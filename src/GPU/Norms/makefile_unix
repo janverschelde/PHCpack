@@ -82,18 +82,22 @@ test_penta_doubles: penta_double_functions.o double_double_functions.o
 	$(gpp) -o test_penta_doubles double_double_functions.o \
                   penta_double_functions.o test_penta_doubles.o
 
-test_octo_doubles: octo_double_functions.o double_double_functions.o
+test_octo_doubles: octo_double_functions.o double_double_functions.o \
+                   quad_double_functions.o
 	@-echo ">>> compiling test_octo_doubles ..."
 	$(gpp) -c -I$(QDsrc) test_octo_doubles.cpp
 	@-echo ">>> linking test_octo_doubles ..."
 	$(gpp) -o test_octo_doubles double_double_functions.o \
-                  octo_double_functions.o test_octo_doubles.o
+                  quad_double_functions.o octo_double_functions.o \
+                  test_octo_doubles.o
 
-test_deca_doubles: deca_double_functions.o double_double_functions.o
+test_deca_doubles: deca_double_functions.o double_double_functions.o \
+                   quad_double_functions.o octo_double_functions.o
 	@-echo ">>> compiling test_deca_doubles ..."
 	$(gpp) -c -I$(QDsrc) test_deca_doubles.cpp
 	@-echo ">>> linking test_deca_doubles ..."
 	$(gpp) -o test_deca_doubles double_double_functions.o \
+                  quad_double_functions.o octo_double_functions.o \
                   deca_double_functions.o test_deca_doubles.o
 
 random_numbers.o:

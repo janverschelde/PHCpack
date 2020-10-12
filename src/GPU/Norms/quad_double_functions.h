@@ -188,6 +188,27 @@ void qdf_sub
 
 /***************** multiplications and division ********************/
 
+void qdf_mul_pwr2
+ ( double a_hihi, double a_lohi, double a_hilo, double a_lolo, double b,
+   double *c_hihi, double *c_lohi, double *c_hilo, double *c_lolo );
+/*
+ * DESCRIPTION : c = a * b, where b is a power of two.
+ *   As b is a power of two, all components of the quad double
+ *   are plainly multiplied by b.
+ *
+ * ON ENTRY :
+ *   a_hihi   the highest part of the quad double a;
+ *   a_lohi   the second highest part of the quad double a;
+ *   a_hilo   the second lowest part of the quad double a;
+ *   a_lolo   the lowest part of the quad double a;
+ *   b        a power of two.
+ *
+ * ON RETURN :
+ *   c_hihi   the highest part of the quad double c = a * b;
+ *   c_lohi   the second highest part of the quad double c = a * b;
+ *   c_hihi   the second lowest part of the quad double c = a * b;
+ *   c_lolo   the lowest part of the quad double c = a * b. */
+
 void qdf_mul
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double b_hihi, double b_lohi, double b_hilo, double b_lolo,
@@ -281,5 +302,36 @@ void qdf_div
  *   c_lohi   the second highest part of the quad double c = a / b;
  *   c_hilo   the third highest part of the quad double c = a / b;
  *   c_lolo   the fourth highest part of the quad double c = a / b. */
+
+/***************************** square root *****************************/
+
+void qdf_sqrt
+ ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
+   double *b_hihi, double *b_lohi, double *b_hilo, double *b_lolo );
+/*
+ * DESCRIPTION :
+ *   Returns in the quad double b (b_hihi, b_lohi, b_hilo, b_lolo) 
+ *   the square root of the quad double a (a_hihi, a_lohi, a_hilo, a_lolo).
+ *
+ * ON ENTRY :
+ *   a_hihi   the highest part of the quad double a;
+ *   a_lohi   the second highest part of the quad double a;
+ *   a_hilo   the second lowest part of the quad double a;
+ *   a_lolo   the lowest part of the quad double a.
+ *
+ * ON RETURN :
+ *   b_hihi   the highest part of the quad double b;
+ *   b_lohi   the second highest part of the quad double b;
+ *   b_hilo   the second lowest part of the quad double b;
+ *   b_lolo   the lowest part of the quad double b. */
+
+/*************************** basic output ***************************/
+
+void qdf_write_doubles
+ ( double a_hihi, double a_lohi, double a_hilo, double a_lolo );
+/*
+ * DESCRIPTION :
+ *   Writes the four doubles (a_hihi, a_lohi, a_hilo, a_lolo) of the 
+ *   quad double a in scientific format with 16 decimal places. */
 
 #endif

@@ -15,7 +15,7 @@ All functions have the prefix pdf_ to avoid name clashes. */
 #ifndef __penta_double_functions_h__
 #define __penta_double_functions_h__
 
-/************************** normalizations **************************/
+/************************** renormalizations **************************/
 
 void pdf_renorm5
  ( double f0, double f1, double f2, double f3, double f4, double f5,
@@ -206,6 +206,30 @@ void pdf_sub
 
 /***************** multiplications and division ********************/
 
+void pdf_mul_pwr2
+ ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
+   double b,
+   double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk );
+/*
+ * DESCRIPTION : c = a * b, where b is a power of two.
+ *   As b is a power of two, all components of the penta double
+ *   are plainly multiplied by b.
+ *
+ * ON ENTRY :
+ *   a_tb     highest part of the penta double a;
+ *   a_ix     second highest part of the penta double a;
+ *   a_mi     middle part of the penta double a;
+ *   a_rg     second lowest part of the penta double a;
+ *   a_pk     lowest part of the penta double a;
+ *   b        a power of two.
+ *
+ * ON RETURN :
+ *   c_tb     highest part of the penta double c = a * b;
+ *   c_ix     second highest part of the penta double c = a * b;
+ *   c_mi     middle part of the penta double c = a * b;
+ *   c_rg     second lowest part of the penta double c = a * b;
+ *   c_pk     lowest part of the penta double c = a * b. */
+
 void pdf_mul
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double b_tb, double b_ix, double b_mi, double b_rg, double b_pk,
@@ -309,5 +333,38 @@ void pdf_div
  *   c_mi     middle part of the penta double c = a / b;
  *   c_rg     second lowest part of the penta double c = a / b;
  *   c_pk     lowest part of the penta double c = a / b. */
+
+/***************************** square root *****************************/
+
+void pdf_sqrt
+ ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
+   double *b_tb, double *b_ix, double *b_mi, double *b_rg, double *b_pk );
+/*
+ * DESCRIPTION :
+ *   Returns in the penta double b (b_tb, b_ix, b_mi, b_rg, b_pk) 
+ *   the square root of the penta double a (a_tb, a_ix, a_mi, a_rg, a_pk).
+ *
+ * ON ENTRY :
+ *   a_tb     highest part of the penta double a;
+ *   a_ix     second highest part of the penta double a;
+ *   a_mi     middle part of the penta double a;
+ *   a_rg     second lowest part of the penta double a;
+ *   a_pk     lowest part of the penta double a.
+ *
+ * ON RETURN :
+ *   b_tb     highest part of the penta double b;
+ *   b_ix     second highest part of the penta double b;
+ *   b_mi     middle part of the penta double b;
+ *   b_rg     second lowest part of the penta double b;
+ *   b_pk     lowest part of the penta double b. */
+
+/*************************** basic output ***************************/
+
+void pdf_write_doubles
+ ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk );
+/*
+ * DESCRIPTION :
+ *   Writes the five doubles (a_tb, a_ix, a_mi, a_rg, a_lo) of the penta
+ *   double a in scientific format with 16 decimal places of precision. */
 
 #endif

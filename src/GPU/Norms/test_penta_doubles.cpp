@@ -41,11 +41,7 @@ int my_sqrt ( void )
       pdf_copy(x_tb,x_ix,x_mi,x_rg,x_pk,&y_tb,&y_ix,&y_mi,&y_rg,&y_pk);
       pdf_sqr(x_tb,x_ix,x_mi,x_rg,x_pk,&z_tb,&z_ix,&z_mi,&z_rg,&z_pk);
       cout << "x*x : " << endl;
-      cout << "  tb : " << z_tb;
-      cout << "  ix : " << z_mi << endl;
-      cout << "  mi : " << z_mi;
-      cout << "  rg : " << z_rg << endl;
-      cout << "  pk : " << z_pk << endl;
+      pdf_write_doubles(z_tb,z_ix,z_mi,z_rg,z_pk); cout << endl;
       pdf_inc(&z_tb,&z_ix,&z_mi,&z_rg,&z_pk,2.0,0.0,0.0,0.0,0.0);
       pdf_div(z_tb,z_ix,z_mi,z_rg,z_pk,x_tb,x_ix,x_mi,x_rg,x_pk,
               &z_tb,&z_ix,&z_mi,&z_rg,&z_pk);
@@ -53,15 +49,19 @@ int my_sqrt ( void )
                    &z_tb,&z_ix,&z_mi,&z_rg,&z_pk);
       pdf_copy(z_tb,z_ix,z_mi,z_rg,z_pk,&x_tb,&x_ix,&x_mi,&x_rg,&x_pk);
       cout << "after step " << i << " : " << endl;
-      cout << "  tb : " << x_tb;
-      cout << "  ix : " << x_ix << endl;
-      cout << "  mi : " << x_mi;
-      cout << "  rg : " << x_rg << endl;
-      cout << "  pk : " << x_pk;
+      pdf_write_doubles(x_tb,x_ix,x_mi,x_rg,x_pk);
       pdf_sub(x_tb,x_ix,x_mi,x_rg,x_pk,y_tb,y_ix,y_mi,y_rg,y_pk,
               &e_tb,&e_ix,&e_mi,&e_rg,&e_pk); 
       pdf_abs(e_tb,e_ix,e_mi,e_rg,e_pk,&a_tb,&a_ix,&a_mi,&a_rg,&a_pk);
       cout << "  error : "<< a_tb << endl;
    }
+   pdf_sqrt(2.0,0.0,0.0,0.0,0.0,&y_tb,&y_ix,&y_mi,&y_rg,&y_pk);
+   cout << "sqrt(2) :" << endl;
+   pdf_write_doubles(y_tb,y_ix,y_mi,y_rg,y_pk);
+   pdf_sub(x_tb,x_ix,x_mi,x_rg,x_pk,y_tb,y_ix,y_mi,y_rg,y_pk,
+           &e_tb,&e_ix,&e_mi,&e_rg,&e_pk);
+   pdf_abs(e_tb,e_ix,e_mi,e_rg,e_pk,&a_tb,&a_ix,&a_mi,&a_rg,&a_pk);
+   cout << "  error : "<< a_tb << endl;
+
    return 0;
 }

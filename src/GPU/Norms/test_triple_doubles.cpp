@@ -1,4 +1,4 @@
-// Test on double double functions.
+// Test on triple double functions.
 
 #include <ctime>
 #include <iostream>
@@ -33,7 +33,6 @@ int my_sqrt ( void )
    cout << "\nrunning Newton's method for sqrt(2) ...\n";
 
    cout << scientific << setprecision(16);
-   // ddf_sqrt(x_hi,x_mi,x_lo,&y_hi,&y_mi,&y_lo);
 
    for(i=1; i <= max_steps; i++)
    {
@@ -41,20 +40,23 @@ int my_sqrt ( void )
       tdf_copy(x_hi,x_mi,x_lo,&y_hi,&y_mi,&y_lo); // copy for comparison
       tdf_sqr(x_hi,x_mi,x_lo,&z_hi,&z_mi,&z_lo);  // z = x*x
       cout << "x*x : " << endl;
-      cout << "  hi : " << z_hi;
-      cout << "  mi : " << z_mi << endl;
-      cout << "  lo : " << z_lo << endl;
+      tdf_write_doubles(z_hi,z_mi,z_lo); cout << endl;
       tdf_inc(&z_hi,&z_mi,&z_lo,2.0,0.0,0.0);     // z += 2
       tdf_div(z_hi,z_mi,z_lo,x_hi,x_mi,x_lo,&z_hi,&z_mi,&z_lo); // z = z/x
       tdf_mul_td_d(z_hi,z_mi,z_lo,0.5,&z_hi,&z_mi,&z_lo);       // z *= 0.5
       tdf_copy(z_hi,z_mi,z_lo,&x_hi,&x_mi,&x_lo);
       cout << "after step " << i << " : " << endl;
-      cout << "  hi : " << x_hi;
-      cout << "  mi : " << x_mi << endl;
-      cout << "  lo : " << x_lo;
+      tdf_write_doubles(x_hi,x_mi,x_lo);
       tdf_sub(x_hi,x_mi,x_lo,y_hi,y_mi,y_lo,&e_hi,&e_mi,&e_lo); // error
       tdf_abs(e_hi,e_mi,e_lo,&a_hi,&a_mi,&a_lo);
       cout << "  error : "<< a_hi << endl;
    }
+   tdf_sqrt(2.0,0.0,0.0,&y_hi,&y_mi,&y_lo);
+   cout << "sqrt(2) :" << endl;
+   tdf_write_doubles(y_hi,y_mi,y_lo);
+   tdf_sub(x_hi,x_mi,x_lo,y_hi,y_mi,y_lo,&e_hi,&e_mi,&e_lo);
+   tdf_abs(e_hi,e_mi,e_lo,&a_hi,&a_mi,&a_lo);
+   cout << "  error : "<< a_hi << endl;
+
    return 0;
 }

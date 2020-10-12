@@ -41,10 +41,7 @@ int my_sqrt ( void )
       qdf_copy(x_hihi,x_lohi,x_hilo,x_lolo,&y_hihi,&y_lohi,&y_hilo,&y_lolo);
       qdf_sqr(x_hihi,x_lohi,x_hilo,x_lolo,&z_hihi,&z_lohi,&z_hilo,&z_lolo);
       cout << "x*x : " << endl;
-      cout << "  hihi : " << z_hihi;
-      cout << "  lohi : " << z_lohi << endl;
-      cout << "  hilo : " << z_hilo;
-      cout << "  lolo : " << z_lolo << endl;
+      qdf_write_doubles(z_hihi,z_lohi,z_hilo,z_lolo);
       qdf_inc(&z_hihi,&z_lohi,&z_hilo,&z_lolo,2.0,0.0,0.0,0.0);
       qdf_div(z_hihi,z_lohi,z_hilo,z_lolo,x_hihi,x_lohi,x_hilo,x_lolo,
               &z_hihi,&z_lohi,&z_hilo,&z_lolo);
@@ -53,14 +50,19 @@ int my_sqrt ( void )
       qdf_copy(z_hihi,z_lohi,z_hilo,z_lolo,
                &x_hihi,&x_lohi,&x_hilo,&x_lolo);
       cout << "after step " << i << " : " << endl;
-      cout << "  hihi : " << x_hihi;
-      cout << "  lohi : " << x_lohi << endl;
-      cout << "  hilo : " << x_hilo;
-      cout << "  lolo : " << x_lolo << endl;
+      qdf_write_doubles(x_hihi,x_lohi,x_hilo,x_lolo);
       qdf_sub(x_hihi,x_lohi,x_hilo,x_lolo,y_hihi,y_lohi,y_hilo,y_lolo,
               &e_hihi,&e_lohi,&e_hilo,&e_lolo);
       qdf_abs(e_hihi,e_lohi,e_hilo,e_lolo,&a_hihi,&a_lohi,&a_hilo,&a_lolo);
       cout << "  error : "<< a_hihi << endl;
    }
+   qdf_sqrt(2.0,0.0,0,0.0,&y_hihi,&y_lohi,&y_hilo,&y_lolo);
+   cout << "sqrt(2) :" << endl;
+   qdf_write_doubles(y_hihi,y_lohi,y_hilo,y_lolo);
+   qdf_sub(x_hihi,x_lohi,x_hilo,x_lolo,y_hihi,y_lohi,y_hilo,y_lolo,
+           &e_hihi,&e_lohi,&e_hilo,&e_lolo);
+   qdf_abs(e_hihi,e_lohi,e_hilo,e_lolo,&a_hihi,&a_lohi,&a_hilo,&a_lolo);
+   cout << "  error : "<< a_hihi << endl;
+
    return 0;
 }

@@ -2,10 +2,12 @@
 // specified in penta_double_functions.h
 
 #include <cmath>
+#include <iostream>
+#include <iomanip>
 #include "double_double_functions.h"
 #include "penta_double_functions.h"
 
-/************************** normalizations **************************/
+/************************** renormalizations **************************/
 
 void pdf_renorm5
  ( double f0, double f1, double f2, double f3, double f4, double f5,
@@ -357,6 +359,18 @@ void pdf_sub
 
 /***************** multiplications and division ********************/
 
+void pdf_mul_pwr2
+ ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
+   double b,
+   double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk )
+{
+   *c_tb = a_tb*b;
+   *c_ix = a_ix*b;
+   *c_mi = a_mi*b;
+   *c_rg = a_rg*b;
+   *c_pk = a_pk*b;
+}
+
 void pdf_mul
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double b_tb, double b_ix, double b_mi, double b_rg, double b_pk,
@@ -625,4 +639,38 @@ void pdf_div
    q5 = *c_tb/b_tb;
 
    pdf_fast_renorm(q0,q1,q2,q3,q4,q5,c_tb,c_ix,c_mi,c_rg,c_pk);
+}
+
+/***************************** square root *****************************/
+
+void pdf_sqrt
+ ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
+   double *b_tb, double *b_ix, double *b_mi, double *b_rg, double *b_pk )
+{
+   double z_tb,z_ix,z_mi,z_rg,z_pk;
+
+   ddf_sqrt(a_tb,a_ix,b_tb,b_ix);
+   pdf_sqr(*b_tb,*b_ix,0.0,0.0,0.0,&z_tb,&z_ix,&z_mi,&z_rg,&z_pk);
+   pdf_inc(&z_tb,&z_ix,&z_mi,&z_rg,&z_pk,a_tb,a_ix,a_mi,a_rg,a_pk);
+   pdf_div(z_tb,z_ix,z_mi,z_rg,z_pk,*b_tb,*b_ix,0.0,0.0,0.0,
+           &z_tb,&z_ix,&z_mi,&z_rg,&z_pk);
+   pdf_mul_pwr2(z_tb,z_ix,z_mi,z_rg,z_pk,0.5,b_tb,b_ix,b_mi,b_rg,b_pk);
+   pdf_sqr(*b_tb,*b_ix,*b_mi,*b_rg,*b_pk,&z_tb,&z_ix,&z_mi,&z_rg,&z_pk);
+   pdf_inc(&z_tb,&z_ix,&z_mi,&z_rg,&z_pk,a_tb,a_ix,a_mi,a_rg,a_pk);
+   pdf_div(z_tb,z_ix,z_mi,z_rg,z_pk,*b_tb,*b_ix,*b_mi,*b_rg,*b_pk,
+           &z_tb,&z_ix,&z_mi,&z_rg,&z_pk);
+   pdf_mul_pwr2(z_tb,z_ix,z_mi,z_rg,z_pk,0.5,b_tb,b_ix,b_mi,b_rg,b_pk);
+}
+
+/*************************** basic output ***************************/
+
+void pdf_write_doubles
+ ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk )
+{
+   std::cout << std::scientific << std::setprecision(16);
+   std::cout << "  tb : " << a_tb;
+   std::cout << "  ix : " << a_ix << std::endl;
+   std::cout << "  mi : " << a_mi;
+   std::cout << "  rg : " << a_rg << std::endl;
+   std::cout << "  pk : " << a_pk;
 }

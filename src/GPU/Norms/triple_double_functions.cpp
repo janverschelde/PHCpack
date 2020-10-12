@@ -2,10 +2,12 @@
 // specified in triple_double_functions.h
 
 #include <cmath>
+#include <iostream>
+#include <iomanip>
 #include "double_double_functions.h"
 #include "triple_double_functions.h"
 
-/************************* normalizations ***************************/
+/************************* renormalizations ***************************/
 
 void tdf_fast_renorm
  ( double x0, double x1, double x2, double x3,
@@ -172,6 +174,15 @@ void tdf_sub
 
 /***************** multiplications and division ********************/
 
+void tdf_mul_pwr2
+ ( double a_hi, double a_mi, double a_lo, double b,
+   double *c_hi, double *c_mi, double *c_lo )
+{
+   *c_hi = a_hi*b;
+   *c_mi = a_mi*b;
+   *c_lo = a_lo*b;
+}
+
 void tdf_mul
  ( double a_hi, double a_mi, double a_lo,
    double b_hi, double b_mi, double b_lo,
@@ -284,4 +295,29 @@ void tdf_div
    q3 = *c_hi/b_hi;
 
    tdf_fast_renorm(q0,q1,q2,q3,c_hi,c_mi,c_lo);
+}
+
+/***************************** square root *****************************/
+
+void tdf_sqrt
+ ( double a_hi, double a_mi, double a_lo,
+   double *b_hi, double *b_mi, double *b_lo )
+{
+   double z_hi,z_mi,z_lo;
+
+   ddf_sqrt(a_hi,a_mi,b_hi,b_mi);
+   tdf_sqr(*b_hi,*b_mi,0.0,&z_hi,&z_mi,&z_lo);
+   tdf_inc(&z_hi,&z_mi,&z_lo,a_hi,a_mi,a_lo);
+   tdf_div(z_hi,z_mi,z_lo,*b_hi,*b_mi,0.0,&z_hi,&z_mi,&z_lo);
+   tdf_mul_pwr2(z_hi,z_mi,z_lo,0.5,b_hi,b_mi,b_lo);
+}
+
+/*************************** basic output ***************************/
+
+void tdf_write_doubles ( double a_hi, double a_mi, double a_lo )
+{
+   std::cout << std::scientific << std::setprecision(16);
+   std::cout << "  hi : " << a_hi;
+   std::cout << "  mi : " << a_mi << std::endl;
+   std::cout << "  lo : " << a_lo;
 }

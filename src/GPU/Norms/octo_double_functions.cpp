@@ -2,10 +2,13 @@
 // specified in octo_double_functions.h
 
 #include <cmath>
+#include <iostream>
+#include <iomanip>
 #include "double_double_functions.h"
+#include "quad_double_functions.h"
 #include "octo_double_functions.h"
 
-/************************** normalizations **************************/
+/************************** renormalizations **************************/
 
 void odf_renorm8
  ( double f0, double f1, double f2, double f3, double f4, double f5,
@@ -665,6 +668,23 @@ void odf_sub
 }
 
 /***************** multiplications and division ********************/
+
+void odf_mul_pwr2
+ ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
+   double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
+   double b,
+   double *c_hihihi, double *c_lohihi, double *c_hilohi, double *c_lolohi,
+   double *c_hihilo, double *c_lohilo, double *c_hilolo, double *c_lololo )
+{
+   *c_hihihi = a_hihihi*b;
+   *c_lohihi = a_lohihi*b;
+   *c_hilohi = a_hilohi*b;
+   *c_lolohi = a_lolohi*b;
+   *c_hihilo = a_hihilo*b;
+   *c_lohilo = a_lohilo*b;
+   *c_hilolo = a_hilolo*b;
+   *c_lololo = a_lololo*b;
+}
 
 void odf_mul
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
@@ -1423,4 +1443,52 @@ void odf_div
    odf_fast_renorm(q0,q1,q2,q3,q4,q5,q6,q7,q8,
                    c_hihihi,c_lohihi,c_hilohi,c_lolohi,
                    c_hihilo,c_lohilo,c_hilolo,c_lololo);
+}
+
+/***************************** square root *****************************/
+
+void odf_sqrt
+ ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
+   double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
+   double *b_hihihi, double *b_lohihi, double *b_hilohi, double *b_lolohi,
+   double *b_hihilo, double *b_lohilo, double *b_hilolo, double *b_lololo )
+{
+   double z_hihihi,z_lohihi,z_hilohi,z_lolohi;
+   double z_hihilo,z_lohilo,z_hilolo,z_lololo;
+
+   qdf_sqrt(a_hihihi,a_lohihi,a_hilohi,a_lolohi,
+            b_hihihi,b_lohihi,b_hilohi,b_lolohi);
+   odf_sqr(*b_hihihi,*b_lohihi,*b_hilohi,*b_lolohi,0.0,0.0,0.0,0.0,
+           &z_hihihi,&z_lohihi,&z_hilohi,&z_lolohi,
+           &z_hihilo,&z_lohilo,&z_hilolo,&z_lololo);
+   odf_inc(&z_hihihi,&z_lohihi,&z_hilohi,&z_lolohi,
+           &z_hihilo,&z_lohilo,&z_hilolo,&z_lololo,
+           a_hihihi,a_lohihi,a_hilohi,a_lolohi,
+           a_hihilo,a_lohilo,a_hilolo,a_lololo);
+   odf_div(z_hihihi,z_lohihi,z_hilohi,z_lolohi,
+           z_hihilo,z_lohilo,z_hilolo,z_lololo,
+           *b_hihihi,*b_lohihi,*b_hilohi,*b_lolohi,0.0,0.0,0.0,0.0,
+           &z_hihihi,&z_lohihi,&z_hilohi,&z_lolohi,
+           &z_hihilo,&z_lohilo,&z_hilolo,&z_lololo);
+   odf_mul_pwr2(z_hihihi,z_lohihi,z_hilohi,z_lolohi,
+                z_hihilo,z_lohilo,z_hilolo,z_lololo,0.5,
+                b_hihihi,b_lohihi,b_hilohi,b_lolohi,
+                b_hihilo,b_lohilo,b_hilolo,b_lololo);
+}
+
+/*************************** basic output ***************************/
+
+void odf_write_doubles
+ ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
+   double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo )
+{
+   std::cout << std::scientific << std::setprecision(16);
+   std::cout << "  hihihi : " << a_hihihi;
+   std::cout << "  lohihi : " << a_lohihi << std::endl;
+   std::cout << "  hilohi : " << a_hilohi;
+   std::cout << "  lolohi : " << a_lolohi << std::endl;
+   std::cout << "  hihilo : " << a_hihilo;
+   std::cout << "  lohilo : " << a_lohilo << std::endl;
+   std::cout << "  hilolo : " << a_hilolo;
+   std::cout << "  lololo : " << a_lololo << std::endl;
 }

@@ -273,6 +273,38 @@ void odf_sub
 
 /***************** multiplications and division ********************/
 
+void odf_mul_pwr2
+ ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
+   double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
+   double b,
+   double *c_hihihi, double *c_lohihi, double *c_hilohi, double *c_lolohi,
+   double *c_hihilo, double *c_lohilo, double *c_hilolo, double *c_lololo );
+/*
+ * DESCRIPTION : c = a * b, where b is a power of two.
+ *   As b is a power of two, all components of the octo double
+ *   are plainly multiplied by b.
+ *
+ * ON ENTRY :
+ *   a_hihihi is the highest part of the quad double a;
+ *   a_lohihi is the second highest part of the quad double a;
+ *   a_hilohi is the third highest part of the quad double a;
+ *   a_lolohi is the fourth highest part of the quad double a;
+ *   a_hihilo is the fourth lowest part of the quad double a;
+ *   a_lohilo is the third lowest part of the quad double a;
+ *   a_hilolo is the second lowest part of the quad double a;
+ *   a_lololo is the lowest part of the quad double a;
+ *   b        a power of two.
+ *
+ * ON RETURN :
+ *   c_hihihi is the highest part of the quad double c = a * b;
+ *   c_lohihi is the second highest part of the quad double c = a * b;
+ *   c_hilohi is the third highest part of the quad double c = a * b;
+ *   c_lolohi is the fourth highest part of the quad double c = a * b;
+ *   c_hihilo is the fourth lowest part of the quad double c = a * b;
+ *   c_lohilo is the third lowest part of the quad double c = a * b;
+ *   c_hilolo is the second lowest part of the quad double c = a * b;
+ *   c_lololo is the lowest part of the quad double c = a * b. */
+
 void odf_mul
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
    double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
@@ -424,5 +456,50 @@ void odf_div
  *   c_lohilo is the third lowest part of the octo double c = a / b;
  *   c_hilolo is the second lowest part of the octo double c = a / b;
  *   c_lololo is the lowest part of the octo double c = a / b. */
+
+/***************************** square root *****************************/
+
+void odf_sqrt
+ ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
+   double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
+   double *b_hihihi, double *b_lohihi, double *b_hilohi, double *b_lolohi,
+   double *b_hihilo, double *b_lohilo, double *b_hilolo, double *b_lololo );
+/*
+ * DESCRIPTION :
+ *   Returns in the octo double b (b_hihihi, b_lohihi, b_hilohi, b_lolohi,
+ *   b_hihilo, b_lohilo, b_hilolo, b_lololo) the square root of the octo
+ *   double a (a_hihihi, a_lohihi, a_hilohi, a_lolohi, a_hihilo, a_lohilo,
+ *   a_hilolo, a_lololo).
+ *
+ * ON ENTRY :
+ *   a_hihihi is the highest part of the octo double a;
+ *   a_lohihi is the second highest part of the octo double a;
+ *   a_hilohi is the third highest part of the octo double a;
+ *   a_lolohi is the fourth highest part of the octo double a.
+ *   a_hihilo is the fourth lowest part of the octo double a.
+ *   a_lohilo is the third lowest part of the octo double a.
+ *   a_hilolo is the second lowest part of the octo double a.
+ *   a_lololo is the lowest part of the octo double a.
+ *
+ * ON RETURN :
+ *   b_hihihi is the highest part of the octo double b;
+ *   b_lohihi is the second highest part of the octo double b;
+ *   b_hilohi is the third highest part of the octo double b;
+ *   b_lolohi is the fourth highest part of the octo double b;
+ *   b_hihilo is the fourth lowest part of the octo double b;
+ *   b_lohilo is the third lowest part of the octo double b;
+ *   b_hilolo is the second lowest part of the octo double b;
+ *   b_lololo is the lowest part of the octo double b. */
+
+/*************************** basic output ***************************/
+
+void odf_write_doubles
+ ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
+   double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo );
+/*
+ * DESCRIPTION :
+ *   Writes the eight doubles (a_hihihi, a_lohihi, a_hilohi, a_lolohi,
+ *   a_hihilo, a_lohilo, a_hilolo, a_lololo) of the octo double a
+ *   in scientific format with 16 decimal places precision. */
 
 #endif

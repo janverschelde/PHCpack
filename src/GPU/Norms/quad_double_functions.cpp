@@ -2,6 +2,8 @@
 // specified in quad_double_functions.h
 
 #include <cmath>
+#include <iostream>
+#include <iomanip>
 #include "double_double_functions.h"
 #include "quad_double_functions.h"
 
@@ -283,6 +285,16 @@ void qdf_sub
 
 /***************** multiplications and division ********************/
 
+void qdf_mul_pwr2
+ ( double a_hihi, double a_lohi, double a_hilo, double a_lolo, double b,
+   double *c_hihi, double *c_lohi, double *c_hilo, double *c_lolo )
+{
+   *c_hihi = a_hihi*b;
+   *c_lohi = a_lohi*b;
+   *c_hilo = a_hilo*b;
+   *c_lolo = a_lolo*b;
+}
+
 void qdf_mul
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double b_hihi, double b_lohi, double b_hilo, double b_lolo,
@@ -467,4 +479,33 @@ void qdf_div
    q4 = *c_hihi/b_hihi;
 
    qdf_fast_renorm(q0,q1,q2,q3,q4,c_hihi,c_lohi,c_hilo,c_lolo);
+}
+
+/***************************** square root *****************************/
+
+void qdf_sqrt
+ ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
+   double *b_hihi, double *b_lohi, double *b_hilo, double *b_lolo )
+{
+   double z_hihi,z_lohi,z_hilo,z_lolo;
+
+   ddf_sqrt(a_hihi,a_lohi,b_hihi,b_lohi);
+   qdf_sqr(*b_hihi,*b_lohi,0.0,0.0,&z_hihi,&z_lohi,&z_hilo,&z_lolo);
+   qdf_inc(&z_hihi,&z_lohi,&z_hilo,&z_lolo,a_hihi,a_lohi,a_hilo,a_lolo);
+   qdf_div(z_hihi,z_lohi,z_hilo,z_lolo,*b_hihi,*b_lohi,0.0,0.0,
+           &z_hihi,&z_lohi,&z_hilo,&z_lolo);
+   qdf_mul_pwr2(z_hihi,z_lohi,z_hilo,z_lolo,0.5,
+                b_hihi,b_lohi,b_hilo,b_lolo);
+}
+
+/*************************** basic output ***************************/
+
+void qdf_write_doubles
+ ( double a_hihi, double a_lohi, double a_hilo, double a_lolo )
+{
+   std::cout << std::scientific << std::setprecision(16);
+   std::cout << "  hihi : " << a_hihi;
+   std::cout << "  lohi : " << a_lohi << std::endl;
+   std::cout << "  hilo : " << a_hilo;
+   std::cout << "  lolo : " << a_lolo << std::endl;
 }

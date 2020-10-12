@@ -2,10 +2,13 @@
 // specified in deca_double_functions.h
 
 #include <cmath>
+#include <iostream>
+#include <iomanip>
 #include "double_double_functions.h"
+#include "octo_double_functions.h"
 #include "deca_double_functions.h"
 
-/************************* normalizations ************************/
+/************************* renormalizations ************************/
 
 void daf_renorm10
  ( double f0, double f1, double f2, double f3, double f4, double f5,
@@ -902,6 +905,25 @@ void daf_sub
 }
 
 /***************** multiplications and division ********************/
+
+void daf_mul_pwr2
+ ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
+   double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
+   double b,
+   double *c_rtb, double *c_rix, double *c_rmi, double *c_rrg, double *c_rpk,
+   double *c_ltb, double *c_lix, double *c_lmi, double *c_lrg, double *c_lpk )
+{
+   *c_rtb = a_rtb*b;
+   *c_rix = a_rix*b;
+   *c_rmi = a_rmi*b;
+   *c_rrg = a_rrg*b;
+   *c_rpk = a_rpk*b;
+   *c_ltb = a_ltb*b;
+   *c_lix = a_lix*b;
+   *c_lmi = a_lmi*b;
+   *c_lrg = a_lrg*b;
+   *c_lpk = a_lpk*b;
+}
 
 void daf_mul
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
@@ -2132,4 +2154,54 @@ void daf_div
    daf_fast_renorm(q0,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,
                    c_rtb,c_rix,c_rmi,c_rrg,c_rpk,
                    c_ltb,c_lix,c_lmi,c_lrg,c_lpk);
+}
+
+/***************************** square root *****************************/
+
+void daf_sqrt
+ ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
+   double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
+   double *b_rtb, double *b_rix, double *b_rmi, double *b_rrg, double *b_rpk,
+   double *b_ltb, double *b_lix, double *b_lmi, double *b_lrg, double *b_lpk )
+{
+   double z_rtb,z_rix,z_rmi,z_rrg,z_rpk,z_ltb,z_lix,z_lmi,z_lrg,z_lpk;
+
+   odf_sqrt(a_rtb,a_rix,a_rmi,a_rrg,a_rpk,a_ltb,a_lix,a_lmi,
+            b_rtb,b_rix,b_rmi,b_rrg,b_rpk,b_ltb,b_lix,b_lmi);
+   daf_sqr(*b_rtb,*b_rix,*b_rmi,*b_rrg,*b_rpk,
+           *b_ltb,*b_lix,*b_lmi,*b_lrg,*b_lpk,
+           &z_rtb,&z_rix,&z_rmi,&z_rrg,&z_rpk,
+           &z_ltb,&z_lix,&z_lmi,&z_lrg,&z_lpk);
+   daf_inc(&z_rtb,&z_rix,&z_rmi,&z_rrg,&z_rpk,
+           &z_ltb,&z_lix,&z_lmi,&z_lrg,&z_lpk,
+           a_rtb,a_rix,a_rmi,a_rrg,a_rpk,
+           a_ltb,a_lix,a_lmi,a_lrg,a_lpk);
+   daf_div(z_rtb,z_rix,z_rmi,z_rrg,z_rpk,z_ltb,z_lix,z_lmi,z_lrg,z_lpk,
+           *b_rtb,*b_rix,*b_rmi,*b_rrg,*b_rpk,
+           *b_ltb,*b_lix,*b_lmi,*b_lrg,*b_lpk,
+           &z_rtb,&z_rix,&z_rmi,&z_rrg,&z_rpk,
+           &z_ltb,&z_lix,&z_lmi,&z_lrg,&z_lpk);
+   daf_mul_pwr2(z_rtb,z_rix,z_rmi,z_rrg,z_rpk,
+                z_ltb,z_lix,z_lmi,z_lrg,z_lpk,0.5,
+                b_rtb,b_rix,b_rmi,b_rrg,b_rpk,
+                b_ltb,b_lix,b_lmi,b_lrg,b_lpk);
+}
+
+/*************************** basic output ***************************/
+
+void daf_write_doubles
+ ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk, 
+   double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk )
+{
+   std::cout << std::scientific << std::setprecision(16);
+   std::cout << "  rtb : " << a_rtb;
+   std::cout << "  rix : " << a_rix << std::endl;
+   std::cout << "  rmi : " << a_rmi;
+   std::cout << "  rrg : " << a_rrg << std::endl;
+   std::cout << "  rpk : " << a_rpk;
+   std::cout << "  ltb : " << a_ltb << std::endl;
+   std::cout << "  lix : " << a_lix;
+   std::cout << "  lmi : " << a_lmi << std::endl;
+   std::cout << "  lrg : " << a_lrg;
+   std::cout << "  lpk : " << a_lpk << std::endl;
 }

@@ -10,7 +10,7 @@ All functions have the prefix tdf_ to avoid name clashes. */
 #ifndef __triple_double_functions_h__
 #define __triple_double_functions_h__
 
-/************************** normalizations **************************/
+/************************** renormalizations **************************/
 
 void tdf_fast_renorm
  ( double x0, double x1, double x2, double x3,
@@ -125,6 +125,25 @@ void tdf_sub
 
 /***************** multiplications and division ********************/
 
+void tdf_mul_pwr2
+ ( double a_hi, double a_mi, double a_lo, double b,
+   double *c_hi, double *c_mi, double *c_lo );
+/*
+ * DESCRIPTION : c = a * b, where b is a power of two.
+ *   As b is a power of two, all components of the triple double
+ *   are plainly multiplied by b.
+ *
+ * ON ENTRY :
+ *   a_hi     high part of the triple double a;
+ *   a_mi     middle part of the triple double a;
+ *   a_lo     low part of the triple double a;
+ *   b        a power of two.
+ *
+ * ON RETURN :
+ *   c_hi     high part of the triple double c = a * b;
+ *   c_mi     middle part of the triple double c = a * b;
+ *   c_lo     low part of the triple double c = a * b. */
+
 void tdf_mul
  ( double a_hi, double a_mi, double a_lo,
    double b_hi, double b_mi, double b_lo,
@@ -205,5 +224,33 @@ void tdf_div
  *   c_hi     high part of the triple double c = a / b;
  *   c_mi     middle part of the triple double c = a / b;
  *   c_lo     low part of the triple double c = a / b. */
+
+/***************************** square root *****************************/
+
+void tdf_sqrt
+ ( double a_hi, double a_mi, double a_lo,
+   double *b_hi, double *b_mi, double *b_lo );
+/*
+ * DESCRIPTION :
+ *   Returns in the triple double b (b_hi, b_mi, b_lo) 
+ *   the square root of the triple double a (a_hi, a_mi, a_lo).
+ *
+ * ON ENTRY :
+ *   a_hi     high part of the triple double a;
+ *   a_mi     middle part of the triple double a;
+ *   a_lo     low part of the triple double a.
+ *
+ * ON RETURN :
+ *   b_hi     high part of the triple double b;
+ *   b_mi     middle part of the triple double b;
+ *   b_lo     low part of the triple double b. */
+
+/*************************** basic output ***************************/
+
+void tdf_write_doubles ( double a_hi, double a_mi, double a_lo );
+/*
+ * DESCRIPTION :
+ *   Writes the three doubles (a_hi, a_mi, a_lo) of the triple double a
+ *   in scientific format with 16 decimal places of precision. */
 
 #endif

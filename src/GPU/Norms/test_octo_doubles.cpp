@@ -55,14 +55,8 @@ int my_sqrt ( void )
               &z_hihihi,&z_lohihi,&z_hilohi,&z_lolohi,
               &z_hihilo,&z_lohilo,&z_hilolo,&z_lololo);
       cout << "x*x : " << endl;
-      cout << "  hihihi : " << z_hihihi;
-      cout << "  lohihi : " << z_lohihi << endl;
-      cout << "  hilohi : " << z_hilohi;
-      cout << "  lolohi : " << z_lolohi << endl;
-      cout << "  hihilo : " << z_hihilo;
-      cout << "  lohilo : " << z_lohilo << endl;
-      cout << "  hilolo : " << z_hilolo;
-      cout << "  lololo : " << z_lololo << endl;
+      odf_write_doubles(z_hihihi,z_lohihi,z_hilohi,z_lolohi,
+                        z_hihilo,z_lohilo,z_hilolo,z_lololo);
       odf_inc(&z_hihihi,&z_lohihi,&z_hilohi,&z_lolohi,
               &z_hihilo,&z_lohilo,&z_hilolo,&z_lololo,
               2.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
@@ -81,14 +75,8 @@ int my_sqrt ( void )
                &x_hihihi,&x_lohihi,&x_hilohi,&x_lolohi,
                &x_hihilo,&x_lohilo,&x_hilolo,&x_lololo);
       cout << "after step " << i << " : " << endl;
-      cout << "  hihihi : " << x_hihihi;
-      cout << "  lohihi : " << x_lohihi << endl;
-      cout << "  hilohi : " << x_hilohi;
-      cout << "  lolohi : " << x_lolohi << endl;
-      cout << "  hihilo : " << x_hihilo;
-      cout << "  lohilo : " << x_lohilo << endl;
-      cout << "  hilolo : " << x_hilolo;
-      cout << "  lololo : " << x_lololo << endl;
+      odf_write_doubles(x_hihihi,x_lohihi,x_hilohi,x_lolohi,
+                        x_hihilo,x_lohilo,x_hilolo,x_lololo);
       odf_sub(x_hihihi,x_lohihi,x_hilohi,x_lolohi,
               x_hihilo,x_lohilo,x_hilolo,x_lololo,
               y_hihihi,y_lohihi,y_hilohi,y_lolohi,
@@ -101,5 +89,23 @@ int my_sqrt ( void )
               &a_hihilo,&a_lohilo,&a_hilolo,&a_lololo);
       cout << "  error : "<< a_hihihi << endl;
    }
+   odf_sqrt(2.0,0.0,0,0.0,0.0,0.0,0.0,0.0,
+            &y_hihihi,&y_lohihi,&y_hilohi,&y_lolohi,
+            &y_hihilo,&y_lohilo,&y_hilolo,&y_lololo);
+   cout << "sqrt(2) :" << endl;
+   odf_write_doubles(y_hihihi,y_lohihi,y_hilohi,y_lolohi,
+                     y_hihilo,y_lohilo,y_hilolo,y_lololo);
+   odf_sub(x_hihihi,x_lohihi,x_hilohi,x_lolohi,
+           x_hihilo,x_lohilo,x_hilolo,x_lololo,
+           y_hihihi,y_lohihi,y_hilohi,y_lolohi,
+           y_hihilo,y_lohilo,y_hilolo,y_lololo,
+           &e_hihihi,&e_lohihi,&e_hilohi,&e_lolohi,
+           &e_hihilo,&e_lohilo,&e_hilolo,&e_lololo);
+   odf_abs(e_hihihi,e_lohihi,e_hilohi,e_lolohi,
+           e_hihilo,e_lohilo,e_hilolo,e_lololo,
+           &a_hihihi,&a_lohihi,&a_hilohi,&a_lolohi,
+           &a_hihilo,&a_lohilo,&a_hilolo,&a_lololo);
+   cout << "  error : "<< a_hihihi << endl;
+
    return 0;
 }

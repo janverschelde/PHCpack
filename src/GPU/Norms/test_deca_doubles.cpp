@@ -48,16 +48,8 @@ int my_sqrt ( void )
               &z_rtb,&z_rix,&z_rmi,&z_rrg,&z_rpk,
               &z_ltb,&z_lix,&z_lmi,&z_lrg,&z_lpk);
       cout << "x*x : " << endl;
-      cout << "  rtb : " << z_rtb;
-      cout << "  rix : " << z_rmi << endl;
-      cout << "  rmi : " << z_rmi;
-      cout << "  rrg : " << z_rrg << endl;
-      cout << "  rpk : " << z_rpk;
-      cout << "  ltb : " << z_rtb << endl;
-      cout << "  lix : " << z_rmi;
-      cout << "  lmi : " << z_rmi << endl;
-      cout << "  lrg : " << z_rrg;
-      cout << "  lpk : " << z_rpk << endl;
+      daf_write_doubles(z_rtb,z_rix,z_rmi,z_rrg,z_rpk,
+                        z_ltb,z_lix,z_lmi,z_lrg,z_lpk);
       daf_inc(&z_rtb,&z_rix,&z_rmi,&z_rrg,&z_rpk,
               &z_ltb,&z_lix,&z_lmi,&z_lrg,&z_lpk,
               2.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
@@ -73,16 +65,8 @@ int my_sqrt ( void )
                &x_rtb,&x_rix,&x_rmi,&x_rrg,&x_rpk,
                &x_ltb,&x_lix,&x_lmi,&x_lrg,&x_lpk);
       cout << "after step " << i << " : " << endl;
-      cout << "  rtb : " << x_rtb;
-      cout << "  rix : " << x_rix << endl;
-      cout << "  rmi : " << x_rmi;
-      cout << "  rrg : " << x_rrg << endl;
-      cout << "  rpk : " << x_rpk;
-      cout << "  ltb : " << x_ltb << endl;
-      cout << "  lix : " << x_lix;
-      cout << "  lmi : " << x_lmi << endl;
-      cout << "  lrg : " << x_lrg;
-      cout << "  lpk : " << x_lpk << endl;
+      daf_write_doubles(x_rtb,x_rix,x_rmi,x_rrg,x_rpk,
+                        x_ltb,x_lix,x_lmi,x_lrg,x_lpk);
       daf_sub(x_rtb,x_rix,x_rmi,x_rrg,x_rpk,x_ltb,x_lix,x_lmi,x_lrg,x_lpk,
               y_rtb,y_rix,y_rmi,y_rrg,y_rpk,y_ltb,y_lix,y_lmi,y_lrg,y_lpk,
               &e_rtb,&e_rix,&e_rmi,&e_rrg,&e_rpk,
@@ -92,5 +76,20 @@ int my_sqrt ( void )
               &a_ltb,&a_lix,&a_lmi,&a_lrg,&a_lpk);
       cout << "  error : "<< a_rtb << endl;
    }
+   cout << "sqrt(2) : " << endl;
+   daf_sqrt(2.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+            &y_rtb,&y_rix,&y_rmi,&y_rrg,&y_rpk,
+            &y_ltb,&y_lix,&y_lmi,&y_lrg,&y_lpk);
+   daf_write_doubles(y_rtb,y_rix,y_rmi,y_rrg,y_rpk,
+                     y_ltb,y_lix,y_lmi,y_lrg,y_lpk);
+   daf_sub(x_rtb,x_rix,x_rmi,x_rrg,x_rpk,x_ltb,x_lix,x_lmi,x_lrg,x_lpk,
+           y_rtb,y_rix,y_rmi,y_rrg,y_rpk,y_ltb,y_lix,y_lmi,y_lrg,y_lpk,
+           &e_rtb,&e_rix,&e_rmi,&e_rrg,&e_rpk,
+           &e_ltb,&e_lix,&e_lmi,&e_lrg,&e_lpk); 
+   daf_abs(e_rtb,e_rix,e_rmi,e_rrg,e_rpk,e_ltb,e_lix,e_lmi,e_lrg,e_lpk,
+           &a_rtb,&a_rix,&a_rmi,&a_rrg,&a_rpk,
+           &a_ltb,&a_lix,&a_lmi,&a_lrg,&a_lpk);
+   cout << "  error : "<< a_rtb << endl;
+
    return 0;
 }

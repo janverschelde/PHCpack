@@ -19,7 +19,7 @@ All functions have the prefix daf_ to avoid name clashes. */
 #ifndef __deca_double_functions_h__
 #define __deca_double_functions_h__
 
-/************************** normalizations **************************/
+/************************** renormalizations **************************/
 
 void daf_renorm10
  ( double f0, double f1, double f2, double f3, double f4, double f5,
@@ -310,6 +310,42 @@ void daf_sub
 
 /***************** multiplications and division ********************/
 
+void daf_mul_pwr2
+ ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
+   double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
+   double b,
+   double *c_rtb, double *c_rix, double *c_rmi, double *c_rrg, double *c_rpk,
+   double *c_ltb, double *c_lix, double *c_lmi, double *c_lrg, double *c_lpk );
+/*
+ * DESCRIPTION : c = a * b, where b is a power of two.
+ *   As b is a power of two, all components of the octo double
+ *   are plainly multiplied by b.
+ *
+ * ON ENTRY :
+ *   a_rtb    highest part of the octo double a;
+ *   a_rix    second highest part of the octo double a;
+ *   a_rmi    third highest part of the octo double a;
+ *   a_rrg    fourth highest part of the octo double a;
+ *   a_rpk    fifth highest part of the octo double a;
+ *   a_ltb    fifth lowest part of the octo double a;
+ *   a_lix    fourth lowest part of the octo double a;
+ *   a_lmi    third lowest part of the octo double a;
+ *   a_lrg    second lowest part of the octo double a;
+ *   a_lpk    lowest part of the octo double a;
+ *   b        a power of two.
+ *
+ * ON RETURN :
+ *   c_rtb    highest part of the octo double c = a * b;
+ *   c_rix    second highest part of the octo double c = a * b;
+ *   c_rmi    third highest part of the octo double c = a * b;
+ *   c_rrg    fourth highest part of the octo double c = a * b;
+ *   c_rpk    fifth highest part of the octo double c = a * b.
+ *   c_ltb    fifth lowest part of the octo double c = a * b;
+ *   c_lix    fourth lowest part of the octo double c = a * b;
+ *   c_lmi    third lowest part of the octo double c = a * b;
+ *   c_lrg    second lowest part of the octo double c = a * b;
+ *   c_lpk    lowest part of the octo double c = a * b. */
+
 void daf_mul
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
@@ -477,5 +513,52 @@ void daf_div
  *   c_lmi    third lowest part of the deca double c = a / b;
  *   c_lrg    second lowest part of the deca double c = a / b;
  *   c_lpk    lowest part of the deca double c = a / b. */
+
+/***************************** square root *****************************/
+
+void daf_sqrt
+ ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
+   double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
+   double *b_rtb, double *b_rix, double *b_rmi, double *b_rrg, double *b_rpk,
+   double *b_ltb, double *b_lix, double *b_lmi, double *b_lrg, double *b_lpk );
+/*
+ * DESCRIPTION :
+ *   Returns in the deca double b (b_rtb, b_rix, b_rmi, b_rrg, b_rpk, b_ltb,
+ *   b_lix, b_lmi, b_lrg, b_lpk)  the square root of the deca double a
+ *   (a_rtb, a_rix, a_rmi, a_rrg, a_rpk, a_ltb, a_lix, a_lmi, a_lrg, a_lpk).
+ *
+ * ON ENTRY :
+ *   a_rtb    highest part of the deca double a;
+ *   a_rix    second highest part of the deca double a;
+ *   a_rmi    third highest part of the deca double a;
+ *   a_rrg    fourth highest part of the deca double a;
+ *   a_rpk    fifth highest part of the deca double a;
+ *   a_ltb    fifth lowest part of the deca double a;
+ *   a_lix    fourth lowest part of the deca double a;
+ *   a_lmi    third lowest part of the deca double a;
+ *   a_lrg    second lowest part of the deca double a;
+ *   a_lpk    lowest part of the deca double a;
+ *
+ * ON RETURN :
+ *   b_rtb    highest part of the deca double a;
+ *   b_rix    second highest part of the deca double b;
+ *   b_rmi    third highest part of the deca double b;
+ *   b_rrg    fourth highest part of the deca double b;
+ *   b_rpk    fifth highest part of the deca double b;
+ *   b_ltb    fifth lowest part of the deca double b;
+ *   b_lix    fourth lowest part of the deca double b;
+ *   b_lmi    third lowest part of the deca double b;
+ *   b_lrg    second lowest part of the deca double b. */
+
+/*************************** basic output ***************************/
+
+void daf_write_doubles
+ ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk, 
+   double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk );
+/*
+ * DESCRIPTION :
+ *   Writes the ten doubles (a_rtb, a_rix, a_rmi, a_rrg, a_rlo, a_ltb,
+ *   a_lix, a_lmi, a_lrg, a_llo) of the deca double a in scientific format
+ *   with 16 decimal places of precision. */
 
 #endif
