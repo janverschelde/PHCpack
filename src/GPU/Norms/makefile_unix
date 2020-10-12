@@ -33,6 +33,10 @@ triple_double_functions.o:
 	@-echo ">>> compiling triple double functions ..."
 	$(gpp) -O3 -c triple_double_functions.cpp
 
+quad_double_functions.o:
+	@-echo ">>> compiling quad double functions ..."
+	$(gpp) -O3 -c quad_double_functions.cpp
+
 penta_double_functions.o:
 	@-echo ">>> compiling penta double functions ..."
 	$(gpp) -O3 -c penta_double_functions.cpp
@@ -63,6 +67,13 @@ test_triple_doubles: triple_double_functions.o double_double_functions.o
 	@-echo ">>> linking test_triple_doubles ..."
 	$(gpp) -o test_triple_doubles double_double_functions.o \
                   triple_double_functions.o test_triple_doubles.o
+
+test_quad_doubles: quad_double_functions.o double_double_functions.o
+	@-echo ">>> compiling test_quad_doubles ..."
+	$(gpp) -c -I$(QDsrc) test_quad_doubles.cpp
+	@-echo ">>> linking test_quad_doubles ..."
+	$(gpp) -o test_quad_doubles double_double_functions.o \
+                  quad_double_functions.o test_quad_doubles.o
 
 test_penta_doubles: penta_double_functions.o double_double_functions.o
 	@-echo ">>> compiling test_penta_doubles ..."
@@ -223,8 +234,9 @@ clean:
 	/bin/rm -f -r cmplx2_norm_host.o
 	/bin/rm -f -r double_double_gpufun.o test_triple_doubles
 	/bin/rm -f -r triple_double_functions.o test_triple_doubles.o
+	/bin/rm -f -r quad_double_functions.o test_quad_doubles.o
+	/bin/rm -f -r test_penta_doubles test_quad_doubles
 	/bin/rm -f -r penta_double_functions.o test_penta_doubles.o
-	/bin/rm -f -r test_penta_doubles
 	/bin/rm -f -r octo_double_functions.o test_octo_doubles.o
 	/bin/rm -f -r test_octo_doubles test_deca_doubles
 	/bin/rm -f -r deca_double_functions.o test_deca_doubles.o

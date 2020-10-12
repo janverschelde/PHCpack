@@ -11,6 +11,8 @@ double_double_gpufun    : double double precision arithmetic on device
 test_double_doubles     : a test on double double_functions
 triple_double_functions : triple double precision arithmetic on host
 test_triple_doubles     : a test on triple double_functions
+quad_double_functions   : quad double precision arithmetic on host
+test_quad_doubles       : a test on quad double_functions
 penta_double_functions  : penta double precision arithmetic on host
 test_penta_doubles      : a test on penta double_functions
 octo_double_functions   : octo double precision arithmetic on host

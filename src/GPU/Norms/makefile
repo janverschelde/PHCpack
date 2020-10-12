@@ -12,6 +12,9 @@ test_double_doubles:
 test_triple_doubles:
 	make -f $(MAKEFILE) test_triple_doubles
 
+test_quad_doubles:
+	make -f $(MAKEFILE) test_quad_doubles
+
 test_penta_doubles:
 	make -f $(MAKEFILE) test_penta_doubles
 

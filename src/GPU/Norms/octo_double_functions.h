@@ -14,7 +14,7 @@ All functions have the prefix odf_ to avoid name clashes. */
 #ifndef __octo_double_functions_h__
 #define __octo_double_functions_h__
 
-/************************** normalizations **************************/
+/************************** renormalizations **************************/
 
 void odf_renorm8
  ( double f0, double f1, double f2, double f3, double f4, double f5,
@@ -135,7 +135,7 @@ void odf_abs
  * DESCRIPTION :
  *   Returns in b the absolute value of a. */
 
-/****************** additions and substractions ************************/
+/****************** additions and subtractions ************************/
 
 void odf_add
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
@@ -146,10 +146,10 @@ void odf_add
    double *c_hihilo, double *c_lohilo, double *c_hilolo, double *c_lololo );
 /*
  * DESCRIPTION : c = a + b.
- *   Adds two octo doubles a (a_hihihi, a_lohihi, a_hilolo, a_lolohi,
+ *   Adds two octo doubles a (a_hihihi, a_lohihi, a_hilohi, a_lolohi,
  *   a_hihilo, a_lohilo, a_hilolo, a_lololo) and b (b_hihihi, b_lohihi,
  *   b_hilohi, b_lolohi, b_hihilo, b_lohilo, b_hilolo, b_lololo)
- *   to make the octo double c (c_hihih, c_lohihi, c_hihlolo, c_lolohi,
+ *   to make the octo double c (c_hihihi, c_lohihi, c_hilohi, c_lolohi,
  *   c_hihilo, c_lohilo, c_hilolo, c_lololo).
  *
  * ON ENTRY :
@@ -187,7 +187,7 @@ void odf_inc
    double b_hihilo, double b_lohilo, double b_hilolo, double b_lololo );
 /*
  * DESCRIPTION : a = a + b.
- *   Adds to the octo double a (a_hihihi, a_lohihi, a_hilolo, a_lolohi,
+ *   Adds to the octo double a (a_hihihi, a_lohihi, a_hilohi, a_lolohi,
  *   a_hihilo, a_lohilo, a_hilolo, a_lololo) the octo double b (b_hihihi,
  *   b_lohihi, b_hilohi, b_lolohi, b_hihilo, b_lohilo, b_hilolo, b_lololo).
  *
@@ -238,9 +238,9 @@ void odf_sub
  * DESCRIPTION : c = a - b.
  *   Subtracts the octo double b (b_hihihi, b_lohihi, b_hilohi, b_lolohi,
  *   b_hihilo, b_lohilo, b_hilolo, b_lololo) from the octo double
- *   in a (a_hihihi, a_lohihi, a_hilolo, a_lolohi, a_hihilo, a_lohilo,
+ *   in a (a_hihihi, a_lohihi, a_hilohi, a_lolohi, a_hihilo, a_lohilo,
  *   a_hilolo, a_lololo) and places the result in the octo double
- *   c (c_hihihi, c_lohihi, c_hilolo, c_lolohi, c_hihilo, c_lohilo,
+ *   c (c_hihihi, c_lohihi, c_hilohi, c_lolohi, c_hihilo, c_lohilo,
  *   c_hilolo, c_lololo).
  *
  * ON ENTRY :
@@ -282,10 +282,10 @@ void odf_mul
    double *c_hihilo, double *c_lohilo, double *c_hilolo, double *c_lololo );
 /*
  * DESCRIPTION : c = a * b.
- *   Multiplies two octo doubles a (a_hihihi, a_lohihi, a_hilolo, a_lolohi,
+ *   Multiplies two octo doubles a (a_hihihi, a_lohihi, a_hilohi, a_lolohi,
  *   a_hihilo, a_lohilo, a_hilolo, a_lololo) and b (b_hihihi, b_lohihi,
  *   b_hilohi, b_lolohi, b_hihilo, b_lohilo, b_hilolo, b_lololo)
- *   to make the octo double c (c_hihih, c_lohihi, c_hihlolo, c_lolohi,
+ *   to make the octo double c (c_hihihi, c_lohihi, c_hilohi, c_lolohi,
  *   c_hihilo, c_lohilo, c_hilolo, c_lololo).
  *
  * ON ENTRY :
@@ -323,9 +323,9 @@ void odf_sqr
    double *c_hihilo, double *c_lohilo, double *c_hilolo, double *c_lololo );
 /*
  * DESCRIPTION : c = a * a.
- *   Multiplies the octo double a (a_hihihi, a_lohihi, a_hilolo, a_lolohi,
+ *   Multiplies the octo double a (a_hihihi, a_lohihi, a_hilohi, a_lolohi,
  *   a_hihilo, a_lohilo, a_hilolo, a_lololo) with a
- *   to make the octo double c (c_hihih, c_lohihi, c_hihlolo, c_lolohi,
+ *   to make the octo double c (c_hihihi, c_lohihi, c_hilohi, c_lolohi,
  *   c_hihilo, c_lohilo, c_hilolo, c_lololo).
  *
  * ON ENTRY :
@@ -356,12 +356,9 @@ void odf_mul_od_d
    double *c_hihilo, double *c_lohilo, double *c_hilolo, double *c_lololo );
 /*
  * DESCRIPTION : c = a * b.
- *   Multiplies the octo double a (a_tb, a_ix, a_mi, a_rg, a_pk) with b
- *   to make the octo double c (c_tb, c_ix, c_mi, c_rg, c_pk).
- *
- *   Multiplies the octo doubles a (a_hihihi, a_lohihi, a_hilolo, a_lolohi,
+ *   Multiplies the octo double a (a_hihihi, a_lohihi, a_hilolo, a_lolohi,
  *   a_hihilo, a_lohilo, a_hilolo, a_lololo) with b
- *   to make the octo double c (c_hihih, c_lohihi, c_hihlolo, c_lolohi,
+ *   to make the octo double c (c_hihihi, c_lohihi, c_hilohi, c_lolohi,
  *   c_hihilo, c_lohilo, c_hilolo, c_lololo).
  *
  * ON ENTRY :
@@ -394,10 +391,10 @@ void odf_div
    double *c_hihilo, double *c_lohilo, double *c_hilolo, double *c_lololo );
 /*
  * DESCRIPTION : c = a / b.
- *   Divides two octo double a (a_hihihi, a_lohihi, a_hilolo, a_lolohi,
+ *   Divides the octo double a (a_hihihi, a_lohihi, a_hilolo, a_lolohi,
  *   a_hihilo, a_lohilo, a_hilolo, a_lololo) by b (b_hihihi, b_lohihi,
  *   b_hilohi, b_lolohi, b_hihilo, b_lohilo, b_hilolo, b_lololo)
- *   to make the octo double c (c_hihih, c_lohihi, c_hihlolo, c_lolohi,
+ *   to make the octo double c (c_hihihi, c_lohihi, c_lohihi, c_lolohi,
  *   c_hihilo, c_lohilo, c_hilolo, c_lololo).
  *
  * ON ENTRY :

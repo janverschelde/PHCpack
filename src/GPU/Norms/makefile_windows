@@ -59,6 +59,11 @@ triple_double_functions.obj:
 	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
              triple_double_functions.cpp /Fo: triple_double_functions.obj
 
+quad_double_functions.obj:
+	@-echo ">>> compiling quad_double_functions ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+             quad_double_functions.cpp /Fo: quad_double_functions.obj
+
 penta_double_functions.obj:
 	@-echo ">>> compiling penta_double_functions ..."
 	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
@@ -87,6 +92,15 @@ test_triple_doubles: triple_double_functions.obj double_double_functions.obj
 	nvcc -ccbin=$(CL) -o test_triple_doubles.exe \
              double_double_functions.obj triple_double_functions.obj \
              test_triple_doubles.obj
+
+test_quad_doubles: quad_double_functions.obj double_double_functions.obj
+	@-echo ">>> compiling test_quad_doubles ..."
+	$(CL)\cl /c -I$(QDsrc) -I$(winkitucrt) -I$(includepath) -O2 \
+                    test_quad_doubles.cpp /Fo: test_quad_doubles.obj /EHsc
+	@-echo ">>> linking test_quad_doubles ..."
+	nvcc -ccbin=$(CL) -o test_quad_doubles.exe \
+             double_double_functions.obj quad_double_functions.obj \
+             test_quad_doubles.obj
 
 test_penta_doubles: penta_double_functions.obj double_double_functions.obj
 	@-echo ">>> compiling test_penta_doubles ..."
