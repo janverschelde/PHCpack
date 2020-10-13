@@ -1,12 +1,12 @@
 // The file dbl2_norm_host.cpp defines the code for the functions
 // specified in dbl2_norm_host.h.
 
+#include <cmath>
 #include "dbl2_norm_host.h"
 #include "double_double_functions.h"
-#include <cmath>
 
 void make_copy
- ( int dim, double* orghi, double* orglo, double* duphi, double* duplo )
+ ( int dim, double *orghi, double *orglo, double *duphi, double *duplo )
 {
    for(int i=0; i<dim; i++)
    {
@@ -16,7 +16,7 @@ void make_copy
 }
 
 void CPU_norm
- ( double* vhi, double* vlo, int dim, double* normhi, double* normlo )
+ ( double *vhi, double *vlo, int dim, double *normhi, double *normlo )
 {
    double sumhi = 0.0;
    double sumlo = 0.0;
@@ -31,7 +31,7 @@ void CPU_norm
 }
 
 void CPU_normalize
- ( double* vhi, double* vlo, int dim, double normhi, double normlo )
+ ( double *vhi, double *vlo, int dim, double normhi, double normlo )
 {
    for(int i=0; i<dim; i++)
       ddf_div(vhi[i],vlo[i],normhi,normlo,&vhi[i],&vlo[i]);

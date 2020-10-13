@@ -1,13 +1,12 @@
 Accelerated Vector Norm computation in PHCv2.4.81.
 
 The code in this folder is to experiment with GPU accelerated algorithms
-to compute vector norms with multiple double precisions.
+to compute 2-norms of vectors in multiple double precision.
 
 -----------------------------------------------------------------------------
 file name               : short description
 -----------------------------------------------------------------------------
 double_double_functions : double double precision arithmetic on host
-double_double_gpufun    : double double precision arithmetic on device
 test_double_doubles     : a test on double double_functions
 triple_double_functions : triple double precision arithmetic on host
 test_triple_doubles     : a test on triple double_functions
@@ -23,16 +22,23 @@ random_numbers          : generators of random doubles and random angles
 random_numbers_windows  : specific include for windows MS VC
 random_vectors          : random vectors in double precision
 random2_vectors         : random vectors in double double precision
+random3_vectors         : random vectors in triple double precision
 parse_run_arguments     : parse command line arguments for run_ functions
+-----------------------------------------------------------------------------
+double_double_gpufun    : double double precision arithmetic on device
+triple_double_gpufun    : triple double precision arithmetic on device
 -----------------------------------------------------------------------------
 dbl_norm_host           : 2-norm of double vectors on host
 dbl2_norm_host          : 2-norm of double double vectors on host
+dbl3_norm_host          : 2-norm of triple double vectors on host
 dbl_norm_kernels        : kernels for 2-norm of double vectors
 dbl2_norm_kernels       : kernels for 2-norm of double double vectors
+dbl3_norm_kernels       : kernels for 2-norm of triple double vectors
 run_dbl_norm            : test norm computation of double vectors
 run_dbl2_norm           : test norm computation of double double vectors
 test_dbl_norm           : test double 2-norm without command line parameters
 test_dbl2_norm          : test double double 2-norm
+test_dbl3_norm          : test triple double 2-norm
 -----------------------------------------------------------------------------
 cmplx_norm_host         : 2-norm of complex double vectors on host
 cmplx2_norm_host        : 2-norm of complex double double vectors on host

@@ -36,6 +36,9 @@ test_dbl_norm:
 test_dbl2_norm:
 	make -f $(MAKEFILE) test_dbl2_norm
 
+test_dbl3_norm:
+	make -f $(MAKEFILE) test_dbl3_norm
+
 run_cmplx_norm:
 	make -f $(MAKEFILE) run_cmplx_norm
 

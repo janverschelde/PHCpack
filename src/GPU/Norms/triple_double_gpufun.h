@@ -1,18 +1,21 @@
-/* This file triple_double_functions.h defines the arithmetical operations 
-   for triple double numbers, defined by high, middle, and low doubles.
+/* This file triple_double_gpufun.h defines the arithmetical operations 
+   for triple double numbers on the GPU.
+
+A triple double is defined by a high, a middle, and a low double.
 
 The algorithms are from the CAMPARY and QD software libraries
 with the modification that a triple double is not stored as an array
 of three doubles, but plainly by three double numbers:
 a high double, a middle double, and a low double.
-All functions have the prefix tdf_ to avoid name clashes. */
 
-#ifndef __triple_double_functions_h__
-#define __triple_double_functions_h__
+All functions have the prefix tdg_ to avoid name clashes. */
+
+#ifndef __triple_double_gpufun_h__
+#define __triple_double_gpufun_h__
 
 /************************** renormalizations **************************/
 
-void tdf_fast_renorm
+__device__ void tdg_fast_renorm
  ( double x0, double x1, double x2, double x3,
    double *r0, double *r1, double *r2 );
 /*
@@ -33,7 +36,7 @@ void tdf_fast_renorm
  *   r1       middle part of a triple double;
  *   r2       lowest part of a triple double. */
 
-void tdf_renorm_add1
+__device__ void tdg_renorm_add1
  ( double x0, double x1, double x2, double x3,
    double *r0, double *r1, double *r2 );
 /*
@@ -56,7 +59,7 @@ void tdf_renorm_add1
 
 /************************ copy and abs *******************************/
 
-void tdf_copy
+__device__ void tdg_copy
  ( double a_hi, double a_mi, double a_lo,
    double *b_hi, double *b_mi, double *b_lo );
 /*
@@ -64,7 +67,7 @@ void tdf_copy
  *   Copies the content of the triple double a (a_hi, a_mi, a_lo)
  *   to the triple double b (b_hi, b_mi, b_lo). */
 
-void tdf_abs
+__device__ void tdg_abs
  ( double a_hi, double a_mi, double a_lo,
    double *b_hi, double *b_mi, double *b_lo );
 /*
@@ -73,7 +76,7 @@ void tdf_abs
 
 /****************** additions and substractions ************************/
 
-void tdf_add
+__device__ void tdg_add
  ( double a_hi, double a_mi, double a_lo,
    double b_hi, double b_mi, double b_lo,
    double *c_hi, double *c_mi, double *c_lo );
@@ -95,7 +98,7 @@ void tdf_add
  *   c_mi     middle part of the triple double c = a + b;
  *   c_lo     low part of the triple double c = a + b. */
 
-void tdf_inc
+__device__ void tdg_inc
  ( double *a_hi, double *a_mi, double *a_lo,
    double b_hi, double b_mi, double b_lo );
 /*
@@ -116,7 +119,7 @@ void tdf_inc
  *   a_mi     middle part of the triple double a + b;
  *   a_lo     low part of the triple double a + b. */
 
-void tdf_inc_d
+__device__ void tdg_inc_d
  ( double *a_hi, double *a_mi, double *a_lo, double b );
 /*
  * DESCRIPTION : a = a + b.
@@ -133,12 +136,12 @@ void tdf_inc_d
  *   a_mi     middle part of the triple double a + b;
  *   a_lo     low part of the triple double a + b. */
 
-void tdf_minus ( double *a_hi, double *a_mi, double *a_lo );
+__device__ void tdg_minus ( double *a_hi, double *a_mi, double *a_lo );
 /*
  * DESCRIPTION :
  *   Flips the sign of a (a_hi, a_mi, a_lo). */
 
-void tdf_sub
+__device__ void tdg_sub
  ( double a_hi, double a_mi, double a_lo,
    double b_hi, double b_mi, double b_lo,
    double *c_hi, double *c_mi, double *c_lo );
@@ -163,7 +166,7 @@ void tdf_sub
 
 /***************** multiplications and division ********************/
 
-void tdf_mul_pwr2
+__device__ void tdg_mul_pwr2
  ( double a_hi, double a_mi, double a_lo, double b,
    double *c_hi, double *c_mi, double *c_lo );
 /*
@@ -182,7 +185,7 @@ void tdf_mul_pwr2
  *   c_mi     middle part of the triple double c = a * b;
  *   c_lo     low part of the triple double c = a * b. */
 
-void tdf_mul
+__device__ void tdg_mul
  ( double a_hi, double a_mi, double a_lo,
    double b_hi, double b_mi, double b_lo,
    double *c_hi, double *c_mi, double *c_lo );
@@ -204,7 +207,7 @@ void tdf_mul
  *   c_mi     middle part of the triple double c = a * b;
  *   c_lo     low part of the triple double c = a * b. */
 
-void tdf_sqr
+__device__ void tdg_sqr
  ( double a_hi, double a_mi, double a_lo,
    double *c_hi, double *c_mi, double *c_lo );
 /*
@@ -222,7 +225,7 @@ void tdf_sqr
  *   c_mi     middle part of the triple double c = a * a;
  *   c_lo     low part of the triple double c = a * a. */
 
-void tdf_mul_td_d
+__device__ void tdg_mul_td_d
  ( double a_hi, double a_mi, double a_lo, double b,
    double *c_hi, double *c_mi, double *c_lo );
 /*
@@ -241,7 +244,7 @@ void tdf_mul_td_d
  *   c_mi     middle part of the triple double c = a * b;
  *   c_lo     low part of the triple double c = a * b. */
 
-void tdf_div
+__device__ void tdg_div
  ( double a_hi, double a_mi, double a_lo,
    double b_hi, double b_mi, double b_lo,
    double *c_hi, double *c_mi, double *c_lo );
@@ -265,7 +268,7 @@ void tdf_div
 
 /***************************** square root *****************************/
 
-void tdf_sqrt
+__device__ void tdg_sqrt
  ( double a_hi, double a_mi, double a_lo,
    double *b_hi, double *b_mi, double *b_lo );
 /*
@@ -282,13 +285,5 @@ void tdf_sqrt
  *   b_hi     high part of the triple double b;
  *   b_mi     middle part of the triple double b;
  *   b_lo     low part of the triple double b. */
-
-/*************************** basic output ***************************/
-
-void tdf_write_doubles ( double a_hi, double a_mi, double a_lo );
-/*
- * DESCRIPTION :
- *   Writes the three doubles (a_hi, a_mi, a_lo) of the triple double a
- *   in scientific format with 16 decimal places of precision. */
 
 #endif
