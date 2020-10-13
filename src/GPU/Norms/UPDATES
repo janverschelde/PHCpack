@@ -1,3 +1,7 @@
+Tue 13 Oct 2020 : edited random2_vectors, to use double_double_functions
+  instead of double_double.  Added unary minus to double_double_functions
+  and double_double_gpufun.  Updated makefile_unix.
+
 Mon 12 Oct 2020 : small edits in octo_double_functions.h.
   New quad_double_functions.h, quad_double_functions.cpp, tested by
   test_quad_doubles.cpp, updated makefile and makefile_unix.

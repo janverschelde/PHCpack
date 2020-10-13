@@ -1,19 +1,19 @@
 // The file double_double_functions.cpp defines the code for the functions
 // specified in double_double_functions.h
 
-#include "double_double_functions.h"
 #include <cmath>
+#include "double_double_functions.h"
 
 /************************** additions ********************************/
 
-double ddf_quick_two_sum ( double a, double b, double* err )
+double ddf_quick_two_sum ( double a, double b, double *err )
 {
    double s = a + b;
    *err = b - (s - a);
    return s;
 }
 
-double ddf_two_sum ( double a, double b, double* err )
+double ddf_two_sum ( double a, double b, double *err )
 {
    double s = a + b;
    double bb = s - a;
@@ -23,7 +23,7 @@ double ddf_two_sum ( double a, double b, double* err )
 
 void ddf_add
  ( double a_hi, double a_lo, double b_hi, double b_lo,
-   double* c_hi, double* c_lo )
+   double *c_hi, double *c_lo )
 {
    double s1, s2, t1, t2;
 
@@ -35,14 +35,14 @@ void ddf_add
    *c_hi = ddf_quick_two_sum(s1,s2,c_lo);
 }
 
-double ddf_quick_two_diff ( double a, double b, double* err )
+double ddf_quick_two_diff ( double a, double b, double *err )
 {
    double s = a - b;
    *err = (a - s) - b;
    return s;
 }
 
-double ddf_two_diff ( double a, double b, double* err )
+double ddf_two_diff ( double a, double b, double *err )
 {
    double s = a - b;
    double bb = s - a;
@@ -50,9 +50,15 @@ double ddf_two_diff ( double a, double b, double* err )
    return s;
 }
 
+void ddf_minus ( double *a_hi, double *a_lo )
+{
+   *a_hi = -(*a_hi);
+   *a_lo = -(*a_lo);
+}
+
 void ddf_sub
  ( double a_hi, double a_lo, double b_hi, double b_lo,
-   double* c_hi, double* c_lo )
+   double *c_hi, double *c_lo )
 {
    double s1, s2, t1, t2;
 
@@ -65,7 +71,7 @@ void ddf_sub
 }
 
 void ddf_sub_dd_d
- ( double a_hi, double a_lo, double b, double* c_hi, double* c_lo )
+ ( double a_hi, double a_lo, double b, double *c_hi, double *c_lo )
 {
    double s1, s2;
 
@@ -76,7 +82,7 @@ void ddf_sub_dd_d
 
 /********** incrementers, decrementers, and multipliers ****************/
 
-void ddf_inc ( double* a_hi, double* a_lo, double b_hi, double b_lo )
+void ddf_inc ( double *a_hi, double *a_lo, double b_hi, double b_lo )
 {
    double s1, s2, t1, t2;
 
@@ -88,7 +94,7 @@ void ddf_inc ( double* a_hi, double* a_lo, double b_hi, double b_lo )
    *a_hi = ddf_quick_two_sum(s1,s2,a_lo);
 }
 
-void ddf_inc_d ( double* a_hi, double* a_lo, double b )
+void ddf_inc_d ( double *a_hi, double *a_lo, double b )
 {
    double s1, s2;
 
@@ -97,7 +103,7 @@ void ddf_inc_d ( double* a_hi, double* a_lo, double b )
    *a_hi = ddf_quick_two_sum(s1,s2,a_lo);
 }
 
-void ddf_dec ( double* a_hi, double* a_lo, double b_hi, double b_lo )
+void ddf_dec ( double *a_hi, double *a_lo, double b_hi, double b_lo )
 {
    double s1, s2, t1, t2;
 
@@ -109,7 +115,7 @@ void ddf_dec ( double* a_hi, double* a_lo, double b_hi, double b_lo )
    *a_hi = ddf_quick_two_sum(s1,s2,a_lo);
 }
 
-void ddf_dec_d ( double* a_hi, double* a_lo, double b )
+void ddf_dec_d ( double *a_hi, double *a_lo, double b )
 {
    double s1, s2;
 
@@ -118,7 +124,7 @@ void ddf_dec_d ( double* a_hi, double* a_lo, double b )
    *a_hi = ddf_quick_two_sum(s1,s2,a_lo);
 }
 
-void ddf_mlt ( double* a_hi, double* a_lo, double b_hi, double b_lo )
+void ddf_mlt ( double *a_hi, double *a_lo, double b_hi, double b_lo )
 {
    double p1, p2;
 
@@ -128,7 +134,7 @@ void ddf_mlt ( double* a_hi, double* a_lo, double b_hi, double b_lo )
    *a_hi = ddf_quick_two_sum(p1,p2,a_lo);
 }
 
-void ddf_mlt_d ( double* a_hi, double* a_lo, double b )
+void ddf_mlt_d ( double *a_hi, double *a_lo, double b )
 {
    double p1, p2;
 
@@ -188,7 +194,7 @@ double ddf_two_sqr ( double a, double *err )
 
 void ddf_mul
  ( double a_hi, double a_lo, double b_hi, double b_lo,
-   double* c_hi, double* c_lo )
+   double *c_hi, double *c_lo )
 {
    double p1, p2;
 
@@ -202,7 +208,7 @@ void ddf_sqr ( double a_hi, double a_lo, double *b_hi, double *b_lo )
    double p1, p2;
 
    p1 = ddf_two_sqr(a_hi,&p2);
-   p2 += 2.0 * a_lo * a_hi;
+   p2 += 2.0 * a_hi * a_lo;
    p2 += a_lo * a_lo;
    *b_hi = ddf_quick_two_sum(p1,p2,b_lo);
 }
@@ -221,7 +227,7 @@ void ddf_mul_d_dd
 
 void ddf_div
  ( double a_hi, double a_lo, double b_hi, double b_lo,
-   double* c_hi, double* c_lo )
+   double *c_hi, double *c_lo )
 {
    double q1, q2, q3;
    double acc_hi, acc_lo;
@@ -270,7 +276,7 @@ void ddf_sqrt ( double a_hi, double a_lo, double *b_hi, double *b_lo )
    }
 }
 
-void ddf_abs ( double a_hi, double a_lo, double* b_hi, double* b_lo )
+void ddf_abs ( double a_hi, double a_lo, double *b_hi, double *b_lo )
 {
    if(a_hi < 0.0)
    {

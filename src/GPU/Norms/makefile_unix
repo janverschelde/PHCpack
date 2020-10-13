@@ -110,7 +110,7 @@ random_vectors.o:
 
 random2_vectors.o:
 	@-echo ">>> compiling double double random vector generators ..."
-	$(gpp) -O3 -c -I$(QDsrc) random2_vectors.cpp
+	$(gpp) -O3 -c random2_vectors.cpp
 
 parse_run_arguments.o:
 	@-echo ">>> compiling parse_run_arguments ..."

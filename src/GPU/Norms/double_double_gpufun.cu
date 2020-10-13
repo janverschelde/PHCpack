@@ -1,20 +1,19 @@
-// The file double_double_functions.cpp defines the code for the functions
-// specified in double_double_functions.h
-
-#include "double_double_gpufun.h"
+// The file double_double_gpufun.cu defines the code for the functions
+// specified in double_double_gpufun.h
 
 #include <cmath>
+#include "double_double_gpufun.h"
 
 /************************** additions ********************************/
 
-__device__ double ddg_quick_two_sum ( double a, double b, double* err )
+__device__ double ddg_quick_two_sum ( double a, double b, double *err )
 {
    double s = a + b;
    *err = b - (s - a);
    return s;
 }
 
-__device__ double ddg_two_sum ( double a, double b, double* err )
+__device__ double ddg_two_sum ( double a, double b, double *err )
 {
    double s = a + b;
    double bb = s - a;
@@ -24,7 +23,7 @@ __device__ double ddg_two_sum ( double a, double b, double* err )
 
 __device__ void ddg_add
  ( double a_hi, double a_lo, double b_hi, double b_lo,
-   double* c_hi, double* c_lo )
+   double *c_hi, double *c_lo )
 {
    double s1, s2, t1, t2;
 
@@ -36,14 +35,14 @@ __device__ void ddg_add
    *c_hi = ddg_quick_two_sum(s1,s2,c_lo);
 }
 
-__device__ double ddg_quick_two_diff ( double a, double b, double* err )
+__device__ double ddg_quick_two_diff ( double a, double b, double *err )
 {
    double s = a - b;
    *err = (a - s) - b;
    return s;
 }
 
-__device__ double ddg_two_diff ( double a, double b, double* err )
+__device__ double ddg_two_diff ( double a, double b, double *err )
 {
    double s = a - b;
    double bb = s - a;
@@ -51,9 +50,15 @@ __device__ double ddg_two_diff ( double a, double b, double* err )
    return s;
 }
 
+__device__ void ddg_minus ( double *a_hi, double *a_lo )
+{
+   *a_hi = -(*a_hi);
+   *a_lo = -(*a_lo);
+}
+
 __device__ void ddg_sub
  ( double a_hi, double a_lo, double b_hi, double b_lo,
-   double* c_hi, double* c_lo )
+   double *c_hi, double *c_lo )
 {
    double s1, s2, t1, t2;
 
@@ -66,7 +71,7 @@ __device__ void ddg_sub
 }
 
 __device__ void ddg_sub_dd_d
- ( double a_hi, double a_lo, double b, double* c_hi, double* c_lo )
+ ( double a_hi, double a_lo, double b, double *c_hi, double *c_lo )
 {
    double s1, s2;
 
@@ -78,7 +83,7 @@ __device__ void ddg_sub_dd_d
 /********** incrementers, decrementers, and multipliers ****************/
 
 __device__ void ddg_inc
- ( double* a_hi, double* a_lo, double b_hi, double b_lo )
+ ( double *a_hi, double *a_lo, double b_hi, double b_lo )
 {
    double s1, s2, t1, t2;
 
@@ -90,7 +95,7 @@ __device__ void ddg_inc
    *a_hi = ddg_quick_two_sum(s1,s2,a_lo);
 }
 
-__device__ void ddg_inc_d ( double* a_hi, double* a_lo, double b )
+__device__ void ddg_inc_d ( double *a_hi, double *a_lo, double b )
 {
    double s1, s2;
 
@@ -100,7 +105,7 @@ __device__ void ddg_inc_d ( double* a_hi, double* a_lo, double b )
 }
 
 __device__ void ddg_dec
- ( double* a_hi, double* a_lo, double b_hi, double b_lo )
+ ( double *a_hi, double *a_lo, double b_hi, double b_lo )
 {
    double s1, s2, t1, t2;
 
@@ -112,7 +117,7 @@ __device__ void ddg_dec
    *a_hi = ddg_quick_two_sum(s1,s2,a_lo);
 }
 
-__device__ void ddg_dec_d ( double* a_hi, double* a_lo, double b )
+__device__ void ddg_dec_d ( double *a_hi, double *a_lo, double b )
 {
    double s1, s2;
 
@@ -122,7 +127,7 @@ __device__ void ddg_dec_d ( double* a_hi, double* a_lo, double b )
 }
 
 __device__ void ddg_mlt
- ( double* a_hi, double* a_lo, double b_hi, double b_lo )
+ ( double *a_hi, double *a_lo, double b_hi, double b_lo )
 {
    double p1, p2;
 
@@ -132,7 +137,7 @@ __device__ void ddg_mlt
    *a_hi = ddg_quick_two_sum(p1,p2,a_lo);
 }
 
-__device__ void ddg_mlt_d ( double* a_hi, double* a_lo, double b )
+__device__ void ddg_mlt_d ( double *a_hi, double *a_lo, double b )
 {
    double p1, p2;
 
@@ -192,7 +197,7 @@ __device__ double ddg_two_sqr ( double a, double *err )
 
 __device__ void ddg_mul
  ( double a_hi, double a_lo, double b_hi, double b_lo,
-   double* c_hi, double* c_lo )
+   double *c_hi, double *c_lo )
 {
    double p1, p2;
 
@@ -226,7 +231,7 @@ __device__ void ddg_mul_d_dd
 
 __device__ void ddg_div
  ( double a_hi, double a_lo, double b_hi, double b_lo,
-   double* c_hi, double* c_lo )
+   double *c_hi, double *c_lo )
 {
    double q1, q2, q3;
    double acc_hi, acc_lo;
@@ -277,7 +282,7 @@ __device__ void ddg_sqrt
 }
 
 __device__ void ddg_abs
- ( double a_hi, double a_lo, double* b_hi, double* b_lo )
+ ( double a_hi, double a_lo, double *b_hi, double *b_lo )
 {
    if(a_hi < 0.0)
    {
