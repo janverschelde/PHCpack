@@ -4,7 +4,8 @@ Tue 13 Oct 2020 : edited random2_vectors, to use double_double_functions
   To triple_double_functions, added the increment of one double; new are:
   random3_vectors, dbl2_norm_host, triple_double_gpufun, dbl3_norm_kernels,
   tested by test_dbl3_norm; updated makefile, makefile_unix.
-  Edited dbl2_norm_host and dbl2_norm_kernels.
+  Edited dbl2_norm_host and dbl2_norm_kernels.  Updated makefile_windows.
+  In double_double_functions.cpp, replace "and" by "&&" in a test.
 
 Mon 12 Oct 2020 : small edits in octo_double_functions.h.
   New quad_double_functions.h, quad_double_functions.cpp, tested by

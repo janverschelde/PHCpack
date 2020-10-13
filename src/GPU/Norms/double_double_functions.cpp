@@ -253,7 +253,7 @@ void ddf_sqrt ( double a_hi, double a_lo, double *b_hi, double *b_lo )
      Also, the multiplication (a*x) and [-]*x can be done with
      only half the precision. */
   
-   if((a_hi == 0.0) and (a_lo == 0.0))
+   if((a_hi == 0.0) && (a_lo == 0.0))
    {
       *b_hi = 0.0; *b_lo = 0.0;
    }

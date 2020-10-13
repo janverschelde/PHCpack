@@ -31,8 +31,12 @@ dbl_norm_kernels.obj:
 	nvcc -ccbin=$(CL) -c -O3 dbl_norm_kernels.cu -o dbl_norm_kernels.obj
 
 dbl2_norm_kernels.obj:
-	@-echo ">>> compiling norm kernels for doubles ..."
+	@-echo ">>> compiling norm kernels for double doubles ..."
 	nvcc -ccbin=$(CL) -c -O3 dbl2_norm_kernels.cu -o dbl2_norm_kernels.obj
+
+dbl3_norm_kernels.obj:
+	@-echo ">>> compiling norm kernels for triple doubles ..."
+	nvcc -ccbin=$(CL) -c -O3 dbl3_norm_kernels.cu -o dbl3_norm_kernels.obj
 
 cmplx_norm_kernels.obj:
 	@-echo ">>> compiling norm kernels for complex doubles ..."
@@ -140,7 +144,11 @@ dbl_norm_host.obj:
 dbl2_norm_host.obj:
 	@-echo ">>> compiling dbl2_norm_host ..."
 	$(CL)\cl /c dbl2_norm_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
-                 /Fo: dbl2_norm_host.obj
+
+dbl3_norm_host.obj:
+	@-echo ">>> compiling dbl3_norm_host ..."
+	$(CL)\cl /c dbl3_norm_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl3_norm_host.obj
 
 random_numbers.obj:
 	@-echo ">>> compiling random numbers ..."
@@ -157,6 +165,12 @@ random2_vectors.obj:
 	$(CL)\cl /c random2_vectors.cpp \
                  -I$(QDsrc) -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: random2_vectors.obj
+
+random3_vectors.obj:
+	@-echo ">>> compiling random triple double vectors ..."
+	$(CL)\cl /c random3_vectors.cpp \
+                 -I$(QDsrc) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random3_vectors.obj
 
 parse_run_arguments.obj:
 	@-echo ">>> compiling parse_run_arguments ..."
@@ -203,6 +217,11 @@ test_dbl2_norm.obj:
 	@-echo ">>> compiling test_dbl2_norm ..."
 	$(CL)\cl /c -O2 test_dbl2_norm.cpp -I$(winkitucrt) -I$(includepath) \
                  /I$(CUDASDK)/include -I$(QDsrc) /Fo: test_dbl2_norm.obj /EHsc
+
+test_dbl3_norm.obj:
+	@-echo ">>> compiling test_dbl3_norm ..."
+	$(CL)\cl /c -O2 test_dbl3_norm.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -I$(QDsrc) /Fo: test_dbl3_norm.obj /EHsc
 
 test_cmplx_norm.obj:
 	@-echo ">>> compiling test_cmplx_norm ..."
@@ -265,6 +284,15 @@ test_dbl2_norm: double_double.obj double_double_functions.obj \
              double_double.obj double_double_functions.obj \
 	     random_numbers.obj random2_vectors.obj dbl2_norm_kernels.obj \
              test_dbl2_norm.obj
+
+test_dbl3_norm: double_double_functions.obj triple_double_functions.obj \
+                dbl3_norm_host.obj random_numbers.obj random3_vectors.obj \
+                dbl3_norm_kernels.obj test_dbl3_norm.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl3_norm.exe dbl3_norm_host.obj \
+             double_double_functions.obj triple_double_functions.obj \
+	     random_numbers.obj random3_vectors.obj dbl3_norm_kernels.obj \
+             test_dbl3_norm.obj
 
 test_cmplx_norm: cmplx_norm_kernels.obj cmplx_norm_host.obj \
                  random_numbers.obj random_vectors.obj test_cmplx_norm.obj
