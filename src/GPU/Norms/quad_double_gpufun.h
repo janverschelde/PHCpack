@@ -1,20 +1,22 @@
-/* This file quad_double_functions.h defines the arithmetical operations
-   for quad double numbers.  A quad double is defined by four doubles.
+/* This file quad_double_gpufun.h defines the arithmetical operations
+   for quad double numbers on the GPU.  
 
+A quad double is defined by four doubles.
 The naming of the four doubles in a quad double is hihi, lohi, hilo, lolo,
 listed in decreasing order of significance.
 
 The algorithms are from the CAMPARY and QD software libraries with the 
 modification that a quad double is not stored as an array of four doubles, 
 but plainly by four double numbers.
-All functions have the prefix qdf_ to avoid name clashes. */
 
-#ifndef __quad_double_functions_h__
-#define __quad_double_functions_h__
+All functions have the prefix qdg_ to avoid name clashes. */
+
+#ifndef __quad_double_gpufun_h__
+#define __quad_double_gpufun_h__
 
 /************************* renormalizations **************************/
 
-void qdf_renorm4
+__device__ void qdg_renorm4
  ( double f0, double f1, double f2, double f3, double f4,
    double *pr, double *r0, double *r1, double *r2, double *r3 );
 /*
@@ -39,7 +41,7 @@ void qdf_renorm4
  *   r2       second lowest part of a quad double number.
  *   r4       lowest part of a quad double number. */
 
-void qdf_fast_renorm
+__device__ void qdg_fast_renorm
  ( double x0, double x1, double x2, double x3, double x4,
    double *r0, double *r1, double *r2, double *r3 );
 /*
@@ -62,7 +64,7 @@ void qdf_fast_renorm
  *   r2       second lowest part of a quad double number;
  *   r3       lowest part of a quad double number. */
 
-void qdf_renorm_add1
+__device__ void qdg_renorm_add1
  ( double x0, double x1, double x2, double x3, double y,
    double *r0, double *r1, double *r2, double *r3 );
 /*
@@ -87,7 +89,7 @@ void qdf_renorm_add1
 
 /************************ copy and abs *******************************/
 
-void qdf_copy
+__device__ void qdg_copy
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double *b_hihi, double *b_lohi, double *b_hilo, double *b_lolo );
 /*
@@ -95,7 +97,7 @@ void qdf_copy
  *   Copies the quad double a (a_hihi, a_lohi, a_hilo, a_lolo)
  *   to the quad double b (b_hihi, b_lohi, b_hilo, b_lolo). */
 
-void qdf_abs
+__device__ void qdg_abs
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double *b_hihi, double *b_lohi, double *b_hilo, double *b_lolo );
 /*
@@ -104,7 +106,7 @@ void qdf_abs
 
 /****************** additions and subtractions ************************/
 
-void qdf_add
+__device__ void qdg_add
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double b_hihi, double b_lohi, double b_hilo, double b_lolo,
    double *c_hihi, double *c_lohi, double *c_hilo, double *c_lolo );
@@ -130,7 +132,7 @@ void qdf_add
  *   c_hilo   the third highest part of the quad double c = a + b;
  *   c_lolo   the fourth highest part of the quad double c = a + b. */
 
-void qdf_inc
+__device__ void qdg_inc
  ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo,
    double b_hihi, double b_lohi, double b_hilo, double b_lolo );
 /*
@@ -154,7 +156,7 @@ void qdf_inc
  *   a_hilo   the third highest part of the quad double a + b;
  *   a_lolo   the fourth highest part of the quad double a + b. */
 
-void qdf_inc_d
+__device__ void qdg_inc_d
  ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo,
    double b );
 /*
@@ -175,13 +177,13 @@ void qdf_inc_d
  *   a_hilo   the third highest part of the quad double a + b;
  *   a_lolo   the fourth highest part of the quad double a + b. */
 
-void qdf_minus
+__device__ void qdg_minus
  ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo );
 /*
  * DESCRIPTION :
  *   Flips the sign of a (a_hihi, a_lohi, a_hilo, a_lolo). */
 
-void qdf_sub
+__device__ void qdg_sub
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double b_hihi, double b_lohi, double b_hilo, double b_lolo,
    double *c_hihi, double *c_lohi, double *c_hilo, double *c_lolo );
@@ -209,7 +211,7 @@ void qdf_sub
 
 /***************** multiplications and division ********************/
 
-void qdf_mul_pwr2
+__device__ void qdg_mul_pwr2
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo, double b,
    double *c_hihi, double *c_lohi, double *c_hilo, double *c_lolo );
 /*
@@ -230,7 +232,7 @@ void qdf_mul_pwr2
  *   c_hihi   the second lowest part of the quad double c = a * b;
  *   c_lolo   the lowest part of the quad double c = a * b. */
 
-void qdf_mul
+__device__ void qdg_mul
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double b_hihi, double b_lohi, double b_hilo, double b_lolo,
    double *c_hihi, double *c_lohi, double *c_hilo, double *c_lolo );
@@ -256,7 +258,7 @@ void qdf_mul
  *   c_hilo   the third highest part of the quad double c = a * b;
  *   c_lolo   the fourth highest part of the quad double c = a * b. */
 
-void qdf_sqr
+__device__ void qdg_sqr
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double *c_hihi, double *c_lohi, double *c_hilo, double *c_lolo );
 /*
@@ -276,7 +278,7 @@ void qdf_sqr
  *   c_hilo   the third highest part of the quad double c = a * a;
  *   c_lolo   the fourth highest part of the quad double c = a * a. */
 
-void qdf_mul_qd_d
+__device__ void qdg_mul_qd_d
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double b,
    double *c_hihi, double *c_lohi, double *c_hilo, double *c_lolo );
@@ -298,7 +300,7 @@ void qdf_mul_qd_d
  *   c_hilo   the third highest part of the quad double c = a * b;
  *   c_lolo   the fourth highest part of the quad double c = a * b. */
 
-void qdf_div
+__device__ void qdg_div
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double b_hihi, double b_lohi, double b_hilo, double b_lolo,
    double *c_hihi, double *c_lohi, double *c_hilo, double *c_lolo );
@@ -326,7 +328,7 @@ void qdf_div
 
 /***************************** square root *****************************/
 
-void qdf_sqrt
+__device__ void qdg_sqrt
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double *b_hihi, double *b_lohi, double *b_hilo, double *b_lolo );
 /*
@@ -345,14 +347,5 @@ void qdf_sqrt
  *   b_lohi   the second highest part of the quad double b;
  *   b_hilo   the second lowest part of the quad double b;
  *   b_lolo   the lowest part of the quad double b. */
-
-/*************************** basic output ***************************/
-
-void qdf_write_doubles
- ( double a_hihi, double a_lohi, double a_hilo, double a_lolo );
-/*
- * DESCRIPTION :
- *   Writes the four doubles (a_hihi, a_lohi, a_hilo, a_lolo) of the 
- *   quad double a in scientific format with 16 decimal places. */
 
 #endif

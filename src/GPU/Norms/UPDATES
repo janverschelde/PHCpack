@@ -6,6 +6,10 @@ Tue 13 Oct 2020 : edited random2_vectors, to use double_double_functions
   tested by test_dbl3_norm; updated makefile, makefile_unix.
   Edited dbl2_norm_host and dbl2_norm_kernels.  Updated makefile_windows.
   In double_double_functions.cpp, replace "and" by "&&" in a test.
+  Edited documentation of dbl3_norm_host.h and dbl3_norm_kernels.h.
+  Added inc_d function to quad_double_functions, new quad_double_gpufun,
+  random4_vectors, dbl4_norm_host, dbl4_norm_kernels, tested by 
+  test_dbl4_norm; updated makefile and makefile_unix.
 
 Mon 12 Oct 2020 : small edits in octo_double_functions.h.
   New quad_double_functions.h, quad_double_functions.cpp, tested by

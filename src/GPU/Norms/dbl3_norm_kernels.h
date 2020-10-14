@@ -95,7 +95,7 @@ __global__ void large_sum_the_squares
 /*
  * DESCRIPTION :
  *   Computes the sums of the squares of the numbers in a vector,
- *   given with high parts in vhi and low parts in vlo,
+ *   given with high parts in vhi, middle parts in vmi, and low parts in vlo,
  *   as needed in the 2-norm of the vector, with many blocks.
  *
  * REQUIRED :
@@ -134,9 +134,9 @@ __global__ void large_normalize_vector
  *   vmi       middle parts of a triple double vector of dimension dim;
  *   vlo       low parts of a triple double vector of dimension dim;
  *   dim       dimension of the vector must equal BS*nbsums;
- *   sumshi    high pars of computed sums of squares of vector slices;
- *   sumsmi    middle pars of computed sums of squares of vector slices;
- *   sumslo    low pars of computed sums of squares of vector slices;
+ *   sumshi    high parts of computed sums of squares of vector slices;
+ *   sumsmi    middle parts of computed sums of squares of vector slices;
+ *   sumslo    low parts of computed sums of squares of vector slices;
  *   nbsums    the number of elements in sums equals
  *             the number of blocks in the kernel launch;
  *   nbsumsLog2 is ceil(log2((double) nbsums), used in sum reduction;
@@ -150,7 +150,7 @@ __global__ void large_normalize_vector
  *   vlo       low parts of the triple double vector in the same direction 
  *             of the original vector but with norm one;
  *   normhi    high part of the 2-norm of the original vector;
- *   normhi    middle part of the 2-norm of the original vector;
+ *   normmi    middle part of the 2-norm of the original vector;
  *   normlo    low part of the 2-norm of the original vector. */
 
 void GPU_norm
@@ -183,6 +183,6 @@ void GPU_norm
  *   vlo_h     low parts of the normalized vector;
  *   normhi    high part of the 2-norm of the original vector;
  *   normmi    middle part of the 2-norm of the original vector;
- *   normlo    high part of the 2-norm of the original vector. */
+ *   normlo    low part of the 2-norm of the original vector. */
 
 #endif

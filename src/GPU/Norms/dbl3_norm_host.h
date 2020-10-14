@@ -6,11 +6,11 @@
 
 void make_copy
  ( int dim, double *orghi, double *orgmi, double *orglo,
-            double *duphi, double *dupmi, double* duplo );
+            double *duphi, double *dupmi, double *duplo );
 /*
  * DESCRIPTION :
  *   Makes a copy of the vector in org to the vector dup,
- *   given as vectors of high and low parts.
+ *   given as vectors of high, middle, and low parts.
  *
  * ON ENTRY :
  *   dim       dimension of the vectors org and dup;

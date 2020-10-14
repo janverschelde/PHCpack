@@ -1,5 +1,5 @@
 /* This program runs automatic tests to compute norms of real vectors
-   in double double precision, for preset values of the parameters.
+   in triple double precision, for preset values of the parameters.
    No input is required from the user. */
 
 #include <ctime>
@@ -44,11 +44,11 @@ void run
  *   vminorm_host    middle part of 2-norm computed by the host;
  *   vlonorm_host    low part of 2-norm computed by the host;
  *   whinorm_device  high part of 2-norm on device after normalization;
- *   wminorm_device  middle norm of 2-norm on device after normalization;
- *   wlonorm_device  low norm of 2-norm on device after normalization;
+ *   wminorm_device  middle part of 2-norm on device after normalization;
+ *   wlonorm_device  low part of 2-norm on device after normalization;
  *   whinorm_host    high part of 2-norm on host after normalization;
  *   wminorm_host    middle part of 2-norm on host after normalization;
- *   wlonorm_host    low norm of 2-norm on host after normalization.  */
+ *   wlonorm_host    low part of 2-norm on host after normalization.  */
 
 int verify_correctness ( int dim, int BS, int blocked );
 /*
@@ -90,7 +90,7 @@ void run
    double* vmi_host = new double[dim];   // middle parts on the host
    double* vlo_host = new double[dim];   // low parts on the host
    double* vhi_device = new double[dim]; // high parts on the device
-   double* vmi_device = new double[dim]; // midle parts on the device
+   double* vmi_device = new double[dim]; // middle parts on the device
    double* vlo_device = new double[dim]; // low parts on the device
    double* whi_host = new double[dim];   // high parts copy
    double* wmi_host = new double[dim];   // middle parts copy
