@@ -873,6 +873,16 @@ void daf_inc
                    a_ltb,a_lix,a_lmi,a_lrg,a_lpk);
 }
 
+void daf_inc_d
+ ( double *a_rtb, double *a_rix, double *a_rmi, double *a_rrg, double *a_rpk,
+   double *a_ltb, double *a_lix, double *a_lmi, double *a_lrg, double *a_lpk,
+   double b )
+{
+   daf_renorm_add1
+      (*a_rtb,*a_rix,*a_rmi,*a_rrg,*a_rpk,*a_ltb,*a_lix,*a_lmi,*a_lrg,*a_lpk,
+       b,a_rtb,a_rix,a_rmi,a_rrg,a_rpk,a_ltb,a_lix,a_lmi,a_lrg,a_lpk);
+}
+
 void daf_minus
  ( double *a_rtb, double *a_rix, double *a_rmi, double *a_rrg, double *a_rpk,
    double *a_ltb, double *a_lix, double *a_lmi, double *a_lrg, double *a_lpk )
@@ -2168,6 +2178,9 @@ void daf_sqrt
 
    odf_sqrt(a_rtb,a_rix,a_rmi,a_rrg,a_rpk,a_ltb,a_lix,a_lmi,
             b_rtb,b_rix,b_rmi,b_rrg,b_rpk,b_ltb,b_lix,b_lmi);
+
+   *b_lrg = 0.0; *b_lpk = 0.0;
+
    daf_sqr(*b_rtb,*b_rix,*b_rmi,*b_rrg,*b_rpk,
            *b_ltb,*b_lix,*b_lmi,*b_lrg,*b_lpk,
            &z_rtb,&z_rix,&z_rmi,&z_rrg,&z_rpk,

@@ -26,7 +26,7 @@ void random_double5_vectors
    double *vrg_device, double *vpk_device );
 /*
  * DESCRIPTION :
- *   Generates two instances of the same random triple double vector,
+ *   Generates two instances of the same random penta double vector,
  *   one for the host and another for the device.
  *
  * REQUIRED :

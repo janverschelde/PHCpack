@@ -7,6 +7,9 @@ Wed 14 Oct 2020 : edited random3_vectors.h, random3_vectors.cpp,
   random8_vectors with the generation of full multiple doubles.
   Improved the tests in test_{dbl2,dbl3,dbl4,dbl5,dbl8}_norm.cpp.
   Corrected a bug in dbl8_norm_kernels.cu and test_dbl8_norm.cpp.
+  Edited random5_vectors.h and fixed a bug in deca_double_functions.cpp:
+  in the sqrt, the least significant parts must be set to zero for else
+  the division by the current approximation for the sqrt fails.
 
 Tue 13 Oct 2020 : edited random2_vectors, to use double_double_functions
   instead of double_double.  Added unary minus to double_double_functions
