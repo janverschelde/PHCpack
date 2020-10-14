@@ -23,26 +23,31 @@ random_numbers_windows  : specific include for windows MS VC
 random_vectors          : random vectors in double precision
 random2_vectors         : random vectors in double double precision
 random3_vectors         : random vectors in triple double precision
+random4_vectors         : random vectors in octo double precision
 parse_run_arguments     : parse command line arguments for run_ functions
 -----------------------------------------------------------------------------
 double_double_gpufun    : double double precision arithmetic on device
 triple_double_gpufun    : triple double precision arithmetic on device
 quad_double_gpufun      : quad double precision arithmetic on device
+octo_double_gpufun      : octo double precision arithmetic on device
 -----------------------------------------------------------------------------
 dbl_norm_host           : 2-norm of double vectors on host
 dbl2_norm_host          : 2-norm of double double vectors on host
 dbl3_norm_host          : 2-norm of triple double vectors on host
 dbl4_norm_host          : 2-norm of quad double vectors on host
+dbl8_norm_host          : 2-norm of quad double vectors on host
 dbl_norm_kernels        : kernels for 2-norm of double vectors
 dbl2_norm_kernels       : kernels for 2-norm of double double vectors
 dbl3_norm_kernels       : kernels for 2-norm of triple double vectors
 dbl4_norm_kernels       : kernels for 2-norm of quad double vectors
+dbl8_norm_kernels       : kernels for 2-norm of quad double vectors
 run_dbl_norm            : test norm computation of double vectors
 run_dbl2_norm           : test norm computation of double double vectors
 test_dbl_norm           : test double 2-norm without command line parameters
 test_dbl2_norm          : test double double 2-norm
 test_dbl3_norm          : test triple double 2-norm
 test_dbl4_norm          : test quad double 2-norm
+test_dbl8_norm          : test octo double 2-norm
 -----------------------------------------------------------------------------
 cmplx_norm_host         : 2-norm of complex double vectors on host
 cmplx2_norm_host        : 2-norm of complex double double vectors on host

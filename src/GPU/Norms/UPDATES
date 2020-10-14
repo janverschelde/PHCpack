@@ -10,6 +10,9 @@ Tue 13 Oct 2020 : edited random2_vectors, to use double_double_functions
   Added inc_d function to quad_double_functions, new quad_double_gpufun,
   random4_vectors, dbl4_norm_host, dbl4_norm_kernels, tested by 
   test_dbl4_norm; updated makefile and makefile_unix.
+  Added inc_d function to octo_double_functions, new octo_double_gpufun,
+  random8_vectors, dbl8_norm_host, dbl8_norm_kernels, tested by 
+  test_dbl8_norm; updated makefile and makefile_unix.
 
 Mon 12 Oct 2020 : small edits in octo_double_functions.h.
   New quad_double_functions.h, quad_double_functions.cpp, tested by

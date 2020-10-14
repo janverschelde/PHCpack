@@ -632,6 +632,17 @@ void odf_inc
                    a_hihilo,a_lohilo,a_hilolo,a_lololo);
 }
 
+void odf_inc_d
+ ( double *a_hihihi, double *a_lohihi, double *a_hilohi, double *a_lolohi,
+   double *a_hihilo, double *a_lohilo, double *a_hilolo, double *a_lololo,
+   double b )
+{
+   odf_renorm_add1(*a_hihihi,*a_lohihi,*a_hilohi,*a_lolohi,
+                   *a_hihilo,*a_lohilo,*a_hilolo,*a_lololo,b,
+                   a_hihihi,a_lohihi,a_hilohi,a_lolohi,
+                   a_hihilo,a_lohilo,a_hilolo,a_lololo);
+}
+
 void odf_minus
  ( double *a_hihihi, double *a_lohihi, double *a_hilohi, double *a_lolohi,
    double *a_hihilo, double *a_lohilo, double *a_hilolo, double *a_lololo )
