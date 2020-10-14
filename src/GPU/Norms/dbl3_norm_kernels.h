@@ -1,4 +1,4 @@
-// Defines the constant and the prototypes for the kernels 
+// Defines the constants and the prototypes for the kernels 
 // to compute the 2-norm of a vector in triple double precision.
 
 #ifndef __DBL3_NORM_KERNELS_H__

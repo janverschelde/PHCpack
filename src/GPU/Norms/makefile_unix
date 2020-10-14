@@ -23,6 +23,10 @@ dbl4_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for quad doubles ..."
 	nvcc -ccbin=$(gcc) -c dbl4_norm_kernels.cu
 
+dbl5_norm_kernels.o:
+	@-echo ">>> compiling vector norm kernels for penta doubles ..."
+	nvcc -ccbin=$(gcc) -c dbl5_norm_kernels.cu
+
 dbl8_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for octo doubles ..."
 	nvcc -ccbin=$(gcc) -c dbl8_norm_kernels.cu
@@ -132,6 +136,10 @@ random4_vectors.o:
 	@-echo ">>> compiling quad double random vector generators ..."
 	$(gpp) -O3 -c random4_vectors.cpp
 
+random5_vectors.o:
+	@-echo ">>> compiling penta double random vector generators ..."
+	$(gpp) -O3 -c random5_vectors.cpp
+
 random8_vectors.o:
 	@-echo ">>> compiling octo double random vector generators ..."
 	$(gpp) -O3 -c random8_vectors.cpp
@@ -155,6 +163,10 @@ dbl3_norm_host.o:
 dbl4_norm_host.o:
 	@-echo ">>> compiling dbl4_norm_host ..."
 	$(gpp) -O3 -c dbl4_norm_host.cpp
+
+dbl5_norm_host.o:
+	@-echo ">>> compiling dbl5_norm_host ..."
+	$(gpp) -O3 -c dbl5_norm_host.cpp
 
 dbl8_norm_host.o:
 	@-echo ">>> compiling dbl8_norm_host ..."
@@ -195,6 +207,10 @@ test_dbl3_norm.o:
 test_dbl4_norm.o:
 	@-echo ">>> compiling test_dbl4_norm ..."
 	$(gpp) -I/usr/local/cuda/include -O3 -c test_dbl4_norm.cpp
+
+test_dbl5_norm.o:
+	@-echo ">>> compiling test_dbl5_norm ..."
+	$(gpp) -I/usr/local/cuda/include -O3 -c test_dbl5_norm.cpp
 
 test_dbl8_norm.o:
 	@-echo ">>> compiling test_dbl8_norm ..."
@@ -272,6 +288,16 @@ test_dbl4_norm: double_double_functions.o quad_double_functions.o \
                   dbl4_norm_host.o dbl4_norm_kernels.o \
                -lcuda -lcudart -L/usr/local/cuda/lib64 
 
+test_dbl5_norm: double_double_functions.o penta_double_functions.o \
+                random_numbers.o random5_vectors.o test_dbl5_norm.o \
+                dbl5_norm_host.o dbl5_norm_kernels.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl5_norm test_dbl5_norm.o \
+                  double_double_functions.o penta_double_functions.o \
+                  random_numbers.o random5_vectors.o \
+                  dbl5_norm_host.o dbl5_norm_kernels.o \
+               -lcuda -lcudart -L/usr/local/cuda/lib64 
+
 test_dbl8_norm: double_double_functions.o quad_double_functions.o \
                 octo_double_functions.o random_numbers.o random8_vectors.o \
                 dbl8_norm_host.o dbl8_norm_kernels.o test_dbl8_norm.o
@@ -315,7 +341,7 @@ clean:
 	/bin/rm -f -r random_numbers.o 
 	/bin/rm -f -r random_vectors.o random2_vectors.o
 	/bin/rm -f -r random3_vectors.o random4_vectors.o
-	/bin/rm -f -r random8_vectors.o
+	/bin/rm -f -r random5_vectors.o random8_vectors.o
 	/bin/rm -f -r dbl_norm_kernels.o dbl_norm_host.o
 	/bin/rm -f -r run_dbl_norm.o run_dbl_norm
 	/bin/rm -f -r test_dbl_norm.o test_dbl_norm
@@ -333,5 +359,7 @@ clean:
 	/bin/rm -f -r test_dbl3_norm.o test_dbl3_norm
 	/bin/rm -f -r dbl4_norm_host.o dbl4_norm_kernels.o
 	/bin/rm -f -r test_dbl4_norm.o test_dbl4_norm
+	/bin/rm -f -r dbl5_norm_host.o dbl5_norm_kernels.o
+	/bin/rm -f -r test_dbl5_norm.o test_dbl5_norm
 	/bin/rm -f -r dbl8_norm_host.o dbl8_norm_kernels.o
 	/bin/rm -f -r test_dbl8_norm.o test_dbl8_norm

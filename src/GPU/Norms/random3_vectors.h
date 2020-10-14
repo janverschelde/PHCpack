@@ -21,12 +21,12 @@ void random_double3_vectors
  *   dim      dimension of the random real vector.
  *
  * ON RETURN :
- *   vhi_host as many randomly generated doubles as the value of dim;
- *   vmi_host as many randomly generated doubles as the value of dim;
- *   vlo_host as many randomly generated doubles as the value of dim;
+ *   vhi_host holds as many randomly generated doubles as the value of dim;
+ *   vmi_host holds as many randomly generated doubles as the value of dim;
+ *   vlo_host holds as many randomly generated doubles as the value of dim;
  *   vhi_device is the same vector as vhi_host;
- *   vmi_device is the same vector as vhi_host;
- *   vlo_device is the same vector as vlo_host.                       */
+ *   vmi_device is the same vector as vmi_host;
+ *   vlo_device is the same vector as vlo_host. */
 
 void random_complex3_vectors
  ( int dim, double *vrehi_host, double *vremi_host, double *vrelo_host,
@@ -46,7 +46,7 @@ void random_complex3_vectors
  *   Space has been allocated for all arrays of size at least dim.
  *
  * ON ENTRY :
- *   dim        dimension of the random complex vector.
+ *   dim          dimension of the random complex vector.
  *
  * ON RETURN :
  *   vrehi_host   high real parts of the complex vectors;
@@ -58,8 +58,8 @@ void random_complex3_vectors
  *   vrehi_device is the same vector as vrehi_host;
  *   vremi_device is the same vector as vremi_host;
  *   vrelo_device is the same vector as vrelo_host;
- *   vimhi_device is the same vector as vimhi_host.
- *   vimmi_device is the same vector as vimmi_host.
- *   vimlo_device is the same vector as vimlo_host.                    */
+ *   vimhi_device is the same vector as vimhi_host;
+ *   vimmi_device is the same vector as vimmi_host;
+ *   vimlo_device is the same vector as vimlo_host. */
 
 #endif

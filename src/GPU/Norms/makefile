@@ -42,6 +42,9 @@ test_dbl3_norm:
 test_dbl4_norm:
 	make -f $(MAKEFILE) test_dbl4_norm
 
+test_dbl5_norm:
+	make -f $(MAKEFILE) test_dbl5_norm
+
 test_dbl8_norm:
 	make -f $(MAKEFILE) test_dbl8_norm
 

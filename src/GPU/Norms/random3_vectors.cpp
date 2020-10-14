@@ -43,10 +43,10 @@ void random_complex3_vectors
       // cos is sqrt(1-sin^2)
 
       vrehi_host[k] = cosrnd_hi; vrehi_device[k] = cosrnd_hi;
-      vremi_host[k] = cosrnd_mi; vrelo_device[k] = cosrnd_mi;
+      vremi_host[k] = cosrnd_mi; vremi_device[k] = cosrnd_mi;
       vrelo_host[k] = cosrnd_lo; vrelo_device[k] = cosrnd_lo;
       vimhi_host[k] = sinrnd_hi; vimhi_device[k] = sinrnd_hi;
-      vimlo_host[k] = sinrnd_mi; vimlo_device[k] = sinrnd_mi;
+      vimmi_host[k] = sinrnd_mi; vimmi_device[k] = sinrnd_mi;
       vimlo_host[k] = sinrnd_lo; vimlo_device[k] = sinrnd_lo;
    }
 }

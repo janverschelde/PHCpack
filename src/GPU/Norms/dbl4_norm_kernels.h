@@ -1,4 +1,4 @@
-// Defines the constant and the prototypes for the kernels 
+// Defines the constants and the prototypes for the kernels 
 // to compute the 2-norm of a vector in quad double precision.
 
 #ifndef __DBL4_NORM_KERNELS_H__
@@ -7,7 +7,7 @@
 /*
   The constant qd_shmemsize determines the size of the vectors
   stored in shared memory.  As every thread works on one entry
-  in the shared memory vectors, for triple double precision,
+  in the shared memory vectors, for quad double precision,
   this size is bounded by the number of threads in a block.
   The largest dimension for which the small normalization runs
   is thus the value of qd_shmemsize.

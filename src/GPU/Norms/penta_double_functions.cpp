@@ -337,6 +337,13 @@ void pdf_inc
    pdf_fast_renorm(f0,f1,f2,f3,f4,f5,a_tb,a_ix,a_mi,a_rg,a_pk);
 }
 
+void pdf_inc_d
+ ( double *a_tb, double *a_ix, double *a_mi, double *a_rg, double *a_pk,
+   double b )
+{
+   pdf_renorm_add1(*a_tb,*a_ix,*a_mi,*a_rg,*a_pk,b,a_tb,a_ix,a_mi,a_rg,a_pk);
+}
+
 void pdf_minus
  ( double *a_tb, double *a_ix, double *a_mi, double *a_rg, double *a_pk )
 {
