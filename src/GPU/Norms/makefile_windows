@@ -38,6 +38,14 @@ dbl3_norm_kernels.obj:
 	@-echo ">>> compiling norm kernels for triple doubles ..."
 	nvcc -ccbin=$(CL) -c -O3 dbl3_norm_kernels.cu -o dbl3_norm_kernels.obj
 
+dbl4_norm_kernels.obj:
+	@-echo ">>> compiling norm kernels for quad doubles ..."
+	nvcc -ccbin=$(CL) -c -O3 dbl4_norm_kernels.cu -o dbl4_norm_kernels.obj
+
+dbl8_norm_kernels.obj:
+	@-echo ">>> compiling norm kernels for octo doubles ..."
+	nvcc -ccbin=$(CL) -c -O3 dbl8_norm_kernels.cu -o dbl8_norm_kernels.obj
+
 cmplx_norm_kernels.obj:
 	@-echo ">>> compiling norm kernels for complex doubles ..."
 	nvcc -ccbin=$(CL) -c -O3 cmplx_norm_kernels.cu \
@@ -148,7 +156,15 @@ dbl2_norm_host.obj:
 dbl3_norm_host.obj:
 	@-echo ">>> compiling dbl3_norm_host ..."
 	$(CL)\cl /c dbl3_norm_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
-                 /Fo: dbl3_norm_host.obj
+
+dbl4_norm_host.obj:
+	@-echo ">>> compiling dbl4_norm_host ..."
+	$(CL)\cl /c dbl4_norm_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
+
+dbl8_norm_host.obj:
+	@-echo ">>> compiling dbl8_norm_host ..."
+	$(CL)\cl /c dbl8_norm_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl8_norm_host.obj
 
 random_numbers.obj:
 	@-echo ">>> compiling random numbers ..."
@@ -170,7 +186,17 @@ random3_vectors.obj:
 	@-echo ">>> compiling random triple double vectors ..."
 	$(CL)\cl /c random3_vectors.cpp \
                  -I$(QDsrc) -I$(winkitucrt) -I$(includepath) -O2 \
-                 /Fo: random3_vectors.obj
+
+random4_vectors.obj:
+	@-echo ">>> compiling random quad double vectors ..."
+	$(CL)\cl /c random4_vectors.cpp \
+                 -I$(QDsrc) -I$(winkitucrt) -I$(includepath) -O2 \
+
+random8_vectors.obj:
+	@-echo ">>> compiling random octo double vectors ..."
+	$(CL)\cl /c random8_vectors.cpp \
+                 -I$(QDsrc) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random8_vectors.obj
 
 parse_run_arguments.obj:
 	@-echo ">>> compiling parse_run_arguments ..."
@@ -221,7 +247,16 @@ test_dbl2_norm.obj:
 test_dbl3_norm.obj:
 	@-echo ">>> compiling test_dbl3_norm ..."
 	$(CL)\cl /c -O2 test_dbl3_norm.cpp -I$(winkitucrt) -I$(includepath) \
-                 /I$(CUDASDK)/include -I$(QDsrc) /Fo: test_dbl3_norm.obj /EHsc
+
+test_dbl4_norm.obj:
+	@-echo ">>> compiling test_dbl4_norm ..."
+	$(CL)\cl /c -O2 test_dbl4_norm.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -I$(QDsrc) /Fo: test_dbl4_norm.obj /EHsc
+
+test_dbl8_norm.obj:
+	@-echo ">>> compiling test_dbl8_norm ..."
+	$(CL)\cl /c -O2 test_dbl8_norm.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -I$(QDsrc) /Fo: test_dbl8_norm.obj /EHsc
 
 test_cmplx_norm.obj:
 	@-echo ">>> compiling test_cmplx_norm ..."
@@ -293,6 +328,25 @@ test_dbl3_norm: double_double_functions.obj triple_double_functions.obj \
              double_double_functions.obj triple_double_functions.obj \
 	     random_numbers.obj random3_vectors.obj dbl3_norm_kernels.obj \
              test_dbl3_norm.obj
+
+test_dbl4_norm: double_double_functions.obj quad_double_functions.obj \
+                dbl4_norm_host.obj random_numbers.obj random4_vectors.obj \
+                dbl4_norm_kernels.obj test_dbl4_norm.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl4_norm.exe dbl4_norm_host.obj \
+             double_double_functions.obj quad_double_functions.obj \
+	     random_numbers.obj random4_vectors.obj dbl4_norm_kernels.obj \
+             test_dbl4_norm.obj
+
+test_dbl8_norm: double_double_functions.obj quad_double_functions.obj \
+                octo_double_functions.obj \
+                dbl8_norm_host.obj random_numbers.obj random8_vectors.obj \
+                dbl8_norm_kernels.obj test_dbl8_norm.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl8_norm.exe dbl8_norm_host.obj \
+             double_double_functions.obj quad_double_functions.obj \
+             octo_double_functions.obj random_numbers.obj \
+	     random8_vectors.obj dbl8_norm_kernels.obj test_dbl8_norm.obj
 
 test_cmplx_norm: cmplx_norm_kernels.obj cmplx_norm_host.obj \
                  random_numbers.obj random_vectors.obj test_cmplx_norm.obj
