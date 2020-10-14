@@ -69,7 +69,7 @@ __global__ void small_normalize_vector
       *normhihihi = prdhihihi[0];
       *normlohihi = prdlohihi[0];
       *normhilohi = prdhilohi[0];
-      *normlohihi = prdlohihi[0];
+      *normlolohi = prdlolohi[0];
       *normhihilo = prdhihilo[0];
       *normlohilo = prdlohilo[0];
       *normhilolo = prdhilolo[0];

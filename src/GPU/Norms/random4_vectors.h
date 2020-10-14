@@ -1,8 +1,22 @@
-// The file random4_vectors.h specifies functions to generate random vectors
-// in quad double precision.
+// The file random4_vectors.h specifies functions
+// to generate random vectors in quad double precision.
 
 #ifndef __random4_vectors_h__
 #define __random4_vectors_h__
+
+void random_quad_double
+ ( double *x_hihi, double *x_lohi, double *x_hilo, double *x_lolo );
+/*
+ * DESCRIPTION :
+ *   Returns a random quad double x in [-1, +1],
+ *   with the generation of four random doubles
+ *   so all four parts of the random quad double are filled.
+ *
+ * ON RETURN :
+ *   x_hihi   highest part of the random quad double x;
+ *   x_lohi   second highest part of the random quad double x;
+ *   x_hilo   second lowest part of the random quad double x;
+ *   x_lolo   lowest part of the random quad double x. */
 
 void random_double4_vectors
  ( int dim, double *vhihi_host, double *vlohi_host,
@@ -22,13 +36,13 @@ void random_double4_vectors
  *   dim      dimension of the random real vector.
  *
  * ON RETURN :
- *   vhihi_host   as many randomly generated doubles as the value of dim;
- *   vlohi_host   as many randomly generated doubles as the value of dim;
- *   vhilo_host   as many randomly generated doubles as the value of dim;
- *   vlolo_host   as many randomly generated doubles as the value of dim;
+ *   vhihi_host holds as many randomly generated doubles as the value of dim;
+ *   vlohi_host holds as many randomly generated doubles as the value of dim;
+ *   vhilo_host holds as many randomly generated doubles as the value of dim;
+ *   vlolo_host holds as many randomly generated doubles as the value of dim;
  *   vhihi_device is the same vector as vhihi_host;
  *   vlohi_device is the same vector as vlohi_host;
- *   vhilo_device is the same vector as vlohi_host. 
+ *   vhilo_device is the same vector as vlohi_host;
  *   vlolo_device is the same vector as vlolo_host. */
 
 void random_complex4_vectors
@@ -53,7 +67,7 @@ void random_complex4_vectors
  *   Space has been allocated for all arrays of size at least dim.
  *
  * ON ENTRY :
- *   dim        dimension of the random complex vector.
+ *   dim            dimension of the random complex vector.
  *
  * ON RETURN :
  *   vrehihi_host   highest real parts of the complex vectors;
@@ -68,8 +82,8 @@ void random_complex4_vectors
  *   vrelohi_device is the same vector as vrelohi_host;
  *   vrehilo_device is the same vector as vrehilo_host;
  *   vrelolo_device is the same vector as vrelolo_host;
- *   vimhihi_device is the same vector as vimhihi_host.
- *   vimlohi_device is the same vector as vimlohi_host.
+ *   vimhihi_device is the same vector as vimhihi_host;
+ *   vimlohi_device is the same vector as vimlohi_host;
  *   vimhilo_device is the same vector as vimhilo_host;
  *   vimlolo_device is the same vector as vimlolo_host. */
 

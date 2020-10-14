@@ -194,7 +194,9 @@ int verify_correctness ( int dim, int BS )
    dd_write(wnrm_h,32); cout << endl;
 
    const double tol = 1.0e-24;
-   double err = abs(vlonorm_device - vlonorm_host)
+   double err = abs(vhinorm_device - vhinorm_host)
+              + abs(whinorm_device - whinorm_host)
+              + abs(vlonorm_device - vlonorm_host)
               + abs(wlonorm_device - wlonorm_host);
 
    cout << scientific << setprecision(4) << "error : " << err;

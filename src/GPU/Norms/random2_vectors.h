@@ -1,8 +1,19 @@
-// The file random2_vectors.h specifies functions to generate random vectors
-// in double double precision.
+// The file random2_vectors.h specifies functions
+// to generate random vectors in double double precision.
 
 #ifndef __random2_vectors_h__
 #define __random2_vectors_h__
+
+void random_double_double ( double *x_hi, double *x_lo );
+/*
+ * DESCRIPTION :
+ *   Returns a random double x in [-1, +1],
+ *   with the generation of two random doubles
+ *   so all three parts of the random double double are filled.
+ *
+ * ON RETURN :
+ *   x_hi     highest part of the random double double x;
+ *   x_lo     lowest part of the random double double x. */
 
 void random_double2_vectors
  ( int dim, double *vhi_host, double *vlo_host,
@@ -20,8 +31,8 @@ void random_double2_vectors
  *   dim      dimension of the random real vector.
  *
  * ON RETURN :
- *   vhi_host as many randomly generated doubles as the value of dim;
- *   vlo_host as many randomly generated doubles as the value of dim;
+ *   vhi_host holds as many randomly generated doubles as the value of dim;
+ *   vlo_host holds as many randomly generated doubles as the value of dim;
  *   vhi_device is the same vector as vhi_host;
  *   vlo_device is the same vector as vlo_host. */
 
@@ -42,7 +53,7 @@ void random_complex2_vectors
  *   Space has been allocated for all arrays of size at least dim.
  *
  * ON ENTRY :
- *   dim        dimension of the random complex vector.
+ *   dim          dimension of the random complex vector.
  *
  * ON RETURN :
  *   vrehi_host   high real parts of the complex vectors;
@@ -51,7 +62,7 @@ void random_complex2_vectors
  *   vimlo_host   low imaginary parts of the complex vectors;
  *   vrehi_device is the same vector as vrehi_host;
  *   vrelo_device is the same vector as vrelo_host;
- *   vimhi_device is the same vector as vimhi_host.
+ *   vimhi_device is the same vector as vimhi_host;
  *   vimlo_device is the same vector as vimlo_host. */
 
 #endif

@@ -1,8 +1,21 @@
-// The file random3_vectors.h specifies functions to generate random vectors
-// in triple double precision.
+// The file random3_vectors.h specifies functions
+// to generate random vectors in triple double precision.
 
 #ifndef __random3_vectors_h__
 #define __random3_vectors_h__
+
+void random_triple_double
+ ( double *x_hi, double *x_mi, double *x_lo );
+/*
+ * DESCRIPTION :
+ *   Returns a random triple double x in [-1, +1],
+ *   with the generation of three random doubles
+ *   so all three parts of the random triple double are filled.
+ *
+ * ON RETURN :
+ *   x_hi     highest part of the random triple double x;
+ *   x_mi     middle part of the random triple double x;
+ *   x_lo     lowest part of the random triple double x. */
 
 void random_double3_vectors
  ( int dim, double *vhi_host, double *vmi_host, double *vlo_host,

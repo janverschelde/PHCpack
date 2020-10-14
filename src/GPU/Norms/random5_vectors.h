@@ -1,8 +1,23 @@
-// The file random5_vectors.h specifies functions to generate random vectors
-// in penta double precision.
+// The file random5_vectors.h specifies functions 
+// to generate random vectors in penta double precision.
 
 #ifndef __random5_vectors_h__
 #define __random5_vectors_h__
+
+void random_penta_double
+ ( double *x_tb, double *x_ix, double *x_mi, double *x_rg, double *x_pk );
+/*
+ * DESCRIPTION :
+ *   Returns a random penta double x in [-1, +1],
+ *   with the generation of five random doubles
+ *   so all five parts of the random penta double are filled.
+ *
+ * ON RETURN :
+ *   x_tb     highest part of the random penta double x;
+ *   x_ix     second highest part of the random penta double x;
+ *   x_mi     middle part of the random penta double x;
+ *   x_rg     second lowest part of the random penta double x;
+ *   x_pk     lowest part of the random penta double x. */
 
 void random_double5_vectors
  ( int dim, double *vtb_host, double *vix_host, double *vmi_host,
@@ -73,10 +88,10 @@ void random_complex5_vectors
  *   vremi_device is the same vector as vremi_host;
  *   vrerg_device is the same vector as vrerg_host;
  *   vrepk_device is the same vector as vrepk_host;
- *   vimtb_device is the same vector as vimtb_host.
- *   vimix_device is the same vector as vimix_host.
- *   vimmi_device is the same vector as vimmi_host.
- *   vimrg_device is the same vector as vimrg_host.
+ *   vimtb_device is the same vector as vimtb_host;
+ *   vimix_device is the same vector as vimix_host;
+ *   vimmi_device is the same vector as vimmi_host;
+ *   vimrg_device is the same vector as vimrg_host;
  *   vimpk_device is the same vector as vimpk_host. */
 
 #endif

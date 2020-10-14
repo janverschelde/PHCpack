@@ -5,18 +5,33 @@
 #include "random3_vectors.h"
 #include "triple_double_functions.h"
 
+void random_triple_double
+ ( double *x_hi, double *x_mi, double *x_lo )
+{
+   const double eps = 2.220446049250313e-16; // 2^(-52)
+   const double eps2 = eps*eps;
+   const double r0 = random_double();
+   const double r1 = random_double();
+   const double r2 = random_double();
+
+   *x_hi = r0; *x_mi = 0.0; *x_lo = 0.0;
+
+   tdf_inc_d(x_hi,x_mi,x_lo,r1*eps);
+   tdf_inc_d(x_hi,x_mi,x_lo,r2*eps2);
+}
+
 void random_double3_vectors
  ( int dim, double *vhi_host, double *vmi_host, double *vlo_host,
    double *vhi_device, double *vmi_device, double *vlo_device )
 {
-   double r;
+   double r_hi,r_mi,r_lo;
 
    for(int k=0; k<dim; k++)
    {
-      r = random_double();
-      vhi_host[k] = r;   vhi_device[k] = r;
-      vmi_host[k] = 0.0; vmi_device[k] = 0.0;
-      vlo_host[k] = 0.0; vlo_device[k] = 0.0;
+      random_triple_double(&r_hi,&r_mi,&r_lo);
+      vhi_host[k] = r_hi; vhi_device[k] = r_hi;
+      vmi_host[k] = r_mi; vmi_device[k] = r_mi;
+      vlo_host[k] = r_lo; vlo_device[k] = r_lo;
    }
 }
 
@@ -26,13 +41,13 @@ void random_complex3_vectors
    double *vrehi_device, double *vremi_device, double *vrelo_device,
    double *vimhi_device, double *vimmi_device, double *vimlo_device )
 {
-   double rnd;
+   double rnd_hi,rnd_mi,rnd_lo;
    double cosrnd_hi,cosrnd_mi,cosrnd_lo,sinrnd_hi,sinrnd_mi,sinrnd_lo;
 
    for(int k=0; k<dim; k++)
    {
-      rnd = random_double(); // rnd is in [-1, +1]
-      sinrnd_hi = rnd; sinrnd_mi = 0.0; sinrnd_lo = 0.0;
+      random_triple_double(&rnd_hi,&rnd_mi,&rnd_lo);
+      sinrnd_hi = rnd_hi; sinrnd_mi = rnd_mi; sinrnd_lo = rnd_lo;
 
       double y_hi,y_mi,y_lo;          // work around to compute cos
 

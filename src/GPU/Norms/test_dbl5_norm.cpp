@@ -197,7 +197,15 @@ int verify_correctness ( int dim, int BS, int blocked )
    cout << endl;
 
    const double tol = 1.0e-60;
-   double err = fabs(vpknorm_device - vpknorm_host)
+   double err = fabs(vtbnorm_device - vtbnorm_host)
+              + fabs(wtbnorm_device - wtbnorm_host)
+              + fabs(vixnorm_device - vixnorm_host)
+              + fabs(wixnorm_device - wixnorm_host)
+              + fabs(vminorm_device - vminorm_host)
+              + fabs(wminorm_device - wminorm_host)
+              + fabs(vrgnorm_device - vrgnorm_host)
+              + fabs(wrgnorm_device - wrgnorm_host)
+              + fabs(vpknorm_device - vpknorm_host)
               + fabs(wpknorm_device - wpknorm_host);
 
    cout << scientific << setprecision(4) << "error : " << err;

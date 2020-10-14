@@ -1,8 +1,27 @@
-// The file random8_vectors.h specifies functions to generate random vectors
-// in octo double precision.
+// The file random8_vectors.h specifies functions
+// to generate random vectors in octo double precision.
 
 #ifndef __random8_vectors_h__
 #define __random8_vectors_h__
+
+void random_octo_double
+ ( double *x_hihihi, double *x_lohihi, double *x_hilohi, double *x_lolohi,
+   double *x_hihilo, double *x_lohilo, double *x_hilolo, double *x_lololo );
+/*
+ * DESCRIPTION :
+ *   Returns a random octo double x in [-1, +1],
+ *   with the generation of eight random doubles
+ *   so all eight parts of the random octo double are filled.
+ *
+ * ON RETURN :
+ *   x_hihihi   highest part of the random octo double x;
+ *   x_lohihi   second highest part of the random octo double x;
+ *   x_hilohi   third highest part of the random octo double x;
+ *   x_lolohi   fourth highest part of the random octo double x;
+ *   x_hihilo   fourth lowest part of the random octo double x;
+ *   x_lohilo   third lowest part of the random octo double x;
+ *   x_hilolo   second lowest part of the random octo double x;
+ *   x_lololo   lowest part of the random octo double x. */
 
 void random_double8_vectors
  ( int dim, double *vhihihi_host, double *vlohihi_host,
@@ -26,14 +45,14 @@ void random_double8_vectors
  *   dim      dimension of the random real vector.
  *
  * ON RETURN :
- *   vhihihi_host   as many randomly generated doubles as the value of dim;
- *   vlohihi_host   as many randomly generated doubles as the value of dim;
- *   vhilohi_host   as many randomly generated doubles as the value of dim;
- *   vlolohi_host   as many randomly generated doubles as the value of dim;
- *   vhihilo_host   as many randomly generated doubles as the value of dim;
- *   vlohilo_host   as many randomly generated doubles as the value of dim;
- *   vhilolo_host   as many randomly generated doubles as the value of dim;
- *   vlololo_host   as many randomly generated doubles as the value of dim;
+ *   vhihihi_host holds as many random doubles as the value of dim;
+ *   vlohihi_host holds as many random doubles as the value of dim;
+ *   vhilohi_host holds as many random doubles as the value of dim;
+ *   vlolohi_host holds as many random doubles as the value of dim;
+ *   vhihilo_host holds as many random doubles as the value of dim;
+ *   vlohilo_host holds as many random doubles as the value of dim;
+ *   vhilolo_host holds as many random doubles as the value of dim;
+ *   vlololo_host holds as many random doubles as the value of dim;
  *   vhihihi_device is the same vector as vhihihi_host;
  *   vlohihi_device is the same vector as vlohihi_host;
  *   vhilohi_device is the same vector as vlohihi_host;
@@ -73,7 +92,7 @@ void random_complex8_vectors
  *   Space has been allocated for all arrays of size at least dim.
  *
  * ON ENTRY :
- *   dim        dimension of the random complex vector.
+ *   dim              dimension of the random complex vector.
  *
  * ON RETURN :
  *   vrehihihi_host   highest real parts of the complex vectors;
@@ -107,6 +126,6 @@ void random_complex8_vectors
  *   vimhihilo_device is the same vector as vimhihilo_host;
  *   vimlohilo_device is the same vector as vimlohilo_host;
  *   vimhilolo_device is the same vector as vimhilolo_host;
- *   vimlololo_device is the same vector as vimlolo_host. */
+ *   vimlololo_device is the same vector as vimlololo_host. */
 
 #endif

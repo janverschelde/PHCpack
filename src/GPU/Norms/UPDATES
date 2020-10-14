@@ -2,7 +2,11 @@ Wed 14 Oct 2020 : edited random3_vectors.h, random3_vectors.cpp,
   dbl3_norm_kernels.h, and dbl4_norm_kernels.h.  Added inc_d function 
   to penta_double_functions, new random5_vectors, penta_double_gpufun,
   dbl5_norm_host, dbl5_norm_kernels, tested by test_dbl5_norm;
-  updated makefile and makefile_unix.
+  updated makefile and makefile_unix.  Extended random2_vectors,
+  random3_vectors, random3_vectors, random4_vectors, random5_vectors,
+  random8_vectors with the generation of full multiple doubles.
+  Improved the tests in test_{dbl2,dbl3,dbl4,dbl5,dbl8}_norm.cpp.
+  Corrected a bug in dbl8_norm_kernels.cu and test_dbl8_norm.cpp.
 
 Tue 13 Oct 2020 : edited random2_vectors, to use double_double_functions
   instead of double_double.  Added unary minus to double_double_functions

@@ -101,9 +101,9 @@ int main ( void )
         << endl;
    fail = verify_correctness(1024,128,0);
 
-   cout << "Blocked version for dimension 4096 and block size 256 ..."
+   cout << "Blocked version for dimension 4096 and block size 128 ..."
         << endl;
-   fail = verify_correctness(4096,256,1);
+   fail = verify_correctness(4096,128,1);
 
    return 0;
 }
@@ -272,7 +272,21 @@ int verify_correctness ( int dim, int BS, int blocked )
                      whilolonorm_device,wlololonorm_device);
 
    const double tol = 1.0e-96;
-   double err = fabs(vlololonorm_device - vlololonorm_host)
+   double err = fabs(vhihihinorm_device - vhihihinorm_host)
+              + fabs(whihihinorm_device - whihihinorm_host)
+              + fabs(vlohihinorm_device - vlohihinorm_host)
+              + fabs(wlohihinorm_device - wlohihinorm_host)
+              + fabs(vhilohinorm_device - vhilohinorm_host)
+              + fabs(whilohinorm_device - whilohinorm_host)
+              + fabs(vlolohinorm_device - vlolohinorm_host)
+              + fabs(wlolohinorm_device - wlolohinorm_host)
+              + fabs(vhihilonorm_device - vhihilonorm_host)
+              + fabs(whihilonorm_device - whihilonorm_host)
+              + fabs(vlohilonorm_device - vlohilonorm_host)
+              + fabs(wlohilonorm_device - wlohilonorm_host)
+              + fabs(vhilolonorm_device - vhilolonorm_host)
+              + fabs(whilolonorm_device - whilolonorm_host)
+              + fabs(vlololonorm_device - vlololonorm_host)
               + fabs(wlololonorm_device - wlololonorm_host);
 
    cout << scientific << setprecision(4) << "error : " << err;
