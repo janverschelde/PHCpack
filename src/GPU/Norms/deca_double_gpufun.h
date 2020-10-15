@@ -1,6 +1,7 @@
 /* This file deca_double_functions.h defines the arithmetical operations 
-   for deca double numbers.  A deca double is defined by ten doubles.
+   for deca double numbers on graphics processing units.
 
+A deca double is defined by ten doubles.
 The ten doubles of a deca double are named after the ten finger count,
 which begins at the fingers on the right hand, starting with the thumb 
 for the most significant double, then to the index, middle, ring, and pink,
@@ -14,14 +15,14 @@ are respectively ltb, lix, lmi, lrg, and lpk.
 The algorithms are from the CAMPARY and QD software libraries
 with the modification that a deca double is not stored as an array
 of ten doubles, but plainly by ten double numbers.
-All functions have the prefix daf_ to avoid name clashes. */
+All functions have the prefix dag_ to avoid name clashes. */
 
-#ifndef __deca_double_functions_h__
-#define __deca_double_functions_h__
+#ifndef __deca_double_gpufun_h__
+#define __deca_double_gpufun_h__
 
 /************************** renormalizations **************************/
 
-void daf_renorm10
+__device__ void dag_renorm10
  ( double f0, double f1, double f2, double f3, double f4, double f5,
    double f6, double f7, double f8, double f9, double f10, double *pr,
    double *r0, double *r1, double *r2, double *r3, double *r4, double *r5,
@@ -60,7 +61,7 @@ void daf_renorm10
  *   r8       second lowest part of a deca double number;
  *   r9       lowest part of a deca double number. */
 
-void daf_fast_renorm
+__device__ void dag_fast_renorm
  ( double x0, double x1, double x2, double x3, double x4, double x5,
    double x6, double x7, double x8, double x9, double x10,
    double *r0, double *r1, double *r2, double *r3, double *r4, double *r5,
@@ -97,7 +98,7 @@ void daf_fast_renorm
  *   r8       second lowest part of an deca double number;
  *   r9       lowest part of an deca double number. */
 
-void daf_renorm_add1
+__device__ void dag_renorm_add1
  ( double x0, double x1, double x2, double x3, double x4, double x5,
    double x6, double x7, double x8, double x9, double y,
    double *r0, double *r1, double *r2, double *r3, double *r4, double *r5,
@@ -136,7 +137,7 @@ void daf_renorm_add1
 
 /************************ copy and abs *******************************/
 
-void daf_copy
+__device__ void dag_copy
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double *b_rtb, double *b_rix, double *b_rmi, double *b_rrg, double *b_rpk,
@@ -147,7 +148,7 @@ void daf_copy
  *   a_rpk, a_ltb, a_lix, a_lmi, a_lrg, a_lpk) to the deca double b (b_rtb,
  *   b_rix, b_rmi, b_rrg, b_rpk, b_ltb, b_lix, b_lmi, b_lrg, b_lpk). */
 
-void daf_abs
+__device__ void dag_abs
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double *b_rtb, double *b_rix, double *b_rmi, double *b_rrg, double *b_rpk,
@@ -158,7 +159,7 @@ void daf_abs
 
 /****************** additions and substractions ************************/
 
-void daf_add
+__device__ void dag_add
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double b_rtb, double b_rix, double b_rmi, double b_rrg, double b_rpk,
@@ -206,7 +207,7 @@ void daf_add
  *   c_lrg    second lowest part of the deca double c = a + b;
  *   c_lpk    lowest part of the deca double c = a + b. */
 
-void daf_inc
+__device__ void dag_inc
  ( double *a_rtb, double *a_rix, double *a_rmi, double *a_rrg, double *a_rpk,
    double *a_ltb, double *a_lix, double *a_lmi, double *a_lrg, double *a_lpk,
    double b_rtb, double b_rix, double b_rmi, double b_rrg, double b_rpk,
@@ -251,7 +252,7 @@ void daf_inc
  *   a_lrg    second lowest part of the deca double a + b;
  *   a_lpk    lowest part of the deca double a + b. */
 
-void daf_inc_d
+__device__ void dag_inc_d
  ( double *a_rtb, double *a_rix, double *a_rmi, double *a_rrg, double *a_rpk,
    double *a_ltb, double *a_lix, double *a_lmi, double *a_lrg, double *a_lpk,
    double b );
@@ -285,7 +286,7 @@ void daf_inc_d
  *   a_lrg    second lowest part of the deca double a * b;
  *   a_lpk    lowest part of the deca double a * b. */
 
-void daf_minus
+__device__ void dag_minus
  ( double *a_rtb, double *a_rix, double *a_rmi, double *a_rrg, double *a_rpk,
    double *a_ltb, double *a_lix, double *a_lmi, double *a_lrg, double *a_lpk );
 /*
@@ -293,7 +294,7 @@ void daf_minus
  *   Flips the sign of a (a_rtb, a_rix, a_rmi, a_rrg, a_rpk, a_ltb, a_lix,
  *   a_lmi, a_lrg, a_lpk). */
 
-void daf_sub
+__device__ void dag_sub
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double b_rtb, double b_rix, double b_rmi, double b_rrg, double b_rpk,
@@ -344,7 +345,7 @@ void daf_sub
 
 /***************** multiplications and division ********************/
 
-void daf_mul_pwr2
+__device__ void dag_mul_pwr2
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double b,
@@ -380,7 +381,7 @@ void daf_mul_pwr2
  *   c_lrg    second lowest part of the octo double c = a * b;
  *   c_lpk    lowest part of the octo double c = a * b. */
 
-void daf_mul
+__device__ void dag_mul
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double b_rtb, double b_rix, double b_rmi, double b_rrg, double b_rpk,
@@ -428,7 +429,7 @@ void daf_mul
  *   c_lrg    second lowest part of the deca double c = a * b;
  *   c_lpk    lowest part of the deca double c = a * b. */
 
-void daf_sqr
+__device__ void dag_sqr
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double *c_rtb, double *c_rix, double *c_rmi, double *c_rrg, double *c_rpk,
@@ -463,7 +464,7 @@ void daf_sqr
  *   c_lrg    second lowest part of the deca double c = a * a;
  *   c_lpk    lowest part of the deca double c = a * a. */
 
-void daf_mul_da_d
+__device__ void dag_mul_da_d
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double b,
@@ -500,7 +501,7 @@ void daf_mul_da_d
  *   c_lrg    second lowest part of the deca double c = a * b;
  *   c_lpk    lowest part of the deca double c = a * b. */
 
-void daf_div
+__device__ void dag_div
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double b_rtb, double b_rix, double b_rmi, double b_rrg, double b_rpk,
@@ -550,7 +551,7 @@ void daf_div
 
 /***************************** square root *****************************/
 
-void daf_sqrt
+__device__ void dag_sqrt
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double *b_rtb, double *b_rix, double *b_rmi, double *b_rrg, double *b_rpk,
@@ -583,16 +584,5 @@ void daf_sqrt
  *   b_lix    fourth lowest part of the deca double b;
  *   b_lmi    third lowest part of the deca double b;
  *   b_lrg    second lowest part of the deca double b. */
-
-/*************************** basic output ***************************/
-
-void daf_write_doubles
- ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk, 
-   double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk );
-/*
- * DESCRIPTION :
- *   Writes the ten doubles (a_rtb, a_rix, a_rmi, a_rrg, a_rlo, a_ltb,
- *   a_lix, a_lmi, a_lrg, a_llo) of the deca double a in scientific format
- *   with 16 decimal places of precision. */
 
 #endif

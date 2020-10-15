@@ -31,6 +31,10 @@ dbl8_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for octo doubles ..."
 	nvcc -ccbin=$(gcc) -c dbl8_norm_kernels.cu
 
+dbl10_norm_kernels.o:
+	@-echo ">>> compiling vector norm kernels for deca doubles ..."
+	nvcc -ccbin=$(gcc) -c dbl10_norm_kernels.cu
+
 cmplx_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for complex doubles ..."
 	nvcc -ccbin=$(gcc) -c cmplx_norm_kernels.cu
@@ -144,6 +148,10 @@ random8_vectors.o:
 	@-echo ">>> compiling octo double random vector generators ..."
 	$(gpp) -O3 -c random8_vectors.cpp
 
+random10_vectors.o:
+	@-echo ">>> compiling deca double random vector generators ..."
+	$(gpp) -O3 -c random10_vectors.cpp
+
 parse_run_arguments.o:
 	@-echo ">>> compiling parse_run_arguments ..."
 	$(gpp) -O3 -c parse_run_arguments.cpp
@@ -171,6 +179,10 @@ dbl5_norm_host.o:
 dbl8_norm_host.o:
 	@-echo ">>> compiling dbl8_norm_host ..."
 	$(gpp) -O3 -c dbl8_norm_host.cpp
+
+dbl10_norm_host.o:
+	@-echo ">>> compiling dbl10_norm_host ..."
+	$(gpp) -O3 -c dbl10_norm_host.cpp
 
 cmplx_norm_host.o:
 	@-echo ">>> compiling cmplx_norm_host ..."
@@ -215,6 +227,10 @@ test_dbl5_norm.o:
 test_dbl8_norm.o:
 	@-echo ">>> compiling test_dbl8_norm ..."
 	$(gpp) -I/usr/local/cuda/include -O3 -c test_dbl8_norm.cpp
+
+test_dbl10_norm.o:
+	@-echo ">>> compiling test_dbl10_norm ..."
+	$(gpp) -I/usr/local/cuda/include -O3 -c test_dbl10_norm.cpp
 
 test_cmplx_norm.o:
 	@-echo ">>> compiling test_cmplx_norm ..."
@@ -308,6 +324,18 @@ test_dbl8_norm: double_double_functions.o quad_double_functions.o \
                   dbl8_norm_kernels.o \
                -lcuda -lcudart -L/usr/local/cuda/lib64 
 
+test_dbl10_norm: double_double_functions.o quad_double_functions.o \
+                 octo_double_functions.o deca_double_functions.o \
+                 random_numbers.o random10_vectors.o \
+                 test_dbl10_norm.o dbl10_norm_host.o dbl10_norm_kernels.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl10_norm test_dbl10_norm.o \
+                  double_double_functions.o quad_double_functions.o \
+                  octo_double_functions.o deca_double_functions.o \
+                  random_numbers.o random10_vectors.o \
+                  dbl10_norm_host.o dbl10_norm_kernels.o \
+               -lcuda -lcudart -L/usr/local/cuda/lib64 
+
 test_cmplx_norm: cmplx_norm_kernels.o cmplx_norm_host.o \
                  random_numbers.o random_vectors.o test_cmplx_norm.o
 	@-echo ">>> linking ..."
@@ -342,6 +370,7 @@ clean:
 	/bin/rm -f -r random_vectors.o random2_vectors.o
 	/bin/rm -f -r random3_vectors.o random4_vectors.o
 	/bin/rm -f -r random5_vectors.o random8_vectors.o
+	/bin/rm -f -r random10_vectors.o
 	/bin/rm -f -r dbl_norm_kernels.o dbl_norm_host.o
 	/bin/rm -f -r run_dbl_norm.o run_dbl_norm
 	/bin/rm -f -r test_dbl_norm.o test_dbl_norm
@@ -363,3 +392,5 @@ clean:
 	/bin/rm -f -r test_dbl5_norm.o test_dbl5_norm
 	/bin/rm -f -r dbl8_norm_host.o dbl8_norm_kernels.o
 	/bin/rm -f -r test_dbl8_norm.o test_dbl8_norm
+	/bin/rm -f -r dbl10_norm_host.o dbl10_norm_kernels.o
+	/bin/rm -f -r test_dbl10_norm.o test_dbl10_norm

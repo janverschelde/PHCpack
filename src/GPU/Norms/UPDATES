@@ -10,6 +10,9 @@ Wed 14 Oct 2020 : edited random3_vectors.h, random3_vectors.cpp,
   Edited random5_vectors.h and fixed a bug in deca_double_functions.cpp:
   in the sqrt, the least significant parts must be set to zero for else
   the division by the current approximation for the sqrt fails.
+  Add the function inc_d to deca_double_functions, new deca_double_gpufun,
+  random10_vectors, dbl10_norm_host, dbl10_norm_kernels, tested by
+  test_dbl10_norm, with updated makefile and makefile_unix.
 
 Tue 13 Oct 2020 : edited random2_vectors, to use double_double_functions
   instead of double_double.  Added unary minus to double_double_functions

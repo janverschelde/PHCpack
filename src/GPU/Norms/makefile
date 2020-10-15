@@ -48,6 +48,9 @@ test_dbl5_norm:
 test_dbl8_norm:
 	make -f $(MAKEFILE) test_dbl8_norm
 
+test_dbl10_norm:
+	make -f $(MAKEFILE) test_dbl10_norm
+
 run_cmplx_norm:
 	make -f $(MAKEFILE) run_cmplx_norm
 
