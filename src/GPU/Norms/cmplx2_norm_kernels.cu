@@ -3,18 +3,12 @@
 // in double double precision,
 // for vectors of small, medium, and large size.
 
-#include <iostream>
-#include <cmath>
-#include <assert.h>
-#include <cstdio>
 #include "double_double_gpufun.cu"
 #include "cmplx2_norm_kernels.h"
 
-using namespace std;
-
 __global__ void small_normalize_vector
- ( double* vrehi, double* vrelo, double* vimhi, double* vimlo,
-   int dim, int dimLog2, double* normhi, double* normlo )
+ ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
+   int dim, int dimLog2, double *normhi, double *normlo )
 {
    int j = threadIdx.x;
 
@@ -59,9 +53,9 @@ __global__ void small_normalize_vector
 }
 
 __global__ void medium_normalize_vector
- ( double* vrehi, double* vrelo, double* vimhi, double* vimlo,
+ ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
    int dim, int rnd, int rndLog2, int BS, int BSLog2,
-   double* normhi, double* normlo )
+   double *normhi, double *normlo )
 {
    int j = threadIdx.x;
    int powTwo;
@@ -151,8 +145,8 @@ __global__ void medium_normalize_vector
 }
 
 __global__ void large_sum_the_squares
- ( double* vrehi, double* vrelo, double* vimhi, double* vimlo,
-   int dim, double* sumshi, double* sumslo, int BS, int BSLog2 )
+ ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
+   int dim, double *sumshi, double *sumslo, int BS, int BSLog2 )
 {
    const int i = blockIdx.x;
    const int j = threadIdx.x;
@@ -196,9 +190,9 @@ __global__ void large_sum_the_squares
 }
 
 __global__ void large_normalize_vector
- ( double* vrehi, double* vrelo, double* vimhi, double* vimlo,
-   int dim, double* sumshi, double* sumslo, int nbsums, int nbsumsLog2,
-   int BS, double* normhi, double* normlo )
+ ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
+   int dim, double *sumshi, double *sumslo, int nbsums, int nbsumsLog2,
+   int BS, double *normhi, double *normlo )
 {
    const int i = blockIdx.x;
    const int j = threadIdx.x;
@@ -253,8 +247,8 @@ __global__ void large_normalize_vector
 }
 
 void GPU_norm
- ( double* vrehi_h, double* vrelo_h, double* vimhi_h, double* vimlo_h,
-   int dim, int freq, int BS, double* normhi, double* normlo, int blocked )
+ ( double *vrehi_h, double *vrelo_h, double *vimhi_h, double *vimlo_h,
+   int dim, int freq, int BS, double *normhi, double *normlo, int blocked )
 {
    int BSLog2 = ceil(log2((double) BS)); // ceil for sum reduction
 

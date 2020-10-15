@@ -7,8 +7,8 @@
 
 void make_copy
  ( int dim,
-   double* orgrehi, double* orgrelo, double* orgimhi, double* orgimlo,
-   double* duprehi, double* duprelo, double* dupimhi, double* dupimlo );
+   double *orgrehi, double *orgrelo, double *orgimhi, double *orgimlo,
+   double *duprehi, double *duprelo, double *dupimhi, double *dupimlo );
 /*
  * DESCRIPTION :
  *   Makes a copy of the complex vector with real parts in orgre
@@ -38,8 +38,8 @@ void make_copy
  *   dupimlo   low imaginary parts of the duplicate vector to org. */
 
 void CPU_norm
- ( double* vrehi, double* vrelo, double* vimhi, double* vimlo,
-   int dim, double* normhi, double* normlo );
+ ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
+   int dim, double *normhi, double *normlo );
 /*
  * DESCRIPTION :
  *   Computes the 2-norm of the complex vector given by its real parts
@@ -57,7 +57,7 @@ void CPU_norm
  *   normlo    low part of the 2-norm of the complex vector. */
 
 void CPU_normalize
- ( double* vrehi, double* vrelo, double* vimhi, double* vimlo,
+ ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
    int dim, double normhi, double normlo );
 /*
  * DESCRIPTION :

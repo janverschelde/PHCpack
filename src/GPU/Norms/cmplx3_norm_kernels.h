@@ -1,37 +1,38 @@
 // Defines the prototypes and constants for the kernels
-// to compute the 2-norm of a complex vector in double double precision.
+// to compute the 2-norm of a complex vector in triple double precision.
 
-#ifndef __CMPLX2_NORM_KERNELS_H__
-#define __CMPLX2_NORM_KERNELS_H__
+#ifndef __CMPLX3_NORM_KERNELS_H__
+#define __CMPLX3_NORM_KERNELS_H__
 
 /*
-  The constant dd_shmemsize determines the size of the vectors
+  The constant td_shmemsize determines the size of the vectors
   stored in shared memory.  As every thread works on one entry
-  in the shared memory vectors, for double double precision,
+  in the shared memory vectors, for triple double precision,
   this size is bounded by the number of threads in a block.
   The largest dimension for which the small normalization runs
-  is thus the value of dd_shmemsize.
+  is thus the value of td_shmemsize.
  */
 
-#define dd_shmemsize 256
+#define td_shmemsize 256
 
 /*
   The constant maxrounds determines the number of rounds
   in the normalization of medium sized vectors.
   The largest dimension for a medium size normalization
-  is thus dd_shemsize*maxrounds, for instance: 1024*32 = 32768.
+  is thus td_shemsize*maxrounds, for instance: 1024*32 = 32768.
  */
 
 #define maxrounds 32
 
 __global__ void small_normalize_vector
- ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
-   int dim, int dimLog2, double *normhi, double *normlo );
+ ( double *vrehi, double *vremi, double *vrelo,
+   double *vimhi, double *vimmi, double *vimlo, int dim,
+   int dimLog2, double *normhi, double *normmi, double *normlo );
 /*
  * DESCRIPTION :
  *   Kernel function to compute the norm of the complex vector,
  *   given by a vector of real parts and a vector of imaginary parts,
- *   for vectors of small dimension, in double double precision.
+ *   for vectors of small dimension, in triple double precision.
  *
  * REQUIRED :
  *   The dimension dim equals the block size,
@@ -39,8 +40,10 @@ __global__ void small_normalize_vector
  *
  * ON ENTRY :
  *   vrehi     high real parts of a complex vector of dimension dim;
+ *   vremi     middle real parts of a complex vector of dimension dim;
  *   vrelo     low real parts of a complex vector of dimension dim;
  *   vimhi     high imaginary parts of a complex vector of dimension dim;
+ *   vimmi     middle imaginary parts of a complex vector of dimension dim;
  *   vimlo     low imaginary parts of a complex vector of dimension dim;
  *   dim       the dimension of the vector must equal the block size;
  *   dimLog2   equals ceil(log2((double) dim), used in sum reduction.
@@ -48,23 +51,29 @@ __global__ void small_normalize_vector
  * ON RETURN :
  *   vrehi     high real parts of the complex vector in same direction,
  *             of the original vector but with norm one;
+ *   vremi     middle real parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
  *   vrelo     low real parts of the complex vector in same direction,
  *             of the original vector but with norm one;
  *   vimhi     high imaginary parts of the complex vector in same direction,
  *             of the original vector but with norm one;
+ *   vimmi     middle imaginary parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
  *   vimlo     low imaginary parts of the complex vector in same direction,
  *             of the original vector but with norm one;
  *   normhi    high part of the 2-norm of the given vector;
+ *   normmi    middle part of the 2-norm of the given vector;
  *   normlo    low part of the 2-norm of the given vector. */
 
 __global__ void medium_normalize_vector
- ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
-   int dim, int rnd, int rndLog2, int BS, int BSLog2,
-   double *normhi, double *normlo );
+ ( double *vrehi, double *vremi, double *vrelo,
+   double *vimhi, double *vimmi, double *vimlo, int dim,
+   int rnd, int rndLog2, int BS, int BSLog2,
+   double *normhi, double *normmi, double *normlo );
 /*
  * DESCRIPTION :
  *   Kernel function to compute the norm of the vector in v,
- *   for vectors of medium dimension, in double double precision.
+ *   for vectors of medium dimension, in triple double precision.
  *
  * REQUIRED :
  *   The dimension dim equals the block size BS times rnd.
@@ -72,8 +81,10 @@ __global__ void medium_normalize_vector
  *
  * ON ENTRY :
  *   vrehi     high real parts of a complex vector of dimension dim;
+ *   vremi     middle real parts of a complex vector of dimension dim;
  *   vrelo     low real parts of a complex vector of dimension dim;
  *   vimhi     high imaginary parts of a complex vector of dimension dim;
+ *   vimmi     middle imaginary parts of a complex vector of dimension dim;
  *   vimlo     low imaginary parts of a complex vector of dimension dim;
  *   dim       dimension of the vector must equal rnd*BS;
  *   rnd       the number of rounds or the multiplier for the dimension;
@@ -84,18 +95,24 @@ __global__ void medium_normalize_vector
  * ON RETURN :
  *   vrehi     high real parts of the complex vector in same direction,
  *             of the original vector but with norm one;
+ *   vremi     middle real parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
  *   vrelo     low real parts of the complex vector in same direction,
  *             of the original vector but with norm one;
  *   vimhi     high imaginary parts of the complex vector in same direction,
  *             of the original vector but with norm one;
+ *   vimmi     middle imaginary parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
  *   vimlo     high imaginary parts of the complex vector in same direction,
  *             of the original vector but with norm one;
  *   normhi    high part of the 2-norm of the given vector;
+ *   normmi    middle part of the 2-norm of the given vector;
  *   normlo    low part of the 2-norm of the given vector. */
 
 __global__ void large_sum_the_squares
- ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
-   int dim, double *sumshi, double *sumslo, int BS, int BSLog2 );
+ ( double *vrehi, double *vremi, double *vrelo,
+   double *vimhi, double *vimmi, double *vimlo, int dim,
+   double *sumshi, double *sumsmi, double *sumslo, int BS, int BSLog2 );
 /*
  * DESCRIPTION :
  *   Computes the sums of the squares of the numbers in v,
@@ -106,8 +123,10 @@ __global__ void large_sum_the_squares
  *
  * ON ENTRY :
  *   vrehi     high real parts of a complex vector of dimension dim;
+ *   vremi     middle real parts of a complex vector of dimension dim;
  *   vrelo     low real parts of a complex vector of dimension dim;
  *   vimhi     high imaginary parts of a complex vector of dimension dim;
+ *   vimmi     middle imaginary parts of a complex vector of dimension dim;
  *   vimlo     low imaginary parts of a complex vector of dimension dim;
  *   dim       dimension of the vector must equal BS*nbsums;
  *   BS        the block size or the number of threads in the block;
@@ -115,12 +134,15 @@ __global__ void large_sum_the_squares
  *
  * ON RETURN :
  *   sumshi    high parts of sums of squares of slices of v;
+ *   sumsmi    middle parts of sums of squares of slices of v;
  *   sumslo    low parts of sums of squares of slices of v. */
 
 __global__ void large_normalize_vector
- ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
-   int dim, double *sumshi, double *sumslo, int nbsums, int nbsumsLog2,
-   int BS, double *normhi, double *normlo );
+ ( double *vrehi, double *vremi, double *vrelo,
+   double *vimhi, double *vimmi, double *vimlo, int dim,
+   double *sumshi, double *sumsmi, double *sumslo,
+   int nbsums, int nbsumsLog2, int BS,
+   double *normhi, double *normmi, double *normlo );
 /*
  * DESCRIPTION :
  *   Computes the norm of the vector v for vectors of large dimension,
@@ -133,11 +155,14 @@ __global__ void large_normalize_vector
  *
  * ON ENTRY :
  *   vrehi     high real parts of a complex vector of dimension dim;
+ *   vremi     middle real parts of a complex vector of dimension dim;
  *   vrelo     low real parts of a complex vector of dimension dim;
  *   vimhi     high imaginary parts of a complex vector of dimension dim;
+ *   vimmi     middle imaginary parts of a complex vector of dimension dim;
  *   vimlo     low imaginary parts of a complex vector of dimension dim;
  *   dim       dimension of the vector must equal BS*nbsums;
  *   sumshi    high parts of sums of squares of slices of v;
+ *   sumsmi    middle parts of sums of squares of slices of v;
  *   sumslo    high parts of sums of squares of slices of v;
  *   nbsums    the number of elements in sums equals
  *             the number of blocks in the kernel launch;
@@ -147,18 +172,25 @@ __global__ void large_normalize_vector
  * ON RETURN :
  *   vrehi     high real parts of the complex vector in same direction,
  *             of the original vector but with norm one;
+ *   vremi     middle real parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
  *   vrelo     low real parts of the complex vector in same direction,
  *             of the original vector but with norm one;
  *   vimhi     high imaginary parts of the complex vector in same direction,
  *             of the original vector but with norm one;
+ *   vimhi     middle imaginary parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
  *   vimlo     low imaginary parts of the complex vector in same direction,
  *             of the original vector but with norm one;
  *   normhi    high part of the 2-norm of the original vector v;
+ *   normhi    middle part of the 2-norm of the original vector v;
  *   normlo    low part of the 2-norm of the original vector v. */
 
 void GPU_norm
- ( double *vrehi_h, double *vrelo_h, double *vimhi_h, double *vimlo_h,
-   int dim, int freq, int BS, double *normhi, double *normlo, int blocked );
+ ( double *vrehi_h, double *vremi_h, double *vrelo_h,
+   double *vimhi_h, double *vimmi_h, double *vimlo_h,
+   int dim, int freq, int BS,
+   double *normhi, double *normmi, double *normlo, int blocked );
 /*
  * DESCRIPTION :
  *   Allocates global memory on the card, transfers the data for the vector
@@ -171,8 +203,10 @@ void GPU_norm
  *
  * ON ENTRY :
  *   vrehi_h   high real parts of a complex vector of dimension dim;
+ *   vremi_h   middle real parts of a complex vector of dimension dim;
  *   vrelo_h   low real parts of a complex vector of dimension dim;
  *   vimhi_h   high imaginary parts of a complex vector of dimension dim;
+ *   vimmi_h   middle imaginary parts of a complex vector of dimension dim;
  *   vimlo_h   low imaginary parts of a complex vector of dimension dim;
  *   dim       dimension of the given vector;
  *   freq      frequency of the number of kernel launches (for timings);
@@ -183,10 +217,13 @@ void GPU_norm
  *
  * ON RETURN :
  *   vrehi_h   high real parts of the the normalized vector on input;
+ *   vremi_h   middle real parts of the the normalized vector on input;
  *   vrelo_h   low real parts of the the normalized vector on input;
  *   vimhi_h   high imaginary parts of the the normalized vector on input;
+ *   vimmi_h   middle imaginary parts of the the normalized vector on input;
  *   vimlo_h   low imaginary parts of the the normalized vector on input;
  *   normhi    high part the 2-norm of the given vector;
+ *   normmi    middle part the 2-norm of the given vector;
  *   normlo    low part the 2-norm of the given vector. */
 
 #endif

@@ -1,3 +1,7 @@
+Thu 15 Oct 2020 : edited cmplx2_norm*, both .h, .cpp, and .cu files.
+  New cmplx3_norm_host, cmplx3_norm_kernels, test_cmplx3_norm,
+  with updated makefile and makefile_unix.
+
 Wed 14 Oct 2020 : edited random3_vectors.h, random3_vectors.cpp,
   dbl3_norm_kernels.h, and dbl4_norm_kernels.h.  Added inc_d function 
   to penta_double_functions, new random5_vectors, penta_double_gpufun,

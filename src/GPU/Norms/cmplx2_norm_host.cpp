@@ -1,14 +1,13 @@
-// The file cmplx_norm_host.cpp defines the code for the functions
-// specified in cmplx_norm_host.h.
+// The file cmplx2_norm_host.cpp defines the code for the functions
+// specified in cmplx2_norm_host.h.
 
-#include <cmath>
 #include "double_double_functions.h"
 #include "cmplx2_norm_host.h"
 
 void make_copy
  ( int dim,
-   double* orgrehi, double* orgrelo, double* orgimhi, double* orgimlo,
-   double* duprehi, double* duprelo, double* dupimhi, double* dupimlo )
+   double *orgrehi, double *orgrelo, double *orgimhi, double *orgimlo,
+   double *duprehi, double *duprelo, double *dupimhi, double *dupimlo )
 {
    for(int i=0; i<dim; i++)
    {
@@ -20,8 +19,8 @@ void make_copy
 }
 
 void CPU_norm
- ( double* vrehi, double* vrelo, double* vimhi, double* vimlo,
-   int dim, double* normhi, double* normlo )
+ ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
+   int dim, double *normhi, double *normlo )
 {
    double sumhi = 0.0;
    double sumlo = 0.0;
@@ -38,7 +37,7 @@ void CPU_norm
 }
 
 void CPU_normalize
- ( double* vrehi, double* vrelo, double* vimhi, double* vimlo,
+ ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
    int dim, double normhi, double normlo )
 {
    for(int i=0; i<dim; i++)
