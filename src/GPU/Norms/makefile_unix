@@ -418,13 +418,13 @@ test_cmplx4_norm: random_numbers.o random4_vectors.o \
 
 test_cmplx5_norm: random_numbers.o random5_vectors.o \
                   double_double_functions.o penta_double_functions.o \
-                  cmplx5_norm_host.o \
+                  cmplx5_norm_host.o cmplx5_norm_kernels.o \
                   test_cmplx5_norm.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_cmplx5_norm test_cmplx5_norm.o \
                   double_double_functions.o penta_double_functions.o \
                   random_numbers.o random5_vectors.o \
-                  cmplx5_norm_host.o \
+                  cmplx5_norm_host.o cmplx5_norm_kernels.o \
                -lcuda -lcudart -L/usr/local/cuda/lib64 
 
 clean:

@@ -55,16 +55,16 @@ __global__ void small_normalize_vector
  * ON RETURN :
  *   vrehihi     highest real parts of the normalized vector;
  *   vrelohi     second highest real parts of the normalized vector;
- *   vrehilo     lowest real parts of the normalized vector;
+ *   vrehilo     second lowest real parts of the normalized vector;
  *   vrelolo     lowest real parts of the normalized vector;
  *   vimhihi     highest imaginary parts of the normalized vector;
  *   vimlohi     second highest imaginary parts of the normalized vector;
  *   vimhilo     second lowest imaginary parts of the normalized vector;
  *   vimlolo     lowest imaginary parts of the normalized vector;
  *   normhihi    highest part of the 2-norm of the given vector;
- *   normlohi    second highest part the 2-norm of the given vector;
- *   normhilo    second lowest part the 2-norm of the given vector;
- *   normlolo    loweset part the 2-norm of the given vector. */
+ *   normlohi    second highest part of the 2-norm of the given vector;
+ *   normhilo    second lowest part of the 2-norm of the given vector;
+ *   normlolo    lowest part of the 2-norm of the given vector. */
 
 __global__ void medium_normalize_vector
  ( double *vrehihi, double *vrelohi, double *vrehilo, double *vrelolo,
@@ -99,16 +99,16 @@ __global__ void medium_normalize_vector
  * ON RETURN :
  *   vrehihi     highest real parts of the normalized vector;
  *   vrelohi     second highest real parts of the normalized vector;
- *   vrehilo     lowest real parts of the normalized vector;
+ *   vrehilo     second lowest real parts of the normalized vector;
  *   vrelolo     lowest real parts of the normalized vector;
  *   vimhihi     highest imaginary parts of the normalized vector;
  *   vimlohi     second highest imaginary parts of the normalized vector;
  *   vimhilo     second lowest imaginary parts of the normalized vector;
  *   vimlolo     lowest imaginary parts of the normalized vector;
  *   normhihi    highest part of the 2-norm of the given vector;
- *   normlohi    second highest part the 2-norm of the given vector;
- *   normhilo    second lowest part the 2-norm of the given vector;
- *   normlolo    loweset part the 2-norm of the given vector. */
+ *   normlohi    second highest part of the 2-norm of the given vector;
+ *   normhilo    second lowest part of the 2-norm of the given vector;
+ *   normlolo    lowest part of the 2-norm of the given vector. */
 
 __global__ void large_sum_the_squares
  ( double *vrehihi, double *vrelohi, double *vrehilo, double *vrelolo,
@@ -182,16 +182,16 @@ __global__ void large_normalize_vector
  * ON RETURN :
  *   vrehihi     highest real parts of the normalized vector;
  *   vrelohi     second highest real parts of the normalized vector;
- *   vrehilo     lowest real parts of the normalized vector;
+ *   vrehilo     second lowest real parts of the normalized vector;
  *   vrelolo     lowest real parts of the normalized vector;
  *   vimhihi     highest imaginary parts of the normalized vector;
  *   vimlohi     second highest imaginary parts of the normalized vector;
  *   vimhilo     second lowest imaginary parts of the normalized vector;
  *   vimlolo     lowest imaginary parts of the normalized vector;
- *   normhihi    highest part the 2-norm of the given vector;
- *   normlohi    second highest part the 2-norm of the given vector;
- *   normhilo    second lowest part the 2-norm of the given vector;
- *   normlolo    loweset part the 2-norm of the given vector. */
+ *   normhihi    highest part of the 2-norm of the given vector;
+ *   normlohi    second highest part of the 2-norm of the given vector;
+ *   normhilo    second lowest part of the 2-norm of the given vector;
+ *   normlolo    lowest part of the 2-norm of the given vector. */
 
 void GPU_norm
  ( double *vrehihi_h, double *vrelohi_h, double *vrehilo_h, double *vrelolo_h,
@@ -229,15 +229,15 @@ void GPU_norm
  * ON RETURN :
  *   vrehihi_h   highest real parts of the normalized vector;
  *   vrelohi_h   second highest real parts of the normalized vector;
- *   vrehilo_h   lowest real parts of the normalized vector;
+ *   vrehilo_h   second lowest real parts of the normalized vector;
  *   vrelolo_h   lowest real parts of the normalized vector;
  *   vimhihi_h   highest imaginary parts of the normalized vector;
  *   vimlohi_h   second highest imaginary parts of the normalized vector;
  *   vimhilo_h   second lowest imaginary parts of the normalized vector;
  *   vimlolo_h   lowest imaginary parts of the normalized vector;
- *   normhihi    highest part the 2-norm of the given vector;
- *   normlohi    second highest part the 2-norm of the given vector;
- *   normhilo    second lowest part the 2-norm of the given vector;
- *   normlolo    loweset part the 2-norm of the given vector. */
+ *   normhihi    highest part of the 2-norm of the given vector;
+ *   normlohi    second highest part of the 2-norm of the given vector;
+ *   normhilo    second lowest part of the 2-norm of the given vector;
+ *   normlolo    lowest part of the 2-norm of the given vector. *of /
 
 #endif

@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <vector_types.h>
-// #include "cmplx5_norm_kernels.h"
+#include "cmplx5_norm_kernels.h"
 #include "cmplx5_norm_host.h"
 #include "random5_vectors.h"
 #include "penta_double_functions.h"
@@ -139,21 +139,23 @@ void run
            vimtb_host,vimix_host,vimmi_host,vimrg_host,vimpk_host,
        vretb_device,vreix_device,vremi_device,vrerg_device,vrepk_device,
        vimtb_device,vimix_device,vimmi_device,vimrg_device,vimpk_device);
-/*
+
    if(mode == 0 || mode == 2)
    {
-      GPU_norm(vretb_device,vreix_device,vremi_device,vrerg_device,
-               vimtb_device,vimix_device,vimmi_device,vimrg_device,
-         dim,1,BS,
-         vtbnorm_device,vixnorm_device,vminorm_device,vrgnorm_device,
-         blocked);
-      GPU_norm(vretb_device,vreix_device,vremi_device,vrerg_device,
-               vimtb_device,vimix_device,vimmi_device,vimrg_device,
-         dim,freq,BS,
-         wtbnorm_device,wixnorm_device,wminorm_device,wrgnorm_device,
-         blocked);
+      GPU_norm
+         (vretb_device,vreix_device,vremi_device,vrerg_device,vrepk_device,
+          vimtb_device,vimix_device,vimmi_device,vimrg_device,vimpk_device,
+          dim,1,BS,
+          vtbnorm_device,vixnorm_device,vminorm_device,vrgnorm_device,
+          vpknorm_device,blocked);
+      GPU_norm
+         (vretb_device,vreix_device,vremi_device,vrerg_device,vrepk_device,
+          vimtb_device,vimix_device,vimmi_device,vimrg_device,vimpk_device,
+          dim,freq,BS,
+          wtbnorm_device,wixnorm_device,wminorm_device,wrgnorm_device,
+          wpknorm_device,blocked);
    }
- */
+
    if(mode == 1 || mode == 2)
    {
       for(int i=0; i<=freq; i++)
@@ -166,7 +168,7 @@ void run
                        vimtb_host,vimix_host,vimmi_host,vimrg_host,vimpk_host,
                    wretb_host,wreix_host,wremi_host,wrerg_host,wrepk_host,
                    wimtb_host,wimix_host,wimmi_host,wimrg_host,wimpk_host);
-         CPU_normalize(wretb_host,wreix_host,wremi_host,wrerg_host,vrepk_host,
+         CPU_normalize(wretb_host,wreix_host,wremi_host,wrerg_host,wrepk_host,
                        wimtb_host,wimix_host,wimmi_host,wimrg_host,wimpk_host,
                        dim,*vtbnorm_host,*vixnorm_host,*vminorm_host,
                            *vrgnorm_host,*vpknorm_host);
@@ -229,8 +231,8 @@ int verify_correctness ( int dim, int BS, int blocked )
               + abs(wminorm_device - wminorm_host)
               + abs(vrgnorm_device - vrgnorm_host)
               + abs(wrgnorm_device - wrgnorm_host)
-              + abs(wpknorm_device - wpknorm_host)
-              + abs(vpknorm_device - vpknorm_host);
+              + abs(vpknorm_device - vpknorm_host)
+              + abs(wpknorm_device - wpknorm_host);
 
    cout << scientific << setprecision(4) << "error : " << err;
    if(err <= tol)

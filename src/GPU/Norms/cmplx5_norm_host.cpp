@@ -67,11 +67,11 @@ void CPU_normalize
 {
    for(int i=0; i<dim; i++)
    {
-      pdf_div( vretb[i],vreix[i],vremi[i],vrerg[i],vrepk[i],
-              normtb, normix,  normmi,  normrg,  normpk,
+      pdf_div( vretb[i], vreix[i], vremi[i], vrerg[i], vrepk[i],
+              normtb,   normix,   normmi,   normrg,   normpk,
               &vretb[i],&vreix[i],&vremi[i],&vrerg[i],&vrepk[i]);
-      pdf_div( vimtb[i],vimix[i],vimmi[i],vimrg[i],     vimpk[i],
-              normtb, normix,normmi,normrg,normpk,
+      pdf_div( vimtb[i], vimix[i], vimmi[i], vimrg[i], vimpk[i],
+              normtb,   normix,   normmi,   normrg,   normpk,
               &vimtb[i],&vimix[i],&vimmi[i],&vimrg[i],&vimpk[i]);
    }
 }

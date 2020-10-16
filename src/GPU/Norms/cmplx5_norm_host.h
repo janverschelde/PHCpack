@@ -48,7 +48,7 @@ void make_copy
  *   dupimtb   space for highest imaginary parts of a vector;
  *   dupimix   space for second highest imaginary parts of a vector;
  *   dupimmi   space for middle imaginary parts of a vector;
- *   dupimrg   space for secondklowest imaginary parts of a vector;
+ *   dupimrg   space for second lowest imaginary parts of a vector;
  *   dupimpk   space for lowest imaginary parts of a vector.
  *
  * ON RETURN :
