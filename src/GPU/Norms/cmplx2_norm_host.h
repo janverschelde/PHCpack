@@ -71,7 +71,7 @@ void CPU_normalize
  *   vimlo     low imaginary parts of a double double vector, of size dim;
  *   dim       dimension of the vector v;
  *   normhi    high part of the norm to normalize the vector;
- *   normhi    low part of the norm to normalize the vector.
+ *   normlo    low part of the norm to normalize the vector.
  *
  * ON RETURN :
  *   vrehi     high real parts of the normalized vector;

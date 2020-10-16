@@ -46,10 +46,10 @@ void run
  *   vlonorm_host    low part of 2-norm computed by the host;
  *   whinorm_device  high part of 2-norm on device after normalization;
  *   wminorm_device  middle part of 2-norm on device after normalization;
- *   wlonorm_device  low norm of 2-norm on device after normalization;
+ *   wlonorm_device  low part of 2-norm on device after normalization;
  *   whinorm_host    high part of 2-norm on host after normalization;
  *   wminorm_host    middle part of 2-norm on host after normalization;
- *   wlonorm_host    low norm of 2-norm on host after normalization.  */
+ *   wlonorm_host    low part of 2-norm on host after normalization.  */
 
 int verify_correctness ( int dim, int BS, int blocked );
 /*

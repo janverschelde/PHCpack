@@ -152,18 +152,19 @@ __global__ void large_normalize_vector
  *   The dimension dim equals the block size BS times nbsums.
  *   The block size BS is the number of threads in the block.
  *   The number of blocks equals nbsums.
+ *   All arrays have size dim.
  *
  * ON ENTRY :
- *   vrehi     high real parts of a complex vector of dimension dim;
- *   vremi     middle real parts of a complex vector of dimension dim;
- *   vrelo     low real parts of a complex vector of dimension dim;
- *   vimhi     high imaginary parts of a complex vector of dimension dim;
- *   vimmi     middle imaginary parts of a complex vector of dimension dim;
- *   vimlo     low imaginary parts of a complex vector of dimension dim;
+ *   vrehi     high real parts of a complex vector;
+ *   vremi     middle real parts of a complex vector;
+ *   vrelo     low real parts of a complex vector;
+ *   vimhi     high imaginary parts of a complex vector;
+ *   vimmi     middle imaginary parts of a complex vector;
+ *   vimlo     low imaginary parts of a complex vector;
  *   dim       dimension of the vector must equal BS*nbsums;
  *   sumshi    high parts of sums of squares of slices of v;
  *   sumsmi    middle parts of sums of squares of slices of v;
- *   sumslo    high parts of sums of squares of slices of v;
+ *   sumslo    low parts of sums of squares of slices of v;
  *   nbsums    the number of elements in sums equals
  *             the number of blocks in the kernel launch;
  *   nbsumsLog2 is ceil(log2((double) nbsums), used in sum reduction;
@@ -200,14 +201,15 @@ void GPU_norm
  *
  * REQUIRED :
  *   The dimension dim is a multiple of the block size BS.
+ *   All arrays have size dim.
  *
  * ON ENTRY :
- *   vrehi_h   high real parts of a complex vector of dimension dim;
- *   vremi_h   middle real parts of a complex vector of dimension dim;
- *   vrelo_h   low real parts of a complex vector of dimension dim;
- *   vimhi_h   high imaginary parts of a complex vector of dimension dim;
- *   vimmi_h   middle imaginary parts of a complex vector of dimension dim;
- *   vimlo_h   low imaginary parts of a complex vector of dimension dim;
+ *   vrehi_h   high real parts of a complex vector;
+ *   vremi_h   middle real parts of a complex vector;
+ *   vrelo_h   low real parts of a complex vector;
+ *   vimhi_h   high imaginary parts of a complex vector;
+ *   vimmi_h   middle imaginary parts of a complex vector;
+ *   vimlo_h   low imaginary parts of a complex vector;
  *   dim       dimension of the given vector;
  *   freq      frequency of the number of kernel launches (for timings);
  *   BS        block size, number of threads per block;
@@ -216,12 +218,12 @@ void GPU_norm
  *             dim must be a multiple of BS.
  *
  * ON RETURN :
- *   vrehi_h   high real parts of the the normalized vector on input;
- *   vremi_h   middle real parts of the the normalized vector on input;
- *   vrelo_h   low real parts of the the normalized vector on input;
- *   vimhi_h   high imaginary parts of the the normalized vector on input;
- *   vimmi_h   middle imaginary parts of the the normalized vector on input;
- *   vimlo_h   low imaginary parts of the the normalized vector on input;
+ *   vrehi_h   high real parts of the normalized vector;
+ *   vremi_h   middle real parts of the normalized vector;
+ *   vrelo_h   low real parts of the normalized vector;
+ *   vimhi_h   high imaginary parts of the normalized vector;
+ *   vimmi_h   middle imaginary parts of the normalized vector;
+ *   vimlo_h   low imaginary parts of the normalized vector;
  *   normhi    high part the 2-norm of the given vector;
  *   normmi    middle part the 2-norm of the given vector;
  *   normlo    low part the 2-norm of the given vector. */

@@ -1,6 +1,9 @@
 Thu 15 Oct 2020 : edited cmplx2_norm*, both .h, .cpp, and .cu files.
   New cmplx3_norm_host, cmplx3_norm_kernels, test_cmplx3_norm,
   with updated makefile and makefile_unix.
+  Edited cmplx2_norm_host.h test_cmplx2_norm.cpp, test_cmplx3_norm.cpp,
+  cmplx3_norm_kernels.h, cmplx3_norm_kernels.cu.
+  New cmplx4_norm_host, cmplx4_norm_kernels, test_cmplx4_norm.
 
 Wed 14 Oct 2020 : edited random3_vectors.h, random3_vectors.cpp,
   dbl3_norm_kernels.h, and dbl4_norm_kernels.h.  Added inc_d function 

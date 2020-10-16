@@ -1,6 +1,6 @@
-// Defines code of the functions in cmplx2_norm_kernels.h,
+// Defines code of the functions in cmplx3_norm_kernels.h,
 // to compute the 2-norm and normalize a complex vector,
-// in double double precision,
+// in triple double precision,
 // for vectors of small, medium, and large size.
 
 #include "double_double_gpufun.cu"
