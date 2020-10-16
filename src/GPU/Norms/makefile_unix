@@ -51,6 +51,10 @@ cmplx4_norm_kernels.o:
 	@-echo ">>> compiling norm kernels for complex quad doubles ..."
 	nvcc -ccbin=$(gcc) -c cmplx4_norm_kernels.cu
 
+cmplx5_norm_kernels.o:
+	@-echo ">>> compiling norm kernels for complex penta doubles ..."
+	nvcc -ccbin=$(gcc) -c cmplx5_norm_kernels.cu
+
 # nvcc -ccbin=$(gcc) -arch=sm_13 -c dbl_norm_kernels.cu
 
 double_double.o:
@@ -212,6 +216,10 @@ cmplx4_norm_host.o:
 	@-echo ">>> compiling cmplx4_norm_host ..."
 	$(gpp) -O3 -c cmplx4_norm_host.cpp
 
+cmplx5_norm_host.o:
+	@-echo ">>> compiling cmplx5_norm_host ..."
+	$(gpp) -O3 -c cmplx5_norm_host.cpp
+
 run_dbl_norm.o:
 	@-echo ">>> compiling run_dbl_norm ..."
 	$(gpp) -I/usr/local/cuda/include -O3 -c run_dbl_norm.cpp
@@ -268,6 +276,10 @@ test_cmplx3_norm.o:
 test_cmplx4_norm.o:
 	@-echo ">>> compiling test_cmplx4_norm ..."
 	$(gpp) -I/usr/local/cuda/include -O3 -c test_cmplx4_norm.cpp
+
+test_cmplx5_norm.o:
+	@-echo ">>> compiling test_cmplx5_norm ..."
+	$(gpp) -I/usr/local/cuda/include -O3 -c test_cmplx5_norm.cpp
 
 run_dbl_norm: dbl_norm_kernels.o dbl_norm_host.o \
               random_numbers.o random_vectors.o \
@@ -404,6 +416,17 @@ test_cmplx4_norm: random_numbers.o random4_vectors.o \
                   cmplx4_norm_host.o cmplx4_norm_kernels.o \
                -lcuda -lcudart -L/usr/local/cuda/lib64 
 
+test_cmplx5_norm: random_numbers.o random5_vectors.o \
+                  double_double_functions.o penta_double_functions.o \
+                  cmplx5_norm_host.o \
+                  test_cmplx5_norm.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_cmplx5_norm test_cmplx5_norm.o \
+                  double_double_functions.o penta_double_functions.o \
+                  random_numbers.o random5_vectors.o \
+                  cmplx5_norm_host.o \
+               -lcuda -lcudart -L/usr/local/cuda/lib64 
+
 clean:
 	/bin/rm -f -r double_double.o double_double_functions.o
 	/bin/rm -f -r test_double_doubles.o test_double_doubles
@@ -442,6 +465,8 @@ clean:
 	/bin/rm -f -r test_cmplx3_norm.o test_cmplx3_norm 
 	/bin/rm -f -r cmplx4_norm_host.o cmplx4_norm_kernels.o
 	/bin/rm -f -r test_cmplx4_norm.o test_cmplx4_norm 
+	/bin/rm -f -r cmplx5_norm_host.o cmplx5_norm_kernels.o
+	/bin/rm -f -r test_cmplx5_norm.o test_cmplx5_norm 
 	/bin/rm -f -r dbl4_norm_host.o dbl4_norm_kernels.o
 	/bin/rm -f -r test_dbl4_norm.o test_dbl4_norm
 	/bin/rm -f -r dbl5_norm_host.o dbl5_norm_kernels.o

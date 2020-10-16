@@ -66,5 +66,8 @@ test_cmplx3_norm:
 test_cmplx4_norm:
 	make -f $(MAKEFILE) test_cmplx4_norm
 
+test_cmplx5_norm:
+	make -f $(MAKEFILE) test_cmplx5_norm
+
 clean:
 	make -f $(MAKEFILE) clean

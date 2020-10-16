@@ -61,8 +61,8 @@ void random_complex5_vectors
 
    for(int k=0; k<dim; k++)
    {
-      random_penta_double(&rnd_tb,&rnd_ix,&rnd_mi,&rnd_ix,&rnd_pk);
-      sinrnd_tb = rnd_tb; sinrnd_ix = rnd_ix; sinrnd_mi = rnd_ix;
+      random_penta_double(&rnd_tb,&rnd_ix,&rnd_mi,&rnd_rg,&rnd_pk);
+      sinrnd_tb = rnd_tb; sinrnd_ix = rnd_ix; sinrnd_mi = rnd_mi;
       sinrnd_rg = rnd_rg; sinrnd_pk = rnd_pk; 
 
       double y_tb,y_ix,y_mi,y_rg,y_pk;      // work around to compute cos
