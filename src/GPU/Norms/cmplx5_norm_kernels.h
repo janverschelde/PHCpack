@@ -8,7 +8,7 @@
   The constant pd_shmemsize determines the size of the vectors
   stored in shared memory.  As every thread works on one entry
   in the shared memory vectors, for penta double precision,
-  ttbs size is bounded by the number of threads in a block.
+  this size is bounded by the number of threads in a block.
   The largest dimension for which the small normalization runs
   is thus the value of pd_shmemsize.
  */

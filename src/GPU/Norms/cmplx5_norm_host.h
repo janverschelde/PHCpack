@@ -1,4 +1,4 @@
-// The file cmplx4_norm_host.h specifies functions to compute
+// The file cmplx5_norm_host.h specifies functions to compute
 // the 2-norm of a complex vector and to normalize a complex vector,
 // in penta double precision.
 
@@ -118,8 +118,8 @@ void CPU_normalize
  *   vrepk    lowest real parts of a penta double vector;
  *   vimtb    highest imaginary parts of a penta double vector;
  *   vimix    second highest imaginary parts of a penta double vector;
- *   vimmi    second lowest imaginary parts of a penta double vector;
- *   vimrg    lowest imaginary parts of a penta double vector;
+ *   vimmi    middle imaginary parts of a penta double vector;
+ *   vimrg    second lowest imaginary parts of a penta double vector;
  *   vimpk    lowest imaginary parts of a penta double vector;
  *   dim      dimension of the vector v;
  *   normtb   highest part of the norm to normalize the vector;

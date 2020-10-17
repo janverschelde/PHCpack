@@ -1,5 +1,5 @@
 /* This program runs automatic tests to compute norms of complex vectors
-   in double precision, for preset values of the parameters.
+   in penta double precision, for preset values of the parameters.
    No input is required from the user. */
 
 #include <ctime>
