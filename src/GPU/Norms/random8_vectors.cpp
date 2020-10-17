@@ -84,10 +84,10 @@ void random_complex8_vectors
             double *vimhilolo_host, double *vimlololo_host,
    double *vrehihihi_device, double *vrelohihi_device,
    double *vrehilohi_device, double *vrelolohi_device,
-   double *vimhihihi_device, double *vimlohihi_device,
-   double *vimhilohi_device, double *vimlolohi_device,
    double *vrehihilo_device, double *vrelohilo_device,
    double *vrehilolo_device, double *vrelololo_device,
+   double *vimhihihi_device, double *vimlohihi_device,
+   double *vimhilohi_device, double *vimlolohi_device,
    double *vimhihilo_device, double *vimlohilo_device,
    double *vimhilolo_device, double *vimlololo_device )
 {

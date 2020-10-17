@@ -3,6 +3,9 @@ Fri 16 Oct 2020 : edited cmplx4_norm_kernels.h.
   Edited cmplx5_norm_host.h and cmplx5_norm_host.cpp.
   New cmplx5_norm_kernels.h and cmplx5_norm_kernels.cu, with tests
   added to test_cmplx5_norm.cpp; updated makefile_unix.
+  Fixed swap of parameters in random8_vectors.h, random8_vectors.cpp.
+  New cmplx8_norm_host, cmplx8_norm_kernels, test_cmplx8_norm,
+  with updated makefile and makefile_unix.
 
 Thu 15 Oct 2020 : edited cmplx2_norm*, both .h, .cpp, and .cu files.
   New cmplx3_norm_host, cmplx3_norm_kernels, test_cmplx3_norm,
