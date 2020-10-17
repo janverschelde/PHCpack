@@ -81,9 +81,14 @@ cmplx5_norm_kernels.obj:
                           -o cmplx5_norm_kernels.obj
 
 cmplx8_norm_kernels.obj:
-	@-echo ">>> compiling norm kernels for complex penta doubles ..."
+	@-echo ">>> compiling norm kernels for complex octo doubles ..."
 	nvcc -ccbin=$(CL) -c -O3 cmplx8_norm_kernels.cu \
                           -o cmplx8_norm_kernels.obj
+
+cmplx10_norm_kernels.obj:
+	@-echo ">>> compiling norm kernels for complex deca doubles ..."
+	nvcc -ccbin=$(CL) -c -O3 cmplx10_norm_kernels.cu \
+                          -o cmplx10_norm_kernels.obj
 
 double_double.obj:
 	@-echo ">>> compiling double_double ..."
@@ -282,6 +287,11 @@ cmplx8_norm_host.obj:
 	$(CL)\cl /c cmplx8_norm_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: cmplx8_norm_host.obj
 
+cmplx10_norm_host.obj:
+	@-echo ">>> compiling cmplx10_norm_host ..."
+	$(CL)\cl /c cmplx10_norm_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: cmplx10_norm_host.obj
+
 run_dbl_norm.obj:
 	@-echo ">>> compiling run_dbl_norm ..."
 	$(CL)\cl /c run_dbl_norm.cpp -I$(winkitucrt) -I$(includepath) \
@@ -366,6 +376,11 @@ test_cmplx8_norm.obj:
 	@-echo ">>> compiling test_cmplx8_norm ..."
 	$(CL)\cl /c -O2 test_cmplx8_norm.cpp -I$(winkitucrt) -I$(includepath) \
                  /I$(CUDASDK)/include /Fo: test_cmplx8_norm.obj /EHsc
+
+test_cmplx10_norm.obj:
+	@-echo ">>> compiling test_cmplx8_norm ..."
+	$(CL)\cl /c -O2 test_cmplx10_norm.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include /Fo: test_cmplx10_norm.obj /EHsc
 
 run_dbl_norm: dbl_norm_kernels.obj dbl_norm_host.obj \
 	      random_numbers.obj random_vectors.obj \
@@ -521,6 +536,18 @@ test_cmplx8_norm: cmplx8_norm_host.obj random_numbers.obj random8_vectors.obj \
              octo_double_functions.obj random_numbers.obj \
              random8_vectors.obj cmplx8_norm_kernels.obj \
              test_cmplx8_norm.obj
+
+test_cmplx10_norm: cmplx10_norm_host.obj \
+                   random_numbers.obj random10_vectors.obj \
+                   double_double_functions.obj quad_double_functions.obj \
+                   octo_double_functions.obj deca_double_functions.obj \
+                   cmplx10_norm_kernels.obj test_cmplx10_norm.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_cmplx10_norm.exe cmplx10_norm_host.obj \
+             double_double_functions.obj quad_double_functions.obj \
+             octo_double_functions.obj deca_double_functions.obj \
+             random_numbers.obj random10_vectors.obj cmplx10_norm_kernels.obj \
+             test_cmplx10_norm.obj
 
 clean:
 	del *exe *obj *exp *lib *~
