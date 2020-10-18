@@ -82,18 +82,18 @@ int main ( void )
 {
    int fail;
 
-   cout << "Verifying correctness for dimension and block size 32 ..."
+   cout << "Verifying correctness for dimension and block size 128 ..."
         << endl;
-   fail = verify_correctness(32,32,0);
-/*
-   cout << "Nonblocked version form dimension 1024 and block size 256..."
-        << endl;
-   fail = verify_correctness(1024,256,0);
+   fail = verify_correctness(128,128,0);
 
-   cout << "Blocked version form dimension 4096 and block size 256..."
+   cout << "Nonblocked version form dimension 1024 and block size 128 ..."
         << endl;
-   fail = verify_correctness(4096,256,1);
- */
+   fail = verify_correctness(1024,128,0);
+
+   cout << "Blocked version form dimension 4096 and block size 128 ..."
+        << endl;
+   fail = verify_correctness(4096,128,1);
+
    return 0;
 }
 
@@ -189,6 +189,31 @@ void run
        vreltb_device,vrelix_device,vrelmi_device,vrelrg_device,vrelpk_device,
        vimrtb_device,vimrix_device,vimrmi_device,vimrrg_device,vimrpk_device,
        vimltb_device,vimlix_device,vimlmi_device,vimlrg_device,vimlpk_device);
+/*
+   for(int k=0; k<dim; k++)
+   {
+      vimrtb_host[k] = 0.0; vimrtb_device[k] = 0.0;
+      vimrix_host[k] = 0.0; vimrix_device[k] = 0.0;
+      vimrmi_host[k] = 0.0; vimrmi_device[k] = 0.0;
+      vimrrg_host[k] = 0.0; vimrrg_device[k] = 0.0;
+      vimrpk_host[k] = 0.0; vimrpk_device[k] = 0.0;
+      vimltb_host[k] = 0.0; vimltb_device[k] = 0.0;
+      vimlix_host[k] = 0.0; vimlix_device[k] = 0.0;
+      vimlmi_host[k] = 0.0; vimlmi_device[k] = 0.0;
+      vimlrg_host[k] = 0.0; vimlrg_device[k] = 0.0;
+      vrertb_host[k] = 0.0; vrertb_device[k] = 0.0;
+      vrerix_host[k] = 0.0; vrerix_device[k] = 0.0;
+      vrermi_host[k] = 0.0; vrermi_device[k] = 0.0;
+      vrerrg_host[k] = 0.0; vrerrg_device[k] = 0.0;
+      vrerpk_host[k] = 0.0; vrerpk_device[k] = 0.0;
+      vreltb_host[k] = 0.0; vreltb_device[k] = 0.0;
+      vrelix_host[k] = 0.0; vrelix_device[k] = 0.0;
+      vrelmi_host[k] = 0.0; vrelmi_device[k] = 0.0;
+      vrelrg_host[k] = 0.0; vrelrg_device[k] = 0.0;
+      vrelpk_host[k] = 0.0; vrelpk_device[k] = 0.0; 
+   }
+ */
+   // vrertb_host[0] = 1.0; vrertb_device[0] = 1.0;
 
    double diffsum = 0.0;
    for(int k=0; k<dim; k++)
@@ -214,7 +239,7 @@ void run
                + fabs(vimlpk_host[k] - vimlpk_device[k]);
 
    cout << "dim : " << dim << endl;
-   cout << "BS : " << dim << endl;
+   cout << "BS : " << BS << endl;
    cout << "diffsum : " << diffsum << endl;
 
    if(mode == 0 || mode == 2)

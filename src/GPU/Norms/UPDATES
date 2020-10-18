@@ -1,7 +1,11 @@
+Sun 18 Oct 2020 : set the da_shmemsize to 128 in cmplx10_norm_kernels.h,
+  added kernels for medium and large vectors in cmplx10_norm_kernels.cu,
+  with modifications in test_cmplx10_norm.cpp.
+
 Sat 17 Oct 2020 : edited cmplx5_norm_host.h, test_cmplx5_norm.cpp,
   and cmplx5_norm_kernels.h.  New cmplx10_norm_host, test_cmplx10_norm.cpp,
   and the start of cmplx10_norm_kernels.  Updated makefile
-  and the makefile_unix.
+  and the makefile_unix.  And then also makefile_windows.
 
 Fri 16 Oct 2020 : edited cmplx4_norm_kernels.h.
   Fixed bug in pdf_sqrt in penta_double_functions.cpp.

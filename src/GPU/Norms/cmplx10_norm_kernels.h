@@ -13,7 +13,7 @@
   is thus the value of da_shmemsize.
  */
 
-#define da_shmemsize 32
+#define da_shmemsize 128
 
 /*
   The constant maxrounds determines the number of rounds
