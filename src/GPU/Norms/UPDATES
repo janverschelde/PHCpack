@@ -9,6 +9,8 @@ Mon 19 Oct 2020 : in cmplx10_norm_kernels.h and dbl10_norm_kernels.h
   in dbl10_norm_kernels.h and cmplx10_norm_kernels.h.
   Fixed run_dbl8_norm.cpp so all doubles of the GPU_norm show correctly.
   Increased the od_shmemsize in {dbl8,cmplx8}_norm_kernels.h.
+  Increased the qd_shmemsize in {dbl4,cmplx4}_norm_kernels.h.
+  Increased the dd_shmemsize in {dbl2,cmplx2}_norm_kernels.h.
 
 Sun 18 Oct 2020 : set the da_shmemsize to 128 in cmplx10_norm_kernels.h,
   added kernels for medium and large vectors in cmplx10_norm_kernels.cu,

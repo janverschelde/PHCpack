@@ -11,18 +11,24 @@
   this size is bounded by the number of threads in a block.
   The largest dimension for which the small normalization runs
   is thus the value of dd_shmemsize.
+  The largest dimension for which the large normalization runs
+  is the square of the value of dd_shmemsize because the algorithm
+  sums two arrays of squares, the squares of the real and the
+  squares of the imaginary part, thus very similar to case of
+  the small normalization.  For example, for dd_shmemsize = 1024,
+  the largest dimension is thus 1024*1024 = 1048576.
  */
 
-#define dd_shmemsize 512
+#define dd_shmemsize 1024
 
 /*
   The constant maxrounds determines the number of rounds
   in the normalization of medium sized vectors.
   The largest dimension for a medium size normalization
-  is thus dd_shemsize*maxrounds, for instance: 512*32 = 16384.
+  is thus dd_shemsize*maxrounds, for instance: 1024*384 = 393216.
  */
 
-#define maxrounds 32
+#define maxrounds 384
 
 __global__ void small_normalize_vector
  ( double *vhi, double *vlo, int dim, int dimLog2,
