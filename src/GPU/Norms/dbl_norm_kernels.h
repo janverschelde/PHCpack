@@ -22,7 +22,7 @@
   is thus d_shemsize*maxrounds, for instance: 1024*32 = 32768.
  */
 
-#define maxrounds 32
+#define maxrounds 1024
 
 __global__ void small_normalize_vector
  ( double* v, int dim, int dimLog2, double* twonorm );
