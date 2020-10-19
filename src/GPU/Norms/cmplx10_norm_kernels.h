@@ -25,7 +25,7 @@
   The constant maxrounds determines the number of rounds
   in the normalization of medium sized vectors.
   The largest dimension for a medium size normalization
-  is thus da_shemsize*maxrounds, for instance: 128*96 = 12288.
+  is thus da_shmemsize*maxrounds, for instance: 128*96 = 12288.
  */
 
 #define maxrounds 96

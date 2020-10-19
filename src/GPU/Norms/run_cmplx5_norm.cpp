@@ -97,7 +97,7 @@ int main ( int argc, char *argv[] )
          (vretb_device,vreix_device,vremi_device,vrerg_device,vrepk_device,
           vimtb_device,vimix_device,vimmi_device,vimrg_device,vimpk_device,
           dim,freq,BS,
-          &wtbnorm_device,&wixnorm_device,&vminorm_device,
+          &wtbnorm_device,&wixnorm_device,&wminorm_device,
           &wrgnorm_device,&wpknorm_device,1);
    }
 

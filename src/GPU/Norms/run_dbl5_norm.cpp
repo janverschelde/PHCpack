@@ -73,7 +73,7 @@ int main ( int argc, char *argv[] )
       GPU_norm(vtb_device,vix_device,vmi_device,vrg_device,vpk_device,
                dim,freq,BS,
                &wtbnorm_device,&wixnorm_device,&wminorm_device,
-               &wrgnorm_device,&vpknorm_device,1);
+               &wrgnorm_device,&wpknorm_device,1);
    }
 
    if(mode==1 || mode==2) // CPU computation of the norm
