@@ -2,8 +2,11 @@ Sun 18 Oct 2020 : set the da_shmemsize to 128 in cmplx10_norm_kernels.h,
   added kernels for medium and large vectors in cmplx10_norm_kernels.cu,
   with modifications in test_cmplx10_norm.cpp.
   Set the da_shmemsize to 128 in dbl10_norm_kernels.h.
-  Add new run_{dbl3,dbl4,dbl5,dbl8,dbl10}_norm, with extended makefile
-  and makefile_unix.
+  Added new run_{dbl3,dbl4,dbl5,dbl8,dbl10}_norm, with extended makefile
+  and makefile_unix; updated makefile_windows.
+  Fixed unterminated comment in cmplx4_norm_kernels.h.
+  Added new run_{cmplx3,cmplx4,cmplx5,cmplx8,cmplx10}_norm, with extended
+  makefile, makefile_unix, and makefile_windows.
 
 Sat 17 Oct 2020 : edited cmplx5_norm_host.h, test_cmplx5_norm.cpp,
   and cmplx5_norm_kernels.h.  New cmplx10_norm_host, test_cmplx10_norm.cpp,

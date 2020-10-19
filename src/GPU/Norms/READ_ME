@@ -81,6 +81,11 @@ cmplx8_norm_kernels     : 2-norm kernels for complex octo double vectors
 cmplx10_norm_kernels    : 2-norm kernels for complex deca double vectors
 run_cmplx_norm          : test norms of complex double vectors
 run_cmplx2_norm         : test norms of complex double double vectors
+run_cmplx3_norm         : test norms of complex triple double vectors
+run_cmplx4_norm         : test norms of complex quad double vectors
+run_cmplx5_norm         : test norms of complex penta double vectors
+run_cmplx8_norm         : test norms of complex octo double vectors
+run_cmplx10_norm        : test norms of complex deca double vectors
 test_cmplx_norm         : test complex 2-norm without command line parameters
 test_cmplx2_norm        : test 2-norm of complex double double vectors
 test_cmplx3_norm        : test 2-norm of complex triple double vectors

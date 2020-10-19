@@ -338,6 +338,36 @@ run_cmplx2_norm.obj:
                  /I$(CUDASDK)/include -I$(QDsrc) -O2 \
                  /Fo: run_cmplx2_norm.obj /EHsc
 
+run_cmplx3_norm.obj:
+	@-echo ">>> compiling run_cmplx3_norm ..."
+	$(CL)\cl /c run_cmplx3_norm.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -I$(QDsrc) -O2 \
+                 /Fo: run_cmplx3_norm.obj /EHsc
+
+run_cmplx4_norm.obj:
+	@-echo ">>> compiling run_cmplx4_norm ..."
+	$(CL)\cl /c run_cmplx4_norm.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -I$(QDsrc) -O2 \
+                 /Fo: run_cmplx4_norm.obj /EHsc
+
+run_cmplx5_norm.obj:
+	@-echo ">>> compiling run_cmplx5_norm ..."
+	$(CL)\cl /c run_cmplx5_norm.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -I$(QDsrc) -O2 \
+                 /Fo: run_cmplx5_norm.obj /EHsc
+
+run_cmplx8_norm.obj:
+	@-echo ">>> compiling run_cmplx8_norm ..."
+	$(CL)\cl /c run_cmplx8_norm.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -I$(QDsrc) -O2 \
+                 /Fo: run_cmplx8_norm.obj /EHsc
+
+run_cmplx10_norm.obj:
+	@-echo ">>> compiling run_cmplx10_norm ..."
+	$(CL)\cl /c run_cmplx10_norm.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -I$(QDsrc) -O2 \
+                 /Fo: run_cmplx10_norm.obj /EHsc
+
 test_dbl_norm.obj:
 	@-echo ">>> compiling test_dbl_norm ..."
 	$(CL)\cl /c test_dbl_norm.cpp -I$(winkitucrt) -I$(includepath) \
@@ -489,13 +519,67 @@ run_cmplx_norm: cmplx_norm_kernels.obj cmplx_norm_host.obj \
 
 run_cmplx2_norm: cmplx2_norm_kernels.obj cmplx2_norm_host.obj \
                  double_double.obj double_double_functions.obj \
-                random_numbers.obj random2_vectors.obj \
-                parse_run_arguments.obj run_cmplx2_norm.obj
+                 random_numbers.obj random2_vectors.obj \
+                 parse_run_arguments.obj run_cmplx2_norm.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o run_cmplx2_norm.exe cmplx2_norm_kernels.obj \
              cmplx2_norm_host.obj random_numbers.obj random2_vectors.obj \
              double_double.obj double_double_functions.obj \
              parse_run_arguments.obj run_cmplx2_norm.obj
+
+run_cmplx3_norm: cmplx3_norm_kernels.obj cmplx3_norm_host.obj \
+                 double_double_functions.obj triple_double_functions.obj \
+                 random_numbers.obj random3_vectors.obj \
+                 parse_run_arguments.obj run_cmplx3_norm.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o run_cmplx3_norm.exe cmplx3_norm_kernels.obj \
+             cmplx3_norm_host.obj random_numbers.obj random3_vectors.obj \
+             double_double_functions.obj triple_double_functions.obj \
+             parse_run_arguments.obj run_cmplx3_norm.obj
+
+run_cmplx4_norm: cmplx4_norm_kernels.obj cmplx4_norm_host.obj \
+                 double_double_functions.obj quad_double_functions.obj \
+                 random_numbers.obj random4_vectors.obj \
+                 parse_run_arguments.obj run_cmplx4_norm.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o run_cmplx4_norm.exe cmplx4_norm_kernels.obj \
+             cmplx4_norm_host.obj random_numbers.obj random4_vectors.obj \
+             double_double_functions.obj quad_double_functions.obj \
+             parse_run_arguments.obj run_cmplx4_norm.obj
+
+run_cmplx5_norm: cmplx5_norm_kernels.obj cmplx5_norm_host.obj \
+                 double_double_functions.obj penta_double_functions.obj \
+                 random_numbers.obj random5_vectors.obj \
+                 parse_run_arguments.obj run_cmplx5_norm.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o run_cmplx5_norm.exe cmplx5_norm_kernels.obj \
+             cmplx5_norm_host.obj random_numbers.obj random5_vectors.obj \
+             double_double_functions.obj penta_double_functions.obj \
+             parse_run_arguments.obj run_cmplx5_norm.obj
+
+run_cmplx8_norm: cmplx8_norm_kernels.obj cmplx8_norm_host.obj \
+                 double_double_functions.obj quad_double_functions.obj \
+                 octo_double_functions.obj \
+                 random_numbers.obj random8_vectors.obj \
+                 parse_run_arguments.obj run_cmplx8_norm.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o run_cmplx8_norm.exe cmplx8_norm_kernels.obj \
+             cmplx8_norm_host.obj random_numbers.obj random8_vectors.obj \
+             double_double_functions.obj quad_double_functions.obj \
+             octo_double_functions.obj \
+             parse_run_arguments.obj run_cmplx8_norm.obj
+
+run_cmplx10_norm: cmplx10_norm_kernels.obj cmplx10_norm_host.obj \
+                  double_double_functions.obj quad_double_functions.obj \
+                  octo_double_functions.obj deca_double_functions.obj \
+                  random_numbers.obj random10_vectors.obj \
+                  parse_run_arguments.obj run_cmplx10_norm.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o run_cmplx10_norm.exe cmplx10_norm_kernels.obj \
+             cmplx10_norm_host.obj random_numbers.obj random10_vectors.obj \
+             double_double_functions.obj quad_double_functions.obj \
+             octo_double_functions.obj deca_double_functions.obj \
+             parse_run_arguments.obj run_cmplx10_norm.obj
 
 test_dbl_norm: dbl_norm_kernels.obj dbl_norm_host.obj \
                random_numbers.obj random_vectors.obj test_dbl_norm.obj

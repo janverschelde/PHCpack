@@ -238,6 +238,6 @@ void GPU_norm
  *   normhihi    highest part of the 2-norm of the given vector;
  *   normlohi    second highest part of the 2-norm of the given vector;
  *   normhilo    second lowest part of the 2-norm of the given vector;
- *   normlolo    lowest part of the 2-norm of the given vector. *of /
+ *   normlolo    lowest part of the 2-norm of the given vector. */
 
 #endif

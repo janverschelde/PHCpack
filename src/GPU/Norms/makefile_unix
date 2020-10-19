@@ -268,6 +268,30 @@ run_cmplx_norm.o:
 	@-echo ">>> compiling run_cmplx_norm ..."
 	$(gpp) -I/usr/local/cuda/include -O3 -c run_cmplx_norm.cpp
 
+run_cmplx2_norm.o:
+	@-echo ">>> compiling run_cmplx2_norm ..."
+	$(gpp) -I$(QDsrc) -I/usr/local/cuda/include -O3 -c run_cmplx2_norm.cpp
+
+run_cmplx3_norm.o:
+	@-echo ">>> compiling run_cmplx3_norm ..."
+	$(gpp) -I/usr/local/cuda/include -O3 -c run_cmplx3_norm.cpp
+
+run_cmplx4_norm.o:
+	@-echo ">>> compiling run_cmplx4_norm ..."
+	$(gpp) -I/usr/local/cuda/include -O3 -c run_cmplx4_norm.cpp
+
+run_cmplx5_norm.o:
+	@-echo ">>> compiling run_cmplx5_norm ..."
+	$(gpp) -I/usr/local/cuda/include -O3 -c run_cmplx5_norm.cpp
+
+run_cmplx8_norm.o:
+	@-echo ">>> compiling run_cmplx8_norm ..."
+	$(gpp) -I/usr/local/cuda/include -O3 -c run_cmplx8_norm.cpp
+
+run_cmplx10_norm.o:
+	@-echo ">>> compiling run_cmplx10_norm ..."
+	$(gpp) -I/usr/local/cuda/include -O3 -c run_cmplx10_norm.cpp
+
 test_dbl_norm.o:
 	@-echo ">>> compiling test_dbl_norm ..."
 	$(gpp) -I/usr/local/cuda/include -O3 -c test_dbl_norm.cpp
@@ -403,6 +427,75 @@ run_cmplx_norm: cmplx_norm_kernels.o cmplx_norm_host.o \
 	$(gpp) -o run_cmplx_norm cmplx_norm_kernels.o cmplx_norm_host.o \
                   random_numbers.o random_vectors.o parse_run_arguments.o \
                   run_cmplx_norm.o \
+               -lcuda -lcudart -L/usr/local/cuda/lib64 
+
+run_cmplx2_norm: cmplx2_norm_kernels.o cmplx2_norm_host.o \
+                 random_numbers.o random2_vectors.o \
+                 double_double.o double_double_functions.o \
+                 parse_run_arguments.o run_cmplx2_norm.o
+	@-echo ">>> linking ..."
+	$(gpp) -o run_cmplx2_norm cmplx2_norm_kernels.o cmplx2_norm_host.o \
+                  random_numbers.o random2_vectors.o parse_run_arguments.o \
+                  double_double.o double_double_functions.o \
+                  run_cmplx2_norm.o \
+               -lcuda -lcudart -L/usr/local/cuda/lib64 
+
+run_cmplx3_norm: cmplx3_norm_kernels.o cmplx3_norm_host.o \
+                 random_numbers.o random3_vectors.o \
+                 double_double_functions.o triple_double_functions.o \
+                 parse_run_arguments.o run_cmplx3_norm.o
+	@-echo ">>> linking ..."
+	$(gpp) -o run_cmplx3_norm cmplx3_norm_kernels.o cmplx3_norm_host.o \
+                  random_numbers.o random3_vectors.o parse_run_arguments.o \
+                  double_double_functions.o triple_double_functions.o \
+                  run_cmplx3_norm.o \
+               -lcuda -lcudart -L/usr/local/cuda/lib64 
+
+run_cmplx4_norm: cmplx4_norm_kernels.o cmplx4_norm_host.o \
+                 random_numbers.o random4_vectors.o \
+                 double_double_functions.o quad_double_functions.o \
+                 parse_run_arguments.o run_cmplx4_norm.o
+	@-echo ">>> linking ..."
+	$(gpp) -o run_cmplx4_norm cmplx4_norm_kernels.o cmplx4_norm_host.o \
+                  random_numbers.o random4_vectors.o parse_run_arguments.o \
+                  double_double_functions.o quad_double_functions.o \
+                  run_cmplx4_norm.o \
+               -lcuda -lcudart -L/usr/local/cuda/lib64 
+
+run_cmplx5_norm: cmplx5_norm_kernels.o cmplx5_norm_host.o \
+                 random_numbers.o random5_vectors.o \
+                 double_double_functions.o penta_double_functions.o \
+                 parse_run_arguments.o run_cmplx5_norm.o
+	@-echo ">>> linking ..."
+	$(gpp) -o run_cmplx5_norm cmplx5_norm_kernels.o cmplx5_norm_host.o \
+                  random_numbers.o random5_vectors.o parse_run_arguments.o \
+                  double_double_functions.o penta_double_functions.o \
+                  run_cmplx5_norm.o \
+               -lcuda -lcudart -L/usr/local/cuda/lib64 
+
+run_cmplx8_norm: cmplx8_norm_kernels.o cmplx8_norm_host.o \
+                 random_numbers.o random8_vectors.o \
+                 double_double_functions.o quad_double_functions.o \
+                 octo_double_functions.o \
+                 parse_run_arguments.o run_cmplx8_norm.o
+	@-echo ">>> linking ..."
+	$(gpp) -o run_cmplx8_norm cmplx8_norm_kernels.o cmplx8_norm_host.o \
+                  random_numbers.o random8_vectors.o parse_run_arguments.o \
+                  double_double_functions.o quad_double_functions.o \
+                  octo_double_functions.o run_cmplx8_norm.o \
+               -lcuda -lcudart -L/usr/local/cuda/lib64 
+
+run_cmplx10_norm: cmplx10_norm_kernels.o cmplx10_norm_host.o \
+                 random_numbers.o random10_vectors.o \
+                 double_double_functions.o quad_double_functions.o \
+                 octo_double_functions.o deca_double_functions.o \
+                 parse_run_arguments.o run_cmplx10_norm.o
+	@-echo ">>> linking ..."
+	$(gpp) -o run_cmplx10_norm cmplx10_norm_kernels.o cmplx10_norm_host.o \
+                  random_numbers.o random10_vectors.o parse_run_arguments.o \
+                  double_double_functions.o quad_double_functions.o \
+                  octo_double_functions.o deca_double_functions.o \
+                  run_cmplx10_norm.o \
                -lcuda -lcudart -L/usr/local/cuda/lib64 
 
 test_dbl_norm: dbl_norm_kernels.o dbl_norm_host.o \
@@ -584,6 +677,11 @@ clean:
 	/bin/rm -f -r test_dbl2_norm.o test_dbl2_norm
 	/bin/rm -f -r cmplx2_norm_host.o cmplx2_norm_kernels.o
 	/bin/rm -f -r run_cmplx2_norm.o run_cmplx2_norm
+	/bin/rm -f -r run_cmplx3_norm.o run_cmplx3_norm
+	/bin/rm -f -r run_cmplx4_norm.o run_cmplx4_norm
+	/bin/rm -f -r run_cmplx5_norm.o run_cmplx5_norm
+	/bin/rm -f -r run_cmplx8_norm.o run_cmplx8_norm
+	/bin/rm -f -r run_cmplx10_norm.o run_cmplx10_norm
 	/bin/rm -f -r test_cmplx2_norm.o test_cmplx2_norm
 	/bin/rm -f -r dbl3_norm_kernels.o dbl3_norm_host.o
 	/bin/rm -f -r test_dbl3_norm.o test_dbl3_norm

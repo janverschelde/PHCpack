@@ -69,6 +69,24 @@ test_dbl10_norm:
 run_cmplx_norm:
 	make -f $(MAKEFILE) run_cmplx_norm
 
+run_cmplx2_norm:
+	make -f $(MAKEFILE) run_cmplx2_norm
+
+run_cmplx3_norm:
+	make -f $(MAKEFILE) run_cmplx3_norm
+
+run_cmplx4_norm:
+	make -f $(MAKEFILE) run_cmplx4_norm
+
+run_cmplx5_norm:
+	make -f $(MAKEFILE) run_cmplx5_norm
+
+run_cmplx8_norm:
+	make -f $(MAKEFILE) run_cmplx8_norm
+
+run_cmplx10_norm:
+	make -f $(MAKEFILE) run_cmplx10_norm
+
 test_cmplx_norm:
 	make -f $(MAKEFILE) test_cmplx_norm
 
