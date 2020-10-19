@@ -52,6 +52,11 @@ dbl8_norm_kernels       : kernels for 2-norm of octo double vectors
 dbl10_norm_kernels      : kernels for 2-norm of deca double vectors
 run_dbl_norm            : test norm computation of double vectors
 run_dbl2_norm           : test norm computation of double double vectors
+run_dbl3_norm           : test norm computation of triple double vectors
+run_dbl4_norm           : test norm computation of quad double vectors
+run_dbl5_norm           : test norm computation of penta double vectors
+run_dbl8_norm           : test norm computation of octo double vectors
+run_dbl10_norm          : test norm computation of deca double vectors
 test_dbl_norm           : test double 2-norm without command line parameters
 test_dbl2_norm          : test double double 2-norm
 test_dbl3_norm          : test triple double 2-norm

@@ -30,6 +30,21 @@ run_dbl_norm:
 run_dbl2_norm:
 	make -f $(MAKEFILE) run_dbl2_norm
 
+run_dbl3_norm:
+	make -f $(MAKEFILE) run_dbl3_norm
+
+run_dbl4_norm:
+	make -f $(MAKEFILE) run_dbl4_norm
+
+run_dbl5_norm:
+	make -f $(MAKEFILE) run_dbl5_norm
+
+run_dbl8_norm:
+	make -f $(MAKEFILE) run_dbl8_norm
+
+run_dbl10_norm:
+	make -f $(MAKEFILE) run_dbl10_norm
+
 test_dbl_norm:
 	make -f $(MAKEFILE) test_dbl_norm
 
