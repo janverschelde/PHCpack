@@ -98,9 +98,9 @@ int main ( int argc, char *argv[] )
                vhihilo_device,vlohilo_device,vhilolo_device,vlololo_device,
                dim,freq,BS,
                &whihihinorm_device,&wlohihinorm_device,
-               &whilohinorm_device,&vlolohinorm_device,
+               &whilohinorm_device,&wlolohinorm_device,
                &whihilonorm_device,&wlohilonorm_device,
-               &whilolonorm_device,&vlololonorm_device,1);
+               &whilolonorm_device,&wlololonorm_device,1);
    }
 
    if(mode==1 || mode==2) // CPU computation of the norm
