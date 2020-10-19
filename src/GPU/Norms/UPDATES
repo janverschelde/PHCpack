@@ -1,3 +1,7 @@
+Mon 19 Oct 2020 : in cmplx10_norm_kernels.h and dbl10_norm_kernels.h
+  increased the maxrounds from 32 to 96, improved the documentation.
+  For dbl10_norm_kernels.h, da_shmemsize can be raised to 256.
+
 Sun 18 Oct 2020 : set the da_shmemsize to 128 in cmplx10_norm_kernels.h,
   added kernels for medium and large vectors in cmplx10_norm_kernels.cu,
   with modifications in test_cmplx10_norm.cpp.

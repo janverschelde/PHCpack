@@ -11,6 +11,12 @@
   this size is bounded by the number of threads in a block.
   The largest dimension for which the small normalization runs
   is thus the value of da_shmemsize.
+  The largest dimension for which the large normalization runs
+  is the square of the value of da_shmemsize because the algorithm
+  sums two arrays of squares, the squares of the real and the
+  squares of the imaginary part, thus very similar to case of
+  the small normalization.  For example, for da_shmemsize = 128,
+  the largest dimension is thus 128*128 = 16384.
  */
 
 #define da_shmemsize 128
@@ -19,10 +25,10 @@
   The constant maxrounds determines the number of rounds
   in the normalization of medium sized vectors.
   The largest dimension for a medium size normalization
-  is thus da_shemsize*maxrounds, for instance: 1024*32 = 32768.
+  is thus da_shemsize*maxrounds, for instance: 128*96 = 12288.
  */
 
-#define maxrounds 32
+#define maxrounds 96
 
 __global__ void small_normalize_vector
  ( double *vrertb, double *vrerix, double *vrermi, double *vrerrg,
