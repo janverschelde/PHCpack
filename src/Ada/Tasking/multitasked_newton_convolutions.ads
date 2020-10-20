@@ -2,13 +2,16 @@ with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs;
+with TripDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
+with TripDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 
 package Multitasked_Newton_Convolutions is
@@ -17,7 +20,7 @@ package Multitasked_Newton_Convolutions is
 --   Runs Newton's method on power series
 --   with the reverse mode of algorithmic differentation
 --   and linearization to solve the matrix series equations,
---   in double, double double, and quad double arithmetic,
+--   in double, double double, triple double, and quad double arithmetic,
 --   with multitasking for shared memory parallel computers.
 
 -- ONE NEWTON STEP WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
@@ -40,6 +43,14 @@ package Multitasked_Newton_Convolutions is
                 output : in boolean := false );
   procedure Multitasked_LU_Newton_Step
               ( nbt : in integer32;
+                s : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in TripDobl_Complex_VecVecs.VecVec;
+                absdx : out triple_double; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false );
+  procedure Multitasked_LU_Newton_Step
+              ( nbt : in integer32;
                 s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 absdx : out quad_double; info : out integer32;
@@ -49,7 +60,8 @@ package Multitasked_Newton_Convolutions is
 
   -- DESCRIPTION :
   --   Does one step with Newton's method using the LU factorization with
-  --   multitasking in double, double double, or quad double precision.
+  --   multitasking in double, triple double, double double,
+  --   or quad double precision.
 
   -- ON ENTRY :
   --   nbt      the number of tasks;
@@ -86,6 +98,14 @@ package Multitasked_Newton_Convolutions is
                 output : in boolean := false );
   procedure Multitasked_LU_Newton_Step
               ( nbt : in integer32;
+                s : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in TripDobl_Complex_VecVecs.VecVec;
+                absdx : out triple_double; rcond : out triple_double;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false );
+  procedure Multitasked_LU_Newton_Step
+              ( nbt : in integer32;
                 s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 absdx : out quad_double; rcond : out quad_double;
@@ -95,7 +115,8 @@ package Multitasked_Newton_Convolutions is
 
   -- DESCRIPTION :
   --   Does one step with Newton's method using the LU factorization with
-  --   multitasking in double, double double, or quad double precision.
+  --   multitasking in double, double double, triple double,
+  --   or quad double precision.
 
   -- ON ENTRY :
   --   nbt      the number of tasks;
@@ -156,6 +177,26 @@ package Multitasked_Newton_Convolutions is
                 output : in boolean := false );
   procedure Multitasked_LU_Newton_Steps
               ( nbt : in integer32;
+                s : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+		tol : in triple_double; absdx : out triple_double; 
+		fail : out boolean; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false );
+  procedure Multitasked_LU_Newton_Steps
+              ( file : in file_type; nbt : in integer32;
+                s : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+		tol : in triple_double; absdx : out triple_double; 
+		fail : out boolean; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false );
+  procedure Multitasked_LU_Newton_Steps
+              ( nbt : in integer32;
                 s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 maxit : in integer32; nbrit : out integer32;
@@ -177,7 +218,8 @@ package Multitasked_Newton_Convolutions is
 
   -- DESCRIPTION :
   --   Applies several Newton steps using the LU factorization with
-  --   multitasking in double, double double, or quad double precision.
+  --   multitasking in double, double double, triple double,
+  --   or quad double precision.
 
   -- ON ENTRY :
   --   file     if provided, then info, absdx is written in every step;
@@ -243,6 +285,26 @@ package Multitasked_Newton_Convolutions is
                 output : in boolean := false );
   procedure Multitasked_LU_Newton_Steps
               ( nbt : in integer32;
+                s : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+		tol : in triple_double; absdx : out triple_double; 
+		fail : out boolean; rcond : out triple_double;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false );
+  procedure Multitasked_LU_Newton_Steps
+              ( file : in file_type; nbt : in integer32;
+                s : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+		tol : in triple_double; absdx : out triple_double; 
+		fail : out boolean; rcond : out triple_double;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false );
+  procedure Multitasked_LU_Newton_Steps
+              ( nbt : in integer32;
                 s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 maxit : in integer32; nbrit : out integer32;
@@ -264,7 +326,8 @@ package Multitasked_Newton_Convolutions is
 
   -- DESCRIPTION :
   --   Applies several Newton steps using the LU factorization with
-  --   multitasking in double, double double, or quad double precision.
+  --   multitasking in double, double double, triple double,
+  --   or quad double precision.
 
   -- ON ENTRY :
   --   file     if provided, then info, absdx is written in every step;

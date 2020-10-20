@@ -6,10 +6,13 @@ with Standard_Complex_VecVecs;
 with Standard_Complex_VecMats;
 with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_VecMats;
+with TripDobl_Complex_VecVecs;
+with TripDobl_Complex_VecMats;
 with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecMats;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
+with TripDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with Standard_Coefficient_Convolutions;
 with DoblDobl_Coefficient_Convolutions;
@@ -37,12 +40,15 @@ package Multitasked_AlgoDiff_Convolutions is
              return DoblDobl_Speelpenning_Convolutions.VecVecVec;
   function Allocate_Work_Space
              ( nbt,dim,deg : integer32 )
+             return TripDobl_Speelpenning_Convolutions.VecVecVec;
+  function Allocate_Work_Space
+             ( nbt,dim,deg : integer32 )
              return QuadDobl_Speelpenning_Convolutions.VecVecVec;
 
   -- DESCRIPTION :
   --   Returns work space for nbt tasks to evaluate circuits of
   --   dimension dim at power series of degree deg,
-  --   in double, double double, or quad double precision.
+  --   in double, double double, triple double, or quad double precision.
 
   procedure Standard_Multitasked_EvalDiff
               ( nbt : in integer32;
@@ -174,6 +180,15 @@ package Multitasked_AlgoDiff_Convolutions is
                 vy : in DoblDobl_Complex_VecVecs.VecVec;
                 vm : in DoblDobl_Complex_VecMats.VecMat;
                 output : in boolean := false );
+  procedure TripDobl_Multitasked_EvalDiff
+              ( nbt : in integer32;
+                c : in TripDobl_Speelpenning_Convolutions.Circuits;
+                x : in TripDobl_Complex_VecVecs.VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
+                pwt : in TripDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
+                vy : in TripDobl_Complex_VecVecs.VecVec;
+                vm : in TripDobl_Complex_VecMats.VecMat;
+                output : in boolean := false );
   procedure QuadDobl_Multitasked_EvalDiff
               ( nbt : in integer32;
                 c : in QuadDobl_Speelpenning_Convolutions.Circuits;
@@ -187,7 +202,8 @@ package Multitasked_AlgoDiff_Convolutions is
   -- DESCRIPTION :
   --   Computes the power table at x.
   --   Evaluates and differentiates the convolution circuits in c at x
-  --   with multitasking, in double, double double, or quad double precision.
+  --   with multitasking, in double, double double, triple double,
+  --   or quad double precision.
 
   -- ON ENTRY :
   --   nbt      number of tasks;

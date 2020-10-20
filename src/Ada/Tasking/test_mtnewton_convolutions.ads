@@ -5,14 +5,18 @@ with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
+with TripDobl_Complex_Vectors;
+with TripDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
+with TripDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
+with TripDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 
 package Test_mtNewton_Convolutions is
@@ -31,13 +35,16 @@ package Test_mtNewton_Convolutions is
               ( c : in DoblDobl_Complex_VecVecs.VecVec;
                 verbose : in boolean := true );
   procedure Apply_Fabry
+              ( c : in TripDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
               ( c : in QuadDobl_Complex_VecVecs.VecVec;
                 verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Estimates the radius of convergence of the power series
   --   with the application of the theorem of Fabry,
-  --   in double, double double, or quad double precision.
+  --   in double, double double, triple double, or quad double precision.
 
   procedure Standard_Run
               ( nbt,dim,maxit : in integer32;
@@ -49,6 +56,12 @@ package Test_mtNewton_Convolutions is
               ( nbt,dim,maxit : in integer32;
                 s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in DoblDobl_Complex_VecVecs.VecVec;
+                serelp,mltelp,speedup,efficiency : in out Duration;
+                output,estco : in boolean; verbose : in boolean := true );
+  procedure TripDobl_Run
+              ( nbt,dim,maxit : in integer32;
+                s : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in TripDobl_Complex_VecVecs.VecVec;
                 serelp,mltelp,speedup,efficiency : in out Duration;
                 output,estco : in boolean; verbose : in boolean := true );
   procedure QuadDobl_Run
@@ -92,6 +105,10 @@ package Test_mtNewton_Convolutions is
               ( p : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
 	        sol : in DoblDobl_Complex_Vectors.Vector;
 	        deg : in integer32 );
+  procedure TripDobl_Run_Loop
+              ( p : in TripDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+	        sol : in TripDobl_Complex_Vectors.Vector;
+	        deg : in integer32 );
   procedure QuadDobl_Run_Loop
               ( p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
 	        sol : in QuadDobl_Complex_Vectors.Vector;
@@ -100,7 +117,7 @@ package Test_mtNewton_Convolutions is
   -- DESCRIPTION :
   --   Runs Newton's method on a solution sol of the system p,
   --   with power series of degree deg, 
-  --   in double, double double, or quad double precision.
+  --   in double, double double, triple double, or quad double precision.
 
   procedure Standard_Test;
 
@@ -113,6 +130,12 @@ package Test_mtNewton_Convolutions is
   -- DESCRIPTION :
   --   Prompts the user for a polynomial system with solutions
   --   and tests in double double precision.
+
+  procedure TripDobl_Test;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system with solutions
+  --   and tests in triple double precision.
 
   procedure QuadDobl_Test;
 
@@ -165,6 +188,12 @@ package Test_mtNewton_Convolutions is
                 s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 x : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 verbose : in boolean := false );
+  procedure TripDobl_Benchmark
+              ( file : in file_type; nbruns,inc,maxit : in integer32;
+                nbtseq : in Standard_Integer_Vectors.Link_to_Vector;
+                s : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in TripDobl_Complex_VecVecs.Link_to_VecVec;
+                verbose : in boolean := false );
   procedure QuadDobl_Benchmark
               ( file : in file_type; nbruns,inc,maxit : in integer32;
                 nbtseq : in Standard_Integer_Vectors.Link_to_Vector;
@@ -173,7 +202,7 @@ package Test_mtNewton_Convolutions is
                 verbose : in boolean := false );
 
   -- DESCRIPTION :
-  --   Runs a benchmark test in double, double double,
+  --   Runs a benchmark test in double, double double, triple double,
   --   or quad double precision.
 
   -- ON ENTRY :

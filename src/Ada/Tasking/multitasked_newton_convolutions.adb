@@ -1,9 +1,11 @@
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Triple_Double_Numbers_io;           use Triple_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Newton_Convolutions;
 with DoblDobl_Newton_Convolutions;
+with TripDobl_Newton_Convolutions;
 with QuadDobl_Newton_Convolutions;
 with Multitasked_AlgoDiff_Convolutions;  use Multitasked_AlgoDiff_Convolutions;
 with Multitasked_Series_Linearization;   use Multitasked_Series_Linearization;
@@ -44,6 +46,23 @@ package body Multitasked_Newton_Convolutions is
     DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := DoblDobl_Newton_Convolutions.Max(s.yv);
     DoblDobl_Newton_Convolutions.Update(x,s.yv);
+  end Multitasked_LU_Newton_Step;
+
+  procedure Multitasked_LU_Newton_Step
+              ( nbt : in integer32;
+                s : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in TripDobl_Complex_VecVecs.VecVec;
+                absdx : out triple_double; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false ) is
+  begin
+    TripDobl_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
+    TripDobl_Newton_Convolutions.Minus(s.vy);
+    Multitasked_Solve_by_lufac(nbt,s.vm,s.vy,ipvt,info,wrk,output);
+    TripDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
+    absdx := TripDobl_Newton_Convolutions.Max(s.yv);
+    TripDobl_Newton_Convolutions.Update(x,s.yv);
   end Multitasked_LU_Newton_Step;
 
   procedure Multitasked_LU_Newton_Step
@@ -97,6 +116,23 @@ package body Multitasked_Newton_Convolutions is
     DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := DoblDobl_Newton_Convolutions.Max(s.yv);
     DoblDobl_Newton_Convolutions.Update(x,s.yv);
+  end Multitasked_LU_Newton_Step;
+
+  procedure Multitasked_LU_Newton_Step
+              ( nbt : in integer32;
+                s : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in TripDobl_Complex_VecVecs.VecVec;
+                absdx : out triple_double; rcond : out triple_double;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false ) is
+  begin
+    TripDobl_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
+    TripDobl_Newton_Convolutions.Minus(s.vy);
+    Multitasked_Solve_by_lufco(nbt,s.vm,s.vy,ipvt,rcond,wrk,output);
+    TripDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
+    absdx := TripDobl_Newton_Convolutions.Max(s.yv);
+    TripDobl_Newton_Convolutions.Update(x,s.yv);
   end Multitasked_LU_Newton_Step;
 
   procedure Multitasked_LU_Newton_Step
@@ -190,6 +226,49 @@ package body Multitasked_Newton_Convolutions is
 		fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false ) is
+  begin
+    fail := true; nbrit := maxit;
+    for k in 1..maxit loop
+      put(file,"Step "); put(file,k,1); put_line(file," :");
+      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,wrk,output);
+      put(file,"  info : "); put(file,info,1);
+      put(file,"  absdx : "); put(file,absdx,3); new_line(file);
+      if absdx <= tol
+       then fail := false; nbrit := k; exit;
+      end if;
+    end loop;
+  end Multitasked_LU_Newton_Steps;
+
+  procedure Multitasked_LU_Newton_Steps
+              ( nbt : in integer32;
+                s : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in triple_double; absdx : out triple_double; 
+                fail : out boolean; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false ) is
+  begin
+    fail := true; nbrit := maxit;
+    for k in 1..maxit loop
+      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,wrk,output);
+      if absdx <= tol
+       then fail := false; nbrit := k; exit;
+      end if;
+    end loop;
+  end Multitasked_LU_Newton_Steps;
+
+  procedure Multitasked_LU_Newton_Steps
+              ( file : in file_type; nbt : in integer32;
+                s : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+		tol : in triple_double; absdx : out triple_double; 
+		fail : out boolean; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_VecVecs.VecVec;
                 output : in boolean := false ) is
   begin
     fail := true; nbrit := maxit;
@@ -321,6 +400,49 @@ package body Multitasked_Newton_Convolutions is
 		fail : out boolean; rcond : out double_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false ) is
+  begin
+    fail := true; nbrit := maxit;
+    for k in 1..maxit loop
+      put(file,"Step "); put(file,k,1); put_line(file," :");
+      Multitasked_LU_Newton_Step(nbt,s,x,absdx,rcond,ipvt,wrk,output);
+      put(file,"  rcond : "); put(file,rcond,3);
+      put(file,"  absdx : "); put(file,absdx,3); new_line(file);
+      if absdx <= tol
+       then fail := false; nbrit := k; exit;
+      end if;
+    end loop;
+  end Multitasked_LU_Newton_Steps;
+
+  procedure Multitasked_LU_Newton_Steps
+              ( nbt : in integer32;
+                s : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in triple_double; absdx : out triple_double; 
+                fail : out boolean; rcond : out triple_double;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false ) is
+  begin
+    fail := true; nbrit := maxit;
+    for k in 1..maxit loop
+      Multitasked_LU_Newton_Step(nbt,s,x,absdx,rcond,ipvt,wrk,output);
+      if absdx <= tol
+       then fail := false; nbrit := k; exit;
+      end if;
+    end loop;
+  end Multitasked_LU_Newton_Steps;
+
+  procedure Multitasked_LU_Newton_Steps
+              ( file : in file_type; nbt : in integer32;
+                s : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+		tol : in triple_double; absdx : out triple_double; 
+		fail : out boolean; rcond : out triple_double;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_VecVecs.VecVec;
                 output : in boolean := false ) is
   begin
     fail := true; nbrit := maxit;
