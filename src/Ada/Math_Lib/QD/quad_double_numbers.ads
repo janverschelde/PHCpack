@@ -2,6 +2,7 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Triple_Double_Numbers;              use Triple_Double_Numbers;
 
 package Quad_Double_Numbers is
 
@@ -147,6 +148,7 @@ package Quad_Double_Numbers is
   function to_int ( x : quad_double ) return integer32;
   function to_double ( x : quad_double ) return double_float;
   function to_double_double ( x : quad_double ) return double_double;
+  function to_triple_double ( x : quad_double ) return triple_double;
   function "abs" ( x : quad_double ) return quad_double;
   function AbsVal ( x : quad_double ) return quad_double; -- same as abs
   function floor ( x : quad_double ) return quad_double;

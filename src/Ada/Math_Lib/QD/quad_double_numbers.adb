@@ -330,6 +330,14 @@ package body Quad_Double_Numbers is
     return d;
   end to_double_double;
 
+  function to_triple_double ( x : quad_double ) return triple_double is
+
+    t : constant triple_double := create(x.hihi,x.lohi,x.hilo);
+
+  begin
+    return t;
+  end to_triple_double;
+
   function "abs" ( x : quad_double ) return quad_double is
 
     q : quad_double;

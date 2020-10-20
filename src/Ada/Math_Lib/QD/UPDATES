@@ -1,3 +1,6 @@
+Tue 20 Oct 2020 : added to_triple_double function in quad_double_numbers
+  and other converters in quaddobl_complex_numbers_cv.
+
 Sun 11 Oct 2020 : added a forgotten last step in the definition of od_div
   in octo_double.c.
 
