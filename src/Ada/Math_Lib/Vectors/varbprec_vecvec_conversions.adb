@@ -1,10 +1,12 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;        use DoblDobl_Complex_Numbers_cv;
+with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
 with Multprec_Complex_Numbers;
@@ -13,6 +15,8 @@ with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Double_Double_Vectors;
 with DoblDobl_Complex_Vectors;
+with Triple_Double_Vectors;
+with TripDobl_Complex_Vectors;
 with Quad_Double_Vectors;
 with QuadDobl_Complex_Vectors;
 with Multprec_Floating_Vectors;
@@ -384,7 +388,7 @@ package body Varbprec_VecVec_Conversions is
     for i in mtx'range loop
       qdv := mtx(i);
       declare
-        ddv : Double_DOuble_Vectors.Vector(qdv'range);
+        ddv : Double_Double_Vectors.Vector(qdv'range);
       begin
         for j in qdv'range loop
           ddv(j) := to_double_double(qdv(j));
@@ -424,6 +428,57 @@ package body Varbprec_VecVec_Conversions is
     end loop;
     return res;
   end qd2dd;
+
+  function qd2td ( mtx : Quad_Double_VecVecs.VecVec )
+                 return Triple_Double_VecVecs.VecVec is
+
+    res : Triple_Double_VecVecs.VecVec(mtx'range);
+    qdv : Quad_Double_Vectors.Link_to_Vector;
+
+  begin
+    for i in mtx'range loop
+      qdv := mtx(i);
+      declare
+        tdv : Triple_Double_Vectors.Vector(qdv'range);
+      begin
+        for j in qdv'range loop
+          tdv(j) := to_triple_double(qdv(j));
+        end loop;
+        res(i) := new Triple_Double_Vectors.Vector'(tdv);
+      end;
+    end loop;
+    return res;
+  end qd2td;
+
+  function qd2td ( mtx : QuadDobl_Complex_VecVecs.VecVec )
+                 return TripDobl_Complex_VecVecs.VecVec is
+
+    res : TripDobl_Complex_VecVecs.VecVec(mtx'range);
+    qdv : QuadDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in mtx'range loop
+      qdv := mtx(i);
+      declare
+        tdv : TripDobl_Complex_Vectors.Vector(qdv'range);
+      begin
+        for j in qdv'range loop
+          declare
+            qdrp : constant quad_double
+                 := QuadDobl_Complex_Numbers.REAL_PART(qdv(j));
+            tdrp : constant triple_double := to_triple_double(qdrp);
+            qdip : constant quad_double
+                 := QuadDobl_Complex_Numbers.IMAG_PART(qdv(j));
+            tdip : constant triple_double := to_triple_double(qdip);
+          begin
+            tdv(j) := TripDobl_Complex_Numbers.create(tdrp,tdip);
+          end;
+        end loop;
+        res(i) := new TripDobl_Complex_Vectors.Vector'(tdv);
+      end;
+    end loop;
+    return res;
+  end qd2td;
 
   function qd2mp ( mtx : Quad_Double_VecVecs.VecVec )
                  return Multprec_Floating_VecVecs.VecVec is

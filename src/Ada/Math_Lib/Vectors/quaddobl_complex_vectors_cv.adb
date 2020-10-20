@@ -54,6 +54,19 @@ package body QuadDobl_Complex_Vectors_cv is
     return res;
   end QuadDobl_Complex_to_DoblDobl;
 
+  function QuadDobl_Complex_to_TripDobl
+             ( v : QuadDobl_Complex_Vectors.Vector )
+             return TripDobl_Complex_Vectors.Vector is
+
+    res : TripDobl_Complex_Vectors.Vector(v'range);
+
+  begin
+    for i in v'range loop
+      res(i) := QuadDobl_Complex_to_TripDobl(v(i));
+    end loop;
+    return res;
+  end QuadDobl_Complex_to_TripDobl;
+
   function QuadDobl_Complex_to_Multprec
              ( v : QuadDobl_Complex_Vectors.Vector )
              return Multprec_Complex_Vectors.Vector is
@@ -66,6 +79,44 @@ package body QuadDobl_Complex_Vectors_cv is
     end loop;
     return res;
   end QuadDobl_Complex_to_Multprec;
+
+  function to_triple_double
+             ( v : QuadDobl_Complex_VecVecs.VecVec )
+             return TripDobl_Complex_VecVecs.VecVec is
+
+    res : TripDobl_Complex_VecVecs.VecVec(v'range);
+
+  begin
+    for i in res'range loop
+      declare
+        vec : constant TripDobl_Complex_Vectors.Vector
+            := QuadDobl_Complex_to_TripDobl(v(i).all);
+      begin
+        res(i) := new TripDobl_Complex_Vectors.Vector'(vec);
+      end;
+    end loop;
+    return res;
+  end to_triple_double;
+
+  function to_triple_double
+             ( v : QuadDobl_Complex_VecVecs.Link_to_VecVec )
+             return TripDobl_Complex_VecVecs.Link_to_VecVec is
+
+    res : TripDobl_Complex_VecVecs.Link_to_VecVec;
+    tdv : TripDobl_Complex_VecVecs.VecVec(v'range);
+
+  begin
+    for i in tdv'range loop
+      declare
+        vec : constant TripDobl_Complex_Vectors.Vector
+            := QuadDobl_Complex_to_TripDobl(v(i).all);
+      begin
+        tdv(i) := new TripDobl_Complex_Vectors.Vector'(vec);
+      end;
+    end loop;
+    res := new TripDobl_Complex_VecVecs.VecVec'(tdv);
+    return res;
+  end to_triple_double;
 
   function to_double_double
              ( v : QuadDobl_Complex_VecVecs.VecVec )

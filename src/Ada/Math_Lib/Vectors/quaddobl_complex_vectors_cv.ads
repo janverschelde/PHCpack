@@ -2,6 +2,8 @@ with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
+with TripDobl_Complex_Vectors;
+with TripDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with Multprec_Complex_Vectors;
@@ -29,13 +31,29 @@ package QuadDobl_Complex_Vectors_cv is
   function QuadDobl_Complex_to_DoblDobl
              ( v : QuadDobl_Complex_Vectors.Vector )
              return DoblDobl_Complex_Vectors.Vector;
+  function QuadDobl_Complex_to_TripDobl
+             ( v : QuadDobl_Complex_Vectors.Vector )
+             return TripDobl_Complex_Vectors.Vector;
   function QuadDobl_Complex_to_Multprec
              ( v : QuadDobl_Complex_Vectors.Vector )
              return Multprec_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Converts a vector of quad double complex numbers into a vector
-  --   of double, double double, or multiprecision complex numbers.
+  --   of double, double double, triple double, 
+  --   or multiprecision complex numbers.
+
+  function to_triple_double
+             ( v : QuadDobl_Complex_VecVecs.VecVec )
+             return TripDobl_Complex_VecVecs.VecVec;
+  function to_triple_double
+             ( v : QuadDobl_Complex_VecVecs.Link_to_VecVec )
+             return TripDobl_Complex_VecVecs.Link_to_VecVec;
+
+  -- DESCRIPTION :
+  --   Returns the vector v converted to triple double precision.
+
+  -- REQUIRED : v /= null;
 
   function to_double_double
              ( v : QuadDobl_Complex_VecVecs.VecVec )

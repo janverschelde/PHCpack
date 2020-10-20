@@ -1,4 +1,4 @@
-Vectors and vectors of vectors in PHCv2.4.80
+Vectors and vectors of vectors in PHCv2.4.81
 
 Because the directory Matrices became too big, 
 this directory was created new for PHCv2.3.33.
@@ -111,6 +111,7 @@ multprec_complex_nesvecs_io        : generic_nesvecs_io(multprec complex)
 ------------------------------------------------------------------------------
 triple_double_vectors              : vectors of triple double numbers
 triple_double_vectors_io           : input/output of triple double vectors
+triple_double_vecvecs              : vectors of triple double vectors
 tripdobl_complex_vectors           : complex vectors of triple doubles
 tripdobl_complex_vectors_io        : i/o of complex vectors of triple doubles
 tripdobl_complex_vecvecs           : complex vecvecs of triple doubles

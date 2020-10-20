@@ -2,9 +2,11 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Floating_VecVecs;
 with Standard_Complex_VecVecs;
 with Double_Double_VecVecs;
+with Triple_Double_VecVecs;
 with Quad_Double_VecVecs;
 with Multprec_Floating_VecVecs;
 with DoblDobl_Complex_VecVecs;
+with TripDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs;
 with Multprec_Complex_VecVecs;
 
@@ -60,6 +62,10 @@ package Varbprec_VecVec_Conversions is
                  return Double_Double_VecVecs.VecVec;
   function qd2dd ( mtx : QuadDobl_Complex_VecVecs.VecVec )
                  return DoblDobl_Complex_VecVecs.VecVec;
+  function qd2td ( mtx : Quad_Double_VecVecs.VecVec )
+                 return Triple_Double_VecVecs.VecVec;
+  function qd2td ( mtx : QuadDobl_Complex_VecVecs.VecVec )
+                 return TripDobl_Complex_VecVecs.VecVec;
   function qd2mp ( mtx : Quad_Double_VecVecs.VecVec )
                  return Multprec_Floating_VecVecs.VecVec;
   function qd2mp ( mtx : QuadDobl_Complex_VecVecs.VecVec )
@@ -67,8 +73,8 @@ package Varbprec_VecVec_Conversions is
 
   -- DESCRIPTION :
   --   Converts a matrix in quad double precision to a matrix
-  --   in standard double (d) or double double (dd) precision,
-  --   or arbitrary multiprecision (mp).
+  --   in standard double (d) precision, double double (dd) precision,
+  --   triple double (td) precision, or arbitrary multiprecision (mp).
 
   procedure Set_Size ( mtx : in out Multprec_Floating_VecVecs.VecVec;
                        size : in natural32 );
