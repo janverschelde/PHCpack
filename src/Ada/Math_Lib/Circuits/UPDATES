@@ -1,5 +1,7 @@
 Tue 20 Oct 2020 : extended random_convolution_circuits with procedures
   to generate random circuits with triple double precision coefficients.
+  Extended system_convolution_circuits with convertors from quad double
+  to triple double precision.
 
 Wed 23 Sep 2020 : to test the Fabry ratio theorem with octo and deca doubles,
   extended {system,homotopy}_convolution_circuits, and the operations in

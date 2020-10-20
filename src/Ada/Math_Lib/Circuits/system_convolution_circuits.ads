@@ -265,6 +265,20 @@ package System_Convolution_Circuits is
   --   Turns the coefficients in c to double double precision
   --   and copies all data of c, and allocates the work space.
 
+  function to_triple_double
+	     ( c : QuadDobl_Speelpenning_Convolutions.Circuit )
+	     return TripDobl_Speelpenning_Convolutions.Circuit;
+  function to_triple_double
+	     ( c : QuadDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return TripDobl_Speelpenning_Convolutions.Link_to_Circuit;
+  function to_triple_double
+	     ( c : QuadDobl_Speelpenning_Convolutions.Circuits )
+	     return TripDobl_Speelpenning_Convolutions.Circuits;
+
+  -- DESCRIPTION :
+  --   Turns the coefficients in c to triple double precision
+  --   and copies all data of c, and allocates the work space.
+
   function to_double
              ( s : QuadDobl_Speelpenning_Convolutions.System )
              return Standard_Speelpenning_Convolutions.System;
@@ -285,6 +299,17 @@ package System_Convolution_Circuits is
 
   -- DESCRIPTION :
   --   Turns the coefficients in s to double double precision,
+  --   copies all data of s, and allocates the work space.
+
+  function to_triple_double
+             ( s : QuadDobl_Speelpenning_Convolutions.System )
+             return TripDobl_Speelpenning_Convolutions.System;
+  function to_triple_double
+             ( s : QuadDobl_Speelpenning_Convolutions.Link_to_System )
+             return TripDobl_Speelpenning_Convolutions.Link_to_System;
+
+  -- DESCRIPTION :
+  --   Turns the coefficients in s to triple double precision,
   --   copies all data of s, and allocates the work space.
 
 end System_Convolution_Circuits;
