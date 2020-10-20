@@ -1,9 +1,11 @@
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
+with TripDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
 with Standard_Random_Vectors;
 with DoblDobl_Random_Vectors;
+with TripDobl_Random_Vectors;
 with QuadDobl_Random_Vectors;
 with Standard_Complex_Series;
 with Standard_Complex_Series_Vectors;
@@ -13,6 +15,10 @@ with DoblDobl_Complex_Series;
 with DoblDobl_Complex_Series_Vectors;
 with DoblDobl_Complex_Random_Series;
 with DoblDobl_Random_Series_Vectors;
+with TripDobl_Complex_Series;
+with TripDobl_Complex_Series_Vectors;
+with TripDobl_Complex_Random_Series;
+with TripDobl_Random_Series_Vectors;
 with QuadDobl_Complex_Series;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Random_Series;
@@ -22,6 +28,7 @@ with Series_Coefficient_Vectors;
 with Homotopy_Convolution_Circuits;
 with Standard_Newton_Convolutions;
 with DoblDobl_Newton_Convolutions;
+with TripDobl_Newton_Convolutions;
 with QuadDobl_Newton_Convolutions;
 
 package body Random_Convolution_Circuits is
@@ -107,6 +114,34 @@ package body Random_Convolution_Circuits is
     return res;
   end DoblDobl_Random_Convolution_Circuit;
 
+  function TripDobl_Random_Convolution_Circuit
+             ( dim,deg,nbr,pwr : in integer32 )
+             return TripDobl_Speelpenning_Convolutions.Circuit is
+
+    use TripDobl_Speelpenning_Convolutions;
+
+    res : Circuit(nbr,dim,dim-1,dim-2);
+    polcff : constant TripDobl_Complex_Series_Vectors.Vector(1..nbr)
+           := TripDobl_Random_Series_Vectors.Random_Series_Vector(1,nbr,deg);
+    rancst : constant TripDobl_Complex_Series.Series
+           := TripDobl_Complex_Random_Series.Random_Series(deg);
+    cstcff : constant TripDobl_Complex_Vectors.Vector(0..rancst.deg)
+           := rancst.cff(0..rancst.deg);
+
+  begin
+    res.xps := Random_Exponents(dim,nbr,pwr);
+    res.idx := Exponent_Indices.Exponent_Index(res.xps);
+    res.fac := Exponent_Indices.Factor_Index(res.xps);
+    res.cff := Series_Coefficient_Vectors.TripDobl_Series_Coefficients(polcff);
+    res.cst := new TripDobl_Complex_Vectors.Vector'(cstcff);
+    res.forward := Allocate_Coefficients(dim-1,deg);
+    res.backward := Allocate_Coefficients(dim-2,deg);
+    res.cross := Allocate_Coefficients(dim-2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    return res;
+  end TripDobl_Random_Convolution_Circuit;
+
   function QuadDobl_Random_Convolution_Circuit
              ( dim,deg,nbr,pwr : in integer32 )
              return QuadDobl_Speelpenning_Convolutions.Circuit is
@@ -175,6 +210,26 @@ package body Random_Convolution_Circuits is
     return res;
   end DoblDobl_Random_Convolution_Circuits;
 
+  function TripDobl_Random_Convolution_Circuits
+             ( dim,deg,nbr,pwr : in integer32 )
+             return TripDobl_Speelpenning_Convolutions.Circuits is
+
+    use TripDobl_Speelpenning_Convolutions;
+
+    res : Circuits(1..dim);
+
+  begin
+    for k in 1..dim loop
+      declare
+        c : constant Circuit(nbr,dim,dim-1,dim-2)
+          := TripDobl_Random_Convolution_Circuit(dim,deg,nbr,pwr);
+      begin
+        res(k) := new Circuit'(c);
+      end;
+    end loop;
+    return res;
+  end TripDobl_Random_Convolution_Circuits;
+
   function QuadDobl_Random_Convolution_Circuits
              ( dim,deg,nbr,pwr : in integer32 )
              return QuadDobl_Speelpenning_Convolutions.Circuits is
@@ -216,6 +271,17 @@ package body Random_Convolution_Circuits is
   begin
     return DoblDobl_Speelpenning_Convolutions.Create(c,dim,deg);
   end DoblDobl_Random_System;
+
+  function TripDobl_Random_System
+             ( dim,deg,nbr,pwr : integer32 )
+             return TripDobl_Speelpenning_Convolutions.Link_to_System is
+
+    c : constant TripDobl_Speelpenning_Convolutions.Circuits
+      := TripDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+
+  begin
+    return TripDobl_Speelpenning_Convolutions.Create(c,dim,deg);
+  end TripDobl_Random_System;
 
   function QuadDobl_Random_System
              ( dim,deg,nbr,pwr : integer32 )
@@ -259,6 +325,22 @@ package body Random_Convolution_Circuits is
     s := DoblDobl_Random_System(dim,deg,nbr,pwr);
     Homotopy_Convolution_Circuits.Newton_Homotopy(s.crc,z);
   end DoblDobl_Random_Newton_Homotopy;
+
+  procedure TripDobl_Random_Newton_Homotopy
+             ( dim,deg,nbr,pwr : in integer32;
+               s : out TripDobl_Speelpenning_Convolutions.Link_to_System;
+               x : out TripDobl_Complex_VecVecs.Link_to_VecVec ) is
+
+    z : constant TripDobl_Complex_Vectors.Vector(1..dim)
+      := TripDobl_Random_Vectors.Random_Vector(1,dim);
+    sz : constant TripDobl_Complex_VecVecs.VecVec(1..dim)
+       := TripDobl_Newton_Convolutions.Series_Coefficients(z,deg);
+
+  begin
+    x := new TripDobl_Complex_VecVecs.VecVec'(sz);
+    s := TripDobl_Random_System(dim,deg,nbr,pwr);
+    Homotopy_Convolution_Circuits.Newton_Homotopy(s.crc,z);
+  end TripDobl_Random_Newton_Homotopy;
 
   procedure QuadDobl_Random_Newton_Homotopy
              ( dim,deg,nbr,pwr : in integer32;
