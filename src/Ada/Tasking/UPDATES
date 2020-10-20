@@ -1,3 +1,6 @@
+Tue 20 Oct 2020 : moved tests from ts_mtnewton.adb to the new package
+  test_mtnewton_convolutions.
+
 Tue 22 Sep 2020 : updates in multitasked_newton_convolutions.adb,
   ts_mtnewton.adb and ts_mthessian.adb because of the split of the
   Newton convolutions package.
