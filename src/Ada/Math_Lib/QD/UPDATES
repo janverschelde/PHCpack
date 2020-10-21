@@ -1,3 +1,7 @@
+Wed 21 Oct 2020 : extended deca_double_numbers with type casts to
+  double double, triple double, quad double, penta double, and octo double,
+  with similar extensions to decadobl_complex_numbers_cv.
+
 Tue 20 Oct 2020 : added to_triple_double function in quad_double_numbers
   and other converters in quaddobl_complex_numbers_cv.
 

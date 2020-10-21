@@ -259,10 +259,25 @@ package Test_mtSeries_Linearization is
                 A : in QuadDobl_Complex_VecMats.VecMat;
                 b : in QuadDobl_Complex_VecVecs.VecVec;
                 verbose : in boolean := false );
+  procedure PentDobl_Benchmark
+              ( file : in file_type; n,nbruns,inc : in integer32;
+                A : in PentDobl_Complex_VecMats.VecMat;
+                b : in PentDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := false );
+  procedure OctoDobl_Benchmark
+              ( file : in file_type; n,nbruns,inc : in integer32;
+                A : in OctoDobl_Complex_VecMats.VecMat;
+                b : in OctoDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := false );
+  procedure DecaDobl_Benchmark
+              ( file : in file_type; n,nbruns,inc : in integer32;
+                A : in DecaDobl_Complex_VecMats.VecMat;
+                b : in DecaDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   Runs multitasked benchmarks in double, double double, triple double,
-  --   or quad double precision. 
+  --   quad double, penta double, octo double, or deca double precision. 
 
   -- ON ENTRY :
   --   file     file opened for output to write speedups;

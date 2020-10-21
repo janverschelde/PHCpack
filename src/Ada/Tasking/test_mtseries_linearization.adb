@@ -26,8 +26,6 @@ with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
 with QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_VecMats_io;        use QuadDobl_Complex_VecMats_io;
-with QuadDobl_Complex_Vectors_cv;
-with QuadDobl_Complex_Matrices_cv;
 with PentDobl_Complex_Vectors_io;        use PentDobl_Complex_Vectors_io;
 with PentDobl_Complex_VecVecs_io;        use PentDobl_Complex_VecVecs_io;
 with PentDobl_Complex_Matrices;
@@ -40,6 +38,8 @@ with DecaDobl_Complex_Vectors_io;        use DecaDobl_Complex_Vectors_io;
 with DecaDobl_Complex_VecVecs_io;        use DecaDobl_Complex_VecVecs_io;
 with DecaDobl_Complex_Matrices;
 with DecaDobl_Complex_VecMats_io;        use DecaDobl_Complex_VecMats_io;
+with DecaDobl_Complex_Vectors_cv;
+with DecaDobl_Complex_Matrices_cv;
 with Standard_Complex_Singular_Values;
 with DoblDobl_Complex_Singular_Values;
 with TripDobl_Complex_Singular_Values;
@@ -1663,35 +1663,227 @@ package body Test_mtSeries_Linearization is
     end loop;
   end QuadDobl_Benchmark;
 
+  procedure PentDobl_Benchmark
+              ( file : in file_type; n,nbruns,inc : in integer32;
+                A : in PentDobl_Complex_VecMats.VecMat;
+                b : in PentDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := false ) is
+
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    info : integer32;
+    wrk : constant PentDobl_Complex_Vectors.Link_to_Vector
+        := new PentDobl_Complex_Vectors.Vector(1..n);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    serelp,mltelp,speedup,efficiency : duration;
+    vm : PentDobl_Complex_VecMats.VecMat(A'range);
+    bw : PentDobl_Complex_VecVecs.VecVec(b'range);
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+
+  begin
+    put_line(file,"penta double precision");
+    PentDobl_Complex_VecMats.Copy(A,vm);
+    PentDobl_Complex_VecVecs.Copy(b,bw);
+    seristart := Ada.Calendar.Clock;
+    PentDobl_Series_Matrix_Solvers.Solve_by_lufac(vm,bw,ipvt,info,wrk);
+    seristop := Ada.Calendar.Clock;
+    serelp := seristop - seristart;
+    put(file,"  1 : "); duration_io.put(file,serelp,1,3); new_line(file);
+    if verbose then
+      put_line("-> Elapsed time without multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    end if;
+    for k in 1..nbruns loop
+      declare
+        wks : PentDobl_Complex_VecVecs.VecVec(1..nbt)
+            := Allocate_Work_Space(nbt,n);
+      begin
+        PentDobl_Complex_VecMats.Copy(A,vm);
+        PentDobl_Complex_VecVecs.Copy(b,bw);
+        multstart := Ada.Calendar.Clock;
+        Multitasked_Solve_by_lufac(nbt,vm,bw,ipvt,info,wks,false);
+        multstop := Ada.Calendar.Clock;
+        mltelp := multstop - multstart;
+        if verbose then
+          put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+          Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+        end if;
+	speedup := Compute_Speedup(serelp,mltelp,verbose);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mltelp,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
+        PentDobl_Complex_VecVecs.Clear(wks);
+        nbt := nbt + inc;
+      end;
+    end loop;
+  end PentDobl_Benchmark;
+
+  procedure OctoDobl_Benchmark
+              ( file : in file_type; n,nbruns,inc : in integer32;
+                A : in OctoDobl_Complex_VecMats.VecMat;
+                b : in OctoDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := false ) is
+
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    info : integer32;
+    wrk : constant OctoDobl_Complex_Vectors.Link_to_Vector
+        := new OctoDobl_Complex_Vectors.Vector(1..n);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    serelp,mltelp,speedup,efficiency : duration;
+    vm : OctoDobl_Complex_VecMats.VecMat(A'range);
+    bw : OctoDobl_Complex_VecVecs.VecVec(b'range);
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+
+  begin
+    put_line(file,"octo double precision");
+    OctoDobl_Complex_VecMats.Copy(A,vm);
+    OctoDobl_Complex_VecVecs.Copy(b,bw);
+    seristart := Ada.Calendar.Clock;
+    OctoDobl_Series_Matrix_Solvers.Solve_by_lufac(vm,bw,ipvt,info,wrk);
+    seristop := Ada.Calendar.Clock;
+    serelp := seristop - seristart;
+    put(file,"  1 : "); duration_io.put(file,serelp,1,3); new_line(file);
+    if verbose then
+      put_line("-> Elapsed time without multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    end if;
+    for k in 1..nbruns loop
+      declare
+        wks : OctoDobl_Complex_VecVecs.VecVec(1..nbt)
+            := Allocate_Work_Space(nbt,n);
+      begin
+        OctoDobl_Complex_VecMats.Copy(A,vm);
+        OctoDobl_Complex_VecVecs.Copy(b,bw);
+        multstart := Ada.Calendar.Clock;
+        Multitasked_Solve_by_lufac(nbt,vm,bw,ipvt,info,wks,false);
+        multstop := Ada.Calendar.Clock;
+        mltelp := multstop - multstart;
+        if verbose then
+          put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+          Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+        end if;
+	speedup := Compute_Speedup(serelp,mltelp,verbose);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mltelp,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
+        OctoDobl_Complex_VecVecs.Clear(wks);
+        nbt := nbt + inc;
+      end;
+    end loop;
+  end OctoDobl_Benchmark;
+
+  procedure DecaDobl_Benchmark
+              ( file : in file_type; n,nbruns,inc : in integer32;
+                A : in DecaDobl_Complex_VecMats.VecMat;
+                b : in DecaDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := false ) is
+
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    info : integer32;
+    wrk : constant DecaDobl_Complex_Vectors.Link_to_Vector
+        := new DecaDobl_Complex_Vectors.Vector(1..n);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    serelp,mltelp,speedup,efficiency : duration;
+    vm : DecaDobl_Complex_VecMats.VecMat(A'range);
+    bw : DecaDobl_Complex_VecVecs.VecVec(b'range);
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+
+  begin
+    put_line(file,"deca double precision");
+    DecaDobl_Complex_VecMats.Copy(A,vm);
+    DecaDobl_Complex_VecVecs.Copy(b,bw);
+    seristart := Ada.Calendar.Clock;
+    DecaDobl_Series_Matrix_Solvers.Solve_by_lufac(vm,bw,ipvt,info,wrk);
+    seristop := Ada.Calendar.Clock;
+    serelp := seristop - seristart;
+    put(file,"  1 : "); duration_io.put(file,serelp,1,3); new_line(file);
+    if verbose then
+      put_line("-> Elapsed time without multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    end if;
+    for k in 1..nbruns loop
+      declare
+        wks : DecaDobl_Complex_VecVecs.VecVec(1..nbt)
+            := Allocate_Work_Space(nbt,n);
+      begin
+        DecaDobl_Complex_VecMats.Copy(A,vm);
+        DecaDobl_Complex_VecVecs.Copy(b,bw);
+        multstart := Ada.Calendar.Clock;
+        Multitasked_Solve_by_lufac(nbt,vm,bw,ipvt,info,wks,false);
+        multstop := Ada.Calendar.Clock;
+        mltelp := multstop - multstart;
+        if verbose then
+          put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+          Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+        end if;
+	speedup := Compute_Speedup(serelp,mltelp,verbose);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mltelp,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
+        DecaDobl_Complex_VecVecs.Clear(wks);
+        nbt := nbt + inc;
+      end;
+    end loop;
+  end DecaDobl_Benchmark;
+
   procedure Benchmark ( n,d : in integer32 ) is
 
-    use QuadDobl_Complex_Series_Matrices; -- for the sA*sx operation
+    use DecaDobl_Complex_Series_Matrices; -- for the sA*sx operation
 
-    sA : constant QuadDobl_Complex_Series_Matrices.Matrix(1..n,1..n)
-       := QuadDobl_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,d);
-    As : constant QuadDobl_Complex_Matrix_Series.Matrix 
-       := QuadDobl_Complex_Matrix_Series.Create(sA); 
-    qd_vm : constant QuadDobl_Complex_VecMats.VecMat(0..As.deg)
-          := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(As);
-    td_vm : constant TripDobl_Complex_VecMats.VecMat(0..As.deg)
-          := QuadDobl_Complex_Matrices_cv.to_triple_double(qd_vm);
-    dd_vm : constant DoblDobl_Complex_VecMats.VecMat(qd_vm'range)
-          := QuadDobl_Complex_Matrices_cv.to_double_double(qd_vm);
-    d_vm : constant Standard_Complex_VecMats.VecMat(qd_vm'range)
-         := QuadDobl_Complex_Matrices_cv.to_double(qd_vm);
-    sx : constant QuadDobl_Complex_Series_Vectors.Vector(1..n)
-       := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,n,d);
-    sb : constant QuadDobl_Complex_Series_Vectors.Vector(1..n) := sA*sx;
-    bs : constant QuadDobl_Complex_Vector_Series.Vector(d)
-       := QuadDobl_Complex_Vector_Series.Create(sb);
+    sA : constant DecaDobl_Complex_Series_Matrices.Matrix(1..n,1..n)
+       := DecaDobl_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,d);
+    As : constant DecaDobl_Complex_Matrix_Series.Matrix 
+       := DecaDobl_Complex_Matrix_Series.Create(sA); 
+    da_vm : constant DecaDobl_Complex_VecMats.VecMat(0..As.deg)
+          := Series_Coefficient_Vectors.DecaDobl_Series_Coefficients(As);
+    od_vm : constant OctoDobl_Complex_VecMats.VecMat(da_vm'range)
+          := DecaDobl_Complex_Matrices_cv.to_octo_double(da_vm);
+    pd_vm : constant PentDobl_Complex_VecMats.VecMat(da_vm'range)
+          := DecaDobl_Complex_Matrices_cv.to_penta_double(da_vm);
+    qd_vm : constant QuadDobl_Complex_VecMats.VecMat(da_vm'range)
+          := DecaDobl_Complex_Matrices_cv.to_quad_double(da_vm);
+    td_vm : constant TripDobl_Complex_VecMats.VecMat(da_vm'range)
+          := DecaDobl_Complex_Matrices_cv.to_triple_double(da_vm);
+    dd_vm : constant DoblDobl_Complex_VecMats.VecMat(da_vm'range)
+          := DecaDobl_Complex_Matrices_cv.to_double_double(da_vm);
+    d_vm : constant Standard_Complex_VecMats.VecMat(da_vm'range)
+         := DecaDobl_Complex_Matrices_cv.to_double(da_vm);
+    sx : constant DecaDobl_Complex_Series_Vectors.Vector(1..n)
+       := DecaDobl_Random_Series_Vectors.Random_Series_Vector(1,n,d);
+    sb : constant DecaDobl_Complex_Series_Vectors.Vector(1..n) := sA*sx;
+    bs : constant DecaDobl_Complex_Vector_Series.Vector(d)
+       := DecaDobl_Complex_Vector_Series.Create(sb);
+    da_bscff : constant DecaDobl_Complex_VecVecs.VecVec(0..bs.deg)
+             := Series_Coefficient_Vectors.DecaDobl_Series_Coefficients(bs);
+    od_bscff : constant OctoDobl_Complex_VecVecs.VecVec(0..bs.deg)
+             := DecaDobl_Complex_Vectors_cv.to_octo_double(da_bscff);
+    pd_bscff : constant PentDobl_Complex_VecVecs.VecVec(0..bs.deg)
+             := DecaDobl_Complex_Vectors_cv.to_penta_double(da_bscff);
     qd_bscff : constant QuadDobl_Complex_VecVecs.VecVec(0..bs.deg)
-             := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(bs);
+             := DecaDobl_Complex_Vectors_cv.to_quad_double(da_bscff);
     td_bscff : constant TripDobl_Complex_VecVecs.VecVec(0..bs.deg)
-             := QuadDobl_Complex_Vectors_cv.to_triple_double(qd_bscff);
+             := DecaDobl_Complex_Vectors_cv.to_triple_double(da_bscff);
     dd_bscff : constant DoblDobl_Complex_VecVecs.VecVec(0..bs.deg)
-             := QuadDobl_Complex_Vectors_cv.to_double_double(qd_bscff);
+             := DecaDobl_Complex_Vectors_cv.to_double_double(da_bscff);
     d_bscff : constant Standard_Complex_VecVecs.VecVec(0..bs.deg)
-            := QuadDobl_Complex_Vectors_cv.to_double(qd_bscff);
+            := DecaDobl_Complex_Vectors_cv.to_double(da_bscff);
     nbruns,inc : integer32 := 0;
     file : file_type;
 
@@ -1712,6 +1904,9 @@ package body Test_mtSeries_Linearization is
     DoblDobl_Benchmark(file,n,nbruns,inc,dd_vm,dd_bscff);
     TripDobl_Benchmark(file,n,nbruns,inc,td_vm,td_bscff);
     QuadDobl_Benchmark(file,n,nbruns,inc,qd_vm,qd_bscff);
+    PentDobl_Benchmark(file,n,nbruns,inc,pd_vm,pd_bscff);
+    OctoDobl_Benchmark(file,n,nbruns,inc,od_vm,od_bscff);
+    DecaDobl_Benchmark(file,n,nbruns,inc,da_vm,da_bscff);
   end Benchmark;
 
   procedure Main is

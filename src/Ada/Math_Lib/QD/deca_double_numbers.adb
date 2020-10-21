@@ -1,7 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Mathematical_Functions;
 with Double_Double_Basics;
-with Double_Double_Numbers;
 with Fast_Double_Renormalizations;       use Fast_Double_Renormalizations;
 
 package body Deca_Double_Numbers is
@@ -311,6 +310,52 @@ package body Deca_Double_Numbers is
   begin
     return x.right_thumb;
   end to_double;
+
+  function to_double_double ( x : deca_double ) return double_double is
+
+    res : constant double_double := create(x.right_thumb,x.right_index);
+
+  begin
+    return res;
+  end to_double_double;
+
+  function to_triple_double ( x : deca_double ) return triple_double is
+
+    res : constant triple_double
+        := create(x.right_thumb,x.right_index,x.right_middle);
+
+  begin
+    return res;
+  end to_triple_double;
+
+  function to_quad_double ( x : deca_double ) return quad_double is
+
+    res : constant quad_double
+        := create(x.right_thumb,x.right_index,x.right_middle,x.right_ring);
+
+  begin
+    return res;
+  end to_quad_double;
+
+  function to_penta_double ( x : deca_double ) return penta_double is
+
+    res : constant penta_double
+        := create(x.right_thumb,x.right_index,x.right_middle,
+                  x.right_ring,x.right_pink);
+
+  begin
+    return res;
+  end to_penta_double;
+
+  function to_octo_double ( x : deca_double ) return octo_double is
+
+    res : constant octo_double
+        := create(x.right_thumb,x.right_index,x.right_middle,x.right_ring,
+                  x.right_pink,x.left_thumb,x.left_index,x.left_middle);
+
+  begin
+    return res;
+  end to_octo_double;
 
 -- COMPARISON and COPYING :
 

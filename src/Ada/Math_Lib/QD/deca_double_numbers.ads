@@ -1,6 +1,11 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Triple_Double_Numbers;              use Triple_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Penta_Double_Numbers;               use Penta_Double_Numbers;
+with Octo_Double_Numbers;                use Octo_Double_Numbers;
 
 package Deca_Double_Numbers is
 
@@ -133,6 +138,36 @@ package Deca_Double_Numbers is
 
   -- DESCRIPTION :
   --   Returns right_thumb(x).
+
+  function to_double_double ( x : deca_double ) return double_double;
+
+  -- DESCRIPTION :
+  --   Returns the double double with the first two significant
+  --   doubles of x.
+
+  function to_triple_double ( x : deca_double ) return triple_double;
+
+  -- DESCRIPTION :
+  --   Returns the double double with the first three significant
+  --   doubles of x.
+
+  function to_quad_double ( x : deca_double ) return quad_double;
+
+  -- DESCRIPTION :
+  --   Returns the double double with the first four significant
+  --   doubles of x.
+
+  function to_penta_double ( x : deca_double ) return penta_double;
+
+  -- DESCRIPTION :
+  --   Returns the double double with the first five significant
+  --   doubles of x.
+
+  function to_octo_double ( x : deca_double ) return octo_double;
+
+  -- DESCRIPTION :
+  --   Returns the double double with the first eight significant
+  --   doubles of x.
 
 -- COMPARISON and COPYING :
 
