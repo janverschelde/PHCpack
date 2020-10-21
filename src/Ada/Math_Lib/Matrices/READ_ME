@@ -65,6 +65,7 @@ quaddobl_complex_matrices          : matrices of quad double complex numbers
 quaddobl_complex_matrices_io       : generic_matrices_io(quad double complex)
 quaddobl_complex_vecmats           : generic_vecmats(quad double complex)
 quaddobl_complex_vecmats_io        : generic_vecmats_io(quad double complex)
+quaddobl_complex_matrices_cv       : convertors to other precisions
 multprec_natural_matrices          : matrices of multiprecision natural numbers
 multprec_natural_matrices_io       : generic_matrices_io(multprec natural)
 multprec_integer_matrices          : matrices of multiprecision integer numbers
