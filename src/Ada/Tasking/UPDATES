@@ -2,6 +2,11 @@ Tue 20 Oct 2020 : moved tests from ts_mtnewton.adb to the new package
   test_mtnewton_convolutions.  Extended multitasked_series_linearization,
   multitasked_algodiff_convolutions, multitasked_newton_convolutions,
   and test_mtnewton_convolutions for runs in triple double precision.
+  Added new test_mtseries_linearization, test_mtalgodiff_convolutions,
+  test_mthessian_convolutions, test_mthessian_circuits,
+  test_mtpade_approximations, test_mtshift_convolutions, with code from
+  respectively ts_mtserlin, ts_mtadcnv, ts_mthessian, ts_mthesscrc,
+  ts_mtratapp, and ts_mtshiftcnv.
 
 Tue 22 Sep 2020 : updates in multitasked_newton_convolutions.adb,
   ts_mtnewton.adb and ts_mthessian.adb because of the split of the

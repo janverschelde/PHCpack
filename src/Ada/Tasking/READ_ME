@@ -97,20 +97,26 @@ pipelined_polyhedral_homotopies   : 2-stage pipeline for polyhedral homotopies
 ts_mtcelidx                       : test on pipelining cell indices
 -------------------------------------------------------------------------------
 multitasked_algodiff_convolutions : multitasked AD for power series
-ts_mtadcnv                        : test on multitasked AD for power series
+test_mtalgodiff_convolutions      : tests multitasked AD for power series
+ts_mtadcnv                        : calls the main test on multitasked AD
 multitasked_series_linearization  : multitasked linearized series solver
-ts_mtserlin                       : develop multitasked matrix series solver
+test_mtseries_linearization       : tests on multitasked linearization
+ts_mtserlin                       : calls the main test on mt linearization
 multitasked_newton_convolutions   : multitasked Newton on power series
 test_mtnewton_convolutions        : tests multitasked Newton for power series
-ts_mtnewton                       : test on multitasked Newton on power series
+ts_mtnewton                       : calls the main test on multitasked Newton
 multitasked_hessian_convolutions  : multitasked Hessian criterion
-ts_mthessian                      : test on multitasked SVD on the Hessians
+test_mthessian_convolutions       : tests the multitasked SVD on the Hessians
+ts_mthessian                      : calls the main test on mt Hessian
 multitasked_hessian_circuits      : multitasked Hessians on circuits
-ts_mthesscrc                      : test on multitasked Hessians on circuits
+test_mthessian_circuits           : tests multitasked Hessians on circuits
+ts_mthesscrc                      : calls the main test on mt Hessian circuits
 multitasked_pade_approximations   : multitasked rational approximations
-ts_mtratapp                       : test on multitasked rational approximations
+test_mtpade_approximations        : test on multitasked rational approximations
+ts_mtratapp                       : calls the main test on mt Pade approx
 multitasked_shift_circuits        : multitasked shift of circuit coefficients
-ts_mtshiftcnv                     : test on multitasked shift of circuits
+test_mtshift_convolutions         : test on multitasked shift of circuits
+ts_mtshiftcnv                     : calls the main test on mt shift circuits
 -------------------------------------------------------------------------------
 multitasked_path_convolutions     : multitasked trackers with convolutions
 ts_mtpcscnv                       : test mt predictor-corrector-shift loops
