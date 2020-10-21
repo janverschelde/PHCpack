@@ -1,5 +1,7 @@
 Tue 20 Oct 2020 : new triple_double_vecvecs.ads.  Added convertors to
   quaddobl_complex_vectors_cv and varbprec_vecvec_conversions.
+  Extended decadobl_complex_vectors_cv with operations to convert vectors 
+  in deca double precision to lower precision equivalent vectors.
 
 Tue 22 Sep 2020 : new {trip,pent,octo,deca}dobl_complex_vectors_cv with
   functions to convert triple, penta, octo, and deca double complex vectors

@@ -103,6 +103,7 @@ decadobl_complex_matrices          : matrices of complex deca doubles
 decadobl_complex_matrices_io       : i/o matrices of complex deca doubles
 decadobl_complex_vecmats           : generic_vecmats(deca double complex)
 decadobl_complex_vecmats_io        : generic_vecmats_io(deca double complex)
+decadobl_complex_matrices_cv       : convert to lower precisions
 ------------------------------------------------------------------------------
 standard_random_matrices           : matrices of random standard numbers
 dobldobl_random_matrices           : matrices of random double doubles

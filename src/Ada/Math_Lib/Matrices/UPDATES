@@ -1,4 +1,5 @@
 Wed 21 Oct 2020 : new package quaddobl_complex_matrices_cv.
+  Added new package decadobl_complex_matrices_cv.
 
 Thu 17 Sep 2020 : new {trip,pent,octo,deca}dobl_complex_vecmats and _io.
 
