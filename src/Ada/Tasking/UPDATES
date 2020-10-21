@@ -1,3 +1,6 @@
+Wed 21 Oct 2020 : extended test_mtseries_linearization to triple double
+  precision.
+
 Tue 20 Oct 2020 : moved tests from ts_mtnewton.adb to the new package
   test_mtnewton_convolutions.  Extended multitasked_series_linearization,
   multitasked_algodiff_convolutions, multitasked_newton_convolutions,
