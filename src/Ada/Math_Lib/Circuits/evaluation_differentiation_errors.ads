@@ -2,6 +2,9 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Penta_Double_Numbers;               use Penta_Double_Numbers;
+with Octo_Double_Numbers;                use Octo_Double_Numbers;
+with Deca_Double_Numbers;                use Deca_Double_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;
@@ -16,6 +19,12 @@ with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_VecMats;
+with PentDobl_Complex_Vectors;
+with PentDobl_Complex_VecVecs;
+with OctoDobl_Complex_Vectors;
+with OctoDobl_Complex_VecVecs;
+with DecaDobl_Complex_Vectors;
+with DecaDobl_Complex_VecVecs;
 with Standard_Complex_Series;
 with Standard_Complex_Series_Vectors;
 with Standard_Complex_Series_Matrices;
@@ -27,6 +36,12 @@ with TripDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series_Matrices;
+with PentDobl_Complex_Series;
+with PentDobl_Complex_Series_Vectors;
+with OctoDobl_Complex_Series;
+with OctoDobl_Complex_Series_Vectors;
+with DecaDobl_Complex_Series;
+with DecaDobl_Complex_Series_Vectors;
 
 package Evaluation_Differentiation_Errors is
 
@@ -47,11 +62,21 @@ package Evaluation_Differentiation_Errors is
   function Difference ( s : QuadDobl_Complex_Series.Link_to_Series;
                         c : QuadDobl_Complex_Vectors.Link_to_Vector )
                       return quad_double;
+  function Difference ( s : PentDobl_Complex_Series.Link_to_Series;
+                        c : PentDobl_Complex_Vectors.Link_to_Vector )
+                      return penta_double;
+  function Difference ( s : OctoDobl_Complex_Series.Link_to_Series;
+                        c : OctoDobl_Complex_Vectors.Link_to_Vector )
+                      return octo_double;
+  function Difference ( s : DecaDobl_Complex_Series.Link_to_Series;
+                        c : DecaDobl_Complex_Vectors.Link_to_Vector )
+                      return deca_double;
 
   -- DESCRIPTION :
   --   Returns the sum of the absolute values of the differences
   --   between the coefficients of s and the values in c,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- REQUIRED : s.cff'range = c'range.
 
@@ -67,11 +92,21 @@ package Evaluation_Differentiation_Errors is
   function Difference ( x : QuadDobl_Complex_Vectors.Link_to_Vector;
                         y : QuadDobl_Complex_Vectors.Link_to_Vector )
                       return quad_double;
+  function Difference ( x : PentDobl_Complex_Vectors.Link_to_Vector;
+                        y : PentDobl_Complex_Vectors.Link_to_Vector )
+                      return penta_double;
+  function Difference ( x : OctoDobl_Complex_Vectors.Link_to_Vector;
+                        y : OctoDobl_Complex_Vectors.Link_to_Vector )
+                      return octo_double;
+  function Difference ( x : DecaDobl_Complex_Vectors.Link_to_Vector;
+                        y : DecaDobl_Complex_Vectors.Link_to_Vector )
+                      return deca_double;
 
   -- DESCRIPTION :
   --   Returns the sum of the absolute values of the differences
   --   between the coefficients of x and those values of y,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- REQUIRED : x'range = y'range.
 
@@ -87,11 +122,21 @@ package Evaluation_Differentiation_Errors is
   function Difference ( s : QuadDobl_Complex_Series_Vectors.Vector;
                         c : QuadDobl_Complex_VecVecs.VecVec )
                       return quad_double;
+  function Difference ( s : PentDobl_Complex_Series_Vectors.Vector;
+                        c : PentDobl_Complex_VecVecs.VecVec )
+                      return penta_double;
+  function Difference ( s : OctoDobl_Complex_Series_Vectors.Vector;
+                        c : OctoDobl_Complex_VecVecs.VecVec )
+                      return octo_double;
+  function Difference ( s : DecaDobl_Complex_Series_Vectors.Vector;
+                        c : DecaDobl_Complex_VecVecs.VecVec )
+                      return deca_double;
 
   -- DESCRIPTION :
   --   Returns the sum of the absolute values of the differences
   --   between the coefficients of s and the values in c,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- REQUIRED : s'range = c'range.
 
@@ -107,11 +152,21 @@ package Evaluation_Differentiation_Errors is
   function Difference ( x : QuadDobl_Complex_VecVecs.VecVec;
                         y : QuadDobl_Complex_VecVecs.VecVec )
                       return quad_double;
+  function Difference ( x : PentDobl_Complex_VecVecs.VecVec;
+                        y : PentDobl_Complex_VecVecs.VecVec )
+                      return penta_double;
+  function Difference ( x : OctoDobl_Complex_VecVecs.VecVec;
+                        y : OctoDobl_Complex_VecVecs.VecVec )
+                      return octo_double;
+  function Difference ( x : DecaDobl_Complex_VecVecs.VecVec;
+                        y : DecaDobl_Complex_VecVecs.VecVec )
+                      return deca_double;
 
   -- DESCRIPTION :
   --   Returns the sum of the absolute values of the differences
   --   between the coefficients of x and those in y,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, or octo double precision.
 
   -- REQUIRED : x'range = y'range.
 

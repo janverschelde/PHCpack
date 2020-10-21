@@ -4,6 +4,9 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Penta_Double_Numbers;               use Penta_Double_Numbers;
+with Octo_Double_Numbers;                use Octo_Double_Numbers;
+with Deca_Double_Numbers;                use Deca_Double_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
@@ -17,10 +20,22 @@ with TripDobl_Complex_VecMats;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecMats;
+with PentDobl_Complex_Vectors;
+with PentDobl_Complex_VecVecs;
+with PentDobl_Complex_VecMats;
+with OctoDobl_Complex_Vectors;
+with OctoDobl_Complex_VecVecs;
+with OctoDobl_Complex_VecMats;
+with DecaDobl_Complex_Vectors;
+with DecaDobl_Complex_VecVecs;
+with DecaDobl_Complex_VecMats;
 with Standard_Complex_Vector_Series;
 with DoblDobl_Complex_Vector_Series;
 with TripDobl_Complex_Vector_Series;
 with QuadDobl_Complex_Vector_Series;
+with PentDobl_Complex_Vector_Series;
+with OctoDobl_Complex_Vector_Series;
+with DecaDobl_Complex_Vector_Series;
 
 package Test_mtSeries_Linearization is
 
@@ -40,6 +55,15 @@ package Test_mtSeries_Linearization is
   function Error ( xs : QuadDobl_Complex_Vector_Series.Vector;
                    bscff : QuadDobl_Complex_VecVecs.VecVec;
                    output : boolean := true ) return quad_double;
+  function Error ( xs : PentDobl_Complex_Vector_Series.Vector;
+                   bscff : PentDobl_Complex_VecVecs.VecVec;
+                   output : boolean := true ) return penta_double;
+  function Error ( xs : OctoDobl_Complex_Vector_Series.Vector;
+                   bscff : OctoDobl_Complex_VecVecs.VecVec;
+                   output : boolean := true ) return octo_double;
+  function Error ( xs : DecaDobl_Complex_Vector_Series.Vector;
+                   bscff : DecaDobl_Complex_VecVecs.VecVec;
+                   output : boolean := true ) return deca_double;
 
   -- DESCRIPTION :
   --   Returns the sum of all differences between the coefficients in xs
@@ -91,10 +115,31 @@ package Test_mtSeries_Linearization is
                 xs : in QuadDobl_Complex_Vector_Series.Vector;
                 mltelp,serelp : in out Duration;
                 output,nbrotp,usesvd : in boolean );
+  procedure PentDobl_Run
+              ( nbt,neq,nvr : in integer32;
+                vm : in PentDobl_Complex_VecMats.VecMat;
+                vb : in PentDobl_Complex_VecVecs.VecVec;
+                xs : in PentDobl_Complex_Vector_Series.Vector;
+                mltelp,serelp : in out Duration;
+                output,nbrotp,usesvd : in boolean );
+  procedure OctoDobl_Run
+              ( nbt,neq,nvr : in integer32;
+                vm : in OctoDobl_Complex_VecMats.VecMat;
+                vb : in OctoDobl_Complex_VecVecs.VecVec;
+                xs : in OctoDobl_Complex_Vector_Series.Vector;
+                mltelp,serelp : in out Duration;
+                output,nbrotp,usesvd : in boolean );
+  procedure DecaDobl_Run
+              ( nbt,neq,nvr : in integer32;
+                vm : in DecaDobl_Complex_VecMats.VecMat;
+                vb : in DecaDobl_Complex_VecVecs.VecVec;
+                xs : in DecaDobl_Complex_Vector_Series.Vector;
+                mltelp,serelp : in out Duration;
+                output,nbrotp,usesvd : in boolean );
 
   -- DESCRIPTION :
   --   Does a run with nbt tasks in double, double double, triple double,
-  --   or quad double precision.
+  --   quad double, penta double, octo double, or deca double precision.
   --   Solves the linearized matrix series system defined by vm and vb.
   --   Prints the elapsed time and if defined, the speedup.
   --   Prints the difference between the computed and the generated solution.
@@ -144,7 +189,7 @@ package Test_mtSeries_Linearization is
   --   Generates an m-by-n matrix of series of degree d,
   --   with complex coefficients and a solution of the same dimension
   --   and degree, in double precision,
-  --   Prompts then the user for the number of tasks and runs the test.
+  --   Prompts then for the number of tasks and runs the test.
 
   procedure DoblDobl_Test ( m,n,d : in integer32 );
 
@@ -152,7 +197,7 @@ package Test_mtSeries_Linearization is
   --   Generates an m-by-n matrix of series of degree d,
   --   with complex coefficients and a solution of the same dimension
   --   and degree, in double double precision,
-  --   Prompts then the user for the number of tasks and runs the test.
+  --   Prompts then for the number of tasks and runs the test.
 
   procedure TripDobl_Test ( m,n,d : in integer32 );
 
@@ -160,7 +205,7 @@ package Test_mtSeries_Linearization is
   --   Generates an m-by-n matrix of series of degree d,
   --   with complex coefficients and a solution of the same dimension
   --   and degree, in double double precision,
-  --   Prompts then the user for the number of tasks and runs the test.
+  --   Prompts then for the number of tasks and runs the test.
 
   procedure QuadDobl_Test ( m,n,d : in integer32 );
 
@@ -168,7 +213,31 @@ package Test_mtSeries_Linearization is
   --   Generates an m-by-n matrix of series of degree d,
   --   with complex coefficients and a solution of the same dimension
   --   and degree, in quad double precision,
-  --   Prompts then the user for the number of tasks.
+  --   Prompts then for the number of tasks and runs the test.
+
+  procedure PentDobl_Test ( m,n,d : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates an m-by-n matrix of series of degree d,
+  --   with complex coefficients and a solution of the same dimension
+  --   and degree, in penta double precision,
+  --   Prompts then for the number of tasks and runs the test.
+
+  procedure OctoDobl_Test ( m,n,d : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates an m-by-n matrix of series of degree d,
+  --   with complex coefficients and a solution of the same dimension
+  --   and degree, in octo double precision,
+  --   Prompts then for the number of tasks and runs the test.
+
+  procedure DecaDobl_Test ( m,n,d : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates an m-by-n matrix of series of degree d,
+  --   with complex coefficients and a solution of the same dimension
+  --   and degree, in deca double precision,
+  --   Prompts then for the number of tasks and runs the test.
 
   procedure Standard_Benchmark
               ( file : in file_type; n,nbruns,inc : in integer32;

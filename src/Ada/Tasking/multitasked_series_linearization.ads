@@ -3,6 +3,9 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Penta_Double_Numbers;               use Penta_Double_Numbers;
+with Octo_Double_Numbers;                use Octo_Double_Numbers;
+with Deca_Double_Numbers;                use Deca_Double_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
@@ -20,12 +23,25 @@ with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_VecMats;
+with PentDobl_Complex_Vectors;
+with PentDobl_Complex_VecVecs;
+with PentDobl_Complex_Matrices;
+with PentDobl_Complex_VecMats;
+with OctoDobl_Complex_Vectors;
+with OctoDobl_Complex_VecVecs;
+with OctoDobl_Complex_Matrices;
+with OctoDobl_Complex_VecMats;
+with DecaDobl_Complex_Vectors;
+with DecaDobl_Complex_VecVecs;
+with DecaDobl_Complex_Matrices;
+with DecaDobl_Complex_VecMats;
 
 package Multitasked_Series_Linearization is
 
 -- DESCRIPTION :
 --   Linearization is applied to solve linear system of truncated series,
---   with multitasking.
+--   with multitasking, in double, double double, triple double, quad double,
+--   penta double, octo double, and deca double precision.
 
   function Allocate_Work_Space
              ( nbt,dim : integer32 ) return Standard_Complex_VecVecs.VecVec;
@@ -35,6 +51,12 @@ package Multitasked_Series_Linearization is
              ( nbt,dim : integer32 ) return TripDobl_Complex_VecVecs.VecVec;
   function Allocate_Work_Space
              ( nbt,dim : integer32 ) return QuadDobl_Complex_VecVecs.VecVec;
+  function Allocate_Work_Space
+             ( nbt,dim : integer32 ) return PentDobl_Complex_VecVecs.VecVec;
+  function Allocate_Work_Space
+             ( nbt,dim : integer32 ) return OctoDobl_Complex_VecVecs.VecVec;
+  function Allocate_Work_Space
+             ( nbt,dim : integer32 ) return DecaDobl_Complex_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Allocates work space for nbt tasks, returns a vector of vectors
@@ -56,11 +78,24 @@ package Multitasked_Series_Linearization is
              ( dim : in integer32;
                A : in QuadDobl_Complex_Matrices.Link_to_Matrix;
                x,y : in QuadDobl_Complex_Vectors.Link_to_Vector );
+  procedure MV_Multiply
+             ( dim : in integer32;
+               A : in PentDobl_Complex_Matrices.Link_to_Matrix;
+               x,y : in PentDobl_Complex_Vectors.Link_to_Vector );
+  procedure MV_Multiply
+             ( dim : in integer32;
+               A : in OctoDobl_Complex_Matrices.Link_to_Matrix;
+               x,y : in OctoDobl_Complex_Vectors.Link_to_Vector );
+  procedure MV_Multiply
+             ( dim : in integer32;
+               A : in DecaDobl_Complex_Matrices.Link_to_Matrix;
+               x,y : in DecaDobl_Complex_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Multiplies the matrix A with the vector x and stores the
   --   result in the vector y, with explicitly declared index variables,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double, penta double,
+  --   octo double, or deca double precision.
 
   -- REQUIRED : all vectors and matrices have the same dimension dim.
 
@@ -80,11 +115,24 @@ package Multitasked_Series_Linearization is
              ( nrows,ncols : in integer32;
                A : in QuadDobl_Complex_Matrices.Link_to_Matrix;
                x,y : in QuadDobl_Complex_Vectors.Link_to_Vector );
+  procedure MV_Multiply
+             ( nrows,ncols : in integer32;
+               A : in PentDobl_Complex_Matrices.Link_to_Matrix;
+               x,y : in PentDobl_Complex_Vectors.Link_to_Vector );
+  procedure MV_Multiply
+             ( nrows,ncols : in integer32;
+               A : in OctoDobl_Complex_Matrices.Link_to_Matrix;
+               x,y : in OctoDobl_Complex_Vectors.Link_to_Vector );
+  procedure MV_Multiply
+             ( nrows,ncols : in integer32;
+               A : in DecaDobl_Complex_Matrices.Link_to_Matrix;
+               x,y : in DecaDobl_Complex_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Multiplies the matrix A with the vector x and stores the
   --   result in the vector y, with explicitly declared index variables,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double, penta double,
+  --   octo double, or deca double precision.
 
   -- REQUIRED : the number of rows of the matrix A is nrows and
   --   the number of columns of the matrix A is ncols, nrows >= ncols;
@@ -102,11 +150,21 @@ package Multitasked_Series_Linearization is
   procedure V_Subtract
               ( dim : in integer32;
                 x,y : in QuadDobl_Complex_Vectors.Link_to_Vector );
+  procedure V_Subtract
+              ( dim : in integer32;
+                x,y : in PentDobl_Complex_Vectors.Link_to_Vector );
+  procedure V_Subtract
+              ( dim : in integer32;
+                x,y : in OctoDobl_Complex_Vectors.Link_to_Vector );
+  procedure V_Subtract
+              ( dim : in integer32;
+                x,y : in DecaDobl_Complex_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Subtracts from the vector x the vector y,
   --   with explicitly declared index variables,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double, penta double,
+  --   octo double, or deca double precision.
 
   -- REQUIRED : both x and y have range 1..dim.
 
@@ -138,12 +196,34 @@ package Multitasked_Series_Linearization is
                 ipvt : in Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
+  procedure Multitasked_Solve_Next_by_lusolve
+              ( idx,nbt : in integer32;
+                A : in PentDobl_Complex_VecMats.VecMat;
+                b : in PentDobl_Complex_VecVecs.VecVec;
+                ipvt : in Standard_Integer_Vectors.Vector;
+                wrk : in PentDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Next_by_lusolve
+              ( idx,nbt : in integer32;
+                A : in OctoDobl_Complex_VecMats.VecMat;
+                b : in OctoDobl_Complex_VecVecs.VecVec;
+                ipvt : in Standard_Integer_Vectors.Vector;
+                wrk : in OctoDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Next_by_lusolve
+              ( idx,nbt : in integer32;
+                A : in DecaDobl_Complex_VecMats.VecMat;
+                b : in DecaDobl_Complex_VecVecs.VecVec;
+                ipvt : in Standard_Integer_Vectors.Vector;
+                wrk : in DecaDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
 
   -- DESCRIPTION :
   --   Applies multitasking for the backsubstitution (lusolve)
   --   to solve the matrix series equation
   --   defined by the matrix series in A and right hand side in b,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- REQUIRED :
   --   A'last = b'last >= 0.  Moreover, the system is square,
@@ -201,11 +281,39 @@ package Multitasked_Series_Linearization is
                 w1,w2,w3,w4,w5 : in out QuadDobl_Complex_VecVecs.VecVec;
                 wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
+  procedure Multitasked_Solve_Next_by_QRLS
+              ( idx,nbt : in integer32;
+                A : in PentDobl_Complex_VecMats.VecMat;
+                b : in PentDobl_Complex_VecVecs.VecVec;
+                x : in PentDobl_Complex_VecVecs.VecVec;
+                qraux : in PentDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out PentDobl_Complex_VecVecs.VecVec;
+                wrk : in PentDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Next_by_QRLS
+              ( idx,nbt : in integer32;
+                A : in OctoDobl_Complex_VecMats.VecMat;
+                b : in OctoDobl_Complex_VecVecs.VecVec;
+                x : in OctoDobl_Complex_VecVecs.VecVec;
+                qraux : in OctoDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out OctoDobl_Complex_VecVecs.VecVec;
+                wrk : in OctoDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Next_by_QRLS
+              ( idx,nbt : in integer32;
+                A : in DecaDobl_Complex_VecMats.VecMat;
+                b : in DecaDobl_Complex_VecVecs.VecVec;
+                x : in DecaDobl_Complex_VecVecs.VecVec;
+                qraux : in DecaDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out DecaDobl_Complex_VecVecs.VecVec;
+                wrk : in DecaDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
 
   -- DESCRIPTION :
   --   Applies multitasking to the least squares solving of the matrix series
   --   equation defined by the matrix series in A and right hand side in b,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- REQUIRED :
   --   A'last = b'last >= 0 and all coefficients in x up to idx-1
@@ -278,12 +386,31 @@ package Multitasked_Series_Linearization is
                 Ut,V : in QuadDobl_Complex_Matrices.Matrix;
                 wrk,utb,sub : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
+  procedure Multitasked_Solve_Next_by_SVD
+              ( idx,nbt : in integer32;
+                A : in PentDobl_Complex_VecMats.VecMat;
+                b : in PentDobl_Complex_VecVecs.VecVec;
+                x : in PentDobl_Complex_VecVecs.VecVec;
+                S : in PentDobl_Complex_Vectors.Vector;
+                Ut,V : in PentDobl_Complex_Matrices.Matrix;
+                wrk,utb,sub : in PentDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Next_by_SVD
+              ( idx,nbt : in integer32;
+                A : in OctoDobl_Complex_VecMats.VecMat;
+                b : in OctoDobl_Complex_VecVecs.VecVec;
+                x : in OctoDobl_Complex_VecVecs.VecVec;
+                S : in OctoDobl_Complex_Vectors.Vector;
+                Ut,V : in OctoDobl_Complex_Matrices.Matrix;
+                wrk,utb,sub : in OctoDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
 
   -- DESCRIPTION :
   --   Applies multitasking to the least squares solving of the matrix series
   --   equation defined by the matrix series in A and right hand side in b,
   --   using the output of the singular value decomposition,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- REQUIRED :
   --   A'last = b'last >= 0 and all coefficients in x up to idx-1
@@ -343,13 +470,35 @@ package Multitasked_Series_Linearization is
                 ipvt : in Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
+  procedure Multitasked_Solve_Loop_by_lusolve
+              ( nbt : in integer32;
+                A : in PentDobl_Complex_VecMats.VecMat;
+                b : in PentDobl_Complex_VecVecs.VecVec;
+                ipvt : in Standard_Integer_Vectors.Vector;
+                wrk : in PentDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Loop_by_lusolve
+              ( nbt : in integer32;
+                A : in OctoDobl_Complex_VecMats.VecMat;
+                b : in OctoDobl_Complex_VecVecs.VecVec;
+                ipvt : in Standard_Integer_Vectors.Vector;
+                wrk : in OctoDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Loop_by_lusolve
+              ( nbt : in integer32;
+                A : in DecaDobl_Complex_VecMats.VecMat;
+                b : in DecaDobl_Complex_VecVecs.VecVec;
+                ipvt : in Standard_Integer_Vectors.Vector;
+                wrk : in DecaDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
 
   -- DESCRIPTION :
   --   With allocated work space for every task,
   --   repeatedly calls the Multitasked_Solve_Next_by_lusolve
   --   to solve the linear system of power series,
   --   defined by the matrix series in A and right hand side in b,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- REQUIRED :
   --   A'last = b'last >= 0.  Moreover, the system is square.
@@ -402,13 +551,41 @@ package Multitasked_Series_Linearization is
                 w1,w2,w3,w4,w5 : in out QuadDobl_Complex_VecVecs.VecVec;
                 wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
+  procedure Multitasked_Solve_Loop_by_QRLS
+              ( nbt : in integer32;
+                A : in PentDobl_Complex_VecMats.VecMat;
+                b : in PentDobl_Complex_VecVecs.VecVec;
+                x : in PentDobl_Complex_VecVecs.VecVec;
+                qraux : in PentDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out PentDobl_Complex_VecVecs.VecVec;
+                wrk : in PentDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Loop_by_QRLS
+              ( nbt : in integer32;
+                A : in OctoDobl_Complex_VecMats.VecMat;
+                b : in OctoDobl_Complex_VecVecs.VecVec;
+                x : in OctoDobl_Complex_VecVecs.VecVec;
+                qraux : in OctoDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out OctoDobl_Complex_VecVecs.VecVec;
+                wrk : in OctoDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Loop_by_QRLS
+              ( nbt : in integer32;
+                A : in DecaDobl_Complex_VecMats.VecMat;
+                b : in DecaDobl_Complex_VecVecs.VecVec;
+                x : in DecaDobl_Complex_VecVecs.VecVec;
+                qraux : in DecaDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out DecaDobl_Complex_VecVecs.VecVec;
+                wrk : in DecaDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
 
   -- DESCRIPTION :
   --   With allocated work space for every task,
   --   repeatedly calls the Multitasked_Solve_Next_by_QRLS
   --   to solve the linear system of power series,
   --   defined by the matrix series in A and right hand side in b,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- REQUIRED :
   --   A'last = b'last >= 0.
@@ -473,13 +650,41 @@ package Multitasked_Series_Linearization is
                 Ut,V : in QuadDobl_Complex_Matrices.Matrix;
                 wrk,utb,sub : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
+  procedure Multitasked_Solve_Loop_by_SVD
+              ( nbt : in integer32;
+                A : in PentDobl_Complex_VecMats.VecMat;
+                b : in PentDobl_Complex_VecVecs.VecVec;
+                x : in PentDobl_Complex_VecVecs.VecVec;
+                S : in PentDobl_Complex_Vectors.Vector;
+                Ut,V : in PentDobl_Complex_Matrices.Matrix;
+                wrk,utb,sub : in PentDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Loop_by_SVD
+              ( nbt : in integer32;
+                A : in OctoDobl_Complex_VecMats.VecMat;
+                b : in OctoDobl_Complex_VecVecs.VecVec;
+                x : in OctoDobl_Complex_VecVecs.VecVec;
+                S : in OctoDobl_Complex_Vectors.Vector;
+                Ut,V : in OctoDobl_Complex_Matrices.Matrix;
+                wrk,utb,sub : in OctoDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Loop_by_SVD
+              ( nbt : in integer32;
+                A : in DecaDobl_Complex_VecMats.VecMat;
+                b : in DecaDobl_Complex_VecVecs.VecVec;
+                x : in DecaDobl_Complex_VecVecs.VecVec;
+                S : in DecaDobl_Complex_Vectors.Vector;
+                Ut,V : in DecaDobl_Complex_Matrices.Matrix;
+                wrk,utb,sub : in DecaDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
 
   -- DESCRIPTION :
   --   With allocated work space for every task,
   --   repeatedly calls the Multitasked_Solve_Next_by_SVD
   --   to solve the linear system of power series,
   --   defined by the matrix series in A and right hand side in b,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- REQUIRED :
   --   A'last = b'last >= 0.
@@ -535,11 +740,36 @@ package Multitasked_Series_Linearization is
                 info : out integer32;
                 wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
+  procedure Multitasked_Solve_by_lufac
+              ( nbt : in integer32;
+                A : in PentDobl_Complex_VecMats.VecMat;
+                b : in PentDobl_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32;
+                wrk : in PentDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_by_lufac
+              ( nbt : in integer32;
+                A : in OctoDobl_Complex_VecMats.VecMat;
+                b : in OctoDobl_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32;
+                wrk : in OctoDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_by_lufac
+              ( nbt : in integer32;
+                A : in DecaDobl_Complex_VecMats.VecMat;
+                b : in DecaDobl_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32;
+                wrk : in DecaDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
 
   -- DESCRIPTION :
   --   Applies multitasking to solve the matrix series equation
   --   defined by the matrix series in A and right hand side in b,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- REQUIRED :
   --   A'last = b'last >= 0.  Moreover, the system is square.
@@ -592,12 +822,37 @@ package Multitasked_Series_Linearization is
                 rcond : out quad_double;
                 wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
+  procedure Multitasked_Solve_by_lufco
+              ( nbt : in integer32;
+                A : in PentDobl_Complex_VecMats.VecMat;
+                b : in PentDobl_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out penta_double;
+                wrk : in PentDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_by_lufco
+              ( nbt : in integer32;
+                A : in OctoDobl_Complex_VecMats.VecMat;
+                b : in OctoDobl_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out octo_double;
+                wrk : in OctoDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_by_lufco
+              ( nbt : in integer32;
+                A : in DecaDobl_Complex_VecMats.VecMat;
+                b : in DecaDobl_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out deca_double;
+                wrk : in DecaDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
 
   -- DESCRIPTION :
   --   Applies multitasking to solve the matrix series equation
   --   defined by the matrix series in A and right hand side in b,
   --   with an estimate for the inverse of the condition number,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- REQUIRED :
   --   A'last = b'last >= 0.  Moreover, the system is square.
@@ -663,12 +918,46 @@ package Multitasked_Series_Linearization is
                 info : out integer32;
                 wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
+  procedure Multitasked_Solve_by_QRLS
+              ( nbt : in integer32; 
+                A : in PentDobl_Complex_VecMats.VecMat;
+                b : in PentDobl_Complex_VecVecs.VecVec;
+                x : in PentDobl_Complex_VecVecs.VecVec;
+                qraux : out PentDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out PentDobl_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32;
+                wrk : in PentDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_by_QRLS
+              ( nbt : in integer32; 
+                A : in OctoDobl_Complex_VecMats.VecMat;
+                b : in OctoDobl_Complex_VecVecs.VecVec;
+                x : in OctoDobl_Complex_VecVecs.VecVec;
+                qraux : out OctoDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out OctoDobl_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32;
+                wrk : in OctoDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_by_QRLS
+              ( nbt : in integer32; 
+                A : in DecaDobl_Complex_VecMats.VecMat;
+                b : in DecaDobl_Complex_VecVecs.VecVec;
+                x : in DecaDobl_Complex_VecVecs.VecVec;
+                qraux : out DecaDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out DecaDobl_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32;
+                wrk : in DecaDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
 
   -- DESCRIPTION :
   --   Applies multitasking to solve the matrix series equation
   --   defined by the matrix series in A and right hand side in b,
   --   with QR factorization for least squares solving,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- REQUIRED :
   --   A'range = b'range = 0..deg, for deg >= 0.
@@ -748,11 +1037,45 @@ package Multitasked_Series_Linearization is
                 ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 wrkv,utb,sub : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
+  procedure Multitasked_Solve_by_SVD
+              ( nbt : in integer32;
+                A : in PentDobl_Complex_VecMats.VecMat;
+                b : in PentDobl_Complex_VecVecs.VecVec;
+                x : in PentDobl_Complex_VecVecs.VecVec;
+                S : out PentDobl_Complex_Vectors.Vector;
+                U,Ut,V : out PentDobl_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out penta_double;
+                ewrk : in PentDobl_Complex_Vectors.Link_to_Vector;
+                wrkv,utb,sub : in PentDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_by_SVD
+              ( nbt : in integer32;
+                A : in OctoDobl_Complex_VecMats.VecMat;
+                b : in OctoDobl_Complex_VecVecs.VecVec;
+                x : in OctoDobl_Complex_VecVecs.VecVec;
+                S : out OctoDobl_Complex_Vectors.Vector;
+                U,Ut,V : out OctoDobl_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out octo_double;
+                ewrk : in OctoDobl_Complex_Vectors.Link_to_Vector;
+                wrkv,utb,sub : in OctoDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_by_SVD
+              ( nbt : in integer32;
+                A : in DecaDobl_Complex_VecMats.VecMat;
+                b : in DecaDobl_Complex_VecVecs.VecVec;
+                x : in DecaDobl_Complex_VecVecs.VecVec;
+                S : out DecaDobl_Complex_Vectors.Vector;
+                U,Ut,V : out DecaDobl_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out deca_double;
+                ewrk : in DecaDobl_Complex_Vectors.Link_to_Vector;
+                wrkv,utb,sub : in DecaDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
 
   -- DESCRIPTION :
   --   Solves the linear system A*x = b, using the SVD of the
   --   leading coefficient matrix of A for least squares solving,
-  --   in double, double double, triple double, or quad double precision,
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision,
   --   with multitasking.
 
   -- REQUIRED :

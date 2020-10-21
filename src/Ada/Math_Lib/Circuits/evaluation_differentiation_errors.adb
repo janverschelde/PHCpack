@@ -3,6 +3,9 @@ with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with PentDobl_Complex_Numbers;
+with OctoDobl_Complex_Numbers;
+with DecaDobl_Complex_Numbers;
 
 package body Evaluation_Differentiation_Errors is
 
@@ -106,6 +109,81 @@ package body Evaluation_Differentiation_Errors is
     return res;
   end Difference;
 
+  function Difference ( s : PentDobl_Complex_Series.Link_to_Series;
+                        c : PentDobl_Complex_Vectors.Link_to_Vector )
+                      return penta_double is
+
+    use Standard_Integer_Numbers;
+    use PentDobl_Complex_Numbers;
+    use PentDobl_Complex_Vectors;
+    use PentDobl_Complex_Series;
+
+    res : penta_double := create(0.0);
+    avl : penta_double;
+    val : Complex_Number;
+
+  begin
+    if s /= null and c /= null then
+      for i in c'range loop
+        exit when (i > s.cff'last);
+        val := s.cff(i) - c(i);
+        avl := AbsVal(val);
+        res := res + avl;
+      end loop;
+    end if;
+    return res;
+  end Difference;
+
+  function Difference ( s : OctoDobl_Complex_Series.Link_to_Series;
+                        c : OctoDobl_Complex_Vectors.Link_to_Vector )
+                      return octo_double is
+
+    use Standard_Integer_Numbers;
+    use OctoDobl_Complex_Numbers;
+    use OctoDobl_Complex_Vectors;
+    use OctoDobl_Complex_Series;
+
+    res : octo_double := create(0.0);
+    avl : octo_double;
+    val : Complex_Number;
+
+  begin
+    if s /= null and c /= null then
+      for i in c'range loop
+        exit when (i > s.cff'last);
+        val := s.cff(i) - c(i);
+        avl := AbsVal(val);
+        res := res + avl;
+      end loop;
+    end if;
+    return res;
+  end Difference;
+
+  function Difference ( s : DecaDobl_Complex_Series.Link_to_Series;
+                        c : DecaDobl_Complex_Vectors.Link_to_Vector )
+                      return deca_double is
+
+    use Standard_Integer_Numbers;
+    use DecaDobl_Complex_Numbers;
+    use DecaDobl_Complex_Vectors;
+    use DecaDobl_Complex_Series;
+
+    res : deca_double := create(0.0);
+    avl : deca_double;
+    val : Complex_Number;
+
+  begin
+    if s /= null and c /= null then
+      for i in c'range loop
+        exit when (i > s.cff'last);
+        val := s.cff(i) - c(i);
+        avl := AbsVal(val);
+        res := res + avl;
+      end loop;
+    end if;
+    return res;
+  end Difference;
+
   function Difference ( x : Standard_Complex_Vectors.Link_to_Vector;
                         y : Standard_Complex_Vectors.Link_to_Vector )
                       return double_float is
@@ -182,6 +260,63 @@ package body Evaluation_Differentiation_Errors is
     return res;
   end Difference;
 
+  function Difference ( x : PentDobl_Complex_Vectors.Link_to_Vector;
+                        y : PentDobl_Complex_Vectors.Link_to_Vector )
+                      return penta_double is
+
+    use PentDobl_Complex_Numbers;
+
+    res : penta_double := create(0.0);
+    avl : penta_double;
+    val : Complex_Number;
+
+  begin
+    for i in x'range loop
+      val := x(i) - y(i);
+      avl := AbsVal(val);
+      res := res + avl;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( x : OctoDobl_Complex_Vectors.Link_to_Vector;
+                        y : OctoDobl_Complex_Vectors.Link_to_Vector )
+                      return octo_double is
+
+    use OctoDobl_Complex_Numbers;
+
+    res : octo_double := create(0.0);
+    avl : octo_double;
+    val : Complex_Number;
+
+  begin
+    for i in x'range loop
+      val := x(i) - y(i);
+      avl := AbsVal(val);
+      res := res + avl;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( x : DecaDobl_Complex_Vectors.Link_to_Vector;
+                        y : DecaDobl_Complex_Vectors.Link_to_Vector )
+                      return deca_double is
+
+    use DecaDobl_Complex_Numbers;
+
+    res : deca_double := create(0.0);
+    avl : deca_double;
+    val : Complex_Number;
+
+  begin
+    for i in x'range loop
+      val := x(i) - y(i);
+      avl := AbsVal(val);
+      res := res + avl;
+    end loop;
+    return res;
+  end Difference;
+
   function Difference ( s : Standard_Complex_Series_Vectors.Vector;
                         c : Standard_Complex_VecVecs.VecVec )
                       return double_float is
@@ -242,6 +377,51 @@ package body Evaluation_Differentiation_Errors is
     return res;
   end Difference;
 
+  function Difference ( s : PentDobl_Complex_Series_Vectors.Vector;
+                        c : PentDobl_Complex_VecVecs.VecVec )
+                      return penta_double is
+
+    res : penta_double := create(0.0);
+    val : penta_double;
+
+  begin
+    for i in s'range loop
+      val := Difference(s(i),c(i));
+      res := res + val;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( s : OctoDobl_Complex_Series_Vectors.Vector;
+                        c : OctoDobl_Complex_VecVecs.VecVec )
+                      return octo_double is
+
+    res : octo_double := create(0.0);
+    val : octo_double;
+
+  begin
+    for i in s'range loop
+      val := Difference(s(i),c(i));
+      res := res + val;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( s : DecaDobl_Complex_Series_Vectors.Vector;
+                        c : DecaDobl_Complex_VecVecs.VecVec )
+                      return deca_double is
+
+    res : deca_double := create(0.0);
+    val : deca_double;
+
+  begin
+    for i in s'range loop
+      val := Difference(s(i),c(i));
+      res := res + val;
+    end loop;
+    return res;
+  end Difference;
+
   function Difference ( x : Standard_Complex_VecVecs.VecVec;
                         y : Standard_Complex_VecVecs.VecVec )
                       return double_float is
@@ -293,6 +473,51 @@ package body Evaluation_Differentiation_Errors is
 
     res : quad_double := create(0.0);
     val : quad_double;
+
+  begin
+    for i in x'range loop
+      val := Difference(x(i),y(i));
+      res := res + val;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( x : PentDobl_Complex_VecVecs.VecVec;
+                        y : PentDobl_Complex_VecVecs.VecVec )
+                      return penta_double is
+
+    res : penta_double := create(0.0);
+    val : penta_double;
+
+  begin
+    for i in x'range loop
+      val := Difference(x(i),y(i));
+      res := res + val;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( x : OctoDobl_Complex_VecVecs.VecVec;
+                        y : OctoDobl_Complex_VecVecs.VecVec )
+                      return octo_double is
+
+    res : octo_double := create(0.0);
+    val : octo_double;
+
+  begin
+    for i in x'range loop
+      val := Difference(x(i),y(i));
+      res := res + val;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( x : DecaDobl_Complex_VecVecs.VecVec;
+                        y : DecaDobl_Complex_VecVecs.VecVec )
+                      return deca_double is
+
+    res : deca_double := create(0.0);
+    val : deca_double;
 
   begin
     for i in x'range loop
