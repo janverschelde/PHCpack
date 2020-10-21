@@ -1,3 +1,6 @@
+Wed 21 Oct 2020 : extended evaluation_differentiation_errors with
+  operations in triple double precision.
+
 Tue 20 Oct 2020 : extended random_convolution_circuits with procedures
   to generate random circuits with triple double precision coefficients.
   Extended system_convolution_circuits with convertors from quad double

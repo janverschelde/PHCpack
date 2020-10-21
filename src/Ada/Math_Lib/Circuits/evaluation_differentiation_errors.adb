@@ -1,6 +1,7 @@
 with Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
+with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 
 package body Evaluation_Differentiation_Errors is
@@ -41,6 +42,31 @@ package body Evaluation_Differentiation_Errors is
 
     res : double_double := create(0.0);
     avl : double_double;
+    val : Complex_Number;
+
+  begin
+    if s /= null and c /= null then
+      for i in c'range loop
+        exit when (i > s.cff'last);
+        val := s.cff(i) - c(i);
+        avl := AbsVal(val);
+        res := res + avl;
+      end loop;
+    end if;
+    return res;
+  end Difference;
+
+  function Difference ( s : TripDobl_Complex_Series.Link_to_Series;
+                        c : TripDobl_Complex_Vectors.Link_to_Vector )
+                      return triple_double is
+
+    use Standard_Integer_Numbers;
+    use TripDobl_Complex_Numbers;
+    use TripDobl_Complex_Vectors;
+    use TripDobl_Complex_Series;
+
+    res : triple_double := create(0.0);
+    avl : triple_double;
     val : Complex_Number;
 
   begin
@@ -118,6 +144,25 @@ package body Evaluation_Differentiation_Errors is
     return res;
   end Difference;
 
+  function Difference ( x : TripDobl_Complex_Vectors.Link_to_Vector;
+                        y : TripDobl_Complex_Vectors.Link_to_Vector )
+                      return triple_double is
+
+    use TripDobl_Complex_Numbers;
+
+    res : triple_double := create(0.0);
+    avl : triple_double;
+    val : Complex_Number;
+
+  begin
+    for i in x'range loop
+      val := x(i) - y(i);
+      avl := AbsVal(val);
+      res := res + avl;
+    end loop;
+    return res;
+  end Difference;
+
   function Difference ( x : QuadDobl_Complex_Vectors.Link_to_Vector;
                         y : QuadDobl_Complex_Vectors.Link_to_Vector )
                       return quad_double is
@@ -167,6 +212,21 @@ package body Evaluation_Differentiation_Errors is
     return res;
   end Difference;
 
+  function Difference ( s : TripDobl_Complex_Series_Vectors.Vector;
+                        c : TripDobl_Complex_VecVecs.VecVec )
+                      return triple_double is
+
+    res : triple_double := create(0.0);
+    val : triple_double;
+
+  begin
+    for i in s'range loop
+      val := Difference(s(i),c(i));
+      res := res + val;
+    end loop;
+    return res;
+  end Difference;
+
   function Difference ( s : QuadDobl_Complex_Series_Vectors.Vector;
                         c : QuadDobl_Complex_VecVecs.VecVec )
                       return quad_double is
@@ -203,6 +263,21 @@ package body Evaluation_Differentiation_Errors is
 
     res : double_double := create(0.0);
     val : double_double;
+
+  begin
+    for i in x'range loop
+      val := Difference(x(i),y(i));
+      res := res + val;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( x : TripDobl_Complex_VecVecs.VecVec;
+                        y : TripDobl_Complex_VecVecs.VecVec )
+                      return triple_double is
+
+    res : triple_double := create(0.0);
+    val : triple_double;
 
   begin
     for i in x'range loop

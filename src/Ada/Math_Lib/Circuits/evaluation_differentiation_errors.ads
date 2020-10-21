@@ -1,5 +1,6 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
@@ -9,6 +10,8 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_Matrices;
 with DoblDobl_Complex_VecMats;
+with TripDobl_Complex_Vectors;
+with TripDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Matrices;
@@ -19,6 +22,8 @@ with Standard_Complex_Series_Matrices;
 with DoblDobl_Complex_Series;
 with DoblDobl_Complex_Series_Vectors;
 with DoblDobl_Complex_Series_Matrices;
+with TripDobl_Complex_Series;
+with TripDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series_Matrices;
@@ -36,6 +41,9 @@ package Evaluation_Differentiation_Errors is
   function Difference ( s : DoblDobl_Complex_Series.Link_to_Series;
                         c : DoblDobl_Complex_Vectors.Link_to_Vector )
                       return double_double;
+  function Difference ( s : TripDobl_Complex_Series.Link_to_Series;
+                        c : TripDobl_Complex_Vectors.Link_to_Vector )
+                      return triple_double;
   function Difference ( s : QuadDobl_Complex_Series.Link_to_Series;
                         c : QuadDobl_Complex_Vectors.Link_to_Vector )
                       return quad_double;
@@ -43,7 +51,7 @@ package Evaluation_Differentiation_Errors is
   -- DESCRIPTION :
   --   Returns the sum of the absolute values of the differences
   --   between the coefficients of s and the values in c,
-  --   in double, double double, or quad double precision.
+  --   in double, double double, triple double, or quad double precision.
 
   -- REQUIRED : s.cff'range = c'range.
 
@@ -53,6 +61,9 @@ package Evaluation_Differentiation_Errors is
   function Difference ( x : DoblDobl_Complex_Vectors.Link_to_Vector;
                         y : DoblDobl_Complex_Vectors.Link_to_Vector )
                       return double_double;
+  function Difference ( x : TripDobl_Complex_Vectors.Link_to_Vector;
+                        y : TripDobl_Complex_Vectors.Link_to_Vector )
+                      return triple_double;
   function Difference ( x : QuadDobl_Complex_Vectors.Link_to_Vector;
                         y : QuadDobl_Complex_Vectors.Link_to_Vector )
                       return quad_double;
@@ -60,7 +71,7 @@ package Evaluation_Differentiation_Errors is
   -- DESCRIPTION :
   --   Returns the sum of the absolute values of the differences
   --   between the coefficients of x and those values of y,
-  --   in double, double double, or quad double precision.
+  --   in double, double double, triple double, or quad double precision.
 
   -- REQUIRED : x'range = y'range.
 
@@ -70,6 +81,9 @@ package Evaluation_Differentiation_Errors is
   function Difference ( s : DoblDobl_Complex_Series_Vectors.Vector;
                         c : DoblDobl_Complex_VecVecs.VecVec )
                       return double_double;
+  function Difference ( s : TripDobl_Complex_Series_Vectors.Vector;
+                        c : TripDobl_Complex_VecVecs.VecVec )
+                      return triple_double;
   function Difference ( s : QuadDobl_Complex_Series_Vectors.Vector;
                         c : QuadDobl_Complex_VecVecs.VecVec )
                       return quad_double;
@@ -77,7 +91,7 @@ package Evaluation_Differentiation_Errors is
   -- DESCRIPTION :
   --   Returns the sum of the absolute values of the differences
   --   between the coefficients of s and the values in c,
-  --   in double, double double, or quad double precision.
+  --   in double, double double, triple double, or quad double precision.
 
   -- REQUIRED : s'range = c'range.
 
@@ -87,6 +101,9 @@ package Evaluation_Differentiation_Errors is
   function Difference ( x : DoblDobl_Complex_VecVecs.VecVec;
                         y : DoblDobl_Complex_VecVecs.VecVec )
                       return double_double;
+  function Difference ( x : TripDobl_Complex_VecVecs.VecVec;
+                        y : TripDobl_Complex_VecVecs.VecVec )
+                      return triple_double;
   function Difference ( x : QuadDobl_Complex_VecVecs.VecVec;
                         y : QuadDobl_Complex_VecVecs.VecVec )
                       return quad_double;
@@ -94,7 +111,7 @@ package Evaluation_Differentiation_Errors is
   -- DESCRIPTION :
   --   Returns the sum of the absolute values of the differences
   --   between the coefficients of x and those in y,
-  --   in double, double double, or quad double precision.
+  --   in double, double double, triple double, or quad double precision.
 
   -- REQUIRED : x'range = y'range.
 
