@@ -8,22 +8,42 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Triple_Double_Numbers;              use Triple_Double_Numbers;
+with Triple_Double_Numbers_io;           use Triple_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with Penta_Double_Numbers;               use Penta_Double_Numbers;
+with Penta_Double_Numbers_io;            use Penta_Double_Numbers_io;
+with Octo_Double_Numbers;                use Octo_Double_Numbers;
+with Octo_Double_Numbers_io;             use Octo_Double_Numbers_io;
+with Deca_Double_Numbers;                use Deca_Double_Numbers;
+with Deca_Double_Numbers_io;             use Deca_Double_Numbers_io;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
 with Standard_Floating_VecVecVecs;
 with Standard_Complex_VecMats;
 with DoblDobl_Complex_VecMats;
+with TripDobl_Complex_VecMats;
 with QuadDobl_Complex_VecMats;
-with QuadDobl_Complex_Vectors_cv;
+with PentDobl_Complex_VecMats;
+with OctoDobl_Complex_VecMats;
+with DecaDobl_Complex_VecMats;
+with DecaDobl_Complex_Vectors_cv;
 with Standard_Complex_Series_Vectors;
 with Standard_Random_Series_Vectors;
 with DoblDobl_Complex_Series_Vectors;
 with DoblDobl_Random_Series_Vectors;
+with TripDobl_Complex_Series_Vectors;
+with TripDobl_Random_Series_Vectors;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Random_Series_Vectors;
+with PentDobl_Complex_Series_Vectors;
+with PentDobl_Random_Series_Vectors;
+with OctoDobl_Complex_Series_Vectors;
+with OctoDobl_Random_Series_Vectors;
+with DecaDobl_Complex_Series_Vectors;
+with DecaDobl_Random_Series_Vectors;
 with Series_Coefficient_Vectors;         use Series_Coefficient_Vectors;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
@@ -31,9 +51,21 @@ with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with TripDobl_Complex_Polynomials;
+with TripDobl_Complex_Poly_Systems;
+with TripDobl_Complex_Poly_Systems_io;   use TripDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
+with PentDobl_Complex_Polynomials;
+with PentDobl_Complex_Poly_Systems;
+with PentDobl_Complex_Poly_Systems_io;   use PentDobl_Complex_Poly_Systems_io;
+with OctoDobl_Complex_Polynomials;
+with OctoDobl_Complex_Poly_Systems;
+with OctoDobl_Complex_Poly_Systems_io;   use OctoDobl_Complex_Poly_Systems_io;
+with DecaDobl_Complex_Polynomials;
+with DecaDobl_Complex_Poly_Systems;
+with DecaDobl_Complex_Poly_Systems_io;   use DecaDobl_Complex_Poly_Systems_io;
 with Standard_Vector_Splitters;
 with DoblDobl_Vector_Splitters;
 with QuadDobl_Vector_Splitters;
@@ -331,6 +363,74 @@ package body Test_mtAlgoDiff_Convolutions is
     end loop;
   end DoblDobl_Coefficient_Test;
 
+  procedure TripDobl_Test
+              ( c : in TripDobl_Speelpenning_Convolutions.Circuits;
+                dim,deg : in integer32; nbt : in out integer32;
+                output : in boolean := true ) is
+
+    use TripDobl_Speelpenning_Convolutions;
+
+    x : constant TripDobl_Complex_Series_Vectors.Vector(1..dim)
+      := TripDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    xcff : constant TripDobl_Complex_VecVecs.VecVec(1..dim)
+         := TripDobl_Series_Coefficients(x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Maxima(c,dim);
+    pwt : constant Link_to_VecVecVec := Allocate(mxe,deg);
+    yd : constant TripDobl_Complex_VecVecs.VecVec(1..dim+1)
+       := Allocate_Coefficients(dim+1,deg);
+    vy1 : constant TripDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vy2 : constant TripDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vm1 : constant TripDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    vm2 : constant TripDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    err : triple_double;
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
+    ans : character;
+
+    use Ada.Calendar; -- for the difference operator on Duration
+
+  begin
+    put_line("Running on one task ...");
+    seristart := Ada.Calendar.Clock;
+    Compute(pwt,mxe,xcff);
+    EvalDiff(c,xcff,pwt,yd,vy1,vm1);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    put_line("-> Elapsed time without multitasking : ");
+    Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    loop
+      new_line;
+      put("Running with "); put(nbt,1); put_line(" tasks ...");
+      multstart := Ada.Calendar.Clock;
+      TripDobl_Multitasked_EvalDiff(nbt,c,xcff,mxe,pwt,vy2,vm2,output);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      err := Difference(vy1,vy2);
+      put("  the error of evaluation : "); put(err,3); new_line;
+      err := Difference(vm1,vm2);
+      put("  the error of differentiation : "); put(err,3); new_line;
+      new_line;
+      put_line("-> Elapsed time on multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
+      end if;
+      put("Continue with different number of tasks ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("Give the number of tasks : "); get(nbt);
+    end loop;
+  end TripDobl_Test;
+
   procedure QuadDobl_Test
               ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
                 dim,deg : in integer32; nbt : in out integer32;
@@ -479,6 +579,210 @@ package body Test_mtAlgoDiff_Convolutions is
     end loop;
   end QuadDobl_Coefficient_Test;
 
+  procedure PentDobl_Test
+              ( c : in PentDobl_Speelpenning_Convolutions.Circuits;
+                dim,deg : in integer32; nbt : in out integer32;
+                output : in boolean := true ) is
+
+    use PentDobl_Speelpenning_Convolutions;
+
+    x : constant PentDobl_Complex_Series_Vectors.Vector(1..dim)
+      := PentDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    xcff : constant PentDobl_Complex_VecVecs.VecVec(1..dim)
+         := PentDobl_Series_Coefficients(x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Maxima(c,dim);
+    pwt : constant Link_to_VecVecVec := Allocate(mxe,deg);
+    yd : constant PentDobl_Complex_VecVecs.VecVec(1..dim+1)
+       := Allocate_Coefficients(dim+1,deg);
+    vy1 : constant PentDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vy2 : constant PentDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vm1 : constant PentDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    vm2 : constant PentDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    err : penta_double;
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
+    ans : character;
+
+    use Ada.Calendar; -- for the difference operator on Duration
+
+  begin
+    put_line("Running on one task ...");
+    seristart := Ada.Calendar.Clock;
+    Compute(pwt,mxe,xcff);
+    EvalDiff(c,xcff,pwt,yd,vy1,vm1);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    put_line("-> Elapsed time without multitasking : ");
+    Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    loop
+      new_line;
+      put("Running with "); put(nbt,1); put_line(" tasks ...");
+      multstart := Ada.Calendar.Clock;
+      PentDobl_Multitasked_EvalDiff(nbt,c,xcff,mxe,pwt,vy2,vm2,output);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      err := Difference(vy1,vy2);
+      put("  the error of evaluation : "); put(err,3); new_line;
+      err := Difference(vm1,vm2);
+      put("  the error of differentiation : "); put(err,3); new_line;
+      new_line;
+      put_line("-> Elapsed time on multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
+      end if;
+      put("Continue with different number of tasks ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("Give the number of tasks : "); get(nbt);
+    end loop;
+  end PentDobl_Test;
+
+  procedure OctoDobl_Test
+              ( c : in OctoDobl_Speelpenning_Convolutions.Circuits;
+                dim,deg : in integer32; nbt : in out integer32;
+                output : in boolean := true ) is
+
+    use OctoDobl_Speelpenning_Convolutions;
+
+    x : constant OctoDobl_Complex_Series_Vectors.Vector(1..dim)
+      := OctoDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    xcff : constant OctoDobl_Complex_VecVecs.VecVec(1..dim)
+         := OctoDobl_Series_Coefficients(x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Maxima(c,dim);
+    pwt : constant Link_to_VecVecVec := Allocate(mxe,deg);
+    yd : constant OctoDobl_Complex_VecVecs.VecVec(1..dim+1)
+       := Allocate_Coefficients(dim+1,deg);
+    vy1 : constant OctoDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vy2 : constant OctoDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vm1 : constant OctoDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    vm2 : constant OctoDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    err : octo_double;
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
+    ans : character;
+
+    use Ada.Calendar; -- for the difference operator on Duration
+
+  begin
+    put_line("Running on one task ...");
+    seristart := Ada.Calendar.Clock;
+    Compute(pwt,mxe,xcff);
+    EvalDiff(c,xcff,pwt,yd,vy1,vm1);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    put_line("-> Elapsed time without multitasking : ");
+    Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    loop
+      new_line;
+      put("Running with "); put(nbt,1); put_line(" tasks ...");
+      multstart := Ada.Calendar.Clock;
+      OctoDobl_Multitasked_EvalDiff(nbt,c,xcff,mxe,pwt,vy2,vm2,output);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      err := Difference(vy1,vy2);
+      put("  the error of evaluation : "); put(err,3); new_line;
+      err := Difference(vm1,vm2);
+      put("  the error of differentiation : "); put(err,3); new_line;
+      new_line;
+      put_line("-> Elapsed time on multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
+      end if;
+      put("Continue with different number of tasks ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("Give the number of tasks : "); get(nbt);
+    end loop;
+  end OctoDobl_Test;
+
+  procedure DecaDobl_Test
+              ( c : in DecaDobl_Speelpenning_Convolutions.Circuits;
+                dim,deg : in integer32; nbt : in out integer32;
+                output : in boolean := true ) is
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+    x : constant DecaDobl_Complex_Series_Vectors.Vector(1..dim)
+      := DecaDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    xcff : constant DecaDobl_Complex_VecVecs.VecVec(1..dim)
+         := DecaDobl_Series_Coefficients(x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Maxima(c,dim);
+    pwt : constant Link_to_VecVecVec := Allocate(mxe,deg);
+    yd : constant DecaDobl_Complex_VecVecs.VecVec(1..dim+1)
+       := Allocate_Coefficients(dim+1,deg);
+    vy1 : constant DecaDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vy2 : constant DecaDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vm1 : constant DecaDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    vm2 : constant DecaDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    err : deca_double;
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
+    ans : character;
+
+    use Ada.Calendar; -- for the difference operator on Duration
+
+  begin
+    put_line("Running on one task ...");
+    seristart := Ada.Calendar.Clock;
+    Compute(pwt,mxe,xcff);
+    EvalDiff(c,xcff,pwt,yd,vy1,vm1);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    put_line("-> Elapsed time without multitasking : ");
+    Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    loop
+      new_line;
+      put("Running with "); put(nbt,1); put_line(" tasks ...");
+      multstart := Ada.Calendar.Clock;
+      DecaDobl_Multitasked_EvalDiff(nbt,c,xcff,mxe,pwt,vy2,vm2,output);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      err := Difference(vy1,vy2);
+      put("  the error of evaluation : "); put(err,3); new_line;
+      err := Difference(vm1,vm2);
+      put("  the error of differentiation : "); put(err,3); new_line;
+      new_line;
+      put_line("-> Elapsed time on multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
+      end if;
+      put("Continue with different number of tasks ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("Give the number of tasks : "); get(nbt);
+    end loop;
+  end DecaDobl_Test;
+
   procedure Standard_Random_Test
               ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
                 output : in boolean := true ) is
@@ -525,6 +829,17 @@ package body Test_mtAlgoDiff_Convolutions is
     end if;
   end DoblDobl_Random_Test;
 
+  procedure TripDobl_Random_Test
+              ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
+                output : in boolean := true ) is
+
+    c : constant TripDobl_Speelpenning_Convolutions.Circuits
+      := TripDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+
+  begin
+    TripDobl_Test(c,dim,deg,nbt,output);
+  end TripDobl_Random_Test;
+
   procedure QuadDobl_Random_Test
               ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
                 output : in boolean := true ) is
@@ -547,6 +862,39 @@ package body Test_mtAlgoDiff_Convolutions is
       QuadDobl_Test(c,dim,deg,nbt,output);
     end if;
   end QuadDobl_Random_Test;
+
+  procedure PentDobl_Random_Test
+              ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
+                output : in boolean := true ) is
+
+    c : constant PentDobl_Speelpenning_Convolutions.Circuits
+      := PentDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+
+  begin
+    PentDobl_Test(c,dim,deg,nbt,output);
+  end PentDobl_Random_Test;
+
+  procedure OctoDobl_Random_Test
+              ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
+                output : in boolean := true ) is
+
+    c : constant OctoDobl_Speelpenning_Convolutions.Circuits
+      := OctoDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+
+  begin
+    OctoDobl_Test(c,dim,deg,nbt,output);
+  end OctoDobl_Random_Test;
+
+  procedure DecaDobl_Random_Test
+              ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
+                output : in boolean := true ) is
+
+    c : constant DecaDobl_Speelpenning_Convolutions.Circuits
+      := DecaDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+
+  begin
+    DecaDobl_Test(c,dim,deg,nbt,output);
+  end DecaDobl_Random_Test;
 
   procedure Standard_Benchmark
               ( file : in file_type; deg,nbruns,inc : in integer32;
@@ -887,6 +1235,81 @@ package body Test_mtAlgoDiff_Convolutions is
     end loop;
   end DoblDobl_Coefficient_Benchmark;
 
+  procedure TripDobl_Benchmark
+              ( file : in file_type; deg,nbruns,inc : in integer32;
+                c : in TripDobl_Speelpenning_Convolutions.Circuits;
+                x : in TripDobl_Complex_VecVecs.VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
+                verbose : in boolean := true ) is
+
+    use TripDobl_Speelpenning_Convolutions;
+
+    dim : constant integer32 := x'last;
+    pwt : constant Link_to_VecVecVec := Allocate(mxe,deg);
+    yd : constant TripDobl_Complex_VecVecs.VecVec(1..dim+1)
+       := Allocate_Coefficients(dim+1,deg);
+    vy1 : constant TripDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vy2 : constant TripDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vm1 : constant TripDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    vm2 : constant TripDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+
+  begin
+    put_line(file,"triple double precision"); flush(file);
+    if verbose
+     then put_line("Running on one task ...");
+    end if;
+    seristart := Ada.Calendar.Clock;
+    Compute(pwt,mxe,x);
+    EvalDiff(c,x,pwt,yd,vy1,vm1);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    put(file,"  1 : ");
+    duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
+    if verbose then
+      put_line("-> Elapsed time without multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    end if;   
+    for k in 1..nbruns loop
+      if verbose then
+        new_line;
+        put("Running with "); put(nbt,1); put_line(" tasks ...");
+      end if;
+      multstart := Ada.Calendar.Clock;
+      TripDobl_Multitasked_EvalDiff(nbt,c,x,mxe,pwt,vy2,vm2,false);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      if verbose then
+        new_line;
+        put_line("-> Elapsed time on multitasking : ");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      end if;
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        if verbose then
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(speedup,2,2); new_line;
+        end if;
+      end if;
+      put(file,nbt,3);
+      put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,2,2);
+      new_line(file); flush(file);
+      nbt := nbt + inc;
+    end loop;
+  end TripDobl_Benchmark;
+
   procedure QuadDobl_Benchmark
               ( file : in file_type; deg,nbruns,inc : in integer32;
                 c : in QuadDobl_Speelpenning_Convolutions.Circuits;
@@ -1061,12 +1484,245 @@ package body Test_mtAlgoDiff_Convolutions is
     end loop;
   end QuadDobl_Coefficient_Benchmark;
 
+  procedure PentDobl_Benchmark
+              ( file : in file_type; deg,nbruns,inc : in integer32;
+                c : in PentDobl_Speelpenning_Convolutions.Circuits;
+                x : in PentDobl_Complex_VecVecs.VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
+                verbose : in boolean := true ) is
+
+    use PentDobl_Speelpenning_Convolutions;
+
+    dim : constant integer32 := x'last;
+    pwt : constant Link_to_VecVecVec := Allocate(mxe,deg);
+    yd : constant PentDobl_Complex_VecVecs.VecVec(1..dim+1)
+       := Allocate_Coefficients(dim+1,deg);
+    vy1 : constant PentDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vy2 : constant PentDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vm1 : constant PentDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    vm2 : constant PentDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+
+  begin
+    put_line(file,"penta double precision"); flush(file);
+    if verbose
+     then put_line("Running on one task ...");
+    end if;
+    seristart := Ada.Calendar.Clock;
+    Compute(pwt,mxe,x);
+    EvalDiff(c,x,pwt,yd,vy1,vm1);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    put(file,"  1 : ");
+    duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
+    if verbose then
+      put_line("-> Elapsed time without multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    end if;   
+    for k in 1..nbruns loop
+      if verbose then
+        new_line;
+        put("Running with "); put(nbt,1); put_line(" tasks ...");
+      end if;
+      multstart := Ada.Calendar.Clock;
+      PentDobl_Multitasked_EvalDiff(nbt,c,x,mxe,pwt,vy2,vm2,false);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      if verbose then
+        new_line;
+        put_line("-> Elapsed time on multitasking : ");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      end if;
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        if verbose then
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(speedup,2,2); new_line;
+        end if;
+      end if;
+      put(file,nbt,3);
+      put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,2,2);
+      new_line(file); flush(file);
+      nbt := nbt + inc;
+    end loop;
+  end PentDobl_Benchmark;
+
+  procedure OctoDobl_Benchmark
+              ( file : in file_type; deg,nbruns,inc : in integer32;
+                c : in OctoDobl_Speelpenning_Convolutions.Circuits;
+                x : in OctoDobl_Complex_VecVecs.VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
+                verbose : in boolean := true ) is
+
+    use OctoDobl_Speelpenning_Convolutions;
+
+    dim : constant integer32 := x'last;
+    pwt : constant Link_to_VecVecVec := Allocate(mxe,deg);
+    yd : constant OctoDobl_Complex_VecVecs.VecVec(1..dim+1)
+       := Allocate_Coefficients(dim+1,deg);
+    vy1 : constant OctoDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vy2 : constant OctoDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vm1 : constant OctoDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    vm2 : constant OctoDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+
+  begin
+    put_line(file,"octo double precision"); flush(file);
+    if verbose
+     then put_line("Running on one task ...");
+    end if;
+    seristart := Ada.Calendar.Clock;
+    Compute(pwt,mxe,x);
+    EvalDiff(c,x,pwt,yd,vy1,vm1);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    put(file,"  1 : ");
+    duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
+    if verbose then
+      put_line("-> Elapsed time without multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    end if;   
+    for k in 1..nbruns loop
+      if verbose then
+        new_line;
+        put("Running with "); put(nbt,1); put_line(" tasks ...");
+      end if;
+      multstart := Ada.Calendar.Clock;
+      OctoDobl_Multitasked_EvalDiff(nbt,c,x,mxe,pwt,vy2,vm2,false);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      if verbose then
+        new_line;
+        put_line("-> Elapsed time on multitasking : ");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      end if;
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        if verbose then
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(speedup,2,2); new_line;
+        end if;
+      end if;
+      put(file,nbt,3);
+      put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,2,2);
+      new_line(file); flush(file);
+      nbt := nbt + inc;
+    end loop;
+  end OctoDobl_Benchmark;
+
+  procedure DecaDobl_Benchmark
+              ( file : in file_type; deg,nbruns,inc : in integer32;
+                c : in DecaDobl_Speelpenning_Convolutions.Circuits;
+                x : in DecaDobl_Complex_VecVecs.VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
+                verbose : in boolean := true ) is
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+    dim : constant integer32 := x'last;
+    pwt : constant Link_to_VecVecVec := Allocate(mxe,deg);
+    yd : constant DecaDobl_Complex_VecVecs.VecVec(1..dim+1)
+       := Allocate_Coefficients(dim+1,deg);
+    vy1 : constant DecaDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vy2 : constant DecaDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vm1 : constant DecaDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    vm2 : constant DecaDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+
+  begin
+    put_line(file,"deca double precision"); flush(file);
+    if verbose
+     then put_line("Running on one task ...");
+    end if;
+    seristart := Ada.Calendar.Clock;
+    Compute(pwt,mxe,x);
+    EvalDiff(c,x,pwt,yd,vy1,vm1);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    put(file,"  1 : ");
+    duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
+    if verbose then
+      put_line("-> Elapsed time without multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    end if;   
+    for k in 1..nbruns loop
+      if verbose then
+        new_line;
+        put("Running with "); put(nbt,1); put_line(" tasks ...");
+      end if;
+      multstart := Ada.Calendar.Clock;
+      DecaDobl_Multitasked_EvalDiff(nbt,c,x,mxe,pwt,vy2,vm2,false);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      if verbose then
+        new_line;
+        put_line("-> Elapsed time on multitasking : ");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      end if;
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        if verbose then
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(speedup,2,2); new_line;
+        end if;
+      end if;
+      put(file,nbt,3);
+      put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,2,2);
+      new_line(file); flush(file);
+      nbt := nbt + inc;
+    end loop;
+  end DecaDobl_Benchmark;
+
   procedure Benchmark ( dim,deg,nbr,pwr : in integer32 ) is
 
+    da_c : constant DecaDobl_Speelpenning_Convolutions.Circuits
+         := DecaDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+    od_c : constant OctoDobl_Speelpenning_Convolutions.Circuits
+         := to_octo_double(da_c);
+    pd_c : constant PentDobl_Speelpenning_Convolutions.Circuits
+         := to_penta_double(da_c);
     qd_c : constant QuadDobl_Speelpenning_Convolutions.Circuits
-         := QuadDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+         := to_quad_double(da_c);
     qd_cc : constant QuadDobl_Coefficient_Convolutions.Circuits
           := QuadDobl_Convolution_Splitters.Split(qd_c);
+    td_c : constant TripDobl_Speelpenning_Convolutions.Circuits
+         := to_triple_double(qd_c);
     dd_c : constant DoblDobl_Speelpenning_Convolutions.Circuits
          := to_double_double(qd_c);
     dd_cc : constant DoblDobl_Coefficient_Convolutions.Circuits
@@ -1075,14 +1731,22 @@ package body Test_mtAlgoDiff_Convolutions is
         := to_double(qd_c);
     d_cc : constant Standard_Coefficient_Convolutions.Circuits
          := Standard_Convolution_Splitters.Split(d_c);
-    qd_x : constant QuadDobl_Complex_Series_Vectors.Vector(1..dim)
-         := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    da_x : constant DecaDobl_Complex_Series_Vectors.Vector(1..dim)
+         := DecaDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    da_xcff : constant DecaDobl_Complex_VecVecs.VecVec(1..dim)
+            := DecaDobl_Series_Coefficients(da_x);
+    od_xcff : constant OctoDobl_Complex_VecVecs.VecVec(1..dim)
+            := DecaDobl_Complex_Vectors_cv.to_octo_double(da_xcff);
+    pd_xcff : constant PentDobl_Complex_VecVecs.VecVec(1..dim)
+            := DecaDobl_Complex_Vectors_cv.to_penta_double(da_xcff);
     qd_xcff : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
-            := QuadDobl_Series_Coefficients(qd_x);
+            := DecaDobl_Complex_Vectors_cv.to_quad_double(da_xcff);
+    td_xcff : constant TripDobl_Complex_VecVecs.VecVec(1..dim)
+            := DecaDobl_Complex_Vectors_cv.to_triple_double(da_xcff);
     dd_xcff : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
-            := QuadDobl_Complex_Vectors_cv.to_double_double(qd_xcff);
+            := DecaDobl_Complex_Vectors_cv.to_double_double(da_xcff);
     d_xcff : constant Standard_Complex_VecVecs.VecVec(1..dim)
-           := QuadDobl_Complex_Vectors_cv.to_double(qd_xcff);
+           := DecaDobl_Complex_Vectors_cv.to_double(da_xcff);
     mxe : constant Standard_Integer_Vectors.Vector(1..dim)
         := QuadDobl_Speelpenning_Convolutions.Exponent_Maxima(qd_c,dim);
     nbruns,inc : integer32 := 0;
@@ -1111,7 +1775,11 @@ package body Test_mtAlgoDiff_Convolutions is
       when '1' =>
         Standard_Benchmark(file,deg,nbruns,inc,d_c,d_xcff,mxe,false);
         DoblDobl_Benchmark(file,deg,nbruns,inc,dd_c,dd_xcff,mxe,false);
+        TripDobl_Benchmark(file,deg,nbruns,inc,td_c,td_xcff,mxe,false);
         QuadDobl_Benchmark(file,deg,nbruns,inc,qd_c,qd_xcff,mxe,false);
+        PentDobl_Benchmark(file,deg,nbruns,inc,pd_c,pd_xcff,mxe,false);
+        OctoDobl_Benchmark(file,deg,nbruns,inc,od_c,od_xcff,mxe,false);
+        DecaDobl_Benchmark(file,deg,nbruns,inc,da_c,da_xcff,mxe,false);
       when '2' =>
         put_line(file,"runs on coefficient convolution circuits ...");
         Standard_Coefficient_Benchmark
@@ -1133,6 +1801,9 @@ package body Test_mtAlgoDiff_Convolutions is
         put_line(file,"runs on coefficient convolution circuits ...");
         QuadDobl_Coefficient_Benchmark
           (file,deg,nbruns,inc,qd_cc,qd_xcff,mxe,false);
+        PentDobl_Benchmark(file,deg,nbruns,inc,pd_c,pd_xcff,mxe,false);
+        OctoDobl_Benchmark(file,deg,nbruns,inc,od_c,od_xcff,mxe,false);
+        DecaDobl_Benchmark(file,deg,nbruns,inc,da_c,da_xcff,mxe,false);
       when others => null;
     end case;
   end Benchmark;
@@ -1144,11 +1815,14 @@ package body Test_mtAlgoDiff_Convolutions is
   begin
     new_line;
     put_line("MENU for the working precision :");
-    put_line("  0. standard double precision");
-    put_line("  1. double double precision");
-    put_line("  2. quad double precision");
-    put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(res,"012");
+    put_line("  1. double precision");
+    put_line("  2. double double precision");
+    put_line("  3. triple double precision");
+    put_line("  4. quad double precision");
+    put_line("  5. penta double precision");
+    put_line("  6. octo double precision");
+    put("Type 1, 2, 3, 4, 5, 6, or 7 to select the precision : ");
+    Ask_Alternative(res,"1234567");
     return res;
   end Prompt_for_Precision;
 
@@ -1230,6 +1904,34 @@ package body Test_mtAlgoDiff_Convolutions is
     end;
   end DoblDobl_Test_Problem;
 
+  procedure TripDobl_Test_Problem is
+
+    use TripDobl_Speelpenning_Convolutions;
+
+    lp : TripDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    deg,nbt : integer32 := 0;
+    dim : natural32;
+    answer : character;
+    output : boolean;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ...");
+    get(lp);
+    dim := TripDobl_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
+    new_line;
+    put("Give the degree of the series : "); get(deg);
+    put("Give the number of tasks : "); get(nbt);
+    put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(answer);
+    output := (answer = 'y');
+    declare
+      c : constant TripDobl_Speelpenning_Convolutions.Circuits(lp'range)
+        := Make_Convolution_Circuits(lp.all,natural32(deg));
+    begin
+      TripDobl_Test(c,integer32(dim),deg,nbt,output);
+    end;
+  end TripDobl_Test_Problem;
+
   procedure QuadDobl_Test_Problem is
 
     lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -1268,6 +1970,84 @@ package body Test_mtAlgoDiff_Convolutions is
     end;
   end QuadDobl_Test_Problem;
 
+  procedure PentDobl_Test_Problem is
+
+    lp : PentDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    deg,nbt : integer32 := 0;
+    dim : natural32;
+    answer : character;
+    output : boolean;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ...");
+    get(lp);
+    dim := PentDobl_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
+    new_line;
+    put("Give the degree of the series : "); get(deg);
+    put("Give the number of tasks : "); get(nbt);
+    put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(answer);
+    output := (answer = 'y');
+    declare
+      c : constant PentDobl_Speelpenning_Convolutions.Circuits(lp'range)
+        := Make_Convolution_Circuits(lp.all,natural32(deg));
+    begin
+      PentDobl_Test(c,integer32(dim),deg,nbt,output);
+    end;
+  end PentDobl_Test_Problem;
+
+  procedure OctoDobl_Test_Problem is
+
+    lp : OctoDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    deg,nbt : integer32 := 0;
+    dim : natural32;
+    answer : character;
+    output : boolean;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ...");
+    get(lp);
+    dim := OctoDobl_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
+    new_line;
+    put("Give the degree of the series : "); get(deg);
+    put("Give the number of tasks : "); get(nbt);
+    put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(answer);
+    output := (answer = 'y');
+    declare
+      c : constant OctoDobl_Speelpenning_Convolutions.Circuits(lp'range)
+        := Make_Convolution_Circuits(lp.all,natural32(deg));
+    begin
+      OctoDobl_Test(c,integer32(dim),deg,nbt,output);
+    end;
+  end OctoDobl_Test_Problem;
+
+  procedure DecaDobl_Test_Problem is
+
+    lp : DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    deg,nbt : integer32 := 0;
+    dim : natural32;
+    answer : character;
+    output : boolean;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ...");
+    get(lp);
+    dim := DecaDobl_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
+    new_line;
+    put("Give the degree of the series : "); get(deg);
+    put("Give the number of tasks : "); get(nbt);
+    put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(answer);
+    output := (answer = 'y');
+    declare
+      c : constant DecaDobl_Speelpenning_Convolutions.Circuits(lp'range)
+        := Make_Convolution_Circuits(lp.all,natural32(deg));
+    begin
+      DecaDobl_Test(c,integer32(dim),deg,nbt,output);
+    end;
+  end DecaDobl_Test_Problem;
+
   procedure Main is
 
     dim,deg,nbr,pwr,nbt : integer32 := 0;
@@ -1282,9 +2062,13 @@ package body Test_mtAlgoDiff_Convolutions is
     if answer /= 'y' then
       precision := Prompt_for_Precision;
       case precision is
-        when '0' => Standard_Test_Problem;
-        when '1' => DoblDobl_Test_Problem;
-        when '2' => QuadDobl_Test_Problem;
+        when '1' => Standard_Test_Problem;
+        when '2' => DoblDobl_Test_Problem;
+        when '3' => TripDobl_Test_Problem;
+        when '4' => QuadDobl_Test_Problem;
+        when '5' => PentDobl_Test_Problem;
+        when '6' => OctoDobl_Test_Problem;
+        when '7' => DecaDobl_Test_Problem;
         when others => null;
       end case;
     else
@@ -1302,9 +2086,13 @@ package body Test_mtAlgoDiff_Convolutions is
         precision := Prompt_for_Precision;
         new_line;
         case precision is
-          when '0' => Standard_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
-          when '1' => DoblDobl_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
-          when '2' => QuadDobl_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
+          when '1' => Standard_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
+          when '2' => DoblDobl_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
+          when '3' => TripDobl_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
+          when '4' => QuadDobl_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
+          when '5' => PentDobl_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
+          when '6' => OctoDobl_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
+          when '7' => DecaDobl_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
           when others => null;
         end case;
       end if;

@@ -1,11 +1,13 @@
 with text_io;                            use text_io;
 with Standard_Complex_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
-with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with DoblDobl_Complex_Numbers;
 with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with PentDobl_Complex_Numbers;
+with OctoDobl_Complex_Numbers;
+with DecaDobl_Complex_Numbers;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
@@ -15,6 +17,12 @@ with TripDobl_Complex_Vectors;
 with TripDobl_Complex_Matrices;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Matrices;
+with PentDobl_Complex_Vectors;
+with PentDobl_Complex_Matrices;
+with OctoDobl_Complex_Vectors;
+with OctoDobl_Complex_Matrices;
+with DecaDobl_Complex_Vectors;
+with DecaDobl_Complex_Matrices;
 with Standard_Vector_Splitters;
 with DoblDobl_Vector_Splitters;
 with QuadDobl_Vector_Splitters;
@@ -118,6 +126,66 @@ package body Multitasked_AlgoDiff_Convolutions is
             := Allocate_Coefficients(dim+1,deg);
       begin
         res(i) := new QuadDobl_Complex_VecVecs.VecVec'(cff);
+      end;
+    end loop;
+    return res;
+  end Allocate_Work_Space;
+
+  function Allocate_Work_Space
+             ( nbt,dim,deg : integer32 )
+             return PentDobl_Speelpenning_Convolutions.VecVecVec is
+
+    use PentDobl_Speelpenning_Convolutions;
+
+    res : VecVecVec(1..nbt);
+
+  begin
+    for i in res'range loop
+      declare
+        cff : constant PentDobl_Complex_VecVecs.VecVec(1..dim+1)
+            := Allocate_Coefficients(dim+1,deg);
+      begin
+        res(i) := new PentDobl_Complex_VecVecs.VecVec'(cff);
+      end;
+    end loop;
+    return res;
+  end Allocate_Work_Space;
+
+  function Allocate_Work_Space
+             ( nbt,dim,deg : integer32 )
+             return OctoDobl_Speelpenning_Convolutions.VecVecVec is
+
+    use OctoDobl_Speelpenning_Convolutions;
+
+    res : VecVecVec(1..nbt);
+
+  begin
+    for i in res'range loop
+      declare
+        cff : constant OctoDobl_Complex_VecVecs.VecVec(1..dim+1)
+            := Allocate_Coefficients(dim+1,deg);
+      begin
+        res(i) := new OctoDobl_Complex_VecVecs.VecVec'(cff);
+      end;
+    end loop;
+    return res;
+  end Allocate_Work_Space;
+
+  function Allocate_Work_Space
+             ( nbt,dim,deg : integer32 )
+             return DecaDobl_Speelpenning_Convolutions.VecVecVec is
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+    res : VecVecVec(1..nbt);
+
+  begin
+    for i in res'range loop
+      declare
+        cff : constant DecaDobl_Complex_VecVecs.VecVec(1..dim+1)
+            := Allocate_Coefficients(dim+1,deg);
+      begin
+        res(i) := new DecaDobl_Complex_VecVecs.VecVec'(cff);
       end;
     end loop;
     return res;
@@ -2014,5 +2082,440 @@ package body Multitasked_AlgoDiff_Convolutions is
       delay 0.001;
     end loop;
   end QuadDobl_Multitasked_EvalDiff;
+
+  procedure PentDobl_Multitasked_EvalDiff
+              ( nbt : in integer32;
+                c : in PentDobl_Speelpenning_Convolutions.Circuits;
+                x : in PentDobl_Complex_VecVecs.VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
+                pwt : in PentDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
+                vy : in PentDobl_Complex_VecVecs.VecVec;
+                vm : in PentDobl_Complex_VecMats.VecMat;
+                output : in boolean := false ) is
+
+    use PentDobl_Speelpenning_Convolutions;
+
+    dim : constant integer32 := c'last; -- assuming square circuits
+    deg : constant integer32 := vm'last;
+    yd : constant VecVecVec(1..nbt) := Allocate_Work_Space(nbt,dim,deg);
+    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    alldone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+
+    procedure Silent_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will evaluate and differentiate circuits
+    --   without intermediate output.
+
+      idx : integer32 := i;
+      ydi : PentDobl_Complex_VecVecs.Link_to_VecVec;
+      vleft,vright : PentDobl_Complex_Vectors.Link_to_Vector;
+      mleft : PentDobl_Complex_Matrices.Link_to_Matrix;
+      xpw : PentDobl_Complex_VecVecs.Link_to_VecVec;
+ 
+    begin
+      while idx <= c'last loop  -- start with power table computation
+        if mxe(idx) > 2 then
+          xpw := pwt(idx);
+          Multiply(x(idx),x(idx),xpw(1));
+          for k in 2..(mxe(idx)-2) loop
+            Multiply(xpw(k-1),x(idx),xpw(k));
+          end loop;
+        end if;
+        idx := idx + n;
+      end loop;
+      pwtdone(i) := true;
+     -- make sure all tasks are done with the power table
+      while not Multitasking.all_true(nbt,pwtdone) loop
+        delay 0.001;
+      end loop;
+      idx := i; -- reset the index for evaluation and differentiation
+      while idx <= c'last loop
+        EvalDiff(c(idx).all,x,pwt,yd(i).all);
+        ydi := yd(i);
+        vright := ydi(x'last+1);
+        for j in vright'range loop
+          vleft := vy(j);
+          vleft(idx) := vright(j);
+          vright(j) := PentDobl_Complex_Numbers.Create(integer32(0));
+        end loop;
+        for j in 1..x'last loop
+          vright := ydi(j);
+          for k in vm'range loop       -- k-th coefficient in matrix vm(k)
+            mleft := vm(k);            -- row idx in vm(k) is the equation
+            mleft(idx,j) := vright(k); -- column j in vm(k) is the variable
+            vright(k) := PentDobl_Complex_Numbers.Create(integer32(0));
+          end loop;
+        end loop;
+        idx := idx + n;
+      end loop;
+      alldone(i) := true;
+    end Silent_Job;
+    procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
+
+    procedure Report_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will evaluate and differentiate circuits
+    --   with intermediate output.
+
+      idx : integer32 := i;
+      ydi : PentDobl_Complex_VecVecs.Link_to_VecVec;
+      vleft,vright : PentDobl_Complex_Vectors.Link_to_Vector;
+      mleft : PentDobl_Complex_Matrices.Link_to_Matrix;
+      xpw : PentDobl_Complex_VecVecs.Link_to_VecVec;
+ 
+    begin
+      put_line("number of circuits : " & Multitasking.to_string(c'last));
+      put_line("number of tasks : " & Multitasking.to_string(n));
+      while idx <= c'last loop  -- start with power table computation
+        if mxe(idx) > 2 then
+          xpw := pwt(idx);
+          Multiply(x(idx),x(idx),xpw(1));
+          for k in 2..(mxe(idx)-2) loop
+            Multiply(xpw(k-1),x(idx),xpw(k));
+          end loop;
+        end if;
+        idx := idx + n;
+      end loop;
+      pwtdone(i) := true;
+     -- make sure all tasks are done with the power table
+      while not Multitasking.all_true(nbt,pwtdone) loop
+        delay 0.001;
+      end loop;
+      idx := i; -- reset the index for evaluation and differentiation
+      while idx <= c'last loop
+        put_line("considering circuit " & Multitasking.to_string(idx));
+        put_line("task " & Multitasking.to_string(i)
+                         & " computes circuit "
+                         & Multitasking.to_string(idx));
+        EvalDiff(c(idx).all,x,pwt,yd(i).all);
+        put_line("task " & Multitasking.to_string(i)
+                         & " done computing circuit "
+                         & Multitasking.to_string(idx));
+        ydi := yd(i);
+        vright := ydi(x'last+1);
+        for j in vright'range loop
+          vleft := vy(j);
+          vleft(idx) := vright(j);
+          vright(j) := PentDobl_Complex_Numbers.Create(integer32(0));
+        end loop;
+        for j in 1..x'last loop
+          vright := ydi(j);
+          for k in vm'range loop       -- k-th coefficient in matrix vm(k)
+            mleft := vm(k);            -- row idx in vm(k) is the equation
+            mleft(idx,j) := vright(k); -- column j in vm(k) is the variable
+            vright(k) := PentDobl_Complex_Numbers.Create(integer32(0));
+          end loop;
+        end loop;
+        put_line("idx before increment : " & Multitasking.to_string(idx));
+        idx := idx + n;
+        put_line("idx after increment : " & Multitasking.to_string(idx));
+      end loop;
+      put_line("task " & Multitasking.to_string(i) & " is done.");
+      alldone(i) := true;
+    end Report_Job;
+    procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
+
+  begin
+    if output
+     then report_do_jobs(nbt);
+     else silent_do_jobs(nbt);
+    end if;
+   -- make sure main task does not terminate before all worker tasks
+    while not Multitasking.all_true(nbt,alldone) loop
+      delay 0.001;
+    end loop;
+  end PentDobl_Multitasked_EvalDiff;
+
+  procedure OctoDobl_Multitasked_EvalDiff
+              ( nbt : in integer32;
+                c : in OctoDobl_Speelpenning_Convolutions.Circuits;
+                x : in OctoDobl_Complex_VecVecs.VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
+                pwt : in OctoDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
+                vy : in OctoDobl_Complex_VecVecs.VecVec;
+                vm : in OctoDobl_Complex_VecMats.VecMat;
+                output : in boolean := false ) is
+
+    use OctoDobl_Speelpenning_Convolutions;
+
+    dim : constant integer32 := c'last; -- assuming square circuits
+    deg : constant integer32 := vm'last;
+    yd : constant VecVecVec(1..nbt) := Allocate_Work_Space(nbt,dim,deg);
+    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    alldone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+
+    procedure Silent_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will evaluate and differentiate circuits
+    --   without intermediate output.
+
+      idx : integer32 := i;
+      ydi : OctoDobl_Complex_VecVecs.Link_to_VecVec;
+      vleft,vright : OctoDobl_Complex_Vectors.Link_to_Vector;
+      mleft : OctoDobl_Complex_Matrices.Link_to_Matrix;
+      xpw : OctoDobl_Complex_VecVecs.Link_to_VecVec;
+ 
+    begin
+      while idx <= c'last loop  -- start with power table computation
+        if mxe(idx) > 2 then
+          xpw := pwt(idx);
+          Multiply(x(idx),x(idx),xpw(1));
+          for k in 2..(mxe(idx)-2) loop
+            Multiply(xpw(k-1),x(idx),xpw(k));
+          end loop;
+        end if;
+        idx := idx + n;
+      end loop;
+      pwtdone(i) := true;
+     -- make sure all tasks are done with the power table
+      while not Multitasking.all_true(nbt,pwtdone) loop
+        delay 0.001;
+      end loop;
+      idx := i; -- reset the index for evaluation and differentiation
+      while idx <= c'last loop
+        EvalDiff(c(idx).all,x,pwt,yd(i).all);
+        ydi := yd(i);
+        vright := ydi(x'last+1);
+        for j in vright'range loop
+          vleft := vy(j);
+          vleft(idx) := vright(j);
+          vright(j) := OctoDobl_Complex_Numbers.Create(integer32(0));
+        end loop;
+        for j in 1..x'last loop
+          vright := ydi(j);
+          for k in vm'range loop       -- k-th coefficient in matrix vm(k)
+            mleft := vm(k);            -- row idx in vm(k) is the equation
+            mleft(idx,j) := vright(k); -- column j in vm(k) is the variable
+            vright(k) := OctoDobl_Complex_Numbers.Create(integer32(0));
+          end loop;
+        end loop;
+        idx := idx + n;
+      end loop;
+      alldone(i) := true;
+    end Silent_Job;
+    procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
+
+    procedure Report_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will evaluate and differentiate circuits
+    --   with intermediate output.
+
+      idx : integer32 := i;
+      ydi : OctoDobl_Complex_VecVecs.Link_to_VecVec;
+      vleft,vright : OctoDobl_Complex_Vectors.Link_to_Vector;
+      mleft : OctoDobl_Complex_Matrices.Link_to_Matrix;
+      xpw : OctoDobl_Complex_VecVecs.Link_to_VecVec;
+ 
+    begin
+      put_line("number of circuits : " & Multitasking.to_string(c'last));
+      put_line("number of tasks : " & Multitasking.to_string(n));
+      while idx <= c'last loop  -- start with power table computation
+        if mxe(idx) > 2 then
+          xpw := pwt(idx);
+          Multiply(x(idx),x(idx),xpw(1));
+          for k in 2..(mxe(idx)-2) loop
+            Multiply(xpw(k-1),x(idx),xpw(k));
+          end loop;
+        end if;
+        idx := idx + n;
+      end loop;
+      pwtdone(i) := true;
+     -- make sure all tasks are done with the power table
+      while not Multitasking.all_true(nbt,pwtdone) loop
+        delay 0.001;
+      end loop;
+      idx := i; -- reset the index for evaluation and differentiation
+      while idx <= c'last loop
+        put_line("considering circuit " & Multitasking.to_string(idx));
+        put_line("task " & Multitasking.to_string(i)
+                         & " computes circuit "
+                         & Multitasking.to_string(idx));
+        EvalDiff(c(idx).all,x,pwt,yd(i).all);
+        put_line("task " & Multitasking.to_string(i)
+                         & " done computing circuit "
+                         & Multitasking.to_string(idx));
+        ydi := yd(i);
+        vright := ydi(x'last+1);
+        for j in vright'range loop
+          vleft := vy(j);
+          vleft(idx) := vright(j);
+          vright(j) := OctoDobl_Complex_Numbers.Create(integer32(0));
+        end loop;
+        for j in 1..x'last loop
+          vright := ydi(j);
+          for k in vm'range loop       -- k-th coefficient in matrix vm(k)
+            mleft := vm(k);            -- row idx in vm(k) is the equation
+            mleft(idx,j) := vright(k); -- column j in vm(k) is the variable
+            vright(k) := OctoDobl_Complex_Numbers.Create(integer32(0));
+          end loop;
+        end loop;
+        put_line("idx before increment : " & Multitasking.to_string(idx));
+        idx := idx + n;
+        put_line("idx after increment : " & Multitasking.to_string(idx));
+      end loop;
+      put_line("task " & Multitasking.to_string(i) & " is done.");
+      alldone(i) := true;
+    end Report_Job;
+    procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
+
+  begin
+    if output
+     then report_do_jobs(nbt);
+     else silent_do_jobs(nbt);
+    end if;
+   -- make sure main task does not terminate before all worker tasks
+    while not Multitasking.all_true(nbt,alldone) loop
+      delay 0.001;
+    end loop;
+  end OctoDobl_Multitasked_EvalDiff;
+
+  procedure DecaDobl_Multitasked_EvalDiff
+              ( nbt : in integer32;
+                c : in DecaDobl_Speelpenning_Convolutions.Circuits;
+                x : in DecaDobl_Complex_VecVecs.VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
+                pwt : in DecaDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
+                vy : in DecaDobl_Complex_VecVecs.VecVec;
+                vm : in DecaDobl_Complex_VecMats.VecMat;
+                output : in boolean := false ) is
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+    dim : constant integer32 := c'last; -- assuming square circuits
+    deg : constant integer32 := vm'last;
+    yd : constant VecVecVec(1..nbt) := Allocate_Work_Space(nbt,dim,deg);
+    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    alldone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+
+    procedure Silent_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will evaluate and differentiate circuits
+    --   without intermediate output.
+
+      idx : integer32 := i;
+      ydi : DecaDobl_Complex_VecVecs.Link_to_VecVec;
+      vleft,vright : DecaDobl_Complex_Vectors.Link_to_Vector;
+      mleft : DecaDobl_Complex_Matrices.Link_to_Matrix;
+      xpw : DecaDobl_Complex_VecVecs.Link_to_VecVec;
+ 
+    begin
+      while idx <= c'last loop  -- start with power table computation
+        if mxe(idx) > 2 then
+          xpw := pwt(idx);
+          Multiply(x(idx),x(idx),xpw(1));
+          for k in 2..(mxe(idx)-2) loop
+            Multiply(xpw(k-1),x(idx),xpw(k));
+          end loop;
+        end if;
+        idx := idx + n;
+      end loop;
+      pwtdone(i) := true;
+     -- make sure all tasks are done with the power table
+      while not Multitasking.all_true(nbt,pwtdone) loop
+        delay 0.001;
+      end loop;
+      idx := i; -- reset the index for evaluation and differentiation
+      while idx <= c'last loop
+        EvalDiff(c(idx).all,x,pwt,yd(i).all);
+        ydi := yd(i);
+        vright := ydi(x'last+1);
+        for j in vright'range loop
+          vleft := vy(j);
+          vleft(idx) := vright(j);
+          vright(j) := DecaDobl_Complex_Numbers.Create(integer32(0));
+        end loop;
+        for j in 1..x'last loop
+          vright := ydi(j);
+          for k in vm'range loop       -- k-th coefficient in matrix vm(k)
+            mleft := vm(k);            -- row idx in vm(k) is the equation
+            mleft(idx,j) := vright(k); -- column j in vm(k) is the variable
+            vright(k) := DecaDobl_Complex_Numbers.Create(integer32(0));
+          end loop;
+        end loop;
+        idx := idx + n;
+      end loop;
+      alldone(i) := true;
+    end Silent_Job;
+    procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
+
+    procedure Report_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will evaluate and differentiate circuits
+    --   with intermediate output.
+
+      idx : integer32 := i;
+      ydi : DecaDobl_Complex_VecVecs.Link_to_VecVec;
+      vleft,vright : DecaDobl_Complex_Vectors.Link_to_Vector;
+      mleft : DecaDobl_Complex_Matrices.Link_to_Matrix;
+      xpw : DecaDobl_Complex_VecVecs.Link_to_VecVec;
+ 
+    begin
+      put_line("number of circuits : " & Multitasking.to_string(c'last));
+      put_line("number of tasks : " & Multitasking.to_string(n));
+      while idx <= c'last loop  -- start with power table computation
+        if mxe(idx) > 2 then
+          xpw := pwt(idx);
+          Multiply(x(idx),x(idx),xpw(1));
+          for k in 2..(mxe(idx)-2) loop
+            Multiply(xpw(k-1),x(idx),xpw(k));
+          end loop;
+        end if;
+        idx := idx + n;
+      end loop;
+      pwtdone(i) := true;
+     -- make sure all tasks are done with the power table
+      while not Multitasking.all_true(nbt,pwtdone) loop
+        delay 0.001;
+      end loop;
+      idx := i; -- reset the index for evaluation and differentiation
+      while idx <= c'last loop
+        put_line("considering circuit " & Multitasking.to_string(idx));
+        put_line("task " & Multitasking.to_string(i)
+                         & " computes circuit "
+                         & Multitasking.to_string(idx));
+        EvalDiff(c(idx).all,x,pwt,yd(i).all);
+        put_line("task " & Multitasking.to_string(i)
+                         & " done computing circuit "
+                         & Multitasking.to_string(idx));
+        ydi := yd(i);
+        vright := ydi(x'last+1);
+        for j in vright'range loop
+          vleft := vy(j);
+          vleft(idx) := vright(j);
+          vright(j) := DecaDobl_Complex_Numbers.Create(integer32(0));
+        end loop;
+        for j in 1..x'last loop
+          vright := ydi(j);
+          for k in vm'range loop       -- k-th coefficient in matrix vm(k)
+            mleft := vm(k);            -- row idx in vm(k) is the equation
+            mleft(idx,j) := vright(k); -- column j in vm(k) is the variable
+            vright(k) := DecaDobl_Complex_Numbers.Create(integer32(0));
+          end loop;
+        end loop;
+        put_line("idx before increment : " & Multitasking.to_string(idx));
+        idx := idx + n;
+        put_line("idx after increment : " & Multitasking.to_string(idx));
+      end loop;
+      put_line("task " & Multitasking.to_string(i) & " is done.");
+      alldone(i) := true;
+    end Report_Job;
+    procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
+
+  begin
+    if output
+     then report_do_jobs(nbt);
+     else silent_do_jobs(nbt);
+    end if;
+   -- make sure main task does not terminate before all worker tasks
+    while not Multitasking.all_true(nbt,alldone) loop
+      delay 0.001;
+    end loop;
+  end DecaDobl_Multitasked_EvalDiff;
 
 end Multitasked_AlgoDiff_Convolutions;
