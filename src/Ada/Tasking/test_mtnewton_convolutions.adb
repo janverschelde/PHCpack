@@ -13,10 +13,19 @@ with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Triple_Double_Numbers_io;           use Triple_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with Penta_Double_Numbers;               use Penta_Double_Numbers;
+with Penta_Double_Numbers_io;            use Penta_Double_Numbers_io;
+with Octo_Double_Numbers;                use Octo_Double_Numbers;
+with Octo_Double_Numbers_io;             use Octo_Double_Numbers_io;
+with Deca_Double_Numbers;                use Deca_Double_Numbers;
+with Deca_Double_Numbers_io;             use Deca_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with PentDobl_Complex_Numbers;
+with OctoDobl_Complex_Numbers;
+with DecaDobl_Complex_Numbers;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with QuadDobl_Complex_Vectors_cv;
 with Standard_Complex_Solutions;
@@ -26,6 +35,12 @@ with DoblDobl_System_and_Solutions_io;
 with TripDobl_Complex_Solutions;
 with TripDobl_System_and_Solutions_io;
 with QuadDobl_System_and_Solutions_io;
+with PentDobl_Complex_Solutions;
+with PentDobl_System_and_Solutions_io;
+with OctoDobl_Complex_Solutions;
+with OctoDobl_System_and_Solutions_io;
+with DecaDobl_Complex_Solutions;
+with DecaDobl_System_and_Solutions_io;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Homotopy_Convolution_Circuits;      use Homotopy_Convolution_Circuits;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
@@ -33,6 +48,9 @@ with Standard_Newton_Convolutions;
 with DoblDobl_Newton_Convolutions;
 with TripDobl_Newton_Convolutions;
 with QuadDobl_Newton_Convolutions;
+with PentDobl_Newton_Convolutions;
+with OctoDobl_Newton_Convolutions;
+with DecaDobl_Newton_Convolutions;
 with Convergence_Radius_Estimates;
 with Multitasked_Series_Linearization;
 with Multitasked_Newton_Convolutions;    use Multitasked_Newton_Convolutions;
@@ -81,6 +99,42 @@ package body Test_mtNewton_Convolutions is
 
     z : QuadDobl_Complex_Numbers.Complex_Number;
     r,e : quad_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( c : in PentDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : PentDobl_Complex_Numbers.Complex_Number;
+    r,e : penta_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( c : in OctoDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : OctoDobl_Complex_Numbers.Complex_Number;
+    r,e : octo_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( c : in DecaDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : DecaDobl_Complex_Numbers.Complex_Number;
+    r,e : deca_double;
     fail : boolean;
 
   begin
@@ -419,6 +473,255 @@ package body Test_mtNewton_Convolutions is
     QuadDobl_Complex_VecVecs.Clear(wks);
   end QuadDobl_Run;
 
+  procedure PentDobl_Run
+              ( nbt,dim,maxit : in integer32;
+                s : in PentDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in PentDobl_Complex_VecVecs.VecVec;
+                serelp,mltelp,speedup,efficiency : in out Duration;
+                output,estco : in boolean; verbose : in boolean := true ) is
+
+    wks : PentDobl_Complex_VecVecs.VecVec(1..nbt)
+        := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info,nbrit : integer32 := 0;
+    fail : boolean;
+    tol : constant penta_double := create(1.0E-60);
+    rcond,absdx : penta_double;
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+
+    use Ada.Calendar; -- for the difference operation on Duration
+
+  begin
+    if verbose then
+      new_line;
+      put("Running with "); put(nbt,1); put_line(" tasks ...");
+    end if;
+    if nbt = 1
+     then seristart := Ada.Calendar.Clock;
+     else multstart := Ada.Calendar.Clock;
+    end if;
+    if verbose then
+      if estco then
+        Multitasked_LU_Newton_Steps
+          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
+           rcond,ipvt,wks,output);
+      else
+        Multitasked_LU_Newton_Steps
+          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
+           info,ipvt,wks,output);
+      end if;
+    else
+      if estco then
+        Multitasked_LU_Newton_Steps
+          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wks);
+      else
+        Multitasked_LU_Newton_Steps
+          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
+      end if;
+    end if;
+    if nbt = 1 then
+      seristop := Ada.Calendar.Clock;
+      serelp := seristop - seristart;
+    else
+      multstop := Ada.Calendar.Clock;
+      mltelp := multstop - multstart;
+    end if;
+    if verbose then
+      put("#steps : "); put(nbrit,1); put("  absdx :"); put(absdx,3);
+      if fail
+       then put("  failed to reach tolerance ");
+       else put("  succeeded to reach tolerance ");
+      end if;
+      put(tol,3); new_line;
+      Apply_Fabry(scf,verbose);
+    end if;
+    if nbt = 1 then
+      if verbose then
+        Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+      end if;
+    else
+      if verbose then
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      end if;
+      if serelp + 1.0 /= 1.0 then
+        speedup := serelp/mltelp;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        if verbose then
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
+        end if;
+      end if;
+    end if;
+    PentDobl_Complex_VecVecs.Clear(wks);
+  end PentDobl_Run;
+
+  procedure OctoDobl_Run
+              ( nbt,dim,maxit : in integer32;
+                s : in OctoDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in OctoDobl_Complex_VecVecs.VecVec;
+                serelp,mltelp,speedup,efficiency : in out Duration;
+                output,estco : in boolean; verbose : in boolean := true ) is
+
+    wks : OctoDobl_Complex_VecVecs.VecVec(1..nbt)
+        := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info,nbrit : integer32 := 0;
+    fail : boolean;
+    tol : constant octo_double := create(1.0E-96);
+    rcond,absdx : octo_double;
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+
+    use Ada.Calendar; -- for the difference operation on Duration
+
+  begin
+    if verbose then
+      new_line;
+      put("Running with "); put(nbt,1); put_line(" tasks ...");
+    end if;
+    if nbt = 1
+     then seristart := Ada.Calendar.Clock;
+     else multstart := Ada.Calendar.Clock;
+    end if;
+    if verbose then
+      if estco then
+        Multitasked_LU_Newton_Steps
+          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
+           rcond,ipvt,wks,output);
+      else
+        Multitasked_LU_Newton_Steps
+          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
+           info,ipvt,wks,output);
+      end if;
+    else
+      if estco then
+        Multitasked_LU_Newton_Steps
+          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wks);
+      else
+        Multitasked_LU_Newton_Steps
+          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
+      end if;
+    end if;
+    if nbt = 1 then
+      seristop := Ada.Calendar.Clock;
+      serelp := seristop - seristart;
+    else
+      multstop := Ada.Calendar.Clock;
+      mltelp := multstop - multstart;
+    end if;
+    if verbose then
+      put("#steps : "); put(nbrit,1); put("  absdx :"); put(absdx,3);
+      if fail
+       then put("  failed to reach tolerance ");
+       else put("  succeeded to reach tolerance ");
+      end if;
+      put(tol,3); new_line;
+      Apply_Fabry(scf,verbose);
+    end if;
+    if nbt = 1 then
+      if verbose then
+        Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+      end if;
+    else
+      if verbose then
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      end if;
+      if serelp + 1.0 /= 1.0 then
+        speedup := serelp/mltelp;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        if verbose then
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
+        end if;
+      end if;
+    end if;
+    OctoDobl_Complex_VecVecs.Clear(wks);
+  end OctoDobl_Run;
+
+  procedure DecaDobl_Run
+              ( nbt,dim,maxit : in integer32;
+                s : in DecaDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in DecaDobl_Complex_VecVecs.VecVec;
+                serelp,mltelp,speedup,efficiency : in out Duration;
+                output,estco : in boolean; verbose : in boolean := true ) is
+
+    wks : DecaDobl_Complex_VecVecs.VecVec(1..nbt)
+        := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info,nbrit : integer32 := 0;
+    fail : boolean;
+    tol : constant deca_double := create(1.0E-108);
+    rcond,absdx : deca_double;
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+
+    use Ada.Calendar; -- for the difference operation on Duration
+
+  begin
+    if verbose then
+      new_line;
+      put("Running with "); put(nbt,1); put_line(" tasks ...");
+    end if;
+    if nbt = 1
+     then seristart := Ada.Calendar.Clock;
+     else multstart := Ada.Calendar.Clock;
+    end if;
+    if verbose then
+      if estco then
+        Multitasked_LU_Newton_Steps
+          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
+           rcond,ipvt,wks,output);
+      else
+        Multitasked_LU_Newton_Steps
+          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
+           info,ipvt,wks,output);
+      end if;
+    else
+      if estco then
+        Multitasked_LU_Newton_Steps
+          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wks);
+      else
+        Multitasked_LU_Newton_Steps
+          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
+      end if;
+    end if;
+    if nbt = 1 then
+      seristop := Ada.Calendar.Clock;
+      serelp := seristop - seristart;
+    else
+      multstop := Ada.Calendar.Clock;
+      mltelp := multstop - multstart;
+    end if;
+    if verbose then
+      put("#steps : "); put(nbrit,1); put("  absdx :"); put(absdx,3);
+      if fail
+       then put("  failed to reach tolerance ");
+       else put("  succeeded to reach tolerance ");
+      end if;
+      put(tol,3); new_line;
+      Apply_Fabry(scf,verbose);
+    end if;
+    if nbt = 1 then
+      if verbose then
+        Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+      end if;
+    else
+      if verbose then
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      end if;
+      if serelp + 1.0 /= 1.0 then
+        speedup := serelp/mltelp;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        if verbose then
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
+        end if;
+      end if;
+    end if;
+    DecaDobl_Complex_VecVecs.Clear(wks);
+  end DecaDobl_Run;
+
   procedure Standard_Run_Loop
               ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
 	        sol : in Standard_Complex_Vectors.Vector;
@@ -559,6 +862,111 @@ package body Test_mtNewton_Convolutions is
     end loop;
   end QuadDobl_Run_Loop;
 
+  procedure PentDobl_Run_Loop
+              ( p : in PentDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+	        sol : in PentDobl_Complex_Vectors.Vector;
+	        deg : in integer32 ) is
+
+    use PentDobl_Speelpenning_Convolutions;
+
+    c : constant Circuits(p'range)
+      := Make_Convolution_Circuits(p.all,natural32(deg));
+    dim : constant integer32 := sol'last;
+    s : constant Link_to_System := Create(c,dim,deg);
+    scf : PentDobl_Complex_VecVecs.VecVec(1..dim);
+    maxit,nbt : integer32 := 0;
+    ans : character;
+    otp,est : boolean;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
+
+  begin
+    Add_Parameter_to_Constant(s);
+    new_line;
+    put("Give the maximum number of iterations : "); get(maxit);
+    loop
+      put("Give the number of tasks (0 to exit) : "); get(nbt);
+      exit when (nbt = 0);
+      put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
+      otp := (ans = 'y');
+      put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+      est := (ans = 'y');
+      scf := PentDobl_Newton_Convolutions.Series_Coefficients(sol,deg);
+      PentDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                   speedup,efficiency,otp,est);
+      PentDobl_Complex_VecVecs.Clear(scf);
+    end loop;
+  end PentDobl_Run_Loop;
+
+  procedure OctoDobl_Run_Loop
+              ( p : in OctoDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+	        sol : in OctoDobl_Complex_Vectors.Vector;
+	        deg : in integer32 ) is
+
+    use OctoDobl_Speelpenning_Convolutions;
+
+    c : constant Circuits(p'range)
+      := Make_Convolution_Circuits(p.all,natural32(deg));
+    dim : constant integer32 := sol'last;
+    s : constant Link_to_System := Create(c,dim,deg);
+    scf : OctoDobl_Complex_VecVecs.VecVec(1..dim);
+    maxit,nbt : integer32 := 0;
+    ans : character;
+    otp,est : boolean;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
+
+  begin
+    Add_Parameter_to_Constant(s);
+    new_line;
+    put("Give the maximum number of iterations : "); get(maxit);
+    loop
+      put("Give the number of tasks (0 to exit) : "); get(nbt);
+      exit when (nbt = 0);
+      put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
+      otp := (ans = 'y');
+      put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+      est := (ans = 'y');
+      scf := OctoDobl_Newton_Convolutions.Series_Coefficients(sol,deg);
+      OctoDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                   speedup,efficiency,otp,est);
+      OctoDobl_Complex_VecVecs.Clear(scf);
+    end loop;
+  end OctoDobl_Run_Loop;
+
+  procedure DecaDobl_Run_Loop
+              ( p : in DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+	        sol : in DecaDobl_Complex_Vectors.Vector;
+	        deg : in integer32 ) is
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+    c : constant Circuits(p'range)
+      := Make_Convolution_Circuits(p.all,natural32(deg));
+    dim : constant integer32 := sol'last;
+    s : constant Link_to_System := Create(c,dim,deg);
+    scf : DecaDobl_Complex_VecVecs.VecVec(1..dim);
+    maxit,nbt : integer32 := 0;
+    ans : character;
+    otp,est : boolean;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
+
+  begin
+    Add_Parameter_to_Constant(s);
+    new_line;
+    put("Give the maximum number of iterations : "); get(maxit);
+    loop
+      put("Give the number of tasks (0 to exit) : "); get(nbt);
+      exit when (nbt = 0);
+      put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
+      otp := (ans = 'y');
+      put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+      est := (ans = 'y');
+      scf := DecaDobl_Newton_Convolutions.Series_Coefficients(sol,deg);
+      DecaDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                   speedup,efficiency,otp,est);
+      DecaDobl_Complex_VecVecs.Clear(scf);
+    end loop;
+  end DecaDobl_Run_Loop;
+
   procedure Standard_Test is
 
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -650,6 +1058,75 @@ package body Test_mtNewton_Convolutions is
     put("Give the degree of the series : "); get(deg);
     QuadDobl_Run_Loop(lp,ls.v,deg);
   end QuadDobl_Test;
+
+  procedure PentDobl_Test is
+
+    lp : PentDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : PentDobl_Complex_Solutions.Solution_List;
+    nbr,dim : natural32;
+    ls : PentDobl_Complex_Solutions.Link_to_Solution;
+    deg : integer32 := 0;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system with solutions ...");
+    PentDobl_System_and_Solutions_io.get(lp,sols);
+    nbr := PentDobl_Complex_Solutions.Length_Of(sols);
+    ls := PentDobl_Complex_Solutions.Head_Of(sols);
+    dim := natural32(ls.n);
+    new_line;
+    put("Read "); put(nbr,1); put(" solutions in dimension ");
+    put(dim,1); put_line(".");
+    new_line;
+    put("Give the degree of the series : "); get(deg);
+    PentDobl_Run_Loop(lp,ls.v,deg);
+  end PentDobl_Test;
+
+  procedure OctoDobl_Test is
+
+    lp : OctoDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : OctoDobl_Complex_Solutions.Solution_List;
+    nbr,dim : natural32;
+    ls : OctoDobl_Complex_Solutions.Link_to_Solution;
+    deg : integer32 := 0;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system with solutions ...");
+    OctoDobl_System_and_Solutions_io.get(lp,sols);
+    nbr := OctoDobl_Complex_Solutions.Length_Of(sols);
+    ls := OctoDobl_Complex_Solutions.Head_Of(sols);
+    dim := natural32(ls.n);
+    new_line;
+    put("Read "); put(nbr,1); put(" solutions in dimension ");
+    put(dim,1); put_line(".");
+    new_line;
+    put("Give the degree of the series : "); get(deg);
+    OctoDobl_Run_Loop(lp,ls.v,deg);
+  end OctoDobl_Test;
+
+  procedure DecaDobl_Test is
+
+    lp : DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : DecaDobl_Complex_Solutions.Solution_List;
+    nbr,dim : natural32;
+    ls : DecaDobl_Complex_Solutions.Link_to_Solution;
+    deg : integer32 := 0;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system with solutions ...");
+    DecaDobl_System_and_Solutions_io.get(lp,sols);
+    nbr := DecaDobl_Complex_Solutions.Length_Of(sols);
+    ls := DecaDobl_Complex_Solutions.Head_Of(sols);
+    dim := natural32(ls.n);
+    new_line;
+    put("Read "); put(nbr,1); put(" solutions in dimension ");
+    put(dim,1); put_line(".");
+    new_line;
+    put("Give the degree of the series : "); get(deg);
+    DecaDobl_Run_Loop(lp,ls.v,deg);
+  end DecaDobl_Test;
 
   procedure Standard_Random_Test
               ( dim,deg,nbr,pwr : in integer32 ) is
@@ -778,6 +1255,102 @@ package body Test_mtNewton_Convolutions is
       QuadDobl_Complex_VecVecs.Clear(scf);
     end loop;
   end QuadDobl_Random_Test;
+
+  procedure PentDobl_Random_Test
+              ( dim,deg,nbr,pwr : in integer32 ) is
+
+    use PentDobl_Complex_VecVecs;
+    use PentDobl_Speelpenning_Convolutions;
+
+    s : Link_to_System;
+    x : Link_to_VecVec;
+    scf : VecVec(1..dim);
+    maxit,nbt : integer32 := 0;
+    ans : character;
+    otp,est : boolean;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
+
+  begin
+    PentDobl_Random_Newton_Homotopy(dim,deg,nbr,pwr,s,x);
+    new_line;
+    put("Give the maximum number of iterations : "); get(maxit);
+    loop
+      put("Give the number of tasks (0 to exit) : "); get(nbt);
+      exit when (nbt = 0);
+      put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
+      otp := (ans = 'y');
+      put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+      est := (ans = 'y');
+      PentDobl_Complex_VecVecs.Copy(x.all,scf);
+      PentDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                   speedup,efficiency,otp,est);
+      PentDobl_Complex_VecVecs.Clear(scf);
+    end loop;
+  end PentDobl_Random_Test;
+
+  procedure OctoDobl_Random_Test
+              ( dim,deg,nbr,pwr : in integer32 ) is
+
+    use OctoDobl_Complex_VecVecs;
+    use OctoDobl_Speelpenning_Convolutions;
+
+    s : Link_to_System;
+    x : Link_to_VecVec;
+    scf : VecVec(1..dim);
+    maxit,nbt : integer32 := 0;
+    ans : character;
+    otp,est : boolean;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
+
+  begin
+    OctoDobl_Random_Newton_Homotopy(dim,deg,nbr,pwr,s,x);
+    new_line;
+    put("Give the maximum number of iterations : "); get(maxit);
+    loop
+      put("Give the number of tasks (0 to exit) : "); get(nbt);
+      exit when (nbt = 0);
+      put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
+      otp := (ans = 'y');
+      put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+      est := (ans = 'y');
+      OctoDobl_Complex_VecVecs.Copy(x.all,scf);
+      OctoDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                   speedup,efficiency,otp,est);
+      OctoDobl_Complex_VecVecs.Clear(scf);
+    end loop;
+  end OctoDobl_Random_Test;
+
+  procedure DecaDobl_Random_Test
+              ( dim,deg,nbr,pwr : in integer32 ) is
+
+    use DecaDobl_Complex_VecVecs;
+    use DecaDobl_Speelpenning_Convolutions;
+
+    s : Link_to_System;
+    x : Link_to_VecVec;
+    scf : VecVec(1..dim);
+    maxit,nbt : integer32 := 0;
+    ans : character;
+    otp,est : boolean;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
+
+  begin
+    DecaDobl_Random_Newton_Homotopy(dim,deg,nbr,pwr,s,x);
+    new_line;
+    put("Give the maximum number of iterations : "); get(maxit);
+    loop
+      put("Give the number of tasks (0 to exit) : "); get(nbt);
+      exit when (nbt = 0);
+      put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
+      otp := (ans = 'y');
+      put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+      est := (ans = 'y');
+      DecaDobl_Complex_VecVecs.Copy(x.all,scf);
+      DecaDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                   speedup,efficiency,otp,est);
+      DecaDobl_Complex_VecVecs.Clear(scf);
+    end loop;
+  end DecaDobl_Random_Test;
 
   procedure Standard_Benchmark
               ( file : in file_type; nbruns,inc,maxit : in integer32;
@@ -1166,8 +1739,11 @@ package body Test_mtNewton_Convolutions is
       put_line("  2. double double precision");
       put_line("  3. triple double precision");
       put_line("  4. quad double precision");
-      put("Type 1, 2, 3, or 4 to select the precision : ");
-      Ask_Alternative(prc,"1234");
+      put_line("  5. penta double precision");
+      put_line("  6. octo double precision");
+      put_line("  7. deca double precision");
+      put("Type 1, 2, 3, 4, 5, 6, or 7 to select the precision : ");
+      Ask_Alternative(prc,"1234567");
       new_line;
       put("Generate a random problem ? (y/n) "); Ask_Yes_or_No(ans);
       if ans ='y' then
@@ -1177,6 +1753,9 @@ package body Test_mtNewton_Convolutions is
           when '2' => DoblDobl_Random_Test(dim,deg,nbr,pwr);
           when '3' => TripDobl_Random_Test(dim,deg,nbr,pwr);
           when '4' => QuadDobl_Random_Test(dim,deg,nbr,pwr);
+          when '5' => PentDobl_Random_Test(dim,deg,nbr,pwr);
+          when '6' => OctoDobl_Random_Test(dim,deg,nbr,pwr);
+          when '7' => DecaDobl_Random_Test(dim,deg,nbr,pwr);
           when others => null;
         end case;
       else
@@ -1185,6 +1764,9 @@ package body Test_mtNewton_Convolutions is
           when '2' => DoblDobl_Test;
           when '3' => TripDobl_Test;
           when '4' => QuadDobl_Test;
+          when '5' => PentDobl_Test;
+          when '6' => OctoDobl_Test;
+          when '7' => DecaDobl_Test;
           when others => null;
         end case;
       end if;

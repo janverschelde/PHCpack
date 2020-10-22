@@ -9,15 +9,27 @@ with TripDobl_Complex_Vectors;
 with TripDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
+with PentDobl_Complex_Vectors;
+with PentDobl_Complex_VecVecs;
+with OctoDobl_Complex_Vectors;
+with OctoDobl_Complex_VecVecs;
+with DecaDobl_Complex_Vectors;
+with DecaDobl_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with TripDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
+with PentDobl_Complex_Poly_Systems;
+with OctoDobl_Complex_Poly_Systems;
+with DecaDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with TripDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
+with PentDobl_Speelpenning_Convolutions;
+with OctoDobl_Speelpenning_Convolutions;
+with DecaDobl_Speelpenning_Convolutions;
 
 package Test_mtNewton_Convolutions is
 
@@ -40,11 +52,21 @@ package Test_mtNewton_Convolutions is
   procedure Apply_Fabry
               ( c : in QuadDobl_Complex_VecVecs.VecVec;
                 verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( c : in PentDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( c : in OctoDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( c : in DecaDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Estimates the radius of convergence of the power series
   --   with the application of the theorem of Fabry,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   procedure Standard_Run
               ( nbt,dim,maxit : in integer32;
@@ -70,10 +92,29 @@ package Test_mtNewton_Convolutions is
                 scf : in QuadDobl_Complex_VecVecs.VecVec;
                 serelp,mltelp,speedup,efficiency : in out Duration;
                 output,estco : in boolean; verbose : in boolean := true );
+  procedure PentDobl_Run
+              ( nbt,dim,maxit : in integer32;
+                s : in PentDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in PentDobl_Complex_VecVecs.VecVec;
+                serelp,mltelp,speedup,efficiency : in out Duration;
+                output,estco : in boolean; verbose : in boolean := true );
+  procedure OctoDobl_Run
+              ( nbt,dim,maxit : in integer32;
+                s : in OctoDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in OctoDobl_Complex_VecVecs.VecVec;
+                serelp,mltelp,speedup,efficiency : in out Duration;
+                output,estco : in boolean; verbose : in boolean := true );
+  procedure DecaDobl_Run
+              ( nbt,dim,maxit : in integer32;
+                s : in DecaDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in DecaDobl_Complex_VecVecs.VecVec;
+                serelp,mltelp,speedup,efficiency : in out Duration;
+                output,estco : in boolean; verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Runs Newton's method with nbt tasks,
-  --   in double, double double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- ON ENTRY :
   --   nbt        the number of tasks;
@@ -113,35 +154,66 @@ package Test_mtNewton_Convolutions is
               ( p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
 	        sol : in QuadDobl_Complex_Vectors.Vector;
 	        deg : in integer32 );
+  procedure PentDobl_Run_Loop
+              ( p : in PentDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+	        sol : in PentDobl_Complex_Vectors.Vector;
+	        deg : in integer32 );
+  procedure OctoDobl_Run_Loop
+              ( p : in OctoDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+	        sol : in OctoDobl_Complex_Vectors.Vector;
+	        deg : in integer32 );
+  procedure DecaDobl_Run_Loop
+              ( p : in DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+	        sol : in DecaDobl_Complex_Vectors.Vector;
+	        deg : in integer32 );
 
   -- DESCRIPTION :
   --   Runs Newton's method on a solution sol of the system p,
-  --   with power series of degree deg, 
-  --   in double, double double, triple double, or quad double precision.
+  --   with power series of degree deg, in double, double double,
+  --   triple double, quad double, penta double, octo double,
+  --   or deca double  precision.
 
   procedure Standard_Test;
 
   -- DESCRIPTION :
-  --   Prompts the user for a polynomial system with solutions
+  --   Prompts for a polynomial system with solutions
   --   and tests in double precision.
 
   procedure DoblDobl_Test;
 
   -- DESCRIPTION :
-  --   Prompts the user for a polynomial system with solutions
+  --   Prompts for a polynomial system with solutions
   --   and tests in double double precision.
 
   procedure TripDobl_Test;
 
   -- DESCRIPTION :
-  --   Prompts the user for a polynomial system with solutions
+  --   Prompts for a polynomial system with solutions
   --   and tests in triple double precision.
 
   procedure QuadDobl_Test;
 
   -- DESCRIPTION :
-  --   Prompts the user for a polynomial system with solutions
+  --   Prompts for a polynomial system with solutions
   --   and tests in quad double precision.
+
+  procedure PentDobl_Test;
+
+  -- DESCRIPTION :
+  --   Prompts for a polynomial system with solutions
+  --   and tests in penta double precision.
+
+  procedure OctoDobl_Test;
+
+  -- DESCRIPTION :
+  --   Prompts for a polynomial system with solutions
+  --   and tests in octo double precision.
+
+  procedure DecaDobl_Test;
+
+  -- DESCRIPTION :
+  --   Prompts for a polynomial system with solutions
+  --   and tests in deca double precision.
 
   procedure Standard_Random_Test ( dim,deg,nbr,pwr : in integer32 );
 
@@ -169,6 +241,39 @@ package Test_mtNewton_Convolutions is
 
   -- DESCRIPTION :
   --   Tests on a random Newton homotopy in quad double precision.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+  procedure PentDobl_Random_Test ( dim,deg,nbr,pwr : in integer32 );
+
+  -- DESCRIPTION :
+  --   Tests on a random Newton homotopy in penta double precision.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+  procedure OctoDobl_Random_Test ( dim,deg,nbr,pwr : in integer32 );
+
+  -- DESCRIPTION :
+  --   Tests on a random Newton homotopy in octo double precision.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+  procedure DecaDobl_Random_Test ( dim,deg,nbr,pwr : in integer32 );
+
+  -- DESCRIPTION :
+  --   Tests on a random Newton homotopy in deca double precision.
 
   -- ON ENTRY :
   --   dim      dimension of the exponent vectors;

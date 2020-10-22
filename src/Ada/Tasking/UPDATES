@@ -1,3 +1,7 @@
+Thu 22 Oct 2020 : extended multitasked_newton_convolutions and
+  test_mtnewton_convolutions with procedures in penta, octo, and deca
+  double precision.
+
 Wed 21 Oct 2020 : extended test_mtseries_linearization to triple double
   precision.  Extended multitasked_series_linearization and test_mtseries_
   linearization to penta double, octo double, and deca double precision.
