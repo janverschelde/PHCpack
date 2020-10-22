@@ -1,3 +1,6 @@
+Wed 21 Oct 2020 : added functions to varbprec_vecvec_conversions to convert
+  complex deca double vectors of vectors into lower precision.
+
 Tue 20 Oct 2020 : new triple_double_vecvecs.ads.  Added convertors to
   quaddobl_complex_vectors_cv and varbprec_vecvec_conversions.
   Extended decadobl_complex_vectors_cv with operations to convert vectors 

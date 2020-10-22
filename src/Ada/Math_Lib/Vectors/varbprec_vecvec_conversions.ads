@@ -8,6 +8,9 @@ with Multprec_Floating_VecVecs;
 with DoblDobl_Complex_VecVecs;
 with TripDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs;
+with PentDobl_Complex_VecVecs;
+with OctoDobl_Complex_VecVecs;
+with DecaDobl_Complex_VecVecs;
 with Multprec_Complex_VecVecs;
 
 package Varbprec_VecVec_Conversions is
@@ -75,6 +78,23 @@ package Varbprec_VecVec_Conversions is
   --   Converts a matrix in quad double precision to a matrix
   --   in standard double (d) precision, double double (dd) precision,
   --   triple double (td) precision, or arbitrary multiprecision (mp).
+
+  function da2d ( v : DecaDobl_Complex_VecVecs.VecVec )
+                return Standard_Complex_VecVecs.VecVec;
+  function da2dd ( v : DecaDobl_Complex_VecVecs.VecVec )
+                 return DoblDobl_Complex_VecVecs.VecVec;
+  function da2td ( v : DecaDobl_Complex_VecVecs.VecVec )
+                 return TripDobl_Complex_VecVecs.VecVec;
+  function da2qd ( v : DecaDobl_Complex_VecVecs.VecVec )
+                 return QuadDobl_Complex_VecVecs.VecVec;
+  function da2pd ( v : DecaDobl_Complex_VecVecs.VecVec )
+                 return PentDobl_Complex_VecVecs.VecVec;
+  function da2od ( v : DecaDobl_Complex_VecVecs.VecVec )
+                 return OctoDobl_Complex_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Converts the coefficients in v from deca double
+  --   to a lower precision.
 
   procedure Set_Size ( mtx : in out Multprec_Floating_VecVecs.VecVec;
                        size : in natural32 );

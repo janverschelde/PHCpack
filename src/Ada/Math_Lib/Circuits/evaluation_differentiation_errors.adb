@@ -581,6 +581,33 @@ package body Evaluation_Differentiation_Errors is
     return res;
   end Difference;
 
+  function Difference ( jm : TripDobl_Complex_Series_Matrices.Matrix;
+                        vm : TripDobl_Complex_VecMats.VecMat )
+                      return triple_double is
+
+    use TripDobl_Complex_Numbers;
+
+    res : triple_double := create(0.0);
+    avl : triple_double;
+    val : Complex_Number;
+
+  begin
+    for i in jm'range(1) loop
+      for j in jm'range(2) loop
+        for k in jm(i,j).cff'range loop
+          declare
+            mat : constant TripDobl_Complex_Matrices.Link_to_Matrix := vm(k);
+          begin
+            val := jm(i,j).cff(k) - mat(i,j);
+            avl := AbsVal(val);
+            res := res + avl;
+          end;
+        end loop;
+      end loop;
+    end loop;
+    return res;
+  end Difference;
+
   function Difference ( jm : QuadDobl_Complex_Series_Matrices.Matrix;
                         vm : QuadDobl_Complex_VecMats.VecMat )
                       return quad_double is
@@ -597,6 +624,87 @@ package body Evaluation_Differentiation_Errors is
         for k in jm(i,j).cff'range loop
           declare
             mat : constant QuadDobl_Complex_Matrices.Link_to_Matrix := vm(k);
+          begin
+            val := jm(i,j).cff(k) - mat(i,j);
+            avl := AbsVal(val);
+            res := res + avl;
+          end;
+        end loop;
+      end loop;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( jm : PentDobl_Complex_Series_Matrices.Matrix;
+                        vm : PentDobl_Complex_VecMats.VecMat )
+                      return penta_double is
+
+    use PentDobl_Complex_Numbers;
+
+    res : penta_double := create(0.0);
+    avl : penta_double;
+    val : Complex_Number;
+
+  begin
+    for i in jm'range(1) loop
+      for j in jm'range(2) loop
+        for k in jm(i,j).cff'range loop
+          declare
+            mat : constant PentDobl_Complex_Matrices.Link_to_Matrix := vm(k);
+          begin
+            val := jm(i,j).cff(k) - mat(i,j);
+            avl := AbsVal(val);
+            res := res + avl;
+          end;
+        end loop;
+      end loop;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( jm : OctoDobl_Complex_Series_Matrices.Matrix;
+                        vm : OctoDobl_Complex_VecMats.VecMat )
+                      return octo_double is
+
+    use OctoDobl_Complex_Numbers;
+
+    res : octo_double := create(0.0);
+    avl : octo_double;
+    val : Complex_Number;
+
+  begin
+    for i in jm'range(1) loop
+      for j in jm'range(2) loop
+        for k in jm(i,j).cff'range loop
+          declare
+            mat : constant OctoDobl_Complex_Matrices.Link_to_Matrix := vm(k);
+          begin
+            val := jm(i,j).cff(k) - mat(i,j);
+            avl := AbsVal(val);
+            res := res + avl;
+          end;
+        end loop;
+      end loop;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( jm : DecaDobl_Complex_Series_Matrices.Matrix;
+                        vm : DecaDobl_Complex_VecMats.VecMat )
+                      return deca_double is
+
+    use DecaDobl_Complex_Numbers;
+
+    res : deca_double := create(0.0);
+    avl : deca_double;
+    val : Complex_Number;
+
+  begin
+    for i in jm'range(1) loop
+      for j in jm'range(2) loop
+        for k in jm(i,j).cff'range loop
+          declare
+            mat : constant DecaDobl_Complex_Matrices.Link_to_Matrix := vm(k);
           begin
             val := jm(i,j).cff(k) - mat(i,j);
             avl := AbsVal(val);
@@ -664,6 +772,34 @@ package body Evaluation_Differentiation_Errors is
     return res;
   end Difference;
 
+  function Difference ( vm1 : TripDobl_Complex_VecMats.VecMat;
+                        vm2 : TripDobl_Complex_VecMats.VecMat )
+                      return triple_double is
+
+    use TripDobl_Complex_Numbers;
+
+    res : triple_double := create(0.0);
+    avl : triple_double;
+    val : Complex_Number;
+
+  begin
+    for k in vm1'range loop
+      declare
+        mat1 : constant TripDobl_Complex_Matrices.Link_to_Matrix := vm1(k);
+        mat2 : constant TripDobl_Complex_Matrices.Link_to_Matrix := vm2(k);
+      begin
+        for i in mat1'range(1) loop
+          for j in mat2'range(2) loop
+            val := mat1(i,j) - mat2(i,j);
+            avl := AbsVal(val);
+            res := res + avl;
+          end loop;
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Difference;
+
   function Difference ( vm1 : QuadDobl_Complex_VecMats.VecMat;
                         vm2 : QuadDobl_Complex_VecMats.VecMat )
                       return quad_double is
@@ -679,6 +815,90 @@ package body Evaluation_Differentiation_Errors is
       declare
         mat1 : constant QuadDobl_Complex_Matrices.Link_to_Matrix := vm1(k);
         mat2 : constant QuadDobl_Complex_Matrices.Link_to_Matrix := vm2(k);
+      begin
+        for i in mat1'range(1) loop
+          for j in mat2'range(2) loop
+            val := mat1(i,j) - mat2(i,j);
+            avl := AbsVal(val);
+            res := res + avl;
+          end loop;
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( vm1 : PentDobl_Complex_VecMats.VecMat;
+                        vm2 : PentDobl_Complex_VecMats.VecMat )
+                      return penta_double is
+
+    use PentDobl_Complex_Numbers;
+
+    res : penta_double := create(0.0);
+    avl : penta_double;
+    val : Complex_Number;
+
+  begin
+    for k in vm1'range loop
+      declare
+        mat1 : constant PentDobl_Complex_Matrices.Link_to_Matrix := vm1(k);
+        mat2 : constant PentDobl_Complex_Matrices.Link_to_Matrix := vm2(k);
+      begin
+        for i in mat1'range(1) loop
+          for j in mat2'range(2) loop
+            val := mat1(i,j) - mat2(i,j);
+            avl := AbsVal(val);
+            res := res + avl;
+          end loop;
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( vm1 : OctoDobl_Complex_VecMats.VecMat;
+                        vm2 : OctoDobl_Complex_VecMats.VecMat )
+                      return octo_double is
+
+    use OctoDobl_Complex_Numbers;
+
+    res : octo_double := create(0.0);
+    avl : octo_double;
+    val : Complex_Number;
+
+  begin
+    for k in vm1'range loop
+      declare
+        mat1 : constant OctoDobl_Complex_Matrices.Link_to_Matrix := vm1(k);
+        mat2 : constant OctoDobl_Complex_Matrices.Link_to_Matrix := vm2(k);
+      begin
+        for i in mat1'range(1) loop
+          for j in mat2'range(2) loop
+            val := mat1(i,j) - mat2(i,j);
+            avl := AbsVal(val);
+            res := res + avl;
+          end loop;
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( vm1 : DecaDobl_Complex_VecMats.VecMat;
+                        vm2 : DecaDobl_Complex_VecMats.VecMat )
+                      return deca_double is
+
+    use DecaDobl_Complex_Numbers;
+
+    res : deca_double := create(0.0);
+    avl : deca_double;
+    val : Complex_Number;
+
+  begin
+    for k in vm1'range loop
+      declare
+        mat1 : constant DecaDobl_Complex_Matrices.Link_to_Matrix := vm1(k);
+        mat2 : constant DecaDobl_Complex_Matrices.Link_to_Matrix := vm2(k);
       begin
         for i in mat1'range(1) loop
           for j in mat2'range(2) loop
@@ -727,12 +947,80 @@ package body Evaluation_Differentiation_Errors is
   end Sum_of_Errors;
 
   function Sum_of_Errors
+             ( x,y : in TripDobl_Complex_Vectors.Vector )
+             return triple_double is
+
+    use TripDobl_Complex_numbers;
+
+    res : triple_double := create(0.0);
+    val : Complex_Number;
+
+  begin
+    for i in x'range loop
+      val := x(i) - y(i);
+      res := res + AbsVal(val);
+    end loop;
+    return res;
+  end Sum_of_Errors;
+
+  function Sum_of_Errors
              ( x,y : in QuadDobl_Complex_Vectors.Vector )
              return quad_double is
 
     use QuadDobl_Complex_numbers;
 
     res : quad_double := create(0.0);
+    val : Complex_Number;
+
+  begin
+    for i in x'range loop
+      val := x(i) - y(i);
+      res := res + AbsVal(val);
+    end loop;
+    return res;
+  end Sum_of_Errors;
+
+  function Sum_of_Errors
+             ( x,y : in PentDobl_Complex_Vectors.Vector )
+             return penta_double is
+
+    use PentDobl_Complex_numbers;
+
+    res : penta_double := create(0.0);
+    val : Complex_Number;
+
+  begin
+    for i in x'range loop
+      val := x(i) - y(i);
+      res := res + AbsVal(val);
+    end loop;
+    return res;
+  end Sum_of_Errors;
+
+  function Sum_of_Errors
+             ( x,y : in OctoDobl_Complex_Vectors.Vector )
+             return octo_double is
+
+    use OctoDobl_Complex_numbers;
+
+    res : octo_double := create(0.0);
+    val : Complex_Number;
+
+  begin
+    for i in x'range loop
+      val := x(i) - y(i);
+      res := res + AbsVal(val);
+    end loop;
+    return res;
+  end Sum_of_Errors;
+
+  function Sum_of_Errors
+             ( x,y : in DecaDobl_Complex_Vectors.Vector )
+             return deca_double is
+
+    use DecaDobl_Complex_numbers;
+
+    res : deca_double := create(0.0);
     val : Complex_Number;
 
   begin
@@ -782,12 +1070,88 @@ package body Evaluation_Differentiation_Errors is
   end Sum_of_Errors;
 
   function Sum_of_Errors
+             ( A,B : in TripDobl_Complex_Matrices.Matrix )
+             return triple_double is
+
+    use TripDobl_Complex_numbers;
+
+    res : triple_double := create(0.0);
+    val : Complex_Number;
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        val := A(i,j) - B(i,j);
+        res := res + AbsVal(val);
+      end loop;
+    end loop;
+    return res;
+  end Sum_of_Errors;
+
+  function Sum_of_Errors
              ( A,B : in QuadDobl_Complex_Matrices.Matrix )
              return quad_double is
 
     use QuadDobl_Complex_numbers;
 
     res : quad_double := create(0.0);
+    val : Complex_Number;
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        val := A(i,j) - B(i,j);
+        res := res + AbsVal(val);
+      end loop;
+    end loop;
+    return res;
+  end Sum_of_Errors;
+
+  function Sum_of_Errors
+             ( A,B : in PentDobl_Complex_Matrices.Matrix )
+             return penta_double is
+
+    use PentDobl_Complex_numbers;
+
+    res : penta_double := create(0.0);
+    val : Complex_Number;
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        val := A(i,j) - B(i,j);
+        res := res + AbsVal(val);
+      end loop;
+    end loop;
+    return res;
+  end Sum_of_Errors;
+
+  function Sum_of_Errors
+             ( A,B : in OctoDobl_Complex_Matrices.Matrix )
+             return octo_double is
+
+    use OctoDobl_Complex_numbers;
+
+    res : octo_double := create(0.0);
+    val : Complex_Number;
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        val := A(i,j) - B(i,j);
+        res := res + AbsVal(val);
+      end loop;
+    end loop;
+    return res;
+  end Sum_of_Errors;
+
+  function Sum_of_Errors
+             ( A,B : in DecaDobl_Complex_Matrices.Matrix )
+             return deca_double is
+
+    use DecaDobl_Complex_numbers;
+
+    res : deca_double := create(0.0);
     val : Complex_Number;
 
   begin

@@ -2,6 +2,9 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Penta_Double_Numbers;               use Penta_Double_Numbers;
+with Octo_Double_Numbers;                use Octo_Double_Numbers;
+with Deca_Double_Numbers;                use Deca_Double_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
@@ -9,6 +12,9 @@ with DoblDobl_Complex_Numbers_cv;        use DoblDobl_Complex_Numbers_cv;
 with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
+with PentDobl_Complex_Numbers;
+with OctoDobl_Complex_Numbers;
+with DecaDobl_Complex_Numbers;
 with Multprec_Complex_Numbers;
 with Multprec_Complex_Number_Tools;      use Multprec_Complex_Number_Tools;
 with Standard_Floating_Vectors;
@@ -19,6 +25,9 @@ with Triple_Double_Vectors;
 with TripDobl_Complex_Vectors;
 with Quad_Double_Vectors;
 with QuadDobl_Complex_Vectors;
+with PentDobl_Complex_Vectors;
+with OctoDobl_Complex_Vectors;
+with DecaDobl_Complex_Vectors;
 with Multprec_Floating_Vectors;
 with Multprec_Complex_Vectors;
 with Multprec_DoblDobl_Convertors;       use Multprec_DoblDobl_Convertors;
@@ -521,6 +530,186 @@ package body Varbprec_VecVec_Conversions is
     end loop;
     return res;
   end qd2mp;
+
+  function da2d ( v : DecaDobl_Complex_VecVecs.VecVec )
+                return Standard_Complex_VecVecs.VecVec is
+
+    res : Standard_Complex_VecVecs.VecVec(v'range);
+    qdv : DecaDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in v'range loop
+      qdv := v(i);
+      declare
+        tdv : Standard_Complex_Vectors.Vector(qdv'range);
+      begin
+        for j in qdv'range loop
+          declare
+            qdrp : constant deca_double
+                 := DecaDobl_Complex_Numbers.REAL_PART(qdv(j));
+            tdrp : constant double_float := to_double(qdrp);
+            qdip : constant deca_double
+                 := DecaDobl_Complex_Numbers.IMAG_PART(qdv(j));
+            tdip : constant double_float := to_double(qdip);
+          begin
+            tdv(j) := Standard_Complex_Numbers.create(tdrp,tdip);
+          end;
+        end loop;
+        res(i) := new Standard_Complex_Vectors.Vector'(tdv);
+      end;
+    end loop;
+    return res;
+  end da2d;
+
+  function da2dd ( v : DecaDobl_Complex_VecVecs.VecVec )
+                 return DoblDobl_Complex_VecVecs.VecVec is
+
+    res : DoblDobl_Complex_VecVecs.VecVec(v'range);
+    qdv : DecaDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in v'range loop
+      qdv := v(i);
+      declare
+        tdv : DoblDobl_Complex_Vectors.Vector(qdv'range);
+      begin
+        for j in qdv'range loop
+          declare
+            qdrp : constant deca_double
+                 := DecaDobl_Complex_Numbers.REAL_PART(qdv(j));
+            tdrp : constant double_double := to_double_double(qdrp);
+            qdip : constant deca_double
+                 := DecaDobl_Complex_Numbers.IMAG_PART(qdv(j));
+            tdip : constant double_double := to_double_double(qdip);
+          begin
+            tdv(j) := DoblDobl_Complex_Numbers.create(tdrp,tdip);
+          end;
+        end loop;
+        res(i) := new DoblDobl_Complex_Vectors.Vector'(tdv);
+      end;
+    end loop;
+    return res;
+  end da2dd;
+
+  function da2td ( v : DecaDobl_Complex_VecVecs.VecVec )
+                 return TripDobl_Complex_VecVecs.VecVec is
+
+    res : TripDobl_Complex_VecVecs.VecVec(v'range);
+    qdv : DecaDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in v'range loop
+      qdv := v(i);
+      declare
+        tdv : TripDobl_Complex_Vectors.Vector(qdv'range);
+      begin
+        for j in qdv'range loop
+          declare
+            qdrp : constant deca_double
+                 := DecaDobl_Complex_Numbers.REAL_PART(qdv(j));
+            tdrp : constant triple_double := to_triple_double(qdrp);
+            qdip : constant deca_double
+                 := DecaDobl_Complex_Numbers.IMAG_PART(qdv(j));
+            tdip : constant triple_double := to_triple_double(qdip);
+          begin
+            tdv(j) := TripDobl_Complex_Numbers.create(tdrp,tdip);
+          end;
+        end loop;
+        res(i) := new TripDobl_Complex_Vectors.Vector'(tdv);
+      end;
+    end loop;
+    return res;
+  end da2td;
+
+  function da2qd ( v : DecaDobl_Complex_VecVecs.VecVec )
+                 return QuadDobl_Complex_VecVecs.VecVec is
+
+    res : QuadDobl_Complex_VecVecs.VecVec(v'range);
+    qdv : DecaDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in v'range loop
+      qdv := v(i);
+      declare
+        tdv : QuadDobl_Complex_Vectors.Vector(qdv'range);
+      begin
+        for j in qdv'range loop
+          declare
+            qdrp : constant deca_double
+                 := DecaDobl_Complex_Numbers.REAL_PART(qdv(j));
+            tdrp : constant quad_double := to_quad_double(qdrp);
+            qdip : constant deca_double
+                 := DecaDobl_Complex_Numbers.IMAG_PART(qdv(j));
+            tdip : constant quad_double := to_quad_double(qdip);
+          begin
+            tdv(j) := QuadDobl_Complex_Numbers.create(tdrp,tdip);
+          end;
+        end loop;
+        res(i) := new QuadDobl_Complex_Vectors.Vector'(tdv);
+      end;
+    end loop;
+    return res;
+  end da2qd;
+
+  function da2pd ( v : DecaDobl_Complex_VecVecs.VecVec )
+                 return PentDobl_Complex_VecVecs.VecVec is
+
+    res : PentDobl_Complex_VecVecs.VecVec(v'range);
+    qdv : DecaDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in v'range loop
+      qdv := v(i);
+      declare
+        tdv : PentDobl_Complex_Vectors.Vector(qdv'range);
+      begin
+        for j in qdv'range loop
+          declare
+            qdrp : constant deca_double
+                 := DecaDobl_Complex_Numbers.REAL_PART(qdv(j));
+            tdrp : constant penta_double := to_penta_double(qdrp);
+            qdip : constant deca_double
+                 := DecaDobl_Complex_Numbers.IMAG_PART(qdv(j));
+            tdip : constant penta_double := to_penta_double(qdip);
+          begin
+            tdv(j) := PentDobl_Complex_Numbers.create(tdrp,tdip);
+          end;
+        end loop;
+        res(i) := new PentDobl_Complex_Vectors.Vector'(tdv);
+      end;
+    end loop;
+    return res;
+  end da2pd;
+
+  function da2od ( v : DecaDobl_Complex_VecVecs.VecVec )
+                 return OctoDobl_Complex_VecVecs.VecVec is
+
+    res : OctoDobl_Complex_VecVecs.VecVec(v'range);
+    qdv : DecaDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in v'range loop
+      qdv := v(i);
+      declare
+        tdv : OctoDobl_Complex_Vectors.Vector(qdv'range);
+      begin
+        for j in qdv'range loop
+          declare
+            qdrp : constant deca_double
+                 := DecaDobl_Complex_Numbers.REAL_PART(qdv(j));
+            tdrp : constant octo_double := to_octo_double(qdrp);
+            qdip : constant deca_double
+                 := DecaDobl_Complex_Numbers.IMAG_PART(qdv(j));
+            tdip : constant octo_double := to_octo_double(qdip);
+          begin
+            tdv(j) := OctoDobl_Complex_Numbers.create(tdrp,tdip);
+          end;
+        end loop;
+        res(i) := new OctoDobl_Complex_Vectors.Vector'(tdv);
+      end;
+    end loop;
+    return res;
+  end da2od;
 
   procedure Set_Size ( mtx : in out Multprec_Floating_VecVecs.VecVec;
                        size : in natural32 ) is

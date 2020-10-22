@@ -4,10 +4,16 @@ with Standard_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs;
 with TripDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs;
+with PentDobl_Complex_VecVecs;
+with OctoDobl_Complex_VecVecs;
+with DecaDobl_Complex_VecVecs;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with TripDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
+with PentDobl_Speelpenning_Convolutions;
+with OctoDobl_Speelpenning_Convolutions;
+with DecaDobl_Speelpenning_Convolutions;
 
 package Random_Convolution_Circuits is
 
@@ -36,11 +42,21 @@ package Random_Convolution_Circuits is
   function QuadDobl_Random_Convolution_Circuit
              ( dim,deg,nbr,pwr : integer32 )
              return QuadDobl_Speelpenning_Convolutions.Circuit;
+  function PentDobl_Random_Convolution_Circuit
+             ( dim,deg,nbr,pwr : integer32 )
+             return PentDobl_Speelpenning_Convolutions.Circuit;
+  function OctoDobl_Random_Convolution_Circuit
+             ( dim,deg,nbr,pwr : integer32 )
+             return OctoDobl_Speelpenning_Convolutions.Circuit;
+  function DecaDobl_Random_Convolution_Circuit
+             ( dim,deg,nbr,pwr : integer32 )
+             return DecaDobl_Speelpenning_Convolutions.Circuit;
 
   -- DESCRIPTION :
-  --   Generates a sequence of random exponents and coefficients
-  --   in double, double double, triple double, or quad double precision,
-  --   and returns a convolution circuit.
+  --   Generates a sequence of random exponents and coefficients in
+  --   double, double double, triple double, quad double, penta double,
+  --   octo double or deca double precision, and returns a convolution
+  --   circuit.
 
   -- ON ENTRY :
   --   dim      dimension of the exponent vectors;
@@ -60,10 +76,20 @@ package Random_Convolution_Circuits is
   function QuadDobl_Random_Convolution_Circuits
              ( dim,deg,nbr,pwr : integer32 )
              return QuadDobl_Speelpenning_Convolutions.Circuits;
+  function PentDobl_Random_Convolution_Circuits
+             ( dim,deg,nbr,pwr : integer32 )
+             return PentDobl_Speelpenning_Convolutions.Circuits;
+  function OctoDobl_Random_Convolution_Circuits
+             ( dim,deg,nbr,pwr : integer32 )
+             return OctoDobl_Speelpenning_Convolutions.Circuits;
+  function DecaDobl_Random_Convolution_Circuits
+             ( dim,deg,nbr,pwr : integer32 )
+             return DecaDobl_Speelpenning_Convolutions.Circuits;
 
   -- DESCRIPTION :
   --   Generates a sequence of random exponents and coefficients
-  --   in double, double double, triple double, or quad doble precision,
+  --   in double, double double, triple double, quad double, penta double,
+  --   octo double, or deca double precision,
   --   and returns as many convolution circuits as the value of dim.
 
   -- ON ENTRY :
@@ -84,11 +110,20 @@ package Random_Convolution_Circuits is
   function QuadDobl_Random_System
              ( dim,deg,nbr,pwr : integer32 )
              return QuadDobl_Speelpenning_Convolutions.Link_to_System;
+  function PentDobl_Random_System
+             ( dim,deg,nbr,pwr : integer32 )
+             return PentDobl_Speelpenning_Convolutions.Link_to_System;
+  function OctoDobl_Random_System
+             ( dim,deg,nbr,pwr : integer32 )
+             return OctoDobl_Speelpenning_Convolutions.Link_to_System;
+  function DecaDobl_Random_System
+             ( dim,deg,nbr,pwr : integer32 )
+             return DecaDobl_Speelpenning_Convolutions.Link_to_System;
 
   -- DESCRIPTION :
   --   Wrappers to the above functions to generate random convolution
-  --   circuits in double, double double, triple double,
-  --   or quad double precision.
+  --   circuits in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- ON ENTRY :
   --   dim      dimension of the exponent vectors;
@@ -112,11 +147,24 @@ package Random_Convolution_Circuits is
              ( dim,deg,nbr,pwr : in integer32;
                s : out QuadDobl_Speelpenning_Convolutions.Link_to_System;
                x : out QuadDobl_Complex_VecVecs.Link_to_VecVec );
+  procedure PentDobl_Random_Newton_Homotopy
+             ( dim,deg,nbr,pwr : in integer32;
+               s : out PentDobl_Speelpenning_Convolutions.Link_to_System;
+               x : out PentDobl_Complex_VecVecs.Link_to_VecVec );
+  procedure OctoDobl_Random_Newton_Homotopy
+             ( dim,deg,nbr,pwr : in integer32;
+               s : out OctoDobl_Speelpenning_Convolutions.Link_to_System;
+               x : out OctoDobl_Complex_VecVecs.Link_to_VecVec );
+  procedure DecaDobl_Random_Newton_Homotopy
+             ( dim,deg,nbr,pwr : in integer32;
+               s : out DecaDobl_Speelpenning_Convolutions.Link_to_System;
+               x : out DecaDobl_Complex_VecVecs.Link_to_VecVec );
 
   -- DESCRIPTION :
   --   Given dimensions of random convolution circuits,
   --   generates a random vector as a solution for a Newton homotopy,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double, penta double,
+  --   octo double, or deca double precision.
 
   -- ON ENTRY :
   --   dim      dimension of the exponent vectors;

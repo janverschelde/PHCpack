@@ -18,6 +18,7 @@ with QuadDobl_Complex_Vectors_cv;        use QuadDobl_Complex_Vectors_cv;
 with PentDobl_Complex_Vectors;
 with OctoDobl_Complex_Vectors;
 with DecaDobl_Complex_Vectors;
+with DecaDobl_Complex_Vectors_cv;        use DecaDobl_Complex_Vectors_cv;
 with Varbprec_VecVec_Conversions;
 with Standard_Complex_Series;
 with DoblDobl_Complex_Series;
@@ -2247,5 +2248,634 @@ package body System_Convolution_Circuits is
     end if;
     return res;
   end to_triple_double;
+
+  function to_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Circuit )
+	     return Standard_Speelpenning_Convolutions.Circuit is
+
+    use DecaDobl_Complex_Vectors;
+    use Standard_Speelpenning_Convolutions;
+
+    n : constant integer32 := c.nbr;
+    d : constant integer32 := c.dim;
+    d1 : constant integer32 := d-1;
+    d2 : constant integer32 := d-2;
+    deg : constant integer32 := c.cff(1)'last;
+    res : Standard_Speelpenning_Convolutions.Circuit(n,d,d1,d2);
+
+  begin
+    Standard_Integer_VecVecs.Copy(c.xps,res.xps);
+    Standard_Integer_VecVecs.Copy(c.idx,res.idx);
+    Standard_Integer_VecVecs.Copy(c.fac,res.fac);
+    res.cff := Varbprec_VecVec_Conversions.da2d(c.cff);
+    if c.cst /= null then
+      declare
+        cst : constant Standard_Complex_Vectors.Vector(c.cst'range)
+            := DecaDobl_Complex_to_Standard(c.cst.all);
+      begin
+        res.cst := new Standard_Complex_Vectors.Vector'(cst);
+      end;
+    end if;
+    res.forward := Allocate_Coefficients(d1,deg);
+    res.backward := Allocate_Coefficients(d2,deg);
+    res.cross := Allocate_Coefficients(d2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    return res;
+  end to_double;
+
+  function to_double_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Circuit )
+	     return DoblDobl_Speelpenning_Convolutions.Circuit is
+
+    use DecaDobl_Complex_Vectors;
+    use DoblDobl_Speelpenning_Convolutions;
+
+    n : constant integer32 := c.nbr;
+    d : constant integer32 := c.dim;
+    d1 : constant integer32 := d-1;
+    d2 : constant integer32 := d-2;
+    deg : constant integer32 := c.cff(1)'last;
+    res : DoblDobl_Speelpenning_Convolutions.Circuit(n,d,d1,d2);
+
+  begin
+    Standard_Integer_VecVecs.Copy(c.xps,res.xps);
+    Standard_Integer_VecVecs.Copy(c.idx,res.idx);
+    Standard_Integer_VecVecs.Copy(c.fac,res.fac);
+    res.cff := Varbprec_VecVec_Conversions.da2dd(c.cff);
+    if c.cst /= null then
+      declare
+        cst : constant DoblDobl_Complex_Vectors.Vector(c.cst'range)
+            := DecaDobl_Complex_to_DoblDobl(c.cst.all);
+      begin
+        res.cst := new DoblDobl_Complex_Vectors.Vector'(cst);
+      end;
+    end if;
+    res.forward := Allocate_Coefficients(d1,deg);
+    res.backward := Allocate_Coefficients(d2,deg);
+    res.cross := Allocate_Coefficients(d2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    return res;
+  end to_double_double;
+
+  function to_triple_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Circuit )
+	     return TripDobl_Speelpenning_Convolutions.Circuit is
+
+    use DecaDobl_Complex_Vectors;
+    use TripDobl_Speelpenning_Convolutions;
+
+    n : constant integer32 := c.nbr;
+    d : constant integer32 := c.dim;
+    d1 : constant integer32 := d-1;
+    d2 : constant integer32 := d-2;
+    deg : constant integer32 := c.cff(1)'last;
+    res : TripDobl_Speelpenning_Convolutions.Circuit(n,d,d1,d2);
+
+  begin
+    Standard_Integer_VecVecs.Copy(c.xps,res.xps);
+    Standard_Integer_VecVecs.Copy(c.idx,res.idx);
+    Standard_Integer_VecVecs.Copy(c.fac,res.fac);
+    res.cff := Varbprec_VecVec_Conversions.da2td(c.cff);
+    if c.cst /= null then
+      declare
+        cst : constant TripDobl_Complex_Vectors.Vector(c.cst'range)
+            := DecaDobl_Complex_to_TripDobl(c.cst.all);
+      begin
+        res.cst := new TripDobl_Complex_Vectors.Vector'(cst);
+      end;
+    end if;
+    res.forward := Allocate_Coefficients(d1,deg);
+    res.backward := Allocate_Coefficients(d2,deg);
+    res.cross := Allocate_Coefficients(d2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    return res;
+  end to_triple_double;
+
+  function to_quad_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Circuit )
+	     return QuadDobl_Speelpenning_Convolutions.Circuit is
+
+    use DecaDobl_Complex_Vectors;
+    use QuadDobl_Speelpenning_Convolutions;
+
+    n : constant integer32 := c.nbr;
+    d : constant integer32 := c.dim;
+    d1 : constant integer32 := d-1;
+    d2 : constant integer32 := d-2;
+    deg : constant integer32 := c.cff(1)'last;
+    res : QuadDobl_Speelpenning_Convolutions.Circuit(n,d,d1,d2);
+
+  begin
+    Standard_Integer_VecVecs.Copy(c.xps,res.xps);
+    Standard_Integer_VecVecs.Copy(c.idx,res.idx);
+    Standard_Integer_VecVecs.Copy(c.fac,res.fac);
+    res.cff := Varbprec_VecVec_Conversions.da2qd(c.cff);
+    if c.cst /= null then
+      declare
+        cst : constant QuadDobl_Complex_Vectors.Vector(c.cst'range)
+            := DecaDobl_Complex_to_QuadDobl(c.cst.all);
+      begin
+        res.cst := new QuadDobl_Complex_Vectors.Vector'(cst);
+      end;
+    end if;
+    res.forward := Allocate_Coefficients(d1,deg);
+    res.backward := Allocate_Coefficients(d2,deg);
+    res.cross := Allocate_Coefficients(d2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    return res;
+  end to_quad_double;
+
+  function to_penta_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Circuit )
+	     return PentDobl_Speelpenning_Convolutions.Circuit is
+
+    use DecaDobl_Complex_Vectors;
+    use PentDobl_Speelpenning_Convolutions;
+
+    n : constant integer32 := c.nbr;
+    d : constant integer32 := c.dim;
+    d1 : constant integer32 := d-1;
+    d2 : constant integer32 := d-2;
+    deg : constant integer32 := c.cff(1)'last;
+    res : PentDobl_Speelpenning_Convolutions.Circuit(n,d,d1,d2);
+
+  begin
+    Standard_Integer_VecVecs.Copy(c.xps,res.xps);
+    Standard_Integer_VecVecs.Copy(c.idx,res.idx);
+    Standard_Integer_VecVecs.Copy(c.fac,res.fac);
+    res.cff := Varbprec_VecVec_Conversions.da2pd(c.cff);
+    if c.cst /= null then
+      declare
+        cst : constant PentDobl_Complex_Vectors.Vector(c.cst'range)
+            := DecaDobl_Complex_to_PentDobl(c.cst.all);
+      begin
+        res.cst := new PentDobl_Complex_Vectors.Vector'(cst);
+      end;
+    end if;
+    res.forward := Allocate_Coefficients(d1,deg);
+    res.backward := Allocate_Coefficients(d2,deg);
+    res.cross := Allocate_Coefficients(d2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    return res;
+  end to_penta_double;
+
+  function to_octo_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Circuit )
+	     return OctoDobl_Speelpenning_Convolutions.Circuit is
+
+    use DecaDobl_Complex_Vectors;
+    use OctoDobl_Speelpenning_Convolutions;
+
+    n : constant integer32 := c.nbr;
+    d : constant integer32 := c.dim;
+    d1 : constant integer32 := d-1;
+    d2 : constant integer32 := d-2;
+    deg : constant integer32 := c.cff(1)'last;
+    res : OctoDobl_Speelpenning_Convolutions.Circuit(n,d,d1,d2);
+
+  begin
+    Standard_Integer_VecVecs.Copy(c.xps,res.xps);
+    Standard_Integer_VecVecs.Copy(c.idx,res.idx);
+    Standard_Integer_VecVecs.Copy(c.fac,res.fac);
+    res.cff := Varbprec_VecVec_Conversions.da2od(c.cff);
+    if c.cst /= null then
+      declare
+        cst : constant OctoDobl_Complex_Vectors.Vector(c.cst'range)
+            := DecaDobl_Complex_to_OctoDobl(c.cst.all);
+      begin
+        res.cst := new OctoDobl_Complex_Vectors.Vector'(cst);
+      end;
+    end if;
+    res.forward := Allocate_Coefficients(d1,deg);
+    res.backward := Allocate_Coefficients(d2,deg);
+    res.cross := Allocate_Coefficients(d2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    return res;
+  end to_octo_double;
+
+  function to_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return Standard_Speelpenning_Convolutions.Link_to_Circuit is
+
+    res : Standard_Speelpenning_Convolutions.Link_to_Circuit;
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+  begin
+    if c /= null then
+      res := new Standard_Speelpenning_Convolutions.Circuit'(to_double(c.all));
+    end if;
+    return res;
+  end to_double;
+
+  function to_double_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return DoblDobl_Speelpenning_Convolutions.Link_to_Circuit is
+
+    res : DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+  begin
+    if c /= null then
+      res := new DoblDobl_Speelpenning_Convolutions.Circuit'
+                   (to_double_double(c.all));
+    end if;
+    return res;
+  end to_double_double;
+
+  function to_triple_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return TripDobl_Speelpenning_Convolutions.Link_to_Circuit is
+
+    res : TripDobl_Speelpenning_Convolutions.Link_to_Circuit;
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+  begin
+    if c /= null then
+      res := new TripDobl_Speelpenning_Convolutions.Circuit'
+                   (to_triple_double(c.all));
+    end if;
+    return res;
+  end to_triple_double;
+
+  function to_quad_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return QuadDobl_Speelpenning_Convolutions.Link_to_Circuit is
+
+    res : QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+  begin
+    if c /= null then
+      res := new QuadDobl_Speelpenning_Convolutions.Circuit'
+                   (to_quad_double(c.all));
+    end if;
+    return res;
+  end to_quad_double;
+
+  function to_penta_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return PentDobl_Speelpenning_Convolutions.Link_to_Circuit is
+
+    res : PentDobl_Speelpenning_Convolutions.Link_to_Circuit;
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+  begin
+    if c /= null then
+      res := new PentDobl_Speelpenning_Convolutions.Circuit'
+                   (to_penta_double(c.all));
+    end if;
+    return res;
+  end to_penta_double;
+
+  function to_octo_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return OctoDobl_Speelpenning_Convolutions.Link_to_Circuit is
+
+    res : OctoDobl_Speelpenning_Convolutions.Link_to_Circuit;
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+  begin
+    if c /= null then
+      res := new OctoDobl_Speelpenning_Convolutions.Circuit'
+                   (to_octo_double(c.all));
+    end if;
+    return res;
+  end to_octo_double;
+
+  function to_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Circuits )
+             return Standard_Speelpenning_Convolutions.Circuits is
+
+    res : Standard_Speelpenning_Convolutions.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_double(c(k));
+    end loop;
+    return res;
+  end to_double;
+
+  function to_double_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Circuits )
+             return DoblDobl_Speelpenning_Convolutions.Circuits is
+
+    res : DoblDobl_Speelpenning_Convolutions.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_double_double(c(k));
+    end loop;
+    return res;
+  end to_double_double;
+
+  function to_triple_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Circuits )
+             return TripDobl_Speelpenning_Convolutions.Circuits is
+
+    res : TripDobl_Speelpenning_Convolutions.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_triple_double(c(k));
+    end loop;
+    return res;
+  end to_triple_double;
+
+  function to_quad_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Circuits )
+             return QuadDobl_Speelpenning_Convolutions.Circuits is
+
+    res : QuadDobl_Speelpenning_Convolutions.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_quad_double(c(k));
+    end loop;
+    return res;
+  end to_quad_double;
+
+  function to_penta_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Circuits )
+             return PentDobl_Speelpenning_Convolutions.Circuits is
+
+    res : PentDobl_Speelpenning_Convolutions.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_penta_double(c(k));
+    end loop;
+    return res;
+  end to_penta_double;
+
+  function to_octo_double
+	     ( c : DecaDobl_Speelpenning_Convolutions.Circuits )
+             return OctoDobl_Speelpenning_Convolutions.Circuits is
+
+    res : OctoDobl_Speelpenning_Convolutions.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_octo_double(c(k));
+    end loop;
+    return res;
+  end to_octo_double;
+
+  function to_double
+             ( s : DecaDobl_Speelpenning_Convolutions.System )
+             return Standard_Speelpenning_Convolutions.System is
+
+    res : Standard_Speelpenning_Convolutions.System
+            (s.neq,s.neq1,s.dim,s.dim1,s.deg);
+
+    use Standard_Speelpenning_Convolutions;
+
+  begin
+    res.crc := to_double(s.crc);
+    Standard_Integer_Vectors.Copy(s.mxe,res.mxe);
+    res.pwt := Allocate(res.mxe,s.deg);
+    res.yd := Allocate_Coefficients(s.dim+1,s.deg);
+    res.vy := Linearized_Allocation(s.dim,s.deg);
+    res.yv := Allocate_Coefficients(s.dim,s.deg);
+    res.vm := Allocate_Coefficients(s.neq,s.dim,s.deg);
+    return res;
+  end to_double;
+
+  function to_double_double
+             ( s : DecaDobl_Speelpenning_Convolutions.System )
+             return DoblDobl_Speelpenning_Convolutions.System is
+
+    res : DoblDobl_Speelpenning_Convolutions.System
+            (s.neq,s.neq1,s.dim,s.dim1,s.deg);
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+  begin
+    res.crc := to_double_double(s.crc);
+    Standard_Integer_Vectors.Copy(s.mxe,res.mxe);
+    res.pwt := Allocate(res.mxe,s.deg);
+    res.yd := Allocate_Coefficients(s.dim+1,s.deg);
+    res.vy := Linearized_Allocation(s.dim,s.deg);
+    res.yv := Allocate_Coefficients(s.dim,s.deg);
+    res.vm := Allocate_Coefficients(s.neq,s.dim,s.deg);
+    return res;
+  end to_double_double;
+
+  function to_triple_double
+             ( s : DecaDobl_Speelpenning_Convolutions.System )
+             return TripDobl_Speelpenning_Convolutions.System is
+
+    res : TripDobl_Speelpenning_Convolutions.System
+            (s.neq,s.neq1,s.dim,s.dim1,s.deg);
+
+    use TripDobl_Speelpenning_Convolutions;
+
+  begin
+    res.crc := to_triple_double(s.crc);
+    Standard_Integer_Vectors.Copy(s.mxe,res.mxe);
+    res.pwt := Allocate(res.mxe,s.deg);
+    res.yd := Allocate_Coefficients(s.dim+1,s.deg);
+    res.vy := Linearized_Allocation(s.dim,s.deg);
+    res.yv := Allocate_Coefficients(s.dim,s.deg);
+    res.vm := Allocate_Coefficients(s.neq,s.dim,s.deg);
+    return res;
+  end to_triple_double;
+
+  function to_quad_double
+             ( s : DecaDobl_Speelpenning_Convolutions.System )
+             return QuadDobl_Speelpenning_Convolutions.System is
+
+    res : QuadDobl_Speelpenning_Convolutions.System
+            (s.neq,s.neq1,s.dim,s.dim1,s.deg);
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+  begin
+    res.crc := to_quad_double(s.crc);
+    Standard_Integer_Vectors.Copy(s.mxe,res.mxe);
+    res.pwt := Allocate(res.mxe,s.deg);
+    res.yd := Allocate_Coefficients(s.dim+1,s.deg);
+    res.vy := Linearized_Allocation(s.dim,s.deg);
+    res.yv := Allocate_Coefficients(s.dim,s.deg);
+    res.vm := Allocate_Coefficients(s.neq,s.dim,s.deg);
+    return res;
+  end to_quad_double;
+
+  function to_penta_double
+             ( s : DecaDobl_Speelpenning_Convolutions.System )
+             return PentDobl_Speelpenning_Convolutions.System is
+
+    res : PentDobl_Speelpenning_Convolutions.System
+            (s.neq,s.neq1,s.dim,s.dim1,s.deg);
+
+    use PentDobl_Speelpenning_Convolutions;
+
+  begin
+    res.crc := to_penta_double(s.crc);
+    Standard_Integer_Vectors.Copy(s.mxe,res.mxe);
+    res.pwt := Allocate(res.mxe,s.deg);
+    res.yd := Allocate_Coefficients(s.dim+1,s.deg);
+    res.vy := Linearized_Allocation(s.dim,s.deg);
+    res.yv := Allocate_Coefficients(s.dim,s.deg);
+    res.vm := Allocate_Coefficients(s.neq,s.dim,s.deg);
+    return res;
+  end to_penta_double;
+
+  function to_octo_double
+             ( s : DecaDobl_Speelpenning_Convolutions.System )
+             return OctoDobl_Speelpenning_Convolutions.System is
+
+    res : OctoDobl_Speelpenning_Convolutions.System
+            (s.neq,s.neq1,s.dim,s.dim1,s.deg);
+
+    use OctoDobl_Speelpenning_Convolutions;
+
+  begin
+    res.crc := to_octo_double(s.crc);
+    Standard_Integer_Vectors.Copy(s.mxe,res.mxe);
+    res.pwt := Allocate(res.mxe,s.deg);
+    res.yd := Allocate_Coefficients(s.dim+1,s.deg);
+    res.vy := Linearized_Allocation(s.dim,s.deg);
+    res.yv := Allocate_Coefficients(s.dim,s.deg);
+    res.vm := Allocate_Coefficients(s.neq,s.dim,s.deg);
+    return res;
+  end to_octo_double;
+
+  function to_double
+             ( s : DecaDobl_Speelpenning_Convolutions.Link_to_System )
+             return Standard_Speelpenning_Convolutions.Link_to_System is
+
+    res : Standard_Speelpenning_Convolutions.Link_to_System;
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+  begin
+    if s /= null then
+      declare
+        ds : constant Standard_Speelpenning_Convolutions.System
+                        (s.neq,s.neq1,s.dim,s.dim1,s.deg)
+           := to_double(s.all);
+      begin
+        res := new Standard_Speelpenning_Convolutions.System'(ds);
+      end;
+    end if;
+    return res;
+  end to_double;
+
+  function to_double_double
+             ( s : DecaDobl_Speelpenning_Convolutions.Link_to_System )
+             return DoblDobl_Speelpenning_Convolutions.Link_to_System is
+
+    res : DoblDobl_Speelpenning_Convolutions.Link_to_System;
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+  begin
+    if s /= null then
+      declare
+        ds : constant DoblDobl_Speelpenning_Convolutions.System
+                        (s.neq,s.neq1,s.dim,s.dim1,s.deg)
+           := to_double_double(s.all);
+      begin
+        res := new DoblDobl_Speelpenning_Convolutions.System'(ds);
+      end;
+    end if;
+    return res;
+  end to_double_double;
+
+  function to_triple_double
+             ( s : DecaDobl_Speelpenning_Convolutions.Link_to_System )
+             return TripDobl_Speelpenning_Convolutions.Link_to_System is
+
+    res : TripDobl_Speelpenning_Convolutions.Link_to_System;
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+  begin
+    if s /= null then
+      declare
+        ds : constant TripDobl_Speelpenning_Convolutions.System
+                        (s.neq,s.neq1,s.dim,s.dim1,s.deg)
+           := to_triple_double(s.all);
+      begin
+        res := new TripDobl_Speelpenning_Convolutions.System'(ds);
+      end;
+    end if;
+    return res;
+  end to_triple_double;
+
+  function to_quad_double
+             ( s : DecaDobl_Speelpenning_Convolutions.Link_to_System )
+             return QuadDobl_Speelpenning_Convolutions.Link_to_System is
+
+    res : QuadDobl_Speelpenning_Convolutions.Link_to_System;
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+  begin
+    if s /= null then
+      declare
+        ds : constant QuadDobl_Speelpenning_Convolutions.System
+                        (s.neq,s.neq1,s.dim,s.dim1,s.deg)
+           := to_quad_double(s.all);
+      begin
+        res := new QuadDobl_Speelpenning_Convolutions.System'(ds);
+      end;
+    end if;
+    return res;
+  end to_quad_double;
+
+  function to_penta_double
+             ( s : DecaDobl_Speelpenning_Convolutions.Link_to_System )
+             return PentDobl_Speelpenning_Convolutions.Link_to_System is
+
+    res : PentDobl_Speelpenning_Convolutions.Link_to_System;
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+  begin
+    if s /= null then
+      declare
+        ds : constant PentDobl_Speelpenning_Convolutions.System
+                        (s.neq,s.neq1,s.dim,s.dim1,s.deg)
+           := to_penta_double(s.all);
+      begin
+        res := new PentDobl_Speelpenning_Convolutions.System'(ds);
+      end;
+    end if;
+    return res;
+  end to_penta_double;
+
+  function to_octo_double
+             ( s : DecaDobl_Speelpenning_Convolutions.Link_to_System )
+             return OctoDobl_Speelpenning_Convolutions.Link_to_System is
+
+    res : OctoDobl_Speelpenning_Convolutions.Link_to_System;
+
+    use DecaDobl_Speelpenning_Convolutions;
+
+  begin
+    if s /= null then
+      declare
+        ds : constant OctoDobl_Speelpenning_Convolutions.System
+                        (s.neq,s.neq1,s.dim,s.dim1,s.deg)
+           := to_octo_double(s.all);
+      begin
+        res := new OctoDobl_Speelpenning_Convolutions.System'(ds);
+      end;
+    end if;
+    return res;
+  end to_octo_double;
 
 end System_Convolution_Circuits;

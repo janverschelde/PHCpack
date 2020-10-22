@@ -1,6 +1,8 @@
 Wed 21 Oct 2020 : extended evaluation_differentiation_errors with
   operations in triple double precision.  Then extended that package again
-  for penta, octo, and deca double precision.
+  for penta, octo, and deca double precision.  Extended random_convolution_ 
+  circuits, evaluation_differentiation_errors, system_convolution_circuits,
+  mainly to reach deca double precision.
 
 Tue 20 Oct 2020 : extended random_convolution_circuits with procedures
   to generate random circuits with triple double precision coefficients.
