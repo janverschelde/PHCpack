@@ -27,19 +27,19 @@ with PentDobl_Complex_Numbers;
 with OctoDobl_Complex_Numbers;
 with DecaDobl_Complex_Numbers;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
-with QuadDobl_Complex_Vectors_cv;
+with DecaDobl_Complex_Vectors_cv;
 with Standard_Complex_Solutions;
 with Standard_System_and_Solutions_io;
 with DoblDobl_Complex_Solutions;
 with DoblDobl_System_and_Solutions_io;
 with TripDobl_Complex_Solutions;
 with TripDobl_System_and_Solutions_io;
+with QuadDobl_Complex_Solutions;
 with QuadDobl_System_and_Solutions_io;
 with PentDobl_Complex_Solutions;
 with PentDobl_System_and_Solutions_io;
 with OctoDobl_Complex_Solutions;
 with OctoDobl_System_and_Solutions_io;
-with DecaDobl_Complex_Solutions;
 with DecaDobl_System_and_Solutions_io;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Homotopy_Convolution_Circuits;      use Homotopy_Convolution_Circuits;
@@ -1544,6 +1544,150 @@ package body Test_mtNewton_Convolutions is
     end if;
   end QuadDobl_Benchmark;
 
+  procedure PentDobl_Benchmark
+              ( file : in file_type; nbruns,inc,maxit : in integer32;
+                nbtseq : in Standard_Integer_Vectors.Link_to_Vector;
+                s : in PentDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in PentDobl_Complex_VecVecs.Link_to_VecVec;
+                verbose : in boolean := false ) is
+
+    scf : PentDobl_Complex_VecVecs.VecVec(1..s.dim);
+    nbt : integer32 := 2;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
+
+  begin
+    put_line(file,"penta double precision");
+    PentDobl_Complex_VecVecs.Copy(x.all,scf);
+    PentDobl_Run(1,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                 speedup,efficiency,false,false,verbose);
+    PentDobl_Complex_VecVecs.Clear(scf);
+    put(file,"  1 : ");
+    duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
+    if nbruns /= 0 then
+      for k in 1..nbruns loop
+        PentDobl_Complex_VecVecs.Copy(x.all,scf);
+        PentDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                     speedup,efficiency,false,false,verbose);
+        PentDobl_Complex_VecVecs.Clear(scf);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
+        nbt := nbt + inc;
+      end loop;
+    else
+      for k in nbtseq'range loop
+        nbt := nbtseq(k);
+        PentDobl_Complex_VecVecs.Copy(x.all,scf);
+        PentDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                     speedup,efficiency,false,false,verbose);
+        PentDobl_Complex_VecVecs.Clear(scf);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
+      end loop;
+    end if;
+  end PentDobl_Benchmark;
+
+  procedure OctoDobl_Benchmark
+              ( file : in file_type; nbruns,inc,maxit : in integer32;
+                nbtseq : in Standard_Integer_Vectors.Link_to_Vector;
+                s : in OctoDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in OctoDobl_Complex_VecVecs.Link_to_VecVec;
+                verbose : in boolean := false ) is
+
+    scf : OctoDobl_Complex_VecVecs.VecVec(1..s.dim);
+    nbt : integer32 := 2;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
+
+  begin
+    put_line(file,"octo double precision");
+    OctoDobl_Complex_VecVecs.Copy(x.all,scf);
+    OctoDobl_Run(1,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                 speedup,efficiency,false,false,verbose);
+    OctoDobl_Complex_VecVecs.Clear(scf);
+    put(file,"  1 : ");
+    duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
+    if nbruns /= 0 then
+      for k in 1..nbruns loop
+        OctoDobl_Complex_VecVecs.Copy(x.all,scf);
+        OctoDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                     speedup,efficiency,false,false,verbose);
+        OctoDobl_Complex_VecVecs.Clear(scf);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
+        nbt := nbt + inc;
+      end loop;
+    else
+      for k in nbtseq'range loop
+        nbt := nbtseq(k);
+        OctoDobl_Complex_VecVecs.Copy(x.all,scf);
+        OctoDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                     speedup,efficiency,false,false,verbose);
+        OctoDobl_Complex_VecVecs.Clear(scf);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
+      end loop;
+    end if;
+  end OctoDobl_Benchmark;
+
+  procedure DecaDobl_Benchmark
+              ( file : in file_type; nbruns,inc,maxit : in integer32;
+                nbtseq : in Standard_Integer_Vectors.Link_to_Vector;
+                s : in DecaDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in DecaDobl_Complex_VecVecs.Link_to_VecVec;
+                verbose : in boolean := false ) is
+
+    scf : DecaDobl_Complex_VecVecs.VecVec(1..s.dim);
+    nbt : integer32 := 2;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
+
+  begin
+    put_line(file,"deca double precision");
+    DecaDobl_Complex_VecVecs.Copy(x.all,scf);
+    DecaDobl_Run(1,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                 speedup,efficiency,false,false,verbose);
+    DecaDobl_Complex_VecVecs.Clear(scf);
+    put(file,"  1 : ");
+    duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
+    if nbruns /= 0 then
+      for k in 1..nbruns loop
+        DecaDobl_Complex_VecVecs.Copy(x.all,scf);
+        DecaDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                     speedup,efficiency,false,false,verbose);
+        DecaDobl_Complex_VecVecs.Clear(scf);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
+        nbt := nbt + inc;
+      end loop;
+    else
+      for k in nbtseq'range loop
+        nbt := nbtseq(k);
+        DecaDobl_Complex_VecVecs.Copy(x.all,scf);
+        DecaDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                     speedup,efficiency,false,false,verbose);
+        DecaDobl_Complex_VecVecs.Clear(scf);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
+      end loop;
+    end if;
+  end DecaDobl_Benchmark;
+
   function Prompt_for_Sequence
              ( max : in integer32 )
              return Standard_Integer_Vectors.Link_to_Vector is
@@ -1579,10 +1723,16 @@ package body Test_mtNewton_Convolutions is
 
   procedure Benchmark ( dim,deg,nbr,pwr : in integer32 ) is
 
+    das : DecaDobl_Speelpenning_Convolutions.Link_to_System;
+    ods : OctoDobl_Speelpenning_Convolutions.Link_to_System;
+    pds : PentDobl_Speelpenning_Convolutions.Link_to_System;
     qds : QuadDobl_Speelpenning_Convolutions.Link_to_System;
     tds : TripDobl_Speelpenning_Convolutions.Link_to_System;
     dds : DoblDobl_Speelpenning_Convolutions.Link_to_System;
     d_s : Standard_Speelpenning_Convolutions.Link_to_System;
+    dax : DecaDobl_Complex_VecVecs.Link_to_VecVec;
+    odx : OctoDobl_Complex_VecVecs.Link_to_VecVec;
+    pdx : PentDobl_Complex_VecVecs.Link_to_VecVec;
     qdx : QuadDobl_Complex_VecVecs.Link_to_VecVec;
     tdx : TripDobl_Complex_VecVecs.Link_to_VecVec;
     ddx : DoblDobl_Complex_VecVecs.Link_to_VecVec;
@@ -1608,13 +1758,19 @@ package body Test_mtNewton_Convolutions is
     new_line;
     put_line("See the output file for results ...");
     new_line;
-    QuadDobl_Random_Newton_Homotopy(dim,deg,nbr,pwr,qds,qdx);
-    tds := System_Convolution_Circuits.to_triple_double(qds);
-    tdx := QuadDobl_Complex_Vectors_cv.to_triple_double(qdx);
-    dds := System_Convolution_Circuits.to_double_double(qds);
-    ddx := QuadDobl_Complex_Vectors_cv.to_double_double(qdx);
-    d_s := System_Convolution_Circuits.to_double(qds);
-    d_x := QuadDobl_Complex_Vectors_cv.to_double(qdx);
+    DecaDobl_Random_Newton_Homotopy(dim,deg,nbr,pwr,das,dax);
+    ods := System_Convolution_Circuits.to_octo_double(das);
+    odx := DecaDobl_Complex_Vectors_cv.to_octo_double(dax);
+    pds := System_Convolution_Circuits.to_penta_double(das);
+    pdx := DecaDobl_Complex_Vectors_cv.to_penta_double(dax);
+    qds := System_Convolution_Circuits.to_quad_double(das);
+    qdx := DecaDobl_Complex_Vectors_cv.to_quad_double(dax);
+    tds := System_Convolution_Circuits.to_triple_double(das);
+    tdx := DecaDobl_Complex_Vectors_cv.to_triple_double(dax);
+    dds := System_Convolution_Circuits.to_double_double(das);
+    ddx := DecaDobl_Complex_Vectors_cv.to_double_double(dax);
+    d_s := System_Convolution_Circuits.to_double(das);
+    d_x := DecaDobl_Complex_Vectors_cv.to_double(dax);
     put(file,"dimension : "); put(file,dim,1);
     put(file,"  degree : "); put(file,deg,1);
     put(file,"  largest power : "); put(file,pwr,1); new_line(file);
@@ -1624,28 +1780,37 @@ package body Test_mtNewton_Convolutions is
     DoblDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,dds,ddx);
     TripDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,tds,tdx);
     QuadDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,qds,qdx);
+    PentDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,pds,pdx);
+    OctoDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,ods,odx);
+    DecaDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,das,dax);
   end Benchmark;
 
   procedure Benchmark
-              ( p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                sols : in QuadDobl_Complex_Solutions.Solution_List;
+              ( p : in DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in DecaDobl_Complex_Solutions.Solution_List;
                 dim,deg : in integer32 ) is
 
     file : file_type;
     nbruns,inc,maxit : integer32 := 0;
 
-    use QuadDobl_Speelpenning_Convolutions;
+    use DecaDobl_Speelpenning_Convolutions;
 
-    c : constant QuadDobl_Speelpenning_Convolutions.Circuits(p'range)
+    c : constant DecaDobl_Speelpenning_Convolutions.Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
-    qds : constant QuadDobl_Speelpenning_Convolutions.Link_to_System
+    das : constant DecaDobl_Speelpenning_Convolutions.Link_to_System
         := Create(c,dim,deg);
-    dds : DoblDobl_Speelpenning_Convolutions.Link_to_System;
+    ods : OctoDobl_Speelpenning_Convolutions.Link_to_System;
+    pds : PentDobl_Speelpenning_Convolutions.Link_to_System;
+    qds : QuadDobl_Speelpenning_Convolutions.Link_to_System;
     tds : TripDobl_Speelpenning_Convolutions.Link_to_System;
+    dds : DoblDobl_Speelpenning_Convolutions.Link_to_System;
     d_s : Standard_Speelpenning_Convolutions.Link_to_System;
-    scf : QuadDobl_Complex_VecVecs.VecVec(1..dim);
-    ls : constant QuadDobl_Complex_Solutions.Link_to_Solution
-       := QuadDobl_Complex_Solutions.Head_Of(sols);
+    scf : DecaDobl_Complex_VecVecs.VecVec(1..dim);
+    ls : constant DecaDobl_Complex_Solutions.Link_to_Solution
+       := DecaDobl_Complex_Solutions.Head_Of(sols);
+    dax : DecaDobl_Complex_VecVecs.Link_to_VecVec;
+    odx : OctoDobl_Complex_VecVecs.Link_to_VecVec;
+    pdx : PentDobl_Complex_VecVecs.Link_to_VecVec;
     qdx : QuadDobl_Complex_VecVecs.Link_to_VecVec;
     tdx : TripDobl_Complex_VecVecs.Link_to_VecVec;
     ddx : DoblDobl_Complex_VecVecs.Link_to_VecVec;
@@ -1653,15 +1818,21 @@ package body Test_mtNewton_Convolutions is
     nbtseq : Standard_Integer_Vectors.Link_to_Vector;
 
   begin
-    Add_Parameter_to_Constant(qds); -- make Newton homotopy
-    dds := System_Convolution_Circuits.to_double_double(qds);
-    tds := System_Convolution_Circuits.to_triple_double(qds);
-    d_s := System_Convolution_Circuits.to_double(qds);
-    scf := QuadDobl_Newton_Convolutions.Series_Coefficients(ls.v,deg);
-    qdx := new QuadDobl_Complex_VecVecs.VecVec'(scf);
-    ddx := QuadDobl_Complex_Vectors_cv.to_double_double(qdx);
-    tdx := QuadDobl_Complex_Vectors_cv.to_triple_double(qdx);
-    d_x := QuadDobl_Complex_Vectors_cv.to_double(qdx);
+    Add_Parameter_to_Constant(das); -- make Newton homotopy
+    ods := System_Convolution_Circuits.to_octo_double(das);
+    pds := System_Convolution_Circuits.to_penta_double(das);
+    qds := System_Convolution_Circuits.to_quad_double(das);
+    tds := System_Convolution_Circuits.to_triple_double(das);
+    dds := System_Convolution_Circuits.to_double_double(das);
+    d_s := System_Convolution_Circuits.to_double(das);
+    scf := DecaDobl_Newton_Convolutions.Series_Coefficients(ls.v,deg);
+    dax := new DecaDobl_Complex_VecVecs.VecVec'(scf);
+    odx := DecaDobl_Complex_Vectors_cv.to_octo_double(dax);
+    pdx := DecaDobl_Complex_Vectors_cv.to_penta_double(dax);
+    qdx := DecaDobl_Complex_Vectors_cv.to_quad_double(dax);
+    tdx := DecaDobl_Complex_Vectors_cv.to_triple_double(dax);
+    ddx := DecaDobl_Complex_Vectors_cv.to_double_double(dax);
+    d_x := DecaDobl_Complex_Vectors_cv.to_double(dax);
     new_line;
     put("Give the number of multitasked runs (0 for sequence) : ");
     get(nbruns);
@@ -1686,6 +1857,9 @@ package body Test_mtNewton_Convolutions is
     DoblDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,dds,ddx);
     TripDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,tds,tdx);
     QuadDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,qds,qdx);
+    PentDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,pds,pdx);
+    OctoDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,ods,odx);
+    DecaDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,das,dax);
   end Benchmark;
 
   procedure Prompt_for_Dimensions
@@ -1702,9 +1876,9 @@ package body Test_mtNewton_Convolutions is
 
     prc,ans : character;
     dim,deg,nbr,pwr : integer32 := 0;
-    lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    sols : QuadDobl_Complex_Solutions.Solution_List;
-    ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+    lp : DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : DecaDobl_Complex_Solutions.Solution_List;
+    ls : DecaDobl_Complex_Solutions.Link_to_Solution;
 
   begin
     new_line;
@@ -1721,9 +1895,9 @@ package body Test_mtNewton_Convolutions is
       else
         new_line;
         put_line("Reading a polynomial system with solutions ...");
-        QuadDobl_System_and_Solutions_io.get(lp,sols);
-        nbr := integer32(QuadDobl_Complex_Solutions.Length_Of(sols));
-        ls := QuadDobl_Complex_Solutions.Head_Of(sols);
+        DecaDobl_System_and_Solutions_io.get(lp,sols);
+        nbr := integer32(DecaDobl_Complex_Solutions.Length_Of(sols));
+        ls := DecaDobl_Complex_Solutions.Head_Of(sols);
         dim := ls.n;
         new_line;
         put("Read "); put(nbr,1); put(" solutions in dimension ");

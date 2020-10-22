@@ -22,7 +22,7 @@ with QuadDobl_Complex_Poly_Systems;
 with PentDobl_Complex_Poly_Systems;
 with OctoDobl_Complex_Poly_Systems;
 with DecaDobl_Complex_Poly_Systems;
-with QuadDobl_Complex_Solutions;
+with DecaDobl_Complex_Solutions;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with TripDobl_Speelpenning_Convolutions;
@@ -305,10 +305,28 @@ package Test_mtNewton_Convolutions is
                 s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 x : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 verbose : in boolean := false );
+  procedure PentDobl_Benchmark
+              ( file : in file_type; nbruns,inc,maxit : in integer32;
+                nbtseq : in Standard_Integer_Vectors.Link_to_Vector;
+                s : in PentDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in PentDobl_Complex_VecVecs.Link_to_VecVec;
+                verbose : in boolean := false );
+  procedure OctoDobl_Benchmark
+              ( file : in file_type; nbruns,inc,maxit : in integer32;
+                nbtseq : in Standard_Integer_Vectors.Link_to_Vector;
+                s : in OctoDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in OctoDobl_Complex_VecVecs.Link_to_VecVec;
+                verbose : in boolean := false );
+  procedure DecaDobl_Benchmark
+              ( file : in file_type; nbruns,inc,maxit : in integer32;
+                nbtseq : in Standard_Integer_Vectors.Link_to_Vector;
+                s : in DecaDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in DecaDobl_Complex_VecVecs.Link_to_VecVec;
+                verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   Runs a benchmark test in double, double double, triple double,
-  --   or quad double precision.
+  --   quad double, penta double, octo double, or deca double precision.
 
   -- ON ENTRY :
   --   file     must be opened for output;
@@ -343,14 +361,14 @@ package Test_mtNewton_Convolutions is
   --   pwr      largest power of the variables.
 
   procedure Benchmark
-              ( p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                sols : in QuadDobl_Complex_Solutions.Solution_List;
+              ( p : in DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in DecaDobl_Complex_Solutions.Solution_List;
                 dim,deg : in integer32 );
 
   -- DESCRIPTION :
   --   For the given polynomial system p and some solutions in sols,
   --   prompts the user for the parameters of the benchmark runs
-  --   in all three levels of precision.
+  --   in all seven levels of precision.
   
   procedure Prompt_for_Dimensions
               ( dim,deg,nbr,pwr : in out integer32 );
