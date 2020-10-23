@@ -133,5 +133,6 @@ standard_circuit_makers            : standard precision testing utilities
 dobldobl_circuit_makers            : double double precision testing utilities
 quaddobl_circuit_makers            : quad double precision testing utilities
 ts_perfade                         : test performance of algo diff eval
-ts_perfhess                        : test on better Hessian computation
+test_hessian_circuits              : test on better Hessian computation
+ts_perfhess                        : calls the main test on Hessian circuits
 -------------------------------------------------------------------------------

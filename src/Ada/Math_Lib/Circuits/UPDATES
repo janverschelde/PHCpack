@@ -1,3 +1,6 @@
+Thu 22 Oct 2020 : moved code from ts_perfhess.adb into a new package
+  test_hessian_circuits.
+
 Wed 21 Oct 2020 : extended evaluation_differentiation_errors with
   operations in triple double precision.  Then extended that package again
   for penta, octo, and deca double precision.  Extended random_convolution_ 
