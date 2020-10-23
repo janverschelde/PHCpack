@@ -5,13 +5,29 @@ with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;        use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;               use Double_Double_Numbers;
 with Double_Double_Numbers_io;            use Double_Double_Numbers_io;
+with Triple_Double_Numbers;               use Triple_Double_Numbers;
+with Triple_Double_Numbers_io;            use Triple_Double_Numbers_io;
 with Quad_Double_Numbers;                 use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;              use Quad_Double_Numbers_io;
+with Penta_Double_Numbers;                use Penta_Double_Numbers;
+with Penta_Double_Numbers_io;             use Penta_Double_Numbers_io;
+with Octo_Double_Numbers;                 use Octo_Double_Numbers;
+with Octo_Double_Numbers_io;              use Octo_Double_Numbers_io;
+with Deca_Double_Numbers;                 use Deca_Double_Numbers;
+with Deca_Double_Numbers_io;              use Deca_Double_Numbers_io;
 with Standard_Complex_Numbers_io;         use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_io;         use DoblDobl_Complex_Numbers_io;
+with TripDobl_Complex_Numbers;
+with TripDobl_Complex_Numbers_io;         use TripDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;         use QuadDobl_Complex_Numbers_io;
+with PentDobl_Complex_Numbers;
+with PentDobl_Complex_Numbers_io;         use PentDobl_Complex_Numbers_io;
+with OctoDobl_Complex_Numbers;
+with OctoDobl_Complex_Numbers_io;         use OctoDobl_Complex_Numbers_io;
+with DecaDobl_Complex_Numbers;
+with DecaDobl_Complex_Numbers_io;         use DecaDobl_Complex_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
@@ -24,14 +40,38 @@ with DoblDobl_Complex_Vectors_io;         use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_Matrices;
 with DoblDobl_Complex_VecMats;
+with TripDobl_Complex_Vectors;
+with TripDobl_Complex_Vectors_io;         use TripDobl_Complex_Vectors_io;
+with TripDobl_Complex_VecVecs;
+with TripDobl_Complex_Matrices;
+with TripDobl_Complex_VecMats;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;         use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_VecMats;
+with PentDobl_Complex_Vectors;
+with PentDobl_Complex_Vectors_io;         use PentDobl_Complex_Vectors_io;
+with PentDobl_Complex_VecVecs;
+with PentDobl_Complex_Matrices;
+with PentDobl_Complex_VecMats;
+with OctoDobl_Complex_Vectors;
+with OctoDobl_Complex_Vectors_io;         use OctoDobl_Complex_Vectors_io;
+with OctoDobl_Complex_VecVecs;
+with OctoDobl_Complex_Matrices;
+with OctoDobl_Complex_VecMats;
+with DecaDobl_Complex_Vectors;
+with DecaDobl_Complex_Vectors_io;         use DecaDobl_Complex_Vectors_io;
+with DecaDobl_Complex_VecVecs;
+with DecaDobl_Complex_Matrices;
+with DecaDobl_Complex_VecMats;
 with Standard_Random_Vectors;
 with DoblDobl_Random_Vectors;
+with TripDobl_Random_Vectors;
 with QuadDobl_Random_Vectors;
+with PentDobl_Random_Vectors;
+with OctoDobl_Random_Vectors;
+with DecaDobl_Random_Vectors;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;     use Standard_Complex_Polynomials_io;
 with Standard_Complex_Poly_Functions;
@@ -44,18 +84,46 @@ with DoblDobl_Complex_Poly_Functions;
 with DoblDobl_Complex_Poly_Systems_io;    use DoblDobl_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Poly_SysFun;
 with DoblDobl_Complex_Jaco_Matrices;
+with TripDobl_Complex_Polynomials;
+with TripDobl_Complex_Polynomials_io;     use TripDobl_Complex_Polynomials_io;
+with TripDobl_Complex_Poly_Functions;
+with TripDobl_Complex_Poly_Systems_io;    use TripDobl_Complex_Poly_Systems_io;
+with TripDobl_Complex_Poly_SysFun;
+with TripDobl_Complex_Jaco_Matrices;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Polynomials_io;     use QuadDobl_Complex_Polynomials_io;
 with QuadDobl_Complex_Poly_Functions;
 with QuadDobl_Complex_Poly_Systems_io;    use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Jaco_Matrices;
+with PentDobl_Complex_Polynomials;
+with PentDobl_Complex_Polynomials_io;     use PentDobl_Complex_Polynomials_io;
+with PentDobl_Complex_Poly_Functions;
+with PentDobl_Complex_Poly_Systems_io;    use PentDobl_Complex_Poly_Systems_io;
+with PentDobl_Complex_Poly_SysFun;
+with PentDobl_Complex_Jaco_Matrices;
+with OctoDobl_Complex_Polynomials;
+with OctoDobl_Complex_Polynomials_io;     use OctoDobl_Complex_Polynomials_io;
+with OctoDobl_Complex_Poly_Functions;
+with OctoDobl_Complex_Poly_Systems_io;    use OctoDobl_Complex_Poly_Systems_io;
+with OctoDobl_Complex_Poly_SysFun;
+with OctoDobl_Complex_Jaco_Matrices;
+with DecaDobl_Complex_Polynomials;
+with DecaDobl_Complex_Polynomials_io;     use DecaDobl_Complex_Polynomials_io;
+with DecaDobl_Complex_Poly_Functions;
+with DecaDobl_Complex_Poly_Systems_io;    use DecaDobl_Complex_Poly_Systems_io;
+with DecaDobl_Complex_Poly_SysFun;
+with DecaDobl_Complex_Jaco_Matrices;
 with Evaluation_Differentiation_Errors;
 with Standard_Vector_Splitters;
 with Standard_Circuit_Splitters;
 with Standard_Circuit_Makers;
 with DoblDobl_Circuit_Makers;
+with TripDobl_Circuit_Makers;
 with QuadDobl_Circuit_Makers;
+with PentDobl_Circuit_Makers;
+with OctoDobl_Circuit_Makers;
+with DecaDobl_Circuit_Makers;
 with Standard_Hessian_Updaters;
 
 package body Test_Hessian_Circuits is
@@ -846,6 +914,59 @@ package body Test_Hessian_Circuits is
     end if;
   end DoblDobl_Test_Power_Circuit;
 
+  procedure TripDobl_Test_Power_Circuit ( dim,nbr,pwr : in integer32 ) is
+
+    c : constant TripDobl_Complex_Circuits.Circuit
+      := TripDobl_Circuit_Makers.Random_Complex_Circuit(nbr,dim,pwr);
+    p : constant TripDobl_Complex_Polynomials.Poly
+      := TripDobl_Circuit_Makers.Make_Polynomial(c,false);
+    x : constant TripDobl_Complex_Vectors.Vector(1..dim)
+      := TripDobl_Random_Vectors.Random_Vector(1,dim);
+    xv : constant TripDobl_Complex_Vectors.Link_to_Vector
+       := new TripDobl_Complex_Vectors.Vector'(x);
+    h0 : constant TripDobl_Complex_Matrices.Matrix(1..dim,1..dim)
+       := TripDobl_Circuit_Makers.Hessian(p,x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
+    pwt : constant TripDobl_Complex_VecVecs.VecVec(x'range)
+        := TripDobl_Complex_Circuits.Allocate(mxe);
+    g : TripDobl_Complex_Vectors.Vector(1..dim);
+    z : TripDobl_Complex_Numbers.Complex_Number;
+    y : constant TripDobl_Complex_Vectors.Vector(0..dim)
+      := (0..dim => TripDobl_Complex_Numbers.Create(integer(0)));
+    yd : constant TripDobl_Complex_Vectors.Link_to_Vector
+       := new TripDobl_Complex_Vectors.Vector'(y);
+    h2 : TripDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    err : triple_double;
+    ans : character;
+
+  begin
+    new_line;
+    put_line("The polynomial : "); put(p); new_line;
+    put_line("The Hessian computed symbolically :");
+    TripDobl_Circuit_Makers.Write_Matrix(h0);
+    put_line("The Hessian computed algorithmically :");
+    TripDobl_Complex_Circuits.Power_Table(mxe,xv,pwt);
+    TripDobl_Complex_Circuits.Speel(c,xv,yd,pwt,h2);
+    TripDobl_Circuit_Makers.Write_Matrix(h2);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h2);
+    put("Sum of errors : "); put(err,3); new_line;
+    new_line;
+    put("Compare gradients ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("The algorithmically computed gradient :");
+      put_line(yd(1..yd'last));
+      g := TripDobl_Circuit_Makers.Gradient(p,x);
+      put_line("The symbolically computed gradient :"); put_line(g);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(g,yd(1..dim));
+      put("Sum of errors : "); put(err,3); new_line;
+      z := TripDobl_Complex_Poly_Functions.Eval(p,x);
+      put_line("The symbolically computed function value :");
+      put(z); new_line;
+      put_line("The algorithmically computed function value :");
+      put(yd(0)); new_line;
+    end if;
+  end TripDobl_Test_Power_Circuit;
+
   procedure QuadDobl_Test_Power_Circuit ( dim,nbr,pwr : in integer32 ) is
 
     c : constant QuadDobl_Complex_Circuits.Circuit
@@ -898,6 +1019,165 @@ package body Test_Hessian_Circuits is
       put(yd(0)); new_line;
     end if;
   end QuadDobl_Test_Power_Circuit;
+
+  procedure PentDobl_Test_Power_Circuit ( dim,nbr,pwr : in integer32 ) is
+
+    c : constant PentDobl_Complex_Circuits.Circuit
+      := PentDobl_Circuit_Makers.Random_Complex_Circuit(nbr,dim,pwr);
+    p : constant PentDobl_Complex_Polynomials.Poly
+      := PentDobl_Circuit_Makers.Make_Polynomial(c,false);
+    x : constant PentDobl_Complex_Vectors.Vector(1..dim)
+      := PentDobl_Random_Vectors.Random_Vector(1,dim);
+    xv : constant PentDobl_Complex_Vectors.Link_to_Vector
+       := new PentDobl_Complex_Vectors.Vector'(x);
+    h0 : constant PentDobl_Complex_Matrices.Matrix(1..dim,1..dim)
+       := PentDobl_Circuit_Makers.Hessian(p,x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
+    pwt : constant PentDobl_Complex_VecVecs.VecVec(x'range)
+        := PentDobl_Complex_Circuits.Allocate(mxe);
+    g : PentDobl_Complex_Vectors.Vector(1..dim);
+    z : PentDobl_Complex_Numbers.Complex_Number;
+    y : constant PentDobl_Complex_Vectors.Vector(0..dim)
+      := (0..dim => PentDobl_Complex_Numbers.Create(integer(0)));
+    yd : constant PentDobl_Complex_Vectors.Link_to_Vector
+       := new PentDobl_Complex_Vectors.Vector'(y);
+    h2 : PentDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    err : penta_double;
+    ans : character;
+
+  begin
+    new_line;
+    put_line("The polynomial : "); put(p); new_line;
+    put_line("The Hessian computed symbolically :");
+    PentDobl_Circuit_Makers.Write_Matrix(h0);
+    put_line("The Hessian computed algorithmically :");
+    PentDobl_Complex_Circuits.Power_Table(mxe,xv,pwt);
+    PentDobl_Complex_Circuits.Speel(c,xv,yd,pwt,h2);
+    PentDobl_Circuit_Makers.Write_Matrix(h2);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h2);
+    put("Sum of errors : "); put(err,3); new_line;
+    new_line;
+    put("Compare gradients ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("The algorithmically computed gradient :");
+      put_line(yd(1..yd'last));
+      g := PentDobl_Circuit_Makers.Gradient(p,x);
+      put_line("The symbolically computed gradient :"); put_line(g);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(g,yd(1..dim));
+      put("Sum of errors : "); put(err,3); new_line;
+      z := PentDobl_Complex_Poly_Functions.Eval(p,x);
+      put_line("The symbolically computed function value :");
+      put(z); new_line;
+      put_line("The algorithmically computed function value :");
+      put(yd(0)); new_line;
+    end if;
+  end PentDobl_Test_Power_Circuit;
+
+  procedure OctoDobl_Test_Power_Circuit ( dim,nbr,pwr : in integer32 ) is
+
+    c : constant OctoDobl_Complex_Circuits.Circuit
+      := OctoDobl_Circuit_Makers.Random_Complex_Circuit(nbr,dim,pwr);
+    p : constant OctoDobl_Complex_Polynomials.Poly
+      := OctoDobl_Circuit_Makers.Make_Polynomial(c,false);
+    x : constant OctoDobl_Complex_Vectors.Vector(1..dim)
+      := OctoDobl_Random_Vectors.Random_Vector(1,dim);
+    xv : constant OctoDobl_Complex_Vectors.Link_to_Vector
+       := new OctoDobl_Complex_Vectors.Vector'(x);
+    h0 : constant OctoDobl_Complex_Matrices.Matrix(1..dim,1..dim)
+       := OctoDobl_Circuit_Makers.Hessian(p,x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
+    pwt : constant OctoDobl_Complex_VecVecs.VecVec(x'range)
+        := OctoDobl_Complex_Circuits.Allocate(mxe);
+    g : OctoDobl_Complex_Vectors.Vector(1..dim);
+    z : OctoDobl_Complex_Numbers.Complex_Number;
+    y : constant OctoDobl_Complex_Vectors.Vector(0..dim)
+      := (0..dim => OctoDobl_Complex_Numbers.Create(integer(0)));
+    yd : constant OctoDobl_Complex_Vectors.Link_to_Vector
+       := new OctoDobl_Complex_Vectors.Vector'(y);
+    h2 : OctoDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    err : octo_double;
+    ans : character;
+
+  begin
+    new_line;
+    put_line("The polynomial : "); put(p); new_line;
+    put_line("The Hessian computed symbolically :");
+    OctoDobl_Circuit_Makers.Write_Matrix(h0);
+    put_line("The Hessian computed algorithmically :");
+    OctoDobl_Complex_Circuits.Power_Table(mxe,xv,pwt);
+    OctoDobl_Complex_Circuits.Speel(c,xv,yd,pwt,h2);
+    OctoDobl_Circuit_Makers.Write_Matrix(h2);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h2);
+    put("Sum of errors : "); put(err,3); new_line;
+    new_line;
+    put("Compare gradients ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("The algorithmically computed gradient :");
+      put_line(yd(1..yd'last));
+      g := OctoDobl_Circuit_Makers.Gradient(p,x);
+      put_line("The symbolically computed gradient :"); put_line(g);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(g,yd(1..dim));
+      put("Sum of errors : "); put(err,3); new_line;
+      z := OctoDobl_Complex_Poly_Functions.Eval(p,x);
+      put_line("The symbolically computed function value :");
+      put(z); new_line;
+      put_line("The algorithmically computed function value :");
+      put(yd(0)); new_line;
+    end if;
+  end OctoDobl_Test_Power_Circuit;
+
+  procedure DecaDobl_Test_Power_Circuit ( dim,nbr,pwr : in integer32 ) is
+
+    c : constant DecaDobl_Complex_Circuits.Circuit
+      := DecaDobl_Circuit_Makers.Random_Complex_Circuit(nbr,dim,pwr);
+    p : constant DecaDobl_Complex_Polynomials.Poly
+      := DecaDobl_Circuit_Makers.Make_Polynomial(c,false);
+    x : constant DecaDobl_Complex_Vectors.Vector(1..dim)
+      := DecaDobl_Random_Vectors.Random_Vector(1,dim);
+    xv : constant DecaDobl_Complex_Vectors.Link_to_Vector
+       := new DecaDobl_Complex_Vectors.Vector'(x);
+    h0 : constant DecaDobl_Complex_Matrices.Matrix(1..dim,1..dim)
+       := DecaDobl_Circuit_Makers.Hessian(p,x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
+    pwt : constant DecaDobl_Complex_VecVecs.VecVec(x'range)
+        := DecaDobl_Complex_Circuits.Allocate(mxe);
+    g : DecaDobl_Complex_Vectors.Vector(1..dim);
+    z : DecaDobl_Complex_Numbers.Complex_Number;
+    y : constant DecaDobl_Complex_Vectors.Vector(0..dim)
+      := (0..dim => DecaDobl_Complex_Numbers.Create(integer(0)));
+    yd : constant DecaDobl_Complex_Vectors.Link_to_Vector
+       := new DecaDobl_Complex_Vectors.Vector'(y);
+    h2 : DecaDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    err : deca_double;
+    ans : character;
+
+  begin
+    new_line;
+    put_line("The polynomial : "); put(p); new_line;
+    put_line("The Hessian computed symbolically :");
+    DecaDobl_Circuit_Makers.Write_Matrix(h0);
+    put_line("The Hessian computed algorithmically :");
+    DecaDobl_Complex_Circuits.Power_Table(mxe,xv,pwt);
+    DecaDobl_Complex_Circuits.Speel(c,xv,yd,pwt,h2);
+    DecaDobl_Circuit_Makers.Write_Matrix(h2);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h2);
+    put("Sum of errors : "); put(err,3); new_line;
+    new_line;
+    put("Compare gradients ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("The algorithmically computed gradient :");
+      put_line(yd(1..yd'last));
+      g := DecaDobl_Circuit_Makers.Gradient(p,x);
+      put_line("The symbolically computed gradient :"); put_line(g);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(g,yd(1..dim));
+      put("Sum of errors : "); put(err,3); new_line;
+      z := DecaDobl_Complex_Poly_Functions.Eval(p,x);
+      put_line("The symbolically computed function value :");
+      put(z); new_line;
+      put_line("The algorithmically computed function value :");
+      put(yd(0)); new_line;
+    end if;
+  end DecaDobl_Test_Power_Circuit;
 
   procedure Standard_Run_EvalDiff2
               ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -1056,6 +1336,65 @@ package body Test_Hessian_Circuits is
     put("Sum of all errors : "); put(sumerr,3); new_line;
   end DoblDobl_Run_EvalDiff2;
 
+  procedure TripDobl_Run_EvalDiff2
+              ( p : in TripDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                s : in TripDobl_Complex_Circuits.Link_to_System ) is
+
+    x : constant TripDobl_Complex_Vectors.Vector(1..s.dim)
+      := TripDobl_Random_Vectors.Random_Vector(1,s.dim);
+    xv : constant TripDobl_Complex_Vectors.Link_to_Vector
+       := new TripDobl_Complex_Vectors.Vector'(x);
+    vh : constant TripDobl_Complex_VecMats.VecMat(1..s.neq)
+       := TripDobl_Complex_Circuits.Allocate(s.neq,s.dim);
+    y : constant TripDobl_Complex_Vectors.Vector(p'range)
+      := TripDobl_Complex_Poly_SysFun.Eval(p.all,x);
+    jm : constant TripDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := TripDobl_Complex_Jaco_Matrices.Create(p.all);
+    jmx : constant TripDobl_Complex_Matrices.Matrix(p'range,x'range)
+        := TripDobl_Complex_Jaco_Matrices.Eval(jm,x);
+    mat : TripDobl_Complex_Matrices.Matrix(x'range,x'range);
+    err,sumerr : triple_double := create(0.0); 
+    ans : character;
+
+  begin
+    TripDobl_Complex_Circuits.EvalDiff2(s,xv,vh);
+    put_line("The function value computed symbolically :"); put_line(y);
+    put_line("The function value computed algorithmically :"); put_line(s.fx);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(y,s.fx);
+    sumerr := sumerr + err;
+    put("The sum of errors : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
+    put_line("The Jacobian matrix computed symbolically :");
+    TripDobl_Circuit_Makers.Write_Matrix(jmx);
+    put_line("The Jacobian matrix computed algorithmically :");
+    TripDobl_Circuit_Makers.Write_Matrix(s.jm);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(jmx,s.jm);
+    sumerr := sumerr + err;
+    put("The sum of errors : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
+    for k in p'range loop
+      mat := TripDobl_Circuit_Makers.Hessian(p(k),x);
+      put("Hessian "); put(k,1); put_line(" computed symbolically :");
+      TripDobl_Circuit_Makers.Write_Matrix(mat);
+      put("Hessian "); put(k,1); put_line(" computed algorithmically :");
+      TripDobl_Circuit_Makers.Write_Matrix(vh(k).all);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(mat,vh(k).all);
+      sumerr := sumerr + err;
+      put("The sum of errors : "); put(err,3); new_line;
+      put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+      if(ans /= 'y')
+       then return;
+      end if;
+    end loop;
+    put("Sum of all errors : "); put(sumerr,3); new_line;
+  end TripDobl_Run_EvalDiff2;
+
   procedure QuadDobl_Run_EvalDiff2
               ( p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 s : in QuadDobl_Complex_Circuits.Link_to_System ) is
@@ -1115,6 +1454,183 @@ package body Test_Hessian_Circuits is
     put("Sum of all errors : "); put(sumerr,3); new_line;
   end QuadDobl_Run_EvalDiff2;
 
+  procedure PentDobl_Run_EvalDiff2
+              ( p : in PentDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                s : in PentDobl_Complex_Circuits.Link_to_System ) is
+
+    x : constant PentDobl_Complex_Vectors.Vector(1..s.dim)
+      := PentDobl_Random_Vectors.Random_Vector(1,s.dim);
+    xv : constant PentDobl_Complex_Vectors.Link_to_Vector
+       := new PentDobl_Complex_Vectors.Vector'(x);
+    vh : constant PentDobl_Complex_VecMats.VecMat(1..s.neq)
+       := PentDobl_Complex_Circuits.Allocate(s.neq,s.dim);
+    y : constant PentDobl_Complex_Vectors.Vector(p'range)
+      := PentDobl_Complex_Poly_SysFun.Eval(p.all,x);
+    jm : constant PentDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := PentDobl_Complex_Jaco_Matrices.Create(p.all);
+    jmx : constant PentDobl_Complex_Matrices.Matrix(p'range,x'range)
+        := PentDobl_Complex_Jaco_Matrices.Eval(jm,x);
+    mat : PentDobl_Complex_Matrices.Matrix(x'range,x'range);
+    err,sumerr : penta_double := create(0.0); 
+    ans : character;
+
+  begin
+    PentDobl_Complex_Circuits.EvalDiff2(s,xv,vh);
+    put_line("The function value computed symbolically :"); put_line(y);
+    put_line("The function value computed algorithmically :"); put_line(s.fx);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(y,s.fx);
+    sumerr := sumerr + err;
+    put("The sum of errors : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
+    put_line("The Jacobian matrix computed symbolically :");
+    PentDobl_Circuit_Makers.Write_Matrix(jmx);
+    put_line("The Jacobian matrix computed algorithmically :");
+    PentDobl_Circuit_Makers.Write_Matrix(s.jm);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(jmx,s.jm);
+    sumerr := sumerr + err;
+    put("The sum of errors : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
+    for k in p'range loop
+      mat := PentDobl_Circuit_Makers.Hessian(p(k),x);
+      put("Hessian "); put(k,1); put_line(" computed symbolically :");
+      PentDobl_Circuit_Makers.Write_Matrix(mat);
+      put("Hessian "); put(k,1); put_line(" computed algorithmically :");
+      PentDobl_Circuit_Makers.Write_Matrix(vh(k).all);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(mat,vh(k).all);
+      sumerr := sumerr + err;
+      put("The sum of errors : "); put(err,3); new_line;
+      put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+      if(ans /= 'y')
+       then return;
+      end if;
+    end loop;
+    put("Sum of all errors : "); put(sumerr,3); new_line;
+  end PentDobl_Run_EvalDiff2;
+
+  procedure OctoDobl_Run_EvalDiff2
+              ( p : in OctoDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                s : in OctoDobl_Complex_Circuits.Link_to_System ) is
+
+    x : constant OctoDobl_Complex_Vectors.Vector(1..s.dim)
+      := OctoDobl_Random_Vectors.Random_Vector(1,s.dim);
+    xv : constant OctoDobl_Complex_Vectors.Link_to_Vector
+       := new OctoDobl_Complex_Vectors.Vector'(x);
+    vh : constant OctoDobl_Complex_VecMats.VecMat(1..s.neq)
+       := OctoDobl_Complex_Circuits.Allocate(s.neq,s.dim);
+    y : constant OctoDobl_Complex_Vectors.Vector(p'range)
+      := OctoDobl_Complex_Poly_SysFun.Eval(p.all,x);
+    jm : constant OctoDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := OctoDobl_Complex_Jaco_Matrices.Create(p.all);
+    jmx : constant OctoDobl_Complex_Matrices.Matrix(p'range,x'range)
+        := OctoDobl_Complex_Jaco_Matrices.Eval(jm,x);
+    mat : OctoDobl_Complex_Matrices.Matrix(x'range,x'range);
+    err,sumerr : octo_double := create(0.0); 
+    ans : character;
+
+  begin
+    OctoDobl_Complex_Circuits.EvalDiff2(s,xv,vh);
+    put_line("The function value computed symbolically :"); put_line(y);
+    put_line("The function value computed algorithmically :"); put_line(s.fx);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(y,s.fx);
+    sumerr := sumerr + err;
+    put("The sum of errors : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
+    put_line("The Jacobian matrix computed symbolically :");
+    OctoDobl_Circuit_Makers.Write_Matrix(jmx);
+    put_line("The Jacobian matrix computed algorithmically :");
+    OctoDobl_Circuit_Makers.Write_Matrix(s.jm);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(jmx,s.jm);
+    sumerr := sumerr + err;
+    put("The sum of errors : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
+    for k in p'range loop
+      mat := OctoDobl_Circuit_Makers.Hessian(p(k),x);
+      put("Hessian "); put(k,1); put_line(" computed symbolically :");
+      OctoDobl_Circuit_Makers.Write_Matrix(mat);
+      put("Hessian "); put(k,1); put_line(" computed algorithmically :");
+      OctoDobl_Circuit_Makers.Write_Matrix(vh(k).all);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(mat,vh(k).all);
+      sumerr := sumerr + err;
+      put("The sum of errors : "); put(err,3); new_line;
+      put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+      if(ans /= 'y')
+       then return;
+      end if;
+    end loop;
+    put("Sum of all errors : "); put(sumerr,3); new_line;
+  end OctoDobl_Run_EvalDiff2;
+
+  procedure DecaDobl_Run_EvalDiff2
+              ( p : in DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                s : in DecaDobl_Complex_Circuits.Link_to_System ) is
+
+    x : constant DecaDobl_Complex_Vectors.Vector(1..s.dim)
+      := DecaDobl_Random_Vectors.Random_Vector(1,s.dim);
+    xv : constant DecaDobl_Complex_Vectors.Link_to_Vector
+       := new DecaDobl_Complex_Vectors.Vector'(x);
+    vh : constant DecaDobl_Complex_VecMats.VecMat(1..s.neq)
+       := DecaDobl_Complex_Circuits.Allocate(s.neq,s.dim);
+    y : constant DecaDobl_Complex_Vectors.Vector(p'range)
+      := DecaDobl_Complex_Poly_SysFun.Eval(p.all,x);
+    jm : constant DecaDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := DecaDobl_Complex_Jaco_Matrices.Create(p.all);
+    jmx : constant DecaDobl_Complex_Matrices.Matrix(p'range,x'range)
+        := DecaDobl_Complex_Jaco_Matrices.Eval(jm,x);
+    mat : DecaDobl_Complex_Matrices.Matrix(x'range,x'range);
+    err,sumerr : deca_double := create(0.0); 
+    ans : character;
+
+  begin
+    DecaDobl_Complex_Circuits.EvalDiff2(s,xv,vh);
+    put_line("The function value computed symbolically :"); put_line(y);
+    put_line("The function value computed algorithmically :"); put_line(s.fx);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(y,s.fx);
+    sumerr := sumerr + err;
+    put("The sum of errors : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
+    put_line("The Jacobian matrix computed symbolically :");
+    DecaDobl_Circuit_Makers.Write_Matrix(jmx);
+    put_line("The Jacobian matrix computed algorithmically :");
+    DecaDobl_Circuit_Makers.Write_Matrix(s.jm);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(jmx,s.jm);
+    sumerr := sumerr + err;
+    put("The sum of errors : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
+    for k in p'range loop
+      mat := DecaDobl_Circuit_Makers.Hessian(p(k),x);
+      put("Hessian "); put(k,1); put_line(" computed symbolically :");
+      DecaDobl_Circuit_Makers.Write_Matrix(mat);
+      put("Hessian "); put(k,1); put_line(" computed algorithmically :");
+      DecaDobl_Circuit_Makers.Write_Matrix(vh(k).all);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(mat,vh(k).all);
+      sumerr := sumerr + err;
+      put("The sum of errors : "); put(err,3); new_line;
+      put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+      if(ans /= 'y')
+       then return;
+      end if;
+    end loop;
+    put("Sum of all errors : "); put(sumerr,3); new_line;
+  end DecaDobl_Run_EvalDiff2;
+
   procedure Standard_Test_EvalDiff2 is
 
     use Standard_Complex_Poly_Systems;
@@ -1146,6 +1662,21 @@ package body Test_Hessian_Circuits is
     DoblDobl_Run_EvalDiff2(p,s);
   end DoblDobl_Test_EvalDiff2;
 
+  procedure TripDobl_Test_EvalDiff2 is
+
+    use TripDobl_Complex_Poly_Systems;
+    use TripDobl_Complex_Circuits;
+
+    p : Link_to_Poly_Sys;
+    s : Link_to_System;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ..."); get(p);
+    s := TripDobl_Circuit_Makers.Make_Complex_System(p);
+    TripDobl_Run_EvalDiff2(p,s);
+  end TripDobl_Test_EvalDiff2;
+
   procedure QuadDobl_Test_EvalDiff2 is
 
     use QuadDobl_Complex_Poly_Systems;
@@ -1160,6 +1691,51 @@ package body Test_Hessian_Circuits is
     s := QuadDobl_Circuit_Makers.Make_Complex_System(p);
     QuadDobl_Run_EvalDiff2(p,s);
   end QuadDobl_Test_EvalDiff2;
+
+  procedure PentDobl_Test_EvalDiff2 is
+
+    use PentDobl_Complex_Poly_Systems;
+    use PentDobl_Complex_Circuits;
+
+    p : Link_to_Poly_Sys;
+    s : Link_to_System;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ..."); get(p);
+    s := PentDobl_Circuit_Makers.Make_Complex_System(p);
+    PentDobl_Run_EvalDiff2(p,s);
+  end PentDobl_Test_EvalDiff2;
+
+  procedure OctoDobl_Test_EvalDiff2 is
+
+    use OctoDobl_Complex_Poly_Systems;
+    use OctoDobl_Complex_Circuits;
+
+    p : Link_to_Poly_Sys;
+    s : Link_to_System;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ..."); get(p);
+    s := OctoDobl_Circuit_Makers.Make_Complex_System(p);
+    OctoDobl_Run_EvalDiff2(p,s);
+  end OctoDobl_Test_EvalDiff2;
+
+  procedure DecaDobl_Test_EvalDiff2 is
+
+    use DecaDobl_Complex_Poly_Systems;
+    use DecaDobl_Complex_Circuits;
+
+    p : Link_to_Poly_Sys;
+    s : Link_to_System;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ..."); get(p);
+    s := DecaDobl_Circuit_Makers.Make_Complex_System(p);
+    DecaDobl_Run_EvalDiff2(p,s);
+  end DecaDobl_Test_EvalDiff2;
 
   function Prompt_for_Precision return character is
 
@@ -1221,7 +1797,11 @@ package body Test_Hessian_Circuits is
     case prc is
       when '1' => Standard_Test_Power_Circuit(dim,nbr,pwr);
       when '2' => DoblDobl_Test_Power_Circuit(dim,nbr,pwr);
+      when '3' => TripDobl_Test_Power_Circuit(dim,nbr,pwr);
       when '4' => QuadDobl_Test_Power_Circuit(dim,nbr,pwr);
+      when '5' => PentDobl_Test_Power_Circuit(dim,nbr,pwr);
+      when '6' => OctoDobl_Test_Power_Circuit(dim,nbr,pwr);
+      when '7' => DecaDobl_Test_Power_Circuit(dim,nbr,pwr);
       when others => null;
     end case;
   end Test_Random_Power_Circuit;
@@ -1234,7 +1814,11 @@ package body Test_Hessian_Circuits is
     case prc is
       when '1' => Standard_Test_EvalDiff2;
       when '2' => DoblDobl_Test_EvalDiff2;
+      when '3' => TripDobl_Test_EvalDiff2;
       when '4' => QuadDobl_Test_EvalDiff2;
+      when '5' => PentDobl_Test_EvalDiff2;
+      when '6' => OctoDobl_Test_EvalDiff2;
+      when '7' => DecaDobl_Test_EvalDiff2;
       when others => null;
     end case;
   end Test_EvalDiff2;

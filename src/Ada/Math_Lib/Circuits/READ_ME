@@ -123,15 +123,27 @@ ts_perfconv                        : test on performance and convolutions
 ts_perfcirc                        : test performance of splitted circuits
 standard_hessian_updaters          : update procedures for Hessian matrices
 dobldobl_hessian_updaters          : dobldobl updates for Hessian matrices
+tripdobl_hessian_updaters          : tripdobl updates for Hessian matrices
 quaddobl_hessian_updaters          : quaddobl updates for Hessian matrices
+pentdobl_hessian_updaters          : pentdobl updates for Hessian matrices
+octodobl_hessian_updaters          : octodobl updates for Hessian matrices
+decadobl_hessian_updaters          : decadobl updates for Hessian matrices
 standard_complex_circuits          : development code for correctness tests
 dobldobl_complex_circuits          : double double complex circuits
+tripdobl_complex_circuits          : triple double complex circuits
 quaddobl_complex_circuits          : quad double complex circuits
+pentdobl_complex_circuits          : penta double complex circuits
+octodobl_complex_circuits          : octo double complex circuits
+decadobl_complex_circuits          : deca double complex circuits
 standard_coefficient_circuits      : better performing algo diff eval
 standard_circuit_splitters         : split coefficients of circuits
 standard_circuit_makers            : standard precision testing utilities
 dobldobl_circuit_makers            : double double precision testing utilities
+tripdobl_circuit_makers            : triple double precision testing utilities
 quaddobl_circuit_makers            : quad double precision testing utilities
+pentdobl_circuit_makers            : penta double precision testing utilities
+octodobl_circuit_makers            : octo double precision testing utilities
+decadobl_circuit_makers            : deca double precision testing utilities
 ts_perfade                         : test performance of algo diff eval
 test_hessian_circuits              : test on better Hessian computation
 ts_perfhess                        : calls the main test on Hessian circuits

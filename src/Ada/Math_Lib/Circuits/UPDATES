@@ -1,5 +1,9 @@
 Fri 23 Oct 2020 : refactored the main test in test_hessian_circuits to
   make room for triple, penta, octo, and deca double precision.
+  New packages {tripdobl,pentdobl,octodobl,decadobl}_hessian_updaters
+  {tripdobl,pentdobl,octodobl,decadobl}_complex_circuits, and
+  {tripdobl,pentdobl,octodobl,decadobl}_circuit_makers, with added
+  procedures in test_hessian_circuits.
 
 Thu 22 Oct 2020 : moved code from ts_perfhess.adb into a new package
   test_hessian_circuits.

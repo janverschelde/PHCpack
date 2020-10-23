@@ -6,11 +6,19 @@ with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
+with TripDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
+with PentDobl_Complex_Poly_Systems;
+with OctoDobl_Complex_Poly_Systems;
+with DecaDobl_Complex_Poly_Systems;
 with Standard_Complex_Circuits;
 with Standard_Coefficient_Circuits;
 with DoblDobl_Complex_Circuits;
+with TripDobl_Complex_Circuits;
 with QuadDobl_Complex_Circuits;
+with PentDobl_Complex_Circuits;
+with OctoDobl_Complex_Circuits;
+with DecaDobl_Complex_Circuits;
 
 package Test_Hessian_Circuits is
 
@@ -183,12 +191,40 @@ package Test_Hessian_Circuits is
   --   and highest power pwr, to test the computation of the Hessian,
   --   in double double precision.
 
+  procedure TripDobl_Test_Power_Circuit ( dim,nbr,pwr : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random circuit with dim variables, nbr of terms,
+  --   and highest power pwr, to test the computation of the Hessian,
+  --   in triple double precision.
+
   procedure QuadDobl_Test_Power_Circuit ( dim,nbr,pwr : in integer32 );
 
   -- DESCRIPTION :
   --   Generates a random circuit with dim variables, nbr of terms,
   --   and highest power pwr, to test the computation of the Hessian,
   --   in quad double precision.
+
+  procedure PentDobl_Test_Power_Circuit ( dim,nbr,pwr : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random circuit with dim variables, nbr of terms,
+  --   and highest power pwr, to test the computation of the Hessian,
+  --   in penta double precision.
+
+  procedure OctoDobl_Test_Power_Circuit ( dim,nbr,pwr : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random circuit with dim variables, nbr of terms,
+  --   and highest power pwr, to test the computation of the Hessian,
+  --   in octo double precision.
+
+  procedure DecaDobl_Test_Power_Circuit ( dim,nbr,pwr : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random circuit with dim variables, nbr of terms,
+  --   and highest power pwr, to test the computation of the Hessian,
+  --   in deca double precision.
 
   procedure Standard_Run_EvalDiff2
               ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -211,9 +247,49 @@ package Test_Hessian_Circuits is
   --   The values computed algorithmically are compared with
   --   the symbolic computations on the system p.
 
+  procedure TripDobl_Run_EvalDiff2
+              ( p : in TripDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                s : in TripDobl_Complex_Circuits.Link_to_System );
+
+  -- DESCRIPTION :
+  --   Generates a random point to evaluate the system s of circuits,
+  --   to compute its Jacobian and vector of Hessians.
+  --   The values computed algorithmically are compared with
+  --   the symbolic computations on the system p.
+
   procedure QuadDobl_Run_EvalDiff2
               ( p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 s : in QuadDobl_Complex_Circuits.Link_to_System );
+
+  -- DESCRIPTION :
+  --   Generates a random point to evaluate the system s of circuits,
+  --   to compute its Jacobian and vector of Hessians.
+  --   The values computed algorithmically are compared with
+  --   the symbolic computations on the system p.
+
+  procedure PentDobl_Run_EvalDiff2
+              ( p : in PentDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                s : in PentDobl_Complex_Circuits.Link_to_System );
+
+  -- DESCRIPTION :
+  --   Generates a random point to evaluate the system s of circuits,
+  --   to compute its Jacobian and vector of Hessians.
+  --   The values computed algorithmically are compared with
+  --   the symbolic computations on the system p.
+
+  procedure OctoDobl_Run_EvalDiff2
+              ( p : in OctoDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                s : in OctoDobl_Complex_Circuits.Link_to_System );
+
+  -- DESCRIPTION :
+  --   Generates a random point to evaluate the system s of circuits,
+  --   to compute its Jacobian and vector of Hessians.
+  --   The values computed algorithmically are compared with
+  --   the symbolic computations on the system p.
+
+  procedure DecaDobl_Run_EvalDiff2
+              ( p : in DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                s : in DecaDobl_Complex_Circuits.Link_to_System );
 
   -- DESCRIPTION :
   --   Generates a random point to evaluate the system s of circuits,
@@ -235,12 +311,40 @@ package Test_Hessian_Circuits is
   --   of the computation of the Jacobian and the Hessians,
   --   in double double precision.
 
+  procedure TripDobl_Test_EvalDiff2;
+
+  -- DESCRIPTION :
+  --   Prompts for a polynomial system and tests the correctness
+  --   of the computation of the Jacobian and the Hessians,
+  --   in triple double precision.
+
   procedure QuadDobl_Test_EvalDiff2;
 
   -- DESCRIPTION :
   --   Prompts for a polynomial system and tests the correctness
   --   of the computation of the Jacobian and the Hessians,
   --   in quad double precision.
+
+  procedure PentDobl_Test_EvalDiff2;
+
+  -- DESCRIPTION :
+  --   Prompts for a polynomial system and tests the correctness
+  --   of the computation of the Jacobian and the Hessians,
+  --   in penta double precision.
+
+  procedure OctoDobl_Test_EvalDiff2;
+
+  -- DESCRIPTION :
+  --   Prompts for a polynomial system and tests the correctness
+  --   of the computation of the Jacobian and the Hessians,
+  --   in octo double precision.
+
+  procedure DecaDobl_Test_EvalDiff2;
+
+  -- DESCRIPTION :
+  --   Prompts for a polynomial system and tests the correctness
+  --   of the computation of the Jacobian and the Hessians,
+  --   in deca double precision.
 
   function Prompt_for_Precision return character;
 
