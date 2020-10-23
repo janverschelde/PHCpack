@@ -1161,55 +1161,100 @@ package body Test_Hessian_Circuits is
     QuadDobl_Run_EvalDiff2(p,s);
   end QuadDobl_Test_EvalDiff2;
 
+  function Prompt_for_Precision return character is
+
+    res : character;
+
+  begin
+    new_line;
+    put_line("MENU for the working precision :");
+    put_line("  1. double precision");
+    put_line("  2. double double precision");
+    put_line("  3. triple double precision");
+    put_line("  4. quad double precision");
+    put_line("  5. penta double precision");
+    put_line("  6. octo double precision");
+    put_line("  7. deca double precision");
+    put("Type 1, 2, 3, 4, 5, 6, or 7 to select the precision : ");
+    Ask_Alternative(res,"1234567");
+    return res;
+  end Prompt_for_Precision;
+
+  procedure Test_Product_or_Circuit is
+
+    nbr,dim,size : integer32 := 0;
+    ans : character;
+
+  begin
+    new_line;
+    put("Give the number of terms : "); get(nbr);
+    if nbr = 1 then
+      new_line;
+      put("Indexed product of variables ? (y/n) "); Ask_Yes_or_No(ans);
+      if ans /= 'y' then
+        new_line;
+        put("Give the dimension : "); get(dim);
+        Test_Product(dim);
+      else
+        put("Give the size of the product : "); get(size);
+        put("Give the dimension (> "); put(size,1); put(") : "); get(dim);
+        if size > dim
+         then Test_Product(dim,size);
+        end if;
+      end if;
+    elsif nbr > 1 then
+      put("Give the dimension : "); get(dim);
+      Test_Circuit(dim,nbr);
+    end if;
+  end Test_Product_or_Circuit;
+
+  procedure Test_Random_Power_Circuit is
+
+    prc : constant character := Prompt_for_Precision;
+    dim,nbr,pwr : integer32 := 0;
+
+  begin
+    new_line;
+    put("Give the dimension : "); get(dim);
+    put("Give the number of terms : "); get(nbr);
+    put("Give the highest power : "); get(pwr);
+    case prc is
+      when '1' => Standard_Test_Power_Circuit(dim,nbr,pwr);
+      when '2' => DoblDobl_Test_Power_Circuit(dim,nbr,pwr);
+      when '4' => QuadDobl_Test_Power_Circuit(dim,nbr,pwr);
+      when others => null;
+    end case;
+  end Test_Random_Power_Circuit;
+
+  procedure Test_EvalDiff2 is
+
+    prc : constant character := Prompt_for_Precision;
+
+  begin
+    case prc is
+      when '1' => Standard_Test_EvalDiff2;
+      when '2' => DoblDobl_Test_EvalDiff2;
+      when '4' => QuadDobl_Test_EvalDiff2;
+      when others => null;
+    end case;
+  end Test_EvalDiff2;
+
   procedure Main is
 
-    dim,size,nbr,pwr : integer32 := 0;
     ans : character;
 
   begin
     new_line;
     put_line("MENU to test the algorithmic Hessian computations :");
-    put_line("  0. on a product of variables");
-    put_line("  1. on a random circuit");
-    put_line("  2. hardware precision random general circuit");
-    put_line("  3. double double precision random general circuit");
-    put_line("  4. quad double precision random general circuit");
-    put_line("  5. hardware precision user given polynomial system");
-    put_line("  6. double double precision user given polynomial system");
-    put_line("  7. quad double precision user given polynomial system");
-    put("Type 0, 1, 2, 3, 4, 5, 6, or 7 to select the test : ");
-    Ask_Alternative(ans,"01234567");
+    put_line("  0. on a product of variables or on many products");
+    put_line("  1. on one randomly generated circuit");
+    put_line("  2. on a user given polynomial system");
+    put("Type 0, 1, or 2 to select the test : ");
+    Ask_Alternative(ans,"012");
     case ans is
-      when '0' =>
-        new_line;
-        put("Indexed product of variables ? (y/n) "); Ask_Yes_or_No(ans);
-        if ans /= 'y' then
-          new_line;
-          put("Give the dimension : "); get(dim);
-          Test_Product(dim);
-        else
-          put("Give the size of the product : "); get(size);
-          put("Give the dimension (> "); put(size,1); put(") : "); get(dim);
-          Test_Product(dim,size);
-        end if;
-      when '1' | '2' | '3' | '4' =>
-        new_line;
-        put("Give the dimension : "); get(dim);
-        put("Give the number of terms : "); get(nbr);
-        if ans = '1' then
-          Test_Circuit(dim,nbr);
-        else
-          put("Give the highest power : "); get(pwr);
-          case ans is
-            when '2' => Standard_Test_Power_Circuit(dim,nbr,pwr);
-            when '3' => DoblDobl_Test_Power_Circuit(dim,nbr,pwr);
-            when '4' => QuadDobl_Test_Power_Circuit(dim,nbr,pwr);
-            when others => null;
-          end case;
-        end if;
-      when '5' => Standard_Test_EvalDiff2;
-      when '6' => DoblDobl_Test_EvalDiff2;
-      when '7' => QuadDobl_Test_EvalDiff2;
+      when '0' => Test_Product_or_Circuit;
+      when '1' => Test_Random_Power_Circuit;
+      when '2' => Test_EvalDiff2;
       when others => null;
     end case;
   end Main;

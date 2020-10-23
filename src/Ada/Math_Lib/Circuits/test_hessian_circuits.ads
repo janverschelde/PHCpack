@@ -242,6 +242,32 @@ package Test_Hessian_Circuits is
   --   of the computation of the Jacobian and the Hessians,
   --   in quad double precision.
 
+  function Prompt_for_Precision return character;
+
+  -- DESCRIPTION :
+  --   Returns '1', '2', '3', '4', '5', '6', or '7', depending
+  --   whether double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision is wanted.
+
+  procedure Test_Product_or_Circuit;
+
+  -- DESCRIPTION :
+  --   Prompts for the number of terms.  If one, then a product
+  --   of variables will be tested, otherwise a number of products
+  --   are generated and tested.
+
+  procedure Test_Random_Power_Circuit;
+
+  -- DESCRIPTION :
+  --   Prompts for the precision, dimension, number of terms, and 
+  --   the highest power to test a randomly generated power circuit.
+
+  procedure Test_EvalDiff2;
+
+  -- DESCRIPTION :
+  --   Prompts for the working precision and then tests
+  --   for a given polynomial systems.
+
   procedure Main;
 
   -- DESCRIPTION :
