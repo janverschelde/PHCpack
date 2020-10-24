@@ -1,3 +1,7 @@
+Fri 23 Oct 2020 : new packages test_product_systems, test_pivot_selection,
+  and test_start_systems, with code extracted from respectively ts_prodsys,
+  ts_pivset, and ts_startsys.
+
 Sun 4 Oct 2020 : to main_{m_homogenization,multi_homogenization,set_structures}
   added a Main without parameters, with code from ts_mainmhom, ts_mainmuho,
   and ts_mainsets.

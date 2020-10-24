@@ -18,7 +18,8 @@ file name                          : short description
 ------------------------------------------------------------------------------
 lexicographic_root_enumeration     : lexicographic enumeration of roots
 total_degree_start_systems         : start systems based on total degree
-ts_startsys                        : test on total-degree based start systems
+test_start_systems                 : test on total-degree based start systems
+ts_startsys                        : calls the main test on start systems
 ------------------------------------------------------------------------------
 sets_of_unknowns                   : set of unknowns of polynomials
 sets_of_unknowns_io                : input/output for sets of unknowns
@@ -53,7 +54,8 @@ main_multi_homogenization          : main procedure for multi-homogenization
 ts_mainmuho                        : calls the main multi-homogenization
 ------------------------------------------------------------------------------
 pivot_selection                    : algorithms for pivot selection
-ts_pivsel                          : test pivot selection problem
+test_pivot_selection               : tests pivot selection algorithms
+ts_pivsel                          : calls the main test on pivot selection
 ------------------------------------------------------------------------------
 set_structure                      : model of general degree structure
 set_structure_io                   : input/output of set structures
@@ -65,5 +67,6 @@ random_product_start_systems       : construct random linear-product systems
 main_set_structures                : main procedure for set structures
 ts_strset                          : test on set structures as strings
 ts_mainsets                        : calls the main for set structures
-ts_prodsys                         : test on jumpstarting product systems
+test_product_systems               : test on jumpstarting product systems
+ts_prodsys                         : calls the main test on product systems
 ------------------------------------------------------------------------------
