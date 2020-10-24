@@ -72,7 +72,11 @@ homotopy_series_readers           : reads a homotopy for power series
 -------------------------------------------------------------------------------
 standard_rational_approximations  : definition of a rational approximation
 dobldobl_rational_approximations  : rational approximations with double doubles
+tripdobl_rational_approximations  : rational approximations with triple doubles
 quaddobl_rational_approximations  : rational approximations with quad doubles
+pentdobl_rational_approximations  : rational approximations with penta doubles
+octodobl_rational_approximations  : rational approximations with octo doubles
+decadobl_rational_approximations  : rational approximations with deca doubles
 homotopy_coefficient_scaling      : scale coefficients for homogenization
 standard_pade_approximants        : Pade approximants in double precision
 standard_pade_approximants_io     : output of double Pade approximants
@@ -85,7 +89,8 @@ test_standard_pade_approximants   : test pade approximants with doubles
 test_dobldobl_pade_approximants   : test pade approximants with double doubles
 test_quaddobl_pade_approximants   : test pade approximants with quad doubles
 ts_serpade                        : test rational approximations given series
-ts_ratapp                         : test on thread safe constructions
+test_rational_approximations      : test on rational approximations
+ts_ratapp                         : calls the main test on rational approxs
 ------------------------------------------------------------------------------
 standard_homotopy_convolutions_io : prompts for double homotopy convolutions
 dobldobl_homotopy_convolutions_io : prompts for dobldobl homotopy convolutions

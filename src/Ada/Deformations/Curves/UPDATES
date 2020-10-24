@@ -1,3 +1,6 @@
+Fri 23 Oct 2020 : new packages {tripdobl,pentdobl,octodobl,decadobl}_
+  rational_approximations, test_rational_approximations, called by ts_ratapp.
+
 Tue 29 Sep 2020 : new package run_power_series_methods with code taken
   from mainseries.adb.  Moved the code from the test procedure ts_serpade
   into the packages test_{standard,dobldobl,quaddobl}_pade_approximants.
