@@ -32,7 +32,8 @@ There are four parts in this library:
 file name                         : short description
 -------------------------------------------------------------------------------
 random_coefficient_systems        : create random systems with given supports
-ts_rndcff                         : test creation of random systems
+test_rndcff_systems               : tests the making of random systems
+ts_rndcff                         : calls the main test on random systems
 integer_mixed_subdivisions        : mixed subdivisions with integer lifting
 integer_mixed_subdivisions_io     : input/output of mixed subdivisions
 integer_lifting_functions         : lifting supports with integer values
@@ -84,7 +85,8 @@ jumpstart_polyhedral_homotopies   : drivers to jumpstart polyhedral trackers
 ts_exptrack                       : test exponential continuation parameters
 -------------------------------------------------------------------------------
 lifted_configurations             : for balancing the lifting values
-ts_balance                        : development of balancing lifting values
+test_balance_lifiting             : development of balancing lifting values
+ts_balance                        : calls the main test on balancing
 -------------------------------------------------------------------------------
 
 Subdivisions induced by integer lifting functions have to be recursive,

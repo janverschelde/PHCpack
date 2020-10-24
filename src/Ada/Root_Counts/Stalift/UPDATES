@@ -1,3 +1,6 @@
+Sat 23 Oct 2020 : new packages test_rndcff_systems and test_balance_lifting
+  with code from ts_rndcff and ts_balance.
+
 Sun 4 Oct 2020 : updated driver_for_criterion for the name change of
   drivers_for_vertex_points into main_vertex_points.
 

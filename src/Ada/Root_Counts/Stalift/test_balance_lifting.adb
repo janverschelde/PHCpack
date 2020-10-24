@@ -1,32 +1,14 @@
-with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
--- with Timing_Package;                     use Timing_Package;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Standard_Integer_Vectors;
-with Standard_Floating_Vectors;
 with Standard_Floating_Vectors_io;       use Standard_Floating_Vectors_io;
-with Lists_of_Floating_Vectors;
-with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
-with Arrays_of_Floating_Vector_Lists;
 with Floating_Integer_Convertors;
-with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;     use Floating_Mixed_Subdivisions_io;
 with Lifted_Configurations;              use Lifted_Configurations;
 
-with Test_Balance_Lifting;
-
-procedure ts_balance is
-
--- DESCRIPTION :
---   Test balancing of lifting values.
-
--- AUXILIARY PROCEDURES :
+package body Test_Balance_Lifting is
 
   procedure Read_Subdivision
              ( n : out natural32;
@@ -53,10 +35,6 @@ procedure ts_balance is
                lifvals,normal : Standard_Floating_Vectors.Link_to_Vector )
              return double_float is
 
-  -- DESCRIPTION :
-  --   Returns the inner product of the normal with the point
-  --   with lifting values in lifvals.
-
    res : double_float := 0.0;
    ind : constant integer32 := integer32(point(point'last));
 
@@ -73,11 +51,8 @@ procedure ts_balance is
                lifvals,normal : in Standard_Floating_Vectors.Link_to_Vector;
                min,max : out double_float ) is
 
-  -- DESCRIPTION :
-  --   Returns in max and min the largest and smalles inner product of 
-  --   the normal with the points with lifting values in lifvals.
-
    use Lists_of_Floating_Vectors;
+
    tmp : List;
    lpt : Standard_Floating_Vectors.Link_to_Vector;
    ip : double_float;
@@ -104,10 +79,6 @@ procedure ts_balance is
                lifvals,normal : Standard_Floating_Vectors.Link_to_Vector )
              return double_float is
 
-  -- DESCRIPTION :
-  --   Returns the largest inner product of the normal with the points
-  --   with lifting values in lifvals.
-
     res,min,max,ip_min,ip_max : double_float;
 
   begin
@@ -130,12 +101,6 @@ procedure ts_balance is
                 n : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
                 mcc : in out Mixed_Subdivision ) is
-
-  -- DESCRIPTION :
-  --   The lifted points are extracted from the mixed-cell configuration.
-  --   Every point has a unique index and the lifting value in every point
-  --   is replaced by the index of the point.
-  --   The lifting values of the points are stored in one central vector.
 
     pts : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(mix'range);
@@ -192,6 +157,4 @@ procedure ts_balance is
     Close(outfile);
   end Main;
 
-begin
-  Test_Balance_Lifting.Main;
-end ts_balance;
+end Test_Balance_Lifting;
