@@ -23,7 +23,7 @@ with Multprec_Complex_Solutions;
 with Drivers_for_Scaling;                use Drivers_for_Scaling;
 with Drivers_for_Reduction;              use Drivers_for_Reduction;
 with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
-with Drivers_for_Root_Counts;            use Drivers_for_Root_Counts;
+with Main_Root_Counters;
 with Drivers_for_Homotopy_Creation;      use Drivers_for_Homotopy_Creation;
 with Driver_for_Root_Refining;
 with String_System_Readers;
@@ -114,7 +114,7 @@ procedure mainphc
     Driver_for_Scaling(file,scalp,basis,scalvec,vrb-1);
     Driver_for_Reduction(file,scalp,roco,true,vrb-1);
     Copy(scalp,projp);
-    Driver_for_Root_Counts(file,nt,projp,q,true,sols,roco,vrb-1);
+    Main_Root_Counters.Polynomial_Main(file,nt,projp,q,true,sols,roco,vrb-1);
     if Length_Of(sols) > 0 then
       Driver_for_Homotopy_Construction(file,ls,projp,q,sols,target,deci,vrb-1);
       proj := (Number_of_Unknowns(p(p'first)) > natural32(p'last));
@@ -161,7 +161,7 @@ procedure mainphc
      then put_line("-> in mainphc.Main_Laurent_Solver ...");
     end if;
     Copy(p,cp);
-    Driver_for_Root_Counts(file,nt,cp,q,sols,roco,vrb-1);
+    Main_Root_Counters.Laurent_Main(file,nt,cp,q,sols,roco,vrb-1);
     if Length_Of(sols) > 0 then
       if Head_Of(sols).t /= Create(0.0)
        then Set_Continuation_Parameter(sols,Create(0.0));

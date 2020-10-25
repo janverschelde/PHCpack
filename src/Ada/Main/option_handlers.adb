@@ -3,13 +3,14 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Characters_and_Numbers;             use Characters_and_Numbers;
 with Standard_Random_Numbers;
+with Main_Root_Counters;
 with Write_Seed_Number;
 with Greeting_Banners;
 with Actions_and_Options;
 with mainphc,bablphc,bablphc2,bablphc4;
 with maingood,mainsymb;
 with mainscal,mainred,mainred2,mainred4;
-with bablroco,mainroco;
+with bablroco;
 with babldmvc,mainsmvc;
 with mainpoco,bablpoco,bablpoco2,bablpoco4;
 with mainadep,maintrack;
@@ -367,13 +368,13 @@ package body Option_Handlers is
       end if;
     elsif nt = 0 then
       put_line(welcome); put_line(rocoban & ", no multitasking.");
-      mainroco(0,infile,outfile,vrblvl);
+      Main_Root_Counters.Main(0,infile,outfile,vrblvl);
     else    
       declare
         ns : constant string := Convert(integer32(nt));
       begin
         put_line(welcome); put_line(rocoban & ", with " & ns & " tasks.");
-        mainroco(nt,infile,outfile,vrblvl);
+        Main_Root_Counters.Main(nt,infile,outfile,vrblvl);
       end;
     end if;
   end Root_Count_Handler;

@@ -5,8 +5,11 @@ with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Vectors;
-with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
+with Standard_Complex_Polynomials;
+with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
+with Standard_Laur_Poly_Convertors;
 with Standard_Complex_Prod_Systems;      use Standard_Complex_Prod_Systems;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with m_Homogeneous_Bezout_Numbers;       use m_Homogeneous_Bezout_Numbers;
@@ -23,8 +26,11 @@ with Drivers_for_Dynamic_Lifting;        use Drivers_for_Dynamic_Lifting;
 with Drivers_for_Symmetric_Lifting;      use Drivers_for_Symmetric_Lifting;
 with Drivers_for_MixedVol_Algorithm;     use Drivers_for_MixedVol_Algorithm;
 with Drivers_for_DEMiCs_Algorithm;       use Drivers_for_DEMiCs_Algorithm;
+with Write_Seed_Number;
+with Greeting_Banners;
+with Bye_Bye_Message;
 
-package body Drivers_for_Root_Counts is
+package body Main_Root_Counters is
 
   procedure High_Total_Degree ( file : in file_type; p : in Poly_Sys ) is
 
@@ -33,6 +39,8 @@ package body Drivers_for_Root_Counts is
   --   represented exactly by integers supported by hardware.
 
     totdeg : Natural_Number;
+
+    use Standard_Complex_Polynomials;
 
   begin
     put("The total degree : ");
@@ -306,7 +314,7 @@ package body Drivers_for_Root_Counts is
     end case;
   end Apply_Laurent_Method;
 
-  procedure Driver_for_Root_Counts 
+  procedure Polynomial_Main
                ( file : in file_type; nt : in natural32;
                  p,q : in out Poly_Sys; own : in boolean;
                  qsols : in out Solution_List; roco : out natural32;
@@ -321,9 +329,8 @@ package body Drivers_for_Root_Counts is
     first : boolean := true; -- total degree only when first time
 
   begin
-    if verbose > 0 then
-      put_line("-> in drivers_for_root_counts.Driver_for_Root_Counts,");
-      put_line("for a polynomial system ...");
+    if verbose > 0
+     then put_line("-> in main_root_counters.Polynomial_Main ...");
     end if;
     declare
     begin
@@ -381,9 +388,9 @@ package body Drivers_for_Root_Counts is
     end loop;
     roco := natural32(rc);
     Clear(lpos);
-  end Driver_for_Root_Counts;
+  end Polynomial_Main;
 
-  procedure Driver_for_Root_Counts
+  procedure Laurent_Main
                ( file : in file_type; nt : in natural32;
                  p,q : in out Laur_Sys; qsols : in out Solution_List;
                  roco : out natural32; verbose : in integer32 := 0 ) is
@@ -392,9 +399,8 @@ package body Drivers_for_Root_Counts is
     choice : character := '0';
 
   begin
-    if verbose > 0 then
-      put_line("-> in drivers_for_root_counts.Driver_for_Root_Counts,");
-      put_line("for a Laurent polynomial system ...");
+    if verbose > 0
+     then put_line("-> in main_root_counters.Laurent_Main ...");
     end if;
     loop
       Display_Laurent_Menu(rc,choice);
@@ -404,6 +410,123 @@ package body Drivers_for_Root_Counts is
       Apply_Laurent_Method(file,integer32(nt),p,q,qsols,choice,rc);
     end loop;
     roco := rc;
-  end Driver_for_Root_Counts;
+  end Laurent_Main;
+ 
+  procedure Read_System
+              ( filename : in string; lp : out Link_to_Laur_Sys ) is
 
-end Drivers_for_Root_Counts;
+    file : file_type;
+
+  begin
+    if filename /= "" then
+      Open(file,in_file,filename);
+      get(file,lp);
+      Close(file);
+    end if;
+  exception
+    when others =>
+      new_line;
+      put("Could not open file with name "); put_line(filename);
+      lp := null; return;
+  end Read_System;
+
+  function Is_Square ( p : Laur_Sys ) return boolean is
+
+    use Standard_Complex_Laurentials;
+
+    nq : constant integer32 := p'last;
+    nv : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
+
+  begin
+    if nv = nq then
+      return true;
+    else
+      new_line;
+      put("The number of equations : "); put(nq,1); new_line;
+      put("The number of variables : "); put(nv,1); new_line;
+      put_line("The system is not square!");
+      new_line;
+      return false;
+    end if;
+  end Is_Square;
+
+  procedure Count_Roots
+              ( nt : in natural32; outfilename : in string;
+                p : in out Laur_Sys; v : in integer32 := 0 ) is
+
+    outft : file_type;
+    q : Laur_Sys(p'range);
+    qsols : Solution_List;
+    rc : natural32;
+
+  begin
+    if v > 0
+     then put_line("-> in main_root_counters.Count_Roots 1 ...");
+    end if;
+    Create_Output_File(outft,outfilename);
+    put(outft,p'last,1);
+    new_line(outft);
+    put(outft,p);
+    Laurent_Main(outft,nt,p,q,qsols,rc,v-1);
+    new_line(outft);
+    put_line(outft,Bye_Bye_Message);
+    Write_Seed_Number(outft);
+    put_line(outft,Greeting_Banners.Version);
+    Close(outft);
+  end Count_Roots;
+
+  procedure Count_Roots
+              ( nt : in natural32; outfilename : in string;
+                p : in out Poly_Sys; v : in integer32 := 0 ) is
+
+    outft : file_type;
+    q : Poly_Sys(p'range);
+    qsols : Solution_List;
+    rc : natural32;
+
+  begin
+    if v > 0
+     then put_line("-> in main_root_counters.Count_Roots 2 ...");
+    end if;
+    Create_Output_File(outft,outfilename);
+    put(outft,p'last,1);
+    new_line(outft);
+    put(outft,p);
+    Polynomial_Main(outft,nt,p,q,false,qsols,rc,v-1);
+    new_line(outft);
+    put_line(outft,Bye_Bye_Message);
+    Write_Seed_Number(outft);
+    put_line(outft,Greeting_Banners.Version);
+    Close(outft);
+  end Count_Roots;
+
+  procedure Main ( nt : in natural32; infilename,outfilename : in string;
+                   verbose : in integer32 := 0 ) is
+
+    lp : Link_to_Laur_Sys := null;
+
+  begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in main_root_counters.Main ...");
+    end if;
+    Read_System(infilename,lp);
+    if lp = null
+     then new_line; get(lp);
+    end if;
+    if Is_Square(lp.all) then
+      if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
+        Count_Roots(nt,outfilename,lp.all,verbose-1);
+      else
+        declare
+          use Standard_Laur_Poly_Convertors;
+          q : Poly_Sys(lp'range)
+            := Positive_Laurent_Polynomial_System(lp.all);
+        begin
+          Count_Roots(nt,outfilename,q,verbose-1);
+        end;
+      end if;
+    end if;
+  end Main;
+
+end Main_Root_Counters;

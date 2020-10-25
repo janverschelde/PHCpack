@@ -5,9 +5,9 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
-with Drivers_for_Root_Counts;            use Drivers_for_Root_Counts;
+with Main_Root_Counters;
 
-procedure ts_drivroco is
+procedure ts_mainroco is
 
 -- DESCRIPTION :
 --   This procedure calls the driver to root counting.
@@ -29,5 +29,5 @@ begin
   put("Give the number of tasks (0 for no multitasking) : "); get(nt);
   skip_line; -- next reading will be character
   lq := new Poly_Sys(lp'range);
-  Driver_for_Root_Counts(file,nt,lp.all,lq.all,false,qsols,b);
-end ts_drivroco;
+  Main_Root_Counters.Polynomial_Main(file,nt,lp.all,lq.all,false,qsols,b);
+end ts_mainroco;
