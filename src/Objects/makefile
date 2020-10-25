@@ -2038,11 +2038,11 @@ ts_mtprdcnv:
 
 # Test programs for the Main interactive drivers :
 
-test_main: ts_drivroco ts_blkroco ts_greet use_phc ts_actopt ts_opthand \
+test_main: ts_mainroco ts_blkroco ts_greet use_phc ts_actopt ts_opthand \
            ts_bbsolve
 
-ts_drivroco:
-	make -f $(MAKEFILE) ts_drivroco
+ts_mainroco:
+	make -f $(MAKEFILE) ts_mainroco
 
 ts_blkroco:
 	make -f $(MAKEFILE) ts_blkroco

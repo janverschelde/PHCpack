@@ -2689,15 +2689,15 @@ ts_mtprdcnv:
 
 # Test programs for the Main interactive drivers :
 
-ts_drivroco: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+ts_mainroco: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
              reltab.o mvc4phc.o demicsrun4phc.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_drivroco.adb \
-                 -o ts_drivroco.o
-	gnatbind ts_drivroco use_c2phc
-	gnatlink ts_drivroco inputData.o outputData.o iTest.o fTest.o \
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_mainroco.adb \
+                 -o ts_mainroco.o
+	gnatbind ts_mainroco use_c2phc
+	gnatlink ts_mainroco inputData.o outputData.o iTest.o fTest.o \
                  simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
-                 -o $(BIN)/ts_drivroco \
+                 -o $(BIN)/ts_mainroco \
                  /usr/lib/libc++.dylib \
                  /usr/lib/libstdc++.dylib \
                  --LINK=g++
@@ -2724,7 +2724,8 @@ ts_opthand: corecount.o inputData.o outputData.o iTest.o fTest.o \
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_opthand.adb
+	gnatmake -c $(INCLULIBS) -I$(PHCAda)/PHCtoC/Main_full \
+                    $(GNATOPTFLAGS) ts_opthand.adb
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) pieri_solver.adb
 	gnatbind ts_opthand use_c2phc mainfeed pieri_solver
