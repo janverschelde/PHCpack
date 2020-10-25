@@ -3,6 +3,7 @@ with Standard_Natural_Numbers;            use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Deca_Double_Numbers;                 use Deca_Double_Numbers;
 with DecaDobl_Complex_Numbers_io;         use DecaDobl_Complex_Numbers_io;
+with DecaDobl_Complex_Numbers_cv;
 with Standard_Random_Numbers;
 with DecaDobl_Random_Numbers;
 with Standard_Natural_Vectors;
@@ -10,6 +11,7 @@ with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
 with Standard_Integer_VecVecs;
 with Standard_Random_Vectors;
 with DecaDobl_Random_Vectors;
+with DecaDobl_Complex_Vectors_cv;
 with DecaDobl_Complex_Poly_Functions;
 with Exponent_Indices;
 
@@ -164,6 +166,486 @@ package body DecaDobl_Circuit_Makers is
   begin
     return res;
   end Random_Complex_System;
+
+  function to_double
+             ( c : DecaDobl_Complex_Circuits.Circuit )
+             return Standard_Complex_Circuits.Circuit is
+
+    res : Standard_Complex_Circuits.Circuit(c.nbr)
+        := Standard_Complex_Circuits.Allocate(c.nbr,c.dim);
+
+    use DecaDobl_Complex_Numbers_cv;
+    use DecaDobl_Complex_Vectors_cv;
+
+  begin
+    res.pdg := c.pdg;
+    res.xps := c.xps;
+    res.idx := c.idx;
+    res.fac := c.fac;
+    res.cff := DecaDobl_Complex_to_Standard(c.cff);
+    res.cst := DecaDobl_Complex_to_Standard(c.cst);
+    return res;
+  end to_double;
+
+  function to_double
+             ( c : DecaDobl_Complex_Circuits.Link_to_Circuit )
+             return Standard_Complex_Circuits.Link_to_Circuit is
+
+    res : Standard_Complex_Circuits.Link_to_Circuit;
+    crc : Standard_Complex_Circuits.Circuit(c.nbr);
+
+    use DecaDobl_Complex_Circuits;
+
+  begin
+    if c /= null then
+      crc := to_double(c.all);
+      res := new Standard_Complex_Circuits.Circuit'(crc);
+    end if;
+    return res;
+  end to_double;
+
+  function to_double
+             ( c : DecaDobl_Complex_Circuits.Circuits )
+             return Standard_Complex_Circuits.Circuits is
+
+    res : Standard_Complex_Circuits.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_double(c(k));
+    end loop;
+    return res;
+  end to_double;
+
+  function to_double
+             ( s : DecaDobl_Complex_Circuits.System )
+             return Standard_Complex_Circuits.System is
+
+    crc : constant Standard_Complex_Circuits.Circuits(1..s.neq)
+        := to_double(s.crc);
+    res : constant Standard_Complex_Circuits.System(s.neq,s.dim)
+        := Standard_Complex_Circuits.Create(crc,s.dim);
+
+  begin
+    return res;
+  end to_double;
+
+  function to_double
+             ( s : DecaDobl_Complex_Circuits.Link_to_System )
+             return Standard_Complex_Circuits.Link_to_System is
+
+    sys : Standard_Complex_Circuits.System(s.neq,s.dim);
+    res : Standard_Complex_Circuits.Link_to_System;
+
+    use DecaDobl_Complex_Circuits;
+
+  begin
+    if s /= null then
+      sys := to_double(s.all);
+      res := new Standard_Complex_Circuits.System'(sys);
+    end if;
+    return res;
+  end to_double;
+
+  function to_double_double
+             ( c : DecaDobl_Complex_Circuits.Circuit )
+             return DoblDobl_Complex_Circuits.Circuit is
+
+    res : DoblDobl_Complex_Circuits.Circuit(c.nbr)
+        := DoblDobl_Complex_Circuits.Allocate(c.nbr,c.dim);
+
+    use DecaDobl_Complex_Numbers_cv;
+    use DecaDobl_Complex_Vectors_cv;
+
+  begin
+    res.pdg := c.pdg;
+    res.xps := c.xps;
+    res.idx := c.idx;
+    res.fac := c.fac;
+    res.cff := DecaDobl_Complex_to_DoblDobl(c.cff);
+    res.cst := DecaDobl_Complex_to_DoblDobl(c.cst);
+    return res;
+  end to_double_double;
+
+  function to_double_double
+             ( c : DecaDobl_Complex_Circuits.Link_to_Circuit )
+             return DoblDobl_Complex_Circuits.Link_to_Circuit is
+
+    res : DoblDobl_Complex_Circuits.Link_to_Circuit;
+    crc : DoblDobl_Complex_Circuits.Circuit(c.nbr);
+
+    use DecaDobl_Complex_Circuits;
+
+  begin
+    if c /= null then
+      crc := to_double_double(c.all);
+      res := new DoblDobl_Complex_Circuits.Circuit'(crc);
+    end if;
+    return res;
+  end to_double_double;
+
+  function to_double_double
+             ( c : DecaDobl_Complex_Circuits.Circuits )
+             return DoblDobl_Complex_Circuits.Circuits is
+
+    res : DoblDobl_Complex_Circuits.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_double_double(c(k));
+    end loop;
+    return res;
+  end to_double_double;
+
+  function to_double_double
+             ( s : DecaDobl_Complex_Circuits.System )
+             return DoblDobl_Complex_Circuits.System is
+
+    crc : constant DoblDobl_Complex_Circuits.Circuits(1..s.neq)
+        := to_double_double(s.crc);
+    res : constant DoblDobl_Complex_Circuits.System(s.neq,s.dim)
+        := DoblDobl_Complex_Circuits.Create(crc,s.dim);
+
+  begin
+    return res;
+  end to_double_double;
+
+  function to_double_double
+             ( s : DecaDobl_Complex_Circuits.Link_to_System )
+             return DoblDobl_Complex_Circuits.Link_to_System is
+
+    sys : DoblDobl_Complex_Circuits.System(s.neq,s.dim);
+    res : DoblDobl_Complex_Circuits.Link_to_System;
+
+    use DecaDobl_Complex_Circuits;
+
+  begin
+    if s /= null then
+      sys := to_double_double(s.all);
+      res := new DoblDobl_Complex_Circuits.System'(sys);
+    end if;
+    return res;
+  end to_double_double;
+
+  function to_triple_double
+             ( c : DecaDobl_Complex_Circuits.Circuit )
+             return TripDobl_Complex_Circuits.Circuit is
+
+    res : TripDobl_Complex_Circuits.Circuit(c.nbr)
+        := TripDobl_Complex_Circuits.Allocate(c.nbr,c.dim);
+
+    use DecaDobl_Complex_Numbers_cv;
+    use DecaDobl_Complex_Vectors_cv;
+
+  begin
+    res.pdg := c.pdg;
+    res.xps := c.xps;
+    res.idx := c.idx;
+    res.fac := c.fac;
+    res.cff := DecaDobl_Complex_to_TripDobl(c.cff);
+    res.cst := DecaDobl_Complex_to_TripDobl(c.cst);
+    return res;
+  end to_triple_double;
+
+  function to_triple_double
+             ( c : DecaDobl_Complex_Circuits.Link_to_Circuit )
+             return TripDobl_Complex_Circuits.Link_to_Circuit is
+
+    res : TripDobl_Complex_Circuits.Link_to_Circuit;
+    crc : TripDobl_Complex_Circuits.Circuit(c.nbr);
+
+    use DecaDobl_Complex_Circuits;
+
+  begin
+    if c /= null then
+      crc := to_triple_double(c.all);
+      res := new TripDobl_Complex_Circuits.Circuit'(crc);
+    end if;
+    return res;
+  end to_triple_double;
+
+  function to_triple_double
+             ( c : DecaDobl_Complex_Circuits.Circuits )
+             return TripDobl_Complex_Circuits.Circuits is
+
+    res : TripDobl_Complex_Circuits.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_triple_double(c(k));
+    end loop;
+    return res;
+  end to_triple_double;
+
+  function to_triple_double
+             ( s : DecaDobl_Complex_Circuits.System )
+             return TripDobl_Complex_Circuits.System is
+
+    crc : constant TripDobl_Complex_Circuits.Circuits(1..s.neq)
+        := to_triple_double(s.crc);
+    res : constant TripDobl_Complex_Circuits.System(s.neq,s.dim)
+        := TripDobl_Complex_Circuits.Create(crc,s.dim);
+
+  begin
+    return res;
+  end to_triple_double;
+
+  function to_triple_double
+             ( s : DecaDobl_Complex_Circuits.Link_to_System )
+             return TripDobl_Complex_Circuits.Link_to_System is
+
+    sys : TripDobl_Complex_Circuits.System(s.neq,s.dim);
+    res : TripDobl_Complex_Circuits.Link_to_System;
+
+    use DecaDobl_Complex_Circuits;
+
+  begin
+    if s /= null then
+      sys := to_triple_double(s.all);
+      res := new TripDobl_Complex_Circuits.System'(sys);
+    end if;
+    return res;
+  end to_triple_double;
+
+  function to_quad_double
+             ( c : DecaDobl_Complex_Circuits.Circuit )
+             return QuadDobl_Complex_Circuits.Circuit is
+
+    res : QuadDobl_Complex_Circuits.Circuit(c.nbr)
+        := QuadDobl_Complex_Circuits.Allocate(c.nbr,c.dim);
+
+    use DecaDobl_Complex_Numbers_cv;
+    use DecaDobl_Complex_Vectors_cv;
+
+  begin
+    res.pdg := c.pdg;
+    res.xps := c.xps;
+    res.idx := c.idx;
+    res.fac := c.fac;
+    res.cff := DecaDobl_Complex_to_QuadDobl(c.cff);
+    res.cst := DecaDobl_Complex_to_QuadDobl(c.cst);
+    return res;
+  end to_quad_double;
+
+  function to_quad_double
+             ( c : DecaDobl_Complex_Circuits.Link_to_Circuit )
+             return QuadDobl_Complex_Circuits.Link_to_Circuit is
+
+    res : QuadDobl_Complex_Circuits.Link_to_Circuit;
+    crc : QuadDobl_Complex_Circuits.Circuit(c.nbr);
+
+    use DecaDobl_Complex_Circuits;
+
+  begin
+    if c /= null then
+      crc := to_quad_double(c.all);
+      res := new QuadDobl_Complex_Circuits.Circuit'(crc);
+    end if;
+    return res;
+  end to_quad_double;
+
+  function to_quad_double
+             ( c : DecaDobl_Complex_Circuits.Circuits )
+             return QuadDobl_Complex_Circuits.Circuits is
+
+    res : QuadDobl_Complex_Circuits.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_quad_double(c(k));
+    end loop;
+    return res;
+  end to_quad_double;
+
+  function to_quad_double
+             ( s : DecaDobl_Complex_Circuits.System )
+             return QuadDobl_Complex_Circuits.System is
+
+    crc : constant QuadDobl_Complex_Circuits.Circuits(1..s.neq)
+        := to_quad_double(s.crc);
+    res : constant QuadDobl_Complex_Circuits.System(s.neq,s.dim)
+        := QuadDobl_Complex_Circuits.Create(crc,s.dim);
+
+  begin
+    return res;
+  end to_quad_double;
+
+  function to_quad_double
+             ( s : DecaDobl_Complex_Circuits.Link_to_System )
+             return QuadDobl_Complex_Circuits.Link_to_System is
+
+    sys : QuadDobl_Complex_Circuits.System(s.neq,s.dim);
+    res : QuadDobl_Complex_Circuits.Link_to_System;
+
+    use DecaDobl_Complex_Circuits;
+
+  begin
+    if s /= null then
+      sys := to_quad_double(s.all);
+      res := new QuadDobl_Complex_Circuits.System'(sys);
+    end if;
+    return res;
+  end to_quad_double;
+
+  function to_penta_double
+             ( c : DecaDobl_Complex_Circuits.Circuit )
+             return PentDobl_Complex_Circuits.Circuit is
+
+    res : PentDobl_Complex_Circuits.Circuit(c.nbr)
+        := PentDobl_Complex_Circuits.Allocate(c.nbr,c.dim);
+
+    use DecaDobl_Complex_Numbers_cv;
+    use DecaDobl_Complex_Vectors_cv;
+
+  begin
+    res.pdg := c.pdg;
+    res.xps := c.xps;
+    res.idx := c.idx;
+    res.fac := c.fac;
+    res.cff := DecaDobl_Complex_to_PentDobl(c.cff);
+    res.cst := DecaDobl_Complex_to_PentDobl(c.cst);
+    return res;
+  end to_penta_double;
+
+  function to_penta_double
+             ( c : DecaDobl_Complex_Circuits.Link_to_Circuit )
+             return PentDobl_Complex_Circuits.Link_to_Circuit is
+
+    res : PentDobl_Complex_Circuits.Link_to_Circuit;
+    crc : PentDobl_Complex_Circuits.Circuit(c.nbr);
+
+    use DecaDobl_Complex_Circuits;
+
+  begin
+    if c /= null then
+      crc := to_penta_double(c.all);
+      res := new PentDobl_Complex_Circuits.Circuit'(crc);
+    end if;
+    return res;
+  end to_penta_double;
+
+  function to_penta_double
+             ( c : DecaDobl_Complex_Circuits.Circuits )
+             return PentDobl_Complex_Circuits.Circuits is
+
+    res : PentDobl_Complex_Circuits.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_penta_double(c(k));
+    end loop;
+    return res;
+  end to_penta_double;
+
+  function to_penta_double
+             ( s : DecaDobl_Complex_Circuits.System )
+             return PentDobl_Complex_Circuits.System is
+
+    crc : constant PentDobl_Complex_Circuits.Circuits(1..s.neq)
+        := to_penta_double(s.crc);
+    res : constant PentDobl_Complex_Circuits.System(s.neq,s.dim)
+        := PentDobl_Complex_Circuits.Create(crc,s.dim);
+
+  begin
+    return res;
+  end to_penta_double;
+
+  function to_penta_double
+             ( s : DecaDobl_Complex_Circuits.Link_to_System )
+             return PentDobl_Complex_Circuits.Link_to_System is
+
+    sys : PentDobl_Complex_Circuits.System(s.neq,s.dim);
+    res : PentDobl_Complex_Circuits.Link_to_System;
+
+    use DecaDobl_Complex_Circuits;
+
+  begin
+    if s /= null then
+      sys := to_penta_double(s.all);
+      res := new PentDobl_Complex_Circuits.System'(sys);
+    end if;
+    return res;
+  end to_penta_double;
+
+  function to_octo_double
+             ( c : DecaDobl_Complex_Circuits.Circuit )
+             return OctoDobl_Complex_Circuits.Circuit is
+
+    res : OctoDobl_Complex_Circuits.Circuit(c.nbr)
+        := OctoDobl_Complex_Circuits.Allocate(c.nbr,c.dim);
+
+    use DecaDobl_Complex_Numbers_cv;
+    use DecaDobl_Complex_Vectors_cv;
+
+  begin
+    res.pdg := c.pdg;
+    res.xps := c.xps;
+    res.idx := c.idx;
+    res.fac := c.fac;
+    res.cff := DecaDobl_Complex_to_OctoDobl(c.cff);
+    res.cst := DecaDobl_Complex_to_OctoDobl(c.cst);
+    return res;
+  end to_octo_double;
+
+  function to_octo_double
+             ( c : DecaDobl_Complex_Circuits.Link_to_Circuit )
+             return OctoDobl_Complex_Circuits.Link_to_Circuit is
+
+    res : OctoDobl_Complex_Circuits.Link_to_Circuit;
+    crc : OctoDobl_Complex_Circuits.Circuit(c.nbr);
+
+    use DecaDobl_Complex_Circuits;
+
+  begin
+    if c /= null then
+      crc := to_octo_double(c.all);
+      res := new OctoDobl_Complex_Circuits.Circuit'(crc);
+    end if;
+    return res;
+  end to_octo_double;
+
+  function to_octo_double
+             ( c : DecaDobl_Complex_Circuits.Circuits )
+             return OctoDobl_Complex_Circuits.Circuits is
+
+    res : OctoDobl_Complex_Circuits.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_octo_double(c(k));
+    end loop;
+    return res;
+  end to_octo_double;
+
+  function to_octo_double
+             ( s : DecaDobl_Complex_Circuits.System )
+             return OctoDobl_Complex_Circuits.System is
+
+    crc : constant OctoDobl_Complex_Circuits.Circuits(1..s.neq)
+        := to_octo_double(s.crc);
+    res : constant OctoDobl_Complex_Circuits.System(s.neq,s.dim)
+        := OctoDobl_Complex_Circuits.Create(crc,s.dim);
+
+  begin
+    return res;
+  end to_octo_double;
+
+  function to_octo_double
+             ( s : DecaDobl_Complex_Circuits.Link_to_System )
+             return OctoDobl_Complex_Circuits.Link_to_System is
+
+    sys : OctoDobl_Complex_Circuits.System(s.neq,s.dim);
+    res : OctoDobl_Complex_Circuits.Link_to_System;
+
+    use DecaDobl_Complex_Circuits;
+
+  begin
+    if s /= null then
+      sys := to_octo_double(s.all);
+      res := new OctoDobl_Complex_Circuits.System'(sys);
+    end if;
+    return res;
+  end to_octo_double;
 
   function Make_Polynomial
              ( c : DecaDobl_Complex_Circuits.Circuit;

@@ -5,6 +5,12 @@ with DecaDobl_Complex_Vectors;
 with DecaDobl_Complex_Matrices;
 with DecaDobl_Complex_Polynomials;
 with DecaDobl_Complex_Poly_Systems;
+with Standard_Complex_Circuits;
+with DoblDobl_Complex_Circuits;
+with TripDobl_Complex_Circuits;
+with QuadDobl_Complex_Circuits;
+with PentDobl_Complex_Circuits;
+with OctoDobl_Complex_Circuits;
 with DecaDobl_Complex_Circuits;
 with DecaDobl_Speelpenning_Convolutions;
 
@@ -77,6 +83,144 @@ package DecaDobl_Circuit_Makers is
   -- DESCRIPTION :
   --   Returns a system of neq circuits, with nbr terms,
   --   of dimension dim and with highest power equal to pwr.
+
+  function to_double
+             ( c : DecaDobl_Complex_Circuits.Circuit )
+             return Standard_Complex_Circuits.Circuit;
+  function to_double
+             ( c : DecaDobl_Complex_Circuits.Link_to_Circuit )
+             return Standard_Complex_Circuits.Link_to_Circuit;
+  function to_double
+             ( c : DecaDobl_Complex_Circuits.Circuits )
+             return Standard_Complex_Circuits.Circuits;
+
+  -- DESCRIPTION :
+  --   Returns the circuit(s) equivalent to c, in double precision.
+
+  function to_double
+             ( s : DecaDobl_Complex_Circuits.System )
+             return Standard_Complex_Circuits.System;
+  function to_double
+             ( s : DecaDobl_Complex_Circuits.Link_to_System )
+             return Standard_Complex_Circuits.Link_to_System;
+
+  -- DESCRIPTION :
+  --   Returns the system equivalent to s, in double precision.
+
+  function to_double_double
+             ( c : DecaDobl_Complex_Circuits.Circuit )
+             return DoblDobl_Complex_Circuits.Circuit;
+  function to_double_double
+             ( c : DecaDobl_Complex_Circuits.Link_to_Circuit )
+             return DoblDobl_Complex_Circuits.Link_to_Circuit;
+  function to_double_double
+             ( c : DecaDobl_Complex_Circuits.Circuits )
+             return DoblDobl_Complex_Circuits.Circuits;
+
+  -- DESCRIPTION :
+  --   Returns the circuit(s) equivalent to c, in double double precision.
+
+  function to_double_double
+             ( s : DecaDobl_Complex_Circuits.System )
+             return DoblDobl_Complex_Circuits.System;
+  function to_double_double
+             ( s : DecaDobl_Complex_Circuits.Link_to_System )
+             return DoblDobl_Complex_Circuits.Link_to_System;
+
+  -- DESCRIPTION :
+  --   Returns the system equivalent to s, in double double precision.
+
+  function to_triple_double
+             ( c : DecaDobl_Complex_Circuits.Circuit )
+             return TripDobl_Complex_Circuits.Circuit;
+  function to_triple_double
+             ( c : DecaDobl_Complex_Circuits.Link_to_Circuit )
+             return TripDobl_Complex_Circuits.Link_to_Circuit;
+  function to_triple_double
+             ( c : DecaDobl_Complex_Circuits.Circuits )
+             return TripDobl_Complex_Circuits.Circuits;
+
+  -- DESCRIPTION :
+  --   Returns the circuit(s) equivalent to c, in triple double precision.
+
+  function to_triple_double
+             ( s : DecaDobl_Complex_Circuits.System )
+             return TripDobl_Complex_Circuits.System;
+  function to_triple_double
+             ( s : DecaDobl_Complex_Circuits.Link_to_System )
+             return TripDobl_Complex_Circuits.Link_to_System;
+
+  -- DESCRIPTION :
+  --   Returns the system equivalent to s, in triple double precision.
+
+  function to_quad_double
+             ( c : DecaDobl_Complex_Circuits.Circuit )
+             return QuadDobl_Complex_Circuits.Circuit;
+  function to_quad_double
+             ( c : DecaDobl_Complex_Circuits.Link_to_Circuit )
+             return QuadDobl_Complex_Circuits.Link_to_Circuit;
+  function to_quad_double
+             ( c : DecaDobl_Complex_Circuits.Circuits )
+             return QuadDobl_Complex_Circuits.Circuits;
+
+  -- DESCRIPTION :
+  --   Returns the circuit(s) equivalent to c, in quad double precision.
+
+  function to_quad_double
+             ( s : DecaDobl_Complex_Circuits.System )
+             return QuadDobl_Complex_Circuits.System;
+  function to_quad_double
+             ( s : DecaDobl_Complex_Circuits.Link_to_System )
+             return QuadDobl_Complex_Circuits.Link_to_System;
+
+  -- DESCRIPTION :
+  --   Returns the system equivalent to s, in quad double precision.
+
+  function to_penta_double
+             ( c : DecaDobl_Complex_Circuits.Circuit )
+             return PentDobl_Complex_Circuits.Circuit;
+  function to_penta_double
+             ( c : DecaDobl_Complex_Circuits.Link_to_Circuit )
+             return PentDobl_Complex_Circuits.Link_to_Circuit;
+  function to_penta_double
+             ( c : DecaDobl_Complex_Circuits.Circuits )
+             return PentDobl_Complex_Circuits.Circuits;
+
+  -- DESCRIPTION :
+  --   Returns the circuit(s) equivalent to c, in penta double precision.
+
+  function to_penta_double
+             ( s : DecaDobl_Complex_Circuits.System )
+             return PentDobl_Complex_Circuits.System;
+  function to_penta_double
+             ( s : DecaDobl_Complex_Circuits.Link_to_System )
+             return PentDobl_Complex_Circuits.Link_to_System;
+
+  -- DESCRIPTION :
+  --   Returns the system equivalent to s, in penta double precision.
+
+  function to_octo_double
+             ( c : DecaDobl_Complex_Circuits.Circuit )
+             return OctoDobl_Complex_Circuits.Circuit;
+  function to_octo_double
+             ( c : DecaDobl_Complex_Circuits.Link_to_Circuit )
+             return OctoDobl_Complex_Circuits.Link_to_Circuit;
+  function to_octo_double
+             ( c : DecaDobl_Complex_Circuits.Circuits )
+             return OctoDobl_Complex_Circuits.Circuits;
+
+  -- DESCRIPTION :
+  --   Returns the circuit(s) equivalent to c, in octo double precision.
+
+  function to_octo_double
+             ( s : DecaDobl_Complex_Circuits.System )
+             return OctoDobl_Complex_Circuits.System;
+  function to_octo_double
+             ( s : DecaDobl_Complex_Circuits.Link_to_System )
+             return OctoDobl_Complex_Circuits.Link_to_System;
+
+  -- DESCRIPTION :
+  --   Returns the system equivalent to s, in octo double precision.
 
   function Make_Polynomial
              ( c : DecaDobl_Complex_Circuits.Circuit;

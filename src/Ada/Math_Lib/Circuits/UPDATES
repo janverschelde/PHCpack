@@ -1,3 +1,6 @@
+Sat 24 Oct 2020 : to decadobl_circuit_makers added functions to convert
+  circuits with coefficients in deca double precision to lower precision.
+
 Fri 23 Oct 2020 : refactored the main test in test_hessian_circuits to
   make room for triple, penta, octo, and deca double precision.
   New packages {tripdobl,pentdobl,octodobl,decadobl}_hessian_updaters
