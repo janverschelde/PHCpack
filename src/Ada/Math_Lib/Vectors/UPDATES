@@ -1,3 +1,6 @@
+Sat 24 Oct 2020 : new packages {tripdobl,pentdobl,octodobl,decadobl}_vector_
+  splitters with memory allocators.
+
 Wed 21 Oct 2020 : added functions to varbprec_vecvec_conversions to convert
   complex deca double vectors of vectors into lower precision.
 

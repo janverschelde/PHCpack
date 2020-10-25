@@ -184,7 +184,11 @@ ts_davec                           : main test on vectors of deca doubles
 ------------------------------------------------------------------------------
 standard_vector_splitters          : split/merge complex vectors for doubles
 dobldobl_vector_splitters          : 4-vector representation of dobldobl vecs
+tripdobl_vector_splitters          : allocators for triple double vectors
 quaddobl_vector_splitters          : 2-vector representation of quaddobl vecs
+pentdobl_vector_splitters          : allocators for penta double vectors
+octodobl_vector_splitters          : allocators for octo double vectors
+decadobl_vector_splitters          : allocators for deca double vectors
 test_dobldobl_performance          : performance test with double doubles
 test_quaddobl_performance          : performance test with quad doubles
 ts_perfddvc                        : main test on dd vector performance
