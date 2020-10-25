@@ -1,3 +1,7 @@
+Sat 24 Oct 2020 : extended multitasked_hessian_circuits with procedures
+  in triple, penta, octo, and deca double precision.  Added tests to
+  multitasked_hessian_circuits, so seven precisions are supported.
+
 Thu 22 Oct 2020 : extended multitasked_newton_convolutions and
   test_mtnewton_convolutions with procedures in penta, octo, and deca
   double precision.  Added procedures to test_mtnewton_convolution to
