@@ -1,0 +1,2 @@
+Mon 26 Oct 2020 : added {dbl,dbl2,dbl3}_convolutions_host.{h,cpp} with a
+  basic test in test_{dbl,dbl2,dbl3}_convolutions.cpp.  Defined makefiles.

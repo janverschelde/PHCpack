@@ -1,0 +1,30 @@
+Accelerated Convolutions for Power Series Multiplication in PHCv2.4.81.
+
+The code in this folder concerns the product of two power series,
+truncated to the same degree.
+
+Input: d, degree of the series;
+       x, array of range 0..d with coefficients of the first series;
+       y, array of range 0..d with coefficients of the second series.
+
+Output: z = x*y, array of range 0..d with coefficients of the product
+        of x with y.
+      
+Algorithm: z(0) := x(0)*y(0)
+           for k in 1..d do
+               z(k) := x(0)*y(k)
+               for i in 1..k do
+                   z(k) := z(k) + x(i)*y(k-i)
+
+The above algorithm is implemented for several multiple double precisions.
+
+-----------------------------------------------------------------------------
+file name               : short description
+-----------------------------------------------------------------------------
+dbl_convolutions_host   : convolutions of double vectors on host
+test_dbl_convolutions   : test convolutions of double vectors
+dbl2_convolutions_host  : convolutions of double double vectors on host
+test_dbl2_convolutions  : test convolutions of double double vectors
+dbl3_convolutions_host  : convolutions of triple double vectors on host
+test_dbl2_convolutions  : test convolutions of triple double vectors
+-----------------------------------------------------------------------------

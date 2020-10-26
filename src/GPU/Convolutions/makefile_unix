@@ -1,0 +1,65 @@
+# tested with nvcc version 5.5.0 and gcc 4.4.7 on C2050
+# Note that the -arch=sm_13 is needed on the C2050.
+# tested with nvcc version 10.1 and gcc 4.8.5 on Volta
+# On Volta, the -arch=sm_13 is not needed.
+
+gpp=/usr/bin/g++
+MPD=../Norms
+
+dbl_convolutions_host.o:
+	@-echo ">>> compiling dbl_convolutions_host ..."
+	$(gpp) -O3 -c dbl_convolutions_host.cpp
+
+double_double_functions.o:
+	@-echo ">>> compiling double double functions ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
+
+triple_double_functions.o:
+	@-echo ">>> compiling triple double functions ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/triple_double_functions.cpp
+
+dbl2_convolutions_host.o:
+	@-echo ">>> compiling dbl2_convolutions_host ..."
+	$(gpp) -I$(MPD) -O3 -c dbl2_convolutions_host.cpp
+
+dbl3_convolutions_host.o:
+	@-echo ">>> compiling dbl3_convolutions_host ..."
+	$(gpp) -I$(MPD) -O3 -c dbl3_convolutions_host.cpp
+
+test_dbl_convolutions.o:
+	@-echo ">>> compiling test_dbl_convolutions ..."
+	$(gpp) -O3 -c test_dbl_convolutions.cpp
+
+test_dbl2_convolutions.o:
+	@-echo ">>> compiling test_dbl2_convolutions ..."
+	$(gpp) -O3 -c test_dbl2_convolutions.cpp
+
+test_dbl3_convolutions.o:
+	@-echo ">>> compiling test_dbl3_convolutions ..."
+	$(gpp) -O3 -c test_dbl3_convolutions.cpp
+
+test_dbl_convolutions: dbl_convolutions_host.o test_dbl_convolutions.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl_convolutions test_dbl_convolutions.o \
+                  dbl_convolutions_host.o
+
+test_dbl2_convolutions: double_double_functions.o dbl2_convolutions_host.o \
+                        test_dbl2_convolutions.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl2_convolutions test_dbl2_convolutions.o \
+                  double_double_functions.o dbl2_convolutions_host.o
+
+test_dbl3_convolutions: double_double_functions.o triple_double_functions.o \
+                        dbl3_convolutions_host.o test_dbl3_convolutions.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl3_convolutions test_dbl3_convolutions.o \
+                  double_double_functions.o triple_double_functions.o \
+                  dbl3_convolutions_host.o
+
+clean:
+	/bin/rm -f -r dbl_convolutions_host.o test_dbl_convolutions.o
+	/bin/rm -f -r test_dbl_convolutions
+	/bin/rm -f -r double_double_functions.o dbl2_convolutions_host.o
+	/bin/rm -f -r test_dbl2_convolutions.o test_dbl2_convolutions
+	/bin/rm -f -r triple_double_functions.o dbl3_convolutions_host.o
+	/bin/rm -f -r test_dbl3_convolutions.o test_dbl3_convolutions
