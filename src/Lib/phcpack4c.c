@@ -1,10 +1,11 @@
-/* file phcpack.c contains the definitions of the functions in phcpack.h */
+/* file phcpack4c.c contains the definitions of the functions 
+ * in phcpack4c.h */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include "phcpack.h"
+#include "phcpack4c.h"
 
 #define v 0 /* verbose flag */
 
@@ -16,7 +17,7 @@ int version_string ( int *n, char *s )
    int b[40];
    double *c;
 
-   fail = _ada_use_c2phc(999,n,b,c,0);
+   fail = _ada_use_c2phc4c(999,n,b,c,0);
 
    for(i=0; i<(*n); i++) s[i] = (char) b[i];
    s[*n] = '\0';
@@ -29,7 +30,7 @@ int set_seed ( int seed )
    int *b,fail;
    double *c;
 
-   fail = _ada_use_c2phc(998,&seed,b,c,0);
+   fail = _ada_use_c2phc4c(998,&seed,b,c,0);
 
    return fail;
 }
@@ -39,7 +40,7 @@ int get_seed ( int *seed )
    int *b,fail;
    double *c;
 
-   fail = _ada_use_c2phc(997,seed,b,c,0);
+   fail = _ada_use_c2phc4c(997,seed,b,c,0);
 
    return fail;
 }
@@ -57,7 +58,7 @@ int solve_standard_system
    b[1] = nbtasks;
    b[2] = mvfocus;
 
-   fail = _ada_use_c2phc(77,a,b,c,vrb);
+   fail = _ada_use_c2phc4c(77,a,b,c,vrb);
 
    *root_count = a[0];
 
@@ -81,7 +82,7 @@ int solve_dobldobl_system
    b[0] = silent;
    b[1] = nbtasks;
 
-   fail = _ada_use_c2phc(700,a,b,c,vrb);
+   fail = _ada_use_c2phc4c(700,a,b,c,vrb);
 
    *root_count = a[0];
 
@@ -105,7 +106,7 @@ int solve_quaddobl_system
    b[0] = silent;
    b[1] = nbtasks;
 
-   fail = _ada_use_c2phc(702,a,b,c,vrb);
+   fail = _ada_use_c2phc4c(702,a,b,c,vrb);
 
    *root_count = a[0];
 
@@ -131,7 +132,7 @@ int solve_standard_Laurent_system
    b[1] = nbtasks;
    b[2] = mvfocus;
 
-   fail = _ada_use_c2phc(75,a,b,c,vrb);
+   fail = _ada_use_c2phc4c(75,a,b,c,vrb);
 
    *root_count = a[0];
 
@@ -155,7 +156,7 @@ int solve_dobldobl_Laurent_system
    b[0] = silent;
    b[1] = nbtasks;
 
-   fail = _ada_use_c2phc(701,a,b,c,vrb);
+   fail = _ada_use_c2phc4c(701,a,b,c,vrb);
 
    *root_count = a[0];
 
@@ -179,7 +180,7 @@ int solve_quaddobl_Laurent_system
    b[0] = silent;
    b[1] = nbtasks;
 
-   fail = _ada_use_c2phc(703,a,b,c,vrb);
+   fail = _ada_use_c2phc4c(703,a,b,c,vrb);
 
    *root_count = a[0];
 
@@ -197,7 +198,7 @@ int mixed_volume ( int *mv )
    int *b,fail;
    double *c;
 
-   fail = _ada_use_c2phc(78,mv,b,c,0);
+   fail = _ada_use_c2phc4c(78,mv,b,c,0);
 
    return fail;
 }
@@ -207,7 +208,7 @@ int stable_mixed_volume ( int *mv, int *smv )
    int fail;
    double *c;
 
-   fail = _ada_use_c2phc(79,mv,smv,c,0);
+   fail = _ada_use_c2phc4c(79,mv,smv,c,0);
 
    return fail;
 }
@@ -217,7 +218,7 @@ int mixed_volume_by_demics ( int *mv )
    int *b,fail;
    double *c;
 
-   fail = _ada_use_c2phc(843,mv,b,c,0);
+   fail = _ada_use_c2phc4c(843,mv,b,c,0);
 
    return fail;
 }
@@ -227,7 +228,7 @@ int stable_mixed_volume_by_demics ( int *mv, int *smv )
    int *b,fail;
    double *c;
 
-   fail = _ada_use_c2phc(844,mv,smv,c,0);
+   fail = _ada_use_c2phc4c(844,mv,smv,c,0);
 
    return fail;
 }
@@ -242,7 +243,7 @@ int standard_deflate
    tols[1] = tolres;
    tols[2] = tolrnk;
 
-   fail = _ada_use_c2phc(196,&maxitr,&maxdef,tols,0);
+   fail = _ada_use_c2phc4c(196,&maxitr,&maxdef,tols,0);
 
    return fail;
 }
@@ -257,7 +258,7 @@ int dobldobl_deflate
    tols[1] = tolres;
    tols[2] = tolrnk;
 
-   fail = _ada_use_c2phc(249,&maxitr,&maxdef,tols,0);
+   fail = _ada_use_c2phc4c(249,&maxitr,&maxdef,tols,0);
 
    return fail;
 }
@@ -272,7 +273,7 @@ int quaddobl_deflate
    tols[1] = tolres;
    tols[2] = tolrnk;
 
-   fail = _ada_use_c2phc(250,&maxitr,&maxdef,tols,0);
+   fail = _ada_use_c2phc4c(250,&maxitr,&maxdef,tols,0);
 
    return fail;
 }
@@ -282,7 +283,7 @@ int standard_Newton_step ( void )
    int *a,*b,fail;
    double *c;
 
-   fail = _ada_use_c2phc(199,a,b,c,0);
+   fail = _ada_use_c2phc4c(199,a,b,c,0);
 
    return fail;
 }
@@ -292,7 +293,7 @@ int dobldobl_Newton_step ( void )
    int *a,*b,fail;
    double *c;
 
-   fail = _ada_use_c2phc(198,a,b,c,0);
+   fail = _ada_use_c2phc4c(198,a,b,c,0);
 
    return fail;
 }
@@ -301,7 +302,7 @@ int quaddobl_Newton_step ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(197,a,b,c,0);
+   fail = _ada_use_c2phc4c(197,a,b,c,0);
    return fail;
 }
 
@@ -309,7 +310,7 @@ int multprec_Newton_step ( int deci )
 {
    int *b,fail;
    double *c;
-   fail = _ada_use_c2phc(195,&deci,b,c,0);
+   fail = _ada_use_c2phc4c(195,&deci,b,c,0);
    return fail;
 }
 
@@ -317,7 +318,7 @@ int standard_Newton_Laurent_step ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(326,a,b,c,0);
+   fail = _ada_use_c2phc4c(326,a,b,c,0);
    return fail;
 }
 
@@ -325,7 +326,7 @@ int dobldobl_Newton_Laurent_step ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(327,a,b,c,0);
+   fail = _ada_use_c2phc4c(327,a,b,c,0);
    return fail;
 }
 
@@ -333,7 +334,7 @@ int quaddobl_Newton_Laurent_step ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(328,a,b,c,0);
+   fail = _ada_use_c2phc4c(328,a,b,c,0);
    return fail;
 }
 
@@ -341,7 +342,7 @@ int multprec_Newton_Laurent_step ( int deci )
 {
    int *b,fail;
    double *c;
-   fail = _ada_use_c2phc(329,&deci,b,c,0);
+   fail = _ada_use_c2phc4c(329,&deci,b,c,0);
    return fail;
 }
 
@@ -380,7 +381,7 @@ int scan_number_of_variables ( int nc, char *eqs, int *dim )
 
    *dim = nc;
 
-   fail = _ada_use_c2phc(439,dim,b,c,0);
+   fail = _ada_use_c2phc4c(439,dim,b,c,0);
 
    return fail;
 }
@@ -585,7 +586,7 @@ int varbprec_Newton_Laurent_step
    a[4] = maxprc;
    for(i=0; i<ns; i++) b[i] = (int) s[i];
 
-   fail = _ada_use_c2phc(179,a,b,c,0);
+   fail = _ada_use_c2phc4c(179,a,b,c,0);
 
    return fail;
 }
@@ -596,7 +597,7 @@ int read_standard_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(11,a,b,c,0);
+   fail = _ada_use_c2phc4c(11,a,b,c,0);
    return fail;
 }
 
@@ -607,7 +608,7 @@ int read_standard_target_system_from_file ( int n, char* filename )
 
    for(i=0; i<n; i++) b[i] = (int) filename[i];
 
-   fail = _ada_use_c2phc(540,&n,b,c,0);
+   fail = _ada_use_c2phc4c(540,&n,b,c,0);
 
    return fail;
 }
@@ -616,7 +617,7 @@ int read_dobldobl_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(231,a,b,c,0);
+   fail = _ada_use_c2phc4c(231,a,b,c,0);
    return fail;
 }
 
@@ -627,7 +628,7 @@ int read_dobldobl_target_system_from_file ( int n, char* filename )
 
    for(i=0; i<n; i++) b[i] = (int) filename[i];
 
-   fail = _ada_use_c2phc(541,&n,b,c,0);
+   fail = _ada_use_c2phc4c(541,&n,b,c,0);
 
    return fail;
 }
@@ -636,7 +637,7 @@ int read_quaddobl_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(241,a,b,c,0);
+   fail = _ada_use_c2phc4c(241,a,b,c,0);
    return fail;
 }
 
@@ -647,7 +648,7 @@ int read_quaddobl_target_system_from_file ( int n, char* filename )
 
    for(i=0; i<n; i++) b[i] = (int) filename[i];
 
-   fail = _ada_use_c2phc(542,&n,b,c,0);
+   fail = _ada_use_c2phc4c(542,&n,b,c,0);
 
    return fail;
 }
@@ -656,7 +657,7 @@ int read_multprec_target_system ( int decimals )
 {
    int *b,fail;
    double *c;
-   fail = _ada_use_c2phc(491,&decimals,b,c,0);
+   fail = _ada_use_c2phc4c(491,&decimals,b,c,0);
    return fail;
 }
 
@@ -671,7 +672,7 @@ int read_multprec_target_system_from_file
    a[1] = decimals;
    for(i=0; i<n; i++) b[i] = (int) filename[i];
 
-   fail = _ada_use_c2phc(543,a,b,c,0);
+   fail = _ada_use_c2phc4c(543,a,b,c,0);
 
    return fail;
 }
@@ -680,7 +681,7 @@ int write_standard_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(12,a,b,c,0);
+   fail = _ada_use_c2phc4c(12,a,b,c,0);
    return fail;
 }
 
@@ -688,7 +689,7 @@ int write_dobldobl_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(232,a,b,c,0);
+   fail = _ada_use_c2phc4c(232,a,b,c,0);
    return fail;
 }
 
@@ -696,7 +697,7 @@ int write_quaddobl_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(242,a,b,c,0);
+   fail = _ada_use_c2phc4c(242,a,b,c,0);
    return fail;
 }
 
@@ -704,7 +705,7 @@ int write_multprec_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(492,a,b,c,0);
+   fail = _ada_use_c2phc4c(492,a,b,c,0);
    return fail;
 }
 
@@ -712,7 +713,7 @@ int read_standard_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(13,a,b,c,0);
+   fail = _ada_use_c2phc4c(13,a,b,c,0);
    return fail;
 }
 
@@ -723,7 +724,7 @@ int read_standard_start_system_from_file ( int n, char* filename )
 
    for(i=0; i<n; i++) b[i] = (int) filename[i];
 
-   fail = _ada_use_c2phc(544,&n,b,c,0);
+   fail = _ada_use_c2phc4c(544,&n,b,c,0);
 
    return fail;
 }
@@ -732,7 +733,7 @@ int read_dobldobl_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(233,a,b,c,0);
+   fail = _ada_use_c2phc4c(233,a,b,c,0);
    return fail;
 }
 
@@ -743,7 +744,7 @@ int read_dobldobl_start_system_from_file ( int n, char* filename )
 
    for(i=0; i<n; i++) b[i] = (int) filename[i];
 
-   fail = _ada_use_c2phc(545,&n,b,c,0);
+   fail = _ada_use_c2phc4c(545,&n,b,c,0);
 
    return fail;
 }
@@ -752,7 +753,7 @@ int read_quaddobl_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(243,a,b,c,0);
+   fail = _ada_use_c2phc4c(243,a,b,c,0);
    return fail;
 }
 
@@ -763,7 +764,7 @@ int read_quaddobl_start_system_from_file ( int n, char* filename )
 
    for(i=0; i<n; i++) b[i] = (int) filename[i];
 
-   fail = _ada_use_c2phc(546,&n,b,c,0);
+   fail = _ada_use_c2phc4c(546,&n,b,c,0);
 
    return fail;
 }
@@ -772,7 +773,7 @@ int read_multprec_start_system ( int decimals )
 {
    int *b,fail;
    double *c;
-   fail = _ada_use_c2phc(493,&decimals,b,c,0);
+   fail = _ada_use_c2phc4c(493,&decimals,b,c,0);
    return fail;
 }
 
@@ -787,7 +788,7 @@ int read_multprec_start_system_from_file
    a[1] = decimals;
    for(i=0; i<n; i++) b[i] = (int) filename[i];
 
-   fail = _ada_use_c2phc(547,a,b,c,0);
+   fail = _ada_use_c2phc4c(547,a,b,c,0);
 
    return fail;
 }
@@ -796,7 +797,7 @@ int write_standard_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(14,a,b,c,0);
+   fail = _ada_use_c2phc4c(14,a,b,c,0);
    return fail;
 }
 
@@ -804,7 +805,7 @@ int write_dobldobl_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(234,a,b,c,0);
+   fail = _ada_use_c2phc4c(234,a,b,c,0);
    return fail;
 }
 
@@ -812,7 +813,7 @@ int write_quaddobl_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(244,a,b,c,0);
+   fail = _ada_use_c2phc4c(244,a,b,c,0);
    return fail;
 }
 
@@ -820,7 +821,7 @@ int write_multprec_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(494,a,b,c,0);
+   fail = _ada_use_c2phc4c(494,a,b,c,0);
    return fail;
 }
 
@@ -828,7 +829,7 @@ int read_standard_start_Laurent_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(759,a,b,c,0);
+   fail = _ada_use_c2phc4c(759,a,b,c,0);
    return fail;
 }
 
@@ -836,7 +837,7 @@ int write_standard_start_Laurent_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(760,a,b,c,0);
+   fail = _ada_use_c2phc4c(760,a,b,c,0);
    return fail;
 }
 
@@ -844,7 +845,7 @@ int read_standard_target_Laurent_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(761,a,b,c,0);
+   fail = _ada_use_c2phc4c(761,a,b,c,0);
    return fail;
 }
 
@@ -852,7 +853,7 @@ int write_standard_target_Laurent_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(762,a,b,c,0);
+   fail = _ada_use_c2phc4c(762,a,b,c,0);
    return fail;
 }
 
@@ -860,7 +861,7 @@ int read_dobldobl_start_Laurent_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(763,a,b,c,0);
+   fail = _ada_use_c2phc4c(763,a,b,c,0);
    return fail;
 }
 
@@ -868,7 +869,7 @@ int write_dobldobl_start_Laurent_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(764,a,b,c,0);
+   fail = _ada_use_c2phc4c(764,a,b,c,0);
    return fail;
 }
 
@@ -876,7 +877,7 @@ int read_dobldobl_target_Laurent_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(765,a,b,c,0);
+   fail = _ada_use_c2phc4c(765,a,b,c,0);
    return fail;
 }
 
@@ -884,7 +885,7 @@ int write_dobldobl_target_Laurent_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(766,a,b,c,0);
+   fail = _ada_use_c2phc4c(766,a,b,c,0);
    return fail;
 }
 
@@ -892,7 +893,7 @@ int read_quaddobl_start_Laurent_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(767,a,b,c,0);
+   fail = _ada_use_c2phc4c(767,a,b,c,0);
    return fail;
 }
 
@@ -900,7 +901,7 @@ int write_quaddobl_start_Laurent_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(768,a,b,c,0);
+   fail = _ada_use_c2phc4c(768,a,b,c,0);
    return fail;
 }
 
@@ -908,7 +909,7 @@ int read_quaddobl_target_Laurent_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(769,a,b,c,0);
+   fail = _ada_use_c2phc4c(769,a,b,c,0);
    return fail;
 }
 
@@ -916,7 +917,7 @@ int write_quaddobl_target_Laurent_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(770,a,b,c,0);
+   fail = _ada_use_c2phc4c(770,a,b,c,0);
    return fail;
 }
 
@@ -924,7 +925,7 @@ int write_start_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(15,a,b,c,0);
+   fail = _ada_use_c2phc4c(15,a,b,c,0);
    return fail;
 }
 
@@ -932,7 +933,7 @@ int write_dobldobl_start_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(235,a,b,c,0);
+   fail = _ada_use_c2phc4c(235,a,b,c,0);
    return fail;
 }
 
@@ -940,7 +941,7 @@ int write_quaddobl_start_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(245,a,b,c,0);
+   fail = _ada_use_c2phc4c(245,a,b,c,0);
    return fail;
 }
 
@@ -948,7 +949,7 @@ int write_multprec_start_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(495,a,b,c,0);
+   fail = _ada_use_c2phc4c(495,a,b,c,0);
    return fail;
 }
 
@@ -956,7 +957,7 @@ int tune_continuation_parameters ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(70,a,b,c,0);
+   fail = _ada_use_c2phc4c(70,a,b,c,0);
    return fail;
 }
 
@@ -964,21 +965,21 @@ int determine_output_during_continuation ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(71,a,b,c,0);
+   fail = _ada_use_c2phc4c(71,a,b,c,0);
    return fail;
 }
 
 int retrieve_continuation_parameters ( double *c )
 {
    int *a,*b,fail;
-   fail = _ada_use_c2phc(72,a,b,c,0);
+   fail = _ada_use_c2phc4c(72,a,b,c,0);
    return fail;
 }
 
 int set_continuation_parameters ( double *c )
 {
    int *a,*b,fail;
-   fail = _ada_use_c2phc(73,a,b,c,0);
+   fail = _ada_use_c2phc4c(73,a,b,c,0);
    return fail;
 }
 
@@ -987,7 +988,7 @@ int autotune_continuation_parameters
 {
    int fail;
    double *c;
-   fail = _ada_use_c2phc(193,&difficulty_level,&digits_of_precision,c,0);
+   fail = _ada_use_c2phc4c(193,&difficulty_level,&digits_of_precision,c,0);
    return fail;
 }
 
@@ -995,21 +996,21 @@ int show_continuation_parameters ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(194,a,b,c,0);
+   fail = _ada_use_c2phc4c(194,a,b,c,0);
    return fail;
 }
 
 int get_value_of_continuation_parameter ( int k, double *val )
 {
    int *b,fail;
-   fail = _ada_use_c2phc(189,&k,b,val,0);
+   fail = _ada_use_c2phc4c(189,&k,b,val,0);
    return fail;
 }
 
 int set_value_of_continuation_parameter ( int k, double *val )
 {
    int *b,fail;
-   fail = _ada_use_c2phc(190,&k,b,val,0);
+   fail = _ada_use_c2phc4c(190,&k,b,val,0);
    return fail;
 }
 
@@ -1017,7 +1018,7 @@ int create_homotopy ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(152,a,b,c,0);
+   fail = _ada_use_c2phc4c(152,a,b,c,0);
    return fail;
 }
 
@@ -1025,7 +1026,7 @@ int create_dobldobl_homotopy ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(172,a,b,c,0);
+   fail = _ada_use_c2phc4c(172,a,b,c,0);
    return fail;
 }
 
@@ -1033,7 +1034,7 @@ int create_quaddobl_homotopy ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(182,a,b,c,0);
+   fail = _ada_use_c2phc4c(182,a,b,c,0);
    return fail;
 }
 
@@ -1041,7 +1042,7 @@ int create_multprec_homotopy ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(522,a,b,c,0);
+   fail = _ada_use_c2phc4c(522,a,b,c,0);
    return fail;
 }
 
@@ -1049,7 +1050,7 @@ int create_standard_Laurent_homotopy ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(792,a,b,c,0);
+   fail = _ada_use_c2phc4c(792,a,b,c,0);
    return fail;
 }
 
@@ -1057,7 +1058,7 @@ int create_dobldobl_Laurent_homotopy ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(793,a,b,c,0);
+   fail = _ada_use_c2phc4c(793,a,b,c,0);
    return fail;
 }
 
@@ -1065,7 +1066,7 @@ int create_quaddobl_Laurent_homotopy ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(794,a,b,c,0);
+   fail = _ada_use_c2phc4c(794,a,b,c,0);
    return fail;
 }
 
@@ -1074,7 +1075,7 @@ int create_homotopy_with_given_gamma ( double gamma_re, double gamma_im )
    int *a,*b,fail;
    double c[2];
    c[0] = gamma_re; c[1] = gamma_im;
-   fail = _ada_use_c2phc(153,a,b,c,0);
+   fail = _ada_use_c2phc4c(153,a,b,c,0);
    return fail;
 }
 
@@ -1084,7 +1085,7 @@ int create_dobldobl_homotopy_with_given_gamma
    int *a,*b,fail;
    double c[2];
    c[0] = gamma_re; c[1] = gamma_im;
-   fail = _ada_use_c2phc(173,a,b,c,0);
+   fail = _ada_use_c2phc4c(173,a,b,c,0);
    return fail;
 }
 
@@ -1094,7 +1095,7 @@ int create_quaddobl_homotopy_with_given_gamma
    int *a,*b,fail;
    double c[2];
    c[0] = gamma_re; c[1] = gamma_im;
-   fail = _ada_use_c2phc(183,a,b,c,0);
+   fail = _ada_use_c2phc4c(183,a,b,c,0);
    return fail;
 }
 
@@ -1104,7 +1105,7 @@ int create_multprec_homotopy_with_given_gamma
    int *a,*b,fail;
    double c[2];
    c[0] = gamma_re; c[1] = gamma_im;
-   fail = _ada_use_c2phc(523,a,b,c,0);
+   fail = _ada_use_c2phc4c(523,a,b,c,0);
    return fail;
 }
 
@@ -1112,7 +1113,7 @@ int clear_homotopy ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(154,a,b,c,0);
+   fail = _ada_use_c2phc4c(154,a,b,c,0);
    return fail;
 }
 
@@ -1120,7 +1121,7 @@ int clear_dobldobl_homotopy ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(174,a,b,c,0);
+   fail = _ada_use_c2phc4c(174,a,b,c,0);
    return fail;
 }
 
@@ -1128,7 +1129,7 @@ int clear_quaddobl_homotopy ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(184,a,b,c,0);
+   fail = _ada_use_c2phc4c(184,a,b,c,0);
    return fail;
 }
 
@@ -1136,7 +1137,7 @@ int clear_multprec_homotopy ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(524,a,b,c,0);
+   fail = _ada_use_c2phc4c(524,a,b,c,0);
    return fail;
 }
 
@@ -1146,7 +1147,7 @@ int refine_root ( int n, int *m, double *c )
    int b[2];
 
    b[0] = n; b[1] = *m;
-   fail = _ada_use_c2phc(149,a,b,c,0);
+   fail = _ada_use_c2phc4c(149,a,b,c,0);
    *m = b[1];
 
    return fail;
@@ -1156,7 +1157,7 @@ int solve_by_standard_homotopy_continuation ( int number_of_tasks )
 {
    int *b,fail;
    double *c;
-   fail = _ada_use_c2phc(16,&number_of_tasks,b,c,0);
+   fail = _ada_use_c2phc4c(16,&number_of_tasks,b,c,0);
    return fail;
 }
 
@@ -1164,7 +1165,7 @@ int solve_by_dobldobl_homotopy_continuation ( int number_of_tasks )
 {
    int *b,fail;
    double *c;
-   fail = _ada_use_c2phc(236,&number_of_tasks,b,c,0);
+   fail = _ada_use_c2phc4c(236,&number_of_tasks,b,c,0);
    return fail;
 }
 
@@ -1172,7 +1173,7 @@ int solve_by_quaddobl_homotopy_continuation ( int number_of_tasks )
 {
    int *b,fail;
    double *c;
-   fail = _ada_use_c2phc(246,&number_of_tasks,b,c,0);
+   fail = _ada_use_c2phc4c(246,&number_of_tasks,b,c,0);
    return fail;
 }
 
@@ -1180,7 +1181,7 @@ int solve_by_multprec_homotopy_continuation ( int decimals )
 {
    int *b,fail;
    double *c;
-   fail = _ada_use_c2phc(496,&decimals,b,c,0);
+   fail = _ada_use_c2phc4c(496,&decimals,b,c,0);
    return fail;
 }
 
@@ -1188,7 +1189,7 @@ int solve_by_standard_Laurent_homotopy_continuation ( int number_of_tasks )
 {
    int *b,fail;
    double *c;
-   fail = _ada_use_c2phc(774,&number_of_tasks,b,c,0);
+   fail = _ada_use_c2phc4c(774,&number_of_tasks,b,c,0);
    return fail;
 }
 
@@ -1196,7 +1197,7 @@ int solve_by_dobldobl_Laurent_homotopy_continuation ( int number_of_tasks )
 {
    int *b,fail;
    double *c;
-   fail = _ada_use_c2phc(775,&number_of_tasks,b,c,0);
+   fail = _ada_use_c2phc4c(775,&number_of_tasks,b,c,0);
    return fail;
 }
 
@@ -1204,7 +1205,7 @@ int solve_by_quaddobl_Laurent_homotopy_continuation ( int number_of_tasks )
 {
    int *b,fail;
    double *c;
-   fail = _ada_use_c2phc(776,&number_of_tasks,b,c,0);
+   fail = _ada_use_c2phc4c(776,&number_of_tasks,b,c,0);
    return fail;
 }
 
@@ -1212,7 +1213,7 @@ int write_target_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(17,a,b,c,0);
+   fail = _ada_use_c2phc4c(17,a,b,c,0);
    return fail;
 }
 
@@ -1220,7 +1221,7 @@ int write_dobldobl_target_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(237,a,b,c,0);
+   fail = _ada_use_c2phc4c(237,a,b,c,0);
    return fail;
 }
 
@@ -1228,7 +1229,7 @@ int write_quaddobl_target_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(247,a,b,c,0);
+   fail = _ada_use_c2phc4c(247,a,b,c,0);
    return fail;
 }
 
@@ -1236,7 +1237,7 @@ int write_multprec_target_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(497,a,b,c,0);
+   fail = _ada_use_c2phc4c(497,a,b,c,0);
    return fail;
 }
 
@@ -1244,7 +1245,7 @@ int clear_data ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(18,a,b,c,0);
+   fail = _ada_use_c2phc4c(18,a,b,c,0);
    return fail;
 }
 
@@ -1252,7 +1253,7 @@ int clear_dobldobl_data ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(238,a,b,c,0);
+   fail = _ada_use_c2phc4c(238,a,b,c,0);
    return fail;
 }
 
@@ -1260,7 +1261,7 @@ int clear_quaddobl_data ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(248,a,b,c,0);
+   fail = _ada_use_c2phc4c(248,a,b,c,0);
    return fail;
 }
 
@@ -1268,7 +1269,7 @@ int clear_multprec_data ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(498,a,b,c,0);
+   fail = _ada_use_c2phc4c(498,a,b,c,0);
    return fail;
 }
 
@@ -1276,7 +1277,7 @@ int clear_standard_Laurent_data ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(771,a,b,c,0);
+   fail = _ada_use_c2phc4c(771,a,b,c,0);
    return fail;
 }
 
@@ -1284,7 +1285,7 @@ int clear_dobldobl_Laurent_data ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(772,a,b,c,0);
+   fail = _ada_use_c2phc4c(772,a,b,c,0);
    return fail;
 }
 
@@ -1292,7 +1293,7 @@ int clear_quaddobl_Laurent_data ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(773,a,b,c,0);
+   fail = _ada_use_c2phc4c(773,a,b,c,0);
    return fail;
 }
 
@@ -1300,7 +1301,7 @@ int define_output_file ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(19,a,b,c,0);
+   fail = _ada_use_c2phc4c(19,a,b,c,0);
    return fail;
 }
 
@@ -1309,7 +1310,7 @@ int define_output_file_with_string ( int n, char *s )
    int i,b[n],fail;
    double *c;
    for(i=0; i<n; i++) b[i] = (int) s[i];
-   fail = _ada_use_c2phc(191,&n,b,c,0);
+   fail = _ada_use_c2phc4c(191,&n,b,c,0);
    return fail;
 }
 
@@ -1317,7 +1318,7 @@ int close_output_file ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(192,a,b,c,0);
+   fail = _ada_use_c2phc4c(192,a,b,c,0);
    return fail;
 }
 
@@ -1328,7 +1329,7 @@ int write_string_to_defined_output_file ( int n, char *s )
 
    for(i=0; i<n; i++) b[i] = (int) s[i];
 
-   fail = _ada_use_c2phc(158,&n,b,c,0);
+   fail = _ada_use_c2phc4c(158,&n,b,c,0);
 
    return fail;
 }
@@ -1338,7 +1339,7 @@ int write_integers_to_defined_output_file ( int n, int *a )
    int i,fail;
    double *c;
 
-   fail = _ada_use_c2phc(159,&n,a,c,0);
+   fail = _ada_use_c2phc4c(159,&n,a,c,0);
 
    return fail;
 }
@@ -1347,7 +1348,7 @@ int write_doubles_to_defined_output_file ( int n, double *a )
 {
    int i,*b,fail;
 
-   fail = _ada_use_c2phc(160,&n,b,a,0);
+   fail = _ada_use_c2phc4c(160,&n,b,a,0);
 
    return fail;
 }
@@ -1358,7 +1359,7 @@ int copy_target_system_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(1,a,b,c,0);
+   fail = _ada_use_c2phc4c(1,a,b,c,0);
    return fail;
 }
 
@@ -1366,7 +1367,7 @@ int copy_dobldobl_target_system_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(251,a,b,c,0);
+   fail = _ada_use_c2phc4c(251,a,b,c,0);
    return fail;
 }
 
@@ -1374,7 +1375,7 @@ int copy_quaddobl_target_system_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(261,a,b,c,0);
+   fail = _ada_use_c2phc4c(261,a,b,c,0);
    return fail;
 }
 
@@ -1382,7 +1383,7 @@ int copy_multprec_target_system_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(281,a,b,c,0);
+   fail = _ada_use_c2phc4c(281,a,b,c,0);
    return fail;
 }
 
@@ -1390,7 +1391,7 @@ int copy_container_to_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(2,a,b,c,0);
+   fail = _ada_use_c2phc4c(2,a,b,c,0);
    return fail;
 }
 
@@ -1398,7 +1399,7 @@ int copy_dobldobl_container_to_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(252,a,b,c,0);
+   fail = _ada_use_c2phc4c(252,a,b,c,0);
    return fail;
 }
 
@@ -1406,7 +1407,7 @@ int copy_quaddobl_container_to_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(262,a,b,c,0);
+   fail = _ada_use_c2phc4c(262,a,b,c,0);
    return fail;
 }
 
@@ -1414,7 +1415,7 @@ int copy_multprec_container_to_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(282,a,b,c,0);
+   fail = _ada_use_c2phc4c(282,a,b,c,0);
    return fail;
 }
 
@@ -1422,7 +1423,7 @@ int copy_start_system_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(3,a,b,c,0);
+   fail = _ada_use_c2phc4c(3,a,b,c,0);
    return fail;
 }
 
@@ -1430,7 +1431,7 @@ int copy_dobldobl_start_system_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(253,a,b,c,0);
+   fail = _ada_use_c2phc4c(253,a,b,c,0);
    return fail;
 }
 
@@ -1438,7 +1439,7 @@ int copy_quaddobl_start_system_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(263,a,b,c,0);
+   fail = _ada_use_c2phc4c(263,a,b,c,0);
    return fail;
 }
 
@@ -1446,7 +1447,7 @@ int copy_multprec_start_system_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(283,a,b,c,0);
+   fail = _ada_use_c2phc4c(283,a,b,c,0);
    return fail;
 }
 
@@ -1454,7 +1455,7 @@ int copy_container_to_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(4,a,b,c,0);
+   fail = _ada_use_c2phc4c(4,a,b,c,0);
    return fail;
 }
 
@@ -1462,7 +1463,7 @@ int copy_dobldobl_container_to_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(254,a,b,c,0);
+   fail = _ada_use_c2phc4c(254,a,b,c,0);
    return fail;
 }
 
@@ -1470,7 +1471,7 @@ int copy_quaddobl_container_to_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(264,a,b,c,0);
+   fail = _ada_use_c2phc4c(264,a,b,c,0);
    return fail;
 }
 
@@ -1478,7 +1479,7 @@ int copy_multprec_container_to_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(284,a,b,c,0);
+   fail = _ada_use_c2phc4c(284,a,b,c,0);
    return fail;
 }
 
@@ -1486,7 +1487,7 @@ int copy_standard_Laurent_container_to_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(777,a,b,c,0);
+   fail = _ada_use_c2phc4c(777,a,b,c,0);
    return fail;
 }
 
@@ -1494,7 +1495,7 @@ int copy_dobldobl_Laurent_container_to_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(778,a,b,c,0);
+   fail = _ada_use_c2phc4c(778,a,b,c,0);
    return fail;
 }
 
@@ -1502,7 +1503,7 @@ int copy_quaddobl_Laurent_container_to_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(779,a,b,c,0);
+   fail = _ada_use_c2phc4c(779,a,b,c,0);
    return fail;
 }
 
@@ -1510,7 +1511,7 @@ int copy_standard_Laurent_container_to_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(780,a,b,c,0);
+   fail = _ada_use_c2phc4c(780,a,b,c,0);
    return fail;
 }
 
@@ -1518,7 +1519,7 @@ int copy_dobldobl_Laurent_container_to_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(781,a,b,c,0);
+   fail = _ada_use_c2phc4c(781,a,b,c,0);
    return fail;
 }
 
@@ -1526,7 +1527,7 @@ int copy_quaddobl_Laurent_container_to_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(782,a,b,c,0);
+   fail = _ada_use_c2phc4c(782,a,b,c,0);
    return fail;
 }
 
@@ -1534,7 +1535,7 @@ int copy_standard_Laurent_start_system_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(783,a,b,c,0);
+   fail = _ada_use_c2phc4c(783,a,b,c,0);
    return fail;
 }
 
@@ -1542,7 +1543,7 @@ int copy_dobldobl_Laurent_start_system_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(784,a,b,c,0);
+   fail = _ada_use_c2phc4c(784,a,b,c,0);
    return fail;
 }
 
@@ -1550,7 +1551,7 @@ int copy_quaddobl_Laurent_start_system_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(785,a,b,c,0);
+   fail = _ada_use_c2phc4c(785,a,b,c,0);
    return fail;
 }
 
@@ -1558,7 +1559,7 @@ int copy_standard_Laurent_target_system_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(786,a,b,c,0);
+   fail = _ada_use_c2phc4c(786,a,b,c,0);
    return fail;
 }
 
@@ -1566,7 +1567,7 @@ int copy_dobldobl_Laurent_target_system_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(787,a,b,c,0);
+   fail = _ada_use_c2phc4c(787,a,b,c,0);
    return fail;
 }
 
@@ -1574,7 +1575,7 @@ int copy_quaddobl_Laurent_target_system_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(788,a,b,c,0);
+   fail = _ada_use_c2phc4c(788,a,b,c,0);
    return fail;
 }
 
@@ -1582,7 +1583,7 @@ int copy_target_solutions_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(5,a,b,c,0);
+   fail = _ada_use_c2phc4c(5,a,b,c,0);
    return fail;
 }
 
@@ -1590,7 +1591,7 @@ int copy_dobldobl_target_solutions_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(255,a,b,c,0);
+   fail = _ada_use_c2phc4c(255,a,b,c,0);
    return fail;
 }
 
@@ -1598,7 +1599,7 @@ int copy_quaddobl_target_solutions_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(265,a,b,c,0);
+   fail = _ada_use_c2phc4c(265,a,b,c,0);
    return fail;
 }
 
@@ -1606,7 +1607,7 @@ int copy_multprec_target_solutions_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(285,a,b,c,0);
+   fail = _ada_use_c2phc4c(285,a,b,c,0);
    return fail;
 }
 
@@ -1614,7 +1615,7 @@ int copy_container_to_target_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(6,a,b,c,0);
+   fail = _ada_use_c2phc4c(6,a,b,c,0);
    return fail;
 }
 
@@ -1622,7 +1623,7 @@ int copy_dobldobl_container_to_target_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(256,a,b,c,0);
+   fail = _ada_use_c2phc4c(256,a,b,c,0);
    return fail;
 }
 
@@ -1630,7 +1631,7 @@ int copy_quaddobl_container_to_target_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(266,a,b,c,0);
+   fail = _ada_use_c2phc4c(266,a,b,c,0);
    return fail;
 }
 
@@ -1638,7 +1639,7 @@ int copy_multprec_container_to_target_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(286,a,b,c,0);
+   fail = _ada_use_c2phc4c(286,a,b,c,0);
    return fail;
 }
 
@@ -1646,7 +1647,7 @@ int copy_start_solutions_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(7,a,b,c,0);
+   fail = _ada_use_c2phc4c(7,a,b,c,0);
    return fail;
 }
 
@@ -1654,7 +1655,7 @@ int copy_dobldobl_start_solutions_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(257,a,b,c,0);
+   fail = _ada_use_c2phc4c(257,a,b,c,0);
    return fail;
 }
 
@@ -1662,7 +1663,7 @@ int copy_quaddobl_start_solutions_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(267,a,b,c,0);
+   fail = _ada_use_c2phc4c(267,a,b,c,0);
    return fail;
 }
 
@@ -1670,7 +1671,7 @@ int copy_multprec_start_solutions_to_container ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(287,a,b,c,0);
+   fail = _ada_use_c2phc4c(287,a,b,c,0);
    return fail;
 }
 
@@ -1678,7 +1679,7 @@ int copy_container_to_start_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(8,a,b,c,0);
+   fail = _ada_use_c2phc4c(8,a,b,c,0);
    return fail;
 }
 
@@ -1686,7 +1687,7 @@ int copy_dobldobl_container_to_start_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(258,a,b,c,0);
+   fail = _ada_use_c2phc4c(258,a,b,c,0);
    return fail;
 }
 
@@ -1694,7 +1695,7 @@ int copy_quaddobl_container_to_start_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(268,a,b,c,0);
+   fail = _ada_use_c2phc4c(268,a,b,c,0);
    return fail;
 }
 
@@ -1702,7 +1703,7 @@ int copy_multprec_container_to_start_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(288,a,b,c,0);
+   fail = _ada_use_c2phc4c(288,a,b,c,0);
    return fail;
 }
 
@@ -1723,7 +1724,7 @@ int standard_condition_report
    {
       int b[48];
 
-      fail = _ada_use_c2phc(920,a,b,c,0);
+      fail = _ada_use_c2phc4c(920,a,b,c,0);
 
       idx = 0;
       for(int i=0; i<16; i++) t_err[i] = b[idx++];
@@ -1736,7 +1737,7 @@ int standard_condition_report
 
       for(int i=0; i<nbc; i++) b[i] = (int) name[i];
 
-      fail = _ada_use_c2phc(920,a,b,c,0);
+      fail = _ada_use_c2phc4c(920,a,b,c,0);
 
       idx = 0;
       for(int i=0; i<16; i++) t_err[i] = b[idx++];
@@ -1749,7 +1750,7 @@ int standard_condition_report
 
       for(int i=0; i<nbc; i++) b[i] = (int) name[i];
 
-      fail = _ada_use_c2phc(920,a,b,c,0);
+      fail = _ada_use_c2phc4c(920,a,b,c,0);
 
       idx = 0;
       for(int i=0; i<16; i++) t_err[i] = b[idx++];
@@ -1772,7 +1773,7 @@ int validate_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(9,a,b,c,0);
+   fail = _ada_use_c2phc4c(9,a,b,c,0);
    return fail;
 }
 
@@ -1780,6 +1781,6 @@ int print_system ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(21,a,b,c,0);
+   fail = _ada_use_c2phc4c(21,a,b,c,0);
    return fail;
 }

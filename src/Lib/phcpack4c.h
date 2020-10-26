@@ -1,18 +1,21 @@
-/* file phcpack.h contains prototypes to the operations offered by PHCpack
+/* file phcpack4c.h contains prototypes to the operations offered by PHCpack
  * By default, compilation with gcc is assumed.
+ *
+ * This disables the mixed_volume_by_demics, written in C++.
+ *
  * To compile with a C++ compiler such as g++, the flag compilewgpp must
  * be defined as "g++ -Dcompilewgpp=1." */
 
-#ifndef __PHCPACK_H__
-#define __PHCPACK_H__
+#ifndef __PHCPACK4C_H__
+#define __PHCPACK4C_H__
 
 #ifdef compilewgpp
 extern "C" void adainit( void );
-extern "C" int _ada_use_c2phc ( int task, int *a, int *b, double *c, int v );
+extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
 extern "C" void adafinal( void );
 #else
 extern void adainit( void );
-extern int _ada_use_c2phc ( int task, int *a, int *b, double *c, int v );
+extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
 extern void adafinal( void );
 #endif
 

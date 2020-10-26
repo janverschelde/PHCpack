@@ -1,4 +1,4 @@
-PHCpack as a library of C functions with a state machine in PHCv2.4.80
+PHCpack as a library of C functions with a state machine in PHCv2.4.81
 
 This directory collects header files and definitions of C which bind the
 operations of PHCpack as a state machine in a systematic manner.
@@ -28,7 +28,9 @@ module for use with Python 3.5.
 file name            : short description
 ------------------------------------------------------------------------------
 phcpack.h            : prototypes for basic operations in PHCpack
-phcpack.c            : definitions of functions in phcpack.h
+phcpack.c            : definitions of functions in phcpack.h, use_c2phc
+phcpack4c.h          : for a pure C interface, without demics
+phcpack4c.c          : definition of functions in phcpack4c.h, use c2phc4c
 syscon.h             : prototypes for systems container
 syscon.c             : definitions of functions in syscon.h
 lib_syscon.c         : test on operations in systems container

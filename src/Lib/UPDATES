@@ -1,3 +1,8 @@
+Sun 25 Oct 2020 : modified phcpack.c to use everywhere use_c2phc instead
+  of use_c2phc4c, because otherwise mixed_volume_by_demics does not work.
+  For a pure C interface, copied phcpack.h and phcpack.c respectively into
+  phcpack4c.h and phcpack4c.c, which uses use_c2phc4c.
+
 Mon 28 Sep 2020 : to the solve_standard_system in phcpack, added the
   option to focus on mixed volumes and polyhedral homotopies, tested by
   phc_solve, with updates in phcpy2c2.c and phcpy2c3.c. 
