@@ -3929,20 +3929,20 @@ phc_solve:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/solcon.c
-	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/phcpack4c.c
 	gcc -c $(PHCLib)/phc_solve.c
 	gnatbind -n use_c2phc4c
-	gnatlink -C use_c2phc4c syscon.o solcon.o phcpack.o phc_solve.o \
+	gnatlink -C use_c2phc4c syscon.o solcon.o phcpack4c.o phc_solve.o \
                  -o $(BIN)/phc_solve -lm
 
 phc_solve_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
 	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
-	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/phcpack4c.c
 	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/phc_solve.c
 	gnatbind -n use_c2phc4c
-	gnatlink -C use_c2phc4c syscon.o solcon.o phcpack.o phc_solve.o \
+	gnatlink -C use_c2phc4c syscon.o solcon.o phcpack4c.o phc_solve.o \
                  -o $(BIN)/phc_solve -lm --LINK=$(gpp)
 
 lib_witsols:

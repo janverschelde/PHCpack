@@ -2461,10 +2461,10 @@ phc_solve: get_clock.o get_clocks_per_sec.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/solcon.c
-	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/phcpack4c.c
 	gcc -c $(PHCLib)/phc_solve.c
 	gnatbind -n use_c2phc4c
-	gnatlink -C use_c2phc4c syscon.o solcon.o phcpack.o phc_solve.o \
+	gnatlink -C use_c2phc4c syscon.o solcon.o phcpack4c.o phc_solve.o \
                     get_clock.o get_clocks_per_sec.o -o ../bin/phc_solve
 
 phcpy2c.so:
