@@ -1,4 +1,4 @@
-/* Tests the product of two series */
+/* Tests the product of two series in double precision. */
 
 #include <iostream>
 #include "dbl_convolutions_host.h"
@@ -31,9 +31,9 @@ int main ( void )
 
 void test_real ( int deg )
 {
-   double x[deg+1];
-   double y[deg+1];
-   double z[deg+1];
+   double *x = new double[deg+1];
+   double *y = new double[deg+1];
+   double *z = new double[deg+1];
 
    for(int k=0; k<=deg; k++)
    {
@@ -52,12 +52,12 @@ void test_real ( int deg )
 
 void test_complex ( int deg )
 {
-   double xre[deg+1];
-   double xim[deg+1];
-   double yre[deg+1];
-   double yim[deg+1];
-   double zre[deg+1];
-   double zim[deg+1];
+   double *xre = new double[deg+1];
+   double *xim = new double[deg+1];
+   double *yre = new double[deg+1];
+   double *yim = new double[deg+1];
+   double *zre = new double[deg+1];
+   double *zim = new double[deg+1];
 
    for(int k=0; k<=deg; k++)
    {

@@ -1,0 +1,98 @@
+# This makefile is for the command line version
+# of the Microsoft Visual Studio Compiler on Windows 10.
+# The option '-O3' is unknown and replaced by '-O2'.
+
+# location for the C code for multiple double precision
+MPD=../Norms
+
+# location of the command line Microsoft Visual Studio Compiler
+CL="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
+
+# include path for the Microsoft Visual Studio Compiler
+includepath="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\include"
+
+# include path for the Windows Kit
+winkitucrt="C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt"
+
+# libaries of the Microsoft Visual Studio compiler
+libdirvs="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\lib\x64"
+
+# libraries of the Windows Kits
+libdirkitum="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\um\x64"
+libdirkitucrt="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64"
+
+# include files of the CUDA SDK
+CUDASDK="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2"
+# library folder of the CUDA SDK
+CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\lib\x64"
+
+double_double_functions.obj:
+	@-echo ">>> compiling double double functions..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/double_double_functions.cpp \
+                 /Fo: double_double_functions.obj /EHsc
+
+triple_double_functions.obj:
+	@-echo ">>> compiling triple double functions..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/triple_double_functions.cpp \
+                 /Fo: triple_double_functions.obj /EHsc
+
+dbl_convolutions_host.obj:
+	@-echo ">>> compiling dbl_convolutions_host ..."
+	$(CL)\cl /c dbl_convolutions_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl_convolutions_host.obj
+
+dbl2_convolutions_host.obj:
+	@-echo ">>> compiling dbl2_convolutions_host ..."
+	$(CL)\cl /c dbl2_convolutions_host.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl2_convolutions_host.obj
+
+dbl3_convolutions_host.obj:
+	@-echo ">>> compiling dbl3_convolutions_host ..."
+	$(CL)\cl /c dbl3_convolutions_host.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl3_convolutions_host.obj
+
+test_dbl_convolutions.obj:
+	@-echo ">>> compiling test_dbl_convolutions ..."
+	$(CL)\cl /c test_dbl_convolutions.cpp \
+                 -I$(winkitucrt) -I$(includepath) /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl_convolutions.obj /EHsc
+
+test_dbl2_convolutions.obj:
+	@-echo ">>> compiling test_dbl2_convolutions ..."
+	$(CL)\cl /c test_dbl2_convolutions.cpp \
+                 -I$(winkitucrt) -I$(includepath) /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl2_convolutions.obj /EHsc
+
+test_dbl3_convolutions.obj:
+	@-echo ">>> compiling test_dbl3_convolutions ..."
+	$(CL)\cl /c test_dbl3_convolutions.cpp \
+                 -I$(winkitucrt) -I$(includepath) /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl3_convolutions.obj /EHsc
+
+test_dbl_convolutions: dbl_convolutions_host.obj test_dbl_convolutions.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_convolutions.exe \
+             dbl_convolutions_host.obj test_dbl_convolutions.obj
+
+test_dbl2_convolutions: double_double_functions.obj \
+                        dbl2_convolutions_host.obj test_dbl2_convolutions.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl2_convolutions.exe \
+             double_double_functions.obj \
+             dbl2_convolutions_host.obj test_dbl2_convolutions.obj
+
+test_dbl3_convolutions: double_double_functions.obj \
+                        triple_double_functions.obj \
+                        dbl3_convolutions_host.obj test_dbl3_convolutions.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl3_convolutions.exe \
+             double_double_functions.obj triple_double_functions.obj \
+             dbl3_convolutions_host.obj test_dbl3_convolutions.obj
+
+clean:
+	del *exe *obj *exp *lib *~

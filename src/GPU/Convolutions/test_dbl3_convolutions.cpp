@@ -31,15 +31,15 @@ int main ( void )
 
 void test_real ( int deg )
 {
-   double xhi[deg+1];
-   double xmi[deg+1];
-   double xlo[deg+1];
-   double yhi[deg+1];
-   double ymi[deg+1];
-   double ylo[deg+1];
-   double zhi[deg+1];
-   double zmi[deg+1];
-   double zlo[deg+1];
+   double* xhi = new double[deg+1];
+   double* xmi = new double[deg+1];
+   double* xlo = new double[deg+1];
+   double* yhi = new double[deg+1];
+   double* ymi = new double[deg+1];
+   double* ylo = new double[deg+1];
+   double* zhi = new double[deg+1];
+   double* zmi = new double[deg+1];
+   double* zlo = new double[deg+1];
 
    for(int k=0; k<=deg; k++)
    {
@@ -66,24 +66,24 @@ void test_real ( int deg )
 
 void test_complex ( int deg )
 {
-   double xrehi[deg+1];
-   double xremi[deg+1];
-   double xrelo[deg+1];
-   double ximhi[deg+1];
-   double ximmi[deg+1];
-   double ximlo[deg+1];
-   double yrehi[deg+1];
-   double yremi[deg+1];
-   double yrelo[deg+1];
-   double yimhi[deg+1];
-   double yimmi[deg+1];
-   double yimlo[deg+1];
-   double zrehi[deg+1];
-   double zremi[deg+1];
-   double zrelo[deg+1];
-   double zimhi[deg+1];
-   double zimmi[deg+1];
-   double zimlo[deg+1];
+   double* xrehi = new double[deg+1];
+   double* xremi = new double[deg+1];
+   double* xrelo = new double[deg+1];
+   double* ximhi = new double[deg+1];
+   double* ximmi = new double[deg+1];
+   double* ximlo = new double[deg+1];
+   double* yrehi = new double[deg+1];
+   double* yremi = new double[deg+1];
+   double* yrelo = new double[deg+1];
+   double* yimhi = new double[deg+1];
+   double* yimmi = new double[deg+1];
+   double* yimlo = new double[deg+1];
+   double* zrehi = new double[deg+1];
+   double* zremi = new double[deg+1];
+   double* zrelo = new double[deg+1];
+   double* zimhi = new double[deg+1];
+   double* zimmi = new double[deg+1];
+   double* zimlo = new double[deg+1];
 
    for(int k=0; k<=deg; k++)
    {
