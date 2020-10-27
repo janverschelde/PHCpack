@@ -26,6 +26,30 @@ CUDASDK="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2"
 # library folder of the CUDA SDK
 CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\lib\x64"
 
+random_numbers.obj:
+	@-echo ">>> compiling random number generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random_numbers.cpp \
+                 /Fo: random_numbers.obj /EHsc
+
+random2_vectors.obj:
+	@-echo ">>> compiling double double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random2_vectors.cpp \
+                 /Fo: random2_vectors.obj /EHsc
+
+random3_vectors.obj:
+	@-echo ">>> compiling triple double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random3_vectors.cpp \
+                 /Fo: random3_vectors.obj /EHsc
+
+random4_vectors.obj:
+	@-echo ">>> compiling quad double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random4_vectors.cpp \
+                 /Fo: random4_vectors.obj /EHsc
+
 double_double_functions.obj:
 	@-echo ">>> compiling double double functions..."
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -37,6 +61,12 @@ triple_double_functions.obj:
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
                       $(MPD)/triple_double_functions.cpp \
                  /Fo: triple_double_functions.obj /EHsc
+
+quad_double_functions.obj:
+	@-echo ">>> compiling quad double functions..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/quad_double_functions.cpp \
+                 /Fo: quad_double_functions.obj /EHsc
 
 dbl_convolutions_host.obj:
 	@-echo ">>> compiling dbl_convolutions_host ..."
@@ -56,43 +86,75 @@ dbl3_convolutions_host.obj:
                  -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: dbl3_convolutions_host.obj
 
+dbl4_convolutions_host.obj:
+	@-echo ">>> compiling dbl4_convolutions_host ..."
+	$(CL)\cl /c dbl4_convolutions_host.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl4_convolutions_host.obj
+
 test_dbl_convolutions.obj:
 	@-echo ">>> compiling test_dbl_convolutions ..."
 	$(CL)\cl /c test_dbl_convolutions.cpp \
-                 -I$(winkitucrt) -I$(includepath) /I$(CUDASDK)/include -02 \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
                  /Fo: test_dbl_convolutions.obj /EHsc
 
 test_dbl2_convolutions.obj:
 	@-echo ">>> compiling test_dbl2_convolutions ..."
 	$(CL)\cl /c test_dbl2_convolutions.cpp \
-                 -I$(winkitucrt) -I$(includepath) /I$(CUDASDK)/include -02 \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
                  /Fo: test_dbl2_convolutions.obj /EHsc
 
 test_dbl3_convolutions.obj:
 	@-echo ">>> compiling test_dbl3_convolutions ..."
 	$(CL)\cl /c test_dbl3_convolutions.cpp \
-                 -I$(winkitucrt) -I$(includepath) /I$(CUDASDK)/include -02 \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
                  /Fo: test_dbl3_convolutions.obj /EHsc
 
-test_dbl_convolutions: dbl_convolutions_host.obj test_dbl_convolutions.obj
+test_dbl4_convolutions.obj:
+	@-echo ">>> compiling test_dbl4_convolutions ..."
+	$(CL)\cl /c test_dbl4_convolutions.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl4_convolutions.obj /EHsc
+
+test_dbl_convolutions: random_numbers.obj dbl_convolutions_host.obj \
+                       test_dbl_convolutions.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_convolutions.exe \
-             dbl_convolutions_host.obj test_dbl_convolutions.obj
+             random_numbers.obj dbl_convolutions_host.obj \
+             test_dbl_convolutions.obj
 
 test_dbl2_convolutions: double_double_functions.obj \
+                        random_numbers.obj random2_vectors.obj \
                         dbl2_convolutions_host.obj test_dbl2_convolutions.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl2_convolutions.exe \
              double_double_functions.obj \
+             random_numbers.obj random2_vectors.obj \
              dbl2_convolutions_host.obj test_dbl2_convolutions.obj
 
 test_dbl3_convolutions: double_double_functions.obj \
                         triple_double_functions.obj \
+                        random_numbers.obj random3_vectors.obj \
                         dbl3_convolutions_host.obj test_dbl3_convolutions.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl3_convolutions.exe \
              double_double_functions.obj triple_double_functions.obj \
+             random_numbers.obj random3_vectors.obj \
              dbl3_convolutions_host.obj test_dbl3_convolutions.obj
+
+test_dbl4_convolutions: double_double_functions.obj \
+                        quad_double_functions.obj \
+                        random_numbers.obj random4_vectors.obj \
+                        dbl4_convolutions_host.obj test_dbl4_convolutions.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl4_convolutions.exe \
+             double_double_functions.obj quad_double_functions.obj \
+             random_numbers.obj random4_vectors.obj \
+             dbl4_convolutions_host.obj test_dbl4_convolutions.obj
 
 clean:
 	del *exe *obj *exp *lib *~
