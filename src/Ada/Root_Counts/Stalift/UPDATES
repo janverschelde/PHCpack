@@ -1,3 +1,6 @@
+Tue 27 Oct 2020 : new package test_stable_mixed_volumes, with code
+  extracted from ts_stable.
+
 Sat 23 Oct 2020 : new packages test_rndcff_systems and test_balance_lifting
   with code from ts_rndcff and ts_balance.
 

@@ -1444,6 +1444,18 @@ ts_drivimpl: get_clock.o get_clocks_per_sec.o
 
 # Test programs for the static lifting library :
 
+ts_balance:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_balance.adb \
+              -o $(BIN)/ts_balance
+
+ts_stable:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_stable.adb \
+              -o $(BIN)/ts_stable
+
+ts_rndcff:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_rndcff.adb \
+              -o $(BIN)/ts_rndcff
+
 ts_conint:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_conint.adb
 	gnatbl -o $(BIN)/ts_conint ts_conint.ali

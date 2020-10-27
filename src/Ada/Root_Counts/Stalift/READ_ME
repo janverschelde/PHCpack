@@ -56,7 +56,8 @@ floating_polyhedral_continuation  : polyhedral continuation by floating lifting
 dobldobl_polyhedral_continuation  : versions for double double coefficients
 quaddobl_polyhedral_continuation  : versions for quad double coefficients
 stable_polyhedral_continuation    : to compute solutions with zero components
-ts_stable                         : test on stable mixed volumes
+test_stable_mixed_volumes         : test on stable mixed volumes
+ts_stable                         : calls the test on stable mixed volumes
 -------------------------------------------------------------------------------
 inner_normal_cones                : representations of cones of inner normals
 normal_cone_intersections         : taking intersections of normal cones
