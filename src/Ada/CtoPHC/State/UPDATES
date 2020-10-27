@@ -1,3 +1,6 @@
+Tue 27 Oct 2020 : in cells_container.adb, changed the Deep_Clear() into
+  Shallow_Clear() of the orgcells (original) and stbcells (stable cells).
+
 Mon 28 Sep 2020 : extended job_handlers with the option to the solver of
   polynomials in double precision, for focus on polyhedral homotopies.
   To job_handlers, this option also for the solvers of Laurent systems

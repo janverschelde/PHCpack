@@ -1218,8 +1218,11 @@ package body Cells_Container is
     Deep_Clear(lifsup);
     lifsup_last := null;
     Deep_Clear(cells);
-    Deep_Clear(orgcells);
-    Deep_Clear(stbcells);
+   -- quick fix to avoid crash when clearing the data
+   -- in case a stable mixed volume was computed,
+   -- because orgcells and stbcells share data with cells
+    Shallow_Clear(orgcells); -- Deep_Clear(orgcells);
+    Shallow_Clear(stbcells); -- Deep_Clear(stbcells);
     Standard_Integer_Vectors.Clear(mix);
   end Clear_Cell_Data;
 
