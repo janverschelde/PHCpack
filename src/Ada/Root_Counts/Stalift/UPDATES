@@ -1,5 +1,7 @@
 Tue 27 Oct 2020 : new package test_stable_mixed_volumes, with code
-  extracted from ts_stable.
+  extracted from ts_stable.  Renamed drivers_for_lifting_functions 
+  into the package main_lifting_functions, updated ts_userlift.adb
+  and drivers_for_static_lifting.
 
 Sat 23 Oct 2020 : new packages test_rndcff_systems and test_balance_lifting
   with code from ts_rndcff and ts_balance.

@@ -9,7 +9,10 @@ with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 
-package Drivers_for_Lifting_Functions is
+package Main_Lifting_Functions is
+
+-- DESCRIPTION :
+--   Determines the lifting function depending on user selection.
 
   function Read_Integer_Lifting
               ( L : Lists_of_Integer_Vectors.List )
@@ -25,7 +28,7 @@ package Drivers_for_Lifting_Functions is
   -- DESCRIPTION : interactive point-wise lifting of a list.
   --   Returns the list of lifted points.
 
-  procedure Driver_for_Lifting_Functions
+  procedure Integer_Lifting
               ( file : in file_type; p : in Poly_Sys;
                 points : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 lifted : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
@@ -46,7 +49,7 @@ package Drivers_for_Lifting_Functions is
   --   lifted   the lifted support sets;
   --   lilifu   vectors used for linear lifting, otherwise lilifu = null.
 
-  procedure Driver_for_Lifting_Functions
+  procedure Floating_Lifting
               ( file : in file_type; p : in Poly_Sys; b : in double_float;
                 points : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 lifted : in out Arrays_of_Floating_Vector_Lists.Array_of_Lists;
@@ -68,7 +71,7 @@ package Drivers_for_Lifting_Functions is
   --   lifted   the lifted support sets;
   --   lilifu   vectors used for linear lifting, otherwise lilifu = null.
 
-  procedure Driver_for_Lifting_Functions
+  procedure Main_Polynomial
               ( file : in file_type; p : in Poly_Sys;
                 ipoints : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 fltlif : out boolean; stlb : out double_float;
@@ -77,7 +80,7 @@ package Drivers_for_Lifting_Functions is
                 flftd : in out Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 ililifu : in out Standard_Integer_VecVecs.Link_to_VecVec;
                 flilifu : in out Standard_Floating_VecVecs.Link_to_VecVec );
-  procedure Driver_for_Lifting_Functions
+  procedure Main_Laurent
               ( file : in file_type; p : in Laur_Sys;
                 ipoints : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 fltlif : out boolean; stlb : out double_float;
@@ -103,4 +106,4 @@ package Drivers_for_Lifting_Functions is
   --   stlb     equals 0.0 if no lifting for stable mixed volumes,
   --            otherwise equals the bound for stable mixed volumes.
 
-end Drivers_for_Lifting_Functions;
+end Main_Lifting_Functions;

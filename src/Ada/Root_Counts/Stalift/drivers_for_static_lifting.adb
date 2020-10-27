@@ -37,7 +37,7 @@ with Floating_Lifting_Utilities;         use Floating_Lifting_Utilities;
 with Integer_Pruning_Methods;            use Integer_Pruning_Methods;
 with Floating_Pruning_Methods;           use Floating_Pruning_Methods;
 with Driver_for_Criterion;
-with Drivers_for_Lifting_Functions;      use Drivers_for_Lifting_Functions;
+with Main_Lifting_Functions;
 with Pruning_Statistics;
 with Integer_Polyhedral_Continuation;    use Integer_Polyhedral_Continuation;
 with Floating_Polyhedral_Continuation;   use Floating_Polyhedral_Continuation;
@@ -1201,7 +1201,7 @@ package body Drivers_for_Static_Lifting is
 
       sp := Select_Terms(permp,mix.all,mixpts.all);
       new_line;
-      Driver_for_Lifting_Functions
+      Main_Lifting_Functions.Main_Polynomial
         (file,sp,mixpts.all,fltlif,stlb,fpts.all,ilifpts.all,
               flifpts.all,ilili,flili);
     else
@@ -1260,7 +1260,7 @@ package body Drivers_for_Static_Lifting is
 
       sp := Select_Terms(permp,mix.all,mixpts.all);
       new_line;
-      Driver_for_Lifting_Functions
+      Main_Lifting_Functions.Main_Laurent
         (file,sp,mixpts.all,fltlif,stlb,fpts.all,ilifpts.all,
               flifpts.all,ilili,flili);
     else

@@ -10,7 +10,7 @@ with Arrays_of_Integer_Vector_Lists;     use Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
 with Mixed_Volume_Computation;
-with Drivers_for_Lifting_Functions;
+with Main_Lifting_Functions;
 with Integer_Mixed_Subdivisions;         use Integer_Mixed_Subdivisions;
 with Integer_Mixed_Subdivisions_io;
 with Drivers_for_Static_Lifting;
@@ -34,7 +34,6 @@ procedure ts_userlift is
     n : constant integer32 := p'last;
     r : integer32;
 
-    use Drivers_for_Lifting_Functions;
     use Drivers_for_Static_Lifting;
 
   begin
@@ -42,12 +41,12 @@ procedure ts_userlift is
     r := mix'last;
     put("Number of distinct supports : "); put(r,1); new_line;
     declare
-      mixsup : Array_of_Lists(mix'range)
+      mixsup : constant Array_of_Lists(mix'range)
              := Mixed_Volume_Computation.Typed_Lists(mix.all,sup);
       lifsup : Array_of_Lists(mix'range);
     begin
       for k in mixsup'range loop
-        lifsup(k) := Read_Integer_Lifting(mixsup(k));
+        lifsup(k) := Main_Lifting_Functions.Read_Integer_Lifting(mixsup(k));
       end loop;
       put_line("The lifted supports : "); put(lifsup);
       Integer_Create_Mixed_Cells(n,mix.all,lifsup,mcc);

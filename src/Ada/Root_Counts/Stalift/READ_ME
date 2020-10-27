@@ -43,6 +43,7 @@ integer_polyhedral_continuation   : polyhedral continuation by integer lifting
 mixed_volume_computation          : functions to compute mixed volumes
 ts_mixvol                         : mixed volume of supports
 bkk_bound_computations            : black-box mixed volumes and solvers
+main_lifting_functions            : determines lifting based on user input
 ts_userlift                       : test user defined integer lifting
 -------------------------------------------------------------------------------
 floating_integer_convertors       : convertors integer<->floating data
@@ -86,7 +87,7 @@ jumpstart_polyhedral_homotopies   : drivers to jumpstart polyhedral trackers
 ts_exptrack                       : test exponential continuation parameters
 -------------------------------------------------------------------------------
 lifted_configurations             : for balancing the lifting values
-test_balance_lifiting             : development of balancing lifting values
+test_balance_lifting              : development of balancing lifting values
 ts_balance                        : calls the main test on balancing
 -------------------------------------------------------------------------------
 

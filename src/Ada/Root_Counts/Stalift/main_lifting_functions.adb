@@ -19,7 +19,7 @@ with Floating_Lifting_Utilities;         use Floating_Lifting_Utilities;
 with Floating_Integer_Convertors;
 with Floating_Mixed_Subdivisions_io;
 
-package body Drivers_for_Lifting_Functions is
+package body Main_Lifting_Functions is
 
 -- AUXILIARIES :
 
@@ -277,8 +277,7 @@ package body Drivers_for_Lifting_Functions is
   end Float_Polynomial_Lifting;
 
   procedure Integer_User_Point_Wise_Lifting
-            ( file : in file_type;
-              points : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+            ( points : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
               lftd : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists ) is
   begin
     for k in points'range loop
@@ -287,8 +286,7 @@ package body Drivers_for_Lifting_Functions is
   end Integer_User_Point_Wise_Lifting;
 
   procedure Float_User_Point_Wise_Lifting
-          ( file : in file_type;
-            points : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+          ( points : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
             lftd : in out Arrays_of_Floating_Vector_Lists.Array_of_Lists ) is
   begin
     for k in points'range loop
@@ -382,7 +380,7 @@ package body Drivers_for_Lifting_Functions is
       when '0' => put_line(file,"random point-wise.");
                   Integer_Random_Point_Wise_Lifting(file,points,lifted);
       when '1' => put_line(file,"point-wise provided by user.");
-                  Integer_User_Point_Wise_Lifting(file,points,lifted);
+                  Integer_User_Point_Wise_Lifting(points,lifted);
       when '2' => put_line(file,"random linear.");
                   Integer_Random_Linear_Lifting(file,n,points,lifted,lilifu);
       when '3' => put_line(file,"linear provided by user.");
@@ -415,7 +413,7 @@ package body Drivers_for_Lifting_Functions is
       when '0' => put_line(file,"random point-wise.");
                   Integer_Random_Point_Wise_Lifting(file,points,lifted);
       when '1' => put_line(file,"point-wise provided by user.");
-                  Integer_User_Point_Wise_Lifting(file,points,lifted);
+                  Integer_User_Point_Wise_Lifting(points,lifted);
       when '2' => put_line(file,"random linear.");
                   Integer_Random_Linear_Lifting(file,n,points,lifted,lilifu);
       when '3' => put_line(file,"linear provided by user.");
@@ -448,7 +446,7 @@ package body Drivers_for_Lifting_Functions is
       when '0' => put_line(file,"random point-wise.");
                   Float_Random_Point_Wise_Lifting(file,points,lifted);
       when '1' => put_line(file,"point-wise provided by user.");
-                  Float_User_Point_Wise_Lifting(file,points,lifted);
+                  Float_User_Point_Wise_Lifting(points,lifted);
       when '2' => put_line(file,"random linear.");
                   Float_Random_Linear_Lifting(file,n,points,lifted,lilifu);
       when '3' => put_line(file,"linear provided by user.");
@@ -484,7 +482,7 @@ package body Drivers_for_Lifting_Functions is
       when '0' => put_line(file,"random point-wise.");
                   Float_Random_Point_Wise_Lifting(file,points,lifted);
       when '1' => put_line(file,"point-wise provided by user.");
-                  Float_User_Point_Wise_Lifting(file,points,lifted);
+                  Float_User_Point_Wise_Lifting(points,lifted);
       when '2' => put_line(file,"random linear.");
                   Float_Random_Linear_Lifting(file,n,points,lifted,lilifu);
       when '3' => put_line(file,"linear provided by user.");
@@ -503,31 +501,31 @@ package body Drivers_for_Lifting_Functions is
 
 -- TARGET ROUTINES :
 
-  procedure Driver_for_Lifting_Functions
+  procedure Integer_Lifting
             ( file : in file_type; p : in Poly_Sys;
               points : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
               lifted : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
               lilifu : in out Standard_Integer_VecVecs.Link_to_VecVec ) is
 
-    liftfun : character := Menu_for_Lifting_Functions(false);
+    liftfun : constant character := Menu_for_Lifting_Functions(false);
 
   begin
     Dispatch_Integer_Lifting(file,p,liftfun,points,lifted,lilifu);
-  end Driver_for_Lifting_Functions;
+  end Integer_Lifting;
 
-  procedure Driver_for_Lifting_Functions
+  procedure Floating_Lifting
             ( file : in file_type; p : in Poly_Sys; b : in double_float;
               points : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
               lifted : in out Arrays_of_Floating_Vector_Lists.Array_of_Lists;
               lilifu : in out Standard_Floating_VecVecs.Link_to_VecVec ) is
 
-    liftfun : character := Menu_for_Lifting_Functions(false);
+    liftfun : constant character := Menu_for_Lifting_Functions(false);
 
   begin
     Dispatch_Float_Lifting(file,p,liftfun,b,points,lifted,lilifu);
-  end Driver_for_Lifting_Functions;
+  end Floating_Lifting;
 
-  procedure Driver_for_Lifting_Functions
+  procedure Main_Polynomial
               ( file : in file_type; p : in Poly_Sys;
                 ipoints : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 fltlif : out boolean; stlb : out double_float;
@@ -537,7 +535,7 @@ package body Drivers_for_Lifting_Functions is
                 ililifu : in out Standard_Integer_VecVecs.Link_to_VecVec;
                 flilifu : in out Standard_Floating_VecVecs.Link_to_VecVec ) is
 
-    liftfun : character := Menu_for_Lifting_Functions(false);
+    liftfun : constant character := Menu_for_Lifting_Functions(false);
     ans : character;
 
   begin
@@ -552,16 +550,17 @@ package body Drivers_for_Lifting_Functions is
    -- put("Type i for integer or f for floating-point lifting : ");
    -- Ask_Alternative(ans,"if"); fltlif := (ans = 'f');
    -- if ans = 'i'
-    if ans = 'y'
-     then fltlif := false;
-          Dispatch_Integer_Lifting(file,p,liftfun,ipoints,ilftd,ililifu);
-     else fltlif := true;
-          fpts := Floating_Integer_Convertors.Convert(ipoints);
-          Dispatch_Float_Lifting(file,p,liftfun,stlb,fpts,flftd,flilifu);
+    if ans = 'y' then
+      fltlif := false;
+      Dispatch_Integer_Lifting(file,p,liftfun,ipoints,ilftd,ililifu);
+    else
+      fltlif := true;
+      fpts := Floating_Integer_Convertors.Convert(ipoints);
+      Dispatch_Float_Lifting(file,p,liftfun,stlb,fpts,flftd,flilifu);
     end if;
-  end Driver_for_Lifting_Functions;
+  end Main_Polynomial;
 
-  procedure Driver_for_Lifting_Functions
+  procedure Main_Laurent
               ( file : in file_type; p : in Laur_Sys;
                 ipoints : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 fltlif : out boolean; stlb : out double_float;
@@ -572,7 +571,7 @@ package body Drivers_for_Lifting_Functions is
                 flilifu : in out Standard_Floating_VecVecs.Link_to_VecVec ) is
 
     gl : constant boolean := Is_Genuine_Laurent(p);
-    liftfun : character := Menu_for_Lifting_Functions(gl);
+    liftfun : constant character := Menu_for_Lifting_Functions(gl);
     ans : character;
 
   begin
@@ -587,13 +586,14 @@ package body Drivers_for_Lifting_Functions is
    -- put("Type i for integer or f for floating-point lifting : ");
    -- Ask_Alternative(ans,"if"); fltlif := (ans = 'f');
    -- if ans = 'i'
-    if ans = 'y'
-     then fltlif := false;
-          Dispatch_Integer_Lifting(file,p,liftfun,ipoints,ilftd,ililifu);
-     else fltlif := true;
-          fpts := Floating_Integer_Convertors.Convert(ipoints);
-          Dispatch_Float_Lifting(file,p,liftfun,stlb,fpts,flftd,flilifu);
+    if ans = 'y' then
+      fltlif := false;
+      Dispatch_Integer_Lifting(file,p,liftfun,ipoints,ilftd,ililifu);
+    else
+      fltlif := true;
+      fpts := Floating_Integer_Convertors.Convert(ipoints);
+      Dispatch_Float_Lifting(file,p,liftfun,stlb,fpts,flftd,flilifu);
     end if;
-  end Driver_for_Lifting_Functions;
+  end Main_Laurent;
 
-end Drivers_for_Lifting_Functions;
+end Main_Lifting_Functions;
