@@ -2,3 +2,7 @@ Mon 26 Oct 2020 : added {dbl,dbl2,dbl3}_convolutions_host.{h,cpp} with a
   basic test in test_{dbl,dbl2,dbl3}_convolutions.cpp.  Defined makefiles.
   Instead of double x[deg+1] used double *x = new double[deg+1] as
   required for the microsoft windows compiler.  Defined makefile_windows.
+  Fixed bugs in {dbl,dbl2,dbl3}_convolutions_host.cpp and added better
+  tests in test_{dbl,dbl2,dbl3}_convolutions.cpp.  Updated makefile_unix.
+  Added code for quad double convolutions in dbl4_convolutions_host,
+  tested by test_dbl4_convolutions.  Updated makefiles.
