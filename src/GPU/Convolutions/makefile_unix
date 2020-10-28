@@ -5,6 +5,12 @@
 
 gpp=/usr/bin/g++
 MPD=../Norms
+CUDA=/usr/local/cuda/include
+CUDALIB=/usr/local/cuda/lib64
+
+dbl_convolutions_kernels.o:
+	@-echo ">>> compiling convolution kernels for doubles ..."
+	nvcc -ccbin=$(gpp) -c dbl_convolutions_kernels.cu
 
 random_numbers.o:
 	@-echo ">>> compiling random number generators ..."
@@ -52,7 +58,7 @@ dbl4_convolutions_host.o:
 
 test_dbl_convolutions.o:
 	@-echo ">>> compiling test_dbl_convolutions ..."
-	$(gpp) -O3 -c -I$(MPD) test_dbl_convolutions.cpp
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl_convolutions.cpp
 
 test_dbl2_convolutions.o:
 	@-echo ">>> compiling test_dbl2_convolutions ..."
@@ -66,11 +72,12 @@ test_dbl4_convolutions.o:
 	@-echo ">>> compiling test_dbl4_convolutions ..."
 	$(gpp) -O3 -c -I$(MPD) test_dbl4_convolutions.cpp
 
-test_dbl_convolutions: dbl_convolutions_host.o test_dbl_convolutions.o \
-                       random_numbers.o
+test_dbl_convolutions: dbl_convolutions_kernels.o dbl_convolutions_host.o \
+                       random_numbers.o test_dbl_convolutions.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_convolutions test_dbl_convolutions.o \
-                  dbl_convolutions_host.o random_numbers.o
+                  dbl_convolutions_host.o random_numbers.o \
+                  dbl_convolutions_kernels.o -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl2_convolutions: double_double_functions.o dbl2_convolutions_host.o \
                         random_numbers.o random2_vectors.o \
@@ -99,8 +106,9 @@ test_dbl4_convolutions: double_double_functions.o quad_double_functions.o \
                   dbl4_convolutions_host.o
 
 clean:
-	/bin/rm -f -r dbl_convolutions_host.o test_dbl_convolutions.o
-	/bin/rm -f -r random_numbers.o test_dbl_convolutions
+	/bin/rm -f -r random_numbers.o
+	/bin/rm -f -r dbl_convolutions_host.o dbl_convolutions_kernels.o
+	/bin/rm -f -r test_dbl_convolutions.o test_dbl_convolutions
 	/bin/rm -f -r double_double_functions.o dbl2_convolutions_host.o
 	/bin/rm -f -r random2_vectors.o random3_vectors.o
 	/bin/rm -f -r test_dbl2_convolutions.o test_dbl2_convolutions

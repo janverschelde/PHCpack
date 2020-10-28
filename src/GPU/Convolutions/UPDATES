@@ -1,3 +1,7 @@
+Wed 28 Oct 2020 : added dbl_convolution_kernels.h and .cu to define kernels
+  to compute products of truncated power series, tested by
+  test_dbl_convolutions.cpp, updated makefile_unix.
+
 Mon 26 Oct 2020 : added {dbl,dbl2,dbl3}_convolutions_host.{h,cpp} with a
   basic test in test_{dbl,dbl2,dbl3}_convolutions.cpp.  Defined makefiles.
   Instead of double x[deg+1] used double *x = new double[deg+1] as
