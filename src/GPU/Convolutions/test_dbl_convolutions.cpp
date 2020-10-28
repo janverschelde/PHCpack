@@ -93,8 +93,10 @@ void test_complex ( int deg )
    double *xim = new double[deg+1];
    double *yre = new double[deg+1];
    double *yim = new double[deg+1];
-   double *zre = new double[deg+1];
-   double *zim = new double[deg+1];
+   double *zre_h = new double[deg+1];
+   double *zim_h = new double[deg+1];
+   double *zre_d = new double[deg+1];
+   double *zim_d = new double[deg+1];
 
    for(int k=0; k<=deg; k++)
    {
@@ -103,14 +105,26 @@ void test_complex ( int deg )
    }
    yre[0] = 1.0; yre[1] = -1.0;
 
-   CPU_cmplx_product(deg,xre,xim,yre,yim,zre,zim);
+   CPU_cmplx_product(deg,xre,xim,yre,yim,zre_h,zim_h);
 
    cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
 
    for(int k=0; k<=deg; k++)
    {
-      cout << "  zre[" << k << "] : " << zre[k];
-      cout << "  zim[" << k << "] : " << zim[k];
+      cout << "  zre[" << k << "] : " << zre_h[k];
+      cout << "  zim[" << k << "] : " << zim_h[k];
+      if((k+1) % 2 == 0) cout << endl;
+   }
+   cout << endl;
+
+   GPU_cmplx_product(xre,xim,yre,yim,zre_d,zim_d,deg,1,deg+1);
+
+   cout << "GPU computed product :" << endl;
+
+   for(int k=0; k<=deg; k++)
+   {
+      cout << "  zre[" << k << "] : " << zre_d[k];
+      cout << "  zim[" << k << "] : " << zim_d[k];
       if((k+1) % 2 == 0) cout << endl;
    }
    cout << endl;
@@ -135,23 +149,19 @@ void test_real_exponential ( int deg )
    CPU_dbl_product(deg,x,y,z_h);
 
    cout << scientific << setprecision(16);
-
    cout << "Series of exp(x)*exp(-x), for x = " << r << endl;
 
    double sum = 0.0;
-
    for(int k=0; k<=deg; k++) sum = sum + z_h[k];
    cout << "Summation of all coefficients of the product ..." << endl;
    cout << "  sum : " << sum << endl;
 
    GPU_dbl_product(x,y,z_d,deg,1,deg+1);
 
-   cout << "GPU computed product :" << endl;
-
    sum = 0.0;
-
    for(int k=0; k<=deg; k++) sum = sum + z_d[k];
-   cout << "Summation of all coefficients of the product ..." << endl;
+   cout << "Summation of all coefficients of the GPU computed product ..."
+        << endl;
    cout << "  sum : " << sum << endl;
 }
 
@@ -161,8 +171,10 @@ void test_complex_exponential ( int deg )
    double *xim = new double[deg+1];
    double *yre = new double[deg+1];
    double *yim = new double[deg+1];
-   double *zre = new double[deg+1];
-   double *zim = new double[deg+1];
+   double *zre_h = new double[deg+1];
+   double *zim_h = new double[deg+1];
+   double *zre_d = new double[deg+1];
+   double *zim_d = new double[deg+1];
    double r = random_angle();
    double cr = cos(r);
    double sr = sin(r);
@@ -178,7 +190,7 @@ void test_complex_exponential ( int deg )
       yim[k] = (yre[k-1]*(-sr) + yim[k-1]*(-cr))/k;
    }
 
-   CPU_cmplx_product(deg,xre,xim,yre,yim,zre,zim);
+   CPU_cmplx_product(deg,xre,xim,yre,yim,zre_h,zim_h);
 
    cout << scientific << setprecision(16);
 
@@ -190,10 +202,24 @@ void test_complex_exponential ( int deg )
 
    for(int k=0; k<=deg; k++) 
    {
-      sumre = sumre + zre[k];
-      sumim = sumim + zim[k];
+      sumre = sumre + zre_h[k];
+      sumim = sumim + zim_h[k];
    }
    cout << "Summation of all coefficients of the product ..." << endl;
    cout << "  sumre : " << sumre << endl;
    cout << "  sumim : " << sumim << endl;
+
+   GPU_cmplx_product(xre,xim,yre,yim,zre_d,zim_d,deg,1,deg+1);
+
+   sumre = 0.0; sumim = 0.0;
+   for(int k=0; k<=deg; k++) 
+   {
+      sumre = sumre + zre_d[k];
+      sumim = sumim + zim_d[k];
+   }
+   cout << "Summation of all coefficients of the GPU computed product ..."
+        << endl;
+   cout << "  sumre : " << sumre << endl;
+   cout << "  sumim : " << sumim << endl;
+
 }
