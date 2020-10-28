@@ -3,6 +3,9 @@ Wed 28 Oct 2020 : added dbl_convolution_kernels.h and .cu to define kernels
   test_dbl_convolutions.cpp, updated makefile_unix.
   To test_dbl_convolution_kernels, added functions for complex vectors and
   extended the tests in test_dbl_convolutions.cpp.
+  Edited dbl_convolutions_kernels.h, added kernels for double doubles in
+  dbl2_convolutions_kernels.h and dbl2_convolutions_kernels.cu, tested
+  in test_dbl2_convolutions.cpp; updated makefiles.
 
 Mon 26 Oct 2020 : added {dbl,dbl2,dbl3}_convolutions_host.{h,cpp} with a
   basic test in test_{dbl,dbl2,dbl3}_convolutions.cpp.  Defined makefiles.

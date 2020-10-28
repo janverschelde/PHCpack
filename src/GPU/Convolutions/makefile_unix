@@ -12,6 +12,10 @@ dbl_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for doubles ..."
 	nvcc -ccbin=$(gpp) -c dbl_convolutions_kernels.cu
 
+dbl2_convolutions_kernels.o:
+	@-echo ">>> compiling convolution kernels for double doubles ..."
+	nvcc -ccbin=$(gpp) -c -I$(MPD) dbl2_convolutions_kernels.cu
+
 random_numbers.o:
 	@-echo ">>> compiling random number generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/random_numbers.cpp
@@ -62,7 +66,7 @@ test_dbl_convolutions.o:
 
 test_dbl2_convolutions.o:
 	@-echo ">>> compiling test_dbl2_convolutions ..."
-	$(gpp) -O3 -c -I$(MPD) test_dbl2_convolutions.cpp
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl2_convolutions.cpp
 
 test_dbl3_convolutions.o:
 	@-echo ">>> compiling test_dbl3_convolutions ..."
@@ -81,11 +85,12 @@ test_dbl_convolutions: dbl_convolutions_kernels.o dbl_convolutions_host.o \
 
 test_dbl2_convolutions: double_double_functions.o dbl2_convolutions_host.o \
                         random_numbers.o random2_vectors.o \
-                        test_dbl2_convolutions.o
+                        dbl2_convolutions_kernels.o test_dbl2_convolutions.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_convolutions test_dbl2_convolutions.o \
                   random_numbers.o random2_vectors.o \
-                  double_double_functions.o dbl2_convolutions_host.o
+                  double_double_functions.o dbl2_convolutions_host.o \
+                  dbl2_convolutions_kernels.o -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl3_convolutions: double_double_functions.o triple_double_functions.o \
                         random_numbers.o random3_vectors.o \
@@ -109,8 +114,9 @@ clean:
 	/bin/rm -f -r random_numbers.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_convolutions_kernels.o
 	/bin/rm -f -r test_dbl_convolutions.o test_dbl_convolutions
-	/bin/rm -f -r double_double_functions.o dbl2_convolutions_host.o
+	/bin/rm -f -r double_double_functions.o
 	/bin/rm -f -r random2_vectors.o random3_vectors.o
+	/bin/rm -f -r dbl2_convolutions_host.o dbl2_convolutions_kernels.o
 	/bin/rm -f -r test_dbl2_convolutions.o test_dbl2_convolutions
 	/bin/rm -f -r triple_double_functions.o dbl3_convolutions_host.o
 	/bin/rm -f -r test_dbl3_convolutions.o test_dbl3_convolutions

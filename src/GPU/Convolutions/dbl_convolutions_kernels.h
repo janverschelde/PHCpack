@@ -11,13 +11,13 @@
  * to compute the product of series with complex double coefficients.
  * For degree 511, we have 512 complex numbers, for x, y, and z,
  * real and imaginary parts, so 512*3*2*8 = 24576 bytes.
- * This constants bounds the degree of the power series. */
+ * This constant bounds the degree of the power series. */
 
 __global__ void dbl_convolute ( double *x, double *y, double *z, int dim );
 /*
  * DESCRIPTION :
  *   Convolutes real vectors x and y to make z.
- *   All vectors have dimension dim. */
+ *   All arrays have dimension dim. */
 
 __global__ void cmplx_convolute
  ( double *xre, double *xim, double *yre, double *yim,
@@ -26,17 +26,20 @@ __global__ void cmplx_convolute
  * DESCRIPTION :
  *   Convolutes complex vectors x and y to make z.
  *   The complex vectors are given as double vectors with real
- *   and imaginary parts.  All vectors have dimension dim.
+ *   and imaginary parts.  All arrays have dimension dim.
  *
  * ON ENTRY :
  *   xre      real parts of the first vector x;
  *   xim      imaginary parts of the first vector x;
  *   yre      real parts of the second vector y;
- *   yim      imaginary parts of the second vector y.
+ *   yim      imaginary parts of the second vector y;
+ *   zre      dim doubles allocated for the real parts of the product;
+ *   zim      dim doubles allocated for the imaginary parts of the product;
+ *   dim      dimension of all arrays.
  *
  * ON RETURN :
  *   zre      real parts of the product of x and y;
- *   zim      imaginary part of the product of x and y. */
+ *   zim      imaginary parts of the product of x and y. */
 
 void GPU_dbl_product
  ( double *x_h, double *y_h, double *z_h, int deg, int freq, int BS );

@@ -21,21 +21,23 @@ The above algorithm is implemented for several multiple double precisions.
 The data parallel version of the algorithm, with d+1 threads in a block,
 reduces to two statements:
 
-   1. z(k) := x(0)*y(k)
-   2. for i in 1..k do z(k) := z(k) + x(i)*y(k-i)
+   1.   z(k) := x(0)*y(k)
+   2.   for i in 1..k do
+   2.1      z(k) := z(k) + x(i)*y(k-i)
 
 where thread k computes z(k).
 
 -----------------------------------------------------------------------------
-file name                : short description
+file name                 : short description
 -----------------------------------------------------------------------------
-dbl_convolutions_host    : convolutions of double vectors on host
-dbl_convolutions_kernels : convolutions of double vectors on device
-test_dbl_convolutions    : test convolutions of double vectors
-dbl2_convolutions_host   : convolutions of double double vectors on host
-test_dbl2_convolutions   : test convolutions of double double vectors
-dbl3_convolutions_host   : convolutions of triple double vectors on host
-test_dbl3_convolutions   : test convolutions of triple double vectors
-dbl4_convolutions_host   : convolutions of quad double vectors on host
-test_dbl4_convolutions   : test convolutions of quad double vectors
+dbl_convolutions_host     : convolutions of double vectors on host
+dbl_convolutions_kernels  : convolutions of double vectors on device
+test_dbl_convolutions     : test convolutions of double vectors
+dbl2_convolutions_host    : convolutions of double double vectors on host
+dbl2_convolutions_kernels : convolutions of double double vectors on device
+test_dbl2_convolutions    : test convolutions of double double vectors
+dbl3_convolutions_host    : convolutions of triple double vectors on host
+test_dbl3_convolutions    : test convolutions of triple double vectors
+dbl4_convolutions_host    : convolutions of quad double vectors on host
+test_dbl4_convolutions    : test convolutions of quad double vectors
 -----------------------------------------------------------------------------
