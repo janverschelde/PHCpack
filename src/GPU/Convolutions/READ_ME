@@ -37,7 +37,9 @@ dbl2_convolutions_host    : convolutions of double double vectors on host
 dbl2_convolutions_kernels : convolutions of double double vectors on device
 test_dbl2_convolutions    : test convolutions of double double vectors
 dbl3_convolutions_host    : convolutions of triple double vectors on host
+dbl3_convolutions_kernels : convolutions of triple double vectors on device
 test_dbl3_convolutions    : test convolutions of triple double vectors
 dbl4_convolutions_host    : convolutions of quad double vectors on host
+dbl4_convolutions_kernels : convolutions of quad double vectors on device
 test_dbl4_convolutions    : test convolutions of quad double vectors
 -----------------------------------------------------------------------------

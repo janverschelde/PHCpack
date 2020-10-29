@@ -31,9 +31,19 @@ dbl_convolutions_kernels.obj:
 	nvcc -ccbin=$(CL) -c -O3 dbl_convolutions_kernels.cu \
 
 dbl2_convolutions_kernels.obj:
-	@-echo ">>> compiling convolution kernels for doubles double ..."
+	@-echo ">>> compiling convolution kernels for double doubles ..."
 	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl2_convolutions_kernels.cu \
                                        -o dbl2_convolutions_kernels.obj
+
+dbl3_convolutions_kernels.obj:
+	@-echo ">>> compiling convolution kernels for triple doubles ..."
+	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl3_convolutions_kernels.cu \
+                                       -o dbl3_convolutions_kernels.obj
+
+dbl4_convolutions_kernels.obj:
+	@-echo ">>> compiling convolution kernels for quad doubles ..."
+	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl4_convolutions_kernels.cu \
+                                       -o dbl4_convolutions_kernels.obj
 
 random_numbers.obj:
 	@-echo ">>> compiling random number generators ..."
@@ -149,22 +159,27 @@ test_dbl2_convolutions: double_double_functions.obj \
 test_dbl3_convolutions: double_double_functions.obj \
                         triple_double_functions.obj \
                         random_numbers.obj random3_vectors.obj \
-                        dbl3_convolutions_host.obj test_dbl3_convolutions.obj
+                        dbl3_convolutions_host.obj test_dbl3_convolutions.obj \
+                        dbl3_convolutions_kernels.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl3_convolutions.exe \
              double_double_functions.obj triple_double_functions.obj \
              random_numbers.obj random3_vectors.obj \
+             dbl3_convolutions_kernels.obj \
              dbl3_convolutions_host.obj test_dbl3_convolutions.obj
 
 test_dbl4_convolutions: double_double_functions.obj \
                         quad_double_functions.obj \
                         random_numbers.obj random4_vectors.obj \
-                        dbl4_convolutions_host.obj test_dbl4_convolutions.obj
+                        dbl4_convolutions_host.obj test_dbl4_convolutions.obj \
+                        dbl4_convolutions_kernels.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl4_convolutions.exe \
              double_double_functions.obj quad_double_functions.obj \
              random_numbers.obj random4_vectors.obj \
+             dbl4_convolutions_kernels.obj \
              dbl4_convolutions_host.obj test_dbl4_convolutions.obj
+           
 
 clean:
 	del *exe *obj *exp *lib *~

@@ -41,7 +41,7 @@ __global__ void cmplx2_convolute
 /*
  * DESCRIPTION :
  *   Convolutes complex vectors x and y to make z.
- *   The complex vectors are given as double vectors with real
+ *   The complex vectors are given as double arrays with real
  *   and imaginary parts, of high and low parts.
  *   All arrays have dimension dim.
  *
@@ -52,6 +52,10 @@ __global__ void cmplx2_convolute
  *   yimlo    low parts of the imaginary parts of the coefficients of y.
  *   zrehi    dim doubles allocated for the high parts
  *            of the real parts of the coefficients of the product;
+ *   zrelo    dim doubles allocated for the low parts
+ *            of the real parts of the coefficients of the product;
+ *   zimhi    dim doubles allocated for the high parts
+ *            of the imaginary parts of the coefficients of the product;
  *   zimlo    dim doubles allocated for the low parts
  *            of the imaginary parts of the coefficients of the product;
  *   dim      dimension of all arrays.
@@ -73,7 +77,7 @@ void GPU_dbl2_product
  * ON ENTRY :
  *   xhi_h    deg+1 high parts of the coefficients of x;
  *   xlo_h    deg+1 low parts of the coefficients of x;
- *   yhi_h    deg+1 high low parts of the coefficients of y;
+ *   yhi_h    deg+1 high parts of the coefficients of y;
  *   ylo_h    deg+1 low parts of the coefficients of y;
  *   zhi_h    space allocated for deg+1 doubles for the high parts of z;
  *   zlo_h    space allocated for deg+1 doubles for the low parts of z;

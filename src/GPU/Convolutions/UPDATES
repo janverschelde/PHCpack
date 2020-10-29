@@ -6,6 +6,12 @@ Wed 28 Oct 2020 : added dbl_convolution_kernels.h and .cu to define kernels
   Edited dbl_convolutions_kernels.h, added kernels for double doubles in
   dbl2_convolutions_kernels.h and dbl2_convolutions_kernels.cu, tested
   in test_dbl2_convolutions.cpp; updated makefiles.
+  Edited dbl2_convolutions_kernels.h and dbl2_convolutions_kernels.cu.
+  Added synchronization to dbl_convolutions_kernels.cu and
+  dbl2_convolutions_kernels.cu.  For triple and quad double precision,
+  added kernels in {dbl3,dbl4}_convolutions_kernels and {dbl3,dbl4}_
+  convolution_kernels.cu, tested by test_{dbl3,dbl4}_convolutions.cpp.
+  Updated makefiles.
 
 Mon 26 Oct 2020 : added {dbl,dbl2,dbl3}_convolutions_host.{h,cpp} with a
   basic test in test_{dbl,dbl2,dbl3}_convolutions.cpp.  Defined makefiles.
