@@ -110,12 +110,18 @@ void test_complex ( int deg )
    double* yimhi = new double[deg+1];
    double* yimmi = new double[deg+1];
    double* yimlo = new double[deg+1];
-   double* zrehi = new double[deg+1];
-   double* zremi = new double[deg+1];
-   double* zrelo = new double[deg+1];
-   double* zimhi = new double[deg+1];
-   double* zimmi = new double[deg+1];
-   double* zimlo = new double[deg+1];
+   double* zrehi_h = new double[deg+1];
+   double* zremi_h = new double[deg+1];
+   double* zrelo_h = new double[deg+1];
+   double* zimhi_h = new double[deg+1];
+   double* zimmi_h = new double[deg+1];
+   double* zimlo_h = new double[deg+1];
+   double* zrehi_d = new double[deg+1];
+   double* zremi_d = new double[deg+1];
+   double* zrelo_d = new double[deg+1];
+   double* zimhi_d = new double[deg+1];
+   double* zimmi_d = new double[deg+1];
+   double* zimlo_d = new double[deg+1];
 
    for(int k=0; k<=deg; k++)
    {
@@ -128,19 +134,37 @@ void test_complex ( int deg )
 
    CPU_cmplx3_product(deg,xrehi,xremi,xrelo,ximhi,ximmi,ximlo,
                           yrehi,yremi,yrelo,yimhi,yimmi,yimlo,
-                          zrehi,zremi,zrelo,zimhi,zimmi,zimlo);
+                          zrehi_h,zremi_h,zrelo_h,zimhi_h,zimmi_h,zimlo_h);
 
-   cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
+   cout << "Series of 1/(1-x) multiplied with 1-x :" << endl;
 
    for(int k=0; k<=deg; k++)
    {
-      cout << "zrehi[" << k << "] : " << zrehi[k];
-      cout << "  zremi[" << k << "] : " << zremi[k];
-      cout << "  zrelo[" << k << "] : " << zrelo[k] << endl;
-      cout << "zimhi[" << k << "] : " << zimhi[k];
-      cout << "  zimmi[" << k << "] : " << zimmi[k];
-      cout << "  zimlo[" << k << "] : " << zimlo[k] << endl;
+      cout << "zrehi[" << k << "] : " << zrehi_h[k];
+      cout << "  zremi[" << k << "] : " << zremi_h[k];
+      cout << "  zrelo[" << k << "] : " << zrelo_h[k] << endl;
+      cout << "zimhi[" << k << "] : " << zimhi_h[k];
+      cout << "  zimmi[" << k << "] : " << zimmi_h[k];
+      cout << "  zimlo[" << k << "] : " << zimlo_h[k] << endl;
    }
+
+   GPU_cmplx3_product
+      (xrehi,xremi,xrelo,ximhi,ximmi,ximlo,
+       yrehi,yremi,yrelo,yimhi,yimmi,yimlo,
+       zrehi_d,zremi_d,zrelo_d,zimhi_d,zimmi_d,zimlo_d,deg,1,deg+1);
+
+   cout << "GPU computed product :" << endl;
+
+   for(int k=0; k<=deg; k++)
+   {
+      cout << "zrehi[" << k << "] : " << zrehi_d[k];
+      cout << "  zremi[" << k << "] : " << zremi_d[k];
+      cout << "  zrelo[" << k << "] : " << zrelo_d[k] << endl;
+      cout << "zimhi[" << k << "] : " << zimhi_d[k];
+      cout << "  zimmi[" << k << "] : " << zimmi_d[k];
+      cout << "  zimlo[" << k << "] : " << zimlo_d[k] << endl;
+   }
+
 }
 
 void test_real_exponential ( int deg )
@@ -202,7 +226,7 @@ void test_real_exponential ( int deg )
 
    GPU_dbl3_product(xhi,xmi,xlo,yhi,ymi,ylo,zhi_d,zmi_d,zlo_d,deg,1,deg+1);
 
-   sumhi = 0.0; sumlo = 0.0;
+   sumhi = 0.0; summi = 0.0; sumlo = 0.0;
 
    for(int k=0; k<=deg; k++)
       tdf_inc(&sumhi,&summi,&sumlo,zhi_d[k],zmi_d[k],zlo_d[k]);

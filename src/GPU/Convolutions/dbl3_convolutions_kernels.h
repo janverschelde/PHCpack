@@ -59,7 +59,7 @@ __global__ void cmplx3_convolute
  *   ximlo    low parts of the imaginary parts of the coefficients of x
  *   yrehi    high parts of the real parts of the coefficients of y;
  *   yremi    middle parts of the real parts of the coefficients of y;
- *   yimlo    low parts of the imaginary parts of the coefficients of y.
+ *   yimlo    low parts of the imaginary parts of the coefficients of y;
  *   zrehi    dim doubles allocated for the highest parts
  *            of the real parts of the coefficients of the product;
  *   zremi    dim doubles allocated for the middle parts
@@ -79,7 +79,7 @@ __global__ void cmplx3_convolute
  *   zremi    middle parts of the real parts of the product z;
  *   zrelo    low parts of the real parts of the product z;
  *   zimhi    high parts of the imaginary parts of the product z;
- *   zimmi    high parts of the imaginary parts of the product z;
+ *   zimmi    middle parts of the imaginary parts of the product z;
  *   zimlo    low parts of the imaginary parts of the product z. */
 
 void GPU_dbl3_product
