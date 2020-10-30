@@ -1,6 +1,9 @@
 Fri 30 Oct 2020 : bugs fixed in test_dbl8_convolutions.cpp to ensure that
   the code for the host is correct.  Fixed dbl8_convolutions_kernels.cu
   and made one more correction to test_dbl8_convolutions.cpp.
+  Defined code on the host for the convolution of vectors with deca doubles
+  in dbl10_convolutions_host.{h,cpp} and test_dbl10_convolutions.cpp.
+  Updated the makefiles.
 
 Thu 29 Oct 2020 : to test_dbl3_convolutions.cpp, added missing initialization
   and a test on gpu_cmplx3_product; edited dbl3_convolutions_kernels.h.

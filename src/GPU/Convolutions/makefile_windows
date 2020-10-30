@@ -55,6 +55,11 @@ dbl8_convolutions_kernels.obj:
 	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl8_convolutions_kernels.cu \
                                        -o dbl8_convolutions_kernels.obj
 
+dbl10_convolutions_kernels.obj:
+	@-echo ">>> compiling convolution kernels for deca doubles ..."
+	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl10_convolutions_kernels.cu \
+                                       -o dbl10_convolutions_kernels.obj
+
 random_numbers.obj:
 	@-echo ">>> compiling random number generators ..."
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -91,6 +96,12 @@ random8_vectors.obj:
                       $(MPD)/random8_vectors.cpp \
                  /Fo: random8_vectors.obj /EHsc
 
+random10_vectors.obj:
+	@-echo ">>> compiling deca double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random10_vectors.cpp \
+                 /Fo: random10_vectors.obj /EHsc
+
 double_double_functions.obj:
 	@-echo ">>> compiling double double functions..."
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -120,6 +131,12 @@ octo_double_functions.obj:
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
                       $(MPD)/octo_double_functions.cpp \
                  /Fo: octo_double_functions.obj /EHsc
+
+deca_double_functions.obj:
+	@-echo ">>> compiling deca double functions..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/deca_double_functions.cpp \
+                 /Fo: deca_double_functions.obj /EHsc
 
 dbl_convolutions_host.obj:
 	@-echo ">>> compiling dbl_convolutions_host ..."
@@ -156,6 +173,12 @@ dbl8_convolutions_host.obj:
 	$(CL)\cl /c dbl8_convolutions_host.cpp \
                  -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: dbl8_convolutions_host.obj
+
+dbl10_convolutions_host.obj:
+	@-echo ">>> compiling dbl10_convolutions_host ..."
+	$(CL)\cl /c dbl10_convolutions_host.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl10_convolutions_host.obj
 
 test_dbl_convolutions.obj:
 	@-echo ">>> compiling test_dbl_convolutions ..."
@@ -198,6 +221,13 @@ test_dbl8_convolutions.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) \
                  /I$(CUDASDK)/include -02 \
                  /Fo: test_dbl8_convolutions.obj /EHsc
+
+test_dbl10_convolutions.obj:
+	@-echo ">>> compiling test_dbl10_convolutions ..."
+	$(CL)\cl /c test_dbl10_convolutions.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl10_convolutions.obj /EHsc
 
 test_dbl_convolutions: random_numbers.obj dbl_convolutions_kernels.obj \
                        dbl_convolutions_host.obj test_dbl_convolutions.obj
@@ -265,6 +295,18 @@ test_dbl8_convolutions: double_double_functions.obj \
              random_numbers.obj random8_vectors.obj \
              dbl8_convolutions_kernels.obj \
              dbl8_convolutions_host.obj test_dbl8_convolutions.obj
+
+test_dbl10_convolutions: double_double_functions.obj \
+                         quad_double_functions.obj \
+                  octo_double_functions.obj deca_double_functions.obj \
+                  random_numbers.obj random10_vectors.obj \
+                  dbl10_convolutions_host.obj test_dbl10_convolutions.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl10_convolutions.exe \
+             double_double_functions.obj quad_double_functions.obj \
+             octo_double_functions.obj deca_double_functions.obj \
+             random_numbers.obj random10_vectors.obj \
+             dbl10_convolutions_host.obj test_dbl10_convolutions.obj
 
 clean:
 	del *exe *obj *exp *lib *~
