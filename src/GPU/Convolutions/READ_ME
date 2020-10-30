@@ -45,4 +45,7 @@ test_dbl4_convolutions    : test convolutions of quad double vectors
 dbl5_convolutions_host    : convolutions of penta double vectors on host
 dbl5_convolutions_kernels : convolutions of penta double vectors on device
 test_dbl5_convolutions    : test convolutions of penta double vectors
+dbl8_convolutions_host    : convolutions of octo double vectors on host
+dbl8_convolutions_kernels : convolutions of octo double vectors on device
+test_dbl8_convolutions    : test convolutions of octo double vectors
 -----------------------------------------------------------------------------

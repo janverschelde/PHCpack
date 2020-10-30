@@ -21,5 +21,8 @@ test_dbl4_convolutions:
 test_dbl5_convolutions:
 	make -f $(MAKEFILE) test_dbl5_convolutions
 
+test_dbl8_convolutions:
+	make -f $(MAKEFILE) test_dbl8_convolutions
+
 clean:
 	make -f $(MAKEFILE) clean

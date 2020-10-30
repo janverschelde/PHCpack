@@ -28,6 +28,10 @@ dbl5_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for penta doubles ..."
 	nvcc -ccbin=$(gpp) -c -I$(MPD) dbl5_convolutions_kernels.cu
 
+dbl8_convolutions_kernels.o:
+	@-echo ">>> compiling convolution kernels for octo doubles ..."
+	nvcc -ccbin=$(gpp) -c -I$(MPD) dbl8_convolutions_kernels.cu
+
 random_numbers.o:
 	@-echo ">>> compiling random number generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/random_numbers.cpp
@@ -48,6 +52,10 @@ random5_vectors.o:
 	@-echo ">>> compiling penta double random vector generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/random5_vectors.cpp
 
+random8_vectors.o:
+	@-echo ">>> compiling octo double random vector generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random8_vectors.cpp
+
 double_double_functions.o:
 	@-echo ">>> compiling double double functions ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
@@ -63,6 +71,10 @@ quad_double_functions.o:
 penta_double_functions.o:
 	@-echo ">>> compiling penta double functions ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/penta_double_functions.cpp
+
+octo_double_functions.o:
+	@-echo ">>> compiling octo double functions ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/octo_double_functions.cpp
 
 dbl_convolutions_host.o:
 	@-echo ">>> compiling dbl_convolutions_host ..."
@@ -84,6 +96,10 @@ dbl5_convolutions_host.o:
 	@-echo ">>> compiling dbl5_convolutions_host ..."
 	$(gpp) -O3 -c -I$(MPD) dbl5_convolutions_host.cpp
 
+dbl8_convolutions_host.o:
+	@-echo ">>> compiling dbl8_convolutions_host ..."
+	$(gpp) -O3 -c -I$(MPD) dbl8_convolutions_host.cpp
+
 test_dbl_convolutions.o:
 	@-echo ">>> compiling test_dbl_convolutions ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl_convolutions.cpp
@@ -103,6 +119,10 @@ test_dbl4_convolutions.o:
 test_dbl5_convolutions.o:
 	@-echo ">>> compiling test_dbl5_convolutions ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl5_convolutions.cpp
+
+test_dbl8_convolutions.o:
+	@-echo ">>> compiling test_dbl8_convolutions ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl8_convolutions.cpp
 
 test_dbl_convolutions: dbl_convolutions_kernels.o dbl_convolutions_host.o \
                        random_numbers.o test_dbl_convolutions.o
@@ -153,6 +173,19 @@ test_dbl5_convolutions: double_double_functions.o penta_double_functions.o \
                   dbl5_convolutions_host.o dbl5_convolutions_kernels.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
+test_dbl8_convolutions: double_double_functions.o quad_double_functions.o \
+                        octo_double_functions.o \
+                        random_numbers.o random8_vectors.o \
+                        dbl8_convolutions_host.o dbl8_convolutions_kernels.o \
+                        test_dbl8_convolutions.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl8_convolutions test_dbl8_convolutions.o \
+                  double_double_functions.o quad_double_functions.o \
+                  octo_double_functions.o \
+                  random_numbers.o random8_vectors.o \
+                  dbl8_convolutions_host.o dbl8_convolutions_kernels.o \
+                  -lcuda -lcudart -L$(CUDALIB)
+
 clean:
 	/bin/rm -f -r random_numbers.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_convolutions_kernels.o
@@ -170,3 +203,6 @@ clean:
 	/bin/rm -f -r penta_double_functions.o random5_vectors.o
 	/bin/rm -f -r dbl5_convolutions_kernels.o dbl5_convolutions_host.o
 	/bin/rm -f -r test_dbl5_convolutions.o test_dbl5_convolutions
+	/bin/rm -f -r octo_double_functions.o random8_vectors.o
+	/bin/rm -f -r dbl8_convolutions_kernels.o dbl8_convolutions_host.o
+	/bin/rm -f -r test_dbl8_convolutions.o test_dbl8_convolutions

@@ -4,6 +4,11 @@ Thu 29 Oct 2020 : to test_dbl3_convolutions.cpp, added missing initialization
   in dbl5_convolutions_{host,kernels}.h, dbl5_convolutions_host.cpp,
   dbl5_convolutions_kernels.cu, tested by test_dbl5_convolutions.cpp.
   Updated makefiles.
+  Edited dbl4_convolutions_host.h and dbl4_convolutions_kernels.h.
+  Added code to compute convolutions in octo double precision,
+  in dbl8_convolutions_{host,kernels}.h, dbl8_convolutions_host.cpp,
+  dbl8_convolutions_kernels.cu, tested by test_dbl8_convolutions.cpp.
+  Updated makefiles.
 
 Wed 28 Oct 2020 : added dbl_convolution_kernels.h and .cu to define kernels
   to compute products of truncated power series, tested by

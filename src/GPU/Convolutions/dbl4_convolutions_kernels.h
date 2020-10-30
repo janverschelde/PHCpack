@@ -9,9 +9,9 @@
 
 /* The constant qd_shmemsize is the bound on the shared memory size,
  * to compute the product of series with complex quad double coefficients.
- * For degree 127, we have 127 complex numbers, for x, y, and z,
+ * For degree 127, we have 128 complex numbers, for x, y, and z,
  * real and imaginary parts, highest, second highest, second lowest,
- * and lowewst parts, so 128*2*3*4*8 = 24576 bytes.
+ * and lowest parts, so 128*2*3*4*8 = 24576 bytes.
  * This constant bounds the degree of the power series. */
 
 __global__ void dbl4_convolute
@@ -29,7 +29,7 @@ __global__ void dbl4_convolute
  *   xhilo    second lowest parts of the first vector x;
  *   xlolo    lowest parts of the first vector x;
  *   yhihi    highest parts of the second vector y;
- *   yhohi    second highest parts of the second vector y;
+ *   ylohi    second highest parts of the second vector y;
  *   yhilo    second lowest parts of the second vector y;
  *   ylolo    lowest parts of the second vector y;
  *   zhihi    dim doubles allocated for the highest parts of z;
@@ -62,12 +62,20 @@ __global__ void cmplx4_convolute
  * ON ENTRY :
  *   xrehihi    highest parts of the real parts of x;
  *   xrelohi    second highest parts of the real parts of x;
+ *   xrehilo    second lowest parts of the real parts of x;
+ *   xrelolo    lowest parts of the real parts of x;
+ *   ximhihi    highest parts of the imaginary parts of x;
+ *   ximlohi    second highest parts of the imaginary parts of x;
  *   ximhilo    second lowest parts of the imaginary parts of x;
  *   ximlolo    lowest parts of the imaginary parts of x;
  *   yrehihi    highest parts of the real parts of y;
  *   yrelohi    second highest parts of the real parts of y;
+ *   yrehilo    second lowest parts of the real parts of y;
+ *   yrelolo    lowest parts of the real parts of y;
+ *   yimhihi    highest parts of the imaginary parts of y;
+ *   yimlohi    second highest parts of the imaginary parts of y;
  *   yimhilo    second lowest parts of the imaginary parts of y;
- *   yimlolo    low parts of the imaginary parts of the coefficients of y;
+ *   yimlolo    lowest parts of the imaginary parts of y;
  *   zrehihi    dim doubles allocated for the highest parts
  *              of the real parts of the coefficients of the product;
  *   zrelohi    dim doubles allocated for the second highest parts
@@ -112,22 +120,22 @@ void GPU_dbl4_product
  *   xhilo_h    deg+1 second lowest parts of the coefficients of x;
  *   xlolo_h    deg+1 lowest parts of the coefficients of x;
  *   yhihi_h    deg+1 highest parts of the coefficients of y;
- *   ylohi_h    deg+1 high low parts of the coefficients of y;
- *   yhilo_h    deg+1 low parts of the coefficients of y;
- *   ylolo_h    deg+1 low parts of the coefficients of y;
- *   zhihi_h    space allocated for deg+1 doubles for the high parts of z;
- *   zlohi_h    space allocated for deg+1 doubles for the high parts of z;
- *   zhilo_h    space allocated for deg+1 doubles for the low parts of z;
- *   zlolo_h    space allocated for deg+1 doubles for the low parts of z;
+ *   ylohi_h    deg+1 second highest low parts of the coefficients of y;
+ *   yhilo_h    deg+1 second lowest parts of the coefficients of y;
+ *   ylolo_h    deg+1 lowest parts of the coefficients of y;
+ *   zhihi_h    space for deg+1 doubles for the highest parts of z;
+ *   zlohi_h    space for deg+1 doubles for the second highest parts of z;
+ *   zhilo_h    space for deg+1 doubles for the second lowest parts of z;
+ *   zlolo_h    space for deg+1 doubles for the lowest parts of z;
  *   deg        degree of the truncated power series;
  *   freq       frequency for timing purposes;
  *   BS         block size, the number of threads in a block.
  *
  * ON RETURN :
- *   zhihi_h    high parts of the coefficients of the product z;
- *   zlohi_h    high parts of the coefficients of the product z;
- *   zhilo_h    low parts of the coefficients of the product z;
- *   zlolo_h    low parts of the coefficients of the product z. */
+ *   zhihi_h    highest parts of the coefficients of the product z;
+ *   zlohi_h    second highest parts of the coefficients of the product z;
+ *   zhilo_h    second lowest parts of the coefficients of the product z;
+ *   zlolo_h    lowest parts of the coefficients of the product z. */
 
 void GPU_cmplx4_product
  ( double *xrehihi_h, double *xrelohi_h, double *xrehilo_h, double *xrelolo_h,

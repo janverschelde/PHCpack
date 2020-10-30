@@ -26,8 +26,8 @@ void CPU_dbl4_product
  *   xlolo    lowest parts of the coefficients of the first series;
  *   yhihi    highest parts of the coefficients of the second series;
  *   ylohi    second highest parts of the coefficients of the second series;
- *   yhilo    second lowest parts of the coefficients of the second series.
- *   yhilo    lowest parts of the coefficients of the second series.
+ *   yhilo    second lowest parts of the coefficients of the second series;
+ *   ylolo    lowest parts of the coefficients of the second series.
  *
  * ON RETURN :
  *   zhihi    highest parts of the coefficients of the product x*y;
@@ -78,7 +78,7 @@ void CPU_cmplx4_product
  *   zrehihi  highest real parts of the coefficients of the product x*y;
  *   zrelohi  2nd highest real parts of the coefficients of the product x*y;
  *   zrehilo  2nd lowest real parts of the coefficients of the product x*y;
- *   zrehilo  lowest real parts of the coefficients of the product x*y;
+ *   zrelolo  lowest real parts of the coefficients of the product x*y;
  *   zimhihi  highest imaginary parts of the coefficients of the product x*y;
  *   zimlohi  2nd highest imag parts of the coefficients of the product x*y;
  *   zimhilo  2nd lowest imag parts of the coefficients of the product x*y;
