@@ -1,5 +1,9 @@
 Thu 29 Oct 2020 : to test_dbl3_convolutions.cpp, added missing initialization
   and a test on gpu_cmplx3_product; edited dbl3_convolutions_kernels.h.
+  Added code to compute convolutions in penta double precision,
+  in dbl5_convolutions_{host,kernels}.h, dbl5_convolutions_host.cpp,
+  dbl5_convolutions_kernels.cu, tested by test_dbl5_convolutions.cpp.
+  Updated makefiles.
 
 Wed 28 Oct 2020 : added dbl_convolution_kernels.h and .cu to define kernels
   to compute products of truncated power series, tested by
