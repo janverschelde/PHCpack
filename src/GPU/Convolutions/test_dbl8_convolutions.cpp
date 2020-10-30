@@ -90,7 +90,7 @@ void test_real ( int deg )
    {
       xhihihi[k] = 1.0; xlohihi[k] = 0.0;
       xhilohi[k] = 0.0; xlolohi[k] = 0.0;
-      xhihilo[k] = 1.0; xlohilo[k] = 0.0;
+      xhihilo[k] = 0.0; xlohilo[k] = 0.0;
       xhilolo[k] = 0.0; xlololo[k] = 0.0;
       yhihihi[k] = 0.0; ylohihi[k] = 0.0;
       yhilohi[k] = 0.0; ylolohi[k] = 0.0;
@@ -347,9 +347,9 @@ void test_real_exponential ( int deg )
        &rhihilo,&rlohilo,&rhilolo,&rlololo);
 
    xhihihi[0] = 1.0; xlohihi[0] = 0.0; xhilohi[0] = 0.0; xlolohi[0] = 0.0;
-   xhihilo[0] = 1.0; xlohilo[0] = 0.0; xhilolo[0] = 0.0; xlololo[0] = 0.0;
+   xhihilo[0] = 0.0; xlohilo[0] = 0.0; xhilolo[0] = 0.0; xlololo[0] = 0.0;
    yhihihi[0] = 1.0; ylohihi[0] = 0.0; yhilohi[0] = 0.0; ylolohi[0] = 0.0;
-   yhihilo[0] = 1.0; ylohilo[0] = 0.0; yhilolo[0] = 0.0; ylololo[0] = 0.0;
+   yhihilo[0] = 0.0; ylohilo[0] = 0.0; yhilolo[0] = 0.0; ylololo[0] = 0.0;
    xhihihi[1] = rhihihi; xlohihi[1] = rlohihi;
    xhilohi[1] = rhilohi; xlolohi[1] = rlolohi;
    xhihilo[1] = rhihilo; xlohilo[1] = rlohilo;
@@ -401,13 +401,13 @@ void test_real_exponential ( int deg )
 
    cout << "Product of series of exp(x) with series of exp(-x)," << endl;
    cout << "  for xhihihi = " << rhihihi;
-   cout << "      xlohihi = " << rlohihi << endl;
+   cout << "  xlohihi = " << rlohihi << endl;
    cout << "      xhilohi = " << rhilohi;
-   cout << "      xlolohi = " << rlolohi << endl;
+   cout << "  xlolohi = " << rlolohi << endl;
    cout << "      xhihilo = " << rhihilo;
-   cout << "      xlohilo = " << rlohilo << endl;
+   cout << "  xlohilo = " << rlohilo << endl;
    cout << "      xhilolo = " << rhilolo;
-   cout << "  and xlololo = " << rlololo << endl;
+   cout << "  xlololo = " << rlololo << endl;
 
    double sumhihihi = 0.0;
    double sumlohihi = 0.0;
@@ -556,11 +556,11 @@ void test_complex_exponential ( int deg )
 
    xrehihihi[0] = 1.0; xrelohihi[0] = 0.0;
    xrehilohi[0] = 0.0; xrelolohi[0] = 0.0;
-   xrehihilo[0] = 1.0; xrelohilo[0] = 0.0;
+   xrehihilo[0] = 0.0; xrelohilo[0] = 0.0;
    xrehilolo[0] = 0.0; xrelololo[0] = 0.0;
    yrehihihi[0] = 1.0; yrelohihi[0] = 0.0;
    yrehilohi[0] = 0.0; yrelolohi[0] = 0.0;
-   yrehihilo[0] = 1.0; yrelohilo[0] = 0.0;
+   yrehihilo[0] = 0.0; yrelohilo[0] = 0.0;
    yrehilolo[0] = 0.0; yrelololo[0] = 0.0;
    ximhihihi[0] = 0.0; ximlohihi[0] = 0.0;
    ximhilohi[0] = 0.0; ximlolohi[0] = 0.0;
