@@ -16,6 +16,11 @@ void test_real ( int deg );
  *   Multiplies the power series of 1/(1-x) with 1+x,
  *   truncated to degree deg, for real coefficients. */
 
+void test_real_random ( int deg );
+/*
+ * DESCRIPTION :
+ *   Multiplies two random power series. */
+
 void test_complex ( int deg );
 /*
  * DESCRIPTION :
@@ -28,7 +33,6 @@ void test_real_exponential ( int deg );
  *   Multiplies the power series for exp(x) with exp(-x)
  *   for some random x in [-1,+1], for real coefficients
  *   of a series of degree truncated to deg. */
-
 
 void test_complex_exponential ( int deg );
 /*
@@ -44,6 +48,7 @@ int main ( void )
    cout << "Give a degree larger than one : "; cin >> deg;
 
    if(deg > 0) test_real(deg);
+   if(deg > 0) test_real_random(deg);
    if(deg > 0) test_complex(deg);
    if(deg > 0) test_real_exponential(deg);
    if(deg > 0) test_complex_exponential(deg);
@@ -100,14 +105,100 @@ void test_real ( int deg )
    yhihihi[0] = 1.0; yhihihi[1] = -1.0;
 
    CPU_dbl8_product
-      (deg,xhihihi,xlohihi,xhilohi,xlolohi,
-           xhihilo,xlohilo,xhilolo,xlololo,
-           yhihihi,ylohihi,yhilohi,ylolohi,
-           yhihilo,ylohilo,yhilolo,ylololo,
+      (deg,xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
+           yhihihi,ylohihi,yhilohi,ylolohi,yhihilo,ylohilo,yhilolo,ylololo,
            zhihihi_h,zlohihi_h,zhilohi_h,zlolohi_h,
            zhihilo_h,zlohilo_h,zhilolo_h,zlololo_h);
 
    cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
+
+   for(int k=0; k<=deg; k++)
+   {
+      cout << "zhihihi[" << k << "] : " << zhihihi_h[k];
+      cout << "  zlohihi[" << k << "] : " << zlohihi_h[k];
+      cout << "  zhilohi[" << k << "] : " << zhilohi_h[k];
+      cout << "  zlolohi[" << k << "] : " << zlolohi_h[k] << endl;
+      cout << "zhihilo[" << k << "] : " << zhihilo_h[k];
+      cout << "  zlohilo[" << k << "] : " << zlohilo_h[k];
+      cout << "  zhilolo[" << k << "] : " << zhilolo_h[k];
+      cout << "  zlololo[" << k << "] : " << zlololo_h[k] << endl;
+   }
+
+   GPU_dbl8_product
+      (xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
+       yhihihi,ylohihi,yhilohi,ylolohi,yhihilo,ylohilo,yhilolo,ylololo,
+       zhihihi_d,zlohihi_d,zhilohi_d,zlolohi_d,
+       zhihilo_d,zlohilo_d,zhilolo_d,zlololo_d,deg,1,deg+1);
+
+   cout << "GPU computed product :" << endl;
+
+   for(int k=0; k<=deg; k++)
+   {
+      cout << "zhihihi[" << k << "] : " << zhihihi_d[k];
+      cout << "  zlohihi[" << k << "] : " << zlohihi_d[k];
+      cout << "  zhilohi[" << k << "] : " << zhilohi_d[k];
+      cout << "  zlolohi[" << k << "] : " << zlolohi_d[k] << endl;
+      cout << "zhihilo[" << k << "] : " << zhihilo_d[k];
+      cout << "  zlohilo[" << k << "] : " << zlohilo_d[k];
+      cout << "  zhilolo[" << k << "] : " << zhilolo_d[k];
+      cout << "  zlololo[" << k << "] : " << zlololo_d[k] << endl;
+   }
+}
+
+void test_real_random ( int deg )
+{
+   double* xhihihi = new double[deg+1];
+   double* xlohihi = new double[deg+1];
+   double* xhilohi = new double[deg+1];
+   double* xlolohi = new double[deg+1];
+   double* xhihilo = new double[deg+1];
+   double* xlohilo = new double[deg+1];
+   double* xhilolo = new double[deg+1];
+   double* xlololo = new double[deg+1];
+   double* yhihihi = new double[deg+1];
+   double* ylohihi = new double[deg+1];
+   double* yhilohi = new double[deg+1];
+   double* ylolohi = new double[deg+1];
+   double* yhihilo = new double[deg+1];
+   double* ylohilo = new double[deg+1];
+   double* yhilolo = new double[deg+1];
+   double* ylololo = new double[deg+1];
+   double* zhihihi_h = new double[deg+1];
+   double* zlohihi_h = new double[deg+1];
+   double* zhilohi_h = new double[deg+1];
+   double* zlolohi_h = new double[deg+1];
+   double* zhihilo_h = new double[deg+1];
+   double* zlohilo_h = new double[deg+1];
+   double* zhilolo_h = new double[deg+1];
+   double* zlololo_h = new double[deg+1];
+   double* zhihihi_d = new double[deg+1];
+   double* zlohihi_d = new double[deg+1];
+   double* zhilohi_d = new double[deg+1];
+   double* zlolohi_d = new double[deg+1];
+   double* zhihilo_d = new double[deg+1];
+   double* zlohilo_d = new double[deg+1];
+   double* zhilolo_d = new double[deg+1];
+   double* zlololo_d = new double[deg+1];
+
+   for(int k=0; k<=deg; k++)
+   {
+      random_octo_double
+         (&xhihihi[k],&xlohihi[k],&xhilohi[k],&xlolohi[k],
+          &xhihilo[k],&xlohilo[k],&xhilolo[k],&xlololo[k]);
+      random_octo_double
+         (&yhihihi[k],&ylohihi[k],&yhilohi[k],&ylolohi[k],
+          &yhihilo[k],&ylohilo[k],&yhilolo[k],&ylololo[k]);
+   }
+
+   CPU_dbl8_product
+      (deg,xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
+           yhihihi,ylohihi,yhilohi,ylolohi,yhihilo,ylohilo,yhilolo,ylololo,
+           zhihihi_h,zlohihi_h,zhilohi_h,zlolohi_h,
+           zhihilo_h,zlohilo_h,zhilolo_h,zlololo_h);
+
+   cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
+
+   cout << scientific << setprecision(16);
 
    for(int k=0; k<=deg; k++)
    {
@@ -213,18 +304,18 @@ void test_complex ( int deg )
    {
       xrehihihi[k] = 1.0; xrelohihi[k] = 0.0;
       xrehilohi[k] = 0.0; xrelolohi[k] = 0.0;
-      xrehihihi[k] = 0.0; xrelohihi[k] = 0.0;
-      xrehilohi[k] = 0.0; xrelolohi[k] = 0.0;
-      ximhihilo[k] = 0.0; ximlohilo[k] = 0.0;
-      ximhilolo[k] = 0.0; ximlololo[k] = 0.0;
+      xrehihilo[k] = 0.0; xrelohilo[k] = 0.0;
+      xrehilolo[k] = 0.0; xrelololo[k] = 0.0;
+      ximhihihi[k] = 0.0; ximlohihi[k] = 0.0;
+      ximhilohi[k] = 0.0; ximlolohi[k] = 0.0;
       ximhihilo[k] = 0.0; ximlohilo[k] = 0.0;
       ximhilolo[k] = 0.0; ximlololo[k] = 0.0;
       yrehihihi[k] = 0.0; yrelohihi[k] = 0.0;
       yrehilohi[k] = 0.0; yrelolohi[k] = 0.0;
-      yrehihihi[k] = 0.0; yrelohihi[k] = 0.0;
-      yrehilohi[k] = 0.0; yrelolohi[k] = 0.0;
-      yimhihilo[k] = 0.0; yimlohilo[k] = 0.0;
-      yimhilolo[k] = 0.0; yimlololo[k] = 0.0;
+      yrehihilo[k] = 0.0; yrelohilo[k] = 0.0;
+      yrehilolo[k] = 0.0; yrelololo[k] = 0.0;
+      yimhihihi[k] = 0.0; yimlohihi[k] = 0.0;
+      yimhilohi[k] = 0.0; yimlolohi[k] = 0.0;
       yimhihilo[k] = 0.0; yimlohilo[k] = 0.0;
       yimhilolo[k] = 0.0; yimlololo[k] = 0.0;
    }
@@ -305,38 +396,38 @@ void test_complex ( int deg )
 
 void test_real_exponential ( int deg )
 {
-   double *xhihihi = new double[deg+1];
-   double *xlohihi = new double[deg+1];
-   double *xhilohi = new double[deg+1];
-   double *xlolohi = new double[deg+1];
-   double *xhihilo = new double[deg+1];
-   double *xlohilo = new double[deg+1];
-   double *xhilolo = new double[deg+1];
-   double *xlololo = new double[deg+1];
-   double *yhihihi = new double[deg+1];
-   double *ylohihi = new double[deg+1];
-   double *yhilohi = new double[deg+1];
-   double *ylolohi = new double[deg+1];
-   double *yhihilo = new double[deg+1];
-   double *ylohilo = new double[deg+1];
-   double *yhilolo = new double[deg+1];
-   double *ylololo = new double[deg+1];
-   double *zhihihi_h = new double[deg+1];
-   double *zlohihi_h = new double[deg+1];
-   double *zhilohi_h = new double[deg+1];
-   double *zlolohi_h = new double[deg+1];
-   double *zhihilo_h = new double[deg+1];
-   double *zlohilo_h = new double[deg+1];
-   double *zhilolo_h = new double[deg+1];
-   double *zlololo_h = new double[deg+1];
-   double *zhihihi_d = new double[deg+1];
-   double *zlohihi_d = new double[deg+1];
-   double *zhilohi_d = new double[deg+1];
-   double *zlolohi_d = new double[deg+1];
-   double *zhihilo_d = new double[deg+1];
-   double *zlohilo_d = new double[deg+1];
-   double *zhilolo_d = new double[deg+1];
-   double *zlololo_d = new double[deg+1];
+   double* xhihihi = new double[deg+1];
+   double* xlohihi = new double[deg+1];
+   double* xhilohi = new double[deg+1];
+   double* xlolohi = new double[deg+1];
+   double* xhihilo = new double[deg+1];
+   double* xlohilo = new double[deg+1];
+   double* xhilolo = new double[deg+1];
+   double* xlololo = new double[deg+1];
+   double* yhihihi = new double[deg+1];
+   double* ylohihi = new double[deg+1];
+   double* yhilohi = new double[deg+1];
+   double* ylolohi = new double[deg+1];
+   double* yhihilo = new double[deg+1];
+   double* ylohilo = new double[deg+1];
+   double* yhilolo = new double[deg+1];
+   double* ylololo = new double[deg+1];
+   double* zhihihi_h = new double[deg+1];
+   double* zlohihi_h = new double[deg+1];
+   double* zhilohi_h = new double[deg+1];
+   double* zlolohi_h = new double[deg+1];
+   double* zhihilo_h = new double[deg+1];
+   double* zlohilo_h = new double[deg+1];
+   double* zhilolo_h = new double[deg+1];
+   double* zlololo_h = new double[deg+1];
+   double* zhihihi_d = new double[deg+1];
+   double* zlohihi_d = new double[deg+1];
+   double* zhilohi_d = new double[deg+1];
+   double* zlolohi_d = new double[deg+1];
+   double* zhihilo_d = new double[deg+1];
+   double* zlohilo_d = new double[deg+1];
+   double* zhilolo_d = new double[deg+1];
+   double* zlololo_d = new double[deg+1];
    double rhihihi,rlohihi,rhilohi,rlolohi;
    double rhihilo,rlohilo,rhilolo,rlololo;
    double fhihihi,flohihi,fhilohi,flolohi;
@@ -435,12 +526,24 @@ void test_real_exponential ( int deg )
    cout << "     lowest part of sum : " << sumlololo << endl;
 
    GPU_dbl8_product
-      (xhihihi,xlohihi,xhilohi,xlolohi,
-       xhihilo,xlohilo,xhilolo,xlololo,
-       yhihihi,ylohihi,yhilohi,ylolohi,
-       yhihilo,ylohilo,yhilolo,ylololo,
+      (xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
+       yhihihi,ylohihi,yhilohi,ylolohi,yhihilo,ylohilo,yhilolo,ylololo,
        zhihihi_d,zlohihi_d,zhilohi_d,zlolohi_d,
        zhihilo_d,zlohilo_d,zhilolo_d,zlololo_d,deg,1,deg+1);
+
+   cout << "GPU computed product :" << endl;
+
+   for(int k=0; k<=deg; k++)
+   {
+      cout << "zhihihi[" << k << "] : " << zhihihi_d[k];
+      cout << "  zlohihi[" << k << "] : " << zlohihi_d[k];
+      cout << "  zhilohi[" << k << "] : " << zhilohi_d[k];
+      cout << "  zlolohi[" << k << "] : " << zlolohi_d[k] << endl;
+      cout << "zhihilo[" << k << "] : " << zhihilo_d[k];
+      cout << "  zlohilo[" << k << "] : " << zlohilo_d[k];
+      cout << "  zhilolo[" << k << "] : " << zhilolo_d[k];
+      cout << "  zlololo[" << k << "] : " << zlololo_d[k] << endl;
+   }
 
    sumhihihi = 0.0; sumlohihi = 0.0; sumhilohi = 0.0; sumlolohi = 0.0;
    sumhihilo = 0.0; sumlohilo = 0.0; sumhilolo = 0.0; sumlololo = 0.0;

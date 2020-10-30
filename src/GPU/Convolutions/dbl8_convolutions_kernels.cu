@@ -49,33 +49,33 @@ __global__ void dbl8_convolute
    xvhilohi[k] = xhilohi[k]; xvlolohi[k] = xlolohi[k];
    xvhihilo[k] = xhihilo[k]; xvlohilo[k] = xlohilo[k];
    xvhilolo[k] = xhilolo[k]; xvlololo[k] = xlololo[k];
-   yvhihihi[k] = yhihihi[k]; yvlohihi[k] = ylohihi[k]; 
+   yvhihihi[k] = yhihihi[k]; yvlohihi[k] = ylohihi[k];
    yvhilohi[k] = yhilohi[k]; yvlolohi[k] = ylolohi[k];
-   yvhihilo[k] = yhihilo[k]; yvlohilo[k] = ylohilo[k]; 
+   yvhihilo[k] = yhihilo[k]; yvlohilo[k] = ylohilo[k];
    yvhilolo[k] = yhilolo[k]; yvlololo[k] = ylololo[k];
 
    __syncthreads();
 
    // zv[k] = xv[0]*yv[k];
-   odg_mul(xvhihihi[0],xvlohihi[0],xvhilohi[0],xvlolohi[0],
-           xvhihilo[0],xvlohilo[0],xvhilolo[0],xvlololo[0],
-           yvhihihi[k],yvlohihi[k],yvhilohi[k],yvlolohi[k],
-           yvhihilo[k],yvlohilo[k],yvhilolo[k],yvlololo[k],
+   odg_mul( xvhihihi[0], xvlohihi[0], xvhilohi[0], xvlolohi[0],
+            xvhihilo[0], xvlohilo[0], xvhilolo[0], xvlololo[0],
+            yvhihihi[k], yvlohihi[k], yvhilohi[k], yvlolohi[k],
+            yvhihilo[k], yvlohilo[k], yvhilolo[k], yvlololo[k],
            &zvhihihi[k],&zvlohihi[k],&zvhilohi[k],&zvlolohi[k],
            &zvhihilo[k],&zvlohilo[k],&zvhilolo[k],&zvlololo[k]);
 
    for(int i=1; i<=k; i++) // zv[k] = zv[k] + xv[i]*yv[k-i];
    {
-      odg_mul(xvhihihi[i],xvlohihi[i],xvhilohi[i],xvlolohi[i],
-              xvhihilo[i],xvlohilo[i],xvhilolo[i],xvlololo[i],
-              yvhihihi[k-i],yvlohihi[k-i],yvhilohi[k-i],yvlolohi[k-i],
-              yvhihilo[k-i],yvlohilo[k-i],yvhilolo[k-i],yvlololo[k-i],
-              &prdhihihi,&prdlohihi,&prdhilohi,&prdlolohi,
-              &prdhihilo,&prdlohilo,&prdhilolo,&prdlololo);
-      odg_inc(&zvhihihi[k],&zvlohihi[k],&zvhilohi[k],&zvlolohi[k],
-              &zvhihilo[k],&zvlohilo[k],&zvhilolo[k],&zvlololo[k],
-              prdhihihi,prdlohihi,prdhilohi,prdlolohi,
-              prdhihilo,prdlohilo,prdhilolo,prdlololo);
+      odg_mul( xvhihihi[i],  xvlohihi[i],  xvhilohi[i],  xvlolohi[i],
+               xvhihilo[i],  xvlohilo[i],  xvhilolo[i],  xvlololo[i],
+               yvhihihi[k-i],yvlohihi[k-i],yvhilohi[k-i],yvlolohi[k-i],
+               yvhihilo[k-i],yvlohilo[k-i],yvhilolo[k-i],yvlololo[k-i],
+             &prdhihihi,   &prdlohihi,   &prdhilohi,   &prdlolohi,
+             &prdhihilo,   &prdlohilo,   &prdhilolo,   &prdlololo);
+      odg_inc(&zvhihihi[k], &zvlohihi[k], &zvhilohi[k], &zvlolohi[k],
+              &zvhihilo[k] ,&zvlohilo[k], &zvhilolo[k], &zvlololo[k],
+              prdhihihi,    prdlohihi,    prdhilohi,    prdlolohi,
+              prdhihilo,    prdlohilo,    prdhilolo,    prdlololo);
    }
 
    __syncthreads();
@@ -294,7 +294,7 @@ __global__ void cmplx8_convolute
       odg_inc(&zihihihi,&zilohihi,&zihilohi,&zilolohi,
               &zihihilo,&zilohilo,&zihilolo,&zilololo,
               acchihihi,acclohihi,acchilohi,acclolohi,
-              acchihilo,acclohilo,acchilolo,acclololo); // zr = xr*yr + xi*yi
+              acchihilo,acclohilo,acchilolo,acclololo); // zr = xr*yi + xi*yr
 
       odg_inc(&zvrehihihi[k],&zvrelohihi[k],&zvrehilohi[k],&zvrelolohi[k],
               &zvrehihilo[k],&zvrelohilo[k],&zvrehilolo[k],&zvrelololo[k],
@@ -405,8 +405,8 @@ void GPU_dbl8_product
              yhihilo_d,ylohilo_d,yhilolo_d,ylololo_d,
              zhihihi_d,zlohihi_d,zhilohi_d,zlolohi_d,
              zhihilo_d,zlohilo_d,zhilolo_d,zlololo_d,dim);
-   }
 
+   }
    cudaMemcpy(zhihihi_h,zhihihi_d,size,cudaMemcpyDeviceToHost);
    cudaMemcpy(zlohihi_h,zlohihi_d,size,cudaMemcpyDeviceToHost);
    cudaMemcpy(zhilohi_h,zhilohi_d,size,cudaMemcpyDeviceToHost);
@@ -531,7 +531,7 @@ void GPU_cmplx8_product
    cudaMalloc((void**)&zrelohihi_d,size);
    cudaMalloc((void**)&zrehilohi_d,size);
    cudaMalloc((void**)&zrelolohi_d,size);
-   cudaMalloc((void**)&zrehihihi_d,size);
+   cudaMalloc((void**)&zrehihilo_d,size);
    cudaMalloc((void**)&zrelohilo_d,size);
    cudaMalloc((void**)&zrehilolo_d,size);
    cudaMalloc((void**)&zrelololo_d,size);
@@ -593,7 +593,6 @@ void GPU_cmplx8_product
              zimhihihi_d,zimlohihi_d,zimhilohi_d,zimlolohi_d,
              zimhihilo_d,zimlohilo_d,zimhilolo_d,zimlololo_d,dim);
    }
-
    cudaMemcpy(zrehihihi_h,zrehihihi_d,size,cudaMemcpyDeviceToHost);
    cudaMemcpy(zrelohihi_h,zrelohihi_d,size,cudaMemcpyDeviceToHost);
    cudaMemcpy(zrehilohi_h,zrehilohi_d,size,cudaMemcpyDeviceToHost);
