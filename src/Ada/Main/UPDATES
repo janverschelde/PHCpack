@@ -1,13 +1,4 @@
-Sun 25 Oct 2020 : renamed drivers_for_root_counts into main_root_counters,
-  and renamed ts_drivroco.adb into ts_mainroco.adb.
-  Updated option_handlers.adb and mainphc.adb.
-  Removed mainroco.ads and mainroco.adb.
-
-Sat 3 Oct 2020 : updated drivers_for_root_counts.adb for the change in name
-  of drivers_for_m_homogenization into main_m_homogenization.
-  Simiular modifications in drivers_for_root_counts.adb for the new
-  main_multi_homogenization and main_set_structures packages,
-  renamed from the drivers_for_* packages.
+Sat 31 Oct 2020 : updated greeting_banners for version 2.4.81.
 
 Tue 29 Sep 2020 : updated greeting_banners for version 2.4.80.
 
