@@ -10,7 +10,7 @@
 /* The constant pd_shmemsize is the bound on the shared memory size,
  * to compute the product of series with complex penta double coefficients.
  * For degree 127, we have 128 complex numbers, for x, y, and z,
- * real and imaginary parts, five doubles, so 192*2*3*5*8 = 20720 bytes.
+ * real and imaginary parts, five doubles, so 192*2*3*5*8 = 30720 bytes.
  * This constant bounds the degree of the power series. */
 
 __global__ void dbl5_convolute
@@ -129,7 +129,7 @@ void GPU_dbl5_product
  *   yrg_h    deg+1 second lowest parts of the coefficients of y;
  *   ypk_h    deg+1 lowest parts of the coefficients of y;
  *   ztb_h    space allocated for deg+1 doubles for the highest parts of z;
- *   ztb_h    space allocated for deg+1 doubles 
+ *   zix_h    space allocated for deg+1 doubles 
  *            for the second highest parts of z;
  *   zmi_h    space allocated for deg+1 doubles for the middle parts of z;
  *   zrg_h    space allocated for deg+1 doubles 

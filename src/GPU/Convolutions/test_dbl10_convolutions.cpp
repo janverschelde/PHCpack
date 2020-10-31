@@ -2,11 +2,11 @@
 
 #include <iostream>
 #include <iomanip>
-// #include <vector_types.h>
+#include <vector_types.h>
 #include "deca_double_functions.h"
 #include "random10_vectors.h"
 #include "dbl10_convolutions_host.h"
-// #include "dbl10_convolutions_kernels.h"
+#include "dbl10_convolutions_kernels.h"
 
 using namespace std;
 
@@ -49,7 +49,7 @@ int main ( void )
    cout << "Give a degree larger than one : "; cin >> deg;
 
    if(deg > 0) test_real(deg);
-   // if(deg > 0) test_real_random(deg);
+   if(deg > 0) test_real_random(deg);
    if(deg > 0) test_complex(deg);
    if(deg > 0) test_real_exponential(deg);
    if(deg > 0) test_complex_exponential(deg);
@@ -132,23 +132,29 @@ void test_real ( int deg )
       cout << "  zlrg[" << k << "] : " << zlrg_h[k];
       cout << "  zlpk[" << k << "] : " << zlpk_h[k] << endl;
    }
-/*
-   GPU_dbl5_product
-      (xtb,xix,xmi,xrg,xpk,ytb,yix,ymi,yrg,ypk,
-       ztb_d,zix_d,zmi_d,zrg_d,zpk_d,deg,1,deg+1);
+
+   GPU_dbl10_product
+      (xrtb,xrix,xrmi,xrrg,xrpk,xltb,xlix,xlmi,xlrg,xlpk,
+       yrtb,yrix,yrmi,yrrg,yrpk,yltb,ylix,ylmi,ylrg,ylpk,
+       zrtb_d,zrix_d,zrmi_d,zrrg_d,zrpk_d,
+       zltb_d,zlix_d,zlmi_d,zlrg_d,zlpk_d,deg,1,deg+1);
 
    cout << "GPU computed product :" << endl;
 
    for(int k=0; k<=deg; k++)
    {
-      cout << "ztb[" << k << "] : " << ztb_d[k];
-      cout << "  zix[" << k << "] : " << zix_d[k];
-      cout << "  zmi[" << k << "] : " << zmi_d[k];
-      cout << "  zrg[" << k << "] : " << zrg_d[k];
-      cout << "  zpk[" << k << "] : " << zpk_d[k] << endl;
+      cout << "zrtb[" << k << "] : " << zrtb_d[k];
+      cout << "  zrix[" << k << "] : " << zrix_d[k];
+      cout << "  zrmi[" << k << "] : " << zrmi_d[k];
+      cout << "  zrrg[" << k << "] : " << zrrg_d[k];
+      cout << "  zrpk[" << k << "] : " << zrpk_d[k] << endl;
+      cout << "zltb[" << k << "] : " << zltb_d[k];
+      cout << "  zlix[" << k << "] : " << zlix_d[k];
+      cout << "  zlmi[" << k << "] : " << zlmi_d[k];
+      cout << "  zlrg[" << k << "] : " << zlrg_d[k];
+      cout << "  zlpk[" << k << "] : " << zlpk_d[k] << endl;
    }
    cout << endl;
- */
 }
 
 void test_real_random ( int deg )
@@ -225,23 +231,29 @@ void test_real_random ( int deg )
       cout << "  zlrg[" << k << "] : " << zlrg_h[k];
       cout << "  zlpk[" << k << "] : " << zlpk_h[k] << endl;
    }
-/*
-   GPU_dbl5_product
-      (xtb,xix,xmi,xrg,xpk,ytb,yix,ymi,yrg,ypk,
-       ztb_d,zix_d,zmi_d,zrg_d,zpk_d,deg,1,deg+1);
+
+   GPU_dbl10_product
+      (xrtb,xrix,xrmi,xrrg,xrpk,xltb,xlix,xlmi,xlrg,xlpk,
+       yrtb,yrix,yrmi,yrrg,yrpk,yltb,ylix,ylmi,ylrg,ylpk,
+       zrtb_d,zrix_d,zrmi_d,zrrg_d,zrpk_d,
+       zltb_d,zlix_d,zlmi_d,zlrg_d,zlpk_d,deg,1,deg+1);
 
    cout << "GPU computed product :" << endl;
 
    for(int k=0; k<=deg; k++)
    {
-      cout << "ztb[" << k << "] : " << ztb_d[k];
-      cout << "  zix[" << k << "] : " << zix_d[k];
-      cout << "  zmi[" << k << "] : " << zmi_d[k];
-      cout << "  zrg[" << k << "] : " << zrg_d[k];
-      cout << "  zpk[" << k << "] : " << zpk_d[k] << endl;
+      cout << "zrtb[" << k << "] : " << zrtb_d[k];
+      cout << "  zrix[" << k << "] : " << zrix_d[k];
+      cout << "  zrmi[" << k << "] : " << zrmi_d[k];
+      cout << "  zrrg[" << k << "] : " << zrrg_d[k];
+      cout << "  zrpk[" << k << "] : " << zrpk_d[k] << endl;
+      cout << "zltb[" << k << "] : " << zltb_d[k];
+      cout << "  zlix[" << k << "] : " << zlix_d[k];
+      cout << "  zlmi[" << k << "] : " << zlmi_d[k];
+      cout << "  zlrg[" << k << "] : " << zlrg_d[k];
+      cout << "  zlpk[" << k << "] : " << zlpk_d[k] << endl;
    }
    cout << endl;
- */
 }
 
 void test_complex ( int deg )
@@ -384,29 +396,42 @@ void test_complex ( int deg )
       cout << "  zimlrg[" << k << "] : " << zimlrg_h[k];
       cout << "  zimlpk[" << k << "] : " << zimlpk_h[k] << endl;
    }
-/*
-   GPU_cmplx5_product
-      (xretb,xreix,xremi,xrerg,xrepk,ximtb,ximix,ximmi,ximrg,ximpk,
-       yretb,yreix,yremi,yrerg,yrepk,yimtb,yimix,yimmi,yimrg,yimpk,
-       zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,
-       zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,deg,1,deg+1);
+
+   GPU_cmplx10_product
+      (xrertb,xrerix,xrermi,xrerrg,xrerpk,xreltb,xrelix,xrelmi,xrelrg,xrelpk,
+       ximrtb,ximrix,ximrmi,ximrrg,ximrpk,ximltb,ximlix,ximlmi,ximlrg,ximlpk,
+       yrertb,yrerix,yrermi,yrerrg,yrerpk,yreltb,yrelix,yrelmi,yrelrg,yrelpk,
+       yimrtb,yimrix,yimrmi,yimrrg,yimrpk,yimltb,yimlix,yimlmi,yimlrg,yimlpk,
+       zrertb_d,zrerix_d,zrermi_d,zrerrg_d,zrerpk_d,
+       zreltb_d,zrelix_d,zrelmi_d,zrelrg_d,zrelpk_d,
+       zimrtb_d,zimrix_d,zimrmi_d,zimrrg_d,zimrpk_d,
+       zimltb_d,zimlix_d,zimlmi_d,zimlrg_d,zimlpk_d,deg,1,deg+1);
 
    cout << "GPU computed product :" << endl;
 
    for(int k=0; k<=deg; k++)
    {
-      cout << "zretb[" << k << "] : " << zretb_d[k];
-      cout << "  zreix[" << k << "] : " << zreix_d[k];
-      cout << "  zremi[" << k << "] : " << zremi_d[k];
-      cout << "  zrerg[" << k << "] : " << zrerg_d[k];
-      cout << "  zrepk[" << k << "] : " << zrepk_d[k] << endl;
-      cout << "zimtb[" << k << "] : " << zimtb_d[k];
-      cout << "  zimix[" << k << "] : " << zimix_d[k];
-      cout << "  zimmi[" << k << "] : " << zimmi_d[k];
-      cout << "  zimrg[" << k << "] : " << zimrg_d[k];
-      cout << "  zimpk[" << k << "] : " << zimpk_d[k] << endl;
+      cout << "zrertb[" << k << "] : " << zrertb_d[k];
+      cout << "  zrerix[" << k << "] : " << zrerix_d[k];
+      cout << "  zrermi[" << k << "] : " << zrermi_d[k];
+      cout << "  zrerrg[" << k << "] : " << zrerrg_d[k];
+      cout << "  zrerpk[" << k << "] : " << zrerpk_d[k] << endl;
+      cout << "zreltb[" << k << "] : " << zreltb_d[k];
+      cout << "  zrelix[" << k << "] : " << zrelix_d[k];
+      cout << "  zrelmi[" << k << "] : " << zrelmi_d[k];
+      cout << "  zrelrg[" << k << "] : " << zrelrg_d[k];
+      cout << "  zrelpk[" << k << "] : " << zrelpk_d[k] << endl;
+      cout << "zimrtb[" << k << "] : " << zimrtb_d[k];
+      cout << "  zimrix[" << k << "] : " << zimrix_d[k];
+      cout << "  zimrmi[" << k << "] : " << zimrmi_d[k];
+      cout << "  zimrrg[" << k << "] : " << zimrrg_d[k];
+      cout << "  zimrpk[" << k << "] : " << zimrpk_d[k] << endl;
+      cout << "zimltb[" << k << "] : " << zimltb_d[k];
+      cout << "  zimlix[" << k << "] : " << zimlix_d[k];
+      cout << "  zimlmi[" << k << "] : " << zimlmi_d[k];
+      cout << "  zimlrg[" << k << "] : " << zimlrg_d[k];
+      cout << "  zimlpk[" << k << "] : " << zimlpk_d[k] << endl;
    }
- */
 }
 
 void test_real_exponential ( int deg )
@@ -566,25 +591,34 @@ void test_real_exponential ( int deg )
    cout << "  third lowest part of the sum : " << sumlmi << endl;
    cout << " second lowest part of the sum : " << sumlrg << endl;
    cout << "        lowest part of the sum : " << sumlpk << endl;
-/*
-   GPU_dbl5_product
-      (xtb,xix,xmi,xrg,xpk,ytb,yix,ymi,yrg,ypk,
-       ztb_d,zix_d,zmi_d,zrg_d,zpk_d,deg,1,deg+1);
 
-   sumtb = 0.0; sumix = 0.0; summi = 0.0; sumrg = 0.0; sumpk = 0.0;
+   GPU_dbl10_product
+      (xrtb,xrix,xrmi,xrrg,xrpk,xltb,xlix,xlmi,xlrg,xlpk,
+       yrtb,yrix,yrmi,yrrg,yrpk,yltb,ylix,ylmi,ylrg,ylpk,
+       zrtb_d,zrix_d,zrmi_d,zrrg_d,zrpk_d,
+       zltb_d,zlix_d,zlmi_d,zlrg_d,zlpk_d,deg,1,deg+1);
+
+   sumrtb = 0.0; sumrix = 0.0; sumrmi = 0.0; sumrrg = 0.0; sumrpk = 0.0;
+   sumltb = 0.0; sumlix = 0.0; sumlmi = 0.0; sumlrg = 0.0; sumlpk = 0.0;
 
    for(int k=0; k<=deg; k++)
-      daf_inc(&sumtb,&sumix,&summi,&sumrg,&sumpk,
-              ztb_d[k],zix_d[k],zmi_d[k],zrg_d[k],zpk_d[k]);
+      daf_inc(&sumrtb,&sumrix,&sumrmi,&sumrrg,&sumrpk,
+              &sumltb,&sumlix,&sumlmi,&sumlrg,&sumlpk,
+              zrtb_d[k],zrix_d[k],zrmi_d[k],zrrg_d[k],zrpk_d[k],
+              zltb_d[k],zlix_d[k],zlmi_d[k],zlrg_d[k],zlpk_d[k]);
 
    cout << "Summation of all coefficients in the GPU computed product ..."
         << endl;
-   cout << "       highest part of the sum : " << sumtb << endl;
-   cout << "second highest part of the sum : " << sumix << endl;
-   cout << "        middle part of the sum : " << summi << endl;
-   cout << " second lowest part of the sum : " << sumrg << endl;
-   cout << "        lowest part of the sum : " << sumpk << endl;
- */
+   cout << "       highest part of the sum : " << sumrtb << endl;
+   cout << "second highest part of the sum : " << sumrix << endl;
+   cout << " third highest part of the sum : " << sumrmi << endl;
+   cout << "fourth highest part of the sum : " << sumrrg << endl;
+   cout << " fifth highest part of the sum : " << sumrpk << endl;
+   cout << "  fifth lowest part of the sum : " << sumltb << endl;
+   cout << " fourth lowest part of the sum : " << sumlix << endl;
+   cout << "  third lowest part of the sum : " << sumlmi << endl;
+   cout << " second lowest part of the sum : " << sumlrg << endl;
+   cout << "        lowest part of the sum : " << sumlpk << endl;
 }
 
 void test_complex_exponential ( int deg )
@@ -929,35 +963,58 @@ void test_complex_exponential ( int deg )
    cout << "  sumimlmi : " << sumimlmi;
    cout << "  sumimlrg : " << sumimlrg << endl;
    cout << "  sumimlpk : " << sumimlpk << endl;
- /*
-   GPU_cmplx5_product
-      (xretb,xreix,xremi,xrerg,xrepk,ximtb,ximix,ximmi,ximrg,ximpk,
-       yretb,yreix,yremi,yrerg,yrepk,yimtb,yimix,yimmi,yimrg,yimpk,
-       zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,
-       zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,deg,1,deg+1);
 
-   sumretb = 0.0; sumreix = 0.0; sumremi = 0.0; sumrerg = 0.0; sumrepk = 0.0;
-   sumimtb = 0.0; sumimix = 0.0; sumimmi = 0.0; sumimrg = 0.0; sumimpk = 0.0;
+   GPU_cmplx10_product
+      (xrertb,xrerix,xrermi,xrerrg,xrerpk,xreltb,xrelix,xrelmi,xrelrg,xrelpk,
+       ximrtb,ximrix,ximrmi,ximrrg,ximrpk,ximltb,ximlix,ximlmi,ximlrg,ximlpk,
+       yrertb,yrerix,yrermi,yrerrg,yrerpk,yreltb,yrelix,yrelmi,yrelrg,yrelpk,
+       yimrtb,yimrix,yimrmi,yimrrg,yimrpk,yimltb,yimlix,yimlmi,yimlrg,yimlpk,
+       zrertb_d,zrerix_d,zrermi_d,zrerrg_d,zrerpk_d,
+       zreltb_d,zrelix_d,zrelmi_d,zrelrg_d,zrelpk_d,
+       zimrtb_d,zimrix_d,zimrmi_d,zimrrg_d,zimrpk_d,
+       zimltb_d,zimlix_d,zimlmi_d,zimlrg_d,zimlpk_d,deg,1,deg+1);
+
+   sumrertb = 0.0; sumrerix = 0.0; sumrermi = 0.0;
+   sumrerrg = 0.0; sumrerpk = 0.0;
+   sumreltb = 0.0; sumrelix = 0.0; sumrelmi = 0.0;
+   sumrelrg = 0.0; sumrelpk = 0.0;
+   sumimrtb = 0.0; sumimrix = 0.0; sumimrmi = 0.0;
+   sumimrrg = 0.0; sumimrpk = 0.0;
+   sumimltb = 0.0; sumimlix = 0.0; sumimlmi = 0.0;
+   sumimlrg = 0.0; sumimlpk = 0.0;
 
    for(int k=0; k<=deg; k++) 
    {
-      daf_inc(&sumretb,&sumreix,&sumremi,&sumrerg,&sumrepk,
-              zretb_d[k],zreix_d[k],zremi_d[k],zrerg_d[k],zrepk_d[k]);
-      daf_inc(&sumimtb,&sumimix,&sumimmi,&sumimrg,&sumimpk,
-              zimtb_d[k],zimix_d[k],zimmi_d[k],zimrg_d[k],zimpk_d[k]);
+      daf_inc(&sumrertb,&sumrerix,&sumrermi,&sumrerrg,&sumrerpk,
+              &sumreltb,&sumrelix,&sumrelmi,&sumrelrg,&sumrelpk,
+              zrertb_d[k],zrerix_d[k],zrermi_d[k],zrerrg_d[k],zrerpk_d[k],
+              zreltb_d[k],zrelix_d[k],zrelmi_d[k],zrelrg_d[k],zrelpk_d[k]);
+      daf_inc(&sumimrtb,&sumimrix,&sumimrmi,&sumimrrg,&sumimrpk,
+              &sumimltb,&sumimlix,&sumimlmi,&sumimlrg,&sumimlpk,
+              zimrtb_d[k],zimrix_d[k],zimrmi_d[k],zimrrg_d[k],zimrpk_d[k],
+              zimltb_d[k],zimlix_d[k],zimlmi_d[k],zimlrg_d[k],zimlpk_d[k]);
    }
    cout << "Summation of all coefficients of the GPU computed product ..."
         << endl;
-   cout << "  sumretb : " << sumretb;
-   cout << "  sumreix : " << sumreix << endl;
-   cout << "  sumremi : " << sumremi;
-   cout << "  sumrerg : " << sumrerg << endl;
-   cout << "  sumrepk : " << sumrepk << endl;
-   cout << "  sumimtb : " << sumimtb;
-   cout << "  sumimix : " << sumimix << endl;
-   cout << "  sumimmi : " << sumimmi;
-   cout << "  sumimrg : " << sumimrg << endl;
-   cout << "  sumimpk : " << sumimpk << endl;
- */
+   cout << "  sumrertb : " << sumrertb;
+   cout << "  sumrerix : " << sumrerix << endl;
+   cout << "  sumrermi : " << sumrermi;
+   cout << "  sumrerrg : " << sumrerrg << endl;
+   cout << "  sumrerpk : " << sumrerpk << endl;
+   cout << "  sumreltb : " << sumreltb;
+   cout << "  sumrelix : " << sumrelix << endl;
+   cout << "  sumrelmi : " << sumrelmi;
+   cout << "  sumrelrg : " << sumrelrg << endl;
+   cout << "  sumrelpk : " << sumrelpk << endl;
+   cout << "  sumimrtb : " << sumimrtb;
+   cout << "  sumimrix : " << sumimrix << endl;
+   cout << "  sumimrmi : " << sumimrmi;
+   cout << "  sumimrrg : " << sumimrrg << endl;
+   cout << "  sumimrpk : " << sumimrpk << endl;
+   cout << "  sumimltb : " << sumimltb;
+   cout << "  sumimlix : " << sumimlix << endl;
+   cout << "  sumimlmi : " << sumimlmi;
+   cout << "  sumimlrg : " << sumimlrg << endl;
+   cout << "  sumimlpk : " << sumimlpk << endl;
 }
 

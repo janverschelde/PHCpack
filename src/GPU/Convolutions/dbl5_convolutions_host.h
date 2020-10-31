@@ -28,7 +28,7 @@ void CPU_dbl5_product
  *   ytb      highest parts of the coefficients of y;
  *   yix      second highest parts of the coefficients of y;
  *   ymi      middle parts of the coefficients of y;
- *   yrg      second lowest parts of the coefficients of y.
+ *   yrg      second lowest parts of the coefficients of y;
  *   ypk      lowest parts of the coefficients of y.
  *
  * ON RETURN :

@@ -300,13 +300,15 @@ test_dbl10_convolutions: double_double_functions.obj \
                          quad_double_functions.obj \
                   octo_double_functions.obj deca_double_functions.obj \
                   random_numbers.obj random10_vectors.obj \
-                  dbl10_convolutions_host.obj test_dbl10_convolutions.obj
+                  dbl10_convolutions_host.obj test_dbl10_convolutions.obj \
+                  dbl10_convolutions_kernels.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl10_convolutions.exe \
              double_double_functions.obj quad_double_functions.obj \
              octo_double_functions.obj deca_double_functions.obj \
              random_numbers.obj random10_vectors.obj \
-             dbl10_convolutions_host.obj test_dbl10_convolutions.obj
+             dbl10_convolutions_host.obj test_dbl10_convolutions.obj \
+             dbl10_convolutions_kernels.obj
 
 clean:
 	del *exe *obj *exp *lib *~

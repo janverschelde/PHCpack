@@ -49,5 +49,6 @@ dbl8_convolutions_host     : convolutions of octo double vectors on host
 dbl8_convolutions_kernels  : convolutions of octo double vectors on device
 test_dbl8_convolutions     : test convolutions of octo double vectors
 dbl10_convolutions_host    : convolutions of deca double vectors on host
+dbl10_convolutions_kernels : convolutions of deca double vectors on device
 test_dbl10_convolutions    : test convolutions of deca double vectors
 -----------------------------------------------------------------------------

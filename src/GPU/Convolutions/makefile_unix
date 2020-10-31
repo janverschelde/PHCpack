@@ -209,13 +209,14 @@ test_dbl8_convolutions: double_double_functions.o quad_double_functions.o \
 test_dbl10_convolutions: double_double_functions.o quad_double_functions.o \
                          octo_double_functions.o deca_double_functions.o \
                          random_numbers.o random10_vectors.o \
-                         dbl10_convolutions_host.o test_dbl10_convolutions.o
+                         dbl10_convolutions_host.o test_dbl10_convolutions.o \
+                         dbl10_convolutions_kernels.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl10_convolutions test_dbl10_convolutions.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o deca_double_functions.o \
                   random_numbers.o random10_vectors.o \
-                  dbl10_convolutions_host.o \
+                  dbl10_convolutions_host.o dbl10_convolutions_kernels.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
 clean:
