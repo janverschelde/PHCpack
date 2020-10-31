@@ -29,10 +29,18 @@ def support(nvr, pol):
     from phcpy.phcpy2c2 \
     import py2c_syscon_initialize_number_of_standard_Laurentials
     from phcpy.phcpy2c2 import py2c_syscon_store_standard_Laurential
+    from phcpy.phcpy2c2 import py2c_scan_for_symbols
     py2c_syscon_clear_standard_Laurent_system()
     py2c_syscon_initialize_number_of_standard_Laurentials(nvr)
     nchar = len(pol)
-    fail = py2c_syscon_store_standard_Laurential(nchar, nvr, 1, pol)
+    dim = py2c_scan_for_symbols(nchar, pol)
+    if(dim <= nvr):
+        fail = py2c_syscon_store_standard_Laurential(nchar, nvr, 1, pol)
+    else:
+        print 'WARNING:', nvr, 'is smaller than', dim, 
+        print 'the number of symbols in', pol
+        print 'Setting the number of variables to', dim, '...'
+        fail = py2c_syscon_store_standard_Laurential(nchar, dim, 1, pol)
     if(fail != 0):
         return fail
     else:

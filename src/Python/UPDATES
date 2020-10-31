@@ -1,3 +1,7 @@
+Sat 31 Oct 2020 : in polytopes.py for python2 added a warning to the support
+  function in case the user provides a value for the number of variables 
+  that is too small.
+
 Wed 30 Sep 2020 : added reference to SciPy 2019 paper to welcome.rst in
   the phcpy documentation.  In blackbox.rst, added descriptions on the
   options mvfocus, dictionary_output, and verbose_level of the solver.
