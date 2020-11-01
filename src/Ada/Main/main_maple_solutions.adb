@@ -1,4 +1,3 @@
-with text_io;                            use text_io;
 with File_Scanning;                      use File_Scanning;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -6,24 +5,14 @@ with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 --with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 --with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 --with Standard_Maple_Solutions_io;
-with Multprec_Complex_Solutions;         use Multprec_Complex_Solutions;
 with Multprec_Complex_Solutions_io;      use Multprec_Complex_Solutions_io;
 with Multprec_Maple_Solutions_io;
 
-procedure mainzip ( infilename,outfilename : in string;
-                    verbose : in integer32 := 0 ) is
-
--- READING THE INPUT :
+package body Main_Maple_Solutions is
 
   procedure Scan_Solutions
-               ( filename : in string; sols : in out Solution_List;
-                 solsonfile : out boolean; maple_format : out boolean ) is
-
-  -- DESCRIPTION :
-  --   Checks whether the given file name corresponds to a file with
-  --   the solutions in a correct format.  If so, then solsonfile is
-  --   true on return and sols contain the solutions.
-  --   When the solutions are in Maple format, then maple_format is true.
+              ( filename : in string; sols : in out Solution_List;
+                solsonfile : out boolean; maple_format : out boolean ) is
 
     file : file_type;
     found : boolean;
@@ -69,12 +58,6 @@ procedure mainzip ( infilename,outfilename : in string;
 
   procedure Write ( file : in file_type; maple_format : in boolean;
                     sols : in Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Writes the solutions to the file.
-
-  -- REQUIRED : file is opened in the right mode.
-
   begin
     if maple_format
      then put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -83,14 +66,9 @@ procedure mainzip ( infilename,outfilename : in string;
     end if;
   end Write;
 
-  procedure Write_Solutions ( maple_format : in boolean;
-                              sols : in Solution_List ) is
-
-  -- DESCRIPTION :
-  --   If the file with name outfilename does not exist,
-  --   then it is created and used to write the solutions on;
-  --   otherwise, the solutions are appended to the file with
-  --   name outfilename.
+  procedure Write_Solutions
+              ( outfilename : in string; maple_format : in boolean;
+                sols : in Solution_List ) is
 
     temp,file : file_type;
 
@@ -105,7 +83,8 @@ procedure mainzip ( infilename,outfilename : in string;
                    Write(file,maple_format,sols); Close(file);
   end Write_Solutions;
 
-  procedure Main is
+  procedure Main ( infilename,outfilename : in string;
+                   verbose : in integer32 := 0 ) is
 
     sols : Solution_List;
     solsonfile,maple_format : boolean;
@@ -124,15 +103,13 @@ procedure mainzip ( infilename,outfilename : in string;
       -- else Standard_Maple_Solutions_io.put(sols);
       end if;
     elsif not Is_Null(sols) then
-      Write_Solutions(maple_format,sols);
+      Write_Solutions(outfilename,maple_format,sols);
     end if;
+  exception
+    when others
+      => new_line;
+         put_line("Use as phc -z input output");
+         new_line;
   end Main;
 
-begin
-  Main;
-exception
-  when others
-    => new_line;
-       put_line("Use as phc -z input output");
-       new_line;
-end mainzip;
+end Main_Maple_Solutions;

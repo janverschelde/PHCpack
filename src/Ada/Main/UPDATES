@@ -1,3 +1,7 @@
+Sun 1 Nov 2020 : new packages main_dictionary_solutions and main_maple_
+  solutions replace the maindict and mainzip procedures respectively.
+  Updated option_handlers.adb.
+
 Sat 31 Oct 2020 : updated greeting_banners for version 2.4.81.
 
 Tue 29 Sep 2020 : updated greeting_banners for version 2.4.80.

@@ -1,4 +1,4 @@
-Main interactive drivers and top level procedure in PHCv2.4.81
+Main interactive drivers and top level procedure in PHCv2.4.82
 
 New in release 2.1 in this directory is the conversion between symbolic 
 and tableau formats, plus the interface of the solutions in Maple format.
@@ -62,8 +62,8 @@ compsolve4                   : defines phc -B4, in quad double precision
 -------------------------------------------------------------------------------
 phcpack                      : PHC with main drivers according to 4 stages
 use_phc                      : an example of how to use phcpack
-mainzip                      : strip output solutions into Maple format
-maindict                     : convert solutions into Python dictionary
+main_maple_solutions         : strip output solutions into Maple format
+main_dictionary_solutions    : convert solutions into Python dictionary
 mainfeed                     : main driver for computing output feedback
 -------------------------------------------------------------------------------
 actions_and_options          : defines actions and options of phc

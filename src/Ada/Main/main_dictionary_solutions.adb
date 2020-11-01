@@ -1,25 +1,13 @@
-with text_io;                            use text_io;
 with File_Scanning;                      use File_Scanning;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_Dictionary_Solutions_io;
 
-procedure maindict ( infilename,outfilename : in string;
-                     verbose : in integer32 := 0 ) is
-
--- READING THE INPUT :
+package body Main_Dictionary_Solutions is
 
   procedure Scan_Solutions
                ( filename : in string; sols : in out Solution_List;
                  solsonfile : out boolean; python_format : out boolean ) is
-
-  -- DESCRIPTION :
-  --   Checks whether the given file name corresponds to a file with
-  --   the solutions in a correct format.  If so, then solsonfile is
-  --   true on return and sols contain the solutions.
-  --   When the solutions are in Python format, then python_format is true.
 
     file : file_type;
     found : boolean;
@@ -55,12 +43,6 @@ procedure maindict ( infilename,outfilename : in string;
 
   procedure Write ( file : in file_type; python_format : in boolean;
                     sols : in Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Writes the solutions to the file.
-
-  -- REQUIRED : file is opened in the right mode.
-
   begin
     if python_format
      then put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -68,14 +50,9 @@ procedure maindict ( infilename,outfilename : in string;
     end if;
   end Write;
 
-  procedure Write_Solutions ( python_format : in boolean;
-                              sols : in Solution_List ) is
-
-  -- DESCRIPTION :
-  --   If the file with name outfilename does not exist,
-  --   then it is created and used to write the solutions on;
-  --   otherwise, the solutions are appended to the file with
-  --   name outfilename.
+  procedure Write_Solutions
+              ( outfilename : in string; python_format : in boolean;
+                sols : in Solution_List ) is
 
     temp,file : file_type;
 
@@ -90,15 +67,15 @@ procedure maindict ( infilename,outfilename : in string;
                    Write(file,python_format,sols); Close(file);
   end Write_Solutions;
 
-  procedure Main is
+  procedure Main ( infilename,outfilename : in string;
+                   verbose : in integer32 := 0 ) is
 
     sols : Solution_List;
     solsonfile,python_format : boolean;
 
   begin
-    if verbose > 0 then
-      put("At verbose level "); put(verbose,1);
-      put_line(", in maindict.Main ...");
+    if verbose > 0
+     then put_line("-> in main_dictionary_solutions.Main ...");
     end if;
     Scan_Solutions(infilename,sols,solsonfile,python_format);
     if outfilename = "" then
@@ -108,15 +85,13 @@ procedure maindict ( infilename,outfilename : in string;
        else Standard_Dictionary_Solutions_io.put(sols);
       end if;
     elsif not Is_Null(sols) then
-      Write_Solutions(python_format,sols);
+      Write_Solutions(outfilename,python_format,sols);
     end if;
+  exception
+    when others
+      => new_line;
+         put_line("Use as phc -x input output");
+         new_line;
   end Main;
 
-begin
-  Main;
-exception
-  when others
-    => new_line;
-       put_line("Use as phc -z input output");
-       new_line;
-end maindict;
+end Main_Dictionary_Solutions;

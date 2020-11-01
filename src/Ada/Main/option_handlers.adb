@@ -22,7 +22,8 @@ with compsolve,compsolve2,compsolve4;
 with mainsolve;
 with mainhyp,mainhyp2,mainhyp4;
 with mainsam,mainwit;
-with maindict,mainzip;
+with Main_Dictionary_Solutions;
+with Main_Maple_Solutions;
 
 package body Option_Handlers is
 
@@ -750,7 +751,7 @@ package body Option_Handlers is
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first)
      then Greeting_Banners.help4mapleform;
-     else mainzip(infile,outfile,vrblvl);
+     else Main_Maple_Solutions.Main(infile,outfile,vrblvl);
     end if;
   end Maple_Format_Handler;
 
@@ -765,7 +766,7 @@ package body Option_Handlers is
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first)
      then Greeting_Banners.help4pythondict;
-     else maindict(infile,outfile,vrblvl);
+     else Main_Dictionary_Solutions.Main(infile,outfile,vrblvl);
     end if;
   end Python_Format_Handler;
 
