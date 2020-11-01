@@ -1,4 +1,4 @@
-phcpy 1.0.7 offers a simple Python interface to PHCv2.4.80
+phcpy 1.0.8 offers a simple Python interface to PHCv2.4.81
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -79,6 +79,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+1.0.8 : 2020-10-31 : improved function support() checks on number of symbols
 1.0.7 : 2020-09-30 : option to focus on polyhedral homotopies in solver
 1.0.6 : 2020-07-30 : added verbose level parameter in the solver module
 1.0.5 : 2020-07-01 : function in solver module for condition report 
