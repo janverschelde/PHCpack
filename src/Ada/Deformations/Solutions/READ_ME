@@ -1,4 +1,4 @@
-Solutions of systems and homotopies in PHCv2.4.80
+Solutions of systems and homotopies in PHCv2.4.82
 
 The second release introduced the solution vectors with multiprecision.
 Version 2.3 has an improved Maple interface.
@@ -73,9 +73,11 @@ mainfilt                           : access to filtering via phc -f
 lists_of_symbols                   : manages lists of symbols
 standard_maple_solutions_io        : output formats to Maple, standard floats
 multprec_maple_solutions_io        : convert from/into Maple, multiprecision
-ts_mapsols_io                      : test program on Maple output format
+test_maple_solutions               : tests on Maple output format
+ts_mapsols_io                      : main test on Maple output format
 standard_dictionary_solutions_io   : convert solutions into Python dictionaries
-ts_dicsols_io                      : test on Python dictionary conversion
+test_dictionary_solutions          : test on Python dictionary conversion
+ts_dicsols_io                      : main test on dictionary solutions
 standard_solution_array_lists      : lists of solution arrays
 ts_solar                           : test on lists of solution arrays
 ------------------------------------------------------------------------------

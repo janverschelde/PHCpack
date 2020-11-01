@@ -1,3 +1,6 @@
+Sun 1 Nov 2020 : new test_dictionary_solutions and test_maple_solutions,
+  packages with code from ts_dicsols_io and ts_mapsols_io.
+
 Wed 23 Sep 2020 : extended solution_drops with operations on solutions in
   triple, penta, octo, and deca double precision.
 
