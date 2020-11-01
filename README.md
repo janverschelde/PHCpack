@@ -15,6 +15,11 @@ DEMiCs (Dynamic Enumeration of all Mixed Cells, by T. Mizutani, A. Takeda, and M
 at a faster pace than MixedVol for larger systems with many different supports.  DEMiCs is also integrated into PHCpack.
 For its double double and quad double arithmetic, PHCpack contains QDlib
 of Y. Hida, X.S. Li, and D.H. Bailey.
+For triple double, and other multiple doubles (penta, octo, deca),
+code generated from the CAMPARY software is used.
+CAMPARY is the CudA Multiple Precision ARithmetic librarY,
+by Mioara Joldes, Olivier Marty, Jean-Michel Muller,
+Valentina Popescu and Warwick Tucker.
 
 This material is based upon work supported by the National Science Foundation
 under Grants No. 9804846, 0105739, 0134611, 0410036, 0713018, 1115777,
