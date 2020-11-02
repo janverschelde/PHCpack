@@ -1,3 +1,7 @@
+Sun 1 Nov 2020 : added test on Is_Null(sinsols) in {dobldobl,quaddobl}_
+  blackbox_refiners.adb to avoid a crash with phc -b2 -t and phc -b4 -t
+  in case the system has no singular solutions.
+
 Tue 6 Aug 2019 : modified drivers_for_poly_continuation.adb so prclvl = 0 also
   stands for double precision, as a result of changing default from 0 to 1.
 

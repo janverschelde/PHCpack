@@ -156,9 +156,11 @@ package body QuadDobl_BlackBox_Refiners is
       QuadDobl_Solution_Splitters.Silent_Singular_Filter
         (vansols,tolsing,sinsols,regsols);
       nb := 0;
-      Silent_Root_Refiner
-        (p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
-      Push(ref_sinsols,regsols);
+      if not Is_Null(sinsols) then
+        Silent_Root_Refiner
+          (p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
+        Push(ref_sinsols,regsols);
+      end if;
       Clear(sols); Clear(vansols); Clear(sinsols); Clear(tarsols);
       sols := regsols;
     end if;
@@ -186,9 +188,11 @@ package body QuadDobl_BlackBox_Refiners is
       vansols := QuadDobl_Solution_Filters.Vanishing_Filter(tarsols,epsfa);
       QuadDobl_Solution_Splitters.Silent_Singular_Filter
         (vansols,tolsing,sinsols,regsols);
-      Reporting_Root_Refiner
-        (file,p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
-      Push(ref_sinsols,regsols);
+      if not Is_Null(sinsols) then
+        Reporting_Root_Refiner
+          (file,p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
+        Push(ref_sinsols,regsols);
+      end if;
       Clear(sols); Clear(vansols); Clear(sinsols); Clear(tarsols);
       sols := regsols;
     end if;
