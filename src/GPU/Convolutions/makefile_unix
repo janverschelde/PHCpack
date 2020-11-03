@@ -144,6 +144,10 @@ test_dbl10_convolutions.o:
 	@-echo ">>> compiling test_dbl10_convolutions ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl10_convolutions.cpp
 
+dbl_monomials_host.o:
+	@-echo ">>> compiling dbl_monomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) dbl_monomials_host.cpp
+
 test_dbl_monomials.o:
 	@-echo ">>> compiling test_dbl_monomials ..."
 	$(gpp) -O3 -c -I$(MPD) test_dbl_monomials.cpp
@@ -223,9 +227,11 @@ test_dbl10_convolutions: double_double_functions.o quad_double_functions.o \
                   dbl10_convolutions_host.o dbl10_convolutions_kernels.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
-test_dbl_monomials: random_numbers.o test_dbl_monomials.o
+test_dbl_monomials: random_numbers.o dbl_convolutions_host.o \
+                    dbl_monomials_host.o test_dbl_monomials.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl_monomials random_numbers.o test_dbl_monomials.o
+	$(gpp) -o test_dbl_monomials random_numbers.o dbl_monomials_host.o \
+                  dbl_convolutions_host.o test_dbl_monomials.o
 
 clean:
 	/bin/rm -f -r random_numbers.o
@@ -250,4 +256,5 @@ clean:
 	/bin/rm -f -r deca_double_functions.o random10_vectors.o
 	/bin/rm -f -r dbl10_convolutions_kernels.o dbl10_convolutions_host.o
 	/bin/rm -f -r test_dbl10_convolutions.o test_dbl10_convolutions
+	/bin/rm -f -r dbl_monomials_host.o
 	/bin/rm -f -r test_dbl_monomials.o test_dbl_monomials

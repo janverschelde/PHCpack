@@ -5,8 +5,8 @@
 #include <iomanip>
 #include <cstdlib>
 #include <ctime>
-#include <cmath>
 #include "random_numbers.h"
+#include "dbl_monomials_host.h"
 
 using namespace std;
 
@@ -93,8 +93,8 @@ int main ( void )
 
    double **input = new double*[dim];
    for(int i=0; i<dim; i++) input[i] = new double[deg];
-   double **output = new double*[nvr+1];
-   for(int i=0; i<=nvr; i++) output[i] = new double[deg];
+   double **output = new double*[dim+1];
+   for(int i=0; i<=dim; i++) output[i] = new double[deg];
 
    srand(time(NULL));
 
@@ -130,6 +130,19 @@ int main ( void )
    {
       cout << "-> coefficients of series " << i << " :" << endl;
       for(int j=0; j<=deg; j++) cout << input[i][j] << endl;
+   }
+
+   CPU_dbl_evaldiff(dim,nvr,deg,idx,input,output);
+
+   cout << "The value of the product :" << endl;
+   for(int i=0; i<=deg; i++)
+      cout << output[dim][i] << endl;
+
+   for(int k=0; k<nvr; k++)
+   {
+      cout << "-> derivative for index " << idx[k] << " :" << endl;
+      for(int i=0; i<=deg; i++)
+         cout << output[idx[k]][i] << endl;
    }
 
    return 0;

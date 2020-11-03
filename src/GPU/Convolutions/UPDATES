@@ -1,5 +1,7 @@
 Mon 2 Nov 2020 : new test_dbl_monomials.cpp to define the setup for the
-  evaluation and differentiation of a monomial.
+  evaluation and differentiation of a monomial.  Added dbl_monomials_host.h
+  and dbl_monomials_host.cpp with code to evaluate and differentiate one
+  product of variables at power series.
 
 Fri 30 Oct 2020 : bugs fixed in test_dbl8_convolutions.cpp to ensure that
   the code for the host is correct.  Fixed dbl8_convolutions_kernels.cu
