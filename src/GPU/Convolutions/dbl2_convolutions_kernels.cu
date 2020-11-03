@@ -1,5 +1,5 @@
 // The file dbl2_convolutions_kernels.cu defines kernels with prototypes
-// in dbl2_convolution_kernels.h.
+// in dbl2_convolutions_kernels.h.
 
 #include "double_double_gpufun.cu"
 #include "dbl2_convolutions_kernels.h"
@@ -21,6 +21,8 @@ __global__ void dbl2_convolute
 
    xvhi[k] = xhi[k]; xvlo[k] = xlo[k];
    yvhi[k] = yhi[k]; yvlo[k] = ylo[k];
+
+   __syncthreads();
 
    // zv[k] = xv[0]*yv[k];
    ddg_mul(xvhi[0],xvlo[0],yvhi[k],yvlo[k],&zvhi[k],&zvlo[k]);
@@ -64,6 +66,8 @@ __global__ void cmplx2_convolute
    xvrelo[k] = xrelo[k]; xvimlo[k] = ximlo[k];
    yvrehi[k] = yrehi[k]; yvimhi[k] = yimhi[k];
    yvrelo[k] = yrelo[k]; yvimlo[k] = yimlo[k];
+
+   __syncthreads();
 
    // z[k] = x[0]*y[k]
    xrhi = xvrehi[0]; xrlo = xvrelo[0]; xihi = xvimhi[0]; xilo = xvimlo[0];
@@ -126,8 +130,6 @@ void GPU_dbl2_product
    cudaMemcpy(xlo_d,xlo_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(yhi_d,yhi_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(ylo_d,ylo_h,size,cudaMemcpyHostToDevice);
-   cudaMemcpy(zhi_d,zhi_h,size,cudaMemcpyHostToDevice);
-   cudaMemcpy(zlo_d,zlo_h,size,cudaMemcpyHostToDevice);
 
    if(dim == BS)
    {
@@ -180,10 +182,6 @@ void GPU_cmplx2_product
    cudaMemcpy(yrelo_d,yrelo_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(yimhi_d,yimhi_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(yimlo_d,yimlo_h,size,cudaMemcpyHostToDevice);
-   cudaMemcpy(zrehi_d,zrehi_h,size,cudaMemcpyHostToDevice);
-   cudaMemcpy(zrelo_d,zrelo_h,size,cudaMemcpyHostToDevice);
-   cudaMemcpy(zimhi_d,zimhi_h,size,cudaMemcpyHostToDevice);
-   cudaMemcpy(zimlo_d,zimlo_h,size,cudaMemcpyHostToDevice);
 
    if(dim == BS)
    {

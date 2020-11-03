@@ -1,6 +1,7 @@
 Tue 3 Nov 2020 : new dbl_monomials_kernels.h and .cu defines the evaluation
   and differentiation of one product of variables at power series.
   In dbl_monomials_host.cpp, ignored the power series coefficients.
+  Bug fix in dbl2_convolutions_kernels.cu.
   
 Mon 2 Nov 2020 : new test_dbl_monomials.cpp to define the setup for the
   evaluation and differentiation of a monomial.  Added dbl_monomials_host.h
