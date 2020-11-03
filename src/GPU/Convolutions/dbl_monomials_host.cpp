@@ -88,20 +88,25 @@ void CPU_dbl_evaldiff
       forward[nvr-2] = new double[deg+1];
 
       CPU_dbl_speel(nvr,deg,idx,input,forward,backward,cross);
-      CPU_dbl_product(deg,cff,forward[nvr-2],output[dim]);
+      for(int i=0; i<deg+1; i++) output[dim][i] = forward[nvr-2][i];
+
+      // CPU_dbl_product(deg,cff,forward[nvr-2],output[dim]);
 
       if(nvr > 2)
       {
          int ix = idx[nvr-1];
 
-         CPU_dbl_product(deg,cff,forward[nvr-3],output[ix]);
+         // CPU_dbl_product(deg,cff,forward[nvr-3],output[ix]);
+         for(int i=0; i<deg+1; i++) output[ix][i] = forward[nvr-3][i];
          ix = idx[0];
-         CPU_dbl_product(deg,cff,backward[nvr-3],output[ix]);
+         // CPU_dbl_product(deg,cff,backward[nvr-3],output[ix]);
+         for(int i=0; i<deg+1; i++) output[ix][i] = backward[nvr-3][i];
 
          for(int k=1; k<nvr-1; k++)
          {
             ix = idx[k];
-            CPU_dbl_product(deg,cff,cross[k-1],output[ix]);
+            // CPU_dbl_product(deg,cff,cross[k-1],output[ix]);
+            for(int i=0; i<deg+1; i++) output[ix][i] = cross[k-1][i];
          }
       }
       for(int i=0; i<nvr-2; i++)

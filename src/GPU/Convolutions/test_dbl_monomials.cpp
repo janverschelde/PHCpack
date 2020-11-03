@@ -5,8 +5,10 @@
 #include <iomanip>
 #include <cstdlib>
 #include <ctime>
+#include <vector_types.h>
 #include "random_numbers.h"
 #include "dbl_monomials_host.h"
+#include "dbl_monomials_kernels.h"
 
 using namespace std;
 
@@ -93,8 +95,10 @@ int main ( void )
 
    double **input = new double*[dim];
    for(int i=0; i<dim; i++) input[i] = new double[deg];
-   double **output = new double*[dim+1];
-   for(int i=0; i<=dim; i++) output[i] = new double[deg];
+   double **output_h = new double*[dim+1];
+   for(int i=0; i<=dim; i++) output_h[i] = new double[deg];
+   double **output_d = new double*[dim+1];
+   for(int i=0; i<=dim; i++) output_d[i] = new double[deg];
 
    srand(time(NULL));
 
@@ -132,19 +136,24 @@ int main ( void )
       for(int j=0; j<=deg; j++) cout << input[i][j] << endl;
    }
 
-   CPU_dbl_evaldiff(dim,nvr,deg,idx,cff,input,output);
+   CPU_dbl_evaldiff(dim,nvr,deg,idx,cff,input,output_h);
 
    cout << "The value of the product :" << endl;
-   for(int i=0; i<=deg; i++)
-      cout << output[dim][i] << endl;
+   for(int i=0; i<=deg; i++) cout << output_h[dim][i] << endl;
+
+   GPU_dbl_evaldiff(deg+1,dim,nvr,deg,idx,cff,input,output_d);
+
+   cout << "The value of the product computed on the GPU :" << endl;
+   for(int i=0; i<=deg; i++) cout << output_d[dim][i] << endl;
 
    for(int k=0; k<nvr; k++)
    {
       cout << "-> derivative for index " << idx[k] << " :" << endl;
-      for(int i=0; i<=deg; i++)
-         cout << output[idx[k]][i] << endl;
+      for(int i=0; i<=deg; i++) cout << output_h[idx[k]][i] << endl;
+      cout << "-> derivative for index " << idx[k]
+           << " computed on GPU :" << endl;
+      for(int i=0; i<=deg; i++) cout << output_d[idx[k]][i] << endl;
    }
-
    return 0;
 }
 

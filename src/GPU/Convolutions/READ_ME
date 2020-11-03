@@ -53,5 +53,6 @@ dbl10_convolutions_kernels : convolutions of deca double vectors on device
 test_dbl10_convolutions    : test convolutions of deca double vectors
 -----------------------------------------------------------------------------
 dbl_monomials_host         : evaluation and differentiation on host
+dbl_monomials_device       : evaluation and differentiation on device
 test_dbl_monomials         : test eval/diff of monomials with doubles
 -----------------------------------------------------------------------------

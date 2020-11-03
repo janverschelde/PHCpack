@@ -60,6 +60,11 @@ dbl10_convolutions_kernels.obj:
 	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl10_convolutions_kernels.cu \
                                        -o dbl10_convolutions_kernels.obj
 
+dbl_monomials_kernels.obj:
+	@-echo ">>> compiling monomial kernels for doubles ..."
+	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl_monomials_kernels.cu \
+                                       -o dbl_monomials_kernels.obj
+
 random_numbers.obj:
 	@-echo ">>> compiling random number generators ..."
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -324,11 +329,13 @@ test_dbl10_convolutions: double_double_functions.obj \
              dbl10_convolutions_kernels.obj
 
 test_dbl_monomials: random_numbers.obj dbl_convolutions_host.obj \
-                    dbl_monomials_host.obj test_dbl_monomials.obj
+                    dbl_monomials_host.obj dbl_monomials_kernels.obj \
+                    test_dbl_monomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_monomials.exe \
               random_numbers.obj dbl_convolutions_host.obj \
-              dbl_monomials_host.obj test_dbl_monomials.obj
+              dbl_monomials_host.obj dbl_monomials_kernels.obj \
+              test_dbl_monomials.obj
 
 clean:
 	del *exe *obj *exp *lib *~
