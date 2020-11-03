@@ -51,45 +51,63 @@ void CPU_dbl_speel
 }
 
 void CPU_dbl_evaldiff
- ( int dim, int nvr, int deg, int *idx, double **input, double **output )
+ ( int dim, int nvr, int deg, int *idx, double *cff,
+   double **input, double **output )
 {
-   double **forward = new double*[nvr-1];
-   double **backward = new double*[nvr-2];
-   double **cross = new double*[nvr-2];
-
-   for(int i=0; i<nvr-2; i++)
+   if(nvr == 1)
    {
-      forward[i] = new double[deg+1];
-      backward[i] = new double[deg+1];
-      cross[i] = new double[deg+1];
+      int ix = idx[0];
+
+      CPU_dbl_product(deg,input[ix],cff,output[dim]);
+
+      for(int i=0; i<=deg; i++) output[ix][i] = cff[i];
    }
-   forward[nvr-2] = new double[deg+1];
-
-   CPU_dbl_speel(nvr,deg,idx,input,forward,backward,cross);
-
-   for(int i=0; i<=deg; i++) output[dim][i] = forward[nvr-2][i];  
-
-   if(nvr > 2)
+   else if(nvr == 2)
    {
-      int ix = idx[nvr-1];
-      for(int i=0; i<=deg; i++) output[ix][i] = forward[nvr-3][i];  
+      int ix1 = idx[0];
+      int ix2 = idx[1];
 
-      ix = idx[0];
-      for(int i=0; i<=deg; i++) output[ix][i] = backward[nvr-3][i];  
+      CPU_dbl_product(deg,input[ix1],input[ix2],output[dim]);
+      CPU_dbl_product(deg,output[dim],cff,output[dim]);
 
-      for(int k=1; k<nvr-1; k++)
+      CPU_dbl_product(deg,cff,input[ix1],output[ix2]);
+      CPU_dbl_product(deg,cff,input[ix2],output[ix1]);
+   }
+   else
+   {
+      double **forward = new double*[nvr-1];
+      double **backward = new double*[nvr-2];
+      double **cross = new double*[nvr-2];
+
+      for(int i=0; i<nvr-2; i++)
       {
-         ix = idx[k];
-         for(int i=0; i<=deg; i++) output[ix][i] = cross[k-1][i];  
+         forward[i] = new double[deg+1];
+         backward[i] = new double[deg+1];
+         cross[i] = new double[deg+1];
       }
-   }
-   for(int i=0; i<nvr-2; i++)
-   {
-      free(forward[i]);
-      free(backward[i]);
-      free(cross[i]);
-   }
-   free(forward[nvr-2]);
+      forward[nvr-2] = new double[deg+1];
 
-   free(forward); free(backward); free(cross);
+      CPU_dbl_speel(nvr,deg,idx,input,forward,backward,cross);
+      CPU_dbl_product(deg,cff,forward[nvr-2],output[dim]);
+
+      if(nvr > 2)
+      {
+         int ix = idx[nvr-1];
+
+         CPU_dbl_product(deg,cff,forward[nvr-3],output[ix]);
+         ix = idx[0];
+         CPU_dbl_product(deg,cff,backward[nvr-3],output[ix]);
+
+         for(int k=1; k<nvr-1; k++)
+         {
+            ix = idx[k];
+            CPU_dbl_product(deg,cff,cross[k-1],output[ix]);
+         }
+      }
+      for(int i=0; i<nvr-2; i++)
+      {
+         free(forward[i]); free(backward[i]); free(cross[i]);
+      }
+      free(forward[nvr-2]); free(forward); free(backward); free(cross);
+   }
 }

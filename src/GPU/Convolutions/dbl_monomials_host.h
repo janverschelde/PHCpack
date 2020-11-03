@@ -44,7 +44,8 @@ void CPU_dbl_speel
  *            variable idx[k+1]. */
 
 void CPU_dbl_evaldiff
- ( int dim, int nvr, int deg, int *idx, double **input, double **output );
+ ( int dim, int nvr, int deg, int *idx, double *cff,
+   double **input, double **output );
 /*
  * DESCRIPTION :
  *   Allocates work space memory to store the forward, backward, and
@@ -56,6 +57,7 @@ void CPU_dbl_evaldiff
  *   idx      as many indices as the value of nvr,
  *            idx[k] defines the place of the k-th variable,
  *            with input values in input[idx[k]];
+ *   cff      coefficient power series of the product;
  *   input    contains the coefficients of the power series
  *            for all variables in the monomial;
  *   output   space allocated for dim+1 series of degree deg.

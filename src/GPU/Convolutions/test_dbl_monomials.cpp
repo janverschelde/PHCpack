@@ -132,7 +132,7 @@ int main ( void )
       for(int j=0; j<=deg; j++) cout << input[i][j] << endl;
    }
 
-   CPU_dbl_evaldiff(dim,nvr,deg,idx,input,output);
+   CPU_dbl_evaldiff(dim,nvr,deg,idx,cff,input,output);
 
    cout << "The value of the product :" << endl;
    for(int i=0; i<=deg; i++)
