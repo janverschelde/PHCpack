@@ -131,6 +131,12 @@ random4_series.obj:
                       random4_series.cpp \
                  /Fo: random4_series.obj /EHsc
 
+random5_series.obj:
+	@-echo ">>> compiling penta double random series generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random5_series.cpp \
+                 /Fo: random5_series.obj /EHsc
+
 double_double_functions.obj:
 	@-echo ">>> compiling double double functions..."
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -314,14 +320,14 @@ test_dbl4_convolutions: double_double_functions.obj \
              dbl4_convolutions_host.obj test_dbl4_convolutions.obj
 
 test_dbl5_convolutions: double_double_functions.obj \
-                        penta_double_functions.obj \
-                        random_numbers.obj random5_vectors.obj \
+                        penta_double_functions.obj random_numbers.obj \
+                        random5_vectors.obj random5_series.obj \
                         dbl5_convolutions_host.obj test_dbl5_convolutions.obj \
                         dbl5_convolutions_kernels.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl5_convolutions.exe \
              double_double_functions.obj penta_double_functions.obj \
-             random_numbers.obj random5_vectors.obj \
+             random_numbers.obj random5_vectors.obj random5_series.obj \
              dbl5_convolutions_kernels.obj \
              dbl5_convolutions_host.obj test_dbl5_convolutions.obj
 

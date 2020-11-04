@@ -5,6 +5,7 @@
 #include <vector_types.h>
 #include "penta_double_functions.h"
 #include "random5_vectors.h"
+#include "random5_series.h"
 #include "dbl5_convolutions_host.h"
 #include "dbl5_convolutions_kernels.h"
 
@@ -236,30 +237,10 @@ void test_real_exponential ( int deg )
    double *zrg_d = new double[deg+1];
    double *zpk_d = new double[deg+1];
    double rtb,rix,rmi,rrg,rpk;
-   double ftb,fix,fmi,frg,fpk;
 
-   random_penta_double(&rtb,&rix,&rmi,&rrg,&rpk);
-
-   xtb[0] = 1.0;  xix[0] = 0.0;  xmi[0] = 0.0;  xrg[0] = 0.0;  xpk[0] = 0.0;
-   ytb[0] = 1.0;  yix[0] = 0.0;  ymi[0] = 0.0;  yrg[0] = 0.0;  ypk[0] = 0.0;
-   xtb[1] = rtb;  xix[1] = rix;  xmi[1] = rmi;  xrg[1] = rrg;  xpk[1] = rpk;
-   ytb[1] = -rtb; yix[1] = -rix; ymi[1] = -rmi; yrg[1] = -rrg; ypk[1] = -rpk;
-
-   for(int k=2; k<=deg; k++)
-   {
-      pdf_mul(xtb[k-1],xix[k-1],xmi[k-1],xrg[k-1],xpk[k-1],
-              rtb,rix,rmi,rrg,rpk,
-              &xtb[k],&xix[k],&xmi[k],&xrg[k],&xpk[k]);    // x[k] = x[k-1]*r
-      pdf_mul(ytb[k-1],yix[k-1],ymi[k-1],yrg[k-1],ypk[k-1],
-              -rtb,-rix,-rmi,-rrg,-rpk,
-              &ytb[k],&yix[k],&ymi[k],&yrg[k],&ypk[k]); 
-      // y[k] = y[k-1]*(-r);
-      ftb = (double) k; fix = 0.0; fmi = 0.0; frg = 0.0; fpk = 0.0;
-      pdf_div(xtb[k],xix[k],xmi[k],xrg[k],xpk[k],ftb,fix,fmi,frg,fpk,
-              &xtb[k],&xix[k],&xmi[k],&xrg[k],&xpk[k]);
-      pdf_div(ytb[k],yix[k],ymi[k],yrg[k],ypk[k],ftb,fix,fmi,frg,fpk,
-              &ytb[k],&yix[k],&ymi[k],&yrg[k],&ypk[k]);
-   }
+   random_dbl5_exponentials
+      (deg,&rtb,&rix,&rmi,&rrg,&rpk,
+           xtb,xix,xmi,xrg,xpk,ytb,yix,ymi,yrg,ypk);
 
    CPU_dbl5_product
       (deg,xtb,xix,xmi,xrg,xpk,ytb,yix,ymi,yrg,ypk,
@@ -354,92 +335,12 @@ void test_complex_exponential ( int deg )
    double* zimpk_d = new double[deg+1];
    double rndretb,rndreix,rndremi,rndrerg,rndrepk;
    double rndimtb,rndimix,rndimmi,rndimrg,rndimpk;
-   double tmptb,tmpix,tmpmi,tmprg,tmppk;
 
-   random_penta_double
-      (&rndretb,&rndreix,&rndremi,&rndrerg,&rndrepk);       // cos(a)
-
-   pdf_sqr(rndretb,rndreix,rndremi,rndrerg,rndrepk,
-           &tmptb,&tmpix,&tmpmi,&tmprg,&tmppk);             // cos^2(a)
-   pdf_minus(&tmptb,&tmpix,&tmpmi,&tmprg,&tmppk);           // -cos^2(a)
-   pdf_inc_d(&tmptb,&tmpix,&tmpmi,&tmprg,&tmppk,1.0);       // 1-cos^2(a)
-   pdf_sqrt(tmptb,tmpix,tmpmi,tmprg,tmppk,
-            &rndimtb,&rndimix,&rndimmi,&rndimrg,&rndimpk);  // sin is sqrt
-
-   xretb[0] = 1.0; xreix[0] = 0.0; xremi[0] = 0.0;
-   xrerg[0] = 0.0; xrepk[0] = 0.0;
-   yretb[0] = 1.0; yreix[0] = 0.0; yremi[0] = 0.0;
-   yrerg[0] = 0.0; yrepk[0] = 0.0;
-   ximtb[0] = 0.0; ximix[0] = 0.0; ximmi[0] = 0.0;
-   ximrg[0] = 0.0; ximpk[0] = 0.0;
-   yimtb[0] = 0.0; yimix[0] = 0.0; yimmi[0] = 0.0;
-   ximrg[0] = 0.0; yimpk[0] = 0.0;
-   xretb[1] = rndretb; xreix[1] = rndreix; xremi[1] = rndremi;
-   xrerg[1] = rndrerg; xrepk[1] = rndrepk;
-   ximtb[1] = rndimtb; ximix[1] = rndimix; ximmi[1] = rndimmi;
-   ximrg[1] = rndimrg; ximpk[1] = rndimpk;
-   yretb[1] = -rndretb; yreix[1] = -rndreix; yremi[1] = -rndremi;
-   yrerg[1] = -rndrerg; yrepk[1] = -rndrepk;
-   yimtb[1] = -rndimtb; yimix[1] = -rndimix; yimmi[1] = -rndimmi;
-   yimrg[1] = -rndimrg; yimpk[1] = -rndimpk;
-
-   for(int k=2; k<=deg; k++)
-   {
-      // xre[k] = (xre[k-1]*cr - xim[k-1]*sr)/k;
-      pdf_mul(xretb[k-1],xreix[k-1],xremi[k-1],xrerg[k-1],xrepk[k-1],
-              rndretb,rndreix,rndremi,rndrerg,rndrepk,
-              &xretb[k],&xreix[k],&xremi[k],&xrerg[k],&xrepk[k]);
-      pdf_mul(ximtb[k-1],ximix[k-1],ximmi[k-1],ximrg[k-1],ximpk[k-1],
-              rndimtb,rndimix,rndimmi,rndimrg,rndimpk,
-              &tmptb,&tmpix,&tmpmi,&tmprg,&tmppk);
-      pdf_minus(&tmptb,&tmpix,&tmpmi,&tmprg,&tmppk);
-      pdf_inc(&xretb[k],&xreix[k],&xremi[k],&xrerg[k],&xrepk[k],
-              tmptb,tmpix,tmpmi,tmprg,tmppk);
-      tmptb = (double) k; tmpix = 0.0; tmpmi = 0.0; tmprg = 0.0; tmppk = 0.0;
-      pdf_div(xretb[k],xreix[k],xremi[k],xrerg[k],xrepk[k],
-              tmptb,tmpix,tmpmi,tmprg,tmppk,
-              &xretb[k],&xreix[k],&xremi[k],&xrerg[k],&xrepk[k]);
-      // xim[k] = (xre[k-1]*sr + xim[k-1]*cr)/k;
-      pdf_mul(xretb[k-1],xreix[k-1],xremi[k-1],xrerg[k-1],xrepk[k-1],
-              rndimtb,rndimix,rndimmi,rndimrg,rndimpk,
-              &ximtb[k],&ximix[k],&ximmi[k],&ximrg[k],&ximpk[k]);
-      pdf_mul(ximtb[k-1],ximix[k-1],ximmi[k-1],ximrg[k-1],ximpk[k-1],
-              rndretb,rndreix,rndremi,rndrerg,rndrepk,
-              &tmptb,&tmpix,&tmpmi,&tmprg,&tmppk);
-      pdf_inc(&ximtb[k],&ximix[k],&ximmi[k],&ximrg[k],&ximpk[k],
-              tmptb,tmpix,tmpmi,tmprg,tmppk);
-      tmptb = (double) k; tmpix = 0.0; tmpmi = 0.0; tmprg = 0.0; tmppk = 0.0;
-      pdf_div(ximtb[k],ximix[k],ximmi[k],ximrg[k],ximpk[k],
-              tmptb,tmpix,tmpmi,tmprg,tmppk,
-              &ximtb[k],&ximix[k],&ximmi[k],&ximrg[k],&ximpk[k]);
-      // yre[k] = (yre[k-1]*(-cr) - yim[k-1]*(-sr))/k;
-      pdf_mul(yretb[k-1],yreix[k-1],yremi[k-1],yrerg[k-1],yrepk[k-1],
-              -rndretb,-rndreix,-rndremi,-rndrerg,-rndrepk,
-              &yretb[k],&yreix[k],&yremi[k],&yrerg[k],&yrepk[k]);
-      pdf_mul(yimtb[k-1],yimix[k-1],yimmi[k-1],yimrg[k-1],yimpk[k-1],
-              -rndimtb,-rndimix,-rndimmi,-rndimrg,-rndimpk,
-              &tmptb,&tmpix,&tmpmi,&tmprg,&tmppk);
-      pdf_minus(&tmptb,&tmpix,&tmpmi,&tmprg,&tmppk);
-      pdf_inc(&yretb[k],&yreix[k],&yremi[k],&yrerg[k],&yrepk[k],
-              tmptb,tmpix,tmpmi,tmprg,tmppk);
-      tmptb = (double) k; tmpix = 0.0; tmpmi = 0.0; tmprg = 0.0; tmppk = 0.0;
-      pdf_div(yretb[k],yreix[k],yremi[k],yrerg[k],yrepk[k],
-              tmptb,tmpix,tmpmi,tmprg,tmppk,
-              &yretb[k],&yreix[k],&yremi[k],&yrerg[k],&yrepk[k]);
-      // yim[k] = (yre[k-1]*(-sr) + yim[k-1]*(-cr))/k;
-      pdf_mul(yretb[k-1],yreix[k-1],yremi[k-1],yrerg[k-1],yrepk[k-1],
-              -rndimtb,-rndimix,-rndimmi,-rndimrg,-rndimpk,
-              &yimtb[k],&yimix[k],&yimmi[k],&yimrg[k],&yimpk[k]);
-      pdf_mul(yimtb[k-1],yimix[k-1],yimmi[k-1],yimrg[k-1],yimpk[k-1],
-              -rndretb,-rndreix,-rndremi,-rndrerg,-rndrepk,
-              &tmptb,&tmpix,&tmpmi,&tmprg,&tmppk);
-      pdf_inc(&yimtb[k],&yimix[k],&yimmi[k],&yimrg[k],&yimpk[k],
-              tmptb,tmpix,tmpmi,tmprg,tmppk);
-      tmptb = (double) k; tmpix = 0.0; tmpmi = 0.0; tmprg = 0.0; tmppk = 0.0;
-      pdf_div(yimtb[k],yimix[k],yimmi[k],yimrg[k],yimpk[k],
-              tmptb,tmpix,tmpmi,tmprg,tmppk,
-              &yimtb[k],&yimix[k],&yimmi[k],&yimrg[k],&yimpk[k]);
-   }
+   random_cmplx5_exponentials
+      (deg,&rndretb,&rndreix,&rndremi,&rndrerg,&rndrepk,
+           &rndimtb,&rndimix,&rndimmi,&rndimrg,&rndimpk,
+           xretb,xreix,xremi,xrerg,xrepk,ximtb,ximix,ximmi,ximrg,ximpk,
+           yretb,yreix,yremi,yrerg,yrepk,yimtb,yimix,yimmi,yimrg,yimpk);
 
    CPU_cmplx5_product
       (deg,xretb,xreix,xremi,xrerg,xrepk,ximtb,ximix,ximmi,ximrg,ximpk,

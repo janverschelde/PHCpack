@@ -15,9 +15,9 @@ void dbl3_exponentials
  *
  * ON ENTRY :
  *   deg      degree to truncate the series;
- *   xhi      high part of some double double;
+ *   xhi      high part of some triple double;
  *   xmi      middle part of some triple double;
- *   xlo      low part of some double double;
+ *   xlo      low part of some triple double;
  *   pluxhi   space for deg+1 doubles for high parts of the exp(+x) series;
  *   pluxmi   space for deg+1 doubles for middle parts of the exp(+x) series;
  *   pluxlo   space for deg+1 doubles for low parts of the exp(+x) series;
@@ -126,7 +126,7 @@ void random_cmplx3_exponentials
  * DESCRIPTION :
  *   Returns power series for exp(x) and exp(-x),
  *   truncated to degree deg for a random complex triple double x.
- *   Parameters are the same as dbl2_exponentials,
+ *   Parameters are the same as cmplx3_exponentials,
  *   except that xrehi, xremi, xrelo, ximhi, ximmi, and ximlo
  *   are return parameters. */
 

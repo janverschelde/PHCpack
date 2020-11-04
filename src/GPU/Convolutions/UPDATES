@@ -4,6 +4,8 @@ Tue 3 Nov 2020 : new dbl_monomials_kernels.h and .cu defines the evaluation
   Bug fix in dbl2_convolutions_kernels.cu.  Factored out the generation of
   random power series, out of test_{dbl,dbl2,dbl3,dbl4}_convolutions.cpp
   into new {random,random2,random3,random4}_series.{h,cpp}.
+  Edited random3_series.h.  New random5_series.h and random5_series.cpp,
+  with code from test_dbl5_convolutions.cpp.
   
 Mon 2 Nov 2020 : new test_dbl_monomials.cpp to define the setup for the
   evaluation and differentiation of a monomial.  Added dbl_monomials_host.h

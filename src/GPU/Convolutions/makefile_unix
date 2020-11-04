@@ -80,6 +80,10 @@ random4_series.o:
 	@-echo ">>> compiling quad double random series generators ..."
 	$(gpp) -O3 -c -I$(MPD) random4_series.cpp
 
+random5_series.o:
+	@-echo ">>> compiling penta double random series generators ..."
+	$(gpp) -O3 -c -I$(MPD) random5_series.cpp
+
 double_double_functions.o:
 	@-echo ">>> compiling double double functions ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
@@ -212,13 +216,13 @@ test_dbl4_convolutions: double_double_functions.o quad_double_functions.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl5_convolutions: double_double_functions.o penta_double_functions.o \
-                        random_numbers.o random5_vectors.o \
+                        random_numbers.o random5_vectors.o random5_series.o \
                         dbl5_convolutions_host.o dbl5_convolutions_kernels.o \
                         test_dbl5_convolutions.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl5_convolutions test_dbl5_convolutions.o \
                   double_double_functions.o penta_double_functions.o \
-                  random_numbers.o random5_vectors.o \
+                  random_numbers.o random5_vectors.o random5_series.o \
                   dbl5_convolutions_host.o dbl5_convolutions_kernels.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
@@ -273,7 +277,8 @@ clean:
 	/bin/rm -f -r random4_vectors.o random4_series.o
 	/bin/rm -f -r dbl4_convolutions_kernels.o dbl4_convolutions_host.o
 	/bin/rm -f -r test_dbl4_convolutions.o test_dbl4_convolutions
-	/bin/rm -f -r penta_double_functions.o random5_vectors.o
+	/bin/rm -f -r penta_double_functions.o
+	/bin/rm -f -r random5_vectors.o random5_series.o
 	/bin/rm -f -r dbl5_convolutions_kernels.o dbl5_convolutions_host.o
 	/bin/rm -f -r test_dbl5_convolutions.o test_dbl5_convolutions
 	/bin/rm -f -r octo_double_functions.o random8_vectors.o
