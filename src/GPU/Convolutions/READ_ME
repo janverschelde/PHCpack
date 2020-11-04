@@ -35,6 +35,7 @@ random2_series             : generates series in double double precision
 random3_series             : generates series in triple double precision
 random4_series             : generates series in quad double precision
 random5_series             : generates series in penta double precision
+random8_series             : generates series in octo double precision
 -----------------------------------------------------------------------------
 dbl_convolutions_host      : convolutions of double vectors on host
 dbl_convolutions_kernels   : convolutions of double vectors on device

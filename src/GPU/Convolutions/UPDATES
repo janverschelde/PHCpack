@@ -1,3 +1,7 @@
+Wed 4 Nov 2020 : edited random4_series.h.  Extracted generation of random
+  power series from test_dbl8_convolutions.cpp into the new random8_series.h
+  and random8_series.cpp.
+
 Tue 3 Nov 2020 : new dbl_monomials_kernels.h and .cu defines the evaluation
   and differentiation of one product of variables at power series.
   In dbl_monomials_host.cpp, ignored the power series coefficients.

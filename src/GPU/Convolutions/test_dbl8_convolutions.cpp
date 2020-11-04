@@ -5,6 +5,7 @@
 #include <vector_types.h>
 #include "octo_double_functions.h"
 #include "random8_vectors.h"
+#include "random8_series.h"
 #include "dbl8_convolutions_host.h"
 #include "dbl8_convolutions_kernels.h"
 
@@ -430,57 +431,12 @@ void test_real_exponential ( int deg )
    double* zlololo_d = new double[deg+1];
    double rhihihi,rlohihi,rhilohi,rlolohi;
    double rhihilo,rlohilo,rhilolo,rlololo;
-   double fhihihi,flohihi,fhilohi,flolohi;
-   double fhihilo,flohilo,fhilolo,flololo;
 
-   random_octo_double
-      (&rhihihi,&rlohihi,&rhilohi,&rlolohi,
-       &rhihilo,&rlohilo,&rhilolo,&rlololo);
-
-   xhihihi[0] = 1.0; xlohihi[0] = 0.0; xhilohi[0] = 0.0; xlolohi[0] = 0.0;
-   xhihilo[0] = 0.0; xlohilo[0] = 0.0; xhilolo[0] = 0.0; xlololo[0] = 0.0;
-   yhihihi[0] = 1.0; ylohihi[0] = 0.0; yhilohi[0] = 0.0; ylolohi[0] = 0.0;
-   yhihilo[0] = 0.0; ylohilo[0] = 0.0; yhilolo[0] = 0.0; ylololo[0] = 0.0;
-   xhihihi[1] = rhihihi; xlohihi[1] = rlohihi;
-   xhilohi[1] = rhilohi; xlolohi[1] = rlolohi;
-   xhihilo[1] = rhihilo; xlohilo[1] = rlohilo;
-   xhilolo[1] = rhilolo; xlololo[1] = rlololo;
-   yhihihi[1] = -rhihihi; ylohihi[1] = -rlohihi;
-   yhilohi[1] = -rhilohi; ylolohi[1] = -rlolohi;
-   yhihilo[1] = -rhihilo; ylohilo[1] = -rlohilo;
-   yhilolo[1] = -rhilolo; ylololo[1] = -rlololo;
-
-   for(int k=2; k<=deg; k++)
-   {
-      odf_mul(xhihihi[k-1],xlohihi[k-1],xhilohi[k-1],xlolohi[k-1],
-              xhihilo[k-1],xlohilo[k-1],xhilolo[k-1],xlololo[k-1],
-              rhihihi,rlohihi,rhilohi,rlolohi,
-              rhihilo,rlohilo,rhilolo,rlololo,
-              &xhihihi[k],&xlohihi[k],&xhilohi[k],&xlolohi[k],
-              &xhihilo[k],&xlohilo[k],&xhilolo[k],&xlololo[k]);
-     // x[k] = x[k-1]*r
-      odf_mul(yhihihi[k-1],ylohihi[k-1],yhilohi[k-1],ylolohi[k-1],
-              yhihilo[k-1],ylohilo[k-1],yhilolo[k-1],ylololo[k-1],
-              -rhihihi,-rlohihi,-rhilohi,-rlolohi,
-              -rhihilo,-rlohilo,-rhilolo,-rlololo,
-              &yhihihi[k],&ylohihi[k],&yhilohi[k],&ylolohi[k],
-              &yhihilo[k],&ylohilo[k],&yhilolo[k],&ylololo[k]); 
-      // y[k] = y[k-1]*(-r)
-      fhihihi = (double) k; flohihi = 0.0; fhilohi = 0.0; flolohi = 0.0;
-      fhihilo = 0.0; flohilo = 0.0; fhilolo = 0.0; flololo = 0.0;
-      odf_div(xhihihi[k],xlohihi[k],xhilohi[k],xlolohi[k],
-              xhihilo[k],xlohilo[k],xhilolo[k],xlololo[k],
-              fhihihi,flohihi,fhilohi,flolohi,
-              fhihilo,flohilo,fhilolo,flololo,
-              &xhihihi[k],&xlohihi[k],&xhilohi[k],&xlolohi[k],
-              &xhihilo[k],&xlohilo[k],&xhilolo[k],&xlololo[k]);
-      odf_div(yhihihi[k],ylohihi[k],yhilohi[k],ylolohi[k],
-              yhihilo[k],ylohilo[k],yhilolo[k],ylololo[k],
-              fhihihi,flohihi,fhilohi,flolohi,
-              fhihilo,flohilo,fhilolo,flololo,
-              &yhihihi[k],&ylohihi[k],&yhilohi[k],&ylolohi[k],
-              &yhihilo[k],&ylohilo[k],&yhilolo[k],&ylololo[k]);
-   }
+   random_dbl8_exponentials
+      (deg,&rhihihi,&rlohihi,&rhilohi,&rlolohi,
+           &rhihilo,&rlohilo,&rhilolo,&rlololo,
+           xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
+           yhihihi,ylohihi,yhilohi,ylolohi,yhihilo,ylohilo,yhilolo,ylololo);
 
    CPU_dbl8_product
       (deg,xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
@@ -636,171 +592,20 @@ void test_complex_exponential ( int deg )
    double rndrehihilo,rndrelohilo,rndrehilolo,rndrelololo;
    double rndimhihihi,rndimlohihi,rndimhilohi,rndimlolohi;
    double rndimhihilo,rndimlohilo,rndimhilolo,rndimlololo;
-   double tmphihihi,tmplohihi,tmphilohi,tmplolohi;
-   double tmphihilo,tmplohilo,tmphilolo,tmplololo;
 
-   random_octo_double
-      (&rndrehihihi,&rndrelohihi,&rndrehilohi,&rndrelolohi,
-       &rndrehihilo,&rndrelohilo,&rndrehilolo,&rndrelololo);    // cos(a)
-
-   odf_sqr(rndrehihihi,rndrelohihi,rndrehilohi,rndrelolohi,
-           rndrehihilo,rndrelohilo,rndrehilolo,rndrelololo,
-           &tmphihihi,&tmplohihi,&tmphilohi,&tmplolohi,
-           &tmphihilo,&tmplohilo,&tmphilolo,&tmplololo);        // cos^2(a)
-   odf_minus(&tmphihihi,&tmplohihi,&tmphilohi,&tmplolohi,
-             &tmphihilo,&tmplohilo,&tmphilolo,&tmplololo);      // -cos^2(a)
-   odf_inc_d(&tmphihihi,&tmplohihi,&tmphilohi,&tmplolohi,
-             &tmphihilo,&tmplohilo,&tmphilolo,&tmplololo,1.0);  // 1-cos^2(a)
-   odf_sqrt(tmphihihi,tmplohihi,tmphilohi,tmplolohi,
-            tmphihilo,tmplohilo,tmphilolo,tmplololo,
-            &rndimhihihi,&rndimlohihi,&rndimhilohi,&rndimlolohi,
-            &rndimhihilo,&rndimlohilo,&rndimhilolo,&rndimlololo);
-   // sin is sqrt
-
-   xrehihihi[0] = 1.0; xrelohihi[0] = 0.0;
-   xrehilohi[0] = 0.0; xrelolohi[0] = 0.0;
-   xrehihilo[0] = 0.0; xrelohilo[0] = 0.0;
-   xrehilolo[0] = 0.0; xrelololo[0] = 0.0;
-   yrehihihi[0] = 1.0; yrelohihi[0] = 0.0;
-   yrehilohi[0] = 0.0; yrelolohi[0] = 0.0;
-   yrehihilo[0] = 0.0; yrelohilo[0] = 0.0;
-   yrehilolo[0] = 0.0; yrelololo[0] = 0.0;
-   ximhihihi[0] = 0.0; ximlohihi[0] = 0.0;
-   ximhilohi[0] = 0.0; ximlolohi[0] = 0.0;
-   ximhihilo[0] = 0.0; ximlohilo[0] = 0.0;
-   ximhilolo[0] = 0.0; ximlololo[0] = 0.0;
-   yimhihihi[0] = 0.0; yimlohihi[0] = 0.0;
-   yimhilohi[0] = 0.0; yimlolohi[0] = 0.0;
-   yimhihilo[0] = 0.0; yimlohilo[0] = 0.0;
-   yimhilolo[0] = 0.0; yimlololo[0] = 0.0;
-   xrehihihi[1] = rndrehihihi; xrelohihi[1] = rndrelohihi;
-   xrehilohi[1] = rndrehilohi; xrelolohi[1] = rndrelolohi;
-   xrehihilo[1] = rndrehihilo; xrelohilo[1] = rndrelohilo;
-   xrehilolo[1] = rndrehilolo; xrelololo[1] = rndrelololo;
-   ximhihihi[1] = rndimhihihi; ximlohihi[1] = rndimlohihi;
-   ximhilohi[1] = rndimhilohi; ximlolohi[1] = rndimlolohi;
-   ximhihilo[1] = rndimhihilo; ximlohilo[1] = rndimlohilo;
-   ximhilolo[1] = rndimhilolo; ximlololo[1] = rndimlololo;
-   yrehihihi[1] = -rndrehihihi; yrelohihi[1] = -rndrelohihi;
-   yrehilohi[1] = -rndrehilohi; yrelolohi[1] = -rndrelolohi;
-   yrehihilo[1] = -rndrehihilo; yrelohilo[1] = -rndrelohilo;
-   yrehilolo[1] = -rndrehilolo; yrelololo[1] = -rndrelololo;
-   yimhihihi[1] = -rndimhihihi; yimlohihi[1] = -rndimlohihi;
-   yimhilohi[1] = -rndimhilohi; yimlolohi[1] = -rndimlolohi;
-   yimhihilo[1] = -rndimhihilo; yimlohilo[1] = -rndimlohilo;
-   yimhilolo[1] = -rndimhilolo; yimlololo[1] = -rndimlololo;
-
-   for(int k=2; k<=deg; k++)
-   {
-      // xre[k] = (xre[k-1]*cr - xim[k-1]*sr)/k;
-      odf_mul(xrehihihi[k-1],xrelohihi[k-1],xrehilohi[k-1],xrelolohi[k-1],
-              xrehihilo[k-1],xrelohilo[k-1],xrehilolo[k-1],xrelololo[k-1],
-              rndrehihihi,rndrelohihi,rndrehilohi,rndrelolohi,
-              rndrehihilo,rndrelohilo,rndrehilolo,rndrelololo,
-              &xrehihihi[k],&xrelohihi[k],&xrehilohi[k],&xrelolohi[k],
-              &xrehihilo[k],&xrelohilo[k],&xrehilolo[k],&xrelololo[k]);
-      odf_mul(ximhihihi[k-1],ximlohihi[k-1],ximhilohi[k-1],ximlolohi[k-1],
-              ximhihilo[k-1],ximlohilo[k-1],ximhilolo[k-1],ximlololo[k-1],
-              rndimhihihi,rndimlohihi,rndimhilohi,rndimlolohi,
-              rndimhihilo,rndimlohilo,rndimhilolo,rndimlololo,
-              &tmphihihi,&tmplohihi,&tmphilohi,&tmplolohi,
-              &tmphihilo,&tmplohilo,&tmphilolo,&tmplololo);
-      odf_minus(&tmphihihi,&tmplohihi,&tmphilohi,&tmplolohi,
-                &tmphihilo,&tmplohilo,&tmphilolo,&tmplololo);
-      odf_inc(&xrehihihi[k],&xrelohihi[k],&xrehilohi[k],&xrelolohi[k],
-              &xrehihilo[k],&xrelohilo[k],&xrehilolo[k],&xrelololo[k],
-              tmphihihi,tmplohihi,tmphilohi,tmplolohi,
-              tmphihilo,tmplohilo,tmphilolo,tmplololo);
-      tmphihihi = (double) k; tmplohihi = 0.0; tmphilohi = 0.0;
-      tmplolohi = 0.0; tmphihilo = 0.0; tmplohilo = 0.0;
-      tmphilolo = 0.0; tmplololo = 0.0;
-      odf_div(xrehihihi[k],xrelohihi[k],xrehilohi[k],xrelolohi[k],
-              xrehihilo[k],xrelohilo[k],xrehilolo[k],xrelololo[k],
-              tmphihihi,tmplohihi,tmphilohi,tmplolohi,
-              tmphihilo,tmplohilo,tmphilolo,tmplololo,
-              &xrehihihi[k],&xrelohihi[k],&xrehilohi[k],&xrelolohi[k],
-              &xrehihilo[k],&xrelohilo[k],&xrehilolo[k],&xrelololo[k]);
-      // xim[k] = (xre[k-1]*sr + xim[k-1]*cr)/k;
-      odf_mul(xrehihihi[k-1],xrelohihi[k-1],xrehilohi[k-1],xrelolohi[k-1],
-              xrehihilo[k-1],xrelohilo[k-1],xrehilolo[k-1],xrelololo[k-1],
-              rndimhihihi,rndimlohihi,rndimhilohi,rndimlolohi,
-              rndimhihilo,rndimlohilo,rndimhilolo,rndimlololo,
-              &ximhihihi[k],&ximlohihi[k],&ximhilohi[k],&ximlolohi[k],
-              &ximhihilo[k],&ximlohilo[k],&ximhilolo[k],&ximlololo[k]);
-      odf_mul(ximhihihi[k-1],ximlohihi[k-1],ximhilohi[k-1],ximlolohi[k-1],
-              ximhihilo[k-1],ximlohilo[k-1],ximhilolo[k-1],ximlololo[k-1],
-              rndrehihihi,rndrelohihi,rndrehilohi,rndrelolohi,
-              rndrehihilo,rndrelohilo,rndrehilolo,rndrelololo,
-              &tmphihihi,&tmplohihi,&tmphilohi,&tmplolohi,
-              &tmphihilo,&tmplohilo,&tmphilolo,&tmplololo);
-      odf_inc(&ximhihihi[k],&ximlohihi[k],&ximhilohi[k],&ximlolohi[k],
-              &ximhihilo[k],&ximlohilo[k],&ximhilolo[k],&ximlololo[k],
-              tmphihihi,tmplohihi,tmphilohi,tmplolohi,
-              tmphihilo,tmplohilo,tmphilolo,tmplololo);
-      tmphihihi = (double) k; tmplohihi = 0.0; tmphilohi = 0.0;
-      tmplolohi = 0.0; tmphihilo = 0.0; tmplohilo = 0.0;
-      tmphilolo = 0.0; tmplololo = 0.0;
-      odf_div(ximhihihi[k],ximlohihi[k],ximhilohi[k],ximlolohi[k],
-              ximhihilo[k],ximlohilo[k],ximhilolo[k],ximlololo[k],
-              tmphihihi,tmplohihi,tmphilohi,tmplolohi,
-              tmphihilo,tmplohilo,tmphilolo,tmplololo,
-              &ximhihihi[k],&ximlohihi[k],&ximhilohi[k],&ximlolohi[k],
-              &ximhihilo[k],&ximlohilo[k],&ximhilolo[k],&ximlololo[k]);
-      // yre[k] = (yre[k-1]*(-cr) - yim[k-1]*(-sr))/k;
-      odf_mul(yrehihihi[k-1],yrelohihi[k-1],yrehilohi[k-1],yrelolohi[k-1],
-              yrehihilo[k-1],yrelohilo[k-1],yrehilolo[k-1],yrelololo[k-1],
-              -rndrehihihi,-rndrelohihi,-rndrehilohi,-rndrelolohi,
-              -rndrehihilo,-rndrelohilo,-rndrehilolo,-rndrelololo,
-              &yrehihihi[k],&yrelohihi[k],&yrehilohi[k],&yrelolohi[k],
-              &yrehihilo[k],&yrelohilo[k],&yrehilolo[k],&yrelololo[k]);
-      odf_mul(yimhihihi[k-1],yimlohihi[k-1],yimhilohi[k-1],yimlolohi[k-1],
-              yimhihilo[k-1],yimlohilo[k-1],yimhilolo[k-1],yimlololo[k-1],
-              -rndimhihihi,-rndimlohihi,-rndimhilohi,-rndimlolohi,
-              -rndimhihilo,-rndimlohilo,-rndimhilolo,-rndimlololo,
-              &tmphihihi,&tmplohihi,&tmphilohi,&tmplolohi,
-              &tmphihilo,&tmplohilo,&tmphilolo,&tmplololo);
-      odf_minus(&tmphihihi,&tmplohihi,&tmphilohi,&tmplolohi,
-                &tmphihilo,&tmplohilo,&tmphilolo,&tmplololo);
-      odf_inc(&yrehihihi[k],&yrelohihi[k],&yrehilohi[k],&yrelolohi[k],
-              &yrehihilo[k],&yrelohilo[k],&yrehilolo[k],&yrelololo[k],
-              tmphihihi,tmplohihi,tmphilohi,tmplolohi,
-              tmphihilo,tmplohilo,tmphilolo,tmplololo);
-      tmphihihi = (double) k; tmplohihi = 0.0; tmphilohi = 0.0;
-      tmplolohi = 0.0; tmphihilo = 0.0; tmplohilo = 0.0;
-      tmphilolo = 0.0; tmplololo = 0.0;
-      odf_div(yrehihihi[k],yrelohihi[k],yrehilohi[k],yrelolohi[k],
-              yrehihilo[k],yrelohilo[k],yrehilolo[k],yrelololo[k],
-              tmphihihi,tmplohihi,tmphilohi,tmplolohi,
-              tmphihilo,tmplohilo,tmphilolo,tmplololo,
-              &yrehihihi[k],&yrelohihi[k],&yrehilohi[k],&yrelolohi[k],
-              &yrehihilo[k],&yrelohilo[k],&yrehilolo[k],&yrelololo[k]);
-      // yim[k] = (yre[k-1]*(-sr) + yim[k-1]*(-cr))/k;
-      odf_mul(yrehihihi[k-1],yrelohihi[k-1],yrehilohi[k-1],yrelolohi[k-1],
-              yrehihilo[k-1],yrelohilo[k-1],yrehilolo[k-1],yrelololo[k-1],
-              -rndimhihihi,-rndimlohihi,-rndimhilohi,-rndimlolohi,
-              -rndimhihilo,-rndimlohilo,-rndimhilolo,-rndimlololo,
-              &yimhihihi[k],&yimlohihi[k],&yimhilohi[k],&yimlolohi[k],
-              &yimhihilo[k],&yimlohilo[k],&yimhilolo[k],&yimlololo[k]);
-      odf_mul(yimhihihi[k-1],yimlohihi[k-1],yimhilohi[k-1],yimlolohi[k-1],
-              yimhihilo[k-1],yimlohilo[k-1],yimhilolo[k-1],yimlololo[k-1],
-              -rndrehihihi,-rndrelohihi,-rndrehilohi,-rndrelolohi,
-              -rndrehihilo,-rndrelohilo,-rndrehilolo,-rndrelololo,
-              &tmphihihi,&tmplohihi,&tmphilohi,&tmplolohi,
-              &tmphihilo,&tmplohilo,&tmphilolo,&tmplololo);
-      odf_inc(&yimhihihi[k],&yimlohihi[k],&yimhilohi[k],&yimlolohi[k],
-              &yimhihilo[k],&yimlohilo[k],&yimhilolo[k],&yimlololo[k],
-              tmphihihi,tmplohihi,tmphilohi,tmplolohi,
-              tmphihilo,tmplohilo,tmphilolo,tmplololo);
-      tmphihihi = (double) k; tmplohihi = 0.0; tmphilohi = 0.0;
-      tmplolohi = 0.0; tmphihilo = 0.0; tmplohilo = 0.0;
-      tmphilolo = 0.0; tmplololo = 0.0;
-      odf_div(yimhihihi[k],yimlohihi[k],yimhilohi[k],yimlolohi[k],
-              yimhihilo[k],yimlohilo[k],yimhilolo[k],yimlololo[k],
-              tmphihihi,tmplohihi,tmphilohi,tmplolohi,
-              tmphihilo,tmplohilo,tmphilolo,tmplololo,
-              &yimhihihi[k],&yimlohihi[k],&yimhilohi[k],&yimlolohi[k],
-              &yimhihilo[k],&yimlohilo[k],&yimhilolo[k],&yimlololo[k]);
-   }
+   random_cmplx8_exponentials
+      (deg,&rndrehihihi,&rndrelohihi,&rndrehilohi,&rndrelolohi,
+           &rndrehihilo,&rndrelohilo,&rndrehilolo,&rndrelololo,
+           &rndimhihihi,&rndimlohihi,&rndimhilohi,&rndimlolohi,
+           &rndimhihilo,&rndimlohilo,&rndimhilolo,&rndimlololo,
+           xrehihihi,xrelohihi,xrehilohi,xrelolohi,
+           xrehihilo,xrelohilo,xrehilolo,xrelololo,
+           ximhihihi,ximlohihi,ximhilohi,ximlolohi,
+           ximhihilo,ximlohilo,ximhilolo,ximlololo,
+           yrehihihi,yrelohihi,yrehilohi,yrelolohi,
+           yrehihilo,yrelohilo,yrehilolo,yrelololo,
+           yimhihihi,yimlohihi,yimhilohi,yimlolohi,
+           yimhihilo,yimlohilo,yimhilolo,yimlololo);
 
    CPU_cmplx8_product
       (deg,xrehihihi,xrelohihi,xrehilohi,xrelolohi,

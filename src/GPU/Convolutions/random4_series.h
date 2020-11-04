@@ -69,7 +69,7 @@ void cmplx4_exponentials
 /*
  * DESCRIPTION :
  *   Returns power series for exp(x) and exp(-x),
- *   with complex coefficients in double double precision.
+ *   with complex coefficients in quad double precision.
  *
  * ON ENTRY :
  *   deg         degree to truncate the series;
