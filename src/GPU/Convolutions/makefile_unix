@@ -64,6 +64,22 @@ random10_vectors.o:
 	@-echo ">>> compiling deca double random vector generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/random10_vectors.cpp
 
+random_series.o:
+	@-echo ">>> compiling random series generators ..."
+	$(gpp) -O3 -c -I$(MPD) random_series.cpp
+
+random2_series.o:
+	@-echo ">>> compiling double double random series generators ..."
+	$(gpp) -O3 -c -I$(MPD) random2_series.cpp
+
+random3_series.o:
+	@-echo ">>> compiling triple double random series generators ..."
+	$(gpp) -O3 -c -I$(MPD) random3_series.cpp
+
+random4_series.o:
+	@-echo ">>> compiling quad double random series generators ..."
+	$(gpp) -O3 -c -I$(MPD) random4_series.cpp
+
 double_double_functions.o:
 	@-echo ">>> compiling double double functions ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
@@ -157,40 +173,41 @@ test_dbl_monomials.o:
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl_monomials.cpp
 
 test_dbl_convolutions: dbl_convolutions_kernels.o dbl_convolutions_host.o \
-                       random_numbers.o test_dbl_convolutions.o
+                       random_numbers.o random_series.o \
+                       test_dbl_convolutions.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_convolutions test_dbl_convolutions.o \
-                  dbl_convolutions_host.o random_numbers.o \
+                  dbl_convolutions_host.o random_numbers.o random_series.o \
                   dbl_convolutions_kernels.o -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl2_convolutions: double_double_functions.o dbl2_convolutions_host.o \
-                        random_numbers.o random2_vectors.o \
+                        random_numbers.o random2_vectors.o random2_series.o \
                         dbl2_convolutions_kernels.o test_dbl2_convolutions.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_convolutions test_dbl2_convolutions.o \
-                  random_numbers.o random2_vectors.o \
+                  random_numbers.o random2_vectors.o random2_series.o \
                   double_double_functions.o dbl2_convolutions_host.o \
                   dbl2_convolutions_kernels.o -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl3_convolutions: double_double_functions.o triple_double_functions.o \
-                        random_numbers.o random3_vectors.o \
+                        random_numbers.o random3_vectors.o random3_series.o  \
                         dbl3_convolutions_host.o dbl3_convolutions_kernels.o \
                         test_dbl3_convolutions.o 
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl3_convolutions test_dbl3_convolutions.o \
                   double_double_functions.o triple_double_functions.o \
-                  random_numbers.o random3_vectors.o \
+                  random_numbers.o random3_vectors.o random3_series.o \
                   dbl3_convolutions_host.o dbl3_convolutions_kernels.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl4_convolutions: double_double_functions.o quad_double_functions.o \
-                        random_numbers.o random4_vectors.o \
+                        random_numbers.o random4_vectors.o random4_series.o \
                         dbl4_convolutions_host.o dbl4_convolutions_kernels.o \
                         test_dbl4_convolutions.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl4_convolutions test_dbl4_convolutions.o \
                   double_double_functions.o quad_double_functions.o \
-                  random_numbers.o random4_vectors.o \
+                  random_numbers.o random4_vectors.o random4_series.o \
                   dbl4_convolutions_host.o dbl4_convolutions_kernels.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
@@ -241,17 +258,19 @@ test_dbl_monomials: random_numbers.o dbl_convolutions_host.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
 clean:
-	/bin/rm -f -r random_numbers.o
+	/bin/rm -f -r random_numbers.o random_series.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_convolutions_kernels.o
 	/bin/rm -f -r test_dbl_convolutions.o test_dbl_convolutions
 	/bin/rm -f -r double_double_functions.o
-	/bin/rm -f -r random2_vectors.o random3_vectors.o
+	/bin/rm -f -r random2_vectors.o random2_series.o
 	/bin/rm -f -r dbl2_convolutions_host.o dbl2_convolutions_kernels.o
 	/bin/rm -f -r test_dbl2_convolutions.o test_dbl2_convolutions
 	/bin/rm -f -r triple_double_functions.o
+	/bin/rm -f -r random3_vectors.o random3_series.o
 	/bin/rm -f -r dbl3_convolutions_host.o dbl3_convolutions_kernels.o
 	/bin/rm -f -r test_dbl3_convolutions.o test_dbl3_convolutions
-	/bin/rm -f -r quad_double_functions.o random4_vectors.o
+	/bin/rm -f -r quad_double_functions.o
+	/bin/rm -f -r random4_vectors.o random4_series.o
 	/bin/rm -f -r dbl4_convolutions_kernels.o dbl4_convolutions_host.o
 	/bin/rm -f -r test_dbl4_convolutions.o test_dbl4_convolutions
 	/bin/rm -f -r penta_double_functions.o random5_vectors.o

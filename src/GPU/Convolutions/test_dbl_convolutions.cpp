@@ -2,9 +2,8 @@
 
 #include <iostream>
 #include <iomanip>
-#include <cmath>
 #include <vector_types.h>
-#include "random_numbers.h"
+#include "random_series.h"
 #include "dbl_convolutions_host.h"
 #include "dbl_convolutions_kernels.h"
 
@@ -136,15 +135,9 @@ void test_real_exponential ( int deg )
    double *y = new double[deg+1];
    double *z_h = new double[deg+1];
    double *z_d = new double[deg+1];
-   double r = random_double();
+   double r;
 
-   x[0] = 1.0; y[0] = 1.0;
-
-   for(int k=1; k<=deg; k++)
-   {
-      x[k] = x[k-1]*r/k;
-      y[k] = y[k-1]*(-r)/k;
-   }
+   random_dbl_exponentials(deg,&r,x,y);
 
    CPU_dbl_product(deg,x,y,z_h);
 
@@ -175,20 +168,9 @@ void test_complex_exponential ( int deg )
    double *zim_h = new double[deg+1];
    double *zre_d = new double[deg+1];
    double *zim_d = new double[deg+1];
-   double r = random_angle();
-   double cr = cos(r);
-   double sr = sin(r);
+   double cr,sr;
 
-   xre[0] = 1.0; xim[0] = 0.0; yre[0] = 1.0; yim[0] = 0.0;
-   xre[1] = cr;  xim[1] = sr;  yre[1] = -cr; yim[1] = -sr;
-
-   for(int k=2; k<=deg; k++)
-   {
-      xre[k] = (xre[k-1]*cr - xim[k-1]*sr)/k;
-      xim[k] = (xre[k-1]*sr + xim[k-1]*cr)/k;
-      yre[k] = (yre[k-1]*(-cr) - yim[k-1]*(-sr))/k;
-      yim[k] = (yre[k-1]*(-sr) + yim[k-1]*(-cr))/k;
-   }
+   random_cmplx_exponentials(deg,&cr,&sr,xre,xim,yre,yim);
 
    CPU_cmplx_product(deg,xre,xim,yre,yim,zre_h,zim_h);
 

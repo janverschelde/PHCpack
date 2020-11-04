@@ -3,7 +3,7 @@
 #include <iostream>
 #include <iomanip>
 #include <vector_types.h>
-#include "random2_vectors.h"
+#include "random2_series.h"
 #include "double_double_functions.h"
 #include "dbl2_convolutions_host.h"
 #include "dbl2_convolutions_kernels.h"
@@ -143,6 +143,8 @@ void test_real_exponential ( int deg )
    double rhi,rlo;
    double fhi,flo;
 
+   random_dbl2_exponentials(deg,&rhi,&rlo,xhi,xlo,yhi,ylo);
+/*
    random_double_double(&rhi,&rlo);
 
    xhi[0] = 1.0; xlo[0] = 0.0; yhi[0] = 1.0; ylo[0] = 0.0;
@@ -157,6 +159,7 @@ void test_real_exponential ( int deg )
       ddf_div(xhi[k],xlo[k],fhi,flo,&xhi[k],&xlo[k]);
       ddf_div(yhi[k],ylo[k],fhi,flo,&yhi[k],&ylo[k]);
    }
+ */
 
    CPU_dbl2_product(deg,xhi,xlo,yhi,ylo,zhi_h,zlo_h);
 
@@ -207,53 +210,10 @@ void test_complex_exponential ( int deg )
    double* zimlo_d = new double[deg+1];
    double rndrehi,rndrelo;
    double rndimhi,rndimlo;
-   double tmphi,tmplo;
 
-   random_double_double(&rndrehi,&rndrelo);       // cos(a)
-
-   ddf_sqr(rndrehi,rndrelo,&tmphi,&tmplo);        // cos^2(a)
-   ddf_minus(&tmphi,&tmplo);                      // -cos^2(a)
-   ddf_inc_d(&tmphi,&tmplo,1.0);                  // 1-cos^2(a)
-   ddf_sqrt(tmphi,tmplo,&rndimhi,&rndimlo);       // sin is sqrt
-
-   xrehi[0] = 1.0; xrelo[0] = 0.0;
-   yrehi[0] = 1.0; yrelo[0] = 0.0;
-   ximhi[0] = 0.0; ximlo[0] = 0.0;
-   yimhi[0] = 0.0; yimlo[0] = 0.0;
-   xrehi[1] = rndrehi; xrelo[1] = rndrelo;
-   ximhi[1] = rndimhi; ximlo[1] = rndimlo;
-   yrehi[1] = -rndrehi; yrelo[1] = -rndrelo;
-   yimhi[1] = -rndimhi; yimlo[1] = -rndimlo;
-
-   for(int k=2; k<=deg; k++)
-   {
-      // xre[k] = (xre[k-1]*cr - xim[k-1]*sr)/k;
-      ddf_mul(xrehi[k-1],xrelo[k-1],rndrehi,rndrelo,&xrehi[k],&xrelo[k]);
-      ddf_mul(ximhi[k-1],ximlo[k-1],rndimhi,rndimlo,&tmphi,&tmplo);
-      ddf_minus(&tmphi,&tmplo);
-      ddf_inc(&xrehi[k],&xrelo[k],tmphi,tmplo);
-      tmphi = (double) k; tmplo = 0.0;
-      ddf_div(xrehi[k],xrelo[k],tmphi,tmplo,&xrehi[k],&xrelo[k]);
-      // xim[k] = (xre[k-1]*sr + xim[k-1]*cr)/k;
-      ddf_mul(xrehi[k-1],xrelo[k-1],rndimhi,rndimlo,&ximhi[k],&ximlo[k]);
-      ddf_mul(ximhi[k-1],ximlo[k-1],rndrehi,rndrelo,&tmphi,&tmplo);
-      ddf_inc(&ximhi[k],&ximlo[k],tmphi,tmplo);
-      tmphi = (double) k; tmplo = 0.0;
-      ddf_div(ximhi[k],ximlo[k],tmphi,tmplo,&ximhi[k],&ximlo[k]);
-      // yre[k] = (yre[k-1]*(-cr) - yim[k-1]*(-sr))/k;
-      ddf_mul(yrehi[k-1],yrelo[k-1],-rndrehi,-rndrelo,&yrehi[k],&yrelo[k]);
-      ddf_mul(yimhi[k-1],yimlo[k-1],-rndimhi,-rndimlo,&tmphi,&tmplo);
-      ddf_minus(&tmphi,&tmplo);
-      ddf_inc(&yrehi[k],&yrelo[k],tmphi,tmplo);
-      tmphi = (double) k; tmplo = 0.0;
-      ddf_div(yrehi[k],yrelo[k],tmphi,tmplo,&yrehi[k],&yrelo[k]);
-      // yim[k] = (yre[k-1]*(-sr) + yim[k-1]*(-cr))/k;
-      ddf_mul(yrehi[k-1],yrelo[k-1],-rndimhi,-rndimlo,&yimhi[k],&yimlo[k]);
-      ddf_mul(yimhi[k-1],yimlo[k-1],-rndrehi,-rndrelo,&tmphi,&tmplo);
-      ddf_inc(&yimhi[k],&yimlo[k],tmphi,tmplo);
-      tmphi = (double) k; tmplo = 0.0;
-      ddf_div(yimhi[k],yimlo[k],tmphi,tmplo,&yimhi[k],&yimlo[k]);
-   }
+   random_cmplx2_exponentials
+      (deg,&rndrehi,&rndrelo,&rndimhi,&rndimlo,
+       xrehi,xrelo,ximhi,ximlo,yrehi,yrelo,yimhi,yimlo);
 
    CPU_cmplx2_product(deg,xrehi,xrelo,ximhi,ximlo,
                           yrehi,yrelo,yimhi,yimlo,

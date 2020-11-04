@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <vector_types.h>
 #include "triple_double_functions.h"
-#include "random3_vectors.h"
+#include "random3_series.h"
 #include "dbl3_convolutions_host.h"
 #include "dbl3_convolutions_kernels.h"
 
@@ -182,26 +182,8 @@ void test_real_exponential ( int deg )
    double *zmi_d = new double[deg+1];
    double *zlo_d = new double[deg+1];
    double rhi,rmi,rlo;
-   double fhi,fmi,flo;
 
-   random_triple_double(&rhi,&rmi,&rlo);
-
-   xhi[0] = 1.0; xmi[0] = 0.0; xlo[0] = 0.0;
-   yhi[0] = 1.0; ymi[0] = 0.0; ylo[0] = 0.0;
-   xhi[1] = rhi; xmi[1] = rmi; xlo[1] = rlo;
-   yhi[1] = -rhi; ymi[1] = -rmi; ylo[1] = -rlo;
-
-   for(int k=2; k<=deg; k++)
-   {
-      tdf_mul(xhi[k-1],xmi[k-1],xlo[k-1],rhi,rmi,rlo,
-              &xhi[k],&xmi[k],&xlo[k]);             // x[k] = x[k-1]*r;
-      tdf_mul(yhi[k-1],ymi[k-1],ylo[k-1],-rhi,-rmi,-rlo,
-              &yhi[k],&ymi[k],&ylo[k]); 
-      // y[k] = y[k-1]*(-r);
-      fhi = (double) k; fmi = 0.0; flo = 0.0;
-      tdf_div(xhi[k],xmi[k],xlo[k],fhi,fmi,flo,&xhi[k],&xmi[k],&xlo[k]);
-      tdf_div(yhi[k],ymi[k],ylo[k],fhi,fmi,flo,&yhi[k],&ymi[k],&ylo[k]);
-   }
+   random_dbl3_exponentials(deg,&rhi,&rmi,&rlo,xhi,xmi,xlo,yhi,ymi,ylo);
 
    CPU_dbl3_product(deg,xhi,xmi,xlo,yhi,ymi,ylo,zhi_h,zmi_h,zlo_h);
 
@@ -268,63 +250,10 @@ void test_complex_exponential ( int deg )
    double rndimhi,rndimmi,rndimlo;
    double tmphi,tmpmi,tmplo;
 
-   random_triple_double(&rndrehi,&rndremi,&rndrelo);       // cos(a)
-
-   tdf_sqr(rndrehi,rndremi,rndrelo,&tmphi,&tmpmi,&tmplo);  // cos^2(a)
-   tdf_minus(&tmphi,&tmpmi,&tmplo);                        // -cos^2(a)
-   tdf_inc_d(&tmphi,&tmpmi,&tmplo,1.0);                    // 1-cos^2(a)
-   tdf_sqrt(tmphi,tmpmi,tmplo,&rndimhi,&rndimmi,&rndimlo); // sin is sqrt
-
-   xrehi[0] = 1.0; xremi[0] = 0.0; xrelo[0] = 0.0;
-   yrehi[0] = 1.0; yremi[0] = 0.0; yrelo[0] = 0.0;
-   ximhi[0] = 0.0; ximmi[0] = 0.0; ximlo[0] = 0.0;
-   yimhi[0] = 0.0; yimmi[0] = 0.0; yimlo[0] = 0.0;
-   xrehi[1] = rndrehi; xremi[1] = rndremi; xrelo[1] = rndrelo;
-   ximhi[1] = rndimhi; ximmi[1] = rndimmi; ximlo[1] = rndimlo;
-   yrehi[1] = -rndrehi; yremi[1] = -rndremi; yrelo[1] = -rndrelo;
-   yimhi[1] = -rndimhi; yimmi[1] = -rndimmi; yimlo[1] = -rndimlo;
-
-   for(int k=2; k<=deg; k++)
-   {
-      // xre[k] = (xre[k-1]*cr - xim[k-1]*sr)/k;
-      tdf_mul(xrehi[k-1],xremi[k-1],xrelo[k-1],rndrehi,rndremi,rndrelo,
-              &xrehi[k],&xremi[k],&xrelo[k]);
-      tdf_mul(ximhi[k-1],ximmi[k-1],ximlo[k-1],rndimhi,rndimmi,rndimlo,
-              &tmphi,&tmpmi,&tmplo);
-      tdf_minus(&tmphi,&tmpmi,&tmplo);
-      tdf_inc(&xrehi[k],&xremi[k],&xrelo[k],tmphi,tmpmi,tmplo);
-      tmphi = (double) k; tmpmi = 0.0; tmplo = 0.0;
-      tdf_div(xrehi[k],xremi[k],xrelo[k],tmphi,tmpmi,tmplo,
-              &xrehi[k],&xremi[k],&xrelo[k]);
-      // xim[k] = (xre[k-1]*sr + xim[k-1]*cr)/k;
-      tdf_mul(xrehi[k-1],xremi[k-1],xrelo[k-1],rndimhi,rndimmi,rndimlo,
-              &ximhi[k],&ximmi[k],&ximlo[k]);
-      tdf_mul(ximhi[k-1],ximmi[k-1],ximlo[k-1],rndrehi,rndremi,rndrelo,
-              &tmphi,&tmpmi,&tmplo);
-      tdf_inc(&ximhi[k],&ximmi[k],&ximlo[k],tmphi,tmpmi,tmplo);
-      tmphi = (double) k; tmpmi = 0.0; tmplo = 0.0;
-      tdf_div(ximhi[k],ximmi[k],ximlo[k],tmphi,tmpmi,tmplo,
-              &ximhi[k],&ximmi[k],&ximlo[k]);
-      // yre[k] = (yre[k-1]*(-cr) - yim[k-1]*(-sr))/k;
-      tdf_mul(yrehi[k-1],yremi[k-1],yrelo[k-1],-rndrehi,-rndremi,-rndrelo,
-              &yrehi[k],&yremi[k],&yrelo[k]);
-      tdf_mul(yimhi[k-1],yimmi[k-1],yimlo[k-1],-rndimhi,-rndimmi,-rndimlo,
-              &tmphi,&tmpmi,&tmplo);
-      tdf_minus(&tmphi,&tmpmi,&tmplo);
-      tdf_inc(&yrehi[k],&yremi[k],&yrelo[k],tmphi,tmpmi,tmplo);
-      tmphi = (double) k; tmpmi = 0.0; tmplo = 0.0;
-      tdf_div(yrehi[k],yremi[k],yrelo[k],tmphi,tmpmi,tmplo,
-              &yrehi[k],&yremi[k],&yrelo[k]);
-      // yim[k] = (yre[k-1]*(-sr) + yim[k-1]*(-cr))/k;
-      tdf_mul(yrehi[k-1],yremi[k-1],yrelo[k-1],-rndimhi,-rndimmi,-rndimlo,
-              &yimhi[k],&yimmi[k],&yimlo[k]);
-      tdf_mul(yimhi[k-1],yimmi[k-1],yimlo[k-1],-rndrehi,-rndremi,-rndrelo,
-              &tmphi,&tmpmi,&tmplo);
-      tdf_inc(&yimhi[k],&yimmi[k],&yimlo[k],tmphi,tmpmi,tmplo);
-      tmphi = (double) k; tmpmi = 0.0; tmplo = 0.0;
-      tdf_div(yimhi[k],yimmi[k],yimlo[k],tmphi,tmpmi,tmplo,
-              &yimhi[k],&yimmi[k],&yimlo[k]);
-   }
+   random_cmplx3_exponentials
+      (deg,&rndrehi,&rndremi,&rndrelo,&rndimhi,&rndimmi,&rndimlo,
+           xrehi,xremi,xrelo,ximhi,ximmi,ximlo,
+           yrehi,yremi,yrelo,yimhi,yimmi,yimlo);
 
    CPU_cmplx3_product(deg,xrehi,xremi,xrelo,ximhi,ximmi,ximlo,
                           yrehi,yremi,yrelo,yimhi,yimmi,yimlo,
