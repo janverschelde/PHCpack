@@ -83,61 +83,97 @@ void cmplx5_exponentials
  *
  * ON ENTRY :
  *   deg       degree to truncate the series;
- *   xretb     high double of the real part of some complex number;
- *   xremi     middle double of the real part of some complex number;
- *   xrelo     low double of the real part of some complex number;
- *   ximtb     high double of the imaginary part of some complex number;
- *   ximmi     middle double of the imaginary part of some complex number;
- *   ximpk     low double of the imaginary part of some complex number;
- *   pluxretb  space for deg+1 doubles for the high doubles of the real parts
- *             of the exp(+x) series;
+ *   xretb     highest double of the real part of a complex number;
+ *   xreix     second highest double of the real part of a complex number;
+ *   xremi     middle double of the real part of a complex number;
+ *   xrerg     second lowest double of the real part of a complex number;
+ *   xrelo     lowest double of the real part of a complex number;
+ *   ximtb     highest double of the imaginary part of a complex number;
+ *   ximix     second highest double of the imaginary part of a complex number;
+ *   ximmi     middle double of the imaginary part of a complex number;
+ *   ximrg     second lowest double of the imaginary part of a complex number;
+ *   ximpk     lowest double of the imaginary part of a complex number;
+ *   pluxretb  space for deg+1 doubles for the highest doubles of the real
+ *             parts of the exp(+x) series;
+ *   pluxreix  space for deg+1 doubles for the second highest doubles of
+ *             the real parts of the exp(+x) series;
  *   pluxremi  space for deg+1 doubles for the middle doubles of the real
  *             parts of the exp(+x) series;
- *   pluxrelo  space for deg+1 doubles for the low doubles of the real parts
- *             of the exp(+x) series;
- *   pluximtb  space for deg+1 doubles for the high doubles of the imaginary
+ *   pluxrerg  space for deg+1 doubles for the second lowest doubles of the
+ *             real parts of the exp(+x) series;
+ *   pluxrelo  space for deg+1 doubles for the lowest doubles of the real
  *             parts of the exp(+x) series;
+ *   pluximtb  space for deg+1 doubles for the highest doubles of the
+ *             imaginary parts of the exp(+x) series;
+ *   pluximix  space for deg+1 doubles for the second highest doubles of the
+ *             imaginary parts of the exp(+x) series;
  *   pluximmi  space for deg+1 doubles for the middle doubles of the imaginary
  *             parts of the exp(+x) series;
- *   pluximpk  space for deg+1 doubles for the low doubles of the imaginary
+ *   pluximrg  space for deg+1 doubles for the second lowest doubles of the
+ *             imaginary parts of the exp(+x) series;
+ *   pluximpk  space for deg+1 doubles for the lowest doubles of the imaginary
  *             parts of the exp(+x) series;
- *   minxretb  space for deg+1 doubles for the high doubles of the real parts
- *             of the exp(-x) series;
+ *   minxretb  space for deg+1 doubles for the highest doubles of the real
+ *             parts of the exp(-x) series;
+ *   minxreix  space for deg+1 doubles for the second highest doubles of the
+ *             real parts of the exp(-x) series;
  *   minxremi  space for deg+1 doubles for the middle doubles of the real
  *             parts of the exp(-x) series;
- *   minxrelo  space for deg+1 doubles for the low doubles of the real parts
- *             of the exp(-x) series;
- *   minximtb  space for deg+1 doubles for the high doubles of the imaginary
- *             parts of the exp(-x) series.
+ *   minxrerg  space for deg+1 doubles for the second lowest doubles of the
+ *             real parts of the exp(-x) series;
+ *   minxrelo  space for deg+1 doubles for the lowest doubles of the real
+ *             parts of the exp(-x) series;
+ *   minximtb  space for deg+1 doubles for the highest doubles of the
+ *             imaginary parts of the exp(-x) series.
+ *   minximix  space for deg+1 doubles for the second highest doubles of the
+ *             imaginary parts of the exp(-x) series.
  *   minximmi  space for deg+1 doubles for the middle doubles of the imaginary
  *             parts of the exp(-x) series.
- *   minximpk  space for deg+1 doubles for the low doubles of the imaginary
+ *   minximrg  space for deg+1 doubles for the second lowest doubles of the
+ *             imaginary parts of the exp(-x) series.
+ *   minximpk  space for deg+1 doubles for the lowest doubles of the imaginary
  *             parts of the exp(-x) series.
  *
  * ON RETURN :
- *   pluxretb  high doubles of the real parts of the power series of exp(+x)
+ *   pluxretb  highest doubles of the real parts of the series of exp(+x)
  *             truncated to degree deg;
- *   pluxremi  middle doubles of the real parts of the power series of exp(+x)
+ *   pluxreix  second highest doubles of the real parts of the series of
+ *             exp(+x) truncated to degree deg;
+ *   pluxremi  middle doubles of the real parts of the series of exp(+x)
  *             truncated to degree deg;
- *   pluxrelo  low doubles of the real parts of the power series of exp(+x)
+ *   pluxrerg  second lowest doubles of the real parts of the series of
+ *             exp(+x) truncated to degree deg;
+ *   pluxrepk  lowest doubles of the real parts of the series of exp(+x)
  *             truncated to degree deg;
- *   pluximtb  high doubles of the imaginary parts of the power series 
+ *   pluximtb  highest doubles of the imaginary parts of the series 
  *             of exp(+x) truncated to degree deg;
- *   pluximmi  middle doubles of the imaginary parts of the power series 
+ *   pluximix  second highest doubles of the imaginary parts of the series 
  *             of exp(+x) truncated to degree deg;
- *   pluximpk  low doubles of the imaginary parts of the power series 
+ *   pluximmi  middle doubles of the imaginary parts of the series 
  *             of exp(+x) truncated to degree deg;
- *   minxretb  high doubles of the real parts of the power series of exp(-x)
+ *   pluximrg  second lowest doubles of the imaginary parts of the series 
+ *             of exp(+x) truncated to degree deg;
+ *   pluximpk  lowest doubles of the imaginary parts of the series 
+ *             of exp(+x) truncated to degree deg;
+ *   minxretb  highest doubles of the real parts of the series of exp(-x)
  *             truncated to degree deg;
- *   minxremi  middle doubles of the real parts of the power series of exp(-x)
+ *   minxreix  second highest doubles of the real parts of the series of
+ *             exp(-x) truncated to degree deg;
+ *   minxremi  middle doubles of the real parts of the series of exp(-x)
  *             truncated to degree deg;
- *   minxrelo  low doubles of the real parts of the power series of exp(-x)
+ *   minxrerg  second lowest doubles of the real parts of the series of
+ *             exp(-x) truncated to degree deg;
+ *   minxrepk  lowest doubles of the real parts of the series of exp(-x)
  *             truncated to degree deg;
- *   minximtb  high doubles of the imaginary parts of the power series
+ *   minximtb  highest doubles of the imaginary parts of the series
  *             of exp(-x) truncated to degree deg;
- *   minximmi  middle doubles of the imaginary parts of the power series
+ *   minximix  second highest doubles of the imaginary parts of the series
  *             of exp(-x) truncated to degree deg;
- *   minximpk  low doubles of the imaginary parts of the power series
+ *   minximmi  middle doubles of the imaginary parts of the series
+ *             of exp(-x) truncated to degree deg;
+ *   minximpk  second lowest doubles of the imaginary parts of the series
+ *             of exp(-x) truncated to degree deg;
+ *   minximpk  lowest doubles of the imaginary parts of the series
  *             of exp(-x) truncated to degree deg. */
 
 void random_cmplx5_exponentials

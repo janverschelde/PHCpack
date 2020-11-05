@@ -5,6 +5,7 @@
 #include <vector_types.h>
 #include "deca_double_functions.h"
 #include "random10_vectors.h"
+#include "random10_series.h"
 #include "dbl10_convolutions_host.h"
 #include "dbl10_convolutions_kernels.h"
 
@@ -478,56 +479,11 @@ void test_real_exponential ( int deg )
    double *zlpk_d = new double[deg+1];
    double rrtb,rrix,rrmi,rrrg,rrpk;
    double rltb,rlix,rlmi,rlrg,rlpk;
-   double frtb,frix,frmi,frrg,frpk;
-   double fltb,flix,flmi,flrg,flpk;
 
-   random_deca_double
-      (&rrtb,&rrix,&rrmi,&rrrg,&rrpk,&rltb,&rlix,&rlmi,&rlrg,&rlpk);
-
-   xrtb[0] = 1.0; xrix[0] = 0.0; xrmi[0] = 0.0; xrrg[0] = 0.0; xrpk[0] = 0.0;
-   xltb[0] = 0.0; xlix[0] = 0.0; xlmi[0] = 0.0; xlrg[0] = 0.0; xlpk[0] = 0.0;
-   yrtb[0] = 1.0; yrix[0] = 0.0; yrmi[0] = 0.0; yrrg[0] = 0.0; yrpk[0] = 0.0;
-   yltb[0] = 0.0; ylix[0] = 0.0; ylmi[0] = 0.0; ylrg[0] = 0.0; ylpk[0] = 0.0;
-   xrtb[1] = rrtb; yrtb[1] = -rrtb;
-   xrix[1] = rrix; yrix[1] = -rrix;
-   xrmi[1] = rrmi; yrmi[1] = -rrmi;
-   xrrg[1] = rrrg; yrrg[1] = -rrrg;
-   xrpk[1] = rrpk; yrpk[1] = -rrpk;
-   xltb[1] = rltb; yltb[1] = -rltb;
-   xlix[1] = rlix; ylix[1] = -rlix;
-   xlmi[1] = rlmi; ylmi[1] = -rlmi;
-   xlrg[1] = rlrg; ylrg[1] = -rlrg;
-   xlpk[1] = rlpk; ylpk[1] = -rlpk;
-
-   for(int k=2; k<=deg; k++)
-   {
-      daf_mul(xrtb[k-1],xrix[k-1],xrmi[k-1],xrrg[k-1],xrpk[k-1],
-              xltb[k-1],xlix[k-1],xlmi[k-1],xlrg[k-1],xlpk[k-1],
-              rrtb,rrix,rrmi,rrrg,rrpk,rltb,rlix,rlmi,rlrg,rlpk,
-              &xrtb[k],&xrix[k],&xrmi[k],&xrrg[k],&xrpk[k],
-              &xltb[k],&xlix[k],&xlmi[k],&xlrg[k],&xlpk[k]);
-      // x[k] = x[k-1]*r
-      daf_mul(yrtb[k-1],yrix[k-1],yrmi[k-1],yrrg[k-1],yrpk[k-1],
-              yltb[k-1],ylix[k-1],ylmi[k-1],ylrg[k-1],ylpk[k-1],
-              -rrtb,-rrix,-rrmi,-rrrg,-rrpk,
-              -rltb,-rlix,-rlmi,-rlrg,-rlpk,
-              &yrtb[k],&yrix[k],&yrmi[k],&yrrg[k],&yrpk[k],
-              &yltb[k],&ylix[k],&ylmi[k],&ylrg[k],&ylpk[k]); 
-      // y[k] = y[k-1]*(-r);
-      frtb = (double) k;
-                  frix = 0.0; frmi = 0.0; frrg = 0.0; frpk = 0.0;
-      fltb = 0.0; flix = 0.0; flmi = 0.0; flrg = 0.0; flpk = 0.0;
-      daf_div(xrtb[k],xrix[k],xrmi[k],xrrg[k],xrpk[k],
-              xltb[k],xlix[k],xlmi[k],xlrg[k],xlpk[k],
-              frtb,frix,frmi,frrg,frpk,fltb,flix,flmi,flrg,flpk,
-              &xrtb[k],&xrix[k],&xrmi[k],&xrrg[k],&xrpk[k],
-              &xltb[k],&xlix[k],&xlmi[k],&xlrg[k],&xlpk[k]);
-      daf_div(yrtb[k],yrix[k],yrmi[k],yrrg[k],yrpk[k],
-              yltb[k],ylix[k],ylmi[k],ylrg[k],ylpk[k],
-              frtb,frix,frmi,frrg,frpk,fltb,flix,flmi,flrg,flpk,
-              &yrtb[k],&yrix[k],&yrmi[k],&yrrg[k],&yrpk[k],
-              &yltb[k],&ylix[k],&ylmi[k],&ylrg[k],&ylpk[k]);
-   }
+   random_dbl10_exponentials
+      (deg,&rrtb,&rrix,&rrmi,&rrrg,&rrpk,&rltb,&rlix,&rlmi,&rlrg,&rlpk,
+           xrtb,xrix,xrmi,xrrg,xrpk,xltb,xlix,xlmi,xlrg,xlpk,
+           yrtb,yrix,yrmi,yrrg,yrpk,yltb,ylix,ylmi,ylrg,ylpk);
 
    CPU_dbl10_product
       (deg,xrtb,xrix,xrmi,xrrg,xrpk,xltb,xlix,xlmi,xlrg,xlpk,
@@ -707,170 +663,20 @@ void test_complex_exponential ( int deg )
    double rndreltb,rndrelix,rndrelmi,rndrelrg,rndrelpk;
    double rndimrtb,rndimrix,rndimrmi,rndimrrg,rndimrpk;
    double rndimltb,rndimlix,rndimlmi,rndimlrg,rndimlpk;
-   double tmprtb,tmprix,tmprmi,tmprrg,tmprpk;
-   double tmpltb,tmplix,tmplmi,tmplrg,tmplpk;
 
-   random_deca_double
-      (&rndrertb,&rndrerix,&rndrermi,&rndrerrg,&rndrerpk,
-       &rndreltb,&rndrelix,&rndrelmi,&rndrelrg,&rndrelpk);  // cos(a)
-
-   daf_sqr(rndrertb,rndrerix,rndrermi,rndrerrg,rndrerpk,
-           rndreltb,rndrelix,rndrelmi,rndrelrg,rndrelpk,
-           &tmprtb,&tmprix,&tmprmi,&tmprrg,&tmprpk,
-           &tmpltb,&tmplix,&tmplmi,&tmplrg,&tmplpk);        // cos^2(a)
-   daf_minus(&tmprtb,&tmprix,&tmprmi,&tmprrg,&tmprpk,
-             &tmpltb,&tmplix,&tmplmi,&tmplrg,&tmplpk);      // -cos^2(a)
-   daf_inc_d(&tmprtb,&tmprix,&tmprmi,&tmprrg,&tmprpk,
-             &tmpltb,&tmplix,&tmplmi,&tmplrg,&tmplpk,1.0);  // 1-cos^2(a)
-   daf_sqrt(tmprtb,tmprix,tmprmi,tmprrg,tmprpk,
-            tmpltb,tmplix,tmplmi,tmplrg,tmplpk,
-            &rndimrtb,&rndimrix,&rndimrmi,&rndimrrg,&rndimrpk,
-            &rndimltb,&rndimlix,&rndimlmi,&rndimlrg,&rndimlpk); // sin is sqrt
-
-   xrertb[0] = 1.0; xrerix[0] = 0.0; xrermi[0] = 0.0;
-   xrerrg[0] = 0.0; xrerpk[0] = 0.0;
-   xreltb[0] = 0.0; xrelix[0] = 0.0; xrelmi[0] = 0.0;
-   xrelrg[0] = 0.0; xrelpk[0] = 0.0;
-   yrertb[0] = 1.0; yrerix[0] = 0.0; yrermi[0] = 0.0;
-   yrerrg[0] = 0.0; yrerpk[0] = 0.0;
-   yreltb[0] = 0.0; yrelix[0] = 0.0; yrelmi[0] = 0.0;
-   yrelrg[0] = 0.0; yrelpk[0] = 0.0;
-   ximrtb[0] = 0.0; ximrix[0] = 0.0; ximrmi[0] = 0.0;
-   ximrrg[0] = 0.0; ximrpk[0] = 0.0;
-   ximltb[0] = 0.0; ximlix[0] = 0.0; ximlmi[0] = 0.0;
-   ximlrg[0] = 0.0; ximlpk[0] = 0.0;
-   yimrtb[0] = 0.0; yimrix[0] = 0.0; yimrmi[0] = 0.0;
-   ximrrg[0] = 0.0; yimrpk[0] = 0.0;
-   yimltb[0] = 0.0; yimlix[0] = 0.0; yimlmi[0] = 0.0;
-   ximlrg[0] = 0.0; yimlpk[0] = 0.0;
-   xrertb[1] = rndrertb; xrerix[1] = rndrerix; xrermi[1] = rndrermi;
-   xrerrg[1] = rndrerrg; xrerpk[1] = rndrerpk;
-   xreltb[1] = rndreltb; xrelix[1] = rndrelix; xrelmi[1] = rndrelmi;
-   xrelrg[1] = rndrelrg; xrelpk[1] = rndrelpk;
-   ximrtb[1] = rndimrtb; ximrix[1] = rndimrix; ximrmi[1] = rndimrmi;
-   ximrrg[1] = rndimrrg; ximrpk[1] = rndimrpk;
-   ximltb[1] = rndimltb; ximlix[1] = rndimlix; ximlmi[1] = rndimlmi;
-   ximlrg[1] = rndimlrg; ximlpk[1] = rndimlpk;
-   yrertb[1] = -rndrertb; yrerix[1] = -rndrerix; yrermi[1] = -rndrermi;
-   yrerrg[1] = -rndrerrg; yrerpk[1] = -rndrerpk;
-   yreltb[1] = -rndreltb; yrelix[1] = -rndrelix; yrelmi[1] = -rndrelmi;
-   yrelrg[1] = -rndrelrg; yrelpk[1] = -rndrelpk;
-   yimrtb[1] = -rndimrtb; yimrix[1] = -rndimrix; yimrmi[1] = -rndimrmi;
-   yimrrg[1] = -rndimrrg; yimrpk[1] = -rndimrpk;
-   yimltb[1] = -rndimltb; yimlix[1] = -rndimlix; yimlmi[1] = -rndimlmi;
-   yimlrg[1] = -rndimlrg; yimlpk[1] = -rndimlpk;
-
-   for(int k=2; k<=deg; k++)
-   {
-      // xre[k] = (xre[k-1]*cr - xim[k-1]*sr)/k;
-      daf_mul(xrertb[k-1],xrerix[k-1],xrermi[k-1],xrerrg[k-1],xrerpk[k-1],
-              xreltb[k-1],xrelix[k-1],xrelmi[k-1],xrelrg[k-1],xrelpk[k-1],
-              rndrertb,rndrerix,rndrermi,rndrerrg,rndrerpk,
-              rndreltb,rndrelix,rndrelmi,rndrelrg,rndrelpk,
-              &xrertb[k],&xrerix[k],&xrermi[k],&xrerrg[k],&xrerpk[k],
-              &xreltb[k],&xrelix[k],&xrelmi[k],&xrelrg[k],&xrelpk[k]);
-      daf_mul(ximrtb[k-1],ximrix[k-1],ximrmi[k-1],ximrrg[k-1],ximrpk[k-1],
-              ximltb[k-1],ximlix[k-1],ximlmi[k-1],ximlrg[k-1],ximlpk[k-1],
-              rndimrtb,rndimrix,rndimrmi,rndimrrg,rndimrpk,
-              rndimltb,rndimlix,rndimlmi,rndimlrg,rndimlpk,
-              &tmprtb,&tmprix,&tmprmi,&tmprrg,&tmprpk,
-              &tmpltb,&tmplix,&tmplmi,&tmplrg,&tmplpk);
-      daf_minus(&tmprtb,&tmprix,&tmprmi,&tmprrg,&tmprpk,
-                &tmpltb,&tmplix,&tmplmi,&tmplrg,&tmplpk);
-      daf_inc(&xrertb[k],&xrerix[k],&xrermi[k],&xrerrg[k],&xrerpk[k],
-              &xreltb[k],&xrelix[k],&xrelmi[k],&xrelrg[k],&xrelpk[k],
-              tmprtb,tmprix,tmprmi,tmprrg,tmprpk,
-              tmpltb,tmplix,tmplmi,tmplrg,tmplpk);
-      tmprtb = (double) k;
-                    tmprix = 0.0; tmprmi = 0.0; tmprrg = 0.0; tmprpk = 0.0;
-      tmpltb = 0.0; tmplix = 0.0; tmplmi = 0.0; tmplrg = 0.0; tmplpk = 0.0;
-      daf_div(xrertb[k],xrerix[k],xrermi[k],xrerrg[k],xrerpk[k],
-              xreltb[k],xrelix[k],xrelmi[k],xrelrg[k],xrelpk[k],
-              tmprtb,tmprix,tmprmi,tmprrg,tmprpk,
-              tmpltb,tmplix,tmplmi,tmplrg,tmplpk,
-              &xrertb[k],&xrerix[k],&xrermi[k],&xrerrg[k],&xrerpk[k],
-              &xreltb[k],&xrelix[k],&xrelmi[k],&xrelrg[k],&xrelpk[k]);
-      // xim[k] = (xre[k-1]*sr + xim[k-1]*cr)/k;
-      daf_mul(xrertb[k-1],xrerix[k-1],xrermi[k-1],xrerrg[k-1],xrerpk[k-1],
-              xreltb[k-1],xrelix[k-1],xrelmi[k-1],xrelrg[k-1],xrelpk[k-1],
-              rndimrtb,rndimrix,rndimrmi,rndimrrg,rndimrpk,
-              rndimltb,rndimlix,rndimlmi,rndimlrg,rndimlpk,
-              &ximrtb[k],&ximrix[k],&ximrmi[k],&ximrrg[k],&ximrpk[k],
-              &ximltb[k],&ximlix[k],&ximlmi[k],&ximlrg[k],&ximlpk[k]);
-      daf_mul(ximrtb[k-1],ximrix[k-1],ximrmi[k-1],ximrrg[k-1],ximrpk[k-1],
-              ximltb[k-1],ximlix[k-1],ximlmi[k-1],ximlrg[k-1],ximlpk[k-1],
-              rndrertb,rndrerix,rndrermi,rndrerrg,rndrerpk,
-              rndreltb,rndrelix,rndrelmi,rndrelrg,rndrelpk,
-              &tmprtb,&tmprix,&tmprmi,&tmprrg,&tmprpk,
-              &tmpltb,&tmplix,&tmplmi,&tmplrg,&tmplpk);
-      daf_inc(&ximrtb[k],&ximrix[k],&ximrmi[k],&ximrrg[k],&ximrpk[k],
-              &ximltb[k],&ximlix[k],&ximlmi[k],&ximlrg[k],&ximlpk[k],
-              tmprtb,tmprix,tmprmi,tmprrg,tmprpk,
-              tmpltb,tmplix,tmplmi,tmplrg,tmplpk);
-      tmprtb = (double) k;
-                    tmprix = 0.0; tmprmi = 0.0; tmprrg = 0.0; tmprpk = 0.0;
-      tmpltb = 0.0; tmplix = 0.0; tmplmi = 0.0; tmplrg = 0.0; tmplpk = 0.0;
-      daf_div(ximrtb[k],ximrix[k],ximrmi[k],ximrrg[k],ximrpk[k],
-              ximltb[k],ximlix[k],ximlmi[k],ximlrg[k],ximlpk[k],
-              tmprtb,tmprix,tmprmi,tmprrg,tmprpk,
-              tmpltb,tmplix,tmplmi,tmplrg,tmplpk,
-              &ximrtb[k],&ximrix[k],&ximrmi[k],&ximrrg[k],&ximrpk[k],
-              &ximltb[k],&ximlix[k],&ximlmi[k],&ximlrg[k],&ximlpk[k]);
-      // yre[k] = (yre[k-1]*(-cr) - yim[k-1]*(-sr))/k;
-      daf_mul(yrertb[k-1],yrerix[k-1],yrermi[k-1],yrerrg[k-1],yrerpk[k-1],
-              yreltb[k-1],yrelix[k-1],yrelmi[k-1],yrelrg[k-1],yrelpk[k-1],
-              -rndrertb,-rndrerix,-rndrermi,-rndrerrg,-rndrerpk,
-              -rndreltb,-rndrelix,-rndrelmi,-rndrelrg,-rndrelpk,
-              &yrertb[k],&yrerix[k],&yrermi[k],&yrerrg[k],&yrerpk[k],
-              &yreltb[k],&yrelix[k],&yrelmi[k],&yrelrg[k],&yrelpk[k]);
-      daf_mul(yimrtb[k-1],yimrix[k-1],yimrmi[k-1],yimrrg[k-1],yimrpk[k-1],
-              yimltb[k-1],yimlix[k-1],yimlmi[k-1],yimlrg[k-1],yimlpk[k-1],
-              -rndimrtb,-rndimrix,-rndimrmi,-rndimrrg,-rndimrpk,
-              -rndimltb,-rndimlix,-rndimlmi,-rndimlrg,-rndimlpk,
-              &tmprtb,&tmprix,&tmprmi,&tmprrg,&tmprpk,
-              &tmpltb,&tmplix,&tmplmi,&tmplrg,&tmplpk);
-      daf_minus(&tmprtb,&tmprix,&tmprmi,&tmprrg,&tmprpk,
-                &tmpltb,&tmplix,&tmplmi,&tmplrg,&tmplpk);
-      daf_inc(&yrertb[k],&yrerix[k],&yrermi[k],&yrerrg[k],&yrerpk[k],
-              &yreltb[k],&yrelix[k],&yrelmi[k],&yrelrg[k],&yrelpk[k],
-              tmprtb,tmprix,tmprmi,tmprrg,tmprpk,
-              tmpltb,tmplix,tmplmi,tmplrg,tmplpk);
-      tmprtb = (double) k;
-                    tmprix = 0.0; tmprmi = 0.0; tmprrg = 0.0; tmprpk = 0.0;
-      tmpltb = 0.0; tmplix = 0.0; tmplmi = 0.0; tmplrg = 0.0; tmplpk = 0.0;
-      daf_div(yrertb[k],yrerix[k],yrermi[k],yrerrg[k],yrerpk[k],
-              yreltb[k],yrelix[k],yrelmi[k],yrelrg[k],yrelpk[k],
-              tmprtb,tmprix,tmprmi,tmprrg,tmprpk,
-              tmpltb,tmplix,tmplmi,tmplrg,tmplpk,
-              &yrertb[k],&yrerix[k],&yrermi[k],&yrerrg[k],&yrerpk[k],
-              &yreltb[k],&yrelix[k],&yrelmi[k],&yrelrg[k],&yrelpk[k]);
-      // yim[k] = (yre[k-1]*(-sr) + yim[k-1]*(-cr))/k;
-      daf_mul(yrertb[k-1],yrerix[k-1],yrermi[k-1],yrerrg[k-1],yrerpk[k-1],
-              yreltb[k-1],yrelix[k-1],yrelmi[k-1],yrelrg[k-1],yrelpk[k-1],
-              -rndimrtb,-rndimrix,-rndimrmi,-rndimrrg,-rndimrpk,
-              -rndimltb,-rndimlix,-rndimlmi,-rndimlrg,-rndimlpk,
-              &yimrtb[k],&yimrix[k],&yimrmi[k],&yimrrg[k],&yimrpk[k],
-              &yimltb[k],&yimlix[k],&yimlmi[k],&yimlrg[k],&yimlpk[k]);
-      daf_mul(yimrtb[k-1],yimrix[k-1],yimrmi[k-1],yimrrg[k-1],yimrpk[k-1],
-              yimltb[k-1],yimlix[k-1],yimlmi[k-1],yimlrg[k-1],yimlpk[k-1],
-              -rndrertb,-rndrerix,-rndrermi,-rndrerrg,-rndrerpk,
-              -rndreltb,-rndrelix,-rndrelmi,-rndrelrg,-rndrelpk,
-              &tmprtb,&tmprix,&tmprmi,&tmprrg,&tmprpk,
-              &tmpltb,&tmplix,&tmplmi,&tmplrg,&tmplpk);
-      daf_inc(&yimrtb[k],&yimrix[k],&yimrmi[k],&yimrrg[k],&yimrpk[k],
-              &yimltb[k],&yimlix[k],&yimlmi[k],&yimlrg[k],&yimlpk[k],
-              tmprtb,tmprix,tmprmi,tmprrg,tmprpk,
-              tmpltb,tmplix,tmplmi,tmplrg,tmplpk);
-      tmprtb = (double) k;
-                    tmprix = 0.0; tmprmi = 0.0; tmprrg = 0.0; tmprpk = 0.0;
-      tmpltb = 0.0; tmplix = 0.0; tmplmi = 0.0; tmplrg = 0.0; tmplpk = 0.0;
-      daf_div(yimrtb[k],yimrix[k],yimrmi[k],yimrrg[k],yimrpk[k],
-              yimltb[k],yimlix[k],yimlmi[k],yimlrg[k],yimlpk[k],
-              tmprtb,tmprix,tmprmi,tmprrg,tmprpk,
-              tmpltb,tmplix,tmplmi,tmplrg,tmplpk,
-              &yimrtb[k],&yimrix[k],&yimrmi[k],&yimrrg[k],&yimrpk[k],
-              &yimltb[k],&yimlix[k],&yimlmi[k],&yimlrg[k],&yimlpk[k]);
-   }
+   random_cmplx10_exponentials
+      (deg,&rndrertb,&rndrerix,&rndrermi,&rndrerrg,&rndrerpk,
+           &rndreltb,&rndrelix,&rndrelmi,&rndrelrg,&rndrelpk,
+           &rndimrtb,&rndimrix,&rndimrmi,&rndimrrg,&rndimrpk,
+           &rndimltb,&rndimlix,&rndimlmi,&rndimlrg,&rndimlpk,
+           xrertb,xrerix,xrermi,xrerrg,xrerpk,
+           xreltb,xrelix,xrelmi,xrelrg,xrelpk,
+           ximrtb,ximrix,ximrmi,ximrrg,ximrpk,
+           ximltb,ximlix,ximlmi,ximlrg,ximlpk,
+           yrertb,yrerix,yrermi,yrerrg,yrerpk,
+           yreltb,yrelix,yrelmi,yrelrg,yrelpk,
+           yimrtb,yimrix,yimrmi,yimrrg,yimrpk,
+           yimltb,yimlix,yimlmi,yimlrg,yimlpk);
 
    CPU_cmplx10_product
       (deg,xrertb,xrerix,xrermi,xrerrg,xrerpk,
