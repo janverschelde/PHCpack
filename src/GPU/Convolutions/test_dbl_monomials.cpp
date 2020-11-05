@@ -156,9 +156,9 @@ int main ( void )
    cout << "Give the largest power of each variable : "; cin >> pwr;
    cout << "Give the degree of the series : "; cin >> deg;
 
-   // cout << "Testing for real input data ... " << endl;
-   // test_real(dim,nvr,pwr,deg);
-   cout << "Testing for complex input data ..." << endl;
+   cout << endl << "Testing for real input data ... " << endl;
+   test_real(dim,nvr,pwr,deg);
+   cout << endl << "Testing for complex input data ..." << endl;
    test_complex(dim,nvr,pwr,deg);
 
    return 0;
@@ -353,22 +353,25 @@ int test_real ( int dim, int nvr, int pwr, int deg )
    }
 
    CPU_dbl_evaldiff(dim,nvr,deg,idx,cff,input,output_h);
-
    cout << "The value of the product :" << endl;
    for(int i=0; i<=deg; i++) cout << output_h[dim][i] << endl;
 
-   GPU_dbl_evaldiff(deg+1,dim,nvr,deg,idx,cff,input,output_d);
-
-   cout << "The value of the product computed on the GPU :" << endl;
-   for(int i=0; i<=deg; i++) cout << output_d[dim][i] << endl;
-
+   if(nvr > 2)
+   {
+      GPU_dbl_evaldiff(deg+1,dim,nvr,deg,idx,cff,input,output_d);
+      cout << "The value of the product computed on the GPU :" << endl;
+      for(int i=0; i<=deg; i++) cout << output_d[dim][i] << endl;
+   }
    for(int k=0; k<nvr; k++)
    {
       cout << "-> derivative for index " << idx[k] << " :" << endl;
       for(int i=0; i<=deg; i++) cout << output_h[idx[k]][i] << endl;
-      cout << "-> derivative for index " << idx[k]
-           << " computed on GPU :" << endl;
-      for(int i=0; i<=deg; i++) cout << output_d[idx[k]][i] << endl;
+      if(nvr > 2)
+      {
+         cout << "-> derivative for index " << idx[k]
+              << " computed on GPU :" << endl;
+         for(int i=0; i<=deg; i++) cout << output_d[idx[k]][i] << endl;
+      }
    }
    return 0;
 }
@@ -452,25 +455,29 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
    cout << "The value of the product :" << endl;
    for(int i=0; i<=deg; i++)
       cout << outputre_h[dim][i] << "  " << outputim_h[dim][i] << endl;
+   if(nvr > 2)
+   {
+      GPU_cmplx_evaldiff(deg+1,dim,nvr,deg,idx,cffre,cffim,inputre,inputim,
+                         outputre_d,outputim_d);
 
-   GPU_cmplx_evaldiff(deg+1,dim,nvr,deg,idx,cffre,cffim,inputre,inputim,
-                      outputre_d,outputim_d);
-
-   cout << "The value of the product computed on the GPU :" << endl;
-   for(int i=0; i<=deg; i++) 
-      cout << outputre_d[dim][i] << "  " << outputim_d[dim][i] << endl;
-
+      cout << "The value of the product computed on the GPU :" << endl;
+      for(int i=0; i<=deg; i++) 
+         cout << outputre_d[dim][i] << "  " << outputim_d[dim][i] << endl;
+   }
    for(int k=0; k<nvr; k++)
    {
       cout << "-> derivative for index " << idx[k] << " :" << endl;
       for(int i=0; i<=deg; i++)
          cout << outputre_h[idx[k]][i] << "  "
               << outputim_h[idx[k]][i] << endl;
-      cout << "-> derivative for index " << idx[k]
-           << " computed on GPU :" << endl;
-      for(int i=0; i<=deg; i++)
-         cout << outputre_d[idx[k]][i] << "  "
-              << outputim_d[idx[k]][i] << endl;
+      if(nvr > 2)
+      {
+         cout << "-> derivative for index " << idx[k]
+              << " computed on GPU :" << endl;
+         for(int i=0; i<=deg; i++)
+            cout << outputre_d[idx[k]][i] << "  "
+                 << outputim_d[idx[k]][i] << endl;
+      }
    }
    return 0;
 }

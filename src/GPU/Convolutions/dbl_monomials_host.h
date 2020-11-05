@@ -6,12 +6,13 @@
 #define __dbl_monomials_host_h__
 
 void CPU_dbl_speel
- ( int nvr, int deg, int *idx, double **input,
+ ( int nvr, int deg, int *idx, double *cff, double **input,
    double **forward, double **backward, double **cross );
 /*
  * DESCRIPTION :
  *   Runs the reverse mode of algorithmic differentiation
  *   of a product of variables at power series truncated to the same degree,
+ *   multiplied with a coefficient series of the same degree,
  *   for real coefficients in double precision.
  *
  * REQUIRED : nvr >= 2.
@@ -22,6 +23,7 @@ void CPU_dbl_speel
  *   idx      as many indices as the value of nvr,
  *            idx[k] defines the place of the k-th variable,
  *            with input values in input[idx[k]];
+ *   cff      deg+1 doubles for the coefficient series of the monomial;
  *   input    contains the coefficients of the power series
  *            for all variables in the monomial;
  *   forward  contains work space for all nvr-1 forward products,
@@ -44,9 +46,10 @@ void CPU_dbl_speel
  *            variable idx[k+1]. */
 
 void CPU_cmplx_speel
- ( int nvr, int deg, int *idx, double **inputre, double **inputim,
-   double **forwardre, double **forwardim, double **backwardre,
-   double **backwardim, double **crossre, double **crossim );
+ ( int nvr, int deg, int *idx, double *cffre, double *cffim,
+   double **inputre, double **inputim, double **forwardre,
+   double **forwardim, double **backwardre, double **backwardim,
+   double **crossre, double **crossim );
 /*
  * DESCRIPTION :
  *   Runs the reverse mode of algorithmic differentiation
@@ -61,6 +64,8 @@ void CPU_cmplx_speel
  *   idx        as many indices as the value of nvr,
  *              idx[k] defines the place of the k-th variable,
  *              with input values in input[idx[k]];
+ *   cffre      real parts of the coefficients of the series of the product;
+ *   cffim      imaginary pars of the coefficient of the series of the product;
  *   inputre    contains the real parts of the coefficients of the series
  *              for all variables in the monomial;
  *   inputim    contains the imaginary parts of the coefficients of the series

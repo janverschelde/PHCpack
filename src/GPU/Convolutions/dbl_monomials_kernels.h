@@ -22,7 +22,7 @@ __device__ void cmplx_convolute
  *   All arrays are of dimension dim. */
 
 __global__ void GPU_dbl_speel
- ( int nvr, int deg, int *idx, double *input,
+ ( int nvr, int deg, int *idx, double *cff, double *input,
    double *forward, double *backward, double *cross );
 /*
  * DESCRIPTION :
@@ -38,6 +38,7 @@ __global__ void GPU_dbl_speel
  *   idx      as many indices as the value of nvr,
  *            idx[k] defines the place of the k-th variable,
  *            with input values in input[idx[k]];
+ *   cff      deg+1 doubles for the coefficient series of the monomial;
  *   input    contains the coefficients of the power series
  *            for all variables in the monomial;
  *   forward  contains work space for all nvr-1 forward products,
@@ -60,9 +61,10 @@ __global__ void GPU_dbl_speel
  *            variable idx[k+1]. */
 
 __global__ void GPU_cmplx_speel
- ( int nvr, int deg, int *idx, double *inputre, double *inputim,
-   double *forwardre, double *forwardim, double *backwardre,
-   double *backwardim, double *crossre, double *crossim );
+ ( int nvr, int deg, int *idx, double *cffre, double *cffim,
+   double *inputre, double *inputim, double *forwardre,
+   double *forwardim, double *backwardre, double *backwardim,
+   double *crossre, double *crossim );
 /*
  * DESCRIPTION :
  *   Runs the reverse mode of algorithmic differentiation
@@ -77,6 +79,8 @@ __global__ void GPU_cmplx_speel
  *   idx        as many indices as the value of nvr,
  *              idx[k] defines the place of the k-th variable,
  *              with input values in input[idx[k]];
+ *   cffre      real parts of the coefficients of the series of the product;
+ *   cffim      imaginary pars of the coefficient of the series of the product;
  *   inputre    contains the real parts of the coefficients of the series
  *              for all variables in the monomial;
  *   inputim    contains the imaginary parts of the coefficients
@@ -169,7 +173,7 @@ void GPU_cmplx_evaldiff
  *
  * ON RETURN :
  *   outputre contains real parts of the derivatives and the value,
- *   outputim contains real parts of the derivatives and the value,
+ *   outputim contains imaginary parts of the derivatives and the value,
  *            output[idx[k]], for k from 0 to nvr, contains the
  *            deriviative with respect to the variable idx[k];
  *            output[dim] contains the value of the product. */

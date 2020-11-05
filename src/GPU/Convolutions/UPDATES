@@ -1,3 +1,7 @@
+Thu 5 Nov 2020 : modified dbl_monomials_host and dbl_monomials_kernels
+  so the reverse mode works directly on a monomial with a coefficient.
+  Updated the test_dbl_monomials.cpp.
+
 Wed 4 Nov 2020 : edited random4_series.h.  Extracted generation of random
   power series from test_dbl8_convolutions.cpp into the new random8_series.h
   and random8_series.cpp.  Added code for complex coefficients to
