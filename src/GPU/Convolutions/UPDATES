@@ -1,3 +1,7 @@
+Fri 6 Nov 2020 : edited dbl2_monomials_host.h and dbl2_monomials_kernels.h.
+  New dbl3_monomials_{host,kernels}.h, dbl3_monomials_host.cpp, 
+  dbl3_monomials_kernels.cu, tested by test_dbl3_monomials.cpp.
+
 Thu 5 Nov 2020 : modified dbl_monomials_host and dbl_monomials_kernels
   so the reverse mode works directly on a monomial with a coefficient.
   Updated the test_dbl_monomials.cpp.

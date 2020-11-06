@@ -180,6 +180,10 @@ dbl2_monomials_kernels.o:
 	@-echo ">>> compiling monomial kernels for double doubles ..."
 	nvcc -ccbin=$(gpp) -I$(MPD) -c dbl2_monomials_kernels.cu
 
+dbl3_monomials_kernels.o:
+	@-echo ">>> compiling monomial kernels for triple doubles ..."
+	nvcc -ccbin=$(gpp) -I$(MPD) -c dbl3_monomials_kernels.cu
+
 dbl_monomials_host.o:
 	@-echo ">>> compiling dbl_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) dbl_monomials_host.cpp
@@ -188,6 +192,10 @@ dbl2_monomials_host.o:
 	@-echo ">>> compiling dbl2_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) dbl2_monomials_host.cpp
 
+dbl3_monomials_host.o:
+	@-echo ">>> compiling dbl3_monomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) dbl3_monomials_host.cpp
+
 test_dbl_monomials.o:
 	@-echo ">>> compiling test_dbl_monomials ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl_monomials.cpp
@@ -195,6 +203,10 @@ test_dbl_monomials.o:
 test_dbl2_monomials.o:
 	@-echo ">>> compiling test_dbl2_monomials ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl2_monomials.cpp
+
+test_dbl3_monomials.o:
+	@-echo ">>> compiling test_dbl3_monomials ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl3_monomials.cpp
 
 test_dbl_convolutions: dbl_convolutions_kernels.o dbl_convolutions_host.o \
                        random_numbers.o random_series.o \
@@ -293,6 +305,17 @@ test_dbl2_monomials: random_numbers.o double_double_functions.o \
                   test_dbl2_monomials.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
+test_dbl3_monomials: random_numbers.o double_double_functions.o \
+                     triple_double_functions.o random3_vectors.o \
+                     dbl3_convolutions_host.o dbl3_monomials_host.o \
+                     dbl3_monomials_kernels.o test_dbl3_monomials.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl3_monomials random_numbers.o random3_vectors.o \
+                  double_double_functions.o triple_double_functions.o \
+                  dbl3_convolutions_host.o dbl3_monomials_host.o \
+                  dbl3_monomials_kernels.o test_dbl3_monomials.o \
+                  -lcuda -lcudart -L$(CUDALIB)
+
 clean:
 	/bin/rm -f -r random_numbers.o random_series.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_convolutions_kernels.o
@@ -325,3 +348,5 @@ clean:
 	/bin/rm -f -r test_dbl_monomials.o test_dbl_monomials
 	/bin/rm -f -r dbl2_monomials_host.o dbl2_monomials_kernels.o
 	/bin/rm -f -r test_dbl2_monomials.o test_dbl2_monomials
+	/bin/rm -f -r dbl3_monomials_host.o dbl3_monomials_kernels.o
+	/bin/rm -f -r test_dbl3_monomials.o test_dbl3_monomials
