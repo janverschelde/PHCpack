@@ -65,6 +65,11 @@ dbl_monomials_kernels.obj:
 	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl_monomials_kernels.cu \
                                        -o dbl_monomials_kernels.obj
 
+dbl2_monomials_kernels.obj:
+	@-echo ">>> compiling monomial kernels for double doubles ..."
+	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl2_monomials_kernels.cu \
+                                       -o dbl2_monomials_kernels.obj
+
 random_numbers.obj:
 	@-echo ">>> compiling random number generators ..."
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -282,12 +287,25 @@ dbl_monomials_host.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -02 \
                  /Fo: dbl_monomials_host.obj /EHsc
 
+dbl2_monomials_host.obj:
+	@-echo ">>> compiling dbl2_monomials_host ..."
+	$(CL)\cl /c dbl2_monomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -02 \
+                 /Fo: dbl2_monomials_host.obj /EHsc
+
 test_dbl_monomials.obj:
 	@-echo ">>> compiling test_dbl_monomials ..."
 	$(CL)\cl /c test_dbl_monomials.cpp \
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) \
                  /I$(CUDASDK)/include -02 \
                  /Fo: test_dbl_monomials.obj /EHsc
+
+test_dbl2_monomials.obj:
+	@-echo ">>> compiling test_dbl2_monomials ..."
+	$(CL)\cl /c test_dbl2_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl2_monomials.obj /EHsc
 
 test_dbl_convolutions: random_numbers.obj random_series.obj \
                        dbl_convolutions_kernels.obj \
@@ -379,6 +397,17 @@ test_dbl_monomials: random_numbers.obj dbl_convolutions_host.obj \
               random_numbers.obj dbl_convolutions_host.obj \
               dbl_monomials_host.obj dbl_monomials_kernels.obj \
               test_dbl_monomials.obj
+
+test_dbl2_monomials: random_numbers.obj random2_vectors.obj \
+                     double_double_functions.obj dbl2_convolutions_host.obj \
+            dbl2_monomials_host.obj dbl2_monomials_kernels.obj \
+            test_dbl2_monomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl2_monomials.exe \
+              random_numbers.obj random2_vectors.obj \
+              double_double_functions.obj dbl2_convolutions_host.obj \
+              dbl2_monomials_host.obj dbl2_monomials_kernels.obj \
+              test_dbl2_monomials.obj
 
 clean:
 	del *exe *obj *exp *lib *~
