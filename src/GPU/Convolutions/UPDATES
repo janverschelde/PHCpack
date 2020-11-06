@@ -1,6 +1,11 @@
 Thu 5 Nov 2020 : modified dbl_monomials_host and dbl_monomials_kernels
   so the reverse mode works directly on a monomial with a coefficient.
   Updated the test_dbl_monomials.cpp.
+  Edited dbl_monomials_host.h and dbl_monomials_kernels.h, to document
+  the added last spot in the work space for the forward products,
+  added for the coefficient multiplication.
+  New dbl2_monomials_host, dbl2_monomials_kernels, tested by test_dbl2_
+  monomials.cpp for monomials with double double precision coefficients.
 
 Wed 4 Nov 2020 : edited random4_series.h.  Extracted generation of random
   power series from test_dbl8_convolutions.cpp into the new random8_series.h

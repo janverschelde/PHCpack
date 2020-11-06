@@ -30,7 +30,7 @@ __global__ void GPU_dbl_speel
  *   of a product of variables at power series truncated to the same degree,
  *   for real coefficients in double precision.
  *
- * REQUIRED : nvr >= 2.
+ * REQUIRED : nvr > 2.
  *
  * ON ENTRY :
  *   nvr      number of variables in the product;
@@ -41,7 +41,7 @@ __global__ void GPU_dbl_speel
  *   cff      deg+1 doubles for the coefficient series of the monomial;
  *   input    contains the coefficients of the power series
  *            for all variables in the monomial;
- *   forward  contains work space for all nvr-1 forward products,
+ *   forward  contains work space for all nvr forward products,
  *            forward[k] contains space for deg+1 doubles;
  *   backward contains work space for all nvr-2 backward products;
  *            backward[k] contains space for deg+1 doubles;
@@ -50,12 +50,12 @@ __global__ void GPU_dbl_speel
  *
  * ON RETURN :
  *   forward  accumulates the forward products,
- *            forward[nvr-2] contains the value of the product,
- *            forward[nvr-3] contains the derivative with respect
- *            to the last variable idx[nvr-1] if nvr > 2;
+ *            forward[nvr-1] contains the value of the product,
+ *            forward[nvr-2] contains the derivative with respect
+ *            to the last variable idx[nvr-1];
  *   backward accumulates the backward products,
- *            backward[0] contains the derivative with respect
- *            to the first variable idx[0] if nvr > 2;
+ *            backward[nvr-3] contains the derivative with respect
+ *            to the first variable idx[0];
  *   cross    stores the cross products,
  *            cross[k] contains the derivatve with respect to
  *            variable idx[k+1]. */
@@ -71,7 +71,7 @@ __global__ void GPU_cmplx_speel
  *   of a product of variables at power series truncated to the same degree,
  *   for real coefficients in double precision.
  *
- * REQUIRED : nvr >= 2.
+ * REQUIRED : nvr > 2.
  *
  * ON ENTRY :
  *   nvr        number of variables in the product;
@@ -79,16 +79,16 @@ __global__ void GPU_cmplx_speel
  *   idx        as many indices as the value of nvr,
  *              idx[k] defines the place of the k-th variable,
  *              with input values in input[idx[k]];
- *   cffre      real parts of the coefficients of the series of the product;
- *   cffim      imaginary pars of the coefficient of the series of the product;
+ *   cffre      real parts of the series coefficient of the product;
+ *   cffim      imaginary pars of the series coefficients of the product;
  *   inputre    contains the real parts of the coefficients of the series
  *              for all variables in the monomial;
  *   inputim    contains the imaginary parts of the coefficients
  *              of the series for all variables in the monomial;
- *   forwardre  contains work space for all nvr-1 forward products,
+ *   forwardre  contains work space for all nvr forward products,
  *              for all real parts of the coefficients,
  *              forwardre[k] contains space for deg+1 doubles;
- *   forwardim  contains work space for all nvr-1 forward products,
+ *   forwardim  contains work space for all nvr forward products,
  *              for all imaginary parts of the coefficients,
  *              forwardim[k] contains space for deg+1 doubles;
  *   backwardre contains work space for all nvr-2 backward products,
@@ -96,24 +96,24 @@ __global__ void GPU_cmplx_speel
  *              backwardre[k] contains space for deg+1 doubles;
  *   backwardim contains work space for all nvr-2 backward products,
  *              for all imaginary parts of the coefficients,
- *              backwardre[k] contains space for deg+1 doubles;
+ *              backwardim[k] contains space for deg+1 doubles;
  *   crossre    contains work space for all nvr-2 cross products,
  *              for the real parts of the coefficients,
  *              crossre[k] contains space for deg+1 doubles;
  *   crossim    contains work space for all nvr-2 cross products,
  *              for the imaginary parts of the coefficients,
- *              crossre[k] contains space for deg+1 doubles.
+ *              crossim[k] contains space for deg+1 doubles.
  *
  * ON RETURN :
  *   forwardre  accumulates the real parts of the forward products,
  *   forwardim  accumulates the imaginary parts of the forward products,
- *              forward[nvr-2] contains the value of the product,
- *              forward[nvr-3] contains the derivative with respect
- *              to the last variable idx[nvr-1] if nvr > 2;
+ *              forward[nvr-1] contains the value of the product,
+ *              forward[nvr-2] contains the derivative with respect
+ *              to the last variable idx[nvr-1];
  *   backwardre accumulates the real parts of the backward products,
  *   backwardre accumulates the imaginary parts of the backward products,
- *              backward[0] contains the derivative with respect
- *              to the first variable idx[0] if nvr > 2;
+ *              backward[nvr-3] contains the derivative with respect
+ *              to the first variable idx[0]
  *   crossre    stores the real parts of the cross products,
  *   crossim    stores the imaginary parts of the cross products,
  *              cross[k] contains the derivatve with respect to
@@ -164,7 +164,7 @@ void GPU_cmplx_evaldiff
  *   cffim    imaginary parts of the coefficient series of the product;
  *   inputre  contains the real parts of the coefficients of the series
  *            for all variables in the monomial;
- *   inputim  contains the imaginary parts of thecoefficients of the 
+ *   inputim  contains the imaginary parts of the coefficients of the 
  *            series for all variables in the monomial;
  *   outputre has space allocated for dim+1 series of degree deg,
  *            for the real parts of the output coefficients;

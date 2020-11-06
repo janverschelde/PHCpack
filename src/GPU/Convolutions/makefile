@@ -30,5 +30,8 @@ test_dbl10_convolutions:
 test_dbl_monomials:
 	make -f $(MAKEFILE) test_dbl_monomials
 
+test_dbl2_monomials:
+	make -f $(MAKEFILE) test_dbl2_monomials
+
 clean:
 	make -f $(MAKEFILE) clean

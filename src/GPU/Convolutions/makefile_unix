@@ -176,13 +176,25 @@ dbl_monomials_kernels.o:
 	@-echo ">>> compiling monomial kernels for doubles ..."
 	nvcc -ccbin=$(gpp) -c dbl_monomials_kernels.cu
 
+dbl2_monomials_kernels.o:
+	@-echo ">>> compiling monomial kernels for double doubles ..."
+	nvcc -ccbin=$(gpp) -I$(MPD) -c dbl2_monomials_kernels.cu
+
 dbl_monomials_host.o:
 	@-echo ">>> compiling dbl_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) dbl_monomials_host.cpp
 
+dbl2_monomials_host.o:
+	@-echo ">>> compiling dbl2_monomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) dbl2_monomials_host.cpp
+
 test_dbl_monomials.o:
 	@-echo ">>> compiling test_dbl_monomials ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl_monomials.cpp
+
+test_dbl2_monomials.o:
+	@-echo ">>> compiling test_dbl2_monomials ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl2_monomials.cpp
 
 test_dbl_convolutions: dbl_convolutions_kernels.o dbl_convolutions_host.o \
                        random_numbers.o random_series.o \
@@ -270,6 +282,17 @@ test_dbl_monomials: random_numbers.o dbl_convolutions_host.o \
                   dbl_monomials_kernels.o test_dbl_monomials.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
+test_dbl2_monomials: random_numbers.o double_double_functions.o \
+                     random2_vectors.o dbl2_convolutions_host.o \
+                     dbl2_monomials_host.o dbl2_monomials_kernels.o \
+                     test_dbl2_monomials.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl2_monomials random_numbers.o random2_vectors.o \
+                  double_double_functions.o dbl2_convolutions_host.o \
+                  dbl2_monomials_host.o dbl2_monomials_kernels.o \
+                  test_dbl2_monomials.o \
+                  -lcuda -lcudart -L$(CUDALIB)
+
 clean:
 	/bin/rm -f -r random_numbers.o random_series.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_convolutions_kernels.o
@@ -300,3 +323,5 @@ clean:
 	/bin/rm -f -r test_dbl10_convolutions.o test_dbl10_convolutions
 	/bin/rm -f -r dbl_monomials_host.o dbl_monomials_kernels.o
 	/bin/rm -f -r test_dbl_monomials.o test_dbl_monomials
+	/bin/rm -f -r dbl2_monomials_host.o dbl2_monomials_kernels.o
+	/bin/rm -f -r test_dbl2_monomials.o test_dbl2_monomials
