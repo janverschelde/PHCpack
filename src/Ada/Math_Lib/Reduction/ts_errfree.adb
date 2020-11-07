@@ -32,7 +32,7 @@ procedure ts_errfree is
 -- DESCRIPTION :
 --   Computing the 2-norm of a vector of dimension 64 of random
 --   complex numbers on the unit circle equals 8.
---   The second double of a multiple double number equals the precision.
+--   Observe the second double of the multiple double 2-norm.
 
   procedure write ( first,second : in double_float ) is
 
@@ -150,8 +150,7 @@ procedure ts_errfree is
     new_line;
     put_line("Computing the 2-norm of a vector of dimension 64");
     put_line("of random complex numbers on the unit circle equals 8.");
-    put("The second double of a multiple double number ");
-    put_line("equals the precision.");
+    put_line("Observe the second double of the multiple double 2-norm.");
     new_line;
     DoblDobl_Two_Norm(64);
     TripDobl_Two_Norm(64);
