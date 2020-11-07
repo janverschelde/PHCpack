@@ -1,4 +1,4 @@
-Numerical Linear Algebra in PHCv2.4.80
+Numerical Linear Algebra in PHCv2.4.82
 
 This "Reduction" directory implements "row reduction" on linear systems
 of floating-point number of various precisions: double, double double,
@@ -51,6 +51,7 @@ deca_double_vector_norms           : norms of vectors of deca doubles
 decadobl_complex_vector_norms      : norms of complex deca double vectors
 test_decadobl_vector_norms         : tests on deca double vector norms
 ts_danorm                          : main test on deca double vector norms
+ts_errfree                         : illustrates error free transformations
 -------------------------------------------------------------------------------
 generic_norms_equals               : norms and equality routines
 standard_floating_norms_equals     : norms/equals for standard floating numbers

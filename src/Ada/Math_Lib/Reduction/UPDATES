@@ -1,3 +1,6 @@
+Sat 7 Nov 2020 : test program ts_errfree to illustrate the concept of the
+  error free transformations.
+
 Mon 7 Sep 2020 : fixed test_{tripdobl,pentdobl}_singular_values.adb,
   fixed the bug in the loop tests on random problems.
   In all *dobl_complex_singular_values.adb, patched the cdabs function
