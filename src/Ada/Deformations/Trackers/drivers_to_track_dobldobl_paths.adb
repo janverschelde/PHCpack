@@ -23,7 +23,7 @@ with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
 with Continuation_Parameters;
 with DoblDobl_Continuation_Data_io;     use DoblDobl_Continuation_Data_io;
 with DoblDobl_Path_Trackers;            use DoblDobl_Path_Trackers;
-with Drivers_for_Poly_Continuation;     use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;            use Main_Poly_Continuation;
 with Lexicographic_Root_Enumeration;
 with Total_Degree_Start_Systems;
 with Standard_Complex_Polynomials;

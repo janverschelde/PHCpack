@@ -43,7 +43,7 @@ with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with Standard_Solution_Diagnostics;
 with DoblDobl_Solution_Diagnostics;
 with QuadDobl_Solution_Diagnostics;
-with Drivers_for_Poly_Continuation;     use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;            use Main_Poly_Continuation;
 with Standard_Root_Refiners;
 with DoblDobl_Root_Refiners;
 with QuadDobl_Root_Refiners;

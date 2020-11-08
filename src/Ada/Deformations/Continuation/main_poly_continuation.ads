@@ -13,10 +13,10 @@ with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Multprec_Complex_Solutions;
 
-package Drivers_for_Poly_Continuation is
+package Main_Poly_Continuation is
 
 -- DESCRIPTION :
---   This package contains three drivers for two types of homotopies:
+--   This package contains main procedures for two types of homotopies:
 --   artificial and natural parameter.
 
   procedure Ask_Symbol;
@@ -250,4 +250,4 @@ package Drivers_for_Poly_Continuation is
   -- ON RETURN :
   --   sols       the computed solutions.
 
-end Drivers_for_Poly_Continuation;
+end Main_Poly_Continuation;

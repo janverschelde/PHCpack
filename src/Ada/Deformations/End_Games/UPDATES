@@ -1,3 +1,6 @@
+Sun 8 Nov 2020 : updated driver_for_winding_numbers.adb for the renaming of
+  drivers_for_poly_continuation into main_poly_continuation.
+
 Sun 21 Apr 2019 : reformatted code in driver_for_winding_numbers.adb.
 
 Mon 29 Feb 2016 : drivers_for_path_directions.adb changed for added

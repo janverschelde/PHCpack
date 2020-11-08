@@ -19,7 +19,7 @@ with Continuation_Parameters;            use Continuation_Parameters;
 with Standard_Continuation_Data;         use Standard_Continuation_Data;
 with Standard_Path_Trackers;             use Standard_Path_Trackers;
 with Drivers_for_Homotopy_Creation;      use Drivers_for_Homotopy_Creation;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 
 procedure Driver_for_Winding_Numbers
              ( file : in file_type; p : in Poly_Sys;

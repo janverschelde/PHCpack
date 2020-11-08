@@ -1,3 +1,6 @@
+Sun 8 Nov 2020 : updated drivers_to_track_*paths.adb for the renaming of
+  drivers_for_poly_continuation into main_poly_continuation.
+
 Fri 26 Feb 2016 : extended stanadard_path_trackers with a new argument for
   the Gauss-Newton corrector, adjusted drivers_to_track_standard_paths.adb.
   Extended ts_path.adb with the call to the Gauss-Newton trackers.

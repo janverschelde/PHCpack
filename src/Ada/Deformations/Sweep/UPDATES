@@ -1,3 +1,6 @@
+Sun 8 Nov 2020 : updated parameter_homotopy_continuation.adb for the renaming
+  of drivers_for_poly_continuation into main_poly_continuation.
+
 Fri 25 Sep 2020 : defined {pent,octo,deca}dobl_parameter_systems.
 
 Wed 23 Sep 2020 : defined tripdobl_parameter_systems.

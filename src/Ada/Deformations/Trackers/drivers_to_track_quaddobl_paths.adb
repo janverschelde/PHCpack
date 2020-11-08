@@ -24,7 +24,7 @@ with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with Continuation_Parameters;
 with QuadDobl_Continuation_Data_io;     use QuadDobl_Continuation_Data_io;
 with QuadDobl_Path_Trackers;            use QuadDobl_Path_Trackers;
-with Drivers_for_Poly_Continuation;     use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;            use Main_Poly_Continuation;
 with Lexicographic_Root_Enumeration;
 with Total_Degree_Start_Systems;
 with Standard_Complex_Polynomials;

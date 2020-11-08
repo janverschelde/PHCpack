@@ -18,7 +18,7 @@ with Standard_Homotopy;
 with Continuation_Parameters;
 with Standard_Continuation_Data_io;     use Standard_Continuation_Data_io;
 with Standard_Path_Trackers;            use Standard_Path_Trackers;
-with Drivers_for_Poly_Continuation;     use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;            use Main_Poly_Continuation;
 with Lexicographic_Root_Enumeration;
 with Total_Degree_Start_Systems;
 with Standard_Complex_Prod_Systems;

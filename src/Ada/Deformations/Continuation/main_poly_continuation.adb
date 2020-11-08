@@ -54,7 +54,7 @@ with Multprec_IncFix_Continuation;
 with Process_io;                         use Process_io;
 with Drivers_for_Path_Directions;        use Drivers_for_Path_Directions;
 
-package body Drivers_for_Poly_Continuation is
+package body Main_Poly_Continuation is
 
 -- AUXILIARIES :
 
@@ -1488,4 +1488,4 @@ package body Drivers_for_Poly_Continuation is
     end if;
   end Driver_for_QuadDobl_Continuation;
 
-end Drivers_for_Poly_Continuation;
+end Main_Poly_Continuation;

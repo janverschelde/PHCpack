@@ -50,7 +50,7 @@ with Projective_Transformations;         use Projective_Transformations;
 with Standard_Root_Refiners;             use Standard_Root_Refiners;
 with DoblDobl_Root_Refiners;             use DoblDobl_Root_Refiners;
 with QuadDobl_Root_Refiners;             use QuadDobl_Root_Refiners;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 with Standard_Parameter_Systems;         use Standard_Parameter_Systems;
 with DoblDobl_Parameter_Systems;         use DoblDobl_Parameter_Systems;
 with QuadDobl_Parameter_Systems;         use QuadDobl_Parameter_Systems;
