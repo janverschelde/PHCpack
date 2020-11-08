@@ -15,7 +15,7 @@ with QuadDobl_Homotopy;
 with Standard_IncFix_Continuation;
 with DoblDobl_IncFix_Continuation;
 with QuadDobl_IncFix_Continuation;
-with Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;
 with Multitasking_Continuation;         use Multitasking_Continuation;
 with Wrapped_Solution_Vectors;
 
@@ -24,7 +24,7 @@ package body Wrapped_Path_Trackers is
   procedure Set_Parameters ( file : in file_type; report : out boolean ) is
 
     oc : natural32;
-    use Drivers_for_Poly_Continuation;
+    use Main_Poly_Continuation;
 
   begin
     new_line;

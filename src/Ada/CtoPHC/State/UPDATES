@@ -1,3 +1,7 @@
+Sun 8 Nov 2020 : updated continuation_parameters_interface.adb and
+  phcpack_operations.adb for the renaming of drivers_for_poly_continuation
+  into main_poly_continuation.
+
 Tue 27 Oct 2020 : in cells_container.adb, changed the Deep_Clear() into
   Shallow_Clear() of the orgcells (original) and stbcells (stable cells).
 

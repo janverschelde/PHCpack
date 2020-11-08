@@ -1,3 +1,7 @@
+Sun 8 Nov 2020 : updated drivers_for_pieri_homotopies.adb and drivers_for_
+  quantum_pieri.adb for the renaming of drivers_for_poly_continuation into
+  main_poly_continuation.
+
 Thu 13 Jun 2019 : added the verbose level to the bablenum.
 
 Tue 29 Nov 2016 : added extra zero option to drivers_for_input_planes

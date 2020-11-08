@@ -3,7 +3,7 @@ with File_Scanning;                      use File_Scanning;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 
 procedure Driver_for_Own_Start_System
              ( file : in file_type; p : in Poly_Sys;

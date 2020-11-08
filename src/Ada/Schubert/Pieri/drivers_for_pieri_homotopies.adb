@@ -24,7 +24,7 @@ with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Homotopy;
 with Standard_Root_Refiners;             use Standard_Root_Refiners;
 with Standard_IncFix_Continuation;       use Standard_IncFix_Continuation;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 with Brackets,Brackets_io;               use Brackets,Brackets_io;
 with Bracket_Monomials;                  use Bracket_Monomials;
 with Standard_Bracket_Systems;           use Standard_Bracket_Systems;

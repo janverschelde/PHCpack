@@ -51,7 +51,7 @@ with Standard_IncFix_Continuation;
 with DoblDobl_IncFix_Continuation;
 with QuadDobl_IncFix_Continuation;
 with Multprec_IncFix_Continuation;
-with Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;
 with Drivers_for_Path_Directions;
 with Standard_Root_Refiners;
 with Witness_Sets,Witness_Sets_io;
@@ -2413,7 +2413,7 @@ package body PHCpack_Operations is
 
     use Standard_Complex_Numbers,Standard_Complex_Norms_Equals;
     use Standard_IncFix_Continuation;
-    use Drivers_for_Poly_Continuation;
+    use Main_Poly_Continuation;
     use Drivers_for_Path_Directions;
 
     k : natural32 := 2;
@@ -2565,7 +2565,7 @@ package body PHCpack_Operations is
 
     use DoblDobl_Complex_Numbers,DoblDobl_Complex_Vector_Norms;
     use DoblDobl_IncFix_Continuation;
-    use Drivers_for_Poly_Continuation;
+    use Main_Poly_Continuation;
     use Drivers_for_Path_Directions;
 
     k : natural32 := 2;
@@ -2713,7 +2713,7 @@ package body PHCpack_Operations is
 
     use QuadDobl_Complex_Numbers,QuadDobl_Complex_Vector_Norms;
     use QuadDobl_IncFix_Continuation;
-    use Drivers_for_Poly_Continuation;
+    use Main_Poly_Continuation;
     use Drivers_for_Path_Directions;
 
     k : natural32 := 2;

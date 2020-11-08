@@ -12,7 +12,7 @@ with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Standard_System_and_Solutions_io;   use Standard_System_and_Solutions_io;
 with Drivers_for_Homotopy_Creation;      use Drivers_for_Homotopy_Creation;
 with Continuation_Parameters;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 with PHCpack_Operations;
 with Standard_Solutions_Queue;
 with DoblDobl_Solutions_Queue;

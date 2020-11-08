@@ -22,7 +22,7 @@ with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Standard_Homotopy;
 with Standard_IncFix_Continuation;       use Standard_IncFix_Continuation;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 with Standard_Root_Refiners;             use Standard_Root_Refiners;
 with Brackets;                           use Brackets;
 with Localization_Posets;                use Localization_Posets;

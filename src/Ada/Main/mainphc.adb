@@ -22,7 +22,7 @@ with Multprec_Floating_Numbers;
 with Multprec_Complex_Solutions;
 with Drivers_for_Scaling;                use Drivers_for_Scaling;
 with Drivers_for_Reduction;              use Drivers_for_Reduction;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 with Main_Root_Counters;
 with Drivers_for_Homotopy_Creation;      use Drivers_for_Homotopy_Creation;
 with Driver_for_Root_Refining;

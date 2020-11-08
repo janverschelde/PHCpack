@@ -1,3 +1,6 @@
+Sum 8 Nov 2020 : updated multitasking_continuation.adb for the renaming of
+  drivers_for_poly_continuation into main_poly_continuation.
+
 Sat 24 Oct 2020 : extended multitasked_hessian_circuits with procedures
   in triple, penta, octo, and deca double precision.  Added tests to
   multitasked_hessian_circuits, so seven precisions are supported.

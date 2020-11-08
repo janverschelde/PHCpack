@@ -6,7 +6,7 @@ with Standard_Floating_Vectors;
 with Continuation_Parameters; 
 with Continuation_Parameters_io; 
 with Pack_Continuation_Parameters;
-with Drivers_for_Poly_Continuation;     use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;            use Main_Poly_Continuation;
 with PHCpack_Operations;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 

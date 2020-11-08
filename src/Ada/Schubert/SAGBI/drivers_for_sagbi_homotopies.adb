@@ -42,7 +42,7 @@ with Lists_of_Integer_Vectors_io;        use Lists_of_Integer_Vectors_io;
 with Arrays_of_Integer_Vector_Lists;     use Arrays_of_Integer_Vector_Lists;
 with Standard_IncFix_Continuation;       use Standard_IncFix_Continuation;
 with Standard_Root_Refiners;             use Standard_Root_Refiners;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
 with Integer_Lifting_Utilities;          use Integer_Lifting_Utilities;
 with Integer_Mixed_Subdivisions;         use Integer_Mixed_Subdivisions;
