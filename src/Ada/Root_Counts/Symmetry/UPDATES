@@ -1,3 +1,6 @@
+Sun 8 Nov 2020 : updated drivers_for_symmetric_lifting for the renaming of
+  drivers_for_poly_continuation into main_poly_continuation.
+
 Wed 5 Jun 2019 : added the verbose level to mainsmvc, and then passed that
   variable to drivers_for_mixedvol_algorithm.Driver_for_MixedVolAlgorithm.
 

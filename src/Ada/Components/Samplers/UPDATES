@@ -1,3 +1,8 @@
+Sun 8 Nov 2020 : updated mainsam.adb, sampling_machine.adb, {dobldobl,
+  quaddobl}_sampling_machine.adb, sampling_laurent_machine,  and {dobldobl,
+  quaddobl}_sampling_laurent_machine.adb for the renaming of drivers_for_poly_
+  continuation into main_poly_continuation.
+
 Sun 5 Jan 2019 : for compiler warnings, modified witness_sets_io.adb.
 
 Fri 29 Dec 2017 : updated *dobl*sampling*machine.adb to avoid sharing

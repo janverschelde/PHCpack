@@ -3,7 +3,7 @@ with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Poly_Randomizers;  use Standard_Complex_Poly_Randomizers;
 with Standard_Complex_Laur_Randomizers;  use Standard_Complex_Laur_Randomizers;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 
 package body Drivers_for_Coefficient_Systems is
 

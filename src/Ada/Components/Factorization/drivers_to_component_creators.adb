@@ -7,7 +7,7 @@ with Sampling_Machine;
 with Interpolation_Filters;              use Interpolation_Filters;
 with Span_of_Component;                  use Span_of_Component;
 with Irreducible_Components;             use Irreducible_Components;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 
 package body Drivers_to_Component_Creators is
 

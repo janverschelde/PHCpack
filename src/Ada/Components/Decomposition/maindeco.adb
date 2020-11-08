@@ -12,7 +12,7 @@ with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Prompt_for_Systems;
-with Drivers_for_Poly_Continuation;     use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;            use Main_Poly_Continuation;
 with Standard_Monomial_Maps;            use Standard_Monomial_Maps;
 with Standard_Monomial_Maps_io;         use Standard_Monomial_Maps_io;
 with Standard_Monomial_Map_Filters;

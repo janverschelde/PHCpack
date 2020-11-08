@@ -17,7 +17,7 @@ with QuadDobl_Complex_Solutions;
 with Prompt_for_Systems;
 with Witness_Sets_io;                    use Witness_Sets_io;
 with Continuation_Parameters;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 with Greeting_Banners;
 with Write_Seed_Number;
 with Cascade_Homotopies;                 use Cascade_Homotopies;

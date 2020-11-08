@@ -1,3 +1,6 @@
+Sun 8 Nov 2020 : updated drivers_for_coefficient_systems.adb because of the
+  name change of drivers_for_poly_continuation into main_poly_continuation.
+
 Sun 4 Oct 2020 : renamed drivers_for_vertex_points into main_vertex_points
   and ts_drivpts into ts_mainvpts.  Updated drivers_for_implicit_lifting
   for this name change.

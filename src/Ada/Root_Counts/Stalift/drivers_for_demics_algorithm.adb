@@ -8,7 +8,7 @@ with Standard_Laur_Poly_Convertors;
 with Standard_Poly_Laur_Convertors;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_System_and_Solutions_io;
-with Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;
 with Floating_Lifting_Functions;
 with Floating_Mixed_Subdivisions_io;
 with Drivers_for_Static_Lifting;
@@ -234,9 +234,9 @@ package body Drivers_for_DEMiCs_Algorithm is
     end if;
     if ranstart then -- allow for tuning of continuation parameters
       new_line;
-      Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file);
+      Main_Poly_Continuation.Driver_for_Continuation_Parameters(file);
       new_line;
-      Drivers_for_Poly_Continuation.Driver_for_Process_io(file,oc);
+      Main_Poly_Continuation.Driver_for_Process_io(file,oc);
       contrep := (oc /= 0);
     end if;
     new_line;

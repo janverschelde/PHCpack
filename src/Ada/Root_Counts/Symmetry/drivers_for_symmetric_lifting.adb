@@ -19,7 +19,7 @@ with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
 with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
 with Integer_Faces_of_Polytope;
 with Integer_Mixed_Subdivisions;

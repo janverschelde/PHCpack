@@ -15,7 +15,7 @@ with DoblDobl_Complex_Jaco_Matrices;
 with Continuation_Parameters;
 with Continuation_Parameters_io;
 with DoblDobl_IncFix_Continuation;       use DoblDobl_IncFix_Continuation;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 with DoblDobl_Root_Refiners;
 with Planes_and_Polynomials;             use Planes_and_Polynomials;
 

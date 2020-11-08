@@ -1,3 +1,6 @@
+Sun 8 Nov 2020 : updated drivers_for_component_creators.adb for the renaming
+  of drivers_for_poly_continuation into main_poly_continuation.
+
 Mon 27 Jan 2020 : updated ts_serwit because of shortening of the name
   Convolution_Circuit into Circuit.
 
