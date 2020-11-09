@@ -180,8 +180,8 @@ int main ( void )
    cout << "Give the largest power of each variable : "; cin >> pwr;
    cout << "Give the degree of the series : "; cin >> deg;
 
-   // cout << endl << "Testing for real input data ... " << endl;
-   // test_real(dim,nvr,pwr,deg);
+   cout << endl << "Testing for real input data ... " << endl;
+   test_real(dim,nvr,pwr,deg);
    cout << endl << "Testing for complex input data ..." << endl;
    test_complex(dim,nvr,pwr,deg);
 
