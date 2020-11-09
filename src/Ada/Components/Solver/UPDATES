@@ -1,3 +1,6 @@
+Sun 8 Nov 2020 : updated drivers_to_eqn_by_eqn_solvers.adb for the renaming
+  of drivers_for_poly_continuation into main_poly_continuation.
+
 Sat 14 Sep 2019 : added file_type and boolean as arguments to bablsolve.
 
 Fri 6 Sep 2019 : added a file name as argument to bablsolve.
