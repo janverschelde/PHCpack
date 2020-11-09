@@ -294,15 +294,15 @@ test_dbl_monomials: random_numbers.o dbl_convolutions_host.o \
                   dbl_monomials_kernels.o test_dbl_monomials.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
-test_dbl2_monomials: random_numbers.o double_double_functions.o \
-                     random2_vectors.o dbl2_convolutions_host.o \
+test_dbl2_monomials: random_numbers.o random2_vectors.o random2_series.o \
+                     double_double_functions.o dbl2_convolutions_host.o \
                      dbl2_monomials_host.o dbl2_monomials_kernels.o \
                      test_dbl2_monomials.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_monomials random_numbers.o random2_vectors.o \
-                  double_double_functions.o dbl2_convolutions_host.o \
-                  dbl2_monomials_host.o dbl2_monomials_kernels.o \
-                  test_dbl2_monomials.o \
+                  random2_series.o double_double_functions.o \
+                  dbl2_convolutions_host.o dbl2_monomials_host.o \
+                  dbl2_monomials_kernels.o test_dbl2_monomials.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl3_monomials: random_numbers.o double_double_functions.o \
