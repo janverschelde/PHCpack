@@ -86,9 +86,9 @@ void CPU_cmplx2_speel
  *                of the series of the product;
  *   cffrelo      low doubles of the real parts of the coefficients
  *                of the series of the product;
- *   cffimhi      high doubles of the imaginary pars of the coefficient
+ *   cffimhi      high doubles of the imaginary parts of the coefficient
  *                of the series of the product;
- *   cffimlo      low doubles of the imaginary pars of the coefficient
+ *   cffimlo      low doubles of the imaginary parts of the coefficient
  *                of the series of the product;
  *   inputrehi    contains the high doubles of the real parts of the
  *                coefficients of the series for all variables;
@@ -101,27 +101,27 @@ void CPU_cmplx2_speel
  *   forwardrehi  contains work space for the high doubles of nvr forward
  *                products, forwardrehi[k] can hold deg+1 doubles;
  *   forwardrelo  contains work space for the low doubles of nvr forward
- *                products, forwardrehi[k] can hold deg+1 doubles;
+ *                products, forwardrelo[k] can hold deg+1 doubles;
  *   forwardimhi  contains work space for the high doubles of nvr forward
  *                products, forwardimhi[k] can hold deg+1 doubles;
  *   forwardimlo  contains work space for the low doubles of nvr forward
- *                products, forwardimhi[k] can hold deg+1 doubles;
+ *                products, forwardimlo[k] can hold deg+1 doubles;
  *   backwardrehi contains work space for the high doubles of nvr-2 backward
  *                products, backwardrehi[k] can hold deg+1 doubles;
  *   backwardrelo contains work space for the low doubles of nvr-2 backward
- *                products, backwardrehi[k] can hold deg+1 doubles;
+ *                products, backwardrelo[k] can hold deg+1 doubles;
  *   backwardimhi contains work space for the high doubles of nvr-2 backward
  *                products, backwardimhi[k] can hold deg+1 doubles;
  *   backwardimlo contains work space for the low doubles of nvr-2 backward
- *                products, backwardimhi[k] can hold deg+1 doubles;
+ *                products, backwardimlo[k] can hold deg+1 doubles;
  *   crossrehi    contains work space for the high doubles of nvr-2 cross
  *                products, crossrehi[k] can hold deg+1 doubles;
  *   crossrelo    contains work space for the low doubles of nvr-2 cross
- *                products, crossrehi[k] can hold deg+1 doubles;
+ *                products, crossrelo[k] can hold deg+1 doubles;
  *   crossimhi    contains work space for the high doubles of nvr-2 cross
  *                products, crossimhi[k] can hold deg+1 doubles;
  *   crossimlo    contains work space for the high doubles of nvr-2 cross
- *                products, crossimhi[k] can hold deg+1 doubles.
+ *                products, crossimlo[k] can hold deg+1 doubles.
  *
  * ON RETURN :
  *   forwardrehi  accumulates the high doubles of the real parts
@@ -207,9 +207,9 @@ void CPU_cmplx2_evaldiff
  *              of the series of the product;
  *   cffrelo    low doubles of the real parts of the coefficients
  *              of the series of the product;
- *   cffimhi    high doubles of the imaginary pars of the coefficients
+ *   cffimhi    high doubles of the imaginary parts of the coefficients
  *              of the series of the product;
- *   cffimlo    low doubles of the imaginary pars of the coefficients
+ *   cffimlo    low doubles of the imaginary parts of the coefficients
  *              of the series of the product;
  *   inputrehi  contains the high doubles of the real parts of the 
  *              coefficients of the series for all variables in the monomial;

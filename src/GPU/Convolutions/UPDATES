@@ -4,6 +4,8 @@ Mon 9 Nov 2020 : added definitions for complex double double arithmetic
   To dbl3_monomials_host.cpp and dbl3_monomials_kernels.cu, added 
   complex triple double functions, tested by test_dbl3_monomials.cpp.
   In dbl*_monomials_kernels.cu, used proper == in equality test.
+  Edited dbl2_monomials_host.h.  Added dbl4_monomials_host.h and its .cpp,
+  tested in test_dbl4_monomials.cpp.  Updated makefiles.
 
 Fri 6 Nov 2020 : edited dbl2_monomials_host.h and dbl2_monomials_kernels.h.
   New dbl3_monomials_{host,kernels}.h, dbl3_monomials_host.cpp, 

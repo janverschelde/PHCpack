@@ -69,4 +69,6 @@ test_dbl2_monomials        : test eval/diff of monomials with double doubles
 dbl3_monomials_host        : evaldiff of triple double monomials on host
 dbl3_monomials_kernels     : evaldiff of triple double monomials on device
 test_dbl3_monomials        : test eval/diff of monomials with triple doubles
+dbl4_monomials_host        : evaldiff of quad double monomials on host
+test_dbl4_monomials        : test eval/diff of monomials with quad doubles
 -----------------------------------------------------------------------------
