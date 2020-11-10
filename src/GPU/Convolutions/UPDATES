@@ -1,6 +1,8 @@
 Mon 9 Nov 2020 : added definitions for complex double double arithmetic 
   in dbl2_monomials_host.cpp, dbl2_monomials_kernels.cu, with added tests
-  in test_dbl2_monomials.cpp; updated makefile_unix.
+  in test_dbl2_monomials.cpp; updated makefile_unix and makefile_windows.
+  To dbl3_monomials_host.cpp and dbl3_monomials_kernels.cu, added 
+  complex triple double functions, tested by test_dbl3_monomials.cpp.
 
 Fri 6 Nov 2020 : edited dbl2_monomials_host.h and dbl2_monomials_kernels.h.
   New dbl3_monomials_{host,kernels}.h, dbl3_monomials_host.cpp, 
