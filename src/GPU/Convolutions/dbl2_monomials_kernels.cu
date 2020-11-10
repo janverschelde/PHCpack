@@ -369,7 +369,7 @@ void GPU_dbl2_evaldiff
    cudaMemcpy(inputhi_d,inputhi_h,szdim,cudaMemcpyHostToDevice);
    cudaMemcpy(inputlo_d,inputlo_h,szdim,cudaMemcpyHostToDevice);
 
-   if(BS = deg1)
+   if(BS == deg1)
    {
       GPU_dbl2_speel<<<1,BS>>>
          (nvr,deg,idx_d,cffhi_d,cfflo_d,inputhi_d,inputlo_d,forwardhi_d,
@@ -502,7 +502,7 @@ void GPU_cmplx2_evaldiff
    cudaMemcpy(inputimhi_d,inputimhi_h,szdim,cudaMemcpyHostToDevice);
    cudaMemcpy(inputimlo_d,inputimlo_h,szdim,cudaMemcpyHostToDevice);
 
-   if(BS = deg1)
+   if(BS == deg1)
    {
       GPU_cmplx2_speel<<<1,BS>>>
          (nvr,deg,idx_d,cffrehi_d,cffrelo_d,cffimhi_d,cffimlo_d,
