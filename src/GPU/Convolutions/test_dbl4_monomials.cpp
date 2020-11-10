@@ -12,7 +12,7 @@
 #include "random4_vectors.h"
 #include "random4_series.h"
 #include "dbl4_monomials_host.h"
-// #include "dbl4_monomials_kernels.h"
+#include "dbl4_monomials_kernels.h"
 
 using namespace std;
 
@@ -508,23 +508,27 @@ int test_real ( int dim, int nvr, int pwr, int deg )
       cout << outputhilo_h[dim][i] << "  " << outputlolo_h[dim][i] << endl;
    }
 
-//   double errsum = 0.0;
-//   double errtot = 0.0;
+   double errsum = 0.0;
+   double errtot = 0.0;
  
    if(nvr > 2)
    {
-/*
-      GPU_dbl4_evaldiff(deg+1,dim,nvr,deg,idx,cffhi,cfflo,inputhi,inputlo,
-                        outputhi_d,outputlo_d);
+      GPU_dbl4_evaldiff(deg+1,dim,nvr,deg,idx,
+         cffhihi,cfflohi,cffhilo,cfflolo,
+         inputhihi,inputlohi,inputhilo,inputlolo,
+         outputhihi_d,outputlohi_d,outputhilo_d,outputlolo_d);
       cout << "The value of the product computed on the GPU :" << endl;
       for(int i=0; i<=deg; i++)
       {
-         cout << outputhi_d[dim][i] << "  " << outputlo_d[dim][i] << endl;
-         errsum = abs(outputhi_h[dim][i] - outputhi_d[dim][i])
-                + abs(outputlo_h[dim][i] - outputlo_d[dim][i]);
+         cout << outputhihi_d[dim][i] << "  " << outputlohi_d[dim][i] << endl;
+         cout << outputhilo_d[dim][i] << "  " << outputlolo_d[dim][i] << endl;
+         errsum = errsum 
+                + abs(outputhihi_h[dim][i] - outputhihi_d[dim][i])
+                + abs(outputlohi_h[dim][i] - outputlohi_d[dim][i])
+                + abs(outputhilo_h[dim][i] - outputhilo_d[dim][i])
+                + abs(outputlolo_h[dim][i] - outputlolo_d[dim][i]);
       }
       cout << "Sum of errors : " << errsum << endl; errtot += errsum;
- */
    }
    for(int k=0; k<nvr; k++)
    {
@@ -536,24 +540,27 @@ int test_real ( int dim, int nvr, int pwr, int deg )
          cout << outputhilo_h[idx[k]][i] << "  "
               << outputlolo_h[idx[k]][i] << endl;
       }
-/*
       if(nvr > 2)
       {
          cout << "-> derivative for index " << idx[k]
               << " computed on GPU :" << endl;
          for(int i=0; i<=deg; i++)
          {
-            cout << outputhi_d[idx[k]][i] << "  "
-                 << outputlo_d[idx[k]][i] << endl;
-            errsum = abs(outputhi_h[idx[k]][i] - outputhi_d[idx[k]][i])
-                   + abs(outputlo_h[idx[k]][i] - outputlo_d[idx[k]][i]);
-            cout << "Sum of errors : " << errsum << endl; errtot += errsum;
+            cout << outputhihi_d[idx[k]][i] << "  "
+                 << outputlohi_d[idx[k]][i] << endl;
+            cout << outputhilo_d[idx[k]][i] << "  "
+                 << outputlolo_d[idx[k]][i] << endl;
+            errsum = errsum
+                   + abs(outputhihi_h[idx[k]][i] - outputhihi_d[idx[k]][i])
+                   + abs(outputlohi_h[idx[k]][i] - outputlohi_d[idx[k]][i])
+                   + abs(outputhilo_h[idx[k]][i] - outputhilo_d[idx[k]][i])
+                   + abs(outputlolo_h[idx[k]][i] - outputlolo_d[idx[k]][i]);
          }
+         cout << "Sum of errors : " << errsum << endl; errtot += errsum;
       }
    }
    cout << "Total sum of all errors : " << errtot << endl;
- */
-   }
+
    return 0;
 }
 

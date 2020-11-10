@@ -1,3 +1,7 @@
+Tue 10 Nov 2020 : edited dbl2_monomials_kernels.h and defined kernels in
+  dbl4_monomials_kernels.h and dbl4_monomials_kernels.cu, with added tests
+  in test_dbl4_monomials.cpp, with updated makefiles.
+
 Mon 9 Nov 2020 : added definitions for complex double double arithmetic 
   in dbl2_monomials_host.cpp, dbl2_monomials_kernels.cu, with added tests
   in test_dbl2_monomials.cpp; updated makefile_unix and makefile_windows.

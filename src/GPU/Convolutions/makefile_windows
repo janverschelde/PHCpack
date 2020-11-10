@@ -461,14 +461,14 @@ test_dbl3_monomials: random_numbers.obj random3_vectors.obj random3_series.obj \
 test_dbl4_monomials: random_numbers.obj random4_vectors.obj random4_series.obj \
                      double_double_functions.obj \
 		     quad_double_functions.obj dbl4_convolutions_host.obj \
-                     dbl4_monomials_host.obj \
+                     dbl4_monomials_host.obj dbl4_monomials_kernels.obj \
                      test_dbl4_monomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl4_monomials.exe \
               random_numbers.obj random4_vectors.obj random4_series.obj \
               double_double_functions.obj \
               quad_double_functions.obj dbl4_convolutions_host.obj \
-              dbl4_monomials_host.obj \
+              dbl4_monomials_host.obj dbl4_monomials_kernels.obj \
               test_dbl4_monomials.obj
 
 clean:

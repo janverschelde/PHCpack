@@ -184,6 +184,10 @@ dbl3_monomials_kernels.o:
 	@-echo ">>> compiling monomial kernels for triple doubles ..."
 	nvcc -ccbin=$(gpp) -I$(MPD) -c dbl3_monomials_kernels.cu
 
+dbl4_monomials_kernels.o:
+	@-echo ">>> compiling monomial kernels for quad doubles ..."
+	nvcc -ccbin=$(gpp) -I$(MPD) -c dbl4_monomials_kernels.cu
+
 dbl_monomials_host.o:
 	@-echo ">>> compiling dbl_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) dbl_monomials_host.cpp
@@ -328,13 +332,13 @@ test_dbl3_monomials: random_numbers.o random3_vectors.o random3_series.o \
 test_dbl4_monomials: random_numbers.o random4_vectors.o random4_series.o \
                      double_double_functions.o quad_double_functions.o \
                      dbl4_convolutions_host.o dbl4_monomials_host.o \
-                     test_dbl4_monomials.o
+                     dbl4_monomials_kernels.o test_dbl4_monomials.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl4_monomials \
                   random_numbers.o random4_vectors.o random4_series.o \
                   double_double_functions.o quad_double_functions.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
-                  test_dbl4_monomials.o \
+                  dbl4_monomials_kernels.o test_dbl4_monomials.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
 clean:
