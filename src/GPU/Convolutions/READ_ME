@@ -60,6 +60,11 @@ dbl10_convolutions_host    : convolutions of deca double vectors on host
 dbl10_convolutions_kernels : convolutions of deca double vectors on device
 test_dbl10_convolutions    : test convolutions of deca double vectors
 -----------------------------------------------------------------------------
+random_monomials           : setup test data in double precision
+random2_monomials          : setup test data in double double precision
+random3_monomials          : setup test data in triple double precision
+random4_monomials          : setup test data in quad double precision
+-----------------------------------------------------------------------------
 dbl_monomials_host         : evaldiff of double monomials on host
 dbl_monomials_kernels      : evaldiff of double monomials on device
 test_dbl_monomials         : test eval/diff of monomials with doubles

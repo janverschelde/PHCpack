@@ -92,6 +92,22 @@ random10_series.o:
 	@-echo ">>> compiling deca double random series generators ..."
 	$(gpp) -O3 -c -I$(MPD) random10_series.cpp
 
+random_monomials.o:
+	@-echo ">>> compiling double random monomials generators ..."
+	$(gpp) -O3 -c -I$(MPD) random_monomials.cpp
+
+random2_monomials.o:
+	@-echo ">>> compiling double double random monomials generators ..."
+	$(gpp) -O3 -c -I$(MPD) random2_monomials.cpp
+
+random3_monomials.o:
+	@-echo ">>> compiling triple double random monomials generators ..."
+	$(gpp) -O3 -c -I$(MPD) random3_monomials.cpp
+
+random4_monomials.o:
+	@-echo ">>> compiling quad double random monomials generators ..."
+	$(gpp) -O3 -c -I$(MPD) random4_monomials.cpp
+
 double_double_functions.o:
 	@-echo ">>> compiling double double functions ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
@@ -297,45 +313,48 @@ test_dbl10_convolutions: double_double_functions.o quad_double_functions.o \
                   dbl10_convolutions_host.o dbl10_convolutions_kernels.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
-test_dbl_monomials: random_numbers.o dbl_convolutions_host.o \
-                    dbl_monomials_host.o dbl_monomials_kernels.o \
-                    test_dbl_monomials.o
+test_dbl_monomials: random_numbers.o random_monomials.o \
+                    dbl_convolutions_host.o dbl_monomials_host.o \
+                    dbl_monomials_kernels.o test_dbl_monomials.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl_monomials random_numbers.o \
+	$(gpp) -o test_dbl_monomials random_numbers.o random_monomials.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
                   dbl_monomials_kernels.o test_dbl_monomials.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
-test_dbl2_monomials: random_numbers.o random2_vectors.o random2_series.o \
+test_dbl2_monomials: random_numbers.o random_monomials.o random2_vectors.o \
+                     random2_series.o random2_monomials.o \
                      double_double_functions.o dbl2_convolutions_host.o \
                      dbl2_monomials_host.o dbl2_monomials_kernels.o \
                      test_dbl2_monomials.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl2_monomials random_numbers.o random2_vectors.o \
-                  random2_series.o double_double_functions.o \
-                  dbl2_convolutions_host.o dbl2_monomials_host.o \
-                  dbl2_monomials_kernels.o test_dbl2_monomials.o \
-                  -lcuda -lcudart -L$(CUDALIB)
+	$(gpp) -o test_dbl2_monomials random_numbers.o random_monomials.o \
+                  random2_vectors.o random2_series.o random2_monomials.o \
+                  double_double_functions.o dbl2_convolutions_host.o \
+                  dbl2_monomials_host.o dbl2_monomials_kernels.o \
+                  test_dbl2_monomials.o -lcuda -lcudart -L$(CUDALIB)
 
-test_dbl3_monomials: random_numbers.o random3_vectors.o random3_series.o \
+test_dbl3_monomials: random_numbers.o random_monomials.o random3_vectors.o \
+                     random3_series.o random3_monomials.o \
                      double_double_functions.o triple_double_functions.o \
                      dbl3_convolutions_host.o dbl3_monomials_host.o \
                      dbl3_monomials_kernels.o test_dbl3_monomials.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl3_monomials \
-                  random_numbers.o random3_vectors.o random3_series.o \
+	$(gpp) -o test_dbl3_monomials random_numbers.o random_monomials.o \
+                  random3_vectors.o random3_series.o random3_monomials.o \
                   double_double_functions.o triple_double_functions.o \
                   dbl3_convolutions_host.o dbl3_monomials_host.o \
                   dbl3_monomials_kernels.o test_dbl3_monomials.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
-test_dbl4_monomials: random_numbers.o random4_vectors.o random4_series.o \
+test_dbl4_monomials: random_numbers.o random_monomials.o random4_vectors.o \
+                     random4_series.o random4_monomials.o \
                      double_double_functions.o quad_double_functions.o \
                      dbl4_convolutions_host.o dbl4_monomials_host.o \
                      dbl4_monomials_kernels.o test_dbl4_monomials.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl4_monomials \
-                  random_numbers.o random4_vectors.o random4_series.o \
+	$(gpp) -o test_dbl4_monomials random_numbers.o random_monomials.o \
+                  random4_vectors.o random4_series.o random4_monomials.o \
                   double_double_functions.o quad_double_functions.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
                   dbl4_monomials_kernels.o test_dbl4_monomials.o \
@@ -369,11 +388,15 @@ clean:
 	/bin/rm -f -r random10_vectors.o random10_series.o
 	/bin/rm -f -r dbl10_convolutions_kernels.o dbl10_convolutions_host.o
 	/bin/rm -f -r test_dbl10_convolutions.o test_dbl10_convolutions
+	/bin/rm -f -r random_monomials.o
 	/bin/rm -f -r dbl_monomials_host.o dbl_monomials_kernels.o
 	/bin/rm -f -r test_dbl_monomials.o test_dbl_monomials
+	/bin/rm -f -r random2_monomials.o
 	/bin/rm -f -r dbl2_monomials_host.o dbl2_monomials_kernels.o
 	/bin/rm -f -r test_dbl2_monomials.o test_dbl2_monomials
+	/bin/rm -f -r random3_monomials.o
 	/bin/rm -f -r dbl3_monomials_host.o dbl3_monomials_kernels.o
 	/bin/rm -f -r test_dbl3_monomials.o test_dbl3_monomials
+	/bin/rm -f -r random4_monomials.o
 	/bin/rm -f -r dbl4_monomials_host.o dbl4_monomials_kernels.o
 	/bin/rm -f -r test_dbl4_monomials.o test_dbl4_monomials

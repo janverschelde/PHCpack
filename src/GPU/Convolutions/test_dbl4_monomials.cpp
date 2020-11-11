@@ -1,5 +1,5 @@
-/* Tests the evaluation and differentiation of a monomial
- * in quad double precision. */
+// Tests the evaluation and differentiation of a monomial
+// in quad double precision.
 
 #include <iostream>
 #include <iomanip>
@@ -7,195 +7,12 @@
 #include <ctime>
 #include <cmath>
 #include <vector_types.h>
-#include "random_numbers.h"
-#include "quad_double_functions.h"
-#include "random4_vectors.h"
-#include "random4_series.h"
+#include "random_monomials.h"
+#include "random4_monomials.h"
 #include "dbl4_monomials_host.h"
 #include "dbl4_monomials_kernels.h"
 
 using namespace std;
-
-bool sorted_insert ( int n, int *data );
-/*
- * DESCRIPTION :
- *   Inserts data[n] in the sequence of n sorted numbers in data.
- *   Returns true if data[n] was already inserted, that is:
- *   there is an index k less than n, for which data[k] == data[n].
- *   Returns false if data[n] is not a duplicate number. */
-
-bool make_real_monomial
- ( int dim, int nvr, int pwr, int deg, int *idx, int *exp,
-   double *cffhihi, double *cfflohi, double *cffhilo, double *cfflolo );
-/*
- * DESCRIPTION :
- *   Makes a monomial in several variables, with a power series coefficient,
- *   generating random exponents and real coefficients.
- *   Writes an error message and returns true if nvr > dim.
- *
- * ON ENTRY :
- *   dim     dimension, total number of variables;
- *   nvr     number of variables with positive power in the monomial;
- *   pwr     largest power of a variable;
- *   deg     degree of the power series coefficient;
- *   exp     space allocated for nvr integers;
- *   cffhihi has space allocated for deg+1 doubles;
- *   cfflohi has space allocated for deg+1 doubles;
- *   cffhilo has space allocated for deg+1 doubles;
- *   cfflolo has space allocated for deg+1 doubles.
- *
- * ON RETURN :
- *   idx     nvr integers in the range from 0 to dim-1,
- *           idx(k) is the index of the k-th variable in the monomial;
- *   exp     nvr positive integers with the powers of the variables,
- *           exp(k) is the power of the variable with index idx(k);
- *   cffhihi stores the deg+1 highest doubles of the coefficients;
- *   cfflohi stores the deg+1 second highest doubles of the coefficients;
- *   cffhilo stores the deg+1 second lowest doubles of the coefficients;
- *   cfflolo stores the deg+1 lowest doubles of the coefficients. */
-
-bool make_complex_monomial
- ( int dim, int nvr, int pwr, int deg, int *idx, int *exp,
-   double *cffrehihi, double *cffrelohi, double *cffrehilo, double *cffrelolo,
-   double *cffimhihi, double *cffimlohi,
-   double *cffimhilo, double *cffimlolo );
-/*
- * DESCRIPTION :
- *   Makes a monomial in several variables, with a power series coefficient,
- *   generating random exponents and complex coefficients.
- *   Writes an error message and returns true if nvr > dim.
- *
- * ON ENTRY :
- *   dim       dimension, total number of variables;
- *   nvr       number of variables with positive power in the monomial;
- *   pwr       largest power of a variable;
- *   deg       degree of the power series coefficient;
- *   exp       space allocated for nvr integers;
- *   cffrehihi has space allocated for deg+1 doubles,
- *             for the highest doubles of the real parts of the coefficients;
- *   cffrelohi has space allocated for deg+1 doubles, for the second
- *             highest doubles of the real parts of the coefficients;
- *   cffrehilo has space allocated for deg+1 doubles, for the second
- *             lowest doubles of the real parts of the coefficients;
- *   cffrelolo has space allocated for deg+1 doubles, for the lowest
- *             doubles of the real parts of the coefficients;
- *   cffimhihi has space allocated for deg+1 doubles, for the highest
- *             doubles of the imaginary parts of the coefficients;
- *   cffimlohi has space allocated for deg+1 doubles, for the second
- *             highest doubles of the imaginary parts of the coefficients;
- *   cffimhilo has space allocated for deg+1 doubles, for the second
- *             lowest doubles of the imaginary parts of the coefficients.
- *   cffimlolo has space allocated for deg+1 doubles, for the lowest
- *             doubles of the imaginary parts of the coefficients.
- *
- * ON RETURN :
- *   idx       nvr integers in the range from 0 to dim-1,
- *             idx(k) is the index of the k-th variable in the monomial;
- *   exp       nvr positive integers with the powers of the variables,
- *             exp(k) is the power of the variable with index idx(k);
- *   cffrehihi holds the deg+1 highest doubles of the real parts
- *             of the coefficients of the power series;
- *   cffrelohi holds the deg+1 second highest doubles of the real parts
- *             of the coefficients of the power series;
- *   cffrehilo holds the deg+1 second lowest doubles of the real parts
- *             of the coefficients of the power series;
- *   cffrelolo holds the deg+1 lowest doubles of the real parts
- *             of the coefficients of the power series;
- *   cffimhihi holds the deg+1 highest doubles of the imaginary parts
- *             of the coefficients of the power series;
- *   cffimlohi holds the deg+1 second highest doubles of the imaginary parts
- *             of the coefficients of the power series;
- *   cffimhilo holds the deg+1 second lowest doubles of the imaginary parts
- *             of the coefficients of the power series;
- *   cffimlolo holds deg+1 lowest doubles of the imaginary parts
- *             of the coefficients of the power series. */
-
-void common_factors ( int nvr, int *exp, int *nbrfac, int *expfac );
-/*
- * DESCRIPTION :
- *   Extracts all exponents strictly larger than one.
- *  
- * ON ENTRY :
- *   nvr     number of variables in exp, exp[k] >= 1,
- *           for all k from 0 to nvr-1;
- *   exp     exponents of a monomial;
- *   expfac  space for nvr integers.
- *
- * ON RETURN :
- *   nbrfac  number of exponents in exp strictly larger than one;
- *   expfac  exponents of the common factor,
- *           if exp[k] > 1, then expfac[k] = exp[k]-1.  */
-
-void make_real_input
- ( int dim, int deg, double **datahihi, double **datalohi,
-                     double **datahilo, double **datalolo );
-/*
- * DESCRIPTION :
- *   Generates input series, as many as dim, of degree deg.
- *
- * ON ENTRY :
- *   dim      dimension of the input;
- *   deg      degree of the power series;
- *   datahihi has space allocated for dim arrays of deg+1 doubles;
- *   datalohi has space allocated for dim arrays of deg+1 doubles;
- *   datahilo has space allocated for dim arrays of deg+1 doubles;
- *   datalolo has space allocated for dim arrays of deg+1 doubles.
- *
- * ON RETURN :
- *   datahihi holds the highest doubles of the input series,
- *            datahihi[i][j] is the highest double of the j-th coefficient 
- *            of the i-th series, for i in 0..dim-1 and j in 0..deg;
- *   datalohi holds the second highest doubles of the input series,
- *            datalohi[i][j] is the 2nd highest double of the j-th coefficient
- *            of the i-th series, for i in 0..dim-1 and j in 0..deg;
- *   datahilo holds the second lowest doubles of the input series,
- *            datalolo[i][j] is the 2nd lowest double of the j-th coefficient
- *            of the i-th series, for i in 0..dim-1 and j in 0..deg;
- *   datalolo holds the lowest doubles of the input series,
- *            datalolo[i][j] is the lowest double of the j-th coefficient
- *            of the i-th series, for i in 0..dim-1 and j in 0..deg. */
-
-void make_complex_input
- ( int dim, int deg,
-   double **datarehihi, double **datarelohi,
-   double **datarehilo, double **datarelolo,
-   double **dataimhihi, double **dataimlohi,
-   double **dataimhilo, double **dataimlolo );
-/*
- * DESCRIPTION :
- *   Generates input series, as many as dim, of degree deg.
- *
- * ON ENTRY :
- *   dim        dimension of the input;
- *   deg        degree of the power series;
- *   datarehihi has space allocated for the highest doubles
- *              of the real parts of dim series of degree deg.
- *   datarelohi has space allocated for the second highest doubles
- *              of the real parts of dim series of degree deg.
- *   datarehilo has space allocated for the second lowest doubles
- *              of the real parts of dim series of degree deg;
- *   datarelolo has space allocated for the lowest doubles
- *              of the real parts of dim series of degree deg;
- *   dataimhihi has space allocated for the highest doubles
- *              of the imaginary parts of dim series of degree deg;
- *   dataimlohi has space allocated for the second highest doubles
- *              of the imaginary parts of dim series of degree deg;
- *   dataimhilo has space allocated for the second lowest doubles
- *              of the imaginary parts of dim series of degree deg.
- *   dataimlolo has space allocated for the lowest doubles
- *              of the imaginary parts of dim series of degree deg.
- *
- * ON RETURN :
- *   datarehihi stores the highest doubles of the real parts,
- *   datarelohi stores the second highest doubles of the real parts,
- *   datarehilo stores the second lowest doubles of the real parts,
- *   datarelolo stores the lowest doubles of the real parts,
- *   dataimhihi stores the highest doubles of the imaginary parts,
- *   dataimlohi stores the second highest doubles of the imaginary parts,
- *   dataimhilo stores the second lowest doubles of the imaginary parts,
- *   dataimlolo stores the lowest doubles of the imaginary parts,
- *              data[i][j] is the j-th coefficient of the i-th series,
- *              for i in 0..dim-1 and j in 0..deg. */
 
 int test_real ( int dim, int nvr, int pwr, int deg );
 /*
@@ -235,214 +52,6 @@ int main ( void )
    test_complex(dim,nvr,pwr,deg);
 
    return 0;
-}
-
-bool sorted_insert ( int n, int *data )
-{
-   if(n == 0)
-      return false;
-   else
-   {
-      int nbr = data[n];
-      int idx = n;
-
-      for(int i=0; i<n; i++)
-         if(data[i] >= nbr)
-         {
-            idx = i; break;
-         }
-
-      if(idx == n)
-         return false;                  // sequence is already sorted
-      else
-      {
-         if(data[idx] == nbr)           // found duplicate number
-            return true;
-         else
-         {
-            for(int i=n; i>idx; i--)
-               data[i] = data[i-1];     // shift the numbers
-
-            data[idx] = nbr;            // insert number
-            return false;
-         }
-      }
-   }
-}
-
-bool make_real_monomial
- ( int dim, int nvr, int pwr, int deg, int *idx, int *exp,
-   double *cffhihi, double *cfflohi, double *cffhilo, double *cfflolo )
-{
-   bool fail;
-
-   if(nvr > dim)
-   {
-      cout << "ERROR: nvr = " << nvr << " > " << dim << " dim" << endl;
-      return true;
-   }
-   else
-   {
-      for(int i=0; i<=deg; i++)
-         random_quad_double(&cffhihi[i],&cfflohi[i],&cffhilo[i],&cfflolo[i]);
-
-      for(int i=0; i<nvr; i++)
-      {
-         exp[i] = 1 + (rand() % pwr);
-         do
-         {
-            idx[i] = rand() % dim;
-            fail = sorted_insert(i,idx);
-         }
-         while(fail);
-      }
-      return false;
-   }
-}
-
-bool make_complex_monomial
- ( int dim, int nvr, int pwr, int deg, int *idx, int *exp,
-   double *cffrehihi, double *cffrelohi, double *cffrehilo, double *cffrelolo,
-   double *cffimhihi, double *cffimlohi, double *cffimhilo, double *cffimlolo )
-{
-   bool fail;
-
-   if(nvr > dim)
-   {
-      cout << "ERROR: nvr = " << nvr << " > " << dim << " dim" << endl;
-      return true;
-   }
-   else
-   {
-      double rndhihi,rndlohi,rndhilo,rndlolo;
-      double sinhihi,sinlohi,sinhilo,sinlolo;
-
-      for(int i=0; i<=deg; i++)
-      {
-         random_quad_double
-            (&rndhihi,&rndlohi,&rndhilo,&rndlolo);           // random cos
-
-         cffrehihi[i] = rndhihi; cffrelohi[i] = rndlohi;     // cos(angle)
-         cffrehilo[i] = rndhilo; cffrelolo[i] = rndlolo;
-         qdf_sqrt(rndhihi,rndlohi,rndhilo,rndlolo,
-                  &sinhihi,&sinlohi,&sinhilo,&sinlolo);      // cos^(angle)
-         qdf_minus(&sinhihi,&sinlohi,&sinhilo,&sinlolo);     // -cos^(angle)
-         qdf_inc_d(&sinhihi,&sinlohi,&sinhilo,&sinlolo,1.0); // 1-cos^2(angle)
-         qdf_sqrt(sinhihi,sinlohi,sinhilo,sinlolo,
-                  &cffimhihi[i],&cffimlohi[i],
-                  &cffimhilo[i],&cffimlolo[i]);              // sin is sqrt
-      }
-      for(int i=0; i<nvr; i++)
-      {
-         exp[i] = 1 + (rand() % pwr);
-         do
-         {
-            idx[i] = rand() % dim;
-            fail = sorted_insert(i,idx);
-         }
-         while(fail);
-      }
-      return false;
-   }
-}
-
-void common_factors ( int nvr, int *exp, int *nbrfac, int *expfac )
-{
-   *nbrfac = 0;
-
-   for(int i=0; i<nvr; i++)
-   {
-      if(exp[i] <= 1)
-         expfac[i] = 0;
-      else
-      {
-         expfac[i] = exp[i] - 1;
-         *nbrfac = *nbrfac + 1;
-      }
-   }
-}
-
-void make_real_input
- ( int dim, int deg, double **datahihi, double **datalohi,
-                     double **datahilo, double **datalolo )
-{
-   double rndhihi,rndlohi,rndhilo,rndlolo;
-   double* pluxhihi = new double[deg+1];
-   double* pluxlohi = new double[deg+1];
-   double* pluxhilo = new double[deg+1];
-   double* pluxlolo = new double[deg+1];
-   double* minxhihi = new double[deg+1];
-   double* minxlohi = new double[deg+1];
-   double* minxhilo = new double[deg+1];
-   double* minxlolo = new double[deg+1];
-
-   for(int i=0; i<dim; i++)
-   {
-      random_dbl4_exponentials
-         (deg,&rndhihi,&rndlohi,&rndhilo,&rndlolo,
-              pluxhihi,pluxlohi,pluxhilo,pluxlolo,
-              minxhihi,minxlohi,minxhilo,minxlolo);
-
-      for(int j=0; j<=deg; j++)
-      {
-         datahihi[i][j] = pluxhihi[j];
-         datalohi[i][j] = pluxlohi[j];
-         datalolo[i][j] = pluxhilo[j];
-         datalolo[i][j] = pluxlolo[j];
-      }
-   }
-   free(pluxhihi); free(pluxlohi); free(pluxhilo); free(pluxlolo);
-   free(minxhihi); free(minxlohi); free(minxhilo); free(minxlolo); 
-}
-
-void make_complex_input
- ( int dim, int deg,
-   double **datarehihi, double **datarelohi,
-   double **datarehilo, double **datarelolo,
-   double **dataimhihi, double **dataimlohi,
-   double **dataimhilo, double **dataimlolo )
-{
-   double rndrehihi,rndrelohi,rndrehilo,rndrelolo;
-   double rndimhihi,rndimlohi,rndimhilo,rndimlolo;
-   double* pluxrehihi = new double[deg+1];
-   double* pluxrelohi = new double[deg+1];
-   double* pluxrehilo = new double[deg+1];
-   double* pluxrelolo = new double[deg+1];
-   double* pluximhihi = new double[deg+1];
-   double* pluximlohi = new double[deg+1];
-   double* pluximhilo = new double[deg+1];
-   double* pluximlolo = new double[deg+1];
-   double* minxrehihi = new double[deg+1];
-   double* minxrelohi = new double[deg+1];
-   double* minxrehilo = new double[deg+1];
-   double* minxrelolo = new double[deg+1];
-   double* minximhihi = new double[deg+1];
-   double* minximlohi = new double[deg+1];
-   double* minximhilo = new double[deg+1];
-   double* minximlolo = new double[deg+1];
-
-   for(int i=0; i<dim; i++)
-   {
-      random_cmplx4_exponentials(deg,
-         &rndrehihi,&rndrelohi,&rndrehilo,&rndrelolo,
-         &rndimhihi,&rndimlohi,&rndimhilo,&rndimlolo,
-         pluxrehihi,pluxrelohi,pluxrehilo,pluxrelolo,
-         pluximhihi,pluximlohi,pluximhilo,pluximlolo,
-         minxrehihi,minxrelohi,minxrehilo,minxrelolo,
-         minximhihi,minximlohi,minximhilo,minximlolo);
-
-      for(int j=0; j<=deg; j++)
-      {
-         datarehihi[i][j] = pluxrehihi[j]; datarelohi[i][j] = pluxrelohi[j];
-         datarehilo[i][j] = pluxrehilo[j]; datarelolo[i][j] = pluxrelolo[j];
-         dataimhihi[i][j] = pluximhihi[j]; dataimlohi[i][j] = pluximlohi[j];
-         dataimhilo[i][j] = pluximhilo[j]; dataimlolo[i][j] = pluximlolo[j];
-      }
-   }
-   free(pluxrehihi); free(pluxrelohi); free(pluxrehilo); free(pluxrelolo);
-   free(pluximhihi); free(pluximlohi); free(pluximhilo); free(pluximlolo);
-   free(minxrehihi); free(minxrelohi); free(minxrehilo); free(minxrelolo);
-   free(minximhihi); free(minximlohi); free(minximhilo); free(minximlolo); 
 }
 
 int test_real ( int dim, int nvr, int pwr, int deg )
@@ -487,36 +96,35 @@ int test_real ( int dim, int nvr, int pwr, int deg )
 
    srand(time(NULL));
 
-   bool fail = make_real_monomial(dim,nvr,pwr,deg,idx,exp,
-                                  cffhihi,cfflohi,cffhilo,cfflolo);
+   bool fail = make_real4_monomial(dim,nvr,pwr,deg,idx,exp,
+                                   cffhihi,cfflohi,cffhilo,cfflolo);
 
-   if(!fail)
+   if(fail) return 1;
+ 
+   cout << "Generated a random monomial :" << endl;
+   cout << "   the indices :";
+   for(int i=0; i<nvr; i++) cout << " " << idx[i];
+   cout << endl;
+
+   cout << " the exponents :";
+   for(int i=0; i<nvr; i++) cout << " " << exp[i];
+   cout << endl;
+
+   common_factors(nvr,exp,&nbrfac,expfac);
+
+   cout << "common factors :";
+   for(int i=0; i<nvr; i++) cout << " " << expfac[i];
+   cout << endl;
+   cout << "number of common factors : " << nbrfac << endl;
+
+   cout << scientific << setprecision(16);
+   cout << "the coefficients :" << endl;
+   for(int i=0; i<=deg; i++)
    {
-      cout << "Generated a random monomial :" << endl;
-      cout << "   the indices :";
-      for(int i=0; i<nvr; i++) cout << " " << idx[i];
-      cout << endl;
-
-      cout << " the exponents :";
-      for(int i=0; i<nvr; i++) cout << " " << exp[i];
-      cout << endl;
-
-      common_factors(nvr,exp,&nbrfac,expfac);
-
-      cout << "common factors :";
-      for(int i=0; i<nvr; i++) cout << " " << expfac[i];
-      cout << endl;
-      cout << "number of common factors : " << nbrfac << endl;
-
-      cout << scientific << setprecision(16);
-      cout << "the coefficients :" << endl;
-      for(int i=0; i<=deg; i++)
-      {
-         cout << " " << cffhihi[i] << " " << cfflohi[i] << endl;
-         cout << " " << cffhilo[i] << " " << cfflolo[i] << endl;
-      }
+      cout << " " << cffhihi[i] << " " << cfflohi[i] << endl;
+      cout << " " << cffhilo[i] << " " << cfflolo[i] << endl;
    }
-   make_real_input(dim,deg,inputhihi,inputlohi,inputhilo,inputlolo);
+   make_real4_input(dim,deg,inputhihi,inputlohi,inputhilo,inputlolo);
 
    cout << "Random input series :" << endl;
    for(int i=0; i<dim; i++)
@@ -673,40 +281,39 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
    }
    srand(time(NULL));
 
-   bool fail = make_complex_monomial
+   bool fail = make_complex4_monomial
      (dim,nvr,pwr,deg,idx,exp,
       cffrehihi,cffrelohi,cffrehilo,cffrelolo,
       cffimhihi,cffimlohi,cffimhilo,cffimlolo);
 
-   if(!fail)
+   if(fail) return 1;
+
+   cout << "Generated a random monomial :" << endl;
+   cout << "   the indices :";
+   for(int i=0; i<nvr; i++) cout << " " << idx[i];
+   cout << endl;
+
+   cout << " the exponents :";
+   for(int i=0; i<nvr; i++) cout << " " << exp[i];
+   cout << endl;
+
+   common_factors(nvr,exp,&nbrfac,expfac);
+
+   cout << "common factors :";
+   for(int i=0; i<nvr; i++) cout << " " << expfac[i];
+   cout << endl;
+   cout << "number of common factors : " << nbrfac << endl;
+
+   cout << scientific << setprecision(16);
+   cout << "the coefficients :" << endl;
+   for(int i=0; i<=deg; i++)
    {
-      cout << "Generated a random monomial :" << endl;
-      cout << "   the indices :";
-      for(int i=0; i<nvr; i++) cout << " " << idx[i];
-      cout << endl;
-
-      cout << " the exponents :";
-      for(int i=0; i<nvr; i++) cout << " " << exp[i];
-      cout << endl;
-
-      common_factors(nvr,exp,&nbrfac,expfac);
-
-      cout << "common factors :";
-      for(int i=0; i<nvr; i++) cout << " " << expfac[i];
-      cout << endl;
-      cout << "number of common factors : " << nbrfac << endl;
-
-      cout << scientific << setprecision(16);
-      cout << "the coefficients :" << endl;
-      for(int i=0; i<=deg; i++)
-      {
-         cout << cffrehihi[i] << "  " << cffrelohi[i] << endl;
-         cout << cffrehilo[i] << "  " << cffrelolo[i] << endl;
-         cout << cffimhihi[i] << "  " << cffimlohi[i] << endl;
-         cout << cffimhilo[i] << "  " << cffimlolo[i] << endl;
-      }
+      cout << cffrehihi[i] << "  " << cffrelohi[i] << endl;
+      cout << cffrehilo[i] << "  " << cffrelolo[i] << endl;
+      cout << cffimhihi[i] << "  " << cffimlohi[i] << endl;
+      cout << cffimhilo[i] << "  " << cffimlolo[i] << endl;
    }
-   make_complex_input(dim,deg,
+   make_complex4_input(dim,deg,
       inputrehihi,inputrelohi,inputrehilo,inputrelolo,
       inputimhihi,inputimlohi,inputimhilo,inputimlolo);
 
