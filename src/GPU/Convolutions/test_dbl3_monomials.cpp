@@ -201,8 +201,8 @@ int main ( void )
    cout << "Give the largest power of each variable : "; cin >> pwr;
    cout << "Give the degree of the series : "; cin >> deg;
 
-  // cout << endl << "Testing for real input data ... " << endl;
-  // test_real(dim,nvr,pwr,deg);
+   cout << endl << "Testing for real input data ... " << endl;
+   test_real(dim,nvr,pwr,deg);
    cout << endl << "Testing for complex input data ..." << endl;
    test_complex(dim,nvr,pwr,deg);
 
@@ -256,8 +256,13 @@ bool make_real_monomial
    else
    {
       for(int i=0; i<=deg; i++)
-         random_triple_double(&cffhi[i],&cffmi[i],&cfflo[i]);
-
+      {
+         // random_triple_double(&cffhi[i],&cffmi[i],&cfflo[i]);
+         cffhi[i] = 1.0;
+         cffmi[i] = 0.0;
+         cfflo[i] = 0.0;
+         if(i > 0) random_triple_double(&cffhi[i],&cffmi[i],&cfflo[i]);
+      }
       for(int i=0; i<nvr; i++)
       {
          exp[i] = 1 + (rand() % pwr);
@@ -355,10 +360,6 @@ void make_real_input
    }
    free(pluxhi); free(pluxmi); free(pluxlo);
    free(minxhi); free(minxmi); free(minxlo); 
-
-//      for(int j=0; j<=deg; j++)
-//         random_triple_double(&datahi[i][j],&datami[i][j],&datalo[i][j]);
-
 }
 
 void make_complex_input
@@ -492,7 +493,8 @@ int test_real ( int dim, int nvr, int pwr, int deg )
          cout << outputhi_d[dim][i] << "  "
               << outputmi_d[dim][i] << "  "
               << outputlo_d[dim][i] << endl;
-         errsum = abs(outputhi_h[dim][i] - outputhi_d[dim][i])
+         errsum = errsum
+                + abs(outputhi_h[dim][i] - outputhi_d[dim][i])
                 + abs(outputmi_h[dim][i] - outputmi_d[dim][i])
                 + abs(outputlo_h[dim][i] - outputlo_d[dim][i]);
       }
@@ -511,12 +513,14 @@ int test_real ( int dim, int nvr, int pwr, int deg )
       {
          cout << "-> derivative for index " << idx[k]
               << " computed on GPU :" << endl;
+         errsum = 0.0;
          for(int i=0; i<=deg; i++)
          {
             cout << outputhi_d[idx[k]][i] << "  "
                  << outputmi_d[idx[k]][i] << "  "
                  << outputlo_d[idx[k]][i] << endl;
-            errsum = abs(outputhi_h[idx[k]][i] - outputhi_d[idx[k]][i])
+            errsum = errsum
+                   + abs(outputhi_h[idx[k]][i] - outputhi_d[idx[k]][i])
                    + abs(outputmi_h[idx[k]][i] - outputmi_d[idx[k]][i])
                    + abs(outputlo_h[idx[k]][i] - outputlo_d[idx[k]][i]);
          }
@@ -671,7 +675,8 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
                                       << "  " << outputrelo_d[dim][i] << endl;
          cout << outputimhi_d[dim][i] << "  " << outputimmi_d[dim][i] 
                                       << "  " << outputimlo_d[dim][i] << endl;
-         errsum = abs(outputrehi_h[dim][i] - outputrehi_d[dim][i])
+         errsum = errsum
+                + abs(outputrehi_h[dim][i] - outputrehi_d[dim][i])
                 + abs(outputremi_h[dim][i] - outputremi_d[dim][i])
                 + abs(outputrelo_h[dim][i] - outputrelo_d[dim][i])
                 + abs(outputimhi_h[dim][i] - outputimhi_d[dim][i])
@@ -697,6 +702,7 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
       {
          cout << "-> derivative for index " << idx[k]
               << " computed on GPU :" << endl;
+         errsum = 0.0;
          for(int i=0; i<=deg; i++)
          {
             cout << outputrehi_d[idx[k]][i] << "  "
@@ -705,7 +711,8 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
             cout << outputimhi_d[idx[k]][i] << "  "
                  << outputimmi_d[idx[k]][i] << "  "
                  << outputimlo_d[idx[k]][i] << endl;
-            errsum = abs(outputrehi_h[idx[k]][i] - outputrehi_d[idx[k]][i])
+            errsum = errsum
+                   + abs(outputrehi_h[idx[k]][i] - outputrehi_d[idx[k]][i])
                    + abs(outputremi_h[idx[k]][i] - outputremi_d[idx[k]][i])
                    + abs(outputrelo_h[idx[k]][i] - outputrelo_d[idx[k]][i])
                    + abs(outputimhi_h[idx[k]][i] - outputimhi_d[idx[k]][i])

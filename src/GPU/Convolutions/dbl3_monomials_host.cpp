@@ -221,6 +221,7 @@ void CPU_dbl3_evaldiff
       for(int i=0; i<=deg; i++)
       {
          outputhi[ix][i] = cffhi[i];
+         outputmi[ix][i] = cffmi[i];
          outputlo[ix][i] = cfflo[i];
       }
    }

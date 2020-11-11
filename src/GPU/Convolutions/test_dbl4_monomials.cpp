@@ -481,8 +481,8 @@ int test_real ( int dim, int nvr, int pwr, int deg )
       cout << "the coefficients :" << endl;
       for(int i=0; i<=deg; i++)
       {
-         cout << " " << cffhihi[i] << " " << cfflohi[i] << endl;;
-         cout << " " << cffhilo[i] << " " << cfflolo[i] << endl;;
+         cout << " " << cffhihi[i] << " " << cfflohi[i] << endl;
+         cout << " " << cffhilo[i] << " " << cfflolo[i] << endl;
       }
    }
    make_real_input(dim,deg,inputhihi,inputlohi,inputhilo,inputlolo);
