@@ -303,10 +303,16 @@ void CPU_dbl4_evaldiff
 
 void CPU_cmplx4_evaldiff
  ( int dim, int nvr, int deg, int *idx,
-   double *cffrehi, double *cffrelo, double *cffimhi, double *cffimlo,
-   double **inputrehi, double **inputrelo, double **inputimhi,
-   double **inputimlo, double **outputrehi, double **outputrelo,
-   double **outputimhi, double **outputimlo );
+   double *cffrehihi, double *cffrelohi, double *cffrehilo, double *cffrelolo,
+   double *cffimhihi, double *cffimlohi, double *cffimhilo, double *cffimlolo,
+   double **inputrehihi, double **inputrelohi,
+   double **inputrehilo, double **inputrelolo,
+   double **inputimhihi, double **inputimlohi,
+   double **inputimhilo, double **inputimlolo,
+   double **outputrehihi, double **outputrelohi,
+   double **outputrehilo, double **outputrelolo,
+   double **outputimhihi, double **outputimlohi,
+   double **outputimhilo, double **outputimlolo );
 /*
  * DESCRIPTION :
  *   Allocates work space memory to store the forward, backward, and

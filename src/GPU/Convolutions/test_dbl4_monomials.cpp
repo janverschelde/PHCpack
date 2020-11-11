@@ -155,33 +155,47 @@ void make_real_input
  *            datalolo[i][j] is the lowest double of the j-th coefficient
  *            of the i-th series, for i in 0..dim-1 and j in 0..deg. */
 
-//void make_complex_input
-// ( int dim, int deg,
-//   double **datarehi, double **datarelo,
-//   double **dataimhi, double **dataimlo );
+void make_complex_input
+ ( int dim, int deg,
+   double **datarehihi, double **datarelohi,
+   double **datarehilo, double **datarelolo,
+   double **dataimhihi, double **dataimlohi,
+   double **dataimhilo, double **dataimlolo );
 /*
  * DESCRIPTION :
  *   Generates input series, as many as dim, of degree deg.
  *
  * ON ENTRY :
- *   dim      dimension of the input;
- *   deg      degree of the power series;
- *   datarehi has space allocated for the high doubles of the real parts
- *            of dim series of degree deg.
- *   datarelo has space allocated for the low doubles of the real parts
- *            of dim series of degree deg;
- *   dataimhi has space allocated for the high doubles of the imaginary parts
- *            of dim series of degree deg;
- *   dataimlo has space allocated for the high doubles of the imaginary parts
- *            of dim series of degree deg.
+ *   dim        dimension of the input;
+ *   deg        degree of the power series;
+ *   datarehihi has space allocated for the highest doubles
+ *              of the real parts of dim series of degree deg.
+ *   datarelohi has space allocated for the second highest doubles
+ *              of the real parts of dim series of degree deg.
+ *   datarehilo has space allocated for the second lowest doubles
+ *              of the real parts of dim series of degree deg;
+ *   datarelolo has space allocated for the lowest doubles
+ *              of the real parts of dim series of degree deg;
+ *   dataimhihi has space allocated for the highest doubles
+ *              of the imaginary parts of dim series of degree deg;
+ *   dataimlohi has space allocated for the second highest doubles
+ *              of the imaginary parts of dim series of degree deg;
+ *   dataimhilo has space allocated for the second lowest doubles
+ *              of the imaginary parts of dim series of degree deg.
+ *   dataimlolo has space allocated for the lowest doubles
+ *              of the imaginary parts of dim series of degree deg.
  *
  * ON RETURN :
- *   datarehi contains the high doubles of the real parts of the data,
- *   datarehi contains the low doubles of the real parts of the data,
- *   dataimhi contains the high doubles of the imaginary parts of the data,
- *   dataimlo contains the low doubles of the imaginary parts of the data,
- *            data[i][j] is the j-th coefficient of the i-th series,
- *            for i in 0..dim-1 and j in 0..deg. */
+ *   datarehihi stores the highest doubles of the real parts,
+ *   datarelohi stores the second highest doubles of the real parts,
+ *   datarehilo stores the second lowest doubles of the real parts,
+ *   datarelolo stores the lowest doubles of the real parts,
+ *   dataimhihi stores the highest doubles of the imaginary parts,
+ *   dataimlohi stores the second highest doubles of the imaginary parts,
+ *   dataimhilo stores the second lowest doubles of the imaginary parts,
+ *   dataimlolo stores the lowest doubles of the imaginary parts,
+ *              data[i][j] is the j-th coefficient of the i-th series,
+ *              for i in 0..dim-1 and j in 0..deg. */
 
 int test_real ( int dim, int nvr, int pwr, int deg );
 /*
@@ -217,8 +231,8 @@ int main ( void )
 
    cout << endl << "Testing for real input data ... " << endl;
    test_real(dim,nvr,pwr,deg);
-   // cout << endl << "Testing for complex input data ..." << endl;
-   // test_complex(dim,nvr,pwr,deg);
+   cout << endl << "Testing for complex input data ..." << endl;
+   test_complex(dim,nvr,pwr,deg);
 
    return 0;
 }
@@ -381,38 +395,55 @@ void make_real_input
    free(minxhihi); free(minxlohi); free(minxhilo); free(minxlolo); 
 }
 
-/*
 void make_complex_input
- ( int dim, int deg, double **datarehi, double **datarelo,
-   double **dataimhi, double **dataimlo )
+ ( int dim, int deg,
+   double **datarehihi, double **datarelohi,
+   double **datarehilo, double **datarelolo,
+   double **dataimhihi, double **dataimlohi,
+   double **dataimhilo, double **dataimlolo )
 {
-   double rndrehi,rndrelo,rndimhi,rndimlo;
-   double* pluxrehi = new double[deg+1];
-   double* pluxrelo = new double[deg+1];
-   double* pluximhi = new double[deg+1];
-   double* pluximlo = new double[deg+1];
-   double* minxrehi = new double[deg+1];
-   double* minxrelo = new double[deg+1];
-   double* minximhi = new double[deg+1];
-   double* minximlo = new double[deg+1];
+   double rndrehihi,rndrelohi,rndrehilo,rndrelolo;
+   double rndimhihi,rndimlohi,rndimhilo,rndimlolo;
+   double* pluxrehihi = new double[deg+1];
+   double* pluxrelohi = new double[deg+1];
+   double* pluxrehilo = new double[deg+1];
+   double* pluxrelolo = new double[deg+1];
+   double* pluximhihi = new double[deg+1];
+   double* pluximlohi = new double[deg+1];
+   double* pluximhilo = new double[deg+1];
+   double* pluximlolo = new double[deg+1];
+   double* minxrehihi = new double[deg+1];
+   double* minxrelohi = new double[deg+1];
+   double* minxrehilo = new double[deg+1];
+   double* minxrelolo = new double[deg+1];
+   double* minximhihi = new double[deg+1];
+   double* minximlohi = new double[deg+1];
+   double* minximhilo = new double[deg+1];
+   double* minximlolo = new double[deg+1];
 
    for(int i=0; i<dim; i++)
    {
       random_cmplx4_exponentials(deg,
-         &rndrehi,&rndrelo,&rndimhi,&rndimlo,
-         pluxrehi,pluxrelo,pluximhi,pluximlo,
-         minxrehi,minxrelo,minximhi,minximlo);
+         &rndrehihi,&rndrelohi,&rndrehilo,&rndrelolo,
+         &rndimhihi,&rndimlohi,&rndimhilo,&rndimlolo,
+         pluxrehihi,pluxrelohi,pluxrehilo,pluxrelolo,
+         pluximhihi,pluximlohi,pluximhilo,pluximlolo,
+         minxrehihi,minxrelohi,minxrehilo,minxrelolo,
+         minximhihi,minximlohi,minximhilo,minximlolo);
 
       for(int j=0; j<=deg; j++)
       {
-         datarehi[i][j] = pluxrehi[j]; datarelo[i][j] = pluxrelo[j];
-         dataimhi[i][j] = pluximhi[j]; dataimlo[i][j] = pluximlo[j];
+         datarehihi[i][j] = pluxrehihi[j]; datarelohi[i][j] = pluxrelohi[j];
+         datarehilo[i][j] = pluxrehilo[j]; datarelolo[i][j] = pluxrelolo[j];
+         dataimhihi[i][j] = pluximhihi[j]; dataimlohi[i][j] = pluximlohi[j];
+         dataimhilo[i][j] = pluximhilo[j]; dataimlolo[i][j] = pluximlolo[j];
       }
    }
-   free(pluxrehi); free(pluxrelo); free(pluximhi); free(pluximlo);
-   free(minxrehi); free(minxrelo); free(minximhi); free(minximlo); 
+   free(pluxrehihi); free(pluxrelohi); free(pluxrehilo); free(pluxrelolo);
+   free(pluximhihi); free(pluximlohi); free(pluximhilo); free(pluximlolo);
+   free(minxrehihi); free(minxrelohi); free(minxrehilo); free(minxrelolo);
+   free(minximhihi); free(minximlohi); free(minximhilo); free(minximlolo); 
 }
-*/
 
 int test_real ( int dim, int nvr, int pwr, int deg )
 {
@@ -564,60 +595,88 @@ int test_real ( int dim, int nvr, int pwr, int deg )
    return 0;
 }
 
-/*
-
 int test_complex ( int dim, int nvr, int pwr, int deg )
 {
    int *idx = new int[nvr];             // indices of variables in the monomial
    int *exp = new int[nvr];             // exponents of the variables
    int *expfac = new int[nvr];          // exponents of common factor
    int nbrfac;                          // number of common factors
-   double *cffrehi = new double[deg+1]; // high real parts of coefficients
-   double *cffrelo = new double[deg+1]; // high real parts of coefficients
-   double *cffimhi = new double[deg+1]; // low imaginary parts of coefficients
-   double *cffimlo = new double[deg+1]; // low imaginary parts of coefficients
+   double *cffrehihi = new double[deg+1]; // highest real coefficients parts
+   double *cffrelohi = new double[deg+1]; // second highest real parts
+   double *cffrehilo = new double[deg+1]; // second lowest real parts 
+   double *cffrelolo = new double[deg+1]; // lowest real parts
+   double *cffimhihi = new double[deg+1]; // highest imaginary parts
+   double *cffimlohi = new double[deg+1]; // second highest imaginary parts
+   double *cffimhilo = new double[deg+1]; // second lowest imaginary parts 
+   double *cffimlolo = new double[deg+1]; // lowest imaginary parts
 
    // The input are dim power series of degree deg,
    // the output are nvr+1 power series of degree deg,
    // for the evaluated and differentiated monomial.
 
-   double **inputrehi = new double*[dim];
-   double **inputrelo = new double*[dim];
-   double **inputimhi = new double*[dim];
-   double **inputimlo = new double*[dim];
+   double **inputrehihi = new double*[dim];
+   double **inputrelohi = new double*[dim];
+   double **inputrehilo = new double*[dim];
+   double **inputrelolo = new double*[dim];
+   double **inputimhihi = new double*[dim];
+   double **inputimlohi = new double*[dim];
+   double **inputimhilo = new double*[dim];
+   double **inputimlolo = new double*[dim];
    for(int i=0; i<dim; i++)
    {
-      inputrehi[i] = new double[deg+1];
-      inputrelo[i] = new double[deg+1];
-      inputimhi[i] = new double[deg+1];
-      inputimlo[i] = new double[deg+1];
+      inputrehihi[i] = new double[deg+1];
+      inputrelohi[i] = new double[deg+1];
+      inputrehilo[i] = new double[deg+1];
+      inputrelolo[i] = new double[deg+1];
+      inputimhihi[i] = new double[deg+1];
+      inputimlohi[i] = new double[deg+1];
+      inputimhilo[i] = new double[deg+1];
+      inputimlolo[i] = new double[deg+1];
    }
-   double **outputrehi_h = new double*[dim+1];
-   double **outputrelo_h = new double*[dim+1];
-   double **outputimhi_h = new double*[dim+1];
-   double **outputimlo_h = new double*[dim+1];
+   double **outputrehihi_h = new double*[dim+1];
+   double **outputrelohi_h = new double*[dim+1];
+   double **outputrehilo_h = new double*[dim+1];
+   double **outputrelolo_h = new double*[dim+1];
+   double **outputimhihi_h = new double*[dim+1];
+   double **outputimlohi_h = new double*[dim+1];
+   double **outputimhilo_h = new double*[dim+1];
+   double **outputimlolo_h = new double*[dim+1];
    for(int i=0; i<=dim; i++)
    {
-      outputrehi_h[i] = new double[deg+1];
-      outputrelo_h[i] = new double[deg+1];
-      outputimhi_h[i] = new double[deg+1];
-      outputimlo_h[i] = new double[deg+1];
+      outputrehihi_h[i] = new double[deg+1];
+      outputrelohi_h[i] = new double[deg+1];
+      outputrehilo_h[i] = new double[deg+1];
+      outputrelolo_h[i] = new double[deg+1];
+      outputimhihi_h[i] = new double[deg+1];
+      outputimlohi_h[i] = new double[deg+1];
+      outputimhilo_h[i] = new double[deg+1];
+      outputimlolo_h[i] = new double[deg+1];
    }
-   double **outputrehi_d = new double*[dim+1];
-   double **outputrelo_d = new double*[dim+1];
-   double **outputimhi_d = new double*[dim+1];
-   double **outputimlo_d = new double*[dim+1];
+   double **outputrehihi_d = new double*[dim+1];
+   double **outputrelohi_d = new double*[dim+1];
+   double **outputrehilo_d = new double*[dim+1];
+   double **outputrelolo_d = new double*[dim+1];
+   double **outputimhihi_d = new double*[dim+1];
+   double **outputimlohi_d = new double*[dim+1];
+   double **outputimhilo_d = new double*[dim+1];
+   double **outputimlolo_d = new double*[dim+1];
    for(int i=0; i<=dim; i++)
    {
-      outputrehi_d[i] = new double[deg+1];
-      outputrelo_d[i] = new double[deg+1];
-      outputimhi_d[i] = new double[deg+1];
-      outputimlo_d[i] = new double[deg+1];
+      outputrehihi_d[i] = new double[deg+1];
+      outputrelohi_d[i] = new double[deg+1];
+      outputrehilo_d[i] = new double[deg+1];
+      outputrelolo_d[i] = new double[deg+1];
+      outputimhihi_d[i] = new double[deg+1];
+      outputimlohi_d[i] = new double[deg+1];
+      outputimhilo_d[i] = new double[deg+1];
+      outputimlolo_d[i] = new double[deg+1];
    }
    srand(time(NULL));
 
    bool fail = make_complex_monomial
-     (dim,nvr,pwr,deg,idx,exp,cffrehi,cffrelo,cffimhi,cffimlo);
+     (dim,nvr,pwr,deg,idx,exp,
+      cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+      cffimhihi,cffimlohi,cffimhilo,cffimlolo);
 
    if(!fail)
    {
@@ -641,11 +700,15 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
       cout << "the coefficients :" << endl;
       for(int i=0; i<=deg; i++)
       {
-         cout << cffrehi[i] << "  " << cffrelo[i] << endl;
-         cout << cffimhi[i] << "  " << cffimlo[i] << endl;
+         cout << cffrehihi[i] << "  " << cffrelohi[i] << endl;
+         cout << cffrehilo[i] << "  " << cffrelolo[i] << endl;
+         cout << cffimhihi[i] << "  " << cffimlohi[i] << endl;
+         cout << cffimhilo[i] << "  " << cffimlolo[i] << endl;
       }
    }
-   make_complex_input(dim,deg,inputrehi,inputrelo,inputimhi,inputimlo);
+   make_complex_input(dim,deg,
+      inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+      inputimhihi,inputimlohi,inputimhilo,inputimlolo);
 
    cout << "Random input series :" << endl;
    for(int i=0; i<dim; i++)
@@ -653,20 +716,32 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
       cout << "-> coefficients of series " << i << " :" << endl;
       for(int j=0; j<=deg; j++)
       {
-         cout << inputrehi[i][j] << "  " << inputrelo[i][j] << endl;
-         cout << inputimhi[i][j] << "  " << inputimlo[i][j] << endl;
+         cout << inputrehihi[i][j] << "  " << inputrelohi[i][j] << endl;
+         cout << inputrehilo[i][j] << "  " << inputrelolo[i][j] << endl;
+         cout << inputimhihi[i][j] << "  " << inputimlohi[i][j] << endl;
+         cout << inputimhilo[i][j] << "  " << inputimlolo[i][j] << endl;
       }
    }
    CPU_cmplx4_evaldiff
-      (dim,nvr,deg,idx,cffrehi,cffrelo,cffimhi,cffimlo,
-       inputrehi,inputrelo,inputimhi,inputimlo,
-       outputrehi_h,outputrelo_h,outputimhi_h,outputimlo_h);
+      (dim,nvr,deg,idx,
+       cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+       cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+       inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+       inputimhihi,inputimlohi,inputimhilo,inputimlolo,
+       outputrehihi_h,outputrelohi_h,outputrehilo_h,outputrelolo_h,
+       outputimhihi_h,outputimlohi_h,outputimhilo_h,outputimlolo_h);
 
    cout << "The value of the product :" << endl;
    for(int i=0; i<=deg; i++)
    {
-      cout << outputrehi_h[dim][i] << "  " << outputrelo_h[dim][i] << endl;
-      cout << outputimhi_h[dim][i] << "  " << outputimlo_h[dim][i] << endl;
+      cout << outputrehihi_h[dim][i] << "  "
+           << outputrelohi_h[dim][i] << endl;
+      cout << outputrehilo_h[dim][i] << "  "
+           << outputrelolo_h[dim][i] << endl;
+      cout << outputimhihi_h[dim][i] << "  "
+           << outputimlohi_h[dim][i] << endl;
+      cout << outputimhilo_h[dim][i] << "  "
+           << outputimlolo_h[dim][i] << endl;
    }
 
    double errsum = 0.0;
@@ -675,19 +750,33 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
    if(nvr > 2)
    {
       GPU_cmplx4_evaldiff(deg+1,dim,nvr,deg,idx,
-         cffrehi,cffrelo,cffimhi,cffimlo,
-         inputrehi,inputrelo,inputimhi,inputimlo,
-         outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d);
+         cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+         cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+         inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+         inputimhihi,inputimlohi,inputimhilo,inputimlolo,
+         outputrehihi_d,outputrelohi_d,outputrehilo_d,outputrelolo_d,
+         outputimhihi_d,outputimlohi_d,outputimhilo_d,outputimlolo_d);
 
       cout << "The value of the product computed on the GPU :" << endl;
       for(int i=0; i<=deg; i++) 
       {
-         cout << outputrehi_d[dim][i] << "  " << outputrelo_d[dim][i] << endl;
-         cout << outputimhi_d[dim][i] << "  " << outputimlo_d[dim][i] << endl;
-         errsum = abs(outputrehi_h[dim][i] - outputrehi_d[dim][i])
-                + abs(outputrelo_h[dim][i] - outputrelo_d[dim][i])
-                + abs(outputimhi_h[dim][i] - outputimhi_d[dim][i])
-                + abs(outputimlo_h[dim][i] - outputimlo_d[dim][i]);
+         cout << outputrehihi_d[dim][i] << "  "
+              << outputrelohi_d[dim][i] << endl;
+         cout << outputrehilo_d[dim][i] << "  "
+              << outputrelolo_d[dim][i] << endl;
+         cout << outputimhihi_d[dim][i] << "  "
+              << outputimlohi_d[dim][i] << endl;
+         cout << outputimhilo_d[dim][i] << "  "
+              << outputimlolo_d[dim][i] << endl;
+         errsum = errsum
+                + abs(outputrehihi_h[dim][i] - outputrehihi_d[dim][i])
+                + abs(outputrelohi_h[dim][i] - outputrelohi_d[dim][i])
+                + abs(outputrehilo_h[dim][i] - outputrehilo_d[dim][i])
+                + abs(outputrelolo_h[dim][i] - outputrelolo_d[dim][i])
+                + abs(outputimhihi_h[dim][i] - outputimhihi_d[dim][i])
+                + abs(outputimlohi_h[dim][i] - outputimlohi_d[dim][i])
+                + abs(outputimhilo_h[dim][i] - outputimhilo_d[dim][i])
+                + abs(outputimlolo_h[dim][i] - outputimlolo_d[dim][i]);
       }
       cout << "The sum of errors : " << errsum << endl; errtot += errsum;
    }
@@ -697,10 +786,14 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
       cout << "-> derivative for index " << idx[k] << " :" << endl;
       for(int i=0; i<=deg; i++)
       {
-         cout << outputrehi_h[idx[k]][i] << "  "
-              << outputrelo_h[idx[k]][i] << endl;
-         cout << outputimhi_h[idx[k]][i] << "  "
-              << outputimlo_h[idx[k]][i] << endl;
+         cout << outputrehihi_h[idx[k]][i] << "  "
+              << outputrelohi_h[idx[k]][i] << endl;
+         cout << outputrehilo_h[idx[k]][i] << "  "
+              << outputrelolo_h[idx[k]][i] << endl;
+         cout << outputimhihi_h[idx[k]][i] << "  "
+              << outputimlohi_h[idx[k]][i] << endl;
+         cout << outputimhilo_h[idx[k]][i] << "  "
+              << outputimlolo_h[idx[k]][i] << endl;
       }
       if(nvr > 2)
       {
@@ -708,14 +801,23 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
               << " computed on GPU :" << endl;
          for(int i=0; i<=deg; i++)
          {
-            cout << outputrehi_d[idx[k]][i] << "  "
-                 << outputrelo_d[idx[k]][i] << endl;
-            cout << outputimhi_d[idx[k]][i] << "  "
-                 << outputimlo_d[idx[k]][i] << endl;
-            errsum = abs(outputrehi_h[idx[k]][i] - outputrehi_d[idx[k]][i])
-                   + abs(outputrelo_h[idx[k]][i] - outputrelo_d[idx[k]][i])
-                   + abs(outputimhi_h[idx[k]][i] - outputimhi_d[idx[k]][i])
-                   + abs(outputimlo_h[idx[k]][i] - outputimlo_d[idx[k]][i]);
+            cout << outputrehihi_d[idx[k]][i] << "  "
+                 << outputrelohi_d[idx[k]][i] << endl;
+            cout << outputrehilo_d[idx[k]][i] << "  "
+                 << outputrelolo_d[idx[k]][i] << endl;
+            cout << outputimhihi_d[idx[k]][i] << "  "
+                 << outputimlohi_d[idx[k]][i] << endl;
+            cout << outputimhilo_d[idx[k]][i] << "  "
+                 << outputimlolo_d[idx[k]][i] << endl;
+            errsum = errsum
+               + abs(outputrehihi_h[idx[k]][i] - outputrehihi_d[idx[k]][i])
+               + abs(outputrelohi_h[idx[k]][i] - outputrelohi_d[idx[k]][i])
+               + abs(outputrehilo_h[idx[k]][i] - outputrehilo_d[idx[k]][i])
+               + abs(outputrelolo_h[idx[k]][i] - outputrelolo_d[idx[k]][i])
+               + abs(outputimhihi_h[idx[k]][i] - outputimhihi_d[idx[k]][i])
+               + abs(outputimlohi_h[idx[k]][i] - outputimlohi_d[idx[k]][i])
+               + abs(outputimhilo_h[idx[k]][i] - outputimhilo_d[idx[k]][i])
+               + abs(outputimlolo_h[idx[k]][i] - outputimlolo_d[idx[k]][i]);
          }
          cout << "The sum of errors : " << errsum << endl; errtot += errsum;
       }
@@ -724,4 +826,3 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
 
    return 0;
 }
-*/

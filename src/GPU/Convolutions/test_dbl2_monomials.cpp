@@ -137,7 +137,7 @@ void make_complex_input
  *            of dim series of degree deg;
  *   dataimhi has space allocated for the high doubles of the imaginary parts
  *            of dim series of degree deg;
- *   dataimlo has space allocated for the high doubles of the imaginary parts
+ *   dataimlo has space allocated for the low doubles of the imaginary parts
  *            of dim series of degree deg.
  *
  * ON RETURN :
@@ -475,8 +475,8 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
    int *expfac = new int[nvr];          // exponents of common factor
    int nbrfac;                          // number of common factors
    double *cffrehi = new double[deg+1]; // high real parts of coefficients
-   double *cffrelo = new double[deg+1]; // high real parts of coefficients
-   double *cffimhi = new double[deg+1]; // low imaginary parts of coefficients
+   double *cffrelo = new double[deg+1]; // low real parts of coefficients
+   double *cffimhi = new double[deg+1]; // high imaginary parts of coefficients
    double *cffimlo = new double[deg+1]; // low imaginary parts of coefficients
 
    // The input are dim power series of degree deg,
