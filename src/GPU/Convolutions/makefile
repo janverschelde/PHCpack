@@ -39,5 +39,8 @@ test_dbl3_monomials:
 test_dbl4_monomials:
 	make -f $(MAKEFILE) test_dbl4_monomials
 
+test_dbl5_monomials:
+	make -f $(MAKEFILE) test_dbl5_monomials
+
 clean:
 	make -f $(MAKEFILE) clean

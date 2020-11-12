@@ -1,4 +1,4 @@
-// The file random2_monomials.h specifies functions to setup tests for the 
+// The file random3_monomials.h specifies functions to setup tests for the 
 // evaluation and differentiation of a monomial in triple double precision.
 
 #ifndef __random3_monomials_h__
@@ -99,7 +99,7 @@ void make_real3_input
  * ON RETURN :
  *   datahi   datahi[i][j] is the high double of the j-th coefficient of 
  *            the i-th series, for i in 0..dim-1 and j in 0..deg;
- *   datami   datahi[i][j] is the middle double of the j-th coefficient of 
+ *   datami   datami[i][j] is the middle double of the j-th coefficient of 
  *            the i-th series, for i in 0..dim-1 and j in 0..deg;
  *   datalo   datalo[i][j] is the low double of the j-th coefficient of 
  *            the i-th series, for i in 0..dim-1 and j in 0..deg. */
@@ -129,13 +129,13 @@ void make_complex3_input
  *            of dim series of degree deg;
  *   dataimmi has space allocated for the middle doubles of the imaginary parts
  *            of dim series of degree deg;
- *   dataimlo has space allocated for the high doubles of the imaginary parts
+ *   dataimlo has space allocated for the low doubles of the imaginary parts
  *            of dim series of degree deg.
  *
  * ON RETURN :
  *   datarehi contains the high doubles of the real parts of the data,
  *   dataremi contains the middle doubles of the real parts of the data,
- *   datarehi contains the low doubles of the real parts of the data,
+ *   datarelo contains the low doubles of the real parts of the data,
  *   dataimhi contains the high doubles of the imaginary parts of the data,
  *   dataimmi contains the middle doubles of the imaginary parts of the data,
  *   dataimlo contains the low doubles of the imaginary parts of the data,

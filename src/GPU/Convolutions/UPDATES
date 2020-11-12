@@ -9,6 +9,8 @@ Wed 11 Nov 2020 : extracted from test_{dbl,dbl2,dbl3,dbl4}_monomials.cpp
   input in random3_monomials.cpp, edited test_dbl3_monomials.cpp.
   In test_dbl4_monomials.cpp, added initialization to errsum, so it became
   clear backward products are correct, whereas forward products are not.
+  Edited random3_monomials.h, dbl3_monomials_host.h, test_dbl3_monomials.cpp.
+  New random5_monomials, dbl5_monomials_host, tested by test_dbl5_monomials.
 
 Tue 10 Nov 2020 : edited dbl2_monomials_kernels.h and defined kernels in
   dbl4_monomials_kernels.h and dbl4_monomials_kernels.cu, with added tests

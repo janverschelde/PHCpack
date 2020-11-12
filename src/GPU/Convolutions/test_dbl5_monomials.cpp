@@ -1,5 +1,5 @@
 // Tests the evaluation and differentiation of a monomial
-// in triple double precision.
+// in penta double precision.
 
 #include <iostream>
 #include <iomanip>
@@ -8,9 +8,9 @@
 #include <cmath>
 #include <vector_types.h>
 #include "random_monomials.h"
-#include "random3_monomials.h"
-#include "dbl3_monomials_host.h"
-#include "dbl3_monomials_kernels.h"
+#include "random5_monomials.h"
+#include "dbl5_monomials_host.h"
+// #include "dbl5_monomials_kernels.h"
 
 using namespace std;
 
@@ -26,7 +26,7 @@ double test_real ( int dim, int nvr, int pwr, int deg );
  *   pwr      highest power of each variable;
  *   deg      truncation degree of the series. */
 
-double test_complex ( int dim, int nvr, int pwr, int deg );
+// double test_complex ( int dim, int nvr, int pwr, int deg );
 /*
  * DESCRIPTION :
  *   Tests the evaluation and differentiation for random complex data.
@@ -50,10 +50,10 @@ int main ( void )
 
    cout << endl << "Testing for real input data ... " << endl;
    double realsum = test_real(dim,nvr,pwr,deg);
-   cout << endl << "Testing for complex input data ..." << endl;
-   double complexsum = test_complex(dim,nvr,pwr,deg);
+   // cout << endl << "Testing for complex input data ..." << endl;
+   // double complexsum = test_complex(dim,nvr,pwr,deg);
 
-   const double tol = 1.0e-44;
+   const double tol = 1.0e-76;
 
    cout << endl << "Sum of all errors :" << endl;
    cout << "  on real data : " << realsum;
@@ -61,12 +61,13 @@ int main ( void )
       cout << "  pass," << endl;
    else
       cout << "  fail!" << endl;
-
+/*
    cout << "  on complex data : " << complexsum;
    if(complexsum < tol)
       cout << "  pass." << endl;
    else
       cout << "  fail!" << endl;
+ */
 
    return 0;
 }
@@ -77,36 +78,51 @@ double test_real ( int dim, int nvr, int pwr, int deg )
    int *exp = new int[nvr];           // exponents of the variables
    int *expfac = new int[nvr];        // exponents of common factor
    int nbrfac;                        // number of common factors
-   double *cffhi = new double[deg+1]; // high doubles of series coefficient
+   double *cfftb = new double[deg+1]; // highest doubles of series coefficient
+   double *cffix = new double[deg+1]; // second highest doubles
    double *cffmi = new double[deg+1]; // middle doubles of series coefficient
-   double *cfflo = new double[deg+1]; // low doubles of series coefficient
+   double *cffrg = new double[deg+1]; // second lowest doubles
+   double *cffpk = new double[deg+1]; // lowest doubles of series coefficient
 
    // The input are dim power series of degree deg,
    // the output are nvr+1 power series of degree deg,
    // for the evaluated and differentiated monomial.
 
-   double **inputhi = new double*[dim];
-   for(int i=0; i<dim; i++) inputhi[i] = new double[deg+1];
+   double **inputtb = new double*[dim];
+   for(int i=0; i<dim; i++) inputtb[i] = new double[deg+1];
+   double **inputix = new double*[dim];
+   for(int i=0; i<dim; i++) inputix[i] = new double[deg+1];
    double **inputmi = new double*[dim];
    for(int i=0; i<dim; i++) inputmi[i] = new double[deg+1];
-   double **inputlo = new double*[dim];
-   for(int i=0; i<dim; i++) inputlo[i] = new double[deg+1];
-   double **outputhi_h = new double*[dim+1];
-   for(int i=0; i<=dim; i++) outputhi_h[i] = new double[deg+1];
-   double **outputhi_d = new double*[dim+1];
-   for(int i=0; i<=dim; i++) outputhi_d[i] = new double[deg+1];
+   double **inputrg = new double*[dim];
+   for(int i=0; i<dim; i++) inputrg[i] = new double[deg+1];
+   double **inputpk = new double*[dim];
+   for(int i=0; i<dim; i++) inputpk[i] = new double[deg+1];
+   double **outputtb_h = new double*[dim+1];
+   for(int i=0; i<=dim; i++) outputtb_h[i] = new double[deg+1];
+   double **outputtb_d = new double*[dim+1];
+   for(int i=0; i<=dim; i++) outputtb_d[i] = new double[deg+1];
+   double **outputix_h = new double*[dim+1];
+   for(int i=0; i<=dim; i++) outputix_h[i] = new double[deg+1];
+   double **outputix_d = new double*[dim+1];
+   for(int i=0; i<=dim; i++) outputix_d[i] = new double[deg+1];
    double **outputmi_h = new double*[dim+1];
    for(int i=0; i<=dim; i++) outputmi_h[i] = new double[deg+1];
    double **outputmi_d = new double*[dim+1];
    for(int i=0; i<=dim; i++) outputmi_d[i] = new double[deg+1];
-   double **outputlo_h = new double*[dim+1];
-   for(int i=0; i<=dim; i++) outputlo_h[i] = new double[deg+1];
-   double **outputlo_d = new double*[dim+1];
-   for(int i=0; i<=dim; i++) outputlo_d[i] = new double[deg+1];
+   double **outputrg_h = new double*[dim+1];
+   for(int i=0; i<=dim; i++) outputrg_h[i] = new double[deg+1];
+   double **outputrg_d = new double*[dim+1];
+   for(int i=0; i<=dim; i++) outputrg_d[i] = new double[deg+1];
+   double **outputpk_h = new double*[dim+1];
+   for(int i=0; i<=dim; i++) outputpk_h[i] = new double[deg+1];
+   double **outputpk_d = new double*[dim+1];
+   for(int i=0; i<=dim; i++) outputpk_d[i] = new double[deg+1];
 
    srand(time(NULL));
 
-   bool fail = make_real3_monomial(dim,nvr,pwr,deg,idx,exp,cffhi,cffmi,cfflo);
+   bool fail = make_real5_monomial
+      (dim,nvr,pwr,deg,idx,exp,cfftb,cffix,cffmi,cffrg,cffpk);
 
    if(fail) return 1.0;
 
@@ -129,38 +145,46 @@ double test_real ( int dim, int nvr, int pwr, int deg )
    cout << scientific << setprecision(16);
    cout << "the coefficients :" << endl;
    for(int i=0; i<=deg; i++)
-      cout << cffhi[i] << "  " << cffmi[i] << "  " << cfflo[i] << endl;
+      cout << cfftb[i] << "  " << cffix[i] << "  " << cffmi[i] << endl
+           << cffrg[i] << "  " << cffpk[i] << endl;
 
-   make_real3_input(dim,deg,inputhi,inputmi,inputlo);
+   make_real5_input(dim,deg,inputtb,inputix,inputmi,inputrg,inputpk);
 
    cout << "Random input series :" << endl;
    for(int i=0; i<dim; i++)
    {
       cout << "-> coefficients of series " << i << " :" << endl;
       for(int j=0; j<=deg; j++)
-         cout << inputhi[i][j] << "  " << inputmi[i][j]
-                               << "  " << inputlo[i][j] << endl;
+         cout << inputtb[i][j] << "  " << inputix[i][j]
+                               << "  " << inputmi[i][j] << endl
+              << inputrg[i][j] << "  " << inputpk[i][j] << endl;
    }
    double errsum = 0.0;
    double errtot = 0.0;
 
-   CPU_dbl3_evaldiff(dim,nvr,deg,idx,cffhi,cffmi,cfflo,
-                     inputhi,inputmi,inputlo,
-                     outputhi_h,outputmi_h,outputlo_h);
+   CPU_dbl5_evaldiff(dim,nvr,deg,idx,cfftb,cffix,cffmi,cffrg,cffpk,
+                     inputtb,inputix,inputmi,inputrg,inputpk,
+                     outputtb_h,outputix_h,outputmi_h,outputrg_h,outputpk_h);
+
    cout << "The value of the product :" << endl;
    for(int i=0; i<=deg; i++)
-      cout << outputhi_h[dim][i] << "  " << outputmi_h[dim][i] 
-                                 << "  " << outputlo_h[dim][i] << endl;
+      cout << outputtb_h[dim][i] << "  " << outputix_h[dim][i] 
+                                 << "  " << outputmi_h[dim][i] << endl
+           << outputrg_h[dim][i] << "  " << outputpk_h[dim][i] << endl;
 
    if(nvr == dim) // the product of all input series equals one
    {
       for(int i=0; i<=deg; i++)
          errsum = errsum
-                + abs(outputhi_h[dim][i] - cffhi[i])
+                + abs(outputtb_h[dim][i] - cfftb[i])
+                + abs(outputix_h[dim][i] - cffix[i])
                 + abs(outputmi_h[dim][i] - cffmi[i])
-                + abs(outputlo_h[dim][i] - cfflo[i]);
+                + abs(outputrg_h[dim][i] - cffrg[i])
+                + abs(outputpk_h[dim][i] - cffpk[i]);
       cout << "Coefficient error : " << errsum << endl; errtot += errsum;
    }
+}
+ /*
    if(nvr > 2)
    {
       GPU_dbl3_evaldiff(deg+1,dim,nvr,deg,idx,cffhi,cffmi,cfflo,inputhi,
@@ -286,7 +310,7 @@ double test_complex ( int dim, int nvr, int pwr, int deg )
       (dim,nvr,pwr,deg,idx,exp,
        cffrehi,cffremi,cffrelo,cffimhi,cffimmi,cffimlo);
 
-   if(fail) return 1.0;
+   if(fail) return 1;
 
    cout << "Generated a random monomial :" << endl;
    cout << "   the indices :";
@@ -437,3 +461,5 @@ double test_complex ( int dim, int nvr, int pwr, int deg )
 
    return errtot;
 }
+
+*/

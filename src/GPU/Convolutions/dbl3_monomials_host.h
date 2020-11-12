@@ -35,23 +35,23 @@ void CPU_dbl3_speel
  *              for all variables in the monomial;
  *   inputlo    contains the low doubles of the coefficients of the series
  *              for all variables in the monomial;
- *   forwardhi  contains work space for the high doubles all nvr forward 
+ *   forwardhi  contains work space for the high doubles of nvr forward 
  *              products, forwardhi[k] contains space for deg+1 doubles;
- *   forwardmi  contains work space for the middle doubles all nvr forward 
+ *   forwardmi  contains work space for the middle doubles of nvr forward 
  *              products, forwardmi[k] contains space for deg+1 doubles;
- *   forwardlo  contains work space for the low doubles all nvr forward 
+ *   forwardlo  contains work space for the low doubles of nvr forward 
  *              products, forwardlo[k] contains space for deg+1 doubles;
- *   backwardhi contains work space for the high doubles of all nvr-2 backward
+ *   backwardhi contains work space for the high doubles of nvr-2 backward
  *              products, backwardhi[k] contains space for deg+1 doubles;
  *   backwardmi contains work space for the middle doubles of nvr-2 backward
- *              products, backwardhi[k] contains space for deg+1 doubles;
- *   backwardlo contains work space for the low doubles of all nvr-2 backward
+ *              products, backwardmi[k] contains space for deg+1 doubles;
+ *   backwardlo contains work space for the low doubles of nvr-2 backward
  *              products, backwardlo[k] contains space for deg+1 doubles;
- *   crosshi    contains work space for the high doubles of all nvr-2 cross
+ *   crosshi    contains work space for the high doubles of nvr-2 cross
  *              products, crosshi[k] contains space for deg+1 doubles;
- *   crossmi    contains work space for the middle doubles of all nvr-2 cross
+ *   crossmi    contains work space for the middle doubles of nvr-2 cross
  *              products, crosshi[k] contains space for deg+1 doubles;
- *   crosslo    contains work space for the low doubles of all nvr-2 cross
+ *   crosslo    contains work space for the low doubles of nvr-2 cross
  *              products, crosslo[k] contains space for deg+1 doubles.
  *
  * ON RETURN :
@@ -125,39 +125,39 @@ void CPU_cmplx3_speel
  *   forwardrehi  contains work space for the high doubles of nvr forward
  *                products, forwardrehi[k] can hold deg+1 doubles;
  *   forwardremi  contains work space for the middle doubles of nvr forward
- *                products, forwardrehi[k] can hold deg+1 doubles;
+ *                products, forwardremi[k] can hold deg+1 doubles;
  *   forwardrelo  contains work space for the low doubles of nvr forward
- *                products, forwardrehi[k] can hold deg+1 doubles;
+ *                products, forwardrelo[k] can hold deg+1 doubles;
  *   forwardimhi  contains work space for the high doubles of nvr forward
  *                products, forwardimhi[k] can hold deg+1 doubles;
  *   forwardimmi  contains work space for the middle doubles of nvr forward
- *                products, forwardimhi[k] can hold deg+1 doubles;
+ *                products, forwardimmi[k] can hold deg+1 doubles;
  *   forwardimlo  contains work space for the low doubles of nvr forward
- *                products, forwardimhi[k] can hold deg+1 doubles;
+ *                products, forwardimlo[k] can hold deg+1 doubles;
  *   backwardrehi contains work space for the high doubles of nvr-2 backward
  *                products, backwardrehi[k] can hold deg+1 doubles;
  *   backwardremi contains work space for the middle doubles of nvr-2 backward
- *                products, backwardrehi[k] can hold deg+1 doubles;
+ *                products, backwardremi[k] can hold deg+1 doubles;
  *   backwardrelo contains work space for the low doubles of nvr-2 backward
- *                products, backwardrehi[k] can hold deg+1 doubles;
+ *                products, backwardrelo[k] can hold deg+1 doubles;
  *   backwardimhi contains work space for the high doubles of nvr-2 backward
  *                products, backwardimhi[k] can hold deg+1 doubles;
  *   backwardimmi contains work space for the middle doubles of nvr-2 backward
- *                products, backwardimhi[k] can hold deg+1 doubles;
+ *                products, backwardimmi[k] can hold deg+1 doubles;
  *   backwardimlo contains work space for the low doubles of nvr-2 backward
- *                products, backwardimhi[k] can hold deg+1 doubles;
+ *                products, backwardimlo[k] can hold deg+1 doubles;
  *   crossrehi    contains work space for the high doubles of nvr-2 cross
  *                products, crossrehi[k] can hold deg+1 doubles;
  *   crossremi    contains work space for the middle doubles of nvr-2 cross
- *                products, crossrehi[k] can hold deg+1 doubles;
+ *                products, crossremi[k] can hold deg+1 doubles;
  *   crossrelo    contains work space for the low doubles of nvr-2 cross
- *                products, crossrehi[k] can hold deg+1 doubles;
+ *                products, crossrelo[k] can hold deg+1 doubles;
  *   crossimhi    contains work space for the high doubles of nvr-2 cross
  *                products, crossimhi[k] can hold deg+1 doubles;
  *   crossimmi    contains work space for the middle doubles of nvr-2 cross
- *                products, crossimhi[k] can hold deg+1 doubles;
- *   crossimlo    contains work space for the high doubles of nvr-2 cross
- *                products, crossimhi[k] can hold deg+1 doubles.
+ *                products, crossimmi[k] can hold deg+1 doubles;
+ *   crossimlo    contains work space for the low doubles of nvr-2 cross
+ *                products, crossimlo[k] can hold deg+1 doubles.
  *
  * ON RETURN :
  *   forwardrehi  accumulates the high doubles of the real parts
