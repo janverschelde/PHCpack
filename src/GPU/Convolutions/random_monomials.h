@@ -85,6 +85,10 @@ void make_real_input ( int dim, int deg, double **data );
 /*
  * DESCRIPTION :
  *   Generates input series, as many as dim, of degree deg.
+ *   The input series are such that the odd indexed series
+ *   are the inverses of the previous even indexed series.
+ *   In case of an odd dimension, the last series equals one.
+ *   The complete product of all series must thus equal one.
  *
  * ON ENTRY :
  *   dim      dimension of the input;
@@ -100,6 +104,10 @@ void make_complex_input
 /*
  * DESCRIPTION :
  *   Generates input series, as many as dim, of degree deg.
+ *   The input series are such that the odd indexed series
+ *   are the inverses of the previous even indexed series.
+ *   In case of an odd dimension, the last series equals one.
+ *   The complete product of all series must thus equal one.
  *
  * ON ENTRY :
  *   dim      dimension of the input;

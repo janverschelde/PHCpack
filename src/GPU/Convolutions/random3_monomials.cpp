@@ -103,7 +103,7 @@ void make_real3_input
    double* minxmi = new double[deg+1];
    double* minxlo = new double[deg+1];
 
-   for(int i=0; i<dim; i++)
+   for(int i=0; i<dim-1; i=i+2)
    {
       random_dbl3_exponentials
          (deg,&rndhi,&rndmi,&rndlo,pluxhi,pluxmi,pluxlo,minxhi,minxmi,minxlo);
@@ -112,6 +112,19 @@ void make_real3_input
          datahi[i][j] = pluxhi[j];
          datami[i][j] = pluxmi[j];
          datalo[i][j] = pluxlo[j];
+         datahi[i+1][j] = minxhi[j];
+         datami[i+1][j] = minxmi[j];
+         datalo[i+1][j] = minxlo[j];
+      }
+   }
+   if(dim % 2 == 1) // in odd case, set the last input series to one
+   {
+      datahi[dim-1][0] = 1.0; datami[dim-1][0] = 0.0; datalo[dim-1][0] = 0.0;
+      for(int j=1; j<=deg; j++)
+      {
+         datahi[dim-1][j] = 0.0;
+         datami[dim-1][j] = 0.0;
+         datalo[dim-1][j] = 0.0;
       }
    }
    free(pluxhi); free(pluxmi); free(pluxlo);
@@ -119,7 +132,8 @@ void make_real3_input
 }
 
 void make_complex3_input
- ( int dim, int deg, double **datarehi, double **dataremi, double **datarelo,
+ ( int dim, int deg,
+   double **datarehi, double **dataremi, double **datarelo,
    double **dataimhi, double **dataimmi, double **dataimlo )
 {
    double rndrehi,rndremi,rndrelo,rndimhi,rndimmi,rndimlo;
@@ -136,7 +150,7 @@ void make_complex3_input
    double* minximmi = new double[deg+1];
    double* minximlo = new double[deg+1];
 
-   for(int i=0; i<dim; i++)
+   for(int i=0; i<dim-1; i=i+2)
    {
       random_cmplx3_exponentials(deg,
          &rndrehi,&rndremi,&rndrelo,&rndimhi,&rndimmi,&rndimlo,
@@ -145,10 +159,25 @@ void make_complex3_input
 
       for(int j=0; j<=deg; j++)
       {
-         datarehi[i][j] = pluxrehi[j]; dataremi[i][j] = pluxremi[j];
-         datarelo[i][j] = pluxrelo[j];
-         dataimhi[i][j] = pluximhi[j]; dataimmi[i][j] = pluximmi[j];
-         dataimlo[i][j] = pluximlo[j];
+         datarehi[i][j] = pluxrehi[j]; dataimhi[i][j] = pluximhi[j];
+         dataremi[i][j] = pluxremi[j]; dataimmi[i][j] = pluximmi[j];
+         datarelo[i][j] = pluxrelo[j]; dataimlo[i][j] = pluximlo[j];
+         datarehi[i+1][j] = minxrehi[j]; dataimhi[i+1][j] = minximhi[j];
+         dataremi[i+1][j] = minxremi[j]; dataimmi[i+1][j] = minximmi[j];
+         datarelo[i+1][j] = minxrelo[j]; dataimlo[i+1][j] = minximlo[j];
+      }
+   }
+   if(dim % 2 == 1) // in odd case, set the last input series to one
+   {
+      datarehi[dim-1][0] = 1.0; dataimhi[dim-1][0] = 0.0;
+      dataremi[dim-1][0] = 0.0; dataimmi[dim-1][0] = 0.0;
+      datarelo[dim-1][0] = 0.0; dataimlo[dim-1][0] = 0.0;
+
+      for(int j=1; j<=deg; j++)
+      {
+         datarehi[dim-1][j] = 0.0; dataimhi[dim-1][j] = 0.0;
+         dataremi[dim-1][j] = 0.0; dataimmi[dim-1][j] = 0.0;
+         datarelo[dim-1][j] = 0.0; dataimlo[dim-1][j] = 0.0;
       }
    }
    free(pluxrehi); free(pluxremi); free(pluxrelo);

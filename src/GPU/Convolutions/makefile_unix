@@ -313,52 +313,54 @@ test_dbl10_convolutions: double_double_functions.o quad_double_functions.o \
                   dbl10_convolutions_host.o dbl10_convolutions_kernels.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
-test_dbl_monomials: random_numbers.o random_monomials.o \
+test_dbl_monomials: random_numbers.o random_series.o random_monomials.o \
                     dbl_convolutions_host.o dbl_monomials_host.o \
                     dbl_monomials_kernels.o test_dbl_monomials.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl_monomials random_numbers.o random_monomials.o \
+	$(gpp) -o test_dbl_monomials random_numbers.o \
+                  random_series.o random_monomials.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
                   dbl_monomials_kernels.o test_dbl_monomials.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
-test_dbl2_monomials: random_numbers.o random_monomials.o random2_vectors.o \
-                     random2_series.o random2_monomials.o \
+test_dbl2_monomials: random_numbers.o random_monomials.o random_series.o \
+                     random2_vectors.o random2_series.o random2_monomials.o \
                      double_double_functions.o dbl2_convolutions_host.o \
                      dbl2_monomials_host.o dbl2_monomials_kernels.o \
                      test_dbl2_monomials.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl2_monomials random_numbers.o random_monomials.o \
-                  random2_vectors.o random2_series.o random2_monomials.o \
-                  double_double_functions.o dbl2_convolutions_host.o \
-                  dbl2_monomials_host.o dbl2_monomials_kernels.o \
-                  test_dbl2_monomials.o -lcuda -lcudart -L$(CUDALIB)
+	$(gpp) -o test_dbl2_monomials random_numbers.o random_series.o \
+                  random_monomials.o random2_vectors.o random2_series.o \
+                  random2_monomials.o double_double_functions.o \
+                  dbl2_convolutions_host.o dbl2_monomials_host.o \
+                  dbl2_monomials_kernels.o test_dbl2_monomials.o \
+                  -lcuda -lcudart -L$(CUDALIB)
 
-test_dbl3_monomials: random_numbers.o random_monomials.o random3_vectors.o \
-                     random3_series.o random3_monomials.o \
+test_dbl3_monomials: random_numbers.o random_series.o random_monomials.o \
+                     random3_vectors.o random3_series.o random3_monomials.o \
                      double_double_functions.o triple_double_functions.o \
                      dbl3_convolutions_host.o dbl3_monomials_host.o \
                      dbl3_monomials_kernels.o test_dbl3_monomials.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl3_monomials random_numbers.o random_monomials.o \
-                  random3_vectors.o random3_series.o random3_monomials.o \
-                  double_double_functions.o triple_double_functions.o \
-                  dbl3_convolutions_host.o dbl3_monomials_host.o \
-                  dbl3_monomials_kernels.o test_dbl3_monomials.o \
-                  -lcuda -lcudart -L$(CUDALIB)
+	$(gpp) -o test_dbl3_monomials random_numbers.o random_series.o \
+                  random_monomials.o random3_vectors.o random3_series.o \
+                  random3_monomials.o double_double_functions.o \
+                  triple_double_functions.o dbl3_convolutions_host.o \
+                  dbl3_monomials_host.o dbl3_monomials_kernels.o \
+                  test_dbl3_monomials.o -lcuda -lcudart -L$(CUDALIB)
 
-test_dbl4_monomials: random_numbers.o random_monomials.o random4_vectors.o \
-                     random4_series.o random4_monomials.o \
+test_dbl4_monomials: random_numbers.o random_series.o random_monomials.o \
+                     random4_vectors.o random4_series.o random4_monomials.o \
                      double_double_functions.o quad_double_functions.o \
                      dbl4_convolutions_host.o dbl4_monomials_host.o \
                      dbl4_monomials_kernels.o test_dbl4_monomials.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl4_monomials random_numbers.o random_monomials.o \
-                  random4_vectors.o random4_series.o random4_monomials.o \
-                  double_double_functions.o quad_double_functions.o \
-                  dbl4_convolutions_host.o dbl4_monomials_host.o \
-                  dbl4_monomials_kernels.o test_dbl4_monomials.o \
-                  -lcuda -lcudart -L$(CUDALIB)
+	$(gpp) -o test_dbl4_monomials random_numbers.o random_series.o \
+                  random_monomials.o random4_vectors.o random4_series.o \
+                  random4_monomials.o double_double_functions.o \
+                  quad_double_functions.o dbl4_convolutions_host.o \
+                  dbl4_monomials_host.o dbl4_monomials_kernels.o \
+                  test_dbl4_monomials.o -lcuda -lcudart -L$(CUDALIB)
 
 clean:
 	/bin/rm -f -r random_numbers.o random_series.o

@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cmath>
 #include "random_numbers.h"
+#include "random_series.h"
 #include "random_monomials.h"
 
 bool sorted_insert ( int n, int *data )
@@ -126,20 +127,55 @@ void common_factors ( int nvr, int *exp, int *nbrfac, int *expfac )
 
 void make_real_input ( int dim, int deg, double **data )
 {
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<=deg; j++) data[i][j] = random_double();
+   double rnd;
+   double* plux = new double[deg+1];
+   double* minx = new double[deg+1];
+
+   for(int i=0; i<dim-1; i=i+2)
+   {
+      random_dbl_exponentials(deg,&rnd,plux,minx);
+
+      for(int j=0; j<=deg; j++)
+      {
+         data[i][j] = plux[j]; data[i+1][j] = minx[j];
+      }
+   }
+   if(dim % 2 == 1) // in odd case, set the last input series to one
+   {
+      data[dim-1][0] = 1.0;
+      for(int j=1; j<=deg; j++) data[dim-1][j] = 0.0;
+   }
+   free(plux); free(minx);
 }
 
 void make_complex_input
  ( int dim, int deg, double **datare, double **dataim )
 {
-   double rnd;
+   double rndre,rndim;
+   double* pluxre = new double[deg+1];
+   double* pluxim = new double[deg+1];
+   double* minxre = new double[deg+1];
+   double* minxim = new double[deg+1];
 
-   for(int i=0; i<dim; i++)
+   for(int i=0; i<dim-1; i=i+2)
+   {
+      random_cmplx_exponentials
+         (deg,&rndre,&rndim,pluxre,pluxim,minxre,minxim);
+
       for(int j=0; j<=deg; j++)
       {
-         rnd = random_angle();
-         datare[i][j] = cos(rnd);
-         dataim[i][j] = sin(rnd);
+         datare[i][j]   = pluxre[j]; dataim[i][j]   = pluxim[j];
+         datare[i+1][j] = minxre[j]; dataim[i+1][j] = minxim[j];
       }
+   }
+   if(dim % 2 == 1) // in odd case, set the last input series to one
+   {
+      datare[dim-1][0] = 1.0; dataim[dim-1][0] = 0.0;
+      for(int j=1; j<=deg; j++)
+      {
+         datare[dim-1][j] = 0.0;
+         dataim[dim-1][j] = 0.0;
+      }
+   }
+   free(pluxre); free(pluxim); free(minxre); free(minxim);
 }

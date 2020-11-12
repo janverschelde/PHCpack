@@ -104,7 +104,7 @@ void make_real4_input
    double* minxhilo = new double[deg+1];
    double* minxlolo = new double[deg+1];
 
-   for(int i=0; i<dim; i++)
+   for(int i=0; i<dim-1; i=i+2)
    {
       random_dbl4_exponentials
          (deg,&rndhihi,&rndlohi,&rndhilo,&rndlolo,
@@ -113,10 +113,21 @@ void make_real4_input
 
       for(int j=0; j<=deg; j++)
       {
-         datahihi[i][j] = pluxhihi[j];
-         datalohi[i][j] = pluxlohi[j];
-         datalolo[i][j] = pluxhilo[j];
-         datalolo[i][j] = pluxlolo[j];
+         datahihi[i][j] = pluxhihi[j]; datalohi[i][j] = pluxlohi[j];
+         datalolo[i][j] = pluxhilo[j]; datalolo[i][j] = pluxlolo[j];
+         datahihi[i+1][j] = minxhihi[j]; datalohi[i+1][j] = minxlohi[j];
+         datalolo[i+1][j] = minxhilo[j]; datalolo[i+1][j] = minxlolo[j];
+      }
+   }
+   if(dim % 2 == 1) // in odd case, set the last input series to one
+   {
+      datahihi[dim-1][0] = 1.0; datalohi[dim-1][0] = 0.0;
+      datahilo[dim-1][0] = 0.0; datalolo[dim-1][0] = 0.0;
+
+      for(int j=1; j<=deg; j++)
+      {
+         datahihi[dim-1][j] = 0.0; datalohi[dim-1][j] = 0.0;
+         datahilo[dim-1][j] = 0.0; datalolo[dim-1][j] = 0.0;
       }
    }
    free(pluxhihi); free(pluxlohi); free(pluxhilo); free(pluxlolo);
@@ -149,7 +160,7 @@ void make_complex4_input
    double* minximhilo = new double[deg+1];
    double* minximlolo = new double[deg+1];
 
-   for(int i=0; i<dim; i++)
+   for(int i=0; i<dim-1; i=i+2)
    {
       random_cmplx4_exponentials(deg,
          &rndrehihi,&rndrelohi,&rndrehilo,&rndrelolo,
@@ -165,6 +176,29 @@ void make_complex4_input
          datarehilo[i][j] = pluxrehilo[j]; datarelolo[i][j] = pluxrelolo[j];
          dataimhihi[i][j] = pluximhihi[j]; dataimlohi[i][j] = pluximlohi[j];
          dataimhilo[i][j] = pluximhilo[j]; dataimlolo[i][j] = pluximlolo[j];
+         datarehihi[i+1][j] = minxrehihi[j];
+         datarelohi[i+1][j] = minxrelohi[j];
+         datarehilo[i+1][j] = minxrehilo[j];
+         datarelolo[i+1][j] = minxrelolo[j];
+         dataimhihi[i+1][j] = minximhihi[j];
+         dataimlohi[i+1][j] = minximlohi[j];
+         dataimhilo[i+1][j] = minximhilo[j];
+         dataimlolo[i+1][j] = minximlolo[j];
+      }
+   }
+   if(dim % 2 == 1) // in odd case, set the last input series to one
+   {
+      datarehihi[dim-1][0] = 1.0; dataimhihi[dim-1][0] = 0.0;
+      datarelohi[dim-1][0] = 0.0; dataimlohi[dim-1][0] = 0.0;
+      datarehilo[dim-1][0] = 0.0; dataimhilo[dim-1][0] = 0.0;
+      datarelolo[dim-1][0] = 0.0; dataimlolo[dim-1][0] = 0.0;
+
+      for(int j=1; j<=deg; j++)
+      {
+         datarehihi[dim-1][j] = 0.0; dataimhihi[dim-1][j] = 0.0;
+         datarelohi[dim-1][j] = 0.0; dataimlohi[dim-1][j] = 0.0;
+         datarehilo[dim-1][j] = 0.0; dataimhilo[dim-1][j] = 0.0;
+         datarelolo[dim-1][j] = 0.0; dataimlolo[dim-1][j] = 0.0;
       }
    }
    free(pluxrehihi); free(pluxrelohi); free(pluxrehilo); free(pluxrelolo);

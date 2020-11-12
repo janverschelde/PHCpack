@@ -1,6 +1,8 @@
 Wed 11 Nov 2020 : extracted from test_{dbl,dbl2,dbl3,dbl4}_monomials.cpp
   the code to define the setup of the tests, into new random_monomials,
   random2_monomials, random3_monomials, and random4_monomials.
+  Improved the setup of input series in random*_monomials, with better
+  tests in test_*monomials.  Bug fixed in dbl4_monomials_host.cpp.
 
 Tue 10 Nov 2020 : edited dbl2_monomials_kernels.h and defined kernels in
   dbl4_monomials_kernels.h and dbl4_monomials_kernels.cu, with added tests

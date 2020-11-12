@@ -14,10 +14,11 @@
 
 using namespace std;
 
-int test_real ( int dim, int nvr, int pwr, int deg );
+double test_real ( int dim, int nvr, int pwr, int deg );
 /*
  * DESCRIPTION :
  *   Tests the evaluation and differentiation for random real data.
+ *   Returns the sum of all errors.
  * 
  * ON ENTRY :
  *   dim      dimension, total number of variables;
@@ -25,10 +26,11 @@ int test_real ( int dim, int nvr, int pwr, int deg );
  *   pwr      highest power of each variable;
  *   deg      truncation degree of the series. */
 
-int test_complex ( int dim, int nvr, int pwr, int deg );
+double test_complex ( int dim, int nvr, int pwr, int deg );
 /*
  * DESCRIPTION :
  *   Tests the evaluation and differentiation for random complex data.
+ *   Returns the sum of all errors.
  * 
  * ON ENTRY :
  *   dim      dimension, total number of variables;
@@ -47,14 +49,29 @@ int main ( void )
    cout << "Give the degree of the series : "; cin >> deg;
 
    cout << endl << "Testing for real input data ... " << endl;
-   test_real(dim,nvr,pwr,deg);
+   double realsum = test_real(dim,nvr,pwr,deg);
    cout << endl << "Testing for complex input data ..." << endl;
-   test_complex(dim,nvr,pwr,deg);
+   double complexsum = test_complex(dim,nvr,pwr,deg);
+
+   const double tol = 1.0e-28;
+
+   cout << endl << "Sum of all errors :" << endl;
+   cout << "  on real data : " << realsum;
+   if(realsum < tol)
+      cout << "  pass," << endl;
+   else
+      cout << "  fail!" << endl;
+
+   cout << "  on complex data : " << complexsum;
+   if(complexsum < tol)
+      cout << "  pass." << endl;
+   else
+      cout << "  fail!" << endl;
 
    return 0;
 }
 
-int test_real ( int dim, int nvr, int pwr, int deg )
+double test_real ( int dim, int nvr, int pwr, int deg )
 {
    int *idx = new int[nvr];           // indices of variables in the monomial
    int *exp = new int[nvr];           // exponents of the variables
@@ -84,7 +101,7 @@ int test_real ( int dim, int nvr, int pwr, int deg )
 
    bool fail = make_real2_monomial(dim,nvr,pwr,deg,idx,exp,cffhi,cfflo);
 
-   if(fail) return 1;
+   if(fail) return 1.0;
 
    cout << "Generated a random monomial :" << endl;
    cout << "   the indices :";
@@ -116,21 +133,29 @@ int test_real ( int dim, int nvr, int pwr, int deg )
       for(int j=0; j<=deg; j++)
          cout << inputhi[i][j] << "  " << inputlo[i][j] << endl;
    }
+   double errsum = 0.0;
+   double errtot = 0.0;
+ 
    CPU_dbl2_evaldiff(dim,nvr,deg,idx,cffhi,cfflo,inputhi,inputlo,
                      outputhi_h,outputlo_h);
    cout << "The value of the product :" << endl;
    for(int i=0; i<=deg; i++)
       cout << outputhi_h[dim][i] << "  " << outputlo_h[dim][i] << endl;
 
-   double errsum = 0.0;
-   double errtot = 0.0;
- 
+   if(nvr == dim) // the product of all input series equals one
+   {
+      for(int i=0; i<=deg; i++)
+         errsum = errsum
+                + abs(outputhi_h[dim][i] - cffhi[i])
+                + abs(outputlo_h[dim][i] - cfflo[i]);
+      cout << "Coefficient error : " << errsum << endl; errtot += errsum;
+   }
    if(nvr > 2)
    {
-
       GPU_dbl2_evaldiff(deg+1,dim,nvr,deg,idx,cffhi,cfflo,inputhi,inputlo,
                         outputhi_d,outputlo_d);
       cout << "The value of the product computed on the GPU :" << endl;
+      errsum = 0.0;
       for(int i=0; i<=deg; i++)
       {
          cout << outputhi_d[dim][i] << "  " << outputlo_d[dim][i] << endl;
@@ -139,6 +164,16 @@ int test_real ( int dim, int nvr, int pwr, int deg )
                 + abs(outputlo_h[dim][i] - outputlo_d[dim][i]);
       }
       cout << "Sum of errors : " << errsum << endl; errtot += errsum;
+
+      if(nvr == dim) // the product of all input series equals one
+      {
+         errsum = 0.0;
+         for(int i=0; i<=deg; i++)
+            errsum = errsum
+                   + abs(outputhi_d[dim][i] - cffhi[i])
+                   + abs(outputlo_d[dim][i] - cfflo[i]);
+         cout << "Coefficient error : " << errsum << endl; errtot += errsum;
+      }
    }
    for(int k=0; k<nvr; k++)
    {
@@ -166,10 +201,10 @@ int test_real ( int dim, int nvr, int pwr, int deg )
    }
    cout << "Total sum of all errors : " << errtot << endl;
 
-   return 0;
+   return errtot;
 }
 
-int test_complex ( int dim, int nvr, int pwr, int deg )
+double test_complex ( int dim, int nvr, int pwr, int deg )
 {
    int *idx = new int[nvr];             // indices of variables in the monomial
    int *exp = new int[nvr];             // exponents of the variables
@@ -222,7 +257,7 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
    bool fail = make_complex2_monomial
      (dim,nvr,pwr,deg,idx,exp,cffrehi,cffrelo,cffimhi,cffimlo);
 
-   if(fail) return 1;
+   if(fail) return 1.0;
 
    cout << "Generated a random monomial :" << endl;
    cout << "   the indices :";
@@ -260,6 +295,9 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
          cout << inputimhi[i][j] << "  " << inputimlo[i][j] << endl;
       }
    }
+   double errsum = 0.0;
+   double errtot = 0.0;
+
    CPU_cmplx2_evaldiff
       (dim,nvr,deg,idx,cffrehi,cffrelo,cffimhi,cffimlo,
        inputrehi,inputrelo,inputimhi,inputimlo,
@@ -271,10 +309,16 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
       cout << outputrehi_h[dim][i] << "  " << outputrelo_h[dim][i] << endl;
       cout << outputimhi_h[dim][i] << "  " << outputimlo_h[dim][i] << endl;
    }
-
-   double errsum = 0.0;
-   double errtot = 0.0;
-
+   if(nvr == dim) // the product of all input series equals one
+   {
+      for(int i=0; i<=deg; i++)
+         errsum = errsum
+                + abs(outputrehi_h[dim][i] - cffrehi[i])
+                + abs(outputrelo_h[dim][i] - cffrelo[i])
+                + abs(outputimhi_h[dim][i] - cffimhi[i])
+                + abs(outputimlo_h[dim][i] - cffimlo[i]);
+      cout << "Coefficient error : " << errsum << endl; errtot += errsum;
+   }
    if(nvr > 2)
    {
       GPU_cmplx2_evaldiff(deg+1,dim,nvr,deg,idx,
@@ -283,6 +327,7 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
          outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d);
 
       cout << "The value of the product computed on the GPU :" << endl;
+      errsum = 0.0;
       for(int i=0; i<=deg; i++) 
       {
          cout << outputrehi_d[dim][i] << "  " << outputrelo_d[dim][i] << endl;
@@ -294,8 +339,18 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
                 + abs(outputimlo_h[dim][i] - outputimlo_d[dim][i]);
       }
       cout << "The sum of errors : " << errsum << endl; errtot += errsum;
+      if(nvr == dim) // the product of all input series equals one
+      {
+         errsum = 0.0;
+         for(int i=0; i<=deg; i++)
+            errsum = errsum
+                   + abs(outputrehi_d[dim][i] - cffrehi[i])
+                   + abs(outputrelo_d[dim][i] - cffrelo[i])
+                   + abs(outputimhi_d[dim][i] - cffimhi[i])
+                   + abs(outputimlo_d[dim][i] - cffimlo[i]);
+         cout << "Coefficient error : " << errsum << endl; errtot += errsum;
+      }
    }
-
    for(int k=0; k<nvr; k++)
    {
       cout << "-> derivative for index " << idx[k] << " :" << endl;
@@ -329,5 +384,5 @@ int test_complex ( int dim, int nvr, int pwr, int deg )
    }
    cout << "Total sum of all errors : " << errtot << endl;
 
-   return 0;
+   return errtot;
 }

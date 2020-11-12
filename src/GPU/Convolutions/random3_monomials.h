@@ -84,6 +84,10 @@ void make_real3_input
 /*
  * DESCRIPTION :
  *   Generates input series, as many as dim, of degree deg.
+ *   The input series are such that the odd indexed series
+ *   are the inverses of the previous even indexed series.
+ *   In case of an odd dimension, the last series equals one.
+ *   The complete product of all series must thus equal one.
  *
  * ON ENTRY :
  *   dim      dimension of the input;
@@ -101,11 +105,16 @@ void make_real3_input
  *            the i-th series, for i in 0..dim-1 and j in 0..deg. */
 
 void make_complex3_input
- ( int dim, int deg, double **datarehi, double **dataremi, double **datarelo,
+ ( int dim, int deg,
+   double **datarehi, double **dataremi, double **datarelo,
    double **dataimhi, double **dataimmi, double **dataimlo );
 /*
  * DESCRIPTION :
  *   Generates input series, as many as dim, of degree deg.
+ *   The input series are such that the odd indexed series
+ *   are the inverses of the previous even indexed series.
+ *   In case of an odd dimension, the last series equals one.
+ *   The complete product of all series must thus equal one.
  *
  * ON ENTRY :
  *   dim      dimension of the input;

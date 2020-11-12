@@ -194,8 +194,8 @@ void CPU_cmplx4_speel
          backwardrehilo[nvr-3],backwardrelolo[nvr-3],
          backwardimhihi[nvr-3],backwardimlohi[nvr-3],
          backwardimhilo[nvr-3],backwardimlolo[nvr-3],
-         cffrehihi,cffrelohi,cffrelohi,cffrelolo,
-         cffimhihi,cffimlohi,cffimlohi,cffimlolo,
+         cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+         cffimhihi,cffimlohi,cffimhilo,cffimlolo,
          crossrehihi[0],crossrelohi[0],crossrehilo[0],crossrelolo[0],
          crossimhihi[0],crossimlohi[0],crossimhilo[0],crossimlolo[0]); 
                                                        // cross is work space
