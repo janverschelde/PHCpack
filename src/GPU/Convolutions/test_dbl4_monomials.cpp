@@ -474,6 +474,7 @@ double test_complex ( int dim, int nvr, int pwr, int deg )
       {
          cout << "-> derivative for index " << idx[k]
               << " computed on GPU :" << endl;
+         errsum = 0.0;
          for(int i=0; i<=deg; i++)
          {
             cout << outputrehihi_d[idx[k]][i] << "  "
