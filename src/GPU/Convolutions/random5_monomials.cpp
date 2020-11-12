@@ -151,4 +151,76 @@ void make_complex5_input
    double **dataimtb, double **dataimix, double **dataimmi,
    double **dataimrg, double **dataimpk )
 {
+   double rndretb,rndreix,rndremi,rndrerg,rndrepk;
+   double rndimtb,rndimix,rndimmi,rndimrg,rndimpk;
+   double* pluxretb = new double[deg+1];
+   double* pluxreix = new double[deg+1];
+   double* pluxremi = new double[deg+1];
+   double* pluxrerg = new double[deg+1];
+   double* pluxrepk = new double[deg+1];
+   double* pluximtb = new double[deg+1];
+   double* pluximix = new double[deg+1];
+   double* pluximmi = new double[deg+1];
+   double* pluximrg = new double[deg+1];
+   double* pluximpk = new double[deg+1];
+   double* minxretb = new double[deg+1];
+   double* minxreix = new double[deg+1];
+   double* minxremi = new double[deg+1];
+   double* minxrerg = new double[deg+1];
+   double* minxrepk = new double[deg+1];
+   double* minximtb = new double[deg+1];
+   double* minximix = new double[deg+1];
+   double* minximmi = new double[deg+1];
+   double* minximrg = new double[deg+1];
+   double* minximpk = new double[deg+1];
+
+   for(int i=0; i<dim-1; i=i+2)
+   {
+      random_cmplx5_exponentials(deg,
+         &rndretb,&rndreix,&rndremi,&rndrerg,&rndrepk,
+         &rndimtb,&rndimix,&rndimmi,&rndimrg,&rndimpk,
+         pluxretb,pluxreix,pluxremi,pluxrerg,pluxrepk,
+         pluximtb,pluximix,pluximmi,pluximrg,pluximpk,
+         minxretb,minxreix,minxremi,minxrerg,minxrepk,
+         minximtb,minximix,minximmi,minximrg,minximpk);
+
+      for(int j=0; j<=deg; j++)
+      {
+         dataretb[i][j] = pluxretb[j]; dataimtb[i][j] = pluximtb[j];
+         datareix[i][j] = pluxreix[j]; dataimix[i][j] = pluximix[j];
+         dataremi[i][j] = pluxremi[j]; dataimmi[i][j] = pluximmi[j];
+         datarerg[i][j] = pluxrerg[j]; dataimrg[i][j] = pluximrg[j];
+         datarepk[i][j] = pluxrepk[j]; dataimpk[i][j] = pluximpk[j];
+         dataretb[i+1][j] = minxretb[j]; dataimtb[i+1][j] = minximtb[j];
+         datareix[i+1][j] = minxreix[j]; dataimix[i+1][j] = minximix[j];
+         dataremi[i+1][j] = minxremi[j]; dataimmi[i+1][j] = minximmi[j];
+         datarerg[i+1][j] = minxrerg[j]; dataimrg[i+1][j] = minximrg[j];
+         datarepk[i+1][j] = minxrepk[j]; dataimpk[i+1][j] = minximpk[j];
+      }
+   }
+   if(dim % 2 == 1) // in odd case, set the last input series to one
+   {
+      dataretb[dim-1][0] = 1.0; dataimtb[dim-1][0] = 0.0;
+      datareix[dim-1][0] = 0.0; dataimix[dim-1][0] = 0.0;
+      dataremi[dim-1][0] = 0.0; dataimmi[dim-1][0] = 0.0;
+      datarerg[dim-1][0] = 0.0; dataimrg[dim-1][0] = 0.0;
+      datarepk[dim-1][0] = 0.0; dataimpk[dim-1][0] = 0.0;
+
+      for(int j=1; j<=deg; j++)
+      {
+         dataretb[dim-1][j] = 0.0; dataimtb[dim-1][j] = 0.0;
+         datareix[dim-1][j] = 0.0; dataimix[dim-1][j] = 0.0;
+         dataremi[dim-1][j] = 0.0; dataimmi[dim-1][j] = 0.0;
+         datarerg[dim-1][j] = 0.0; dataimrg[dim-1][j] = 0.0;
+         datarepk[dim-1][j] = 0.0; dataimpk[dim-1][j] = 0.0;
+      }
+   }
+   free(pluxretb); free(pluxreix); free(pluxremi);
+   free(pluxrerg); free(pluxrepk);
+   free(pluximtb); free(pluximix); free(pluximmi);
+   free(pluximrg); free(pluximpk);
+   free(minxretb); free(minxreix); free(minxremi);
+   free(minxrerg); free(minxrepk);
+   free(minximtb); free(minximix); free(minximmi);
+   free(minximrg); free(minximpk); 
 }

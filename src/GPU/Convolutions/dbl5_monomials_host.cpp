@@ -141,6 +141,145 @@ void CPU_cmplx5_speel
    double **crossimtb, double **crossimix, double **crossimmi,
    double **crossimrg, double **crossimpk )
 {
+   int ix1 = idx[0];
+   int ix2;
+                                                           // f[0] = cff*x[0]
+   CPU_cmplx5_product(deg,
+      cffretb,cffreix,cffremi,cffrerg,cffrepk,
+      cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+      inputretb[ix1],inputreix[ix1],inputremi[ix1],
+      inputrerg[ix1],inputrepk[ix1],
+      inputimtb[ix1],inputimix[ix1],inputimmi[ix1],
+      inputimrg[ix1],inputimpk[ix1],
+      forwardretb[0],forwardreix[0],forwardremi[0],
+      forwardrerg[0],forwardrepk[0],
+      forwardimtb[0],forwardimix[0],forwardimmi[0],
+      forwardimrg[0],forwardimpk[0]);
+   for(int i=1; i<nvr; i++)
+   {                                                    // f[i] = f[i-1]*x[i]
+      ix2 = idx[i];
+      CPU_cmplx5_product(deg,
+         forwardretb[i-1],forwardreix[i-1],forwardremi[i-1],
+         forwardrerg[i-1],forwardrepk[i-1],
+         forwardimtb[i-1],forwardimix[i-1],forwardimmi[i-1],
+         forwardimrg[i-1],forwardimpk[i-1],
+         inputretb[ix2],inputreix[ix2],inputremi[ix2],
+         inputrerg[ix2],inputrepk[ix2],
+         inputimtb[ix2],inputimix[ix2],inputimmi[ix2],
+         inputimrg[ix2],inputimpk[ix2],
+         forwardretb[i],forwardreix[i],forwardremi[i],
+         forwardrerg[i],forwardrepk[i],
+         forwardimtb[i],forwardimix[i],forwardimmi[i],
+         forwardimrg[i],forwardimpk[i]);
+   }
+   if(nvr > 2)
+   {                                                  // b[0] = x[n-1]*x[n-2]
+      ix1 = idx[nvr-1]; ix2 = idx[nvr-2];
+      CPU_cmplx5_product(deg,
+         inputretb[ix1],inputreix[ix1],inputremi[ix1],
+         inputrerg[ix1],inputrepk[ix1],
+         inputimtb[ix1],inputimix[ix1],inputimmi[ix1],
+         inputimrg[ix1],inputimpk[ix1],
+         inputretb[ix2],inputreix[ix2],inputremi[ix2],
+         inputrerg[ix2],inputrepk[ix2],
+         inputimtb[ix2],inputimix[ix2],inputimmi[ix2],
+         inputimrg[ix2],inputimpk[ix2],
+         backwardretb[0],backwardreix[0],backwardremi[0],
+         backwardrerg[0],backwardrepk[0],
+         backwardimtb[0],backwardimix[0],backwardimmi[0],
+         backwardimrg[0],backwardimpk[0]);
+      for(int i=1; i<nvr-2; i++)
+      {                                             // b[i] = b[i-1]*x[x-2-i]
+         ix2 = idx[nvr-2-i];
+         CPU_cmplx5_product(deg,
+            backwardretb[i-1],backwardreix[i-1],backwardremi[i-1],
+            backwardrerg[i-1],backwardrepk[i-1],
+            backwardimtb[i-1],backwardimix[i-1],backwardimmi[i-1],
+            backwardimrg[i-1],backwardimpk[i-1],
+            inputretb[ix2],inputreix[ix2],inputremi[ix2],
+            inputrerg[ix2],inputrepk[ix2],
+            inputimtb[ix2],inputimix[ix2],inputimmi[ix2],
+            inputimrg[ix2],inputimpk[ix2],
+            backwardretb[i],backwardreix[i],backwardremi[i],
+            backwardrerg[i],backwardrepk[i],
+            backwardimtb[i],backwardimix[i],backwardimmi[i],
+            backwardimrg[i],backwardimpk[i]);
+      }
+                                                       // b[n-3] = b[n-3]*cff
+      CPU_cmplx5_product(deg,
+         backwardretb[nvr-3],backwardreix[nvr-3],backwardremi[nvr-3],
+         backwardrerg[nvr-3],backwardrepk[nvr-3],
+         backwardimtb[nvr-3],backwardimix[nvr-3],backwardimmi[nvr-3],
+         backwardimrg[nvr-3],backwardimpk[nvr-3],
+         cffretb,cffreix,cffremi,cffrerg,cffrepk,
+         cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+         crossretb[0],crossreix[0],crossremi[0],crossrerg[0],crossrepk[0],
+         crossimtb[0],crossimix[0],crossimmi[0],crossimrg[0],crossimpk[0]);
+                                                       // cross is work space
+      for(int i=0; i<=deg; i++)
+      {
+         backwardretb[nvr-3][i] = crossretb[0][i];
+         backwardreix[nvr-3][i] = crossreix[0][i];
+         backwardremi[nvr-3][i] = crossremi[0][i];
+         backwardrerg[nvr-3][i] = crossrerg[0][i];
+         backwardrepk[nvr-3][i] = crossrepk[0][i];
+         backwardimtb[nvr-3][i] = crossimtb[0][i];
+         backwardimix[nvr-3][i] = crossimix[0][i];
+         backwardimmi[nvr-3][i] = crossimmi[0][i];
+         backwardimrg[nvr-3][i] = crossimrg[0][i];
+         backwardimpk[nvr-3][i] = crossimpk[0][i];
+      }
+      if(nvr == 3)
+      {                                                   // c[0] = f[0]*x[2]
+         ix2 = idx[2];
+         CPU_cmplx5_product(deg,
+            forwardretb[0],forwardreix[0],forwardremi[0],
+            forwardrerg[0],forwardrepk[0],
+            forwardimtb[0],forwardimix[0],forwardimmi[0],
+            forwardimrg[0],forwardimpk[0],
+            inputretb[ix2],inputreix[ix2],inputremi[ix2],
+            inputrerg[ix2],inputrepk[ix2],
+            inputimtb[ix2],inputimix[ix2],inputimmi[ix2],
+            inputimrg[ix2],inputimpk[ix2],
+            crossretb[0],crossreix[0],crossremi[0],crossrerg[0],crossrepk[0],
+            crossimtb[0],crossimix[0],crossimmi[0],crossimrg[0],crossimpk[0]);
+      }
+      else
+      {
+         for(int i=0; i<nvr-3; i++)
+         {                                            // c[i] = f[i]*b[n-4-i]
+            ix2 = nvr-4-i;
+            CPU_cmplx5_product(deg,
+               forwardretb[i],forwardreix[i],forwardremi[i],
+               forwardrerg[i],forwardrepk[i],
+               forwardimtb[i],forwardimix[i],forwardimmi[i],
+               forwardimrg[i],forwardimpk[i],
+               backwardretb[ix2],backwardreix[ix2],backwardremi[ix2],
+               backwardrerg[ix2],backwardrepk[ix2],
+               backwardimtb[ix2],backwardimix[ix2],backwardimmi[ix2],
+               backwardimrg[ix2],backwardimpk[ix2],
+               crossretb[i],crossreix[i],crossremi[i],
+               crossrerg[i],crossrepk[i],
+               crossimtb[i],crossimix[i],crossimmi[i],
+               crossimrg[i],crossimpk[i]);
+         }
+                                                    // c[n-3] = f[n-3]*x[n-1]
+         ix2 = idx[nvr-1];
+         CPU_cmplx5_product(deg,
+            forwardretb[nvr-3],forwardreix[nvr-3],forwardremi[nvr-3],
+            forwardrerg[nvr-3],forwardrepk[nvr-3],
+            forwardimtb[nvr-3],forwardimix[nvr-3],forwardimmi[nvr-3],
+            forwardimrg[nvr-3],forwardimpk[nvr-3],
+            inputretb[ix2],inputreix[ix2],inputremi[ix2],
+            inputrerg[ix2],inputrepk[ix2],
+            inputimtb[ix2],inputimix[ix2],inputimmi[ix2],
+            inputimrg[ix2],inputimpk[ix2],
+            crossretb[nvr-3],crossreix[nvr-3],crossremi[nvr-3],
+            crossrerg[nvr-3],crossrepk[nvr-3],
+            crossimtb[nvr-3],crossimix[nvr-3],crossimmi[nvr-3],
+            crossimrg[nvr-3],crossimpk[nvr-3]);
+      }
+   }
 }
 
 void CPU_dbl5_evaldiff
@@ -321,4 +460,285 @@ void CPU_cmplx5_evaldiff
    double **outputimtb, double **outputimix, double **outputimmi,
    double **outputimrg, double **outputimpk )
 {
+   if(nvr == 1)
+   {
+      int ix = idx[0];
+
+      CPU_cmplx5_product(deg,
+         inputretb[ix],inputreix[ix],inputremi[ix],
+         inputrerg[ix],inputrepk[ix],
+         inputimtb[ix],inputimix[ix],inputimmi[ix],
+         inputimrg[ix],inputimpk[ix],
+         cffretb,cffreix,cffremi,cffrerg,cffrepk,
+         cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+         outputretb[dim],outputreix[dim],outputremi[dim],
+         outputrerg[dim],outputrepk[dim],
+         outputimtb[dim],outputimix[dim],outputimmi[dim],
+         outputimrg[dim],outputimpk[dim]);
+
+      for(int i=0; i<=deg; i++) 
+      {
+         outputretb[ix][i] = cffretb[i]; outputreix[ix][i] = cffreix[i];
+         outputremi[ix][i] = cffremi[i]; outputrerg[ix][i] = cffrerg[i];
+         outputrepk[ix][i] = cffrepk[i];
+         outputimtb[ix][i] = cffimtb[i]; outputimix[ix][i] = cffimix[i];
+         outputimmi[ix][i] = cffimmi[i]; outputimrg[ix][i] = cffimrg[i];
+         outputimpk[ix][i] = cffimpk[i];
+      }
+   }
+   else if(nvr == 2)
+   {
+      int ix1 = idx[0];
+      int ix2 = idx[1];
+
+      CPU_cmplx5_product(deg,
+         inputretb[ix1],inputreix[ix1],inputremi[ix1],
+         inputrerg[ix1],inputrepk[ix1],
+         inputimtb[ix1],inputimix[ix1],inputimmi[ix1],
+         inputimrg[ix1],inputimpk[ix1],
+         inputretb[ix2],inputreix[ix2],inputremi[ix2],
+         inputrerg[ix2],inputrepk[ix2],
+         inputimtb[ix2],inputimix[ix2],inputimmi[ix2],
+         inputimrg[ix2],inputimpk[ix2],
+         outputretb[dim],outputreix[dim],outputremi[dim],
+         outputrerg[dim],outputrepk[dim],
+         outputimtb[dim],outputimix[dim],outputimmi[dim],
+         outputimrg[dim],outputimpk[dim]);
+      CPU_cmplx5_product(deg,
+         outputretb[dim],outputreix[dim],outputremi[dim],
+         outputrerg[dim],outputrepk[dim],
+         outputimtb[dim],outputimix[dim],outputimmi[dim],
+         outputimrg[dim],outputimpk[dim],
+         cffretb,cffreix,cffremi,cffrerg,cffrepk,
+         cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+         outputretb[dim],outputreix[dim],outputremi[dim],
+         outputrerg[dim],outputrepk[dim],
+         outputimtb[dim],outputimix[dim],outputimmi[dim],
+         outputimrg[dim],outputimpk[dim]);
+
+      CPU_cmplx5_product(deg,
+         cffretb,cffreix,cffremi,cffrerg,cffrepk,
+         cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+         inputretb[ix1],inputreix[ix1],inputremi[ix1],
+         inputrerg[ix1],inputrepk[ix1],
+         inputimtb[ix1],inputimix[ix1],inputimmi[ix1],
+         inputimrg[ix1],inputimpk[ix1],
+         outputretb[ix2],outputreix[ix2],outputremi[ix2],
+         outputrerg[ix2],outputrepk[ix2],
+         outputimtb[ix2],outputimix[ix2],outputimmi[ix2],
+         outputimrg[ix2],outputimpk[ix2]);
+      CPU_cmplx5_product(deg,
+         cffretb,cffreix,cffremi,cffrerg,cffrepk,
+         cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+         inputretb[ix2],inputreix[ix2],inputremi[ix2],
+         inputrerg[ix2],inputrepk[ix2],
+         inputimtb[ix1],inputimix[ix1],inputimmi[ix1],
+         inputimrg[ix1],inputimpk[ix1],
+         outputretb[ix1],outputreix[ix1],outputremi[ix1],
+         outputrerg[ix1],outputrepk[ix1],
+         outputimtb[ix1],outputimix[ix1],outputimmi[ix1],
+         outputimrg[ix1],outputimpk[ix1]);
+   }
+   else
+   {
+      double **forwardretb = new double*[nvr];
+      double **forwardreix = new double*[nvr];
+      double **forwardremi = new double*[nvr];
+      double **forwardrerg = new double*[nvr];
+      double **forwardrepk = new double*[nvr];
+      double **forwardimtb = new double*[nvr];
+      double **forwardimix = new double*[nvr];
+      double **forwardimmi = new double*[nvr];
+      double **forwardimrg = new double*[nvr];
+      double **forwardimpk = new double*[nvr];
+      double **backwardretb = new double*[nvr-2];
+      double **backwardreix = new double*[nvr-2];
+      double **backwardremi = new double*[nvr-2];
+      double **backwardrerg = new double*[nvr-2];
+      double **backwardrepk = new double*[nvr-2];
+      double **backwardimtb = new double*[nvr-2];
+      double **backwardimix = new double*[nvr-2];
+      double **backwardimmi = new double*[nvr-2];
+      double **backwardimrg = new double*[nvr-2];
+      double **backwardimpk = new double*[nvr-2];
+      double **crossretb = new double*[nvr-2];
+      double **crossreix = new double*[nvr-2];
+      double **crossremi = new double*[nvr-2];
+      double **crossrerg = new double*[nvr-2];
+      double **crossrepk = new double*[nvr-2];
+      double **crossimtb = new double*[nvr-2];
+      double **crossimix = new double*[nvr-2];
+      double **crossimmi = new double*[nvr-2];
+      double **crossimrg = new double*[nvr-2];
+      double **crossimpk = new double*[nvr-2];
+
+      for(int i=0; i<nvr-2; i++)
+      {
+         forwardretb[i] = new double[deg+1];
+         forwardreix[i] = new double[deg+1];
+         forwardremi[i] = new double[deg+1];
+         forwardrerg[i] = new double[deg+1];
+         forwardrepk[i] = new double[deg+1];
+         forwardimtb[i] = new double[deg+1];
+         forwardimix[i] = new double[deg+1];
+         forwardimmi[i] = new double[deg+1];
+         forwardimrg[i] = new double[deg+1];
+         forwardimpk[i] = new double[deg+1];
+         backwardretb[i] = new double[deg+1];
+         backwardreix[i] = new double[deg+1];
+         backwardremi[i] = new double[deg+1];
+         backwardrerg[i] = new double[deg+1];
+         backwardrepk[i] = new double[deg+1];
+         backwardimtb[i] = new double[deg+1];
+         backwardimix[i] = new double[deg+1];
+         backwardimmi[i] = new double[deg+1];
+         backwardimrg[i] = new double[deg+1];
+         backwardimpk[i] = new double[deg+1];
+         crossretb[i] = new double[deg+1];
+         crossreix[i] = new double[deg+1];
+         crossremi[i] = new double[deg+1];
+         crossrerg[i] = new double[deg+1];
+         crossrepk[i] = new double[deg+1];
+         crossimtb[i] = new double[deg+1];
+         crossimix[i] = new double[deg+1];
+         crossimmi[i] = new double[deg+1];
+         crossimrg[i] = new double[deg+1];
+         crossimpk[i] = new double[deg+1];
+      }
+      forwardretb[nvr-2] = new double[deg+1];
+      forwardreix[nvr-2] = new double[deg+1];
+      forwardremi[nvr-2] = new double[deg+1];
+      forwardrerg[nvr-2] = new double[deg+1];
+      forwardrepk[nvr-2] = new double[deg+1];
+      forwardimtb[nvr-2] = new double[deg+1];
+      forwardimix[nvr-2] = new double[deg+1];
+      forwardimmi[nvr-2] = new double[deg+1];
+      forwardimrg[nvr-2] = new double[deg+1];
+      forwardimpk[nvr-2] = new double[deg+1];
+      forwardretb[nvr-1] = new double[deg+1];
+      forwardreix[nvr-1] = new double[deg+1];
+      forwardremi[nvr-1] = new double[deg+1];
+      forwardrerg[nvr-1] = new double[deg+1];
+      forwardrepk[nvr-1] = new double[deg+1];
+      forwardimtb[nvr-1] = new double[deg+1];
+      forwardimix[nvr-1] = new double[deg+1];
+      forwardimmi[nvr-1] = new double[deg+1];
+      forwardimrg[nvr-1] = new double[deg+1];
+      forwardimpk[nvr-1] = new double[deg+1];
+
+      CPU_cmplx5_speel(nvr,deg,idx,
+         cffretb,cffreix,cffremi,cffrerg,cffrepk,
+         cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+         inputretb,inputreix,inputremi,inputrerg,inputrepk,
+         inputimtb,inputimix,inputimmi,inputimrg,inputimpk,
+         forwardretb,forwardreix,forwardremi,forwardrerg,forwardrepk,
+         forwardimtb,forwardimix,forwardimmi,forwardimrg,forwardimpk,
+         backwardretb,backwardreix,backwardremi,backwardrerg,backwardrepk,
+         backwardimtb,backwardimix,backwardimmi,backwardimrg,backwardimpk,
+         crossretb,crossreix,crossremi,crossrerg,crossrepk,
+         crossimtb,crossimix,crossimmi,crossimrg,crossimpk);
+
+      for(int i=0; i<deg+1; i++)          // assign value of the monomial
+      {
+         outputretb[dim][i] = forwardretb[nvr-1][i];
+         outputreix[dim][i] = forwardreix[nvr-1][i];
+         outputremi[dim][i] = forwardremi[nvr-1][i];
+         outputrerg[dim][i] = forwardrerg[nvr-1][i];
+         outputrepk[dim][i] = forwardrepk[nvr-1][i];
+         outputimtb[dim][i] = forwardimtb[nvr-1][i];
+         outputimix[dim][i] = forwardimix[nvr-1][i];
+         outputimmi[dim][i] = forwardimmi[nvr-1][i];
+         outputimrg[dim][i] = forwardimrg[nvr-1][i];
+         outputimpk[dim][i] = forwardimpk[nvr-1][i];
+      }
+      if(nvr > 2)
+      {
+         int ix = idx[nvr-1];        // derivative with respect to x[n-1]
+
+         for(int i=0; i<deg+1; i++)
+         {
+            outputretb[ix][i] = forwardretb[nvr-2][i];
+            outputreix[ix][i] = forwardreix[nvr-2][i];
+            outputremi[ix][i] = forwardremi[nvr-2][i];
+            outputrerg[ix][i] = forwardrerg[nvr-2][i];
+            outputrepk[ix][i] = forwardrepk[nvr-2][i];
+            outputimtb[ix][i] = forwardimtb[nvr-2][i];
+            outputimix[ix][i] = forwardimix[nvr-2][i];
+            outputimmi[ix][i] = forwardimmi[nvr-2][i];
+            outputimrg[ix][i] = forwardimrg[nvr-2][i];
+            outputimpk[ix][i] = forwardimpk[nvr-2][i];
+         }
+
+         ix = idx[0];                  // derivative with respect to x[0]
+         for(int i=0; i<deg+1; i++)
+         {
+            outputretb[ix][i] = backwardretb[nvr-3][i];
+            outputreix[ix][i] = backwardreix[nvr-3][i];
+            outputremi[ix][i] = backwardremi[nvr-3][i];
+            outputrerg[ix][i] = backwardrerg[nvr-3][i];
+            outputrepk[ix][i] = backwardrepk[nvr-3][i];
+            outputimtb[ix][i] = backwardimtb[nvr-3][i];
+            outputimix[ix][i] = backwardimix[nvr-3][i];
+            outputimmi[ix][i] = backwardimmi[nvr-3][i];
+            outputimrg[ix][i] = backwardimrg[nvr-3][i];
+            outputimpk[ix][i] = backwardimpk[nvr-3][i];
+         }
+         for(int k=1; k<nvr-1; k++)
+         {
+            ix = idx[k];               // derivative with respect to x[k]
+            for(int i=0; i<deg+1; i++)
+            {
+               outputretb[ix][i] = crossretb[k-1][i];
+               outputreix[ix][i] = crossreix[k-1][i];
+               outputremi[ix][i] = crossremi[k-1][i];
+               outputrerg[ix][i] = crossrerg[k-1][i];
+               outputrepk[ix][i] = crossrepk[k-1][i];
+               outputimtb[ix][i] = crossimtb[k-1][i];
+               outputimix[ix][i] = crossimix[k-1][i];
+               outputimmi[ix][i] = crossimmi[k-1][i];
+               outputimrg[ix][i] = crossimrg[k-1][i];
+               outputimpk[ix][i] = crossimpk[k-1][i];
+            }
+         }
+      }
+      for(int i=0; i<nvr-2; i++)
+      {
+         free(forwardretb[i]);  free(forwardreix[i]);  free(forwardremi[i]);
+         free(forwardrerg[i]);  free(forwardrepk[i]);
+         free(forwardimtb[i]);  free(forwardimix[i]);  free(forwardimmi[i]);
+         free(forwardimrg[i]);  free(forwardimpk[i]);
+         free(backwardretb[i]); free(backwardreix[i]); free(backwardremi[i]);
+         free(backwardrerg[i]); free(backwardrepk[i]);
+         free(backwardimtb[i]); free(backwardimix[i]); free(backwardimmi[i]);
+         free(backwardimrg[i]); free(backwardimpk[i]);
+         free(crossretb[i]);    free(crossreix[i]);    free(crossremi[i]);
+         free(crossrerg[i]);    free(crossrepk[i]);
+         free(crossimtb[i]);    free(crossimix[i]);    free(crossimmi[i]);
+         free(crossimrg[i]);    free(crossimpk[i]);
+      }
+      free(forwardretb[nvr-2]); free(forwardreix[nvr-2]);
+      free(forwardremi[nvr-2]); free(forwardrerg[nvr-2]);
+      free(forwardrepk[nvr-2]);
+      free(forwardimtb[nvr-2]); free(forwardimix[nvr-2]);
+      free(forwardimmi[nvr-2]); free(forwardimrg[nvr-2]);
+      free(forwardimpk[nvr-2]);
+      free(forwardretb[nvr-1]); free(forwardreix[nvr-1]);
+      free(forwardremi[nvr-1]); free(forwardrerg[nvr-1]);
+      free(forwardrepk[nvr-1]);
+      free(forwardimtb[nvr-1]); free(forwardimix[nvr-1]);
+      free(forwardimmi[nvr-1]); free(forwardimrg[nvr-1]);
+      free(forwardimpk[nvr-1]);
+      free(forwardretb);  free(forwardreix);  free(forwardremi);
+      free(forwardrerg);  free(forwardrepk);
+      free(forwardimtb);  free(forwardimix);  free(forwardimmi);
+      free(forwardimrg);  free(forwardimpk);
+      free(backwardretb); free(backwardreix); free(backwardremi);
+      free(backwardrerg); free(backwardrepk);
+      free(backwardimtb); free(backwardimix); free(backwardimmi);
+      free(backwardimrg); free(backwardimpk);
+      free(crossretb);    free(crossreix);    free(crossremi);
+      free(crossrerg);    free(crossrepk);
+      free(crossimtb);    free(crossimix);    free(crossimmi);
+      free(crossimrg);    free(crossimpk);
+   }
 }

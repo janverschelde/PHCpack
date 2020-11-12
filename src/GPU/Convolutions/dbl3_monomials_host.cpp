@@ -383,7 +383,7 @@ void CPU_cmplx3_evaldiff
       CPU_cmplx3_product(deg,
          cffrehi,cffremi,cffrelo,cffimhi,cffimmi,cffimlo,
          inputrehi[ix2],inputremi[ix2],inputrelo[ix2],
-         inputimhi[ix1],inputimmi[ix2],inputimlo[ix1],
+         inputimhi[ix1],inputimmi[ix1],inputimlo[ix1],
          outputrehi[ix1],outputremi[ix1],outputrelo[ix1],
          outputimhi[ix1],outputimmi[ix1],outputimlo[ix1]);
    }
