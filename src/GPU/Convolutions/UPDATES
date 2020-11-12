@@ -1,3 +1,6 @@
+Thu 12 Nov 2020 : edited the documentation in dbl3_monomials_kernels.h.
+  New dbl5_monomials_kernels, tested by test_dbl5_monomials.cpp.
+
 Wed 11 Nov 2020 : extracted from test_{dbl,dbl2,dbl3,dbl4}_monomials.cpp
   the code to define the setup of the tests, into new random_monomials,
   random2_monomials, random3_monomials, and random4_monomials.

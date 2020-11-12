@@ -79,5 +79,6 @@ dbl4_monomials_host        : evaldiff of quad double monomials on host
 dbl4_monomials_kernels     : evaldiff of quad double monomials on device
 test_dbl4_monomials        : test eval/diff of monomials with quad doubles
 dbl5_monomials_host        : evaldiff of penta double monomials on host
+dbl5_monomials_kernels     : evaldiff of penta double monomials on device
 test_dbl5_monomials        : test eval/diff of monomials with penta doubles
 -----------------------------------------------------------------------------
