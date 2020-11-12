@@ -26,13 +26,8 @@ bool make_real3_monomial
    else
    {
       for(int i=0; i<=deg; i++)
-      {
-         // random_triple_double(&cffhi[i],&cffmi[i],&cfflo[i]);
-         cffhi[i] = 1.0;
-         cffmi[i] = 0.0;
-         cfflo[i] = 0.0;
-         if(i > 0) random_triple_double(&cffhi[i],&cffmi[i],&cfflo[i]);
-      }
+         random_triple_double(&cffhi[i],&cffmi[i],&cfflo[i]);
+
       for(int i=0; i<nvr; i++)
       {
          exp[i] = 1 + (rand() % pwr);

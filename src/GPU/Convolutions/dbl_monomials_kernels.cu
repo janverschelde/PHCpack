@@ -68,36 +68,48 @@ __global__ void GPU_dbl_speel
    __shared__ double zv[d_shmemsize];
   
    xv[k] = cff[k]; ix1 = idx[0]*deg1+k; yv[k] = input[ix1]; 
-   __syncthreads(); dbl_convolute(xv,yv,zv,deg1,k);
+   __syncthreads();
+   dbl_convolute(xv,yv,zv,deg1,k);
+   __syncthreads();
    forward[k] = zv[k];                               // f[0] = cff*x[0]
 
    for(int i=1; i<nvr; i++)
    {
       xv[k] = zv[k]; ix2 = idx[i]*deg1+k; yv[k] = input[ix2];
-      __syncthreads(); dbl_convolute(xv,yv,zv,deg1,k);
+      __syncthreads();
+      dbl_convolute(xv,yv,zv,deg1,k);
+      __syncthreads();
       forward[i*deg1+k] = zv[k];                    // f[i] = f[i-1]*x[i]
    }
    if(nvr > 2)
    {
       ix1 = idx[nvr-1]*deg1+k; xv[k] = input[ix1];
       ix2 = idx[nvr-2]*deg1+k; yv[k] = input[ix2];
-      __syncthreads(); dbl_convolute(xv,yv,zv,deg1,k);
+      __syncthreads();
+      dbl_convolute(xv,yv,zv,deg1,k);
+      __syncthreads();
       backward[k] = zv[k];                           // b[0] = x[n-1]*x[n-2]
       for(int i=1; i<nvr-2; i++)
       {
          xv[k] = zv[k]; ix2 = idx[nvr-2-i]*deg1+k; yv[k] = input[ix2];
-         __syncthreads(); dbl_convolute(xv,yv,zv,deg1,k);
+         __syncthreads();
+         dbl_convolute(xv,yv,zv,deg1,k);
+         __syncthreads();
          backward[i*deg1+k] = zv[k];                // b[i] = b[i-1]*x[n-2-i]
       }
       xv[k] = zv[k]; yv[k] = cff[k];
-      __syncthreads(); dbl_convolute(xv,yv,zv,deg1,k);
+      __syncthreads();
+      dbl_convolute(xv,yv,zv,deg1,k);
+      __syncthreads();
       ix2 = (nvr-3)*deg1+k;
       backward[ix2] = zv[k];                         // b[n-3] = b[n-3]*cff
 
       if(nvr == 3)
       {
          xv[k] = forward[k]; ix2 = idx[2]*deg1+k; yv[k] = input[ix2];
-         __syncthreads(); dbl_convolute(xv,yv,zv,deg1,k);
+         __syncthreads();
+         dbl_convolute(xv,yv,zv,deg1,k);
+         __syncthreads();
          cross[k] = zv[k];                          // c[0] = f[0]*x[2]
       }
       else
@@ -106,12 +118,16 @@ __global__ void GPU_dbl_speel
          {
             ix1 = i*deg1+k;         xv[k] = forward[ix1];
             ix2 = (nvr-4-i)*deg1+k; yv[k] = backward[ix2];
-            __syncthreads(); dbl_convolute(xv,yv,zv,deg1,k);
+            __syncthreads();
+            dbl_convolute(xv,yv,zv,deg1,k);
+            __syncthreads();
             cross[i*deg1+k] = zv[k];                // c[i] = f[i]*b[n-4-i]
          }
          ix1 = (nvr-3)*deg1+k;    xv[k] = forward[ix1];
          ix2 = idx[nvr-1]*deg1+k; yv[k] = input[ix2];
-         __syncthreads(); dbl_convolute(xv,yv,zv,deg1,k);
+         __syncthreads();
+         dbl_convolute(xv,yv,zv,deg1,k);
+         __syncthreads();
          cross[(nvr-3)*deg1+k] = zv[k];             // c[n-3] = f[n-3]*x[n-1]
       }
    }
@@ -135,7 +151,9 @@ __global__ void GPU_cmplx_speel
 
    xvre[k] = cffre[k]; xvim[k] = cffim[k];
    ix1 = idx[0]*deg1+k; yvre[k] = inputre[ix1]; yvim[k] = inputim[ix1];
-   __syncthreads(); cmplx_convolute(xvre,xvim,yvre,yvim,zvre,zvim,deg1,k);
+   __syncthreads();
+   cmplx_convolute(xvre,xvim,yvre,yvim,zvre,zvim,deg1,k);
+   __syncthreads();
    forwardre[k] = zvre[k];
    forwardim[k] = zvim[k];                            // f[0] = cff*x[0]
 
@@ -143,7 +161,9 @@ __global__ void GPU_cmplx_speel
    {
       xvre[k] = zvre[k]; xvim[k] = zvim[k];
       ix2 = idx[i]*deg1+k; yvre[k] = inputre[ix2]; yvim[k] = inputim[ix2];
-      __syncthreads(); cmplx_convolute(xvre,xvim,yvre,yvim,zvre,zvim,deg1,k);
+      __syncthreads();
+      cmplx_convolute(xvre,xvim,yvre,yvim,zvre,zvim,deg1,k);
+      __syncthreads();
       ix1 = i*deg1+k;
       forwardre[ix1] = zvre[k];
       forwardim[ix1] = zvim[k];                       // f[i] = f[i-i]*x[i]
@@ -152,7 +172,9 @@ __global__ void GPU_cmplx_speel
    {
       ix1 = idx[nvr-1]*deg1+k; xvre[k] = inputre[ix1]; xvim[k] = inputim[ix1];
       ix2 = idx[nvr-2]*deg1+k; yvre[k] = inputre[ix2]; yvim[k] = inputim[ix2];
-      __syncthreads(); cmplx_convolute(xvre,xvim,yvre,yvim,zvre,zvim,deg1,k);
+      __syncthreads();
+      cmplx_convolute(xvre,xvim,yvre,yvim,zvre,zvim,deg1,k);
+      __syncthreads();
       backwardre[k] = zvre[k];
       backwardim[k] = zvim[k];                        // b[0] = x[n-1]*x[n-2]
       for(int i=1; i<nvr-2; i++)
@@ -162,6 +184,7 @@ __global__ void GPU_cmplx_speel
          yvre[k] = inputre[ix2]; yvim[k] = inputim[ix2];
          __syncthreads();
          cmplx_convolute(xvre,xvim,yvre,yvim,zvre,zvim,deg1,k);
+         __syncthreads();
          ix1 = i*deg1+k;
          backwardre[ix1] = zvre[k];
          backwardim[ix1] = zvim[k];                // b[i] = b[i]*x[n-2-i]
@@ -170,6 +193,7 @@ __global__ void GPU_cmplx_speel
       yvre[k] = cffre[k]; yvim[k] = cffim[k];
       __syncthreads();
       cmplx_convolute(xvre,xvim,yvre,yvim,zvre,zvim,deg1,k);
+      __syncthreads();
       ix1 = (nvr-3)*deg1+k;
       backwardre[ix1] = zvre[k];
       backwardim[ix1] = zvim[k];                   // b[n-3] = b[n-3]*cff
@@ -180,6 +204,7 @@ __global__ void GPU_cmplx_speel
          ix2 = idx[2]*deg1+k; yvre[k] = inputre[ix2]; yvim[k] = inputim[ix2];
          __syncthreads();
          cmplx_convolute(xvre,xvim,yvre,yvim,zvre,zvim,deg1,k);
+         __syncthreads();
          crossre[k] = zvre[k];
          crossim[k] = zvim[k];                     // c[0] = f[0]*x[2]
       }
@@ -193,6 +218,7 @@ __global__ void GPU_cmplx_speel
             yvre[k] = backwardre[ix2]; yvim[k] = backwardim[ix2];
             __syncthreads();
             cmplx_convolute(xvre,xvim,yvre,yvim,zvre,zvim,deg1,k);
+            __syncthreads();
             ix1 = i*deg1+k;
             crossre[ix1] = zvre[k];
             crossim[ix1] = zvim[k];                // c[i] = f[i]*b[n-4-i]
@@ -203,6 +229,7 @@ __global__ void GPU_cmplx_speel
          yvre[k] = inputre[ix2];   yvim[k] = inputim[ix2];
          __syncthreads();
          cmplx_convolute(xvre,xvim,yvre,yvim,zvre,zvim,deg1,k);
+         __syncthreads();
          ix1 = (nvr-3)*deg1+k;
          crossre[ix1] = zvre[k];
          crossim[ix1] = zvim[k];                  // c[n-3] = f[n-3]*x[n-1]

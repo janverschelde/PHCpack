@@ -169,6 +169,7 @@ __global__ void GPU_dbl4_speel
    dbl4_convolute(xvhihi,xvlohi,xvhilo,xvlolo,
                   yvhihi,yvlohi,yvhilo,yvlolo,
                   zvhihi,zvlohi,zvhilo,zvlolo,deg1,k);
+   __syncthreads();
    forwardhihi[k] = zvhihi[k]; forwardlohi[k] = zvlohi[k];
    forwardhilo[k] = zvhilo[k]; forwardlolo[k] = zvlolo[k];
 
@@ -183,6 +184,7 @@ __global__ void GPU_dbl4_speel
       dbl4_convolute(xvhihi,xvlohi,xvhilo,xvlolo,
                      yvhihi,yvlohi,yvhilo,yvlolo,
                      zvhihi,zvlohi,zvhilo,zvlolo,deg1,k);
+      __syncthreads();
       ix1 = i*deg1+k;
       forwardhihi[ix1] = zvhihi[k]; forwardlohi[ix1] = zvlohi[k]; 
       forwardhilo[ix1] = zvhilo[k]; forwardlolo[ix1] = zvlolo[k];           
@@ -199,6 +201,7 @@ __global__ void GPU_dbl4_speel
       dbl4_convolute(xvhihi,xvlohi,xvhilo,xvlolo,
                      yvhihi,yvlohi,yvhilo,yvlolo,
                      zvhihi,zvlohi,zvhilo,zvlolo,deg1,k);
+      __syncthreads();
       backwardhihi[k] = zvhihi[k]; backwardlohi[k] = zvlohi[k];
       backwardhilo[k] = zvhilo[k]; backwardlolo[k] = zvlolo[k];                  
       for(int i=1; i<nvr-2; i++)
@@ -212,6 +215,7 @@ __global__ void GPU_dbl4_speel
          dbl4_convolute(xvhihi,xvlohi,xvhilo,xvlolo,
                         yvhihi,yvlohi,yvhilo,yvlolo,
                         zvhihi,zvlohi,zvhilo,zvlolo,deg1,k);
+         __syncthreads();
          ix1 = i*deg1+k;
          backwardhihi[ix1] = zvhihi[k]; backwardlohi[ix1] = zvlohi[k];
          backwardhilo[ix1] = zvhilo[k]; backwardlolo[ix1] = zvlolo[k];        
@@ -224,6 +228,7 @@ __global__ void GPU_dbl4_speel
       dbl4_convolute(xvhihi,xvlohi,xvhilo,xvlolo,
                      yvhihi,yvlohi,yvhilo,yvlolo,
                      zvhihi,zvlohi,zvhilo,zvlolo,deg1,k);
+      __syncthreads();
       ix2 = (nvr-3)*deg1+k;
       backwardhihi[ix2] = zvhihi[k]; backwardlohi[ix2] = zvlohi[k];
       backwardhilo[ix2] = zvhilo[k]; backwardlolo[ix2] = zvlolo[k];
@@ -239,6 +244,7 @@ __global__ void GPU_dbl4_speel
          dbl4_convolute(xvhihi,xvlohi,xvhilo,xvlolo,
                         yvhihi,yvlohi,yvhilo,yvlolo,
                         zvhihi,zvlohi,zvhilo,zvlolo,deg1,k);
+         __syncthreads();
          crosshihi[k] = zvhihi[k]; crosslohi[k] = zvlohi[k];
          crosshilo[k] = zvhilo[k]; crosslolo[k] = zvlolo[k];
       }
@@ -256,6 +262,7 @@ __global__ void GPU_dbl4_speel
             dbl4_convolute(xvhihi,xvlohi,xvhilo,xvlolo,
                            yvhihi,yvlohi,yvhilo,yvlolo,
                            zvhihi,zvlohi,zvhilo,zvlolo,deg1,k);
+            __syncthreads();
             crosshihi[ix1] = zvhihi[k]; crosslohi[ix1] = zvlohi[k];
             crosshilo[ix1] = zvhilo[k]; crosslolo[ix1] = zvlolo[k]; 
          }
@@ -269,6 +276,7 @@ __global__ void GPU_dbl4_speel
          dbl4_convolute(xvhihi,xvlohi,xvhilo,xvlolo,
                         yvhihi,yvlohi,yvhilo,yvlolo,
                         zvhihi,zvlohi,zvhilo,zvlolo,deg1,k);
+         __syncthreads();
          crosshihi[ix1] = zvhihi[k]; crosslohi[ix1] = zvlohi[k];
          crosshilo[ix1] = zvhilo[k]; crosslolo[ix1] = zvlolo[k];
       }
@@ -341,6 +349,7 @@ __global__ void GPU_cmplx4_speel
                     yvimhihi,yvimlohi,yvimhilo,yvimlolo,
                     zvrehihi,zvrelohi,zvrehilo,zvrelolo,
                     zvimhihi,zvimlohi,zvimhilo,zvimlolo,deg1,k);
+   __syncthreads();
    forwardrehihi[k] = zvrehihi[k]; forwardrelohi[k] = zvrelohi[k];
    forwardrehilo[k] = zvrehilo[k]; forwardrelolo[k] = zvrelolo[k];
    forwardimhihi[k] = zvimhihi[k]; forwardimlohi[k] = zvimlohi[k];
@@ -364,6 +373,7 @@ __global__ void GPU_cmplx4_speel
                        yvimhihi,yvimlohi,yvimhilo,yvimlolo,
                        zvrehihi,zvrelohi,zvrehilo,zvrelolo,
                        zvimhihi,zvimlohi,zvimhilo,zvimlolo,deg1,k);
+      __syncthreads();
       ix1 = i*deg1+k;                                   
       forwardrehihi[ix1] = zvrehihi[k]; forwardrelohi[ix1] = zvrelohi[k];
       forwardrehilo[ix1] = zvrehilo[k]; forwardrelolo[ix1] = zvrelolo[k];
@@ -389,6 +399,7 @@ __global__ void GPU_cmplx4_speel
                        yvimhihi,yvimlohi,yvimhilo,yvimlolo,
                        zvrehihi,zvrelohi,zvrehilo,zvrelolo,
                        zvimhihi,zvimlohi,zvimhilo,zvimlolo,deg1,k);
+      __syncthreads();
       backwardrehihi[k] = zvrehihi[k]; backwardrelohi[k] = zvrelohi[k];
       backwardrehilo[k] = zvrehilo[k]; backwardrelolo[k] = zvrelolo[k];
       backwardimhihi[k] = zvimhihi[k]; backwardimlohi[k] = zvimlohi[k];
@@ -412,6 +423,7 @@ __global__ void GPU_cmplx4_speel
                           yvimhihi,yvimlohi,yvimhilo,yvimlolo,
                           zvrehihi,zvrelohi,zvrehilo,zvrelolo,
                           zvimhihi,zvimlohi,zvimhilo,zvimlolo,deg1,k);
+         __syncthreads();
          ix1 = i*deg1+k;
          backwardrehihi[ix1] = zvrehihi[k]; backwardrelohi[ix1] = zvrelohi[k];
          backwardrehilo[ix1] = zvrehilo[k]; backwardrelolo[ix1] = zvrelolo[k];
@@ -433,6 +445,7 @@ __global__ void GPU_cmplx4_speel
                        yvimhihi,yvimlohi,yvimhilo,yvimlolo,
                        zvrehihi,zvrelohi,zvrehilo,zvrelolo,
                        zvimhihi,zvimlohi,zvimhilo,zvimlolo,deg1,k);
+      __syncthreads();
       ix1 = (nvr-3)*deg1+k;
       backwardrehihi[ix1] = zvrehihi[k]; backwardrelohi[ix1] = zvrelohi[k];
       backwardrehilo[ix1] = zvrehilo[k]; backwardrelolo[ix1] = zvrelolo[k];
@@ -457,6 +470,7 @@ __global__ void GPU_cmplx4_speel
                           yvimhihi,yvimlohi,yvimhilo,yvimlolo,
                           zvrehihi,zvrelohi,zvrehilo,zvrelolo,
                           zvimhihi,zvimlohi,zvimhilo,zvimlolo,deg1,k);
+         __syncthreads();
          crossrehihi[k] = zvrehihi[k]; crossrelohi[k] = zvrelohi[k];
          crossrehilo[k] = zvrehilo[k]; crossrelolo[k] = zvrelolo[k];
          crossimhihi[k] = zvimhihi[k]; crossimlohi[k] = zvimlohi[k];
@@ -487,6 +501,7 @@ __global__ void GPU_cmplx4_speel
                              yvimhihi,yvimlohi,yvimhilo,yvimlolo,
                              zvrehihi,zvrelohi,zvrehilo,zvrelolo,
                              zvimhihi,zvimlohi,zvimhilo,zvimlolo,deg1,k);
+            __syncthreads();
             ix1 = i*deg1+k;
             crossrehihi[ix1] = zvrehihi[k]; crossrelohi[ix1] = zvrelohi[k];
             crossrehilo[ix1] = zvrehilo[k]; crossrelolo[ix1] = zvrelolo[k];
@@ -510,6 +525,7 @@ __global__ void GPU_cmplx4_speel
                           yvimhihi,yvimlohi,yvimhilo,yvimlolo,
                           zvrehihi,zvrelohi,zvrehilo,zvrelolo,
                           zvimhihi,zvimlohi,zvimhilo,zvimlolo,deg1,k);
+         __syncthreads();
          ix1 = (nvr-3)*deg1+k;
          crossrehihi[ix1] = zvrehihi[k]; crossrelohi[ix1] = zvrelohi[k];
          crossrehilo[ix1] = zvrehilo[k]; crossrelolo[ix1] = zvrelolo[k];

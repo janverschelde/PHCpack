@@ -119,6 +119,7 @@ __global__ void GPU_dbl3_speel
    yvhi[k] = inputhi[ix1]; yvmi[k] = inputmi[ix1]; yvlo[k] = inputlo[ix1]; 
    __syncthreads();
    dbl3_convolute(xvhi,xvmi,xvlo,yvhi,yvmi,yvlo,zvhi,zvmi,zvlo,deg1,k);
+   __syncthreads();
    forwardhi[k] = zvhi[k];
    forwardmi[k] = zvmi[k];
    forwardlo[k] = zvlo[k];                            // f[0] = cff*x[0]
@@ -130,6 +131,7 @@ __global__ void GPU_dbl3_speel
       yvhi[k] = inputhi[ix2]; yvmi[k] = inputmi[ix2]; yvlo[k] = inputlo[ix2];
       __syncthreads();
       dbl3_convolute(xvhi,xvmi,xvlo,yvhi,yvmi,yvlo,zvhi,zvmi,zvlo,deg1,k);
+      __syncthreads();
       forwardhi[i*deg1+k] = zvhi[k]; 
       forwardmi[i*deg1+k] = zvmi[k]; 
       forwardlo[i*deg1+k] = zvlo[k];                  // f[i] = f[i-1]*x[i]
@@ -142,6 +144,7 @@ __global__ void GPU_dbl3_speel
       yvhi[k] = inputhi[ix2]; yvmi[k] = inputmi[ix2]; yvlo[k] = inputlo[ix2];
       __syncthreads();
       dbl3_convolute(xvhi,xvmi,xvlo,yvhi,yvmi,yvlo,zvhi,zvmi,zvlo,deg1,k);
+      __syncthreads();
       backwardhi[k] = zvhi[k];
       backwardmi[k] = zvmi[k];
       backwardlo[k] = zvlo[k];                       // b[0] = x[n-1]*x[n-2]
@@ -153,6 +156,7 @@ __global__ void GPU_dbl3_speel
          yvlo[k] = inputlo[ix2];
          __syncthreads();
          dbl3_convolute(xvhi,xvmi,xvlo,yvhi,yvmi,yvlo,zvhi,zvmi,zvlo,deg1,k);
+         __syncthreads();
          backwardhi[i*deg1+k] = zvhi[k];
          backwardmi[i*deg1+k] = zvmi[k];
          backwardlo[i*deg1+k] = zvlo[k];             // b[i] = b[i-1]*x[n-2-i]
@@ -161,6 +165,7 @@ __global__ void GPU_dbl3_speel
       yvhi[k] = cffhi[k]; yvmi[k] = cffmi[k]; yvlo[k] = cfflo[k];
       __syncthreads();
       dbl3_convolute(xvhi,xvmi,xvlo,yvhi,yvmi,yvlo,zvhi,zvmi,zvlo,deg1,k);
+      __syncthreads();
       ix2 = (nvr-3)*deg1+k;
       backwardhi[ix2] = zvhi[k];
       backwardmi[ix2] = zvmi[k];
@@ -175,6 +180,7 @@ __global__ void GPU_dbl3_speel
          yvlo[k] = inputlo[ix2];
          __syncthreads();
          dbl3_convolute(xvhi,xvmi,xvlo,yvhi,yvmi,yvlo,zvhi,zvmi,zvlo,deg1,k);
+         __syncthreads();
          crosshi[k] = zvhi[k];
          crossmi[k] = zvmi[k];
          crosslo[k] = zvlo[k];                      // c[0] = f[0]*x[2]
@@ -192,6 +198,7 @@ __global__ void GPU_dbl3_speel
             __syncthreads();
             dbl3_convolute
                (xvhi,xvmi,xvlo,yvhi,yvmi,yvlo,zvhi,zvmi,zvlo,deg1,k);
+            __syncthreads();
             crosshi[i*deg1+k] = zvhi[k];
             crossmi[i*deg1+k] = zvmi[k];
             crosslo[i*deg1+k] = zvlo[k];            // c[i] = f[i]*b[n-4-i]
@@ -204,6 +211,7 @@ __global__ void GPU_dbl3_speel
          yvlo[k] = inputlo[ix2];
          __syncthreads();
          dbl3_convolute(xvhi,xvmi,xvlo,yvhi,yvmi,yvlo,zvhi,zvmi,zvlo,deg1,k);
+         __syncthreads();
          crosshi[(nvr-3)*deg1+k] = zvhi[k];
          crossmi[(nvr-3)*deg1+k] = zvmi[k];
          crosslo[(nvr-3)*deg1+k] = zvlo[k];         // c[n-3] = f[n-3]*x[n-1]
@@ -258,6 +266,7 @@ __global__ void GPU_cmplx3_speel
    cmplx3_convolute(xvrehi,xvremi,xvrelo,xvimhi,xvimmi,xvimlo,
                     yvrehi,yvremi,yvrelo,yvimhi,yvimmi,yvimlo,
                     zvrehi,zvremi,zvrelo,zvimhi,zvimmi,zvimlo,deg1,k);
+   __syncthreads();
    forwardrehi[k] = zvrehi[k]; forwardremi[k] = zvremi[k];
    forwardrelo[k] = zvrelo[k];
    forwardimhi[k] = zvimhi[k]; forwardimmi[k] = zvimmi[k];
@@ -276,6 +285,7 @@ __global__ void GPU_cmplx3_speel
       cmplx3_convolute(xvrehi,xvremi,xvrelo,xvimhi,xvimmi,xvimlo,
                        yvrehi,yvremi,yvrelo,yvimhi,yvimmi,yvimlo,
                        zvrehi,zvremi,zvrelo,zvimhi,zvimmi,zvimlo,deg1,k);
+      __syncthreads();
       ix1 = i*deg1+k;                                   
       forwardrehi[ix1] = zvrehi[k]; forwardremi[ix1] = zvremi[k];
       forwardrelo[ix1] = zvrelo[k];
@@ -298,6 +308,7 @@ __global__ void GPU_cmplx3_speel
       cmplx3_convolute(xvrehi,xvremi,xvrelo,xvimhi,xvimmi,xvimlo,
                        yvrehi,yvremi,yvrelo,yvimhi,yvimmi,yvimlo,
                        zvrehi,zvremi,zvrelo,zvimhi,zvimmi,zvimlo,deg1,k);
+      __syncthreads();
       backwardrehi[k] = zvrehi[k]; backwardremi[k] = zvremi[k];
       backwardrelo[k] = zvrelo[k];
       backwardimhi[k] = zvimhi[k]; backwardimmi[k] = zvimmi[k];
@@ -316,6 +327,7 @@ __global__ void GPU_cmplx3_speel
          cmplx3_convolute(xvrehi,xvremi,xvrelo,xvimhi,xvimmi,xvimlo,
                           yvrehi,yvremi,yvrelo,yvimhi,yvimmi,yvimlo,
                           zvrehi,zvremi,zvrelo,zvimhi,zvimmi,zvimlo,deg1,k);
+         __syncthreads();
          ix1 = i*deg1+k;
          backwardrehi[ix1] = zvrehi[k]; backwardremi[ix1] = zvremi[k];
          backwardrelo[ix1] = zvrelo[k];
@@ -330,6 +342,7 @@ __global__ void GPU_cmplx3_speel
       cmplx3_convolute(xvrehi,xvremi,xvrelo,xvimhi,xvimmi,xvimlo,
                        yvrehi,yvremi,yvrelo,yvimhi,yvimmi,yvimlo,
                        zvrehi,zvremi,zvrelo,zvimhi,zvimmi,zvimlo,deg1,k);
+      __syncthreads();
       ix1 = (nvr-3)*deg1+k;
       backwardrehi[ix1] = zvrehi[k]; backwardremi[ix1] = zvremi[k];
       backwardrelo[ix1] = zvrelo[k];
@@ -351,6 +364,7 @@ __global__ void GPU_cmplx3_speel
          cmplx3_convolute(xvrehi,xvremi,xvrelo,xvimhi,xvimmi,xvimlo,
                           yvrehi,yvremi,yvrelo,yvimhi,yvimmi,yvimlo,
                           zvrehi,zvremi,zvrelo,zvimhi,zvimmi,zvimlo,deg1,k);
+         __syncthreads();
          crossrehi[k] = zvrehi[k]; crossremi[k] = zvremi[k];
          crossrelo[k] = zvrelo[k];
          crossimhi[k] = zvimhi[k]; crossimmi[k] = zvimmi[k];
@@ -374,6 +388,8 @@ __global__ void GPU_cmplx3_speel
             cmplx3_convolute(xvrehi,xvremi,xvrelo,xvimhi,xvimmi,xvimlo,
                              yvrehi,yvremi,yvrelo,yvimhi,yvimmi,yvimlo,
                              zvrehi,zvremi,zvrelo,zvimhi,zvimmi,zvimlo,deg1,k);
+
+            __syncthreads();
             ix1 = i*deg1+k;
             crossrehi[ix1] = zvrehi[k]; crossremi[ix1] = zvremi[k];
             crossrelo[ix1] = zvrelo[k];
@@ -394,6 +410,7 @@ __global__ void GPU_cmplx3_speel
          cmplx3_convolute(xvrehi,xvremi,xvrelo,xvimhi,xvimmi,xvimlo,
                           yvrehi,yvremi,yvrelo,yvimhi,yvimmi,yvimlo,
                           zvrehi,zvremi,zvrelo,zvimhi,zvimmi,zvimlo,deg1,k);
+         __syncthreads();
          ix1 = (nvr-3)*deg1+k;
          crossrehi[ix1] = zvrehi[k]; crossremi[ix1] = zvremi[k];
          crossrelo[ix1] = zvrelo[k];
