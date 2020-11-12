@@ -114,9 +114,9 @@ void make_real4_input
       for(int j=0; j<=deg; j++)
       {
          datahihi[i][j] = pluxhihi[j]; datalohi[i][j] = pluxlohi[j];
-         datalolo[i][j] = pluxhilo[j]; datalolo[i][j] = pluxlolo[j];
+         datahilo[i][j] = pluxhilo[j]; datalolo[i][j] = pluxlolo[j];
          datahihi[i+1][j] = minxhihi[j]; datalohi[i+1][j] = minxlohi[j];
-         datalolo[i+1][j] = minxhilo[j]; datalolo[i+1][j] = minxlolo[j];
+         datahilo[i+1][j] = minxhilo[j]; datalolo[i+1][j] = minxlolo[j];
       }
    }
    if(dim % 2 == 1) // in odd case, set the last input series to one
