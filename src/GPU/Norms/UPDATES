@@ -1,3 +1,6 @@
+Fri 13 Nov 2020 : fixed random8_vectors.cpp so the last double of a random
+  octo double is nonzero.
+
 Mon 19 Oct 2020 : in cmplx10_norm_kernels.h and dbl10_norm_kernels.h
   increased the maxrounds from 32 to 96, improved the documentation.
   For dbl10_norm_kernels.h, da_shmemsize can be raised to 256.
@@ -11,6 +14,7 @@ Mon 19 Oct 2020 : in cmplx10_norm_kernels.h and dbl10_norm_kernels.h
   Increased the od_shmemsize in {dbl8,cmplx8}_norm_kernels.h.
   Increased the qd_shmemsize in {dbl4,cmplx4}_norm_kernels.h.
   Increased the dd_shmemsize in {dbl2,cmplx2}_norm_kernels.h.
+  Increased the dd_shmemsize in {dbl3,dbl,cmplx3,cmplx}_norm_kernels.h.
 
 Sun 18 Oct 2020 : set the da_shmemsize to 128 in cmplx10_norm_kernels.h,
   added kernels for medium and large vectors in cmplx10_norm_kernels.cu,

@@ -15,7 +15,7 @@ void random_octo_double
    const double eps4 = eps*eps3;
    const double eps5 = eps*eps4;
    const double eps6 = eps*eps5;
-   const double eps7 = eps*eps7;
+   const double eps7 = eps*eps6;
    const double r0 = random_double();
    const double r1 = random_double();
    const double r2 = random_double();
