@@ -431,7 +431,7 @@ double test_complex ( int dim, int nvr, int pwr, int deg )
                 + abs(outputimpk_h[dim][i] - cffimpk[i]);
       cout << "Coefficient error : " << errsum << endl; errtot += errsum;
    }
-/*
+
    if(nvr > 2)
    {
       GPU_cmplx5_evaldiff(deg+1,dim,nvr,deg,idx,
@@ -484,7 +484,6 @@ double test_complex ( int dim, int nvr, int pwr, int deg )
          cout << "Coefficient error : " << errsum << endl; errtot += errsum;
       }
    }
- */
    for(int k=0; k<nvr; k++)
    {
       cout << "-> derivative for index " << idx[k] << " :" << endl;
@@ -501,7 +500,6 @@ double test_complex ( int dim, int nvr, int pwr, int deg )
               << outputimrg_h[idx[k]][i] << "  "
               << outputimpk_h[idx[k]][i] << endl;
       }
- /*
       if(nvr > 2)
       {
          cout << "-> derivative for index " << idx[k]
@@ -533,7 +531,6 @@ double test_complex ( int dim, int nvr, int pwr, int deg )
          }
          cout << "The sum of errors : " << errsum << endl; errtot += errsum;
       }
- */
    }
    cout << "Total sum of all errors : " << errtot << endl;
 

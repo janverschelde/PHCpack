@@ -322,6 +322,279 @@ __global__ void GPU_cmplx5_speel
    double *crossimtb, double *crossimix, double *crossimmi,
    double *crossimrg, double *crossimpk )
 {
+   const int k = threadIdx.x;
+   const int deg1 = deg+1;
+   int ix1,ix2;
+
+   __shared__ double xvretb[pd_shmemsize];
+   __shared__ double xvreix[pd_shmemsize];
+   __shared__ double xvremi[pd_shmemsize];
+   __shared__ double xvrerg[pd_shmemsize];
+   __shared__ double xvrepk[pd_shmemsize];
+   __shared__ double xvimtb[pd_shmemsize];
+   __shared__ double xvimix[pd_shmemsize];
+   __shared__ double xvimmi[pd_shmemsize];
+   __shared__ double xvimrg[pd_shmemsize];
+   __shared__ double xvimpk[pd_shmemsize];
+   __shared__ double yvretb[pd_shmemsize];
+   __shared__ double yvreix[pd_shmemsize];
+   __shared__ double yvremi[pd_shmemsize];
+   __shared__ double yvrerg[pd_shmemsize];
+   __shared__ double yvrepk[pd_shmemsize];
+   __shared__ double yvimtb[pd_shmemsize];
+   __shared__ double yvimix[pd_shmemsize];
+   __shared__ double yvimmi[pd_shmemsize];
+   __shared__ double yvimrg[pd_shmemsize];
+   __shared__ double yvimpk[pd_shmemsize];
+   __shared__ double zvretb[pd_shmemsize];
+   __shared__ double zvreix[pd_shmemsize];
+   __shared__ double zvremi[pd_shmemsize];
+   __shared__ double zvrerg[pd_shmemsize];
+   __shared__ double zvrepk[pd_shmemsize];
+   __shared__ double zvimtb[pd_shmemsize];
+   __shared__ double zvimix[pd_shmemsize];
+   __shared__ double zvimmi[pd_shmemsize];
+   __shared__ double zvimrg[pd_shmemsize];
+   __shared__ double zvimpk[pd_shmemsize];
+
+   xvretb[k] = cffretb[k]; xvreix[k] = cffreix[k]; xvremi[k] = cffremi[k];
+   xvrerg[k] = cffrerg[k]; xvrepk[k] = cffrepk[k];
+   xvimtb[k] = cffimtb[k]; xvimix[k] = cffimix[k]; xvimmi[k] = cffimmi[k];
+   xvimrg[k] = cffimrg[k]; xvimpk[k] = cffimpk[k];
+   ix1 = idx[0]*deg1+k;
+   yvretb[k] = inputretb[ix1]; yvreix[k] = inputreix[ix1];
+   yvremi[k] = inputremi[ix1]; yvrerg[k] = inputrerg[ix1];
+   yvrepk[k] = inputrepk[ix1];
+   yvimtb[k] = inputimtb[ix1]; yvimix[k] = inputimix[ix1];
+   yvimmi[k] = inputimmi[ix1]; yvimrg[k] = inputimrg[ix1];
+   yvimpk[k] = inputimpk[ix1];
+   __syncthreads();                                      // f[0] = cff*x[0] 
+   cmplx5_convolute(xvretb,xvreix,xvremi,xvrerg,xvrepk,
+                    xvimtb,xvimix,xvimmi,xvimrg,xvimpk,
+                    yvretb,yvreix,yvremi,yvrerg,yvrepk,
+                    yvimtb,yvimix,yvimmi,yvimrg,yvimpk,
+                    zvretb,zvreix,zvremi,zvrerg,zvrepk,
+                    zvimtb,zvimix,zvimmi,zvimrg,zvimpk,deg1,k);
+   __syncthreads();
+   forwardretb[k] = zvretb[k]; forwardreix[k] = zvreix[k];
+   forwardremi[k] = zvremi[k]; forwardrerg[k] = zvrerg[k];
+   forwardrepk[k] = zvrepk[k];
+   forwardimtb[k] = zvimtb[k]; forwardimix[k] = zvimix[k];
+   forwardimmi[k] = zvimmi[k]; forwardimrg[k] = zvimrg[k];
+   forwardimpk[k] = zvimpk[k];
+
+   for(int i=1; i<nvr; i++)
+   {
+      xvretb[k] = zvretb[k]; xvreix[k] = zvreix[k];
+      xvremi[k] = zvremi[k]; xvrerg[k] = zvrerg[k];
+      xvrepk[k] = zvrepk[k];
+      xvimtb[k] = zvimtb[k]; xvimix[k] = zvimix[k];
+      xvimmi[k] = zvimmi[k]; xvimrg[k] = zvimrg[k];
+      xvimpk[k] = zvimpk[k];
+      ix2 = idx[i]*deg1+k;
+      yvretb[k] = inputretb[ix2]; yvreix[k] = inputreix[ix2];
+      yvremi[k] = inputremi[ix2]; yvrerg[k] = inputrerg[ix2];
+      yvrepk[k] = inputrepk[ix2];
+      yvimtb[k] = inputimtb[ix2]; yvimix[k] = inputimix[ix2];
+      yvimmi[k] = inputimmi[ix2]; yvimrg[k] = inputimrg[ix2];
+      yvimpk[k] = inputimpk[ix2];
+      __syncthreads();                                 // f[i] = f[i-i]*x[i]
+      cmplx5_convolute(xvretb,xvreix,xvremi,xvrerg,xvrepk,
+                       xvimtb,xvimix,xvimmi,xvimrg,xvimpk,
+                       yvretb,yvreix,yvremi,yvrerg,yvrepk,
+                       yvimtb,yvimix,yvimmi,yvimrg,yvimpk,
+                       zvretb,zvreix,zvremi,zvrerg,zvrepk,
+                       zvimtb,zvimix,zvimmi,zvimrg,zvimpk,deg1,k);
+      __syncthreads();
+      ix1 = i*deg1+k;                                   
+      forwardretb[ix1] = zvretb[k]; forwardreix[ix1] = zvreix[k];
+      forwardremi[ix1] = zvremi[k]; forwardrerg[ix1] = zvrerg[k];
+      forwardrepk[ix1] = zvrepk[k];
+      forwardimtb[ix1] = zvimtb[k]; forwardimix[ix1] = zvimix[k];
+      forwardimmi[ix1] = zvimmi[k]; forwardimrg[ix1] = zvimrg[k];
+      forwardimpk[ix1] = zvimpk[k]; 
+   }
+   if(nvr > 2)
+   {
+      ix1 = idx[nvr-1]*deg1+k;
+      xvretb[k] = inputretb[ix1]; xvreix[k] = inputreix[ix1];
+      xvremi[k] = inputremi[ix1]; xvrerg[k] = inputrerg[ix1];
+      xvrepk[k] = inputrepk[ix1];
+      xvimtb[k] = inputimtb[ix1]; xvimix[k] = inputimix[ix1];
+      xvimmi[k] = inputimmi[ix1]; xvimrg[k] = inputimrg[ix1];
+      xvimpk[k] = inputimpk[ix1];
+      ix2 = idx[nvr-2]*deg1+k;
+      yvretb[k] = inputretb[ix2]; yvreix[k] = inputreix[ix2];
+      yvremi[k] = inputremi[ix2]; yvrerg[k] = inputrerg[ix2];
+      yvrepk[k] = inputrepk[ix2];
+      yvimtb[k] = inputimtb[ix2]; yvimix[k] = inputimix[ix2];
+      yvimmi[k] = inputimmi[ix2]; yvimrg[k] = inputimrg[ix2];
+      yvimpk[k] = inputimpk[ix2];
+      __syncthreads();                               // b[0] = x[n-1]*x[n-2]
+      cmplx5_convolute(xvretb,xvreix,xvremi,xvrerg,xvrepk,
+                       xvimtb,xvimix,xvimmi,xvimrg,xvimpk,
+                       yvretb,yvreix,yvremi,yvrerg,yvrepk,
+                       yvimtb,yvimix,yvimmi,yvimrg,yvimpk,
+                       zvretb,zvreix,zvremi,zvrerg,zvrepk,
+                       zvimtb,zvimix,zvimmi,zvimrg,zvimpk,deg1,k);
+      __syncthreads();
+      backwardretb[k] = zvretb[k]; backwardreix[k] = zvreix[k];
+      backwardremi[k] = zvremi[k]; backwardrerg[k] = zvrerg[k];
+      backwardrepk[k] = zvrepk[k];
+      backwardimtb[k] = zvimtb[k]; backwardimix[k] = zvimix[k];
+      backwardimmi[k] = zvimmi[k]; backwardimrg[k] = zvimrg[k];
+      backwardimpk[k] = zvimpk[k];
+
+      for(int i=1; i<nvr-2; i++)
+      {
+         xvretb[k] = zvretb[k]; xvreix[k] = zvreix[k];
+         xvremi[k] = zvremi[k]; xvrerg[k] = zvrerg[k];
+         xvrepk[k] = zvrepk[k];
+         xvimtb[k] = zvimtb[k]; xvimix[k] = zvimix[k];
+         xvimmi[k] = zvimmi[k]; xvimrg[k] = zvimrg[k];
+         xvimpk[k] = zvimpk[k];
+         ix2 = idx[nvr-2-i]*deg1+k;
+         yvretb[k] = inputretb[ix2]; yvreix[k] = inputreix[ix2];
+         yvremi[k] = inputremi[ix2]; yvrerg[k] = inputrerg[ix2];
+         yvrepk[k] = inputrepk[ix2];
+         yvimtb[k] = inputimtb[ix2]; yvimix[k] = inputimix[ix2];
+         yvimmi[k] = inputimmi[ix2]; yvimrg[k] = inputimrg[ix2];
+         yvimpk[k] = inputimpk[ix2];
+         __syncthreads();                           // b[i] = b[i]*x[n-2-i]
+         cmplx5_convolute(xvretb,xvreix,xvremi,xvrerg,xvrepk,
+                          xvimtb,xvimix,xvimmi,xvimrg,xvimpk,
+                          yvretb,yvreix,yvremi,yvrerg,yvrepk,
+                          yvimtb,yvimix,yvimmi,yvimrg,yvimpk,
+                          zvretb,zvreix,zvremi,zvrerg,zvrepk,
+                          zvimtb,zvimix,zvimmi,zvimrg,zvimpk,deg1,k);
+         __syncthreads();
+         ix1 = i*deg1+k;
+         backwardretb[ix1] = zvretb[k]; backwardreix[ix1] = zvreix[k];
+         backwardremi[ix1] = zvremi[k]; backwardrerg[ix1] = zvrerg[k];
+         backwardrepk[ix1] = zvrepk[k];
+         backwardimtb[ix1] = zvimtb[k]; backwardimix[ix1] = zvimix[k];
+         backwardimmi[ix1] = zvimmi[k]; backwardimrg[ix1] = zvimrg[k];
+         backwardimpk[ix1] = zvimpk[k];
+      }
+      xvretb[k] = zvretb[k]; xvreix[k] = zvreix[k]; xvremi[k] = zvremi[k];
+      xvrerg[k] = zvrerg[k]; xvrepk[k] = zvrepk[k];
+      xvimtb[k] = zvimtb[k]; xvimix[k] = zvimix[k]; xvimmi[k] = zvimmi[k];
+      xvimrg[k] = zvimrg[k]; xvimpk[k] = zvimpk[k];
+      yvretb[k] = cffretb[k]; yvreix[k] = cffreix[k]; yvremi[k] = cffremi[k];
+      yvrerg[k] = cffrerg[k]; yvrepk[k] = cffrepk[k];
+      yvimtb[k] = cffimtb[k]; yvimix[k] = cffimix[k]; yvimmi[k] = cffimmi[k];
+      yvimrg[k] = cffimrg[k]; yvimpk[k] = cffimpk[k];
+      __syncthreads();                               // b[n-3] = b[n-3]*cff
+      cmplx5_convolute(xvretb,xvreix,xvremi,xvrerg,xvrepk,
+                       xvimtb,xvimix,xvimmi,xvimrg,xvimpk,
+                       yvretb,yvreix,yvremi,yvrerg,yvrepk,
+                       yvimtb,yvimix,yvimmi,yvimrg,yvimpk,
+                       zvretb,zvreix,zvremi,zvrerg,zvrepk,
+                       zvimtb,zvimix,zvimmi,zvimrg,zvimpk,deg1,k);
+      __syncthreads();
+      ix1 = (nvr-3)*deg1+k;
+      backwardretb[ix1] = zvretb[k]; backwardreix[ix1] = zvreix[k];
+      backwardremi[ix1] = zvremi[k]; backwardrerg[ix1] = zvrerg[k];
+      backwardrepk[ix1] = zvrepk[k];
+      backwardimtb[ix1] = zvimtb[k]; backwardimix[ix1] = zvimix[k];
+      backwardimmi[ix1] = zvimmi[k]; backwardimrg[ix1] = zvimrg[k];
+      backwardimpk[ix1] = zvimpk[k];
+
+      if(nvr == 3)
+      {
+         xvretb[k] = forwardretb[k]; xvreix[k] = forwardreix[k];
+         xvremi[k] = forwardremi[k]; xvrerg[k] = forwardrerg[k];
+         xvrepk[k] = forwardrepk[k];
+         xvimtb[k] = forwardimtb[k]; xvimix[k] = forwardimix[k];
+         xvimmi[k] = forwardimmi[k]; xvimrg[k] = forwardimrg[k];
+         xvimpk[k] = forwardimpk[k];
+         ix2 = idx[2]*deg1+k;
+         yvretb[k] = inputretb[ix2]; yvreix[k] = inputreix[ix2];
+         yvremi[k] = inputremi[ix2]; yvrerg[k] = inputrerg[ix2];
+         yvrepk[k] = inputrepk[ix2];
+         yvimtb[k] = inputimtb[ix2]; yvimix[k] = inputimix[ix2];
+         yvimmi[k] = inputimmi[ix2]; yvimrg[k] = inputimrg[ix2];
+         yvimpk[k] = inputimpk[ix2];
+         __syncthreads();                               // c[0] = f[0]*x[2]
+         cmplx5_convolute(xvretb,xvreix,xvremi,xvrerg,xvrepk,
+                          xvimtb,xvimix,xvimmi,xvimrg,xvimpk,
+                          yvretb,yvreix,yvremi,yvrerg,yvrepk,
+                          yvimtb,yvimix,yvimmi,yvimrg,yvimpk,
+                          zvretb,zvreix,zvremi,zvrerg,zvrepk,
+                          zvimtb,zvimix,zvimmi,zvimrg,zvimpk,deg1,k);
+         __syncthreads();
+         crossretb[k] = zvretb[k]; crossreix[k] = zvreix[k];
+         crossremi[k] = zvremi[k]; crossrerg[k] = zvrerg[k];
+         crossrepk[k] = zvrepk[k];
+         crossimtb[k] = zvimtb[k]; crossimix[k] = zvimix[k];
+         crossimmi[k] = zvimmi[k]; crossimrg[k] = zvimrg[k];
+         crossimpk[k] = zvimpk[k];
+      }
+      else
+      {
+         for(int i=0; i<nvr-3; i++)
+         {
+            ix1 = i*deg1+k;   
+            xvretb[k] = forwardretb[ix1]; xvreix[k] = forwardreix[ix1];
+            xvremi[k] = forwardremi[ix1]; xvrerg[k] = forwardrerg[ix1];
+            xvrepk[k] = forwardrepk[ix1];
+            xvimtb[k] = forwardimtb[ix1]; xvimix[k] = forwardimix[ix1];
+            xvimmi[k] = forwardimmi[ix1]; xvimrg[k] = forwardimrg[ix1];
+            xvimpk[k] = forwardimpk[ix1];
+            ix2 = (nvr-4-i)*deg1+k;
+            yvretb[k] = backwardretb[ix2]; yvreix[k] = backwardreix[ix2];
+            yvremi[k] = backwardremi[ix2]; yvrerg[k] = backwardrerg[ix2];
+            yvrepk[k] = backwardrepk[ix2];
+            yvimtb[k] = backwardimtb[ix2]; yvimix[k] = backwardimix[ix2];
+            yvimmi[k] = backwardimmi[ix2]; yvimrg[k] = backwardimrg[ix2];
+            yvimpk[k] = backwardimpk[ix2];
+            __syncthreads();                        // c[i] = f[i]*b[n-4-i]
+            cmplx5_convolute(xvretb,xvreix,xvremi,xvrerg,xvrepk,
+                             xvimtb,xvimix,xvimmi,xvimrg,xvimpk,
+                             yvretb,yvreix,yvremi,yvrerg,yvrepk,
+                             yvimtb,yvimix,yvimmi,yvimrg,yvimpk,
+                             zvretb,zvreix,zvremi,zvrerg,zvrepk,
+                             zvimtb,zvimix,zvimmi,zvimrg,zvimpk,deg1,k);
+            __syncthreads();
+            ix1 = i*deg1+k;
+            crossretb[ix1] = zvretb[k]; crossreix[ix1] = zvreix[k];
+            crossremi[ix1] = zvremi[k]; crossrerg[ix1] = zvrerg[k];
+            crossrepk[ix1] = zvrepk[k];
+            crossimtb[ix1] = zvimtb[k]; crossimix[ix1] = zvimix[k];
+            crossimmi[ix1] = zvimmi[k]; crossimrg[ix1] = zvimrg[k];
+            crossimpk[ix1] = zvimpk[k];
+         }
+         ix1 = (nvr-3)*deg1+k;
+         xvretb[k] = forwardretb[ix1]; xvreix[k] = forwardreix[ix1];
+         xvremi[k] = forwardremi[ix1]; xvrerg[k] = forwardrerg[ix1];
+         xvrepk[k] = forwardrepk[ix1];
+         xvimtb[k] = forwardimtb[ix1]; xvimix[k] = forwardimix[ix1];
+         xvimmi[k] = forwardimmi[ix1]; xvimrg[k] = forwardimrg[ix1];
+         xvimpk[k] = forwardimpk[ix1];
+         ix2 = idx[nvr-1]*deg1+k;
+         yvretb[k] = inputretb[ix2]; yvreix[k] = inputreix[ix2];
+         yvremi[k] = inputremi[ix2]; yvrerg[k] = inputrerg[ix2];
+         yvrepk[k] = inputrepk[ix2];
+         yvimtb[k] = inputimtb[ix2]; yvimix[k] = inputimix[ix2];
+         yvimmi[k] = inputimmi[ix2]; yvimrg[k] = inputimrg[ix2];
+         yvimpk[k] = inputimpk[ix2];
+         __syncthreads();                         // c[n-3] = f[n-3]*x[n-1]
+         cmplx5_convolute(xvretb,xvreix,xvremi,xvrerg,xvrepk,
+                          xvimtb,xvimix,xvimmi,xvimrg,xvimpk,
+                          yvretb,yvreix,yvremi,yvrerg,yvrepk,
+                          yvimtb,yvimix,yvimmi,yvimrg,yvimpk,
+                          zvretb,zvreix,zvremi,zvrerg,zvrepk,
+                          zvimtb,zvimix,zvimmi,zvimrg,zvimpk,deg1,k);
+         __syncthreads();
+         ix1 = (nvr-3)*deg1+k;
+         crossretb[ix1] = zvretb[k]; crossreix[ix1] = zvreix[k];
+         crossremi[ix1] = zvremi[k]; crossrerg[ix1] = zvrerg[k];
+         crossrepk[ix1] = zvrepk[k];
+         crossimtb[ix1] = zvimtb[k]; crossimix[ix1] = zvimix[k];
+         crossimmi[ix1] = zvimmi[k]; crossimrg[ix1] = zvimrg[k];
+         crossimpk[ix1] = zvimpk[k];
+      }
+   }
 }
 
 void GPU_dbl5_evaldiff
@@ -520,4 +793,304 @@ void GPU_cmplx5_evaldiff
    double **outputimtb, double **outputimix, double **outputimmi,
    double **outputimrg, double **outputimpk )
 {
+   const int deg1 = deg+1;          // length of all vectors
+   double *inputretb_d;             // inputretb_d is inputretb on the device
+   double *inputreix_d;             // inputreix_d is inputreix on the device
+   double *inputremi_d;             // inputremi_d is inputremi on the device
+   double *inputrerg_d;             // inputrerg_d is inputrerg on the device
+   double *inputrepk_d;             // inputrepk_d is inputrepk on the device
+   double *inputimtb_d;             // inputimtb_d is inputretb on the device
+   double *inputimix_d;             // inputimix_d is inputreix on the device
+   double *inputimmi_d;             // inputimmi_d is inputremi on the device
+   double *inputimrg_d;             // inputimrg_d is inputrerg on the device
+   double *inputimpk_d;             // inputimpk_d is inputrepk on the device
+   double *forwardretb_d;
+   double *forwardreix_d;
+   double *forwardremi_d;
+   double *forwardrerg_d;
+   double *forwardrepk_d;
+   double *forwardimtb_d;
+   double *forwardimix_d;
+   double *forwardimmi_d;
+   double *forwardimrg_d;
+   double *forwardimpk_d;
+   double *backwardretb_d;
+   double *backwardreix_d;
+   double *backwardremi_d;
+   double *backwardrerg_d;
+   double *backwardrepk_d;
+   double *backwardimtb_d;
+   double *backwardimix_d;
+   double *backwardimmi_d;
+   double *backwardimrg_d;
+   double *backwardimpk_d;
+   double *crossretb_d;
+   double *crossreix_d;
+   double *crossremi_d;
+   double *crossrerg_d;
+   double *crossrepk_d;
+   double *crossimtb_d;
+   double *crossimix_d;
+   double *crossimmi_d;
+   double *crossimrg_d;
+   double *crossimpk_d;
+   double *cffretb_d;               // cffretb_d is cffretb on the device
+   double *cffreix_d;               // cffreix_d is cffreix on the device
+   double *cffremi_d;               // cffremi_d is cffremi on the device
+   double *cffrerg_d;               // cffremi_d is cffrerg on the device
+   double *cffrepk_d;               // cffrepk_d is cffrepk on the device
+   double *cffimtb_d;               // cffimtb_d is cffimtb on the device
+   double *cffimix_d;               // cffimix_d is cffimix on the device
+   double *cffimmi_d;               // cffimmi_d is cffimmi on the device
+   double *cffimrg_d;               // cffimrg_d is cffimrg on the device
+   double *cffimpk_d;               // cffimpk_d is cffimpk on the device
+   int *idx_d;                      // idx_d is idx on the device
+
+   size_t szdim = dim*(deg1)*sizeof(double);
+   size_t sznvr = nvr*(deg1)*sizeof(double);
+   size_t sznvr2 = (nvr-2)*(deg1)*sizeof(double);
+   size_t szidx = nvr*sizeof(int);
+   size_t szcff = deg1*sizeof(double);
+
+   cudaMalloc((void**)&idx_d,szidx);
+   cudaMalloc((void**)&cffretb_d,szcff);
+   cudaMalloc((void**)&cffreix_d,szcff);
+   cudaMalloc((void**)&cffremi_d,szcff);
+   cudaMalloc((void**)&cffrerg_d,szcff);
+   cudaMalloc((void**)&cffrepk_d,szcff);
+   cudaMalloc((void**)&cffimtb_d,szcff);
+   cudaMalloc((void**)&cffimix_d,szcff);
+   cudaMalloc((void**)&cffimmi_d,szcff);
+   cudaMalloc((void**)&cffimrg_d,szcff);
+   cudaMalloc((void**)&cffimpk_d,szcff);
+   cudaMalloc((void**)&inputretb_d,szdim);
+   cudaMalloc((void**)&inputreix_d,szdim);
+   cudaMalloc((void**)&inputremi_d,szdim);
+   cudaMalloc((void**)&inputrerg_d,szdim);
+   cudaMalloc((void**)&inputrepk_d,szdim);
+   cudaMalloc((void**)&inputimtb_d,szdim);
+   cudaMalloc((void**)&inputimix_d,szdim);
+   cudaMalloc((void**)&inputimmi_d,szdim);
+   cudaMalloc((void**)&inputimrg_d,szdim);
+   cudaMalloc((void**)&inputimpk_d,szdim);
+   cudaMalloc((void**)&forwardretb_d,sznvr);
+   cudaMalloc((void**)&forwardreix_d,sznvr);
+   cudaMalloc((void**)&forwardremi_d,sznvr);
+   cudaMalloc((void**)&forwardrerg_d,sznvr);
+   cudaMalloc((void**)&forwardrepk_d,sznvr);
+   cudaMalloc((void**)&forwardimtb_d,sznvr);
+   cudaMalloc((void**)&forwardimix_d,sznvr);
+   cudaMalloc((void**)&forwardimmi_d,sznvr);
+   cudaMalloc((void**)&forwardimrg_d,sznvr);
+   cudaMalloc((void**)&forwardimpk_d,sznvr);
+   cudaMalloc((void**)&backwardretb_d,sznvr2);
+   cudaMalloc((void**)&backwardreix_d,sznvr2);
+   cudaMalloc((void**)&backwardremi_d,sznvr2);
+   cudaMalloc((void**)&backwardrerg_d,sznvr2);
+   cudaMalloc((void**)&backwardrepk_d,sznvr2);
+   cudaMalloc((void**)&backwardimtb_d,sznvr2);
+   cudaMalloc((void**)&backwardimix_d,sznvr2);
+   cudaMalloc((void**)&backwardimmi_d,sznvr2);
+   cudaMalloc((void**)&backwardimrg_d,sznvr2);
+   cudaMalloc((void**)&backwardimpk_d,sznvr2);
+   cudaMalloc((void**)&crossretb_d,sznvr2);
+   cudaMalloc((void**)&crossreix_d,sznvr2);
+   cudaMalloc((void**)&crossremi_d,sznvr2);
+   cudaMalloc((void**)&crossrerg_d,sznvr2);
+   cudaMalloc((void**)&crossrepk_d,sznvr2);
+   cudaMalloc((void**)&crossimtb_d,sznvr2);
+   cudaMalloc((void**)&crossimix_d,sznvr2);
+   cudaMalloc((void**)&crossimmi_d,sznvr2);
+   cudaMalloc((void**)&crossimrg_d,sznvr2);
+   cudaMalloc((void**)&crossimpk_d,sznvr2);
+
+   double *inputretb_h = new double[dim*(deg1)];
+   double *inputreix_h = new double[dim*(deg1)];
+   double *inputremi_h = new double[dim*(deg1)];
+   double *inputrerg_h = new double[dim*(deg1)];
+   double *inputrepk_h = new double[dim*(deg1)];
+   double *inputimtb_h = new double[dim*(deg1)];
+   double *inputimix_h = new double[dim*(deg1)];
+   double *inputimmi_h = new double[dim*(deg1)];
+   double *inputimrg_h = new double[dim*(deg1)];
+   double *inputimpk_h = new double[dim*(deg1)];
+   int ix = 0;
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         inputretb_h[ix] = inputretb[i][j];
+         inputreix_h[ix] = inputreix[i][j];
+         inputremi_h[ix] = inputremi[i][j];
+         inputrerg_h[ix] = inputrerg[i][j];
+         inputrepk_h[ix] = inputrepk[i][j];
+         inputimtb_h[ix] = inputimtb[i][j];
+         inputimix_h[ix] = inputimix[i][j];
+         inputimmi_h[ix] = inputimmi[i][j];
+         inputimrg_h[ix] = inputimrg[i][j];
+         inputimpk_h[ix++] = inputimpk[i][j];
+      }
+
+   cudaMemcpy(idx_d,idx,szidx,cudaMemcpyHostToDevice);
+   cudaMemcpy(cffretb_d,cffretb,szcff,cudaMemcpyHostToDevice);
+   cudaMemcpy(cffreix_d,cffreix,szcff,cudaMemcpyHostToDevice);
+   cudaMemcpy(cffremi_d,cffremi,szcff,cudaMemcpyHostToDevice);
+   cudaMemcpy(cffrerg_d,cffrerg,szcff,cudaMemcpyHostToDevice);
+   cudaMemcpy(cffrepk_d,cffrepk,szcff,cudaMemcpyHostToDevice);
+   cudaMemcpy(cffimtb_d,cffimtb,szcff,cudaMemcpyHostToDevice);
+   cudaMemcpy(cffimix_d,cffimix,szcff,cudaMemcpyHostToDevice);
+   cudaMemcpy(cffimmi_d,cffimmi,szcff,cudaMemcpyHostToDevice);
+   cudaMemcpy(cffimrg_d,cffimrg,szcff,cudaMemcpyHostToDevice);
+   cudaMemcpy(cffimpk_d,cffimpk,szcff,cudaMemcpyHostToDevice);
+   cudaMemcpy(inputretb_d,inputretb_h,szdim,cudaMemcpyHostToDevice);
+   cudaMemcpy(inputreix_d,inputreix_h,szdim,cudaMemcpyHostToDevice);
+   cudaMemcpy(inputremi_d,inputremi_h,szdim,cudaMemcpyHostToDevice);
+   cudaMemcpy(inputrerg_d,inputrerg_h,szdim,cudaMemcpyHostToDevice);
+   cudaMemcpy(inputrepk_d,inputrepk_h,szdim,cudaMemcpyHostToDevice);
+   cudaMemcpy(inputimtb_d,inputimtb_h,szdim,cudaMemcpyHostToDevice);
+   cudaMemcpy(inputimix_d,inputimix_h,szdim,cudaMemcpyHostToDevice);
+   cudaMemcpy(inputimmi_d,inputimmi_h,szdim,cudaMemcpyHostToDevice);
+   cudaMemcpy(inputimrg_d,inputimrg_h,szdim,cudaMemcpyHostToDevice);
+   cudaMemcpy(inputimpk_d,inputimpk_h,szdim,cudaMemcpyHostToDevice);
+
+   if(BS == deg1)
+   {
+      GPU_cmplx5_speel<<<1,BS>>>(nvr,deg,idx_d,
+         cffretb_d,cffreix_d,cffremi_d,cffrerg_d,cffrepk_d,
+         cffimtb_d,cffimix_d,cffimmi_d,cffimrg_d,cffimpk_d,
+         inputretb_d,inputreix_d,inputremi_d,inputrerg_d,inputrepk_d,
+         inputimtb_d,inputimix_d,inputimmi_d,inputimrg_d,inputimpk_d,
+         forwardretb_d,forwardreix_d,forwardremi_d,
+         forwardrerg_d,forwardrepk_d,
+         forwardimtb_d,forwardimix_d,forwardimmi_d,
+         forwardimrg_d,forwardimpk_d,
+         backwardretb_d,backwardreix_d,backwardremi_d,
+         backwardrerg_d,backwardrepk_d,
+         backwardimtb_d,backwardimix_d,backwardimmi_d,
+         backwardimrg_d,backwardimpk_d,
+         crossretb_d,crossreix_d,crossremi_d,crossrerg_d,crossrepk_d,
+         crossimtb_d,crossimix_d,crossimmi_d,crossimrg_d,crossimpk_d);
+   }
+   double *forwardretb_h = new double[(deg1)*nvr];
+   double *forwardreix_h = new double[(deg1)*nvr];
+   double *forwardremi_h = new double[(deg1)*nvr];
+   double *forwardrerg_h = new double[(deg1)*nvr];
+   double *forwardrepk_h = new double[(deg1)*nvr];
+   double *forwardimtb_h = new double[(deg1)*nvr];
+   double *forwardimix_h = new double[(deg1)*nvr];
+   double *forwardimmi_h = new double[(deg1)*nvr];
+   double *forwardimrg_h = new double[(deg1)*nvr];
+   double *forwardimpk_h = new double[(deg1)*nvr];
+   double *backwardretb_h = new double[(deg1)*(nvr-2)];
+   double *backwardreix_h = new double[(deg1)*(nvr-2)];
+   double *backwardremi_h = new double[(deg1)*(nvr-2)];
+   double *backwardrerg_h = new double[(deg1)*(nvr-2)];
+   double *backwardrepk_h = new double[(deg1)*(nvr-2)];
+   double *backwardimtb_h = new double[(deg1)*(nvr-2)];
+   double *backwardimix_h = new double[(deg1)*(nvr-2)];
+   double *backwardimmi_h = new double[(deg1)*(nvr-2)];
+   double *backwardimrg_h = new double[(deg1)*(nvr-2)];
+   double *backwardimpk_h = new double[(deg1)*(nvr-2)];
+   double *crossretb_h = new double[(deg1)*(nvr-2)];
+   double *crossreix_h = new double[(deg1)*(nvr-2)];
+   double *crossremi_h = new double[(deg1)*(nvr-2)];
+   double *crossrerg_h = new double[(deg1)*(nvr-2)];
+   double *crossrepk_h = new double[(deg1)*(nvr-2)];
+   double *crossimtb_h = new double[(deg1)*(nvr-2)];
+   double *crossimix_h = new double[(deg1)*(nvr-2)];
+   double *crossimmi_h = new double[(deg1)*(nvr-2)];
+   double *crossimrg_h = new double[(deg1)*(nvr-2)];
+   double *crossimpk_h = new double[(deg1)*(nvr-2)];
+  
+   cudaMemcpy(forwardretb_h,forwardretb_d,sznvr,cudaMemcpyDeviceToHost);
+   cudaMemcpy(forwardreix_h,forwardreix_d,sznvr,cudaMemcpyDeviceToHost);
+   cudaMemcpy(forwardremi_h,forwardremi_d,sznvr,cudaMemcpyDeviceToHost);
+   cudaMemcpy(forwardrerg_h,forwardrerg_d,sznvr,cudaMemcpyDeviceToHost);
+   cudaMemcpy(forwardrepk_h,forwardrepk_d,sznvr,cudaMemcpyDeviceToHost);
+   cudaMemcpy(forwardimtb_h,forwardimtb_d,sznvr,cudaMemcpyDeviceToHost);
+   cudaMemcpy(forwardimix_h,forwardimix_d,sznvr,cudaMemcpyDeviceToHost);
+   cudaMemcpy(forwardimmi_h,forwardimmi_d,sznvr,cudaMemcpyDeviceToHost);
+   cudaMemcpy(forwardimrg_h,forwardimrg_d,sznvr,cudaMemcpyDeviceToHost);
+   cudaMemcpy(forwardimpk_h,forwardimpk_d,sznvr,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardretb_h,backwardretb_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardreix_h,backwardreix_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardremi_h,backwardremi_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardrerg_h,backwardrerg_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardrepk_h,backwardrepk_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardimtb_h,backwardimtb_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardimix_h,backwardimix_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardimmi_h,backwardimmi_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardimrg_h,backwardimrg_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardimpk_h,backwardimpk_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(crossretb_h,crossretb_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(crossreix_h,crossreix_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(crossremi_h,crossremi_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(crossrerg_h,crossrerg_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(crossrepk_h,crossrepk_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(crossimtb_h,crossimtb_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(crossimix_h,crossimix_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(crossimmi_h,crossimmi_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(crossimrg_h,crossimrg_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(crossimpk_h,crossimpk_d,sznvr2,cudaMemcpyDeviceToHost);
+
+   int offset = (nvr-1)*deg1;
+   for(int i=0; i<deg1; i++)   // assign value of the monomial
+   {
+      outputretb[dim][i] = forwardretb_h[offset+i];
+      outputreix[dim][i] = forwardreix_h[offset+i];
+      outputremi[dim][i] = forwardremi_h[offset+i];
+      outputrerg[dim][i] = forwardrerg_h[offset+i];
+      outputrepk[dim][i] = forwardrepk_h[offset+i];
+      outputimtb[dim][i] = forwardimtb_h[offset+i];
+      outputimix[dim][i] = forwardimix_h[offset+i];
+      outputimmi[dim][i] = forwardimmi_h[offset+i];
+      outputimrg[dim][i] = forwardimrg_h[offset+i];
+      outputimpk[dim][i] = forwardimpk_h[offset+i];
+   }
+   ix = idx[nvr-1];
+   offset = (nvr-2)*deg1;
+   for(int i=0; i<deg1; i++)  // derivative with respect to x[n-1]
+   {
+      outputretb[ix][i] = forwardretb_h[offset+i];
+      outputreix[ix][i] = forwardreix_h[offset+i];
+      outputremi[ix][i] = forwardremi_h[offset+i];
+      outputrerg[ix][i] = forwardrerg_h[offset+i];
+      outputrepk[ix][i] = forwardrepk_h[offset+i];
+      outputimtb[ix][i] = forwardimtb_h[offset+i];
+      outputimix[ix][i] = forwardimix_h[offset+i];
+      outputimmi[ix][i] = forwardimmi_h[offset+i];
+      outputimrg[ix][i] = forwardimrg_h[offset+i];
+      outputimpk[ix][i] = forwardimpk_h[offset+i];
+   }
+   ix = idx[0]; 
+   offset = (nvr-3)*deg1;
+   for(int i=0; i<deg1; i++)   // derivative with respect to x[0]
+   {
+      outputretb[ix][i] = backwardretb_h[offset+i];
+      outputreix[ix][i] = backwardreix_h[offset+i];
+      outputremi[ix][i] = backwardremi_h[offset+i];
+      outputrerg[ix][i] = backwardrerg_h[offset+i];
+      outputrepk[ix][i] = backwardrepk_h[offset+i];
+      outputimtb[ix][i] = backwardimtb_h[offset+i];
+      outputimix[ix][i] = backwardimix_h[offset+i];
+      outputimmi[ix][i] = backwardimmi_h[offset+i];
+      outputimrg[ix][i] = backwardimrg_h[offset+i];
+      outputimpk[ix][i] = backwardimpk_h[offset+i];
+   }
+   for(int k=1; k<nvr-1; k++)  // derivative with respect to x[k]
+   {
+      ix = idx[k]; offset = (k-1)*deg1;
+      for(int i=0; i<deg1; i++)
+      {
+         outputretb[ix][i] = crossretb_h[offset+i];
+         outputreix[ix][i] = crossreix_h[offset+i];
+         outputremi[ix][i] = crossremi_h[offset+i];
+         outputrerg[ix][i] = crossrerg_h[offset+i];
+         outputrepk[ix][i] = crossrepk_h[offset+i];
+         outputimtb[ix][i] = crossimtb_h[offset+i];
+         outputimix[ix][i] = crossimix_h[offset+i];
+         outputimmi[ix][i] = crossimmi_h[offset+i];
+         outputimrg[ix][i] = crossimrg_h[offset+i];
+         outputimpk[ix][i] = crossimpk_h[offset+i];
+      }
+   }
 }

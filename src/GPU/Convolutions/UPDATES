@@ -2,7 +2,8 @@ Thu 12 Nov 2020 : edited the documentation in dbl3_monomials_kernels.h.
   New dbl5_monomials_kernels, tested by test_dbl5_monomials.cpp.
   Fixed bug in special case in dbl3_monomials_host.cpp.
   Added the complex case to random5_monomials.cpp, dbl5_monomials_host.cpp,
-  and test_dbl5_monomials.cpp.
+  and test_dbl5_monomials.cpp.  Edited dbl3_monomials_kernels.cu,
+  added code to dbl5_monomials_kernels.cu and test_dbl5_monomials.cpp.
 
 Wed 11 Nov 2020 : extracted from test_{dbl,dbl2,dbl3,dbl4}_monomials.cpp
   the code to define the setup of the tests, into new random_monomials,

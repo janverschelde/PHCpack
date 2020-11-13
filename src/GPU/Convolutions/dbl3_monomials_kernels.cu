@@ -560,10 +560,10 @@ void GPU_cmplx3_evaldiff
 {
    const int deg1 = deg+1;          // length of all vectors
    double *inputrehi_d;             // inputrehi_d is inputrehi on the device
-   double *inputremi_d;             // inputremi_d is inputrehi on the device
+   double *inputremi_d;             // inputremi_d is inputremi on the device
    double *inputrelo_d;             // inputrelo_d is inputrelo on the device
    double *inputimhi_d;             // inputimhi_d is inputrehi on the device
-   double *inputimmi_d;             // inputimmi_d is inputrehi on the device
+   double *inputimmi_d;             // inputimmi_d is inputremi on the device
    double *inputimlo_d;             // inputimlo_d is inputrelo on the device
    double *forwardrehi_d;
    double *forwardremi_d;
@@ -584,10 +584,10 @@ void GPU_cmplx3_evaldiff
    double *crossimmi_d;
    double *crossimlo_d;
    double *cffrehi_d;               // cffrehi_d is cffrehi on the device
-   double *cffremi_d;               // cffremi_d is cffrehi on the device
+   double *cffremi_d;               // cffremi_d is cffremi on the device
    double *cffrelo_d;               // cffrelo_d is cffrelo on the device
    double *cffimhi_d;               // cffimhi_d is cffimhi on the device
-   double *cffimmi_d;               // cffimmi_d is cffimhi on the device
+   double *cffimmi_d;               // cffimmi_d is cffimmi on the device
    double *cffimlo_d;               // cffimlo_d is cffimlo on the device
    int *idx_d;                      // idx_d is idx on the device
 
