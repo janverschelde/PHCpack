@@ -85,6 +85,11 @@ dbl5_monomials_kernels.obj:
 	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl5_monomials_kernels.cu \
                                        -o dbl5_monomials_kernels.obj
 
+dbl8_monomials_kernels.obj:
+	@-echo ">>> compiling monomial kernels for octo doubles ..."
+	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl8_monomials_kernels.cu \
+                                       -o dbl8_monomials_kernels.obj
+
 random_numbers.obj:
 	@-echo ">>> compiling random number generators ..."
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -198,6 +203,12 @@ random5_monomials.obj:
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
                       random5_monomials.cpp \
                  /Fo: random5_monomials.obj /EHsc
+
+random8_monomials.obj:
+	@-echo ">>> compiling octo double random monomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random8_monomials.cpp \
+                 /Fo: random8_monomials.obj /EHsc
 
 double_double_functions.obj:
 	@-echo ">>> compiling double double functions..."
@@ -356,6 +367,12 @@ dbl5_monomials_host.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -02 \
                  /Fo: dbl5_monomials_host.obj /EHsc
 
+dbl8_monomials_host.obj:
+	@-echo ">>> compiling dbl8_monomials_host ..."
+	$(CL)\cl /c dbl8_monomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -02 \
+                 /Fo: dbl8_monomials_host.obj /EHsc
+
 test_dbl_monomials.obj:
 	@-echo ">>> compiling test_dbl_monomials ..."
 	$(CL)\cl /c test_dbl_monomials.cpp \
@@ -390,6 +407,13 @@ test_dbl5_monomials.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) \
                  /I$(CUDASDK)/include -02 \
                  /Fo: test_dbl5_monomials.obj /EHsc
+
+test_dbl8_monomials.obj:
+	@-echo ">>> compiling test_dbl8_monomials ..."
+	$(CL)\cl /c test_dbl8_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl8_monomials.obj /EHsc
 
 test_dbl_convolutions: random_numbers.obj random_series.obj \
                        dbl_convolutions_kernels.obj \
@@ -536,6 +560,20 @@ test_dbl5_monomials: random_numbers.obj random_series.obj random_monomials.obj \
               double_double_functions.obj penta_double_functions.obj \
               dbl5_convolutions_host.obj dbl5_monomials_host.obj \
               dbl5_monomials_kernels.obj test_dbl5_monomials.obj
+
+test_dbl8_monomials: random_numbers.obj random_series.obj random_monomials.obj \
+                     random8_vectors.obj random8_series.obj \
+                     random8_monomials.obj double_double_functions.obj \
+		     quad_double_functions.obj octo_double_functions.obj \
+                     dbl8_convolutions_host.obj \
+                     dbl8_monomials_host.obj test_dbl8_monomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl8_monomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random8_vectors.obj random8_series.obj random8_monomials.obj \
+              double_double_functions.obj quad_double_functions.obj \
+              octo_double_functions.obj dbl8_convolutions_host.obj \
+              dbl8_monomials_host.obj test_dbl8_monomials.obj
 
 clean:
 	del *exe *obj *exp *lib *~
