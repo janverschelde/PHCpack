@@ -1,4 +1,4 @@
-/* The file dbl4_monomials_host.cpp defines the funnctions specified
+/* The file dbl4_monomials_host.cpp defines the functions specified
  * in dbl4_monomials_host.h. */
 
 /* The algorithm to compute forward, backward, and cross products

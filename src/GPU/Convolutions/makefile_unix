@@ -112,6 +112,10 @@ random5_monomials.o:
 	@-echo ">>> compiling penta double random monomials generators ..."
 	$(gpp) -O3 -c -I$(MPD) random5_monomials.cpp
 
+random8_monomials.o:
+	@-echo ">>> compiling octo double random monomials generators ..."
+	$(gpp) -O3 -c -I$(MPD) random8_monomials.cpp
+
 double_double_functions.o:
 	@-echo ">>> compiling double double functions ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
@@ -212,6 +216,10 @@ dbl5_monomials_kernels.o:
 	@-echo ">>> compiling monomial kernels for penta doubles ..."
 	nvcc -ccbin=$(gpp) -I$(MPD) -c dbl5_monomials_kernels.cu
 
+dbl8_monomials_kernels.o:
+	@-echo ">>> compiling monomial kernels for octo doubles ..."
+	nvcc -ccbin=$(gpp) -I$(MPD) -c dbl8_monomials_kernels.cu
+
 dbl_monomials_host.o:
 	@-echo ">>> compiling dbl_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) dbl_monomials_host.cpp
@@ -232,6 +240,10 @@ dbl5_monomials_host.o:
 	@-echo ">>> compiling dbl5_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) dbl5_monomials_host.cpp
 
+dbl8_monomials_host.o:
+	@-echo ">>> compiling dbl8_monomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) dbl8_monomials_host.cpp
+
 test_dbl_monomials.o:
 	@-echo ">>> compiling test_dbl_monomials ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl_monomials.cpp
@@ -251,6 +263,10 @@ test_dbl4_monomials.o:
 test_dbl5_monomials.o:
 	@-echo ">>> compiling test_dbl5_monomials ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl5_monomials.cpp
+
+test_dbl8_monomials.o:
+	@-echo ">>> compiling test_dbl8_monomials ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl8_monomials.cpp
 
 test_dbl_convolutions: dbl_convolutions_kernels.o dbl_convolutions_host.o \
                        random_numbers.o random_series.o \
@@ -391,6 +407,21 @@ test_dbl5_monomials: random_numbers.o random_series.o random_monomials.o \
                   dbl5_monomials_host.o dbl5_monomials_kernels.o \
                   test_dbl5_monomials.o -lcuda -lcudart -L$(CUDALIB)
 
+test_dbl8_monomials: random_numbers.o random_series.o random_monomials.o \
+                     random8_vectors.o random8_series.o random8_monomials.o \
+                     double_double_functions.o quad_double_functions.o \
+                     octo_double_functions.o \
+                     dbl8_convolutions_host.o dbl8_monomials_host.o \
+                     test_dbl8_monomials.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl8_monomials random_numbers.o random_series.o \
+                  random_monomials.o random8_vectors.o random8_series.o \
+                  random8_monomials.o double_double_functions.o \
+                  quad_double_functions.o octo_double_functions.o \
+                  dbl8_convolutions_host.o \
+                  dbl8_monomials_host.o \
+                  test_dbl8_monomials.o -lcuda -lcudart -L$(CUDALIB)
+
 clean:
 	/bin/rm -f -r random_numbers.o random_series.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_convolutions_kernels.o
@@ -434,3 +465,6 @@ clean:
 	/bin/rm -f -r random5_monomials.o
 	/bin/rm -f -r dbl5_monomials_host.o dbl5_monomials_kernels.o
 	/bin/rm -f -r test_dbl5_monomials.o test_dbl5_monomials
+	/bin/rm -f -r random8_monomials.o
+	/bin/rm -f -r dbl8_monomials_host.o dbl8_monomials_kernels.o
+	/bin/rm -f -r test_dbl8_monomials.o test_dbl8_monomials

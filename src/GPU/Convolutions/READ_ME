@@ -65,6 +65,7 @@ random2_monomials          : setup test data in double double precision
 random3_monomials          : setup test data in triple double precision
 random4_monomials          : setup test data in quad double precision
 random5_monomials          : setup test data in penta double precision
+random8_monomials          : setup test data in octo double precision
 -----------------------------------------------------------------------------
 dbl_monomials_host         : evaldiff of double monomials on host
 dbl_monomials_kernels      : evaldiff of double monomials on device
@@ -81,4 +82,6 @@ test_dbl4_monomials        : test eval/diff of monomials with quad doubles
 dbl5_monomials_host        : evaldiff of penta double monomials on host
 dbl5_monomials_kernels     : evaldiff of penta double monomials on device
 test_dbl5_monomials        : test eval/diff of monomials with penta doubles
+dbl8_monomials_host        : evaldiff of octo double monomials on host
+test_dbl8_monomials        : test eval/diff of monomials with octo doubles
 -----------------------------------------------------------------------------

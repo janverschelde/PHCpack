@@ -43,27 +43,29 @@ void CPU_dbl4_speel
  *                for all variables in the monomial;
  *   inputlolo    contains the lowest doubles of the input series
  *                for all variables in the monomial;
- *   forwardhihi  is work space for the highest doubles all nvr forward 
+ *   forwardhihi  is work space for the highest doubles of nvr forward 
  *                products, forwardhihi[k] can store deg+1 doubles;
- *   forwardlohi  is work space for the second highest doubles all nvr
+ *   forwardlohi  is work space for the second highest doubles of nvr
  *                forward  products, forwardlohi[k] can store deg+1 doubles;
- *   forwardhilo  iss work space for the second lowest doubles all nvr
+ *   forwardhilo  iss work space for the second lowest doubles of nvr
  *                forward products, forwardhilo[k] can store deg+1 doubles;
- *   backwardhihi is work space for the highest doubles of all nvr-2 backward
+ *   forwardlolo  is work space for the lowest doubles of nvr
+ *                forward products, forwardhilo[k] can store deg+1 doubles;
+ *   backwardhihi is work space for the highest doubles of nvr-2 backward
  *                products, backwardhihi[k] can store deg+1 doubles;
- *   backwardlohi is work space for the second highest doubles of all nvr-2
+ *   backwardlohi is work space for the second highest doubles of nvr-2
  *                backward products, backwardlohi[k] can store deg+1 doubles;
- *   backwardhilo is work space for the second lowest doubles of all nvr-2
+ *   backwardhilo is work space for the second lowest doubles of nvr-2
  *                backward products, backwardhilo[k] can store deg+1 doubles;
- *   backwardlolo is work space for the lowest doubles of all nvr-2 backward
+ *   backwardlolo is work space for the lowest doubles of nvr-2 backward
  *                products, backwardlolo[k] can store deg+1 doubles;
- *   crosshihi    is work space for the highest doubles of all nvr-2 cross
+ *   crosshihi    is work space for the highest doubles of nvr-2 cross
  *                products, crosshi[k] can store deg+1 doubles;
- *   crosslohi    is work space for the second highest doubles of all nvr-2
+ *   crosslohi    is work space for the second highest doubles of nvr-2
  *                cross products, crosshi[k] can store deg+1 doubles;
- *   crosshilo    is work space for the second lowest doubles of all nvr-2
+ *   crosshilo    is work space for the second lowest doubles of nvr-2
  *                cross products, crosshilo[k] can store for deg+1 doubles.
- *   crosslolo    is work space for the lowest doubles of all nvr-2 cross
+ *   crosslolo    is work space for the lowest doubles of nvr-2 cross
  *                products, crosslolo[k] can store for deg+1 doubles.
  *
  * ON RETURN :
@@ -129,13 +131,13 @@ void CPU_cmplx4_speel
  *                  coefficients of the series of the product;
  *   cffrelolo      lowest doubles of the real parts of the coefficients
  *                  of the series of the product;
- *   cffimhihi      highest doubles of the imaginary parts of the coefficient
+ *   cffimhihi      highest doubles of the imaginary parts of the coefficients
  *                  of the series of the product;
  *   cffimlohi      second highest doubles of the imaginary parts of the
- *                  coefficient of the series of the product;
+ *                  coefficients of the series of the product;
  *   cffimhilo      second lowest doubles of the imaginary parts of the
- *                  coefficient of the series of the product;
- *   cffimlolo      lowest doubles of the imaginary parts of the coefficient
+ *                  coefficients of the series of the product;
+ *   cffimlolo      lowest doubles of the imaginary parts of the coefficients
  *                  of the series of the product;
  *   inputrehihi    holds the highest doubles of the real parts of the
  *                  coefficients of the series for all variables;
@@ -195,8 +197,8 @@ void CPU_cmplx4_speel
  *                  products, crossrelolo[k] holds deg+1 doubles;
  *   crossimhihi    is work space for the highest doubles of nvr-2 cross
  *                  products, crossimhihi[k] holds deg+1 doubles;
- *   crossimhihi    is work space for the highest doubles of nvr-2 cross
- *                  products, crossimlohi[k] holds deg+1 doubles;
+ *   crossimlohi    is work space for the second highest doubles of nvr-2
+ *                  cross products, crossimlohi[k] holds deg+1 doubles;
  *   crossimhilo    is work space for the second lowest doubles of nvr-2 cross
  *                  products, crossimlolo[k] holds deg+1 doubles.
  *   crossimlolo    is work space for the lowest doubles of nvr-2 cross
@@ -213,7 +215,9 @@ void CPU_cmplx4_speel
  *                  of the forward products,
  *   forwardimhihi  holds the highest doubles of the imaginary parts
  *                  of the forward products,
- *   forwardimlohi  holds the highest doubles of the imaginary parts
+ *   forwardimlohi  holds the second highest doubles of the imaginary parts
+ *                  of the forward products,
+ *   forwardimhilo  holds the second lowest doubles of the imaginary parts
  *                  of the forward products,
  *   forwardimlolo  holds the lowest doubles of the imaginary parts
  *                  of the forward products,
@@ -222,17 +226,17 @@ void CPU_cmplx4_speel
  *                  to the last variable idx[nvr-1];
  *   backwardrehihi holds the highest doubles of the real parts
  *                  of the backward products,
- *   backwardrelohi holds the highest doubles of the real parts
+ *   backwardrelohi holds the second highest doubles of the real parts
  *                  of the backward products,
- *   backwardrehilo holds the lowest doubles of the real parts
+ *   backwardrehilo holds the second lowest doubles of the real parts
  *                  of the backward products,
  *   backwardrelolo holds the lowest doubles of the real parts
  *                  of the backward products,
  *   backwardimhihi holds the highest doubles of the imaginary parts
  *                  of the backward products,
- *   backwardimlohi holds the highest doubles of the imaginary parts
+ *   backwardimlohi holds the second highest doubles of the imaginary parts
  *                  of the backward products,
- *   backwardimhilo holds the lowest doubles of the imaginary parts
+ *   backwardimhilo holds the second lowest doubles of the imaginary parts
  *                  of the backward products,
  *   backwardimlolo holds the lowest doubles of the imaginary parts
  *                  of the backward products,
@@ -254,7 +258,7 @@ void CPU_cmplx4_speel
  *                  of the cross products,
  *   crossimlolo    stores the lowest doubles of the imaginary parts
  *                  of the cross products,
- *                  cross[k] contains the derivatve with respect to
+ *                  cross[k] contains the derivative with respect to
  *                  the variable idx[k+1]. */
 
 void CPU_dbl4_evaldiff
@@ -350,8 +354,8 @@ void CPU_cmplx4_evaldiff
  *                  coefficients of the series for all variables;
  *   inputimhihi    holds the highest doubles of the imaginary parts of the
  *                  coefficients of the series for all variables;
- *   inputimlohi    holds the highest doubles of the imaginary parts of the
- *                  coefficients of the series for all variables;
+ *   inputimlohi    holds the second highest doubles of the imaginary parts
+ *                  of the coefficients of the series for all variables;
  *   inputimhilo    holds the second lowest doubles of the imaginary parts of
  *                  the coefficients of the series for all variables;
  *   inputimlolo    holds the lowest doubles of the imaginary parts of the
@@ -372,7 +376,7 @@ void CPU_cmplx4_evaldiff
  *                  of the derivatives and the value,
  *   outputrehilo   stores the second lowest doubles of the real parts
  *                  of the derivatives and the value,
- *   outputrelolo   stores the second lowest doubles of the real parts
+ *   outputrelolo   stores the lowest doubles of the real parts
  *                  of the derivatives and the value,
  *   outputimhihi   stores the highest doubles of the imaginary parts
  *                  of the derivatives and the value,
