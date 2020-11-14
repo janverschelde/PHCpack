@@ -565,7 +565,7 @@ test_dbl8_monomials: random_numbers.obj random_series.obj random_monomials.obj \
                      random8_vectors.obj random8_series.obj \
                      random8_monomials.obj double_double_functions.obj \
 		     quad_double_functions.obj octo_double_functions.obj \
-                     dbl8_convolutions_host.obj \
+                     dbl8_convolutions_host.obj dbl8_monomials_kernels.obj \
                      dbl8_monomials_host.obj test_dbl8_monomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl8_monomials.exe \
@@ -573,7 +573,8 @@ test_dbl8_monomials: random_numbers.obj random_series.obj random_monomials.obj \
               random8_vectors.obj random8_series.obj random8_monomials.obj \
               double_double_functions.obj quad_double_functions.obj \
               octo_double_functions.obj dbl8_convolutions_host.obj \
-              dbl8_monomials_host.obj test_dbl8_monomials.obj
+              dbl8_monomials_host.obj dbl8_monomials_kernels.obj \
+              test_dbl8_monomials.obj
 
 clean:
 	del *exe *obj *exp *lib *~

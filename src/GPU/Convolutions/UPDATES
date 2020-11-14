@@ -1,7 +1,8 @@
 Fri 13 Nov 2020 : edited dbl4_monomials_host.h and dbl4_monomials_host.cpp.
   New dbl8_monomials_host.h, dbl8_monomials_host.cpp, random8_monomials.h,
   random8_monomials.cpp, tested by test_dbl8_monomials.cpp, with updated
-  makefiles.
+  makefiles.  New dbl8_monomials_kernels.h and dbl8_monomial_kernels.cu,
+  with added tests in test_dbl8_monomials.cpp.
 
 Thu 12 Nov 2020 : edited the documentation in dbl3_monomials_kernels.h.
   New dbl5_monomials_kernels, tested by test_dbl5_monomials.cpp.

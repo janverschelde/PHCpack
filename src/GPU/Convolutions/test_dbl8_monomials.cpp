@@ -10,7 +10,7 @@
 #include "random_monomials.h"
 #include "random8_monomials.h"
 #include "dbl8_monomials_host.h"
-// #include "dbl8_monomials_kernels.h"
+#include "dbl8_monomials_kernels.h"
 
 using namespace std;
 
@@ -226,23 +226,37 @@ double test_real ( int dim, int nvr, int pwr, int deg )
                 + abs(outputlololo_h[dim][i] - cfflololo[i]);
       cout << "Coefficient error : " << errsum << endl; errtot += errsum;
    }
-/*
+
    if(nvr > 2)
    {
-      GPU_dbl4_evaldiff(deg+1,dim,nvr,deg,idx,
-         cffhihi,cfflohi,cffhilo,cfflolo,
-         inputhihi,inputlohi,inputhilo,inputlolo,
-         outputhihi_d,outputlohi_d,outputhilo_d,outputlolo_d);
+      GPU_dbl8_evaldiff(deg+1,dim,nvr,deg,idx,
+         cffhihihi,cfflohihi,cffhilohi,cfflolohi,
+         cffhihilo,cfflohilo,cffhilolo,cfflololo,
+         inputhihihi,inputlohihi,inputhilohi,inputlolohi,
+         inputhihilo,inputlohilo,inputhilolo,inputlololo,
+         outputhihihi_d,outputlohihi_d,outputhilohi_d,outputlolohi_d,
+         outputhihilo_d,outputlohilo_d,outputhilolo_d,outputlololo_d);
+
       cout << "The value of the product computed on the GPU :" << endl;
       for(int i=0; i<=deg; i++)
       {
-         cout << outputhihi_d[dim][i] << "  " << outputlohi_d[dim][i] << endl;
-         cout << outputhilo_d[dim][i] << "  " << outputlolo_d[dim][i] << endl;
+         cout << outputhihihi_d[dim][i] << "  " << outputlohihi_d[dim][i]
+              << endl;
+         cout << outputhilohi_d[dim][i] << "  " << outputlolohi_d[dim][i]
+              << endl;
+         cout << outputhihilo_d[dim][i] << "  " << outputlohilo_d[dim][i]
+              << endl;
+         cout << outputhilolo_d[dim][i] << "  " << outputlololo_d[dim][i]
+              << endl;
          errsum = errsum 
-                + abs(outputhihi_h[dim][i] - outputhihi_d[dim][i])
-                + abs(outputlohi_h[dim][i] - outputlohi_d[dim][i])
-                + abs(outputhilo_h[dim][i] - outputhilo_d[dim][i])
-                + abs(outputlolo_h[dim][i] - outputlolo_d[dim][i]);
+                + abs(outputhihihi_h[dim][i] - outputhihihi_d[dim][i])
+                + abs(outputlohihi_h[dim][i] - outputlohihi_d[dim][i])
+                + abs(outputhilohi_h[dim][i] - outputhilohi_d[dim][i])
+                + abs(outputlolohi_h[dim][i] - outputlolohi_d[dim][i])
+                + abs(outputhihilo_h[dim][i] - outputhihilo_d[dim][i])
+                + abs(outputlohilo_h[dim][i] - outputlohilo_d[dim][i])
+                + abs(outputhilolo_h[dim][i] - outputhilolo_d[dim][i])
+                + abs(outputlololo_h[dim][i] - outputlololo_d[dim][i]);
       }
       cout << "Sum of errors : " << errsum << endl; errtot += errsum;
 
@@ -251,14 +265,17 @@ double test_real ( int dim, int nvr, int pwr, int deg )
          errsum = 0.0;
          for(int i=0; i<=deg; i++)
             errsum = errsum
-                   + abs(outputhihi_d[dim][i] - cffhihi[i])
-                   + abs(outputlohi_d[dim][i] - cfflohi[i])
-                   + abs(outputhilo_d[dim][i] - cffhilo[i])
-                   + abs(outputlolo_d[dim][i] - cfflolo[i]);
+                   + abs(outputhihihi_d[dim][i] - cffhihihi[i])
+                   + abs(outputlohihi_d[dim][i] - cfflohihi[i])
+                   + abs(outputhilohi_d[dim][i] - cffhilohi[i])
+                   + abs(outputlolohi_d[dim][i] - cfflolohi[i])
+                   + abs(outputhihilo_d[dim][i] - cffhihilo[i])
+                   + abs(outputlohilo_d[dim][i] - cfflohilo[i])
+                   + abs(outputhilolo_d[dim][i] - cffhilolo[i])
+                   + abs(outputlololo_d[dim][i] - cfflololo[i]);
          cout << "Coefficient error : " << errsum << endl; errtot += errsum;
       }
    }
- */
    for(int k=0; k<nvr; k++)
    {
       cout << "-> derivative for index " << idx[k] << " :" << endl;
@@ -273,7 +290,6 @@ double test_real ( int dim, int nvr, int pwr, int deg )
          cout << outputhilolo_h[idx[k]][i] << "  "
               << outputlololo_h[idx[k]][i] << endl;
       }
- /*
       if(nvr > 2)
       {
          cout << "-> derivative for index " << idx[k]
@@ -281,19 +297,26 @@ double test_real ( int dim, int nvr, int pwr, int deg )
          errsum = 0.0;
          for(int i=0; i<=deg; i++)
          {
-            cout << outputhihi_d[idx[k]][i] << "  "
-                 << outputlohi_d[idx[k]][i] << endl;
-            cout << outputhilo_d[idx[k]][i] << "  "
-                 << outputlolo_d[idx[k]][i] << endl;
+            cout << outputhihihi_d[idx[k]][i] << "  "
+                 << outputlohihi_d[idx[k]][i] << endl;
+            cout << outputhilohi_d[idx[k]][i] << "  "
+                 << outputlolohi_d[idx[k]][i] << endl;
+            cout << outputhihilo_d[idx[k]][i] << "  "
+                 << outputlohilo_d[idx[k]][i] << endl;
+            cout << outputhilolo_d[idx[k]][i] << "  "
+                 << outputlololo_d[idx[k]][i] << endl;
             errsum = errsum
-                   + abs(outputhihi_h[idx[k]][i] - outputhihi_d[idx[k]][i])
-                   + abs(outputlohi_h[idx[k]][i] - outputlohi_d[idx[k]][i])
-                   + abs(outputhilo_h[idx[k]][i] - outputhilo_d[idx[k]][i])
-                   + abs(outputlolo_h[idx[k]][i] - outputlolo_d[idx[k]][i]);
+               + abs(outputhihihi_h[idx[k]][i] - outputhihihi_d[idx[k]][i])
+               + abs(outputlohihi_h[idx[k]][i] - outputlohihi_d[idx[k]][i])
+               + abs(outputhilohi_h[idx[k]][i] - outputhilohi_d[idx[k]][i])
+               + abs(outputlolohi_h[idx[k]][i] - outputlolohi_d[idx[k]][i])
+               + abs(outputhihilo_h[idx[k]][i] - outputhihilo_d[idx[k]][i])
+               + abs(outputlohilo_h[idx[k]][i] - outputlohilo_d[idx[k]][i])
+               + abs(outputhilolo_h[idx[k]][i] - outputhilolo_d[idx[k]][i])
+               + abs(outputlololo_h[idx[k]][i] - outputlololo_d[idx[k]][i]);
          }
          cout << "Sum of errors : " << errsum << endl; errtot += errsum;
       }
-  */
    }
    cout << "Total sum of all errors : " << errtot << endl;
 

@@ -410,17 +410,17 @@ test_dbl5_monomials: random_numbers.o random_series.o random_monomials.o \
 test_dbl8_monomials: random_numbers.o random_series.o random_monomials.o \
                      random8_vectors.o random8_series.o random8_monomials.o \
                      double_double_functions.o quad_double_functions.o \
-                     octo_double_functions.o \
-                     dbl8_convolutions_host.o dbl8_monomials_host.o \
+                     octo_double_functions.o dbl8_convolutions_host.o \
+                     dbl8_monomials_host.o dbl8_monomials_kernels.o \
                      test_dbl8_monomials.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl8_monomials random_numbers.o random_series.o \
                   random_monomials.o random8_vectors.o random8_series.o \
                   random8_monomials.o double_double_functions.o \
                   quad_double_functions.o octo_double_functions.o \
-                  dbl8_convolutions_host.o \
-                  dbl8_monomials_host.o \
-                  test_dbl8_monomials.o -lcuda -lcudart -L$(CUDALIB)
+                  dbl8_convolutions_host.o dbl8_monomials_kernels.o \
+                  dbl8_monomials_host.o test_dbl8_monomials.o \
+                  -lcuda -lcudart -L$(CUDALIB)
 
 clean:
 	/bin/rm -f -r random_numbers.o random_series.o
