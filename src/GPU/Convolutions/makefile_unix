@@ -248,6 +248,10 @@ dbl8_monomials_host.o:
 	@-echo ">>> compiling dbl8_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) dbl8_monomials_host.cpp
 
+dbl10_monomials_host.o:
+	@-echo ">>> compiling dbl10_monomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) dbl10_monomials_host.cpp
+
 test_dbl_monomials.o:
 	@-echo ">>> compiling test_dbl_monomials ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl_monomials.cpp
@@ -434,7 +438,7 @@ test_dbl10_monomials: random_numbers.o random_series.o random_monomials.o \
                  random10_vectors.o random10_series.o random10_monomials.o \
                  double_double_functions.o quad_double_functions.o \
                  octo_double_functions.o deca_double_functions.o \
-                 dbl10_convolutions_host.o \
+                 dbl10_convolutions_host.o dbl10_monomials_host.o \
                  test_dbl10_monomials.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl10_monomials random_numbers.o random_series.o \
@@ -442,7 +446,7 @@ test_dbl10_monomials: random_numbers.o random_series.o random_monomials.o \
                   random10_monomials.o double_double_functions.o \
                   quad_double_functions.o octo_double_functions.o \
                   deca_double_functions.o dbl10_convolutions_host.o \
-                  test_dbl10_monomials.o \
+                  dbl10_monomials_host.o test_dbl10_monomials.o \
                   -lcuda -lcudart -L$(CUDALIB)
 
 clean:

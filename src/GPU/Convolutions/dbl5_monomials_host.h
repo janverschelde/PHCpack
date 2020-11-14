@@ -169,7 +169,7 @@ void CPU_cmplx5_speel
  *                the coefficients of the series for all variables;
  *   inputimmi    holds the middle doubles of the imaginary parts of the
  *                coefficients of the series for all variables;
- *   inputimpk    holds the second lowest doubles of the imaginary parts of
+ *   inputimrg    holds the second lowest doubles of the imaginary parts of
  *                the coefficients of the series for all variables;
  *   inputimpk    holds the lowest doubles of the imaginary parts of the
  *                coefficients of the series for all variables;
@@ -178,9 +178,11 @@ void CPU_cmplx5_speel
  *   forwardreix  is work space for the second highest doubles of nvr forward
  *                products, forwardreix[k] has space for deg+1 doubles;
  *   forwardremi  is work space for the middle doubles of nvr forward
- *                products, forwardrehi[k] has space for deg+1 doubles;
- *   forwardrelo  is work space for the low doubles of nvr forward
- *                products, forwardrehi[k] has space for deg+1 doubles;
+ *                products, forwardremi[k] has space for deg+1 doubles;
+ *   forwardrerg  is work space for the second lowest doubles of nvr forward
+ *                products, forwardrerg[k] has space for deg+1 doubles;
+ *   forwardrepk  is work space for the lowest doubles of nvr forward
+ *                products, forwardrepk[k] has space for deg+1 doubles;
  *   forwardimtb  is work space for the highest doubles of nvr forward
  *                products, forwardimtb[k] has space for deg+1 doubles;
  *   forwardimix  is work space for the second highest doubles of nvr forward
@@ -191,8 +193,8 @@ void CPU_cmplx5_speel
  *                products, forwardimrg[k] has space for deg+1 doubles;
  *   forwardimpk  is work space for the lowest doubles of nvr forward
  *                products, forwardimpk[k] has space for deg+1 doubles;
- *   backwardrehi is work space for the highest doubles of nvr-2 backward
- *                products, backwardrehi[k] has space for deg+1 doubles;
+ *   backwardretb is work space for the highest doubles of nvr-2 backward
+ *                products, backwardretb[k] has space for deg+1 doubles;
  *   backwardreix is work space for second highest doubles of nvr-2 backward
  *                products, backwardreix[k] has space for deg+1 doubles;
  *   backwardremi is work space for the middle doubles of nvr-2 backward
@@ -211,13 +213,17 @@ void CPU_cmplx5_speel
  *                products, backwardimrg[k] has space for deg+1 doubles;
  *   backwardimpk is work space for the lowest doubles of nvr-2 backward
  *                products, backwardimpk[k] has space for deg+1 doubles;
- *   crossrehi    is work space for the high doubles of nvr-2 cross
- *                products, crossrehi[k] has space for deg+1 doubles;
+ *   crossretb    is work space for the highest doubles of nvr-2 cross
+ *                products, crossretb[k] has space for deg+1 doubles;
+ *   crossreix    is work space for the second highest doubles of nvr-2 cross
+ *                products, crossreix[k] has space for deg+1 doubles;
  *   crossremi    is work space for the middle doubles of nvr-2 cross
- *                products, crossrehi[k] has space for deg+1 doubles;
- *   crossrelo    is work space for the low doubles of nvr-2 cross
- *                products, crossrehi[k] has space for deg+1 doubles;
- *   crossimhi    is work space for the highest doubles of nvr-2 cross
+ *                products, crossremi[k] has space for deg+1 doubles;
+ *   crossrerg    is work space for the second lowest doubles of nvr-2 cross
+ *                products, crossrerg[k] has space for deg+1 doubles;
+ *   crossrepk    is work space for the lowest doubles of nvr-2 cross
+ *                products, crossrepk[k] has space for deg+1 doubles;
+ *   crossimtb    is work space for the highest doubles of nvr-2 cross
  *                products, crossimtb[k] has space for deg+1 doubles;
  *   crossimix    is work space for the second highest doubles of nvr-2 cross
  *                products, crossimix[k] has space for deg+1 doubles;

@@ -86,5 +86,6 @@ test_dbl5_monomials        : test eval/diff of monomials with penta doubles
 dbl8_monomials_host        : evaldiff of octo double monomials on host
 dbl8_monomials_device      : evaldiff of octo double monomials on device
 test_dbl8_monomials        : test eval/diff of monomials with octo doubles
+dbl10_monomials_host       : evaldiff of deca double monomials on host
 test_dbl10_monomials       : test eval/diff of monomials with deca doubles
 -----------------------------------------------------------------------------

@@ -9,8 +9,8 @@
 #include <vector_types.h>
 #include "random_monomials.h"
 #include "random10_monomials.h"
-// #include "dbl5_monomials_host.h"
-// #include "dbl5_monomials_kernels.h"
+#include "dbl10_monomials_host.h"
+// #include "dbl10_monomials_kernels.h"
 
 using namespace std;
 
@@ -208,28 +208,42 @@ double test_real ( int dim, int nvr, int pwr, int deg )
    }
    double errsum = 0.0;
    double errtot = 0.0;
-/*
-   CPU_dbl5_evaldiff(dim,nvr,deg,idx,cfftb,cffix,cffmi,cffrg,cffpk,
-                     inputtb,inputix,inputmi,inputrg,inputpk,
-                     outputtb_h,outputix_h,outputmi_h,outputrg_h,outputpk_h);
+
+   CPU_dbl10_evaldiff(dim,nvr,deg,idx,
+      cffrtb,cffrix,cffrmi,cffrrg,cffrpk,
+      cffltb,cfflix,cfflmi,cfflrg,cfflpk,
+      inputrtb,inputrix,inputrmi,inputrrg,inputrpk,
+      inputltb,inputlix,inputlmi,inputlrg,inputlpk,
+      outputrtb_h,outputrix_h,outputrmi_h,outputrrg_h,outputrpk_h,
+      outputltb_h,outputlix_h,outputlmi_h,outputlrg_h,outputlpk_h);
 
    cout << "The value of the product :" << endl;
    for(int i=0; i<=deg; i++)
-      cout << outputtb_h[dim][i] << "  " << outputix_h[dim][i] 
-                                 << "  " << outputmi_h[dim][i] << endl
-           << outputrg_h[dim][i] << "  " << outputpk_h[dim][i] << endl;
-
+   {
+      cout << outputrtb_h[dim][i] << "  " << outputrix_h[dim][i] 
+                                  << "  " << outputrmi_h[dim][i] << endl
+           << outputrrg_h[dim][i] << "  " << outputrpk_h[dim][i] << endl;
+      cout << outputltb_h[dim][i] << "  " << outputlix_h[dim][i] 
+                                  << "  " << outputlmi_h[dim][i] << endl
+           << outputlrg_h[dim][i] << "  " << outputlpk_h[dim][i] << endl;
+   }
    if(nvr == dim) // the product of all input series equals one
    {
       for(int i=0; i<=deg; i++)
          errsum = errsum
-                + abs(outputtb_h[dim][i] - cfftb[i])
-                + abs(outputix_h[dim][i] - cffix[i])
-                + abs(outputmi_h[dim][i] - cffmi[i])
-                + abs(outputrg_h[dim][i] - cffrg[i])
-                + abs(outputpk_h[dim][i] - cffpk[i]);
+                + abs(outputrtb_h[dim][i] - cffrtb[i])
+                + abs(outputrix_h[dim][i] - cffrix[i])
+                + abs(outputrmi_h[dim][i] - cffrmi[i])
+                + abs(outputrrg_h[dim][i] - cffrrg[i])
+                + abs(outputrpk_h[dim][i] - cffrpk[i])
+                + abs(outputltb_h[dim][i] - cffltb[i])
+                + abs(outputlix_h[dim][i] - cfflix[i])
+                + abs(outputlmi_h[dim][i] - cfflmi[i])
+                + abs(outputlrg_h[dim][i] - cfflrg[i])
+                + abs(outputlpk_h[dim][i] - cfflpk[i]);
       cout << "Coefficient error : " << errsum << endl; errtot += errsum;
    }
+ /*
    if(nvr > 2)
    {
       GPU_dbl5_evaldiff(deg+1,dim,nvr,deg,idx,cfftb,cffix,cffmi,cffrg,cffpk,
