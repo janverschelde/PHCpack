@@ -1,5 +1,5 @@
 // Tests the evaluation and differentiation of a monomial
-// in penta double precision.
+// in deca double precision.
 
 #include <iostream>
 #include <iomanip>
@@ -10,7 +10,7 @@
 #include "random_monomials.h"
 #include "random10_monomials.h"
 #include "dbl10_monomials_host.h"
-// #include "dbl10_monomials_kernels.h"
+#include "dbl10_monomials_kernels.h"
 
 using namespace std;
 
@@ -243,28 +243,42 @@ double test_real ( int dim, int nvr, int pwr, int deg )
                 + abs(outputlpk_h[dim][i] - cfflpk[i]);
       cout << "Coefficient error : " << errsum << endl; errtot += errsum;
    }
- /*
+
    if(nvr > 2)
    {
-      GPU_dbl5_evaldiff(deg+1,dim,nvr,deg,idx,cfftb,cffix,cffmi,cffrg,cffpk,
-         inputtb,inputix,inputmi,inputrg,inputpk,
-         outputtb_d,outputix_d,outputmi_d,outputrg_d,outputpk_d);
+      GPU_dbl10_evaldiff(deg+1,dim,nvr,deg,idx,
+         cffrtb,cffrix,cffrmi,cffrrg,cffrpk,
+         cffltb,cfflix,cfflmi,cfflrg,cfflpk,
+         inputrtb,inputrix,inputrmi,inputrrg,inputrpk,
+         inputltb,inputlix,inputlmi,inputlrg,inputlpk,
+         outputrtb_d,outputrix_d,outputrmi_d,outputrrg_d,outputrpk_d,
+         outputltb_d,outputlix_d,outputlmi_d,outputlrg_d,outputlpk_d);
 
       cout << "The value of the product computed on the GPU :" << endl;
       errsum = 0.0;
       for(int i=0; i<=deg; i++)
       {
-         cout << outputtb_d[dim][i] << "  "
-              << outputix_d[dim][i] << "  "
-              << outputmi_d[dim][i] << endl
-              << outputrg_d[dim][i] << "  "
-              << outputpk_d[dim][i] << endl;
+         cout << outputrtb_d[dim][i] << "  "
+              << outputrix_d[dim][i] << "  "
+              << outputrmi_d[dim][i] << endl
+              << outputrrg_d[dim][i] << "  "
+              << outputrpk_d[dim][i] << endl;
+         cout << outputltb_d[dim][i] << "  "
+              << outputlix_d[dim][i] << "  "
+              << outputlmi_d[dim][i] << endl
+              << outputlrg_d[dim][i] << "  "
+              << outputlpk_d[dim][i] << endl;
          errsum = errsum
-                + abs(outputtb_h[dim][i] - outputtb_d[dim][i])
-                + abs(outputix_h[dim][i] - outputix_d[dim][i])
-                + abs(outputmi_h[dim][i] - outputmi_d[dim][i])
-                + abs(outputrg_h[dim][i] - outputrg_d[dim][i])
-                + abs(outputpk_h[dim][i] - outputpk_d[dim][i]);
+                + abs(outputrtb_h[dim][i] - outputrtb_d[dim][i])
+                + abs(outputrix_h[dim][i] - outputrix_d[dim][i])
+                + abs(outputrmi_h[dim][i] - outputrmi_d[dim][i])
+                + abs(outputrrg_h[dim][i] - outputrrg_d[dim][i])
+                + abs(outputrpk_h[dim][i] - outputrpk_d[dim][i])
+                + abs(outputltb_h[dim][i] - outputltb_d[dim][i])
+                + abs(outputlix_h[dim][i] - outputlix_d[dim][i])
+                + abs(outputlmi_h[dim][i] - outputlmi_d[dim][i])
+                + abs(outputlrg_h[dim][i] - outputlrg_d[dim][i])
+                + abs(outputlpk_h[dim][i] - outputlpk_d[dim][i]);
       }
       cout << "Sum of errors : " << errsum << endl; errtot += errsum;
 
@@ -273,11 +287,16 @@ double test_real ( int dim, int nvr, int pwr, int deg )
          errsum = 0.0;
          for(int i=0; i<=deg; i++)
             errsum = errsum
-                   + abs(outputtb_d[dim][i] - cfftb[i])
-                   + abs(outputix_d[dim][i] - cffix[i])
-                   + abs(outputmi_d[dim][i] - cffmi[i])
-                   + abs(outputrg_d[dim][i] - cffrg[i])
-                   + abs(outputpk_d[dim][i] - cffpk[i]);
+                   + abs(outputrtb_d[dim][i] - cffrtb[i])
+                   + abs(outputrix_d[dim][i] - cffrix[i])
+                   + abs(outputrmi_d[dim][i] - cffrmi[i])
+                   + abs(outputrrg_d[dim][i] - cffrrg[i])
+                   + abs(outputrpk_d[dim][i] - cffrpk[i])
+                   + abs(outputltb_d[dim][i] - cffltb[i])
+                   + abs(outputlix_d[dim][i] - cfflix[i])
+                   + abs(outputlmi_d[dim][i] - cfflmi[i])
+                   + abs(outputlrg_d[dim][i] - cfflrg[i])
+                   + abs(outputlpk_d[dim][i] - cfflpk[i]);
          cout << "Coefficient error : " << errsum << endl; errtot += errsum;
       }
    }
@@ -285,12 +304,18 @@ double test_real ( int dim, int nvr, int pwr, int deg )
    {
       cout << "-> derivative for index " << idx[k] << " :" << endl;
       for(int i=0; i<=deg; i++)
-         cout << outputtb_h[idx[k]][i] << "  "
-              << outputix_h[idx[k]][i] << "  "
-              << outputmi_h[idx[k]][i] << endl
-              << outputrg_h[idx[k]][i] << "  "
-              << outputpk_h[idx[k]][i] << endl;
-
+      {
+         cout << outputrtb_h[idx[k]][i] << "  "
+              << outputrix_h[idx[k]][i] << "  "
+              << outputrmi_h[idx[k]][i] << endl
+              << outputrrg_h[idx[k]][i] << "  "
+              << outputrpk_h[idx[k]][i] << endl;
+         cout << outputltb_h[idx[k]][i] << "  "
+              << outputlix_h[idx[k]][i] << "  "
+              << outputlmi_h[idx[k]][i] << endl
+              << outputlrg_h[idx[k]][i] << "  "
+              << outputlpk_h[idx[k]][i] << endl;
+      }
       if(nvr > 2)
       {
          cout << "-> derivative for index " << idx[k]
@@ -298,23 +323,32 @@ double test_real ( int dim, int nvr, int pwr, int deg )
          errsum = 0.0;
          for(int i=0; i<=deg; i++)
          {
-            cout << outputtb_d[idx[k]][i] << "  "
-                 << outputix_d[idx[k]][i] << "  "
-                 << outputmi_d[idx[k]][i] << endl
-                 << outputrg_d[idx[k]][i] << "  "
-                 << outputpk_d[idx[k]][i] << endl;
+            cout << outputrtb_d[idx[k]][i] << "  "
+                 << outputrix_d[idx[k]][i] << "  "
+                 << outputrmi_d[idx[k]][i] << endl
+                 << outputrrg_d[idx[k]][i] << "  "
+                 << outputrpk_d[idx[k]][i] << endl;
+            cout << outputltb_d[idx[k]][i] << "  "
+                 << outputlix_d[idx[k]][i] << "  "
+                 << outputlmi_d[idx[k]][i] << endl
+                 << outputlrg_d[idx[k]][i] << "  "
+                 << outputlpk_d[idx[k]][i] << endl;
             errsum = errsum
-                   + abs(outputtb_h[idx[k]][i] - outputtb_d[idx[k]][i])
-                   + abs(outputix_h[idx[k]][i] - outputix_d[idx[k]][i])
-                   + abs(outputmi_h[idx[k]][i] - outputmi_d[idx[k]][i])
-                   + abs(outputrg_h[idx[k]][i] - outputrg_d[idx[k]][i])
-                   + abs(outputpk_h[idx[k]][i] - outputpk_d[idx[k]][i]);
+                   + abs(outputrtb_h[idx[k]][i] - outputrtb_d[idx[k]][i])
+                   + abs(outputrix_h[idx[k]][i] - outputrix_d[idx[k]][i])
+                   + abs(outputrmi_h[idx[k]][i] - outputrmi_d[idx[k]][i])
+                   + abs(outputrrg_h[idx[k]][i] - outputrrg_d[idx[k]][i])
+                   + abs(outputrpk_h[idx[k]][i] - outputrpk_d[idx[k]][i])
+                   + abs(outputltb_h[idx[k]][i] - outputltb_d[idx[k]][i])
+                   + abs(outputlix_h[idx[k]][i] - outputlix_d[idx[k]][i])
+                   + abs(outputlmi_h[idx[k]][i] - outputlmi_d[idx[k]][i])
+                   + abs(outputlrg_h[idx[k]][i] - outputlrg_d[idx[k]][i])
+                   + abs(outputlpk_h[idx[k]][i] - outputlpk_d[idx[k]][i]);
          }
          cout << "Sum of errors : " << errsum << endl; errtot += errsum;
       }
       cout << "Total sum of all errors : " << errtot << endl;
    }
-  */
    return errtot;
 }
 

@@ -1,6 +1,9 @@
 Sat 14 Nov 2020 : more edits in dbl5_monomials_host.h.
   New dbl10_monomials_host.h and dbl10_monomials_host.cpp to evaluate and
   differentiation in deca double precision, tested in test_dbl10_monomials.
+  Edited dbl5_monomials_kernels.h.
+  New dlb10_monomials_kernels.h and dbl10_monomials_kernels.cu,
+  tested by test_dbl10_monomials.cpp.
 
 Fri 13 Nov 2020 : edited dbl4_monomials_host.h and dbl4_monomials_host.cpp.
   New dbl8_monomials_host.h, dbl8_monomials_host.cpp, random8_monomials.h,

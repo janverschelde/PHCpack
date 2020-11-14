@@ -169,19 +169,19 @@ __global__ void GPU_cmplx5_speel
  *   cffremi      middle doubles of the real parts
  *                of the series coefficient of the product;
  *   cffrerg      second lowest doubles of the real parts
- *                of the series coefficient of of the product;
+ *                of the series coefficient of the product;
  *   cffrepk      lowest doubles of the real parts
- *                of the series coefficient of of the product;
+ *                of the series coefficient of the product;
  *   cffimtb      highest doubles of the imaginary parts
- *                of the series coefficient of of the product;
+ *                of the series coefficient of the product;
  *   cffimix      second highest doubles of the imaginary parts
- *                of the series coefficient of of the product;
+ *                of the series coefficient of the product;
  *   cffimmi      middle doubles of the imaginary parts
- *                of the series coefficient of coefficient of the product;
+ *                of the series coefficient of the product;
  *   cffimrg      second lowest doubles of the imaginary parts
- *                of the series coefficient of of the product;
+ *                of the series coefficient of the product;
  *   cffimpk      lowest doubles of the imaginary parts
- *                of the series coefficient of of the product;
+ *                of the series coefficient of the product;
  *   inputretb    stores the highest doubles of the real parts
  *                of the coefficients of the input series;
  *   inputreix    stores the second highest doubles of the real parts
@@ -213,7 +213,7 @@ __global__ void GPU_cmplx5_speel
  *                forwardremi has space for nvr*(deg+1) doubles;
  *   forwardrerg  is work space for the second lowest doubles
  *                for all real parts of the nvr forward products,
- *                forwardrepk has space for nvr*(deg+1) doubles;
+ *                forwardrerg has space for nvr*(deg+1) doubles;
  *   forwardrepk  is work space for the lowest doubles
  *                for all real parts of the nvr forward products,
  *                forwardrepk has space for nvr*(deg+1) doubles;
@@ -300,7 +300,7 @@ __global__ void GPU_cmplx5_speel
  *                of the forward products,
  *   forwardremi  stores the middle doubles of the real parts
  *                of the forward products,
- *   forwardretb  stores the second lowest doubles of the real parts
+ *   forwardrerg  stores the second lowest doubles of the real parts
  *                of the forward products,
  *   forwardrepk  stores the lowest doubles of the real parts
  *                of the forward products,
@@ -358,7 +358,7 @@ __global__ void GPU_cmplx5_speel
  *                of the cross products,
  *   crossimpk    stores the lowest doubles of the imaginary parts
  *                of the cross products,
- *                cross[k] contains the derivatve with respect to
+ *                cross[k] contains the derivative with respect to
  *                variable idx[k+1]. */
 
 void GPU_dbl5_evaldiff
@@ -449,19 +449,19 @@ void GPU_cmplx5_evaldiff
  *   cffremi    middle doubles of the real parts
  *              of the series coefficient of the product;
  *   cffrerg    second lowest doubles of the real parts
- *              of the series coefficient of of the product;
+ *              of the series coefficient of the product;
  *   cffrepk    lowest doubles of the real parts
- *              of the series coefficient of of the product;
+ *              of the series coefficient of the product;
  *   cffimtb    highest doubles of the imaginary parts
- *              of the series coefficient of of the product;
+ *              of the series coefficient of the product;
  *   cffimix    second highest doubles of the imaginary parts
- *              of the series coefficient of of the product;
+ *              of the series coefficient of the product;
  *   cffimmi    middle doubles of the imaginary parts
- *              of the series coefficient of coefficient of the product;
+ *              of the series coefficient of the product;
  *   cffimrg    second lowest doubles of the imaginary parts
- *              of the series coefficient of of the product;
+ *              of the series coefficient of the product;
  *   cffimpk    lowest doubles of the imaginary parts
- *              of the series coefficient of of the product;
+ *              of the series coefficient of the product;
  *   inputretb  stores the highest doubles of the real parts
  *              of the coefficients of the input series;
  *   inputreix  stores the second highest doubles of the real parts

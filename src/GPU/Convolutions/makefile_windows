@@ -606,7 +606,7 @@ test_dbl10_monomials: random_numbers.obj random_series.obj \
                  double_double_functions.obj quad_double_functions.obj \
                  octo_double_functions.obj deca_double_functions.obj \
                  dbl10_convolutions_host.obj dbl10_monomials_host.obj \
-                 test_dbl10_monomials.obj
+                 dbl10_monomials_kernels.obj test_dbl10_monomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl10_monomials.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
@@ -614,7 +614,7 @@ test_dbl10_monomials: random_numbers.obj random_series.obj \
               double_double_functions.obj quad_double_functions.obj \
               octo_double_functions.obj deca_double_functions.obj  \
               dbl10_convolutions_host.obj dbl10_monomials_host.obj \
-              test_dbl10_monomials.obj
+              dbl10_monomials_kernels.obj test_dbl10_monomials.obj
 
 clean:
 	del *exe *obj *exp *lib *~
