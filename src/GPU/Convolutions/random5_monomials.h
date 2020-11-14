@@ -30,11 +30,11 @@ bool make_real5_monomial
  *           idx(k) is the index of the k-th variable in the monomial;
  *   exp     nvr positive integers with the powers of the variables,
  *           exp(k) is the power of the variable with index idx(k);
- *   cfftb   deg+1 doubles with the highest doubles of the coefficients;
- *   cffix   deg+1 doubles with the second highest doubles;
- *   cffmi   deg+1 doubles with the middle doubles of the coefficients;
- *   cffrg   deg+1 doubles with the second lowest doubles;
- *   cffpk   deg+1 doubles with the lowest doubles of the coefficients. */
+ *   cfftb   deg+1 doubles with the highest coefficient doubles;
+ *   cffix   deg+1 doubles with the second highest coefficient doubles;
+ *   cffmi   deg+1 doubles with the middle coefficient doubles;
+ *   cffrg   deg+1 doubles with the second lowest coefficient doubles;
+ *   cffpk   deg+1 doubles with the lowest coefficient doubles. */
 
 bool make_complex5_monomial
  ( int dim, int nvr, int pwr, int deg, int *idx, int *exp,
@@ -54,7 +54,7 @@ bool make_complex5_monomial
  *   pwr     largest power of a variable;
  *   deg     degree of the power series coefficient;
  *   exp     space allocated for nvr integers;
- *   cffretb has space allocated for deg+1 higest doubles,
+ *   cffretb has space allocated for deg+1 highest doubles,
  *           for the real parts of the coefficients;
  *   cffreix has space allocated for deg+1 second highest doubles,
  *           for the real parts of the coefficients;
@@ -72,7 +72,7 @@ bool make_complex5_monomial
  *           for the imaginary parts of the coefficients;
  *   cffimrg has space allocated for deg+1 lowest doubles,
  *           for the imaginary parts of the coefficients;
- *   cffimpk has space allocated for deg+1 lowest doubles,
+ *   cffimpk has space allocated for deg+1 second lowest doubles,
  *           for the imaginary parts of the coefficients.
  *
  * ON RETURN :
@@ -96,7 +96,7 @@ bool make_complex5_monomial
  *           of the coefficients of the power series;
  *   cffimmi holds deg+1 middle doubles of the imaginary parts
  *           of the coefficients of the power series;
- *   cffimrg holds deg+1 lowest doubles of the imaginary parts
+ *   cffimrg holds deg+1 second lowest doubles of the imaginary parts
  *           of the coefficients of the power series;
  *   cffimpk holds deg+1 lowest doubles of the imaginary parts
  *           of the coefficients of the power series. */

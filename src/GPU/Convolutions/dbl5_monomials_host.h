@@ -29,8 +29,8 @@ void CPU_dbl5_speel
  *   idx        as many indices as the value of nvr,
  *              idx[k] defines the place of the k-th variable,
  *              with input values in input[idx[k]];
- *   cfftb      deg+1 higest doubles in the coefficient series;
- *   cffix      deg+1 second higest doubles in the coefficient series;
+ *   cfftb      deg+1 highest doubles in the coefficient series;
+ *   cffix      deg+1 second highest doubles in the coefficient series;
  *   cffmi      deg+1 middle doubles in the coefficient series;
  *   cffrg      deg+1 second lowest doubles in the coefficient series;
  *   cffpk      deg+1 lowest doubles in the coefficient series;
@@ -133,17 +133,25 @@ void CPU_cmplx5_speel
  *   idx          as many indices as the value of nvr,
  *                idx[k] defines the place of the k-th variable,
  *                with input values in input[idx[k]];
- *   cffrehi      high doubles of the real parts of the coefficients
+ *   cffretb      highest doubles of the real parts of the coefficients
  *                of the series of the product;
+ *   cffreix      second highest doubles of the real parts of the
+ *                coefficients of the series of the product;
  *   cffremi      middle doubles of the real parts of the coefficients
  *                of the series of the product;
- *   cffrelo      low doubles of the real parts of the coefficients
+ *   cffrerg      second lowest doubles of the real parts of the
+ *                coefficients of the series of the product;
+ *   cffrepk      lowest doubles of the real parts of the
+ *                coefficients of the series of the product;
+ *   cffimtb      highest doubles of the imaginary parts of the coefficients
  *                of the series of the product;
- *   cffimhi      high doubles of the imaginary pars of the coefficient
+ *   cffimix      second highest doubles of the imaginary parts of the
+ *                coefficients of the series of the product;
+ *   cffimmi      middle doubles of the imaginary parts of the coefficients
  *                of the series of the product;
- *   cffimmi      middle doubles of the imaginary pars of the coefficient
- *                of the series of the product;
- *   cffimlo      low doubles of the imaginary pars of the coefficient
+ *   cffimrg      second lowest doubles of the imaginary parts of the
+ *                coefficients of the series of the product;
+ *   cffimpk      lowest doubles of the imaginary parts of the coefficients
  *                of the series of the product;
  *   inputretb    holds the highest doubles of the real parts of the 
  *                coefficients of the series for all variables;
@@ -306,12 +314,12 @@ void CPU_dbl5_evaldiff
  *   idx      as many indices as the value of nvr,
  *            idx[k] defines the place of the k-th variable,
  *            with input values in input[idx[k]];
- *   cfftb    deg+1 higest doubles in the coefficient series;
- *   cffix    deg+1 second higest doubles in the coefficient series;
+ *   cfftb    deg+1 highest doubles in the coefficient series;
+ *   cffix    deg+1 second highest doubles in the coefficient series;
  *   cffmi    deg+1 middle doubles in the coefficient series;
  *   cffrg    deg+1 second lowest doubles in the coefficient series;
  *   cffpk    deg+1 lowest doubles in the coefficient series;
- *   inputhi  holds the highest doubles of the input series
+ *   inputtb  holds the highest doubles of the input series
  *            for all variables in the monomial;
  *   inputix  holds the second highest doubles of the input series
  *            for all variables in the monomial;
@@ -360,17 +368,25 @@ void CPU_cmplx5_evaldiff
  *   idx        as many indices as the value of nvr,
  *              idx[k] defines the place of the k-th variable,
  *              with input values in input[idx[k]];
- *   cffrehi    high doubles of the real parts of the coefficients
+ *   cffretb    highest doubles of the real parts of the coefficients
+ *              of the series of the product;
+ *   cffreix    second highest doubles of the real parts of the coefficients
  *              of the series of the product;
  *   cffremi    middle doubles of the real parts of the coefficients
  *              of the series of the product;
- *   cffrelo    low doubles of the real parts of the coefficients
+ *   cffrerg    second lowest doubles of the real parts of the coefficients
  *              of the series of the product;
- *   cffimhi    high doubles of the imaginary pars of the coefficients
+ *   cffrepk    lowest doubles of the real parts of the coefficients
  *              of the series of the product;
- *   cffimmi    middle doubles of the imaginary pars of the coefficients
+ *   cffimtb    highest doubles of the imaginary parts of the coefficients
  *              of the series of the product;
- *   cffimlo    low doubles of the imaginary pars of the coefficients
+ *   cffimix    second highest doubles of the imaginary parts of the
+ *              coefficients of the series of the product;
+ *   cffimmi    middle doubles of the imaginary parts of the coefficients
+ *              of the series of the product;
+ *   cffimrg    second lowest doubles of the imaginary parts of the
+ *              coefficients of the series of the product;
+ *   cffimpk    lowest doubles of the imaginary parts of the coefficients
  *              of the series of the product;
  *   inputretb  holds the highest doubles of the real parts of the 
  *              coefficients of the series for all variables in the monomial;
@@ -409,6 +425,16 @@ void CPU_cmplx5_evaldiff
  *   outputreix stores the second highest doubles of the real parts
  *              of the derivatives and the value,
  *   outputremi stores the middle doubles of the real parts
+ *              of the derivatives and the value,
+ *   outputrerg stores the second lowest doubles of the real parts
+ *              of the derivatives and the value,
+ *   outputrepk stores the lowest doubles of the real parts
+ *              of the derivatives and the value,
+ *   outputimtb stores the highest doubles of the imaginary parts
+ *              of the derivatives and the value,
+ *   outputimix stores the second highest doubles of the imaginary parts
+ *              of the derivatives and the value,
+ *   outputimmi stores the middle doubles of the imaginary parts
  *              of the derivatives and the value,
  *   outputimrg stores the second lowest doubles of the imaginary parts
  *              of the derivatives and the value,
