@@ -1,40 +1,52 @@
-# tested with nvcc version 5.5.0 and gcc 4.4.7 on C2050
-# Note that the -arch=sm_13 is needed on the C2050.
-# tested with nvcc version 10.1 and gcc 4.8.5 on Volta
-# On Volta, the -arch=sm_13 is not needed.
+# Tested on four different NVIDIA GPUs.
 
 gpp=/usr/bin/g++
 MPD=../Norms
 CUDA=/usr/local/cuda/include
 CUDALIB=/usr/local/cuda/lib64
+# the architecture flag for Tesla C2050
+# smflag=sm_20
+# the architecture flag for Kepler K20C
+# smflag=sm_35
+# the architecture flag for Pascal P100
+# smflag=sm_60
+# the architecture flag for Volta V100
+smflag=sm_70
 
 dbl_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for doubles ..."
-	nvcc -ccbin=$(gpp) -c dbl_convolutions_kernels.cu
+	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             -c dbl_convolutions_kernels.cu
 
 dbl2_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for double doubles ..."
-	nvcc -ccbin=$(gpp) -c -I$(MPD) dbl2_convolutions_kernels.cu
+	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             -c -I$(MPD) dbl2_convolutions_kernels.cu
 
 dbl3_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for triple doubles ..."
-	nvcc -ccbin=$(gpp) -c -I$(MPD) dbl3_convolutions_kernels.cu
+	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             -c -I$(MPD) dbl3_convolutions_kernels.cu
 
 dbl4_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for quad doubles ..."
-	nvcc -ccbin=$(gpp) -c -I$(MPD) dbl4_convolutions_kernels.cu
+	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             -c -I$(MPD) dbl4_convolutions_kernels.cu
 
 dbl5_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for penta doubles ..."
-	nvcc -ccbin=$(gpp) -c -I$(MPD) dbl5_convolutions_kernels.cu
+	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             -c -I$(MPD) dbl5_convolutions_kernels.cu
 
 dbl8_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for octo doubles ..."
-	nvcc -ccbin=$(gpp) -c -I$(MPD) dbl8_convolutions_kernels.cu
+	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             -c -I$(MPD) dbl8_convolutions_kernels.cu
 
 dbl10_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for deca doubles ..."
-	nvcc -ccbin=$(gpp) -c -I$(MPD) dbl10_convolutions_kernels.cu
+	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             -c -I$(MPD) dbl10_convolutions_kernels.cu
 
 random_numbers.o:
 	@-echo ">>> compiling random number generators ..."
@@ -202,31 +214,37 @@ test_dbl10_convolutions.o:
 
 dbl_monomials_kernels.o:
 	@-echo ">>> compiling monomial kernels for doubles ..."
-	nvcc -ccbin=$(gpp) -c dbl_monomials_kernels.cu
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -c dbl_monomials_kernels.cu
 
 dbl2_monomials_kernels.o:
 	@-echo ">>> compiling monomial kernels for double doubles ..."
-	nvcc -ccbin=$(gpp) -I$(MPD) -c dbl2_monomials_kernels.cu
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+             -c dbl2_monomials_kernels.cu
 
 dbl3_monomials_kernels.o:
 	@-echo ">>> compiling monomial kernels for triple doubles ..."
-	nvcc -ccbin=$(gpp) -I$(MPD) -c dbl3_monomials_kernels.cu
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+             -c dbl3_monomials_kernels.cu
 
 dbl4_monomials_kernels.o:
 	@-echo ">>> compiling monomial kernels for quad doubles ..."
-	nvcc -ccbin=$(gpp) -I$(MPD) -c dbl4_monomials_kernels.cu
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+             -c dbl4_monomials_kernels.cu
 
 dbl5_monomials_kernels.o:
 	@-echo ">>> compiling monomial kernels for penta doubles ..."
-	nvcc -ccbin=$(gpp) -I$(MPD) -c dbl5_monomials_kernels.cu
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+             -c dbl5_monomials_kernels.cu
 
 dbl8_monomials_kernels.o:
 	@-echo ">>> compiling monomial kernels for octo doubles ..."
-	nvcc -ccbin=$(gpp) -I$(MPD) -c dbl8_monomials_kernels.cu
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+             -c dbl8_monomials_kernels.cu
 
 dbl10_monomials_kernels.o:
 	@-echo ">>> compiling monomial kernels for deca doubles ..."
-	nvcc -ccbin=$(gpp) -I$(MPD) -c dbl10_monomials_kernels.cu
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+             -c dbl10_monomials_kernels.cu
 
 dbl_monomials_host.o:
 	@-echo ">>> compiling dbl_monomials_host ..."

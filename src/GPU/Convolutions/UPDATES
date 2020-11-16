@@ -1,4 +1,5 @@
 Mon 16 Nov 2020 : fixed one bug in dbl10_monomials_kernels.cu.
+  Updated makefile_unix to pass the proper architecture flag.
 
 Sat 14 Nov 2020 : more edits in dbl5_monomials_host.h.
   New dbl10_monomials_host.h and dbl10_monomials_host.cpp to evaluate and
