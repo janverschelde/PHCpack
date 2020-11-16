@@ -603,7 +603,7 @@ void GPU_dbl10_evaldiff
           forwardrtb_d,forwardrix_d,forwardrmi_d,forwardrrg_d,forwardrpk_d,
           forwardltb_d,forwardlix_d,forwardlmi_d,forwardlrg_d,forwardlpk_d,
           backwardrtb_d,backwardrix_d,backwardrmi_d,backwardrrg_d,
-          backwardrpk_d,backwardltb_d,backwardlix_d,backwardlmi_d,
+          backwardlpk_d,backwardltb_d,backwardlix_d,backwardlmi_d,
           backwardlrg_d,backwardlpk_d,
           crossrtb_d,crossrix_d,crossrmi_d,crossrrg_d,crossrpk_d,
           crossltb_d,crosslix_d,crosslmi_d,crosslrg_d,crosslpk_d);
