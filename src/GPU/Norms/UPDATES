@@ -1,3 +1,6 @@
+Sun 15 Nov 2020 : defined makefile_c2050, a makefile for the NVIDIA C2050 GPU,
+  updated makefile as well.
+
 Fri 13 Nov 2020 : fixed random8_vectors.cpp so the last double of a random
   octo double is nonzero.
 
