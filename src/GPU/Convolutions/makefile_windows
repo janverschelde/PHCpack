@@ -5,6 +5,9 @@
 # location for the C code for multiple double precision
 MPD=../Norms
 
+# architecture flag
+smflag=sm_70
+
 # location of the command line Microsoft Visual Studio Compiler
 CL="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
 
@@ -28,72 +31,87 @@ CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\lib\x64"
 
 dbl_convolutions_kernels.obj:
 	@-echo ">>> compiling convolution kernels for doubles ..."
-	nvcc -ccbin=$(CL) -c -O3 dbl_convolutions_kernels.cu \
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 \
+                dbl_convolutions_kernels.cu \
+             -o dbl_convolutions_kernels.obj
 
 dbl2_convolutions_kernels.obj:
 	@-echo ">>> compiling convolution kernels for double doubles ..."
-	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl2_convolutions_kernels.cu \
-                                       -o dbl2_convolutions_kernels.obj
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                dbl2_convolutions_kernels.cu \
+             -o dbl2_convolutions_kernels.obj
 
 dbl3_convolutions_kernels.obj:
 	@-echo ">>> compiling convolution kernels for triple doubles ..."
-	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl3_convolutions_kernels.cu \
-                                       -o dbl3_convolutions_kernels.obj
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                dbl3_convolutions_kernels.cu \
+             -o dbl3_convolutions_kernels.obj
 
 dbl4_convolutions_kernels.obj:
 	@-echo ">>> compiling convolution kernels for quad doubles ..."
-	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl4_convolutions_kernels.cu \
-                                       -o dbl4_convolutions_kernels.obj
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                dbl4_convolutions_kernels.cu \
+             -o dbl4_convolutions_kernels.obj
 
 dbl5_convolutions_kernels.obj:
 	@-echo ">>> compiling convolution kernels for penta doubles ..."
-	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl5_convolutions_kernels.cu \
-                                       -o dbl5_convolutions_kernels.obj
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                dbl5_convolutions_kernels.cu \
+             -o dbl5_convolutions_kernels.obj
 
 dbl8_convolutions_kernels.obj:
 	@-echo ">>> compiling convolution kernels for octo doubles ..."
-	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl8_convolutions_kernels.cu \
-                                       -o dbl8_convolutions_kernels.obj
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                dbl8_convolutions_kernels.cu \
+             -o dbl8_convolutions_kernels.obj
 
 dbl10_convolutions_kernels.obj:
 	@-echo ">>> compiling convolution kernels for deca doubles ..."
-	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl10_convolutions_kernels.cu \
-                                       -o dbl10_convolutions_kernels.obj
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                dbl10_convolutions_kernels.cu \
+             -o dbl10_convolutions_kernels.obj
 
 dbl_monomials_kernels.obj:
 	@-echo ">>> compiling monomial kernels for doubles ..."
-	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl_monomials_kernels.cu \
-                                       -o dbl_monomials_kernels.obj
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                dbl_monomials_kernels.cu \
+             -o dbl_monomials_kernels.obj
 
 dbl2_monomials_kernels.obj:
 	@-echo ">>> compiling monomial kernels for double doubles ..."
-	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl2_monomials_kernels.cu \
-                                       -o dbl2_monomials_kernels.obj
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                dbl2_monomials_kernels.cu \
+             -o dbl2_monomials_kernels.obj
 
 dbl3_monomials_kernels.obj:
 	@-echo ">>> compiling monomial kernels for triple doubles ..."
-	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl3_monomials_kernels.cu \
-                                       -o dbl3_monomials_kernels.obj
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                dbl3_monomials_kernels.cu \
+             -o dbl3_monomials_kernels.obj
 
 dbl4_monomials_kernels.obj:
 	@-echo ">>> compiling monomial kernels for quad doubles ..."
-	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl4_monomials_kernels.cu \
-                                       -o dbl4_monomials_kernels.obj
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                dbl4_monomials_kernels.cu \
+             -o dbl4_monomials_kernels.obj
 
 dbl5_monomials_kernels.obj:
 	@-echo ">>> compiling monomial kernels for penta doubles ..."
-	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl5_monomials_kernels.cu \
-                                       -o dbl5_monomials_kernels.obj
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                dbl5_monomials_kernels.cu \
+             -o dbl5_monomials_kernels.obj
 
 dbl8_monomials_kernels.obj:
 	@-echo ">>> compiling monomial kernels for octo doubles ..."
-	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl8_monomials_kernels.cu \
-                                       -o dbl8_monomials_kernels.obj
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                dbl8_monomials_kernels.cu \
+             -o dbl8_monomials_kernels.obj
 
 dbl10_monomials_kernels.obj:
 	@-echo ">>> compiling monomial kernels for deca doubles ..."
-	nvcc -ccbin=$(CL) -c -O3 -I$(MPD) dbl10_monomials_kernels.cu \
-                                       -o dbl10_monomials_kernels.obj
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                dbl10_monomials_kernels.cu \
+             -o dbl10_monomials_kernels.obj
 
 random_numbers.obj:
 	@-echo ">>> compiling random number generators ..."
