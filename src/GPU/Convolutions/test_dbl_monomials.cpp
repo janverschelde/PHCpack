@@ -169,7 +169,7 @@ double test_real ( int dim, int nvr, int pwr, int deg )
          for(int i=0; i<=deg; i++)
          {
             cout << output_d[idx[k]][i] << endl;
-            errsum = errsum + abs(output_h[dim][i] - output_d[dim][i]);
+            errsum = errsum + abs(output_h[idx[k]][i] - output_d[idx[k]][i]);
          }
          cout << "Sum of errors : " << errsum << endl; errtot += errsum;
       }
@@ -309,8 +309,8 @@ double test_complex ( int dim, int nvr, int pwr, int deg )
             cout << outputre_d[idx[k]][i] << "  "
                  << outputim_d[idx[k]][i] << endl;
             errsum = errsum
-                   + abs(outputre_h[dim][i] - outputre_d[dim][i])
-                   + abs(outputim_h[dim][i] - outputim_d[dim][i]);
+                   + abs(outputre_h[idx[k]][i] - outputre_d[idx[k]][i])
+                   + abs(outputim_h[idx[k]][i] - outputim_d[idx[k]][i]);
          }
          cout << "The sum of errors : " << errsum << endl; errtot += errsum;
       }
