@@ -5,7 +5,6 @@
 
 # MAKEFILE = makefile_windows
 MAKEFILE = makefile_unix
-# MAKEFILE = makefile_c2050
 
 test_dbl_convolutions:
 	make -f $(MAKEFILE) test_dbl_convolutions

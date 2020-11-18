@@ -195,8 +195,8 @@ double test_real ( int dim, int nvr, int pwr, int deg )
             errsum = errsum
                    + abs(outputhi_h[idx[k]][i] - outputhi_d[idx[k]][i])
                    + abs(outputlo_h[idx[k]][i] - outputlo_d[idx[k]][i]);
-            cout << "Sum of errors : " << errsum << endl; errtot += errsum;
          }
+         cout << "Sum of errors : " << errsum << endl; errtot += errsum;
       }
    }
    cout << "Total sum of all errors : " << errtot << endl;

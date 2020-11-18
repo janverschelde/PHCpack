@@ -5,29 +5,9 @@
 #ifndef __dbl2_monomials_kernels_h__
 #define __dbl2_monomials_kernels_h__
 
-__device__ void dbl2_convolute
- ( double *xhi, double *xlo, double *yhi, double *ylo,
-   double *zhi, double *zlo, int dim, int k );
-/*
- * DESCRIPTION :
- *   Thread k returns in z[k] the k-th component of the convolution
- *   of x and y, with high and low parts in hi and lo arrays.
- *   All vectors are of dimension dim. */
-
-__device__ void cmplx2_convolute
- ( double *xrehi, double *xrelo, double *ximhi, double *ximlo,
-   double *yrehi, double *yrelo, double *yimhi, double *yimlo,
-   double *zrehi, double *zrelo, double *zimhi, double *zimlo,
-   int dim, int k );
-/*
- * DESCRIPTION :
- *   Thread k returns in z[k] the k-th component of the convolution
- *   of x and y, with real and imaginary parts in re and im arrays,
- *   and high and low parts in hi and lo arrays.
- *   All arrays are of dimension dim. */
-
-__global__ void GPU_dbl2_speel
- ( int nvr, int deg, int *idx, double *cffhi, double *cfflo, double *inputhi,
+void GPU_dbl2_speel
+ ( int BS, int nvr, int deg, int *idx,
+   double *cffhi, double *cfflo, double *inputhi,
    double *inputlo, double *forwardhi, double *forwardlo, double *backwardhi,
    double *backwardlo, double *crosshi, double *crosslo );
 /*
@@ -36,9 +16,13 @@ __global__ void GPU_dbl2_speel
  *   of a product of variables at power series truncated to the same degree,
  *   for real coefficients in double double precision.
  *
- * REQUIRED : nvr > 2.
+ * REQUIRED : nvr > 2 and BS = deg+1.
+ *   The cff and input are allocated on the device
+ *   and all coefficients and input series are copied from host to device.
+ *   The forward, backward, and cross are allocated on the device.
  *
  * ON ENTRY :
+ *   BS         number of threads in one block, must be deg+1;
  *   nvr        number of variables in the product;
  *   deg        truncation degree of the series;
  *   idx        as many indices as the value of nvr,
@@ -46,40 +30,40 @@ __global__ void GPU_dbl2_speel
  *              with input values in input[idx[k]];
  *   cffhi      deg+1 doubles for high doubles of the coefficient series;
  *   cfflo      deg+1 doubles for low doubles of the coefficient series;
- *   inputhi    contains the high doubles of the coefficients of the series
+ *   inputhi    stores the high doubles of the coefficients of the series
  *              for all variables in the monomial;
- *   inputlo    contains the high doubles of the coefficients of the series
+ *   inputlo    stores the high doubles of the coefficients of the series
  *              for all variables in the monomial;
- *   forwardhi  contains work space for the high doubles of all nvr forward
- *              products, forwardhi[k] contains space for deg+1 doubles;
- *   forwardlo  contains work space for the low doubles of all nvr forward
- *              products, forwardlo[k] contains space for deg+1 doubles;
- *   backwardhi contains work space for the high doubles of all nvr-2 backward
- *              products, backwardhi[k] contains space for deg+1 doubles;
- *   backwardlo contains work space for the low doubles of all nvr-2 backward
- *              products, backwardlo[k] contains space for deg+1 doubles;
- *   crosshi    contains work space for the high doubles of all nvr-2 cross
- *              products, crosshi[k] contains space for deg+1 doubles;
- *   crosslo    contains work space for the low doubles of all nvr-2 cross
- *              products, crosslo[k] contains space for deg+1 doubles.
+ *   forwardhi  is work space for the high doubles of all nvr forward
+ *              products, forwardhi has space for nvr*(deg+1) doubles;
+ *   forwardlo  is work space for the low doubles of all nvr forward
+ *              products, forwardlo has space for nvr*(deg+1) doubles;
+ *   backwardhi is work space for the high doubles of all nvr-1 backward
+ *              products, backwardhi has space for (nvr-1)*(deg+1) doubles;
+ *   backwardlo is work space for the low doubles of all nvr-1 backward
+ *              products, backwardlo has space for (nvr-1)*(deg+1) doubles;
+ *   crosshi    is work space for the high doubles of all nvr-2 cross
+ *              products, crosshi has space for (nvr-2)*(deg+1) doubles;
+ *   crosslo    is work space for the low doubles of all nvr-2 cross
+ *              products, crosslo has space for (nvr-2)*(deg+1) doubles.
  *
  * ON RETURN :
- *   forwardhi  accumulates the high doubles of the forward products,
- *   forwardlo  accumulates the low doubles of the forward products,
- *              forward[nvr-1] contains the value of the product,
- *              forward[nvr-2] contains the derivative with respect
+ *   forwardhi  stores the high doubles of the forward products,
+ *   forwardlo  stores the low doubles of the forward products,
+ *              forward[nvr-1] is the value of the product (as double**),
+ *              forward[nvr-2] is the derivative with respect
  *              to the last variable idx[nvr-1] if nvr > 2;
- *   backwardhi accumulates the high doubles of the backward products,
- *   backwardlo accumulates the low doubles of the backward products,
- *              backward[nvr-3] contains the derivative with respect
+ *   backwardhi stores the high doubles of the backward products,
+ *   backwardlo stores the low doubles of the backward products,
+ *              backward[nvr-2] is the derivative with respect
  *              to the first variable idx[0] if nvr > 2;
  *   crosshi    stores the high doubles of the cross products,
  *   crosslo    stores the low doubles of the cross products,
- *              cross[k] contains the derivatve with respect to
+ *              cross[k] is the derivatve with respect to
  *              variable idx[k+1]. */
 
-__global__ void GPU_cmplx2_speel
- ( int nvr, int deg, int *idx,
+void GPU_cmplx2_speel
+ ( int BS, int nvr, int deg, int *idx,
    double *cffrehi, double *cffrelo, double *cffimhi, double *cffimlo,
    double *inputrehi, double *inputrelo, double *inputimhi, double *inputimlo,
    double *forwardrehi, double *forwardrelo, double *forwardimhi,
@@ -90,11 +74,16 @@ __global__ void GPU_cmplx2_speel
  * DESCRIPTION :
  *   Runs the reverse mode of algorithmic differentiation
  *   of a product of variables at power series truncated to the same degree,
- *   for real coefficients in double double precision.
+ *   for complex coefficients in double double precision.
  *
- * REQUIRED : nvr > 2.
+ * REQUIRED : nvr > 2 and BS = deg+1.
+ *   The cffre, cffim, inputre, and inputim are allocated on the device
+ *   and all coefficients and input series are copied from host to device.
+ *   The forwardre, forwardim, backwardre, backwardim, crossre, and crossim
+ *   are allocated on the device.
  *
  * ON ENTRY :
+ *   BS           number of threads in one block, must be deg+1;
  *   nvr          number of variables in the product;
  *   deg          truncation degree of the series;
  *   idx          as many indices as the value of nvr,
@@ -108,72 +97,72 @@ __global__ void GPU_cmplx2_speel
  *                of the product;
  *   cffimlo      low doubles of the imaginary pars of the series coefficient
  *                of the product;
- *   inputrehi    contains the high doubles of the real parts of the
+ *   inputrehi    stores the high doubles of the real parts of the
  *                coefficients of the series for all variables;
- *   inputrelo    contains the low doubles of the real parts of the
+ *   inputrelo    stores the low doubles of the real parts of the
  *                coefficients of the series for all variables;
- *   inputimhi    contains the high doubles of the imaginary parts of the
+ *   inputimhi    stores the high doubles of the imaginary parts of the
  *                coefficients of the series for all variables;
- *   inputimlo    contains the low doubles of the imaginary parts of the
+ *   inputimlo    stores the low doubles of the imaginary parts of the
  *                coefficients of the series for all variables;
- *   forwardrehi  contains work space for the high doubles of nvr forward
+ *   forwardrehi  is work space for the high doubles of nvr forward
  *                products, for all real parts of the coefficients,
- *                forwardrehi[k] contains space for deg+1 doubles;
- *   forwardrelo  contains work space for the low doubles of nvr forward
+ *                forwardrehi has space for nvr*(deg+1) doubles;
+ *   forwardrelo  is work space for the low doubles of nvr forward
  *                products, for all real parts of the coefficients,
- *                forwardrelo[k] contains space for deg+1 doubles;
- *   forwardimhi  contains work space for the high doubles of nvr forward
+ *                forwardrelo has space for nvr*(deg+1) doubles;
+ *   forwardimhi  is work space for the high doubles of nvr forward
  *                products, for all imaginary parts of the coefficients,
- *                forwardimhi[k] contains space for deg+1 doubles;
- *   forwardimlo  contains work space for the low doubles of nvr forward
+ *                forwardimhi has space for nvr*(deg+1) doubles;
+ *   forwardimlo  is work space for the low doubles of nvr forward
  *                products, for all imaginary parts of the coefficients,
- *                forwardimlo[k] contains space for deg+1 doubles;
- *   backwardrehi contains work space for all high doubles of nvr-2 backward
+ *                forwardimlo has space for nvr*(deg+1) doubles;
+ *   backwardrehi is work space for all high doubles of nvr-1 backward
  *                products, for all real parts of the coefficients,
- *                backwardrehi[k] contains space for deg+1 doubles;
- *   backwardrelo contains work space for all low doubles of nvr-2 backward
+ *                backwardrehi has space for (nvr-1)*(deg+1) doubles;
+ *   backwardrelo is work space for all low doubles of nvr-1 backward
  *                products, for all real parts of the coefficients,
- *                backwardrelo[k] contains space for deg+1 doubles;
- *   backwardimhi contains work space for the high doubles of nvr-2 backward
+ *                backwardrelo has space for (nvr-1)*(deg+1) doubles;
+ *   backwardimhi is work space for the high doubles of nvr-1 backward
  *                products, for all imaginary parts of the coefficients,
- *                backwardimhi[k] contains space for deg+1 doubles;
- *   backwardimlo contains work space for the low doubles of nvr-2 backward
+ *                backwardimhi has space for (nvr-1)*(deg+1) doubles;
+ *   backwardimlo is work space for the low doubles of nvr-1 backward
  *                products, for all imaginary parts of the coefficients,
- *                backwardimlo[k] contains space for deg+1 doubles;
- *   crossrehi    contains work space for the high doubles of nvr-2 cross
+ *                backwardimlo has space for (nvr-1)*(deg+1) doubles;
+ *   crossrehi    is work space for the high doubles of nvr-2 cross
  *                products,for the real parts of the coefficients,
- *                crossrehi[k] contains space for deg+1 doubles;
- *   crossrelo    contains work space for the low doubles of nvr-2 cross
+ *                crossrehi has space for (nvr-2)*(deg+1) doubles;
+ *   crossrelo    is work space for the low doubles of nvr-2 cross
  *                products,for the real parts of the coefficients,
- *                crossrelo[k] contains space for deg+1 doubles;
- *   crossimhi    contains work space for the high doubles of nvr-2 cross
+ *                crossrelo has space for (nvr-2)*(deg+1) doubles;
+ *   crossimhi    is work space for the high doubles of nvr-2 cross
  *                products, for the imaginary parts of the coefficients,
- *                crossimhi[k] contains space for deg+1 doubles.
- *   crossimlo    contains work space for the low doubles of nvr-2 cross
+ *                crossimhi has space for (nvr-2)*(deg+1) doubles.
+ *   crossimlo    is work space for the low doubles of nvr-2 cross
  *                products, for the imaginary parts of the coefficients,
- *                crossimlo[k] contains space for deg+1 doubles.
+ *                crossimlo has space for (nvr-2)*(deg+1) doubles.
  *
  * ON RETURN :
- *   forwardrehi  accumulates the high doubles of the real parts
+ *   forwardrehi  stores the high doubles of the real parts
  *                of the forward products,
- *   forwardrelo  accumulates the low doubles of the real parts
+ *   forwardrelo  stores the low doubles of the real parts
  *                of the forward products,
- *   forwardimhi  accumulates the high doubles of the imaginary parts
+ *   forwardimhi  stores the high doubles of the imaginary parts
  *                of the forward products,
- *   forwardimlo  accumulates the low doubles of the imaginary parts
- *                of the forward products,
- *                forward[nvr-1] contains the value of the product,
- *                forward[nvr-2] contains the derivative with respect
+ *   forwardimlo  stores the low doubles of the imaginary parts
+ *                of the forward products, as double**,
+ *                forward[nvr-1] is the value of the product,
+ *                forward[nvr-2] is the derivative with respect
  *                to the last variable idx[nvr-1];
- *   backwardrehi accumulates the high doubles of the real parts
+ *   backwardrehi stores the high doubles of the real parts
  *                of the backward products,
- *   backwardrelo accumulates the low doubles of the real parts
+ *   backwardrelo stores the low doubles of the real parts
  *                of the backward products,
- *   backwardimhi accumulates the high doubles of the imaginary parts of 
+ *   backwardimhi stores the high doubles of the imaginary parts of 
  *                the backward products,
- *   backwardimlo accumulates the low doubles of the imaginary parts of 
+ *   backwardimlo stores the low doubles of the imaginary parts of 
  *                the backward products,
- *                backward[nvr-3] contains the derivative with respect
+ *                backward[nvr-2] is the derivative with respect
  *                to the first variable idx[0];
  *   crossrehi    stores the high doubles of the real parts
  *                of the cross products,
@@ -183,7 +172,7 @@ __global__ void GPU_cmplx2_speel
  *                of the cross products,
  *   crossimlo    stores the low doubles of the imaginary parts
  *                of the cross products,
- *                cross[k] contains the derivatve with respect to
+ *                cross[k] is the derivatve with respect to
  *                variable idx[k+1]. */
 
 void GPU_dbl2_evaldiff
