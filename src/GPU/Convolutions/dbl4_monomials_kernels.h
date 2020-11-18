@@ -27,7 +27,7 @@ void GPU_dbl4_speel
  *   The forward, backward, and cross are allocated on the device.
  *
  * ON ENTRY :
- *   BS       number of threads in one block, must be deg+1;
+ *   BS           number of threads in one block, must be deg+1;
  *   nvr          number of variables in the product;
  *   deg          truncation degree of the series;
  *   idx          as many indices as the value of nvr,

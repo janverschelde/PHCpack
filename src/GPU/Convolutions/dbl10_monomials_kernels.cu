@@ -21,74 +21,11 @@
  * (without coefficient cff), two extra multiplications must be done,
  * but this is better than n+1 multiplications with cff afterwards. */
 
-#include "double_double_gpufun.cu"
-#include "quad_double_gpufun.cu"
-#include "octo_double_gpufun.cu"
-#include "deca_double_gpufun.cu"
-#include "dbl10_convolutions_kernels.h"
+#include "dbl10_convolutions_kernels.cu"
 #include "dbl10_monomials_kernels.h"
 
-__device__ void dbl10_convolute
- ( double *xrtb, double *xrix, double *xrmi, double *xrrg, double *xrpk,
-   double *xltb, double *xlix, double *xlmi, double *xlrg, double *xlpk,
-   double *yrtb, double *yrix, double *yrmi, double *yrrg, double *yrpk,
-   double *yltb, double *ylix, double *ylmi, double *ylrg, double *ylpk,
-   double *zrtb, double *zrix, double *zrmi, double *zrrg, double *zrpk,
-   double *zltb, double *zlix, double *zlmi, double *zlrg, double *zlpk,
-   int dim, int k )
-{
-   double prdrtb,prdrix,prdrmi,prdrrg,prdrpk;
-   double prdltb,prdlix,prdlmi,prdlrg,prdlpk;
-   int idx;
-
-   // zv[k] = xv[0]*yv[k];
-   dag_mul(xrtb[0],xrix[0],xrmi[0],xrrg[0],xrpk[0],
-           xltb[0],xlix[0],xlmi[0],xlrg[0],xlpk[0],
-           yrtb[k],yrix[k],yrmi[k],yrrg[k],yrpk[k],
-           yltb[k],ylix[k],ylmi[k],ylrg[k],ylpk[k],
-           &zrtb[k],&zrix[k],&zrmi[k],&zrrg[k],&zrpk[k],
-           &zltb[k],&zlix[k],&zlmi[k],&zlrg[k],&zlpk[k]);
-
-   for(int i=1; i<=k; i++) // zv[k] = zv[k] + xv[i]*yv[k-i];
-   {
-      idx = k-i;
-      dag_mul(xrtb[i],xrix[i],xrmi[i],xrrg[i],xrpk[i],
-              xltb[i],xlix[i],xlmi[i],xlrg[i],xlpk[i],
-              yrtb[idx],yrix[idx],yrmi[idx],yrrg[idx],yrpk[idx],
-              yltb[idx],ylix[idx],ylmi[idx],ylrg[idx],ylpk[idx],
-              &prdrtb,&prdrix,&prdrmi,&prdrrg,&prdrpk,
-              &prdltb,&prdlix,&prdlmi,&prdlrg,&prdlpk);
-      dag_inc(&zrtb[k],&zrix[k],&zrmi[k],&zrrg[k],&zrpk[k],
-              &zltb[k],&zlix[k],&zlmi[k],&zlrg[k],&zlpk[k],
-              prdrtb,prdrix,prdrmi,prdrrg,prdrpk,
-              prdltb,prdlix,prdlmi,prdlrg,prdlpk);
-   }
-}
-
-__device__ void cmplx10_convolute
- ( double *xrertb, double *xrerix, double *xrermi, double *xrerrg,
-   double *xrerpk, double *xreltb, double *xrelix, double *xrelmi,
-   double *xrelrg, double *xrelpk,
-   double *ximrtb, double *ximrix, double *ximrmi, double *ximrrg,
-   double *ximrpk, double *ximltb, double *ximlix, double *ximlmi,
-   double *ximlrg, double *ximlpk,
-   double *yrertb, double *yrerix, double *yrermi, double *yrerrg,
-   double *yrerpk, double *yreltb, double *yrelix, double *yrelmi,
-   double *yrelrg, double *yrelpk,
-   double *yimrtb, double *yimrix, double *yimrmi, double *yimrrg,
-   double *yimrpk, double *yimltb, double *yimlix, double *yimlmi,
-   double *yimlrg, double *yimlpk,
-   double *zrertb, double *zrerix, double *zrermi, double *zrerrg,
-   double *zrerpk, double *zreltb, double *zrelix, double *zrelmi,
-   double *zrelrg, double *zrelpk,
-   double *zimrtb, double *zimrix, double *zimrmi, double *zimrrg,
-   double *zimrpk, double *zimltb, double *zimlix, double *zimlmi,
-   double *zimlrg, double *zimlpk, int dim, int k )
-{
-}
-
-__global__ void GPU_dbl10_speel
- ( int nvr, int deg, int *idx,
+void GPU_dbl10_speel
+ ( int BS, int nvr, int deg, int *idx,
    double *cffrtb, double *cffrix, double *cffrmi, double *cffrrg,
    double *cffrpk, double *cffltb, double *cfflix, double *cfflmi,
    double *cfflrg, double *cfflpk,
@@ -107,277 +44,133 @@ __global__ void GPU_dbl10_speel
    double *crossrpk, double *crossltb, double *crosslix, double *crosslmi,
    double *crosslrg, double *crosslpk )
 {
-   const int k = threadIdx.x;
    const int deg1 = deg+1;
-   int ix1,ix2;
+   int ix1,ix2,ix3;
 
-   __shared__ double xvrtb[da_shmemsize];
-   __shared__ double xvrix[da_shmemsize];
-   __shared__ double xvrmi[da_shmemsize];
-   __shared__ double xvrrg[da_shmemsize];
-   __shared__ double xvrpk[da_shmemsize];
-   __shared__ double xvltb[da_shmemsize];
-   __shared__ double xvlix[da_shmemsize];
-   __shared__ double xvlmi[da_shmemsize];
-   __shared__ double xvlrg[da_shmemsize];
-   __shared__ double xvlpk[da_shmemsize];
-   __shared__ double yvrtb[da_shmemsize];
-   __shared__ double yvrix[da_shmemsize];
-   __shared__ double yvrmi[da_shmemsize];
-   __shared__ double yvrrg[da_shmemsize];
-   __shared__ double yvrpk[da_shmemsize];
-   __shared__ double yvltb[da_shmemsize];
-   __shared__ double yvlix[da_shmemsize];
-   __shared__ double yvlmi[da_shmemsize];
-   __shared__ double yvlrg[da_shmemsize];
-   __shared__ double yvlpk[da_shmemsize];
-   __shared__ double zvrtb[da_shmemsize];
-   __shared__ double zvrix[da_shmemsize];
-   __shared__ double zvrmi[da_shmemsize];
-   __shared__ double zvrrg[da_shmemsize];
-   __shared__ double zvrpk[da_shmemsize];
-   __shared__ double zvltb[da_shmemsize];
-   __shared__ double zvlix[da_shmemsize];
-   __shared__ double zvlmi[da_shmemsize];
-   __shared__ double zvlrg[da_shmemsize];
-   __shared__ double zvlpk[da_shmemsize];
-  
-   xvrtb[k] = cffrtb[k]; xvrix[k] = cffrix[k]; xvrmi[k] = cffrmi[k]; 
-   xvrrg[k] = cffrrg[k]; xvrpk[k] = cffrpk[k];
-   xvltb[k] = cffltb[k]; xvlix[k] = cfflix[k]; xvlmi[k] = cfflmi[k]; 
-   xvlrg[k] = cfflrg[k]; xvlpk[k] = cfflpk[k];
-   ix1 = idx[0]*deg1+k;
-   yvrtb[k] = inputrtb[ix1]; yvrix[k] = inputrix[ix1];
-   yvrmi[k] = inputrmi[ix1]; yvrrg[k] = inputrrg[ix1];
-   yvrpk[k] = inputrpk[ix1]; 
-   yvltb[k] = inputltb[ix1]; yvlix[k] = inputlix[ix1];
-   yvlmi[k] = inputlmi[ix1]; yvlrg[k] = inputlrg[ix1];
-   yvlpk[k] = inputlpk[ix1]; 
-   __syncthreads();
-   dbl10_convolute(xvrtb,xvrix,xvrmi,xvrrg,xvrpk,
-                   xvltb,xvlix,xvlmi,xvlrg,xvlpk,
-                   yvrtb,yvrix,yvrmi,yvrrg,yvrpk,
-                   yvltb,yvlix,yvlmi,yvlrg,yvlpk,
-                   zvrtb,zvrix,zvrmi,zvrrg,zvrpk,
-                   zvltb,zvlix,zvlmi,zvlrg,zvlpk,deg1,k);
-   __syncthreads();
-   forwardrtb[k] = zvrtb[k]; forwardrix[k] = zvrix[k];
-   forwardrmi[k] = zvrmi[k]; forwardrrg[k] = zvrrg[k];
-   forwardrpk[k] = zvrpk[k];
-   forwardltb[k] = zvltb[k]; forwardlix[k] = zvlix[k];
-   forwardlmi[k] = zvlmi[k]; forwardlrg[k] = zvlrg[k];
-   forwardlpk[k] = zvlpk[k];                            // f[0] = cff*x[0]
+   ix1 = idx[0]*deg1;                                     // f[0] = cff*x[0]
+   dbl10_convolute<<<1,BS>>>
+      (cffrtb,cffrix,cffrmi,cffrrg,cffrpk,cffltb,cfflix,cfflmi,cfflrg,cfflpk,
+       &inputrtb[ix1],&inputrix[ix1],&inputrmi[ix1],
+       &inputrrg[ix1],&inputrpk[ix1],
+       &inputltb[ix1],&inputlix[ix1],&inputlmi[ix1],
+       &inputlrg[ix1],&inputlpk[ix1],
+       forwardrtb,forwardrix,forwardrmi,forwardrrg,forwardrpk,
+       forwardltb,forwardlix,forwardlmi,forwardlrg,forwardlpk,deg1);
 
-   for(int i=1; i<nvr; i++)
+   for(int i=1; i<nvr; i++)                            // f[i] = f[i-1]*x[i]
    {
-      xvrtb[k] = zvrtb[k]; xvrix[k] = zvrix[k]; xvrmi[k] = zvrmi[k];
-      xvrrg[k] = zvrrg[k]; xvrpk[k] = zvrpk[k];
-      xvltb[k] = zvltb[k]; xvlix[k] = zvlix[k]; xvlmi[k] = zvlmi[k];
-      xvlrg[k] = zvlrg[k]; xvlpk[k] = zvlpk[k];
-      ix2 = idx[i]*deg1+k;
-      yvrtb[k] = inputrtb[ix2]; yvrix[k] = inputrix[ix2];
-      yvrmi[k] = inputrmi[ix2]; yvrrg[k] = inputrrg[ix2];
-      yvrpk[k] = inputrpk[ix2];
-      yvltb[k] = inputltb[ix2]; yvlix[k] = inputlix[ix2];
-      yvlmi[k] = inputlmi[ix2]; yvlrg[k] = inputlrg[ix2];
-      yvlpk[k] = inputlpk[ix2];
-      __syncthreads();
-      dbl10_convolute(xvrtb,xvrix,xvrmi,xvrrg,xvrpk,
-                      xvltb,xvlix,xvlmi,xvlrg,xvlpk,
-                      yvrtb,yvrix,yvrmi,yvrrg,yvrpk,
-                      yvltb,yvlix,yvlmi,yvlrg,yvlpk,
-                      zvrtb,zvrix,zvrmi,zvrrg,zvrpk,
-                      zvltb,zvlix,zvlmi,zvlrg,zvlpk,deg1,k);
-      __syncthreads();
-      ix1 = i*deg1+k;
-      forwardrtb[ix1] = zvrtb[k]; forwardrix[ix1] = zvrix[k]; 
-      forwardrmi[ix1] = zvrmi[k]; forwardrrg[ix1] = zvrrg[k]; 
-      forwardrpk[ix1] = zvrpk[k];
-      forwardltb[ix1] = zvltb[k]; forwardlix[ix1] = zvlix[k]; 
-      forwardlmi[ix1] = zvlmi[k]; forwardlrg[ix1] = zvlrg[k]; 
-      forwardlpk[ix1] = zvlpk[k];                     // f[i] = f[i-1]*x[i]
+      ix2 = idx[i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
+      dbl10_convolute<<<1,BS>>>
+         (&forwardrtb[ix1],&forwardrix[ix1],&forwardrmi[ix1],
+          &forwardrrg[ix1],&forwardrpk[ix1],
+          &forwardltb[ix1],&forwardlix[ix1],&forwardlmi[ix1],
+          &forwardlrg[ix1],&forwardlpk[ix1],
+          &inputrtb[ix2],&inputrix[ix2],&inputrmi[ix2],
+          &inputrrg[ix2],&inputrpk[ix2],
+          &inputltb[ix2],&inputlix[ix2],&inputlmi[ix2],
+          &inputlrg[ix2],&inputlpk[ix2],
+          &forwardrtb[ix3],&forwardrix[ix3],&forwardrmi[ix3],
+          &forwardrrg[ix3],&forwardrpk[ix3],
+          &forwardltb[ix3],&forwardlix[ix3],&forwardlmi[ix3],
+          &forwardlrg[ix3],&forwardlpk[ix3],deg1);
    }
    if(nvr > 2)
    {
-      ix1 = idx[nvr-1]*deg1+k;
-      xvrtb[k] = inputrtb[ix1]; xvrix[k] = inputrix[ix1];
-      xvrmi[k] = inputrmi[ix1]; xvrrg[k] = inputrrg[ix1];
-      xvrpk[k] = inputrpk[ix1];
-      xvltb[k] = inputltb[ix1]; xvlix[k] = inputlix[ix1];
-      xvlmi[k] = inputlmi[ix1]; xvlrg[k] = inputlrg[ix1];
-      xvlpk[k] = inputlpk[ix1];
-      ix2 = idx[nvr-2]*deg1+k;
-      yvrtb[k] = inputrtb[ix2]; yvrix[k] = inputrix[ix2];
-      yvrmi[k] = inputrmi[ix2]; yvrrg[k] = inputrrg[ix2];
-      yvrpk[k] = inputrpk[ix2];
-      yvltb[k] = inputltb[ix2]; yvlix[k] = inputlix[ix2];
-      yvlmi[k] = inputlmi[ix2]; yvlrg[k] = inputlrg[ix2];
-      yvlpk[k] = inputlpk[ix2];
-      __syncthreads();
-      dbl10_convolute(xvrtb,xvrix,xvrmi,xvrrg,xvrpk,
-                      xvltb,xvlix,xvlmi,xvlrg,xvlpk,
-                      yvrtb,yvrix,yvrmi,yvrrg,yvrpk,
-                      yvltb,yvlix,yvlmi,yvlrg,yvlpk,
-                      zvrtb,zvrix,zvrmi,zvrrg,zvrpk,
-                      zvltb,zvlix,zvlmi,zvlrg,zvlpk,deg1,k);
-      __syncthreads();
-      backwardrtb[k] = zvrtb[k]; backwardrix[k] = zvrix[k];
-      backwardrmi[k] = zvrmi[k]; backwardrrg[k] = zvrrg[k];
-      backwardrpk[k] = zvrpk[k]; 
-      backwardltb[k] = zvltb[k]; backwardlix[k] = zvlix[k];
-      backwardlmi[k] = zvlmi[k]; backwardlrg[k] = zvlrg[k];
-      backwardlpk[k] = zvlpk[k];                     // b[0] = x[n-1]*x[n-2]
+      ix1 = idx[nvr-1]*deg1; ix2 = idx[nvr-2]*deg1;  // b[0] = x[n-1]*x[n-2]
+      dbl10_convolute<<<1,BS>>>
+         (&inputrtb[ix1],&inputrix[ix1],&inputrmi[ix1],
+          &inputrrg[ix1],&inputrpk[ix1],
+          &inputltb[ix1],&inputlix[ix1],&inputlmi[ix1],
+          &inputlrg[ix1],&inputlpk[ix1],
+          &inputrtb[ix2],&inputrix[ix2],&inputrmi[ix2],
+          &inputrrg[ix2],&inputrpk[ix2],
+          &inputltb[ix2],&inputlix[ix2],&inputlmi[ix2],
+          &inputlrg[ix2],&inputlpk[ix2],
+          backwardrtb,backwardrix,backwardrmi,backwardrrg,backwardrpk,
+          backwardltb,backwardlix,backwardlmi,backwardlrg,backwardlpk,deg1);
 
-      for(int i=1; i<nvr-2; i++)
+      for(int i=1; i<nvr-2; i++)                   // b[i] = b[i-1]*x[n-2-i]
       {
-         xvrtb[k] = zvrtb[k]; xvrix[k] = zvrix[k]; xvrmi[k] = zvrmi[k]; 
-         xvrrg[k] = zvrrg[k]; xvrpk[k] = zvrpk[k];
-         xvltb[k] = zvltb[k]; xvlix[k] = zvlix[k]; xvlmi[k] = zvlmi[k]; 
-         xvlrg[k] = zvlrg[k]; xvlpk[k] = zvlpk[k];
-         ix2 = idx[nvr-2-i]*deg1+k;
-         yvrtb[k] = inputrtb[ix2]; yvrix[k] = inputrix[ix2];
-         yvrmi[k] = inputrmi[ix2]; yvrrg[k] = inputrrg[ix2];
-         yvrpk[k] = inputrpk[ix2];
-         yvltb[k] = inputltb[ix2]; yvlix[k] = inputlix[ix2];
-         yvlmi[k] = inputlmi[ix2]; yvlrg[k] = inputlrg[ix2];
-         yvlpk[k] = inputlpk[ix2];
-         __syncthreads();
-         dbl10_convolute(xvrtb,xvrix,xvrmi,xvrrg,xvrpk,
-                         xvltb,xvlix,xvlmi,xvlrg,xvlpk,
-                         yvrtb,yvrix,yvrmi,yvrrg,yvrpk,
-                         yvltb,yvlix,yvlmi,yvlrg,yvlpk,
-                         zvrtb,zvrix,zvrmi,zvrrg,zvrpk,
-                         zvltb,zvlix,zvlmi,zvlrg,zvlpk,deg1,k);
-         __syncthreads();
-         ix1 = i*deg1+k;
-         backwardrtb[ix1] = zvrtb[k]; backwardrix[ix1] = zvrix[k];
-         backwardrmi[ix1] = zvrmi[k]; backwardrrg[ix1] = zvrrg[k];
-         backwardrpk[ix1] = zvrpk[k]; 
-         backwardltb[ix1] = zvltb[k]; backwardlix[ix1] = zvlix[k];
-         backwardlmi[ix1] = zvlmi[k]; backwardlrg[ix1] = zvlrg[k];
-         backwardlpk[ix1] = zvlpk[k];            // b[i] = b[i-1]*x[n-2-i]
+         ix2 = idx[nvr-2-i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
+         dbl10_convolute<<<1,BS>>>
+            (&backwardrtb[ix1],&backwardrix[ix1],&backwardrmi[ix1],
+             &backwardrrg[ix1],&backwardrpk[ix1],
+             &backwardltb[ix1],&backwardlix[ix1],&backwardlmi[ix1],
+             &backwardlrg[ix1],&backwardlpk[ix1],
+             &inputrtb[ix2],&inputrix[ix2],&inputrmi[ix2],
+             &inputrrg[ix2],&inputrpk[ix2],
+             &inputltb[ix2],&inputlix[ix2],&inputlmi[ix2],
+             &inputlrg[ix2],&inputlpk[ix2],
+             &backwardrtb[ix3],&backwardrix[ix3],&backwardrmi[ix3],
+             &backwardrrg[ix3],&backwardrpk[ix3],
+             &backwardltb[ix3],&backwardlix[ix3],&backwardlmi[ix3],
+             &backwardlrg[ix3],&backwardlpk[ix3],deg1);
       }
-      xvrtb[k] = zvrtb[k];  xvrix[k] = zvrix[k];  xvrmi[k] = zvrmi[k];
-      xvrrg[k] = zvrrg[k];  xvrpk[k] = zvrpk[k];
-      xvltb[k] = zvltb[k];  xvlix[k] = zvlix[k];  xvlmi[k] = zvlmi[k];
-      xvlrg[k] = zvlrg[k];  xvlpk[k] = zvlpk[k];
-      yvrtb[k] = cffrtb[k]; yvrix[k] = cffrix[k]; yvrmi[k] = cffrmi[k];
-      yvrrg[k] = cffrrg[k]; yvrpk[k] = cffrpk[k];
-      yvltb[k] = cffltb[k]; yvlix[k] = cfflix[k]; yvlmi[k] = cfflmi[k];
-      yvlrg[k] = cfflrg[k]; yvlpk[k] = cfflpk[k];
-      __syncthreads();
-      dbl10_convolute(xvrtb,xvrix,xvrmi,xvrrg,xvrpk,
-                      xvltb,xvlix,xvlmi,xvlrg,xvlpk,
-                      yvrtb,yvrix,yvrmi,yvrrg,yvrpk,
-                      yvltb,yvlix,yvlmi,yvlrg,yvlpk,
-                      zvrtb,zvrix,zvrmi,zvrrg,zvrpk,
-                      zvltb,zvlix,zvlmi,zvlrg,zvlpk,deg1,k);
-      __syncthreads();
-      ix2 = (nvr-3)*deg1+k;
-      backwardrtb[ix2] = zvrtb[k]; backwardrix[ix2] = zvrix[k];
-      backwardrmi[ix2] = zvrmi[k]; backwardrrg[ix2] = zvrrg[k];
-      backwardrpk[ix2] = zvrpk[k];
-      backwardltb[ix2] = zvltb[k]; backwardlix[ix2] = zvlix[k];
-      backwardlmi[ix2] = zvlmi[k]; backwardlrg[ix2] = zvlrg[k];
-      backwardlpk[ix2] = zvlpk[k];                   // b[n-3] = b[n-3]*cff
+      ix3 = (nvr-3)*deg1; ix2 = (nvr-2)*deg1;         // b[n-2] = b[n-3]*cff
+      dbl10_convolute<<<1,BS>>>
+         (&backwardrtb[ix3],&backwardrix[ix3],&backwardrmi[ix3],
+          &backwardrrg[ix3],&backwardrpk[ix3],
+          &backwardltb[ix3],&backwardlix[ix3],&backwardlmi[ix3],
+          &backwardlrg[ix3],&backwardlpk[ix3],
+          cffrtb,cffrix,cffrmi,cffrrg,cffrpk,
+          cffltb,cfflix,cfflmi,cfflrg,cfflpk,
+          &backwardrtb[ix2],&backwardrix[ix2],&backwardrmi[ix2],
+          &backwardrrg[ix2],&backwardrpk[ix2],
+          &backwardltb[ix2],&backwardlix[ix2],&backwardlmi[ix2],
+          &backwardlrg[ix2],&backwardlpk[ix2],deg1);
 
-      if(nvr == 3)
+      if(nvr == 3)                                       // c[0] = f[0]*x[2]
       {
-         xvrtb[k] = forwardrtb[k]; xvrix[k] = forwardrix[k];
-         xvrmi[k] = forwardrmi[k]; xvrrg[k] = forwardrrg[k];
-         xvrpk[k] = forwardrpk[k];
-         xvltb[k] = forwardltb[k]; xvlix[k] = forwardlix[k];
-         xvlmi[k] = forwardlmi[k]; xvlrg[k] = forwardlrg[k];
-         xvlpk[k] = forwardlpk[k];
-         ix2 = idx[2]*deg1+k;
-         yvrtb[k] = inputrtb[ix2]; yvrix[k] = inputrix[ix2];
-         yvrmi[k] = inputrmi[ix2]; yvrrg[k] = inputrrg[ix2]; 
-         yvrpk[k] = inputrpk[ix2];
-         yvltb[k] = inputltb[ix2]; yvlix[k] = inputlix[ix2];
-         yvlmi[k] = inputlmi[ix2]; yvlrg[k] = inputlrg[ix2]; 
-         yvlpk[k] = inputlpk[ix2];
-         __syncthreads();
-         dbl10_convolute(xvrtb,xvrix,xvrmi,xvrrg,xvrpk,
-                         xvltb,xvlix,xvlmi,xvlrg,xvlpk,
-                         yvrtb,yvrix,yvrmi,yvrrg,yvrpk,
-                         yvltb,yvlix,yvlmi,yvlrg,yvlpk,
-                         zvrtb,zvrix,zvrmi,zvrrg,zvrpk,
-                         zvltb,zvlix,zvlmi,zvlrg,zvlpk,deg1,k);
-         __syncthreads();
-         crossrtb[k] = zvrtb[k]; crossrix[k] = zvrix[k];
-         crossrmi[k] = zvrmi[k]; crossrrg[k] = zvrrg[k];
-         crossrpk[k] = zvrpk[k]; 
-         crossltb[k] = zvltb[k]; crosslix[k] = zvlix[k];
-         crosslmi[k] = zvlmi[k]; crosslrg[k] = zvlrg[k];
-         crosslpk[k] = zvlpk[k];                       // c[0] = f[0]*x[2]
+         ix2 = idx[2]*deg1;
+         dbl10_convolute<<<1,BS>>>
+            (forwardrtb,forwardrix,forwardrmi,forwardrrg,forwardrpk,
+             forwardltb,forwardlix,forwardlmi,forwardlrg,forwardlpk,
+             &inputrtb[ix2],&inputrix[ix2],&inputrmi[ix2],
+             &inputrrg[ix2],&inputrpk[ix2],
+             &inputltb[ix2],&inputlix[ix2],&inputlmi[ix2],
+             &inputlrg[ix2],&inputlpk[ix2],
+             crossrtb,crossrix,crossrmi,crossrrg,crossrpk,
+             crossltb,crosslix,crosslmi,crosslrg,crosslpk,deg1);
       }
       else
       {
-         for(int i=0; i<nvr-3; i++)
+         for(int i=0; i<nvr-3; i++)                  // c[i] = f[i]*b[n-4-i]
          {
-            ix1 = i*deg1+k; 
-            xvrtb[k] = forwardrtb[ix1]; xvrix[k] = forwardrix[ix1];
-            xvrmi[k] = forwardrmi[ix1]; xvrrg[k] = forwardrrg[ix1];
-            xvrpk[k] = forwardrpk[ix1];
-            xvltb[k] = forwardltb[ix1]; xvlix[k] = forwardlix[ix1];
-            xvlmi[k] = forwardlmi[ix1]; xvlrg[k] = forwardlrg[ix1];
-            xvlpk[k] = forwardlpk[ix1];
-            ix2 = (nvr-4-i)*deg1+k;
-            yvrtb[k] = backwardrtb[ix2]; yvrix[k] = backwardrix[ix2];
-            yvrmi[k] = backwardrmi[ix2]; yvrrg[k] = backwardrrg[ix2];
-            yvrpk[k] = backwardrpk[ix2];
-            yvltb[k] = backwardltb[ix2]; yvlix[k] = backwardlix[ix2];
-            yvlmi[k] = backwardlmi[ix2]; yvlrg[k] = backwardlrg[ix2];
-            yvlpk[k] = backwardlpk[ix2];
-            __syncthreads();
-            dbl10_convolute(xvrtb,xvrix,xvrmi,xvrrg,xvrpk,
-                            xvltb,xvlix,xvlmi,xvlrg,xvlpk,
-                            yvrtb,yvrix,yvrmi,yvrrg,yvrpk,
-                            yvltb,yvlix,yvlmi,yvlrg,yvlpk,
-                            zvrtb,zvrix,zvrmi,zvrrg,zvrpk,
-                            zvltb,zvlix,zvlmi,zvlrg,zvlpk,deg1,k);
-            __syncthreads();
-            crossrtb[ix1] = zvrtb[k]; crossrix[ix1] = zvrix[k];
-            crossrmi[ix1] = zvrmi[k]; crossrrg[ix1] = zvrrg[k];
-            crossrpk[ix1] = zvrpk[k];
-            crossltb[ix1] = zvltb[k]; crosslix[ix1] = zvlix[k];
-            crosslmi[ix1] = zvlmi[k]; crosslrg[ix1] = zvlrg[k];
-            crosslpk[ix1] = zvlpk[k];            // c[i] = f[i]*b[n-4-i]
+            ix1 = i*deg1; ix2 = (nvr-4-i)*deg1;
+            dbl10_convolute<<<1,BS>>>
+               (&forwardrtb[ix1],&forwardrix[ix1],&forwardrmi[ix1],
+                &forwardrrg[ix1],&forwardrpk[ix1],
+                &forwardltb[ix1],&forwardlix[ix1],&forwardlmi[ix1],
+                &forwardlrg[ix1],&forwardlpk[ix1],
+                &backwardrtb[ix2],&backwardrix[ix2],&backwardrmi[ix2],
+                &backwardrrg[ix2],&backwardrpk[ix2],
+                &backwardltb[ix2],&backwardlix[ix2],&backwardlmi[ix2],
+                &backwardlrg[ix2],&backwardlpk[ix2],
+                &crossrtb[ix1],&crossrix[ix1],&crossrmi[ix1],
+                &crossrrg[ix1],&crossrpk[ix1],
+                &crossltb[ix1],&crosslix[ix1],&crosslmi[ix1],
+                &crosslrg[ix1],&crosslpk[ix1],deg1);
          }
-         ix1 = (nvr-3)*deg1+k;
-         xvrtb[k] = forwardrtb[ix1]; xvrix[k] = forwardrix[ix1];
-         xvrmi[k] = forwardrmi[ix1]; xvrrg[k] = forwardrrg[ix1];
-         xvrpk[k] = forwardrpk[ix1];
-         xvltb[k] = forwardltb[ix1]; xvlix[k] = forwardlix[ix1];
-         xvlmi[k] = forwardlmi[ix1]; xvlrg[k] = forwardlrg[ix1];
-         xvlpk[k] = forwardlpk[ix1];
-         ix2 = idx[nvr-1]*deg1+k;
-         yvrtb[k] = inputrtb[ix2]; yvrix[k] = inputrix[ix2];
-         yvrmi[k] = inputrmi[ix2]; yvrrg[k] = inputrrg[ix2];
-         yvrpk[k] = inputrpk[ix2];
-         yvltb[k] = inputltb[ix2]; yvlix[k] = inputlix[ix2];
-         yvlmi[k] = inputlmi[ix2]; yvlrg[k] = inputlrg[ix2];
-         yvlpk[k] = inputlpk[ix2];
-         __syncthreads();
-         dbl10_convolute(xvrtb,xvrix,xvrmi,xvrrg,xvrpk,
-                         xvltb,xvlix,xvlmi,xvlrg,xvlpk,
-                         yvrtb,yvrix,yvrmi,yvrrg,yvrpk,
-                         yvltb,yvlix,yvlmi,yvlrg,yvlpk,
-                         zvrtb,zvrix,zvrmi,zvrrg,zvrpk,
-                         zvltb,zvlix,zvlmi,zvlrg,zvlpk,deg1,k);
-         __syncthreads();
-         crossrtb[ix1] = zvrtb[k]; crossrix[ix1] = zvrix[k];
-         crossrmi[ix1] = zvrmi[k]; crossrrg[ix1] = zvrrg[k];
-         crossrpk[ix1] = zvrpk[k];
-         crossltb[ix1] = zvltb[k]; crosslix[ix1] = zvlix[k];
-         crosslmi[ix1] = zvlmi[k]; crosslrg[ix1] = zvlrg[k];
-         crosslpk[ix1] = zvlpk[k];                 // c[n-3] = f[n-3]*x[n-1]
+         ix1 = (nvr-3)*deg1; ix2 = idx[nvr-1]*deg1; // c[n-3] = f[n-3]*x[n-1]
+         dbl10_convolute<<<1,BS>>>
+            (&forwardrtb[ix1],&forwardrix[ix1],&forwardrmi[ix1],
+             &forwardrrg[ix1],&forwardrpk[ix1],
+             &forwardltb[ix1],&forwardlix[ix1],&forwardlmi[ix1],
+             &forwardlrg[ix1],&forwardlpk[ix1],
+             &inputrtb[ix2],&inputrix[ix2],&inputrmi[ix2],
+             &inputrrg[ix2],&inputrpk[ix2],
+             &inputltb[ix2],&inputlix[ix2],&inputlmi[ix2],
+             &inputlrg[ix2],&inputlpk[ix2],
+             &crossrtb[ix1],&crossrix[ix1],&crossrmi[ix1],
+             &crossrrg[ix1],&crossrpk[ix1],
+             &crossltb[ix1],&crosslix[ix1],&crosslmi[ix1],
+             &crosslrg[ix1],&crosslpk[ix1],deg1);
       }
    }
 }
 
-__global__ void GPU_cmplx10_speel
- ( int nvr, int deg, int *idx,
+void GPU_cmplx10_speel
+ ( int BS, int nvr, int deg, int *idx,
    double *cffrertb, double *cffrerix, double *cffrermi, double *cffrerrg,
    double *cffrerpk, double *cffreltb, double *cffrelix, double *cffrelmi,
    double *cffrelrg, double *cffrelpk,
@@ -484,15 +277,14 @@ void GPU_dbl10_evaldiff
    double *cfflmi_d;            // cfflmi_d is cfflmi on device
    double *cfflrg_d;            // cfflrg_d is cfflrg on device
    double *cfflpk_d;            // cfflpk_d is cfflpk on device
-   int *idx_d;                  // idx_d is idx on device
 
    size_t szcff = deg1*sizeof(double);
    size_t szdim = dim*(deg1)*sizeof(double);
    size_t sznvr = nvr*(deg1)*sizeof(double);
+   size_t sznvr1 = (nvr-1)*(deg1)*sizeof(double);
    size_t sznvr2 = (nvr-2)*(deg1)*sizeof(double);
    size_t szidx = nvr*sizeof(int);
 
-   cudaMalloc((void**)&idx_d,szidx);
    cudaMalloc((void**)&cffrtb_d,szcff);
    cudaMalloc((void**)&cffrix_d,szcff);
    cudaMalloc((void**)&cffrmi_d,szcff);
@@ -523,16 +315,16 @@ void GPU_dbl10_evaldiff
    cudaMalloc((void**)&forwardlmi_d,sznvr);
    cudaMalloc((void**)&forwardlrg_d,sznvr);
    cudaMalloc((void**)&forwardlpk_d,sznvr);
-   cudaMalloc((void**)&backwardrtb_d,sznvr2);
-   cudaMalloc((void**)&backwardrix_d,sznvr2);
-   cudaMalloc((void**)&backwardrmi_d,sznvr2);
-   cudaMalloc((void**)&backwardrrg_d,sznvr2);
-   cudaMalloc((void**)&backwardrpk_d,sznvr2);
-   cudaMalloc((void**)&backwardltb_d,sznvr2);
-   cudaMalloc((void**)&backwardlix_d,sznvr2);
-   cudaMalloc((void**)&backwardlmi_d,sznvr2);
-   cudaMalloc((void**)&backwardlrg_d,sznvr2);
-   cudaMalloc((void**)&backwardlpk_d,sznvr2);
+   cudaMalloc((void**)&backwardrtb_d,sznvr1);
+   cudaMalloc((void**)&backwardrix_d,sznvr1);
+   cudaMalloc((void**)&backwardrmi_d,sznvr1);
+   cudaMalloc((void**)&backwardrrg_d,sznvr1);
+   cudaMalloc((void**)&backwardrpk_d,sznvr1);
+   cudaMalloc((void**)&backwardltb_d,sznvr1);
+   cudaMalloc((void**)&backwardlix_d,sznvr1);
+   cudaMalloc((void**)&backwardlmi_d,sznvr1);
+   cudaMalloc((void**)&backwardlrg_d,sznvr1);
+   cudaMalloc((void**)&backwardlpk_d,sznvr1);
    cudaMalloc((void**)&crossrtb_d,sznvr2);
    cudaMalloc((void**)&crossrix_d,sznvr2);
    cudaMalloc((void**)&crossrmi_d,sznvr2);
@@ -570,7 +362,6 @@ void GPU_dbl10_evaldiff
          inputlpk_h[ix++] = inputlpk[i][j];
       }
 
-   cudaMemcpy(idx_d,idx,szidx,cudaMemcpyHostToDevice);
    cudaMemcpy(cffrtb_d,cffrtb,szcff,cudaMemcpyHostToDevice);
    cudaMemcpy(cffrix_d,cffrix,szcff,cudaMemcpyHostToDevice);
    cudaMemcpy(cffrmi_d,cffrmi,szcff,cudaMemcpyHostToDevice);
@@ -594,8 +385,8 @@ void GPU_dbl10_evaldiff
 
    if(BS == deg1)
    {
-      GPU_dbl10_speel<<<1,BS>>>
-         (nvr,deg,idx_d,
+      GPU_dbl10_speel
+         (BS,nvr,deg,idx,
           cffrtb_d,cffrix_d,cffrmi_d,cffrrg_d,cffrpk_d,
           cffltb_d,cfflix_d,cfflmi_d,cfflrg_d,cfflpk_d,
           inputrtb_d,inputrix_d,inputrmi_d,inputrrg_d,inputrpk_d,
@@ -603,7 +394,7 @@ void GPU_dbl10_evaldiff
           forwardrtb_d,forwardrix_d,forwardrmi_d,forwardrrg_d,forwardrpk_d,
           forwardltb_d,forwardlix_d,forwardlmi_d,forwardlrg_d,forwardlpk_d,
           backwardrtb_d,backwardrix_d,backwardrmi_d,backwardrrg_d,
-          backwardlpk_d,backwardltb_d,backwardlix_d,backwardlmi_d,
+          backwardrpk_d,backwardltb_d,backwardlix_d,backwardlmi_d,
           backwardlrg_d,backwardlpk_d,
           crossrtb_d,crossrix_d,crossrmi_d,crossrrg_d,crossrpk_d,
           crossltb_d,crosslix_d,crosslmi_d,crosslrg_d,crosslpk_d);
@@ -618,16 +409,16 @@ void GPU_dbl10_evaldiff
    double *forwardlmi_h = new double[(deg1)*nvr];
    double *forwardlrg_h = new double[(deg1)*nvr];
    double *forwardlpk_h = new double[(deg1)*nvr];
-   double *backwardrtb_h = new double[(deg1)*(nvr-2)];
-   double *backwardrix_h = new double[(deg1)*(nvr-2)];
-   double *backwardrmi_h = new double[(deg1)*(nvr-2)];
-   double *backwardrrg_h = new double[(deg1)*(nvr-2)];
-   double *backwardrpk_h = new double[(deg1)*(nvr-2)];
-   double *backwardltb_h = new double[(deg1)*(nvr-2)];
-   double *backwardlix_h = new double[(deg1)*(nvr-2)];
-   double *backwardlmi_h = new double[(deg1)*(nvr-2)];
-   double *backwardlrg_h = new double[(deg1)*(nvr-2)];
-   double *backwardlpk_h = new double[(deg1)*(nvr-2)];
+   double *backwardrtb_h = new double[(deg1)*(nvr-1)];
+   double *backwardrix_h = new double[(deg1)*(nvr-1)];
+   double *backwardrmi_h = new double[(deg1)*(nvr-1)];
+   double *backwardrrg_h = new double[(deg1)*(nvr-1)];
+   double *backwardrpk_h = new double[(deg1)*(nvr-1)];
+   double *backwardltb_h = new double[(deg1)*(nvr-1)];
+   double *backwardlix_h = new double[(deg1)*(nvr-1)];
+   double *backwardlmi_h = new double[(deg1)*(nvr-1)];
+   double *backwardlrg_h = new double[(deg1)*(nvr-1)];
+   double *backwardlpk_h = new double[(deg1)*(nvr-1)];
    double *crossrtb_h = new double[(deg1)*(nvr-2)];
    double *crossrix_h = new double[(deg1)*(nvr-2)];
    double *crossrmi_h = new double[(deg1)*(nvr-2)];
@@ -649,16 +440,16 @@ void GPU_dbl10_evaldiff
    cudaMemcpy(forwardlmi_h,forwardlmi_d,sznvr,cudaMemcpyDeviceToHost);
    cudaMemcpy(forwardlrg_h,forwardlrg_d,sznvr,cudaMemcpyDeviceToHost);
    cudaMemcpy(forwardlpk_h,forwardlpk_d,sznvr,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardrtb_h,backwardrtb_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardrix_h,backwardrix_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardrmi_h,backwardrmi_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardrrg_h,backwardrrg_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardrpk_h,backwardrpk_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardltb_h,backwardltb_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardlix_h,backwardlix_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardlmi_h,backwardlmi_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardlrg_h,backwardlrg_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardlpk_h,backwardlpk_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardrtb_h,backwardrtb_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardrix_h,backwardrix_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardrmi_h,backwardrmi_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardrrg_h,backwardrrg_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardrpk_h,backwardrpk_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardltb_h,backwardltb_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardlix_h,backwardlix_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardlmi_h,backwardlmi_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardlrg_h,backwardlrg_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardlpk_h,backwardlpk_d,sznvr1,cudaMemcpyDeviceToHost);
    cudaMemcpy(crossrtb_h,crossrtb_d,sznvr2,cudaMemcpyDeviceToHost);
    cudaMemcpy(crossrix_h,crossrix_d,sznvr2,cudaMemcpyDeviceToHost);
    cudaMemcpy(crossrmi_h,crossrmi_d,sznvr2,cudaMemcpyDeviceToHost);
@@ -700,7 +491,7 @@ void GPU_dbl10_evaldiff
       outputlpk[ix][i] = forwardlpk_h[offset+i];
    }
    ix = idx[0];                          // derivative with respect to x[0]
-   offset = (nvr-3)*deg1;
+   offset = (nvr-2)*deg1;
    for(int i=0; i<deg1; i++)
    {
       outputrtb[ix][i] = backwardrtb_h[offset+i];

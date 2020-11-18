@@ -5,48 +5,8 @@
 #ifndef __dbl10_monomials_kernels_h__
 #define __dbl10_monomials_kernels_h__
 
-__device__ void dbl10_convolute
- ( double *xrtb, double *xrix, double *xrmi, double *xrrg, double *xrpk,
-   double *xltb, double *xlix, double *xlmi, double *xlrg, double *xlpk,
-   double *yrtb, double *yrix, double *yrmi, double *yrrg, double *yrpk,
-   double *yltb, double *ylix, double *ylmi, double *ylrg, double *ylpk,
-   double *zrtb, double *zrix, double *zrmi, double *zrrg, double *zrpk,
-   double *zltb, double *zlix, double *zlmi, double *zlrg, double *zlpk,
-   int dim, int k );
-/*
- * DESCRIPTION :
- *   Thread k returns in z[k] the k-th component of the convolution
- *   of x and y, with the ten doubles of the deca double numbers
- *   stored in ten different arrays.  All array are of dimension dim. */
-
-__device__ void cmplx10_convolute
- ( double *xrertb, double *xrerix, double *xrermi, double *xrerrg,
-   double *xrerpk, double *xreltb, double *xrelix, double *xrelmi,
-   double *xrelrg, double *xrelpk,
-   double *ximrtb, double *ximrix, double *ximrmi, double *ximrrg,
-   double *ximrpk, double *ximltb, double *ximlix, double *ximlmi,
-   double *ximlrg, double *ximlpk,
-   double *yrertb, double *yrerix, double *yrermi, double *yrerrg,
-   double *yrerpk, double *yreltb, double *yrelix, double *yrelmi,
-   double *yrelrg, double *yrelpk,
-   double *yimrtb, double *yimrix, double *yimrmi, double *yimrrg,
-   double *yimrpk, double *yimltb, double *yimlix, double *yimlmi,
-   double *yimlrg, double *yimlpk,
-   double *zrertb, double *zrerix, double *zrermi, double *zrerrg,
-   double *zrerpk, double *zreltb, double *zrelix, double *zrelmi,
-   double *zrelrg, double *zrelpk,
-   double *zimrtb, double *zimrix, double *zimrmi, double *zimrrg,
-   double *zimrpk, double *zimltb, double *zimlix, double *zimlmi,
-   double *zimlrg, double *zimlpk, int dim, int k );
-/*
- * DESCRIPTION :
- *   Thread k returns in z[k] the k-th component of the convolution
- *   of x and y, with real and imaginary parts in re and im arrays,
- *   and the ten doubles of deca double numbers is separate arrays.
- *   All arrays are of dimension dim. */
-
-__global__ void GPU_dbl10_speel
- ( int nvr, int deg, int *idx,
+void GPU_dbl10_speel
+ ( int BS, int nvr, int deg, int *idx,
    double *cffrtb, double *cffrix, double *cffrmi, double *cffrrg,
    double *cffrpk, double *cffltb, double *cfflix, double *cfflmi,
    double *cfflrg, double *cfflpk,
@@ -70,9 +30,13 @@ __global__ void GPU_dbl10_speel
  *   of a product of variables at power series truncated to the same degree,
  *   for real coefficients in deca double precision.
  *
- * REQUIRED : nvr > 2.
+ * REQUIRED : nvr > 2 and BS = deg+1.
+ *   The cff and input are allocated on the device
+ *   and all coefficients and input series are copied from host to device.
+ *   The forward, backward, and cross are allocated on the device.
  *
  * ON ENTRY :
+ *   BS          number of threads in one block, must be deg+1;
  *   nvr         number of variables in the product;
  *   deg         truncation degree of the series;
  *   idx         as many indices as the value of nvr,
@@ -208,8 +172,8 @@ __global__ void GPU_dbl10_speel
  *               cross[k] contains the derivative with respect to
  *               variable idx[k+1]. */
 
-__global__ void GPU_cmplx10_speel
- ( int nvr, int deg, int *idx,
+void GPU_cmplx10_speel
+ ( int BS, int nvr, int deg, int *idx,
    double *cffrertb, double *cffrerix, double *cffrermi, double *cffrerrg,
    double *cffrerpk, double *cffreltb, double *cffrelix, double *cffrelmi,
    double *cffrelrg, double *cffrelpk,
@@ -252,11 +216,15 @@ __global__ void GPU_cmplx10_speel
  * DESCRIPTION :
  *   Runs the reverse mode of algorithmic differentiation
  *   of a product of variables at power series truncated to the same degree,
- *   for real coefficients in deca double precision.
+ *   for complex coefficients in deca double precision.
  *
- * REQUIRED : nvr > 2.
+ * REQUIRED : nvr > 2 and BS = deg+1.
+ *   The cff and input are allocated on the device
+ *   and all coefficients and input series are copied from host to device.
+ *   The forward, backward, and cross are allocated on the device.
  *
  * ON ENTRY :
+ *   BS            number of threads in one block, must be deg+1;
  *   nvr           number of variables in the product;
  *   deg           truncation degree of the series;
  *   idx           as many indices as the value of nvr,

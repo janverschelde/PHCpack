@@ -5,43 +5,8 @@
 #ifndef __dbl8_monomials_kernels_h__
 #define __dbl8_monomials_kernels_h__
 
-__device__ void dbl8_convolute
- ( double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
-   double *xhihilo, double *xlohilo, double *xhilolo, double *xlololo,
-   double *yhihihi, double *ylohihi, double *yhilohi, double *ylolohi,
-   double *yhihilo, double *ylohilo, double *yhilolo, double *ylololo,
-   double *zhihihi, double *zlohihi, double *zhilohi, double *zlolohi,
-   double *zhihilo, double *zlohilo, double *zhilolo, double *zlololo,
-   int dim, int k );
-/*
- * DESCRIPTION :
- *   Thread k returns in z[k] the k-th component of the convolution
- *   of x and y, with the four parts of octo doubles in eight arrays.
- *   All arrays are of dimension dim. */
-
-__device__ void cmplx8_convolute
- ( double *xrehihihi, double *xrelohihi, double *xrehilohi, double *xrelolohi,
-   double *xrehihilo, double *xrelohilo, double *xrehilolo, double *xrelololo,
-   double *ximhihihi, double *ximlohihi, double *ximhilohi, double *ximlolohi,
-   double *ximhihilo, double *ximlohilo, double *ximhilolo, double *ximlololo,
-   double *yrehihihi, double *yrelohihi, double *yrehilohi, double *yrelolohi,
-   double *yrehihilo, double *yrelohilo, double *yrehilolo, double *yrelololo,
-   double *yimhihihi, double *yimlohihi, double *yimhilohi, double *yimlolohi,
-   double *yimhihilo, double *yimlohilo, double *yimhilolo, double *yimlololo,
-   double *zrehihihi, double *zrelohihi, double *zrehilohi, double *zrelolohi,
-   double *zrehihilo, double *zrelohilo, double *zrehilolo, double *zrelololo,
-   double *zimhihihi, double *zimlohihi, double *zimhilohi, double *zimlolohi,
-   double *zimhihilo, double *zimlohilo, double *zimhilolo, double *zimlololo,
-   int dim, int k );
-/*
- * DESCRIPTION :
- *   Thread k returns in z[k] the k-th component of the convolution
- *   of x and y, with real and imaginary parts in re and im arrays,
- *   and the octo double parts in eight arrays.
- *   All arrays are of dimension dim. */
-
-__global__ void GPU_dbl8_speel
- ( int nvr, int deg, int *idx,
+void GPU_dbl8_speel
+ ( int BS, int nvr, int deg, int *idx,
    double *cffhihihi, double *cfflohihi,
    double *cffhilohi, double *cfflolohi,
    double *cffhihilo, double *cfflohilo,
@@ -68,9 +33,13 @@ __global__ void GPU_dbl8_speel
  *   of a product of variables at power series truncated to the same degree,
  *   for real coefficients in octo double precision.
  *
- * REQUIRED : nvr > 2.
+ * REQUIRED : nvr > 2 and BS = deg+1.
+ *   The cff and input are allocated on the device
+ *   and all coefficients and input series are copied from host to device.
+ *   The forward, backward, and cross are allocated on the device.
  *
  * ON ENTRY :
+ *   BS             number of threads in one block, must be deg+1;
  *   nvr            number of variables in the product;
  *   deg            truncation degree of the series;
  *   idx            as many indices as the value of nvr,
@@ -182,8 +151,8 @@ __global__ void GPU_dbl8_speel
  *                  cross[k] contains the derivatve with respect to
  *                  variable idx[k+1]. */
 
-__global__ void GPU_cmplx8_speel
- ( int nvr, int deg, int *idx,
+void GPU_cmplx8_speel
+ ( int BS, int nvr, int deg, int *idx,
    double *cffrehihihi, double *cffrelohihi,
    double *cffrehilohi, double *cffrelolohi,
    double *cffrehihilo, double *cffrelohilo,
@@ -228,11 +197,15 @@ __global__ void GPU_cmplx8_speel
  * DESCRIPTION :
  *   Runs the reverse mode of algorithmic differentiation
  *   of a product of variables at power series truncated to the same degree,
- *   for real coefficients in octo double precision.
+ *   for complex coefficients in octo double precision.
  *
- * REQUIRED : nvr > 2.
+ * REQUIRED : nvr > 2 and BS = deg+1.
+ *   The cff and input are allocated on the device
+ *   and all coefficients and input series are copied from host to device.
+ *   The forward, backward, and cross are allocated on the device.
  *
  * ON ENTRY :
+ *   BS               number of threads in one block, must be deg+1;
  *   nvr              number of variables in the product;
  *   deg              truncation degree of the series;
  *   idx              as many indices as the value of nvr,

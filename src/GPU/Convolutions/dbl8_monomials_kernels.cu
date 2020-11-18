@@ -21,204 +21,11 @@
  * (without coefficient cff), two extra multiplications must be done,
  * but this is better than n+1 multiplications with cff afterwards. */
 
-#include "double_double_gpufun.cu"
-#include "quad_double_gpufun.cu"
-#include "octo_double_gpufun.cu"
-#include "dbl8_convolutions_kernels.h"
+#include "dbl8_convolutions_kernels.cu"
 #include "dbl8_monomials_kernels.h"
 
-__device__ void dbl8_convolute
- ( double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
-   double *xhihilo, double *xlohilo, double *xhilolo, double *xlololo,
-   double *yhihihi, double *ylohihi, double *yhilohi, double *ylolohi,
-   double *yhihilo, double *ylohilo, double *yhilolo, double *ylololo,
-   double *zhihihi, double *zlohihi, double *zhilohi, double *zlolohi,
-   double *zhihilo, double *zlohilo, double *zhilolo, double *zlololo,
-   int dim, int k )
-{
-   double prdhihihi,prdlohihi,prdhilohi,prdlolohi;
-   double prdhihilo,prdlohilo,prdhilolo,prdlololo;
-   int idx;
-
-   // z[k] = x[0]*y[k];
-   odg_mul(xhihihi[0],xlohihi[0],xhilohi[0],xlolohi[0],
-           xhihilo[0],xlohilo[0],xhilolo[0],xlololo[0],
-           yhihihi[k],ylohihi[k],yhilohi[k],ylolohi[k],
-           yhihilo[k],ylohilo[k],yhilolo[k],ylololo[k],
-           &zhihihi[k],&zlohihi[k],&zhilohi[k],&zlolohi[k],
-           &zhihilo[k],&zlohilo[k],&zhilolo[k],&zlololo[k]);
-
-   for(int i=1; i<=k; i++) // z[k] = z[k] + x[i]*y[k-i];
-   {
-      idx = k-i;
-      odg_mul(xhihihi[i],xlohihi[i],xhilohi[i],xlolohi[i],
-              xhihilo[i],xlohilo[i],xhilolo[i],xlololo[i],
-              yhihihi[idx],ylohihi[idx],yhilohi[idx],ylolohi[idx],
-              yhihilo[idx],ylohilo[idx],yhilolo[idx],ylololo[idx],
-              &prdhihihi,&prdlohihi,&prdhilohi,&prdlolohi,
-              &prdhihilo,&prdlohilo,&prdhilolo,&prdlololo);
-      odg_inc(&zhihihi[k],&zlohihi[k],&zhilohi[k],&zlolohi[k],
-              &zhihilo[k],&zlohilo[k],&zhilolo[k],&zlololo[k],
-              prdhihihi,prdlohihi,prdhilohi,prdlolohi,
-              prdhihilo,prdlohilo,prdhilolo,prdlololo);
-   }
-}
-
-__device__ void cmplx8_convolute
- ( double *xrehihihi, double *xrelohihi, double *xrehilohi, double *xrelolohi,
-   double *xrehihilo, double *xrelohilo, double *xrehilolo, double *xrelololo,
-   double *ximhihihi, double *ximlohihi, double *ximhilohi, double *ximlolohi,
-   double *ximhihilo, double *ximlohilo, double *ximhilolo, double *ximlololo,
-   double *yrehihihi, double *yrelohihi, double *yrehilohi, double *yrelolohi,
-   double *yrehihilo, double *yrelohilo, double *yrehilolo, double *yrelololo,
-   double *yimhihihi, double *yimlohihi, double *yimhilohi, double *yimlolohi,
-   double *yimhihilo, double *yimlohilo, double *yimhilolo, double *yimlololo,
-   double *zrehihihi, double *zrelohihi, double *zrehilohi, double *zrelolohi,
-   double *zrehihilo, double *zrelohilo, double *zrehilolo, double *zrelololo,
-   double *zimhihihi, double *zimlohihi, double *zimhilohi, double *zimlolohi,
-   double *zimhihilo, double *zimlohilo, double *zimhilolo, double *zimlololo,
-   int dim, int k )
-{
-   double xrhihihi,xihihihi,yrhihihi,yihihihi,zrhihihi,zihihihi,acchihihi;
-   double xrhihilo,xihihilo,yrhihilo,yihihilo,zrhihilo,zihihilo,acchihilo;
-   double xrlohihi,xilohihi,yrlohihi,yilohihi,zrlohihi,zilohihi,acclohihi;
-   double xrlohilo,xilohilo,yrlohilo,yilohilo,zrlohilo,zilohilo,acclohilo;
-   double xrhilohi,xihilohi,yrhilohi,yihilohi,zrhilohi,zihilohi,acchilohi;
-   double xrhilolo,xihilolo,yrhilolo,yihilolo,zrhilolo,zihilolo,acchilolo;
-   double xrlolohi,xilolohi,yrlolohi,yilolohi,zrlolohi,zilolohi,acclolohi;
-   double xrlololo,xilololo,yrlololo,yilololo,zrlololo,zilololo,acclololo;
-   int idx;
-
-   // z[k] = x[0]*y[k]
-   xrhihihi = xrehihihi[0]; xrlohihi = xrelohihi[0];
-   xrhilohi = xrehilohi[0]; xrlolohi = xrelolohi[0];
-   xrhihilo = xrehihilo[0]; xrlohilo = xrelohilo[0];
-   xrhilolo = xrehilolo[0]; xrlololo = xrelololo[0];
-   xihihihi = ximhihihi[0]; xilohihi = ximlohihi[0];
-   xihilohi = ximhilohi[0]; xilolohi = ximlolohi[0];
-   xihihilo = ximhihilo[0]; xilohilo = ximlohilo[0];
-   xihilolo = ximhilolo[0]; xilololo = ximlololo[0];
-   yrhihihi = yrehihihi[k]; yrlohihi = yrelohihi[k];
-   yrhilohi = yrehilohi[k]; yrlolohi = yrelolohi[k];
-   yrhihilo = yrehihilo[k]; yrlohilo = yrelohilo[k];
-   yrhilolo = yrehilolo[k]; yrlololo = yrelololo[k];
-   yihihihi = yimhihihi[k]; yilohihi = yimlohihi[k];
-   yihilohi = yimhilohi[k]; yilolohi = yimlolohi[k];
-   yihihilo = yimhihilo[k]; yilohilo = yimlohilo[k];
-   yihilolo = yimhilolo[k]; yilololo = yimlololo[k];
-
-   odg_mul(xrhihihi,xrlohihi,xrhilohi,xrlolohi,
-           xrhihilo,xrlohilo,xrhilolo,xrlololo,
-           yrhihihi,yrlohihi,yrhilohi,yrlolohi,
-           yrhihilo,yrlohilo,yrhilolo,yrlololo,
-           &zrhihihi,&zrlohihi,&zrhilohi,&zrlolohi,
-           &zrhihilo,&zrlohilo,&zrhilolo,&zrlololo);       // zr = xr*yr
-   odg_mul(xihihihi,xilohihi,xihilohi,xilolohi,
-           xihihilo,xilohilo,xihilolo,xilololo,
-           yihihihi,yilohihi,yihilohi,yilolohi,
-           yihihilo,yilohilo,yihilolo,yilololo,
-           &acchihihi,&acclohihi,&acchilohi,&acclolohi,
-           &acchihilo,&acclohilo,&acchilolo,&acclololo);   // acc = xi*yi
-   odg_minus(&acchihihi,&acclohihi,&acchilohi,&acclolohi,
-             &acchihilo,&acclohilo,&acchilolo,&acclololo);
-   odg_inc(&zrhihihi,&zrlohihi,&zrhilohi,&zrlolohi,
-           &zrhihilo,&zrlohilo,&zrhilolo,&zrlololo,
-           acchihihi,acclohihi,acchilohi,acclolohi,
-           acchihilo,acclohilo,acchilolo,acclololo);  // zr = xr*yr - xi*yi
-   odg_mul(xrhihihi,xrlohihi,xrhilohi,xrlolohi,
-           xrhihilo,xrlohilo,xrhilolo,xrlololo,
-           yihihihi,yilohihi,yihilohi,yilolohi,
-           yihihilo,yilohilo,yihilolo,yilololo,
-           &zihihihi,&zilohihi,&zihilohi,&zilolohi,
-           &zihihilo,&zilohilo,&zihilolo,&zilololo);       // zi = xr*yi
-   odg_mul(xihihihi,xilohihi,xihilohi,xilolohi,
-           xihihilo,xilohilo,xihilolo,xilololo,
-           yrhihihi,yrlohihi,yrhilohi,yrlolohi,
-           yrhihilo,yrlohilo,yrhilolo,yrlololo,
-           &acchihihi,&acclohihi,&acchilohi,&acclolohi,
-           &acchihilo,&acclohilo,&acchilolo,&acclololo);   // acc = xi*yr
-   odg_inc(&zihihihi,&zilohihi,&zihilohi,&zilolohi,
-           &zihihilo,&zilohilo,&zihilolo,&zilololo,
-           acchihihi,acclohihi,acchilohi,acclolohi,
-           acchihilo,acclohilo,acchilolo,acclololo); // zr = xr*yr + xi*yi
-
-   zrehihihi[k] = zrhihihi; zrelohihi[k] = zrlohihi;
-   zrehilohi[k] = zrhilohi; zrelolohi[k] = zrlolohi;
-   zrehihilo[k] = zrhihilo; zrelohilo[k] = zrlohilo;
-   zrehilolo[k] = zrhilolo; zrelololo[k] = zrlololo;
-   zimhihihi[k] = zihihihi; zimlohihi[k] = zilohihi;
-   zimhilohi[k] = zihilohi; zimlolohi[k] = zilolohi;
-   zimhihilo[k] = zihihilo; zimlohilo[k] = zilohilo;
-   zimhilolo[k] = zihilolo; zimlololo[k] = zilololo;
-
-   for(int i=1; i<=k; i++) // z[k] = z[k] + x[i]*y[k-i]
-   {
-      idx = k-i;
-      xrhihihi = xrehihihi[i]; xrlohihi = xrelohihi[i];
-      xrhilohi = xrehilohi[i]; xrlolohi = xrelolohi[i];
-      xrhihilo = xrehihilo[i]; xrlohilo = xrelohilo[i];
-      xrhilolo = xrehilolo[i]; xrlololo = xrelololo[i];
-      xihihihi = ximhihihi[i]; xilohihi = ximlohihi[i];
-      xihilohi = ximhilohi[i]; xilolohi = ximlolohi[i];
-      xihihilo = ximhihilo[i]; xilohilo = ximlohilo[i];
-      xihilolo = ximhilolo[i]; xilololo = ximlololo[i];
-      yrhihihi = yrehihihi[idx]; yrlohihi = yrelohihi[idx];
-      yrhilohi = yrehilohi[idx]; yrlolohi = yrelolohi[idx];
-      yrhihilo = yrehihilo[idx]; yrlohilo = yrelohilo[idx];
-      yrhilolo = yrehilolo[idx]; yrlololo = yrelololo[idx];
-      yihihihi = yimhihihi[idx]; yilohihi = yimlohihi[idx];
-      yihilohi = yimhilohi[idx]; yilolohi = yimlolohi[idx];
-      yihihilo = yimhihilo[idx]; yilohilo = yimlohilo[idx];
-      yihilolo = yimhilolo[idx]; yilololo = yimlololo[idx];
-
-      odg_mul(xrhihihi,xrlohihi,xrhilohi,xrlolohi,
-              xrhihilo,xrlohilo,xrhilolo,xrlololo,
-              yrhihihi,yrlohihi,yrhilohi,yrlolohi,
-              yrhihilo,yrlohilo,yrhilolo,yrlololo,
-              &zrhihihi,&zrlohihi,&zrhilohi,&zrlolohi,
-              &zrhihilo,&zrlohilo,&zrhilolo,&zrlololo);       // zr = xr*yr
-      odg_mul(xihihihi,xilohihi,xihilohi,xilolohi,
-              xihihilo,xilohilo,xihilolo,xilololo,
-              yihihihi,yilohihi,yihilohi,yilolohi,
-              yihihilo,yilohilo,yihilolo,yilololo,
-              &acchihihi,&acclohihi,&acchilohi,&acclolohi,
-              &acchihilo,&acclohilo,&acchilolo,&acclololo);   // acc = xi*yi
-      odg_minus(&acchihihi,&acclohihi,&acchilohi,&acclolohi,
-                &acchihilo,&acclohilo,&acchilolo,&acclololo);
-      odg_inc(&zrhihihi,&zrlohihi,&zrhilohi,&zrlolohi,
-              &zrhihilo,&zrlohilo,&zrhilolo,&zrlololo,
-              acchihihi,acclohihi,acchilohi,acclolohi,
-              acchihilo,acclohilo,acchilolo,acclololo); // zr = xr*yr - xi*yi
-      odg_mul(xrhihihi,xrlohihi,xrhilohi,xrlolohi,
-              xrhihilo,xrlohilo,xrhilolo,xrlololo,
-              yihihihi,yilohihi,yihilohi,yilolohi,
-              yihihilo,yilohilo,yihilolo,yilololo,
-              &zihihihi,&zilohihi,&zihilohi,&zilolohi,
-              &zihihilo,&zilohilo,&zihilolo,&zilololo);       // zi = xr*yi
-      odg_mul(xihihihi,xilohihi,xihilohi,xilolohi,
-              xihihilo,xilohilo,xihilolo,xilololo,
-              yrhihihi,yrlohihi,yrhilohi,yrlolohi,
-              yrhihilo,yrlohilo,yrhilolo,yrlololo,
-              &acchihihi,&acclohihi,&acchilohi,&acclolohi,
-              &acchihilo,&acclohilo,&acchilolo,&acclololo);   // acc = xi*yr
-      odg_inc(&zihihihi,&zilohihi,&zihilohi,&zilolohi,
-              &zihihilo,&zilohilo,&zihilolo,&zilololo,
-              acchihihi,acclohihi,acchilohi,acclolohi,
-              acchihilo,acclohilo,acchilolo,acclololo); // zr = xr*yi + xi*yr
-
-      odg_inc(&zrehihihi[k],&zrelohihi[k],&zrehilohi[k],&zrelolohi[k],
-              &zrehihilo[k],&zrelohilo[k],&zrehilolo[k],&zrelololo[k],
-              zrhihihi,zrlohihi,zrhilohi,zrlolohi,
-              zrhihilo,zrlohilo,zrhilolo,zrlololo);      // zre[k] += zr
-      odg_inc(&zimhihihi[k],&zimlohihi[k],&zimhilohi[k],&zimlolohi[k],
-              &zimhihilo[k],&zimlohilo[k],&zimhilolo[k],&zimlololo[k],
-              zihihihi,zilohihi,zihilohi,zilolohi,
-              zihihilo,zilohilo,zihilolo,zilololo);      // zim[k] += zi
-   }
-}
-
-__global__ void GPU_dbl8_speel
- ( int nvr, int deg, int *idx,
+void GPU_dbl8_speel
+ ( int BS, int nvr, int deg, int *idx,
    double *cffhihihi, double *cfflohihi,
    double *cffhilohi, double *cfflolohi,
    double *cffhihilo, double *cfflohilo,
@@ -240,240 +47,134 @@ __global__ void GPU_dbl8_speel
    double *crosshihilo, double *crosslohilo,
    double *crosshilolo, double *crosslololo )
 {
-   const int k = threadIdx.x;
    const int deg1 = deg+1;
-   int ix1,ix2;
+   int ix1,ix2,ix3;
 
-   __shared__ double xvhihihi[od_shmemsize];
-   __shared__ double xvlohihi[od_shmemsize];
-   __shared__ double xvhilohi[od_shmemsize];
-   __shared__ double xvlolohi[od_shmemsize];
-   __shared__ double xvhihilo[od_shmemsize];
-   __shared__ double xvlohilo[od_shmemsize];
-   __shared__ double xvhilolo[od_shmemsize];
-   __shared__ double xvlololo[od_shmemsize];
-   __shared__ double yvhihihi[od_shmemsize];
-   __shared__ double yvlohihi[od_shmemsize];
-   __shared__ double yvhilohi[od_shmemsize];
-   __shared__ double yvlolohi[od_shmemsize];
-   __shared__ double yvhihilo[od_shmemsize];
-   __shared__ double yvlohilo[od_shmemsize];
-   __shared__ double yvhilolo[od_shmemsize];
-   __shared__ double yvlololo[od_shmemsize];
-   __shared__ double zvhihihi[od_shmemsize];
-   __shared__ double zvlohihi[od_shmemsize];
-   __shared__ double zvhilohi[od_shmemsize];
-   __shared__ double zvlolohi[od_shmemsize];
-   __shared__ double zvhihilo[od_shmemsize];
-   __shared__ double zvlohilo[od_shmemsize];
-   __shared__ double zvhilolo[od_shmemsize];
-   __shared__ double zvlololo[od_shmemsize];
-  
-   xvhihihi[k] = cffhihihi[k]; xvlohihi[k] = cfflohihi[k];
-   xvhilohi[k] = cffhilohi[k]; xvlolohi[k] = cfflolohi[k];
-   xvhihilo[k] = cffhihilo[k]; xvlohilo[k] = cfflohilo[k];
-   xvhilolo[k] = cffhilolo[k]; xvlololo[k] = cfflololo[k];
-   ix1 = idx[0]*deg1+k;
-   yvhihihi[k] = inputhihihi[ix1]; yvlohihi[k] = inputlohihi[ix1];
-   yvhilohi[k] = inputhilohi[ix1]; yvlolohi[k] = inputlolohi[ix1]; 
-   yvhihilo[k] = inputhihilo[ix1]; yvlohilo[k] = inputlohilo[ix1];
-   yvhilolo[k] = inputhilolo[ix1]; yvlololo[k] = inputlololo[ix1]; 
-   __syncthreads();                                       // f[0] = cff*x[0]
-   dbl8_convolute(xvhihihi,xvlohihi,xvhilohi,xvlolohi,
-                  xvhihilo,xvlohilo,xvhilolo,xvlololo,
-                  yvhihihi,yvlohihi,yvhilohi,yvlolohi,
-                  yvhihilo,yvlohilo,yvhilolo,yvlololo,
-                  zvhihihi,zvlohihi,zvhilohi,zvlolohi,
-                  zvhihilo,zvlohilo,zvhilolo,zvlololo,deg1,k);
-   __syncthreads();
-   forwardhihihi[k] = zvhihihi[k]; forwardlohihi[k] = zvlohihi[k];
-   forwardhilohi[k] = zvhilohi[k]; forwardlolohi[k] = zvlolohi[k];
-   forwardhihilo[k] = zvhihilo[k]; forwardlohilo[k] = zvlohilo[k];
-   forwardhilolo[k] = zvhilolo[k]; forwardlololo[k] = zvlololo[k];
+   ix1 = idx[0]*deg1;                                     // f[0] = cff*x[0]
+   dbl8_convolute<<<1,BS>>>
+      (cffhihihi,cfflohihi,cffhilohi,cfflolohi,
+       cffhihilo,cfflohilo,cffhilolo,cfflololo,
+       &inputhihihi[ix1],&inputlohihi[ix1],
+       &inputhilohi[ix1],&inputlolohi[ix1],
+       &inputhihilo[ix1],&inputlohilo[ix1],
+       &inputhilolo[ix1],&inputlololo[ix1],
+       forwardhihihi,forwardlohihi,forwardhilohi,forwardlolohi,
+       forwardhihilo,forwardlohilo,forwardhilolo,forwardlololo,deg1);
 
-   for(int i=1; i<nvr; i++)
+   for(int i=1; i<nvr; i++)                            // f[i] = f[i-1]*x[i]
    {
-      xvhihihi[k] = zvhihihi[k]; xvlohihi[k] = zvlohihi[k];
-      xvhilohi[k] = zvhilohi[k]; xvlolohi[k] = zvlolohi[k];
-      xvhihilo[k] = zvhihilo[k]; xvlohilo[k] = zvlohilo[k];
-      xvhilolo[k] = zvhilolo[k]; xvlololo[k] = zvlololo[k];
-      ix2 = idx[i]*deg1+k;
-      yvhihihi[k] = inputhihihi[ix2]; yvlohihi[k] = inputlohihi[ix2];
-      yvhilohi[k] = inputhilohi[ix2]; yvlolohi[k] = inputlolohi[ix2];
-      yvhihilo[k] = inputhihilo[ix2]; yvlohilo[k] = inputlohilo[ix2];
-      yvhilolo[k] = inputhilolo[ix2]; yvlololo[k] = inputlololo[ix2];
-      __syncthreads();                                 // f[i] = f[i-1]*x[i]
-      dbl8_convolute(xvhihihi,xvlohihi,xvhilohi,xvlolohi,
-                     xvhihilo,xvlohilo,xvhilolo,xvlololo,
-                     yvhihihi,yvlohihi,yvhilohi,yvlolohi,
-                     yvhihilo,yvlohilo,yvhilolo,yvlololo,
-                     zvhihihi,zvlohihi,zvhilohi,zvlolohi,
-                     zvhihilo,zvlohilo,zvhilolo,zvlololo,deg1,k);
-      __syncthreads();
-      ix1 = i*deg1+k;
-      forwardhihihi[ix1] = zvhihihi[k]; forwardlohihi[ix1] = zvlohihi[k];
-      forwardhilohi[ix1] = zvhilohi[k]; forwardlolohi[ix1] = zvlolohi[k];
-      forwardhihilo[ix1] = zvhihilo[k]; forwardlohilo[ix1] = zvlohilo[k];
-      forwardhilolo[ix1] = zvhilolo[k]; forwardlololo[ix1] = zvlololo[k];
+      ix2 = idx[i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
+      dbl8_convolute<<<1,BS>>>
+         (&forwardhihihi[ix1],&forwardlohihi[ix1],
+          &forwardhilohi[ix1],&forwardlolohi[ix1],
+          &forwardhihilo[ix1],&forwardlohilo[ix1],
+          &forwardhilolo[ix1],&forwardlololo[ix1],
+          &inputhihihi[ix2],&inputlohihi[ix2],
+          &inputhilohi[ix2],&inputlolohi[ix2],
+          &inputhihilo[ix2],&inputlohilo[ix2],
+          &inputhilolo[ix2],&inputlololo[ix2],
+          &forwardhihihi[ix3],&forwardlohihi[ix3],
+          &forwardhilohi[ix3],&forwardlolohi[ix3],
+          &forwardhihilo[ix3],&forwardlohilo[ix3],
+          &forwardhilolo[ix3],&forwardlololo[ix3],deg1);
    }
    if(nvr > 2)
    {
-      ix1 = idx[nvr-1]*deg1+k;
-      xvhihihi[k] = inputhihihi[ix1]; xvlohihi[k] = inputlohihi[ix1]; 
-      xvhilohi[k] = inputhilohi[ix1]; xvlolohi[k] = inputlolohi[ix1];
-      xvhihilo[k] = inputhihilo[ix1]; xvlohilo[k] = inputlohilo[ix1]; 
-      xvhilolo[k] = inputhilolo[ix1]; xvlololo[k] = inputlololo[ix1];
-      ix2 = idx[nvr-2]*deg1+k;
-      yvhihihi[k] = inputhihihi[ix2]; yvlohihi[k] = inputlohihi[ix2];
-      yvhilohi[k] = inputhilohi[ix2]; yvlolohi[k] = inputlolohi[ix2];
-      yvhihilo[k] = inputhihilo[ix2]; yvlohilo[k] = inputlohilo[ix2];
-      yvhilolo[k] = inputhilolo[ix2]; yvlololo[k] = inputlololo[ix2];
-      __syncthreads();                               // b[0] = x[n-1]*x[n-2]
-      dbl8_convolute(xvhihihi,xvlohihi,xvhilohi,xvlolohi,
-                     xvhihilo,xvlohilo,xvhilolo,xvlololo,
-                     yvhihihi,yvlohihi,yvhilohi,yvlolohi,
-                     yvhihilo,yvlohilo,yvhilolo,yvlololo,
-                     zvhihihi,zvlohihi,zvhilohi,zvlolohi,
-                     zvhihilo,zvlohilo,zvhilolo,zvlololo,deg1,k);
-      __syncthreads();
-      backwardhihihi[k] = zvhihihi[k]; backwardlohihi[k] = zvlohihi[k];
-      backwardhilohi[k] = zvhilohi[k]; backwardlolohi[k] = zvlolohi[k];
-      backwardhihilo[k] = zvhihilo[k]; backwardlohilo[k] = zvlohilo[k];
-      backwardhilolo[k] = zvhilolo[k]; backwardlololo[k] = zvlololo[k];
-      for(int i=1; i<nvr-2; i++)
-      {
-         xvhihihi[k] = zvhihihi[k]; xvlohihi[k] = zvlohihi[k];
-         xvhilohi[k] = zvhilohi[k]; xvlolohi[k] = zvlolohi[k];
-         xvhihilo[k] = zvhihilo[k]; xvlohilo[k] = zvlohilo[k];
-         xvhilolo[k] = zvhilolo[k]; xvlololo[k] = zvlololo[k];
-         ix2 = idx[nvr-2-i]*deg1+k;
-         yvhihihi[k] = inputhihihi[ix2]; yvlohihi[k] = inputlohihi[ix2];
-         yvhilohi[k] = inputhilohi[ix2]; yvlolohi[k] = inputlolohi[ix2];
-         yvhihilo[k] = inputhihilo[ix2]; yvlohilo[k] = inputlohilo[ix2];
-         yvhilolo[k] = inputhilolo[ix2]; yvlololo[k] = inputlololo[ix2];
-         __syncthreads();                          // b[i] = b[i-1]*x[n-2-i]
-         dbl8_convolute(xvhihihi,xvlohihi,xvhilohi,xvlolohi,
-                        xvhihilo,xvlohilo,xvhilolo,xvlololo,
-                        yvhihihi,yvlohihi,yvhilohi,yvlolohi,
-                        yvhihilo,yvlohilo,yvhilolo,yvlololo,
-                        zvhihihi,zvlohihi,zvhilohi,zvlolohi,
-                        zvhihilo,zvlohilo,zvhilolo,zvlololo,deg1,k);
-         __syncthreads();
-         ix1 = i*deg1+k;
-         backwardhihihi[ix1] = zvhihihi[k]; backwardlohihi[ix1] = zvlohihi[k];
-         backwardhilohi[ix1] = zvhilohi[k]; backwardlolohi[ix1] = zvlolohi[k];
-         backwardhihilo[ix1] = zvhihilo[k]; backwardlohilo[ix1] = zvlohilo[k];
-         backwardhilolo[ix1] = zvhilolo[k]; backwardlololo[ix1] = zvlololo[k];
-      }
-      xvhihihi[k] = zvhihihi[k]; xvlohihi[k] = zvlohihi[k];
-      xvhilohi[k] = zvhilohi[k]; xvlolohi[k] = zvlolohi[k];
-      xvhihilo[k] = zvhihilo[k]; xvlohilo[k] = zvlohilo[k];
-      xvhilolo[k] = zvhilolo[k]; xvlololo[k] = zvlololo[k];
-      yvhihihi[k] = cffhihihi[k]; yvlohihi[k] = cfflohihi[k];
-      yvhilohi[k] = cffhilohi[k]; yvlolohi[k] = cfflolohi[k];
-      yvhihilo[k] = cffhihilo[k]; yvlohilo[k] = cfflohilo[k];
-      yvhilolo[k] = cffhilolo[k]; yvlololo[k] = cfflololo[k];
-      __syncthreads();                                // b[n-3] = b[n-3]*cff
-      dbl8_convolute(xvhihihi,xvlohihi,xvhilohi,xvlolohi,
-                     xvhihilo,xvlohilo,xvhilolo,xvlololo,
-                     yvhihihi,yvlohihi,yvhilohi,yvlolohi,
-                     yvhihilo,yvlohilo,yvhilolo,yvlololo,
-                     zvhihihi,zvlohihi,zvhilohi,zvlolohi,
-                     zvhihilo,zvlohilo,zvhilolo,zvlololo,deg1,k);
-      __syncthreads();
-      ix2 = (nvr-3)*deg1+k;
-      backwardhihihi[ix2] = zvhihihi[k]; backwardlohihi[ix2] = zvlohihi[k];
-      backwardhilohi[ix2] = zvhilohi[k]; backwardlolohi[ix2] = zvlolohi[k];
-      backwardhihilo[ix2] = zvhihilo[k]; backwardlohilo[ix2] = zvlohilo[k];
-      backwardhilolo[ix2] = zvhilolo[k]; backwardlololo[ix2] = zvlololo[k];
+      ix1 = idx[nvr-1]*deg1; ix2 = idx[nvr-2]*deg1;  // b[0] = x[n-1]*x[n-2]
+      dbl8_convolute<<<1,BS>>>
+         (&inputhihihi[ix1],&inputlohihi[ix1],
+          &inputhilohi[ix1],&inputlolohi[ix1],
+          &inputhihilo[ix1],&inputlohilo[ix1],
+          &inputhilolo[ix1],&inputlololo[ix1],
+          &inputhihihi[ix2],&inputlohihi[ix2],
+          &inputhilohi[ix2],&inputlolohi[ix2],
+          &inputhihilo[ix2],&inputlohilo[ix2],
+          &inputhilolo[ix2],&inputlololo[ix2],
+          backwardhihihi,backwardlohihi,backwardhilohi,backwardlolohi,
+          backwardhihilo,backwardlohilo,backwardhilolo,backwardlololo,deg1);
 
-      if(nvr == 3)
+      for(int i=1; i<nvr-2; i++)                   // b[i] = b[i-1]*x[n-2-i]
       {
-         xvhihihi[k] = forwardhihihi[k]; xvlohihi[k] = forwardlohihi[k];
-         xvhilohi[k] = forwardhilohi[k]; xvlolohi[k] = forwardlolohi[k];
-         xvhihilo[k] = forwardhihilo[k]; xvlohilo[k] = forwardlohilo[k];
-         xvhilolo[k] = forwardhilolo[k]; xvlololo[k] = forwardlololo[k];
-         ix2 = idx[2]*deg1+k;
-         yvhihihi[k] = inputhihihi[ix2]; yvlohihi[k] = inputlohihi[ix2];
-         yvhilohi[k] = inputhilohi[ix2]; yvlolohi[k] = inputlolohi[ix2];
-         yvhihilo[k] = inputhihilo[ix2]; yvlohilo[k] = inputlohilo[ix2];
-         yvhilolo[k] = inputhilolo[ix2]; yvlololo[k] = inputlololo[ix2];
-         __syncthreads();                                // c[0] = f[0]*x[2]
-         dbl8_convolute(xvhihihi,xvlohihi,xvhilohi,xvlolohi,
-                        xvhihilo,xvlohilo,xvhilolo,xvlololo,
-                        yvhihihi,yvlohihi,yvhilohi,yvlolohi,
-                        yvhihilo,yvlohilo,yvhilolo,yvlololo,
-                        zvhihihi,zvlohihi,zvhilohi,zvlolohi,
-                        zvhihilo,zvlohilo,zvhilolo,zvlololo,deg1,k);
-         __syncthreads();
-         crosshihihi[k] = zvhihihi[k]; crosslohihi[k] = zvlohihi[k];
-         crosshilohi[k] = zvhilohi[k]; crosslolohi[k] = zvlolohi[k];
-         crosshihilo[k] = zvhihilo[k]; crosslohilo[k] = zvlohilo[k];
-         crosshilolo[k] = zvhilolo[k]; crosslololo[k] = zvlololo[k];
+         ix2 = idx[nvr-2-i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
+         dbl8_convolute<<<1,BS>>>
+            (&backwardhihihi[ix1],&backwardlohihi[ix1],
+             &backwardhilohi[ix1],&backwardlolohi[ix1],
+             &backwardhihilo[ix1],&backwardlohilo[ix1],
+             &backwardhilolo[ix1],&backwardlololo[ix1],
+             &inputhihihi[ix2],&inputlohihi[ix2],
+             &inputhilohi[ix2],&inputlolohi[ix2],
+             &inputhihilo[ix2],&inputlohilo[ix2],
+             &inputhilolo[ix2],&inputlololo[ix2],
+             &backwardhihihi[ix3],&backwardlohihi[ix3],
+             &backwardhilohi[ix3],&backwardlolohi[ix3],
+             &backwardhihilo[ix3],&backwardlohilo[ix3],
+             &backwardhilolo[ix3],&backwardlololo[ix3],deg1);
+      }
+      ix3 = (nvr-3)*deg1; ix2 = (nvr-2)*deg1;         // b[n-2] = b[n-3]*cff
+      dbl8_convolute<<<1,BS>>>
+         (&backwardhihihi[ix3],&backwardlohihi[ix3],
+          &backwardhilohi[ix3],&backwardlolohi[ix3],
+          &backwardhihilo[ix3],&backwardlohilo[ix3],
+          &backwardhilolo[ix3],&backwardlololo[ix3],
+          cffhihihi,cfflohihi,cffhilohi,cfflolohi,
+          cffhihilo,cfflohilo,cffhilolo,cfflololo,
+          &backwardhihihi[ix2],&backwardlohihi[ix2],
+          &backwardhilohi[ix2],&backwardlolohi[ix2],
+          &backwardhihilo[ix2],&backwardlohilo[ix2],
+          &backwardhilolo[ix2],&backwardlololo[ix2],deg1);
+
+      if(nvr == 3)                                       // c[0] = f[0]*x[2]
+      {
+         ix2 = idx[2]*deg1;
+         dbl8_convolute<<<1,BS>>>
+            (forwardhihihi,forwardlohihi,forwardhilohi,forwardlolohi,
+             forwardhihilo,forwardlohilo,forwardhilolo,forwardlololo,
+             &inputhihihi[ix2],&inputlohihi[ix2],
+             &inputhilohi[ix2],&inputlolohi[ix2],
+             &inputhihilo[ix2],&inputlohilo[ix2],
+             &inputhilolo[ix2],&inputlololo[ix2],
+             crosshihihi,crosslohihi,crosshilohi,crosslolohi,
+             crosshihilo,crosslohilo,crosshilolo,crosslololo,deg1);
       }
       else
       {
-         for(int i=0; i<nvr-3; i++)
+         for(int i=0; i<nvr-3; i++)                  // c[i] = f[i]*b[n-4-i]
          {
-            ix1 = i*deg1+k; 
-            xvhihihi[k] = forwardhihihi[ix1];
-            xvlohihi[k] = forwardlohihi[ix1];
-            xvhilohi[k] = forwardhilohi[ix1];
-            xvlolohi[k] = forwardlolohi[ix1];
-            xvhihilo[k] = forwardhihilo[ix1];
-            xvlohilo[k] = forwardlohilo[ix1];
-            xvhilolo[k] = forwardhilolo[ix1];
-            xvlololo[k] = forwardlololo[ix1];
-            ix2 = (nvr-4-i)*deg1+k;
-            yvhihihi[k] = backwardhihihi[ix2];
-            yvlohihi[k] = backwardlohihi[ix2];
-            yvhilohi[k] = backwardhilohi[ix2];
-            yvlolohi[k] = backwardlolohi[ix2];
-            yvhihilo[k] = backwardhihilo[ix2];
-            yvlohilo[k] = backwardlohilo[ix2];
-            yvhilolo[k] = backwardhilolo[ix2];
-            yvlololo[k] = backwardlololo[ix2];
-            __syncthreads();                         // c[i] = f[i]*b[n-4-i]
-            dbl8_convolute(xvhihihi,xvlohihi,xvhilohi,xvlolohi,
-                           xvhihilo,xvlohilo,xvhilolo,xvlololo,
-                           yvhihihi,yvlohihi,yvhilohi,yvlolohi,
-                           yvhihilo,yvlohilo,yvhilolo,yvlololo,
-                           zvhihihi,zvlohihi,zvhilohi,zvlolohi,
-                           zvhihilo,zvlohilo,zvhilolo,zvlololo,deg1,k);
-            __syncthreads();
-            crosshihihi[ix1] = zvhihihi[k]; crosslohihi[ix1] = zvlohihi[k];
-            crosshilohi[ix1] = zvhilohi[k]; crosslolohi[ix1] = zvlolohi[k]; 
-            crosshihilo[ix1] = zvhihilo[k]; crosslohilo[ix1] = zvlohilo[k];
-            crosshilolo[ix1] = zvhilolo[k]; crosslololo[ix1] = zvlololo[k]; 
+            ix1 = i*deg1; ix2 = (nvr-4-i)*deg1;
+            dbl8_convolute<<<1,BS>>>
+               (&forwardhihihi[ix1],&forwardlohihi[ix1],
+                &forwardhilohi[ix1],&forwardlolohi[ix1],
+                &forwardhihilo[ix1],&forwardlohilo[ix1],
+                &forwardhilolo[ix1],&forwardlololo[ix1],
+                &backwardhihihi[ix2],&backwardlohihi[ix2],
+                &backwardhilohi[ix2],&backwardlolohi[ix2],
+                &backwardhihilo[ix2],&backwardlohilo[ix2],
+                &backwardhilolo[ix2],&backwardlololo[ix2],
+                &crosshihihi[ix1],&crosslohihi[ix1],
+                &crosshilohi[ix1],&crosslolohi[ix1],
+                &crosshihilo[ix1],&crosslohilo[ix1],
+                &crosshilolo[ix1],&crosslololo[ix1],deg1);
          }
-         ix1 = (nvr-3)*deg1+k;
-         xvhihihi[k] = forwardhihihi[ix1]; xvlohihi[k] = forwardlohihi[ix1];
-         xvhilohi[k] = forwardhilohi[ix1]; xvlolohi[k] = forwardlolohi[ix1];
-         xvhihilo[k] = forwardhihilo[ix1]; xvlohilo[k] = forwardlohilo[ix1];
-         xvhilolo[k] = forwardhilolo[ix1]; xvlololo[k] = forwardlololo[ix1];
-         ix2 = idx[nvr-1]*deg1+k;
-         yvhihihi[k] = inputhihihi[ix2]; yvlohihi[k] = inputlohihi[ix2];
-         yvhilohi[k] = inputhilohi[ix2]; yvlolohi[k] = inputlolohi[ix2];
-         yvhihilo[k] = inputhihilo[ix2]; yvlohilo[k] = inputlohilo[ix2];
-         yvhilolo[k] = inputhilolo[ix2]; yvlololo[k] = inputlololo[ix2];
-         __syncthreads();                          // c[n-3] = f[n-3]*x[n-1]
-         dbl8_convolute(xvhihihi,xvlohihi,xvhilohi,xvlolohi,
-                        xvhihilo,xvlohilo,xvhilolo,xvlololo,
-                        yvhihihi,yvlohihi,yvhilohi,yvlolohi,
-                        yvhihilo,yvlohilo,yvhilolo,yvlololo,
-                        zvhihihi,zvlohihi,zvhilohi,zvlolohi,
-                        zvhihilo,zvlohilo,zvhilolo,zvlololo,deg1,k);
-         __syncthreads();
-         crosshihihi[ix1] = zvhihihi[k]; crosslohihi[ix1] = zvlohihi[k];
-         crosshilohi[ix1] = zvhilohi[k]; crosslolohi[ix1] = zvlolohi[k];
-         crosshihilo[ix1] = zvhihilo[k]; crosslohilo[ix1] = zvlohilo[k];
-         crosshilolo[ix1] = zvhilolo[k]; crosslololo[ix1] = zvlololo[k];
+         ix1 = (nvr-3)*deg1; ix2 = idx[nvr-1]*deg1; // c[n-3] = f[n-3]*x[n-1]
+         dbl8_convolute<<<1,BS>>>
+            (&forwardhihihi[ix1],&forwardlohihi[ix1],
+             &forwardhilohi[ix1],&forwardlolohi[ix1],
+             &forwardhihilo[ix1],&forwardlohilo[ix1],
+             &forwardhilolo[ix1],&forwardlololo[ix1],
+             &inputhihihi[ix2],&inputlohihi[ix2],
+             &inputhilohi[ix2],&inputlolohi[ix2],
+             &inputhihilo[ix2],&inputlohilo[ix2],
+             &inputhilolo[ix2],&inputlololo[ix2],
+             &crosshihihi[ix1],&crosslohihi[ix1],
+             &crosshilohi[ix1],&crosslolohi[ix1],
+             &crosshihilo[ix1],&crosslohilo[ix1],
+             &crosshilolo[ix1],&crosslololo[ix1],deg1);
       }
    }
 }
 
-__global__ void GPU_cmplx8_speel
- ( int nvr, int deg, int *idx,
+void GPU_cmplx8_speel
+ ( int BS, int nvr, int deg, int *idx,
    double *cffrehihihi, double *cffrelohihi,
    double *cffrehilohi, double *cffrelolohi,
    double *cffrehihilo, double *cffrelohilo,
@@ -571,15 +272,13 @@ void GPU_dbl8_evaldiff
    double *cfflohilo_d;      // cfflohilo_d is cfflohilo on device
    double *cffhilolo_d;      // cffhilolo_d is cffhilolo on device
    double *cfflololo_d;      // cfflololo_d is cfflololo on device
-   int *idx_d;               // idx_d is idx on device
 
    size_t szcff = deg1*sizeof(double);
    size_t szdim = dim*(deg1)*sizeof(double);
    size_t sznvr = nvr*(deg1)*sizeof(double);
+   size_t sznvr1 = (nvr-1)*(deg1)*sizeof(double);
    size_t sznvr2 = (nvr-2)*(deg1)*sizeof(double);
-   size_t szidx = nvr*sizeof(int);
 
-   cudaMalloc((void**)&idx_d,szidx);
    cudaMalloc((void**)&cffhihihi_d,szcff);
    cudaMalloc((void**)&cfflohihi_d,szcff);
    cudaMalloc((void**)&cffhilohi_d,szcff);
@@ -604,22 +303,22 @@ void GPU_dbl8_evaldiff
    cudaMalloc((void**)&forwardlohilo_d,sznvr);
    cudaMalloc((void**)&forwardhilolo_d,sznvr);
    cudaMalloc((void**)&forwardlololo_d,sznvr);
-   cudaMalloc((void**)&backwardhihihi_d,sznvr2);
-   cudaMalloc((void**)&backwardlohihi_d,sznvr2);
-   cudaMalloc((void**)&backwardhilohi_d,sznvr2);
-   cudaMalloc((void**)&backwardlolohi_d,sznvr2);
-   cudaMalloc((void**)&backwardhihilo_d,sznvr2);
-   cudaMalloc((void**)&backwardlohilo_d,sznvr2);
-   cudaMalloc((void**)&backwardhilolo_d,sznvr2);
-   cudaMalloc((void**)&backwardlololo_d,sznvr2);
-   cudaMalloc((void**)&crosshihihi_d,sznvr2);
-   cudaMalloc((void**)&crosslohihi_d,sznvr2);
-   cudaMalloc((void**)&crosshilohi_d,sznvr2);
-   cudaMalloc((void**)&crosslolohi_d,sznvr2);
-   cudaMalloc((void**)&crosshihilo_d,sznvr2);
-   cudaMalloc((void**)&crosslohilo_d,sznvr2);
-   cudaMalloc((void**)&crosshilolo_d,sznvr2);
-   cudaMalloc((void**)&crosslololo_d,sznvr2);
+   cudaMalloc((void**)&backwardhihihi_d,sznvr1);
+   cudaMalloc((void**)&backwardlohihi_d,sznvr1);
+   cudaMalloc((void**)&backwardhilohi_d,sznvr1);
+   cudaMalloc((void**)&backwardlolohi_d,sznvr1);
+   cudaMalloc((void**)&backwardhihilo_d,sznvr1);
+   cudaMalloc((void**)&backwardlohilo_d,sznvr1);
+   cudaMalloc((void**)&backwardhilolo_d,sznvr1);
+   cudaMalloc((void**)&backwardlololo_d,sznvr1);
+   cudaMalloc((void**)&crosshihihi_d,sznvr1);
+   cudaMalloc((void**)&crosslohihi_d,sznvr1);
+   cudaMalloc((void**)&crosshilohi_d,sznvr1);
+   cudaMalloc((void**)&crosslolohi_d,sznvr1);
+   cudaMalloc((void**)&crosshihilo_d,sznvr1);
+   cudaMalloc((void**)&crosslohilo_d,sznvr1);
+   cudaMalloc((void**)&crosshilolo_d,sznvr1);
+   cudaMalloc((void**)&crosslololo_d,sznvr1);
 
    double *inputhihihi_h = new double[dim*(deg1)];
    double *inputlohihi_h = new double[dim*(deg1)];
@@ -643,7 +342,6 @@ void GPU_dbl8_evaldiff
          inputlololo_h[ix++] = inputlololo[i][j];
       }
 
-   cudaMemcpy(idx_d,idx,szidx,cudaMemcpyHostToDevice);
    cudaMemcpy(cffhihihi_d,cffhihihi,szcff,cudaMemcpyHostToDevice);
    cudaMemcpy(cfflohihi_d,cfflohihi,szcff,cudaMemcpyHostToDevice);
    cudaMemcpy(cffhilohi_d,cffhilohi,szcff,cudaMemcpyHostToDevice);
@@ -663,8 +361,8 @@ void GPU_dbl8_evaldiff
 
    if(BS == deg1)
    {
-      GPU_dbl8_speel<<<1,BS>>>
-         (nvr,deg,idx_d,
+      GPU_dbl8_speel
+         (BS,nvr,deg,idx,
           cffhihihi_d,cfflohihi_d,cffhilohi_d,cfflolohi_d,
           cffhihilo_d,cfflohilo_d,cffhilolo_d,cfflololo_d,
           inputhihihi_d,inputlohihi_d,inputhilohi_d,inputlolohi_d,
@@ -684,14 +382,14 @@ void GPU_dbl8_evaldiff
    double *forwardlohilo_h = new double[(deg1)*nvr];
    double *forwardhilolo_h = new double[(deg1)*nvr];
    double *forwardlololo_h = new double[(deg1)*nvr];
-   double *backwardhihihi_h = new double[(deg1)*(nvr-2)];
-   double *backwardlohihi_h = new double[(deg1)*(nvr-2)];
-   double *backwardhilohi_h = new double[(deg1)*(nvr-2)];
-   double *backwardlolohi_h = new double[(deg1)*(nvr-2)];
-   double *backwardhihilo_h = new double[(deg1)*(nvr-2)];
-   double *backwardlohilo_h = new double[(deg1)*(nvr-2)];
-   double *backwardhilolo_h = new double[(deg1)*(nvr-2)];
-   double *backwardlololo_h = new double[(deg1)*(nvr-2)];
+   double *backwardhihihi_h = new double[(deg1)*(nvr-1)];
+   double *backwardlohihi_h = new double[(deg1)*(nvr-1)];
+   double *backwardhilohi_h = new double[(deg1)*(nvr-1)];
+   double *backwardlolohi_h = new double[(deg1)*(nvr-1)];
+   double *backwardhihilo_h = new double[(deg1)*(nvr-1)];
+   double *backwardlohilo_h = new double[(deg1)*(nvr-1)];
+   double *backwardhilolo_h = new double[(deg1)*(nvr-1)];
+   double *backwardlololo_h = new double[(deg1)*(nvr-1)];
    double *crosshihihi_h = new double[(deg1)*(nvr-2)];
    double *crosslohihi_h = new double[(deg1)*(nvr-2)];
    double *crosshilohi_h = new double[(deg1)*(nvr-2)];
@@ -709,14 +407,14 @@ void GPU_dbl8_evaldiff
    cudaMemcpy(forwardlohilo_h,forwardlohilo_d,sznvr,cudaMemcpyDeviceToHost);
    cudaMemcpy(forwardhilolo_h,forwardhilolo_d,sznvr,cudaMemcpyDeviceToHost);
    cudaMemcpy(forwardlololo_h,forwardlololo_d,sznvr,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardhihihi_h,backwardhihihi_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardlohihi_h,backwardlohihi_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardhilohi_h,backwardhilohi_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardlolohi_h,backwardlolohi_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardhihilo_h,backwardhihilo_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardlohilo_h,backwardlohilo_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardhilolo_h,backwardhilolo_d,sznvr2,cudaMemcpyDeviceToHost);
-   cudaMemcpy(backwardlololo_h,backwardlololo_d,sznvr2,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardhihihi_h,backwardhihihi_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardlohihi_h,backwardlohihi_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardhilohi_h,backwardhilohi_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardlolohi_h,backwardlolohi_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardhihilo_h,backwardhihilo_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardlohilo_h,backwardlohilo_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardhilolo_h,backwardhilolo_d,sznvr1,cudaMemcpyDeviceToHost);
+   cudaMemcpy(backwardlololo_h,backwardlololo_d,sznvr1,cudaMemcpyDeviceToHost);
    cudaMemcpy(crosshihihi_h,crosshihihi_d,sznvr2,cudaMemcpyDeviceToHost);
    cudaMemcpy(crosslohihi_h,crosslohihi_d,sznvr2,cudaMemcpyDeviceToHost);
    cudaMemcpy(crosshilohi_h,crosshilohi_d,sznvr2,cudaMemcpyDeviceToHost);
@@ -752,7 +450,7 @@ void GPU_dbl8_evaldiff
       outputlololo[ix][i] = forwardlololo_h[offset+i];
    }
    ix = idx[0];                          // derivative with respect to x[0]
-   offset = (nvr-3)*deg1;
+   offset = (nvr-2)*deg1;
    for(int i=0; i<deg1; i++)
    {
       outputhihihi[ix][i] = backwardhihihi_h[offset+i];
