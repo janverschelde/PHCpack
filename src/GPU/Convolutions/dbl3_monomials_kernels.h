@@ -92,9 +92,12 @@ void GPU_cmplx3_speel
  * DESCRIPTION :
  *   Runs the reverse mode of algorithmic differentiation
  *   of a product of variables at power series truncated to the same degree,
- *   for real coefficients in triple double precision.
+ *   for complex coefficients in triple double precision.
  *
  * REQUIRED : nvr > 2 and BS = deg+1.
+ *   The cff and input are allocated on the device
+ *   and all coefficients and input series are copied from host to device.
+ *   The forward, backward, and cross are allocated on the device.
  *
  * ON ENTRY :
  *   BS           number of threads in one block, must be deg+1;

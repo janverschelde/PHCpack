@@ -5,34 +5,8 @@
 #ifndef __dbl4_monomials_kernels_h__
 #define __dbl4_monomials_kernels_h__
 
-__device__ void dbl4_convolute
- ( double *xhihi, double *xlohi, double *xhilo, double *xlolo,
-   double *yhihi, double *ylohi, double *yhilo, double *ylolo,
-   double *zhihi, double *zlohi, double *zhilo, double *zlolo,
-   int dim, int k );
-/*
- * DESCRIPTION :
- *   Thread k returns in z[k] the k-th component of the convolution
- *   of x and y, with the four parts of quad doubles in four arrays.
- *   All arrays are of dimension dim. */
-
-__device__ void cmplx4_convolute
- ( double *xrehihi, double *xrelohi, double *xrehilo, double *xrelolo,
-   double *ximhihi, double *ximlohi, double *ximhilo, double *ximlolo,
-   double *yrehihi, double *yrelohi, double *yrehilo, double *yrelolo,
-   double *yimhihi, double *yimlohi, double *yimhilo, double *yimlolo,
-   double *zrehihi, double *zrelohi, double *zrehilo, double *zrelolo,
-   double *zimhihi, double *zimlohi, double *zimhilo, double *zimlolo,
-   int dim, int k );
-/*
- * DESCRIPTION :
- *   Thread k returns in z[k] the k-th component of the convolution
- *   of x and y, with real and imaginary parts in re and im arrays,
- *   and the quad double parts in four arrays.
- *   All arrays are of dimension dim. */
-
-__global__ void GPU_dbl4_speel
- ( int nvr, int deg, int *idx,
+void GPU_dbl4_speel
+ ( int BS, int nvr, int deg, int *idx,
    double *cffhihi, double *cfflohi, double *cffhilo, double *cfflolo,
    double *inputhihi, double *inputlohi, double *inputhilo, double *inputlolo,
    double *forwardhihi, double *forwardlohi,
@@ -47,9 +21,13 @@ __global__ void GPU_dbl4_speel
  *   of a product of variables at power series truncated to the same degree,
  *   for real coefficients in quad double precision.
  *
- * REQUIRED : nvr > 2.
+ * REQUIRED : nvr > 2 and BS = deg+1.
+ *   The cff and input are allocated on the device
+ *   and all coefficients and input series are copied from host to device.
+ *   The forward, backward, and cross are allocated on the device.
  *
  * ON ENTRY :
+ *   BS       number of threads in one block, must be deg+1;
  *   nvr          number of variables in the product;
  *   deg          truncation degree of the series;
  *   idx          as many indices as the value of nvr,
@@ -113,8 +91,8 @@ __global__ void GPU_dbl4_speel
  *                cross[k] contains the derivatve with respect to
  *                variable idx[k+1]. */
 
-__global__ void GPU_cmplx4_speel
- ( int nvr, int deg, int *idx,
+void GPU_cmplx4_speel
+ ( int BS, int nvr, int deg, int *idx,
    double *cffrehihi, double *cffrelohi, double *cffrehilo, double *cffrelolo,
    double *cffimhihi, double *cffimlohi, double *cffimhilo, double *cffimlolo,
    double *inputrehihi, double *inputrelohi,
@@ -137,11 +115,15 @@ __global__ void GPU_cmplx4_speel
  * DESCRIPTION :
  *   Runs the reverse mode of algorithmic differentiation
  *   of a product of variables at power series truncated to the same degree,
- *   for real coefficients in quad double precision.
+ *   for complex coefficients in quad double precision.
  *
- * REQUIRED : nvr > 2.
+ * REQUIRED : nvr > 2 and BS = deg+1.
+ *   The cff and input are allocated on the device
+ *   and all coefficients and input series are copied from host to device.
+ *   The forward, backward, and cross are allocated on the device.
  *
  * ON ENTRY :
+ *   BS             number of threads in one block, must be deg+1;
  *   nvr            number of variables in the product;
  *   deg            truncation degree of the series;
  *   idx            as many indices as the value of nvr,
