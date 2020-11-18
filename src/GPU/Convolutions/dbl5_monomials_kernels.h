@@ -5,34 +5,8 @@
 #ifndef __dbl5_monomials_kernels_h__
 #define __dbl5_monomials_kernels_h__
 
-__device__ void dbl5_convolute
- ( double *xtb, double *xix, double *xmi, double *xrg, double *xpk,
-   double *ytb, double *yix, double *ymi, double *yrg, double *ypk,
-   double *ztb, double *zix, double *zmi, double *zrg, double *zpk,
-   int dim, int k );
-/*
- * DESCRIPTION :
- *   Thread k returns in z[k] the k-th component of the convolution
- *   of x and y, with the five doubles of the penta double numbers
- *   stored in five different arrays.  All array are of dimension dim. */
-
-__device__ void cmplx5_convolute
- ( double *xretb, double *xreix, double *xremi, double *xrerg, double *xrepk,
-   double *ximtb, double *ximix, double *ximmi, double *ximrg, double *ximpk,
-   double *yretb, double *yreix, double *yremi, double *yrerg, double *yrepk,
-   double *yimtb, double *yimix, double *yimmi, double *yimrg, double *yimpk,
-   double *zretb, double *zreix, double *zremi, double *zrerg, double *zrepk,
-   double *zimtb, double *zimix, double *zimmi, double *zimrg, double *zimpk,
-   int dim, int k );
-/*
- * DESCRIPTION :
- *   Thread k returns in z[k] the k-th component of the convolution
- *   of x and y, with real and imaginary parts in re and im arrays,
- *   and the five doubles of penta double numbers is separate arrays.
- *   All arrays are of dimension dim. */
-
-__global__ void GPU_dbl5_speel
- ( int nvr, int deg, int *idx,
+void GPU_dbl5_speel
+ ( int BS, int nvr, int deg, int *idx,
    double *cfftb, double *cffix, double *cffmi, double *cffrg, double *cffpk,
    double *inputtb, double *inputix, double *inputmi,
    double *inputrg, double *inputpk,
@@ -48,9 +22,13 @@ __global__ void GPU_dbl5_speel
  *   of a product of variables at power series truncated to the same degree,
  *   for real coefficients in penta double precision.
  *
- * REQUIRED : nvr > 2.
+ * REQUIRED : nvr > 2 and BS = deg+1.
+ *   The cff and input are allocated on the device
+ *   and all coefficients and input series are copied from host to device.
+ *   The forward, backward, and cross are allocated on the device.
  *
  * ON ENTRY :
+ *   BS         number of threads in one block, must be deg+1;
  *   nvr        number of variables in the product;
  *   deg        truncation degree of the series;
  *   idx        as many indices as the value of nvr,
@@ -126,8 +104,8 @@ __global__ void GPU_dbl5_speel
  *              cross[k] contains the derivative with respect to
  *              variable idx[k+1]. */
 
-__global__ void GPU_cmplx5_speel
- ( int nvr, int deg, int *idx,
+void GPU_cmplx5_speel
+ ( int BS, int nvr, int deg, int *idx,
    double *cffretb, double *cffreix, double *cffremi,
    double *cffrerg, double *cffrepk,
    double *cffimtb, double *cffimix, double *cffimmi,
@@ -152,11 +130,15 @@ __global__ void GPU_cmplx5_speel
  * DESCRIPTION :
  *   Runs the reverse mode of algorithmic differentiation
  *   of a product of variables at power series truncated to the same degree,
- *   for real coefficients in penta double precision.
+ *   for complex coefficients in penta double precision.
  *
- * REQUIRED : nvr > 2.
+ * REQUIRED : nvr > 2 and BS = deg+1.
+ *   The cff and input are allocated on the device
+ *   and all coefficients and input series are copied from host to device.
+ *   The forward, backward, and cross are allocated on the device.
  *
  * ON ENTRY :
+ *   BS           number of threads in one block, must be deg+1;
  *   nvr          number of variables in the product;
  *   deg          truncation degree of the series;
  *   idx          as many indices as the value of nvr,
