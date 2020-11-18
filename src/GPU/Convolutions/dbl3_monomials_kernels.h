@@ -5,32 +5,9 @@
 #ifndef __dbl3_monomials_kernels_h__
 #define __dbl3_monomials_kernels_h__
 
-__device__ void dbl3_convolute
- ( double *xhi, double *xmi, double *xlo,
-   double *yhi, double *ymi, double *ylo,
-   double *zhi, double *zmi, double *zlo, int dim, int k );
-/*
- * DESCRIPTION :
- *   Thread k returns in z[k] the k-th component of the convolution
- *   of x and y, with high, middle, and low parts in hi, mi, and lo arrays.
- *   All vectors are of dimension dim. */
-
-__device__ void cmplx3_convolute
- ( double *xrehi, double *xremi, double *xrelo,
-   double *ximhi, double *ximmi, double *ximlo,
-   double *yrehi, double *yremi, double *yrelo,
-   double *yimhi, double *yimmi, double *yimlo,
-   double *zrehi, double *zremi, double *zrelo,
-   double *zimhi, double *zimmi, double *zimlo, int dim, int k );
-/*
- * DESCRIPTION :
- *   Thread k returns in z[k] the k-th component of the convolution
- *   of x and y, with real and imaginary parts in re and im arrays,
- *   and high, middle, and low parts in hi, mi, and lo arrays.
- *   All arrays are of dimension dim. */
-
-__global__ void GPU_dbl3_speel
- ( int nvr, int deg, int *idx, double *cffhi, double *cffmi, double *cfflo,
+void GPU_dbl3_speel
+ ( int BS, int nvr, int deg, int *idx,
+   double *cffhi, double *cffmi, double *cfflo,
    double *inputhi, double *inputmi, double *inputlo,
    double *forwardhi, double *forwardmi, double *forwardlo,
    double *backwardhi, double *backwardmi, double *backwardlo,
@@ -41,9 +18,13 @@ __global__ void GPU_dbl3_speel
  *   of a product of variables at power series truncated to the same degree,
  *   for real coefficients in triple double precision.
  *
- * REQUIRED : nvr > 2.
+ * REQUIRED : nvr > 2 and BS = deg+1.
+ *   The cff and input are allocated on the device
+ *   and all coefficients and input series are copied from host to device.
+ *   The forward, backward, and cross are allocated on the device.
  *
  * ON ENTRY :
+ *   BS         number of threads in one block, must be deg+1;
  *   nvr        number of variables in the product;
  *   deg        truncation degree of the series;
  *   idx        as many indices as the value of nvr,
@@ -95,8 +76,8 @@ __global__ void GPU_dbl3_speel
  *              cross[k] contains the derivative with respect to
  *              variable idx[k+1]. */
 
-__global__ void GPU_cmplx3_speel
- ( int nvr, int deg, int *idx,
+void GPU_cmplx3_speel
+ ( int BS, int nvr, int deg, int *idx,
    double *cffrehi, double *cffremi, double *cffrelo,
    double *cffimhi, double *cffimmi, double *cffimlo,
    double *inputrehi, double *inputremi, double *inputrelo,
@@ -113,9 +94,10 @@ __global__ void GPU_cmplx3_speel
  *   of a product of variables at power series truncated to the same degree,
  *   for real coefficients in triple double precision.
  *
- * REQUIRED : nvr > 2.
+ * REQUIRED : nvr > 2 and BS = deg+1.
  *
  * ON ENTRY :
+ *   BS           number of threads in one block, must be deg+1;
  *   nvr          number of variables in the product;
  *   deg          truncation degree of the series;
  *   idx          as many indices as the value of nvr,
