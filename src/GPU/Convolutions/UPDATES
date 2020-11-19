@@ -1,6 +1,7 @@
 Wed 18 Nov 2020 : Redefined dbl5_monomials_kernels, it works on the C2050.
   Edited dbl4_monomials_kernels.h and dbl5_monomials_kernels.h.
   Redefined dbl8_monomials_kernels and dbl10_monomials_kernels.
+  Small fix in dbl10_monomials_kernels.cu for a compiler warning.
 
 Tue 17 Nov 2020 : redefined the dbl_monomials_kernels and corrected tests
   on the values of the derivatives in test_dbl_monomials.cpp.

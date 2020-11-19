@@ -283,7 +283,6 @@ void GPU_dbl10_evaldiff
    size_t sznvr = nvr*(deg1)*sizeof(double);
    size_t sznvr1 = (nvr-1)*(deg1)*sizeof(double);
    size_t sznvr2 = (nvr-2)*(deg1)*sizeof(double);
-   size_t szidx = nvr*sizeof(int);
 
    cudaMalloc((void**)&cffrtb_d,szcff);
    cudaMalloc((void**)&cffrix_d,szcff);
