@@ -189,6 +189,32 @@ void make_real10_input
          datalmi[dim-1][j] = 0.0; datalrg[dim-1][j] = 0.0;
          datalpk[dim-1][j] = 0.0;
       }
+      int middle = dim/2; // move the last input series to the middle
+      double tmp;
+
+      for(int j=0; j<=deg; j++)
+      {
+         tmp = datartb[dim-1][j]; datartb[dim-1][j] = datartb[middle][j];
+         datartb[middle][j] = tmp;
+         tmp = datarix[dim-1][j]; datarix[dim-1][j] = datarix[middle][j];
+         datarix[middle][j] = tmp;
+         tmp = datarmi[dim-1][j]; datarmi[dim-1][j] = datarmi[middle][j];
+         datarmi[middle][j] = tmp;
+         tmp = datarrg[dim-1][j]; datarrg[dim-1][j] = datarrg[middle][j];
+         datarrg[middle][j] = tmp;
+         tmp = datarpk[dim-1][j]; datarpk[dim-1][j] = datarpk[middle][j];
+         datarpk[middle][j] = tmp;
+         tmp = dataltb[dim-1][j]; dataltb[dim-1][j] = dataltb[middle][j];
+         dataltb[middle][j] = tmp;
+         tmp = datalix[dim-1][j]; datalix[dim-1][j] = datalix[middle][j];
+         datalix[middle][j] = tmp;
+         tmp = datalmi[dim-1][j]; datalmi[dim-1][j] = datalmi[middle][j];
+         datalmi[middle][j] = tmp;
+         tmp = datalrg[dim-1][j]; datalrg[dim-1][j] = datalrg[middle][j];
+         datalrg[middle][j] = tmp;
+         tmp = datalpk[dim-1][j]; datalpk[dim-1][j] = datalpk[middle][j];
+         datalpk[middle][j] = tmp;
+      }
    }
    free(pluxrtb); free(pluxrix); free(pluxrmi); free(pluxrrg); free(pluxrpk);
    free(pluxltb); free(pluxlix); free(pluxlmi); free(pluxlrg); free(pluxlpk);

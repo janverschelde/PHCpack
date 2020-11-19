@@ -83,8 +83,8 @@ void CPU_dbl10_speel
          inputltb[ix2],inputlix[ix2],inputlmi[ix2],inputlrg[ix2],inputlpk[ix2],
          backwardrtb[0],backwardrix[0],backwardrmi[0],
          backwardrrg[0],backwardrpk[0],
-         backwardltb[0],backwardrix[0],backwardlmi[0],
-         backwardlrg[0],backwardrpk[0]);
+         backwardltb[0],backwardlix[0],backwardlmi[0],
+         backwardlrg[0],backwardlpk[0]);
 
       for(int i=1; i<nvr-2; i++)
       {                                            // b[i] = b[i-1]*x[n-2-i]
