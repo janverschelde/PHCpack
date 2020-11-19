@@ -206,10 +206,14 @@ void CPU_cmplx8_speel
    double **inputimhilohi, double **inputimlolohi,
    double **inputimhihilo, double **inputimlohilo,
    double **inputimhilolo, double **inputimlololo,
-   double **forwardrehihi, double **forwardrelohi,
-   double **forwardrehilo, double **forwardrelolo,
-   double **forwardimhihi, double **forwardimlohi,
-   double **forwardimhilo, double **forwardimlolo,
+   double **forwardrehihihi, double **forwardrelohihi,
+   double **forwardrehilohi, double **forwardrelolohi,
+   double **forwardrehihilo, double **forwardrelohilo,
+   double **forwardrehilolo, double **forwardrelololo,
+   double **forwardimhihihi, double **forwardimlohihi,
+   double **forwardimhilohi, double **forwardimlolohi,
+   double **forwardimhihilo, double **forwardimlohilo,
+   double **forwardimhilolo, double **forwardimlololo,
    double **backwardrehihihi, double **backwardrelohihi,
    double **backwardrehilohi, double **backwardrelolohi,
    double **backwardrehihilo, double **backwardrelohilo,
@@ -227,6 +231,249 @@ void CPU_cmplx8_speel
    double **crossimhihilo, double **crossimlohilo,
    double **crossimhilolo, double **crossimlololo )
 {
+   int ix1 = idx[0];
+   int ix2;
+                                                           // f[0] = cff*x[0]
+   CPU_cmplx8_product(deg,
+      cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+      cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+      cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+      cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+      inputrehihihi[ix1],inputrelohihi[ix1],
+      inputrehilohi[ix1],inputrelolohi[ix1],
+      inputrehihilo[ix1],inputrelohilo[ix1],
+      inputrehilolo[ix1],inputrelololo[ix1],
+      inputimhihihi[ix1],inputimlohihi[ix1],
+      inputimhilohi[ix1],inputimlolohi[ix1],
+      inputimhihilo[ix1],inputimlohilo[ix1],
+      inputimhilolo[ix1],inputimlololo[ix1],
+      forwardrehihihi[0],forwardrelohihi[0],
+      forwardrehilohi[0],forwardrelolohi[0],
+      forwardrehihilo[0],forwardrelohilo[0],
+      forwardrehilolo[0],forwardrelololo[0],
+      forwardimhihihi[0],forwardimlohihi[0],
+      forwardimhilohi[0],forwardimlolohi[0],
+      forwardimhihilo[0],forwardimlohilo[0],
+      forwardimhilolo[0],forwardimlololo[0]);
+
+   for(int i=1; i<nvr; i++)
+   {                                                    // f[i] = f[i-1]*x[i]
+      ix2 = idx[i];
+      CPU_cmplx8_product(deg,
+         forwardrehihihi[i-1],forwardrelohihi[i-1],
+         forwardrehilohi[i-1],forwardrelolohi[i-1],
+         forwardrehihilo[i-1],forwardrelohilo[i-1],
+         forwardrehilolo[i-1],forwardrelololo[i-1],
+         forwardimhihihi[i-1],forwardimlohihi[i-1],
+         forwardimhilohi[i-1],forwardimlolohi[i-1],
+         forwardimhihilo[i-1],forwardimlohilo[i-1],
+         forwardimhilolo[i-1],forwardimlololo[i-1],
+         inputrehihihi[ix2],inputrelohihi[ix2],
+         inputrehilohi[ix2],inputrelolohi[ix2],
+         inputrehihilo[ix2],inputrelohilo[ix2],
+         inputrehilolo[ix2],inputrelololo[ix2],
+         inputimhihihi[ix2],inputimlohihi[ix2],
+         inputimhilohi[ix2],inputimlolohi[ix2],
+         inputimhihilo[ix2],inputimlohilo[ix2],
+         inputimhilolo[ix2],inputimlololo[ix2],
+         forwardrehihihi[i],forwardrelohihi[i],
+         forwardrehilohi[i],forwardrelolohi[i],
+         forwardrehihilo[i],forwardrelohilo[i],
+         forwardrehilolo[i],forwardrelololo[i],
+         forwardimhihihi[i],forwardimlohihi[i],
+         forwardimhilohi[i],forwardimlolohi[i],
+         forwardimhihilo[i],forwardimlohilo[i],
+         forwardimhilolo[i],forwardimlololo[i]);
+   }
+   if(nvr > 2)
+   {                                                  // b[0] = x[n-1]*x[n-2]
+      ix1 = idx[nvr-1]; ix2 = idx[nvr-2];
+      CPU_cmplx8_product(deg,
+         inputrehihihi[ix1],inputrelohihi[ix1],
+         inputrehilohi[ix1],inputrelolohi[ix1],
+         inputrehihilo[ix1],inputrelohilo[ix1],
+         inputrehilolo[ix1],inputrelololo[ix1],
+         inputimhihihi[ix1],inputimlohihi[ix1],
+         inputimhilohi[ix1],inputimlolohi[ix1],
+         inputimhihilo[ix1],inputimlohilo[ix1],
+         inputimhilolo[ix1],inputimlololo[ix1],
+         inputrehihihi[ix2],inputrelohihi[ix2],
+         inputrehilohi[ix2],inputrelolohi[ix2],
+         inputrehihilo[ix2],inputrelohilo[ix2],
+         inputrehilolo[ix2],inputrelololo[ix2],
+         inputimhihihi[ix2],inputimlohihi[ix2],
+         inputimhilohi[ix2],inputimlolohi[ix2],
+         inputimhihilo[ix2],inputimlohilo[ix2],
+         inputimhilolo[ix2],inputimlololo[ix2],
+         backwardrehihihi[0],backwardrelohihi[0],
+         backwardrehilohi[0],backwardrelolohi[0],
+         backwardrehihilo[0],backwardrelohilo[0],
+         backwardrehilolo[0],backwardrelololo[0],
+         backwardimhihihi[0],backwardimlohihi[0],
+         backwardimhilohi[0],backwardimlolohi[0],
+         backwardimhihilo[0],backwardimlohilo[0],
+         backwardimhilolo[0],backwardimlololo[0]);
+
+      for(int i=1; i<nvr-2; i++)
+      {                                             // b[i] = b[i-1]*x[x-2-i]
+         ix2 = idx[nvr-2-i];
+         CPU_cmplx8_product(deg,
+            backwardrehihihi[i-1],backwardrelohihi[i-1],
+            backwardrehilohi[i-1],backwardrelolohi[i-1],
+            backwardrehihilo[i-1],backwardrelohilo[i-1],
+            backwardrehilolo[i-1],backwardrelololo[i-1],
+            backwardimhihihi[i-1],backwardimlohihi[i-1],
+            backwardimhilohi[i-1],backwardimlolohi[i-1],
+            backwardimhihilo[i-1],backwardimlohilo[i-1],
+            backwardimhilolo[i-1],backwardimlololo[i-1],
+            inputrehihihi[ix2],inputrelohihi[ix2],
+            inputrehilohi[ix2],inputrelolohi[ix2],
+            inputrehihilo[ix2],inputrelohilo[ix2],
+            inputrehilolo[ix2],inputrelololo[ix2],
+            inputimhihihi[ix2],inputimlohihi[ix2],
+            inputimhilohi[ix2],inputimlolohi[ix2],
+            inputimhihilo[ix2],inputimlohilo[ix2],
+            inputimhilolo[ix2],inputimlololo[ix2],
+            backwardrehihihi[i],backwardrelohihi[i],
+            backwardrehilohi[i],backwardrelolohi[i],
+            backwardrehihilo[i],backwardrelohilo[i],
+            backwardrehilolo[i],backwardrelololo[i],
+            backwardimhihihi[i],backwardimlohihi[i],
+            backwardimhilohi[i],backwardimlolohi[i],
+            backwardimhihilo[i],backwardimlohilo[i],
+            backwardimhilolo[i],backwardimlololo[i]);
+      }
+                                                       // b[n-3] = b[n-3]*cff
+      CPU_cmplx8_product(deg,
+         backwardrehihihi[nvr-3],backwardrelohihi[nvr-3],
+         backwardrehilohi[nvr-3],backwardrelolohi[nvr-3],
+         backwardrehihilo[nvr-3],backwardrelohilo[nvr-3],
+         backwardrehilolo[nvr-3],backwardrelololo[nvr-3],
+         backwardimhihihi[nvr-3],backwardimlohihi[nvr-3],
+         backwardimhilohi[nvr-3],backwardimlolohi[nvr-3],
+         backwardimhihilo[nvr-3],backwardimlohilo[nvr-3],
+         backwardimhilolo[nvr-3],backwardimlololo[nvr-3],
+         cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+         cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+         cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+         cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+         crossrehihihi[0],crossrelohihi[0],
+         crossrehilohi[0],crossrelolohi[0],
+         crossrehihilo[0],crossrelohilo[0],
+         crossrehilolo[0],crossrelololo[0],
+         crossimhihihi[0],crossimlohihi[0],
+         crossimhilohi[0],crossimlolohi[0],
+         crossimhihilo[0],crossimlohilo[0],
+         crossimhilolo[0],crossimlololo[0]); 
+                                                       // cross is work space
+      for(int i=0; i<=deg; i++)
+      {
+         backwardrehihihi[nvr-3][i] = crossrehihihi[0][i];
+         backwardrelohihi[nvr-3][i] = crossrelohihi[0][i];
+         backwardrehilohi[nvr-3][i] = crossrehilohi[0][i];
+         backwardrelolohi[nvr-3][i] = crossrelolohi[0][i];
+         backwardrehihilo[nvr-3][i] = crossrehihilo[0][i];
+         backwardrelohilo[nvr-3][i] = crossrelohilo[0][i];
+         backwardrehilolo[nvr-3][i] = crossrehilolo[0][i];
+         backwardrelololo[nvr-3][i] = crossrelololo[0][i];
+         backwardimhihihi[nvr-3][i] = crossimhihihi[0][i];
+         backwardimlohihi[nvr-3][i] = crossimlohihi[0][i];
+         backwardimhilohi[nvr-3][i] = crossimhilohi[0][i];
+         backwardimlolohi[nvr-3][i] = crossimlolohi[0][i];
+         backwardimhihilo[nvr-3][i] = crossimhihilo[0][i];
+         backwardimlohilo[nvr-3][i] = crossimlohilo[0][i];
+         backwardimhilolo[nvr-3][i] = crossimhilolo[0][i];
+         backwardimlololo[nvr-3][i] = crossimlololo[0][i];
+      }
+      if(nvr == 3)
+      {                                                   // c[0] = f[0]*x[2]
+         ix2 = idx[2];
+         CPU_cmplx8_product(deg,
+            forwardrehihihi[0],forwardrelohihi[0],
+            forwardrehilohi[0],forwardrelolohi[0],
+            forwardrehihilo[0],forwardrelohilo[0],
+            forwardrehilolo[0],forwardrelololo[0],
+            forwardimhihihi[0],forwardimlohihi[0],
+            forwardimhilohi[0],forwardimlolohi[0],
+            forwardimhihilo[0],forwardimlohilo[0],
+            forwardimhilolo[0],forwardimlololo[0],
+            inputrehihihi[ix2],inputrelohihi[ix2],
+            inputrehilohi[ix2],inputrelolohi[ix2],
+            inputrehihilo[ix2],inputrelohilo[ix2],
+            inputrehilolo[ix2],inputrelololo[ix2],
+            inputimhihihi[ix2],inputimlohihi[ix2],
+            inputimhilohi[ix2],inputimlolohi[ix2],
+            inputimhihilo[ix2],inputimlohilo[ix2],
+            inputimhilolo[ix2],inputimlololo[ix2],
+            crossrehihihi[0],crossrelohihi[0],
+            crossrehilohi[0],crossrelolohi[0],
+            crossrehihilo[0],crossrelohilo[0],
+            crossrehilolo[0],crossrelololo[0],
+            crossimhihihi[0],crossimlohihi[0],
+            crossimhilohi[0],crossimlolohi[0],
+            crossimhihilo[0],crossimlohilo[0],
+            crossimhilolo[0],crossimlololo[0]);
+      }
+      else
+      {
+         for(int i=0; i<nvr-3; i++)
+         {                                            // c[i] = f[i]*b[n-4-i]
+            ix2 = nvr-4-i;
+            CPU_cmplx8_product(deg,
+               forwardrehihihi[i],forwardrelohihi[i],
+               forwardrehilohi[i],forwardrelolohi[i],
+               forwardrehihilo[i],forwardrelohilo[i],
+               forwardrehilolo[i],forwardrelololo[i],
+               forwardimhihihi[i],forwardimlohihi[i],
+               forwardimhilohi[i],forwardimlolohi[i],
+               forwardimhihilo[i],forwardimlohilo[i],
+               forwardimhilolo[i],forwardimlololo[i],
+               backwardrehihihi[ix2],backwardrelohihi[ix2],
+               backwardrehilohi[ix2],backwardrelolohi[ix2],
+               backwardrehihilo[ix2],backwardrelohilo[ix2],
+               backwardrehilolo[ix2],backwardrelololo[ix2],
+               backwardimhihihi[ix2],backwardimlohihi[ix2],
+               backwardimhilohi[ix2],backwardimlolohi[ix2],
+               backwardimhihilo[ix2],backwardimlohilo[ix2],
+               backwardimhilolo[ix2],backwardimlololo[ix2],
+               crossrehihihi[i],crossrelohihi[i],
+               crossrehilohi[i],crossrelolohi[i],
+               crossrehihilo[i],crossrelohilo[i],
+               crossrehilolo[i],crossrelololo[i],
+               crossimhihihi[i],crossimlohihi[i],
+               crossimhilohi[i],crossimlolohi[i],
+               crossimhihilo[i],crossimlohilo[i],
+               crossimhilolo[i],crossimlololo[i]);
+         }
+                                                    // c[n-3] = f[n-3]*x[n-1]
+         ix2 = idx[nvr-1];
+         CPU_cmplx8_product(deg,
+            forwardrehihihi[nvr-3],forwardrelohihi[nvr-3],
+            forwardrehilohi[nvr-3],forwardrelolohi[nvr-3],
+            forwardrehihilo[nvr-3],forwardrelohilo[nvr-3],
+            forwardrehilolo[nvr-3],forwardrelololo[nvr-3],
+            forwardimhihihi[nvr-3],forwardimlohihi[nvr-3],
+            forwardimhilohi[nvr-3],forwardimlolohi[nvr-3],
+            forwardimhihilo[nvr-3],forwardimlohilo[nvr-3],
+            forwardimhilolo[nvr-3],forwardimlololo[nvr-3],
+            inputrehihihi[ix2],inputrelohihi[ix2],
+            inputrehilohi[ix2],inputrelolohi[ix2],
+            inputrehihilo[ix2],inputrelohilo[ix2],
+            inputrehilolo[ix2],inputrelololo[ix2],
+            inputimhihihi[ix2],inputimlohihi[ix2],
+            inputimhilohi[ix2],inputimlolohi[ix2],
+            inputimhihilo[ix2],inputimlohilo[ix2],
+            inputimhilolo[ix2],inputimlololo[ix2],
+            crossrehihihi[nvr-3],crossrelohihi[nvr-3],
+            crossrehilohi[nvr-3],crossrelolohi[nvr-3],
+            crossrehihilo[nvr-3],crossrelohilo[nvr-3],
+            crossrehilolo[nvr-3],crossrelololo[nvr-3],
+            crossimhihihi[nvr-3],crossimlohihi[nvr-3],
+            crossimhilohi[nvr-3],crossimlolohi[nvr-3],
+            crossimhihilo[nvr-3],crossimlohilo[nvr-3],
+            crossimhilolo[nvr-3],crossimlololo[nvr-3]);
+      }
+   }
 }
 
 void CPU_dbl8_evaldiff
@@ -510,10 +757,6 @@ void CPU_cmplx8_evaldiff
    double **inputimhilohi, double **inputimlolohi,
    double **inputimhihilo, double **inputimlohilo,
    double **inputimhilolo, double **inputimlololo,
-   double **forwardrehihi, double **forwardrelohi,
-   double **forwardrehilo, double **forwardrelolo,
-   double **forwardimhihi, double **forwardimlohi,
-   double **forwardimhilo, double **forwardimlolo,
    double **outputrehihihi, double **outputrelohihi,
    double **outputrehilohi, double **outputrelolohi,
    double **outputrehihilo, double **outputrelohilo,
@@ -523,4 +766,458 @@ void CPU_cmplx8_evaldiff
    double **outputimhihilo, double **outputimlohilo,
    double **outputimhilolo, double **outputimlololo )
 {
+   if(nvr == 1)
+   {
+      int ix = idx[0];
+
+      CPU_cmplx8_product(deg,
+         inputrehihihi[ix],inputrelohihi[ix],
+         inputrehilohi[ix],inputrelolohi[ix],
+         inputrehihilo[ix],inputrelohilo[ix],
+         inputrehilolo[ix],inputrelololo[ix],
+         inputimhihihi[ix],inputimlohihi[ix],
+         inputimhilohi[ix],inputimlolohi[ix],
+         inputimhihilo[ix],inputimlohilo[ix],
+         inputimhilolo[ix],inputimlololo[ix],
+         cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+         cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+         cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+         cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+         outputrehihihi[dim],outputrelohihi[dim],
+         outputrehilohi[dim],outputrelolohi[dim],
+         outputrehihilo[dim],outputrelohilo[dim],
+         outputrehilolo[dim],outputrelololo[dim],
+         outputimhihihi[dim],outputimlohihi[dim],
+         outputimhilohi[dim],outputimlolohi[dim],
+         outputimhihilo[dim],outputimlohilo[dim],
+         outputimhilolo[dim],outputimlololo[dim]);
+
+      for(int i=0; i<=deg; i++) 
+      {
+         outputrehihihi[ix][i] = cffrehihihi[i];
+         outputrelohihi[ix][i] = cffrelohihi[i];
+         outputrehilolo[ix][i] = cffrehilolo[i];
+         outputrelololo[ix][i] = cffrelololo[i];
+         outputrehihihi[ix][i] = cffrehihihi[i];
+         outputrelohihi[ix][i] = cffrelohihi[i];
+         outputrehilolo[ix][i] = cffrehilolo[i];
+         outputrelololo[ix][i] = cffrelololo[i];
+         outputimhihihi[ix][i] = cffimhihihi[i];
+         outputimlohihi[ix][i] = cffimlohihi[i];
+         outputimhilolo[ix][i] = cffimhilolo[i];
+         outputimlololo[ix][i] = cffimlololo[i];
+         outputimhihihi[ix][i] = cffimhihihi[i];
+         outputimlohihi[ix][i] = cffimlohihi[i];
+         outputimhilolo[ix][i] = cffimhilolo[i];
+         outputimlololo[ix][i] = cffimlololo[i];
+      }
+   }
+   else if(nvr == 2)
+   {
+      int ix1 = idx[0];
+      int ix2 = idx[1];
+
+      CPU_cmplx8_product(deg,
+         inputrehihihi[ix1],inputrelohihi[ix1],
+         inputrehilohi[ix1],inputrelolohi[ix1],
+         inputrehihilo[ix1],inputrelohilo[ix1],
+         inputrehilolo[ix1],inputrelololo[ix1],
+         inputimhihihi[ix1],inputimlohihi[ix1],
+         inputimhilohi[ix1],inputimlolohi[ix1],
+         inputimhihilo[ix1],inputimlohilo[ix1],
+         inputimhilolo[ix1],inputimlololo[ix1],
+         inputrehihihi[ix2],inputrelohihi[ix2],
+         inputrehilohi[ix2],inputrelolohi[ix2],
+         inputrehihilo[ix2],inputrelohilo[ix2],
+         inputrehilolo[ix2],inputrelololo[ix2],
+         inputimhihihi[ix2],inputimlohihi[ix2],
+         inputimhilohi[ix2],inputimlolohi[ix2],
+         inputimhihilo[ix2],inputimlohilo[ix2],
+         inputimhilolo[ix2],inputimlololo[ix2],
+         outputrehihihi[dim],outputrelohihi[dim],
+         outputrehilohi[dim],outputrelolohi[dim],
+         outputrehihilo[dim],outputrelohilo[dim],
+         outputrehilolo[dim],outputrelololo[dim],
+         outputimhihihi[dim],outputimlohihi[dim],
+         outputimhilohi[dim],outputimlolohi[dim],
+         outputimhihilo[dim],outputimlohilo[dim],
+         outputimhilolo[dim],outputimlololo[dim]);
+      CPU_cmplx8_product(deg,
+         outputrehihihi[dim],outputrelohihi[dim],
+         outputrehilohi[dim],outputrelolohi[dim],
+         outputrehihilo[dim],outputrelohilo[dim],
+         outputrehilolo[dim],outputrelololo[dim],
+         outputimhihihi[dim],outputimlohihi[dim],
+         outputimhilohi[dim],outputimlolohi[dim],
+         outputimhihilo[dim],outputimlohilo[dim],
+         outputimhilolo[dim],outputimlololo[dim],
+         cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+         cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+         cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+         cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+         outputrehihihi[dim],outputrelohihi[dim],
+         outputrehilohi[dim],outputrelolohi[dim],
+         outputrehihilo[dim],outputrelohilo[dim],
+         outputrehilolo[dim],outputrelololo[dim],
+         outputimhihihi[dim],outputimlohihi[dim],
+         outputimhilohi[dim],outputimlolohi[dim],
+         outputimhihilo[dim],outputimlohilo[dim],
+         outputimhilolo[dim],outputimlololo[dim]);
+
+      CPU_cmplx8_product(deg,
+         cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+         cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+         cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+         cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+         inputrehihihi[ix1],inputrelohihi[ix1],
+         inputrehilohi[ix1],inputrelolohi[ix1],
+         inputrehihilo[ix1],inputrelohilo[ix1],
+         inputrehilolo[ix1],inputrelololo[ix1],
+         inputimhihihi[ix1],inputimlohihi[ix1],
+         inputimhilohi[ix1],inputimlolohi[ix1],
+         inputimhihilo[ix1],inputimlohilo[ix1],
+         inputimhilolo[ix1],inputimlololo[ix1],
+         outputrehihihi[ix2],outputrelohihi[ix2],
+         outputrehilohi[ix2],outputrelolohi[ix2],
+         outputrehihilo[ix2],outputrelohilo[ix2],
+         outputrehilolo[ix2],outputrelololo[ix2],
+         outputimhihihi[ix2],outputimlohihi[ix2],
+         outputimhilohi[ix2],outputimlolohi[ix2],
+         outputimhihilo[ix2],outputimlohilo[ix2],
+         outputimhilolo[ix2],outputimlololo[ix2]);
+      CPU_cmplx8_product(deg,
+         cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+         cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+         cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+         cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+         inputrehihihi[ix2],inputrelohihi[ix2],
+         inputrehilohi[ix2],inputrelolohi[ix2],
+         inputrehihilo[ix2],inputrelohilo[ix2],
+         inputrehilolo[ix2],inputrelololo[ix2],
+         inputimhihihi[ix1],inputimlohihi[ix1],
+         inputimhilohi[ix1],inputimlolohi[ix1],
+         inputimhihilo[ix1],inputimlohilo[ix1],
+         inputimhilolo[ix1],inputimlololo[ix1],
+         outputrehihihi[ix1],outputrelohihi[ix1],
+         outputrehilohi[ix1],outputrelolohi[ix1],
+         outputrehihilo[ix1],outputrelohilo[ix1],
+         outputrehilolo[ix1],outputrelololo[ix1],
+         outputimhihihi[ix1],outputimlohihi[ix1],
+         outputimhilohi[ix1],outputimlolohi[ix1],
+         outputimhihilo[ix1],outputimlohilo[ix1],
+         outputimhilolo[ix1],outputimlololo[ix1]);
+   }
+   else
+   {
+      double **forwardrehihihi = new double*[nvr];
+      double **forwardrelohihi = new double*[nvr];
+      double **forwardrehilohi = new double*[nvr];
+      double **forwardrelolohi = new double*[nvr];
+      double **forwardrehihilo = new double*[nvr];
+      double **forwardrelohilo = new double*[nvr];
+      double **forwardrehilolo = new double*[nvr];
+      double **forwardrelololo = new double*[nvr];
+      double **forwardimhihihi = new double*[nvr];
+      double **forwardimlohihi = new double*[nvr];
+      double **forwardimhilohi = new double*[nvr];
+      double **forwardimlolohi = new double*[nvr];
+      double **forwardimhihilo = new double*[nvr];
+      double **forwardimlohilo = new double*[nvr];
+      double **forwardimhilolo = new double*[nvr];
+      double **forwardimlololo = new double*[nvr];
+      double **backwardrehihihi = new double*[nvr-2];
+      double **backwardrelohihi = new double*[nvr-2];
+      double **backwardrehilohi = new double*[nvr-2];
+      double **backwardrelolohi = new double*[nvr-2];
+      double **backwardrehihilo = new double*[nvr-2];
+      double **backwardrelohilo = new double*[nvr-2];
+      double **backwardrehilolo = new double*[nvr-2];
+      double **backwardrelololo = new double*[nvr-2];
+      double **backwardimhihihi = new double*[nvr-2];
+      double **backwardimlohihi = new double*[nvr-2];
+      double **backwardimhilohi = new double*[nvr-2];
+      double **backwardimlolohi = new double*[nvr-2];
+      double **backwardimhihilo = new double*[nvr-2];
+      double **backwardimlohilo = new double*[nvr-2];
+      double **backwardimhilolo = new double*[nvr-2];
+      double **backwardimlololo = new double*[nvr-2];
+      double **crossrehihihi = new double*[nvr-2];
+      double **crossrelohihi = new double*[nvr-2];
+      double **crossrehilohi = new double*[nvr-2];
+      double **crossrelolohi = new double*[nvr-2];
+      double **crossrehihilo = new double*[nvr-2];
+      double **crossrelohilo = new double*[nvr-2];
+      double **crossrehilolo = new double*[nvr-2];
+      double **crossrelololo = new double*[nvr-2];
+      double **crossimhihihi = new double*[nvr-2];
+      double **crossimlohihi = new double*[nvr-2];
+      double **crossimhilohi = new double*[nvr-2];
+      double **crossimlolohi = new double*[nvr-2];
+      double **crossimhihilo = new double*[nvr-2];
+      double **crossimlohilo = new double*[nvr-2];
+      double **crossimhilolo = new double*[nvr-2];
+      double **crossimlololo = new double*[nvr-2];
+
+      for(int i=0; i<nvr-2; i++)
+      {
+         forwardrehihihi[i] = new double[deg+1];
+         forwardrelohihi[i] = new double[deg+1];
+         forwardrehilohi[i] = new double[deg+1];
+         forwardrelolohi[i] = new double[deg+1];
+         forwardrehihilo[i] = new double[deg+1];
+         forwardrelohilo[i] = new double[deg+1];
+         forwardrehilolo[i] = new double[deg+1];
+         forwardrelololo[i] = new double[deg+1];
+         forwardimhihihi[i] = new double[deg+1];
+         forwardimlohihi[i] = new double[deg+1];
+         forwardimhilohi[i] = new double[deg+1];
+         forwardimlolohi[i] = new double[deg+1];
+         forwardimhihilo[i] = new double[deg+1];
+         forwardimlohilo[i] = new double[deg+1];
+         forwardimhilolo[i] = new double[deg+1];
+         forwardimlololo[i] = new double[deg+1];
+         backwardrehihihi[i] = new double[deg+1];
+         backwardrelohihi[i] = new double[deg+1];
+         backwardrehilohi[i] = new double[deg+1];
+         backwardrelolohi[i] = new double[deg+1];
+         backwardrehihilo[i] = new double[deg+1];
+         backwardrelohilo[i] = new double[deg+1];
+         backwardrehilolo[i] = new double[deg+1];
+         backwardrelololo[i] = new double[deg+1];
+         backwardimhihihi[i] = new double[deg+1];
+         backwardimlohihi[i] = new double[deg+1];
+         backwardimhilohi[i] = new double[deg+1];
+         backwardimlolohi[i] = new double[deg+1];
+         backwardimhihilo[i] = new double[deg+1];
+         backwardimlohilo[i] = new double[deg+1];
+         backwardimhilolo[i] = new double[deg+1];
+         backwardimlololo[i] = new double[deg+1];
+         crossrehihihi[i] = new double[deg+1];
+         crossrelohihi[i] = new double[deg+1];
+         crossrehilohi[i] = new double[deg+1];
+         crossrelolohi[i] = new double[deg+1];
+         crossrehihilo[i] = new double[deg+1];
+         crossrelohilo[i] = new double[deg+1];
+         crossrehilolo[i] = new double[deg+1];
+         crossrelololo[i] = new double[deg+1];
+         crossimhihihi[i] = new double[deg+1];
+         crossimlohihi[i] = new double[deg+1];
+         crossimhilohi[i] = new double[deg+1];
+         crossimlolohi[i] = new double[deg+1];
+         crossimhihilo[i] = new double[deg+1];
+         crossimlohilo[i] = new double[deg+1];
+         crossimhilolo[i] = new double[deg+1];
+         crossimlololo[i] = new double[deg+1];
+      }
+      forwardrehihihi[nvr-2] = new double[deg+1];
+      forwardrelohihi[nvr-2] = new double[deg+1];
+      forwardrehilohi[nvr-2] = new double[deg+1];
+      forwardrelolohi[nvr-2] = new double[deg+1];
+      forwardrehihilo[nvr-2] = new double[deg+1];
+      forwardrelohilo[nvr-2] = new double[deg+1];
+      forwardrehilolo[nvr-2] = new double[deg+1];
+      forwardrelololo[nvr-2] = new double[deg+1];
+      forwardimhihihi[nvr-2] = new double[deg+1];
+      forwardimlohihi[nvr-2] = new double[deg+1];
+      forwardimhilohi[nvr-2] = new double[deg+1];
+      forwardimlolohi[nvr-2] = new double[deg+1];
+      forwardimhihilo[nvr-2] = new double[deg+1];
+      forwardimlohilo[nvr-2] = new double[deg+1];
+      forwardimhilolo[nvr-2] = new double[deg+1];
+      forwardimlololo[nvr-2] = new double[deg+1];
+      forwardrehihihi[nvr-1] = new double[deg+1];
+      forwardrelohihi[nvr-1] = new double[deg+1];
+      forwardrehilohi[nvr-1] = new double[deg+1];
+      forwardrelolohi[nvr-1] = new double[deg+1];
+      forwardrehihilo[nvr-1] = new double[deg+1];
+      forwardrelohilo[nvr-1] = new double[deg+1];
+      forwardrehilolo[nvr-1] = new double[deg+1];
+      forwardrelololo[nvr-1] = new double[deg+1];
+      forwardimhihihi[nvr-1] = new double[deg+1];
+      forwardimlohihi[nvr-1] = new double[deg+1];
+      forwardimhilohi[nvr-1] = new double[deg+1];
+      forwardimlolohi[nvr-1] = new double[deg+1];
+      forwardimhihilo[nvr-1] = new double[deg+1];
+      forwardimlohilo[nvr-1] = new double[deg+1];
+      forwardimhilolo[nvr-1] = new double[deg+1];
+      forwardimlololo[nvr-1] = new double[deg+1];
+
+      CPU_cmplx8_speel(nvr,deg,idx,
+         cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+         cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+         cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+         cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+         inputrehihihi,inputrelohihi,inputrehilohi,inputrelolohi,
+         inputrehihilo,inputrelohilo,inputrehilolo,inputrelololo,
+         inputimhihihi,inputimlohihi,inputimhilohi,inputimlolohi,
+         inputimhihilo,inputimlohilo,inputimhilolo,inputimlololo,
+         forwardrehihihi,forwardrelohihi,forwardrehilohi,forwardrelolohi,
+         forwardrehihilo,forwardrelohilo,forwardrehilolo,forwardrelololo,
+         forwardimhihihi,forwardimlohihi,forwardimhilohi,forwardimlolohi,
+         forwardimhihilo,forwardimlohilo,forwardimhilolo,forwardimlololo,
+         backwardrehihihi,backwardrelohihi,backwardrehilohi,backwardrelolohi,
+         backwardrehihilo,backwardrelohilo,backwardrehilolo,backwardrelololo,
+         backwardimhihihi,backwardimlohihi,backwardimhilohi,backwardimlolohi,
+         backwardimhihilo,backwardimlohilo,backwardimhilolo,backwardimlololo,
+         crossrehihihi,crossrelohihi,crossrehilohi,crossrelolohi,
+         crossrehihilo,crossrelohilo,crossrehilolo,crossrelololo,
+         crossimhihihi,crossimlohihi,crossimhilohi,crossimlolohi,
+         crossimhihilo,crossimlohilo,crossimhilolo,crossimlololo);
+
+      for(int i=0; i<deg+1; i++)          // assign value of the monomial
+      {
+         outputrehihihi[dim][i] = forwardrehihihi[nvr-1][i];
+         outputrelohihi[dim][i] = forwardrelohihi[nvr-1][i];
+         outputrehilohi[dim][i] = forwardrehilohi[nvr-1][i];
+         outputrelolohi[dim][i] = forwardrelolohi[nvr-1][i];
+         outputrehihilo[dim][i] = forwardrehihilo[nvr-1][i];
+         outputrelohilo[dim][i] = forwardrelohilo[nvr-1][i];
+         outputrehilolo[dim][i] = forwardrehilolo[nvr-1][i];
+         outputrelololo[dim][i] = forwardrelololo[nvr-1][i];
+         outputimhihihi[dim][i] = forwardimhihihi[nvr-1][i];
+         outputimlohihi[dim][i] = forwardimlohihi[nvr-1][i];
+         outputimhilohi[dim][i] = forwardimhilohi[nvr-1][i];
+         outputimlolohi[dim][i] = forwardimlolohi[nvr-1][i];
+         outputimhihilo[dim][i] = forwardimhihilo[nvr-1][i];
+         outputimlohilo[dim][i] = forwardimlohilo[nvr-1][i];
+         outputimhilolo[dim][i] = forwardimhilolo[nvr-1][i];
+         outputimlololo[dim][i] = forwardimlololo[nvr-1][i];
+      }
+
+      if(nvr > 2)
+      {
+         int ix = idx[nvr-1];        // derivative with respect to x[n-1]
+
+         for(int i=0; i<deg+1; i++)
+         {
+            outputrehihihi[ix][i] = forwardrehihihi[nvr-2][i];
+            outputrelohihi[ix][i] = forwardrelohihi[nvr-2][i];
+            outputrehilohi[ix][i] = forwardrehilohi[nvr-2][i];
+            outputrelolohi[ix][i] = forwardrelolohi[nvr-2][i];
+            outputrehihilo[ix][i] = forwardrehihilo[nvr-2][i];
+            outputrelohilo[ix][i] = forwardrelohilo[nvr-2][i];
+            outputrehilolo[ix][i] = forwardrehilolo[nvr-2][i];
+            outputrelololo[ix][i] = forwardrelololo[nvr-2][i];
+            outputimhihihi[ix][i] = forwardimhihihi[nvr-2][i];
+            outputimlohihi[ix][i] = forwardimlohihi[nvr-2][i];
+            outputimhilohi[ix][i] = forwardimhilohi[nvr-2][i];
+            outputimlolohi[ix][i] = forwardimlolohi[nvr-2][i];
+            outputimhihilo[ix][i] = forwardimhihilo[nvr-2][i];
+            outputimlohilo[ix][i] = forwardimlohilo[nvr-2][i];
+            outputimhilolo[ix][i] = forwardimhilolo[nvr-2][i];
+            outputimlololo[ix][i] = forwardimlololo[nvr-2][i];
+         }
+
+         ix = idx[0];                  // derivative with respect to x[0]
+         for(int i=0; i<deg+1; i++)
+         {
+            outputrehihihi[ix][i] = backwardrehihihi[nvr-3][i];
+            outputrelohihi[ix][i] = backwardrelohihi[nvr-3][i];
+            outputrehilohi[ix][i] = backwardrehilohi[nvr-3][i];
+            outputrelolohi[ix][i] = backwardrelolohi[nvr-3][i];
+            outputrehihilo[ix][i] = backwardrehihilo[nvr-3][i];
+            outputrelohilo[ix][i] = backwardrelohilo[nvr-3][i];
+            outputrehilolo[ix][i] = backwardrehilolo[nvr-3][i];
+            outputrelololo[ix][i] = backwardrelololo[nvr-3][i];
+            outputimhihihi[ix][i] = backwardimhihihi[nvr-3][i];
+            outputimlohihi[ix][i] = backwardimlohihi[nvr-3][i];
+            outputimhilohi[ix][i] = backwardimhilohi[nvr-3][i];
+            outputimlolohi[ix][i] = backwardimlolohi[nvr-3][i];
+            outputimhihilo[ix][i] = backwardimhihilo[nvr-3][i];
+            outputimlohilo[ix][i] = backwardimlohilo[nvr-3][i];
+            outputimhilolo[ix][i] = backwardimhilolo[nvr-3][i];
+            outputimlololo[ix][i] = backwardimlololo[nvr-3][i];
+         }
+         for(int k=1; k<nvr-1; k++)
+         {
+            ix = idx[k];               // derivative with respect to x[k]
+            for(int i=0; i<deg+1; i++)
+            {
+               outputrehihihi[ix][i] = crossrehihihi[k-1][i];
+               outputrelohihi[ix][i] = crossrelohihi[k-1][i];
+               outputrehilohi[ix][i] = crossrehilohi[k-1][i];
+               outputrelolohi[ix][i] = crossrelolohi[k-1][i];
+               outputrehihilo[ix][i] = crossrehihilo[k-1][i];
+               outputrelohilo[ix][i] = crossrelohilo[k-1][i];
+               outputrehilolo[ix][i] = crossrehilolo[k-1][i];
+               outputrelololo[ix][i] = crossrelololo[k-1][i];
+               outputimhihihi[ix][i] = crossimhihihi[k-1][i];
+               outputimlohihi[ix][i] = crossimlohihi[k-1][i];
+               outputimhilohi[ix][i] = crossimhilohi[k-1][i];
+               outputimlolohi[ix][i] = crossimlolohi[k-1][i];
+               outputimhihilo[ix][i] = crossimhihilo[k-1][i];
+               outputimlohilo[ix][i] = crossimlohilo[k-1][i];
+               outputimhilolo[ix][i] = crossimhilolo[k-1][i];
+               outputimlololo[ix][i] = crossimlololo[k-1][i];
+            }
+         }
+      }
+      for(int i=0; i<nvr-2; i++)
+      {
+         free(forwardrehihihi[i]);  free(forwardrelohihi[i]);
+         free(forwardrehilohi[i]);  free(forwardrelolohi[i]);
+         free(forwardrehihilo[i]);  free(forwardrelohilo[i]);
+         free(forwardrehilolo[i]);  free(forwardrelololo[i]);
+         free(forwardimhihihi[i]);  free(forwardimlohihi[i]);
+         free(forwardimhilohi[i]);  free(forwardimlolohi[i]);
+         free(forwardimhihilo[i]);  free(forwardimlohilo[i]);
+         free(forwardimhilolo[i]);  free(forwardimlololo[i]);
+         free(backwardrehihihi[i]); free(backwardrelohihi[i]);
+         free(backwardrehilohi[i]); free(backwardrelolohi[i]);
+         free(backwardrehihilo[i]); free(backwardrelohilo[i]);
+         free(backwardrehilolo[i]); free(backwardrelololo[i]);
+         free(backwardimhihihi[i]); free(backwardimlohihi[i]);
+         free(backwardimhilohi[i]); free(backwardimlolohi[i]);
+         free(backwardimhihilo[i]); free(backwardimlohilo[i]);
+         free(backwardimhilolo[i]); free(backwardimlololo[i]);
+         free(crossrehihihi[i]);    free(crossrelohihi[i]);
+         free(crossrehilohi[i]);    free(crossrelolohi[i]);
+         free(crossrehihilo[i]);    free(crossrelohilo[i]);
+         free(crossrehilolo[i]);    free(crossrelololo[i]);
+         free(crossimhihihi[i]);    free(crossimlohihi[i]);
+         free(crossimhilohi[i]);    free(crossimlolohi[i]);
+         free(crossimhihilo[i]);    free(crossimlohilo[i]);
+         free(crossimhilolo[i]);    free(crossimlololo[i]);
+      }
+      free(forwardrehihihi[nvr-2]); free(forwardrelohihi[nvr-2]);
+      free(forwardrehilohi[nvr-2]); free(forwardrelolohi[nvr-2]);
+      free(forwardrehihilo[nvr-2]); free(forwardrelohilo[nvr-2]);
+      free(forwardrehilolo[nvr-2]); free(forwardrelololo[nvr-2]);
+      free(forwardrehihihi[nvr-1]); free(forwardrelohihi[nvr-1]);
+      free(forwardrehilohi[nvr-1]); free(forwardrelolohi[nvr-1]);
+      free(forwardrehihilo[nvr-1]); free(forwardrelohilo[nvr-1]);
+      free(forwardrehilolo[nvr-1]); free(forwardrelololo[nvr-1]);
+      free(forwardrehihihi);        free(forwardrelohihi);
+      free(forwardrehilohi);        free(forwardrelolohi);
+      free(forwardrehihilo);        free(forwardrelohilo);
+      free(forwardrehilolo);        free(forwardrelololo);
+      free(forwardimhihihi[nvr-2]); free(forwardimlohihi[nvr-2]);
+      free(forwardimhilohi[nvr-2]); free(forwardimlolohi[nvr-2]);
+      free(forwardimhihilo[nvr-2]); free(forwardimlohilo[nvr-2]);
+      free(forwardimhilolo[nvr-2]); free(forwardimlololo[nvr-2]);
+      free(forwardimhihihi[nvr-1]); free(forwardimlohihi[nvr-1]);
+      free(forwardimhilohi[nvr-1]); free(forwardimlolohi[nvr-1]);
+      free(forwardimhihilo[nvr-1]); free(forwardimlohilo[nvr-1]);
+      free(forwardimhilolo[nvr-1]); free(forwardimlololo[nvr-1]);
+      free(forwardimhihihi);        free(forwardimlohihi);
+      free(forwardimhilohi);        free(forwardimlolohi);
+      free(forwardimhihilo);        free(forwardimlohilo);
+      free(forwardimhilolo);        free(forwardimlololo);
+      free(backwardrehihihi);       free(backwardrelohihi);
+      free(backwardrehilohi);       free(backwardrelolohi);
+      free(backwardrehihilo);       free(backwardrelohilo);
+      free(backwardrehilolo);       free(backwardrelololo);
+      free(backwardimhihihi);       free(backwardimlohihi);
+      free(backwardimhilohi);       free(backwardimlolohi);
+      free(backwardimhihilo);       free(backwardimlohilo);
+      free(backwardimhilolo);       free(backwardimlololo);
+      free(crossrehihihi);          free(crossrelohihi);
+      free(crossrehilohi);          free(crossrelolohi);
+      free(crossrehihilo);          free(crossrelohilo);
+      free(crossrehilolo);          free(crossrelololo);
+      free(crossimhihihi);          free(crossimlohihi);
+      free(crossimhilohi);          free(crossimlolohi);
+      free(crossimhihilo);          free(crossimlohilo);
+      free(crossimhilolo);          free(crossimlololo);
+   }
 }

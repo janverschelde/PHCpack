@@ -1,5 +1,7 @@
 Thu 19 Nov 2020 : bug fixed in dbl10_monomials_host.cpp (at last!).
   In random10_monomials.cpp, swapped one to the middle for odd dimensions.
+  To dbl8_monomials_host and dbl8_monomials_kernels, added code for complex
+  coefficients, with tests added to test_dbl8_monomials.
 
 Wed 18 Nov 2020 : Redefined dbl5_monomials_kernels, it works on the C2050.
   Edited dbl4_monomials_kernels.h and dbl5_monomials_kernels.h.
