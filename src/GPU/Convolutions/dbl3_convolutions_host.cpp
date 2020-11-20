@@ -15,7 +15,7 @@ void CPU_dbl3_product
    tdf_mul(xhi[0],xmi[0],xlo[0],yhi[0],ymi[0],ylo[0],
            &zhi[0],&zmi[0],&zlo[0]);                    // z[0] = x[0]*y[0]
 
-   for(int k=0; k<=deg; k++)
+   for(int k=1; k<=deg; k++)
    {
       tdf_mul(xhi[0],xmi[0],xlo[0],yhi[k],ymi[k],ylo[k],
               &zhi[k],&zmi[k],&zlo[k]);                 // z[k] = x[0]*y[k]
@@ -63,12 +63,12 @@ void CPU_cmplx3_product
            &ipahi,&ipami,&ipalo);
    tdf_inc(&zimhi[0],&zimmi[0],&zimlo[0],ipahi,ipami,ipalo);
 
-   for(int k=0; k<=deg; k++)
+   for(int k=1; k<=deg; k++)
    {
       xr0hi = xrehi[0]; xr0mi = xremi[0]; xr0lo = xrelo[0];
       xi0hi = ximhi[0]; xi0mi = ximmi[0]; xi0lo = ximlo[0];
-      yr0hi = yrehi[k]; yr0mi = xremi[0]; yr0lo = yrelo[k];
-      yi0hi = yimhi[k]; yi0mi = ximmi[0]; yi0lo = yimlo[k];
+      yr0hi = yrehi[k]; yr0mi = yremi[k]; yr0lo = yrelo[k];
+      yi0hi = yimhi[k]; yi0mi = yimmi[k]; yi0lo = yimlo[k];
       // rpa = xr0*yr0 - xi0*yi0;
       tdf_mul(xr0hi,xr0mi,xr0lo,yr0hi,yr0mi,yr0lo,
               &rpahi,&rpami,&rpalo);
