@@ -83,11 +83,13 @@ int clear_4d_facets ( void )
    return fail;
 }
 
-int support_size ( void ) 
+int support_size ( int idx ) 
 {
    int fail,nbr;
    int *b;
    double *c;
+
+   nbr = idx;
 
    fail = _ada_use_c2phc4c(586,&nbr,b,c,0);
 

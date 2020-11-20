@@ -1286,7 +1286,9 @@ static PyObject *py2c_giftwrap_support_size
 /*
  * DESCRIPTION :
  *   Returns the number of characters in the string representation of
- *   the support of the first Laurent polynomial in the container. */
+ *   the support of the k-th Laurent polynomial in the container.
+ *   The index k is given on input as an integer between 1
+ *   and the number of Laurent polynomials. */
 
 static PyObject *py2c_giftwrap_support_string
  ( PyObject *self, PyObject *args );

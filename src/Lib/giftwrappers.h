@@ -105,14 +105,17 @@ int clear_4d_facets ( void );
  * DESCRIPTION :
  *   Clears the list of facets in 4-space. */
 
-int support_size ( void );
+int support_size ( int idx );
 /*
  * DESCRIPTION :
  *   Returns the number of characters in the string representation of
- *   the support of the first Laurent polynomial in the container.
+ *   the support of the Laurent polynomial with index idx in the container.
  *
  * REQUIRED :
- *   The Laurent systems container must be initialized. */
+ *   The Laurent systems container must be initialized.
+ *
+ * ON ENTRY :
+ *   idx     number between 1 and the number of polynomials stored. */
 
 int support_string ( int size, char *supp );
 /*

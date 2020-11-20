@@ -1,3 +1,7 @@
+Thu 19 Nov 2020 : updated giftwrappers.h, giftwrappers.c with an extra
+  index in the function support_size, which modified phcpy2c.h, phcpy2c2.c,
+  and phcpy2c3.c.
+
 Sun 25 Oct 2020 : modified phcpack.c to use everywhere use_c2phc instead
   of use_c2phc4c, because otherwise mixed_volume_by_demics does not work.
   For a pure C interface, copied phcpack.h and phcpack.c respectively into

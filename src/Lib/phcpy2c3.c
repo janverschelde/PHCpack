@@ -1928,11 +1928,11 @@ static PyObject *py2c_giftwrap_clear_4d_facets
 static PyObject *py2c_giftwrap_support_size
  ( PyObject *self, PyObject *args )
 {
-   int nbr;
+   int idx,nbr;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"")) return NULL;   
-   nbr = support_size();  
+   if(!PyArg_ParseTuple(args,"i",&idx)) return NULL;   
+   nbr = support_size(idx);  
 
    return Py_BuildValue("i",nbr);
 }
@@ -10276,7 +10276,7 @@ static PyMethodDef phcpy2c3_methods[] =
     METH_VARARGS,
     "Deallocates list of facets of convex hull stored in 4-space."},
    {"py2c_giftwrap_support_size", py2c_giftwrap_support_size, METH_VARARGS,
-    "Returns the number of characters in the string representation of\n the support of the first Laurent polynomial in the container."},
+    "Returns the number of characters in the string representation of\n the support of the k-th Laurent polynomial in the container, k is given on input."},
    {"py2c_giftwrap_support_string", py2c_giftwrap_support_string,
     METH_VARARGS,
     "Returns the string representation of the support of a Laurent polynomial."},
