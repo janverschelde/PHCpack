@@ -205,6 +205,8 @@ package body Giftwrap_Interface is
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
 
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    idx : constant integer32 := integer32(v_a(v_a'first));
     lp : constant Standard_Complex_Laur_Systems.Link_to_Laur_Sys
        := Standard_LaurSys_Container.retrieve;
     sup : Lists_of_Integer_Vectors.List;
@@ -213,7 +215,7 @@ package body Giftwrap_Interface is
     if vrblvl > 0
      then put_line("-> in giftwrap_interface.Giftwrap_String_Size ...");
     end if;
-    sup := Supports_of_Polynomial_Systems.Create(lp(lp'first));
+    sup := Supports_of_Polynomial_Systems.Create(lp(idx));
    -- put("The number of elements in the support : ");
    -- put(Lists_of_Integer_Vectors.Length_Of(sup),1); new_line;
     declare

@@ -1,3 +1,6 @@
+Thu 19 Nov 2020 : updated giftwrap_interface with an additional argument
+  to the Giftwrap_String_Size function.
+
 Sun 8 Nov 2020 : updated continuation_parameters_interface.adb and
   phcpack_operations.adb for the renaming of drivers_for_poly_continuation
   into main_poly_continuation.

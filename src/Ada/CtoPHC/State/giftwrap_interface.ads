@@ -76,9 +76,14 @@ package Giftwrap_Interface is
                vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
-  --   Returns length of string of support.
+  --   Returns the length of a string of a support set.
+  --   The string is stored internally and is returned
+  --   by the Giftwrap_String_of_Support.
 
   -- ON ENTRY :
+  --   a       is the index of the Laurent polynomial stored in the
+  --           container for Laurent systems in double precision,
+  --           must be between 1 and the number of polynomials;
   --   vrblvl  is the verbose level.
 
   -- ON RETURN :
@@ -90,14 +95,19 @@ package Giftwrap_Interface is
                vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
-  --   Returns string computed by Giftwrap_String_of_Facet.
+  --   Returns the string stored in the giftwrap container.
+
+  -- REQUIRED :
+  --   The Giftwrap_String_Size has been called,
+  --   or the Giftwrap_String_of_Facet.
 
   -- ON ENTRY :
   --   vrblvl  is the verbose level.
 
   -- ON RETURN :
-  --   b       characters in the string representation of a facet,
-  --           as many as the value returned by Giftwrap_String_Size.
+  --   b       characters in the string representation of a support set,
+  --           as many as the value returned by Giftwrap_String_Size,
+  --           or Giftwrap_String_of_Facet.
 
   function Giftwrap_String_Clear
              ( vrblvl : integer32 := 0 ) return integer32;
