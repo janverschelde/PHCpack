@@ -50,13 +50,39 @@ def support(nvr, pol):
         from phcpy.phcpy2c2 import py2c_giftwrap_clear_support_string
         # ntm = py2c_syscon_number_of_Laurent_terms(1)
         # print 'number of terms : %d' % ntm
-        size = py2c_giftwrap_support_size()
+        size = py2c_giftwrap_support_size(1) # take first polynomial
         # print 'size of support :', size
         supp = py2c_giftwrap_support_string(size)
         # print 'support string :', supp
         py2c_giftwrap_clear_support_string()
         result = literal_eval(supp)
         return result
+
+def support_sets(pols, **nbvar):
+    r"""
+    Returns the support sets of all polynomials in the list *pols*.
+    The *nbvar* is the number of variables in the system.
+    if *nbvar* is omitted, then the system is assumed to be square.
+    """
+    from ast import literal_eval
+    from phcpy.interface import store_standard_laurent_system
+    from phcpy.phcpy2c2 import py2c_syscon_clear_standard_Laurent_system
+    from phcpy.phcpy2c2 import py2c_giftwrap_support_size
+    from phcpy.phcpy2c2 import py2c_giftwrap_support_string
+    from phcpy.phcpy2c2 import py2c_giftwrap_clear_support_string
+    py2c_syscon_clear_standard_Laurent_system()
+    if len(nbvar) == 0:
+        store_standard_laurent_system(pols)
+    else:
+        nvr = nbvar.values()[0]
+        store_standard_laurent_system(pols, nbvar=nvr)
+    result = []
+    for k in range(len(pols)):
+        size = py2c_giftwrap_support_size(k+1)
+        supp = py2c_giftwrap_support_string(size)
+        result.append(literal_eval(supp))
+        py2c_giftwrap_clear_support_string()
+    return result
 
 def initial_form(pols, normal):
     r"""

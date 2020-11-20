@@ -1,3 +1,6 @@
+Thu 19 Nov 2020 : added a function support_sets to the polytopes module for
+  python2 and python3.
+
 Sat 31 Oct 2020 : in polytopes.py for python2 added a warning to the support
   function in case the value for the number of variables is too small.
   Added the same warning to the python3 version of polytopes.py.
