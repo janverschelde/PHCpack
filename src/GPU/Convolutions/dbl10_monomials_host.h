@@ -637,7 +637,7 @@ void CPU_dbl10_evaldiff
  *             output[dim] contains the value of the product. */
 
 void CPU_cmplx10_evaldiff
- ( int dim, int nvr, int deg, int *idx, double *cffretb, double *cffreix,
+ ( int dim, int nvr, int deg, int *idx,
    double *cffrertb, double *cffrerix, double *cffrermi, double *cffrerrg,
    double *cffrerpk, double *cffreltb, double *cffrelix, double *cffrelmi,
    double *cffrelrg, double *cffrelpk,
@@ -652,12 +652,6 @@ void CPU_cmplx10_evaldiff
    double **inputimrrg, double **inputimrpk,
    double **inputimltb, double **inputimlix, double **inputimlmi,
    double **inputimlrg, double **inputimlpk,
-   double *cffremi, double *cffrerg, double *cffrepk, double *cffimtb,
-   double *cffimix, double *cffimmi, double *cffimrg, double *cffimpk,
-   double **inputretb, double **inputreix, double **inputremi,
-   double **inputrerg, double **inputrepk,
-   double **inputimtb, double **inputimix, double **inputimmi,
-   double **inputimrg, double **inputimpk,
    double **outputrertb, double **outputrerix, double **outputrermi,
    double **outputrerrg, double **outputrerpk,
    double **outputreltb, double **outputrelix, double **outputrelmi,

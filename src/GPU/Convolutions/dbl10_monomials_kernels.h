@@ -713,18 +713,30 @@ void GPU_dbl10_evaldiff
 
 void GPU_cmplx10_evaldiff
  ( int BS, int dim, int nvr, int deg, int *idx,
-   double *cffretb, double *cffreix, double *cffremi,
-   double *cffrerg, double *cffrepk,
-   double *cffimtb, double *cffimix, double *cffimmi,
-   double *cffimrg, double *cffimpk,
-   double **inputretb, double **inputreix, double **inputremi,
-   double **inputrerg, double **inputrepk,
-   double **inputimtb, double **inputimix, double **inputimmi,
-   double **inputimrg, double **inputimpk,
-   double **outputretb, double **outputreix, double **outputremi,
-   double **outputrerg, double **outputrepk,
-   double **outputimtb, double **outputimix, double **outputimmi,
-   double **outputimrg, double **outputimpk );
+   double *cffrertb, double *cffrerix, double *cffrermi,
+   double *cffrerrg, double *cffrerpk,
+   double *cffreltb, double *cffrelix, double *cffrelmi,
+   double *cffrelrg, double *cffrelpk,
+   double *cffimrtb, double *cffimrix, double *cffimrmi,
+   double *cffimrrg, double *cffimrpk,
+   double *cffimltb, double *cffimlix, double *cffimlmi,
+   double *cffimlrg, double *cffimlpk,
+   double **inputrertb, double **inputrerix, double **inputrermi,
+   double **inputrerrg, double **inputrerpk,
+   double **inputreltb, double **inputrelix, double **inputrelmi,
+   double **inputrelrg, double **inputrelpk,
+   double **inputimrtb, double **inputimrix, double **inputimrmi,
+   double **inputimrrg, double **inputimrpk,
+   double **inputimltb, double **inputimlix, double **inputimlmi,
+   double **inputimlrg, double **inputimlpk,
+   double **outputrertb, double **outputrerix, double **outputrermi,
+   double **outputrerrg, double **outputrerpk,
+   double **outputreltb, double **outputrelix, double **outputrelmi,
+   double **outputrelrg, double **outputrelpk,
+   double **outputimrtb, double **outputimrix, double **outputimrmi,
+   double **outputimrrg, double **outputimrpk,
+   double **outputimltb, double **outputimlix, double **outputimlmi,
+   double **outputimlrg, double **outputimlpk );
 /*
  * DESCRIPTION :
  *   Allocates work space memory to store the forward, backward, and

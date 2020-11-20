@@ -1,4 +1,6 @@
 Fri 20 Nov 2020 : two bugs fixed in dbl3_convolutions_host.cpp.
+  Extended dbl10_monomials_host, dbl10_monomials_kernels, with tests
+  added to test_dbl10_monomials.cpp for complex deca doubles.
 
 Thu 19 Nov 2020 : bug fixed in dbl10_monomials_host.cpp (at last!).
   In random10_monomials.cpp, swapped one to the middle for odd dimensions.
