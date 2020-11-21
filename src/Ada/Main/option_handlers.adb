@@ -20,7 +20,7 @@ with mainenum,bablenum,mainfeed;
 with mainseries;
 with Main_Verification;
 with bablvali,bablvali2,bablvali4;
-with compsolve,compsolve2,compsolve4;
+with Main_Component_Solvers;
 with mainsolve;
 with mainhyp,mainhyp2,mainhyp4;
 with mainsam,mainwit;
@@ -296,15 +296,21 @@ package body Option_Handlers is
     else
       if nt > 0 then
         case compprc is
-          when 2 => compsolve2(nt,infile,outfile,vrblvl);
-          when 4 => compsolve4(nt,infile,outfile,vrblvl);
-          when others => compsolve(nt,infile,outfile,vrblvl);
+          when 2 =>
+            Main_Component_Solvers.DoblDobl_Main(nt,infile,outfile,vrblvl);
+          when 4 =>
+            Main_Component_Solvers.QuadDobl_Main(nt,infile,outfile,vrblvl);
+          when others =>
+            Main_Component_Solvers.Standard_Main(nt,infile,outfile,vrblvl);
         end case;
       else 
         case compprc is
-          when 2 => compsolve2(0,infile,outfile,vrblvl);
-          when 4 => compsolve4(0,infile,outfile,vrblvl);
-          when others => compsolve(0,infile,outfile,vrblvl);
+          when 2 =>
+            Main_Component_Solvers.DoblDobl_Main(0,infile,outfile,vrblvl);
+          when 4 =>
+            Main_Component_Solvers.QuadDobl_Main(0,infile,outfile,vrblvl);
+          when others =>
+            Main_Component_Solvers.Standard_Main(0,infile,outfile,vrblvl);
         end case;
       end if;
     end if;

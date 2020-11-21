@@ -1,3 +1,6 @@
+Sat 21 Nov 2020 : the procedures compsolve, compsolve2, compsolve4 are
+  packaged into the new main_component_solvers, updated option_handlers.adb.
+
 Fri 20 Nov 2020 : replaced the procedure mainvali with the package 
   main_verification, and replaced maintrack with main_trackers.
   Updated option_handlers.adb.
