@@ -1,3 +1,7 @@
+Fri 20 Nov 2020 : replaced the procedure mainvali with the package 
+  main_verification, and replaced maintrack with main_trackers.
+  Updated option_handlers.adb.
+
 Sun 8 Nov 2020 : updated mainphc.adb and driver_for_own_start_system.adb for
   the renaming of drivers_for_poly_continuation into main_poly_continuation.
 

@@ -1,4 +1,3 @@
-with text_io;                           use text_io;
 with String_Splitters;                  use String_Splitters;
 with Communications_with_User;          use Communications_with_User;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
@@ -14,24 +13,9 @@ with Drivers_to_Track_QuadDobl_Paths;
 with Jumpstart_Polyhedral_Homotopies;   use Jumpstart_Polyhedral_Homotopies;
 with Jumpstart_Diagonal_Homotopies;     use Jumpstart_Diagonal_Homotopies;
 
-procedure maintrack ( targetfilename,startfilename,outfilename : in string;
-                      verbose : in integer32 := 0 ) is
+package body Main_Trackers is
 
   function Ask_for_Start_Type return character is
-
-  -- DESCRIPTION :
-  --   Displays the menu of the types of start systems, and asks the
-  --   user to make a choice from a menu.
-
-  -- ON RETURN :
-  --   A character with a number of a type of start system:
-  --     '1' : the start system is based on the total degree;
-  --     '2' : a linear-product start system will be used;
-  --     '3' : the user will provide start system and solutions;
-  --     '4' : polyhedral continuation to solve random system;
-  --     '5' : diagonal homotopy to intersect algebraic sets;
-  --     '6' : one level down continuation in a homotopy cascade;
-  --     '7' : remove last slack variable in a witness set.
 
     res : character;
 
@@ -54,12 +38,6 @@ procedure maintrack ( targetfilename,startfilename,outfilename : in string;
               ( target,start,output : in file_type;
                 kind : in character ) is
 
-  -- DESCRIPTION :
-  --   Runs the cheater homotopy (option 3 of the menu above)
-  --   with standard double floating point arithmetic.
-
-  -- REQUIRED : kind is either '1' or '3'.
-
     use Drivers_to_Track_Standard_Paths;
     tgtsys : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
 
@@ -74,10 +52,6 @@ procedure maintrack ( targetfilename,startfilename,outfilename : in string;
   procedure DoblDobl_Track
               ( target,start,output : in file_type; kind : in character ) is
 
-  -- DESCRIPTION :
-  --   Tracks paths with a homotopy (option 1 or 3 of the menu above)
-  --   with double double floating point arithmetic.
-
     use Drivers_to_Track_DoblDobl_Paths;
     tgtsys : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
 
@@ -91,10 +65,6 @@ procedure maintrack ( targetfilename,startfilename,outfilename : in string;
 
   procedure QuadDobl_Track
               ( target,start,output : in file_type; kind : in character  ) is
-
-  -- DESCRIPTION :
-  --   Tracks paths with a homotopy (option 1 or 3 of the menu above)
-  --   with quad double floating point arithmetic.
 
     use Drivers_to_Track_QuadDobl_Paths;
     tgtsys : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -127,7 +97,8 @@ procedure maintrack ( targetfilename,startfilename,outfilename : in string;
     end case;
   end Track;
 
-  procedure Main is
+  procedure Main ( targetfilename,startfilename,outfilename : in string;
+                   verbose : in integer32 := 0 ) is
 
     target_file,start_file,output_file : file_type;
     target_name,start_name,output_name : Link_to_String;
@@ -139,7 +110,7 @@ procedure maintrack ( targetfilename,startfilename,outfilename : in string;
   begin
     if verbose > 0 then
       put("At verbose level "); put(verbose,1);
-      put_line(", in maintrack.Main ...");
+      put_line(", in main_trackers.Main ...");
     end if;
     start_type := Ask_for_Start_Type;
     if targetfilename = "" then
@@ -195,6 +166,4 @@ procedure maintrack ( targetfilename,startfilename,outfilename : in string;
     close(target_file);
   end Main;
 
-begin
-  Main;
-end maintrack;
+end Main_Trackers;

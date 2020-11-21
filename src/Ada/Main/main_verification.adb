@@ -1,18 +1,12 @@
-with text_io;                            use text_io;
 with Timing_Package;                     use Timing_Package;
-with String_Splitters;                   use String_Splitters;
 with Communications_with_User;           use Communications_with_User;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Symbol_Table;
 with Standard_Complex_Polynomials;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laurentials;
-with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Laur_Poly_Convertors;
 with Standard_to_Multprec_Convertors;    use Standard_to_Multprec_Convertors;
@@ -25,20 +19,17 @@ with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_Systems;      use Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_SysFun;       use Multprec_Complex_Poly_SysFun;
 with Multprec_Complex_Poly_Strings;      use Multprec_Complex_Poly_Strings;
-with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
-with Multprec_Complex_Solutions;
 with Multprec_Complex_Solutions_io;      use Multprec_Complex_Solutions_io;
 with Multprec_System_and_Solutions_io;   use Multprec_System_and_Solutions_io;
 with Drivers_for_Condition_Tables;       use Drivers_for_Condition_Tables;
 with Standard_Root_Refiners;             use Standard_Root_Refiners;
 with Multprec_Root_Refiners;             use Multprec_Root_Refiners;
 with Multprec_Residual_Evaluations;      use Multprec_Residual_Evaluations;
-with Symmetry_Group;                     use Symmetry_Group;
 with Symbolic_Symmetry_Group_io;
 with Drivers_for_Symmetry_Group_io;      use Drivers_for_Symmetry_Group_io;
 with Drivers_for_Orbits_of_Solutions;    use Drivers_for_Orbits_of_Solutions;
@@ -56,13 +47,9 @@ with Verification_of_Solutions;          use Verification_of_Solutions;
 with Prompt_for_Systems;                 use Prompt_for_Systems;
 with Prompt_for_Solutions;               use Prompt_for_Solutions;
 
-procedure mainvali ( infilename,outfilename : in string;
-                     verbose : in integer32 := 0 ) is
+package body Main_Verification is
 
   procedure Display_Verification_Info is
-
-  -- DESCRIPTION :
-  --   Displays information about available verification methods on screen.
 
     i : array(1..13) of string(1..65);
 
@@ -95,24 +82,6 @@ procedure mainvali ( infilename,outfilename : in string;
                 wout : in boolean;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 refsols : in out Standard_Complex_Solutions.Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Refines the roots and computes generating solutions when required.
-
-  -- ON ENTRY :
-  --   file        for writing results on;
-  --   p           the polynomial system under consideration;
-  --   solsfile    whether refined solution have to go to separate file;
-  --   invar       whether generating solutions have to be computed;
-  --   allperms    whether invariant under all permutations;
-  --   signsym     whether there is sign-symmetry;
-  --   v           group representation, only needed when invar;
-  --   sols        solutions that need to be refined.
-
-  -- ON RETURN :
-  --   sols        solutions after applying some Newton iteration;
-  --   refsols     refined solutions, with the exception of failures and
-  --               the non-generating solutions.
 
     numit : natural32 := 0;
 
@@ -149,9 +118,6 @@ procedure mainvali ( infilename,outfilename : in string;
                sols : in out Standard_Complex_Solutions.Solution_List;
                refsols : in out Standard_Complex_Solutions.Solution_List ) is
 
-  -- DESCRIPTION : 
-  --   Root refinement without computing of generating solutions.
-
     numit : natural32 := 0;
 
   begin
@@ -183,9 +149,6 @@ procedure mainvali ( infilename,outfilename : in string;
                sols : in out Standard_Complex_Solutions.Solution_List;
                refsols : in out Standard_Complex_Solutions.Solution_List ) is
 
-  -- DESCRIPTION : 
-  --   Root refinement without computing of generating solutions.
-
     numit : natural32 := 0;
 
   begin
@@ -208,12 +171,9 @@ procedure mainvali ( infilename,outfilename : in string;
     end if;
   end Refine_Roots;
 
--- VALIDATION PROCEDURES :
-
-  procedure Winding_Verification is
-
-  -- DESCRIPTION :
-  --   Verification by computing winding numbers by homotopy continuation.
+  procedure Winding_Verification
+              ( infilename,outfilename : in string;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -227,6 +187,9 @@ procedure mainvali ( infilename,outfilename : in string;
     maxit : natural32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in main_verification.Winding_Verification ...");
+    end if;
     Read_System(infile,infilename,lp,sysonfile);
     Create_Output_File(outfile,outfilename);
     put(outfile,natural32(lp'last),lp.all);
@@ -260,12 +223,9 @@ procedure mainvali ( infilename,outfilename : in string;
   end Winding_Verification;
 
   procedure Standard_Weeding_Verification
-              ( infile : in out file_type;
+              ( infile : in out file_type; outfilename : in string;
                 lp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sysonfile : in boolean ) is
-
-  -- DESCRIPTION :
-  --   Verifciation by refining the roots and weeding out the solution set.
 
     use Standard_Complex_Polynomials;
     use Standard_Complex_Solutions;
@@ -334,12 +294,9 @@ procedure mainvali ( infilename,outfilename : in string;
   end Standard_Weeding_Verification;
 
   procedure Standard_Weeding_Verification
-              ( infile : in out file_type;
+              ( infile : in out file_type; outfilename : in string;
                 lp : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
                 sysonfile : in boolean ) is
-
-  -- DESCRIPTION :
-  --   Verifciation by refining the roots and weeding out the solution set.
 
     use Standard_Complex_Laurentials;
     use Standard_Complex_Solutions;
@@ -390,10 +347,9 @@ procedure mainvali ( infilename,outfilename : in string;
     Close(outfile);
   end Standard_Weeding_Verification;
 
-  procedure Standard_Weeding_Verification is
-
-  -- DESCRIPTION :
-  --   Verifciation by refining the roots and weeding out the solution set.
+  procedure Standard_Weeding_Verification
+              ( infilename,outfilename : in string;
+                vrblvl : in integer32 := 0 ) is
 
     infile : file_type;
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -403,20 +359,22 @@ procedure mainvali ( infilename,outfilename : in string;
     use Standard_Laur_Poly_Convertors;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in main_verification.Standard_Weeding_Verification ...");
+    end if;
     Read_System(infile,infilename,lq,sysonfile);
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
-      Standard_Weeding_Verification(infile,lq,sysonfile);
+      Standard_Weeding_Verification(infile,outfilename,lq,sysonfile);
     else
       lp := new Standard_Complex_Poly_Systems.Poly_Sys'
                   (Positive_Laurent_Polynomial_System(lq.all));
-      Standard_Weeding_Verification(infile,lp,sysonfile);
+      Standard_Weeding_Verification(infile,outfilename,lp,sysonfile);
     end if;
   end Standard_Weeding_Verification;
 
-  procedure Multprec_Residual_Evaluator is
-
-  -- DESCRIPTION :
-  --   Evaluation of residuals using multi-precision arithmetic.
+  procedure Multprec_Residual_Evaluator
+              ( infilename,outfilename : in string;
+                vrblvl : in integer32 := 0 ) is
 
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     timer : Timing_Widget;
@@ -425,6 +383,9 @@ procedure mainvali ( infilename,outfilename : in string;
     sols : Standard_Complex_Solutions.Solution_List;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in main_verification.Multprec_Residual_Evaluator ...");
+    end if;
     Read_System(infile,infilename,lp,sysonfile);
     Create_Output_File(outfile,outfilename);
     put(outfile,natural32(lp'last),lp.all);
@@ -509,10 +470,6 @@ procedure mainvali ( infilename,outfilename : in string;
                  ls : in Link_to_Array_of_Strings;
                  sols : in out Multprec_Complex_Solutions.Solution_List ) is
 
-  -- DESCRIPTION :
-  --   Offers the user a menu to set the parameters and then calls
-  --   the variable precision Newton's method on the list of solutions.
-
     timer : Timing_Widget;
     wanted,maxitr,maxprc : natural32;
     verbose : boolean;
@@ -539,11 +496,9 @@ procedure mainvali ( infilename,outfilename : in string;
     print_times(file,timer,"Variable precision Newton steps");
   end Call_Varbprec_Root_Refiner;
 
-  procedure Multprec_Weeding_Verification ( varbprec : in boolean ) is
-
-  -- DESCRIPTION :
-  --   Newton's method using multi-precision arithmetic,
-  --   or with variable precision if varbprec is true.
+  procedure Multprec_Weeding_Verification
+              ( infilename,outfilename : in string;
+                varbprec : in boolean ) is
 
     n,m : natural32;
     ls : Link_to_Array_of_Strings;
@@ -583,9 +538,6 @@ procedure mainvali ( infilename,outfilename : in string;
 
   procedure Polyhedral_End_Game_Verification is
 
-  -- DESCRIPTION :
-  --   Verification of the polyhedral end game.
-
     pocofile,resultfile : file_type;
 
   begin
@@ -603,12 +555,9 @@ procedure mainvali ( infilename,outfilename : in string;
     Close(resultfile);
   end Polyhedral_End_Game_Verification;
 
-  procedure Standard_Newton_with_Deflation ( vrblvl : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Reads the polynomial system in standard double precision
-  --   confirms the output to the file and calls the deflation method.
-  --   The verbose level is in vrblvl.
+  procedure Standard_Newton_with_Deflation
+              ( infilename,outfilename : in string;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Polynomials;
     use Standard_Complex_Solutions;
@@ -620,8 +569,9 @@ procedure mainvali ( infilename,outfilename : in string;
     nbequ,nbvar : natural32;
 
   begin
-    if vrblvl > 0
-     then put_line("-> in mainvali.Standard_Newton_with_Deflation ...");
+    if vrblvl > 0 then
+      put("-> in main_verification.");
+      put_line("Standard_Newton_with_Deflation ...");
     end if;
     Read_System(infile,infilename,lp,sysonfile);
     nbequ := natural32(lp'last);
@@ -657,12 +607,9 @@ procedure mainvali ( infilename,outfilename : in string;
     end if;
   end Standard_Newton_with_Deflation;
 
-  procedure DoblDobl_Newton_with_Deflation ( vrblvl : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Reads the polynomial system in double double precision
-  --   confirms the output to the file and calls the deflation method.
-  --   The verbose level is in vrblvl.
+  procedure DoblDobl_Newton_with_Deflation
+              ( infilename,outfilename : in string;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Polynomials;
     use DoblDobl_Complex_Solutions;
@@ -674,8 +621,9 @@ procedure mainvali ( infilename,outfilename : in string;
     nbequ,nbvar : natural32;
 
   begin
-    if vrblvl > 0
-     then put_line("-> in mainvali.DoblDobl_Newton_with_Deflation ...");
+    if vrblvl > 0 then
+      put("-> in main_verification.");
+      put_line("DoblDobl_Newton_with_Deflation ...");
     end if;
     Read_System(infile,infilename,lp,sysonfile);
     nbequ := natural32(lp'last);
@@ -711,12 +659,9 @@ procedure mainvali ( infilename,outfilename : in string;
     end if;
   end DoblDobl_Newton_with_Deflation;
 
-  procedure QuadDobl_Newton_with_Deflation ( vrblvl : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Reads the polynomial system in quad double precision
-  --   confirms the output to the file and calls the deflation method.
-  --   The verbose level is in vrblvl.
+  procedure QuadDobl_Newton_with_Deflation
+              ( infilename,outfilename : in string;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Polynomials;
     use QuadDobl_Complex_Solutions;
@@ -728,8 +673,9 @@ procedure mainvali ( infilename,outfilename : in string;
     nbequ,nbvar : natural32;
 
   begin
-    if vrblvl > 0
-     then put_line("-> in mainvali.QuadDobl_Newton_with_Deflation ...");
+    if vrblvl > 0 then
+      put("-> in main_verification.");
+      put_line("QuadDobl_Newton_with_Deflation ...");
     end if;
     Read_System(infile,infilename,lp,sysonfile);
     nbequ := natural32(lp'last);
@@ -765,12 +711,9 @@ procedure mainvali ( infilename,outfilename : in string;
     end if;
   end QuadDobl_Newton_with_Deflation;
 
-  procedure Newton_with_Deflation ( vrblvl : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Prompts the user for the precision
-  --   and then calls the corresponding driver
-  --   to apply Newton's method with deflation.
+  procedure Newton_with_Deflation
+              ( infilename,outfilename : in string;
+                vrblvl : in integer32 := 0 ) is
 
     prc : character;
 
@@ -780,19 +723,19 @@ procedure mainvali ( infilename,outfilename : in string;
     end if;
     prc := Communications_with_User.Prompt_for_Precision;
     case prc is
-      when '0' => Standard_Newton_with_Deflation(vrblvl-1);
-      when '1' => DoblDobl_Newton_with_Deflation(vrblvl-1);
-      when '2' => QuadDobl_Newton_with_Deflation(vrblvl-1);
+      when '0' =>
+        Standard_Newton_with_Deflation(infilename,outfilename,vrblvl-1);
+      when '1' =>
+        DoblDobl_Newton_with_Deflation(infilename,outfilename,vrblvl-1);
+      when '2' =>
+        QuadDobl_Newton_with_Deflation(infilename,outfilename,vrblvl-1);
       when others => null;
     end case;
   end Newton_with_Deflation;
 
-  procedure Standard_Multiplicity ( vrblvl : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Computes the multiplicity structure in standard double precision,
-  --   after prompting for a polynomial system and solutions.
-  --   The verbose level is in vrblvl.
+  procedure Standard_Multiplicity
+              ( infilename,outfilename : in string;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
     use Standard_Multiplicity_Structure;
@@ -804,7 +747,7 @@ procedure mainvali ( infilename,outfilename : in string;
 
   begin
     if vrblvl > 0
-     then put_line("-> in mainvali.Standard_Multiplicity ...");
+     then put_line("-> in main_verification.Standard_Multiplicity ...");
     end if;
     Read_System(infile,infilename,lp,sysonfile);
     if outfilename = "" then
@@ -819,12 +762,9 @@ procedure mainvali ( infilename,outfilename : in string;
     Driver_to_Multiplicity_Structure(outfile,lp.all,sols);
   end Standard_Multiplicity;
 
-  procedure DoblDobl_Multiplicity ( vrblvl : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Computes the multiplicity structure in double double precision,
-  --   after prompting for a polynomial system and solutions.
-  --   The verbose level is in vrblvl.
+  procedure DoblDobl_Multiplicity
+              ( infilename,outfilename : in string;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
     use DoblDobl_Multiplicity_Structure;
@@ -836,7 +776,7 @@ procedure mainvali ( infilename,outfilename : in string;
 
   begin
     if vrblvl > 0
-     then put_line("-> in mainvali.DoblDobl_Multiplicity ...");
+     then put_line("-> in main_verification.DoblDobl_Multiplicity ...");
     end if;
     Read_System(infile,infilename,lp,sysonfile);
     if outfilename = "" then
@@ -851,12 +791,9 @@ procedure mainvali ( infilename,outfilename : in string;
     Driver_to_Multiplicity_Structure(outfile,lp.all,sols);
   end DoblDobl_Multiplicity;
 
-  procedure QuadDobl_Multiplicity ( vrblvl : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Computes the multiplicity structure in quad double precision,
-  --   after prompting for a polynomial system and solutions.
-  --   The verbose level is in vrblvl.
+  procedure QuadDobl_Multiplicity
+              ( infilename,outfilename : in string;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
     use QuadDobl_Multiplicity_Structure;
@@ -868,7 +805,7 @@ procedure mainvali ( infilename,outfilename : in string;
 
   begin
     if vrblvl > 0
-     then put_line("-> in mainvali.QuadDobl_Multiplicity ...");
+     then put_line("-> in main_verification.QuadDobl_Multiplicity ...");
     end if;
     Read_System(infile,infilename,lp,sysonfile);
     if outfilename = "" then
@@ -883,39 +820,34 @@ procedure mainvali ( infilename,outfilename : in string;
     Driver_to_Multiplicity_Structure(outfile,lp.all,sols);
   end QuadDobl_Multiplicity;
 
-  procedure Multiplicity_Structure ( vrblvl : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Prompts the user for the precision
-  --   and then launches the corresponding driver
-  --   to compute the multiplicity structure.
-  --   The verbose level is in vrblvl.
+  procedure Multiplicity_Structure
+              ( infilename,outfilename : in string;
+                vrblvl : in integer32 := 0 ) is
 
     prc : character;
 
   begin
     if vrblvl > 0
-     then put_line("-> in mainvali.Multiplicity_Structure ...");
+     then put_line("-> in main_verification.Multiplicity_Structure ...");
     end if;
     prc := Communications_with_User.Prompt_for_Precision;
     case prc is
-      when '0' => Standard_Multiplicity(vrblvl-1);
-      when '1' => DoblDobl_Multiplicity(vrblvl-1);
-      when '2' => QuadDobl_Multiplicity(vrblvl-1);
+      when '0' => Standard_Multiplicity(infilename,outfilename,vrblvl-1);
+      when '1' => DoblDobl_Multiplicity(infilename,outfilename,vrblvl-1);
+      when '2' => QuadDobl_Multiplicity(infilename,outfilename,vrblvl-1);
       when others => null;
     end case;
   end Multiplicity_Structure;
 
-  procedure Solution_Scanner ( vrblvl : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Handles option #0, to deal with huge solution lists.
+  procedure Solution_Scanner
+              ( infilename,outfilename : in string;
+                vrblvl : in integer32 := 0 ) is
 
     ans : character;
 
   begin
     if vrblvl > 0
-     then put_line("-> in mainvali.Solution_Scanner ...");
+     then put_line("-> in main_verification.Solution_Scanner ...");
     end if;
     new_line;
     put("Run Newton's method ? (y/n) "); Ask_Yes_or_No(ans);
@@ -925,14 +857,15 @@ procedure mainvali ( infilename,outfilename : in string;
     end if;
   end Solution_Scanner;
 
-  procedure Display_and_Dispatch_Menu is
+  procedure Main ( infilename,outfilename : in string;
+                   verbose : in integer32 := 0 ) is
 
     ans : character;
 
   begin
     if verbose > 0 then
       put("At verbose level "); put(verbose,1);
-      put_line(", in mainvali.Display_and_Dispatch_Menu ...");
+      put_line(", in main_verification.Main ...");
     end if;
     loop
       new_line;
@@ -962,22 +895,24 @@ procedure mainvali ( infilename,outfilename : in string;
       case ans is
         when 'i' => new_line;
                     Display_Verification_Info;
-        when '0' => Solution_Scanner(verbose-1);
-        when '1' => Standard_Weeding_Verification;
-        when '2' => Multprec_Residual_Evaluator;
-        when '3' => Multprec_Weeding_Verification(false);
-        when '4' => Winding_Verification;
+        when '0' => Solution_Scanner(infilename,outfilename,verbose-1);
+        when '1' =>
+          Standard_Weeding_Verification(infilename,outfilename,verbose-1);
+        when '2' =>
+          Multprec_Residual_Evaluator(infilename,outfilename,verbose-1);
+        when '3' =>
+          Multprec_Weeding_Verification(infilename,outfilename,false);
+        when '4' => Winding_Verification(infilename,outfilename,verbose-1);
         when '5' => Polyhedral_End_Game_Verification;
-        when '6' => Newton_with_Deflation(verbose-1);
-        when '7' => Multiplicity_Structure(verbose-1);
+        when '6' => Newton_with_Deflation(infilename,outfilename,verbose-1);
+        when '7' => Multiplicity_Structure(infilename,outfilename,verbose-1);
         when '8' => DD_QD_Root_Refinement(infilename,outfilename);
-        when '9' => Multprec_Weeding_Verification(true);
+        when '9' =>
+          Multprec_Weeding_Verification(infilename,outfilename,true);
         when others => null;
       end case;
       exit when ans /= 'i';
     end loop;
-  end Display_and_Dispatch_Menu;
+  end Main;
 
-begin
-  Display_and_Dispatch_Menu;
-end mainvali;
+end Main_Verification;

@@ -38,8 +38,8 @@ ts_blkroco                   : tests black box root counters output
 bablroco                     : calls the black-box root counter
 mainroco                     : calls interactive root-counting driver
 -------------------------------------------------------------------------------
-maintrack                    : jumpstart path tracking
-mainvali                     : menu-driver for validating the results
+main_trackers                : jumpstart path tracking
+main_verification            : defines the phc -v
 bablvali                     : black-box version of validation
 mainphc                      : the main program running in full mode
 black_box_helpers            : helper operations for the black box solvers

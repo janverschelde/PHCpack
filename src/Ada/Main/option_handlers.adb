@@ -13,11 +13,13 @@ with mainscal,mainred,mainred2,mainred4;
 with bablroco;
 with babldmvc,mainsmvc;
 with mainpoco,bablpoco,bablpoco2,bablpoco4;
-with mainadep,maintrack;
+with Main_Trackers;
+with mainadep;
 with mainfac,maindeco;
 with mainenum,bablenum,mainfeed;
 with mainseries;
-with mainvali,bablvali,bablvali2,bablvali4;
+with Main_Verification;
+with bablvali,bablvali2,bablvali4;
 with compsolve,compsolve2,compsolve4;
 with mainsolve;
 with mainhyp,mainhyp2,mainhyp4;
@@ -477,7 +479,7 @@ package body Option_Handlers is
       Greeting_Banners.help4jumpstart;
     else
       put_line(welcome); put_line(trackban);
-      maintrack(file1,file2,file3,vrblvl);
+      Main_Trackers.Main(file1,file2,file3,vrblvl);
     end if;
   end Jumpstart_Handler;
 
@@ -680,7 +682,7 @@ package body Option_Handlers is
       end if;
     else
       put_line(welcome); put_line(veriban);
-      mainvali(infile,outfile,vrblvl);
+      Main_Verification.Main(infile,outfile,vrblvl);
     end if;
   end Verification_Handler;
 
