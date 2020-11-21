@@ -52,9 +52,9 @@ black_box_solvers            : to be called by bablphc
 black_box_polyhedral_solvers : solve with polyhedral homotopies
 test_standard_solver         : test black box solver in double precision
 ts_bbsolve                   : test on black box solvers
-bablphc                      : black-box version of the program
-bablphc2                     : black-box solving in double double precision
-bablphc4                     : black-box solving in quad double precision
+standard_blackbox_solvers    : black-box solvers in double precision
+dobldobl_blackbox_solvers    : black-box solvers in double double precision
+quaddobl_blackbox_solvers    : black-box solvers in quad double precision
 greetings_and_conclusions    : defines greetings and conclusions in phc -B
 main_component_solvers       : numerical irreducible decomposition in phc -B
 -------------------------------------------------------------------------------

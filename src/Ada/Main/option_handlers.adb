@@ -7,8 +7,10 @@ with Main_Root_Counters;
 with Write_Seed_Number;
 with Greeting_Banners;
 with Actions_and_Options;
-with mainphc,bablphc,bablphc2,bablphc4;
-with maingood,mainsymb;
+with Standard_BlackBox_Solvers;
+with DoblDobl_BlackBox_Solvers;
+with QuadDobl_BlackBox_Solvers;
+with mainphc,maingood,mainsymb;
 with mainscal,mainred,mainred2,mainred4;
 with bablroco;
 with babldmvc,mainsmvc;
@@ -266,15 +268,15 @@ package body Option_Handlers is
       end if;
     elsif nt > 0 then
       case bbprc is
-        when 2 => bablphc2(nt,file1,file2,vrblvl);
-        when 4 => bablphc4(nt,file1,file2,vrblvl);
-        when others => bablphc(nt,file1,file2,vrblvl);
+        when 2 => DoblDobl_BlackBox_Solvers.Main(nt,file1,file2,vrblvl);
+        when 4 => QuadDobl_BlackBox_Solvers.Main(nt,file1,file2,vrblvl);
+        when others => Standard_BlackBox_Solvers.Main(nt,file1,file2,vrblvl);
       end case;
     else
       case bbprc is
-        when 2 => bablphc2(0,file1,file2,vrblvl);
-        when 4 => bablphc4(0,file1,file2,vrblvl);
-        when others => bablphc(0,file1,file2,vrblvl);
+        when 2 => DoblDobl_BlackBox_Solvers.Main(0,file1,file2,vrblvl);
+        when 4 => QuadDobl_BlackBox_Solvers.Main(0,file1,file2,vrblvl);
+        when others => Standard_BlackBox_Solvers.Main(0,file1,file2,vrblvl);
       end case;
     end if;
   end BlackBox_Solver_Handler;
