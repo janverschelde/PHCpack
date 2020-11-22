@@ -60,9 +60,6 @@ dobldobl_blackbox_continuations  : blackbox continuation with double doubles
 quaddobl_blackbox_continuations  : blackbox continuation with quad doubles
 ts_bbpoco                        : calls the blackbox continuation 
 mainpoco                         : poco as called by the main program
-bablpoco                         : calls blackbox polynomial continuation
-bablpoco2                        : double double blackbox continuation
-bablpoco4                        : quad double blackbox continuation
 ------------------------------------------------------------------------------
 
 An important feature is that much of the routines in this library are

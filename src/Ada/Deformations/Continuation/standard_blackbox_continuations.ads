@@ -226,4 +226,18 @@ package Standard_BlackBox_Continuations is
   --   sols      solutions of p, obtained from sols;
   --   pocotime  elapsed user cpu time for polyhedral continuation.
 
+  procedure Main ( targetname,startname,outfilename : in string;
+                   verbose : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Defines phc -b -p to track paths in double precision.
+  --   If the names of the file do not lead to the proper data,
+  --   then the user is prompted to provide file names.
+
+  -- ON INPUT :
+  --   targetname      name of the file where the target system is;
+  --   startname       name of the file where the start system is;
+  --   outfilename     name of the output file;
+  --   verbose         the verbose level.
+
 end Standard_BlackBox_Continuations;

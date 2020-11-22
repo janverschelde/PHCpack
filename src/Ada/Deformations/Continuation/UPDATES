@@ -1,3 +1,6 @@
+Sun 22 Nov 2020 : moved bablpoco into standard_blackbox_continuations,
+  bablpoco2, bablpoco4 into {dobldobl,quaddobl}_blackbox_continuations.
+
 Sun 8 Nov 2020 : renamed drivers_for_poly_continuation into main_poly_
   continuation, adjusted mainpoco.adb.
 

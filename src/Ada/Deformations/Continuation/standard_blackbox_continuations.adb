@@ -1,4 +1,5 @@
 with Ada.Calendar;
+with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
 with File_Scanning,Time_Stamps;          use File_Scanning,Time_Stamps;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
@@ -978,5 +979,36 @@ package body Standard_BlackBox_Continuations is
     flush(file);
     Standard_Laurent_Homotopy.Clear;
   end Black_Box_Polynomial_Continuation;
+
+  procedure Main ( targetname,startname,outfilename : in string;
+                   verbose : in integer32 := 0 ) is
+
+    targetfile,startfile,outfile : file_type;
+    poco : duration;
+
+  begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in standard_blackbox_continuations.Main ...");
+    end if;
+    if targetname /= "" then
+      Open_Input_File(targetfile,targetname);
+    else
+      new_line;
+      put_line("Reading the name of the file for the target system.");
+      Read_Name_and_Open_File(targetfile);
+    end if;
+    if startname /= "" then
+      Open_Input_File(startfile,startname);
+    else
+      new_line;
+      put_line("Reading the name of the file for the start system.");
+      Read_Name_and_Open_File(startfile);
+    end if;
+    Create_Output_File(outfile,outfilename);
+    Black_Box_Polynomial_Continuation
+      (targetfile,startfile,outfile,true,poco,verbose-1);
+    Close(targetfile); Close(startfile); Close(outfile);
+  end Main;
 
 end Standard_BlackBox_Continuations;

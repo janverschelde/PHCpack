@@ -15,7 +15,10 @@ with Main_Reduction;
 with mainscal;
 with Black_Box_Root_Counters;
 with babldmvc,mainsmvc;
-with mainpoco,bablpoco,bablpoco2,bablpoco4;
+with Standard_BlackBox_Continuations;
+with DoblDobl_BlackBox_Continuations;
+with QuadDobl_BlackBox_Continuations;
+with mainpoco;
 with Main_Trackers;
 with mainadep;
 with mainfac,maindeco;
@@ -253,11 +256,11 @@ package body Option_Handlers is
       end if;
     elsif ppos >= integer32(opts'first) then
       if bbprc = 2 or contprc = 2 then
-        bablpoco2(file1,file2,file3,vrblvl);
+        DoblDobl_BlackBox_Continuations.Main(file1,file2,file3,vrblvl);
       elsif bbprc = 4 or contprc = 4 then
-        bablpoco4(file1,file2,file3,vrblvl);
+        QuadDobl_BlackBox_Continuations.Main(file1,file2,file3,vrblvl);
       else
-        bablpoco(file1,file2,file3,vrblvl);
+        Standard_BlackBox_Continuations.Main(file1,file2,file3,vrblvl);
       end if;
     elsif vpos >= integer32(opts'first) then
       if bbprc = 2 or valiprc = 2 then
@@ -455,11 +458,11 @@ package body Option_Handlers is
       Greeting_Banners.help4continuation;
     elsif bpos >= integer32(opts'first) then
       if contprc = 2 or bbprc = 2 then
-        bablpoco2(file1,file2,file3,vrblvl);
+        DoblDobl_BlackBox_Continuations.Main(file1,file2,file3,vrblvl);
       elsif contprc = 4 or bbprc = 4 then
-        bablpoco4(file1,file2,file3,vrblvl);
+        QuadDobl_BlackBox_Continuations.Main(file1,file2,file3,vrblvl);
       else
-        bablpoco(file1,file2,file3,vrblvl);
+        Standard_BlackBox_Continuations.Main(file1,file2,file3,vrblvl);
       end if;
     elsif nt = 0 then
       put_line(welcome); put_line(pocoban & ", no multitasking.");
