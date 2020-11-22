@@ -1,5 +1,6 @@
 Sun 22 Nov 2020 : removed bablvali, bablvali2, bablvali4, and updated
-  option_handlers.adb.
+  option_handlers.adb.  Updated mainphc.adb and option_handlers.adb
+  for the renaming of drivers_for_reduction into main_reduction.
 
 Sat 21 Nov 2020 : the procedures compsolve, compsolve2, compsolve4 are
   packaged into the new main_component_solvers, updated option_handlers.adb.

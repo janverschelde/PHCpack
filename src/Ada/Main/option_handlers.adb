@@ -11,7 +11,8 @@ with Standard_BlackBox_Solvers;
 with DoblDobl_BlackBox_Solvers;
 with QuadDobl_BlackBox_Solvers;
 with mainphc,maingood,mainsymb;
-with mainscal,mainred,mainred2,mainred4;
+with Main_Reduction;
+with mainscal;
 with Black_Box_Root_Counters;
 with babldmvc,mainsmvc;
 with mainpoco,bablpoco,bablpoco2,bablpoco4;
@@ -234,11 +235,11 @@ package body Option_Handlers is
       bablenum(file1,file2,vrblvl);
     elsif dpos >= integer32(opts'first) then
       if redprc = 2 then
-        mainred2(file1,file2,vrblvl);
+        Main_Reduction.DoblDobl_Main(file1,file2,vrblvl);
       elsif redprc = 4 then
-        mainred4(file1,file2,vrblvl);
+        Main_Reduction.QuadDobl_Main(file1,file2,vrblvl);
       else
-        mainred(file1,file2,vrblvl);
+        Main_Reduction.Standard_Main(file1,file2,vrblvl);
       end if;
     elsif rpos >= integer32(opts'first) then
       if nt > 0
@@ -350,11 +351,11 @@ package body Option_Handlers is
     else
       put_line(welcome); put_line(reduban);
       if redprc = 2 then
-        mainred2(infile,outfile,vrblvl);
+        Main_Reduction.DoblDobl_Main(infile,outfile,vrblvl);
       elsif redprc = 4 then
-        mainred4(infile,outfile,vrblvl);
+        Main_Reduction.QuadDobl_Main(infile,outfile,vrblvl);
       else
-        mainred(infile,outfile,vrblvl);
+        Main_Reduction.Standard_Main(infile,outfile,vrblvl);
       end if;
     end if;
   end Reduction_Handler;

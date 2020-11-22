@@ -1,4 +1,4 @@
-Homotopies, scaling and reduction in PHCv2.4.80
+Homotopies, scaling and reduction in PHCv2.4.82
 
 The Creators in the package Homotopy allow more accessibility constants for
 the Cheater's homotopy.  A multiprecision version of the homotopy package
@@ -81,10 +81,8 @@ dobldobl_linear_reduction          : utilities for dobldobl precision reduction
 quaddobl_linear_reduction          : utilities for quaddobl precision reduction
 reduction_of_polynomial_systems    : linear and nonlinear reduction
 reduction_of_nonsquare_systems     : transform overconstrained into square
-drivers_for_reduction              : menu-drivers for reducing systems
-mainred                            : reduction tool, as called by phc
-mainred2                           : reduction in double double precision
-mainred4                           : reduction in quad double precision
+main_reduction                     : main procedures to reduce systems
+ts_reduce                          : calls a main reduction procedure
 ------------------------------------------------------------------------------
 standard_linear_poly_solvers       : solve linear polynomial systems
 ts_linsol                          : test on the linear poly solvers

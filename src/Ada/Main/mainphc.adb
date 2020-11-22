@@ -21,7 +21,7 @@ with QuadDobl_Complex_Solutions;
 with Multprec_Floating_Numbers;
 with Multprec_Complex_Solutions;
 with Drivers_for_Scaling;                use Drivers_for_Scaling;
-with Drivers_for_Reduction;              use Drivers_for_Reduction;
+with Main_Reduction;
 with Main_Poly_Continuation;             use Main_Poly_Continuation;
 with Main_Root_Counters;
 with Drivers_for_Homotopy_Creation;      use Drivers_for_Homotopy_Creation;
@@ -112,7 +112,7 @@ procedure mainphc
     end if;
     Copy(p,scalp);
     Driver_for_Scaling(file,scalp,basis,scalvec,vrb-1);
-    Driver_for_Reduction(file,scalp,roco,true,vrb-1);
+    Main_Reduction.Reduce(file,scalp,roco,true,vrb-1);
     Copy(scalp,projp);
     Main_Root_Counters.Polynomial_Main(file,nt,projp,q,true,sols,roco,vrb-1);
     if Length_Of(sols) > 0 then

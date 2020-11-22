@@ -1,3 +1,7 @@
+Sun 22 Nov 2020 : renamed drivers_for_reduction into main_reduction and
+  moved mainred, mainred2, and mainred4 into main_reduction.
+  Changed the name of ts_drivred into ts_reduce.
+
 Fri 25 Sep 2020 : extended homogenization, projective_transformations, and
   multi_projective_transformations for penta, octo, and deca doubles.
 
