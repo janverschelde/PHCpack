@@ -12,7 +12,7 @@ with DoblDobl_BlackBox_Solvers;
 with QuadDobl_BlackBox_Solvers;
 with mainphc,maingood,mainsymb;
 with mainscal,mainred,mainred2,mainred4;
-with bablroco;
+with Black_Box_Root_Counters;
 with babldmvc,mainsmvc;
 with mainpoco,bablpoco,bablpoco2,bablpoco4;
 with Main_Trackers;
@@ -21,7 +21,7 @@ with mainfac,maindeco;
 with mainenum,bablenum,mainfeed;
 with mainseries;
 with Main_Verification;
-with bablvali,bablvali2,bablvali4;
+with Black_Box_Root_Refiners;
 with Main_Component_Solvers;
 with mainsolve;
 with mainhyp,mainhyp2,mainhyp4;
@@ -242,8 +242,8 @@ package body Option_Handlers is
       end if;
     elsif rpos >= integer32(opts'first) then
       if nt > 0
-       then bablroco(nt,file1,file2,vrblvl);
-       else bablroco(0,file1,file2,vrblvl);
+       then Black_Box_Root_Counters.Main(nt,file1,file2,vrblvl);
+       else Black_Box_Root_Counters.Main(0,file1,file2,vrblvl);
       end if;
     elsif mpos >= integer32(opts'first) then
       if nt > 0
@@ -260,11 +260,11 @@ package body Option_Handlers is
       end if;
     elsif vpos >= integer32(opts'first) then
       if bbprc = 2 or valiprc = 2 then
-        bablvali2(file1,file2,vrblvl);
+        Black_Box_Root_Refiners.DoblDobl_Main(file1,file2,vrblvl);
       elsif bbprc = 4 or valiprc = 4 then
-        bablvali4(file1,file2,vrblvl);
+        Black_Box_Root_Refiners.QuadDobl_Main(file1,file2,vrblvl);
       else
-        bablvali(file1,file2,vrblvl);
+        Black_Box_Root_Refiners.Standard_Main(file1,file2,vrblvl);
       end if;
     elsif nt > 0 then
       case bbprc is
@@ -374,8 +374,8 @@ package body Option_Handlers is
       Greeting_Banners.help4rootcounts;
     elsif bpos >= integer32(opts'first) then
       if nt > 0 
-       then bablroco(nt,infile,outfile,vrblvl);
-       else bablroco(0,infile,outfile,vrblvl);
+       then Black_Box_Root_Counters.Main(nt,infile,outfile,vrblvl);
+       else Black_Box_Root_Counters.Main(0,infile,outfile,vrblvl);
       end if;
     elsif nt = 0 then
       put_line(welcome); put_line(rocoban & ", no multitasking.");
@@ -682,11 +682,11 @@ package body Option_Handlers is
       Greeting_Banners.help4verification;
     elsif bpos >= integer32(opts'first) then 
       if veriprc = 2 or bbprc = 2 then
-        bablvali2(infile,outfile,vrblvl);
+        Black_Box_Root_Refiners.DoblDobl_Main(infile,outfile,vrblvl);
       elsif veriprc = 4 or bbprc = 4 then
-        bablvali4(infile,outfile,vrblvl);
+        Black_Box_Root_Refiners.QuadDobl_Main(infile,outfile,vrblvl);
       else
-        bablvali(infile,outfile,vrblvl);
+        Black_Box_Root_Refiners.Standard_Main(infile,outfile,vrblvl);
       end if;
     else
       put_line(welcome); put_line(veriban);

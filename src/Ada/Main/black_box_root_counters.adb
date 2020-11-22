@@ -1,6 +1,8 @@
 with Ada.Calendar;
 with Timing_Package,Time_Stamps;         use Timing_Package,Time_Stamps;
+with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
 with Characters_and_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
@@ -2767,5 +2769,46 @@ package body Black_Box_Root_Counters is
     Write_Elapsed_Time(file,start_moment,ended_moment);
     flush(file);
   end Pipelined_Root_Counting;
+
+  procedure Main ( nt : in natural32; infilename,outfilename : in string;
+                   verbose : in integer32 := 0 ) is
+
+    use Standard_Complex_Poly_Systems;
+
+    procedure Read_System
+                ( file : in out file_type; filename : in string;
+                  lp : out Link_to_Poly_Sys ) is
+    begin
+      if filename /= "" then
+        Open_Input_File(file,filename);
+        get(file,lp);
+      end if;
+    exception
+      when others => put_line("Something is wrong with argument file...");
+                     lp := null; return;
+    end Read_System;
+
+    lp,lq : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    infile,outfile : file_type;
+    rc : natural32;
+    roco,poco : duration;
+    qsols,qsols0 : Standard_Complex_Solutions.Solution_List;
+
+  begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in black_box_root_counters.Main ...");
+    end if;
+    Read_System(infile,infilename,lp);
+    if lp = null then
+      new_line;
+      get(lp);
+    end if;
+    Create_Output_File(outfile,outfilename);
+    put(outfile,lp.all);
+    lq := new Poly_Sys(lp'range);
+    Black_Box_Root_Counting
+      (outfile,integer32(nt),lp.all,false,rc,lq.all,qsols,qsols0,roco,poco);
+  end Main;
 
 end Black_Box_Root_Counters;

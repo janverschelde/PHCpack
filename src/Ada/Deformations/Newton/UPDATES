@@ -1,3 +1,6 @@
+Sun 22 Nov 2020 : moved bablvali, bablvali2, bablvali4 into the package
+  black_box_root_refiners.
+
 Sun 23 Aug 2020 : added verbose level to drivers_to_deflate_singularities.
 
 Thu 16 Jul 2020 : in standard_inlined_newton_circuits.adb ,added check 

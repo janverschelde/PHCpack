@@ -997,4 +997,18 @@ package Black_Box_Root_Counters is
   --   qsols     solutions of q, without zero components;
   --   elaptime  is elapsed user cpu time for the computation.
 
+
+  procedure Main ( nt : in natural32; infilename,outfilename : in string;
+                   verbose : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --    Defines phc -b -r, the main blackbox root counter procedure.
+
+  -- ON ENTRY :
+  --   nt             the number of tasks, if 0 then no multitasking,
+  --                  otherwise nt tasks will be used to track the paths;
+  --   infilename     the name of the input file;
+  --   outfilename    the name of the output file;
+  --   verbose        the verbose level.
+
 end Black_Box_Root_Counters;

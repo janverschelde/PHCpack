@@ -1,8 +1,12 @@
+Sun 22 Nov 2020 : removed bablvali, bablvali2, bablvali4, and updated
+  option_handlers.adb.
+
 Sat 21 Nov 2020 : the procedures compsolve, compsolve2, compsolve4 are
   packaged into the new main_component_solvers, updated option_handlers.adb.
   Replaced the procedure bablphc by the package standard_blackbox_solvers,
   bablphc2 and bablphc4 by {dobldobl,quaddobl}_blackbox_solvers.
-  Updated option_handlers.adb.
+  Updated option_handlers.adb.  Moved bablroco.adb into the Main procedure
+  of black_box_root_counters.  Updated option_handlers.adb once more.
 
 Fri 20 Nov 2020 : replaced the procedure mainvali with the package 
   main_verification, and replaced maintrack with main_trackers.
