@@ -851,7 +851,7 @@ ts_mixres:
 
 # Test programs for the Deformations/Homotopy library :
 
-test_homotopy: ts_quad ts_drivscal ts_scal ts_drivred ts_homotopy \
+test_homotopy: ts_quad ts_drivscal ts_scal ts_reduce ts_homotopy \
                ts_homline ts_linsol ts_qdhom ts_poldrop ts_evalhomt ts_vmphom \
                ts_scalplane ts_multproj ts_homcnv
 
@@ -861,8 +861,8 @@ ts_drivscal:
 ts_scal:
 	make -f $(MAKEFILE) ts_scal
 
-ts_drivred:
-	make -f $(MAKEFILE) ts_drivred
+ts_reduce:
+	make -f $(MAKEFILE) ts_reduce
 
 ts_homotopy:
 	make -f $(MAKEFILE) ts_homotopy

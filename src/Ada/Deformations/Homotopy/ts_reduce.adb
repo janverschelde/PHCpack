@@ -5,7 +5,7 @@ with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Main_Reduction;
 
-procedure ts_drivred is
+procedure ts_reduce is
 
 -- DESCRIPTION :
 --   Calls the driver routine to reducing a polynomial system.
@@ -23,4 +23,4 @@ begin
   put_line("Reading the name of the output file.");
   Read_Name_and_Create_File(file);
   Main_Reduction.Reduce(file,lp.all,d,false);
-end ts_drivred;
+end ts_reduce;

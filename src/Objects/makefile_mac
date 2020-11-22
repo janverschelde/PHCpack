@@ -552,10 +552,6 @@ ts_odnorm:
 ts_danorm:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_danorm.adb -o $(BIN)/ts_danorm
 
-ts_errfree:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_errfree.adb \
-              -o $(BIN)/ts_errfree
-
 # Test programs for Math_Lib/Polynomials :
 
 ts_poly:
@@ -958,9 +954,9 @@ ts_drivscal:
 ts_scal:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_scal.adb -o $(BIN)/ts_scal
 
-ts_drivred:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivred.adb \
-                 -o $(BIN)/ts_drivred
+ts_reduce:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_reduce.adb \
+                 -o $(BIN)/ts_reduce
 
 ts_homotopy:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_homotopy.adb \

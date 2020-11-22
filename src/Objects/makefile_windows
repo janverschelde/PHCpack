@@ -1015,9 +1015,9 @@ ts_drivscal: get_clock.o get_clocks_per_sec.o
 ts_scal:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_scal.adb -o $(BIN)/ts_scal
 
-ts_drivred: get_clock.o get_clocks_per_sec.o
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivred.adb \
-              -o $(BIN)/ts_drivred \
+ts_reduce: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_reduce.adb \
+              -o $(BIN)/ts_reduce \
               -largs get_clock.o get_clocks_per_sec.o
 
 ts_homotopy:
