@@ -28,7 +28,7 @@ with Main_Verification;
 with Black_Box_Root_Refiners;
 with Main_Component_Solvers;
 with mainsolve;
-with mainhyp,mainhyp2,mainhyp4;
+with Main_Hypersurface_Witsets;
 with mainsam,mainwit;
 with Main_Dictionary_Solutions;
 with Main_Maple_Solutions;
@@ -706,6 +706,7 @@ package body Option_Handlers is
     hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
     precision : constant natural32
               := Actions_and_Options.Scan_Precision(args,'l');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
@@ -715,9 +716,12 @@ package body Option_Handlers is
        then put_line(welcome); put_line(hypban);
       end if;
       case precision is
-        when 2 => mainhyp2(polyfile,logfile);
-        when 4 => mainhyp4(polyfile,logfile);
-        when others => mainhyp(polyfile,logfile);
+        when 2 =>
+          Main_Hypersurface_Witsets.DoblDobl_Main(polyfile,logfile,vrblvl);
+        when 4 =>
+          Main_Hypersurface_Witsets.QuadDobl_Main(polyfile,logfile,vrblvl);
+        when others =>
+          Main_Hypersurface_Witsets.Standard_Main(polyfile,logfile,vrblvl);
       end case;
     end if;
   end Witness_Set_for_Hypersurface_Handler;
