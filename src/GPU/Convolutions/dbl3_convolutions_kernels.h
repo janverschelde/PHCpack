@@ -82,6 +82,20 @@ __global__ void cmplx3_convolute
  *   zimmi    middle parts of the imaginary parts of the product z;
  *   zimlo    low parts of the imaginary parts of the product z. */
 
+__global__ void cmplx3_looped_convolute
+ ( double *xrehi, double *xremi, double *xrelo,
+   double *ximhi, double *ximmi, double *ximlo,
+   double *yrehi, double *yremi, double *yrelo,
+   double *yimhi, double *yimmi, double *yimlo,
+   double *zrehi, double *zremi, double *zrelo,
+   double *zimhi, double *zimmi, double *zimlo, int dim );
+/*
+ * DESCRIPTION :
+ *   Does the same as cmplx3_convolute, but in two loops,
+ *   one for the real and one for the imaginary parts.
+ *   The loop for the imaginary parts has the indices reversed,
+ *   so every thread executes the same amount of operations. */
+
 void GPU_dbl3_product
  ( double *xhi_h, double *xmi_h, double *xlo_h,
    double *yhi_h, double *ymi_h, double *ylo_h,
@@ -117,7 +131,7 @@ void GPU_cmplx3_product
    double *yimhi_h, double *yimmi_h, double *yimlo_h,
    double *zrehi_h, double *zremi_h, double *zrelo_h,
    double *zimhi_h, double *zimmi_h, double *zimlo_h,
-   int deg, int freq, int BS );
+   int deg, int freq, int BS, int looped );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
@@ -144,7 +158,8 @@ void GPU_cmplx3_product
  *   zimlo_h    space for deg+1 doubles for the low imag parts of z;
  *   deg        degree of the truncated power series;
  *   freq       frequency for timing purposes;
- *   BS         block size, the number of threads in a block.
+ *   BS         block size, the number of threads in a block;
+ *   looped     if 1, then the looped convolute is applied.
  *
  * ON RETURN :
  *   zrehi_h    high parts of the real parts of the coefficients of z;

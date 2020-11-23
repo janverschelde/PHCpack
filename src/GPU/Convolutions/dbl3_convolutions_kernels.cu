@@ -131,6 +131,112 @@ __global__ void cmplx3_convolute
    zimhi[k] = zvimhi[k]; zimmi[k] = zvimmi[k]; zimlo[k] = zvimlo[k];
 }
 
+__global__ void cmplx3_looped_convolute
+ ( double *xrehi, double *xremi, double *xrelo,
+   double *ximhi, double *ximmi, double *ximlo,
+   double *yrehi, double *yremi, double *yrelo,
+   double *yimhi, double *yimmi, double *yimlo,
+   double *zrehi, double *zremi, double *zrelo,
+   double *zimhi, double *zimmi, double *zimlo, int dim )
+{
+   int k = threadIdx.x;       // thread k computes zre[k] and zim[dim-1-k]
+
+   __shared__ double xvrehi[td_shmemsize];
+   __shared__ double xvremi[td_shmemsize];
+   __shared__ double xvrelo[td_shmemsize];
+   __shared__ double xvimhi[td_shmemsize];
+   __shared__ double xvimmi[td_shmemsize];
+   __shared__ double xvimlo[td_shmemsize];
+   __shared__ double yvrehi[td_shmemsize];
+   __shared__ double yvremi[td_shmemsize];
+   __shared__ double yvrelo[td_shmemsize];
+   __shared__ double yvimhi[td_shmemsize];
+   __shared__ double yvimmi[td_shmemsize];
+   __shared__ double yvimlo[td_shmemsize];
+   __shared__ double zvrehi[td_shmemsize];
+   __shared__ double zvremi[td_shmemsize];
+   __shared__ double zvrelo[td_shmemsize];
+   __shared__ double zvimhi[td_shmemsize];
+   __shared__ double zvimmi[td_shmemsize];
+   __shared__ double zvimlo[td_shmemsize];
+
+   const int dim1 = dim-1;
+   int idx;
+   double xrhi,xihi,yrhi,yihi,zvhi,acchi;
+   double xrmi,ximi,yrmi,yimi,zvmi,accmi;
+   double xrlo,xilo,yrlo,yilo,zvlo,acclo;
+
+   xvrehi[k] = xrehi[k]; xvimhi[k] = ximhi[k];
+   xvremi[k] = xremi[k]; xvimmi[k] = ximmi[k];
+   xvrelo[k] = xrelo[k]; xvimlo[k] = ximlo[k];
+   yvrehi[k] = yrehi[k]; yvimhi[k] = yimhi[k];
+   yvremi[k] = yremi[k]; yvimmi[k] = yimmi[k];
+   yvrelo[k] = yrelo[k]; yvimlo[k] = yimlo[k];
+
+   __syncthreads();
+
+   // z[k] = x[0]*y[k]
+   xrhi = xvrehi[0]; xrmi = xvremi[0]; xrlo = xvrelo[0];
+   xihi = xvimhi[0]; ximi = xvimmi[0]; xilo = xvimlo[0];
+   yrhi = yvrehi[k]; yrmi = yvremi[k]; yrlo = yvrelo[k];
+   yihi = yvimhi[k]; yimi = yvimmi[k]; yilo = yvimlo[k];
+
+   tdg_mul(xrhi,xrmi,xrlo,yrhi,yrmi,yrlo,&zvhi,&zvmi,&zvlo);     // zr = xr*yr
+   tdg_mul(xihi,ximi,xilo,yihi,yimi,yilo,&acchi,&accmi,&acclo); // acc = xi*yi
+   tdg_minus(&acchi,&accmi,&acclo);
+   tdg_inc(&zvhi,&zvmi,&zvlo,acchi,accmi,acclo);         // zr = xr*yr - xi*yi
+
+   zvrehi[k] = zvhi; zvremi[k] = zvmi; zvrelo[k] = zvlo;
+
+   for(int i=1; i<=k; i++) // z[k] = z[k] + x[i]*y[k-i]
+   {
+      idx = k-i;
+      xrhi = xvrehi[i]; xrmi = xvremi[i]; xrlo = xvrelo[i];
+      xihi = xvimhi[i]; ximi = xvimmi[i]; xilo = xvimlo[i];
+      yrhi = yvrehi[idx]; yrmi = yvremi[idx]; yrlo = yvrelo[idx];
+      yihi = yvimhi[idx]; yimi = yvimmi[idx]; yilo = yvimlo[idx];
+
+      tdg_mul(xrhi,xrmi,xrlo,yrhi,yrmi,yrlo,&zvhi,&zvmi,&zvlo); // zr = xr*yr
+      tdg_mul(xihi,ximi,xilo,yihi,yimi,yilo,&acchi,&accmi,&acclo);   // xi*yi
+      tdg_minus(&acchi,&accmi,&acclo);
+      tdg_inc(&zvhi,&zvmi,&zvlo,acchi,accmi,acclo);     // zr = xr*yr - xi*yi
+      // zvim[k] += zi
+      tdg_inc(&zvrehi[k],&zvremi[k],&zvrelo[k],zvhi,zvmi,zvlo);
+   }
+                                                          // z[k] = x[0]*y[k]
+   idx = dim1-k;
+   xrhi = xvrehi[0]; xrmi = xvremi[0]; xrlo = xvrelo[0];
+   xihi = xvimhi[0]; ximi = xvimmi[0]; xilo = xvimlo[0];
+   yrhi = yvrehi[idx]; yrmi = yvremi[idx]; yrlo = yvrelo[idx];
+   yihi = yvimhi[idx]; yimi = yvimmi[idx]; yilo = yvimlo[idx];
+
+   tdg_mul(xrhi,xrmi,xrlo,yihi,yimi,yilo,&zvhi,&zvmi,&zvlo);     // zi = xr*yi
+   tdg_mul(xihi,ximi,xilo,yrhi,yrmi,yrlo,&acchi,&accmi,&acclo); // acc = xi*yr
+   tdg_inc(&zvhi,&zvmi,&zvlo,acchi,accmi,acclo);         // zi = xr*yi + xi*yr
+
+   zvimhi[k] = zvhi; zvimmi[k] = zvmi; zvimlo[k] = zvlo;
+
+   for(int i=1; i<dim-k; i++) // z[k] = z[k] + x[i]*y[k-i]
+   {
+      idx = dim1-k-i;
+      xrhi = xvrehi[i]; xrmi = xvremi[i]; xrlo = xvrelo[i];
+      xihi = xvimhi[i]; ximi = xvimmi[i]; xilo = xvimlo[i];
+      yrhi = yvrehi[idx]; yrmi = yvremi[idx]; yrlo = yvrelo[idx];
+      yihi = yvimhi[idx]; yimi = yvimmi[idx]; yilo = yvimlo[idx];
+
+      tdg_mul(xrhi,xrmi,xrlo,yihi,yimi,yilo,&zvhi,&zvmi,&zvlo); // zi = xr*yi
+      tdg_mul(xihi,ximi,xilo,yrhi,yrmi,yrlo,&acchi,&accmi,&acclo);   // xi*yr
+      tdg_inc(&zvhi,&zvmi,&zvlo,acchi,accmi,acclo);     // zi = xr*yi + xi*yr
+      // zvim[k] += zi
+      tdg_inc(&zvimhi[k],&zvimmi[k],&zvimlo[k],zvhi,zvmi,zvlo);
+   }
+   __syncthreads();
+
+   zrehi[k] = zvrehi[k]; zremi[k] = zvremi[k]; zrelo[k] = zvrelo[k];
+   zimhi[k] = zvimhi[dim1-k]; zimmi[k] = zvimmi[dim1-k];
+   zimlo[k] = zvimlo[dim1-k];
+}
+
 void GPU_dbl3_product
  ( double *xhi_h, double *xmi_h, double *xlo_h,
    double *yhi_h, double *ymi_h, double *ylo_h,
@@ -183,7 +289,7 @@ void GPU_cmplx3_product
    double *yimhi_h, double *yimmi_h, double *yimlo_h,
    double *zrehi_h, double *zremi_h, double *zrelo_h,
    double *zimhi_h, double *zimmi_h, double *zimlo_h,
-   int deg, int freq, int BS )
+   int deg, int freq, int BS, int looped )
 {
    const int dim = deg+1;            // length of all vectors
    double* xrehi_d;                  // xrehi_d is xrehi_h on the device
@@ -239,11 +345,23 @@ void GPU_cmplx3_product
 
    if(dim == BS)
    {
-      for(int i=0; i<freq; i++)
-         cmplx3_convolute<<<1,BS>>>
-            (xrehi_d,xremi_d,xrelo_d,ximhi_d,ximmi_d,ximlo_d,
-             yrehi_d,yremi_d,yrelo_d,yimhi_d,yimmi_d,yimlo_d,
-             zrehi_d,zremi_d,zrelo_d,zimhi_d,zimmi_d,zimlo_d,dim);
+      if(looped == 1)
+      {
+         for(int i=0; i<freq; i++)
+            cmplx3_looped_convolute<<<1,BS>>>
+               (xrehi_d,xremi_d,xrelo_d,ximhi_d,ximmi_d,ximlo_d,
+                yrehi_d,yremi_d,yrelo_d,yimhi_d,yimmi_d,yimlo_d,
+                zrehi_d,zremi_d,zrelo_d,zimhi_d,zimmi_d,zimlo_d,dim);
+      }
+      else
+      {
+         for(int i=0; i<freq; i++)
+            cmplx3_convolute<<<1,BS>>>
+               (xrehi_d,xremi_d,xrelo_d,ximhi_d,ximmi_d,ximlo_d,
+                yrehi_d,yremi_d,yrelo_d,yimhi_d,yimmi_d,yimlo_d,
+                zrehi_d,zremi_d,zrelo_d,zimhi_d,zimmi_d,zimlo_d,dim);
+      }
+
    }
 
    cudaMemcpy(zrehi_h,zrehi_d,size,cudaMemcpyDeviceToHost);

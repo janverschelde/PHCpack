@@ -68,7 +68,7 @@ __global__ void cmplx_looped_convolute
  ( double *xre, double *xim, double *yre, double *yim,
    double *zre, double *zim, int dim )
 {
-   int k = threadIdx.x;  // thread k computes zre[k] and zim[dim-k]
+   int k = threadIdx.x;  // thread k computes zre[k] and zim[dim-1-k]
 
    __shared__ double xvre[d_shmemsize];
    __shared__ double xvim[d_shmemsize];
@@ -79,38 +79,38 @@ __global__ void cmplx_looped_convolute
 
    const int dim1 = dim-1;
    int idx;
-   double xr,xi,yr,yi,zr,zi;
+   double xr,xi,yr,yi,zv;
 
    xvre[k] = xre[k]; xvim[k] = xim[k];
    yvre[k] = yre[k]; yvim[k] = yim[k];
 
    xr = xvre[0]; xi = xvim[0];    // z[k] = x[0]*y[k]
    yr = yvre[k]; yi = yvim[k];
-   zr = xr*yr - xi*yi;
-   zvre[k] = zr;
+   zv = xr*yr - xi*yi;
+   zvre[k] = zv;
 
    for(int i=1; i<=k; i++) // z[k] = z[k] + x[i]*y[k-i]
    {
       idx = k-i;
       xr = xvre[i];   xi = xvim[i];
       yr = yvre[idx]; yi = yvim[idx];
-      zr = xr*yr - xi*yi;
-      zvre[k] += zr;
+      zv = xr*yr - xi*yi;
+      zvre[k] += zv;
    }
 
    idx = dim1-k;
    xr = xvre[0];   xi = xvim[0];       // z[k] = x[0]*y[k]
    yr = yvre[idx]; yi = yvim[idx];
-   zi = xr*yi + xi*yr;
-   zvim[k] = zi;
+   zv = xr*yi + xi*yr;
+   zvim[k] = zv;
 
    for(int i=1; i<dim-k; i++) // z[k] = z[k] + x[i]*y[k-i]
    {
       idx = dim1-k-i;
       xr = xvre[i];   xi = xvim[i];
       yr = yvre[idx]; yi = yvim[idx];
-      zi = xr*yi + xi*yr;
-      zvim[k] += zi;
+      zv = xr*yi + xi*yr;
+      zvim[k] += zv;
    }
    __syncthreads();
 

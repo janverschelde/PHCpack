@@ -114,7 +114,7 @@ void GPU_cmplx3_speel
    int ix1,ix2,ix3;
 
    ix1 = idx[0]*deg1;                                     // f[0] = cff*x[0]
-   cmplx3_convolute<<<1,BS>>>
+   cmplx3_looped_convolute<<<1,BS>>>
       (cffrehi,cffremi,cffrelo,cffimhi,cffimmi,cffimlo,
        &inputrehi[ix1],&inputremi[ix1],&inputrelo[ix1],
        &inputimhi[ix1],&inputimmi[ix1],&inputimlo[ix1],
@@ -124,7 +124,7 @@ void GPU_cmplx3_speel
    for(int i=1; i<nvr; i++)                            // f[i] = f[i-i]*x[i]
    {
       ix2 = idx[i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
-      cmplx3_convolute<<<1,BS>>>
+      cmplx3_looped_convolute<<<1,BS>>>
          (&forwardrehi[ix1],&forwardremi[ix1],&forwardrelo[ix1],
           &forwardimhi[ix1],&forwardimmi[ix1],&forwardimlo[ix1],
           &inputrehi[ix2],&inputremi[ix2],&inputrelo[ix2],
@@ -135,7 +135,7 @@ void GPU_cmplx3_speel
    if(nvr > 2)
    {
       ix1 = idx[nvr-1]*deg1; ix2 = idx[nvr-2]*deg1;  // b[0] = x[n-1]*x[n-2]
-      cmplx3_convolute<<<1,BS>>>
+      cmplx3_looped_convolute<<<1,BS>>>
          (&inputrehi[ix1],&inputremi[ix1],&inputrelo[ix1],
           &inputimhi[ix1],&inputimmi[ix1],&inputimlo[ix1],
           &inputrehi[ix2],&inputremi[ix2],&inputrelo[ix2],
@@ -146,7 +146,7 @@ void GPU_cmplx3_speel
       for(int i=1; i<nvr-2; i++)                   // b[i] = b[i-1]*x[n-2-i]
       {
          ix2 = idx[nvr-2-i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
-         cmplx3_convolute<<<1,BS>>>
+         cmplx3_looped_convolute<<<1,BS>>>
             (&backwardrehi[ix1],&backwardremi[ix1],&backwardrelo[ix1],
              &backwardimhi[ix1],&backwardimmi[ix1],&backwardimlo[ix1],
              &inputrehi[ix2],&inputremi[ix2],&inputrelo[ix2],
@@ -155,7 +155,7 @@ void GPU_cmplx3_speel
              &backwardimhi[ix3],&backwardimmi[ix3],&backwardimlo[ix3],deg1);
       }
       ix3 = (nvr-3)*deg1; ix2 = (nvr-2)*deg1;         // b[n-2] = b[n-3]*cff
-      cmplx3_convolute<<<1,BS>>>
+      cmplx3_looped_convolute<<<1,BS>>>
          (&backwardrehi[ix3],&backwardremi[ix3],&backwardrelo[ix3],
           &backwardimhi[ix3],&backwardimmi[ix3],&backwardimlo[ix3],
           cffrehi,cffremi,cffrelo,cffimhi,cffimmi,cffimlo,
@@ -165,7 +165,7 @@ void GPU_cmplx3_speel
       if(nvr == 3)                                       // c[0] = f[0]*x[2]
       {
          ix2 = idx[2]*deg1;
-         cmplx3_convolute<<<1,BS>>>
+         cmplx3_looped_convolute<<<1,BS>>>
             (forwardrehi,forwardremi,forwardrelo,
              forwardimhi,forwardimmi,forwardimlo,
              &inputrehi[ix2],&inputremi[ix2],&inputrelo[ix2],
@@ -178,7 +178,7 @@ void GPU_cmplx3_speel
          for(int i=0; i<nvr-3; i++)                  // c[i] = f[i]*b[n-4-i]
          {
             ix1 = i*deg1; ix2 = (nvr-4-i)*deg1;
-            cmplx3_convolute<<<1,BS>>>
+            cmplx3_looped_convolute<<<1,BS>>>
                (&forwardrehi[ix1],&forwardremi[ix1],&forwardrelo[ix1],
                 &forwardimhi[ix1],&forwardimmi[ix1],&forwardimlo[ix1],
                 &backwardrehi[ix2],&backwardremi[ix2],&backwardrelo[ix2],
@@ -187,7 +187,7 @@ void GPU_cmplx3_speel
                 &crossimhi[ix1],&crossimmi[ix1],&crossimlo[ix1],deg1);
          }
          ix1 = (nvr-3)*deg1; ix2 = idx[nvr-1]*deg1; // c[n-3] = f[n-3]*x[n-1]
-         cmplx3_convolute<<<1,BS>>>
+         cmplx3_looped_convolute<<<1,BS>>>
             (&forwardrehi[ix1],&forwardremi[ix1],&forwardrelo[ix1],
              &forwardimhi[ix1],&forwardimmi[ix1],&forwardimlo[ix1],
              &inputrehi[ix2],&inputremi[ix2],&inputrelo[ix2],

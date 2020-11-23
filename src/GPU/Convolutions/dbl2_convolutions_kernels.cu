@@ -112,7 +112,7 @@ __global__ void cmplx2_looped_convolute
    double *yrehi, double *yrelo, double *yimhi, double *yimlo,
    double *zrehi, double *zrelo, double *zimhi, double *zimlo, int dim )
 {
-   int k = threadIdx.x;       // thread k computes zre[k] and zim[k]
+   int k = threadIdx.x;       // thread k computes zre[k] and zim[dim-1-k]
 
    __shared__ double xvrehi[dd_shmemsize];
    __shared__ double xvrelo[dd_shmemsize];
@@ -129,8 +129,8 @@ __global__ void cmplx2_looped_convolute
 
    const int dim1 = dim-1;
    int idx;
-   double xrhi,xihi,yrhi,yihi,zrhi,zihi,acchi;
-   double xrlo,xilo,yrlo,yilo,zrlo,zilo,acclo;
+   double xrhi,xihi,yrhi,yihi,zvhi,acchi;
+   double xrlo,xilo,yrlo,yilo,zvlo,acclo;
 
    xvrehi[k] = xrehi[k]; xvimhi[k] = ximhi[k];
    xvrelo[k] = xrelo[k]; xvimlo[k] = ximlo[k];
@@ -143,11 +143,11 @@ __global__ void cmplx2_looped_convolute
    xrhi = xvrehi[0]; xrlo = xvrelo[0]; xihi = xvimhi[0]; xilo = xvimlo[0];
    yrhi = yvrehi[k]; yrlo = yvrelo[k]; yihi = yvimhi[k]; yilo = yvimlo[k];
 
-   ddg_mul(xrhi,xrlo,yrhi,yrlo,&zrhi,&zrlo);   // zr = xr*yr
+   ddg_mul(xrhi,xrlo,yrhi,yrlo,&zvhi,&zvlo);   // zr = xr*yr
    ddg_mul(xihi,xilo,yihi,yilo,&acchi,&acclo); // acc = xi*yi
-   ddg_dec(&zrhi,&zrlo,acchi,acclo);           // zr = xr*yr - xi*yi
+   ddg_dec(&zvhi,&zvlo,acchi,acclo);           // zr = xr*yr - xi*yi
 
-   zvrehi[k] = zrhi; zvrelo[k] = zrlo;
+   zvrehi[k] = zvhi; zvrelo[k] = zvlo;
 
    for(int i=1; i<=k; i++) // z[k] = z[k] + x[i]*y[k-i]
    {
@@ -157,24 +157,25 @@ __global__ void cmplx2_looped_convolute
       yrhi = yvrehi[idx]; yrlo = yvrelo[idx];
       yihi = yvimhi[idx]; yilo = yvimlo[idx];
 
-      ddg_mul(xrhi,xrlo,yrhi,yrlo,&zrhi,&zrlo);   // zr = xr*yr
+      ddg_mul(xrhi,xrlo,yrhi,yrlo,&zvhi,&zvlo);   // zr = xr*yr
       ddg_mul(xihi,xilo,yihi,yilo,&acchi,&acclo); // acc = xi*yi
-      ddg_dec(&zrhi,&zrlo,acchi,acclo);           // zr = xr*yr - xi*yi
+      ddg_dec(&zvhi,&zvlo,acchi,acclo);           // zr = xr*yr - xi*yi
 
-      ddg_inc(&zvrehi[k],&zvrelo[k],zrhi,zrlo);   // zvre[k] += zr;
+      ddg_inc(&zvrehi[k],&zvrelo[k],zvhi,zvlo);   // zvre[k] += zr;
    }
 
    // z[k] = x[0]*y[k]
-   xrhi = xvrehi[0]; xrlo = xvrelo[0]; xihi = xvimhi[0]; xilo = xvimlo[0];
+   xrhi = xvrehi[0]; xrlo = xvrelo[0];
+   xihi = xvimhi[0]; xilo = xvimlo[0];
    idx = dim1-k;
    yrhi = yvrehi[idx]; yrlo = yvrelo[idx];
    yihi = yvimhi[idx]; yilo = yvimlo[idx];
 
-   ddg_mul(xrhi,xrlo,yihi,yilo,&zihi,&zilo);   // zi = xr*yi
+   ddg_mul(xrhi,xrlo,yihi,yilo,&zvhi,&zvlo);   // zi = xr*yi
    ddg_mul(xihi,xilo,yrhi,yrlo,&acchi,&acclo); // acc = xi*yr
-   ddg_inc(&zihi,&zilo,acchi,acclo);           // zi = xr*yi + xi*yr
+   ddg_inc(&zvhi,&zvlo,acchi,acclo);           // zi = xr*yi + xi*yr
 
-   zvimhi[k] = zihi; zvimlo[k] = zilo;
+   zvimhi[k] = zvhi; zvimlo[k] = zvlo;
 
    for(int i=1; i<dim-k; i++) // z[k] = z[k] + x[i]*y[k-i]
    {
@@ -184,11 +185,11 @@ __global__ void cmplx2_looped_convolute
       yrhi = yvrehi[idx]; yrlo = yvrelo[idx];
       yihi = yvimhi[idx]; yilo = yvimlo[idx];
 
-      ddg_mul(xrhi,xrlo,yihi,yilo,&zihi,&zilo);   // zi = xr*yi
+      ddg_mul(xrhi,xrlo,yihi,yilo,&zvhi,&zvlo);   // zi = xr*yi
       ddg_mul(xihi,xilo,yrhi,yrlo,&acchi,&acclo); // acc = xi*yr
-      ddg_inc(&zihi,&zilo,acchi,acclo);           // zr = xr*yi + xi*yr
+      ddg_inc(&zvhi,&zvlo,acchi,acclo);           // zr = xr*yi + xi*yr
 
-      ddg_inc(&zvimhi[k],&zvimlo[k],zihi,zilo);   // zvim[k] += zi;
+      ddg_inc(&zvimhi[k],&zvimlo[k],zvhi,zvlo);   // zvim[k] += zi;
    }
 
    __syncthreads();
