@@ -5,7 +5,9 @@
 #ifndef __DBL2_CONVOLUTIONS_KERNELS_H__
 #define __DBL2_CONVOLUTIONS_KERNELS_H__
 
-#define dd_shmemsize 256
+// #define dd_shmemsize 256
+// redefined for C2050
+#define dd_shmemsize 128
 
 /* The constant dd_shmemsize is the bound on the shared memory size,
  * to compute the product of series with complex double double coefficients.
@@ -66,6 +68,17 @@ __global__ void cmplx2_convolute
  *   zimhi    high parts of the imaginary parts of the product of x and y;
  *   zimlo    low parts of the imaginary parts of the product of x and y. */
 
+__global__ void cmplx2_looped_convolute
+ ( double *xrehi, double *xrelo, double *ximhi, double *ximlo,
+   double *yrehi, double *yrelo, double *yimhi, double *yimlo,
+   double *zrehi, double *zrelo, double *zimhi, double *zimlo, int dim );
+/*
+ * DESCRIPTION :
+ *   Does the same as cmplx2_convolute, but in two loops,
+ *   one for the real and one for the imaginary parts.
+ *   The loop for the imaginary parts has the indices reversed,
+ *   so every thread executes the same amount of operations. */
+
 void GPU_dbl2_product
  ( double *xhi_h, double *xlo_h, double *yhi_h, double *ylo_h,
    double *zhi_h, double *zlo_h, int deg, int freq, int BS );
@@ -93,7 +106,7 @@ void GPU_cmplx2_product
  ( double *xrehi_h, double *xrelo_h, double *ximhi_h, double *ximlo_h,
    double *yrehi_h, double *yrelo_h, double *yimhi_h, double *yimlo_h,
    double *zrehi_h, double *zrelo_h, double *zimhi_h, double *zimlo_h,
-   int deg, int freq, int BS );
+   int deg, int freq, int BS, int looped );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
@@ -114,7 +127,8 @@ void GPU_cmplx2_product
  *   zimlo_h    space for deg+1 doubles for the low imag parts of z;
  *   deg        degree of the truncated power series;
  *   freq       frequency for timing purposes;
- *   BS         block size, the number of threads in a block.
+ *   BS         block size, the number of threads in a block;
+ *   looped     if 1, then the looped convolute is applied.
  *
  * ON RETURN :
  *   zrehi_h    high parts of the real parts of the coefficients of z;

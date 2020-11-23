@@ -5,7 +5,9 @@
 #ifndef __DBL_CONVOLUTIONS_KERNELS_H__
 #define __DBL_CONVOLUTIONS_KERNELS_H__
 
-#define d_shmemsize 512
+// #define d_shmemsize 512
+// Reset to smaller size for C2050
+#define d_shmemsize 256
 
 /* The constant d_shmemsize is the bound on the shared memory size,
  * to compute the product of series with complex double coefficients.
@@ -41,6 +43,16 @@ __global__ void cmplx_convolute
  *   zre      real parts of the product of x and y;
  *   zim      imaginary parts of the product of x and y. */
 
+__global__ void cmplx_looped_convolute
+ ( double *xre, double *xim, double *yre, double *yim,
+   double *zre, double *zim, int dim );
+/*
+ * DESCRIPTION :
+ *   Does the same as cmplx_convolute, but in two loops,
+ *   one for the real and one for the imaginary parts.
+ *   The loop for the imaginary parts has the indices reversed,
+ *   so every thread executes the same amount of operations. */
+
 void GPU_dbl_product
  ( double *x_h, double *y_h, double *z_h, int deg, int freq, int BS );
 /*
@@ -60,7 +72,7 @@ void GPU_dbl_product
 
 void GPU_cmplx_product
  ( double *xre_h, double *xim_h, double *yre_h, double *yim_h,
-   double *zre_h, double *zim_h, int deg, int freq, int BS );
+   double *zre_h, double *zim_h, int deg, int freq, int BS, int looped );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series
@@ -75,7 +87,8 @@ void GPU_cmplx_product
  *   zim_h    space allocated for deg+1 doubles;
  *   deg      degree of the truncated power series;
  *   freq     frequency for timing purposes;
- *   BS       block size, the number of threads in a block.
+ *   BS       block size, the number of threads in a block;
+ *   looped   if 1, then the looped convolute is applied.
  *
  * ON RETURN :
  *   zre_h    real parts of the coefficients of the product of x with y;

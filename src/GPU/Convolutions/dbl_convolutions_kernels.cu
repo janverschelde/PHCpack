@@ -64,6 +64,60 @@ __global__ void cmplx_convolute
    zim[k] = zvim[k];
 }
 
+__global__ void cmplx_looped_convolute
+ ( double *xre, double *xim, double *yre, double *yim,
+   double *zre, double *zim, int dim )
+{
+   int k = threadIdx.x;  // thread k computes zre[k] and zim[dim-k]
+
+   __shared__ double xvre[d_shmemsize];
+   __shared__ double xvim[d_shmemsize];
+   __shared__ double yvre[d_shmemsize];
+   __shared__ double yvim[d_shmemsize];
+   __shared__ double zvre[d_shmemsize];
+   __shared__ double zvim[d_shmemsize];
+
+   const int dim1 = dim-1;
+   int idx;
+   double xr,xi,yr,yi,zr,zi;
+
+   xvre[k] = xre[k]; xvim[k] = xim[k];
+   yvre[k] = yre[k]; yvim[k] = yim[k];
+
+   xr = xvre[0]; xi = xvim[0];    // z[k] = x[0]*y[k]
+   yr = yvre[k]; yi = yvim[k];
+   zr = xr*yr - xi*yi;
+   zvre[k] = zr;
+
+   for(int i=1; i<=k; i++) // z[k] = z[k] + x[i]*y[k-i]
+   {
+      idx = k-i;
+      xr = xvre[i];   xi = xvim[i];
+      yr = yvre[idx]; yi = yvim[idx];
+      zr = xr*yr - xi*yi;
+      zvre[k] += zr;
+   }
+
+   idx = dim1-k;
+   xr = xvre[0];   xi = xvim[0];       // z[k] = x[0]*y[k]
+   yr = yvre[idx]; yi = yvim[idx];
+   zi = xr*yi + xi*yr;
+   zvim[k] = zi;
+
+   for(int i=1; i<dim-k; i++) // z[k] = z[k] + x[i]*y[k-i]
+   {
+      idx = dim1-k-i;
+      xr = xvre[i];   xi = xvim[i];
+      yr = yvre[idx]; yi = yvim[idx];
+      zi = xr*yi + xi*yr;
+      zvim[k] += zi;
+   }
+   __syncthreads();
+
+   zre[k] = zvre[k];
+   zim[k] = zvim[dim1-k];
+}
+
 void GPU_dbl_product
  ( double *x_h, double *y_h, double *z_h, int deg, int freq, int BS )
 {
@@ -91,7 +145,7 @@ void GPU_dbl_product
 
 void GPU_cmplx_product
  ( double *xre_h, double *xim_h, double *yre_h, double *yim_h,
-   double *zre_h, double *zim_h, int deg, int freq, int BS )
+   double *zre_h, double *zim_h, int deg, int freq, int BS, int looped )
 {
    const int dim = deg+1;            // length of all vectors
    double* xre_d;                    // xre_d is xre_h on the device
@@ -117,8 +171,18 @@ void GPU_cmplx_product
 
    if(dim == BS)
    {
-      for(int i=0; i<freq; i++)
-         cmplx_convolute<<<1,BS>>>(xre_d,xim_d,yre_d,yim_d,zre_d,zim_d,dim);
+      if(looped == 1)
+      {
+         for(int i=0; i<freq; i++)
+            cmplx_looped_convolute<<<1,BS>>>
+               (xre_d,xim_d,yre_d,yim_d,zre_d,zim_d,dim);
+      }
+      else
+      {
+         for(int i=0; i<freq; i++)
+            cmplx_convolute<<<1,BS>>>
+               (xre_d,xim_d,yre_d,yim_d,zre_d,zim_d,dim);
+      }
    }
 
    cudaMemcpy(zre_h,zre_d,size,cudaMemcpyDeviceToHost);

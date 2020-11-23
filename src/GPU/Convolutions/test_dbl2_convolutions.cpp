@@ -102,10 +102,14 @@ void test_complex ( int deg )
    double *yrelo = new double[deg+1];
    double *yimhi = new double[deg+1];
    double *yimlo = new double[deg+1];
-   double *zrehi = new double[deg+1];
-   double *zrelo = new double[deg+1];
-   double *zimhi = new double[deg+1];
-   double *zimlo = new double[deg+1];
+   double *zrehi_h = new double[deg+1];
+   double *zrelo_h = new double[deg+1];
+   double *zimhi_h = new double[deg+1];
+   double *zimlo_h = new double[deg+1];
+   double *zrehi_d = new double[deg+1];
+   double *zrelo_d = new double[deg+1];
+   double *zimhi_d = new double[deg+1];
+   double *zimlo_d = new double[deg+1];
 
    for(int k=0; k<=deg; k++)
    {
@@ -116,17 +120,32 @@ void test_complex ( int deg )
    }
    yrehi[0] = 1.0; yrehi[1] = -1.0;
 
-   CPU_cmplx2_product(deg,xrehi,xrelo,ximhi,ximlo,yrehi,yrelo,yimhi,yimlo,
-                          zrehi,zrelo,zimhi,zimlo);
+   CPU_cmplx2_product
+      (deg,xrehi,xrelo,ximhi,ximlo,yrehi,yrelo,yimhi,yimlo,
+       zrehi_h,zrelo_h,zimhi_h,zimlo_h);
 
    cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
 
    for(int k=0; k<=deg; k++)
    {
-      cout << "zrehi[" << k << "] : " << zrehi[k];
-      cout << "  zrelo[" << k << "] : " << zrelo[k];
-      cout << "  zimhi[" << k << "] : " << zimhi[k];
-      cout << "  zimlo[" << k << "] : " << zimlo[k] << endl;
+      cout << "zrehi[" << k << "] : " << zrehi_h[k];
+      cout << "  zrelo[" << k << "] : " << zrelo_h[k];
+      cout << "  zimhi[" << k << "] : " << zimhi_h[k];
+      cout << "  zimlo[" << k << "] : " << zimlo_h[k] << endl;
+   }
+
+   GPU_cmplx2_product(xrehi,xrelo,ximhi,ximlo,
+                      yrehi,yrelo,yimhi,yimlo,
+                      zrehi_d,zrelo_d,zimhi_d,zimlo_d,deg,1,deg+1,1);
+
+   cout << "GPU computed product :" << endl;
+
+   for(int k=0; k<=deg; k++)
+   {
+      cout << "zrehi[" << k << "] : " << zrehi_d[k];
+      cout << "  zrelo[" << k << "] : " << zrelo_d[k];
+      cout << "  zimhi[" << k << "] : " << zimhi_d[k];
+      cout << "  zimlo[" << k << "] : " << zimlo_d[k] << endl;
    }
 }
 
@@ -245,7 +264,7 @@ void test_complex_exponential ( int deg )
 
    GPU_cmplx2_product(xrehi,xrelo,ximhi,ximlo,
                       yrehi,yrelo,yimhi,yimlo,
-                      zrehi_d,zrelo_d,zimhi_d,zimlo_d,deg,1,deg+1);
+                      zrehi_d,zrelo_d,zimhi_d,zimlo_d,deg,1,deg+1,1);
 
    sumrehi = 0.0; sumrelo = 0.0; sumimhi = 0.0; sumimlo = 0.0;
 
