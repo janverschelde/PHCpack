@@ -1,5 +1,8 @@
 /* Tests the product of two series in triple double precision. */
 
+#include <ctime>
+#include <cstdlib>
+#include <cmath>
 #include <iostream>
 #include <iomanip>
 #include <vector_types.h>
@@ -10,47 +13,91 @@
 
 using namespace std;
 
-void test_real ( int deg );
+double test_real ( int deg );
 /*
  * DESCRIPTION :
  *   Multiplies the power series of 1/(1-x) with 1+x,
- *   truncated to degree deg, for real coefficients. */
+ *   truncated to degree deg, for real coefficients.
+ *   Returns the sum of all errors. */
 
-void test_complex ( int deg );
+double test_complex ( int deg );
 /*
  * DESCRIPTION :
  *   Multiplies the power series of 1/(1-x) with 1+x,
- *   truncated to degree deg, for complex coefficients. */
+ *   truncated to degree deg, for complex coefficients.
+ *   Returns the sum of all errors. */
 
-void test_real_exponential ( int deg );
+double test_real_exponential ( int deg );
 /*
  * DESCRIPTION :
  *   Multiplies the power series for exp(x) with exp(-x)
  *   for some random x in [-1,+1], for real coefficients
- *   of a series of degree truncated to deg. */
+ *   of a series of degree truncated to deg.
+ *   Returns the sum of all errors. */
 
-void test_complex_exponential ( int deg );
+double test_complex_exponential ( int deg );
 /*
  * DESCRIPTION :
  *   Multiplies the power series for exp(x) with exp(-x)
  *   for some random complex number on the unit circle,
- *   for series of degree truncated to deg. */
+ *   for series of degree truncated to deg.
+ *   Returns the sum of all errors. */
 
 int main ( void )
 {
-   int deg;
+   const int timevalue = time(NULL); // for a random seed
+   srand(timevalue);
 
-   cout << "Give a degree larger than one : "; cin >> deg;
+   ios_base::fmtflags f(cout.flags()); // to restore format flags
+ 
+   cout << "Give a degree larger than one : ";
+   int deg; cin >> deg;
 
-   if(deg > 0) test_real(deg);
-   if(deg > 0) test_complex(deg);
-   if(deg > 0) test_real_exponential(deg);
-   if(deg > 0) test_complex_exponential(deg);
+   if(deg > 0)
+   {
+      double realerror1 = test_real(deg);
 
+      cout.flags(f);
+      double complexerror1 = test_complex(deg);
+
+      double realerror2 = test_real_exponential(deg);
+      double complexerror2 = test_complex_exponential(deg);
+
+      const double tol = 1.0e-42;
+
+      cout << scientific << setprecision(2);
+      cout << "First test on real data, sum of all errors : ";
+      cout << realerror1;
+      if(realerror1 < tol)
+         cout << "  pass." << endl;
+      else
+         cout << "  fail!" << endl;
+
+      cout << "First test on complex data, sum of all errors : ";
+      cout << complexerror1;
+      if(complexerror1 < tol)
+         cout << "  pass." << endl;
+      else
+         cout << "  fail!" << endl;
+
+      cout << "Second test on real data, sum of all errors : ";
+      cout << realerror2;
+      if(realerror2 < tol)
+         cout << "  pass." << endl;
+      else
+         cout << "  fail!" << endl;
+
+      cout << "Second test on complex data, sum of all errors : ";
+      cout << complexerror2;
+      if(complexerror2 < tol)
+         cout << "  pass." << endl;
+      else
+         cout << "  fail!" << endl;
+   }
    return 0;
 }
 
-void test_real ( int deg )
+double test_real ( int deg )
 {
    double* xhi = new double[deg+1];
    double* xmi = new double[deg+1];
@@ -82,21 +129,30 @@ void test_real ( int deg )
       cout << "  zmi[" << k << "] : " << zmi_h[k];
       cout << "  zlo[" << k << "] : " << zlo_h[k] << endl;
    }
-
    GPU_dbl3_product(xhi,xmi,xlo,yhi,ymi,ylo,zhi_d,zmi_d,zlo_d,deg,1,deg+1);
 
    cout << "GPU computed product :" << endl;
+
+   double err = 0.0;
 
    for(int k=0; k<=deg; k++)
    {
       cout << "zhi[" << k << "] : " << zhi_d[k];
       cout << "  zmi[" << k << "] : " << zmi_d[k];
       cout << "  zlo[" << k << "] : " << zlo_d[k] << endl;
+      err = err
+          + abs(zhi_h[k] - zhi_d[k]) + abs(zmi_h[k] - zmi_d[k])
+          + abs(zlo_h[k] - zlo_d[k]);
    }
    cout << endl;
+
+   cout << scientific << setprecision(16);
+   cout << "the error : " << err << endl;
+
+   return err;
 }
 
-void test_complex ( int deg )
+double test_complex ( int deg )
 {
    double* xrehi = new double[deg+1];
    double* xremi = new double[deg+1];
@@ -147,13 +203,14 @@ void test_complex ( int deg )
       cout << "  zimmi[" << k << "] : " << zimmi_h[k];
       cout << "  zimlo[" << k << "] : " << zimlo_h[k] << endl;
    }
-
    GPU_cmplx3_product
       (xrehi,xremi,xrelo,ximhi,ximmi,ximlo,
        yrehi,yremi,yrelo,yimhi,yimmi,yimlo,
        zrehi_d,zremi_d,zrelo_d,zimhi_d,zimmi_d,zimlo_d,deg,1,deg+1,2);
 
    cout << "GPU computed product :" << endl;
+
+   double err = 0.0;
 
    for(int k=0; k<=deg; k++)
    {
@@ -163,11 +220,20 @@ void test_complex ( int deg )
       cout << "zimhi[" << k << "] : " << zimhi_d[k];
       cout << "  zimmi[" << k << "] : " << zimmi_d[k];
       cout << "  zimlo[" << k << "] : " << zimlo_d[k] << endl;
-   }
 
+      err = err
+          + abs(zrehi_h[k] - zrehi_d[k]) + abs(zremi_h[k] - zremi_d[k])
+          + abs(zrelo_h[k] - zrelo_d[k])
+          + abs(zimhi_h[k] - zimhi_d[k]) + abs(zimmi_h[k] - zimmi_d[k])
+          + abs(zimlo_h[k] - zimlo_d[k]);
+   }
+   cout << scientific << setprecision(16);
+   cout << "the error : " << err << endl;
+
+   return err;
 }
 
-void test_real_exponential ( int deg )
+double test_real_exponential ( int deg )
 {
    double *xhi = new double[deg+1];
    double *xmi = new double[deg+1];
@@ -210,17 +276,29 @@ void test_real_exponential ( int deg )
 
    sumhi = 0.0; summi = 0.0; sumlo = 0.0;
 
+   double err = 0.0;
+
    for(int k=0; k<=deg; k++)
+   {
       tdf_inc(&sumhi,&summi,&sumlo,zhi_d[k],zmi_d[k],zlo_d[k]);
+      err = err
+          + abs(zhi_h[k] - zhi_d[k]) + abs(zmi_h[k] - zmi_d[k])
+          + abs(zlo_h[k] - zlo_d[k]);
+   }
 
    cout << "Summation of all coefficients in the GPU computed product ..."
         << endl;
    cout << "  high part of sum : " << sumhi << endl;
    cout << "middle part of sum : " << summi << endl;
    cout << "   low part of sum : " << sumlo << endl;
+
+   cout << scientific << setprecision(16);
+   cout << "the error : " << err << endl;
+
+   return err;
 }
 
-void test_complex_exponential ( int deg )
+double test_complex_exponential ( int deg )
 {
    double* xrehi = new double[deg+1];
    double* xremi = new double[deg+1];
@@ -297,10 +375,18 @@ void test_complex_exponential ( int deg )
    sumrehi = 0.0; sumremi = 0.0; sumrelo = 0.0;
    sumimhi = 0.0; sumimmi = 0.0; sumimlo = 0.0;
 
+   double err = 0.0;
+
    for(int k=0; k<=deg; k++) 
    {
       tdf_inc(&sumrehi,&sumremi,&sumrelo,zrehi_d[k],zremi_d[k],zrelo_d[k]);
       tdf_inc(&sumimhi,&sumimmi,&sumimlo,zimhi_d[k],zimmi_d[k],zimlo_d[k]);
+
+      err = err
+          + abs(zrehi_h[k] - zrehi_d[k]) + abs(zremi_h[k] - zremi_d[k])
+          + abs(zrelo_h[k] - zrelo_d[k])
+          + abs(zimhi_h[k] - zimhi_d[k]) + abs(zimmi_h[k] - zimmi_d[k])
+          + abs(zimlo_h[k] - zimlo_d[k]);
    }
    cout << "Summation of all coefficients of the GPU computed product ..."
         << endl;
@@ -310,4 +396,9 @@ void test_complex_exponential ( int deg )
    cout << "  sumimhi : " << sumimhi;
    cout << "  sumimmi : " << sumimmi << endl;
    cout << "  sumimlo : " << sumimlo << endl;
+
+   cout << scientific << setprecision(16);
+   cout << "the error : " << err << endl;
+
+   return err;
 }

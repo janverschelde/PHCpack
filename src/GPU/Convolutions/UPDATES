@@ -1,3 +1,5 @@
+Tue 24 Nov 2020 : improved all tests in test_dbl*_convolutions.cpp.
+
 Mon 23 Nov 2020 : to dbl_convolutions_kernels and dbl2_convolutions_kernels,
   added double looped convolute kernels to compute the imaginary parts in
   the next loop with reversed indexing.  Extended the test_dbl_convolutions
