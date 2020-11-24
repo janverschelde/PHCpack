@@ -13,6 +13,22 @@
  * real and imaginary parts, five doubles, so 192*2*3*5*8 = 30720 bytes.
  * This constant bounds the degree of the power series. */
 
+__global__ void dbl5_increment
+ ( double *xtb, double *xix, double *xmi, double *xrg, double *xpk,
+   double *ytb, double *yix, double *ymi, double *yrg, double *ypk,
+   double *ztb, double *zix, double *zmi, double *zrg, double *zpk, int dim );
+/*
+ * DESCRIPTION : z = x + y.
+ *   Adds y to x to make z.  All arrays are of dimension dim. */
+
+__global__ void dbl5_decrement
+ ( double *xtb, double *xix, double *xmi, double *xrg, double *xpk,
+   double *ytb, double *yix, double *ymi, double *yrg, double *ypk,
+   double *ztb, double *zix, double *zmi, double *zrg, double *zpk, int dim );
+/*
+ * DESCRIPTION : z = x + y.
+ *   Subtracts y from x to make z.  All arrays are of dimension dim. */
+
 __global__ void dbl5_convolute
  ( double *xtb, double *xix, double *xmi, double *xrg, double *xpk,
    double *ytb, double *yix, double *ymi, double *yrg, double *ypk,
@@ -154,7 +170,8 @@ void GPU_cmplx5_product
    double *yimix_h, double *yimmi_h, double *yimrg_h, double *yimpk_h,
    double *zretb_h, double *zreix_h, double *zremi_h, double *zrerg_h,
    double *zrepk_h, double *zimtb_h, double *zimix_h, double *zimmi_h,
-   double *zimrg_h, double *zimpk_h, int deg, int freq, int BS );
+   double *zimrg_h, double *zimpk_h, int deg, int freq, int BS,
+   int looped );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
@@ -196,7 +213,8 @@ void GPU_cmplx5_product
  *   zimpk_h    space for deg+1 doubles for the lowest imag parts of z;
  *   deg        degree of the truncated power series;
  *   freq       frequency for timing purposes;
- *   BS         block size, the number of threads in a block.
+ *   BS         block size, the number of threads in a block;
+ *   looped     if > 0, then multiple double kernels are launched.
  *
  * ON RETURN :
  *   zretb_h    highest parts of the real parts of z;

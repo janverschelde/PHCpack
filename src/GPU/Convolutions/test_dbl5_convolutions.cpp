@@ -195,7 +195,7 @@ void test_complex ( int deg )
       (xretb,xreix,xremi,xrerg,xrepk,ximtb,ximix,ximmi,ximrg,ximpk,
        yretb,yreix,yremi,yrerg,yrepk,yimtb,yimix,yimmi,yimrg,yimpk,
        zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,
-       zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,deg,1,deg+1);
+       zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,deg,1,deg+1,2);
 
    cout << "GPU computed product :" << endl;
 
@@ -396,7 +396,7 @@ void test_complex_exponential ( int deg )
       (xretb,xreix,xremi,xrerg,xrepk,ximtb,ximix,ximmi,ximrg,ximpk,
        yretb,yreix,yremi,yrerg,yrepk,yimtb,yimix,yimmi,yimrg,yimpk,
        zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,
-       zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,deg,1,deg+1);
+       zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,deg,1,deg+1,2);
 
    sumretb = 0.0; sumreix = 0.0; sumremi = 0.0; sumrerg = 0.0; sumrepk = 0.0;
    sumimtb = 0.0; sumimix = 0.0; sumimmi = 0.0; sumimrg = 0.0; sumimpk = 0.0;

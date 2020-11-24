@@ -7,6 +7,142 @@
 #include "deca_double_gpufun.cu"
 #include "dbl10_convolutions_kernels.h"
 
+__global__ void dbl10_increment
+ ( double *xrtb, double *xrix, double *xrmi, double *xrrg, double *xrpk,
+   double *xltb, double *xlix, double *xlmi, double *xlrg, double *xlpk,
+   double *yrtb, double *yrix, double *yrmi, double *yrrg, double *yrpk,
+   double *yltb, double *ylix, double *ylmi, double *ylrg, double *ylpk,
+   double *zrtb, double *zrix, double *zrmi, double *zrrg, double *zrpk,
+   double *zltb, double *zlix, double *zlmi, double *zlrg, double *zlpk,
+   int dim )
+{
+   int k = threadIdx.x;                 // thread k computes z[k]
+
+   __shared__ double xvrtb[da_shmemsize];
+   __shared__ double xvrix[da_shmemsize];
+   __shared__ double xvrmi[da_shmemsize];
+   __shared__ double xvrrg[da_shmemsize];
+   __shared__ double xvrpk[da_shmemsize];
+   __shared__ double xvltb[da_shmemsize];
+   __shared__ double xvlix[da_shmemsize];
+   __shared__ double xvlmi[da_shmemsize];
+   __shared__ double xvlrg[da_shmemsize];
+   __shared__ double xvlpk[da_shmemsize];
+   __shared__ double yvrtb[da_shmemsize];
+   __shared__ double yvrix[da_shmemsize];
+   __shared__ double yvrmi[da_shmemsize];
+   __shared__ double yvrrg[da_shmemsize];
+   __shared__ double yvrpk[da_shmemsize];
+   __shared__ double yvltb[da_shmemsize];
+   __shared__ double yvlix[da_shmemsize];
+   __shared__ double yvlmi[da_shmemsize];
+   __shared__ double yvlrg[da_shmemsize];
+   __shared__ double yvlpk[da_shmemsize];
+   __shared__ double zvrtb[da_shmemsize];
+   __shared__ double zvrix[da_shmemsize];
+   __shared__ double zvrmi[da_shmemsize];
+   __shared__ double zvrrg[da_shmemsize];
+   __shared__ double zvrpk[da_shmemsize];
+   __shared__ double zvltb[da_shmemsize];
+   __shared__ double zvlix[da_shmemsize];
+   __shared__ double zvlmi[da_shmemsize];
+   __shared__ double zvlrg[da_shmemsize];
+   __shared__ double zvlpk[da_shmemsize];
+
+   xvrtb[k] = xrtb[k]; xvrix[k] = xrix[k]; xvrmi[k] = xrmi[k];
+   xvrrg[k] = xrrg[k]; xvrpk[k] = xrpk[k];
+   xvltb[k] = xltb[k]; xvlix[k] = xlix[k]; xvlmi[k] = xlmi[k];
+   xvlrg[k] = xlrg[k]; xvlpk[k] = xlpk[k];
+   yvrtb[k] = yrtb[k]; yvrix[k] = yrix[k]; yvrmi[k] = yrmi[k];
+   yvrrg[k] = yrrg[k]; yvrpk[k] = yrpk[k];
+   yvltb[k] = yltb[k]; yvlix[k] = ylix[k]; yvlmi[k] = ylmi[k];
+   yvlrg[k] = ylrg[k]; yvlpk[k] = ylpk[k];
+
+   __syncthreads();
+
+   dag_add(xvrtb[k],xvrix[k],xvrmi[k],xvrrg[k],xvrpk[k],
+           xvltb[k],xvlix[k],xvlmi[k],xvlrg[k],xvlpk[k],
+           yvrtb[k],yvrix[k],yvrmi[k],yvrrg[k],yvrpk[k],
+           yvltb[k],yvlix[k],yvlmi[k],yvlrg[k],yvlpk[k],
+           &zvrtb[k],&zvrix[k],&zvrmi[k],&zvrrg[k],&zvrpk[k],
+           &zvltb[k],&zvlix[k],&zvlmi[k],&zvlrg[k],&zvlpk[k]);
+
+   __syncthreads();
+
+   zrtb[k] = zvrtb[k]; zrix[k] = zvrix[k]; zrmi[k] = zvrmi[k];
+   zrrg[k] = zvrrg[k]; zrpk[k] = zvrpk[k];
+   zltb[k] = zvltb[k]; zlix[k] = zvlix[k]; zlmi[k] = zvlmi[k];
+   zlrg[k] = zvlrg[k]; zlpk[k] = zvlpk[k];
+}
+
+__global__ void dbl10_decrement
+ ( double *xrtb, double *xrix, double *xrmi, double *xrrg, double *xrpk,
+   double *xltb, double *xlix, double *xlmi, double *xlrg, double *xlpk,
+   double *yrtb, double *yrix, double *yrmi, double *yrrg, double *yrpk,
+   double *yltb, double *ylix, double *ylmi, double *ylrg, double *ylpk,
+   double *zrtb, double *zrix, double *zrmi, double *zrrg, double *zrpk,
+   double *zltb, double *zlix, double *zlmi, double *zlrg, double *zlpk,
+   int dim )
+{
+   int k = threadIdx.x;                 // thread k computes z[k]
+
+   __shared__ double xvrtb[da_shmemsize];
+   __shared__ double xvrix[da_shmemsize];
+   __shared__ double xvrmi[da_shmemsize];
+   __shared__ double xvrrg[da_shmemsize];
+   __shared__ double xvrpk[da_shmemsize];
+   __shared__ double xvltb[da_shmemsize];
+   __shared__ double xvlix[da_shmemsize];
+   __shared__ double xvlmi[da_shmemsize];
+   __shared__ double xvlrg[da_shmemsize];
+   __shared__ double xvlpk[da_shmemsize];
+   __shared__ double yvrtb[da_shmemsize];
+   __shared__ double yvrix[da_shmemsize];
+   __shared__ double yvrmi[da_shmemsize];
+   __shared__ double yvrrg[da_shmemsize];
+   __shared__ double yvrpk[da_shmemsize];
+   __shared__ double yvltb[da_shmemsize];
+   __shared__ double yvlix[da_shmemsize];
+   __shared__ double yvlmi[da_shmemsize];
+   __shared__ double yvlrg[da_shmemsize];
+   __shared__ double yvlpk[da_shmemsize];
+   __shared__ double zvrtb[da_shmemsize];
+   __shared__ double zvrix[da_shmemsize];
+   __shared__ double zvrmi[da_shmemsize];
+   __shared__ double zvrrg[da_shmemsize];
+   __shared__ double zvrpk[da_shmemsize];
+   __shared__ double zvltb[da_shmemsize];
+   __shared__ double zvlix[da_shmemsize];
+   __shared__ double zvlmi[da_shmemsize];
+   __shared__ double zvlrg[da_shmemsize];
+   __shared__ double zvlpk[da_shmemsize];
+
+   xvrtb[k] = xrtb[k]; xvrix[k] = xrix[k]; xvrmi[k] = xrmi[k];
+   xvrrg[k] = xrrg[k]; xvrpk[k] = xrpk[k];
+   xvltb[k] = xltb[k]; xvlix[k] = xlix[k]; xvlmi[k] = xlmi[k];
+   xvlrg[k] = xlrg[k]; xvlpk[k] = xlpk[k];
+   yvrtb[k] = yrtb[k]; yvrix[k] = yrix[k]; yvrmi[k] = yrmi[k];
+   yvrrg[k] = yrrg[k]; yvrpk[k] = yrpk[k];
+   yvltb[k] = yltb[k]; yvlix[k] = ylix[k]; yvlmi[k] = ylmi[k];
+   yvlrg[k] = ylrg[k]; yvlpk[k] = ylpk[k];
+
+   __syncthreads();
+
+   dag_sub(xvrtb[k],xvrix[k],xvrmi[k],xvrrg[k],xvrpk[k],
+           xvltb[k],xvlix[k],xvlmi[k],xvlrg[k],xvlpk[k],
+           yvrtb[k],yvrix[k],yvrmi[k],yvrrg[k],yvrpk[k],
+           yvltb[k],yvlix[k],yvlmi[k],yvlrg[k],yvlpk[k],
+           &zvrtb[k],&zvrix[k],&zvrmi[k],&zvrrg[k],&zvrpk[k],
+           &zvltb[k],&zvlix[k],&zvlmi[k],&zvlrg[k],&zvlpk[k]);
+
+   __syncthreads();
+
+   zrtb[k] = zvrtb[k]; zrix[k] = zvrix[k]; zrmi[k] = zvrmi[k];
+   zrrg[k] = zvrrg[k]; zrpk[k] = zvrpk[k];
+   zltb[k] = zvltb[k]; zlix[k] = zvlix[k]; zlmi[k] = zvlmi[k];
+   zlrg[k] = zvlrg[k]; zlpk[k] = zvlpk[k];
+}
+
 __global__ void dbl10_convolute
  ( double *xrtb, double *xrix, double *xrmi, double *xrrg, double *xrpk,
    double *xltb, double *xlix, double *xlmi, double *xlrg, double *xlpk,
@@ -468,7 +604,8 @@ void GPU_cmplx10_product
    double *zrelrg_h, double *zrelpk_h,
    double *zimrtb_h, double *zimrix_h, double *zimrmi_h, double *zimrrg_h,
    double *zimrpk_h, double *zimltb_h, double *zimlix_h, double *zimlmi_h,
-   double *zimlrg_h, double *zimlpk_h, int deg, int freq, int BS )
+   double *zimlrg_h, double *zimlpk_h, int deg, int freq, int BS,
+   int looped )
 {
    const int dim = deg+1;            // length of all vectors
    double* xrertb_d;                 // xrertb_d is xrertb_h on the device
@@ -531,6 +668,16 @@ void GPU_cmplx10_product
    double* zimlmi_d;                 // zimlmi_d is zimlmi_h on the device
    double* zimlrg_d;                 // zimlrg_d is zimlrg_h on the device
    double* zimlpk_d;                 // zimlpk_d is zimlpk_h on the device
+   double* accrtb_d;                 // accumulates highest doubles
+   double* accrix_d;                 // accumulates second highest doubles
+   double* accrmi_d;                 // accumulates third highest doubles
+   double* accrrg_d;                 // accumulates fourth highest doubles
+   double* accrpk_d;                 // accumulates fifth highest doubles
+   double* accltb_d;                 // accumulates fifth lowest doubles
+   double* acclix_d;                 // accumulates fourth lowest doubles
+   double* acclmi_d;                 // accumulates third lowest doubles
+   double* acclrg_d;                 // accumulates second lowest doubles
+   double* acclpk_d;                 // accumulates lowest doubles
    size_t size = dim*sizeof(double); // number of bytes for each vector
 
    cudaMalloc((void**)&xrertb_d,size);
@@ -593,6 +740,16 @@ void GPU_cmplx10_product
    cudaMalloc((void**)&zimlmi_d,size);
    cudaMalloc((void**)&zimlrg_d,size);
    cudaMalloc((void**)&zimlpk_d,size);
+   cudaMalloc((void**)&accrtb_d,size);
+   cudaMalloc((void**)&accrix_d,size);
+   cudaMalloc((void**)&accrmi_d,size);
+   cudaMalloc((void**)&accrrg_d,size);
+   cudaMalloc((void**)&accrpk_d,size);
+   cudaMalloc((void**)&accltb_d,size);
+   cudaMalloc((void**)&acclix_d,size);
+   cudaMalloc((void**)&acclmi_d,size);
+   cudaMalloc((void**)&acclrg_d,size);
+   cudaMalloc((void**)&acclpk_d,size);
    cudaMemcpy(xrertb_d,xrertb_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(xrerix_d,xrerix_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(xrermi_d,xrermi_h,size,cudaMemcpyHostToDevice);
@@ -636,20 +793,68 @@ void GPU_cmplx10_product
 
    if(dim == BS)
    {
-      for(int i=0; i<freq; i++)
-         cmplx10_convolute<<<1,BS>>>
+      if(looped > 0)
+      {
+         dbl10_convolute<<<1,BS>>>
             (xrertb_d,xrerix_d,xrermi_d,xrerrg_d,xrerpk_d,
              xreltb_d,xrelix_d,xrelmi_d,xrelrg_d,xrelpk_d,
-             ximrtb_d,ximrix_d,ximrmi_d,ximrrg_d,ximrpk_d,
+             yrertb_d,yrerix_d,yrermi_d,yrerrg_d,yrerpk_d,
+             yreltb_d,yrelix_d,yrelmi_d,yrelrg_d,yrelpk_d,
+             zrertb_d,zrerix_d,zrermi_d,zrerrg_d,zrerpk_d,
+             zreltb_d,zrelix_d,zrelmi_d,zrelrg_d,zrelpk_d,dim);
+         dbl10_convolute<<<1,BS>>>
+            (ximrtb_d,ximrix_d,ximrmi_d,ximrrg_d,ximrpk_d,
+             ximltb_d,ximlix_d,ximlmi_d,ximlrg_d,ximlpk_d,
+             yimrtb_d,yimrix_d,yimrmi_d,yimrrg_d,yimrpk_d,
+             yimltb_d,yimlix_d,yimlmi_d,yimlrg_d,yimlpk_d,
+             accrtb_d,accrix_d,accrmi_d,accrrg_d,zimrpk_d,
+             accltb_d,acclix_d,acclmi_d,acclrg_d,zimlpk_d,dim);
+         dbl10_decrement<<<1,BS>>>
+            (zrertb_d,zrerix_d,zrermi_d,zrerrg_d,zrerpk_d,
+             zreltb_d,zrelix_d,zrelmi_d,zrelrg_d,zrelpk_d,
+             accrtb_d,accrix_d,accrmi_d,accrrg_d,accrpk_d,
+             accltb_d,acclix_d,acclmi_d,acclrg_d,acclpk_d,
+             zrertb_d,zrerix_d,zrermi_d,zrerrg_d,zrerpk_d,
+             zreltb_d,zrelix_d,zrelmi_d,zrelrg_d,zrelpk_d,dim);
+         dbl10_convolute<<<1,BS>>>
+            (xrertb_d,xrerix_d,xrermi_d,xrerrg_d,xrerpk_d,
+             xreltb_d,xrelix_d,xrelmi_d,xrelrg_d,xrelpk_d,
+             yimrtb_d,yimrix_d,yimrmi_d,yimrrg_d,yimrpk_d,
+             yimltb_d,yimlix_d,yimlmi_d,yimlrg_d,yimlpk_d,
+             zimrtb_d,zimrix_d,zimrmi_d,zimrrg_d,zimrpk_d,
+             zimltb_d,zimlix_d,zimlmi_d,zimlrg_d,zimlpk_d,dim);
+         dbl10_convolute<<<1,BS>>>
+            (ximrtb_d,ximrix_d,ximrmi_d,ximrrg_d,ximrpk_d,
              ximltb_d,ximlix_d,ximlmi_d,ximlrg_d,ximlpk_d,
              yrertb_d,yrerix_d,yrermi_d,yrerrg_d,yrerpk_d,
              yreltb_d,yrelix_d,yrelmi_d,yrelrg_d,yrelpk_d,
-             yimrtb_d,yimrix_d,yimrmi_d,yimrrg_d,yimrpk_d,
-             yimltb_d,yimlix_d,yimlmi_d,yimlrg_d,yimlpk_d,
-             zrertb_d,zrerix_d,zrermi_d,zrerrg_d,zrerpk_d,
-             zreltb_d,zrelix_d,zrelmi_d,zrelrg_d,zrelpk_d,
+             accrtb_d,accrix_d,accrmi_d,accrrg_d,accrpk_d,
+             accltb_d,acclix_d,acclmi_d,acclrg_d,acclpk_d,dim);
+         dbl10_increment<<<1,BS>>>
+            (zimrtb_d,zimrix_d,zimrmi_d,zimrrg_d,zimrpk_d,
+             zimltb_d,zimlix_d,zimlmi_d,zimlrg_d,zimlpk_d,
+             accrtb_d,accrix_d,accrmi_d,accrrg_d,accrpk_d,
+             accltb_d,acclix_d,acclmi_d,acclrg_d,acclpk_d,
              zimrtb_d,zimrix_d,zimrmi_d,zimrrg_d,zimrpk_d,
              zimltb_d,zimlix_d,zimlmi_d,zimlrg_d,zimlpk_d,dim);
+      }
+      else
+      {
+         for(int i=0; i<freq; i++)
+            cmplx10_convolute<<<1,BS>>>
+               (xrertb_d,xrerix_d,xrermi_d,xrerrg_d,xrerpk_d,
+                xreltb_d,xrelix_d,xrelmi_d,xrelrg_d,xrelpk_d,
+                ximrtb_d,ximrix_d,ximrmi_d,ximrrg_d,ximrpk_d,
+                ximltb_d,ximlix_d,ximlmi_d,ximlrg_d,ximlpk_d,
+                yrertb_d,yrerix_d,yrermi_d,yrerrg_d,yrerpk_d,
+                yreltb_d,yrelix_d,yrelmi_d,yrelrg_d,yrelpk_d,
+                yimrtb_d,yimrix_d,yimrmi_d,yimrrg_d,yimrpk_d,
+                yimltb_d,yimlix_d,yimlmi_d,yimlrg_d,yimlpk_d,
+                zrertb_d,zrerix_d,zrermi_d,zrerrg_d,zrerpk_d,
+                zreltb_d,zrelix_d,zrelmi_d,zrelrg_d,zrelpk_d,
+                zimrtb_d,zimrix_d,zimrmi_d,zimrrg_d,zimrpk_d,
+                zimltb_d,zimlix_d,zimlmi_d,zimlrg_d,zimlpk_d,dim);
+      }
    }
    cudaMemcpy(zrertb_h,zrertb_d,size,cudaMemcpyDeviceToHost);
    cudaMemcpy(zrerix_h,zrerix_d,size,cudaMemcpyDeviceToHost);

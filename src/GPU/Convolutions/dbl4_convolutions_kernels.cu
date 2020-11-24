@@ -5,6 +5,76 @@
 #include "quad_double_gpufun.cu"
 #include "dbl4_convolutions_kernels.h"
 
+__global__ void dbl4_increment
+ ( double *xhihi, double *xlohi, double *xhilo, double *xlolo,
+   double *yhihi, double *ylohi, double *yhilo, double *ylolo,
+   double *zhihi, double *zlohi, double *zhilo, double *zlolo, int dim )
+{
+   int k = threadIdx.x;                 // thread k computes z[k]
+
+   __shared__ double xvhihi[qd_shmemsize];
+   __shared__ double xvlohi[qd_shmemsize];
+   __shared__ double xvhilo[qd_shmemsize];
+   __shared__ double xvlolo[qd_shmemsize];
+   __shared__ double yvhihi[qd_shmemsize];
+   __shared__ double yvlohi[qd_shmemsize];
+   __shared__ double yvhilo[qd_shmemsize];
+   __shared__ double yvlolo[qd_shmemsize];
+   __shared__ double zvhihi[qd_shmemsize];
+   __shared__ double zvlohi[qd_shmemsize];
+   __shared__ double zvhilo[qd_shmemsize];
+   __shared__ double zvlolo[qd_shmemsize];
+
+   xvhihi[k] = xhihi[k]; xvlohi[k] = xlohi[k]; 
+   xvhilo[k] = xhilo[k]; xvlolo[k] = xlolo[k];
+   yvhihi[k] = yhihi[k]; yvlohi[k] = ylohi[k]; 
+   yvhilo[k] = yhilo[k]; yvlolo[k] = ylolo[k];
+
+   qdg_add(xvhihi[k],xvlohi[k],xvhilo[k],xvlolo[k],
+           yvhihi[k],yvlohi[k],yvhilo[k],yvlolo[k],
+           &zvhihi[k],&zvlohi[k],&zvhilo[k],&zvlolo[k]);
+
+   __syncthreads();
+
+   zhihi[k] = zvhihi[k]; zlohi[k] = zvlohi[k];
+   zhilo[k] = zvhilo[k]; zlolo[k] = zvlolo[k];
+}
+
+__global__ void dbl4_decrement
+ ( double *xhihi, double *xlohi, double *xhilo, double *xlolo,
+   double *yhihi, double *ylohi, double *yhilo, double *ylolo,
+   double *zhihi, double *zlohi, double *zhilo, double *zlolo, int dim )
+{
+   int k = threadIdx.x;                 // thread k computes z[k]
+
+   __shared__ double xvhihi[qd_shmemsize];
+   __shared__ double xvlohi[qd_shmemsize];
+   __shared__ double xvhilo[qd_shmemsize];
+   __shared__ double xvlolo[qd_shmemsize];
+   __shared__ double yvhihi[qd_shmemsize];
+   __shared__ double yvlohi[qd_shmemsize];
+   __shared__ double yvhilo[qd_shmemsize];
+   __shared__ double yvlolo[qd_shmemsize];
+   __shared__ double zvhihi[qd_shmemsize];
+   __shared__ double zvlohi[qd_shmemsize];
+   __shared__ double zvhilo[qd_shmemsize];
+   __shared__ double zvlolo[qd_shmemsize];
+
+   xvhihi[k] = xhihi[k]; xvlohi[k] = xlohi[k]; 
+   xvhilo[k] = xhilo[k]; xvlolo[k] = xlolo[k];
+   yvhihi[k] = yhihi[k]; yvlohi[k] = ylohi[k]; 
+   yvhilo[k] = yhilo[k]; yvlolo[k] = ylolo[k];
+
+   qdg_sub(xvhihi[k],xvlohi[k],xvhilo[k],xvlolo[k],
+           yvhihi[k],yvlohi[k],yvhilo[k],yvlolo[k],
+           &zvhihi[k],&zvlohi[k],&zvhilo[k],&zvlolo[k]);
+
+   __syncthreads();
+
+   zhihi[k] = zvhihi[k]; zlohi[k] = zvlohi[k];
+   zhilo[k] = zvhilo[k]; zlolo[k] = zvlolo[k];
+}
+
 __global__ void dbl4_convolute
  ( double *xhihi, double *xlohi, double *xhilo, double *xlolo,
    double *yhihi, double *ylohi, double *yhilo, double *ylolo,
@@ -248,7 +318,7 @@ void GPU_cmplx4_product
    double *yimhihi_h, double *yimlohi_h, double *yimhilo_h, double *yimlolo_h,
    double *zrehihi_h, double *zrelohi_h, double *zrehilo_h, double *zrelolo_h,
    double *zimhihi_h, double *zimlohi_h, double *zimhilo_h, double *zimlolo_h,
-   int deg, int freq, int BS )
+   int deg, int freq, int BS, int looped )
 {
    const int dim = deg+1;            // length of all vectors
    double* xrehihi_d;                // xrehihi_d is xrehihi_h on the device
@@ -275,6 +345,10 @@ void GPU_cmplx4_product
    double* zimlohi_d;                // zimlohi_d is zimlohi_h on the device
    double* zimhilo_d;                // zimhilo_d is zimhilo_h on the device
    double* zimlolo_d;                // zimlolo_d is zimlolo_h on the device
+   double* acchihi_d;                // accumulates highest doubles
+   double* acclohi_d;                // accumulates second highest doubles
+   double* acchilo_d;                // accumulates second lowest doubles
+   double* acclolo_d;                // accumulates lowest doubles
    size_t size = dim*sizeof(double); // number of bytes for each vector
 
    cudaMalloc((void**)&xrehihi_d,size);
@@ -301,6 +375,10 @@ void GPU_cmplx4_product
    cudaMalloc((void**)&zimlohi_d,size);
    cudaMalloc((void**)&zimhilo_d,size);
    cudaMalloc((void**)&zimlolo_d,size);
+   cudaMalloc((void**)&acchihi_d,size);
+   cudaMalloc((void**)&acclohi_d,size);
+   cudaMalloc((void**)&acchilo_d,size);
+   cudaMalloc((void**)&acclolo_d,size);
    cudaMemcpy(xrehihi_d,xrehihi_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(xrelohi_d,xrelohi_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(xrehilo_d,xrehilo_h,size,cudaMemcpyHostToDevice);
@@ -320,14 +398,44 @@ void GPU_cmplx4_product
 
    if(dim == BS)
    {
-      for(int i=0; i<freq; i++)
-         cmplx4_convolute<<<1,BS>>>
+      if(looped > 0)
+      {
+         dbl4_convolute<<<1,BS>>>
             (xrehihi_d,xrelohi_d,xrehilo_d,xrelolo_d,
-             ximhihi_d,ximlohi_d,ximhilo_d,ximlolo_d,
              yrehihi_d,yrelohi_d,yrehilo_d,yrelolo_d,
+             zrehihi_d,zrelohi_d,zrehilo_d,zrelolo_d,dim);
+         dbl4_convolute<<<1,BS>>>
+            (ximhihi_d,ximlohi_d,ximhilo_d,ximlolo_d,
              yimhihi_d,yimlohi_d,yimhilo_d,yimlolo_d,
-             zrehihi_d,zrelohi_d,zrehilo_d,zrelolo_d,
+             acchihi_d,acclohi_d,acchilo_d,acclolo_d,dim);
+         dbl4_decrement<<<1,BS>>>
+            (zrehihi_d,zrelohi_d,zrehilo_d,zrelolo_d,
+             acchihi_d,acclohi_d,acchilo_d,acclolo_d,
+             zrehihi_d,zrelohi_d,zrehilo_d,zrelolo_d,dim);
+         dbl4_convolute<<<1,BS>>>
+            (xrehihi_d,xrelohi_d,xrehilo_d,xrelolo_d,
+             yimhihi_d,yimlohi_d,yimhilo_d,yimlolo_d,
              zimhihi_d,zimlohi_d,zimhilo_d,zimlolo_d,dim);
+         dbl4_convolute<<<1,BS>>>
+            (ximhihi_d,ximlohi_d,ximhilo_d,ximlolo_d,
+             yrehihi_d,yrelohi_d,yrehilo_d,yrelolo_d,
+             acchihi_d,acclohi_d,acchilo_d,acclolo_d,dim);
+         dbl4_increment<<<1,BS>>>
+            (zimhihi_d,zimlohi_d,zimhilo_d,zimlolo_d,
+             acchihi_d,acclohi_d,acchilo_d,acclolo_d,
+             zimhihi_d,zimlohi_d,zimhilo_d,zimlolo_d,dim);
+      }
+      else
+      { 
+         for(int i=0; i<freq; i++)
+           cmplx4_convolute<<<1,BS>>>
+              (xrehihi_d,xrelohi_d,xrehilo_d,xrelolo_d,
+               ximhihi_d,ximlohi_d,ximhilo_d,ximlolo_d,
+               yrehihi_d,yrelohi_d,yrehilo_d,yrelolo_d,
+               yimhihi_d,yimlohi_d,yimhilo_d,yimlolo_d,
+               zrehihi_d,zrelohi_d,zrehilo_d,zrelolo_d,
+               zimhihi_d,zimlohi_d,zimhilo_d,zimlolo_d,dim);
+      }
    }
 
    cudaMemcpy(zrehihi_h,zrehihi_d,size,cudaMemcpyDeviceToHost);

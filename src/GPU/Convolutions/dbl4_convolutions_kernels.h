@@ -14,6 +14,22 @@
  * and lowest parts, so 128*2*3*4*8 = 24576 bytes.
  * This constant bounds the degree of the power series. */
 
+__global__ void dbl4_increment
+ ( double *xhihi, double *xlohi, double *xhilo, double *xlolo,
+   double *yhihi, double *ylohi, double *yhilo, double *ylolo,
+   double *zhihi, double *zlohi, double *zhilo, double *zlolo, int dim );
+/*
+ * DESCRIPTION : z = x + y.
+ *   Adds y to x to make z.  All arrays have dimension dim. */
+
+__global__ void dbl4_decrement
+ ( double *xhihi, double *xlohi, double *xhilo, double *xlolo,
+   double *yhihi, double *ylohi, double *yhilo, double *ylolo,
+   double *zhihi, double *zlohi, double *zhilo, double *zlolo, int dim );
+/*
+ * DESCRIPTION : z = x + y.
+ *   Subtracts y from x to make z.  All arrays have dimension dim. */
+
 __global__ void dbl4_convolute
  ( double *xhihi, double *xlohi, double *xhilo, double *xlolo,
    double *yhihi, double *ylohi, double *yhilo, double *ylolo,
@@ -144,7 +160,7 @@ void GPU_cmplx4_product
    double *yimhihi_h, double *yimlohi_h, double *yimhilo_h, double *yimlolo_h,
    double *zrehihi_h, double *zrelohi_h, double *zrehilo_h, double *zrelolo_h,
    double *zimhihi_h, double *zimlohi_h, double *zimhilo_h, double *zimlolo_h,
-   int deg, int freq, int BS );
+   int deg, int freq, int BS, int looped );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
@@ -177,7 +193,8 @@ void GPU_cmplx4_product
  *   zimlolo_h    space for deg+1 doubles for the lowest imag parts of z;
  *   deg          degree of the truncated power series;
  *   freq         frequency for timing purposes;
- *   BS           block size, the number of threads in a block.
+ *   BS           block size, the number of threads in a block;
+ *   looped       if > 0, then multiple double kernels are launched.
  *
  * ON RETURN :
  *   zrehihi_h    highest parts of the real parts of z;

@@ -13,6 +13,30 @@
  * real and imaginary parts, ten doubles, so 64*2*3*10*8 = 30720 bytes.
  * This constant bounds the degree of the power series. */
 
+__global__ void dbl10_increment
+ ( double *xrtb, double *xrix, double *xrmi, double *xrrg, double *xrpk,
+   double *xltb, double *xlix, double *xlmi, double *xlrg, double *xlpk,
+   double *yrtb, double *yrix, double *yrmi, double *yrrg, double *yrpk,
+   double *yltb, double *ylix, double *ylmi, double *ylrg, double *ylpk,
+   double *zrtb, double *zrix, double *zrmi, double *zrrg, double *zrpk,
+   double *zltb, double *zlix, double *zlmi, double *zlrg, double *zlpk,
+   int dim );
+/*
+ * DESCRIPTION : z = x + y.
+ *   Adds y to x to make z.  All arrays are of dimension dim. */
+
+__global__ void dbl10_decrement
+ ( double *xrtb, double *xrix, double *xrmi, double *xrrg, double *xrpk,
+   double *xltb, double *xlix, double *xlmi, double *xlrg, double *xlpk,
+   double *yrtb, double *yrix, double *yrmi, double *yrrg, double *yrpk,
+   double *yltb, double *ylix, double *ylmi, double *ylrg, double *ylpk,
+   double *zrtb, double *zrix, double *zrmi, double *zrrg, double *zrpk,
+   double *zltb, double *zlix, double *zlmi, double *zlrg, double *zlpk,
+   int dim );
+/*
+ * DESCRIPTION : z = x + y.
+ *   Subtracts y from x to make z.  All arrays are of dimension dim. */
+
 __global__ void dbl10_convolute
  ( double *xrtb, double *xrix, double *xrmi, double *xrrg, double *xrpk,
    double *xltb, double *xlix, double *xlmi, double *xlrg, double *xlpk,
@@ -270,7 +294,8 @@ void GPU_cmplx10_product
    double *zrelrg_h, double *zrelpk_h,
    double *zimrtb_h, double *zimrix_h, double *zimrmi_h, double *zimrrg_h,
    double *zimrpk_h, double *zimltb_h, double *zimlix_h, double *zimlmi_h,
-   double *zimlrg_h, double *zimlpk_h, int deg, int freq, int BS );
+   double *zimlrg_h, double *zimlpk_h, int deg, int freq, int BS,
+   int looped );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
@@ -345,7 +370,8 @@ void GPU_cmplx10_product
  *   zimlpk_h   space for deg+1 doubles for the lowest imaginary parts of z;
  *   deg        degree of the truncated power series;
  *   freq       frequency for timing purposes;
- *   BS         block size, the number of threads in a block.
+ *   BS         block size, the number of threads in a block;
+ *   looped     if > 0, then multiple kernels will be launched.
  *
  * ON RETURN :
  *   zrertb_h   highest parts of the real parts of z;

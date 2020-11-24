@@ -370,7 +370,7 @@ void test_complex ( int deg )
        zrehihihi_d,zrelohihi_d,zrehilohi_d,zrelolohi_d,
        zrehihilo_d,zrelohilo_d,zrehilolo_d,zrelololo_d,
        zimhihihi_d,zimlohihi_d,zimhilohi_d,zimlolohi_d,
-       zimhihilo_d,zimlohilo_d,zimhilolo_d,zimlololo_d,deg,1,deg+1);
+       zimhihilo_d,zimlohilo_d,zimhilolo_d,zimlololo_d,deg,1,deg+1,2);
 
    cout << "GPU computed product :" << endl;
 
@@ -699,7 +699,7 @@ void test_complex_exponential ( int deg )
        zrehihihi_d,zrelohihi_d,zrehilohi_d,zrelolohi_d,
        zrehihilo_d,zrelohilo_d,zrehilolo_d,zrelololo_d,
        zimhihihi_d,zimlohihi_d,zimhilohi_d,zimlolohi_d,
-       zimhihilo_d,zimlohilo_d,zimhilolo_d,zimlololo_d,deg,1,deg+1);
+       zimhihilo_d,zimlohilo_d,zimhilolo_d,zimlololo_d,deg,1,deg+1,2);
 
    sumrehihihi = 0.0; sumrelohihi = 0.0;
    sumrehilohi = 0.0; sumrelolohi = 0.0;

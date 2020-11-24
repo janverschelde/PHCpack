@@ -14,6 +14,30 @@
  * so 64*2*3*8*8 = 24576 bytes.
  * This constant bounds the degree of the power series. */
 
+__global__ void dbl8_increment
+ ( double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
+   double *xhihilo, double *xlohilo, double *xhilolo, double *xlololo,
+   double *yhihihi, double *ylohihi, double *yhilohi, double *ylolohi,
+   double *yhihilo, double *ylohilo, double *yhilolo, double *ylololo,
+   double *zhihihi, double *zlohihi, double *zhilohi, double *zlolohi,
+   double *zhihilo, double *zlohilo, double *zhilolo, double *zlololo,
+   int dim );
+/*
+ * DESCRIPTION : z = x + y.
+ *   Adds y to x to make z.  All arrays are of dimension dim. */
+
+__global__ void dbl8_decrement
+ ( double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
+   double *xhihilo, double *xlohilo, double *xhilolo, double *xlololo,
+   double *yhihihi, double *ylohihi, double *yhilohi, double *ylolohi,
+   double *yhihilo, double *ylohilo, double *yhilolo, double *ylololo,
+   double *zhihihi, double *zlohihi, double *zhilohi, double *zlolohi,
+   double *zhihilo, double *zlohilo, double *zhilolo, double *zlololo,
+   int dim );
+/*
+ * DESCRIPTION : z = x - y.
+ *   Subtracts y to x to make z.  All arrays are of dimension dim. */
+
 __global__ void dbl8_convolute
  ( double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
    double *xhihilo, double *xlohilo, double *xhilolo, double *xlololo,
@@ -248,7 +272,7 @@ void GPU_cmplx8_product
    double *zimhilohi_h, double *zimlolohi_h,
    double *zimhihilo_h, double *zimlohilo_h,
    double *zimhilolo_h, double *zimlololo_h,
-   int deg, int freq, int BS );
+   int deg, int freq, int BS, int looped );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
@@ -289,7 +313,8 @@ void GPU_cmplx8_product
  *   yimlololo_h    deg+1 lowest parts of the imag parts of y;
  *   deg            degree of the truncated power series;
  *   freq           frequency for timing purposes;
- *   BS             block size, the number of threads in a block.
+ *   BS             block size, the number of threads in a block;
+ *   looped         if > 0, then multiple kernels are launched.
  *
  * ON RETURN :
  *   zrehihihi_h    highest parts of the real parts of z;

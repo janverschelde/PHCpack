@@ -5,6 +5,62 @@
 #include "triple_double_gpufun.cu"
 #include "dbl3_convolutions_kernels.h"
 
+__global__ void dbl3_increment
+ ( double *xhi, double *xmi, double *xlo,
+   double *yhi, double *ymi, double *ylo,
+   double *zhi, double *zmi, double *zlo, int dim )
+{
+   int k = threadIdx.x;                 // thread k computes z[k]
+
+   __shared__ double xvhi[td_shmemsize];
+   __shared__ double xvmi[td_shmemsize];
+   __shared__ double xvlo[td_shmemsize];
+   __shared__ double yvhi[td_shmemsize];
+   __shared__ double yvmi[td_shmemsize];
+   __shared__ double yvlo[td_shmemsize];
+   __shared__ double zvhi[td_shmemsize];
+   __shared__ double zvmi[td_shmemsize];
+   __shared__ double zvlo[td_shmemsize];
+
+   xvhi[k] = xhi[k]; xvmi[k] = xmi[k]; xvlo[k] = xlo[k];
+   yvhi[k] = yhi[k]; yvmi[k] = ymi[k]; yvlo[k] = ylo[k];
+
+   tdg_add(xvhi[k],xvmi[k],xvlo[k],yvhi[k],yvmi[k],yvlo[k],
+           &zvhi[k],&zvmi[k],&zvlo[k]);
+
+   __syncthreads();
+
+   zhi[k] = zvhi[k]; zmi[k] = zvmi[k]; zlo[k] = zvlo[k];
+}
+
+__global__ void dbl3_decrement
+ ( double *xhi, double *xmi, double *xlo,
+   double *yhi, double *ymi, double *ylo,
+   double *zhi, double *zmi, double *zlo, int dim )
+{
+   int k = threadIdx.x;                 // thread k computes z[k]
+
+   __shared__ double xvhi[td_shmemsize];
+   __shared__ double xvmi[td_shmemsize];
+   __shared__ double xvlo[td_shmemsize];
+   __shared__ double yvhi[td_shmemsize];
+   __shared__ double yvmi[td_shmemsize];
+   __shared__ double yvlo[td_shmemsize];
+   __shared__ double zvhi[td_shmemsize];
+   __shared__ double zvmi[td_shmemsize];
+   __shared__ double zvlo[td_shmemsize];
+
+   xvhi[k] = xhi[k]; xvmi[k] = xmi[k]; xvlo[k] = xlo[k];
+   yvhi[k] = yhi[k]; yvmi[k] = ymi[k]; yvlo[k] = ylo[k];
+
+   tdg_sub(xvhi[k],xvmi[k],xvlo[k],yvhi[k],yvmi[k],yvlo[k],
+           &zvhi[k],&zvmi[k],&zvlo[k]);
+
+   __syncthreads();
+
+   zhi[k] = zvhi[k]; zmi[k] = zvmi[k]; zlo[k] = zvlo[k];
+}
+
 __global__ void dbl3_convolute
  ( double *xhi, double *xmi, double *xlo,
    double *yhi, double *ymi, double *ylo,
@@ -310,6 +366,9 @@ void GPU_cmplx3_product
    double* zimhi_d;                  // zimhi_d is zimhi_h on the device
    double* zimmi_d;                  // zimmi_d is zimmi_h on the device
    double* zimlo_d;                  // zimlo_d is zimlo_h on the device
+   double* acchi_d;                  // accumulates high parts on the device
+   double* accmi_d;                  // accumulates middle parts
+   double* acclo_d;                  // accumulates low parts 
    size_t size = dim*sizeof(double); // number of bytes for each vector
 
    cudaMalloc((void**)&xrehi_d,size);
@@ -330,6 +389,9 @@ void GPU_cmplx3_product
    cudaMalloc((void**)&zimhi_d,size);
    cudaMalloc((void**)&zimmi_d,size);
    cudaMalloc((void**)&zimlo_d,size);
+   cudaMalloc((void**)&acchi_d,size);
+   cudaMalloc((void**)&accmi_d,size);
+   cudaMalloc((void**)&acclo_d,size);
    cudaMemcpy(xrehi_d,xrehi_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(xremi_d,xremi_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(xrelo_d,xrelo_h,size,cudaMemcpyHostToDevice);
@@ -345,6 +407,27 @@ void GPU_cmplx3_product
 
    if(dim == BS)
    {
+      if(looped == 2)
+      {
+         dbl3_convolute<<<1,BS>>>
+            (xrehi_d,xremi_d,xrelo_d,yrehi_d,yremi_d,yrelo_d,
+             zrehi_d,zremi_d,zrelo_d,dim);
+         dbl3_convolute<<<1,BS>>>
+            (ximhi_d,ximmi_d,ximlo_d,yimhi_d,yimmi_d,yimlo_d,
+             acchi_d,accmi_d,acclo_d,dim);
+         dbl3_decrement<<<1,BS>>>
+            (zrehi_d,zremi_d,zrelo_d,acchi_d,accmi_d,acclo_d,
+             zrehi_d,zremi_d,zrelo_d,dim);
+         dbl3_convolute<<<1,BS>>>
+            (xrehi_d,xremi_d,xrelo_d,yimhi_d,yimmi_d,yimlo_d,
+             zimhi_d,zimmi_d,zimlo_d,dim);
+         dbl3_convolute<<<1,BS>>>
+            (ximhi_d,ximmi_d,ximlo_d,yrehi_d,yremi_d,yrelo_d,
+             acchi_d,accmi_d,acclo_d,dim);
+         dbl3_increment<<<1,BS>>>
+            (zimhi_d,zimmi_d,zimlo_d,acchi_d,accmi_d,acclo_d,
+             zimhi_d,zimmi_d,zimlo_d,dim);
+      }
       if(looped == 1)
       {
          for(int i=0; i<freq; i++)

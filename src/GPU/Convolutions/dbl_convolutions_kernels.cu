@@ -3,6 +3,44 @@
 
 #include "dbl_convolutions_kernels.h"
 
+__global__ void dbl_increment
+ ( double *x, double *y, double *z, int dim )
+{
+   int k = threadIdx.x;                 // thread k computes z[k]
+
+   __shared__ double xv[d_shmemsize];
+   __shared__ double yv[d_shmemsize];
+   __shared__ double zv[d_shmemsize];
+
+   xv[k] = x[k];
+   yv[k] = y[k];
+
+   zv[k] = xv[k] + yv[k];
+
+   __syncthreads();
+
+   z[k] = zv[k];
+}
+
+__global__ void dbl_decrement
+ ( double *x, double *y, double *z, int dim )
+{
+   int k = threadIdx.x;                 // thread k computes z[k]
+
+   __shared__ double xv[d_shmemsize];
+   __shared__ double yv[d_shmemsize];
+   __shared__ double zv[d_shmemsize];
+
+   xv[k] = x[k];
+   yv[k] = y[k];
+
+   zv[k] = xv[k] - yv[k];
+
+   __syncthreads();
+
+   z[k] = zv[k];
+}
+
 __global__ void dbl_convolute
  ( double *x, double *y, double *z, int dim )
 {
@@ -154,6 +192,7 @@ void GPU_cmplx_product
    double* yim_d;                    // yim_d is yim_h on the device
    double* zre_d;                    // zre_d is zre_h on the device
    double* zim_d;                    // zim_d is zim_h on the device
+   double* acc_d;                    // accumulator on device
    size_t size = dim*sizeof(double); // number of bytes for each vector
 
    cudaMalloc((void**)&xre_d,size);
@@ -162,6 +201,7 @@ void GPU_cmplx_product
    cudaMalloc((void**)&yim_d,size);
    cudaMalloc((void**)&zre_d,size);
    cudaMalloc((void**)&zim_d,size);
+   cudaMalloc((void**)&acc_d,size);
    cudaMemcpy(xre_d,xre_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(xim_d,xim_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(yre_d,yre_h,size,cudaMemcpyHostToDevice);
@@ -171,7 +211,16 @@ void GPU_cmplx_product
 
    if(dim == BS)
    {
-      if(looped == 1)
+      if(looped == 2)
+      {
+         dbl_convolute<<<1,BS>>>(xre_d,yre_d,zre_d,dim);
+         dbl_convolute<<<1,BS>>>(xim_d,yim_d,acc_d,dim);
+         dbl_decrement<<<1,BS>>>(zre_d,acc_d,zre_d,dim);
+         dbl_convolute<<<1,BS>>>(xre_d,yim_d,zim_d,dim);
+         dbl_convolute<<<1,BS>>>(xim_d,yre_d,acc_d,dim);
+         dbl_increment<<<1,BS>>>(zim_d,acc_d,zim_d,dim);
+      }
+      else if(looped == 1)
       {
          for(int i=0; i<freq; i++)
             cmplx_looped_convolute<<<1,BS>>>

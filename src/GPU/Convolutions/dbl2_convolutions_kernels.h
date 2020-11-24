@@ -15,6 +15,20 @@
  * real and imaginary parts, high and low parts, so 256*2*3*2*8 = 24576 bytes.
  * This constant bounds the degree of the power series. */
 
+__global__ void dbl2_increment
+ ( double *xhi, double *xlo, double *yhi, double *ylo,
+   double *zhi, double *zlo, int dim );
+/*
+ * DESCRIPTION : z = x + y.
+ *   Add y to x to make z.  All arrays are of dimension dim. */
+
+__global__ void dbl2_decrement
+ ( double *xhi, double *xlo, double *yhi, double *ylo,
+   double *zhi, double *zlo, int dim );
+/*
+ * DESCRIPTION : z = x + y.
+ *  Subtracts y from x to make z.  All arrays are of dimension dim. */
+
 __global__ void dbl2_convolute
  ( double *xhi, double *xlo, double *yhi, double *ylo,
    double *zhi, double *zlo, int dim );

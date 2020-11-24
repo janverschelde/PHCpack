@@ -5,6 +5,82 @@
 #include "penta_double_gpufun.cu"
 #include "dbl5_convolutions_kernels.h"
 
+__global__ void dbl5_increment
+ ( double *xtb, double *xix, double *xmi, double *xrg, double *xpk,
+   double *ytb, double *yix, double *ymi, double *yrg, double *ypk,
+   double *ztb, double *zix, double *zmi, double *zrg, double *zpk, int dim )
+{
+   int k = threadIdx.x;                 // thread k computes z[k]
+
+   __shared__ double xvtb[pd_shmemsize];
+   __shared__ double xvix[pd_shmemsize];
+   __shared__ double xvmi[pd_shmemsize];
+   __shared__ double xvrg[pd_shmemsize];
+   __shared__ double xvpk[pd_shmemsize];
+   __shared__ double yvtb[pd_shmemsize];
+   __shared__ double yvix[pd_shmemsize];
+   __shared__ double yvmi[pd_shmemsize];
+   __shared__ double yvrg[pd_shmemsize];
+   __shared__ double yvpk[pd_shmemsize];
+   __shared__ double zvtb[pd_shmemsize];
+   __shared__ double zvix[pd_shmemsize];
+   __shared__ double zvmi[pd_shmemsize];
+   __shared__ double zvrg[pd_shmemsize];
+   __shared__ double zvpk[pd_shmemsize];
+
+   xvtb[k] = xtb[k]; xvix[k] = xix[k]; xvmi[k] = xmi[k];
+   xvrg[k] = xrg[k]; xvpk[k] = xpk[k];
+   yvtb[k] = ytb[k]; yvix[k] = yix[k]; yvmi[k] = ymi[k];
+   yvrg[k] = yrg[k]; yvpk[k] = ypk[k];
+
+   pdg_add(xvtb[k],xvix[k],xvmi[k],xvrg[k],xvpk[k],
+           yvtb[k],yvix[k],yvmi[k],yvrg[k],yvpk[k],
+           &zvtb[k],&zvix[k],&zvmi[k],&zvrg[k],&zvpk[k]);
+
+   __syncthreads();
+
+   ztb[k] = zvtb[k]; zix[k] = zvix[k]; zmi[k] = zvmi[k];
+   zrg[k] = zvrg[k]; zpk[k] = zvpk[k];
+}
+
+__global__ void dbl5_decrement
+ ( double *xtb, double *xix, double *xmi, double *xrg, double *xpk,
+   double *ytb, double *yix, double *ymi, double *yrg, double *ypk,
+   double *ztb, double *zix, double *zmi, double *zrg, double *zpk, int dim )
+{
+   int k = threadIdx.x;                 // thread k computes z[k]
+
+   __shared__ double xvtb[pd_shmemsize];
+   __shared__ double xvix[pd_shmemsize];
+   __shared__ double xvmi[pd_shmemsize];
+   __shared__ double xvrg[pd_shmemsize];
+   __shared__ double xvpk[pd_shmemsize];
+   __shared__ double yvtb[pd_shmemsize];
+   __shared__ double yvix[pd_shmemsize];
+   __shared__ double yvmi[pd_shmemsize];
+   __shared__ double yvrg[pd_shmemsize];
+   __shared__ double yvpk[pd_shmemsize];
+   __shared__ double zvtb[pd_shmemsize];
+   __shared__ double zvix[pd_shmemsize];
+   __shared__ double zvmi[pd_shmemsize];
+   __shared__ double zvrg[pd_shmemsize];
+   __shared__ double zvpk[pd_shmemsize];
+
+   xvtb[k] = xtb[k]; xvix[k] = xix[k]; xvmi[k] = xmi[k];
+   xvrg[k] = xrg[k]; xvpk[k] = xpk[k];
+   yvtb[k] = ytb[k]; yvix[k] = yix[k]; yvmi[k] = ymi[k];
+   yvrg[k] = yrg[k]; yvpk[k] = ypk[k];
+
+   pdg_sub(xvtb[k],xvix[k],xvmi[k],xvrg[k],xvpk[k],
+           yvtb[k],yvix[k],yvmi[k],yvrg[k],yvpk[k],
+           &zvtb[k],&zvix[k],&zvmi[k],&zvrg[k],&zvpk[k]);
+
+   __syncthreads();
+
+   ztb[k] = zvtb[k]; zix[k] = zvix[k]; zmi[k] = zvmi[k];
+   zrg[k] = zvrg[k]; zpk[k] = zvpk[k];
+}
+
 __global__ void dbl5_convolute
  ( double *xtb, double *xix, double *xmi, double *xrg, double *xpk,
    double *ytb, double *yix, double *ymi, double *yrg, double *ypk,
@@ -29,6 +105,7 @@ __global__ void dbl5_convolute
    __shared__ double zvpk[pd_shmemsize];
 
    double prdtb,prdix,prdmi,prdrg,prdpk;
+   int idx;
 
    xvtb[k] = xtb[k]; xvix[k] = xix[k]; xvmi[k] = xmi[k];
    xvrg[k] = xrg[k]; xvpk[k] = xpk[k];
@@ -44,8 +121,9 @@ __global__ void dbl5_convolute
 
    for(int i=1; i<=k; i++) // zv[k] = zv[k] + xv[i]*yv[k-i];
    {
+      idx = k-i;
       pdg_mul(xvtb[i],xvix[i],xvmi[i],xvrg[i],xvpk[i],
-              yvtb[k-i],yvix[k-i],yvmi[k-i],yvrg[k-i],yvpk[k-i],
+              yvtb[idx],yvix[idx],yvmi[idx],yvrg[idx],yvpk[idx],
               &prdtb,&prdix,&prdmi,&prdrg,&prdpk);
       pdg_inc(&zvtb[k],&zvix[k],&zvmi[k],&zvrg[k],&zvpk[k],
               prdtb,prdix,prdmi,prdrg,prdpk);
@@ -259,7 +337,8 @@ void GPU_cmplx5_product
    double *yimix_h, double *yimmi_h, double *yimrg_h, double *yimpk_h,
    double *zretb_h, double *zreix_h, double *zremi_h, double *zrerg_h,
    double *zrepk_h, double *zimtb_h, double *zimix_h, double *zimmi_h,
-   double *zimrg_h, double *zimpk_h, int deg, int freq, int BS )
+   double *zimrg_h, double *zimpk_h, int deg, int freq, int BS,
+   int looped )
 {
    const int dim = deg+1;            // length of all vectors
    double* xretb_d;                  // xretb_d is xretb_h on the device
@@ -292,6 +371,11 @@ void GPU_cmplx5_product
    double* zimmi_d;                  // zimmi_d is zimmi_h on the device
    double* zimrg_d;                  // zimrg_d is zimrg_h on the device
    double* zimpk_d;                  // zimpk_d is zimpk_h on the device
+   double* acctb_d;                  // accumulates highest doubles
+   double* accix_d;                  // accumulates second highest doubles
+   double* accmi_d;                  // accumulates middle doubles
+   double* accrg_d;                  // accumulates second lowest doubles
+   double* accpk_d;                  // accumulates lowest doubles
    size_t size = dim*sizeof(double); // number of bytes for each vector
 
    cudaMalloc((void**)&xretb_d,size);
@@ -324,6 +408,11 @@ void GPU_cmplx5_product
    cudaMalloc((void**)&zimmi_d,size);
    cudaMalloc((void**)&zimrg_d,size);
    cudaMalloc((void**)&zimpk_d,size);
+   cudaMalloc((void**)&acctb_d,size);
+   cudaMalloc((void**)&accix_d,size);
+   cudaMalloc((void**)&accmi_d,size);
+   cudaMalloc((void**)&accrg_d,size);
+   cudaMalloc((void**)&accpk_d,size);
    cudaMemcpy(xretb_d,xretb_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(xreix_d,xreix_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(xremi_d,xremi_h,size,cudaMemcpyHostToDevice);
@@ -347,14 +436,44 @@ void GPU_cmplx5_product
 
    if(dim == BS)
    {
-      for(int i=0; i<freq; i++)
-         cmplx5_convolute<<<1,BS>>>
+      if(looped > 0)
+      {
+         dbl5_convolute<<<1,BS>>>
             (xretb_d,xreix_d,xremi_d,xrerg_d,xrepk_d,
-             ximtb_d,ximix_d,ximmi_d,ximrg_d,ximpk_d,
              yretb_d,yreix_d,yremi_d,yrerg_d,yrepk_d,
+             zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,dim);
+         dbl5_convolute<<<1,BS>>>
+            (ximtb_d,ximix_d,ximmi_d,ximrg_d,ximpk_d,
              yimtb_d,yimix_d,yimmi_d,yimrg_d,yimpk_d,
-             zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,
+             acctb_d,accix_d,accmi_d,accrg_d,zimpk_d,dim);
+         dbl5_decrement<<<1,BS>>>
+            (zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,
+             acctb_d,accix_d,accmi_d,accrg_d,accpk_d,
+             zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,dim);
+         dbl5_convolute<<<1,BS>>>
+            (xretb_d,xreix_d,xremi_d,xrerg_d,xrepk_d,
+             yimtb_d,yimix_d,yimmi_d,yimrg_d,yimpk_d,
              zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,dim);
+         dbl5_convolute<<<1,BS>>>
+            (ximtb_d,ximix_d,ximmi_d,ximrg_d,ximpk_d,
+             yretb_d,yreix_d,yremi_d,yrerg_d,yrepk_d,
+             acctb_d,accix_d,accmi_d,accrg_d,accpk_d,dim);
+         dbl5_increment<<<1,BS>>>
+            (zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,
+             acctb_d,accix_d,accmi_d,accrg_d,accpk_d,
+             zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,dim);
+      }
+      else
+      {
+         for(int i=0; i<freq; i++)
+            cmplx5_convolute<<<1,BS>>>
+               (xretb_d,xreix_d,xremi_d,xrerg_d,xrepk_d,
+                ximtb_d,ximix_d,ximmi_d,ximrg_d,ximpk_d,
+                yretb_d,yreix_d,yremi_d,yrerg_d,yrepk_d,
+                yimtb_d,yimix_d,yimmi_d,yimrg_d,yimpk_d,
+                zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,
+                zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,dim);
+      }
    }
 
    cudaMemcpy(zretb_h,zretb_d,size,cudaMemcpyDeviceToHost);

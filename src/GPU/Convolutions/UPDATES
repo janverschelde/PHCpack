@@ -3,9 +3,9 @@ Mon 23 Nov 2020 : to dbl_convolutions_kernels and dbl2_convolutions_kernels,
   the next loop with reversed indexing.  Extended the test_dbl_convolutions
   and test_dbl2_convolutions.  In dbl_monomials_kernels.cu and
   dbl2_monomials_kernels.cu, applied the looped_convolute.
-  Edited comments in {dbl,dbl2}_convolution_kernels.cu.
-  Added looped kernels to dbl3_convolution_kernels, extended the tests in
-  test_dbl3_convolutions.cpp and updated dbl3_monomials_kernels.cu.
+  To all dbl*_convolution_kernels added increment, decrement kernels
+  and the option to compute complex convolutions via real convolutions.
+  Adjusted all test_dbl*_convolutions.cpp.
 
 Fri 20 Nov 2020 : two bugs fixed in dbl3_convolutions_host.cpp.
   Extended dbl10_monomials_host, dbl10_monomials_kernels, with tests

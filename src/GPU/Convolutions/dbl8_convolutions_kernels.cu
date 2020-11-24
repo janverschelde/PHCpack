@@ -6,6 +6,130 @@
 #include "octo_double_gpufun.cu"
 #include "dbl8_convolutions_kernels.h"
 
+__global__ void dbl8_increment
+ ( double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
+   double *xhihilo, double *xlohilo, double *xhilolo, double *xlololo,
+   double *yhihihi, double *ylohihi, double *yhilohi, double *ylolohi,
+   double *yhihilo, double *ylohilo, double *yhilolo, double *ylololo,
+   double *zhihihi, double *zlohihi, double *zhilohi, double *zlolohi,
+   double *zhihilo, double *zlohilo, double *zhilolo, double *zlololo,
+   int dim )
+{
+   int k = threadIdx.x;                 // thread k computes z[k]
+
+   __shared__ double xvhihihi[od_shmemsize];
+   __shared__ double xvlohihi[od_shmemsize];
+   __shared__ double xvhilohi[od_shmemsize];
+   __shared__ double xvlolohi[od_shmemsize];
+   __shared__ double xvhihilo[od_shmemsize];
+   __shared__ double xvlohilo[od_shmemsize];
+   __shared__ double xvhilolo[od_shmemsize];
+   __shared__ double xvlololo[od_shmemsize];
+   __shared__ double yvhihihi[od_shmemsize];
+   __shared__ double yvlohihi[od_shmemsize];
+   __shared__ double yvhilohi[od_shmemsize];
+   __shared__ double yvlolohi[od_shmemsize];
+   __shared__ double yvhihilo[od_shmemsize];
+   __shared__ double yvlohilo[od_shmemsize];
+   __shared__ double yvhilolo[od_shmemsize];
+   __shared__ double yvlololo[od_shmemsize];
+   __shared__ double zvhihihi[od_shmemsize];
+   __shared__ double zvlohihi[od_shmemsize];
+   __shared__ double zvhilohi[od_shmemsize];
+   __shared__ double zvlolohi[od_shmemsize];
+   __shared__ double zvhihilo[od_shmemsize];
+   __shared__ double zvlohilo[od_shmemsize];
+   __shared__ double zvhilolo[od_shmemsize];
+   __shared__ double zvlololo[od_shmemsize];
+
+   xvhihihi[k] = xhihihi[k]; xvlohihi[k] = xlohihi[k];
+   xvhilohi[k] = xhilohi[k]; xvlolohi[k] = xlolohi[k];
+   xvhihilo[k] = xhihilo[k]; xvlohilo[k] = xlohilo[k];
+   xvhilolo[k] = xhilolo[k]; xvlololo[k] = xlololo[k];
+   yvhihihi[k] = yhihihi[k]; yvlohihi[k] = ylohihi[k];
+   yvhilohi[k] = yhilohi[k]; yvlolohi[k] = ylolohi[k];
+   yvhihilo[k] = yhihilo[k]; yvlohilo[k] = ylohilo[k];
+   yvhilolo[k] = yhilolo[k]; yvlololo[k] = ylololo[k];
+
+   __syncthreads();
+
+   odg_add( xvhihihi[k], xvlohihi[k], xvhilohi[k], xvlolohi[k],
+            xvhihilo[k], xvlohilo[k], xvhilolo[k], xvlololo[k],
+            yvhihihi[k], yvlohihi[k], yvhilohi[k], yvlolohi[k],
+            yvhihilo[k], yvlohilo[k], yvhilolo[k], yvlololo[k],
+           &zvhihihi[k],&zvlohihi[k],&zvhilohi[k],&zvlolohi[k],
+           &zvhihilo[k],&zvlohilo[k],&zvhilolo[k],&zvlololo[k]);
+
+   __syncthreads();
+
+   zhihihi[k] = zvhihihi[k]; zlohihi[k] = zvlohihi[k];
+   zhilohi[k] = zvhilohi[k]; zlolohi[k] = zvlolohi[k];
+   zhihilo[k] = zvhihilo[k]; zlohilo[k] = zvlohilo[k];
+   zhilolo[k] = zvhilolo[k]; zlololo[k] = zvlololo[k];
+}
+
+__global__ void dbl8_decrement
+ ( double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
+   double *xhihilo, double *xlohilo, double *xhilolo, double *xlololo,
+   double *yhihihi, double *ylohihi, double *yhilohi, double *ylolohi,
+   double *yhihilo, double *ylohilo, double *yhilolo, double *ylololo,
+   double *zhihihi, double *zlohihi, double *zhilohi, double *zlolohi,
+   double *zhihilo, double *zlohilo, double *zhilolo, double *zlololo,
+   int dim )
+{
+   int k = threadIdx.x;                 // thread k computes z[k]
+
+   __shared__ double xvhihihi[od_shmemsize];
+   __shared__ double xvlohihi[od_shmemsize];
+   __shared__ double xvhilohi[od_shmemsize];
+   __shared__ double xvlolohi[od_shmemsize];
+   __shared__ double xvhihilo[od_shmemsize];
+   __shared__ double xvlohilo[od_shmemsize];
+   __shared__ double xvhilolo[od_shmemsize];
+   __shared__ double xvlololo[od_shmemsize];
+   __shared__ double yvhihihi[od_shmemsize];
+   __shared__ double yvlohihi[od_shmemsize];
+   __shared__ double yvhilohi[od_shmemsize];
+   __shared__ double yvlolohi[od_shmemsize];
+   __shared__ double yvhihilo[od_shmemsize];
+   __shared__ double yvlohilo[od_shmemsize];
+   __shared__ double yvhilolo[od_shmemsize];
+   __shared__ double yvlololo[od_shmemsize];
+   __shared__ double zvhihihi[od_shmemsize];
+   __shared__ double zvlohihi[od_shmemsize];
+   __shared__ double zvhilohi[od_shmemsize];
+   __shared__ double zvlolohi[od_shmemsize];
+   __shared__ double zvhihilo[od_shmemsize];
+   __shared__ double zvlohilo[od_shmemsize];
+   __shared__ double zvhilolo[od_shmemsize];
+   __shared__ double zvlololo[od_shmemsize];
+
+   xvhihihi[k] = xhihihi[k]; xvlohihi[k] = xlohihi[k];
+   xvhilohi[k] = xhilohi[k]; xvlolohi[k] = xlolohi[k];
+   xvhihilo[k] = xhihilo[k]; xvlohilo[k] = xlohilo[k];
+   xvhilolo[k] = xhilolo[k]; xvlololo[k] = xlololo[k];
+   yvhihihi[k] = yhihihi[k]; yvlohihi[k] = ylohihi[k];
+   yvhilohi[k] = yhilohi[k]; yvlolohi[k] = ylolohi[k];
+   yvhihilo[k] = yhihilo[k]; yvlohilo[k] = ylohilo[k];
+   yvhilolo[k] = yhilolo[k]; yvlololo[k] = ylololo[k];
+
+   __syncthreads();
+
+   odg_sub( xvhihihi[k], xvlohihi[k], xvhilohi[k], xvlolohi[k],
+            xvhihilo[k], xvlohilo[k], xvhilolo[k], xvlololo[k],
+            yvhihihi[k], yvlohihi[k], yvhilohi[k], yvlolohi[k],
+            yvhihilo[k], yvlohilo[k], yvhilolo[k], yvlololo[k],
+           &zvhihihi[k],&zvlohihi[k],&zvhilohi[k],&zvlolohi[k],
+           &zvhihilo[k],&zvlohilo[k],&zvhilolo[k],&zvlololo[k]);
+
+   __syncthreads();
+
+   zhihihi[k] = zvhihihi[k]; zlohihi[k] = zvlohihi[k];
+   zhilohi[k] = zvhilohi[k]; zlolohi[k] = zvlolohi[k];
+   zhihilo[k] = zvhihilo[k]; zlohilo[k] = zvlohilo[k];
+   zhilolo[k] = zvhilolo[k]; zlololo[k] = zvlololo[k];
+}
+
 __global__ void dbl8_convolute
  ( double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
    double *xhihilo, double *xlohilo, double *xhilolo, double *xlololo,
@@ -442,7 +566,7 @@ void GPU_cmplx8_product
    double *zimhilohi_h, double *zimlolohi_h,
    double *zimhihilo_h, double *zimlohilo_h,
    double *zimhilolo_h, double *zimlololo_h,
-   int deg, int freq, int BS )
+   int deg, int freq, int BS, int looped )
 {
    const int dim = deg+1;       // length of all vectors
    double* xrehihihi_d;         // xrehihihi_d is xrehihihi_h on the device
@@ -493,6 +617,14 @@ void GPU_cmplx8_product
    double* zimlohilo_d;         // zimlohilo_d is zimlohilo_h on the device
    double* zimhilolo_d;         // zimhilolo_d is zimhilolo_h on the device
    double* zimlololo_d;         // zimlololo_d is zimlololo_h on the device
+   double* acchihihi_d;         // accumulates highest doubles
+   double* acclohihi_d;         // accumulates second highest doubles
+   double* acchilohi_d;         // accumulates third highest doubles
+   double* acclolohi_d;         // accumulates fourth highest doubles
+   double* acchihilo_d;         // accumulates fourth lowest doubles
+   double* acclohilo_d;         // accumulates third lowest doubles
+   double* acchilolo_d;         // accumulates second lowest doubles
+   double* acclololo_d;         // accumulates lowest doubles
    size_t size = dim*sizeof(double); // number of bytes for each vector
 
    cudaMalloc((void**)&xrehihihi_d,size);
@@ -543,6 +675,14 @@ void GPU_cmplx8_product
    cudaMalloc((void**)&zimlohilo_d,size);
    cudaMalloc((void**)&zimhilolo_d,size);
    cudaMalloc((void**)&zimlololo_d,size);
+   cudaMalloc((void**)&acchihihi_d,size);
+   cudaMalloc((void**)&acclohihi_d,size);
+   cudaMalloc((void**)&acchilohi_d,size);
+   cudaMalloc((void**)&acclolohi_d,size);
+   cudaMalloc((void**)&acchihilo_d,size);
+   cudaMalloc((void**)&acclohilo_d,size);
+   cudaMalloc((void**)&acchilolo_d,size);
+   cudaMalloc((void**)&acclololo_d,size);
    cudaMemcpy(xrehihihi_d,xrehihihi_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(xrelohihi_d,xrelohihi_h,size,cudaMemcpyHostToDevice);
    cudaMemcpy(xrehilohi_d,xrehilohi_h,size,cudaMemcpyHostToDevice);
@@ -578,20 +718,68 @@ void GPU_cmplx8_product
 
    if(dim == BS)
    {
-      for(int i=0; i<freq; i++)
-         cmplx8_convolute<<<1,BS>>>
+      if(looped > 0)
+      {
+         dbl8_convolute<<<1,BS>>>
             (xrehihihi_d,xrelohihi_d,xrehilohi_d,xrelolohi_d,
              xrehihilo_d,xrelohilo_d,xrehilolo_d,xrelololo_d,
-             ximhihihi_d,ximlohihi_d,ximhilohi_d,ximlolohi_d,
+             yrehihihi_d,yrelohihi_d,yrehilohi_d,yrelolohi_d,
+             yrehihilo_d,yrelohilo_d,yrehilolo_d,yrelololo_d,
+             zrehihihi_d,zrelohihi_d,zrehilohi_d,zrelolohi_d,
+             zrehihilo_d,zrelohilo_d,zrehilolo_d,zrelololo_d,dim);
+         dbl8_convolute<<<1,BS>>>
+            (ximhihihi_d,ximlohihi_d,ximhilohi_d,ximlolohi_d,
+             ximhihilo_d,ximlohilo_d,ximhilolo_d,ximlololo_d,
+             yimhihihi_d,yimlohihi_d,yimhilohi_d,yimlolohi_d,
+             yimhihilo_d,yimlohilo_d,yimhilolo_d,yimlololo_d,
+             acchihihi_d,acclohihi_d,acchilohi_d,acclolohi_d,
+             acchihilo_d,acclohilo_d,acchilolo_d,acclololo_d,dim);
+         dbl8_decrement<<<1,BS>>>
+            (zrehihihi_d,zrelohihi_d,zrehilohi_d,zrelolohi_d,
+             zrehihilo_d,zrelohilo_d,zrehilolo_d,zrelololo_d,
+             acchihihi_d,acclohihi_d,acchilohi_d,acclolohi_d,
+             acchihilo_d,acclohilo_d,acchilolo_d,acclololo_d,
+             zrehihihi_d,zrelohihi_d,zrehilohi_d,zrelolohi_d,
+             zrehihilo_d,zrelohilo_d,zrehilolo_d,zrelololo_d,dim);
+         dbl8_convolute<<<1,BS>>>
+            (xrehihihi_d,xrelohihi_d,xrehilohi_d,xrelolohi_d,
+             xrehihilo_d,xrelohilo_d,xrehilolo_d,xrelololo_d,
+             yimhihihi_d,yimlohihi_d,yimhilohi_d,yimlolohi_d,
+             yimhihilo_d,yimlohilo_d,yimhilolo_d,yimlololo_d,
+             zimhihihi_d,zimlohihi_d,zimhilohi_d,zimlolohi_d,
+             zimhihilo_d,zimlohilo_d,zimhilolo_d,zimlololo_d,dim);
+         dbl8_convolute<<<1,BS>>>
+            (ximhihihi_d,ximlohihi_d,ximhilohi_d,ximlolohi_d,
              ximhihilo_d,ximlohilo_d,ximhilolo_d,ximlololo_d,
              yrehihihi_d,yrelohihi_d,yrehilohi_d,yrelolohi_d,
              yrehihilo_d,yrelohilo_d,yrehilolo_d,yrelololo_d,
-             yimhihihi_d,yimlohihi_d,yimhilohi_d,yimlolohi_d,
-             yimhihilo_d,yimlohilo_d,yimhilolo_d,yimlololo_d,
-             zrehihihi_d,zrelohihi_d,zrehilohi_d,zrelolohi_d,
-             zrehihilo_d,zrelohilo_d,zrehilolo_d,zrelololo_d,
+             acchihihi_d,acclohihi_d,acchilohi_d,acclolohi_d,
+             acchihilo_d,acclohilo_d,acchilolo_d,acclololo_d,dim);
+         dbl8_increment<<<1,BS>>>
+            (zimhihihi_d,zimlohihi_d,zimhilohi_d,zimlolohi_d,
+             zimhihilo_d,zimlohilo_d,zimhilolo_d,zimlololo_d,
+             acchihihi_d,acclohihi_d,acchilohi_d,acclolohi_d,
+             acchihilo_d,acclohilo_d,acchilolo_d,acclololo_d,
              zimhihihi_d,zimlohihi_d,zimhilohi_d,zimlolohi_d,
              zimhihilo_d,zimlohilo_d,zimhilolo_d,zimlololo_d,dim);
+      }
+      else
+      {
+         for(int i=0; i<freq; i++)
+            cmplx8_convolute<<<1,BS>>>
+               (xrehihihi_d,xrelohihi_d,xrehilohi_d,xrelolohi_d,
+                xrehihilo_d,xrelohilo_d,xrehilolo_d,xrelololo_d,
+                ximhihihi_d,ximlohihi_d,ximhilohi_d,ximlolohi_d,
+                ximhihilo_d,ximlohilo_d,ximhilolo_d,ximlololo_d,
+                yrehihihi_d,yrelohihi_d,yrehilohi_d,yrelolohi_d,
+                yrehihilo_d,yrelohilo_d,yrehilolo_d,yrelololo_d,
+                yimhihihi_d,yimlohihi_d,yimhilohi_d,yimlolohi_d,
+                yimhihilo_d,yimlohilo_d,yimhilolo_d,yimlololo_d,
+                zrehihihi_d,zrelohihi_d,zrehilohi_d,zrelolohi_d,
+                zrehihilo_d,zrelohilo_d,zrehilolo_d,zrelololo_d,
+                zimhihihi_d,zimlohihi_d,zimhilohi_d,zimlolohi_d,
+                zimhihilo_d,zimlohilo_d,zimhilolo_d,zimlololo_d,dim);
+      }
    }
    cudaMemcpy(zrehihihi_h,zrehihihi_d,size,cudaMemcpyDeviceToHost);
    cudaMemcpy(zrelohihi_h,zrelohihi_d,size,cudaMemcpyDeviceToHost);

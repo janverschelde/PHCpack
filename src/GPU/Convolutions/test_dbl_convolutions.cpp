@@ -116,7 +116,7 @@ void test_complex ( int deg )
    }
    cout << endl;
 
-   GPU_cmplx_product(xre,xim,yre,yim,zre_d,zim_d,deg,1,deg+1,1);
+   GPU_cmplx_product(xre,xim,yre,yim,zre_d,zim_d,deg,1,deg+1,2);
 
    cout << "GPU computed product :" << endl;
 
@@ -191,7 +191,7 @@ void test_complex_exponential ( int deg )
    cout << "  sumre : " << sumre << endl;
    cout << "  sumim : " << sumim << endl;
 
-   GPU_cmplx_product(xre,xim,yre,yim,zre_d,zim_d,deg,1,deg+1,1);
+   GPU_cmplx_product(xre,xim,yre,yim,zre_d,zim_d,deg,1,deg+1,2);
 
    sumre = 0.0; sumim = 0.0;
    for(int k=0; k<=deg; k++) 
