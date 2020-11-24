@@ -1,69 +1,76 @@
-# tested with nvcc version 5.5.0 and gcc 4.4.7 on C2050
-# Note that the -arch=sm_13 is needed on the C2050.
-# tested with nvcc version 10.1 and gcc 4.8.5 on Volta
-# On Volta, the -arch=sm_13 is not needed.
+# Tested on four different NVIDIA GPUs.
 
 gpp=/usr/bin/g++
 gcc=/usr/bin/gcc
 QDsrc=../../Ada/Math_Lib/QD
+# the architecture flag for Tesla C2050
+# smflag=sm_20
+# the architecture flag for Kepler K20C
+# smflag=sm_35
+# the architecture flag for Pascal P100
+# smflag=sm_60
+# the architecture flag for Volta V100
+smflag=sm_70
+
+double_double_gpufun.o:
+	@-echo ">>> compiling double double gpu functions ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -c double_double_gpufun.cu
 
 dbl_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for doubles ..."
-	nvcc -ccbin=$(gcc) -c dbl_norm_kernels.cu
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c dbl_norm_kernels.cu
 
 dbl2_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for double doubles ..."
-	nvcc -ccbin=$(gcc) -c dbl2_norm_kernels.cu
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c dbl2_norm_kernels.cu
 
 dbl3_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for triple doubles ..."
-	nvcc -ccbin=$(gcc) -c dbl3_norm_kernels.cu
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c dbl3_norm_kernels.cu
 
 dbl4_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for quad doubles ..."
-	nvcc -ccbin=$(gcc) -c dbl4_norm_kernels.cu
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c dbl4_norm_kernels.cu
 
 dbl5_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for penta doubles ..."
-	nvcc -ccbin=$(gcc) -c dbl5_norm_kernels.cu
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c dbl5_norm_kernels.cu
 
 dbl8_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for octo doubles ..."
-	nvcc -ccbin=$(gcc) -c dbl8_norm_kernels.cu
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c dbl8_norm_kernels.cu
 
 dbl10_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for deca doubles ..."
-	nvcc -ccbin=$(gcc) -c dbl10_norm_kernels.cu
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c dbl10_norm_kernels.cu
 
 cmplx_norm_kernels.o:
 	@-echo ">>> compiling norm kernels for complex doubles ..."
-	nvcc -ccbin=$(gcc) -c cmplx_norm_kernels.cu
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c cmplx_norm_kernels.cu
 
 cmplx2_norm_kernels.o:
 	@-echo ">>> compiling norm kernels for complex double doubles ..."
-	nvcc -ccbin=$(gcc) -c cmplx2_norm_kernels.cu
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c cmplx2_norm_kernels.cu
 
 cmplx3_norm_kernels.o:
 	@-echo ">>> compiling norm kernels for complex triple doubles ..."
-	nvcc -ccbin=$(gcc) -c cmplx3_norm_kernels.cu
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c cmplx3_norm_kernels.cu
 
 cmplx4_norm_kernels.o:
 	@-echo ">>> compiling norm kernels for complex quad doubles ..."
-	nvcc -ccbin=$(gcc) -c cmplx4_norm_kernels.cu
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c cmplx4_norm_kernels.cu
 
 cmplx5_norm_kernels.o:
 	@-echo ">>> compiling norm kernels for complex penta doubles ..."
-	nvcc -ccbin=$(gcc) -c cmplx5_norm_kernels.cu
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c cmplx5_norm_kernels.cu
 
 cmplx8_norm_kernels.o:
 	@-echo ">>> compiling norm kernels for complex octo doubles ..."
-	nvcc -ccbin=$(gcc) -c cmplx8_norm_kernels.cu
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c cmplx8_norm_kernels.cu
 
 cmplx10_norm_kernels.o:
 	@-echo ">>> compiling norm kernels for complex deca doubles ..."
-	nvcc -ccbin=$(gcc) -c cmplx10_norm_kernels.cu
-
-# nvcc -ccbin=$(gcc) -arch=sm_13 -c dbl_norm_kernels.cu
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c cmplx10_norm_kernels.cu
 
 double_double.o:
 	@-echo ">>> compiling double_double ..."
@@ -92,10 +99,6 @@ octo_double_functions.o:
 deca_double_functions.o:
 	@-echo ">>> compiling deca double functions ..."
 	$(gpp) -O3 -c deca_double_functions.cpp
-
-double_double_gpufun.o:
-	@-echo ">>> compiling double double gpu functions ..."
-	nvcc -ccbin=$(gpp) -c double_double_gpufun.cu
 
 test_double_doubles: double_double.o double_double_functions.o
 	@-echo ">>> compiling test_double_doubles ..."

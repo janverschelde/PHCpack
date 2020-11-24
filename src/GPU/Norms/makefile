@@ -4,8 +4,7 @@
 # respectively for a Windows or GNU Linux/Unix computer.
 
 # MAKEFILE = makefile_windows
-# MAKEFILE = makefile_unix
-MAKEFILE = makefile_c2050
+MAKEFILE = makefile_unix
 
 test_double_doubles:
 	make -f $(MAKEFILE) test_double_doubles
