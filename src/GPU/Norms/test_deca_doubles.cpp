@@ -9,32 +9,64 @@
 
 using namespace std;
 
-int my_sqrt ( void );
+int my_sqrt
+ ( double *rtb, double *rix, double *rmi, double *rrg, double *rpk,
+   double *ltb, double *lix, double *lmi, double *lrg, double *lpk,
+   int max_steps );
 /*
  * DESCRIPTION :
- *   Applies Newton's method to compute the square root. */
+ *   Applies Newton's method to compute the square root of the deca double
+ *   given by ten parts respectively in rtb, rix, rmi, rrg, rpk, ltb, lix,
+ *   lmi, lrg, and lpk, in as many interations as the value of max_steps.
+ *   Returns in rtb, rix, rmi, rrg, rpk, ltb, lix, lmi, lrg, and lpk 
+ *   the value of the square root.
+ *   The integer on return is 1 if the error is too large,
+ *   or 0 if Newton's method converged properly. */ 
 
 int main ( void )
 {
-   int fail = my_sqrt();
+   const int max = 9;
+   
+   double twortb = 2.0;
+   double tworix = 0.0;
+   double twormi = 0.0;
+   double tworrg = 0.0;
+   double tworpk = 0.0;
+   double twoltb = 0.0;
+   double twolix = 0.0;
+   double twolmi = 0.0;
+   double twolrg = 0.0;
+   double twolpk = 0.0;
+
+   int fail = my_sqrt(&twortb,&tworix,&twormi,&tworrg,&tworpk,
+                      &twoltb,&twolix,&twolmi,&twolrg,&twolpk,max);
+
+   if(fail == 0)
+      cout << "Test passed." << endl;
+   else
+      cout << "Test failed!" << endl;
 
    return 0;
 }
 
-int my_sqrt ( void )
+int my_sqrt
+ ( double *rtb, double *rix, double *rmi, double *rrg, double *rpk,
+   double *ltb, double *lix, double *lmi, double *lrg, double *lpk,
+   int max_steps )
 {
+   const double tol = 1.0e-154;
+
    double x_rtb,x_rix,x_rmi,x_rrg,x_rpk,z_rtb,z_rix,z_rmi,z_rrg,z_rpk;
    double x_ltb,x_lix,x_lmi,x_lrg,x_lpk,z_ltb,z_lix,z_lmi,z_lrg,z_lpk;
    double y_rtb,y_rix,y_rmi,y_rrg,y_rpk,e_rtb,e_rix,e_rmi,e_rrg,e_rpk;
    double y_ltb,y_lix,y_lmi,y_lrg,y_lpk,e_ltb,e_lix,e_lmi,e_lrg,e_lpk;
    double a_rtb,a_rix,a_rmi,a_rrg,a_rpk,a_ltb,a_lix,a_lmi,a_lrg,a_lpk;
-   const int max_steps = 9;
    int i;
 
    x_rtb = 2.0; x_rix = 0.0; x_rmi = 0.0; x_rrg = 0.0; x_rpk = 0.0;
    x_ltb = 0.0; x_lix = 0.0; x_lmi = 0.0; x_lrg = 0.0; x_lpk = 0.0;
 
-   cout << "\nrunning Newton's method for sqrt(2) ...\n";
+   cout << "\nRunning Newton's method for sqrt ...\n";
 
    cout << scientific << setprecision(16);
 
@@ -90,6 +122,12 @@ int my_sqrt ( void )
            &a_rtb,&a_rix,&a_rmi,&a_rrg,&a_rpk,
            &a_ltb,&a_lix,&a_lmi,&a_lrg,&a_lpk);
    cout << "  error : "<< a_rtb << endl;
+
+   *rtb = x_rtb; *rix = x_rix; *rmi = x_rmi, *rrg = x_rrg; *rpk = x_rpk;
+   *ltb = x_ltb; *lix = x_lix; *lmi = x_lmi, *lrg = x_lrg; *lpk = x_lpk;
+
+   return int(a_rtb + a_rix + a_rmi + a_rrg + a_rpk
+            + a_ltb + a_lix + a_lmi + a_lrg + a_lpk > tol);
 
    return 0;
 }

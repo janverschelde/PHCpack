@@ -10,29 +10,45 @@
 
 using namespace std;
 
-int my_sqrt ( void );
+int my_sqrt ( double *hi, double *lo, int max_steps );
 /*
  * DESCRIPTION :
- *   Applies Newton's method to compute the square root. */
+ *   Applies Newton's method to compute the square root
+ *   of the double double with high part in hi and low part in lo,
+ *   in as many iterations as the value of max_steps.
+ *   Returns in hi and lo the value of the square root.
+ *   The integer on return is 1 if the error is too large,
+ *   or 0 if Newton's method converged properly. */ 
 
 int main ( void )
 {
-   int fail = my_sqrt();
+   const int max = 7;
+   double twohi = 2.0;
+   double twolo = 0.0;
+
+   int fail = my_sqrt(&twohi,&twolo,max);
+
+   if(fail == 0)
+      cout << "Test passed." << endl;
+   else
+      cout << "Test failed!" << endl;
 
    return 0;
 }
 
-int my_sqrt ( void )
+int my_sqrt ( double *hi, double *lo, int max_steps )
 {
+   const double tol = 1.0e-28;
+
    double n[2],x[2],y[2],z[2],e[2],a[2];
    double x_hi,x_lo,z_hi,z_lo,y_hi,y_lo,e_hi,e_lo;
-   const int max_steps = 7;
+
    const char sqrt2[] = "1.4142135623730950488016887242097\0";
    int i;
 
-   x_hi = 2.0; x_lo = 0.0; n[0] = 2.0; n[1] = 0.0; // dd_copy(n,x);
+   x_hi = *hi; x_lo = *lo; n[0] = x_hi; n[1] = x_lo; // dd_copy(n,x);
 
-   cout << "\nrunning Newton's method for sqrt(2) ...\n";
+   cout << "\nRunning Newton's method for sqrt ...\n";
    dd_read(sqrt2,y);
 
    cout << scientific << setprecision(16);
@@ -60,6 +76,7 @@ int my_sqrt ( void )
       ddf_abs(e_hi,e_lo,&a[0],&a[1]);
       cout << "  error : "; dd_write(a,3); cout << endl;
    }
+   *hi = x_hi; *lo = x_lo;
 
-   return 0;
+   return int(a[0] + a[1] > tol);
 }

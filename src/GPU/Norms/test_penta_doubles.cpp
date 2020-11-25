@@ -9,29 +9,52 @@
 
 using namespace std;
 
-int my_sqrt ( void );
+int my_sqrt
+ ( double *tb, double *ix, double *mi, double *rg, double *pk,
+   int max_steps );
 /*
  * DESCRIPTION :
- *   Applies Newton's method to compute the square root. */
+ *   Applies Newton's method to compute the square root of the penta double
+ *   given by five parts respectively in tb, ix, mi, rg, and pk,
+ *   in as many interations as the value of max_steps.
+ *   Returns in tb, ix, mi, rg, and pk the value of the square root.
+ *   The integer on return is 1 if the error is too large,
+ *   or 0 if Newton's method converged properly. */ 
 
 int main ( void )
 {
-   int fail = my_sqrt();
+   const int max = 8;
+
+   double twotb = 2.0;
+   double twoix = 0.0;
+   double twomi = 0.0;
+   double tworg = 0.0;
+   double twopk = 0.0;
+
+   int fail = my_sqrt(&twotb,&twoix,&twomi,&tworg,&twopk,max);
+
+   if(fail == 0)
+      cout << "Test passed." << endl;
+   else
+      cout << "Test failed!" << endl;
 
    return 0;
 }
 
-int my_sqrt ( void )
+int my_sqrt
+ ( double *tb, double *ix, double *mi, double *rg, double *pk,
+   int max_steps )
 {
+   const double tol = 1.0e-76;
+
    double x_tb,x_ix,x_mi,x_rg,x_pk,z_tb,z_ix,z_mi,z_rg,z_pk;
    double y_tb,y_ix,y_mi,y_rg,y_pk,e_tb,e_ix,e_mi,e_rg,e_pk;
    double a_tb,a_ix,a_mi,a_rg,a_pk;
-   const int max_steps = 8;
    int i;
 
    x_tb = 2.0; x_ix = 0.0; x_mi = 0.0; x_rg = 0.0; x_pk = 0.0;
 
-   cout << "\nrunning Newton's method for sqrt(2) ...\n";
+   cout << "\nRunning Newton's method for ...\n";
 
    cout << scientific << setprecision(16);
 
@@ -63,5 +86,7 @@ int my_sqrt ( void )
    pdf_abs(e_tb,e_ix,e_mi,e_rg,e_pk,&a_tb,&a_ix,&a_mi,&a_rg,&a_pk);
    cout << "  error : "<< a_tb << endl;
 
-   return 0;
+   *tb = x_tb; *ix = x_ix; *mi = x_mi, *rg = x_rg; *pk = x_pk;
+
+   return int(a_tb + a_ix + a_mi + a_rg + a_pk > tol);
 }

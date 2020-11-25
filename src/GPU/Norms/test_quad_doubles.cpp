@@ -9,29 +9,48 @@
 
 using namespace std;
 
-int my_sqrt ( void );
+int my_sqrt
+ ( double *hihi, double *lohi, double *hilo, double *lolo, int max_steps );
 /*
  * DESCRIPTION :
- *   Applies Newton's method to compute the square root. */
+ *   Applies Newton's method to compute the square root of the quad double
+ *   given by four parts respectively in hihi, lohi, hilo, and lolo,
+ *   in as many interations as the value of max_steps.
+ *   Returns in hihi, lohi, hilo, and lolo the value of the square root.
+ *   The integer on return is 1 if the error is too large,
+ *   or 0 if Newton's method converged properly. */ 
 
 int main ( void )
 {
-   int fail = my_sqrt();
+   const int max = 8;
+   double twohihi = 2.0;
+   double twolohi = 0.0;
+   double twohilo = 0.0;
+   double twololo = 0.0;
+
+   int fail = my_sqrt(&twohihi,&twolohi,&twohilo,&twololo,max);
+
+   if(fail == 0)
+      cout << "Test passed." << endl;
+   else
+      cout << "Test failed!" << endl;
 
    return 0;
 }
 
-int my_sqrt ( void )
+int my_sqrt
+ ( double *hihi, double *lohi, double *hilo, double *lolo, int max_steps )
 {
+   const double tol = 1.0e-60;
+
    double x_hihi,x_lohi,x_hilo,x_lolo,y_hihi,y_lohi,y_hilo,y_lolo;
    double z_hihi,z_lohi,z_hilo,z_lolo;
    double e_hihi,e_lohi,e_hilo,e_lolo,a_hihi,a_lohi,a_hilo,a_lolo;
-   const int max_steps = 8;
    int i;
 
    x_hihi = 2.0; x_lohi = 0.0; x_hilo = 0.0; x_lolo = 0.0;
 
-   cout << "\nrunning Newton's method for sqrt(2) ...\n";
+   cout << "\nrunning Newton's method for sqrt ...\n";
 
    cout << scientific << setprecision(16);
 
@@ -64,5 +83,7 @@ int my_sqrt ( void )
    qdf_abs(e_hihi,e_lohi,e_hilo,e_lolo,&a_hihi,&a_lohi,&a_hilo,&a_lolo);
    cout << "  error : "<< a_hihi << endl;
 
-   return 0;
+   *hihi = x_hihi; *lohi = x_lohi; *hilo = x_hilo; *lolo = x_lolo;
+
+   return int(a_hihi + a_lohi + a_hilo + a_lolo > tol);
 }

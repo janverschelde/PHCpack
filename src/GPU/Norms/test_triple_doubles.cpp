@@ -9,28 +9,44 @@
 
 using namespace std;
 
-int my_sqrt ( void );
+int my_sqrt ( double *hi, double *mi, double *lo, int max_steps );
 /*
  * DESCRIPTION :
- *   Applies Newton's method to compute the square root. */
+ *   Applies Newton's method to compute the square root of the triple double
+ *   given by high, middle and low parts respectively in hi, mi, and lo,
+ *   in as many interations as the value of max_steps.
+ *   Returns in hi, mi, and lo the value of the square root.
+ *   The integer on return is 1 if the error is too large,
+ *   or 0 if Newton's method converged properly. */ 
 
 int main ( void )
 {
-   int fail = my_sqrt();
+   const int max = 7;
+   double twohi = 2.0;
+   double twomi = 0.0;
+   double twolo = 0.0;
+
+   int fail = my_sqrt(&twohi,&twomi,&twolo,max);
+
+   if(fail == 0)
+      cout << "Test passed." << endl;
+   else
+      cout << "Test failed!" << endl;
 
    return 0;
 }
 
-int my_sqrt ( void )
+int my_sqrt ( double *hi, double *mi, double *lo, int max_steps )
 {
+   const double tol = 1.0e-44;
+
    double x_hi,x_mi,x_lo,z_hi,z_mi,z_lo,y_hi,y_mi,y_lo,e_hi,e_mi,e_lo;
    double a_hi,a_mi,a_lo;
-   const int max_steps = 7;
    int i;
 
-   x_hi = 2.0; x_mi = 0.0; x_lo = 0.0;
+   x_hi = *hi; x_mi = *mi; x_lo = *lo;
 
-   cout << "\nrunning Newton's method for sqrt(2) ...\n";
+   cout << "\nRunning Newton's method for ...\n";
 
    cout << scientific << setprecision(16);
 
@@ -58,5 +74,7 @@ int my_sqrt ( void )
    tdf_abs(e_hi,e_mi,e_lo,&a_hi,&a_mi,&a_lo);
    cout << "  error : "<< a_hi << endl;
 
-   return 0;
+   *hi = x_hi; *mi = x_mi; *lo = x_lo;
+
+   return int(a_hi + a_mi + a_lo > tol);
 }

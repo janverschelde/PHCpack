@@ -1,5 +1,6 @@
 Tue 24 Nov 2020 : added the architecture flags to makefile_unix, so the
   makefile_c2050 is no longer needed.  Updated also the makefile.
+  Improved test_{double,triple,quad,penta,octo,deca}_doubles.cpp.
 
 Sun 15 Nov 2020 : defined makefile_c2050, a makefile for the NVIDIA C2050 GPU,
   updated makefile as well.
