@@ -320,7 +320,7 @@ void GPU_dbl5_product
          dbl5_convolute<<<1,BS>>>
             (xtb_d,xix_d,xmi_d,xrg_d,xpk_d,
              ytb_d,yix_d,ymi_d,yrg_d,ypk_d,
-             ztb_d,zix_d,zmi_d,xrg_d,zpk_d,dim);
+             ztb_d,zix_d,zmi_d,zrg_d,zpk_d,dim);
    }
    cudaMemcpy(ztb_h,ztb_d,size,cudaMemcpyDeviceToHost);
    cudaMemcpy(zix_h,zix_d,size,cudaMemcpyDeviceToHost);

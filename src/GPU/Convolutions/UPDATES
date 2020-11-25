@@ -1,3 +1,6 @@
+Wed 25 Nov 2020 : bug fixes in calling the convolution kernels for convolutions
+  of real vectors in {dbl5,dbl10}_convolutions_kernels.cu.
+
 Tue 24 Nov 2020 : improved all tests in test_dbl*_convolutions.cpp.
 
 Mon 23 Nov 2020 : to dbl_convolutions_kernels and dbl2_convolutions_kernels,

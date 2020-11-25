@@ -571,8 +571,8 @@ void GPU_dbl10_product
              xltb_d,xlix_d,xlmi_d,xlrg_d,xlpk_d,
              yrtb_d,yrix_d,yrmi_d,yrrg_d,yrpk_d,
              yltb_d,ylix_d,ylmi_d,ylrg_d,ylpk_d,
-             zrtb_d,zrix_d,zrmi_d,xrrg_d,zrpk_d,
-             zltb_d,zlix_d,zlmi_d,xlrg_d,zlpk_d,dim);
+             zrtb_d,zrix_d,zrmi_d,zrrg_d,zrpk_d,
+             zltb_d,zlix_d,zlmi_d,zlrg_d,zlpk_d,dim);
    }
    cudaMemcpy(zrtb_h,zrtb_d,size,cudaMemcpyDeviceToHost);
    cudaMemcpy(zrix_h,zrix_d,size,cudaMemcpyDeviceToHost);
