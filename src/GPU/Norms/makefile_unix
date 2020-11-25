@@ -2,7 +2,10 @@
 
 gpp=/usr/bin/g++
 gcc=/usr/bin/gcc
+CUDA=/usr/local/cuda/include
+CUDALIB=/usr/local/cuda/lib64
 QDsrc=../../Ada/Math_Lib/QD
+
 # the architecture flag for Tesla C2050
 # smflag=sm_20
 # the architecture flag for Kepler K20C
@@ -15,6 +18,30 @@ smflag=sm_70
 double_double_gpufun.o:
 	@-echo ">>> compiling double double gpu functions ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -c double_double_gpufun.cu
+
+dbl2_sqrt_kernels.o:
+	@-echo ">>> compiling sqrt kernels for double doubles ..."
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c dbl2_sqrt_kernels.cu
+
+dbl3_sqrt_kernels.o:
+	@-echo ">>> compiling sqrt kernels for triple doubles ..."
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c dbl3_sqrt_kernels.cu
+
+dbl4_sqrt_kernels.o:
+	@-echo ">>> compiling sqrt kernels for quad doubles ..."
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c dbl4_sqrt_kernels.cu
+
+dbl5_sqrt_kernels.o:
+	@-echo ">>> compiling sqrt kernels for penta doubles ..."
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c dbl5_sqrt_kernels.cu
+
+dbl8_sqrt_kernels.o:
+	@-echo ">>> compiling sqrt kernels for octo doubles ..."
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c dbl8_sqrt_kernels.cu
+
+dbl10_sqrt_kernels.o:
+	@-echo ">>> compiling sqrt kernels for deca doubles ..."
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c dbl10_sqrt_kernels.cu
 
 dbl_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for doubles ..."
@@ -100,52 +127,63 @@ deca_double_functions.o:
 	@-echo ">>> compiling deca double functions ..."
 	$(gpp) -O3 -c deca_double_functions.cpp
 
-test_double_doubles: double_double.o double_double_functions.o
+test_double_doubles: double_double.o double_double_functions.o \
+                     dbl2_sqrt_kernels.o
 	@-echo ">>> compiling test_double_doubles ..."
-	$(gpp) -c -I$(QDsrc) test_double_doubles.cpp
+	$(gpp) -c -I$(QDsrc) -I$(CUDA) test_double_doubles.cpp
 	@-echo ">>> linking test_double_doubles ..."
 	$(gpp) -o test_double_doubles \
                   double_double.o double_double_functions.o \
-                  test_double_doubles.o
+                  test_double_doubles.o dbl2_sqrt_kernels.o \
+               -lcuda -lcudart -L$(CUDALIB)
 
-test_triple_doubles: triple_double_functions.o double_double_functions.o
+test_triple_doubles: triple_double_functions.o double_double_functions.o \
+                     dbl3_sqrt_kernels.o
 	@-echo ">>> compiling test_triple_doubles ..."
-	$(gpp) -c -I$(QDsrc) test_triple_doubles.cpp
+	$(gpp) -c -I$(QDsrc) -I$(CUDA) test_triple_doubles.cpp
 	@-echo ">>> linking test_triple_doubles ..."
 	$(gpp) -o test_triple_doubles double_double_functions.o \
-                  triple_double_functions.o test_triple_doubles.o
+                  triple_double_functions.o dbl3_sqrt_kernels.o \
+                  test_triple_doubles.o -lcuda -lcudart -L$(CUDALIB)
 
-test_quad_doubles: quad_double_functions.o double_double_functions.o
+test_quad_doubles: quad_double_functions.o double_double_functions.o \
+                   dbl4_sqrt_kernels.o
 	@-echo ">>> compiling test_quad_doubles ..."
-	$(gpp) -c -I$(QDsrc) test_quad_doubles.cpp
+	$(gpp) -c -I$(QDsrc) -I$(CUDA)  test_quad_doubles.cpp
 	@-echo ">>> linking test_quad_doubles ..."
 	$(gpp) -o test_quad_doubles double_double_functions.o \
-                  quad_double_functions.o test_quad_doubles.o
+                  quad_double_functions.o dbl4_sqrt_kernels.o \
+                  test_quad_doubles.o -lcuda -lcudart -L$(CUDALIB)
 
-test_penta_doubles: penta_double_functions.o double_double_functions.o
+test_penta_doubles: penta_double_functions.o double_double_functions.o \
+                    dbl5_sqrt_kernels.o
 	@-echo ">>> compiling test_penta_doubles ..."
-	$(gpp) -c -I$(QDsrc) test_penta_doubles.cpp
+	$(gpp) -c -I$(QDsrc) -I$(CUDA) test_penta_doubles.cpp
 	@-echo ">>> linking test_penta_doubles ..."
 	$(gpp) -o test_penta_doubles double_double_functions.o \
-                  penta_double_functions.o test_penta_doubles.o
+                  penta_double_functions.o dbl5_sqrt_kernels.o \
+                  test_penta_doubles.o -lcuda -lcudart -L$(CUDALIB)
 
 test_octo_doubles: octo_double_functions.o double_double_functions.o \
-                   quad_double_functions.o
+                   quad_double_functions.o dbl8_sqrt_kernels.o
 	@-echo ">>> compiling test_octo_doubles ..."
-	$(gpp) -c -I$(QDsrc) test_octo_doubles.cpp
+	$(gpp) -c -I$(QDsrc) -I$(CUDA) test_octo_doubles.cpp
 	@-echo ">>> linking test_octo_doubles ..."
 	$(gpp) -o test_octo_doubles double_double_functions.o \
                   quad_double_functions.o octo_double_functions.o \
-                  test_octo_doubles.o
+                  test_octo_doubles.o dbl8_sqrt_kernels.o \
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_deca_doubles: deca_double_functions.o double_double_functions.o \
-                   quad_double_functions.o octo_double_functions.o
+                   quad_double_functions.o octo_double_functions.o \
+                   dbl10_sqrt_kernels.o
 	@-echo ">>> compiling test_deca_doubles ..."
-	$(gpp) -c -I$(QDsrc) test_deca_doubles.cpp
+	$(gpp) -c -I$(QDsrc) -I$(CUDA) test_deca_doubles.cpp
 	@-echo ">>> linking test_deca_doubles ..."
 	$(gpp) -o test_deca_doubles double_double_functions.o \
                   quad_double_functions.o octo_double_functions.o \
-                  deca_double_functions.o test_deca_doubles.o
+                  deca_double_functions.o dbl10_sqrt_kernels.o \
+                  test_deca_doubles.o -lcuda -lcudart -L$(CUDALIB)
 
 random_numbers.o:
 	@-echo ">>> compiling random number generators ..."
@@ -241,116 +279,115 @@ cmplx10_norm_host.o:
 
 run_dbl_norm.o:
 	@-echo ">>> compiling run_dbl_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c run_dbl_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c run_dbl_norm.cpp
 
 run_dbl2_norm.o:
 	@-echo ">>> compiling run_dbl2_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c run_dbl2_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c run_dbl2_norm.cpp
 
 run_dbl3_norm.o:
 	@-echo ">>> compiling run_dbl3_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c run_dbl3_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c run_dbl3_norm.cpp
 
 run_dbl4_norm.o:
 	@-echo ">>> compiling run_dbl4_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c run_dbl4_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c run_dbl4_norm.cpp
 
 run_dbl5_norm.o:
 	@-echo ">>> compiling run_dbl5_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c run_dbl5_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c run_dbl5_norm.cpp
 
 run_dbl8_norm.o:
 	@-echo ">>> compiling run_dbl8_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c run_dbl8_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c run_dbl8_norm.cpp
 
 run_dbl10_norm.o:
 	@-echo ">>> compiling run_dbl10_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c run_dbl10_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c run_dbl10_norm.cpp
 
 run_cmplx_norm.o:
 	@-echo ">>> compiling run_cmplx_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c run_cmplx_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c run_cmplx_norm.cpp
 
 run_cmplx2_norm.o:
 	@-echo ">>> compiling run_cmplx2_norm ..."
-	$(gpp) -I$(QDsrc) -I/usr/local/cuda/include -O3 -c run_cmplx2_norm.cpp
+	$(gpp) -I$(QDsrc) -I$(CUDA) -O3 -c run_cmplx2_norm.cpp
 
 run_cmplx3_norm.o:
 	@-echo ">>> compiling run_cmplx3_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c run_cmplx3_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c run_cmplx3_norm.cpp
 
 run_cmplx4_norm.o:
 	@-echo ">>> compiling run_cmplx4_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c run_cmplx4_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c run_cmplx4_norm.cpp
 
 run_cmplx5_norm.o:
 	@-echo ">>> compiling run_cmplx5_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c run_cmplx5_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c run_cmplx5_norm.cpp
 
 run_cmplx8_norm.o:
 	@-echo ">>> compiling run_cmplx8_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c run_cmplx8_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c run_cmplx8_norm.cpp
 
 run_cmplx10_norm.o:
 	@-echo ">>> compiling run_cmplx10_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c run_cmplx10_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c run_cmplx10_norm.cpp
 
 test_dbl_norm.o:
 	@-echo ">>> compiling test_dbl_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c test_dbl_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c test_dbl_norm.cpp
 
 test_dbl2_norm.o:
 	@-echo ">>> compiling test_dbl2_norm ..."
-	$(gpp) -I$(QDsrc) -I/usr/local/cuda/include -O3 -c test_dbl2_norm.cpp
+	$(gpp) -I$(QDsrc) -I$(CUDA) -O3 -c test_dbl2_norm.cpp
 
 test_dbl3_norm.o:
 	@-echo ">>> compiling test_dbl3_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c test_dbl3_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c test_dbl3_norm.cpp
 
 test_dbl4_norm.o:
 	@-echo ">>> compiling test_dbl4_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c test_dbl4_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c test_dbl4_norm.cpp
 
 test_dbl5_norm.o:
 	@-echo ">>> compiling test_dbl5_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c test_dbl5_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c test_dbl5_norm.cpp
 
 test_dbl8_norm.o:
 	@-echo ">>> compiling test_dbl8_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c test_dbl8_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c test_dbl8_norm.cpp
 
 test_dbl10_norm.o:
 	@-echo ">>> compiling test_dbl10_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c test_dbl10_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c test_dbl10_norm.cpp
 
 test_cmplx_norm.o:
 	@-echo ">>> compiling test_cmplx_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c test_cmplx_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c test_cmplx_norm.cpp
 
 test_cmplx2_norm.o:
 	@-echo ">>> compiling test_cmplx2_norm ..."
-	$(gpp) -I$(QDsrc) -I/usr/local/cuda/include -O3 \
-               -c test_cmplx2_norm.cpp
+	$(gpp) -I$(QDsrc) -I$(CUDA) -O3 -c test_cmplx2_norm.cpp
 
 test_cmplx3_norm.o:
 	@-echo ">>> compiling test_cmplx3_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c test_cmplx3_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c test_cmplx3_norm.cpp
 
 test_cmplx4_norm.o:
 	@-echo ">>> compiling test_cmplx4_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c test_cmplx4_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c test_cmplx4_norm.cpp
 
 test_cmplx5_norm.o:
 	@-echo ">>> compiling test_cmplx5_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c test_cmplx5_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c test_cmplx5_norm.cpp
 
 test_cmplx8_norm.o:
 	@-echo ">>> compiling test_cmplx8_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c test_cmplx8_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c test_cmplx8_norm.cpp
 
 test_cmplx10_norm.o:
 	@-echo ">>> compiling test_cmplx10_norm ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c test_cmplx10_norm.cpp
+	$(gpp) -I$(CUDA) -O3 -c test_cmplx10_norm.cpp
 
 run_dbl_norm: dbl_norm_kernels.o dbl_norm_host.o \
               random_numbers.o random_vectors.o \
@@ -359,7 +396,7 @@ run_dbl_norm: dbl_norm_kernels.o dbl_norm_host.o \
 	$(gpp) -o run_dbl_norm dbl_norm_kernels.o dbl_norm_host.o \
                   random_numbers.o random_vectors.o \
                   parse_run_arguments.o run_dbl_norm.o \
-            -lcuda -lcudart -L/usr/local/cuda/lib64 
+            -lcuda -lcudart -L$(CUDALIB)
 
 run_dbl2_norm: dbl2_norm_kernels.o dbl2_norm_host.o \
                random_numbers.o random2_vectors.o double_double.o \
@@ -368,7 +405,7 @@ run_dbl2_norm: dbl2_norm_kernels.o dbl2_norm_host.o \
 	$(gpp) -o run_dbl2_norm dbl2_norm_kernels.o dbl2_norm_host.o \
                   random_numbers.o random2_vectors.o parse_run_arguments.o \
                   double_double.o double_double_functions.o run_dbl2_norm.o \
-            -lcuda -lcudart -L/usr/local/cuda/lib64 
+            -lcuda -lcudart -L$(CUDALIB)
 
 run_dbl3_norm: dbl3_norm_kernels.o dbl3_norm_host.o \
                random_numbers.o random3_vectors.o double_double_functions.o \
@@ -377,8 +414,7 @@ run_dbl3_norm: dbl3_norm_kernels.o dbl3_norm_host.o \
 	$(gpp) -o run_dbl3_norm dbl3_norm_kernels.o dbl3_norm_host.o \
                   random_numbers.o random3_vectors.o parse_run_arguments.o \
                   double_double_functions.o triple_double_functions.o \
-                  run_dbl3_norm.o \
-            -lcuda -lcudart -L/usr/local/cuda/lib64 
+                  run_dbl3_norm.o -lcuda -lcudart -L$(CUDALIB)
 
 run_dbl4_norm: dbl4_norm_kernels.o dbl4_norm_host.o \
                random_numbers.o random4_vectors.o double_double_functions.o \
@@ -387,8 +423,7 @@ run_dbl4_norm: dbl4_norm_kernels.o dbl4_norm_host.o \
 	$(gpp) -o run_dbl4_norm dbl4_norm_kernels.o dbl4_norm_host.o \
                   random_numbers.o random4_vectors.o parse_run_arguments.o \
                   double_double_functions.o quad_double_functions.o \
-                  run_dbl4_norm.o \
-            -lcuda -lcudart -L/usr/local/cuda/lib64 
+                  run_dbl4_norm.o -lcuda -lcudart -L$(CUDALIB)
 
 run_dbl5_norm: dbl5_norm_kernels.o dbl5_norm_host.o \
                random_numbers.o random5_vectors.o double_double_functions.o \
@@ -397,8 +432,7 @@ run_dbl5_norm: dbl5_norm_kernels.o dbl5_norm_host.o \
 	$(gpp) -o run_dbl5_norm dbl5_norm_kernels.o dbl5_norm_host.o \
                   random_numbers.o random5_vectors.o parse_run_arguments.o \
                   double_double_functions.o penta_double_functions.o \
-                  run_dbl5_norm.o \
-            -lcuda -lcudart -L/usr/local/cuda/lib64 
+                  run_dbl5_norm.o -lcuda -lcudart -L$(CUDALIB)
 
 run_dbl8_norm: dbl8_norm_kernels.o dbl8_norm_host.o \
                random_numbers.o random8_vectors.o double_double_functions.o \
@@ -409,7 +443,7 @@ run_dbl8_norm: dbl8_norm_kernels.o dbl8_norm_host.o \
                   random_numbers.o random8_vectors.o parse_run_arguments.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o run_dbl8_norm.o \
-            -lcuda -lcudart -L/usr/local/cuda/lib64 
+            -lcuda -lcudart -L$(CUDALIB)
 
 run_dbl10_norm: dbl10_norm_kernels.o dbl10_norm_host.o \
                 random_numbers.o random10_vectors.o double_double_functions.o \
@@ -420,8 +454,7 @@ run_dbl10_norm: dbl10_norm_kernels.o dbl10_norm_host.o \
                   random_numbers.o random10_vectors.o parse_run_arguments.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o deca_double_functions.o \
-                  run_dbl10_norm.o \
-            -lcuda -lcudart -L/usr/local/cuda/lib64 
+                  run_dbl10_norm.o -lcuda -lcudart -L$(CUDALIB)
 
 run_cmplx_norm: cmplx_norm_kernels.o cmplx_norm_host.o \
                 random_numbers.o random_vectors.o \
@@ -429,8 +462,7 @@ run_cmplx_norm: cmplx_norm_kernels.o cmplx_norm_host.o \
 	@-echo ">>> linking ..."
 	$(gpp) -o run_cmplx_norm cmplx_norm_kernels.o cmplx_norm_host.o \
                   random_numbers.o random_vectors.o parse_run_arguments.o \
-                  run_cmplx_norm.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+                  run_cmplx_norm.o -lcuda -lcudart -L$(CUDALIB)
 
 run_cmplx2_norm: cmplx2_norm_kernels.o cmplx2_norm_host.o \
                  random_numbers.o random2_vectors.o \
@@ -440,8 +472,7 @@ run_cmplx2_norm: cmplx2_norm_kernels.o cmplx2_norm_host.o \
 	$(gpp) -o run_cmplx2_norm cmplx2_norm_kernels.o cmplx2_norm_host.o \
                   random_numbers.o random2_vectors.o parse_run_arguments.o \
                   double_double.o double_double_functions.o \
-                  run_cmplx2_norm.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+                  run_cmplx2_norm.o -lcuda -lcudart -L$(CUDALIB)
 
 run_cmplx3_norm: cmplx3_norm_kernels.o cmplx3_norm_host.o \
                  random_numbers.o random3_vectors.o \
@@ -451,8 +482,7 @@ run_cmplx3_norm: cmplx3_norm_kernels.o cmplx3_norm_host.o \
 	$(gpp) -o run_cmplx3_norm cmplx3_norm_kernels.o cmplx3_norm_host.o \
                   random_numbers.o random3_vectors.o parse_run_arguments.o \
                   double_double_functions.o triple_double_functions.o \
-                  run_cmplx3_norm.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+                  run_cmplx3_norm.o -lcuda -lcudart -L$(CUDALIB)
 
 run_cmplx4_norm: cmplx4_norm_kernels.o cmplx4_norm_host.o \
                  random_numbers.o random4_vectors.o \
@@ -462,8 +492,7 @@ run_cmplx4_norm: cmplx4_norm_kernels.o cmplx4_norm_host.o \
 	$(gpp) -o run_cmplx4_norm cmplx4_norm_kernels.o cmplx4_norm_host.o \
                   random_numbers.o random4_vectors.o parse_run_arguments.o \
                   double_double_functions.o quad_double_functions.o \
-                  run_cmplx4_norm.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+                  run_cmplx4_norm.o -lcuda -lcudart -L$(CUDALIB)
 
 run_cmplx5_norm: cmplx5_norm_kernels.o cmplx5_norm_host.o \
                  random_numbers.o random5_vectors.o \
@@ -473,8 +502,7 @@ run_cmplx5_norm: cmplx5_norm_kernels.o cmplx5_norm_host.o \
 	$(gpp) -o run_cmplx5_norm cmplx5_norm_kernels.o cmplx5_norm_host.o \
                   random_numbers.o random5_vectors.o parse_run_arguments.o \
                   double_double_functions.o penta_double_functions.o \
-                  run_cmplx5_norm.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+                  run_cmplx5_norm.o -lcuda -lcudart -L$(CUDALIB)
 
 run_cmplx8_norm: cmplx8_norm_kernels.o cmplx8_norm_host.o \
                  random_numbers.o random8_vectors.o \
@@ -486,7 +514,7 @@ run_cmplx8_norm: cmplx8_norm_kernels.o cmplx8_norm_host.o \
                   random_numbers.o random8_vectors.o parse_run_arguments.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o run_cmplx8_norm.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+               -lcuda -lcudart -L$(CUDALIB)
 
 run_cmplx10_norm: cmplx10_norm_kernels.o cmplx10_norm_host.o \
                  random_numbers.o random10_vectors.o \
@@ -498,15 +526,14 @@ run_cmplx10_norm: cmplx10_norm_kernels.o cmplx10_norm_host.o \
                   random_numbers.o random10_vectors.o parse_run_arguments.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o deca_double_functions.o \
-                  run_cmplx10_norm.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+                  run_cmplx10_norm.o -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl_norm: dbl_norm_kernels.o dbl_norm_host.o \
                random_numbers.o random_vectors.o test_dbl_norm.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_norm dbl_norm_kernels.o dbl_norm_host.o \
                   random_numbers.o random_vectors.o test_dbl_norm.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl2_norm: double_double.o double_double_functions.o \
                 random_numbers.o random2_vectors.o \
@@ -515,7 +542,7 @@ test_dbl2_norm: double_double.o double_double_functions.o \
 	$(gpp) -o test_dbl2_norm double_double.o double_double_functions.o \
                   random_numbers.o random2_vectors.o dbl2_norm_host.o \
                   dbl2_norm_kernels.o test_dbl2_norm.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl3_norm: double_double_functions.o triple_double_functions.o \
                 random_numbers.o random3_vectors.o \
@@ -525,7 +552,7 @@ test_dbl3_norm: double_double_functions.o triple_double_functions.o \
                   double_double_functions.o triple_double_functions.o \
                   random_numbers.o random3_vectors.o \
                   dbl3_norm_host.o dbl3_norm_kernels.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl4_norm: double_double_functions.o quad_double_functions.o \
                 random_numbers.o random4_vectors.o test_dbl4_norm.o \
@@ -535,7 +562,7 @@ test_dbl4_norm: double_double_functions.o quad_double_functions.o \
                   double_double_functions.o quad_double_functions.o \
                   random_numbers.o random4_vectors.o \
                   dbl4_norm_host.o dbl4_norm_kernels.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl5_norm: double_double_functions.o penta_double_functions.o \
                 random_numbers.o random5_vectors.o test_dbl5_norm.o \
@@ -545,7 +572,7 @@ test_dbl5_norm: double_double_functions.o penta_double_functions.o \
                   double_double_functions.o penta_double_functions.o \
                   random_numbers.o random5_vectors.o \
                   dbl5_norm_host.o dbl5_norm_kernels.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl8_norm: double_double_functions.o quad_double_functions.o \
                 octo_double_functions.o random_numbers.o random8_vectors.o \
@@ -554,8 +581,7 @@ test_dbl8_norm: double_double_functions.o quad_double_functions.o \
 	$(gpp) -o test_dbl8_norm test_dbl8_norm.o dbl8_norm_host.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o random_numbers.o random8_vectors.o \
-                  dbl8_norm_kernels.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+                  dbl8_norm_kernels.o -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl10_norm: double_double_functions.o quad_double_functions.o \
                  octo_double_functions.o deca_double_functions.o \
@@ -567,14 +593,14 @@ test_dbl10_norm: double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o deca_double_functions.o \
                   random_numbers.o random10_vectors.o \
                   dbl10_norm_host.o dbl10_norm_kernels.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_cmplx_norm: cmplx_norm_kernels.o cmplx_norm_host.o \
                  random_numbers.o random_vectors.o test_cmplx_norm.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_cmplx_norm cmplx_norm_kernels.o cmplx_norm_host.o \
                   random_numbers.o random_vectors.o test_cmplx_norm.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_cmplx2_norm: random_numbers.o random2_vectors.o \
                   double_double.o double_double_functions.o \
@@ -585,7 +611,7 @@ test_cmplx2_norm: random_numbers.o random2_vectors.o \
                   double_double.o double_double_functions.o \
                   random_numbers.o random2_vectors.o \
                   cmplx2_norm_host.o cmplx2_norm_kernels.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_cmplx3_norm: random_numbers.o random3_vectors.o \
                   double_double_functions.o triple_double_functions.o \
@@ -596,7 +622,7 @@ test_cmplx3_norm: random_numbers.o random3_vectors.o \
                   double_double_functions.o triple_double_functions.o \
                   random_numbers.o random3_vectors.o \
                   cmplx3_norm_host.o cmplx3_norm_kernels.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_cmplx4_norm: random_numbers.o random4_vectors.o \
                   double_double_functions.o quad_double_functions.o \
@@ -607,7 +633,7 @@ test_cmplx4_norm: random_numbers.o random4_vectors.o \
                   double_double_functions.o quad_double_functions.o \
                   random_numbers.o random4_vectors.o \
                   cmplx4_norm_host.o cmplx4_norm_kernels.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_cmplx5_norm: random_numbers.o random5_vectors.o \
                   double_double_functions.o penta_double_functions.o \
@@ -618,7 +644,7 @@ test_cmplx5_norm: random_numbers.o random5_vectors.o \
                   double_double_functions.o penta_double_functions.o \
                   random_numbers.o random5_vectors.o \
                   cmplx5_norm_host.o cmplx5_norm_kernels.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_cmplx8_norm: random_numbers.o random8_vectors.o \
                   double_double_functions.o quad_double_functions.o \
@@ -630,6 +656,7 @@ test_cmplx8_norm: random_numbers.o random8_vectors.o \
                   octo_double_functions.o \
                   random_numbers.o random8_vectors.o \
                   cmplx8_norm_host.o cmplx8_norm_kernels.o \
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_cmplx10_norm: random_numbers.o random10_vectors.o \
                    double_double_functions.o quad_double_functions.o \
@@ -642,20 +669,21 @@ test_cmplx10_norm: random_numbers.o random10_vectors.o \
                   octo_double_functions.o deca_double_functions.o \
                   random_numbers.o random10_vectors.o \
                   cmplx10_norm_host.o cmplx10_norm_kernels.o \
-               -lcuda -lcudart -L/usr/local/cuda/lib64 
+               -lcuda -lcudart -L$(CUDALIB)
 
 clean:
 	/bin/rm -f -r double_double.o double_double_functions.o
+	/bin/rm -f -r dbl2_sqrt_kernels.o
 	/bin/rm -f -r test_double_doubles.o test_double_doubles
-	/bin/rm -f -r triple_double_functions.o
+	/bin/rm -f -r triple_double_functions.o dbl3_sqrt_kernels.o
 	/bin/rm -f -r test_triple_doubles.o test_triple_doubles
-	/bin/rm -f -r quad_double_functions.o
+	/bin/rm -f -r quad_double_functions.o dbl4_sqrt_kernels.o
 	/bin/rm -f -r test_quad_doubles.o test_quad_doubles
-	/bin/rm -f -r penta_double_functions.o
+	/bin/rm -f -r penta_double_functions.o dbl5_sqrt_kernels.o
 	/bin/rm -f -r test_penta_doubles.o test_penta_doubles
-	/bin/rm -f -r octo_double_functions.o
+	/bin/rm -f -r octo_double_functions.o dbl8_sqrt_kernels.o
 	/bin/rm -f -r test_octo_doubles.o test_octo_doubles
-	/bin/rm -f -r deca_double_functions.o
+	/bin/rm -f -r deca_double_functions.o dbl10_sqrt_kernels.o
 	/bin/rm -f -r test_deca_doubles.o test_deca_doubles
 	/bin/rm -f -r parse_run_arguments.o 
 	/bin/rm -f -r random_numbers.o 

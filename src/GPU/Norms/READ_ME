@@ -7,17 +7,30 @@ to compute 2-norms of vectors in multiple double precision.
 file name               : short description
 -----------------------------------------------------------------------------
 double_double_functions : double double precision arithmetic on host
+double_double_gpufun    : double double precision arithmetic on device
+dbl2_sqrt_kernels       : sqrt in double double precision on device
 test_double_doubles     : a test on double double_functions
 triple_double_functions : triple double precision arithmetic on host
+triple_double_gpufun    : triple double precision arithmetic on device
+dbl3_sqrt_kernels       : sqrt in triple double precision on device
 test_triple_doubles     : a test on triple double_functions
 quad_double_functions   : quad double precision arithmetic on host
+quad_double_gpufun      : quad double precision arithmetic on device
+dbl4_sqrt_kernels       : sqrt in quad double precision on device
 test_quad_doubles       : a test on quad double_functions
 penta_double_functions  : penta double precision arithmetic on host
+penta_double_gpufun     : penta double precision arithmetic on device
+dbl5_sqrt_kernels       : sqrt in penta double precision on device
 test_penta_doubles      : a test on penta double_functions
 octo_double_functions   : octo double precision arithmetic on host
+octo_double_gpufun      : octo double precision arithmetic on device
+dbl8_sqrt_kernels       : sqrt in octo double precision on device
 test_octo_doubles       : a test on octo double_functions
 deca_double_functions   : deca double precision arithmetic on host
+deca_double_gpufun      : deca double precision arithmetic on device
+dbl10_sqrt_kernels      : sqrt in deca double precision on device
 test_deca_doubles       : a test on deca double_functions
+-----------------------------------------------------------------------------
 random_numbers          : generators of random doubles and random angles
 random_numbers_windows  : specific include for windows MS VC
 random_vectors          : random vectors in double precision
@@ -28,13 +41,6 @@ random5_vectors         : random vectors in penta double precision
 random8_vectors         : random vectors in octo double precision
 random10_vectors          random vectors in deca double precision
 parse_run_arguments     : parse command line arguments for run_ functions
------------------------------------------------------------------------------
-double_double_gpufun    : double double precision arithmetic on device
-triple_double_gpufun    : triple double precision arithmetic on device
-quad_double_gpufun      : quad double precision arithmetic on device
-penta_double_gpufun     : penta double precision arithmetic on device
-octo_double_gpufun      : octo double precision arithmetic on device
-deca_double_gpufun      : deca double precision arithmetic on device
 -----------------------------------------------------------------------------
 dbl_norm_host           : 2-norm of double vectors on host
 dbl2_norm_host          : 2-norm of double double vectors on host

@@ -5,7 +5,9 @@
 #include <iomanip>
 #include <cstdlib>
 #include <cmath>
+#include <vector_types.h>
 #include "octo_double_functions.h"
+#include "dbl8_sqrt_kernels.h"
 
 using namespace std;
 
@@ -26,23 +28,58 @@ int my_sqrt
 int main ( void )
 {
    const int max = 9;
-   double twohihihi = 2.0;
-   double twolohihi = 0.0;
-   double twohilohi = 0.0;
-   double twololohi = 0.0;
-   double twohihilo = 0.0;
-   double twolohilo = 0.0;
-   double twohilolo = 0.0;
-   double twolololo = 0.0;
+   double twohihihi_h = 2.0;
+   double twolohihi_h = 0.0;
+   double twohilohi_h = 0.0;
+   double twololohi_h = 0.0;
+   double twohihilo_h = 0.0;
+   double twolohilo_h = 0.0;
+   double twohilolo_h = 0.0;
+   double twolololo_h = 0.0;
+   double twohihihi_d = 2.0;
+   double twolohihi_d = 0.0;
+   double twohilohi_d = 0.0;
+   double twololohi_d = 0.0;
+   double twohihilo_d = 0.0;
+   double twolohilo_d = 0.0;
+   double twohilolo_d = 0.0;
+   double twolololo_d = 0.0;
 
-   int fail = my_sqrt(&twohihihi,&twolohihi,&twohilohi,&twololohi,
-                      &twohihilo,&twolohilo,&twohilolo,&twolololo,max);
+   int fail;
 
-   if(fail == 0)
-      cout << "Test passed." << endl;
-   else
+   fail = my_sqrt(&twohihihi_h,&twolohihi_h,&twohilohi_h,&twololohi_h,
+                  &twohihilo_h,&twolohilo_h,&twohilolo_h,&twolololo_h,max);
+
+   if(fail != 0)
       cout << "Test failed!" << endl;
+   else
+   {
+      cout << "Test passed." << endl;
 
+      GPU_dbl8_sqrt
+         (&twohihihi_d,&twolohihi_d,&twohilohi_d,&twololohi_d,
+          &twohihilo_d,&twolohilo_d,&twohilolo_d,&twolololo_d,max);
+
+      cout << "GPU computed sqrt :" << endl;
+      odf_write_doubles
+         (twohihihi_d,twolohihi_d,twohilohi_d,twololohi_d,
+          twohihilo_d,twolohilo_d,twohilolo_d,twolololo_d);
+
+      double err = abs(twohihihi_h - twohihihi_d)
+                 + abs(twolohihi_h - twolohihi_d)
+                 + abs(twohilohi_h - twohilohi_d)
+                 + abs(twololohi_h - twololohi_d)
+                 + abs(twohihilo_h - twohihilo_d)
+                 + abs(twolohilo_h - twolohilo_d)
+                 + abs(twohilolo_h - twohilolo_d)
+                 + abs(twolololo_h - twolololo_d);
+      cout << "  error : " << err << endl; 
+
+      if(err < 1.0e-120)
+         cout << "GPU test on octo doubles passed." << endl;
+      else
+         cout << "GPU test on octo doubles failed!" << endl;
+   }
    return 0;
 }
 
@@ -65,10 +102,12 @@ int my_sqrt
    double a_hihilo,a_lohilo,a_hilolo,a_lololo;
    int i;
 
-   x_hihihi = 2.0; x_lohihi = 0.0; x_hilohi = 0.0; x_lolohi = 0.0;
-   x_hihilo = 0.0; x_lohilo = 0.0; x_hilolo = 0.0; x_lololo = 0.0;
+   x_hihihi = *hihihi; x_lohihi = *lohihi;
+   x_hilohi = *hilohi; x_lolohi = *lolohi;
+   x_hihilo = *hihilo; x_lohilo = *lohilo;
+   x_hilolo = *hilolo; x_lololo = *lololo;
 
-   cout << "\nRunning Newton's method for ...\n";
+   cout << "\nRunning Newton's method for sqrt ...\n";
 
    cout << scientific << setprecision(16);
 
@@ -88,7 +127,8 @@ int my_sqrt
                         z_hihilo,z_lohilo,z_hilolo,z_lololo);
       odf_inc(&z_hihihi,&z_lohihi,&z_hilohi,&z_lolohi,
               &z_hihilo,&z_lohilo,&z_hilolo,&z_lololo,
-              2.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+              *hihihi,*lohihi,*hilohi,*lolohi,
+              *hihilo,*lohilo,*hilolo,*lololo);
       odf_div(z_hihihi,z_lohihi,z_hilohi,z_lolohi,
               z_hihilo,z_lohilo,z_hilolo,z_lololo,
               x_hihihi,x_lohihi,x_hilohi,x_lolohi,
@@ -118,24 +158,6 @@ int my_sqrt
               &a_hihilo,&a_lohilo,&a_hilolo,&a_lololo);
       cout << "  error : "<< a_hihihi << endl;
    }
-   odf_sqrt(2.0,0.0,0,0.0,0.0,0.0,0.0,0.0,
-            &y_hihihi,&y_lohihi,&y_hilohi,&y_lolohi,
-            &y_hihilo,&y_lohilo,&y_hilolo,&y_lololo);
-   cout << "sqrt(2) :" << endl;
-   odf_write_doubles(y_hihihi,y_lohihi,y_hilohi,y_lolohi,
-                     y_hihilo,y_lohilo,y_hilolo,y_lololo);
-   odf_sub(x_hihihi,x_lohihi,x_hilohi,x_lolohi,
-           x_hihilo,x_lohilo,x_hilolo,x_lololo,
-           y_hihihi,y_lohihi,y_hilohi,y_lolohi,
-           y_hihilo,y_lohilo,y_hilolo,y_lololo,
-           &e_hihihi,&e_lohihi,&e_hilohi,&e_lolohi,
-           &e_hihilo,&e_lohilo,&e_hilolo,&e_lololo);
-   odf_abs(e_hihihi,e_lohihi,e_hilohi,e_lolohi,
-           e_hihilo,e_lohilo,e_hilolo,e_lololo,
-           &a_hihihi,&a_lohihi,&a_hilohi,&a_lolohi,
-           &a_hihilo,&a_lohilo,&a_hilolo,&a_lololo);
-   cout << "  error : "<< a_hihihi << endl;
-
    *hihihi = x_hihihi; *lohihi = x_lohihi;
    *hilohi = x_hilohi; *lolohi = x_lolohi;
    *hihilo = x_hihilo; *lohilo = x_lohilo;

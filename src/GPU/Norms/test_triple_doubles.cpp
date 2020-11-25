@@ -5,7 +5,9 @@
 #include <iomanip>
 #include <cstdlib>
 #include <cmath>
+#include <vector_types.h>
 #include "triple_double_functions.h"
+#include "dbl3_sqrt_kernels.h"
 
 using namespace std;
 
@@ -22,17 +24,37 @@ int my_sqrt ( double *hi, double *mi, double *lo, int max_steps );
 int main ( void )
 {
    const int max = 7;
-   double twohi = 2.0;
-   double twomi = 0.0;
-   double twolo = 0.0;
+   double twohi_h = 2.0;
+   double twomi_h = 0.0;
+   double twolo_h = 0.0;
+   double twohi_d = 2.0;
+   double twomi_d = 0.0;
+   double twolo_d = 0.0;
 
-   int fail = my_sqrt(&twohi,&twomi,&twolo,max);
+   int fail = my_sqrt(&twohi_h,&twomi_h,&twolo_h,max);
 
-   if(fail == 0)
-      cout << "Test passed." << endl;
+   cout << "Test on triple doubles ";
+   if(fail != 0)
+      cout << "failed!" << endl;
    else
-      cout << "Test failed!" << endl;
+   {
+      cout << "passed." << endl;
 
+      GPU_dbl3_sqrt(&twohi_d,&twomi_d,&twolo_d,max);
+
+      cout << "GPU computed sqrt :" << endl;
+      tdf_write_doubles(twohi_d,twomi_d,twolo_d);
+
+      double err = abs(twohi_h - twohi_d)
+                 + abs(twomi_h - twomi_d)
+                 + abs(twolo_h - twolo_d);
+      cout << "  error : " << err << endl; 
+
+      if(err < 1.0e-44)
+         cout << "GPU test on triple doubles passed." << endl;
+      else
+         cout << "GPU test on triple doubles failed!" << endl;
+   }
    return 0;
 }
 
@@ -57,7 +79,7 @@ int my_sqrt ( double *hi, double *mi, double *lo, int max_steps )
       tdf_sqr(x_hi,x_mi,x_lo,&z_hi,&z_mi,&z_lo);  // z = x*x
       cout << "x*x : " << endl;
       tdf_write_doubles(z_hi,z_mi,z_lo); cout << endl;
-      tdf_inc(&z_hi,&z_mi,&z_lo,2.0,0.0,0.0);     // z += 2
+      tdf_inc(&z_hi,&z_mi,&z_lo,*hi,*mi,*lo);     // z += input number
       tdf_div(z_hi,z_mi,z_lo,x_hi,x_mi,x_lo,&z_hi,&z_mi,&z_lo); // z = z/x
       tdf_mul_td_d(z_hi,z_mi,z_lo,0.5,&z_hi,&z_mi,&z_lo);       // z *= 0.5
       tdf_copy(z_hi,z_mi,z_lo,&x_hi,&x_mi,&x_lo);
@@ -67,12 +89,6 @@ int my_sqrt ( double *hi, double *mi, double *lo, int max_steps )
       tdf_abs(e_hi,e_mi,e_lo,&a_hi,&a_mi,&a_lo);
       cout << "  error : "<< a_hi << endl;
    }
-   tdf_sqrt(2.0,0.0,0.0,&y_hi,&y_mi,&y_lo);
-   cout << "sqrt(2) :" << endl;
-   tdf_write_doubles(y_hi,y_mi,y_lo);
-   tdf_sub(x_hi,x_mi,x_lo,y_hi,y_mi,y_lo,&e_hi,&e_mi,&e_lo);
-   tdf_abs(e_hi,e_mi,e_lo,&a_hi,&a_mi,&a_lo);
-   cout << "  error : "<< a_hi << endl;
 
    *hi = x_hi; *mi = x_mi; *lo = x_lo;
 

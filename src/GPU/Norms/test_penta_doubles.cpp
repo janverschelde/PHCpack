@@ -5,7 +5,9 @@
 #include <iomanip>
 #include <cstdlib>
 #include <cmath>
+#include <vector_types.h>
 #include "penta_double_functions.h"
+#include "dbl5_sqrt_kernels.h"
 
 using namespace std;
 
@@ -25,19 +27,42 @@ int main ( void )
 {
    const int max = 8;
 
-   double twotb = 2.0;
-   double twoix = 0.0;
-   double twomi = 0.0;
-   double tworg = 0.0;
-   double twopk = 0.0;
+   double twotb_h = 2.0;
+   double twoix_h = 0.0;
+   double twomi_h = 0.0;
+   double tworg_h = 0.0;
+   double twopk_h = 0.0;
+   double twotb_d = 2.0;
+   double twoix_d = 0.0;
+   double twomi_d = 0.0;
+   double tworg_d = 0.0;
+   double twopk_d = 0.0;
 
-   int fail = my_sqrt(&twotb,&twoix,&twomi,&tworg,&twopk,max);
+   int fail = my_sqrt(&twotb_h,&twoix_h,&twomi_h,&tworg_h,&twopk_h,max);
 
-   if(fail == 0)
-      cout << "Test passed." << endl;
-   else
+   if(fail != 0)
       cout << "Test failed!" << endl;
+   else
+   {
+      cout << "Test passed." << endl;
 
+      GPU_dbl5_sqrt(&twotb_d,&twoix_d,&twomi_d,&tworg_d,&twopk_d,max);
+
+      cout << "GPU computed sqrt :" << endl;
+      pdf_write_doubles(twotb_d,twoix_d,twomi_d,tworg_d,twopk_d);
+
+      double err = abs(twotb_h - twotb_d)
+                 + abs(twoix_h - twoix_d)
+                 + abs(twomi_h - twomi_d)
+                 + abs(tworg_h - tworg_d)
+                 + abs(twopk_h - twopk_d);
+      cout << "  error : " << err << endl; 
+
+      if(err < 1.0e-76)
+         cout << "GPU test on penta doubles passed." << endl;
+      else
+         cout << "GPU test on penta doubles failed!" << endl;
+   }
    return 0;
 }
 
@@ -78,13 +103,6 @@ int my_sqrt
       pdf_abs(e_tb,e_ix,e_mi,e_rg,e_pk,&a_tb,&a_ix,&a_mi,&a_rg,&a_pk);
       cout << "  error : "<< a_tb << endl;
    }
-   pdf_sqrt(2.0,0.0,0.0,0.0,0.0,&y_tb,&y_ix,&y_mi,&y_rg,&y_pk);
-   cout << "sqrt(2) :" << endl;
-   pdf_write_doubles(y_tb,y_ix,y_mi,y_rg,y_pk);
-   pdf_sub(x_tb,x_ix,x_mi,x_rg,x_pk,y_tb,y_ix,y_mi,y_rg,y_pk,
-           &e_tb,&e_ix,&e_mi,&e_rg,&e_pk);
-   pdf_abs(e_tb,e_ix,e_mi,e_rg,e_pk,&a_tb,&a_ix,&a_mi,&a_rg,&a_pk);
-   cout << "  error : "<< a_tb << endl;
 
    *tb = x_tb; *ix = x_ix; *mi = x_mi, *rg = x_rg; *pk = x_pk;
 
