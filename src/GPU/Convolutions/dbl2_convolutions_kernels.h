@@ -50,6 +50,17 @@ __global__ void dbl2_convolute
  *   zhi      high parts of the product of x with y;
  *   zlo      low parts of the product of x with y. */
 
+__global__ void dbl2_padded_convolute
+ ( double *xhi, double *xlo, double *yhi, double *ylo,
+   double *zhi, double *zlo, int dim );
+/*
+ * DESCRIPTION :
+ *   Convolutes real vectors x and y to make z.
+ *   All arrays have dimension dim.
+ *   Zeros are inserted in the shared memory for the second vector,
+ *   so all threads perform the same number of operations
+ *   and thread divergence is avoided. */
+
 __global__ void cmplx2_convolute
  ( double *xrehi, double *xrelo, double *ximhi, double *ximlo,
    double *yrehi, double *yrelo, double *yimhi, double *yimlo,
@@ -93,9 +104,23 @@ __global__ void cmplx2_looped_convolute
  *   The loop for the imaginary parts has the indices reversed,
  *   so every thread executes the same amount of operations. */
 
+__global__ void cmplx2_padded_convolute
+ ( double *xrehi, double *xrelo, double *ximhi, double *ximlo,
+   double *yrehi, double *yrelo, double *yimhi, double *yimlo,
+   double *zrehi, double *zrelo, double *zimhi, double *zimlo, int dim );
+/*
+ * DESCRIPTION :
+ *   Convolutes complex vectors x and y to make z.
+ *   The complex vectors are given as double arrays with real
+ *   and imaginary parts, of high and low parts.
+ *   All arrays have dimension dim.
+ *   Zeros are inserted in the shared memory for the second vector,
+ *   so all threads perform the same number of operations
+ *   and thread divergence is avoided. */
+
 void GPU_dbl2_product
  ( double *xhi_h, double *xlo_h, double *yhi_h, double *ylo_h,
-   double *zhi_h, double *zlo_h, int deg, int freq, int BS );
+   double *zhi_h, double *zlo_h, int deg, int freq, int BS, int padded );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
@@ -110,7 +135,8 @@ void GPU_dbl2_product
  *   zlo_h    space allocated for deg+1 doubles for the low parts of z;
  *   deg      degree of the truncated power series;
  *   freq     frequency for timing purposes;
- *   BS       block size, the number of threads in a block.
+ *   BS       block size, the number of threads in a block;
+ *   padded   if 1, then the padded convolute is applied.
  *
  * ON RETURN :
  *   zhi_h    high parts of the coefficients of the product of x with y;
@@ -120,7 +146,7 @@ void GPU_cmplx2_product
  ( double *xrehi_h, double *xrelo_h, double *ximhi_h, double *ximlo_h,
    double *yrehi_h, double *yrelo_h, double *yimhi_h, double *yimlo_h,
    double *zrehi_h, double *zrelo_h, double *zimhi_h, double *zimlo_h,
-   int deg, int freq, int BS, int looped );
+   int deg, int freq, int BS, int mode );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
@@ -142,7 +168,7 @@ void GPU_cmplx2_product
  *   deg        degree of the truncated power series;
  *   freq       frequency for timing purposes;
  *   BS         block size, the number of threads in a block;
- *   looped     if 1, then the looped convolute is applied.
+ *   mode       if 1, then the looped convolute is applied.
  *
  * ON RETURN :
  *   zrehi_h    high parts of the real parts of the coefficients of z;

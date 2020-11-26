@@ -129,7 +129,7 @@ double test_real ( int deg )
       cout << "  zmi[" << k << "] : " << zmi_h[k];
       cout << "  zlo[" << k << "] : " << zlo_h[k] << endl;
    }
-   GPU_dbl3_product(xhi,xmi,xlo,yhi,ymi,ylo,zhi_d,zmi_d,zlo_d,deg,1,deg+1);
+   GPU_dbl3_product(xhi,xmi,xlo,yhi,ymi,ylo,zhi_d,zmi_d,zlo_d,deg,1,deg+1,1);
 
    cout << "GPU computed product :" << endl;
 
@@ -206,7 +206,7 @@ double test_complex ( int deg )
    GPU_cmplx3_product
       (xrehi,xremi,xrelo,ximhi,ximmi,ximlo,
        yrehi,yremi,yrelo,yimhi,yimmi,yimlo,
-       zrehi_d,zremi_d,zrelo_d,zimhi_d,zimmi_d,zimlo_d,deg,1,deg+1,2);
+       zrehi_d,zremi_d,zrelo_d,zimhi_d,zimmi_d,zimlo_d,deg,1,deg+1,3);
 
    cout << "GPU computed product :" << endl;
 
@@ -272,7 +272,7 @@ double test_real_exponential ( int deg )
    cout << "middle part of sum : " << summi << endl;
    cout << "   low part of sum : " << sumlo << endl;
 
-   GPU_dbl3_product(xhi,xmi,xlo,yhi,ymi,ylo,zhi_d,zmi_d,zlo_d,deg,1,deg+1);
+   GPU_dbl3_product(xhi,xmi,xlo,yhi,ymi,ylo,zhi_d,zmi_d,zlo_d,deg,1,deg+1,1);
 
    sumhi = 0.0; summi = 0.0; sumlo = 0.0;
 
@@ -370,7 +370,7 @@ double test_complex_exponential ( int deg )
    GPU_cmplx3_product
       (xrehi,xremi,xrelo,ximhi,ximmi,ximlo,
        yrehi,yremi,yrelo,yimhi,yimmi,yimlo,
-       zrehi_d,zremi_d,zrelo_d,zimhi_d,zimmi_d,zimlo_d,deg,1,deg+1,2);
+       zrehi_d,zremi_d,zrelo_d,zimhi_d,zimmi_d,zimlo_d,deg,1,deg+1,3);
 
    sumrehi = 0.0; sumremi = 0.0; sumrelo = 0.0;
    sumimhi = 0.0; sumimmi = 0.0; sumimlo = 0.0;

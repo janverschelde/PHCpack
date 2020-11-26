@@ -31,6 +31,16 @@ __global__ void dbl_convolute ( double *x, double *y, double *z, int dim );
  *   Convolutes real vectors x and y to make z.
  *   All arrays have dimension dim. */
 
+__global__ void dbl_padded_convolute
+ ( double *x, double *y, double *z, int dim );
+/*
+ * DESCRIPTION :
+ *   Convolutes real vectors x and y to make z.
+ *   All arrays have dimension dim.
+ *   Zeros are inserted in the shared memory for the second vector,
+ *   so all threads perform the same number of operations
+ *   and thread divergence is avoided. */
+
 __global__ void cmplx_convolute
  ( double *xre, double *xim, double *yre, double *yim,
    double *zre, double *zim, int dim );
@@ -53,6 +63,17 @@ __global__ void cmplx_convolute
  *   zre      real parts of the product of x and y;
  *   zim      imaginary parts of the product of x and y. */
 
+__global__ void cmplx_padded_convolute
+ ( double *xre, double *xim, double *yre, double *yim,
+   double *zre, double *zim, int dim );
+/*
+ * DESCRIPTION :
+ *   Convolutes complex vectors x and y to make z.
+ *   All arrays have dimension dim.
+ *   Zeros are inserted in the shared memory for the second vector,
+ *   so all threads perform the same number of operations
+ *   and thread divergence is avoided. */
+
 __global__ void cmplx_looped_convolute
  ( double *xre, double *xim, double *yre, double *yim,
    double *zre, double *zim, int dim );
@@ -64,7 +85,8 @@ __global__ void cmplx_looped_convolute
  *   so every thread executes the same amount of operations. */
 
 void GPU_dbl_product
- ( double *x_h, double *y_h, double *z_h, int deg, int freq, int BS );
+ ( double *x_h, double *y_h, double *z_h, int deg, int freq, int BS,
+   int mode );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series with double coefficients.
@@ -75,7 +97,8 @@ void GPU_dbl_product
  *   z_h      space allocated for deg+1 doubles;
  *   deg      degree of the truncated power series;
  *   freq     frequency for timing purposes;
- *   BS       block size, the number of threads in a block.
+ *   BS       block size, the number of threads in a block;
+ *   padded   if 1, then the padded convolution is called.
  *
  * ON RETURN :
  *   z_h      coefficients of the product of x with y. */
@@ -98,7 +121,10 @@ void GPU_cmplx_product
  *   deg      degree of the truncated power series;
  *   freq     frequency for timing purposes;
  *   BS       block size, the number of threads in a block;
- *   looped   if 1, then the looped convolute is applied.
+ *   mode     0 : the plain version,
+ *            1 : looped convolute,
+ *            2 : multiple looped convolute,
+ *            3 : padded version.
  *
  * ON RETURN :
  *   zre_h    real parts of the coefficients of the product of x with y;

@@ -1,7 +1,7 @@
-Wed 25 Nov 2020 : bug fixes in calling the convolution kernels for convolutions
-  of real vectors in {dbl5,dbl10}_convolutions_kernels.cu.
-
 Tue 24 Nov 2020 : improved all tests in test_dbl*_convolutions.cpp.
+  Added padded convolute operations to {dbl,dbl2,dbl3}_convolutions_kernels,
+  tested in test_{dbl,dbl2,dbl3}_convolutions.cpp, applied the padded kerns
+  in {dbl,dbl2,dbl3}_monomials_kernels.cu.
 
 Mon 23 Nov 2020 : to dbl_convolutions_kernels and dbl2_convolutions_kernels,
   added double looped convolute kernels to compute the imaginary parts in

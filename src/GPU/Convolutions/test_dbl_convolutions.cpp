@@ -121,7 +121,7 @@ double test_real ( int deg )
    }
    cout << endl;
 
-   GPU_dbl_product(x,y,z_d,deg,1,deg+1);
+   GPU_dbl_product(x,y,z_d,deg,1,deg+1,1);
 
    cout << "GPU computed product :" << endl;
 
@@ -171,7 +171,7 @@ double test_complex ( int deg )
    }
    cout << endl;
 
-   GPU_cmplx_product(xre,xim,yre,yim,zre_d,zim_d,deg,1,deg+1,2);
+   GPU_cmplx_product(xre,xim,yre,yim,zre_d,zim_d,deg,1,deg+1,3);
 
    cout << "GPU computed product :" << endl;
 
@@ -212,7 +212,7 @@ double test_real_exponential ( int deg )
    cout << "Summation of all coefficients of the product ..." << endl;
    cout << "  sum : " << sum << endl;
 
-   GPU_dbl_product(x,y,z_d,deg,1,deg+1);
+   GPU_dbl_product(x,y,z_d,deg,1,deg+1,1);
 
    double err = 0.0;
 
@@ -265,7 +265,7 @@ double test_complex_exponential ( int deg )
    cout << "  sumre : " << sumre << endl;
    cout << "  sumim : " << sumim << endl;
 
-   GPU_cmplx_product(xre,xim,yre,yim,zre_d,zim_d,deg,1,deg+1,2);
+   GPU_cmplx_product(xre,xim,yre,yim,zre_d,zim_d,deg,1,deg+1,3);
 
    double err = 0.0;
 
