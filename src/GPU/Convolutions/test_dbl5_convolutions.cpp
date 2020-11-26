@@ -142,9 +142,18 @@ double test_real ( int deg )
       cout << "  zrg[" << k << "] : " << zrg_h[k];
       cout << "  zpk[" << k << "] : " << zpk_h[k] << endl;
    }
+   for(int k=0; k<=deg; k++)
+   {
+      cout << "x[" << k << "] : " << endl;
+      pdf_write_doubles(xtb[k],xix[k],xmi[k],xrg[k],xpk[k]);
+      cout << endl;
+      cout << "y[" << k << "] : " << endl;
+      pdf_write_doubles(ytb[k],yix[k],ymi[k],yrg[k],ypk[k]);
+      cout << endl;
+   }
    GPU_dbl5_product
       (xtb,xix,xmi,xrg,xpk,ytb,yix,ymi,yrg,ypk,
-       ztb_d,zix_d,zmi_d,zrg_d,zpk_d,deg,1,deg+1);
+       ztb_d,zix_d,zmi_d,zrg_d,zpk_d,deg,1,deg+1,1);
 
    cout << "GPU computed product :" << endl;
 
@@ -345,7 +354,7 @@ double test_real_exponential ( int deg )
 
    GPU_dbl5_product
       (xtb,xix,xmi,xrg,xpk,ytb,yix,ymi,yrg,ypk,
-       ztb_d,zix_d,zmi_d,zrg_d,zpk_d,deg,1,deg+1);
+       ztb_d,zix_d,zmi_d,zrg_d,zpk_d,deg,1,deg+1,1);
 
    sumtb = 0.0; sumix = 0.0; summi = 0.0; sumrg = 0.0; sumpk = 0.0;
 
@@ -432,6 +441,18 @@ double test_complex_exponential ( int deg )
            zretb_h,zreix_h,zremi_h,zrerg_h,zrepk_h,
            zimtb_h,zimix_h,zimmi_h,zimrg_h,zimpk_h);
 
+   for(int k=0; k<=deg; k++)
+   {
+      cout << "zre[" << k << "] : " << endl;
+      pdf_write_doubles
+         (zretb_h[k],zreix_h[k],zremi_h[k],zrerg_h[k],zrepk_h[k]);
+      cout << endl;
+      cout << "zim[" << k << "] : " << endl;
+      pdf_write_doubles
+         (zimtb_h[k],zimix_h[k],zimmi_h[k],zimrg_h[k],zimpk_h[k]);
+      cout << endl;
+   }
+
    cout << scientific << setprecision(16);
 
    cout << "Product of series of exp(x) with series of exp(-x)," << endl;
@@ -476,11 +497,39 @@ double test_complex_exponential ( int deg )
    cout << "  sumimrg : " << sumimrg << endl;
    cout << "  sumimpk : " << sumimpk << endl;
 
+   for(int k=0; k<=deg; k++)
+   {
+      cout << "xre[" << k << "] : " << endl;
+      pdf_write_doubles(xretb[k],xreix[k],xremi[k],xrerg[k],xrepk[k]);
+      cout << endl;
+      cout << "xim[" << k << "] : " << endl;
+      pdf_write_doubles(ximtb[k],ximix[k],ximmi[k],ximrg[k],ximpk[k]);
+      cout << endl;
+      cout << "yre[" << k << "] : " << endl;
+      pdf_write_doubles(yretb[k],yreix[k],yremi[k],yrerg[k],yrepk[k]);
+      cout << endl;
+      cout << "yim[" << k << "] : " << endl;
+      pdf_write_doubles(yimtb[k],yimix[k],yimmi[k],yimrg[k],yimpk[k]);
+      cout << endl;
+   }
+
    GPU_cmplx5_product
       (xretb,xreix,xremi,xrerg,xrepk,ximtb,ximix,ximmi,ximrg,ximpk,
        yretb,yreix,yremi,yrerg,yrepk,yimtb,yimix,yimmi,yimrg,yimpk,
        zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,
        zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,deg,1,deg+1,2);
+
+   for(int k=0; k<=deg; k++)
+   {
+      cout << "zre[" << k << "] : " << endl;
+      pdf_write_doubles
+         (zretb_d[k],zreix_d[k],zremi_d[k],zrerg_d[k],zrepk_d[k]);
+      cout << endl;
+      cout << "zim[" << k << "] : " << endl;
+      pdf_write_doubles
+         (zimtb_d[k],zimix_d[k],zimmi_d[k],zimrg_d[k],zimpk_d[k]);
+      cout << endl;
+   }
 
    sumretb = 0.0; sumreix = 0.0; sumremi = 0.0; sumrerg = 0.0; sumrepk = 0.0;
    sumimtb = 0.0; sumimix = 0.0; sumimmi = 0.0; sumimrg = 0.0; sumimpk = 0.0;

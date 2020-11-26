@@ -60,6 +60,18 @@ __global__ void dbl4_convolute
  *   zhilo    second lowest parts of the product of x with y;
  *   zlolo    lowest parts of the product of x with y. */
 
+__global__ void dbl4_padded_convolute
+ ( double *xhihi, double *xlohi, double *xhilo, double *xlolo,
+   double *yhihi, double *ylohi, double *yhilo, double *ylolo,
+   double *zhihi, double *zlohi, double *zhilo, double *zlolo, int dim );
+/*
+ * DESCRIPTION :
+ *   Convolutes real vectors x and y to make z.
+ *   All arrays have dimension dim.
+ *   Zeros are inserted in the shared memory for the second vector,
+ *   so all threads perform the same number of operations
+ *   and thread divergence is avoided. */
+
 __global__ void cmplx4_convolute
  ( double *xrehihi, double *xrelohi, double *xrehilo, double *xrelolo,
    double *ximhihi, double *ximlohi, double *ximhilo, double *ximlolo,
@@ -120,11 +132,29 @@ __global__ void cmplx4_convolute
  *   zimhilo    second lowest parts of the imaginary parts of z;
  *   zimlolo    lowest parts of the imaginary parts of the product z. */
 
+__global__ void cmplx4_padded_convolute
+ ( double *xrehihi, double *xrelohi, double *xrehilo, double *xrelolo,
+   double *ximhihi, double *ximlohi, double *ximhilo, double *ximlolo,
+   double *yrehihi, double *yrelohi, double *yrehilo, double *yrelolo,
+   double *yimhihi, double *yimlohi, double *yimhilo, double *yimlolo,
+   double *zrehihi, double *zrelohi, double *zrehilo, double *zrelolo,
+   double *zimhihi, double *zimlohi, double *zimhilo, double *zimlolo,
+   int dim );
+/*
+ * DESCRIPTION :
+ *   Convolutes complex vectors x and y to make z.
+ *   The complex vectors are given as double arrays with real
+ *   and imaginary parts, of highest, second highest, second lowest,
+ *   and lowest parts.  All arrays have dimension dim.
+ *   Zeros are inserted in the shared memory for the second vector,
+ *   so all threads perform the same number of operations
+ *   and thread divergence is avoided. */
+
 void GPU_dbl4_product
  ( double *xhihi_h, double *xlohi_h, double *xhilo_h, double *xlolo_h,
    double *yhihi_h, double *ylohi_h, double *yhilo_h, double *ylolo_h,
    double *zhihi_h, double *zlohi_h, double *zhilo_h, double *zlolo_h,
-   int deg, int freq, int BS );
+   int deg, int freq, int BS, int padded );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
@@ -145,7 +175,8 @@ void GPU_dbl4_product
  *   zlolo_h    space for deg+1 doubles for the lowest parts of z;
  *   deg        degree of the truncated power series;
  *   freq       frequency for timing purposes;
- *   BS         block size, the number of threads in a block.
+ *   BS         block size, the number of threads in a block;
+ *   padded     if 1, then the padded convolute is applied.
  *
  * ON RETURN :
  *   zhihi_h    highest parts of the coefficients of the product z;
@@ -160,7 +191,7 @@ void GPU_cmplx4_product
    double *yimhihi_h, double *yimlohi_h, double *yimhilo_h, double *yimlolo_h,
    double *zrehihi_h, double *zrelohi_h, double *zrehilo_h, double *zrelolo_h,
    double *zimhihi_h, double *zimlohi_h, double *zimhilo_h, double *zimlolo_h,
-   int deg, int freq, int BS, int looped );
+   int deg, int freq, int BS, int mode );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
@@ -194,7 +225,8 @@ void GPU_cmplx4_product
  *   deg          degree of the truncated power series;
  *   freq         frequency for timing purposes;
  *   BS           block size, the number of threads in a block;
- *   looped       if > 0, then multiple double kernels are launched.
+ *   mode         if 1, then multiple double kernels are launched;
+ *                if 2, then one padded complex convolute is applied.
  *
  * ON RETURN :
  *   zrehihi_h    highest parts of the real parts of z;

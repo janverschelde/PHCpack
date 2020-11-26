@@ -386,11 +386,15 @@ __global__ void cmplx3_padded_convolute
    yihi = yvimhi[idx]; yimi = yvimmi[idx]; yilo = yvimlo[idx];
 
    tdg_mul(xrhi,xrmi,xrlo,yrhi,yrmi,yrlo,&zrhi,&zrmi,&zrlo);     // zr = xr*yr
+   __syncthreads();
    tdg_mul(xihi,ximi,xilo,yihi,yimi,yilo,&acchi,&accmi,&acclo); // acc = xi*yi
+   __syncthreads();
    tdg_minus(&acchi,&accmi,&acclo);
    tdg_inc(&zrhi,&zrmi,&zrlo,acchi,accmi,acclo);         // zr = xr*yr - xi*yi
    tdg_mul(xrhi,xrmi,xrlo,yihi,yimi,yilo,&zihi,&zimi,&zilo);     // zi = xr*yi
+   __syncthreads();
    tdg_mul(xihi,ximi,xilo,yrhi,yrmi,yrlo,&acchi,&accmi,&acclo); // acc = xi*yr
+   __syncthreads();
    tdg_inc(&zihi,&zimi,&zilo,acchi,accmi,acclo);         // zi = xr*yi + xi*yr
 
    zvrehi[k] = zrhi; zvremi[k] = zrmi; zvrelo[k] = zrlo;
@@ -405,11 +409,15 @@ __global__ void cmplx3_padded_convolute
       yihi = yvimhi[idx]; yimi = yvimmi[idx]; yilo = yvimlo[idx];
 
       tdg_mul(xrhi,xrmi,xrlo,yrhi,yrmi,yrlo,&zrhi,&zrmi,&zrlo); // zr = xr*yr
+      __syncthreads();
       tdg_mul(xihi,ximi,xilo,yihi,yimi,yilo,&acchi,&accmi,&acclo);   // xi*yi
+      __syncthreads();
       tdg_minus(&acchi,&accmi,&acclo);
       tdg_inc(&zrhi,&zrmi,&zrlo,acchi,accmi,acclo);     // zr = xr*yr - xi*yi
       tdg_mul(xrhi,xrmi,xrlo,yihi,yimi,yilo,&zihi,&zimi,&zilo); // zi = xr*yi
+      __syncthreads();
       tdg_mul(xihi,ximi,xilo,yrhi,yrmi,yrlo,&acchi,&accmi,&acclo);   // xi*yr
+      __syncthreads();
       tdg_inc(&zihi,&zimi,&zilo,acchi,accmi,acclo);     // zr = xr*yr + xi*yi
       // zvre[k] += zr; zvim[k] += zi
       tdg_inc(&zvrehi[k],&zvremi[k],&zvrelo[k],zrhi,zrmi,zrlo);

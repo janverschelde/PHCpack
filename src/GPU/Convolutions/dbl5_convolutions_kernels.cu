@@ -37,7 +37,7 @@ __global__ void dbl5_increment
            yvtb[k],yvix[k],yvmi[k],yvrg[k],yvpk[k],
            &zvtb[k],&zvix[k],&zvmi[k],&zvrg[k],&zvpk[k]);
 
-   __syncthreads();
+   // __syncthreads();
 
    ztb[k] = zvtb[k]; zix[k] = zvix[k]; zmi[k] = zvmi[k];
    zrg[k] = zvrg[k]; zpk[k] = zvpk[k];
@@ -75,7 +75,7 @@ __global__ void dbl5_decrement
            yvtb[k],yvix[k],yvmi[k],yvrg[k],yvpk[k],
            &zvtb[k],&zvix[k],&zvmi[k],&zvrg[k],&zvpk[k]);
 
-   __syncthreads();
+   // __syncthreads();
 
    ztb[k] = zvtb[k]; zix[k] = zvix[k]; zmi[k] = zvmi[k];
    zrg[k] = zvrg[k]; zpk[k] = zvpk[k];
@@ -115,21 +115,75 @@ __global__ void dbl5_convolute
    __syncthreads();
 
    // zv[k] = xv[0]*yv[k];
-   pdg_mul(xvtb[0],xvix[0],xvmi[0],xvrg[0],xvpk[0],
-           yvtb[k],yvix[k],yvmi[k],yvrg[k],yvpk[k],
+   pdg_mul( xvtb[0], xvix[0], xvmi[0], xvrg[0], xvpk[0],
+            yvtb[k], yvix[k], yvmi[k], yvrg[k], yvpk[k],
            &zvtb[k],&zvix[k],&zvmi[k],&zvrg[k],&zvpk[k]);
+
+   // __syncthreads();
 
    for(int i=1; i<=k; i++) // zv[k] = zv[k] + xv[i]*yv[k-i];
    {
       idx = k-i;
-      pdg_mul(xvtb[i],xvix[i],xvmi[i],xvrg[i],xvpk[i],
-              yvtb[idx],yvix[idx],yvmi[idx],yvrg[idx],yvpk[idx],
-              &prdtb,&prdix,&prdmi,&prdrg,&prdpk);
+      pdg_mul(  xvtb[i],  xvix[i],  xvmi[i],  xvrg[i],  xvpk[i],
+                yvtb[idx],yvix[idx],yvmi[idx],yvrg[idx],yvpk[idx],
+              &prdtb,   &prdix,   &prdmi,   &prdrg,   &prdpk);
       pdg_inc(&zvtb[k],&zvix[k],&zvmi[k],&zvrg[k],&zvpk[k],
-              prdtb,prdix,prdmi,prdrg,prdpk);
+              prdtb,   prdix,   prdmi,   prdrg,   prdpk);
    }
 
-   __syncthreads();
+   // __syncthreads();
+
+   ztb[k] = zvtb[k]; zix[k] = zvix[k]; zmi[k] = zvmi[k];
+   zrg[k] = zvrg[k]; zpk[k] = zvpk[k];
+}
+
+__global__ void dbl5_padded_convolute
+ ( double *xtb, double *xix, double *xmi, double *xrg, double *xpk,
+   double *ytb, double *yix, double *ymi, double *yrg, double *ypk,
+   double *ztb, double *zix, double *zmi, double *zrg, double *zpk, int dim )
+{
+   int k = threadIdx.x;                 // thread k computes z[k]
+
+   __shared__ double xvtb[pd_shmemsize];
+   __shared__ double xvix[pd_shmemsize];
+   __shared__ double xvmi[pd_shmemsize];
+   __shared__ double xvrg[pd_shmemsize];
+   __shared__ double xvpk[pd_shmemsize];
+   __shared__ double yvtb[pd_shmemsize];
+   __shared__ double yvix[pd_shmemsize];
+   __shared__ double yvmi[pd_shmemsize];
+   __shared__ double yvrg[pd_shmemsize];
+   __shared__ double yvpk[pd_shmemsize];
+   __shared__ double zvtb[pd_shmemsize];
+   __shared__ double zvix[pd_shmemsize];
+   __shared__ double zvmi[pd_shmemsize];
+   __shared__ double zvrg[pd_shmemsize];
+   __shared__ double zvpk[pd_shmemsize];
+
+   double prdtb,prdix,prdmi,prdrg,prdpk;
+   int idx = dim+k;
+
+   xvtb[k] = xtb[k]; xvix[k] = xix[k]; xvmi[k] = xmi[k];
+   xvrg[k] = xrg[k]; xvpk[k] = xpk[k];
+   yvtb[k] = 0.0; yvix[k] = 0.0; yvmi[k] = 0.0;
+   yvrg[k] = 0.0; yvpk[k] = 0.0;
+   yvtb[idx] = ytb[k]; yvix[idx] = yix[k]; yvmi[idx] = ymi[k];
+   yvrg[idx] = yrg[k]; yvpk[idx] = ypk[k];
+
+   // zv[k] = xv[0]*yv[k];
+   pdg_mul( xvtb[0], xvix[0], xvmi[0], xvrg[0], xvpk[0],
+            yvtb[idx], yvix[idx], yvmi[idx], yvrg[idx], yvpk[idx],
+           &zvtb[k],&zvix[k],&zvmi[k],&zvrg[k],&zvpk[k]);
+
+   for(int i=1; i<dim; i++) // zv[k] = zv[k] + xv[i]*yv[k-i];
+   {
+      idx = dim+k-i;
+      pdg_mul(  xvtb[i],  xvix[i],  xvmi[i],  xvrg[i],  xvpk[i],
+                yvtb[idx],yvix[idx],yvmi[idx],yvrg[idx],yvpk[idx],
+              &prdtb,   &prdix,   &prdmi,   &prdrg,   &prdpk);
+      pdg_inc(&zvtb[k],&zvix[k],&zvmi[k],&zvrg[k],&zvpk[k],
+              prdtb,   prdix,   prdmi,   prdrg,   prdpk);
+   }
 
    ztb[k] = zvtb[k]; zix[k] = zvix[k]; zmi[k] = zvmi[k];
    zrg[k] = zvrg[k]; zpk[k] = zvpk[k];
@@ -264,11 +318,158 @@ __global__ void cmplx5_convolute
    zimrg[k] = zvimrg[k]; zimpk[k] = zvimpk[k];
 }
 
+__global__ void cmplx5_padded_convolute
+ ( double *xretb, double *xreix, double *xremi, double *xrerg, double *xrepk,
+   double *ximtb, double *ximix, double *ximmi, double *ximrg, double *ximpk,
+   double *yretb, double *yreix, double *yremi, double *yrerg, double *yrepk,
+   double *yimtb, double *yimix, double *yimmi, double *yimrg, double *yimpk,
+   double *zretb, double *zreix, double *zremi, double *zrerg, double *zrepk,
+   double *zimtb, double *zimix, double *zimmi, double *zimrg, double *zimpk,
+   int dim )
+{
+   int k = threadIdx.x;       // thread k computes zre[k] and zim[k]
+
+   __shared__ double xvretb[pd_shmemsize];
+   __shared__ double xvreix[pd_shmemsize];
+   __shared__ double xvremi[pd_shmemsize];
+   __shared__ double xvrerg[pd_shmemsize];
+   __shared__ double xvrepk[pd_shmemsize];
+   __shared__ double xvimtb[pd_shmemsize];
+   __shared__ double xvimix[pd_shmemsize];
+   __shared__ double xvimmi[pd_shmemsize];
+   __shared__ double xvimrg[pd_shmemsize];
+   __shared__ double xvimpk[pd_shmemsize];
+   __shared__ double yvretb[pd_shmemsize];
+   __shared__ double yvreix[pd_shmemsize];
+   __shared__ double yvremi[pd_shmemsize];
+   __shared__ double yvrerg[pd_shmemsize];
+   __shared__ double yvrepk[pd_shmemsize];
+   __shared__ double yvimtb[pd_shmemsize];
+   __shared__ double yvimix[pd_shmemsize];
+   __shared__ double yvimmi[pd_shmemsize];
+   __shared__ double yvimrg[pd_shmemsize];
+   __shared__ double yvimpk[pd_shmemsize];
+   __shared__ double zvretb[pd_shmemsize];
+   __shared__ double zvreix[pd_shmemsize];
+   __shared__ double zvremi[pd_shmemsize];
+   __shared__ double zvrerg[pd_shmemsize];
+   __shared__ double zvrepk[pd_shmemsize];
+   __shared__ double zvimtb[pd_shmemsize];
+   __shared__ double zvimix[pd_shmemsize];
+   __shared__ double zvimmi[pd_shmemsize];
+   __shared__ double zvimrg[pd_shmemsize];
+   __shared__ double zvimpk[pd_shmemsize];
+
+   double xrtb,xitb,yrtb,yitb,zrtb,zitb,acctb;
+   double xrix,xiix,yrix,yiix,zrix,ziix,accix;
+   double xrmi,ximi,yrmi,yimi,zrmi,zimi,accmi;
+   double xrrg,xirg,yrrg,yirg,zrrg,zirg,accrg;
+   double xrpk,xipk,yrpk,yipk,zrpk,zipk,accpk;
+   int idx = dim+k;
+
+   xvretb[k] = xretb[k]; xvimtb[k] = ximtb[k];
+   xvreix[k] = xreix[k]; xvimix[k] = ximix[k];
+   xvremi[k] = xremi[k]; xvimmi[k] = ximmi[k];
+   xvrerg[k] = xrerg[k]; xvimrg[k] = ximrg[k];
+   xvrepk[k] = xrepk[k]; xvimpk[k] = ximpk[k];
+   yvretb[k] = 0.0; yvimtb[k] = 0.0;
+   yvreix[k] = 0.0; yvimix[k] = 0.0;
+   yvremi[k] = 0.0; yvimmi[k] = 0.0;
+   yvrerg[k] = 0.0; yvimrg[k] = 0.0;
+   yvrepk[k] = 0.0; yvimpk[k] = 0.0;
+   yvretb[idx] = yretb[k]; yvimtb[idx] = yimtb[k];
+   yvreix[idx] = yreix[k]; yvimix[idx] = yimix[k];
+   yvremi[idx] = yremi[k]; yvimmi[idx] = yimmi[k];
+   yvrerg[idx] = yrerg[k]; yvimrg[idx] = yimrg[k];
+   yvrepk[idx] = yrepk[k]; yvimpk[idx] = yimpk[k];
+
+   __syncthreads();
+
+   // z[k] = x[0]*y[k]
+   xrtb = xvretb[0]; xrix = xvreix[0]; xrmi = xvremi[0];
+   xrrg = xvrerg[0]; xrpk = xvrepk[0];
+   xitb = xvimtb[0]; xiix = xvimix[0]; ximi = xvimmi[0];
+   xirg = xvimrg[0]; xipk = xvimpk[0];
+   yrtb = yvretb[idx]; yrix = yvreix[idx]; yrmi = yvremi[idx];
+   yrrg = yvrerg[idx]; yrpk = yvrepk[idx];
+   yitb = yvimtb[idx]; yiix = yvimix[idx]; yimi = yvimmi[idx];
+   yirg = yvimrg[idx]; yipk = yvimpk[idx];
+
+   pdg_mul(xrtb,xrix,xrmi,xrrg,xrpk,yrtb,yrix,yrmi,yrrg,yrpk,
+           &zrtb,&zrix,&zrmi,&zrrg,&zrpk);         // zr = xr*yr
+   __syncthreads();
+   pdg_mul(xitb,xiix,ximi,xirg,xipk,yitb,yiix,yimi,yirg,yipk,
+           &acctb,&accix,&accmi,&accrg,&accpk);    // acc = xi*yi
+   __syncthreads();
+   pdg_minus(&acctb,&accix,&accmi,&accrg,&accpk);
+   pdg_inc(&zrtb,&zrix,&zrmi,&zrrg,&zrpk,
+           acctb,accix,accmi,accrg,accpk);         // zr = xr*yr - xi*yi
+   __syncthreads();
+   pdg_mul(xrtb,xrix,xrmi,xrrg,xrpk,yitb,yiix,yimi,yirg,yipk,
+           &zitb,&ziix,&zimi,&zirg,&zipk);         // zi = xr*yi
+   __syncthreads();
+   pdg_mul(xitb,xiix,ximi,xirg,xipk,yrtb,yrix,yrmi,yrrg,yrpk,
+           &acctb,&accix,&accmi,&accrg,&accpk);    // acc = xi*yr
+   __syncthreads();
+   pdg_inc(&zitb,&ziix,&zimi,&zirg,&zipk,
+           acctb,accix,accmi,accrg,accpk);         // zr = xr*yr + xi*yi
+   __syncthreads();
+
+   zvretb[k] = zrtb; zvreix[k] = zrix; zvremi[k] = zrmi;
+   zvrerg[k] = zrrg; zvrepk[k] = zrpk;
+   zvimtb[k] = zitb; zvimix[k] = ziix; zvimmi[k] = zimi;
+   zvimrg[k] = zirg; zvimpk[k] = zipk;
+
+   for(int i=1; i<dim; i++) // z[k] = z[k] + x[i]*y[k-i]
+   {
+      idx = dim + k - i;
+      xrtb = xvretb[i]; xrix = xvreix[i]; xrmi = xvremi[i];
+      xrrg = xvrerg[i]; xrpk = xvrepk[i];
+      xitb = xvimtb[i]; xiix = xvimix[i]; ximi = xvimmi[i];
+      xirg = xvimrg[i]; xipk = xvimpk[i];
+      yrtb = yvretb[idx]; yrix = yvreix[idx]; yrmi = yvremi[idx];
+      yrrg = yvrerg[idx]; yrpk = yvrepk[idx];
+      yitb = yvimtb[idx]; yiix = yvimix[idx]; yimi = yvimmi[idx];
+      yirg = yvimrg[idx]; yipk = yvimpk[idx];
+
+      pdg_mul(xrtb,xrix,xrmi,xrrg,xrpk,yrtb,yrix,yrmi,yrrg,yrpk,
+              &zrtb,&zrix,&zrmi,&zrrg,&zrpk);        // zr = xr*yr
+      __syncthreads();
+      pdg_mul(xitb,xiix,ximi,xirg,xipk,yitb,yiix,yimi,yirg,yipk,
+              &acctb,&accix,&accmi,&accrg,&accpk);   // xi*yi
+      __syncthreads();
+      pdg_minus(&acctb,&accix,&accmi,&accrg,&accpk);
+      pdg_inc(&zrtb,&zrix,&zrmi,&zrrg,&zrpk,
+              acctb,accix,accmi,accrg,accpk);        // zr = xr*yr - xi*yi
+      __syncthreads();
+      pdg_mul(xrtb,xrix,xrmi,xrrg,xrpk,yitb,yiix,yimi,yirg,yipk,
+              &zitb,&ziix,&zimi,&zirg,&zipk);        // zi = xr*yi
+      __syncthreads();
+      pdg_mul(xitb,xiix,ximi,xirg,xipk,yrtb,yrix,yrmi,yrrg,yrpk,
+              &acctb,&accix,&accmi,&accrg,&accpk);   // xi*yr
+      __syncthreads();
+      pdg_inc(&zitb,&ziix,&zimi,&zirg,&zipk,
+              acctb,accix,accmi,accrg,accpk);        // zr = xr*yr + xi*yi
+      __syncthreads();
+      // zvre[k] += zr; zvim[k] += zi
+      pdg_inc(&zvretb[k],&zvreix[k],&zvremi[k],&zvrerg[k],&zvrepk[k],
+              zrtb,zrix,zrmi,zrrg,zrpk);
+      __syncthreads();
+      pdg_inc(&zvimtb[k],&zvimix[k],&zvimmi[k],&zvimrg[k],&zvimpk[k],
+              zitb,ziix,zimi,zirg,zipk);
+      __syncthreads();
+   }
+   zretb[k] = zvretb[k]; zreix[k] = zvreix[k]; zremi[k] = zvremi[k];
+   zrerg[k] = zvrerg[k]; zrepk[k] = zvrepk[k];
+   zimtb[k] = zvimtb[k]; zimix[k] = zvimix[k]; zimmi[k] = zvimmi[k];
+   zimrg[k] = zvimrg[k]; zimpk[k] = zvimpk[k];
+}
+
 void GPU_dbl5_product
  ( double *xtb_h, double *xix_h, double *xmi_h, double *xrg_h, double *xpk_h,
    double *ytb_h, double *yix_h, double *ymi_h, double *yrg_h, double *ypk_h,
    double *ztb_h, double *zix_h, double *zmi_h, double *zrg_h, double *zpk_h,
-   int deg, int freq, int BS )
+   int deg, int freq, int BS, int padded )
 {
    const int dim = deg+1;            // length of all vectors
    double* xtb_d;                    // xtb_d is xtb_h on the device
@@ -316,11 +517,22 @@ void GPU_dbl5_product
 
    if(dim == BS)
    {
-      for(int i=0; i<freq; i++)
-         dbl5_convolute<<<1,BS>>>
-            (xtb_d,xix_d,xmi_d,xrg_d,xpk_d,
-             ytb_d,yix_d,ymi_d,yrg_d,ypk_d,
-             ztb_d,zix_d,zmi_d,zrg_d,zpk_d,dim);
+      if(padded == 1)
+      {
+         for(int i=0; i<freq; i++)
+            dbl5_padded_convolute<<<1,BS>>>
+               (xtb_d,xix_d,xmi_d,xrg_d,xpk_d,
+                ytb_d,yix_d,ymi_d,yrg_d,ypk_d,
+                ztb_d,zix_d,zmi_d,zrg_d,zpk_d,dim);
+      }
+      else
+      {
+         for(int i=0; i<freq; i++)
+            dbl5_convolute<<<1,BS>>>
+               (xtb_d,xix_d,xmi_d,xrg_d,xpk_d,
+                ytb_d,yix_d,ymi_d,yrg_d,ypk_d,
+                ztb_d,zix_d,zmi_d,zrg_d,zpk_d,dim);
+      }
    }
    cudaMemcpy(ztb_h,ztb_d,size,cudaMemcpyDeviceToHost);
    cudaMemcpy(zix_h,zix_d,size,cudaMemcpyDeviceToHost);
@@ -338,7 +550,7 @@ void GPU_cmplx5_product
    double *zretb_h, double *zreix_h, double *zremi_h, double *zrerg_h,
    double *zrepk_h, double *zimtb_h, double *zimix_h, double *zimmi_h,
    double *zimrg_h, double *zimpk_h, int deg, int freq, int BS,
-   int looped )
+   int mode )
 {
    const int dim = deg+1;            // length of all vectors
    double* xretb_d;                  // xretb_d is xretb_h on the device
@@ -436,32 +648,46 @@ void GPU_cmplx5_product
 
    if(dim == BS)
    {
-      if(looped > 0)
+      if(mode == 2)
       {
-         dbl5_convolute<<<1,BS>>>
-            (xretb_d,xreix_d,xremi_d,xrerg_d,xrepk_d,
-             yretb_d,yreix_d,yremi_d,yrerg_d,yrepk_d,
-             zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,dim);
-         dbl5_convolute<<<1,BS>>>
-            (ximtb_d,ximix_d,ximmi_d,ximrg_d,ximpk_d,
-             yimtb_d,yimix_d,yimmi_d,yimrg_d,yimpk_d,
-             acctb_d,accix_d,accmi_d,accrg_d,zimpk_d,dim);
-         dbl5_decrement<<<1,BS>>>
-            (zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,
-             acctb_d,accix_d,accmi_d,accrg_d,accpk_d,
-             zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,dim);
-         dbl5_convolute<<<1,BS>>>
-            (xretb_d,xreix_d,xremi_d,xrerg_d,xrepk_d,
-             yimtb_d,yimix_d,yimmi_d,yimrg_d,yimpk_d,
-             zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,dim);
-         dbl5_convolute<<<1,BS>>>
-            (ximtb_d,ximix_d,ximmi_d,ximrg_d,ximpk_d,
-             yretb_d,yreix_d,yremi_d,yrerg_d,yrepk_d,
-             acctb_d,accix_d,accmi_d,accrg_d,accpk_d,dim);
-         dbl5_increment<<<1,BS>>>
-            (zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,
-             acctb_d,accix_d,accmi_d,accrg_d,accpk_d,
-             zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,dim);
+         for(int i=0; i<freq; i++)
+            cmplx5_padded_convolute<<<1,BS>>>
+               (xretb_d,xreix_d,xremi_d,xrerg_d,xrepk_d,
+                ximtb_d,ximix_d,ximmi_d,ximrg_d,ximpk_d,
+                yretb_d,yreix_d,yremi_d,yrerg_d,yrepk_d,
+                yimtb_d,yimix_d,yimmi_d,yimrg_d,yimpk_d,
+                zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,
+                zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,dim);
+      }
+      else if(mode == 1)
+      {
+         for(int i=0; i<freq; i++)
+         {
+            dbl5_padded_convolute<<<1,BS>>>
+               (xretb_d,xreix_d,xremi_d,xrerg_d,xrepk_d,
+                yretb_d,yreix_d,yremi_d,yrerg_d,yrepk_d,
+                zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,dim);
+            dbl5_padded_convolute<<<1,BS>>>
+               (ximtb_d,ximix_d,ximmi_d,ximrg_d,ximpk_d,
+                yimtb_d,yimix_d,yimmi_d,yimrg_d,yimpk_d,
+                acctb_d,accix_d,accmi_d,accrg_d,zimpk_d,dim);
+            dbl5_decrement<<<1,BS>>>
+               (zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,
+                acctb_d,accix_d,accmi_d,accrg_d,accpk_d,
+                zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,dim);
+            dbl5_padded_convolute<<<1,BS>>>
+               (xretb_d,xreix_d,xremi_d,xrerg_d,xrepk_d,
+                yimtb_d,yimix_d,yimmi_d,yimrg_d,yimpk_d,
+                zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,dim);
+            dbl5_padded_convolute<<<1,BS>>>
+               (ximtb_d,ximix_d,ximmi_d,ximrg_d,ximpk_d,
+                yretb_d,yreix_d,yremi_d,yrerg_d,yrepk_d,
+                acctb_d,accix_d,accmi_d,accrg_d,accpk_d,dim);
+            dbl5_increment<<<1,BS>>>
+               (zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,
+                acctb_d,accix_d,accmi_d,accrg_d,accpk_d,
+                zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,dim);
+         }
       }
       else
       {

@@ -120,10 +120,61 @@ __global__ void dbl4_convolute
 
    __syncthreads();
 
-   zhihi[k] = zvhihi[k];
-   zlohi[k] = zvlohi[k];
-   zhilo[k] = zvhilo[k];
-   zlolo[k] = zvlolo[k];
+   zhihi[k] = zvhihi[k]; zlohi[k] = zvlohi[k];
+   zhilo[k] = zvhilo[k]; zlolo[k] = zvlolo[k];
+}
+
+__global__ void dbl4_padded_convolute
+ ( double *xhihi, double *xlohi, double *xhilo, double *xlolo,
+   double *yhihi, double *ylohi, double *yhilo, double *ylolo,
+   double *zhihi, double *zlohi, double *zhilo, double *zlolo, int dim )
+{
+   int k = threadIdx.x;                 // thread k computes z[k]
+
+   __shared__ double xvhihi[qd_shmemsize];
+   __shared__ double xvlohi[qd_shmemsize];
+   __shared__ double xvhilo[qd_shmemsize];
+   __shared__ double xvlolo[qd_shmemsize];
+   __shared__ double yvhihi[qd_shmemsize];
+   __shared__ double yvlohi[qd_shmemsize];
+   __shared__ double yvhilo[qd_shmemsize];
+   __shared__ double yvlolo[qd_shmemsize];
+   __shared__ double zvhihi[qd_shmemsize];
+   __shared__ double zvlohi[qd_shmemsize];
+   __shared__ double zvhilo[qd_shmemsize];
+   __shared__ double zvlolo[qd_shmemsize];
+
+   double prdhihi,prdlohi,prdhilo,prdlolo;
+   int idx = dim+k;
+
+   xvhihi[k] = xhihi[k]; xvlohi[k] = xlohi[k]; 
+   xvhilo[k] = xhilo[k]; xvlolo[k] = xlolo[k];
+   yvhihi[k] = 0.0; yvlohi[k] = 0.0; 
+   yvhilo[k] = 0.0; yvlolo[k] = 0.0;
+   yvhihi[idx] = yhihi[k]; yvlohi[idx] = ylohi[k]; 
+   yvhilo[idx] = yhilo[k]; yvlolo[idx] = ylolo[k];
+
+   __syncthreads();
+
+   // zv[k] = xv[0]*yv[k];
+   qdg_mul(xvhihi[0],xvlohi[0],xvhilo[0],xvlolo[0],
+           yvhihi[idx],yvlohi[idx],yvhilo[idx],yvlolo[idx],
+           &zvhihi[k],&zvlohi[k],&zvhilo[k],&zvlolo[k]);
+   __syncthreads();
+
+   for(int i=1; i<dim; i++) // zv[k] = zv[k] + xv[i]*yv[k-i];
+   {
+      int idx = dim + k - i;
+      qdg_mul(xvhihi[i],xvlohi[i],xvhilo[i],xvlolo[i],
+              yvhihi[idx],yvlohi[idx],yvhilo[idx],yvlolo[idx],
+              &prdhihi,&prdlohi,&prdhilo,&prdlolo);
+      __syncthreads();
+      qdg_inc(&zvhihi[k],&zvlohi[k],&zvhilo[k],&zvlolo[k],
+              prdhihi,prdlohi,prdhilo,prdlolo);
+   }
+   __syncthreads();
+   zhihi[k] = zvhihi[k]; zlohi[k] = zvlohi[k];
+   zhilo[k] = zvhilo[k]; zlolo[k] = zvlolo[k];
 }
 
 __global__ void cmplx4_convolute
@@ -254,11 +305,155 @@ __global__ void cmplx4_convolute
    zimhilo[k] = zvimhilo[k]; zimlolo[k] = zvimlolo[k];
 }
 
+__global__ void cmplx4_padded_convolute
+ ( double *xrehihi, double *xrelohi, double *xrehilo, double *xrelolo,
+   double *ximhihi, double *ximlohi, double *ximhilo, double *ximlolo,
+   double *yrehihi, double *yrelohi, double *yrehilo, double *yrelolo,
+   double *yimhihi, double *yimlohi, double *yimhilo, double *yimlolo,
+   double *zrehihi, double *zrelohi, double *zrehilo, double *zrelolo,
+   double *zimhihi, double *zimlohi, double *zimhilo, double *zimlolo,
+   int dim )
+{
+   int k = threadIdx.x;       // thread k computes zre[k] and zim[k]
+
+   __shared__ double xvrehihi[qd_shmemsize];
+   __shared__ double xvrelohi[qd_shmemsize];
+   __shared__ double xvrehilo[qd_shmemsize];
+   __shared__ double xvrelolo[qd_shmemsize];
+   __shared__ double xvimhihi[qd_shmemsize];
+   __shared__ double xvimlohi[qd_shmemsize];
+   __shared__ double xvimhilo[qd_shmemsize];
+   __shared__ double xvimlolo[qd_shmemsize];
+   __shared__ double yvrehihi[qd_shmemsize];
+   __shared__ double yvrelohi[qd_shmemsize];
+   __shared__ double yvrehilo[qd_shmemsize];
+   __shared__ double yvrelolo[qd_shmemsize];
+   __shared__ double yvimhihi[qd_shmemsize];
+   __shared__ double yvimlohi[qd_shmemsize];
+   __shared__ double yvimhilo[qd_shmemsize];
+   __shared__ double yvimlolo[qd_shmemsize];
+   __shared__ double zvrehihi[qd_shmemsize];
+   __shared__ double zvrelohi[qd_shmemsize];
+   __shared__ double zvrehilo[qd_shmemsize];
+   __shared__ double zvrelolo[qd_shmemsize];
+   __shared__ double zvimhihi[qd_shmemsize];
+   __shared__ double zvimlohi[qd_shmemsize];
+   __shared__ double zvimhilo[qd_shmemsize];
+   __shared__ double zvimlolo[qd_shmemsize];
+
+   double xrhihi,xihihi,yrhihi,yihihi,zrhihi,zihihi,acchihi;
+   double xrlohi,xilohi,yrlohi,yilohi,zrlohi,zilohi,acclohi;
+   double xrhilo,xihilo,yrhilo,yihilo,zrhilo,zihilo,acchilo;
+   double xrlolo,xilolo,yrlolo,yilolo,zrlolo,zilolo,acclolo;
+   int idx = dim+k;
+
+   xvrehihi[k] = xrehihi[k]; xvimhihi[k] = ximhihi[k];
+   xvrelohi[k] = xrelohi[k]; xvimlohi[k] = ximlohi[k];
+   xvrehilo[k] = xrehilo[k]; xvimhilo[k] = ximhilo[k];
+   xvrelolo[k] = xrelolo[k]; xvimlolo[k] = ximlolo[k];
+   yvrehihi[k] = 0.0; yvimhihi[k] = 0.0;
+   yvrelohi[k] = 0.0; yvimlohi[k] = 0.0;
+   yvrehilo[k] = 0.0; yvimhilo[k] = 0.0;
+   yvrelolo[k] = 0.0; yvimlolo[k] = 0.0;
+   yvrehihi[idx] = yrehihi[k]; yvimhihi[idx] = yimhihi[k];
+   yvrelohi[idx] = yrelohi[k]; yvimlohi[idx] = yimlohi[k];
+   yvrehilo[idx] = yrehilo[k]; yvimhilo[idx] = yimhilo[k];
+   yvrelolo[idx] = yrelolo[k]; yvimlolo[idx] = yimlolo[k];
+
+   __syncthreads();
+
+   // z[k] = x[0]*y[k]
+   xrhihi = xvrehihi[0]; xrlohi = xvrelohi[0];
+   xrhilo = xvrehilo[0]; xrlolo = xvrelolo[0];
+   xihihi = xvimhihi[0]; xilohi = xvimlohi[0];
+   xihilo = xvimhilo[0]; xilolo = xvimlolo[0];
+   yrhihi = yvrehihi[idx]; yrlohi = yvrelohi[idx];
+   yrhilo = yvrehilo[idx]; yrlolo = yvrelolo[idx];
+   yihihi = yvimhihi[idx]; yilohi = yvimlohi[idx];
+   yihilo = yvimhilo[idx]; yilolo = yvimlolo[idx];
+
+   qdg_mul(xrhihi,xrlohi,xrhilo,xrlolo,
+           yrhihi,yrlohi,yrhilo,yrlolo,
+           &zrhihi,&zrlohi,&zrhilo,&zrlolo);       // zr = xr*yr
+   __syncthreads();
+   qdg_mul(xihihi,xilohi,xihilo,xilolo,
+           yihihi,yilohi,yihilo,yilolo,
+           &acchihi,&acclohi,&acchilo,&acclolo);   // acc = xi*yi
+   __syncthreads();
+   qdg_minus(&acchihi,&acclohi,&acchilo,&acclolo);
+   qdg_inc(&zrhihi,&zrlohi,&zrhilo,&zrlolo,
+           acchihi,acclohi,acchilo,acclolo);       // zr = xr*yr - xi*yi
+   __syncthreads();
+   qdg_mul(xrhihi,xrlohi,xrhilo,xrlolo,
+           yihihi,yilohi,yihilo,yilolo,
+           &zihihi,&zilohi,&zihilo,&zilolo);       // zi = xr*yi
+   __syncthreads();
+   qdg_mul(xihihi,xilohi,xihilo,xilolo,
+           yrhihi,yrlohi,yrhilo,yrlolo,
+           &acchihi,&acclohi,&acchilo,&acclolo);   // acc = xi*yr
+   __syncthreads();
+   qdg_inc(&zihihi,&zilohi,&zihilo,&zilolo,
+           acchihi,acclohi,acchilo,acclolo);       // zr = xr*yr + xi*yi
+   __syncthreads();
+
+   zvrehihi[k] = zrhihi; zvrelohi[k] = zrlohi;
+   zvrehilo[k] = zrhilo; zvrelolo[k] = zrlolo;
+   zvimhihi[k] = zihihi; zvimlohi[k] = zilohi;
+   zvimhilo[k] = zihilo; zvimlolo[k] = zilolo;
+
+   for(int i=1; i<dim; i++) // z[k] = z[k] + x[i]*y[k-i]
+   {
+      idx = dim + k - i;
+      xrhihi = xvrehihi[i]; xrlohi = xvrelohi[i];
+      xrhilo = xvrehilo[i]; xrlolo = xvrelolo[i];
+      xihihi = xvimhihi[i]; xilohi = xvimlohi[i];
+      xihilo = xvimhilo[i]; xilolo = xvimlolo[i];
+      yrhihi = yvrehihi[idx]; yrlohi = yvrelohi[idx];
+      yrhilo = yvrehilo[idx]; yrlolo = yvrelolo[idx];
+      yihihi = yvimhihi[idx]; yilohi = yvimlohi[idx];
+      yihilo = yvimhilo[idx]; yilolo = yvimlolo[idx];
+
+      qdg_mul(xrhihi,xrlohi,xrhilo,xrlolo,
+              yrhihi,yrlohi,yrhilo,yrlolo,
+              &zrhihi,&zrlohi,&zrhilo,&zrlolo);       // zr = xr*yr
+      __syncthreads();
+      qdg_mul(xihihi,xilohi,xihilo,xilolo,
+              yihihi,yilohi,yihilo,yilolo,
+              &acchihi,&acclohi,&acchilo,&acclolo);   // acc = xi*yi
+      __syncthreads();
+      qdg_minus(&acchihi,&acclohi,&acchilo,&acclolo);
+      qdg_inc(&zrhihi,&zrlohi,&zrhilo,&zrlolo,
+              acchihi,acclohi,acchilo,acclolo);       // zr = xr*yr - xi*yi
+      __syncthreads();
+      qdg_mul(xrhihi,xrlohi,xrhilo,xrlolo,
+              yihihi,yilohi,yihilo,yilolo,
+              &zihihi,&zilohi,&zihilo,&zilolo);       // zi = xr*yi
+      __syncthreads();
+      qdg_mul(xihihi,xilohi,xihilo,xilolo,
+              yrhihi,yrlohi,yrhilo,yrlolo,
+              &acchihi,&acclohi,&acchilo,&acclolo);   // acc = xi*yr
+      __syncthreads();
+      qdg_inc(&zihihi,&zilohi,&zihilo,&zilolo,
+              acchihi,acclohi,acchilo,acclolo);       // zr = xr*yr + xi*yi
+      __syncthreads();
+      qdg_inc(&zvrehihi[k],&zvrelohi[k],&zvrehilo[k],&zvrelolo[k],
+              zrhihi,zrlohi,zrhilo,zrlolo);           // zvre[k] += zr;
+      __syncthreads();
+      qdg_inc(&zvimhihi[k],&zvimlohi[k],&zvimhilo[k],&zvimlolo[k],
+              zihihi,zilohi,zihilo,zilolo);           // zvim[k] += zi;
+      __syncthreads();
+   }
+   zrehihi[k] = zvrehihi[k]; zrelohi[k] = zvrelohi[k];
+   zrehilo[k] = zvrehilo[k]; zrelolo[k] = zvrelolo[k];
+   zimhihi[k] = zvimhihi[k]; zimlohi[k] = zvimlohi[k];
+   zimhilo[k] = zvimhilo[k]; zimlolo[k] = zvimlolo[k];
+}
+
 void GPU_dbl4_product
  ( double *xhihi_h, double *xlohi_h, double *xhilo_h, double *xlolo_h,
    double *yhihi_h, double *ylohi_h, double *yhilo_h, double *ylolo_h,
    double *zhihi_h, double *zlohi_h, double *zhilo_h, double *zlolo_h,
-   int deg, int freq, int BS )
+   int deg, int freq, int BS, int padded )
 {
    const int dim = deg+1;            // length of all vectors
    double* xhihi_d;                  // xhihi_d is xhihi_h on the device
@@ -298,11 +493,22 @@ void GPU_dbl4_product
 
    if(dim == BS)
    {
-      for(int i=0; i<freq; i++)
-         dbl4_convolute<<<1,BS>>>
-            (xhihi_d,xlohi_d,xhilo_d,xlolo_d,
-             yhihi_d,ylohi_d,yhilo_d,ylolo_d,
-             zhihi_d,zlohi_d,zhilo_d,zlolo_d,dim);
+      if(padded == 1)
+      {
+         for(int i=0; i<freq; i++)
+            dbl4_padded_convolute<<<1,BS>>>
+               (xhihi_d,xlohi_d,xhilo_d,xlolo_d,
+                yhihi_d,ylohi_d,yhilo_d,ylolo_d,
+                zhihi_d,zlohi_d,zhilo_d,zlolo_d,dim);
+      }
+      else
+      {
+         for(int i=0; i<freq; i++)
+            dbl4_convolute<<<1,BS>>>
+               (xhihi_d,xlohi_d,xhilo_d,xlolo_d,
+                yhihi_d,ylohi_d,yhilo_d,ylolo_d,
+                zhihi_d,zlohi_d,zhilo_d,zlolo_d,dim);
+      }
    }
 
    cudaMemcpy(zhihi_h,zhihi_d,size,cudaMemcpyDeviceToHost);
@@ -318,7 +524,7 @@ void GPU_cmplx4_product
    double *yimhihi_h, double *yimlohi_h, double *yimhilo_h, double *yimlolo_h,
    double *zrehihi_h, double *zrelohi_h, double *zrehilo_h, double *zrelolo_h,
    double *zimhihi_h, double *zimlohi_h, double *zimhilo_h, double *zimlolo_h,
-   int deg, int freq, int BS, int looped )
+   int deg, int freq, int BS, int mode )
 {
    const int dim = deg+1;            // length of all vectors
    double* xrehihi_d;                // xrehihi_d is xrehihi_h on the device
@@ -398,43 +604,57 @@ void GPU_cmplx4_product
 
    if(dim == BS)
    {
-      if(looped > 0)
+      if(mode == 2)
+      { 
+         for(int i=0; i<freq; i++)
+            cmplx4_padded_convolute<<<1,BS>>>
+               (xrehihi_d,xrelohi_d,xrehilo_d,xrelolo_d,
+                ximhihi_d,ximlohi_d,ximhilo_d,ximlolo_d,
+                yrehihi_d,yrelohi_d,yrehilo_d,yrelolo_d,
+                yimhihi_d,yimlohi_d,yimhilo_d,yimlolo_d,
+                zrehihi_d,zrelohi_d,zrehilo_d,zrelolo_d,
+                zimhihi_d,zimlohi_d,zimhilo_d,zimlolo_d,dim);
+      }
+      else if(mode == 1)
       {
-         dbl4_convolute<<<1,BS>>>
-            (xrehihi_d,xrelohi_d,xrehilo_d,xrelolo_d,
-             yrehihi_d,yrelohi_d,yrehilo_d,yrelolo_d,
-             zrehihi_d,zrelohi_d,zrehilo_d,zrelolo_d,dim);
-         dbl4_convolute<<<1,BS>>>
-            (ximhihi_d,ximlohi_d,ximhilo_d,ximlolo_d,
-             yimhihi_d,yimlohi_d,yimhilo_d,yimlolo_d,
-             acchihi_d,acclohi_d,acchilo_d,acclolo_d,dim);
-         dbl4_decrement<<<1,BS>>>
-            (zrehihi_d,zrelohi_d,zrehilo_d,zrelolo_d,
-             acchihi_d,acclohi_d,acchilo_d,acclolo_d,
-             zrehihi_d,zrelohi_d,zrehilo_d,zrelolo_d,dim);
-         dbl4_convolute<<<1,BS>>>
-            (xrehihi_d,xrelohi_d,xrehilo_d,xrelolo_d,
-             yimhihi_d,yimlohi_d,yimhilo_d,yimlolo_d,
-             zimhihi_d,zimlohi_d,zimhilo_d,zimlolo_d,dim);
-         dbl4_convolute<<<1,BS>>>
-            (ximhihi_d,ximlohi_d,ximhilo_d,ximlolo_d,
-             yrehihi_d,yrelohi_d,yrehilo_d,yrelolo_d,
-             acchihi_d,acclohi_d,acchilo_d,acclolo_d,dim);
-         dbl4_increment<<<1,BS>>>
-            (zimhihi_d,zimlohi_d,zimhilo_d,zimlolo_d,
-             acchihi_d,acclohi_d,acchilo_d,acclolo_d,
-             zimhihi_d,zimlohi_d,zimhilo_d,zimlolo_d,dim);
+         for(int i=0; i<freq; i++)
+         {
+            dbl4_padded_convolute<<<1,BS>>>
+               (xrehihi_d,xrelohi_d,xrehilo_d,xrelolo_d,
+                yrehihi_d,yrelohi_d,yrehilo_d,yrelolo_d,
+                zrehihi_d,zrelohi_d,zrehilo_d,zrelolo_d,dim);
+            dbl4_padded_convolute<<<1,BS>>>
+               (ximhihi_d,ximlohi_d,ximhilo_d,ximlolo_d,
+                yimhihi_d,yimlohi_d,yimhilo_d,yimlolo_d,
+                acchihi_d,acclohi_d,acchilo_d,acclolo_d,dim);
+            dbl4_decrement<<<1,BS>>>
+               (zrehihi_d,zrelohi_d,zrehilo_d,zrelolo_d,
+                acchihi_d,acclohi_d,acchilo_d,acclolo_d,
+                zrehihi_d,zrelohi_d,zrehilo_d,zrelolo_d,dim);
+            dbl4_padded_convolute<<<1,BS>>>
+               (xrehihi_d,xrelohi_d,xrehilo_d,xrelolo_d,
+                yimhihi_d,yimlohi_d,yimhilo_d,yimlolo_d,
+                zimhihi_d,zimlohi_d,zimhilo_d,zimlolo_d,dim);
+            dbl4_padded_convolute<<<1,BS>>>
+               (ximhihi_d,ximlohi_d,ximhilo_d,ximlolo_d,
+                yrehihi_d,yrelohi_d,yrehilo_d,yrelolo_d,
+                acchihi_d,acclohi_d,acchilo_d,acclolo_d,dim);
+            dbl4_increment<<<1,BS>>>
+               (zimhihi_d,zimlohi_d,zimhilo_d,zimlolo_d,
+                acchihi_d,acclohi_d,acchilo_d,acclolo_d,
+                zimhihi_d,zimlohi_d,zimhilo_d,zimlolo_d,dim);
+         }
       }
       else
       { 
          for(int i=0; i<freq; i++)
-           cmplx4_convolute<<<1,BS>>>
-              (xrehihi_d,xrelohi_d,xrehilo_d,xrelolo_d,
-               ximhihi_d,ximlohi_d,ximhilo_d,ximlolo_d,
-               yrehihi_d,yrelohi_d,yrehilo_d,yrelolo_d,
-               yimhihi_d,yimlohi_d,yimhilo_d,yimlolo_d,
-               zrehihi_d,zrelohi_d,zrehilo_d,zrelolo_d,
-               zimhihi_d,zimlohi_d,zimhilo_d,zimlolo_d,dim);
+            cmplx4_convolute<<<1,BS>>>
+               (xrehihi_d,xrelohi_d,xrehilo_d,xrelolo_d,
+                ximhihi_d,ximlohi_d,ximhilo_d,ximlolo_d,
+                yrehihi_d,yrelohi_d,yrehilo_d,yrelolo_d,
+                yimhihi_d,yimlohi_d,yimhilo_d,yimlolo_d,
+                zrehihi_d,zrelohi_d,zrehilo_d,zrelolo_d,
+                zimhihi_d,zimlohi_d,zimhilo_d,zimlolo_d,dim);
       }
    }
 

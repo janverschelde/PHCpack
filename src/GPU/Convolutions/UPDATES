@@ -3,6 +3,9 @@ Thu 26 Nov 2020 : fixed the problems caused by the thread divergence
   so test_dbl2_monomials works correctly on the C2050.
   Added synchronization statements in the padded convolute for complex vectors
   in dbl8_convolutions_kernels.cu.
+  Improved dbl3_convolution_kernels.cu.  Added padded kernels to {dbl4,
+  dbl5}_convolutions_kernels, extended test_{dbl4,dbl5}_convolutions.cpp.
+  Applied the padded kernels in {dbl4,dbl5}_monomials_kernels.cu.
 
 Wed 25 Nov 2020 : improved all tests in test_dbl*_convolutions.cpp.
   Added padded convolute operations to {dbl,dbl2,dbl3}_convolutions_kernels,

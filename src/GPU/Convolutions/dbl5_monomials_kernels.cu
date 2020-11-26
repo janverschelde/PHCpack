@@ -40,7 +40,7 @@ void GPU_dbl5_speel
    int ix1,ix2,ix3;
 
    ix1 = idx[0]*deg1;                                     // f[0] = cff*x[0]
-   dbl5_convolute<<<1,BS>>>
+   dbl5_padded_convolute<<<1,BS>>>
       (cfftb,cffix,cffmi,cffrg,cffpk,
        &inputtb[ix1],&inputix[ix1],&inputmi[ix1],&inputrg[ix1],&inputpk[ix1],
        forwardtb,forwardix,forwardmi,forwardrg,forwardpk,deg1);
@@ -48,7 +48,7 @@ void GPU_dbl5_speel
    for(int i=1; i<nvr; i++)                            // f[i] = f[i-1]*x[i]
    {
       ix2 = idx[i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
-      dbl5_convolute<<<1,BS>>>
+      dbl5_padded_convolute<<<1,BS>>>
          (&forwardtb[ix1],&forwardix[ix1],&forwardmi[ix1],
           &forwardrg[ix1],&forwardpk[ix1],
           &inputtb[ix2],&inputix[ix2],&inputmi[ix2],
@@ -59,7 +59,7 @@ void GPU_dbl5_speel
    if(nvr > 2)
    {
       ix1 = idx[nvr-1]*deg1; ix2 = idx[nvr-2]*deg1;  // b[0] = x[n-1]*x[n-2]
-      dbl5_convolute<<<1,BS>>>
+      dbl5_padded_convolute<<<1,BS>>>
          (&inputtb[ix1],&inputix[ix1],&inputmi[ix1],
           &inputrg[ix1],&inputpk[ix1],
           &inputtb[ix2],&inputix[ix2],&inputmi[ix2],
@@ -69,7 +69,7 @@ void GPU_dbl5_speel
       for(int i=1; i<nvr-2; i++)                   // b[i] = b[i-1]*x[n-2-i]
       {
          ix2 = idx[nvr-2-i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
-         dbl5_convolute<<<1,BS>>>
+         dbl5_padded_convolute<<<1,BS>>>
             (&backwardtb[ix1],&backwardix[ix1],&backwardmi[ix1],
              &backwardrg[ix1],&backwardpk[ix1],
              &inputtb[ix2],&inputix[ix2],&inputmi[ix2],
@@ -78,7 +78,7 @@ void GPU_dbl5_speel
              &backwardrg[ix3],&backwardpk[ix3],deg1);
       }
       ix3 = (nvr-3)*deg1; ix2 = (nvr-2)*deg1;         // b[n-2] = b[n-3]*cff
-      dbl5_convolute<<<1,BS>>>
+      dbl5_padded_convolute<<<1,BS>>>
          (&backwardtb[ix3],&backwardix[ix3],&backwardmi[ix3],
           &backwardrg[ix3],&backwardpk[ix3],
           cfftb,cffix,cffmi,cffrg,cffpk,
@@ -88,7 +88,7 @@ void GPU_dbl5_speel
       if(nvr == 3)                                       // c[0] = f[0]*x[2]
       {
          ix2 = idx[2]*deg1;
-         dbl5_convolute<<<1,BS>>>
+         dbl5_padded_convolute<<<1,BS>>>
             (forwardtb,forwardix,forwardmi,forwardrg,forwardpk,
              &inputtb[ix2],&inputix[ix2],&inputmi[ix2],
              &inputrg[ix2],&inputpk[ix2],
@@ -99,7 +99,7 @@ void GPU_dbl5_speel
          for(int i=0; i<nvr-3; i++)                  // c[i] = f[i]*b[n-4-i]
          {
             ix1 = i*deg1; ix2 = (nvr-4-i)*deg1;
-            dbl5_convolute<<<1,BS>>>
+            dbl5_padded_convolute<<<1,BS>>>
                (&forwardtb[ix1],&forwardix[ix1],&forwardmi[ix1],
                 &forwardrg[ix1],&forwardpk[ix1],
                 &backwardtb[ix2],&backwardix[ix2],&backwardmi[ix2],
@@ -108,7 +108,7 @@ void GPU_dbl5_speel
                 &crossrg[ix1],&crosspk[ix1],deg1);
          }
          ix1 = (nvr-3)*deg1; ix2 = idx[nvr-1]*deg1; // c[n-3] = f[n-3]*x[n-1]
-         dbl5_convolute<<<1,BS>>>
+         dbl5_padded_convolute<<<1,BS>>>
             (&forwardtb[ix1],&forwardix[ix1],&forwardmi[ix1],
              &forwardrg[ix1],&forwardpk[ix1],
              &inputtb[ix2],&inputix[ix2],&inputmi[ix2],
@@ -146,7 +146,7 @@ void GPU_cmplx5_speel
    int ix1,ix2,ix3;
 
    ix1 = idx[0]*deg1;                                     // f[0] = cff*x[0]
-   cmplx5_convolute<<<1,BS>>>
+   cmplx5_padded_convolute<<<1,BS>>>
       (cffretb,cffreix,cffremi,cffrerg,cffrepk,
        cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
        &inputretb[ix1],&inputreix[ix1],&inputremi[ix1],
@@ -159,7 +159,7 @@ void GPU_cmplx5_speel
    for(int i=1; i<nvr; i++)                            // f[i] = f[i-i]*x[i]
    {
       ix2 = idx[i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
-      cmplx5_convolute<<<1,BS>>>
+      cmplx5_padded_convolute<<<1,BS>>>
          (&forwardretb[ix1],&forwardreix[ix1],&forwardremi[ix1],
           &forwardrerg[ix1],&forwardrepk[ix1],
           &forwardimtb[ix1],&forwardimix[ix1],&forwardimmi[ix1],
@@ -176,7 +176,7 @@ void GPU_cmplx5_speel
    if(nvr > 2)
    {
       ix1 = idx[nvr-1]*deg1; ix2 = idx[nvr-2]*deg1;  // b[0] = x[n-1]*x[n-2]
-      cmplx5_convolute<<<1,BS>>>
+      cmplx5_padded_convolute<<<1,BS>>>
          (&inputretb[ix1],&inputreix[ix1],&inputremi[ix1],
           &inputrerg[ix1],&inputrepk[ix1],
           &inputimtb[ix1],&inputimix[ix1],&inputimmi[ix1],
@@ -192,7 +192,7 @@ void GPU_cmplx5_speel
       for(int i=1; i<nvr-2; i++)                   // b[i] = b[i-1]*x[n-2-i]
       {
          ix2 = idx[nvr-2-i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
-         cmplx5_convolute<<<1,BS>>>
+         cmplx5_padded_convolute<<<1,BS>>>
             (&backwardretb[ix1],&backwardreix[ix1],&backwardremi[ix1],
              &backwardrerg[ix1],&backwardrepk[ix1],
              &backwardimtb[ix1],&backwardimix[ix1],&backwardimmi[ix1],
@@ -207,7 +207,7 @@ void GPU_cmplx5_speel
              &backwardimrg[ix3],&backwardimpk[ix3],deg1);
       }
       ix3 = (nvr-3)*deg1; ix2 = (nvr-2)*deg1;         // b[n-2] = b[n-3]*cff
-      cmplx5_convolute<<<1,BS>>>
+      cmplx5_padded_convolute<<<1,BS>>>
          (&backwardretb[ix3],&backwardreix[ix3],&backwardremi[ix3],
           &backwardrerg[ix3],&backwardrepk[ix3],
           &backwardimtb[ix3],&backwardimix[ix3],&backwardimmi[ix3],
@@ -222,7 +222,7 @@ void GPU_cmplx5_speel
       if(nvr == 3)                                       // c[0] = f[0]*x[2]
       {
          ix2 = idx[2]*deg1;
-         cmplx5_convolute<<<1,BS>>>
+         cmplx5_padded_convolute<<<1,BS>>>
             (forwardretb,forwardreix,forwardremi,forwardrerg,forwardrepk,
              forwardimtb,forwardimix,forwardimmi,forwardimrg,forwardimpk,
              &inputretb[ix2],&inputreix[ix2],&inputremi[ix2],
@@ -237,7 +237,7 @@ void GPU_cmplx5_speel
          for(int i=0; i<nvr-3; i++)                  // c[i] = f[i]*b[n-4-i]
          {
             ix1 = i*deg1; ix2 = (nvr-4-i)*deg1;
-            cmplx5_convolute<<<1,BS>>>
+            cmplx5_padded_convolute<<<1,BS>>>
                (&forwardretb[ix1],&forwardreix[ix1],&forwardremi[ix1],
                 &forwardrerg[ix1],&forwardrepk[ix1],
                 &forwardimtb[ix1],&forwardimix[ix1],&forwardimmi[ix1],
@@ -252,7 +252,7 @@ void GPU_cmplx5_speel
                 &crossimrg[ix1],&crossimpk[ix1],deg1);
          }
          ix1 = (nvr-3)*deg1; ix2 = idx[nvr-1]*deg1; // c[n-3] = f[n-3]*x[n-1]
-         cmplx5_convolute<<<1,BS>>>
+         cmplx5_padded_convolute<<<1,BS>>>
             (&forwardretb[ix1],&forwardreix[ix1],&forwardremi[ix1],
              &forwardrerg[ix1],&forwardrepk[ix1],
              &forwardimtb[ix1],&forwardimix[ix1],&forwardimmi[ix1],

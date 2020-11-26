@@ -137,10 +137,9 @@ double test_real ( int deg )
       cout << "  zhilo[" << k << "] : " << zhilo_h[k];
       cout << "  zlolo[" << k << "] : " << zlolo_h[k] << endl;
    }
-
    GPU_dbl4_product(xhihi,xlohi,xhilo,xlolo,
                     yhihi,ylohi,yhilo,ylolo,
-                    zhihi_d,zlohi_d,zhilo_d,zlolo_d,deg,1,deg+1);
+                    zhihi_d,zlohi_d,zhilo_d,zlolo_d,deg,1,deg+1,1);
 
    cout << "GPU computed product :" << endl;
 
@@ -318,7 +317,7 @@ double test_real_exponential ( int deg )
 
    GPU_dbl4_product(xhihi,xlohi,xhilo,xlolo,
                     yhihi,ylohi,yhilo,ylolo,
-                    zhihi_d,zlohi_d,zhilo_d,zlolo_d,deg,1,deg+1);
+                    zhihi_d,zlohi_d,zhilo_d,zlolo_d,deg,1,deg+1,1);
 
    sumhihi = 0.0; sumlohi = 0.0; sumhilo = 0.0; sumlolo = 0.0;
 

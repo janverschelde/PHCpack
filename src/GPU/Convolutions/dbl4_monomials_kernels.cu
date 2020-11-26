@@ -39,7 +39,7 @@ void GPU_dbl4_speel
    int ix1,ix2,ix3;
 
    ix1 = idx[0]*deg1;                                     // f[0] = cff*x[0]
-   dbl4_convolute<<<1,BS>>>
+   dbl4_padded_convolute<<<1,BS>>>
       (cffhihi,cfflohi,cffhilo,cfflolo,
        &inputhihi[ix1],&inputlohi[ix1],&inputhilo[ix1],&inputlolo[ix1],
        forwardhihi,forwardlohi,forwardhilo,forwardlolo,deg1);
@@ -47,7 +47,7 @@ void GPU_dbl4_speel
    for(int i=1; i<nvr; i++)                            // f[i] = f[i-1]*x[i]
    {
       ix2 = idx[i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
-      dbl4_convolute<<<1,BS>>>
+      dbl4_padded_convolute<<<1,BS>>>
          (&forwardhihi[ix1],&forwardlohi[ix1],
           &forwardhilo[ix1],&forwardlolo[ix1],
           &inputhihi[ix2],&inputlohi[ix2],
@@ -58,7 +58,7 @@ void GPU_dbl4_speel
    if(nvr > 2)
    {
       ix1 = idx[nvr-1]*deg1; ix2 = idx[nvr-2]*deg1;  // b[0] = x[n-1]*x[n-2]
-      dbl4_convolute<<<1,BS>>>
+      dbl4_padded_convolute<<<1,BS>>>
          (&inputhihi[ix1],&inputlohi[ix1],&inputhilo[ix1],&inputlolo[ix1],
           &inputhihi[ix2],&inputlohi[ix2],&inputhilo[ix2],&inputlolo[ix2],
           backwardhihi,backwardlohi,backwardhilo,backwardlolo,deg1);
@@ -66,7 +66,7 @@ void GPU_dbl4_speel
       for(int i=1; i<nvr-2; i++)                   // b[i] = b[i-1]*x[n-2-i]
       {
          ix2 = idx[nvr-2-i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
-         dbl4_convolute<<<1,BS>>>
+         dbl4_padded_convolute<<<1,BS>>>
             (&backwardhihi[ix1],&backwardlohi[ix1],
              &backwardhilo[ix1],&backwardlolo[ix1],
              &inputhihi[ix2],&inputlohi[ix2],&inputhilo[ix2],&inputlolo[ix2],
@@ -74,7 +74,7 @@ void GPU_dbl4_speel
              &backwardhilo[ix3],&backwardlolo[ix3],deg1);
       }
       ix3 = (nvr-3)*deg1; ix2 = (nvr-2)*deg1;         // b[n-2] = b[n-3]*cff
-      dbl4_convolute<<<1,BS>>>
+      dbl4_padded_convolute<<<1,BS>>>
          (&backwardhihi[ix3],&backwardlohi[ix3],
           &backwardhilo[ix3],&backwardlolo[ix3],
           cffhihi,cfflohi,cffhilo,cfflolo,
@@ -84,7 +84,7 @@ void GPU_dbl4_speel
       if(nvr == 3)                                       // c[0] = f[0]*x[2]
       {
          ix2 = idx[2]*deg1;
-         dbl4_convolute<<<1,BS>>>
+         dbl4_padded_convolute<<<1,BS>>>
             (forwardhihi,forwardlohi,forwardhilo,forwardlolo,
              &inputhihi[ix2],&inputlohi[ix2],&inputhilo[ix2],&inputlolo[ix2],
              crosshihi,crosslohi,crosshilo,crosslolo,deg1);
@@ -94,7 +94,7 @@ void GPU_dbl4_speel
          for(int i=0; i<nvr-3; i++)                  // c[i] = f[i]*b[n-4-i]
          {
             ix1 = i*deg1; ix2 = (nvr-4-i)*deg1;
-            dbl4_convolute<<<1,BS>>>
+            dbl4_padded_convolute<<<1,BS>>>
                (&forwardhihi[ix1],&forwardlohi[ix1],
                 &forwardhilo[ix1],&forwardlolo[ix1],
                 &backwardhihi[ix2],&backwardlohi[ix2],
@@ -103,7 +103,7 @@ void GPU_dbl4_speel
                 &crosshilo[ix1],&crosslolo[ix1],deg1);
          }
          ix1 = (nvr-3)*deg1; ix2 = idx[nvr-1]*deg1; // c[n-3] = f[n-3]*x[n-1]
-         dbl4_convolute<<<1,BS>>>
+         dbl4_padded_convolute<<<1,BS>>>
             (&forwardhihi[ix1],&forwardlohi[ix1],
              &forwardhilo[ix1],&forwardlolo[ix1],
              &inputhihi[ix2],&inputlohi[ix2],&inputhilo[ix2],&inputlolo[ix2],
@@ -138,7 +138,7 @@ void GPU_cmplx4_speel
    int ix1,ix2,ix3;
 
    ix1 = idx[0]*deg1;                                     // f[0] = cff*x[0]
-   cmplx4_convolute<<<1,BS>>>
+   cmplx4_padded_convolute<<<1,BS>>>
       (cffrehihi,cffrelohi,cffrehilo,cffrelolo,
        cffimhihi,cffimlohi,cffimhilo,cffimlolo,
        &inputrehihi[ix1],&inputrelohi[ix1],&inputrehilo[ix1],&inputrelolo[ix1],
@@ -149,7 +149,7 @@ void GPU_cmplx4_speel
    for(int i=1; i<nvr; i++)                            // f[i] = f[i-i]*x[i]
    {
       ix2 = idx[i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
-      cmplx4_convolute<<<1,BS>>>
+      cmplx4_padded_convolute<<<1,BS>>>
          (&forwardrehihi[ix1],&forwardrelohi[ix1],
           &forwardrehilo[ix1],&forwardrelolo[ix1],
           &forwardimhihi[ix1],&forwardimlohi[ix1],
@@ -166,7 +166,7 @@ void GPU_cmplx4_speel
    if(nvr > 2)
    {
       ix1 = idx[nvr-1]*deg1; ix2 = idx[nvr-2]*deg1;  // b[0] = x[n-1]*x[n-2]
-      cmplx4_convolute<<<1,BS>>>
+      cmplx4_padded_convolute<<<1,BS>>>
          (&inputrehihi[ix1],&inputrelohi[ix1],
           &inputrehilo[ix1],&inputrelolo[ix1],
           &inputimhihi[ix1],&inputimlohi[ix1],
@@ -181,7 +181,7 @@ void GPU_cmplx4_speel
       for(int i=1; i<nvr-2; i++)                   // b[i] = b[i-1]*x[n-2-i]
       {
          ix2 = idx[nvr-2-i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
-         cmplx4_convolute<<<1,BS>>>
+         cmplx4_padded_convolute<<<1,BS>>>
             (&backwardrehihi[ix1],&backwardrelohi[ix1],
              &backwardrehilo[ix1],&backwardrelolo[ix1],
              &backwardimhihi[ix1],&backwardimlohi[ix1],
@@ -196,7 +196,7 @@ void GPU_cmplx4_speel
              &backwardimhilo[ix3],&backwardimlolo[ix3],deg1);
       }
       ix3 = (nvr-3)*deg1; ix2 = (nvr-2)*deg1;         // b[n-2] = b[n-3]*cff
-      cmplx4_convolute<<<1,BS>>>
+      cmplx4_padded_convolute<<<1,BS>>>
          (&backwardrehihi[ix3],&backwardrelohi[ix3],
           &backwardrehilo[ix3],&backwardrelolo[ix3],
           &backwardimhihi[ix3],&backwardimlohi[ix3],
@@ -211,7 +211,7 @@ void GPU_cmplx4_speel
       if(nvr == 3)                                       // c[0] = f[0]*x[2]
       {
          ix2 = idx[2]*deg1;
-         cmplx4_convolute<<<1,BS>>>
+         cmplx4_padded_convolute<<<1,BS>>>
             (forwardrehihi,forwardrelohi,forwardrehilo,forwardrelolo,
              forwardimhihi,forwardimlohi,forwardimhilo,forwardimlolo,
              &inputrehihi[ix2],&inputrelohi[ix2],
@@ -226,7 +226,7 @@ void GPU_cmplx4_speel
          for(int i=0; i<nvr-3; i++)                  // c[i] = f[i]*b[n-4-i]
          {
             ix1 = i*deg1; ix2 = (nvr-4-i)*deg1;
-            cmplx4_convolute<<<1,BS>>>
+            cmplx4_padded_convolute<<<1,BS>>>
                (&forwardrehihi[ix1],&forwardrelohi[ix1],
                 &forwardrehilo[ix1],&forwardrelolo[ix1],
                 &forwardimhihi[ix1],&forwardimlohi[ix1],
@@ -241,7 +241,7 @@ void GPU_cmplx4_speel
                 &crossimhilo[ix1],&crossimlolo[ix1],deg1);
          }
          ix1 = (nvr-3)*deg1; ix2 = idx[nvr-1]*deg1; // c[n-3] = f[n-3]*x[n-1]
-         cmplx4_convolute<<<1,BS>>>
+         cmplx4_padded_convolute<<<1,BS>>>
             (&forwardrehihi[ix1],&forwardrelohi[ix1],
              &forwardrehilo[ix1],&forwardrelolo[ix1],
              &forwardimhihi[ix1],&forwardimlohi[ix1],

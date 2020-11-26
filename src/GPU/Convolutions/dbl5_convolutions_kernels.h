@@ -63,6 +63,17 @@ __global__ void dbl5_convolute
  *   zrg      second lowest parts of the product of x with y;
  *   zpk      lowest parts of the product of x with y. */
 
+__global__ void dbl5_padded_convolute
+ ( double *xtb, double *xix, double *xmi, double *xrg, double *xpk,
+   double *ytb, double *yix, double *ymi, double *yrg, double *ypk,
+   double *ztb, double *zix, double *zmi, double *zrg, double *zpk, int dim );
+/*
+ * DESCRIPTION :
+ *   Convolutes real vectors x and y to make z.
+ *   All arrays have dimension dim.
+ *   Zeros are inserted in the shared memory for the vector y,
+ *   so all threads perform the same number of operations. */
+
 __global__ void cmplx5_convolute
  ( double *xretb, double *xreix, double *xremi, double *xrerg, double *xrepk,
    double *ximtb, double *ximix, double *ximmi, double *ximrg, double *ximpk,
@@ -123,11 +134,29 @@ __global__ void cmplx5_convolute
  *   zimrg    second lowest parts of the imaginary parts of the product z;
  *   zimpk    lowest parts of the imaginary parts of the product z. */
 
+__global__ void cmplx5_padded_convolute
+ ( double *xretb, double *xreix, double *xremi, double *xrerg, double *xrepk,
+   double *ximtb, double *ximix, double *ximmi, double *ximrg, double *ximpk,
+   double *yretb, double *yreix, double *yremi, double *yrerg, double *yrepk,
+   double *yimtb, double *yimix, double *yimmi, double *yimrg, double *yimpk,
+   double *zretb, double *zreix, double *zremi, double *zrerg, double *zrepk,
+   double *zimtb, double *zimix, double *zimmi, double *zimrg, double *zimpk,
+   int dim );
+/*
+ * DESCRIPTION :
+ *   Convolutes complex vectors x and y to make z.
+ *   The complex vectors are given as double arrays with real
+ *   and imaginary parts, of highest, second highest, middle,
+ *   second lowest and lowest parts.  All arrays have dimension dim.
+ *   Zeros are inserted in the shared memory for the second vector,
+ *   so all threads perform the same number of operations
+ *   and thread divergence is avoided. */
+
 void GPU_dbl5_product
  ( double *xtb_h, double *xix_h, double *xmi_h, double *xrg_h, double *xpk_h,
    double *ytb_h, double *yix_h, double *ymi_h, double *yrg_h, double *ypk_h,
    double *ztb_h, double *zix_h, double *zmi_h, double *zrg_h, double *zpk_h,
-   int deg, int freq, int BS );
+   int deg, int freq, int BS, int padded );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
@@ -153,7 +182,8 @@ void GPU_dbl5_product
  *   zpk_h    space allocated for deg+1 doubles for the lowest parts of z;
  *   deg      degree of the truncated power series;
  *   freq     frequency for timing purposes;
- *   BS       block size, the number of threads in a block.
+ *   BS       block size, the number of threads in a block;
+ *   padded   if 1, then the zeros are inserted for the vector y.
  *
  * ON RETURN :
  *   ztb_h    highest parts of the coefficients of the product z;
@@ -171,7 +201,7 @@ void GPU_cmplx5_product
    double *zretb_h, double *zreix_h, double *zremi_h, double *zrerg_h,
    double *zrepk_h, double *zimtb_h, double *zimix_h, double *zimmi_h,
    double *zimrg_h, double *zimpk_h, int deg, int freq, int BS,
-   int looped );
+   int mode );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
@@ -214,7 +244,8 @@ void GPU_cmplx5_product
  *   deg        degree of the truncated power series;
  *   freq       frequency for timing purposes;
  *   BS         block size, the number of threads in a block;
- *   looped     if > 0, then multiple double kernels are launched.
+ *   looped     if 1, then multiple double kernels are launched;
+ *              if 2, then one padded complex convolute is applied.
  *
  * ON RETURN :
  *   zretb_h    highest parts of the real parts of z;
