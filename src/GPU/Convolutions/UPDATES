@@ -1,7 +1,9 @@
-Tue 24 Nov 2020 : improved all tests in test_dbl*_convolutions.cpp.
+Wed 25 Nov 2020 : improved all tests in test_dbl*_convolutions.cpp.
   Added padded convolute operations to {dbl,dbl2,dbl3}_convolutions_kernels,
-  tested in test_{dbl,dbl2,dbl3}_convolutions.cpp, applied the padded kerns
-  in {dbl,dbl2,dbl3}_monomials_kernels.cu.
+  tested in test_{dbl,dbl2,dbl3}_convolutions.cpp, applied the padded kernels
+  in {dbl,dbl2,dbl3}_monomials_kernels.cu.  Added padded convolute kernels
+  to dbl8_convolution_kernels, tested in test_dbl8_convolutions.cpp, and
+  applied in dbl8_monomials_kernels.cu.
 
 Mon 23 Nov 2020 : to dbl_convolutions_kernels and dbl2_convolutions_kernels,
   added double looped convolute kernels to compute the imaginary parts in

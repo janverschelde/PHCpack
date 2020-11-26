@@ -88,6 +88,22 @@ __global__ void dbl8_convolute
  *   zhilolo    second lowest parts of the product of x with y;
  *   zlololo    lowest parts of the product of x with y. */
 
+__global__ void dbl8_padded_convolute
+ ( double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
+   double *xhihilo, double *xlohilo, double *xhilolo, double *xlololo,
+   double *yhihihi, double *ylohihi, double *yhilohi, double *ylolohi,
+   double *yhihilo, double *ylohilo, double *yhilolo, double *ylololo,
+   double *zhihihi, double *zlohihi, double *zhilohi, double *zlolohi,
+   double *zhihilo, double *zlohilo, double *zhilolo, double *zlololo,
+   int dim );
+/*
+ * DESCRIPTION :
+ *   Convolutes real vectors x and y to make z.
+ *   All arrays have dimension dim.
+ *   Zeros are inserted in the shared memory for the second vector,
+ *   so all threads perform the same number of operations
+ *   and thread divergence is avoided. */
+
 __global__ void cmplx8_convolute
  ( double *xrehihihi, double *xrelohihi, double *xrehilohi, double *xrelolohi,
    double *xrehihilo, double *xrelohilo, double *xrehilolo, double *xrelololo,
@@ -195,6 +211,30 @@ __global__ void cmplx8_convolute
  *   zimhilolo    second lowest parts of the imaginary parts of z;
  *   zimlololo    lowest parts of the imaginary parts of z. */
 
+__global__ void cmplx8_padded_convolute
+ ( double *xrehihihi, double *xrelohihi, double *xrehilohi, double *xrelolohi,
+   double *xrehihilo, double *xrelohilo, double *xrehilolo, double *xrelololo,
+   double *ximhihihi, double *ximlohihi, double *ximhilohi, double *ximlolohi,
+   double *ximhihilo, double *ximlohilo, double *ximhilolo, double *ximlololo,
+   double *yrehihihi, double *yrelohihi, double *yrehilohi, double *yrelolohi,
+   double *yrehihilo, double *yrelohilo, double *yrehilolo, double *yrelololo,
+   double *yimhihihi, double *yimlohihi, double *yimhilohi, double *yimlolohi,
+   double *yimhihilo, double *yimlohilo, double *yimhilolo, double *yimlololo,
+   double *zrehihihi, double *zrelohihi, double *zrehilohi, double *zrelolohi,
+   double *zrehihilo, double *zrelohilo, double *zrehilolo, double *zrelololo,
+   double *zimhihihi, double *zimlohihi, double *zimhilohi, double *zimlolohi,
+   double *zimhihilo, double *zimlohilo, double *zimhilolo, double *zimlololo,
+   int dim );
+/*
+ * DESCRIPTION :
+ *   Convolutes complex vectors x and y to make z.
+ *   The complex vectors are given as double arrays with real
+ *   and imaginary parts, as eight double arrays for all eight
+ *   parts of the octo double numbers.  All arrays have dimension dim.
+ *   Zeros are inserted in the shared memory for the second vector,
+ *   so all threads perform the same number of operations
+ *   and thread divergence is avoided. */
+
 void GPU_dbl8_product
  ( double *xhihihi_h, double *xlohihi_h, double *xhilohi_h, double *xlolohi_h,
    double *xhihilo_h, double *xlohilo_h, double *xhilolo_h, double *xlololo_h,
@@ -202,7 +242,7 @@ void GPU_dbl8_product
    double *yhihilo_h, double *ylohilo_h, double *yhilolo_h, double *ylololo_h,
    double *zhihihi_h, double *zlohihi_h, double *zhilohi_h, double *zlolohi_h,
    double *zhihilo_h, double *zlohilo_h, double *zhilolo_h, double *zlololo_h,
-   int deg, int freq, int BS );
+   int deg, int freq, int BS, int padded );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
@@ -235,7 +275,8 @@ void GPU_dbl8_product
  *   zlololo_h    space for deg+1 doubles for the lowest parts of z;
  *   deg          degree of the truncated power series;
  *   freq         frequency for timing purposes;
- *   BS           block size, the number of threads in a block.
+ *   BS           block size, the number of threads in a block;
+ *   padded       if 1, then the padded convolution will run.
  *
  * ON RETURN :
  *   zhihihi_h    highest parts of the coefficients of the product z;
@@ -272,7 +313,7 @@ void GPU_cmplx8_product
    double *zimhilohi_h, double *zimlolohi_h,
    double *zimhihilo_h, double *zimlohilo_h,
    double *zimhilolo_h, double *zimlololo_h,
-   int deg, int freq, int BS, int looped );
+   int deg, int freq, int BS, int mode );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
@@ -314,7 +355,9 @@ void GPU_cmplx8_product
  *   deg            degree of the truncated power series;
  *   freq           frequency for timing purposes;
  *   BS             block size, the number of threads in a block;
- *   looped         if > 0, then multiple kernels are launched.
+ *   mode           0 : plain kernel,
+ *                  1 : multiple real convolutions run,
+ *                  2 : one padded complex convolution runs.
  *
  * ON RETURN :
  *   zrehihihi_h    highest parts of the real parts of z;

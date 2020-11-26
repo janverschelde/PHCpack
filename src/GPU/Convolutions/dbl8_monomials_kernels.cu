@@ -51,7 +51,7 @@ void GPU_dbl8_speel
    int ix1,ix2,ix3;
 
    ix1 = idx[0]*deg1;                                     // f[0] = cff*x[0]
-   dbl8_convolute<<<1,BS>>>
+   dbl8_padded_convolute<<<1,BS>>>
       (cffhihihi,cfflohihi,cffhilohi,cfflolohi,
        cffhihilo,cfflohilo,cffhilolo,cfflololo,
        &inputhihihi[ix1],&inputlohihi[ix1],
@@ -64,7 +64,7 @@ void GPU_dbl8_speel
    for(int i=1; i<nvr; i++)                            // f[i] = f[i-1]*x[i]
    {
       ix2 = idx[i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
-      dbl8_convolute<<<1,BS>>>
+      dbl8_padded_convolute<<<1,BS>>>
          (&forwardhihihi[ix1],&forwardlohihi[ix1],
           &forwardhilohi[ix1],&forwardlolohi[ix1],
           &forwardhihilo[ix1],&forwardlohilo[ix1],
@@ -81,7 +81,7 @@ void GPU_dbl8_speel
    if(nvr > 2)
    {
       ix1 = idx[nvr-1]*deg1; ix2 = idx[nvr-2]*deg1;  // b[0] = x[n-1]*x[n-2]
-      dbl8_convolute<<<1,BS>>>
+      dbl8_padded_convolute<<<1,BS>>>
          (&inputhihihi[ix1],&inputlohihi[ix1],
           &inputhilohi[ix1],&inputlolohi[ix1],
           &inputhihilo[ix1],&inputlohilo[ix1],
@@ -96,7 +96,7 @@ void GPU_dbl8_speel
       for(int i=1; i<nvr-2; i++)                   // b[i] = b[i-1]*x[n-2-i]
       {
          ix2 = idx[nvr-2-i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
-         dbl8_convolute<<<1,BS>>>
+         dbl8_padded_convolute<<<1,BS>>>
             (&backwardhihihi[ix1],&backwardlohihi[ix1],
              &backwardhilohi[ix1],&backwardlolohi[ix1],
              &backwardhihilo[ix1],&backwardlohilo[ix1],
@@ -111,7 +111,7 @@ void GPU_dbl8_speel
              &backwardhilolo[ix3],&backwardlololo[ix3],deg1);
       }
       ix3 = (nvr-3)*deg1; ix2 = (nvr-2)*deg1;         // b[n-2] = b[n-3]*cff
-      dbl8_convolute<<<1,BS>>>
+      dbl8_padded_convolute<<<1,BS>>>
          (&backwardhihihi[ix3],&backwardlohihi[ix3],
           &backwardhilohi[ix3],&backwardlolohi[ix3],
           &backwardhihilo[ix3],&backwardlohilo[ix3],
@@ -126,7 +126,7 @@ void GPU_dbl8_speel
       if(nvr == 3)                                       // c[0] = f[0]*x[2]
       {
          ix2 = idx[2]*deg1;
-         dbl8_convolute<<<1,BS>>>
+         dbl8_padded_convolute<<<1,BS>>>
             (forwardhihihi,forwardlohihi,forwardhilohi,forwardlolohi,
              forwardhihilo,forwardlohilo,forwardhilolo,forwardlololo,
              &inputhihihi[ix2],&inputlohihi[ix2],
@@ -141,7 +141,7 @@ void GPU_dbl8_speel
          for(int i=0; i<nvr-3; i++)                  // c[i] = f[i]*b[n-4-i]
          {
             ix1 = i*deg1; ix2 = (nvr-4-i)*deg1;
-            dbl8_convolute<<<1,BS>>>
+            dbl8_padded_convolute<<<1,BS>>>
                (&forwardhihihi[ix1],&forwardlohihi[ix1],
                 &forwardhilohi[ix1],&forwardlolohi[ix1],
                 &forwardhihilo[ix1],&forwardlohilo[ix1],
@@ -156,7 +156,7 @@ void GPU_dbl8_speel
                 &crosshilolo[ix1],&crosslololo[ix1],deg1);
          }
          ix1 = (nvr-3)*deg1; ix2 = idx[nvr-1]*deg1; // c[n-3] = f[n-3]*x[n-1]
-         dbl8_convolute<<<1,BS>>>
+         dbl8_padded_convolute<<<1,BS>>>
             (&forwardhihihi[ix1],&forwardlohihi[ix1],
              &forwardhilohi[ix1],&forwardlolohi[ix1],
              &forwardhihilo[ix1],&forwardlohilo[ix1],
@@ -220,7 +220,7 @@ void GPU_cmplx8_speel
    int ix1,ix2,ix3;
 
    ix1 = idx[0]*deg1;                                     // f[0] = cff*x[0]
-   cmplx8_convolute<<<1,BS>>>
+   cmplx8_padded_convolute<<<1,BS>>>
       (cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
        cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
        cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
@@ -242,7 +242,7 @@ void GPU_cmplx8_speel
    for(int i=1; i<nvr; i++)                            // f[i] = f[i-i]*x[i]
    {
       ix2 = idx[i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
-      cmplx8_convolute<<<1,BS>>>
+      cmplx8_padded_convolute<<<1,BS>>>
          (&forwardrehihihi[ix1],&forwardrelohihi[ix1],
           &forwardrehilohi[ix1],&forwardrelolohi[ix1],
           &forwardrehihilo[ix1],&forwardrelohilo[ix1],
@@ -271,7 +271,7 @@ void GPU_cmplx8_speel
    if(nvr > 2)
    {
       ix1 = idx[nvr-1]*deg1; ix2 = idx[nvr-2]*deg1;  // b[0] = x[n-1]*x[n-2]
-      cmplx8_convolute<<<1,BS>>>
+      cmplx8_padded_convolute<<<1,BS>>>
          (&inputrehihihi[ix1],&inputrelohihi[ix1],
           &inputrehilohi[ix1],&inputrelolohi[ix1],
           &inputrehihilo[ix1],&inputrelohilo[ix1],
@@ -297,7 +297,7 @@ void GPU_cmplx8_speel
       for(int i=1; i<nvr-2; i++)                   // b[i] = b[i-1]*x[n-2-i]
       {
          ix2 = idx[nvr-2-i]*deg1; ix3 = i*deg1; ix1 = ix3 - deg1;
-         cmplx8_convolute<<<1,BS>>>
+         cmplx8_padded_convolute<<<1,BS>>>
             (&backwardrehihihi[ix1],&backwardrelohihi[ix1],
              &backwardrehilohi[ix1],&backwardrelolohi[ix1],
              &backwardrehihilo[ix1],&backwardrelohilo[ix1],
@@ -324,7 +324,7 @@ void GPU_cmplx8_speel
              &backwardimhilolo[ix3],&backwardimlololo[ix3],deg1);
       }
       ix3 = (nvr-3)*deg1; ix2 = (nvr-2)*deg1;         // b[n-2] = b[n-3]*cff
-      cmplx8_convolute<<<1,BS>>>
+      cmplx8_padded_convolute<<<1,BS>>>
          (&backwardrehihihi[ix3],&backwardrelohihi[ix3],
           &backwardrehilohi[ix3],&backwardrelolohi[ix3],
           &backwardrehihilo[ix3],&backwardrelohilo[ix3],
@@ -349,7 +349,7 @@ void GPU_cmplx8_speel
       if(nvr == 3)                                       // c[0] = f[0]*x[2]
       {
          ix2 = idx[2]*deg1;
-         cmplx8_convolute<<<1,BS>>>
+         cmplx8_padded_convolute<<<1,BS>>>
             (forwardrehihihi,forwardrelohihi,forwardrehilohi,forwardrelolohi,
              forwardrehihilo,forwardrelohilo,forwardrehilolo,forwardrelololo,
              forwardimhihihi,forwardimlohihi,forwardimhilohi,forwardimlolohi,
@@ -372,7 +372,7 @@ void GPU_cmplx8_speel
          for(int i=0; i<nvr-3; i++)                  // c[i] = f[i]*b[n-4-i]
          {
             ix1 = i*deg1; ix2 = (nvr-4-i)*deg1;
-            cmplx8_convolute<<<1,BS>>>
+            cmplx8_padded_convolute<<<1,BS>>>
                (&forwardrehihihi[ix1],&forwardrelohihi[ix1],
                 &forwardrehilohi[ix1],&forwardrelolohi[ix1],
                 &forwardrehihilo[ix1],&forwardrelohilo[ix1],
@@ -399,7 +399,7 @@ void GPU_cmplx8_speel
                 &crossimhilolo[ix1],&crossimlololo[ix1],deg1);
          }
          ix1 = (nvr-3)*deg1; ix2 = idx[nvr-1]*deg1; // c[n-3] = f[n-3]*x[n-1]
-         cmplx8_convolute<<<1,BS>>>
+         cmplx8_padded_convolute<<<1,BS>>>
             (&forwardrehihihi[ix1],&forwardrelohihi[ix1],
              &forwardrehilohi[ix1],&forwardrelolohi[ix1],
              &forwardrehihilo[ix1],&forwardrelohilo[ix1],
