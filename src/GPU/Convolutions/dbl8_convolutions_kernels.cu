@@ -655,34 +655,41 @@ __global__ void cmplx8_padded_convolute
            yrhihilo,yrlohilo,yrhilolo,yrlololo,
            &zrhihihi,&zrlohihi,&zrhilohi,&zrlolohi,
            &zrhihilo,&zrlohilo,&zrhilolo,&zrlololo);       // zr = xr*yr
+   __syncthreads();
    odg_mul(xihihihi,xilohihi,xihilohi,xilolohi,
            xihihilo,xilohilo,xihilolo,xilololo,
            yihihihi,yilohihi,yihilohi,yilolohi,
            yihihilo,yilohilo,yihilolo,yilololo,
            &acchihihi,&acclohihi,&acchilohi,&acclolohi,
            &acchihilo,&acclohilo,&acchilolo,&acclololo);   // acc = xi*yi
+   __syncthreads();
    odg_minus(&acchihihi,&acclohihi,&acchilohi,&acclolohi,
              &acchihilo,&acclohilo,&acchilolo,&acclololo);
+   __syncthreads();
    odg_inc(&zrhihihi,&zrlohihi,&zrhilohi,&zrlolohi,
            &zrhihilo,&zrlohilo,&zrhilolo,&zrlololo,
            acchihihi,acclohihi,acchilohi,acclolohi,
            acchihilo,acclohilo,acchilolo,acclololo);  // zr = xr*yr - xi*yi
+   __syncthreads();
    odg_mul(xrhihihi,xrlohihi,xrhilohi,xrlolohi,
            xrhihilo,xrlohilo,xrhilolo,xrlololo,
            yihihihi,yilohihi,yihilohi,yilolohi,
            yihihilo,yilohilo,yihilolo,yilololo,
            &zihihihi,&zilohihi,&zihilohi,&zilolohi,
            &zihihilo,&zilohilo,&zihilolo,&zilololo);       // zi = xr*yi
+   __syncthreads();
    odg_mul(xihihihi,xilohihi,xihilohi,xilolohi,
            xihihilo,xilohilo,xihilolo,xilololo,
            yrhihihi,yrlohihi,yrhilohi,yrlolohi,
            yrhihilo,yrlohilo,yrhilolo,yrlololo,
            &acchihihi,&acclohihi,&acchilohi,&acclolohi,
            &acchihilo,&acclohilo,&acchilolo,&acclololo);   // acc = xi*yr
+   __syncthreads();
    odg_inc(&zihihihi,&zilohihi,&zihilohi,&zilolohi,
            &zihihilo,&zilohilo,&zihilolo,&zilololo,
            acchihihi,acclohihi,acchilohi,acclolohi,
            acchihilo,acclohilo,acchilolo,acclololo); // zr = xr*yr + xi*yi
+   __syncthreads();
 
    zvrehihihi[k] = zrhihihi; zvrelohihi[k] = zrlohihi;
    zvrehilohi[k] = zrhilohi; zvrelolohi[k] = zrlolohi;
@@ -719,47 +726,52 @@ __global__ void cmplx8_padded_convolute
               yrhihilo,yrlohilo,yrhilolo,yrlololo,
               &zrhihihi,&zrlohihi,&zrhilohi,&zrlolohi,
               &zrhihilo,&zrlohilo,&zrhilolo,&zrlololo);       // zr = xr*yr
+      __syncthreads();
       odg_mul(xihihihi,xilohihi,xihilohi,xilolohi,
               xihihilo,xilohilo,xihilolo,xilololo,
               yihihihi,yilohihi,yihilohi,yilolohi,
               yihihilo,yilohilo,yihilolo,yilololo,
               &acchihihi,&acclohihi,&acchilohi,&acclolohi,
               &acchihilo,&acclohilo,&acchilolo,&acclololo);   // acc = xi*yi
+      __syncthreads();
       odg_minus(&acchihihi,&acclohihi,&acchilohi,&acclolohi,
                 &acchihilo,&acclohilo,&acchilolo,&acclololo);
+      __syncthreads();
       odg_inc(&zrhihihi,&zrlohihi,&zrhilohi,&zrlolohi,
               &zrhihilo,&zrlohilo,&zrhilolo,&zrlololo,
               acchihihi,acclohihi,acchilohi,acclolohi,
               acchihilo,acclohilo,acchilolo,acclololo); // zr = xr*yr - xi*yi
+      __syncthreads();
       odg_mul(xrhihihi,xrlohihi,xrhilohi,xrlolohi,
               xrhihilo,xrlohilo,xrhilolo,xrlololo,
               yihihihi,yilohihi,yihilohi,yilolohi,
               yihihilo,yilohilo,yihilolo,yilololo,
               &zihihihi,&zilohihi,&zihilohi,&zilolohi,
               &zihihilo,&zilohilo,&zihilolo,&zilololo);       // zi = xr*yi
+      __syncthreads();
       odg_mul(xihihihi,xilohihi,xihilohi,xilolohi,
               xihihilo,xilohilo,xihilolo,xilololo,
               yrhihihi,yrlohihi,yrhilohi,yrlolohi,
               yrhihilo,yrlohilo,yrhilolo,yrlololo,
               &acchihihi,&acclohihi,&acchilohi,&acclolohi,
               &acchihilo,&acclohilo,&acchilolo,&acclololo);   // acc = xi*yr
+      __syncthreads();
       odg_inc(&zihihihi,&zilohihi,&zihilohi,&zilolohi,
               &zihihilo,&zilohilo,&zihilolo,&zilololo,
               acchihihi,acclohihi,acchilohi,acclolohi,
               acchihilo,acclohilo,acchilolo,acclololo); // zr = xr*yi + xi*yr
-
+      __syncthreads();
       odg_inc(&zvrehihihi[k],&zvrelohihi[k],&zvrehilohi[k],&zvrelolohi[k],
               &zvrehihilo[k],&zvrelohilo[k],&zvrehilolo[k],&zvrelololo[k],
               zrhihihi,zrlohihi,zrhilohi,zrlolohi,
               zrhihilo,zrlohilo,zrhilolo,zrlololo);      // zvre[k] += zr
+      __syncthreads();
       odg_inc(&zvimhihihi[k],&zvimlohihi[k],&zvimhilohi[k],&zvimlolohi[k],
               &zvimhihilo[k],&zvimlohilo[k],&zvimhilolo[k],&zvimlololo[k],
               zihihihi,zilohihi,zihilohi,zilolohi,
               zihihilo,zilohilo,zihilolo,zilololo);      // zvim[k] += zi
    }
-
    __syncthreads();
-
    zrehihihi[k] = zvrehihihi[k]; zrelohihi[k] = zvrelohihi[k];
    zrehilohi[k] = zvrehilohi[k]; zrelolohi[k] = zvrelolohi[k];
    zrehihilo[k] = zvrehihilo[k]; zrelohilo[k] = zvrelohilo[k];
