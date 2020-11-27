@@ -82,25 +82,22 @@ __global__ void dbl3_convolute
 
    xvhi[k] = xhi[k]; xvmi[k] = xmi[k]; xvlo[k] = xlo[k];
    yvhi[k] = yhi[k]; yvmi[k] = ymi[k]; yvlo[k] = ylo[k];
-
    __syncthreads();
 
    // zv[k] = xv[0]*yv[k];
    tdg_mul(xvhi[0],xvmi[0],xvlo[0],yvhi[k],yvmi[k],yvlo[k],
            &zvhi[k],&zvmi[k],&zvlo[k]);
+   __syncthreads();
 
    for(int i=1; i<=k; i++) // zv[k] = zv[k] + xv[i]*yv[k-i];
    {
       tdg_mul(xvhi[i],xvmi[i],xvlo[i],yvhi[k-i],yvmi[k-i],yvlo[k-i],
               &prdhi,&prdmi,&prdlo);
+      __syncthreads();
       tdg_inc(&zvhi[k],&zvmi[k],&zvlo[k],prdhi,prdmi,prdlo);
+      __syncthreads();
    }
-
-   __syncthreads();
-
-   zhi[k] = zvhi[k];
-   zmi[k] = zvmi[k];
-   zlo[k] = zvlo[k];
+   zhi[k] = zvhi[k]; zmi[k] = zvmi[k]; zlo[k] = zvlo[k];
 }
 
 __global__ void dbl3_padded_convolute
@@ -132,15 +129,17 @@ __global__ void dbl3_padded_convolute
    // zv[k] = xv[0]*yv[k];
    tdg_mul(xvhi[0],xvmi[0],xvlo[0],yvhi[idx],yvmi[idx],yvlo[idx],
            &zvhi[k],&zvmi[k],&zvlo[k]);
+   __syncthreads();
 
    for(int i=1; i<dim; i++) // zv[k] = zv[k] + xv[i]*yv[k-i];
    {
       int idx = dim + k - i;
       tdg_mul(xvhi[i],xvmi[i],xvlo[i],yvhi[idx],yvmi[idx],yvlo[idx],
               &prdhi,&prdmi,&prdlo);
+      __syncthreads();
       tdg_inc(&zvhi[k],&zvmi[k],&zvlo[k],prdhi,prdmi,prdlo);
+      __syncthreads();
    }
-   __syncthreads();
 
    zhi[k] = zvhi[k]; zmi[k] = zvmi[k]; zlo[k] = zvlo[k];
 }

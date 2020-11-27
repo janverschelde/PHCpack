@@ -108,16 +108,18 @@ __global__ void dbl4_convolute
    qdg_mul(xvhihi[0],xvlohi[0],xvhilo[0],xvlolo[0],
            yvhihi[k],yvlohi[k],yvhilo[k],yvlolo[k],
            &zvhihi[k],&zvlohi[k],&zvhilo[k],&zvlolo[k]);
+   __syncthreads();
 
    for(int i=1; i<=k; i++) // zv[k] = zv[k] + xv[i]*yv[k-i];
    {
       qdg_mul(xvhihi[i],xvlohi[i],xvhilo[i],xvlolo[i],
               yvhihi[k-i],yvlohi[k-i],yvhilo[k-i],yvlolo[k-i],
               &prdhihi,&prdlohi,&prdhilo,&prdlolo);
+      __syncthreads();
       qdg_inc(&zvhihi[k],&zvlohi[k],&zvhilo[k],&zvlolo[k],
               prdhihi,prdlohi,prdhilo,prdlolo);
+      __syncthreads();
    }
-
    __syncthreads();
 
    zhihi[k] = zvhihi[k]; zlohi[k] = zvlohi[k];
@@ -171,8 +173,8 @@ __global__ void dbl4_padded_convolute
       __syncthreads();
       qdg_inc(&zvhihi[k],&zvlohi[k],&zvhilo[k],&zvlolo[k],
               prdhihi,prdlohi,prdhilo,prdlolo);
+      __syncthreads();
    }
-   __syncthreads();
    zhihi[k] = zvhihi[k]; zlohi[k] = zvlohi[k];
    zhilo[k] = zvhilo[k]; zlolo[k] = zvlolo[k];
 }
