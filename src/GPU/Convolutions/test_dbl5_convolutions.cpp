@@ -14,57 +14,106 @@
 
 using namespace std;
 
-double test_real ( int deg );
+double test_dbl5_real ( int deg, int verbose );
 /*
  * DESCRIPTION :
  *   Multiplies the power series of 1/(1-x) with 1+x,
  *   truncated to degree deg, for real coefficients.
+ *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
 
-double test_complex ( int deg );
+double test_dbl5_complex ( int deg, int verbose );
 /*
  * DESCRIPTION :
  *   Multiplies the power series of 1/(1-x) with 1+x,
  *   truncated to degree deg, for complex coefficients.
+ *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
 
-double test_real_exponential ( int deg );
+double test_dbl5_real_exponential ( int deg, int verbose );
 /*
  * DESCRIPTION :
  *   Multiplies the power series for exp(x) with exp(-x)
  *   for some random x in [-1,+1], for real coefficients
  *   of a series of degree truncated to deg.
+ *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
 
-double test_complex_exponential ( int deg );
+double test_dbl5_complex_exponential ( int deg, int verbose );
 /*
  * DESCRIPTION :
  *   Multiplies the power series for exp(x) with exp(-x)
  *   for some random complex number on the unit circle,
  *   for series of degree truncated to deg.
+ *   If verbose, then no output is written.
  *   Returns the sum of all errors. */
+
+int main_dbl5_test ( int seed, int deg, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Runs four tests on convolutions in penta double precision.
+ *   Returns 0 if all tests passed,
+ *   otherwise, returns the number of failed tests.
+ *
+ * ON ENTRY :
+ *   seed     seed of the random number generators,
+ *            if 0, then the current time will be used as seed;
+ *   deg      degree of all series;
+ *   vrblvl   is the verbose level:
+ *            if 0, then there is no output,
+ *            if 1, then only the pass/fail conclusions are written,
+ *            if 2, then the numerical results are shown. */
 
 int main ( void )
 {
-   const int timevalue = time(NULL); // for a random seed
-   srand(timevalue);
-
-   ios_base::fmtflags f(cout.flags()); // to restore format flags
-
+   cout << "Give the seed (0 for time) : ";
+   int seed; cin >> seed;
+  
    cout << "Give a degree larger than one : ";
    int deg; cin >> deg;
 
+   cout << "Give the verbose level : ";
+   int vrb; cin >> vrb;
+
+   int fail = main_dbl5_test(seed,deg,vrb);
+
+   if(fail == 0)
+      cout << "All tests passed." << endl;
+   else
+      cout << "Number of failed tests : " << fail << endl;
+
+   return 0;
+}
+
+int main_dbl5_test ( int seed, int deg, int vrblvl )
+{
+   int fail;
+
+   if(seed != 0)
+      srand(seed);
+   else
+   {
+      const int timevalue = time(NULL); // for a random seed
+      srand(timevalue);
+   }
+   ios_base::fmtflags f(cout.flags()); // to restore format flags
+
    if(deg > 0)
    {
-      double realerror1 = test_real(deg);
+      double realerror1 = test_dbl5_real(deg,vrblvl-1);
 
       cout.flags(f);
-      double complexerror1 = test_complex(deg);
+      double complexerror1 = test_dbl5_complex(deg,vrblvl-1);
 
-      double realerror2 = test_real_exponential(deg);
-      double complexerror2 = test_complex_exponential(deg);
+      double realerror2 = test_dbl5_real_exponential(deg,vrblvl-1);
+      double complexerror2 = test_dbl5_complex_exponential(deg,vrblvl-1);
 
       const double tol = 1.0e-75;
+
+      fail = int(realerror1 > tol)
+           + int(realerror2 > tol)
+           + int(complexerror1 > tol)
+           + int(complexerror2 > tol);
 
       cout << scientific << setprecision(2);
       cout << "First test on real data, sum of all errors : ";
@@ -95,10 +144,10 @@ int main ( void )
       else
          cout << "  fail!" << endl;
    }
-   return 0;
+   return fail;
 }
 
-double test_real ( int deg )
+double test_dbl5_real ( int deg, int verbose )
 {
    double* xtb = new double[deg+1];
    double* xix = new double[deg+1];
@@ -132,55 +181,64 @@ double test_real ( int deg )
       (deg,xtb,xix,xmi,xrg,xpk,ytb,yix,ymi,yrg,ypk,
        ztb_h,zix_h,zmi_h,zrg_h,zpk_h);
 
-   cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
+   if(verbose > 0)
+   {
+      cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
 
-   for(int k=0; k<=deg; k++)
-   {
-      cout << "ztb[" << k << "] : " << ztb_h[k];
-      cout << "  zix[" << k << "] : " << zix_h[k];
-      cout << "  zmi[" << k << "] : " << zmi_h[k];
-      cout << "  zrg[" << k << "] : " << zrg_h[k];
-      cout << "  zpk[" << k << "] : " << zpk_h[k] << endl;
-   }
-   for(int k=0; k<=deg; k++)
-   {
-      cout << "x[" << k << "] : " << endl;
-      pdf_write_doubles(xtb[k],xix[k],xmi[k],xrg[k],xpk[k]);
-      cout << endl;
-      cout << "y[" << k << "] : " << endl;
-      pdf_write_doubles(ytb[k],yix[k],ymi[k],yrg[k],ypk[k]);
-      cout << endl;
+      for(int k=0; k<=deg; k++)
+      {
+         cout << "ztb[" << k << "] : " << ztb_h[k];
+         cout << "  zix[" << k << "] : " << zix_h[k];
+         cout << "  zmi[" << k << "] : " << zmi_h[k];
+         cout << "  zrg[" << k << "] : " << zrg_h[k];
+         cout << "  zpk[" << k << "] : " << zpk_h[k] << endl;
+      }
+      /*
+         for(int k=0; k<=deg; k++)
+         {
+            cout << "x[" << k << "] : " << endl;
+            pdf_write_doubles(xtb[k],xix[k],xmi[k],xrg[k],xpk[k]);
+            cout << endl;
+            cout << "y[" << k << "] : " << endl;
+            pdf_write_doubles(ytb[k],yix[k],ymi[k],yrg[k],ypk[k]);
+            cout << endl;
+         }
+       */
    }
    GPU_dbl5_product
       (xtb,xix,xmi,xrg,xpk,ytb,yix,ymi,yrg,ypk,
        ztb_d,zix_d,zmi_d,zrg_d,zpk_d,deg,1,deg+1,1);
 
-   cout << "GPU computed product :" << endl;
+   if(verbose > 0) cout << "GPU computed product :" << endl;
 
    double err = 0.0;
 
    for(int k=0; k<=deg; k++)
    {
-      cout << "ztb[" << k << "] : " << ztb_d[k];
-      cout << "  zix[" << k << "] : " << zix_d[k];
-      cout << "  zmi[" << k << "] : " << zmi_d[k];
-      cout << "  zrg[" << k << "] : " << zrg_d[k];
-      cout << "  zpk[" << k << "] : " << zpk_d[k] << endl;
-
+      if(verbose > 0)
+      {
+         cout << "ztb[" << k << "] : " << ztb_d[k];
+         cout << "  zix[" << k << "] : " << zix_d[k];
+         cout << "  zmi[" << k << "] : " << zmi_d[k];
+         cout << "  zrg[" << k << "] : " << zrg_d[k];
+         cout << "  zpk[" << k << "] : " << zpk_d[k] << endl;
+      }
       err = err
           + abs(ztb_h[k] - ztb_d[k]) + abs(zix_h[k] - zix_d[k])
           + abs(zmi_h[k] - zmi_d[k]) + abs(zrg_h[k] - zrg_d[k])
           + abs(zpk_h[k] - zpk_d[k]);
    }
-   cout << endl;
+   if(verbose > 0)
+   {
+      cout << endl;
 
-   cout << scientific << setprecision(16);
-   cout << "the error : " << err << endl;
-
+      cout << scientific << setprecision(16);
+      cout << "the error : " << err << endl;
+   }
    return err;
 }
 
-double test_complex ( int deg )
+double test_dbl5_complex ( int deg, int verbose )
 {
    double* xretb = new double[deg+1];
    double* xreix = new double[deg+1];
@@ -242,20 +300,23 @@ double test_complex ( int deg )
            zretb_h,zreix_h,zremi_h,zrerg_h,zrepk_h,
            zimtb_h,zimix_h,zimmi_h,zimrg_h,zimpk_h);
 
-   cout << "Series of 1/(1-x) multiplied with 1-x :" << endl;
-
-   for(int k=0; k<=deg; k++)
+   if(verbose > 0)
    {
-      cout << "zretb[" << k << "] : " << zretb_h[k];
-      cout << "  zreix[" << k << "] : " << zreix_h[k];
-      cout << "  zremi[" << k << "] : " << zremi_h[k];
-      cout << "  zrerg[" << k << "] : " << zrerg_h[k];
-      cout << "  zrepk[" << k << "] : " << zrepk_h[k] << endl;
-      cout << "zimtb[" << k << "] : " << zimtb_h[k];
-      cout << "  zimix[" << k << "] : " << zimix_h[k];
-      cout << "  zimmi[" << k << "] : " << zimmi_h[k];
-      cout << "  zimrg[" << k << "] : " << zimrg_h[k];
-      cout << "  zimpk[" << k << "] : " << zimpk_h[k] << endl;
+      cout << "Series of 1/(1-x) multiplied with 1-x :" << endl;
+
+      for(int k=0; k<=deg; k++)
+      {
+         cout << "zretb[" << k << "] : " << zretb_h[k];
+         cout << "  zreix[" << k << "] : " << zreix_h[k];
+         cout << "  zremi[" << k << "] : " << zremi_h[k];
+         cout << "  zrerg[" << k << "] : " << zrerg_h[k];
+         cout << "  zrepk[" << k << "] : " << zrepk_h[k] << endl;
+         cout << "zimtb[" << k << "] : " << zimtb_h[k];
+         cout << "  zimix[" << k << "] : " << zimix_h[k];
+         cout << "  zimmi[" << k << "] : " << zimmi_h[k];
+         cout << "  zimrg[" << k << "] : " << zimrg_h[k];
+         cout << "  zimpk[" << k << "] : " << zimpk_h[k] << endl;
+      }
    }
    GPU_cmplx5_product
       (xretb,xreix,xremi,xrerg,xrepk,ximtb,ximix,ximmi,ximrg,ximpk,
@@ -263,23 +324,25 @@ double test_complex ( int deg )
        zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,
        zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,deg,1,deg+1,2);
 
-   cout << "GPU computed product :" << endl;
+   if(verbose > 0) cout << "GPU computed product :" << endl;
 
    double err = 0.0;
 
    for(int k=0; k<=deg; k++)
    {
-      cout << "zretb[" << k << "] : " << zretb_d[k];
-      cout << "  zreix[" << k << "] : " << zreix_d[k];
-      cout << "  zremi[" << k << "] : " << zremi_d[k];
-      cout << "  zrerg[" << k << "] : " << zrerg_d[k];
-      cout << "  zrepk[" << k << "] : " << zrepk_d[k] << endl;
-      cout << "zimtb[" << k << "] : " << zimtb_d[k];
-      cout << "  zimix[" << k << "] : " << zimix_d[k];
-      cout << "  zimmi[" << k << "] : " << zimmi_d[k];
-      cout << "  zimrg[" << k << "] : " << zimrg_d[k];
-      cout << "  zimpk[" << k << "] : " << zimpk_d[k] << endl;
-
+      if(verbose > 0)
+      {
+         cout << "zretb[" << k << "] : " << zretb_d[k];
+         cout << "  zreix[" << k << "] : " << zreix_d[k];
+         cout << "  zremi[" << k << "] : " << zremi_d[k];
+         cout << "  zrerg[" << k << "] : " << zrerg_d[k];
+         cout << "  zrepk[" << k << "] : " << zrepk_d[k] << endl;
+         cout << "zimtb[" << k << "] : " << zimtb_d[k];
+         cout << "  zimix[" << k << "] : " << zimix_d[k];
+         cout << "  zimmi[" << k << "] : " << zimmi_d[k];
+         cout << "  zimrg[" << k << "] : " << zimrg_d[k];
+         cout << "  zimpk[" << k << "] : " << zimpk_d[k] << endl;
+      }
       err = err
           + abs(zretb_h[k] - zretb_d[k]) + abs(zreix_h[k] - zreix_d[k])
           + abs(zremi_h[k] - zremi_d[k]) + abs(zrerg_h[k] - zrerg_d[k])
@@ -288,13 +351,15 @@ double test_complex ( int deg )
           + abs(zimmi_h[k] - zimmi_d[k]) + abs(zimrg_h[k] - zimrg_d[k])
           + abs(zimpk_h[k] - zimpk_d[k]);
    }
-   cout << scientific << setprecision(16);
-   cout << "the error : " << err << endl;
-
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
+      cout << "the error : " << err << endl;
+   }
    return err;
 }
 
-double test_real_exponential ( int deg )
+double test_dbl5_real_exponential ( int deg, int verbose )
 {
    double *xtb = new double[deg+1];
    double *xix = new double[deg+1];
@@ -317,6 +382,7 @@ double test_real_exponential ( int deg )
    double *zrg_d = new double[deg+1];
    double *zpk_d = new double[deg+1];
    double rtb,rix,rmi,rrg,rpk;
+   double sumtb,sumix,summi,sumrg,sumpk;
 
    random_dbl5_exponentials
       (deg,&rtb,&rix,&rmi,&rrg,&rpk,
@@ -326,65 +392,67 @@ double test_real_exponential ( int deg )
       (deg,xtb,xix,xmi,xrg,xpk,ytb,yix,ymi,yrg,ypk,
        ztb_h,zix_h,zmi_h,zrg_h,zpk_h);
 
-   cout << scientific << setprecision(16);
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
 
-   cout << "Product of series of exp(x) with series of exp(-x)," << endl;
-   cout << "  for xtb = " << rtb << endl;
-   cout << "      xix = " << rix << endl;
-   cout << "      xmi = " << rmi << endl;
-   cout << "      xrg = " << rrg << endl;
-   cout << "  and xpk = " << rpk << endl;
+      cout << "Product of series of exp(x) with series of exp(-x)," << endl;
+      cout << "  for xtb = " << rtb << endl;
+      cout << "      xix = " << rix << endl;
+      cout << "      xmi = " << rmi << endl;
+      cout << "      xrg = " << rrg << endl;
+      cout << "  and xpk = " << rpk << endl;
 
-   double sumtb = 0.0;
-   double sumix = 0.0;
-   double summi = 0.0;
-   double sumrg = 0.0;
-   double sumpk = 0.0;
+      sumtb = 0.0; sumix = 0.0; summi = 0.0; sumrg = 0.0; sumpk = 0.0;
 
-   for(int k=0; k<=deg; k++)
-      pdf_inc(&sumtb,&sumix,&summi,&sumrg,&sumpk,
-              ztb_h[k],zix_h[k],zmi_h[k],zrg_h[k],zpk_h[k]);
+      for(int k=0; k<=deg; k++)
+         pdf_inc(&sumtb,&sumix,&summi,&sumrg,&sumpk,
+                 ztb_h[k],zix_h[k],zmi_h[k],zrg_h[k],zpk_h[k]);
 
-   cout << "Summation of all coefficients in the product ..." << endl;
-   cout << "       highest part of the sum : " << sumtb << endl;
-   cout << "second highest part of the sum : " << sumix << endl;
-   cout << "        middle part of the sum : " << summi << endl;
-   cout << " second lowest part of the sum : " << sumrg << endl;
-   cout << "        lowest part of the sum : " << sumpk << endl;
-
+      cout << "Summation of all coefficients in the product ..." << endl;
+      cout << "       highest part of the sum : " << sumtb << endl;
+      cout << "second highest part of the sum : " << sumix << endl;
+      cout << "        middle part of the sum : " << summi << endl;
+      cout << " second lowest part of the sum : " << sumrg << endl;
+      cout << "        lowest part of the sum : " << sumpk << endl;
+   }
    GPU_dbl5_product
       (xtb,xix,xmi,xrg,xpk,ytb,yix,ymi,yrg,ypk,
        ztb_d,zix_d,zmi_d,zrg_d,zpk_d,deg,1,deg+1,1);
 
-   sumtb = 0.0; sumix = 0.0; summi = 0.0; sumrg = 0.0; sumpk = 0.0;
-
+   if(verbose > 0)
+   {
+      sumtb = 0.0; sumix = 0.0; summi = 0.0; sumrg = 0.0; sumpk = 0.0;
+   }
    double err = 0.0;
 
    for(int k=0; k<=deg; k++)
    {
-      pdf_inc(&sumtb,&sumix,&summi,&sumrg,&sumpk,
-              ztb_d[k],zix_d[k],zmi_d[k],zrg_d[k],zpk_d[k]);
+      if(verbose > 0)
+         pdf_inc(&sumtb,&sumix,&summi,&sumrg,&sumpk,
+                 ztb_d[k],zix_d[k],zmi_d[k],zrg_d[k],zpk_d[k]);
 
       err = err
           + abs(ztb_h[k] - ztb_d[k]) + abs(zix_h[k] - zix_d[k])
           + abs(zmi_h[k] - zmi_d[k]) + abs(zrg_h[k] - zrg_d[k])
           + abs(zpk_h[k] - zpk_d[k]);
    }
-   cout << "Summation of all coefficients in the GPU computed product ..."
-        << endl;
-   cout << "       highest part of the sum : " << sumtb << endl;
-   cout << "second highest part of the sum : " << sumix << endl;
-   cout << "        middle part of the sum : " << summi << endl;
-   cout << " second lowest part of the sum : " << sumrg << endl;
-   cout << "        lowest part of the sum : " << sumpk << endl;
+   if(verbose > 0)
+   {
+      cout << "Summation of all coefficients in the GPU computed product ..."
+           << endl;
+      cout << "       highest part of the sum : " << sumtb << endl;
+      cout << "second highest part of the sum : " << sumix << endl;
+      cout << "        middle part of the sum : " << summi << endl;
+      cout << " second lowest part of the sum : " << sumrg << endl;
+      cout << "        lowest part of the sum : " << sumpk << endl;
 
-   cout << scientific << setprecision(16);
-   cout << "the error : " << err << endl;
-
+      cout << "the error : " << err << endl;
+   }
    return err;
 }
 
-double test_complex_exponential ( int deg )
+double test_dbl5_complex_exponential ( int deg, int verbose )
 {
    double* xretb = new double[deg+1];
    double* xreix = new double[deg+1];
@@ -428,6 +496,8 @@ double test_complex_exponential ( int deg )
    double* zimpk_d = new double[deg+1];
    double rndretb,rndreix,rndremi,rndrerg,rndrepk;
    double rndimtb,rndimix,rndimmi,rndimrg,rndimpk;
+   double sumretb,sumreix,sumremi,sumrerg,sumrepk;
+   double sumimtb,sumimix,sumimmi,sumimrg,sumimpk;
 
    random_cmplx5_exponentials
       (deg,&rndretb,&rndreix,&rndremi,&rndrerg,&rndrepk,
@@ -441,108 +511,112 @@ double test_complex_exponential ( int deg )
            zretb_h,zreix_h,zremi_h,zrerg_h,zrepk_h,
            zimtb_h,zimix_h,zimmi_h,zimrg_h,zimpk_h);
 
-   for(int k=0; k<=deg; k++)
+   if(verbose > 0)
    {
-      cout << "zre[" << k << "] : " << endl;
-      pdf_write_doubles
-         (zretb_h[k],zreix_h[k],zremi_h[k],zrerg_h[k],zrepk_h[k]);
-      cout << endl;
-      cout << "zim[" << k << "] : " << endl;
-      pdf_write_doubles
-         (zimtb_h[k],zimix_h[k],zimmi_h[k],zimrg_h[k],zimpk_h[k]);
-      cout << endl;
+      /*
+         for(int k=0; k<=deg; k++)
+         {
+            cout << "zre[" << k << "] : " << endl;
+            pdf_write_doubles
+               (zretb_h[k],zreix_h[k],zremi_h[k],zrerg_h[k],zrepk_h[k]);
+            cout << endl;
+            cout << "zim[" << k << "] : " << endl;
+            pdf_write_doubles
+               (zimtb_h[k],zimix_h[k],zimmi_h[k],zimrg_h[k],zimpk_h[k]);
+            cout << endl;
+         }
+      */
+      cout << scientific << setprecision(16);
+
+      cout << "Product of series of exp(x) with series of exp(-x)," << endl;
+      cout << "  for xretb = " << rndretb;
+      cout << "      xreix = " << rndreix << endl;
+      cout << "      xremi = " << rndremi;
+      cout << "      xrerg = " << rndrerg << endl;
+      cout << "  and xrepk = " << rndrepk << endl;
+      cout << "  for ximtb = " << rndimtb;
+      cout << "      ximix = " << rndimix << endl;
+      cout << "      ximmi = " << rndimmi;
+      cout << "      ximrg = " << rndimrg << endl;
+      cout << "  and ximpk = " << rndimpk << endl;
+
+      sumretb = 0.0; sumreix = 0.0; sumremi = 0.0;
+      sumrerg = 0.0; sumrepk = 0.0;
+      sumimtb = 0.0; sumimix = 0.0; sumimmi = 0.0;
+      sumimrg = 0.0; sumimpk = 0.0;
+
+      for(int k=0; k<=deg; k++) 
+      {
+         pdf_inc(&sumretb,&sumreix,&sumremi,&sumrerg,&sumrepk,
+                 zretb_h[k],zreix_h[k],zremi_h[k],zrerg_h[k],zrepk_h[k]);
+         pdf_inc(&sumimtb,&sumimix,&sumimmi,&sumimrg,&sumimpk,
+                 zimtb_h[k],zimix_h[k],zimmi_h[k],zimrg_h[k],zimpk_h[k]);
+      }
+      cout << "Summation of all coefficients of the product ..." << endl;
+      cout << "  sumretb : " << sumretb;
+      cout << "  sumreix : " << sumreix << endl;
+      cout << "  sumremi : " << sumremi;
+      cout << "  sumrerg : " << sumrerg << endl;
+      cout << "  sumrepk : " << sumrepk << endl;
+      cout << "  sumimtb : " << sumimtb;
+      cout << "  sumimix : " << sumimix << endl;
+      cout << "  sumimmi : " << sumimmi;
+      cout << "  sumimrg : " << sumimrg << endl;
+      cout << "  sumimpk : " << sumimpk << endl;
+
+      for(int k=0; k<=deg; k++)
+      {
+         cout << "xre[" << k << "] : " << endl;
+         pdf_write_doubles(xretb[k],xreix[k],xremi[k],xrerg[k],xrepk[k]);
+         cout << endl;
+         cout << "xim[" << k << "] : " << endl;
+         pdf_write_doubles(ximtb[k],ximix[k],ximmi[k],ximrg[k],ximpk[k]);
+         cout << endl;
+         cout << "yre[" << k << "] : " << endl;
+         pdf_write_doubles(yretb[k],yreix[k],yremi[k],yrerg[k],yrepk[k]);
+         cout << endl;
+         cout << "yim[" << k << "] : " << endl;
+         pdf_write_doubles(yimtb[k],yimix[k],yimmi[k],yimrg[k],yimpk[k]);
+         cout << endl;
+      }
    }
-
-   cout << scientific << setprecision(16);
-
-   cout << "Product of series of exp(x) with series of exp(-x)," << endl;
-   cout << "  for xretb = " << rndretb;
-   cout << "      xreix = " << rndreix << endl;
-   cout << "      xremi = " << rndremi;
-   cout << "      xrerg = " << rndrerg << endl;
-   cout << "  and xrepk = " << rndrepk << endl;
-   cout << "  for ximtb = " << rndimtb;
-   cout << "      ximix = " << rndimix << endl;
-   cout << "      ximmi = " << rndimmi;
-   cout << "      ximrg = " << rndimrg << endl;
-   cout << "  and ximpk = " << rndimpk << endl;
-
-   double sumretb = 0.0;
-   double sumreix = 0.0;
-   double sumremi = 0.0;
-   double sumrerg = 0.0;
-   double sumrepk = 0.0;
-   double sumimtb = 0.0;
-   double sumimix = 0.0;
-   double sumimmi = 0.0;
-   double sumimrg = 0.0;
-   double sumimpk = 0.0;
-
-   for(int k=0; k<=deg; k++) 
-   {
-      pdf_inc(&sumretb,&sumreix,&sumremi,&sumrerg,&sumrepk,
-              zretb_h[k],zreix_h[k],zremi_h[k],zrerg_h[k],zrepk_h[k]);
-      pdf_inc(&sumimtb,&sumimix,&sumimmi,&sumimrg,&sumimpk,
-              zimtb_h[k],zimix_h[k],zimmi_h[k],zimrg_h[k],zimpk_h[k]);
-   }
-   cout << "Summation of all coefficients of the product ..." << endl;
-   cout << "  sumretb : " << sumretb;
-   cout << "  sumreix : " << sumreix << endl;
-   cout << "  sumremi : " << sumremi;
-   cout << "  sumrerg : " << sumrerg << endl;
-   cout << "  sumrepk : " << sumrepk << endl;
-   cout << "  sumimtb : " << sumimtb;
-   cout << "  sumimix : " << sumimix << endl;
-   cout << "  sumimmi : " << sumimmi;
-   cout << "  sumimrg : " << sumimrg << endl;
-   cout << "  sumimpk : " << sumimpk << endl;
-
-   for(int k=0; k<=deg; k++)
-   {
-      cout << "xre[" << k << "] : " << endl;
-      pdf_write_doubles(xretb[k],xreix[k],xremi[k],xrerg[k],xrepk[k]);
-      cout << endl;
-      cout << "xim[" << k << "] : " << endl;
-      pdf_write_doubles(ximtb[k],ximix[k],ximmi[k],ximrg[k],ximpk[k]);
-      cout << endl;
-      cout << "yre[" << k << "] : " << endl;
-      pdf_write_doubles(yretb[k],yreix[k],yremi[k],yrerg[k],yrepk[k]);
-      cout << endl;
-      cout << "yim[" << k << "] : " << endl;
-      pdf_write_doubles(yimtb[k],yimix[k],yimmi[k],yimrg[k],yimpk[k]);
-      cout << endl;
-   }
-
    GPU_cmplx5_product
       (xretb,xreix,xremi,xrerg,xrepk,ximtb,ximix,ximmi,ximrg,ximpk,
        yretb,yreix,yremi,yrerg,yrepk,yimtb,yimix,yimmi,yimrg,yimpk,
        zretb_d,zreix_d,zremi_d,zrerg_d,zrepk_d,
        zimtb_d,zimix_d,zimmi_d,zimrg_d,zimpk_d,deg,1,deg+1,2);
 
-   for(int k=0; k<=deg; k++)
-   {
-      cout << "zre[" << k << "] : " << endl;
-      pdf_write_doubles
-         (zretb_d[k],zreix_d[k],zremi_d[k],zrerg_d[k],zrepk_d[k]);
-      cout << endl;
-      cout << "zim[" << k << "] : " << endl;
-      pdf_write_doubles
-         (zimtb_d[k],zimix_d[k],zimmi_d[k],zimrg_d[k],zimpk_d[k]);
-      cout << endl;
+   /*
+      for(int k=0; k<=deg; k++)
+      {
+         cout << "zre[" << k << "] : " << endl;
+         pdf_write_doubles
+            (zretb_d[k],zreix_d[k],zremi_d[k],zrerg_d[k],zrepk_d[k]);
+         cout << endl;
+         cout << "zim[" << k << "] : " << endl;
+         pdf_write_doubles
+            (zimtb_d[k],zimix_d[k],zimmi_d[k],zimrg_d[k],zimpk_d[k]);
+         cout << endl;
    }
-
-   sumretb = 0.0; sumreix = 0.0; sumremi = 0.0; sumrerg = 0.0; sumrepk = 0.0;
-   sumimtb = 0.0; sumimix = 0.0; sumimmi = 0.0; sumimrg = 0.0; sumimpk = 0.0;
-
+   */
+   if(verbose > 0)
+   {
+      sumretb = 0.0; sumreix = 0.0; sumremi = 0.0;
+      sumrerg = 0.0; sumrepk = 0.0;
+      sumimtb = 0.0; sumimix = 0.0; sumimmi = 0.0;
+      sumimrg = 0.0; sumimpk = 0.0;
+   }
    double err = 0.0;
 
    for(int k=0; k<=deg; k++) 
    {
-      pdf_inc(&sumretb,&sumreix,&sumremi,&sumrerg,&sumrepk,
-              zretb_d[k],zreix_d[k],zremi_d[k],zrerg_d[k],zrepk_d[k]);
-      pdf_inc(&sumimtb,&sumimix,&sumimmi,&sumimrg,&sumimpk,
-              zimtb_d[k],zimix_d[k],zimmi_d[k],zimrg_d[k],zimpk_d[k]);
-
+      if(verbose > 0)
+      {
+         pdf_inc(&sumretb,&sumreix,&sumremi,&sumrerg,&sumrepk,
+                 zretb_d[k],zreix_d[k],zremi_d[k],zrerg_d[k],zrepk_d[k]);
+         pdf_inc(&sumimtb,&sumimix,&sumimmi,&sumimrg,&sumimpk,
+                 zimtb_d[k],zimix_d[k],zimmi_d[k],zimrg_d[k],zimpk_d[k]);
+      }
       err = err
           + abs(zretb_h[k] - zretb_d[k]) + abs(zreix_h[k] - zreix_d[k])
           + abs(zremi_h[k] - zremi_d[k]) + abs(zrerg_h[k] - zrerg_d[k])
@@ -551,21 +625,22 @@ double test_complex_exponential ( int deg )
           + abs(zimmi_h[k] - zimmi_d[k]) + abs(zimrg_h[k] - zimrg_d[k])
           + abs(zimpk_h[k] - zimpk_d[k]);
    }
-   cout << "Summation of all coefficients of the GPU computed product ..."
-        << endl;
-   cout << "  sumretb : " << sumretb;
-   cout << "  sumreix : " << sumreix << endl;
-   cout << "  sumremi : " << sumremi;
-   cout << "  sumrerg : " << sumrerg << endl;
-   cout << "  sumrepk : " << sumrepk << endl;
-   cout << "  sumimtb : " << sumimtb;
-   cout << "  sumimix : " << sumimix << endl;
-   cout << "  sumimmi : " << sumimmi;
-   cout << "  sumimrg : " << sumimrg << endl;
-   cout << "  sumimpk : " << sumimpk << endl;
+   if(verbose > 0)
+   {
+      cout << "Summation of all coefficients of the GPU computed product ..."
+           << endl;
+      cout << "  sumretb : " << sumretb;
+      cout << "  sumreix : " << sumreix << endl;
+      cout << "  sumremi : " << sumremi;
+      cout << "  sumrerg : " << sumrerg << endl;
+      cout << "  sumrepk : " << sumrepk << endl;
+      cout << "  sumimtb : " << sumimtb;
+      cout << "  sumimix : " << sumimix << endl;
+      cout << "  sumimmi : " << sumimmi;
+      cout << "  sumimrg : " << sumimrg << endl;
+      cout << "  sumimpk : " << sumimpk << endl;
 
-   cout << scientific << setprecision(16);
-   cout << "the error : " << err << endl;
-
+      cout << "the error : " << err << endl;
+   }
    return err;
 }

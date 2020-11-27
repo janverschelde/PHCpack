@@ -770,8 +770,8 @@ __global__ void cmplx8_padded_convolute
               &zvimhihilo[k],&zvimlohilo[k],&zvimhilolo[k],&zvimlololo[k],
               zihihihi,zilohihi,zihilohi,zilolohi,
               zihihilo,zilohilo,zihilolo,zilololo);      // zvim[k] += zi
+      __syncthreads();
    }
-   __syncthreads();
    zrehihihi[k] = zvrehihihi[k]; zrelohihi[k] = zvrelohihi[k];
    zrehilohi[k] = zvrehilohi[k]; zrelolohi[k] = zvrelolohi[k];
    zrehihilo[k] = zvrehihilo[k]; zrelohilo[k] = zvrelohilo[k];

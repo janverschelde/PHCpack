@@ -13,91 +13,143 @@
 
 using namespace std;
 
-double test_real ( int deg );
+double test_dbl3_real ( int deg, int verbose );
 /*
  * DESCRIPTION :
  *   Multiplies the power series of 1/(1-x) with 1+x,
  *   truncated to degree deg, for real coefficients.
+ *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
 
-double test_complex ( int deg );
+double test_dbl3_complex ( int deg, int verbose );
 /*
  * DESCRIPTION :
  *   Multiplies the power series of 1/(1-x) with 1+x,
  *   truncated to degree deg, for complex coefficients.
+ *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
 
-double test_real_exponential ( int deg );
+double test_dbl3_real_exponential ( int deg, int verbose );
 /*
  * DESCRIPTION :
  *   Multiplies the power series for exp(x) with exp(-x)
  *   for some random x in [-1,+1], for real coefficients
  *   of a series of degree truncated to deg.
+ *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
 
-double test_complex_exponential ( int deg );
+double test_dbl3_complex_exponential ( int deg, int verbose );
 /*
  * DESCRIPTION :
  *   Multiplies the power series for exp(x) with exp(-x)
  *   for some random complex number on the unit circle,
  *   for series of degree truncated to deg.
+ *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
+
+int main_dbl3_test ( int seed, int deg, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Runs four tests on convolutions in triple double precision.
+ *   Returns 0 if all tests passed,
+ *   otherwise, returns the number of failed tests.
+ *
+ * ON ENTRY :
+ *   seed     seed of the random number generators,
+ *            if 0, then the current time will be used as seed;
+ *   deg      degree of all series;
+ *   vrblvl   is the verbose level:
+ *            if 0, then there is no output,
+ *            if 1, then only the pass/fail conclusions are written,
+ *            if 2, then the numerical results are shown. */
 
 int main ( void )
 {
-   const int timevalue = time(NULL); // for a random seed
-   srand(timevalue);
-
-   ios_base::fmtflags f(cout.flags()); // to restore format flags
- 
+   cout << "Give the seed (0 for time) : ";
+   int seed; cin >> seed;
+  
    cout << "Give a degree larger than one : ";
    int deg; cin >> deg;
 
-   if(deg > 0)
-   {
-      double realerror1 = test_real(deg);
+   cout << "Give the verbose level : ";
+   int vrb; cin >> vrb;
 
-      cout.flags(f);
-      double complexerror1 = test_complex(deg);
+   int fail = main_dbl3_test(seed,deg,vrb);
 
-      double realerror2 = test_real_exponential(deg);
-      double complexerror2 = test_complex_exponential(deg);
+   if(fail == 0)
+      cout << "All tests passed." << endl;
+   else
+      cout << "Number of failed tests : " << fail << endl;
 
-      const double tol = 1.0e-42;
-
-      cout << scientific << setprecision(2);
-      cout << "First test on real data, sum of all errors : ";
-      cout << realerror1;
-      if(realerror1 < tol)
-         cout << "  pass." << endl;
-      else
-         cout << "  fail!" << endl;
-
-      cout << "First test on complex data, sum of all errors : ";
-      cout << complexerror1;
-      if(complexerror1 < tol)
-         cout << "  pass." << endl;
-      else
-         cout << "  fail!" << endl;
-
-      cout << "Second test on real data, sum of all errors : ";
-      cout << realerror2;
-      if(realerror2 < tol)
-         cout << "  pass." << endl;
-      else
-         cout << "  fail!" << endl;
-
-      cout << "Second test on complex data, sum of all errors : ";
-      cout << complexerror2;
-      if(complexerror2 < tol)
-         cout << "  pass." << endl;
-      else
-         cout << "  fail!" << endl;
-   }
    return 0;
 }
 
-double test_real ( int deg )
+int main_dbl3_test ( int seed, int deg, int vrblvl )
+{
+   int fail;
+
+   if(seed != 0)
+      srand(seed);
+   else
+   {
+      const int timevalue = time(NULL); // for a random seed
+      srand(timevalue);
+   }
+   ios_base::fmtflags f(cout.flags()); // to restore format flags
+ 
+   if(deg > 0)
+   {
+      double realerror1 = test_dbl3_real(deg,vrblvl-1);
+
+      cout.flags(f);
+      double complexerror1 = test_dbl3_complex(deg,vrblvl-1);
+
+      double realerror2 = test_dbl3_real_exponential(deg,vrblvl-1);
+      double complexerror2 = test_dbl3_complex_exponential(deg,vrblvl-1);
+
+      const double tol = 1.0e-42;
+
+      fail = int(realerror1 > tol)
+           + int(realerror2 > tol)
+           + int(complexerror1 > tol)
+           + int(complexerror2 > tol);
+
+      if(vrblvl > 0)
+      {
+         cout << scientific << setprecision(2);
+         cout << "First test on real data, sum of all errors : ";
+         cout << realerror1;
+         if(realerror1 < tol)
+            cout << "  pass." << endl;
+         else
+            cout << "  fail!" << endl;
+
+         cout << "First test on complex data, sum of all errors : ";
+         cout << complexerror1;
+         if(complexerror1 < tol)
+            cout << "  pass." << endl;
+         else
+            cout << "  fail!" << endl;
+
+         cout << "Second test on real data, sum of all errors : ";
+         cout << realerror2;
+         if(realerror2 < tol)
+            cout << "  pass." << endl;
+         else
+            cout << "  fail!" << endl;
+
+         cout << "Second test on complex data, sum of all errors : ";
+         cout << complexerror2;
+         if(complexerror2 < tol)
+            cout << "  pass." << endl;
+         else
+            cout << "  fail!" << endl;
+      }
+   }
+   return fail;
+}
+
+double test_dbl3_real ( int deg, int verbose )
 {
    double* xhi = new double[deg+1];
    double* xmi = new double[deg+1];
@@ -121,38 +173,46 @@ double test_real ( int deg )
 
    CPU_dbl3_product(deg,xhi,xmi,xlo,yhi,ymi,ylo,zhi_h,zmi_h,zlo_h);
 
-   cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
-
-   for(int k=0; k<=deg; k++)
+   if(verbose > 0)
    {
-      cout << "zhi[" << k << "] : " << zhi_h[k];
-      cout << "  zmi[" << k << "] : " << zmi_h[k];
-      cout << "  zlo[" << k << "] : " << zlo_h[k] << endl;
+      cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
+
+      for(int k=0; k<=deg; k++)
+      {
+         cout << "zhi[" << k << "] : " << zhi_h[k];
+         cout << "  zmi[" << k << "] : " << zmi_h[k];
+         cout << "  zlo[" << k << "] : " << zlo_h[k] << endl;
+      }
    }
    GPU_dbl3_product(xhi,xmi,xlo,yhi,ymi,ylo,zhi_d,zmi_d,zlo_d,deg,1,deg+1,1);
 
-   cout << "GPU computed product :" << endl;
+   if(verbose > 0) cout << "GPU computed product :" << endl;
 
    double err = 0.0;
 
    for(int k=0; k<=deg; k++)
    {
-      cout << "zhi[" << k << "] : " << zhi_d[k];
-      cout << "  zmi[" << k << "] : " << zmi_d[k];
-      cout << "  zlo[" << k << "] : " << zlo_d[k] << endl;
+      if(verbose > 0)
+      {
+         cout << "zhi[" << k << "] : " << zhi_d[k];
+         cout << "  zmi[" << k << "] : " << zmi_d[k];
+         cout << "  zlo[" << k << "] : " << zlo_d[k] << endl;
+      }
       err = err
           + abs(zhi_h[k] - zhi_d[k]) + abs(zmi_h[k] - zmi_d[k])
           + abs(zlo_h[k] - zlo_d[k]);
    }
-   cout << endl;
+   if(verbose > 0)
+   {
+      cout << endl;
 
-   cout << scientific << setprecision(16);
-   cout << "the error : " << err << endl;
-
+      cout << scientific << setprecision(16);
+      cout << "the error : " << err << endl;
+   }
    return err;
 }
 
-double test_complex ( int deg )
+double test_dbl3_complex ( int deg, int verbose )
 {
    double* xrehi = new double[deg+1];
    double* xremi = new double[deg+1];
@@ -192,48 +252,55 @@ double test_complex ( int deg )
                           yrehi,yremi,yrelo,yimhi,yimmi,yimlo,
                           zrehi_h,zremi_h,zrelo_h,zimhi_h,zimmi_h,zimlo_h);
 
-   cout << "Series of 1/(1-x) multiplied with 1-x :" << endl;
-
-   for(int k=0; k<=deg; k++)
+   if(verbose > 0)
    {
-      cout << "zrehi[" << k << "] : " << zrehi_h[k];
-      cout << "  zremi[" << k << "] : " << zremi_h[k];
-      cout << "  zrelo[" << k << "] : " << zrelo_h[k] << endl;
-      cout << "zimhi[" << k << "] : " << zimhi_h[k];
-      cout << "  zimmi[" << k << "] : " << zimmi_h[k];
-      cout << "  zimlo[" << k << "] : " << zimlo_h[k] << endl;
+      cout << "Series of 1/(1-x) multiplied with 1-x :" << endl;
+
+      for(int k=0; k<=deg; k++)
+      {
+         cout << "zrehi[" << k << "] : " << zrehi_h[k];
+         cout << "  zremi[" << k << "] : " << zremi_h[k];
+         cout << "  zrelo[" << k << "] : " << zrelo_h[k] << endl;
+         cout << "zimhi[" << k << "] : " << zimhi_h[k];
+         cout << "  zimmi[" << k << "] : " << zimmi_h[k];
+         cout << "  zimlo[" << k << "] : " << zimlo_h[k] << endl;
+      }
    }
    GPU_cmplx3_product
       (xrehi,xremi,xrelo,ximhi,ximmi,ximlo,
        yrehi,yremi,yrelo,yimhi,yimmi,yimlo,
        zrehi_d,zremi_d,zrelo_d,zimhi_d,zimmi_d,zimlo_d,deg,1,deg+1,3);
 
-   cout << "GPU computed product :" << endl;
+   if(verbose > 0) cout << "GPU computed product :" << endl;
 
    double err = 0.0;
 
    for(int k=0; k<=deg; k++)
    {
-      cout << "zrehi[" << k << "] : " << zrehi_d[k];
-      cout << "  zremi[" << k << "] : " << zremi_d[k];
-      cout << "  zrelo[" << k << "] : " << zrelo_d[k] << endl;
-      cout << "zimhi[" << k << "] : " << zimhi_d[k];
-      cout << "  zimmi[" << k << "] : " << zimmi_d[k];
-      cout << "  zimlo[" << k << "] : " << zimlo_d[k] << endl;
-
+      if(verbose > 0)
+      {
+         cout << "zrehi[" << k << "] : " << zrehi_d[k];
+         cout << "  zremi[" << k << "] : " << zremi_d[k];
+         cout << "  zrelo[" << k << "] : " << zrelo_d[k] << endl;
+         cout << "zimhi[" << k << "] : " << zimhi_d[k];
+         cout << "  zimmi[" << k << "] : " << zimmi_d[k];
+         cout << "  zimlo[" << k << "] : " << zimlo_d[k] << endl;
+      }
       err = err
           + abs(zrehi_h[k] - zrehi_d[k]) + abs(zremi_h[k] - zremi_d[k])
           + abs(zrelo_h[k] - zrelo_d[k])
           + abs(zimhi_h[k] - zimhi_d[k]) + abs(zimmi_h[k] - zimmi_d[k])
           + abs(zimlo_h[k] - zimlo_d[k]);
    }
-   cout << scientific << setprecision(16);
-   cout << "the error : " << err << endl;
-
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
+      cout << "the error : " << err << endl;
+   }
    return err;
 }
 
-double test_real_exponential ( int deg )
+double test_dbl3_real_exponential ( int deg, int verbose )
 {
    double *xhi = new double[deg+1];
    double *xmi = new double[deg+1];
@@ -248,57 +315,62 @@ double test_real_exponential ( int deg )
    double *zmi_d = new double[deg+1];
    double *zlo_d = new double[deg+1];
    double rhi,rmi,rlo;
+   double sumhi,summi,sumlo;
 
    random_dbl3_exponentials(deg,&rhi,&rmi,&rlo,xhi,xmi,xlo,yhi,ymi,ylo);
 
    CPU_dbl3_product(deg,xhi,xmi,xlo,yhi,ymi,ylo,zhi_h,zmi_h,zlo_h);
 
-   cout << scientific << setprecision(16);
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
 
-   cout << "Product of series of exp(x) with series of exp(-x)," << endl;
-   cout << "  for xhi = " << rhi << endl;
-   cout << "      xmi = " << rmi << endl;
-   cout << "  and xlo = " << rlo << endl;
+      cout << "Product of series of exp(x) with series of exp(-x)," << endl;
+      cout << "  for xhi = " << rhi << endl;
+      cout << "      xmi = " << rmi << endl;
+      cout << "  and xlo = " << rlo << endl;
 
-   double sumhi = 0.0;
-   double summi = 0.0;
-   double sumlo = 0.0;
+      sumhi = 0.0; summi = 0.0; sumlo = 0.0;
 
-   for(int k=0; k<=deg; k++)
-      tdf_inc(&sumhi,&summi,&sumlo,zhi_h[k],zmi_h[k],zlo_h[k]);
+      for(int k=0; k<=deg; k++)
+         tdf_inc(&sumhi,&summi,&sumlo,zhi_h[k],zmi_h[k],zlo_h[k]);
 
-   cout << "Summation of all coefficients in the product ..." << endl;
-   cout << "  high part of sum : " << sumhi << endl;
-   cout << "middle part of sum : " << summi << endl;
-   cout << "   low part of sum : " << sumlo << endl;
-
+      cout << "Summation of all coefficients in the product ..." << endl;
+      cout << "  high part of sum : " << sumhi << endl;
+      cout << "middle part of sum : " << summi << endl;
+      cout << "   low part of sum : " << sumlo << endl;
+   }
    GPU_dbl3_product(xhi,xmi,xlo,yhi,ymi,ylo,zhi_d,zmi_d,zlo_d,deg,1,deg+1,1);
 
-   sumhi = 0.0; summi = 0.0; sumlo = 0.0;
-
+   if(verbose > 0)
+   {
+      sumhi = 0.0; summi = 0.0; sumlo = 0.0;
+   }
    double err = 0.0;
 
    for(int k=0; k<=deg; k++)
    {
-      tdf_inc(&sumhi,&summi,&sumlo,zhi_d[k],zmi_d[k],zlo_d[k]);
+      if(verbose > 0)
+         tdf_inc(&sumhi,&summi,&sumlo,zhi_d[k],zmi_d[k],zlo_d[k]);
+
       err = err
           + abs(zhi_h[k] - zhi_d[k]) + abs(zmi_h[k] - zmi_d[k])
           + abs(zlo_h[k] - zlo_d[k]);
    }
+   if(verbose > 0)
+   {
+      cout << "Summation of all coefficients in the GPU computed product ..."
+           << endl;
+      cout << "  high part of sum : " << sumhi << endl;
+      cout << "middle part of sum : " << summi << endl;
+      cout << "   low part of sum : " << sumlo << endl;
 
-   cout << "Summation of all coefficients in the GPU computed product ..."
-        << endl;
-   cout << "  high part of sum : " << sumhi << endl;
-   cout << "middle part of sum : " << summi << endl;
-   cout << "   low part of sum : " << sumlo << endl;
-
-   cout << scientific << setprecision(16);
-   cout << "the error : " << err << endl;
-
+      cout << "the error : " << err << endl;
+   }
    return err;
 }
 
-double test_complex_exponential ( int deg )
+double test_dbl3_complex_exponential ( int deg, int verbose )
 {
    double* xrehi = new double[deg+1];
    double* xremi = new double[deg+1];
@@ -327,6 +399,7 @@ double test_complex_exponential ( int deg )
    double rndrehi,rndremi,rndrelo;
    double rndimhi,rndimmi,rndimlo;
    double tmphi,tmpmi,tmplo;
+   double sumrehi,sumremi,sumrelo,sumimhi,sumimmi,sumimlo;
 
    random_cmplx3_exponentials
       (deg,&rndrehi,&rndremi,&rndrelo,&rndimhi,&rndimmi,&rndimlo,
@@ -337,68 +410,71 @@ double test_complex_exponential ( int deg )
                           yrehi,yremi,yrelo,yimhi,yimmi,yimlo,
                           zrehi_h,zremi_h,zrelo_h,zimhi_h,zimmi_h,zimlo_h);
 
-   cout << scientific << setprecision(16);
-
-   cout << "Product of series of exp(x) with series of exp(-x)," << endl;
-   cout << "  for xrehi = " << rndrehi;
-   cout << "      xremi = " << rndremi << endl;
-   cout << "  and xrelo = " << rndrelo << endl;
-   cout << "  for ximhi = " << rndimhi;
-   cout << "      ximmi = " << rndimmi << endl;
-   cout << "  and ximlo = " << rndimlo << endl;
-
-   double sumrehi = 0.0;
-   double sumremi = 0.0;
-   double sumrelo = 0.0;
-   double sumimhi = 0.0;
-   double sumimmi = 0.0;
-   double sumimlo = 0.0;
-
-   for(int k=0; k<=deg; k++) 
+   if(verbose > 0)
    {
-      tdf_inc(&sumrehi,&sumremi,&sumrelo,zrehi_h[k],zremi_h[k],zrelo_h[k]);
-      tdf_inc(&sumimhi,&sumimmi,&sumimlo,zimhi_h[k],zimmi_h[k],zimlo_h[k]);
-   }
-   cout << "Summation of all coefficients of the product ..." << endl;
-   cout << "  sumrehi : " << sumrehi;
-   cout << "  sumremi : " << sumremi << endl;
-   cout << "  sumrelo : " << sumrelo << endl;
-   cout << "  sumimhi : " << sumimhi;
-   cout << "  sumimmi : " << sumimmi << endl;
-   cout << "  sumimlo : " << sumimlo << endl;
+      cout << scientific << setprecision(16);
 
+      cout << "Product of series of exp(x) with series of exp(-x)," << endl;
+      cout << "  for xrehi = " << rndrehi;
+      cout << "      xremi = " << rndremi << endl;
+      cout << "  and xrelo = " << rndrelo << endl;
+      cout << "  for ximhi = " << rndimhi;
+      cout << "      ximmi = " << rndimmi << endl;
+      cout << "  and ximlo = " << rndimlo << endl;
+
+      sumrehi = 0.0; sumremi = 0.0; sumrelo = 0.0;
+      sumimhi = 0.0; sumimmi = 0.0; sumimlo = 0.0;
+
+      for(int k=0; k<=deg; k++) 
+      {
+         tdf_inc(&sumrehi,&sumremi,&sumrelo,zrehi_h[k],zremi_h[k],zrelo_h[k]);
+         tdf_inc(&sumimhi,&sumimmi,&sumimlo,zimhi_h[k],zimmi_h[k],zimlo_h[k]);
+      }
+      cout << "Summation of all coefficients of the product ..." << endl;
+      cout << "  sumrehi : " << sumrehi;
+      cout << "  sumremi : " << sumremi << endl;
+      cout << "  sumrelo : " << sumrelo << endl;
+      cout << "  sumimhi : " << sumimhi;
+      cout << "  sumimmi : " << sumimmi << endl;
+      cout << "  sumimlo : " << sumimlo << endl;
+   }
    GPU_cmplx3_product
       (xrehi,xremi,xrelo,ximhi,ximmi,ximlo,
        yrehi,yremi,yrelo,yimhi,yimmi,yimlo,
        zrehi_d,zremi_d,zrelo_d,zimhi_d,zimmi_d,zimlo_d,deg,1,deg+1,3);
 
-   sumrehi = 0.0; sumremi = 0.0; sumrelo = 0.0;
-   sumimhi = 0.0; sumimmi = 0.0; sumimlo = 0.0;
-
+   if(verbose > 0)
+   {
+      sumrehi = 0.0; sumremi = 0.0; sumrelo = 0.0;
+      sumimhi = 0.0; sumimmi = 0.0; sumimlo = 0.0;
+   }
    double err = 0.0;
 
    for(int k=0; k<=deg; k++) 
    {
-      tdf_inc(&sumrehi,&sumremi,&sumrelo,zrehi_d[k],zremi_d[k],zrelo_d[k]);
-      tdf_inc(&sumimhi,&sumimmi,&sumimlo,zimhi_d[k],zimmi_d[k],zimlo_d[k]);
-
+      if(verbose > 0)
+      {
+         tdf_inc(&sumrehi,&sumremi,&sumrelo,zrehi_d[k],zremi_d[k],zrelo_d[k]);
+         tdf_inc(&sumimhi,&sumimmi,&sumimlo,zimhi_d[k],zimmi_d[k],zimlo_d[k]);
+      }
       err = err
           + abs(zrehi_h[k] - zrehi_d[k]) + abs(zremi_h[k] - zremi_d[k])
           + abs(zrelo_h[k] - zrelo_d[k])
           + abs(zimhi_h[k] - zimhi_d[k]) + abs(zimmi_h[k] - zimmi_d[k])
           + abs(zimlo_h[k] - zimlo_d[k]);
    }
-   cout << "Summation of all coefficients of the GPU computed product ..."
-        << endl;
-   cout << "  sumrehi : " << sumrehi;
-   cout << "  sumremi : " << sumremi << endl;
-   cout << "  sumrelo : " << sumrelo << endl;
-   cout << "  sumimhi : " << sumimhi;
-   cout << "  sumimmi : " << sumimmi << endl;
-   cout << "  sumimlo : " << sumimlo << endl;
+   if(verbose > 0)
+   {
+      cout << "Summation of all coefficients of the GPU computed product ..."
+           << endl;
+      cout << "  sumrehi : " << sumrehi;
+      cout << "  sumremi : " << sumremi << endl;
+      cout << "  sumrelo : " << sumrelo << endl;
+      cout << "  sumimhi : " << sumimhi;
+      cout << "  sumimmi : " << sumimmi << endl;
+      cout << "  sumimlo : " << sumimlo << endl;
 
-   cout << scientific << setprecision(16);
-   cout << "the error : " << err << endl;
-
+      cout << "the error : " << err << endl;
+   }
    return err;
 }

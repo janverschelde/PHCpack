@@ -14,63 +14,115 @@
 
 using namespace std;
 
-double test_real ( int deg );
+double test_dbl8_real ( int deg, int verbose );
 /*
  * DESCRIPTION :
  *   Multiplies the power series of 1/(1-x) with 1+x,
  *   truncated to degree deg, for real coefficients.
+ *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
 
-double test_real_random ( int deg );
+double test_dbl8_real_random ( int deg, int verbose );
 /*
  * DESCRIPTION :
- *   Multiplies two random power series.
+ *   Multiplies two random power series,
+ *   truncated to degree deg, for real coefficients.
+ *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
 
-double test_complex ( int deg );
+double test_dbl8_complex ( int deg, int verbose );
 /*
  * DESCRIPTION :
  *   Multiplies the power series of 1/(1-x) with 1+x,
  *   truncated to degree deg, for complex coefficients.
+ *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
 
-double test_real_exponential ( int deg );
+double test_dbl8_real_exponential ( int deg, int verbose );
 /*
  * DESCRIPTION :
  *   Multiplies the power series for exp(x) with exp(-x)
  *   for some random x in [-1,+1], for real coefficients
  *   of a series of degree truncated to deg.
+ *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
 
-double test_complex_exponential ( int deg );
+double test_dbl8_complex_exponential ( int deg, int verbose );
 /*
  * DESCRIPTION :
  *   Multiplies the power series for exp(x) with exp(-x)
  *   for some random complex number on the unit circle,
  *   for series of degree truncated to deg.
+ *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
+
+int main_dbl8_test ( int seed, int deg, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Runs five tests on convolutions in octo double precision.
+ *   Returns 0 if all tests passed,
+ *   otherwise, returns the number of failed tests.
+ *
+ * ON ENTRY :
+ *   seed     seed of the random number generators,
+ *            if 0, then the current time will be used as seed;
+ *   deg      degree of all series;
+ *   vrblvl   is the verbose level:
+ *            if 0, then there is no output,
+ *            if 1, then only the pass/fail conclusions are written,
+ *            if 2, then the numerical results are shown. */
 
 int main ( void )
 {
-   const int timevalue = time(NULL); // for a random seed
-   srand(timevalue);
-
-   ios_base::fmtflags f(cout.flags()); // to restore format flags
-
+   cout << "Give the seed (0 for time) : ";
+   int seed; cin >> seed;
+  
    cout << "Give a degree larger than one : ";
    int deg; cin >> deg;
 
+   cout << "Give the verbose level : ";
+   int vrb; cin >> vrb;
+
+   int fail = main_dbl8_test(seed,deg,vrb);
+
+   if(fail == 0)
+      cout << "All tests passed." << endl;
+   else
+      cout << "Number of failed tests : " << fail << endl;
+
+   return 0;
+}
+
+int main_dbl8_test ( int seed, int deg, int vrblvl )
+{
+   int fail;
+
+   if(seed != 0)
+      srand(seed);
+   else
+   {
+      const int timevalue = time(NULL); // for a random seed
+      srand(timevalue);
+   }
+   ios_base::fmtflags f(cout.flags()); // to restore format flags
+
    if(deg > 0)
    {
-      double realerror1 = test_real(deg);
-      double realerror2 = test_real_random(deg);
+      double realerror1 = test_dbl8_real(deg,vrblvl-1);
+      double realerror2 = test_dbl8_real_random(deg,vrblvl-1);
 
       cout.flags(f);
-      double complexerror1 = test_complex(deg);
-      double realerror3 = test_real_exponential(deg);
-      double complexerror2 = test_complex_exponential(deg);
+      double complexerror1 = test_dbl8_complex(deg,vrblvl-1);
+      double realerror3 = test_dbl8_real_exponential(deg,vrblvl-1);
+      double complexerror2 = test_dbl8_complex_exponential(deg,vrblvl-1);
 
       const double tol = 1.0e-120;
+
+      fail = int(realerror1 > tol)
+           + int(realerror2 > tol)
+           + int(realerror3 > tol)
+           + int(complexerror1 > tol)
+           + int(complexerror2 > tol);
 
       cout << scientific << setprecision(2);
       cout << "First test on real data, sum of all errors : ";
@@ -108,10 +160,10 @@ int main ( void )
       else
          cout << "  fail!" << endl;
    }
-   return 0;
+   return fail;
 }
 
-double test_real ( int deg )
+double test_dbl8_real ( int deg, int verbose )
 {
    double* xhihihi = new double[deg+1];
    double* xlohihi = new double[deg+1];
@@ -165,41 +217,45 @@ double test_real ( int deg )
            zhihihi_h,zlohihi_h,zhilohi_h,zlolohi_h,
            zhihilo_h,zlohilo_h,zhilolo_h,zlololo_h);
 
-   cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
-
-   for(int k=0; k<=deg; k++)
+   if(verbose > 0)
    {
-      cout << "zhihihi[" << k << "] : " << zhihihi_h[k];
-      cout << "  zlohihi[" << k << "] : " << zlohihi_h[k];
-      cout << "  zhilohi[" << k << "] : " << zhilohi_h[k];
-      cout << "  zlolohi[" << k << "] : " << zlolohi_h[k] << endl;
-      cout << "zhihilo[" << k << "] : " << zhihilo_h[k];
-      cout << "  zlohilo[" << k << "] : " << zlohilo_h[k];
-      cout << "  zhilolo[" << k << "] : " << zhilolo_h[k];
-      cout << "  zlololo[" << k << "] : " << zlololo_h[k] << endl;
-   }
+      cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
 
+      for(int k=0; k<=deg; k++)
+      {
+         cout << "zhihihi[" << k << "] : " << zhihihi_h[k];
+         cout << "  zlohihi[" << k << "] : " << zlohihi_h[k];
+         cout << "  zhilohi[" << k << "] : " << zhilohi_h[k];
+         cout << "  zlolohi[" << k << "] : " << zlolohi_h[k] << endl;
+         cout << "zhihilo[" << k << "] : " << zhihilo_h[k];
+         cout << "  zlohilo[" << k << "] : " << zlohilo_h[k];
+         cout << "  zhilolo[" << k << "] : " << zhilolo_h[k];
+         cout << "  zlololo[" << k << "] : " << zlololo_h[k] << endl;
+      }
+   }
    GPU_dbl8_product
       (xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
        yhihihi,ylohihi,yhilohi,ylolohi,yhihilo,ylohilo,yhilolo,ylololo,
        zhihihi_d,zlohihi_d,zhilohi_d,zlolohi_d,
        zhihilo_d,zlohilo_d,zhilolo_d,zlololo_d,deg,1,deg+1,1);
 
-   cout << "GPU computed product :" << endl;
+   if(verbose > 0) cout << "GPU computed product :" << endl;
 
    double err = 0.0;
 
    for(int k=0; k<=deg; k++)
    {
-      cout << "zhihihi[" << k << "] : " << zhihihi_d[k];
-      cout << "  zlohihi[" << k << "] : " << zlohihi_d[k];
-      cout << "  zhilohi[" << k << "] : " << zhilohi_d[k];
-      cout << "  zlolohi[" << k << "] : " << zlolohi_d[k] << endl;
-      cout << "zhihilo[" << k << "] : " << zhihilo_d[k];
-      cout << "  zlohilo[" << k << "] : " << zlohilo_d[k];
-      cout << "  zhilolo[" << k << "] : " << zhilolo_d[k];
-      cout << "  zlololo[" << k << "] : " << zlololo_d[k] << endl;
-
+      if(verbose > 0)
+      {
+         cout << "zhihihi[" << k << "] : " << zhihihi_d[k];
+         cout << "  zlohihi[" << k << "] : " << zlohihi_d[k];
+         cout << "  zhilohi[" << k << "] : " << zhilohi_d[k];
+         cout << "  zlolohi[" << k << "] : " << zlolohi_d[k] << endl;
+         cout << "zhihilo[" << k << "] : " << zhihilo_d[k];
+         cout << "  zlohilo[" << k << "] : " << zlohilo_d[k];
+         cout << "  zhilolo[" << k << "] : " << zhilolo_d[k];
+         cout << "  zlololo[" << k << "] : " << zlololo_d[k] << endl;
+      }
       err = err
           + abs(zhihihi_h[k] - zhihihi_d[k])
           + abs(zlohihi_h[k] - zlohihi_d[k])
@@ -210,13 +266,15 @@ double test_real ( int deg )
           + abs(zhilolo_h[k] - zhilolo_d[k])
           + abs(zlololo_h[k] - zlololo_d[k]);
    }
-   cout << scientific << setprecision(16);
-   cout << "the error : " << err << endl;
-
+   if(verbose > 0)
+   {
+     cout << scientific << setprecision(16);
+     cout << "the error : " << err << endl;
+   }
    return err;
 }
 
-double test_real_random ( int deg )
+double test_dbl8_real_random ( int deg, int verbose )
 {
    double* xhihihi = new double[deg+1];
    double* xlohihi = new double[deg+1];
@@ -267,20 +325,23 @@ double test_real_random ( int deg )
            zhihihi_h,zlohihi_h,zhilohi_h,zlolohi_h,
            zhihilo_h,zlohilo_h,zhilolo_h,zlololo_h);
 
-   cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
-
-   cout << scientific << setprecision(16);
-
-   for(int k=0; k<=deg; k++)
+   if(verbose > 0)
    {
-      cout << "zhihihi[" << k << "] : " << zhihihi_h[k];
-      cout << "  zlohihi[" << k << "] : " << zlohihi_h[k];
-      cout << "  zhilohi[" << k << "] : " << zhilohi_h[k];
-      cout << "  zlolohi[" << k << "] : " << zlolohi_h[k] << endl;
-      cout << "zhihilo[" << k << "] : " << zhihilo_h[k];
-      cout << "  zlohilo[" << k << "] : " << zlohilo_h[k];
-      cout << "  zhilolo[" << k << "] : " << zhilolo_h[k];
-      cout << "  zlololo[" << k << "] : " << zlololo_h[k] << endl;
+      cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
+
+      cout << scientific << setprecision(16);
+
+      for(int k=0; k<=deg; k++)
+      {
+         cout << "zhihihi[" << k << "] : " << zhihihi_h[k];
+         cout << "  zlohihi[" << k << "] : " << zlohihi_h[k];
+         cout << "  zhilohi[" << k << "] : " << zhilohi_h[k];
+         cout << "  zlolohi[" << k << "] : " << zlolohi_h[k] << endl;
+         cout << "zhihilo[" << k << "] : " << zhihilo_h[k];
+         cout << "  zlohilo[" << k << "] : " << zlohilo_h[k];
+         cout << "  zhilolo[" << k << "] : " << zhilolo_h[k];
+         cout << "  zlololo[" << k << "] : " << zlololo_h[k] << endl;
+      }
    }
    GPU_dbl8_product
       (xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
@@ -288,21 +349,23 @@ double test_real_random ( int deg )
        zhihihi_d,zlohihi_d,zhilohi_d,zlolohi_d,
        zhihilo_d,zlohilo_d,zhilolo_d,zlololo_d,deg,1,deg+1,1);
 
-   cout << "GPU computed product :" << endl;
+   if(verbose > 0) cout << "GPU computed product :" << endl;
 
    double err = 0.0;
 
    for(int k=0; k<=deg; k++)
    {
-      cout << "zhihihi[" << k << "] : " << zhihihi_d[k];
-      cout << "  zlohihi[" << k << "] : " << zlohihi_d[k];
-      cout << "  zhilohi[" << k << "] : " << zhilohi_d[k];
-      cout << "  zlolohi[" << k << "] : " << zlolohi_d[k] << endl;
-      cout << "zhihilo[" << k << "] : " << zhihilo_d[k];
-      cout << "  zlohilo[" << k << "] : " << zlohilo_d[k];
-      cout << "  zhilolo[" << k << "] : " << zhilolo_d[k];
-      cout << "  zlololo[" << k << "] : " << zlololo_d[k] << endl;
-
+      if(verbose > 0)
+      {
+         cout << "zhihihi[" << k << "] : " << zhihihi_d[k];
+         cout << "  zlohihi[" << k << "] : " << zlohihi_d[k];
+         cout << "  zhilohi[" << k << "] : " << zhilohi_d[k];
+         cout << "  zlolohi[" << k << "] : " << zlolohi_d[k] << endl;
+         cout << "zhihilo[" << k << "] : " << zhihilo_d[k];
+         cout << "  zlohilo[" << k << "] : " << zlohilo_d[k];
+         cout << "  zhilolo[" << k << "] : " << zhilolo_d[k];
+         cout << "  zlololo[" << k << "] : " << zlololo_d[k] << endl;
+      }
       err = err
           + abs(zhihihi_h[k] - zhihihi_d[k])
           + abs(zlohihi_h[k] - zlohihi_d[k])
@@ -313,13 +376,15 @@ double test_real_random ( int deg )
           + abs(zhilolo_h[k] - zhilolo_d[k])
           + abs(zlololo_h[k] - zlololo_d[k]);
    }
-   cout << scientific << setprecision(16);
-   cout << "the error : " << err << endl;
-
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
+      cout << "the error : " << err << endl;
+   }
    return err;
 }
 
-double test_complex ( int deg )
+double test_dbl8_complex ( int deg, int verbose )
 {
    double* xrehihihi = new double[deg+1];
    double* xrelohihi = new double[deg+1];
@@ -421,28 +486,30 @@ double test_complex ( int deg )
            zimhihihi_h,zimlohihi_h,zimhilohi_h,zimlolohi_h,
            zimhihilo_h,zimlohilo_h,zimhilolo_h,zimlololo_h);
 
-   cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
-
-   for(int k=0; k<=deg; k++)
+   if(verbose > 0)
    {
-      cout << "zrehihihi[" << k << "] : " << zrehihihi_h[k];
-      cout << "  zrelohihi[" << k << "] : " << zrelohihi_h[k];
-      cout << "  zrehilohi[" << k << "] : " << zrehilohi_h[k];
-      cout << "  zrelolohi[" << k << "] : " << zrelolohi_h[k] << endl;
-      cout << "zrehihilo[" << k << "] : " << zrehihilo_h[k];
-      cout << "  zrelohilo[" << k << "] : " << zrelohilo_h[k];
-      cout << "  zrehilolo[" << k << "] : " << zrehilolo_h[k];
-      cout << "  zrelololo[" << k << "] : " << zrelololo_h[k] << endl;
-      cout << "zimhihihi[" << k << "] : " << zimhihihi_h[k];
-      cout << "  zimlohihi[" << k << "] : " << zimlohihi_h[k];
-      cout << "  zimhilohi[" << k << "] : " << zimhilohi_h[k];
-      cout << "  zimlolohi[" << k << "] : " << zimlolohi_h[k] << endl;
-      cout << "zimhihilo[" << k << "] : " << zimhihilo_h[k];
-      cout << "  zimlohilo[" << k << "] : " << zimlohilo_h[k];
-      cout << "  zimhilolo[" << k << "] : " << zimhilolo_h[k];
-      cout << "  zimlololo[" << k << "] : " << zimlololo_h[k] << endl;
-   }
+      cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
 
+      for(int k=0; k<=deg; k++)
+      {
+         cout << "zrehihihi[" << k << "] : " << zrehihihi_h[k];
+         cout << "  zrelohihi[" << k << "] : " << zrelohihi_h[k];
+         cout << "  zrehilohi[" << k << "] : " << zrehilohi_h[k];
+         cout << "  zrelolohi[" << k << "] : " << zrelolohi_h[k] << endl;
+         cout << "zrehihilo[" << k << "] : " << zrehihilo_h[k];
+         cout << "  zrelohilo[" << k << "] : " << zrelohilo_h[k];
+         cout << "  zrehilolo[" << k << "] : " << zrehilolo_h[k];
+         cout << "  zrelololo[" << k << "] : " << zrelololo_h[k] << endl;
+         cout << "zimhihihi[" << k << "] : " << zimhihihi_h[k];
+         cout << "  zimlohihi[" << k << "] : " << zimlohihi_h[k];
+         cout << "  zimhilohi[" << k << "] : " << zimhilohi_h[k];
+         cout << "  zimlolohi[" << k << "] : " << zimlolohi_h[k] << endl;
+         cout << "zimhihilo[" << k << "] : " << zimhihilo_h[k];
+         cout << "  zimlohilo[" << k << "] : " << zimlohilo_h[k];
+         cout << "  zimhilolo[" << k << "] : " << zimhilolo_h[k];
+         cout << "  zimlololo[" << k << "] : " << zimlololo_h[k] << endl;
+      }
+   }
    GPU_cmplx8_product
       (xrehihihi,xrelohihi,xrehilohi,xrelolohi,
        xrehihilo,xrelohilo,xrehilolo,xrelololo,
@@ -457,29 +524,31 @@ double test_complex ( int deg )
        zimhihihi_d,zimlohihi_d,zimhilohi_d,zimlolohi_d,
        zimhihilo_d,zimlohilo_d,zimhilolo_d,zimlololo_d,deg,1,deg+1,2);
 
-   cout << "GPU computed product :" << endl;
+   if(verbose > 0) cout << "GPU computed product :" << endl;
 
    double err = 0.0;
 
    for(int k=0; k<=deg; k++)
    {
-      cout << "zrehihihi[" << k << "] : " << zrehihihi_d[k];
-      cout << "  zrelohihi[" << k << "] : " << zrelohihi_d[k];
-      cout << "  zrehilohi[" << k << "] : " << zrehilohi_d[k];
-      cout << "  zrelolohi[" << k << "] : " << zrelolohi_d[k] << endl;
-      cout << "zrehihilo[" << k << "] : " << zrehihilo_d[k];
-      cout << "  zrelohilo[" << k << "] : " << zrelohilo_d[k];
-      cout << "  zrehilolo[" << k << "] : " << zrehilolo_d[k];
-      cout << "  zrelololo[" << k << "] : " << zrelololo_d[k] << endl;
-      cout << "zimhihihi[" << k << "] : " << zimhihihi_d[k];
-      cout << "  zimlohihi[" << k << "] : " << zimlohihi_d[k];
-      cout << "  zimhilohi[" << k << "] : " << zimhilohi_d[k];
-      cout << "  zimlolohi[" << k << "] : " << zimlolohi_d[k] << endl;
-      cout << "zimhihilo[" << k << "] : " << zimhihilo_d[k];
-      cout << "  zimlohilo[" << k << "] : " << zimlohilo_d[k];
-      cout << "  zimhilolo[" << k << "] : " << zimhilolo_d[k];
-      cout << "  zimlololo[" << k << "] : " << zimlololo_d[k] << endl;
-
+      if(verbose > 0)
+      {
+         cout << "zrehihihi[" << k << "] : " << zrehihihi_d[k];
+         cout << "  zrelohihi[" << k << "] : " << zrelohihi_d[k];
+         cout << "  zrehilohi[" << k << "] : " << zrehilohi_d[k];
+         cout << "  zrelolohi[" << k << "] : " << zrelolohi_d[k] << endl;
+         cout << "zrehihilo[" << k << "] : " << zrehihilo_d[k];
+         cout << "  zrelohilo[" << k << "] : " << zrelohilo_d[k];
+         cout << "  zrehilolo[" << k << "] : " << zrehilolo_d[k];
+         cout << "  zrelololo[" << k << "] : " << zrelololo_d[k] << endl;
+         cout << "zimhihihi[" << k << "] : " << zimhihihi_d[k];
+         cout << "  zimlohihi[" << k << "] : " << zimlohihi_d[k];
+         cout << "  zimhilohi[" << k << "] : " << zimhilohi_d[k];
+         cout << "  zimlolohi[" << k << "] : " << zimlolohi_d[k] << endl;
+         cout << "zimhihilo[" << k << "] : " << zimhihilo_d[k];
+         cout << "  zimlohilo[" << k << "] : " << zimlohilo_d[k];
+         cout << "  zimhilolo[" << k << "] : " << zimhilolo_d[k];
+         cout << "  zimlololo[" << k << "] : " << zimlololo_d[k] << endl;
+      }
       err = err
           + abs(zrehihihi_h[k] - zrehihihi_d[k])
           + abs(zrelohihi_h[k] - zrelohihi_d[k])
@@ -498,13 +567,15 @@ double test_complex ( int deg )
           + abs(zimhilolo_h[k] - zimhilolo_d[k])
           + abs(zimlololo_h[k] - zimlololo_d[k]);
    }
-   cout << scientific << setprecision(16);
-   cout << "the error : " << err << endl;
-
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
+      cout << "the error : " << err << endl;
+   }
    return err;
 }
 
-double test_real_exponential ( int deg )
+double test_dbl8_real_exponential ( int deg, int verbose )
 {
    double* xhihihi = new double[deg+1];
    double* xlohihi = new double[deg+1];
@@ -540,6 +611,8 @@ double test_real_exponential ( int deg )
    double* zlololo_d = new double[deg+1];
    double rhihihi,rlohihi,rhilohi,rlolohi;
    double rhihilo,rlohilo,rhilolo,rlololo;
+   double sumhihihi,sumlohihi,sumhilohi,sumlolohi;
+   double sumhihilo,sumlohilo,sumhilolo,sumlololo;
 
    random_dbl8_exponentials
       (deg,&rhihihi,&rlohihi,&rhilohi,&rlolohi,
@@ -553,74 +626,72 @@ double test_real_exponential ( int deg )
            zhihihi_h,zlohihi_h,zhilohi_h,zlolohi_h,
            zhihilo_h,zlohilo_h,zhilolo_h,zlololo_h);
 
-   cout << scientific << setprecision(16);
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
 
-   cout << "Product of series of exp(x) with series of exp(-x)," << endl;
-   cout << "  for xhihihi = " << rhihihi;
-   cout << "  xlohihi = " << rlohihi << endl;
-   cout << "      xhilohi = " << rhilohi;
-   cout << "  xlolohi = " << rlolohi << endl;
-   cout << "      xhihilo = " << rhihilo;
-   cout << "  xlohilo = " << rlohilo << endl;
-   cout << "      xhilolo = " << rhilolo;
-   cout << "  xlololo = " << rlololo << endl;
+      cout << "Product of series of exp(x) with series of exp(-x)," << endl;
+      cout << "  for xhihihi = " << rhihihi;
+      cout << "  xlohihi = " << rlohihi << endl;
+      cout << "      xhilohi = " << rhilohi;
+      cout << "  xlolohi = " << rlolohi << endl;
+      cout << "      xhihilo = " << rhihilo;
+      cout << "  xlohilo = " << rlohilo << endl;
+      cout << "      xhilolo = " << rhilolo;
+      cout << "  xlololo = " << rlololo << endl;
 
-   double sumhihihi = 0.0;
-   double sumlohihi = 0.0;
-   double sumhilohi = 0.0;
-   double sumlolohi = 0.0;
-   double sumhihilo = 0.0;
-   double sumlohilo = 0.0;
-   double sumhilolo = 0.0;
-   double sumlololo = 0.0;
+      sumhihihi = 0.0; sumlohihi = 0.0; sumhilohi = 0.0; sumlolohi = 0.0;
+      sumhihilo = 0.0; sumlohilo = 0.0; sumhilolo = 0.0; sumlololo = 0.0;
 
-   for(int k=0; k<=deg; k++)
-      odf_inc(&sumhihihi,&sumlohihi,&sumhilohi,&sumlolohi,
-              &sumhihilo,&sumlohilo,&sumhilolo,&sumlololo,
-              zhihihi_h[k],zlohihi_h[k],zhilohi_h[k],zlolohi_h[k],
-              zhihilo_h[k],zlohilo_h[k],zhilolo_h[k],zlololo_h[k]);
+      for(int k=0; k<=deg; k++)
+         odf_inc(&sumhihihi,&sumlohihi,&sumhilohi,&sumlolohi,
+                 &sumhihilo,&sumlohilo,&sumhilolo,&sumlololo,
+                 zhihihi_h[k],zlohihi_h[k],zhilohi_h[k],zlolohi_h[k],
+                 zhihilo_h[k],zlohilo_h[k],zhilolo_h[k],zlololo_h[k]);
 
-   cout << "Summation of all coefficients in the product ..." << endl;
-   cout << "    highest part of sum : " << sumhihihi << endl;
-   cout << "2nd highest part of sum : " << sumlohihi << endl;
-   cout << "3rd highest part of sum : " << sumhilohi << endl;
-   cout << "4th highest part of sum : " << sumlolohi << endl;
-   cout << " 4th lowest part of sum : " << sumhihilo << endl;
-   cout << " 3rd lowest part of sum : " << sumlohilo << endl;
-   cout << " 2nd lowest part of sum : " << sumhilolo << endl;
-   cout << "     lowest part of sum : " << sumlololo << endl;
-
+      cout << "Summation of all coefficients in the product ..." << endl;
+      cout << "    highest part of sum : " << sumhihihi << endl;
+      cout << "2nd highest part of sum : " << sumlohihi << endl;
+      cout << "3rd highest part of sum : " << sumhilohi << endl;
+      cout << "4th highest part of sum : " << sumlolohi << endl;
+      cout << " 4th lowest part of sum : " << sumhihilo << endl;
+      cout << " 3rd lowest part of sum : " << sumlohilo << endl;
+      cout << " 2nd lowest part of sum : " << sumhilolo << endl;
+      cout << "     lowest part of sum : " << sumlololo << endl;
+   }
    GPU_dbl8_product
       (xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
        yhihihi,ylohihi,yhilohi,ylolohi,yhihilo,ylohilo,yhilolo,ylololo,
        zhihihi_d,zlohihi_d,zhilohi_d,zlolohi_d,
        zhihilo_d,zlohilo_d,zhilolo_d,zlololo_d,deg,1,deg+1,1);
 
-   cout << "GPU computed product :" << endl;
-
-   for(int k=0; k<=deg; k++)
+   if(verbose > 0)
    {
-      cout << "zhihihi[" << k << "] : " << zhihihi_d[k];
-      cout << "  zlohihi[" << k << "] : " << zlohihi_d[k];
-      cout << "  zhilohi[" << k << "] : " << zhilohi_d[k];
-      cout << "  zlolohi[" << k << "] : " << zlolohi_d[k] << endl;
-      cout << "zhihilo[" << k << "] : " << zhihilo_d[k];
-      cout << "  zlohilo[" << k << "] : " << zlohilo_d[k];
-      cout << "  zhilolo[" << k << "] : " << zhilolo_d[k];
-      cout << "  zlololo[" << k << "] : " << zlololo_d[k] << endl;
+      cout << "GPU computed product :" << endl;
+
+      for(int k=0; k<=deg; k++)
+      {
+         cout << "zhihihi[" << k << "] : " << zhihihi_d[k];
+         cout << "  zlohihi[" << k << "] : " << zlohihi_d[k];
+         cout << "  zhilohi[" << k << "] : " << zhilohi_d[k];
+         cout << "  zlolohi[" << k << "] : " << zlolohi_d[k] << endl;
+         cout << "zhihilo[" << k << "] : " << zhihilo_d[k];
+         cout << "  zlohilo[" << k << "] : " << zlohilo_d[k];
+         cout << "  zhilolo[" << k << "] : " << zhilolo_d[k];
+         cout << "  zlololo[" << k << "] : " << zlololo_d[k] << endl;
+      }
+      sumhihihi = 0.0; sumlohihi = 0.0; sumhilohi = 0.0; sumlolohi = 0.0;
+      sumhihilo = 0.0; sumlohilo = 0.0; sumhilolo = 0.0; sumlololo = 0.0;
    }
-
-   sumhihihi = 0.0; sumlohihi = 0.0; sumhilohi = 0.0; sumlolohi = 0.0;
-   sumhihilo = 0.0; sumlohilo = 0.0; sumhilolo = 0.0; sumlololo = 0.0;
-
    double err = 0.0;
 
    for(int k=0; k<=deg; k++)
    {
-      odf_inc(&sumhihihi,&sumlohihi,&sumhilohi,&sumlolohi,
-              &sumhihilo,&sumlohilo,&sumhilolo,&sumlololo,
-              zhihihi_d[k],zlohihi_d[k],zhilohi_d[k],zlolohi_d[k],
-              zhihilo_d[k],zlohilo_d[k],zhilolo_d[k],zlololo_d[k]);
+      if(verbose > 0)
+         odf_inc(&sumhihihi,&sumlohihi,&sumhilohi,&sumlolohi,
+                 &sumhihilo,&sumlohilo,&sumhilolo,&sumlololo,
+                 zhihihi_d[k],zlohihi_d[k],zhilohi_d[k],zlolohi_d[k],
+                 zhihilo_d[k],zlohilo_d[k],zhilolo_d[k],zlololo_d[k]);
 
       err = err
           + abs(zhihihi_h[k] - zhihihi_d[k])
@@ -632,24 +703,25 @@ double test_real_exponential ( int deg )
           + abs(zhilolo_h[k] - zhilolo_d[k])
           + abs(zlololo_h[k] - zlololo_d[k]);
    }
-   cout << "Summation of all coefficients in the GPU computed product ..."
-        << endl;
-   cout << "    highest part of sum : " << sumhihihi << endl;
-   cout << "2nd highest part of sum : " << sumlohihi << endl;
-   cout << "3rd highest part of sum : " << sumhilohi << endl;
-   cout << "4th highest part of sum : " << sumlolohi << endl;
-   cout << " 4th lowest part of sum : " << sumhihilo << endl;
-   cout << " 3rd lowest part of sum : " << sumlohilo << endl;
-   cout << " 2nd lowest part of sum : " << sumhilolo << endl;
-   cout << "     lowest part of sum : " << sumlololo << endl;
+   if(verbose > 0)
+   {
+      cout << "Summation of all coefficients in the GPU computed product ..."
+           << endl;
+      cout << "    highest part of sum : " << sumhihihi << endl;
+      cout << "2nd highest part of sum : " << sumlohihi << endl;
+      cout << "3rd highest part of sum : " << sumhilohi << endl;
+      cout << "4th highest part of sum : " << sumlolohi << endl;
+      cout << " 4th lowest part of sum : " << sumhihilo << endl;
+      cout << " 3rd lowest part of sum : " << sumlohilo << endl;
+      cout << " 2nd lowest part of sum : " << sumhilolo << endl;
+      cout << "     lowest part of sum : " << sumlololo << endl;
 
-   cout << scientific << setprecision(16);
-   cout << "the error : " << err << endl;
-
+      cout << "the error : " << err << endl;
+   }
    return err;
 }
 
-double test_complex_exponential ( int deg )
+double test_dbl8_complex_exponential ( int deg, int verbose )
 {
    double* xrehihihi = new double[deg+1];
    double* xrelohihi = new double[deg+1];
@@ -719,6 +791,10 @@ double test_complex_exponential ( int deg )
    double rndrehihilo,rndrelohilo,rndrehilolo,rndrelololo;
    double rndimhihihi,rndimlohihi,rndimhilohi,rndimlolohi;
    double rndimhihilo,rndimlohilo,rndimhilolo,rndimlololo;
+   double sumrehihihi,sumrelohihi,sumrehilohi,sumrelolohi;
+   double sumrehihilo,sumrelohilo,sumrehilolo,sumrelololo;
+   double sumimhihihi,sumimlohihi,sumimhilohi,sumimlolohi;
+   double sumimhihilo,sumimlohilo,sumimhilolo,sumimlololo;
 
    random_cmplx8_exponentials
       (deg,&rndrehihihi,&rndrelohihi,&rndrehilohi,&rndrelolohi,
@@ -748,72 +824,66 @@ double test_complex_exponential ( int deg )
            zimhihihi_h,zimlohihi_h,zimhilohi_h,zimlolohi_h,
            zimhihilo_h,zimlohilo_h,zimhilolo_h,zimlololo_h);
 
-   cout << scientific << setprecision(16);
-
-   cout << "Product of series of exp(x) with series of exp(-x)," << endl;
-   cout << "  for xrehihihi = " << rndrehihihi;
-   cout << "      xrelohihi = " << rndrelohihi << endl;
-   cout << "      xrehilohi = " << rndrehilohi;
-   cout << "      xrelolohi = " << rndrelolohi << endl;
-   cout << "      xrehihilo = " << rndrehihilo;
-   cout << "      xrelohilo = " << rndrelohilo << endl;
-   cout << "      xrehilolo = " << rndrehilolo;
-   cout << "  and xrelololo = " << rndrelololo << endl;
-   cout << "  for ximhihihi = " << rndimhihihi;
-   cout << "      ximlohihi = " << rndimlohihi << endl;
-   cout << "      ximhilohi = " << rndimhilohi;
-   cout << "      ximlolohi = " << rndimlolohi << endl;
-   cout << "      ximhihilo = " << rndimhihilo;
-   cout << "      ximlohilo = " << rndimlohilo << endl;
-   cout << "      ximhilolo = " << rndimhilolo;
-   cout << "  and ximlololo = " << rndimlololo << endl;
-
-   double sumrehihihi = 0.0;
-   double sumrelohihi = 0.0;
-   double sumrehilohi = 0.0;
-   double sumrelolohi = 0.0;
-   double sumrehihilo = 0.0;
-   double sumrelohilo = 0.0;
-   double sumrehilolo = 0.0;
-   double sumrelololo = 0.0;
-   double sumimhihihi = 0.0;
-   double sumimlohihi = 0.0;
-   double sumimhilohi = 0.0;
-   double sumimlolohi = 0.0;
-   double sumimhihilo = 0.0;
-   double sumimlohilo = 0.0;
-   double sumimhilolo = 0.0;
-   double sumimlololo = 0.0;
-
-   for(int k=0; k<=deg; k++) 
+   if(verbose > 0)
    {
-      odf_inc(&sumrehihihi,&sumrelohihi,&sumrehilohi,&sumrelolohi,
-              &sumrehihilo,&sumrelohilo,&sumrehilolo,&sumrelololo,
-              zrehihihi_h[k],zrelohihi_h[k],zrehilohi_h[k],zrelolohi_h[k],
-              zrehihilo_h[k],zrelohilo_h[k],zrehilolo_h[k],zrelololo_h[k]);
-      odf_inc(&sumimhihihi,&sumimlohihi,&sumimhilohi,&sumimlolohi,
-              &sumimhihilo,&sumimlohilo,&sumimhilolo,&sumimlololo,
-              zimhihihi_h[k],zimlohihi_h[k],zimhilohi_h[k],zimlolohi_h[k],
-              zimhihilo_h[k],zimlohilo_h[k],zimhilolo_h[k],zimlololo_h[k]);
-   }
-   cout << "Summation of all coefficients of the product ..." << endl;
-   cout << "  sumrehihihi : " << sumrehihihi;
-   cout << "  sumrelohihi : " << sumrelohihi << endl;
-   cout << "  sumrehilohi : " << sumrehilohi;
-   cout << "  sumrelolohi : " << sumrelolohi << endl;
-   cout << "  sumrehihilo : " << sumrehihilo;
-   cout << "  sumrelohilo : " << sumrelohilo << endl;
-   cout << "  sumrehilolo : " << sumrehilolo;
-   cout << "  sumrelololo : " << sumrelololo << endl;
-   cout << "  sumimhihihi : " << sumimhihihi;
-   cout << "  sumimlohihi : " << sumimlohihi << endl;
-   cout << "  sumimhilohi : " << sumimhilohi;
-   cout << "  sumimlolohi : " << sumimlolohi << endl;
-   cout << "  sumimhihilo : " << sumimhihilo;
-   cout << "  sumimlohilo : " << sumimlohilo << endl;
-   cout << "  sumimhilolo : " << sumimhilolo;
-   cout << "  sumimlololo : " << sumimlololo << endl;
+      cout << scientific << setprecision(16);
 
+      cout << "Product of series of exp(x) with series of exp(-x)," << endl;
+      cout << "  for xrehihihi = " << rndrehihihi;
+      cout << "      xrelohihi = " << rndrelohihi << endl;
+      cout << "      xrehilohi = " << rndrehilohi;
+      cout << "      xrelolohi = " << rndrelolohi << endl;
+      cout << "      xrehihilo = " << rndrehihilo;
+      cout << "      xrelohilo = " << rndrelohilo << endl;
+      cout << "      xrehilolo = " << rndrehilolo;
+      cout << "  and xrelololo = " << rndrelololo << endl;
+      cout << "  for ximhihihi = " << rndimhihihi;
+      cout << "      ximlohihi = " << rndimlohihi << endl;
+      cout << "      ximhilohi = " << rndimhilohi;
+      cout << "      ximlolohi = " << rndimlolohi << endl;
+      cout << "      ximhihilo = " << rndimhihilo;
+      cout << "      ximlohilo = " << rndimlohilo << endl;
+      cout << "      ximhilolo = " << rndimhilolo;
+      cout << "  and ximlololo = " << rndimlololo << endl;
+
+      sumrehihihi = 0.0; sumrelohihi = 0.0;
+      sumrehilohi = 0.0; sumrelolohi = 0.0;
+      sumrehihilo = 0.0; sumrelohilo = 0.0;
+      sumrehilolo = 0.0; sumrelololo = 0.0;
+      sumimhihihi = 0.0; sumimlohihi = 0.0;
+      sumimhilohi = 0.0; sumimlolohi = 0.0;
+      sumimhihilo = 0.0; sumimlohilo = 0.0;
+      sumimhilolo = 0.0; sumimlololo = 0.0;
+
+      for(int k=0; k<=deg; k++) 
+      {
+         odf_inc(&sumrehihihi,&sumrelohihi,&sumrehilohi,&sumrelolohi,
+                 &sumrehihilo,&sumrelohilo,&sumrehilolo,&sumrelololo,
+                 zrehihihi_h[k],zrelohihi_h[k],zrehilohi_h[k],zrelolohi_h[k],
+                 zrehihilo_h[k],zrelohilo_h[k],zrehilolo_h[k],zrelololo_h[k]);
+         odf_inc(&sumimhihihi,&sumimlohihi,&sumimhilohi,&sumimlolohi,
+                 &sumimhihilo,&sumimlohilo,&sumimhilolo,&sumimlololo,
+                 zimhihihi_h[k],zimlohihi_h[k],zimhilohi_h[k],zimlolohi_h[k],
+                 zimhihilo_h[k],zimlohilo_h[k],zimhilolo_h[k],zimlololo_h[k]);
+      }
+      cout << "Summation of all coefficients of the product ..." << endl;
+      cout << "  sumrehihihi : " << sumrehihihi;
+      cout << "  sumrelohihi : " << sumrelohihi << endl;
+      cout << "  sumrehilohi : " << sumrehilohi;
+      cout << "  sumrelolohi : " << sumrelolohi << endl;
+      cout << "  sumrehihilo : " << sumrehihilo;
+      cout << "  sumrelohilo : " << sumrelohilo << endl;
+      cout << "  sumrehilolo : " << sumrehilolo;
+      cout << "  sumrelololo : " << sumrelololo << endl;
+      cout << "  sumimhihihi : " << sumimhihihi;
+      cout << "  sumimlohihi : " << sumimlohihi << endl;
+      cout << "  sumimhilohi : " << sumimhilohi;
+      cout << "  sumimlolohi : " << sumimlolohi << endl;
+      cout << "  sumimhihilo : " << sumimhihilo;
+      cout << "  sumimlohilo : " << sumimlohilo << endl;
+      cout << "  sumimhilolo : " << sumimhilolo;
+      cout << "  sumimlololo : " << sumimlololo << endl;
+   }
    GPU_cmplx8_product
       (xrehihihi,xrelohihi,xrehilohi,xrelolohi,
        xrehihilo,xrelohilo,xrehilolo,xrelololo,
@@ -828,28 +898,32 @@ double test_complex_exponential ( int deg )
        zimhihihi_d,zimlohihi_d,zimhilohi_d,zimlolohi_d,
        zimhihilo_d,zimlohilo_d,zimhilolo_d,zimlololo_d,deg,1,deg+1,2);
 
-   sumrehihihi = 0.0; sumrelohihi = 0.0;
-   sumrehilohi = 0.0; sumrelolohi = 0.0;
-   sumrehihilo = 0.0; sumrelohilo = 0.0;
-   sumrehilolo = 0.0; sumrelololo = 0.0;
-   sumimhihihi = 0.0; sumimlohihi = 0.0;
-   sumimhilohi = 0.0; sumimlolohi = 0.0;
-   sumimhihilo = 0.0; sumimlohilo = 0.0;
-   sumimhilolo = 0.0; sumimlololo = 0.0;
-
+   if(verbose > 0)
+   {
+      sumrehihihi = 0.0; sumrelohihi = 0.0;
+      sumrehilohi = 0.0; sumrelolohi = 0.0;
+      sumrehihilo = 0.0; sumrelohilo = 0.0;
+      sumrehilolo = 0.0; sumrelololo = 0.0;
+      sumimhihihi = 0.0; sumimlohihi = 0.0;
+      sumimhilohi = 0.0; sumimlolohi = 0.0;
+      sumimhihilo = 0.0; sumimlohilo = 0.0;
+      sumimhilolo = 0.0; sumimlololo = 0.0;
+   }
    double err = 0.0;
 
    for(int k=0; k<=deg; k++) 
    {
-      odf_inc(&sumrehihihi,&sumrelohihi,&sumrehilohi,&sumrelolohi,
-              &sumrehihilo,&sumrelohilo,&sumrehilolo,&sumrelololo,
-              zrehihihi_d[k],zrelohihi_d[k],zrehilohi_d[k],zrelolohi_d[k],
-              zrehihilo_d[k],zrelohilo_d[k],zrehilolo_d[k],zrelololo_d[k]);
-      odf_inc(&sumimhihihi,&sumimlohihi,&sumimhilohi,&sumimlolohi,
-              &sumimhihilo,&sumimlohilo,&sumimhilolo,&sumimlololo,
-              zimhihihi_d[k],zimlohihi_d[k],zimhilohi_d[k],zimlolohi_d[k],
-              zimhihilo_d[k],zimlohilo_d[k],zimhilolo_d[k],zimlololo_d[k]);
-
+      if(verbose > 0)
+      {
+         odf_inc(&sumrehihihi,&sumrelohihi,&sumrehilohi,&sumrelolohi,
+                 &sumrehihilo,&sumrelohilo,&sumrehilolo,&sumrelololo,
+                 zrehihihi_d[k],zrelohihi_d[k],zrehilohi_d[k],zrelolohi_d[k],
+                 zrehihilo_d[k],zrelohilo_d[k],zrehilolo_d[k],zrelololo_d[k]);
+         odf_inc(&sumimhihihi,&sumimlohihi,&sumimhilohi,&sumimlolohi,
+                 &sumimhihilo,&sumimlohilo,&sumimhilolo,&sumimlololo,
+                 zimhihihi_d[k],zimlohihi_d[k],zimhilohi_d[k],zimlolohi_d[k],
+                 zimhihilo_d[k],zimlohilo_d[k],zimhilolo_d[k],zimlololo_d[k]);
+      }
       err = err
           + abs(zrehihihi_h[k] - zrehihihi_d[k])
           + abs(zrelohihi_h[k] - zrelohihi_d[k])
@@ -868,27 +942,28 @@ double test_complex_exponential ( int deg )
           + abs(zimhilolo_h[k] - zimhilolo_d[k])
           + abs(zimlololo_h[k] - zimlololo_d[k]);
    }
-   cout << "Summation of all coefficients of the GPU computed product ..."
-        << endl;
-   cout << "  sumrehihihi : " << sumrehihihi;
-   cout << "  sumrelohihi : " << sumrelohihi << endl;
-   cout << "  sumrehilohi : " << sumrehilohi;
-   cout << "  sumrelolohi : " << sumrelolohi << endl;
-   cout << "  sumrehihilo : " << sumrehihilo;
-   cout << "  sumrelohilo : " << sumrelohilo << endl;
-   cout << "  sumrehilolo : " << sumrehilolo;
-   cout << "  sumrelololo : " << sumrelololo << endl;
-   cout << "  sumimhihihi : " << sumimhihihi;
-   cout << "  sumimlohihi : " << sumimlohihi << endl;
-   cout << "  sumimhilohi : " << sumimhilohi;
-   cout << "  sumimlolohi : " << sumimlolohi << endl;
-   cout << "  sumimhihilo : " << sumimhihilo;
-   cout << "  sumimlohilo : " << sumimlohilo << endl;
-   cout << "  sumimhilolo : " << sumimhilolo;
-   cout << "  sumimlololo : " << sumimlololo << endl;
+   if(verbose > 0)
+   {
+      cout << "Summation of all coefficients of the GPU computed product ..."
+           << endl;
+      cout << "  sumrehihihi : " << sumrehihihi;
+      cout << "  sumrelohihi : " << sumrelohihi << endl;
+      cout << "  sumrehilohi : " << sumrehilohi;
+      cout << "  sumrelolohi : " << sumrelolohi << endl;
+      cout << "  sumrehihilo : " << sumrehihilo;
+      cout << "  sumrelohilo : " << sumrelohilo << endl;
+      cout << "  sumrehilolo : " << sumrehilolo;
+      cout << "  sumrelololo : " << sumrelololo << endl;
+      cout << "  sumimhihihi : " << sumimhihihi;
+      cout << "  sumimlohihi : " << sumimlohihi << endl;
+      cout << "  sumimhilohi : " << sumimhilohi;
+      cout << "  sumimlolohi : " << sumimlolohi << endl;
+      cout << "  sumimhihilo : " << sumimhihilo;
+      cout << "  sumimlohilo : " << sumimlohilo << endl;
+      cout << "  sumimhilolo : " << sumimhilolo;
+      cout << "  sumimlololo : " << sumimlololo << endl;
 
-   cout << scientific << setprecision(16);
-   cout << "the error : " << err << endl;
-
+      cout << "the error : " << err << endl;
+   }
    return err;
 }
