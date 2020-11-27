@@ -95,6 +95,22 @@ __global__ void dbl10_convolute
  *   zlrg     second lowest parts of the product of x with y;
  *   zlpk     lowest parts of the product of x with y. */
 
+__global__ void dbl10_padded_convolute
+ ( double *xrtb, double *xrix, double *xrmi, double *xrrg, double *xrpk,
+   double *xltb, double *xlix, double *xlmi, double *xlrg, double *xlpk,
+   double *yrtb, double *yrix, double *yrmi, double *yrrg, double *yrpk,
+   double *yltb, double *ylix, double *ylmi, double *ylrg, double *ylpk,
+   double *zrtb, double *zrix, double *zrmi, double *zrrg, double *zrpk,
+   double *zltb, double *zlix, double *zlmi, double *zlrg, double *zlpk,
+   int dim );
+/*
+ * DESCRIPTION :
+ *   Convolutes real vectors x and y to make z.
+ *   All arrays have dimension dim.
+ *   Zeros are inserted in the shared memory for the second vector,
+ *   so all threads perform the same number of operations
+ *   and thread divergence is avoided. */
+
 __global__ void cmplx10_convolute
  ( double *xrertb, double *xrerix, double *xrermi, double *xrerrg,
    double *xrerpk, double *xreltb, double *xrelix, double *xrelmi,
@@ -206,6 +222,35 @@ __global__ void cmplx10_convolute
  *   zimlrg   second lowest parts of the imaginary parts of the product z;
  *   zimlpk   lowest parts of the imaginary parts of the product z. */
 
+__global__ void cmplx10_padded_convolute
+ ( double *xrertb, double *xrerix, double *xrermi, double *xrerrg,
+   double *xrerpk, double *xreltb, double *xrelix, double *xrelmi,
+   double *xrelrg, double *xrelpk,
+   double *ximrtb, double *ximrix, double *ximrmi, double *ximrrg,
+   double *ximrpk, double *ximltb, double *ximlix, double *ximlmi,
+   double *ximlrg, double *ximlpk,
+   double *yrertb, double *yrerix, double *yrermi, double *yrerrg,
+   double *yrerpk, double *yreltb, double *yrelix, double *yrelmi,
+   double *yrelrg, double *yrelpk,
+   double *yimrtb, double *yimrix, double *yimrmi, double *yimrrg,
+   double *yimrpk, double *yimltb, double *yimlix, double *yimlmi,
+   double *yimlrg, double *yimlpk,
+   double *zrertb, double *zrerix, double *zrermi, double *zrerrg,
+   double *zrerpk, double *zreltb, double *zrelix, double *zrelmi,
+   double *zrelrg, double *zrelpk,
+   double *zimrtb, double *zimrix, double *zimrmi, double *zimrrg,
+   double *zimrpk, double *zimltb, double *zimlix, double *zimlmi,
+   double *zimlrg, double *zimlpk, int dim );
+/*
+ * DESCRIPTION :
+ *   Convolutes complex vectors x and y to make z.
+ *   The complex vectors are given as double arrays with real
+ *   and imaginary parts, of ten arrays for all parts of the deca doubles.
+ *   All arrays have dimension dim.
+ *   Zeros are inserted in the shared memory for the second vector,
+ *   so all threads perform the same number of operations
+ *   and thread divergence is avoided. */
+
 void GPU_dbl10_product
  ( double *xrtb_h, double *xrix_h, double *xrmi_h, double *xrrg_h,
    double *xrpk_h, double *xltb_h, double *xlix_h, double *xlmi_h,
@@ -215,54 +260,55 @@ void GPU_dbl10_product
    double *ylrg_h, double *ylpk_h,
    double *zrtb_h, double *zrix_h, double *zrmi_h, double *zrrg_h,
    double *zrpk_h, double *zltb_h, double *zlix_h, double *zlmi_h,
-   double *zlrg_h, double *zlpk_h, int deg, int freq, int BS );
+   double *zlrg_h, double *zlpk_h, int deg, int freq, int BS, int padded );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
  *   with deca double coefficients.
  *
  * ON ENTRY :
- *   xrtb_h   deg+1 highest parts of the coefficients of x;
- *   xrix_h   deg+1 second highest parts of the coefficients of x;
- *   xrmi_h   deg+1 third highest parts of the coefficients of x;
- *   xrrg_h   deg+1 fourth highest parts of the coefficients of x;
- *   xrpk_h   deg+1 fifth highest parts of the coefficients of x;
- *   xltb_h   deg+1 fifth lowest parts of the coefficients of x;
- *   xlix_h   deg+1 fourth lowest parts of the coefficients of x;
- *   xlmi_h   deg+1 third lowest parts of the coefficients of x;
- *   xlrg_h   deg+1 second lowest parts of the coefficients of x;
- *   xlpk_h   deg+1 lowest parts of the coefficients of x;
- *   yltb_h   deg+1 highest parts of the coefficients of y;
- *   yrix_h   deg+1 second highest parts of the coefficients of y;
- *   yrmi_h   deg+1 third highest parts of the coefficients of y;
- *   yrrg_h   deg+1 fourth highest lowest parts of the coefficients of y;
- *   yrpk_h   deg+1 fifth highest parts of the coefficients of y;
- *   yltb_h   deg+1 fifth lowest parts of the coefficients of y;
- *   ylix_h   deg+1 fourth lowest parts of the coefficients of y;
- *   ylmi_h   deg+1 third lowest parts of the coefficients of y;
- *   ylrg_h   deg+1 second lowest parts of the coefficients of y;
- *   ylpk_h   deg+1 lowest parts of the coefficients of y;
- *   zrtb_h   space allocated for deg+1 doubles for the highest parts of z;
- *   zrix_h   space allocated for deg+1 doubles 
- *            for the second highest parts of z;
- *   zrmi_h   space allocated for deg+1 doubles
- *            for the third highest parts of z;
- *   zrrg_h   space allocated for deg+1 doubles 
- *            for the fourth highest parts of z;
- *   zrpk_h   space allocated for deg+1 doubles
- *            for the fifth highest parts of z;
- *   zltb_h   space allocated for deg+1 doubles
- *            for the fifth lowest parts of z;
- *   zlix_h   space allocated for deg+1 doubles 
- *            for the fourth lowest parts of z;
- *   zlmi_h   space allocated for deg+1 doubles
- *            for the third lowest parts of z;
- *   zlrg_h   space allocated for deg+1 doubles 
- *            for the second lowest parts of z;
- *   zlpk_h   space allocated for deg+1 doubles for the lowest parts of z;
- *   deg      degree of the truncated power series;
- *   freq     frequency for timing purposes;
- *   BS       block size, the number of threads in a block.
+ *   xrtb_h    deg+1 highest parts of the coefficients of x;
+ *   xrix_h    deg+1 second highest parts of the coefficients of x;
+ *   xrmi_h    deg+1 third highest parts of the coefficients of x;
+ *   xrrg_h    deg+1 fourth highest parts of the coefficients of x;
+ *   xrpk_h    deg+1 fifth highest parts of the coefficients of x;
+ *   xltb_h    deg+1 fifth lowest parts of the coefficients of x;
+ *   xlix_h    deg+1 fourth lowest parts of the coefficients of x;
+ *   xlmi_h    deg+1 third lowest parts of the coefficients of x;
+ *   xlrg_h    deg+1 second lowest parts of the coefficients of x;
+ *   xlpk_h    deg+1 lowest parts of the coefficients of x;
+ *   yltb_h    deg+1 highest parts of the coefficients of y;
+ *   yrix_h    deg+1 second highest parts of the coefficients of y;
+ *   yrmi_h    deg+1 third highest parts of the coefficients of y;
+ *   yrrg_h    deg+1 fourth highest lowest parts of the coefficients of y;
+ *   yrpk_h    deg+1 fifth highest parts of the coefficients of y;
+ *   yltb_h    deg+1 fifth lowest parts of the coefficients of y;
+ *   ylix_h    deg+1 fourth lowest parts of the coefficients of y;
+ *   ylmi_h    deg+1 third lowest parts of the coefficients of y;
+ *   ylrg_h    deg+1 second lowest parts of the coefficients of y;
+ *   ylpk_h    deg+1 lowest parts of the coefficients of y;
+ *   zrtb_h    space allocated for deg+1 doubles for the highest parts of z;
+ *   zrix_h    space allocated for deg+1 doubles 
+ *             for the second highest parts of z;
+ *   zrmi_h    space allocated for deg+1 doubles
+ *             for the third highest parts of z;
+ *   zrrg_h    space allocated for deg+1 doubles 
+ *             for the fourth highest parts of z;
+ *   zrpk_h    space allocated for deg+1 doubles
+ *             for the fifth highest parts of z;
+ *   zltb_h    space allocated for deg+1 doubles
+ *             for the fifth lowest parts of z;
+ *   zlix_h    space allocated for deg+1 doubles 
+ *             for the fourth lowest parts of z;
+ *   zlmi_h    space allocated for deg+1 doubles
+ *             for the third lowest parts of z;
+ *   zlrg_h    space allocated for deg+1 doubles 
+ *             for the second lowest parts of z;
+ *   zlpk_h    space allocated for deg+1 doubles for the lowest parts of z;
+ *   deg       degree of the truncated power series;
+ *   freq      frequency for timing purposes;
+ *   BS        block size, the number of threads in a block;
+ *   padded    if 1, then the padded convolute is called.
  *
  * ON RETURN :
  *   zrtb_h    highest parts of the coefficients of the product z;
@@ -294,8 +340,7 @@ void GPU_cmplx10_product
    double *zrelrg_h, double *zrelpk_h,
    double *zimrtb_h, double *zimrix_h, double *zimrmi_h, double *zimrrg_h,
    double *zimrpk_h, double *zimltb_h, double *zimlix_h, double *zimlmi_h,
-   double *zimlrg_h, double *zimlpk_h, int deg, int freq, int BS,
-   int looped );
+   double *zimlrg_h, double *zimlpk_h, int deg, int freq, int BS, int mode );
 /*
  * DESCRIPTION :
  *   Computes the product of two power series x and y to make z,
@@ -371,7 +416,8 @@ void GPU_cmplx10_product
  *   deg        degree of the truncated power series;
  *   freq       frequency for timing purposes;
  *   BS         block size, the number of threads in a block;
- *   looped     if > 0, then multiple kernels will be launched.
+ *   mode       if 1, then multiple kernels will be launched;
+ *              if 2, then one padded complex convolute runs.
  *
  * ON RETURN :
  *   zrertb_h   highest parts of the real parts of z;

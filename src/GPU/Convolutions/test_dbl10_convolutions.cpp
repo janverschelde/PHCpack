@@ -192,7 +192,7 @@ double test_real ( int deg )
       (xrtb,xrix,xrmi,xrrg,xrpk,xltb,xlix,xlmi,xlrg,xlpk,
        yrtb,yrix,yrmi,yrrg,yrpk,yltb,ylix,ylmi,ylrg,ylpk,
        zrtb_d,zrix_d,zrmi_d,zrrg_d,zrpk_d,
-       zltb_d,zlix_d,zlmi_d,zlrg_d,zlpk_d,deg,1,deg+1);
+       zltb_d,zlix_d,zlmi_d,zlrg_d,zlpk_d,deg,1,deg+1,1);
 
    cout << "GPU computed product :" << endl;
 
@@ -279,7 +279,6 @@ double test_real_random ( int deg )
          (&yrtb[k],&yrix[k],&yrmi[k],&yrrg[k],&yrpk[k],
           &yltb[k],&ylix[k],&ylmi[k],&ylrg[k],&ylpk[k]);
    }
-
    CPU_dbl10_product
       (deg,xrtb,xrix,xrmi,xrrg,xrpk,xltb,xlix,xlmi,xlrg,xlpk,
            yrtb,yrix,yrmi,yrrg,yrpk,yltb,ylix,ylmi,ylrg,ylpk,
@@ -305,7 +304,7 @@ double test_real_random ( int deg )
       (xrtb,xrix,xrmi,xrrg,xrpk,xltb,xlix,xlmi,xlrg,xlpk,
        yrtb,yrix,yrmi,yrrg,yrpk,yltb,ylix,ylmi,ylrg,ylpk,
        zrtb_d,zrix_d,zrmi_d,zrrg_d,zrpk_d,
-       zltb_d,zlix_d,zlmi_d,zlrg_d,zlpk_d,deg,1,deg+1);
+       zltb_d,zlix_d,zlmi_d,zlrg_d,zlpk_d,deg,1,deg+1,1);
 
    cout << "GPU computed product :" << endl;
 
@@ -648,7 +647,7 @@ double test_real_exponential ( int deg )
       (xrtb,xrix,xrmi,xrrg,xrpk,xltb,xlix,xlmi,xlrg,xlpk,
        yrtb,yrix,yrmi,yrrg,yrpk,yltb,ylix,ylmi,ylrg,ylpk,
        zrtb_d,zrix_d,zrmi_d,zrrg_d,zrpk_d,
-       zltb_d,zlix_d,zlmi_d,zlrg_d,zlpk_d,deg,1,deg+1);
+       zltb_d,zlix_d,zlmi_d,zlrg_d,zlpk_d,deg,1,deg+1,1);
 
    sumrtb = 0.0; sumrix = 0.0; sumrmi = 0.0; sumrrg = 0.0; sumrpk = 0.0;
    sumltb = 0.0; sumlix = 0.0; sumlmi = 0.0; sumlrg = 0.0; sumlpk = 0.0;
