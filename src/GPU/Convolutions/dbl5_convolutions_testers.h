@@ -12,10 +12,26 @@ double test_dbl5_real ( int deg, int verbose );
  *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
 
+double test_dbl5_real_random ( int deg, int verbose );
+/*
+ * DESCRIPTION :
+ *   Multiplies two random power series,
+ *   truncated to degree deg, for real coefficients.
+ *   If verbose equals zero, then no output is written.
+ *   Returns the sum of all errors. */
+
 double test_dbl5_complex ( int deg, int verbose );
 /*
  * DESCRIPTION :
  *   Multiplies the power series of 1/(1-x) with 1+x,
+ *   truncated to degree deg, for complex coefficients.
+ *   If verbose equals zero, then no output is written.
+ *   Returns the sum of all errors. */
+
+double test_dbl5_complex_random ( int deg, int verbose );
+/*
+ * DESCRIPTION :
+ *   Multiplies two random power series,
  *   truncated to degree deg, for complex coefficients.
  *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
@@ -41,7 +57,7 @@ double test_dbl5_complex_exponential ( int deg, int verbose );
 int main_dbl5_test ( int seed, int deg, int vrblvl );
 /*
  * DESCRIPTION :
- *   Runs four tests on convolutions in penta double precision.
+ *   Runs six tests on convolutions in penta double precision.
  *   Returns 0 if all tests passed,
  *   otherwise, returns the number of failed tests.
  *

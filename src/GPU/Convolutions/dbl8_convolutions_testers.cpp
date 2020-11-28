@@ -18,14 +18,18 @@ using namespace std;
 
 int main_dbl8_test ( int seed, int deg, int vrblvl )
 {
-   int fail;
+   int fail,seedused;
 
    if(seed != 0)
+   {
       srand(seed);
+      seedused = seed;
+   }
    else
    {
       const int timevalue = time(NULL); // for a random seed
       srand(timevalue);
+      seedused = timevalue;
    }
    ios_base::fmtflags f(cout.flags()); // to restore format flags
 
@@ -36,8 +40,10 @@ int main_dbl8_test ( int seed, int deg, int vrblvl )
 
       cout.flags(f);
       double complexerror1 = test_dbl8_complex(deg,vrblvl-1);
+      double complexerror2 = test_dbl8_complex_random(deg,vrblvl-1);
+
       double realerror3 = test_dbl8_real_exponential(deg,vrblvl-1);
-      double complexerror2 = test_dbl8_complex_exponential(deg,vrblvl-1);
+      double complexerror3 = test_dbl8_complex_exponential(deg,vrblvl-1);
 
       const double tol = 1.0e-120;
 
@@ -45,7 +51,8 @@ int main_dbl8_test ( int seed, int deg, int vrblvl )
            + int(realerror2 > tol)
            + int(realerror3 > tol)
            + int(complexerror1 > tol)
-           + int(complexerror2 > tol);
+           + int(complexerror2 > tol)
+           + int(complexerror3 > tol);
 
       if(vrblvl > 0)
       {
@@ -71,6 +78,13 @@ int main_dbl8_test ( int seed, int deg, int vrblvl )
          else
             cout << "  fail!" << endl;
 
+         cout << "-> Second test on complex data, sum of all errors : ";
+         cout << complexerror2;
+         if(complexerror2 < tol)
+            cout << "  pass." << endl;
+         else
+            cout << "  fail!" << endl;
+
          cout << "-> Third test on real data, sum of all errors : ";
          cout << realerror3;
          if(realerror3 < tol)
@@ -78,12 +92,14 @@ int main_dbl8_test ( int seed, int deg, int vrblvl )
          else
             cout << "  fail!" << endl;
 
-         cout << "-> Second test on complex data, sum of all errors : ";
-         cout << complexerror2;
-         if(complexerror2 < tol)
+         cout << "-> Third test on complex data, sum of all errors : ";
+         cout << complexerror3;
+         if(complexerror3 < tol)
             cout << "  pass." << endl;
          else
             cout << "  fail!" << endl;
+
+         cout << "   Seed used : " <<  seedused << endl;
       }
    }
    return fail;
@@ -253,19 +269,19 @@ double test_dbl8_real_random ( int deg, int verbose )
 
    if(verbose > 0)
    {
-      cout << "Series of 1/(1-x) multiplied with 1-x : " << endl;
+      cout << "Product of two random real series :" << endl;
 
       cout << scientific << setprecision(16);
 
       for(int k=0; k<=deg; k++)
       {
          cout << "zhihihi[" << k << "] : " << zhihihi_h[k];
-         cout << "  zlohihi[" << k << "] : " << zlohihi_h[k];
-         cout << "  zhilohi[" << k << "] : " << zhilohi_h[k];
+         cout << "  zlohihi[" << k << "] : " << zlohihi_h[k] << endl;
+         cout << "zhilohi[" << k << "] : " << zhilohi_h[k];
          cout << "  zlolohi[" << k << "] : " << zlolohi_h[k] << endl;
          cout << "zhihilo[" << k << "] : " << zhihilo_h[k];
-         cout << "  zlohilo[" << k << "] : " << zlohilo_h[k];
-         cout << "  zhilolo[" << k << "] : " << zhilolo_h[k];
+         cout << "  zlohilo[" << k << "] : " << zlohilo_h[k] << endl;
+         cout << "zhilolo[" << k << "] : " << zhilolo_h[k];
          cout << "  zlololo[" << k << "] : " << zlololo_h[k] << endl;
       }
    }
@@ -284,12 +300,12 @@ double test_dbl8_real_random ( int deg, int verbose )
       if(verbose > 0)
       {
          cout << "zhihihi[" << k << "] : " << zhihihi_d[k];
-         cout << "  zlohihi[" << k << "] : " << zlohihi_d[k];
-         cout << "  zhilohi[" << k << "] : " << zhilohi_d[k];
+         cout << "  zlohihi[" << k << "] : " << zlohihi_d[k] << endl;
+         cout << "zhilohi[" << k << "] : " << zhilohi_d[k];
          cout << "  zlolohi[" << k << "] : " << zlolohi_d[k] << endl;
          cout << "zhihilo[" << k << "] : " << zhihilo_d[k];
-         cout << "  zlohilo[" << k << "] : " << zlohilo_d[k];
-         cout << "  zhilolo[" << k << "] : " << zhilolo_d[k];
+         cout << "  zlohilo[" << k << "] : " << zlohilo_d[k] << endl;
+         cout << "zhilolo[" << k << "] : " << zhilolo_d[k];
          cout << "  zlololo[" << k << "] : " << zlololo_d[k] << endl;
       }
       err = err
@@ -473,6 +489,191 @@ double test_dbl8_complex ( int deg, int verbose )
          cout << "zimhihilo[" << k << "] : " << zimhihilo_d[k];
          cout << "  zimlohilo[" << k << "] : " << zimlohilo_d[k];
          cout << "  zimhilolo[" << k << "] : " << zimhilolo_d[k];
+         cout << "  zimlololo[" << k << "] : " << zimlololo_d[k] << endl;
+      }
+      err = err
+          + abs(zrehihihi_h[k] - zrehihihi_d[k])
+          + abs(zrelohihi_h[k] - zrelohihi_d[k])
+          + abs(zrehilohi_h[k] - zrehilohi_d[k])
+          + abs(zrelolohi_h[k] - zrelolohi_d[k])
+          + abs(zrehihilo_h[k] - zrehihilo_d[k])
+          + abs(zrelohilo_h[k] - zrelohilo_d[k])
+          + abs(zrehilolo_h[k] - zrehilolo_d[k])
+          + abs(zrelololo_h[k] - zrelololo_d[k])
+          + abs(zimhihihi_h[k] - zimhihihi_d[k])
+          + abs(zimlohihi_h[k] - zimlohihi_d[k])
+          + abs(zimhilohi_h[k] - zimhilohi_d[k])
+          + abs(zimlolohi_h[k] - zimlolohi_d[k])
+          + abs(zimhihilo_h[k] - zimhihilo_d[k])
+          + abs(zimlohilo_h[k] - zimlohilo_d[k])
+          + abs(zimhilolo_h[k] - zimhilolo_d[k])
+          + abs(zimlololo_h[k] - zimlololo_d[k]);
+   }
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
+      cout << "the error : " << err << endl;
+   }
+   return err;
+}
+
+double test_dbl8_complex_random ( int deg, int verbose )
+{
+   double* xrehihihi = new double[deg+1];
+   double* xrelohihi = new double[deg+1];
+   double* xrehilohi = new double[deg+1];
+   double* xrelolohi = new double[deg+1];
+   double* xrehihilo = new double[deg+1];
+   double* xrelohilo = new double[deg+1];
+   double* xrehilolo = new double[deg+1];
+   double* xrelololo = new double[deg+1];
+   double* ximhihihi = new double[deg+1];
+   double* ximlohihi = new double[deg+1];
+   double* ximhilohi = new double[deg+1];
+   double* ximlolohi = new double[deg+1];
+   double* ximhihilo = new double[deg+1];
+   double* ximlohilo = new double[deg+1];
+   double* ximhilolo = new double[deg+1];
+   double* ximlololo = new double[deg+1];
+   double* yrehihihi = new double[deg+1];
+   double* yrelohihi = new double[deg+1];
+   double* yrehilohi = new double[deg+1];
+   double* yrelolohi = new double[deg+1];
+   double* yrehihilo = new double[deg+1];
+   double* yrelohilo = new double[deg+1];
+   double* yrehilolo = new double[deg+1];
+   double* yrelololo = new double[deg+1];
+   double* yimhihihi = new double[deg+1];
+   double* yimlohihi = new double[deg+1];
+   double* yimhilohi = new double[deg+1];
+   double* yimlolohi = new double[deg+1];
+   double* yimhihilo = new double[deg+1];
+   double* yimlohilo = new double[deg+1];
+   double* yimhilolo = new double[deg+1];
+   double* yimlololo = new double[deg+1];
+   double* zrehihihi_h = new double[deg+1];
+   double* zrelohihi_h = new double[deg+1];
+   double* zrehilohi_h = new double[deg+1];
+   double* zrelolohi_h = new double[deg+1];
+   double* zrehihilo_h = new double[deg+1];
+   double* zrelohilo_h = new double[deg+1];
+   double* zrehilolo_h = new double[deg+1];
+   double* zrelololo_h = new double[deg+1];
+   double* zimhihihi_h = new double[deg+1];
+   double* zimlohihi_h = new double[deg+1];
+   double* zimhilohi_h = new double[deg+1];
+   double* zimlolohi_h = new double[deg+1];
+   double* zimhihilo_h = new double[deg+1];
+   double* zimlohilo_h = new double[deg+1];
+   double* zimhilolo_h = new double[deg+1];
+   double* zimlololo_h = new double[deg+1];
+   double* zrehihihi_d = new double[deg+1];
+   double* zrelohihi_d = new double[deg+1];
+   double* zrehilohi_d = new double[deg+1];
+   double* zrelolohi_d = new double[deg+1];
+   double* zrehihilo_d = new double[deg+1];
+   double* zrelohilo_d = new double[deg+1];
+   double* zrehilolo_d = new double[deg+1];
+   double* zrelololo_d = new double[deg+1];
+   double* zimhihihi_d = new double[deg+1];
+   double* zimlohihi_d = new double[deg+1];
+   double* zimhilohi_d = new double[deg+1];
+   double* zimlolohi_d = new double[deg+1];
+   double* zimhihilo_d = new double[deg+1];
+   double* zimlohilo_d = new double[deg+1];
+   double* zimhilolo_d = new double[deg+1];
+   double* zimlololo_d = new double[deg+1];
+
+   for(int k=0; k<=deg; k++)
+   {
+      random_octo_double
+         (&xrehihihi[k],&xrelohihi[k],&xrehilohi[k],&xrelolohi[k],
+          &xrehihilo[k],&xrelohilo[k],&xrehilolo[k],&xrelololo[k]);
+      random_octo_double
+         (&ximhihihi[k],&ximlohihi[k],&ximhilohi[k],&ximlolohi[k],
+          &ximhihilo[k],&ximlohilo[k],&ximhilolo[k],&ximlololo[k]);
+      random_octo_double
+         (&yrehihihi[k],&yrelohihi[k],&yrehilohi[k],&yrelolohi[k],
+          &yrehihilo[k],&yrelohilo[k],&yrehilolo[k],&yrelololo[k]);
+      random_octo_double
+         (&yimhihihi[k],&yimlohihi[k],&yimhilohi[k],&yimlolohi[k],
+          &yimhihilo[k],&yimlohilo[k],&yimhilolo[k],&yimlololo[k]);
+   }
+   CPU_cmplx8_product
+      (deg,xrehihihi,xrelohihi,xrehilohi,xrelolohi,
+           xrehihilo,xrelohilo,xrehilolo,xrelololo,
+           ximhihihi,ximlohihi,ximhilohi,ximlolohi,
+           ximhihilo,ximlohilo,ximhilolo,ximlololo,
+           yrehihihi,yrelohihi,yrehilohi,yimlolohi,
+           yrehihilo,yrelohilo,yrehilolo,yimlololo,
+           yimhihihi,yimlohihi,yimhilohi,yimlolohi,
+           yimhihilo,yimlohilo,yimhilolo,yimlololo,
+           zrehihihi_h,zrelohihi_h,zrehilohi_h,zrelolohi_h,
+           zrehihilo_h,zrelohilo_h,zrehilolo_h,zrelololo_h,
+           zimhihihi_h,zimlohihi_h,zimhilohi_h,zimlolohi_h,
+           zimhihilo_h,zimlohilo_h,zimhilolo_h,zimlololo_h);
+
+   if(verbose > 0)
+   {
+      cout << "Product of two random complex series : " << endl;
+
+      for(int k=0; k<=deg; k++)
+      {
+         cout << "zrehihihi[" << k << "] : " << zrehihihi_h[k];
+         cout << "  zrelohihi[" << k << "] : " << zrelohihi_h[k] << endl;
+         cout << "zrehilohi[" << k << "] : " << zrehilohi_h[k];
+         cout << "  zrelolohi[" << k << "] : " << zrelolohi_h[k] << endl;
+         cout << "zrehihilo[" << k << "] : " << zrehihilo_h[k];
+         cout << "  zrelohilo[" << k << "] : " << zrelohilo_h[k] << endl;
+         cout << "zrehilolo[" << k << "] : " << zrehilolo_h[k];
+         cout << "  zrelololo[" << k << "] : " << zrelololo_h[k] << endl;
+         cout << "zimhihihi[" << k << "] : " << zimhihihi_h[k];
+         cout << "  zimlohihi[" << k << "] : " << zimlohihi_h[k] << endl;
+         cout << "zimhilohi[" << k << "] : " << zimhilohi_h[k];
+         cout << "  zimlolohi[" << k << "] : " << zimlolohi_h[k] << endl;
+         cout << "zimhihilo[" << k << "] : " << zimhihilo_h[k];
+         cout << "  zimlohilo[" << k << "] : " << zimlohilo_h[k] << endl;
+         cout << "zimhilolo[" << k << "] : " << zimhilolo_h[k];
+         cout << "  zimlololo[" << k << "] : " << zimlololo_h[k] << endl;
+      }
+   }
+   GPU_cmplx8_product
+      (xrehihihi,xrelohihi,xrehilohi,xrelolohi,
+       xrehihilo,xrelohilo,xrehilolo,xrelololo,
+       ximhihihi,ximlohihi,ximhilohi,ximlolohi,
+       ximhihilo,ximlohilo,ximhilolo,ximlololo,
+       yrehihihi,yrelohihi,yrehilohi,yrelolohi,
+       yrehihilo,yrelohilo,yrehilolo,yrelololo,
+       yimhihihi,yimlohihi,yimhilohi,yimlolohi,
+       yimhihilo,yimlohilo,yimhilolo,yimlololo,
+       zrehihihi_d,zrelohihi_d,zrehilohi_d,zrelolohi_d,
+       zrehihilo_d,zrelohilo_d,zrehilolo_d,zrelololo_d,
+       zimhihihi_d,zimlohihi_d,zimhilohi_d,zimlolohi_d,
+       zimhihilo_d,zimlohilo_d,zimhilolo_d,zimlololo_d,deg,1,deg+1,2);
+
+   if(verbose > 0) cout << "GPU computed product :" << endl;
+
+   double err = 0.0;
+
+   for(int k=0; k<=deg; k++)
+   {
+      if(verbose > 0)
+      {
+         cout << "zrehihihi[" << k << "] : " << zrehihihi_d[k];
+         cout << "  zrelohihi[" << k << "] : " << zrelohihi_d[k] << endl;
+         cout << "zrehilohi[" << k << "] : " << zrehilohi_d[k];
+         cout << "  zrelolohi[" << k << "] : " << zrelolohi_d[k] << endl;
+         cout << "zrehihilo[" << k << "] : " << zrehihilo_d[k];
+         cout << "  zrelohilo[" << k << "] : " << zrelohilo_d[k] << endl;
+         cout << "zrehilolo[" << k << "] : " << zrehilolo_d[k];
+         cout << "  zrelololo[" << k << "] : " << zrelololo_d[k] << endl;
+         cout << "zimhihihi[" << k << "] : " << zimhihihi_d[k];
+         cout << "  zimlohihi[" << k << "] : " << zimlohihi_d[k] << endl;
+         cout << "zimhilohi[" << k << "] : " << zimhilohi_d[k];
+         cout << "  zimlolohi[" << k << "] : " << zimlolohi_d[k] << endl;
+         cout << "zimhihilo[" << k << "] : " << zimhihilo_d[k];
+         cout << "  zimlohilo[" << k << "] : " << zimlohilo_d[k] << endl;
+         cout << "zimhilolo[" << k << "] : " << zimhilolo_d[k];
          cout << "  zimlololo[" << k << "] : " << zimlololo_d[k] << endl;
       }
       err = err

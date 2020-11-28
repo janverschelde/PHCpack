@@ -18,14 +18,18 @@ using namespace std;
 
 int main_dbl10_test ( int seed, int deg, int vrblvl )
 {
-   int fail;
+   int fail,seedused;
 
    if(seed != 0)
+   {
       srand(seed);
+      seedused = seed;
+   }
    else
    {
       const int timevalue = time(NULL); // for a random seed
       srand(timevalue);
+      seedused = timevalue;
    }
    ios_base::fmtflags f(cout.flags()); // to restore format flags
 
@@ -36,8 +40,10 @@ int main_dbl10_test ( int seed, int deg, int vrblvl )
 
       cout.flags(f);
       double complexerror1 = test_dbl10_complex(deg,vrblvl-1);
+      double complexerror2 = test_dbl10_complex_random(deg,vrblvl-1);
+
       double realerror3 = test_dbl10_real_exponential(deg,vrblvl-1);
-      double complexerror2 = test_dbl10_complex_exponential(deg,vrblvl-1);
+      double complexerror3 = test_dbl10_complex_exponential(deg,vrblvl-1);
 
       const double tol = 1.0e-154;
 
@@ -45,7 +51,8 @@ int main_dbl10_test ( int seed, int deg, int vrblvl )
            + int(realerror2 > tol)
            + int(realerror3 > tol)
            + int(complexerror1 > tol)
-           + int(complexerror2 > tol);
+           + int(complexerror2 > tol)
+           + int(complexerror3 > tol);
 
       if(vrblvl > 0)
       {
@@ -71,6 +78,13 @@ int main_dbl10_test ( int seed, int deg, int vrblvl )
          else
             cout << "  fail!" << endl;
 
+         cout << "-> Second test on complex data, sum of all errors : ";
+         cout << complexerror2;
+         if(complexerror2 < tol)
+            cout << "  pass." << endl;
+         else
+            cout << "  fail!" << endl;
+
          cout << "-> Third test on real data, sum of all errors : ";
          cout << realerror3;
          if(realerror3 < tol)
@@ -78,12 +92,14 @@ int main_dbl10_test ( int seed, int deg, int vrblvl )
          else
             cout << "  fail!" << endl;
 
-         cout << "-> Second test on complex data, sum of all errors : ";
-         cout << complexerror2;
-         if(complexerror2 < tol)
+         cout << "-> Third test on complex data, sum of all errors : ";
+         cout << complexerror3;
+         if(complexerror3 < tol)
             cout << "  pass." << endl;
          else
             cout << "  fail!" << endl;
+
+         cout << "   Seed used : " <<  seedused << endl;
       }
    }
    return fail;
@@ -270,20 +286,20 @@ double test_dbl10_real_random ( int deg, int verbose )
 
    if(verbose > 0)
    {
-      cout << "The product of two random series : " << endl;
+      cout << "The product of two random real series : " << endl;
 
       for(int k=0; k<=deg; k++)
       {
          cout << "zrtb[" << k << "] : " << zrtb_h[k];
-         cout << "  zrix[" << k << "] : " << zrix_h[k];
-         cout << "  zrmi[" << k << "] : " << zrmi_h[k];
-         cout << "  zrrg[" << k << "] : " << zrrg_h[k];
-         cout << "  zrpk[" << k << "] : " << zrpk_h[k] << endl;
+         cout << "  zrix[" << k << "] : " << zrix_h[k] << endl;
+         cout << "zrmi[" << k << "] : " << zrmi_h[k];
+         cout << "  zrrg[" << k << "] : " << zrrg_h[k] << endl;
+         cout << "zrpk[" << k << "] : " << zrpk_h[k] << endl;
          cout << "zltb[" << k << "] : " << zltb_h[k];
-         cout << "  zlix[" << k << "] : " << zlix_h[k];
-         cout << "  zlmi[" << k << "] : " << zlmi_h[k];
-         cout << "  zlrg[" << k << "] : " << zlrg_h[k];
-         cout << "  zlpk[" << k << "] : " << zlpk_h[k] << endl;
+         cout << "  zlix[" << k << "] : " << zlix_h[k] << endl;
+         cout << "zlmi[" << k << "] : " << zlmi_h[k];
+         cout << "  zlrg[" << k << "] : " << zlrg_h[k] << endl;
+         cout << "zlpk[" << k << "] : " << zlpk_h[k] << endl;
       }
    }
    GPU_dbl10_product
@@ -510,6 +526,198 @@ double test_dbl10_complex ( int deg, int verbose )
          cout << "  zimlmi[" << k << "] : " << zimlmi_d[k];
          cout << "  zimlrg[" << k << "] : " << zimlrg_d[k];
          cout << "  zimlpk[" << k << "] : " << zimlpk_d[k] << endl;
+      }
+      err = err
+          + abs(zrertb_h[k] - zrertb_d[k]) + abs(zrerix_h[k] - zrerix_d[k])
+          + abs(zrermi_h[k] - zrermi_d[k]) + abs(zrerrg_h[k] - zrerrg_d[k])
+          + abs(zrerpk_h[k] - zrerpk_d[k])
+          + abs(zimltb_h[k] - zimltb_d[k]) + abs(zimlix_h[k] - zimlix_d[k])
+          + abs(zimlmi_h[k] - zimlmi_d[k]) + abs(zimlrg_h[k] - zimlrg_d[k])
+          + abs(zimlpk_h[k] - zimlpk_d[k]);
+   }
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
+     cout << "the error : " << err << endl;
+   }
+   return err;
+}
+
+double test_dbl10_complex_random ( int deg, int verbose )
+{
+   double* xrertb = new double[deg+1];
+   double* xrerix = new double[deg+1];
+   double* xrermi = new double[deg+1];
+   double* xrerrg = new double[deg+1];
+   double* xrerpk = new double[deg+1];
+   double* xreltb = new double[deg+1];
+   double* xrelix = new double[deg+1];
+   double* xrelmi = new double[deg+1];
+   double* xrelrg = new double[deg+1];
+   double* xrelpk = new double[deg+1];
+   double* ximrtb = new double[deg+1];
+   double* ximrix = new double[deg+1];
+   double* ximrmi = new double[deg+1];
+   double* ximrrg = new double[deg+1];
+   double* ximrpk = new double[deg+1];
+   double* ximltb = new double[deg+1];
+   double* ximlix = new double[deg+1];
+   double* ximlmi = new double[deg+1];
+   double* ximlrg = new double[deg+1];
+   double* ximlpk = new double[deg+1];
+   double* yrertb = new double[deg+1];
+   double* yrerix = new double[deg+1];
+   double* yrermi = new double[deg+1];
+   double* yrerrg = new double[deg+1];
+   double* yrerpk = new double[deg+1];
+   double* yreltb = new double[deg+1];
+   double* yrelix = new double[deg+1];
+   double* yrelmi = new double[deg+1];
+   double* yrelrg = new double[deg+1];
+   double* yrelpk = new double[deg+1];
+   double* yimrtb = new double[deg+1];
+   double* yimrix = new double[deg+1];
+   double* yimrmi = new double[deg+1];
+   double* yimrrg = new double[deg+1];
+   double* yimrpk = new double[deg+1];
+   double* yimltb = new double[deg+1];
+   double* yimlix = new double[deg+1];
+   double* yimlmi = new double[deg+1];
+   double* yimlrg = new double[deg+1];
+   double* yimlpk = new double[deg+1];
+   double* zrertb_h = new double[deg+1];
+   double* zrerix_h = new double[deg+1];
+   double* zrermi_h = new double[deg+1];
+   double* zrerrg_h = new double[deg+1];
+   double* zrerpk_h = new double[deg+1];
+   double* zreltb_h = new double[deg+1];
+   double* zrelix_h = new double[deg+1];
+   double* zrelmi_h = new double[deg+1];
+   double* zrelrg_h = new double[deg+1];
+   double* zrelpk_h = new double[deg+1];
+   double* zimrtb_h = new double[deg+1];
+   double* zimrix_h = new double[deg+1];
+   double* zimrmi_h = new double[deg+1];
+   double* zimrrg_h = new double[deg+1];
+   double* zimrpk_h = new double[deg+1];
+   double* zimltb_h = new double[deg+1];
+   double* zimlix_h = new double[deg+1];
+   double* zimlmi_h = new double[deg+1];
+   double* zimlrg_h = new double[deg+1];
+   double* zimlpk_h = new double[deg+1];
+   double* zrertb_d = new double[deg+1];
+   double* zrerix_d = new double[deg+1];
+   double* zrermi_d = new double[deg+1];
+   double* zrerrg_d = new double[deg+1];
+   double* zrerpk_d = new double[deg+1];
+   double* zreltb_d = new double[deg+1];
+   double* zrelix_d = new double[deg+1];
+   double* zrelmi_d = new double[deg+1];
+   double* zrelrg_d = new double[deg+1];
+   double* zrelpk_d = new double[deg+1];
+   double* zimrtb_d = new double[deg+1];
+   double* zimrix_d = new double[deg+1];
+   double* zimrmi_d = new double[deg+1];
+   double* zimrrg_d = new double[deg+1];
+   double* zimrpk_d = new double[deg+1];
+   double* zimltb_d = new double[deg+1];
+   double* zimlix_d = new double[deg+1];
+   double* zimlmi_d = new double[deg+1];
+   double* zimlrg_d = new double[deg+1];
+   double* zimlpk_d = new double[deg+1];
+
+   for(int k=0; k<=deg; k++)
+   {
+      random_deca_double
+         (&xrertb[k],&xrerix[k],&xrermi[k],&xrerrg[k],&xrerpk[k],
+          &xreltb[k],&xrelix[k],&xrelmi[k],&xrelrg[k],&xrelpk[k]);
+      random_deca_double
+         (&ximrtb[k],&ximrix[k],&ximrmi[k],&ximrrg[k],&ximrpk[k],
+          &ximltb[k],&ximlix[k],&ximlmi[k],&ximlrg[k],&ximlpk[k]);
+      random_deca_double
+         (&yrertb[k],&yrerix[k],&yrermi[k],&yrerrg[k],&yrerpk[k],
+          &yreltb[k],&yrelix[k],&yrelmi[k],&yrelrg[k],&yrelpk[k]);
+      random_deca_double
+         (&yimrtb[k],&yimrix[k],&yimrmi[k],&yimrrg[k],&yimrpk[k],
+          &yimltb[k],&yimlix[k],&yimlmi[k],&yimlrg[k],&yimlpk[k]);
+   }
+   CPU_cmplx10_product
+      (deg,
+       xrertb,xrerix,xrermi,xrerrg,xrerpk,xreltb,xrelix,xrelmi,xrelrg,xrelpk,
+       ximrtb,ximrix,ximrmi,ximrrg,ximrpk,ximltb,ximlix,ximlmi,ximlrg,ximlpk,
+       yrertb,yrerix,yrermi,yrerrg,yrerpk,yreltb,yrelix,yrelmi,yrelrg,yrelpk,
+       yimrtb,yimrix,yimrmi,yimrrg,yimrpk,yimltb,yimlix,yimlmi,yimlrg,yimlpk,
+       zrertb_h,zrerix_h,zrermi_h,zrerrg_h,zrerpk_h,
+       zreltb_h,zrelix_h,zrelmi_h,zrelrg_h,zrelpk_h,
+       zimrtb_h,zimrix_h,zimrmi_h,zimrrg_h,zimrpk_h,
+       zimltb_h,zimlix_h,zimlmi_h,zimlrg_h,zimlpk_h);
+
+   if(verbose > 0)
+   {
+      cout << "Product of two random complex series :" << endl;
+
+      for(int k=0; k<=deg; k++)
+      {
+         cout << "zrertb[" << k << "] : " << zrertb_h[k];
+         cout << "  zrerix[" << k << "] : " << zrerix_h[k] << endl;
+         cout << "zrermi[" << k << "] : " << zrermi_h[k];
+         cout << "  zrerrg[" << k << "] : " << zrerrg_h[k] << endl;
+         cout << "zrerpk[" << k << "] : " << zrerpk_h[k] << endl;
+         cout << "zreltb[" << k << "] : " << zreltb_h[k];
+         cout << "  zrelix[" << k << "] : " << zrelix_h[k] << endl;
+         cout << "zrelmi[" << k << "] : " << zrelmi_h[k];
+         cout << "  zrelrg[" << k << "] : " << zrelrg_h[k] << endl;
+         cout << "zrelpk[" << k << "] : " << zrelpk_h[k] << endl;
+         cout << "zimrtb[" << k << "] : " << zimrtb_h[k];
+         cout << "  zimrix[" << k << "] : " << zimrix_h[k] << endl;
+         cout << "zimrmi[" << k << "] : " << zimrmi_h[k];
+         cout << "  zimrrg[" << k << "] : " << zimrrg_h[k] << endl;
+         cout << "zimrpk[" << k << "] : " << zimrpk_h[k] << endl;
+         cout << "zimltb[" << k << "] : " << zimltb_h[k];
+         cout << "  zimlix[" << k << "] : " << zimlix_h[k] << endl;
+         cout << "zimlmi[" << k << "] : " << zimlmi_h[k];
+         cout << "  zimlrg[" << k << "] : " << zimlrg_h[k] << endl;
+         cout << "zimlpk[" << k << "] : " << zimlpk_h[k] << endl;
+      }
+   }
+   GPU_cmplx10_product
+      (xrertb,xrerix,xrermi,xrerrg,xrerpk,xreltb,xrelix,xrelmi,xrelrg,xrelpk,
+       ximrtb,ximrix,ximrmi,ximrrg,ximrpk,ximltb,ximlix,ximlmi,ximlrg,ximlpk,
+       yrertb,yrerix,yrermi,yrerrg,yrerpk,yreltb,yrelix,yrelmi,yrelrg,yrelpk,
+       yimrtb,yimrix,yimrmi,yimrrg,yimrpk,yimltb,yimlix,yimlmi,yimlrg,yimlpk,
+       zrertb_d,zrerix_d,zrermi_d,zrerrg_d,zrerpk_d,
+       zreltb_d,zrelix_d,zrelmi_d,zrelrg_d,zrelpk_d,
+       zimrtb_d,zimrix_d,zimrmi_d,zimrrg_d,zimrpk_d,
+       zimltb_d,zimlix_d,zimlmi_d,zimlrg_d,zimlpk_d,deg,1,deg+1,2);
+
+   if(verbose > 0) cout << "GPU computed product :" << endl;
+
+   double err = 0.0;
+
+   for(int k=0; k<=deg; k++)
+   {
+      if(verbose > 0)
+      {
+         cout << "zrertb[" << k << "] : " << zrertb_d[k];
+         cout << "  zrerix[" << k << "] : " << zrerix_d[k] << endl;
+         cout << "zrermi[" << k << "] : " << zrermi_d[k];
+         cout << "  zrerrg[" << k << "] : " << zrerrg_d[k] << endl;
+         cout << "zrerpk[" << k << "] : " << zrerpk_d[k] << endl;
+         cout << "zreltb[" << k << "] : " << zreltb_d[k];
+         cout << "  zrelix[" << k << "] : " << zrelix_d[k] << endl;
+         cout << "zrelmi[" << k << "] : " << zrelmi_d[k];
+         cout << "  zrelrg[" << k << "] : " << zrelrg_d[k] << endl;
+         cout << "zrelpk[" << k << "] : " << zrelpk_d[k] << endl;
+         cout << "zimrtb[" << k << "] : " << zimrtb_d[k];
+         cout << "  zimrix[" << k << "] : " << zimrix_d[k] << endl;
+         cout << "zimrmi[" << k << "] : " << zimrmi_d[k];
+         cout << "  zimrrg[" << k << "] : " << zimrrg_d[k] << endl;
+         cout << "zimrpk[" << k << "] : " << zimrpk_d[k] << endl;
+         cout << "zimltb[" << k << "] : " << zimltb_d[k];
+         cout << "  zimlix[" << k << "] : " << zimlix_d[k] << endl;
+         cout << "zimlmi[" << k << "] : " << zimlmi_d[k];
+         cout << "  zimlrg[" << k << "] : " << zimlrg_d[k] << endl;
+         cout << "zimlpk[" << k << "] : " << zimlpk_d[k] << endl;
       }
       err = err
           + abs(zrertb_h[k] - zrertb_d[k]) + abs(zrerix_h[k] - zrerix_d[k])

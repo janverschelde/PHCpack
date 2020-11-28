@@ -28,6 +28,14 @@ double test_dbl10_complex ( int deg, int verbose );
  *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
 
+double test_dbl10_complex_random ( int deg, int verbose );
+/*
+ * DESCRIPTION :
+ *   Multiplies two power series of degree deg
+ *   with random complex coefficients.
+ *   If verbose equals zero, then no output is written.
+ *   Returns the sum of all errors. */
+
 double test_dbl10_real_exponential ( int deg, int verbose );
 /*
  * DESCRIPTION :
@@ -49,7 +57,7 @@ double test_dbl10_complex_exponential ( int deg, int verbose );
 int main_dbl10_test ( int seed, int deg, int vrblvl );
 /*
  * DESCRIPTION :
- *   Runs four tests on convolutions in deca double precision.
+ *   Runs six tests on convolutions in deca double precision.
  *   Returns 0 if all tests passed,
  *   otherwise, returns the number of failed tests.
  *

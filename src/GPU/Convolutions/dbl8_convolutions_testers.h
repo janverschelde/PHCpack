@@ -28,6 +28,14 @@ double test_dbl8_complex ( int deg, int verbose );
  *   If verbose equals zero, then no output is written.
  *   Returns the sum of all errors. */
 
+double test_dbl8_complex_random ( int deg, int verbose );
+/*
+ * DESCRIPTION :
+ *   Multiplies two random power series,
+ *   truncated to degree deg, for complex coefficients.
+ *   If verbose equals zero, then no output is written.
+ *   Returns the sum of all errors. */
+
 double test_dbl8_real_exponential ( int deg, int verbose );
 /*
  * DESCRIPTION :
@@ -49,7 +57,7 @@ double test_dbl8_complex_exponential ( int deg, int verbose );
 int main_dbl8_test ( int seed, int deg, int vrblvl );
 /*
  * DESCRIPTION :
- *   Runs five tests on convolutions in octo double precision.
+ *   Runs six tests on convolutions in octo double precision.
  *   Returns 0 if all tests passed,
  *   otherwise, returns the number of failed tests.
  *
