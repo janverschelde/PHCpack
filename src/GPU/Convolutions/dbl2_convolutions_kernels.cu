@@ -460,7 +460,7 @@ void GPU_cmplx2_product
 
    if(dim == BS)
    {
-      if(mode == 2)
+      if(mode == 3)
       {
          for(int i=0; i<freq; i++)
          {
