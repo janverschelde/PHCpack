@@ -482,6 +482,34 @@ dbl10_monomials_host.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -02 \
                  /Fo: dbl10_monomials_host.obj /EHsc
 
+dbl_monomials_testers.obj:
+	@-echo ">>> compiling dbl_monomials_testers ..."
+	$(CL)\cl /c dbl_monomials_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl_monomials_testers.obj /EHsc
+
+dbl2_monomials_testers.obj:
+	@-echo ">>> compiling dbl2_monomials_testers ..."
+	$(CL)\cl /c dbl2_monomials_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl2_monomials_testers.obj /EHsc
+
+dbl3_monomials_testers.obj:
+	@-echo ">>> compiling dbl3_monomials_testers ..."
+	$(CL)\cl /c dbl3_monomials_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl3_monomials_testers.obj /EHsc
+
+test_monomials.obj:
+	@-echo ">>> compiling test_monomials ..."
+	$(CL)\cl /c test_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_monomials.obj /EHsc
+
 test_dbl_monomials.obj:
 	@-echo ">>> compiling test_dbl_monomials ..."
 	$(CL)\cl /c test_dbl_monomials.cpp \
@@ -648,41 +676,69 @@ test_dbl10_convolutions: double_double_functions.obj \
              dbl10_convolutions_host.obj dbl10_convolutions_kernels.obj \
        	     dbl10_convolutions_testers.obj test_dbl10_convolutions.obj
 
+test_monomials: random_numbers.obj random_series.obj random_monomials.obj \
+                random2_vectors.obj random2_series.obj random2_monomials.obj \
+                random3_vectors.obj random3_series.obj random3_monomials.obj \
+                double_double_functions.obj triple_double_functions.obj \
+                dbl_convolutions_host.obj dbl_monomials_host.obj \
+                dbl_monomials_kernels.obj dbl_monomials_testers.obj \
+                dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+                dbl2_monomials_kernels.obj dbl2_monomials_testers.obj \
+                dbl3_convolutions_host.obj dbl3_monomials_host.obj \
+                dbl3_monomials_kernels.obj dbl3_monomials_testers.obj \
+                test_monomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_monomials.exe test_monomials.obj \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random2_vectors.obj random2_series.obj random2_monomials.obj \
+              random3_vectors.obj random3_series.obj random3_monomials.obj \
+              double_double_functions.obj triple_double_functions.obj \
+              dbl_convolutions_host.obj dbl_monomials_host.obj \
+              dbl_monomials_kernels.obj dbl_monomials_testers.obj \
+              dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+              dbl2_monomials_kernels.obj dbl2_monomials_testers.obj \
+              dbl3_convolutions_host.obj dbl3_monomials_host.obj \
+              dbl3_monomials_kernels.obj dbl3_monomials_testers.obj
+
 test_dbl_monomials: random_numbers.obj random_series.obj random_monomials.obj \
                     dbl_convolutions_host.obj dbl_monomials_host.obj \
-                    dbl_monomials_kernels.obj test_dbl_monomials.obj
+                    dbl_monomials_kernels.obj dbl_monomials_testers.obj \
+                    test_dbl_monomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_monomials.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
               dbl_convolutions_host.obj dbl_monomials_host.obj \
-              dbl_monomials_kernels.obj test_dbl_monomials.obj
+              dbl_monomials_kernels.obj dbl_monomials_testers.obj \
+              test_dbl_monomials.obj
 
 test_dbl2_monomials: random_numbers.obj random_series.obj random_monomials.obj \
                      random2_vectors.obj random2_series.obj \
                      random2_monomials.obj double_double_functions.obj \
                      dbl2_convolutions_host.obj dbl2_monomials_host.obj \
-                     dbl2_monomials_kernels.obj test_dbl2_monomials.obj
+                     dbl2_monomials_kernels.obj dbl2_monomials_testers.obj \
+                     test_dbl2_monomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl2_monomials.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
               random2_vectors.obj random2_series.obj random2_monomials.obj \
               double_double_functions.obj dbl2_convolutions_host.obj \
               dbl2_monomials_host.obj dbl2_monomials_kernels.obj \
-              test_dbl2_monomials.obj
+              dbl2_monomials_testers.obj test_dbl2_monomials.obj
 
 test_dbl3_monomials: random_numbers.obj random_series.obj random_monomials.obj \
                      random3_vectors.obj random3_series.obj \
                      random3_monomials.obj double_double_functions.obj \
 		     triple_double_functions.obj dbl3_convolutions_host.obj \
                      dbl3_monomials_host.obj dbl3_monomials_kernels.obj \
-                     test_dbl3_monomials.obj
+                     test_dbl3_monomials.obj dbl3_monomials_testers.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl3_monomials.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
               random3_vectors.obj random3_series.obj random3_monomials.obj \
               double_double_functions.obj triple_double_functions.obj \
               dbl3_convolutions_host.obj dbl3_monomials_host.obj \
-              dbl3_monomials_kernels.obj test_dbl3_monomials.obj
+              dbl3_monomials_kernels.obj dbl3_monomials_testers.obj \
+              test_dbl3_monomials.obj
 
 test_dbl4_monomials: random_numbers.obj random_series.obj random_monomials.obj \
                      random4_vectors.obj random4_series.obj \
