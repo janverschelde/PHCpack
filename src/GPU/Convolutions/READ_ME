@@ -40,25 +40,34 @@ random10_series            : generates series in deca double precision
 -----------------------------------------------------------------------------
 dbl_convolutions_host      : convolutions of double vectors on host
 dbl_convolutions_kernels   : convolutions of double vectors on device
-test_dbl_convolutions      : test convolutions of double vectors
+dbl_convolutions_testers   : test convolutions in double precision
+test_dbl_convolutions      : main test on double convolutions 
 dbl2_convolutions_host     : convolutions of double double vectors on host
 dbl2_convolutions_kernels  : convolutions of double double vectors on device
-test_dbl2_convolutions     : test convolutions of double double vectors
+dbl2_convolutions_testers  : test convolutions in double double precision
+test_dbl2_convolutions     : main test on double double convolutions
 dbl3_convolutions_host     : convolutions of triple double vectors on host
 dbl3_convolutions_kernels  : convolutions of triple double vectors on device
-test_dbl3_convolutions     : test convolutions of triple double vectors
+dbl3_convolutions_testers  : test convolutions in triple double precision
+test_dbl3_convolutions     : main test on triple double convolutions
 dbl4_convolutions_host     : convolutions of quad double vectors on host
 dbl4_convolutions_kernels  : convolutions of quad double vectors on device
-test_dbl4_convolutions     : test convolutions of quad double vectors
+dbl4_convolutions_testers  : test convolutions in quad precision
+test_dbl4_convolutions     : main test on quad double convolutions
 dbl5_convolutions_host     : convolutions of penta double vectors on host
 dbl5_convolutions_kernels  : convolutions of penta double vectors on device
-test_dbl5_convolutions     : test convolutions of penta double vectors
+dbl5_convolutions_testers  : test convolutions in penta double precision
+test_dbl5_convolutions     : main test on penta double convolutions
 dbl8_convolutions_host     : convolutions of octo double vectors on host
 dbl8_convolutions_kernels  : convolutions of octo double vectors on device
-test_dbl8_convolutions     : test convolutions of octo double vectors
+dbl8_convolutions_testers  : test convolutions in octo double precision
+test_dbl8_convolutions     : main test on octo double convolutions
 dbl10_convolutions_host    : convolutions of deca double vectors on host
 dbl10_convolutions_kernels : convolutions of deca double vectors on device
-test_dbl10_convolutions    : test convolutions of deca double vectors
+dbl10_convolutions_testers : test convolutions in deca double precision
+test_dbl10_convolutions    : main test on deca double convolutions
+convolutions_kernels       : includes all cuda convolutions code
+test_convolutions          : tests convolutions in all precisions
 -----------------------------------------------------------------------------
 random_monomials           : setup test data in double precision
 random2_monomials          : setup test data in double double precision

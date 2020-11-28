@@ -1,8 +1,10 @@
 // The file dbl5_convolutions_kernels.cu defines kernels with prototypes
 // in dbl5_convolutions_kernels.h.
 
+#ifdef gpufun
 #include "double_double_gpufun.cu"
 #include "penta_double_gpufun.cu"
+#endif
 #include "dbl5_convolutions_kernels.h"
 
 __global__ void dbl5_increment

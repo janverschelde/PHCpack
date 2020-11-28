@@ -13,6 +13,11 @@ CUDALIB=/usr/local/cuda/lib64
 # the architecture flag for Volta V100
 smflag=sm_70
 
+convolutions_kernels.o:
+	@-echo ">>> compiling all convolution kernels ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             -c -I$(MPD) convolutions_kernels.cu
+
 dbl_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) \
@@ -21,31 +26,37 @@ dbl_convolutions_kernels.o:
 dbl2_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for double doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             --define-macro gpufun=1 \
              -c -I$(MPD) dbl2_convolutions_kernels.cu
 
 dbl3_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for triple doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             --define-macro gpufun=1 \
              -c -I$(MPD) dbl3_convolutions_kernels.cu
 
 dbl4_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for quad doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             --define-macro gpufun=1 \
              -c -I$(MPD) dbl4_convolutions_kernels.cu
 
 dbl5_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for penta doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             --define-macro gpufun=1 \
              -c -I$(MPD) dbl5_convolutions_kernels.cu
 
 dbl8_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for octo doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             --define-macro gpufun=1 \
              -c -I$(MPD) dbl8_convolutions_kernels.cu
 
 dbl10_convolutions_kernels.o:
 	@-echo ">>> compiling convolution kernels for deca doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             --define-macro gpufun=1 \
              -c -I$(MPD) dbl10_convolutions_kernels.cu
 
 random_numbers.o:
@@ -184,6 +195,38 @@ dbl10_convolutions_host.o:
 	@-echo ">>> compiling dbl10_convolutions_host ..."
 	$(gpp) -O3 -c -I$(MPD) dbl10_convolutions_host.cpp
 
+dbl_convolutions_testers.o:
+	@-echo ">>> compiling dbl_convolutions_testers ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl_convolutions_testers.cpp
+
+dbl2_convolutions_testers.o:
+	@-echo ">>> compiling dbl2_convolutions_testers ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl2_convolutions_testers.cpp
+
+dbl3_convolutions_testers.o:
+	@-echo ">>> compiling dbl3_convolutions_testers ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl3_convolutions_testers.cpp
+
+dbl4_convolutions_testers.o:
+	@-echo ">>> compiling dbl4_convolutions_testers ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl4_convolutions_testers.cpp
+
+dbl5_convolutions_testers.o:
+	@-echo ">>> compiling dbl5_convolutions_testers ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl5_convolutions_testers.cpp
+
+dbl8_convolutions_testers.o:
+	@-echo ">>> compiling dbl8_convolutions_testers ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl8_convolutions_testers.cpp
+
+dbl10_convolutions_testers.o:
+	@-echo ">>> compiling dbl10_convolutions_testers ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl10_convolutions_testers.cpp
+
+test_convolutions.o:
+	@-echo ">>> compiling test_convolutions ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_convolutions.cpp
+
 test_dbl_convolutions.o:
 	@-echo ">>> compiling test_dbl_convolutions ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl_convolutions.cpp
@@ -218,7 +261,7 @@ dbl_monomials_kernels.o:
 
 dbl2_monomials_kernels.o:
 	@-echo ">>> compiling monomial kernels for double doubles ..."
-	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -O3 \
              -c dbl2_monomials_kernels.cu
 
 dbl3_monomials_kernels.o:
@@ -302,82 +345,122 @@ test_dbl10_monomials.o:
 	@-echo ">>> compiling test_dbl10_monomials ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl10_monomials.cpp
 
+test_convolutions: convolutions_kernels.o random_numbers.o random_series.o \
+               double_double_functions.o random2_vectors.o random2_series.o \
+               triple_double_functions.o random3_vectors.o random3_series.o \
+               quad_double_functions.o random4_vectors.o random4_series.o \
+               penta_double_functions.o random5_vectors.o random5_series.o \
+               octo_double_functions.o random8_vectors.o random8_series.o \
+               deca_double_functions.o random10_vectors.o random10_series.o \
+                   dbl_convolutions_host.o dbl2_convolutions_host.o \
+                   dbl3_convolutions_host.o dbl4_convolutions_host.o \
+                   dbl5_convolutions_host.o dbl8_convolutions_host.o \
+                   dbl10_convolutions_host.o \
+                   dbl_convolutions_testers.o dbl2_convolutions_testers.o \
+                   dbl3_convolutions_testers.o dbl4_convolutions_testers.o \
+                   dbl5_convolutions_testers.o dbl8_convolutions_testers.o \
+                   dbl10_convolutions_testers.o dbl10_convolutions_testers.o \
+                   test_convolutions.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_convolutions test_convolutions.o \
+                  convolutions_kernels.o \
+                  random_numbers.o random_series.o dbl_convolutions_host.o \
+                  random2_vectors.o random2_series.o \
+                  random3_vectors.o random3_series.o \
+                  random4_vectors.o random4_series.o \
+                  random5_vectors.o random5_series.o \
+                  random8_vectors.o random8_series.o \
+                  random10_vectors.o random10_series.o \
+                  double_double_functions.o dbl2_convolutions_host.o \
+                  triple_double_functions.o dbl3_convolutions_host.o \
+                  quad_double_functions.o dbl4_convolutions_host.o \
+                  penta_double_functions.o dbl5_convolutions_host.o \
+                  octo_double_functions.o dbl8_convolutions_host.o \
+                  deca_double_functions.o dbl10_convolutions_host.o \
+                  dbl_convolutions_testers.o dbl2_convolutions_testers.o \
+                  dbl3_convolutions_testers.o dbl4_convolutions_testers.o \
+                  dbl5_convolutions_testers.o dbl8_convolutions_testers.o \
+                  dbl10_convolutions_testers.o -lcuda -lcudart -L$(CUDALIB)
+
 test_dbl_convolutions: dbl_convolutions_kernels.o dbl_convolutions_host.o \
                        random_numbers.o random_series.o \
-                       test_dbl_convolutions.o
+                       dbl_convolutions_testers.o test_dbl_convolutions.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_convolutions test_dbl_convolutions.o \
                   dbl_convolutions_host.o random_numbers.o random_series.o \
-                  dbl_convolutions_kernels.o -lcuda -lcudart -L$(CUDALIB)
+                  dbl_convolutions_kernels.o dbl_convolutions_testers.o \
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl2_convolutions: double_double_functions.o dbl2_convolutions_host.o \
                         random_numbers.o random2_vectors.o random2_series.o \
-                        dbl2_convolutions_kernels.o test_dbl2_convolutions.o
+                        dbl2_convolutions_kernels.o \
+                        dbl2_convolutions_testers.o test_dbl2_convolutions.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_convolutions test_dbl2_convolutions.o \
                   random_numbers.o random2_vectors.o random2_series.o \
                   double_double_functions.o dbl2_convolutions_host.o \
-                  dbl2_convolutions_kernels.o -lcuda -lcudart -L$(CUDALIB)
+                  dbl2_convolutions_kernels.o dbl2_convolutions_testers.o \
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl3_convolutions: double_double_functions.o triple_double_functions.o \
                         random_numbers.o random3_vectors.o random3_series.o  \
                         dbl3_convolutions_host.o dbl3_convolutions_kernels.o \
-                        test_dbl3_convolutions.o 
+                        dbl3_convolutions_testers.o test_dbl3_convolutions.o 
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl3_convolutions test_dbl3_convolutions.o \
                   double_double_functions.o triple_double_functions.o \
                   random_numbers.o random3_vectors.o random3_series.o \
                   dbl3_convolutions_host.o dbl3_convolutions_kernels.o \
-                  -lcuda -lcudart -L$(CUDALIB)
+                  dbl3_convolutions_testers.o -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl4_convolutions: double_double_functions.o quad_double_functions.o \
                         random_numbers.o random4_vectors.o random4_series.o \
                         dbl4_convolutions_host.o dbl4_convolutions_kernels.o \
-                        test_dbl4_convolutions.o
+                        dbl4_convolutions_testers.o test_dbl4_convolutions.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl4_convolutions test_dbl4_convolutions.o \
                   double_double_functions.o quad_double_functions.o \
                   random_numbers.o random4_vectors.o random4_series.o \
                   dbl4_convolutions_host.o dbl4_convolutions_kernels.o \
-                  -lcuda -lcudart -L$(CUDALIB)
+                  dbl4_convolutions_testers.o -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl5_convolutions: double_double_functions.o penta_double_functions.o \
                         random_numbers.o random5_vectors.o random5_series.o \
                         dbl5_convolutions_host.o dbl5_convolutions_kernels.o \
-                        test_dbl5_convolutions.o
+                        dbl5_convolutions_testers.o test_dbl5_convolutions.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl5_convolutions test_dbl5_convolutions.o \
                   double_double_functions.o penta_double_functions.o \
                   random_numbers.o random5_vectors.o random5_series.o \
                   dbl5_convolutions_host.o dbl5_convolutions_kernels.o \
-                  -lcuda -lcudart -L$(CUDALIB)
+                  dbl5_convolutions_testers.o -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl8_convolutions: double_double_functions.o quad_double_functions.o \
                         octo_double_functions.o \
                         random_numbers.o random8_vectors.o random8_series.o \
                         dbl8_convolutions_host.o dbl8_convolutions_kernels.o \
-                        test_dbl8_convolutions.o
+                        dbl8_convolutions_testers.o test_dbl8_convolutions.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl8_convolutions test_dbl8_convolutions.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o \
                   random_numbers.o random8_vectors.o random8_series.o \
                   dbl8_convolutions_host.o dbl8_convolutions_kernels.o \
-                  -lcuda -lcudart -L$(CUDALIB)
+                  dbl8_convolutions_testers.o -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl10_convolutions: double_double_functions.o quad_double_functions.o \
                          octo_double_functions.o deca_double_functions.o \
                          random_numbers.o \
                          random10_vectors.o random10_series.o \
-                         dbl10_convolutions_host.o test_dbl10_convolutions.o \
-                         dbl10_convolutions_kernels.o
+                    dbl10_convolutions_host.o dbl10_convolutions_kernels.o \
+                    dbl10_convolutions_testers.o test_dbl10_convolutions.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl10_convolutions test_dbl10_convolutions.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o deca_double_functions.o \
                   random_numbers.o random10_vectors.o random10_series.o \
                   dbl10_convolutions_host.o dbl10_convolutions_kernels.o \
-                  -lcuda -lcudart -L$(CUDALIB)
+                  dbl10_convolutions_testers.o -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl_monomials: random_numbers.o random_series.o random_monomials.o \
                     dbl_convolutions_host.o dbl_monomials_host.o \
@@ -474,31 +557,40 @@ test_dbl10_monomials: random_numbers.o random_series.o random_monomials.o \
 clean:
 	/bin/rm -f -r random_numbers.o random_series.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_convolutions_kernels.o
+	/bin/rm -f -r dbl_convolutions_testers.o
 	/bin/rm -f -r test_dbl_convolutions.o test_dbl_convolutions
 	/bin/rm -f -r double_double_functions.o
 	/bin/rm -f -r random2_vectors.o random2_series.o
 	/bin/rm -f -r dbl2_convolutions_host.o dbl2_convolutions_kernels.o
+	/bin/rm -f -r dbl2_convolutions_testers.o
 	/bin/rm -f -r test_dbl2_convolutions.o test_dbl2_convolutions
 	/bin/rm -f -r triple_double_functions.o
 	/bin/rm -f -r random3_vectors.o random3_series.o
 	/bin/rm -f -r dbl3_convolutions_host.o dbl3_convolutions_kernels.o
+	/bin/rm -f -r dbl3_convolutions_testers.o
 	/bin/rm -f -r test_dbl3_convolutions.o test_dbl3_convolutions
 	/bin/rm -f -r quad_double_functions.o
 	/bin/rm -f -r random4_vectors.o random4_series.o
 	/bin/rm -f -r dbl4_convolutions_kernels.o dbl4_convolutions_host.o
+	/bin/rm -f -r dbl4_convolutions_testers.o
 	/bin/rm -f -r test_dbl4_convolutions.o test_dbl4_convolutions
 	/bin/rm -f -r penta_double_functions.o
 	/bin/rm -f -r random5_vectors.o random5_series.o
 	/bin/rm -f -r dbl5_convolutions_kernels.o dbl5_convolutions_host.o
+	/bin/rm -f -r dbl5_convolutions_testers.o
 	/bin/rm -f -r test_dbl5_convolutions.o test_dbl5_convolutions
 	/bin/rm -f -r octo_double_functions.o
 	/bin/rm -f -r random8_vectors.o random8_series.o
 	/bin/rm -f -r dbl8_convolutions_kernels.o dbl8_convolutions_host.o
+	/bin/rm -f -r dbl8_convolutions_testers.o
 	/bin/rm -f -r test_dbl8_convolutions.o test_dbl8_convolutions
 	/bin/rm -f -r deca_double_functions.o
 	/bin/rm -f -r random10_vectors.o random10_series.o
 	/bin/rm -f -r dbl10_convolutions_kernels.o dbl10_convolutions_host.o
+	/bin/rm -f -r dbl10_convolutions_testers.o
 	/bin/rm -f -r test_dbl10_convolutions.o test_dbl10_convolutions
+	/bin/rm -f -r convolutions_kernels.o
+	/bin/rm -f -r test_convolutions.o test_convolutions
 	/bin/rm -f -r random_monomials.o
 	/bin/rm -f -r dbl_monomials_host.o dbl_monomials_kernels.o
 	/bin/rm -f -r test_dbl_monomials.o test_dbl_monomials

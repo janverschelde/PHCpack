@@ -1,10 +1,12 @@
 // The file dbl10_convolutions_kernels.cu defines kernels with prototypes
 // in dbl10_convolutions_kernels.h.
 
+#ifdef gpufun
 #include "double_double_gpufun.cu"
 #include "quad_double_gpufun.cu"
 #include "octo_double_gpufun.cu"
 #include "deca_double_gpufun.cu"
+#endif
 #include "dbl10_convolutions_kernels.h"
 
 __global__ void dbl10_increment

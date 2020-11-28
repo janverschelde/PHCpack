@@ -1,6 +1,12 @@
 Fri 27 Nov 2020 : moved a __syncthreads() in dbl8_convolutions_kernels.cu.
   Improved the test functions in test_dbl*_convolutions.cpp.
   Added __syncthreads() to {dbl3,dbl4}_convolutions_kernels.cu.
+  Moved code from test_dbl*_convolutions into separate headers,
+  corresponding to dbl*_convolutions_testers.h, with .cpp files.
+  Adjusted all dbl*_convolutions_kernels.cu for conditional inclusion
+  of the multiple double arithmetical operations in the *gpufun.cu files.
+  New convolution_kernels.cu, to include all cuda convolutions code.
+  New test_convolutions, to test in all precisions.  Updated makefiles.
 
 Thu 26 Nov 2020 : fixed the problems caused by the thread divergence 
   in dbl2_convolutions_kernels.cu by additional __syncthreads() statements,

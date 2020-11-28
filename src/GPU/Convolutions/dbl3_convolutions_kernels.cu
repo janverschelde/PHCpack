@@ -1,8 +1,10 @@
 // The file dbl3_convolutions_kernels.cu defines kernels with prototypes
 // in dbl3_convolutions_kernels.h.
 
+#ifdef gpufun
 #include "double_double_gpufun.cu"
 #include "triple_double_gpufun.cu"
+#endif
 #include "dbl3_convolutions_kernels.h"
 
 __global__ void dbl3_increment
