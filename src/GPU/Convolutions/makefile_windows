@@ -92,36 +92,42 @@ dbl_monomials_kernels.obj:
 dbl2_monomials_kernels.obj:
 	@-echo ">>> compiling monomial kernels for double doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
                 dbl2_monomials_kernels.cu \
              -o dbl2_monomials_kernels.obj
 
 dbl3_monomials_kernels.obj:
 	@-echo ">>> compiling monomial kernels for triple doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
                 dbl3_monomials_kernels.cu \
              -o dbl3_monomials_kernels.obj
 
 dbl4_monomials_kernels.obj:
 	@-echo ">>> compiling monomial kernels for quad doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
                 dbl4_monomials_kernels.cu \
              -o dbl4_monomials_kernels.obj
 
 dbl5_monomials_kernels.obj:
 	@-echo ">>> compiling monomial kernels for penta doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
                 dbl5_monomials_kernels.cu \
              -o dbl5_monomials_kernels.obj
 
 dbl8_monomials_kernels.obj:
 	@-echo ">>> compiling monomial kernels for octo doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
                 dbl8_monomials_kernels.cu \
              -o dbl8_monomials_kernels.obj
 
 dbl10_monomials_kernels.obj:
 	@-echo ">>> compiling monomial kernels for deca doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
                 dbl10_monomials_kernels.cu \
              -o dbl10_monomials_kernels.obj
 
