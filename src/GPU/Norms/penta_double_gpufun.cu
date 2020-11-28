@@ -200,7 +200,6 @@ __device__ __forceinline__ void pdg_renorm5
    {
       *r4 = 0.0;
    }
-   __syncthreads();
 }
 
 __device__ __forceinline__ void pdg_fast_renorm
