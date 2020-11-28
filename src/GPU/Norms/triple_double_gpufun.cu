@@ -6,7 +6,7 @@
 
 /************************* renormalizations ***************************/
 
-__device__ void tdg_fast_renorm
+__device__ __forceinline__ void tdg_fast_renorm
  ( double x0, double x1, double x2, double x3,
    double *r0, double *r1, double *r2 )
 {
@@ -84,7 +84,7 @@ __device__ void tdg_fast_renorm
     }
 }
 
-__device__ void tdg_renorm_add1
+__device__ __forceinline__ void tdg_renorm_add1
  ( double x0, double x1, double x2, double y,
    double *r0, double *r1, double *r2 )
 {
@@ -164,7 +164,7 @@ __device__ void tdg_renorm_add1
 
 /*************************** copy and abs ***************************/
 
-__device__ void tdg_copy
+__device__ __forceinline__ void tdg_copy
  ( double a_hi, double a_mi, double a_lo,
    double *b_hi, double *b_mi, double *b_lo )
 {
@@ -173,7 +173,7 @@ __device__ void tdg_copy
    *b_lo = a_lo;
 }
 
-__device__ void tdg_abs
+__device__ __forceinline__ void tdg_abs
  ( double a_hi, double a_mi, double a_lo,
    double *b_hi, double *b_mi, double *b_lo )
 {
@@ -193,7 +193,7 @@ __device__ void tdg_abs
 
 /************************** additions ********************************/
 
-__device__ void tdg_add
+__device__ __forceinline__ void tdg_add
  ( double a_hi, double a_mi, double a_lo,
    double b_hi, double b_mi, double b_lo,
    double *c_hi, double *c_mi, double *c_lo )
@@ -212,7 +212,7 @@ __device__ void tdg_add
    tdg_fast_renorm(f0,f1,f2,f3,c_hi,c_mi,c_lo);
 }
 
-__device__ void tdg_inc
+__device__ __forceinline__ void tdg_inc
  ( double *a_hi, double *a_mi, double *a_lo,
    double b_hi, double b_mi, double b_lo )
 {
@@ -230,20 +230,20 @@ __device__ void tdg_inc
    tdg_fast_renorm(f0,f1,f2,f3,a_hi,a_mi,a_lo);
 }
 
-__device__ void tdg_inc_d
+__device__ __forceinline__ void tdg_inc_d
  ( double *a_hi, double *a_mi, double *a_lo, double b )
 {
    tdg_renorm_add1(*a_hi,*a_mi,*a_lo,b,a_hi,a_mi,a_lo);
 }
 
-__device__ void tdg_minus ( double *a_hi, double *a_mi, double *a_lo )
+__device__ __forceinline__ void tdg_minus ( double *a_hi, double *a_mi, double *a_lo )
 {
    *a_hi = -(*a_hi);
    *a_mi = -(*a_mi);
    *a_lo = -(*a_lo);
 }
 
-__device__ void tdg_sub
+__device__ __forceinline__ void tdg_sub
  ( double a_hi, double a_mi, double a_lo,
    double b_hi, double b_mi, double b_lo,
    double *c_hi, double *c_mi, double *c_lo )
@@ -255,7 +255,7 @@ __device__ void tdg_sub
 
 /***************** multiplications and division ********************/
 
-__device__ void tdg_mul_pwr2
+__device__ __forceinline__ void tdg_mul_pwr2
  ( double a_hi, double a_mi, double a_lo, double b,
    double *c_hi, double *c_mi, double *c_lo )
 {
@@ -264,7 +264,7 @@ __device__ void tdg_mul_pwr2
    *c_lo = a_lo*b;
 }
 
-__device__ void tdg_mul
+__device__ __forceinline__ void tdg_mul
  ( double a_hi, double a_mi, double a_lo,
    double b_hi, double b_mi, double b_lo,
    double *c_hi, double *c_mi, double *c_lo )
@@ -299,7 +299,7 @@ __device__ void tdg_mul
    tdg_fast_renorm(f0,f1,f2,f3,c_hi,c_mi,c_lo);
 }
 
-__device__ void tdg_sqr
+__device__ __forceinline__ void tdg_sqr
  ( double a_hi, double a_mi, double a_lo,
    double *c_hi, double *c_mi, double *c_lo )
 {
@@ -333,7 +333,7 @@ __device__ void tdg_sqr
    tdg_fast_renorm(f0,f1,f2,f3,c_hi,c_mi,c_lo);
 }
 
-__device__ void tdg_mul_td_d
+__device__ __forceinline__ void tdg_mul_td_d
  ( double a_hi, double a_mi, double a_lo, double b,
    double *c_hi, double *c_mi, double *c_lo )
 {
@@ -353,7 +353,7 @@ __device__ void tdg_mul_td_d
    tdg_fast_renorm(f0,f1,f2,f3,c_hi,c_mi,c_lo);
 }
 
-__device__ void tdg_div
+__device__ __forceinline__ void tdg_div
  ( double a_hi, double a_mi, double a_lo,
    double b_hi, double b_mi, double b_lo,
    double *c_hi, double *c_mi, double *c_lo )
@@ -380,7 +380,7 @@ __device__ void tdg_div
 
 /***************************** square root *****************************/
 
-__device__ void tdg_sqrt
+__device__ __forceinline__ void tdg_sqrt
  ( double a_hi, double a_mi, double a_lo,
    double *b_hi, double *b_mi, double *b_lo )
 {

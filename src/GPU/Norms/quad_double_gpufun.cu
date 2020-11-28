@@ -6,7 +6,7 @@
 
 /************************** renormalizations **************************/
 
-__device__ void qdg_renorm4
+__device__ __forceinline__ void qdg_renorm4
  ( double f0, double f1, double f2, double f3, double f4,
    double *pr, double *r0, double *r1, double *r2, double *r3 )
 {
@@ -48,7 +48,6 @@ __device__ void qdg_renorm4
    {
       *r2 = ddg_quick_two_sum(*pr,f3,pr);
    }
-
    if(*pr == 0.0)
    {
       if(ptr == 0)
@@ -84,7 +83,6 @@ __device__ void qdg_renorm4
    {
       *r3 = ddg_quick_two_sum(*pr,f4,pr);
    }
-
    if(*pr == 0.0)
    {
       if(ptr == 0)
@@ -146,7 +144,7 @@ __device__ void qdg_renorm4
    }
 }
 
-__device__ void qdg_fast_renorm
+__device__ __forceinline__ void qdg_fast_renorm
  ( double x0, double x1, double x2, double x3, double x4,
    double *r0, double *r1, double *r2, double *r3 )
 {
@@ -160,7 +158,7 @@ __device__ void qdg_fast_renorm
    qdg_renorm4(f0,f1,f2,f3,f4,&pr,r0,r1,r2,r3);
 }
 
-__device__ void qdg_renorm_add1
+__device__ __forceinline__ void qdg_renorm_add1
  ( double x0, double x1, double x2, double x3, double y,
    double *r0, double *r1, double *r2, double *r3 )
 {
@@ -176,7 +174,7 @@ __device__ void qdg_renorm_add1
 
 /************************ copy and abs *******************************/
 
-__device__ void qdg_copy
+__device__ __forceinline__ void qdg_copy
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double *b_hihi, double *b_lohi, double *b_hilo, double *b_lolo )
 {
@@ -186,7 +184,7 @@ __device__ void qdg_copy
    *b_lolo = a_lolo;
 }
 
-__device__ void qdg_abs
+__device__ __forceinline__ void qdg_abs
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double *b_hihi, double *b_lohi, double *b_hilo, double *b_lolo )
 {
@@ -208,7 +206,7 @@ __device__ void qdg_abs
 
 /****************** additions and subtractions ************************/
 
-__device__ void qdg_add
+__device__ __forceinline__ void qdg_add
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double b_hihi, double b_lohi, double b_hilo, double b_lolo,
    double *c_hihi, double *c_lohi, double *c_hilo, double *c_lolo )
@@ -236,7 +234,7 @@ __device__ void qdg_add
    qdg_fast_renorm(f0,f1,f2,f3,f4,c_hihi,c_lohi,c_hilo,c_lolo);
 }
 
-__device__ void qdg_inc
+__device__ __forceinline__ void qdg_inc
  ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo,
    double b_hihi, double b_lohi, double b_hilo, double b_lolo )
 {
@@ -261,7 +259,7 @@ __device__ void qdg_inc
    qdg_fast_renorm(f0,f1,f2,f3,f4,a_hihi,a_lohi,a_hilo,a_lolo);
 }
 
-__device__ void qdg_inc_d
+__device__ void __forceinline__ qdg_inc_d
  ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo,
    double b )
 {
@@ -269,7 +267,7 @@ __device__ void qdg_inc_d
                    a_hihi,a_lohi,a_hilo,a_lolo);
 }
 
-__device__ void qdg_minus
+__device__ void __forceinline__ qdg_minus
  ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo )
 {
    *a_hihi = -(*a_hihi);
@@ -278,7 +276,7 @@ __device__ void qdg_minus
    *a_lolo = -(*a_lolo);
 }
 
-__device__ void qdg_sub
+__device__ __forceinline__ void qdg_sub
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double b_hihi, double b_lohi, double b_hilo, double b_lolo,
    double *c_hihi, double *c_lohi, double *c_hilo, double *c_lolo )
@@ -290,7 +288,7 @@ __device__ void qdg_sub
 
 /***************** multiplications and division ********************/
 
-__device__ void qdg_mul_pwr2
+__device__ __forceinline__ void qdg_mul_pwr2
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo, double b,
    double *c_hihi, double *c_lohi, double *c_hilo, double *c_lolo )
 {
@@ -300,7 +298,7 @@ __device__ void qdg_mul_pwr2
    *c_lolo = a_lolo*b;
 }
 
-__device__ void qdg_mul
+__device__ __forceinline__ void qdg_mul
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double b_hihi, double b_lohi, double b_hilo, double b_lolo,
    double *c_hihi, double *c_lohi, double *c_hilo, double *c_lolo )
@@ -362,7 +360,7 @@ __device__ void qdg_mul
    qdg_fast_renorm(f0,f1,f2,f3,f4,c_hihi,c_lohi,c_hilo,c_lolo);
 }
 
-__device__ void qdg_sqr
+__device__ __forceinline__ void qdg_sqr
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double *c_hihi, double *c_lohi, double *c_hilo, double *c_lolo )
 {
@@ -421,7 +419,7 @@ __device__ void qdg_sqr
    qdg_fast_renorm(f0,f1,f2,f3,f4,c_hihi,c_lohi,c_hilo,c_lolo);
 }
 
-__device__ void qdg_mul_qd_d
+__device__ __forceinline__ void qdg_mul_qd_d
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double b,
    double *c_hihi, double *c_lohi, double *c_hilo, double *c_lolo )
@@ -488,7 +486,7 @@ __device__ void qdg_div
 
 /***************************** square root *****************************/
 
-__device__ void qdg_sqrt
+__device__ __forceinline__ void qdg_sqrt
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double *b_hihi, double *b_lohi, double *b_hilo, double *b_lolo )
 {

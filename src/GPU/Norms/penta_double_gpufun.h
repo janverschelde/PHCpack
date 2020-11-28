@@ -18,7 +18,7 @@ All functions have the prefix pdg_ to avoid name clashes. */
 
 /************************** renormalizations **************************/
 
-__device__ void pdg_renorm5
+__device__ __forceinline__ void pdg_renorm5
  ( double f0, double f1, double f2, double f3, double f4, double f5,
    double *pr, double *r0, double *r1, double *r2, double *r3, double *r4 );
 /*
@@ -45,7 +45,7 @@ __device__ void pdg_renorm5
  *   r3       second lowest part of a penta double number;
  *   r4       lowest part of a penta double number. */
 
-__device__ void pdg_fast_renorm
+__device__ __forceinline__ void pdg_fast_renorm
  ( double x0, double x1, double x2, double x3, double x4, double x5,
    double *r0, double *r1, double *r2, double *r3, double *r4 );
 /*
@@ -70,7 +70,7 @@ __device__ void pdg_fast_renorm
  *   r3       second lowest part of a penta double number;
  *   r4       lowest part of a penta double number. */
 
-__device__ void pdg_renorm_add1
+__device__ __forceinline__ void pdg_renorm_add1
  ( double x0, double x1, double x2, double x3, double x4, double y,
    double *r0, double *r1, double *r2, double *r3, double *r4 );
 /*
@@ -97,7 +97,7 @@ __device__ void pdg_renorm_add1
 
 /************************ copy and abs *******************************/
 
-__device__ void pdg_copy
+__device__ __forceinline__ void pdg_copy
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double *b_tb, double *b_ix, double *b_mi, double *b_rg, double *b_pk );
 /*
@@ -105,7 +105,7 @@ __device__ void pdg_copy
  *   Copies the content of the penta double a (a_tb, a_ix, a_mi, a_rg, a_pk)
  *   to the penta double b (b_tb, b_ix, b_mi, b_rg, b_pk). */
 
-__device__ void pdg_abs
+__device__ __forceinline__ void pdg_abs
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double *b_tb, double *b_ix, double *b_mi, double *b_rg, double *b_pk );
 /*
@@ -114,7 +114,7 @@ __device__ void pdg_abs
 
 /****************** additions and substractions ************************/
 
-__device__ void pdg_add
+__device__ __forceinline__ void pdg_add
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double b_tb, double b_ix, double b_mi, double b_rg, double b_pk,
    double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk);
@@ -143,7 +143,7 @@ __device__ void pdg_add
  *   c_rg     second lowest part of the penta double c = a + b;
  *   c_pk     lowest part of the penta double c = a + b. */
 
-__device__ void pdg_inc
+__device__ __forceinline__ void pdg_inc
  ( double *a_tb, double *a_ix, double *a_mi, double *a_rg, double *a_pk,
    double b_tb, double b_ix, double b_mi, double b_rg, double b_pk );
 /*
@@ -170,7 +170,7 @@ __device__ void pdg_inc
  *   a_rg     second lowest part of the penta double a + b;
  *   a_pk     lowest part of the penta double a + b. */
 
-__device__ void pdg_inc_d
+__device__ __forceinline__ void pdg_inc_d
  ( double *a_tb, double *a_ix, double *a_mi, double *a_rg, double *a_pk,
    double b );
 /*
@@ -192,13 +192,13 @@ __device__ void pdg_inc_d
  *   a_rg     second lowest part of the penta double a + b;
  *   a_pk     lowest part of the penta double a + b. */
 
-__device__ void pdg_minus
+__device__ __forceinline__ void pdg_minus
  ( double *a_tb, double *a_ix, double *a_mi, double *a_rg, double *a_pk );
 /*
  * DESCRIPTION :
  *   Flips the sign of a (a_tb, a_ix, a_mi, a_rg, a_pk). */
 
-__device__ void pdg_sub
+__device__ __forceinline__ void pdg_sub
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double b_tb, double b_ix, double b_mi, double b_rg, double b_pk,
    double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk );
@@ -229,7 +229,7 @@ __device__ void pdg_sub
 
 /***************** multiplications and division ********************/
 
-__device__ void pdg_mul_pwr2
+__device__ __forceinline__ void pdg_mul_pwr2
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double b,
    double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk );
@@ -253,7 +253,7 @@ __device__ void pdg_mul_pwr2
  *   c_rg     second lowest part of the penta double c = a * b;
  *   c_pk     lowest part of the penta double c = a * b. */
 
-__device__ void pdg_mul
+__device__ __forceinline__ void pdg_mul
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double b_tb, double b_ix, double b_mi, double b_rg, double b_pk,
    double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk );
@@ -282,7 +282,7 @@ __device__ void pdg_mul
  *   c_pk     second lowest part of the penta double c = a * b;
  *   c_pk     lowest part of the penta double c = a * b. */
 
-__device__ void pdg_sqr
+__device__ __forceinline__ void pdg_sqr
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk );
 /*
@@ -304,7 +304,7 @@ __device__ void pdg_sqr
  *   c_rg     second lowest part of the penta double c = a * a;
  *   c_pk     lowest part of the penta double c = a * a. */
 
-__device__ void pdg_mul_pd_d
+__device__ __forceinline__ void pdg_mul_pd_d
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double b,
    double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk );
@@ -328,7 +328,7 @@ __device__ void pdg_mul_pd_d
  *   c_rg     second lowest part of the penta double c = a * b;
  *   c_pk     lowest part of the penta double c = a * b. */
 
-__device__ void pdg_div
+__device__ __forceinline__ void pdg_div
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double b_tb, double b_ix, double b_mi, double b_rg, double b_pk,
    double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk );
@@ -359,7 +359,7 @@ __device__ void pdg_div
 
 /***************************** square root *****************************/
 
-__device__ void pdg_sqrt
+__device__ __forceinline__ void pdg_sqrt
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double *b_tb, double *b_ix, double *b_mi, double *b_rg, double *b_pk );
 /*

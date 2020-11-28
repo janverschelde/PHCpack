@@ -6,7 +6,7 @@
 
 /************************** renormalizations **************************/
 
-__device__ void pdg_renorm5
+__device__ __forceinline__ void pdg_renorm5
  ( double f0, double f1, double f2, double f3, double f4, double f5,
    double *pr, double *r0, double *r1, double *r2, double *r3, double *r4 )
 {
@@ -200,9 +200,10 @@ __device__ void pdg_renorm5
    {
       *r4 = 0.0;
    }
+   __syncthreads();
 }
 
-__device__ void pdg_fast_renorm
+__device__ __forceinline__ void pdg_fast_renorm
  ( double x0, double x1, double x2, double x3, double x4, double x5,
    double *r0, double *r1, double *r2, double *r3, double *r4 )
 {
@@ -217,7 +218,7 @@ __device__ void pdg_fast_renorm
    pdg_renorm5(f0,f1,f2,f3,f4,f5,&pr,r0,r1,r2,r3,r4);
 }
 
-__device__ void pdg_renorm_add1
+__device__ __forceinline__ void pdg_renorm_add1
  ( double x0, double x1, double x2, double x3, double x4, double y,
    double *r0, double *r1, double *r2, double *r3, double *r4 )
 {
@@ -234,7 +235,7 @@ __device__ void pdg_renorm_add1
 
 /************************ copy and abs *******************************/
 
-__device__ void pdg_copy
+__device__ __forceinline__ void pdg_copy
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double *b_tb, double *b_ix, double *b_mi, double *b_rg, double *b_pk )
 {
@@ -245,7 +246,7 @@ __device__ void pdg_copy
    *b_pk = a_pk;
 }
 
-__device__ void pdg_abs
+__device__ __forceinline__ void pdg_abs
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double *b_tb, double *b_ix, double *b_mi, double *b_rg, double *b_pk )
 {
@@ -269,7 +270,7 @@ __device__ void pdg_abs
 
 /****************** additions and substractions ************************/
 
-__device__ void pdg_add
+__device__ __forceinline__ void pdg_add
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double b_tb, double b_ix, double b_mi, double b_rg, double b_pk,
    double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk)
@@ -303,7 +304,7 @@ __device__ void pdg_add
    pdg_fast_renorm(f0,f1,f2,f3,f4,f5,c_tb,c_ix,c_mi,c_rg,c_pk);
 }
 
-__device__ void pdg_inc
+__device__ __forceinline__ void pdg_inc
  ( double *a_tb, double *a_ix, double *a_mi, double *a_rg, double *a_pk,
    double b_tb, double b_ix, double b_mi, double b_rg, double b_pk )
 {
@@ -334,14 +335,14 @@ __device__ void pdg_inc
    pdg_fast_renorm(f0,f1,f2,f3,f4,f5,a_tb,a_ix,a_mi,a_rg,a_pk);
 }
 
-__device__ void pdg_inc_d
+__device__ __forceinline__ void pdg_inc_d
  ( double *a_tb, double *a_ix, double *a_mi, double *a_rg, double *a_pk,
    double b )
 {
    pdg_renorm_add1(*a_tb,*a_ix,*a_mi,*a_rg,*a_pk,b,a_tb,a_ix,a_mi,a_rg,a_pk);
 }
 
-__device__ void pdg_minus
+__device__ __forceinline__ void pdg_minus
  ( double *a_tb, double *a_ix, double *a_mi, double *a_rg, double *a_pk )
 {
    *a_tb = -(*a_tb);
@@ -351,7 +352,7 @@ __device__ void pdg_minus
    *a_pk = -(*a_pk);
 }
 
-__device__ void pdg_sub
+__device__ __forceinline__ void pdg_sub
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double b_tb, double b_ix, double b_mi, double b_rg, double b_pk,
    double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk )
@@ -363,7 +364,7 @@ __device__ void pdg_sub
 
 /***************** multiplications and division ********************/
 
-__device__ void pdg_mul_pwr2
+__device__ __forceinline__ void pdg_mul_pwr2
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double b,
    double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk )
@@ -375,7 +376,7 @@ __device__ void pdg_mul_pwr2
    *c_pk = a_pk*b;
 }
 
-__device__ void pdg_mul
+__device__ __forceinline__ void pdg_mul
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double b_tb, double b_ix, double b_mi, double b_rg, double b_pk,
    double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk )
@@ -473,7 +474,7 @@ __device__ void pdg_mul
    pdg_fast_renorm(f0,f1,f2,f3,f4,f5,c_tb,c_ix,c_mi,c_rg,c_pk);
 }
 
-__device__ void pdg_sqr
+__device__ __forceinline__ void pdg_sqr
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk )
 {
@@ -568,7 +569,7 @@ __device__ void pdg_sqr
    pdg_fast_renorm(f0,f1,f2,f3,f4,f5,c_tb,c_ix,c_mi,c_rg,c_pk);
 }
 
-__device__ void pdg_mul_pd_d
+__device__ __forceinline__ void pdg_mul_pd_d
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double b,
    double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk )
@@ -602,7 +603,7 @@ __device__ void pdg_mul_pd_d
    pdg_fast_renorm(f0,f1,f2,f3,f4,f5,c_tb,c_ix,c_mi,c_rg,c_pk);
 }
 
-__device__ void pdg_div
+__device__ __forceinline__ void pdg_div
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double b_tb, double b_ix, double b_mi, double b_rg, double b_pk,
    double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk )
@@ -647,7 +648,7 @@ __device__ void pdg_div
 
 /***************************** square root *****************************/
 
-__device__ void pdg_sqrt
+__device__ __forceinline__ void pdg_sqrt
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
    double *b_tb, double *b_ix, double *b_mi, double *b_rg, double *b_pk )
 {

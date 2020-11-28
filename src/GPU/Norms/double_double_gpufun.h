@@ -12,7 +12,8 @@ for comparison and for input and output. */
 
 /************************** additions ********************************/
 
-__device__ double ddg_quick_two_sum ( double a, double b, double *err );
+__device__ __forceinline__  double ddg_quick_two_sum
+ ( double a, double b, double *err );
 /*
  * DESCRIPTION :
  *   Assuming |a| >= |b|, returns a+b and in err the error.
@@ -24,7 +25,8 @@ __device__ double ddg_quick_two_sum ( double a, double b, double *err );
  *   s        returned sum of a and b.
  *   err      error value, b - (s - a). */
 
-__device__ double ddg_two_sum ( double a, double b, double *err );
+__device__ __forceinline__  double ddg_two_sum
+ ( double a, double b, double *err );
 /*
  * DESCRIPTION :
  *   Computes fl(a+b) and err(a+b).
@@ -36,7 +38,7 @@ __device__ double ddg_two_sum ( double a, double b, double *err );
  *   s        approximation for the sum of a and b is returned;
  *   err      error of a + b. */
 
-__device__ void ddg_add
+__device__ __forceinline__  void ddg_add
  ( double a_hi, double a_lo, double b_hi, double b_lo,
    double *c_hi, double *c_lo );
 /*
@@ -54,7 +56,8 @@ __device__ void ddg_add
  *   c_hi     high part of the double double c;
  *   c_lo     low part of the double double c. */
 
-__device__ double ddg_quick_two_diff ( double a, double b, double *err );
+__device__ __forceinline__  double ddg_quick_two_diff
+ ( double a, double b, double *err );
 /*
  * DESCRIPTION :
  *   Assuming |a| >= |b|, returns a-b and in err the error.
@@ -66,7 +69,8 @@ __device__ double ddg_quick_two_diff ( double a, double b, double *err );
  *   s        returned a minus b.
  *   err      error value, (a - s) - b. */
 
-__device__ double ddg_two_diff ( double a, double b, double *err );
+__device__ __forceinline__  double ddg_two_diff
+ ( double a, double b, double *err );
 /*
  * DESCRIPTION :
  *   Computes fl(a-b) and err(a-b).
@@ -78,7 +82,7 @@ __device__ double ddg_two_diff ( double a, double b, double *err );
  *   s        approximation for the difference of a with b is returned;
  *   err      error of a - b. */
 
-__device__ void ddg_minus ( double *a_hi, double *a_lo );
+__device__ __forceinline__  void ddg_minus ( double *a_hi, double *a_lo );
 /*
  * DESCRIPTION : a = -a, unary minus,
  *   Flips the sign of both high and low parts of the double double a.
@@ -91,7 +95,7 @@ __device__ void ddg_minus ( double *a_hi, double *a_lo );
  *   a_hi     high part of the double double -a;
  *   a_hi     low part of the double double -a. */
 
-__device__ void ddg_sub
+__device__ __forceinline__  void ddg_sub
  ( double a_hi, double a_lo, double b_hi, double b_lo,
    double *c_hi, double *c_lo );
 /*
@@ -110,7 +114,7 @@ __device__ void ddg_sub
  *   c_hi     high part of the double double c;
  *   c_lo     low part of the double double c. */
 
-__device__ void ddg_sub_dd_d
+__device__ __forceinline__  void ddg_sub_dd_d
  ( double a_hi, double a_lo, double b, double *c_hi, double *c_lo );
 /*
  * DESCRIPTION : c = a - b.
@@ -128,7 +132,7 @@ __device__ void ddg_sub_dd_d
 
 /********** incrementers, decrementers, and multipliers ****************/
 
-__device__ void ddg_inc
+__device__ __forceinline__  void ddg_inc
  ( double *a_hi, double *a_lo, double b_hi, double b_lo );
 /*
  * DESCRIPTION : a = a + b.
@@ -145,7 +149,8 @@ __device__ void ddg_inc
  *   a_hi     high part of the double double a;
  *   a_lo     low part of the double double a. */
 
-__device__ void ddg_inc_d ( double *a_hi, double *a_lo, double b );
+__device__  __forceinline__ void ddg_inc_d
+ ( double *a_hi, double *a_lo, double b );
 /*
  * DESCRIPTION : a = a + b.
  *   Inplace increment of the double double a (a_hi, a_lo)
@@ -160,7 +165,7 @@ __device__ void ddg_inc_d ( double *a_hi, double *a_lo, double b );
  *   a_hi     high part of the double double a;
  *   a_lo     low part of the double double a. */
 
-__device__ void ddg_dec
+__device__  __forceinline__ void ddg_dec
  ( double *a_hi, double *a_lo, double b_hi, double b_lo );
 /*
  * DESCRIPTION : a = a - b.
@@ -177,7 +182,8 @@ __device__ void ddg_dec
  *   a_hi     high part of the double double a;
  *   a_lo     low part of the double double a. */
 
-__device__ void ddg_dec_d ( double *a_hi, double *a_lo, double b );
+__device__  __forceinline__ void ddg_dec_d
+ ( double *a_hi, double *a_lo, double b );
 /*
  * DESCRIPTION : a = a - b.
  *   Inplace decrement of the double double a (a_hi, a_lo)
@@ -192,7 +198,7 @@ __device__ void ddg_dec_d ( double *a_hi, double *a_lo, double b );
  *   a_hi     high part of the double double a;
  *   a_lo     low part of the double double a. */
 
-__device__ void ddg_mlt
+__device__  __forceinline__ void ddg_mlt
  ( double *a_hi, double *a_lo, double b_hi, double b_lo );
 /*
  * DESCRIPTION : a = a * b.
@@ -209,7 +215,8 @@ __device__ void ddg_mlt
  *   a_hi     high part of the double double a;
  *   a_lo     low part of the double double a. */
 
-__device__ void ddg_mlt_d ( double *a_hi, double *a_lo, double b );
+__device__  __forceinline__ void ddg_mlt_d
+ ( double *a_hi, double *a_lo, double b );
 /*
  * DESCRIPTION : a = a * b.
  *   Inplace multiplication of the double double a (a_hi, a_lo)
@@ -226,7 +233,8 @@ __device__ void ddg_mlt_d ( double *a_hi, double *a_lo, double b );
 
 /************************ multiplications ********************************/
 
-__device__ void ddg_split ( double a, double *hi, double *lo );
+__device__  __forceinline__ void ddg_split
+ ( double a, double *hi, double *lo );
 /*
  * DESCRIPTION :
  *   Computes high and low word of a.
@@ -238,7 +246,8 @@ __device__ void ddg_split ( double a, double *hi, double *lo );
  *   hi       high word of a;
  *   lo       low word of a. */ 
 
-__device__ double ddg_two_prod ( double a, double b, double *err );
+__device__  __forceinline__ double ddg_two_prod
+ ( double a, double b, double *err );
 /*
  * DESCRIPTION :
  *   Computes fl(a*b) and err(a*b).
@@ -250,12 +259,12 @@ __device__ double ddg_two_prod ( double a, double b, double *err );
  *   p        returned approximation for a*b;
  *   err      error on the approximated product. */
 
-__device__ double ddg_two_sqr ( double a, double *err );
+__device__  __forceinline__ double ddg_two_sqr ( double a, double *err );
 /*
  * DESCRIPTION :
  *   Computes fl(a*a) and err(a*a) faster than two_prod. */
 
-__device__ void ddg_mul
+__device__  __forceinline__ void ddg_mul
  ( double a_hi, double a_lo, double b_hi, double b_lo,
    double *c_hi, double *c_lo );
 /*
@@ -273,7 +282,7 @@ __device__ void ddg_mul
  *   c_hi     high part of the double double c;
  *   c_lo     low part of the double double c. */
 
-__device__ void ddg_sqr
+__device__ __forceinline__  void ddg_sqr
  ( double a_hi, double a_lo, double *b_hi, double *b_lo );
 /*
  * DESCRIPTION :
@@ -288,7 +297,7 @@ __device__ void ddg_sqr
  *   b_hi     high part of the double double b;
  *   b_lo     low part of the double double b. */
 
-__device__ void ddg_mul_d_dd
+__device__ __forceinline__  void ddg_mul_d_dd
  ( double a, double b_hi, double b_lo, double *c_hi, double *c_lo );
 /*
  * DESCRIPTION : c = a * b.
@@ -306,7 +315,7 @@ __device__ void ddg_mul_d_dd
 
 /*************************** divisions ***************************/
 
-__device__ void ddg_div
+__device__ __forceinline__  void ddg_div
  ( double a_hi, double a_lo, double b_hi, double b_lo,
    double *c_hi, double *c_lo );
 /*
@@ -326,7 +335,7 @@ __device__ void ddg_div
 
 /*************************** sqrt ***************************/
 
-__device__ void ddg_sqrt 
+__device__  __forceinline__ void ddg_sqrt 
  ( double a_hi, double a_lo, double *b_hi, double *b_lo );
 /*
  * DESCRIPTION :
@@ -341,7 +350,7 @@ __device__ void ddg_sqrt
  *   b_hi     high part of the double double b;
  *   b_lo     low part of the double double b. */
 
-__device__ void ddg_abs
+__device__  __forceinline__ void ddg_abs
  ( double a_hi, double a_lo, double *b_hi, double *b_lo );
 /*
  * DESCRIPTION :

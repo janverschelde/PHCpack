@@ -15,7 +15,7 @@ All functions have the prefix tdg_ to avoid name clashes. */
 
 /************************** renormalizations **************************/
 
-__device__ void tdg_fast_renorm
+__device__ __forceinline__ void tdg_fast_renorm
  ( double x0, double x1, double x2, double x3,
    double *r0, double *r1, double *r2 );
 /*
@@ -36,7 +36,7 @@ __device__ void tdg_fast_renorm
  *   r1       middle part of a triple double;
  *   r2       lowest part of a triple double. */
 
-__device__ void tdg_renorm_add1
+__device__ __forceinline__ void tdg_renorm_add1
  ( double x0, double x1, double x2, double x3,
    double *r0, double *r1, double *r2 );
 /*
@@ -59,7 +59,7 @@ __device__ void tdg_renorm_add1
 
 /************************ copy and abs *******************************/
 
-__device__ void tdg_copy
+__device__ __forceinline__ void tdg_copy
  ( double a_hi, double a_mi, double a_lo,
    double *b_hi, double *b_mi, double *b_lo );
 /*
@@ -67,7 +67,7 @@ __device__ void tdg_copy
  *   Copies the content of the triple double a (a_hi, a_mi, a_lo)
  *   to the triple double b (b_hi, b_mi, b_lo). */
 
-__device__ void tdg_abs
+__device__ __forceinline__ void tdg_abs
  ( double a_hi, double a_mi, double a_lo,
    double *b_hi, double *b_mi, double *b_lo );
 /*
@@ -76,7 +76,7 @@ __device__ void tdg_abs
 
 /****************** additions and substractions ************************/
 
-__device__ void tdg_add
+__device__ __forceinline__ void tdg_add
  ( double a_hi, double a_mi, double a_lo,
    double b_hi, double b_mi, double b_lo,
    double *c_hi, double *c_mi, double *c_lo );
@@ -98,7 +98,7 @@ __device__ void tdg_add
  *   c_mi     middle part of the triple double c = a + b;
  *   c_lo     low part of the triple double c = a + b. */
 
-__device__ void tdg_inc
+__device__ __forceinline__ void tdg_inc
  ( double *a_hi, double *a_mi, double *a_lo,
    double b_hi, double b_mi, double b_lo );
 /*
@@ -119,7 +119,7 @@ __device__ void tdg_inc
  *   a_mi     middle part of the triple double a + b;
  *   a_lo     low part of the triple double a + b. */
 
-__device__ void tdg_inc_d
+__device__ __forceinline__ void tdg_inc_d
  ( double *a_hi, double *a_mi, double *a_lo, double b );
 /*
  * DESCRIPTION : a = a + b.
@@ -136,12 +136,12 @@ __device__ void tdg_inc_d
  *   a_mi     middle part of the triple double a + b;
  *   a_lo     low part of the triple double a + b. */
 
-__device__ void tdg_minus ( double *a_hi, double *a_mi, double *a_lo );
+__device__ __forceinline__ void tdg_minus ( double *a_hi, double *a_mi, double *a_lo );
 /*
  * DESCRIPTION :
  *   Flips the sign of a (a_hi, a_mi, a_lo). */
 
-__device__ void tdg_sub
+__device__ __forceinline__ void tdg_sub
  ( double a_hi, double a_mi, double a_lo,
    double b_hi, double b_mi, double b_lo,
    double *c_hi, double *c_mi, double *c_lo );
@@ -166,7 +166,7 @@ __device__ void tdg_sub
 
 /***************** multiplications and division ********************/
 
-__device__ void tdg_mul_pwr2
+__device__ __forceinline__ void tdg_mul_pwr2
  ( double a_hi, double a_mi, double a_lo, double b,
    double *c_hi, double *c_mi, double *c_lo );
 /*
@@ -185,7 +185,7 @@ __device__ void tdg_mul_pwr2
  *   c_mi     middle part of the triple double c = a * b;
  *   c_lo     low part of the triple double c = a * b. */
 
-__device__ void tdg_mul
+__device__ __forceinline__ void tdg_mul
  ( double a_hi, double a_mi, double a_lo,
    double b_hi, double b_mi, double b_lo,
    double *c_hi, double *c_mi, double *c_lo );
@@ -207,7 +207,7 @@ __device__ void tdg_mul
  *   c_mi     middle part of the triple double c = a * b;
  *   c_lo     low part of the triple double c = a * b. */
 
-__device__ void tdg_sqr
+__device__ __forceinline__ void tdg_sqr
  ( double a_hi, double a_mi, double a_lo,
    double *c_hi, double *c_mi, double *c_lo );
 /*
@@ -225,7 +225,7 @@ __device__ void tdg_sqr
  *   c_mi     middle part of the triple double c = a * a;
  *   c_lo     low part of the triple double c = a * a. */
 
-__device__ void tdg_mul_td_d
+__device__ __forceinline__ void tdg_mul_td_d
  ( double a_hi, double a_mi, double a_lo, double b,
    double *c_hi, double *c_mi, double *c_lo );
 /*
@@ -244,7 +244,7 @@ __device__ void tdg_mul_td_d
  *   c_mi     middle part of the triple double c = a * b;
  *   c_lo     low part of the triple double c = a * b. */
 
-__device__ void tdg_div
+__device__ __forceinline__ void tdg_div
  ( double a_hi, double a_mi, double a_lo,
    double b_hi, double b_mi, double b_lo,
    double *c_hi, double *c_mi, double *c_lo );
@@ -268,7 +268,7 @@ __device__ void tdg_div
 
 /***************************** square root *****************************/
 
-__device__ void tdg_sqrt
+__device__ __forceinline__ void tdg_sqrt
  ( double a_hi, double a_mi, double a_lo,
    double *b_hi, double *b_mi, double *b_lo );
 /*

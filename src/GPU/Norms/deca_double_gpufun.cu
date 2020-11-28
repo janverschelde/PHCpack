@@ -7,7 +7,7 @@
 
 /************************* renormalizations ************************/
 
-__device__ void dag_renorm10
+__device__ __forceinline__ void dag_renorm10
  ( double f0, double f1, double f2, double f3, double f4, double f5,
    double f6, double f7, double f8, double f9, double f10, double *pr,
    double *r0, double *r1, double *r2, double *r3, double *r4, double *r5,
@@ -604,7 +604,7 @@ __device__ void dag_renorm10
    }
 }
 
-__device__ void dag_fast_renorm
+__device__ __forceinline__ void dag_fast_renorm
  ( double x0, double x1, double x2, double x3, double x4, double x5,
    double x6, double x7, double x8, double x9, double x10,
    double *r0, double *r1, double *r2, double *r3, double *r4, double *r5,
@@ -627,7 +627,7 @@ __device__ void dag_fast_renorm
                 r0,r1,r2,r3,r4,r5,r6,r7,r8,r9);
 }
 
-__device__ void dag_renorm_add1
+__device__ __forceinline__ void dag_renorm_add1
  ( double x0, double x1, double x2, double x3, double x4, double x5,
    double x6, double x7, double x8, double x9, double y,
    double *r0, double *r1, double *r2, double *r3, double *r4, double *r5,
@@ -652,7 +652,7 @@ __device__ void dag_renorm_add1
 
 /************************ copy and abs *******************************/
 
-__device__ void dag_copy
+__device__ __forceinline__ void dag_copy
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double *b_rtb, double *b_rix, double *b_rmi, double *b_rrg, double *b_rpk,
@@ -670,7 +670,7 @@ __device__ void dag_copy
    *b_lpk = a_lpk;
 }
 
-__device__ void dag_abs
+__device__ __forceinline__ void dag_abs
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double *b_rtb, double *b_rix, double *b_rmi, double *b_rrg, double *b_rpk,
@@ -706,7 +706,7 @@ __device__ void dag_abs
 
 /****************** additions and substractions ************************/
 
-__device__ void dag_add
+__device__ __forceinline__ void dag_add
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double b_rtb, double b_rix, double b_rmi, double b_rrg, double b_rpk,
@@ -790,7 +790,7 @@ __device__ void dag_add
                    c_ltb,c_lix,c_lmi,c_lrg,c_lpk);
 }
 
-__device__ void dag_inc
+__device__ __forceinline__ void dag_inc
  ( double *a_rtb, double *a_rix, double *a_rmi, double *a_rrg, double *a_rpk,
    double *a_ltb, double *a_lix, double *a_lmi, double *a_lrg, double *a_lpk,
    double b_rtb, double b_rix, double b_rmi, double b_rrg, double b_rpk,
@@ -870,7 +870,7 @@ __device__ void dag_inc
                    a_ltb,a_lix,a_lmi,a_lrg,a_lpk);
 }
 
-__device__ void dag_inc_d
+__device__ __forceinline__ void dag_inc_d
  ( double *a_rtb, double *a_rix, double *a_rmi, double *a_rrg, double *a_rpk,
    double *a_ltb, double *a_lix, double *a_lmi, double *a_lrg, double *a_lpk,
    double b )
@@ -880,7 +880,7 @@ __device__ void dag_inc_d
        b,a_rtb,a_rix,a_rmi,a_rrg,a_rpk,a_ltb,a_lix,a_lmi,a_lrg,a_lpk);
 }
 
-__device__ void dag_minus
+__device__ __forceinline__ void dag_minus
  ( double *a_rtb, double *a_rix, double *a_rmi, double *a_rrg, double *a_rpk,
    double *a_ltb, double *a_lix, double *a_lmi, double *a_lrg, double *a_lpk )
 {
@@ -896,7 +896,7 @@ __device__ void dag_minus
    *a_lpk = -(*a_lpk);
 }
 
-__device__ void dag_sub
+__device__ __forceinline__ void dag_sub
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double b_rtb, double b_rix, double b_rmi, double b_rrg, double b_rpk,
@@ -913,7 +913,7 @@ __device__ void dag_sub
 
 /***************** multiplications and division ********************/
 
-__device__ void dag_mul_pwr2
+__device__ __forceinline__ void dag_mul_pwr2
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double b,
@@ -932,7 +932,7 @@ __device__ void dag_mul_pwr2
    *c_lpk = a_lpk*b;
 }
 
-__device__ void dag_mul
+__device__ __forceinline__ void dag_mul
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double b_rtb, double b_rix, double b_rmi, double b_rrg, double b_rpk,
@@ -1444,7 +1444,7 @@ __device__ void dag_mul
                    c_ltb,c_lix,c_lmi,c_lrg,c_lpk);
 }
 
-__device__ void dag_sqr
+__device__ __forceinline__ void dag_sqr
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double *c_rtb, double *c_rix, double *c_rmi, double *c_rrg, double *c_rpk,
@@ -1952,7 +1952,7 @@ __device__ void dag_sqr
                    c_ltb,c_lix,c_lmi,c_lrg,c_lpk);
 }
 
-__device__ void dag_mul_da_d
+__device__ __forceinline__ void dag_mul_da_d
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double b,
@@ -2035,7 +2035,7 @@ __device__ void dag_mul_da_d
                    c_ltb,c_lix,c_lmi,c_lrg,c_lpk);
 }
 
-__device__ void dag_div
+__device__ __forceinline__ void dag_div
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double b_rtb, double b_rix, double b_rmi, double b_rrg, double b_rpk,
@@ -2165,7 +2165,7 @@ __device__ void dag_div
 
 /***************************** square root *****************************/
 
-__device__ void dag_sqrt
+__device__ __forceinline__ void dag_sqrt
  ( double a_rtb, double a_rix, double a_rmi, double a_rrg, double a_rpk,
    double a_ltb, double a_lix, double a_lmi, double a_lrg, double a_lpk,
    double *b_rtb, double *b_rix, double *b_rmi, double *b_rrg, double *b_rpk,

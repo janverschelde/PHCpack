@@ -1,3 +1,5 @@
+Sat 28 Nov 2020 : added __forceinline__ to all functions of all *gpufun*.
+
 Wed 25 Nov 2020 : new {dbl2,dbl3,dbl4,dbl5,dbl8,dbl10}_sqrt_kernels,
   for improved test_{double,triple,quad,penta,octo,deca}_doubles.cpp.
   Updated makefiles.

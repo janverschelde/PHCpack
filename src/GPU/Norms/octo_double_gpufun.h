@@ -18,7 +18,7 @@ All functions have the prefix odg_ to avoid name clashes. */
 
 /************************** renormalizations **************************/
 
-__device__ void odg_renorm8
+__device__ __forceinline__ void odg_renorm8
  ( double f0, double f1, double f2, double f3, double f4, double f5,
    double f6, double f7, double f8, double *pr, double *r0, double *r1,
    double *r2, double *r3, double *r4, double *r5, double *r6, double *r7 );
@@ -51,7 +51,7 @@ __device__ void odg_renorm8
  *   r6       second lowest part of an octo double number;
  *   r7       lowest part of an octo double number. */
 
-__device__ void odg_fast_renorm
+__device__ __forceinline__ void odg_fast_renorm
  ( double x0, double x1, double x2, double x3, double x4, double x5,
    double x6, double x7, double x8, double *r0, double *r1, double *r2,
    double *r3, double *r4, double *r5, double *r6, double *r7 );
@@ -83,7 +83,7 @@ __device__ void odg_fast_renorm
  *   r6       second lowest part of an octo double number;
  *   r7       lowest part of an octo double number. */
 
-__device__ void odg_renorm_add1
+__device__ __forceinline__ void odg_renorm_add1
  ( double x0, double x1, double x2, double x3, double x4, double x5,
    double x6, double x7, double y, double *r0, double *r1, double *r2,
    double *r3, double *r4, double *r5, double *r6, double *r7 );
@@ -117,7 +117,7 @@ __device__ void odg_renorm_add1
 
 /************************ copy and abs *******************************/
 
-__device__ void odg_copy
+__device__ __forceinline__ void odg_copy
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
    double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
    double *b_hihihi, double *b_lohihi, double *b_hilohi, double *b_lolohi,
@@ -128,7 +128,7 @@ __device__ void odg_copy
  *   a_hihilo, a_lohilo, a_hilolo, a_lololo) to the octo double b (b_hihihi,
  *   b_lohihi, b_hilohi, b_lolohi, b_hihilo, b_lohilo, b_hilolo, b_lololo). */
 
-__device__ void odg_abs
+__device__ __forceinline__ void odg_abs
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
    double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
    double *b_hihihi, double *b_lohihi, double *b_hilohi, double *b_lolohi,
@@ -139,7 +139,7 @@ __device__ void odg_abs
 
 /****************** additions and subtractions ************************/
 
-__device__ void odg_add
+__device__ __forceinline__ void odg_add
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
    double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
    double b_hihihi, double b_lohihi, double b_hilohi, double b_lolohi,
@@ -182,7 +182,7 @@ __device__ void odg_add
  *   c_hilolo is the second lowest part of the octo double c = a + b;
  *   c_lololo is the lowest part of the octo double c = a + b. */
 
-__device__ void odg_inc
+__device__ __forceinline__ void odg_inc
  ( double *a_hihihi, double *a_lohihi, double *a_hilohi, double *a_lolohi,
    double *a_hihilo, double *a_lohilo, double *a_hilolo, double *a_lololo,
    double b_hihihi, double b_lohihi, double b_hilohi, double b_lolohi,
@@ -221,7 +221,7 @@ __device__ void odg_inc
  *   a_hilolo is the second lowest part of the octo double a + b;
  *   a_lololo is the lowest part of the octo double a + b. */
 
-__device__ void odg_inc_d
+__device__ __forceinline__ void odg_inc_d
  ( double *a_hihihi, double *a_lohihi, double *a_hilohi, double *a_lolohi,
    double *a_hihilo, double *a_lohilo, double *a_hilolo, double *a_lololo,
    double b );
@@ -251,7 +251,7 @@ __device__ void odg_inc_d
  *   a_hilolo is the second lowest part of the octo double a + b;
  *   a_lololo is the lowest part of the octo double a + b; */
 
-__device__ void odg_minus
+__device__ __forceinline__ void odg_minus
  ( double *a_hihihi, double *a_lohihi, double *a_hilohi, double *a_lolohi,
    double *a_hihilo, double *a_lohilo, double *a_hilolo, double *a_lololo );
 /*
@@ -259,7 +259,7 @@ __device__ void odg_minus
  *   Flips the sign of a (a_hihihi, a_lohihi, a_hilohi, a_lolohi,
  *                        a_hihilo, a_lohilo, a_hilolo, a_lololo). */
 
-__device__ void odg_sub
+__device__ __forceinline__ void odg_sub
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
    double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
    double b_hihihi, double b_lohihi, double b_hilohi, double b_lolohi,
@@ -305,7 +305,7 @@ __device__ void odg_sub
 
 /***************** multiplications and division ********************/
 
-__device__ void odg_mul_pwr2
+__device__ __forceinline__ void odg_mul_pwr2
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
    double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
    double b,
@@ -337,7 +337,7 @@ __device__ void odg_mul_pwr2
  *   c_hilolo is the second lowest part of the octo double c = a * b;
  *   c_lololo is the lowest part of the octo double c = a * b. */
 
-__device__ void odg_mul
+__device__ __forceinline__ void odg_mul
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
    double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
    double b_hihihi, double b_lohihi, double b_hilohi, double b_lolohi,
@@ -380,7 +380,7 @@ __device__ void odg_mul
  *   c_hilolo is the second lowest part of the octo double c = a * b;
  *   c_lololo is the lowest part of the octo double c = a * b. */
 
-__device__ void odg_sqr
+__device__ __forceinline__ void odg_sqr
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
    double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
    double *c_hihihi, double *c_lohihi, double *c_hilohi, double *c_lolohi,
@@ -412,7 +412,7 @@ __device__ void odg_sqr
  *   c_hilolo is the second lowest part of the octo double c = a * a;
  *   c_lololo is the lowest part of the octo double c = a * a. */
 
-__device__ void odg_mul_od_d
+__device__ __forceinline__ void odg_mul_od_d
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
    double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
    double b,
@@ -446,7 +446,7 @@ __device__ void odg_mul_od_d
  *   c_hilolo is the second lowest part of the octo double c = a * b;
  *   c_lololo is the lowest part of the octo double c = a * b. */
 
-__device__ void odg_div
+__device__ __forceinline__ void odg_div
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
    double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
    double b_hihihi, double b_lohihi, double b_hilohi, double b_lolohi,
@@ -491,7 +491,7 @@ __device__ void odg_div
 
 /***************************** square root *****************************/
 
-__device__ void odg_sqrt
+__device__ __forceinline__ void odg_sqrt
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
    double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
    double *b_hihihi, double *b_lohihi, double *b_hilohi, double *b_lolohi,

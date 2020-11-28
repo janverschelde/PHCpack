@@ -6,14 +6,16 @@
 
 /************************** additions ********************************/
 
-__device__ double ddg_quick_two_sum ( double a, double b, double *err )
+__device__ __forceinline__ double ddg_quick_two_sum
+ ( double a, double b, double *err )
 {
    double s = a + b;
    *err = b - (s - a);
    return s;
 }
 
-__device__ double ddg_two_sum ( double a, double b, double *err )
+__device__ __forceinline__ double ddg_two_sum
+ ( double a, double b, double *err )
 {
    double s = a + b;
    double bb = s - a;
@@ -21,7 +23,7 @@ __device__ double ddg_two_sum ( double a, double b, double *err )
    return s;
 }
 
-__device__ void ddg_add
+__device__ __forceinline__ void ddg_add
  ( double a_hi, double a_lo, double b_hi, double b_lo,
    double *c_hi, double *c_lo )
 {
@@ -35,14 +37,16 @@ __device__ void ddg_add
    *c_hi = ddg_quick_two_sum(s1,s2,c_lo);
 }
 
-__device__ double ddg_quick_two_diff ( double a, double b, double *err )
+__device__ __forceinline__ double ddg_quick_two_diff
+ ( double a, double b, double *err )
 {
    double s = a - b;
    *err = (a - s) - b;
    return s;
 }
 
-__device__ double ddg_two_diff ( double a, double b, double *err )
+__device__ __forceinline__ double ddg_two_diff
+ ( double a, double b, double *err )
 {
    double s = a - b;
    double bb = s - a;
@@ -50,13 +54,13 @@ __device__ double ddg_two_diff ( double a, double b, double *err )
    return s;
 }
 
-__device__ void ddg_minus ( double *a_hi, double *a_lo )
+__device__ __forceinline__ void ddg_minus ( double *a_hi, double *a_lo )
 {
    *a_hi = -(*a_hi);
    *a_lo = -(*a_lo);
 }
 
-__device__ void ddg_sub
+__device__ __forceinline__ void ddg_sub
  ( double a_hi, double a_lo, double b_hi, double b_lo,
    double *c_hi, double *c_lo )
 {
@@ -70,7 +74,7 @@ __device__ void ddg_sub
    *c_hi = ddg_quick_two_sum(s1,s2,c_lo);
 }
 
-__device__ void ddg_sub_dd_d
+__device__ __forceinline__ void ddg_sub_dd_d
  ( double a_hi, double a_lo, double b, double *c_hi, double *c_lo )
 {
    double s1, s2;
@@ -82,7 +86,7 @@ __device__ void ddg_sub_dd_d
 
 /********** incrementers, decrementers, and multipliers ****************/
 
-__device__ void ddg_inc
+__device__ __forceinline__ void ddg_inc
  ( double *a_hi, double *a_lo, double b_hi, double b_lo )
 {
    double s1, s2, t1, t2;
@@ -95,7 +99,8 @@ __device__ void ddg_inc
    *a_hi = ddg_quick_two_sum(s1,s2,a_lo);
 }
 
-__device__ void ddg_inc_d ( double *a_hi, double *a_lo, double b )
+__device__ __forceinline__ void ddg_inc_d
+ ( double *a_hi, double *a_lo, double b )
 {
    double s1, s2;
 
@@ -104,7 +109,7 @@ __device__ void ddg_inc_d ( double *a_hi, double *a_lo, double b )
    *a_hi = ddg_quick_two_sum(s1,s2,a_lo);
 }
 
-__device__ void ddg_dec
+__device__ __forceinline__ void ddg_dec
  ( double *a_hi, double *a_lo, double b_hi, double b_lo )
 {
    double s1, s2, t1, t2;
@@ -117,7 +122,8 @@ __device__ void ddg_dec
    *a_hi = ddg_quick_two_sum(s1,s2,a_lo);
 }
 
-__device__ void ddg_dec_d ( double *a_hi, double *a_lo, double b )
+__device__ __forceinline__ void ddg_dec_d
+ ( double *a_hi, double *a_lo, double b )
 {
    double s1, s2;
 
@@ -126,7 +132,7 @@ __device__ void ddg_dec_d ( double *a_hi, double *a_lo, double b )
    *a_hi = ddg_quick_two_sum(s1,s2,a_lo);
 }
 
-__device__ void ddg_mlt
+__device__ __forceinline__ void ddg_mlt
  ( double *a_hi, double *a_lo, double b_hi, double b_lo )
 {
    double p1, p2;
@@ -137,7 +143,8 @@ __device__ void ddg_mlt
    *a_hi = ddg_quick_two_sum(p1,p2,a_lo);
 }
 
-__device__ void ddg_mlt_d ( double *a_hi, double *a_lo, double b )
+__device__ __forceinline__ void ddg_mlt_d
+ ( double *a_hi, double *a_lo, double b )
 {
    double p1, p2;
 
@@ -148,7 +155,7 @@ __device__ void ddg_mlt_d ( double *a_hi, double *a_lo, double b )
 
 /************************ multiplications ********************************/
 
-__device__ void ddg_split ( double a, double *hi, double *lo )
+__device__ __forceinline__ void ddg_split ( double a, double *hi, double *lo )
 {
    const double QD_SPLITTER = 134217729.0;            /* 2^27 + 1 */
    const double QD_SPLIT_THRESH = 6.69692879491417e+299; /* 2^996 */
@@ -172,7 +179,8 @@ __device__ void ddg_split ( double a, double *hi, double *lo )
    }
 }
 
-__device__ double ddg_two_prod ( double a, double b, double *err )
+__device__ __forceinline__ double ddg_two_prod
+ ( double a, double b, double *err )
 {
    double a_hi,a_lo,b_hi,b_lo;
    double p = a*b;
@@ -184,7 +192,7 @@ __device__ double ddg_two_prod ( double a, double b, double *err )
    return p;
 }
 
-__device__ double ddg_two_sqr ( double a, double *err )
+__device__ __forceinline__ double ddg_two_sqr ( double a, double *err )
 {
    double hi,lo;
    double q = a*a;
@@ -195,7 +203,7 @@ __device__ double ddg_two_sqr ( double a, double *err )
    return q;
 }
 
-__device__ void ddg_mul
+__device__  __forceinline__ void ddg_mul
  ( double a_hi, double a_lo, double b_hi, double b_lo,
    double *c_hi, double *c_lo )
 {
@@ -206,7 +214,7 @@ __device__ void ddg_mul
    *c_hi = ddg_quick_two_sum(p1,p2,c_lo);
 }
 
-__device__ void ddg_sqr
+__device__  __forceinline__ void ddg_sqr
  ( double a_hi, double a_lo, double *b_hi, double *b_lo )
 {
    double p1, p2;
@@ -217,7 +225,7 @@ __device__ void ddg_sqr
    *b_hi = ddg_quick_two_sum(p1,p2,b_lo);
 }
 
-__device__ void ddg_mul_d_dd
+__device__  __forceinline__ void ddg_mul_d_dd
  ( double a, double b_hi, double b_lo, double *c_hi, double *c_lo )
 {
    double p1, p2;
@@ -229,7 +237,7 @@ __device__ void ddg_mul_d_dd
 
 /*************************** divisions ***************************/
 
-__device__ void ddg_div
+__device__  __forceinline__ void ddg_div
  ( double a_hi, double a_lo, double b_hi, double b_lo,
    double *c_hi, double *c_lo )
 {
@@ -249,7 +257,7 @@ __device__ void ddg_div
 
 /*************************** sqrt and abs ***************************/
 
-__device__ void ddg_sqrt
+__device__  __forceinline__ void ddg_sqrt
  ( double a_hi, double a_lo, double *b_hi, double *b_lo )
 {
   /* Use Karp's trick: if x is an approximation to sqrt(a), then
@@ -281,7 +289,7 @@ __device__ void ddg_sqrt
    }
 }
 
-__device__ void ddg_abs
+__device__  __forceinline__ void ddg_abs
  ( double a_hi, double a_lo, double *b_hi, double *b_lo )
 {
    if(a_hi < 0.0)
