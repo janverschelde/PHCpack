@@ -29,6 +29,12 @@ CUDASDK="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2"
 # library folder of the CUDA SDK
 CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\lib\x64"
 
+convolutions_kernels.obj:
+	@-echo ">>> compiling all convolution kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                convolutions_kernels.cu \
+             -o convolutions_kernels.obj
+
 dbl_convolutions_kernels.obj:
 	@-echo ">>> compiling convolution kernels for doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 \
@@ -38,36 +44,42 @@ dbl_convolutions_kernels.obj:
 dbl2_convolutions_kernels.obj:
 	@-echo ">>> compiling convolution kernels for double doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
                 dbl2_convolutions_kernels.cu \
              -o dbl2_convolutions_kernels.obj
 
 dbl3_convolutions_kernels.obj:
 	@-echo ">>> compiling convolution kernels for triple doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
                 dbl3_convolutions_kernels.cu \
              -o dbl3_convolutions_kernels.obj
 
 dbl4_convolutions_kernels.obj:
 	@-echo ">>> compiling convolution kernels for quad doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
                 dbl4_convolutions_kernels.cu \
              -o dbl4_convolutions_kernels.obj
 
 dbl5_convolutions_kernels.obj:
 	@-echo ">>> compiling convolution kernels for penta doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
                 dbl5_convolutions_kernels.cu \
              -o dbl5_convolutions_kernels.obj
 
 dbl8_convolutions_kernels.obj:
 	@-echo ">>> compiling convolution kernels for octo doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
                 dbl8_convolutions_kernels.cu \
              -o dbl8_convolutions_kernels.obj
 
 dbl10_convolutions_kernels.obj:
 	@-echo ">>> compiling convolution kernels for deca doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
                 dbl10_convolutions_kernels.cu \
              -o dbl10_convolutions_kernels.obj
 
@@ -317,6 +329,62 @@ dbl10_convolutions_host.obj:
                  -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: dbl10_convolutions_host.obj
 
+dbl_convolutions_testers.obj:
+	@-echo ">>> compiling dbl_convolutions_testers ..."
+	$(CL)\cl /c dbl_convolutions_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl_convolutions_testers.obj /EHsc
+
+dbl2_convolutions_testers.obj:
+	@-echo ">>> compiling dbl2_convolutions_testers ..."
+	$(CL)\cl /c dbl2_convolutions_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl2_convolutions_testers.obj /EHsc
+
+dbl3_convolutions_testers.obj:
+	@-echo ">>> compiling dbl3_convolutions_testers ..."
+	$(CL)\cl /c dbl3_convolutions_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl3_convolutions_testers.obj /EHsc
+
+dbl4_convolutions_testers.obj:
+	@-echo ">>> compiling dbl4_convolutions_testers ..."
+	$(CL)\cl /c dbl4_convolutions_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl4_convolutions_testers.obj /EHsc
+
+dbl5_convolutions_testers.obj:
+	@-echo ">>> compiling dbl5_convolutions_testers ..."
+	$(CL)\cl /c dbl5_convolutions_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl5_convolutions_testers.obj /EHsc
+
+dbl8_convolutions_testers.obj:
+	@-echo ">>> compiling dbl8_convolutions_testers ..."
+	$(CL)\cl /c dbl8_convolutions_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl8_convolutions_testers.obj /EHsc
+
+dbl10_convolutions_testers.obj:
+	@-echo ">>> compiling dbl10_convolutions_testers ..."
+	$(CL)\cl /c dbl10_convolutions_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl10_convolutions_testers.obj /EHsc
+
+test_convolutions.obj:
+	@-echo ">>> compiling test_convolutions ..."
+	$(CL)\cl /c test_convolutions.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_convolutions.obj /EHsc
+
 test_dbl_convolutions.obj:
 	@-echo ">>> compiling test_dbl_convolutions ..."
 	$(CL)\cl /c test_dbl_convolutions.cpp \
@@ -457,87 +525,122 @@ test_dbl10_monomials.obj:
                  /I$(CUDASDK)/include -02 \
                  /Fo: test_dbl10_monomials.obj /EHsc
 
+test_convolutions: convolutions_kernels.obj test_convolutions.obj \
+                   random_numbers.obj random_series.obj \
+          double_double_functions.obj random2_vectors.obj random2_series.obj \
+          triple_double_functions.obj random3_vectors.obj random3_series.obj \
+          quad_double_functions.obj random4_vectors.obj random4_series.obj \
+          penta_double_functions.obj random5_vectors.obj random5_series.obj \
+          octo_double_functions.obj random8_vectors.obj random8_series.obj \
+          deca_double_functions.obj random10_vectors.obj random10_series.obj \
+                   dbl_convolutions_host.obj dbl_convolutions_testers.obj \
+                   dbl2_convolutions_host.obj dbl2_convolutions_testers.obj \
+                   dbl3_convolutions_host.obj dbl3_convolutions_testers.obj \
+                   dbl4_convolutions_host.obj dbl4_convolutions_testers.obj \
+                   dbl5_convolutions_host.obj dbl5_convolutions_testers.obj \
+                   dbl8_convolutions_host.obj dbl8_convolutions_testers.obj \
+                   dbl10_convolutions_host.obj dbl10_convolutions_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_convolutions.exe convolutions_kernels.obj \
+             random_numbers.obj random_series.obj test_convolutions.obj \
+          double_double_functions.obj random2_vectors.obj random2_series.obj \
+          triple_double_functions.obj random3_vectors.obj random3_series.obj \
+          quad_double_functions.obj random4_vectors.obj random4_series.obj \
+          penta_double_functions.obj random5_vectors.obj random5_series.obj \
+          octo_double_functions.obj random8_vectors.obj random8_series.obj \
+          deca_double_functions.obj random10_vectors.obj random10_series.obj \
+             dbl_convolutions_host.obj dbl_convolutions_testers.obj \
+             dbl2_convolutions_host.obj dbl2_convolutions_testers.obj \
+             dbl3_convolutions_host.obj dbl3_convolutions_testers.obj \
+             dbl4_convolutions_host.obj dbl4_convolutions_testers.obj \
+             dbl5_convolutions_host.obj dbl5_convolutions_testers.obj \
+             dbl8_convolutions_host.obj dbl8_convolutions_testers.obj \
+             dbl10_convolutions_host.obj dbl10_convolutions_testers.obj
+
 test_dbl_convolutions: random_numbers.obj random_series.obj \
                        dbl_convolutions_kernels.obj \
-                       dbl_convolutions_host.obj test_dbl_convolutions.obj
+                       dbl_convolutions_host.obj test_dbl_convolutions.obj \
+		       dbl_convolutions_testers.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_convolutions.exe random_numbers.obj \
              random_series.obj dbl_convolutions_kernels.obj \
-             dbl_convolutions_host.obj test_dbl_convolutions.obj
+             dbl_convolutions_host.obj test_dbl_convolutions.obj \
+             dbl_convolutions_testers.obj
 
 test_dbl2_convolutions: double_double_functions.obj random_numbers.obj \
                         random2_vectors.obj random2_series.obj \
-                        dbl2_convolutions_host.obj test_dbl2_convolutions.obj \
-                        dbl2_convolutions_kernels.obj
+                    dbl2_convolutions_host.obj dbl2_convolutions_kernels.obj \
+                    dbl2_convolutions_testers.obj test_dbl2_convolutions.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl2_convolutions.exe \
              double_double_functions.obj dbl2_convolutions_kernels.obj \
              random_numbers.obj random2_vectors.obj random2_series.obj \
-             dbl2_convolutions_host.obj test_dbl2_convolutions.obj
+             dbl2_convolutions_host.obj test_dbl2_convolutions.obj \
+	     dbl2_convolutions_testers.obj
 
 test_dbl3_convolutions: double_double_functions.obj \
                         triple_double_functions.obj random_numbers.obj \
                         random3_vectors.obj random3_series.obj \
-                        dbl3_convolutions_host.obj test_dbl3_convolutions.obj \
-                        dbl3_convolutions_kernels.obj
+                    dbl3_convolutions_host.obj dbl3_convolutions_kernels.obj \
+                    dbl3_convolutions_testers.obj test_dbl3_convolutions.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl3_convolutions.exe \
              double_double_functions.obj triple_double_functions.obj \
              random_numbers.obj random3_vectors.obj random3_series.obj \
-             dbl3_convolutions_kernels.obj \
-             dbl3_convolutions_host.obj test_dbl3_convolutions.obj
+             dbl3_convolutions_kernels.obj dbl3_convolutions_host.obj \
+             dbl3_convolutions_testers.obj test_dbl3_convolutions.obj
 
 test_dbl4_convolutions: double_double_functions.obj \
                         quad_double_functions.obj random_numbers.obj \
                         random4_vectors.obj random4_series.obj \
-                        dbl4_convolutions_host.obj test_dbl4_convolutions.obj \
-                        dbl4_convolutions_kernels.obj
+                    dbl4_convolutions_host.obj dbl4_convolutions_kernels.obj \
+                    dbl4_convolutions_testers.obj test_dbl4_convolutions.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl4_convolutions.exe \
              double_double_functions.obj quad_double_functions.obj \
              random_numbers.obj random4_vectors.obj random4_series.obj \
-             dbl4_convolutions_kernels.obj \
-             dbl4_convolutions_host.obj test_dbl4_convolutions.obj
+             dbl4_convolutions_kernels.obj dbl4_convolutions_host.obj \
+             dbl4_convolutions_testers.obj test_dbl4_convolutions.obj
 
 test_dbl5_convolutions: double_double_functions.obj \
                         penta_double_functions.obj random_numbers.obj \
                         random5_vectors.obj random5_series.obj \
-                        dbl5_convolutions_host.obj test_dbl5_convolutions.obj \
-                        dbl5_convolutions_kernels.obj
+                    dbl5_convolutions_host.obj dbl5_convolutions_kernels.obj \
+                    dbl5_convolutions_testers.obj test_dbl5_convolutions.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl5_convolutions.exe \
              double_double_functions.obj penta_double_functions.obj \
              random_numbers.obj random5_vectors.obj random5_series.obj \
-             dbl5_convolutions_kernels.obj \
-             dbl5_convolutions_host.obj test_dbl5_convolutions.obj
+             dbl5_convolutions_kernels.obj dbl5_convolutions_host.obj \
+             dbl5_convolutions_testers.obj test_dbl5_convolutions.obj
 
 test_dbl8_convolutions: double_double_functions.obj \
                         quad_double_functions.obj \
                         octo_double_functions.obj random_numbers.obj \
                         random8_vectors.obj random8_series.obj \
-                        dbl8_convolutions_host.obj test_dbl8_convolutions.obj \
-                        dbl8_convolutions_kernels.obj
+                    dbl8_convolutions_host.obj dbl8_convolutions_kernels.obj \
+                    dbl8_convolutions_testers.obj test_dbl8_convolutions.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl8_convolutions.exe \
              double_double_functions.obj quad_double_functions.obj \
              octo_double_functions.obj \
              random_numbers.obj random8_vectors.obj random8_series.obj \
-             dbl8_convolutions_kernels.obj \
-             dbl8_convolutions_host.obj test_dbl8_convolutions.obj
+             dbl8_convolutions_kernels.obj dbl8_convolutions_host.obj \
+             dbl8_convolutions_testers.obj test_dbl8_convolutions.obj
 
 test_dbl10_convolutions: double_double_functions.obj \
                          quad_double_functions.obj \
                  octo_double_functions.obj deca_double_functions.obj \
                  random_numbers.obj random10_vectors.obj random10_series.obj \
-                 dbl10_convolutions_host.obj test_dbl10_convolutions.obj \
-                 dbl10_convolutions_kernels.obj
+                 dbl10_convolutions_host.obj dbl10_convolutions_kernels.obj \
+                 dbl10_convolutions_testers.obj test_dbl10_convolutions.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl10_convolutions.exe \
              double_double_functions.obj quad_double_functions.obj \
              octo_double_functions.obj deca_double_functions.obj \
              random_numbers.obj random10_vectors.obj random10_series.obj \
-             dbl10_convolutions_host.obj test_dbl10_convolutions.obj \
-             dbl10_convolutions_kernels.obj
+             dbl10_convolutions_host.obj dbl10_convolutions_kernels.obj \
+       	     dbl10_convolutions_testers.obj test_dbl10_convolutions.obj
 
 test_dbl_monomials: random_numbers.obj random_series.obj random_monomials.obj \
                     dbl_convolutions_host.obj dbl_monomials_host.obj \
