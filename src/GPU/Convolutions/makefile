@@ -9,6 +9,9 @@ MAKEFILE = makefile_unix
 test_convolutions:
 	make -f $(MAKEFILE) test_convolutions
 
+test_monomials:
+	make -f $(MAKEFILE) test_monomials
+
 test_dbl_convolutions:
 	make -f $(MAKEFILE) test_dbl_convolutions
 

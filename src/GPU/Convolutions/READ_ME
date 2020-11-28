@@ -79,13 +79,16 @@ random10_monomials         : setup test data in deca double precision
 -----------------------------------------------------------------------------
 dbl_monomials_host         : evaldiff of double monomials on host
 dbl_monomials_kernels      : evaldiff of double monomials on device
-test_dbl_monomials         : test eval/diff of monomials with doubles
+dbl_monomials_testers      : test monomial eval/diff with doubles
+test_dbl_monomials         : main test eval/diff in double precision
 dbl2_monomials_host        : evaldiff of double double monomials on host
 dbl2_monomials_kernels     : evaldiff of double double monomials on device
-test_dbl2_monomials        : test eval/diff of monomials with double doubles
+dbl2_monomials_testers     : test monomial eval/diff with double double
+test_dbl2_monomials        : main test eval/diff in double double precision
 dbl3_monomials_host        : evaldiff of triple double monomials on host
 dbl3_monomials_kernels     : evaldiff of triple double monomials on device
-test_dbl3_monomials        : test eval/diff of monomials with triple doubles
+dbl3_monomials_testers     : test monomial eval/diff with triple doubles
+test_dbl3_monomials        : main test eval/diff in triple double precision
 dbl4_monomials_host        : evaldiff of quad double monomials on host
 dbl4_monomials_kernels     : evaldiff of quad double monomials on device
 test_dbl4_monomials        : test eval/diff of monomials with quad doubles

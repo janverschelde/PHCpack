@@ -1,6 +1,9 @@
 Sat 28 Nov 2020 : bug fixed in dbl2_convolution_kernels.cu, the mode 3
   reverted to the default first kernel to convolute complex vectors.
   Updated the makefile_unix to compile the monomial kernels.
+  Moved code from test_{dbl,dbl2,dbl3}_monomials into {dbl,dbl2,dbl3}_
+  monomials_testers (.h and .cpp); new test_monomials.cpp.
+  Updated makefiles.
 
 Fri 27 Nov 2020 : moved a __syncthreads() in dbl8_convolutions_kernels.cu.
   Improved the test functions in test_dbl*_convolutions.cpp.
