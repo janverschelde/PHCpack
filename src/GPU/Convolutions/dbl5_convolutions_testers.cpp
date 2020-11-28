@@ -79,6 +79,13 @@ int main_dbl5_test ( int seed, int deg, int vrblvl )
          else
             cout << "  fail!" << endl;
 
+         cout << "-> Second test on complex data, sum of all errors : ";
+         cout << complexerror2;
+         if(complexerror2 < tol)
+            cout << "  pass." << endl;
+         else
+            cout << "  fail!" << endl;
+
          cout << "-> Third test on real data, sum of all errors : ";
          cout << realerror3;
          if(realerror3 < tol)
@@ -86,9 +93,9 @@ int main_dbl5_test ( int seed, int deg, int vrblvl )
          else
             cout << "  fail!" << endl;
 
-         cout << "-> Second test on complex data, sum of all errors : ";
-         cout << complexerror2;
-         if(complexerror2 < tol)
+         cout << "-> Third test on complex data, sum of all errors : ";
+         cout << complexerror3;
+         if(complexerror3 < tol)
             cout << "  pass." << endl;
          else
             cout << "  fail!" << endl;

@@ -9,6 +9,7 @@ Fri 27 Nov 2020 : moved a __syncthreads() in dbl8_convolutions_kernels.cu.
   New test_convolutions, to test in all precisions.  Updated makefiles.
   Added tests on random data in dbl*_convolution_testers,
   reported the seed used in the random number generators.
+  Fixed dbl5_convolutions_testers.cpp.
 
 Thu 26 Nov 2020 : fixed the problems caused by the thread divergence 
   in dbl2_convolutions_kernels.cu by additional __syncthreads() statements,
