@@ -80,25 +80,30 @@ random10_monomials         : setup test data in deca double precision
 dbl_monomials_host         : evaldiff of double monomials on host
 dbl_monomials_kernels      : evaldiff of double monomials on device
 dbl_monomials_testers      : test monomial eval/diff with doubles
-test_dbl_monomials         : main test eval/diff in double precision
+test_dbl_monomials         : main test on eval/diff in double precision
 dbl2_monomials_host        : evaldiff of double double monomials on host
 dbl2_monomials_kernels     : evaldiff of double double monomials on device
-dbl2_monomials_testers     : test monomial eval/diff with double double
-test_dbl2_monomials        : main test eval/diff in double double precision
+dbl2_monomials_testers     : test monomial eval/diff with double doubles
+test_dbl2_monomials        : main test on eval/diff in double double precision
 dbl3_monomials_host        : evaldiff of triple double monomials on host
 dbl3_monomials_kernels     : evaldiff of triple double monomials on device
 dbl3_monomials_testers     : test monomial eval/diff with triple doubles
-test_dbl3_monomials        : main test eval/diff in triple double precision
+test_dbl3_monomials        : main test on eval/diff in triple double precision
 dbl4_monomials_host        : evaldiff of quad double monomials on host
 dbl4_monomials_kernels     : evaldiff of quad double monomials on device
-test_dbl4_monomials        : test eval/diff of monomials with quad doubles
+dbl4_monomials_testers     : test monomial eval/diff with quad doubles
+test_dbl4_monomials        : main test on eval/diff in quad double precision
 dbl5_monomials_host        : evaldiff of penta double monomials on host
 dbl5_monomials_kernels     : evaldiff of penta double monomials on device
-test_dbl5_monomials        : test eval/diff of monomials with penta doubles
+dbl5_monomials_testers     : test monomial eval/diff with penta doubles
+test_dbl5_monomials        : main test on eval/diff in penta double precision
 dbl8_monomials_host        : evaldiff of octo double monomials on host
-dbl8_monomials_device      : evaldiff of octo double monomials on device
-test_dbl8_monomials        : test eval/diff of monomials with octo doubles
+dbl8_monomials_kernels     : evaldiff of octo double monomials on device
+dbl8_monomials_testers     : test monomial eval/diff with octo doubles
+test_dbl8_monomials        : main test on eval/diff in octo double precision
 dbl10_monomials_host       : evaldiff of deca double monomials on host
 dbl10_monomials_kernels    : evaldiff of deca double monomials on device
-test_dbl10_monomials       : test eval/diff of monomials with deca doubles
+dbl10_monomials_testers    : test monomial eval/diff with deca doubles
+test_dbl10_monomials       : main test on eval/diff in deca double precision
+test_monomials             : tests eval/diff in all precisions
 -----------------------------------------------------------------------------
