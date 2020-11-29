@@ -38,7 +38,7 @@ with Standard_Solution_Posets;
 with DoblDobl_Solution_Posets;
 with QuadDobl_Solution_Posets;
 with Resolve_Schubert_Problems;         use Resolve_Schubert_Problems;
-with Drivers_for_Schubert_Induction;    use Drivers_for_Schubert_Induction;
+with Main_Schubert_Induction;           use Main_Schubert_Induction;
 with Standard_PolySys_Container;
 with Standard_Solutions_Container;
 with DoblDobl_PolySys_Container;

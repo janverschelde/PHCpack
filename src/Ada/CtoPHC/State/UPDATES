@@ -1,3 +1,6 @@
+Sun 29 Nov 2020 : updated schubert_interface.adb for the renaming of the
+  package drivers_for_schubert_induction into main_schubert_induction.
+
 Thu 19 Nov 2020 : updated giftwrap_interface with an additional argument
   to the Giftwrap_String_Size function.
 

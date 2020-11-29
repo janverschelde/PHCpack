@@ -1,3 +1,6 @@
+Sun 29 Nov 2020 : drivers_for_schubert_induction is main_schubert_induction;
+  and moved mainenum into main_schubert_induction as its main procedure.
+
 Sun 8 Nov 2020 : updated wrapped_path_trackers.adb for the renaming of
   drivers_for_poly_continuation into main_poly_continuation.
 

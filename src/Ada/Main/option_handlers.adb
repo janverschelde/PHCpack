@@ -22,7 +22,8 @@ with mainpoco;
 with Main_Trackers;
 with mainadep;
 with mainfac,maindeco;
-with mainenum,bablenum,mainfeed;
+with Main_Schubert_Induction;
+with bablenum,mainfeed;
 with mainseries;
 with Main_Verification;
 with Black_Box_Root_Refiners;
@@ -532,12 +533,12 @@ package body Option_Handlers is
         begin
           put_line(welcome);
           put_line(enumban & " with " & ns & " tasks.");
-          mainenum(nt,vrblvl);
+          Main_Schubert_Induction.Main(nt,vrblvl);
         end;
       else
         put_line(welcome);
         put_line(enumban & ", no multitasking.");
-        mainenum(0,vrblvl);
+        Main_Schubert_Induction.Main(0,vrblvl);
       end if;
     end if;
   end Enumeration_Handler;

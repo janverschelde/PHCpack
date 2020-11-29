@@ -18,10 +18,13 @@ with Brackets;                           use Brackets;
 with Bracket_Monomials;                  use Bracket_Monomials;
 with Intersection_Posets;                use Intersection_Posets;
 
-package Drivers_for_Schubert_Induction is
+package Main_Schubert_Induction is
 
 -- DESCRIPTION :
---   Offers drivers to the Littlewood-Richardson homotopies.
+--   Schubert induction applies Littlewood-Richardson homotopies to 
+--   compute all solution planes that meet input planes at specific
+--   intersection conditions.  The main procedure gives access to
+--   the SAGBI and Pieri homotopies to solve special Schubert problems.
 
   function Prompt_for_Bracket_Monomial return Bracket_Monomial;
 
@@ -473,10 +476,20 @@ package Drivers_for_Schubert_Induction is
   --   Interactive procedure to compute solutions to Schubert problems
   --   in n-space.  Prompts the user intersections conditions
   --   on k-planes in n-space and resolve the Schubert problem.
-  --
+
   --  ON ENTRY :
   --   nt       the number of tasks, 0 for no multitasking;
   --   n        the ambient dimension;
   --   vrblvl   the verbose level.
 
-end Drivers_for_Schubert_Induction;
+  procedure Main ( nt : in natural32; verbose : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Shows a menu and prompts for a type of enumerative geometry problem.
+  --   Defines the what phc -e does.
+
+  -- ON ENTRY :
+  --   nt       the number of tasks, 0 for no multitasking;
+  --   vrblvl   is the verbose level.
+
+end Main_Schubert_Induction;
