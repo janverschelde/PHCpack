@@ -14,6 +14,20 @@ package Black_Box_Polyhedral_Solvers is
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent,deflate : in boolean;
                     rc : out natural32;
+                    q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                    qsols : out Standard_Complex_Solutions.Solution_List;
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
+  procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    silent,deflate : in boolean;
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
+  procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    deflate : in boolean;
+                    rc : out natural32; rocos : out Link_to_String;
+                    q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                    qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
                     verbose : in integer32 := 0 );
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -40,12 +54,30 @@ package Black_Box_Polyhedral_Solvers is
   --   rocos        string with the root count information,
   --                displayed in the format as when silent is false
   --                in the first Polyhedral_Solve;
+  --   q            start system;
+  --   qsols        start solutions;
   --   sols         solutions found at the end of the paths.
 
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent,deflate : in boolean;
                     rc : out natural32;
+                    q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                    qsols : out Standard_Complex_Solutions.Solution_List;
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
+  procedure Solve ( nt : in natural32;
+                    p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    silent,deflate : in boolean;
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
+  procedure Solve ( nt : in natural32;
+                    p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    deflate : in boolean;
+                    rc : out natural32; rocos : out Link_to_String;
+                    q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                    qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
                     verbose : in integer32 := 0 );
   procedure Solve ( nt : in natural32;
@@ -75,11 +107,27 @@ package Black_Box_Polyhedral_Solvers is
   --   rocos        string with the root count information,
   --                displayed in the format as when silent is false
   --                in the first Polyhedral_Solve;
+  --   q            start system;
+  --   qsols        start solutions;
   --   sols         solutions found at the end of the paths.
 
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean; rc : out natural32;
+                    q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                    qsols : out Standard_Complex_Solutions.Solution_List;
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
+  procedure Solve ( file : in file_type;
+                    p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    deflate : in boolean; rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
+  procedure Solve ( file : in file_type; nt : in natural32;
+                    p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    deflate : in boolean; rc : out natural32;
+                    q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                    qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
                     verbose : in integer32 := 0 );
   procedure Solve ( file : in file_type; nt : in natural32;
@@ -101,6 +149,8 @@ package Black_Box_Polyhedral_Solvers is
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
+  --   q            start system;
+  --   qsols        start solutions;
   --   sols         solutions found at the end of the paths.
 
 end Black_Box_Polyhedral_Solvers;
