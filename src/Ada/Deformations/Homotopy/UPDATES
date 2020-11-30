@@ -1,7 +1,10 @@
+Sun 29 Nov 2020 : renamed drivers_for_scaling into scaling_methods.
+  Reworked the procedure mainenum into the package main_scaling.
+  Renamed ts_drivscal.adb into ts_mainscal.adb.
+
 Sun 22 Nov 2020 : renamed drivers_for_reduction into main_reduction and
   moved mainred, mainred2, and mainred4 into main_reduction.
   Changed the name of ts_drivred into ts_reduce.
-  In ts_reduce.adb, changed the procedure name.
 
 Fri 25 Sep 2020 : extended homogenization, projective_transformations, and
   multi_projective_transformations for penta, octo, and deca doubles.

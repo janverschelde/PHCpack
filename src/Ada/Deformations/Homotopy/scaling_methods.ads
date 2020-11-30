@@ -10,12 +10,11 @@ with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems;
 
-package Drivers_for_Scaling is
+package Scaling_Methods is
 
 -- DESCRIPTION :
---   This package provides driver routines to perform scaling,
---   in standard double, double double, quad double precision,
---   and arbitrary multiprecision.
+--   Equation and variable scaling is defined for double, double double,
+--   quad double precision, and arbitrary multiprecision.
 
   procedure Display_Info;
 
@@ -90,30 +89,26 @@ package Drivers_for_Scaling is
   --   These results are the scaled system p, and in case basis /= 0,
   --   the scaling coefficients in the vectors scvc.
 
-  procedure Driver_for_Scaling
-              ( file : in file_type;
-                p : in out Standard_Complex_Poly_Systems.Poly_Sys;
-                basis : out natural32;
-                scvc : out Standard_Complex_Vectors.Link_to_Vector;
-                verbose : in integer32 := 0 );
-  procedure Driver_for_Scaling
-              ( file : in file_type;
-                p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                basis : out natural32;
-                scvc : out DoblDobl_Complex_Vectors.Link_to_Vector;
-                verbose : in integer32 := 0 );
-  procedure Driver_for_Scaling
-              ( file : in file_type;
-                p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                basis : out natural32;
-                scvc : out QuadDobl_Complex_Vectors.Link_to_Vector;
-                verbose : in integer32 := 0 );
-  procedure Driver_for_Scaling
-              ( file : in file_type;
-                p : in out Multprec_Complex_Poly_Systems.Poly_Sys;
-                basis : out natural32;
-                scvc : out Multprec_Complex_Vectors.Link_to_Vector;
-                verbose : in integer32 := 0 );
+  procedure Main ( file : in file_type;
+                   p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                   basis : out natural32;
+                   scvc : out Standard_Complex_Vectors.Link_to_Vector;
+                   verbose : in integer32 := 0 );
+  procedure Main ( file : in file_type;
+                   p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                   basis : out natural32;
+                   scvc : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                   verbose : in integer32 := 0 );
+  procedure Main ( file : in file_type;
+                   p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                   basis : out natural32;
+                   scvc : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                   verbose : in integer32 := 0 );
+  procedure Main ( file : in file_type;
+                   p : in out Multprec_Complex_Poly_Systems.Poly_Sys;
+                   basis : out natural32;
+                   scvc : out Multprec_Complex_Vectors.Link_to_Vector;
+                   verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   This is an interactive driver for phc running in full mode.
@@ -129,4 +124,4 @@ package Drivers_for_Scaling is
   --            if basis /= 0, then variable scaling has been applied;
   --   scvc     scaling coefficients, only /= null when basis /= 0.
 
-end Drivers_for_Scaling;
+end Scaling_Methods;

@@ -1,5 +1,6 @@
 Sun 29 Nov 2020 : updated option_handlers.adb for the renaming of the package
   drivers_for_schubert_induction into main_schubert_induction.
+  Updated mainphc.adb and option_handlers.adb for the main_scaling package.
 
 Sun 22 Nov 2020 : removed bablvali, bablvali2, bablvali4, and updated
   option_handlers.adb.  Updated mainphc.adb and option_handlers.adb

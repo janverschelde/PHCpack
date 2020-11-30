@@ -72,9 +72,10 @@ dobldobl_scaling                   : scaling systems in double double precision
 quaddobl_scaling                   : scaling systems in quad double precision
 multprec_scaling                   : scaling multprec systems
 ts_scal                            : simple test program
-drivers_for_scaling                : menu-driver for scaling routines
-ts_drivscal                        : calls the driver
-mainscal                           : scaling tool, as called by phc
+scaling_methods                    : equation and variable scaling methods
+ts_mainscal                        : calls main scaling procedures
+main_scaling                       : defines phc -s
+------------------------------------------------------------------------------
 reduction_of_polynomials           : S-polynomials and R-polynomials
 standard_linear_reduction          : utilities for double precision reduction
 dobldobl_linear_reduction          : utilities for dobldobl precision reduction

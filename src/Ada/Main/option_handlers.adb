@@ -12,7 +12,7 @@ with DoblDobl_BlackBox_Solvers;
 with QuadDobl_BlackBox_Solvers;
 with mainphc,maingood,mainsymb;
 with Main_Reduction;
-with mainscal;
+with Main_Scaling;
 with Black_Box_Root_Counters;
 with babldmvc,mainsmvc;
 with Standard_BlackBox_Continuations;
@@ -234,7 +234,7 @@ package body Option_Handlers is
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4blackbox;
     elsif spos >= integer32(opts'first) then
-      mainscal(file1,file2,vrblvl);
+      Main_Scaling.Main(file1,file2,vrblvl);
     elsif epos >= integer32(opts'first) then
       bablenum(file1,file2,vrblvl);
     elsif dpos >= integer32(opts'first) then
@@ -335,7 +335,7 @@ package body Option_Handlers is
       Greeting_Banners.help4scaling;
     else
       put_line(welcome); put_line(scalban);
-      mainscal(infile,outfile,vrblvl);
+      Main_Scaling.Main(infile,outfile,vrblvl);
     end if;
   end Scaling_Handler;
 

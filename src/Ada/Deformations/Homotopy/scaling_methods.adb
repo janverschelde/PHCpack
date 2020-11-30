@@ -26,7 +26,7 @@ with DoblDobl_Scaling;
 with QuadDobl_Scaling;
 with Multprec_Scaling;
 
-package body Drivers_for_Scaling is
+package body Scaling_Methods is
 
   procedure Display_Info is
 
@@ -341,12 +341,11 @@ package body Drivers_for_Scaling is
     end if;
   end Write_Results;
 
-  procedure Driver_for_Scaling
-              ( file : in file_type;
-                p : in out Standard_Complex_Poly_Systems.Poly_Sys;
-                basis : out natural32;
-                scvc : out Standard_Complex_Vectors.Link_to_Vector;
-                verbose : in integer32 := 0 ) is
+  procedure Main ( file : in file_type;
+                   p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                   basis : out natural32;
+                   scvc : out Standard_Complex_Vectors.Link_to_Vector;
+                   verbose : in integer32 := 0 ) is
 
     ans : character;
     res_scvc : Standard_Complex_Vectors.Link_to_Vector;
@@ -354,7 +353,7 @@ package body Drivers_for_Scaling is
 
   begin
     if verbose > 0
-     then put_line("-> in drivers_for_scaling.Driver_for_Scaling 1 ...");
+     then put_line("-> in scaling_methods.Main 1 ...");
     end if;
     loop
       new_line;
@@ -379,14 +378,13 @@ package body Drivers_for_Scaling is
       when others    => null;
     end case;
     basis := bas; scvc := res_scvc;
-  end Driver_for_Scaling;
+  end Main;
 
-  procedure Driver_for_Scaling
-              ( file : in file_type;
-                p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                basis : out natural32;
-                scvc : out DoblDobl_Complex_Vectors.Link_to_Vector;
-                verbose : in integer32 := 0 ) is
+  procedure Main ( file : in file_type;
+                   p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                   basis : out natural32;
+                   scvc : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                   verbose : in integer32 := 0 ) is
 
     ans : character;
     res_scvc : DoblDobl_Complex_Vectors.Link_to_Vector;
@@ -394,7 +392,7 @@ package body Drivers_for_Scaling is
 
   begin
     if verbose > 0
-     then put_line("-> in drivers_for_scaling.Driver_for_Scaling 2 ...");
+     then put_line("-> in scaling_methods.Main 2 ...");
     end if;
     loop
       new_line;
@@ -419,14 +417,13 @@ package body Drivers_for_Scaling is
       when others    => null;
     end case;
     basis := bas; scvc := res_scvc;
-  end Driver_for_Scaling;
+  end Main;
 
-  procedure Driver_for_Scaling
-              ( file : in file_type;
-                p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                basis : out natural32;
-                scvc : out QuadDobl_Complex_Vectors.Link_to_Vector;
-                verbose : in integer32 := 0 ) is
+  procedure Main ( file : in file_type;
+                   p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                   basis : out natural32;
+                   scvc : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                   verbose : in integer32 := 0 ) is
 
     ans : character;
     res_scvc : QuadDobl_Complex_Vectors.Link_to_Vector;
@@ -434,7 +431,7 @@ package body Drivers_for_Scaling is
 
   begin
     if verbose > 0
-     then put_line("-> in drivers_for_scaling.Driver_for_Scaling 3 ...");
+     then put_line("-> in scaling_methods.Main 3 ...");
     end if;
     loop
       new_line;
@@ -459,14 +456,13 @@ package body Drivers_for_Scaling is
       when others    => null;
     end case;
     basis := bas; scvc := res_scvc;
-  end Driver_for_Scaling;
+  end Main;
 
-  procedure Driver_for_Scaling
-              ( file : in file_type;
-                p : in out Multprec_Complex_Poly_Systems.Poly_Sys;
-                basis : out natural32;
-                scvc : out Multprec_Complex_Vectors.Link_to_Vector;
-                verbose : in integer32 := 0 ) is
+  procedure Main ( file : in file_type;
+                   p : in out Multprec_Complex_Poly_Systems.Poly_Sys;
+                   basis : out natural32;
+                   scvc : out Multprec_Complex_Vectors.Link_to_Vector;
+                   verbose : in integer32 := 0 ) is
 
     ans : character;
     res_scvc : Multprec_Complex_Vectors.Link_to_Vector;
@@ -474,7 +470,7 @@ package body Drivers_for_Scaling is
 
   begin
     if verbose > 0
-     then put_line("-> in drivers_for_scaling.Driver_for_Scaling 4 ...");
+     then put_line("-> in scaling_methods.Main 4 ...");
     end if;
     loop
       new_line;
@@ -499,6 +495,6 @@ package body Drivers_for_Scaling is
       when others    => null;
     end case;
     basis := bas; scvc := res_scvc;
-  end Driver_for_Scaling;
+  end Main;
 
-end Drivers_for_Scaling;
+end Scaling_Methods;

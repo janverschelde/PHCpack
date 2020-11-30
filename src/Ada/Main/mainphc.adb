@@ -20,7 +20,7 @@ with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Multprec_Floating_Numbers;
 with Multprec_Complex_Solutions;
-with Drivers_for_Scaling;                use Drivers_for_Scaling;
+with Scaling_Methods;
 with Main_Reduction;
 with Main_Poly_Continuation;             use Main_Poly_Continuation;
 with Main_Root_Counters;
@@ -111,7 +111,7 @@ procedure mainphc
      then put_line("-> in mainphc.Main_Polynomial_Solver ...");
     end if;
     Copy(p,scalp);
-    Driver_for_Scaling(file,scalp,basis,scalvec,vrb-1);
+    Scaling_Methods.Main(file,scalp,basis,scalvec,vrb-1);
     Main_Reduction.Reduce(file,scalp,roco,true,vrb-1);
     Copy(scalp,projp);
     Main_Root_Counters.Polynomial_Main(file,nt,projp,q,true,sols,roco,vrb-1);

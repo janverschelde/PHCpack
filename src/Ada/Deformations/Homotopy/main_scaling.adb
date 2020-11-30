@@ -1,26 +1,15 @@
-with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with File_Scanning;                      use File_Scanning;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
-with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
-with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
-with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
-with Standard_Complex_Polynomials;
-with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
---with DoblDobl_Complex_Polynomials;
-with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
---with QuadDobl_Complex_Polynomials;
-with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
@@ -31,20 +20,14 @@ with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Standard_Scaling;
 with DoblDobl_Scaling;
 with QuadDobl_Scaling;
-with Drivers_for_Scaling;                use Drivers_for_Scaling;
+with Scaling_Methods;
 
-procedure mainscal ( infilename,outfilename : in string;
-                     verbose : in integer32 := 0 ) is
+package body Main_Scaling is
 
   procedure Standard_Read_System 
               ( file : in out file_type; filename : in string;
                 dim : out integer32;
                 lp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
-
-  -- DESCRIPTION :
-  --   Attempts to open the file defined by the name in filename
-  --   and to read a polynomial system in standard double precision.
-
   begin
     if filename /= "" then
       Open(file,in_file,filename);
@@ -64,11 +47,6 @@ procedure mainscal ( infilename,outfilename : in string;
               ( file : in out file_type; filename : in string;
                 dim : out integer32;
                 lp : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
-
-  -- DESCRIPTION :
-  --   Attempts to open the file defined by the name in filename
-  --   and to read a polynomial system in double double precision.
-
   begin
     if filename /= "" then
       Open(file,in_file,filename);
@@ -88,11 +66,6 @@ procedure mainscal ( infilename,outfilename : in string;
               ( file : in out file_type; filename : in string;
                 dim : out integer32;
                 lp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
-
-  -- DESCRIPTION :
-  --   Attempts to open the file defined by the name in filename
-  --   and to read a polynomial system in quad double precision.
-
   begin
     if filename /= "" then
       Open(file,in_file,filename);
@@ -112,10 +85,6 @@ procedure mainscal ( infilename,outfilename : in string;
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 basis : in natural32;
                 scalvec : in Standard_Complex_Vectors.Link_to_Vector ) is
-
-  -- DESCRIPTION :
-  --   Prompts the user if the system, scaled with standard double
-  --   precision arithmetic, needs to be written to a separate file.
 
     ans : character;
     scafile : file_type;
@@ -149,10 +118,6 @@ procedure mainscal ( infilename,outfilename : in string;
                 basis : in natural32;
                 scalvec : in DoblDobl_Complex_Vectors.Link_to_Vector ) is
 
-  -- DESCRIPTION :
-  --   Prompts the user if the system, scaled with double double
-  --   precision arithmetic, needs to be written to a separate file.
-
     ans : character;
     scafile : file_type;
    -- use DoblDobl_Complex_Polynomials;
@@ -181,10 +146,6 @@ procedure mainscal ( infilename,outfilename : in string;
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 basis : in natural32;
                 scalvec : in QuadDobl_Complex_Vectors.Link_to_Vector ) is
-
-  -- DESCRIPTION :
-  --   Prompts the user if the system, scaled with quad double
-  --   precision arithmetic, needs to be written to a separate file.
 
     ans : character;
     scafile : file_type;
@@ -215,23 +176,6 @@ procedure mainscal ( infilename,outfilename : in string;
                   infile,outfile : in out file_type;
                   sysonfile : in boolean ) is
 
-  -- DESCRIPTION :
-  --   Rescales the solutions with respect to given scaling coefficients.
-  --   The user is either prompted for solutions and scaling coefficients
-  --   or these are read from the input file infile.
-  --   The rescaling of the solutions happens in standard double precision.
-
-  -- ON ENTRY :
-  --   dim        number of polynomial equations in the system;
-  --   infile     if sysonfile, then infile is the input file;
-  --   outfile    for writing extra output information
-  --   sysonfile  is true if the input system and scaling coefficients
-  --              are available on the infile.
-
-  -- ON RETURN :
-  --   infile     closed for input;
-  --   outfile    closed for outpute.
-  
     use Standard_Complex_Vectors;
     use Standard_Complex_Solutions;
 
@@ -296,23 +240,6 @@ procedure mainscal ( infilename,outfilename : in string;
                   infile,outfile : in out file_type;
                   sysonfile : in boolean ) is
 
-  -- DESCRIPTION :
-  --   Rescales the solutions with respect to given scaling coefficients.
-  --   The user is either prompted for solutions and scaling coefficients
-  --   or these are read from the input file infile.
-  --   The rescaling of the solutions happens in double double precision.
-
-  -- ON ENTRY :
-  --   dim        number of polynomial equations in the system;
-  --   infile     if sysonfile, then infile is the input file;
-  --   outfile    for writing extra output information
-  --   sysonfile  is true if the input system and scaling coefficients
-  --              are available on the infile.
-
-  -- ON RETURN :
-  --   infile     closed for input;
-  --   outfile    closed for outpute.
-  
     use DoblDobl_Complex_Vectors;
     use DoblDobl_Complex_Solutions;
 
@@ -377,23 +304,6 @@ procedure mainscal ( infilename,outfilename : in string;
                   infile,outfile : in out file_type;
                   sysonfile : in boolean ) is
 
-  -- DESCRIPTION :
-  --   Rescales the solutions with respect to given scaling coefficients.
-  --   The user is either prompted for solutions and scaling coefficients
-  --   or these are read from the input file infile.
-  --   The rescaling of the solutions happens in quad double precision.
-
-  -- ON ENTRY :
-  --   dim        number of polynomial equations in the system;
-  --   infile     if sysonfile, then infile is the input file;
-  --   outfile    for writing extra output information
-  --   sysonfile  is true if the input system and scaling coefficients
-  --              are available on the infile.
-
-  -- ON RETURN :
-  --   infile     closed for input;
-  --   outfile    closed for outpute.
-  
     use QuadDobl_Complex_Vectors;
     use QuadDobl_Complex_Solutions;
 
@@ -458,13 +368,11 @@ procedure mainscal ( infilename,outfilename : in string;
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  sysonfile : in boolean ) is
 
-  -- DESCRIPTION :
-  --   Displays the menu and returns a choice, corresponding to one of the
-  --   three available scaling procedures in standard double precision.
-
     ans : character;
     basis : natural32;
     scalvec : Standard_Complex_Vectors.Link_to_Vector;
+
+    use Scaling_Methods;
 
   begin
     loop
@@ -476,7 +384,7 @@ procedure mainscal ( infilename,outfilename : in string;
       put("Type 1, 2, or 3 to select scaling, or i for info : ");
       Ask_Alternative(ans,"123i");
       if ans = 'i'
-       then new_line; Drivers_for_Scaling.Display_Info; new_line;
+       then new_line; Scaling_Methods.Display_Info; new_line;
       end if;
       exit when ans /= 'i';
     end loop;
@@ -500,13 +408,11 @@ procedure mainscal ( infilename,outfilename : in string;
                  p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  sysonfile : in boolean ) is
 
-  -- DESCRIPTION :
-  --   Displays the menu and returns a choice, corresponding to one of the
-  --   three available scaling procedures in double double precision.
-
     ans : character;
     basis : natural32;
     scalvec : DoblDobl_Complex_Vectors.Link_to_Vector;
+
+    use Scaling_Methods;
 
   begin
     loop
@@ -518,7 +424,7 @@ procedure mainscal ( infilename,outfilename : in string;
       put("Type 1, 2, or 3 to select scaling, or i for info : ");
       Ask_Alternative(ans,"123i");
       if ans = 'i'
-       then new_line; Drivers_for_Scaling.Display_Info; new_line;
+       then new_line; Scaling_Methods.Display_Info; new_line;
       end if;
       exit when ans /= 'i';
     end loop;
@@ -542,13 +448,11 @@ procedure mainscal ( infilename,outfilename : in string;
                  p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  sysonfile : in boolean ) is
 
-  -- DESCRIPTION :
-  --   Displays the menu and returns a choice, corresponding to one of the
-  --   three available scaling procedures in quad double precision.
-
     ans : character;
     basis : natural32;
     scalvec : QuadDobl_Complex_Vectors.Link_to_Vector;
+
+    use Scaling_Methods;
 
   begin
     loop
@@ -560,7 +464,7 @@ procedure mainscal ( infilename,outfilename : in string;
       put("Type 1, 2, or 3 to select scaling, or i for info : ");
       Ask_Alternative(ans,"123i");
       if ans = 'i'
-       then new_line; Drivers_for_Scaling.Display_Info; new_line;
+       then new_line; Scaling_Methods.Display_Info; new_line;
       end if;
       exit when ans /= 'i';
     end loop;
@@ -579,11 +483,7 @@ procedure mainscal ( infilename,outfilename : in string;
     end if;
   end QuadDobl_Display_and_Dispatch_Menu;
 
-  procedure Standard_Main is
-
-  -- DESCRIPTION :
-  --   Parses the given system into standard double precision
-  --   and then calls the procedure to display the scaling menu.
+  procedure Standard_Main ( infilename,outfilename : in string ) is
 
     ans : character;
     n : integer32;
@@ -629,11 +529,7 @@ procedure mainscal ( infilename,outfilename : in string;
     Standard_Display_and_Dispatch_Menu(infile,outfile,n,lp.all,sysonfile);
   end Standard_Main;
 
-  procedure DoblDobl_Main is
-
-  -- DESCRIPTION :
-  --   Parses the given system into double double precision
-  --   and then calls the procedure to display the scaling menu.
+  procedure DoblDobl_Main ( infilename,outfilename : in string ) is
 
     ans : character;
     n : integer32;
@@ -675,11 +571,7 @@ procedure mainscal ( infilename,outfilename : in string;
     DoblDobl_Display_and_Dispatch_Menu(infile,outfile,n,lp.all,sysonfile);
   end DoblDobl_Main;
 
-  procedure QuadDobl_Main is
-
-  -- DESCRIPTION :
-  --   Parses the given system into quad double precision
-  --   and then calls the procedure to display the scaling menu.
+  procedure QuadDobl_Main ( infilename,outfilename : in string ) is
 
     ans : character;
     n : integer32;
@@ -721,10 +613,8 @@ procedure mainscal ( infilename,outfilename : in string;
     QuadDobl_Display_and_Dispatch_Menu(infile,outfile,n,lp.all,sysonfile);
   end QuadDobl_Main;
 
-  procedure Main is
-
-  -- DESCRIPTION :
-  --   Prompts the user for the precision before parsing the system.
+  procedure Main ( infilename,outfilename : in string;
+                   verbose : in integer32 := 0 ) is
 
     ans : character;
 
@@ -741,13 +631,11 @@ procedure mainscal ( infilename,outfilename : in string;
     put("Type 0, 1, or 2 to select the precision : ");
     Ask_Alternative(ans,"012");
     case ans is
-      when '0' => Standard_Main;
-      when '1' => DoblDobl_Main;
-      when '2' => QuadDobl_Main;
+      when '0' => Standard_Main(infilename,outfilename);
+      when '1' => DoblDobl_Main(infilename,outfilename);
+      when '2' => QuadDobl_Main(infilename,outfilename);
       when others => null;
     end case;
   end Main;
 
-begin
-  Main;
-end mainscal;
+end Main_Scaling;

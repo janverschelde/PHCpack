@@ -13,12 +13,12 @@ with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
-with Drivers_for_Scaling;                use Drivers_for_Scaling;
+with Scaling_Methods;
 
-procedure ts_drivscal is
+procedure ts_mainscal is
 
 -- DESCRIPTION :
---   Calls the driver routine to scaling a polynomial system.
+--   Calls the main procedures to scale a polynomial system.
 
   procedure Standard_Scale is
 
@@ -40,7 +40,7 @@ procedure ts_drivscal is
     new_line;
     put_line("Reading the name of the output file.");
     Read_Name_and_Create_File(file);
-    Driver_for_Scaling(file,lp.all,bas,scvc);
+    Scaling_Methods.Main(file,lp.all,bas,scvc);
   end Standard_Scale;
 
   procedure DoblDobl_Scale is
@@ -63,7 +63,7 @@ procedure ts_drivscal is
     new_line;
     put_line("Reading the name of the output file.");
     Read_Name_and_Create_File(file);
-    Driver_for_Scaling(file,lp.all,bas,scvc);
+    Scaling_Methods.Main(file,lp.all,bas,scvc);
   end DoblDobl_Scale;
 
   procedure QuadDobl_Scale is
@@ -86,7 +86,7 @@ procedure ts_drivscal is
     new_line;
     put_line("Reading the name of the output file.");
     Read_Name_and_Create_File(file);
-    Driver_for_Scaling(file,lp.all,bas,scvc);
+    Scaling_Methods.Main(file,lp.all,bas,scvc);
   end QuadDobl_Scale;
 
   procedure Multprec_Scale is
@@ -109,7 +109,7 @@ procedure ts_drivscal is
     new_line;
     put_line("Reading the name of the output file.");
     Read_Name_and_Create_File(file);
-    Driver_for_Scaling(file,lp.all,bas,scvc);
+    Scaling_Methods.Main(file,lp.all,bas,scvc);
   end Multprec_Scale;
 
   procedure Main is
@@ -140,4 +140,4 @@ procedure ts_drivscal is
 
 begin
   Main;
-end ts_drivscal;
+end ts_mainscal;
