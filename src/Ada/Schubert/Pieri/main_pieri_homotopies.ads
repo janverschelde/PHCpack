@@ -6,13 +6,11 @@ with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Matrices;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 
-package Drivers_for_Pieri_Homotopies is
+package Main_Pieri_Homotopies is
 
 -- DESCRIPTION :
---   The two interactive drivers in this package give access to the Pieri
---   homotopies to intersect m-planes in n-space. 
---   Their main and only difference is the output file which is
---   an optional input parameter.
+--   The two main procedures setup Pieri homotopies 
+--   to intersect m-planes in n-space. 
 
   function Create_Hypersurface_System
              ( n : natural32; locmap : Standard_Natural_Matrices.Matrix;
@@ -49,9 +47,8 @@ package Drivers_for_Pieri_Homotopies is
 
   -- REQUIRED : not Is_Null(sols).
 
-  procedure Driver_for_Pieri_Homotopies ( n,d : in natural32 );
-  procedure Driver_for_Pieri_Homotopies
-              ( file : in file_type; n,d : in natural32 );
+  procedure Main ( n,d : in natural32 );
+  procedure Main ( file : in file_type; n,d : in natural32 );
 
   -- DESCRIPTION :
   --   Finds all d-planes that meet linear subspaces in n-space.
@@ -61,4 +58,4 @@ package Drivers_for_Pieri_Homotopies is
   --   n        dimension of the ambient space;
   --   d        dimension of the output planes.
 
-end Drivers_for_Pieri_Homotopies;
+end Main_Pieri_Homotopies;

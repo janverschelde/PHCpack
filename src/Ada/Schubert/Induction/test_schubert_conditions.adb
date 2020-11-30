@@ -61,7 +61,7 @@ with Start_Flag_Homotopies;             use Start_Flag_Homotopies;
 with Moving_Flag_Homotopies;            use Moving_Flag_Homotopies;
 with Schubert_Posets;
 with Flag_Transformations;
-with Drivers_for_Schubert_Induction;    use Drivers_for_Schubert_Induction;
+with Main_Schubert_Induction;
 
 package body Test_Schubert_Conditions is
 
@@ -1371,7 +1371,7 @@ package body Test_Schubert_Conditions is
     procedure Show_Paths is new Enumerate_Paths_in_Poset(Show_Patterns);
 
   begin
-    Read_Intersection_Conditions(ip,rows,cols);
+    Main_Schubert_Induction.Read_Intersection_Conditions(ip,rows,cols);
     ps := Create(n,rows,cols);
     Show_Paths(ps);
   end Symbolic_Localization_Patterns;
@@ -1562,7 +1562,8 @@ package body Test_Schubert_Conditions is
 
   procedure Define_Schubert_Systems ( n,k : in integer32 ) is
 
-    b : Bracket_Monomial := Prompt_for_Bracket_Monomial;
+    b : Bracket_Monomial
+      := Main_Schubert_Induction.Prompt_for_Bracket_Monomial;
     nb : constant natural32 := Number_of_Brackets(b);
     ans : character;
 
@@ -1770,7 +1771,7 @@ package body Test_Schubert_Conditions is
       when '6' => Symbolic_Localization_Patterns(n,k);
       when '7' => Define_Moving_Flag_Homotopy(n,k);
       when '8' => Test_One_Flag_Homotopy(n,k);
-      when '9' => Run_Moving_Flag_Continuation(n,k);
+      when '9' => Main_Schubert_Induction.Run_Moving_Flag_Continuation(n,k);
       when 'A' => Define_Schubert_Systems(n,k);
       when 'B' => Verify_Solutions_of_Schubert_Problem(n,k);
       when others => null;

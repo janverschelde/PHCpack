@@ -1,15 +1,14 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 
-package Drivers_for_SAGBI_Homotopies is
+package Main_SAGBI_Homotopies is
 
 -- DESCRIPTION :
---   This package offers two driver procedures to manage the SAGBI
---   homotopies to intersect m-planes in n-space, m = n-d.
+--   This package offers two interactive procedures to launch
+--   the SAGBI homotopies to intersect m-planes in n-space, m = n-d.
 
-  procedure Driver_for_SAGBI_Homotopies ( n,d : in natural32 );
-  procedure Driver_for_SAGBI_Homotopies
-               ( file : in file_type; n,d : in natural32 );
+  procedure Main ( n,d : in natural32 );
+  procedure Main ( file : in file_type; n,d : in natural32 );
 
   -- DESCRIPTION :
   --   Computes the intersection of (n-d)-planes in n-space.
@@ -20,4 +19,4 @@ package Drivers_for_SAGBI_Homotopies is
   --   n         dimension of the ambient space;
   --   d         co-dimension of the planes we intersect.
 
-end Drivers_for_SAGBI_Homotopies;
+end Main_SAGBI_Homotopies;

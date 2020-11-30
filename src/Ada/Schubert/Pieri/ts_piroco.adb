@@ -34,11 +34,11 @@ procedure ts_piroco is
 
   procedure Show_the_Poset ( m,p,q : in natural32 ) is
 
-    root : Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
+    lnkroot : constant Link_to_Node := new Node'(root);
     nq : constant natural32 := m*p + q*(m+p);
     level_poset : Array_of_Nodes(0..integer32(nq));
-    index_poset : Array_of_Array_of_Nodes(0..integer32(nq));
+   -- index_poset : Array_of_Array_of_Nodes(0..integer32(nq));
 
   begin
     Q_Top_Bottom_Create(lnkroot,root.bottom(integer32(p)),m+p);

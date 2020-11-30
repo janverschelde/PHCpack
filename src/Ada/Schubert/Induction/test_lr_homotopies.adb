@@ -21,7 +21,7 @@ with Wrapped_Path_Trackers;
 with Setup_Flag_Homotopies;
 with Standard_Solution_Posets;           use Standard_Solution_Posets;
 with Resolve_Schubert_Problems;          use Resolve_Schubert_Problems;
-with Drivers_for_Schubert_Induction;     use Drivers_for_Schubert_Induction;
+with Main_Schubert_Induction;
 
 package body Test_LR_Homotopies is
 
@@ -43,7 +43,7 @@ package body Test_LR_Homotopies is
     cnd : constant Array_of_Brackets := Create(bm);
     nbc : constant integer32 := cnd'last;
     ips : constant Intersection_Poset(nbc-1)
-        := Process_Conditions(n,k,nbc,cnd);
+        := Main_Schubert_Induction.Process_Conditions(n,k,nbc,cnd);
     tmp : Poset_List;
     lpn : Link_to_Poset_Node;
 
@@ -133,7 +133,8 @@ package body Test_LR_Homotopies is
 
     cnd : constant Array_of_Brackets := Create(bm);
     nbc : constant integer32 := cnd'last;
-    ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
+    ips : Intersection_Poset(nbc-1)
+        := Main_Schubert_Induction.Process_Conditions(n,k,nbc,cnd);
     tmp : Poset_List;
     lpn : Link_to_Poset_Node;
     roco : Natural_Number;
@@ -182,7 +183,8 @@ package body Test_LR_Homotopies is
 
     cnd : constant Array_of_Brackets := Create(bm);
     nbc : constant integer32 := cnd'last;
-    ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
+    ips : Intersection_Poset(nbc-1)
+        := Main_Schubert_Induction.Process_Conditions(n,k,nbc,cnd);
     top_roco,bottom_roco : Natural_Number;
 
   begin
@@ -201,7 +203,7 @@ package body Test_LR_Homotopies is
     cnd : constant Array_of_Brackets := Create(bm);
     nbc : constant integer32 := cnd'last;
     ips : constant Intersection_Poset(nbc-1)
-        := Process_Conditions(n,k,nbc,cnd);
+        := Main_Schubert_Induction.Process_Conditions(n,k,nbc,cnd);
     sps : Solution_Poset(ips.m) := Create(ips);
     tmp : Solnode_List;
     snd : Link_to_Solution_Node;
@@ -230,17 +232,18 @@ package body Test_LR_Homotopies is
     file : file_type;
     cnd : constant Array_of_Brackets := Create(bm);
     nbc : constant integer32 := cnd'last;
-    ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
+    ips : Intersection_Poset(nbc-1)
+        := Main_Schubert_Induction.Process_Conditions(n,k,nbc,cnd);
     sps : Solution_Poset(ips.m) := Create(ips);
     top_roco,bottom_roco : Natural_Number;
     q : constant Standard_Natural_Vectors.Vector
       := Identity_Permutation(natural32(n));
     rows : constant Standard_Natural_Vectors.Vector
-         := Bracket_to_Vector(cnd(cnd'first).all);
+         := Main_Schubert_Induction.Bracket_to_Vector(cnd(cnd'first).all);
     cols : constant Standard_Natural_Vectors.Vector
-         := Bracket_to_Vector(cnd(cnd'first+1).all);
+         := Main_Schubert_Induction.Bracket_to_Vector(cnd(cnd'first+1).all);
     conds : constant Standard_Natural_VecVecs.VecVec(1..nbc-2)
-          := Remaining_Intersection_Conditions(cnd);
+          := Main_Schubert_Induction.Remaining_Intersection_Conditions(cnd);
     link2conds : constant Standard_Natural_VecVecs.Link_to_VecVec
                := new Standard_Natural_VecVecs.VecVec'(conds);
     flags : Standard_Complex_VecMats.VecMat(1..nbc-2);
@@ -295,7 +298,8 @@ package body Test_LR_Homotopies is
     Resolve(file,monitor_games,report,n,k,0,tol,ips,sps,
             verify,minrep,tosqr,conds,flags,sols);
     tstop(timer);
-    Write_Results(file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);
+    Main_Schubert_Induction.Write_Results
+     (file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);
     new_line(file);
     print_times(file,timer,"resolving a Schubert problem");
   end Resolve_Schubert_Problem;

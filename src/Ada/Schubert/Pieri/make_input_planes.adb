@@ -15,13 +15,9 @@ with Standard_Complex_VecMats_io;       use Standard_Complex_VecMats_io;
 with Osculating_Planes;                 use Osculating_Planes;
 with Complex_Osculating_Planes;         use Complex_Osculating_Planes;
 
-package body Drivers_for_Input_Planes is
+package body Make_Input_Planes is
 
   function Finite ( dim : Bracket; fin_sum : natural32 ) return boolean is
-
-  -- DESCRIPTION :
-  --   Returns true if the co-dimensions in dim will lead to a finite
-  --   number of solutions.                         
 
     sum : natural32 := 0;
 
@@ -427,9 +423,8 @@ package body Drivers_for_Input_Planes is
     return res;
   end Select_Input_Choice;
 
-  procedure Driver_for_Input_Planes
-              ( file : file_type; m,p : in natural32; planes : out VecMat;
-                nocheater : out boolean ) is
+  procedure Main ( file : file_type; m,p : in natural32; planes : out VecMat;
+                   nocheater : out boolean ) is
 
     input_choice : constant character := Select_Input_Choice(true);
     dim : constant natural32 := m*p;
@@ -457,11 +452,10 @@ package body Drivers_for_Input_Planes is
       put_line(file,"THE INPUT PLANES (eventually after othogonalization) : ");
       put(file,planes);
     end if;
-  end Driver_for_Input_Planes;
+  end Main;
 
-  procedure Driver_for_Input_Planes
-              ( m,p : in natural32; k : in Bracket; planes : out VecMat;
-                nocheater : out boolean ) is
+  procedure Main ( m,p : in natural32; k : in Bracket; planes : out VecMat;
+                   nocheater : out boolean ) is
 
     input_choice : constant character := Select_Input_Choice(false);
     svals : Vector(k'range);
@@ -477,24 +471,22 @@ package body Drivers_for_Input_Planes is
       when '4' => planes := Read_Input_Planes(m,p,k);
       when others => null;
     end case;
-  end Driver_for_Input_Planes;
+  end Main;
 
-  procedure Driver_for_Input_Planes
-              ( file : in file_type;
-                m,p : in natural32; k : in Bracket; planes : out VecMat;
-                nocheater : out boolean ) is
+  procedure Main ( file : in file_type;
+                   m,p : in natural32; k : in Bracket; planes : out VecMat;
+                   nocheater : out boolean ) is
   begin
-    Driver_for_Input_Planes(m,p,k,planes,nocheater);
+    Main(m,p,k,planes,nocheater);
     if not nocheater then
       put_line(file,"THE INPUT PLANES (eventually after othogonalization) : ");
       put(file,planes);
     end if;
-  end Driver_for_Input_Planes;
+  end Main;
 
-  procedure Driver_for_Input_Planes
-              ( file : in file_type; m,p,q : in natural32;
-                s : out Vector; planes : out VecMat;
-                nocheater : out boolean ) is
+  procedure Main ( file : in file_type; m,p,q : in natural32;
+                   s : out Vector; planes : out VecMat;
+                   nocheater : out boolean ) is
 
     input_choice : constant character := Select_Input_Choice(false);
     dim : constant natural32 := m*p + q*(m+p);
@@ -524,6 +516,6 @@ package body Drivers_for_Input_Planes is
       put_line(file,"THE TARGET PLANES : ");
       put(file,planes);
     end if;
-  end Driver_for_Input_Planes;
+  end Main;
 
-end Drivers_for_Input_Planes;
+end Make_Input_Planes;

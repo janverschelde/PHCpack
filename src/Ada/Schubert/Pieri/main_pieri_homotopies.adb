@@ -1,37 +1,33 @@
-with text_io,integer_io;                 use text_io,integer_io;
 with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
-with Standard_Natural_Matrices;
 with Standard_Natural_Matrices_io;       use Standard_Natural_Matrices_io;
-with Standard_Floating_Matrices;
 with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
+with Standard_Complex_VecMats_io;        use Standard_Complex_VecMats_io;
 with Standard_Random_Numbers;            use Standard_Random_Numbers;
 with Standard_Random_Vectors;            use Standard_Random_Vectors;
-with Standard_Matrix_Inversion;          use Standard_Matrix_Inversion;
-with Standard_Complex_VecMats;           use Standard_Complex_VecMats;
+--with Standard_Matrix_Inversion;          use Standard_Matrix_Inversion;
 with Symbol_Table;                       use Symbol_Table;
 with Matrix_Indeterminates;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
-with Standard_Complex_Poly_Matrices;
-with Standard_Complex_Poly_Matrices_io;  use Standard_Complex_Poly_Matrices_io;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;       use Standard_Complex_Poly_SysFun;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Homotopy;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
-with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_Root_Refiners;             use Standard_Root_Refiners;
-with Increment_and_Fix_Continuation;     use Increment_and_Fix_Continuation;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Standard_IncFix_Continuation;       use Standard_IncFix_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 with Brackets,Brackets_io;               use Brackets,Brackets_io;
-with Bracket_Monomials,Bracket_Systems;  use Bracket_Monomials,Bracket_Systems;
+with Bracket_Monomials;                  use Bracket_Monomials;
+with Standard_Bracket_Systems;           use Standard_Bracket_Systems;
 with Specialization_of_Planes;           use Specialization_of_Planes;
 with Symbolic_Minor_Equations;           use Symbolic_Minor_Equations;
 with Numeric_Minor_Equations;            use Numeric_Minor_Equations;
@@ -40,10 +36,9 @@ with Plane_Representations;              use Plane_Representations;
 with Localization_Posets;                use Localization_Posets;
 with Localization_Posets_io;             use Localization_Posets_io;
 with Deformation_Posets;                 use Deformation_Posets;
-with Drivers_for_Input_Planes;           use Drivers_for_Input_Planes;
+with Make_Input_Planes;
 
-procedure Driver_for_Pieri_Homotopies
-                ( file : in file_type; n,d : in natural ) is
+package body Main_Pieri_Homotopies is
 
 -- AUXILIARIES IN THE SOLVERS :
 
@@ -68,7 +63,7 @@ procedure Driver_for_Pieri_Homotopies
   -- DESCRIPTION :
   --   Interactive determination of the continuation and output parameters.
 
-    oc : natural;
+    oc : natural32;
 
   begin
     new_line;
@@ -83,16 +78,16 @@ procedure Driver_for_Pieri_Homotopies
   end Set_Parameters;
 
   function First_Standard_Plane
-             ( m,p : natural ) return Standard_Complex_Matrices.Matrix is
+             ( m,p : natural32 ) return Standard_Complex_Matrices.Matrix is
 
   -- DESCRIPTION :
   --   Returns the m-plane spanned by the first m standard basis vectors.
 
-    res : Standard_Complex_Matrices.Matrix(1..m+p,1..m);
+    res : Standard_Complex_Matrices.Matrix(1..integer32(m+p),1..integer32(m));
 
   begin
-    for j in 1..m loop                 -- assign j-th column
-      for i in 1..m+p loop
+    for j in res'range(2)loop          -- assign j-th column
+      for i in res'range(1) loop
         res(i,j) := Create(0.0);       -- initialize with zeros
       end loop;
       res(j,j) := Create(1.0);         -- j-th column = j-th basis vector
@@ -101,69 +96,70 @@ procedure Driver_for_Pieri_Homotopies
   end First_Standard_Plane;
 
   function Last_Standard_Plane
-             ( m,p : natural ) return Standard_Complex_Matrices.Matrix is
+             ( m,p : natural32 ) return Standard_Complex_Matrices.Matrix is
 
   -- DESCRIPTION :
   --   Returns the m-plane spanned by the last m standard basis vectors.
 
-    res : Standard_Complex_Matrices.Matrix(1..m+p,1..m);
+    res : Standard_Complex_Matrices.Matrix(1..integer32(m+p),1..integer32(m));
 
   begin
-    for j in 1..m loop                  -- assign j-th column
-      for i in 1..m+p loop
+    for j in res'range(2) loop          -- assign j-th column
+      for i in res'range(1) loop
         res(i,j) := Create(0.0);        -- initialize with zeros
-      end loop;
-      res(p+j,j) := Create(1.0);        -- j-th vector = (p+j)-th basis vector
+      end loop;                         -- j-th vector = (p+j)-th basis vector
+      res(integer32(p)+j,j) := Create(1.0); 
     end loop;
     return res;
   end Last_Standard_Plane;
 
-  procedure Basis_Change ( n : in natural; vm : in VecMat; transvm : out VecMat;
-                           trans : out Standard_Complex_Matrices.Matrix ) is
-
-  -- DESCRIPTION :
-  --   Changes basis so that the last two planes in vm are spanned by
-  --   the first and last standard basis vectors respectively.
-
-    wrk : Standard_Complex_Matrices.Matrix(1..n,1..n);
-   -- penuplane : constant Standard_Complex_Matrices.Matrix
-   --   := vm(vm'last-1).all;
-    frstplane : constant Standard_Complex_Matrices.Matrix := vm(vm'first).all;
-    lastplane : constant Standard_Complex_Matrices.Matrix := vm(vm'last).all;
-    colind : natural := 0;
-    use Standard_Complex_Matrices;
-    ranflt : double_float;
-
-  begin
-    for j in frstplane'range(2) loop              -- fill up the work matrix
-      colind := colind + 1;
-      for i in frstplane'range(1) loop
-         wrk(i,colind) := frstplane(i,j);
-      end loop;
-    end loop;
-    for j in colind+1..(n-lastplane'length(2)) loop  -- random spacing
-      for i in 1..n loop
-        ranflt := Random;
-        wrk(i,j) := Create(ranflt);
-      end loop;
-    end loop;
-    colind := n+1;
-    for j in reverse lastplane'range(2) loop
-      colind := colind - 1;
-      for i in lastplane'range(1) loop
-         wrk(i,colind) := lastplane(i,j);
-      end loop;
-    end loop;
-    trans := Inverse(wrk);                        -- transformation = inverse
-    for i in vm'first+1..vm'last-1 loop
-      transvm(i-1) := new Standard_Complex_Matrices.Matrix'
-                           (trans*vm(i).all);
-    end loop;
-    transvm(transvm'last-1)
-      := new Standard_Complex_Matrices.Matrix'(trans*vm(vm'first).all);
-    transvm(transvm'last)
-      := new Standard_Complex_Matrices.Matrix'(trans*vm(vm'last).all);
-  end Basis_Change;
+--  procedure Basis_Change
+--              ( n : in natural; vm : in VecMat; transvm : out VecMat;
+--                trans : out Standard_Complex_Matrices.Matrix ) is
+--
+--  -- DESCRIPTION :
+--  --   Changes basis so that the last two planes in vm are spanned by
+--  --   the first and last standard basis vectors respectively.
+--
+--    wrk : Standard_Complex_Matrices.Matrix(1..n,1..n);
+--   -- penuplane : constant Standard_Complex_Matrices.Matrix
+--   --   := vm(vm'last-1).all;
+--    frstplane : constant Standard_Complex_Matrices.Matrix := vm(vm'first).all;
+--    lastplane : constant Standard_Complex_Matrices.Matrix := vm(vm'last).all;
+--    colind : natural := 0;
+--    use Standard_Complex_Matrices;
+--    ranflt : double_float;
+--
+--  begin
+--    for j in frstplane'range(2) loop              -- fill up the work matrix
+--      colind := colind + 1;
+--      for i in frstplane'range(1) loop
+--         wrk(i,colind) := frstplane(i,j);
+--      end loop;
+--    end loop;
+--    for j in colind+1..(n-lastplane'length(2)) loop  -- random spacing
+--      for i in 1..n loop
+--        ranflt := Random;
+--        wrk(i,j) := Create(ranflt);
+--      end loop;
+--    end loop;
+--    colind := n+1;
+--    for j in reverse lastplane'range(2) loop
+--      colind := colind - 1;
+--      for i in lastplane'range(1) loop
+--         wrk(i,colind) := lastplane(i,j);
+--      end loop;
+--    end loop;
+--    trans := Inverse(wrk);                        -- transformation = inverse
+--    for i in vm'first+1..vm'last-1 loop
+--      transvm(i-1) := new Standard_Complex_Matrices.Matrix'
+--                           (trans*vm(i).all);
+--    end loop;
+--    transvm(transvm'last-1)
+--      := new Standard_Complex_Matrices.Matrix'(trans*vm(vm'first).all);
+--    transvm(transvm'last)
+--      := new Standard_Complex_Matrices.Matrix'(trans*vm(vm'last).all);
+--  end Basis_Change;
 
   function Solution_Plane ( locmap : Standard_Natural_Matrices.Matrix;
                             mat : Standard_Complex_Matrices.Matrix )
@@ -202,8 +198,7 @@ procedure Driver_for_Pieri_Homotopies
   end Solution_Planes;
 
   procedure Write_Solution_Planes
-                ( file : in file_type; n,p : in natural;
-                  sols : in Solution_List;
+                ( file : in file_type; sols : in Solution_List;
                   locmap : in Standard_Natural_Matrices.Matrix ) is
 
   -- DESCRIPTION :
@@ -223,7 +218,7 @@ procedure Driver_for_Pieri_Homotopies
   end Write_Solution_Planes;
 
   function Create_Hypersurface_System
-             ( n : natural; locmap : Standard_Natural_Matrices.Matrix;
+             ( n : natural32; locmap : Standard_Natural_Matrices.Matrix;
                xpm : Standard_Complex_Poly_Matrices.Matrix; planes : VecMat )
              return Poly_Sys is
 
@@ -232,8 +227,9 @@ procedure Driver_for_Pieri_Homotopies
   --   intersection conditions for meeting the given m-planes.
   --   The system is localized according to the given localization map.
 
-    wrksys : Poly_Sys(1..n) := Polynomial_Equations(planes(1..n),xpm);
-    res : Poly_Sys(1..n) := Localize(locmap,wrksys);
+    wrksys : Poly_Sys(1..integer32(n))
+           := Polynomial_Equations(planes(1..integer32(n)),xpm);
+    res : constant Poly_Sys(1..integer32(n)) := Localize(locmap,wrksys);
 
   begin
     Clear(wrksys);
@@ -279,19 +275,19 @@ procedure Driver_for_Pieri_Homotopies
     end loop;
   end Evaluate_Roots;
 
-  function Square ( n : natural; p : Poly_Sys ) return Poly_Sys is
+  function Square ( n : natural32; p : Poly_Sys ) return Poly_Sys is
 
   -- DESCRIPTION :
   --   Returns a n-by-n system, by adding random linear combinations of 
   --   the polynomials p(i), i > n, to the first n polynomials.
 
-    res : Poly_Sys(1..n);
+    res : Poly_Sys(1..integer32(n));
     acc : Poly;
 
   begin
     for i in res'range loop
       Copy(p(i),res(i));
-      for j in n+1..p'last loop
+      for j in integer32(n)+1..p'last loop
         acc := Random1*p(j);
         Add(res(i),acc);
         Clear(acc);
@@ -309,12 +305,13 @@ procedure Driver_for_Pieri_Homotopies
     epsxa : constant double_float := 10.0**(-8);
     epsfa : constant double_float := 10.0**(-8);
     tolsing : constant double_float := 10.0**(-8);
-    max : constant natural := 3;
-    numit : natural := 0;
+    max : constant natural32 := 3;
+    numit : natural32 := 0;
+    deflate : boolean := false;
 
   begin
     Reporting_Root_Refiner
-      (file,p,sols,epsxa,epsfa,tolsing,numit,max,false,false);
+      (file,p,sols,epsxa,epsfa,tolsing,numit,max,deflate,false);
   end Refine_Roots;
 
   function General_Homotopy
@@ -329,10 +326,9 @@ procedure Driver_for_Pieri_Homotopies
   -- REQUIRED : dimensions of start and target matrices must correspond.
 
     res : Link_to_Poly_Sys;
-    n : constant natural := xpm'length(1);
-    p : constant natural := xpm'length(2);
-    m : constant natural := n-p;
-    nva : constant natural := n*p + 1;
+    n : constant natural32 := natural32(xpm'length(1));
+    p : constant natural32 := natural32(xpm'length(2));
+    nva : constant integer32 := integer32(n*p + 1);
 
   begin
     for i in start'range loop
@@ -340,11 +336,11 @@ procedure Driver_for_Pieri_Homotopies
         moving : Standard_Complex_Poly_Matrices.Matrix
                    (start(i)'range(1),start(i)'range(2))
                := Moving_U_Matrix(nva,start(i).all,target(i).all);
-        kd : constant natural := p + start(i)'length(2);
-        bm : Bracket_Monomial := Maximal_Minors(n,kd);
-        bs : Bracket_System(0..Number_of_Brackets(bm))
-           := Minor_Equations(kd,kd-p,bm); 
-        sys : Poly_Sys(1..bs'last)
+        kd : constant integer32 := integer32(p) + start(i)'length(2);
+        bm : constant Bracket_Monomial := Maximal_Minors(n,natural32(kd));
+        bs : constant Bracket_System(0..integer32(Number_of_Brackets(bm)))
+           := Minor_Equations(natural32(kd),natural32(kd)-p,bm); 
+        sys : constant Poly_Sys(1..bs'last)
             := Lifted_Expanded_Minors(moving,xpm,bs);
       begin
         Concat(res,sys);
@@ -377,8 +373,8 @@ procedure Driver_for_Pieri_Homotopies
   begin
     Set_Continuation_Parameter(sols,Create(0.0));
     if report
-     then Rep_Cont(file,sols,false,Create(1.0));
-     else Sil_Cont(sols,false,Create(1.0));
+     then Rep_Cont(file,sols,false,target=>Create(1.0));
+     else Sil_Cont(sols,false,target=>Create(1.0));
     end if;
   end Continuation;
 
@@ -393,9 +389,8 @@ procedure Driver_for_Pieri_Homotopies
   -- REQUIRED : not Is_Null(sols).
 
     timer : Timing_Widget;
-    neq : constant natural := homsys'last;       -- number of equations 
-    dim : constant natural := Head_Of(sols).n;   -- actual dimension
-    squhom : Poly_Sys(1..dim) := Square(dim,homsys);
+    dim : constant integer32 := Head_Of(sols).n;   -- actual dimension
+    squhom : constant Poly_Sys(1..dim) := Square(natural32(dim),homsys);
 
   begin
     tstart(timer);
@@ -422,37 +417,39 @@ procedure Driver_for_Pieri_Homotopies
   -- REQUIRED : not Is_Null(sols).
 
     timer : Timing_Widget;
-    n : constant natural := target'last;
-    a : Standard_Complex_Vectors.Vector(1..n) := Random_Vector(1,n);
-    b : Standard_Complex_Vectors.Vector(1..n) := Random_Vector(1,n);
-    dimsol : constant natural := Head_Of(sols).n;
+    n : constant integer32 := target'last;
+    a : constant Standard_Complex_Vectors.Vector(1..n) := Random_Vector(1,n);
+    b : constant Standard_Complex_Vectors.Vector(1..n) := Random_Vector(1,n);
+    dimsol : constant integer32 := Head_Of(sols).n;
     squ_target,squ_start : Poly_Sys(1..dimsol);
 
   begin
     tstart(timer);
-    if dimsol = n
-     then Standard_Homotopy.Create(target,start,2,a,b,true);  -- linear cheater
-     else squ_target := Square(dimsol,target);
-          squ_start  := Square(dimsol,start);
-          Standard_Homotopy.Create(squ_target,squ_start,2,a,b,true);
+    if dimsol = n then
+      Standard_Homotopy.Create(target,start,2,a,b,true);  -- linear cheater
+    else
+      squ_target := Square(natural32(dimsol),target);
+      squ_start  := Square(natural32(dimsol),start);
+      Standard_Homotopy.Create(squ_target,squ_start,2,a,b,true);
     end if;
     Continuation(file,sols,report);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Linear Cheater's homotopy to target system");
-    if dimsol = n
-     then Refine_Roots(file,target,sols);
-     else Refine_Roots(file,squ_target,sols);
-          Evaluate_Roots(file,target,sols);
+    if dimsol = n then
+      Refine_Roots(file,target,sols);
+    else
+      Refine_Roots(file,squ_target,sols);
+      Evaluate_Roots(file,target,sols);
     end if;
   end Path_Following_with_Cheater;
 
   procedure Solve_Hypersurface_Target_System
-                     ( file : in file_type; m,p : in natural;
+                     ( file : in file_type; m,p : in natural32;
                        start_planes,target_planes : in VecMat;
                        index_poset : in Array_of_Array_of_Nodes;
                        deform_poset : in Array_of_Array_of_VecMats;
-                       target_level : in natural; report : in boolean ) is
+                       target_level : in integer32; report : in boolean ) is
 
   -- DESCRIPTION :
   --   This procedure tests the output of the deformation poset,
@@ -470,17 +467,21 @@ procedure Driver_for_Pieri_Homotopies
   --   target_level    indicates lowest node in deform_poset that is filled;
   --   report          switch for intermediate output during continuation.
 
-    dim : constant natural := m*p;
-    xpm : Standard_Complex_Poly_Matrices.Matrix(1..m+p,1..p)
+    dim : constant integer32 := integer32(m*p);
+    xpm : constant Standard_Complex_Poly_Matrices.Matrix
+                     (1..integer32(m+p),1..integer32(p))
         := Localization_Pattern(m+p,index_poset(dim)(1).top,
                                     index_poset(dim)(1).bottom);
     solplanes : constant VecMat := deform_poset(target_level)(1).all;
-    locmap : Standard_Natural_Matrices.Matrix(1..m+p,1..p)
+    locmap : constant Standard_Natural_Matrices.Matrix
+                        (1..integer32(m+p),1..integer32(p))
            := Standard_Coordinate_Frame(xpm,solplanes(1).all);
-    locsys : Poly_Sys(start_planes'range)
-           := Create_Hypersurface_System(dim,locmap,xpm,start_planes);
-    target : Poly_Sys(target_planes'range)
-           := Create_Hypersurface_System(dim,locmap,xpm,target_planes);
+    locsys : constant Poly_Sys(start_planes'range)
+           := Create_Hypersurface_System
+                (natural32(dim),locmap,xpm,start_planes);
+    target : constant Poly_Sys(target_planes'range)
+           := Create_Hypersurface_System
+                (natural32(dim),locmap,xpm,target_planes);
     sols : Solution_List := Solution_Planes(locmap,solplanes);
 
   begin
@@ -497,15 +498,15 @@ procedure Driver_for_Pieri_Homotopies
     Path_Following_with_Cheater(file,locsys,target,sols,report);
     new_line(file);
     put_line(file,"THE SOLUTION PLANES : ");
-    Write_Solution_Planes(file,m+p,p,sols,locmap);
+    Write_Solution_Planes(file,sols,locmap);
   end Solve_Hypersurface_Target_System;
 
   procedure Solve_General_Target_System
-                     ( file : in file_type; m,p : in natural; k : in Bracket;
+                     ( file : in file_type; m,p : in natural32;
                        start_planes,target_planes : in VecMat;
                        index_poset : in Array_of_Array_of_Nodes;
                        deform_poset : in Array_of_Array_of_VecMats;
-                       target_level : in natural; report : in boolean ) is
+                       target_level : in integer32; report : in boolean ) is
 
   -- DESCRIPTION :
   --   This procedure tests the output of the deformation poset,
@@ -516,7 +517,6 @@ procedure Driver_for_Pieri_Homotopies
   --   file            to write intermediate output on;
   --   m               dimension of the input planes;
   --   p               dimension of the solution planes;
-  --   k               co-dimension conditions;
   --   start_planes    input (m+1-k(i))-planes in general position;
   --   target_planes   specific input (m+1-k(i))-planes;
   --   index_poset     indexed localization poset; 
@@ -524,12 +524,14 @@ procedure Driver_for_Pieri_Homotopies
   --   target_level    indicates lowest node in deform_poset that is filled;
   --   report          switch for intermediate output during continuation.
 
-    dim : constant natural := m*p;
-    xpm : Standard_Complex_Poly_Matrices.Matrix(1..m+p,1..p)
+    dim : constant integer32 := integer32(m*p);
+    xpm : constant Standard_Complex_Poly_Matrices.Matrix
+                     (1..integer32(m+p),1..integer32(p))
         := Localization_Pattern(m+p,index_poset(dim)(1).top,
                                     index_poset(dim)(1).bottom);
     solplanes : constant VecMat := deform_poset(target_level)(1).all;
-    locmap : Standard_Natural_Matrices.Matrix(1..m+p,1..p)
+    locmap : constant Standard_Natural_Matrices.Matrix
+                        (1..integer32(m+p),1..integer32(p))
            := Standard_Coordinate_Frame(xpm,solplanes(1).all);
     homtpy : constant Poly_Sys
            := General_Homotopy(xpm,locmap,start_planes,target_planes);
@@ -553,7 +555,7 @@ procedure Driver_for_Pieri_Homotopies
     General_Path_Following(file,target,homtpy,sols,report);
     new_line(file);
     put_line(file,"THE SOLUTION PLANES : ");
-    Write_Solution_Planes(file,m+p,p,sols,locmap);
+    Write_Solution_Planes(file,sols,locmap);
   end Solve_General_Target_System;
 
   procedure Write_Poset_Times
@@ -573,10 +575,10 @@ procedure Driver_for_Pieri_Homotopies
     put_line(file,"|   n   |  #paths  |  user cpu time  |");
     put_line(file,"--------------------------------------");
     for i in npaths'range loop
-      if npaths(i) /= 0
-       then put(file,"|"); put(file,i,4); put(file,"   |");
-            put(file,npaths(i),7);        put(file,"   | ");
-            print_hms(file,timings(i));   put(file,"  |"); new_line(file);
+      if npaths(i) /= 0 then
+        put(file,"|"); put(file,i,4); put(file,"   |");
+        put(file,npaths(i),7);        put(file,"   | ");
+        print_hms(file,timings(i));   put(file,"  |"); new_line(file);
       end if;
     end loop;
     put_line(file,"--------------------------------------");
@@ -589,26 +591,28 @@ procedure Driver_for_Pieri_Homotopies
   end Write_Poset_Times;
 
   procedure Solve_Hypersurface_Deformation_Poset
-               ( file : in file_type; m,p : in natural;
-                 level_poset : in Array_of_Nodes;
-                 index_poset : in Array_of_Array_of_Nodes ) is
+              ( file : in file_type; m,p : in natural32;
+                level_poset : in Array_of_Nodes;
+                index_poset : in Array_of_Array_of_Nodes ) is
 
   -- DESCRIPTION :
   --   Creates a deformation poset and applies the Solve operator.
 
-    n : constant natural := m+p;
     deform_poset : Array_of_Array_of_VecMats(index_poset'range)
                  := Create(index_poset);
-    planes : VecMat(1..m*p) := Random_Complex_Planes(m,p);
-    target_planes : VecMat(1..m*p);
+    mp : constant integer32 := integer32(m*p);
+    planes : constant VecMat(1..mp)
+           := Make_Input_Planes.Random_Complex_Planes(m,p);
+    target_planes : VecMat(1..mp);
     ans : character;
     report,outlog : boolean;
     timer : Timing_Widget;
-    target_level : natural := m*p;
-    nbp : natural := 0;
+    target_level : integer32 := mp;
+    nbp : natural32 := 0;
     npaths : Standard_Natural_Vectors.Vector(1..target_level)
            := (1..target_level => 0);
     timings : Duration_Array(1..target_level) := (1..target_level => 0.0);
+    nocheater : boolean;
 
   begin
     put_line("The size of the deformation poset : ");
@@ -619,7 +623,7 @@ procedure Driver_for_Pieri_Homotopies
     put("Give target level <= "); put(target_level,1);
     put(" = root level by default : "); get(target_level);
     for i in 1..target_level loop
-      nbp := nbp + Row_Root_Count_Sum(level_poset,i);
+      nbp := nbp + Row_Root_Count_Sum(level_poset,natural32(i));
     end loop;
     put("The number of paths : "); put(nbp,1); new_line;
     put(file,"The number of paths : "); put(file,nbp,1); new_line(file);
@@ -627,20 +631,20 @@ procedure Driver_for_Pieri_Homotopies
     put("Do you want to have the homotopies on file ? (y/n) ");
     Ask_Yes_or_No(ans);
     outlog := (ans = 'y');
-    if target_level < m*p
-     then planes(m*p).all := Last_Standard_Plane(m,p);
-          if target_level < m*p-1
-           then planes(m*p-1).all := First_Standard_Plane(m,p);
-          end if;
+    if target_level < mp then
+      planes(mp).all := Last_Standard_Plane(m,p);
+      if target_level < mp-1
+       then planes(mp-1).all := First_Standard_Plane(m,p);
+      end if;
     end if;
-    Driver_for_Input_Planes(file,m,p,target_planes); 
+    Make_Input_Planes.Main(file,m,p,target_planes,nocheater); 
     Matrix_Indeterminates.Initialize_Symbols(m+p,p);
     Add_t_Symbol;
     Set_Parameters(file,report);
     tstart(timer);
     for i in index_poset(target_level)'range loop
       declare
-        root : Node := index_poset(target_level)(i).all;
+        root : constant Node := index_poset(target_level)(i).all;
       begin
         Solve(file,m+p,deform_poset,root,planes(1..target_level),
               report,outlog,npaths,timings);
@@ -651,32 +655,49 @@ procedure Driver_for_Pieri_Homotopies
     print_times(file,timer,"Solving along the deformation poset");
     Write_Poset_Times(file,timer,
                       npaths(1..target_level),timings(1..target_level));
-    if deform_poset(target_level)(1) /= null
-     then new_line(file);
-          Solve_Hypersurface_Target_System
-            (file,m,p,planes,target_planes,index_poset,deform_poset,
-             target_level,report);
+    if nocheater then
+      new_line(file);
+      put_line(file,"THE INPUT PLANES : ");
+      put(file,planes);
+      new_line(file);
+      put_line(file,"THE SOLUTION PLANES : ");
+      declare
+        solplanes : constant VecMat := deform_poset(target_level)(1).all;
+      begin
+        put(file,solplanes);
+      end;
+     -- the statement below seems equivalent to the block above
+     -- Write_Solution_Planes(file,sols,locmap);
+    else
+      if deform_poset(target_level)(1) /= null then
+        new_line(file);
+        Solve_Hypersurface_Target_System
+          (file,m,p,planes,target_planes,index_poset,deform_poset,
+           target_level,report);
+      end if;
     end if;
   end Solve_Hypersurface_Deformation_Poset;
 
   procedure Solve_General_Deformation_Poset
-               ( file : in file_type; m,p : in natural; k : in Bracket;
-                 index_poset : in Array_of_Array_of_Nodes ) is
+              ( file : in file_type; m,p : in natural32; k : in Bracket;
+                index_poset : in Array_of_Array_of_Nodes ) is
 
   -- DESCRIPTION :
   --   Applies the solver to general intersection conditions.
 
     deform_poset : Array_of_Array_of_VecMats(index_poset'range)
                  := Create(index_poset);
-    planes : VecMat(k'range) := Random_Complex_Planes(m,p,k);
+    planes : constant VecMat(k'range)
+           := Make_Input_Planes.Random_Complex_Planes(m,p,k);
     target_planes : VecMat(k'range);
     ans : character;
     report,outlog : boolean;
     timer : Timing_Widget;
-    target_level : natural := m*p;
+    target_level : integer32 := integer32(m*p);
     npaths : Standard_Natural_Vectors.Vector(1..target_level)
            := (1..target_level => 0);
     timings : Duration_Array(1..target_level) := (1..target_level => 0.0);
+    nocheater : boolean;
 
   begin
     put_line("The size of the deformation poset : ");
@@ -690,14 +711,14 @@ procedure Driver_for_Pieri_Homotopies
     put("Do you want to have the homotopies on file ? (y/n) ");
     Ask_Yes_or_No(ans);
     outlog := (ans = 'y');
-    Driver_for_Input_Planes(file,m,p,k,target_planes);
+    Make_Input_Planes.Main(file,m,p,k,target_planes,nocheater);
     Matrix_Indeterminates.Initialize_Symbols(m+p,p);
     Add_t_Symbol;
     Set_Parameters(file,report);
     tstart(timer);
     for i in index_poset(target_level)'range loop
       declare
-        root : Node := index_poset(target_level)(i).all;
+        root : constant Node := index_poset(target_level)(i).all;
       begin
         Solve(file,m+p,k,deform_poset,root,planes,report,outlog,
               npaths,timings);
@@ -708,29 +729,63 @@ procedure Driver_for_Pieri_Homotopies
     print_times(file,timer,"Solving along the deformation poset");
     Write_Poset_Times(file,timer,
                       npaths(1..target_level),timings(1..target_level));
-    if deform_poset(target_level)(1) /= null
-     then new_line(file);
-          Solve_General_Target_System
-            (file,m,p,k,planes,target_planes,index_poset,deform_poset,
-             target_level,report);
+    if nocheater then
+      new_line(file);
+      put_line(file,"THE INPUT PLANES :");
+      put(file,planes);
+      new_line(file);
+      put_line(file,"THE SOLUTION PLANES : ");
+      declare
+        solplanes : constant VecMat := deform_poset(target_level)(1).all;
+      begin
+        put(file,solplanes);
+      end;
+    else
+      if deform_poset(target_level)(1) /= null then
+        new_line(file);
+        Solve_General_Target_System
+          (file,m,p,planes,target_planes,index_poset,deform_poset,
+           target_level,report);
+      end if;
     end if;
   end Solve_General_Deformation_Poset;
 
 -- HYPERSURFACE SOLVERS :
 
-  procedure Create_Top_Hypersurface_Poset
-              ( file : in file_type; m,p : in natural ) is
+  procedure Top_Hypersurface_Poset
+              ( m,p : in natural32; level_poset : out Array_of_Nodes;
+                index_poset : out Array_of_Array_of_Nodes ) is
+
+  -- DESCRIPTION :
+  --   Creates the poset by incrementing only top pivots.
+  --   The range of the posets on return is 0..m*p.
+
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
+
+  begin
+    Top_Create(lnkroot,m+p);
+    put_line("The poset created from the top : ");
+    level_poset := Create_Leveled_Poset(lnkroot);
+    Count_Roots(level_poset);
+    index_poset := Create_Indexed_Poset(level_poset);
+    put(index_poset);
+  end Top_Hypersurface_Poset;
+
+  procedure Top_Hypersurface_Poset
+              ( file : in file_type; m,p : in natural32 ) is
 
   -- DESCRIPTION :
   --   Create the poset by incrementing only top pivots.
 
     timer : Timing_Widget;
-    root : Node(p) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
-    level_poset : Array_of_Nodes(0..m*p);
-    index_poset : Array_of_Array_of_Nodes(0..m*p);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    level_poset : Array_of_Nodes(0..integer32(m*p));
+    index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
 
   begin
+    new_line(file);
     tstart(timer);
     Top_Create(lnkroot,m+p);
     put_line("The poset created from the top : ");
@@ -745,21 +800,42 @@ procedure Driver_for_Pieri_Homotopies
     new_line(file);
     print_times(file,timer,
                 "Total time for Hypersurface Pieri Homotopy Algorithm");
-  end Create_Top_Hypersurface_Poset;
+  end Top_Hypersurface_Poset;
 
-  procedure Create_Bottom_Hypersurface_Poset
-              ( file : in file_type; m,p : in natural ) is
+  procedure Bottom_Hypersurface_Poset
+              ( m,p : in natural32; level_poset : out Array_of_Nodes;
+                index_poset : out Array_of_Array_of_Nodes ) is
+
+  -- DESCRIPTION :
+  --   Create the poset by decrementing only bottom pivots.
+  --   The range of the posets on return is 0..m*p.
+
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
+
+  begin
+    Bottom_Create(lnkroot);
+    put_line("The poset created from the bottom : ");
+    level_poset := Create_Leveled_Poset(lnkroot);
+    Count_Roots(level_poset);
+    index_poset := Create_Indexed_Poset(level_poset);
+    put(index_poset);
+  end Bottom_Hypersurface_Poset;
+
+  procedure Bottom_Hypersurface_Poset
+              ( file : in file_type; m,p : in natural32 ) is
 
   -- DESCRIPTION :
   --   Create the poset by decrementing only bottom pivots.
 
     timer : Timing_Widget;
-    root : Node(p) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
-    level_poset : Array_of_Nodes(0..m*p);
-    index_poset : Array_of_Array_of_Nodes(0..m*p);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    level_poset : Array_of_Nodes(0..integer32(m*p));
+    index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
 
   begin
+    new_line(file);
     tstart(timer);
     Bottom_Create(lnkroot);
     put_line("The poset created from the bottom : ");
@@ -774,21 +850,42 @@ procedure Driver_for_Pieri_Homotopies
     new_line(file);
     print_times(file,timer,
                 "Total time for Hypersurface Pieri Homotopy Algorithm");
-  end Create_Bottom_Hypersurface_Poset;
+  end Bottom_Hypersurface_Poset;
 
-  procedure Create_Mixed_Hypersurface_Poset
-              ( file : in file_type; m,p : in natural ) is
+  procedure Mixed_Hypersurface_Poset
+              ( m,p : in natural32; level_poset : out Array_of_Nodes;
+                index_poset : out Array_of_Array_of_Nodes ) is
+
+  -- DESCRIPTION :
+  --   Create the poset by incrementing top and decrementing bottom pivots.
+  --   The posets on return are of range 0..m*p.
+
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
+
+  begin
+    Top_Bottom_Create(lnkroot,m+p);
+    put_line("The poset created in a mixed fashion : ");
+    level_poset := Create_Leveled_Poset(lnkroot);
+    Count_Roots(level_poset);
+    index_poset := Create_Indexed_Poset(level_poset);
+    put(index_poset);
+  end Mixed_Hypersurface_Poset;
+
+  procedure Mixed_Hypersurface_Poset
+              ( file : in file_type; m,p : in natural32 ) is
 
   -- DESCRIPTION :
   --   Create the poset by incrementing top and decrementing bottom pivots.
 
     timer : Timing_Widget;
-    root : Node(p) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
-    level_poset : Array_of_Nodes(0..m*p);
-    index_poset : Array_of_Array_of_Nodes(0..m*p);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    level_poset : Array_of_Nodes(0..integer32(m*p));
+    index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
 
   begin
+    new_line(file);
     tstart(timer);
     Top_Bottom_Create(lnkroot,m+p);
     put_line("The poset created in a mixed fashion : ");
@@ -803,23 +900,55 @@ procedure Driver_for_Pieri_Homotopies
     new_line(file);
     print_times(file,timer,
                 "Total time for Hypersurface Pieri Homotopy Algorithm");
-  end Create_Mixed_Hypersurface_Poset;
+  end Mixed_Hypersurface_Poset;
 
 -- GENERAL SOLVERS :
 
-  procedure Create_Top_General_Poset
-              ( file : in file_type; m,p : in natural ) is
+  procedure Top_General_Poset
+              ( m,p : in natural32; k : out Link_to_Bracket;
+                level_poset : out Array_of_Nodes;
+                index_poset : out Array_of_Array_of_Nodes ) is
+
+  -- DESCRIPTION :
+  --   Creates a poset for counting general subspace intersections,
+  --   by consistently incrementing the top pivots.
+
+  -- ON ENTRY :
+  --   m        dimension of the input planes;
+  --   p        dimension of the output planes.
+  
+  -- ON RETURN :
+  --   k        codimension conditions, k(i) = 1 : hypersurface condition;
+  --   level_poset is poset of range 0..m*p;
+  --   index_poset is poset of range 0..m*p.
+
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,0);
+
+  begin
+    Top_Create(lnkroot,codim,m+p);
+    put_line("The poset created from the top : ");
+    level_poset := Create_Leveled_Poset(lnkroot);
+    Count_Roots(level_poset);
+    index_poset := Create_Indexed_Poset(level_poset);
+    put(index_poset);
+    k := new Bracket'(codim);
+  end Top_General_Poset;
+
+  procedure Top_General_Poset
+              ( file : in file_type; m,p : in natural32 ) is
 
   -- DESCRIPTION :
   --   Creates a poset for counting general subspace intersections,
   --   by consistently incrementing the top pivots.
 
     timer : Timing_Widget;
-    root : Node(p) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,0);
-    level_poset : Array_of_Nodes(0..m*p);
-    index_poset : Array_of_Array_of_Nodes(0..m*p);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,0);
+    level_poset : Array_of_Nodes(0..integer32(m*p));
+    index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
 
   begin
     put(file,"  k = "); put(file,codim); new_line(file);
@@ -837,21 +966,53 @@ procedure Driver_for_Pieri_Homotopies
     new_line(file);
     print_times(file,timer,
                 "Total time for General Pieri Homotopy Algorithm");
-  end Create_Top_General_Poset;
+  end Top_General_Poset;
 
-  procedure Create_Bottom_General_Poset
-              ( file : in file_type; m,p : in natural ) is
+  procedure Bottom_General_Poset
+              ( m,p : in natural32; k : out Link_to_Bracket;
+                level_poset : out Array_of_Nodes;
+                index_poset : out Array_of_Array_of_Nodes ) is
 
   -- DESCRIPTION :
   --   Creates a poset for counting general subspace intersections,
-  --   by consistently incrementing the top pivots.
+  --   by consistently incrementing the bottom pivots.
+
+  -- ON ENTRY :
+  --   m        dimension of the input planes;
+  --   p        dimension of the output planes.
+  
+  -- ON RETURN :
+  --   k        codimension conditions, k(i) = 1 : hypersurface condition;
+  --   level_poset is poset of range 0..m*p;
+  --   index_poset is poset of range 0..m*p.
+
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,0);
+
+  begin
+    Bottom_Create(lnkroot,codim);
+    put_line("The poset created from the bottom : ");
+    level_poset := Create_Leveled_Poset(lnkroot);
+    Count_Roots(level_poset);
+    index_poset := Create_Indexed_Poset(level_poset);
+    put(index_poset);
+    k := new Bracket'(codim);
+  end Bottom_General_Poset;
+
+  procedure Bottom_General_Poset
+              ( file : in file_type; m,p : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Creates a poset for counting general subspace intersections,
+  --   by consistently incrementing the bottom pivots.
 
     timer : Timing_Widget;
-    root : Node(p) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,0);
-    level_poset : Array_of_Nodes(0..m*p);
-    index_poset : Array_of_Array_of_Nodes(0..m*p);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,0);
+    level_poset : Array_of_Nodes(0..integer32(m*p));
+    index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
 
   begin
     put(file,"  k = "); put(file,codim); new_line(file);
@@ -869,21 +1030,53 @@ procedure Driver_for_Pieri_Homotopies
     new_line(file);
     print_times(file,timer,
                 "Total time for General Pieri Homotopy Algorithm");
-  end Create_Bottom_General_Poset;
+  end Bottom_General_Poset;
 
-  procedure Create_Mixed_General_Poset
-              ( file : in file_type; m,p : in natural ) is
+  procedure Mixed_General_Poset
+              ( m,p : in natural32; k : out Link_to_Bracket;
+                level_poset : out Array_of_Nodes;
+                index_poset : out Array_of_Array_of_Nodes ) is
+
+  -- DESCRIPTION :
+  --   Creates a poset for counting general subspace intersections,
+  --   by incrementing the top and decrementing the bottom pivots.
+
+  -- ON ENTRY :
+  --   m        dimension of the input planes;
+  --   p        dimension of the output planes.
+  
+  -- ON RETURN :
+  --   k        codimension conditions, k(i) = 1 : hypersurface condition;
+  --   level_poset is poset of range 0..m*p;
+  --   index_poset is poset of range 0..m*p.
+
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,0);
+
+  begin
+    Top_Bottom_Create(lnkroot,codim,m+p);
+    put_line("The poset created in a mixed fashion : ");
+    level_poset := Create_Leveled_Poset(lnkroot);
+    Count_Roots(level_poset);
+    index_poset := Create_Indexed_Poset(level_poset);
+    put(index_poset);
+    k := new Bracket'(codim);
+  end Mixed_General_Poset;
+
+  procedure Mixed_General_Poset
+              ( file : in file_type; m,p : in natural32 ) is
 
   -- DESCRIPTION :
   --   Creates a poset for counting general subspace intersections,
   --   by incrementing the top and decrementing the bottom pivots.
 
     timer : Timing_Widget;
-    root : Node(p) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,0);
-    level_poset : Array_of_Nodes(0..m*p);
-    index_poset : Array_of_Array_of_Nodes(0..m*p);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,0);
+    level_poset : Array_of_Nodes(0..integer32(m*p));
+    index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
 
   begin
     put(file,"  k = "); put(file,codim); new_line(file);
@@ -901,16 +1094,16 @@ procedure Driver_for_Pieri_Homotopies
     new_line(file);
     print_times(file,timer,
                 "Total time for General Pieri Homotopy Algorithm");
-  end Create_Mixed_General_Poset;
+  end Mixed_General_Poset;
 
-  procedure Main is
+  function Menu_Choice return character is
 
-    p : constant natural := d;
-    m : constant natural := n-d;
+  -- DESCRIPTION :
+  --   Displays the menu of available choices and returns the character
+  --   the user typed in.
     ans : character;
 
   begin
-    new_line;
     put_line("MENU for deforming p-planes in (m+p)-space, co-dimensions k : ");
     put_line("  1. k_i = 1  consistently incrementing the top pivots.");
     put_line("  2.          consistently decrementing the bottom pivots.");
@@ -920,18 +1113,94 @@ procedure Driver_for_Pieri_Homotopies
     put_line("  6.          mixed top-bottom sequence for poset creation.");
     put("Type 1, 2, 3, 4, 5, or 6 to choose : ");
     Ask_Alternative(ans,"123456");
+    return ans;
+  end Menu_Choice;
+
+  procedure Run_Pieri_Homotopies
+              ( file : in file_type;
+                m,p : in natural32; k : in Link_to_Bracket;
+                level_poset : in Array_of_Nodes;
+                index_poset : in Array_of_Array_of_Nodes ) is
+
+    timer : Timing_Widget;
+
+  begin
+    put(file,"Pieri Homotopies for m = "); put(file,m,1);
+    put(file," and p = "); put(file,p,1);
+    if k = null then
+      new_line(file);
+      put(file,index_poset);
+      tstart(timer);
+      Solve_Hypersurface_Deformation_Poset(file,m,p,level_poset,index_poset);
+      tstop(timer);
+      new_line(file);
+      print_times(file,timer,
+                 "Total time for Hypersurface Pieri Homotopy Algorithm");
+    else
+      put(file," and k = "); Brackets_io.put(file,k.all); new_line(file);
+      put(file,index_poset);
+      tstart(timer);
+      Solve_General_Deformation_Poset(file,m,p,k.all,index_poset);
+      tstop(timer);
+      new_line(file);
+      print_times(file,timer,
+                  "Total time for General Pieri Homotopy Algorithm");
+    end if;
+  end Run_Pieri_Homotopies;
+
+  procedure Main ( n,d : in natural32 ) is
+
+    p : constant natural32 := d;
+    m : constant natural32 := n-d;
+    ans : character := Menu_Choice;
+    k : Link_to_Bracket;
+    level_poset : Array_of_Nodes(0..integer32(m*p));
+    index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
+    file : file_type;
+
+  begin
     new_line;
     case ans is
-      when '1' => new_line(file); Create_Top_Hypersurface_Poset(file,m,p);
-      when '2' => new_line(file); Create_Bottom_Hypersurface_Poset(file,m,p);
-      when '3' => new_line(file); Create_Mixed_Hypersurface_Poset(file,m,p);
-      when '4' => Create_Top_General_Poset(file,m,p);
-      when '5' => Create_Bottom_General_Poset(file,m,p);
-      when '6' => Create_Mixed_General_Poset(file,m,p);
+      when '1' => Top_Hypersurface_Poset(m,p,level_poset,index_poset);
+      when '2' => Bottom_Hypersurface_Poset(m,p,level_poset,index_poset);
+      when '3' => Mixed_Hypersurface_Poset(m,p,level_poset,index_poset);
+      when '4' => Top_General_Poset(m,p,k,level_poset,index_poset);
+      when '5' => Bottom_General_Poset(m,p,k,level_poset,index_poset);
+      when '6' => Mixed_General_Poset(m,p,k,level_poset,index_poset);
+      when others => put_line("Option not recognized.  Please try again.");
+    end case;
+    new_line;
+    put("Do you want to run the Pieri homotopies ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      new_line;
+      put_line("Reading the name of the output file.");
+      Read_Name_and_Create_File(file);
+      new_line;
+      Run_Pieri_Homotopies(file,m,p,k,level_poset,index_poset);
+    end if;
+  end Main;
+
+  procedure Main ( file : in file_type; n,d : in natural32 ) is
+
+    p : constant natural32 := d;
+    m : constant natural32 := n-d;
+    ans : character;
+
+  begin
+    put(file,"Pieri Homotopies for m = "); put(file,m,1);
+    put(file," and p = "); put(file,p,1); new_line(file);
+    ans := Menu_Choice;
+    new_line;
+    case ans is
+      when '1' => Top_Hypersurface_Poset(file,m,p);
+      when '2' => Bottom_Hypersurface_Poset(file,m,p);
+      when '3' => Mixed_Hypersurface_Poset(file,m,p);
+      when '4' => Top_General_Poset(file,m,p);
+      when '5' => Bottom_General_Poset(file,m,p);
+      when '6' => Mixed_General_Poset(file,m,p);
       when others => put_line("Option not recognized.  Please try again.");
     end case;
   end Main;
 
-begin
-  Main;
-end Driver_for_Pieri_Homotopies;
+end Main_Pieri_Homotopies;

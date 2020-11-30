@@ -14,7 +14,6 @@ with Standard_Natural_Matrices_io;       use Standard_Natural_Matrices_io;
 with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
 with Standard_Random_Vectors;            use Standard_Random_Vectors;
 with Standard_Complex_VecMats;           use Standard_Complex_VecMats;
-with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Matrices;
 with Standard_Complex_Poly_Matrices_io;  use Standard_Complex_Poly_Matrices_io;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
@@ -31,9 +30,9 @@ with Curves_into_Grassmannian;           use Curves_into_Grassmannian;
 with Curves_into_Grassmannian_io;        use Curves_into_Grassmannian_io;
 with Deformation_Posets;                 use Deformation_Posets;
 with Determinantal_Systems;              use Determinantal_Systems;
-with Drivers_for_Input_Planes;           use Drivers_for_Input_planes;
+with Make_Input_Planes;
 
-package body Drivers_for_Quantum_Pieri is
+package body Main_Quantum_Pieri is
 
   procedure Refine_Roots ( file : in file_type;
                            p : in Poly_Sys; sols : in out Solution_List ) is
@@ -233,7 +232,8 @@ package body Drivers_for_Quantum_Pieri is
     deform_poset : Array_of_Array_of_VecMats(index_poset'range)
                  := Create(index_poset);
     dim : constant integer32 := integer32((m*p)+q*(m+p));
-    input : constant VecMat(1..dim) := Random_Complex_Planes(m,p,q);
+    input : constant VecMat(1..dim)
+          := Make_Input_Planes.Random_Complex_Planes(m,p,q);
     svals : constant Standard_Complex_Vectors.Vector(1..dim)
           := Random_Vector(1,dim);
     target_planes : VecMat(1..dim);
@@ -252,7 +252,7 @@ package body Drivers_for_Quantum_Pieri is
     put("Do you want to have the homotopies on file ? (y/n) "); 
     Ask_Yes_or_No(ans);
     outlog := (ans = 'y');
-    Driver_for_Input_Planes(file,m,p,q,target_svals,target_planes,nocheater);
+    Make_Input_Planes.Main(file,m,p,q,target_svals,target_planes,nocheater);
     Set_Parameters(file,report);
     tstart(timer);
     Solve(file,m+p,q,nb,deform_poset,root,input,svals,report,outlog,
@@ -272,7 +272,7 @@ package body Drivers_for_Quantum_Pieri is
   end Solve_Deformation_Poset;
 
   procedure Hypersurface_Localization_Poset
-              ( lnkroot : in Link_to_Node; m,p,q,nq : in natural32;
+              ( lnkroot : in Link_to_Node;
                 level_poset : out Array_of_Nodes;
                 index_poset : out Array_of_Array_of_Nodes ) is
 
@@ -324,7 +324,6 @@ package body Drivers_for_Quantum_Pieri is
 
   procedure General_Localization_Poset
                 ( lnkroot : in Link_to_Node;
-                  m,p,q,nq : in natural32; codim : in Bracket;
                   level_poset : out Array_of_Nodes;
                   index_poset : out Array_of_Array_of_Nodes ) is
 
@@ -341,7 +340,7 @@ package body Drivers_for_Quantum_Pieri is
 
   procedure General_Localization_Poset
                 ( file : in file_type; lnkroot : in Link_to_Node;
-                  m,p,q,nq : in natural32; codim : in Bracket ) is
+                  nq : in natural32 ) is
 
   -- DESCRIPTION :
   --   Creates the posets and outputs them to the screen and on file.
@@ -365,7 +364,7 @@ package body Drivers_for_Quantum_Pieri is
   end General_Localization_Poset;
 
   procedure Top_Hypersurface_Poset
-              ( m,p,q,nq : in natural32; level_poset : out Array_of_Nodes;
+              ( m,p,q : in natural32; level_poset : out Array_of_Nodes;
                 index_poset : out Array_of_Array_of_Nodes ) is
 
   -- DESCRIPTION :
@@ -378,7 +377,7 @@ package body Drivers_for_Quantum_Pieri is
     Q_Top_Create(lnkroot,root.bottom(integer32(p)),m+p);
     new_line;
     put_line("The poset created from the top : ");
-    Hypersurface_Localization_Poset(lnkroot,m,p,q,nq,level_poset,index_poset);
+    Hypersurface_Localization_Poset(lnkroot,level_poset,index_poset);
   end Top_Hypersurface_Poset;
 
   procedure Top_Hypersurface_Poset
@@ -403,7 +402,7 @@ package body Drivers_for_Quantum_Pieri is
   end Top_Hypersurface_Poset;
 
   procedure Bottom_Hypersurface_Poset
-              ( m,p,q,nq : in natural32; level_poset : out Array_of_Nodes;
+              ( m,p,q : in natural32; level_poset : out Array_of_Nodes;
                 index_poset : out Array_of_Array_of_Nodes ) is
 
   -- DESCRIPTION :
@@ -416,7 +415,7 @@ package body Drivers_for_Quantum_Pieri is
     Q_Bottom_Create(lnkroot,m+p);
     new_line;
     put_line("The poset created from the bottom : ");
-    Hypersurface_Localization_Poset(lnkroot,m,p,q,nq,level_poset,index_poset);
+    Hypersurface_Localization_Poset(lnkroot,level_poset,index_poset);
   end Bottom_Hypersurface_Poset;
 
   procedure Bottom_Hypersurface_Poset
@@ -441,7 +440,7 @@ package body Drivers_for_Quantum_Pieri is
   end Bottom_Hypersurface_Poset;
 
   procedure Mixed_Hypersurface_Poset
-              ( m,p,q,nq : in natural32; level_poset : out Array_of_Nodes;
+              ( m,p,q : in natural32; level_poset : out Array_of_Nodes;
                 index_poset : out Array_of_Array_of_Nodes ) is
 
   -- DESCRIPTION :
@@ -454,7 +453,7 @@ package body Drivers_for_Quantum_Pieri is
     Q_Top_Bottom_Create(lnkroot,root.bottom(integer32(p)),m+p);
     new_line;
     put_line("The poset created in a mixed fashion : ");
-    Hypersurface_Localization_Poset(lnkroot,m,p,q,nq,level_poset,index_poset);
+    Hypersurface_Localization_Poset(lnkroot,level_poset,index_poset);
   end Mixed_Hypersurface_Poset;
 
   procedure Mixed_Hypersurface_Poset
@@ -479,7 +478,7 @@ package body Drivers_for_Quantum_Pieri is
   end Mixed_Hypersurface_Poset;
 
   procedure Top_General_Poset
-               ( m,p,q,nq : in natural32; k : out Link_to_Bracket;
+               ( m,p,q : in natural32; k : out Link_to_Bracket;
                  level_poset : out Array_of_Nodes;
                  index_poset : out Array_of_Array_of_Nodes ) is
 
@@ -488,12 +487,12 @@ package body Drivers_for_Quantum_Pieri is
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
     lnkroot : constant Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,q);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,q);
 
   begin
     Q_Top_Create(lnkroot,codim,root.bottom(integer32(p)),m+p);
     put_line("The poset created from the top : ");
-    General_Localization_Poset(lnkroot,m,p,q,nq,codim,level_poset,index_poset);
+    General_Localization_Poset(lnkroot,level_poset,index_poset);
     k := new Bracket'(codim);
   end Top_General_Poset;
 
@@ -506,21 +505,21 @@ package body Drivers_for_Quantum_Pieri is
     timer : Timing_Widget;
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
     lnkroot : constant Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,q);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,q);
 
   begin
     tstart(timer);
     Q_Top_Create(lnkroot,codim,root.bottom(integer32(p)),m+p);
     put_line("The poset created from the top : ");
     put_line(file,"The poset created from the top :");
-    General_Localization_Poset(file,lnkroot,m,p,q,nq,codim);
+    General_Localization_Poset(file,lnkroot,nq);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Total time for Quantum Pieri Homotopy Algorithm");
   end Top_General_Poset;
 
   procedure Bottom_General_Poset
-               ( m,p,q,nq : in natural32; k : out Link_to_Bracket;
+               ( m,p,q : in natural32; k : out Link_to_Bracket;
                  level_poset : out Array_of_Nodes;
                  index_poset : out Array_of_Array_of_Nodes ) is
 
@@ -529,12 +528,12 @@ package body Drivers_for_Quantum_Pieri is
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
     lnkroot : constant Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,q);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,q);
 
   begin
     Q_Bottom_Create(lnkroot,codim,m+p);
     put_line("The poset created from the bottom : ");
-    General_Localization_Poset(lnkroot,m,p,q,nq,codim,level_poset,index_poset);
+    General_Localization_Poset(lnkroot,level_poset,index_poset);
     k := new Bracket'(codim);
   end Bottom_General_Poset;
 
@@ -547,21 +546,21 @@ package body Drivers_for_Quantum_Pieri is
     timer : Timing_Widget;
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
     lnkroot : constant Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,q);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,q);
 
   begin
     tstart(timer);
     Q_Bottom_Create(lnkroot,codim,m+p);
     put_line("The poset created from the bottom : ");
     put_line(file,"The poset created from the bottom :");
-    General_Localization_Poset(file,lnkroot,m,p,q,nq,codim);
+    General_Localization_Poset(file,lnkroot,nq);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Total time for Quantum Pieri Homotopy Algorithm");
   end Bottom_General_Poset;
 
   procedure Mixed_General_Poset
-              ( m,p,q,nq : in natural32; k : out Link_to_Bracket;
+              ( m,p,q : in natural32; k : out Link_to_Bracket;
                 level_poset : out Array_of_Nodes;
                 index_poset : out Array_of_Array_of_Nodes ) is
 
@@ -570,12 +569,12 @@ package body Drivers_for_Quantum_Pieri is
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
     lnkroot : constant Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,q);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,q);
 
   begin
     Q_Top_Bottom_Create(lnkroot,codim,root.bottom(integer32(p)),m+p);
     put_line("The poset created from the bottom : ");
-    General_Localization_Poset(lnkroot,m,p,q,nq,codim,level_poset,index_poset);
+    General_Localization_Poset(lnkroot,level_poset,index_poset);
     k := new Bracket'(codim);
   end Mixed_General_Poset;
 
@@ -588,14 +587,14 @@ package body Drivers_for_Quantum_Pieri is
     timer : Timing_Widget;
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
     lnkroot : constant Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,q);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,q);
 
   begin
     tstart(timer);
     Q_Top_Bottom_Create(lnkroot,codim,root.bottom(integer32(p)),m+p);
     put_line("The poset created from the bottom : ");
     put_line(file,"The poset created from the bottom :");
-    General_Localization_Poset(file,lnkroot,m,p,q,nq,codim);
+    General_Localization_Poset(file,lnkroot,nq);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Total time for Quantum Pieri Homotopy Algorithm");
@@ -622,7 +621,7 @@ package body Drivers_for_Quantum_Pieri is
   end Menu_Choice;
 
   procedure Run_Quantum_Pieri_Homotopies
-              ( file : in file_type; m,p,q,nq : in natural32;
+              ( file : in file_type; m,p,q : in natural32;
                 level_poset : in Array_of_Nodes;
                 index_poset : in out Array_of_Array_of_Nodes ) is
 
@@ -652,7 +651,7 @@ package body Drivers_for_Quantum_Pieri is
     end if;
   end Run_Quantum_Pieri_Homotopies;
 
-  procedure Driver_for_Quantum_Pieri ( n,d,q : in natural32 ) is
+  procedure Main ( n,d,q : in natural32 ) is
 
     ans : character := Menu_Choice;
     p : constant natural32 := d;
@@ -665,12 +664,12 @@ package body Drivers_for_Quantum_Pieri is
 
   begin
     case ans is
-      when '1' => Top_Hypersurface_Poset(m,p,q,nq,level_poset,index_poset);
-      when '2' => Bottom_Hypersurface_Poset(m,p,q,nq,level_poset,index_poset);
-      when '3' => Mixed_Hypersurface_Poset(m,p,q,nq,level_poset,index_poset);
-      when '4' => Top_General_Poset(m,p,q,nq,k,level_poset,index_poset);
-      when '5' => Bottom_General_Poset(m,p,q,nq,k,level_poset,index_poset);
-      when '6' => Mixed_General_Poset(m,p,q,nq,k,level_poset,index_poset);
+      when '1' => Top_Hypersurface_Poset(m,p,q,level_poset,index_poset);
+      when '2' => Bottom_Hypersurface_Poset(m,p,q,level_poset,index_poset);
+      when '3' => Mixed_Hypersurface_Poset(m,p,q,level_poset,index_poset);
+      when '4' => Top_General_Poset(m,p,q,k,level_poset,index_poset);
+      when '5' => Bottom_General_Poset(m,p,q,k,level_poset,index_poset);
+      when '6' => Mixed_General_Poset(m,p,q,k,level_poset,index_poset);
       when others => put_line("Option not recognized.  Please try again.");
     end case;
     if k = null then
@@ -681,13 +680,12 @@ package body Drivers_for_Quantum_Pieri is
         new_line;
         put_line("Reading the name of the output file.");
         Read_Name_and_Create_File(file);
-        Run_Quantum_Pieri_Homotopies(file,m,p,q,nq,level_poset,index_poset);
+        Run_Quantum_Pieri_Homotopies(file,m,p,q,level_poset,index_poset);
       end if;
     end if;
-  end Driver_for_Quantum_Pieri;
+  end Main;
 
-  procedure Driver_for_Quantum_Pieri
-              ( file : in file_type; n,d,q : in natural32 ) is
+  procedure Main ( file : in file_type; n,d,q : in natural32 ) is
 
     p : constant natural32 := d;
     m : constant natural32 := n-d;
@@ -710,6 +708,6 @@ package body Drivers_for_Quantum_Pieri is
       when '6' => Mixed_General_Poset(file,m,p,q,nq);
       when others => put_line("Option not recognized.  Please try again.");
     end case;
-  end Driver_for_Quantum_Pieri;
+  end Main;
 
-end Drivers_for_Quantum_Pieri;
+end Main_Quantum_Pieri;

@@ -44,7 +44,7 @@ evaluated_minors                 : determinant computations
 minor_computations               : computes all minors to check signs
 maximal_minors                   : magnitude computation of maximal minors 
 sagbi_homotopies                 : set up of the SAGBI homotopies
-drivers_for_sagbi_homotopies     : driver procedures to the SAGBI homotopies
+main_sagbi_homotopies            : main procedures to run SAGBI homotopies
 -------------------------------------------------------------------------------
 ts_subsets                       : test generation of subsets
 ts_brackets                      : test manipulation of brackets 

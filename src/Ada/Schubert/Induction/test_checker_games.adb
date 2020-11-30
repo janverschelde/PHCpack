@@ -18,7 +18,7 @@ with Checker_Posets_io;                 use Checker_Posets_io;
 with Checker_Localization_Patterns;     use Checker_Localization_Patterns;
 with Intersection_Posets;               use Intersection_Posets;
 with Intersection_Posets_io;            use Intersection_Posets_io;
-with Drivers_for_Schubert_Induction;
+with Main_Schubert_Induction;
 
 package body Test_Checker_Games is
 
@@ -539,7 +539,8 @@ package body Test_Checker_Games is
     cd : constant Array_of_Brackets(1..nb) := Create(bm);
     fs : Natural_Number;
     ans : character;
-    use Drivers_for_Schubert_Induction;
+
+    use Main_Schubert_Induction;
 
   begin
     put("Do you want intermediate output ? (y/n) ");
@@ -779,7 +780,7 @@ package body Test_Checker_Games is
     p,q,r,bp,bq,br : Bracket(1..k);
     cd : Array_of_Brackets(1..3);
 
-    use Drivers_for_Schubert_Induction;
+    use Main_Schubert_Induction;
  
   begin
     p := Random_Partition(k,n);
@@ -816,7 +817,7 @@ package body Test_Checker_Games is
     sign : integer32;
     cnt : integer32 := 0;
 
-    use Drivers_for_Schubert_Induction;
+    use Main_Schubert_Induction;
 
   begin
     for i in 1..m-1 loop

@@ -56,17 +56,17 @@ with Matrix_Homotopies;
 with Matrix_Homotopies_io;
 with Osculating_Planes;                  use Osculating_Planes;
 
-package body Drivers_for_SAGBI_Homotopies is
+package body Main_SAGBI_Homotopies is
 
-  procedure Driver_for_SAGBI_Homotopies ( n,d : in natural32 ) is
+  procedure Main ( n,d : in natural32 ) is
 
     file : file_type;
 
   begin
     put_line("Reading the name of the output file.");
     Read_Name_and_Create_File(file);
-    Driver_for_SAGBI_Homotopies(file,n,d);
-  end Driver_for_SAGBI_Homotopies;
+    Main(file,n,d);
+  end Main;
 
   function Convert ( mat : Standard_Floating_Matrices.Matrix )
                    return Standard_Complex_Matrices.Matrix is
@@ -93,7 +93,7 @@ package body Drivers_for_SAGBI_Homotopies is
     p : Poly;
     l : Poly_Sys(1..integer32(dim));
     s : double_float;
-    inc : double_float := 2.0/(double_float(dim));
+    inc : constant double_float := 2.0/(double_float(dim));
     mat : Standard_Floating_Matrices.Matrix(1..integer32(n),1..integer32(n-d));
 
   begin
@@ -611,8 +611,7 @@ package body Drivers_for_SAGBI_Homotopies is
     return res;
   end Read_Localization_Map;
 
-  procedure Driver_for_SAGBI_Homotopies
-              ( file : in file_type; n,d : in natural32 ) is
+  procedure Main ( file : in file_type; n,d : in natural32 ) is
 
   -- DESCRIPTION :
   --   There are four parts in the elaboration of the SAGBI homotopy :
@@ -706,6 +705,6 @@ package body Drivers_for_SAGBI_Homotopies is
     tstop(totaltimer);
     new_line(file);
     print_times(file,totaltimer,"Total time for Solving the System");
-  end Driver_for_SAGBI_Homotopies;
+  end Main;
 
-end Drivers_for_SAGBI_Homotopies;
+end Main_SAGBI_Homotopies;

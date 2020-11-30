@@ -25,7 +25,6 @@ with Black_Box_Root_Refiners;
 with Standard_IncFix_Continuation;       use Standard_IncFix_Continuation;
 with Brackets_io;                        use Brackets_io;
 with Bracket_Monomials_io;               use Bracket_Monomials_io;
-with Drivers_for_Pieri_Homotopies;       use Drivers_for_Pieri_Homotopies;
 with Checker_Boards_io;                  use Checker_Boards_io;
 with Checker_Moves;                      use Checker_Moves;
 with Checker_Posets,Checker_Posets_io;   use Checker_Posets,Checker_Posets_io;
@@ -42,9 +41,9 @@ with Checker_Poset_Deformations;
 with Resolve_Schubert_Problems;          use Resolve_Schubert_Problems;
 with Write_Seed_Number;
 with Greeting_Banners;
-with Drivers_for_SAGBI_Homotopies;       use Drivers_for_SAGBI_Homotopies;
-with Drivers_for_Pieri_Homotopies;       use Drivers_for_Pieri_Homotopies;
-with Drivers_for_Quantum_Pieri;          use Drivers_for_Quantum_Pieri;
+with Main_SAGBI_Homotopies;
+with Main_Pieri_Homotopies;
+with Main_Quantum_Pieri;
 
 package body Main_Schubert_Induction is
 
@@ -1143,7 +1142,8 @@ package body Main_Schubert_Induction is
      --     := Standard_Complex_Poly_SysFun.Eval(hom.all,Create(0.0),nv+1);
      -- tgh : constant Poly_Sys(hom'range)
      --     := Standard_Complex_Poly_SysFun.Eval(hom.all,Create(1.0),nv+1);
-      squhom : Poly_Sys(1..nv) := Square(natural32(nv),hom.all);
+      squhom : Poly_Sys(1..nv)
+             := Main_Pieri_Homotopies.Square(natural32(nv),hom.all);
     begin
      -- put_line(file,"the start system :"); put_line(file,sth);
      -- put_line(file,"the target system :"); put_line(file,tgh);
@@ -1782,9 +1782,9 @@ package body Main_Schubert_Induction is
     skip_line;
     new_line;
     case ans is
-      when '1' => Driver_for_SAGBI_Homotopies(m+p,p);
-      when '2' => Driver_for_Pieri_Homotopies(m+p,p);
-      when '3' => Driver_for_Quantum_Pieri(m+p,p,q);
+      when '1' => Main_SAGBI_Homotopies.Main(m+p,p);
+      when '2' => Main_Pieri_Homotopies.Main(m+p,p);
+      when '3' => Main_Quantum_Pieri.Main(m+p,p,q);
       when '4' => Resolve_Intersection_Condition(n,verbose-1);
       when '5' => Solve_Schubert_Problems(nt,integer32(n),verbose-1);
       when others => put_line("Option not recognized.  Please try again...");

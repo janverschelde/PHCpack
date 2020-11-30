@@ -1,4 +1,4 @@
-Numerical Schubert Calculus using Pieri homotopies with PHCv2.4.68
+Numerical Schubert Calculus using Pieri homotopies with PHCv2.4.82
 
 This directory was delivered with release 2 of PHCpack.
 Release 2.1 has only minor updates to facilitate the connection with C.
@@ -37,9 +37,9 @@ deformation_posets               : posets of solution planes
 standard_matrix_inversion        : inverse of square matrix, standard doubles
 dobldobl_matrix_inversion        : inverse of square matrix in double doubles
 quaddobl_matrix_inversion        : inverse of square matrix in quad doubles
-drivers_for_input_planes         : generators of input for Pieri algorithm
-drivers_for_pieri_homotopies     : drivers for the Pieri homotopies
-drivers_for_quantum_pieri        : drivers for counting q-maps
+make_input_planes                : generators of input for Pieri algorithm
+main_pieri_homotopies            : main procedure to run Pieri homotopies
+main_quantum_pieri               : main procedure to run quantum Pieri
 bablenum                         : black-box enumerative geometry
 pieri_root_count                 : hypersurface quantum pieri root count
 ts_canocurv                      : test localization patterns for q-curves

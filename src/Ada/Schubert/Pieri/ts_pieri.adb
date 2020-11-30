@@ -2,13 +2,13 @@ with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Drivers_for_Pieri_Homotopies;       use Drivers_for_Pieri_Homotopies;
-with Drivers_for_Quantum_Pieri;          use Drivers_for_Quantum_Pieri;
+with Main_Pieri_Homotopies;
+with Main_Quantum_Pieri;
 
 procedure ts_pieri is
 
 -- DESCRIPTION :
---   Simply calls the driver for the Pieri homotopies.
+--   Simply calls the main Pieri homotopy procedures.
 
   procedure Main is
 
@@ -29,8 +29,8 @@ procedure ts_pieri is
     put(file,"  p = "); put(file,d,1);
     put(file,"  and q = "); put(file,q,1); new_line(file);
     if q = 0
-     then Driver_for_Pieri_Homotopies(file,n,d);
-     else Driver_for_Quantum_Pieri(file,n,d,q);
+     then Main_Pieri_Homotopies.Main(file,n,d);
+     else Main_Quantum_Pieri.Main(file,n,d,q);
     end if;
   end Main;
 

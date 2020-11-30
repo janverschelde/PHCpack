@@ -4,39 +4,40 @@ with Standard_Natural_Numbers_io;      use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;         use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;      use Standard_Integer_Numbers_io;
 with Communications_with_User;         use Communications_with_User;
-with Brackets,Brackets_io;             use Brackets,Brackets_io;
+with Brackets;                         use Brackets;
+-- with Brackets_io;                      use Brackets_io;
 with Localization_Posets;              use Localization_Posets;
 with Localization_Posets_io;           use Localization_Posets_io;
-with Drivers_for_Input_Planes;         use Drivers_for_Input_Planes;
+with Make_Input_Planes;
 
 procedure ts_posets is
 
 -- DESCRIPTION :
 --   Test on the construction of localization posets.
 
-  function Determine_Root ( m,p : natural32 ) return Node is
+  --function Determine_Root ( m,p : natural32 ) return Node is
 
   -- DESCRIPTION :
   --   Proposes the trivial root to the user, allowing the user to
   --   modify this choice.
 
-    root : Node(integer32(p)) := Trivial_Root(m,p);
-    ans : character;
+  --  root : Node(integer32(p)) := Trivial_Root(m,p);
+  --  ans : character;
 
-  begin
-    loop
-      put("Top and bottom pivots of root are ");
-      put(root.top); put(" and ");
-      put(root.bottom); put_line(".");
-      put("Level of the root : "); put(root.level,1); new_line;
-      put("Do you want to use another root ? (y/n) "); get(ans);
-      exit when (ans /= 'y');
-      put("Give top pivots : "); get(root.top);
-      put("Give bottom pivots : "); get(root.bottom);
-      put("Give level of root : "); get(root.level);
-    end loop;
-    return root;
-  end Determine_Root;
+  --begin
+  --  loop
+  --    put("Top and bottom pivots of root are ");
+  --    put(root.top); put(" and ");
+  --    put(root.bottom); put_line(".");
+  --    put("Level of the root : "); put(root.level,1); new_line;
+  --    put("Do you want to use another root ? (y/n) "); get(ans);
+  --    exit when (ans /= 'y');
+  --    put("Give top pivots : "); get(root.top);
+  --    put("Give bottom pivots : "); get(root.bottom);
+  --    put("Give level of root : "); get(root.level);
+  --  end loop;
+  --  return root;
+  --end Determine_Root;
 
   procedure Write_Poset
                 ( file : in file_type;
@@ -64,8 +65,8 @@ procedure ts_posets is
   -- DESCRIPTION :
   --   Create the poset by incrementing only top pivots.
 
-    root : Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
 
   begin
     Top_Create(lnkroot,m+p);
@@ -78,7 +79,7 @@ procedure ts_posets is
   -- DESCRIPTION :
   --   Create the poset by incrementing only top pivots.
 
-    root : Node(integer32(p)) := Trivial_Root(m,p,q);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
     lnkroot : Link_to_Node := new Node'(root);
 
   begin
@@ -92,8 +93,8 @@ procedure ts_posets is
   -- DESCRIPTION :
   --   Create the poset by decrementing only bottom pivots.
 
-    root : Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
 
   begin
     Bottom_Create(lnkroot);
@@ -106,8 +107,8 @@ procedure ts_posets is
   -- DESCRIPTION :
   --   Create the poset by decrementing only bottom pivots.
 
-    root : Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
+    lnkroot : constant Link_to_Node := new Node'(root);
 
   begin
     Q_Bottom_Create(lnkroot,m+p);
@@ -120,8 +121,8 @@ procedure ts_posets is
   -- DESCRIPTION :
   --   Create the poset by incrementing top and decrementing bottom pivots.
 
-    root : Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
 
   begin
     Top_Bottom_Create(lnkroot,m+p);
@@ -134,8 +135,8 @@ procedure ts_posets is
   -- DESCRIPTION :
   --   Create the poset by incrementing top and decrementing bottom pivots.
 
-    root : Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
+    lnkroot : constant Link_to_Node := new Node'(root);
 
   begin
     Q_Top_Bottom_Create(lnkroot,root.bottom(integer32(p)),m+p);
@@ -149,9 +150,9 @@ procedure ts_posets is
   --   Creates a poset for counting general subspace intersections,
   --   by consistently incrementing the top pivots.
 
-    root : Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,0);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,0);
 
   begin
     Top_Create(lnkroot,codim,m+p);
@@ -165,9 +166,9 @@ procedure ts_posets is
   --   Creates a poset for counting general subspace intersections,
   --   by consistently incrementing the top pivots.
 
-    root : Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,0);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,0);
 
   begin
     Bottom_Create(lnkroot,codim);
@@ -181,9 +182,9 @@ procedure ts_posets is
   --   Creates a poset for counting general subspace intersections,
   --   by incrementing the top and decrementing the bottom pivots.
 
-    root : Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,0);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,0);
 
   begin
     Top_Bottom_Create(lnkroot,codim,m+p);
@@ -197,9 +198,9 @@ procedure ts_posets is
   --   Creates a poset for counting general subspace intersections,
   --   by consistently incrementing the top pivots.
 
-    root : Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,q);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,q);
 
   begin
     Q_Top_Create(lnkroot,codim,root.bottom(integer32(p)),m+p);
@@ -213,9 +214,9 @@ procedure ts_posets is
   --   Creates a poset for counting general subspace intersections,
   --   by consistently incrementing the top pivots.
 
-    root : Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,q);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,q);
 
   begin
     Q_Bottom_Create(lnkroot,codim,m+p);
@@ -229,9 +230,9 @@ procedure ts_posets is
   --   Creates a poset for counting general subspace intersections,
   --   by incrementing the top and decrementing the bottom pivots.
 
-    root : Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,q);
+    root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,q);
 
   begin
     Q_Top_Bottom_Create(lnkroot,codim,root.bottom(integer32(p)),m+p);

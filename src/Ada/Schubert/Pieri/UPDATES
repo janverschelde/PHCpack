@@ -1,3 +1,9 @@
+Sun 29 Nov 2020 : removed superfluous procedures driver_for_pieri_homotopies
+  and driver_for_quantum_pieri.  Renamed drivers_for_pieri_homotopies into
+  main_pieri_homotopies, drivers_for_quantum_pieri into main_quantum_pieri,
+  and drivers_for_input_planes into make_input_planes.
+  Updated ts_pieri, ts_posets, ts_defpos, and ts_piroco.
+  
 Sun 8 Nov 2020 : updated drivers_for_pieri_homotopies.adb and drivers_for_
   quantum_pieri.adb for the renaming of drivers_for_poly_continuation into
   main_poly_continuation.

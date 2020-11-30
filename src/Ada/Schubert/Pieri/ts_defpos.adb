@@ -12,13 +12,13 @@ with Standard_Random_Matrices;           use Standard_Random_Matrices;
 with Standard_Complex_VecMats;           use Standard_Complex_VecMats;
 with Symbol_Table;                       use Symbol_Table;
 with Matrix_Indeterminates;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;
 with Brackets,Brackets_io;               use Brackets,Brackets_io;
 with Localization_Posets;                use Localization_Posets;
 with Localization_Posets_io;             use Localization_Posets_io;
 with Curves_into_Grassmannian_io;        use Curves_into_Grassmannian_io;
 with Deformation_Posets;                 use Deformation_Posets;
-with Drivers_for_Input_Planes;           use Drivers_for_Input_Planes;
+with Make_Input_Planes;
 
 procedure ts_defpos is
 
@@ -47,6 +47,8 @@ procedure ts_defpos is
   --   Interactive determination of the continuation and output parameters.
 
     oc : natural32;
+
+    use Main_Poly_Continuation;
 
   begin
     new_line;
@@ -88,7 +90,8 @@ procedure ts_defpos is
     deform_poset : Array_of_Array_of_VecMats(index_poset'range)
                  := Create(index_poset);
     mpq : constant integer32 := integer32(m*p + q*(m+p));
-    planes : constant VecMat(1..mpq) := Random_Complex_Planes(m,p,q);
+    planes : constant VecMat(1..mpq)
+           := Make_Input_Planes.Random_Complex_Planes(m,p,q);
     svals : constant Standard_Complex_Vectors.Vector := Random_Vector(1,mpq);
     ans : character;
     report,outlog : boolean;
@@ -218,7 +221,7 @@ procedure ts_defpos is
   --   Create the poset by incrementing only top pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     level_poset : Array_of_Nodes(0..integer32(m*p));
     index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
 
@@ -267,7 +270,7 @@ procedure ts_defpos is
   --   Creates the poset by decrementing only bottom pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     level_poset : Array_of_Nodes(0..integer32(m*p));
     index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
 
@@ -291,7 +294,7 @@ procedure ts_defpos is
   --   Creates the poset by decrementing only bottom pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     mpq : constant integer32 := integer32(m*p + q*(m+p));
     level_poset : Array_of_Nodes(0..mpq);
     index_poset : Array_of_Array_of_Nodes(0..mpq);
@@ -316,7 +319,7 @@ procedure ts_defpos is
   --   Creates the poset by incrementing top and decrementing bottom pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     level_poset : Array_of_Nodes(0..integer32(m*p));
     index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
 
@@ -340,7 +343,7 @@ procedure ts_defpos is
   --   Creates the poset by incrementing top and decrementing bottom pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     mpq : constant integer32 := integer32(m*p + q*(m+p));
     level_poset : Array_of_Nodes(0..mpq);
     index_poset : Array_of_Array_of_Nodes(0..mpq);
@@ -383,8 +386,8 @@ procedure ts_defpos is
   --   by consistently incrementing the top pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,0);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,0);
     level_poset : Array_of_Nodes(0..integer32(m*p));
     index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
 
@@ -410,8 +413,8 @@ procedure ts_defpos is
   --   by consistently incrementing the top pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,q);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,q);
     mpq : constant integer32 := integer32(m*p + q*(m+p));
     level_poset : Array_of_Nodes(0..mpq);
     index_poset : Array_of_Array_of_Nodes(0..mpq);
@@ -438,8 +441,8 @@ procedure ts_defpos is
   --   by consistently incrementing the top pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,0);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,0);
     level_poset : Array_of_Nodes(0..integer32(m*p));
     index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
 
@@ -465,8 +468,8 @@ procedure ts_defpos is
   --   by consistently incrementing the top pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,q);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,q);
     mpq : constant integer32 := integer32(m*p + q*(m+p));
     level_poset : Array_of_Nodes(0..mpq);
     index_poset : Array_of_Array_of_Nodes(0..mpq);
@@ -493,8 +496,8 @@ procedure ts_defpos is
   --   by incrementing the top and decrementing the bottom pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,0);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,0);
     level_poset : Array_of_Nodes(0..integer32(m*p));
     index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
 
@@ -520,8 +523,8 @@ procedure ts_defpos is
   --   by incrementing the top and decrementing the bottom pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
-    codim : constant Bracket := Read_Codimensions(m,p,q);
+    lnkroot : constant Link_to_Node := new Node'(root);
+    codim : constant Bracket := Make_Input_Planes.Read_Codimensions(m,p,q);
     mpq : constant integer32 := integer32(m*p + q*(m+p));
     level_poset : Array_of_Nodes(0..mpq);
     index_poset : Array_of_Array_of_Nodes(0..mpq);
