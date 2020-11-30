@@ -14,12 +14,15 @@ with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems;
 with Standard_Laur_Poly_Convertors;
+with Standard_Poly_Laur_Convertors;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Laur_Systems;
 with DoblDobl_Laur_Poly_Convertors;
+with DoblDobl_Poly_Laur_Convertors;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Laur_Systems;
 with QuadDobl_Laur_Poly_Convertors;
+with QuadDobl_Poly_Laur_Convertors;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions;
@@ -44,6 +47,7 @@ with QuadDobl_PolySys_Container;
 with QuadDobl_LaurSys_Container;
 with QuadDobl_Solutions_Container;
 with Cells_Container;
+with PHCpack_Operations;
 
 package body Job_Handlers is
 
@@ -146,57 +150,70 @@ package body Job_Handlers is
       return 77;
     end if;
    -- Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
-    if silent then
-      if mvfocus = 0 then
-        if ntasks = 0 then
-          Black_Box_Solvers.Solve(lp.all,silent,true,rc,sols,vrblvl-1);
+    declare
+      q : Poly_Sys(lp'range);
+      qsols : Standard_Complex_Solutions.Solution_List;
+    begin
+      if silent then
+        if mvfocus = 0 then
+          if ntasks = 0 then
+            Black_Box_Solvers.Solve
+              (lp.all,silent,true,rc,q,qsols,sols,vrblvl-1);
+          else
+            Black_Box_Solvers.Solve
+              (ntasks,lp.all,silent,true,rc,q,qsols,sols,vrblvl-1);
+          end if;
         else
-          Black_Box_Solvers.Solve(ntasks,lp.all,silent,true,rc,sols,vrblvl-1);
+          if ntasks = 0 then
+            Black_Box_Polyhedral_Solvers.Solve
+              (lp.all,silent,true,rc,q,qsols,sols,vrblvl-1);
+          else
+            Black_Box_Polyhedral_Solvers.Solve
+              (ntasks,lp.all,silent,true,rc,q,qsols,sols,vrblvl-1);
+          end if;
         end if;
       else
-        if ntasks = 0 then
-          Black_Box_Polyhedral_Solvers.Solve
-            (lp.all,silent,true,rc,sols,vrblvl-1);
+        if mvfocus = 0 then
+          if ntasks = 0 then
+            Black_Box_Solvers.Solve
+              (lp.all,true,rc,lsroco,q,qsols,sols,vrblvl-1);
+          else
+            Black_Box_Solvers.Solve
+              (ntasks,lp.all,true,rc,lsroco,q,qsols,sols,vrblvl-1);
+          end if;
         else
-          Black_Box_Polyhedral_Solvers.Solve
-            (ntasks,lp.all,silent,true,rc,sols,vrblvl-1);
+          if ntasks = 0 then
+            Black_Box_Polyhedral_Solvers.Solve
+              (lp.all,true,rc,lsroco,q,qsols,sols,vrblvl-1);
+          else
+            Black_Box_Polyhedral_Solvers.Solve
+              (ntasks,lp.all,true,rc,lsroco,q,qsols,sols,vrblvl-1);
+          end if;
+        end if;
+        if lsroco = null then
+          nr := 0;
+        else
+          nr := natural32(lsroco'last);
+          declare
+            sv : constant Standard_Integer_Vectors.Vector
+               := String_to_Integer_Vector(lsroco.all);
+          begin
+            Assign(sv,b);
+          end;
+          Clear(lsroco);
         end if;
       end if;
-    else
-      if mvfocus = 0 then
-        if ntasks = 0 then
-          Black_Box_Solvers.Solve(lp.all,true,rc,lsroco,sols,vrblvl-1);
-        else
-          Black_Box_Solvers.Solve(ntasks,lp.all,true,rc,lsroco,sols,vrblvl-1);
-        end if;
-      else
-        if ntasks = 0 then
-          Black_Box_Polyhedral_Solvers.Solve
-            (lp.all,true,rc,lsroco,sols,vrblvl-1);
-        else
-          Black_Box_Polyhedral_Solvers.Solve
-            (ntasks,lp.all,true,rc,lsroco,sols,vrblvl-1);
-        end if;
-      end if;
-      if lsroco = null then
-        nr := 0;
-      else
-        nr := natural32(lsroco'last);
-        declare
-          sv : constant Standard_Integer_Vectors.Vector
-             := String_to_Integer_Vector(lsroco.all);
-        begin
-          Assign(sv,b);
-        end;
-        Clear(lsroco);
-      end if;
-    end if;
-   -- Assign(integer32(rc),a);
-   -- put("nr = "); put(integer32(nr),1); new_line;
-    rcnr(1) := integer32(rc);
-    rcnr(2) := integer32(nr);
-    Assign(rcnr,a);
-    Standard_Solutions_Container.Initialize(sols);
+     -- Assign(integer32(rc),a);
+     -- put("nr = "); put(integer32(nr),1); new_line;
+      rcnr(1) := integer32(rc);
+      rcnr(2) := integer32(nr);
+      Assign(rcnr,a);
+      Standard_Solutions_Container.Initialize(sols);
+      PHCpack_Operations.Store_Start_System(q);
+      PHCpack_Operations.Store_Start_Solutions(qsols);
+      Standard_Complex_Poly_Systems.Clear(q);
+      Standard_Complex_Solutions.Deep_Clear(qsols);
+    end;
     return 0;
   exception
     when others =>
@@ -243,66 +260,85 @@ package body Job_Handlers is
       return 75;
     end if;
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
-     -- Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
-      if silent then
-        if ntasks = 0 -- patch for multitasking and deflation
-         then Black_Box_Solvers.Solve(lp.all,silent,rc,sols,vrblvl-1);
-         else Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols,vrblvl-1);
-        end if;
-      else
-        if ntasks = 0 -- patch for multitasking and deflation
-         then Black_Box_Solvers.Solve(lp.all,rc,lsroco,sols,vrblvl-1);
-         else Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols,vrblvl-1);
-        end if;
-        if lsroco = null then
-          nr := 0;
+      declare
+        q : Laur_Sys(lp'range);
+        qsols : Standard_Complex_Solutions.Solution_List;
+      begin
+       -- Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+        if silent then
+          if ntasks = 0 then -- patch for multitasking and deflation
+            Black_Box_Solvers.Solve(lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+          else
+            Black_Box_Solvers.Solve
+              (ntasks,lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+          end if;
         else
-          nr := natural32(lsroco'last);
-          declare
-            sv : constant Standard_Integer_Vectors.Vector
-               := String_to_Integer_Vector(lsroco.all);
-          begin
-            Assign(sv,b);
-          end;
-          Clear(lsroco);
+          if ntasks = 0 then -- patch for multitasking and deflation
+            Black_Box_Solvers.Solve(lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+          else
+            Black_Box_Solvers.Solve
+             (ntasks,lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+          end if;
+          if lsroco = null then
+            nr := 0;
+          else
+            nr := natural32(lsroco'last);
+            declare
+              sv : constant Standard_Integer_Vectors.Vector
+                 := String_to_Integer_Vector(lsroco.all);
+            begin
+              Assign(sv,b);
+            end;
+            Clear(lsroco);
+          end if;
         end if;
-      end if;
+        PHCpack_Operations.Store_Start_System(q);
+        PHCpack_Operations.Store_Start_Solutions(qsols);
+        Standard_Complex_Laur_Systems.Clear(q);
+        Standard_Complex_Solutions.Deep_Clear(qsols);
+      end;
     else
       declare
         use Standard_Laur_Poly_Convertors;
+        use Standard_Poly_Laur_Convertors;
         p : Poly_Sys(lp'range) := Positive_Laurent_Polynomial_System(lp.all);
+        q : Poly_Sys(p'range);
+        qq : Laur_Sys(p'range);
+        qsols : Solution_List;
       begin
        -- Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
         if silent then
           if mvfocus = 0 then
             if ntasks = 0 then -- patch for deflation with multitasking
-              Black_Box_Solvers.Solve(p,silent,true,rc,sols,vrblvl-1);
+              Black_Box_Solvers.Solve(p,silent,true,rc,q,qsols,sols,vrblvl-1);
             else
-              Black_Box_Solvers.Solve(ntasks,p,silent,true,rc,sols,vrblvl-1);
+              Black_Box_Solvers.Solve
+                (ntasks,p,silent,true,rc,q,qsols,sols,vrblvl-1);
             end if;
           else 
             if ntasks = 0 then -- patch for deflation with multitasking
               Black_Box_Polyhedral_Solvers.Solve
-                (p,silent,true,rc,sols,vrblvl-1);
+                (p,silent,true,rc,q,qsols,sols,vrblvl-1);
             else
               Black_Box_Polyhedral_Solvers.Solve
-                (ntasks,p,silent,true,rc,sols,vrblvl-1);
+                (ntasks,p,silent,true,rc,q,qsols,sols,vrblvl-1);
             end if;
           end if;
         else
           if mvfocus = 0 then
             if ntasks = 0 then -- patch for deflation with multitasking
-              Black_Box_Solvers.Solve(p,true,rc,lsroco,sols,vrblvl-1);
+              Black_Box_Solvers.Solve(p,true,rc,lsroco,q,qsols,sols,vrblvl-1);
             else
-              Black_Box_Solvers.Solve(ntasks,p,true,rc,lsroco,sols,vrblvl-1);
+              Black_Box_Solvers.Solve
+                (ntasks,p,true,rc,lsroco,q,qsols,sols,vrblvl-1);
             end if;
           else
             if ntasks = 0 then -- patch for deflation with multitasking
               Black_Box_Polyhedral_Solvers.Solve
-                (p,true,rc,lsroco,sols,vrblvl-1);
+                (p,true,rc,lsroco,q,qsols,sols,vrblvl-1);
             else
               Black_Box_Polyhedral_Solvers.Solve
-                (ntasks,p,true,rc,lsroco,sols,vrblvl-1);
+                (ntasks,p,true,rc,lsroco,q,qsols,sols,vrblvl-1);
             end if;
           end if;
           if lsroco = null then
@@ -319,9 +355,15 @@ package body Job_Handlers is
           end if;
         end if;
         Standard_Complex_Poly_Systems.Clear(p);
+        qq := Polynomial_to_Laurent_System(q);
+        PHCpack_Operations.Store_Start_System(qq);
+        PHCpack_Operations.Store_Start_Solutions(qsols);
+        Standard_Complex_Poly_Systems.Clear(q);
+        Standard_Complex_Laur_Systems.Clear(qq);
+        Standard_Complex_Solutions.Deep_Clear(qsols);
       end;
+     -- Assign(integer32(rc),a);
     end if;
-   -- Assign(integer32(rc),a);
     rcnr(1) := integer32(rc);
     rcnr(2) := integer32(nr);
     Assign(rcnr,a);
@@ -368,29 +410,42 @@ package body Job_Handlers is
       put_line("The system is underdetermined, add linear equations.");
       return 700;
     end if;
-    if silent then
-      if ntasks = 0 -- patch for multitasking and deflation
-       then Black_Box_Solvers.Solve(lp.all,silent,rc,sols,vrblvl-1);
-       else Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols,vrblvl-1);
-      end if;
-    else
-      if ntasks = 0 -- patch for multitasking and deflation
-       then Black_Box_Solvers.Solve(lp.all,rc,lsroco,sols,vrblvl-1);
-       else Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols,vrblvl-1);
-      end if;
-      if lsroco = null then
-        nr := 0;
+    declare
+      q : Poly_Sys(lp'range);
+      qsols : Solution_List;
+    begin
+      if silent then
+        if ntasks = 0 then -- patch for multitasking and deflation
+          Black_Box_Solvers.Solve(lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+        else
+          Black_Box_Solvers.Solve
+            (ntasks,lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+        end if;
       else
-        nr := natural32(lsroco'last); 
-        declare
-          sv : constant Standard_Integer_Vectors.Vector
-             := String_to_Integer_Vector(lsroco.all);
-        begin
-          Assign(sv,b);
-        end;
-        Clear(lsroco);
+        if ntasks = 0 then -- patch for multitasking and deflation
+          Black_Box_Solvers.Solve(lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+        else
+          Black_Box_Solvers.Solve
+            (ntasks,lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+        end if;
+        if lsroco = null then
+          nr := 0;
+        else
+          nr := natural32(lsroco'last); 
+          declare
+            sv : constant Standard_Integer_Vectors.Vector
+               := String_to_Integer_Vector(lsroco.all);
+          begin
+            Assign(sv,b);
+          end;
+          Clear(lsroco);
+        end if;
       end if;
-    end if;
+      PHCpack_Operations.Store_Start_System(q);
+      PHCpack_Operations.Store_Start_Solutions(qsols);
+      DoblDobl_Complex_Poly_Systems.Clear(q);
+      DoblDobl_Complex_Solutions.Deep_Clear(qsols);
+    end;
     rcnr(1) := integer32(rc);
     rcnr(2) := integer32(nr);
     Assign(rcnr,a);
@@ -440,43 +495,23 @@ package body Job_Handlers is
       return 701;
     end if;
     if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
-      if silent then
-        if ntasks = 0 -- patch for multitasking and deflation
-         then Black_Box_Solvers.Solve(lp.all,silent,rc,sols,vrblvl-1);
-         else Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols,vrblvl-1);
-        end if;
-      else
-        if ntasks = 0 -- patch for multitasking and deflation
-         then Black_Box_Solvers.Solve(lp.all,rc,lsroco,sols,vrblvl-1);
-         else Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols,vrblvl-1);
-        end if;
-        if lsroco = null then
-          nr := 0;
-        else
-          nr := natural32(lsroco'last);
-          declare
-            sv : constant Standard_Integer_Vectors.Vector
-               := String_to_Integer_Vector(lsroco.all);
-          begin
-            Assign(sv,b);
-          end;
-          Clear(lsroco);
-        end if;
-      end if;
-    else
       declare
-        use DoblDobl_Laur_Poly_Convertors;
-        p : constant Poly_Sys := Positive_Laurent_Polynomial_System(lp.all);
+        q : Laur_Sys(lp'range);
+        qsols : Solution_List;
       begin
         if silent then
-          if ntasks = 0 -- patch for multitasking and deflation
-           then Black_Box_Solvers.Solve(p,silent,rc,sols,vrblvl-1);
-           else Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols,vrblvl-1);
+          if ntasks = 0 then -- patch for multitasking and deflation
+            Black_Box_Solvers.Solve(lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+          else
+            Black_Box_Solvers.Solve
+              (ntasks,lp.all,silent,rc,q,qsols,sols,vrblvl-1);
           end if;
         else
-          if ntasks = 0 -- patch for multitasking and deflation
-           then Black_Box_Solvers.Solve(p,rc,lsroco,sols,vrblvl-1);
-           else Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols,vrblvl-1);
+          if ntasks = 0 then -- patch for multitasking and deflation
+            Black_Box_Solvers.Solve(lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+          else
+            Black_Box_Solvers.Solve
+              (ntasks,lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
           end if;
           if lsroco = null then
             nr := 0;
@@ -491,6 +526,51 @@ package body Job_Handlers is
             Clear(lsroco);
           end if;
         end if;
+        PHCpack_Operations.Store_Start_System(q);
+        PHCpack_Operations.Store_Start_Solutions(qsols);
+        DoblDobl_Complex_Laur_Systems.Clear(q);
+        DoblDobl_Complex_Solutions.Deep_Clear(qsols);
+      end;
+    else
+      declare
+        use DoblDobl_Laur_Poly_Convertors;
+        use DoblDobl_Poly_Laur_Convertors;
+        p : constant Poly_Sys := Positive_Laurent_Polynomial_System(lp.all);
+        q : Poly_Sys(p'range);
+        qq : Laur_Sys(p'range);
+        qsols : Solution_List;
+      begin
+        if silent then
+          if ntasks = 0 then -- patch for multitasking and deflation
+            Black_Box_Solvers.Solve(p,silent,rc,q,qsols,sols,vrblvl-1);
+          else
+            Black_Box_Solvers.Solve(ntasks,p,silent,rc,q,qsols,sols,vrblvl-1);
+          end if;
+        else
+          if ntasks = 0 then -- patch for multitasking and deflation
+            Black_Box_Solvers.Solve(p,rc,lsroco,q,qsols,sols,vrblvl-1);
+          else
+            Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,q,qsols,sols,vrblvl-1);
+          end if;
+          if lsroco = null then
+            nr := 0;
+          else
+            nr := natural32(lsroco'last);
+            declare
+              sv : constant Standard_Integer_Vectors.Vector
+                 := String_to_Integer_Vector(lsroco.all);
+            begin
+              Assign(sv,b);
+            end;
+            Clear(lsroco);
+          end if;
+        end if;
+        qq := Polynomial_to_Laurent_System(q);
+        PHCpack_Operations.Store_Start_System(qq);
+        PHCpack_Operations.Store_Start_Solutions(qsols);
+        DoblDobl_Complex_Poly_Systems.Clear(q);
+        DoblDobl_Complex_Laur_Systems.Clear(qq);
+        DoblDobl_Complex_Solutions.Deep_Clear(qsols);
       end;
     end if;
     rcnr(1) := integer32(rc);
@@ -539,29 +619,42 @@ package body Job_Handlers is
       put_line("The system is underdetermined, add linear equations.");
       return 702;
     end if;
-    if silent then
-      if ntasks = 0 -- patch for multitasking and deflation
-       then Black_Box_Solvers.Solve(lp.all,silent,rc,sols,vrblvl-1);
-       else Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols,vrblvl-1);
-      end if;
-    else
-      if ntasks = 0 -- patch for multitasking and deflation
-       then Black_Box_Solvers.Solve(lp.all,rc,lsroco,sols,vrblvl-1);
-       else Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols,vrblvl-1);
-      end if;
-      if lsroco = null then
-        nr := 0;
+    declare
+      q : Poly_Sys(lp'range);
+      qsols : Solution_List;
+    begin
+      if silent then
+        if ntasks = 0 then -- patch for multitasking and deflation
+          Black_Box_Solvers.Solve(lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+        else
+          Black_Box_Solvers.Solve
+            (ntasks,lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+        end if;
       else
-        nr := natural32(lsroco'last);
-        declare
-          sv : constant Standard_Integer_Vectors.Vector
-             := String_to_Integer_Vector(lsroco.all);
-        begin
-          Assign(sv,b);
-        end;
-        Clear(lsroco);
+        if ntasks = 0 then -- patch for multitasking and deflation
+          Black_Box_Solvers.Solve(lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+        else
+          Black_Box_Solvers.Solve
+            (ntasks,lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+        end if;
+        if lsroco = null then
+          nr := 0;
+        else
+          nr := natural32(lsroco'last);
+          declare
+            sv : constant Standard_Integer_Vectors.Vector
+               := String_to_Integer_Vector(lsroco.all);
+          begin
+            Assign(sv,b);
+          end;
+          Clear(lsroco);
+        end if;
       end if;
-    end if;
+      PHCpack_Operations.Store_Start_System(q);
+      PHCpack_Operations.Store_Start_Solutions(qsols);
+      QuadDobl_Complex_Poly_Systems.Clear(q);
+      QuadDobl_Complex_Solutions.Deep_Clear(qsols);
+    end;
     rcnr(1) := integer32(rc);
     rcnr(2) := integer32(nr);
     Assign(rcnr,a);
@@ -611,43 +704,23 @@ package body Job_Handlers is
       return 703;
     end if;
     if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
-      if silent then
-        if ntasks = 0 -- patch for multitasking and deflation
-         then Black_Box_Solvers.Solve(lp.all,silent,rc,sols,vrblvl-1);
-         else Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols,vrblvl-1);
-        end if;
-      else
-        if ntasks = 0 -- patch for multitasking and deflation
-         then Black_Box_Solvers.Solve(lp.all,rc,lsroco,sols,vrblvl-1);
-         else Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols,vrblvl-1);
-        end if;
-        if lsroco = null then
-          nr := 0;
-        else
-          nr := natural32(lsroco'last);
-          declare
-            sv : constant Standard_Integer_Vectors.Vector
-               := String_to_Integer_Vector(lsroco.all);
-          begin
-            Assign(sv,b);
-          end;
-          Clear(lsroco);
-        end if;
-      end if;
-    else
       declare
-        use QuadDobl_Laur_Poly_Convertors;
-        p : constant Poly_Sys := Positive_Laurent_Polynomial_System(lp.all);
+        q : Laur_Sys(lp'range);
+        qsols : Solution_List;
       begin
         if silent then
-          if ntasks = 0 -- patch for multitasking and deflation
-           then Black_Box_Solvers.Solve(p,silent,rc,sols,vrblvl-1);
-           else Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols,vrblvl-1);
+          if ntasks = 0 then -- patch for multitasking and deflation
+            Black_Box_Solvers.Solve(lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+          else
+            Black_Box_Solvers.Solve
+              (ntasks,lp.all,silent,rc,q,qsols,sols,vrblvl-1);
           end if;
         else
-          if ntasks = 0 -- patch for multitasking and deflation
-           then Black_Box_Solvers.Solve(p,rc,lsroco,sols,vrblvl-1);
-           else Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols,vrblvl-1);
+          if ntasks = 0 then -- patch for multitasking and deflation
+            Black_Box_Solvers.Solve(lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+          else
+            Black_Box_Solvers.Solve
+              (ntasks,lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
           end if;
           if lsroco = null then
             nr := 0;
@@ -662,6 +735,51 @@ package body Job_Handlers is
             Clear(lsroco);
           end if;
         end if;
+        PHCpack_Operations.Store_Start_System(q);
+        PHCpack_Operations.Store_Start_Solutions(qsols);
+        QuadDobl_Complex_Laur_Systems.Clear(q);
+        QuadDobl_Complex_Solutions.Deep_Clear(qsols);
+      end;
+    else
+      declare
+        use QuadDobl_Laur_Poly_Convertors;
+        use QuadDobl_Poly_Laur_Convertors;
+        p : constant Poly_Sys := Positive_Laurent_Polynomial_System(lp.all);
+        q : Poly_Sys(p'range);
+        qq : Laur_Sys(q'range);
+        qsols : Solution_List;
+      begin
+        if silent then
+          if ntasks = 0 then -- patch for multitasking and deflation
+            Black_Box_Solvers.Solve(p,silent,rc,q,qsols,sols,vrblvl-1);
+          else
+            Black_Box_Solvers.Solve(ntasks,p,silent,rc,q,qsols,sols,vrblvl-1);
+          end if;
+        else
+          if ntasks = 0 then -- patch for multitasking and deflation
+            Black_Box_Solvers.Solve(p,rc,lsroco,q,qsols,sols,vrblvl-1);
+          else
+            Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,q,qsols,sols,vrblvl-1);
+          end if;
+          if lsroco = null then
+            nr := 0;
+          else
+            nr := natural32(lsroco'last);
+            declare
+              sv : constant Standard_Integer_Vectors.Vector
+                 := String_to_Integer_Vector(lsroco.all);
+            begin
+              Assign(sv,b);
+            end;
+            Clear(lsroco);
+          end if;
+        end if;
+        qq := Polynomial_to_Laurent_System(q);
+        PHCpack_Operations.Store_Start_System(qq);
+        PHCpack_Operations.Store_Start_Solutions(qsols);
+        QuadDobl_Complex_Poly_Systems.Clear(q);
+        QuadDobl_Complex_Laur_Systems.Clear(qq);
+        QuadDobl_Complex_Solutions.Deep_Clear(qsols);
       end;
     end if;
     rcnr(1) := integer32(rc);

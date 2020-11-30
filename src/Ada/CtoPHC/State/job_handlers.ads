@@ -42,6 +42,8 @@ package Job_Handlers is
   --   Solves the polynomial system in the system container
   --   with the blackbox solver in standard double precision
   --   and puts the solutions into the solution container.
+  --   The start system and start solutions are stored
+  --   in the data management package.
   --   The two parameters on entry are as follows:
   --     a[0] : 1 or 2 for to be silent or not,
   --     a[1] : the number of tasks.
@@ -59,6 +61,8 @@ package Job_Handlers is
   --   Solves the Laurent system in the system container
   --   with the blackbox solver in standard double precision
   --   and puts the solutions into the solution container.
+  --   The start system and start solutions are stored
+  --   in the data management package.
   --   The two parameters on entry are as follows:
   --     a[0] : 1 or 2 for to be silent or not,
   --     a[1] : the number of tasks.
@@ -78,6 +82,8 @@ package Job_Handlers is
   --   Solves the polynomial system in the system container
   --   with the blackbox solver in double double precision 
   --   and puts the solutions into the solution container,
+  --   The start system and start solutions are stored
+  --   in the data management package.
   --   The two parameters on entry are as follows:
   --     a[0] : 1 or 2 for to be silent or not,
   --     a[1] : the number of tasks.
@@ -93,6 +99,8 @@ package Job_Handlers is
   --   Solves the Laurent system in the system container
   --   with the blackbox solver in double double precision 
   --   and puts the solutions into the solution container.
+  --   The start system and start solutions are stored
+  --   in the data management package.
   --   The two parameters on entry are as follows:
   --     a[0] : 1 or 2 for to be silent or not,
   --     a[1] : the number of tasks.
@@ -108,6 +116,8 @@ package Job_Handlers is
   --   Solves the polynomial system in the system container
   --   with the blackbox solver in quad double precision 
   --   and puts the solutions into the solution container,
+  --   The start system and start solutions are stored
+  --   in the data management package.
   --   The two parameters on entry are as follows:
   --     a[0] : 1 or 2 for to be silent or not,
   --     a[1] : the number of tasks.
@@ -123,6 +133,8 @@ package Job_Handlers is
   --   Solves the Laurent system in the system container
   --   with the blackbox solver in quad double precision 
   --   and puts the solutions into the solution container.
+  --   The start system and start solutions are stored
+  --   in the data management package.
   --   The two parameters on entry are as follows:
   --     a[0] : 1 or 2 for to be silent or not,
   --     a[1] : the number of tasks.
