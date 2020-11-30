@@ -1007,9 +1007,9 @@ ts_mixres:
 
 # Test programs for the Deformations/Homotopy library :
 
-ts_drivscal: get_clock.o get_clocks_per_sec.o
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivscal \
-              -o $(BIN)/ts_drivscal \
+ts_mainscal: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mainscal \
+              -o $(BIN)/ts_mainscal \
               -largs get_clock.o get_clocks_per_sec.o
 
 ts_scal:

@@ -948,8 +948,8 @@ ts_mixres:
 
 # Test programs for the Deformations/Homotopy library :
 
-ts_drivscal:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivscal -o $(BIN)/ts_drivscal
+ts_mainscal:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mainscal -o $(BIN)/ts_mainscal
 
 ts_scal:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_scal.adb -o $(BIN)/ts_scal
