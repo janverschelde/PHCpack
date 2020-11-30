@@ -1,3 +1,6 @@
+Mon 30 Nov 2020 : updated black_box_solvers with procedures that return
+  the start system and the start solutions.
+
 Sun 29 Nov 2020 : updated option_handlers.adb for the renaming of the package
   drivers_for_schubert_induction into main_schubert_induction.
   Updated mainphc.adb and option_handlers.adb for the main_scaling package.
