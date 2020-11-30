@@ -26,8 +26,8 @@ with Deformation_Posets;                use Deformation_Posets;
 with Symbolic_Minor_Equations;
 with Curves_into_Grassmannian;
 with Curves_into_Grassmannian_io;
-with Drivers_for_Input_Planes;          use Drivers_for_Input_Planes;
-with Drivers_for_Pieri_Homotopies;      use Drivers_for_Pieri_Homotopies; 
+with Make_Input_Planes;
+with Main_Pieri_Homotopies;
 with Pieri_Root_Count;
 with Pieri_Homotopy;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
@@ -645,6 +645,8 @@ package body Pieri_Interface is
   --   The solution container will contain the solutions
   --   and the systems container the system.
 
+    use Main_Pieri_Homotopies;
+
     dim : constant integer32 := m*p;
     target_level : constant integer32 := dim;
     xpm : constant Standard_Complex_Poly_Matrices.Matrix(1..m+p,1..p)
@@ -883,7 +885,7 @@ package body Pieri_Interface is
         s(i) := double_float(v(i1));
       end loop;
      -- put_line("the interpolation points :"); put_line(s);
-      planes := Osculating_Input_Planes
+      planes := Make_Input_Planes.Osculating_Input_Planes
                   (natural32(m),natural32(p),natural32(q),s);
       coeffs := Flatten(coeffs'last,planes);
      -- put_line("the coefficients of the planes :"); put_line(coeffs);
@@ -945,6 +947,8 @@ package body Pieri_Interface is
     locmap : constant Standard_Natural_Matrices.Matrix(1..m+p,1..p)
            := Standard_Localization_Map(m,p,root.top,root.bottom);
     locsys : Poly_Sys(planes'range);
+
+    use Main_Pieri_Homotopies;
    
   begin
     Assign(natural32(tdim),c,cff);

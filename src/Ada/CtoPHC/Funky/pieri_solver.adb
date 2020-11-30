@@ -27,7 +27,7 @@ with Curves_into_Grassmannian;           use Curves_into_Grassmannian;
 with Curves_into_Grassmannian_io;        use Curves_into_Grassmannian_io;
 with Localization_Posets;                use Localization_Posets;
 with Deformation_Posets;                 use Deformation_Posets;
-with Drivers_for_Input_Planes;           use Drivers_for_Input_Planes;
+with Make_Input_Planes;
 with Determinantal_Systems;              use Determinantal_Systems;
 with Complex_Polynomial_Matrices;        use Complex_Polynomial_Matrices;
 with Complex_Polynomial_Matrices_io;     use Complex_Polynomial_Matrices_io;
@@ -440,6 +440,8 @@ function Pieri_Solver ( m,p,q,nb,output_level : integer32;
   -- DESCRIPTION :
   --   This procedure calls the Pieri homotopies to solve a random
   --   complex instance, based on the poset.
+
+    use Make_Input_Planes;
 
     root : constant Node := index_poset(nq)(1).all;
     deform_poset : Array_of_Array_of_VecMats(index_poset'range)

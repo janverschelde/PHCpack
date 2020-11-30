@@ -1,3 +1,6 @@
+Sun 29 Nov 2020 : updated pieri_solver.adb for the renaming of the package
+  drivers_for_input_planes into make_input_planes.
+
 Sun 2 Jun 2019 : changed complex_polynomial_matrices.ads for compiler warnings.
 
 Sat 1 Jun 2019 : changed pieri_solver.adb for compiler warnings.
