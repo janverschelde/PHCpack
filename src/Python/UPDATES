@@ -2,6 +2,7 @@ Mon 30 Nov 2020 : to polynomials.py for python2 and python3, added the
   retrieval of the start system and start solutions.
   In the solve method of the Polynomials class in polynomials, stored
   the start solutions as Solution objects.
+  Updates setup.py, __init__.py, and conf.py files for 1.0.9.
 
 Thu 19 Nov 2020 : added a function support_sets to the polytopes module for
   python2 and python3.
