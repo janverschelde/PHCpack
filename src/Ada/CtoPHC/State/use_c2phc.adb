@@ -6,7 +6,8 @@ with use_c2phc4c;
 function use_c2phc ( job : integer32;
                      a : C_intarrs.Pointer;
 		     b : C_intarrs.Pointer;
-                     c : C_dblarrs.Pointer ) return integer32 is
+                     c : C_dblarrs.Pointer;
+                     vrblvl : integer32 := 0 ) return integer32 is
 
   pragma Unreserve_All_Interrupts;
 
@@ -25,7 +26,7 @@ function use_c2phc ( job : integer32;
       when 842 => return use_outdata(8,a,b,c); -- retrieve mixed volume
       when 843 => return use_outdata(9,a,b,c); -- call DEMiCs for mixed volume
       when 844 => return use_outdata(10,a,b,c); -- stable mv by DEMiCs
-      when others => return use_c2phc4c(job,a,b,c);
+      when others => return use_c2phc4c(job,a,b,c,vrblvl);
     end case;
   exception
     when others => put("Exception raised in use_c2phc handling job ");

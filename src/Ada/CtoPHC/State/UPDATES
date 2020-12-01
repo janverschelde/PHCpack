@@ -1,5 +1,6 @@
 Mon 30 Nov 2020 : updated job_handlers so the solvers store the start
   system and start solutions in the data management package.
+  Adjusted use_c2phc.ads and use_c2phc.adb so the verbose level is passed.
 
 Sun 29 Nov 2020 : updated schubert_interface.adb for the renaming of the
   package drivers_for_schubert_induction into main_schubert_induction.
