@@ -20,11 +20,11 @@ with DoblDobl_BlackBox_Continuations;
 with QuadDobl_BlackBox_Continuations;
 with mainpoco;
 with Main_Trackers;
+with Main_Pade_Trackers;
 with mainadep;
 with mainfac,maindeco;
 with Main_Schubert_Induction;
 with bablenum,mainfeed;
-with mainseries;
 with Main_Verification;
 with Black_Box_Root_Refiners;
 with Main_Component_Solvers;
@@ -632,16 +632,16 @@ package body Option_Handlers is
         case prc is
           when 1 =>
             put_line(seriesban & ", in double precision.");
-            mainseries(0,'1',infile,outfile,vrblvl);
+            Main_Pade_Trackers.Main(infile,outfile,0,'1',vrblvl);
           when 2 =>
             put_line(seriesban & ", in double double precision.");
-            mainseries(0,'2',infile,outfile,vrblvl);
+            Main_Pade_Trackers.Main(infile,outfile,0,'2',vrblvl);
           when 4 =>
             put_line(seriesban & ", in quad double precision.");
-            mainseries(0,'4',infile,outfile,vrblvl);
+            Main_Pade_Trackers.Main(infile,outfile,0,'4',vrblvl);
           when others =>
             put_line(seriesban & ".");
-            mainseries(0,'0',infile,outfile,vrblvl);
+            Main_Pade_Trackers.Main(infile,outfile,0,'0',vrblvl);
         end case;
       else
         declare
@@ -651,18 +651,18 @@ package body Option_Handlers is
             when 1 =>
               put(seriesban & ", in double precision");
               put_line(", with " & ns & " tasks.");
-              mainseries(nt,'1',infile,outfile,vrblvl);
+              Main_Pade_Trackers.Main(infile,outfile,nt,'1',vrblvl);
             when 2 =>
               put(seriesban & ", in double double precision");
               put_line(", with " & ns & " tasks.");
-              mainseries(nt,'2',infile,outfile,vrblvl);
+              Main_Pade_Trackers.Main(infile,outfile,nt,'2',vrblvl);
             when 4 =>
               put(seriesban & ", in quad double precision");
               put_line(", with " & ns & " tasks.");
-              mainseries(nt,'4',infile,outfile,vrblvl);
+              Main_Pade_Trackers.Main(infile,outfile,nt,'4',vrblvl);
             when others =>
               put_line(seriesban & ", with " & ns & " tasks.");
-              mainseries(nt,'0',infile,outfile,vrblvl);
+              Main_Pade_Trackers.Main(infile,outfile,nt,'0',vrblvl);
           end case;
         end;
       end if;

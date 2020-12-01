@@ -1,3 +1,6 @@
+Tue 1 Dec 2020 : eliminated the procedure mainseries, as it only calls the
+  Main of the main_pade_trackers.
+
 Fri 23 Oct 2020 : new packages {tripdobl,pentdobl,octodobl,decadobl}_
   rational_approximations, test_rational_approximations, called by ts_ratapp.
 
