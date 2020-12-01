@@ -17,6 +17,8 @@ class Polynomials(object):
         A polynomial system is contructed as a list of strings.
         """
         self.pols = pols
+        self.startpols = []
+        self.startsols = []
         self.vars = solver.names_of_variables(pols)
 
     def __str__(self):
@@ -40,14 +42,35 @@ class Polynomials(object):
         """
         return self.vars
 
-    def solve(self, nbtasks=0, verbose=True):
-        """
+    def solve(self, verbose=True, nbtasks=0, mvfocus=0, \
+        dictionary_output=False, verbose_level=0):
+        r"""
         Applies the blackbox solver and returns a list of solutions.
-        Multitasking is applied when the number of tasks in nbtasks
+        By default, *verbose* is True, and root counts are written.
+        Multitasking is applied when the number of tasks in *nbtasks*
         is set to the number of tasks.
-        By default, verbose is True, and root counts are written.
+        To apply only mixed volumes and polyhedral homotopies,
+        set the value for *mvfocus* to 1.
+        If *dictionary_output*, then on return is a list of dictionaries,
+        else the returned list is a list of strings.
+        If *verbose_level* is larger than 0, then the names of the procedures
+        called in the running of the blackbox solver will be listed.
+        The solving happens in standard double precision arithmetic.
         """
-        sols = solver.solve(self.pols, verbose=verbose, tasks=nbtasks)
+        from phcpy.phcpy2c2 \
+            import py2c_copy_standard_Laurent_start_system_to_container
+        from phcpy.phcpy2c2 import py2c_copy_start_solutions_to_container
+        from phcpy.phcpy2c2 import py2c_solcon_clear_standard_solutions
+        from phcpy.interface import load_standard_laurent_system as qload
+        from phcpy.interface import load_standard_solutions as qsolsload
+        sols = solver.solve(self.pols, verbose=verbose, tasks=nbtasks, \
+            mvfocus=mvfocus, dictionary_output=dictionary_output, \
+            verbose_level=verbose_level)
+        py2c_copy_standard_Laurent_start_system_to_container()
+        self.startpols = qload()
+        py2c_solcon_clear_standard_solutions()
+        py2c_copy_start_solutions_to_container()
+        self.startsols = qsolsload()
         result = [Solution(sol) for sol in sols]
         return result
 
@@ -61,6 +84,14 @@ def test():
     print 'the variables :', p.variables()
     s = p.solve()
     for sol in s:
+        print sol
+    q = p.startpols
+    print 'the start system :'
+    for pol in q:
+        print pol
+    qsols = p.startsols
+    print 'the start solutions :'
+    for sol in qsols:
         print sol
 
 if __name__ == "__main__":
