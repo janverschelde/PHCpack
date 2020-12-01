@@ -70,7 +70,7 @@ class Polynomials(object):
         self.startpols = qload()
         py2c_solcon_clear_standard_solutions()
         py2c_copy_start_solutions_to_container()
-        self.startsols = qsolsload()
+        self.startsols = [Solution(sol) for sol in qsolsload()]
         result = [Solution(sol) for sol in sols]
         return result
 
