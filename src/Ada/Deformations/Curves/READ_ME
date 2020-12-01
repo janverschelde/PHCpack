@@ -47,7 +47,8 @@ ts_sernew                         : test on the Newton series packages
 series_and_solutions              : making series from solution vectors
 power_series_methods              : Newton's method on power series solutions
 run_power_series_methods          : main programs to run Newton on series
-ts_sersol                         : test on series and solutions
+test_series_solutions             : test series developments as solutions
+ts_sersol                         : main test procedure on solution series
 -------------------------------------------------------------------------------
 standard_newton_convolution_steps : double Newton convolution steps
 staggered_newton_convolutions     : Newton with staggered degrees
