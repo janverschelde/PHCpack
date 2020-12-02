@@ -60,7 +60,7 @@ phcpack                          : PHC with main drivers according to 4 stages
 use_phc                          : an example of how to use phcpack
 main_maple_solutions             : strip output solutions into Maple format
 main_dictionary_solutions        : convert solutions into Python dictionary
-mainfeed                         : main driver for computing output feedback
+main_output_feedback             : encapsulates realization of output feedback
 -------------------------------------------------------------------------------
 actions_and_options              : defines actions and options of phc
 ts_actopt                        : test on actions and options

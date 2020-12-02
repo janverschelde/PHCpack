@@ -25,7 +25,8 @@ with Main_Pade_Trackers;
 with mainadep;
 with mainfac,maindeco;
 with Main_Schubert_Induction;
-with bablenum,mainfeed;
+with Main_Output_Feedback;
+with bablenum;
 with Main_Verification;
 with Black_Box_Root_Refiners;
 with Main_Component_Solvers;
@@ -555,7 +556,7 @@ package body Option_Handlers is
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first)
      then Greeting_Banners.help4feedback;
-     else mainfeed(infile,outfile,vrblvl);
+     else Main_Output_Feedback.Main(infile,outfile,vrblvl);
     end if;
   end Feedback_Handler;
 
