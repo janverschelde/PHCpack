@@ -9,7 +9,6 @@ phcpy2c3path_dd.so (double double), and phcpy2c3path_qd.so (quad double).
 """
 
 from distutils.core import setup
-from distutils.sysconfig import get_python_lib
 
 setup(
     name = 'PHCpy' ,
@@ -27,7 +26,7 @@ setup(
         'phcpy/curves', 'phcpy/examples', 'phcpy/families', \
         'phcpy/schubert' , 'phcpy/dashboard', 'phcpy/server' ],
     license = 'GNU GENERAL PUBLIC LICENSE version 3' ,
-    data_files = [(get_python_lib()+'/phcpy', ['phcpy/phcpy2c3.so'])] ,
+    package_data = {'phcpy':['phcpy2c3.so']} ,
     platforms = ['linux2'] ,
     long_description=open('README.txt').read()
 )
