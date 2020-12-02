@@ -1,19 +1,14 @@
-with Ada.Calendar;                       use Ada.Calendar;
-with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
 with Time_Stamps;                        use Time_Stamps;
-with String_Splitters;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Write_Seed_Number;
 with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Symbol_Table;
 with Standard_Complex_Laur_Strings;
-with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Standard_Laur_Poly_Convertors;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
@@ -29,19 +24,10 @@ with Driver_for_Root_Refining;
 with String_System_Readers;
 with Standard_BlackBox_Continuations;    use Standard_BlackBox_Continuations;
 with Greeting_Banners;
---with Bye_Bye_Message;
 
-procedure mainphc
-            ( nt : in natural32; infilename,outfilename : in string;
-              verbose : in integer32 := 0 ) is
+package body Polynomial_Homotopy_Continuation is
 
-  start_moment : constant Time := Clock;
-  ended_moment : Time;
-
-  procedure Display_Options is
-
-  -- DESCRIPTION :
-  --   Displays an overview of all options on screen.
+  procedure Display_all_Options ( nt : in natural32 ) is
 
     o : array(0..26) of string(1..65);
 
@@ -85,16 +71,12 @@ procedure mainphc
     put_line("Options may be combined, e.g.: phc -b -0 or phc -0 -b.");
     put_line("To run the blackbox solver with 8 threads, do phc -b -t8.");
     put_line("Use -b2 or -b4 for double double or quad double precision.");
-  end Display_Options;
+  end Display_all_Options;
 
   procedure Main_Polynomial_Solver 
-              ( file : in file_type; p : in Poly_Sys;
+              ( file : in file_type; nt : in natural32; p : in Poly_Sys;
                 ls : in String_Splitters.Link_to_Array_of_Strings;
                 vrb : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   This is the main interactive solver for polynomial systems,
-  --   running through all drivers.
 
     q,scalp,projp : Poly_Sys(p'range);
     target : Complex_Number;
@@ -107,8 +89,9 @@ procedure mainphc
     proj : boolean;
 
   begin
-    if vrb > 0
-     then put_line("-> in mainphc.Main_Polynomial_Solver ...");
+    if vrb > 0 then
+      put_line("-> in polynomial_homotopy_continuation.");
+      put_line("Main_Polynomial_Solver ...");
     end if;
     Copy(p,scalp);
     Scaling_Methods.Main(file,scalp,basis,scalvec,vrb-1);
@@ -144,12 +127,8 @@ procedure mainphc
   end Main_Polynomial_Solver;
 
   procedure Main_Laurent_Solver 
-              ( file : in file_type; p : in Laur_Sys;
+              ( file : in file_type; nt : in natural32;  p : in Laur_Sys;
                 vrb : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   This is the main interactive solver for Laurent systems,
-  --   primarily guiding through polyhedral homotopies.
 
     cp,q : Laur_Sys(p'range);
     sols : Solution_List;
@@ -157,8 +136,9 @@ procedure mainphc
     poco : duration := 0.0;
 
   begin
-    if vrb > 0
-     then put_line("-> in mainphc.Main_Laurent_Solver ...");
+    if vrb > 0 then
+      put("-> in polynomial_homotopy_continuation.");
+      put_line("Main_Laurent_Solver ...");
     end if;
     Copy(p,cp);
     Main_Root_Counters.Laurent_Main(file,nt,cp,q,sols,roco,vrb-1);
@@ -174,19 +154,21 @@ procedure mainphc
     end if;
   end Main_Laurent_Solver;
 
-  procedure Main_Dispatch 
-              ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+  procedure Start_Main
+              ( start_moment : in Ada.Calendar.Time; nt : in natural32;
+                outfilename : in string; q : in Laur_Sys;
                 ls : in String_Splitters.Link_to_Array_of_Strings;
                 vrb : in integer32 := 0 ) is
 
-   -- use Standard_Complex_Laur_Systems;
+    use Ada.Calendar;
 
+    ended_moment : Time;
     timer : Timing_Widget;
     outpt : file_type;
 
   begin
     if vrb > 0
-     then put_line("-> in mainphc.Main_Dispatch ...");
+     then put_line("-> in polynomial_homotopy_continuation.Start_Main ...");
     end if;
     Create_Output_File(outpt,outfilename);
     put(outpt,q'last,1);
@@ -196,7 +178,7 @@ procedure mainphc
     end loop;
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(q) then
       tstart(timer);
-      Main_Laurent_Solver(outpt,q,vrb-1);
+      Main_Laurent_Solver(outpt,nt,q,vrb-1);
       tstop(timer);
     else
       declare
@@ -205,7 +187,7 @@ procedure mainphc
           := Positive_Laurent_Polynomial_System(q);
       begin
         tstart(timer);
-        Main_Polynomial_Solver(outpt,p,ls,vrb-1);
+        Main_Polynomial_Solver(outpt,nt,p,ls,vrb-1);
         tstop(timer);
       end;
     end if;
@@ -221,14 +203,12 @@ procedure mainphc
     Write_Seed_Number(outpt);
     put_line(outpt,Greeting_Banners.Version);
     Close(outpt);
-  end Main_Dispatch;
+  end Start_Main;
 
-  procedure String_Main is
+  procedure Main ( nt : in natural32; infilename,outfilename : in string;
+                   verbose : in integer32 := 0 ) is
 
-  -- DESCRIPTION :
-  --   Reads in the system as a pointer to an array of strings
-  --   and converts to a Laurent polynomial system with standard
-  --   complex coefficients for a first dispatch.
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
     inft : file_type;
     ls : String_Splitters.Link_to_Array_of_Strings;
@@ -239,10 +219,10 @@ procedure mainphc
   begin
     if verbose > 0 then
       put("At verbose level "); put(verbose,1);
-      put_line(", in mainphc.String_Main ...");
+      put_line(", in polynomial_homotopy_continuation.Main ...");
     end if;
     new_line;
-    Display_Options;
+    Display_all_Options(nt);
     String_System_Readers.Read_System(inft,infilename,n,m,ls);
     if ls = null then
       new_line;
@@ -256,10 +236,8 @@ procedure mainphc
       q : constant Standard_Complex_Laur_Systems.Laur_Sys(1..integer32(n))
          := Standard_Complex_Laur_Strings.Parse(m,ls.all);
     begin
-      Main_Dispatch(q,ls,verbose-1);
+      Start_Main(start_moment,nt,outfilename,q,ls,verbose-1);
     end;
-  end String_Main;
+  end Main;
 
-begin
-  String_Main;
-end mainphc;
+end Polynomial_Homotopy_Continuation;

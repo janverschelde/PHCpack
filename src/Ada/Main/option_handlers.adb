@@ -10,7 +10,8 @@ with Actions_and_Options;
 with Standard_BlackBox_Solvers;
 with DoblDobl_BlackBox_Solvers;
 with QuadDobl_BlackBox_Solvers;
-with mainphc,maingood,mainsymb;
+with Polynomial_Homotopy_Continuation;
+with maingood,mainsymb;
 with Main_Reduction;
 with Main_Scaling;
 with Black_Box_Root_Counters;
@@ -153,8 +154,8 @@ package body Option_Handlers is
     end if;
     put_line(welcome);
     if nt > 0
-     then mainphc(nt,infile,outfile,vrblvl);
-     else mainphc(0,infile,outfile,vrblvl);
+     then Polynomial_Homotopy_Continuation.Main(nt,infile,outfile,vrblvl);
+     else Polynomial_Homotopy_Continuation.Main(0,infile,outfile,vrblvl);
     end if;
   end Full_Mode_Handler;
 
@@ -865,7 +866,7 @@ package body Option_Handlers is
   procedure Handle_no_Options ( infile,outfile : in string ) is
   begin
     put_line(welcome);
-    mainphc(0,infile,outfile);
+    Polynomial_Homotopy_Continuation.Main(0,infile,outfile);
   exception
     when others =>
       put_line("Oops, an unhandled exception occurred.");

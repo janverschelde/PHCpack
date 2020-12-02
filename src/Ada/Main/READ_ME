@@ -23,50 +23,50 @@ The are several parts in this library :
 4. the top level procedure
 
 -------------------------------------------------------------------------------
-file name                    : short description
+file name                        : short description
 -------------------------------------------------------------------------------
-driver_for_own_start_system  : driver for submitting start system
-drivers_for_root_counts      : interactive menu-drivers for counting roots
-driver_for_root_refining     : calls the root refiners
+driver_for_own_start_system      : driver for submitting start system
+drivers_for_root_counts          : interactive menu-drivers for counting roots
+driver_for_root_refining         : calls the root refiners
 -------------------------------------------------------------------------------
-greeting_banners             : defines banners to welcome the user
-ts_greet                     : prints the PHCpack version string
+greeting_banners                 : defines banners to welcome the user
+ts_greet                         : prints the PHCpack version string
 -------------------------------------------------------------------------------
-root_counters_output         : writes root counts to file and to string
-black_box_root_counters      : performs several root counts
-ts_blkroco                   : tests black box root counters output
-mainroco                     : calls interactive root-counting driver
+root_counters_output             : writes root counts to file and to string
+black_box_root_counters          : performs several root counts
+ts_blkroco                       : tests black box root counters output
+main_root_counters               : defines phc -r
 -------------------------------------------------------------------------------
-main_trackers                : jumpstart path tracking
-main_verification            : defines the phc -v
-mainphc                      : the main program running in full mode
-black_box_helpers            : helper operations for the black box solvers
-black_box_single_solvers     : solvers for one single equation
-black_box_linear_solvers     : solvers for linear systems
-black_box_square_solvers     : solvers for square systems
-black_box_solver_cases       : special cases for the solvers
-black_box_mixed_volumes      : for a polyhedral black box solver
-black_box_solvers            : to be called by bablphc
-black_box_polyhedral_solvers : solve with polyhedral homotopies
-test_standard_solver         : test black box solver in double precision
-ts_bbsolve                   : test on black box solvers
-standard_blackbox_solvers    : black-box solvers in double precision
-dobldobl_blackbox_solvers    : black-box solvers in double double precision
-quaddobl_blackbox_solvers    : black-box solvers in quad double precision
-greetings_and_conclusions    : defines greetings and conclusions in phc -B
-main_component_solvers       : numerical irreducible decomposition in phc -B
+main_trackers                    : jumpstart path tracking
+main_verification                : defines the phc -v
+polynomial_homotopy_continuation : defines phc in full mode
+black_box_helpers                : helper operations for the black box solvers
+black_box_single_solvers         : solvers for one single equation
+black_box_linear_solvers         : solvers for linear systems
+black_box_square_solvers         : solvers for square systems
+black_box_solver_cases           : special cases for the solvers
+black_box_mixed_volumes          : for a polyhedral black box solver
+black_box_solvers                : to be called by bablphc
+black_box_polyhedral_solvers     : solve with polyhedral homotopies
+test_standard_solver             : test black box solver in double precision
+ts_bbsolve                       : test on black box solvers
+standard_blackbox_solvers        : black-box solvers in double precision
+dobldobl_blackbox_solvers        : black-box solvers in double double precision
+quaddobl_blackbox_solvers        : black-box solvers in quad double precision
+greetings_and_conclusions        : defines greetings and conclusions
+main_component_solvers           : numerical irreducible decomposition
 -------------------------------------------------------------------------------
-phcpack                      : PHC with main drivers according to 4 stages
-use_phc                      : an example of how to use phcpack
-main_maple_solutions         : strip output solutions into Maple format
-main_dictionary_solutions    : convert solutions into Python dictionary
-mainfeed                     : main driver for computing output feedback
+phcpack                          : PHC with main drivers according to 4 stages
+use_phc                          : an example of how to use phcpack
+main_maple_solutions             : strip output solutions into Maple format
+main_dictionary_solutions        : convert solutions into Python dictionary
+mainfeed                         : main driver for computing output feedback
 -------------------------------------------------------------------------------
-actions_and_options          : defines actions and options of phc
-ts_actopt                    : test on actions and options
-option_handlers              : handles the options for phc
-ts_opthand                   : test on the option handlers
-phctop                       : scans options and arguments and calls drivers
+actions_and_options              : defines actions and options of phc
+ts_actopt                        : test on actions and options
+option_handlers                  : handles the options for phc
+ts_opthand                       : test on the option handlers
+phctop                           : scans options and arguments and calls drivers
 -------------------------------------------------------------------------------
 
 The driver for root refinement are located at this level because symmetry
