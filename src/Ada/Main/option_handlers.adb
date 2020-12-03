@@ -33,7 +33,8 @@ with Black_Box_Root_Refiners;
 with Main_Component_Solvers;
 with Main_Eqn_by_Eqn_Solvers;
 with Main_Hypersurface_Witsets;
-with mainsam,mainwit;
+with Main_Samplers;
+with mainwit;
 with Main_Dictionary_Solutions;
 with Main_Maple_Solutions;
 
@@ -758,7 +759,7 @@ package body Option_Handlers is
       Greeting_Banners.help4sampler;
     else
       put_line(welcome); put_line(samban);
-      mainsam(infile,outfile);
+      Main_Samplers.Main(infile,outfile);
     end if;
   end Witness_Set_Sampler_Handler;
 

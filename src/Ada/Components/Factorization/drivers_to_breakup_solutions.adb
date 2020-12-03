@@ -30,7 +30,7 @@ with QuadDobl_Sampling_Laurent_Machine;
 with Rectangular_Sample_Grids;
 with DoblDobl_Rectangular_Sample_Grids;
 with QuadDobl_Rectangular_Sample_Grids;
-with Drivers_to_Grid_Creators;          use Drivers_to_Grid_Creators;
+with Make_Sample_Grids;                 use Make_Sample_Grids;
 with Combinatorial_Factorization;
 with Drivers_to_Factor_Components;
 with Greeting_Banners;

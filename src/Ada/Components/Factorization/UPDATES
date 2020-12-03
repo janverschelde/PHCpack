@@ -1,3 +1,7 @@
+Thu 3 Dec 2020 : updated irreducible_component_creators.adb, mainfac.adb,
+  monodromy_component_breakup.adb and drivers_to_breakup_solutions.adb,
+  for the renaming of drivers_to_grid_creators into make_sample_grids.
+
 Sun 8 Nov 2020 : updated drivers_for_component_creators.adb for the renaming
   of drivers_for_poly_continuation into main_poly_continuation.
 

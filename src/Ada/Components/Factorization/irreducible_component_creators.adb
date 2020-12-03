@@ -26,7 +26,7 @@ with span_of_Component_io;               use Span_of_Component_io;
 with Span_of_Component_Creators;         use Span_of_Component_Creators;
 with Standard_Stacked_Sample_Grids;
 with Multprec_Stacked_Sample_Grids;
-with Drivers_to_Grid_Creators;           use Drivers_to_Grid_Creators;
+with Make_Sample_Grids;                  use Make_Sample_Grids;
 
 package body Irreducible_Component_Creators is
 

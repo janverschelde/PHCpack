@@ -1,30 +1,18 @@
-with text_io;                           use text_io;
 with Characters_and_Numbers;
 with String_Splitters;                  use String_Splitters;
 with Timing_Package;                    use Timing_Package;
 with Communications_with_User;          use Communications_with_User;
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs;
-with Standard_Complex_Matrices;
-with DoblDobl_Complex_Matrices;
-with QuadDobl_Complex_Matrices;
-with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;
-with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_SysFun;
 with DoblDobl_Complex_Jaco_Matrices;
-with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Jaco_Matrices;
-with Standard_Complex_Solutions;
-with DoblDobl_Complex_Solutions;
-with QuadDobl_Complex_Solutions;
 with Continuation_Parameters;
 with Standard_Continuation_Data;
 with Standard_Continuation_Data_io;
@@ -45,24 +33,13 @@ with Standard_Intrinsic_Continuation;
 with DoblDobl_Intrinsic_Continuation;
 with QuadDobl_Intrinsic_Continuation;
 
-procedure mainsam ( witset,logfile : in string ) is
+package body Main_Samplers is
 
   procedure Read_Witness_Set
               ( w : in string;
                 p : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sols : out Standard_Complex_Solutions.Solution_List;
                 dim : out natural32 ) is
-
-  -- DESCRIPTION :
-  --   Reads witness set k from file with name in the string w.
-  --   The data is presumed to be in standard double precision.
-
-  -- ON ENTRY :
-  --   w        name of file, if empty, the user is asked for a name.
-
-  -- ON RETURN :
-  --   p        polynomial equations defining the witness set;
-  --   sols     points in the witness set;
 
     file : file_type;
 
@@ -83,17 +60,6 @@ procedure mainsam ( witset,logfile : in string ) is
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
                 dim : out natural32 ) is
 
-  -- DESCRIPTION :
-  --   Reads witness set k from file with name in the string w.
-  --   The data is presumed to be in double double precision.
-
-  -- ON ENTRY :
-  --   w        name of file, if empty, the user is asked for a name.
-
-  -- ON RETURN :
-  --   p        polynomial equations defining the witness set;
-  --   sols     points in the witness set;
-
     file : file_type;
 
   begin
@@ -112,17 +78,6 @@ procedure mainsam ( witset,logfile : in string ) is
                 p : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
                 dim : out natural32 ) is
-
-  -- DESCRIPTION :
-  --   Reads witness set k from file with name in the string w.
-  --   The data is presumed to be in double double precision.
-
-  -- ON ENTRY :
-  --   w        name of file, if empty, the user is asked for a name.
-
-  -- ON RETURN :
-  --   p        polynomial equations defining the witness set;
-  --   sols     points in the witness set;
 
     file : file_type;
 
@@ -143,20 +98,6 @@ procedure mainsam ( witset,logfile : in string ) is
                 f : in Standard_Complex_Poly_Systems.Poly_Sys;
                 start : in Standard_Complex_Matrices.Matrix;
                 esols : in Standard_Complex_Solutions.Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Deforms the given plane p into a random target plane,
-  --   running intrinsic continuation on all solutions,
-  --   in standard double precision.
-
-  -- ON ENTRY :
-  --   file     file to write diagnostics on;
-  --   name     name of the output file;
-  --   n        ambient dimension, number of original variables;
-  --   k        codimension of the solution set;
-  --   output   if intermediate output wanted during tracking;
-  --   f        original polynomial system;
-  --   esols    extrinsic coordinates of the solutions.
 
     use Standard_Complex_Matrices;
     use Standard_Complex_Poly_Systems;
@@ -207,20 +148,6 @@ procedure mainsam ( witset,logfile : in string ) is
                 start : in DoblDobl_Complex_Matrices.Matrix;
                 esols : in DoblDobl_Complex_Solutions.Solution_List ) is
 
-  -- DESCRIPTION :
-  --   Deforms the given plane p into a random target plane,
-  --   running intrinsic continuation on all solutions,
-  --   in double double precision.
-
-  -- ON ENTRY :
-  --   file     file to write diagnostics on;
-  --   name     name of the output file;
-  --   n        ambient dimension, number of original variables;
-  --   k        codimension of the solution set;
-  --   output   if intermediate output wanted during tracking;
-  --   f        original polynomial system;
-  --   esols    extrinsic coordinates of the solutions.
-
     use DoblDobl_Complex_Matrices;
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Poly_SysFun;
@@ -268,20 +195,6 @@ procedure mainsam ( witset,logfile : in string ) is
                 f : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 start : in QuadDobl_Complex_Matrices.Matrix;
                 esols : in QuadDobl_Complex_Solutions.Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Deforms the given plane p into a random target plane,
-  --   running intrinsic continuation on all solutions,
-  --   in quad double precision.
-
-  -- ON ENTRY :
-  --   file     file to write diagnostics on;
-  --   name     name of the output file;
-  --   n        ambient dimension, number of original variables;
-  --   k        codimension of the solution set;
-  --   output   if intermediate output wanted during tracking;
-  --   f        original polynomial system;
-  --   esols    extrinsic coordinates of the solutions.
 
     use QuadDobl_Complex_Matrices;
     use QuadDobl_Complex_Poly_Systems;
@@ -337,17 +250,6 @@ procedure mainsam ( witset,logfile : in string ) is
                 sols : in Standard_Complex_Solutions.Solution_List;
                 d : in integer32 ) is
 
-  -- DESCRIPTION :
-  --   Prepares the setup for working with local intrinsic coordinates,
-  --   in standard double precision.
-
-  -- ON ENTRY:
-  --   file     file to write diagnostics on;
-  --   name     name of the output file;
-  --   ep       embedded polynomial system with d slack variables;
-  --   sols     generic points on the algebraic set;
-  --   d        dimension of the witness set.
-
     use Standard_Complex_Matrices;
     use Standard_Complex_VecVecs;
     use Standard_Complex_Poly_Systems;
@@ -388,17 +290,6 @@ procedure mainsam ( witset,logfile : in string ) is
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 d : in integer32 ) is
-
-  -- DESCRIPTION :
-  --   Prepares the setup for working with local intrinsic coordinates,
-  --   in double double precision.
-
-  -- ON ENTRY:
-  --   file     file to write diagnostics on;
-  --   name     name of the output file;
-  --   ep       embedded polynomial system with d slack variables;
-  --   sols     generic points on the algebraic set;
-  --   d        dimension of the witness set.
 
     use DoblDobl_Complex_Matrices;
     use DoblDobl_Complex_VecVecs;
@@ -441,17 +332,6 @@ procedure mainsam ( witset,logfile : in string ) is
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 d : in integer32 ) is
 
-  -- DESCRIPTION :
-  --   Prepares the setup for working with local intrinsic coordinates,
-  --   in double double precision.
-
-  -- ON ENTRY:
-  --   file     file to write diagnostics on;
-  --   name     name of the output file;
-  --   ep       embedded polynomial system with d slack variables;
-  --   sols     generic points on the algebraic set;
-  --   d        dimension of the witness set.
-
     use QuadDobl_Complex_Matrices;
     use QuadDobl_Complex_VecVecs;
     use QuadDobl_Complex_Poly_Systems;
@@ -487,12 +367,7 @@ procedure mainsam ( witset,logfile : in string ) is
     Local_Intrinsic_Continuation(file,name,n,k,output,pp,pla,sols);
   end Setup_Local_Coordinates;
 
-  procedure Sample_in_Standard_Precision is
-
-  -- DESCRIPTION :
-  --   Prompts the user for a witness set and then computes
-  --   a new set of samples using local intrinsic coordinates,
-  --   for a new random set of slices in standard double precision.
+  procedure Sample_in_Standard_Precision ( witset,logfile : in string ) is
 
     p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     w : Standard_Complex_Solutions.Solution_List;
@@ -512,12 +387,7 @@ procedure mainsam ( witset,logfile : in string ) is
     Setup_Local_Coordinates(file,name.all,p.all,w,d);
   end Sample_in_Standard_Precision;
 
-  procedure Sample_in_DoblDobl_Precision is
-
-  -- DESCRIPTION :
-  --   Prompts the user for a witness set and then computes
-  --   a new set of samples using local intrinsic coordinates,
-  --   for a new random set of slices in double double precision.
+  procedure Sample_in_DoblDobl_Precision ( witset,logfile : in string ) is
 
     p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     w : DoblDobl_Complex_Solutions.Solution_List;
@@ -537,12 +407,7 @@ procedure mainsam ( witset,logfile : in string ) is
     Setup_Local_Coordinates(file,name.all,p.all,w,d);
   end Sample_in_DoblDobl_Precision;
 
-  procedure Sample_in_QuadDobl_Precision is
-
-  -- DESCRIPTION :
-  --   Prompts the user for a witness set and then computes
-  --   a new set of samples using local intrinsic coordinates,
-  --   for a new random set of slices in quad double precision.
+  procedure Sample_in_QuadDobl_Precision ( witset,logfile : in string ) is
 
     p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     w : QuadDobl_Complex_Solutions.Solution_List;
@@ -562,7 +427,7 @@ procedure mainsam ( witset,logfile : in string ) is
     Setup_Local_Coordinates(file,name.all,p.all,w,d);
   end Sample_in_QuadDobl_Precision;
 
-  procedure Main is
+  procedure Main ( witset,logfile : in string ) is
 
     ans : character;
 
@@ -575,13 +440,11 @@ procedure mainsam ( witset,logfile : in string ) is
     put("Type 0, 1, or 2 to select the level of precision : ");
     Ask_Alternative(ans,"012");
     case ans is
-      when '0' => Sample_in_Standard_Precision;
-      when '1' => Sample_in_DoblDobl_Precision;
-      when '2' => Sample_in_QuadDobl_Precision;
+      when '0' => Sample_in_Standard_Precision(witset,logfile);
+      when '1' => Sample_in_DoblDobl_Precision(witset,logfile);
+      when '2' => Sample_in_QuadDobl_Precision(witset,logfile);
       when others => null;
     end case;
   end Main;
 
-begin
-  Main;
-end mainsam;
+end Main_Samplers;

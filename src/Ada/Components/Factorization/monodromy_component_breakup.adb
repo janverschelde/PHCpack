@@ -33,7 +33,7 @@ with QuadDobl_Sample_Grids;                use QuadDobl_Sample_Grids;
 with Rectangular_Sample_Grids;          use Rectangular_Sample_Grids;
 with DoblDobl_Rectangular_Sample_Grids; use DoblDobl_Rectangular_Sample_Grids;
 with QuadDobl_Rectangular_Sample_Grids; use QuadDobl_Rectangular_Sample_Grids;
-with Drivers_to_Grid_Creators;          use Drivers_to_Grid_Creators;
+with Make_Sample_Grids;                 use Make_Sample_Grids;
 with Monodromy_Partitions;              use Monodromy_Partitions;
 with Standard_Trace_Interpolators;      use Standard_Trace_Interpolators;
 with DoblDobl_Trace_Interpolators;      use DoblDobl_Trace_Interpolators;

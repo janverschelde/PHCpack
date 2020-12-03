@@ -101,7 +101,7 @@ standard_stacked_sample_grids     : grids for general dimensions
 dobldobl_stacked_sample_grids     : double double version of stacked grids
 quaddobl_stacked_sample_grids     : quad double version of stacked grids
 multprec_stacked_sample_grids     : multiprecision version of stacked grids
-drivers_to_grid_creators          : create grids with extra tests
+make_sample_grids                 : makes grids of sample points with tests
 ------------------------------------------------------------------------------
 standard_solution_clusters        : managing clusters of solutions
 extrapolate_solution_clusters     : refining solutions by extrapolation
@@ -124,5 +124,5 @@ ts_hyppts                         : test on solving p(b+t*v) = 0
 hypersurface_roots                : homotopies to solve p(t*v) = 0
 ts_hyprts                         : test on solving p(t*v) = 0
 -------------------------------------------------------------------------------
-mainsam                           : main driver implements phc -y
+main_samplers                     : defines phc -y
 ------------------------------------------------------------------------------

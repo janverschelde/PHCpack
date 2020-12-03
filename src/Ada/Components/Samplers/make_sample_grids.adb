@@ -17,7 +17,7 @@ with Rectangular_Sample_Grids;          use Rectangular_Sample_Grids;
 with DoblDobl_Rectangular_Sample_Grids; use DoblDobl_Rectangular_Sample_Grids;
 with QuadDobl_Rectangular_Sample_Grids; use QuadDobl_Rectangular_Sample_Grids;
 
-package body Drivers_to_Grid_Creators is
+package body Make_Sample_Grids is
 
   procedure Write_Errors ( file : in file_type;
                            sps : in Standard_Sample_List ) is
@@ -483,4 +483,4 @@ package body Drivers_to_Grid_Creators is
     Write_Errors(file,testsps); new_line(file);
   end Multprec_Test_Samples;
 
-end Drivers_to_Grid_Creators;
+end Make_Sample_Grids;

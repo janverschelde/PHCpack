@@ -14,13 +14,11 @@ with DoblDobl_Stacked_Sample_Grids;
 with QuadDobl_Stacked_Sample_Grids;
 with Multprec_Stacked_Sample_Grids;
 
-package Drivers_to_Grid_Creators is
+package Make_Sample_Grids is
 
 -- DESCRIPTION :
---   This package provides drivers to the creators for rectangular
---   and stacked grids of sample points.
---   In addition to creating the grids, these routines provide tests 
---   on the quality of the grids.
+--   Makes rectangular and stacked grids of sample points.
+--   In addition to making the grids, tests the quality of the grids.
 --   Four different types of precision are supported:
 --   standard double, double double, quad double, and multiprecision.
 
@@ -144,4 +142,4 @@ package Drivers_to_Grid_Creators is
   --   Chooses new random constants in the slices and generates
   --   new sample points, starting at those points in sps.
 
-end Drivers_to_Grid_Creators;
+end Make_Sample_Grids;
