@@ -11,7 +11,8 @@ with Standard_BlackBox_Solvers;
 with DoblDobl_BlackBox_Solvers;
 with QuadDobl_BlackBox_Solvers;
 with Polynomial_Homotopy_Continuation;
-with maingood,mainsymb;
+with Parse_Strings_to_Polynomials;
+with mainsymb;
 with Main_Reduction;
 with Main_Scaling;
 with Black_Box_Root_Counters;
@@ -173,7 +174,7 @@ package body Option_Handlers is
       if infile = "" or outfile = ""  -- still interactive input needed
        then put_line(welcome); put_line(goodban);
       end if;
-      maingood(infile,outfile);
+      Parse_Strings_to_Polynomials.Main(infile,outfile);
     end if;
   end Good_Format_Handler;
 

@@ -1,5 +1,6 @@
 Wed 2 Dec 2020 : replace mainfeed by the package main_output_feedback,
-  updated option_handlers.adb.
+  updated option_handlers.adb.  Updated option_handlers.adb for the
+  elimination of the procedure maingood from the Math_Lib/Polynomials.
 
 Tue 1 Dec 2020 : updated option_handlers.adb for the removal of mainseries.
   Replaced mainphc by the package Polynomial_Homotopy_Continuation and

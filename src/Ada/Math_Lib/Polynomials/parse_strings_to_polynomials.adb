@@ -276,12 +276,12 @@ package body Parse_Strings_to_Polynomials is
           raise;
       end;
     end loop;
-  exception
+   --  exception
    -- when OVERFLOW_OF_UNKNOWNS
    --   => put("fail = "); put(fail,1); new_line;
    --      put_line("trying to stay silent ..."); return;
    -- a simple return does not work with -O3 inlining option ...
-    when others => raise;
+   -- when others => raise;
   end Parse_Polynomials;
 
   procedure Create_Output_File
@@ -426,8 +426,19 @@ package body Parse_Strings_to_Polynomials is
 
   begin
     Read_from_File(name,"");
-  exception
-    when others => raise; -- put_line("suppressing exception..."); return;
+ -- exception
+ --   when others => raise; -- put_line("suppressing exception..."); return;
   end Read_Input_File_Name;
+
+  procedure Main ( infilename,outfilename : in string ) is
+  begin
+    if infilename /= "" then
+      Read_from_File(infilename,outfilename);
+    else
+      new_line;
+      put_line("Reading the name of the input file ...");
+      Read_Input_File_Name; 
+    end if;
+  end Main;
 
 end Parse_Strings_to_Polynomials;
