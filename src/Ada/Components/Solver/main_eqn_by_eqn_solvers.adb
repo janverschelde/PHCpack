@@ -1,3 +1,4 @@
+with String_Splitters;                   use String_Splitters;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
@@ -20,7 +21,7 @@ with Permutations,Shuffle_Polynomials;   use Permutations,Shuffle_Polynomials;
 with Intrinsic_Witness_Sets_io;          use Intrinsic_Witness_Sets_io;
 with Equation_by_Equation_Solvers;       use Equation_by_Equation_Solvers;
 
-package body Drivers_to_Eqn_by_Eqn_Solvers is
+package body Main_Eqn_by_Eqn_Solvers is
 
   function Shuffle ( file : file_type; p : Poly_Sys ) return Poly_Sys is
 
@@ -215,4 +216,53 @@ package body Drivers_to_Eqn_by_Eqn_Solvers is
     Solve(file,filename,report,want_stone,p'last,n,k,d,witset,planes);
   end Solver_using_Generics;
 
-end Drivers_to_Eqn_by_Eqn_Solvers;
+  procedure Read_System ( name : in string; p : out Link_to_Poly_Sys ) is
+
+    file : file_type;
+
+  begin
+    Open(file,in_file,name);
+    get(file,p);
+  exception
+    when others => new_line;
+                   put_line("Exception occurred with file " & name & ".");
+                   get(p);
+  end Read_System;
+
+  procedure Interactive_Create_Output_File
+               ( file : in out file_type; name : in string;
+                 new_name : out Link_to_String ) is
+
+    procedure Ask_File is
+    begin
+      new_line;
+      put_line("Reading the name of the output file ...");
+      Read_Name_and_Create_File(file,new_name);
+    end Ask_File;
+
+  begin
+    if name = ""
+     then Ask_File;
+     else Create_Output_File(file,name,new_name); 
+    end if;
+  end Interactive_Create_Output_File;
+
+  procedure Main ( infilename,outfilename : in string ) is
+
+    file : file_type;
+    lp : Link_to_Poly_Sys;
+    name : Link_to_String;
+
+  begin
+    if infilename /= ""
+     then Read_System(infilename,lp);
+     else new_line; get(lp);
+    end if;
+    Interactive_Create_Output_File(file,outfilename,name);
+    if name /= null
+     then Shuffle_Polynomials_and_Solve(file,name.all,lp.all);
+     else Shuffle_Polynomials_and_Solve(file,outfilename,lp.all);
+    end if;
+  end Main;
+
+end Main_Eqn_by_Eqn_Solvers;

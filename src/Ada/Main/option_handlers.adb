@@ -31,7 +31,7 @@ with bablenum;
 with Main_Verification;
 with Black_Box_Root_Refiners;
 with Main_Component_Solvers;
-with mainsolve;
+with Main_Eqn_by_Eqn_Solvers;
 with Main_Hypersurface_Witsets;
 with mainsam,mainwit;
 with Main_Dictionary_Solutions;
@@ -205,7 +205,7 @@ package body Option_Handlers is
       Greeting_Banners.help4eqnbyeqn;
     else
       put_line(welcome); put_line(slvban);
-      mainsolve(infile,outfile);
+      Main_Eqn_by_Eqn_Solvers.Main(infile,outfile);
     end if;
   end EqnByEqn_Solver_Handler;
 

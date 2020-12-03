@@ -1,7 +1,7 @@
 with text_io;                            use text_io;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 
-package Drivers_to_Eqn_by_Eqn_Solvers is
+package Main_Eqn_by_Eqn_Solvers is
 
 -- DESCRIPTION :
 --   This package provides access to the equation-by-equation solvers.
@@ -30,4 +30,17 @@ package Drivers_to_Eqn_by_Eqn_Solvers is
   --   Prepares the executable versions to instantiate the
   --   generic equation-by-equation solver.
 
-end Drivers_to_Eqn_by_Eqn_Solvers;
+
+  procedure Main ( infilename,outfilename : in string );
+
+  -- DESCRIPTION :
+  --   Defines phc -a, applies the equation-by-equation solver.
+
+  -- ON ENTRY :
+  --   infilename     file name for input for a polynomial system,
+  --                  if empty, then the user will be prompted to supply
+  --                  the name of an input file;
+  --   outfilename    name of file for output, if empty, then the user will
+  --                  be asked to supply the name of an output file.
+
+end Main_Eqn_by_Eqn_Solvers;

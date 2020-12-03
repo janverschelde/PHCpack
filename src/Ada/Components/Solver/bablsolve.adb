@@ -1,6 +1,6 @@
 with String_Splitters;                   use String_Splitters;
 with Communications_with_User;           use Communications_with_User;
-with Drivers_to_Eqn_by_Eqn_Solvers;      use Drivers_to_Eqn_by_Eqn_Solvers;
+with Main_Eqn_by_Eqn_Solvers;            use Main_Eqn_by_Eqn_Solvers;
 
 procedure bablsolve
             ( p : in Poly_Sys; outname : in string;
