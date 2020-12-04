@@ -325,13 +325,15 @@ package Option_Handlers is
   --   logfile  name of the output file.
 
   procedure Witness_Set_Intersection_Handler
-              ( opts,witset_one,witset_two,logfile : in string );
+              ( args : in Array_of_Strings;
+                opts,witset_one,witset_two,logfile : in string );
 
   -- DESCRIPTION :
   --   Defines the action for the option -w,
   --   to intersect two witness sets.
 
   -- ON ENTRY :
+  --   args     command line arguments;
   --   opts     options extracted from the comamnd line arguments;
   --   witset_one is the name of the first witness set;
   --   witset_two is the name of the second witness set;

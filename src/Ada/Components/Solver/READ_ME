@@ -21,12 +21,12 @@ ts_hypwit                        : test on hypersurface witness sets
 shuffle_polynomials              : utilities to rearrange the order
 hypersurfaces_and_filters        : hypersurface representations and filters
 equation_by_equation_solvers     : solve equation by equation
-main_eqn_by_eqn_solvers          : its main defines phc -a
+main_eqn_by_eqn_solvers          : defines phc -a
 ts_solver                        : stand-alone interactive test program
 testnine.adb, testnine.m         : straight-line progs for 9-point problem
 testninehom1.adb                 : 1-homogeneous coordinates of 9-pt problem
 testfivehom1.adb                 : 1-homogeneous coordinates of 5-pt problem
 bablsolve                        : call by blackbox solver of PHCpack
-mainwit                          : witness set intersection main driver
-main_hypersurface_witsets        : witness set construction for hypersurface
+main_intersection                : defines phc -w, witness set intersection
+main_hypersurface_witsets        : defines phc -l, hypersurface witness sets
 ------------------------------------------------------------------------------

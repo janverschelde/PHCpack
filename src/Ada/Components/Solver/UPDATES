@@ -1,3 +1,6 @@
+Fri 4 Dec 2020 : moved mainwit into the new package main_intersection.
+  Added the verbose level to the procedures in main_intersection.
+
 Wed 2 Dec 2020 : renamed drivers_to_eqn_by_eqn_solvers into main_eqn_by_eqn_
   solvers and moved mainsolve into main_eqn_by_eqn_solvers as its main
   procedure.  Updated bablsolve.adb and removed the procedure mainsolve.

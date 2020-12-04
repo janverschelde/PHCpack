@@ -1,3 +1,6 @@
+Fri 4 Dec 2020 : extended option_handlers.ads and updated option_handlers.adb
+  for the new package main_intersection.
+
 Thu 3 Dec 2020 : updated option_handlers.adb for the move of the mainsam
   procedure into the package main_samplers.  Updated option_handlers.adb
   for the move of bablenum into the package main_pieri_count.

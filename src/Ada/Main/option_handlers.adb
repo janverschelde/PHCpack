@@ -35,7 +35,7 @@ with Main_Component_Solvers;
 with Main_Eqn_by_Eqn_Solvers;
 with Main_Hypersurface_Witsets;
 with Main_Samplers;
-with mainwit;
+with Main_Intersection;
 with Main_Dictionary_Solutions;
 with Main_Maple_Solutions;
 
@@ -733,10 +733,12 @@ package body Option_Handlers is
   end Witness_Set_for_Hypersurface_Handler;
 
   procedure Witness_Set_Intersection_Handler
-              ( opts,witset_one,witset_two,logfile : in string ) is
+              ( args : in Array_of_Strings;
+                opts,witset_one,witset_two,logfile : in string ) is
 
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
     hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
@@ -745,7 +747,7 @@ package body Option_Handlers is
       if witset_one = "" or witset_two = "" or logfile = ""
        then put_line(welcome); put_line(witban);
       end if;
-      mainwit(witset_one,witset_two,logfile);
+      Main_Intersection.Main(witset_one,witset_two,logfile,vrblvl);
     end if;
   end Witness_Set_Intersection_Handler;
 
@@ -835,7 +837,7 @@ package body Option_Handlers is
         when 'u' => Series_Handler(args,opts,a1,a2);
         when 'v' => Verification_Handler(args,opts,a1,a2);
         when 'l' => Witness_Set_for_Hypersurface_Handler(args,opts,a1,a2);
-        when 'w' => Witness_Set_Intersection_Handler(opts,a1,a2,a3);
+        when 'w' => Witness_Set_Intersection_Handler(args,opts,a1,a2,a3);
         when 'x' => Python_Format_Handler(args,opts,a1,a2);
         when 'y' => Witness_Set_Sampler_Handler(opts,a1,a2);
         when 'z' => Maple_Format_Handler(args,opts,a1,a2);
