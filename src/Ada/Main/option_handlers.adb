@@ -25,9 +25,9 @@ with Main_Trackers;
 with Main_Pade_Trackers;
 with mainadep;
 with mainfac,maindeco;
-with Main_Schubert_Induction;
 with Main_Output_Feedback;
-with bablenum;
+with Main_Pieri_Count;
+with Main_Schubert_Induction;
 with Main_Verification;
 with Black_Box_Root_Refiners;
 with Main_Component_Solvers;
@@ -240,7 +240,7 @@ package body Option_Handlers is
     elsif spos >= integer32(opts'first) then
       Main_Scaling.Main(file1,file2,vrblvl);
     elsif epos >= integer32(opts'first) then
-      bablenum(file1,file2,vrblvl);
+      Main_Pieri_Count.Main(file1,file2,vrblvl);
     elsif dpos >= integer32(opts'first) then
       if redprc = 2 then
         Main_Reduction.DoblDobl_Main(file1,file2,vrblvl);
@@ -529,7 +529,7 @@ package body Option_Handlers is
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4enumeration;
     elsif bpos >= integer32(opts'first) then
-      bablenum(infile,outfile,vrblvl);
+      Main_Pieri_Count.Main(infile,outfile,vrblvl);
     else
       if nt > 0 then
         declare

@@ -1,5 +1,6 @@
 Thu 3 Dec 2020 : updated option_handlers.adb for the move of the mainsam
-  procedure into the package main_samplers.
+  procedure into the package main_samplers.  Updated option_handlers.adb
+  for the move of bablenum into the package main_pieri_count.
 
 Wed 2 Dec 2020 : replace mainfeed by the package main_output_feedback,
   updated option_handlers.adb.  Updated option_handlers.adb for the
