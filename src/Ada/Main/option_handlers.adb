@@ -24,7 +24,8 @@ with mainpoco;
 with Main_Trackers;
 with Main_Pade_Trackers;
 with mainadep;
-with mainfac,maindeco;
+with mainfac;
+with Main_Decomposition;
 with Main_Output_Feedback;
 with Main_Pieri_Count;
 with Main_Schubert_Induction;
@@ -581,11 +582,11 @@ package body Option_Handlers is
         begin
           put_line(welcome);
           put_line(compban & " with " & ns & " tasks");
-          maindeco(nt,infile,outfile,vrblvl);
+          Main_Decomposition.Main(nt,infile,outfile,vrblvl);
         end;
       else
         put_line(welcome); put_line(compban);
-        maindeco(0,infile,outfile,vrblvl);
+        Main_Decomposition.Main(0,infile,outfile,vrblvl);
       end if;
     end if;
   end Decomposition_Handler;

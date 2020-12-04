@@ -1,3 +1,5 @@
+Thu 3 Dec 2020 : moved maindeco to the package main_decomposition.
+
 Sun 8 Nov 2020 : updated maindeco.adb, drivers_to_cascade_filtering.adb,
   jumpstart_diagonal_homotopies.adb for the renaming of drivers_for_poly_
   continuation into main_poly_continuation.

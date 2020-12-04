@@ -1,4 +1,4 @@
-A Numerical Irreducible Decomposition with PHCv2.4.74
+A Numerical Irreducible Decomposition with PHCv2.4.83
 
 This directory is entirely new in release 2.1 and contains homotopies to
 compute witness points on all positive dimensional solution components.
@@ -42,7 +42,7 @@ jumpstart_diagonal_homotopies    : jumpstart to intersect varieties
 ts_jmpdia                        : jumpstarting diagonal homotopies
 ------------------------------------------------------------------------------
 add_and_remove_embedding         : adding and removing an embedding
-maindeco                         : dispatcher calls decomposition (all dim)
+main_decomposition               : defines phc -c
 ------------------------------------------------------------------------------
 ts_dimred                        : test on dimension determination
 ------------------------------------------------------------------------------

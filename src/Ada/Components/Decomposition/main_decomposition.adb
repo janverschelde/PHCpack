@@ -5,9 +5,6 @@ with Timing_Package;                    use Timing_Package;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Matrices;         use Standard_Complex_Matrices;
-with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
-with Symbol_Table;
-with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
@@ -28,20 +25,15 @@ with Extrinsic_Diagonal_Solvers;        use Extrinsic_Diagonal_Solvers;
 with Drivers_to_Intersect_Varieties;    use Drivers_to_Intersect_Varieties;
 with Driver_to_Rank_Supports;
 
-procedure maindeco ( nt : in natural32; infilename,outfilename : in string;
-                     verbose : in integer32 := 0 ) is
+package body Main_Decomposition is
 
   procedure Read_Two_Witness_Sets
               ( lp1,lp2 : out Link_to_Poly_Sys;
                 sols1,sols2 : out Solution_List;
                 dim1,dim2 : out natural32; vrb : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Prompts the user for two files for two witness sets.
-
   begin
     if vrb > 0
-     then put_line("-> in maindeco.Read_Two_Witness_Sets 1 ...");
+     then put_line("-> in main_decomposition.Read_Two_Witness_Sets 1 ...");
     end if;
     new_line;
     put_line("Reading the first embedded polynomial system.");
@@ -57,15 +49,9 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string;
                 dim1,dim2 : out natural32;
                 lsym1,lsym2 : out Symbol_Table.Link_to_Array_of_Symbols;
                 vrb : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Prompts the user for two files for two witness sets,
-  --   returns the witness sets: systems and solutions, their dimensions,
-  --   and their symbols for the names of the variables.
-
   begin
     if vrb > 0
-     then put_line("-> in maindeco.Read_Two_Witness_Sets 2 ...");
+     then put_line("-> in main_decomposition.Read_Two_Witness_Sets 2 ...");
     end if;
     new_line;
     put_line("Reading the first embedded polynomial system.");
@@ -77,12 +63,8 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string;
     lsym2 := Extrinsic_Diagonal_Homotopies_io.Get_Link_to_Symbols;
   end Read_Two_Witness_Sets;
 
-  procedure Call_Extrinsic_Diagonal_Homotopies ( vrb : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Prompts the user for two witness sets and runs an extrinsic
-  --   cascade of homotopies to compute a witness set representation
-  --   of their intersection.
+  procedure Call_Extrinsic_Diagonal_Homotopies
+              ( outfilename : in string; vrb : in integer32 := 0 ) is
 
     lp1,lp2 : Link_to_Poly_Sys;
     esols1,esols2,sols1,sols2 : Solution_List;
@@ -93,8 +75,9 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string;
     report : boolean;
 
   begin
-    if vrb > 0
-     then put_line("-> in maindeco.Call_Extrinsic_Diagonal_Homotopies ...");
+    if vrb > 0 then
+      put("-> in main_decomposition.");
+      put_line("Call_Extrinsic_Diagonal_Homotopies ...");
     end if;
     new_line;
     put_line("Executing diagonal homotopies extrinsically...");
@@ -124,7 +107,8 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string;
     end if;
   end Call_Extrinsic_Diagonal_Homotopies;
 
-  procedure Call_Intrinsic_Diagonal_Homotopies ( vrb : in integer32 := 0 ) is
+  procedure Call_Intrinsic_Diagonal_Homotopies
+              ( outfilename : in string; vrb : in integer32 := 0 ) is
 
     lp1,lp2 : Link_to_Poly_Sys;
     sols1,sols2 : Solution_List;
@@ -140,8 +124,9 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string;
     s : Solution_List;
 
   begin
-    if vrb > 0
-     then put_line("-> in maindeco.Call_Intrinsic_Diagonal_Homotopies ...");
+    if vrb > 0 then
+      put("-> in main_decomposition.");
+      put_line("-> Call_Intrinsic_Diagonal_Homotopies ...");
     end if;
     new_line;
     put_line("Executing diagonal homotopies intrinsically...");
@@ -178,7 +163,9 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string;
     end if;
   end Call_Intrinsic_Diagonal_Homotopies;
 
-  procedure Call_Binomial_Solver ( vrb : in integer32 := 0 ) is
+  procedure Call_Binomial_Solver
+              ( infilename,outfilename : in string;
+                vrb : in integer32 := 0 ) is
 
     infile,file : file_type;
     lp : Link_to_Laur_Sys;
@@ -226,19 +213,17 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string;
     print_times(file,timer,"the blackbox binomial system solver");
   end Call_Binomial_Solver;
 
-  procedure Degrees_of_Monomial_Maps ( vrb : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Reads a Laurent system and a list of monomial maps
-  --   to compute their degrees.
+  procedure Degrees_of_Monomial_Maps
+              ( infilename : in string; vrb : in integer32 := 0 ) is
 
     file : file_type;
     lp : Link_to_Laur_Sys;
     maps : Monomial_Map_List;
 
   begin
-    if vrb > 0
-     then put_line("-> in maindeco.Degrees_of_Monomial_Maps ...");
+    if vrb > 0 then
+      put_line("-> in main_decomposition.");
+      put_line("Degrees_of_Monomial_Maps ...");
     end if;
     if infilename = "" then
       new_line;
@@ -257,12 +242,9 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string;
     end;
   end Degrees_of_Monomial_Maps;
 
-  procedure Transform_Positive_Corank ( vrb : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Computes the rank of the supports of a Laurent system
-  --   and if the corank is positive, via a monomial transformation
-  --   as many variables as the corank can be eliminated.
+  procedure Transform_Positive_Corank 
+              ( infilename,outfilename : in string;
+                vrb : in integer32 := 0 ) is
 
     infile,file : file_type;
     lp : Link_to_Laur_Sys;
@@ -270,17 +252,16 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string;
 
   begin
     if vrb > 0
-     then put_line("-> in maindeco.Transform_Positive_Corank ...");
+     then put_line("-> in main_decomposition.Transform_Positive_Corank ...");
     end if;
     Prompt_for_Systems.Read_System(infile,infilename,lp,sysonfile);
     Create_Output_File(file,outfilename);
     Driver_to_Rank_Supports(file,lp.all);
   end Transform_Positive_Corank;
 
-  procedure Run_Cascade_Filter ( vrb : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Runs the cascade filter with verbose level in vrb.
+  procedure Run_Cascade_Filter
+               ( infilename,outfilename : in string;
+                 vrb : in integer32 := 0 ) is
 
     lp : Link_to_Poly_Sys;
     k : natural32 := 0;
@@ -298,10 +279,8 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string;
     Driver_for_Cascade_Filter(file,lp.all,integer32(k));
   end Run_Cascade_Filter;
 
-  procedure Main is
-
-  -- DESCRIPTION :
-  --   Displays the main menu and then calls the proper handler.
+  procedure Main ( nt : in natural32; infilename,outfilename : in string;
+                   verbose : in integer32 := 0 ) is
 
     ans : character;
 
@@ -334,19 +313,17 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string;
       when '0' => Embed_and_Cascade(nt,infilename,outfilename,verbose-1);
       when '1' => Driver_to_Square_and_Embed(infilename,outfilename);
       when '2' => Driver_to_Witness_Generate(nt,infilename,outfilename);
-      when '3' => Run_Cascade_Filter(verbose-1);
+      when '3' => Run_Cascade_Filter(infilename,outfilename,verbose-1);
       when '4' => Driver_to_Remove_Embedding(infilename,outfilename);
       when '5' => Build_Diagonal_Cascade;
       when '6' => Collapse_Diagonal_System;
-      when '7' => Call_Extrinsic_Diagonal_Homotopies(verbose-1);
-      when '8' => Call_Intrinsic_Diagonal_Homotopies(verbose-1);
-      when '9' => Call_Binomial_Solver(verbose-1);
-      when 'A' => Degrees_of_Monomial_Maps(verbose-1);
-      when 'B' => Transform_Positive_Corank(verbose-1);
+      when '7' => Call_Extrinsic_Diagonal_Homotopies(outfilename,verbose-1);
+      when '8' => Call_Intrinsic_Diagonal_Homotopies(outfilename,verbose-1);
+      when '9' => Call_Binomial_Solver(infilename,outfilename,verbose-1);
+      when 'A' => Degrees_of_Monomial_Maps(infilename,verbose-1);
+      when 'B' => Transform_Positive_Corank(infilename,outfilename,verbose-1);
       when others => null;
     end case;
   end Main;
 
-begin
-  Main;
-end maindeco;
+end Main_Decomposition;
