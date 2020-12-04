@@ -26,7 +26,7 @@ setup(
         'phcpy/curves', 'phcpy/schubert', 'phcpy/examples', \
         'phcpy/families', 'phcpy/dashboard', 'phcpy/server' ] ,
     license = 'GNU GENERAL PUBLIC LICENSE version 3' ,
-    package_data = {'phcpy':['phcpy2c3.so']} ,
+    package_data = {'phcpy':['phcpy2c2.so']} ,
     platforms = ['linux2'] ,
     long_description=open('README.txt').read()
 )
