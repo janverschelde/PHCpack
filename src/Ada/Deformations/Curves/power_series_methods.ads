@@ -2,14 +2,18 @@ with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
+with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Complex_Series_Vectors;
 with Standard_Complex_Series_VecVecs;
 with DoblDobl_Complex_Series_Vectors;
 with DoblDobl_Complex_Series_VecVecs;
+with TripDobl_Complex_Series_Vectors;
+with TripDobl_Complex_Series_VecVecs;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series_VecVecs;
 with Standard_CSeries_Poly_Systems;
@@ -18,6 +22,9 @@ with Standard_CSeries_Jaco_Matrices;
 with DoblDobl_CSeries_Poly_Systems;
 with DoblDobl_CSeries_Poly_SysFun;
 with DoblDobl_CSeries_Jaco_Matrices;
+with TripDobl_CSeries_Poly_SysFun;
+with TripDobl_CSeries_Jaco_Matrices;
+with TripDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_SysFun;
 with QuadDobl_CSeries_Jaco_Matrices;
@@ -395,6 +402,18 @@ package Power_Series_Methods is
                 vrblvl : in integer32 := 0 );
   procedure Run_SVD_Newton
               ( maxdeg,nbrit : in integer32;
+                p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out TripDobl_Complex_Series_Vectors.Vector;
+                rcond : out triple_double; verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out TripDobl_Complex_Series_Vectors.Vector;
+                rcond : out triple_double; verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double; verbose : in boolean := false;
@@ -631,6 +650,13 @@ package Power_Series_Methods is
                 vrblvl : in integer32 := 0 );
   procedure Run_SVD_Newton
               ( maxdeg,nbrit : in integer32;
+                p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in TripDobl_Complex_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                pause : in boolean := false;
+                vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -650,6 +676,12 @@ package Power_Series_Methods is
                 vrblvl : in integer32 := 0 );
   procedure Run_SVD_Newton
               ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in TripDobl_Complex_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -658,7 +690,7 @@ package Power_Series_Methods is
   -- DESCRIPTION :
   --   Runs Newton's method on the vector of power series in v.
   --   using the singular value decomposition to compute the updates,
-  --   in double, double double, or quad double precision.
+  --   in double, double double, triple double or quad double precision.
 
   -- ON ENTRY :
   --   file     must be opened for output, to write results,

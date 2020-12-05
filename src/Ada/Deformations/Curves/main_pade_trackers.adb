@@ -1,6 +1,6 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
-with Run_Power_Series_Methods;          use Run_Power_Series_Methods;
+with Run_Power_Series_Methods;           use Run_Power_Series_Methods;
 with Regular_Newton_Puiseux;
 with Series_Path_Trackers;
 with Interactive_Pade_Trackers;
@@ -50,6 +50,11 @@ package body Main_Pade_Trackers is
         if ans = 'y'
          then DoblDobl_Main_at_Constant(infilename,outfilename,vrb-1);
          else DoblDobl_Main_at_Series(infilename,outfilename,vrb-1);
+        end if;
+      when '3' =>
+        put_line("The working precision is triple double precision.");
+        if ans = 'y'
+         then TripDobl_Main_at_Constant(infilename,outfilename,vrb-1);
         end if;
       when '4' =>
         put_line("The working precision is quad double precision.");
@@ -131,9 +136,10 @@ package body Main_Pade_Trackers is
     put_line("MENU for the precision :");
     put_line("  1. double precision");
     put_line("  2. double double precision");
+    put_line("  3. triple double precision");
     put_line("  4. quad double precision");
-    put("Type 1, 2, or 4 to select the precision : ");
-    Ask_Alternative(res,"124");
+    put("Type 1, 2, 3, or 4 to select the precision : ");
+    Ask_Alternative(res,"1234");
     return res;
   end Prompt_for_Precision_Level;
 

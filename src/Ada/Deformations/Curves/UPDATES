@@ -1,3 +1,8 @@
+Sat 5 Dec 2020 : extended main_pade_trackers.adb to run Newton's method
+  starting at a constant term in triple double precision, using the new
+  package tripdobl_newton_matrix_series, the extended series_and_solutions,
+  power_series_methods, and run_power_series_methods.
+
 Tue 1 Dec 2020 : eliminated the procedure mainseries, as it only calls the
   Main of the main_pade_trackers.  New package test_series_solutions with
   code taken from ts_sersol.adb.

@@ -7,6 +7,9 @@ with Standard_System_and_Solutions_io;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
 with DoblDobl_System_and_Solutions_io;
+with TripDobl_Complex_Polynomials;
+with TripDobl_Complex_Poly_Systems_io;   use TripDobl_Complex_Poly_Systems_io;
+with TripDobl_System_and_Solutions_io;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_System_and_Solutions_io;
@@ -16,7 +19,7 @@ with QuadDobl_Complex_Series_Vectors;
 with Complex_Series_and_Polynomials;
 with Complex_Series_and_Polynomials_io;
 with Series_and_Solutions;
-with Power_Series_Methods;              use Power_Series_Methods;
+with Power_Series_Methods;               use Power_Series_Methods;
 
 package body Run_Power_Series_Methods is
 
@@ -100,6 +103,45 @@ package body Run_Power_Series_Methods is
 
   procedure Run_Newton
              ( file : in file_type; echelon : in boolean;
+               p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in TripDobl_Complex_Series_VecVecs.VecVec;
+               vrb : in integer32 := 0 ) is
+
+    maxdeg,nbrit : integer32 := 0;
+    ans : character;
+    verbose : boolean;
+    timer : Timing_Widget;
+
+  begin
+    if vrb > 0
+     then put_line("-> in run_power_series_methods.Run_Newton 3 ...");
+    end if;
+    put("Give the number of steps in Newton's method : "); get(nbrit);
+    put("Give the maximal degree of the series : "); get(maxdeg);
+    put("Do you want extra diagnostic output in every Newton step ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    if echelon then
+      new_line;
+      put_line("Echelon Newton will be applied.  See the output file ...");
+      new_line;
+      tstart(timer);
+     -- Run_Echelon_Newton(file,maxdeg,nbrit,p,s,verbose);
+      tstop(timer);
+    else
+      new_line;
+      put_line("SVD Newton will be applied.  See the output file ...");
+      new_line;
+      tstart(timer);
+      Run_SVD_Newton(file,maxdeg,nbrit,p,s,verbose);
+      tstop(timer);
+    end if;
+    new_line(file);
+    print_times(file,timer,"power series Newton in triple double precision");
+  end Run_Newton;
+
+  procedure Run_Newton
+             ( file : in file_type; echelon : in boolean;
                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in QuadDobl_Complex_Series_VecVecs.VecVec;
                vrb : in integer32 := 0 ) is
@@ -111,7 +153,7 @@ package body Run_Power_Series_Methods is
 
   begin
     if vrb > 0
-     then put_line("-> in run_power_series_methods.Run_Newton 3 ...");
+     then put_line("-> in run_power_series_methods.Run_Newton 4 ...");
     end if;
     put("Give the number of steps in Newton's method : "); get(nbrit);
     put("Give the maximal degree of the series : "); get(maxdeg);
@@ -179,6 +221,28 @@ package body Run_Power_Series_Methods is
     end if;
     Run_Newton(file,false,srp,srv,vrb-1);
     DoblDobl_CSeries_Poly_Systems.Clear(srp);
+  end Run_Newton_at_Constant;
+
+  procedure Run_Newton_at_Constant
+             ( file : in file_type; idx : in integer32;
+               p : in TripDobl_Complex_Poly_Systems.Poly_Sys;
+               s : in TripDobl_Complex_Solutions.Solution_List;
+               vrb : in integer32 := 0 ) is
+
+    use TripDobl_Complex_Solutions;
+
+    len : constant integer32 := integer32(Length_Of(s));
+    srv : constant TripDobl_Complex_Series_VecVecs.VecVec(1..len)
+        := Series_and_Solutions.Create(s,idx);
+    srp : TripDobl_CSeries_Poly_Systems.Poly_Sys(p'range)
+        := Complex_Series_and_Polynomials.System_to_Series_System(p,idx);
+
+  begin
+    if vrb > 0 then
+      put_line("-> in run_power_series_methods.Run_Newton_at_Constant 2 ...");
+    end if;
+    Run_Newton(file,false,srp,srv,vrb-1);
+    TripDobl_CSeries_Poly_Systems.Clear(srp);
   end Run_Newton_at_Constant;
 
   procedure Run_Newton_at_Constant
@@ -290,6 +354,50 @@ package body Run_Power_Series_Methods is
     put("Give the index of the parameter : "); get(idx);
     Run_Newton_at_Constant(outfile,idx,lp.all,sols,vrb-1);
   end DoblDobl_Main_at_Constant;
+
+  procedure TripDobl_Main_at_Constant
+              ( infilename,outfilename : in string;
+                vrb : in integer32 := 0 ) is
+
+    use TripDobl_Complex_Polynomials;
+    use TripDobl_Complex_Poly_Systems;
+    use TripDobl_Complex_Solutions;
+
+    infile,outfile : file_type;
+    lp : Link_to_Poly_Sys;
+    nq,nv,idx : integer32 := 0;
+    sols : Solution_List;
+
+  begin
+    if vrb > 0 then
+      put_line("-> in run_power_series_methods.TripDobl_Main_at_Constant ...");
+    end if;
+    if infilename = "" then
+      new_line;
+      put_line("Reading the file name for a system and solutions ...");
+      TripDobl_System_and_Solutions_io.get(lp,sols);
+    else
+      Open_Input_File(infile,infilename);
+      TripDobl_System_and_Solutions_io.get(infile,lp,sols);
+      close(infile);
+    end if;
+    new_line;
+    nq := lp'last;
+    nv := integer32(Number_of_Unknowns(lp(lp'first)));
+    put("Read a system of "); put(nq,1);
+    put(" equations in "); put(nv,1); put_line(" unknowns.");
+    put("Read "); put(integer32(Length_Of(sols)),1); put_line(" solutions.");
+    if outfilename = "" then
+      new_line;
+      put_line("Reading the name of the output file ...");
+      Read_Name_and_Create_File(outfile);
+    else
+      Create_Output_File(outfile,outfilename);
+    end if;
+    new_line;
+    put("Give the index of the parameter : "); get(idx);
+    Run_Newton_at_Constant(outfile,idx,lp.all,sols,vrb-1);
+  end TripDobl_Main_at_Constant;
 
   procedure QuadDobl_Main_at_Constant
               ( infilename,outfilename : in string;

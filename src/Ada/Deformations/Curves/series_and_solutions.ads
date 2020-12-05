@@ -3,12 +3,16 @@ with Standard_Complex_Vectors;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Solutions;
+with TripDobl_Complex_Vectors;
+with TripDobl_Complex_Solutions;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Solutions;
 with Standard_Complex_Series_Vectors;
 with Standard_Complex_Series_VecVecs;
 with DoblDobl_Complex_Series_Vectors;
 with DoblDobl_Complex_Series_VecVecs;
+with TripDobl_Complex_Series_Vectors;
+with TripDobl_Complex_Series_VecVecs;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series_VecVecs;
 
@@ -24,6 +28,9 @@ package Series_and_Solutions is
   function Create ( sol : DoblDobl_Complex_Vectors.Vector;
                     idx : integer32 ) 
                   return DoblDobl_Complex_Series_Vectors.Vector;
+  function Create ( sol : TripDobl_Complex_Vectors.Vector;
+                    idx : integer32 ) 
+                  return TripDobl_Complex_Series_Vectors.Vector;
   function Create ( sol : QuadDobl_Complex_Vectors.Vector;
                     idx : integer32 ) 
                   return QuadDobl_Complex_Series_Vectors.Vector;
@@ -41,6 +48,9 @@ package Series_and_Solutions is
   function Create ( sol : DoblDobl_Complex_Solutions.Solution;
                     idx : integer32 ) 
                   return DoblDobl_Complex_Series_Vectors.Vector;
+  function Create ( sol : TripDobl_Complex_Solutions.Solution;
+                    idx : integer32 ) 
+                  return TripDobl_Complex_Series_Vectors.Vector;
   function Create ( sol : QuadDobl_Complex_Solutions.Solution;
                     idx : integer32 ) 
                   return QuadDobl_Complex_Series_Vectors.Vector;
@@ -58,6 +68,9 @@ package Series_and_Solutions is
   function Create ( sols : DoblDobl_Complex_Solutions.Solution_List;
                     idx : integer32 ) 
                   return DoblDobl_Complex_Series_VecVecs.VecVec;
+  function Create ( sols : TripDobl_Complex_Solutions.Solution_List;
+                    idx : integer32 ) 
+                  return TripDobl_Complex_Series_VecVecs.VecVec;
   function Create ( sols : QuadDobl_Complex_Solutions.Solution_List;
                     idx : integer32 ) 
                   return QuadDobl_Complex_Series_VecVecs.VecVec;
