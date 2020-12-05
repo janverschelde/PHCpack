@@ -61,7 +61,7 @@ monodromy_homotopies             : exports witness_factor procedures
 monodromy_homotopies_io          : writes the results of monodromy homotopies
 ------------------------------------------------------------------------------
 drivers_to_breakup_solutions     : drivers to factor witness sets
-mainfac                          : routine called by main dispatcher
+main_factorization               : defines phc -f
 black_box_factorization          : routine called by black-box solver (phc -b)
 phc_factor                       : Ada routine for C interface
 ------------------------------------------------------------------------------

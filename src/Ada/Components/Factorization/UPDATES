@@ -1,3 +1,6 @@
+Fri 4 Dec 2020 : moved mainfac into the new package main_factorization.
+  Added the verbose level to the main procedures in this new package.
+
 Thu 3 Dec 2020 : updated irreducible_component_creators.adb, mainfac.adb,
   monodromy_component_breakup.adb and drivers_to_breakup_solutions.adb,
   for the renaming of drivers_to_grid_creators into make_sample_grids.

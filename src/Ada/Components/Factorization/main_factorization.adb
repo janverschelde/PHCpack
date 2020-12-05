@@ -1,10 +1,7 @@
 with Ada.Calendar;
-with text_io;                            use text_io;
 with Timing_Package,Time_Stamps;         use Timing_Package,Time_Stamps;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Numbers_io;                         use Numbers_io;
 with Multprec_Floating_Numbers;
@@ -13,15 +10,8 @@ with Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;    use Standard_Complex_Polynomials_io;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Polynomials_io;    use Multprec_Complex_Polynomials_io;
-with Standard_Complex_Poly_Systems;
-with DoblDobl_Complex_Poly_Systems;
-with QuadDobl_Complex_Poly_Systems;
-with Multprec_Complex_Poly_Systems;
-with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
-with DoblDobl_Complex_Solutions;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
-with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Sampling_Machine;
 with Sample_Point_Lists;                 use Sample_Point_Lists;
@@ -41,14 +31,9 @@ with mainfilt;
 with Greeting_Banners;
 with Write_Seed_Number;
 
-procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
+package body Main_Factorization is
 
   procedure Tune_Member_Tolerances ( restol,homtol : in out double_float ) is
-
-  -- DESCRIPTION :
-  --   Displays the current values for the tolerances to decide whether
-  --   a residual is small enough for the point to lie on a hypersurface,
-  --   and for a test point to belong to a witness set.
 
     ans : character;
 
@@ -76,10 +61,6 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 gpts,sols : in Standard_Complex_Solutions.Solution_List ) is
 
-  -- DESCRIPTION :
-  --   When nt > 0, then the multitasking membership test is called.
-  --   This procedure wraps the call and writes results to file.
-
     use Standard_Complex_Solutions;
 
     start_moment,ended_moment : Ada.Calendar.Time;
@@ -89,7 +70,7 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
   begin
     start_moment := Ada.Calendar.Clock;
     tstart(timer);
-    isols := Standard_Membership_Filter(nt,dim,homtol,ep,gpts,sols);
+    isols := Standard_Membership_Filter(nbtasks,dim,homtol,ep,gpts,sols);
     tstop(timer);
     ended_moment := Ada.Calendar.Clock;
     put(file,"Tested ");
@@ -113,10 +94,6 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 gpts,sols : in DoblDobl_Complex_Solutions.Solution_List ) is
 
-  -- DESCRIPTION :
-  --   When nt > 0, then the multitasking membership test is called.
-  --   This procedure wraps the call and writes results to file.
-
     use DoblDobl_Complex_Solutions;
 
     start_moment,ended_moment : Ada.Calendar.Time;
@@ -126,7 +103,7 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
   begin
     start_moment := Ada.Calendar.Clock;
     tstart(timer);
-    isols := DoblDobl_Membership_Filter(nt,dim,homtol,ep,gpts,sols);
+    isols := DoblDobl_Membership_Filter(nbtasks,dim,homtol,ep,gpts,sols);
     tstop(timer);
     ended_moment := Ada.Calendar.Clock;
     put(file,"Tested ");
@@ -150,10 +127,6 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 gpts,sols : in QuadDobl_Complex_Solutions.Solution_List ) is
 
-  -- DESCRIPTION :
-  --   When nt > 0, then the multitasking membership test is called.
-  --   This procedure wraps the call and writes results to file.
-
     use QuadDobl_Complex_Solutions;
 
     start_moment,ended_moment : Ada.Calendar.Time;
@@ -163,7 +136,7 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
   begin
     start_moment := Ada.Calendar.Clock;
     tstart(timer);
-    isols := QuadDobl_Membership_Filter(nt,dim,homtol,ep,gpts,sols);
+    isols := QuadDobl_Membership_Filter(nbtasks,dim,homtol,ep,gpts,sols);
     tstop(timer);
     ended_moment := Ada.Calendar.Clock;
     put(file,"Tested ");
@@ -181,12 +154,8 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     put(file,Length_Of(isols),natural32(Head_Of(isols).n),isols);
   end QuadDobl_Multitasked_Membership_Test;
 
-  procedure Standard_Homotopy_Membership_Test is
-
-  -- DESCRIPTION :
-  --   Prompts the user for a witness set, a list of test points,
-  --   and then applies the homotopy membership test
-  --   using standard double precision arithmetic.
+  procedure Standard_Homotopy_Membership_Test
+              ( nt : in natural32; vrblvl : in integer32 := 0 ) is
 
     file : file_type;
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -197,6 +166,10 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     timer : Timing_Widget;
 
   begin
+    if vrblvl > 0 then
+      put("-> in main_factorization.");
+      put_line("Standard_Homotopy_Membership_Test ...");
+    end if;
     Standard_Read_Embedding(lp,genpts,dim);
     new_line;
     put_line("The input format of the test points is the solutions format.");
@@ -223,12 +196,8 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     put_line(file,Greeting_Banners.Version);
   end Standard_Homotopy_Membership_Test;
 
-  procedure DoblDobl_Homotopy_Membership_Test is
-
-  -- DESCRIPTION :
-  --   Prompts the user for a witness set, a list of test points,
-  --   and then applies the homotopy membership test
-  --   using double double precision arithmetic.
+  procedure DoblDobl_Homotopy_Membership_Test
+              ( nt : in natural32; vrblvl : in integer32 := 0 ) is
 
     file : file_type;
     lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -239,6 +208,10 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     timer : Timing_Widget;
 
   begin
+    if vrblvl > 0 then
+      put("-> in main_factorization.");
+      put_line("DoblDobl_Homotopy_Membership_Test ...");
+    end if;
     DoblDobl_Read_Embedding(lp,genpts,dim);
     new_line;
     put_line("The input format of the test points is the solutions format.");
@@ -265,12 +238,8 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     put_line(file,Greeting_Banners.Version);
   end DoblDobl_Homotopy_Membership_Test;
 
-  procedure QuadDobl_Homotopy_Membership_Test is
-
-  -- DESCRIPTION :
-  --   Prompts the user for a witness set, a list of test points,
-  --   and then applies the homotopy membership test
-  --   using quad double precision arithmetic.
+  procedure QuadDobl_Homotopy_Membership_Test
+              ( nt : in natural32; vrblvl : in integer32 := 0 ) is
 
     file : file_type;
     lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -281,6 +250,10 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     timer : Timing_Widget;
 
   begin
+    if vrblvl > 0 then
+      put("-> in main_factorization.");
+      put_line("QuadDobl_Homotopy_Membership_Test ...");
+    end if;
     QuadDobl_Read_Embedding(lp,genpts,dim);
     new_line;
     put_line("The input format of the test points is the solutions format.");
@@ -307,11 +280,15 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     put_line(file,Greeting_Banners.Version);
   end QuadDobl_Homotopy_Membership_Test;
 
-  procedure Homotopy_Membership_Test is
+  procedure Homotopy_Membership_Test
+              ( nt : in natural32; vrblvl : in integer32 := 0 ) is
 
     ans : character;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in main_factorization.Homotopy_Membership_Test ...");
+    end if;
     new_line;
     put_line("Membership test with homotopy :");
     put_line("  Input : embedded polynomial system with generic points, and");
@@ -325,14 +302,14 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     put("Type 0, 1, or 2 to select the precision : ");
     Ask_Alternative(ans,"012");
     case ans is
-      when '0' => Standard_Homotopy_Membership_Test;
-      when '1' => DoblDobl_Homotopy_Membership_Test;
-      when '2' => QuadDobl_Homotopy_Membership_Test;
+      when '0' => Standard_Homotopy_Membership_Test(nt,vrblvl-1);
+      when '1' => DoblDobl_Homotopy_Membership_Test(nt,vrblvl-1);
+      when '2' => QuadDobl_Homotopy_Membership_Test(nt,vrblvl-1);
       when others => null;
     end case;
   end Homotopy_Membership_Test;
 
-  procedure Trace_Form_Interpolation is
+  procedure Trace_Form_Interpolation ( vrblvl : in integer32 := 0 ) is
 
     file : file_type;
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -341,6 +318,9 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     ans : character;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in main_factorization.Trace_Form_Interpolation ...");
+    end if;
     Standard_Read_Embedding(lp,sols,dim);
     new_line;
     put_line("Reading the name of the output file...");
@@ -366,7 +346,7 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     end case;
   end Trace_Form_Interpolation;
 
-  procedure Incremental_Interpolation is
+  procedure Incremental_Interpolation ( vrblvl : in integer32 := 0 ) is
 
     file : file_type;
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -375,6 +355,9 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     ans : character;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in main_factorization.Incremental_Interpolation ...");
+    end if;
     Standard_Read_Embedding(lp,sols,dim);
     new_line;
     put_line("Reading the name of the output file...");
@@ -408,11 +391,6 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
                   p : in Standard_Complex_Poly_Systems.Poly_Sys;
                   sols : in Standard_Complex_Solutions.Solution_List;
                   dim : in integer32 ) is
-
-  -- DESCRIPTION :
-  --   Given the embedded system with its solutions, this procedure
-  --   initializes the sampler and calls the interpolation routines.
-  --   All calculations are done with standard floating-point arithmetic.
 
     use Standard_Stacked_Sample_Grids,Standard_Trace_Interpolators;
 
@@ -469,12 +447,6 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
                   sols : in Standard_Complex_Solutions.Solution_List;
                   dim : in integer32; size : in natural32 ) is       
 
-  -- DESCRIPTION :
-  --   Given the embedded system with its solutions, this procedure
-  --   initializes the sampler and calls the interpolation routines.
-  --   Sample refinement and interpolation is done with multi-precision
-  --   arithmetic.
-
     use Multprec_Stacked_Sample_Grids,Multprec_Trace_Interpolators;
 
     sli : constant Standard_Complex_VecVecs.VecVec := Slices(ep,natural32(dim));
@@ -520,12 +492,7 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     put_line(file,ip);
   end Multprec_Eliminate;
 
-  procedure Eliminate_Variables is
-
-  -- DESCRIPTION :
-  --   Given an embedding with slices parallel to a given subspace,
-  --   with interpolation we eliminate variables not belonging to this
-  --   subspace from the system.
+  procedure Eliminate_Variables ( vrblvl : in integer32 := 0 ) is
 
     file : file_type;
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -534,9 +501,9 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     dim,deci,size : natural32 := 0;
 
   begin
-   -- new_line;
-   -- put_line
-   --   ("Numerical Elimination by Sampling, Projecting, and Interpolating.");
+    if vrblvl > 0
+     then put_line("-> in main_factorization.Eliminate_Variables ...");
+    end if;
     Standard_Read_Embedding(lp,sols,dim);
     new_line;
     put_line("Reading the name of the output file.");
@@ -556,11 +523,15 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     end if;
   end Eliminate_Variables;
 
-  procedure Main is
+  procedure Main ( nt : in natural32; infilename,outfilename : in string;
+                   vrblvl : in integer32 := 0 ) is
 
     ans : character;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in main_factorization.Main ...");
+    end if;
     new_line;
     put_line("MENU to filter junk, factor components, and eliminate :");
     put_line("  0. filter solution lists subject to criteria;");
@@ -577,11 +548,11 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     Ask_Alternative(ans,"0123456789");
     case ans is
       when '0' => mainfilt(infilename,outfilename);
-      when '1' => Homotopy_Membership_Test;
+      when '1' => Homotopy_Membership_Test(nt,vrblvl-1);
       when '2' => Standard_Breakup(infilename,outfilename);
-      when '3' => Trace_Form_Interpolation;
-      when '4' => Incremental_Interpolation;
-      when '5' => Eliminate_Variables;
+      when '3' => Trace_Form_Interpolation(vrblvl-1);
+      when '4' => Incremental_Interpolation(vrblvl-1);
+      when '5' => Eliminate_Variables(vrblvl-1);
       when '6' =>
         if infilename = ""
          then Driver_to_Factor_Polynomial;
@@ -594,6 +565,4 @@ procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
     end case;
   end Main;
 
-begin
-  Main;
-end mainfac;
+end Main_Factorization;

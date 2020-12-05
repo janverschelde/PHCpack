@@ -24,7 +24,7 @@ with mainpoco;
 with Main_Trackers;
 with Main_Pade_Trackers;
 with mainadep;
-with mainfac;
+with Main_Factorization;
 with Main_Decomposition;
 with Main_Output_Feedback;
 with Main_Pieri_Count;
@@ -598,6 +598,7 @@ package body Option_Handlers is
     nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
     hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
@@ -613,7 +614,7 @@ package body Option_Handlers is
           put_line(facban & ", with " & ns & " tasks.");
         end;
       end if;
-      mainfac(nt,infile,outfile);
+      Main_Factorization.Main(nt,infile,outfile,vrblvl);
     end if;
   end Factorization_Handler;
 
