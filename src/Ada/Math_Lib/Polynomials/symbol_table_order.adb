@@ -4,14 +4,18 @@ with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Symbol_Table_io;
 
-procedure mainsymb ( infilename,outfilename : in string ) is
+package body Symbol_Table_Order is
 
-  procedure Main is
+  procedure Main ( infilename,outfilename : in string;
+                   vrblvl : in integer32 := 0 ) is
 
     infile,outfile : file_type;
     lp : Link_to_Laur_Sys;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in symbol_table_order.Main ...");
+    end if;
     if infilename = "" then
       new_line;
       get(lp);
@@ -28,6 +32,4 @@ procedure mainsymb ( infilename,outfilename : in string ) is
     end if;
   end Main;
 
-begin
-  Main;
-end mainsymb;
+end Symbol_Table_Order;

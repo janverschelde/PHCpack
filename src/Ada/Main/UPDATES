@@ -1,3 +1,6 @@
+Sat 5 Dec 2020 : updated option_handlers for the replacement of the procedure
+  mainsymb by the package symbol_table_order.
+
 Fri 4 Dec 2020 : extended option_handlers.ads and updated option_handlers.adb
   for the new package main_intersection.  Updated option_handlers.adb for the
   new package main_factorization and the removal of the mainfac procedure.

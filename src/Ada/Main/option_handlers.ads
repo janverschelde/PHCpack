@@ -171,7 +171,8 @@ package Option_Handlers is
   --   outfile  name of the output file.
 
   procedure Symbols_Handler
-              ( opts : in string; infile,outfile : in string );
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string );
 
   -- DESCRIPTION :
   --   Defines the action for the option -o.

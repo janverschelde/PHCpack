@@ -12,7 +12,7 @@ with DoblDobl_BlackBox_Solvers;
 with QuadDobl_BlackBox_Solvers;
 with Polynomial_Homotopy_Continuation;
 with Parse_Strings_to_Polynomials;
-with mainsymb;
+with Symbol_Table_Order;
 with Main_Reduction;
 with Main_Scaling;
 with Black_Box_Root_Counters;
@@ -433,17 +433,19 @@ package body Option_Handlers is
   end Mixed_Volume_Handler;
 
   procedure Symbols_Handler
-              ( opts : in string; infile,outfile : in string ) is
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string ) is
 
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
     hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4symbols;
     else
       put_line(welcome); put_line(symbban);
-      mainsymb(infile,outfile);
+      Symbol_Table_Order.Main(infile,outfile,vrblvl);
     end if;
   end Symbols_Handler;
 
@@ -828,7 +830,7 @@ package body Option_Handlers is
         when 'd' => Reduction_Handler(args,opts,a1,a2);
         when 'r' => Root_Count_Handler(args,opts,a1,a2);
         when 'm' => Mixed_Volume_Handler(args,opts,a1,a2);
-        when 'o' => Symbols_Handler(opts,a1,a2);
+        when 'o' => Symbols_Handler(args,opts,a1,a2);
         when 'p' => Continuation_Handler(args,opts,a1,a2,a3);
         when 'q' => Jumpstart_Handler(args,opts,a1,a2,a3);
         when 'j' => Algorithmic_Differentiation_Handler(opts,a1,a2,a3);

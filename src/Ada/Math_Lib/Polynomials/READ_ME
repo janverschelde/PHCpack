@@ -261,9 +261,8 @@ ts_qdpol                          : test on quad double polynomials
 ts_termlist                       : tests on lists of terms
 ts_rwspol                         : test on writing, for long polynomials
 -------------------------------------------------------------------------------
-parse_strings_to_polynomials      : to parse strings into a system
-maingood                          : code for the phc -g
-mainsymb                          : writes the symbol table of a system
+parse_strings_to_polynomials      : to parse strings into a system and phc -g
+symbol_table_order                : writes the symbol table, for phc -o
 -------------------------------------------------------------------------------
 The i/o-routines provide readable formats in symbolic form.
 
