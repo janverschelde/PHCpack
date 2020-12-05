@@ -16,7 +16,8 @@ with mainsymb;
 with Main_Reduction;
 with Main_Scaling;
 with Black_Box_Root_Counters;
-with babldmvc,mainsmvc;
+with babldmvc;
+with Mixed_Volume_Calculator;
 with Standard_BlackBox_Continuations;
 with DoblDobl_BlackBox_Continuations;
 with QuadDobl_BlackBox_Continuations;
@@ -423,11 +424,11 @@ package body Option_Handlers is
         ns : constant string := Convert(integer32(nt));
       begin
         put_line(welcome); put_line(mvcban & ", with " & ns & " tasks.");
-        mainsmvc(nt,infile,outfile,vrblvl);
+        Mixed_Volume_Calculator.Main(nt,infile,outfile,vrblvl);
       end;
     else
       put_line(welcome); put_line(mvcban & ", no multitasking.");
-      mainsmvc(0,infile,outfile,vrblvl);
+      Mixed_Volume_Calculator.Main(0,infile,outfile,vrblvl);
     end if;
   end Mixed_Volume_Handler;
 

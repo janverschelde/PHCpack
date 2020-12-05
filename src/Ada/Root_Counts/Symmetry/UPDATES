@@ -1,3 +1,5 @@
+Fri 4 Dec 2020 : replaced mainsmvc by the package mixed_volume_calculator.
+
 Sun 8 Nov 2020 : updated drivers_for_symmetric_lifting for the renaming of
   drivers_for_poly_continuation into main_poly_continuation.
 

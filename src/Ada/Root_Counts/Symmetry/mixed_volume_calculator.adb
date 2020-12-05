@@ -1,11 +1,8 @@
-with Ada.Calendar;                       use Ada.Calendar;
-with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Time_Stamps;                        use Time_Stamps;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
-with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Laur_Poly_Convertors;      use Standard_Laur_Poly_Convertors;
 with DoblDobl_Complex_Laur_Systems;
@@ -25,20 +22,12 @@ with Drivers_for_DEMiCs_Algorithm;       use Drivers_for_DEMiCs_Algorithm;
 with Write_Seed_Number;
 with Greeting_Banners;
 
-procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
-                     verbose : in integer32 := 0 ) is
-
-  start_moment : constant Time := Clock;
-  ended_moment : Time;
+package body Mixed_Volume_Calculator is
 
   procedure Read_System
               ( filename : in string;
                 lq : in out Standard_Complex_Laur_Systems.Link_to_Laur_Sys ) is
 
-  -- DESCRIPTION :
-  --   Attempts to open the file with the given name for reading of
-  --   a polynomial system.
-  
     file : file_type;
 
   begin
@@ -52,11 +41,7 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
                    lq := null; return;
   end Read_System;
 
-  function Lifting_Strategy return natural32 is
-
-  -- DESCRIPTION :
-  --   Prompts the user to select a lifting strategy and returns this
-  --   choice as a natural number between 0 and 4.
+  function Prompt_for_Lifting return natural32 is
 
     choice : string(1..2) := "  ";
     ans : character;
@@ -134,16 +119,13 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
       when '5'    => return 5;
       when others => return 0;
     end case;
-  end Lifting_Strategy;
+  end Prompt_for_Lifting;
 
   procedure Call_MixedVol
-               ( file : in file_type;
+               ( file : in file_type; nt : in natural32;
                  lq : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
                  v : in integer32 := 0 ) is
 
-  -- DESCRIPTION :
-  --   Asks for the precision and then calls the MixedVol driver.
-  --
     d_qq : Standard_Complex_Laur_Systems.Laur_Sys(lq'range);
     d_qsols,d_qsols0 : Standard_Complex_Solutions.Solution_List;
     dd_p,dd_qq : DoblDobl_Complex_Laur_Systems.Laur_Sys(lq'range);
@@ -156,7 +138,7 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
   
   begin
     if v > 0
-     then put_line("-> in mainsmvc.Call_MixedVol ...");
+     then put_line("-> in mixed_volume_calculator.Call_MixedVol ...");
     end if;
     new_line;
     put_line("MENU for precision to compute random coefficient system :");
@@ -186,13 +168,11 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
     end case;
   end Call_MixedVol;
 
-  procedure Ask_and_Dispatch_Lifting_Strategy 
-              ( lq : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+  procedure Lift_Set_and_Run
+              ( nt : in natural32; outfilename : in string;
+                start_moment : in Ada.Calendar.Time;
+                lq : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
                 v : in integer32 := 0 ) is
-
-  -- DESCRIPTION :
-  --   Opens file for output and asks for the lifting strategy,
-  --   then calls the appropriate drivers.
 
     outft : file_type;
     pq : Poly_Sys(lq'range);
@@ -201,14 +181,15 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
     mv,smv,tmv : natural32;
     strategy : natural32;
     deflate : boolean := false;
+    ended_moment : Ada.Calendar.Time;
 
   begin
     if v > 0
-     then put_line("-> in mainsmvc.Ask_and_Dispatch_Lifting_Strategy ...");
+     then put_line("-> in mixed_volume_calculator.Lift_Set_and_Run ...");
     end if;
     Create_Output_File(outft,outfilename);
     put(outft,natural32(lq'last),lq.all);
-    strategy := Lifting_Strategy;
+    strategy := Prompt_for_Lifting;
     new_line(outft);
     case strategy is
       when 0 =>
@@ -230,7 +211,7 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
           (outft,lq.all,true,qq,qsols,mv);
       when 4 =>
         put_line(outft,"MixedVol Algorithm to compute the mixed volume");
-        Call_MixedVol(outft,lq,v);
+        Call_MixedVol(outft,nt,lq,v);
       when 5 =>
         put_line(outft,
           "DEMiCs Algorithm applies dynamic enumeration for all mixed cells");
@@ -250,7 +231,7 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
       end;
     end if;
     new_line(outft);
-    ended_moment := Clock;
+    ended_moment := Ada.Calendar.Clock;
     put(outft,"phc -m ran from "); Write_Time_Stamp(outft,start_moment);
     put(outft," till "); Write_Time_Stamp(outft,ended_moment);
     put_line(outft,".");
@@ -258,13 +239,12 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
     Write_Seed_Number(outft);
     put_line(outft,Greeting_Banners.Version);
     Close(outft);
-  end Ask_and_Dispatch_Lifting_Strategy;
+  end Lift_Set_and_Run;
 
-  procedure Main is
+  procedure Main ( nt : in natural32; infilename,outfilename : in string;
+                   verbose : in integer32 := 0 ) is
 
-  -- DESCRIPTION :
-  --   Reads the system as a Laurent polynomial system,
-  --   prompts the user with the menu for the lifting strategy.
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
     use Standard_Complex_Laur_Systems;
     lq : Link_to_Laur_Sys := null;
@@ -272,15 +252,13 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
   begin
     if verbose > 0 then
       put("At verbose level "); put(verbose,1);
-      put_line(", in mainsmvc.Main ...");
+      put_line(", in mixed_volume_calculator.Main ...");
     end if;
     Read_System(infilename,lq);
     if lq = null
      then new_line; get(lq);
     end if;
-    Ask_and_Dispatch_Lifting_Strategy(lq,verbose-1);
+    Lift_Set_and_Run(nt,outfilename,start_moment,lq,verbose-1);
   end Main;
 
-begin
-  Main;
-end mainsmvc;
+end Mixed_Volume_Calculator;
