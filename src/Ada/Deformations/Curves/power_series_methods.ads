@@ -4,10 +4,16 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Penta_Double_Numbers;               use Penta_Double_Numbers;
+with Octo_Double_Numbers;                use Octo_Double_Numbers;
+with Deca_Double_Numbers;                use Deca_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
-with TripDobl_Complex_Numbers;
+-- with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+-- with PentDobl_Complex_Numbers;
+-- with OctoDobl_Complex_Numbers;
+-- with DecaDobl_Complex_Numbers;
 with Standard_Complex_Series_Vectors;
 with Standard_Complex_Series_VecVecs;
 with DoblDobl_Complex_Series_Vectors;
@@ -16,6 +22,12 @@ with TripDobl_Complex_Series_Vectors;
 with TripDobl_Complex_Series_VecVecs;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series_VecVecs;
+with PentDobl_Complex_Series_Vectors;
+with PentDobl_Complex_Series_VecVecs;
+with OctoDobl_Complex_Series_Vectors;
+with OctoDobl_Complex_Series_VecVecs;
+with DecaDobl_Complex_Series_Vectors;
+with DecaDobl_Complex_Series_VecVecs;
 with Standard_CSeries_Poly_Systems;
 with Standard_CSeries_Poly_SysFun;
 with Standard_CSeries_Jaco_Matrices;
@@ -23,11 +35,20 @@ with DoblDobl_CSeries_Poly_Systems;
 with DoblDobl_CSeries_Poly_SysFun;
 with DoblDobl_CSeries_Jaco_Matrices;
 with TripDobl_CSeries_Poly_SysFun;
-with TripDobl_CSeries_Jaco_Matrices;
+-- with TripDobl_CSeries_Jaco_Matrices;
 with TripDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_SysFun;
 with QuadDobl_CSeries_Jaco_Matrices;
+with PentDobl_CSeries_Poly_Systems;
+with PentDobl_CSeries_Poly_SysFun;
+-- with PentDobl_CSeries_Jaco_Matrices;
+with OctoDobl_CSeries_Poly_Systems;
+with OctoDobl_CSeries_Poly_SysFun;
+-- with OctoDobl_CSeries_Jaco_Matrices;
+with DecaDobl_CSeries_Poly_Systems;
+with DecaDobl_CSeries_Poly_SysFun;
+-- with DecaDobl_CSeries_Jaco_Matrices;
 
 package Power_Series_Methods is
 
@@ -35,11 +56,10 @@ package Power_Series_Methods is
 --   A power series method applies Newton's method to a system
 --   which has as coefficients power series.
 --   The procedures in this packages split in several categories:
---   (1) whether to be verbose or not;
---   (2) which precision: double, double double, or quad double;
---   (3) whether to use LU, QR, SVD, or a general Echelon form;
---   (4) whether to work on one vector or on a vector of vectors of series;
---   Depending on the choices, there are 2x3x4x2 = 48 procedures.
+--   (1) verbose or not;
+--   (2) seven levels of multiple double precision are supported;
+--   (3) use LU, QR, SVD, or a general Echelon form;
+--   (4) work on one vector or on a vector of vectors of series.
 
 -- NEWTON on ONE VECTOR of POWER SERIES :
 
@@ -424,12 +444,49 @@ package Power_Series_Methods is
                 s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double; verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( maxdeg,nbrit : in integer32;
+                p : in PentDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out PentDobl_Complex_Series_Vectors.Vector;
+                rcond : out penta_double; verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in PentDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out PentDobl_Complex_Series_Vectors.Vector;
+                rcond : out penta_double; verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( maxdeg,nbrit : in integer32;
+                p : in OctoDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out OctoDobl_Complex_Series_Vectors.Vector;
+                rcond : out octo_double; verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in OctoDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out OctoDobl_Complex_Series_Vectors.Vector;
+                rcond : out octo_double; verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( maxdeg,nbrit : in integer32;
+                p : in DecaDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out DecaDobl_Complex_Series_Vectors.Vector;
+                rcond : out deca_double; verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in DecaDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out DecaDobl_Complex_Series_Vectors.Vector;
+                rcond : out deca_double; verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies as many steps with Newton's method as the value of nbrit,
   --   starting at the solution in s to the system p,
   --   applying Singular Value Decomposition to compute the Newton updates,
-  --   in standard double, double double, or quad double precision.
+  --   in standard double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- ON ENTRY :
   --   file     must be opened for output, to write results,
@@ -663,6 +720,27 @@ package Power_Series_Methods is
                 pause : in boolean := false;
                 vrblvl : in integer32 := 0 );
   procedure Run_SVD_Newton
+              ( maxdeg,nbrit : in integer32;
+                p : in PentDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in PentDobl_Complex_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                pause : in boolean := false;
+                vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( maxdeg,nbrit : in integer32;
+                p : in OctoDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in OctoDobl_Complex_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                pause : in boolean := false;
+                vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( maxdeg,nbrit : in integer32;
+                p : in DecaDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DecaDobl_Complex_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                pause : in boolean := false;
+                vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
               ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
@@ -686,11 +764,30 @@ package Power_Series_Methods is
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in PentDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in PentDobl_Complex_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in OctoDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in OctoDobl_Complex_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in DecaDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DecaDobl_Complex_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs Newton's method on the vector of power series in v.
   --   using the singular value decomposition to compute the updates,
-  --   in double, double double, triple double or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
 
   -- ON ENTRY :
   --   file     must be opened for output, to write results,
