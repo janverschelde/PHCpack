@@ -44,6 +44,9 @@ dobldobl_newton_matrix_series     : linearized Newton with double doubles
 tripdobl_newton_matrix_series     : linearized Newton with triple doubles
 quaddobl_newton_series            : Newton on series in quad double precision
 quaddobl_newton_matrix_series     : linearized Newton with quad doubles
+pentdobl_newton_matrix_series     : linearized Newton with penta doubles
+octodobl_newton_matrix_series     : linearized Newton with octo doubles
+decadobl_newton_matrix_series     : linearized Newton with deca doubles
 ts_sernew                         : test on the Newton series packages
 series_and_solutions              : making series from solution vectors
 power_series_methods              : Newton's method on power series solutions

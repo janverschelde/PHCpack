@@ -7,6 +7,12 @@ with TripDobl_Complex_Vectors;
 with TripDobl_Complex_Solutions;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Solutions;
+with PentDobl_Complex_Vectors;
+with PentDobl_Complex_Solutions;
+with OctoDobl_Complex_Vectors;
+with OctoDobl_Complex_Solutions;
+with DecaDobl_Complex_Vectors;
+with DecaDobl_Complex_Solutions;
 with Standard_Complex_Series_Vectors;
 with Standard_Complex_Series_VecVecs;
 with DoblDobl_Complex_Series_Vectors;
@@ -15,6 +21,12 @@ with TripDobl_Complex_Series_Vectors;
 with TripDobl_Complex_Series_VecVecs;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series_VecVecs;
+with PentDobl_Complex_Series_Vectors;
+with PentDobl_Complex_Series_VecVecs;
+with OctoDobl_Complex_Series_Vectors;
+with OctoDobl_Complex_Series_VecVecs;
+with DecaDobl_Complex_Series_Vectors;
+with DecaDobl_Complex_Series_VecVecs;
 
 package Series_and_Solutions is
 
@@ -34,6 +46,15 @@ package Series_and_Solutions is
   function Create ( sol : QuadDobl_Complex_Vectors.Vector;
                     idx : integer32 ) 
                   return QuadDobl_Complex_Series_Vectors.Vector;
+  function Create ( sol : PentDobl_Complex_Vectors.Vector;
+                    idx : integer32 ) 
+                  return PentDobl_Complex_Series_Vectors.Vector;
+  function Create ( sol : OctoDobl_Complex_Vectors.Vector;
+                    idx : integer32 ) 
+                  return OctoDobl_Complex_Series_Vectors.Vector;
+  function Create ( sol : DecaDobl_Complex_Vectors.Vector;
+                    idx : integer32 ) 
+                  return DecaDobl_Complex_Series_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Takes the coordinates of the vector sol and returns a vector of 
@@ -54,6 +75,15 @@ package Series_and_Solutions is
   function Create ( sol : QuadDobl_Complex_Solutions.Solution;
                     idx : integer32 ) 
                   return QuadDobl_Complex_Series_Vectors.Vector;
+  function Create ( sol : PentDobl_Complex_Solutions.Solution;
+                    idx : integer32 ) 
+                  return PentDobl_Complex_Series_Vectors.Vector;
+  function Create ( sol : OctoDobl_Complex_Solutions.Solution;
+                    idx : integer32 ) 
+                  return OctoDobl_Complex_Series_Vectors.Vector;
+  function Create ( sol : DecaDobl_Complex_Solutions.Solution;
+                    idx : integer32 ) 
+                  return DecaDobl_Complex_Series_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Takes the coordinates of the solution and returns a vector of 
@@ -74,6 +104,15 @@ package Series_and_Solutions is
   function Create ( sols : QuadDobl_Complex_Solutions.Solution_List;
                     idx : integer32 ) 
                   return QuadDobl_Complex_Series_VecVecs.VecVec;
+  function Create ( sols : PentDobl_Complex_Solutions.Solution_List;
+                    idx : integer32 ) 
+                  return PentDobl_Complex_Series_VecVecs.VecVec;
+  function Create ( sols : OctoDobl_Complex_Solutions.Solution_List;
+                    idx : integer32 ) 
+                  return OctoDobl_Complex_Series_VecVecs.VecVec;
+  function Create ( sols : DecaDobl_Complex_Solutions.Solution_List;
+                    idx : integer32 ) 
+                  return DecaDobl_Complex_Series_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Returns a vector of vectors of series.  The series are defined

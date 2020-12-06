@@ -62,6 +62,21 @@ package body Main_Pade_Trackers is
          then QuadDobl_Main_at_Constant(infilename,outfilename,vrb-1);
          else QuadDobl_Main_at_Series(infilename,outfilename,vrb-1);
         end if;
+      when '5' =>
+        put_line("The working precision is penta double precision.");
+        if ans = 'y'
+         then PentDobl_Main_at_Constant(infilename,outfilename,vrb-1);
+        end if;
+      when '6' =>
+        put_line("The working precision is octo double precision.");
+        if ans = 'y'
+         then OctoDobl_Main_at_Constant(infilename,outfilename,vrb-1);
+        end if;
+      when '7' =>
+        put_line("The working precision is deca double precision.");
+        if ans = 'y'
+         then DecaDobl_Main_at_Constant(infilename,outfilename,vrb-1);
+        end if;
       when others => null;
     end case;
   end Run_Power_Series_Newton;
@@ -138,8 +153,11 @@ package body Main_Pade_Trackers is
     put_line("  2. double double precision");
     put_line("  3. triple double precision");
     put_line("  4. quad double precision");
-    put("Type 1, 2, 3, or 4 to select the precision : ");
-    Ask_Alternative(res,"1234");
+    put_line("  5. penta double precision");
+    put_line("  6. octo double precision");
+    put_line("  7. deca double precision");
+    put("Type 1, 2, 3, 4, 5, 6, or 7 to select the precision : ");
+    Ask_Alternative(res,"1234567");
     return res;
   end Prompt_for_Precision_Level;
 

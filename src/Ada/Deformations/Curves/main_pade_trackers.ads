@@ -46,8 +46,9 @@ package Main_Pade_Trackers is
   function Prompt_for_Precision_Level return character;
 
   -- DESCRIPTION :
-  --   Prompts for the precision and returns '1', '2', or '4',
-  --   respectively for double, double double, or quad double precision.
+  --   Prompts for the precision and returns '1', '2', '3', '4', '5', '6',
+  --   or '7', respectively for double, double double, triple double,
+  --   quad double, penta double, octo double, or deca double precision.
 
   procedure Run_Regular_Newton_Puiseux;
 
