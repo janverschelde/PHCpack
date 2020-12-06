@@ -1,5 +1,7 @@
-with text_io;                            use text_io;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Ada.Calendar;
+with Communications_with_User;           use Communications_with_User;
+with Timing_Package,Time_Stamps;         use Timing_Package,Time_Stamps;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
@@ -11,6 +13,7 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
+with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Functions;
 with Standard_Complex_Laur_SysFun;
 with Standard_Complex_Laur_JacoMats;
@@ -26,6 +29,7 @@ with DoblDobl_Poly_Laur_Convertors;
 with QuadDobl_Poly_Laur_Convertors;
 with Standard_Complex_Poly_Randomizers; 
 with Standard_Complex_Laur_Randomizers;  
+with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Continuation_Parameters;
 with Exponent_Vectors;                   use Exponent_Vectors;
 with Random_Coefficient_Systems;
@@ -35,6 +39,7 @@ with Floating_Polyhedral_Continuation;   use Floating_Polyhedral_Continuation;
 with DoblDobl_Polyhedral_Continuation;   use DoblDobl_Polyhedral_Continuation;
 with QuadDobl_Polyhedral_Continuation;   use QuadDobl_Polyhedral_Continuation;
 with Stable_Polyhedral_Continuation;     use Stable_Polyhedral_Continuation;
+with Black_Mixed_Volume_Computations;    use Black_Mixed_Volume_Computations;
 with Multitasking_Polyhedral_Trackers;   use Multitasking_Polyhedral_Trackers;
 
 package body Black_Polyhedral_Continuations is
@@ -567,5 +572,118 @@ package body Black_Polyhedral_Continuations is
     Clear(lq); Clear(hq); Clear(jacmat); Clear(mulfac);
     QuadDobl_Complex_VecVecs.Clear(coeffv);
   end Black_Box_Polyhedral_Continuation;
+
+  procedure Read_System
+              ( file : in out file_type; filename : in string;
+                lp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Attempts to read a polynomial system from file.
+
+  begin
+    if filename /= "" then
+      Open_Input_File(file,filename);
+      get(file,lp);
+    end if;
+  exception
+    when others => put_line("Something is wrong with argument file...");
+                   lp := null; return;
+  end Read_System;
+
+  procedure Call_MixedVol
+      ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+        mivo,stmv : out natural32;
+        stlb : out double_float;
+        lifsup : out Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
+        mix,perm,iprm : out Standard_Integer_Vectors.Link_to_Vector;
+        orgmcc,stbmcc : out Floating_Mixed_Subdivisions.Mixed_Subdivision ) is
+
+    mixsub : Floating_Mixed_Subdivisions.Mixed_Subdivision;
+    mv,smv,tmv,orgcnt,stbcnt : natural32;
+
+  begin
+    Black_Box_Mixed_Volume_Computation
+      (p,mix,perm,iprm,stlb,lifsup,mixsub,orgmcc,stbmcc,
+       mv,smv,tmv,orgcnt,stbcnt);
+    mivo := mv; stmv := smv;
+  end Call_MixedVol;
+
+  procedure Polyhedral_Solver
+              ( file : in file_type; nt : in natural32;
+                p : in out Standard_Complex_Poly_Systems.Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
+
+    timer : Timing_Widget;
+    q : Poly_Sys(p'range);
+    qsols,qsols0 : Solution_List;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    lifsup : Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
+    stlb : double_float;
+    orgmcc,stbmcc : Floating_Mixed_Subdivisions.Mixed_Subdivision;
+    mv,stmv : natural32;
+
+  begin
+    tstart(timer);
+    Call_MixedVol(p,mv,stmv,stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc);
+    tstop(timer);
+    new_line(file);
+    put(file,"mixed volume : "); put(file,mv,1); new_line(file);
+    put(file,"stable mixed volume : ");
+    put(file,stmv,1); new_line(file);
+    new_line(file);
+    print_times(file,timer,"Mixed-Volume Computation");
+    if mv > 0 then
+      tstart(timer);
+      Black_Box_Polyhedral_Continuation
+        (integer32(nt),p,mix,stlb,lifsup.all,orgmcc,stbmcc,q,qsols,qsols0);
+      tstop(timer);
+      new_line(file);
+      put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
+      new_line(file);
+      put_line(file,q);
+      new_line(file);
+      put_line(file,"SOLUTIONS with nonzero coordinates:");
+      new_line(file);
+      put(file,Length_Of(qsols),natural32(Head_Of(qsols).n),qsols);
+      new_line(file);
+      if not Is_Null(qsols0) then
+        put_line(file,"SOLUTIONS with zero coordinates :");
+        new_line(file);
+        put(file,Length_Of(qsols0),natural32(Head_Of(qsols0).n),qsols0);
+      end if;
+      print_times(file,timer,"Polyhedral Continuation");
+    end if;
+  end Polyhedral_Solver;
+
+  procedure Main ( nt : in natural32; infilename,outfilename : in string ) is
+
+    use Standard_Complex_Poly_Systems;
+
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
+    infile,outfile : file_type;
+    lp : Link_to_Poly_Sys;
+
+  begin
+    Read_System(infile,infilename,lp);
+    if lp = null then
+      new_line;
+      get(lp);
+    end if;
+    Close(infile);
+    Create_Output_File(outfile,outfilename);
+    put(outfile,natural32(lp'last),lp.all);
+    Polyhedral_Solver(outfile,nt,lp.all);
+    ended_moment := Ada.Calendar.Clock;
+    new_line(outfile);
+    put(outfile,"PHC ran from ");
+    Write_Time_Stamp(outfile,start_moment);
+    put(outfile," till "); Write_Time_Stamp(outfile,ended_moment);
+    put_line(outfile,".");
+    Write_Elapsed_Time(outfile,start_moment,ended_moment);
+    Close(outfile);
+  end Main;
 
 end Black_Polyhedral_Continuations;

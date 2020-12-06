@@ -16,7 +16,7 @@ with Symbol_Table_Order;
 with Main_Reduction;
 with Main_Scaling;
 with Black_Box_Root_Counters;
-with babldmvc;
+with Black_Polyhedral_Continuations;
 with Mixed_Volume_Calculator;
 with Standard_BlackBox_Continuations;
 with DoblDobl_BlackBox_Continuations;
@@ -258,8 +258,8 @@ package body Option_Handlers is
       end if;
     elsif mpos >= integer32(opts'first) then
       if nt > 0
-       then babldmvc(nt,file1,file2);
-       else babldmvc(0,file1,file2);
+       then Black_Polyhedral_Continuations.Main(nt,file1,file2);
+       else Black_Polyhedral_Continuations.Main(0,file1,file2);
       end if;
     elsif ppos >= integer32(opts'first) then
       if bbprc = 2 or contprc = 2 then
@@ -416,8 +416,8 @@ package body Option_Handlers is
       Greeting_Banners.help4mixvol;
     elsif bpos >= integer32(opts'first) then
       if nt > 0 
-       then babldmvc(nt,infile,outfile);
-       else babldmvc(0,infile,outfile);
+       then Black_Polyhedral_Continuations.Main(nt,infile,outfile);
+       else Black_Polyhedral_Continuations.Main(0,infile,outfile);
       end if;
     elsif nt > 0 then
       declare
