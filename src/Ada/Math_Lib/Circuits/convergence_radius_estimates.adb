@@ -853,4 +853,181 @@ package body Convergence_Radius_Estimates is
     end loop;
   end Fabry;
 
+-- WRAPPERS :
+
+  procedure Apply_Fabry
+              ( c : in Standard_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : Standard_Complex_Numbers.Complex_Number;
+    r,e : double_float;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in Standard_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : Standard_Complex_Numbers.Complex_Number;
+    r,e : double_float;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(file,c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( c : in DoblDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : DoblDobl_Complex_Numbers.Complex_Number;
+    r,e : double_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in DoblDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : DoblDobl_Complex_Numbers.Complex_Number;
+    r,e : double_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(file,c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( c : in TripDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : TripDobl_Complex_Numbers.Complex_Number;
+    r,e : triple_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in TripDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : TripDobl_Complex_Numbers.Complex_Number;
+    r,e : triple_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(file,c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( c : in QuadDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : QuadDobl_Complex_Numbers.Complex_Number;
+    r,e : quad_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in QuadDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : QuadDobl_Complex_Numbers.Complex_Number;
+    r,e : quad_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(file,c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( c : in PentDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : PentDobl_Complex_Numbers.Complex_Number;
+    r,e : penta_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in PentDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : PentDobl_Complex_Numbers.Complex_Number;
+    r,e : penta_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(file,c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( c : in OctoDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : OctoDobl_Complex_Numbers.Complex_Number;
+    r,e : octo_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in OctoDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : OctoDobl_Complex_Numbers.Complex_Number;
+    r,e : octo_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(file,c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( c : in DecaDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : DecaDobl_Complex_Numbers.Complex_Number;
+    r,e : deca_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in DecaDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : DecaDobl_Complex_Numbers.Complex_Number;
+    r,e : deca_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(file,c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
 end Convergence_Radius_Estimates;

@@ -1,4 +1,7 @@
-Sum 8 Nov 2020 : updated multitasking_continuation.adb for the renaming of
+Sat 5 Dec 2020 : new package multitasked_power_newton with code extracted
+  from test_mtnewton_convolutions.adb.
+
+Sun 8 Nov 2020 : updated multitasking_continuation.adb for the renaming of
   drivers_for_poly_continuation into main_poly_continuation.
 
 Sat 24 Oct 2020 : extended multitasked_hessian_circuits with procedures

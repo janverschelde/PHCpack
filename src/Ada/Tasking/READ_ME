@@ -1,4 +1,4 @@
-Multitasked linear algebra, evaluation and path tracking in PHCv2.4.82
+Multitasked linear algebra, evaluation and path tracking in PHCv2.4.83
 
 This directory is entirely new in release 2.3.45 of PHCpack.
 Tasks in Ada are mapped to kernel threads.
@@ -97,6 +97,7 @@ pipelined_polyhedral_homotopies   : 2-stage pipeline for polyhedral homotopies
 ts_mtcelidx                       : test on pipelining cell indices
 -------------------------------------------------------------------------------
 multitasked_algodiff_convolutions : multitasked AD for power series
+multitasked_power_newton          : wraps call to multitasked newton
 test_mtalgodiff_convolutions      : tests multitasked AD for power series
 ts_mtadcnv                        : calls the main test on multitasked AD
 multitasked_series_linearization  : multitasked linearized series solver

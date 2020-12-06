@@ -224,4 +224,63 @@ package Convergence_Radius_Estimates is
   --   fail         true if the last coefficient of all series in c is zero,
   --                false otherwise.
 
+-- WRAPPERS :
+
+  procedure Apply_Fabry
+              ( c : in Standard_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in Standard_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( c : in DoblDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in DoblDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( c : in TripDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in TripDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( c : in QuadDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in QuadDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( c : in PentDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in PentDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( c : in OctoDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in OctoDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( c : in DecaDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in DecaDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Estimates the radius of convergence of the power series
+  --   with the application of the theorem of Fabry,
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision,
+  --   writing output to screen or to file if verbose.
+
 end Convergence_Radius_Estimates;

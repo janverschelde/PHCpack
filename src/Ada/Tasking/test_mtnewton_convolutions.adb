@@ -19,13 +19,6 @@ with Octo_Double_Numbers;                use Octo_Double_Numbers;
 with Octo_Double_Numbers_io;             use Octo_Double_Numbers_io;
 with Deca_Double_Numbers;                use Deca_Double_Numbers;
 with Deca_Double_Numbers_io;             use Deca_Double_Numbers_io;
-with Standard_Complex_Numbers;
-with DoblDobl_Complex_Numbers;
-with TripDobl_Complex_Numbers;
-with QuadDobl_Complex_Numbers;
-with PentDobl_Complex_Numbers;
-with OctoDobl_Complex_Numbers;
-with DecaDobl_Complex_Numbers;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with DecaDobl_Complex_Vectors_cv;
 with Standard_Complex_Solutions;
@@ -51,95 +44,10 @@ with QuadDobl_Newton_Convolutions;
 with PentDobl_Newton_Convolutions;
 with OctoDobl_Newton_Convolutions;
 with DecaDobl_Newton_Convolutions;
+with Multitasked_Power_Newton;
 with Convergence_Radius_Estimates;
-with Multitasked_Series_Linearization;
-with Multitasked_Newton_Convolutions;    use Multitasked_Newton_Convolutions;
 
 package body Test_mtNewton_Convolutions is
-
-  procedure Apply_Fabry
-              ( c : in Standard_Complex_VecVecs.VecVec;
-                verbose : in boolean := true ) is
-
-    z : Standard_Complex_Numbers.Complex_Number;
-    r,e : double_float;
-    fail : boolean;
-
-  begin
-    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
-  end Apply_Fabry;
-
-  procedure Apply_Fabry
-              ( c : in DoblDobl_Complex_VecVecs.VecVec;
-                verbose : in boolean := true ) is
-
-    z : DoblDobl_Complex_Numbers.Complex_Number;
-    r,e : double_double;
-    fail : boolean;
-
-  begin
-    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
-  end Apply_Fabry;
-
-  procedure Apply_Fabry
-              ( c : in TripDobl_Complex_VecVecs.VecVec;
-                verbose : in boolean := true ) is
-
-    z : TripDobl_Complex_Numbers.Complex_Number;
-    r,e : triple_double;
-    fail : boolean;
-
-  begin
-    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
-  end Apply_Fabry;
-
-  procedure Apply_Fabry
-              ( c : in QuadDobl_Complex_VecVecs.VecVec;
-                verbose : in boolean := true ) is
-
-    z : QuadDobl_Complex_Numbers.Complex_Number;
-    r,e : quad_double;
-    fail : boolean;
-
-  begin
-    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
-  end Apply_Fabry;
-
-  procedure Apply_Fabry
-              ( c : in PentDobl_Complex_VecVecs.VecVec;
-                verbose : in boolean := true ) is
-
-    z : PentDobl_Complex_Numbers.Complex_Number;
-    r,e : penta_double;
-    fail : boolean;
-
-  begin
-    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
-  end Apply_Fabry;
-
-  procedure Apply_Fabry
-              ( c : in OctoDobl_Complex_VecVecs.VecVec;
-                verbose : in boolean := true ) is
-
-    z : OctoDobl_Complex_Numbers.Complex_Number;
-    r,e : octo_double;
-    fail : boolean;
-
-  begin
-    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
-  end Apply_Fabry;
-
-  procedure Apply_Fabry
-              ( c : in DecaDobl_Complex_VecVecs.VecVec;
-                verbose : in boolean := true ) is
-
-    z : DecaDobl_Complex_Numbers.Complex_Number;
-    r,e : deca_double;
-    fail : boolean;
-
-  begin
-    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
-  end Apply_Fabry;
 
   procedure Standard_Run
               ( nbt,dim,maxit : in integer32;
@@ -148,9 +56,6 @@ package body Test_mtNewton_Convolutions is
                 serelp,mltelp,speedup,efficiency : in out Duration;
                 output,estco : in boolean; verbose : in boolean := true ) is
 
-    wks : Standard_Complex_VecVecs.VecVec(1..nbt)
-        := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
-    ipvt : Standard_Integer_Vectors.Vector(1..dim);
     info,nbrit : integer32 := 0;
     fail : boolean;
     tol : constant double_float := 1.0E-12;
@@ -168,25 +73,9 @@ package body Test_mtNewton_Convolutions is
      then seristart := Ada.Calendar.Clock;
      else multstart := Ada.Calendar.Clock;
     end if;
-    if verbose then
-      if estco then
-        Multitasked_LU_Newton_Steps
-         (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-          rcond,ipvt,wks,output);
-      else
-        Multitasked_LU_Newton_Steps
-         (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-          info,ipvt,wks,output);
-      end if;
-    else
-      if estco then
-        Multitasked_LU_Newton_Steps
-         (nbt,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wks);
-      else
-        Multitasked_LU_Newton_Steps
-         (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
-      end if;
-    end if;
+    Multitasked_Power_Newton.Standard_Run
+      (nbt,dim,maxit,s,scf,tol,estco,fail,info,nbrit,rcond,absdx,
+       output,verbose);
     if nbt = 1 then
       seristop := Ada.Calendar.Clock;
       serelp := seristop - seristart;
@@ -201,7 +90,7 @@ package body Test_mtNewton_Convolutions is
        else put("  succeeded to reach tolerance");
       end if;
       put(tol,3); new_line;
-      Apply_Fabry(scf,verbose);
+      Convergence_Radius_Estimates.Apply_Fabry(scf,verbose);
     end if;
     if nbt = 1 then
       if verbose then
@@ -221,7 +110,6 @@ package body Test_mtNewton_Convolutions is
         end if;
       end if;
     end if;
-    Standard_Complex_VecVecs.Clear(wks);
   end Standard_Run;
 
   procedure DoblDobl_Run
@@ -231,12 +119,9 @@ package body Test_mtNewton_Convolutions is
                 serelp,mltelp,speedup,efficiency : in out Duration;
                 output,estco : in boolean; verbose : in boolean := true ) is
 
-    wks : DoblDobl_Complex_VecVecs.VecVec(1..nbt)
-        := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
-    ipvt : Standard_Integer_Vectors.Vector(1..dim);
     info,nbrit : integer32 := 0;
     fail : boolean;
-    tol : constant double_double := create(1.0E-24);
+    tol : constant double_float := 1.0E-24;
     rcond,absdx : double_double;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
 
@@ -251,25 +136,9 @@ package body Test_mtNewton_Convolutions is
      then seristart := Ada.Calendar.Clock;
      else multstart := Ada.Calendar.Clock;
     end if;
-    if verbose then
-      if estco then
-        Multitasked_LU_Newton_Steps
-          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-           rcond,ipvt,wks,output);
-      else
-        Multitasked_LU_Newton_Steps
-          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-           info,ipvt,wks,output);
-      end if;
-    else
-      if estco then
-        Multitasked_LU_Newton_Steps
-          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wks);
-      else
-        Multitasked_LU_Newton_Steps
-          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
-      end if;
-    end if;
+    Multitasked_Power_Newton.DoblDobl_Run
+      (nbt,dim,maxit,s,scf,tol,estco,fail,info,nbrit,rcond,absdx,
+       output,verbose);
     if nbt = 1 then
       seristop := Ada.Calendar.Clock;
       serelp := seristop - seristart;
@@ -284,7 +153,7 @@ package body Test_mtNewton_Convolutions is
        else put("  succeeded to reach tolerance ");
       end if;
       put(tol,3); new_line;
-      Apply_Fabry(scf,verbose);
+      Convergence_Radius_Estimates.Apply_Fabry(scf,verbose);
     end if;
     if nbt = 1 then
       if verbose then
@@ -304,7 +173,6 @@ package body Test_mtNewton_Convolutions is
         end if;
       end if;
     end if;
-    DoblDobl_Complex_VecVecs.Clear(wks);
   end DoblDobl_Run;
 
   procedure TripDobl_Run
@@ -314,12 +182,9 @@ package body Test_mtNewton_Convolutions is
                 serelp,mltelp,speedup,efficiency : in out Duration;
                 output,estco : in boolean; verbose : in boolean := true ) is
 
-    wks : TripDobl_Complex_VecVecs.VecVec(1..nbt)
-        := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
-    ipvt : Standard_Integer_Vectors.Vector(1..dim);
     info,nbrit : integer32 := 0;
     fail : boolean;
-    tol : constant triple_double := create(1.0E-36);
+    tol : constant double_float := 1.0E-36;
     rcond,absdx : triple_double;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
 
@@ -334,25 +199,9 @@ package body Test_mtNewton_Convolutions is
      then seristart := Ada.Calendar.Clock;
      else multstart := Ada.Calendar.Clock;
     end if;
-    if verbose then
-      if estco then
-        Multitasked_LU_Newton_Steps
-          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-           rcond,ipvt,wks,output);
-      else
-        Multitasked_LU_Newton_Steps
-          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-           info,ipvt,wks,output);
-      end if;
-    else
-      if estco then
-        Multitasked_LU_Newton_Steps
-          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wks);
-      else
-        Multitasked_LU_Newton_Steps
-          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
-      end if;
-    end if;
+    Multitasked_Power_Newton.TripDobl_Run
+      (nbt,dim,maxit,s,scf,tol,estco,fail,info,nbrit,rcond,absdx,
+       output,verbose);
     if nbt = 1 then
       seristop := Ada.Calendar.Clock;
       serelp := seristop - seristart;
@@ -367,7 +216,7 @@ package body Test_mtNewton_Convolutions is
        else put("  succeeded to reach tolerance ");
       end if;
       put(tol,3); new_line;
-      Apply_Fabry(scf,verbose);
+      Convergence_Radius_Estimates.Apply_Fabry(scf,verbose);
     end if;
     if nbt = 1 then
       if verbose then
@@ -387,7 +236,6 @@ package body Test_mtNewton_Convolutions is
         end if;
       end if;
     end if;
-    TripDobl_Complex_VecVecs.Clear(wks);
   end TripDobl_Run;
 
   procedure QuadDobl_Run
@@ -397,12 +245,9 @@ package body Test_mtNewton_Convolutions is
                 serelp,mltelp,speedup,efficiency : in out Duration;
                 output,estco : in boolean; verbose : in boolean := true ) is
 
-    wks : QuadDobl_Complex_VecVecs.VecVec(1..nbt)
-        := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
-    ipvt : Standard_Integer_Vectors.Vector(1..dim);
     info,nbrit : integer32 := 0;
     fail : boolean;
-    tol : constant quad_double := create(1.0E-48);
+    tol : constant double_float := 1.0E-48;
     rcond,absdx : quad_double;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
 
@@ -417,25 +262,9 @@ package body Test_mtNewton_Convolutions is
      then seristart := Ada.Calendar.Clock;
      else multstart := Ada.Calendar.Clock;
     end if;
-    if verbose then
-      if estco then
-        Multitasked_LU_Newton_Steps
-          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-           rcond,ipvt,wks,output);
-      else
-        Multitasked_LU_Newton_Steps
-          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-           info,ipvt,wks,output);
-      end if;
-    else
-      if estco then
-        Multitasked_LU_Newton_Steps
-          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wks);
-      else
-        Multitasked_LU_Newton_Steps
-          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
-      end if;
-    end if;
+    Multitasked_Power_Newton.QuadDobl_Run
+      (nbt,dim,maxit,s,scf,tol,estco,fail,info,nbrit,rcond,absdx,
+       output,verbose);
     if nbt = 1 then
       seristop := Ada.Calendar.Clock;
       serelp := seristop - seristart;
@@ -450,7 +279,7 @@ package body Test_mtNewton_Convolutions is
        else put("  succeeded to reach tolerance ");
       end if;
       put(tol,3); new_line;
-      Apply_Fabry(scf,verbose);
+      Convergence_Radius_Estimates.Apply_Fabry(scf,verbose);
     end if;
     if nbt = 1 then
       if verbose then
@@ -470,7 +299,6 @@ package body Test_mtNewton_Convolutions is
         end if;
       end if;
     end if;
-    QuadDobl_Complex_VecVecs.Clear(wks);
   end QuadDobl_Run;
 
   procedure PentDobl_Run
@@ -480,12 +308,9 @@ package body Test_mtNewton_Convolutions is
                 serelp,mltelp,speedup,efficiency : in out Duration;
                 output,estco : in boolean; verbose : in boolean := true ) is
 
-    wks : PentDobl_Complex_VecVecs.VecVec(1..nbt)
-        := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
-    ipvt : Standard_Integer_Vectors.Vector(1..dim);
     info,nbrit : integer32 := 0;
     fail : boolean;
-    tol : constant penta_double := create(1.0E-60);
+    tol : constant double_float := 1.0E-60;
     rcond,absdx : penta_double;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
 
@@ -500,25 +325,9 @@ package body Test_mtNewton_Convolutions is
      then seristart := Ada.Calendar.Clock;
      else multstart := Ada.Calendar.Clock;
     end if;
-    if verbose then
-      if estco then
-        Multitasked_LU_Newton_Steps
-          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-           rcond,ipvt,wks,output);
-      else
-        Multitasked_LU_Newton_Steps
-          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-           info,ipvt,wks,output);
-      end if;
-    else
-      if estco then
-        Multitasked_LU_Newton_Steps
-          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wks);
-      else
-        Multitasked_LU_Newton_Steps
-          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
-      end if;
-    end if;
+    Multitasked_Power_Newton.PentDobl_Run
+      (nbt,dim,maxit,s,scf,tol,estco,fail,info,nbrit,rcond,absdx,
+       output,verbose);
     if nbt = 1 then
       seristop := Ada.Calendar.Clock;
       serelp := seristop - seristart;
@@ -533,7 +342,7 @@ package body Test_mtNewton_Convolutions is
        else put("  succeeded to reach tolerance ");
       end if;
       put(tol,3); new_line;
-      Apply_Fabry(scf,verbose);
+      Convergence_Radius_Estimates.Apply_Fabry(scf,verbose);
     end if;
     if nbt = 1 then
       if verbose then
@@ -553,7 +362,6 @@ package body Test_mtNewton_Convolutions is
         end if;
       end if;
     end if;
-    PentDobl_Complex_VecVecs.Clear(wks);
   end PentDobl_Run;
 
   procedure OctoDobl_Run
@@ -563,12 +371,9 @@ package body Test_mtNewton_Convolutions is
                 serelp,mltelp,speedup,efficiency : in out Duration;
                 output,estco : in boolean; verbose : in boolean := true ) is
 
-    wks : OctoDobl_Complex_VecVecs.VecVec(1..nbt)
-        := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
-    ipvt : Standard_Integer_Vectors.Vector(1..dim);
     info,nbrit : integer32 := 0;
     fail : boolean;
-    tol : constant octo_double := create(1.0E-96);
+    tol : constant double_float := 1.0E-96;
     rcond,absdx : octo_double;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
 
@@ -583,25 +388,9 @@ package body Test_mtNewton_Convolutions is
      then seristart := Ada.Calendar.Clock;
      else multstart := Ada.Calendar.Clock;
     end if;
-    if verbose then
-      if estco then
-        Multitasked_LU_Newton_Steps
-          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-           rcond,ipvt,wks,output);
-      else
-        Multitasked_LU_Newton_Steps
-          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-           info,ipvt,wks,output);
-      end if;
-    else
-      if estco then
-        Multitasked_LU_Newton_Steps
-          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wks);
-      else
-        Multitasked_LU_Newton_Steps
-          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
-      end if;
-    end if;
+    Multitasked_Power_Newton.OctoDobl_Run
+      (nbt,dim,maxit,s,scf,tol,estco,fail,info,nbrit,rcond,absdx,
+       output,verbose);
     if nbt = 1 then
       seristop := Ada.Calendar.Clock;
       serelp := seristop - seristart;
@@ -616,7 +405,7 @@ package body Test_mtNewton_Convolutions is
        else put("  succeeded to reach tolerance ");
       end if;
       put(tol,3); new_line;
-      Apply_Fabry(scf,verbose);
+      Convergence_Radius_Estimates.Apply_Fabry(scf,verbose);
     end if;
     if nbt = 1 then
       if verbose then
@@ -636,7 +425,6 @@ package body Test_mtNewton_Convolutions is
         end if;
       end if;
     end if;
-    OctoDobl_Complex_VecVecs.Clear(wks);
   end OctoDobl_Run;
 
   procedure DecaDobl_Run
@@ -646,12 +434,9 @@ package body Test_mtNewton_Convolutions is
                 serelp,mltelp,speedup,efficiency : in out Duration;
                 output,estco : in boolean; verbose : in boolean := true ) is
 
-    wks : DecaDobl_Complex_VecVecs.VecVec(1..nbt)
-        := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
-    ipvt : Standard_Integer_Vectors.Vector(1..dim);
     info,nbrit : integer32 := 0;
     fail : boolean;
-    tol : constant deca_double := create(1.0E-108);
+    tol : constant double_float := 1.0E-108;
     rcond,absdx : deca_double;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
 
@@ -666,25 +451,9 @@ package body Test_mtNewton_Convolutions is
      then seristart := Ada.Calendar.Clock;
      else multstart := Ada.Calendar.Clock;
     end if;
-    if verbose then
-      if estco then
-        Multitasked_LU_Newton_Steps
-          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-           rcond,ipvt,wks,output);
-      else
-        Multitasked_LU_Newton_Steps
-          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-           info,ipvt,wks,output);
-      end if;
-    else
-      if estco then
-        Multitasked_LU_Newton_Steps
-          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wks);
-      else
-        Multitasked_LU_Newton_Steps
-          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
-      end if;
-    end if;
+    Multitasked_Power_Newton.DecaDobl_Run
+      (nbt,dim,maxit,s,scf,tol,estco,fail,info,nbrit,rcond,absdx,
+       output,verbose);
     if nbt = 1 then
       seristop := Ada.Calendar.Clock;
       serelp := seristop - seristart;
@@ -699,7 +468,7 @@ package body Test_mtNewton_Convolutions is
        else put("  succeeded to reach tolerance ");
       end if;
       put(tol,3); new_line;
-      Apply_Fabry(scf,verbose);
+      Convergence_Radius_Estimates.Apply_Fabry(scf,verbose);
     end if;
     if nbt = 1 then
       if verbose then
@@ -719,7 +488,6 @@ package body Test_mtNewton_Convolutions is
         end if;
       end if;
     end if;
-    DecaDobl_Complex_VecVecs.Clear(wks);
   end DecaDobl_Run;
 
   procedure Standard_Run_Loop

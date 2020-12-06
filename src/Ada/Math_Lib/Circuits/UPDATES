@@ -1,3 +1,5 @@
+Sat 5 Dec 2020 : added wrappers to convergence_radius_estimates.
+
 Sat 24 Oct 2020 : to decadobl_circuit_makers added functions to convert
   circuits with coefficients in deca double precision to lower precision.
 

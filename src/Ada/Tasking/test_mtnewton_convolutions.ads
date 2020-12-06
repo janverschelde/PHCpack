@@ -40,34 +40,6 @@ package Test_mtNewton_Convolutions is
 --   in double, double double, and quad double arithmetic,
 --   with multitasking for shared memory parallel computers.
 
-  procedure Apply_Fabry
-              ( c : in Standard_Complex_VecVecs.VecVec;
-                verbose : in boolean := true );
-  procedure Apply_Fabry
-              ( c : in DoblDobl_Complex_VecVecs.VecVec;
-                verbose : in boolean := true );
-  procedure Apply_Fabry
-              ( c : in TripDobl_Complex_VecVecs.VecVec;
-                verbose : in boolean := true );
-  procedure Apply_Fabry
-              ( c : in QuadDobl_Complex_VecVecs.VecVec;
-                verbose : in boolean := true );
-  procedure Apply_Fabry
-              ( c : in PentDobl_Complex_VecVecs.VecVec;
-                verbose : in boolean := true );
-  procedure Apply_Fabry
-              ( c : in OctoDobl_Complex_VecVecs.VecVec;
-                verbose : in boolean := true );
-  procedure Apply_Fabry
-              ( c : in DecaDobl_Complex_VecVecs.VecVec;
-                verbose : in boolean := true );
-
-  -- DESCRIPTION :
-  --   Estimates the radius of convergence of the power series
-  --   with the application of the theorem of Fabry,
-  --   in double, double double, triple double, quad double,
-  --   penta double, octo double, or deca double precision.
-
   procedure Standard_Run
               ( nbt,dim,maxit : in integer32;
                 s : in Standard_Speelpenning_Convolutions.Link_to_System;
