@@ -21,7 +21,7 @@ with Mixed_Volume_Calculator;
 with Standard_BlackBox_Continuations;
 with DoblDobl_BlackBox_Continuations;
 with QuadDobl_BlackBox_Continuations;
-with mainpoco;
+with Main_Homotopy_Continuation;
 with Main_Trackers;
 with Main_Pade_Trackers;
 with mainadep;
@@ -475,14 +475,14 @@ package body Option_Handlers is
       end if;
     elsif nt = 0 then
       put_line(welcome); put_line(pocoban & ", no multitasking.");
-      mainpoco(0,file1,file2,contprc,vrblvl);
+      Main_Homotopy_Continuation.Main(0,file1,file2,contprc,vrblvl);
     else
       declare
         ns : constant string := Convert(integer32(nt));
       begin
         put_line(welcome);
         put_line(pocoban & ", with " & ns & " tasks.");
-        mainpoco(nt,file1,file2,contprc,vrblvl);
+        Main_Homotopy_Continuation.Main(nt,file1,file2,contprc,vrblvl);
       end;
     end if;
   end Continuation_Handler;

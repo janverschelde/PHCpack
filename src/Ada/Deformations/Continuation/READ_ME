@@ -1,4 +1,4 @@
-Data management and drivers for polynomial continuation in PHCv2.4.82
+Data management and drivers for polynomial continuation in PHCv2.4.83
 
 In version 2.3.75, this directory was simplified with the moving of specific
 code for end games, sweeps, and path trackers to separate directories.
@@ -59,7 +59,7 @@ standard_blackbox_continuations  : blackbox polynomial continuation
 dobldobl_blackbox_continuations  : blackbox continuation with double doubles
 quaddobl_blackbox_continuations  : blackbox continuation with quad doubles
 ts_bbpoco                        : calls the blackbox continuation 
-mainpoco                         : poco as called by the main program
+main_homotopy_continuation       : defines phc -p
 ------------------------------------------------------------------------------
 
 An important feature is that much of the routines in this library are
