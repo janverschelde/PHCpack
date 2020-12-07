@@ -1,4 +1,6 @@
+with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with DecaDobl_Complex_Vectors;
 with DecaDobl_Complex_Solutions;
 with DecaDobl_Speelpenning_Convolutions;
@@ -9,6 +11,22 @@ package DecaDobl_Fabry_on_Homotopy is
 --   Computes the Newton-Fabry convergence radius in deca double precision
 --   for artificial or natural-parameter homotopies.
 
+  procedure Prompt_for_Parameters
+              ( maxit : in out integer32; tol : in out double_float;
+                verbose : out boolean );
+
+  -- DESCRIPTION :
+  --   Interactive setting of parameters.
+
+  -- ON ENTRY :
+  --   maxit    initial number of maximum number of iterations;
+  --   tol      initial value for the tolerance.
+
+  -- ON RETURN :
+  --   maxit    new value for the maximum number of iterations;
+  --   tol      new value for the tolerance;
+  --   verbose  true if output during the Newton steps is wanted.
+
   procedure DecaDobl_Newton_Fabry
               ( cfs : in DecaDobl_Speelpenning_Convolutions.Link_to_System;
                 sol : in DecaDobl_Complex_Vectors.Vector );
@@ -16,6 +34,8 @@ package DecaDobl_Fabry_on_Homotopy is
   -- DESCRIPTION :
   --   Runs Newton's method and applies Fabry's theorem
   --   starting at the solution for the homotopy in cfs.
+  --   In this interactive version, the user is prompted each time 
+  --   for the parameters and all output is written to screen.
 
   procedure DecaDobl_Run
               ( nbequ,idxpar,deg : in integer32;
@@ -24,8 +44,25 @@ package DecaDobl_Fabry_on_Homotopy is
   -- DESCRIPTION :
   --   With the homotopy defined starting at the solutions in sols,
   --   runs Newton's method on power series and applies Fabry's theorem.
+  --   All output is written to screen in this interactive run.
 
   -- ON ENTRY :
+  --   nbequ    number of equations in the homotopy;
+  --   idxpar   index of the continuation parameter in the homotopy;
+  --   deg      degree of the power series;
+  --   sols     start solutions in the homotopy.
+
+  procedure DecaDobl_Run
+              ( file : in file_type; nbequ,idxpar,deg : in integer32;
+                sols : in out DecaDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   With the homotopy defined starting at the solutions in sols,
+  --   runs Newton's method on power series and applies Fabry's theorem.
+  --   All output is written to file and the run is not interactive.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
   --   nbequ    number of equations in the homotopy;
   --   idxpar   index of the continuation parameter in the homotopy;
   --   deg      degree of the power series;

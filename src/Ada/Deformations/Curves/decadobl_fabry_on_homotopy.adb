@@ -1,8 +1,6 @@
-with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Deca_Double_Numbers;                use Deca_Double_Numbers;
 with Deca_Double_Numbers_io;             use Deca_Double_Numbers_io;
@@ -26,6 +24,43 @@ with Convergence_Radius_Estimates;
 
 package body DecaDobl_Fabry_on_Homotopy is
 
+  procedure Prompt_for_Parameters
+              ( maxit : in out integer32; tol : in out double_float;
+                verbose : out boolean ) is
+
+    ans : character;
+
+  begin
+    loop
+      put("Maximum number of iterations : "); put(maxit,1);
+      put(".  Change this number ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("Give the new maximum number of iterations : "); get(maxit);
+    end loop;
+    loop
+      put("Tolerance for the accuracy : "); put(tol,3);
+      put(".  Change this tolerance ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("Give the new tolerance for the accuracy : "); get(tol);
+    end loop;
+    put("Output during the Newton steps ? (y/n) "); Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+  end Prompt_for_Parameters;
+
+  procedure Write_Report
+              ( file : in file_type; rad,err : in deca_double;
+                zpt : in DecaDobl_Complex_Numbers.Complex_Number;
+                fail : in boolean ) is
+  begin
+    put(file,"the convergence radius : "); put(file,rad,3);
+    put(file,"   error estimate : "); put(file,err,3); new_line(file);
+    put(file,zpt); put_line(file,"  estimates nearest singularity");
+    if fail
+     then put_line(file,"Reported failure.");
+     else put_line(file,"Reported success.");
+    end if;
+  end Write_Report;
+
   procedure DecaDobl_Newton_Fabry
               ( cfs : in DecaDobl_Speelpenning_Convolutions.Link_to_System;
                 sol : in DecaDobl_Complex_Vectors.Vector ) is
@@ -34,41 +69,31 @@ package body DecaDobl_Fabry_on_Homotopy is
     deg : constant integer32 := cfs.deg;
     scf : constant DecaDobl_Complex_VecVecs.VecVec(1..dim)
         := DecaDobl_Newton_Convolutions.Series_Coefficients(sol,deg);
-    maxit,nbrit : integer32 := 0;
-    ans : character;
+    maxit : integer32 := deg/2;
+    nbrit : integer32 := 0;
     tol : double_float := 1.0E-32;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     wrk : DecaDobl_Complex_Vectors.Link_to_Vector
         := new DecaDobl_Complex_Vectors.Vector(1..dim); -- dim = #equations
-    fail : boolean;
+    fail,verbose : boolean;
     absdx,rcond,rad,err : deca_double;
     scale : constant boolean := false;
     zpt : DecaDobl_Complex_Numbers.Complex_Number;
 
   begin
-    new_line;
-    put("Give the maximum number of iterations : "); get(maxit);
-    loop
-      put("Tolerance for the accuracy : "); put(tol,3); new_line;
-      put("Change the tolerance ? (y/n) "); Ask_Yes_or_No(ans);
-      exit when (ans /= 'y');
-      if ans = 'y' then
-        put("Give the new tolerance for the accuracy : "); get(tol);
-      end if;
-    end loop;
-    DecaDobl_Newton_Convolution_Steps.LU_Newton_Steps
-      (standard_output,cfs,scf,maxit,nbrit,tol,absdx,fail,rcond,
-       ipvt,wrk,scale);
+    Prompt_for_Parameters(maxit,tol,verbose);
+    if verbose then
+      DecaDobl_Newton_Convolution_Steps.LU_Newton_Steps
+        (standard_output,cfs,scf,maxit,nbrit,tol,absdx,fail,rcond,
+         ipvt,wrk,scale);
+    else
+      DecaDobl_Newton_Convolution_Steps.LU_Newton_Steps
+        (cfs,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale,false);
+    end if;
     put_line("The coefficients of the series : "); put_line(scf);
     Convergence_Radius_Estimates.Fabry
       (standard_output,scf,zpt,rad,err,fail,1,true);
-    put("the convergence radius : "); put(rad,3);
-    put("   error estimate : "); put(err,3); new_line;
-    put(zpt); put_line("  estimates nearest singularity");
-    if fail
-     then put_line("Reported failure.");
-     else put_line("Reported success.");
-    end if;
+    Write_Report(standard_output,rad,err,zpt,fail);
     DecaDobl_Complex_Vectors.Clear(wrk);
   end DecaDobl_Newton_Fabry;
 
@@ -90,6 +115,61 @@ package body DecaDobl_Fabry_on_Homotopy is
       exit when (ans /= 'y');
       tmp := DecaDobl_Complex_Solutions.Tail_Of(tmp);
     end loop;
+    DecaDobl_Speelpenning_Convolutions.Clear(cvh);
+  end DecaDobl_Run;
+
+  procedure DecaDobl_Run
+              ( file : in file_type;
+                nbequ,idxpar,deg : in integer32;
+                sols : in out DecaDobl_Complex_Solutions.Solution_List ) is
+
+    cvh : DecaDobl_Speelpenning_Convolutions.Link_to_System;
+    tmp : DecaDobl_Complex_Solutions.Solution_List := sols;
+    ls : DecaDobl_Complex_Solutions.Link_to_Solution
+       := DecaDobl_Complex_Solutions.Head_Of(sols);
+    dim : constant integer32 := ls.v'last;
+    scf : DecaDobl_Complex_VecVecs.VecVec(1..dim)
+        := DecaDobl_Newton_Convolutions.Series_Coefficients(ls.v,deg);
+    maxit : integer32 := deg/2;
+    tol : double_float := 1.0E-32;
+    nbrit : integer32 := 0;
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    wrk : DecaDobl_Complex_Vectors.Link_to_Vector
+        := new DecaDobl_Complex_Vectors.Vector(1..dim); -- dim = #equations
+    fail,verbose : boolean;
+    absdx,rcond,rad,err : deca_double;
+    scale : constant boolean := false;
+    zpt : DecaDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    Prompt_for_Parameters(maxit,tol,verbose);
+    new_line(file);
+    put(file,"maximum number of iterations : ");
+    put(file,maxit,1); new_line(file);
+    put(file,"tolerance :"); put(file,tol,3); new_line(file);
+    new_line(file);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    cvh := DecaDobl_Homotopy_Convolutions_io.Make_Homotopy(nbequ,idxpar,deg);
+    while not DecaDobl_Complex_Solutions.Is_Null(tmp) loop
+      if verbose then
+        DecaDobl_Newton_Convolution_Steps.LU_Newton_Steps
+          (file,cvh,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale);
+      else
+        DecaDobl_Newton_Convolution_Steps.LU_Newton_Steps
+          (cvh,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale,false);
+      end if;
+      put_line(file,"The coefficients of the series : "); put_line(file,scf);
+      Convergence_Radius_Estimates.Fabry(file,scf,zpt,rad,err,fail,1,true);
+      Write_Report(file,rad,err,zpt,fail);
+      tmp := DecaDobl_Complex_Solutions.Tail_Of(tmp);
+      exit when DecaDobl_Complex_Solutions.Is_Null(tmp);
+      ls := DecaDobl_Complex_Solutions.Head_Of(tmp);
+      scf := DecaDobl_Newton_Convolutions.Series_Coefficients(ls.v,deg);
+    end loop;
+    DecaDobl_Complex_Vectors.Clear(wrk);
+    DecaDobl_Speelpenning_Convolutions.Clear(cvh);
   end DecaDobl_Run;
 
   procedure DecaDobl_Artificial_Setup is
@@ -99,6 +179,8 @@ package body DecaDobl_Fabry_on_Homotopy is
     gamma : DecaDobl_Complex_Numbers.Complex_Number;
     nbequ,nbvar,nbsols,deg : integer32 := 0;
     ans : character;
+    tofile : boolean;
+    outfile : file_type;
 
     use DecaDobl_Complex_Polynomials;
 
@@ -124,15 +206,35 @@ package body DecaDobl_Fabry_on_Homotopy is
       put("Read "); put(nbsols,1); put(" solutions in dimension ");
       put(nbvar,1); put_line(".");
       new_line;
+      put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
+      tofile := (ans = 'y');
+      if tofile then
+        new_line;
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(outfile);
+        put(outfile,target'last); new_line(outfile);
+        put(outfile,target.all);
+        new_line(outfile);
+        put_line(outfile,"THE START SYSTEM :");
+        DecaDobl_System_and_Solutions_io.put
+          (outfile,start.all,sols,"THE START SOLUTIONS :");
+      end if;
+      new_line;
       put("Random gamma ? (y/n) "); Ask_Yes_or_No(ans);
       if ans = 'y'
        then gamma := DecaDobl_Random_Numbers.Random1;
        else gamma := DecaDobl_Complex_Numbers.Create(integer(1));
       end if;
       DecaDobl_Homotopy.Create(target.all,start.all,1,gamma);
-      new_line;
       put("Give the degree of the power series : "); get(deg);
-      DecaDobl_Run(nbequ,nbvar+1,deg,sols);
+      if not tofile then
+        DecaDobl_Run(nbequ,nbvar+1,deg,sols);
+      else
+        new_line(outfile);
+        put(outfile,"gamma : "); put(outfile,gamma); new_line(outfile);
+        put(outfile,"degree : "); put(outfile,deg,1); new_line(outfile);
+        DecaDobl_Run(outfile,nbequ,nbvar+1,deg,sols);
+      end if;
     end if;
   end DecaDobl_Artificial_Setup;
 
@@ -142,6 +244,9 @@ package body DecaDobl_Fabry_on_Homotopy is
     sols,dropsols : DecaDobl_Complex_Solutions.Solution_List;
     nbequ,sysnbvar,solnbvar,nbsols,idxpar,deg : integer32 := 0;
     par : Standard_Integer_Vectors.Vector(1..1);
+    ans : character;
+    tofile : boolean;
+    outfile : file_type;
 
     use DecaDobl_Complex_Polynomials;
 
@@ -172,12 +277,34 @@ package body DecaDobl_Fabry_on_Homotopy is
         put_line("Need to drop one coordinate of each solution.");
         dropsols := Solution_Drops.Drop(sols,natural32(idxpar));
       end if;
+      new_line;
+      put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
+      tofile := (ans = 'y');
+      if tofile then
+        new_line;
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(outfile);
+        if solnbvar = nbequ then
+          DecaDobl_System_and_Solutions_io.put
+            (outfile,hom.all,sols,"THE START SOLUTIONS :");
+        else
+          DecaDobl_System_and_Solutions_io.put
+            (outfile,hom.all,dropsols,"THE START SOLUTIONS :");
+        end if;
+      end if;
       DecaDobl_Homotopy.Create(hom.all,idxpar);
       new_line;
       put("Give the degree of the power series : "); get(deg);
-      if solnbvar = nbequ
-       then DecaDobl_Run(nbequ,idxpar,deg,sols);
-       else DecaDobl_Run(nbequ,idxpar,deg,dropsols);
+      if solnbvar = nbequ then
+        if tofile 
+         then DecaDobl_Run(outfile,nbequ,idxpar,deg,sols);
+         else DecaDobl_Run(nbequ,idxpar,deg,sols);
+        end if;
+      else 
+        if tofile
+         then DecaDobl_Run(outfile,nbequ,idxpar,deg,dropsols);
+         else DecaDobl_Run(nbequ,idxpar,deg,dropsols);
+        end if;
       end if;
     end if;
   end DecaDobl_Natural_Setup;
