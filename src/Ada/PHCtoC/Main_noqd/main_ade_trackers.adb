@@ -2,9 +2,9 @@ with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Algorithmic_DiffEval_Trackers;      use Algorithmic_DiffEval_Trackers;
 
-procedure mainadep ( targetfilename,startfilename,outfilename : in string ) is
+package body Main_ADE_Trackers is
 
-  procedure Main is
+  procedure Main ( vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Prompts the user for the test, not for the precision,
@@ -14,6 +14,9 @@ procedure mainadep ( targetfilename,startfilename,outfilename : in string ) is
    -- tst,prc : character;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in main_ade_trackers.Main ...");
+    end if;
     new_line;
     put_line("MENU to test the algorithmic differentiation :");
     put_line("  0. running Newton's method;");
@@ -54,6 +57,4 @@ procedure mainadep ( targetfilename,startfilename,outfilename : in string ) is
     end case;
   end Main;
 
-begin
-  Main;
-end mainadep;
+end Main_ADE_Trackers;

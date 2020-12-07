@@ -215,17 +215,15 @@ package Option_Handlers is
   --   file3    name of the output file.
 
   procedure Algorithmic_Differentiation_Handler
-              ( opts : in string; file1,file2,file3 : in string );
+              ( args : in Array_of_Strings; opts : in string );
 
   -- DESCRIPTION :
   --   Defines the action for the option -j,
   --   for path trackers with algorithmic differentation.
 
   -- ON ENTRY :
-  --   opts     options extracted from the command line arguments;
-  --   file1    name of the input file with the target system;
-  --   file2    name of the input file with the start system;
-  --   file3    name of the output file.
+  --   args     command line arguments;
+  --   opts     options extracted from the command line arguments.
 
   procedure Enumeration_Handler
               ( args : in Array_of_Strings;

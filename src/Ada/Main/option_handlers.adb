@@ -24,7 +24,7 @@ with QuadDobl_BlackBox_Continuations;
 with Main_Homotopy_Continuation;
 with Main_Trackers;
 with Main_Pade_Trackers;
-with mainadep;
+with Main_ADE_Trackers;
 with Main_Factorization;
 with Main_Decomposition;
 with Main_Output_Feedback;
@@ -505,17 +505,18 @@ package body Option_Handlers is
   end Jumpstart_Handler;
 
   procedure Algorithmic_Differentiation_Handler
-              ( opts : in string; file1,file2,file3 : in string ) is
+              ( args : in Array_of_Strings; opts : in string ) is
 
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
     hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4adepath;
     else
       put_line(welcome); put_line(adepban);
-      mainadep(file1,file2,file3);
+      Main_ADE_Trackers.Main(vrblvl);
     end if;
   end Algorithmic_Differentiation_Handler;
 
@@ -833,7 +834,7 @@ package body Option_Handlers is
         when 'o' => Symbols_Handler(args,opts,a1,a2);
         when 'p' => Continuation_Handler(args,opts,a1,a2,a3);
         when 'q' => Jumpstart_Handler(args,opts,a1,a2,a3);
-        when 'j' => Algorithmic_Differentiation_Handler(opts,a1,a2,a3);
+        when 'j' => Algorithmic_Differentiation_Handler(args,opts);
         when 'c' => Decomposition_Handler(args,opts,a1,a2);
         when 'e' => Enumeration_Handler(args,opts,a1,a2);
         when 'k' => Feedback_Handler(args,opts,a1,a2);
