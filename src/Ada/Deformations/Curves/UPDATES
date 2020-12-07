@@ -1,3 +1,6 @@
+Mon 7 Dec 2020 : fixed *_newton_convolution_steps.adb so the output is
+  properly written to file in verbose mode.
+
 Sat 5 Dec 2020 : extended main_pade_trackers.adb to run Newton's method
   starting at a constant term in triple double precision, using the new
   package tripdobl_newton_matrix_series, the extended series_and_solutions,

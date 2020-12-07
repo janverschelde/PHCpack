@@ -74,10 +74,10 @@ package body Standard_Newton_Convolution_Steps is
         (file,csr,scf,rx,ix,absdx,info,ipvt,wrk,scale,vrblvl-1);
       Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        put("max |dx| ="); put(maxval,3);
+        put(file,"max |dx| ="); put(file,maxval,3);
         if idx < csr.vy'first
-         then put_line(" too large");
-         else put(" at index "); put(idx,1); new_line;
+         then put_line(file," too large");
+         else put(file," at index "); put(file,idx,1); new_line(file);
         end if;
       end if;
       if absdx <= tol
@@ -152,10 +152,10 @@ package body Standard_Newton_Convolution_Steps is
         (file,csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
       Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        put("max |dx| ="); put(maxval,3);
+        put(file,"max |dx| ="); put(file,maxval,3);
         if idx < csr.vy'first
-         then put_line(" too large");
-         else put(" at index "); put(idx,1); new_line;
+         then put_line(file," too large");
+         else put(file," at index "); put(file,idx,1); new_line(file);
         end if;
       end if;
       if absdx <= tol
@@ -233,10 +233,10 @@ package body Standard_Newton_Convolution_Steps is
         (file,csr,scf,rx,ix,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
       Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        put("max |dx| ="); put(maxval,3);
+        put(file,"max |dx| ="); put(file,maxval,3);
         if idx < csr.vy'first
-         then put_line(" too large");
-         else put(" at index "); put(idx,1); new_line;
+         then put_line(file," too large");
+         else put(file," at index "); put(file,idx,1); new_line(file);
         end if;
       end if;
       if absdx <= tol
@@ -311,10 +311,10 @@ package body Standard_Newton_Convolution_Steps is
         (file,csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
       Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        put("max |dx| ="); put(maxval,3);
+        put(file,"max |dx| ="); put(file,maxval,3);
         if idx < csr.vy'first
-         then put_line(" too large");
-         else put(" at index "); put(idx,1); new_line;
+         then put_line(file," too large");
+         else put(file," at index "); put(file,idx,1); new_line(file);
         end if;
       end if;
       if absdx <= tol
@@ -399,10 +399,10 @@ package body Standard_Newton_Convolution_Steps is
          scale,vrblvl-1);
       Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        put("max |dx| ="); put(maxval,3);
+        put(file,"max |dx| ="); put(file,maxval,3);
         if idx < csr.vy'first
-         then put_line(" too large");
-         else put(" at index "); put(idx,1); new_line;
+         then put_line(file," too large");
+         else put(file," at index "); put(file,idx,1); new_line(file);
         end if;
       end if;
       if absdx <= tol
@@ -485,10 +485,10 @@ package body Standard_Newton_Convolution_Steps is
          scale,vrblvl-1);
       Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        put("max |dx| ="); put(maxval,3);
+        put(file,"max |dx| ="); put(file,maxval,3);
         if idx < csr.vy'first
-         then put_line(" too large");
-         else put(" at index "); put(idx,1); new_line;
+         then put_line(file," too large");
+         else put(file," at index "); put(file,idx,1); new_line(file);
         end if;
       end if;
       if absdx <= tol
@@ -573,10 +573,10 @@ package body Standard_Newton_Convolution_Steps is
          scale,vrblvl-1);
       Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        put("max |dx| ="); put(maxval,3);
+        put(file,"max |dx| ="); put(file,maxval,3);
         if idx < csr.vy'first
-         then put_line(" too large");
-         else put(" at index "); put(idx,1); new_line;
+         then put_line(file," too large");
+         else put(file," at index "); put(file,idx,1); new_line(file);
         end if;
       end if;
       if absdx <= tol
@@ -657,10 +657,10 @@ package body Standard_Newton_Convolution_Steps is
         (file,csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
       Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        put("max |dx| ="); put(maxval,3);
+        put(file,"max |dx| ="); put(file,maxval,3);
         if idx < csr.vy'first
-         then put_line(" too large");
-         else put(" at index "); put(idx,1); new_line;
+         then put_line(file," too large");
+         else put(file," at index "); put(file,idx,1); new_line(file);
         end if;
       end if;
       if absdx <= tol
