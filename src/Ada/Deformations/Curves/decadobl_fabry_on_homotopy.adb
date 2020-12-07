@@ -1,9 +1,9 @@
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Deca_Double_Numbers;                use Deca_Double_Numbers;
-with Deca_Double_Numbers_io;             use Deca_Double_Numbers_io;
 with DecaDobl_Complex_Numbers;
 with DecaDobl_Complex_Numbers_io;        use DecaDobl_Complex_Numbers_io;
 with DecaDobl_Random_Numbers;
@@ -21,45 +21,9 @@ with DecaDobl_Homotopy_Convolutions_io;
 with DecaDobl_Newton_Convolutions;
 with DecaDobl_Newton_Convolution_Steps;
 with Convergence_Radius_Estimates;
+with Fabry_on_Homotopy_Helpers;
 
 package body DecaDobl_Fabry_on_Homotopy is
-
-  procedure Prompt_for_Parameters
-              ( maxit : in out integer32; tol : in out double_float;
-                verbose : out boolean ) is
-
-    ans : character;
-
-  begin
-    loop
-      put("Maximum number of iterations : "); put(maxit,1);
-      put(".  Change this number ? (y/n) "); Ask_Yes_or_No(ans);
-      exit when (ans /= 'y');
-      put("Give the new maximum number of iterations : "); get(maxit);
-    end loop;
-    loop
-      put("Tolerance for the accuracy : "); put(tol,3);
-      put(".  Change this tolerance ? (y/n) "); Ask_Yes_or_No(ans);
-      exit when (ans /= 'y');
-      put("Give the new tolerance for the accuracy : "); get(tol);
-    end loop;
-    put("Output during the Newton steps ? (y/n) "); Ask_Yes_or_No(ans);
-    verbose := (ans = 'y');
-  end Prompt_for_Parameters;
-
-  procedure Write_Report
-              ( file : in file_type; rad,err : in deca_double;
-                zpt : in DecaDobl_Complex_Numbers.Complex_Number;
-                fail : in boolean ) is
-  begin
-    put(file,"the convergence radius : "); put(file,rad,3);
-    put(file,"   error estimate : "); put(file,err,3); new_line(file);
-    put(file,zpt); put_line(file,"  estimates nearest singularity");
-    if fail
-     then put_line(file,"Reported failure.");
-     else put_line(file,"Reported success.");
-    end if;
-  end Write_Report;
 
   procedure DecaDobl_Newton_Fabry
               ( cfs : in DecaDobl_Speelpenning_Convolutions.Link_to_System;
@@ -81,7 +45,7 @@ package body DecaDobl_Fabry_on_Homotopy is
     zpt : DecaDobl_Complex_Numbers.Complex_Number;
 
   begin
-    Prompt_for_Parameters(maxit,tol,verbose);
+    Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
     if verbose then
       DecaDobl_Newton_Convolution_Steps.LU_Newton_Steps
         (standard_output,cfs,scf,maxit,nbrit,tol,absdx,fail,rcond,
@@ -93,7 +57,7 @@ package body DecaDobl_Fabry_on_Homotopy is
     put_line("The coefficients of the series : "); put_line(scf);
     Convergence_Radius_Estimates.Fabry
       (standard_output,scf,zpt,rad,err,fail,1,true);
-    Write_Report(standard_output,rad,err,zpt,fail);
+    Fabry_on_Homotopy_Helpers.Write_Report(standard_output,rad,err,zpt,fail);
     DecaDobl_Complex_Vectors.Clear(wrk);
   end DecaDobl_Newton_Fabry;
 
@@ -142,7 +106,7 @@ package body DecaDobl_Fabry_on_Homotopy is
     zpt : DecaDobl_Complex_Numbers.Complex_Number;
 
   begin
-    Prompt_for_Parameters(maxit,tol,verbose);
+    Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
     new_line(file);
     put(file,"maximum number of iterations : ");
     put(file,maxit,1); new_line(file);
@@ -162,7 +126,7 @@ package body DecaDobl_Fabry_on_Homotopy is
       end if;
       put_line(file,"The coefficients of the series : "); put_line(file,scf);
       Convergence_Radius_Estimates.Fabry(file,scf,zpt,rad,err,fail,1,true);
-      Write_Report(file,rad,err,zpt,fail);
+      Fabry_on_Homotopy_Helpers.Write_Report(file,rad,err,zpt,fail);
       tmp := DecaDobl_Complex_Solutions.Tail_Of(tmp);
       exit when DecaDobl_Complex_Solutions.Is_Null(tmp);
       ls := DecaDobl_Complex_Solutions.Head_Of(tmp);

@@ -3,11 +3,8 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Octo_Double_Numbers;                use Octo_Double_Numbers;
-with Octo_Double_Numbers_io;             use Octo_Double_Numbers_io;
 with OctoDobl_Complex_Numbers;
-with OctoDobl_Complex_Numbers_io;        use OctoDobl_Complex_Numbers_io;
 with OctoDobl_Random_Numbers;
 with Standard_Integer_Vectors;
 with OctoDobl_Complex_VecVecs;
@@ -23,6 +20,7 @@ with OctoDobl_Homotopy_Convolutions_io;
 with OctoDobl_Newton_Convolutions;
 with OctoDobl_Newton_Convolution_Steps;
 with Convergence_Radius_Estimates;
+with Fabry_on_Homotopy_Helpers;
 
 package body OctoDobl_Fabry_on_Homotopy is
 
@@ -34,41 +32,31 @@ package body OctoDobl_Fabry_on_Homotopy is
     deg : constant integer32 := cfs.deg;
     scf : constant OctoDobl_Complex_VecVecs.VecVec(1..dim)
         := OctoDobl_Newton_Convolutions.Series_Coefficients(sol,deg);
-    maxit,nbrit : integer32 := 0;
-    ans : character;
+    maxit : integer32 := deg/2;
+    nbrit : integer32 := 0;
     tol : double_float := 1.0E-32;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     wrk : OctoDobl_Complex_Vectors.Link_to_Vector
         := new OctoDobl_Complex_Vectors.Vector(1..dim); -- dim = #equations
-    fail : boolean;
+    fail,verbose : boolean;
     absdx,rcond,rad,err : octo_double;
     scale : constant boolean := false;
     zpt : OctoDobl_Complex_Numbers.Complex_Number;
 
   begin
-    new_line;
-    put("Give the maximum number of iterations : "); get(maxit);
-    loop
-      put("Tolerance for the accuracy : "); put(tol,3); new_line;
-      put("Change the tolerance ? (y/n) "); Ask_Yes_or_No(ans);
-      exit when (ans /= 'y');
-      if ans = 'y' then
-        put("Give the new tolerance for the accuracy : "); get(tol);
-      end if;
-    end loop;
-    OctoDobl_Newton_Convolution_Steps.LU_Newton_Steps
-      (standard_output,cfs,scf,maxit,nbrit,tol,absdx,fail,rcond,
-       ipvt,wrk,scale);
+    Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
+    if verbose then
+      OctoDobl_Newton_Convolution_Steps.LU_Newton_Steps
+        (standard_output,cfs,scf,maxit,nbrit,tol,absdx,fail,rcond,
+         ipvt,wrk,scale);
+    else
+      OctoDobl_Newton_Convolution_Steps.LU_Newton_Steps
+        (cfs,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale,false);
+    end if;
     put_line("The coefficients of the series : "); put_line(scf);
     Convergence_Radius_Estimates.Fabry
       (standard_output,scf,zpt,rad,err,fail,1,true);
-    put("the convergence radius : "); put(rad,3);
-    put("   error estimate : "); put(err,3); new_line;
-    put(zpt); put_line("  estimates nearest singularity");
-    if fail
-     then put_line("Reported failure.");
-     else put_line("Reported success.");
-    end if;
+    Fabry_on_Homotopy_Helpers.Write_Report(standard_output,rad,err,zpt,fail);
     OctoDobl_Complex_Vectors.Clear(wrk);
   end OctoDobl_Newton_Fabry;
 

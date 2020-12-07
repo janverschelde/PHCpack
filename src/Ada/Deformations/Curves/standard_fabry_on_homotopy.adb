@@ -3,9 +3,7 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
-with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_VecVecs;
@@ -27,6 +25,7 @@ with Standard_Homotopy_Convolutions_io;
 with Standard_Newton_Convolutions;
 with Staggered_Newton_Convolutions;
 with Convergence_Radius_Estimates;
+with Fabry_on_Homotopy_Helpers;
 
 package body Standard_Fabry_on_Homotopy is
 
@@ -46,11 +45,11 @@ package body Standard_Fabry_on_Homotopy is
     ry,iy : Standard_Floating_Vectors.Link_to_Vector;
     rv,iv : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
     tol : double_float := 1.0E-12;
-    ans : character;
     rcond,absdx,rad,err : double_float;
-    maxit,nbrit,idxtoldx : integer32 := 0;
+    maxit : integer32 := deg/2;
+    nbrit,idxtoldx : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
-    fail : boolean;
+    fail,verbose : boolean;
     scale : constant boolean := false;
     zpt : Standard_Complex_Numbers.Complex_Number;
 
@@ -63,29 +62,20 @@ package body Standard_Fabry_on_Homotopy is
     ib := Standard_Vector_Splitters.Allocate(deg,dim,0,1);
     ry := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
     iy := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
-    new_line;
-    put("Give the maximum number of iterations : "); get(maxit);
-    loop
-      put("Tolerance for the accuracy : "); put(tol,3); new_line;
-      put("Change the tolerance ? (y/n) "); Ask_Yes_or_No(ans);
-      exit when (ans /= 'y');
-      if ans = 'y' then
-        put("Give the new tolerance for the accuracy : "); get(tol);
-      end if;
-    end loop;
-    Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
-      (standard_output,cfs,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
-       fail,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
+    Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
+    if verbose then
+      Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+        (standard_output,cfs,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
+         fail,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
+    else
+      Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+        (cfs,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
+         fail,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale,false);
+    end if;
     put_line("The coefficients of the series : "); put_line(scf);
     Convergence_Radius_Estimates.Fabry
       (standard_output,scf,zpt,rad,err,fail,1,true);
-    put("the convergence radius :"); put(rad,3);
-    put("   error estimate :"); put(err,3); new_line;
-    put(zpt); put_line("  estimates nearest singularity");
-    if fail
-     then put_line("Reported failure.");
-     else put_line("Reported success.");
-    end if;
+    Fabry_on_Homotopy_Helpers.Write_Report(standard_output,rad,err,zpt,fail);
     Standard_Floating_Vectors.Clear(ry);
     Standard_Floating_Vectors.Clear(iy);
     Standard_Floating_VecVecs.Deep_Clear(rc);

@@ -1,6 +1,5 @@
 with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with DecaDobl_Complex_Vectors;
 with DecaDobl_Complex_Solutions;
 with DecaDobl_Speelpenning_Convolutions;
@@ -10,22 +9,6 @@ package DecaDobl_Fabry_on_Homotopy is
 -- DESCRIPTION :
 --   Computes the Newton-Fabry convergence radius in deca double precision
 --   for artificial or natural-parameter homotopies.
-
-  procedure Prompt_for_Parameters
-              ( maxit : in out integer32; tol : in out double_float;
-                verbose : out boolean );
-
-  -- DESCRIPTION :
-  --   Interactive setting of parameters.
-
-  -- ON ENTRY :
-  --   maxit    initial number of maximum number of iterations;
-  --   tol      initial value for the tolerance.
-
-  -- ON RETURN :
-  --   maxit    new value for the maximum number of iterations;
-  --   tol      new value for the tolerance;
-  --   verbose  true if output during the Newton steps is wanted.
 
   procedure DecaDobl_Newton_Fabry
               ( cfs : in DecaDobl_Speelpenning_Convolutions.Link_to_System;
