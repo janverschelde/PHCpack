@@ -1,5 +1,19 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Standard_Complex_Numbers;
+with Standard_Natural_Vectors;
+with Standard_Complex_Vectors;
+with Symbol_Table;
+with Standard_Complex_Polynomials_io;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Solutions;
+with Total_Degree_Start_Systems;
+with Standard_Complex_Solutions_io;
 with Standard_Fabry_on_Homotopy;
 with DoblDobl_Fabry_on_Homotopy;
 with TripDobl_Fabry_on_Homotopy;
@@ -50,5 +64,72 @@ package body Newton_Fabry_on_Homotopy is
   begin
     Run_Newton_Fabry(prc);
   end Main;
+
+  procedure Generate_Homotopy
+              ( file : in file_type;
+                dim : in integer32; tvalue : in double_float ) is
+
+    d : constant Standard_Natural_Vectors.Vector(1..dim) := (1..dim => 2);
+    ones : constant Standard_Complex_Vectors.Vector(1..dim)
+         := (1..dim => Standard_Complex_Numbers.Create(1.0));
+    q : Standard_Complex_Poly_Systems.Poly_Sys(1..dim)
+      := Total_Degree_Start_Systems.Start_System(d,ones);
+    qsol : Standard_Complex_Solutions.Solution(dim+1);
+    sols : Standard_Complex_Solutions.Solution_List;
+    s : constant Symbol_Table.Array_of_Symbols(1..dim)
+      := Symbol_Table.Standard_Symbols(dim);
+
+  begin
+    qsol.t := Standard_Complex_Numbers.Create(0.0);
+    qsol.m := 1;
+    qsol.v := (1..dim+1 => Standard_Complex_Numbers.Create(1.0));
+    qsol.v(dim+1) := Standard_Complex_Numbers.Create(0.0);
+    qsol.err := 0.0;
+    qsol.rco := 1.0;
+    qsol.res := 0.0;
+    Standard_Complex_Solutions.Add(sols,qsol);
+    put(file,dim,1); put(file," "); put(file,dim+1,1); new_line(file);
+    put(file," x1");
+    for i in 2..dim loop                 -- write x1 + x2 + ...
+      put(file," + x"); put(file,i,1);
+    end loop;
+    for i in 1..dim loop                 -- write - x1 - x2 - ...
+      put(file," - x"); put(file,i,1);
+    end loop;
+    put_line(file," + ");                -- to initialize symbol table
+    for i in 1..dim loop
+      put(file," (1-t)*(t -");
+      put(file,tvalue); put(file,")*(");
+      Standard_Complex_Polynomials_io.put_terms(file,q(i));
+      put_line(file,")"); 
+      put(file," + t*(t -"); put(file,tvalue); put(file,")*(");
+      put(file,"x"); put(file,i,1); put_line(file,"^2);");
+    end loop;
+    Symbol_Table.Init(s);
+    Symbol_Table.Enlarge(1);
+    Symbol_Table.Add_String("t");
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    Standard_Complex_Solutions_io.put(file,1,natural32(dim)+1,sols);
+    Standard_Complex_Poly_Systems.Clear(q);
+  end Generate_Homotopy;
+
+  procedure Test is
+
+    dim : integer32 := 0;
+    tvalue : double_float := 0.0;
+    file : file_type;
+
+  begin
+    new_line;
+    put_line("Generating a test homotopy ...");
+    put("Give the dimension : "); get(dim);
+    put("Give a nonzero critical value for t : "); get(tvalue);
+    new_line;
+    put_line("Reading the name of the output file ..."); skip_line;
+    Read_Name_and_Create_File(file);
+    Generate_Homotopy(file,dim,tvalue);
+    close(file);
+  end Test;
 
 end Newton_Fabry_on_Homotopy;

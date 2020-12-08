@@ -25,4 +25,9 @@ package Newton_Fabry_on_Homotopy is
   --   Prompts for the precision
   --   and then launches the computation in that precision.
 
+  procedure Test;
+
+  -- DESCRIPTION :
+  --   Interactive procedure to generate a test case.
+
 end Newton_Fabry_on_Homotopy;
