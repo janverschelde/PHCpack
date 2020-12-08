@@ -1,3 +1,5 @@
+with Ada.Calendar;
+with Time_Stamps;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -22,6 +24,7 @@ with QuadDobl_Newton_Convolutions;
 with QuadDobl_Newton_Convolution_Steps;
 with Convergence_Radius_Estimates;
 with Fabry_on_Homotopy_Helpers;
+with Multitasked_Power_Newton;
 
 package body QuadDobl_Fabry_on_Homotopy is
 
@@ -34,7 +37,7 @@ package body QuadDobl_Fabry_on_Homotopy is
     scf : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
         := QuadDobl_Newton_Convolutions.Series_Coefficients(sol,deg);
     maxit : integer32 := deg/2;
-    nbrit : integer32 := 0;
+    nbrit,nbtasks,info : integer32 := 0;
     tol : double_float := 1.0E-32;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     wrk : QuadDobl_Complex_Vectors.Link_to_Vector
@@ -46,13 +49,27 @@ package body QuadDobl_Fabry_on_Homotopy is
 
   begin
     Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
+    new_line;
+    put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
     if verbose then
-      QuadDobl_Newton_Convolution_Steps.LU_Newton_Steps
-        (standard_output,cfs,scf,maxit,nbrit,tol,absdx,fail,rcond,
-         ipvt,wrk,scale);
+      if nbtasks = 0 then
+        QuadDobl_Newton_Convolution_Steps.LU_Newton_Steps
+          (standard_output,cfs,scf,maxit,nbrit,tol,absdx,fail,rcond,
+           ipvt,wrk,scale);
+      else
+        Multitasked_Power_Newton.QuadDobl_Run
+          (standard_output,nbtasks,dim,maxit,cfs,scf,tol,true,fail,
+           info,nbrit,rcond,absdx);
+      end if;
     else
-      QuadDobl_Newton_Convolution_Steps.LU_Newton_Steps
-        (cfs,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale,false);
+      if nbtasks = 0 then
+        QuadDobl_Newton_Convolution_Steps.LU_Newton_Steps
+          (cfs,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale,false);
+      else
+        Multitasked_Power_Newton.QuadDobl_Run
+          (nbtasks,dim,maxit,cfs,scf,tol,true,fail,
+           info,nbrit,rcond,absdx,false,false);
+      end if;
     end if;
     put_line("The coefficients of the series : "); put_line(scf);
     Convergence_Radius_Estimates.Fabry
@@ -92,7 +109,7 @@ package body QuadDobl_Fabry_on_Homotopy is
         := QuadDobl_Newton_Convolutions.Series_Coefficients(ls.v,deg);
     maxit : integer32 := deg/2;
     tol : double_float := 1.0E-32;
-    nbrit : integer32 := 0;
+    nbrit,nbtasks,info : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     wrk : QuadDobl_Complex_Vectors.Link_to_Vector
         := new QuadDobl_Complex_Vectors.Vector(1..dim); -- dim = #equations
@@ -100,9 +117,18 @@ package body QuadDobl_Fabry_on_Homotopy is
     absdx,rcond,rad,err : quad_double;
     scale : constant boolean := false;
     zpt : QuadDobl_Complex_Numbers.Complex_Number;
+    tstart,tstop : Ada.Calendar.Time;
+    cnt : integer32 := 0;
 
   begin
     Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
+    new_line;
+    put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
+    if nbtasks = 0 then
+      put_line(file,"no multitasking");
+    else
+      put(file,"number of tasks : "); put(file,nbtasks,1); new_line(file);
+    end if;
     put(file,"maximum number of iterations : ");
     put(file,maxit,1); new_line(file);
     put(file,"tolerance :"); put(file,tol,3); new_line(file);
@@ -111,15 +137,30 @@ package body QuadDobl_Fabry_on_Homotopy is
     put_line("See the output file for results ...");
     new_line;
     cvh := QuadDobl_Homotopy_Convolutions_io.Make_Homotopy(nbequ,idxpar,deg);
+    tstart := Ada.Calendar.Clock;
     loop
       if verbose then
-        QuadDobl_Newton_Convolution_Steps.LU_Newton_Steps
-          (file,cvh,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale);
+        if nbtasks = 0 then
+          QuadDobl_Newton_Convolution_Steps.LU_Newton_Steps
+            (file,cvh,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale);
+        else
+          Multitasked_Power_Newton.QuadDobl_Run
+            (file,nbtasks,dim,maxit,cvh,scf,tol,true,fail,
+             info,nbrit,rcond,absdx);
+        end if;
       else
-        QuadDobl_Newton_Convolution_Steps.LU_Newton_Steps
-          (cvh,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale,false);
+        if nbtasks = 0 then
+          QuadDobl_Newton_Convolution_Steps.LU_Newton_Steps
+            (cvh,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale,false);
+        else
+          Multitasked_Power_Newton.QuadDobl_Run
+            (nbtasks,dim,maxit,cvh,scf,tol,true,fail,
+             info,nbrit,rcond,absdx,false,false);
+        end if;
       end if;
-      put_line(file,"The coefficients of the series : "); put_line(file,scf);
+      put(file,"The coefficients of the series for solution ");
+      cnt := cnt + 1; put(file,cnt,1); put_line(file," :");
+      put_line(file,scf);
       Convergence_Radius_Estimates.Fabry(file,scf,zpt,rad,err,fail,1,true);
       Fabry_on_Homotopy_Helpers.Write_Report(file,rad,err,zpt,fail);
       tmp := QuadDobl_Complex_Solutions.Tail_Of(tmp);
@@ -127,6 +168,9 @@ package body QuadDobl_Fabry_on_Homotopy is
       ls := QuadDobl_Complex_Solutions.Head_Of(tmp);
       scf := QuadDobl_Newton_Convolutions.Series_Coefficients(ls.v,deg);
     end loop;
+    tstop := Ada.Calendar.Clock;
+    new_line(file);
+    Time_Stamps.Write_Elapsed_Time(file,tstart,tstop);
     QuadDobl_Complex_Vectors.Clear(wrk);
     QuadDobl_Speelpenning_Convolutions.Clear(cvh);
   end Run;

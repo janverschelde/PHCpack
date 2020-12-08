@@ -1,3 +1,5 @@
+with Ada.Calendar;
+with Time_Stamps;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -20,18 +22,19 @@ with Standard_System_and_Solutions_io;
 with Standard_Homotopy;
 with Standard_Parameter_Systems;
 with Solution_Drops;
-with Standard_Speelpenning_Convolutions;
 with Standard_Convolution_Splitters;
 with Standard_Homotopy_Convolutions_io;
 with Standard_Newton_Convolutions;
 with Staggered_Newton_Convolutions;
 with Convergence_Radius_Estimates;
 with Fabry_on_Homotopy_Helpers;
+with Multitasked_Power_Newton;
 
 package body Standard_Fabry_on_Homotopy is
 
   procedure Newton_Fabry
-              ( cfs : in Standard_Coefficient_Convolutions.Link_to_System;
+              ( cvh : Standard_Speelpenning_Convolutions.Link_to_System;
+                cfs : in Standard_Coefficient_Convolutions.Link_to_System;
                 sol : in Standard_Complex_Vectors.Vector ) is
 
     dim : constant integer32 := sol'last;
@@ -48,7 +51,7 @@ package body Standard_Fabry_on_Homotopy is
     tol : double_float := 1.0E-12;
     rcond,absdx,rad,err : double_float;
     maxit : integer32 := deg/2;
-    nbrit,idxtoldx : integer32 := 0;
+    nbrit,idxtoldx,nbtasks,info : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     fail,verbose : boolean;
     scale : constant boolean := false;
@@ -64,14 +67,28 @@ package body Standard_Fabry_on_Homotopy is
     ry := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
     iy := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
     Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
+    new_line;
+    put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
     if verbose then
-      Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
-        (standard_output,cfs,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
-         fail,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
+      if nbtasks = 0 then
+        Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+          (standard_output,cfs,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
+           fail,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
+      else
+        Multitasked_Power_Newton.Standard_Run
+          (standard_output,nbtasks,dim,maxit,cvh,scf,tol,true,fail,
+           info,nbrit,rcond,absdx);
+      end if;
     else
-      Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
-        (cfs,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
-         fail,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale,false);
+      if nbtasks = 0 then
+        Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+          (cfs,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
+           fail,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale,false);
+      else
+        Multitasked_Power_Newton.Standard_Run
+          (nbtasks,dim,maxit,cvh,scf,tol,true,fail,
+           info,nbrit,rcond,absdx,false,false);
+      end if;
     end if;
     put_line("The coefficients of the series : "); put_line(scf);
     Convergence_Radius_Estimates.Fabry
@@ -99,7 +116,7 @@ package body Standard_Fabry_on_Homotopy is
     cfh := Standard_Convolution_Splitters.Split(cvh);
     while not Standard_Complex_Solutions.Is_Null(tmp) loop
       ls := Standard_Complex_Solutions.Head_Of(tmp);
-      Newton_Fabry(cfh,ls.v);
+      Newton_Fabry(cvh,cfh,ls.v);
       put("Continue with the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       tmp := Standard_Complex_Solutions.Tail_Of(tmp);
@@ -126,7 +143,7 @@ package body Standard_Fabry_on_Homotopy is
     rv,iv : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
     maxit : integer32 := deg/2;
     tol : double_float := 1.0E-12;
-    nbrit,idxtoldx : integer32 := 0;
+    nbrit,idxtoldx,nbtasks,info : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     wrk : Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector(1..dim); -- dim = #equations
@@ -134,6 +151,8 @@ package body Standard_Fabry_on_Homotopy is
     absdx,rcond,rad,err : double_float;
     scale : constant boolean := false;
     zpt : Standard_Complex_Numbers.Complex_Number;
+    tstart,tstop : Ada.Calendar.Time;
+    cnt : integer32 := 0;
 
   begin
     Standard_Floating_VecVecVecs.Allocate(rv,1,deg,1,dim,1,dim);
@@ -145,6 +164,13 @@ package body Standard_Fabry_on_Homotopy is
     ry := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
     iy := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
     Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
+    new_line;
+    put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
+    if nbtasks = 0 then
+      put_line(file,"no multitasking");
+    else
+      put(file,"number of tasks : "); put(file,nbtasks,1); new_line(file);
+    end if;
     put(file,"maximum number of iterations : ");
     put(file,maxit,1); new_line(file);
     put(file,"tolerance :"); put(file,tol,3); new_line(file);
@@ -154,17 +180,32 @@ package body Standard_Fabry_on_Homotopy is
     new_line;
     cvh := Standard_Homotopy_Convolutions_io.Make_Homotopy(nbequ,idxpar,deg);
     cfh := Standard_Convolution_Splitters.Split(cvh);
+    tstart := Ada.Calendar.Clock;
     loop
       if verbose then
-        Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
-          (file,cfh,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
-           fail,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
+        if nbtasks = 0 then
+          Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+            (file,cfh,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
+             fail,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
+        else
+          Multitasked_Power_Newton.Standard_Run
+            (file,nbtasks,dim,maxit,cvh,scf,tol,true,fail,
+             info,nbrit,rcond,absdx);
+        end if;
       else
-        Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
-          (cfh,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
-           fail,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale,false);
+        if nbtasks = 0 then
+          Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+            (cfh,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
+             fail,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale,false);
+        else
+          Multitasked_Power_Newton.Standard_Run
+            (nbtasks,dim,maxit,cvh,scf,tol,true,fail,
+             info,nbrit,rcond,absdx,false,false);
+        end if;
       end if;
-      put_line(file,"The coefficients of the series : "); put_line(file,scf);
+      put(file,"The coefficients of the series for solution ");
+      cnt := cnt + 1; put(file,cnt,1); put_line(file," :");
+      put_line(file,scf);
       Convergence_Radius_Estimates.Fabry
         (file,scf,zpt,rad,err,fail,1,true);
       tmp := Standard_Complex_Solutions.Tail_Of(tmp);
@@ -172,6 +213,9 @@ package body Standard_Fabry_on_Homotopy is
       ls := Standard_Complex_Solutions.Head_Of(tmp);
       scf := Standard_Newton_Convolutions.Series_Coefficients(ls.v,deg);
     end loop;
+    tstop := Ada.Calendar.Clock;
+    new_line(file);
+    Time_Stamps.Write_Elapsed_Time(file,tstart,tstop);
     Standard_Floating_Vectors.Clear(ry);
     Standard_Floating_Vectors.Clear(iy);
     Standard_Floating_VecVecs.Deep_Clear(rc);
