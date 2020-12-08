@@ -1,10 +1,11 @@
-with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with QuadDobl_Random_Numbers;
 with Standard_Integer_Vectors;
 with QuadDobl_Complex_VecVecs;
@@ -24,7 +25,7 @@ with Fabry_on_Homotopy_Helpers;
 
 package body QuadDobl_Fabry_on_Homotopy is
 
-  procedure QuadDobl_Newton_Fabry
+  procedure Newton_Fabry
               ( cfs : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 sol : in QuadDobl_Complex_Vectors.Vector ) is
 
@@ -58,11 +59,10 @@ package body QuadDobl_Fabry_on_Homotopy is
       (standard_output,scf,zpt,rad,err,fail,1,true);
     Fabry_on_Homotopy_Helpers.Write_Report(standard_output,rad,err,zpt,fail);
     QuadDobl_Complex_Vectors.Clear(wrk);
-  end QuadDobl_Newton_Fabry;
+  end Newton_Fabry;
 
-  procedure QuadDobl_Run
-              ( nbequ,idxpar,deg : in integer32;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+  procedure Run ( nbequ,idxpar,deg : in integer32;
+                  sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
 
     cvh : QuadDobl_Speelpenning_Convolutions.Link_to_System;
     tmp : QuadDobl_Complex_Solutions.Solution_List := sols;
@@ -73,20 +73,73 @@ package body QuadDobl_Fabry_on_Homotopy is
     cvh := QuadDobl_Homotopy_Convolutions_io.Make_Homotopy(nbequ,idxpar,deg);
     while not QuadDobl_Complex_Solutions.Is_Null(tmp) loop
       ls := QuadDobl_Complex_Solutions.Head_Of(tmp);
-      QuadDobl_Newton_Fabry(cvh,ls.v);
+      Newton_Fabry(cvh,ls.v);
       put("Continue with the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       tmp := QuadDobl_Complex_Solutions.Tail_Of(tmp);
     end loop;
-  end QuadDobl_Run;
+  end Run;
 
-  procedure QuadDobl_Artificial_Setup is
+  procedure Run ( file : in file_type; nbequ,idxpar,deg : in integer32;
+                  sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    cvh : QuadDobl_Speelpenning_Convolutions.Link_to_System;
+    tmp : QuadDobl_Complex_Solutions.Solution_List := sols;
+    ls : QuadDobl_Complex_Solutions.Link_to_Solution
+       := QuadDobl_Complex_Solutions.Head_Of(sols);
+    dim : constant integer32 := ls.v'last;
+    scf : QuadDobl_Complex_VecVecs.VecVec(1..dim)
+        := QuadDobl_Newton_Convolutions.Series_Coefficients(ls.v,deg);
+    maxit : integer32 := deg/2;
+    tol : double_float := 1.0E-32;
+    nbrit : integer32 := 0;
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    wrk : QuadDobl_Complex_Vectors.Link_to_Vector
+        := new QuadDobl_Complex_Vectors.Vector(1..dim); -- dim = #equations
+    fail,verbose : boolean;
+    absdx,rcond,rad,err : quad_double;
+    scale : constant boolean := false;
+    zpt : QuadDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
+    put(file,"maximum number of iterations : ");
+    put(file,maxit,1); new_line(file);
+    put(file,"tolerance :"); put(file,tol,3); new_line(file);
+    new_line(file);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    cvh := QuadDobl_Homotopy_Convolutions_io.Make_Homotopy(nbequ,idxpar,deg);
+    loop
+      if verbose then
+        QuadDobl_Newton_Convolution_Steps.LU_Newton_Steps
+          (file,cvh,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale);
+      else
+        QuadDobl_Newton_Convolution_Steps.LU_Newton_Steps
+          (cvh,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale,false);
+      end if;
+      put_line(file,"The coefficients of the series : "); put_line(file,scf);
+      Convergence_Radius_Estimates.Fabry(file,scf,zpt,rad,err,fail,1,true);
+      Fabry_on_Homotopy_Helpers.Write_Report(file,rad,err,zpt,fail);
+      tmp := QuadDobl_Complex_Solutions.Tail_Of(tmp);
+      exit when QuadDobl_Complex_Solutions.Is_Null(tmp);
+      ls := QuadDobl_Complex_Solutions.Head_Of(tmp);
+      scf := QuadDobl_Newton_Convolutions.Series_Coefficients(ls.v,deg);
+    end loop;
+    QuadDobl_Complex_Vectors.Clear(wrk);
+    QuadDobl_Speelpenning_Convolutions.Clear(cvh);
+  end Run;
+
+  procedure Artificial_Setup is
 
     target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : QuadDobl_Complex_Solutions.Solution_List;
     gamma : QuadDobl_Complex_Numbers.Complex_Number;
     nbequ,nbvar,nbsols,deg : integer32 := 0;
     ans : character;
+    tofile : boolean;
+    outfile : file_type;
 
     use QuadDobl_Complex_Polynomials;
 
@@ -112,6 +165,20 @@ package body QuadDobl_Fabry_on_Homotopy is
       put("Read "); put(nbsols,1); put(" solutions in dimension ");
       put(nbvar,1); put_line(".");
       new_line;
+      put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
+      tofile := (ans = 'y');
+      if tofile then
+        new_line;
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(outfile);
+        put(outfile,target'last); new_line(outfile);
+        put(outfile,target.all);
+        new_line(outfile);
+        put_line(outfile,"THE START SYSTEM :");
+        QuadDobl_System_and_Solutions_io.put
+          (outfile,start.all,sols,"THE START SOLUTIONS :");
+      end if;
+      new_line;
       put("Random gamma ? (y/n) "); Ask_Yes_or_No(ans);
       if ans = 'y'
        then gamma := QuadDobl_Random_Numbers.Random1;
@@ -120,16 +187,26 @@ package body QuadDobl_Fabry_on_Homotopy is
       QuadDobl_Homotopy.Create(target.all,start.all,1,gamma);
       new_line;
       put("Give the degree of the power series : "); get(deg);
-      QuadDobl_Run(nbequ,nbvar+1,deg,sols);
+      if not tofile then
+        Run(nbequ,nbvar+1,deg,sols);
+      else
+        new_line(outfile);
+        put(outfile,"gamma : "); put(outfile,gamma); new_line(outfile);
+        put(outfile,"degree : "); put(outfile,deg,1); new_line(outfile);
+        Run(outfile,nbequ,nbvar+1,deg,sols);
+      end if;
     end if;
-  end QuadDobl_Artificial_Setup;
+  end Artificial_Setup;
 
-  procedure QuadDobl_Natural_Setup is
+  procedure Natural_Setup is
 
     hom : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols,dropsols : QuadDobl_Complex_Solutions.Solution_List;
     nbequ,sysnbvar,solnbvar,nbsols,idxpar,deg : integer32 := 0;
     par : Standard_Integer_Vectors.Vector(1..1);
+    ans : character;
+    tofile : boolean;
+    outfile : file_type;
 
     use QuadDobl_Complex_Polynomials;
 
@@ -157,18 +234,42 @@ package body QuadDobl_Fabry_on_Homotopy is
       if solnbvar = nbequ then
         put_line("Solution dimension is okay.");
       else
-        put_line("Need to drop one coordinate of each solution.");
+        put_line("Dropping one coordinate of each solution ...");
         dropsols := Solution_Drops.Drop(sols,natural32(idxpar));
+      end if;
+      new_line;
+      put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
+      tofile := (ans = 'y');
+      if tofile then
+        new_line;
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(outfile);
+        if solnbvar = nbequ then
+          QuadDobl_System_and_Solutions_io.put
+            (outfile,hom.all,sols,"THE START SOLUTIONS :");
+        else
+          QuadDobl_System_and_Solutions_io.put
+            (outfile,hom.all,dropsols,"THE START SOLUTIONS :");
+        end if;
       end if;
       QuadDobl_Homotopy.Create(hom.all,idxpar);
       new_line;
       put("Give the degree of the power series : "); get(deg);
-      if solnbvar = nbequ
-       then QuadDobl_Run(nbequ,idxpar,deg,sols);
-       else QuadDobl_Run(nbequ,idxpar,deg,dropsols);
+      if not tofile then
+        if solnbvar = nbequ
+         then Run(nbequ,idxpar,deg,sols);
+         else Run(nbequ,idxpar,deg,dropsols);
+        end if;
+      else
+        new_line(outfile);
+        put(outfile,"degree : "); put(outfile,deg,1); new_line(outfile);
+        if solnbvar = nbequ
+         then Run(outfile,nbequ,idxpar,deg,sols);
+         else Run(outfile,nbequ,idxpar,deg,dropsols);
+        end if;
       end if;
     end if;
-  end QuadDobl_Natural_Setup;
+  end Natural_Setup;
 
   procedure Main is
 
@@ -178,8 +279,8 @@ package body QuadDobl_Fabry_on_Homotopy is
     new_line;
     put("Artificial-parameter homotopy ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y'
-     then QuadDobl_Artificial_Setup;
-     else QuadDobl_Natural_Setup;
+     then Artificial_Setup;
+     else Natural_Setup;
     end if;
   end Main;
 

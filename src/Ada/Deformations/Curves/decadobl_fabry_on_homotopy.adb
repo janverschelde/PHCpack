@@ -25,7 +25,7 @@ with Fabry_on_Homotopy_Helpers;
 
 package body DecaDobl_Fabry_on_Homotopy is
 
-  procedure DecaDobl_Newton_Fabry
+  procedure Newton_Fabry
               ( cfs : in DecaDobl_Speelpenning_Convolutions.Link_to_System;
                 sol : in DecaDobl_Complex_Vectors.Vector ) is
 
@@ -59,11 +59,10 @@ package body DecaDobl_Fabry_on_Homotopy is
       (standard_output,scf,zpt,rad,err,fail,1,true);
     Fabry_on_Homotopy_Helpers.Write_Report(standard_output,rad,err,zpt,fail);
     DecaDobl_Complex_Vectors.Clear(wrk);
-  end DecaDobl_Newton_Fabry;
+  end Newton_Fabry;
 
-  procedure DecaDobl_Run
-              ( nbequ,idxpar,deg : in integer32;
-                sols : in out DecaDobl_Complex_Solutions.Solution_List ) is
+  procedure Run ( nbequ,idxpar,deg : in integer32;
+                  sols : in out DecaDobl_Complex_Solutions.Solution_List ) is
 
     cvh : DecaDobl_Speelpenning_Convolutions.Link_to_System;
     tmp : DecaDobl_Complex_Solutions.Solution_List := sols;
@@ -74,18 +73,16 @@ package body DecaDobl_Fabry_on_Homotopy is
     cvh := DecaDobl_Homotopy_Convolutions_io.Make_Homotopy(nbequ,idxpar,deg);
     while not DecaDobl_Complex_Solutions.Is_Null(tmp) loop
       ls := DecaDobl_Complex_Solutions.Head_Of(tmp);
-      DecaDobl_Newton_Fabry(cvh,ls.v);
+      Newton_Fabry(cvh,ls.v);
       put("Continue with the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       tmp := DecaDobl_Complex_Solutions.Tail_Of(tmp);
     end loop;
     DecaDobl_Speelpenning_Convolutions.Clear(cvh);
-  end DecaDobl_Run;
+  end Run;
 
-  procedure DecaDobl_Run
-              ( file : in file_type;
-                nbequ,idxpar,deg : in integer32;
-                sols : in out DecaDobl_Complex_Solutions.Solution_List ) is
+  procedure Run ( file : in file_type; nbequ,idxpar,deg : in integer32;
+                  sols : in out DecaDobl_Complex_Solutions.Solution_List ) is
 
     cvh : DecaDobl_Speelpenning_Convolutions.Link_to_System;
     tmp : DecaDobl_Complex_Solutions.Solution_List := sols;
@@ -116,7 +113,7 @@ package body DecaDobl_Fabry_on_Homotopy is
     put_line("See the output file for results ...");
     new_line;
     cvh := DecaDobl_Homotopy_Convolutions_io.Make_Homotopy(nbequ,idxpar,deg);
-    while not DecaDobl_Complex_Solutions.Is_Null(tmp) loop
+    loop
       if verbose then
         DecaDobl_Newton_Convolution_Steps.LU_Newton_Steps
           (file,cvh,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale);
@@ -134,9 +131,9 @@ package body DecaDobl_Fabry_on_Homotopy is
     end loop;
     DecaDobl_Complex_Vectors.Clear(wrk);
     DecaDobl_Speelpenning_Convolutions.Clear(cvh);
-  end DecaDobl_Run;
+  end Run;
 
-  procedure DecaDobl_Artificial_Setup is
+  procedure Artificial_Setup is
 
     target,start : DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : DecaDobl_Complex_Solutions.Solution_List;
@@ -192,17 +189,17 @@ package body DecaDobl_Fabry_on_Homotopy is
       DecaDobl_Homotopy.Create(target.all,start.all,1,gamma);
       put("Give the degree of the power series : "); get(deg);
       if not tofile then
-        DecaDobl_Run(nbequ,nbvar+1,deg,sols);
+        Run(nbequ,nbvar+1,deg,sols);
       else
         new_line(outfile);
         put(outfile,"gamma : "); put(outfile,gamma); new_line(outfile);
         put(outfile,"degree : "); put(outfile,deg,1); new_line(outfile);
-        DecaDobl_Run(outfile,nbequ,nbvar+1,deg,sols);
+        Run(outfile,nbequ,nbvar+1,deg,sols);
       end if;
     end if;
-  end DecaDobl_Artificial_Setup;
+  end Artificial_Setup;
 
-  procedure DecaDobl_Natural_Setup is
+  procedure Natural_Setup is
 
     hom : DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols,dropsols : DecaDobl_Complex_Solutions.Solution_List;
@@ -238,7 +235,7 @@ package body DecaDobl_Fabry_on_Homotopy is
       if solnbvar = nbequ then
         put_line("Solution dimension is okay.");
       else
-        put_line("Need to drop one coordinate of each solution.");
+        put_line("Dropping one coordinate of each solution ...");
         dropsols := Solution_Drops.Drop(sols,natural32(idxpar));
       end if;
       new_line;
@@ -259,19 +256,21 @@ package body DecaDobl_Fabry_on_Homotopy is
       DecaDobl_Homotopy.Create(hom.all,idxpar);
       new_line;
       put("Give the degree of the power series : "); get(deg);
-      if solnbvar = nbequ then
-        if tofile 
-         then DecaDobl_Run(outfile,nbequ,idxpar,deg,sols);
-         else DecaDobl_Run(nbequ,idxpar,deg,sols);
+      if not tofile then
+        if solnbvar = nbequ
+         then Run(nbequ,idxpar,deg,sols);
+         else Run(nbequ,idxpar,deg,dropsols);
         end if;
-      else 
-        if tofile
-         then DecaDobl_Run(outfile,nbequ,idxpar,deg,dropsols);
-         else DecaDobl_Run(nbequ,idxpar,deg,dropsols);
+      else
+        new_line(outfile);
+        put(outfile,"degree : "); put(outfile,deg,1); new_line(outfile);
+        if solnbvar = nbequ
+         then Run(outfile,nbequ,idxpar,deg,sols);
+         else Run(outfile,nbequ,idxpar,deg,dropsols);
         end if;
       end if;
     end if;
-  end DecaDobl_Natural_Setup;
+  end Natural_Setup;
 
   procedure Main is
 
@@ -281,8 +280,8 @@ package body DecaDobl_Fabry_on_Homotopy is
     new_line;
     put("Artificial-parameter homotopy ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y'
-     then DecaDobl_Artificial_Setup;
-     else DecaDobl_Natural_Setup;
+     then Artificial_Setup;
+     else Natural_Setup;
     end if;
   end Main;
 

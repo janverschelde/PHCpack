@@ -8,9 +8,9 @@ package DecaDobl_Fabry_on_Homotopy is
 
 -- DESCRIPTION :
 --   Computes the Newton-Fabry convergence radius in deca double precision
---   for artificial or natural-parameter homotopies.
+--   for artificial-parameter or natural-parameter homotopies.
 
-  procedure DecaDobl_Newton_Fabry
+  procedure Newton_Fabry
               ( cfs : in DecaDobl_Speelpenning_Convolutions.Link_to_System;
                 sol : in DecaDobl_Complex_Vectors.Vector );
 
@@ -20,9 +20,8 @@ package DecaDobl_Fabry_on_Homotopy is
   --   In this interactive version, the user is prompted each time 
   --   for the parameters and all output is written to screen.
 
-  procedure DecaDobl_Run
-              ( nbequ,idxpar,deg : in integer32;
-                sols : in out DecaDobl_Complex_Solutions.Solution_List );
+  procedure Run ( nbequ,idxpar,deg : in integer32;
+                  sols : in out DecaDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   With the homotopy defined starting at the solutions in sols,
@@ -35,9 +34,8 @@ package DecaDobl_Fabry_on_Homotopy is
   --   deg      degree of the power series;
   --   sols     start solutions in the homotopy.
 
-  procedure DecaDobl_Run
-              ( file : in file_type; nbequ,idxpar,deg : in integer32;
-                sols : in out DecaDobl_Complex_Solutions.Solution_List );
+  procedure Run ( file : in file_type; nbequ,idxpar,deg : in integer32;
+                  sols : in out DecaDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   With the homotopy defined starting at the solutions in sols,
@@ -51,21 +49,21 @@ package DecaDobl_Fabry_on_Homotopy is
   --   deg      degree of the power series;
   --   sols     start solutions in the homotopy.
 
-  procedure DecaDobl_Artificial_Setup;
+  procedure Artificial_Setup;
 
   -- DESCRIPTION :
-  --   Promps the user for an artifical-parameter homotopy.
+  --   Prompts for an artifical-parameter homotopy.
   --   If the number of start solutions is positive,
   --   then the homotopy is defined.
 
-  procedure DecaDobl_Natural_Setup;
+  procedure Natural_Setup;
 
   -- DESCRIPTION :
-  --   Promps for a natural-parameter homotopy, with start solutions.
+  --   Prompts for a natural-parameter homotopy, with start solutions.
 
   procedure Main;
 
   -- DESCRIPTION :
-  --   Prompts the user for the type of homotopy.
+  --   Prompts for the type of homotopy.
 
 end DecaDobl_Fabry_on_Homotopy;

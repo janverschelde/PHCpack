@@ -1,9 +1,10 @@
-with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_VecVecs;
@@ -29,7 +30,7 @@ with Fabry_on_Homotopy_Helpers;
 
 package body Standard_Fabry_on_Homotopy is
 
-  procedure Standard_Newton_Fabry
+  procedure Newton_Fabry
               ( cfs : in Standard_Coefficient_Convolutions.Link_to_System;
                 sol : in Standard_Complex_Vectors.Vector ) is
 
@@ -82,11 +83,10 @@ package body Standard_Fabry_on_Homotopy is
     Standard_Floating_VecVecs.Deep_Clear(ic);
     Standard_Floating_VecVecs.Deep_Clear(rb);
     Standard_Floating_VecVecs.Deep_Clear(ib);
-  end Standard_Newton_Fabry;
+  end Newton_Fabry;
 
-  procedure Standard_Run
-              ( nbequ,idxpar,deg : in integer32;
-                sols : in out Standard_Complex_Solutions.Solution_List ) is
+  procedure Run ( nbequ,idxpar,deg : in integer32;
+                  sols : in out Standard_Complex_Solutions.Solution_List ) is
 
     cvh : Standard_Speelpenning_Convolutions.Link_to_System;
     cfh : Standard_Coefficient_Convolutions.Link_to_System;
@@ -99,20 +99,98 @@ package body Standard_Fabry_on_Homotopy is
     cfh := Standard_Convolution_Splitters.Split(cvh);
     while not Standard_Complex_Solutions.Is_Null(tmp) loop
       ls := Standard_Complex_Solutions.Head_Of(tmp);
-      Standard_Newton_Fabry(cfh,ls.v);
+      Newton_Fabry(cfh,ls.v);
       put("Continue with the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       tmp := Standard_Complex_Solutions.Tail_Of(tmp);
     end loop;
-  end Standard_Run;
+  end Run;
 
-  procedure Standard_Artificial_Setup is
+  procedure Run ( file : in file_type; nbequ,idxpar,deg : in integer32;
+                  sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    cvh : Standard_Speelpenning_Convolutions.Link_to_System;
+    cfh : Standard_Coefficient_Convolutions.Link_to_System;
+    tmp : Standard_Complex_Solutions.Solution_List := sols;
+    ls : Standard_Complex_Solutions.Link_to_Solution
+       := Standard_Complex_Solutions.Head_Of(sols);
+    dim : constant integer32 := ls.v'last;
+    scf : Standard_Complex_VecVecs.VecVec(1..dim)
+        := Standard_Newton_Convolutions.Series_Coefficients(ls.v,deg);
+    rx : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    ix : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    rc,ic,rb,ib : Standard_Floating_VecVecs.Link_to_VecVec;
+    ry,iy : Standard_Floating_Vectors.Link_to_Vector;
+    rv,iv : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+    maxit : integer32 := deg/2;
+    tol : double_float := 1.0E-12;
+    nbrit,idxtoldx : integer32 := 0;
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    wrk : Standard_Complex_Vectors.Link_to_Vector
+        := new Standard_Complex_Vectors.Vector(1..dim); -- dim = #equations
+    fail,verbose : boolean;
+    absdx,rcond,rad,err : double_float;
+    scale : constant boolean := false;
+    zpt : Standard_Complex_Numbers.Complex_Number;
+
+  begin
+    Standard_Floating_VecVecVecs.Allocate(rv,1,deg,1,dim,1,dim);
+    Standard_Floating_VecVecVecs.Allocate(iv,1,deg,1,dim,1,dim);
+    rc := Standard_Vector_Splitters.Allocate(dim,dim,1,1);
+    ic := Standard_Vector_Splitters.Allocate(dim,dim,1,1);
+    rb := Standard_Vector_Splitters.Allocate(deg,dim,0,1);
+    ib := Standard_Vector_Splitters.Allocate(deg,dim,0,1);
+    ry := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
+    iy := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
+    Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
+    put(file,"maximum number of iterations : ");
+    put(file,maxit,1); new_line(file);
+    put(file,"tolerance :"); put(file,tol,3); new_line(file);
+    new_line(file);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    cvh := Standard_Homotopy_Convolutions_io.Make_Homotopy(nbequ,idxpar,deg);
+    cfh := Standard_Convolution_Splitters.Split(cvh);
+    loop
+      if verbose then
+        Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+          (file,cfh,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
+           fail,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
+      else
+        Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+          (cfh,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
+           fail,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale,false);
+      end if;
+      put_line(file,"The coefficients of the series : "); put_line(file,scf);
+      Convergence_Radius_Estimates.Fabry
+        (file,scf,zpt,rad,err,fail,1,true);
+      tmp := Standard_Complex_Solutions.Tail_Of(tmp);
+      exit when Standard_Complex_Solutions.Is_Null(tmp);
+      ls := Standard_Complex_Solutions.Head_Of(tmp);
+      scf := Standard_Newton_Convolutions.Series_Coefficients(ls.v,deg);
+    end loop;
+    Standard_Floating_Vectors.Clear(ry);
+    Standard_Floating_Vectors.Clear(iy);
+    Standard_Floating_VecVecs.Deep_Clear(rc);
+    Standard_Floating_VecVecs.Deep_Clear(ic);
+    Standard_Floating_VecVecs.Deep_Clear(rb);
+    Standard_Floating_VecVecs.Deep_Clear(ib);
+    Standard_Complex_Vectors.Clear(wrk);
+    Standard_Speelpenning_Convolutions.Clear(cvh);
+  end Run;
+
+  procedure Artificial_Setup is
 
     target,start : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : Standard_Complex_Solutions.Solution_List;
     gamma : Standard_Complex_Numbers.Complex_Number;
     nbequ,nbvar,nbsols,deg : integer32 := 0;
     ans : character;
+    tofile : boolean;
+    outfile : file_type;
 
     use Standard_Complex_Polynomials;
 
@@ -138,6 +216,20 @@ package body Standard_Fabry_on_Homotopy is
       put("Read "); put(nbsols,1); put(" solutions in dimension ");
       put(nbvar,1); put_line(".");
       new_line;
+      put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
+      tofile := (ans = 'y');
+      if tofile then
+        new_line;
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(outfile);
+        put(outfile,target'last); new_line(outfile);
+        put(outfile,target.all);
+        new_line(outfile);
+        put_line(outfile,"THE START SYSTEM :");
+        Standard_System_and_Solutions_io.put
+          (outfile,start.all,sols,"THE START SOLUTIONS :");
+      end if;
+      new_line;
       put("Random gamma ? (y/n) "); Ask_Yes_or_No(ans);
       if ans = 'y'
        then gamma := Standard_Random_Numbers.Random1;
@@ -146,16 +238,26 @@ package body Standard_Fabry_on_Homotopy is
       Standard_Homotopy.Create(target.all,start.all,1,gamma);
       new_line;
       put("Give the degree of the power series : "); get(deg);
-      Standard_Run(nbequ,nbvar+1,deg,sols);
+      if not tofile then
+        Run(nbequ,nbvar+1,deg,sols);
+      else
+        new_line(outfile);
+        put(outfile,"gamma : "); put(outfile,gamma); new_line(outfile);
+        put(outfile,"degree : "); put(outfile,deg,1); new_line(outfile);
+        Run(outfile,nbequ,nbvar+1,deg,sols);
+      end if;
     end if;
-  end Standard_Artificial_Setup;
+  end Artificial_Setup;
 
-  procedure Standard_Natural_Setup is
+  procedure Natural_Setup is
 
     hom : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols,dropsols : Standard_Complex_Solutions.Solution_List;
     nbequ,sysnbvar,solnbvar,nbsols,idxpar,deg : integer32 := 0;
     par : Standard_Integer_Vectors.Vector(1..1);
+    ans : character;
+    tofile : boolean;
+    outfile : file_type;
 
     use Standard_Complex_Polynomials;
 
@@ -183,18 +285,42 @@ package body Standard_Fabry_on_Homotopy is
       if solnbvar = nbequ then
         put_line("Solution dimension is okay.");
       else
-        put_line("Need to drop one coordinate of each solution.");
+        put_line("Dropping one coordinate of each solution ...");
         dropsols := Solution_Drops.Drop(sols,natural32(idxpar));
+      end if;
+      new_line;
+      put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
+      tofile := (ans = 'y');
+      if tofile then
+        new_line;
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(outfile);
+        if solnbvar = nbequ then
+          Standard_System_and_Solutions_io.put
+            (outfile,hom.all,sols,"THE START SOLUTIONS :");
+        else
+          Standard_System_and_Solutions_io.put
+            (outfile,hom.all,dropsols,"THE START SOLUTIONS :");
+        end if;
       end if;
       Standard_Homotopy.Create(hom.all,idxpar);
       new_line;
       put("Give the degree of the power series : "); get(deg);
-      if solnbvar = nbequ
-       then Standard_Run(nbequ,idxpar,deg,sols);
-       else Standard_Run(nbequ,idxpar,deg,dropsols);
+      if not tofile then
+        if solnbvar = nbequ
+         then Run(nbequ,idxpar,deg,sols);
+         else Run(nbequ,idxpar,deg,dropsols);
+        end if;
+      else
+        new_line(outfile);
+        put(outfile,"degree : "); put(outfile,deg,1); new_line(outfile);
+        if solnbvar = nbequ
+         then Run(outfile,nbequ,idxpar,deg,sols);
+         else Run(outfile,nbequ,idxpar,deg,dropsols);
+        end if;
       end if;
     end if;
-  end Standard_Natural_Setup;
+  end Natural_Setup;
 
   procedure Main is
 
@@ -204,8 +330,8 @@ package body Standard_Fabry_on_Homotopy is
     new_line;
     put("Artificial-parameter homotopy ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y'
-     then Standard_Artificial_Setup;
-     else Standard_Natural_Setup;
+     then Artificial_Setup;
+     else Natural_Setup;
     end if;
   end Main;
 
