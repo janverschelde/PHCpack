@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
@@ -33,6 +34,28 @@ package Fabry_on_Homotopy_Helpers is
   --   tol      initial value for the tolerance.
 
   -- ON RETURN :
+  --   maxit    new value for the maximum number of iterations;
+  --   tol      new value for the tolerance;
+  --   verbose  true if output during the Newton steps is wanted.
+
+  procedure Prompt_and_Write
+              ( file : in file_type; nbtasks : in out natural32;
+                maxit : in out integer32; tol : in out double_float;
+                verbose : out boolean );
+
+  -- DESCRIPTION :
+  --   Prompts for parameters and writes their values to file.
+  --   Terminates with closing statement, signaling the end of
+  --   the interactive input, as this is useful for larger problems.
+
+  -- ON ENTRY :
+  --   nbtasks  initial number of tasks,
+  --            if zero, then there is a prompt for the number of tasks;
+  --   maxit    initial number of maximum number of iterations;
+  --   tol      initial value for the tolerance.
+
+  -- ON RETURN :
+  --   nbtasks  new value for the number of tasks (if nonzero);
   --   maxit    new value for the maximum number of iterations;
   --   tol      new value for the tolerance;
   --   verbose  true if output during the Newton steps is wanted.

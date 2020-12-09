@@ -1,4 +1,5 @@
 with Communications_with_User;           use Communications_with_User;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
@@ -39,6 +40,30 @@ package body Fabry_on_Homotopy_Helpers is
     put("Output during the Newton steps ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
   end Prompt_for_Parameters;
+
+  procedure Prompt_and_Write
+              ( file : in file_type; nbtasks : in out natural32;
+                maxit : in out integer32; tol : in out double_float;
+                verbose : out boolean ) is
+  begin
+    Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
+    if nbtasks = 0 then
+      new_line;
+      put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
+    end if;
+    if nbtasks = 0 then
+      put_line(file,"no multitasking");
+    else
+      put(file,"number of tasks : "); put(file,nbtasks,1); new_line(file);
+    end if;
+    put(file,"maximum number of iterations : ");
+    put(file,maxit,1); new_line(file);
+    put(file,"tolerance :"); put(file,tol,3); new_line(file);
+    flush(file);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+  end Prompt_and_Write;
 
   procedure Write_Report
               ( file : in file_type; rad,err : in double_float;

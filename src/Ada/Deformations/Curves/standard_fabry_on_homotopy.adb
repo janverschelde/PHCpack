@@ -2,7 +2,6 @@ with Ada.Calendar;
 with Time_Stamps;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
@@ -128,7 +127,9 @@ package body Standard_Fabry_on_Homotopy is
 
   procedure Run ( file : in file_type;
                   nbt : in natural32; nbequ,idxpar,deg : in integer32;
-                  sols : in out Standard_Complex_Solutions.Solution_List ) is
+                  maxit : in integer32; tol : in double_float;
+                  sols : in out Standard_Complex_Solutions.Solution_List;
+                  verbose : in boolean ) is
 
     cvh : Standard_Speelpenning_Convolutions.Link_to_System;
     cfh : Standard_Coefficient_Convolutions.Link_to_System;
@@ -145,14 +146,12 @@ package body Standard_Fabry_on_Homotopy is
     rc,ic,rb,ib : Standard_Floating_VecVecs.Link_to_VecVec;
     ry,iy : Standard_Floating_Vectors.Link_to_Vector;
     rv,iv : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
-    maxit : integer32 := deg/2;
-    tol : double_float := 1.0E-12;
-    nbtasks : integer32 := integer32(nbt);
+    nbtasks : constant integer32 := integer32(nbt);
     nbrit,idxtoldx,info : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     wrk : Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector(1..dim); -- dim = #equations
-    fail,verbose : boolean;
+    fail : boolean;
     absdx,rcond,rad,err : double_float;
     scale : constant boolean := false;
     zpt : Standard_Complex_Numbers.Complex_Number;
@@ -168,23 +167,6 @@ package body Standard_Fabry_on_Homotopy is
     ib := Standard_Vector_Splitters.Allocate(deg,dim,0,1);
     ry := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
     iy := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
-    Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
-    if nbtasks = 0 then
-      new_line;
-      put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
-    end if;
-    if nbtasks = 0 then
-      put_line(file,"no multitasking");
-    else
-      put(file,"number of tasks : "); put(file,nbtasks,1); new_line(file);
-    end if;
-    put(file,"maximum number of iterations : ");
-    put(file,maxit,1); new_line(file);
-    put(file,"tolerance :"); put(file,tol,3); new_line(file);
-    new_line(file);
-    new_line;
-    put_line("See the output file for results ...");
-    new_line;
     cvh := Standard_Homotopy_Convolutions_io.Make_Homotopy(nbequ,idxpar,deg);
     cfh := Standard_Convolution_Splitters.Split(cvh);
     tstart := Ada.Calendar.Clock;
@@ -213,6 +195,16 @@ package body Standard_Fabry_on_Homotopy is
       put(file,"The coefficients of the series for solution ");
       cnt := cnt + 1; put(file,cnt,1); put_line(file," :");
       put_line(file,scf);
+      new_line(file);
+      put(file,"rcond : "); put(file,rcond,3); new_line(file);
+      put(file,"absdx : "); put(file,absdx,3); new_line(file);
+      put(file,"nbrit : "); put(file,nbrit,1);
+      if fail
+       then put(file,"  failed to reach ");
+       else put(file,"  reached tolerance ");
+      end if;
+      put(file,tol,3); new_line(file); flush(file);
+      new_line(file);
       Convergence_Radius_Estimates.Fabry
         (file,scf,zpt,rad,err,fail,1,true);
       tmp := Standard_Complex_Solutions.Tail_Of(tmp);
@@ -239,10 +231,13 @@ package body Standard_Fabry_on_Homotopy is
     target,start : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : Standard_Complex_Solutions.Solution_List;
     gamma : Standard_Complex_Numbers.Complex_Number;
-    nbequ,nbvar,nbsols,deg : integer32 := 0;
+    nbequ,nbvar,nbsols,deg,mxt : integer32 := 0;
     ans : character;
     tofile : boolean;
     outfile : file_type;
+    nbt : natural32 := nbtasks;
+    tol : double_float := 1.0E-12;
+    vrb : boolean;
 
     use Standard_Complex_Polynomials;
 
@@ -277,12 +272,6 @@ package body Standard_Fabry_on_Homotopy is
         new_line;
         put_line("Reading the name of the output file ...");
         Read_Name_and_Create_File(outfile);
-        put(outfile,target'last); new_line(outfile);
-        put(outfile,target.all);
-        new_line(outfile);
-        put_line(outfile,"THE START SYSTEM :");
-        Standard_System_and_Solutions_io.put
-          (outfile,start.all,sols,"THE START SOLUTIONS :");
       end if;
       new_line;
       put("Random gamma ? (y/n) "); Ask_Yes_or_No(ans);
@@ -290,16 +279,27 @@ package body Standard_Fabry_on_Homotopy is
        then gamma := Standard_Random_Numbers.Random1;
        else gamma := Standard_Complex_Numbers.Create(1.0);
       end if;
-      Standard_Homotopy.Create(target.all,start.all,1,gamma);
       new_line;
       put("Give the degree of the power series : "); get(deg);
+      if tofile then
+        mxt := deg/2;
+        Fabry_on_Homotopy_Helpers.Prompt_and_Write(outfile,nbt,mxt,tol,vrb);
+        put(outfile,"gamma : "); put(outfile,gamma); new_line(outfile);
+        put(outfile,"degree : "); put(outfile,deg,1); new_line(outfile);
+        new_line(outfile);
+        put(outfile,target'last); new_line(outfile);
+        put(outfile,target.all);
+        new_line(outfile);
+        put_line(outfile,"THE START SYSTEM :");
+        Standard_System_and_Solutions_io.put
+          (outfile,start.all,sols,"THE START SOLUTIONS :");
+      end if;
+      Standard_Homotopy.Create(target.all,start.all,1,gamma);
       if not tofile then
         Run(nbtasks,nbequ,nbvar+1,deg,sols);
       else
         new_line(outfile);
-        put(outfile,"gamma : "); put(outfile,gamma); new_line(outfile);
-        put(outfile,"degree : "); put(outfile,deg,1); new_line(outfile);
-        Run(outfile,nbtasks,nbequ,nbvar+1,deg,sols);
+        Run(outfile,nbt,nbequ,nbvar+1,deg,mxt,tol,sols,vrb);
       end if;
     end if;
   end Artificial_Setup;
@@ -309,11 +309,14 @@ package body Standard_Fabry_on_Homotopy is
 
     hom : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols,dropsols : Standard_Complex_Solutions.Solution_List;
-    nbequ,sysnbvar,solnbvar,nbsols,idxpar,deg : integer32 := 0;
+    nbequ,sysnbvar,solnbvar,nbsols,idxpar,deg,mxt : integer32 := 0;
     par : Standard_Integer_Vectors.Vector(1..1);
     ans : character;
     tofile : boolean;
     outfile : file_type;
+    nbt : natural32 := nbtasks;
+    tol : double_float := 1.0E-12;
+    vrb : boolean;
 
     use Standard_Complex_Polynomials;
 
@@ -354,6 +357,14 @@ package body Standard_Fabry_on_Homotopy is
         new_line;
         put_line("Reading the name of the output file ...");
         Read_Name_and_Create_File(outfile);
+      end if;
+      new_line;
+      put("Give the degree of the power series : "); get(deg);
+      if tofile then
+        mxt := deg/2;
+        Fabry_on_Homotopy_Helpers.Prompt_and_Write(outfile,nbt,mxt,tol,vrb);
+        put(outfile,"degree : "); put(outfile,deg,1); new_line(outfile);
+        new_line(outfile);
         if solnbvar = nbequ then
           Standard_System_and_Solutions_io.put
             (outfile,hom.all,sols,"THE START SOLUTIONS :");
@@ -363,8 +374,6 @@ package body Standard_Fabry_on_Homotopy is
         end if;
       end if;
       Standard_Homotopy.Create(hom.all,idxpar);
-      new_line;
-      put("Give the degree of the power series : "); get(deg);
       if not tofile then
         if solnbvar = nbequ
          then Run(nbtasks,nbequ,idxpar,deg,sols);
@@ -372,10 +381,9 @@ package body Standard_Fabry_on_Homotopy is
         end if;
       else
         new_line(outfile);
-        put(outfile,"degree : "); put(outfile,deg,1); new_line(outfile);
         if solnbvar = nbequ
-         then Run(outfile,nbtasks,nbequ,idxpar,deg,sols);
-         else Run(outfile,nbtasks,nbequ,idxpar,deg,dropsols);
+         then Run(outfile,nbt,nbequ,idxpar,deg,mxt,tol,sols,vrb);
+         else Run(outfile,nbt,nbequ,idxpar,deg,mxt,tol,dropsols,vrb);
         end if;
       end if;
     end if;
