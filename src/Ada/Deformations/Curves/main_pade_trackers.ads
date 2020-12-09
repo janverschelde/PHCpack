@@ -79,11 +79,14 @@ package Main_Pade_Trackers is
   --   The number of tasks is given in nbt.
   --   The verbose level is given in vrb.
 
-  procedure Run_Newton_Fabry ( prc : in character );
+  procedure Run_Newton_Fabry
+              ( nbtasks : in natural32; prc : in character;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   If prc = '0', then prompts for the precision to compute
   --   the convergence radius estimate of a series solution.
+  --   The number of tasks is in nbtasks and the verbose level in vrblvl.
 
   function Prompt_for_Method return character;
 

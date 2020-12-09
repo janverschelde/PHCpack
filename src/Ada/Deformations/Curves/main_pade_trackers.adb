@@ -196,15 +196,20 @@ package body Main_Pade_Trackers is
     Run_Path_Convolution_Trackers(nbt,prc,vrb-1);
   end Run_Path_Convolution_Trackers;
 
-  procedure Run_Newton_Fabry ( prc : in character ) is
+  procedure Run_Newton_Fabry
+              ( nbtasks : in natural32; prc : in character;
+                vrblvl : in integer32 := 0 ) is
 
     valprc : character := prc;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in main_pade_trackers.Run_Newton_Fabry ...");
+    end if;
     if valprc = '0'
      then valprc := Newton_Fabry_on_Homotopy.Prompt_for_Precision;
     end if;
-    Newton_Fabry_on_Homotopy.Run_Newton_Fabry(valprc);
+    Newton_Fabry_on_Homotopy.Run_Newton_Fabry(nbtasks,valprc,vrblvl);
   end Run_Newton_Fabry;
 
   function Prompt_for_Method return character is
@@ -241,7 +246,7 @@ package body Main_Pade_Trackers is
       when '2' => Run_Power_Series_Newton(infilename,outfilename,valprc,vrb-1);
       when '3' => Run_Path_Trackers(valprc,vrb-1);
       when '4' => Run_Path_Convolution_Trackers(nbtasks,valprc,vrb-1);
-      when '5' => Run_Newton_Fabry(valprc);
+      when '5' => Run_Newton_Fabry(nbtasks,valprc,vrb-1);
       when others => null;
     end case;
   end Nonzero_Precision_Main;
@@ -262,7 +267,7 @@ package body Main_Pade_Trackers is
       when '2' => Run_Power_Series_Newton(infilename,outfilename,vrb-1);
       when '3' => Run_Path_Trackers(vrb-1);
       when '4' => Run_Path_Convolution_Trackers(nbtasks,vrb-1);
-      when '5' => Run_Newton_Fabry('0');
+      when '5' => Run_Newton_Fabry(nbtasks,'0',vrb-1);
       when others => null;
     end case;
   end Zero_Precision_Main;

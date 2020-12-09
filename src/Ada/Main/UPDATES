@@ -1,3 +1,6 @@
+Tue 8 Dec 2020 : updated option_handlers.adb so phc -u passes the precision
+  and the number of tasks.
+
 Sat 6 Dec 2020 : updated option_handlers.adb for the move of babldmvc into
   the package black_polyhedral_continuations.  Updated option_handlers.adb
   for the move of mainpoco into the package main_homotopy_continuation.

@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with TripDobl_Complex_Vectors;
 with TripDobl_Complex_Solutions;
@@ -11,27 +12,34 @@ package TripDobl_Fabry_on_Homotopy is
 --   for artificial-parameter or natural-parameter homotopies.
 
   procedure Newton_Fabry
-              ( cfs : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+              ( nbt : in natural32;
+                cfs : in TripDobl_Speelpenning_Convolutions.Link_to_System;
                 sol : in TripDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Runs Newton's method and applies Fabry's theorem
   --   starting at the solution for the homotopy in cfs.
+  --   In this interactive version, the user is prompted each time 
+  --   for the parameters and all output is written to screen.
+  --   The number of tasks is in nbt.
 
-  procedure Run ( nbequ,idxpar,deg : in integer32;
+  procedure Run ( nbt : in natural32; nbequ,idxpar,deg : in integer32;
                   sols : in out TripDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   With the homotopy defined starting at the solutions in sols,
   --   runs Newton's method on power series and applies Fabry's theorem.
+  --   All output is written to screen in this interactive run.
 
   -- ON ENTRY :
+  --   nbt      the number of tasks;
   --   nbequ    number of equations in the homotopy;
   --   idxpar   index of the continuation parameter in the homotopy;
   --   deg      degree of the power series;
   --   sols     start solutions in the homotopy.
 
-  procedure Run ( file : in file_type; nbequ,idxpar,deg : in integer32;
+  procedure Run ( file : in file_type;
+                  nbt : in natural32; nbequ,idxpar,deg : in integer32;
                   sols : in out TripDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
@@ -41,26 +49,35 @@ package TripDobl_Fabry_on_Homotopy is
 
   -- ON ENTRY :
   --   file     must be opened for output;
+  --   nbt      the number of tasks;
   --   nbequ    number of equations in the homotopy;
   --   idxpar   index of the continuation parameter in the homotopy;
   --   deg      degree of the power series;
   --   sols     start solutions in the homotopy.
 
-  procedure Artificial_Setup;
+  procedure Artificial_Setup
+              ( nbtasks : in natural32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts for an artifical-parameter homotopy.
   --   If the number of start solutions is positive,
   --   then the homotopy is defined.
+  --   The number of tasks is in nbtasks
+  --   and the verbose level is in vrblvl.
 
-  procedure Natural_Setup;
+  procedure Natural_Setup
+              ( nbtasks : in natural32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts for a natural-parameter homotopy, with start solutions.
+  --   The number of tasks is in nbtasks
+  --   and the verbose level is in vrblvl.
 
-  procedure Main;
+  procedure Main ( nbtasks : in natural32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts for the type of homotopy.
+  --   The number of tasks is in nbtasks
+  --   and the verbose level is in vrblvl.
 
 end TripDobl_Fabry_on_Homotopy;

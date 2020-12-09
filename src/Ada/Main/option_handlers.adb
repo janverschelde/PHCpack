@@ -646,9 +646,21 @@ package body Option_Handlers is
           when 2 =>
             put_line(seriesban & ", in double double precision.");
             Main_Pade_Trackers.Main(infile,outfile,0,'2',vrblvl);
+          when 3 =>
+            put_line(seriesban & ", in triple double precision.");
+            Main_Pade_Trackers.Main(infile,outfile,0,'3',vrblvl);
           when 4 =>
             put_line(seriesban & ", in quad double precision.");
             Main_Pade_Trackers.Main(infile,outfile,0,'4',vrblvl);
+          when 5 =>
+            put_line(seriesban & ", in penta double precision.");
+            Main_Pade_Trackers.Main(infile,outfile,0,'5',vrblvl);
+          when 6 =>
+            put_line(seriesban & ", in octo double precision.");
+            Main_Pade_Trackers.Main(infile,outfile,0,'6',vrblvl);
+          when 7 =>
+            put_line(seriesban & ", in deca double precision.");
+            Main_Pade_Trackers.Main(infile,outfile,0,'7',vrblvl);
           when others =>
             put_line(seriesban & ".");
             Main_Pade_Trackers.Main(infile,outfile,0,'0',vrblvl);
@@ -666,10 +678,26 @@ package body Option_Handlers is
               put(seriesban & ", in double double precision");
               put_line(", with " & ns & " tasks.");
               Main_Pade_Trackers.Main(infile,outfile,nt,'2',vrblvl);
+            when 3 =>
+              put(seriesban & ", in triple double precision");
+              put_line(", with " & ns & " tasks.");
+              Main_Pade_Trackers.Main(infile,outfile,nt,'3',vrblvl);
             when 4 =>
               put(seriesban & ", in quad double precision");
               put_line(", with " & ns & " tasks.");
               Main_Pade_Trackers.Main(infile,outfile,nt,'4',vrblvl);
+            when 5 =>
+              put(seriesban & ", in penta double precision");
+              put_line(", with " & ns & " tasks.");
+              Main_Pade_Trackers.Main(infile,outfile,nt,'5',vrblvl);
+            when 6 =>
+              put(seriesban & ", in octo double precision");
+              put_line(", with " & ns & " tasks.");
+              Main_Pade_Trackers.Main(infile,outfile,nt,'6',vrblvl);
+            when 7 =>
+              put(seriesban & ", in deca double precision");
+              put_line(", with " & ns & " tasks.");
+              Main_Pade_Trackers.Main(infile,outfile,nt,'7',vrblvl);
             when others =>
               put_line(seriesban & ", with " & ns & " tasks.");
               Main_Pade_Trackers.Main(infile,outfile,nt,'0',vrblvl);

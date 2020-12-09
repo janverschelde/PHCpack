@@ -1,7 +1,5 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
@@ -43,16 +41,21 @@ package body Newton_Fabry_on_Homotopy is
     return res;
   end Prompt_for_Precision;
 
-  procedure Run_Newton_Fabry ( precision : in character ) is
+  procedure Run_Newton_Fabry
+              ( nbtasks : in natural32; precision : in character;
+                vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put_line("-> in newton_fabry_on_homotopy.Run_Newton_Fabry ...");
+    end if;
     case precision is
-      when '1' => Standard_Fabry_on_Homotopy.Main;
-      when '2' => DoblDobl_Fabry_on_Homotopy.Main;
-      when '3' => TripDobl_Fabry_on_Homotopy.Main;
-      when '4' => QuadDobl_Fabry_on_Homotopy.Main;
-      when '5' => PentDobl_Fabry_on_Homotopy.Main;
-      when '6' => OctoDobl_Fabry_on_Homotopy.Main;
-      when '7' => DecaDobl_Fabry_on_Homotopy.Main;
+      when '1' => Standard_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
+      when '2' => DoblDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
+      when '3' => TripDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
+      when '4' => QuadDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
+      when '5' => PentDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
+      when '6' => OctoDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
+      when '7' => DecaDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
       when others => null;
     end case;
   end Run_Newton_Fabry;
@@ -62,7 +65,7 @@ package body Newton_Fabry_on_Homotopy is
     prc : constant character := Prompt_for_Precision;
 
   begin
-    Run_Newton_Fabry(prc);
+    Run_Newton_Fabry(0,prc);
   end Main;
 
   procedure Generate_Homotopy

@@ -1,7 +1,6 @@
 with Ada.Calendar;
 with Time_Stamps;
 with Communications_with_User;           use Communications_with_User;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
@@ -29,7 +28,8 @@ with Multitasked_Power_Newton;
 package body DoblDobl_Fabry_on_Homotopy is
 
   procedure Newton_Fabry
-              ( cfs : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+              ( nbt : in natural32;
+                cfs : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sol : in DoblDobl_Complex_Vectors.Vector ) is
 
     dim : constant integer32 := sol'last;
@@ -37,7 +37,8 @@ package body DoblDobl_Fabry_on_Homotopy is
     scf : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
         := DoblDobl_Newton_Convolutions.Series_Coefficients(sol,deg);
     maxit : integer32 := deg/2;
-    nbrit,nbtasks,info : integer32 := 0;
+    nbtasks : integer32 := integer32(nbt);
+    nbrit,info : integer32 := 0;
     tol : double_float := 1.0E-20;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     wrk : DoblDobl_Complex_Vectors.Link_to_Vector
@@ -49,8 +50,10 @@ package body DoblDobl_Fabry_on_Homotopy is
 
   begin
     Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
-    new_line;
-    put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
+    if nbtasks = 0 then
+      new_line;
+      put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
+    end if;
     if verbose then
       if nbtasks = 0 then
         DoblDobl_Newton_Convolution_Steps.LU_Newton_Steps
@@ -78,7 +81,7 @@ package body DoblDobl_Fabry_on_Homotopy is
     DoblDobl_Complex_Vectors.Clear(wrk);
   end Newton_Fabry;
 
-  procedure Run ( nbequ,idxpar,deg : in integer32;
+  procedure Run ( nbt : in natural32; nbequ,idxpar,deg : in integer32;
                   sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
 
     cvh : DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -90,14 +93,15 @@ package body DoblDobl_Fabry_on_Homotopy is
     cvh := DoblDobl_Homotopy_Convolutions_io.Make_Homotopy(nbequ,idxpar,deg);
     while not DoblDobl_Complex_Solutions.Is_Null(tmp) loop
       ls := DoblDobl_Complex_Solutions.Head_Of(tmp);
-      Newton_Fabry(cvh,ls.v);
+      Newton_Fabry(nbt,cvh,ls.v);
       put("Continue with the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       tmp := DoblDobl_Complex_Solutions.Tail_Of(tmp);
     end loop;
   end Run;
 
-  procedure Run ( file : in file_type; nbequ,idxpar,deg : in integer32;
+  procedure Run ( file : in file_type;
+                  nbt : in natural32; nbequ,idxpar,deg : in integer32;
                   sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
 
     cvh : DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -109,7 +113,8 @@ package body DoblDobl_Fabry_on_Homotopy is
         := DoblDobl_Newton_Convolutions.Series_Coefficients(ls.v,deg);
     maxit : integer32 := deg/2;
     tol : double_float := 1.0E-32;
-    nbrit,nbtasks,info : integer32 := 0;
+    nbtasks : integer32 := integer32(nbt);
+    nbrit,info : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     wrk : DoblDobl_Complex_Vectors.Link_to_Vector
         := new DoblDobl_Complex_Vectors.Vector(1..dim); -- dim = #equations
@@ -122,8 +127,10 @@ package body DoblDobl_Fabry_on_Homotopy is
 
   begin
     Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
-    new_line;
-    put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
+    if nbtasks = 0 then
+      new_line;
+      put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
+    end if;
     if nbtasks = 0 then
       put_line(file,"no multitasking");
     else
@@ -175,7 +182,8 @@ package body DoblDobl_Fabry_on_Homotopy is
     DoblDobl_Speelpenning_Convolutions.Clear(cvh);
   end Run;
 
-  procedure Artificial_Setup is
+  procedure Artificial_Setup
+              ( nbtasks : in natural32; vrblvl : in integer32 := 0 ) is
 
     target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : DoblDobl_Complex_Solutions.Solution_List;
@@ -188,6 +196,9 @@ package body DoblDobl_Fabry_on_Homotopy is
     use DoblDobl_Complex_Polynomials;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_fabry_on_homotopy.Artificial_Setup ...");
+    end if;
     new_line;
     put_line("Reading the name of a file for the target system ...");
     get(target);
@@ -232,17 +243,18 @@ package body DoblDobl_Fabry_on_Homotopy is
       new_line;
       put("Give the degree of the power series : "); get(deg);
       if not tofile then
-        Run(nbequ,nbvar+1,deg,sols);
+        Run(nbtasks,nbequ,nbvar+1,deg,sols);
       else
         new_line(outfile);
         put(outfile,"gamma : "); put(outfile,gamma); new_line(outfile);
         put(outfile,"degree : "); put(outfile,deg,1); new_line(outfile);
-        Run(outfile,nbequ,nbvar+1,deg,sols);
+        Run(outfile,nbtasks,nbequ,nbvar+1,deg,sols);
       end if;
     end if;
   end Artificial_Setup;
 
-  procedure Natural_Setup is
+  procedure Natural_Setup
+              ( nbtasks : in natural32; vrblvl : in integer32 := 0 ) is
 
     hom : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols,dropsols : DoblDobl_Complex_Solutions.Solution_List;
@@ -255,6 +267,9 @@ package body DoblDobl_Fabry_on_Homotopy is
     use DoblDobl_Complex_Polynomials;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_fabry_on_homotopy.Natural_Setup ...");
+    end if;
     new_line;
     put_line("Reading the name of a file for a homotopy ...");
     DoblDobl_System_and_Solutions_io.get(hom,sols);
@@ -301,30 +316,33 @@ package body DoblDobl_Fabry_on_Homotopy is
       put("Give the degree of the power series : "); get(deg);
       if not tofile then
         if solnbvar = nbequ
-         then Run(nbequ,idxpar,deg,sols);
-         else Run(nbequ,idxpar,deg,dropsols);
+         then Run(nbtasks,nbequ,idxpar,deg,sols);
+         else Run(nbtasks,nbequ,idxpar,deg,dropsols);
         end if;
       else
         new_line(outfile);
         put(outfile,"degree : "); put(outfile,deg,1); new_line(outfile);
         if solnbvar = nbequ
-         then Run(outfile,nbequ,idxpar,deg,sols);
-         else Run(outfile,nbequ,idxpar,deg,dropsols);
+         then Run(outfile,nbtasks,nbequ,idxpar,deg,sols);
+         else Run(outfile,nbtasks,nbequ,idxpar,deg,dropsols);
         end if;
       end if;
     end if;
   end Natural_Setup;
 
-  procedure Main is
+  procedure Main ( nbtasks : in natural32; vrblvl : in integer32 := 0 ) is
 
     ans : character;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in dobldobl_fabry_on_homotopy.Main ...");
+    end if;
     new_line;
     put("Artificial-parameter homotopy ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y'
-     then Artificial_Setup;
-     else Natural_Setup;
+     then Artificial_Setup(nbtasks,vrblvl-1);
+     else Natural_Setup(nbtasks,vrblvl-1);
     end if;
   end Main;
 

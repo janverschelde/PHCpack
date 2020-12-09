@@ -1,7 +1,6 @@
 with Ada.Calendar;
 with Time_Stamps;
 with Communications_with_User;           use Communications_with_User;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
@@ -33,7 +32,8 @@ with Multitasked_Power_Newton;
 package body Standard_Fabry_on_Homotopy is
 
   procedure Newton_Fabry
-              ( cvh : Standard_Speelpenning_Convolutions.Link_to_System;
+              ( nbt : in natural32;
+                cvh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 cfs : in Standard_Coefficient_Convolutions.Link_to_System;
                 sol : in Standard_Complex_Vectors.Vector ) is
 
@@ -51,7 +51,8 @@ package body Standard_Fabry_on_Homotopy is
     tol : double_float := 1.0E-12;
     rcond,absdx,rad,err : double_float;
     maxit : integer32 := deg/2;
-    nbrit,idxtoldx,nbtasks,info : integer32 := 0;
+    nbtasks : integer32 := integer32(nbt);
+    nbrit,idxtoldx,info : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     fail,verbose : boolean;
     scale : constant boolean := false;
@@ -67,8 +68,10 @@ package body Standard_Fabry_on_Homotopy is
     ry := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
     iy := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
     Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
-    new_line;
-    put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
+    if nbtasks = 0 then
+      new_line;
+      put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
+    end if;
     if verbose then
       if nbtasks = 0 then
         Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
@@ -102,7 +105,7 @@ package body Standard_Fabry_on_Homotopy is
     Standard_Floating_VecVecs.Deep_Clear(ib);
   end Newton_Fabry;
 
-  procedure Run ( nbequ,idxpar,deg : in integer32;
+  procedure Run ( nbt : in natural32; nbequ,idxpar,deg : in integer32;
                   sols : in out Standard_Complex_Solutions.Solution_List ) is
 
     cvh : Standard_Speelpenning_Convolutions.Link_to_System;
@@ -116,14 +119,15 @@ package body Standard_Fabry_on_Homotopy is
     cfh := Standard_Convolution_Splitters.Split(cvh);
     while not Standard_Complex_Solutions.Is_Null(tmp) loop
       ls := Standard_Complex_Solutions.Head_Of(tmp);
-      Newton_Fabry(cvh,cfh,ls.v);
+      Newton_Fabry(nbt,cvh,cfh,ls.v);
       put("Continue with the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       tmp := Standard_Complex_Solutions.Tail_Of(tmp);
     end loop;
   end Run;
 
-  procedure Run ( file : in file_type; nbequ,idxpar,deg : in integer32;
+  procedure Run ( file : in file_type;
+                  nbt : in natural32; nbequ,idxpar,deg : in integer32;
                   sols : in out Standard_Complex_Solutions.Solution_List ) is
 
     cvh : Standard_Speelpenning_Convolutions.Link_to_System;
@@ -143,7 +147,8 @@ package body Standard_Fabry_on_Homotopy is
     rv,iv : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
     maxit : integer32 := deg/2;
     tol : double_float := 1.0E-12;
-    nbrit,idxtoldx,nbtasks,info : integer32 := 0;
+    nbtasks : integer32 := integer32(nbt);
+    nbrit,idxtoldx,info : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     wrk : Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector(1..dim); -- dim = #equations
@@ -164,8 +169,10 @@ package body Standard_Fabry_on_Homotopy is
     ry := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
     iy := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
     Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
-    new_line;
-    put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
+    if nbtasks = 0 then
+      new_line;
+      put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
+    end if;
     if nbtasks = 0 then
       put_line(file,"no multitasking");
     else
@@ -226,7 +233,8 @@ package body Standard_Fabry_on_Homotopy is
     Standard_Speelpenning_Convolutions.Clear(cvh);
   end Run;
 
-  procedure Artificial_Setup is
+  procedure Artificial_Setup
+              ( nbtasks : in natural32; vrblvl : in integer32 := 0 ) is
 
     target,start : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : Standard_Complex_Solutions.Solution_List;
@@ -239,6 +247,9 @@ package body Standard_Fabry_on_Homotopy is
     use Standard_Complex_Polynomials;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_fabry_on_homotopy.Artificial_Setup ...");
+    end if;
     new_line;
     put_line("Reading the name of a file for the target system ...");
     get(target);
@@ -283,17 +294,18 @@ package body Standard_Fabry_on_Homotopy is
       new_line;
       put("Give the degree of the power series : "); get(deg);
       if not tofile then
-        Run(nbequ,nbvar+1,deg,sols);
+        Run(nbtasks,nbequ,nbvar+1,deg,sols);
       else
         new_line(outfile);
         put(outfile,"gamma : "); put(outfile,gamma); new_line(outfile);
         put(outfile,"degree : "); put(outfile,deg,1); new_line(outfile);
-        Run(outfile,nbequ,nbvar+1,deg,sols);
+        Run(outfile,nbtasks,nbequ,nbvar+1,deg,sols);
       end if;
     end if;
   end Artificial_Setup;
 
-  procedure Natural_Setup is
+  procedure Natural_Setup
+              ( nbtasks : in natural32; vrblvl : in integer32 := 0 ) is
 
     hom : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols,dropsols : Standard_Complex_Solutions.Solution_List;
@@ -306,6 +318,9 @@ package body Standard_Fabry_on_Homotopy is
     use Standard_Complex_Polynomials;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_fabry_on_homotopy.Natural_Setup ...");
+    end if;
     new_line;
     put_line("Reading the name of a file for a homotopy ...");
     Standard_System_and_Solutions_io.get(hom,sols);
@@ -352,30 +367,33 @@ package body Standard_Fabry_on_Homotopy is
       put("Give the degree of the power series : "); get(deg);
       if not tofile then
         if solnbvar = nbequ
-         then Run(nbequ,idxpar,deg,sols);
-         else Run(nbequ,idxpar,deg,dropsols);
+         then Run(nbtasks,nbequ,idxpar,deg,sols);
+         else Run(nbtasks,nbequ,idxpar,deg,dropsols);
         end if;
       else
         new_line(outfile);
         put(outfile,"degree : "); put(outfile,deg,1); new_line(outfile);
         if solnbvar = nbequ
-         then Run(outfile,nbequ,idxpar,deg,sols);
-         else Run(outfile,nbequ,idxpar,deg,dropsols);
+         then Run(outfile,nbtasks,nbequ,idxpar,deg,sols);
+         else Run(outfile,nbtasks,nbequ,idxpar,deg,dropsols);
         end if;
       end if;
     end if;
   end Natural_Setup;
 
-  procedure Main is
+  procedure Main ( nbtasks : in natural32; vrblvl : in integer32 := 0 ) is
 
     ans : character;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_fabry_on_homotopy.Main ...");
+    end if;
     new_line;
     put("Artificial-parameter homotopy ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y'
-     then Artificial_Setup;
-     else Natural_Setup;
+     then Artificial_Setup(nbtasks,vrblvl-1);
+     else Natural_Setup(nbtasks,vrblvl-1);
     end if;
   end Main;
 

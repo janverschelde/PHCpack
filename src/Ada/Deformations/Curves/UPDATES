@@ -2,6 +2,8 @@ Tue 8 Dec 2020 : extended *dobl_fabry_on_homotopy.adb with multitasked runs.
   Updated standard_fabry_on_homotopy.ads and its body in the .adb file.
   Added a test to newton_fabry_on_homotopy to generate a test homotopy,
   which can be called from ts_fabryhom.
+  Updated all *_fabry_on_homotopy packages to pass the number of tasks
+  and updated main_pade_trackers.
 
 Mon 7 Dec 2020 : fixed *_newton_convolution_steps.adb so the output is
   properly written to file in verbose mode.  Extended to write to output

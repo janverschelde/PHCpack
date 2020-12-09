@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with DecaDobl_Complex_Vectors;
 with DecaDobl_Complex_Solutions;
@@ -11,7 +12,8 @@ package DecaDobl_Fabry_on_Homotopy is
 --   for artificial-parameter or natural-parameter homotopies.
 
   procedure Newton_Fabry
-              ( cfs : in DecaDobl_Speelpenning_Convolutions.Link_to_System;
+              ( nbt : in natural32;
+                cfs : in DecaDobl_Speelpenning_Convolutions.Link_to_System;
                 sol : in DecaDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
@@ -19,8 +21,9 @@ package DecaDobl_Fabry_on_Homotopy is
   --   starting at the solution for the homotopy in cfs.
   --   In this interactive version, the user is prompted each time 
   --   for the parameters and all output is written to screen.
+  --   The number of tasks is in nbt.
 
-  procedure Run ( nbequ,idxpar,deg : in integer32;
+  procedure Run ( nbt : in natural32; nbequ,idxpar,deg : in integer32;
                   sols : in out DecaDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
@@ -29,12 +32,14 @@ package DecaDobl_Fabry_on_Homotopy is
   --   All output is written to screen in this interactive run.
 
   -- ON ENTRY :
+  --   nbt      the number of tasks;
   --   nbequ    number of equations in the homotopy;
   --   idxpar   index of the continuation parameter in the homotopy;
   --   deg      degree of the power series;
   --   sols     start solutions in the homotopy.
 
-  procedure Run ( file : in file_type; nbequ,idxpar,deg : in integer32;
+  procedure Run ( file : in file_type;
+                  nbt : in natural32; nbequ,idxpar,deg : in integer32;
                   sols : in out DecaDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
@@ -44,26 +49,35 @@ package DecaDobl_Fabry_on_Homotopy is
 
   -- ON ENTRY :
   --   file     must be opened for output;
+  --   nbt      the number of tasks;
   --   nbequ    number of equations in the homotopy;
   --   idxpar   index of the continuation parameter in the homotopy;
   --   deg      degree of the power series;
   --   sols     start solutions in the homotopy.
 
-  procedure Artificial_Setup;
+  procedure Artificial_Setup
+              ( nbtasks : in natural32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts for an artifical-parameter homotopy.
   --   If the number of start solutions is positive,
   --   then the homotopy is defined.
+  --   The number of tasks is in nbtasks
+  --   and the verbose level is in vrblvl.
 
-  procedure Natural_Setup;
+  procedure Natural_Setup
+              ( nbtasks : in natural32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts for a natural-parameter homotopy, with start solutions.
+  --   The number of tasks is in nbtasks
+  --   and the verbose level is in vrblvl.
 
-  procedure Main;
+  procedure Main ( nbtasks : in natural32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts for the type of homotopy.
+  --   The number of tasks is in nbtasks
+  --   and the verbose level is in vrblvl.
 
 end DecaDobl_Fabry_on_Homotopy;
