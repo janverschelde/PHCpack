@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with PentDobl_Complex_Vectors;
 with PentDobl_Complex_Solutions;
 with PentDobl_Speelpenning_Convolutions;
@@ -40,7 +41,9 @@ package PentDobl_Fabry_on_Homotopy is
 
   procedure Run ( file : in file_type;
                   nbt : in natural32; nbequ,idxpar,deg : in integer32;
-                  sols : in out PentDobl_Complex_Solutions.Solution_List );
+                  maxit : in integer32; tol : in double_float;
+                  sols : in out PentDobl_Complex_Solutions.Solution_List;
+                  verbose : in boolean );
 
   -- DESCRIPTION :
   --   With the homotopy defined starting at the solutions in sols,
@@ -53,6 +56,8 @@ package PentDobl_Fabry_on_Homotopy is
   --   nbequ    number of equations in the homotopy;
   --   idxpar   index of the continuation parameter in the homotopy;
   --   deg      degree of the power series;
+  --   maxit    maximum number of iterations;
+  --   tol      tolerance on the update vector;
   --   sols     start solutions in the homotopy.
 
   procedure Artificial_Setup
