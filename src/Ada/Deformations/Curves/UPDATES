@@ -1,3 +1,7 @@
+Thu 10 Dec 2020 : to fabry_on_homotopy_helpers.adb, *_fabry_on_homotopy.adb,
+  for * in {standard, *dobl}, applied the procedures in numbers_io,
+  to make the prompting of input parameters more robust.
+
 Wed 9 Dec 2020 : added a procedure to fabry_homotopy_on_helpers and
   rearranged code in standard_fabry_on_homotopy to ask for all input
   of the user before the time consuming creation of the homotopy.

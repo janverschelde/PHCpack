@@ -2,6 +2,7 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Triple_Double_Numbers_io;           use Triple_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
@@ -23,19 +24,23 @@ package body Fabry_on_Homotopy_Helpers is
                 verbose : out boolean ) is
 
     ans : character;
+    mxt : positive;
 
   begin
     loop
       put("Maximum number of iterations : "); put(maxit,1);
       put(".  Change this number ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
-      put("Give the new maximum number of iterations : "); get(maxit);
+      put("Give the new maximum number of iterations : ");
+      Numbers_io.Read_Positive(mxt);
+      maxit := integer32(mxt);
     end loop;
     loop
       put("Tolerance for the accuracy : "); put(tol,3);
       put(".  Change this tolerance ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
-      put("Give the new tolerance for the accuracy : "); get(tol);
+      put("Give the new tolerance for the accuracy : ");
+      Numbers_io.Read_Positive_Float(tol);
     end loop;
     put("Output during the Newton steps ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
@@ -49,7 +54,8 @@ package body Fabry_on_Homotopy_Helpers is
     Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
     if nbtasks = 0 then
       new_line;
-      put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
+      put("Give the number of tasks (0 for no multitasking) : ");
+      Numbers_io.Read_Natural(nbtasks);
     end if;
     if nbtasks = 0 then
       put_line(file,"no multitasking");

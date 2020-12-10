@@ -3,6 +3,7 @@ with Time_Stamps;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with DoblDobl_Complex_Numbers;
@@ -37,6 +38,7 @@ package body DoblDobl_Fabry_on_Homotopy is
     scf : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
         := DoblDobl_Newton_Convolutions.Series_Coefficients(sol,deg);
     maxit : integer32 := deg/2;
+    natnbt : natural32;
     nbtasks : integer32 := integer32(nbt);
     nbrit,info : integer32 := 0;
     tol : double_float := 1.0E-20;
@@ -52,7 +54,8 @@ package body DoblDobl_Fabry_on_Homotopy is
     Fabry_on_Homotopy_Helpers.Prompt_for_Parameters(maxit,tol,verbose);
     if nbtasks = 0 then
       new_line;
-      put("Give the number of tasks (0 for no multitasking) : "); get(nbtasks);
+      put("Give the number of tasks (0 for no multitasking) : ");
+      Numbers_io.Read_Natural(natnbt); nbtasks := integer32(natnbt);
     end if;
     if verbose then
       if nbtasks = 0 then
@@ -181,6 +184,7 @@ package body DoblDobl_Fabry_on_Homotopy is
     target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : DoblDobl_Complex_Solutions.Solution_List;
     gamma : DoblDobl_Complex_Numbers.Complex_Number;
+    posdeg : positive;
     nbequ,nbvar,nbsols,deg,mxt : integer32 := 0;
     ans : character;
     tofile : boolean;
@@ -230,7 +234,8 @@ package body DoblDobl_Fabry_on_Homotopy is
        else gamma := DoblDobl_Complex_Numbers.Create(integer(1));
       end if;
       new_line;
-      put("Give the degree of the power series : "); get(deg);
+      put("Give the degree of the power series : ");
+      Numbers_io.Read_Positive(posdeg); deg := integer32(posdeg);
       if tofile then
         mxt := deg/2;
         Fabry_on_Homotopy_Helpers.Prompt_and_Write(outfile,nbt,mxt,tol,vrb);
@@ -259,6 +264,7 @@ package body DoblDobl_Fabry_on_Homotopy is
 
     hom : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols,dropsols : DoblDobl_Complex_Solutions.Solution_List;
+    posdeg : positive;
     nbequ,sysnbvar,solnbvar,nbsols,idxpar,deg,mxt : integer32 := 0;
     par : Standard_Integer_Vectors.Vector(1..1);
     ans : character;
@@ -309,7 +315,8 @@ package body DoblDobl_Fabry_on_Homotopy is
         Read_Name_and_Create_File(outfile);
       end if;
       new_line;
-      put("Give the degree of the power series : "); get(deg);
+      put("Give the degree of the power series : ");
+      Numbers_io.Read_Positive(posdeg); deg := integer32(posdeg);
       if tofile then
         mxt := deg/2;
         Fabry_on_Homotopy_Helpers.Prompt_and_Write(outfile,nbt,mxt,tol,vrb);
