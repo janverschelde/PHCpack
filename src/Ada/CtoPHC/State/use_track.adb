@@ -33,7 +33,7 @@ function use_track ( job : integer32;
       when 0 => return Standard_PolySys_Prompt_for_Target(vrblvl-1);
       when 1 => return Standard_PolySys_Prompt_for_Start(vrblvl-1);
       when 2 => return Path_Trackers_Standard_Homotopy_Random(vrblvl-1);
-      when 3 => return Path_Trackers_Standard_Homotopy_Gamma(c,vrblvl-1);
+      when 3 => return Path_Trackers_Standard_Homotopy_Gamma(a,c,vrblvl-1);
       when 4 => return Path_Trackers_Standard_Homotopy_Clear(vrblvl-1);
       when 5 => return Path_Trackers_Standard_Silent_Track(a,b,c,vrblvl-1);
       when 6 => return Path_Trackers_Standard_Report_Track(a,b,c,vrblvl-1);
@@ -55,7 +55,7 @@ function use_track ( job : integer32;
       when 21 => return Cascade_Homotopy_Cut_Slack(a,vrblvl-1);
      -- tracking in double double precision :
       when 22 => return Path_Trackers_DoblDobl_Homotopy_Random(vrblvl-1);
-      when 23 => return Path_Trackers_DoblDobl_Homotopy_Gamma(c,vrblvl-1);
+      when 23 => return Path_Trackers_DoblDobl_Homotopy_Gamma(a,c,vrblvl-1);
       when 24 => return Path_Trackers_DoblDobl_Homotopy_Clear(vrblvl-1);
       when 25 => return Path_Trackers_DoblDobl_Silent_Track(a,b,c,vrblvl-1);
       when 26 => return Path_Trackers_DoblDobl_Report_Track(a,b,c,vrblvl-1);
@@ -63,7 +63,7 @@ function use_track ( job : integer32;
       when 28 => return Cascade_Homotopy_DoblDobl_Polynomial(vrblvl-1);
      -- tracking in quad double precision :
       when 32 => return Path_Trackers_QuadDobl_Homotopy_Random(vrblvl-1);
-      when 33 => return Path_Trackers_QuadDobl_Homotopy_Gamma(c,vrblvl-1);
+      when 33 => return Path_Trackers_QuadDobl_Homotopy_Gamma(a,c,vrblvl-1);
       when 34 => return Path_Trackers_QuadDobl_Homotopy_Clear(vrblvl-1);
       when 35 => return Path_Trackers_QuadDobl_Silent_Track(a,b,c,vrblvl-1);
       when 36 => return Path_Trackers_QuadDobl_Report_Track(a,b,c,vrblvl-1);
@@ -93,7 +93,7 @@ function use_track ( job : integer32;
         return Diagonal_Homotopy_QuadDobl_Polynomial_Set(a,b,vrblvl-1);
      -- multiprecision versions to create homotopy :
       when 52 => return Path_Trackers_Multprec_Homotopy_Random(vrblvl-1);
-      when 53 => return Path_Trackers_Multprec_Homotopy_Gamma(c,vrblvl-1);
+      when 53 => return Path_Trackers_Multprec_Homotopy_Gamma(a,c,vrblvl-1);
       when 54 => return Path_Trackers_Multprec_Homotopy_Clear(vrblvl-1);
      -- crude path trackers
       when 55 => return Path_Trackers_Standard_Crude_Track(a,vrblvl-1);

@@ -15,13 +15,14 @@ package Path_Trackers_Interface is
   --   The verbose level is in vrblvl.
 
   function Path_Trackers_Standard_Homotopy_Gamma
-             ( c : C_dblarrs.Pointer;
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Makes a homotopy in double precision with given gamma constant.
 
   -- ON ENTRY :
+  --   a       in a[0] is the power of t in the homotopy;
   --   c       in c[0] is the real part of the gamma,
   --           in c[1] is the imaginary part of the gamma;
   --   vrblvl  is the verbose level.
@@ -41,13 +42,14 @@ package Path_Trackers_Interface is
   --   The verbose level is given in verbose level.
 
   function Path_Trackers_DoblDobl_Homotopy_Gamma
-             ( c : C_dblarrs.Pointer;
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Makes a homotopy in double double precision with given gamma constant.
 
   -- ON ENTRY :
+  --   a       in a[0] is the power of t in the homotopy;
   --   c       in c[0] is the real part of the gamma,
   --           in c[1] is the imaginary part of the gamma;
   --   vrblvl  is the verbose level.
@@ -67,13 +69,14 @@ package Path_Trackers_Interface is
   --   The verbose level is given in vrblvl.
 
   function Path_Trackers_QuadDobl_Homotopy_Gamma
-             ( c : C_dblarrs.Pointer;
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Makes a homotopy in quad double precision with given gamma constant.
 
   -- ON ENTRY :
+  --   a       in a[0] is the power of t in the homotopy;
   --   c       in c[0] is the real part of the gamma,
   --           in c[1] is the imaginary part of the gamma;
   --   vrblvl  is the verbose level.
@@ -93,13 +96,14 @@ package Path_Trackers_Interface is
   --   The verbose level is given in vrblvl.
 
   function Path_Trackers_Multprec_Homotopy_Gamma
-             ( c : C_dblarrs.Pointer;
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Makes a homotopy in multiprecision with given gamma constant.
 
   -- ON ENTRY :
+  --   a       in a[0] is the power of t in the homotopy;
   --   c       in c[0] is the real part of the gamma,
   --           in c[1] is the imaginary part of the gamma;
   --   vrblvl  is the verbose level.

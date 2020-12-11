@@ -1,6 +1,7 @@
 with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Double_Double_Numbers;             use Double_Double_Numbers;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
@@ -47,11 +48,14 @@ package body Path_Trackers_Interface is
   end Path_Trackers_Standard_Homotopy_Random;
 
   function Path_Trackers_Standard_Homotopy_Gamma
-             ( c : C_dblarrs.Pointer;
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
 
     g : Standard_Floating_Vectors.Vector(1..2);
     gamma : Standard_Complex_Numbers.Complex_Number;
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    pwt : constant natural32 := natural32(v_a(v_a'first)); -- power of t
 
   begin
     if vrblvl > 0 then
@@ -60,7 +64,16 @@ package body Path_Trackers_Interface is
     end if;
     Assign(2,c,g);
     gamma := Standard_Complex_Numbers.Create(g(1),g(2));
-    PHCpack_Operations.Create_Standard_Homotopy(gamma);
+    if pwt > 0 then -- the power of t must be positive
+      PHCpack_Operations.Create_Standard_Homotopy(gamma,pwt);
+    else
+      if vrblvl > 0 then
+        put("Invalid input "); put(pwt,1);
+        put_line(" for the power of t.");
+        put_line("Will resort to the default power of t ...");
+      end if;
+      PHCpack_Operations.Create_Standard_Homotopy(gamma);
+    end if;
     return 0;
   exception
     when others => 
@@ -108,12 +121,15 @@ package body Path_Trackers_Interface is
   end Path_Trackers_DoblDobl_Homotopy_Random;
 
   function Path_Trackers_DoblDobl_Homotopy_Gamma
-             ( c : C_dblarrs.Pointer;
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
 
     g : Standard_Floating_Vectors.Vector(1..2);
     g_re,g_im : double_double;
     gamma : DoblDobl_Complex_Numbers.Complex_Number;
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    pwt : constant natural32 := natural32(v_a(v_a'first)); -- power of t
 
   begin
     if vrblvl > 0 then
@@ -124,7 +140,16 @@ package body Path_Trackers_Interface is
     g_re := create(g(1));
     g_im := create(g(2));
     gamma := DoblDobl_Complex_Numbers.Create(g_re,g_im);
-    PHCpack_Operations.Create_DoblDobl_Homotopy(gamma);
+    if pwt > 0 then -- the power of t must be positive
+      PHCpack_Operations.Create_DoblDobl_Homotopy(gamma,pwt);
+    else
+      if vrblvl > 0 then
+        put("Invalid input "); put(pwt,1);
+        put_line(" for the power of t.");
+        put_line("Will resort to the default power of t ...");
+      end if;
+      PHCpack_Operations.Create_DoblDobl_Homotopy(gamma);
+    end if;
     return 0;
   exception
     when others => 
@@ -172,12 +197,15 @@ package body Path_Trackers_Interface is
   end Path_Trackers_QuadDobl_Homotopy_Random;
 
   function Path_Trackers_QuadDobl_Homotopy_Gamma
-             ( c : C_dblarrs.Pointer;
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
 
     g : Standard_Floating_Vectors.Vector(1..2);
     g_re,g_im : quad_double;
     gamma : QuadDobl_Complex_Numbers.Complex_Number;
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    pwt : constant natural32 := natural32(v_a(v_a'first)); -- power of t
 
   begin
     if vrblvl > 0 then
@@ -188,7 +216,16 @@ package body Path_Trackers_Interface is
     g_re := create(g(1));
     g_im := create(g(1));
     gamma := QuadDobl_Complex_Numbers.Create(g_re,g_im);
-    PHCpack_Operations.Create_QuadDobl_Homotopy(gamma);
+    if pwt > 0 then -- the power of t must be positive
+      PHCpack_Operations.Create_QuadDobl_Homotopy(gamma,pwt);
+    else
+      if vrblvl > 0 then
+        put("Invalid input "); put(pwt,1);
+        put_line(" for the power of t.");
+        put_line("Will resort to the default power of t ...");
+      end if;
+      PHCpack_Operations.Create_QuadDobl_Homotopy(gamma);
+    end if;
     return 0;
   exception
     when others => 
@@ -236,12 +273,15 @@ package body Path_Trackers_Interface is
   end Path_Trackers_Multprec_Homotopy_Random;
 
   function Path_Trackers_Multprec_Homotopy_Gamma
-             ( c : C_dblarrs.Pointer;
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
 
     g : Standard_Floating_Vectors.Vector(1..2);
     g_re,g_im : Multprec_Floating_Numbers.Floating_Number;
     gamma : Multprec_Complex_Numbers.Complex_Number;
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    pwt : constant natural32 := natural32(v_a(v_a'first)); -- power of t
 
   begin
     if vrblvl > 0 then
@@ -254,7 +294,16 @@ package body Path_Trackers_Interface is
     gamma := Multprec_Complex_Numbers.Create(g_re,g_im);
     Multprec_Floating_Numbers.Clear(g_re);
     Multprec_Floating_Numbers.Clear(g_im);
-    PHCpack_Operations.Create_Multprec_Homotopy(gamma);
+    if pwt > 0 then -- the power of t must be positive
+      PHCpack_Operations.Create_Multprec_Homotopy(gamma,pwt);
+    else
+      if vrblvl > 0 then
+        put("Invalid input "); put(pwt,1);
+        put_line(" for the power of t.");
+        put_line("Will resort to the default power of t ...");
+      end if;
+      PHCpack_Operations.Create_Multprec_Homotopy(gamma);
+    end if;
     return 0;
   exception
     when others => 

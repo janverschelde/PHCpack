@@ -157,21 +157,26 @@ package PHCpack_Operations is
 
   procedure Create_Standard_Homotopy;
   procedure Create_Standard_Homotopy
-              ( gamma : in Standard_Complex_Numbers.Complex_Number );
+              ( gamma : in Standard_Complex_Numbers.Complex_Number;
+                pwrt : in natural32 := 2 );
   procedure Create_DoblDobl_Homotopy;
   procedure Create_DoblDobl_Homotopy
-              ( gamma : in DoblDobl_Complex_Numbers.Complex_Number );
+              ( gamma : in DoblDobl_Complex_Numbers.Complex_Number;
+                pwrt : in natural32 := 2 );
   procedure Create_QuadDobl_Homotopy;
   procedure Create_QuadDobl_Homotopy
-              ( gamma : in QuadDobl_Complex_Numbers.Complex_Number );
+              ( gamma : in QuadDobl_Complex_Numbers.Complex_Number;
+                pwrt : in natural32 := 2 );
   procedure Create_Multprec_Homotopy;
   procedure Create_Multprec_Homotopy
-              ( gamma : in Multprec_Complex_Numbers.Complex_Number );
+              ( gamma : in Multprec_Complex_Numbers.Complex_Number;
+                pwrt : in natural32 := 2 );
 
   -- DESCRIPTION :
   --   Creates a linear homotopy between target and start system,
   --   which must be already stored.  If no gamma is provided, then
   --   a random complex constant will be generated.
+  --   The default value for the power of t is 2.
 
   -- REQUIRED : start and target system have been stored.
 

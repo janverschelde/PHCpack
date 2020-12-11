@@ -676,7 +676,8 @@ package body PHCpack_Operations is
   end Create_Multprec_Homotopy;
 
   procedure Create_Standard_Homotopy
-              ( gamma : in Standard_Complex_Numbers.Complex_Number ) is
+              ( gamma : in Standard_Complex_Numbers.Complex_Number;
+                pwrt : in natural32 := 2 ) is
   begin
     if not empty_standard_homotopy then
       Standard_Homotopy.Clear;
@@ -697,7 +698,7 @@ package body PHCpack_Operations is
    -- put(" number of equations in target : "); put(st_target_sys'last,1);
    -- put(" number of equations in start : "); put(st_start_sys'last,1);
    -- new_line;
-    Standard_Homotopy.Create(st_target_sys.all,st_start_sys.all,2,gamma);
+    Standard_Homotopy.Create(st_target_sys.all,st_start_sys.all,pwrt,gamma);
     empty_standard_homotopy := false;
   exception
     when others => put_line("exception raised when creating a homotopy");
@@ -705,7 +706,8 @@ package body PHCpack_Operations is
   end Create_Standard_Homotopy;
 
   procedure Create_DoblDobl_Homotopy
-              ( gamma : in DoblDobl_Complex_Numbers.Complex_Number ) is
+              ( gamma : in DoblDobl_Complex_Numbers.Complex_Number;
+                pwrt : in natural32 := 2 ) is
   begin
     if not empty_dobldobl_homotopy then
       DoblDobl_Homotopy.Clear;
@@ -713,7 +715,7 @@ package body PHCpack_Operations is
     else
       empty_dobldobl_homotopy := false;
     end if;
-    DoblDobl_Homotopy.Create(dd_target_sys.all,dd_start_sys.all,2,gamma);
+    DoblDobl_Homotopy.Create(dd_target_sys.all,dd_start_sys.all,pwrt,gamma);
     empty_dobldobl_homotopy := false;
   exception
     when others => put_line("exception raised when creating a homotopy");
@@ -721,7 +723,8 @@ package body PHCpack_Operations is
   end Create_DoblDobl_Homotopy;
 
   procedure Create_QuadDobl_Homotopy
-              ( gamma : in QuadDobl_Complex_Numbers.Complex_Number ) is
+              ( gamma : in QuadDobl_Complex_Numbers.Complex_Number;
+                pwrt : in natural32 := 2 ) is
   begin
     if not empty_quaddobl_homotopy then
       QuadDobl_Homotopy.Clear;
@@ -729,7 +732,7 @@ package body PHCpack_Operations is
     else
       empty_quaddobl_homotopy := false;
     end if;
-    QuadDobl_Homotopy.Create(qd_target_sys.all,qd_start_sys.all,2,gamma);
+    QuadDobl_Homotopy.Create(qd_target_sys.all,qd_start_sys.all,pwrt,gamma);
     empty_quaddobl_homotopy := false;
   exception
     when others => put_line("exception raised when creating a homotopy");
@@ -737,7 +740,8 @@ package body PHCpack_Operations is
   end Create_QuadDobl_Homotopy;
 
   procedure Create_Multprec_Homotopy
-              ( gamma : in Multprec_Complex_Numbers.Complex_Number ) is
+              ( gamma : in Multprec_Complex_Numbers.Complex_Number;
+                pwrt : in natural32 := 2 ) is
   begin
     if not empty_multprec_homotopy then
       Multprec_Homotopy.Clear;
@@ -745,7 +749,7 @@ package body PHCpack_Operations is
     else
       empty_multprec_homotopy := false;
     end if;
-    Multprec_Homotopy.Create(mp_target_sys.all,mp_start_sys.all,2,gamma);
+    Multprec_Homotopy.Create(mp_target_sys.all,mp_start_sys.all,pwrt,gamma);
     empty_multprec_homotopy := false;
   exception
     when others => put_line("exception raised when creating a homotopy");
