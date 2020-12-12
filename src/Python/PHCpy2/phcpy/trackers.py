@@ -12,7 +12,7 @@ The tuning of the parameters for the predictor, corrector,
 and the settings of the tolerances is handled by the tuning module.
 """
 
-def standard_double_track(target, start, sols, gamma=0, tasks=0):
+def standard_double_track(target, start, sols, gamma=0, pwt=2, tasks=0):
     r"""
     Does path tracking with standard double precision.
     On input are a target system, a start system with solutions,
@@ -26,6 +26,9 @@ def standard_double_track(target, start, sols, gamma=0, tasks=0):
     The *sols* is a list of strings representing start solutions.
     By default, a random *gamma* constant is generated,
     otherwise *gamma* must be a nonzero complex constant.
+    The *pwt* is the power of t in the homotopy.
+    Changing the default of *pwt* can only be done if a nonzero complex
+    value for *gamma* is provided as well.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
@@ -51,7 +54,7 @@ def standard_double_track(target, start, sols, gamma=0, tasks=0):
     if(gamma == 0):
         py2c_create_standard_homotopy()
     else:
-        py2c_create_standard_homotopy_with_gamma(gamma.real, gamma.imag)
+        py2c_create_standard_homotopy_with_gamma(gamma.real, gamma.imag, pwt)
     store_standard_solutions(dim, sols)
     py2c_copy_standard_container_to_start_solutions()
     py2c_solve_by_standard_homotopy_continuation(tasks)
@@ -192,7 +195,7 @@ def gpu_double_track(target, start, sols, gamma=0, verbose=1):
         print 'Path tracking on the GPU failed!'
     return load_standard_solutions()
 
-def double_double_track(target, start, sols, gamma=0, tasks=0):
+def double_double_track(target, start, sols, gamma=0, pwt=2, tasks=0):
     r"""
     Does path tracking in double double precision.
     On input are a target system, a start system with solutions,
@@ -206,6 +209,9 @@ def double_double_track(target, start, sols, gamma=0, tasks=0):
     The *sols* is a list of strings representing start solutions.
     By default, a random *gamma* constant is generated,
     otherwise *gamma* must be a nonzero complex constant.
+    The *pwt* is the power of t in the homotopy.
+    Changing the default of *pwt* can only be done if a nonzero complex
+    value for *gamma* is provided as well.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
@@ -231,7 +237,7 @@ def double_double_track(target, start, sols, gamma=0, tasks=0):
     if(gamma == 0):
         py2c_create_dobldobl_homotopy()
     else:
-        py2c_create_dobldobl_homotopy_with_gamma(gamma.real, gamma.imag)
+        py2c_create_dobldobl_homotopy_with_gamma(gamma.real, gamma.imag, pwt)
     store_dobldobl_solutions(dim, sols)
     py2c_copy_dobldobl_container_to_start_solutions()
     py2c_solve_by_dobldobl_homotopy_continuation(tasks)
@@ -373,7 +379,7 @@ def gpu_double_double_track(target, start, sols, gamma=0, verbose=1):
         print 'Path tracking on the GPU failed!'
     return load_dobldobl_solutions()
 
-def quad_double_track(target, start, sols, gamma=0, tasks=0):
+def quad_double_track(target, start, sols, gamma=0, pwt=2, tasks=0):
     r"""
     Does path tracking with quad double precision.
     On input are a *target* system, a *start* system with solutions,
@@ -387,6 +393,9 @@ def quad_double_track(target, start, sols, gamma=0, tasks=0):
     The *sols* is a list of strings representing start solutions.
     By default, a random *gamma* constant is generated,
     otherwise *gamma* must be a nonzero complex constant.
+    The *pwt* is the power of t in the homotopy.
+    Changing the default of *pwt* can only be done if a nonzero complex
+    value for *gamma* is provided as well.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
@@ -553,7 +562,7 @@ def gpu_quad_double_track(target, start, sols, gamma=0, verbose=1):
         print 'Path tracking on the GPU failed!'
     return load_quaddobl_solutions()
 
-def multiprecision_track(target, start, sols, gamma=0, decimals=80):
+def multiprecision_track(target, start, sols, gamma=0, pwt=2, decimals=80):
     r"""
     Does path tracking with multiprecision.
     On input are a target system, a start system with solutions,
@@ -567,6 +576,9 @@ def multiprecision_track(target, start, sols, gamma=0, decimals=80):
     otherwise *gamma* must be a nonzero complex constant.
     The number of decimal places in the working precision is
     given by the value of *decimals*.
+    The *pwt* is the power of t in the homotopy.
+    Changing the default of *pwt* can only be done if a nonzero complex
+    value for *gamma* is provided as well.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
@@ -589,7 +601,7 @@ def multiprecision_track(target, start, sols, gamma=0, decimals=80):
     if(gamma == 0):
         py2c_create_multprec_homotopy()
     else:
-        py2c_create_multprec_homotopy_with_gamma(gamma.real, gamma.imag)
+        py2c_create_multprec_homotopy_with_gamma(gamma.real, gamma.imag, pwt)
     dim = len(start)
     store_multprec_solutions(dim, sols)
     py2c_copy_multprec_container_to_start_solutions()
@@ -598,7 +610,8 @@ def multiprecision_track(target, start, sols, gamma=0, decimals=80):
     py2c_copy_multprec_target_solutions_to_container()
     return load_multprec_solutions()
 
-def track(target, start, sols, precision='d', decimals=80, gamma=0, tasks=0):
+def track(target, start, sols, \
+    precision='d', decimals=80, gamma=0, pwt=2, tasks=0):
     """
     Runs the path trackers to track solutions in *sols*
     at the start system in *start* to the target system
@@ -619,6 +632,9 @@ def track(target, start, sols, precision='d', decimals=80, gamma=0, tasks=0):
     The next to last parameter is optional.  By default,
     a random complex number will be used for *gamma*,
     otherwise, *gamma* can be any nonzero complex number.
+    The *pwt* is the power of t in the homotopy.
+    Changing the default of *pwt* can only be done if a nonzero complex
+    value for *gamma* is provided as well.
     The last parameter equals the number of *tasks*.
     By default, for *tasks* equal to 0 there is no multitasking.
     For positive values of *tasks*, the multitasking could give
@@ -626,13 +642,13 @@ def track(target, start, sols, precision='d', decimals=80, gamma=0, tasks=0):
     cores are available on the processor.
     """
     if(precision == 'd'):
-        return standard_double_track(target, start, sols, gamma, tasks)
+        return standard_double_track(target, start, sols, gamma, pwt, tasks)
     elif(precision == 'dd'):
-        return double_double_track(target, start, sols, gamma, tasks)
+        return double_double_track(target, start, sols, gamma, pwt, tasks)
     elif(precision == 'qd'):
-        return quad_double_track(target, start, sols, gamma, tasks)
+        return quad_double_track(target, start, sols, gamma, pwt, tasks)
     elif(precision == 'mp'):
-        return multiprecision_track(target, start, sols, gamma, decimals)
+        return multiprecision_track(target, start, sols, gamma, pwt, decimals)
     else:
         print 'wrong argument for precision'
         return None

@@ -1,3 +1,6 @@
+Fri 11 Dec 2020 : extended track functions in trackers.py, both for python2
+  and python3 with the option to set power of t in the homotopy.
+
 Mon 30 Nov 2020 : to polynomials.py for python2 and python3, added the
   retrieval of the start system and start solutions.
   In the solve method of the Polynomials class in polynomials, stored
