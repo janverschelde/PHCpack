@@ -1,3 +1,6 @@
+Sat 12 Dec 2020 : updated the messages in main_schubert_induction when the
+  verbose level is positive.
+
 Sun 29 Nov 2020 : drivers_for_schubert_induction is main_schubert_induction;
   and moved mainenum into main_schubert_induction as its main procedure.
   Updated main_schubert_induction for the name changes of the drivers_

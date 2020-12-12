@@ -297,7 +297,7 @@ package body Main_Schubert_Induction is
 
   begin
     if vrblvl > 0 then
-      put("-> in drivers_for_schubert_induction.");
+      put("-> in main_schubert_induction.");
       put_line("Resolve_Intersection_Condition ...");
     end if;
     bm := Prompt_for_Bracket_Monomial;
@@ -1380,7 +1380,7 @@ package body Main_Schubert_Induction is
 
   begin
     if vrblvl > 0 then
-      put("-> in drivers_for_schubert_induction.");
+      put("-> in main_for_schubert_induction.");
       put_line("Resolve_Schubert_Problem 1 ...");
     end if;
     new_line;
@@ -1478,7 +1478,7 @@ package body Main_Schubert_Induction is
 
   begin
     if vrblvl > 0 then
-      put("-> in drivers_for_schubert_induction.");
+      put("-> in main_for_schubert_induction.");
       put_line("Resolve_Schubert_Problem 2 ...");
     end if;
     new_line;
@@ -1557,7 +1557,7 @@ package body Main_Schubert_Induction is
 
   begin
     if vrblvl > 0 then
-      put("-> in drivers_for_schubert_induction.");
+      put("-> in main_for_schubert_induction.");
       put_line("Resolve_Schubert_Problem 3 ...");
     end if;
     new_line;
@@ -1614,7 +1614,7 @@ package body Main_Schubert_Induction is
 
   begin
     if vrblvl > 0 then
-      put("-> in drivers_for_schubert_induction.");
+      put("-> in main_for_schubert_induction.");
       put_line("Standard_Resolve_Schubert_Problem ...");
     end if;
     flags := Prompt_for_Generic_Flags(n,nbc-2);
@@ -1640,7 +1640,7 @@ package body Main_Schubert_Induction is
   begin
    
     if vrblvl > 0 then
-      put("-> in drivers_for_schubert_induction.");
+      put("-> in main_schubert_induction.");
       put_line("DoblDobl_Resolve_Schubert_Problem ...");
     end if;
     flags := Prompt_for_Generic_Flags(n,nbc-2);
@@ -1665,7 +1665,7 @@ package body Main_Schubert_Induction is
 
   begin
     if vrblvl > 0 then
-      put("-> in drivers_for_schubert_induction.");
+      put("-> in main_schubert_induction.");
       put_line("QuadDobl_Resolve_Schubert_Problem ...");
     end if;
     flags := Prompt_for_Generic_Flags(n,nbc-2);
@@ -1685,7 +1685,7 @@ package body Main_Schubert_Induction is
 
   begin
     if vrblvl > 0 then
-      put("-> in drivers_for_schubert_induction.");
+      put("-> in main_schubert_induction.");
       put_line("Resolve_Schubert_Problem ...");
     end if;
     new_line;
@@ -1718,7 +1718,7 @@ package body Main_Schubert_Induction is
 
   begin
     if vrblvl > 0 then
-      put("-> in drivers_for_schubert_induction.");
+      put("-> in main_schubert_induction.");
       put_line("Solve_Schubert_Problems ...");
     end if;
     bm := Prompt_for_Bracket_Monomial;
