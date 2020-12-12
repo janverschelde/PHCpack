@@ -1069,42 +1069,43 @@ int create_quaddobl_Laurent_homotopy ( void )
    return fail;
 }
 
-int create_homotopy_with_given_gamma ( double gamma_re, double gamma_im )
+int create_homotopy_with_given_gamma
+ ( double gamma_re, double gamma_im, int pwt )
 {
-   int *a,*b,fail;
+   int *b,fail;
    double c[2];
    c[0] = gamma_re; c[1] = gamma_im;
-   fail = _ada_use_c2phc(153,a,b,c,0);
+   fail = _ada_use_c2phc(153,&pwt,b,c,0);
    return fail;
 }
 
 int create_dobldobl_homotopy_with_given_gamma
- ( double gamma_re, double gamma_im )
+ ( double gamma_re, double gamma_im, int pwt )
 {
-   int *a,*b,fail;
+   int *b,fail;
    double c[2];
    c[0] = gamma_re; c[1] = gamma_im;
-   fail = _ada_use_c2phc(173,a,b,c,0);
+   fail = _ada_use_c2phc(173,&pwt,b,c,0);
    return fail;
 }
 
 int create_quaddobl_homotopy_with_given_gamma
- ( double gamma_re, double gamma_im )
+ ( double gamma_re, double gamma_im, int pwt )
 {
-   int *a,*b,fail;
+   int *b,fail;
    double c[2];
    c[0] = gamma_re; c[1] = gamma_im;
-   fail = _ada_use_c2phc(183,a,b,c,0);
+   fail = _ada_use_c2phc(183,&pwt,b,c,0);
    return fail;
 }
 
 int create_multprec_homotopy_with_given_gamma
- ( double gamma_re, double gamma_im )
+ ( double gamma_re, double gamma_im, int pwt )
 {
-   int *a,*b,fail;
+   int *b,fail;
    double c[2];
    c[0] = gamma_re; c[1] = gamma_im;
-   fail = _ada_use_c2phc(523,a,b,c,0);
+   fail = _ada_use_c2phc(523,&pwt,b,c,0);
    return fail;
 }
 

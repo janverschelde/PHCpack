@@ -850,12 +850,12 @@ static PyObject *py2c_create_standard_homotopy
 static PyObject *py2c_create_standard_homotopy_with_gamma
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,pwt;
    double g_re,g_im;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"dd",&g_re,&g_im)) return NULL;   
-   fail = create_homotopy_with_given_gamma(g_re,g_im);
+   if(!PyArg_ParseTuple(args,"ddi",&g_re,&g_im,&pwt)) return NULL;   
+   fail = create_homotopy_with_given_gamma(g_re,g_im,pwt);
               
    return Py_BuildValue("i",fail);
 }
@@ -875,12 +875,12 @@ static PyObject *py2c_create_dobldobl_homotopy
 static PyObject *py2c_create_dobldobl_homotopy_with_gamma
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,pwt;
    double g_re,g_im;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"dd",&g_re,&g_im)) return NULL;   
-   fail = create_dobldobl_homotopy_with_given_gamma(g_re,g_im);
+   if(!PyArg_ParseTuple(args,"ddi",&g_re,&g_im,&pwt)) return NULL;   
+   fail = create_dobldobl_homotopy_with_given_gamma(g_re,g_im,pwt);
               
    return Py_BuildValue("i",fail);
 }
@@ -900,12 +900,12 @@ static PyObject *py2c_create_quaddobl_homotopy
 static PyObject *py2c_create_quaddobl_homotopy_with_gamma
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,pwt;
    double g_re,g_im;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"dd",&g_re,&g_im)) return NULL;   
-   fail = create_quaddobl_homotopy_with_given_gamma(g_re,g_im);
+   if(!PyArg_ParseTuple(args,"ddi",&g_re,&g_im,&pwt)) return NULL;   
+   fail = create_quaddobl_homotopy_with_given_gamma(g_re,g_im,pwt);
               
    return Py_BuildValue("i",fail);
 }
@@ -925,12 +925,12 @@ static PyObject *py2c_create_multprec_homotopy
 static PyObject *py2c_create_multprec_homotopy_with_gamma
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,pwt;
    double g_re,g_im;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"dd",&g_re,&g_im)) return NULL;   
-   fail = create_multprec_homotopy_with_given_gamma(g_re,g_im);
+   if(!PyArg_ParseTuple(args,"ddi",&g_re,&g_im,&pwt)) return NULL;   
+   fail = create_multprec_homotopy_with_given_gamma(g_re,g_im,pwt);
               
    return Py_BuildValue("i",fail);
 }
@@ -10061,25 +10061,25 @@ static PyMethodDef phcpy2c3_methods[] =
     "Initializes the data for a homotopy in standard double precision.\n The failure code is returned, which is zero when all goes well."},
    {"py2c_create_standard_homotopy_with_gamma",
      py2c_create_standard_homotopy_with_gamma, METH_VARARGS,
-    "Initializes the data for a homotopy in standard double precision.\n On input are two doubles: the real and imaginary part of the gamma constant.\n The failure code is returned, which is zero when all goes well."},
+    "Initializes the data for a homotopy in standard double precision.\n On input are two doubles and one positive integer:\n (1) the real and imaginary part of the gamma constant;\n (2) the power of t in the homotopy.\n The failure code is returned, which is zero when all goes well."},
    {"py2c_create_dobldobl_homotopy", py2c_create_dobldobl_homotopy,
      METH_VARARGS,
     "Initializes the data for a homotopy in double double precision.\n The failure code is returned, which is zero when all goes well."},
    {"py2c_create_dobldobl_homotopy_with_gamma",
      py2c_create_dobldobl_homotopy_with_gamma, METH_VARARGS,
-    "Initializes the data for a homotopy in double double precision.\n On input are two doubles: the real and imaginary part of the gamma constant.\n The failure code is returned, which is zero when all goes well."},
+    "Initializes the data for a homotopy in double double precision.\n On input are two doubles and one positive integer:\n (1) the real and imaginary part of the gamma constant;\n (2) the power of t in the homotopy.\n The failure code is returned, which is zero when all goes well."},
    {"py2c_create_quaddobl_homotopy", py2c_create_quaddobl_homotopy,
      METH_VARARGS,
     "Initializes the data for a homotopy in quad double precision.\n The failure code is returned, which is zero when all goes well."},
    {"py2c_create_quaddobl_homotopy_with_gamma",
      py2c_create_quaddobl_homotopy_with_gamma, METH_VARARGS,
-    "Initializes the data for a homotopy in quad double precision.\n On input are two doubles: the real and imaginary part of the gamma constant.\n The failure code is returned, which is zero when all goes well."},
+    "Initializes the data for a homotopy in quad double precision.\n On input are two doubles and one positive integer:\n (1) the real and imaginary part of the gamma constant;\n (2) the power of t in the homotopy.\n The failure code is returned, which is zero when all goes well."},
    {"py2c_create_multprec_homotopy", py2c_create_multprec_homotopy,
      METH_VARARGS,
     "Initializes the data for a homotopy in arbitrary multiprecision.\n The failure code is returned, which is zero when all goes well."},
    {"py2c_create_multprec_homotopy_with_gamma",
      py2c_create_multprec_homotopy_with_gamma, METH_VARARGS,
-    "Initializes the data for a homotopy in arbitrary multiprecision.\n On input are two doubles: the real and imaginary part of the gamma constant.\n The failure code is returned, which is zero when all goes well."},
+    "Initializes the data for a homotopy in arbitrary multiprecision.\n On input are two doubles and one positive integer:\n (1) the real and imaginary part of the gamma constant;\n (2) the power of t in the homotopy.\n The failure code is returned, which is zero when all goes well."},
    {"py2c_clear_standard_homotopy", py2c_clear_standard_homotopy, METH_VARARGS,
     "Deallocation of the homotopy stored in standard double precision.\n On return is the failure code, which equals zero if all is well."},
    {"py2c_clear_dobldobl_homotopy", py2c_clear_dobldobl_homotopy, METH_VARARGS,

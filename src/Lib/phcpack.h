@@ -782,36 +782,41 @@ int create_quaddobl_Laurent_homotopy ( void );
  *   Creates a homotopy with the Laurent systems stored
  *   as target and start in quad double precision. */
 
-int create_homotopy_with_given_gamma ( double gamma_re, double gamma_im );
+int create_homotopy_with_given_gamma
+ ( double gamma_re, double gamma_im, int pwt );
 /*
  * DESCRIPTION :
  *   Creates a homotopy in standard double precision,
  *   between the stored target and start system,
- *   using the gamma, given by its real and imaginary part. */
+ *   using the gamma, given by its real and imaginary part.
+ *   The power of t in the homotopy is given by pwt */
 
 int create_dobldobl_homotopy_with_given_gamma
- ( double gamma_re, double gamma_im );
+ ( double gamma_re, double gamma_im, int pwt );
 /*
  * DESCRIPTION :
  *   Creates a homotopy in double double precision,
  *   between the stored target and start system,
- *   using the gamma, given by its real and imaginary part. */
+ *   using the gamma, given by its real and imaginary part.
+ *   The power of t in the homotopy is given by pwt. */
 
 int create_quaddobl_homotopy_with_given_gamma
- ( double gamma_re, double gamma_im );
+ ( double gamma_re, double gamma_im, int pwt );
 /*
  * DESCRIPTION :
  *   Creates a homotopy in quad double precision,
  *   between the stored target and start system,
- *   using the gamma, given by its real and imaginary part. */
+ *   using the gamma, given by its real and imaginary part.
+ *   The power of t in the homotopy is given by pwt. */
 
 int create_multprec_homotopy_with_given_gamma
- ( double gamma_re, double gamma_im );
+ ( double gamma_re, double gamma_im, int pwt );
 /*
  * DESCRIPTION :
  *   Creates a homotopy in multiprecision,
  *   between the stored target and start system,
- *   using the gamma, given by its real and imaginary part. */
+ *   using the gamma, given by its real and imaginary part.
+ *   The power of t in the homotopy is given by pwt. */
 
 int clear_homotopy ( void );
 /*

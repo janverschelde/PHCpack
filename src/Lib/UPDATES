@@ -1,3 +1,7 @@
+Fri 11 Dec 2020 : updated phcpack, phcpy2c.h, and phcpy2c?.c with functions
+  that enable to pass the power of t when a homotopy is defined with a
+  given value of the gamma parameter.
+
 Thu 19 Nov 2020 : updated giftwrappers.h, giftwrappers.c with an extra
   index in the function support_size, which modified phcpy2c.h, phcpy2c2.c,
   and phcpy2c3.c.

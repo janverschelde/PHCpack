@@ -500,8 +500,9 @@ static PyObject *py2c_create_standard_homotopy_with_gamma
 /*
  * DESCRIPTION :
  *   Initializes the data for a homotopy in standard double precision.
- *   On input are two doubles: the real and imaginary part of the
- *   gamma constant.
+ *   On input are two doubles and one positive integer:
+ *   (1) the real and imaginary part of the gamma constant;
+ *   (2) the power of t in the homotopy.
  *   The failure code is returned, which is zero when all goes well. */
 
 static PyObject *py2c_create_dobldobl_homotopy
@@ -516,8 +517,9 @@ static PyObject *py2c_create_dobldobl_homotopy_with_gamma
 /*
  * DESCRIPTION :
  *   Initializes the data for a homotopy in double double precision.
- *   On input are two doubles: the real and imaginary part of the
- *   gamma constant.
+ *   On input are two doubles and one positive integer:
+ *   (1) the real and imaginary part of the gamma constant;
+ *   (2) the power of t in the homotopy.
  *   The failure code is returned, which is zero when all goes well. */
 
 static PyObject *py2c_create_quaddobl_homotopy
@@ -532,8 +534,9 @@ static PyObject *py2c_create_quaddobl_homotopy_with_gamma
 /*
  * DESCRIPTION :
  *   Initializes the data for a homotopy in quad double precision.
- *   On input are two doubles: the real and imaginary part of the
- *   gamma constant.
+ *   On input are two doubles and one positive integer:
+ *   (1) the real and imaginary part of the gamma constant;
+ *   (2) the power of t in the homotopy.
  *   The failure code is returned, which is zero when all goes well. */
 
 static PyObject *py2c_create_multprec_homotopy
@@ -548,8 +551,9 @@ static PyObject *py2c_create_multprec_homotopy_with_gamma
 /*
  * DESCRIPTION :
  *   Initializes the data for a homotopy in arbitrary multiprecision.
- *   On input are two doubles: the real and imaginary part of the
- *   gamma constant.
+ *   On input are two doubles and one positive integer:
+ *   (1) the real and imaginary part of the gamma constant;
+ *   (2) the power of t in the homotopy.
  *   The failure code is returned, which is zero when all goes well. */
 
 static PyObject *py2c_clear_standard_homotopy
