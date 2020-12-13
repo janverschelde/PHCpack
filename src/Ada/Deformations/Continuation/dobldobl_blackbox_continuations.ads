@@ -176,15 +176,34 @@ package DoblDobl_BlackBox_Continuations is
 -- CONTINUATION for Laurent systems :
 
   procedure Black_Box_Polynomial_Continuation
+               ( p,q : in Laur_Sys; gamma : in Complex_Number;
+                 sols : in out Solution_List;
+                 pocotime : out duration; verbose : in integer32 := 0 );
+  procedure Black_Box_Polynomial_Continuation
                ( p,q : in Laur_Sys; sols : in out Solution_List;
+                 pocotime : out duration; verbose : in integer32 := 0 );
+  procedure Black_Box_Polynomial_Continuation
+               ( nt : in integer32;
+                 p,q : in Laur_Sys; gamma : in Complex_Number;
+                 sols : in out Solution_List;
                  pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( nt : in integer32;
                  p,q : in Laur_Sys; sols : in out Solution_List;
                  pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
+               ( file : in file_type;
+                 p,q : in Laur_Sys; gamma : in Complex_Number;
+                 sols : in out Solution_List;
+                 pocotime : out duration; verbose : in integer32 := 0 );
+  procedure Black_Box_Polynomial_Continuation
                ( file : in file_type; 
                  p,q : in Laur_Sys; sols : in out Solution_List;
+                 pocotime : out duration; verbose : in integer32 := 0 );
+  procedure Black_Box_Polynomial_Continuation
+               ( file : in file_type; nt : in integer32;
+                 p,q : in Laur_Sys; gamma : in Complex_Number;
+                 sols : in out Solution_List;
                  pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( file : in file_type; nt : in integer32;
@@ -202,6 +221,7 @@ package DoblDobl_BlackBox_Continuations is
   --   nt        number of tasks, must be larger than zero to have effect;
   --   p         target polynomial system;
   --   q         a start system for solving p;
+  --   gamma     optional complex gamma constant;
   --   sols      solutions of q, without zero components;
   --   verbose   the verbose level.
 

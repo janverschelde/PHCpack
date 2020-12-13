@@ -1,3 +1,6 @@
+Sun 13 Dec 2020 : to {standard,dobldobl,quaddobl}_blackbox_continuations,
+  added procedures to provide the gamma for Laurent systems.
+
 Sun 6 Dec 2020 : moved mainpoco into main_homotopy_continuation.
 
 Sun 22 Nov 2020 : moved bablpoco into standard_blackbox_continuations,

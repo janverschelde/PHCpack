@@ -6,6 +6,9 @@ with Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
@@ -136,6 +139,8 @@ package body Job_Handlers is
     rcnr : Standard_Integer_Vectors.Vector(1..2);
     sols : Solution_List;
     lsroco : Link_to_String;
+    gamma : Standard_Complex_Numbers.Complex_Number
+          := Standard_Complex_Numbers.Create(0.0);
 
   begin
     if vrblvl > 0
@@ -158,10 +163,10 @@ package body Job_Handlers is
         if mvfocus = 0 then
           if ntasks = 0 then
             Black_Box_Solvers.Solve
-              (lp.all,silent,true,rc,q,qsols,sols,vrblvl-1);
+              (lp.all,silent,true,rc,gamma,q,qsols,sols,vrblvl-1);
           else
             Black_Box_Solvers.Solve
-              (ntasks,lp.all,silent,true,rc,q,qsols,sols,vrblvl-1);
+              (ntasks,lp.all,silent,true,rc,gamma,q,qsols,sols,vrblvl-1);
           end if;
         else
           if ntasks = 0 then
@@ -176,10 +181,10 @@ package body Job_Handlers is
         if mvfocus = 0 then
           if ntasks = 0 then
             Black_Box_Solvers.Solve
-              (lp.all,true,rc,lsroco,q,qsols,sols,vrblvl-1);
+              (lp.all,true,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
           else
             Black_Box_Solvers.Solve
-              (ntasks,lp.all,true,rc,lsroco,q,qsols,sols,vrblvl-1);
+              (ntasks,lp.all,true,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
           end if;
         else
           if ntasks = 0 then
@@ -245,6 +250,8 @@ package body Job_Handlers is
     rcnr : Standard_Integer_Vectors.Vector(1..2);
     lsroco : Link_to_String;
     sols : Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number
+          := Standard_Complex_Numbers.Create(0.0);
 
   begin
     if vrblvl > 0
@@ -267,17 +274,19 @@ package body Job_Handlers is
        -- Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
         if silent then
           if ntasks = 0 then -- patch for multitasking and deflation
-            Black_Box_Solvers.Solve(lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+            Black_Box_Solvers.Solve
+              (lp.all,silent,rc,gamma,q,qsols,sols,vrblvl-1);
           else
             Black_Box_Solvers.Solve
-              (ntasks,lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+              (ntasks,lp.all,silent,rc,gamma,q,qsols,sols,vrblvl-1);
           end if;
         else
           if ntasks = 0 then -- patch for multitasking and deflation
-            Black_Box_Solvers.Solve(lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+            Black_Box_Solvers.Solve
+              (lp.all,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
           else
             Black_Box_Solvers.Solve
-             (ntasks,lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+             (ntasks,lp.all,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
           end if;
           if lsroco = null then
             nr := 0;
@@ -310,10 +319,11 @@ package body Job_Handlers is
         if silent then
           if mvfocus = 0 then
             if ntasks = 0 then -- patch for deflation with multitasking
-              Black_Box_Solvers.Solve(p,silent,true,rc,q,qsols,sols,vrblvl-1);
+              Black_Box_Solvers.Solve
+                (p,silent,true,rc,gamma,q,qsols,sols,vrblvl-1);
             else
               Black_Box_Solvers.Solve
-                (ntasks,p,silent,true,rc,q,qsols,sols,vrblvl-1);
+                (ntasks,p,silent,true,rc,gamma,q,qsols,sols,vrblvl-1);
             end if;
           else 
             if ntasks = 0 then -- patch for deflation with multitasking
@@ -327,10 +337,11 @@ package body Job_Handlers is
         else
           if mvfocus = 0 then
             if ntasks = 0 then -- patch for deflation with multitasking
-              Black_Box_Solvers.Solve(p,true,rc,lsroco,q,qsols,sols,vrblvl-1);
+              Black_Box_Solvers.Solve
+                (p,true,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
             else
               Black_Box_Solvers.Solve
-                (ntasks,p,true,rc,lsroco,q,qsols,sols,vrblvl-1);
+                (ntasks,p,true,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
             end if;
           else
             if ntasks = 0 then -- patch for deflation with multitasking
@@ -397,6 +408,8 @@ package body Job_Handlers is
     rcnr : Standard_Integer_Vectors.Vector(1..2);
     lsroco : Link_to_String;
     sols : Solution_List;
+    gamma : DoblDobl_Complex_Numbers.Complex_Number
+          := DoblDobl_Complex_Numbers.Create(integer(0));
 
   begin
     if vrblvl > 0
@@ -416,17 +429,19 @@ package body Job_Handlers is
     begin
       if silent then
         if ntasks = 0 then -- patch for multitasking and deflation
-          Black_Box_Solvers.Solve(lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+          Black_Box_Solvers.Solve
+            (lp.all,silent,rc,gamma,q,qsols,sols,vrblvl-1);
         else
           Black_Box_Solvers.Solve
-            (ntasks,lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+            (ntasks,lp.all,silent,rc,gamma,q,qsols,sols,vrblvl-1);
         end if;
       else
         if ntasks = 0 then -- patch for multitasking and deflation
-          Black_Box_Solvers.Solve(lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+          Black_Box_Solvers.Solve
+            (lp.all,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
         else
           Black_Box_Solvers.Solve
-            (ntasks,lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+            (ntasks,lp.all,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
         end if;
         if lsroco = null then
           nr := 0;
@@ -480,6 +495,8 @@ package body Job_Handlers is
     rcnr : Standard_Integer_Vectors.Vector(1..2);
     lsroco : Link_to_String;
     sols : Solution_List;
+    gamma : DoblDobl_Complex_Numbers.Complex_Number
+          := DoblDobl_Complex_Numbers.Create(integer(0));
 
   begin
     if vrblvl > 0
@@ -501,17 +518,19 @@ package body Job_Handlers is
       begin
         if silent then
           if ntasks = 0 then -- patch for multitasking and deflation
-            Black_Box_Solvers.Solve(lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+            Black_Box_Solvers.Solve
+              (lp.all,silent,rc,gamma,q,qsols,sols,vrblvl-1);
           else
             Black_Box_Solvers.Solve
-              (ntasks,lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+              (ntasks,lp.all,silent,rc,gamma,q,qsols,sols,vrblvl-1);
           end if;
         else
           if ntasks = 0 then -- patch for multitasking and deflation
-            Black_Box_Solvers.Solve(lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+            Black_Box_Solvers.Solve
+              (lp.all,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
           else
             Black_Box_Solvers.Solve
-              (ntasks,lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+              (ntasks,lp.all,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
           end if;
           if lsroco = null then
             nr := 0;
@@ -542,15 +561,17 @@ package body Job_Handlers is
       begin
         if silent then
           if ntasks = 0 then -- patch for multitasking and deflation
-            Black_Box_Solvers.Solve(p,silent,rc,q,qsols,sols,vrblvl-1);
+            Black_Box_Solvers.Solve(p,silent,rc,gamma,q,qsols,sols,vrblvl-1);
           else
-            Black_Box_Solvers.Solve(ntasks,p,silent,rc,q,qsols,sols,vrblvl-1);
+            Black_Box_Solvers.Solve
+              (ntasks,p,silent,rc,gamma,q,qsols,sols,vrblvl-1);
           end if;
         else
           if ntasks = 0 then -- patch for multitasking and deflation
-            Black_Box_Solvers.Solve(p,rc,lsroco,q,qsols,sols,vrblvl-1);
+            Black_Box_Solvers.Solve(p,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
           else
-            Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,q,qsols,sols,vrblvl-1);
+            Black_Box_Solvers.Solve
+              (ntasks,p,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
           end if;
           if lsroco = null then
             nr := 0;
@@ -606,6 +627,8 @@ package body Job_Handlers is
     rcnr : Standard_Integer_Vectors.Vector(1..2);
     lsroco : Link_to_String;
     sols : Solution_List;
+    gamma : QuadDobl_Complex_Numbers.Complex_Number
+          := QuadDobl_Complex_Numbers.Create(integer(0));
 
   begin
     if vrblvl > 0
@@ -625,17 +648,19 @@ package body Job_Handlers is
     begin
       if silent then
         if ntasks = 0 then -- patch for multitasking and deflation
-          Black_Box_Solvers.Solve(lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+          Black_Box_Solvers.Solve
+            (lp.all,silent,rc,gamma,q,qsols,sols,vrblvl-1);
         else
           Black_Box_Solvers.Solve
-            (ntasks,lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+            (ntasks,lp.all,silent,rc,gamma,q,qsols,sols,vrblvl-1);
         end if;
       else
         if ntasks = 0 then -- patch for multitasking and deflation
-          Black_Box_Solvers.Solve(lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+          Black_Box_Solvers.Solve
+            (lp.all,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
         else
           Black_Box_Solvers.Solve
-            (ntasks,lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+            (ntasks,lp.all,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
         end if;
         if lsroco = null then
           nr := 0;
@@ -689,6 +714,8 @@ package body Job_Handlers is
     rcnr : Standard_Integer_Vectors.Vector(1..2);
     lsroco : Link_to_String;
     sols : Solution_List;
+    gamma : QuadDobl_Complex_Numbers.Complex_Number
+          := QuadDobl_Complex_Numbers.Create(integer(0));
 
   begin
     if vrblvl > 0
@@ -710,17 +737,19 @@ package body Job_Handlers is
       begin
         if silent then
           if ntasks = 0 then -- patch for multitasking and deflation
-            Black_Box_Solvers.Solve(lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+            Black_Box_Solvers.Solve
+              (lp.all,silent,rc,gamma,q,qsols,sols,vrblvl-1);
           else
             Black_Box_Solvers.Solve
-              (ntasks,lp.all,silent,rc,q,qsols,sols,vrblvl-1);
+              (ntasks,lp.all,silent,rc,gamma,q,qsols,sols,vrblvl-1);
           end if;
         else
           if ntasks = 0 then -- patch for multitasking and deflation
-            Black_Box_Solvers.Solve(lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+            Black_Box_Solvers.Solve
+              (lp.all,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
           else
             Black_Box_Solvers.Solve
-              (ntasks,lp.all,rc,lsroco,q,qsols,sols,vrblvl-1);
+              (ntasks,lp.all,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
           end if;
           if lsroco = null then
             nr := 0;
@@ -751,15 +780,17 @@ package body Job_Handlers is
       begin
         if silent then
           if ntasks = 0 then -- patch for multitasking and deflation
-            Black_Box_Solvers.Solve(p,silent,rc,q,qsols,sols,vrblvl-1);
+            Black_Box_Solvers.Solve(p,silent,rc,gamma,q,qsols,sols,vrblvl-1);
           else
-            Black_Box_Solvers.Solve(ntasks,p,silent,rc,q,qsols,sols,vrblvl-1);
+            Black_Box_Solvers.Solve
+              (ntasks,p,silent,rc,gamma,q,qsols,sols,vrblvl-1);
           end if;
         else
           if ntasks = 0 then -- patch for multitasking and deflation
-            Black_Box_Solvers.Solve(p,rc,lsroco,q,qsols,sols,vrblvl-1);
+            Black_Box_Solvers.Solve(p,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
           else
-            Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,q,qsols,sols,vrblvl-1);
+            Black_Box_Solvers.Solve
+              (ntasks,p,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
           end if;
           if lsroco = null then
             nr := 0;

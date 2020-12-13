@@ -1,3 +1,6 @@
+with Standard_Random_Numbers;
+with DoblDobl_Random_Numbers;
+with QuadDobl_Random_Numbers;
 with Standard_Scaling;
 with DoblDobl_Scaling;
 with QuadDobl_Scaling;
@@ -13,6 +16,7 @@ package body Black_Box_Solvers is
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent,deflate : in boolean;
                     rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -42,8 +46,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         Standard_Scaling.Scale(pp);
+        gamma := Standard_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (deflate,pp,q,sols,sols0,poco,verbose-1);
+          (deflate,pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       Standard_Complex_Poly_Systems.Clear(pp);
@@ -58,13 +63,14 @@ package body Black_Box_Solvers is
 
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 2,");
       put_line("for polynomial systems in double precision ...");
     end if;
-    Solve(p,silent,deflate,rc,q,qsols,sols,verbose);
+    Solve(p,silent,deflate,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
       Standard_Complex_Poly_Systems.Clear(q);
@@ -74,6 +80,7 @@ package body Black_Box_Solvers is
   procedure Solve ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean;
                     rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -103,7 +110,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         DoblDobl_Scaling.Scale(pp);
-        Black_Box_Polynomial_Continuation(pp,q,sols,sols0,poco,verbose-1);
+        gamma := DoblDobl_Random_Numbers.Random1;
+        Black_Box_Polynomial_Continuation
+          (pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       DoblDobl_Complex_Poly_Systems.Clear(pp);
@@ -118,13 +127,14 @@ package body Black_Box_Solvers is
 
     q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : DoblDobl_Complex_Solutions.Solution_List;
+    gamma : DoblDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 4,");
       put_line("for polynomial systems in double double precision ...");
     end if;
-    Solve(p,silent,rc,q,qsols,sols,verbose);
+    Solve(p,silent,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       DoblDobl_Complex_Solutions.Deep_Clear(qsols);
       DoblDobl_Complex_Poly_Systems.Clear(q);
@@ -134,6 +144,7 @@ package body Black_Box_Solvers is
   procedure Solve ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean;
                     rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -163,7 +174,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         QuadDobl_Scaling.Scale(pp);
-        Black_Box_Polynomial_Continuation(pp,q,sols,sols0,poco,verbose-1);
+        gamma := QuadDobl_Random_Numbers.Random1;
+        Black_Box_Polynomial_Continuation
+          (pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
         QuadDobl_Complex_Poly_Systems.Clear(pp);
       end if;
@@ -178,13 +191,14 @@ package body Black_Box_Solvers is
 
     q : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : QuadDobl_Complex_Solutions.Solution_List;
+    gamma : QuadDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 6,");
       put_line("for polynomial systems in quad double precision ...");
     end if;
-    Solve(p,silent,rc,q,qsols,sols,verbose);
+    Solve(p,silent,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       QuadDobl_Complex_Solutions.Deep_Clear(qsols);
       QuadDobl_Complex_Poly_Systems.Clear(q);
@@ -194,6 +208,7 @@ package body Black_Box_Solvers is
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -223,8 +238,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         Standard_Scaling.Scale(pp);
+        gamma := Standard_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (deflate,pp,q,sols,sols0,poco,verbose-1);
+          (deflate,pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
         Standard_Complex_Poly_Systems.Clear(pp);
       end if;
@@ -239,13 +255,14 @@ package body Black_Box_Solvers is
 
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 8,");
       put_line("for polynomial systems in double precision ...");
     end if;
-    Solve(p,deflate,rc,rocos,q,qsols,sols,verbose);
+    Solve(p,deflate,rc,rocos,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
       Standard_Complex_Poly_Systems.Clear(q);
@@ -254,6 +271,7 @@ package body Black_Box_Solvers is
 
   procedure Solve ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -283,7 +301,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         DoblDobl_Scaling.Scale(pp);
-        Black_Box_Polynomial_Continuation(pp,q,sols,sols0,poco,verbose-1);
+        gamma := DoblDobl_Random_Numbers.Random1;
+        Black_Box_Polynomial_Continuation
+          (pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       DoblDobl_Complex_Poly_Systems.Clear(pp);
@@ -297,13 +317,14 @@ package body Black_Box_Solvers is
 
     q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : DoblDobl_Complex_Solutions.Solution_List;
+    gamma : DoblDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 10,");
       put_line("for polynomial systems in double double precision ...");
     end if;
-    Solve(p,rc,rocos,q,qsols,sols,verbose);
+    Solve(p,rc,rocos,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       DoblDobl_Complex_Solutions.Deep_Clear(qsols);
       DoblDobl_Complex_Poly_Systems.Clear(q);
@@ -312,6 +333,7 @@ package body Black_Box_Solvers is
 
   procedure Solve ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -341,7 +363,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         QuadDobl_Scaling.Scale(pp);
-        Black_Box_Polynomial_Continuation(pp,q,sols,sols0,poco,verbose-1);
+        gamma := QuadDobl_Random_Numbers.Random1;
+        Black_Box_Polynomial_Continuation
+          (pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       QuadDobl_Complex_Poly_Systems.Clear(pp);
@@ -355,13 +379,14 @@ package body Black_Box_Solvers is
 
     q : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : QuadDobl_Complex_Solutions.Solution_List;
+    gamma : QuadDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 12,");
       put_line("for polynomial systems in quad double precision ...");
     end if;
-    Solve(p,rc,rocos,q,qsols,sols,verbose);
+    Solve(p,rc,rocos,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       QuadDobl_Complex_Solutions.Deep_Clear(qsols);
       QuadDobl_Complex_Poly_Systems.Clear(q);
@@ -371,6 +396,7 @@ package body Black_Box_Solvers is
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean; rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -400,8 +426,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;     
         Standard_Scaling.Scale(pp);
+        gamma := Standard_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (file,deflate,pp,q,sols,sols0,poco,verbose-1);
+          (file,deflate,pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       Standard_Complex_Poly_Systems.Clear(pp);
@@ -416,13 +443,14 @@ package body Black_Box_Solvers is
 
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 14,");
       put_line("for polynomial systems in double precision ...");
     end if;
-    Solve(file,p,deflate,rc,q,qsols,sols,verbose);
+    Solve(file,p,deflate,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
       Standard_Complex_Poly_Systems.Clear(q);
@@ -432,6 +460,7 @@ package body Black_Box_Solvers is
   procedure Solve ( file : in file_type;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -461,6 +490,7 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         DoblDobl_Scaling.Scale(pp);
+        gamma := DoblDobl_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
           (file,pp,q,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
@@ -477,13 +507,14 @@ package body Black_Box_Solvers is
 
     q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : DoblDobl_Complex_Solutions.Solution_List;
+    gamma : DoblDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 16,");
       put_line("for polynomial systems in double double precision ...");
     end if;
-    Solve(file,p,rc,q,qsols,sols,verbose);
+    Solve(file,p,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       DoblDobl_Complex_Solutions.Deep_Clear(qsols);
       DoblDobl_Complex_Poly_Systems.Clear(q);
@@ -493,6 +524,7 @@ package body Black_Box_Solvers is
   procedure Solve ( file : in file_type;
                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -522,8 +554,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         QuadDobl_Scaling.Scale(pp);
+        gamma := QuadDobl_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (file,pp,q,sols,sols0,poco,verbose-1);
+          (file,pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       QuadDobl_Complex_Poly_Systems.Clear(pp);
@@ -538,13 +571,14 @@ package body Black_Box_Solvers is
 
     q : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : QuadDobl_Complex_Solutions.Solution_List;
+    gamma : QuadDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 18,");
       put_line("for polynomial systems in quad double precision ...");
     end if;
-    Solve(file,p,rc,q,qsols,sols,verbose);
+    Solve(file,p,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       QuadDobl_Complex_Solutions.Deep_Clear(qsols);
       QuadDobl_Complex_Poly_Systems.Clear(q);
@@ -554,6 +588,7 @@ package body Black_Box_Solvers is
   procedure Solve ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
                     rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Laur_Systems.Laur_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -575,7 +610,8 @@ package body Black_Box_Solvers is
       Black_Box_Root_Counting(0,silent,pp,rc,q,sols,roco,hoco,verbose-1);
       if rc /= 0 then
         Standard_Complex_Solutions.Copy(sols,qsols);
-        Black_Box_Polynomial_Continuation(pp,q,sols,poco,verbose-1);
+        gamma := Standard_Random_Numbers.Random1;
+        Black_Box_Polynomial_Continuation(pp,q,gamma,sols,poco,verbose-1);
       end if;
       Standard_Complex_Laur_Systems.Clear(pp);
     else
@@ -591,13 +627,14 @@ package body Black_Box_Solvers is
  
     q : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 20,");
       put_line("for Laurent polynomial systems in double precision ...");
     end if;
-    Solve(p,silent,rc,q,qsols,sols,verbose);
+    Solve(p,silent,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
       Standard_Complex_Laur_Systems.Clear(q);
@@ -607,6 +644,7 @@ package body Black_Box_Solvers is
   procedure Solve ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
                     rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -628,7 +666,8 @@ package body Black_Box_Solvers is
       Black_Box_Root_Counting(0,silent,pp,rc,q,sols,roco,hoco,verbose-1);
       if rc /= 0 then
         DoblDobl_Complex_Solutions.Copy(sols,qsols);
-        Black_Box_Polynomial_Continuation(pp,q,sols,poco,verbose-1);
+        gamma := DoblDobl_Random_Numbers.Random1;
+        Black_Box_Polynomial_Continuation(pp,q,gamma,sols,poco,verbose-1);
       end if;
       DoblDobl_Complex_Laur_Systems.Clear(pp);
     else
@@ -644,13 +683,14 @@ package body Black_Box_Solvers is
  
     q : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : DoblDobl_Complex_Solutions.Solution_List;
+    gamma : DoblDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 22,");
       put_line("for Laurent polynomial systems in double double precision ...");
     end if;
-    Solve(p,silent,rc,q,qsols,sols,verbose);
+    Solve(p,silent,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       DoblDobl_Complex_Solutions.Deep_Clear(qsols);
       DoblDobl_Complex_Laur_Systems.Clear(q);
@@ -660,6 +700,7 @@ package body Black_Box_Solvers is
   procedure Solve ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
                     rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -681,7 +722,8 @@ package body Black_Box_Solvers is
       Black_Box_Root_Counting(0,silent,pp,rc,q,sols,roco,hoco,verbose-1);
       if rc /= 0 then
         QuadDobl_Complex_Solutions.Copy(sols,qsols);
-        Black_Box_Polynomial_Continuation(pp,q,sols,poco,verbose-1);
+        gamma := QuadDobl_Random_Numbers.Random1;
+        Black_Box_Polynomial_Continuation(pp,q,gamma,sols,poco,verbose-1);
       end if;
       QuadDobl_Complex_Laur_Systems.Clear(pp);
     else
@@ -697,13 +739,14 @@ package body Black_Box_Solvers is
  
     q : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : QuadDobl_Complex_Solutions.Solution_List;
+    gamma : QuadDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 24,");
       put_line("for Laurent polynomial systems in quad double precision ...");
     end if;
-    Solve(p,silent,rc,q,qsols,sols,verbose);
+    Solve(p,silent,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       QuadDobl_Complex_Solutions.Deep_Clear(qsols);
       QuadDobl_Complex_Laur_Systems.Clear(q);
@@ -712,6 +755,7 @@ package body Black_Box_Solvers is
 
   procedure Solve ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Laur_Systems.Laur_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -733,7 +777,8 @@ package body Black_Box_Solvers is
       Black_Box_Root_Counting(0,pp,rc,rocos,q,sols,roco,hoco,verbose-1);
       if rc /= 0 then
         Standard_Complex_Solutions.Copy(sols,qsols);
-        Black_Box_Polynomial_Continuation(pp,q,sols,poco,verbose-1);
+        gamma := Standard_Random_Numbers.Random1;
+        Black_Box_Polynomial_Continuation(pp,q,gamma,sols,poco,verbose-1);
       end if;
       Standard_Complex_Laur_Systems.Clear(pp);
     else
@@ -748,13 +793,14 @@ package body Black_Box_Solvers is
  
     q : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 26,");
       put_line("for Laurent polynomial systems in double precision ...");
     end if;
-    Solve(p,rc,rocos,q,qsols,sols,verbose);
+    Solve(p,rc,rocos,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
       Standard_Complex_Laur_Systems.Clear(q);
@@ -763,6 +809,7 @@ package body Black_Box_Solvers is
 
   procedure Solve ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -784,7 +831,8 @@ package body Black_Box_Solvers is
       Black_Box_Root_Counting(0,pp,rc,rocos,q,sols,roco,hoco,verbose-1);
       if rc /= 0 then
         DoblDobl_Complex_Solutions.Copy(sols,qsols);
-        Black_Box_Polynomial_Continuation(pp,q,sols,poco,verbose-1);
+        gamma := DoblDobl_Random_Numbers.Random1;
+        Black_Box_Polynomial_Continuation(pp,q,gamma,sols,poco,verbose-1);
       end if;
       DoblDobl_Complex_Laur_Systems.Clear(pp);
     else
@@ -799,13 +847,14 @@ package body Black_Box_Solvers is
  
     q : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : DoblDobl_Complex_Solutions.Solution_List;
+    gamma : DoblDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 28,");
       put_line("for Laurent polynomial systems in double double precision ...");
     end if;
-    Solve(p,rc,rocos,q,qsols,sols,verbose);
+    Solve(p,rc,rocos,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       DoblDobl_Complex_Solutions.Deep_Clear(qsols);
       DoblDobl_Complex_Laur_Systems.Clear(q);
@@ -814,6 +863,7 @@ package body Black_Box_Solvers is
 
   procedure Solve ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -835,7 +885,8 @@ package body Black_Box_Solvers is
       Black_Box_Root_Counting(0,pp,rc,rocos,q,sols,roco,hoco,verbose-1);
       if rc /= 0 then
         QuadDobl_Complex_Solutions.Copy(sols,qsols);
-        Black_Box_Polynomial_Continuation(pp,q,sols,poco,verbose-1);
+        gamma := QuadDobl_Random_Numbers.Random1;
+        Black_Box_Polynomial_Continuation(pp,q,gamma,sols,poco,verbose-1);
       end if;
       QuadDobl_Complex_Laur_Systems.Clear(pp);
     else
@@ -850,13 +901,14 @@ package body Black_Box_Solvers is
  
     q : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : QuadDobl_Complex_Solutions.Solution_List;
+    gamma : QuadDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 30,");
       put_line("for Laurent polynomial systems in quad double precision ...");
     end if;
-    Solve(p,rc,rocos,q,qsols,sols,verbose);
+    Solve(p,rc,rocos,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       QuadDobl_Complex_Solutions.Deep_Clear(qsols);
       QuadDobl_Complex_Laur_Systems.Clear(q);
@@ -866,6 +918,7 @@ package body Black_Box_Solvers is
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Laur_Systems.Laur_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -887,7 +940,9 @@ package body Black_Box_Solvers is
       Black_Box_Root_Counting(file,0,pp,rc,q,sols,roco,hoco,verbose-1);
       if rc /= 0 then
         Standard_Complex_Solutions.Copy(sols,qsols);
-        Black_Box_Polynomial_Continuation(file,pp,q,sols,poco,verbose-1);
+        gamma := Standard_Random_Numbers.Random1;
+        Black_Box_Polynomial_Continuation
+          (file,pp,q,gamma,sols,poco,verbose-1);
       end if;
       Standard_Complex_Laur_Systems.Clear(pp);
     else
@@ -903,13 +958,14 @@ package body Black_Box_Solvers is
  
     q : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 32,");
       put_line("for Laurent polynomial systems in double precision ...");
     end if;
-    Solve(file,p,rc,q,qsols,sols,verbose);
+    Solve(file,p,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
       Standard_Complex_Laur_Systems.Clear(q);
@@ -919,6 +975,7 @@ package body Black_Box_Solvers is
   procedure Solve ( file : in file_type;
                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -940,7 +997,9 @@ package body Black_Box_Solvers is
       Black_Box_Root_Counting(file,0,pp,rc,q,sols,roco,hoco,verbose-1);
       if rc /= 0 then
         DoblDobl_Complex_Solutions.Copy(sols,qsols);
-        Black_Box_Polynomial_Continuation(file,pp,q,sols,poco,verbose-1);
+        gamma := DoblDobl_Random_Numbers.Random1;
+        Black_Box_Polynomial_Continuation
+          (file,pp,q,gamma,sols,poco,verbose-1);
       end if;
       DoblDobl_Complex_Laur_Systems.Clear(pp);
     else
@@ -956,13 +1015,14 @@ package body Black_Box_Solvers is
  
     q : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : DoblDobl_Complex_Solutions.Solution_List;
+    gamma : DoblDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 34,");
       put_line("for Laurent polynomial systems in double double precision ...");
     end if;
-    Solve(file,p,rc,q,qsols,sols,verbose);
+    Solve(file,p,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       DoblDobl_Complex_Solutions.Deep_Clear(qsols);
       DoblDobl_Complex_Laur_Systems.Clear(q);
@@ -972,6 +1032,7 @@ package body Black_Box_Solvers is
   procedure Solve ( file : in file_type;
                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -993,7 +1054,9 @@ package body Black_Box_Solvers is
       Black_Box_Root_Counting(file,0,pp,rc,q,sols,roco,hoco,verbose-1);
       if rc /= 0 then
         QuadDobl_Complex_Solutions.Copy(sols,qsols);
-        Black_Box_Polynomial_Continuation(file,pp,q,sols,poco,verbose-1);
+        gamma := QuadDobl_Random_Numbers.Random1;
+        Black_Box_Polynomial_Continuation
+          (file,pp,q,gamma,sols,poco,verbose-1);
       end if;
       QuadDobl_Complex_Laur_Systems.Clear(pp);
     else
@@ -1009,13 +1072,14 @@ package body Black_Box_Solvers is
  
     q : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : QuadDobl_Complex_Solutions.Solution_List;
+    gamma : QuadDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 36,");
       put_line("for Laurent polynomial systems in quad double precision ...");
     end if;
-    Solve(file,p,rc,q,qsols,sols,verbose);
+    Solve(file,p,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       QuadDobl_Complex_Solutions.Deep_Clear(qsols);
       QuadDobl_Complex_Laur_Systems.Clear(q);
@@ -1025,6 +1089,7 @@ package body Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent,deflate : in boolean; rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -1059,8 +1124,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         Standard_Scaling.Scale(pp);
+        gamma := Standard_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (deflate,integer32(nt),pp,q,sols,sols0,poco,verbose-1);
+          (deflate,integer32(nt),pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       Standard_Complex_Poly_Systems.Clear(pp);
@@ -1075,13 +1141,14 @@ package body Black_Box_Solvers is
 
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 38,");
       put_line("for polynomial systems in double precision ...");
     end if;
-    Solve(nt,p,silent,deflate,rc,q,qsols,sols,verbose);
+    Solve(nt,p,silent,deflate,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
       Standard_Complex_Poly_Systems.Clear(q);
@@ -1091,6 +1158,7 @@ package body Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean; rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -1120,8 +1188,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         DoblDobl_Scaling.Scale(pp);
+        gamma := DoblDobl_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (integer32(nt),pp,q,sols,sols0,poco,verbose-1);
+          (integer32(nt),pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       DoblDobl_Complex_Poly_Systems.Clear(pp);
@@ -1136,13 +1205,14 @@ package body Black_Box_Solvers is
 
     q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : DoblDobl_Complex_Solutions.Solution_List;
+    gamma : DoblDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 40,");
       put_line("for polynomial systems in double double precision ...");
     end if;
-    Solve(nt,p,silent,rc,q,qsols,sols,verbose);
+    Solve(nt,p,silent,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       DoblDobl_Complex_Solutions.Deep_Clear(qsols);
       DoblDobl_Complex_Poly_Systems.Clear(q);
@@ -1152,6 +1222,7 @@ package body Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean; rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -1181,8 +1252,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         QuadDobl_Scaling.Scale(pp);
+        gamma := QuadDobl_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (integer32(nt),pp,q,sols,sols0,poco,verbose-1);
+          (integer32(nt),pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       QuadDobl_Complex_Poly_Systems.Clear(pp);
@@ -1197,13 +1269,14 @@ package body Black_Box_Solvers is
 
     q : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : QuadDobl_Complex_Solutions.Solution_List;
+    gamma : QuadDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 42,");
       put_line("for polynomial systems in quad double precision ...");
     end if;
-    Solve(nt,p,silent,rc,q,qsols,sols,verbose);
+    Solve(nt,p,silent,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       QuadDobl_Complex_Solutions.Deep_Clear(qsols);
       QuadDobl_Complex_Poly_Systems.Clear(q);
@@ -1214,6 +1287,7 @@ package body Black_Box_Solvers is
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -1248,8 +1322,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         Standard_Scaling.Scale(pp);
+        gamma := Standard_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (deflate,integer32(nt),pp,q,sols,sols0,poco,verbose-1);
+          (deflate,integer32(nt),pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       Standard_Complex_Poly_Systems.Clear(pp);
@@ -1265,13 +1340,14 @@ package body Black_Box_Solvers is
 
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 44,");
       put_line("for polynomial systems in double precision ...");
     end if;
-    Solve(nt,p,deflate,rc,rocos,q,qsols,sols,verbose);
+    Solve(nt,p,deflate,rc,rocos,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
       Standard_Complex_Poly_Systems.Clear(q);
@@ -1281,6 +1357,7 @@ package body Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -1315,8 +1392,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         DoblDobl_Scaling.Scale(pp);
+        gamma := DoblDobl_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (integer32(nt),pp,q,sols,sols0,poco,verbose-1);
+          (integer32(nt),pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       DoblDobl_Complex_Poly_Systems.Clear(pp);
@@ -1331,13 +1409,14 @@ package body Black_Box_Solvers is
 
     q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : DoblDobl_Complex_Solutions.Solution_List;
+    gamma : DoblDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 46,");
       put_line("for polynomial systems in double double precision ...");
     end if;
-    Solve(nt,p,rc,rocos,q,qsols,sols,verbose);
+    Solve(nt,p,rc,rocos,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       DoblDobl_Complex_Solutions.Deep_Clear(qsols);
       DoblDobl_Complex_Poly_Systems.Clear(q);
@@ -1347,6 +1426,7 @@ package body Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -1381,8 +1461,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         QuadDobl_Scaling.Scale(pp);
+        gamma := QuadDobl_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (integer32(nt),pp,q,sols,sols0,poco);
+          (integer32(nt),pp,q,gamma,sols,sols0,poco);
         Push(sols0,sols);
       end if;
       QuadDobl_Complex_Poly_Systems.Clear(pp);
@@ -1397,13 +1478,14 @@ package body Black_Box_Solvers is
 
     q : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : QuadDobl_Complex_Solutions.Solution_List;
+    gamma : QuadDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 48,");
       put_line("for polynomial systems in quad double precision ...");
     end if;
-    Solve(nt,p,rc,rocos,q,qsols,sols,verbose);
+    Solve(nt,p,rc,rocos,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       QuadDobl_Complex_Solutions.Deep_Clear(qsols);
       QuadDobl_Complex_Poly_Systems.Clear(q);
@@ -1413,6 +1495,7 @@ package body Black_Box_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean; rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -1447,8 +1530,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         Standard_Scaling.Scale(pp);
+        gamma := Standard_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (file,deflate,integer32(nt),pp,q,sols,sols0,poco,verbose-1);
+          (file,deflate,integer32(nt),pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       Standard_Complex_Poly_Systems.Clear(pp);
@@ -1463,13 +1547,14 @@ package body Black_Box_Solvers is
  
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 50,");
       put_line("for polynomial systems in double precision ...");
     end if;
-    Solve(file,nt,p,deflate,rc,q,qsols,sols,verbose);
+    Solve(file,nt,p,deflate,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
       Standard_Complex_Poly_Systems.Clear(q);
@@ -1479,6 +1564,7 @@ package body Black_Box_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -1513,8 +1599,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         DoblDobl_Scaling.Scale(pp);
+        gamma := DoblDobl_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (file,integer32(nt),pp,q,sols,sols0,poco,verbose-1);
+          (file,integer32(nt),pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       DoblDobl_Complex_Poly_Systems.Clear(pp);
@@ -1529,13 +1616,14 @@ package body Black_Box_Solvers is
  
     q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : DoblDobl_Complex_Solutions.Solution_List;
+    gamma : DoblDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 52,");
       put_line("for polynomial systems in double double precision ...");
     end if;
-    Solve(file,nt,p,rc,q,qsols,sols,verbose);
+    Solve(file,nt,p,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       DoblDobl_Complex_Solutions.Deep_Clear(qsols);
       DoblDobl_Complex_Poly_Systems.Clear(q);
@@ -1545,6 +1633,7 @@ package body Black_Box_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -1579,8 +1668,9 @@ package body Black_Box_Solvers is
           Push(qsols0,qsols);
         end if;
         QuadDobl_Scaling.Scale(pp);
+        gamma := QuadDobl_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (file,integer32(nt),pp,q,sols,sols0,poco,verbose-1);
+          (file,integer32(nt),pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       QuadDobl_Complex_Poly_Systems.Clear(pp);
@@ -1595,13 +1685,14 @@ package body Black_Box_Solvers is
  
     q : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : QuadDobl_Complex_Solutions.Solution_List;
+    gamma : QuadDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 54,");
       put_line("for polynomial systems in quad double precision ...");
     end if;
-    Solve(file,nt,p,rc,q,qsols,sols,verbose);
+    Solve(file,nt,p,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       QuadDobl_Complex_Solutions.Deep_Clear(qsols);
       QuadDobl_Complex_Poly_Systems.Clear(q);
@@ -1611,6 +1702,7 @@ package body Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean; rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Laur_Systems.Laur_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -1638,8 +1730,9 @@ package body Black_Box_Solvers is
       end if;
       if rc /= 0 then
         Standard_Complex_Solutions.Copy(sols,qsols);
+        gamma := Standard_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (integer32(nt),pp,q,sols,poco,verbose-1);
+          (integer32(nt),pp,q,gamma,sols,poco,verbose-1);
       end if;
       Standard_Complex_Laur_Systems.Clear(pp);
     else
@@ -1655,13 +1748,14 @@ package body Black_Box_Solvers is
  
     q : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 56,");
       put_line("for Laurent polynomial systems in double precision ...");
     end if;
-    Solve(nt,p,silent,rc,q,qsols,sols,verbose);
+    Solve(nt,p,silent,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
       Standard_Complex_Laur_Systems.Clear(q);
@@ -1671,6 +1765,7 @@ package body Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean; rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -1698,8 +1793,9 @@ package body Black_Box_Solvers is
       end if;
       if rc /= 0 then
         DoblDobl_Complex_Solutions.Copy(sols,qsols);
+        gamma := DoblDobl_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (integer32(nt),pp,q,sols,poco,verbose-1);
+          (integer32(nt),pp,q,gamma,sols,poco,verbose-1);
       end if;
       DoblDobl_Complex_Laur_Systems.Clear(pp);
     else
@@ -1715,13 +1811,14 @@ package body Black_Box_Solvers is
  
     q : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : DoblDobl_Complex_Solutions.Solution_List;
+    gamma : DoblDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 58,");
       put_line("for Laurent polynomial systems in double double precision ...");
     end if;
-    Solve(nt,p,silent,rc,q,qsols,sols,verbose);
+    Solve(nt,p,silent,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       DoblDobl_Complex_Solutions.Deep_Clear(qsols);
       DoblDobl_Complex_Laur_Systems.Clear(q);
@@ -1731,6 +1828,7 @@ package body Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean; rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -1758,8 +1856,9 @@ package body Black_Box_Solvers is
       end if;
       if rc /= 0 then
         QuadDobl_Complex_Solutions.Copy(sols,qsols);
+        gamma := QuadDobl_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (integer32(nt),pp,q,sols,poco,verbose-1);
+          (integer32(nt),pp,q,gamma,sols,poco,verbose-1);
       end if;
       QuadDobl_Complex_Laur_Systems.Clear(pp);
     else
@@ -1775,13 +1874,14 @@ package body Black_Box_Solvers is
  
     q : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : QuadDobl_Complex_Solutions.Solution_List;
+    gamma : QuadDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 60,");
       put_line("for Laurent polynomial systems in quad double precision ...");
     end if;
-    Solve(nt,p,silent,rc,q,qsols,sols,verbose);
+    Solve(nt,p,silent,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       QuadDobl_Complex_Solutions.Deep_Clear(qsols);
       QuadDobl_Complex_Laur_Systems.Clear(q);
@@ -1791,6 +1891,7 @@ package body Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Laur_Systems.Laur_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -1818,8 +1919,9 @@ package body Black_Box_Solvers is
       end if;
       if rc /= 0 then
         Standard_Complex_Solutions.Copy(sols,qsols);
+        gamma := Standard_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (integer32(nt),pp,q,sols,poco,verbose-1);
+          (integer32(nt),pp,q,gamma,sols,poco,verbose-1);
       end if;
       Standard_Complex_Laur_Systems.Clear(pp);
     else
@@ -1835,13 +1937,14 @@ package body Black_Box_Solvers is
  
     q : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 62,");
       put_line("for Laurent polynomial systems in double precision ...");
     end if;
-    Solve(nt,p,rc,rocos,q,qsols,sols,verbose);
+    Solve(nt,p,rc,rocos,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
       Standard_Complex_Laur_Systems.Clear(q);
@@ -1851,6 +1954,7 @@ package body Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -1878,8 +1982,9 @@ package body Black_Box_Solvers is
       end if;
       if rc /= 0 then
         DoblDobl_Complex_Solutions.Copy(sols,qsols);
+        gamma := DoblDobl_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (integer32(nt),pp,q,sols,poco,verbose-1);
+          (integer32(nt),pp,q,gamma,sols,poco,verbose-1);
       end if;
       DoblDobl_Complex_Laur_Systems.Clear(pp);
     else
@@ -1895,13 +2000,14 @@ package body Black_Box_Solvers is
  
     q : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : DoblDobl_Complex_Solutions.Solution_List;
+    gamma : DoblDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 64,");
       put_line("for Laurent polynomial systems in double double precision ...");
     end if;
-    Solve(nt,p,rc,rocos,q,qsols,sols,verbose);
+    Solve(nt,p,rc,rocos,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       DoblDobl_Complex_Solutions.Deep_Clear(qsols);
       DoblDobl_Complex_Laur_Systems.Clear(q);
@@ -1911,6 +2017,7 @@ package body Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -1938,8 +2045,9 @@ package body Black_Box_Solvers is
       end if;
       if rc /= 0 then
         QuadDobl_Complex_Solutions.Copy(sols,qsols);
+        gamma := QuadDobl_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (integer32(nt),pp,q,sols,poco,verbose-1);
+          (integer32(nt),pp,q,gamma,sols,poco,verbose-1);
       end if;
       QuadDobl_Complex_Laur_Systems.Clear(pp);
     else
@@ -1955,13 +2063,14 @@ package body Black_Box_Solvers is
  
     q : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : QuadDobl_Complex_Solutions.Solution_List;
+    gamma : QuadDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 66,");
       put_line("for Laurent polynomial systems in quad double precision ...");
     end if;
-    Solve(nt,p,rc,rocos,q,qsols,sols,verbose);
+    Solve(nt,p,rc,rocos,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       QuadDobl_Complex_Solutions.Deep_Clear(qsols);
       QuadDobl_Complex_Laur_Systems.Clear(q);
@@ -1971,6 +2080,7 @@ package body Black_Box_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Laur_Systems.Laur_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -1998,8 +2108,9 @@ package body Black_Box_Solvers is
       end if;
       if rc /= 0 then
         Standard_Complex_Solutions.Copy(sols,qsols);
+        gamma := Standard_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (file,integer32(nt),pp,q,sols,poco,verbose-1);
+          (file,integer32(nt),pp,q,gamma,sols,poco,verbose-1);
       end if;
       Standard_Complex_Laur_Systems.Clear(pp);
     else
@@ -2015,13 +2126,14 @@ package body Black_Box_Solvers is
  
     q : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 68,");
       put_line("for Laurent polynomial systems in double precision ...");
     end if;
-    Solve(file,nt,p,rc,q,qsols,sols,verbose);
+    Solve(file,nt,p,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
       Standard_Complex_Laur_Systems.Clear(q);
@@ -2031,6 +2143,7 @@ package body Black_Box_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -2058,8 +2171,9 @@ package body Black_Box_Solvers is
       end if;
       if rc /= 0 then
         DoblDobl_Complex_Solutions.Copy(sols,qsols);
+        gamma := DoblDobl_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (file,integer32(nt),pp,q,sols,poco,verbose-1);
+          (file,integer32(nt),pp,q,gamma,sols,poco,verbose-1);
       end if;
       DoblDobl_Complex_Laur_Systems.Clear(pp);
     else
@@ -2075,13 +2189,14 @@ package body Black_Box_Solvers is
  
     q : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : DoblDobl_Complex_Solutions.Solution_List;
+    gamma : DoblDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 70,");
       put_line("for Laurent polynomial systems in double double precision ...");
     end if;
-    Solve(file,nt,p,rc,q,qsols,sols,verbose);
+    Solve(file,nt,p,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       DoblDobl_Complex_Solutions.Deep_Clear(qsols);
       DoblDobl_Complex_Laur_Systems.Clear(q);
@@ -2091,6 +2206,7 @@ package body Black_Box_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -2118,8 +2234,9 @@ package body Black_Box_Solvers is
       end if;
       if rc /= 0 then
         QuadDobl_Complex_Solutions.Copy(sols,qsols);
+        gamma := QuadDobl_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (file,integer32(nt),pp,q,sols,poco,verbose-1);
+          (file,integer32(nt),pp,q,gamma,sols,poco,verbose-1);
       end if;
       QuadDobl_Complex_Laur_Systems.Clear(pp);
     else
@@ -2135,13 +2252,14 @@ package body Black_Box_Solvers is
  
     q : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols : QuadDobl_Complex_Solutions.Solution_List;
+    gamma : QuadDobl_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_solvers.Solve 72,");
       put_line("for Laurent polynomial systems in quad double precision ...");
     end if;
-    Solve(file,nt,p,rc,q,qsols,sols,verbose);
+    Solve(file,nt,p,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       QuadDobl_Complex_Solutions.Deep_Clear(qsols);
       QuadDobl_Complex_Laur_Systems.Clear(q);

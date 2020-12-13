@@ -857,11 +857,11 @@ package body Standard_BlackBox_Continuations is
 -- for Laurent polynomial systems :
 
   procedure Black_Box_Polynomial_Continuation
-               ( p,q : in Laur_Sys; sols : in out Solution_List;
+               ( p,q : in Laur_Sys; gamma : in Complex_Number;
+                 sols : in out Solution_List;
                  pocotime : out duration; verbose : in integer32 := 0 ) is
 
     k : constant natural32 := 2;
-    gamma : constant Complex_Number := Random1;
     target : constant Complex_Number := Create(1.0);
     proj : constant boolean := false;
     timer : Timing_Widget;
@@ -884,21 +884,35 @@ package body Standard_BlackBox_Continuations is
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Standard_Laurent_Homotopy.Clear;
-  end black_Box_Polynomial_Continuation;
+  end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( nt : in integer32;
-                 p,q : in Laur_Sys; sols : in out Solution_List;
+               ( p,q : in Laur_Sys; sols : in out Solution_List;
                  pocotime : out duration; verbose : in integer32 := 0 ) is
 
-    k : constant natural32 := 2;
     gamma : constant Complex_Number := Random1;
-    timer : Timing_Widget;
 
   begin
     if verbose > 0 then
       put("-> in standard_blackbox_continuations.");
       put_line("Black_Box_Polynomial_Continuation 20 ...");
+    end if;
+    Black_Box_Polynomial_Continuation(p,q,gamma,sols,pocotime,verbose-1);
+  end Black_Box_Polynomial_Continuation;
+
+  procedure Black_Box_Polynomial_Continuation
+               ( nt : in integer32;
+                 p,q : in Laur_Sys; gamma : in Complex_Number;
+                 sols : in out Solution_List;
+                 pocotime : out duration; verbose : in integer32 := 0 ) is
+
+    k : constant natural32 := 2;
+    timer : Timing_Widget;
+
+  begin
+    if verbose > 0 then
+      put("-> in standard_blackbox_continuations.");
+      put_line("Black_Box_Polynomial_Continuation 21 ...");
     end if;
     Standard_Laurent_Homotopy.Create(p,q,k,gamma);
     Continuation_Parameters.Tune(0);
@@ -911,12 +925,27 @@ package body Standard_BlackBox_Continuations is
   end black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; 
+               ( nt : in integer32;
                  p,q : in Laur_Sys; sols : in out Solution_List;
                  pocotime : out duration; verbose : in integer32 := 0 ) is
 
-    k : constant natural32 := 2;
     gamma : constant Complex_Number := Random1;
+
+  begin
+    if verbose > 0 then
+      put("-> in standard_blackbox_continuations.");
+      put_line("Black_Box_Polynomial_Continuation 22 ...");
+    end if;
+    Black_Box_Polynomial_Continuation(nt,p,q,gamma,sols,pocotime,verbose-1);
+  end black_Box_Polynomial_Continuation;
+
+  procedure Black_Box_Polynomial_Continuation
+               ( file : in file_type;
+                 p,q : in Laur_Sys; gamma : in Complex_Number;
+                 sols : in out Solution_List;
+                 pocotime : out duration; verbose : in integer32 := 0 ) is
+
+    k : constant natural32 := 2;
     target : constant Complex_Number := Create(1.0);
     proj : constant boolean := false;
     timer : Timing_Widget;
@@ -929,7 +958,7 @@ package body Standard_BlackBox_Continuations is
   begin
     if verbose > 0 then
       put("-> in standard_blackbox_continuations.");
-      put_line("Black_Box_Polynomial_Continuation 21 ...");
+      put_line("Black_Box_Polynomial_Continuation 23 ...");
     end if;
     Standard_Laurent_Homotopy.Create(p,q,k,gamma);
     Tune_Continuation_Parameters(file);
@@ -942,20 +971,35 @@ package body Standard_BlackBox_Continuations is
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; nt : in integer32;
+               ( file : in file_type; 
                  p,q : in Laur_Sys; sols : in out Solution_List;
+                 pocotime : out duration; verbose : in integer32 := 0 ) is
+
+    gamma : constant Complex_Number := Random1;
+
+  begin
+    if verbose > 0 then
+      put("-> in standard_blackbox_continuations.");
+      put_line("Black_Box_Polynomial_Continuation 24 ...");
+    end if;
+    Black_Box_Polynomial_Continuation(file,p,q,gamma,sols,pocotime,verbose-1);
+  end Black_Box_Polynomial_Continuation;
+
+  procedure Black_Box_Polynomial_Continuation
+               ( file : in file_type; nt : in integer32;
+                 p,q : in Laur_Sys; gamma : in Complex_Number;
+                 sols : in out Solution_List;
                  pocotime : out duration; verbose : in integer32 := 0 ) is
 
     start_moment : Ada.Calendar.Time := Ada.Calendar.Clock;
     ended_moment : Ada.Calendar.Time;
     k : constant natural32 := 2;
-    gamma : constant Complex_Number := Random1;
     timer : Timing_Widget;
 
   begin
     if verbose > 0 then
       put("-> in standard_blackbox_continuations.");
-      put_line("Black_Box_Polynomial_Continuation 22 ...");
+      put_line("Black_Box_Polynomial_Continuation 25 ...");
     end if;
     Standard_Laurent_Homotopy.Create(p,q,k,gamma);
     Tune_Continuation_Parameters(file);
@@ -978,6 +1022,22 @@ package body Standard_BlackBox_Continuations is
     Write_Elapsed_Time(file,start_moment,ended_moment);
     flush(file);
     Standard_Laurent_Homotopy.Clear;
+  end Black_Box_Polynomial_Continuation;
+
+  procedure Black_Box_Polynomial_Continuation
+               ( file : in file_type; nt : in integer32;
+                 p,q : in Laur_Sys; sols : in out Solution_List;
+                 pocotime : out duration; verbose : in integer32 := 0 ) is
+
+    gamma : constant Complex_Number := Random1;
+
+  begin
+    if verbose > 0 then
+      put("-> in standard_blackbox_continuations.");
+      put_line("Black_Box_Polynomial_Continuation 26 ...");
+    end if;
+    Black_Box_Polynomial_Continuation
+      (file,nt,p,q,gamma,sols,pocotime,verbose-1);
   end Black_Box_Polynomial_Continuation;
 
   procedure Main ( targetname,startname,outfilename : in string;

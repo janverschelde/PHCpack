@@ -842,11 +842,11 @@ package body DoblDobl_BlackBox_Continuations is
 -- for Laurent polynomial systems :
 
   procedure Black_Box_Polynomial_Continuation
-               ( p,q : in Laur_Sys; sols : in out Solution_List;
+               ( p,q : in Laur_Sys; gamma : in Complex_Number;
+                 sols : in out Solution_List;
                  pocotime : out duration; verbose : in integer32 := 0 ) is
 
     k : constant natural32 := 2;
-    gamma : constant Complex_Number := Random1;
     one : constant double_double := create(1.0);
     target : constant Complex_Number := Create(one);
    -- proj : constant boolean := false;
@@ -870,21 +870,35 @@ package body DoblDobl_BlackBox_Continuations is
     pocotime := Elapsed_User_Time(timer);
     Silent_Black_Box_Refine(p,sols);
     DoblDobl_Laurent_Homotopy.Clear;
-  end black_Box_Polynomial_Continuation;
+  end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( nt : in integer32;
-                 p,q : in Laur_Sys; sols : in out Solution_List;
+               ( p,q : in Laur_Sys; sols : in out Solution_List;
                  pocotime : out duration; verbose : in integer32 := 0 ) is
 
-    k : constant natural32 := 2;
     gamma : constant Complex_Number := Random1;
-    timer : Timing_Widget;
 
   begin
     if verbose > 0 then
       put("-> in dobldobl_blackbox_continuations.");
       put_line("Black_Box_Polynomial_Continuation 20 ...");
+    end if;
+    Black_Box_Polynomial_Continuation(p,q,gamma,sols,pocotime,verbose-1);
+  end Black_Box_Polynomial_Continuation;
+
+  procedure Black_Box_Polynomial_Continuation
+               ( nt : in integer32;
+                 p,q : in Laur_Sys; gamma : in Complex_Number;
+                 sols : in out Solution_List;
+                 pocotime : out duration; verbose : in integer32 := 0 ) is
+
+    k : constant natural32 := 2;
+    timer : Timing_Widget;
+
+  begin
+    if verbose > 0 then
+      put("-> in dobldobl_blackbox_continuations.");
+      put_line("Black_Box_Polynomial_Continuation 21 ...");
     end if;
     DoblDobl_Laurent_Homotopy.Create(p,q,k,gamma);
     Continuation_Parameters.Tune(0); --,32);
@@ -894,15 +908,30 @@ package body DoblDobl_BlackBox_Continuations is
     pocotime := Elapsed_User_Time(timer);
     Silent_Black_Box_Refine(p,sols);
     DoblDobl_Laurent_Homotopy.Clear;
-  end black_Box_Polynomial_Continuation;
+  end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; 
+               ( nt : in integer32;
                  p,q : in Laur_Sys; sols : in out Solution_List;
                  pocotime : out duration; verbose : in integer32 := 0 ) is
 
-    k : constant natural32 := 2;
     gamma : constant Complex_Number := Random1;
+
+  begin
+    if verbose > 0 then
+      put("-> in dobldobl_blackbox_continuations.");
+      put_line("Black_Box_Polynomial_Continuation 22 ...");
+    end if;
+    Black_Box_Polynomial_Continuation(nt,p,q,gamma,sols,pocotime,verbose-1);
+  end Black_Box_Polynomial_Continuation;
+
+  procedure Black_Box_Polynomial_Continuation
+               ( file : in file_type;
+                 p,q : in Laur_Sys; gamma : in Complex_Number;
+                 sols : in out Solution_List;
+                 pocotime : out duration; verbose : in integer32 := 0 ) is
+
+    k : constant natural32 := 2;
     one : constant double_double := create(1.0);
     target : constant Complex_Number := Create(one);
    -- proj : constant boolean := false;
@@ -916,7 +945,7 @@ package body DoblDobl_BlackBox_Continuations is
   begin
     if verbose > 0 then
       put("-> in dobldobl_blackbox_continuations.");
-      put_line("Black_Box_Polynomial_Continuation 21 ...");
+      put_line("Black_Box_Polynomial_Continuation 23 ...");
     end if;
     DoblDobl_Laurent_Homotopy.Create(p,q,k,gamma);
     Tune_Continuation_Parameters(file);
@@ -929,20 +958,40 @@ package body DoblDobl_BlackBox_Continuations is
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; nt : in integer32;
+               ( file : in file_type; 
                  p,q : in Laur_Sys; sols : in out Solution_List;
+                 pocotime : out duration; verbose : in integer32 := 0 ) is
+
+    gamma : constant Complex_Number := Random1;
+
+    procedure Cont is
+      new Reporting_Continue
+            (Max_Norm,DoblDobl_Laurent_Homotopy.Eval,
+             DoblDobl_Laurent_Homotopy.Diff,DoblDobl_Laurent_Homotopy.Diff);
+
+  begin
+    if verbose > 0 then
+      put("-> in dobldobl_blackbox_continuations.");
+      put_line("Black_Box_Polynomial_Continuation 24 ...");
+    end if;
+    Black_Box_Polynomial_Continuation(file,p,q,gamma,sols,pocotime,verbose-1);
+  end Black_Box_Polynomial_Continuation;
+
+  procedure Black_Box_Polynomial_Continuation
+               ( file : in file_type; nt : in integer32;
+                 p,q : in Laur_Sys; gamma : in Complex_Number;
+                 sols : in out Solution_List;
                  pocotime : out duration; verbose : in integer32 := 0 ) is
 
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
     ended_moment : Ada.Calendar.Time;
     k : constant natural32 := 2;
-    gamma : constant Complex_Number := Random1;
     timer : Timing_Widget;
 
   begin
     if verbose > 0 then
       put("-> in dobldobl_blackbox_continuations.");
-      put_line("Black_Box_Polynomial_Continuation 22 ...");
+      put_line("Black_Box_Polynomial_Continuation 25 ...");
     end if;
     DoblDobl_Laurent_Homotopy.Create(p,q,k,gamma);
     Tune_Continuation_Parameters(file);
@@ -956,6 +1005,22 @@ package body DoblDobl_BlackBox_Continuations is
     flush(file);
     Reporting_Black_Box_Refine(file,nt,p,sols);
     DoblDobl_Laurent_Homotopy.Clear;
+  end Black_Box_Polynomial_Continuation;
+
+  procedure Black_Box_Polynomial_Continuation
+               ( file : in file_type; nt : in integer32;
+                 p,q : in Laur_Sys; sols : in out Solution_List;
+                 pocotime : out duration; verbose : in integer32 := 0 ) is
+
+    gamma : constant Complex_Number := Random1;
+
+  begin
+    if verbose > 0 then
+      put("-> in dobldobl_blackbox_continuations.");
+      put_line("Black_Box_Polynomial_Continuation 26 ...");
+    end if;
+    Black_Box_Polynomial_Continuation
+      (file,nt,p,q,gamma,sols,pocotime,verbose-1);
   end Black_Box_Polynomial_Continuation;
 
   procedure Main ( targetname,startname,outfilename : in string;

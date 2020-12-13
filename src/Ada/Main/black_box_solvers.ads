@@ -2,6 +2,9 @@ with text_io;                            use text_io;
 with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
@@ -28,6 +31,7 @@ package Black_Box_Solvers is
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent,deflate : in boolean;
                     rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -40,6 +44,7 @@ package Black_Box_Solvers is
   procedure Solve ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean;
                     rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -52,6 +57,7 @@ package Black_Box_Solvers is
   procedure Solve ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean;
                     rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -77,6 +83,7 @@ package Black_Box_Solvers is
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
+  --   gamma        random complex gamma constant used;
   --   q            start system (if the system was not special);
   --   qsols        start solutions (if the system was not special);
   --   sols         solutions found at the end of the paths.
@@ -84,6 +91,7 @@ package Black_Box_Solvers is
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -95,16 +103,18 @@ package Black_Box_Solvers is
                     verbose : in integer32 := 0 );
   procedure Solve ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out DoblDobl_Complex_Solutions.Solution_List;
-                    verbose : in integer32 := 0 );
-  procedure Solve ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                    rc : out natural32; rocos : out Link_to_String;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
                     verbose : in integer32 := 0 );
+  procedure Solve ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -130,6 +140,7 @@ package Black_Box_Solvers is
   --                displayed in the format as when silent is false
   --                in the other above solve procedures,
   --                rocos is null if p is one of the special cases!;
+  --   gamma        random complex gamma constant used;
   --   q            start system (if the system was not special);
   --   qsols        start solutions (if the system was not special);
   --   sols         solutions found at the end of the paths.
@@ -137,6 +148,7 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean; rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -149,6 +161,7 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -161,6 +174,7 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type;
                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -182,6 +196,7 @@ package Black_Box_Solvers is
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
+  --   gamma        random complex gamma constant used;
   --   q            start system (if the system was not special);
   --   qsols        start solutions (if the system was not special);
   --   sols         solutions found at the end of the paths.
@@ -189,30 +204,33 @@ package Black_Box_Solvers is
   procedure Solve ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
                     rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
+                    q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                    qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
                     verbose : in integer32 := 0 );
   procedure Solve ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
                     rc : out natural32;
-                    q : out Standard_Complex_Laur_Systems.Laur_Sys;
-                    qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
                     verbose : in integer32 := 0 );
   procedure Solve ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
                     rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
+                    q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
                     verbose : in integer32 := 0 );
   procedure Solve ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
                     rc : out natural32;
-                    q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                    qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
                     verbose : in integer32 := 0 );
   procedure Solve ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
                     rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -237,32 +255,36 @@ package Black_Box_Solvers is
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
+  --   gamma        random complex gamma constant used;
   --   q            start system (if the system was not special);
   --   qsols        start solutions (if the system was not special);
   --   sols         solutions found at the end of the paths.
 
   procedure Solve ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out Standard_Complex_Solutions.Solution_List;
-                    verbose : in integer32 := 0 );
-  procedure Solve ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                    rc : out natural32; rocos : out Link_to_String;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Laur_Systems.Laur_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
                     verbose : in integer32 := 0 );
-  procedure Solve ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+  procedure Solve ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out DoblDobl_Complex_Solutions.Solution_List;
+                    sols : out Standard_Complex_Solutions.Solution_List;
                     verbose : in integer32 := 0 );
   procedure Solve ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
                     verbose : in integer32 := 0 );
+  procedure Solve ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -286,6 +308,7 @@ package Black_Box_Solvers is
   --   rocos        information about the root counts, in the same format
   --                as the above solve procedures with false for silent,
   --                rocos is null if p is one of the special cases!;
+  --   gamma        random complex gamma constant used;
   --   q            start system (if the system was not special);
   --   qsols        start solutions (if the system was not special);
   --   sols         solutions found at the end of the paths.
@@ -293,6 +316,7 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Laur_Systems.Laur_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -305,6 +329,7 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type;
                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -317,6 +342,7 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type;
                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -339,6 +365,7 @@ package Black_Box_Solvers is
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
+  --   gamma        random complex gamma constant used;
   --   q            start system (if the system was not special);
   --   qsols        start solutions (if the system was not special);
   --   sols         solutions found at the end of the paths.
@@ -346,6 +373,7 @@ package Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent,deflate : in boolean; rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -358,6 +386,7 @@ package Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean; rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -370,6 +399,7 @@ package Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean; rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -395,6 +425,7 @@ package Black_Box_Solvers is
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
+  --   gamma        random complex gamma constant used;
   --   q            start system (if the system was not special);
   --   qsols        start solutions (if the system was not special);
   --   sols         solutions found at the end of the paths.
@@ -403,6 +434,7 @@ package Black_Box_Solvers is
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -416,6 +448,7 @@ package Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -428,6 +461,7 @@ package Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -455,6 +489,7 @@ package Black_Box_Solvers is
   --                displayed in the format as when silent is false
   --                in the other above solve procedures,
   --                rocos is null if p is one of the special cases!;
+  --   gamma        random complex gamma constant used;
   --   q            start system (if the system was not special);
   --   qsols        start solutions (if the system was not special);
   --   sols         solutions found at the end of the paths.
@@ -462,6 +497,7 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean; rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -474,6 +510,7 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -486,6 +523,7 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -510,6 +548,7 @@ package Black_Box_Solvers is
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
+  --   gamma        random complex gamma constant used;
   --   q            start system (if the system was not special);
   --   qsols        start solutions (if the system was not special);
   --   sols         solutions found at the end of the paths.
@@ -517,6 +556,7 @@ package Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean; rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Laur_Systems.Laur_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -529,6 +569,7 @@ package Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean; rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -541,6 +582,7 @@ package Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean; rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -566,6 +608,7 @@ package Black_Box_Solvers is
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
+  --   gamma        random complex gamma constant used;
   --   q            start system (if p is not a special case system);
   --   qsols        start solutions (if p is not a special case system);
   --   sols         solutions found at the end of the paths.
@@ -573,18 +616,20 @@ package Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out Standard_Complex_Solutions.Solution_List;
-                    verbose : in integer32 := 0 );
-  procedure Solve ( nt : in natural32;
-                    p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                    rc : out natural32; rocos : out Link_to_String;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Laur_Systems.Laur_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
                     verbose : in integer32 := 0 );
   procedure Solve ( nt : in natural32;
+                    p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
+  procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -597,6 +642,7 @@ package Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -623,6 +669,7 @@ package Black_Box_Solvers is
   --                displayed in the format as when silent is false
   --                in the other above solve procedures,
   --                rocos is null if p is one of the special cases!;
+  --   gamma        random complex gamma constant used;
   --   q            start system (if p is not a special case system);
   --   qsols        start solutions (if p is not a special case system);
   --   sols         solutions found at the end of the paths.
@@ -630,6 +677,7 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Laur_Systems.Laur_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -642,6 +690,7 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
+                    gamma : out DoblDobl_Complex_Numbers.Complex_Number;
                     q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out DoblDobl_Complex_Solutions.Solution_List;
                     sols : out DoblDobl_Complex_Solutions.Solution_List;
@@ -654,6 +703,7 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
+                    gamma : out QuadDobl_Complex_Numbers.Complex_Number;
                     q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     qsols : out QuadDobl_Complex_Solutions.Solution_List;
                     sols : out QuadDobl_Complex_Solutions.Solution_List;
@@ -677,6 +727,7 @@ package Black_Box_Solvers is
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
+  --   gamma        random complex gamma constant used;
   --   q            start system (if p is not a special case system);
   --   qsols        start solutions (if p is not a special case system);
   --   sols         solutions found at the end of the paths.
