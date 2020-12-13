@@ -171,10 +171,10 @@ package body Job_Handlers is
         else
           if ntasks = 0 then
             Black_Box_Polyhedral_Solvers.Solve
-              (lp.all,silent,true,rc,q,qsols,sols,vrblvl-1);
+              (lp.all,silent,true,rc,gamma,q,qsols,sols,vrblvl-1);
           else
             Black_Box_Polyhedral_Solvers.Solve
-              (ntasks,lp.all,silent,true,rc,q,qsols,sols,vrblvl-1);
+              (ntasks,lp.all,silent,true,rc,gamma,q,qsols,sols,vrblvl-1);
           end if;
         end if;
       else
@@ -189,10 +189,10 @@ package body Job_Handlers is
         else
           if ntasks = 0 then
             Black_Box_Polyhedral_Solvers.Solve
-              (lp.all,true,rc,lsroco,q,qsols,sols,vrblvl-1);
+              (lp.all,true,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
           else
             Black_Box_Polyhedral_Solvers.Solve
-              (ntasks,lp.all,true,rc,lsroco,q,qsols,sols,vrblvl-1);
+              (ntasks,lp.all,true,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
           end if;
         end if;
         if lsroco = null then
@@ -216,6 +216,7 @@ package body Job_Handlers is
       Standard_Solutions_Container.Initialize(sols);
       PHCpack_Operations.Store_Start_System(q);
       PHCpack_Operations.Store_Start_Solutions(qsols);
+      PHCpack_Operations.Store_Gamma_Constant(gamma);
       Standard_Complex_Poly_Systems.Clear(q);
       Standard_Complex_Solutions.Deep_Clear(qsols);
     end;
@@ -303,6 +304,7 @@ package body Job_Handlers is
         end if;
         PHCpack_Operations.Store_Start_System(q);
         PHCpack_Operations.Store_Start_Solutions(qsols);
+        PHCpack_Operations.Store_Gamma_Constant(gamma);
         Standard_Complex_Laur_Systems.Clear(q);
         Standard_Complex_Solutions.Deep_Clear(qsols);
       end;
@@ -328,10 +330,10 @@ package body Job_Handlers is
           else 
             if ntasks = 0 then -- patch for deflation with multitasking
               Black_Box_Polyhedral_Solvers.Solve
-                (p,silent,true,rc,q,qsols,sols,vrblvl-1);
+                (p,silent,true,rc,gamma,q,qsols,sols,vrblvl-1);
             else
               Black_Box_Polyhedral_Solvers.Solve
-                (ntasks,p,silent,true,rc,q,qsols,sols,vrblvl-1);
+                (ntasks,p,silent,true,rc,gamma,q,qsols,sols,vrblvl-1);
             end if;
           end if;
         else
@@ -346,10 +348,10 @@ package body Job_Handlers is
           else
             if ntasks = 0 then -- patch for deflation with multitasking
               Black_Box_Polyhedral_Solvers.Solve
-                (p,true,rc,lsroco,q,qsols,sols,vrblvl-1);
+                (p,true,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
             else
               Black_Box_Polyhedral_Solvers.Solve
-                (ntasks,p,true,rc,lsroco,q,qsols,sols,vrblvl-1);
+                (ntasks,p,true,rc,lsroco,gamma,q,qsols,sols,vrblvl-1);
             end if;
           end if;
           if lsroco = null then
@@ -369,6 +371,7 @@ package body Job_Handlers is
         qq := Polynomial_to_Laurent_System(q);
         PHCpack_Operations.Store_Start_System(qq);
         PHCpack_Operations.Store_Start_Solutions(qsols);
+        PHCpack_Operations.Store_Gamma_Constant(gamma);
         Standard_Complex_Poly_Systems.Clear(q);
         Standard_Complex_Laur_Systems.Clear(qq);
         Standard_Complex_Solutions.Deep_Clear(qsols);
@@ -458,6 +461,7 @@ package body Job_Handlers is
       end if;
       PHCpack_Operations.Store_Start_System(q);
       PHCpack_Operations.Store_Start_Solutions(qsols);
+      PHCpack_Operations.Store_Gamma_Constant(gamma);
       DoblDobl_Complex_Poly_Systems.Clear(q);
       DoblDobl_Complex_Solutions.Deep_Clear(qsols);
     end;
@@ -547,6 +551,7 @@ package body Job_Handlers is
         end if;
         PHCpack_Operations.Store_Start_System(q);
         PHCpack_Operations.Store_Start_Solutions(qsols);
+        PHCpack_Operations.Store_Gamma_Constant(gamma);
         DoblDobl_Complex_Laur_Systems.Clear(q);
         DoblDobl_Complex_Solutions.Deep_Clear(qsols);
       end;
@@ -589,6 +594,7 @@ package body Job_Handlers is
         qq := Polynomial_to_Laurent_System(q);
         PHCpack_Operations.Store_Start_System(qq);
         PHCpack_Operations.Store_Start_Solutions(qsols);
+        PHCpack_Operations.Store_Gamma_Constant(gamma);
         DoblDobl_Complex_Poly_Systems.Clear(q);
         DoblDobl_Complex_Laur_Systems.Clear(qq);
         DoblDobl_Complex_Solutions.Deep_Clear(qsols);
@@ -677,6 +683,7 @@ package body Job_Handlers is
       end if;
       PHCpack_Operations.Store_Start_System(q);
       PHCpack_Operations.Store_Start_Solutions(qsols);
+      PHCpack_Operations.Store_Gamma_Constant(gamma);
       QuadDobl_Complex_Poly_Systems.Clear(q);
       QuadDobl_Complex_Solutions.Deep_Clear(qsols);
     end;
@@ -766,6 +773,7 @@ package body Job_Handlers is
         end if;
         PHCpack_Operations.Store_Start_System(q);
         PHCpack_Operations.Store_Start_Solutions(qsols);
+        PHCpack_Operations.Store_Gamma_Constant(gamma);
         QuadDobl_Complex_Laur_Systems.Clear(q);
         QuadDobl_Complex_Solutions.Deep_Clear(qsols);
       end;
@@ -808,6 +816,7 @@ package body Job_Handlers is
         qq := Polynomial_to_Laurent_System(q);
         PHCpack_Operations.Store_Start_System(qq);
         PHCpack_Operations.Store_Start_Solutions(qsols);
+        PHCpack_Operations.Store_Gamma_Constant(gamma);
         QuadDobl_Complex_Poly_Systems.Clear(q);
         QuadDobl_Complex_Laur_Systems.Clear(qq);
         QuadDobl_Complex_Solutions.Deep_Clear(qsols);

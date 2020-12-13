@@ -2,6 +2,7 @@ with text_io;                            use text_io;
 with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 
@@ -14,6 +15,7 @@ package Black_Box_Polyhedral_Solvers is
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent,deflate : in boolean;
                     rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -26,6 +28,7 @@ package Black_Box_Polyhedral_Solvers is
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -54,6 +57,7 @@ package Black_Box_Polyhedral_Solvers is
   --   rocos        string with the root count information,
   --                displayed in the format as when silent is false
   --                in the first Polyhedral_Solve;
+  --   gamma        complex gamma constant used in homotopy;
   --   q            start system;
   --   qsols        start solutions;
   --   sols         solutions found at the end of the paths.
@@ -62,6 +66,7 @@ package Black_Box_Polyhedral_Solvers is
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent,deflate : in boolean;
                     rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -76,6 +81,7 @@ package Black_Box_Polyhedral_Solvers is
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -107,6 +113,7 @@ package Black_Box_Polyhedral_Solvers is
   --   rocos        string with the root count information,
   --                displayed in the format as when silent is false
   --                in the first Polyhedral_Solve;
+  --   gamma        random complex gamma constant used;
   --   q            start system;
   --   qsols        start solutions;
   --   sols         solutions found at the end of the paths.
@@ -114,6 +121,7 @@ package Black_Box_Polyhedral_Solvers is
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean; rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -126,6 +134,7 @@ package Black_Box_Polyhedral_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean; rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -149,6 +158,7 @@ package Black_Box_Polyhedral_Solvers is
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
+  --   gamma        random complex gamma constant used;
   --   q            start system;
   --   qsols        start solutions;
   --   sols         solutions found at the end of the paths.

@@ -1,3 +1,4 @@
+with Standard_Random_Numbers;
 with Standard_Scaling;
 with Standard_BlackBox_Continuations;    use Standard_BlackBox_Continuations;
 with Black_Box_Mixed_Volumes;
@@ -7,6 +8,7 @@ package body Black_Box_Polyhedral_Solvers is
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent,deflate : in boolean;
                     rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -32,8 +34,9 @@ package body Black_Box_Polyhedral_Solvers is
         Push(qsols0,qsols);
       end if;
       Standard_Scaling.Scale(pp);
+      gamma := Standard_Random_Numbers.Random1;
       Black_Box_Polynomial_Continuation
-        (deflate,pp,q,sols,sols0,poco,verbose-1);
+        (deflate,pp,q,gamma,sols,sols0,poco,verbose-1);
       Push(sols0,sols);
     end if;
     Standard_Complex_Poly_Systems.Clear(pp);
@@ -47,12 +50,13 @@ package body Black_Box_Polyhedral_Solvers is
 
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_polyhedral_solvers.Solve 2 ...");
     end if;
-    Solve(p,silent,deflate,rc,q,qsols,sols,verbose);
+    Solve(p,silent,deflate,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
       Standard_Complex_Poly_Systems.Clear(q);
@@ -62,6 +66,7 @@ package body Black_Box_Polyhedral_Solvers is
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -87,8 +92,9 @@ package body Black_Box_Polyhedral_Solvers is
         Push(qsols0,qsols);
       end if;
       Standard_Scaling.Scale(pp);
+      gamma := Standard_Random_Numbers.Random1;
       Black_Box_Polynomial_Continuation
-        (deflate,pp,q,sols,sols0,poco,verbose-1);
+        (deflate,pp,q,gamma,sols,sols0,poco,verbose-1);
       Push(sols0,sols);
     end if;
     Standard_Complex_Poly_Systems.Clear(pp);
@@ -102,12 +108,13 @@ package body Black_Box_Polyhedral_Solvers is
 
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_polyhedral_solvers.Solve 4 ...");
     end if;
-    Solve(p,deflate,rc,rocos,q,qsols,sols,verbose);
+    Solve(p,deflate,rc,rocos,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
       Standard_Complex_Poly_Systems.Clear(q);
@@ -118,6 +125,7 @@ package body Black_Box_Polyhedral_Solvers is
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent,deflate : in boolean;
                     rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -134,7 +142,7 @@ package body Black_Box_Polyhedral_Solvers is
       put_line("-> in black_box_polyhedral_solvers.Solve 5 ...");
     end if;
     if nt < 2 then
-      Solve(p,silent,deflate,rc,q,qsols,sols,verbose);
+      Solve(p,silent,deflate,rc,gamma,q,qsols,sols,verbose);
     else
       Standard_Complex_Poly_Systems.Copy(p,pp);
       Black_Box_Mixed_Volumes.Black_Box_Polyhedral_Homotopies
@@ -146,8 +154,9 @@ package body Black_Box_Polyhedral_Solvers is
           Push(qsols0,qsols);
         end if;
         Standard_Scaling.Scale(pp);
+        gamma := Standard_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (deflate,integer32(nt),pp,q,sols,sols0,poco,verbose-1);
+          (deflate,integer32(nt),pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       Standard_Complex_Poly_Systems.Clear(pp);
@@ -163,14 +172,15 @@ package body Black_Box_Polyhedral_Solvers is
  
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_polyhedral_solvers.Solve 6 ...");
     end if;
     if nt < 2
-     then Solve(p,silent,deflate,rc,q,qsols,sols,verbose);
-     else Solve(nt,p,silent,deflate,rc,q,qsols,sols,verbose);
+     then Solve(p,silent,deflate,rc,gamma,q,qsols,sols,verbose);
+     else Solve(nt,p,silent,deflate,rc,gamma,q,qsols,sols,verbose);
     end if;
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
@@ -182,6 +192,7 @@ package body Black_Box_Polyhedral_Solvers is
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean;
                     rc : out natural32; rocos : out Link_to_String;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -198,7 +209,7 @@ package body Black_Box_Polyhedral_Solvers is
       put_line("-> in black_box_polyhedral_solvers.Solve 7 ...");
     end if;
     if nt < 2 then
-      Solve(p,deflate,rc,rocos,q,qsols,sols,verbose);
+      Solve(p,deflate,rc,rocos,gamma,q,qsols,sols,verbose);
     else
       Standard_Complex_Poly_Systems.Copy(p,pp);
       Black_Box_Mixed_Volumes.Black_Box_Polyhedral_Homotopies
@@ -210,8 +221,9 @@ package body Black_Box_Polyhedral_Solvers is
           Push(qsols0,qsols);
         end if;
         Standard_Scaling.Scale(pp);
+        gamma := Standard_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (deflate,integer32(nt),pp,q,sols,sols0,poco,verbose-1);
+          (deflate,integer32(nt),pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       Standard_Complex_Poly_Systems.Clear(pp);
@@ -227,14 +239,15 @@ package body Black_Box_Polyhedral_Solvers is
 
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_polyhedral_solvers.Solve 8 ...");
     end if;
     if nt < 2
-     then Solve(p,deflate,rc,rocos,q,qsols,sols,verbose);
-     else Solve(nt,p,deflate,rc,rocos,q,qsols,sols,verbose);
+     then Solve(p,deflate,rc,rocos,gamma,q,qsols,sols,verbose);
+     else Solve(nt,p,deflate,rc,rocos,gamma,q,qsols,sols,verbose);
     end if;
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
@@ -245,6 +258,7 @@ package body Black_Box_Polyhedral_Solvers is
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean; rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -270,6 +284,7 @@ package body Black_Box_Polyhedral_Solvers is
         Push(qsols0,qsols);
       end if;
       Standard_Scaling.Scale(pp);
+      gamma := Standard_Random_Numbers.Random1;
       Black_Box_Polynomial_Continuation
         (file,deflate,pp,q,sols,sols0,poco,verbose-1);
       Push(sols0,sols);
@@ -285,12 +300,13 @@ package body Black_Box_Polyhedral_Solvers is
 
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_polyhedral_solvers.Solve 10 ...");
     end if;
-    Solve(file,p,deflate,rc,q,qsols,sols,verbose);
+    Solve(file,p,deflate,rc,gamma,q,qsols,sols,verbose);
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
       Standard_Complex_Poly_Systems.Clear(q);
@@ -300,6 +316,7 @@ package body Black_Box_Polyhedral_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean; rc : out natural32;
+                    gamma : out Standard_Complex_Numbers.Complex_Number;
                     q : out Standard_Complex_Poly_Systems.Poly_Sys;
                     qsols : out Standard_Complex_Solutions.Solution_List;
                     sols : out Standard_Complex_Solutions.Solution_List;
@@ -316,7 +333,7 @@ package body Black_Box_Polyhedral_Solvers is
       put_line("-> in black_box_polyhedral_solvers.Solve 11 ...");
     end if;
     if nt < 2 then
-      Solve(file,p,deflate,rc,q,qsols,sols,verbose);
+      Solve(file,p,deflate,rc,gamma,q,qsols,sols,verbose);
     else
       Standard_Complex_Poly_Systems.Copy(p,pp);
       Black_Box_Mixed_Volumes.Black_Box_Polyhedral_Homotopies
@@ -328,8 +345,9 @@ package body Black_Box_Polyhedral_Solvers is
           Push(qsols0,qsols);
         end if;
         Standard_Scaling.Scale(pp);
+        gamma := Standard_Random_Numbers.Random1;
         Black_Box_Polynomial_Continuation
-          (file,deflate,integer32(nt),pp,q,sols,sols0,poco,verbose-1);
+          (file,deflate,integer32(nt),pp,q,gamma,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
       Standard_Complex_Poly_Systems.Clear(pp);
@@ -344,14 +362,15 @@ package body Black_Box_Polyhedral_Solvers is
 
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     qsols : Standard_Complex_Solutions.Solution_List;
+    gamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
     if verbose > 0 then
       put_line("-> in black_box_polyhedral_solvers.Solve 12 ...");
     end if;
     if nt < 2
-     then Solve(file,p,deflate,rc,q,qsols,sols,verbose);
-     else Solve(file,nt,p,deflate,rc,q,qsols,sols,verbose);
+     then Solve(file,p,deflate,rc,gamma,q,qsols,sols,verbose);
+     else Solve(file,nt,p,deflate,rc,gamma,q,qsols,sols,verbose);
     end if;
     if rc /= 0 then
       Standard_Complex_Solutions.Deep_Clear(qsols);
