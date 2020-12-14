@@ -1165,8 +1165,8 @@ package body Setup_Flag_Homotopies is
     acc : Poly;
 
   begin
-    put("in Square, p'last = "); put(p'last,1);
-    put("  n = "); put(n,1); new_line;
+   -- put("in Square, p'last = "); put(p'last,1);
+   -- put("  n = "); put(n,1); new_line;
     for i in res'range loop
       Copy(p(i),res(i));
       for j in n+1..p'last loop
