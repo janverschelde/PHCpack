@@ -142,6 +142,34 @@ package Job_Handlers is
   --   then a[1] contains the number of characters in b,
   --   where b is the root counter output string.
 
+  function Get_Gamma_Constant
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Retrieves the gamma constant used in the solver.
+
+  -- ON ENTRY :
+  --   a        a[0] equals 1, 2, or 4, for double, double double,
+  --            or quad double precision.
+
+  -- ON RETURN :
+  --   c        c[0] is the real part of the complex gamma constant;
+  --            c[1] is the imaginary part of the complex gamma constant.
+
+  function Set_Gamma_Constant
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Retrieves the gamma constant used in the solver.
+
+  -- ON ENTRY :
+  --   a        a[0] equals 1, 2, or 4, for double, double double,
+  --            or quad double precision;
+  --   c        c[0] is the real part of the complex gamma constant;
+  --            c[1] is the imaginary part of the complex gamma constant.
+
   function Mixed_Volume
              ( a : C_intarrs.Pointer; vrblvl : integer32 := 0 )
              return integer32;

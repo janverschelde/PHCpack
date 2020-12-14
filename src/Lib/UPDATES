@@ -1,3 +1,5 @@
+Mon 14 Dec 2020 : extended phcpack with function to set and get the gamma.
+
 Fri 11 Dec 2020 : updated phcpack, phcpy2c.h, and phcpy2c?.c with functions
   that enable to pass the power of t when a homotopy is defined with a
   given value of the gamma parameter.

@@ -841,7 +841,10 @@ function use_c2phc4c ( job : integer32;
      -- reading solutions from file with given name
       when 916..918 => return use_solcon(job,a,b,c,vrblvl-1);
       when 920 => return Job_Handlers.Standard_Condition_Report(a,b,c,vrblvl-1);
-     -- getting, setting the seed and the version string
+     -- get and set the gamma constant
+      when 995 => return Job_Handlers.Get_Gamma_Constant(a,c,vrblvl-1);
+      when 996 => return Job_Handlers.Set_Gamma_Constant(a,c,vrblvl-1);
+     -- get and set the seed and the version string
       when 997 => return Job_Handlers.Get_Seed(a,vrblvl-1);
       when 998 => return Job_Handlers.Set_Seed(a,vrblvl-1);
       when 999 => return Job_Handlers.Version_String(a,b,vrblvl-1);

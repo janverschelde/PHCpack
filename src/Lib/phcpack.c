@@ -192,6 +192,36 @@ int solve_quaddobl_Laurent_system
    return fail;
 }
 
+int set_gamma_constant
+ ( double regamma, double imgamma, int precision, int vrb )
+{
+   int fail = 1;
+   int *b;
+   double c[2];
+  
+   c[0] = regamma;
+   c[1] = imgamma;
+
+   fail = _ada_use_c2phc(996,&precision,b,c,vrb);
+
+   return fail;
+}
+
+int get_gamma_constant
+ ( double *regamma, double *imgamma, int precision, int vrb )
+{
+   int fail = 1;
+   int *b;
+   double c[2];
+  
+   fail = _ada_use_c2phc(995,&precision,b,c,vrb);
+
+   *regamma = c[0];
+   *imgamma = c[1];
+
+   return fail;
+}
+
 int mixed_volume ( int *mv )
 {
    int *b,fail;

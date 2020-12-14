@@ -13,8 +13,12 @@ function use_c2phc4c ( job : integer32;
 
 -- ON ENTRY :
 --   job   =   0 : display the menu of all available options;
---         = 998 : fixes the seed of the random number generator;
---         = 999 : returns the version string of PHCpack.
+--         = 998 : sets the seed of the random number generator,
+--                 on entry in a[0] is the value for the seed;
+--         = 997 : returns the seed of the random number generator in a;
+--         = 999 : returns the version string of PHCpack,
+--                 in a are the characters of the string,
+--                 and in b[0] is the number of characters.
 --
 -- moving data from PHCpack_operations from and to containers :
 --
@@ -1260,6 +1264,20 @@ function use_c2phc4c ( job : integer32;
 --                 on return in a[0] is the root count and if not silent,
 --                 then a[1] contains the number of characters in b,
 --                 where b is the root counter output string.
+--
+-- set and get the value of the gamma constant :
+--
+--   job   = 995 : returns the value of the complex gamma constant
+--                 used in the solver (if the system was not special),
+--                 on entry in a[0] is 1, 2, or 4, respectively for
+--                 double, double double, or quad double precision,
+--                 on return in c[0] is the real part of gamma,
+--                 and in c[1] is the imaginary part of gamma;
+--         = 996 : sets the value of the complex gamma constant,
+--                 on entry in a[0] is 1, 2, or 4, respectively for
+--                 double, double double, or quad double precision,
+--                 and in c[0] is the real part of gamma,
+--                 in c[1] is the imaginary part of gamma.
 --
 -- the size limit of the string representation of a polynomial :
 -- 

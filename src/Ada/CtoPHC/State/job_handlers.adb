@@ -6,12 +6,15 @@ with Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
+with Standard_Floating_Vectors;
 with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
@@ -835,6 +838,106 @@ package body Job_Handlers is
       end if;
       return 703;
   end QuadDobl_Laurent_Solver;
+
+  function Get_Gamma_Constant
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    gamma : Standard_Floating_Vectors.Vector(1..2);
+    regamma,imgamma : double_float;
+    ddregamma,ddimgamma : double_double;
+    qdregamma,qdimgamma : quad_double;
+    dgamma : Standard_Complex_Numbers.Complex_Number;
+    ddgamma : DoblDobl_Complex_Numbers.Complex_Number;
+    qdgamma : QuadDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    case prc is
+      when 1 => 
+        PHCpack_Operations.Retrieve_Gamma_Constant(dgamma);
+        regamma := Standard_Complex_Numbers.REAL_PART(dgamma);
+        imgamma := Standard_Complex_Numbers.IMAG_PART(dgamma);
+      when 2 => 
+        PHCpack_Operations.Retrieve_Gamma_Constant(ddgamma);
+        ddregamma := DoblDobl_Complex_Numbers.REAL_PART(ddgamma);
+        ddimgamma := DoblDobl_Complex_Numbers.IMAG_PART(ddgamma);
+        regamma := hi_part(ddregamma);
+        imgamma := hi_part(ddimgamma);
+      when 4 => 
+        PHCpack_Operations.Retrieve_Gamma_Constant(qdgamma);
+        qdregamma := QuadDobl_Complex_Numbers.REAL_PART(qdgamma);
+        qdimgamma := QuadDobl_Complex_Numbers.IMAG_PART(qdgamma);
+        regamma := hihi_part(qdregamma);
+        imgamma := hihi_part(qdimgamma);
+      when others =>
+        if vrblvl > 0 then
+          put("Value for precision "); put(prc,1);
+          put_line(" is not valid.");
+        end if;
+    end case;
+    gamma(1) := regamma;
+    gamma(2) := imgamma;
+    Assign(gamma,c);
+    return 0;
+  exception
+    when others =>
+      if vrblvl > 0 then
+        put("Exception raised");
+        put_line(" in job_handlers.Get_Gamma_Constant.");
+      end if;
+      return 995;
+  end Get_Gamma_Constant;
+
+  function Set_Gamma_Constant
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    v_c : constant C_Double_Array
+        := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(2));
+    regamma : constant double_float := double_float(v_c(v_c'first));
+    imgamma : constant double_float := double_float(v_c(v_c'first+1));
+    ddregamma,ddimgamma : double_double;
+    qdregamma,qdimgamma : quad_double;
+    dgamma : Standard_Complex_Numbers.Complex_Number;
+    ddgamma : DoblDobl_Complex_Numbers.Complex_Number;
+    qdgamma : QuadDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    case prc is
+      when 1 => 
+        dgamma := Standard_Complex_Numbers.Create(regamma,imgamma);
+        PHCpack_Operations.Store_Gamma_Constant(dgamma);
+      when 2 =>
+        ddregamma := create(regamma); ddimgamma := create(imgamma);
+        ddgamma := DoblDobl_Complex_Numbers.Create(ddregamma,ddimgamma);
+        PHCpack_Operations.Store_Gamma_Constant(ddgamma);
+      when 4 =>
+        qdregamma := create(regamma); qdimgamma := create(imgamma);
+        qdgamma := QuadDobl_Complex_Numbers.Create(qdregamma,qdimgamma);
+        PHCpack_Operations.Store_Gamma_Constant(qdgamma);
+      when others =>
+        if vrblvl > 0 then
+          put("Value for precision "); put(prc,1);
+          put_line(" is not valid.");
+        end if;
+    end case;
+    return 0;
+  exception
+    when others =>
+      if vrblvl > 0 then
+        put("Exception raised");
+        put_line(" in job_handlers.Set_Gamma_Constant.");
+      end if;
+      return 996;
+  end Set_Gamma_Constant;
 
   function Mixed_Volume
              ( a : C_intarrs.Pointer; vrblvl : integer32 := 0 )

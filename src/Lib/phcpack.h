@@ -48,6 +48,12 @@ int solve_standard_system
  * DESCRIPTION :
  *   Calls the blackbox solver on the standard double polynomial systems
  *   container.  The solutions on return are in the solution container.
+ *   The start system can be retrieved with the function
+ *   copy_standard_Laurent_start_system_to_container(); and
+ *   the start solutions with the function
+ *   copy_start_solutions_to_container(); and
+ *   the gamma constant can be retrieved with the function
+ *   get_gamma_constant().
  *
  * ON ENTRY :
  *   silent     if 1, then the solver will not write the computed root
@@ -182,6 +188,44 @@ int solve_quaddobl_Laurent_system
  *   nrcs       the number of characters in rocos, only if silent = 0;
  *   rocos      string with the output of the root counters, of size nrcs,
  *              but only if silent = 0. */
+
+int set_gamma_constant
+ ( double regamma, double imgamma, int precision, int vrb );
+/*
+ * DESCRIPTION :
+ *   Sets the value of the gamma constant.
+ *
+ * ON ENTRY :
+ *   precision  indicates the precision of the solver,
+ *                1 for double precision,
+ *                2 for double double precision,
+ *                4 for then quad double precision.
+ *   regamma    the real part of the complex gamma constant;
+ *   imgamma    the imaginary part of the complex gamma constant;
+ *   vrb        is the verbose level, if 0, nothing will be written,
+ *              for vrb > 0, the value of vrb is the depth of the tree
+ *              of nested subroutine calls for which information is shown. */
+
+int get_gamma_constant
+ ( double *regamma, double *imgamma, int precision, int vrb );
+/*
+ * DESCRIPTION :
+ *   Returns the value of the gamma constant used in the blackbox solver.
+ *   If the system was so special that no homotopy was needed,
+ *   then the gamma on return is zero.
+ *
+ * ON ENTRY :
+ *   precision  indicates the precision of the solver,
+ *                1 for double precision,
+ *                2 for double double precision,
+ *                4 for then quad double precision;
+ *   vrb        is the verbose level, if 0, nothing will be written,
+ *              for vrb > 0, the value of vrb is the depth of the tree
+ *              of nested subroutine calls for which information is shown.
+ *
+ * ON RETURN :
+ *   regamma    the real part of the complex gamma constant;
+ *   imgamma    the imaginary part of the complex gamma constant. */
 
 int mixed_volume ( int *mv );
 /*
