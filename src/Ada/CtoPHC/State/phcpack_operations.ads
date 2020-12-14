@@ -155,6 +155,22 @@ package PHCpack_Operations is
   procedure Store_Gamma_Constant
               ( gamma : in Multprec_Complex_Numbers.Complex_Number );
 
+  -- DESCRIPTION :
+  --   Stores the gamma constant.
+
+  procedure Retrieve_Gamma_Constant
+              ( gamma : out Standard_Complex_Numbers.Complex_Number );
+  procedure Retrieve_Gamma_Constant
+              ( gamma : out DoblDobl_Complex_Numbers.Complex_Number );
+  procedure Retrieve_Gamma_Constant
+              ( gamma : out QuadDobl_Complex_Numbers.Complex_Number );
+  procedure Retrieve_Gamma_Constant
+              ( gamma : out Multprec_Complex_Numbers.Complex_Number );
+
+  -- DESCRIPTION :
+  --   Retrieves the gamma constant.
+  --   If no gamma constant was stored, the gamma on return is zero.
+
   procedure Create_Standard_Homotopy;
   procedure Create_Standard_Homotopy
               ( gamma : in Standard_Complex_Numbers.Complex_Number;

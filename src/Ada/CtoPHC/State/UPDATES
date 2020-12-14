@@ -1,5 +1,6 @@
 Sun 13 Dec 2020 : updated job_handlers.adb for the return of gamma in
   the blackbox solver and in the blackbox_polyhedral_solvers.
+  To phcpack_operations, added procedures to retrieve the stored gamma.
 
 Fri 11 Dec 2020 : extended phcpack_operations with the option to set the
   power of t with a homotopy definition; updated path_trackers_interface

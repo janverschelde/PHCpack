@@ -550,6 +550,42 @@ package body PHCpack_Operations is
     Multprec_Complex_Numbers.Copy(gamma,mp_gamma_constant);
   end Store_Gamma_Constant;
 
+  procedure Retrieve_Gamma_Constant
+              ( gamma : out Standard_Complex_Numbers.Complex_Number ) is
+  begin
+    if zero_standard_constant
+     then gamma := Standard_Complex_Numbers.Create(0.0);
+     else gamma := st_gamma_constant;
+    end if;
+  end Retrieve_Gamma_Constant;
+
+  procedure Retrieve_Gamma_Constant
+              ( gamma : out DoblDobl_Complex_Numbers.Complex_Number ) is
+  begin
+    if zero_dobldobl_constant
+     then gamma := DoblDobl_Complex_Numbers.Create(integer(0));
+     else gamma := dd_gamma_constant;
+    end if;
+  end Retrieve_Gamma_Constant;
+
+  procedure Retrieve_Gamma_Constant
+              ( gamma : out QuadDobl_Complex_Numbers.Complex_Number ) is
+  begin
+    if zero_dobldobl_constant
+     then gamma := QuadDobl_Complex_Numbers.Create(integer(0));
+     else gamma := qd_gamma_constant;
+    end if;
+  end Retrieve_Gamma_Constant;
+
+  procedure Retrieve_Gamma_Constant
+              ( gamma : out Multprec_Complex_Numbers.Complex_Number ) is
+  begin
+    if zero_dobldobl_constant
+     then gamma := Multprec_Complex_Numbers.Create(integer(0));
+     else Multprec_Complex_Numbers.Copy(mp_gamma_constant,gamma);
+    end if;
+  end Retrieve_Gamma_Constant;
+
   procedure Copy_Labels is
 
   -- DESCRIPTION :
