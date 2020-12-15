@@ -1,5 +1,6 @@
 Mon 14 Dec 2020 : updated the solve method in the Polynomials class to
   store the gamma constant after calling the blackbox solver.
+  Updates files for version 1.1.0 of phcpy.
 
 Fri 11 Dec 2020 : extended track functions in trackers.py, both for python2
   and python3 with the option to set power of t in the homotopy.

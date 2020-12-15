@@ -9,6 +9,7 @@ phcpy2cpath_dd.so (double double), and phcpy2cpath_qd.so (quad double).
 """
 
 from distutils.core import setup
+from distutils.sysconfig import get_python_lib
 
 setup(
     name = 'PHCpy' ,
@@ -16,7 +17,7 @@ setup(
     author_email = 'janv@uic.edu' ,
     description = 'a package for Polynomial Homotopy Continuation' ,
     url = 'https://github.com/janverschelde/PHCpack' ,
-    version = '1.0.9' ,
+    version = '1.1.0' ,
     packages = ['phcpy'] ,
     py_modules = ['phcpy/interface', 'phcpy/solver', \
         'phcpy/solutions', 'phcpy/polynomials', \
@@ -26,7 +27,7 @@ setup(
         'phcpy/curves', 'phcpy/schubert', 'phcpy/examples', \
         'phcpy/families', 'phcpy/dashboard', 'phcpy/server' ] ,
     license = 'GNU GENERAL PUBLIC LICENSE version 3' ,
-    package_data = {'phcpy':['phcpy2c2.so']} ,
+    data_files = [(get_python_lib()+'/phcpy', ['phcpy/phcpy2c2.so'])] ,
     platforms = ['linux2'] ,
     long_description=open('README.txt').read()
 )
