@@ -197,7 +197,7 @@ enabling the solution of polynomial systems in the cloud.
 DEMiCs applies dynamic enumeration for all mixed cells and
 computes the mixed volume at a faster pace than MixedVol.
 Since version 2.4.53, DEMiCs is distributed with PHCpack.
-Triple, penta, octo, and deca double arithmetic was added
+Triple, penta, octo, and deca double arithmetic were added
 in version 2.4.80.
 
 phcpy: An Application Programming Interface to PHCpack
@@ -327,6 +327,19 @@ Pointers to the literature are mentioned below.
    pages 71-76, 2014, available at
    <http://arxiv.org/abs/1310.0056>.
 
+#. J. Verschelde:
+   **A Blackbox Polynomial System Solver on Parallel Shared Memory Computers.**
+   In the *Proceedings of the 20th International
+   Workshop on Computer Algebra in Scientific Computing (CASC 2018)*,
+   edited by V.P. Gerdt, W. Koepf, W.M. Seiler, and E.V. Vorozhtsov,
+   volume 11077 of Lecture Notes in Computer Science,
+   pages 361-375, Springer-Verlag, 2018.
+
+#. J. Verschelde:
+   **Parallel Software to Offset the Cost of Higher Precision.**
+   Available at
+   <http://arxiv.org/abs/2012.06607>.
+
 #. J. Verschelde and G. Yoffe.
    **Polynomial homotopies on multicore workstations.**
    In the *Proceedings of the 4th International Workshop on Parallel 
@@ -336,14 +349,6 @@ Pointers to the literature are mentioned below.
 #. J. Verschelde and X. Yu:
    **Polynomial Homotopy Continuation on GPUs.**
    *ACM Communications in Computer Algebra*, 49(4):130-133, 2015.
-
-#. J. Verschelde:
-   **A Blackbox Polynomial System Solver on Parallel Shared Memory Computers.**
-   In the *Proceedings of the 20th International
-   Workshop on Computer Algebra in Scientific Computing (CASC 2018)*,
-   edited by V.P. Gerdt, W. Koepf, W.M. Seiler, and E.V. Vorozhtsov,
-   volume 11077 of Lecture Notes in Computer Science,
-   pages 361-375, Springer-Verlag, 2018.
 
 Users
 =====
