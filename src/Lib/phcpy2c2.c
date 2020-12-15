@@ -1547,6 +1547,30 @@ static PyObject *py2c_solve_quaddobl_Laurent_system
       return Py_BuildValue("(i,s)",rc,rocos);
 }
 
+static PyObject *py2c_set_gamma_constant ( PyObject *self, PyObject *args )
+{
+   int fail,prc,vrb;
+   double regm,imgm;
+
+   initialize();
+   if (!PyArg_ParseTuple(args,"ddii",&regm,&imgm,&prc,&vrb)) return NULL;
+   fail = set_gamma_constant(regm,imgm,prc,vrb);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_get_gamma_constant ( PyObject *self, PyObject *args )
+{
+   int fail,prc,vrb;
+   double regm,imgm;
+
+   initialize();
+   if (!PyArg_ParseTuple(args,"ii",&prc,&vrb)) return NULL;
+   fail = get_gamma_constant(&regm,&imgm,prc,vrb);
+
+   return Py_BuildValue("(d,d)",regm,imgm);
+}
+
 static PyObject *py2c_mixed_volume
  ( PyObject *self, PyObject *args )
 {
@@ -10197,6 +10221,10 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_solve_quaddobl_Laurent_system",
      py2c_solve_quaddobl_Laurent_system, METH_VARARGS,
     "Calls the blackbox solver on the system stored in the container for\n Laurent systems with coefficients in quad double precision.\n Three integers are expected on input:\n 1) a boolean flag silent: if 1, then no intermediate output about\n the root counts is printed, if 0, then the solver is verbose; \n 2) the number of tasks: if 0, then no multitasking is applied,\n otherwise as many tasks as the number will run; and\n 3) the verbose level.\n On return, the container for solutions in quad double precision\n contains the solutions to the system in the quad double Laurent systems\n container."},
+   {"py2c_set_gamma_constant", py2c_set_gamma_constant, METH_VARARGS,
+    "Stores the gamma constant for later retrieval.\n Four parameters are expected on input, two doubles and two integers.\n The two doubles are the real and imaginary parts of the gamma.\n The two integers are the precision, 1, 2, or 4, respectively for\n double, double double, or quad double; and the verbose level."},
+   {"py2c_get_gamma_constant", py2c_get_gamma_constant, METH_VARARGS,
+    "Returns the gamma constant used by the solve functions.\n Two integer parameters are expected on input:\n (1) for the precision, 1, 2, or 4, respectively for double,\n double double, or quad double precision; and\n (2) the verbose level.\n The function returns a tuple of two doubles,\n for the real and imaginary part of the gamma constant."},
    {"py2c_mixed_volume", py2c_mixed_volume, METH_VARARGS,
     "Computes the mixed volume, and the stable mixed volume as well if\n the input parameter equals 1.  On return is the mixed volume, or\n a tuple with the mixed volume and the stable mixed volume.\n A regular mixed-cell configuration is in the cells container."},
    {"py2c_mixed_volume_by_demics", py2c_mixed_volume_by_demics, METH_VARARGS,

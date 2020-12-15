@@ -1004,6 +1004,26 @@ static PyObject *py2c_solve_quaddobl_Laurent_system
  *   contains the solutions to the system in the quaddobl Laurent systems
  *   container. */
 
+static PyObject *py2c_set_gamma_constant ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Stores the gamma constant for later retrieval.
+ *   Four parameters are expected on input, two doubles and two integers.
+ *   The two doubles are the real and imaginary parts of the gamma.
+ *   The two integers are the precision, 1, 2, or 4, respectively for
+ *   double, double double, or quad double; and the verbose level. */
+
+static PyObject *py2c_get_gamma_constant ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the gamma constant used by the solve functions.
+ *   Two integer parameters are expected on input:
+ *   (1) for the precision, 1, 2, or 4, respectively for double,
+ *       double double, or quad double precision; and
+ *   (2) the verbose level.
+ *   The function returns a tuple of two doubles,
+ *   for the real and imaginary part of the gamma constant. */
+
 static PyObject *py2c_mixed_volume
  ( PyObject *self, PyObject *args );
 /*
