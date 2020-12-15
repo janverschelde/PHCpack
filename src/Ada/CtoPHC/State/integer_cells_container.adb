@@ -985,7 +985,7 @@ package body Integer_Cells_Container is
     n : constant natural32 := Dimension_of_Supports;
     q : Standard_Complex_Laur_Systems.Laur_Sys(1..integer32(n))
       := Random_Coefficient_Systems.Create(n,mix.all,lifsup.all);
-    perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+   -- perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
 
   begin
     Deep_Clear(lifsup); Clear(cells);

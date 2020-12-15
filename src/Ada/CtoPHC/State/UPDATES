@@ -1,3 +1,5 @@
+Tue 15 Dec 2020 : updated integer_cells_container.adb for compiler warnings.
+
 Mon 14 Dec 2020 : extended job_handlers and use_c2phc4c with functions
   to set and get the gamma constant.  Added verbose level incoming message
   in the set and get of gamma constant in job_handlers.adb.
