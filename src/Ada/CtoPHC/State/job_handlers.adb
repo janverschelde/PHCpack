@@ -855,6 +855,9 @@ package body Job_Handlers is
     qdgamma : QuadDobl_Complex_Numbers.Complex_Number;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in job_handlers.Get_Gamma_Constant ...");
+    end if;
     case prc is
       when 1 => 
         PHCpack_Operations.Retrieve_Gamma_Constant(dgamma);
@@ -911,6 +914,9 @@ package body Job_Handlers is
     qdgamma : QuadDobl_Complex_Numbers.Complex_Number;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in job_handlers.Set_Gamma_Constant ...");
+    end if;
     case prc is
       when 1 => 
         dgamma := Standard_Complex_Numbers.Create(regamma,imgamma);

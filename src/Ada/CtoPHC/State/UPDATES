@@ -1,5 +1,6 @@
 Mon 14 Dec 2020 : extended job_handlers and use_c2phc4c with functions
-  to set and get the gamma constant.
+  to set and get the gamma constant.  Added verbose level incoming message
+  in the set and get of gamma constant in job_handlers.adb.
 
 Sun 13 Dec 2020 : updated job_handlers.adb for the return of gamma in
   the blackbox solver and in the blackbox_polyhedral_solvers.
