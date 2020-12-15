@@ -19,6 +19,7 @@ class Polynomials(object):
         self.pols = pols
         self.startpols = []
         self.startsols = []
+        self.gamma = complex(0)
         self.vars = solver.names_of_variables(pols)
 
     def __str__(self):
@@ -61,12 +62,15 @@ class Polynomials(object):
             import py2c_copy_standard_Laurent_start_system_to_container
         from phcpy.phcpy2c2 import py2c_copy_start_solutions_to_container
         from phcpy.phcpy2c2 import py2c_solcon_clear_standard_solutions
+        from phcpy.phcpy2c2 import py2c_get_gamma_constant
         from phcpy.interface import load_standard_laurent_system as qload
         from phcpy.interface import load_standard_solutions as qsolsload
         sols = solver.solve(self.pols, verbose=verbose, tasks=nbtasks, \
             mvfocus=mvfocus, dictionary_output=dictionary_output, \
             verbose_level=verbose_level)
         py2c_copy_standard_Laurent_start_system_to_container()
+        (regamma, imgamma) = py2c_get_gamma_constant(1, verbose_level)
+        self.gamma = complex(regamma, imgamma)
         self.startpols = qload()
         py2c_solcon_clear_standard_solutions()
         py2c_copy_start_solutions_to_container()
