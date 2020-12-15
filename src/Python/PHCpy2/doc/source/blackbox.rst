@@ -4,7 +4,8 @@ a blackbox solver for isolated solutions
 .. |eacute| unicode:: U+00E9 .. eacute
    :trim:
 
-The package phcpy depends on the shared object file phcpy2c.so.
+The package phcpy depends on the shared object file ``phcpy2c2.so``
+for Python2 and ``phcpy2c3.so`` for Python3.
 The module **solver**
 exports the blackbox solver of PHCpack, a fast mixed volume
 calculator, and several functions to predict the number of isolated
