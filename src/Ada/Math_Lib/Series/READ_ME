@@ -1,4 +1,4 @@
-Truncated power series with complex coefficients for PHCv2.4.80
+Truncated power series with complex coefficients for PHCv2.4.83
 
 Similar to Taylor series approximations for general functions,
 we can approximate roots of polynomials in a parameter by series.
@@ -226,12 +226,20 @@ ts_csermat                         : test on 3rd version of matrices of series
 ------------------------------------------------------------------------------
 standard_interpolating_series      : interpolation for standard series systems
 dobldobl_interpolating_series      : interpolation for dobldobl series systems
+tripdobl_interpolating_series      : interpolation for tripdobl series systems
 quaddobl_interpolating_series      : interpolation for quaddobl series systems
+pentdobl_interpolating_series      : interpolation for pentdobl series systems
+octodobl_interpolating_series      : interpolation for octodobl series systems
+decadobl_interpolating_series      : interpolation for decadobl series systems
 ts_cseritp                         : test on linear series interpolation
 ------------------------------------------------------------------------------
 standard_echelon_forms             : echelon standard Hermite-Laurent systems
 dobldobl_echelon_forms             : echelon dobldobl Hermite-Laurent systems
+tripdobl_echelon_forms             : echelon tripdobl Hermite-Laurent systems
 quaddobl_echelon_forms             : echelon quaddobl Hermite-Laurent systems
+pentdobl_echelon_forms             : echelon pentdobl Hermite-Laurent systems
+octodobl_echelon_forms             : echelon octodobl Hermite-Laurent systems
+decadobl_echelon_forms             : echelon decadobl Hermite-Laurent systems
 ts_csersin                         : test on solving singular linear systems
 ------------------------------------------------------------------------------
 standard_series_matrix_solvers     : linearization for standard series systems

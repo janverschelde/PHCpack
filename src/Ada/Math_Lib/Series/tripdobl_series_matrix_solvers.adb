@@ -1,7 +1,8 @@
-with TripDobl_Complex_Numbers;           use TripDobl_Complex_Numbers;
 with TripDobl_Complex_Linear_Solvers;    use TripDobl_Complex_Linear_Solvers;
 with TripDobl_Complex_QR_Least_Squares;  use TripDobl_Complex_QR_Least_Squares;
 with TripDobl_Complex_Singular_Values;   use TripDobl_Complex_Singular_Values;
+with TripDobl_Interpolating_CSeries;
+with TripDobl_Echelon_Forms;             use TripDobl_Echelon_Forms;
 
 package body TripDobl_Series_Matrix_Solvers is
 
@@ -274,6 +275,57 @@ package body TripDobl_Series_Matrix_Solvers is
       end loop;
     end if;
   end Solve_by_SVD;
+
+  procedure Echelon_Solve
+              ( A : in TripDobl_Complex_Matrix_Series.Matrix;
+                b : in TripDobl_Complex_Vector_Series.Vector;
+                det : out Complex_Number;
+                xp : out TripDobl_Complex_Vector_Series.Vector;
+                xn : out TripDobl_Complex_Vector_Series.Vector ) is
+
+    deg : constant integer32 := A.deg;
+    nbr : constant integer32 := A.cff(0)'last(1);
+    nbc : constant integer32 := A.cff(0)'last(2);
+    nrows : constant integer32 := nbr*(2*deg+1);
+    ncols : constant integer32 := nbc*(2*deg+1);
+    hlm : TripDobl_Complex_Matrices.Matrix(1..nrows,1..ncols)
+        := TripDobl_Interpolating_CSeries.Hermite_Laurent_Matrix(A.cff(0..deg));
+    x : TripDobl_Complex_Vectors.Vector(1..ncols);
+    rhs : constant TripDobl_Complex_Vectors.Vector(1..nrows)
+        := TripDobl_Interpolating_CSeries.Hermite_Laurent_Vector(b.cff(0..deg));
+    U : TripDobl_Complex_Matrices.Matrix(1..nrows,1..ncols);
+    row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
+    col_ipvt,pivots : Standard_Integer_Vectors.Vector(1..ncols);
+    wx : TripDobl_Complex_Vectors.Vector(1..nbc);
+    startidx : constant integer32 := nbc*deg; -- space for Laurent portion
+    one : constant triple_double := create(1.0);
+    absdet : triple_double;
+
+  begin
+    Lower_Triangular_Echelon_Form(nbc,hlm,U,row_ipvt,col_ipvt,pivots,false);
+    Solve_with_Echelon_Form(hlm,rhs,x);
+    Multiply_and_Permute(x,U,pivots);
+    det := Determinant(hlm);
+    absdet := AbsVal(det);
+   -- xp.deg := deg;
+    for i in 0..deg loop
+      for j in 1..nbc loop
+        wx(j) := x(startidx+i*nbc+j);
+      end loop;
+      xp.cff(i) := new TripDobl_Complex_Vectors.Vector'(wx);
+    end loop;
+   -- if absdet + 1.0 /= 1.0 then
+   --   xn.deg := -1; -- no Laurent portion
+   -- else
+    if absdet + one = one then
+      for i in 1..deg loop
+        for j in 1..nbc loop
+          wx(j) := x(startidx-i*nbc+j);
+        end loop;
+        xn.cff(i) := new TripDobl_Complex_Vectors.Vector'(wx);
+      end loop;
+    end if;
+  end Echelon_Solve;
 
 -- ON FLATTENED DATA STRUCTURES :
 
