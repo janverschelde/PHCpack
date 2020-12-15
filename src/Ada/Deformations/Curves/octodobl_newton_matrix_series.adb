@@ -830,7 +830,7 @@ package body OctoDobl_Newton_Matrix_Series is
     Complex_Series_and_Polynomials.Set_degree(jm,degree);
     mj := OctoDobl_Complex_Matrix_Series.Create(jm);
     xp := OctoDobl_Complex_Vector_Series.Create(px);
-   -- Echelon_Solve(mj,xp,det,xd,xdn);
+    Echelon_Solve(mj,xp,det,xd,xdn);
     dx := OctoDobl_Complex_Vector_Series.Create(xd);
     OctoDobl_Complex_Series_Vectors.Add(x,dx);
     OctoDobl_Complex_Series_Vectors.Clear(dx);
@@ -891,7 +891,7 @@ package body OctoDobl_Newton_Matrix_Series is
     Complex_Series_and_Polynomials.Set_degree(jm,degree);
     mj := OctoDobl_Complex_Matrix_Series.Create(jm);
     xp := OctoDobl_Complex_Vector_Series.Create(px);
-   -- Echelon_Solve(mj,xp,det,xd,xdn);
+    Echelon_Solve(mj,xp,det,xd,xdn);
     put(file,"n.deg : "); put(file,xdn.deg,1); 
     put(file,"  det : "); put(file,det); new_line(file);
     dx := OctoDobl_Complex_Vector_Series.Create(xd);

@@ -1,3 +1,6 @@
+Tue 15 Dec 2020 : in {trip,pent,octo,deca}dobl_newton_matrix_series.adb,
+  applied the echelon solvers for linear systems.
+
 Thu 10 Dec 2020 : to fabry_on_homotopy_helpers.adb, *_fabry_on_homotopy.adb,
   for * in {standard, *dobl}, applied the procedures in numbers_io,
   to make the prompting of input parameters more robust.
