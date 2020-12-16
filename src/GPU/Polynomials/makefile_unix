@@ -1,0 +1,69 @@
+# Tested on four different NVIDIA GPUs.
+
+gpp=/usr/bin/g++
+MPD=../Norms
+CNV=../Convolutions
+CUDA=/usr/local/cuda/include
+CUDALIB=/usr/local/cuda/lib64
+# the architecture flag for Tesla C2050
+smflag=sm_20
+# the architecture flag for Kepler K20C
+# smflag=sm_35
+# the architecture flag for Pascal P100
+# smflag=sm_60
+# the architecture flag for Volta V100
+# smflag=sm_70
+
+random_numbers.o:
+	@-echo ">>> compiling double random number generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random_numbers.cpp
+
+random_series.o:
+	@-echo ">>> compiling double random series generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(CNV)/random_series.cpp
+
+random_monomials.o:
+	@-echo ">>> compiling double random monomials generators ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random_monomials.cpp
+
+dbl_convolutions_host.o:
+	@-echo ">>> compiling dbl_convolutions_host ..."
+	$(gpp) -O3 -c -I$(CNV) $(CNV)/dbl_convolutions_host.cpp
+
+dbl_monomials_host.o:
+	@-echo ">>> compiling dbl_monomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl_monomials_host.cpp
+
+dbl_monomials_kernels.o:
+	@-echo ">>> compiling monomial kernels for doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(CNV) -c \
+             $(CNV)/dbl_monomials_kernels.cu
+
+dbl_monomials_testers.o:
+	@-echo ">>> compiling dbl_monomials_testers ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) \
+               $(CNV)/dbl_monomials_testers.cpp
+
+test_dbl_polynomials.o:
+	@-echo ">>> compiling test_dbl_polynomials ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl_polynomials.cpp
+
+test_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
+                      dbl_convolutions_host.o dbl_monomials_host.o \
+                      dbl_monomials_kernels.o dbl_monomials_testers.o \
+                      test_dbl_polynomials.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl_polynomials test_dbl_polynomials.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  dbl_convolutions_host.o dbl_monomials_host.o \
+                  dbl_monomials_kernels.o dbl_monomials_testers.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
+clean:
+	/bin/rm -f -r test_dbl_polynomials.o test_dbl_polynomials
+
+cleanall: clean
+	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o
+	/bin/rm -f -r dbl_convolutions_host.o dbl_monomials_host.o
+	/bin/rm -f -r dbl_convolutions_kernels.o dbl_monomials_kernels.o
+	/bin/rm -f -r dbl_monomials_testers.o
