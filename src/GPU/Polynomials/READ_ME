@@ -1,0 +1,9 @@
+Accelerated Polynomial Evaluation and Differentiation at Series in PHCv2.4.84.
+
+The code in this folder concerns the evaluation and differentiation
+of polynomials in several variables, with coefficients power series
+truncated to the same degree.
+
+-----------------------------------------------------------------------------
+file name                  : short description
+-----------------------------------------------------------------------------
