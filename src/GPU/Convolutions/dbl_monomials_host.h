@@ -7,7 +7,8 @@
 
 void CPU_dbl_speel
  ( int nvr, int deg, int *idx, double *cff, double **input,
-   double **forward, double **backward, double **cross );
+   double **forward, double **backward, double **cross,
+   bool verbose=false, int monidx=0 );
 /*
  * DESCRIPTION :
  *   Runs the reverse mode of algorithmic differentiation
@@ -31,7 +32,9 @@ void CPU_dbl_speel
  *   backward contains work space for all nvr-2 backward products;
  *            backward[k] contains space for deg+1 doubles;
  *   cross    contains work space for all nvr-2 cross products;
- *            cross[k] contains space for deg+1 doubles.
+ *            cross[k] contains space for deg+1 doubles;
+ *   verbose  if true, writes one line to screen for every convolution;
+ *   monidx   index of the monomial, only needed if verbose.
  *
  * ON RETURN :
  *   forward  accumulates the forward products,

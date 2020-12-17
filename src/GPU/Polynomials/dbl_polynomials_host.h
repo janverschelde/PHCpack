@@ -8,7 +8,7 @@
 void CPU_dbl_poly_speel
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double **cff, double **input, double **output,
-   double **forward, double **backward, double **cross );
+   double **forward, double **backward, double **cross, bool verbose=false );
 /*
  * DESCRIPTION :
  *   Runs the reverse mode of algorithmic differentiation
@@ -33,7 +33,8 @@ void CPU_dbl_poly_speel
  *   backward contains work space for all nvr-2 backward products;
  *            backward[k] contains space for deg+1 doubles;
  *   cross    contains work space for all nvr-2 cross products;
- *            cross[k] contains space for deg+1 doubles.
+ *            cross[k] contains space for deg+1 doubles;
+ *   verbose  if true, writes one line to screen for every convolution.
  *
  * ON RETURN :
  *   output   contains derivatives and the value of the polynomial,
@@ -43,7 +44,8 @@ void CPU_dbl_poly_speel
 
 void CPU_dbl_poly_evaldiff
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
-   double *cst, double **cff, double **input, double **output );
+   double *cst, double **cff, double **input, double **output,
+   bool verbose=false );
 /*
  * DESCRIPTION :
  *   Allocates work space memory to store the forward, backward, and
@@ -62,7 +64,8 @@ void CPU_dbl_poly_evaldiff
  *            of monomial k;
  *   input    contains the coefficients of the power series
  *            for all variables in the polynomial;
- *   output   space allocated for the value and all derivatives.
+ *   output   space allocated for the value and all derivatives;
+ *   verbose  if true, writes one line to screen for every convolution.
  *
  * ON RETURN :
  *   output   contains derivatives and the value of the polynomial,

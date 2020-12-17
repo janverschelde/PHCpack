@@ -168,8 +168,9 @@ double test_dbl_real_polynomial
             for(int j=0; j<=deg; j++) cout << " " << cff[i][j] << endl;
          }
       }
+      bool vrb = (verbose > 0);
 
-      CPU_dbl_poly_evaldiff(dim,nbr,deg,nvr,idx,cst,cff,input,output_h);
+      CPU_dbl_poly_evaldiff(dim,nbr,deg,nvr,idx,cst,cff,input,output_h,vrb);
 
       if(verbose > 0)
       {

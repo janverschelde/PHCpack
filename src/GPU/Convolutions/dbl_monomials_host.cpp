@@ -22,35 +22,52 @@
  * but this is better than n+1 multiplications with cff afterwards. */
 
 #include <cstdlib>
+#include <iostream>
 #include "dbl_convolutions_host.h"
 #include "dbl_monomials_host.h"
 
+using namespace std;
+
 void CPU_dbl_speel
  ( int nvr, int deg, int *idx, double *cff, double **input,
-   double **forward, double **backward, double **cross )
+   double **forward, double **backward, double **cross,
+   bool verbose, int monidx )
 {
    int ix1 = idx[0];
    int ix2;
 
    CPU_dbl_product(deg,cff,input[ix1],forward[0]); // f[0] = cff*x[0] 
+   if(verbose) cout << "monomial " << monidx << " : ";
+   if(verbose) cout << "cff * input[" << ix1 << "] to f[0]" << endl;
 
    for(int i=1; i<nvr; i++)
    {                                               // f[i] = f[i-1]*x[i]
       ix2 = idx[i];
       CPU_dbl_product(deg,forward[i-1],input[ix2],forward[i]);
+      if(verbose) cout << "monomial " << monidx << " : ";
+      if(verbose) cout << "f[" << i-1 << "] * "
+                       << "input[" << ix2 << "] to f[" << i << "]" << endl;
    }
    if(nvr > 2)
    {
       ix1 = idx[nvr-1];                            // b[0] = x[n-1]*x[n-2]
       ix2 = idx[nvr-2];
       CPU_dbl_product(deg,input[ix1],input[ix2],backward[0]);
+      if(verbose) cout << "monomial " << monidx << " : ";
+      if(verbose) cout << "input[" << ix1 << "] * "
+                       << "input[" << ix2 << "] to b[0]" << endl;
       for(int i=1; i<nvr-2; i++)
       {                                            // b[i] = b[i-1]*x[n-2-i]
          ix2 = idx[nvr-2-i];
          CPU_dbl_product(deg,backward[i-1],input[ix2],backward[i]);
+         if(verbose) cout << "monomial " << monidx << " : ";
+         if(verbose) cout << "b[" << i-1 << "] * "
+                          << "input[" << ix2 << "] to b[" << i << "]" << endl;
       }
                                                    // b[n-3] = cff*b[n-3]
       CPU_dbl_product(deg,backward[nvr-3],cff,cross[0]);
+      if(verbose) cout << "monomial " << monidx << " : ";
+      if(verbose) cout << "b[" << nvr-3 << "] * cff to c[0]" << endl;
       // cross[0] is work space, cannot write into backward[nvr-3]
       for(int i=0; i<=deg; i++) backward[nvr-3][i] = cross[0][i];
 
@@ -58,6 +75,8 @@ void CPU_dbl_speel
       {                                            // c[0] = f[0]*x[2]
          ix2 = idx[2];
          CPU_dbl_product(deg,forward[0],input[ix2],cross[0]);
+         if(verbose) cout << "monomial " << monidx << " : ";
+         if(verbose) cout << "f[0] * input[" << ix2 << "] to c[0]" << endl;
       }
       else
       {
@@ -65,10 +84,16 @@ void CPU_dbl_speel
          {                                         // c[i] = f[i]*b[n-4-i]
             ix2 = nvr-4-i;
             CPU_dbl_product(deg,forward[i],backward[ix2],cross[i]);
+            if(verbose) cout << "monomial " << monidx << " : ";
+            if(verbose) cout << "f[" << i << "] * b[" << ix2
+                             << "] to c[" << i << "]" << endl;
          }
                                                    // c[n-3] = f[n-3]*x[n-1]
          ix2 = idx[nvr-1];
          CPU_dbl_product(deg,forward[nvr-3],input[ix2],cross[nvr-3]);
+         if(verbose) cout << "monomial " << monidx << " : ";
+         if(verbose) cout << "f[" << nvr-3 << "] * input[" << ix2
+                          << "] to c[" << nvr-3 << "]" << endl;
       }
    }
 }

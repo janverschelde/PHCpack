@@ -2,28 +2,28 @@
  * in dbl_polynomials_host.h. */
 
 #include <cstdlib>
+#include <iostream>
 #include "dbl_convolutions_host.h"
 #include "dbl_monomials_host.h"
 #include "dbl_polynomials_host.h"
-
-#include <iostream>
 
 using namespace std;
 
 void CPU_dbl_poly_speel
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double **cff, double **input, double **output,
-   double **forward, double **backward, double **cross )
+   double **forward, double **backward, double **cross, bool verbose )
 {
    int ix1,ix2;
 
    for(int i=0; i<nbr; i++)
    {
-      cout << "processing monomial " << i << endl;
       if(nvr[i] == 1)
       {
          ix1 = idx[i][0];
          CPU_dbl_product(deg,input[ix1],cff[i],forward[0]);
+         if(verbose) cout << "monomial " << i << " : ";
+         if(verbose) cout << "input[" << ix1 << "] * cff to f[0]" << endl;
          for(int j=0; j<=deg; j++)
          {
             output[dim][j] += forward[0][j];
@@ -35,18 +35,30 @@ void CPU_dbl_poly_speel
          ix1 = idx[i][0]; ix2 = idx[i][1];
 
          CPU_dbl_product(deg,input[ix1],input[ix2],forward[0]);
+         if(verbose) cout << "monomial " << i << " : ";
+         if(verbose) cout << "input[" << ix1 << "] * "
+                          << "input[" << ix2 << "] to f[0]" << endl;
          CPU_dbl_product(deg,forward[0],cff[i],forward[0]);
+         if(verbose) cout << "monomial " << i << " : ";
+         if(verbose) cout << "f[0] * cff to f[0]" << endl;
          for(int j=0; j<=deg; j++) output[dim][j] += forward[0][j];
 
          CPU_dbl_product(deg,cff[i],input[ix1],forward[0]);
+         if(verbose) cout << "monomial " << i << " : ";
+         if(verbose) cout << "cff * "
+                          << "input[" << ix1 << "] to b[0]" << endl;
          for(int j=0; j<=deg; j++) output[ix2][j] += forward[i][j];
 
          CPU_dbl_product(deg,cff[i],input[ix2],forward[0]);
+         if(verbose) cout << "monomial " << i << " : ";
+         if(verbose) cout << "cff * "
+                          << "input[" << ix2 << "] to c[0]" << endl;
          for(int j=0; j<=deg; j++) output[ix1][j] += forward[i][j];
       }
       else if(nvr[i] > 2)
       {
-         CPU_dbl_speel(nvr[i],deg,idx[i],cff[i],input,forward,backward,cross);
+         CPU_dbl_speel
+            (nvr[i],deg,idx[i],cff[i],input,forward,backward,cross,verbose,i);
 
          ix1 = nvr[i]-1;
          for(int j=0; j<=deg; j++)     // update the value of the polynomial
@@ -74,7 +86,7 @@ void CPU_dbl_poly_speel
 
 void CPU_dbl_poly_evaldiff
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
-   double *cst, double **cff, double **input, double **output )
+   double *cst, double **cff, double **input, double **output, bool verbose )
 {
    double **forward = new double*[dim];
    double **backward = new double*[dim-2];
@@ -94,7 +106,7 @@ void CPU_dbl_poly_evaldiff
       for(int j=0; j<=deg; j++) output[i][j] = 0.0;
 
    CPU_dbl_poly_speel
-      (dim,nbr,deg,nvr,idx,cff,input,output,forward,backward,cross);
+      (dim,nbr,deg,nvr,idx,cff,input,output,forward,backward,cross,verbose);
 
    for(int i=0; i<dim-2; i++)
    {
