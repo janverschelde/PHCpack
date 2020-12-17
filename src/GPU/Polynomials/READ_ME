@@ -8,5 +8,6 @@ truncated to the same degree.
 file name                  : short description
 -----------------------------------------------------------------------------
 dbl_polynomials_host       : evaldiff of double polynomials on host
+random_polynomials         : generation of random polynomials
 test_dbl_polynomials       : main test on eval/diff in double precision
 -----------------------------------------------------------------------------

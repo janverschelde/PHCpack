@@ -49,6 +49,12 @@ random_monomials.obj:
                       $(CNV)/random_monomials.cpp \
                  /Fo: random_monomials.obj /EHsc
 
+random_polynomials.obj:
+	@-echo ">>> compiling double random polynomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random_polynomials.cpp \
+                 /Fo: random_polynomials.obj /EHsc
+
 dbl_convolutions_host.obj:
 	@-echo ">>> compiling dbl_convolutions_host ..."
 	$(CL)\cl /c -I$(CNV) $(CNV)/dbl_convolutions_host.cpp \
@@ -89,22 +95,21 @@ test_dbl_polynomials.obj:
                  /Fo: test_dbl_polynomials.obj /EHsc
 
 test_dbl_polynomials: random_numbers.obj random_series.obj \
-	              random_monomials.obj \
+	              random_monomials.obj random_polynomials.obj \
                     dbl_convolutions_host.obj dbl_monomials_host.obj \
-                    dbl_monomials_kernels.obj dbl_monomials_testers.obj \
                     dbl_polynomials_host.obj test_dbl_polynomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_polynomials.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
+              random_polynomials.obj \
               dbl_convolutions_host.obj dbl_monomials_host.obj \
-              dbl_monomials_kernels.obj dbl_monomials_testers.obj \
               dbl_polynomials_host.obj test_dbl_polynomials.obj
 
 clean:
 	del *~
 	del test_dbl_polynomials.exe test_dbl_polynomials.obj
 	del test_dbl_polynomials.exp test_dbl_polynomials.lib
-	del dbl_polynomials_host.obj
+	del dbl_polynomials_host.obj random_polynomials.obj
 
 cleanall: clean
 	del *exe *obj *exp *lib

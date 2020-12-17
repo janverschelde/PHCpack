@@ -13,7 +13,7 @@ void CPU_dbl_poly_speel
 {
    int ix1,ix2;
 
-   for(int i=0; i<nbr-1; i++)
+   for(int i=0; i<nbr; i++)
    {
       if(nvr[i] == 1)
       {
@@ -74,35 +74,30 @@ void CPU_dbl_poly_evaldiff
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double *cst, double **cff, double **input, double **output )
 {
-   if(nbr == 1)
-      CPU_dbl_evaldiff(dim,nvr[0],deg,idx[0],cff[0],input,output);
-   else if(nbr > 1)
+   double **forward = new double*[dim];
+   double **backward = new double*[dim-2];
+   double **cross = new double*[dim-2];
+
+   for(int i=0; i<dim-2; i++)
    {
-      double **forward = new double*[dim];
-      double **backward = new double*[dim-2];
-      double **cross = new double*[dim-2];
-
-      for(int i=0; i<dim-2; i++)
-      {
-         forward[i] = new double[deg+1];
-         backward[i] = new double[deg+1];
-         cross[i] = new double[deg+1];
-      }
-      forward[dim-2] = new double[deg+1];
-      forward[dim-1] = new double[deg+1];
-
-      for(int i=0; i<=deg; i++) output[dim][i] = cst[i];
-      for(int i=0; i<dim; i++)
-         for(int j=0; j<=deg; j++) output[i][j] = 0.0;
-
-      CPU_dbl_poly_speel
-         (dim,nbr,deg,nvr,idx,cff,input,output,forward,backward,cross);
-
-      for(int i=0; i<dim-2; i++)
-      {
-         free(forward[i]); free(backward[i]); free(cross[i]);
-      }
-      free(forward[dim-2]); free(forward[dim-1]);
-      free(forward); free(backward); free(cross);
+      forward[i] = new double[deg+1];
+      backward[i] = new double[deg+1];
+      cross[i] = new double[deg+1];
    }
+   forward[dim-2] = new double[deg+1];
+   forward[dim-1] = new double[deg+1];
+
+   for(int i=0; i<=deg; i++) output[dim][i] = cst[i];
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<=deg; j++) output[i][j] = 0.0;
+
+   CPU_dbl_poly_speel
+      (dim,nbr,deg,nvr,idx,cff,input,output,forward,backward,cross);
+
+   for(int i=0; i<dim-2; i++)
+   {
+      free(forward[i]); free(backward[i]); free(cross[i]);
+   }
+   free(forward[dim-2]); free(forward[dim-1]);
+   free(forward); free(backward); free(cross);
 }

@@ -26,6 +26,10 @@ random_monomials.o:
 	@-echo ">>> compiling double random monomials generators ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random_monomials.cpp
 
+random_polynomials.o:
+	@-echo ">>> compiling random_polynomials ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) random_polynomials.cpp
+
 dbl_convolutions_host.o:
 	@-echo ">>> compiling dbl_convolutions_host ..."
 	$(gpp) -O3 -c -I$(CNV) $(CNV)/dbl_convolutions_host.cpp
@@ -53,20 +57,20 @@ test_dbl_polynomials.o:
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl_polynomials.cpp
 
 test_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
+                      random_polynomials.o \
                       dbl_convolutions_host.o dbl_monomials_host.o \
-                      dbl_monomials_kernels.o dbl_monomials_testers.o \
                       dbl_polynomials_host.o test_dbl_polynomials.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_polynomials test_dbl_polynomials.o \
                   random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
-                  dbl_monomials_kernels.o dbl_monomials_testers.o \
                   dbl_polynomials_host.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 clean:
 	/bin/rm -f -r test_dbl_polynomials.o test_dbl_polynomials
-	/bin/rm -f -r dbl_polynomials_host.o
+	/bin/rm -f -r random_polynomials.o dbl_polynomials_host.o
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o

@@ -6,7 +6,7 @@
 #include <ctime>
 #include "random_numbers.h"
 #include "random_monomials.h"
-#include "dbl_monomials_testers.h"
+#include "random_polynomials.h"
 #include "dbl_polynomials_host.h"
 
 using namespace std;
@@ -99,7 +99,7 @@ int main_dbl_test_polynomial
       cout << "Sum of all errors in double precision :" << endl;
       cout << "  on real data : " << realsum;
       if(realsum < tol)
-         cout << "  pass," << endl;
+         cout << "  pass." << endl;
       else
          cout << "  fail!" << endl;
 
@@ -113,11 +113,6 @@ double test_dbl_real_polynomial
 {
    if(nbr < 1)
       return 0.0;
-   else if(nbr == 1) // one term is the test on one monomial
-   {
-      const int nvr = 1 + (rand() % (dim-1));
-      return test_dbl_real(dim,nvr,pwr,deg,verbose);
-   }
    else
    {
       double **input = new double*[dim]; // dim series of degree deg
@@ -142,36 +137,30 @@ double test_dbl_real_polynomial
          }
       }
       double *cst = new double[deg+1]; // constant coefficient series
-      for(int i=0; i<=deg; i++) cst[i] = random_double();
+      double **cff = new double*[nbr]; // coefficient series of terms
+      for(int i=0; i<nbr; i++) cff[i] = new double[deg+1];
+      int *nvr = new int[nbr]; // number of variables in each monomial
+
+      make_supports(dim,nbr,nvr); // define supports of polynomial
+
+      int **idx = new int*[nbr];  // indices of variables in monomials
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+      int **exp = new int*[nbr];  // exponents of the variables
+      for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
+
+      bool fail = make_real_polynomial(dim,nbr,pwr,deg,nvr,idx,exp,cst,cff);
 
       if(verbose > 0)
       {
          cout << "Coefficient series of the constant term :" << endl;
          for(int j=0; j<=deg; j++) cout << cst[j] << endl;
-      }
-      double **cff = new double*[nbr-1]; // coefficient series of terms
-      for(int i=0; i<nbr-1; i++) cff[i] = new double[deg+1];
-      int *nvr = new int[nbr-1]; // number of variables in each monomial
-      for(int i=0; i<nbr-1; i++) nvr[i] = 1 + (rand() % (dim-1));
-      int **idx = new int*[nbr-1];  // indices of variables in monomials
-      for(int i=0; i<nbr-1; i++) idx[i] = new int[nvr[i]];
-      int **exp = new int*[nbr-1];  // exponents of the variables
-      for(int i=0; i<nbr-1; i++) exp[i] = new int[nvr[i]];
 
-      bool fail = false;
-
-      for(int i=0; i<nbr-1; i++)
-      {
-         fail = make_real_monomial(dim,nvr[i],pwr,deg,idx[i],exp[i],cff[i]);
-         if(fail) return 1.0;
-
-         if(verbose > 0)
+         for(int i=0; i<nbr; i++)
          {
             cout << "Generated random monomial " << i << " :" << endl;
             cout << "   the indices :";
             for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
             cout << endl;
-
             cout << " the exponents :";
             for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
             cout << endl;
@@ -179,6 +168,7 @@ double test_dbl_real_polynomial
             for(int j=0; j<=deg; j++) cout << " " << cff[i][j] << endl;
          }
       }
+
       CPU_dbl_poly_evaldiff(dim,nbr,deg,nvr,idx,cst,cff,input,output_h);
 
       if(verbose > 0)

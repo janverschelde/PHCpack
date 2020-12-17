@@ -15,13 +15,9 @@ void CPU_dbl_poly_speel
  *   of a polynomial at power series truncated to the same degree,
  *   for real coefficients in double precision.
  *
- * REQUIRED : nbr > 1.
- *
  * ON ENTRY :
  *   dim      total number of variables;
- *   nbr      number of monomials, including the constant term,
- *            if nbr == 1, then there is no constant term,
- *            only one monomial multiplied with a coefficient series;
+ *   nbr      number of monomials, excluding the constant term;
  *   deg      truncation degree of the series;
  *   nvr      nvr[k] holds the number of variables in monomial k;
  *   idx      idx[k] has as many indices as the value of nvr[k],
@@ -55,9 +51,7 @@ void CPU_dbl_poly_evaldiff
  *
  * ON ENTRY :
  *   dim      total number of variables;
- *   nbr      number of monomials, including the constant term,
- *            if nbr == 1, then there is no constant term,
- *            only one monomial multiplied with a coefficient series;
+ *   nbr      number of monomials, excluding the constant term;
  *   deg      truncation degree of the series;
  *   nvr      nvr[k] holds the number of variables in monomial k;
  *   idx      idx[k] has as many indices as the value of nvr[k],
