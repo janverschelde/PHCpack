@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <ctime>
 #include "random_polynomials.h"
 
 using namespace std;
