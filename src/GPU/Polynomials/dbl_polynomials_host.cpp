@@ -6,6 +6,10 @@
 #include "dbl_monomials_host.h"
 #include "dbl_polynomials_host.h"
 
+#include <iostream>
+
+using namespace std;
+
 void CPU_dbl_poly_speel
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double **cff, double **input, double **output,
@@ -15,6 +19,7 @@ void CPU_dbl_poly_speel
 
    for(int i=0; i<nbr; i++)
    {
+      cout << "processing monomial " << i << endl;
       if(nvr[i] == 1)
       {
          ix1 = idx[i][0];
@@ -31,16 +36,13 @@ void CPU_dbl_poly_speel
 
          CPU_dbl_product(deg,input[ix1],input[ix2],forward[0]);
          CPU_dbl_product(deg,forward[0],cff[i],forward[0]);
+         for(int j=0; j<=deg; j++) output[dim][j] += forward[0][j];
 
-         CPU_dbl_product(deg,cff[i],input[ix1],cross[0]);
-         CPU_dbl_product(deg,cff[i],input[ix2],backward[0]);
+         CPU_dbl_product(deg,cff[i],input[ix1],forward[0]);
+         for(int j=0; j<=deg; j++) output[ix2][j] += forward[i][j];
 
-         for(int j=0; j<=deg; j++)
-         {
-            output[dim][j] += forward[0][j];
-            output[ix1][j] += backward[i][j];
-            output[ix2][j] += cross[i][j];
-         }
+         CPU_dbl_product(deg,cff[i],input[ix2],forward[0]);
+         for(int j=0; j<=deg; j++) output[ix1][j] += forward[i][j];
       }
       else if(nvr[i] > 2)
       {
