@@ -2,6 +2,7 @@ Thu 17 Dec 2020 : new random_polynomials, updated dbl_polynomials_host and
   test_dbl_polynomials, so polynomials with one term are no longer special.
   Bug fix in dbl_polynomials_host.cpp for 2 variables in low dimension.
   Added verbose option to dbl_polynomials_host and test_dbl_polynomials.
+  New test_convolution_jobs.cpp to collect all convolution jobs.
 
 Wed 16 Dec 2020 : added test_dbl_polynomials.cpp, makefile and makefile_unix.
   Added makefile_windows.  New dbl_polynomials_host.h and .cpp.

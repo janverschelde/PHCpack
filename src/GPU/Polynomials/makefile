@@ -9,6 +9,9 @@ MAKEFILE = makefile_unix
 test_dbl_polynomials:
 	make -f $(MAKEFILE) test_dbl_polynomials
 
+test_convolution_jobs:
+	make -f $(MAKEFILE) test_convolution_jobs
+
 clean:
 	make -f $(MAKEFILE) clean
 
