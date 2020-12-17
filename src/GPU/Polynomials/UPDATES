@@ -1,2 +1,2 @@
 Wed 16 Dec 2020 : added test_dbl_polynomials.cpp, makefile and makefile_unix.
-  Added makefile_windows.
+  Added makefile_windows.  New dbl_polynomials_host.h and .cpp.

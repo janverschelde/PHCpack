@@ -7,6 +7,7 @@
 #include "random_numbers.h"
 #include "random_monomials.h"
 #include "dbl_monomials_testers.h"
+#include "dbl_polynomials_host.h"
 
 using namespace std;
 
@@ -177,6 +178,13 @@ double test_dbl_real_polynomial
             cout << " coefficient series :" << endl;
             for(int j=0; j<=deg; j++) cout << " " << cff[i][j] << endl;
          }
+      }
+      CPU_dbl_poly_evaldiff(dim,nbr,deg,nvr,idx,cst,cff,input,output_h);
+
+      if(verbose > 0)
+      {
+         cout << "The value of the polynomial :" << endl;
+         for(int i=0; i<=deg; i++) cout << output_h[dim][i] << endl;
       }
       return 0.0;
    }
