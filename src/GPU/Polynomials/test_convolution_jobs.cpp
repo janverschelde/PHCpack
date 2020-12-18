@@ -8,7 +8,8 @@
 
 using namespace std;
 
-void write_monomial_convolutions ( int nvr, int *idx, int monidx, int *cnt );
+void write_monomial_convolutions
+ ( int nvr, int *idx, int monidx, int *cnt, int *depth );
 /*
  * DESCRIPTION :
  *   Writes the convolution jobs to evaluate and differentiate one monomial.
@@ -17,12 +18,15 @@ void write_monomial_convolutions ( int nvr, int *idx, int monidx, int *cnt );
  *   nvr     number of variables in the monomial;
  *   idx     array of nvr indices to the participating variables;
  *   monidx  index of the monomial;
- *   cnt     current number of convolution jobs.
+ *   cnt     current number of convolution jobs;
+ *   depth   current depth of the layers.
  *
  * ON RETURN :
- *   cnt     updated number of convolution jobs. */
+ *   cnt     updated number of convolution jobs;
+ *   depth   updated depth of the layers. */
 
-void write_polynomial_convolutions ( int nbr, int *nvr, int **idx );
+void write_polynomial_convolutions
+ ( int nbr, int *nvr, int **idx, int *cnt, int *depth );
 /*
  * DESCRIPTION :
  *   Writes the convolution jobs to evaluate and differentiate a polynomial.
@@ -30,7 +34,11 @@ void write_polynomial_convolutions ( int nbr, int *nvr, int **idx );
  * ON ENTRY :
  *   nbr     number of monomials in the polynomial;
  *   nvr     array of nbr counts on the number of variables in monomials;
- *   idx     array of nbr indices to the participating variables. */
+ *   idx     array of nbr indices to the participating variables.
+ *
+ * ON RETURN :
+ *   cnt     number of convolution jobs;
+ *   depth   equals the number of layers minus one. */
 
 int main ( void )
 {
@@ -56,8 +64,8 @@ int main ( void )
       srand(timevalue);
       seedused = timevalue;
    }
-   const int deg=0;
-   const int pwr=1;
+   const int deg = 0;
+   const int pwr = 1;
 
    double *cst = new double[deg+1]; // constant coefficient series
    double **cff = new double*[nbr]; // coefficient series of terms
@@ -78,19 +86,30 @@ int main ( void )
       cout << "Indices of monomial " << i << " :";
       for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j]; cout << endl;
    }
-   write_polynomial_convolutions(nbr,nvr,idx);
+   int cnt = 0;
+   int depth = 0;
+
+   write_polynomial_convolutions(nbr,nvr,idx,&cnt,&depth);
+
+   cout << "number of convolution jobs : " << cnt << endl;
+   cout << "number of layers : " << depth + 1 << endl;
+
+   cout << "seed used : " << seedused << endl;
 
    return 0;
 }
 
-void write_monomial_convolutions ( int nvr, int *idx, int monidx, int *cnt )
+void write_monomial_convolutions
+ ( int nvr, int *idx, int monidx, int *cnt, int *depth )
 {
    int ix1 = idx[0];
    int ix2;
+   int layer = 0; // determines the order of execution
 
    *cnt = *cnt + 1; cout << *cnt << " : ";
    cout << "monomial " << monidx << " : ";               // f[0] = cff*x[0]
-   cout << "cff * input[" << ix1 << "] to f[0]" << endl;
+   cout << "cff * input[" << ix1 << "] to f[0] : ";
+   cout << "layer " << layer++ << endl;
 
    for(int i=1; i<nvr; i++)
    {                                                  // f[i] = f[i-1]*x[i]
@@ -98,15 +117,19 @@ void write_monomial_convolutions ( int nvr, int *idx, int monidx, int *cnt )
       *cnt = *cnt + 1; cout << *cnt << " : ";
       cout << "monomial " << monidx << " : ";
       cout << "f[" << i-1 << "] * "
-           << "input[" << ix2 << "] to f[" << i << "]" << endl;
+           << "input[" << ix2 << "] to f[" << i << "] : ";
+      cout << "layer " << layer++ << endl;
    }
    if(nvr > 2)
    {
       ix1 = idx[nvr-1]; ix2 = idx[nvr-2];           // b[0] = x[n-1]*x[n-2]
+
+      layer = 0;                       // reset layer for backward products
       *cnt = *cnt + 1; cout << *cnt << " : ";
       cout << "monomial " << monidx << " : ";
       cout << "input[" << ix1 << "] * "
-           << "input[" << ix2 << "] to b[0]" << endl;
+           << "input[" << ix2 << "] to b[0] : ";
+      cout << "layer " << layer++ << endl;
 
       for(int i=1; i<nvr-2; i++)
       {                                           // b[i] = b[i-1]*x[n-2-i]
@@ -114,12 +137,14 @@ void write_monomial_convolutions ( int nvr, int *idx, int monidx, int *cnt )
          *cnt = *cnt + 1; cout << *cnt << " : ";
          cout << "monomial " << monidx << " : ";
          cout << "b[" << i-1 << "] * "
-              << "input[" << ix2 << "] to b[" << i << "]" << endl;
+              << "input[" << ix2 << "] to b[" << i << "] : ";
+         cout << "layer " << layer++ << endl;
       }
       *cnt = *cnt + 1; cout << *cnt << " : ";
       cout << "monomial " << monidx << " : ";        // b[n-3] = cff*b[n-3]
       cout << "b[" << nvr-3 << "] * cff to "
-           << "b[" << nvr-2 << "]" << endl;
+           << "b[" << nvr-2 << "] : ";
+      cout << "layer " << layer++ << endl;
       // host code uses cross[0] as work space,
       // kernels write to backward[nvr-2]
 
@@ -128,7 +153,8 @@ void write_monomial_convolutions ( int nvr, int *idx, int monidx, int *cnt )
          ix2 = idx[2];
          *cnt = *cnt + 1; cout << *cnt << " : ";
          cout << "monomial " << monidx << " : ";
-         cout << "f[0] * input[" << ix2 << "] to c[0]" << endl;
+         cout << "f[0] * input[" << ix2 << "] to c[0] : ";
+         cout << "layer " << layer++ << endl;
       }
       else
       {
@@ -138,21 +164,24 @@ void write_monomial_convolutions ( int nvr, int *idx, int monidx, int *cnt )
             *cnt = *cnt + 1; cout << *cnt << " : ";
             cout << "monomial " << monidx << " : ";
             cout << "f[" << i << "] * b[" << ix2
-                 << "] to c[" << i << "]" << endl;
+                 << "] to c[" << i << "] : ";
+            cout << "layer " << layer++ << endl;
          }
          ix2 = idx[nvr-1];                        // c[n-3] = f[n-3]*x[n-1]
          *cnt = *cnt + 1; cout << *cnt << " : ";
          cout << "monomial " << monidx << " : ";
          cout << "f[" << nvr-3 << "] * input[" << ix2
-              << "] to c[" << nvr-3 << "]" << endl;
+              << "] to c[" << nvr-3 << "] : ";
+         cout << "layer " << layer++ << endl;
       }
    }
+   if(layer > *depth) *depth = layer;
 }
 
-void write_polynomial_convolutions ( int nbr, int *nvr, int **idx )
+void write_polynomial_convolutions
+ ( int nbr, int *nvr, int **idx, int *cnt, int *depth )
 {
    int ix1,ix2;
-   int cnt=0;
 
    for(int i=0; i<nbr; i++)
    {
@@ -160,34 +189,41 @@ void write_polynomial_convolutions ( int nbr, int *nvr, int **idx )
       {
          ix1 = idx[i][0];
 
-         cnt = cnt + 1; cout << cnt << " : ";
+         *cnt = *cnt + 1; cout << *cnt << " : ";
          cout << "monomial " << i << " : ";
-         cout << "input[" << ix1 << "] * cff to f[0]" << endl;
+         cout << "input[" << ix1 << "] * cff to f[0] : ";
+         cout << "layer 0" << endl;
       }
       else if(nvr[i] == 2)
       {
          ix1 = idx[i][0]; ix2 = idx[i][1];
 
-         cnt = cnt + 1; cout << cnt << " : ";
+         *cnt = *cnt + 1; cout << *cnt << " : ";
          cout << "monomial " << i << " : ";
          cout << "input[" << ix1 << "] * "
-              << "input[" << ix2 << "] to f[0]" << endl;
+              << "input[" << ix2 << "] to f[0] : ";
+         cout << "layer 0" << endl;
 
-         cnt = cnt + 1; cout << cnt << " : ";
+         *cnt = *cnt + 1; cout << *cnt << " : ";
          cout << "monomial " << i << " : ";
-         cout << "f[0] * cff to f[0]" << endl;
+         cout << "f[0] * cff to f[0] : ";
+         cout << "layer 1" << endl;
 
-         cnt = cnt + 1; cout << cnt << " : ";
+         *cnt = *cnt + 1; cout << *cnt << " : ";
          cout << "monomial " << i << " : ";
-         cout << "cff * " << "input[" << ix1 << "] to b[0]" << endl;
+         cout << "cff * " << "input[" << ix1 << "] to b[0] : ";
+         cout << "layer 0" << endl;
 
-         cnt = cnt + 1; cout << cnt << " : ";
+         *cnt = *cnt + 1; cout << *cnt << " : ";
          cout << "monomial " << i << " : ";
-         cout << "cff * " << "input[" << ix2 << "] to c[0]" << endl;
+         cout << "cff * " << "input[" << ix2 << "] to c[0] : ";
+         cout << "layer 0" << endl;
+
+         if(*depth < 1) *depth = 1;
       }
       else if(nvr[i] > 2)
       {
-         write_monomial_convolutions(nvr[i],idx[i],i,&cnt);
+         write_monomial_convolutions(nvr[i],idx[i],i,cnt,depth);
       }
    }
 }
