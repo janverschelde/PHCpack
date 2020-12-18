@@ -1,4 +1,5 @@
 Fri 18 Dec 2020 : extended test_convolution_jobs with layer counts.
+  Extended test_convolution_jobs with a frequency table of layer counts.
 
 Thu 17 Dec 2020 : new random_polynomials, updated dbl_polynomials_host and
   test_dbl_polynomials, so polynomials with one term are no longer special.
