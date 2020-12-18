@@ -218,7 +218,7 @@ void write_polynomial_convolutions
          cout << "layer 0" << endl;
          freq[0] = freq[0] + 1;
 
-         if(*depth < 1) *depth = 1;
+         if(*depth < 1) *depth = 1; // we have one layer
       }
       else if(nvr[i] == 2)
       {
@@ -226,26 +226,20 @@ void write_polynomial_convolutions
 
          *cnt = *cnt + 1; cout << *cnt << " : ";
          cout << "monomial " << i << " : ";
-         cout << "input[" << ix1 << "] * "
-              << "input[" << ix2 << "] to f[0] : ";
+         cout << "cff * input[" << ix1 << "] to c[0] : ";
          cout << "layer 0" << endl; freq[0] = freq[0] + 1;
 
          *cnt = *cnt + 1; cout << *cnt << " : ";
          cout << "monomial " << i << " : ";
-         cout << "f[0] * cff to f[0] : ";
+         cout << "cff * input[" << ix2 << "] to b[0] : ";
+         cout << "layer 0" << endl; freq[0] = freq[0] + 1;
+
+         *cnt = *cnt + 1; cout << *cnt << " : ";
+         cout << "monomial " << i << " : ";
+         cout << "cff * " << "input[" << ix2 << "] to f[0] : ";
          cout << "layer 1" << endl; freq[1] = freq[1] + 1;
 
-         *cnt = *cnt + 1; cout << *cnt << " : ";
-         cout << "monomial " << i << " : ";
-         cout << "cff * " << "input[" << ix1 << "] to b[0] : ";
-         cout << "layer 0" << endl; freq[0] = freq[0] + 1;
-
-         *cnt = *cnt + 1; cout << *cnt << " : ";
-         cout << "monomial " << i << " : ";
-         cout << "cff * " << "input[" << ix2 << "] to c[0] : ";
-         cout << "layer 0" << endl; freq[0] = freq[0] + 1;
-
-         if(*depth < 2) *depth = 2;
+         if(*depth < 2) *depth = 2; // we have two layers
       }
       else if(nvr[i] > 2)
       {

@@ -34,26 +34,23 @@ void CPU_dbl_poly_speel
       {
          ix1 = idx[i][0]; ix2 = idx[i][1];
 
-         CPU_dbl_product(deg,input[ix1],input[ix2],forward[0]);
+         CPU_dbl_product(deg,cff[i],input[ix1],cross[0]);
+         for(int j=0; j<=deg; j++) output[ix2][j] += cross[0][j];
          if(verbose) cout << "monomial " << i << " : ";
-         if(verbose) cout << "input[" << ix1 << "] * "
+         if(verbose) cout << "cff * "
+                          << "input[" << ix1 << "] to c[0]" << endl;
+
+         CPU_dbl_product(deg,cff[i],input[ix2],backward[0]);
+         if(verbose) cout << "monomial " << i << " : ";
+         if(verbose) cout << "cff * "
+                          << "input[" << ix2 << "] to b[0]" << endl;
+         for(int j=0; j<=deg; j++) output[ix1][j] += backward[0][j];
+
+         CPU_dbl_product(deg,cross[0],input[ix2],forward[0]);
+         if(verbose) cout << "monomial " << i << " : ";
+         if(verbose) cout << "c[0] * "
                           << "input[" << ix2 << "] to f[0]" << endl;
-         CPU_dbl_product(deg,forward[0],cff[i],forward[0]);
-         if(verbose) cout << "monomial " << i << " : ";
-         if(verbose) cout << "f[0] * cff to f[0]" << endl;
          for(int j=0; j<=deg; j++) output[dim][j] += forward[0][j];
-
-         CPU_dbl_product(deg,cff[i],input[ix1],forward[0]);
-         if(verbose) cout << "monomial " << i << " : ";
-         if(verbose) cout << "cff * "
-                          << "input[" << ix1 << "] to b[0]" << endl;
-         for(int j=0; j<=deg; j++) output[ix2][j] += forward[i][j];
-
-         CPU_dbl_product(deg,cff[i],input[ix2],forward[0]);
-         if(verbose) cout << "monomial " << i << " : ";
-         if(verbose) cout << "cff * "
-                          << "input[" << ix2 << "] to c[0]" << endl;
-         for(int j=0; j<=deg; j++) output[ix1][j] += forward[i][j];
       }
       else if(nvr[i] > 2)
       {
@@ -89,16 +86,15 @@ void CPU_dbl_poly_evaldiff
    double *cst, double **cff, double **input, double **output, bool verbose )
 {
    double **forward = new double*[dim];
-   double **backward = new double*[dim-2];
-   double **cross = new double*[dim-2];
+   double **backward = new double*[dim-1]; // in case dim = 2
+   double **cross = new double*[dim-1];    // in case dim = 2
 
-   for(int i=0; i<dim-2; i++)
+   for(int i=0; i<dim-1; i++)
    {
       forward[i] = new double[deg+1];
       backward[i] = new double[deg+1];
       cross[i] = new double[deg+1];
    }
-   forward[dim-2] = new double[deg+1];
    forward[dim-1] = new double[deg+1];
 
    for(int i=0; i<=deg; i++) output[dim][i] = cst[i];
@@ -108,10 +104,10 @@ void CPU_dbl_poly_evaldiff
    CPU_dbl_poly_speel
       (dim,nbr,deg,nvr,idx,cff,input,output,forward,backward,cross,verbose);
 
-   for(int i=0; i<dim-2; i++)
+   for(int i=0; i<dim-1; i++)
    {
       free(forward[i]); free(backward[i]); free(cross[i]);
    }
-   free(forward[dim-2]); free(forward[dim-1]);
+   free(forward[dim-1]);
    free(forward); free(backward); free(cross);
 }
