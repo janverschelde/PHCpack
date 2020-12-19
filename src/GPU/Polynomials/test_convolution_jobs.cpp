@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 #include "random_polynomials.h"
+#include "convolution_jobs.h"
 
 using namespace std;
 
@@ -55,6 +56,9 @@ int main ( void )
    cout << "Give the dimension : ";
    int dim;  cin >> dim;
 
+   ConvolutionJobs jobs(dim);
+   cout << "-> the dimension : " << jobs.get_dimension() << endl;
+
    cout << "Give the number of terms : ";
    int nbr; cin >> nbr;
 
@@ -93,6 +97,7 @@ int main ( void )
       cout << "Indices of monomial " << i << " :";
       for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j]; cout << endl;
    }
+/*
    int cnt = 0;
    int depth = 0;
    int maxdepth = 2*dim-2;
@@ -106,6 +111,15 @@ int main ( void )
    cout << "frequency of layer counts :" << endl;
    for(int i=0; i<depth; i++)
       cout << i << " : " << freqlaycnt[i] << endl;
+ */
+
+   jobs.make(nbr,nvr,idx,true);
+
+   cout << "number of convolution jobs : " << jobs.get_count() << endl;
+   cout << "number of layers : " << jobs.get_depth() << endl;
+   cout << "frequency of layer counts :" << endl;
+   for(int i=0; i<jobs.get_depth(); i++)
+      cout << i << " : " << jobs.get_layer_count(i) << endl;
 
    cout << "seed used : " << seedused << endl;
 

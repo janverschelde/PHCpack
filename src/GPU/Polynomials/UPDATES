@@ -1,3 +1,6 @@
+Sat 19 Dec 2020 : convolution_jobs.h and convolution_jobs.cpp define a class
+  to setup the layers of convolution jobs, tested by test_convolution_jobs.
+
 Fri 18 Dec 2020 : extended test_convolution_jobs with layer counts.
   Extended test_convolution_jobs with a frequency table of layer counts.
   Improved the 2-variable case in dbl_polynomials_host.cpp and adjusted
