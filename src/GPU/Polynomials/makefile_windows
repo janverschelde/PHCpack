@@ -94,6 +94,12 @@ test_dbl_polynomials.obj:
                  /I$(CUDASDK)/include \
                  /Fo: test_dbl_polynomials.obj /EHsc
 
+convolution_jobs.obj:
+	@-echo ">>> compiling convolution_jobs ..."
+	$(CL)\cl /c convolution_jobs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: convolution_jobs.obj /EHsc
+
 test_convolution_jobs.obj:
 	@-echo ">>> compiling test_convolution_jobs ..."
 	$(CL)\cl /c test_convolution_jobs.cpp \
@@ -113,11 +119,12 @@ test_dbl_polynomials: random_numbers.obj random_series.obj \
 
 test_convolution_jobs: random_numbers.obj random_series.obj \
 	               random_monomials.obj random_polynomials.obj \
-                       test_convolution_jobs.obj 
+                       convolution_jobs.obj test_convolution_jobs.obj 
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_convolution_jobs.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
-              random_polynomials.obj test_convolution_jobs.obj
+              random_polynomials.obj convolution_jobs.obj \
+              test_convolution_jobs.obj
 
 clean:
 	del *~
@@ -125,6 +132,7 @@ clean:
 	del test_dbl_polynomials.exp test_dbl_polynomials.lib
 	del dbl_polynomials_host.obj random_polynomials.obj
 	del test_convolution_jobs.exe test_convolution_jobs.lib
+	del convolution_jobs.obj
 	del test_convolution_jobs.exp test_convolution_jobs.obj
 
 cleanall: clean
