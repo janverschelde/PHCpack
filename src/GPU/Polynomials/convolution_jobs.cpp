@@ -48,6 +48,10 @@ void ConvolutionJobs::make_monomial
       }
       layer = layer + 1;
    }
+   // The layer is always incremented after writing,
+   // so its value equals the numbers of layers.
+   if(layer > laydepth) laydepth = layer;
+
    if(nvr > 2)
    {
       ix1 = idx[nvr-1]; ix2 = idx[nvr-2];           // b[0] = x[n-1]*x[n-2]
@@ -88,7 +92,7 @@ void ConvolutionJobs::make_monomial
       if(verbose)
       {
          cout << jobcount << " : ";
-         cout << "monomial " << monidx << " : ";      // b[n-3] = cff*b[n-3]
+         cout << "monomial " << monidx << " : ";      // b[n-2] = b[n-3]*cff
          cout << "b[" << nvr-3 << "] * cff to "
               << "b[" << nvr-2 << "] : ";
          cout << "layer " << layer << endl;
@@ -101,6 +105,7 @@ void ConvolutionJobs::make_monomial
       {                                                 // c[0] = f[0]*x[2]
          ix2 = idx[2];
 
+         layer = 1;
          jobcount = jobcount + 1; freqlaycnt[layer] = freqlaycnt[layer] + 1;
 
          if(verbose)
@@ -110,7 +115,6 @@ void ConvolutionJobs::make_monomial
             cout << "f[0] * input[" << ix2 << "] to c[0] : ";
             cout << "layer " << layer << endl;
          }
-         layer = layer + 1;
       }
       else
       {
@@ -119,6 +123,8 @@ void ConvolutionJobs::make_monomial
             ix2 = nvr-4-i;
 
             jobcount = jobcount + 1;
+            // layer = max(i,n-4-i) + 1;
+            layer = (i > nvr-4-i) ? i+1 : nvr-4-i+1;
             freqlaycnt[layer] = freqlaycnt[layer] + 1;
 
             if(verbose)
@@ -129,34 +135,29 @@ void ConvolutionJobs::make_monomial
                     << "] to c[" << i << "] : ";
                cout << "layer " << layer << endl;
             }
-            layer = layer + 1;
          }
          ix2 = idx[nvr-1];                        // c[n-3] = f[n-3]*x[n-1]
 
-         jobcount = jobcount + 1; freqlaycnt[layer] = freqlaycnt[layer] + 1;
+         jobcount = jobcount + 1;
+         layer = nvr-2;
+         freqlaycnt[layer] = freqlaycnt[layer] + 1;
 
          if(verbose)
          {
             cout << jobcount << " : ";
             cout << "monomial " << monidx << " : ";
             cout << "f[" << nvr-3 << "] * input[" << ix2
-                 << "] to c[" << nvr-3 << "] : ";
+                 << "] to c[" << nvr-1 << "] : ";
             cout << "layer " << layer << endl;
          }
-         layer = layer + 1;
       }
    }
-   // The layer is always incremented after writing,
-   // so its value equals the numbers of layers.
-   if(layer > laydepth) laydepth = layer;
 }
 
 void ConvolutionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
 {
-   int maxdepth = 2*dimension-2;
-
-   freqlaycnt = new int[maxdepth];
-   for(int i=0; i<maxdepth; i++) freqlaycnt[i] = 0;
+   freqlaycnt = new int[dimension];
+   for(int i=0; i<dimension; i++) freqlaycnt[i] = 0;
 
    int ix1,ix2;
 
