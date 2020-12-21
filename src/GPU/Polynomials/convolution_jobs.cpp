@@ -104,8 +104,8 @@ void ConvolutionJobs::make_monomial
                  << "input[" << ix2 << "] to b[" << i << "] : ";
             cout << "layer " << layer << endl;
          }
+         layer = layer + 1;
       }
-      layer = layer + 1;
 
       jobcount = jobcount + 1; freqlaycnt[layer] = freqlaycnt[layer] + 1;
       {
