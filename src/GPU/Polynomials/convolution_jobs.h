@@ -4,6 +4,11 @@
 #ifndef __convolution_jobs_h__
 #define __convolution_jobs_h__
 
+#include <vector>
+#include "convolution_job.h"
+
+using namespace std;
+
 class ConvolutionJobs
 {
    public:
@@ -60,6 +65,7 @@ class ConvolutionJobs
       int jobcount;
       int laydepth;
       int *freqlaycnt;
+      vector< vector<ConvolutionJob> > jobs;
 
       void make_monomial ( int nvr, int *idx, int monidx, bool verbose );
       /*

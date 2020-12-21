@@ -56,6 +56,10 @@ test_dbl_polynomials.o:
 	@-echo ">>> compiling test_dbl_polynomials ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl_polynomials.cpp
 
+convolution_job.o:
+	@-echo ">>> compiling convolution_job ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) convolution_job.cpp
+
 convolution_jobs.o:
 	@-echo ">>> compiling convolution_jobs ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) convolution_jobs.cpp
@@ -77,17 +81,17 @@ test_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 test_convolution_jobs: random_numbers.o random_series.o random_monomials.o \
-                       random_polynomials.o convolution_jobs.o \
-                       test_convolution_jobs.o
+                       random_polynomials.o convolution_job.o \
+                       convolution_jobs.o test_convolution_jobs.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_convolution_jobs test_convolution_jobs.o \
                   random_numbers.o random_series.o random_monomials.o \
-                  random_polynomials.o convolution_jobs.o
+                  random_polynomials.o convolution_job.o convolution_jobs.o
 
 clean:
 	/bin/rm -f -r test_dbl_polynomials.o test_dbl_polynomials
 	/bin/rm -f -r random_polynomials.o dbl_polynomials_host.o
-	/bin/rm -f -r convolution_jobs.o
+	/bin/rm -f -r convolution_job.o convolution_jobs.o
 	/bin/rm -f -r test_convolution_jobs test_convolution_jobs.o
 
 cleanall: clean

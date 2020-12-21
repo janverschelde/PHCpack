@@ -22,7 +22,11 @@ void ConvolutionJobs::make_monomial
    int layer = 0; // determines the order of execution
 
    jobcount = jobcount + 1; freqlaycnt[layer] = freqlaycnt[layer] + 1;
-
+   {
+      ConvolutionJob job(monidx,-1,-1,0,ix1,1,0);
+      if(verbose) cout << job << endl;
+      jobs[layer].push_back(job);
+   }
    if(verbose)
    {
       cout << jobcount << " : ";
@@ -37,7 +41,11 @@ void ConvolutionJobs::make_monomial
       ix2 = idx[i];
 
       jobcount = jobcount + 1; freqlaycnt[layer] = freqlaycnt[layer] + 1;
-
+      {
+         ConvolutionJob job(monidx,1,i-1,0,ix1,1,i);
+         if(verbose) cout << job << endl;
+         jobs[layer].push_back(job);
+      }
       if(verbose)
       {
          cout << jobcount << " : ";
@@ -59,7 +67,11 @@ void ConvolutionJobs::make_monomial
       layer = 0;                       // reset layer for backward products
 
       jobcount = jobcount + 1; freqlaycnt[layer] = freqlaycnt[layer] + 1;
-
+      {
+         ConvolutionJob job(monidx,0,ix1,0,ix2,2,0);
+         if(verbose) cout << job << endl;
+         jobs[layer].push_back(job);
+      }
       if(verbose)
       {
          cout << jobcount << " : ";
@@ -75,7 +87,11 @@ void ConvolutionJobs::make_monomial
          ix2 = idx[nvr-2-i];
 
          jobcount = jobcount + 1; freqlaycnt[layer] = freqlaycnt[layer] + 1;
-
+         {
+            ConvolutionJob job(monidx,2,i-1,0,ix2,2,i);
+            if(verbose) cout << job << endl;
+            jobs[layer].push_back(job);
+         }
          if(verbose)
          {
             cout << jobcount << " : ";
@@ -88,7 +104,11 @@ void ConvolutionJobs::make_monomial
       layer = layer + 1;
 
       jobcount = jobcount + 1; freqlaycnt[layer] = freqlaycnt[layer] + 1;
-
+      {
+         ConvolutionJob job(monidx,2,nvr-3,-1,-1,2,nvr-2);
+         if(verbose) cout << job << endl;
+         jobs[layer].push_back(job);
+      }
       if(verbose)
       {
          cout << jobcount << " : ";
@@ -107,7 +127,11 @@ void ConvolutionJobs::make_monomial
 
          layer = 1;
          jobcount = jobcount + 1; freqlaycnt[layer] = freqlaycnt[layer] + 1;
-
+         {
+            ConvolutionJob job(monidx,1,0,0,ix2,3,0);
+            if(verbose) cout << job << endl;
+            jobs[layer].push_back(job);
+         }
          if(verbose)
          {
             cout << jobcount << " : ";
@@ -126,7 +150,11 @@ void ConvolutionJobs::make_monomial
             // layer = max(i,n-4-i) + 1;
             layer = (i > nvr-4-i) ? i+1 : nvr-4-i+1;
             freqlaycnt[layer] = freqlaycnt[layer] + 1;
-
+            {
+               ConvolutionJob job(monidx,1,i,2,ix2,3,i);
+               if(verbose) cout << job << endl;
+               jobs[layer].push_back(job);
+            }
             if(verbose)
             {
                cout << jobcount << " : ";
@@ -141,13 +169,17 @@ void ConvolutionJobs::make_monomial
          jobcount = jobcount + 1;
          layer = nvr-2;
          freqlaycnt[layer] = freqlaycnt[layer] + 1;
-
+         {
+            ConvolutionJob job(monidx,1,nvr-3,0,ix2,3,nvr-3);
+            if(verbose) cout << job << endl;
+            jobs[layer].push_back(job);
+         }
          if(verbose)
          {
             cout << jobcount << " : ";
             cout << "monomial " << monidx << " : ";
             cout << "f[" << nvr-3 << "] * input[" << ix2
-                 << "] to c[" << nvr-1 << "] : ";
+                 << "] to c[" << nvr-3 << "] : ";
             cout << "layer " << layer << endl;
          }
       }
@@ -159,17 +191,27 @@ void ConvolutionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
    freqlaycnt = new int[dimension];
    for(int i=0; i<dimension; i++) freqlaycnt[i] = 0;
 
+   for(int i=0; i<dimension; i++)
+   {
+      vector<ConvolutionJob> jobvec;
+      jobs.push_back(jobvec);
+   }
+
    int ix1,ix2;
 
    for(int i=0; i<nbr; i++)
    {
       if(nvr[i] == 1)
       {
+         ix1 = idx[i][0];
+
          jobcount = jobcount + 1; freqlaycnt[0] = freqlaycnt[0] + 1;
+         ConvolutionJob job(i,0,ix1,-1,-1,1,0);
+         if(verbose) cout << job << endl;
+         jobs[0].push_back(job);
 
          if(verbose)
          {
-            ix1 = idx[i][0];
             cout << jobcount << " : ";
             cout << "monomial " << i << " : ";
             cout << "input[" << ix1 << "] * cff to f[0] : ";
@@ -182,6 +224,9 @@ void ConvolutionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
          ix1 = idx[i][0]; ix2 = idx[i][1];
 
          jobcount = jobcount + 1; freqlaycnt[0] = freqlaycnt[0] + 1;
+         ConvolutionJob job1(i,-1,-1,0,ix1,3,0);
+         if(verbose) cout << job1 << endl;
+         jobs[0].push_back(job1);
 
          if(verbose)
          {
@@ -191,6 +236,9 @@ void ConvolutionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
             cout << "layer 0" << endl;
          }
          jobcount = jobcount + 1; freqlaycnt[0] = freqlaycnt[0] + 1;
+         ConvolutionJob job2(i,-1,-1,0,ix2,2,0);
+         if(verbose) cout << job2 << endl;
+         jobs[0].push_back(job2);
 
          if(verbose)
          {
@@ -200,12 +248,15 @@ void ConvolutionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
             cout << "layer 0" << endl;
          }
          jobcount = jobcount + 1; freqlaycnt[1] = freqlaycnt[1] + 1;
+         ConvolutionJob job3(i,3,0,0,ix2,1,0);
+         if(verbose) cout << job3 << endl;
+         jobs[1].push_back(job3);
 
          if(verbose)
          {
             cout << jobcount << " : ";
             cout << "monomial " << i << " : ";
-            cout << "cff * " << "input[" << ix2 << "] to f[0] : ";
+            cout << "c[0] * " << "input[" << ix2 << "] to f[0] : ";
             cout << "layer 1" << endl;
          }
          if(laydepth < 2) laydepth = 2; // we have two layers
@@ -229,7 +280,7 @@ int ConvolutionJobs::get_count ( void ) const
 
 int ConvolutionJobs::get_layer_count ( int k ) const
 {
-   if(k >= 2*dimension - 2)
+   if(k >= dimension)
       return 0;
    else
       return freqlaycnt[k];
