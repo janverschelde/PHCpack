@@ -35,24 +35,23 @@ class ConvolutionJobs
        *           if false, then the constructor remains silent. */
 
       int get_dimension ( void ) const;
-      /*
-       * DESCRIPTION :
-       *   Returns the dimension. */
+      // Returns the dimension.
 
       int get_count ( void ) const;
-      /*
-       * DESCRIPTION :
-       *   Returns the number of convolution jobs. */
+      // Returns the number of convolution jobs.
 
       int get_layer_count ( int k ) const;
-      /*
-       * DESCRIPTION :
-       *   Returns the number of jobs in layer k. */
+      // Returns the number of jobs in layer k.
 
       int get_depth ( void ) const;
+      // Returns the number of layers of convolution jobs.
+
+      ConvolutionJob get_job ( int k, int i ) const;
       /*
        * DESCRIPTION :
-       *   Returns the number of layers of convolution jobs. */
+       *   Returns the i-th convolution job at layer k.
+       *
+       * REQUIRED : k < get_depth() and i < get_layer_count(k). */
 
       ~ConvolutionJobs ( void );
       /*

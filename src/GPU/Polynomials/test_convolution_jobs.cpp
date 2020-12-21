@@ -70,6 +70,14 @@ int main ( void )
       checksum = checksum + jobs.get_layer_count(i); 
    }
    cout << "layer count sum : " << checksum << endl;
+
+   for(int k=0; k<jobs.get_depth(); k++)
+   {
+      cout << "jobs at layer " << k << " :" << endl;
+      for(int i=0; i<jobs.get_layer_count(k); i++)
+         cout << jobs.get_job(k,i) << endl;
+   }
+
    cout << "seed used : " << seedused << endl;
 
    return 0;

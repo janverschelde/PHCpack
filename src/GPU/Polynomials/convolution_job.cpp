@@ -60,7 +60,7 @@ std::ostream& operator<< ( std::ostream& os, const ConvolutionJob& job )
    if(job.inp1tp == 0) os << "input[" << job.inp1ix << "] * ";
    if(job.inp1tp == 1) os << "f[" << job.inp1ix << "] * ";
    if(job.inp1tp == 2) os << "b[" << job.inp1ix << "] * ";
-   if(job.inp2tp == 3) os << "c[" << job.inp1ix << "] * ";
+   if(job.inp1tp == 3) os << "c[" << job.inp1ix << "] * ";
    if(job.inp2tp == -1) os << "cff to ";
    if(job.inp2tp == 0) os << "input[" << job.inp2ix << "] to ";
    if(job.inp2tp == 1) os << "f[" << job.inp2ix << "] to ";
