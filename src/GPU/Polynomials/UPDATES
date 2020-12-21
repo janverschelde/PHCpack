@@ -2,6 +2,7 @@ Sun 20 Dec 2020 : updated the layer count for the cross products in
   convolution_jobs.cpp, removed functions from test_convolution_jobs.cpp.
   Added convolution_job.h and convolution_job.cpp to define the class
   to represent one convolution job.  Adjusted convolution_jobs.h and *.cpp.
+  Updated makefile_windows, added return os statement in convolution_job.cpp.
 
 Sat 19 Dec 2020 : convolution_jobs.h and convolution_jobs.cpp define a class
   to setup the layers of convolution jobs, tested by test_convolution_jobs.

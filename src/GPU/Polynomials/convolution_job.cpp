@@ -56,23 +56,19 @@ int ConvolutionJob::get_output_index ( void ) const
 std::ostream& operator<< ( std::ostream& os, const ConvolutionJob& job )
 {
    os << "monomial " << job.monidx << " : ";
-
-   os << job.inp1tp << " " << job.inp1ix << " "
-      << job.inp2tp << " " << job.inp2ix << " "
-      << job.outptp << " " << job.outidx;
-/*
    if(job.inp1tp == -1) os << "cff * ";
-   if(job.inp1tp == 0) os << "input[" << job.inp1ix << "] *";
-   if(job.inp1tp == 1) os << "f[" << job.inp1ix << "] *";
-   if(job.inp1tp == 2) os << "b[" << job.inp1ix << "] *";
-   if(job.inp2tp == 3) os << "c[" << job.inp1ix << "] *";
-   if(job.inp2tp == -1) os << "* cff to ";
-   if(job.inp2tp == 0) os << "* input[" << job.inp2ix << "] to ";
-   if(job.inp2tp == 1) os << "* f[" << job.inp2ix << "] to ";
-   if(job.inp2tp == 2) os << "* b[" << job.inp2ix << "] to ";
-   if(job.inp2tp == 3) os << "* c[" << job.inp2ix << "] to ";
+   if(job.inp1tp == 0) os << "input[" << job.inp1ix << "] * ";
+   if(job.inp1tp == 1) os << "f[" << job.inp1ix << "] * ";
+   if(job.inp1tp == 2) os << "b[" << job.inp1ix << "] * ";
+   if(job.inp2tp == 3) os << "c[" << job.inp1ix << "] * ";
+   if(job.inp2tp == -1) os << "cff to ";
+   if(job.inp2tp == 0) os << "input[" << job.inp2ix << "] to ";
+   if(job.inp2tp == 1) os << "f[" << job.inp2ix << "] to ";
+   if(job.inp2tp == 2) os << "b[" << job.inp2ix << "] to ";
+   if(job.inp2tp == 3) os << "c[" << job.inp2ix << "] to ";
    if(job.outptp == 1) os << "f[" << job.outidx << "]";
    if(job.outptp == 2) os << "b[" << job.outidx << "]";
    if(job.outptp == 3) os << "c[" << job.outidx << "]";
-*/
+
+   return os;
 }
