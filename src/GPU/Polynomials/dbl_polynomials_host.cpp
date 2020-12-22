@@ -304,17 +304,29 @@ void CPU_dbl_poly_evaldiffjobs
                              // last backward has the first derivative
       int ixn = idx[k][ix1]; // index of the last variable in monomial k
 
-      for(int i=0; i<=deg; i++)
-      {
+      for(int i=0; i<=deg; i++) // value is last forward location
          output[dim][i] = output[dim][i] + forward[k][ix1][i];
-         if(ix1 == 0) // monomial has only one variable
-         {
+
+      if(ix1 == 0)           // monomial has only one variable
+      {
+         for(int i=0; i<=deg; i++)
             output[ix0][i] = output[ix0][i] + cff[k][i]; 
-         }
-         else if(ix2 >= 0) // first and last derivative
+      }
+      else if(ix2 >= 0)      // update first and last derivative
+      {
+         for(int i=0; i<=deg; i++)
          {
             output[ixn][i] = output[ixn][i] + forward[k][ix2][i];
             output[ix0][i] = output[ix0][i] + backward[k][ix2][i];
+         }
+         if(ix2 > 0)         // update all other derivatives
+         {
+            for(int j=1; j<ix1; j++) // j-th variable in monomial k
+            {
+               ix0 = idx[k][j];
+               for(int i=0; i<=deg; i++)
+                  output[ix0][i] = output[ix0][i] + cross[k][j-1][i];
+            }
          }
       }
    }
