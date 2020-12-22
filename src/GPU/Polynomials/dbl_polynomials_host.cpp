@@ -266,16 +266,21 @@ void CPU_dbl_poly_evaldiffjobs
 
    for(int k=0; k<nbr; k++)
    {
-      forward[k] = new double*[dim];
-      backward[k] = new double*[dim-1];
-      cross[k] = new double*[dim-1];
-      for(int i=0; i<dim-1; i++)
+      int nvrk = nvr[k]; // number of variables in monomial k
+
+      forward[k] = new double*[nvrk];
+      for(int i=0; i<nvrk; i++) forward[k][i] = new double[deg+1];
+
+      if(nvrk > 1)
       {
-         forward[k][i] = new double[deg+1];
-         backward[k][i] = new double[deg+1];
-         cross[k][i] = new double[deg+1];
+         backward[k] = new double*[nvrk-1];
+         for(int i=0; i<nvrk-1; i++) backward[k][i] = new double[deg+1];
       }
-      forward[k][dim-1] = new double[deg+1];
+      if(nvrk > 2)
+      {
+         cross[k] = new double*[nvrk-2];
+         for(int i=0; i<nvrk-2; i++) cross[k][i] = new double[deg+1];
+      }
    }
    for(int i=0; i<=deg; i++) output[dim][i] = cst[i];
    for(int i=0; i<dim; i++)
@@ -332,11 +337,11 @@ void CPU_dbl_poly_evaldiffjobs
    }
    for(int k=0; k<nbr; k++)
    {
-      for(int i=0; i<dim-1; i++)
-      {
-         free(forward[k][i]); free(backward[k][i]); free(cross[k][i]);
-      }
-      free(forward[k][dim-1]);
+      int nvrk = nvr[k];
+
+      for(int i=0; i<nvrk; i++) free(forward[k][i]);
+      if(nvrk > 1) for(int i=0; i<nvrk-1; i++) free(backward[k][i]);
+      if(nvrk > 2) for(int i=0; i<nvrk-2; i++) free(cross[k][i]);
    }
    free(forward); free(backward); free(cross);
 }
