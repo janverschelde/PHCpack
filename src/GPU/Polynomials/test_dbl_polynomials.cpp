@@ -195,6 +195,7 @@ double test_dbl_real_polynomial
          for(int i=0; i<jobs.get_layer_count(k); i++)
             cout << jobs.get_job(k,i) << endl;
       }
+      cout << endl;
 
       CPU_dbl_poly_evaldiff(dim,nbr,deg,nvr,idx,cst,cff,input,output1_h,vrb);
       if(vrb) cout << endl;
@@ -202,17 +203,47 @@ double test_dbl_real_polynomial
          (dim,nbr,deg,nvr,idx,cst,cff,input,output2_h,jobs,vrb);
 
       double sumerr = 0.0;
+      double err = 0.0;
 
-      if(verbose > 0)
+      if(verbose > 0) cout << "The value of the polynomial :" << endl;
+      for(int i=0; i<=deg; i++)
       {
-         cout << "The value of the polynomial :" << endl;
-         for(int i=0; i<=deg; i++)
+         if(verbose > 0)
          {
             cout << output1_h[dim][i] << endl;
             cout << output2_h[dim][i] << endl;
-            sumerr = sumerr + abs(output1_h[dim][i] - output2_h[dim][i]);
          }
+         err = err + abs(output1_h[dim][i] - output2_h[dim][i]);
       }
+      if(verbose > 0) cout << "error : " << err << endl;
+      sumerr = err;
+      if(verbose > 0) cout << "The first derivative :" << endl;
+      err = 0.0;
+      for(int i=0; i<=deg; i++)
+      {
+         if(verbose > 0)
+         {
+            cout << output1_h[0][i] << endl;
+            cout << output2_h[0][i] << endl;
+         }
+         err = err + abs(output1_h[0][i] - output2_h[0][i]);
+      }
+      if(verbose > 0) cout << "error : " << err << endl;
+      sumerr = sumerr + err;
+      if(verbose > 0) cout << "The last derivative :" << endl;
+      err = 0.0;
+      for(int i=0; i<=deg; i++)
+      {
+         if(verbose > 0)
+         {
+            cout << output1_h[dim-1][i] << endl;
+            cout << output2_h[dim-1][i] << endl;
+         }
+         err = err + abs(output1_h[dim-1][i] - output2_h[dim-1][i]);
+      }
+      if(verbose > 0) cout << "error : " << err << endl;
+      sumerr = sumerr + err;
+
       return sumerr;
    }
 }

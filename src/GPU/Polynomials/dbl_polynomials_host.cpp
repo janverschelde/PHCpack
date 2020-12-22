@@ -46,11 +46,11 @@ void CPU_dbl_poly_speel
                           << "input[" << ix2 << "] to b[0]" << endl;
          for(int j=0; j<=deg; j++) output[ix1][j] += backward[0][j];
 
-         CPU_dbl_product(deg,cross[0],input[ix2],forward[0]);
+         CPU_dbl_product(deg,cross[0],input[ix2],forward[1]);
          if(verbose) cout << "monomial " << i << " : ";
          if(verbose) cout << "c[0] * "
-                          << "input[" << ix2 << "] to f[0]" << endl;
-         for(int j=0; j<=deg; j++) output[dim][j] += forward[0][j];
+                          << "input[" << ix2 << "] to f[1]" << endl;
+         for(int j=0; j<=deg; j++) output[dim][j] += forward[1][j];
       }
       else if(nvr[i] > 2)
       {
@@ -296,11 +296,31 @@ void CPU_dbl_poly_evaldiffjobs
             forward[monidx],backward[monidx],cross[monidx],job,verbose);
       }
    }
-
    for(int k=0; k<nbr; k++)
    {
+      int ix0 = idx[k][0];   // first variable in monomial k
+      int ix1 = nvr[k]-1;    // last forward has the value
+      int ix2 = nvr[k]-2;    // next to last forward has last derivative
+      int ix3 = nvr[k]-3;    // last backward has derivative w.r.t x[0]
+      int ixn = idx[k][ix1]; // index of the last variable in monomial k
+
       for(int i=0; i<=deg; i++)
-         output[dim][i] = output[dim][i] + forward[k][nvr[k]-1][i];
+      {
+         output[dim][i] = output[dim][i] + forward[k][ix1][i];
+         if(ix1 == 0) // monomial has only one variable
+         {
+            output[ix0][i] = output[ix0][i] + cff[k][i]; 
+         }
+         else if(ix2 == 0) // c has last derivative for 2-variable monomial
+         {
+            output[ixn][i] = output[ixn][i] + cross[k][0][i];
+         }
+         else if(ix2 > 0) // last derivative for general monomials
+         {
+            output[ixn][i] = output[ixn][i] + forward[k][ix2][i];
+         }
+         if(ix2 >= 0) output[ix0][i] = output[ix0][i] + backward[k][ix2][i];
+      }
    }
 
 /*

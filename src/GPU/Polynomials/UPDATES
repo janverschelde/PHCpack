@@ -1,3 +1,6 @@
+Tue 22 Dec 2020 : updated dbl_polynomials_host.cpp and test_dbl_polynomials
+  with the computation of first and last derivative.
+
 Mon 21 Dec 2020 : fixed bug in output, in convolution_job.cpp.
   Added get_job() method in convolution_jobs.h, convolution_jobs.cpp,
   to write all convolution_jobs per layer in test_convolution_jobs.
