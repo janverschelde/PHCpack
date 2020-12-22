@@ -4,9 +4,11 @@
 #include <iomanip>
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 #include "random_numbers.h"
 #include "random_monomials.h"
 #include "random_polynomials.h"
+#include "convolution_jobs.h"
 #include "dbl_polynomials_host.h"
 
 using namespace std;
@@ -119,8 +121,10 @@ double test_dbl_real_polynomial
       for(int i=0; i<dim; i++) input[i] = new double[deg+1];
       // The output are dim+1 power series of degree deg
       // for the evaluated and differentiated polynomial.
-      double **output_h = new double*[dim+1];
-      for(int i=0; i<=dim; i++) output_h[i] = new double[deg+1];
+      double **output1_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) output1_h[i] = new double[deg+1];
+      double **output2_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) output2_h[i] = new double[deg+1];
       double **output_d = new double*[dim+1];
       for(int i=0; i<=dim; i++) output_d[i] = new double[deg+1];
 
@@ -170,13 +174,45 @@ double test_dbl_real_polynomial
       }
       bool vrb = (verbose > 0);
 
-      CPU_dbl_poly_evaldiff(dim,nbr,deg,nvr,idx,cst,cff,input,output_h,vrb);
+      ConvolutionJobs jobs(dim);
+
+      jobs.make(nbr,nvr,idx,vrb);
+
+      cout << "number of convolution jobs : " << jobs.get_count() << endl;
+      cout << "number of layers : " << jobs.get_depth() << endl;
+      cout << "frequency of layer counts :" << endl;
+      int checksum = 0;
+      for(int i=0; i<jobs.get_depth(); i++)
+      {
+         cout << i << " : " << jobs.get_layer_count(i) << endl;
+         checksum = checksum + jobs.get_layer_count(i); 
+      }
+      cout << "layer count sum : " << checksum << endl;
+
+      for(int k=0; k<jobs.get_depth(); k++)
+      {
+         cout << "jobs at layer " << k << " :" << endl;
+         for(int i=0; i<jobs.get_layer_count(k); i++)
+            cout << jobs.get_job(k,i) << endl;
+      }
+
+      CPU_dbl_poly_evaldiff(dim,nbr,deg,nvr,idx,cst,cff,input,output1_h,vrb);
+      if(vrb) cout << endl;
+      CPU_dbl_poly_evaldiffjobs
+         (dim,nbr,deg,nvr,idx,cst,cff,input,output2_h,jobs,vrb);
+
+      double sumerr = 0.0;
 
       if(verbose > 0)
       {
          cout << "The value of the polynomial :" << endl;
-         for(int i=0; i<=deg; i++) cout << output_h[dim][i] << endl;
+         for(int i=0; i<=deg; i++)
+         {
+            cout << output1_h[dim][i] << endl;
+            cout << output2_h[dim][i] << endl;
+            sumerr = sumerr + abs(output1_h[dim][i] - output2_h[dim][i]);
+         }
       }
-      return 0.0;
+      return sumerr;
    }
 }

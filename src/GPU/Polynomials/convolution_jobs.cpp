@@ -259,7 +259,7 @@ void ConvolutionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
             cout << "layer 0" << endl;
          }
          jobcount = jobcount + 1; freqlaycnt[1] = freqlaycnt[1] + 1;
-         ConvolutionJob job3(i,3,0,0,ix2,1,0);
+         ConvolutionJob job3(i,3,0,0,ix2,1,1);
          if(verbose) cout << jobcount << " : " << job3
                                       << " : layer 1" << endl;
          jobs[1].push_back(job3);
@@ -268,7 +268,7 @@ void ConvolutionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
          {
             cout << jobcount << " : ";
             cout << "monomial " << i << " : ";
-            cout << "c[0] * " << "input[" << ix2 << "] to f[0] : ";
+            cout << "c[0] * " << "input[" << ix2 << "] to f[1] : ";
             cout << "layer 1" << endl;
          }
          if(laydepth < 2) laydepth = 2; // we have two layers
@@ -310,5 +310,5 @@ ConvolutionJob ConvolutionJobs::get_job ( int k, int i ) const
 
 ConvolutionJobs::~ConvolutionJobs( void )
 {
-   free(freqlaycnt);
+   // free(freqlaycnt);
 }

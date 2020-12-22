@@ -114,12 +114,13 @@ test_convolution_jobs.obj:
 
 test_dbl_polynomials: random_numbers.obj random_series.obj \
 	              random_monomials.obj random_polynomials.obj \
+                      convolution_job.obj convolution_jobs.obj \
                     dbl_convolutions_host.obj dbl_monomials_host.obj \
                     dbl_polynomials_host.obj test_dbl_polynomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_polynomials.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
-              random_polynomials.obj \
+              random_polynomials.obj convolution_job.obj convolution_jobs.obj \
               dbl_convolutions_host.obj dbl_monomials_host.obj \
               dbl_polynomials_host.obj test_dbl_polynomials.obj
 
