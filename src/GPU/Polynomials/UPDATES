@@ -1,5 +1,6 @@
 Tue 22 Dec 2020 : updated dbl_polynomials_host.cpp and test_dbl_polynomials
-  with the computation of first and last derivative.
+  with the computation of first and last derivative.  Simplified 2-variable
+  monomials, updated convolution_jobs.cpp and dbl_polynomials_host.cpp.
 
 Mon 21 Dec 2020 : fixed bug in output, in convolution_job.cpp.
   Added get_job() method in convolution_jobs.h, convolution_jobs.cpp,
