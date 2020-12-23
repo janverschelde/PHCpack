@@ -10,6 +10,7 @@
 #include "random_polynomials.h"
 #include "convolution_jobs.h"
 #include "dbl_polynomials_host.h"
+#include "dbl_polynomials_kernels.h"
 
 using namespace std;
 
@@ -197,10 +198,14 @@ double test_dbl_real_polynomial
       }
       cout << endl;
 
+      if(vrb) cout << "Computing without convolution jobs ..." << endl;
       CPU_dbl_poly_evaldiff(dim,nbr,deg,nvr,idx,cst,cff,input,output1_h,vrb);
-      if(vrb) cout << endl;
+      if(vrb) cout << "Computing with convolution jobs ..." << endl;
       CPU_dbl_poly_evaldiffjobs
          (dim,nbr,deg,nvr,idx,cst,cff,input,output2_h,jobs,vrb);
+      if(vrb) cout << "Computing on the device ..." << endl;
+      GPU_dbl_poly_evaldiff
+         (deg+1,dim,nbr,deg,nvr,idx,cst,cff,input,output_d,jobs,vrb);
 
       double err = 0.0;
 

@@ -38,15 +38,9 @@ dbl_monomials_host.o:
 	@-echo ">>> compiling dbl_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl_monomials_host.cpp
 
-dbl_monomials_kernels.o:
-	@-echo ">>> compiling monomial kernels for doubles ..."
-	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(CNV) -c \
-             $(CNV)/dbl_monomials_kernels.cu
-
-dbl_monomials_testers.o:
-	@-echo ">>> compiling dbl_monomials_testers ..."
-	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) \
-               $(CNV)/dbl_monomials_testers.cpp
+dbl_polynomials_kernels.o:
+	@-echo ">>> compiling polynomial kernels for doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -c dbl_polynomials_kernels.cu
 
 dbl_polynomials_host.o:
 	@-echo ">>> compiling dbl_polynomials_host ..."
@@ -68,20 +62,6 @@ test_convolution_jobs.o:
 	@-echo ">>> compiling test_convolution_jobs ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_convolution_jobs.cpp
 
-test_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
-                      random_polynomials.o \
-                      convolution_job.o convolution_jobs.o \
-                      dbl_convolutions_host.o dbl_monomials_host.o \
-                      dbl_polynomials_host.o test_dbl_polynomials.o
-	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl_polynomials test_dbl_polynomials.o \
-                  random_numbers.o random_series.o random_monomials.o \
-                  random_polynomials.o \
-                  convolution_job.o convolution_jobs.o \
-                  dbl_convolutions_host.o dbl_monomials_host.o \
-                  dbl_polynomials_host.o \
-               -lcuda -lcudart -L$(CUDALIB)
-
 test_convolution_jobs: random_numbers.o random_series.o random_monomials.o \
                        random_polynomials.o convolution_job.o \
                        convolution_jobs.o test_convolution_jobs.o
@@ -90,14 +70,28 @@ test_convolution_jobs: random_numbers.o random_series.o random_monomials.o \
                   random_numbers.o random_series.o random_monomials.o \
                   random_polynomials.o convolution_job.o convolution_jobs.o
 
+test_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
+                      random_polynomials.o \
+                      convolution_job.o convolution_jobs.o \
+                      dbl_convolutions_host.o dbl_monomials_host.o \
+                      dbl_polynomials_host.o dbl_polynomials_kernels.o \
+                      test_dbl_polynomials.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl_polynomials test_dbl_polynomials.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  dbl_convolutions_host.o dbl_monomials_host.o \
+                  dbl_polynomials_host.o dbl_polynomials_kernels.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
 clean:
 	/bin/rm -f -r test_dbl_polynomials.o test_dbl_polynomials
 	/bin/rm -f -r random_polynomials.o dbl_polynomials_host.o
+	/bin/rm -f -r dbl_polynomials_kernels.o
 	/bin/rm -f -r convolution_job.o convolution_jobs.o
 	/bin/rm -f -r test_convolution_jobs test_convolution_jobs.o
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_monomials_host.o
-	/bin/rm -f -r dbl_convolutions_kernels.o dbl_monomials_kernels.o
-	/bin/rm -f -r dbl_monomials_testers.o

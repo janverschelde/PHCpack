@@ -1,3 +1,7 @@
+Wed 23 Dec 2020 : edited dbl_polynomials_host.cpp and test_dbl_polynomials.
+  Added a first setup for the preparation of the convolution jobs in
+  dbl_polynomials_kernels.h and dbl_polynomials_kernels.cu.
+
 Tue 22 Dec 2020 : updated dbl_polynomials_host.cpp and test_dbl_polynomials
   with the computation of first and last derivative.  Simplified 2-variable
   monomials, updated convolution_jobs.cpp and dbl_polynomials_host.cpp.
