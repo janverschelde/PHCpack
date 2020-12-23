@@ -2,6 +2,7 @@
 // in dbl_polynomials_kernels.h.
 
 #include <iostream>
+#include "dbl_convolutions_kernels.h"
 #include "dbl_polynomials_kernels.h"
 
 using namespace std;
@@ -182,13 +183,41 @@ void jobs_coordinates
                   dim,nbr,deg,fsums,bsums,csums,fstart,bstart,cstart,verbose);
 }
 
+__global__ void dbl_padded_convjobs
+ ( double *data, int *in1idx, int *in2idx, int *outidx, int dim )
+{
+   const int bdx = blockIdx.x;           // index to the convolution job
+   const int tdx = threadIdx.x;          // index to the output of the job
+   const int idx1 = in1idx[bdx] + tdx;
+   const int idx2 = in2idx[bdx] + tdx;
+   const int idx3 = outidx[bdx] + tdx;
+
+   __shared__ double xv[d_shmemsize];
+   __shared__ double yv[d_shmemsize];
+   __shared__ double zv[d_shmemsize];
+
+   int ydx = dim + tdx;
+
+   xv[tdx] = data[idx1];  // loading first input
+   yv[tdx] = 0.0;         // padded with zeros
+   yv[ydx] = data[idx2];  // loading second input
+
+   zv[tdx] = xv[0]*yv[ydx];
+
+   for(int i=1; i<dim; i++)
+   {
+      ydx = dim + tdx - i;
+      zv[tdx] = zv[tdx] + xv[i]*yv[ydx];
+   }
+   data[idx3] = zv[tdx]; // storing the output
+}
+
 void GPU_dbl_poly_evaldiff
  ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,
    double *cst, double **cff, double **input, double **output,
    ConvolutionJobs jobs, bool verbose )
 {
    const int deg1 = deg+1;
-
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
 
    int *fstart = new int[nbr];
@@ -203,7 +232,7 @@ void GPU_dbl_poly_evaldiff
 
    if(verbose)
    {
-      cout << "The total coefficient count : " << totalcff << endl;
+      cout << "The output coefficient count : " << totalcff << endl;
       cout << "fsums :";
       for(int i=0; i<nbr; i++) cout << " " << fsums[i]; cout << endl;
       cout << "fstart :";
@@ -218,30 +247,51 @@ void GPU_dbl_poly_evaldiff
       for(int i=0; i<nbr; i++) cout << " " << cstart[i]; cout << endl;
    }
 
-   double *data_h = new double[totalcff];       // linearized data
+   double *data_h = new double[totalcff];        // data on host
    int ix = 0;
    for(int i=0; i<nbr; i++)
       for(int j=0; j<deg1; j++) data_h[ix++] = cff[i][j];
    for(int i=0; i<dim; i++)
       for(int j=0; j<deg1; j++) data_h[ix++] = input[i][j];
 
-   double *data_d;                             // device data
-   size_t szdata = totalcff*sizeof(double);
+   double *data_d;                               // device data
+   const size_t szdata = totalcff*sizeof(double);
    cudaMalloc((void**)&data_d,szdata);
    cudaMemcpy(data_d,data_h,szdata,cudaMemcpyHostToDevice);
 
    for(int k=0; k<jobs.get_depth(); k++)
    {
       const int jobnbr = jobs.get_layer_count(k);
-      int *in1ix = new int[jobnbr];
-      int *in2ix = new int[jobnbr];
-      int *outix = new int[jobnbr];
+      int *in1ix_h = new int[jobnbr];
+      int *in2ix_h = new int[jobnbr];
+      int *outix_h = new int[jobnbr];
 
       if(verbose) cout << "preparing jobs at layer " << k << " ..." << endl;
 
-      jobs_coordinates(jobs,k,in1ix,in2ix,outix,dim,nbr,deg,
+      jobs_coordinates(jobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,
                        fsums,bsums,csums,fstart,bstart,cstart,verbose);
 
-      free(in1ix); free(in2ix); free(outix);
+      if(dim == BS)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << BS
+                 << " threads ..." << endl;
+
+         dbl_padded_convjobs<<<jobnbr,BS>>>
+            (data_d,in1ix_d,in2ix_d,outix_d,dim);
+      }
+      free(in1ix_h); free(in2ix_h); free(outix_h);
    }
+   cudaMemcpy(data_h,data_d,szdata,cudaMemcpyDeviceToHost);
 }

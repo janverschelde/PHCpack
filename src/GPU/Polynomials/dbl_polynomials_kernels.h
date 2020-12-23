@@ -116,6 +116,29 @@ void jobs_coordinates
  *   inp2ix   inp2ix[i] is the index of the second input of job i;
  *   outidx   outidx[i] is the index of the output of job i. */
 
+__global__ void dbl_padded_convjobs
+ ( double *data, int *in1idx, int *in2idx, int *outidx, int dim );
+/*
+ * DESCRIPTION :
+ *   Executes all convolution jobs at the same layer.
+ *   The block index defines the convolution job.
+ *
+ * REQUIRED : 
+ *   The number of blocks equals the size of  in1idx, in2idx, outidx,
+ *   and dim equals the number of threads in each block.
+ *
+ * ON ENTRY :
+ *   data      coefficients of monomials and input series, 
+ *             space for forward, backward, and cross products;
+ *   in1idx    indices of the first input of the convolution jobs;
+ *   in2idx    indices of the second input of the convolution jobs;
+ *   outidx    indices of the output of the convolution jobs;
+ *   dim       the number of coefficients in each series
+ *             equals the number of threads in each block.
+ *
+ * ON RETURN :
+ *   data      updated forward, backward, and cross products. */
+
 void GPU_dbl_poly_evaldiff
  ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,
    double *cst, double **cff, double **input, double **output,

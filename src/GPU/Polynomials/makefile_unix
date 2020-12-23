@@ -40,7 +40,8 @@ dbl_monomials_host.o:
 
 dbl_polynomials_kernels.o:
 	@-echo ">>> compiling polynomial kernels for doubles ..."
-	nvcc -ccbin=$(gpp) -arch=$(smflag) -c dbl_polynomials_kernels.cu
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -c -I$(CNV) \
+             dbl_polynomials_kernels.cu
 
 dbl_polynomials_host.o:
 	@-echo ">>> compiling dbl_polynomials_host ..."

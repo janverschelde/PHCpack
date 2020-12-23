@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
+#include <vector_types.h>
 #include "random_numbers.h"
 #include "random_monomials.h"
 #include "random_polynomials.h"
