@@ -270,8 +270,7 @@ void GPU_dbl_poly_evaldiff
 
       jobs_coordinates(jobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,
                        fsums,bsums,csums,fstart,bstart,cstart,verbose);
-
-      if(dim == BS)
+      if(deg1 == BS)
       {
          int *in1ix_d; // first input on device
          int *in2ix_d; // second input on device
@@ -289,7 +288,7 @@ void GPU_dbl_poly_evaldiff
                  << " threads ..." << endl;
 
          dbl_padded_convjobs<<<jobnbr,BS>>>
-            (data_d,in1ix_d,in2ix_d,outix_d,dim);
+            (data_d,in1ix_d,in2ix_d,outix_d,deg1);
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
