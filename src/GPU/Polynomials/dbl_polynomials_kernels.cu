@@ -60,16 +60,13 @@ void coefficient_indices
       }
    }
    fstart[0] = (nbr+dim)*(deg+1);
-   for(int i=1; i<nbr; i++)
-      fstart[i] = fstart[0] + fsums[i-1]*(deg+1);
+   for(int i=1; i<nbr; i++) fstart[i] = fstart[0] + fsums[i-1]*(deg+1);
 
    bstart[0] = fstart[0] + fsums[nbr-1]*(deg+1);
-   for(int i=1; i<nbr; i++)
-      bstart[i] = bstart[0] + bsums[i-1]*(deg+1);
+   for(int i=1; i<nbr; i++) bstart[i] = bstart[0] + bsums[i-1]*(deg+1);
 
    cstart[0] = bstart[0] + bsums[nbr-1]*(deg+1);
-   for(int i=1; i<nbr; i++)
-      cstart[i] = cstart[0] + csums[i-1]*(deg+1);
+   for(int i=1; i<nbr; i++) cstart[i] = cstart[0] + csums[i-1]*(deg+1);
 }
 
 void job_indices
@@ -172,11 +169,11 @@ __global__ void dbl_padded_convjobs
 
 void data_to_output
  ( double *data, double *cst, double **output,
-   int dim, int nbr, int deg, int *nvr,
-   int *fsums, int *bsums, int *csums,
+   int dim, int nbr, int deg, int *nvr, int **idx,
    int *fstart, int *bstart, int *cstart, bool verbose )
 {
    const int deg1 = deg+1;
+   int ix0,ix1,ix2;
 
    for(int i=0; i<=deg; i++) output[dim][i] = cst[i];
    for(int i=0; i<dim; i++)
@@ -184,12 +181,39 @@ void data_to_output
 
    for(int k=0; k<nbr; k++)
    {
-      int idx = fstart[k] + (nvr[k]-1)*deg1;
+      ix1 = fstart[k] + (nvr[k]-1)*deg1;
       
       if(verbose)
-         cout << "monomial " << k << " update starts at " << idx << endl;
+         cout << "monomial " << k << " update starts at " << ix1 << endl;
 
-      for(int i=0; i<=deg; i++) output[dim][i] += data[idx++];
+      for(int i=0; i<=deg; i++) output[dim][i] += data[ix1++];
+
+      ix0 = idx[k][0];
+      if(nvr[k] == 1)
+      {
+         ix1 = (k-1)*deg1;
+         for(int i=0; i<=deg; i++) output[ix0][i] += data[ix1++];
+      }
+      else
+      {                               // update first and last derivative
+         ix2 = nvr[k]-2;
+         ix1 = bstart[k] + ix2*deg1;
+         for(int i=0; i<=deg; i++) output[ix0][i] += data[ix1++];
+
+         ix1 = fstart[k] + ix2*deg1;
+         ix0 = idx[k][ix2+1];
+         for(int i=0; i<=deg; i++) output[ix0][i] += data[ix1++];
+
+         if(nvr[k] > 2)                   // update all other derivatives
+         {
+            for(int j=1; j<nvr[k]-1; j++)
+            {
+               ix0 = idx[k][j];            // j-th variable in monomial k
+               ix1 = cstart[k] + (j-1)*deg1;
+               for(int i=0; i<=deg; i++) output[ix0][i] += data[ix1++];
+            }
+         }
+      }
    }
 }
 
@@ -275,6 +299,6 @@ void GPU_dbl_poly_evaldiff
    }
    cudaMemcpy(data_h,data_d,szdata,cudaMemcpyDeviceToHost);
 
-   data_to_output(data_h,cst,output,dim,nbr,deg,nvr,
-                  fsums,bsums,csums,fstart,bstart,cstart,verbose);
+   data_to_output(data_h,cst,output,dim,nbr,deg,nvr,idx,
+                  fstart,bstart,cstart,verbose);
 }

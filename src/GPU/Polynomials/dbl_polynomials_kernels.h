@@ -129,8 +129,7 @@ __global__ void dbl_padded_convjobs
 
 void data_to_output
  ( double *data, double *cst, double **output,
-   int dim, int nbr, int deg, int *nvr,
-   int *fsums, int *bsums, int *csums,
+   int dim, int nbr, int deg, int *nvr, int **idx,
    int *fstart, int *bstart, int *cstart, bool verbose=true );
 /*
  * DESCRIPTION :
@@ -140,18 +139,15 @@ void data_to_output
  * ON ENTRY :
  *   data     coefficients of monomials and input series, 
  *            computed forward, backward, and cross products;
- *   cst      constant coefficient of the polynomial;
+ *   cst      deg+1 doubles for the constant coefficient series;
  *   output   space for the value and all derivatives;
  *   dim      total number of variables;
  *   nbr      number of monomials, excluding the constant term;
  *   deg      truncation degree of the series;
  *   nvr      nvr[k] is the number of variables for monomial k;
- *   fsums    fsums[k] holds the sum of coefficients for the forward
- *            products of the k-th monomial and of all monomials before k;
- *   bsums    fsums[k] holds the sum of coefficients for the backward
- *            products of the k-th monomial and of all monomials before k;
- *   csums    fsums[k] holds the sum of coefficients for the cross
- *            products of the k-th monomial and of all monomials before k;
+ *   idx      idx[k] has as many indices as the value of nvr[k],
+ *            idx[k][i] defines the place of the i-th variable,
+ *            with input values in input[idx[k][i]];
  *   fstart   fstart[k] has the start position of the forward products
  *            for the k-th monomial;
  *   bstart   fstart[k] has the start position of the backward products
