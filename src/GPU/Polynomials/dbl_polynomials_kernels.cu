@@ -120,7 +120,7 @@ void job_indices
          *outidx = bstart[monidx] + joboutidx*deg1;
       else
       {
-         if(monidx == 2)
+         if(nvr[monidx] == 2)
             *outidx = bstart[monidx];
          else
             *outidx = bstart[monidx] + (joboutidx-1)*deg1;
@@ -203,6 +203,8 @@ void data_to_output
       if(nvr[k] == 1)
       {
          ix1 = k*deg1;
+
+            
          for(int i=0; i<=deg; i++) output[ix0][i] += data[ix1++];
       }
       else
@@ -210,11 +212,14 @@ void data_to_output
          ix2 = nvr[k]-3;
          if(ix2 < 0) ix2 = 0;
          ix1 = bstart[k] + ix2*deg1;
+
+
          for(int i=0; i<=deg; i++) output[ix0][i] += data[ix1++];
 
          ix2 = nvr[k]-2;
          ix1 = fstart[k] + ix2*deg1;
          ix0 = idx[k][ix2+1];
+
          for(int i=0; i<=deg; i++) output[ix0][i] += data[ix1++];
 
          if(nvr[k] > 2)                   // update all other derivatives
@@ -223,6 +228,11 @@ void data_to_output
             {
                ix0 = idx[k][j];            // j-th variable in monomial k
                ix1 = cstart[k] + (j-1)*deg1;
+
+               if(verbose)
+                  cout << "monomial " << k << " derivative " << ix0
+                       << " update starts at " << ix1 << endl;
+
                for(int i=0; i<=deg; i++) output[ix0][i] += data[ix1++];
             }
          }

@@ -3,6 +3,7 @@ Thu 24 Dec 2020 : bug fixed in dbl_polynomials_kernels, the computation of
   verifies that the polynomial value with GPU convolutions is correct.
   To dbl_polynomials_kernels, test_dbl_polynomials added computation and
   test on all other derivatives.  Fixes in dbl_polynomials_kernels...
+  Fixed the last indexing bug in dbl_polynomials_kernels.cu.
 
 Wed 23 Dec 2020 : edited dbl_polynomials_host.cpp and test_dbl_polynomials.
   Added a first setup for the preparation of the convolution jobs in
