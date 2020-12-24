@@ -1,3 +1,7 @@
+Thu 24 Dec 2020 : bug fixed in dbl_polynomials_kernels, the computation of
+  the job indices does not need the cumulative sums; test_dbl_polynomials
+  verifies that the polynomial value with GPU convolutions is correct.
+
 Wed 23 Dec 2020 : edited dbl_polynomials_host.cpp and test_dbl_polynomials.
   Added a first setup for the preparation of the convolution jobs in
   dbl_polynomials_kernels.h and dbl_polynomials_kernels.cu.

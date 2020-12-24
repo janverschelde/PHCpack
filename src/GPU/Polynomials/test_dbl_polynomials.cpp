@@ -217,8 +217,10 @@ double test_dbl_real_polynomial
          {
             cout << output1_h[dim][i] << endl;
             cout << output2_h[dim][i] << endl;
+            cout << output_d[dim][i] << endl;
          }
-         err = err + abs(output1_h[dim][i] - output2_h[dim][i]);
+         err = err + abs(output1_h[dim][i] - output2_h[dim][i])
+                   + abs(output1_h[dim][i] - output_d[dim][i]);
       }
       if(verbose > 0) cout << "error : " << err << endl;
 

@@ -49,7 +49,7 @@ void coefficient_indices
 
 void job_indices
  ( ConvolutionJob job, int *inp1ix, int *inp2ix, int *outidx,
-   int dim, int nbr, int deg, int *fsums, int *bsums, int *csums,
+   int dim, int nbr, int deg,
    int *fstart, int *bstart, int *cstart, bool verbose );
 /*
  * DESCRIPTION :
@@ -60,12 +60,6 @@ void job_indices
  *   dim      total number of variables;
  *   nbr      number of monomials, excluding the constant term;
  *   deg      truncation degree of the series;
- *   fsums    fsums[k] holds the sum of coefficients for the forward
- *            products of the k-th monomial and of all monomials before k;
- *   bsums    fsums[k] holds the sum of coefficients for the backward
- *            products of the k-th monomial and of all monomials before k;
- *   csums    fsums[k] holds the sum of coefficients for the cross
- *            products of the k-th monomial and of all monomials before k;
  *   fstart   fstart[k] has the start position of the forward products
  *            for the k-th monomial;
  *   bstart   fstart[k] has the start position of the backward products
@@ -82,7 +76,7 @@ void job_indices
 void jobs_coordinates
  ( ConvolutionJobs jobs, int layer,
    int *inp1ix, int *inp2ix, int *outidx,
-   int dim, int nbr, int deg, int *fsums, int *bsums, int *csums,
+   int dim, int nbr, int deg,
    int *fstart, int *bstart, int *cstart, bool verbose );
 /*
  * DESCRIPTION :
@@ -97,12 +91,6 @@ void jobs_coordinates
  *   dim      total number of variables;
  *   nbr      number of monomials, excluding the constant term;
  *   deg      truncation degree of the series;
- *   fsums    fsums[k] holds the sum of coefficients for the forward
- *            products of the k-th monomial and of all monomials before k;
- *   bsums    fsums[k] holds the sum of coefficients for the backward
- *            products of the k-th monomial and of all monomials before k;
- *   csums    fsums[k] holds the sum of coefficients for the cross
- *            products of the k-th monomial and of all monomials before k;
  *   fstart   fstart[k] has the start position of the forward products
  *            for the k-th monomial;
  *   bstart   fstart[k] has the start position of the backward products
@@ -138,6 +126,42 @@ __global__ void dbl_padded_convjobs
  *
  * ON RETURN :
  *   data      updated forward, backward, and cross products. */
+
+void data_to_output
+ ( double *data, double *cst, double **output,
+   int dim, int nbr, int deg, int *nvr,
+   int *fsums, int *bsums, int *csums,
+   int *fstart, int *bstart, int *cstart, bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Extracts the data computed on the device to the output.
+ *   This function is only for testing purposes.
+ *
+ * ON ENTRY :
+ *   data     coefficients of monomials and input series, 
+ *            computed forward, backward, and cross products;
+ *   cst      constant coefficient of the polynomial;
+ *   output   space for the value and all derivatives;
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      truncation degree of the series;
+ *   nvr      nvr[k] is the number of variables for monomial k;
+ *   fsums    fsums[k] holds the sum of coefficients for the forward
+ *            products of the k-th monomial and of all monomials before k;
+ *   bsums    fsums[k] holds the sum of coefficients for the backward
+ *            products of the k-th monomial and of all monomials before k;
+ *   csums    fsums[k] holds the sum of coefficients for the cross
+ *            products of the k-th monomial and of all monomials before k;
+ *   fstart   fstart[k] has the start position of the forward products
+ *            for the k-th monomial;
+ *   bstart   fstart[k] has the start position of the backward products
+ *            for the k-th monomial;
+ *   cstart   fstart[k] has the start position of the cross products
+ *            for the k-th monomial;
+ *   verbose  if true, writes extra information.
+ *
+ * ON RETURN :
+ *   output   contains the value and all derivatives. */
 
 void GPU_dbl_poly_evaldiff
  ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,

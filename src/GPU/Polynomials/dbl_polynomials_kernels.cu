@@ -74,7 +74,7 @@ void coefficient_indices
 
 void job_indices
  ( ConvolutionJob job, int *inp1ix, int *inp2ix, int *outidx,
-   int dim, int nbr, int deg, int *fsums, int *bsums, int *csums,
+   int dim, int nbr, int deg,
    int *fstart, int *bstart, int *cstart, bool verbose )
 {
    const int monidx = job.get_monomial_index();
@@ -97,73 +97,31 @@ void job_indices
       *inp1ix = monidx*deg1;
    else if(jobinp1tp == 0)     // first input is input series
       *inp1ix = (nbr + jobinp1ix)*deg1;
-   else if(jobinp1tp == 1) 
-   {
-      if(jobinp1ix == 0)       // first input is forward product
-         *inp1ix = fstart[monidx];
-      else
-         *inp1ix = fstart[monidx] + fsums[jobinp1ix-1]*deg1;
-   }
+   else if(jobinp1tp == 1)     // first input is forward product
+      *inp1ix = fstart[monidx] + jobinp1ix*deg1;
    else if(jobinp1tp == 2)     // first input is backward product
-   {
-      if(jobinp1ix == 0)
-         *inp1ix = bstart[monidx];
-      else
-         *inp1ix = bstart[monidx] + bsums[jobinp1ix-1]*deg1;
-   }
+      *inp1ix = bstart[monidx] + jobinp1ix*deg1;
    else if(jobinp1tp == 3)     // first input is cross product
-   {
-      if(jobinp1ix == 0)
-         *inp1ix = cstart[monidx];
-      else
-         *inp1ix = cstart[monidx] + csums[jobinp1ix-1]*deg1;
-   }
+      *inp1ix = cstart[monidx] + jobinp1ix*deg1;
+
    if(jobinp2tp < 0)           // second input is coefficient
       *inp2ix = monidx*deg1;
    else if(jobinp2tp == 0)     // second input is input series
       *inp2ix = (nbr + jobinp2ix)*deg1;
    else if(jobinp2tp == 1)     // second input is forward product
-   {
-      if(jobinp2ix == 0)
-         *inp2ix = fstart[monidx];
-      else
-         *inp2ix = fstart[monidx] + fsums[jobinp2ix-1]*deg1;
-   }
+      *inp2ix = fstart[monidx] + jobinp2ix*deg1;
    else if(jobinp2tp == 2)     // second input is backward product
-   {
-      if(jobinp2ix == 0)
-         *inp2ix = bstart[monidx];
-      else
-         *inp2ix = bstart[monidx] + bsums[jobinp2ix-1]*deg1;
-   }
+      *inp2ix = bstart[monidx] + jobinp2ix*deg1;
    else if(jobinp2tp == 3)     // second input is cross product
-   {
-      if(jobinp2ix == 0)
-         *outidx = cstart[monidx];
-      else
-         *outidx = cstart[monidx] + csums[jobinp2ix-1]*deg1;
-   }
+      *outidx = cstart[monidx] + jobinp2ix*deg1;
+
    if(joboutptp == 1)          // output is forward product
-   {
-      if(joboutidx == 0)
-         *outidx = fstart[monidx];
-      else
-         *outidx = fstart[monidx] + fsums[joboutidx-1]*deg1;
-   }
+      *outidx = fstart[monidx] + joboutidx*deg1;
    else if(joboutptp == 2)    // output is backward product
-   {
-      if(joboutidx == 0)
-         *outidx = bstart[monidx];
-      else
-         *outidx = bstart[monidx] + bsums[joboutidx-1]*deg1;
-   }
+      *outidx = bstart[monidx] + joboutidx*deg1;
    else if(joboutptp == 3)    // output is cross product
-   {
-      if(joboutidx == 0)
-         *outidx = cstart[monidx];
-      else
-         *outidx = cstart[monidx] + csums[joboutidx-1]*deg1;
-   }
+      *outidx = cstart[monidx] + joboutidx*deg1;
+
    if(verbose)
    {
       cout << "-> inp1ix : " << *inp1ix
@@ -175,12 +133,12 @@ void job_indices
 void jobs_coordinates
  ( ConvolutionJobs jobs, int layer,
    int *inp1ix, int *inp2ix, int *outidx,
-   int dim, int nbr, int deg, int *fsums, int *bsums, int *csums,
+   int dim, int nbr, int deg,
    int *fstart, int *bstart, int *cstart, bool verbose )
 { 
    for(int i=0; i<jobs.get_layer_count(layer); i++)
       job_indices(jobs.get_job(layer,i),&inp1ix[i],&inp2ix[i],&outidx[i],
-                  dim,nbr,deg,fsums,bsums,csums,fstart,bstart,cstart,verbose);
+                  dim,nbr,deg,fstart,bstart,cstart,verbose);
 }
 
 __global__ void dbl_padded_convjobs
@@ -210,6 +168,29 @@ __global__ void dbl_padded_convjobs
       zv[tdx] = zv[tdx] + xv[i]*yv[ydx];
    }
    data[idx3] = zv[tdx]; // storing the output
+}
+
+void data_to_output
+ ( double *data, double *cst, double **output,
+   int dim, int nbr, int deg, int *nvr,
+   int *fsums, int *bsums, int *csums,
+   int *fstart, int *bstart, int *cstart, bool verbose )
+{
+   const int deg1 = deg+1;
+
+   for(int i=0; i<=deg; i++) output[dim][i] = cst[i];
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<=deg; j++) output[i][j] = 0.0;
+
+   for(int k=0; k<nbr; k++)
+   {
+      int idx = fstart[k] + (nvr[k]-1)*deg1;
+      
+      if(verbose)
+         cout << "monomial " << k << " update starts at " << idx << endl;
+
+      for(int i=0; i<=deg; i++) output[dim][i] += data[idx++];
+   }
 }
 
 void GPU_dbl_poly_evaldiff
@@ -269,7 +250,7 @@ void GPU_dbl_poly_evaldiff
       if(verbose) cout << "preparing jobs at layer " << k << " ..." << endl;
 
       jobs_coordinates(jobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,
-                       fsums,bsums,csums,fstart,bstart,cstart,verbose);
+                       fstart,bstart,cstart,verbose);
       if(deg1 == BS)
       {
          int *in1ix_d; // first input on device
@@ -293,4 +274,7 @@ void GPU_dbl_poly_evaldiff
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
    cudaMemcpy(data_h,data_d,szdata,cudaMemcpyDeviceToHost);
+
+   data_to_output(data_h,cst,output,dim,nbr,deg,nvr,
+                  fsums,bsums,csums,fstart,bstart,cstart,verbose);
 }
