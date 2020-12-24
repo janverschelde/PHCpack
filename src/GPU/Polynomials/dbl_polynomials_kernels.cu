@@ -71,7 +71,7 @@ void coefficient_indices
 
 void job_indices
  ( ConvolutionJob job, int *inp1ix, int *inp2ix, int *outidx,
-   int dim, int nbr, int deg,
+   int dim, int nbr, int deg, int *nvr,
    int *fstart, int *bstart, int *cstart, bool verbose )
 {
    const int monidx = job.get_monomial_index();
@@ -115,7 +115,18 @@ void job_indices
    if(joboutptp == 1)          // output is forward product
       *outidx = fstart[monidx] + joboutidx*deg1;
    else if(joboutptp == 2)    // output is backward product
-      *outidx = bstart[monidx] + joboutidx*deg1;
+   {
+      if(joboutidx < nvr[monidx]-2) // last backward product is special ...
+         *outidx = bstart[monidx] + joboutidx*deg1;
+      else
+      {
+         if(monidx == 2)
+            *outidx = bstart[monidx];
+         else
+            *outidx = bstart[monidx] + (joboutidx-1)*deg1;
+
+      }
+   }
    else if(joboutptp == 3)    // output is cross product
       *outidx = cstart[monidx] + joboutidx*deg1;
 
@@ -130,12 +141,12 @@ void job_indices
 void jobs_coordinates
  ( ConvolutionJobs jobs, int layer,
    int *inp1ix, int *inp2ix, int *outidx,
-   int dim, int nbr, int deg,
+   int dim, int nbr, int deg, int *nvr,
    int *fstart, int *bstart, int *cstart, bool verbose )
 { 
    for(int i=0; i<jobs.get_layer_count(layer); i++)
       job_indices(jobs.get_job(layer,i),&inp1ix[i],&inp2ix[i],&outidx[i],
-                  dim,nbr,deg,fstart,bstart,cstart,verbose);
+                  dim,nbr,deg,nvr,fstart,bstart,cstart,verbose);
 }
 
 __global__ void dbl_padded_convjobs
@@ -191,15 +202,17 @@ void data_to_output
       ix0 = idx[k][0];
       if(nvr[k] == 1)
       {
-         ix1 = (k-1)*deg1;
+         ix1 = k*deg1;
          for(int i=0; i<=deg; i++) output[ix0][i] += data[ix1++];
       }
       else
       {                               // update first and last derivative
-         ix2 = nvr[k]-2;
+         ix2 = nvr[k]-3;
+         if(ix2 < 0) ix2 = 0;
          ix1 = bstart[k] + ix2*deg1;
          for(int i=0; i<=deg; i++) output[ix0][i] += data[ix1++];
 
+         ix2 = nvr[k]-2;
          ix1 = fstart[k] + ix2*deg1;
          ix0 = idx[k][ix2+1];
          for(int i=0; i<=deg; i++) output[ix0][i] += data[ix1++];
@@ -273,7 +286,7 @@ void GPU_dbl_poly_evaldiff
 
       if(verbose) cout << "preparing jobs at layer " << k << " ..." << endl;
 
-      jobs_coordinates(jobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,
+      jobs_coordinates(jobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
                        fstart,bstart,cstart,verbose);
       if(deg1 == BS)
       {

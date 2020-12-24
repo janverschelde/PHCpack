@@ -49,7 +49,7 @@ void coefficient_indices
 
 void job_indices
  ( ConvolutionJob job, int *inp1ix, int *inp2ix, int *outidx,
-   int dim, int nbr, int deg,
+   int dim, int nbr, int deg, int *nvr,
    int *fstart, int *bstart, int *cstart, bool verbose );
 /*
  * DESCRIPTION :
@@ -60,6 +60,7 @@ void job_indices
  *   dim      total number of variables;
  *   nbr      number of monomials, excluding the constant term;
  *   deg      truncation degree of the series;
+ *   nvr      nvr[k] is the number of variables for monomial k;
  *   fstart   fstart[k] has the start position of the forward products
  *            for the k-th monomial;
  *   bstart   fstart[k] has the start position of the backward products
@@ -76,7 +77,7 @@ void job_indices
 void jobs_coordinates
  ( ConvolutionJobs jobs, int layer,
    int *inp1ix, int *inp2ix, int *outidx,
-   int dim, int nbr, int deg,
+   int dim, int nbr, int deg, int *nvr,
    int *fstart, int *bstart, int *cstart, bool verbose );
 /*
  * DESCRIPTION :
@@ -91,6 +92,7 @@ void jobs_coordinates
  *   dim      total number of variables;
  *   nbr      number of monomials, excluding the constant term;
  *   deg      truncation degree of the series;
+ *   nvr      nvr[k] is the number of variables for monomial k;
  *   fstart   fstart[k] has the start position of the forward products
  *            for the k-th monomial;
  *   bstart   fstart[k] has the start position of the backward products
