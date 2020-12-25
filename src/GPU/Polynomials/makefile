@@ -6,11 +6,14 @@
 # MAKEFILE = makefile_windows
 MAKEFILE = makefile_unix
 
-test_dbl_polynomials:
-	make -f $(MAKEFILE) test_dbl_polynomials
-
 test_convolution_jobs:
 	make -f $(MAKEFILE) test_convolution_jobs
+
+test_addition_jobs:
+	make -f $(MAKEFILE) test_addition_jobs
+
+test_dbl_polynomials:
+	make -f $(MAKEFILE) test_dbl_polynomials
 
 clean:
 	make -f $(MAKEFILE) clean

@@ -1,0 +1,106 @@
+// Collects the addition jobs to evaluate and differentiate
+// one polynomial in several variables.
+
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include "random_polynomials.h"
+
+using namespace std;
+
+void write_addition_jobs ( int dim, int nbr, int *nvr );
+/*
+ * DESCRIPTION :
+ *   Writes all jobs to add forward, backward, and cross products
+ *   to define a reduction tree.
+ *
+ * ON ENTRY :
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant;
+ *   nvr      nbr integers with the number of variables in each monomial,
+ *            nvr[k] is the number of variables in monomial k. */
+
+int main ( void )
+{
+   cout << "Give the seed (0 for time) : ";
+   int seed; cin >> seed;
+
+   cout << "Give the dimension : ";
+   int dim;  cin >> dim;
+
+
+   cout << "Give the number of terms : ";
+   int nbr; cin >> nbr;
+
+   int seedused;
+
+   if(seed != 0)
+   {
+      srand(seed);
+      seedused = seed;
+   }
+   else
+   {
+      const int timevalue = time(NULL); // for a random seed
+      srand(timevalue);
+      seedused = timevalue;
+   }
+   const int deg = 0;
+   const int pwr = 1;
+
+   double *cst = new double[deg+1]; // constant coefficient series
+   double **cff = new double*[nbr]; // coefficient series of terms
+   for(int i=0; i<nbr; i++) cff[i] = new double[deg+1];
+   int *nvr = new int[nbr]; // number of variables in each monomial
+
+   make_supports(dim,nbr,nvr); // define supports of polynomial
+
+   int **idx = new int*[nbr];  // indices of variables in monomials
+   for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   int **exp = new int*[nbr];  // exponents of the variables
+   for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
+
+   bool fail = make_real_polynomial(dim,nbr,pwr,deg,nvr,idx,exp,cst,cff);
+
+   for(int i=0; i<nbr; i++)
+   {
+      cout << "Indices of monomial " << i << " :";
+      for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j]; cout << endl;
+   }
+   write_addition_jobs(dim,nbr,nvr);
+
+   cout << "seed used : " << seedused << endl;
+
+   return 0;
+}
+
+void write_addition_jobs ( int dim, int nbr, int *nvr )
+{
+   cout << "layer 0 : " << endl;
+   cout << "  f[0," << nvr[0]-1 << "] := "
+        << "f[0," << nvr[0]-1 << "] + cst " << endl;
+   if(nbr > 1)
+   {
+      for(int i=1; i<nbr-1; i=i+2) 
+         cout << "  f[" << i+1 << "," << nvr[i+1]-1 << "] := "
+              << "f[" << i+1 << "," << nvr[i+1]-1 << "] + "
+              << "f[" << i << "," << nvr[i]-1 << "]" << endl;
+
+      int stride = 2;
+      int laycnt = 1;
+      int istart = 0;
+
+      while(stride < nbr)
+      {
+         cout << "layer " << laycnt++ << " :" << endl;
+    
+         for(int i=istart; i<nbr-stride; i=i+2*stride) 
+            cout << "  f[" << i+stride << "," << nvr[i+stride]-1 << "] := "
+                 << "f[" << i+stride << "," << nvr[i+stride]-1 << "] + "
+                 << "f[" << i << "," << nvr[i]-1 << "]" << endl;
+
+         istart = istart + stride;
+         stride = 2*stride;
+      }
+   }
+}

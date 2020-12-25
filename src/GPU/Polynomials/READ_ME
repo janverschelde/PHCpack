@@ -11,6 +11,7 @@ random_polynomials         : generation of random polynomials
 convolution_job            : class to represent one convolution job
 convolution_jobs           : class to setup layers of convolution jobs
 test_convolution_jobs      : collects all convolution jobs
+test_addition_jobs         : tests the definition of the reduction tree
 -----------------------------------------------------------------------------
 dbl_polynomials_host       : evaldiff of double polynomials on host
 dbl_polynomials_kernels    : kernels for double evaluate and differentiate

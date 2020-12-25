@@ -1,4 +1,5 @@
 Fri 25 Dec 2020 : updated dbl_polynomial_kernels to include the constant.
+  New test_addition_jobs.cpp to define the reduction tree of additions.
 
 Thu 24 Dec 2020 : bug fixed in dbl_polynomials_kernels, the computation of
   the job indices does not need the cumulative sums; test_dbl_polynomials
