@@ -9,7 +9,7 @@ using namespace std;
 
 int coefficient_count ( int dim, int nbr, int deg, int *nvr )
 {
-   int count = nbr + dim;
+   int count = 1 + nbr + dim;
 
    for(int i=0; i<nbr; i++)
    {
@@ -59,7 +59,7 @@ void coefficient_indices
          csums[i] = csums[i-1] + nvr[i] - 2;
       }
    }
-   fstart[0] = (nbr+dim)*(deg+1);
+   fstart[0] = (1+nbr+dim)*(deg+1);
    for(int i=1; i<nbr; i++) fstart[i] = fstart[0] + fsums[i-1]*(deg+1);
 
    bstart[0] = fstart[0] + fsums[nbr-1]*(deg+1);
@@ -91,9 +91,9 @@ void job_indices
       cout << endl;
    }
    if(jobinp1tp < 0)           // first input is coefficient
-      *inp1ix = monidx*deg1;
+      *inp1ix = (1 + monidx)*deg1;
    else if(jobinp1tp == 0)     // first input is input series
-      *inp1ix = (nbr + jobinp1ix)*deg1;
+      *inp1ix = (1 + nbr + jobinp1ix)*deg1;
    else if(jobinp1tp == 1)     // first input is forward product
       *inp1ix = fstart[monidx] + jobinp1ix*deg1;
    else if(jobinp1tp == 2)     // first input is backward product
@@ -102,9 +102,9 @@ void job_indices
       *inp1ix = cstart[monidx] + jobinp1ix*deg1;
 
    if(jobinp2tp < 0)           // second input is coefficient
-      *inp2ix = monidx*deg1;
+      *inp2ix = (1 + monidx)*deg1;
    else if(jobinp2tp == 0)     // second input is input series
-      *inp2ix = (nbr + jobinp2ix)*deg1;
+      *inp2ix = (1 + nbr + jobinp2ix)*deg1;
    else if(jobinp2tp == 1)     // second input is forward product
       *inp2ix = fstart[monidx] + jobinp2ix*deg1;
    else if(jobinp2tp == 2)     // second input is backward product
@@ -179,14 +179,13 @@ __global__ void dbl_padded_convjobs
 }
 
 void data_to_output
- ( double *data, double *cst, double **output,
-   int dim, int nbr, int deg, int *nvr, int **idx,
-   int *fstart, int *bstart, int *cstart, bool verbose )
+ ( double *data, double **output, int dim, int nbr, int deg, int *nvr,
+   int **idx, int *fstart, int *bstart, int *cstart, bool verbose )
 {
    const int deg1 = deg+1;
    int ix0,ix1,ix2;
 
-   for(int i=0; i<=deg; i++) output[dim][i] = cst[i];
+   for(int i=0; i<=deg; i++) output[dim][i] = data[i];
    for(int i=0; i<dim; i++)
       for(int j=0; j<=deg; j++) output[i][j] = 0.0;
 
@@ -202,8 +201,7 @@ void data_to_output
       ix0 = idx[k][0];
       if(nvr[k] == 1)
       {
-         ix1 = k*deg1;
-
+         ix1 = (1 + k)*deg1;
             
          for(int i=0; i<=deg; i++) output[ix0][i] += data[ix1++];
       }
@@ -212,7 +210,6 @@ void data_to_output
          ix2 = nvr[k]-3;
          if(ix2 < 0) ix2 = 0;
          ix1 = bstart[k] + ix2*deg1;
-
 
          for(int i=0; i<=deg; i++) output[ix0][i] += data[ix1++];
 
@@ -277,6 +274,7 @@ void GPU_dbl_poly_evaldiff
 
    double *data_h = new double[totalcff];        // data on host
    int ix = 0;
+   for(int i=0; i<deg1; i++) data_h[ix++] = cst[i];
    for(int i=0; i<nbr; i++)
       for(int j=0; j<deg1; j++) data_h[ix++] = cff[i][j];
    for(int i=0; i<dim; i++)
@@ -322,6 +320,6 @@ void GPU_dbl_poly_evaldiff
    }
    cudaMemcpy(data_h,data_d,szdata,cudaMemcpyDeviceToHost);
 
-   data_to_output(data_h,cst,output,dim,nbr,deg,nvr,idx,
+   data_to_output(data_h,output,dim,nbr,deg,nvr,idx,
                   fstart,bstart,cstart,verbose);
 }

@@ -11,6 +11,7 @@ int coefficient_count ( int dim, int nbr, int deg, int *nvr );
 /*
  * DESCRIPTION :
  *   Returns the total number of coefficients in all convolutions.
+ *   The count includes also the constant coefficient.
  *
  * ON ENTRY :
  *   dim      total number of variables;
@@ -130,18 +131,16 @@ __global__ void dbl_padded_convjobs
  *   data      updated forward, backward, and cross products. */
 
 void data_to_output
- ( double *data, double *cst, double **output,
-   int dim, int nbr, int deg, int *nvr, int **idx,
-   int *fstart, int *bstart, int *cstart, bool verbose=true );
+ ( double *data, double **output, int dim, int nbr, int deg, int *nvr,
+   int **idx, int *fstart, int *bstart, int *cstart, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Extracts the data computed on the device to the output.
  *   This function is only for testing purposes.
  *
  * ON ENTRY :
- *   data     coefficients of monomials and input series, 
+ *   data     coefficients of all monomials and input series, 
  *            computed forward, backward, and cross products;
- *   cst      deg+1 doubles for the constant coefficient series;
  *   output   space for the value and all derivatives;
  *   dim      total number of variables;
  *   nbr      number of monomials, excluding the constant term;
