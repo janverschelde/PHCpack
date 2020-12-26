@@ -105,6 +105,12 @@ test_convolution_jobs.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: test_convolution_jobs.obj /EHsc
 
+addition_job.obj:
+	@-echo ">>> compiling addition_job ..."
+	$(CL)\cl /c addition_job.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: addition_job.obj /EHsc
+
 test_addition_jobs.obj:
 	@-echo ">>> compiling test_addition_jobs ..."
 	$(CL)\cl /c test_addition_jobs.cpp \
@@ -123,11 +129,11 @@ test_convolution_jobs: random_numbers.obj random_series.obj \
 
 test_addition_jobs: random_numbers.obj random_series.obj \
 	            random_monomials.obj random_polynomials.obj \
-                    test_addition_jobs.obj 
+                    addition_job.obj test_addition_jobs.obj 
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_addition_jobs.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
-              random_polynomials.obj test_addition_jobs.obj
+              random_polynomials.obj addition_job.obj test_addition_jobs.obj
 
 test_dbl_polynomials: random_numbers.obj random_series.obj \
 	              random_monomials.obj random_polynomials.obj \
@@ -152,6 +158,7 @@ clean:
 	del test_convolution_jobs.exe test_convolution_jobs.lib
 	del convolution_job.obj convolution_jobs.obj
 	del test_convolution_jobs.exp test_convolution_jobs.obj
+	del addition_job.obj
 	del test_addition_jobs.exe test_addition_jobs.lib
 	del test_addition_jobs.exp test_addition_jobs.obj
 

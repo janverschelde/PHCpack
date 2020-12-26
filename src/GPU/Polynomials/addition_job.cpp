@@ -57,4 +57,6 @@ std::ostream& operator<< ( std::ostream& os, const AdditionJob& job )
       os << "c[" << job.updmon << "," << job.updidx << "] := "
          << "c[" << job.updmon << "," << job.updidx << "] + "
          << "c[" << job.incmon << "," << job.incidx << "]";
+
+   return os;
 }
