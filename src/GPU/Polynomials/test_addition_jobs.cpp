@@ -6,6 +6,7 @@
 #include <ctime>
 #include "random_polynomials.h"
 #include "addition_job.h"
+#include "addition_jobs.h"
 
 using namespace std;
 
@@ -70,6 +71,27 @@ int main ( void )
    }
    write_addition_jobs(dim,nbr,nvr);
 
+   AdditionJobs jobs(dim);
+
+   jobs.make(nbr,nvr,true);
+
+   cout << "number of addition jobs : " << jobs.get_count() << endl;
+   cout << "number of layers : " << jobs.get_depth() << endl;
+   cout << "frequency of layer counts :" << endl;
+   int checksum = 0;
+   for(int i=0; i<jobs.get_depth(); i++)
+   {
+      cout << i << " : " << jobs.get_layer_count(i) << endl;
+      checksum = checksum + jobs.get_layer_count(i); 
+   }
+   cout << "layer count sum : " << checksum << endl;
+
+   for(int k=0; k<jobs.get_depth(); k++)
+   {
+      cout << "jobs at layer " << k << " :" << endl;
+      for(int i=0; i<jobs.get_layer_count(k); i++)
+         cout << jobs.get_job(k,i) << endl;
+   }
    cout << "seed used : " << seedused << endl;
 
    return 0;

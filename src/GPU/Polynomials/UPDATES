@@ -1,4 +1,5 @@
-Sat 26 Dec 2020 : new class addition_job, used in test_addition_jobs.
+Sat 26 Dec 2020 : new class in addition_job, used in test_addition_jobs.
+  New class in addition_jobs, updated addition_job.cpp and test_addition_jobs.
 
 Fri 25 Dec 2020 : updated dbl_polynomial_kernels to include the constant.
   New test_addition_jobs.cpp to define the reduction tree of additions.

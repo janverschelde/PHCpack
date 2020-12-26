@@ -12,6 +12,7 @@ convolution_job            : class to represent one convolution job
 convolution_jobs           : class to setup layers of convolution jobs
 test_convolution_jobs      : collects all convolution jobs
 addition_job               : class to represent one addition job
+addition_jobs              : class to setup the reduction tree
 test_addition_jobs         : tests the definition of the reduction tree
 -----------------------------------------------------------------------------
 dbl_polynomials_host       : evaldiff of double polynomials on host
