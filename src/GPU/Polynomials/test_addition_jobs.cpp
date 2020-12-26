@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 #include "random_polynomials.h"
+#include "addition_job.h"
 
 using namespace std;
 
@@ -77,15 +78,17 @@ int main ( void )
 void write_addition_jobs ( int dim, int nbr, int *nvr )
 {
    cout << "layer 0 : " << endl;
-   cout << "  f[0," << nvr[0]-1 << "] := "
-        << "f[0," << nvr[0]-1 << "] + cst " << endl;
+   {
+      AdditionJob job(1,1,-1,0,-1);
+      cout << job << endl;
+   }
    if(nbr > 1)
    {
       for(int i=1; i<nbr-1; i=i+2) 
-         cout << "  f[" << i+1 << "," << nvr[i+1]-1 << "] := "
-              << "f[" << i+1 << "," << nvr[i+1]-1 << "] + "
-              << "f[" << i << "," << nvr[i]-1 << "]" << endl;
-
+      {
+         AdditionJob job(1,i+1,i,nvr[i+1]-1,nvr[i]-1);
+         cout << job << endl;
+      }
       int stride = 2;
       int laycnt = 1;
       int istart = 0;
@@ -95,9 +98,10 @@ void write_addition_jobs ( int dim, int nbr, int *nvr )
          cout << "layer " << laycnt++ << " :" << endl;
     
          for(int i=istart; i<nbr-stride; i=i+2*stride) 
-            cout << "  f[" << i+stride << "," << nvr[i+stride]-1 << "] := "
-                 << "f[" << i+stride << "," << nvr[i+stride]-1 << "] + "
-                 << "f[" << i << "," << nvr[i]-1 << "]" << endl;
+         {
+            AdditionJob job(1,i+stride,i,nvr[i+stride]-1,nvr[i]-1);
+            cout << job << endl;
+         }
 
          istart = istart + stride;
          stride = 2*stride;
