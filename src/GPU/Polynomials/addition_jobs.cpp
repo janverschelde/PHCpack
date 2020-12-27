@@ -25,7 +25,7 @@ void AdditionJobs::make ( int nbr, int *nvr, bool verbose )
    if(verbose) cout << "layer 0 : " << endl;
    {
       jobcount = jobcount + 1; freqlaycnt[0] = freqlaycnt[0] + 1;
-      AdditionJob job(1,1,-1,0,-1);
+      AdditionJob job(1,0,-1,nvr[0]-1,-1);
       if(verbose) cout << jobcount << " : " << job
                                    << " : layer 0" << endl;
       jobs[0].push_back(job);

@@ -101,7 +101,7 @@ void write_addition_jobs ( int dim, int nbr, int *nvr )
 {
    cout << "layer 0 : " << endl;
    {
-      AdditionJob job(1,1,-1,0,-1);
+      AdditionJob job(1,0,-1,nvr[0]-1,-1);
       cout << job << endl;
    }
    if(nbr > 1)
