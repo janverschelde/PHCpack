@@ -5,9 +5,9 @@
 #include <iostream>
 #include "addition_jobs.h"
 
-AdditionJobs::AdditionJobs ( int dim )
+AdditionJobs::AdditionJobs ( int nbr )
 {
-   dimension = dim;
+   dimension = nbr;
    jobcount = 0;
    laydepth = 0;
 }
@@ -47,12 +47,17 @@ void AdditionJobs::make ( int nbr, int *nvr, bool verbose )
 
       while(stride < nbr)
       {
-         if(verbose) cout << "layer " << laycnt << " :" << endl;
+         if(verbose) cout << "layer " << laycnt
+                          << ", istart : " << istart
+                          << ", stride : " << stride << " :" << endl;
     
          for(int i=istart; i<nbr-stride; i=i+2*stride) 
          {
             jobcount = jobcount + 1;
             freqlaycnt[laycnt] = freqlaycnt[laycnt] + 1;
+            if(verbose)
+               cout << "freqlaycnt[" << laycnt << "] : "
+                    << freqlaycnt[laycnt] << endl;
             AdditionJob job(1,i+stride,i,nvr[i+stride]-1,nvr[i]-1);
             if(verbose) cout << jobcount << " : " << job
                              << " : layer " << laycnt << endl;

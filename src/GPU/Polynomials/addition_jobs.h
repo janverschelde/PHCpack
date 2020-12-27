@@ -13,11 +13,11 @@ class AdditionJobs
 {
    public:
 
-      AdditionJobs ( int dim );
+      AdditionJobs ( int nbr );
       /*
        * DESCRIPTION :
-       *   Sets the dimension to dim.
-       *   The dimension is the number of variables in a polynomial. */
+       *   Sets the dimension to nbr.
+       *   The dimension is the number of monomials. */
 
       void make ( int nbr, int *nvr, bool verbose );
       /*
@@ -34,7 +34,7 @@ class AdditionJobs
        *           if false, then the constructor remains silent. */
 
       int get_dimension ( void ) const;
-      // Returns the dimension.
+      // Returns the dimension, the number of terms.
 
       int get_count ( void ) const;
       // Returns the number of addition jobs.

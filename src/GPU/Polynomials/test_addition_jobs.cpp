@@ -71,7 +71,7 @@ int main ( void )
    }
    write_addition_jobs(dim,nbr,nvr);
 
-   AdditionJobs jobs(dim);
+   AdditionJobs jobs(nbr); // initialize with the number of monomials
 
    jobs.make(nbr,nvr,true);
 
