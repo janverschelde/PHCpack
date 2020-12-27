@@ -1,6 +1,7 @@
 Sun 27 Dec 2020 : bug fix, in addition_jobs and test_addition_jobs,
   the dimension is the number of monomials, not the number of variables.
   Added recursive make of jobs to addition_jobs, test_addition_jobs.
+  In addition_job.h, fixed the ifndef label.
 
 Sat 26 Dec 2020 : new class in addition_job, used in test_addition_jobs.
   New class in addition_jobs, updated addition_job.cpp and test_addition_jobs.

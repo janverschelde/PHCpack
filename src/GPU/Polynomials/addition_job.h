@@ -1,8 +1,8 @@
 // The file addition_job.h defines the class AdditionJob
 // to store the data of one addition job.
 
-#ifndef __convolution_job_h__
-#define __convolution_job_h__
+#ifndef __addition_job_h__
+#define __addition_job_h__
 
 #include <iostream>
 
