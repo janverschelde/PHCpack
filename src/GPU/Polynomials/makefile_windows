@@ -145,6 +145,7 @@ test_addition_jobs: random_numbers.obj random_series.obj \
 test_dbl_polynomials: random_numbers.obj random_series.obj \
 	              random_monomials.obj random_polynomials.obj \
                       convolution_job.obj convolution_jobs.obj \
+                      addition_job.obj addition_jobs.obj \
                     dbl_convolutions_host.obj dbl_monomials_host.obj \
                     dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
                     test_dbl_polynomials.obj
@@ -152,6 +153,7 @@ test_dbl_polynomials: random_numbers.obj random_series.obj \
 	nvcc -ccbin=$(CL) -o test_dbl_polynomials.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
               random_polynomials.obj convolution_job.obj convolution_jobs.obj \
+              addition_job.obj addition_jobs.obj \
               dbl_convolutions_host.obj dbl_monomials_host.obj \
               dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
               test_dbl_polynomials.obj
