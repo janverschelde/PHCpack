@@ -1,11 +1,17 @@
 /* The file dbl_polynomials_host.h specifies functions to evaluate and
  * differentiate a polynomial at power series truncated to the same degree,
- * in double precision. */
+ * in double precision.
+ *
+ * The algorithmic differentiation is organized in two ways:
+ * (1) CPU_dbl_poly_evaldiff serves to verify the correctness;
+ * (2) CPU_dbl_poly_evaldiffjobs prepares the accelerated version,
+ * with layered convolution jobs. */
 
 #ifndef __dbl_polynomials_host_h__
 #define __dbl_polynomials_host_h__
 
 #include "convolution_jobs.h"
+#include "addition_jobs.h"
 
 void CPU_dbl_poly_speel
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
@@ -103,13 +109,36 @@ void CPU_dbl_conv_job
  *   backward are the updated backward products;
  *   cross    are the updated cross products. */
 
+void CPU_dbl_add_job
+ ( int deg, double *cst,
+   double ***forward, double ***backward, double ***cross,
+   AdditionJob job, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Does one update defined by the job.
+ *
+ * ON ENTRY :
+ *   deg      degree of the series;
+ *   cst      constant coefficient series of the polynmial;
+ *   forward  all computed forward products,
+ *   backward all computed backward products;
+ *   cross    all computed cross products;
+ *   job      defines the addition job;
+ *   verbose  if true, then is verbose.
+ *
+ * ON RETURN :
+ *   forward  are the updated forward products;
+ *   backward are the updated backward products;
+ *   cross    are the updated cross products. */
+
 void CPU_dbl_poly_evaldiffjobs
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double *cst, double **cff, double **input, double **output,
-   ConvolutionJobs jobs, bool verbose=false );
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose=false );
 /*
  * DESCRIPTION :
- *   Computes the convolutions in the order as defined by jobs,
+ *   Computes the convolutions in the order as defined by cnvjobs,
+ *   performs the updates to the values as defined by addjobs,
  *   all other parameters are the same as in the other function.
  *
  * ON ENTRY :
@@ -126,7 +155,8 @@ void CPU_dbl_poly_evaldiffjobs
  *   input    contains the coefficients of the power series
  *            for all variables in the polynomial;
  *   output   space allocated for the value and all derivatives;
- *   jobs     convolution jobs organized in layers;
+ *   cnvjobs  convolution jobs organized in layers;
+ *   addjobs  addition jobs organized in layers;
  *   verbose  if true, writes one line to screen for every convolution.
  *
  * ON RETURN :
@@ -134,6 +164,5 @@ void CPU_dbl_poly_evaldiffjobs
  *            output[k], for k from 0 to dim-1, contains the
  *            derivative with respect to the variable k;
  *            output[dim] contains the value of the polynomial. */
-
 
 #endif

@@ -255,10 +255,36 @@ void CPU_dbl_conv_job
    }
 }
 
+void CPU_dbl_add_job
+ ( int deg, double *cst,
+   double ***forward, double ***backward, double ***cross,
+   AdditionJob job, bool verbose )
+{
+   const int jobtype = job.get_addition_type();
+   const int updmon = job.get_update_monomial();
+   const int updidx = job.get_update_index();
+   const int incmon = job.get_increment_monomial();
+   const int incidx = job.get_increment_index();
+
+   if(jobtype == 1)
+   {
+      if(incmon < 0)
+      {
+         for(int i=0; i<=deg; i++)
+            forward[updmon][updidx][i] += cst[i];
+      }
+      else
+      {
+         for(int i=0; i<=deg; i++)
+            forward[updmon][updidx][i] += forward[incmon][incidx][i];
+      }
+   }
+}
+
 void CPU_dbl_poly_evaldiffjobs
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double *cst, double **cff, double **input, double **output,
-   ConvolutionJobs jobs, bool verbose )
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose )
 {
    double ***forward = new double**[nbr];
    double ***backward = new double**[nbr];
@@ -282,24 +308,43 @@ void CPU_dbl_poly_evaldiffjobs
          for(int i=0; i<nvrk-2; i++) cross[k][i] = new double[deg+1];
       }
    }
-   for(int i=0; i<=deg; i++) output[dim][i] = cst[i];
+   // for(int i=0; i<=deg; i++) output[dim][i] = cst[i];
    for(int i=0; i<dim; i++)
       for(int j=0; j<=deg; j++) output[i][j] = 0.0;
 
-   for(int k=0; k<jobs.get_depth(); k++)
+   for(int k=0; k<cnvjobs.get_depth(); k++)
    {
-      if(verbose) cout << "running jobs at layer " << k << " :" << endl;
-      for(int i=0; i<jobs.get_layer_count(k); i++)
+      if(verbose) cout << "executing convolution jobs at layer "
+                       << k << " :" << endl;
+      for(int i=0; i<cnvjobs.get_layer_count(k); i++)
       {
-         ConvolutionJob job = jobs.get_job(k,i);
+         ConvolutionJob job = cnvjobs.get_job(k,i);
          if(verbose) cout << "job " << i << " : " << job << endl;
 
          int monidx = job.get_monomial_index();
 
          CPU_dbl_conv_job
-           (deg,nvr[monidx],idx[monidx],cff[monidx],input,
-            forward[monidx],backward[monidx],cross[monidx],job,verbose);
+            (deg,nvr[monidx],idx[monidx],cff[monidx],input,
+             forward[monidx],backward[monidx],cross[monidx],job,verbose);
       }
+   }
+   for(int k=0; k<addjobs.get_depth(); k++)
+   {
+      if(verbose) cout << "executing addition jobs at layer "
+                       << k << " :" << endl;
+      for(int i=0; i<addjobs.get_layer_count(k); i++)
+      {
+         AdditionJob job = addjobs.get_job(k,i);
+         if(verbose) cout << "job " << i << " : " << job << endl;
+
+         CPU_dbl_add_job(deg,cst,forward,backward,cross,job,verbose);
+      }
+   }
+   {
+      int lastmon = nbr-1;
+      int lastidx = nvr[lastmon]-1;
+      for(int i=0; i<=deg; i++) // value is last forward location
+         output[dim][i] = forward[lastmon][lastidx][i];
    }
    for(int k=0; k<nbr; k++)
    {
@@ -309,8 +354,8 @@ void CPU_dbl_poly_evaldiffjobs
                              // last backward has the first derivative
       int ixn = idx[k][ix1]; // index of the last variable in monomial k
 
-      for(int i=0; i<=deg; i++) // value is last forward location
-         output[dim][i] = output[dim][i] + forward[k][ix1][i];
+      //for(int i=0; i<=deg; i++) // value is last forward location
+      //   output[dim][i] = output[dim][i] + forward[k][ix1][i];
 
       if(ix1 == 0)           // monomial has only one variable
       {

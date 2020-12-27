@@ -10,6 +10,7 @@
 #include "random_monomials.h"
 #include "random_polynomials.h"
 #include "convolution_jobs.h"
+#include "addition_jobs.h"
 #include "dbl_polynomials_host.h"
 #include "dbl_polynomials_kernels.h"
 
@@ -176,37 +177,58 @@ double test_dbl_real_polynomial
       }
       bool vrb = (verbose > 0);
 
-      ConvolutionJobs jobs(dim);
+      ConvolutionJobs cnvjobs(dim);
 
-      jobs.make(nbr,nvr,idx,vrb);
+      cnvjobs.make(nbr,nvr,idx,vrb);
 
-      cout << "number of convolution jobs : " << jobs.get_count() << endl;
-      cout << "number of layers : " << jobs.get_depth() << endl;
+      cout << "number of convolution jobs : " << cnvjobs.get_count() << endl;
+      cout << "number of layers : " << cnvjobs.get_depth() << endl;
       cout << "frequency of layer counts :" << endl;
       int checksum = 0;
-      for(int i=0; i<jobs.get_depth(); i++)
+      for(int i=0; i<cnvjobs.get_depth(); i++)
       {
-         cout << i << " : " << jobs.get_layer_count(i) << endl;
-         checksum = checksum + jobs.get_layer_count(i); 
+         cout << i << " : " << cnvjobs.get_layer_count(i) << endl;
+         checksum = checksum + cnvjobs.get_layer_count(i); 
       }
       cout << "layer count sum : " << checksum << endl;
 
-      for(int k=0; k<jobs.get_depth(); k++)
+      for(int k=0; k<cnvjobs.get_depth(); k++)
       {
          cout << "jobs at layer " << k << " :" << endl;
-         for(int i=0; i<jobs.get_layer_count(k); i++)
-            cout << jobs.get_job(k,i) << endl;
+         for(int i=0; i<cnvjobs.get_layer_count(k); i++)
+            cout << cnvjobs.get_job(k,i) << endl;
       }
       cout << endl;
 
+      AdditionJobs addjobs(nbr); // initialize with the number of monomials
+
+      addjobs.make(nbr,nvr,true);
+
+      cout << "number of addition jobs : " << addjobs.get_count() << endl;
+      cout << "number of layers : " << addjobs.get_depth() << endl;
+      cout << "frequency of layer counts :" << endl;
+      checksum = 0;
+      for(int i=0; i<addjobs.get_depth(); i++)
+      {
+         cout << i << " : " << addjobs.get_layer_count(i) << endl;
+         checksum = checksum + addjobs.get_layer_count(i); 
+      }
+      cout << "layer count sum : " << checksum << endl;
+
+      for(int k=0; k<addjobs.get_depth(); k++)
+      {
+         cout << "jobs at layer " << k << " :" << endl;
+         for(int i=0; i<addjobs.get_layer_count(k); i++)
+            cout << addjobs.get_job(k,i) << endl;
+      }
       if(vrb) cout << "Computing without convolution jobs ..." << endl;
       CPU_dbl_poly_evaldiff(dim,nbr,deg,nvr,idx,cst,cff,input,output1_h,vrb);
       if(vrb) cout << "Computing with convolution jobs ..." << endl;
       CPU_dbl_poly_evaldiffjobs
-         (dim,nbr,deg,nvr,idx,cst,cff,input,output2_h,jobs,vrb);
+         (dim,nbr,deg,nvr,idx,cst,cff,input,output2_h,cnvjobs,addjobs,vrb);
       if(vrb) cout << "Computing on the device ..." << endl;
       GPU_dbl_poly_evaldiff
-         (deg+1,dim,nbr,deg,nvr,idx,cst,cff,input,output_d,jobs,vrb);
+         (deg+1,dim,nbr,deg,nvr,idx,cst,cff,input,output_d,cnvjobs,vrb);
 
       double err = 0.0;
 
