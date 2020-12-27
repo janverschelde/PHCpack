@@ -12,6 +12,48 @@ AdditionJobs::AdditionJobs ( int nbr )
    laydepth = 0;
 }
 
+void AdditionJobs::recursive_start ( int nbr, int *level, int *stride )
+{
+   int lvl = 0;
+   int pwr = 1; // pwr = 2**lvl
+
+   while(pwr <= nbr)
+   {
+      lvl = lvl+1;
+      pwr = pwr*2;
+   }
+   *level = lvl-1;
+   *stride = pwr/2;
+}
+
+void AdditionJobs::recursive_make
+ ( int level, int stride, int nbr, int *nvr, bool verbose )
+{
+   const int ix1 = nbr - 1;
+   const int ix2 = ix1 - stride;
+
+   if(ix2 >= 0)
+   {
+      AdditionJob job(1,ix1,ix2,nvr[ix1]-1,nvr[ix2]-1);
+      if(verbose) cout << "adding " << job << " to layer " << level << endl;
+      jobs[level].push_back(job);
+      freqlaycnt[level] = freqlaycnt[level] + 1;
+   }
+   else if(ix2 == -1)
+   {
+      AdditionJob job(1,ix1,-1,nvr[ix1]-1,-1);
+      if(verbose) cout << "adding " << job << " to layer " << level << endl;
+      jobs[level].push_back(job);
+      freqlaycnt[level] = freqlaycnt[level] + 1;
+   }
+   if(level > 0)
+   {
+      recursive_make(level-1,stride/2,nbr,nvr,verbose);
+      if(nbr > stride)
+         recursive_make(level-1,stride/2,nbr-stride,nvr,verbose);
+   }
+}
+
 void AdditionJobs::make ( int nbr, int *nvr, bool verbose )
 {
    freqlaycnt = new int[dimension];
@@ -22,53 +64,12 @@ void AdditionJobs::make ( int nbr, int *nvr, bool verbose )
       vector<AdditionJob> jobvec;
       jobs.push_back(jobvec);
    }
-   if(verbose) cout << "layer 0 : " << endl;
-   {
-      jobcount = jobcount + 1; freqlaycnt[0] = freqlaycnt[0] + 1;
-      AdditionJob job(1,0,-1,nvr[0]-1,-1);
-      if(verbose) cout << jobcount << " : " << job
-                                   << " : layer 0" << endl;
-      jobs[0].push_back(job);
-   }
-   laydepth = 1; // we have one layer
-   if(nbr > 1)
-   {
-      for(int i=1; i<nbr-1; i=i+2) 
-      {
-         jobcount = jobcount + 1; freqlaycnt[0] = freqlaycnt[0] + 1;
-         AdditionJob job(1,i+1,i,nvr[i+1]-1,nvr[i]-1);
-         if(verbose) cout << jobcount << " : " << job
-                                      << " : layer 0" << endl;
-         jobs[0].push_back(job);
-      }
-      int stride = 2;
-      int laycnt = 1;
-      int istart = 0;
+   int level,stride;
 
-      while(stride < nbr)
-      {
-         if(verbose) cout << "layer " << laycnt
-                          << ", istart : " << istart
-                          << ", stride : " << stride << " :" << endl;
-    
-         for(int i=istart; i<nbr-stride; i=i+2*stride) 
-         {
-            jobcount = jobcount + 1;
-            freqlaycnt[laycnt] = freqlaycnt[laycnt] + 1;
-            if(verbose)
-               cout << "freqlaycnt[" << laycnt << "] : "
-                    << freqlaycnt[laycnt] << endl;
-            AdditionJob job(1,i+stride,i,nvr[i+stride]-1,nvr[i]-1);
-            if(verbose) cout << jobcount << " : " << job
-                             << " : layer " << laycnt << endl;
-            jobs[laycnt].push_back(job);
-         }
-         laycnt = laycnt + 1;
-         istart = istart + stride;
-         stride = 2*stride;
-      }
-      laydepth = laycnt;
-   }
+   recursive_start(nbr,&level,&stride);
+   recursive_make(level,stride,nbr,nvr,verbose);
+
+   laydepth = level+1;
 }
 
 int AdditionJobs::get_dimension ( void ) const

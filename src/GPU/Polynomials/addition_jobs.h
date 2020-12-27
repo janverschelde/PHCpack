@@ -65,6 +65,27 @@ class AdditionJobs
       int *freqlaycnt;
 
       vector< vector<AdditionJob> > jobs;
+
+      void recursive_start ( int nbr, int *level, int *stride );
+      /*
+       * DESCRIPTION :
+       *   Determines the value for the level and stride,
+       *   given the number of monomials in nbr,
+       *   to start the recursive_make. */
+
+      void recursive_make
+       ( int level, int stride, int nbr, int *nvr, bool verbose );
+      /*
+       * DESCRIPTION :
+       *   Adds the jobs recursively, starting at the top.
+       *
+       * ON ENTRY :
+       *   level    current layer of jobs;
+       *   stride   current stride;
+       *   nbr      number of monomials, excluding the constant;
+       *   nvr      nbr integers count the variables in each monomial,
+       *            nvr[k] is the number of variables in monomial k;
+       *   verbose  if true, writes one line per job added. */
 };
 
 #endif

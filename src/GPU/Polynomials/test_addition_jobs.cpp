@@ -10,18 +10,6 @@
 
 using namespace std;
 
-void write_addition_jobs ( int dim, int nbr, int *nvr );
-/*
- * DESCRIPTION :
- *   Writes all jobs to add forward, backward, and cross products
- *   to define a reduction tree.
- *
- * ON ENTRY :
- *   dim      total number of variables;
- *   nbr      number of monomials, excluding the constant;
- *   nvr      nbr integers with the number of variables in each monomial,
- *            nvr[k] is the number of variables in monomial k. */
-
 int main ( void )
 {
    cout << "Give the seed (0 for time) : ";
@@ -69,8 +57,6 @@ int main ( void )
       cout << "Indices of monomial " << i << " :";
       for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j]; cout << endl;
    }
-   write_addition_jobs(dim,nbr,nvr);
-
    AdditionJobs jobs(nbr); // initialize with the number of monomials
 
    jobs.make(nbr,nvr,true);
@@ -95,38 +81,4 @@ int main ( void )
    cout << "seed used : " << seedused << endl;
 
    return 0;
-}
-
-void write_addition_jobs ( int dim, int nbr, int *nvr )
-{
-   cout << "layer 0 : " << endl;
-   {
-      AdditionJob job(1,0,-1,nvr[0]-1,-1);
-      cout << job << endl;
-   }
-   if(nbr > 1)
-   {
-      for(int i=1; i<nbr-1; i=i+2) 
-      {
-         AdditionJob job(1,i+1,i,nvr[i+1]-1,nvr[i]-1);
-         cout << job << endl;
-      }
-      int stride = 2;
-      int laycnt = 1;
-      int istart = 0;
-
-      while(stride < nbr)
-      {
-         cout << "layer " << laycnt++ << " :" << endl;
-    
-         for(int i=istart; i<nbr-stride; i=i+2*stride) 
-         {
-            AdditionJob job(1,i+stride,i,nvr[i+stride]-1,nvr[i]-1);
-            cout << job << endl;
-         }
-
-         istart = istart + stride;
-         stride = 2*stride;
-      }
-   }
 }
