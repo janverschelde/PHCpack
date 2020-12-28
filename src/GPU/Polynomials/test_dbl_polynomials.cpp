@@ -205,9 +205,9 @@ double test_dbl_real_polynomial
       }
       cout << endl;
 
-      AdditionJobs addjobs(nbr); // initialize with the number of monomials
+      AdditionJobs addjobs(dim,nbr);
 
-      addjobs.make(nbr,nvr,true);
+      addjobs.make(nbr,nvr,idx,true);
 
       cout << "number of addition jobs : " << addjobs.get_count() << endl;
       cout << "number of layers : " << addjobs.get_depth() << endl;

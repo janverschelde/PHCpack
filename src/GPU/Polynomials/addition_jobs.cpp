@@ -5,9 +5,10 @@
 #include <iostream>
 #include "addition_jobs.h"
 
-AdditionJobs::AdditionJobs ( int nbr )
+AdditionJobs::AdditionJobs ( int dim, int nbr )
 {
-   dimension = nbr;
+   nbrvar = dim;
+   nbrmon = nbr;
    jobcount = 0;
    laydepth = 0;
 }
@@ -54,12 +55,82 @@ void AdditionJobs::recursive_make
    }
 }
 
-void AdditionJobs::make ( int nbr, int *nvr, bool verbose )
+void AdditionJobs::differential_index_count
+ ( int dim, int nbr, int *nvr, int **idx, int *cnt, bool verbose )
 {
-   freqlaycnt = new int[dimension];
-   for(int i=0; i<dimension; i++) freqlaycnt[i] = 0;
+   for(int i=0; i<dim; i++)
+   {
+      if(verbose) cout << "Variable " <<  i << " occurs in monomials"; 
 
-   for(int i=0; i<dimension; i++)
+      cnt[i] = 0;
+      for(int j=0; j<nbr; j++)
+      {
+         for(int k=0; k<nvr[j]; k++)
+            if(idx[j][k] == i)
+            {
+               if(verbose)
+               {
+                  cout << " " << j;
+                  if(nvr[j] == 1) cout << "(cff!)";
+               }
+               cnt[i] = cnt[i] + 1; break;
+            }
+      }
+      if(verbose) cout << endl;
+   }
+}
+
+void AdditionJobs::make_differential_indices
+ ( int dim, int nbr, int *nvr, int **idx, int *cnt, int **difidx,
+   bool verbose )
+{
+   int pos;
+
+   for(int i=0; i<dim; i++)
+   {
+      if(verbose) cout << "Variable " <<  i << " occurs in monomials"; 
+      
+      difidx[i][0] = -1;
+      pos = 1;
+      for(int j=0; j<nbr; j++)
+      {
+         for(int k=0; k<nvr[j]; k++)
+            if(idx[j][k] == i)
+            {
+               if(verbose)
+               {
+                  cout << " " << j;
+                  if(nvr[j] == 1) cout << "(cff!)";
+               }
+               if(nvr[j] == 1)
+               {
+                  difidx[i][0] = j;
+                  cnt[i] = cnt[i] - 1;
+               }
+               else
+               {
+                  difidx[i][pos++] = j;
+               }
+               break;
+            }
+      }
+      if(verbose) cout << endl;
+   }
+}
+
+void AdditionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
+{
+   freqlaycnt = new int[nbrmon];
+   for(int i=0; i<nbrmon; i++) freqlaycnt[i] = 0;
+
+   difcnt = new int[nbrmon];
+   differential_index_count(nbrvar,nbr,nvr,idx,difcnt,verbose);
+
+   difidx = new int*[nbrvar];
+   for(int i=0; i<nbrvar; i++) difidx[i] = new int[difcnt[i]+1];
+   make_differential_indices(nbrvar,nbr,nvr,idx,difcnt,difidx,verbose);
+
+   for(int i=0; i<nbrmon; i++)
    {
       vector<AdditionJob> jobvec;
       jobs.push_back(jobvec);
@@ -72,9 +143,14 @@ void AdditionJobs::make ( int nbr, int *nvr, bool verbose )
    laydepth = level+1;
 }
 
-int AdditionJobs::get_dimension ( void ) const
+int AdditionJobs::get_number_of_variables ( void ) const
 {
-   return dimension;
+   return nbrvar;
+}
+
+int AdditionJobs::get_number_of_monomials ( void ) const
+{
+   return nbrmon;
 }
 
 int AdditionJobs::get_count ( void ) const
@@ -84,7 +160,7 @@ int AdditionJobs::get_count ( void ) const
 
 int AdditionJobs::get_layer_count ( int k ) const
 {
-   if(k >= dimension)
+   if(k >= nbrmon)
       return 0;
    else
       return freqlaycnt[k];
@@ -95,6 +171,24 @@ int AdditionJobs::get_depth ( void ) const
    return laydepth;
 }
 
+int AdditionJobs::get_differential_count ( int k ) const
+{
+   if(k >= nbrvar)
+      return 0;
+   else
+      return difcnt[k];
+}
+
+int AdditionJobs::get_differential_index ( int k, int i ) const
+{
+   if(k >= nbrvar)
+      return -1;
+   else if(i > difcnt[k])
+      return -1;
+   else
+      return difidx[k][i];
+}
+
 AdditionJob AdditionJobs::get_job ( int k, int i ) const
 {
    return jobs[k][i];
@@ -102,5 +196,6 @@ AdditionJob AdditionJobs::get_job ( int k, int i ) const
 
 AdditionJobs::~AdditionJobs ( void )
 {
-   dimension = 0;
+   nbrvar = 0;
+   nbrmon = 0;
 }
