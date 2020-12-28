@@ -176,6 +176,11 @@ double test_dbl_real_polynomial
          }
       }
       bool vrb = (verbose > 0);
+      bool dup = duplicate_supports(dim,nbr,nvr,idx,vrb);
+      if(dup)
+         cout << "Duplicate supports found." << endl;
+      else
+         cout << "No duplicate supports found." << endl;
 
       ConvolutionJobs cnvjobs(dim);
 

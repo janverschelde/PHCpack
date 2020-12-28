@@ -1,3 +1,6 @@
+Mon 28 Dec 2020 : extended random_polynomials with a check on duplicate
+  support vectors, tested in test_dbl_polynomials.cpp.
+
 Sun 27 Dec 2020 : bug fix, in addition_jobs and test_addition_jobs,
   the dimension is the number of monomials, not the number of variables.
   Added recursive make of jobs to addition_jobs, test_addition_jobs.
