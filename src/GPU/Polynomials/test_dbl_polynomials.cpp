@@ -92,6 +92,8 @@ int main_dbl_test_polynomial
       srand(timevalue);
       seedused = timevalue;
    }
+   if(vrblvl > 0) cout << "  Seed used : " << seedused << endl;
+
    double realsum = test_dbl_real_polynomial(dim,nbr,pwr,deg,vrblvl-1);
 
    const double tol = 1.0e-12;

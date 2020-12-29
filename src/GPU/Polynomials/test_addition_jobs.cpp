@@ -18,7 +18,6 @@ int main ( void )
    cout << "Give the dimension : ";
    int dim;  cin >> dim;
 
-
    cout << "Give the number of terms : ";
    int nbr; cin >> nbr;
 
@@ -35,6 +34,8 @@ int main ( void )
       srand(timevalue);
       seedused = timevalue;
    }
+   cout << "  seed used : " << seedused << endl;
+
    const int deg = 0;
    const int pwr = 1;
 
