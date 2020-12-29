@@ -4,9 +4,10 @@
 #include "addition_job.h"
 
 AdditionJob::AdditionJob
- ( int atp, int monix1, int monix2, int ix1, int ix2 )
+ ( int atp, int itp, int monix1, int monix2, int ix1, int ix2 )
 {
    adtype = atp;
+   intype = itp;
    updmon = monix1;
    incmon = monix2;
    updidx = ix1;
@@ -16,6 +17,11 @@ AdditionJob::AdditionJob
 int AdditionJob::get_addition_type ( void ) const
 {
    return adtype;
+}
+
+int AdditionJob::get_increment_type ( void ) const
+{
+   return intype;
 }
 
 int AdditionJob::get_update_monomial ( void ) const
@@ -46,7 +52,14 @@ std::ostream& operator<< ( std::ostream& os, const AdditionJob& job )
       if(job.incmon < 0)
          os << "cst";
       else
-         os << "f[" << job.incmon << "," << job.incidx << "]";
+      {
+         if(job.intype == 1)
+            os << "f[" << job.incmon << "," << job.incidx << "]";
+         else if(job.intype == 2)
+            os << "b[" << job.incmon << "," << job.incidx << "]";
+         else
+            os << "c[" << job.incmon << "," << job.incidx << "]";
+      }
    }
    else if(job.adtype == 2)
    {
@@ -54,7 +67,14 @@ std::ostream& operator<< ( std::ostream& os, const AdditionJob& job )
       if(job.incmon < 0)
          os << "cff[" << job.incidx << "]";
       else
-         os << "b[" << job.incmon << "," << job.incidx << "]";
+      {
+         if(job.intype == 1)
+            os << "f[" << job.incmon << "," << job.incidx << "]";
+         else if(job.intype == 2)
+            os << "b[" << job.incmon << "," << job.incidx << "]";
+         else
+            os << "c[" << job.incmon << "," << job.incidx << "]";
+      }
    }
    else
    {
@@ -62,7 +82,14 @@ std::ostream& operator<< ( std::ostream& os, const AdditionJob& job )
       if(job.incmon < 0)
          os << "cff[" << job.incidx << "]";
       else
-         os << "c[" << job.incmon << "," << job.incidx << "]";
+      {
+         if(job.intype == 1)
+            os << "f[" << job.incmon << "," << job.incidx << "]";
+         else if(job.intype == 2)
+            os << "b[" << job.incmon << "," << job.incidx << "]";
+         else
+            os << "c[" << job.incmon << "," << job.incidx << "]";
+      }
    }
    return os;
 }

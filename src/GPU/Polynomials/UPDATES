@@ -1,7 +1,8 @@
 Tue 29 Dec 2020 : in addition_jobs.cpp, corrected the dimension of the
   difcnt, which should be nbrvar instead of nbrmon.  The first derivative
   is correctly computed with addition jobs, as verified by the updates
-  in dbl_polynomials_host.cpp.
+  in dbl_polynomials_host.cpp.  Extended addition_job with a type for
+  the increment.  Added the jobs for all derivaties to addition_jobs.
 
 Mon 28 Dec 2020 : extended random_polynomials with a check on duplicate
   support vectors, tested in test_dbl_polynomials.cpp.

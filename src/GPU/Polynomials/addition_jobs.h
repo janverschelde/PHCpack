@@ -125,6 +125,38 @@ class AdditionJobs
        *            nvr[k] is the number of variables in monomial k;
        *   verbose  if true, writes one line per job added. */
 
+      int position ( int n, int *idx, int k );
+      /*
+       * DESCRIPTION :
+       *   Returns the position of k in the array idx, or
+       *   return -1 if k does not occur in the values of idx.
+       *   This is a helper function for the recursive_other_make.
+       *
+       * ON ENTRY :
+       *   n        number of entries in idx;
+       *   idx      sequence of n indices;
+       *   k        one index. */
+
+      void recursive_other_make
+       ( int level, int stride, int nbr, int *nvr, int **idx, int varidx,
+         bool verbose );
+      /*
+       * DESCRIPTION :
+       *   Adds the jobs recursively for the derivative, other than
+       *   the first one, starting at the top.
+       *
+       * ON ENTRY :
+       *   level    current layer of jobs;
+       *   stride   current stride;
+       *   nbr      value of difcnt[varidx];
+       *   nvr      nbr integers count the variables in each monomial,
+       *            nvr[k] is the number of variables in monomial k;
+       *   idx      array of nbr support vectors,
+       *            idx[k] has nvr[k] integers, idx[k][i] is the index
+       *            of the i-th variable in monomial k;
+       *   vardidx  index of the variable for the derivative;
+       *   verbose  if true, writes one line per job added. */
+
       void differential_index_count
        ( int dim, int nbr, int *nvr, int **idx, int *cnt, bool verbose );
       /*
