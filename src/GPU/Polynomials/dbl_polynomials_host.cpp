@@ -256,7 +256,7 @@ void CPU_dbl_conv_job
 }
 
 void CPU_dbl_add_job
- ( int deg, double *cst,
+ ( int deg, double *cst, double **cff,
    double ***forward, double ***backward, double ***cross,
    AdditionJob job, bool verbose )
 {
@@ -277,6 +277,19 @@ void CPU_dbl_add_job
       {
          for(int i=0; i<=deg; i++)
             forward[updmon][updidx][i] += forward[incmon][incidx][i];
+      }
+   }
+   else if(jobtype == 2)
+   {
+      if(incmon < 0)
+      {
+         for(int i=0; i<=deg; i++)
+            backward[updmon][updidx][i] += cff[incidx][i];
+      }
+      else
+      {
+         for(int i=0; i<=deg; i++)
+            backward[updmon][updidx][i] += backward[incmon][incidx][i];
       }
    }
 }
@@ -337,7 +350,7 @@ void CPU_dbl_poly_evaldiffjobs
          AdditionJob job = addjobs.get_job(k,i);
          if(verbose) cout << "job " << i << " : " << job << endl;
 
-         CPU_dbl_add_job(deg,cst,forward,backward,cross,job,verbose);
+         CPU_dbl_add_job(deg,cst,cff,forward,backward,cross,job,verbose);
       }
    }
    {
@@ -345,6 +358,20 @@ void CPU_dbl_poly_evaldiffjobs
       int lastidx = nvr[lastmon]-1;
       for(int i=0; i<=deg; i++) // value is last forward location
          output[dim][i] = forward[lastmon][lastidx][i];
+      // update the first derivative
+      int cnt = addjobs.get_differential_count(0);
+      if(cnt > 0) // it could be there is no first variable ...
+      {
+         int ix0 = addjobs.get_differential_index(0,cnt);
+         int ix2 = nvr[ix0] - 2;
+
+         cout << "Updating first derivative, ix0 = " << ix0
+              << ", ix2 = " << ix2
+              << " : b[" << ix0 << "," << ix2 << "]" << endl;
+
+         for(int i=0; i<=deg; i++)
+            output[0][i] = backward[ix0][ix2][i];
+      }
    }
    for(int k=0; k<nbr; k++)
    {
@@ -359,15 +386,17 @@ void CPU_dbl_poly_evaldiffjobs
 
       if(ix1 == 0)           // monomial has only one variable
       {
-         for(int i=0; i<=deg; i++)
-            output[ix0][i] = output[ix0][i] + cff[k][i]; 
+         if(ix0 > 0)
+            for(int i=0; i<=deg; i++)
+               output[ix0][i] = output[ix0][i] + cff[k][i]; 
       }
       else if(ix2 >= 0)      // update first and last derivative
       {
          for(int i=0; i<=deg; i++)
          {
             output[ixn][i] = output[ixn][i] + forward[k][ix2][i];
-            output[ix0][i] = output[ix0][i] + backward[k][ix2][i];
+            if(ix0 > 0)
+               output[ix0][i] = output[ix0][i] + backward[k][ix2][i];
          }
          if(ix2 > 0)         // update all other derivatives
          {
