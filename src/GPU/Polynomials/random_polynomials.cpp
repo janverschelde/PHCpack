@@ -58,14 +58,14 @@ bool duplicate_supports
       {
          if(verbose)
          {
-            if(not result) cout << "duplicate indices :";
+            if(!result) cout << "duplicate indices :";
             cout << " " << dupidx << "==" << i;
          }
          result = true;
       }
-      if(not verbose and result) break;
+      if(!verbose && result) break;
    }
-   if(verbose and result) cout << endl;
+   if(verbose && result) cout << endl;
 
    return result;
 }

@@ -72,7 +72,7 @@ void AdditionJobs::recursive_first_make
       jobcount = jobcount + 1;
       freqlaycnt[level] = freqlaycnt[level] + 1;
    }
-   else if((ix0 == 0) and (ix2 != -1))
+   else if((ix0 == 0) && (ix2 != -1))
    {
       AdditionJob job(2,2,ix1,-1,nvr[ix1]-2,ix2);
       if(verbose) cout << "adding " << job << " to layer " << level << endl;
@@ -218,7 +218,7 @@ void AdditionJobs::recursive_other_make
          }
       }
    }
-   else if((ix0 == 0) and (ix2 != -1)) // cff contributes to a derivative
+   else if((ix0 == 0) && (ix2 != -1)) // cff contributes to a derivative
    {
       if(idx[ix1][0] == varidx)       // update backward product with cff
       {
