@@ -49,11 +49,20 @@ std::ostream& operator<< ( std::ostream& os, const AdditionJob& job )
          os << "f[" << job.incmon << "," << job.incidx << "]";
    }
    else if(job.adtype == 2)
-      os << "b[" << job.updmon << "," << job.updidx << "] += "
-         << "b[" << job.incmon << "," << job.incidx << "]";
+   {
+      os << "b[" << job.updmon << "," << job.updidx << "] += ";
+      if(job.incmon < 0)
+         os << "cff[" << job.incidx << "]";
+      else
+         os << "b[" << job.incmon << "," << job.incidx << "]";
+   }
    else
-      os << "c[" << job.updmon << "," << job.updidx << "] += "
-         << "c[" << job.incmon << "," << job.incidx << "]";
-
+   {
+      os << "c[" << job.updmon << "," << job.updidx << "] += ";
+      if(job.incmon < 0)
+         os << "cff[" << job.incidx << "]";
+      else
+         os << "c[" << job.incmon << "," << job.incidx << "]";
+   }
    return os;
 }

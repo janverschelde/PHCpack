@@ -38,6 +38,7 @@ void AdditionJobs::recursive_make
       AdditionJob job(1,ix1,ix2,nvr[ix1]-1,nvr[ix2]-1);
       if(verbose) cout << "adding " << job << " to layer " << level << endl;
       jobs[level].push_back(job);
+      jobcount = jobcount + 1;
       freqlaycnt[level] = freqlaycnt[level] + 1;
    }
    else if(ix2 == -1)
@@ -45,6 +46,7 @@ void AdditionJobs::recursive_make
       AdditionJob job(1,ix1,-1,nvr[ix1]-1,-1);
       if(verbose) cout << "adding " << job << " to layer " << level << endl;
       jobs[level].push_back(job);
+      jobcount = jobcount + 1;
       freqlaycnt[level] = freqlaycnt[level] + 1;
    }
    if(level > 0)
@@ -52,6 +54,37 @@ void AdditionJobs::recursive_make
       recursive_make(level-1,stride/2,nbr,nvr,verbose);
       if(nbr > stride)
          recursive_make(level-1,stride/2,nbr-stride,nvr,verbose);
+   }
+}
+
+void AdditionJobs::recursive_first_make
+ ( int level, int stride, int nbr, int *nvr, bool verbose )
+{
+   const int ix0 = nbr - stride;
+   const int ix1 = difidx[0][nbr];
+   const int ix2 = difidx[0][ix0];
+
+   if(ix0 > 0)
+   {
+      AdditionJob job(2,ix1,ix2,nvr[ix1]-2,nvr[ix2]-2);
+      if(verbose) cout << "adding " << job << " to layer " << level << endl;
+      jobs[level].push_back(job);
+      jobcount = jobcount + 1;
+      freqlaycnt[level] = freqlaycnt[level] + 1;
+   }
+   else if((ix0 == 0) and (ix2 != -1))
+   {
+      AdditionJob job(2,ix1,-1,nvr[ix1]-2,ix2);
+      if(verbose) cout << "adding " << job << " to layer " << level << endl;
+      jobs[level].push_back(job);
+      jobcount = jobcount + 1;
+      freqlaycnt[level] = freqlaycnt[level] + 1;
+   }
+   if(level > 0)
+   {
+      recursive_first_make(level-1,stride/2,nbr,nvr,verbose);
+      if(nbr > stride)
+         recursive_first_make(level-1,stride/2,nbr-stride,nvr,verbose);
    }
 }
 
@@ -137,10 +170,15 @@ void AdditionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
    }
    int level,stride;
 
+   if(verbose) cout << "-> adding jobs for the value ..." << endl;
    recursive_start(nbr,&level,&stride);
    recursive_make(level,stride,nbr,nvr,verbose);
 
    laydepth = level+1;
+
+   if(verbose) cout << "-> adding jobs for the first derivative ..." << endl;
+   recursive_start(difcnt[0],&level,&stride);
+   recursive_first_make(level,stride,difcnt[0],nvr,verbose);
 }
 
 int AdditionJobs::get_number_of_variables ( void ) const

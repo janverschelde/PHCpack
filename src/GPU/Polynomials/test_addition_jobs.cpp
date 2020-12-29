@@ -57,6 +57,12 @@ int main ( void )
       cout << "Indices of monomial " << i << " :";
       for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j]; cout << endl;
    }
+   bool dup = duplicate_supports(dim,nbr,nvr,idx,false);
+   if(dup)
+      cout << "Duplicate supports found." << endl;
+   else
+      cout << "No duplicate supports found." << endl;
+
    AdditionJobs jobs(dim,nbr); // initialize with the number of monomials
 
    jobs.make(nbr,nvr,idx,true);

@@ -110,6 +110,21 @@ class AdditionJobs
        *            nvr[k] is the number of variables in monomial k;
        *   verbose  if true, writes one line per job added. */
 
+      void recursive_first_make
+       ( int level, int stride, int nbr, int *nvr, bool verbose );
+      /*
+       * DESCRIPTION :
+       *   Adds the jobs recursively for the first derivative,
+       *   starting at the top.
+       *
+       * ON ENTRY :
+       *   level    current layer of jobs;
+       *   stride   current stride;
+       *   nbr      value of difcnt[0];
+       *   nvr      nbr integers count the variables in each monomial,
+       *            nvr[k] is the number of variables in monomial k;
+       *   verbose  if true, writes one line per job added. */
+
       void differential_index_count
        ( int dim, int nbr, int *nvr, int **idx, int *cnt, bool verbose );
       /*
