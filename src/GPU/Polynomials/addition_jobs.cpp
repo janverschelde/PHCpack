@@ -156,8 +156,15 @@ void AdditionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
    freqlaycnt = new int[nbrmon];
    for(int i=0; i<nbrmon; i++) freqlaycnt[i] = 0;
 
-   difcnt = new int[nbrmon];
+   difcnt = new int[nbrvar];
    differential_index_count(nbrvar,nbr,nvr,idx,difcnt,verbose);
+
+   if(verbose)
+   {
+      cout << "The differential counts :";
+      for(int i=0; i<nbrvar; i++) cout << " " << difcnt[i];
+      cout << endl;
+   }
 
    difidx = new int*[nbrvar];
    for(int i=0; i<nbrvar; i++) difidx[i] = new int[difcnt[i]+1];

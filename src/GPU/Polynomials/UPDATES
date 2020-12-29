@@ -1,3 +1,6 @@
+Tue 29 Dec 2020 : in addition_jobs.cpp, corrected the dimension of the
+  difcnt, which should be nbrvar instead of nbrmon.
+
 Mon 28 Dec 2020 : extended random_polynomials with a check on duplicate
   support vectors, tested in test_dbl_polynomials.cpp.
   To test_addition_jobs.cpp, added differential indices computation.
