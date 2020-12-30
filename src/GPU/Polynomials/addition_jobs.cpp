@@ -106,6 +106,7 @@ void AdditionJobs::recursive_other_make
    const int ix2 = difidx[varidx][ix0];
    // index of the monomial at position ix0 that contains varidx
    const int ix3 = nvr[ix1]-1; // last index of variable in monomial nbr
+   const int ix4 = nvr[ix2]-1; // last index of variable in other monomial
 
    if(verbose)
    {
@@ -117,8 +118,6 @@ void AdditionJobs::recursive_other_make
    }
    if(ix0 > 0)
    {
-      const int ix4 = nvr[ix0]-1; // last index of variable in monomial ix0
-
       if(idx[ix1][0] == varidx) // update the backward product
       {
          if(idx[ix2][0] == varidx)       // use backward product as increment
@@ -173,7 +172,7 @@ void AdditionJobs::recursive_other_make
          }
          else                               // use cross product as increment
          {
-            const int crossidx = position(nvr[ix1],idx[ix1],varidx)-1;
+            const int crossidx = position(nvr[ix2],idx[ix2],varidx)-1;
 
             AdditionJob job(1,3,ix1,ix2,nvr[ix1]-2,crossidx);
             if(verbose) cout << "adding " << job
