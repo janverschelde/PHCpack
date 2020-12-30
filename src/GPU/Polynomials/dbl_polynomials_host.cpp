@@ -338,6 +338,132 @@ void CPU_dbl_add_job
    }
 }
 
+void CPU_dbl_poly_updates
+ ( int dim, int nbr, int deg, int *nvr, int **idx, 
+   double *cst, double **cff, double **input, double **output,
+   double ***forward, double ***backward, double ***cross )
+{
+   for(int i=0; i<=deg; i++) output[dim][i] = cst[i];
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<=deg; j++) output[i][j] = 0.0;
+
+   for(int k=0; k<nbr; k++)
+   {
+      int ix0 = idx[k][0];   // first variable in monomial k
+      int ix1 = nvr[k]-1;    // last forward has the value
+      int ix2 = nvr[k]-2;    // next to last forward has last derivative
+                             // last backward has the first derivative
+      int ixn = idx[k][ix1]; // index of the last variable in monomial k
+
+      for(int i=0; i<=deg; i++) // value is last forward location
+         output[dim][i] = output[dim][i] + forward[k][ix1][i];
+
+      if(ix1 == 0)           // monomial has only one variable
+      {
+         for(int i=0; i<=deg; i++)
+            output[ix0][i] = output[ix0][i] + cff[k][i]; 
+      }
+      else if(ix2 >= 0)      // update first and last derivative
+      {
+         for(int i=0; i<=deg; i++)
+         {
+            output[ixn][i] = output[ixn][i] + forward[k][ix2][i];
+            output[ix0][i] = output[ix0][i] + backward[k][ix2][i];
+         }
+         if(ix2 > 0)         // update all other derivatives
+         {
+            for(int j=1; j<ix1; j++) // j-th variable in monomial k
+            {
+               ix0 = idx[k][j];
+               for(int i=0; i<=deg; i++)
+                  output[ix0][i] = output[ix0][i] + cross[k][j-1][i];
+            }
+         }
+      }
+   }
+}
+
+void CPU_dbl_poly_addjobs
+ ( int dim, int nbr, int deg, int *nvr, int **idx, 
+   double *cst, double **cff, double **input, double **output,
+   double ***forward, double ***backward, double ***cross,
+   AdditionJobs jobs, bool verbose )
+{
+   for(int k=0; k<jobs.get_depth(); k++)
+   {
+      if(verbose) cout << "executing addition jobs at layer "
+                       << k << " :" << endl;
+      for(int i=0; i<jobs.get_layer_count(k); i++)
+      {
+         AdditionJob job = jobs.get_job(k,i);
+         if(verbose) cout << "job " << i << " : " << job << endl;
+
+         CPU_dbl_add_job(deg,cst,cff,forward,backward,cross,job,verbose);
+      }
+   }
+   int lastmon = nbr-1;
+   int lastidx = nvr[lastmon]-1;
+   for(int i=0; i<=deg; i++) // value is last forward location
+      output[dim][i] = forward[lastmon][lastidx][i];
+
+   int cnt = jobs.get_differential_count(0);
+   if(cnt > 0) // it could be there is no first variable anywhere ...
+   {
+      int ix0 = jobs.get_differential_index(0,cnt);
+      int ix2 = nvr[ix0] - 2;
+      
+      if(verbose)
+         cout << "Updating derivative 0, ix0 = " << ix0
+              << ", ix2 = " << ix2
+              << " : b[" << ix0 << "," << ix2 << "]" << endl;
+
+      for(int i=0; i<=deg; i++) output[0][i] = backward[ix0][ix2][i];
+   }
+   for(int k=1; k<dim; k++) // updating all other derivatives
+   {
+      int cnt = jobs.get_differential_count(k);
+      if(cnt > 0) // it could be there is no variable k anywhere ...
+      {
+         int ix0 = jobs.get_differential_index(k,cnt);
+
+         if(idx[ix0][0] == k) // k is first variable of monomial
+         {
+            int ix2 = nvr[ix0] - 2;
+
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << ", ix0 = " << ix0 << ", ix2 = " << ix2
+                    << " : b[" << ix0 << "," << ix2 << "]" << endl;
+
+            for(int i=0; i<=deg; i++) output[k][i] = backward[ix0][ix2][i];
+         }
+         else if(idx[ix0][nvr[ix0]-1] == k) // k is last variable
+         {
+            int ix2 = nvr[ix0] - 2;
+
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << ", ix0 = " << ix0 << ", ix2 = " << ix2
+                    << " : f[" << ix0 << "," << ix2 << "]" << endl;
+
+            for(int i=0; i<=deg; i++) output[k][i] = forward[ix0][ix2][i];
+         }
+         else // derivative is in some cross product
+         {
+            int ix2 = jobs.position(nvr[ix0],idx[ix0],k) - 1;
+
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << ", ix0 = " << ix0 << ", ix2 = " << ix2
+                    << " : c[" << ix0 << "," << ix2 << "]" << endl;
+
+            for(int i=0; i<=deg; i++) output[k][i] = cross[ix0][ix2][i];
+         }
+      }
+   }
+}
+
 void CPU_dbl_poly_evaldiffjobs
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double *cst, double **cff, double **input, double **output,
@@ -365,10 +491,6 @@ void CPU_dbl_poly_evaldiffjobs
          for(int i=0; i<nvrk-2; i++) cross[k][i] = new double[deg+1];
       }
    }
-   // for(int i=0; i<=deg; i++) output[dim][i] = cst[i];
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<=deg; j++) output[i][j] = 0.0;
-
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
       if(verbose) cout << "executing convolution jobs at layer "
@@ -385,78 +507,12 @@ void CPU_dbl_poly_evaldiffjobs
              forward[monidx],backward[monidx],cross[monidx],job,verbose);
       }
    }
-   for(int k=0; k<addjobs.get_depth(); k++)
-   {
-      if(verbose) cout << "executing addition jobs at layer "
-                       << k << " :" << endl;
-      for(int i=0; i<addjobs.get_layer_count(k); i++)
-      {
-         AdditionJob job = addjobs.get_job(k,i);
-         if(verbose) cout << "job " << i << " : " << job << endl;
+   //CPU_dbl_poly_updates
+   //   (dim,nbr,deg,nvr,idx,cst,cff,input,output,forward,backward,cross);
+   CPU_dbl_poly_addjobs
+      (dim,nbr,deg,nvr,idx,cst,cff,input,output,forward,backward,cross,
+       addjobs,true);
 
-         CPU_dbl_add_job(deg,cst,cff,forward,backward,cross,job,verbose);
-      }
-   }
-   int lastmon = nbr-1;
-   int lastidx = nvr[lastmon]-1;
-   for(int i=0; i<=deg; i++) // value is last forward location
-      output[dim][i] = forward[lastmon][lastidx][i];
-
-   int cnt = addjobs.get_differential_count(0);
-   if(cnt > 0) // it could be there is no first variable anywhere ...
-   {
-      int ix0 = addjobs.get_differential_index(0,cnt);
-      int ix2 = nvr[ix0] - 2;
-      
-      if(verbose)
-         cout << "Updating derivative 0, ix0 = " << ix0
-              << ", ix2 = " << ix2
-              << " : b[" << ix0 << "," << ix2 << "]" << endl;
-
-      for(int i=0; i<=deg; i++) output[0][i] = backward[ix0][ix2][i];
-   }
-   for(int k=1; k<dim; k++) // updating all other derivatives
-   {
-      int cnt = addjobs.get_differential_count(k);
-      if(cnt > 0) // it could be there is no variable k anywhere ...
-      {
-         int ix0 = addjobs.get_differential_index(k,cnt);
-
-         if(idx[ix0][0] == k) // k is first variable of monomial
-         {
-            int ix2 = nvr[ix0] - 2;
-
-            if(verbose)
-               cout << "Updating derivative " << k 
-                    << ", ix0 = " << ix0 << ", ix2 = " << ix2
-                    << " : b[" << ix0 << "," << ix2 << "]" << endl;
-
-            for(int i=0; i<=deg; i++) output[k][i] = backward[ix0][ix2][i];
-         }
-         else if(idx[ix0][nvr[ix0]-1] == k) // k is last variable
-         {
-            int ix2 = nvr[ix0] - 2;
-
-            if(verbose)
-               cout << "Updating derivative " << k 
-                    << ", ix0 = " << ix0 << ", ix2 = " << ix2
-                    << " : f[" << ix0 << "," << ix2 << "]" << endl;
-
-            for(int i=0; i<=deg; i++) output[k][i] = forward[ix0][ix2][i];
-         }
-         else // derivative is in some cross product
-         {
-            int ix2 = addjobs.position(nvr[ix0],idx[ix0],k) - 1;
-
-            if(verbose)
-               cout << "Updating derivative " << k 
-                    << ", ix0 = " << ix0 << ", ix2 = " << ix2
-                    << " : c[" << ix0 << "," << ix2 << "]" << endl;
-
-            for(int i=0; i<=deg; i++) output[k][i] = cross[ix0][ix2][i];
-         }
-      }
-   }
    for(int k=0; k<nbr; k++)
    {
       int nvrk = nvr[k];

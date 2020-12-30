@@ -110,7 +110,7 @@ void CPU_dbl_conv_job
  *   cross    are the updated cross products. */
 
 void CPU_dbl_add_job
- ( int deg, double *cst,
+ ( int deg, double *cst, double **cff,
    double ***forward, double ***backward, double ***cross,
    AdditionJob job, bool verbose );
 /*
@@ -120,6 +120,7 @@ void CPU_dbl_add_job
  * ON ENTRY :
  *   deg      degree of the series;
  *   cst      constant coefficient series of the polynmial;
+ *   cff      coefficients of the monomials;
  *   forward  all computed forward products,
  *   backward all computed backward products;
  *   cross    all computed cross products;
@@ -130,6 +131,61 @@ void CPU_dbl_add_job
  *   forward  are the updated forward products;
  *   backward are the updated backward products;
  *   cross    are the updated cross products. */
+
+void CPU_dbl_poly_updates
+ ( int dim, int nbr, int deg, int *nvr, int **idx, 
+   double *cst, double **cff, double **input, double **output,
+   double ***forward, double ***backward, double ***cross );
+/*
+ * DESCRIPTION :
+ *   Given the forward, backward, and cross products for every monomial,
+ *   makes all additions in a straightforward manner to the final output.
+ *
+ * ON ENTRY :
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      degree of the series;
+ *   nvr      nvr[k] holds the number of variables in monomial k;
+ *   idx      idx[k] has as many indices as the value of nvr[k],
+ *            idx[k][i] defines the place of the i-th variable,
+ *            with input values in input[idx[k][i]];
+ *   cst      constant coefficient series of the polynmial;
+ *   cff      coefficients of the monomials;
+ *   forward  are all computed forward products,
+ *   backward are all computed backward products;
+ *   cross    are all computed cross products.
+ *
+ * ON RETURN :
+ *   output   the values and all derivatives. */
+
+void CPU_dbl_poly_addjobs
+ ( int dim, int nbr, int deg, int *nvr, int **idx, 
+   double *cst, double **cff, double **input, double **output,
+   double ***forward, double ***backward, double ***cross,
+   AdditionJobs jobs, bool verbose=false );
+/*
+ * DESCRIPTION :
+ *   Given the forward, backward, and cross products for every monomial,
+ *   makes all additions as defined by the addition jobs.
+ *
+ * ON ENTRY :
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      degree of the series;
+ *   nvr      nvr[k] holds the number of variables in monomial k;
+ *   idx      idx[k] has as many indices as the value of nvr[k],
+ *            idx[k][i] defines the place of the i-th variable,
+ *            with input values in input[idx[k][i]];
+ *   cst      constant coefficient series of the polynmial;
+ *   cff      coefficients of the monomials;
+ *   forward  are all computed forward products,
+ *   backward are all computed backward products;
+ *   cross    are all computed cross products;
+ *   jobs     defines the addition jobs;
+ *   verbose  if true, then output is written.
+ *
+ * ON RETURN :
+ *   output   the values and all derivatives. */
 
 void CPU_dbl_poly_evaldiffjobs
  ( int dim, int nbr, int deg, int *nvr, int **idx, 

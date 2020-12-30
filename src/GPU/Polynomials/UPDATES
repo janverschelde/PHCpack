@@ -1,3 +1,6 @@
+Wed 30 Dec 2020 : new functions in dbl_polynomials_host for the additions,
+  with or without the addition jobs.
+
 Tue 29 Dec 2020 : in addition_jobs.cpp, corrected the dimension of the
   difcnt, which should be nbrvar instead of nbrmon.  The first derivative
   is correctly computed with addition jobs, as verified by the updates
