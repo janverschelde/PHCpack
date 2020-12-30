@@ -211,6 +211,14 @@ double test_dbl_real_polynomial
 
       addjobs.make(nbr,nvr,idx,true);
 
+      cout << "The differential indices :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "variable " << i << " :";
+         for(int j=0; j<=addjobs.get_differential_count(i); j++)
+            cout << " " << addjobs.get_differential_index(i,j);
+         cout << endl;
+      }
       cout << "number of addition jobs : " << addjobs.get_count() << endl;
       cout << "number of layers : " << addjobs.get_depth() << endl;
       cout << "frequency of layer counts :" << endl;
