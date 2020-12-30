@@ -271,8 +271,12 @@ void CPU_dbl_add_job
    {
       if(incmon < 0)
       {
-         for(int i=0; i<=deg; i++)
-            forward[updmon][updidx][i] += cst[i];
+         if(incidx < 0)
+            for(int i=0; i<=deg; i++)
+               forward[updmon][updidx][i] += cst[i];
+         else
+            for(int i=0; i<=deg; i++)
+               forward[updmon][updidx][i] += cff[incidx][i];
       }
       else if(intype == 1)
       {

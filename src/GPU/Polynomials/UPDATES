@@ -1,5 +1,7 @@
 Wed 30 Dec 2020 : new functions in dbl_polynomials_host for the additions,
-  with or without the addition jobs.
+  with or without the addition jobs.  Fixed index in addition_jobs.cpp,
+  added special case to addition_job.cpp and dbl_polynomials_host.cpp
+  when a forward product is updated with a coefficient of a monomial.
 
 Tue 29 Dec 2020 : in addition_jobs.cpp, corrected the dimension of the
   difcnt, which should be nbrvar instead of nbrmon.  The first derivative

@@ -50,7 +50,12 @@ std::ostream& operator<< ( std::ostream& os, const AdditionJob& job )
    {
       os << "f[" << job.updmon << "," << job.updidx << "] += ";
       if(job.incmon < 0)
-         os << "cst";
+      {
+         if(job.incidx < 0)
+            os << "cst";
+         else
+            os << "cff[" << job.incidx << "]";
+      }
       else
       {
          if(job.intype == 1)

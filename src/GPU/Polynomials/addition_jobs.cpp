@@ -105,7 +105,7 @@ void AdditionJobs::recursive_other_make
    // index of the monomial at position nbr that contains varidx
    const int ix2 = difidx[varidx][ix0];
    // index of the monomial at position ix0 that contains varidx
-   const int ix3 = nvr[nbr]-1; // last index of variable in monomial nbr
+   const int ix3 = nvr[ix1]-1; // last index of variable in monomial nbr
 
    if(verbose)
    {
@@ -220,6 +220,9 @@ void AdditionJobs::recursive_other_make
    }
    else if((ix0 == 0) && (ix2 != -1)) // cff contributes to a derivative
    {
+      cout << "idx[" << ix1 << "][" << ix3 << "] = " << idx[ix1][ix3]
+           << ", varidx = " << varidx << endl;
+
       if(idx[ix1][0] == varidx)       // update backward product with cff
       {
          AdditionJob job(2,0,ix1,-1,nvr[ix1]-2,ix2);
