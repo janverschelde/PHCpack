@@ -61,6 +61,9 @@ void AdditionJobs::recursive_first_make
  ( int level, int stride, int nbr, int *nvr, bool verbose )
 {
    const int ix0 = nbr - stride;
+
+   // if(ix0 < 0) return;
+
    const int ix1 = difidx[0][nbr];
    const int ix2 = difidx[0][ix0];
 
@@ -103,21 +106,23 @@ void AdditionJobs::recursive_other_make
    const int ix0 = nbr - stride;
    const int ix1 = difidx[varidx][nbr];
    // index of the monomial at position nbr that contains varidx
-   const int ix2 = difidx[varidx][ix0];
-   // index of the monomial at position ix0 that contains varidx
    const int ix3 = nvr[ix1]-1; // last index of variable in monomial nbr
-   const int ix4 = nvr[ix2]-1; // last index of variable in other monomial
 
    if(verbose)
    {
       cout << "nbr : " << nbr << ", stride : " << stride;
       cout << ", ix0 : " << ix0;
       cout << ", ix1 : " << ix1;
-      cout << ", ix2 : " << ix2;
-      cout << ", ix3 : " << ix3 << endl;
    }
    if(ix0 > 0)
    {
+      const int ix2 = difidx[varidx][ix0];
+      // index of the monomial at position ix0 that contains varidx
+      const int ix4 = nvr[ix2]-1;
+      // last index of variable in other monomial
+
+      if(verbose) cout << ", ix2 = " << ix2 << ", ix4 = " << ix4 << endl;
+
       if(idx[ix1][0] == varidx) // update the backward product
       {
          if(idx[ix2][0] == varidx)       // use backward product as increment
@@ -217,39 +222,46 @@ void AdditionJobs::recursive_other_make
          }
       }
    }
-   else if((ix0 == 0) && (ix2 != -1)) // cff contributes to a derivative
+   else if(ix0 == 0) // check if cff contributes to a derivative
    {
-      cout << "idx[" << ix1 << "][" << ix3 << "] = " << idx[ix1][ix3]
-           << ", varidx = " << varidx << endl;
+      const int ix2 = difidx[varidx][ix0];
 
-      if(idx[ix1][0] == varidx)       // update backward product with cff
+      if(verbose) cout << ", ix2 = " << ix2 << endl;
+     
+      if(ix2 != -1)  // cff contributes to a derivative
       {
-         AdditionJob job(2,0,ix1,-1,nvr[ix1]-2,ix2);
-         if(verbose) cout << "adding " << job
-                          << " to layer " << level << endl;
-         jobs[level].push_back(job);
-         jobcount = jobcount + 1;
-         freqlaycnt[level] = freqlaycnt[level] + 1;
-      }
-      else if(idx[ix1][ix3] == varidx) // update forward product with cff
-      {
-         AdditionJob job(1,0,ix1,-1,nvr[ix1]-2,ix2);
-         if(verbose) cout << "adding " << job
-                          << " to layer " << level << endl;
-         jobs[level].push_back(job);
-         jobcount = jobcount + 1;
-         freqlaycnt[level] = freqlaycnt[level] + 1;
-      }
-      else                               // update cross product with cff
-      {
-         const int crossidx = position(nvr[ix1],idx[ix1],varidx)-1;
+         cout << "idx[" << ix1 << "][" << ix3 << "] = " << idx[ix1][ix3]
+              << ", varidx = " << varidx << endl;
 
-         AdditionJob job(3,0,ix1,-1,crossidx,ix2);
-         if(verbose) cout << "adding " << job
-                          << " to layer " << level << endl;
-         jobs[level].push_back(job);
-         jobcount = jobcount + 1;
-         freqlaycnt[level] = freqlaycnt[level] + 1;
+         if(idx[ix1][0] == varidx)       // update backward product with cff
+         {
+            AdditionJob job(2,0,ix1,-1,nvr[ix1]-2,ix2);
+            if(verbose) cout << "adding " << job
+                             << " to layer " << level << endl;
+            jobs[level].push_back(job);
+            jobcount = jobcount + 1;
+            freqlaycnt[level] = freqlaycnt[level] + 1;
+         }
+         else if(idx[ix1][ix3] == varidx) // update forward product with cff
+         {
+            AdditionJob job(1,0,ix1,-1,nvr[ix1]-2,ix2);
+            if(verbose) cout << "adding " << job
+                             << " to layer " << level << endl;
+            jobs[level].push_back(job);
+            jobcount = jobcount + 1;
+            freqlaycnt[level] = freqlaycnt[level] + 1;
+         }
+         else                               // update cross product with cff
+         {
+            const int crossidx = position(nvr[ix1],idx[ix1],varidx)-1;
+
+            AdditionJob job(3,0,ix1,-1,crossidx,ix2);
+            if(verbose) cout << "adding " << job
+                             << " to layer " << level << endl;
+            jobs[level].push_back(job);
+            jobcount = jobcount + 1;
+            freqlaycnt[level] = freqlaycnt[level] + 1;
+         }
       }
    }
    if(level > 0)
