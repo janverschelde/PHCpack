@@ -123,6 +123,12 @@ test_addition_jobs.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: test_addition_jobs.obj /EHsc
 
+write_job_counts.obj:
+	@-echo ">>> compiling write_job_counts ..."
+	$(CL)\cl /c write_job_counts.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_job_counts.obj /EHsc
+
 test_convolution_jobs: random_numbers.obj random_series.obj \
 	               random_monomials.obj random_polynomials.obj \
                        convolution_job.obj convolution_jobs.obj \
@@ -145,7 +151,7 @@ test_addition_jobs: random_numbers.obj random_series.obj \
 test_dbl_polynomials: random_numbers.obj random_series.obj \
 	              random_monomials.obj random_polynomials.obj \
                       convolution_job.obj convolution_jobs.obj \
-                      addition_job.obj addition_jobs.obj \
+                      addition_job.obj addition_jobs.obj write_job_counts.obj \
                     dbl_convolutions_host.obj dbl_monomials_host.obj \
                     dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
                     test_dbl_polynomials.obj
@@ -153,7 +159,7 @@ test_dbl_polynomials: random_numbers.obj random_series.obj \
 	nvcc -ccbin=$(CL) -o test_dbl_polynomials.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
               random_polynomials.obj convolution_job.obj convolution_jobs.obj \
-              addition_job.obj addition_jobs.obj \
+              addition_job.obj addition_jobs.obj write_job_counts.obj \
               dbl_convolutions_host.obj dbl_monomials_host.obj \
               dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
               test_dbl_polynomials.obj
@@ -170,6 +176,7 @@ clean:
 	del addition_job.obj addition_jobs.obj
 	del test_addition_jobs.exe test_addition_jobs.lib
 	del test_addition_jobs.exp test_addition_jobs.obj
+	del write_job_counts.obj
 
 cleanall: clean
 	del *exe *obj *exp *lib

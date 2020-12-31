@@ -75,6 +75,10 @@ test_addition_jobs.o:
 	@-echo ">>> compiling test_addition_jobs ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test_addition_jobs.cpp
 
+write_job_counts.o:
+	@-echo ">>> compiling write_job_counts ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) write_job_counts.cpp
+
 test_convolution_jobs: random_numbers.o random_series.o random_monomials.o \
                        random_polynomials.o convolution_job.o \
                        convolution_jobs.o test_convolution_jobs.o
@@ -97,13 +101,13 @@ test_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
                       addition_job.o addition_jobs.o \
                       dbl_convolutions_host.o dbl_monomials_host.o \
                       dbl_polynomials_host.o dbl_polynomials_kernels.o \
-                      test_dbl_polynomials.o
+                      write_job_counts.o test_dbl_polynomials.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_polynomials test_dbl_polynomials.o \
                   random_numbers.o random_series.o random_monomials.o \
                   random_polynomials.o \
                   convolution_job.o convolution_jobs.o \
-                  addition_job.o addition_jobs.o \
+                  addition_job.o addition_jobs.o write_job_counts.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
                   dbl_polynomials_host.o dbl_polynomials_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
@@ -116,6 +120,7 @@ clean:
 	/bin/rm -f -r test_convolution_jobs test_convolution_jobs.o
 	/bin/rm -f -r addition_job.o addition_jobs.o
 	/bin/rm -f -r test_addition_jobs test_addition_jobs.o
+	/bin/rm -f -r write_job_counts.o
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o

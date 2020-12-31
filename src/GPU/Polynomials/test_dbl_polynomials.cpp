@@ -11,6 +11,7 @@
 #include "random_polynomials.h"
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
+#include "write_job_counts.h"
 #include "dbl_polynomials_host.h"
 #include "dbl_polynomials_kernels.h"
 
@@ -47,16 +48,6 @@ int main_dbl_test_polynomial
  *   pwr      highest power of each variable;
  *   deg      truncation degree of the series;
  *   vrblvl   is the verbose level, if 0 then no output. */
-
-void write_convolution_counts ( ConvolutionJobs jobs );
-/*
- * DESCRIPTION :
- *   Writes the counts of convolution jobs in each layer. */
-
-void write_addition_counts ( AdditionJobs jobs );
-/*
- * DESCRIPTION :
- *   Writes the counts of addition jobs in each layer. */
 
 int main ( void )
 {
@@ -98,38 +89,6 @@ int main ( void )
       cout << "Number of failed tests : " << fail << endl;
 
    return 0;
-}
-
-void write_convolution_counts ( ConvolutionJobs jobs )
-{
-   cout << "number of convolution jobs : " << jobs.get_count() << endl;
-   cout << "number of layers : " << jobs.get_depth() << endl;
-   cout << "frequency of layer counts :" << endl;
-
-   int checksum = 0;
-
-   for(int i=0; i<jobs.get_depth(); i++)
-   {
-      cout << i << " : " << jobs.get_layer_count(i) << endl;
-      checksum = checksum + jobs.get_layer_count(i); 
-   }
-   cout << "layer count sum : " << checksum << endl;
-}
-
-void write_addition_counts ( AdditionJobs jobs )
-{
-   cout << "number of addition jobs : " << jobs.get_count() << endl;
-   cout << "number of layers : " << jobs.get_depth() << endl;
-   cout << "frequency of layer counts :" << endl;
-
-   int checksum = 0;
-
-   for(int i=0; i<jobs.get_depth(); i++)
-   {
-      cout << i << " : " << jobs.get_layer_count(i) << endl;
-      checksum = checksum + jobs.get_layer_count(i); 
-   }
-   cout << "layer count sum : " << checksum << endl;
 }
 
 int main_dbl_test_polynomial
@@ -343,6 +302,7 @@ double test_dbl_real_polynomial
       cout << "number of monomials : " << nbr << endl;
       write_convolution_counts(cnvjobs);
       write_addition_counts(addjobs);
+      write_operation_counts(deg,cnvjobs,addjobs);
       
       return sumerr;
    }
