@@ -91,23 +91,25 @@ bool make_real_polynomial
  *   cff     the coefficient series for each monomial,
  *           cff[k] has the deg+1 coefficients of monomial k. */
 
-int minors_count ( int dim, int nbr );
+int products_count ( int dim, int nbr );
 /*
  * DESCRIPTION :
- *   Returns the count of all choices of nbr distint numbers
+ *   Returns the count of all choices of nbr distinct numbers
  *   in the range 0 to dim-1. */
 
-void make_exponents
- ( int lvl, int dim, int nbv, int *accu, int *moncnt, int **idx );
+void make_product_exponents
+ ( int lvl, int dim, int nva, int *accu, int *moncnt, int **idx );
 /*
  * DESCRIPTION :
- *   Generates all exponent vectors that define the minors.
+ *   Generates all exponent vectors that define the products.
+ *
+ * REQUIRED : nva < dim.
  *
  * ON ENTRY :
  *   lvl     current level in the recursion, is zero initially;
  *   dim     dimension, total number of variables;
- *   nbv     number of variables in each exponent vector;
- *   accu    the accumulator has space for nbv integers;
+ *   nva     number of variables in each exponent vector;
+ *   accu    the accumulator has space for nva integers;
  *   moncnt  current number of monomials, is zero initially;
  *   idx     has space for all exponent vectors.
  *
@@ -118,19 +120,41 @@ void make_exponents
  *           idx[k] is an array of nvr[k] integers,
  *           idx[k][i] is the index of variable i in monomial k. */
 
-void make_real_minors
- ( int dim, int nbr, int nbv, int deg, int **idx, double *cst, double **cff );
+void insert_sort ( int dim, int *data );
 /*
  * DESCRIPTION :
- *   Returns the sum of all minors of size nbr out of dimension dim,
- *   with power series coefficients.
+ *   Applies insertion sort to the dim numbers in data. */
+
+void make_cyclic_exponents ( int dim, int nva, int **idx );
+/*
+ * DESCRIPTION :
+ *   Makes all exponents in a cyclic polynomial.
+ *
+ * REQUIRED : nva < dim.
+ *
+ * ON ENTRY :
+ *   dim     dimension, total number of variables;
+ *   nva     number of variables in each monomial;
+ *   idx     has space for all nva exponent vectors.
+ *
+ * ON RETURN :
+ *   idx     the participating variables in each monomial,
+ *           idx[k] is an array of nvr[k] integers,
+ *           idx[k][i] is the index of variable i in monomial k. */
+
+void make_real_products
+ ( int dim, int nbr, int nva, int deg, int **idx, double *cst, double **cff );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all products of size nbr out of dimension dim,
+ *   with random power series coefficients truncated to degree deg.
  *
  * REQUIRED : dim > nbr.
  *
  * ON ENTRY :
  *   dim     dimension, total number of variables;
  *   nbr     number of monomials, excluding the constant;
- *   nbv     number of variables in each monomial;
+ *   nva     number of variables in each monomial;
  *   deg     truncation degree of the power series;
  *   idx     space for nbr index vectors;
  *   cst     space for deg + 1 doubles;
@@ -138,7 +162,32 @@ void make_real_minors
  *
  * ON RETURN :
  *   idx     the participating variables in each monomial,
- *           idx[k] is an array of nvr[k] integers,
+ *           idx[k] is an array of nva integers,
+ *           idx[k][i] is the index of variable i in monomial k;
+ *   cst     deg+1 coefficients of the constant monomial;
+ *   cff     the coefficient series for each monomial,
+ *           cff[k] has the deg+1 coefficients of monomial k. */
+
+void make_real_cyclic
+ ( int dim, int nva, int deg, int **idx, double *cst, double **cff );
+/*
+ * DESCRIPTION :
+ *   Returns the cyclic polynomial with nva variables in dimension dim,
+ *   with random power series coefficients truncated to degree deg.
+ *
+ * REQUIRED : dim > nbr.
+ *
+ * ON ENTRY :
+ *   dim     dimension, total number of variables;
+ *   nva     number of variables in each monomial;
+ *   deg     truncation degree of the power series;
+ *   idx     space for nva index vectors;
+ *   cst     space for deg + 1 doubles;
+ *   cff     space for nva power series coefficients.
+ *
+ * ON RETURN :
+ *   idx     the participating variables in each monomial,
+ *           idx[k] is an array of nva integers,
  *           idx[k][i] is the index of variable i in monomial k;
  *   cst     deg+1 coefficients of the constant monomial;
  *   cff     the coefficient series for each monomial,

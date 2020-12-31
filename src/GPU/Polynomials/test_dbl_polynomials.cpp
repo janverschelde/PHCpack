@@ -18,7 +18,7 @@
 using namespace std;
 
 double test_dbl_real_polynomial
- ( int dim, int nbr, int nbv, int pwr, int deg, int verbose );
+ ( int dim, int nbr, int nva, int pwr, int deg, int verbose );
 /*
  * DESCRIPTION :
  *   Tests the evaluation and differentiation for random real data.
@@ -27,13 +27,13 @@ double test_dbl_real_polynomial
  * ON ENTRY :
  *   dim      dimension, total number of variables;
  *   nbr      number of terms in the polynomial;
- *   nbv      number of variables in each monomial (for minors);
+ *   nva      number of variables per monomial (for products and cyclic);
  *   pwr      highest power of each variable;
  *   deg      truncation degree of the series;
  *   verbose  if zero, then no output is written. */
 
 int main_dbl_test_polynomial
- ( int seed, int dim, int nbr, int nbv, int pwr, int deg, int vrblvl );
+ ( int seed, int dim, int nbr, int nva, int pwr, int deg, int vrblvl );
 /*
  * DESCRIPTION :
  *   Runs tests on a random polynomial in double precision.
@@ -44,7 +44,7 @@ int main_dbl_test_polynomial
  *   seed     seed for the random number generator;
  *   dim      dimension, total number of variables;
  *   nbr      number of terms in the polynomial;
- *   nbv      number of variables in each monomial (for minors);
+ *   nva      number of variables in each monomial (for products, cyclic);
  *   pwr      highest power of each variable;
  *   deg      truncation degree of the series;
  *   vrblvl   is the verbose level, if 0 then no output. */
@@ -57,14 +57,21 @@ int main ( void )
    cout << "Give the dimension : ";
    int dim;  cin >> dim;
 
-   cout << "Give the minors dimension (0 for random polynomial) : ";
-   int nbv; cin >> nbv;
+   cout << "Give the variables per monomial (0 for random polynomial) : ";
+   int nva; cin >> nva;
 
    int nbr; // number of monomials, not counting the constant
 
-   if(nbv > 0)
+   if(nva > 0)
    {
-      nbr = minors_count(dim,nbv);
+      cout << "Enter 0 for products, other number of cyclic : ";
+      cin >> nbr;
+
+      if(nbr == 0)
+         nbr = products_count(dim,nva);
+      else
+         nbr = dim;
+
       cout << "-> number of monomials : " << nbr << endl;
    }
    else
@@ -81,7 +88,7 @@ int main ( void )
    cout << "Give the verbose level : ";
    int vrb; cin >> vrb;
 
-   int fail = main_dbl_test_polynomial(seed,dim,nbr,nbv,pwr,deg,vrb);
+   int fail = main_dbl_test_polynomial(seed,dim,nbr,nva,pwr,deg,vrb);
 
    if(fail == 0)
       cout << "All tests passed." << endl;
@@ -92,7 +99,7 @@ int main ( void )
 }
 
 int main_dbl_test_polynomial
- ( int seed, int dim, int nbr, int nbv, int pwr, int deg, int vrblvl )
+ ( int seed, int dim, int nbr, int nva, int pwr, int deg, int vrblvl )
 {
    int seedused;
 
@@ -109,7 +116,7 @@ int main_dbl_test_polynomial
    }
    if(vrblvl > 0) cout << "  Seed used : " << seedused << endl;
 
-   double realsum = test_dbl_real_polynomial(dim,nbr,nbv,pwr,deg,vrblvl-1);
+   double realsum = test_dbl_real_polynomial(dim,nbr,nva,pwr,deg,vrblvl-1);
 
    const double tol = 1.0e-12;
 
@@ -131,7 +138,7 @@ int main_dbl_test_polynomial
 }
 
 double test_dbl_real_polynomial
- ( int dim, int nbr, int nbv, int pwr, int deg, int verbose )
+ ( int dim, int nbr, int nva, int pwr, int deg, int verbose )
 {
    if(nbr < 1)
       return 0.0;
@@ -165,23 +172,28 @@ double test_dbl_real_polynomial
       for(int i=0; i<nbr; i++) cff[i] = new double[deg+1];
       int *nvr = new int[nbr]; // number of variables in each monomial
 
-      if(nbv == 0) make_supports(dim,nbr,nvr); // random supports
+      if(nva == 0) make_supports(dim,nbr,nvr); // random supports
 
       int **idx = new int*[nbr];  // indices of variables in monomials
 
-      if(nbv == 0)
+      if(nva == 0)
          for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
       else
       {
          for(int i=0; i<nbr; i++)
          {
-            idx[i] = new int[nbv];
-            nvr[i] = nbv;
+            idx[i] = new int[nva];
+            nvr[i] = nva;
          }
       }
       int **exp = new int*[nbr];  // exponents of the variables
-      if(nbv > 0)
-         make_real_minors(dim,nbr,nbv,deg,idx,cst,cff);
+      if(nva > 0)
+      {
+         if(nbr == dim)
+            make_real_cyclic(dim,nva,deg,idx,cst,cff);
+         else
+            make_real_products(dim,nbr,nva,deg,idx,cst,cff);
+      }
       else
       {
          for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
@@ -199,7 +211,7 @@ double test_dbl_real_polynomial
             cout << "   the indices :";
             for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
             cout << endl;
-            if(nbv == 0)
+            if(nva == 0)
             {
                cout << " the exponents :";
                for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
@@ -210,7 +222,7 @@ double test_dbl_real_polynomial
          }
       }
       bool vrb = (verbose > 0);
-      if(nbv == 0)
+      if(nva == 0)
       {
          bool dup = duplicate_supports(dim,nbr,nvr,idx,vrb);
          if(dup)
@@ -299,6 +311,10 @@ double test_dbl_real_polynomial
          sumerr = sumerr + err;
       }
       cout << "dimension : " << dim << endl;
+      if(nva > 0)
+      {
+         cout << "number of variables per monomial : " << nva << endl;
+      }
       cout << "number of monomials : " << nbr << endl;
       write_convolution_counts(cnvjobs);
       write_addition_counts(addjobs);

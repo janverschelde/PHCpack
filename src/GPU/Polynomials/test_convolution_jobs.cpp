@@ -17,14 +17,21 @@ int main ( void )
    cout << "Give the dimension : ";
    int dim; cin >> dim;
 
-   cout << "Give the minors dimension (0 for random polynomial) : ";
-   int nbv; cin >> nbv;
+   cout << "Give the variables per monomial (0 for random polynomial) : ";
+   int nva; cin >> nva;
 
    int nbr; // number of monomials, not counting the constant
 
-   if(nbv > 0)
+   if(nva > 0)
    {
-      nbr = minors_count(dim,nbv);
+      cout << "Enter 0 for products, other number for cyclic : ";
+      cin >> nbr;
+
+      if(nbr == 0)
+         nbr = products_count(dim,nva);
+      else
+         nbr = dim;
+
       cout << "-> number of monomials : " << nbr << endl;
    }
    else
@@ -53,21 +60,26 @@ int main ( void )
    for(int i=0; i<nbr; i++) cff[i] = new double[deg+1];
    int *nvr = new int[nbr]; // number of variables in each monomial
 
-   if(nbv == 0) make_supports(dim,nbr,nvr); // define supports of polynomial
+   if(nva == 0) make_supports(dim,nbr,nvr); // define supports of polynomial
 
    int **idx = new int*[nbr];  // indices of variables in monomials
-   if(nbv == 0)
+   if(nva == 0)
       for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
    else
    {
       for(int i=0; i<nbr; i++)
       {
-         idx[i] = new int[nbv];
-         nvr[i] = nbv;
+         idx[i] = new int[nva];
+         nvr[i] = nva;
       }
    }
-   if(nbv > 0)
-      make_real_minors(dim,nbr,nbv,deg,idx,cst,cff);
+   if(nva > 0)
+   {
+      if(nbr == dim)
+         make_real_cyclic(dim,nva,deg,idx,cst,cff);
+      else
+         make_real_products(dim,nbr,nva,deg,idx,cst,cff);
+   }
    else
    {
       int **exp = new int*[nbr];  // exponents of the variables

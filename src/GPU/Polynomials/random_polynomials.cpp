@@ -86,7 +86,7 @@ bool make_real_polynomial
    return fail;
 }
 
-int minors_count ( int dim, int nbr )
+int products_count ( int dim, int nbr )
 {
    if(nbr > dim)
       return 0;
@@ -104,12 +104,12 @@ int minors_count ( int dim, int nbr )
    }
 }
 
-void make_exponents
- ( int lvl, int dim, int nbv, int *accu, int *moncnt, int **idx )
+void make_product_exponents
+ ( int lvl, int dim, int nva, int *accu, int *moncnt, int **idx )
 {
-   if(lvl == nbv)
+   if(lvl == nva)
    {
-      for(int i=0; i<nbv; i++) idx[*moncnt][i] = accu[i];
+      for(int i=0; i<nva; i++) idx[*moncnt][i] = accu[i];
       *moncnt = *moncnt + 1;
    }
    else
@@ -119,7 +119,7 @@ void make_exponents
          for(int i=0; i<dim; i++)
          {
             accu[lvl] = i;
-            make_exponents(lvl+1,dim,nbv,accu,moncnt,idx);
+            make_product_exponents(lvl+1,dim,nva,accu,moncnt,idx);
          }
       }
       else
@@ -127,14 +127,51 @@ void make_exponents
          for(int i=accu[lvl-1]+1; i<dim; i++)
          {
             accu[lvl] = i;
-            make_exponents(lvl+1,dim,nbv,accu,moncnt,idx);
+            make_product_exponents(lvl+1,dim,nva,accu,moncnt,idx);
          }
       }
    }
 }
 
-void make_real_minors
- ( int dim, int nbr, int nbv, int deg, int **idx, double *cst, double **cff )
+void insert_sort ( int dim, int *data )
+{
+   int smallest,tmp;
+
+   for(int i=0; i<dim; i++)
+   {
+      smallest = i;
+
+      for(int j=i+1; j<dim; j++) 
+      {
+         if(data[j] < data[smallest]) smallest = j;
+      }
+      if(smallest != i)
+      {
+         tmp = data[i];
+         data[i] = data[smallest];
+         data[smallest] = tmp;
+      }
+   }
+}
+
+void make_cyclic_exponents ( int dim, int nva, int **idx )
+{
+   for(int i=0; i<nva; i++) idx[0][i] = i;
+
+   for(int k=1; k<dim; k++)
+   {
+      if(idx[k-1][nva-1] < dim-1)
+         idx[k][nva-1] = idx[k-1][nva-1] + 1;
+      else
+         idx[k][nva-1] = 0;
+     
+      for(int i=1; i<nva; i++) idx[k][i-1] = idx[k-1][i];
+   }
+   for(int k=1; k<dim; k++) insert_sort(nva,idx[k]);
+}
+
+void make_real_products
+ ( int dim, int nbr, int nva, int deg, int **idx, double *cst, double **cff )
 {
    for(int i=0; i<=deg; i++) cst[i] = random_double();
 
@@ -142,9 +179,20 @@ void make_real_minors
       for(int i=0; i<=deg; i++) cff[k][i] = random_double();
 
    int moncnt = 0;
-   int *accu = new int[nbv];
+   int *accu = new int[nva];
 
-   make_exponents(0,dim,nbv,accu,&moncnt,idx);
+   make_product_exponents(0,dim,nva,accu,&moncnt,idx);
 
    free(accu);
+}
+
+void make_real_cyclic
+ ( int dim, int nva, int deg, int **idx, double *cst, double **cff )
+{
+   for(int i=0; i<=deg; i++) cst[i] = random_double();
+
+   for(int k=0; k<dim; k++)
+      for(int i=0; i<=deg; i++) cff[k][i] = random_double();
+
+   make_cyclic_exponents(dim,nva,idx);
 }
