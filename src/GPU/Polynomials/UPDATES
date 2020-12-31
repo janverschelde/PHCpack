@@ -1,5 +1,6 @@
 Thu 31 Dec 2020 : to random_polynomials, added the generation of sums of
   all minors, updated test_{{convolution,addition}_jobs,dbl_polynomials}.
+  In random_polynomials.cpp, changed the allocation of the accumulator.
 
 Wed 30 Dec 2020 : new functions in dbl_polynomials_host for the additions,
   with or without the addition jobs.  Fixed index in addition_jobs.cpp,

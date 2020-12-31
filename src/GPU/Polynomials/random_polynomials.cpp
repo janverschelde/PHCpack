@@ -142,7 +142,9 @@ void make_real_minors
       for(int i=0; i<=deg; i++) cff[k][i] = random_double();
 
    int moncnt = 0;
-   int accu[nbv];
+   int *accu = new int[nbv];
 
    make_exponents(0,dim,nbv,accu,&moncnt,idx);
+
+   free(accu);
 }
