@@ -69,7 +69,7 @@ void coefficient_indices
    for(int i=1; i<nbr; i++) cstart[i] = cstart[0] + csums[i-1]*(deg+1);
 }
 
-void job_indices
+void convjob_indices
  ( ConvolutionJob job, int *inp1ix, int *inp2ix, int *outidx,
    int dim, int nbr, int deg, int *nvr,
    int *fstart, int *bstart, int *cstart, bool verbose )
@@ -138,15 +138,96 @@ void job_indices
    }
 }
 
-void jobs_coordinates
+void convjobs_coordinates
  ( ConvolutionJobs jobs, int layer,
    int *inp1ix, int *inp2ix, int *outidx,
    int dim, int nbr, int deg, int *nvr,
    int *fstart, int *bstart, int *cstart, bool verbose )
 { 
    for(int i=0; i<jobs.get_layer_count(layer); i++)
-      job_indices(jobs.get_job(layer,i),&inp1ix[i],&inp2ix[i],&outidx[i],
-                  dim,nbr,deg,nvr,fstart,bstart,cstart,verbose);
+      convjob_indices(jobs.get_job(layer,i),&inp1ix[i],&inp2ix[i],&outidx[i],
+                      dim,nbr,deg,nvr,fstart,bstart,cstart,verbose);
+}
+
+void addjob_indices
+ ( AdditionJob job, int *inp1ix, int *inp2ix, int *outidx,
+   int dim, int nbr, int deg, int *nvr,
+   int *fstart, int *bstart, int *cstart, bool verbose )
+{
+   const int adtype = job.get_addition_type();
+   const int intype = job.get_increment_type();
+   const int updmon = job.get_update_monomial();
+   const int updidx = job.get_update_index();
+   const int incmon = job.get_increment_monomial();
+   const int incidx = job.get_increment_index();
+   const int deg1 = deg+1;
+
+   if(verbose)
+   {
+      cout << "  add type : " << adtype
+           << ", mon : " << updmon << ", idx : " << updidx;
+      cout << "  inc type : " << intype
+           << ", mon : " << incmon << ", idx : " << incidx;
+      cout << endl;
+   }
+   if(adtype == 1)
+   {
+      *inp1ix = fstart[updmon] + updidx*deg1;
+   }
+   else if(adtype == 2)  // on GPU, one backward item less
+   {
+      if(updidx == 0)
+         *inp1ix = bstart[updmon];
+      else
+         *inp1ix = bstart[updmon] + (updidx-1)*deg1;
+   }
+   else if(adtype == 3)
+   {
+      *inp1ix = cstart[updmon] + updidx*deg1;
+   }
+   *outidx = *inp1ix;
+   if(incmon < 0)
+   {
+      if(incidx < 0)
+         *inp2ix = 0; // start with constant coefficient
+      else
+         *inp2ix = (1 + incidx)*deg1;
+   }
+   else
+   {
+      if(intype == 1)
+      {
+         *inp2ix = fstart[incmon] + incidx*deg1;
+      }
+      else if(intype == 2)
+      {                                // on GPU, on backward item less
+         if(incidx == 0)
+            *inp2ix = bstart[incmon];
+         else
+            *inp2ix = bstart[incmon] + (incidx-1)*deg1;
+      }
+      else if(intype == 3)
+      {
+         *inp2ix = cstart[incmon] + incidx*deg1;
+      }
+   }
+   if(verbose)
+   {
+      cout << "-> inp1ix : " << *inp1ix
+           << ", inp2ix : " << *inp2ix
+           << ", outidx : " << *outidx << endl;
+   }
+}
+
+void addjobs_coordinates
+ ( AdditionJobs jobs, int layer,
+   int *inp1ix, int *inp2ix, int *outidx,
+   int dim, int nbr, int deg, int *nvr,
+   int *fstart, int *bstart, int *cstart, bool verbose )
+{
+   for(int i=0; i<jobs.get_layer_count(layer); i++)
+      addjob_indices(jobs.get_job(layer,i),&inp1ix[i],&inp2ix[i],&outidx[i],
+                     dim,nbr,deg,nvr,fstart,bstart,cstart,verbose);
 }
 
 __global__ void dbl_padded_convjobs
@@ -178,7 +259,28 @@ __global__ void dbl_padded_convjobs
    data[idx3] = zv[tdx]; // storing the output
 }
 
-void data_to_output
+__global__ void dbl_update_addjobs
+ ( double *data, int *in1idx, int *in2idx, int *outidx, int dim )
+{
+   const int bdx = blockIdx.x;           // index to the addition job
+   const int tdx = threadIdx.x;          // index to the output of the job
+   const int idx1 = in1idx[bdx] + tdx;
+   const int idx2 = in2idx[bdx] + tdx;
+   const int idx3 = outidx[bdx] + tdx;
+
+   __shared__ double xv[d_shmemsize];
+   __shared__ double yv[d_shmemsize];
+   __shared__ double zv[d_shmemsize];
+
+   xv[tdx] = data[idx1];  // loading first input
+   yv[tdx] = data[idx2];  // loading second input
+
+   zv[tdx] = xv[tdx] + yv[tdx];
+
+   data[idx3] = zv[tdx]; // storing the output
+}
+
+void convoluted_data_to_output
  ( double *data, double **output, int dim, int nbr, int deg, int *nvr,
    int **idx, int *fstart, int *bstart, int *cstart, bool verbose )
 {
@@ -237,10 +339,98 @@ void data_to_output
    }
 }
 
+void added_data_to_output
+ ( double *data, double **output, int dim, int nbr, int deg, int *nvr,
+   int **idx, int *fstart, int *bstart, int *cstart, AdditionJobs jobs,
+   bool verbose )
+{
+   const int deg1 = deg + 1;
+   const int lastmon = nbr-1;
+   const int lastidx = nvr[lastmon]-1;
+   int ix;
+
+   ix = fstart[lastmon] + lastidx*deg1;
+
+   if(verbose)
+      cout << "Updating value starting at " << ix << " in data." << endl;
+
+   for(int i=0; i<=deg; i++) output[dim][i] = data[ix++];
+
+   int cnt = jobs.get_differential_count(0);
+   if(cnt == 0) // it could be there is no first variable anywhere ...
+   {
+      for(int i=0; i<=deg; i++) output[0][i] = 0.0;
+   }
+   else
+   {
+      int ix0 = jobs.get_differential_index(0,cnt);
+      int ix2 = nvr[ix0]-3;
+      if(ix2 < 0) ix2 = 0; // on GPU, one backward item less
+
+      ix = bstart[ix0] + ix2*deg1;
+      
+      if(verbose)
+         cout << "Updating derivative 0 at " << ix << " in data." << endl;
+
+      for(int i=0; i<=deg; i++) output[0][i] = data[ix++];
+
+      for(int k=1; k<dim; k++) // updating all other derivatives
+      {
+         int cnt = jobs.get_differential_count(k);
+         if(cnt == 0) // it could be there is no variable k anywhere ...
+         {
+            for(int i=0; i<=deg; i++) output[k][i] = 0.0;
+         }
+         else
+         {
+            int ix0 = jobs.get_differential_index(k,cnt);
+   
+            if(idx[ix0][0] == k) // k is first variable of monomial
+            {
+               int ix2 = nvr[ix0]-3;
+               if(ix2 < 0) ix2 = 0;
+
+               if(verbose)
+                  cout << "Updating derivative " << k 
+                       << " at " << ix << " in data." << endl;
+
+               ix = bstart[ix0] + ix2*deg1;
+
+               for(int i=0; i<=deg; i++) output[k][i] = data[ix++];
+            }
+            else if(idx[ix0][nvr[ix0]-1] == k) // k is last variable
+            {
+               int ix2 = nvr[ix0]-2;
+   
+               if(verbose)
+                  cout << "Updating derivative " << k 
+                       << " at " << ix << " in data." << endl;
+
+               ix = fstart[ix0] + ix2*deg1;
+
+               for(int i=0; i<=deg; i++) output[k][i] = data[ix++];
+            }
+            else // derivative is in some cross product
+            {
+               int ix2 = jobs.position(nvr[ix0],idx[ix0],k) - 1;
+   
+               if(verbose)
+                  cout << "Updating derivative " << k 
+                       << " at " << ix << " in data." << endl;
+
+               ix = cstart[ix0] + ix2*deg1;
+
+               for(int i=0; i<=deg; i++) output[k][i] = data[ix++];
+            }
+         }
+      }
+   }
+}
+
 void GPU_dbl_poly_evaldiff
  ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,
    double *cst, double **cff, double **input, double **output,
-   ConvolutionJobs jobs, bool verbose )
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose )
 {
    const int deg1 = deg+1;
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
@@ -285,17 +475,18 @@ void GPU_dbl_poly_evaldiff
    cudaMalloc((void**)&data_d,szdata);
    cudaMemcpy(data_d,data_h,szdata,cudaMemcpyHostToDevice);
 
-   for(int k=0; k<jobs.get_depth(); k++)
+   for(int k=0; k<cnvjobs.get_depth(); k++)
    {
-      const int jobnbr = jobs.get_layer_count(k);
+      const int jobnbr = cnvjobs.get_layer_count(k);
       int *in1ix_h = new int[jobnbr];
       int *in2ix_h = new int[jobnbr];
       int *outix_h = new int[jobnbr];
 
-      if(verbose) cout << "preparing jobs at layer " << k << " ..." << endl;
+      if(verbose) cout << "preparing convolution jobs at layer "
+                       << k << " ..." << endl;
 
-      jobs_coordinates(jobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
-                       fstart,bstart,cstart,verbose);
+      convjobs_coordinates(cnvjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
+                           fstart,bstart,cstart,verbose);
       if(deg1 == BS)
       {
          int *in1ix_d; // first input on device
@@ -318,8 +509,44 @@ void GPU_dbl_poly_evaldiff
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
+   for(int k=0; k<addjobs.get_depth(); k++)
+   {
+      const int jobnbr = addjobs.get_layer_count(k);
+      int *in1ix_h = new int[jobnbr];
+      int *in2ix_h = new int[jobnbr];
+      int *outix_h = new int[jobnbr];
+
+      if(verbose) cout << "preparing addition jobs at layer "
+                       << k << " ..." << endl;
+
+      addjobs_coordinates(addjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
+                          fstart,bstart,cstart,verbose);
+      if(deg1 == BS)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << BS
+                 << " threads ..." << endl;
+
+         dbl_update_addjobs<<<jobnbr,BS>>>
+            (data_d,in1ix_d,in2ix_d,outix_d,deg1);
+      }
+      free(in1ix_h); free(in2ix_h); free(outix_h);
+   }
    cudaMemcpy(data_h,data_d,szdata,cudaMemcpyDeviceToHost);
 
-   data_to_output(data_h,output,dim,nbr,deg,nvr,idx,
-                  fstart,bstart,cstart,verbose);
+   // convoluted_data_to_output
+   //    (data_h,output,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,verbose);
+   added_data_to_output
+      (data_h,output,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,addjobs,verbose);
 }

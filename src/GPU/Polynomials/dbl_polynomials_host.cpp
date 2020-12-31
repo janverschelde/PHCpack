@@ -412,7 +412,11 @@ void CPU_dbl_poly_addjobs
       output[dim][i] = forward[lastmon][lastidx][i];
 
    int cnt = jobs.get_differential_count(0);
-   if(cnt > 0) // it could be there is no first variable anywhere ...
+   if(cnt == 0) // it could be there is no first variable anywhere ...
+   {
+      for(int i=0; i<=deg; i++) output[0][i] = 0.0;
+   }
+   else
    {
       int ix0 = jobs.get_differential_index(0,cnt);
       int ix2 = nvr[ix0] - 2;
@@ -427,7 +431,11 @@ void CPU_dbl_poly_addjobs
    for(int k=1; k<dim; k++) // updating all other derivatives
    {
       int cnt = jobs.get_differential_count(k);
-      if(cnt > 0) // it could be there is no variable k anywhere ...
+      if(cnt == 0) // it could be there is no variable k anywhere ...
+      {
+         for(int i=0; i<=deg; i++) output[k][i] = 0.0;
+      }
+      else
       {
          int ix0 = jobs.get_differential_index(k,cnt);
 

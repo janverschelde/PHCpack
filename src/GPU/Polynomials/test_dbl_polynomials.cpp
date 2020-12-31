@@ -243,7 +243,8 @@ double test_dbl_real_polynomial
          (dim,nbr,deg,nvr,idx,cst,cff,input,output2_h,cnvjobs,addjobs,vrb);
       if(vrb) cout << "Computing on the device ..." << endl;
       GPU_dbl_poly_evaldiff
-         (deg+1,dim,nbr,deg,nvr,idx,cst,cff,input,output_d,cnvjobs,vrb);
+         (deg+1,dim,nbr,deg,nvr,idx,cst,cff,input,output_d,
+          cnvjobs,addjobs,vrb);
 
       double err = 0.0;
 

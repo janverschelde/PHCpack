@@ -6,6 +6,7 @@
 #define __dbl_polynomials_kernels_h__
 
 #include "convolution_jobs.h"
+#include "addition_jobs.h"
 
 int coefficient_count ( int dim, int nbr, int deg, int *nvr );
 /*
@@ -48,7 +49,7 @@ void coefficient_indices
  *   cstart   fstart[k] has the start position of the cross products
  *            for the k-th monomial. */
 
-void job_indices
+void convjob_indices
  ( ConvolutionJob job, int *inp1ix, int *inp2ix, int *outidx,
    int dim, int nbr, int deg, int *nvr,
    int *fstart, int *bstart, int *cstart, bool verbose );
@@ -75,7 +76,7 @@ void job_indices
  *   inp2ix   index of the second input;
  *   outidx   index of the output. */
 
-void jobs_coordinates
+void convjobs_coordinates
  ( ConvolutionJobs jobs, int layer,
    int *inp1ix, int *inp2ix, int *outidx,
    int dim, int nbr, int deg, int *nvr,
@@ -86,6 +87,65 @@ void jobs_coordinates
  *
  * ON ENTRY :
  *   jobs     defines convolution jobs;
+ *   layer    the index of one layer of jobs;
+ *   inp1ix   space for as many integers as the jobs on the layer;
+ *   inp2ix   space for as many integers as the jobs on the layer;
+ *   outidx   space for as many integers as the jobs on the layer;
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      truncation degree of the series;
+ *   nvr      nvr[k] is the number of variables for monomial k;
+ *   fstart   fstart[k] has the start position of the forward products
+ *            for the k-th monomial;
+ *   bstart   fstart[k] has the start position of the backward products
+ *            for the k-th monomial;
+ *   cstart   fstart[k] has the start position of the cross products
+ *            for the k-th monomial;
+ *   verbose  if true, writes extra information about the jobs.
+ *
+ * ON RETURN :
+ *   inp1ix   inp1ix[i] is the index of the first input of job i;
+ *   inp2ix   inp2ix[i] is the index of the second input of job i;
+ *   outidx   outidx[i] is the index of the output of job i. */
+
+void addjob_indices
+ ( AdditionJob job, int *inp1ix, int *inp2ix, int *outidx,
+   int dim, int nbr, int deg, int *nvr,
+   int *fstart, int *bstart, int *cstart, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Computes the indices of the two inputs and the output of a job.
+ *
+ * ON ENTRY :
+ *   job      defines an addition job;
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      truncation degree of the series;
+ *   nvr      nvr[k] is the number of variables for monomial k;
+ *   fstart   fstart[k] has the start position of the forward products
+ *            for the k-th monomial;
+ *   bstart   fstart[k] has the start position of the backward products
+ *            for the k-th monomial;
+ *   cstart   fstart[k] has the start position of the cross products
+ *            for the k-th monomial;
+ *   verbose  if true, writes extra information about the job.
+ *
+ * ON RETURN :
+ *   inp1ix   index of the first input;
+ *   inp2ix   index of the second input;
+ *   outidx   index of the output. */
+
+void addjobs_coordinates
+ ( AdditionJobs jobs, int layer,
+   int *inp1ix, int *inp2ix, int *outidx,
+   int dim, int nbr, int deg, int *nvr,
+   int *fstart, int *bstart, int *cstart, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Defines the coordinates of all jobs in the same layer.
+ *
+ * ON ENTRY :
+ *   jobs     defines addition jobs;
  *   layer    the index of one layer of jobs;
  *   inp1ix   space for as many integers as the jobs on the layer;
  *   inp2ix   space for as many integers as the jobs on the layer;
@@ -130,12 +190,36 @@ __global__ void dbl_padded_convjobs
  * ON RETURN :
  *   data      updated forward, backward, and cross products. */
 
-void data_to_output
+__global__ void dbl_update_addjobs
+ ( double *data, int *in1idx, int *in2idx, int *outidx, int dim );
+/*
+ * DESCRIPTION :
+ *   Executes all addition jobs at the same layer.
+ *   The block index defines the addition job.
+ *
+ * REQUIRED : 
+ *   The number of blocks equals the size of  in1idx, in2idx, outidx,
+ *   and dim equals the number of threads in each block.
+ *
+ * ON ENTRY :
+ *   data      coefficients of monomials and input series, 
+ *             space for forward, backward, and cross products;
+ *   in1idx    indices of the first input of the addition jobs;
+ *   in2idx    indices of the second input of the addition jobs;
+ *   outidx    indices of the output of the addition jobs;
+ *   dim       the number of coefficients in each series
+ *             equals the number of threads in each block.
+ *
+ * ON RETURN :
+ *   data      updated forward, backward, and cross products. */
+
+void convoluted_data_to_output
  ( double *data, double **output, int dim, int nbr, int deg, int *nvr,
    int **idx, int *fstart, int *bstart, int *cstart, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Extracts the data computed on the device to the output.
+ *   All convolutions have been computed, but no additions.
  *   This function is only for testing purposes.
  *
  * ON ENTRY :
@@ -160,10 +244,43 @@ void data_to_output
  * ON RETURN :
  *   output   contains the value and all derivatives. */
 
+void added_data_to_output
+ ( double *data, double **output, int dim, int nbr, int deg, int *nvr,
+   int **idx, int *fstart, int *bstart, int *cstart, AdditionJobs jobs,
+   bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Extracts the data computed on the device to the output.
+ *   All convolutions and all additions have been computed.
+ *
+ * ON ENTRY :
+ *   data     coefficients of all monomials and input series, 
+ *            computed forward, backward, and cross products,
+ *            with the accumulated additions;
+ *   output   space for the value and all derivatives;
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      truncation degree of the series;
+ *   nvr      nvr[k] is the number of variables for monomial k;
+ *   idx      idx[k] has as many indices as the value of nvr[k],
+ *            idx[k][i] defines the place of the i-th variable,
+ *            with input values in input[idx[k][i]];
+ *   fstart   fstart[k] has the start position of the forward products
+ *            for the k-th monomial;
+ *   bstart   fstart[k] has the start position of the backward products
+ *            for the k-th monomial;
+ *   cstart   fstart[k] has the start position of the cross products
+ *            for the k-th monomial;
+ *   jobs     defines all addition jobs;
+ *   verbose  if true, writes extra information.
+ *
+ * ON RETURN :
+ *   output   contains the value and all derivatives. */
+
 void GPU_dbl_poly_evaldiff
  ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,
    double *cst, double **cff, double **input, double **output,
-   ConvolutionJobs jobs, bool verbose=true );
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiations a polynomial in 
@@ -185,7 +302,8 @@ void GPU_dbl_poly_evaldiff
  *   input    contains the coefficients of the power series
  *            for all variables in the polynomial;
  *   output   space allocated for the value and all derivatives;
- *   jobs     convolution jobs organized in layers;
+ *   cnvjobs  convolution jobs organized in layers;
+ *   addjobs  addition jobs organized in layers;
  *   verbose  if true, then extra output about the setup is written.
  *
  * ON RETURN :
