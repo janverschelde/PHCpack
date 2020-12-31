@@ -85,3 +85,64 @@ bool make_real_polynomial
    }
    return fail;
 }
+
+int minors_count ( int dim, int nbr )
+{
+   if(nbr > dim)
+      return 0;
+   else if(nbr == dim)
+      return 1;
+   else
+   {
+      int result = 1;
+
+      for(int i=(dim-nbr+1); i<=dim; i++) result = result*i;
+
+      for(int i=2; i<=nbr; i++) result = result/i;
+
+      return result;
+   }
+}
+
+void make_exponents
+ ( int lvl, int dim, int nbv, int *accu, int *moncnt, int **idx )
+{
+   if(lvl == nbv)
+   {
+      for(int i=0; i<nbv; i++) idx[*moncnt][i] = accu[i];
+      *moncnt = *moncnt + 1;
+   }
+   else
+   {
+      if(lvl == 0)
+      {
+         for(int i=0; i<dim; i++)
+         {
+            accu[lvl] = i;
+            make_exponents(lvl+1,dim,nbv,accu,moncnt,idx);
+         }
+      }
+      else
+      {
+         for(int i=accu[lvl-1]+1; i<dim; i++)
+         {
+            accu[lvl] = i;
+            make_exponents(lvl+1,dim,nbv,accu,moncnt,idx);
+         }
+      }
+   }
+}
+
+void make_real_minors
+ ( int dim, int nbr, int nbv, int deg, int **idx, double *cst, double **cff )
+{
+   for(int i=0; i<=deg; i++) cst[i] = random_double();
+
+   for(int k=0; k<nbr; k++)
+      for(int i=0; i<=deg; i++) cff[k][i] = random_double();
+
+   int moncnt = 0;
+   int accu[nbv];
+
+   make_exponents(0,dim,nbv,accu,&moncnt,idx);
+}

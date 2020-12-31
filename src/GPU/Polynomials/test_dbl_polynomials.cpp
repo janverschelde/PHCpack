@@ -17,7 +17,7 @@
 using namespace std;
 
 double test_dbl_real_polynomial
- ( int dim, int nbr, int pwr, int deg, int verbose );
+ ( int dim, int nbr, int nbv, int pwr, int deg, int verbose );
 /*
  * DESCRIPTION :
  *   Tests the evaluation and differentiation for random real data.
@@ -26,12 +26,13 @@ double test_dbl_real_polynomial
  * ON ENTRY :
  *   dim      dimension, total number of variables;
  *   nbr      number of terms in the polynomial;
+ *   nbv      number of variables in each monomial (for minors);
  *   pwr      highest power of each variable;
  *   deg      truncation degree of the series;
  *   verbose  if zero, then no output is written. */
 
 int main_dbl_test_polynomial
- ( int seed, int dim, int nbr, int pwr, int deg, int vrblvl );
+ ( int seed, int dim, int nbr, int nbv, int pwr, int deg, int vrblvl );
 /*
  * DESCRIPTION :
  *   Runs tests on a random polynomial in double precision.
@@ -42,9 +43,20 @@ int main_dbl_test_polynomial
  *   seed     seed for the random number generator;
  *   dim      dimension, total number of variables;
  *   nbr      number of terms in the polynomial;
+ *   nbv      number of variables in each monomial (for minors);
  *   pwr      highest power of each variable;
  *   deg      truncation degree of the series;
  *   vrblvl   is the verbose level, if 0 then no output. */
+
+void write_convolution_counts ( ConvolutionJobs jobs );
+/*
+ * DESCRIPTION :
+ *   Writes the counts of convolution jobs in each layer. */
+
+void write_addition_counts ( AdditionJobs jobs );
+/*
+ * DESCRIPTION :
+ *   Writes the counts of addition jobs in each layer. */
 
 int main ( void )
 {
@@ -54,9 +66,21 @@ int main ( void )
    cout << "Give the dimension : ";
    int dim;  cin >> dim;
 
-   cout << "Give the number of terms : ";
-   int nbr; cin >> nbr;
+   cout << "Give the minors dimension (0 for random polynomial) : ";
+   int nbv; cin >> nbv;
 
+   int nbr; // number of monomials, not counting the constant
+
+   if(nbv > 0)
+   {
+      nbr = minors_count(dim,nbv);
+      cout << "-> number of monomials : " << nbr << endl;
+   }
+   else
+   {
+      cout << "Give the number of terms : ";
+      cin >> nbr;
+   }
    // cout << "Give the largest power of each variable : "; cin >> pwr;
    const int pwr=1;
 
@@ -66,7 +90,7 @@ int main ( void )
    cout << "Give the verbose level : ";
    int vrb; cin >> vrb;
 
-   int fail = main_dbl_test_polynomial(seed,dim,nbr,pwr,deg,vrb);
+   int fail = main_dbl_test_polynomial(seed,dim,nbr,nbv,pwr,deg,vrb);
 
    if(fail == 0)
       cout << "All tests passed." << endl;
@@ -76,8 +100,40 @@ int main ( void )
    return 0;
 }
 
+void write_convolution_counts ( ConvolutionJobs jobs )
+{
+   cout << "number of convolution jobs : " << jobs.get_count() << endl;
+   cout << "number of layers : " << jobs.get_depth() << endl;
+   cout << "frequency of layer counts :" << endl;
+
+   int checksum = 0;
+
+   for(int i=0; i<jobs.get_depth(); i++)
+   {
+      cout << i << " : " << jobs.get_layer_count(i) << endl;
+      checksum = checksum + jobs.get_layer_count(i); 
+   }
+   cout << "layer count sum : " << checksum << endl;
+}
+
+void write_addition_counts ( AdditionJobs jobs )
+{
+   cout << "number of addition jobs : " << jobs.get_count() << endl;
+   cout << "number of layers : " << jobs.get_depth() << endl;
+   cout << "frequency of layer counts :" << endl;
+
+   int checksum = 0;
+
+   for(int i=0; i<jobs.get_depth(); i++)
+   {
+      cout << i << " : " << jobs.get_layer_count(i) << endl;
+      checksum = checksum + jobs.get_layer_count(i); 
+   }
+   cout << "layer count sum : " << checksum << endl;
+}
+
 int main_dbl_test_polynomial
- ( int seed, int dim, int nbr, int pwr, int deg, int vrblvl )
+ ( int seed, int dim, int nbr, int nbv, int pwr, int deg, int vrblvl )
 {
    int seedused;
 
@@ -94,7 +150,7 @@ int main_dbl_test_polynomial
    }
    if(vrblvl > 0) cout << "  Seed used : " << seedused << endl;
 
-   double realsum = test_dbl_real_polynomial(dim,nbr,pwr,deg,vrblvl-1);
+   double realsum = test_dbl_real_polynomial(dim,nbr,nbv,pwr,deg,vrblvl-1);
 
    const double tol = 1.0e-12;
 
@@ -116,7 +172,7 @@ int main_dbl_test_polynomial
 }
 
 double test_dbl_real_polynomial
- ( int dim, int nbr, int pwr, int deg, int verbose )
+ ( int dim, int nbr, int nbv, int pwr, int deg, int verbose )
 {
    if(nbr < 1)
       return 0.0;
@@ -150,15 +206,29 @@ double test_dbl_real_polynomial
       for(int i=0; i<nbr; i++) cff[i] = new double[deg+1];
       int *nvr = new int[nbr]; // number of variables in each monomial
 
-      make_supports(dim,nbr,nvr); // define supports of polynomial
+      if(nbv == 0) make_supports(dim,nbr,nvr); // random supports
 
       int **idx = new int*[nbr];  // indices of variables in monomials
-      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+
+      if(nbv == 0)
+         for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+      else
+      {
+         for(int i=0; i<nbr; i++)
+         {
+            idx[i] = new int[nbv];
+            nvr[i] = nbv;
+         }
+      }
       int **exp = new int*[nbr];  // exponents of the variables
-      for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
+      if(nbv > 0)
+         make_real_minors(dim,nbr,nbv,deg,idx,cst,cff);
+      else
+      {
+         for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
 
-      bool fail = make_real_polynomial(dim,nbr,pwr,deg,nvr,idx,exp,cst,cff);
-
+         bool fail = make_real_polynomial(dim,nbr,pwr,deg,nvr,idx,exp,cst,cff);
+      }
       if(verbose > 0)
       {
          cout << "Coefficient series of the constant term :" << endl;
@@ -170,34 +240,30 @@ double test_dbl_real_polynomial
             cout << "   the indices :";
             for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
             cout << endl;
-            cout << " the exponents :";
-            for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
-            cout << endl;
+            if(nbv == 0)
+            {
+               cout << " the exponents :";
+               for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
+               cout << endl;
+            }
             cout << " coefficient series :" << endl;
             for(int j=0; j<=deg; j++) cout << " " << cff[i][j] << endl;
          }
       }
       bool vrb = (verbose > 0);
-      bool dup = duplicate_supports(dim,nbr,nvr,idx,vrb);
-      if(dup)
-         cout << "Duplicate supports found." << endl;
-      else
-         cout << "No duplicate supports found." << endl;
-
+      if(nbv == 0)
+      {
+         bool dup = duplicate_supports(dim,nbr,nvr,idx,vrb);
+         if(dup)
+            cout << "Duplicate supports found." << endl;
+         else
+            cout << "No duplicate supports found." << endl;
+      }
       ConvolutionJobs cnvjobs(dim);
 
       cnvjobs.make(nbr,nvr,idx,vrb);
 
-      cout << "number of convolution jobs : " << cnvjobs.get_count() << endl;
-      cout << "number of layers : " << cnvjobs.get_depth() << endl;
-      cout << "frequency of layer counts :" << endl;
-      int checksum = 0;
-      for(int i=0; i<cnvjobs.get_depth(); i++)
-      {
-         cout << i << " : " << cnvjobs.get_layer_count(i) << endl;
-         checksum = checksum + cnvjobs.get_layer_count(i); 
-      }
-      cout << "layer count sum : " << checksum << endl;
+      write_convolution_counts(cnvjobs);
 
       for(int k=0; k<cnvjobs.get_depth(); k++)
       {
@@ -219,16 +285,7 @@ double test_dbl_real_polynomial
             cout << " " << addjobs.get_differential_index(i,j);
          cout << endl;
       }
-      cout << "number of addition jobs : " << addjobs.get_count() << endl;
-      cout << "number of layers : " << addjobs.get_depth() << endl;
-      cout << "frequency of layer counts :" << endl;
-      checksum = 0;
-      for(int i=0; i<addjobs.get_depth(); i++)
-      {
-         cout << i << " : " << addjobs.get_layer_count(i) << endl;
-         checksum = checksum + addjobs.get_layer_count(i); 
-      }
-      cout << "layer count sum : " << checksum << endl;
+      write_addition_counts(addjobs);
 
       for(int k=0; k<addjobs.get_depth(); k++)
       {
@@ -282,6 +339,11 @@ double test_dbl_real_polynomial
          if(verbose > 0) cout << "error : " << err << endl;
          sumerr = sumerr + err;
       }
+      cout << "dimension : " << dim << endl;
+      cout << "number of monomials : " << nbr << endl;
+      write_convolution_counts(cnvjobs);
+      write_addition_counts(addjobs);
+      
       return sumerr;
    }
 }
