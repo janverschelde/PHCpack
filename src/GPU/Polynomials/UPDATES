@@ -5,7 +5,8 @@ Thu 31 Dec 2020 : to random_polynomials, added the generation of sums of
   Moved writing of job counts to separate write_job_counts,
   adjusted test_dbl_polynomials and the makefiles.
   To random_polynomials, added the definition of cyclic polynomials,
-  updated all test programs.
+  updated all test programs.  New random2_polynomials, tested by
+  test_dbl2_polynomials, updated the makefiles.
 
 Wed 30 Dec 2020 : new functions in dbl_polynomials_host for the additions,
   with or without the addition jobs.  Fixed index in addition_jobs.cpp,

@@ -10,25 +10,45 @@ CUDALIB=/usr/local/cuda/lib64
 # the architecture flag for Kepler K20C
 # smflag=sm_35
 # the architecture flag for Pascal P100
-# smflag=sm_60
+smflag=sm_60
 # the architecture flag for Volta V100
-smflag=sm_70
+# smflag=sm_70
+
+double_double_functions.o:
+	@-echo ">>> compiling double double functions ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
 
 random_numbers.o:
 	@-echo ">>> compiling double random number generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/random_numbers.cpp
 
+random2_vectors.o:
+	@-echo ">>> compiling double double random vector generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random2_vectors.cpp
+
 random_series.o:
 	@-echo ">>> compiling double random series generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(CNV)/random_series.cpp
+
+random2_series.o:
+	@-echo ">>> compiling double double random series generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(CNV)/random2_series.cpp
 
 random_monomials.o:
 	@-echo ">>> compiling double random monomials generators ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random_monomials.cpp
 
+random2_monomials.o:
+	@-echo ">>> compiling double double random monomials generators ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random2_monomials.cpp
+
 random_polynomials.o:
 	@-echo ">>> compiling random_polynomials ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) random_polynomials.cpp
+
+random2_polynomials.o:
+	@-echo ">>> compiling random2_polynomials ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) random2_polynomials.cpp
 
 dbl_convolutions_host.o:
 	@-echo ">>> compiling dbl_convolutions_host ..."
@@ -50,6 +70,10 @@ dbl_polynomials_host.o:
 test_dbl_polynomials.o:
 	@-echo ">>> compiling test_dbl_polynomials ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl_polynomials.cpp
+
+test_dbl2_polynomials.o:
+	@-echo ">>> compiling test_dbl2_polynomials ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl2_polynomials.cpp
 
 convolution_job.o:
 	@-echo ">>> compiling convolution_job ..."
@@ -112,7 +136,20 @@ test_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
                   dbl_polynomials_host.o dbl_polynomials_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
 
+test_dbl2_polynomials: random_numbers.o random_series.o random_monomials.o \
+                       random_polynomials.o double_double_functions.o \
+                       random2_vectors.o random2_series.o random2_monomials.o \
+                       random2_polynomials.o test_dbl2_polynomials.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl2_polynomials test_dbl2_polynomials.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o double_double_functions.o \
+                  random2_vectors.o random2_series.o \
+                  random2_monomials.o random2_polynomials.o
+
 clean:
+	/bin/rm -f -r test_dbl2_polynomials.o test_dbl2_polynomials
+	/bin/rm -f -r random2_polynomials.o
 	/bin/rm -f -r test_dbl_polynomials.o test_dbl_polynomials
 	/bin/rm -f -r random_polynomials.o dbl_polynomials_host.o
 	/bin/rm -f -r dbl_polynomials_kernels.o
@@ -124,4 +161,6 @@ clean:
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o
+	/bin/rm -f -r double_double_functions.o
+	/bin/rm -f -r random2_vectors.o random2_series.o random2_monomials.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_monomials_host.o

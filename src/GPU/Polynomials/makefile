@@ -15,6 +15,9 @@ test_addition_jobs:
 test_dbl_polynomials:
 	make -f $(MAKEFILE) test_dbl_polynomials
 
+test_dbl2_polynomials:
+	make -f $(MAKEFILE) test_dbl2_polynomials
+
 clean:
 	make -f $(MAKEFILE) clean
 

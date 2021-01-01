@@ -8,6 +8,7 @@ truncated to the same degree.
 file name                  : short description
 -----------------------------------------------------------------------------
 random_polynomials         : generation of random polynomials
+random2_polynomials        : random polynomials with double doubles
 convolution_job            : class to represent one convolution job
 convolution_jobs           : class to setup layers of convolution jobs
 test_convolution_jobs      : collects all convolution jobs
@@ -18,5 +19,6 @@ write_job_counts           : writes job and operation counts
 -----------------------------------------------------------------------------
 dbl_polynomials_host       : evaldiff of double polynomials on host
 dbl_polynomials_kernels    : kernels for double evaluate and differentiate
-test_dbl_polynomials       : main test on eval/diff in double precision
+test_dbl_polynomials       : main test in double precision
+test_dbl2_polynomials      : main test in double double precision
 -----------------------------------------------------------------------------
