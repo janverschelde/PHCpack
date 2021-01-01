@@ -31,11 +31,23 @@ CUDASDK="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2"
 # library folder of the CUDA SDK
 CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\lib\x64"
 
+double_double_functions.obj:
+	@-echo ">>> compiling double double functions ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/double_double_functions.cpp \
+                 /Fo: double_double_functions.obj /EHsc
+
 random_numbers.obj:
 	@-echo ">>> compiling double random number generators ..."
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
                       $(MPD)/random_numbers.cpp \
                  /Fo: random_numbers.obj /EHsc
+
+random2_vectors.obj:
+	@-echo ">>> compiling double double random number generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random2_vectors.cpp \
+                 /Fo: random2_vectors.obj /EHsc
 
 random_series.obj:
 	@-echo ">>> compiling double random series generators ..."
@@ -43,17 +55,35 @@ random_series.obj:
                       $(CNV)/random_series.cpp \
                  /Fo: random_series.obj /EHsc
 
+random2_series.obj:
+	@-echo ">>> compiling double double random series generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(CNV)/random2_series.cpp \
+                 /Fo: random2_series.obj /EHsc
+
 random_monomials.obj:
 	@-echo ">>> compiling double random monomials generators ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
                       $(CNV)/random_monomials.cpp \
                  /Fo: random_monomials.obj /EHsc
 
+random2_monomials.obj:
+	@-echo ">>> compiling double double random monomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(CNV)/random2_monomials.cpp \
+                 /Fo: random2_monomials.obj /EHsc
+
 random_polynomials.obj:
 	@-echo ">>> compiling double random polynomials generators ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
                       random_polynomials.cpp \
                  /Fo: random_polynomials.obj /EHsc
+
+random2_polynomials.obj:
+	@-echo ">>> compiling double double random polynomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random2_polynomials.cpp \
+                 /Fo: random2_polynomials.obj /EHsc
 
 dbl_convolutions_host.obj:
 	@-echo ">>> compiling dbl_convolutions_host ..."
@@ -86,6 +116,13 @@ test_dbl_polynomials.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /I$(CUDASDK)/include \
                  /Fo: test_dbl_polynomials.obj /EHsc
+
+test_dbl2_polynomials.obj:
+	@-echo ">>> compiling test_dbl2_polynomials ..."
+	$(CL)\cl /c test_dbl2_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl2_polynomials.obj /EHsc
 
 convolution_job.obj:
 	@-echo ">>> compiling convolution_job ..."
@@ -164,8 +201,25 @@ test_dbl_polynomials: random_numbers.obj random_series.obj \
               dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
               test_dbl_polynomials.obj
 
+test_dbl2_polynomials: random_numbers.obj random_series.obj \
+	               random_monomials.obj random_polynomials.obj \
+                       double_double_functions.obj \
+                       random2_vectors.obj random2_series.obj \
+                       random2_monomials.obj random2_polynomials.obj \
+                       test_dbl2_polynomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl2_polynomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random_polynomials.obj double_double_functions.obj \
+              random2_vectors.obj random2_series.obj \
+              random2_monomials.obj random2_polynomials.obj \
+              test_dbl2_polynomials.obj
+
 clean:
 	del *~
+	del test_dbl2_polynomials.exe test_dbl2_polynomials.obj
+	del test_dbl2_polynomials.exp test_dbl2_polynomials.lib
+	del random2_polynomials.obj
 	del test_dbl_polynomials.exe test_dbl_polynomials.obj
 	del test_dbl_polynomials.exp test_dbl_polynomials.lib
 	del dbl_polynomials_host.obj random_polynomials.obj
