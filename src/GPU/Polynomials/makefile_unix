@@ -10,9 +10,9 @@ CUDALIB=/usr/local/cuda/lib64
 # the architecture flag for Kepler K20C
 # smflag=sm_35
 # the architecture flag for Pascal P100
-smflag=sm_60
+# smflag=sm_60
 # the architecture flag for Volta V100
-# smflag=sm_70
+smflag=sm_70
 
 double_double_functions.o:
 	@-echo ">>> compiling double double functions ..."
@@ -54,9 +54,17 @@ dbl_convolutions_host.o:
 	@-echo ">>> compiling dbl_convolutions_host ..."
 	$(gpp) -O3 -c -I$(CNV) $(CNV)/dbl_convolutions_host.cpp
 
+dbl2_convolutions_host.o:
+	@-echo ">>> compiling dbl2_convolutions_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl2_convolutions_host.cpp
+
 dbl_monomials_host.o:
 	@-echo ">>> compiling dbl_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl_monomials_host.cpp
+
+dbl2_monomials_host.o:
+	@-echo ">>> compiling dbl2_monomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl2_monomials_host.cpp
 
 dbl_polynomials_kernels.o:
 	@-echo ">>> compiling polynomial kernels for doubles ..."
@@ -66,6 +74,10 @@ dbl_polynomials_kernels.o:
 dbl_polynomials_host.o:
 	@-echo ">>> compiling dbl_polynomials_host ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) dbl_polynomials_host.cpp
+
+dbl2_polynomials_host.o:
+	@-echo ">>> compiling dbl2_polynomials_host ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) dbl2_polynomials_host.cpp
 
 test_dbl_polynomials.o:
 	@-echo ">>> compiling test_dbl_polynomials ..."
@@ -122,10 +134,10 @@ test_addition_jobs: random_numbers.o random_series.o random_monomials.o \
 test_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
                       random_polynomials.o \
                       convolution_job.o convolution_jobs.o \
-                      addition_job.o addition_jobs.o \
+                      addition_job.o addition_jobs.o write_job_counts.o \
                       dbl_convolutions_host.o dbl_monomials_host.o \
                       dbl_polynomials_host.o dbl_polynomials_kernels.o \
-                      write_job_counts.o test_dbl_polynomials.o
+                      test_dbl_polynomials.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_polynomials test_dbl_polynomials.o \
                   random_numbers.o random_series.o random_monomials.o \
@@ -139,17 +151,25 @@ test_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
 test_dbl2_polynomials: random_numbers.o random_series.o random_monomials.o \
                        random_polynomials.o double_double_functions.o \
                        random2_vectors.o random2_series.o random2_monomials.o \
-                       random2_polynomials.o test_dbl2_polynomials.o
+                       random2_polynomials.o test_dbl2_polynomials.o \
+                       convolution_job.o convolution_jobs.o \
+                       addition_job.o addition_jobs.o write_job_counts.o \
+                       dbl2_convolutions_host.o dbl2_monomials_host.o \
+                       dbl2_polynomials_host.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_polynomials test_dbl2_polynomials.o \
                   random_numbers.o random_series.o random_monomials.o \
                   random_polynomials.o double_double_functions.o \
                   random2_vectors.o random2_series.o \
-                  random2_monomials.o random2_polynomials.o
+                  random2_monomials.o random2_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o write_job_counts.o \
+                  dbl2_convolutions_host.o dbl2_monomials_host.o \
+                  dbl2_polynomials_host.o
 
 clean:
 	/bin/rm -f -r test_dbl2_polynomials.o test_dbl2_polynomials
-	/bin/rm -f -r random2_polynomials.o
+	/bin/rm -f -r random2_polynomials.o dbl2_polynomials_host.o
 	/bin/rm -f -r test_dbl_polynomials.o test_dbl_polynomials
 	/bin/rm -f -r random_polynomials.o dbl_polynomials_host.o
 	/bin/rm -f -r dbl_polynomials_kernels.o
@@ -164,3 +184,4 @@ cleanall: clean
 	/bin/rm -f -r double_double_functions.o
 	/bin/rm -f -r random2_vectors.o random2_series.o random2_monomials.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_monomials_host.o
+	/bin/rm -f -r dbl2_convolutions_host.o dbl2_monomials_host.o
