@@ -115,6 +115,13 @@ dbl_polynomials_kernels.obj:
                 dbl_polynomials_kernels.cu \
              -o dbl_polynomials_kernels.obj
 
+dbl2_polynomials_kernels.obj:
+	@-echo ">>> compiling polynomial kernels for double doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(CNV) \
+             --define-macro gpufun=1 \
+                dbl2_polynomials_kernels.cu \
+             -o dbl2_polynomials_kernels.obj
+
 dbl_polynomials_host.obj:
 	@-echo ">>> compiling dbl_polynomials_host ..."
 	$(CL)\cl /c dbl_polynomials_host.cpp \
@@ -235,9 +242,10 @@ test_dbl2_polynomials: random_numbers.obj random_series.obj \
                        random2_monomials.obj random2_polynomials.obj \
                        convolution_job.obj convolution_jobs.obj \
                        addition_job.obj addition_jobs.obj \
+                       job_coordinates.obj write_job_counts.obj \
                        dbl2_convolutions_host.obj dbl2_monomials_host.obj \
-                       dbl2_polynomials_host.obj \
-		       write_job_counts.obj test_dbl2_polynomials.obj
+                       dbl2_polynomials_host.obj dbl2_polynomials_kernels.obj \
+		       test_dbl2_polynomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl2_polynomials.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
@@ -245,15 +253,18 @@ test_dbl2_polynomials: random_numbers.obj random_series.obj \
               random2_vectors.obj random2_series.obj \
               random2_monomials.obj random2_polynomials.obj \
               convolution_job.obj convolution_jobs.obj \
-              addition_job.obj addition_jobs.obj write_job_counts.obj \
+              addition_job.obj addition_jobs.obj \
+              job_coordinates.obj write_job_counts.obj \
               dbl2_convolutions_host.obj dbl2_monomials_host.obj \
-              dbl2_polynomials_host.obj test_dbl2_polynomials.obj
+              dbl2_polynomials_host.obj dbl2_polynomials_kernels.obj \
+              test_dbl2_polynomials.obj
 
 clean:
 	del *~
 	del test_dbl2_polynomials.exe test_dbl2_polynomials.obj
 	del test_dbl2_polynomials.exp test_dbl2_polynomials.lib
 	del random2_polynomials.obj dbl2_polynomials_host.obj
+	del dbl2_polynomials_kernels.obj
 	del test_dbl_polynomials.exe test_dbl_polynomials.obj
 	del test_dbl_polynomials.exp test_dbl_polynomials.lib
 	del dbl_polynomials_host.obj random_polynomials.obj
