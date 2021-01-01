@@ -19,8 +19,9 @@ write_job_counts           : writes job and operation counts
 job_coordinates            : defines data positions for the kernels
 -----------------------------------------------------------------------------
 dbl_polynomials_host       : evaldiff of double polynomials on host
-dbl_polynomials_kernels    : kernels for double evaluate and differentiate
+dbl_polynomials_kernels    : kernels for double evaldiff
 test_dbl_polynomials       : main test in double precision
 dbl2_polynomials_host      : evaldiff of double double polynomials on host
+dbl2_polynomials_kernels   : kernels for double double evaldiff
 test_dbl2_polynomials      : main test in double double precision
 -----------------------------------------------------------------------------

@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
-// #include <vector_types.h>
+#include <vector_types.h>
 #include "random_polynomials.h"
 #include "random2_monomials.h"
 #include "random2_polynomials.h"
@@ -14,7 +14,7 @@
 #include "addition_jobs.h"
 #include "write_job_counts.h"
 #include "dbl2_polynomials_host.h"
-// #include "dbl_polynomials_kernels.h"
+#include "dbl2_polynomials_kernels.h"
 
 using namespace std;
 
@@ -288,10 +288,10 @@ double test_dbl2_real_polynomial
       CPU_dbl2_poly_evaldiffjobs
          (dim,nbr,deg,nvr,idx,csthi,cstlo,cffhi,cfflo,inputhi,inputlo,
           output2hi_h,output2lo_h,cnvjobs,addjobs,vrb);
-      // if(vrb) cout << "Computing on the device ..." << endl;
-      // GPU_dbl_poly_evaldiff
-      //    (deg+1,dim,nbr,deg,nvr,idx,cst,cff,input,output_d,
-      //     cnvjobs,addjobs,vrb);
+      if(vrb) cout << "Computing on the device ..." << endl;
+      GPU_dbl2_poly_evaldiff
+         (deg+1,dim,nbr,deg,nvr,idx,csthi,cstlo,cffhi,cfflo,
+          inputhi,inputlo,outputhi_d,outputlo_d,cnvjobs,addjobs,vrb);
 
       double err = 0.0;
 
@@ -304,11 +304,13 @@ double test_dbl2_real_polynomial
                  << output1lo_h[dim][i] << endl;
             cout << output2hi_h[dim][i] << "  "
                  << output2lo_h[dim][i] << endl;
-            // cout << output_d[dim][i] << endl;
+            cout << outputhi_d[dim][i] << "  "
+                 << outputlo_d[dim][i] << endl;
          }
          err = err + abs(output1hi_h[dim][i] - output2hi_h[dim][i])
-                   + abs(output1lo_h[dim][i] - output2lo_h[dim][i]);
-                   // + abs(output1_h[dim][i] - output_d[dim][i]);
+                   + abs(output1lo_h[dim][i] - output2lo_h[dim][i])
+                   + abs(output1hi_h[dim][i] - outputhi_d[dim][i])
+                   + abs(output1lo_h[dim][i] - outputlo_d[dim][i]);
       }
       if(verbose > 0) cout << "error : " << err << endl;
 
@@ -326,11 +328,13 @@ double test_dbl2_real_polynomial
                     << output1lo_h[k][i] << endl;
                cout << output2hi_h[k][i] << "  "
                     << output2lo_h[k][i] << endl;
-               // cout << output_d[k][i] << endl;
+               cout << outputhi_d[k][i] << "  "
+                    << outputlo_d[k][i] << endl;
             }
             err = err + abs(output1hi_h[k][i] - output2hi_h[k][i])
-                      + abs(output1lo_h[k][i] - output2lo_h[k][i]);
-                      // + abs(output1_h[k][i] - output_d[k][i]);
+                      + abs(output1lo_h[k][i] - output2lo_h[k][i])
+                      + abs(output1hi_h[k][i] - outputhi_d[k][i])
+                      + abs(output1lo_h[k][i] - outputlo_d[k][i]);
          }
          if(verbose > 0) cout << "error : " << err << endl;
          sumerr = sumerr + err;
