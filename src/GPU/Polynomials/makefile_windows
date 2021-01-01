@@ -185,6 +185,12 @@ write_job_counts.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: write_job_counts.obj /EHsc
 
+job_coordinates.obj:
+	@-echo ">>> compiling job_coordinates ..."
+	$(CL)\cl /c job_coordinates.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: job_coordinates.obj /EHsc
+
 test_convolution_jobs: random_numbers.obj random_series.obj \
 	               random_monomials.obj random_polynomials.obj \
                        convolution_job.obj convolution_jobs.obj \
@@ -207,7 +213,8 @@ test_addition_jobs: random_numbers.obj random_series.obj \
 test_dbl_polynomials: random_numbers.obj random_series.obj \
 	              random_monomials.obj random_polynomials.obj \
                       convolution_job.obj convolution_jobs.obj \
-                      addition_job.obj addition_jobs.obj write_job_counts.obj \
+                      addition_job.obj addition_jobs.obj \
+                      job_coordinates.obj write_job_counts.obj \
                     dbl_convolutions_host.obj dbl_monomials_host.obj \
                     dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
                     test_dbl_polynomials.obj
@@ -215,7 +222,8 @@ test_dbl_polynomials: random_numbers.obj random_series.obj \
 	nvcc -ccbin=$(CL) -o test_dbl_polynomials.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
               random_polynomials.obj convolution_job.obj convolution_jobs.obj \
-              addition_job.obj addition_jobs.obj write_job_counts.obj \
+              addition_job.obj addition_jobs.obj \
+              job_coordinates.obj write_job_counts.obj \
               dbl_convolutions_host.obj dbl_monomials_host.obj \
               dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
               test_dbl_polynomials.obj
@@ -256,7 +264,7 @@ clean:
 	del addition_job.obj addition_jobs.obj
 	del test_addition_jobs.exe test_addition_jobs.lib
 	del test_addition_jobs.exp test_addition_jobs.obj
-	del write_job_counts.obj
+	del job_coordinates.obj write_job_counts.obj
 
 cleanall: clean
 	del *exe *obj *exp *lib
