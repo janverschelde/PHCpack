@@ -43,6 +43,12 @@ triple_double_functions.obj:
                       $(MPD)/triple_double_functions.cpp \
                  /Fo: triple_double_functions.obj /EHsc
 
+quad_double_functions.obj:
+	@-echo ">>> compiling quad double functions ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/quad_double_functions.cpp \
+                 /Fo: quad_double_functions.obj /EHsc
+
 random_numbers.obj:
 	@-echo ">>> compiling double random number generators ..."
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -60,6 +66,12 @@ random3_vectors.obj:
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
                       $(MPD)/random3_vectors.cpp \
                  /Fo: random3_vectors.obj /EHsc
+
+random4_vectors.obj:
+	@-echo ">>> compiling quad double random number generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random4_vectors.cpp \
+                 /Fo: random4_vectors.obj /EHsc
 
 random_series.obj:
 	@-echo ">>> compiling double random series generators ..."
@@ -79,6 +91,12 @@ random3_series.obj:
                       $(CNV)/random3_series.cpp \
                  /Fo: random3_series.obj /EHsc
 
+random4_series.obj:
+	@-echo ">>> compiling quad double random series generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(CNV)/random4_series.cpp \
+                 /Fo: random4_series.obj /EHsc
+
 random_monomials.obj:
 	@-echo ">>> compiling double random monomials generators ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -97,6 +115,12 @@ random3_monomials.obj:
                       $(CNV)/random3_monomials.cpp \
                  /Fo: random3_monomials.obj /EHsc
 
+random4_monomials.obj:
+	@-echo ">>> compiling quad double random monomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(CNV)/random4_monomials.cpp \
+                 /Fo: random4_monomials.obj /EHsc
+
 random_polynomials.obj:
 	@-echo ">>> compiling double random polynomials generators ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -114,6 +138,12 @@ random3_polynomials.obj:
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
                       random3_polynomials.cpp \
                  /Fo: random3_polynomials.obj /EHsc
+
+random4_polynomials.obj:
+	@-echo ">>> compiling quad double random polynomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random4_polynomials.cpp \
+                 /Fo: random4_polynomials.obj /EHsc
 
 dbl_convolutions_host.obj:
 	@-echo ">>> compiling dbl_convolutions_host ..."
@@ -212,6 +242,13 @@ test_dbl3_polynomials.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /I$(CUDASDK)/include \
                  /Fo: test_dbl3_polynomials.obj /EHsc
+
+test_dbl4_polynomials.obj:
+	@-echo ">>> compiling test_dbl4_polynomials ..."
+	$(CL)\cl /c test_dbl4_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl4_polynomials.obj /EHsc
 
 convolution_job.obj:
 	@-echo ">>> compiling convolution_job ..."
@@ -348,8 +385,27 @@ test_dbl3_polynomials: random_numbers.obj random_series.obj \
               dbl3_polynomials_host.obj dbl3_polynomials_kernels.obj \
               test_dbl3_polynomials.obj
 
+test_dbl4_polynomials: random_numbers.obj random_series.obj \
+	               random_monomials.obj random_polynomials.obj \
+                       double_double_functions.obj \
+                       quad_double_functions.obj \
+                       random4_vectors.obj random4_series.obj \
+                       random4_monomials.obj random4_polynomials.obj \
+		       test_dbl4_polynomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl4_polynomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random_polynomials.obj double_double_functions.obj \
+              quad_double_functions.obj \
+              random4_vectors.obj random4_series.obj \
+              random4_monomials.obj random4_polynomials.obj \
+              test_dbl4_polynomials.obj
+
 clean:
 	del *~
+	del test_dbl4_polynomials.exe test_dbl4_polynomials.obj
+	del test_dbl4_polynomials.exp test_dbl4_polynomials.lib
+	del random4_polynomials.obj
 	del test_dbl3_polynomials.exe test_dbl3_polynomials.obj
 	del test_dbl3_polynomials.exp test_dbl3_polynomials.lib
 	del random3_polynomials.obj dbl3_polynomials_host.obj
