@@ -11,6 +11,7 @@ random_polynomials         : generation of random polynomials
 random2_polynomials        : random polynomials with double doubles
 random3_polynomials        : random polynomials with triple doubles
 random4_polynomials        : random polynomials with quad doubles
+random8_polynomials        : random polynomials with octo doubles
 -----------------------------------------------------------------------------
 convolution_job            : class to represent one convolution job
 convolution_jobs           : class to setup layers of convolution jobs
@@ -33,4 +34,5 @@ test_dbl3_polynomials      : main test in triple double precision
 dbl4_polynomials_host      : evaldiff of quad double polynomials on host
 dbl4_polynomials_kernels   : kernels for quad double evaldiff
 test_dbl4_polynomials      : main test in quad double precision
+test_dbl8_polynomials      : main test in octo double precision
 -----------------------------------------------------------------------------

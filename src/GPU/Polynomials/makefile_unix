@@ -6,13 +6,13 @@ CNV=../Convolutions
 CUDA=/usr/local/cuda/include
 CUDALIB=/usr/local/cuda/lib64
 # the architecture flag for Tesla C2050
-# smflag=sm_20
+smflag=sm_20
 # the architecture flag for Kepler K20C
 # smflag=sm_35
 # the architecture flag for Pascal P100
 # smflag=sm_60
 # the architecture flag for Volta V100
-smflag=sm_70
+# smflag=sm_70
 
 double_double_functions.o:
 	@-echo ">>> compiling double double functions ..."
@@ -25,6 +25,10 @@ triple_double_functions.o:
 quad_double_functions.o:
 	@-echo ">>> compiling quad double functions ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/quad_double_functions.cpp
+
+octo_double_functions.o:
+	@-echo ">>> compiling octo double functions ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/octo_double_functions.cpp
 
 random_numbers.o:
 	@-echo ">>> compiling double random number generators ..."
@@ -42,6 +46,10 @@ random4_vectors.o:
 	@-echo ">>> compiling quad double random vector generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/random4_vectors.cpp
 
+random8_vectors.o:
+	@-echo ">>> compiling octo double random vector generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random8_vectors.cpp
+
 random_series.o:
 	@-echo ">>> compiling double random series generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(CNV)/random_series.cpp
@@ -57,6 +65,10 @@ random3_series.o:
 random4_series.o:
 	@-echo ">>> compiling quad double random series generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(CNV)/random4_series.cpp
+
+random8_series.o:
+	@-echo ">>> compiling octo double random series generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(CNV)/random8_series.cpp
 
 random_monomials.o:
 	@-echo ">>> compiling double random monomials generators ..."
@@ -74,6 +86,10 @@ random4_monomials.o:
 	@-echo ">>> compiling quad double random monomials generators ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random4_monomials.cpp
 
+random8_monomials.o:
+	@-echo ">>> compiling octo double random monomials generators ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random8_monomials.cpp
+
 random_polynomials.o:
 	@-echo ">>> compiling random_polynomials ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) random_polynomials.cpp
@@ -89,6 +105,10 @@ random3_polynomials.o:
 random4_polynomials.o:
 	@-echo ">>> compiling random4_polynomials ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) random4_polynomials.cpp
+
+random8_polynomials.o:
+	@-echo ">>> compiling random8_polynomials ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) random8_polynomials.cpp
 
 dbl_convolutions_host.o:
 	@-echo ">>> compiling dbl_convolutions_host ..."
@@ -176,6 +196,10 @@ test_dbl3_polynomials.o:
 test_dbl4_polynomials.o:
 	@-echo ">>> compiling test_dbl4_polynomials ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl4_polynomials.cpp
+
+test_dbl8_polynomials.o:
+	@-echo ">>> compiling test_dbl8_polynomials ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl8_polynomials.cpp
 
 convolution_job.o:
 	@-echo ">>> compiling convolution_job ..."
@@ -314,9 +338,24 @@ test_dbl4_polynomials: random_numbers.o random_series.o random_monomials.o \
                   dbl4_polynomials_host.o dbl4_polynomials_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
 
+test_dbl8_polynomials: random_numbers.o random_series.o random_monomials.o \
+                       random_polynomials.o double_double_functions.o \
+                       quad_double_functions.o octo_double_functions.o \
+                       random8_vectors.o random8_series.o random8_monomials.o \
+                       random8_polynomials.o test_dbl8_polynomials.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl8_polynomials test_dbl8_polynomials.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o double_double_functions.o \
+                  quad_double_functions.o octo_double_functions.o \
+                  random8_vectors.o random8_series.o \
+                  random8_monomials.o random8_polynomials.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
 clean:
+	/bin/rm -f -r test_dbl8_polynomials.o test_dbl8_polynomials
+	/bin/rm -f -r random8_polynomials.o
 	/bin/rm -f -r test_dbl4_polynomials.o test_dbl4_polynomials
-	/bin/rm -f -r random4_polynomials.o dbl4_polynomials_host.o
 	/bin/rm -f -r dbl4_polynomials_kernels.o
 	/bin/rm -f -r test_dbl3_polynomials.o test_dbl3_polynomials
 	/bin/rm -f -r random3_polynomials.o dbl3_polynomials_host.o
@@ -341,6 +380,8 @@ cleanall: clean
 	/bin/rm -f -r random3_vectors.o random3_series.o random3_monomials.o
 	/bin/rm -f -r quad_double_functions.o
 	/bin/rm -f -r random4_vectors.o random4_series.o random4_monomials.o
+	/bin/rm -f -r octo_double_functions.o
+	/bin/rm -f -r random8_vectors.o random8_series.o random8_monomials.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_monomials_host.o
 	/bin/rm -f -r dbl2_convolutions_host.o dbl2_monomials_host.o
 	/bin/rm -f -r dbl3_convolutions_host.o dbl3_monomials_host.o

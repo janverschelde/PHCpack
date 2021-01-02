@@ -5,7 +5,7 @@ Sat 2 Jan 2021 : new random4_polynomials, edits in {random2,random3}_
   dbl3_polynomials_host.cpp; new dbl4_polynomials_host with updated tests
   in test_dbl4_polynomials.cpp; updated makefiles.
   New dbl4_polynomials_kernels, tested by test_dbl4_polynomials,
-  updated the makefiles.
+  updated the makefiles.  New random8_polynomials, test_dbl8_polynomials.
 
 Fri 1 Jan 2021 : new dbl2_polynomials_host, tested by test_dbl2_polynomials,
   updated makefiles.  New job_coordinates with code taken from the
