@@ -126,7 +126,7 @@ int main_dbl2_test_polynomial
    if(vrblvl > 0)
    {
       cout << scientific << setprecision(2);
-      cout << "Sum of all errors in double precision :" << endl;
+      cout << "Sum of all errors in double double precision :" << endl;
       cout << "  on real data : " << realsum;
       if(realsum < tol)
          cout << "  pass." << endl;

@@ -9,6 +9,8 @@ file name                  : short description
 -----------------------------------------------------------------------------
 random_polynomials         : generation of random polynomials
 random2_polynomials        : random polynomials with double doubles
+random3_polynomials        : random polynomials with triple doubles
+-----------------------------------------------------------------------------
 convolution_job            : class to represent one convolution job
 convolution_jobs           : class to setup layers of convolution jobs
 test_convolution_jobs      : collects all convolution jobs
