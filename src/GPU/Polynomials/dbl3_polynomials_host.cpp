@@ -819,7 +819,9 @@ void CPU_dbl3_poly_evaldiffjobs
 
       for(int i=0; i<nvrk; i++)
       {
-         free(forwardhi[k][i]); free(forwardlo[k][i]);
+         free(forwardhi[k][i]);
+         free(forwardmi[k][i]);
+         free(forwardlo[k][i]);
       }
       if(nvrk > 1) for(int i=0; i<nvrk-1; i++)
                    {

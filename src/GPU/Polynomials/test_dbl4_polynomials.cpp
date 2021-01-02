@@ -13,7 +13,7 @@
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
 #include "write_job_counts.h"
-// #include "dbl4_polynomials_host.h"
+#include "dbl4_polynomials_host.h"
 // #include "dbl4_polynomials_kernels.h"
 
 using namespace std;
@@ -119,7 +119,7 @@ int main_dbl4_test_polynomial
 
    double realsum = test_dbl4_real_polynomial(dim,nbr,nva,pwr,deg,vrblvl-1);
 
-   const double tol = 1.0e-64;
+   const double tol = 1.0e-60;
 
    int fail = int(realsum > tol);
 
@@ -277,7 +277,6 @@ double test_dbl4_real_polynomial
          else
             cout << "No duplicate supports found." << endl;
       }
-/*
       ConvolutionJobs cnvjobs(dim);
 
       cnvjobs.make(nbr,nvr,idx,vrb);
@@ -313,19 +312,25 @@ double test_dbl4_real_polynomial
             cout << addjobs.get_job(k,i) << endl;
       }
       if(vrb) cout << "Computing without convolution jobs ..." << endl;
-      CPU_dbl3_poly_evaldiff
-         (dim,nbr,deg,nvr,idx,csthi,cstmi,cstlo,cffhi,cffmi,cfflo,
-          inputhi,inputmi,inputlo,output1hi_h,output1mi_h,output1lo_h,vrb);
+      CPU_dbl4_poly_evaldiff
+         (dim,nbr,deg,nvr,idx,csthihi,cstlohi,csthilo,cstlolo,
+          cffhihi,cfflohi,cffhilo,cfflolo,
+          inputhihi,inputlohi,inputhilo,inputlolo,
+          output1hihi_h,output1lohi_h,output1hilo_h,output1lolo_h,vrb);
       if(vrb) cout << "Computing with convolution jobs ..." << endl;
-      CPU_dbl3_poly_evaldiffjobs
-         (dim,nbr,deg,nvr,idx,csthi,cstmi,cstlo,cffhi,cffmi,cfflo,
-          inputhi,inputmi,inputlo,output2hi_h,output2mi_h,output2lo_h,
+      CPU_dbl4_poly_evaldiffjobs
+         (dim,nbr,deg,nvr,idx,csthihi,cstlohi,csthilo,cstlolo,
+          cffhihi,cfflohi,cffhilo,cfflolo,
+          inputhihi,inputlohi,inputhilo,inputlolo,
+          output2hihi_h,output2lohi_h,output2hilo_h,output2lolo_h,
           cnvjobs,addjobs,vrb);
-      if(vrb) cout << "Computing on the device ..." << endl;
-      GPU_dbl3_poly_evaldiff
-         (deg+1,dim,nbr,deg,nvr,idx,csthi,cstmi,cstlo,cffhi,cffmi,cfflo,
-          inputhi,inputmi,inputlo,outputhi_d,outputmi_d,outputlo_d,
-          cnvjobs,addjobs,vrb);
+      // if(vrb) cout << "Computing on the device ..." << endl;
+      // GPU_dbl4_poly_evaldiff
+      //    (deg+1,dim,nbr,deg,nvr,idx,csthihi,cstlohi,csthilo,cstlolo,
+      //     cffhihi,cfflohi,cffhilo,cfflolo,
+      //     inputhihi,inputlohi,inputhilo,inputlolo,
+      //     outputhihi_d,outputlohi_d,outputhilo_d,outputlolo_d,
+      //     cnvjobs,addjobs,vrb);
 
       double err = 0.0;
 
@@ -334,22 +339,27 @@ double test_dbl4_real_polynomial
       {
          if(verbose > 0)
          {
-            cout << output1hi_h[dim][i] << "  "
-                 << output1mi_h[dim][i] << "  "
-                 << output1lo_h[dim][i] << endl;
-            cout << output2hi_h[dim][i] << "  "
-                 << output2mi_h[dim][i] << "  "
-                 << output2lo_h[dim][i] << endl;
-            cout << outputhi_d[dim][i] << "  "
-                 << outputmi_d[dim][i] << "  "
-                 << outputlo_d[dim][i] << endl;
+            cout << output1hihi_h[dim][i] << "  "
+                 << output1lohi_h[dim][i] << endl
+                 << output1hilo_h[dim][i] << "  "
+                 << output1lolo_h[dim][i] << endl;
+            cout << output2hihi_h[dim][i] << "  "
+                 << output2lohi_h[dim][i] << endl
+                 << output2hilo_h[dim][i] << "  "
+                 << output2lolo_h[dim][i] << endl;
+            // cout << outputhihi_d[dim][i] << "  "
+            //      << outputlohi_d[dim][i] << endl
+            //      << outputhilo_d[dim][i] << "  "
+            //      << outputlolo_d[dim][i] << endl;
          }
-         err = err + abs(output1hi_h[dim][i] - output2hi_h[dim][i])
-                   + abs(output1mi_h[dim][i] - output2mi_h[dim][i])
-                   + abs(output1lo_h[dim][i] - output2lo_h[dim][i])
-                   + abs(output1hi_h[dim][i] - outputhi_d[dim][i])
-                   + abs(output1mi_h[dim][i] - outputmi_d[dim][i])
-                   + abs(output1lo_h[dim][i] - outputlo_d[dim][i]);
+         err = err + abs(output1hihi_h[dim][i] - output2hihi_h[dim][i])
+                   + abs(output1lohi_h[dim][i] - output2lohi_h[dim][i])
+                   + abs(output1hilo_h[dim][i] - output2hilo_h[dim][i])
+                   + abs(output1lolo_h[dim][i] - output2lolo_h[dim][i]);
+     //              + abs(output1hihi_h[dim][i] - outputhihi_d[dim][i])
+     //              + abs(output1lohi_h[dim][i] - outputlohi_d[dim][i])
+     //              + abs(output1hilo_h[dim][i] - outputhilo_d[dim][i])
+     //              + abs(output1lolo_h[dim][i] - outputlolo_d[dim][i]);
       }
       if(verbose > 0) cout << "error : " << err << endl;
 
@@ -363,22 +373,27 @@ double test_dbl4_real_polynomial
          {
             if(verbose > 0)
             {
-               cout << output1hi_h[k][i] << "  "
-                    << output1mi_h[k][i] << "  "
-                    << output1lo_h[k][i] << endl;
-               cout << output2hi_h[k][i] << "  "
-                    << output2mi_h[k][i] << "  "
-                    << output2lo_h[k][i] << endl;
-               cout << outputhi_d[k][i] << "  "
-                    << outputmi_d[k][i] << "  "
-                    << outputlo_d[k][i] << endl;
+               cout << output1hihi_h[k][i] << "  "
+                    << output1lohi_h[k][i] << endl
+                    << output1hilo_h[k][i] << "  "
+                    << output1lolo_h[k][i] << endl;
+               cout << output2hihi_h[k][i] << "  "
+                    << output2lohi_h[k][i] << endl
+                    << output2hilo_h[k][i] << "  "
+                    << output2lolo_h[k][i] << endl;
+             //  cout << outputhihi_d[k][i] << "  "
+             //       << outputlohi_d[k][i] << endl
+             //       << outputhilo_d[k][i] << "  "
+             //       << outputlolo_d[k][i] << endl;
             }
-            err = err + abs(output1hi_h[k][i] - output2hi_h[k][i])
-                      + abs(output1mi_h[k][i] - output2mi_h[k][i])
-                      + abs(output1lo_h[k][i] - output2lo_h[k][i])
-                      + abs(output1hi_h[k][i] - outputhi_d[k][i])
-                      + abs(output1mi_h[k][i] - outputmi_d[k][i])
-                      + abs(output1lo_h[k][i] - outputlo_d[k][i]);
+            err = err + abs(output1hihi_h[k][i] - output2hihi_h[k][i])
+                      + abs(output1lohi_h[k][i] - output2lohi_h[k][i])
+                      + abs(output1hilo_h[k][i] - output2hilo_h[k][i])
+                      + abs(output1lolo_h[k][i] - output2lolo_h[k][i]);
+             //         + abs(output1hihi_h[k][i] - outputhihi_d[k][i])
+             //         + abs(output1lohi_h[k][i] - outputlohi_d[k][i])
+             //         + abs(output1hilo_h[k][i] - outputhilo_d[k][i])
+             //         + abs(output1lolo_h[k][i] - outputlolo_d[k][i]);
          }
          if(verbose > 0) cout << "error : " << err << endl;
          sumerr = sumerr + err;
@@ -394,7 +409,5 @@ double test_dbl4_real_polynomial
       write_operation_counts(deg,cnvjobs,addjobs);
 
       return sumerr;
-*/
-      return 0.0;
    }
 }

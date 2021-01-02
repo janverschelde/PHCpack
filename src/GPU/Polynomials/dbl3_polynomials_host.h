@@ -80,9 +80,9 @@ void CPU_dbl3_poly_speel
  *              derivative with respect to the variable k;
  *              outputmi[dim] contains the value of the polynomial;
  *   outputlo   has the low parts of derivatives and the value,
- *              outputhi[k], for k from 0 to dim-1, contains the
+ *              outputlo[k], for k from 0 to dim-1, contains the
  *              derivative with respect to the variable k;
- *              outputhi[dim] contains the value of the polynomial. */
+ *              outputlo[dim] contains the value of the polynomial. */
 
 void CPU_dbl3_poly_evaldiff
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
@@ -379,8 +379,8 @@ void CPU_dbl3_poly_evaldiffjobs
  *              derivative with respect to the variable k;
  *              outputmi[dim] contains the value of the polynomial;
  *   outputlo   has the low parts of derivatives and the value,
- *              outputhi[k], for k from 0 to dim-1, contains the
+ *              outputlo[k], for k from 0 to dim-1, contains the
  *              derivative with respect to the variable k;
- *              outputhi[dim] contains the value of the polynomial. */
+ *              outputlo[dim] contains the value of the polynomial. */
 
 #endif

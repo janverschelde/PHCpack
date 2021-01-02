@@ -1,6 +1,9 @@
 Sat 2 Jan 2021 : new random4_polynomials, edits in {random2,random3}_
   polynomials, new test_dbl4_polynomials, decreased the tolerances in
   test_{dbl2,dbl3}_polynomials.  Updated makefiles.
+  Edited {dbl2,dbl3}_polynomials_host.h, added missing free at the end of
+  dbl3_polynomials_host.cpp; new dbl4_polynomials_host with updated tests
+  in test_dbl4_polynomials.cpp; updated makefiles.
 
 Fri 1 Jan 2021 : new dbl2_polynomials_host, tested by test_dbl2_polynomials,
   updated makefiles.  New job_coordinates with code taken from the
