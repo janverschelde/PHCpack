@@ -163,6 +163,12 @@ dbl3_convolutions_host.obj:
                  -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: dbl3_convolutions_host.obj
 
+dbl4_convolutions_host.obj:
+	@-echo ">>> compiling dbl4_convolutions_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/dbl4_convolutions_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl4_convolutions_host.obj
+
 dbl_monomials_host.obj:
 	@-echo ">>> compiling dbl_monomials_host ..."
 	$(CL)\cl /c $(CNV)/dbl_monomials_host.cpp \
@@ -180,6 +186,12 @@ dbl3_monomials_host.obj:
 	$(CL)\cl /c $(CNV)/dbl3_monomials_host.cpp \
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -02 \
                  /Fo: dbl3_monomials_host.obj /EHsc
+
+dbl4_monomials_host.obj:
+	@-echo ">>> compiling dbl4_monomials_host ..."
+	$(CL)\cl /c $(CNV)/dbl4_monomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -02 \
+                 /Fo: dbl4_monomials_host.obj /EHsc
 
 dbl_polynomials_kernels.obj:
 	@-echo ">>> compiling polynomial kernels for doubles ..."
@@ -221,6 +233,13 @@ dbl3_polynomials_host.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /I$(CUDASDK)/include \
                  /Fo: dbl3_polynomials_host.obj /EHsc
+
+dbl4_polynomials_host.obj:
+	@-echo ">>> compiling dbl4_polynomials_host ..."
+	$(CL)\cl /c dbl4_polynomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_polynomials_host.obj /EHsc
 
 test_dbl_polynomials.obj:
 	@-echo ">>> compiling test_dbl_polynomials ..."
@@ -391,6 +410,11 @@ test_dbl4_polynomials: random_numbers.obj random_series.obj \
                        quad_double_functions.obj \
                        random4_vectors.obj random4_series.obj \
                        random4_monomials.obj random4_polynomials.obj \
+                       convolution_job.obj convolution_jobs.obj \
+                       addition_job.obj addition_jobs.obj \
+                       job_coordinates.obj write_job_counts.obj \
+                       dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+                       dbl4_polynomials_host.obj \
 		       test_dbl4_polynomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl4_polynomials.exe \
@@ -399,13 +423,18 @@ test_dbl4_polynomials: random_numbers.obj random_series.obj \
               quad_double_functions.obj \
               random4_vectors.obj random4_series.obj \
               random4_monomials.obj random4_polynomials.obj \
+              convolution_job.obj convolution_jobs.obj \
+              addition_job.obj addition_jobs.obj \
+              job_coordinates.obj write_job_counts.obj \
+              dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+              dbl4_polynomials_host.obj \
               test_dbl4_polynomials.obj
 
 clean:
 	del *~
 	del test_dbl4_polynomials.exe test_dbl4_polynomials.obj
 	del test_dbl4_polynomials.exp test_dbl4_polynomials.lib
-	del random4_polynomials.obj
+	del random4_polynomials.obj dbl4_polynomials_host.obj
 	del test_dbl3_polynomials.exe test_dbl3_polynomials.obj
 	del test_dbl3_polynomials.exp test_dbl3_polynomials.lib
 	del random3_polynomials.obj dbl3_polynomials_host.obj

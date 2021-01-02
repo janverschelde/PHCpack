@@ -31,5 +31,6 @@ dbl3_polynomials_host      : evaldiff of triple double polynomials on host
 dbl3_polynomials_kernels   : kernels for triple double evaldiff
 test_dbl3_polynomials      : main test in triple double precision
 dbl4_polynomials_host      : evaldiff of quad double polynomials on host
+dbl4_polynomials_kernels   : kernels for quad double evaldiff
 test_dbl4_polynomials      : main test in quad double precision
 -----------------------------------------------------------------------------
