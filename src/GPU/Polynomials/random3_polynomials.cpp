@@ -1,4 +1,4 @@
-// The file random_polynomials3.cpp defines functions specified
+// The file random3_polynomials.cpp defines functions specified
 // in random3_polynomials.h.
 
 #include <cstdlib>

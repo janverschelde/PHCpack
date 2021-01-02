@@ -23,8 +23,10 @@ bool make_real3_polynomial
  *   nvr     nbr integers, with nvr[k] the number of variables in monomial k;
  *   exp     space allocated for nbr arrays of nvr[k] integers;
  *   csthi   space allocated for deg+1 doubles;
+ *   cstmi   space allocated for deg+1 doubles;
  *   cstlo   space allocated for deg+1 doubles;
  *   cffhi   space allocated for nbr arrays of deg+1 doubles;
+ *   cffmi   space allocated for nbr arrays of deg+1 doubles;
  *   cfflo   space allocated for nbr arrays of deg+1 doubles.
  *
  * ON RETURN :
@@ -42,7 +44,7 @@ bool make_real3_polynomial
  *   cffmi   the middle parts of the coefficient series for each monomial,
  *           cffhi[k] has the deg+1 middle coefficients of monomial k;
  *   cfflo   the low parts of the coefficient series for each monomial,
- *           cfflo[k] has the deg+1 high coefficients of monomial k. */
+ *           cfflo[k] has the deg+1 low coefficients of monomial k. */
 
 void make_real3_products
  ( int dim, int nbr, int nva, int deg, int **idx,
@@ -80,7 +82,7 @@ void make_real3_products
  *   cffmi   the middle parts of the coefficient series for each monomial,
  *           cffmi[k] has the deg+1 middle coefficients of monomial k;
  *   cfflo   the low parts of the coefficient series for each monomial,
- *           cfflo[k] has the deg+1 high coefficients of monomial k. */
+ *           cfflo[k] has the deg+1 low coefficients of monomial k. */
 
 void make_real3_cyclic
  ( int dim, int nva, int deg, int **idx,
@@ -117,6 +119,6 @@ void make_real3_cyclic
  *   cffmi   the middle parts of the coefficient series for each monomial,
  *           cffmi[k] has the deg+1 middle coefficients of monomial k;
  *   cfflo   the low parts of the coefficient series for each monomial,
- *           cfflo[k] has the deg+1 high coefficients of monomial k. */
+ *           cfflo[k] has the deg+1 low coefficients of monomial k. */
 
 #endif

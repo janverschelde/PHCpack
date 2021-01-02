@@ -10,6 +10,7 @@ file name                  : short description
 random_polynomials         : generation of random polynomials
 random2_polynomials        : random polynomials with double doubles
 random3_polynomials        : random polynomials with triple doubles
+random4_polynomials        : random polynomials with quad doubles
 -----------------------------------------------------------------------------
 convolution_job            : class to represent one convolution job
 convolution_jobs           : class to setup layers of convolution jobs
@@ -29,4 +30,5 @@ test_dbl2_polynomials      : main test in double double precision
 dbl3_polynomials_host      : evaldiff of triple double polynomials on host
 dbl3_polynomials_kernels   : kernels for triple double evaldiff
 test_dbl3_polynomials      : main test in triple double precision
+test_dbl4_polynomials      : main test in quad double precision
 -----------------------------------------------------------------------------

@@ -1,24 +1,24 @@
 /* Tests polynomial evaluation and differentiation
- * in double double precision. */
+ * in quad double precision. */
 
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
-#include <vector_types.h>
+// #include <vector_types.h>
 #include "random_polynomials.h"
-#include "random2_monomials.h"
-#include "random2_polynomials.h"
+#include "random4_monomials.h"
+#include "random4_polynomials.h"
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
 #include "write_job_counts.h"
-#include "dbl2_polynomials_host.h"
-#include "dbl2_polynomials_kernels.h"
+// #include "dbl4_polynomials_host.h"
+// #include "dbl4_polynomials_kernels.h"
 
 using namespace std;
 
-double test_dbl2_real_polynomial
+double test_dbl4_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose );
 /*
  * DESCRIPTION :
@@ -33,11 +33,11 @@ double test_dbl2_real_polynomial
  *   deg      truncation degree of the series;
  *   verbose  if zero, then no output is written. */
 
-int main_dbl2_test_polynomial
+int main_dbl4_test_polynomial
  ( int seed, int dim, int nbr, int nva, int pwr, int deg, int vrblvl );
 /*
  * DESCRIPTION :
- *   Runs tests on a random polynomial in double precision.
+ *   Runs tests on a random polynomial in triple double precision.
  *   Returns 0 if all tests passed,
  *   otherwise, returns the number of failed tests.
  *
@@ -89,7 +89,7 @@ int main ( void )
    cout << "Give the verbose level : ";
    int vrb; cin >> vrb;
 
-   int fail = main_dbl2_test_polynomial(seed,dim,nbr,nva,pwr,deg,vrb);
+   int fail = main_dbl4_test_polynomial(seed,dim,nbr,nva,pwr,deg,vrb);
 
    if(fail == 0)
       cout << "All tests passed." << endl;
@@ -99,7 +99,7 @@ int main ( void )
    return 0;
 }
 
-int main_dbl2_test_polynomial
+int main_dbl4_test_polynomial
  ( int seed, int dim, int nbr, int nva, int pwr, int deg, int vrblvl )
 {
    int seedused;
@@ -117,16 +117,16 @@ int main_dbl2_test_polynomial
    }
    if(vrblvl > 0) cout << "  Seed used : " << seedused << endl;
 
-   double realsum = test_dbl2_real_polynomial(dim,nbr,nva,pwr,deg,vrblvl-1);
+   double realsum = test_dbl4_real_polynomial(dim,nbr,nva,pwr,deg,vrblvl-1);
 
-   const double tol = 1.0e-28;
+   const double tol = 1.0e-64;
 
    int fail = int(realsum > tol);
 
    if(vrblvl > 0)
    {
       cout << scientific << setprecision(2);
-      cout << "Sum of all errors in double double precision :" << endl;
+      cout << "Sum of all errors in quad double precision :" << endl;
       cout << "  on real data : " << realsum;
       if(realsum < tol)
          cout << "  pass." << endl;
@@ -138,33 +138,49 @@ int main_dbl2_test_polynomial
    return fail;
 }
 
-double test_dbl2_real_polynomial
+double test_dbl4_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose )
 {
    if(nbr < 1)
       return 0.0;
    else
    {
-      double **inputhi = new double*[dim]; // dim series of degree deg
-      for(int i=0; i<dim; i++) inputhi[i] = new double[deg+1];
-      double **inputlo = new double*[dim];
-      for(int i=0; i<dim; i++) inputlo[i] = new double[deg+1];
+      double **inputhihi = new double*[dim]; // dim series of degree deg
+      for(int i=0; i<dim; i++) inputhihi[i] = new double[deg+1];
+      double **inputlohi = new double*[dim];
+      for(int i=0; i<dim; i++) inputlohi[i] = new double[deg+1];
+      double **inputhilo = new double*[dim];
+      for(int i=0; i<dim; i++) inputhilo[i] = new double[deg+1];
+      double **inputlolo = new double*[dim];
+      for(int i=0; i<dim; i++) inputlolo[i] = new double[deg+1];
       // The output are dim+1 power series of degree deg
       // for the evaluated and differentiated polynomial.
-      double **output1hi_h = new double*[dim+1];
-      for(int i=0; i<=dim; i++) output1hi_h[i] = new double[deg+1];
-      double **output1lo_h = new double*[dim+1];
-      for(int i=0; i<=dim; i++) output1lo_h[i] = new double[deg+1];
-      double **output2hi_h = new double*[dim+1];
-      for(int i=0; i<=dim; i++) output2hi_h[i] = new double[deg+1];
-      double **output2lo_h = new double*[dim+1];
-      for(int i=0; i<=dim; i++) output2lo_h[i] = new double[deg+1];
-      double **outputhi_d = new double*[dim+1];
-      for(int i=0; i<=dim; i++) outputhi_d[i] = new double[deg+1];
-      double **outputlo_d = new double*[dim+1];
-      for(int i=0; i<=dim; i++) outputlo_d[i] = new double[deg+1];
+      double **output1hihi_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) output1hihi_h[i] = new double[deg+1];
+      double **output1lohi_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) output1lohi_h[i] = new double[deg+1];
+      double **output1hilo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) output1hilo_h[i] = new double[deg+1];
+      double **output1lolo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) output1lolo_h[i] = new double[deg+1];
+      double **output2hihi_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) output2hihi_h[i] = new double[deg+1];
+      double **output2lohi_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) output2lohi_h[i] = new double[deg+1];
+      double **output2hilo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) output2hilo_h[i] = new double[deg+1];
+      double **output2lolo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) output2lolo_h[i] = new double[deg+1];
+      double **outputhihi_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputhihi_d[i] = new double[deg+1];
+      double **outputlohi_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputlohi_d[i] = new double[deg+1];
+      double **outputhilo_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputhilo_d[i] = new double[deg+1];
+      double **outputlolo_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputlolo_d[i] = new double[deg+1];
 
-      make_real2_input(dim,deg,inputhi,inputlo);
+      make_real4_input(dim,deg,inputhihi,inputlohi,inputhilo,inputlolo);
 
       if(verbose > 0)
       {
@@ -174,15 +190,22 @@ double test_dbl2_real_polynomial
          {
             cout << "-> coefficients of series " << i << " :" << endl;
             for(int j=0; j<=deg; j++)
-               cout << inputhi[i][j] << "  " << inputlo[i][j] << endl;
+               cout << inputhihi[i][j] << "  " << inputlohi[i][j] << endl
+                    << inputhilo[i][j] << "  " << inputlolo[i][j] << endl;
          }
       }
-      double *csthi = new double[deg+1]; // constant coefficient series
-      double *cstlo = new double[deg+1];
-      double **cffhi = new double*[nbr]; // coefficient series of terms
-      for(int i=0; i<nbr; i++) cffhi[i] = new double[deg+1];
-      double **cfflo = new double*[nbr]; // coefficient series of terms
-      for(int i=0; i<nbr; i++) cfflo[i] = new double[deg+1];
+      double *csthihi = new double[deg+1]; // constant coefficient series
+      double *cstlohi = new double[deg+1];
+      double *csthilo = new double[deg+1];
+      double *cstlolo = new double[deg+1];
+      double **cffhihi = new double*[nbr]; // coefficient series of terms
+      for(int i=0; i<nbr; i++) cffhihi[i] = new double[deg+1];
+      double **cfflohi = new double*[nbr];
+      for(int i=0; i<nbr; i++) cfflohi[i] = new double[deg+1];
+      double **cffhilo = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffhilo[i] = new double[deg+1];
+      double **cfflolo = new double*[nbr];
+      for(int i=0; i<nbr; i++) cfflolo[i] = new double[deg+1];
       int *nvr = new int[nbr]; // number of variables in each monomial
 
       if(nva == 0) make_supports(dim,nbr,nvr); // random supports
@@ -203,22 +226,29 @@ double test_dbl2_real_polynomial
       if(nva > 0)
       {
          if(nbr == dim)
-            make_real2_cyclic(dim,nva,deg,idx,csthi,cstlo,cffhi,cfflo);
+            make_real4_cyclic
+               (dim,nva,deg,idx,csthihi,cstlohi,csthilo,cstlolo,
+                                cffhihi,cfflohi,cffhilo,cfflolo);
          else
-            make_real2_products(dim,nbr,nva,deg,idx,csthi,cstlo,cffhi,cfflo);
+            make_real4_products
+               (dim,nbr,nva,deg,idx,csthihi,cstlohi,csthilo,cstlolo,
+                                    cffhihi,cfflohi,cffhilo,cfflolo);
       }
       else
       {
          for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
 
-         bool fail = make_real2_polynomial(dim,nbr,pwr,deg,nvr,idx,exp,
-                                           csthi,cstlo,cffhi,cfflo);
+         bool fail = make_real4_polynomial
+                        (dim,nbr,pwr,deg,nvr,idx,exp,
+                         csthihi,cstlohi,csthilo,cstlolo,
+                         cffhihi,cfflohi,cffhilo,cfflolo);
       }
       if(verbose > 0)
       {
          cout << "Coefficient series of the constant term :" << endl;
          for(int j=0; j<=deg; j++)
-            cout << csthi[j] << "  " << cstlo[j] << endl;
+            cout << csthihi[j] << "  " << cstlohi[j] << endl
+                 << csthilo[j] << "  " << cstlolo[j] << endl;
 
          for(int i=0; i<nbr; i++)
          {
@@ -234,7 +264,8 @@ double test_dbl2_real_polynomial
             }
             cout << " coefficient series :" << endl;
             for(int j=0; j<=deg; j++)
-               cout << cffhi[i][j] << "  " << cfflo[i][j] << endl;
+               cout << cffhihi[i][j] << "  " << cfflohi[i][j] << endl
+                    << cffhilo[i][j] << "  " << cfflolo[i][j] << endl;
          }
       }
       bool vrb = (verbose > 0);
@@ -246,6 +277,7 @@ double test_dbl2_real_polynomial
          else
             cout << "No duplicate supports found." << endl;
       }
+/*
       ConvolutionJobs cnvjobs(dim);
 
       cnvjobs.make(nbr,nvr,idx,vrb);
@@ -281,17 +313,19 @@ double test_dbl2_real_polynomial
             cout << addjobs.get_job(k,i) << endl;
       }
       if(vrb) cout << "Computing without convolution jobs ..." << endl;
-      CPU_dbl2_poly_evaldiff
-         (dim,nbr,deg,nvr,idx,csthi,cstlo,cffhi,cfflo,inputhi,inputlo,
-          output1hi_h,output1lo_h,vrb);
+      CPU_dbl3_poly_evaldiff
+         (dim,nbr,deg,nvr,idx,csthi,cstmi,cstlo,cffhi,cffmi,cfflo,
+          inputhi,inputmi,inputlo,output1hi_h,output1mi_h,output1lo_h,vrb);
       if(vrb) cout << "Computing with convolution jobs ..." << endl;
-      CPU_dbl2_poly_evaldiffjobs
-         (dim,nbr,deg,nvr,idx,csthi,cstlo,cffhi,cfflo,inputhi,inputlo,
-          output2hi_h,output2lo_h,cnvjobs,addjobs,vrb);
+      CPU_dbl3_poly_evaldiffjobs
+         (dim,nbr,deg,nvr,idx,csthi,cstmi,cstlo,cffhi,cffmi,cfflo,
+          inputhi,inputmi,inputlo,output2hi_h,output2mi_h,output2lo_h,
+          cnvjobs,addjobs,vrb);
       if(vrb) cout << "Computing on the device ..." << endl;
-      GPU_dbl2_poly_evaldiff
-         (deg+1,dim,nbr,deg,nvr,idx,csthi,cstlo,cffhi,cfflo,
-          inputhi,inputlo,outputhi_d,outputlo_d,cnvjobs,addjobs,vrb);
+      GPU_dbl3_poly_evaldiff
+         (deg+1,dim,nbr,deg,nvr,idx,csthi,cstmi,cstlo,cffhi,cffmi,cfflo,
+          inputhi,inputmi,inputlo,outputhi_d,outputmi_d,outputlo_d,
+          cnvjobs,addjobs,vrb);
 
       double err = 0.0;
 
@@ -301,15 +335,20 @@ double test_dbl2_real_polynomial
          if(verbose > 0)
          {
             cout << output1hi_h[dim][i] << "  "
+                 << output1mi_h[dim][i] << "  "
                  << output1lo_h[dim][i] << endl;
             cout << output2hi_h[dim][i] << "  "
+                 << output2mi_h[dim][i] << "  "
                  << output2lo_h[dim][i] << endl;
             cout << outputhi_d[dim][i] << "  "
+                 << outputmi_d[dim][i] << "  "
                  << outputlo_d[dim][i] << endl;
          }
          err = err + abs(output1hi_h[dim][i] - output2hi_h[dim][i])
+                   + abs(output1mi_h[dim][i] - output2mi_h[dim][i])
                    + abs(output1lo_h[dim][i] - output2lo_h[dim][i])
                    + abs(output1hi_h[dim][i] - outputhi_d[dim][i])
+                   + abs(output1mi_h[dim][i] - outputmi_d[dim][i])
                    + abs(output1lo_h[dim][i] - outputlo_d[dim][i]);
       }
       if(verbose > 0) cout << "error : " << err << endl;
@@ -325,15 +364,20 @@ double test_dbl2_real_polynomial
             if(verbose > 0)
             {
                cout << output1hi_h[k][i] << "  "
+                    << output1mi_h[k][i] << "  "
                     << output1lo_h[k][i] << endl;
                cout << output2hi_h[k][i] << "  "
+                    << output2mi_h[k][i] << "  "
                     << output2lo_h[k][i] << endl;
                cout << outputhi_d[k][i] << "  "
+                    << outputmi_d[k][i] << "  "
                     << outputlo_d[k][i] << endl;
             }
             err = err + abs(output1hi_h[k][i] - output2hi_h[k][i])
+                      + abs(output1mi_h[k][i] - output2mi_h[k][i])
                       + abs(output1lo_h[k][i] - output2lo_h[k][i])
                       + abs(output1hi_h[k][i] - outputhi_d[k][i])
+                      + abs(output1mi_h[k][i] - outputmi_d[k][i])
                       + abs(output1lo_h[k][i] - outputlo_d[k][i]);
          }
          if(verbose > 0) cout << "error : " << err << endl;
@@ -350,5 +394,7 @@ double test_dbl2_real_polynomial
       write_operation_counts(deg,cnvjobs,addjobs);
 
       return sumerr;
+*/
+      return 0.0;
    }
 }

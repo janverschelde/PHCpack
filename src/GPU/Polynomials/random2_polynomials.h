@@ -38,7 +38,7 @@ bool make_real2_polynomial
  *   cffhi   the high parts of the coefficient series for each monomial,
  *           cffhi[k] has the deg+1 high coefficients of monomial k;
  *   cfflo   the low parts of the coefficient series for each monomial,
- *           cfflo[k] has the deg+1 high coefficients of monomial k. */
+ *           cfflo[k] has the deg+1 low coefficients of monomial k. */
 
 void make_real2_products
  ( int dim, int nbr, int nva, int deg, int **idx,

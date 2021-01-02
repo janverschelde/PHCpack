@@ -119,7 +119,7 @@ int main_dbl3_test_polynomial
 
    double realsum = test_dbl3_real_polynomial(dim,nbr,nva,pwr,deg,vrblvl-1);
 
-   const double tol = 1.0e-12;
+   const double tol = 1.0e-44;
 
    int fail = int(realsum > tol);
 
