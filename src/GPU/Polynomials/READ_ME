@@ -26,4 +26,6 @@ test_dbl_polynomials       : main test in double precision
 dbl2_polynomials_host      : evaldiff of double double polynomials on host
 dbl2_polynomials_kernels   : kernels for double double evaldiff
 test_dbl2_polynomials      : main test in double double precision
+dbl3_polynomials_host      : evaldiff of triple double polynomials on host
+test_dbl3_polynomials      : main test in triple double precision
 -----------------------------------------------------------------------------

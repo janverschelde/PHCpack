@@ -3,7 +3,8 @@ Fri 1 Jan 2020 : new dbl2_polynomials_host, tested by test_dbl2_polynomials,
   dbl_polynomials_kernels.h and dbl_polynomials_kernels.cu.
   Defined dbl2_polynomials_kernels, tested by test_dbl2_polynomials,
   updated the makefiles.  New random3_polynomials and test_dbl3_polynomials,
-  updated makefiles.
+  updated makefiles.  New dbl3_polynomials_host, updated makefiles, and
+  updated test_dbl3_polynomials.
 
 Thu 31 Dec 2020 : to random_polynomials, added the generation of sums of
   all products, updated test_{{convolution,addition}_jobs,dbl_polynomials}.
