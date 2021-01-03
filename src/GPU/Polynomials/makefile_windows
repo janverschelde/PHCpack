@@ -49,11 +49,23 @@ quad_double_functions.obj:
                       $(MPD)/quad_double_functions.cpp \
                  /Fo: quad_double_functions.obj /EHsc
 
+penta_double_functions.obj:
+	@-echo ">>> compiling penta double functions ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/penta_double_functions.cpp \
+                 /Fo: penta_double_functions.obj /EHsc
+
 octo_double_functions.obj:
 	@-echo ">>> compiling octo double functions ..."
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
                       $(MPD)/octo_double_functions.cpp \
                  /Fo: octo_double_functions.obj /EHsc
+
+deca_double_functions.obj:
+	@-echo ">>> compiling deca double functions ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/deca_double_functions.cpp \
+                 /Fo: deca_double_functions.obj /EHsc
 
 random_numbers.obj:
 	@-echo ">>> compiling double random number generators ..."
@@ -79,11 +91,23 @@ random4_vectors.obj:
                       $(MPD)/random4_vectors.cpp \
                  /Fo: random4_vectors.obj /EHsc
 
+random5_vectors.obj:
+	@-echo ">>> compiling penta double random number generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random5_vectors.cpp \
+                 /Fo: random5_vectors.obj /EHsc
+
 random8_vectors.obj:
 	@-echo ">>> compiling octo double random number generators ..."
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
                       $(MPD)/random8_vectors.cpp \
                  /Fo: random8_vectors.obj /EHsc
+
+random10_vectors.obj:
+	@-echo ">>> compiling deca double random number generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random10_vectors.cpp \
+                 /Fo: random10_vectors.obj /EHsc
 
 random_series.obj:
 	@-echo ">>> compiling double random series generators ..."
@@ -109,11 +133,23 @@ random4_series.obj:
                       $(CNV)/random4_series.cpp \
                  /Fo: random4_series.obj /EHsc
 
+random5_series.obj:
+	@-echo ">>> compiling penta double random series generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(CNV)/random5_series.cpp \
+                 /Fo: random5_series.obj /EHsc
+
 random8_series.obj:
 	@-echo ">>> compiling octo double random series generators ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
                       $(CNV)/random8_series.cpp \
                  /Fo: random8_series.obj /EHsc
+
+random10_series.obj:
+	@-echo ">>> compiling deca double random series generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(CNV)/random10_series.cpp \
+                 /Fo: random10_series.obj /EHsc
 
 random_monomials.obj:
 	@-echo ">>> compiling double random monomials generators ..."
@@ -139,11 +175,23 @@ random4_monomials.obj:
                       $(CNV)/random4_monomials.cpp \
                  /Fo: random4_monomials.obj /EHsc
 
+random5_monomials.obj:
+	@-echo ">>> compiling penta double random monomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(CNV)/random5_monomials.cpp \
+                 /Fo: random5_monomials.obj /EHsc
+
 random8_monomials.obj:
 	@-echo ">>> compiling octo double random monomials generators ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
                       $(CNV)/random8_monomials.cpp \
                  /Fo: random8_monomials.obj /EHsc
+
+random10_monomials.obj:
+	@-echo ">>> compiling deca double random monomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(CNV)/random10_monomials.cpp \
+                 /Fo: random10_monomials.obj /EHsc
 
 random_polynomials.obj:
 	@-echo ">>> compiling double random polynomials generators ..."
@@ -169,11 +217,23 @@ random4_polynomials.obj:
                       random4_polynomials.cpp \
                  /Fo: random4_polynomials.obj /EHsc
 
+random5_polynomials.obj:
+	@-echo ">>> compiling penta double random polynomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random5_polynomials.cpp \
+                 /Fo: random5_polynomials.obj /EHsc
+
 random8_polynomials.obj:
 	@-echo ">>> compiling octo double random polynomials generators ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
                       random8_polynomials.cpp \
                  /Fo: random8_polynomials.obj /EHsc
+
+random10_polynomials.obj:
+	@-echo ">>> compiling deca double random polynomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random10_polynomials.cpp \
+                 /Fo: random10_polynomials.obj /EHsc
 
 dbl_convolutions_host.obj:
 	@-echo ">>> compiling dbl_convolutions_host ..."
@@ -332,12 +392,26 @@ test_dbl4_polynomials.obj:
                  /I$(CUDASDK)/include \
                  /Fo: test_dbl4_polynomials.obj /EHsc
 
+test_dbl5_polynomials.obj:
+	@-echo ">>> compiling test_dbl5_polynomials ..."
+	$(CL)\cl /c test_dbl5_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl5_polynomials.obj /EHsc
+
 test_dbl8_polynomials.obj:
 	@-echo ">>> compiling test_dbl8_polynomials ..."
 	$(CL)\cl /c test_dbl8_polynomials.cpp \
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /I$(CUDASDK)/include \
                  /Fo: test_dbl8_polynomials.obj /EHsc
+
+test_dbl10_polynomials.obj:
+	@-echo ">>> compiling test_dbl10_polynomials ..."
+	$(CL)\cl /c test_dbl10_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl10_polynomials.obj /EHsc
 
 convolution_job.obj:
 	@-echo ">>> compiling convolution_job ..."
@@ -500,6 +574,22 @@ test_dbl4_polynomials: random_numbers.obj random_series.obj \
               dbl4_polynomials_host.obj dbl4_polynomials_kernels.obj \
               test_dbl4_polynomials.obj
 
+test_dbl5_polynomials: random_numbers.obj random_series.obj \
+	               random_monomials.obj random_polynomials.obj \
+                       double_double_functions.obj \
+                       penta_double_functions.obj \
+                       random5_vectors.obj random5_series.obj \
+                       random5_monomials.obj random5_polynomials.obj \
+		       test_dbl5_polynomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl5_polynomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random_polynomials.obj double_double_functions.obj \
+              penta_double_functions.obj \
+              random5_vectors.obj random5_series.obj \
+              random5_monomials.obj random5_polynomials.obj \
+              test_dbl5_polynomials.obj
+
 test_dbl8_polynomials: random_numbers.obj random_series.obj \
 	               random_monomials.obj random_polynomials.obj \
                        double_double_functions.obj \
@@ -527,12 +617,36 @@ test_dbl8_polynomials: random_numbers.obj random_series.obj \
               dbl8_polynomials_host.obj dbl8_polynomials_kernels.obj \
               test_dbl8_polynomials.obj
 
+test_dbl10_polynomials: random_numbers.obj random_series.obj \
+	                random_monomials.obj random_polynomials.obj \
+                        double_double_functions.obj \
+                        quad_double_functions.obj octo_double_functions.obj \
+                        deca_double_functions.obj \
+                        random10_vectors.obj random10_series.obj \
+                        random10_monomials.obj random10_polynomials.obj \
+		        test_dbl10_polynomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl10_polynomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random_polynomials.obj double_double_functions.obj \
+              quad_double_functions.obj octo_double_functions.obj \
+              deca_double_functions.obj \
+              random10_vectors.obj random10_series.obj \
+              random10_monomials.obj random10_polynomials.obj \
+              test_dbl10_polynomials.obj
+
 clean:
 	del *~
+	del test_dbl10_polynomials.exe test_dbl10_polynomials.obj
+	del test_dbl10_polynomials.exp test_dbl10_polynomials.lib
+	del random10_polynomials.obj
 	del test_dbl8_polynomials.exe test_dbl8_polynomials.obj
 	del test_dbl8_polynomials.exp test_dbl8_polynomials.lib
 	del random8_polynomials.obj dbl8_polynomials_host.obj
 	del dbl8_polynomials_kernels.obj
+	del test_dbl5_polynomials.exe test_dbl5_polynomials.obj
+	del test_dbl5_polynomials.exp test_dbl5_polynomials.lib
+	del random5_polynomials.obj
 	del test_dbl4_polynomials.exe test_dbl4_polynomials.obj
 	del test_dbl4_polynomials.exp test_dbl4_polynomials.lib
 	del random4_polynomials.obj dbl4_polynomials_host.obj
