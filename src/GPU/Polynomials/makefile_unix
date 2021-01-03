@@ -34,6 +34,10 @@ octo_double_functions.o:
 	@-echo ">>> compiling octo double functions ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/octo_double_functions.cpp
 
+deca_double_functions.o:
+	@-echo ">>> compiling deca double functions ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/deca_double_functions.cpp
+
 random_numbers.o:
 	@-echo ">>> compiling double random number generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/random_numbers.cpp
@@ -57,6 +61,10 @@ random5_vectors.o:
 random8_vectors.o:
 	@-echo ">>> compiling octo double random vector generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/random8_vectors.cpp
+
+random10_vectors.o:
+	@-echo ">>> compiling deca double random vector generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random10_vectors.cpp
 
 random_series.o:
 	@-echo ">>> compiling double random series generators ..."
@@ -82,6 +90,10 @@ random8_series.o:
 	@-echo ">>> compiling octo double random series generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(CNV)/random8_series.cpp
 
+random10_series.o:
+	@-echo ">>> compiling deca double random series generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(CNV)/random10_series.cpp
+
 random_monomials.o:
 	@-echo ">>> compiling double random monomials generators ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random_monomials.cpp
@@ -106,6 +118,10 @@ random8_monomials.o:
 	@-echo ">>> compiling octo double random monomials generators ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random8_monomials.cpp
 
+random10_monomials.o:
+	@-echo ">>> compiling deca double random monomials generators ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random10_monomials.cpp
+
 random_polynomials.o:
 	@-echo ">>> compiling random_polynomials ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) random_polynomials.cpp
@@ -129,6 +145,10 @@ random5_polynomials.o:
 random8_polynomials.o:
 	@-echo ">>> compiling random8_polynomials ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) random8_polynomials.cpp
+
+random10_polynomials.o:
+	@-echo ">>> compiling random10_polynomials ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) random10_polynomials.cpp
 
 dbl_convolutions_host.o:
 	@-echo ">>> compiling dbl_convolutions_host ..."
@@ -242,6 +262,10 @@ test_dbl5_polynomials.o:
 test_dbl8_polynomials.o:
 	@-echo ">>> compiling test_dbl8_polynomials ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl8_polynomials.cpp
+
+test_dbl10_polynomials.o:
+	@-echo ">>> compiling test_dbl10_polynomials ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl10_polynomials.cpp
 
 convolution_job.o:
 	@-echo ">>> compiling convolution_job ..."
@@ -418,7 +442,26 @@ test_dbl8_polynomials: random_numbers.o random_series.o random_monomials.o \
                   dbl8_polynomials_host.o dbl8_polynomials_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
 
+test_dbl10_polynomials: random_numbers.o random_series.o random_monomials.o \
+                        random_polynomials.o double_double_functions.o \
+                        quad_double_functions.o octo_double_functions.o \
+                        deca_double_functions.o \
+                        random10_vectors.o random10_series.o \
+                        random10_monomials.o random10_polynomials.o \
+                        test_dbl10_polynomials.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl10_polynomials test_dbl10_polynomials.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o double_double_functions.o \
+                  quad_double_functions.o octo_double_functions.o \
+                  deca_double_functions.o \
+                  random10_vectors.o random10_series.o \
+                  random10_monomials.o random10_polynomials.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
 clean:
+	/bin/rm -f -r test_dbl10_polynomials.o test_dbl10_polynomials
+	/bin/rm -f -r random10_polynomials.o
 	/bin/rm -f -r test_dbl8_polynomials.o test_dbl8_polynomials
 	/bin/rm -f -r random8_polynomials.o dbl8_polynomials_host.o
 	/bin/rm -f -r dbl8_polynomials_kernels.o
@@ -453,6 +496,8 @@ cleanall: clean
 	/bin/rm -f -r random5_vectors.o random5_series.o random5_monomials.o
 	/bin/rm -f -r octo_double_functions.o
 	/bin/rm -f -r random8_vectors.o random8_series.o random8_monomials.o
+	/bin/rm -f -r deca_double_functions.o
+	/bin/rm -f -r random10_vectors.o random10_series.o random10_monomials.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_monomials_host.o
 	/bin/rm -f -r dbl2_convolutions_host.o dbl2_monomials_host.o
 	/bin/rm -f -r dbl3_convolutions_host.o dbl3_monomials_host.o

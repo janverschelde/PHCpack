@@ -1,5 +1,5 @@
-Sun 3 Jan 2021 : new random5_polynomials and test_dbl5_polynomials,
-  updated the makefiles.
+Sun 3 Jan 2021 : new random5_polynomials and test_dbl5_polynomials, updated
+  the makefiles.  New random10_polynomials and test_dbl10_polynomials.
 
 Sat 2 Jan 2021 : new random4_polynomials, edits in {random2,random3}_
   polynomials, new test_dbl4_polynomials, decreased the tolerances in

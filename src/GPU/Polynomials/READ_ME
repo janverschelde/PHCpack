@@ -13,6 +13,7 @@ random3_polynomials        : random polynomials with triple doubles
 random4_polynomials        : random polynomials with quad doubles
 random5_polynomials        : random polynomials with penta doubles
 random8_polynomials        : random polynomials with octo doubles
+random10_polynomials       : random polynomials with deca doubles
 -----------------------------------------------------------------------------
 convolution_job            : class to represent one convolution job
 convolution_jobs           : class to setup layers of convolution jobs
@@ -39,4 +40,5 @@ test_dbl5_polynomials      : main test in penta double precision
 dbl8_polynomials_host      : evaldiff of octo double polynomials on host
 dbl8_polynomials_kernels   : kernels for octo double evaldiff
 test_dbl8_polynomials      : main test in octo double precision
+test_dbl10_polynomials     : main test in deca double precision
 -----------------------------------------------------------------------------
