@@ -24,6 +24,9 @@ test_dbl3_polynomials:
 test_dbl4_polynomials:
 	make -f $(MAKEFILE) test_dbl4_polynomials
 
+test_dbl5_polynomials:
+	make -f $(MAKEFILE) test_dbl5_polynomials
+
 test_dbl8_polynomials:
 	make -f $(MAKEFILE) test_dbl8_polynomials
 
