@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
-// #include <vector_types.h>
+#include <vector_types.h>
 #include "random_polynomials.h"
 #include "random8_monomials.h"
 #include "random8_polynomials.h"
@@ -14,7 +14,7 @@
 #include "addition_jobs.h"
 #include "write_job_counts.h"
 #include "dbl8_polynomials_host.h"
-// #include "dbl8_polynomials_kernels.h"
+#include "dbl8_polynomials_kernels.h"
 
 using namespace std;
 
@@ -401,9 +401,8 @@ double test_dbl8_real_polynomial
           output2hihihi_h,output2hilohi_h,output2hihilo_h,output2hilolo_h,
           output2lohihi_h,output2lolohi_h,output2lohilo_h,output2lololo_h,
           cnvjobs,addjobs,vrb);
-    /*
       if(vrb) cout << "Computing on the device ..." << endl;
-      GPU_dbl4_poly_evaldiff
+      GPU_dbl8_poly_evaldiff
          (deg+1,dim,nbr,deg,nvr,idx,
           csthihihi,csthilohi,csthihilo,csthilolo,
           cstlohihi,cstlolohi,cstlohilo,cstlololo,
@@ -414,7 +413,7 @@ double test_dbl8_real_polynomial
           outputhihihi_d,outputhilohi_d,outputhihilo_d,outputhilolo_d,
           outputlohihi_d,outputlolohi_d,outputlohilo_d,outputlololo_d,
           cnvjobs,addjobs,vrb);
-     */
+
       double err = 0.0;
 
       if(verbose > 0) cout << "The value of the polynomial :" << endl;
@@ -438,7 +437,6 @@ double test_dbl8_real_polynomial
                  << output2lolohi_h[dim][i] << endl
                  << output2lohilo_h[dim][i] << "  "
                  << output2lololo_h[dim][i] << endl;
-          /*
             cout << outputhihihi_d[dim][i] << "  "
                  << outputhilohi_d[dim][i] << endl
                  << outputhihilo_d[dim][i] << "  "
@@ -446,7 +444,7 @@ double test_dbl8_real_polynomial
             cout << outputlohihi_d[dim][i] << "  "
                  << outputlolohi_d[dim][i] << endl
                  << outputlohilo_d[dim][i] << "  "
-                 << outputlololo_d[dim][i] << endl; */
+                 << outputlololo_d[dim][i] << endl;
          }
          err = err + abs(output1hihihi_h[dim][i] - output2hihihi_h[dim][i])
                    + abs(output1hilohi_h[dim][i] - output2hilohi_h[dim][i])
@@ -455,8 +453,7 @@ double test_dbl8_real_polynomial
                    + abs(output1lohihi_h[dim][i] - output2lohihi_h[dim][i])
                    + abs(output1lolohi_h[dim][i] - output2lolohi_h[dim][i])
                    + abs(output1lohilo_h[dim][i] - output2lohilo_h[dim][i])
-                   + abs(output1lololo_h[dim][i] - output2lololo_h[dim][i]);
-        /*
+                   + abs(output1lololo_h[dim][i] - output2lololo_h[dim][i])
                    + abs(output1hihihi_h[dim][i] - outputhihihi_d[dim][i])
                    + abs(output1hilohi_h[dim][i] - outputhilohi_d[dim][i])
                    + abs(output1hihilo_h[dim][i] - outputhihilo_d[dim][i])
@@ -465,7 +462,6 @@ double test_dbl8_real_polynomial
                    + abs(output1lolohi_h[dim][i] - outputlolohi_d[dim][i])
                    + abs(output1lohilo_h[dim][i] - outputlohilo_d[dim][i])
                    + abs(output1lololo_h[dim][i] - outputlololo_d[dim][i]);
-         */
       }
       if(verbose > 0) cout << "error : " << err << endl;
 
@@ -495,7 +491,6 @@ double test_dbl8_real_polynomial
                     << output2lolohi_h[k][i] << endl
                     << output2lohilo_h[k][i] << "  "
                     << output2lololo_h[k][i] << endl;
-            /*
                cout << outputhihihi_d[k][i] << "  "
                     << outputhilohi_d[k][i] << endl
                     << outputhihilo_d[k][i] << "  "
@@ -503,7 +498,7 @@ double test_dbl8_real_polynomial
                cout << outputlohihi_d[k][i] << "  "
                     << outputlolohi_d[k][i] << endl
                     << outputlohilo_d[k][i] << "  "
-                    << outputlololo_d[k][i] << endl; */
+                    << outputlololo_d[k][i] << endl;
             }
             err = err + abs(output1hihihi_h[k][i] - output2hihihi_h[k][i])
                       + abs(output1hilohi_h[k][i] - output2hilohi_h[k][i])
@@ -512,16 +507,15 @@ double test_dbl8_real_polynomial
                       + abs(output1lohihi_h[k][i] - output2lohihi_h[k][i])
                       + abs(output1lolohi_h[k][i] - output2lolohi_h[k][i])
                       + abs(output1lohilo_h[k][i] - output2lohilo_h[k][i])
-                      + abs(output1lololo_h[k][i] - output2lololo_h[k][i]);
-            /*
+                      + abs(output1lololo_h[k][i] - output2lololo_h[k][i])
                       + abs(output1hihihi_h[k][i] - outputhihihi_d[k][i])
                       + abs(output1hilohi_h[k][i] - outputhilohi_d[k][i])
                       + abs(output1hihilo_h[k][i] - outputhihilo_d[k][i])
-                      + abs(output1hilolo_h[k][i] - outputhilolo_d[k][i]);
+                      + abs(output1hilolo_h[k][i] - outputhilolo_d[k][i])
                       + abs(output1lohihi_h[k][i] - outputlohihi_d[k][i])
                       + abs(output1lolohi_h[k][i] - outputlolohi_d[k][i])
                       + abs(output1lohilo_h[k][i] - outputlohilo_d[k][i])
-                      + abs(output1lololo_h[k][i] - outputlololo_d[k][i]); */
+                      + abs(output1lololo_h[k][i] - outputlololo_d[k][i]);
          }
          if(verbose > 0) cout << "error : " << err << endl;
          sumerr = sumerr + err;
