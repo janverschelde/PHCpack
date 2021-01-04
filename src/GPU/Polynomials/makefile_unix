@@ -6,13 +6,13 @@ CNV=../Convolutions
 CUDA=/usr/local/cuda/include
 CUDALIB=/usr/local/cuda/lib64
 # the architecture flag for Tesla C2050
-smflag=sm_20
+# smflag=sm_20
 # the architecture flag for Kepler K20C
 # smflag=sm_35
 # the architecture flag for Pascal P100
 # smflag=sm_60
 # the architecture flag for Volta V100
-# smflag=sm_70
+smflag=sm_70
 
 double_double_functions.o:
 	@-echo ">>> compiling double double functions ..."
@@ -166,9 +166,17 @@ dbl4_convolutions_host.o:
 	@-echo ">>> compiling dbl4_convolutions_host ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl4_convolutions_host.cpp
 
+dbl5_convolutions_host.o:
+	@-echo ">>> compiling dbl5_convolutions_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl5_convolutions_host.cpp
+
 dbl8_convolutions_host.o:
 	@-echo ">>> compiling dbl8_convolutions_host ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl8_convolutions_host.cpp
+
+dbl10_convolutions_host.o:
+	@-echo ">>> compiling dbl10_convolutions_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl10_convolutions_host.cpp
 
 dbl_monomials_host.o:
 	@-echo ">>> compiling dbl_monomials_host ..."
@@ -186,9 +194,17 @@ dbl4_monomials_host.o:
 	@-echo ">>> compiling dbl4_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl4_monomials_host.cpp
 
+dbl5_monomials_host.o:
+	@-echo ">>> compiling dbl5_monomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl5_monomials_host.cpp
+
 dbl8_monomials_host.o:
 	@-echo ">>> compiling dbl8_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl8_monomials_host.cpp
+
+dbl10_monomials_host.o:
+	@-echo ">>> compiling dbl10_monomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl10_monomials_host.cpp
 
 dbl_polynomials_kernels.o:
 	@-echo ">>> compiling polynomial kernels for doubles ..."
@@ -235,9 +251,17 @@ dbl4_polynomials_host.o:
 	@-echo ">>> compiling dbl4_polynomials_host ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) dbl4_polynomials_host.cpp
 
+dbl5_polynomials_host.o:
+	@-echo ">>> compiling dbl5_polynomials_host ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) dbl5_polynomials_host.cpp
+
 dbl8_polynomials_host.o:
 	@-echo ">>> compiling dbl8_polynomials_host ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) dbl8_polynomials_host.cpp
+
+dbl10_polynomials_host.o:
+	@-echo ">>> compiling dbl10_polynomials_host ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) dbl10_polynomials_host.cpp
 
 test_dbl_polynomials.o:
 	@-echo ">>> compiling test_dbl_polynomials ..."
@@ -408,7 +432,12 @@ test_dbl5_polynomials: random_numbers.o random_series.o random_monomials.o \
                        random_polynomials.o double_double_functions.o \
                        penta_double_functions.o \
                        random5_vectors.o random5_series.o random5_monomials.o \
-                       random5_polynomials.o test_dbl5_polynomials.o
+                       random5_polynomials.o test_dbl5_polynomials.o \
+                       convolution_job.o convolution_jobs.o \
+                       addition_job.o addition_jobs.o \
+                       job_coordinates.o write_job_counts.o \
+                       dbl5_convolutions_host.o dbl5_monomials_host.o \
+                       dbl5_polynomials_host.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl5_polynomials test_dbl5_polynomials.o \
                   random_numbers.o random_series.o random_monomials.o \
@@ -416,6 +445,11 @@ test_dbl5_polynomials: random_numbers.o random_series.o random_monomials.o \
                   penta_double_functions.o \
                   random5_vectors.o random5_series.o \
                   random5_monomials.o random5_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o \
+                  job_coordinates.o write_job_counts.o \
+                  dbl5_convolutions_host.o dbl5_monomials_host.o \
+                  dbl5_polynomials_host.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl8_polynomials: random_numbers.o random_series.o random_monomials.o \
@@ -448,7 +482,12 @@ test_dbl10_polynomials: random_numbers.o random_series.o random_monomials.o \
                         deca_double_functions.o \
                         random10_vectors.o random10_series.o \
                         random10_monomials.o random10_polynomials.o \
-                        test_dbl10_polynomials.o
+                        test_dbl10_polynomials.o \
+                        convolution_job.o convolution_jobs.o \
+                        addition_job.o addition_jobs.o \
+                        job_coordinates.o write_job_counts.o \
+                        dbl10_convolutions_host.o dbl10_monomials_host.o \
+                        dbl10_polynomials_host.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl10_polynomials test_dbl10_polynomials.o \
                   random_numbers.o random_series.o random_monomials.o \
@@ -457,16 +496,21 @@ test_dbl10_polynomials: random_numbers.o random_series.o random_monomials.o \
                   deca_double_functions.o \
                   random10_vectors.o random10_series.o \
                   random10_monomials.o random10_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o \
+                  job_coordinates.o write_job_counts.o \
+                  dbl10_convolutions_host.o dbl10_monomials_host.o \
+                  dbl10_polynomials_host.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 clean:
 	/bin/rm -f -r test_dbl10_polynomials.o test_dbl10_polynomials
-	/bin/rm -f -r random10_polynomials.o
+	/bin/rm -f -r random10_polynomials.o dbl10_polynomials_host.o
 	/bin/rm -f -r test_dbl8_polynomials.o test_dbl8_polynomials
 	/bin/rm -f -r random8_polynomials.o dbl8_polynomials_host.o
 	/bin/rm -f -r dbl8_polynomials_kernels.o
 	/bin/rm -f -r test_dbl5_polynomials.o test_dbl5_polynomials
-	/bin/rm -f -r random5_polynomials.o
+	/bin/rm -f -r random5_polynomials.o dbl5_polynomials_host.o
 	/bin/rm -f -r test_dbl4_polynomials.o test_dbl4_polynomials
 	/bin/rm -f -r dbl4_polynomials_kernels.o
 	/bin/rm -f -r test_dbl3_polynomials.o test_dbl3_polynomials
@@ -502,4 +546,6 @@ cleanall: clean
 	/bin/rm -f -r dbl2_convolutions_host.o dbl2_monomials_host.o
 	/bin/rm -f -r dbl3_convolutions_host.o dbl3_monomials_host.o
 	/bin/rm -f -r dbl4_convolutions_host.o dbl4_monomials_host.o
+	/bin/rm -f -r dbl5_convolutions_host.o dbl5_monomials_host.o
 	/bin/rm -f -r dbl8_convolutions_host.o dbl8_monomials_host.o
+	/bin/rm -f -r dbl10_convolutions_host.o dbl10_monomials_host.o

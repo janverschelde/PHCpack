@@ -13,8 +13,8 @@
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
 #include "write_job_counts.h"
-// #include "dbl5_polynomials_host.h"
-// #include "dbl5_polynomials_kernels.h"
+#include "dbl10_polynomials_host.h"
+// #include "dbl10_polynomials_kernels.h"
 
 using namespace std;
 
@@ -370,7 +370,6 @@ double test_dbl10_real_polynomial
          else
             cout << "No duplicate supports found." << endl;
       }
- /*
       ConvolutionJobs cnvjobs(dim);
 
       cnvjobs.make(nbr,nvr,idx,vrb);
@@ -407,25 +406,42 @@ double test_dbl10_real_polynomial
       }
       if(vrb) cout << "Computing without convolution jobs ..." << endl;
       CPU_dbl10_poly_evaldiff
-         (dim,nbr,deg,nvr,idx,csttb,cstix,cstrg,cstpk,
-          cfftb,cffix,cffrg,cffpk,
-          inputtb,inputix,inputrg,inputpk,
-          output1tb_h,output1ix_h,output1rg_h,output1pk_h,vrb);
+         (dim,nbr,deg,nvr,idx,
+          cstrtb,cstrix,cstrmi,cstrrg,cstrpk,
+          cstltb,cstlix,cstlmi,cstlrg,cstlpk,
+          cffrtb,cffrix,cffrmi,cffrrg,cffrpk,
+          cffltb,cfflix,cfflmi,cfflrg,cfflpk,
+          inputrtb,inputrix,inputrmi,inputrrg,inputrpk,
+          inputltb,inputlix,inputlmi,inputlrg,inputlpk,
+          output1rtb_h,output1rix_h,output1rmi_h,output1rrg_h,output1rpk_h,
+          output1ltb_h,output1lix_h,output1lmi_h,output1lrg_h,output1lpk_h,
+          vrb);
       if(vrb) cout << "Computing with convolution jobs ..." << endl;
       CPU_dbl10_poly_evaldiffjobs
-         (dim,nbr,deg,nvr,idx,csttb,cstix,cstrg,cstpk,
-          cfftb,cffix,cffrg,cffpk,
-          inputtb,inputix,inputrg,inputpk,
-          output2tb_h,output2ix_h,output2rg_h,output2pk_h,
+         (dim,nbr,deg,nvr,idx,
+          cstrtb,cstrix,cstrmi,cstrrg,cstrpk,
+          cstltb,cstlix,cstlmi,cstlrg,cstlpk,
+          cffrtb,cffrix,cffrmi,cffrrg,cffrpk,
+          cffltb,cfflix,cfflmi,cfflrg,cfflpk,
+          inputrtb,inputrix,inputrmi,inputrrg,inputrpk,
+          inputltb,inputlix,inputlmi,inputlrg,inputlpk,
+          output2rtb_h,output2rix_h,output2rmi_h,output2rrg_h,output2rpk_h,
+          output2ltb_h,output2lix_h,output2lmi_h,output2lrg_h,output2lpk_h,
           cnvjobs,addjobs,vrb);
+   /*
       if(vrb) cout << "Computing on the device ..." << endl;
       GPU_dbl10_poly_evaldiff
-         (deg+1,dim,nbr,deg,nvr,idx,csttb,cstix,cstrg,cstpk,
-          cfftb,cffix,cffrg,cffpk,
-          inputtb,inputix,inputrg,inputpk,
-          outputtb_d,outputix_d,outputrg_d,outputpk_d,
+         (deg+1,dim,nbr,deg,nvr,idx,
+          cstrtb,cstrix,cstrmi,cstrrg,cstrpk,
+          cstltb,cstlix,cstlmi,cstlrg,cstlpk,
+          cffrtb,cffrix,cffrmi,cffrrg,cffrpk,
+          cffltb,cfflix,cfflmi,cfflrg,cfflpk,
+          inputrtb,inputrix,inputrmi,inputrrg,inputrpk,
+          inputltb,inputlix,inputlmi,inputlrg,inputlpk,
+          outputrtb_d,outputrix_d,outputrmi_d,outputrrg_d,outputrpk_d,
+          outputltb_d,outputlix_d,outputlmi_d,outputlrg_d,outputlpk_d,
           cnvjobs,addjobs,vrb);
-
+    */
       double err = 0.0;
 
       if(verbose > 0) cout << "The value of the polynomial :" << endl;
@@ -433,27 +449,56 @@ double test_dbl10_real_polynomial
       {
          if(verbose > 0)
          {
-            cout << output1tb_h[dim][i] << "  "
-                 << output1ix_h[dim][i] << endl
-                 << output1rg_h[dim][i] << "  "
-                 << output1pk_h[dim][i] << endl;
-            cout << output2tb_h[dim][i] << "  "
-                 << output2ix_h[dim][i] << endl
-                 << output2rg_h[dim][i] << "  "
-                 << output2pk_h[dim][i] << endl;
-            cout << outputtb_d[dim][i] << "  "
-                 << outputix_d[dim][i] << endl
-                 << outputrg_d[dim][i] << "  "
-                 << outputpk_d[dim][i] << endl;
+            cout << output1rtb_h[dim][i] << "  "
+                 << output1rix_h[dim][i] << "  "
+                 << output1rmi_h[dim][i] << endl
+                 << output1rrg_h[dim][i] << "  "
+                 << output1rpk_h[dim][i] << endl;
+            cout << output1ltb_h[dim][i] << "  "
+                 << output1lix_h[dim][i] << "  "
+                 << output1lmi_h[dim][i] << endl
+                 << output1lrg_h[dim][i] << "  "
+                 << output1lpk_h[dim][i] << endl;
+            cout << output2rtb_h[dim][i] << "  "
+                 << output2rix_h[dim][i] << "  "
+                 << output2rmi_h[dim][i] << endl
+                 << output2rrg_h[dim][i] << "  "
+                 << output2rpk_h[dim][i] << endl;
+            cout << output2ltb_h[dim][i] << "  "
+                 << output2lix_h[dim][i] << "  "
+                 << output2lmi_h[dim][i] << endl
+                 << output2lrg_h[dim][i] << "  "
+                 << output2lpk_h[dim][i] << endl;
+       /*
+            cout << outputrtb_d[dim][i] << "  "
+                 << outputrix_d[dim][i] << "  "
+                 << outputrmi_d[dim][i] << endl
+                 << outputrrg_d[dim][i] << "  "
+                 << outputrpk_d[dim][i] << endl;
+            cout << outputltb_d[dim][i] << "  "
+                 << outputlix_d[dim][i] << "  "
+                 << outputlmi_d[dim][i] << endl
+                 << outputlrg_d[dim][i] << "  "
+                 << outputlpk_d[dim][i] << endl;
+        */
          }
-         err = err + abs(output1tb_h[dim][i] - output2tb_h[dim][i])
-                   + abs(output1ix_h[dim][i] - output2ix_h[dim][i])
-                   + abs(output1rg_h[dim][i] - output2rg_h[dim][i])
-                   + abs(output1pk_h[dim][i] - output2pk_h[dim][i])
+         err = err + abs(output1rtb_h[dim][i] - output2rtb_h[dim][i])
+                   + abs(output1rix_h[dim][i] - output2rix_h[dim][i])
+                   + abs(output1rmi_h[dim][i] - output2rmi_h[dim][i])
+                   + abs(output1rrg_h[dim][i] - output2rrg_h[dim][i])
+                   + abs(output1rpk_h[dim][i] - output2rpk_h[dim][i])
+                   + abs(output1ltb_h[dim][i] - output2ltb_h[dim][i])
+                   + abs(output1lix_h[dim][i] - output2lix_h[dim][i])
+                   + abs(output1lmi_h[dim][i] - output2lmi_h[dim][i])
+                   + abs(output1lrg_h[dim][i] - output2lrg_h[dim][i])
+                   + abs(output1lpk_h[dim][i] - output2lpk_h[dim][i]);
+        /*
                    + abs(output1tb_h[dim][i] - outputtb_d[dim][i])
                    + abs(output1ix_h[dim][i] - outputix_d[dim][i])
+                   + abs(output1mi_h[dim][i] - outputmi_d[dim][i])
                    + abs(output1rg_h[dim][i] - outputrg_d[dim][i])
                    + abs(output1pk_h[dim][i] - outputpk_d[dim][i]);
+         */
       }
       if(verbose > 0) cout << "error : " << err << endl;
 
@@ -467,27 +512,55 @@ double test_dbl10_real_polynomial
          {
             if(verbose > 0)
             {
-               cout << output1tb_h[k][i] << "  "
-                    << output1ix_h[k][i] << endl
-                    << output1rg_h[k][i] << "  "
-                    << output1pk_h[k][i] << endl;
-               cout << output2tb_h[k][i] << "  "
-                    << output2ix_h[k][i] << endl
-                    << output2rg_h[k][i] << "  "
-                    << output2pk_h[k][i] << endl;
-               cout << outputtb_d[k][i] << "  "
-                    << outputix_d[k][i] << endl
-                    << outputrg_d[k][i] << "  "
-                    << outputpk_d[k][i] << endl;
+               cout << output1rtb_h[k][i] << "  "
+                    << output1rix_h[k][i] << "  "
+                    << output1rmi_h[k][i] << endl
+                    << output1rrg_h[k][i] << "  "
+                    << output1rpk_h[k][i] << endl;
+               cout << output1ltb_h[k][i] << "  "
+                    << output1lix_h[k][i] << "  "
+                    << output1lmi_h[k][i] << endl
+                    << output1lrg_h[k][i] << "  "
+                    << output1lpk_h[k][i] << endl;
+               cout << output2rtb_h[k][i] << "  "
+                    << output2rix_h[k][i] << "  "
+                    << output2rmi_h[k][i] << endl
+                    << output2rrg_h[k][i] << "  "
+                    << output2rpk_h[k][i] << endl;
+               cout << output2ltb_h[k][i] << "  "
+                    << output2lix_h[k][i] << "  "
+                    << output2lmi_h[k][i] << endl
+                    << output2lrg_h[k][i] << "  "
+                    << output2lpk_h[k][i] << endl;
+           /*
+               cout << outputrtb_d[k][i] << "  "
+                    << outputrix_d[k][i] << "  "
+                    << outputrmi_d[k][i] << endl
+                    << outputrrg_d[k][i] << "  "
+                    << outputrpk_d[k][i] << endl;
+               cout << outputltb_d[k][i] << "  "
+                    << outputlix_d[k][i] << "  "
+                    << outputlmi_d[k][i] << endl
+                    << outputlrg_d[k][i] << "  "
+                    << outputlpk_d[k][i] << endl;
+            */
             }
-            err = err + abs(output1tb_h[k][i] - output2tb_h[k][i])
-                      + abs(output1ix_h[k][i] - output2ix_h[k][i])
-                      + abs(output1rg_h[k][i] - output2rg_h[k][i])
-                      + abs(output1pk_h[k][i] - output2pk_h[k][i])
+            err = err + abs(output1rtb_h[k][i] - output2rtb_h[k][i])
+                      + abs(output1rix_h[k][i] - output2rix_h[k][i])
+                      + abs(output1rmi_h[k][i] - output2rmi_h[k][i])
+                      + abs(output1rrg_h[k][i] - output2rrg_h[k][i])
+                      + abs(output1rpk_h[k][i] - output2rpk_h[k][i])
+                      + abs(output1ltb_h[k][i] - output2ltb_h[k][i])
+                      + abs(output1lix_h[k][i] - output2lix_h[k][i])
+                      + abs(output1lmi_h[k][i] - output2lmi_h[k][i])
+                      + abs(output1lrg_h[k][i] - output2lrg_h[k][i])
+                      + abs(output1lpk_h[k][i] - output2lpk_h[k][i]); 
+           /*
                       + abs(output1tb_h[k][i] - outputtb_d[k][i])
                       + abs(output1ix_h[k][i] - outputix_d[k][i])
+                      + abs(output1mi_h[k][i] - outputmi_d[k][i])
                       + abs(output1rg_h[k][i] - outputrg_d[k][i])
-                      + abs(output1pk_h[k][i] - outputpk_d[k][i]);
+                      + abs(output1pk_h[k][i] - outputpk_d[k][i]); */
          }
          if(verbose > 0) cout << "error : " << err << endl;
          sumerr = sumerr + err;
@@ -503,7 +576,5 @@ double test_dbl10_real_polynomial
       write_operation_counts(deg,cnvjobs,addjobs);
 
       return sumerr;
-  */
-      return 0.0;
    }
 }
