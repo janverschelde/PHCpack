@@ -37,6 +37,7 @@ dbl4_polynomials_host      : evaldiff of quad double polynomials on host
 dbl4_polynomials_kernels   : kernels for quad double evaldiff
 test_dbl4_polynomials      : main test in quad double precision
 dbl5_polynomials_host      : evaldiff of penta double polynomials on host
+dbl5_polynomials_kernels   : kernels for penta double evaldiff
 test_dbl5_polynomials      : main test in penta double precision
 dbl8_polynomials_host      : evaldiff of octo double polynomials on host
 dbl8_polynomials_kernels   : kernels for octo double evaldiff

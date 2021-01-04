@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
-// #include <vector_types.h>
+#include <vector_types.h>
 #include "random_polynomials.h"
 #include "random5_monomials.h"
 #include "random5_polynomials.h"
@@ -14,7 +14,7 @@
 #include "addition_jobs.h"
 #include "write_job_counts.h"
 #include "dbl5_polynomials_host.h"
-// #include "dbl5_polynomials_kernels.h"
+#include "dbl5_polynomials_kernels.h"
 
 using namespace std;
 
@@ -337,7 +337,6 @@ double test_dbl5_real_polynomial
           inputtb,inputix,inputmi,inputrg,inputpk,
           output2tb_h,output2ix_h,output2mi_h,output2rg_h,output2pk_h,
           cnvjobs,addjobs,vrb);
-/*
       if(vrb) cout << "Computing on the device ..." << endl;
       GPU_dbl5_poly_evaldiff
          (deg+1,dim,nbr,deg,nvr,idx,csttb,cstix,cstmi,cstrg,cstpk,
@@ -345,7 +344,7 @@ double test_dbl5_real_polynomial
           inputtb,inputix,inputmi,inputrg,inputpk,
           outputtb_d,outputix_d,outputmi_d,outputrg_d,outputpk_d,
           cnvjobs,addjobs,vrb);
- */
+
       double err = 0.0;
 
       if(verbose > 0) cout << "The value of the polynomial :" << endl;
@@ -363,26 +362,22 @@ double test_dbl5_real_polynomial
                  << output2mi_h[dim][i] << endl
                  << output2rg_h[dim][i] << "  "
                  << output2pk_h[dim][i] << endl;
-       /*
             cout << outputtb_d[dim][i] << "  "
                  << outputix_d[dim][i] << "  "
                  << outputmi_d[dim][i] << endl
                  << outputrg_d[dim][i] << "  "
                  << outputpk_d[dim][i] << endl;
-        */
          }
          err = err + abs(output1tb_h[dim][i] - output2tb_h[dim][i])
                    + abs(output1ix_h[dim][i] - output2ix_h[dim][i])
                    + abs(output1mi_h[dim][i] - output2mi_h[dim][i])
                    + abs(output1rg_h[dim][i] - output2rg_h[dim][i])
-                   + abs(output1pk_h[dim][i] - output2pk_h[dim][i]);
-         /*
+                   + abs(output1pk_h[dim][i] - output2pk_h[dim][i])
                    + abs(output1tb_h[dim][i] - outputtb_d[dim][i])
                    + abs(output1ix_h[dim][i] - outputix_d[dim][i])
                    + abs(output1mi_h[dim][i] - outputmi_d[dim][i])
                    + abs(output1rg_h[dim][i] - outputrg_d[dim][i])
                    + abs(output1pk_h[dim][i] - outputpk_d[dim][i]);
-          */
       }
       if(verbose > 0) cout << "error : " << err << endl;
 
@@ -406,26 +401,22 @@ double test_dbl5_real_polynomial
                     << output2mi_h[k][i] << endl
                     << output2rg_h[k][i] << "  "
                     << output2pk_h[k][i] << endl;
-             /*
                cout << outputtb_d[k][i] << "  "
                     << outputix_d[k][i] << "  "
                     << outputmi_d[k][i] << endl
                     << outputrg_d[k][i] << "  "
                     << outputpk_d[k][i] << endl;
-              */
             }
             err = err + abs(output1tb_h[k][i] - output2tb_h[k][i])
                       + abs(output1ix_h[k][i] - output2ix_h[k][i])
                       + abs(output1mi_h[k][i] - output2mi_h[k][i])
                       + abs(output1rg_h[k][i] - output2rg_h[k][i])
-                      + abs(output1pk_h[k][i] - output2pk_h[k][i]);
-             /*
+                      + abs(output1pk_h[k][i] - output2pk_h[k][i])
                       + abs(output1tb_h[k][i] - outputtb_d[k][i])
                       + abs(output1ix_h[k][i] - outputix_d[k][i])
                       + abs(output1mi_h[k][i] - outputmi_d[k][i])
                       + abs(output1rg_h[k][i] - outputrg_d[k][i])
                       + abs(output1pk_h[k][i] - outputpk_d[k][i]);
-              */
          }
          if(verbose > 0) cout << "error : " << err << endl;
          sumerr = sumerr + err;

@@ -7,7 +7,6 @@
 
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
-#include "dbl3_polynomials_kernels.h"
 
 __global__ void dbl3_padded_convjobs
  ( double *datahi, double *datami, double *datalo,

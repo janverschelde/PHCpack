@@ -7,7 +7,6 @@
 
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
-#include "dbl8_polynomials_kernels.h"
 
 __global__ void dbl8_padded_convjobs
  ( double *datahihihi, double *datahilohi,
