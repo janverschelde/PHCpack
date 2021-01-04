@@ -346,12 +346,26 @@ dbl4_polynomials_kernels.obj:
                 dbl4_polynomials_kernels.cu \
              -o dbl4_polynomials_kernels.obj
 
+dbl5_polynomials_kernels.obj:
+	@-echo ">>> compiling polynomial kernels for penta doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(CNV) \
+             --define-macro gpufun=1 \
+                dbl5_polynomials_kernels.cu \
+             -o dbl5_polynomials_kernels.obj
+
 dbl8_polynomials_kernels.obj:
 	@-echo ">>> compiling polynomial kernels for octo doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(CNV) \
              --define-macro gpufun=1 \
                 dbl8_polynomials_kernels.cu \
              -o dbl8_polynomials_kernels.obj
+
+dbl10_polynomials_kernels.obj:
+	@-echo ">>> compiling polynomial kernels for deca doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(CNV) \
+             --define-macro gpufun=1 \
+                dbl10_polynomials_kernels.cu \
+             -o dbl10_polynomials_kernels.obj
 
 dbl_polynomials_host.obj:
 	@-echo ">>> compiling dbl_polynomials_host ..."
@@ -622,7 +636,7 @@ test_dbl5_polynomials: random_numbers.obj random_series.obj \
                        addition_job.obj addition_jobs.obj \
                        job_coordinates.obj write_job_counts.obj \
                        dbl5_convolutions_host.obj dbl5_monomials_host.obj \
-                       dbl5_polynomials_host.obj \
+                       dbl5_polynomials_host.obj dbl5_polynomials_kernels.obj \
 		       test_dbl5_polynomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl5_polynomials.exe \
@@ -635,7 +649,7 @@ test_dbl5_polynomials: random_numbers.obj random_series.obj \
               addition_job.obj addition_jobs.obj \
               job_coordinates.obj write_job_counts.obj \
               dbl5_convolutions_host.obj dbl5_monomials_host.obj \
-              dbl5_polynomials_host.obj \
+              dbl5_polynomials_host.obj dbl5_polynomials_kernels.obj \
               test_dbl5_polynomials.obj
 
 test_dbl8_polynomials: random_numbers.obj random_series.obj \
@@ -676,7 +690,7 @@ test_dbl10_polynomials: random_numbers.obj random_series.obj \
                         addition_job.obj addition_jobs.obj \
                         job_coordinates.obj write_job_counts.obj \
                         dbl10_convolutions_host.obj dbl10_monomials_host.obj \
-                        dbl10_polynomials_host.obj \
+                        dbl10_polynomials_host.obj dbl10_polynomials_kernels.obj \
 		        test_dbl10_polynomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl10_polynomials.exe \
@@ -690,7 +704,7 @@ test_dbl10_polynomials: random_numbers.obj random_series.obj \
               addition_job.obj addition_jobs.obj \
               job_coordinates.obj write_job_counts.obj \
               dbl10_convolutions_host.obj dbl10_monomials_host.obj \
-              dbl10_polynomials_host.obj \
+              dbl10_polynomials_host.obj dbl10_polynomials_kernels.obj \
               test_dbl10_polynomials.obj
 
 clean:
@@ -698,6 +712,7 @@ clean:
 	del test_dbl10_polynomials.exe test_dbl10_polynomials.obj
 	del test_dbl10_polynomials.exp test_dbl10_polynomials.lib
 	del random10_polynomials.obj dbl10_polynomials_host.obj
+	del dbl10_polynomials_kernels.obj
 	del test_dbl8_polynomials.exe test_dbl8_polynomials.obj
 	del test_dbl8_polynomials.exp test_dbl8_polynomials.lib
 	del random8_polynomials.obj dbl8_polynomials_host.obj
@@ -705,6 +720,7 @@ clean:
 	del test_dbl5_polynomials.exe test_dbl5_polynomials.obj
 	del test_dbl5_polynomials.exp test_dbl5_polynomials.lib
 	del random5_polynomials.obj dbl5_polynomials_host.obj
+	del dbl5_polynomials_kernels.obj
 	del test_dbl4_polynomials.exe test_dbl4_polynomials.obj
 	del test_dbl4_polynomials.exp test_dbl4_polynomials.lib
 	del random4_polynomials.obj dbl4_polynomials_host.obj

@@ -43,5 +43,6 @@ dbl8_polynomials_host      : evaldiff of octo double polynomials on host
 dbl8_polynomials_kernels   : kernels for octo double evaldiff
 test_dbl8_polynomials      : main test in octo double precision
 dbl10_polynomials_host     : evaldiff of deca double polynomials on host
+dbl10_polynomials_kernels  : kernels for deca double evaldiff
 test_dbl10_polynomials     : main test in deca double precision
 -----------------------------------------------------------------------------
