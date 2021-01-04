@@ -2,6 +2,7 @@ Mon 4 Jan 2021 : extracted code from test_dbl*_polynomials.cpp into separate
   files dbl*_polynomials_testers.  Applied the verbose flag correctly in 
   all dbl*_polynomials_host.cpp.  New polynomial_kernels.cu.
   In addition_jobs.cpp, applied verbose flag correctly.
+  Fixed the reporting of number of failures in test_polynomials.cpp.
 
 Sun 3 Jan 2021 : new random5_polynomials and test_dbl5_polynomials, updated
   the makefiles.  New random10_polynomials and test_dbl10_polynomials.

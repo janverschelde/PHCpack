@@ -67,7 +67,7 @@ int main ( void )
       cout << "All tests in double double precision passed." << endl;
    else
       cout << "Number of failed tests in double double precision : "
-           << fail << endl;
+           << fail2 << endl;
 
    int fail3 = main_dbl3_test_polynomial(seed,dim,nbr,nva,pwr,deg,vrb);
 
@@ -75,7 +75,7 @@ int main ( void )
       cout << "All tests in triple double precision passed." << endl;
    else
       cout << "Number of failed tests in triple double precision : "
-           << fail << endl;
+           << fail3 << endl;
 
    int fail4 = main_dbl4_test_polynomial(seed,dim,nbr,nva,pwr,deg,vrb);
 
@@ -83,7 +83,7 @@ int main ( void )
       cout << "All tests in quad double precision passed." << endl;
    else
       cout << "Number of failed tests in quad double precision : "
-           << fail << endl;
+           << fail4 << endl;
 
    int fail5 = main_dbl5_test_polynomial(seed,dim,nbr,nva,pwr,deg,vrb);
 
@@ -91,7 +91,7 @@ int main ( void )
       cout << "All tests in penta double precision passed." << endl;
    else
       cout << "Number of failed tests in penta double precision : "
-           << fail << endl;
+           << fail5 << endl;
 
    int fail8 = main_dbl8_test_polynomial(seed,dim,nbr,nva,pwr,deg,vrb);
 
@@ -99,7 +99,7 @@ int main ( void )
       cout << "All tests in octo double precision passed." << endl;
    else
       cout << "Number of failed tests in octo double precision : "
-           << fail << endl;
+           << fail8 << endl;
 
    int fail10 = main_dbl10_test_polynomial(seed,dim,nbr,nva,pwr,deg,vrb);
 
@@ -107,7 +107,7 @@ int main ( void )
       cout << "All tests in deca double precision passed." << endl;
    else
       cout << "Number of failed tests in deca double precision : "
-           << fail << endl;
+           << fail10 << endl;
 
    int sumfail = fail + fail2 + fail3 + fail4 + fail5 + fail8 + fail10;
 
