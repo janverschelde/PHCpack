@@ -811,7 +811,7 @@ void CPU_dbl3_poly_evaldiffjobs
       (dim,nbr,deg,nvr,idx,csthi,cstmi,cstlo,cffhi,cffmi,cfflo,
        inputhi,inputmi,inputlo,outputhi,outputmi,outputlo,
        forwardhi,forwardmi,forwardlo,backwardhi,backwardmi,backwardlo,
-       crosshi,crossmi,crosslo,addjobs,true);
+       crosshi,crossmi,crosslo,addjobs,verbose);
 
    for(int k=0; k<nbr; k++)
    {

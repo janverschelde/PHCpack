@@ -1627,7 +1627,7 @@ void CPU_dbl10_poly_evaldiffjobs
        backwardltb,backwardlix,backwardlmi,backwardlrg,backwardlpk,
           crossrtb,   crossrix,   crossrmi,   crossrrg,   crossrpk,
           crossltb,   crosslix,   crosslmi,   crosslrg,   crosslpk,
-       addjobs,true);
+       addjobs,verbose);
 
    for(int k=0; k<nbr; k++)
    {

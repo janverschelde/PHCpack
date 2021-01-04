@@ -26,23 +26,33 @@ job_coordinates            : defines data positions for the kernels
 -----------------------------------------------------------------------------
 dbl_polynomials_host       : evaldiff of double polynomials on host
 dbl_polynomials_kernels    : kernels for double evaldiff
+dbl_polynomials_testers    : test functions in double precision
 test_dbl_polynomials       : main test in double precision
 dbl2_polynomials_host      : evaldiff of double double polynomials on host
 dbl2_polynomials_kernels   : kernels for double double evaldiff
+dbl2_polynomials_testers   : test functions in double double precision
 test_dbl2_polynomials      : main test in double double precision
 dbl3_polynomials_host      : evaldiff of triple double polynomials on host
 dbl3_polynomials_kernels   : kernels for triple double evaldiff
+dbl3_polynomials_testers   : test functions in triple double precision
 test_dbl3_polynomials      : main test in triple double precision
 dbl4_polynomials_host      : evaldiff of quad double polynomials on host
 dbl4_polynomials_kernels   : kernels for quad double evaldiff
+dbl4_polynomials_testers   : test functions in quad double precision
 test_dbl4_polynomials      : main test in quad double precision
 dbl5_polynomials_host      : evaldiff of penta double polynomials on host
 dbl5_polynomials_kernels   : kernels for penta double evaldiff
+dbl5_polynomials_testers   : test functions in penta double precision
 test_dbl5_polynomials      : main test in penta double precision
 dbl8_polynomials_host      : evaldiff of octo double polynomials on host
 dbl8_polynomials_kernels   : kernels for octo double evaldiff
+dbl8_polynomials_testers   : test functions in octo double precision
 test_dbl8_polynomials      : main test in octo double precision
 dbl10_polynomials_host     : evaldiff of deca double polynomials on host
 dbl10_polynomials_kernels  : kernels for deca double evaldiff
+dbl10_polynomials_testers  : test functions in deca double precision
 test_dbl10_polynomials     : main test in deca double precision
+-----------------------------------------------------------------------------
+polynomials_kernels        : includes all cuda polynomials code
+test_polynomials           : test in all precisions
 -----------------------------------------------------------------------------

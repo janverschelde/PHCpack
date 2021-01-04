@@ -1063,7 +1063,7 @@ void CPU_dbl5_poly_evaldiffjobs
          outputtb,  outputix,  outputmi,  outputrg,  outputpk,
         forwardtb, forwardix, forwardmi, forwardrg, forwardpk,
        backwardtb,backwardix,backwardmi,backwardrg,backwardpk,
-          crosstb,   crossix,   crossmi,   crossrg,   crosspk,addjobs,true);
+          crosstb,   crossix,   crossmi,   crossrg,   crosspk,addjobs,verbose);
 
    for(int k=0; k<nbr; k++)
    {

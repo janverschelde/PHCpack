@@ -983,7 +983,7 @@ void CPU_dbl4_poly_evaldiffjobs
          outputhihi,  outputlohi,  outputhilo,  outputlolo,
         forwardhihi, forwardlohi, forwardhilo, forwardlolo,
        backwardhihi,backwardlohi,backwardhilo,backwardlolo,
-          crosshihi,   crosslohi,   crosshilo,   crosslolo,addjobs,true);
+          crosshihi,   crosslohi,   crosshilo,   crosslolo,addjobs,verbose);
 
    for(int k=0; k<nbr; k++)
    {

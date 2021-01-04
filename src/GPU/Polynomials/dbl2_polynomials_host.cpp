@@ -724,7 +724,7 @@ void CPU_dbl2_poly_evaldiffjobs
    CPU_dbl2_poly_addjobs
       (dim,nbr,deg,nvr,idx,csthi,cstlo,cffhi,cfflo,inputhi,inputlo,
        outputhi,outputlo,forwardhi,forwardlo,backwardhi,backwardlo,
-       crosshi,crosslo,addjobs,true);
+       crosshi,crosslo,addjobs,verbose);
 
    for(int k=0; k<nbr; k++)
    {

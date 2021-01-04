@@ -230,8 +230,9 @@ void AdditionJobs::recursive_other_make
      
       if(ix2 != -1)  // cff contributes to a derivative
       {
-         cout << "idx[" << ix1 << "][" << ix3 << "] = " << idx[ix1][ix3]
-              << ", varidx = " << varidx << endl;
+         if(verbose)
+            cout << "idx[" << ix1 << "][" << ix3 << "] = " << idx[ix1][ix3]
+                 << ", varidx = " << varidx << endl;
 
          if(idx[ix1][0] == varidx)       // update backward product with cff
          {

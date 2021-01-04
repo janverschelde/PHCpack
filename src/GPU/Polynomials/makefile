@@ -33,6 +33,9 @@ test_dbl8_polynomials:
 test_dbl10_polynomials:
 	make -f $(MAKEFILE) test_dbl10_polynomials
 
+test_polynomials:
+	make -f $(MAKEFILE) test_polynomials
+
 clean:
 	make -f $(MAKEFILE) clean
 

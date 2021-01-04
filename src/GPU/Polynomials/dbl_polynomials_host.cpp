@@ -523,7 +523,7 @@ void CPU_dbl_poly_evaldiffjobs
    //   (dim,nbr,deg,nvr,idx,cst,cff,input,output,forward,backward,cross);
    CPU_dbl_poly_addjobs
       (dim,nbr,deg,nvr,idx,cst,cff,input,output,forward,backward,cross,
-       addjobs,true);
+       addjobs,verbose);
 
    for(int k=0; k<nbr; k++)
    {

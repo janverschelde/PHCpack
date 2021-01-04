@@ -1502,7 +1502,7 @@ void CPU_dbl8_poly_evaldiffjobs
        backwardlohihi,backwardlolohi,backwardlohilo,backwardlololo,
           crosshihihi,   crosshilohi,   crosshihilo,   crosshilolo,
           crosslohihi,   crosslolohi,   crosslohilo,   crosslololo,
-       addjobs,true);
+       addjobs,verbose);
 
    for(int k=0; k<nbr; k++)
    {
