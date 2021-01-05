@@ -18,7 +18,7 @@ __global__ void dbl_padded_convjobs
    const int idx3 = outidx[bdx] + tdx;
 
    __shared__ double xv[d_shmemsize];
-   __shared__ double yv[d_shmemsize];
+   __shared__ double yv[2*d_shmemsize];
    __shared__ double zv[d_shmemsize];
 
    int ydx = dim + tdx;

@@ -1,3 +1,6 @@
+Mon 4 jan 2021 : in dbl2_convolutions_kernels.h, increased the shared memory 
+  size from 128 to 192.
+
 Thu 17 Dec 2020 : added verbose option to dbl_monomials_host.h and
   output statements to dbl_monomials_host.cpp.
 

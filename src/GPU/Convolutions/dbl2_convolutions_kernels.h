@@ -7,7 +7,7 @@
 
 // #define dd_shmemsize 256
 // redefined for C2050
-#define dd_shmemsize 128
+#define dd_shmemsize 192
 
 /* The constant dd_shmemsize is the bound on the shared memory size,
  * to compute the product of series with complex double double coefficients.

@@ -24,8 +24,8 @@ __global__ void dbl2_padded_convjobs
 
    __shared__ double xvhi[dd_shmemsize];
    __shared__ double xvlo[dd_shmemsize];
-   __shared__ double yvhi[dd_shmemsize];
-   __shared__ double yvlo[dd_shmemsize];
+   __shared__ double yvhi[2*dd_shmemsize];
+   __shared__ double yvlo[2*dd_shmemsize];
    __shared__ double zvhi[dd_shmemsize];
    __shared__ double zvlo[dd_shmemsize];
 
@@ -48,7 +48,10 @@ __global__ void dbl2_padded_convjobs
    {
       ydx = dim + tdx - i;
       ddg_mul(xvhi[i],xvlo[i],yvhi[ydx],yvlo[ydx],&prdhi,&prdlo);
+      __syncthreads();
+
       ddg_inc(&zvhi[tdx],&zvlo[tdx],prdhi,prdlo);
+      __syncthreads();
    }
 
    __syncthreads();

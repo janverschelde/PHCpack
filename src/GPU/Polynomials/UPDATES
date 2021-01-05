@@ -3,6 +3,8 @@ Mon 4 Jan 2021 : extracted code from test_dbl*_polynomials.cpp into separate
   all dbl*_polynomials_host.cpp.  New polynomial_kernels.cu.
   In addition_jobs.cpp, applied verbose flag correctly.
   Fixed the reporting of number of failures in test_polynomials.cpp.
+  In dbl*_polynomials_kernels.cu, doubled the size of the shared memory
+  occupied in the padded convolutions of the second input argument.
 
 Sun 3 Jan 2021 : new random5_polynomials and test_dbl5_polynomials, updated
   the makefiles.  New random10_polynomials and test_dbl10_polynomials.

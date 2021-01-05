@@ -27,10 +27,10 @@ __global__ void dbl4_padded_convjobs
    __shared__ double xvlohi[qd_shmemsize];
    __shared__ double xvhilo[qd_shmemsize];
    __shared__ double xvlolo[qd_shmemsize];
-   __shared__ double yvhihi[qd_shmemsize];
-   __shared__ double yvlohi[qd_shmemsize];
-   __shared__ double yvhilo[qd_shmemsize];
-   __shared__ double yvlolo[qd_shmemsize];
+   __shared__ double yvhihi[2*qd_shmemsize];
+   __shared__ double yvlohi[2*qd_shmemsize];
+   __shared__ double yvhilo[2*qd_shmemsize];
+   __shared__ double yvlolo[2*qd_shmemsize];
    __shared__ double zvhihi[qd_shmemsize];
    __shared__ double zvlohi[qd_shmemsize];
    __shared__ double zvhilo[qd_shmemsize];

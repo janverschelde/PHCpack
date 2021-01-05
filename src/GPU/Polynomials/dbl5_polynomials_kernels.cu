@@ -27,11 +27,11 @@ __global__ void dbl5_padded_convjobs
    __shared__ double xvmi[pd_shmemsize];
    __shared__ double xvrg[pd_shmemsize];
    __shared__ double xvpk[pd_shmemsize];
-   __shared__ double yvtb[pd_shmemsize];
-   __shared__ double yvix[pd_shmemsize];
-   __shared__ double yvmi[pd_shmemsize];
-   __shared__ double yvrg[pd_shmemsize];
-   __shared__ double yvpk[pd_shmemsize];
+   __shared__ double yvtb[2*pd_shmemsize];
+   __shared__ double yvix[2*pd_shmemsize];
+   __shared__ double yvmi[2*pd_shmemsize];
+   __shared__ double yvrg[2*pd_shmemsize];
+   __shared__ double yvpk[2*pd_shmemsize];
    __shared__ double zvtb[pd_shmemsize];
    __shared__ double zvix[pd_shmemsize];
    __shared__ double zvmi[pd_shmemsize];

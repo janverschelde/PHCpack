@@ -26,9 +26,9 @@ __global__ void dbl3_padded_convjobs
    __shared__ double xvhi[td_shmemsize];
    __shared__ double xvmi[td_shmemsize];
    __shared__ double xvlo[td_shmemsize];
-   __shared__ double yvhi[td_shmemsize];
-   __shared__ double yvmi[td_shmemsize];
-   __shared__ double yvlo[td_shmemsize];
+   __shared__ double yvhi[2*td_shmemsize];
+   __shared__ double yvmi[2*td_shmemsize];
+   __shared__ double yvlo[2*td_shmemsize];
    __shared__ double zvhi[td_shmemsize];
    __shared__ double zvmi[td_shmemsize];
    __shared__ double zvlo[td_shmemsize];
