@@ -86,7 +86,7 @@ double test_dbl2_real_polynomial
 
       make_real2_input(dim,deg,inputhi,inputlo);
 
-      if(verbose > 0)
+      if(verbose > 1)
       {
          cout << scientific << setprecision(16);
          cout << "Random input series :" << endl;
@@ -134,7 +134,7 @@ double test_dbl2_real_polynomial
          bool fail = make_real2_polynomial(dim,nbr,pwr,deg,nvr,idx,exp,
                                            csthi,cstlo,cffhi,cfflo);
       }
-      if(verbose > 0)
+      if(verbose > 1)
       {
          cout << "Coefficient series of the constant term :" << endl;
          for(int j=0; j<=deg; j++)
@@ -157,7 +157,7 @@ double test_dbl2_real_polynomial
                cout << cffhi[i][j] << "  " << cfflo[i][j] << endl;
          }
       }
-      bool vrb = (verbose > 0);
+      bool vrb = (verbose > 1);
       if(nva == 0)
       {
          bool dup = duplicate_supports(dim,nbr,nvr,idx,vrb);
@@ -250,7 +250,7 @@ double test_dbl2_real_polynomial
          err = 0.0;
          for(int i=0; i<=deg; i++)
          {
-            if(verbose > 0)
+            if(vrb)
             {
                cout << output1hi_h[k][i] << "  "
                     << output1lo_h[k][i] << endl;
@@ -267,7 +267,7 @@ double test_dbl2_real_polynomial
          if(vrb) cout << "error : " << err << endl;
          sumerr = sumerr + err;
       }
-      if(vrb)
+      if(verbose > 0)
       {
          cout << "dimension : " << dim << endl;
          if(nva > 0)

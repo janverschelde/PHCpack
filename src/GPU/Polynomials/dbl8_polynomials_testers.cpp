@@ -136,7 +136,7 @@ double test_dbl8_real_polynomial
          inputhihihi,inputhilohi,inputhihilo,inputhilolo,
          inputlohihi,inputlolohi,inputlohilo,inputlololo);
 
-      if(verbose > 0)
+      if(verbose > 1)
       {
          cout << scientific << setprecision(16);
          cout << "Random input series :" << endl;
@@ -221,7 +221,7 @@ double test_dbl8_real_polynomial
                          cffhihihi,cffhilohi,cffhihilo,cffhilolo,
                          cfflohihi,cfflolohi,cfflohilo,cfflololo);
       }
-      if(verbose > 0)
+      if(verbose > 1)
       {
          cout << "Coefficient series of the constant term :" << endl;
          for(int j=0; j<=deg; j++)
@@ -254,7 +254,7 @@ double test_dbl8_real_polynomial
             }
          }
       }
-      bool vrb = (verbose > 0);
+      bool vrb = (verbose > 1);
       if(nva == 0)
       {
          bool dup = duplicate_supports(dim,nbr,nvr,idx,vrb);
@@ -447,7 +447,7 @@ double test_dbl8_real_polynomial
          if(vrb) cout << "error : " << err << endl;
          sumerr = sumerr + err;
       }
-      if(vrb)
+      if(verbose > 0)
       {
          cout << "dimension : " << dim << endl;
          if(nva > 0)

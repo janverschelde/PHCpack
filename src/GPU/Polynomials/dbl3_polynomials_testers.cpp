@@ -94,7 +94,7 @@ double test_dbl3_real_polynomial
 
       make_real3_input(dim,deg,inputhi,inputmi,inputlo);
 
-      if(verbose > 0)
+      if(verbose > 1)
       {
          cout << scientific << setprecision(16);
          cout << "Random input series :" << endl;
@@ -150,7 +150,7 @@ double test_dbl3_real_polynomial
                         (dim,nbr,pwr,deg,nvr,idx,exp,csthi,cstmi,cstlo,
                          cffhi,cffmi,cfflo);
       }
-      if(verbose > 0)
+      if(verbose > 1)
       {
          cout << "Coefficient series of the constant term :" << endl;
          for(int j=0; j<=deg; j++)
@@ -175,7 +175,7 @@ double test_dbl3_real_polynomial
                                    << "  " << cfflo[i][j] << endl;
          }
       }
-      bool vrb = (verbose > 0);
+      bool vrb = (verbose > 1);
       if(nva == 0)
       {
          bool dup = duplicate_supports(dim,nbr,nvr,idx,vrb);
@@ -265,7 +265,7 @@ double test_dbl3_real_polynomial
                    + abs(output1mi_h[dim][i] - outputmi_d[dim][i])
                    + abs(output1lo_h[dim][i] - outputlo_d[dim][i]);
       }
-      if(verbose > 0) cout << "error : " << err << endl;
+      if(vrb) cout << "error : " << err << endl;
 
       double sumerr = err;
 
@@ -297,7 +297,7 @@ double test_dbl3_real_polynomial
          if(vrb) cout << "error : " << err << endl;
          sumerr = sumerr + err;
       }
-      if(vrb)
+      if(verbose > 0)
       {
          cout << "dimension : " << dim << endl;
          if(nva > 0)

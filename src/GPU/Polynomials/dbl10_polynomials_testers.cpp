@@ -152,7 +152,7 @@ double test_dbl10_real_polynomial
          inputrtb,inputrix,inputrmi,inputrrg,inputrpk,
          inputltb,inputlix,inputlmi,inputlrg,inputlpk);
 
-      if(verbose > 0)
+      if(verbose > 1)
       {
          cout << scientific << setprecision(16);
          cout << "Random input series :" << endl;
@@ -245,7 +245,7 @@ double test_dbl10_real_polynomial
                          cffrtb,cffrix,cffrmi,cffrrg,cffrpk,
                          cffltb,cfflix,cfflmi,cfflrg,cfflpk);
       }
-      if(verbose > 0)
+      if(verbose > 1)
       {
          cout << "Coefficient series of the constant term :" << endl;
          for(int j=0; j<=deg; j++)
@@ -281,7 +281,7 @@ double test_dbl10_real_polynomial
             }
          }
       }
-      bool vrb = (verbose > 0);
+      bool vrb = (verbose > 1);
       if(nva == 0)
       {
          bool dup = duplicate_supports(dim,nbr,nvr,idx,vrb);
@@ -437,7 +437,7 @@ double test_dbl10_real_polynomial
          err = 0.0;
          for(int i=0; i<=deg; i++)
          {
-            if(verbose > 0)
+            if(vrb)
             {
                cout << output1rtb_h[k][i] << "  "
                     << output1rix_h[k][i] << "  "
@@ -494,7 +494,7 @@ double test_dbl10_real_polynomial
          if(vrb) cout << "error : " << err << endl;
          sumerr = sumerr + err;
       }
-      if(vrb)
+      if(verbose > 0)
       {
          cout << "dimension : " << dim << endl;
          if(nva > 0)

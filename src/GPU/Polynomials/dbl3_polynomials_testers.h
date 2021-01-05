@@ -17,7 +17,8 @@ double test_dbl3_real_polynomial
  *   nva      number of variables per monomial (for products and cyclic);
  *   pwr      highest power of each variable;
  *   deg      truncation degree of the series;
- *   verbose  if zero, then no output is written. */
+ *   verbose  if zero, then no output is written,
+ *            otherwise, the higher the value, the more output. */
 
 int main_dbl3_test_polynomial
  ( int seed, int dim, int nbr, int nva, int pwr, int deg, int vrblvl );
@@ -34,6 +35,10 @@ int main_dbl3_test_polynomial
  *   nva      number of variables in each monomial (for products, cyclic);
  *   pwr      highest power of each variable;
  *   deg      truncation degree of the series;
- *   vrblvl   is the verbose level, if 0 then no output. */
+ *   vrblvl   is the verbose level, if 0 then no output,
+ *            otherwise, the higher the value, the more output:
+ *            if 1, then the sum of all errors is shown,
+ *            if 2, then job counts and timings are listed,
+ *            if 3 (or higher), then all values are written. */
 
 #endif

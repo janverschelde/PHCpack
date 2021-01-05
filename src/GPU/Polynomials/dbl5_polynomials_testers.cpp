@@ -110,7 +110,7 @@ double test_dbl5_real_polynomial
 
       make_real5_input(dim,deg,inputtb,inputix,inputmi,inputrg,inputpk);
 
-      if(verbose > 0)
+      if(verbose > 1)
       {
          cout << scientific << setprecision(16);
          cout << "Random input series :" << endl;
@@ -175,7 +175,7 @@ double test_dbl5_real_polynomial
                          csttb,cstix,cstmi,cstrg,cstpk,
                          cfftb,cffix,cffmi,cffrg,cffpk);
       }
-      if(verbose > 0)
+      if(verbose > 1)
       {
          cout << "Coefficient series of the constant term :" << endl;
          for(int j=0; j<=deg; j++)
@@ -201,7 +201,7 @@ double test_dbl5_real_polynomial
                     << cffrg[i][j] << "  " << cffpk[i][j] << endl;
          }
       }
-      bool vrb = (verbose > 0);
+      bool vrb = (verbose > 1);
       if(nva == 0)
       {
          bool dup = duplicate_supports(dim,nbr,nvr,idx,vrb);
@@ -349,7 +349,7 @@ double test_dbl5_real_polynomial
          if(vrb) cout << "error : " << err << endl;
          sumerr = sumerr + err;
       }
-      if(vrb)
+      if(verbose > 0)
       {
          cout << "dimension : " << dim << endl;
          if(nva > 0)
