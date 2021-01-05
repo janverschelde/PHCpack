@@ -355,7 +355,8 @@ void GPU_dbl10_poly_evaldiff
    double **outputrrg, double **outputrpk,
    double **outputltb, double **outputlix, double **outputlmi,
    double **outputlrg, double **outputlpk,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose=true );
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs, double *elapsedms,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiations a polynomial in 
@@ -475,6 +476,8 @@ void GPU_dbl10_poly_evaldiff
  *   outputlpk   has the lowest parts of derivatives and the value,
  *               outputlpk[k], for k from 0 to dim-1, contains the
  *               derivative with respect to the variable k;
- *               outputlpk[dim] contains the value of the polynomial. */
+ *               outputlpk[dim] contains the value of the polynomial;
+ *   elapsedms   is the elapsed time spent by all kernels,
+ *               expressed in milliseconds. */
 
 #endif

@@ -329,6 +329,8 @@ double test_dbl10_real_polynomial
                cout << addjobs.get_job(k,i) << endl;
          }
       }
+      double timelapms_d;
+
       if(vrb) cout << "Computing without convolution jobs ..." << endl;
       CPU_dbl10_poly_evaldiff
          (dim,nbr,deg,nvr,idx,
@@ -364,7 +366,7 @@ double test_dbl10_real_polynomial
           inputltb,inputlix,inputlmi,inputlrg,inputlpk,
           outputrtb_d,outputrix_d,outputrmi_d,outputrrg_d,outputrpk_d,
           outputltb_d,outputlix_d,outputlmi_d,outputlrg_d,outputlpk_d,
-          cnvjobs,addjobs,vrb);
+          cnvjobs,addjobs,&timelapms_d,vrb);
 
       double err = 0.0;
 
@@ -503,6 +505,10 @@ double test_dbl10_real_polynomial
          write_convolution_counts(cnvjobs);
          write_addition_counts(addjobs);
          write_operation_counts(deg,cnvjobs,addjobs);
+
+         cout << "Time spent by all kernels in milliseconds : ";
+         cout << fixed << setprecision(2) << timelapms_d << endl;
+         cout << scientific << setprecision(16);
       }
       return sumerr;
    }

@@ -160,7 +160,8 @@ void GPU_dbl3_poly_evaldiff
    double **cffhi, double **cffmi, double **cfflo,
    double **inputhi, double **inputmi,  double **inputlo,
    double **outputhi, double **outputmi, double **outputlo,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose=true );
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs, double *elapsedms,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiations a polynomial in 
@@ -210,6 +211,8 @@ void GPU_dbl3_poly_evaldiff
  *   outputlo has the low parts of derivatives and the value,
  *            outputhi[k], for k from 0 to dim-1, contains the
  *            derivative with respect to the variable k;
- *            outputhi[dim] contains the value of the polynomial. */
+ *            outputhi[dim] contains the value of the polynomial;
+ *   elapsedms is the elapsed time spent by all kernels,
+ *            expressed in milliseconds. */
 
 #endif

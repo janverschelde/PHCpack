@@ -311,7 +311,8 @@ void GPU_dbl8_poly_evaldiff
    double **outputhihilo, double **outputhilolo,
    double **outputlohihi, double **outputlolohi,
    double **outputlohilo, double **outputlololo,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose=true );
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs, double *elapsedms,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiations a polynomial in 
@@ -410,6 +411,8 @@ void GPU_dbl8_poly_evaldiff
  *   outputlololo has the lowest parts of derivatives and the value,
  *                outputlololo[k], for k from 0 to dim-1, contains the
  *                derivative with respect to the variable k;
- *                outputlololo[dim] contains the value of the polynomial. */
+ *                outputlololo[dim] contains the value of the polynomial;
+ *   elapsedms    is the elapsed time spent by all kernels,
+ *                expressed in milliseconds. */
 
 #endif

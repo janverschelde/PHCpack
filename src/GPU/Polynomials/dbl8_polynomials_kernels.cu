@@ -2,6 +2,7 @@
 // in dbl8_polynomials_kernels.h.
 
 #include <iostream>
+#include <iomanip>
 #include "job_coordinates.h"
 #include "octo_double_functions.h"
 #ifdef gpufun
@@ -509,7 +510,8 @@ void GPU_dbl8_poly_evaldiff
    double **outputhihilo, double **outputhilolo,
    double **outputlohihi, double **outputlolohi,
    double **outputlohilo, double **outputlololo,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose )
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs, double *elapsedms,
+   bool verbose )
 {
    const int deg1 = deg+1;
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
@@ -540,7 +542,6 @@ void GPU_dbl8_poly_evaldiff
       cout << "cstart :";
       for(int i=0; i<nbr; i++) cout << " " << cstart[i]; cout << endl;
    }
-
    double *datahihihi_h = new double[totalcff];        // data on host
    double *datahilohi_h = new double[totalcff];
    double *datahihilo_h = new double[totalcff];
@@ -612,6 +613,12 @@ void GPU_dbl8_poly_evaldiff
    cudaMemcpy(datalohilo_d,datalohilo_h,szdata,cudaMemcpyHostToDevice);
    cudaMemcpy(datalololo_d,datalololo_h,szdata,cudaMemcpyHostToDevice);
 
+   cudaEvent_t start,stop;
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *elapsedms = 0.0;
+   float milliseconds;
+
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
       const int jobnbr = cnvjobs.get_layer_count(k);
@@ -641,10 +648,15 @@ void GPU_dbl8_poly_evaldiff
             cout << "launching " << jobnbr << " blocks of " << BS
                  << " threads ..." << endl;
 
+         cudaEventRecord(start);
          dbl8_padded_convjobs<<<jobnbr,BS>>>
             (datahihihi_d,datahilohi_d,datahihilo_d,datahilolo_d,
              datalohihi_d,datalolohi_d,datalohilo_d,datalololo_d,
              in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *elapsedms += milliseconds;
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
@@ -677,10 +689,15 @@ void GPU_dbl8_poly_evaldiff
             cout << "launching " << jobnbr << " blocks of " << BS
                  << " threads ..." << endl;
 
+         cudaEventRecord(start);
          dbl8_update_addjobs<<<jobnbr,BS>>>
             (datahihihi_d,datahilohi_d,datahihilo_d,datahilolo_d,
              datalohihi_d,datalolohi_d,datalohilo_d,datalololo_d,
              in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *elapsedms += milliseconds;
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
@@ -701,4 +718,10 @@ void GPU_dbl8_poly_evaldiff
        outputhihihi,outputhilohi,outputhihilo,outputhilolo,
        outputlohihi,outputlolohi,outputlohilo,outputlololo,
        dim,nbr,deg,nvr,idx,fstart,bstart,cstart,addjobs,verbose);
+   if(verbose)
+   {
+      cout << "Time spent by all kernels in milliseconds : ";
+      cout << fixed << setprecision(2) << *elapsedms << endl;
+      cout << scientific << setprecision(16);
+   }
 }

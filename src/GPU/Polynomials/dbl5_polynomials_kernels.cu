@@ -2,6 +2,7 @@
 // in dbl5_polynomials_kernels.h.
 
 #include <iostream>
+#include <iomanip>
 #include "job_coordinates.h"
 #include "penta_double_functions.h"
 #ifdef gpufun
@@ -390,7 +391,8 @@ void GPU_dbl5_poly_evaldiff
    double **inputrg, double **inputpk,
    double **outputtb, double **outputix, double **outputmi,
    double **outputrg, double **outputpk,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose )
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs, double *elapsedms,
+   bool verbose )
 {
    const int deg1 = deg+1;
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
@@ -421,7 +423,6 @@ void GPU_dbl5_poly_evaldiff
       cout << "cstart :";
       for(int i=0; i<nbr; i++) cout << " " << cstart[i]; cout << endl;
    }
-
    double *datatb_h = new double[totalcff];        // data on host
    double *dataix_h = new double[totalcff];
    double *datami_h = new double[totalcff];
@@ -472,6 +473,12 @@ void GPU_dbl5_poly_evaldiff
    cudaMemcpy(datarg_d,datarg_h,szdata,cudaMemcpyHostToDevice);
    cudaMemcpy(datapk_d,datapk_h,szdata,cudaMemcpyHostToDevice);
 
+   cudaEvent_t start,stop;
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *elapsedms = 0.0;
+   float milliseconds;
+
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
       const int jobnbr = cnvjobs.get_layer_count(k);
@@ -501,9 +508,14 @@ void GPU_dbl5_poly_evaldiff
             cout << "launching " << jobnbr << " blocks of " << BS
                  << " threads ..." << endl;
 
+         cudaEventRecord(start);
          dbl5_padded_convjobs<<<jobnbr,BS>>>
             (datatb_d,dataix_d,datami_d,datarg_d,datapk_d,
              in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *elapsedms += milliseconds;
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
@@ -536,9 +548,14 @@ void GPU_dbl5_poly_evaldiff
             cout << "launching " << jobnbr << " blocks of " << BS
                  << " threads ..." << endl;
 
+         cudaEventRecord(start);
          dbl5_update_addjobs<<<jobnbr,BS>>>
             (datatb_d,dataix_d,datami_d,datarg_d,datapk_d,
              in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *elapsedms += milliseconds;
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
@@ -554,4 +571,10 @@ void GPU_dbl5_poly_evaldiff
       (datatb_h,dataix_h,datami_h,datarg_h,datapk_h,
        outputtb,outputix,outputmi,outputrg,outputpk,
        dim,nbr,deg,nvr,idx,fstart,bstart,cstart,addjobs,verbose);
+   if(verbose)
+   {
+      cout << "Time spent by all kernels in milliseconds : ";
+      cout << fixed << setprecision(2) << *elapsedms << endl;
+      cout << scientific << setprecision(16);
+   }
 }

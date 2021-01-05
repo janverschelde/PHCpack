@@ -121,7 +121,8 @@ void added_data_to_output
 void GPU_dbl_poly_evaldiff
  ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,
    double *cst, double **cff, double **input, double **output,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose=true );
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs, double *elapsedms,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiations a polynomial in 
@@ -151,6 +152,8 @@ void GPU_dbl_poly_evaldiff
  *   output   contains derivatives and the value of the polynomial,
  *            output[k], for k from 0 to dim-1, contains the
  *            derivative with respect to the variable k;
- *            output[dim] contains the value of the polynomial. */
+ *            output[dim] contains the value of the polynomial;
+ *   elapsedms is the elapsed time spent by all kernels,
+ *            expressed in milliseconds. */
 
 #endif
