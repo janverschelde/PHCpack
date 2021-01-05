@@ -3,6 +3,8 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <iomanip>
+#include <ctime>
 #include "double_double_functions.h"
 #include "dbl2_convolutions_host.h"
 #include "dbl2_monomials_host.h"
@@ -111,7 +113,8 @@ void CPU_dbl2_poly_evaldiff
    double *csthi, double *cstlo,
    double **cffhi, double **cfflo,
    double **inputhi, double **inputlo, 
-   double **outputhi, double **outputlo, bool verbose )
+   double **outputhi, double **outputlo,
+   double *elapsedsec, bool verbose )
 {
    double **forwardhi = new double*[dim];
    double **forwardlo = new double*[dim];
@@ -140,10 +143,19 @@ void CPU_dbl2_poly_evaldiff
          outputlo[i][j] = 0.0;
       }
 
+   clock_t start = clock();
    CPU_dbl2_poly_speel
       (dim,nbr,deg,nvr,idx,cffhi,cfflo,inputhi,inputlo,outputhi,outputlo,
        forwardhi,forwardlo,backwardhi,backwardlo,crosshi,crosslo,verbose);
+   clock_t end = clock();
+   *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 
+   if(verbose)
+   {
+      cout << fixed << setprecision(3);
+      cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+           << *elapsedsec << " seconds." << endl;
+   }
    for(int i=0; i<dim-1; i++)
    {
       free(forwardhi[i]); free(backwardhi[i]); free(crosshi[i]);
@@ -660,7 +672,8 @@ void CPU_dbl2_poly_evaldiffjobs
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double *csthi, double *cstlo, double **cffhi, double **cfflo,
    double **inputhi, double **inputlo, double **outputhi, double **outputlo,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose )
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs,
+   double *elapsedsec, bool verbose )
 {
    double ***forwardhi = new double**[nbr];
    double ***forwardlo = new double**[nbr];
@@ -701,6 +714,7 @@ void CPU_dbl2_poly_evaldiffjobs
          }
       }
    }
+   clock_t start = clock();
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
       if(verbose) cout << "executing convolution jobs at layer "
@@ -725,7 +739,15 @@ void CPU_dbl2_poly_evaldiffjobs
       (dim,nbr,deg,nvr,idx,csthi,cstlo,cffhi,cfflo,inputhi,inputlo,
        outputhi,outputlo,forwardhi,forwardlo,backwardhi,backwardlo,
        crosshi,crosslo,addjobs,verbose);
+   clock_t end = clock();
+   *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 
+   if(verbose)
+   {
+      cout << fixed << setprecision(3);
+      cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+           << *elapsedsec << " seconds." << endl;
+   }
    for(int k=0; k<nbr; k++)
    {
       int nvrk = nvr[k];

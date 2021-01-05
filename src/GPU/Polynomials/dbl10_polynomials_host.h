@@ -43,7 +43,7 @@ void CPU_dbl10_poly_speel
  * DESCRIPTION :
  *   Runs the reverse mode of algorithmic differentiation
  *   of a polynomial at power series truncated to the same degree,
- *   for real coefficients in penta double precision.
+ *   for real coefficients in deca double precision.
  *
  * ON ENTRY :
  *   dim         total number of variables;
@@ -224,7 +224,8 @@ void CPU_dbl10_poly_evaldiff
    double **outputrtb, double **outputrix, double **outputrmi,
    double **outputrrg, double **outputrpk,
    double **outputltb, double **outputlix, double **outputlmi,
-   double **outputlrg, double **outputlpk, bool verbose=false );
+   double **outputlrg, double **outputlpk,
+   double *elapsedsec, bool verbose=false );
 /*
  * DESCRIPTION :
  *   Allocates work space memory to store the forward, backward, and
@@ -340,7 +341,8 @@ void CPU_dbl10_poly_evaldiff
  *   outputlpk   has the lowest parts of derivatives and the value,
  *               outputlpk[k], for k from 0 to dim-1, contains the
  *               derivative with respect to the variable k;
- *               outputlpk[dim] contains the value of the polynomial. */
+ *               outputlpk[dim] contains the value of the polynomial;
+ *   elapsedsec  is the elapsed time in seconds. */
 
 void CPU_dbl10_conv_job
  ( int deg, int nvr, int *idx,
@@ -895,7 +897,8 @@ void CPU_dbl10_poly_evaldiffjobs
    double **outputrrg, double **outputrpk,
    double **outputltb, double **outputlix, double **outputlmi,
    double **outputlrg, double **outputlpk,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose=false );
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs,
+   double *elapsedsec, bool verbose=false );
 /*
  * DESCRIPTION :
  *   Computes the convolutions in the order as defined by cnvjobs,
@@ -1014,6 +1017,7 @@ void CPU_dbl10_poly_evaldiffjobs
  *   outputlpk   has the lowest parts of derivatives and the value,
  *               outputlpk[k], for k from 0 to dim-1, contains the
  *               derivative with respect to the variable k;
- *               outputlpk[dim] contains the value of the polynomial. */
+ *               outputlpk[dim] contains the value of the polynomial;
+ *   elapsedsec  is the elapsed time in seconds. */
 
 #endif

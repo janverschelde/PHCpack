@@ -129,7 +129,8 @@ void CPU_dbl5_poly_evaldiff
    double **inputtb, double **inputix, double **inputmi,
    double **inputrg, double **inputpk, 
    double **outputtb, double **outputix, double **outputmi,
-   double **outputrg, double **outputpk, bool verbose=false );
+   double **outputrg, double **outputpk,
+   double *elapsedsec, bool verbose=false );
 /*
  * DESCRIPTION :
  *   Allocates work space memory to store the forward, backward, and
@@ -195,7 +196,8 @@ void CPU_dbl5_poly_evaldiff
  *   outputpk   has the lowest parts of derivatives and the value,
  *              outputpk[k], for k from 0 to dim-1, contains the
  *              derivative with respect to the variable k;
- *              outputpk[dim] contains the value of the polynomial. */
+ *              outputpk[dim] contains the value of the polynomial;
+ *   elapsedsec is the elapsed time in seconds. */
 
 void CPU_dbl5_conv_job
  ( int deg, int nvr, int *idx,
@@ -509,7 +511,8 @@ void CPU_dbl5_poly_evaldiffjobs
    double **inputrg, double **inputpk, 
    double **outputtb, double **outputix, double **outputmi,
    double **outputrg, double **outputpk,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose=false );
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs,
+   double *elapsedsec, bool verbose=false );
 /*
  * DESCRIPTION :
  *   Computes the convolutions in the order as defined by cnvjobs,
@@ -578,6 +581,7 @@ void CPU_dbl5_poly_evaldiffjobs
  *   outputpk   has the lowest parts of derivatives and the value,
  *              outputpk[k], for k from 0 to dim-1, contains the
  *              derivative with respect to the variable k;
- *              outputpk[dim] contains the value of the polynomial. */
+ *              outputpk[dim] contains the value of the polynomial;
+ *   elapsedsec is the elapsed time in seconds. */
 
 #endif

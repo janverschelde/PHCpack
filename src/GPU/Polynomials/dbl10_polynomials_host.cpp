@@ -3,6 +3,8 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <iomanip>
+#include <ctime>
 #include "deca_double_functions.h"
 #include "dbl10_convolutions_host.h"
 #include "dbl10_monomials_host.h"
@@ -250,7 +252,8 @@ void CPU_dbl10_poly_evaldiff
    double **outputrtb, double **outputrix, double **outputrmi,
    double **outputrrg, double **outputrpk,
    double **outputltb, double **outputlix, double **outputlmi,
-   double **outputlrg, double **outputlpk, bool verbose )
+   double **outputlrg, double **outputlpk,
+   double *elapsedsec, bool verbose )
 {
    double **forwardrtb = new double*[dim];
    double **forwardrix = new double*[dim];
@@ -355,6 +358,7 @@ void CPU_dbl10_poly_evaldiff
          outputlpk[i][j] = 0.0;
       }
 
+   clock_t start = clock();
    CPU_dbl10_poly_speel
       (dim,nbr,deg,nvr,idx,
             cffrtb,     cffrix,     cffrmi,     cffrrg,     cffrpk,
@@ -369,7 +373,15 @@ void CPU_dbl10_poly_evaldiff
        backwardltb,backwardlix,backwardlmi,backwardlrg,backwardlpk,
           crossrtb,   crossrix,   crossrmi,   crossrrg,   crossrpk,
           crossltb,   crosslix,   crosslmi,   crosslrg,   crosslpk,verbose);
+   clock_t end = clock();
+   *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 
+   if(verbose)
+   {
+      cout << fixed << setprecision(3);
+      cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+           << *elapsedsec << " seconds." << endl;
+   }
    for(int i=0; i<dim-1; i++)
    {
       free(forwardrtb[i]); free(backwardrtb[i]); free(crossrtb[i]);
@@ -1463,7 +1475,8 @@ void CPU_dbl10_poly_evaldiffjobs
    double **outputrrg, double **outputrpk,
    double **outputltb, double **outputlix, double **outputlmi,
    double **outputlrg, double **outputlpk,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose )
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs,
+   double *elapsedsec, bool verbose )
 {
    double ***forwardrtb = new double**[nbr];
    double ***forwardrix = new double**[nbr];
@@ -1576,6 +1589,7 @@ void CPU_dbl10_poly_evaldiffjobs
          }
       }
    }
+   clock_t start = clock();
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
       if(verbose) cout << "executing convolution jobs at layer "
@@ -1628,6 +1642,15 @@ void CPU_dbl10_poly_evaldiffjobs
           crossrtb,   crossrix,   crossrmi,   crossrrg,   crossrpk,
           crossltb,   crosslix,   crosslmi,   crosslrg,   crosslpk,
        addjobs,verbose);
+   clock_t end = clock();
+   *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
+
+   if(verbose)
+   {
+      cout << fixed << setprecision(3);
+      cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+           << *elapsedsec << " seconds." << endl;
+   }
 
    for(int k=0; k<nbr; k++)
    {

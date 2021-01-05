@@ -30,7 +30,7 @@ void CPU_dbl4_poly_speel
  * DESCRIPTION :
  *   Runs the reverse mode of algorithmic differentiation
  *   of a polynomial at power series truncated to the same degree,
- *   for real coefficients in double precision.
+ *   for real coefficients in quad double precision.
  *
  * ON ENTRY :
  *   dim          total number of variables;
@@ -64,22 +64,22 @@ void CPU_dbl4_poly_speel
  *                products, forwardhihi[k] can store deg+1 doubles;
  *   forwardlohi  is work space for the second highest doubles of nvr
  *                forward  products, forwardlohi[k] can store deg+1 doubles;
- *   forwardhilo  iss work space for the second lowest doubles of nvr
+ *   forwardhilo  is work space for the second lowest doubles of nvr
  *                forward products, forwardhilo[k] can store deg+1 doubles;
  *   forwardlolo  is work space for the lowest doubles of nvr
- *                forward products, forwardhilo[k] can store deg+1 doubles;
- *   backwardhihi is work space for the highest doubles of nvr-2 backward
+ *                forward products, forwardlolo[k] can store deg+1 doubles;
+ *   backwardhihi is work space for the highest doubles of nvr-1 backward
  *                products, backwardhihi[k] can store deg+1 doubles;
- *   backwardlohi is work space for the second highest doubles of nvr-2
+ *   backwardlohi is work space for the second highest doubles of nvr-1
  *                backward products, backwardlohi[k] can store deg+1 doubles;
- *   backwardhilo is work space for the second lowest doubles of nvr-2
+ *   backwardhilo is work space for the second lowest doubles of nvr-1
  *                backward products, backwardhilo[k] can store deg+1 doubles;
- *   backwardlolo is work space for the lowest doubles of nvr-2 backward
+ *   backwardlolo is work space for the lowest doubles of nvr- backward
  *                products, backwardlolo[k] can store deg+1 doubles;
  *   crosshihi    is work space for the highest doubles of nvr-2 cross
- *                products, crosshi[k] can store deg+1 doubles;
+ *                products, crosshihi[k] can store deg+1 doubles;
  *   crosslohi    is work space for the second highest doubles of nvr-2
- *                cross products, crosshi[k] can store deg+1 doubles;
+ *                cross products, crosslohi[k] can store deg+1 doubles;
  *   crosshilo    is work space for the second lowest doubles of nvr-2
  *                cross products, crosshilo[k] can store for deg+1 doubles.
  *   crosslolo    is work space for the lowest doubles of nvr-2 cross
@@ -98,7 +98,7 @@ void CPU_dbl4_poly_speel
  *   outputhilo   has the second lowest parts of derivatives and the value,
  *                outputhilo[k], for k from 0 to dim-1, contains the
  *                derivative with respect to the variable k;
- *                outputlohi[dim] contains the value of the polynomial;
+ *                outputhilo[dim] contains the value of the polynomial;
  *   outputlolo   has the lowest parts of derivatives and the value,
  *                outputlolo[k], for k from 0 to dim-1, contains the
  *                derivative with respect to the variable k;
@@ -111,7 +111,8 @@ void CPU_dbl4_poly_evaldiff
    double **inputhihi, double **inputlohi,
    double **inputhilo, double **inputlolo, 
    double **outputhihi, double **outputlohi,
-   double **outputhilo, double **outputlolo, bool verbose=false );
+   double **outputhilo, double **outputlolo,
+   double *elapsedsec, bool verbose=false );
 /*
  * DESCRIPTION :
  *   Allocates work space memory to store the forward, backward, and
@@ -126,7 +127,7 @@ void CPU_dbl4_poly_evaldiff
  *                idx[k][i] defines the place of the i-th variable,
  *                with input values in input[idx[k][i]];
  *   csthihi      highest parts of constant coefficient series;
- *   cstlohi      second higest parts of constant coefficient series;
+ *   cstlohi      second highest parts of constant coefficient series;
  *   csthilo      second lowest parts of constant coefficient series;
  *   cstlolo      lowest parts of constant coefficient series;
  *   cffhihi      cffhihi[k] has deg+1 doubles for the highest parts
@@ -163,11 +164,12 @@ void CPU_dbl4_poly_evaldiff
  *   outputhilo   has the second lowest parts of derivatives and the value,
  *                outputhilo[k], for k from 0 to dim-1, contains the
  *                derivative with respect to the variable k;
- *                outputlohi[dim] contains the value of the polynomial;
+ *                outputhilo[dim] contains the value of the polynomial;
  *   outputlolo   has the lowest parts of derivatives and the value,
  *                outputlolo[k], for k from 0 to dim-1, contains the
  *                derivative with respect to the variable k;
- *                outputlolo[dim] contains the value of the polynomial. */
+ *                outputlolo[dim] contains the value of the polynomial;
+ *   elapsedsec   is the elapsed time in seconds. */
 
 void CPU_dbl4_conv_job
  ( int deg, int nvr, int *idx,
@@ -213,22 +215,22 @@ void CPU_dbl4_conv_job
  *                products, forwardhihi[k] can store deg+1 doubles;
  *   forwardlohi  is work space for the second highest doubles of nvr
  *                forward  products, forwardlohi[k] can store deg+1 doubles;
- *   forwardhilo  iss work space for the second lowest doubles of nvr
+ *   forwardhilo  is work space for the second lowest doubles of nvr
  *                forward products, forwardhilo[k] can store deg+1 doubles;
  *   forwardlolo  is work space for the lowest doubles of nvr
  *                forward products, forwardhilo[k] can store deg+1 doubles;
- *   backwardhihi is work space for the highest doubles of nvr-2 backward
+ *   backwardhihi is work space for the highest doubles of nvr-1 backward
  *                products, backwardhihi[k] can store deg+1 doubles;
- *   backwardlohi is work space for the second highest doubles of nvr-2
+ *   backwardlohi is work space for the second highest doubles of nvr-1
  *                backward products, backwardlohi[k] can store deg+1 doubles;
- *   backwardhilo is work space for the second lowest doubles of nvr-2
+ *   backwardhilo is work space for the second lowest doubles of nvr-1
  *                backward products, backwardhilo[k] can store deg+1 doubles;
- *   backwardlolo is work space for the lowest doubles of nvr-2 backward
+ *   backwardlolo is work space for the lowest doubles of nvr-1 backward
  *                products, backwardlolo[k] can store deg+1 doubles;
  *   crosshihi    is work space for the highest doubles of nvr-2 cross
- *                products, crosshi[k] can store deg+1 doubles;
+ *                products, crosshihi[k] can store deg+1 doubles;
  *   crosslohi    is work space for the second highest doubles of nvr-2
- *                cross products, crosshi[k] can store deg+1 doubles;
+ *                cross products, crosslohi[k] can store deg+1 doubles;
  *   crosshilo    is work space for the second lowest doubles of nvr-2
  *                cross products, crosshilo[k] can store for deg+1 doubles;
  *   crosslolo    is work space for the lowest doubles of nvr-2 cross
@@ -268,7 +270,7 @@ void CPU_dbl4_add_job
  * ON ENTRY :
  *   deg          degree of the series;
  *   csthihi      highest parts of constant coefficient series;
- *   cstlohi      second higest parts of constant coefficient series;
+ *   cstlohi      second highest parts of constant coefficient series;
  *   csthilo      second lowest parts of constant coefficient series;
  *   cstlolo      lowest parts of constant coefficient series;
  *   cffhihi      cffhihi[k] has deg+1 doubles for the highest parts
@@ -336,7 +338,7 @@ void CPU_dbl4_poly_updates
  *                idx[k][i] defines the place of the i-th variable,
  *                with input values in input[idx[k][i]];
  *   csthihi      highest parts of constant coefficient series;
- *   cstlohi      second higest parts of constant coefficient series;
+ *   cstlohi      second highest parts of constant coefficient series;
  *   csthilo      second lowest parts of constant coefficient series;
  *   cstlolo      lowest parts of constant coefficient series;
  *   cffhihi      cffhihi[k] has deg+1 doubles for the highest parts
@@ -395,7 +397,7 @@ void CPU_dbl4_poly_addjobs
  *                idx[k][i] defines the place of the i-th variable,
  *                with input values in input[idx[k][i]];
  *   csthihi      highest parts of constant coefficient series;
- *   cstlohi      second higest parts of constant coefficient series;
+ *   cstlohi      second highest parts of constant coefficient series;
  *   csthilo      second lowest parts of constant coefficient series;
  *   cstlolo      lowest parts of constant coefficient series;
  *   cffhihi      cffhihi[k] has deg+1 doubles for the highest parts
@@ -435,7 +437,8 @@ void CPU_dbl4_poly_evaldiffjobs
    double **inputhilo, double **inputlolo, 
    double **outputhihi, double **outputlohi,
    double **outputhilo, double **outputlolo,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose=false );
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs,
+   double *elapsedsec, bool verbose=false );
 /*
  * DESCRIPTION :
  *   Computes the convolutions in the order as defined by cnvjobs,
@@ -451,7 +454,7 @@ void CPU_dbl4_poly_evaldiffjobs
  *                idx[k][i] defines the place of the i-th variable,
  *                with input values in input[idx[k][i]];
  *   csthihi      highest parts of constant coefficient series;
- *   cstlohi      second higest parts of constant coefficient series;
+ *   cstlohi      second highest parts of constant coefficient series;
  *   csthilo      second lowest parts of constant coefficient series;
  *   cstlolo      lowest parts of constant coefficient series;
  *   cffhihi      cffhihi[k] has deg+1 doubles for the highest parts
@@ -490,10 +493,11 @@ void CPU_dbl4_poly_evaldiffjobs
  *   outputhilo   has the second lowest parts of derivatives and the value,
  *                outputhilo[k], for k from 0 to dim-1, contains the
  *                derivative with respect to the variable k;
- *                outputlohi[dim] contains the value of the polynomial;
+ *                outputhilo[dim] contains the value of the polynomial;
  *   outputlolo   has the lowest parts of derivatives and the value,
  *                outputlolo[k], for k from 0 to dim-1, contains the
  *                derivative with respect to the variable k;
- *                outputlolo[dim] contains the value of the polynomial. */
+ *                outputlolo[dim] contains the value of the polynomial;
+ *   elapsedsec   is the elapsed time in seconds. */
 
 #endif

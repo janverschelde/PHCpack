@@ -3,6 +3,8 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <iomanip>
+#include <ctime>
 #include "quad_double_functions.h"
 #include "dbl4_convolutions_host.h"
 #include "dbl4_monomials_host.h"
@@ -147,7 +149,8 @@ void CPU_dbl4_poly_evaldiff
    double **inputhihi, double **inputlohi,
    double **inputhilo, double **inputlolo, 
    double **outputhihi, double **outputlohi,
-   double **outputhilo, double **outputlolo, bool verbose )
+   double **outputhilo, double **outputlolo,
+   double *elapsedsec, bool verbose )
 {
    double **forwardhihi = new double*[dim];
    double **forwardlohi = new double*[dim];
@@ -198,6 +201,7 @@ void CPU_dbl4_poly_evaldiff
          outputlolo[i][j] = 0.0;
       }
 
+   clock_t start = clock();
    CPU_dbl4_poly_speel
       (dim,nbr,deg,nvr,idx,
             cffhihi,     cfflohi,     cffhilo,     cfflolo,
@@ -206,7 +210,15 @@ void CPU_dbl4_poly_evaldiff
         forwardhihi, forwardlohi, forwardhilo, forwardlolo,
        backwardhihi,backwardlohi,backwardhilo,backwardlolo,
           crosshihi,   crosslohi,   crosshilo,   crosslolo,verbose);
+   clock_t end = clock();
+   *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 
+   if(verbose)
+   {
+      cout << fixed << setprecision(3);
+      cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+           << *elapsedsec << " seconds." << endl;
+   }
    for(int i=0; i<dim-1; i++)
    {
       free(forwardhihi[i]); free(backwardhihi[i]); free(crosshihi[i]);
@@ -892,7 +904,8 @@ void CPU_dbl4_poly_evaldiffjobs
    double **inputhilo, double **inputlolo, 
    double **outputhihi, double **outputlohi,
    double **outputhilo, double **outputlolo,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose )
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs,
+   double *elapsedsec, bool verbose )
 {
    double ***forwardhihi = new double**[nbr];
    double ***forwardlohi = new double**[nbr];
@@ -951,6 +964,7 @@ void CPU_dbl4_poly_evaldiffjobs
          }
       }
    }
+   clock_t start = clock();
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
       if(verbose) cout << "executing convolution jobs at layer "
@@ -984,7 +998,15 @@ void CPU_dbl4_poly_evaldiffjobs
         forwardhihi, forwardlohi, forwardhilo, forwardlolo,
        backwardhihi,backwardlohi,backwardhilo,backwardlolo,
           crosshihi,   crosslohi,   crosshilo,   crosslolo,addjobs,verbose);
+   clock_t end = clock();
+   *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 
+   if(verbose)
+   {
+      cout << fixed << setprecision(3);
+      cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+           << *elapsedsec << " seconds." << endl;
+   }
    for(int k=0; k<nbr; k++)
    {
       int nvrk = nvr[k];

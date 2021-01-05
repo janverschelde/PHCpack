@@ -195,7 +195,7 @@ void CPU_dbl8_poly_evaldiff
    double **outputhihilo, double **outputhilolo,
    double **outputlohihi, double **outputlolohi,
    double **outputlohilo, double **outputlololo,
-   bool verbose=false );
+   double *elapsedsec, bool verbose=false );
 /*
  * DESCRIPTION :
  *   Allocates work space memory to store the forward, backward, and
@@ -291,7 +291,8 @@ void CPU_dbl8_poly_evaldiff
  *   outputlololo   has the lowest parts of derivatives and the value,
  *                  outputlololo[k], for k from 0 to dim-1, contains the
  *                  derivative with respect to the variable k;
- *                  outputlololo[dim] contains the value of the polynomial. */
+ *                  outputlololo[dim] contains the value of the polynomial;
+ *   elapsedsec     is the elapsed time in seconds. */
 
 void CPU_dbl8_conv_job
  ( int deg, int nvr, int *idx,
@@ -758,7 +759,8 @@ void CPU_dbl8_poly_evaldiffjobs
    double **outputhihilo, double **outputhilolo,
    double **outputlohihi, double **outputlolohi,
    double **outputlohilo, double **outputlololo,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose=false );
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs,
+   double *elapsedsec, bool verbose=false );
 /*
  * DESCRIPTION :
  *   Computes the convolutions in the order as defined by cnvjobs,
@@ -857,6 +859,7 @@ void CPU_dbl8_poly_evaldiffjobs
  *   outputlololo   has the lowest parts of derivatives and the value,
  *                  outputlololo[k], for k from 0 to dim-1, contains the
  *                  derivative with respect to the variable k;
- *                  outputlololo[dim] contains the value of the polynomial. */
+ *                  outputlololo[dim] contains the value of the polynomial;
+ *   elapsedsec     is the elapsed time in seconds. */
 
 #endif

@@ -3,6 +3,8 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <iomanip>
+#include <ctime>
 #include "dbl_convolutions_host.h"
 #include "dbl_monomials_host.h"
 #include "dbl_polynomials_host.h"
@@ -83,7 +85,8 @@ void CPU_dbl_poly_speel
 
 void CPU_dbl_poly_evaldiff
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
-   double *cst, double **cff, double **input, double **output, bool verbose )
+   double *cst, double **cff, double **input, double **output,
+   double *elapsedsec, bool verbose )
 {
    double **forward = new double*[dim];
    double **backward = new double*[dim-1]; // in case dim = 2
@@ -101,9 +104,18 @@ void CPU_dbl_poly_evaldiff
    for(int i=0; i<dim; i++)
       for(int j=0; j<=deg; j++) output[i][j] = 0.0;
 
+   clock_t start = clock();
    CPU_dbl_poly_speel
       (dim,nbr,deg,nvr,idx,cff,input,output,forward,backward,cross,verbose);
+   clock_t end = clock();
+   *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 
+   if(verbose)
+   {
+      cout << fixed << setprecision(3);
+      cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+           << *elapsedsec << " seconds." << endl;
+   }
    for(int i=0; i<dim-1; i++)
    {
       free(forward[i]); free(backward[i]); free(cross[i]);
@@ -479,7 +491,8 @@ void CPU_dbl_poly_addjobs
 void CPU_dbl_poly_evaldiffjobs
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double *cst, double **cff, double **input, double **output,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose )
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs,
+   double *elapsedsec, bool verbose )
 {
    double ***forward = new double**[nbr];
    double ***backward = new double**[nbr];
@@ -503,6 +516,7 @@ void CPU_dbl_poly_evaldiffjobs
          for(int i=0; i<nvrk-2; i++) cross[k][i] = new double[deg+1];
       }
    }
+   clock_t start = clock();
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
       if(verbose) cout << "executing convolution jobs at layer "
@@ -524,7 +538,15 @@ void CPU_dbl_poly_evaldiffjobs
    CPU_dbl_poly_addjobs
       (dim,nbr,deg,nvr,idx,cst,cff,input,output,forward,backward,cross,
        addjobs,verbose);
+   clock_t end = clock();
+   *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 
+   if(verbose)
+   {
+      cout << fixed << setprecision(3);
+      cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+           << *elapsedsec << " seconds." << endl;
+   }
    for(int k=0; k<nbr; k++)
    {
       int nvrk = nvr[k];

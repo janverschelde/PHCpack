@@ -25,7 +25,7 @@ void CPU_dbl3_poly_speel
  * DESCRIPTION :
  *   Runs the reverse mode of algorithmic differentiation
  *   of a polynomial at power series truncated to the same degree,
- *   for real coefficients in double precision.
+ *   for real coefficients in triple double precision.
  *
  * ON ENTRY :
  *   dim        total number of variables;
@@ -90,7 +90,7 @@ void CPU_dbl3_poly_evaldiff
    double **cffhi, double **cffmi, double **cfflo,
    double **inputhi, double **inputmi, double **inputlo, 
    double **outputhi, double **outputmi, double **outputlo,
-   bool verbose=false );
+   double *elapsedsec, bool verbose=false );
 /*
  * DESCRIPTION :
  *   Allocates work space memory to store the forward, backward, and
@@ -136,7 +136,8 @@ void CPU_dbl3_poly_evaldiff
  *   outputlo   has the low parts of derivatives and the value,
  *              outputhi[k], for k from 0 to dim-1, contains the
  *              derivative with respect to the variable k;
- *              outputhi[dim] contains the value of the polynomial. */
+ *              outputhi[dim] contains the value of the polynomial;
+ *   elapsedsec is the elapsed time in seconds. */
 
 void CPU_dbl3_conv_job
  ( int deg, int nvr, int *idx,
@@ -335,7 +336,8 @@ void CPU_dbl3_poly_evaldiffjobs
    double **cffhi, double **cffmi, double **cfflo,
    double **inputhi, double **inputmi, double **inputlo,
    double **outputhi, double **outputmi, double **outputlo,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, bool verbose=false );
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs,
+   double *elapsedsec, bool verbose=false );
 /*
  * DESCRIPTION :
  *   Computes the convolutions in the order as defined by cnvjobs,
@@ -381,6 +383,7 @@ void CPU_dbl3_poly_evaldiffjobs
  *   outputlo   has the low parts of derivatives and the value,
  *              outputlo[k], for k from 0 to dim-1, contains the
  *              derivative with respect to the variable k;
- *              outputlo[dim] contains the value of the polynomial. */
+ *              outputlo[dim] contains the value of the polynomial;
+ *   elapsedsec is the elapsed time in seconds. */
 
 #endif

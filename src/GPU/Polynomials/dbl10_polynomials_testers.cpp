@@ -329,7 +329,7 @@ double test_dbl10_real_polynomial
                cout << addjobs.get_job(k,i) << endl;
          }
       }
-      double timelapms_d;
+      double timelapsec1_h,timelapsec2_h,timelapms_d;
 
       if(vrb) cout << "Computing without convolution jobs ..." << endl;
       CPU_dbl10_poly_evaldiff
@@ -342,7 +342,7 @@ double test_dbl10_real_polynomial
           inputltb,inputlix,inputlmi,inputlrg,inputlpk,
           output1rtb_h,output1rix_h,output1rmi_h,output1rrg_h,output1rpk_h,
           output1ltb_h,output1lix_h,output1lmi_h,output1lrg_h,output1lpk_h,
-          vrb);
+          &timelapsec1_h,vrb);
       if(vrb) cout << "Computing with convolution jobs ..." << endl;
       CPU_dbl10_poly_evaldiffjobs
          (dim,nbr,deg,nvr,idx,
@@ -354,7 +354,7 @@ double test_dbl10_real_polynomial
           inputltb,inputlix,inputlmi,inputlrg,inputlpk,
           output2rtb_h,output2rix_h,output2rmi_h,output2rrg_h,output2rpk_h,
           output2ltb_h,output2lix_h,output2lmi_h,output2lrg_h,output2lpk_h,
-          cnvjobs,addjobs,vrb);
+          cnvjobs,addjobs,&timelapsec2_h,vrb);
       if(vrb) cout << "Computing on the device ..." << endl;
       GPU_dbl10_poly_evaldiff
          (deg+1,dim,nbr,deg,nvr,idx,
@@ -506,6 +506,12 @@ double test_dbl10_real_polynomial
          write_addition_counts(addjobs);
          write_operation_counts(deg,cnvjobs,addjobs);
 
+         cout << fixed << setprecision(3);
+         cout << "Elapsed CPU time (Linux), Wall time (Windows) : " << endl;
+         cout << "  (1) without jobs : " << timelapsec1_h << " seconds,"
+              << endl;
+         cout << "  (2) cnv/add jobs : " << timelapsec2_h << " seconds."
+              << endl;
          cout << "Time spent by all kernels in milliseconds : ";
          cout << fixed << setprecision(2) << timelapms_d << endl;
          cout << scientific << setprecision(16);

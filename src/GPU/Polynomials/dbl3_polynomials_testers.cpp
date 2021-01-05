@@ -223,17 +223,18 @@ double test_dbl3_real_polynomial
                cout << addjobs.get_job(k,i) << endl;
          }
       }
-      double timelapms_d;
+      double timelapsec1_h,timelapsec2_h,timelapms_d;
 
       if(vrb) cout << "Computing without convolution jobs ..." << endl;
       CPU_dbl3_poly_evaldiff
          (dim,nbr,deg,nvr,idx,csthi,cstmi,cstlo,cffhi,cffmi,cfflo,
-          inputhi,inputmi,inputlo,output1hi_h,output1mi_h,output1lo_h,vrb);
+          inputhi,inputmi,inputlo,output1hi_h,output1mi_h,output1lo_h,
+          &timelapsec1_h,vrb);
       if(vrb) cout << "Computing with convolution jobs ..." << endl;
       CPU_dbl3_poly_evaldiffjobs
          (dim,nbr,deg,nvr,idx,csthi,cstmi,cstlo,cffhi,cffmi,cfflo,
           inputhi,inputmi,inputlo,output2hi_h,output2mi_h,output2lo_h,
-          cnvjobs,addjobs,vrb);
+          cnvjobs,addjobs,&timelapsec2_h,vrb);
       if(vrb) cout << "Computing on the device ..." << endl;
       GPU_dbl3_poly_evaldiff
          (deg+1,dim,nbr,deg,nvr,idx,csthi,cstmi,cstlo,cffhi,cffmi,cfflo,
@@ -308,6 +309,12 @@ double test_dbl3_real_polynomial
          write_addition_counts(addjobs);
          write_operation_counts(deg,cnvjobs,addjobs);
 
+         cout << fixed << setprecision(3);
+         cout << "Elapsed CPU time (Linux), Wall time (Windows) : " << endl;
+         cout << "  (1) without jobs : " << timelapsec1_h << " seconds,"
+              << endl;
+         cout << "  (2) cnv/add jobs : " << timelapsec2_h << " seconds."
+              << endl;
          cout << "Time spent by all kernels in milliseconds : ";
          cout << fixed << setprecision(2) << timelapms_d << endl;
          cout << scientific << setprecision(16);
