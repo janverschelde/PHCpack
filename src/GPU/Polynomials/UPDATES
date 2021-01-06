@@ -1,6 +1,7 @@
 Tue 5 Jan 2021 : added timers with CUDA events to all kernels, reported by
   all testers.cpp.  Added timers with clock() to all host code, updated
-  all testers.cpp.
+  all testers.cpp.  Improved verbose level in all testers.
+  In all testers, improved the settings of the tolerances.
 
 Mon 4 Jan 2021 : extracted code from test_dbl*_polynomials.cpp into separate
   files dbl*_polynomials_testers.  Applied the verbose flag correctly in 

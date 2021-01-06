@@ -21,7 +21,8 @@ double test_dbl3_real_polynomial
  *            otherwise, the higher the value, the more output. */
 
 int main_dbl3_test_polynomial
- ( int seed, int dim, int nbr, int nva, int pwr, int deg, int vrblvl );
+ ( int seed, int dim, int nbr, int nva, int pwr, int deg, int vrblvl,
+   double tol=1.0e-40 );
 /*
  * DESCRIPTION :
  *   Runs tests on a random polynomial in triple double precision.
@@ -39,6 +40,8 @@ int main_dbl3_test_polynomial
  *            otherwise, the higher the value, the more output:
  *            if 1, then the sum of all errors is shown,
  *            if 2, then job counts and timings are listed,
- *            if 3 (or higher), then all values are written. */
+ *            if 3 (or higher), then all values are written;
+ *   tol      tolerance to decide pass or fail,
+ *            fail if the sum of all errors is larger than tol. */
 
 #endif

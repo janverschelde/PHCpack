@@ -20,7 +20,8 @@
 using namespace std;
 
 int main_dbl8_test_polynomial
- ( int seed, int dim, int nbr, int nva, int pwr, int deg, int vrblvl )
+ ( int seed, int dim, int nbr, int nva, int pwr, int deg, int vrblvl,
+   double tol )
 {
    int seedused;
 
@@ -39,8 +40,6 @@ int main_dbl8_test_polynomial
 
    double realsum = test_dbl8_real_polynomial(dim,nbr,nva,pwr,deg,vrblvl-1);
 
-   const double tol = 1.0e-120;
-
    int fail = int(realsum > tol);
 
    if(vrblvl > 0)
@@ -51,8 +50,10 @@ int main_dbl8_test_polynomial
       if(realsum < tol)
          cout << "  pass." << endl;
       else
+      {
+         cout << " > " << tol;
          cout << "  fail!" << endl;
-
+      }
       cout << "  Seed used : " <<  seedused << endl;
    }
    return fail;
