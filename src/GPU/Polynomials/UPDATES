@@ -1,3 +1,6 @@
+Wed 6 Jan 2021 : in all testers, separated the computation of the sum of
+  errors into a separate function.
+
 Tue 5 Jan 2021 : added timers with CUDA events to all kernels, reported by
   all testers.cpp.  Added timers with clock() to all host code, updated
   all testers.cpp.  Improved verbose level in all testers.

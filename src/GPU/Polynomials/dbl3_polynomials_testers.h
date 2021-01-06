@@ -4,6 +4,34 @@
 #ifndef __dbl3_polynomials_testers_h__
 #define __dbl3_polynomials_testers_h__
 
+double dbl3_error_sum
+ ( int dim, int deg,
+   double **results1hi_h, double **results1mi_h, double **results1lo_h,
+   double **results2hi_h, double **results2mi_h, double **results2lo_h,
+   double **resultshi_d, double **resultsmi_d, double **resultslo_d,
+   bool verbose );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all errors, comparing results computed on the host
+ *   with results computed on the device.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   deg      truncation degree of the series;
+ *   results1hi_h are the high doubles computed on the host without jobs;
+ *   results1mi_h are the middle doubles computed on the host without jobs;
+ *   results1lo_h are the low doubles computed on the host without jobs;
+ *   results2hi_h are the high doubles computed on the host
+ *            with convolution and addition jobs;
+ *   results2mi_h are the middle doubles computed on the host
+ *            with convolution and addition jobs;
+ *   results2lo_h are the low doubles computed on the host
+ *            with convolution and addition jobs;
+ *   resultshi_d are the high doubles computed on the device;
+ *   resultsmi_d are the middle doubles computed on the device;
+ *   resultslo_d are the low doubles computed on the device;
+ *   verbose  if true, then all results and intermediate errors are shown. */
+
 double test_dbl3_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose );
 /*

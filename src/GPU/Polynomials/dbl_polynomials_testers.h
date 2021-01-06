@@ -4,6 +4,23 @@
 #ifndef __dbl_polynomials_testers_h__
 #define __dbl_polynomials_testers_h__
 
+double dbl_error_sum
+ ( int dim, int deg, double **results1_h, double **results2_h,
+   double **results_d, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all errors, comparing results computed on the host
+ *   with results computed on the device.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   deg      truncation degree of the series;
+ *   results1_h are the results on the host computed without jobs;
+ *   results2_h are the results with convolution and addition jobs,
+ *            computed on the host;
+ *   results_d are the results computed on the device;
+ *   verbose  if true, then all results and intermediate errors are shown. */
+
 double test_dbl_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose );
 /*

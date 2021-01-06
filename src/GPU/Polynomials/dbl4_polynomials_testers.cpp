@@ -59,6 +59,84 @@ int main_dbl4_test_polynomial
    return fail;
 }
 
+double dbl4_error_sum
+ ( int dim, int deg,
+   double **results1hihi_h, double **results1lohi_h, 
+   double **results1hilo_h, double **results1lolo_h,
+   double **results2hihi_h, double **results2lohi_h,
+   double **results2hilo_h, double **results2lolo_h,
+   double **resultshihi_d, double **resultslohi_d,
+   double **resultshilo_d, double **resultslolo_d, bool verbose )
+{
+   double err = 0.0;
+
+   if(verbose) cout << "The value of the polynomial :" << endl;
+   for(int i=0; i<=deg; i++)
+   {
+      if(verbose)
+      {
+         cout << results1hihi_h[dim][i] << "  "
+              << results1lohi_h[dim][i] << endl
+              << results1hilo_h[dim][i] << "  "
+              << results1lolo_h[dim][i] << endl;
+         cout << results2hihi_h[dim][i] << "  "
+              << results2lohi_h[dim][i] << endl
+              << results2hilo_h[dim][i] << "  "
+              << results2lolo_h[dim][i] << endl;
+         cout << resultshihi_d[dim][i] << "  "
+              << resultslohi_d[dim][i] << endl
+              << resultshilo_d[dim][i] << "  "
+              << resultslolo_d[dim][i] << endl;
+      }
+      err = err + abs(results1hihi_h[dim][i] - results2hihi_h[dim][i])
+                + abs(results1lohi_h[dim][i] - results2lohi_h[dim][i])
+                + abs(results1hilo_h[dim][i] - results2hilo_h[dim][i])
+                + abs(results1lolo_h[dim][i] - results2lolo_h[dim][i])
+                + abs(results1hihi_h[dim][i] - resultshihi_d[dim][i])
+                + abs(results1lohi_h[dim][i] - resultslohi_d[dim][i])
+                + abs(results1hilo_h[dim][i] - resultshilo_d[dim][i])
+                + abs(results1lolo_h[dim][i] - resultslolo_d[dim][i]);
+   }
+   if(verbose) cout << "error : " << err << endl;
+
+   double sumerr = err;
+
+   for(int k=0; k<dim; k++)
+   {
+      if(verbose) cout << "Derivative " << k << " :" << endl;
+      err = 0.0;
+      for(int i=0; i<=deg; i++)
+      {
+         if(verbose)
+         {
+            cout << results1hihi_h[k][i] << "  "
+                 << results1lohi_h[k][i] << endl
+                 << results1hilo_h[k][i] << "  "
+                 << results1lolo_h[k][i] << endl;
+            cout << results2hihi_h[k][i] << "  "
+                 << results2lohi_h[k][i] << endl
+                 << results2hilo_h[k][i] << "  "
+                 << results2lolo_h[k][i] << endl;
+            cout << resultshihi_d[k][i] << "  "
+                 << resultslohi_d[k][i] << endl
+                 << resultshilo_d[k][i] << "  "
+                 << resultslolo_d[k][i] << endl;
+         }
+         err = err + abs(results1hihi_h[k][i] - results2hihi_h[k][i])
+                   + abs(results1lohi_h[k][i] - results2lohi_h[k][i])
+                   + abs(results1hilo_h[k][i] - results2hilo_h[k][i])
+                   + abs(results1lolo_h[k][i] - results2lolo_h[k][i])
+                   + abs(results1hihi_h[k][i] - resultshihi_d[k][i])
+                   + abs(results1lohi_h[k][i] - resultslohi_d[k][i])
+                   + abs(results1hilo_h[k][i] - resultshilo_d[k][i])
+                   + abs(results1lolo_h[k][i] - resultslolo_d[k][i]);
+      }
+      if(verbose) cout << "error : " << err << endl;
+      sumerr = sumerr + err;
+   }
+   return sumerr;
+}
+
 double test_dbl4_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose )
 {
@@ -261,72 +339,14 @@ double test_dbl4_real_polynomial
           outputhihi_d,outputlohi_d,outputhilo_d,outputlolo_d,
           cnvjobs,addjobs,&timelapms_d,vrb);
 
-      double err = 0.0;
-
-      if(vrb) cout << "The value of the polynomial :" << endl;
-      for(int i=0; i<=deg; i++)
-      {
-         if(vrb)
-         {
-            cout << output1hihi_h[dim][i] << "  "
-                 << output1lohi_h[dim][i] << endl
-                 << output1hilo_h[dim][i] << "  "
-                 << output1lolo_h[dim][i] << endl;
-            cout << output2hihi_h[dim][i] << "  "
-                 << output2lohi_h[dim][i] << endl
-                 << output2hilo_h[dim][i] << "  "
-                 << output2lolo_h[dim][i] << endl;
-            cout << outputhihi_d[dim][i] << "  "
-                 << outputlohi_d[dim][i] << endl
-                 << outputhilo_d[dim][i] << "  "
-                 << outputlolo_d[dim][i] << endl;
-         }
-         err = err + abs(output1hihi_h[dim][i] - output2hihi_h[dim][i])
-                   + abs(output1lohi_h[dim][i] - output2lohi_h[dim][i])
-                   + abs(output1hilo_h[dim][i] - output2hilo_h[dim][i])
-                   + abs(output1lolo_h[dim][i] - output2lolo_h[dim][i])
-                   + abs(output1hihi_h[dim][i] - outputhihi_d[dim][i])
-                   + abs(output1lohi_h[dim][i] - outputlohi_d[dim][i])
-                   + abs(output1hilo_h[dim][i] - outputhilo_d[dim][i])
-                   + abs(output1lolo_h[dim][i] - outputlolo_d[dim][i]);
-      }
-      if(vrb) cout << "error : " << err << endl;
-
-      double sumerr = err;
-
-      for(int k=0; k<dim; k++)
-      {
-         if(vrb) cout << "Derivative " << k << " :" << endl;
-         err = 0.0;
-         for(int i=0; i<=deg; i++)
-         {
-            if(vrb)
-            {
-               cout << output1hihi_h[k][i] << "  "
-                    << output1lohi_h[k][i] << endl
-                    << output1hilo_h[k][i] << "  "
-                    << output1lolo_h[k][i] << endl;
-               cout << output2hihi_h[k][i] << "  "
-                    << output2lohi_h[k][i] << endl
-                    << output2hilo_h[k][i] << "  "
-                    << output2lolo_h[k][i] << endl;
-               cout << outputhihi_d[k][i] << "  "
-                    << outputlohi_d[k][i] << endl
-                    << outputhilo_d[k][i] << "  "
-                    << outputlolo_d[k][i] << endl;
-            }
-            err = err + abs(output1hihi_h[k][i] - output2hihi_h[k][i])
-                      + abs(output1lohi_h[k][i] - output2lohi_h[k][i])
-                      + abs(output1hilo_h[k][i] - output2hilo_h[k][i])
-                      + abs(output1lolo_h[k][i] - output2lolo_h[k][i])
-                      + abs(output1hihi_h[k][i] - outputhihi_d[k][i])
-                      + abs(output1lohi_h[k][i] - outputlohi_d[k][i])
-                      + abs(output1hilo_h[k][i] - outputhilo_d[k][i])
-                      + abs(output1lolo_h[k][i] - outputlolo_d[k][i]);
-         }
-         if(vrb) cout << "error : " << err << endl;
-         sumerr = sumerr + err;
-      }
+      double sumerr = dbl4_error_sum(dim,deg,
+                         output1hihi_h,output1lohi_h,
+                         output1hilo_h,output1lolo_h,
+                         output2hihi_h,output2lohi_h,
+                         output2hilo_h,output2lolo_h,
+                         outputhihi_d,outputlohi_d,
+                         outputhilo_d,outputlolo_d,vrb);
+ 
       if(verbose > 0)
       {
          cout << "dimension : " << dim << endl;

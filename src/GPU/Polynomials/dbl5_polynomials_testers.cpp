@@ -59,6 +59,94 @@ int main_dbl5_test_polynomial
    return fail;
 }
 
+double dbl5_error_sum
+ ( int dim, int deg,
+   double **results1tb_h, double **results1ix_h, double **results1mi_h, 
+   double **results1rg_h, double **results1pk_h,
+   double **results2tb_h, double **results2ix_h, double **results2mi_h, 
+   double **results2rg_h, double **results2pk_h,
+   double **resultstb_d, double **resultsix_d, double **resultsmi_d, 
+   double **resultsrg_d, double **resultspk_d, bool verbose )
+{
+   double err = 0.0;
+
+   if(verbose) cout << "The value of the polynomial :" << endl;
+   for(int i=0; i<=deg; i++)
+   {
+      if(verbose)
+      {
+         cout << results1tb_h[dim][i] << "  "
+              << results1ix_h[dim][i] << "  "
+              << results1mi_h[dim][i] << endl
+              << results1rg_h[dim][i] << "  "
+              << results1pk_h[dim][i] << endl;
+         cout << results2tb_h[dim][i] << "  "
+              << results2ix_h[dim][i] << "  "
+              << results2mi_h[dim][i] << endl
+              << results2rg_h[dim][i] << "  "
+              << results2pk_h[dim][i] << endl;
+         cout << resultstb_d[dim][i] << "  "
+              << resultsix_d[dim][i] << "  "
+              << resultsmi_d[dim][i] << endl
+              << resultsrg_d[dim][i] << "  "
+              << resultspk_d[dim][i] << endl;
+      }
+      err = err + abs(results1tb_h[dim][i] - results2tb_h[dim][i])
+                + abs(results1ix_h[dim][i] - results2ix_h[dim][i])
+                + abs(results1mi_h[dim][i] - results2mi_h[dim][i])
+                + abs(results1rg_h[dim][i] - results2rg_h[dim][i])
+                + abs(results1pk_h[dim][i] - results2pk_h[dim][i])
+                + abs(results1tb_h[dim][i] - resultstb_d[dim][i])
+                + abs(results1ix_h[dim][i] - resultsix_d[dim][i])
+                + abs(results1mi_h[dim][i] - resultsmi_d[dim][i])
+                + abs(results1rg_h[dim][i] - resultsrg_d[dim][i])
+                + abs(results1pk_h[dim][i] - resultspk_d[dim][i]);
+   }
+   if(verbose) cout << "error : " << err << endl;
+
+   double sumerr = err;
+
+   for(int k=0; k<dim; k++)
+   {
+      if(verbose) cout << "Derivative " << k << " :" << endl;
+      err = 0.0;
+      for(int i=0; i<=deg; i++)
+      {
+         if(verbose)
+         {
+            cout << results1tb_h[k][i] << "  "
+                 << results1ix_h[k][i] << "  "
+                 << results1mi_h[k][i] << endl
+                 << results1rg_h[k][i] << "  "
+                 << results1pk_h[k][i] << endl;
+            cout << results2tb_h[k][i] << "  "
+                 << results2ix_h[k][i] << "  "
+                 << results2mi_h[k][i] << endl
+                 << results2rg_h[k][i] << "  "
+                 << results2pk_h[k][i] << endl;
+            cout << resultstb_d[k][i] << "  "
+                 << resultsix_d[k][i] << "  "
+                 << resultsmi_d[k][i] << endl
+                 << resultsrg_d[k][i] << "  "
+                 << resultspk_d[k][i] << endl;
+         }
+         err = err + abs(results1tb_h[k][i] - results2tb_h[k][i])
+                   + abs(results1ix_h[k][i] - results2ix_h[k][i])
+                   + abs(results1mi_h[k][i] - results2mi_h[k][i])
+                   + abs(results1rg_h[k][i] - results2rg_h[k][i])
+                   + abs(results1pk_h[k][i] - results2pk_h[k][i])
+                   + abs(results1tb_h[k][i] - resultstb_d[k][i])
+                   + abs(results1ix_h[k][i] - resultsix_d[k][i])
+                   + abs(results1mi_h[k][i] - resultsmi_d[k][i])
+                   + abs(results1rg_h[k][i] - resultsrg_d[k][i])
+                   + abs(results1pk_h[k][i] - resultspk_d[k][i]);
+      }
+      if(verbose) cout << "error : " << err << endl;
+      sumerr = sumerr + err;
+   }
+   return sumerr;
+}
+
 double test_dbl5_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose )
 {
@@ -274,82 +362,14 @@ double test_dbl5_real_polynomial
           outputtb_d,outputix_d,outputmi_d,outputrg_d,outputpk_d,
           cnvjobs,addjobs,&timelapms_d,vrb);
 
-      double err = 0.0;
+      double sumerr = dbl5_error_sum(dim,deg,
+                         output1tb_h,output1ix_h,output1mi_h,
+                         output1rg_h,output1pk_h,
+                         output2tb_h,output2ix_h,output2mi_h,
+                         output2rg_h,output2pk_h,
+                         outputtb_d,outputix_d,outputmi_d,
+                         outputrg_d,outputpk_d,vrb);
 
-      if(vrb) cout << "The value of the polynomial :" << endl;
-      for(int i=0; i<=deg; i++)
-      {
-         if(vrb)
-         {
-            cout << output1tb_h[dim][i] << "  "
-                 << output1ix_h[dim][i] << "  "
-                 << output1mi_h[dim][i] << endl
-                 << output1rg_h[dim][i] << "  "
-                 << output1pk_h[dim][i] << endl;
-            cout << output2tb_h[dim][i] << "  "
-                 << output2ix_h[dim][i] << "  "
-                 << output2mi_h[dim][i] << endl
-                 << output2rg_h[dim][i] << "  "
-                 << output2pk_h[dim][i] << endl;
-            cout << outputtb_d[dim][i] << "  "
-                 << outputix_d[dim][i] << "  "
-                 << outputmi_d[dim][i] << endl
-                 << outputrg_d[dim][i] << "  "
-                 << outputpk_d[dim][i] << endl;
-         }
-         err = err + abs(output1tb_h[dim][i] - output2tb_h[dim][i])
-                   + abs(output1ix_h[dim][i] - output2ix_h[dim][i])
-                   + abs(output1mi_h[dim][i] - output2mi_h[dim][i])
-                   + abs(output1rg_h[dim][i] - output2rg_h[dim][i])
-                   + abs(output1pk_h[dim][i] - output2pk_h[dim][i])
-                   + abs(output1tb_h[dim][i] - outputtb_d[dim][i])
-                   + abs(output1ix_h[dim][i] - outputix_d[dim][i])
-                   + abs(output1mi_h[dim][i] - outputmi_d[dim][i])
-                   + abs(output1rg_h[dim][i] - outputrg_d[dim][i])
-                   + abs(output1pk_h[dim][i] - outputpk_d[dim][i]);
-      }
-      if(vrb) cout << "error : " << err << endl;
-
-      double sumerr = err;
-
-      for(int k=0; k<dim; k++)
-      {
-         if(vrb) cout << "Derivative " << k << " :" << endl;
-         err = 0.0;
-         for(int i=0; i<=deg; i++)
-         {
-            if(vrb)
-            {
-               cout << output1tb_h[k][i] << "  "
-                    << output1ix_h[k][i] << "  "
-                    << output1mi_h[k][i] << endl
-                    << output1rg_h[k][i] << "  "
-                    << output1pk_h[k][i] << endl;
-               cout << output2tb_h[k][i] << "  "
-                    << output2ix_h[k][i] << "  "
-                    << output2mi_h[k][i] << endl
-                    << output2rg_h[k][i] << "  "
-                    << output2pk_h[k][i] << endl;
-               cout << outputtb_d[k][i] << "  "
-                    << outputix_d[k][i] << "  "
-                    << outputmi_d[k][i] << endl
-                    << outputrg_d[k][i] << "  "
-                    << outputpk_d[k][i] << endl;
-            }
-            err = err + abs(output1tb_h[k][i] - output2tb_h[k][i])
-                      + abs(output1ix_h[k][i] - output2ix_h[k][i])
-                      + abs(output1mi_h[k][i] - output2mi_h[k][i])
-                      + abs(output1rg_h[k][i] - output2rg_h[k][i])
-                      + abs(output1pk_h[k][i] - output2pk_h[k][i])
-                      + abs(output1tb_h[k][i] - outputtb_d[k][i])
-                      + abs(output1ix_h[k][i] - outputix_d[k][i])
-                      + abs(output1mi_h[k][i] - outputmi_d[k][i])
-                      + abs(output1rg_h[k][i] - outputrg_d[k][i])
-                      + abs(output1pk_h[k][i] - outputpk_d[k][i]);
-         }
-         if(vrb) cout << "error : " << err << endl;
-         sumerr = sumerr + err;
-      }
       if(verbose > 0)
       {
          cout << "dimension : " << dim << endl;

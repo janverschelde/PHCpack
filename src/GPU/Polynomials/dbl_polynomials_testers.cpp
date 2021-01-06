@@ -59,6 +59,49 @@ int main_dbl_test_polynomial
    return fail;
 }
 
+double dbl_error_sum
+ ( int dim, int deg, double **results1_h, double **results2_h,
+   double **results_d, bool verbose )
+{
+   double err = 0.0;
+
+   if(verbose) cout << "The value of the polynomial :" << endl;
+   for(int i=0; i<=deg; i++)
+   {
+      if(verbose)
+      {
+         cout << results1_h[dim][i] << endl;
+         cout << results2_h[dim][i] << endl;
+         cout << results_d[dim][i] << endl;
+      }
+      err = err + abs(results1_h[dim][i] - results2_h[dim][i])
+                + abs(results1_h[dim][i] - results_d[dim][i]);
+   }
+   if(verbose) cout << "error : " << err << endl;
+
+   double sumerr = err;
+
+   for(int k=0; k<dim; k++)
+   {
+      if(verbose) cout << "Derivative " << k << " :" << endl;
+      err = 0.0;
+      for(int i=0; i<=deg; i++)
+      {
+         if(verbose)
+         {
+            cout << results1_h[k][i] << endl;
+            cout << results2_h[k][i] << endl;
+            cout << results_d[k][i] << endl;
+         }
+         err = err + abs(results1_h[k][i] - results2_h[k][i])
+                   + abs(results1_h[k][i] - results_d[k][i]);
+      }
+      if(verbose) cout << "error : " << err << endl;
+      sumerr = sumerr + err;
+   }
+   return sumerr;
+}
+
 double test_dbl_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose )
 {
@@ -205,42 +248,8 @@ double test_dbl_real_polynomial
          (deg+1,dim,nbr,deg,nvr,idx,cst,cff,input,output_d,
           cnvjobs,addjobs,&timelapms_d,vrb);
 
-      double err = 0.0;
+      double sumerr = dbl_error_sum(dim,deg,output1_h,output2_h,output_d,vrb);
 
-      if(vrb) cout << "The value of the polynomial :" << endl;
-      for(int i=0; i<=deg; i++)
-      {
-         if(vrb)
-         {
-            cout << output1_h[dim][i] << endl;
-            cout << output2_h[dim][i] << endl;
-            cout << output_d[dim][i] << endl;
-         }
-         err = err + abs(output1_h[dim][i] - output2_h[dim][i])
-                   + abs(output1_h[dim][i] - output_d[dim][i]);
-      }
-      if(vrb) cout << "error : " << err << endl;
-
-      double sumerr = err;
-
-      for(int k=0; k<dim; k++)
-      {
-         if(vrb) cout << "Derivative " << k << " :" << endl;
-         err = 0.0;
-         for(int i=0; i<=deg; i++)
-         {
-            if(vrb)
-            {
-               cout << output1_h[k][i] << endl;
-               cout << output2_h[k][i] << endl;
-               cout << output_d[k][i] << endl;
-            }
-            err = err + abs(output1_h[k][i] - output2_h[k][i])
-                      + abs(output1_h[k][i] - output_d[k][i]);
-         }
-         if(vrb) cout << "error : " << err << endl;
-         sumerr = sumerr + err;
-      }
       if(verbose > 0)
       {
          cout << "dimension : " << dim << endl;

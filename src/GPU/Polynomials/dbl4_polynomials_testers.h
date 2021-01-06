@@ -4,6 +4,42 @@
 #ifndef __dbl4_polynomials_testers_h__
 #define __dbl4_polynomials_testers_h__
 
+double dbl4_error_sum
+ ( int dim, int deg,
+   double **results1hihi_h, double **results1lohi_h, 
+   double **results1hilo_h, double **results1lolo_h,
+   double **results2hihi_h, double **results2lohi_h,
+   double **results2hilo_h, double **results2lolo_h,
+   double **resultshihi_d, double **resultslohi_d,
+   double **resultshilo_d, double **resultslolo_d, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all errors, comparing results computed on the host
+ *   with results computed on the device.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   deg      truncation degree of the series;
+ *   results1hihi_h are the highest doubles computed on the host without jobs;
+ *   results1lohi_h are the second highest doubles computed on the host
+ *            without jobs;
+ *   results1hilo_h are the second lowest doubles computed on the host
+ *            without jobs;
+ *   results1lolo_h are the lowest doubles computed on the host without jobs;
+ *   results2hihi_h are the highest doubles computed on the host
+ *            with convolution and addition jobs;
+ *   results2lohi_h are the second highest doubles computed on the host
+ *            with convolution and addition jobs;
+ *   results2hilo_h are the second lowest doubles computed on the host
+ *            with convolution and addition jobs;
+ *   results2lolo_h are the lowest doubles computed on the host
+ *            with convolution and addition jobs;
+ *   resultshihi_d are the highest doubles computed on the device;
+ *   resultslohi_d are the second highest doubles computed on the device;
+ *   resultshilo_d are the second lowest doubles computed on the device;
+ *   resultslolo_d are the lowest doubles computed on the device;
+ *   verbose  if true, then all results and intermediate errors are shown. */
+
 double test_dbl4_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose );
 /*

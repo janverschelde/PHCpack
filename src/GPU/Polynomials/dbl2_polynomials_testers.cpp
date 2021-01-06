@@ -59,6 +59,61 @@ int main_dbl2_test_polynomial
    return fail;
 }
 
+double dbl2_error_sum
+ ( int dim, int deg,
+   double **results1hi_h, double **results1lo_h,
+   double **results2hi_h, double **results2lo_h,
+   double **resultshi_d, double **resultslo_d, bool verbose )
+{
+   double err = 0.0;
+
+   if(verbose) cout << "The value of the polynomial :" << endl;
+   for(int i=0; i<=deg; i++)
+   {
+      if(verbose)
+      {
+         cout << results1hi_h[dim][i] << "  "
+              << results1lo_h[dim][i] << endl;
+         cout << results2hi_h[dim][i] << "  "
+              << results2lo_h[dim][i] << endl;
+         cout << resultshi_d[dim][i] << "  "
+              << resultslo_d[dim][i] << endl;
+      }
+      err = err + abs(results1hi_h[dim][i] - results2hi_h[dim][i])
+                + abs(results1lo_h[dim][i] - results2lo_h[dim][i])
+                + abs(results1hi_h[dim][i] - resultshi_d[dim][i])
+                + abs(results1lo_h[dim][i] - resultslo_d[dim][i]);
+   }
+   if(verbose) cout << "error : " << err << endl;
+
+   double sumerr = err;
+
+   for(int k=0; k<dim; k++)
+   {
+      if(verbose) cout << "Derivative " << k << " :" << endl;
+      err = 0.0;
+      for(int i=0; i<=deg; i++)
+      {
+         if(verbose)
+         {
+            cout << results1hi_h[k][i] << "  "
+                 << results1lo_h[k][i] << endl;
+            cout << results2hi_h[k][i] << "  "
+                 << results2lo_h[k][i] << endl;
+            cout << resultshi_d[k][i] << "  "
+                 << resultslo_d[k][i] << endl;
+         }
+         err = err + abs(results1hi_h[k][i] - results2hi_h[k][i])
+                   + abs(results1lo_h[k][i] - results2lo_h[k][i])
+                   + abs(results1hi_h[k][i] - resultshi_d[k][i])
+                   + abs(results1lo_h[k][i] - resultslo_d[k][i]);
+      }
+      if(verbose) cout << "error : " << err << endl;
+      sumerr = sumerr + err;
+   }
+   return sumerr;
+}
+
 double test_dbl2_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose )
 {
@@ -222,52 +277,9 @@ double test_dbl2_real_polynomial
           inputhi,inputlo,outputhi_d,outputlo_d,cnvjobs,addjobs,
           &timelapms_d,vrb);
 
-      double err = 0.0;
+      double sumerr = dbl2_error_sum(dim,deg,output1hi_h,output1lo_h,
+                         output2hi_h,output2lo_h,outputhi_d,outputlo_d,vrb);
 
-      if(vrb) cout << "The value of the polynomial :" << endl;
-      for(int i=0; i<=deg; i++)
-      {
-         if(vrb)
-         {
-            cout << output1hi_h[dim][i] << "  "
-                 << output1lo_h[dim][i] << endl;
-            cout << output2hi_h[dim][i] << "  "
-                 << output2lo_h[dim][i] << endl;
-            cout << outputhi_d[dim][i] << "  "
-                 << outputlo_d[dim][i] << endl;
-         }
-         err = err + abs(output1hi_h[dim][i] - output2hi_h[dim][i])
-                   + abs(output1lo_h[dim][i] - output2lo_h[dim][i])
-                   + abs(output1hi_h[dim][i] - outputhi_d[dim][i])
-                   + abs(output1lo_h[dim][i] - outputlo_d[dim][i]);
-      }
-      if(vrb) cout << "error : " << err << endl;
-
-      double sumerr = err;
-
-      for(int k=0; k<dim; k++)
-      {
-         if(vrb) cout << "Derivative " << k << " :" << endl;
-         err = 0.0;
-         for(int i=0; i<=deg; i++)
-         {
-            if(vrb)
-            {
-               cout << output1hi_h[k][i] << "  "
-                    << output1lo_h[k][i] << endl;
-               cout << output2hi_h[k][i] << "  "
-                    << output2lo_h[k][i] << endl;
-               cout << outputhi_d[k][i] << "  "
-                    << outputlo_d[k][i] << endl;
-            }
-            err = err + abs(output1hi_h[k][i] - output2hi_h[k][i])
-                      + abs(output1lo_h[k][i] - output2lo_h[k][i])
-                      + abs(output1hi_h[k][i] - outputhi_d[k][i])
-                      + abs(output1lo_h[k][i] - outputlo_d[k][i]);
-         }
-         if(vrb) cout << "error : " << err << endl;
-         sumerr = sumerr + err;
-      }
       if(verbose > 0)
       {
          cout << "dimension : " << dim << endl;
