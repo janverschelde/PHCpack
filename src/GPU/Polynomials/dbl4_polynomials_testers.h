@@ -4,6 +4,62 @@
 #ifndef __dbl4_polynomials_testers_h__
 #define __dbl4_polynomials_testers_h__
 
+void dbl4_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputhihi, double **inputlohi,
+   double **inputhilo, double **inputlolo,
+   double *csthihi, double *cstlohi, double *csthilo, double *cstlolo,
+   double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo,
+   bool verbose );
+/*
+ * DESCRIPTION :
+ *   Generates random polynomials and input series.
+ *
+ * ON ENTRY :
+ *   dim       dimension, total number of variables;
+ *   nbr       number of terms in the polynomial;
+ *   nva       number of variables in each monomial (for products, cyclic);
+ *   pwr       highest power of each variable;
+ *   deg       truncation degree of the series;
+ *   nvr       space for nbr integers;
+ *   idx       space for nbr pointers to integers;
+ *   exp       space for nbr pointers to integers;
+ *   inputhihi has space for dim arrays of deg+1 doubles;
+ *   inputlohi has space for dim arrays of deg+1 doubles;
+ *   inputhilo has space for dim arrays of deg+1 doubles;
+ *   inputlolo has space for dim arrays of deg+1 doubles;
+ *   csthihi   space for deg+1 doubles;
+ *   cstlohi   space for deg+1 doubles;
+ *   csthilo   space for deg+1 doubles;
+ *   cstlolo   space for deg+1 doubles;
+ *   cffhihi   space for nbr arrays of deg+1 doubles;
+ *   cfflohi   space for nbr arrays of deg+1 doubles;
+ *   cffhilo   space for nbr arrays of deg+1 doubles;
+ *   cfflolo   space for nbr arrays of deg+1 doubles;
+ *   verbose   if true, then output is written.
+ *
+ * ON RETURN :
+ *   nvr       nvr[k] has the number of variables in monomial k;
+ *   idx       idx[k] holds nvr[k] indices to variables in monomial k;
+ *   exp       exp[k] holds nvr[k] exponents of variables in monomial k;
+ *   inputhihi has the highest doubles of dim input series of degree deg;
+ *   inputlohi has the second highest doubles of dim input series;
+ *   inputhilo has the second lowest doubles of dim input series;
+ *   inputlolo has the lowest doubles of dim input series of degree deg;
+ *   csthihi   has the highest doubles of the constant series;
+ *   cstlohi   has the second highest doubles of the constant series;
+ *   csthilo   has the second lowest doubles of the constant series;
+ *   cstlolo   has the lowest doubles of the constant series;
+ *   cffhihi   cffhihi[k] has the highest doubles of the coefficient series
+ *             of monomial k;
+ *   cfflohi   cfflohi[k] has the second highest doubles of the coefficient
+ *             series of monomial k;
+ *   cffhilo   cffhilo[k] has the second lowest doubles of the coefficient
+ *             series of monomial k;
+ *   cfflolo   cfflolo[k] has the lowest doubles of the coefficient series
+ *             of monomial k. */
+
 double dbl4_error_sum
  ( int dim, int deg,
    double **results1hihi_h, double **results1lohi_h, 

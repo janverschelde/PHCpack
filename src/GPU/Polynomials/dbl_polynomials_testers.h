@@ -4,6 +4,36 @@
 #ifndef __dbl_polynomials_testers_h__
 #define __dbl_polynomials_testers_h__
 
+void dbl_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **input, double *cst, double **cff, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Generates random polynomials and input series.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   nbr      number of terms in the polynomial;
+ *   nva      number of variables in each monomial (for products, cyclic);
+ *   pwr      highest power of each variable;
+ *   deg      truncation degree of the series;
+ *   nvr      space for nbr integers;
+ *   idx      space for nbr pointers to integers;
+ *   exp      space for nbr pointers to integers;
+ *   input    space for dim arrays of deg+1 doubles;
+ *   cst      space for deg+1 doubles;
+ *   cff      space for nbr arrays of deg+1 doubles;
+ *   verbose  if true, then output is written.
+ *
+ * ON RETURN :
+ *   nvr      nvr[k] has the number of variables in monomial k;
+ *   idx      idx[k] holds nvr[k] indices to variables in monomial k;
+ *   exp      exp[k] holds nvr[k] exponents of variables in monomial k;
+ *   input    has dim input series of degree deg;
+ *   cst      has the coefficients of the constant series;
+ *   cff      cff[k] has the coefficient series of monomial k. */
+
 double dbl_error_sum
  ( int dim, int deg, double **results1_h, double **results2_h,
    double **results_d, bool verbose );

@@ -59,6 +59,80 @@ int main_dbl_test_polynomial
    return fail;
 }
 
+void dbl_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **input, double *cst, double **cff, bool verbose )
+ { 
+   make_real_input(dim,deg,input);
+
+   if(verbose)
+   {
+      cout << scientific << setprecision(16);
+      cout << "Random input series :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "-> coefficients of series " << i << " :" << endl;
+         for(int j=0; j<=deg; j++) cout << input[i][j] << endl;
+      }
+   }
+   if(nva == 0) // random supports
+   {
+      make_supports(dim,nbr,nvr);
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++)
+      {
+         idx[i] = new int[nva];
+         nvr[i] = nva;
+      }
+   }
+   if(nva > 0)
+   {
+      if(nbr == dim)
+         make_real_cyclic(dim,nva,deg,idx,cst,cff);
+      else
+         make_real_products(dim,nbr,nva,deg,idx,cst,cff);
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
+
+      bool fail = make_real_polynomial(dim,nbr,pwr,deg,nvr,idx,exp,cst,cff);
+   }
+   if(verbose)
+   {
+      cout << "Coefficient series of the constant term :" << endl;
+      for(int j=0; j<=deg; j++) cout << cst[j] << endl;
+
+      for(int i=0; i<nbr; i++)
+      {
+         cout << "Generated random monomial " << i << " :" << endl;
+         cout << "   the indices :";
+         for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
+         cout << endl;
+         if(nva == 0)
+         {
+            cout << " the exponents :";
+            for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
+            cout << endl;
+         }
+         cout << " coefficient series :" << endl;
+         for(int j=0; j<=deg; j++) cout << " " << cff[i][j] << endl;
+      }
+   }
+   if(nva == 0)
+   {
+      bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
+      if(dup)
+         cout << "Duplicate supports found." << endl;
+      else if(verbose)
+         cout << "No duplicate supports found." << endl;
+   }
+}
+
 double dbl_error_sum
  ( int dim, int deg, double **results1_h, double **results2_h,
    double **results_d, bool verbose )
@@ -120,81 +194,17 @@ double test_dbl_real_polynomial
       double **output_d = new double*[dim+1];
       for(int i=0; i<=dim; i++) output_d[i] = new double[deg+1];
 
-      make_real_input(dim,deg,input);
-
-      if(verbose > 1)
-      {
-         cout << scientific << setprecision(16);
-         cout << "Random input series :" << endl;
-         for(int i=0; i<dim; i++)
-         {
-            cout << "-> coefficients of series " << i << " :" << endl;
-            for(int j=0; j<=deg; j++) cout << input[i][j] << endl;
-         }
-      }
       double *cst = new double[deg+1]; // constant coefficient series
       double **cff = new double*[nbr]; // coefficient series of terms
       for(int i=0; i<nbr; i++) cff[i] = new double[deg+1];
       int *nvr = new int[nbr]; // number of variables in each monomial
-
-      if(nva == 0) make_supports(dim,nbr,nvr); // random supports
-
       int **idx = new int*[nbr];  // indices of variables in monomials
-
-      if(nva == 0)
-         for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
-      else
-      {
-         for(int i=0; i<nbr; i++)
-         {
-            idx[i] = new int[nva];
-            nvr[i] = nva;
-         }
-      }
       int **exp = new int*[nbr];  // exponents of the variables
-      if(nva > 0)
-      {
-         if(nbr == dim)
-            make_real_cyclic(dim,nva,deg,idx,cst,cff);
-         else
-            make_real_products(dim,nbr,nva,deg,idx,cst,cff);
-      }
-      else
-      {
-         for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
 
-         bool fail = make_real_polynomial(dim,nbr,pwr,deg,nvr,idx,exp,cst,cff);
-      }
-      if(verbose > 1)
-      {
-         cout << "Coefficient series of the constant term :" << endl;
-         for(int j=0; j<=deg; j++) cout << cst[j] << endl;
+      const bool vrb = (verbose > 1);
 
-         for(int i=0; i<nbr; i++)
-         {
-            cout << "Generated random monomial " << i << " :" << endl;
-            cout << "   the indices :";
-            for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
-            cout << endl;
-            if(nva == 0)
-            {
-               cout << " the exponents :";
-               for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
-               cout << endl;
-            }
-            cout << " coefficient series :" << endl;
-            for(int j=0; j<=deg; j++) cout << " " << cff[i][j] << endl;
-         }
-      }
-      bool vrb = (verbose > 1);
-      if(nva == 0)
-      {
-         bool dup = duplicate_supports(dim,nbr,nvr,idx,vrb);
-         if(dup)
-            cout << "Duplicate supports found." << endl;
-         else if(vrb)
-            cout << "No duplicate supports found." << endl;
-      }
+      dbl_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,input,cst,cff,vrb);
+
       ConvolutionJobs cnvjobs(dim);
 
       cnvjobs.make(nbr,nvr,idx,vrb);

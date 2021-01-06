@@ -4,6 +4,70 @@
 #ifndef __dbl5_polynomials_testers_h__
 #define __dbl5_polynomials_testers_h__
 
+void dbl5_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputtb, double **inputix, double **inputmi,
+   double **inputrg, double **inputpk,
+   double *csttb, double *cstix, double *cstmi, 
+   double *cstrg, double *cstpk,
+   double **cfftb, double **cffix, double **cffmi, 
+   double **cffrg, double **cffpk, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Generates random polynomials and input series.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   nbr      number of terms in the polynomial;
+ *   nva      number of variables in each monomial (for products, cyclic);
+ *   pwr      highest power of each variable;
+ *   deg      truncation degree of the series;
+ *   nvr      space for nbr integers;
+ *   idx      space for nbr pointers to integers;
+ *   exp      space for nbr pointers to integers;
+ *   inputtb  space for dim arrays of deg+1 doubles;
+ *   inputix  space for dim arrays of deg+1 doubles;
+ *   inputmi  space for dim arrays of deg+1 doubles;
+ *   inputrg  space for dim arrays of deg+1 doubles;
+ *   inputpk  space for dim arrays of deg+1 doubles;
+ *   csttb    space for deg+1 doubles;
+ *   cstix    space for deg+1 doubles;
+ *   cstmi    space for deg+1 doubles;
+ *   cstrg    space for deg+1 doubles;
+ *   cstpk    space for deg+1 doubles;
+ *   cfftb    space for nbr arrays of deg+1 doubles;
+ *   cffix    space for nbr arrays of deg+1 doubles;
+ *   cffmi    space for nbr arrays of deg+1 doubles;
+ *   cffrg    space for nbr arrays of deg+1 doubles;
+ *   cffpk    space for nbr arrays of deg+1 doubles;
+ *   verbose  if true, then output is written.
+ *
+ * ON RETURN :
+ *   nvr      nvr[k] has the number of variables in monomial k;
+ *   idx      idx[k] holds nvr[k] indices to variables in monomial k;
+ *   exp      exp[k] holds nvr[k] exponents of variables in monomial k;
+ *   inputtb  has the highest doubles of dim input series of degree deg;
+ *   inputix  has the second highest doubles of dim input series;
+ *   inputmi  has the middle doubles of dim input series of degree deg;
+ *   inputrg  has the second lowest doubles of dim input series;
+ *   inputpk  has the lowest doubles of dim input series of degree deg;
+ *   csttb    has the highest doubles of the constant series;
+ *   cstix    has the second highest doubles of the constant series;
+ *   cstmi    has the middle doubles of the constant series;
+ *   cstrg    has the second lowest doubles of the constant series;
+ *   cstpk    has the lowest doubles of the constant series;
+ *   cfftb    cfftb[k] has the highest doubles of the coefficient series
+ *            of monomial k;
+ *   cffix    cffix[k] has the second highest doubles of the coefficient
+ *            series of monomial k;
+ *   cffmi    cffmi[k] has the middle doubles of the coefficient series
+ *            of monomial k;
+ *   cffrg    cffrg[k] has the second lowest doubles of the coefficient
+ *            series of monomial k;
+ *   cffpk    cffpk[k] has the lowest doubles of the coefficient series
+ *            of monomial k. */
+
 double dbl5_error_sum
  ( int dim, int deg,
    double **results1tb_h, double **results1ix_h, double **results1mi_h, 

@@ -59,6 +59,97 @@ int main_dbl4_test_polynomial
    return fail;
 }
 
+void dbl4_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputhihi, double **inputlohi,
+   double **inputhilo, double **inputlolo,
+   double *csthihi, double *cstlohi, double *csthilo, double *cstlolo,
+   double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo,
+   bool verbose )
+{
+   make_real4_input(dim,deg,inputhihi,inputlohi,inputhilo,inputlolo);
+
+   if(verbose)
+   {
+      cout << scientific << setprecision(16);
+      cout << "Random input series :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "-> coefficients of series " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << inputhihi[i][j] << "  " << inputlohi[i][j] << endl
+                 << inputhilo[i][j] << "  " << inputlolo[i][j] << endl;
+      }
+   }
+   if(nva == 0) // random supports
+   {
+      make_supports(dim,nbr,nvr); // random supports
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++)
+      {
+         idx[i] = new int[nva];
+         nvr[i] = nva;
+      }
+   }
+   if(nva > 0)
+   {
+      if(nbr == dim)
+         make_real4_cyclic
+            (dim,nva,deg,idx,csthihi,cstlohi,csthilo,cstlolo,
+                             cffhihi,cfflohi,cffhilo,cfflolo);
+      else
+         make_real4_products
+            (dim,nbr,nva,deg,idx,csthihi,cstlohi,csthilo,cstlolo,
+                                 cffhihi,cfflohi,cffhilo,cfflolo);
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
+
+      bool fail = make_real4_polynomial
+                     (dim,nbr,pwr,deg,nvr,idx,exp,
+                      csthihi,cstlohi,csthilo,cstlolo,
+                      cffhihi,cfflohi,cffhilo,cfflolo);
+   }
+   if(verbose)
+   {
+      cout << "Coefficient series of the constant term :" << endl;
+      for(int j=0; j<=deg; j++)
+         cout << csthihi[j] << "  " << cstlohi[j] << endl
+              << csthilo[j] << "  " << cstlolo[j] << endl;
+
+      for(int i=0; i<nbr; i++)
+      {
+         cout << "Generated random monomial " << i << " :" << endl;
+         cout << "   the indices :";
+         for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
+         cout << endl;
+         if(nva == 0)
+         {
+            cout << " the exponents :";
+            for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
+            cout << endl;
+         }
+         cout << " coefficient series :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << cffhihi[i][j] << "  " << cfflohi[i][j] << endl
+                 << cffhilo[i][j] << "  " << cfflolo[i][j] << endl;
+      }
+   }
+   if(nva == 0)
+   {
+      bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
+      if(dup)
+         cout << "Duplicate supports found." << endl;
+      else if(verbose)
+         cout << "No duplicate supports found." << endl;
+   }
+}
+
 double dbl4_error_sum
  ( int dim, int deg,
    double **results1hihi_h, double **results1lohi_h, 
@@ -179,20 +270,6 @@ double test_dbl4_real_polynomial
       double **outputlolo_d = new double*[dim+1];
       for(int i=0; i<=dim; i++) outputlolo_d[i] = new double[deg+1];
 
-      make_real4_input(dim,deg,inputhihi,inputlohi,inputhilo,inputlolo);
-
-      if(verbose > 1)
-      {
-         cout << scientific << setprecision(16);
-         cout << "Random input series :" << endl;
-         for(int i=0; i<dim; i++)
-         {
-            cout << "-> coefficients of series " << i << " :" << endl;
-            for(int j=0; j<=deg; j++)
-               cout << inputhihi[i][j] << "  " << inputlohi[i][j] << endl
-                    << inputhilo[i][j] << "  " << inputlolo[i][j] << endl;
-         }
-      }
       double *csthihi = new double[deg+1]; // constant coefficient series
       double *cstlohi = new double[deg+1];
       double *csthilo = new double[deg+1];
@@ -206,76 +283,16 @@ double test_dbl4_real_polynomial
       double **cfflolo = new double*[nbr];
       for(int i=0; i<nbr; i++) cfflolo[i] = new double[deg+1];
       int *nvr = new int[nbr]; // number of variables in each monomial
-
-      if(nva == 0) make_supports(dim,nbr,nvr); // random supports
-
       int **idx = new int*[nbr];  // indices of variables in monomials
-
-      if(nva == 0)
-         for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
-      else
-      {
-         for(int i=0; i<nbr; i++)
-         {
-            idx[i] = new int[nva];
-            nvr[i] = nva;
-         }
-      }
       int **exp = new int*[nbr];  // exponents of the variables
-      if(nva > 0)
-      {
-         if(nbr == dim)
-            make_real4_cyclic
-               (dim,nva,deg,idx,csthihi,cstlohi,csthilo,cstlolo,
-                                cffhihi,cfflohi,cffhilo,cfflolo);
-         else
-            make_real4_products
-               (dim,nbr,nva,deg,idx,csthihi,cstlohi,csthilo,cstlolo,
-                                    cffhihi,cfflohi,cffhilo,cfflolo);
-      }
-      else
-      {
-         for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
 
-         bool fail = make_real4_polynomial
-                        (dim,nbr,pwr,deg,nvr,idx,exp,
-                         csthihi,cstlohi,csthilo,cstlolo,
-                         cffhihi,cfflohi,cffhilo,cfflolo);
-      }
-      if(verbose > 1)
-      {
-         cout << "Coefficient series of the constant term :" << endl;
-         for(int j=0; j<=deg; j++)
-            cout << csthihi[j] << "  " << cstlohi[j] << endl
-                 << csthilo[j] << "  " << cstlolo[j] << endl;
-
-         for(int i=0; i<nbr; i++)
-         {
-            cout << "Generated random monomial " << i << " :" << endl;
-            cout << "   the indices :";
-            for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
-            cout << endl;
-            if(nva == 0)
-            {
-               cout << " the exponents :";
-               for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
-               cout << endl;
-            }
-            cout << " coefficient series :" << endl;
-            for(int j=0; j<=deg; j++)
-               cout << cffhihi[i][j] << "  " << cfflohi[i][j] << endl
-                    << cffhilo[i][j] << "  " << cfflolo[i][j] << endl;
-         }
-      }
       bool vrb = (verbose > 1);
-      if(nva == 0)
-      {
-         bool dup = duplicate_supports(dim,nbr,nvr,idx,vrb);
-         if(dup)
-            cout << "Duplicate supports found." << endl;
-         else if(vrb)
-            cout << "No duplicate supports found." << endl;
-      }
+
+      dbl4_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
+                      inputhihi,inputlohi,inputhilo,inputlolo,
+                      csthihi,cstlohi,csthilo,cstlolo,
+                      cffhihi,cfflohi,cffhilo,cfflolo,vrb);
+
       ConvolutionJobs cnvjobs(dim);
 
       cnvjobs.make(nbr,nvr,idx,vrb);

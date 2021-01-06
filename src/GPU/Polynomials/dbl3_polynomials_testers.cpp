@@ -59,6 +59,93 @@ int main_dbl3_test_polynomial
    return fail;
 }
 
+void dbl3_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputhi, double **inputmi, double **inputlo,
+   double *csthi, double *cstmi, double *cstlo,
+   double **cffhi, double **cffmi, double **cfflo, bool verbose )
+{
+   make_real3_input(dim,deg,inputhi,inputmi,inputlo);
+
+   if(verbose)
+   {
+      cout << scientific << setprecision(16);
+      cout << "Random input series :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "-> coefficients of series " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << inputhi[i][j]
+                 << "  " << inputmi[i][j]
+                 << "  " << inputlo[i][j] << endl;
+      }
+   }
+   if(nva == 0) // random supports
+   {
+      make_supports(dim,nbr,nvr);
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++)
+      {
+         idx[i] = new int[nva];
+         nvr[i] = nva;
+      }
+   }
+   if(nva > 0)
+   {
+      if(nbr == dim)
+         make_real3_cyclic
+            (dim,nva,deg,idx,csthi,cstmi,cstlo,cffhi,cffmi,cfflo);
+      else
+         make_real3_products
+            (dim,nbr,nva,deg,idx,csthi,cstmi,cstlo,cffhi,cffmi,cfflo);
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
+
+      bool fail = make_real3_polynomial
+                     (dim,nbr,pwr,deg,nvr,idx,exp,csthi,cstmi,cstlo,
+                      cffhi,cffmi,cfflo);
+   }
+   if(verbose)
+   {
+      cout << "Coefficient series of the constant term :" << endl;
+      for(int j=0; j<=deg; j++)
+         cout << csthi[j] << "  " << cstmi[j]
+                          << "  " << cstlo[j] << endl;
+
+      for(int i=0; i<nbr; i++)
+      {
+         cout << "Generated random monomial " << i << " :" << endl;
+         cout << "   the indices :";
+         for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
+         cout << endl;
+         if(nva == 0)
+         {
+            cout << " the exponents :";
+            for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
+            cout << endl;
+         }
+         cout << " coefficient series :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << cffhi[i][j] << "  " << cffmi[i][j]
+                                << "  " << cfflo[i][j] << endl;
+       }
+    }
+    if(nva == 0)
+    {
+       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
+       if(dup)
+          cout << "Duplicate supports found." << endl;
+       else if(verbose)
+          cout << "No duplicate supports found." << endl;
+    }
+}
+
 double dbl3_error_sum
  ( int dim, int deg,
    double **results1hi_h, double **results1mi_h, double **results1lo_h,
@@ -159,21 +246,6 @@ double test_dbl3_real_polynomial
       double **outputlo_d = new double*[dim+1];
       for(int i=0; i<=dim; i++) outputlo_d[i] = new double[deg+1];
 
-      make_real3_input(dim,deg,inputhi,inputmi,inputlo);
-
-      if(verbose > 1)
-      {
-         cout << scientific << setprecision(16);
-         cout << "Random input series :" << endl;
-         for(int i=0; i<dim; i++)
-         {
-            cout << "-> coefficients of series " << i << " :" << endl;
-            for(int j=0; j<=deg; j++)
-               cout << inputhi[i][j]
-                    << "  " << inputmi[i][j]
-                    << "  " << inputlo[i][j] << endl;
-         }
-      }
       double *csthi = new double[deg+1]; // constant coefficient series
       double *cstmi = new double[deg+1];
       double *cstlo = new double[deg+1];
@@ -184,73 +256,15 @@ double test_dbl3_real_polynomial
       double **cfflo = new double*[nbr];
       for(int i=0; i<nbr; i++) cfflo[i] = new double[deg+1];
       int *nvr = new int[nbr]; // number of variables in each monomial
-
-      if(nva == 0) make_supports(dim,nbr,nvr); // random supports
-
       int **idx = new int*[nbr];  // indices of variables in monomials
-
-      if(nva == 0)
-         for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
-      else
-      {
-         for(int i=0; i<nbr; i++)
-         {
-            idx[i] = new int[nva];
-            nvr[i] = nva;
-         }
-      }
       int **exp = new int*[nbr];  // exponents of the variables
-      if(nva > 0)
-      {
-         if(nbr == dim)
-            make_real3_cyclic
-               (dim,nva,deg,idx,csthi,cstmi,cstlo,cffhi,cffmi,cfflo);
-         else
-            make_real3_products
-               (dim,nbr,nva,deg,idx,csthi,cstmi,cstlo,cffhi,cffmi,cfflo);
-      }
-      else
-      {
-         for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
 
-         bool fail = make_real3_polynomial
-                        (dim,nbr,pwr,deg,nvr,idx,exp,csthi,cstmi,cstlo,
-                         cffhi,cffmi,cfflo);
-      }
-      if(verbose > 1)
-      {
-         cout << "Coefficient series of the constant term :" << endl;
-         for(int j=0; j<=deg; j++)
-            cout << csthi[j] << "  " << cstmi[j]
-                             << "  " << cstlo[j] << endl;
-
-         for(int i=0; i<nbr; i++)
-         {
-            cout << "Generated random monomial " << i << " :" << endl;
-            cout << "   the indices :";
-            for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
-            cout << endl;
-            if(nva == 0)
-            {
-               cout << " the exponents :";
-               for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
-               cout << endl;
-            }
-            cout << " coefficient series :" << endl;
-            for(int j=0; j<=deg; j++)
-               cout << cffhi[i][j] << "  " << cffmi[i][j]
-                                   << "  " << cfflo[i][j] << endl;
-         }
-      }
       bool vrb = (verbose > 1);
-      if(nva == 0)
-      {
-         bool dup = duplicate_supports(dim,nbr,nvr,idx,vrb);
-         if(dup)
-            cout << "Duplicate supports found." << endl;
-         else if(vrb)
-            cout << "No duplicate supports found." << endl;
-      }
+
+      dbl3_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
+                      inputhi,inputmi,inputlo,csthi,cstmi,cstlo,
+                      cffhi,cffmi,cfflo,vrb);
+
       ConvolutionJobs cnvjobs(dim);
 
       cnvjobs.make(nbr,nvr,idx,vrb);

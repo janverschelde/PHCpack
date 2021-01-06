@@ -4,6 +4,97 @@
 #ifndef __dbl8_polynomials_testers_h__
 #define __dbl8_polynomials_testers_h__
 
+void dbl8_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputhihihi, double **inputhilohi,
+   double **inputhihilo, double **inputhilolo,
+   double **inputlohihi, double **inputlolohi,
+   double **inputlohilo, double **inputlololo,
+   double *csthihihi, double *csthilohi,
+   double *csthihilo, double *csthilolo,
+   double *cstlohihi, double *cstlolohi,
+   double *cstlohilo, double *cstlololo,
+   double **cffhihihi, double **cffhilohi,
+   double **cffhihilo, double **cffhilolo,
+   double **cfflohihi, double **cfflolohi,
+   double **cfflohilo, double **cfflololo, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Generates random polynomials and input series.
+ *
+ * ON ENTRY :
+ *   dim         dimension, total number of variables;
+ *   nbr         number of terms in the polynomial;
+ *   nva         number of variables in each monomial (for products, cyclic);
+ *   pwr         highest power of each variable;
+ *   deg         truncation degree of the series;
+ *   nvr         space for nbr integers;
+ *   idx         space for nbr pointers to integers;
+ *   exp         space for nbr pointers to integers;
+ *   inputhihihi has space for dim arrays of deg+1 doubles;
+ *   inputhilohi has space for dim arrays of deg+1 doubles;
+ *   inputhihilo has space for dim arrays of deg+1 doubles;
+ *   inputhilolo has space for dim arrays of deg+1 doubles;
+ *   inputlohihi has space for dim arrays of deg+1 doubles;
+ *   inputlolohi has space for dim arrays of deg+1 doubles;
+ *   inputlohilo has space for dim arrays of deg+1 doubles;
+ *   inputlololo has space for dim arrays of deg+1 doubles;
+ *   csthihihi   space for deg+1 doubles;
+ *   csthilohi   space for deg+1 doubles;
+ *   csthihilo   space for deg+1 doubles;
+ *   csthilolo   space for deg+1 doubles;
+ *   cstlohihi   space for deg+1 doubles;
+ *   cstlolohi   space for deg+1 doubles;
+ *   cstlohilo   space for deg+1 doubles;
+ *   cstlololo   space for deg+1 doubles;
+ *   cffhihihi   space for nbr arrays of deg+1 doubles;
+ *   cffhilohi   space for nbr arrays of deg+1 doubles;
+ *   cffhihilo   space for nbr arrays of deg+1 doubles;
+ *   cffhilolo   space for nbr arrays of deg+1 doubles;
+ *   cfflohihi   space for nbr arrays of deg+1 doubles;
+ *   cfflolohi   space for nbr arrays of deg+1 doubles;
+ *   cfflohilo   space for nbr arrays of deg+1 doubles;
+ *   cfflololo   space for nbr arrays of deg+1 doubles;
+ *   verbose     if true, then output is written.
+ *
+ * ON RETURN :
+ *   nvr       nvr[k] has the number of variables in monomial k;
+ *   idx       idx[k] holds nvr[k] indices to variables in monomial k;
+ *   exp       exp[k] holds nvr[k] exponents of variables in monomial k;
+ *   inputhihihi has the highest doubles of dim input series of degree deg;
+ *   inputhilohi has the second highest doubles of dim input series;
+ *   inputhihilo has the third highest doubles of dim input series;
+ *   inputhilolo has the fourth highest doubles of dim input series;
+ *   inputlohihi has the fourth lowest doubles of dim input series;
+ *   inputlolohi has the third lowest doubles of dim input series;
+ *   inputlohilo has the second lowest doubles of dim input series;
+ *   inputlololo has the lowest doubles of dim input series of degree deg;
+ *   csthihihi   has the highest doubles of the constant series;
+ *   csthilohi   has the second highest doubles of the constant series;
+ *   csthihilo   has the third highest doubles of the constant series;
+ *   csthilolo   has the fourth highest doubles of the constant series;
+ *   cstlohihi   has the fourth lowest doubles of the constant series;
+ *   cstlolohi   has the third lowest doubles of the constant series;
+ *   cstlohilo   has the second lowest doubles of the constant series;
+ *   cstlololo   has the lowest doubles of the constant series;
+ *   cffhihihi   cffhihihi[k] has the highest doubles of the coefficient
+ *               series of monomial k;
+ *   cffhilohi   cffhilohi[k] has the second highest doubles of the
+ *               coefficient series of monomial k;
+ *   cffhihilo   cffhihilo[k] has the third highest doubles of the coefficient
+ *               series of monomial k;
+ *   cffhilolo   cffhilolo[k] has the fourth highest doubles of the coefficient
+ *               series of monomial k;
+ *   cfflohihi   cfflohihi[k] has the fourth lowest doubles of the coefficient
+ *               series of monomial k;
+ *   cfflolohi   cfflolohi[k] has the third lowest doubles of the coefficient
+ *               series of monomial k;
+ *   cfflohilo   cfflohilo[k] has the second lowest doubles of the coefficient
+ *               series of monomial k;
+ *   cfflololo   cfflololo[k] has the lowest doubles of the coefficient series
+ *               series of monomial k. */
+
 double dbl8_error_sum
  ( int dim, int deg,
    double **results1hihihi_h, double **results1hilohi_h, 

@@ -4,6 +4,111 @@
 #ifndef __dbl10_polynomials_testers_h__
 #define __dbl10_polynomials_testers_h__
 
+void dbl10_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputrtb, double **inputrix, double **inputrmi,
+   double **inputrrg, double **inputrpk,
+   double **inputltb, double **inputlix, double **inputlmi,
+   double **inputlrg, double **inputlpk,
+   double *cstrtb, double *cstrix, double *cstrmi, 
+   double *cstrrg, double *cstrpk,
+   double *cstltb, double *cstlix, double *cstlmi, 
+   double *cstlrg, double *cstlpk,
+   double **cffrtb, double **cffrix, double **cffrmi, 
+   double **cffrrg, double **cffrpk,
+   double **cffltb, double **cfflix, double **cfflmi, 
+   double **cfflrg, double **cfflpk, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Generates random polynomials and input series.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   nbr      number of terms in the polynomial;
+ *   nva      number of variables in each monomial (for products, cyclic);
+ *   pwr      highest power of each variable;
+ *   deg      truncation degree of the series;
+ *   nvr      space for nbr integers;
+ *   idx      space for nbr pointers to integers;
+ *   exp      space for nbr pointers to integers;
+ *   inputrtb has space for dim arrays of deg+1 doubles;
+ *   inputrix has space for dim arrays of deg+1 doubles;
+ *   inputrmi has space for dim arrays of deg+1 doubles;
+ *   inputrrg has space for dim arrays of deg+1 doubles;
+ *   inputrpk has space for dim arrays of deg+1 doubles;
+ *   inputltb has space for dim arrays of deg+1 doubles;
+ *   inputlix has space for dim arrays of deg+1 doubles;
+ *   inputlmi has space for dim arrays of deg+1 doubles;
+ *   inputlrg has space for dim arrays of deg+1 doubles;
+ *   inputlpk has space for dim arrays of deg+1 doubles;
+ *   cstrtb   space for deg+1 doubles;
+ *   cstrix   space for deg+1 doubles;
+ *   cstrmi   space for deg+1 doubles;
+ *   cstrrg   space for deg+1 doubles;
+ *   cstrpk   space for deg+1 doubles;
+ *   cstltb   space for deg+1 doubles;
+ *   cstlix   space for deg+1 doubles;
+ *   cstlmi   space for deg+1 doubles;
+ *   cstlrg   space for deg+1 doubles;
+ *   cstlpk   space for deg+1 doubles;
+ *   cffrtb   space for nbr arrays of deg+1 doubles;
+ *   cffrix   space for nbr arrays of deg+1 doubles;
+ *   cffrmi   space for nbr arrays of deg+1 doubles;
+ *   cffrrg   space for nbr arrays of deg+1 doubles;
+ *   cffrpk   space for nbr arrays of deg+1 doubles;
+ *   cffltb   space for nbr arrays of deg+1 doubles;
+ *   cfflix   space for nbr arrays of deg+1 doubles;
+ *   cfflmi   space for nbr arrays of deg+1 doubles;
+ *   cfflrg   space for nbr arrays of deg+1 doubles;
+ *   cfflpk   space for nbr arrays of deg+1 doubles;
+ *   verbose  if true, then output is written.
+ *
+ * ON RETURN :
+ *   nvr      nvr[k] has the number of variables in monomial k;
+ *   idx      idx[k] holds nvr[k] indices to variables in monomial k;
+ *   exp      exp[k] holds nvr[k] exponents of variables in monomial k;
+ *   inputrtb has the highest doubles of dim input series of degree deg;
+ *   inputrix has the second highest doubles of dim input series;
+ *   inputrmi has the third highest doubles of dim input series;
+ *   inputrrg has the fourth highest doubles of dim input series;
+ *   inputrpk has the fifth highest doubles of dim input series;
+ *   inputltb has the fifth lowest doubles of dim input series;
+ *   inputlix has the fourth lowest doubles of dim input series;
+ *   inputlmi has the third lowest doubles of dim input series;
+ *   inputlrg has the second lowest doubles of dim input series;
+ *   inputlpk has the lowest doubles of dim input series of degree deg;
+ *   cstrtb   has the highest doubles of the constant series;
+ *   cstrix   has the second highest doubles of the constant series;
+ *   cstrmi   has the third highest doubles of the constant series;
+ *   cstrrg   has the fourth highest doubles of the constant series;
+ *   cstrpk   has the fifth highest doubles of the constant series;
+ *   cstltb   has the fifth lowest doubles of the constant series;
+ *   cstlix   has the fourth lowest doubles of the constant series;
+ *   cstlmi   has the third lowest doubles of the constant series;
+ *   cstlrg   has the second lowest doubles of the constant series;
+ *   cstlpk   has the lowest doubles of the constant series;
+ *   cffrtb   cffrtb[k] has the highest doubles of the coefficient series
+ *            of monomial k;
+ *   cffrix   cffrix[k] has the second highest doubles of the coefficient
+ *            series of monomial k;
+ *   cffrmi   cffrmi[k] has the third highest doubles of the coefficient
+ *            series of monomial k;
+ *   cffrrg   cffrrg[k] has the fourth highest doubles of the coefficient
+ *            series of monomial k;
+ *   cffrpk   cffrpk[k] has the fifth highest doubles of the coefficient
+ *            series of monomial k;
+ *   cffltb   cffltb[k] has the fifth lowest doubles of the coefficient
+ *            series of monomial k;
+ *   cfflix   cfflix[k] has the fourth lowest doubles of the coefficient
+ *            series of monomial k;
+ *   cfflmi   cfflmi[k] has the third lowest doubles of the coefficient
+ *            series of monomial k;
+ *   cfflrg   cfflrg[k] has the second lowest doubles of the coefficient
+ *            series of monomial k;
+ *   cfflpk   cfflpk[k] has the lowest doubles of the coefficient series
+ *            of monomial k. */
+
 double dbl10_error_sum
  ( int dim, int deg,
    double **results1rtb_h, double **results1rix_h, double **results1rmi_h, 

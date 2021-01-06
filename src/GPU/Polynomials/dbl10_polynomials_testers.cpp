@@ -58,6 +58,131 @@ int main_dbl10_test_polynomial
    return fail;
 }
 
+void dbl10_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputrtb, double **inputrix, double **inputrmi,
+   double **inputrrg, double **inputrpk,
+   double **inputltb, double **inputlix, double **inputlmi,
+   double **inputlrg, double **inputlpk,
+   double *cstrtb, double *cstrix, double *cstrmi, 
+   double *cstrrg, double *cstrpk,
+   double *cstltb, double *cstlix, double *cstlmi, 
+   double *cstlrg, double *cstlpk,
+   double **cffrtb, double **cffrix, double **cffrmi, 
+   double **cffrrg, double **cffrpk,
+   double **cffltb, double **cfflix, double **cfflmi, 
+   double **cfflrg, double **cfflpk, bool verbose )
+{
+   make_real10_input(dim,deg,
+      inputrtb,inputrix,inputrmi,inputrrg,inputrpk,
+      inputltb,inputlix,inputlmi,inputlrg,inputlpk);
+
+   if(verbose)
+   {
+      cout << scientific << setprecision(16);
+      cout << "Random input series :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "-> coefficients of series " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+         {
+            cout << inputrtb[i][j] << "  " << inputrix[i][j]
+                                   << "  " << inputrmi[i][j] << endl
+                 << inputrrg[i][j] << "  " << inputrpk[i][j] << endl;
+            cout << inputltb[i][j] << "  " << inputlix[i][j]
+                                   << "  " << inputlmi[i][j] << endl
+                 << inputlrg[i][j] << "  " << inputlpk[i][j] << endl;
+         }
+      }
+   }
+   if(nva == 0) // random supports
+   {
+      make_supports(dim,nbr,nvr); // random supports
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++)
+      {
+         idx[i] = new int[nva];
+         nvr[i] = nva;
+      }
+   }
+   if(nva > 0)
+   {
+      if(nbr == dim)
+         make_real10_cyclic
+            (dim,nva,deg,idx,
+             cstrtb,cstrix,cstrmi,cstrrg,cstrpk,
+             cstltb,cstlix,cstlmi,cstlrg,cstlpk,
+             cffrtb,cffrix,cffrmi,cffrrg,cffrpk,
+             cffltb,cfflix,cfflmi,cfflrg,cfflpk);
+      else
+         make_real10_products
+            (dim,nbr,nva,deg,idx,
+             cstrtb,cstrix,cstrmi,cstrrg,cstrpk,
+             cstltb,cstlix,cstlmi,cstlrg,cstlpk,
+             cffrtb,cffrix,cffrmi,cffrrg,cffrpk,
+             cffltb,cfflix,cfflmi,cfflrg,cfflpk);
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
+
+      bool fail = make_real10_polynomial
+                     (dim,nbr,pwr,deg,nvr,idx,exp,
+                      cstrtb,cstrix,cstrmi,cstrrg,cstrpk,
+                      cstltb,cstlix,cstlmi,cstlrg,cstlpk,
+                      cffrtb,cffrix,cffrmi,cffrrg,cffrpk,
+                      cffltb,cfflix,cfflmi,cfflrg,cfflpk);
+   }
+   if(verbose)
+   {
+      cout << "Coefficient series of the constant term :" << endl;
+      for(int j=0; j<=deg; j++)
+      {
+         cout << cstrtb[j] << "  " << cstrix[j]
+                           << "  " << cstrmi[j] << endl
+              << cstrrg[j] << "  " << cstrpk[j] << endl;
+         cout << cstltb[j] << "  " << cstlix[j]
+                           << "  " << cstlmi[j] << endl
+              << cstlrg[j] << "  " << cstlpk[j] << endl;
+      }
+      for(int i=0; i<nbr; i++)
+      {
+         cout << "Generated random monomial " << i << " :" << endl;
+         cout << "   the indices :";
+         for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
+         cout << endl;
+         if(nva == 0)
+         {
+            cout << " the exponents :";
+            for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
+            cout << endl;
+         }
+         cout << " coefficient series :" << endl;
+         for(int j=0; j<=deg; j++)
+         {
+            cout << cffrtb[i][j] << "  " << cffrix[i][j]
+                                 << "  " << cffrmi[i][j] << endl
+                 << cffrrg[i][j] << "  " << cffrpk[i][j] << endl;
+            cout << cffltb[i][j] << "  " << cfflix[i][j]
+                                 << "  " << cfflmi[i][j] << endl
+                 << cfflrg[i][j] << "  " << cfflpk[i][j] << endl;
+         }
+      }
+   }
+   if(nva == 0)
+   {
+      bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
+      if(dup)
+         cout << "Duplicate supports found." << endl;
+      else if(verbose)
+         cout << "No duplicate supports found." << endl;
+   }
+}
+
 double dbl10_error_sum
  ( int dim, int deg,
    double **results1rtb_h, double **results1rix_h, double **results1rmi_h, 
@@ -292,28 +417,6 @@ double test_dbl10_real_polynomial
       double **outputlpk_d = new double*[dim+1];
       for(int i=0; i<=dim; i++) outputlpk_d[i] = new double[deg+1];
 
-      make_real10_input(dim,deg,
-         inputrtb,inputrix,inputrmi,inputrrg,inputrpk,
-         inputltb,inputlix,inputlmi,inputlrg,inputlpk);
-
-      if(verbose > 1)
-      {
-         cout << scientific << setprecision(16);
-         cout << "Random input series :" << endl;
-         for(int i=0; i<dim; i++)
-         {
-            cout << "-> coefficients of series " << i << " :" << endl;
-            for(int j=0; j<=deg; j++)
-            {
-               cout << inputrtb[i][j] << "  " << inputrix[i][j]
-                                      << "  " << inputrmi[i][j] << endl
-                    << inputrrg[i][j] << "  " << inputrpk[i][j] << endl;
-               cout << inputltb[i][j] << "  " << inputlix[i][j]
-                                      << "  " << inputlmi[i][j] << endl
-                    << inputlrg[i][j] << "  " << inputlpk[i][j] << endl;
-            }
-         }
-      }
       double *cstrtb = new double[deg+1]; // constant coefficient series
       double *cstrix = new double[deg+1];
       double *cstrmi = new double[deg+1];
@@ -345,95 +448,19 @@ double test_dbl10_real_polynomial
       double **cfflpk = new double*[nbr];
       for(int i=0; i<nbr; i++) cfflpk[i] = new double[deg+1];
       int *nvr = new int[nbr]; // number of variables in each monomial
-
-      if(nva == 0) make_supports(dim,nbr,nvr); // random supports
-
       int **idx = new int*[nbr];  // indices of variables in monomials
-
-      if(nva == 0)
-         for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
-      else
-      {
-         for(int i=0; i<nbr; i++)
-         {
-            idx[i] = new int[nva];
-            nvr[i] = nva;
-         }
-      }
       int **exp = new int*[nbr];  // exponents of the variables
-      if(nva > 0)
-      {
-         if(nbr == dim)
-            make_real10_cyclic
-               (dim,nva,deg,idx,
-                cstrtb,cstrix,cstrmi,cstrrg,cstrpk,
-                cstltb,cstlix,cstlmi,cstlrg,cstlpk,
-                cffrtb,cffrix,cffrmi,cffrrg,cffrpk,
-                cffltb,cfflix,cfflmi,cfflrg,cfflpk);
-         else
-            make_real10_products
-               (dim,nbr,nva,deg,idx,
-                cstrtb,cstrix,cstrmi,cstrrg,cstrpk,
-                cstltb,cstlix,cstlmi,cstlrg,cstlpk,
-                cffrtb,cffrix,cffrmi,cffrrg,cffrpk,
-                cffltb,cfflix,cfflmi,cfflrg,cfflpk);
-      }
-      else
-      {
-         for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
 
-         bool fail = make_real10_polynomial
-                        (dim,nbr,pwr,deg,nvr,idx,exp,
-                         cstrtb,cstrix,cstrmi,cstrrg,cstrpk,
-                         cstltb,cstlix,cstlmi,cstlrg,cstlpk,
-                         cffrtb,cffrix,cffrmi,cffrrg,cffrpk,
-                         cffltb,cfflix,cfflmi,cfflrg,cfflpk);
-      }
-      if(verbose > 1)
-      {
-         cout << "Coefficient series of the constant term :" << endl;
-         for(int j=0; j<=deg; j++)
-         {
-            cout << cstrtb[j] << "  " << cstrix[j]
-                              << "  " << cstrmi[j] << endl
-                 << cstrrg[j] << "  " << cstrpk[j] << endl;
-            cout << cstltb[j] << "  " << cstlix[j]
-                              << "  " << cstlmi[j] << endl
-                 << cstlrg[j] << "  " << cstlpk[j] << endl;
-         }
-         for(int i=0; i<nbr; i++)
-         {
-            cout << "Generated random monomial " << i << " :" << endl;
-            cout << "   the indices :";
-            for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
-            cout << endl;
-            if(nva == 0)
-            {
-               cout << " the exponents :";
-               for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
-               cout << endl;
-            }
-            cout << " coefficient series :" << endl;
-            for(int j=0; j<=deg; j++)
-            {
-               cout << cffrtb[i][j] << "  " << cffrix[i][j]
-                                    << "  " << cffrmi[i][j] << endl
-                    << cffrrg[i][j] << "  " << cffrpk[i][j] << endl;
-               cout << cffltb[i][j] << "  " << cfflix[i][j]
-                                    << "  " << cfflmi[i][j] << endl
-                    << cfflrg[i][j] << "  " << cfflpk[i][j] << endl;
-            }
-         }
-      }
       bool vrb = (verbose > 1);
-      if(nva == 0)
-      {
-         bool dup = duplicate_supports(dim,nbr,nvr,idx,vrb);
-         if(dup)
-            cout << "Duplicate supports found." << endl;
-         else if(vrb)
-            cout << "No duplicate supports found." << endl;
-      }
+
+      dbl10_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
+                       inputrtb,inputrix,inputrmi,inputrrg,inputrpk,
+                       inputltb,inputlix,inputlmi,inputlrg,inputlpk,
+                       cstrtb,cstrix,cstrmi,cstrrg,cstrpk,
+                       cstltb,cstlix,cstlmi,cstlrg,cstlpk,
+                       cffrtb,cffrix,cffrmi,cffrrg,cffrpk,
+                       cffltb,cfflix,cfflmi,cfflrg,cfflpk,vrb);
+
       ConvolutionJobs cnvjobs(dim);
 
       cnvjobs.make(nbr,nvr,idx,vrb);

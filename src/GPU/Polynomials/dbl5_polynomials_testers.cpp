@@ -59,6 +59,100 @@ int main_dbl5_test_polynomial
    return fail;
 }
 
+void dbl5_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputtb, double **inputix, double **inputmi,
+   double **inputrg, double **inputpk,
+   double *csttb, double *cstix, double *cstmi, 
+   double *cstrg, double *cstpk,
+   double **cfftb, double **cffix, double **cffmi, 
+   double **cffrg, double **cffpk, bool verbose )
+{
+   make_real5_input(dim,deg,inputtb,inputix,inputmi,inputrg,inputpk);
+
+   if(verbose)
+   {
+      cout << scientific << setprecision(16);
+      cout << "Random input series :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "-> coefficients of series " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << inputtb[i][j] << "  " << inputix[i][j]
+                                  << "  " << inputmi[i][j] << endl
+                 << inputrg[i][j] << "  " << inputpk[i][j] << endl;
+      }
+   }
+   if(nva == 0) // random supports
+   {
+      make_supports(dim,nbr,nvr);
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++)
+      {
+         idx[i] = new int[nva];
+         nvr[i] = nva;
+      }
+   }
+   if(nva > 0)
+   {
+      if(nbr == dim)
+         make_real5_cyclic
+            (dim,nva,deg,idx,csttb,cstix,cstmi,cstrg,cstpk,
+                             cfftb,cffix,cffmi,cffrg,cffpk);
+      else
+         make_real5_products
+            (dim,nbr,nva,deg,idx,csttb,cstix,cstmi,cstrg,cstpk,
+                                 cfftb,cffix,cffmi,cffrg,cffpk);
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
+
+      bool fail = make_real5_polynomial
+                     (dim,nbr,pwr,deg,nvr,idx,exp,
+                      csttb,cstix,cstmi,cstrg,cstpk,
+                      cfftb,cffix,cffmi,cffrg,cffpk);
+   }
+   if(verbose)
+   {
+      cout << "Coefficient series of the constant term :" << endl;
+      for(int j=0; j<=deg; j++)
+         cout << csttb[j] << "  " << cstix[j] << "  " << cstmi[j] << endl
+              << cstrg[j] << "  " << cstpk[j] << endl;
+
+      for(int i=0; i<nbr; i++)
+      {
+         cout << "Generated random monomial " << i << " :" << endl;
+         cout << "   the indices :";
+         for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
+         cout << endl;
+         if(nva == 0)
+         {
+            cout << " the exponents :";
+            for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
+            cout << endl;
+         }
+         cout << " coefficient series :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << cfftb[i][j] << "  " << cffix[i][j]
+                                << "  " << cffmi[i][j] << endl
+                 << cffrg[i][j] << "  " << cffpk[i][j] << endl;
+      }
+    }
+    if(nva == 0)
+    {
+       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
+       if(dup)
+          cout << "Duplicate supports found." << endl;
+       else if(verbose)
+          cout << "No duplicate supports found." << endl;
+    }
+}
+
 double dbl5_error_sum
  ( int dim, int deg,
    double **results1tb_h, double **results1ix_h, double **results1mi_h, 
@@ -197,21 +291,6 @@ double test_dbl5_real_polynomial
       double **outputpk_d = new double*[dim+1];
       for(int i=0; i<=dim; i++) outputpk_d[i] = new double[deg+1];
 
-      make_real5_input(dim,deg,inputtb,inputix,inputmi,inputrg,inputpk);
-
-      if(verbose > 1)
-      {
-         cout << scientific << setprecision(16);
-         cout << "Random input series :" << endl;
-         for(int i=0; i<dim; i++)
-         {
-            cout << "-> coefficients of series " << i << " :" << endl;
-            for(int j=0; j<=deg; j++)
-               cout << inputtb[i][j] << "  " << inputix[i][j]
-                                     << "  " << inputmi[i][j] << endl
-                    << inputrg[i][j] << "  " << inputpk[i][j] << endl;
-         }
-      }
       double *csttb = new double[deg+1]; // constant coefficient series
       double *cstix = new double[deg+1];
       double *cstmi = new double[deg+1];
@@ -228,77 +307,16 @@ double test_dbl5_real_polynomial
       double **cffpk = new double*[nbr];
       for(int i=0; i<nbr; i++) cffpk[i] = new double[deg+1];
       int *nvr = new int[nbr]; // number of variables in each monomial
-
-      if(nva == 0) make_supports(dim,nbr,nvr); // random supports
-
       int **idx = new int*[nbr];  // indices of variables in monomials
-
-      if(nva == 0)
-         for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
-      else
-      {
-         for(int i=0; i<nbr; i++)
-         {
-            idx[i] = new int[nva];
-            nvr[i] = nva;
-         }
-      }
       int **exp = new int*[nbr];  // exponents of the variables
-      if(nva > 0)
-      {
-         if(nbr == dim)
-            make_real5_cyclic
-               (dim,nva,deg,idx,csttb,cstix,cstmi,cstrg,cstpk,
-                                cfftb,cffix,cffmi,cffrg,cffpk);
-         else
-            make_real5_products
-               (dim,nbr,nva,deg,idx,csttb,cstix,cstmi,cstrg,cstpk,
-                                    cfftb,cffix,cffmi,cffrg,cffpk);
-      }
-      else
-      {
-         for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
 
-         bool fail = make_real5_polynomial
-                        (dim,nbr,pwr,deg,nvr,idx,exp,
-                         csttb,cstix,cstmi,cstrg,cstpk,
-                         cfftb,cffix,cffmi,cffrg,cffpk);
-      }
-      if(verbose > 1)
-      {
-         cout << "Coefficient series of the constant term :" << endl;
-         for(int j=0; j<=deg; j++)
-            cout << csttb[j] << "  " << cstix[j] << "  " << cstmi[j] << endl
-                 << cstrg[j] << "  " << cstpk[j] << endl;
-
-         for(int i=0; i<nbr; i++)
-         {
-            cout << "Generated random monomial " << i << " :" << endl;
-            cout << "   the indices :";
-            for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
-            cout << endl;
-            if(nva == 0)
-            {
-               cout << " the exponents :";
-               for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
-               cout << endl;
-            }
-            cout << " coefficient series :" << endl;
-            for(int j=0; j<=deg; j++)
-               cout << cfftb[i][j] << "  " << cffix[i][j]
-                                   << "  " << cffmi[i][j] << endl
-                    << cffrg[i][j] << "  " << cffpk[i][j] << endl;
-         }
-      }
       bool vrb = (verbose > 1);
-      if(nva == 0)
-      {
-         bool dup = duplicate_supports(dim,nbr,nvr,idx,vrb);
-         if(dup)
-            cout << "Duplicate supports found." << endl;
-         else if(vrb)
-            cout << "No duplicate supports found." << endl;
-      }
+
+      dbl5_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
+                      inputtb,inputix,inputmi,inputrg,inputpk,
+                      csttb,cstix,cstmi,cstrg,cstpk,
+                      cfftb,cffix,cffmi,cffrg,cffpk,vrb);
+
       ConvolutionJobs cnvjobs(dim);
 
       cnvjobs.make(nbr,nvr,idx,vrb);
