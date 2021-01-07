@@ -527,6 +527,62 @@ test_polynomials.obj:
                  /I$(CUDASDK)/include \
                  /Fo: test_polynomials.obj /EHsc
 
+run_dbl_polynomials.obj:
+	@-echo ">>> compiling run_dbl_polynomials ..."
+	$(CL)\cl /c run_dbl_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: run_dbl_polynomials.obj /EHsc
+
+run_dbl2_polynomials.obj:
+	@-echo ">>> compiling run_dbl2_polynomials ..."
+	$(CL)\cl /c run_dbl2_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: run_dbl2_polynomials.obj /EHsc
+
+run_dbl3_polynomials.obj:
+	@-echo ">>> compiling run_dbl3_polynomials ..."
+	$(CL)\cl /c run_dbl3_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: run_dbl3_polynomials.obj /EHsc
+
+run_dbl4_polynomials.obj:
+	@-echo ">>> compiling run_dbl4_polynomials ..."
+	$(CL)\cl /c run_dbl4_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: run_dbl4_polynomials.obj /EHsc
+
+run_dbl5_polynomials.obj:
+	@-echo ">>> compiling run_dbl5_polynomials ..."
+	$(CL)\cl /c run_dbl5_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: run_dbl5_polynomials.obj /EHsc
+
+run_dbl8_polynomials.obj:
+	@-echo ">>> compiling run_dbl8_polynomials ..."
+	$(CL)\cl /c run_dbl8_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: run_dbl8_polynomials.obj /EHsc
+
+run_dbl10_polynomials.obj:
+	@-echo ">>> compiling run_dbl10_polynomials ..."
+	$(CL)\cl /c run_dbl10_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: run_dbl10_polynomials.obj /EHsc
+
+run_polynomials.obj:
+	@-echo ">>> compiling run_polynomials ..."
+	$(CL)\cl /c run_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: run_polynomials.obj /EHsc
+
 convolution_job.obj:
 	@-echo ">>> compiling convolution_job ..."
 	$(CL)\cl /c convolution_job.cpp \
@@ -849,8 +905,273 @@ test_polynomials: random_numbers.obj random_series.obj \
               dbl10_polynomials_host.obj dbl10_polynomials_testers.obj \
               polynomials_kernels.obj test_polynomials.obj
 
+run_dbl_polynomials: random_numbers.obj random_series.obj \
+                     random_monomials.obj random_polynomials.obj \
+                     convolution_job.obj convolution_jobs.obj \
+                     addition_job.obj addition_jobs.obj \
+                     job_coordinates.obj write_job_counts.obj \
+                    dbl_convolutions_host.obj dbl_monomials_host.obj \
+                    dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
+                    run_dbl_polynomials.obj dbl_polynomials_testers.obj \
+                    prompt_for_setup.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o run_dbl_polynomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random_polynomials.obj convolution_job.obj convolution_jobs.obj \
+              addition_job.obj addition_jobs.obj prompt_for_setup.obj \
+              job_coordinates.obj write_job_counts.obj \
+              dbl_convolutions_host.obj dbl_monomials_host.obj \
+              dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
+              run_dbl_polynomials.obj dbl_polynomials_testers.obj
+
+run_dbl2_polynomials: random_numbers.obj random_series.obj \
+                      random_monomials.obj random_polynomials.obj \
+                      double_double_functions.obj prompt_for_setup.obj \
+                      random2_vectors.obj random2_series.obj \
+                      random2_monomials.obj random2_polynomials.obj \
+                      convolution_job.obj convolution_jobs.obj \
+                      addition_job.obj addition_jobs.obj \
+                      job_coordinates.obj write_job_counts.obj \
+                      dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+                      dbl2_polynomials_host.obj dbl2_polynomials_kernels.obj \
+                      run_dbl2_polynomials.obj dbl2_polynomials_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o run_dbl2_polynomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random_polynomials.obj double_double_functions.obj \
+              random2_vectors.obj random2_series.obj \
+              random2_monomials.obj random2_polynomials.obj \
+              convolution_job.obj convolution_jobs.obj \
+              addition_job.obj addition_jobs.obj prompt_for_setup.obj \
+              job_coordinates.obj write_job_counts.obj \
+              dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+              dbl2_polynomials_host.obj dbl2_polynomials_kernels.obj \
+              run_dbl2_polynomials.obj dbl2_polynomials_testers.obj
+
+run_dbl3_polynomials: random_numbers.obj random_series.obj \
+                      random_monomials.obj random_polynomials.obj \
+                      double_double_functions.obj prompt_for_setup.obj \
+                      triple_double_functions.obj \
+                      random3_vectors.obj random3_series.obj \
+                      random3_monomials.obj random3_polynomials.obj \
+                      convolution_job.obj convolution_jobs.obj \
+                      addition_job.obj addition_jobs.obj \
+                      job_coordinates.obj write_job_counts.obj \
+                      dbl3_convolutions_host.obj dbl3_monomials_host.obj \
+                      dbl3_polynomials_host.obj dbl3_polynomials_kernels.obj \
+                      run_dbl3_polynomials.obj dbl3_polynomials_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o run_dbl3_polynomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random_polynomials.obj double_double_functions.obj \
+              triple_double_functions.obj prompt_for_setup.obj \
+              random3_vectors.obj random3_series.obj \
+              random3_monomials.obj random3_polynomials.obj \
+              convolution_job.obj convolution_jobs.obj \
+              addition_job.obj addition_jobs.obj \
+              job_coordinates.obj write_job_counts.obj \
+              dbl3_convolutions_host.obj dbl3_monomials_host.obj \
+              dbl3_polynomials_host.obj dbl3_polynomials_kernels.obj \
+              run_dbl3_polynomials.obj dbl3_polynomials_testers.obj
+
+run_dbl4_polynomials: random_numbers.obj random_series.obj \
+                      random_monomials.obj random_polynomials.obj \
+                      double_double_functions.obj \
+                      quad_double_functions.obj prompt_for_setup.obj \
+                      random4_vectors.obj random4_series.obj \
+                      random4_monomials.obj random4_polynomials.obj \
+                      convolution_job.obj convolution_jobs.obj \
+                      addition_job.obj addition_jobs.obj \
+                      job_coordinates.obj write_job_counts.obj \
+                      dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+                      dbl4_polynomials_host.obj dbl4_polynomials_kernels.obj \
+                      run_dbl4_polynomials.obj dbl4_polynomials_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o run_dbl4_polynomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random_polynomials.obj double_double_functions.obj \
+              quad_double_functions.obj prompt_for_setup.obj \
+              random4_vectors.obj random4_series.obj \
+              random4_monomials.obj random4_polynomials.obj \
+              convolution_job.obj convolution_jobs.obj \
+              addition_job.obj addition_jobs.obj \
+              job_coordinates.obj write_job_counts.obj \
+              dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+              dbl4_polynomials_host.obj dbl4_polynomials_kernels.obj \
+              run_dbl4_polynomials.obj dbl4_polynomials_testers.obj
+
+run_dbl5_polynomials: random_numbers.obj random_series.obj \
+                      random_monomials.obj random_polynomials.obj \
+                      double_double_functions.obj \
+                      penta_double_functions.obj prompt_for_setup.obj \
+                      random5_vectors.obj random5_series.obj \
+                      random5_monomials.obj random5_polynomials.obj \
+                      convolution_job.obj convolution_jobs.obj \
+                      addition_job.obj addition_jobs.obj \
+                      job_coordinates.obj write_job_counts.obj \
+                      dbl5_convolutions_host.obj dbl5_monomials_host.obj \
+                      dbl5_polynomials_host.obj dbl5_polynomials_kernels.obj \
+                      run_dbl5_polynomials.obj dbl5_polynomials_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o run_dbl5_polynomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random_polynomials.obj double_double_functions.obj \
+              penta_double_functions.obj prompt_for_setup.obj \
+              random5_vectors.obj random5_series.obj \
+              random5_monomials.obj random5_polynomials.obj \
+              convolution_job.obj convolution_jobs.obj \
+              addition_job.obj addition_jobs.obj \
+              job_coordinates.obj write_job_counts.obj \
+              dbl5_convolutions_host.obj dbl5_monomials_host.obj \
+              dbl5_polynomials_host.obj dbl5_polynomials_kernels.obj \
+              run_dbl5_polynomials.obj dbl5_polynomials_testers.obj
+
+run_dbl8_polynomials: random_numbers.obj random_series.obj \
+                      random_monomials.obj random_polynomials.obj \
+                      double_double_functions.obj \
+                      quad_double_functions.obj \
+                      octo_double_functions.obj prompt_for_setup.obj \
+                      random8_vectors.obj random8_series.obj \
+                      random8_monomials.obj random8_polynomials.obj \
+                      convolution_job.obj convolution_jobs.obj \
+                      addition_job.obj addition_jobs.obj \
+                      job_coordinates.obj write_job_counts.obj \
+                      dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+                      dbl8_polynomials_host.obj dbl8_polynomials_kernels.obj \
+                      run_dbl8_polynomials.obj dbl8_polynomials_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o run_dbl8_polynomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random_polynomials.obj double_double_functions.obj \
+              quad_double_functions.obj octo_double_functions.obj \
+              random8_vectors.obj random8_series.obj \
+              random8_monomials.obj random8_polynomials.obj \
+              convolution_job.obj convolution_jobs.obj \
+              addition_job.obj addition_jobs.obj prompt_for_setup.obj \
+              job_coordinates.obj write_job_counts.obj \
+              dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+              dbl8_polynomials_host.obj dbl8_polynomials_kernels.obj \
+              run_dbl8_polynomials.obj dbl8_polynomials_testers.obj
+
+run_dbl10_polynomials: random_numbers.obj random_series.obj \
+                       random_monomials.obj random_polynomials.obj \
+                       double_double_functions.obj \
+                       quad_double_functions.obj octo_double_functions.obj \
+                       deca_double_functions.obj prompt_for_setup.obj \
+                       random10_vectors.obj random10_series.obj \
+                       random10_monomials.obj random10_polynomials.obj \
+                       convolution_job.obj convolution_jobs.obj \
+                       addition_job.obj addition_jobs.obj \
+                       job_coordinates.obj write_job_counts.obj \
+                      dbl10_convolutions_host.obj dbl10_monomials_host.obj \
+                      dbl10_polynomials_host.obj dbl10_polynomials_kernels.obj \
+                      run_dbl10_polynomials.obj dbl10_polynomials_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o run_dbl10_polynomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random_polynomials.obj double_double_functions.obj \
+              quad_double_functions.obj octo_double_functions.obj \
+              deca_double_functions.obj prompt_for_setup.obj \
+              random10_vectors.obj random10_series.obj \
+              random10_monomials.obj random10_polynomials.obj \
+              convolution_job.obj convolution_jobs.obj \
+              addition_job.obj addition_jobs.obj \
+              job_coordinates.obj write_job_counts.obj \
+              dbl10_convolutions_host.obj dbl10_monomials_host.obj \
+              dbl10_polynomials_host.obj dbl10_polynomials_kernels.obj \
+              run_dbl10_polynomials.obj dbl10_polynomials_testers.obj
+
+run_polynomials: random_numbers.obj random_series.obj \
+                 random_monomials.obj random_polynomials.obj \
+                 double_double_functions.obj triple_double_functions.obj \
+                 quad_double_functions.obj penta_double_functions.obj \
+                 octo_double_functions.obj deca_double_functions.obj \
+                 random2_vectors.obj random2_series.obj \
+                 random2_monomials.obj random2_polynomials.obj \
+                 random3_vectors.obj random3_series.obj \
+                 random3_monomials.obj random3_polynomials.obj \
+                 random4_vectors.obj random4_series.obj \
+                 random4_monomials.obj random4_polynomials.obj \
+                 random5_vectors.obj random5_series.obj \
+                 random5_monomials.obj random5_polynomials.obj \
+                 random8_vectors.obj random8_series.obj \
+                 random8_monomials.obj random8_polynomials.obj \
+                 random10_vectors.obj random10_series.obj \
+                 random10_monomials.obj random10_polynomials.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 addition_job.obj addition_jobs.obj prompt_for_setup.obj \
+                 job_coordinates.obj write_job_counts.obj \
+                 dbl_convolutions_host.obj dbl_monomials_host.obj \
+                 dbl_polynomials_host.obj dbl_polynomials_testers.obj \
+                 dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+                 dbl2_polynomials_host.obj dbl2_polynomials_testers.obj \
+                 dbl3_convolutions_host.obj dbl3_monomials_host.obj \
+                 dbl3_polynomials_host.obj dbl3_polynomials_testers.obj \
+                 dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+                 dbl4_polynomials_host.obj dbl4_polynomials_testers.obj \
+                 dbl5_convolutions_host.obj dbl5_monomials_host.obj \
+                 dbl5_polynomials_host.obj dbl5_polynomials_testers.obj \
+                 dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+                 dbl8_polynomials_host.obj dbl8_polynomials_testers.obj \
+                 dbl10_convolutions_host.obj dbl10_monomials_host.obj \
+                 dbl10_polynomials_host.obj dbl10_polynomials_testers.obj \
+                 polynomials_kernels.obj run_polynomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o run_polynomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random_polynomials.obj prompt_for_setup.obj \
+              double_double_functions.obj triple_double_functions.obj \
+              quad_double_functions.obj penta_double_functions.obj \
+              octo_double_functions.obj deca_double_functions.obj \
+              random2_vectors.obj random2_series.obj \
+              random2_monomials.obj random2_polynomials.obj \
+              random3_vectors.obj random3_series.obj \
+              random3_monomials.obj random3_polynomials.obj \
+              random4_vectors.obj random4_series.obj \
+              random4_monomials.obj random4_polynomials.obj \
+              random5_vectors.obj random5_series.obj \
+              random5_monomials.obj random5_polynomials.obj \
+              random8_vectors.obj random8_series.obj \
+              random8_monomials.obj random8_polynomials.obj \
+              random10_vectors.obj random10_series.obj \
+              random10_monomials.obj random10_polynomials.obj \
+              convolution_job.obj convolution_jobs.obj \
+              addition_job.obj addition_jobs.obj \
+              job_coordinates.obj write_job_counts.obj \
+              dbl_convolutions_host.obj dbl_monomials_host.obj \
+              dbl_polynomials_host.obj dbl_polynomials_testers.obj \
+              dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+              dbl2_polynomials_host.obj dbl2_polynomials_testers.obj \
+              dbl3_convolutions_host.obj dbl3_monomials_host.obj \
+              dbl3_polynomials_host.obj dbl3_polynomials_testers.obj \
+              dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+              dbl4_polynomials_host.obj dbl4_polynomials_testers.obj \
+              dbl5_convolutions_host.obj dbl5_monomials_host.obj \
+              dbl5_polynomials_host.obj dbl5_polynomials_testers.obj \
+              dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+              dbl8_polynomials_host.obj dbl8_polynomials_testers.obj \
+              dbl10_convolutions_host.obj dbl10_monomials_host.obj \
+              dbl10_polynomials_host.obj dbl10_polynomials_testers.obj \
+              polynomials_kernels.obj run_polynomials.obj
+
 clean:
 	del *~
+	del run_polynomials.exe run_polynomials.obj
+	del run_polynomials.exp run_polynomials.lib
+	del run_dbl_polynomials.exe run_dbl_polynomials.obj
+	del run_dbl_polynomials.exp run_dbl_polynomials.lib
+	del run_dbl2_polynomials.exe run_dbl2_polynomials.obj
+	del run_dbl2_polynomials.exp run_dbl2_polynomials.lib
+	del run_dbl3_polynomials.exe run_dbl3_polynomials.obj
+	del run_dbl3_polynomials.exp run_dbl3_polynomials.lib
+	del run_dbl4_polynomials.exe run_dbl4_polynomials.obj
+	del run_dbl4_polynomials.exp run_dbl4_polynomials.lib
+	del run_dbl5_polynomials.exe run_dbl5_polynomials.obj
+	del run_dbl5_polynomials.exp run_dbl5_polynomials.lib
+	del run_dbl8_polynomials.exe run_dbl8_polynomials.obj
+	del run_dbl8_polynomials.exp run_dbl8_polynomials.lib
+	del run_dbl10_polynomials.exe run_dbl10_polynomials.obj
+	del run_dbl10_polynomials.exp run_dbl10_polynomials.lib
 	del test_polynomials.exe test_polynomials.obj
 	del test_polynomials.exp test_polynomials.lib
 	del test_dbl10_polynomials.exe test_dbl10_polynomials.obj
