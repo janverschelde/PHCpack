@@ -97,7 +97,8 @@ double dbl4_error_sum
  *   verbose  if true, then all results and intermediate errors are shown. */
 
 double test_dbl4_real_polynomial
- ( int dim, int nbr, int nva, int pwr, int deg, int verbose );
+ ( int dim, int nbr, int nva, int pwr, int deg, int verbose,
+   bool jobrep=true );
 /*
  * DESCRIPTION :
  *   Tests the evaluation and differentiation for random real data.
@@ -110,11 +111,16 @@ double test_dbl4_real_polynomial
  *   pwr      highest power of each variable;
  *   deg      truncation degree of the series;
  *   verbose  if zero, then no output is written,
- *            otherwise, the higher the value, the more output. */
+ *            otherwise, the higher the value, the more output;
+ *   jobrep   if verbose is nonzero and jobrep is true,
+ *            then the jobs report is written,
+ *            otherwise no jobs report is written.
+ *            When running the same problems in many precisions,
+ *            this jobs reports needs to be written only once. */
 
 int main_dbl4_test_polynomial
  ( int seed, int dim, int nbr, int nva, int pwr, int deg, int vrblvl,
-   double tol=1.0e-56 );
+   double tol=1.0e-56, bool jobrep=true );
 /*
  * DESCRIPTION :
  *   Runs tests on a random polynomial in triple double precision.
@@ -134,6 +140,11 @@ int main_dbl4_test_polynomial
  *            if 2, then job counts and timings are listed,
  *            if 3 (or higher), then all values are written;
  *   tol      tolerance to decide pass or fail,
- *            fail if the sum of all errors is larger than tol. */
+ *            fail if the sum of all errors is larger than tol;
+ *   jobrep   if verbose is nonzero and jobrep is true,
+ *            then the jobs report is written,
+ *            otherwise no jobs report is written.
+ *            When running the same problems in many precisions,
+ *            this jobs reports needs to be written only once. */
 
 #endif

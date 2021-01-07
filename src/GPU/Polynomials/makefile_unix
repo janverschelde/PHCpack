@@ -341,6 +341,38 @@ test_polynomials.o:
 	@-echo ">>> compiling test_polynomials ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_polynomials.cpp
 
+run_dbl_polynomials.o:
+	@-echo ">>> compiling run_dbl_polynomials ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) run_dbl_polynomials.cpp
+
+run_dbl2_polynomials.o:
+	@-echo ">>> compiling run_dbl2_polynomials ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) run_dbl2_polynomials.cpp
+
+run_dbl3_polynomials.o:
+	@-echo ">>> compiling run_dbl3_polynomials ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) run_dbl3_polynomials.cpp
+
+run_dbl4_polynomials.o:
+	@-echo ">>> compiling run_dbl4_polynomials ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) run_dbl4_polynomials.cpp
+
+run_dbl5_polynomials.o:
+	@-echo ">>> compiling run_dbl5_polynomials ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) run_dbl5_polynomials.cpp
+
+run_dbl8_polynomials.o:
+	@-echo ">>> compiling run_dbl8_polynomials ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) run_dbl8_polynomials.cpp
+
+run_dbl10_polynomials.o:
+	@-echo ">>> compiling run_dbl10_polynomials ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) run_dbl10_polynomials.cpp
+
+run_polynomials.o:
+	@-echo ">>> compiling run_polynomials ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) run_polynomials.cpp
+
 convolution_job.o:
 	@-echo ">>> compiling convolution_job ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) convolution_job.cpp
@@ -638,7 +670,260 @@ test_polynomials: random_numbers.o random_series.o random_monomials.o \
                   polynomials_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
 
+run_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
+                     random_polynomials.o prompt_for_setup.o \
+                     convolution_job.o convolution_jobs.o \
+                     addition_job.o addition_jobs.o \
+                     job_coordinates.o write_job_counts.o \
+                     dbl_convolutions_host.o dbl_monomials_host.o \
+                     dbl_polynomials_host.o dbl_polynomials_kernels.o \
+                     dbl_polynomials_testers.o run_dbl_polynomials.o
+	@-echo ">>> linking ..."
+	$(gpp) -o run_dbl_polynomials run_dbl_polynomials.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o \
+                  job_coordinates.o write_job_counts.o \
+                  dbl_convolutions_host.o dbl_monomials_host.o \
+                  dbl_polynomials_host.o dbl_polynomials_kernels.o \
+                  prompt_for_setup.o dbl_polynomials_testers.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
+run_dbl2_polynomials: random_numbers.o random_series.o random_monomials.o \
+                      random_polynomials.o double_double_functions.o \
+                      random2_vectors.o random2_series.o random2_monomials.o \
+                      random2_polynomials.o run_dbl2_polynomials.o \
+                      convolution_job.o convolution_jobs.o \
+                      addition_job.o addition_jobs.o \
+                      job_coordinates.o write_job_counts.o \
+                      dbl2_convolutions_host.o dbl2_monomials_host.o \
+                      dbl2_polynomials_host.o dbl2_polynomials_kernels.o \
+                      prompt_for_setup.o dbl2_polynomials_testers.o
+	@-echo ">>> linking ..."
+	$(gpp) -o run_dbl2_polynomials run_dbl2_polynomials.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o double_double_functions.o \
+                  random2_vectors.o random2_series.o \
+                  random2_monomials.o random2_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o \
+                  job_coordinates.o write_job_counts.o \
+                  dbl2_convolutions_host.o dbl2_monomials_host.o \
+                  dbl2_polynomials_host.o dbl2_polynomials_kernels.o \
+                  prompt_for_setup.o dbl2_polynomials_testers.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
+run_dbl3_polynomials: random_numbers.o random_series.o random_monomials.o \
+                      random_polynomials.o double_double_functions.o \
+                      triple_double_functions.o \
+                      random3_vectors.o random3_series.o random3_monomials.o \
+                      random3_polynomials.o run_dbl3_polynomials.o \
+                      convolution_job.o convolution_jobs.o \
+                      addition_job.o addition_jobs.o \
+                      job_coordinates.o write_job_counts.o \
+                      dbl3_convolutions_host.o dbl3_monomials_host.o \
+                      dbl3_polynomials_host.o dbl3_polynomials_kernels.o \
+                      prompt_for_setup.o dbl3_polynomials_testers.o
+	@-echo ">>> linking ..."
+	$(gpp) -o run_dbl3_polynomials run_dbl3_polynomials.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o double_double_functions.o \
+                  triple_double_functions.o \
+                  random3_vectors.o random3_series.o \
+                  random3_monomials.o random3_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o \
+                  job_coordinates.o write_job_counts.o \
+                  dbl3_convolutions_host.o dbl3_monomials_host.o \
+                  dbl3_polynomials_host.o dbl3_polynomials_kernels.o \
+                  prompt_for_setup.o dbl3_polynomials_testers.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
+run_dbl4_polynomials: random_numbers.o random_series.o random_monomials.o \
+                      random_polynomials.o double_double_functions.o \
+                      quad_double_functions.o \
+                      random4_vectors.o random4_series.o random4_monomials.o \
+                      random4_polynomials.o run_dbl4_polynomials.o \
+                      convolution_job.o convolution_jobs.o \
+                      addition_job.o addition_jobs.o \
+                      job_coordinates.o write_job_counts.o \
+                      dbl4_convolutions_host.o dbl4_monomials_host.o \
+                      dbl4_polynomials_host.o dbl4_polynomials_kernels.o \
+                      prompt_for_setup.o dbl4_polynomials_testers.o
+	@-echo ">>> linking ..."
+	$(gpp) -o run_dbl4_polynomials run_dbl4_polynomials.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o double_double_functions.o \
+                  quad_double_functions.o \
+                  random4_vectors.o random4_series.o \
+                  random4_monomials.o random4_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o \
+                  job_coordinates.o write_job_counts.o \
+                  dbl4_convolutions_host.o dbl4_monomials_host.o \
+                  dbl4_polynomials_host.o dbl4_polynomials_kernels.o \
+                  prompt_for_setup.o dbl4_polynomials_testers.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
+run_dbl5_polynomials: random_numbers.o random_series.o random_monomials.o \
+                      random_polynomials.o double_double_functions.o \
+                      penta_double_functions.o \
+                      random5_vectors.o random5_series.o random5_monomials.o \
+                      random5_polynomials.o run_dbl5_polynomials.o \
+                      convolution_job.o convolution_jobs.o \
+                      addition_job.o addition_jobs.o \
+                      job_coordinates.o write_job_counts.o \
+                      dbl5_convolutions_host.o dbl5_monomials_host.o \
+                      dbl5_polynomials_host.o dbl5_polynomials_kernels.o \
+                      prompt_for_setup.o dbl5_polynomials_testers.o
+	@-echo ">>> linking ..."
+	$(gpp) -o run_dbl5_polynomials run_dbl5_polynomials.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o double_double_functions.o \
+                  penta_double_functions.o \
+                  random5_vectors.o random5_series.o \
+                  random5_monomials.o random5_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o \
+                  job_coordinates.o write_job_counts.o \
+                  dbl5_convolutions_host.o dbl5_monomials_host.o \
+                  dbl5_polynomials_host.o dbl5_polynomials_kernels.o \
+                  prompt_for_setup.o dbl5_polynomials_testers.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
+run_dbl8_polynomials: random_numbers.o random_series.o random_monomials.o \
+                      random_polynomials.o double_double_functions.o \
+                      quad_double_functions.o octo_double_functions.o \
+                      random8_vectors.o random8_series.o random8_monomials.o \
+                      random8_polynomials.o run_dbl8_polynomials.o \
+                      convolution_job.o convolution_jobs.o \
+                      addition_job.o addition_jobs.o \
+                      job_coordinates.o write_job_counts.o \
+                      dbl8_convolutions_host.o dbl8_monomials_host.o \
+                      dbl8_polynomials_host.o dbl8_polynomials_kernels.o \
+                      prompt_for_setup.o dbl8_polynomials_testers.o
+	@-echo ">>> linking ..."
+	$(gpp) -o run_dbl8_polynomials run_dbl8_polynomials.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o double_double_functions.o \
+                  quad_double_functions.o octo_double_functions.o \
+                  random8_vectors.o random8_series.o \
+                  random8_monomials.o random8_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o \
+                  job_coordinates.o write_job_counts.o \
+                  dbl8_convolutions_host.o dbl8_monomials_host.o \
+                  dbl8_polynomials_host.o dbl8_polynomials_kernels.o \
+                  prompt_for_setup.o dbl8_polynomials_testers.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
+run_dbl10_polynomials: random_numbers.o random_series.o random_monomials.o \
+                       random_polynomials.o double_double_functions.o \
+                       quad_double_functions.o octo_double_functions.o \
+                       deca_double_functions.o \
+                       random10_vectors.o random10_series.o \
+                       random10_monomials.o random10_polynomials.o \
+                       run_dbl10_polynomials.o \
+                       convolution_job.o convolution_jobs.o \
+                       addition_job.o addition_jobs.o \
+                       job_coordinates.o write_job_counts.o \
+                       dbl10_convolutions_host.o dbl10_monomials_host.o \
+                       dbl10_polynomials_host.o dbl10_polynomials_kernels.o \
+                       prompt_for_setup.o dbl10_polynomials_testers.o
+	@-echo ">>> linking ..."
+	$(gpp) -o run_dbl10_polynomials run_dbl10_polynomials.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o double_double_functions.o \
+                  quad_double_functions.o octo_double_functions.o \
+                  deca_double_functions.o \
+                  random10_vectors.o random10_series.o \
+                  random10_monomials.o random10_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o \
+                  job_coordinates.o write_job_counts.o \
+                  dbl10_convolutions_host.o dbl10_monomials_host.o \
+                  dbl10_polynomials_host.o dbl10_polynomials_kernels.o \
+                  prompt_for_setup.o dbl10_polynomials_testers.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
+run_polynomials: random_numbers.o random_series.o random_monomials.o \
+                 random_polynomials.o double_double_functions.o \
+                 random2_vectors.o random2_series.o random2_monomials.o \
+                 random2_polynomials.o triple_double_functions.o \
+                 random3_vectors.o random3_series.o random3_monomials.o \
+                 random3_polynomials.o quad_double_functions.o \
+                 random4_vectors.o random4_series.o random4_monomials.o \
+                 random4_polynomials.o penta_double_functions.o \
+                 random5_vectors.o random5_series.o random5_monomials.o \
+                 random5_polynomials.o octo_double_functions.o \
+                 random8_vectors.o random8_series.o random8_monomials.o \
+                 random8_polynomials.o deca_double_functions.o \
+                 random10_vectors.o random10_series.o random10_monomials.o \
+                 random10_polynomials.o prompt_for_setup.o \
+                 convolution_job.o convolution_jobs.o \
+                 addition_job.o addition_jobs.o \
+                 job_coordinates.o write_job_counts.o \
+                 dbl_convolutions_host.o dbl_monomials_host.o \
+                 dbl_polynomials_host.o dbl_polynomials_testers.o \
+                 dbl2_convolutions_host.o dbl2_monomials_host.o \
+                 dbl2_polynomials_host.o dbl2_polynomials_testers.o \
+                 dbl3_convolutions_host.o dbl3_monomials_host.o \
+                 dbl3_polynomials_host.o dbl3_polynomials_testers.o \
+                 dbl4_convolutions_host.o dbl4_monomials_host.o \
+                 dbl4_polynomials_host.o dbl4_polynomials_testers.o \
+                 dbl5_convolutions_host.o dbl5_monomials_host.o \
+                 dbl5_polynomials_host.o dbl5_polynomials_testers.o \
+                 dbl8_convolutions_host.o dbl8_monomials_host.o \
+                 dbl8_polynomials_host.o dbl8_polynomials_testers.o \
+                 dbl10_convolutions_host.o dbl10_monomials_host.o \
+                 dbl10_polynomials_host.o dbl10_polynomials_testers.o \
+                 polynomials_kernels.o run_polynomials.o
+	@-echo ">>> linking ..."
+	$(gpp) -o run_polynomials run_polynomials.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o double_double_functions.o \
+                  random2_vectors.o random2_series.o random2_monomials.o \
+                  random2_polynomials.o triple_double_functions.o \
+                  random3_vectors.o random3_series.o random3_monomials.o \
+                  random3_polynomials.o quad_double_functions.o \
+                  random4_vectors.o random4_series.o random4_monomials.o \
+                  random4_polynomials.o penta_double_functions.o \
+                  random5_vectors.o random5_series.o random5_monomials.o \
+                  random5_polynomials.o octo_double_functions.o \
+                  random8_vectors.o random8_series.o random8_monomials.o \
+                  random8_polynomials.o deca_double_functions.o \
+                  random10_vectors.o random10_series.o random10_monomials.o \
+                  random10_polynomials.o prompt_for_setup.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o \
+                  job_coordinates.o write_job_counts.o \
+                  dbl_convolutions_host.o dbl_monomials_host.o \
+                  dbl_polynomials_host.o dbl_polynomials_testers.o \
+                  dbl2_convolutions_host.o dbl2_monomials_host.o \
+                  dbl2_polynomials_host.o dbl2_polynomials_testers.o \
+                  dbl3_convolutions_host.o dbl3_monomials_host.o \
+                  dbl3_polynomials_host.o dbl3_polynomials_testers.o \
+                  dbl4_convolutions_host.o dbl4_monomials_host.o \
+                  dbl4_polynomials_host.o dbl4_polynomials_testers.o \
+                  dbl5_convolutions_host.o dbl5_monomials_host.o \
+                  dbl5_polynomials_host.o dbl5_polynomials_testers.o \
+                  dbl8_convolutions_host.o dbl8_monomials_host.o \
+                  dbl8_polynomials_host.o dbl8_polynomials_testers.o \
+                  dbl10_convolutions_host.o dbl10_monomials_host.o \
+                  dbl10_polynomials_host.o dbl10_polynomials_testers.o \
+                  polynomials_kernels.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
 clean:
+	/bin/rm -f -r run_polynomials.o run_polynomials
+	/bin/rm -f -r run_dbl10_polynomials.o run_dbl10_polynomials
+	/bin/rm -f -r run_dbl8_polynomials.o run_dbl8_polynomials
+	/bin/rm -f -r run_dbl5_polynomials.o run_dbl5_polynomials
+	/bin/rm -f -r run_dbl4_polynomials.o run_dbl4_polynomials
+	/bin/rm -f -r run_dbl3_polynomials.o run_dbl3_polynomials
+	/bin/rm -f -r run_dbl2_polynomials.o run_dbl2_polynomials
+	/bin/rm -f -r run_dbl_polynomials.o run_dbl_polynomials
 	/bin/rm -f -r test_polynomials.o test_polynomials
 	/bin/rm -f -r polynomials_kernels.o
 	/bin/rm -f -r test_dbl10_polynomials.o test_dbl10_polynomials

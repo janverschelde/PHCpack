@@ -1,4 +1,6 @@
 Thu 7 Jan 2021 : applied prompt_for_setup in test_polynomials.cpp.
+  Added to all testers a flag to suppress the jobs report at the end.
+  New run_*cpp to run specific examples to test the performance.
 
 Wed 6 Jan 2021 : in all testers, separated the computation of the sum of
   errors into a separate function.  In addition, factored out the setup

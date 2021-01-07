@@ -20,7 +20,8 @@
 using namespace std;
 
 int main_dbl10_test_polynomial
- ( int seed, int dim, int nbr, int nva, int pwr, int deg, int vrblvl )
+ ( int seed, int dim, int nbr, int nva, int pwr, int deg, int vrblvl,
+   double tol, bool jobrep )
 {
    int seedused;
 
@@ -37,9 +38,8 @@ int main_dbl10_test_polynomial
    }
    if(vrblvl > 0) cout << "  Seed used : " << seedused << endl;
 
-   double realsum = test_dbl10_real_polynomial(dim,nbr,nva,pwr,deg,vrblvl-1);
-
-   const double tol = 1.0e-152;
+   double realsum = test_dbl10_real_polynomial
+                       (dim,nbr,nva,pwr,deg,vrblvl-1,jobrep);
 
    int fail = int(realsum > tol);
 
@@ -328,7 +328,7 @@ double dbl10_error_sum
 }
 
 double test_dbl10_real_polynomial
- ( int dim, int nbr, int nva, int pwr, int deg, int verbose )
+ ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep )
 {
    if(nbr < 1)
       return 0.0;
@@ -555,16 +555,18 @@ double test_dbl10_real_polynomial
 
       if(verbose > 0)
       {
-         cout << "dimension : " << dim << endl;
-         if(nva > 0)
+         if(jobrep)
          {
-            cout << "number of variables per monomial : " << nva << endl;
+            cout << "dimension : " << dim << endl;
+            if(nva > 0)
+            {
+               cout << "number of variables per monomial : " << nva << endl;
+            }
+            cout << "number of monomials : " << nbr << endl;
+            write_convolution_counts(cnvjobs);
+            write_addition_counts(addjobs);
+            write_operation_counts(deg,cnvjobs,addjobs);
          }
-         cout << "number of monomials : " << nbr << endl;
-         write_convolution_counts(cnvjobs);
-         write_addition_counts(addjobs);
-         write_operation_counts(deg,cnvjobs,addjobs);
-
          cout << fixed << setprecision(3);
          cout << "Elapsed CPU time (Linux), Wall time (Windows) : " << endl;
          cout << "  (1) without jobs : " << timelapsec1_h << " seconds,"

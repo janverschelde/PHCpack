@@ -57,3 +57,12 @@ test_dbl10_polynomials     : main test in deca double precision
 polynomials_kernels        : includes all cuda polynomials code
 test_polynomials           : test in all precisions
 -----------------------------------------------------------------------------
+run_dbl_polynomials        : run specific tests in double precision
+run_dbl2_polynomials       : run specific tests in double double precision
+run_dbl3_polynomials       : run specific tests in triple double precision
+run_dbl4_polynomials       : run specific tests in quad double precision
+run_dbl5_polynomials       : run specific tests in penta double precision
+run_dbl8_polynomials       : run specific tests in octo double precision
+run_dbl10_polynomials      : run specific tests in deca double precision
+run_polynomials            : run specific tests in all precisions
+-----------------------------------------------------------------------------
