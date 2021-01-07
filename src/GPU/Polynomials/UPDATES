@@ -1,6 +1,8 @@
 Wed 6 Jan 2021 : in all testers, separated the computation of the sum of
   errors into a separate function.  In addition, factored out the setup
   of the input into separate functions in all testers.
+  Moved the prompting for the setup into a separate function,
+  out of all test_dbl*_polynomials.cpp.  Update the makefiles.
 
 Tue 5 Jan 2021 : added timers with CUDA events to all kernels, reported by
   all testers.cpp.  Added timers with clock() to all host code, updated
