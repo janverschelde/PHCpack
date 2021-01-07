@@ -1,3 +1,5 @@
+Thu 7 Jan 2021 : applied prompt_for_setup in test_polynomials.cpp.
+
 Wed 6 Jan 2021 : in all testers, separated the computation of the sum of
   errors into a separate function.  In addition, factored out the setup
   of the input into separate functions in all testers.
