@@ -5,7 +5,7 @@
 #ifndef __DBL10_CONVOLUTIONS_KERNELS_H__
 #define __DBL10_CONVOLUTIONS_KERNELS_H__
 
-#define da_shmemsize 64
+#define da_shmemsize 153
 
 /* The constant da_shmemsize is the bound on the shared memory size,
  * to compute the product of series with complex deca double coefficients.

@@ -1,3 +1,6 @@
+Thu 7 Jan 2021 : in dbl8_convolutions_kernels.h, dbl10_convolution_kernels.h
+  increased the shared memory size from 64 to 192 and 153 respectively.
+
 Mon 4 jan 2021 : in dbl2_convolutions_kernels.h, increased the shared memory 
   size from 128 to 192.
 
