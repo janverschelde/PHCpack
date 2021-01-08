@@ -15,7 +15,7 @@ void prompt_for_setup
    cout << "Give the variables per monomial (0 for random polynomial) : ";
    cin >> *nva;
 
-   if(nva > 0)
+   if(*nva > 0)
    {
       cout << "Enter 0 for products, other number of cyclic : ";
       cin >> *nbr;
