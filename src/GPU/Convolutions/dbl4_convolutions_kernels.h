@@ -5,7 +5,7 @@
 #ifndef __DBL4_CONVOLUTIONS_KERNELS_H__
 #define __DBL4_CONVOLUTIONS_KERNELS_H__
 
-#define qd_shmemsize 128
+#define qd_shmemsize 192
 
 /* The constant qd_shmemsize is the bound on the shared memory size,
  * to compute the product of series with complex quad double coefficients.

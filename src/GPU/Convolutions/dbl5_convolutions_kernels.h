@@ -5,7 +5,7 @@
 #ifndef __DBL5_CONVOLUTIONS_KERNELS_H__
 #define __DBL5_CONVOLUTIONS_KERNELS_H__
 
-#define pd_shmemsize 128
+#define pd_shmemsize 192
 
 /* The constant pd_shmemsize is the bound on the shared memory size,
  * to compute the product of series with complex penta double coefficients.
