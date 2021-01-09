@@ -5,7 +5,7 @@
 #ifndef __DBL8_CONVOLUTIONS_KERNELS_H__
 #define __DBL8_CONVOLUTIONS_KERNELS_H__
 
-#define od_shmemsize 192
+#define od_shmemsize 64
 
 /* The constant od_shmemsize is the bound on the shared memory size,
  * to compute the product of series with complex octo double coefficients.
