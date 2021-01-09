@@ -10,8 +10,11 @@
 #include "quad_double_gpufun.cu"
 #include "octo_double_gpufun.cu"
 #endif
-#include "dbl8_convolutions_kernels.h"
 #include "dbl8_polynomials_kernels.h"
+
+// The constant od_shmemsize is the bound on the shared memory size.
+
+#define od_shmemsize 192
 
 using namespace std;
 

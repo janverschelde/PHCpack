@@ -9,8 +9,13 @@
 #include "double_double_gpufun.cu"
 #include "penta_double_gpufun.cu"
 #endif
-#include "dbl5_convolutions_kernels.h"
 #include "dbl5_polynomials_kernels.h"
+
+// The constant pd_shmemsize is the bound on the shared memory size.
+
+#define pd_shmemsize 192
+
+using namespace std;
 
 __global__ void dbl5_padded_convjobs
  ( double *datatb, double *dataix, double *datami, 

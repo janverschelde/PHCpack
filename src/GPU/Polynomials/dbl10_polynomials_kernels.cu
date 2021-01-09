@@ -11,8 +11,13 @@
 #include "octo_double_gpufun.cu"
 #include "deca_double_gpufun.cu"
 #endif
-#include "dbl10_convolutions_kernels.h"
 #include "dbl10_polynomials_kernels.h"
+
+// The constant da_shmemsize is the bound on the shared memory size.
+
+#define da_shmemsize 153
+
+using namespace std;
 
 __global__ void dbl10_padded_convjobs
  ( double *datartb, double *datarix, double *datarmi, 

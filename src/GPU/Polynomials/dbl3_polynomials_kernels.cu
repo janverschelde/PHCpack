@@ -9,8 +9,11 @@
 #include "double_double_gpufun.cu"
 #include "triple_double_gpufun.cu"
 #endif
-#include "dbl3_convolutions_kernels.h"
 #include "dbl3_polynomials_kernels.h"
+
+// The constant td_shmemsize is the bound on the shared memory size.
+
+#define td_shmemsize 192
 
 using namespace std;
 

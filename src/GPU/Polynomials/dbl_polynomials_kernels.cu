@@ -4,8 +4,11 @@
 #include <iostream>
 #include <iomanip>
 #include "job_coordinates.h"
-#include "dbl_convolutions_kernels.h"
 #include "dbl_polynomials_kernels.h"
+
+// The constant d_shmemsize is the bound on the shared memory size.
+
+#define d_shmemsize 256
 
 using namespace std;
 

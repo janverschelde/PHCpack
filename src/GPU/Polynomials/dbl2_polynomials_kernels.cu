@@ -8,8 +8,11 @@
 #ifdef gpufun
 #include "double_double_gpufun.cu"
 #endif
-#include "dbl2_convolutions_kernels.h"
 #include "dbl2_polynomials_kernels.h"
+
+// The constant dd_shmemsize is the bound on the shared memory size.
+
+#define dd_shmemsize 192
 
 using namespace std;
 

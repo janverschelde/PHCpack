@@ -9,8 +9,11 @@
 #include "double_double_gpufun.cu"
 #include "quad_double_gpufun.cu"
 #endif
-#include "dbl4_convolutions_kernels.h"
 #include "dbl4_polynomials_kernels.h"
+
+// The constant qd_shmemsize is the bound on the shared memory size.
+
+#define qd_shmemsize 192
 
 using namespace std;
 
