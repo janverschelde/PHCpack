@@ -4,7 +4,8 @@
 #define __prompt_for_setup_h__
 
 void prompt_for_setup
- ( int *seed, int *dim, int *nbr, int *nva, int *pwr, int *deg, int *vrb );
+ ( int *seed, int *dim, int *nbr, int *nva, int *pwr, int *deg, int *vrb,
+   int *mode );
 /*
  * DESCRIPTION :
  *   Prompts for the parameters to setup an experiment.
@@ -16,6 +17,7 @@ void prompt_for_setup
  *   nva      number of variables per monomial (0 for random polynomial);
  *   pwr      largest power of a variable;
  *   deg      degree of the series;
- *   vrb      the verbose level. */
+ *   vrb      the verbose level;
+ *   mode     execution mode, 0, 1 or 2. */
 
 #endif

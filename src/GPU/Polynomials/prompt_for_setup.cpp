@@ -6,7 +6,8 @@
 using namespace std;
 
 void prompt_for_setup
- ( int *seed, int *dim, int *nbr, int *nva, int *pwr, int *deg, int *vrb )
+ ( int *seed, int *dim, int *nbr, int *nva, int *pwr, int *deg, int *vrb,
+   int *mode )
 {
    cout << "Give the seed (0 for time) : "; cin >> *seed;
 
@@ -37,4 +38,7 @@ void prompt_for_setup
    cout << "Give the degree of the series : "; cin >> *deg;
 
    cout << "Give the verbose level : "; cin >> *vrb;
+
+   cout << "Enter 0 (GPU only), 1 (CPU only), or 2 (GPU+CPU) : ";
+   cin >> *mode;
 }
