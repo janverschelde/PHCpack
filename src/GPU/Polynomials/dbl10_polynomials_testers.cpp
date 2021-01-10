@@ -573,8 +573,9 @@ double test_dbl10_real_polynomial
               << endl;
          cout << "  (2) cnv/add jobs : " << timelapsec2_h << " seconds."
               << endl;
-         cout << "Time spent by all kernels in milliseconds : ";
-         cout << fixed << setprecision(2) << timelapms_d << endl;
+         cout << "Time spent by all kernels : ";
+         cout << fixed << setprecision(2) << timelapms_d
+              << " milliseconds." << endl;
          cout << scientific << setprecision(16);
       }
       return sumerr;

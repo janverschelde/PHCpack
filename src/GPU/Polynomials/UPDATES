@@ -1,3 +1,6 @@
+Sun 10 Jan 2021 : Updated {dbl2,dbl3,dbl4,dbl5,dbl8,dbl10}_polynomials_
+  testers.cpp to report the times as in dbl_polynomials_testers.cpp.
+
 Fri 8 Jan 2021 : Extended run_{dbl,dbl2,dbl3,dbl4,dbl5}_polynomials.cpp
   with more specific tests for an increasing sequence of degrees.
   Updated all dbl*_polynomials_kernels.cu with the definition of the
