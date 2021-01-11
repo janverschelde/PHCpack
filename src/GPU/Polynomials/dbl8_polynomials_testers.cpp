@@ -459,7 +459,7 @@ double test_dbl8_real_polynomial
          }
       }
       double timelapsec1_h,timelapsec2_h;
-      double cnvlapms,addlapms,timelapms_d;
+      double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
       if((mode == 1) || (mode == 2))
       {
@@ -501,7 +501,8 @@ double test_dbl8_real_polynomial
              inputlohihi,inputlolohi,inputlohilo,inputlololo,
              outputhihihi_d,outputhilohi_d,outputhihilo_d,outputhilolo_d,
              outputlohihi_d,outputlolohi_d,outputlohilo_d,outputlololo_d,
-             cnvjobs,addjobs,&cnvlapms,&addlapms,&timelapms_d,vrb);
+             cnvjobs,addjobs,&cnvlapms,&addlapms,&timelapms_d,
+             &walltimes_d,vrb);
       }
       double sumerr = 0.0;
       if(mode == 2)
@@ -552,6 +553,9 @@ double test_dbl8_real_polynomial
                  << addlapms << " milliseconds." << endl;
             cout << "Time spent by all kernels         : "
                  << timelapms_d << " milliseconds." << endl;
+            cout << "Total wall clock computation time : ";
+            cout << fixed << setprecision(3) << walltimes_d
+                 << " seconds." << endl;
             cout << scientific << setprecision(16);
          }
       }

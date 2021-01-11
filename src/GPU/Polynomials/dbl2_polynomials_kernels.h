@@ -143,7 +143,7 @@ void GPU_dbl2_poly_evaldiff
    double **outputhi, double **outputlo,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
    double *cnvlapms, double *addlapms, double *elapsedms,
-   bool verbose=true );
+   double *walltimesec, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiations a polynomial in 
@@ -189,6 +189,8 @@ void GPU_dbl2_poly_evaldiff
  *   addlapms is the elapsed time spent by all addition kernels,
  *            expressed in milliseconds;
  *   elapsedms is the elapsed time spent by all kernels,
- *            expressed in milliseconds. */
+ *            expressed in milliseconds;
+ *   walltimesec is the elapsed wall clock time for all computations
+ *            (excluding memory copies) in seconds. */
 
 #endif

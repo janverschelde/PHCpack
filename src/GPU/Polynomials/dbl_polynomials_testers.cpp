@@ -250,7 +250,7 @@ double test_dbl_real_polynomial
          }
       }
       double timelapsec1_h,timelapsec2_h;
-      double cnvlapms,addlapms,timelapms_d;
+      double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
       if((mode == 1) || (mode == 2))
       {
@@ -267,7 +267,8 @@ double test_dbl_real_polynomial
          if(vrb) cout << "Computing on the device ..." << endl;
          GPU_dbl_poly_evaldiff
             (deg+1,dim,nbr,deg,nvr,idx,cst,cff,input,output_d,
-             cnvjobs,addjobs,&cnvlapms,&addlapms,&timelapms_d,vrb);
+             cnvjobs,addjobs,&cnvlapms,&addlapms,&timelapms_d,
+             &walltimes_d,vrb);
       }
       double sumerr = 0.0;
       if(mode == 2)
@@ -306,6 +307,9 @@ double test_dbl_real_polynomial
                  << addlapms << " milliseconds." << endl;
             cout << "Time spent by all kernels         : "
                  << timelapms_d << " milliseconds." << endl;
+            cout << "Total wall clock computation time : ";
+            cout << fixed << setprecision(3) << walltimes_d
+                 << " seconds." << endl;
             cout << scientific << setprecision(16);
          }
       } 

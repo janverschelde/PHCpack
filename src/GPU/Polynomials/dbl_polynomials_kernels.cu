@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <sys/time.h>
 #include "job_coordinates.h"
 #include "dbl_polynomials_kernels.h"
 
@@ -214,7 +215,7 @@ void GPU_dbl_poly_evaldiff
    double *cst, double **cff, double **input, double **output,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
    double *cnvlapms, double *addlapms, double *elapsedms,
-   bool verbose )
+   double *walltimesec, bool verbose )
 {
    const int deg1 = deg+1;
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
@@ -258,13 +259,15 @@ void GPU_dbl_poly_evaldiff
    cudaMalloc((void**)&data_d,szdata);
    cudaMemcpy(data_d,data_h,szdata,cudaMemcpyHostToDevice);
 
-   cudaEvent_t start,stop;
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
    cudaEventCreate(&stop);
    *cnvlapms = 0.0;
    *addlapms = 0.0;
    float milliseconds;
+   struct timeval begintime,endtime; // wall clock time of computations
 
+   gettimeofday(&begintime,0);
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
       const int jobnbr = cnvjobs.get_layer_count(k);
@@ -343,13 +346,18 @@ void GPU_dbl_poly_evaldiff
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
+   gettimeofday(&endtime,0);
    cudaMemcpy(data_h,data_d,szdata,cudaMemcpyDeviceToHost);
    *elapsedms = *cnvlapms + *addlapms;
+   long seconds = endtime.tv_sec - begintime.tv_sec;
+   long microseconds = endtime.tv_usec - begintime.tv_usec;
+   *walltimesec = seconds + microseconds*1.0e-6;
 
    // convoluted_data_to_output
    //    (data_h,output,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,verbose);
    added_data_to_output
-      (data_h,output,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,addjobs,verbose);
+      (data_h,output,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,
+       addjobs,verbose);
    if(verbose)
    {
       cout << fixed << setprecision(2);
@@ -359,6 +367,9 @@ void GPU_dbl_poly_evaldiff
       cout << *addlapms << " milliseconds." << endl;
       cout << "Time spent by all kernels         : ";
       cout << *elapsedms << " milliseconds." << endl;
+      cout << "Total wall clock computation time : ";
+      cout << fixed << setprecision(3) << *walltimesec
+           << " seconds." << endl;
       cout << scientific << setprecision(16);
    }
 }
