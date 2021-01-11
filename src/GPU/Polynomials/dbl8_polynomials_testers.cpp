@@ -458,7 +458,8 @@ double test_dbl8_real_polynomial
                cout << addjobs.get_job(k,i) << endl;
          }
       }
-      double timelapsec1_h,timelapsec2_h,timelapms_d;
+      double timelapsec1_h,timelapsec2_h;
+      double cnvlapms,addlapms,timelapms_d;
 
       if((mode == 1) || (mode == 2))
       {
@@ -500,7 +501,7 @@ double test_dbl8_real_polynomial
              inputlohihi,inputlolohi,inputlohilo,inputlololo,
              outputhihihi_d,outputhilohi_d,outputhihilo_d,outputhilolo_d,
              outputlohihi_d,outputlolohi_d,outputlohilo_d,outputlololo_d,
-             cnvjobs,addjobs,&timelapms_d,vrb);
+             cnvjobs,addjobs,&cnvlapms,&addlapms,&timelapms_d,vrb);
       }
       double sumerr = 0.0;
       if(mode == 2)
@@ -544,9 +545,13 @@ double test_dbl8_real_polynomial
          }
          if((mode == 0) || (mode == 2))
          {
-            cout << "Time spent by all kernels : ";
-            cout << fixed << setprecision(2) << timelapms_d
-                 << " milliseconds." << endl;
+            cout << fixed << setprecision(2);
+            cout << "Time spent by convolution kernels : "
+                 << cnvlapms << " milliseconds." << endl;
+            cout << "Time spent by addition kernels    : "
+                 << addlapms << " milliseconds." << endl;
+            cout << "Time spent by all kernels         : "
+                 << timelapms_d << " milliseconds." << endl;
             cout << scientific << setprecision(16);
          }
       }

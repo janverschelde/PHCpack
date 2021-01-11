@@ -513,7 +513,8 @@ void GPU_dbl8_poly_evaldiff
    double **outputhihilo, double **outputhilolo,
    double **outputlohihi, double **outputlolohi,
    double **outputlohilo, double **outputlololo,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, double *elapsedms,
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs,
+   double *cnvlapms, double *addlapms, double *elapsedms,
    bool verbose )
 {
    const int deg1 = deg+1;
@@ -619,7 +620,8 @@ void GPU_dbl8_poly_evaldiff
    cudaEvent_t start,stop;
    cudaEventCreate(&start);
    cudaEventCreate(&stop);
-   *elapsedms = 0.0;
+   *cnvlapms = 0.0;
+   *addlapms = 0.0;
    float milliseconds;
 
    for(int k=0; k<cnvjobs.get_depth(); k++)
@@ -659,7 +661,7 @@ void GPU_dbl8_poly_evaldiff
          cudaEventRecord(stop);
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
-         *elapsedms += milliseconds;
+         *cnvlapms += milliseconds;
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
@@ -700,7 +702,7 @@ void GPU_dbl8_poly_evaldiff
          cudaEventRecord(stop);
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
-         *elapsedms += milliseconds;
+         *addlapms += milliseconds;
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
@@ -712,6 +714,7 @@ void GPU_dbl8_poly_evaldiff
    cudaMemcpy(datalolohi_h,datalolohi_d,szdata,cudaMemcpyDeviceToHost);
    cudaMemcpy(datalohilo_h,datalohilo_d,szdata,cudaMemcpyDeviceToHost);
    cudaMemcpy(datalololo_h,datalololo_d,szdata,cudaMemcpyDeviceToHost);
+   *elapsedms = *cnvlapms + *addlapms;
 
    // convoluted_data2_to_output
    //    (data_h,output,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,verbose);
@@ -723,8 +726,13 @@ void GPU_dbl8_poly_evaldiff
        dim,nbr,deg,nvr,idx,fstart,bstart,cstart,addjobs,verbose);
    if(verbose)
    {
-      cout << "Time spent by all kernels in milliseconds : ";
-      cout << fixed << setprecision(2) << *elapsedms << endl;
+      cout << fixed << setprecision(2);
+      cout << "Time spent by convolution kernels : ";
+      cout << *cnvlapms << " milliseconds." << endl;
+      cout << "Time spent by addition kernels    : ";
+      cout << *addlapms << " milliseconds." << endl;
+      cout << "Time spent by all kernels         : ";
+      cout << *elapsedms << " milliseconds." << endl;
       cout << scientific << setprecision(16);
    }
 }

@@ -311,7 +311,8 @@ void GPU_dbl8_poly_evaldiff
    double **outputhihilo, double **outputhilolo,
    double **outputlohihi, double **outputlolohi,
    double **outputlohilo, double **outputlololo,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, double *elapsedms,
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs,
+   double *cnvlapms, double *addlapms, double *elapsedms,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -412,6 +413,10 @@ void GPU_dbl8_poly_evaldiff
  *                outputlololo[k], for k from 0 to dim-1, contains the
  *                derivative with respect to the variable k;
  *                outputlololo[dim] contains the value of the polynomial;
+ *   cnvlapms     is the elapsed time spent by all convolution kernels,
+ *                expressed in milliseconds;
+ *   addlapms     is the elapsed time spent by all addition kernels,
+ *                expressed in milliseconds;
  *   elapsedms    is the elapsed time spent by all kernels,
  *                expressed in milliseconds. */
 

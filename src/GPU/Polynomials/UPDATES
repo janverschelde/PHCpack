@@ -1,3 +1,6 @@
+Mon 11 Jan 2021 : updated all kernels and testers.cpp to separate times
+  spent on convolutions and on additions.
+  
 Sun 10 Jan 2021 : Updated {dbl2,dbl3,dbl4,dbl5,dbl8,dbl10}_polynomials_
   testers.cpp to report the times as in dbl_polynomials_testers.cpp.
   Extended prompt_for_setup to prompt for the mode of execution.

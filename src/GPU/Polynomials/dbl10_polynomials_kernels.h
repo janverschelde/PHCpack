@@ -355,7 +355,8 @@ void GPU_dbl10_poly_evaldiff
    double **outputrrg, double **outputrpk,
    double **outputltb, double **outputlix, double **outputlmi,
    double **outputlrg, double **outputlpk,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs, double *elapsedms,
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs,
+   double *cnvlapms, double *addlapms, double *elapsedms,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -477,6 +478,10 @@ void GPU_dbl10_poly_evaldiff
  *               outputlpk[k], for k from 0 to dim-1, contains the
  *               derivative with respect to the variable k;
  *               outputlpk[dim] contains the value of the polynomial;
+ *   cnvlapms    is the elapsed time spent by all convolution kernels,
+ *               expressed in milliseconds;
+ *   addlapms    is the elapsed time spent by all addition kernels,
+ *               expressed in milliseconds;
  *   elapsedms   is the elapsed time spent by all kernels,
  *               expressed in milliseconds. */
 
