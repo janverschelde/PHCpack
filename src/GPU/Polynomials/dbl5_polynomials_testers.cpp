@@ -21,7 +21,7 @@ using namespace std;
 
 int main_dbl5_test_polynomial
  ( int seed, int dim, int nbr, int nva, int pwr, int deg, int vrblvl,
-   double tol, bool jobrep )
+   double tol, bool jobrep, int mode )
 {
    int seedused;
 
@@ -39,21 +39,24 @@ int main_dbl5_test_polynomial
    if(vrblvl > 0) cout << "  Seed used : " << seedused << endl;
 
    double realsum = test_dbl5_real_polynomial
-                       (dim,nbr,nva,pwr,deg,vrblvl-1,jobrep);
+                       (dim,nbr,nva,pwr,deg,vrblvl-1,jobrep,mode);
 
    int fail = int(realsum > tol);
 
    if(vrblvl > 0)
    {
-      cout << scientific << setprecision(2);
-      cout << "Sum of all errors in penta double precision :" << endl;
-      cout << "  on real data : " << realsum;
-      if(realsum < tol)
-         cout << "  pass." << endl;
-      else
+      if(mode == 2)
       {
-         cout << " > " << tol;
-         cout << "  fail!" << endl;
+         cout << scientific << setprecision(2);
+         cout << "Sum of all errors in penta double precision :" << endl;
+         cout << "  on real data : " << realsum;
+         if(realsum < tol)
+            cout << "  pass." << endl;
+         else
+         {
+            cout << " > " << tol;
+            cout << "  fail!" << endl;
+         }
       }
       cout << "  Seed used : " <<  seedused << endl;
    }
@@ -243,7 +246,8 @@ double dbl5_error_sum
 }
 
 double test_dbl5_real_polynomial
- ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep )
+ ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
+   int mode )
 {
    if(nbr < 1)
       return 0.0;
@@ -359,35 +363,42 @@ double test_dbl5_real_polynomial
       }
       double timelapsec1_h,timelapsec2_h,timelapms_d;
 
-      if(vrb) cout << "Computing without convolution jobs ..." << endl;
-      CPU_dbl5_poly_evaldiff
-         (dim,nbr,deg,nvr,idx,csttb,cstix,cstmi,cstrg,cstpk,
-          cfftb,cffix,cffmi,cffrg,cffpk,
-          inputtb,inputix,inputmi,inputrg,inputpk,
-          output1tb_h,output1ix_h,output1mi_h,output1rg_h,output1pk_h,
-          &timelapsec1_h,vrb);
-      if(vrb) cout << "Computing with convolution jobs ..." << endl;
-      CPU_dbl5_poly_evaldiffjobs
-         (dim,nbr,deg,nvr,idx,csttb,cstix,cstmi,cstrg,cstpk,
-          cfftb,cffix,cffmi,cffrg,cffpk,
-          inputtb,inputix,inputmi,inputrg,inputpk,
-          output2tb_h,output2ix_h,output2mi_h,output2rg_h,output2pk_h,
-          cnvjobs,addjobs,&timelapsec2_h,vrb);
-      if(vrb) cout << "Computing on the device ..." << endl;
-      GPU_dbl5_poly_evaldiff
-         (deg+1,dim,nbr,deg,nvr,idx,csttb,cstix,cstmi,cstrg,cstpk,
-          cfftb,cffix,cffmi,cffrg,cffpk,
-          inputtb,inputix,inputmi,inputrg,inputpk,
-          outputtb_d,outputix_d,outputmi_d,outputrg_d,outputpk_d,
-          cnvjobs,addjobs,&timelapms_d,vrb);
-
-      double sumerr = dbl5_error_sum(dim,deg,
-                         output1tb_h,output1ix_h,output1mi_h,
-                         output1rg_h,output1pk_h,
-                         output2tb_h,output2ix_h,output2mi_h,
-                         output2rg_h,output2pk_h,
-                         outputtb_d,outputix_d,outputmi_d,
-                         outputrg_d,outputpk_d,vrb);
+      if((mode == 1) || (mode == 2))
+      {
+         if(vrb) cout << "Computing without convolution jobs ..." << endl;
+         CPU_dbl5_poly_evaldiff
+            (dim,nbr,deg,nvr,idx,csttb,cstix,cstmi,cstrg,cstpk,
+             cfftb,cffix,cffmi,cffrg,cffpk,
+             inputtb,inputix,inputmi,inputrg,inputpk,
+             output1tb_h,output1ix_h,output1mi_h,output1rg_h,output1pk_h,
+             &timelapsec1_h,vrb);
+         if(vrb) cout << "Computing with convolution jobs ..." << endl;
+         CPU_dbl5_poly_evaldiffjobs
+            (dim,nbr,deg,nvr,idx,csttb,cstix,cstmi,cstrg,cstpk,
+             cfftb,cffix,cffmi,cffrg,cffpk,
+             inputtb,inputix,inputmi,inputrg,inputpk,
+             output2tb_h,output2ix_h,output2mi_h,output2rg_h,output2pk_h,
+             cnvjobs,addjobs,&timelapsec2_h,vrb);
+      }
+      if((mode == 0) || (mode == 2))
+      {
+         if(vrb) cout << "Computing on the device ..." << endl;
+         GPU_dbl5_poly_evaldiff
+            (deg+1,dim,nbr,deg,nvr,idx,csttb,cstix,cstmi,cstrg,cstpk,
+             cfftb,cffix,cffmi,cffrg,cffpk,
+             inputtb,inputix,inputmi,inputrg,inputpk,
+             outputtb_d,outputix_d,outputmi_d,outputrg_d,outputpk_d,
+             cnvjobs,addjobs,&timelapms_d,vrb);
+      }
+      double sumerr = 0.0;
+      if(mode == 2)
+         sumerr = dbl5_error_sum(dim,deg,
+                     output1tb_h,output1ix_h,output1mi_h,
+                     output1rg_h,output1pk_h,
+                     output2tb_h,output2ix_h,output2mi_h,
+                     output2rg_h,output2pk_h,
+                     outputtb_d,outputix_d,outputmi_d,
+                     outputrg_d,outputpk_d,vrb);
 
       if(verbose > 0)
       {
@@ -403,17 +414,72 @@ double test_dbl5_real_polynomial
             write_addition_counts(addjobs);
             write_operation_counts(deg,cnvjobs,addjobs);
          }
-         cout << fixed << setprecision(3);
-         cout << "Elapsed CPU time (Linux), Wall time (Windows) : " << endl;
-         cout << "  (1) without jobs : " << timelapsec1_h << " seconds,"
-              << endl;
-         cout << "  (2) cnv/add jobs : " << timelapsec2_h << " seconds."
-              << endl;
-         cout << "Time spent by all kernels : ";
-         cout << fixed << setprecision(2) << timelapms_d
-              << " milliseconds." << endl;
-         cout << scientific << setprecision(16);
+         if((mode == 1) || (mode == 2))
+         {
+            cout << fixed << setprecision(3);
+            cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+                 << endl;
+            cout << "  (1) without jobs : " << timelapsec1_h << " seconds,"
+                 << endl;
+            cout << "  (2) cnv/add jobs : " << timelapsec2_h << " seconds."
+                 << endl;
+         }
+         if((mode == 0) || (mode == 2))
+         {
+            cout << "Time spent by all kernels : ";
+            cout << fixed << setprecision(2) << timelapms_d
+                 << " milliseconds." << endl;
+            cout << scientific << setprecision(16);
+         }
       }
       return sumerr;
    }
+}
+
+int test_dbl5_sequence
+ ( int seed, int dim, int nva, int nbr, int pwr, int vrblvl,
+   bool jobrep, int mode )
+{
+   const double tol = 1.0e-72;
+
+   int deg = 15;
+   int fail = main_dbl5_test_polynomial
+                (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,jobrep,mode);
+   deg = 31;
+   cout << "---> running for degree 31 ..." << endl;
+   fail += main_dbl5_test_polynomial
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
+   deg = 63;
+   cout << "---> running for degree 63 ..." << endl;
+   fail += main_dbl5_test_polynomial
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
+   deg = 95;
+   cout << "---> running for degree 95 ..." << endl;
+   fail += main_dbl5_test_polynomial
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
+   deg = 127;
+   cout << "---> running for degree 127 ..." << endl;
+   fail += main_dbl5_test_polynomial
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
+   deg = 152;
+   cout << "---> running for degree 152 ..." << endl;
+   fail += main_dbl5_test_polynomial
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
+   deg = 159;
+   cout << "---> running for degree 159 ..." << endl;
+   fail += main_dbl5_test_polynomial
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
+   deg = 191;
+   cout << "---> running for degree 191 ..." << endl;
+   fail += main_dbl5_test_polynomial
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
+
+   if(mode == 2)
+   {
+      if(fail == 0)
+         cout << "All tests passed." << endl;
+      else
+         cout << "Number of failed tests : " << fail << endl;
+   }
+   return 0;
 }

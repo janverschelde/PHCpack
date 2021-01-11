@@ -9,48 +9,22 @@ using namespace std;
 
 int main ( void )
 {
-   int seed,dim,nva,nbr,pwr,deg,vrb,fail;
+   int seed,dim,nva,nbr,pwr,deg,vrb,fail,mode;
 
    cout << "Give the seed (0 for time) : "; cin >> seed;
+   cout << "Enter 0 (GPU only), 1 (CPU only), or 2 (GPU+CPU) : ";
+   cin >> mode;
 
    dim = 16; nva = 4; nbr = products_count(dim,nva); pwr = 1; vrb = 2;
 
-   deg = 15;
-   fail = main_dbl5_test_polynomial
-             (seed,dim,nbr,nva,pwr,deg,vrb,1.0e-72,true);
-   deg = 31;
-   cout << "---> running for degree 31 ..." << endl;
-   fail += main_dbl5_test_polynomial
-             (seed,dim,nbr,nva,pwr,deg,vrb,1.0e-72,false);
-   deg = 63;
-   cout << "---> running for degree 63 ..." << endl;
-   fail += main_dbl5_test_polynomial
-             (seed,dim,nbr,nva,pwr,deg,vrb,1.0e-72,false);
-   deg = 95;
-   cout << "---> running for degree 95 ..." << endl;
-   fail += main_dbl5_test_polynomial
-             (seed,dim,nbr,nva,pwr,deg,vrb,1.0e-72,false);
-   deg = 127;
-   cout << "---> running for degree 127 ..." << endl;
-   fail += main_dbl5_test_polynomial
-             (seed,dim,nbr,nva,pwr,deg,vrb,1.0e-72,false);
-   deg = 152;
-   cout << "---> running for degree 152 ..." << endl;
-   fail += main_dbl5_test_polynomial
-             (seed,dim,nbr,nva,pwr,deg,vrb,1.0e-72,false);
-   deg = 159;
-   cout << "---> running for degree 159 ..." << endl;
-   fail += main_dbl5_test_polynomial
-             (seed,dim,nbr,nva,pwr,deg,vrb,1.0e-72,false);
-   deg = 191;
-   cout << "---> running for degree 191 ..." << endl;
-   fail += main_dbl5_test_polynomial
-             (seed,dim,nbr,nva,pwr,deg,vrb,1.0e-72,false);
+   fail = test_dbl5_sequence(seed,dim,nva,nbr,pwr,vrb,true,mode);
 
-   if(fail == 0)
-      cout << "All tests passed." << endl;
-   else
-      cout << "Number of failed tests : " << fail << endl;
-
+   if(mode == 2)
+   {
+      if(fail == 0)
+         cout << "All tests passed." << endl;
+      else
+         cout << "Number of failed tests : " << fail << endl;
+   }
    return 0;
 }

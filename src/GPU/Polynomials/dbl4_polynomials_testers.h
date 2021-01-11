@@ -98,7 +98,7 @@ double dbl4_error_sum
 
 double test_dbl4_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose,
-   bool jobrep=true );
+   bool jobrep=true, int mode=2 );
 /*
  * DESCRIPTION :
  *   Tests the evaluation and differentiation for random real data.
@@ -116,11 +116,13 @@ double test_dbl4_real_polynomial
  *            then the jobs report is written,
  *            otherwise no jobs report is written.
  *            When running the same problems in many precisions,
- *            this jobs reports needs to be written only once. */
+ *            this jobs reports needs to be written only once;
+ *   mode     the mode of execution, either 0, 1, or 2, as follows:
+ *            0 : GPU only; 1 : CPU only; 2 : GPU and CPU. */
 
 int main_dbl4_test_polynomial
  ( int seed, int dim, int nbr, int nva, int pwr, int deg, int vrblvl,
-   double tol=1.0e-56, bool jobrep=true );
+   double tol=1.0e-56, bool jobrep=true, int mode=2 );
 /*
  * DESCRIPTION :
  *   Runs tests on a random polynomial in triple double precision.
@@ -145,6 +147,31 @@ int main_dbl4_test_polynomial
  *            then the jobs report is written,
  *            otherwise no jobs report is written.
  *            When running the same problems in many precisions,
- *            this jobs reports needs to be written only once. */
+ *            the jobs reports needs to be written only once;
+ *   mode     the mode of execution, either 0, 1, or 2, as follows:
+ *            0 : GPU only; 1 : CPU only; 2 : GPU and CPU. */
+
+int test_dbl4_sequence
+ ( int seed, int dim, int nva, int nbr, int pwr, int vrblvl,
+   bool jobrep, int mode );
+/*
+ * DESCRIPTION :
+ *   For an increasing sequence of degrees,
+ *   runs tests in quad double precision.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   nbr      number of terms in the polynomial;
+ *   nva      number of variables per monomial (for products and cyclic);
+ *   pwr      highest power of each variable;
+ *   vrblvl   if zero, then no output is written,
+ *            otherwise, the higher the value, the more input;
+ *   jobrep   if verbose is nonzero and jobrep is true,
+ *            then the jobs report is written,
+ *            otherwise no jobs report is written.
+ *            When running the same problems in many precisions,
+ *            the jobs reports needs to be written only once;
+ *   mode     the mode of execution, either 0, 1, or 2, as follows:
+ *            0 : GPU only; 1 : CPU only; 2 : GPU and CPU. */
 
 #endif
