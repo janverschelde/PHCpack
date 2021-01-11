@@ -631,14 +631,6 @@ int test_dbl10_sequence
    cout << "---> running for degree 152 ..." << endl;
    fail += main_dbl10_test_polynomial
               (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
-   deg = 159;
-   cout << "---> running for degree 159 ..." << endl;
-   fail += main_dbl10_test_polynomial
-              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
-   deg = 191;
-   cout << "---> running for degree 191 ..." << endl;
-   fail += main_dbl10_test_polynomial
-              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
 
    if(mode == 2)
    {
