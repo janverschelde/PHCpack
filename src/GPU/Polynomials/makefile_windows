@@ -8,7 +8,7 @@ MPD=../Norms
 CNV=../Convolutions
 
 # architecture flag
-smflag=sm_70
+smflag=sm_75
 
 # location of the command line Microsoft Visual Studio Compiler
 CL="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
@@ -888,7 +888,7 @@ test_polynomials: random_numbers.obj random_series.obj \
               random10_monomials.obj random10_polynomials.obj \
               convolution_job.obj convolution_jobs.obj \
               addition_job.obj addition_jobs.obj \
-              job_coordinates.obj write_job_counts.obj prompt_for_setup.obj \
+              job_coordinates.obj write_job_counts.obj \
               dbl_convolutions_host.obj dbl_monomials_host.obj \
               dbl_polynomials_host.obj dbl_polynomials_testers.obj \
               dbl2_convolutions_host.obj dbl2_monomials_host.obj \
