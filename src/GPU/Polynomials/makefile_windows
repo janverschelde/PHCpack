@@ -322,12 +322,14 @@ dbl10_monomials_host.obj:
 dbl_polynomials_kernels.obj:
 	@-echo ">>> compiling polynomial kernels for doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(CNV) \
+             --define-macro winwalltime=1 \
                 dbl_polynomials_kernels.cu \
              -o dbl_polynomials_kernels.obj
 
 dbl2_polynomials_kernels.obj:
 	@-echo ">>> compiling polynomial kernels for double doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(CNV) \
+             --define-macro winwalltime=1 \
              --define-macro gpufun=1 \
                 dbl2_polynomials_kernels.cu \
              -o dbl2_polynomials_kernels.obj
@@ -335,6 +337,7 @@ dbl2_polynomials_kernels.obj:
 dbl3_polynomials_kernels.obj:
 	@-echo ">>> compiling polynomial kernels for triple doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(CNV) \
+             --define-macro winwalltime=1 \
              --define-macro gpufun=1 \
                 dbl3_polynomials_kernels.cu \
              -o dbl3_polynomials_kernels.obj
@@ -342,6 +345,7 @@ dbl3_polynomials_kernels.obj:
 dbl4_polynomials_kernels.obj:
 	@-echo ">>> compiling polynomial kernels for quad doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(CNV) \
+             --define-macro winwalltime=1 \
              --define-macro gpufun=1 \
                 dbl4_polynomials_kernels.cu \
              -o dbl4_polynomials_kernels.obj
@@ -349,6 +353,7 @@ dbl4_polynomials_kernels.obj:
 dbl5_polynomials_kernels.obj:
 	@-echo ">>> compiling polynomial kernels for penta doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(CNV) \
+             --define-macro winwalltime=1 \
              --define-macro gpufun=1 \
                 dbl5_polynomials_kernels.cu \
              -o dbl5_polynomials_kernels.obj
@@ -356,6 +361,7 @@ dbl5_polynomials_kernels.obj:
 dbl8_polynomials_kernels.obj:
 	@-echo ">>> compiling polynomial kernels for octo doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(CNV) \
+             --define-macro winwalltime=1 \
              --define-macro gpufun=1 \
                 dbl8_polynomials_kernels.cu \
              -o dbl8_polynomials_kernels.obj
@@ -363,6 +369,7 @@ dbl8_polynomials_kernels.obj:
 dbl10_polynomials_kernels.obj:
 	@-echo ">>> compiling polynomial kernels for deca doubles ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(CNV) \
+             --define-macro winwalltime=1 \
              --define-macro gpufun=1 \
                 dbl10_polynomials_kernels.cu \
              -o dbl10_polynomials_kernels.obj
@@ -370,6 +377,7 @@ dbl10_polynomials_kernels.obj:
 polynomials_kernels.obj:
 	@-echo ">>> compiling all polynomial kernels ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(CNV) \
+             --define-macro winwalltime=1 \
                 polynomials_kernels.cu \
              -o polynomials_kernels.obj
 

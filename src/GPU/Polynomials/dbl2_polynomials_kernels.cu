@@ -3,6 +3,11 @@
 
 #include <iostream>
 #include <iomanip>
+#ifdef winwalltime
+#include "wingettimeofday.h"
+#else
+#include <sys/time.h>
+#endif
 #include "job_coordinates.h"
 #include "double_double_functions.h"
 #ifdef gpufun
