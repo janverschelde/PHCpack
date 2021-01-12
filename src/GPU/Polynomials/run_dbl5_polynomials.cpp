@@ -19,6 +19,14 @@ int main ( void )
 
    fail = test_dbl5_sequence(seed,dim,nva,nbr,pwr,vrb,true,mode);
 
+   dim = 128; nva = 64; nbr = 128; pwr = 1; vrb = 2;
+
+   fail += test_dbl5_sequence(seed,dim,nva,nbr,pwr,vrb,true,mode);
+
+   dim = 128; nva = 2; nbr = products_count(dim,nva); pwr = 1; vrb = 2;
+
+   fail += test_dbl5_sequence(seed,dim,nva,nbr,pwr,vrb,true,mode);
+
    if(mode == 2)
    {
       if(fail == 0)

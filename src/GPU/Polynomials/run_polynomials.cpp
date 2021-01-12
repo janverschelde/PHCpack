@@ -14,18 +14,42 @@
 
 using namespace std;
 
+void run
+ ( int seed, int dim, int nva, int nbr, int pwr, int vrb, int mode );
+/*
+ * DESCRIPTION :
+ *   For increasing precision and for an increasing sequence of degrees,
+ *   runs tests in double precision.
+ *
+ * ON ENTRY :
+ *   seed     seed for the random number generator;
+ *   dim      dimension, total number of variables;
+ *   nva      number of variables per monomial (for products and cyclic);
+ *   nbr      number of terms in the polynomial;
+ *   pwr      highest power of each variable;
+ *   vrb      verbose level, if zero, then no output is written,
+ *            otherwise, the higher the value, the more input;
+ *   mode     the mode of execution, either 0, 1, or 2, as follows:
+ *            0 : GPU only; 1 : CPU only; 2 : GPU and CPU. */
+
 int main ( void )
 {
-   int seed,dim,nva,nbr,pwr,deg,vrb,mode;
+   int seed,dim,nva,nbr,pwr,vrb,mode;
 
    cout << "Give the seed (0 for time) : "; cin >> seed;
    cout << "Enter 0 (GPU only), 1 (CPU only), or 2 (GPU+CPU) : ";
    cin >> mode;
 
-   dim = 16; nva = 4; nbr = products_count(dim,nva); pwr = 1; deg = 31;
+   dim = 16; nva = 4; nbr = products_count(dim,nva); pwr = 1; vrb = 2;
 
-   vrb = 2;
+   run(seed,dim,nva,nbr,pwr,vrb,mode);
 
+   return 0;
+}
+
+void run
+ ( int seed, int dim, int nva, int nbr, int pwr, int vrb, int mode )
+{
    cout << endl << "running in double precision ..." << endl;
 
    int fail = test_dbl_sequence(seed,dim,nva,nbr,pwr,vrb,true,mode);
@@ -117,5 +141,4 @@ int main ( void )
      else
         cout << "Total number of failed tests : " << sumfail << endl;
    }
-   return 0;
 }

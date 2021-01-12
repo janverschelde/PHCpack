@@ -1,6 +1,9 @@
 Mon 11 Jan 2021 : updated all kernels and testers.cpp to separate times
   spent on convolutions and on additions.  To all kernels and testers.cpp,
   added wall clock time measurement and reporting.
+  Added wingettimeofday.h for the wall clock time on Windows,
+  used in dbl*_polynomials_kernels.cu, updated makefile_windows.
+  Added two tests to all run*cpp files.
   
 Sun 10 Jan 2021 : Updated {dbl2,dbl3,dbl4,dbl5,dbl8,dbl10}_polynomials_
   testers.cpp to report the times as in dbl_polynomials_testers.cpp.
