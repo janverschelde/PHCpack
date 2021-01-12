@@ -1,3 +1,6 @@
+Tue 12 Jan 2021 : restored the bounds on the shared memory size to 128
+  in dbl4_convolutions_kernels.h and in dbl5_convolutions_kernels.h.
+
 Sat 9 Jan 2021 : restored the bounds on the shared memory size to 64,
   in dbl8_convolutions_kernels.h and dbl10_convolutions_kernels.h.
 
