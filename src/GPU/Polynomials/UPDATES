@@ -1,3 +1,5 @@
+Tue 12 Jan 2021 : added more tests to run_polynomials.cpp.
+
 Mon 11 Jan 2021 : updated all kernels and testers.cpp to separate times
   spent on convolutions and on additions.  To all kernels and testers.cpp,
   added wall clock time measurement and reporting.

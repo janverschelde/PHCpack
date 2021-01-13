@@ -44,6 +44,14 @@ int main ( void )
 
    run(seed,dim,nva,nbr,pwr,vrb,mode);
 
+   dim = 128; nva = 64; nbr = 128; pwr = 1; vrb = 2;
+
+   run(seed,dim,nva,nbr,pwr,vrb,mode);
+
+   dim = 128; nva = 2; nbr = products_count(dim,nva); pwr = 1; vrb = 2;
+
+   run(seed,dim,nva,nbr,pwr,vrb,mode);
+
    return 0;
 }
 
