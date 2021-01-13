@@ -569,9 +569,18 @@ int test_dbl8_sequence
 {
    const double tol = 1.0e-120;
 
-   int deg = 15;
+   int deg = 0;
+   cout << "---> running in octo double precision for degree 0 ..." << endl;
    int fail = main_dbl8_test_polynomial
-                (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,jobrep,mode);
+                 (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,jobrep,mode);
+   deg = 8;
+   cout << "---> running for degree 8 ..." << endl;
+   fail += main_dbl8_test_polynomial
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
+   deg = 15;
+   cout << "---> running for degree 15 ..." << endl;
+   fail += main_dbl8_test_polynomial
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
    deg = 31;
    cout << "---> running for degree 31 ..." << endl;
    fail += main_dbl8_test_polynomial

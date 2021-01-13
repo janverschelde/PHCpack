@@ -321,37 +321,48 @@ int test_dbl_sequence
  ( int seed, int dim, int nva, int nbr, int pwr, int vrblvl,
    bool jobrep, int mode )
 {
-   int deg = 15;
+   const double tol = 1.0e-8;
+
+   int deg = 0;
+   cout << "---> running in double precision for degree 0 ..." << endl;
    int fail = main_dbl_test_polynomial
-                (seed,dim,nbr,nva,pwr,deg,vrblvl,1.0e-8,jobrep,mode);
+                 (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,jobrep,mode);
+   deg = 8;
+   cout << "---> running for degree 8 ..." << endl;
+   fail += main_dbl_test_polynomial
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
+   deg = 15;
+   cout << "---> running for degree 15 ..." << endl;
+   fail += main_dbl_test_polynomial
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
    deg = 31;
    cout << "---> running for degree 31 ..." << endl;
    fail += main_dbl_test_polynomial
-              (seed,dim,nbr,nva,pwr,deg,vrblvl,1.0e-8,false,mode);
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
    deg = 63;
    cout << "---> running for degree 63 ..." << endl;
    fail += main_dbl_test_polynomial
-              (seed,dim,nbr,nva,pwr,deg,vrblvl,1.0e-8,false,mode);
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
    deg = 95;
    cout << "---> running for degree 95 ..." << endl;
    fail += main_dbl_test_polynomial
-              (seed,dim,nbr,nva,pwr,deg,vrblvl,1.0e-8,false,mode);
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
    deg = 127;
    cout << "---> running for degree 127 ..." << endl;
    fail += main_dbl_test_polynomial
-              (seed,dim,nbr,nva,pwr,deg,vrblvl,1.0e-8,false,mode);
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
    deg = 152;
    cout << "---> running for degree 152 ..." << endl;
    fail += main_dbl_test_polynomial
-              (seed,dim,nbr,nva,pwr,deg,vrblvl,1.0e-8,false,mode);
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
    deg = 159;
    cout << "---> running for degree 159 ..." << endl;
    fail += main_dbl_test_polynomial
-              (seed,dim,nbr,nva,pwr,deg,vrblvl,1.0e-8,false,mode);
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
    deg = 191;
    cout << "---> running for degree 191 ..." << endl;
    fail += main_dbl_test_polynomial
-              (seed,dim,nbr,nva,pwr,deg,vrblvl,1.0e-8,false,mode);
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
 
    if(mode == 2)
    {

@@ -427,9 +427,18 @@ int test_dbl4_sequence
 {
    double const tol = 1.0e-56;
 
-   int deg = 15;
+   int deg = 0;
+   cout << "---> running in quad double precision for degree 0 ..." << endl;
    int fail = main_dbl4_test_polynomial
-                (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,jobrep,mode);
+                 (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,jobrep,mode);
+   deg = 8;
+   cout << "---> running for degree 8 ..." << endl;
+   fail += main_dbl4_test_polynomial
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
+   deg = 15;
+   cout << "---> running for degree 15 ..." << endl;
+   fail += main_dbl4_test_polynomial
+              (seed,dim,nbr,nva,pwr,deg,vrblvl,tol,false,mode);
    deg = 31;
    cout << "---> running for degree 31 ..." << endl;
    fail += main_dbl4_test_polynomial
