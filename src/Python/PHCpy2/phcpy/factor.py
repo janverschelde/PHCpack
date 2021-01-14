@@ -405,7 +405,7 @@ def factor(dim, witsys, witsols, \
         dobldobl_monodromy_breakup\
             (witsys, witsols, dim, islaurent, verbose, nbloops)
         return decomposition(len(witsols), 'dd')
-    elif(precision == 'dd'):
+    elif(precision == 'qd'):
         quaddobl_monodromy_breakup\
             (witsys, witsols, dim, islaurent, verbose, nbloops)
         return decomposition(len(witsols), 'qd')

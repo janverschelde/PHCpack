@@ -1,3 +1,6 @@
+Thu 14 Jan 2021 : fixed type error in factor.py of the python2 and python3
+  versions of phcpy.
+
 Mon 14 Dec 2020 : updated the solve method in the Polynomials class to
   store the gamma constant after calling the blackbox solver.
   Updates files for version 1.1.0 of phcpy.
