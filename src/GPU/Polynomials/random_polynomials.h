@@ -91,6 +91,42 @@ bool make_real_polynomial
  *   cff     the coefficient series for each monomial,
  *           cff[k] has the deg+1 coefficients of monomial k. */
 
+bool make_complex_polynomial
+ ( int dim, int nbr, int pwr, int deg, int *nvr, int **idx, int **exp,
+   double *cstre, double *cstim, double **cffre, double **cffim );
+/*
+ * DESCRIPTION :
+ *   Makes a polynomial in several variables, with power series coefficients,
+ *   generating random exponents and complex coefficients.
+ *   Writes an error message and returns true if for one k, nvr[k] > dim.
+ *
+ * ON ENTRY :
+ *   dim     dimension, total number of variables;
+ *   nbr     number of monomials, excluding the constant term,
+ *           nbr is the number of monomials that have at least one variable;
+ *   pwr     largest power of a variable;
+ *   deg     degree of the power series coefficient;
+ *   nvr     nbr integers, with nvr[k] the number of variables in monomial k;
+ *   exp     space allocated for nbr arrays of nvr[k] integers;
+ *   cstre   space allocated for deg+1 doubles;
+ *   cstim   space allocated for deg+1 doubles;
+ *   cffre   space allocated for nbr arrays of deg+1 doubles.
+ *   cffim   space allocated for nbr arrays of deg+1 doubles.
+ *
+ * ON RETURN :
+ *   idx     the participating variables in each monomial,
+ *           idx[k] is an array of nvr[k] integers,
+ *           idx[k][i] is the index of variable i in monomial k;
+ *   exp     the exponents of the variables in each monomial,
+ *           exp[k] is an array of nvr[k] integers,
+ *           exp[k][i] is the exponent of variable i in monomial k;
+ *   cstre   deg+1 coefficients of the real parts of the constant;
+ *   cstim   deg+1 coefficients of the imaginary parts of the constant;
+ *   cffre   the real parts of the coefficient series for each monomial,
+ *           cffre[k] has the deg+1 real parts of monomial k;
+ *   cffim   the imaginary parts of the coefficient series for each monomial,
+ *           cffim[k] has the deg+1 imaginary parts of monomial k. */
+
 int products_count ( int dim, int nbr );
 /*
  * DESCRIPTION :

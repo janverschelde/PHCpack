@@ -1,8 +1,9 @@
 // The file random_polynomials.cpp defines functions specified
 // in random_polynomials.h.
 
-#include <cstdlib>
 #include <iostream>
+#include <cstdlib>
+#include <cmath>
 #include "random_numbers.h"
 #include "random_monomials.h"
 
@@ -81,6 +82,28 @@ bool make_real_polynomial
    for(int i=0; i<nbr; i++)
    {
       fail = make_real_monomial(dim,nvr[i],pwr,deg,idx[i],exp[i],cff[i]);
+      if(fail) return true;
+   }
+   return fail;
+}
+
+bool make_complex_polynomial
+ ( int dim, int nbr, int pwr, int deg, int *nvr, int **idx, int **exp,
+   double *cstre, double *cstim, double **cffre, double **cffim )
+{
+   bool fail = false;
+   double rnd;
+
+   for(int i=0; i<=deg; i++)
+   {
+      rnd = random_angle();        
+      cstre[i] = cos(rnd);
+      cstim[i] = sin(rnd);
+   }
+   for(int i=0; i<nbr; i++)
+   {
+      fail = make_complex_monomial(dim,nvr[i],pwr,deg,idx[i],exp[i],
+                                   cffre[i],cffim[i]);
       if(fail) return true;
    }
    return fail;
