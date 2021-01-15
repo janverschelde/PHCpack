@@ -10,7 +10,7 @@ void dbl_make_input
    double **input, double *cst, double **cff, bool verbose );
 /*
  * DESCRIPTION :
- *   Generates random polynomials and input series.
+ *   Generates random real polynomials and real input series.
  *
  * ON ENTRY :
  *   dim      dimension, total number of variables;
@@ -33,6 +33,44 @@ void dbl_make_input
  *   input    has dim input series of degree deg;
  *   cst      has the coefficients of the constant series;
  *   cff      cff[k] has the coefficient series of monomial k. */
+
+void cmplx_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputre, double **inputim, double *cstre, double *cstim,
+   double **cffre, double **cffim, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Generates random complex polynomials and complex input series.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   nbr      number of terms in the polynomial;
+ *   nva      number of variables in each monomial (for products, cyclic);
+ *   pwr      highest power of each variable;
+ *   deg      truncation degree of the series;
+ *   nvr      space for nbr integers;
+ *   idx      space for nbr pointers to integers;
+ *   exp      space for nbr pointers to integers;
+ *   inputre  space for dim arrays of deg+1 doubles;
+ *   inputim  space for dim arrays of deg+1 doubles;
+ *   cstre    space for deg+1 doubles;
+ *   cstim    space for deg+1 doubles;
+ *   cffre    space for nbr arrays of deg+1 doubles;
+ *   cffim    space for nbr arrays of deg+1 doubles;
+ *   verbose  if true, then output is written.
+ *
+ * ON RETURN :
+ *   nvr      nvr[k] has the number of variables in monomial k;
+ *   idx      idx[k] holds nvr[k] indices to variables in monomial k;
+ *   exp      exp[k] holds nvr[k] exponents of variables in monomial k;
+ *   input    has dim input series of degree deg;
+ *   cstre    has the real parts of the coefficients of the constant;
+ *   cstim    has the imaginary parts of the coefficients of the constant;
+ *   cffre    cffre[k] has the real parts of the coefficient series
+ *            of monomial k;
+ *   cffim    cffim[k] has the imaginary parts of the coefficient series
+ *            of monomial k. */
 
 double dbl_error_sum
  ( int dim, int deg, double **results1_h, double **results2_h,
@@ -57,6 +95,30 @@ double test_dbl_real_polynomial
 /*
  * DESCRIPTION :
  *   Tests the evaluation and differentiation for random real data.
+ *   Returns the sum of all errors if the mode equals 2.
+ * 
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   nbr      number of terms in the polynomial;
+ *   nva      number of variables per monomial (for products and cyclic);
+ *   pwr      highest power of each variable;
+ *   deg      truncation degree of the series;
+ *   verbose  if zero, then no output is written,
+ *            otherwise, the higher the value, the more input;
+ *   jobrep   if verbose is nonzero and jobrep is true,
+ *            then the jobs report is written,
+ *            otherwise no jobs report is written.
+ *            When running the same problems in many precisions,
+ *            the jobs reports needs to be written only once;
+ *   mode     the mode of execution, either 0, 1, or 2, as follows:
+ *            0 : GPU only; 1 : CPU only; 2 : GPU and CPU. */
+
+double test_dbl_complex_polynomial
+ ( int dim, int nbr, int nva, int pwr, int deg, int verbose,
+   bool jobrep=true, int mode=2 );
+/*
+ * DESCRIPTION :
+ *   Tests the evaluation and differentiation for random complex data.
  *   Returns the sum of all errors if the mode equals 2.
  * 
  * ON ENTRY :

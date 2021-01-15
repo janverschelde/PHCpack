@@ -40,8 +40,10 @@ int main_dbl_test_polynomial
 
    double realsum = test_dbl_real_polynomial
                        (dim,nbr,nva,pwr,deg,vrblvl-1,jobrep,mode);
+   double compsum = test_dbl_complex_polynomial
+                       (dim,nbr,nva,pwr,deg,vrblvl-1,jobrep,mode);
 
-   int fail = int(realsum > tol);
+   int fail = int(realsum > tol) + int(compsum > tol);
 
    if(vrblvl > 0)
    {
@@ -51,6 +53,14 @@ int main_dbl_test_polynomial
          cout << "Sum of all errors in double precision :" << endl;
          cout << "  on real data : " << realsum;
          if(realsum < tol)
+            cout << "  pass." << endl;
+         else
+         {
+            cout << " > " << tol;
+            cout << "  fail!" << endl;
+         }
+         cout << "  on complex data : " << compsum;
+         if(compsum < tol)
             cout << "  pass." << endl;
          else
          {
@@ -125,6 +135,85 @@ void dbl_make_input
          }
          cout << " coefficient series :" << endl;
          for(int j=0; j<=deg; j++) cout << " " << cff[i][j] << endl;
+      }
+   }
+   if(nva == 0)
+   {
+      bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
+      if(dup)
+         cout << "Duplicate supports found." << endl;
+      else if(verbose)
+         cout << "No duplicate supports found." << endl;
+   }
+}
+
+void cmplx_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputre, double **inputim, double *cstre, double *cstim,
+   double **cffre, double **cffim, bool verbose )
+ { 
+   make_complex_input(dim,deg,inputre,inputim);
+
+   if(verbose)
+   {
+      cout << scientific << setprecision(16);
+      cout << "Random input series :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "-> coefficients of series " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << inputre[i][j] << "  " << inputim[i][j] << endl;
+      }
+   }
+   if(nva == 0) // random supports
+   {
+      make_supports(dim,nbr,nvr);
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++)
+      {
+         idx[i] = new int[nva];
+         nvr[i] = nva;
+      }
+   }
+   if(nva > 0)
+   {
+      if(nbr == dim)
+         make_complex_cyclic(dim,nva,deg,idx,cstre,cstim,cffre,cffim);
+      else
+         make_complex_products(dim,nbr,nva,deg,idx,cstre,cstim,cffre,cffim);
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
+
+      bool fail = make_complex_polynomial(dim,nbr,pwr,deg,nvr,idx,exp,
+                                          cstre,cstim,cffre,cffim);
+   }
+   if(verbose)
+   {
+      cout << "Coefficient series of the constant term :" << endl;
+      for(int j=0; j<=deg; j++)
+         cout << cstre[j] << "  " << cstim[j] << endl;
+
+      for(int i=0; i<nbr; i++)
+      {
+         cout << "Generated random monomial " << i << " :" << endl;
+         cout << "   the indices :";
+         for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
+         cout << endl;
+         if(nva == 0)
+         {
+            cout << " the exponents :";
+            for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
+            cout << endl;
+         }
+         cout << " coefficient series :" << endl;
+         for(int j=0; j<=deg; j++) 
+            cout << cffre[i][j] << "  " << cffim[i][j] << endl;
       }
    }
    if(nva == 0)
@@ -314,6 +403,66 @@ double test_dbl_real_polynomial
          }
       } 
       return sumerr;
+   }
+}
+
+double test_dbl_complex_polynomial
+ ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
+   int mode )
+{
+   if(nbr < 1)
+      return 0.0;
+   else
+   {
+      double **inputre = new double*[dim]; // dim series of degree deg
+      double **inputim = new double*[dim];
+      for(int i=0; i<dim; i++)
+      {
+         inputre[i] = new double[deg+1];
+         inputim[i] = new double[deg+1];
+      }
+      // The output are dim+1 power series of degree deg
+      // for the evaluated and differentiated polynomial.
+      double **output1re_h = new double*[dim+1];
+      double **output1im_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++)
+      {
+         output1re_h[i] = new double[deg+1];
+         output1im_h[i] = new double[deg+1];
+      }
+      double **output2re_h = new double*[dim+1];
+      double **output2im_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++)
+      {
+         output2re_h[i] = new double[deg+1];
+         output2im_h[i] = new double[deg+1];
+      }
+      double **outputre_d = new double*[dim+1];
+      double **outputim_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++)
+      {
+         outputre_d[i] = new double[deg+1];
+         outputim_d[i] = new double[deg+1];
+      }
+      double *cstre = new double[deg+1]; // constant coefficient series
+      double *cstim = new double[deg+1];
+      double **cffre = new double*[nbr]; // coefficient series of terms
+      double **cffim = new double*[nbr];
+      for(int i=0; i<nbr; i++)
+      {
+         cffre[i] = new double[deg+1];
+         cffim[i] = new double[deg+1];
+      }
+      int *nvr = new int[nbr]; // number of variables in each monomial
+      int **idx = new int*[nbr];  // indices of variables in monomials
+      int **exp = new int*[nbr];  // exponents of the variables
+
+      const bool vrb = (verbose > 1);
+
+      cmplx_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,inputre,inputim,
+                       cstre,cstim,cffre,cffim,vrb);
+
+      return 0.0;
    }
 }
 

@@ -209,6 +209,34 @@ void make_real_products
    free(accu);
 }
 
+void make_complex_products
+ ( int dim, int nbr, int nva, int deg, int **idx,
+   double *cstre, double *cstim, double **cffre, double **cffim )
+{
+   double rnd;
+
+   for(int i=0; i<=deg; i++)
+   {
+      rnd = random_angle();        
+      cstre[i] = cos(rnd);
+      cstim[i] = sin(rnd);
+   }
+   for(int k=0; k<nbr; k++)
+      for(int i=0; i<=deg; i++)
+      {
+         rnd = random_angle();
+         cffre[k][i] = cos(rnd);
+         cffim[k][i] = sin(rnd);
+      }
+
+   int moncnt = 0;
+   int *accu = new int[nva];
+
+   make_product_exponents(0,dim,nva,accu,&moncnt,idx);
+
+   free(accu);
+}
+
 void make_real_cyclic
  ( int dim, int nva, int deg, int **idx, double *cst, double **cff )
 {
@@ -216,6 +244,29 @@ void make_real_cyclic
 
    for(int k=0; k<dim; k++)
       for(int i=0; i<=deg; i++) cff[k][i] = random_double();
+
+   make_cyclic_exponents(dim,nva,idx);
+}
+
+void make_complex_cyclic
+ ( int dim, int nva, int deg, int **idx,
+   double *cstre, double *cstim, double **cffre, double **cffim )
+{
+   double rnd;
+
+   for(int i=0; i<=deg; i++)
+   {
+      rnd = random_angle();        
+      cstre[i] = cos(rnd);
+      cstim[i] = sin(rnd);
+   }
+   for(int k=0; k<dim; k++)
+      for(int i=0; i<=deg; i++)
+      {
+         rnd = random_angle();
+         cffre[k][i] = cos(rnd);
+         cffim[k][i] = sin(rnd);
+      }
 
    make_cyclic_exponents(dim,nva,idx);
 }

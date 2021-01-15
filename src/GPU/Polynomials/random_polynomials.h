@@ -183,7 +183,7 @@ void make_real_products
 /*
  * DESCRIPTION :
  *   Returns the sum of all products of size nbr out of dimension dim,
- *   with random power series coefficients truncated to degree deg.
+ *   with random real power series coefficients truncated to degree deg.
  *
  * REQUIRED : dim > nbr.
  *
@@ -204,12 +204,44 @@ void make_real_products
  *   cff     the coefficient series for each monomial,
  *           cff[k] has the deg+1 coefficients of monomial k. */
 
+void make_complex_products
+ ( int dim, int nbr, int nva, int deg, int **idx,
+   double *cstre, double *cstim, double **cffre, double **cffim );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all products of size nbr out of dimension dim,
+ *   with random complex power series coefficients truncated to degree deg.
+ *
+ * REQUIRED : dim > nbr.
+ *
+ * ON ENTRY :
+ *   dim     dimension, total number of variables;
+ *   nbr     number of monomials, excluding the constant;
+ *   nva     number of variables in each monomial;
+ *   deg     truncation degree of the power series;
+ *   idx     space for nbr index vectors;
+ *   cstre   space for deg + 1 doubles;
+ *   cstim   space for deg + 1 doubles;
+ *   cffre   space for nbr power series coefficients;
+ *   cffim   space for nbr power series coefficients.
+ *
+ * ON RETURN :
+ *   idx     the participating variables in each monomial,
+ *           idx[k] is an array of nva integers,
+ *           idx[k][i] is the index of variable i in monomial k;
+ *   cstre   deg+1 coefficients of the real parts of the constant;
+ *   cstim   deg+1 coefficients of the imaginary parts of the constant;
+ *   cffre   the real parts of the coefficient series for each monomial,
+ *           cffre[k] has the deg+1 real parts of monomial k;
+ *   cffim   the imaginary parts of the coefficient series for each monomial,
+ *           cffim[k] has the deg+1 imaginary parts of monomial k. */
+
 void make_real_cyclic
  ( int dim, int nva, int deg, int **idx, double *cst, double **cff );
 /*
  * DESCRIPTION :
  *   Returns the cyclic polynomial with nva variables in dimension dim,
- *   with random power series coefficients truncated to degree deg.
+ *   with random real power series coefficients truncated to degree deg.
  *
  * REQUIRED : dim > nbr.
  *
@@ -228,5 +260,36 @@ void make_real_cyclic
  *   cst     deg+1 coefficients of the constant monomial;
  *   cff     the coefficient series for each monomial,
  *           cff[k] has the deg+1 coefficients of monomial k. */
+
+void make_complex_cyclic
+ ( int dim, int nva, int deg, int **idx,
+   double *cstre, double *cstim, double **cffre, double **cffim );
+/*
+ * DESCRIPTION :
+ *   Returns the cyclic polynomial with nva variables in dimension dim,
+ *   with random complex power series coefficients truncated to degree deg.
+ *
+ * REQUIRED : dim > nbr.
+ *
+ * ON ENTRY :
+ *   dim     dimension, total number of variables;
+ *   nva     number of variables in each monomial;
+ *   deg     truncation degree of the power series;
+ *   idx     space for nva index vectors;
+ *   cstre   space for deg + 1 doubles;
+ *   cstim   space for deg + 1 doubles;
+ *   cffre   space for nbr power series coefficients;
+ *   cffim   space for nbr power series coefficients.
+ *
+ * ON RETURN :
+ *   idx     the participating variables in each monomial,
+ *           idx[k] is an array of nva integers,
+ *           idx[k][i] is the index of variable i in monomial k;
+ *   cstre   deg+1 coefficients of the real parts of the constant;
+ *   cstim   deg+1 coefficients of the imaginary parts of the constant;
+ *   cffre   the real parts of the coefficient series for each monomial,
+ *           cffre[k] has the deg+1 real parts of monomial k;
+ *   cffim   the imaginary parts of the coefficient series for each monomial,
+ *           cffim[k] has the deg+1 imaginary parts of monomial k. */
 
 #endif
