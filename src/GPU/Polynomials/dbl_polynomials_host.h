@@ -140,7 +140,8 @@ void CPU_dbl_poly_evaldiff
 
 void CPU_cmplx_poly_evaldiff
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
-   double *cst, double **cff, double **input, double **output,
+   double *cstre, double *cstim, double **cffre, double **cffim,
+   double **inputre, double **inputim, double **outputre, double **outputim,
    double *elapsedsec, bool verbose=false );
 /*
  * DESCRIPTION :

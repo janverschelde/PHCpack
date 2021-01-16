@@ -220,6 +220,7 @@ void CPU_dbl_poly_evaldiff
       cout << fixed << setprecision(3);
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
            << *elapsedsec << " seconds." << endl;
+      cout << scientific << setprecision(16);
    }
    for(int i=0; i<dim-1; i++)
    {
@@ -275,6 +276,7 @@ void CPU_cmplx_poly_evaldiff
       cout << fixed << setprecision(3);
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
            << *elapsedsec << " seconds." << endl;
+      cout << scientific << setprecision(16);
    }
    for(int i=0; i<dim-1; i++)
    {
@@ -1198,6 +1200,7 @@ void CPU_dbl_poly_evaldiffjobs
       cout << fixed << setprecision(3);
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
            << *elapsedsec << " seconds." << endl;
+      cout << scientific << setprecision(16);
    }
    for(int k=0; k<nbr; k++)
    {
@@ -1291,6 +1294,7 @@ void CPU_cmplx_poly_evaldiffjobs
       cout << fixed << setprecision(3);
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
            << *elapsedsec << " seconds." << endl;
+      cout << scientific << setprecision(16);
    }
    for(int k=0; k<nbr; k++)
    {

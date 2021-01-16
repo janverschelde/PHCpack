@@ -1,3 +1,6 @@
+Sat 16 Jan 2021 : make some corrections to dbl_polynomials_host and
+  extended dbl_polynomials_testers for complex data.
+
 Fri 15 Jan 2021 : to random_polynomials, added a function to generate
   random polynomials with complex coefficients.
   Extended dbl_polynomials_testers with tests on random complex data.

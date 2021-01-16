@@ -10,8 +10,6 @@
 #include "random_numbers.h"
 #include "random_monomials.h"
 #include "random_polynomials.h"
-#include "convolution_jobs.h"
-#include "addition_jobs.h"
 #include "write_job_counts.h"
 #include "dbl_polynomials_host.h"
 #include "dbl_polynomials_kernels.h"
@@ -269,6 +267,103 @@ double dbl_error_sum
    return sumerr;
 }
 
+double cmplx_error_sum
+ ( int dim, int deg,
+   double **results1re_h, double **results1im_h,
+   double **results2re_h, double **results2im_h,
+   double **resultsre_d, double **resultsim_d, bool verbose )
+{
+   double err = 0.0;
+
+   if(verbose) cout << "The value of the polynomial :" << endl;
+   for(int i=0; i<=deg; i++)
+   {
+      if(verbose)
+      {
+         cout << results1re_h[dim][i] << "  "
+              << results1im_h[dim][i] << endl;
+         cout << results2re_h[dim][i] << "  "
+              << results2im_h[dim][i] << endl;
+         cout << resultsre_d[dim][i] <<  "  "
+              << resultsim_d[dim][i] << endl;
+      }
+      err = err + abs(results1re_h[dim][i] - results2re_h[dim][i])
+                + abs(results1im_h[dim][i] - results2im_h[dim][i])
+                + abs(results1re_h[dim][i] - resultsre_d[dim][i])
+                + abs(results1im_h[dim][i] - resultsim_d[dim][i]);
+   }
+   if(verbose) cout << "error : " << err << endl;
+
+   double sumerr = err;
+
+   for(int k=0; k<dim; k++)
+   {
+      if(verbose) cout << "Derivative " << k << " :" << endl;
+      err = 0.0;
+      for(int i=0; i<=deg; i++)
+      {
+         if(verbose)
+         {
+            cout << results1re_h[k][i] << "  "
+                 << results1im_h[k][i] << endl;
+            cout << results2re_h[k][i] << "  "
+                 << results2im_h[k][i] << endl;
+            cout << resultsre_d[k][i] << "  "
+                 << resultsim_d[k][i] << endl;
+         }
+         err = err + abs(results1re_h[k][i] - results2re_h[k][i])
+                   + abs(results1im_h[k][i] - results2im_h[k][i])
+                   + abs(results1re_h[k][i] - resultsre_d[k][i])
+                   + abs(results1im_h[k][i] - resultsim_d[k][i]);
+      }
+      if(verbose) cout << "error : " << err << endl;
+      sumerr = sumerr + err;
+   }
+   return sumerr;
+}
+
+void dbl_make_jobs
+ ( int dim, int nbr, int *nvr, int **idx,
+   ConvolutionJobs *cnvjobs, AdditionJobs *addjobs, bool verbose )
+{
+   cnvjobs->make(nbr,nvr,idx,verbose);
+
+   if(verbose)
+   {
+      write_convolution_counts(*cnvjobs);
+
+      for(int k=0; k<cnvjobs->get_depth(); k++)
+      {
+         cout << "jobs at layer " << k << " :" << endl;
+         for(int i=0; i<cnvjobs->get_layer_count(k); i++)
+            cout << cnvjobs->get_job(k,i) << endl;
+      }
+      cout << endl;
+   }
+
+   addjobs->make(nbr,nvr,idx,verbose);
+
+   if(verbose)
+   {
+      cout << "The differential indices :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "variable " << i << " :";
+         for(int j=0; j<=addjobs->get_differential_count(i); j++)
+            cout << " " << addjobs->get_differential_index(i,j);
+         cout << endl;
+      }
+      write_addition_counts(*addjobs);
+   
+      for(int k=0; k<addjobs->get_depth(); k++)
+      {
+         cout << "jobs at layer " << k << " :" << endl;
+         for(int i=0; i<addjobs->get_layer_count(k); i++)
+            cout << addjobs->get_job(k,i) << endl;
+      }
+   }
+}
+
 double test_dbl_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
@@ -300,44 +395,10 @@ double test_dbl_real_polynomial
       dbl_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,input,cst,cff,vrb);
 
       ConvolutionJobs cnvjobs(dim);
-
-      cnvjobs.make(nbr,nvr,idx,vrb);
-
-      if(vrb)
-      {
-         write_convolution_counts(cnvjobs);
-
-         for(int k=0; k<cnvjobs.get_depth(); k++)
-         {
-            cout << "jobs at layer " << k << " :" << endl;
-            for(int i=0; i<cnvjobs.get_layer_count(k); i++)
-               cout << cnvjobs.get_job(k,i) << endl;
-         }
-         cout << endl;
-      }
       AdditionJobs addjobs(dim,nbr);
 
-      addjobs.make(nbr,nvr,idx,vrb);
+      dbl_make_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
 
-      if(vrb)
-      {
-         cout << "The differential indices :" << endl;
-         for(int i=0; i<dim; i++)
-         {
-            cout << "variable " << i << " :";
-            for(int j=0; j<=addjobs.get_differential_count(i); j++)
-               cout << " " << addjobs.get_differential_index(i,j);
-            cout << endl;
-         }
-         write_addition_counts(addjobs);
-      
-         for(int k=0; k<addjobs.get_depth(); k++)
-         {
-            cout << "jobs at layer " << k << " :" << endl;
-            for(int i=0; i<addjobs.get_layer_count(k); i++)
-               cout << addjobs.get_job(k,i) << endl;
-         }
-      }
       double timelapsec1_h,timelapsec2_h;
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
@@ -386,6 +447,7 @@ double test_dbl_real_polynomial
                  << endl;
             cout << "  (2) cnv/add jobs : " << timelapsec2_h << " seconds."
                  << endl;
+            cout << scientific << setprecision(16);
          }
          if((mode == 0) || (mode == 2))
          {
@@ -462,7 +524,31 @@ double test_dbl_complex_polynomial
       cmplx_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,inputre,inputim,
                        cstre,cstim,cffre,cffim,vrb);
 
-      return 0.0;
+      ConvolutionJobs cnvjobs(dim);
+      AdditionJobs addjobs(dim,nbr);
+
+      dbl_make_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
+
+      double timelapsec1_h,timelapsec2_h;
+      double cnvlapms,addlapms,timelapms_d,walltimes_d;
+
+      if((mode == 1) || (mode == 2))
+      {
+         if(vrb) cout << "Computing without convolution jobs ..." << endl;
+         CPU_cmplx_poly_evaldiff
+            (dim,nbr,deg,nvr,idx,cstre,cstim,cffre,cffim,inputre,inputim,
+             output1re_h,output1im_h,&timelapsec1_h,vrb);
+         if(vrb) cout << "Computing with convolution jobs ..." << endl;
+         CPU_cmplx_poly_evaldiffjobs
+            (dim,nbr,deg,nvr,idx,cstre,cstim,cffre,cffim,inputre,inputim,
+             output2re_h,output2im_h,cnvjobs,addjobs,&timelapsec2_h,vrb);
+      }
+      double sumerr = 0.0;
+      if(mode == 2)
+         sumerr = cmplx_error_sum(dim,deg,output1re_h,output1im_h,
+                     output2re_h,output2im_h,outputre_d,outputim_d,vrb);
+
+      return sumerr;
    }
 }
 

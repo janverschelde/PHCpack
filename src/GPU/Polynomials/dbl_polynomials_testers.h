@@ -4,6 +4,9 @@
 #ifndef __dbl_polynomials_testers_h__
 #define __dbl_polynomials_testers_h__
 
+#include "convolution_jobs.h"
+#include "addition_jobs.h"
+
 void dbl_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
@@ -78,7 +81,7 @@ double dbl_error_sum
 /*
  * DESCRIPTION :
  *   Returns the sum of all errors, comparing results computed on the host
- *   with results computed on the device.
+ *   with results computed on the device, for real data.
  *
  * ON ENTRY :
  *   dim      dimension, total number of variables;
@@ -88,6 +91,48 @@ double dbl_error_sum
  *            computed on the host;
  *   results_d are the results computed on the device;
  *   verbose  if true, then all results and intermediate errors are shown. */
+
+double cmplx_error_sum
+ ( int dim, int deg,
+   double **results1re_h, double **results1im_h,
+   double **results2re_h, double **results2im_h,
+   double **resultsre_d, double **resultsim_d, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all errors, comparing results computed on the host
+ *   with results computed on the device, for complex data.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   deg      truncation degree of the series;
+ *   results1re_h are the real parts computed on the host without jobs;
+ *   results1im_h are the imaginary parts computed on the host without jobs;
+ *   results2re_h are the real parts computed on the host,
+ *            with convolution and addition jobs;
+ *   results2im_h are the imaginary parts computed on the host,
+ *            with convolution and addition jobs;
+ *   resultsre_d are the real parts computed on the device;
+ *   resultsim_d are the imaginary parts computed on the device;
+ *   verbose  if true, then all results and intermediate errors are shown. */
+
+void dbl_make_jobs
+ ( int dim, int nbr, int *nvr, int **idx,
+   ConvolutionJobs *cnvjobs, AdditionJobs *addjobs, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Defines the convolution and addition jobs for a polynomial.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   nbr      number of terms in the polynomial;
+ *   nvr      nvr[k] has the number of variables in monomial k;
+ *   idx      idx[k] holds nvr[k] indices to variables in monomial k;
+ *   verbose  is the verbose flag, if true, then information about
+ *            all jobs is written to screen.
+ *
+ * ON RETURN :
+ *   cnvjobs  are the convolution jobs;
+ *   addjobs  are the addition jobs. */
 
 double test_dbl_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose,
