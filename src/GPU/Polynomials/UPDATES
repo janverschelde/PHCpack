@@ -1,6 +1,7 @@
 Fri 15 Jan 2021 : to random_polynomials, added a function to generate
   random polynomials with complex coefficients.
   Extended dbl_polynomials_testers with tests on random complex data.
+  Extended dbl_polynomials_host with code for complex data.
 
 Wed 13 Jan 2021 : in all testers.cpp, for all precisions, extended the run
   sequence with degrees 0 and 8.
