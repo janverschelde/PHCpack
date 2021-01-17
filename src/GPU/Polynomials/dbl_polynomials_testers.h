@@ -134,6 +134,30 @@ void dbl_make_jobs
  *   cnvjobs  are the convolution jobs;
  *   addjobs  are the addition jobs. */
 
+void write_jobs_report
+ ( int dim, int nva, int nbr, int deg,
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs );
+/*
+ * DESCRIPTION :
+ *   Writes the dimensions of the jobs.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   nva      number of variables per monomial (if fixed);
+ *   nbr      number of monomials, excluding the constant;
+ *   deg      truncation degree of the series;
+ *   cnvjobs  are the convolution jobs;
+ *   addjobs  are the addition jobs. */
+
+void write_CPU_timings ( double lapsec1, double lapsec2 );
+/*
+ * DESCRIPTION :
+ *   Writes the timings.
+ *
+ * ON ENTRY :
+ *   lapsec1  is the CPU time for the first algorithm, without jobs
+ *   lapsec2  is the CPU time for the second algorithm, with jobs. */
+
 double test_dbl_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose,
    bool jobrep=true, int mode=2 );

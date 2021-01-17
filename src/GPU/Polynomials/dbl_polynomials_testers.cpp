@@ -364,6 +364,27 @@ void dbl_make_jobs
    }
 }
 
+void write_jobs_report
+ ( int dim, int nva, int nbr, int deg,
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs )
+{
+   cout << "dimension : " << dim << endl;
+   if(nva > 0) cout << "number of variables per monomial : " << nva << endl;
+   cout << "number of monomials : " << nbr << endl;
+   write_convolution_counts(cnvjobs);
+   write_addition_counts(addjobs);
+   write_operation_counts(deg,cnvjobs,addjobs);
+}
+
+void write_CPU_timings ( double lapsec1, double lapsec2 )
+{
+   cout << fixed << setprecision(3);
+   cout << "Elapsed CPU time (Linux), Wall time (Windows) : " << endl;
+   cout << "  (1) without jobs : " << lapsec1 << " seconds," << endl;
+   cout << "  (2) cnv/add jobs : " << lapsec2 << " seconds." << endl;
+   cout << scientific << setprecision(16);
+}
+
 double test_dbl_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
@@ -426,43 +447,11 @@ double test_dbl_real_polynomial
 
       if(verbose > 0)
       {
-         if(jobrep)
-         {
-            cout << "dimension : " << dim << endl;
-            if(nva > 0)
-            {
-               cout << "number of variables per monomial : " << nva << endl;
-            }
-            cout << "number of monomials : " << nbr << endl;
-            write_convolution_counts(cnvjobs);
-            write_addition_counts(addjobs);
-            write_operation_counts(deg,cnvjobs,addjobs);
-         }
+         if(jobrep) write_jobs_report(dim,nva,nbr,deg,cnvjobs,addjobs);
          if((mode == 1) || (mode == 2))
-         {
-            cout << fixed << setprecision(3);
-            cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
-                 << endl;
-            cout << "  (1) without jobs : " << timelapsec1_h << " seconds,"
-                 << endl;
-            cout << "  (2) cnv/add jobs : " << timelapsec2_h << " seconds."
-                 << endl;
-            cout << scientific << setprecision(16);
-         }
+            write_CPU_timings(timelapsec1_h,timelapsec2_h);
          if((mode == 0) || (mode == 2))
-         {
-            cout << fixed << setprecision(2);
-            cout << "Time spent by convolution kernels : "
-                 << cnvlapms << " milliseconds." << endl;
-            cout << "Time spent by addition kernels    : "
-                 << addlapms << " milliseconds." << endl;
-            cout << "Time spent by all kernels         : "
-                 << timelapms_d << " milliseconds." << endl;
-            cout << "Total wall clock computation time : ";
-            cout << fixed << setprecision(3) << walltimes_d
-                 << " seconds." << endl;
-            cout << scientific << setprecision(16);
-         }
+            write_GPU_timings(cnvlapms,addlapms,timelapms_d,walltimes_d);
       } 
       return sumerr;
    }
@@ -543,11 +532,27 @@ double test_dbl_complex_polynomial
             (dim,nbr,deg,nvr,idx,cstre,cstim,cffre,cffim,inputre,inputim,
              output2re_h,output2im_h,cnvjobs,addjobs,&timelapsec2_h,vrb);
       }
+      if((mode == 0) || (mode == 2))
+      {
+         if(vrb) cout << "Computing on the device ..." << endl;
+         GPU_cmplx_poly_evaldiff
+            (deg+1,dim,nbr,deg,nvr,idx,cstre,cstim,cffre,cffim,
+             inputre,inputim,outputre_d,outputim_d,cnvjobs,addjobs,
+             &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,vrb);
+      }
       double sumerr = 0.0;
       if(mode == 2)
          sumerr = cmplx_error_sum(dim,deg,output1re_h,output1im_h,
                      output2re_h,output2im_h,outputre_d,outputim_d,vrb);
 
+      if(verbose > 0)
+      {
+         if(jobrep) write_jobs_report(dim,nva,nbr,deg,cnvjobs,addjobs);
+         if((mode == 1) || (mode == 2))
+            write_CPU_timings(timelapsec1_h,timelapsec2_h);
+         if((mode == 0) || (mode == 2))
+            write_GPU_timings(cnvlapms,addlapms,timelapms_d,walltimes_d);
+      } 
       return sumerr;
    }
 }
