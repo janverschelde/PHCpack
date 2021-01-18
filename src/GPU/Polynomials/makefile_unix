@@ -895,6 +895,7 @@ run_polynomials: random_numbers.o random_series.o random_monomials.o \
                  dbl8_polynomials_host.o dbl8_polynomials_testers.o \
                  dbl10_convolutions_host.o dbl10_monomials_host.o \
                  dbl10_polynomials_host.o dbl10_polynomials_testers.o \
+                 test_helpers.o write_gpu_timings.o \
                  polynomials_kernels.o run_polynomials.o
 	@-echo ">>> linking ..."
 	$(gpp) -o run_polynomials run_polynomials.o \
@@ -929,7 +930,7 @@ run_polynomials: random_numbers.o random_series.o random_monomials.o \
                   dbl8_polynomials_host.o dbl8_polynomials_testers.o \
                   dbl10_convolutions_host.o dbl10_monomials_host.o \
                   dbl10_polynomials_host.o dbl10_polynomials_testers.o \
-                  polynomials_kernels.o \
+                  test_helpers.o write_gpu_timings.o polynomials_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 clean:

@@ -633,11 +633,23 @@ write_job_counts.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: write_job_counts.obj /EHsc
 
+write_gpu_timings.obj:
+	@-echo ">>> compiling write_gpu_timings ..."
+	$(CL)\cl /c write_gpu_timings.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_gpu_timings.obj /EHsc
+
 job_coordinates.obj:
 	@-echo ">>> compiling job_coordinates ..."
 	$(CL)\cl /c job_coordinates.cpp \
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: job_coordinates.obj /EHsc
+
+test_helpers.obj:
+	@-echo ">>> compiling test_helpers ..."
+	$(CL)\cl /c test_helpers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: test_helpers.obj /EHsc
 
 prompt_for_setup.obj:
 	@-echo ">>> compiling prompt_for_setup ..."
@@ -667,20 +679,21 @@ test_addition_jobs: random_numbers.obj random_series.obj \
 test_dbl_polynomials: random_numbers.obj random_series.obj \
 	              random_monomials.obj random_polynomials.obj \
                       convolution_job.obj convolution_jobs.obj \
-                      addition_job.obj addition_jobs.obj \
+                      addition_job.obj addition_jobs.obj test_helpers.obj \
                       job_coordinates.obj write_job_counts.obj \
                     dbl_convolutions_host.obj dbl_monomials_host.obj \
                     dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
                     test_dbl_polynomials.obj dbl_polynomials_testers.obj \
-                    prompt_for_setup.obj
+                    prompt_for_setup.obj write_gpu_timings.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_polynomials.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
               random_polynomials.obj convolution_job.obj convolution_jobs.obj \
               addition_job.obj addition_jobs.obj prompt_for_setup.obj \
-              job_coordinates.obj write_job_counts.obj \
+              job_coordinates.obj write_job_counts.obj test_helpers.obj \
               dbl_convolutions_host.obj dbl_monomials_host.obj \
               dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
+              write_gpu_timings.obj \
               test_dbl_polynomials.obj dbl_polynomials_testers.obj
 
 test_dbl2_polynomials: random_numbers.obj random_series.obj \
@@ -689,10 +702,11 @@ test_dbl2_polynomials: random_numbers.obj random_series.obj \
                        random2_vectors.obj random2_series.obj \
                        random2_monomials.obj random2_polynomials.obj \
                        convolution_job.obj convolution_jobs.obj \
-                       addition_job.obj addition_jobs.obj \
+                       addition_job.obj addition_jobs.obj test_helpers.obj \
                        job_coordinates.obj write_job_counts.obj \
                        dbl2_convolutions_host.obj dbl2_monomials_host.obj \
                        dbl2_polynomials_host.obj dbl2_polynomials_kernels.obj \
+                       write_gpu_timings.obj \
 		       test_dbl2_polynomials.obj dbl2_polynomials_testers.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl2_polynomials.exe \
@@ -700,11 +714,12 @@ test_dbl2_polynomials: random_numbers.obj random_series.obj \
               random_polynomials.obj double_double_functions.obj \
               random2_vectors.obj random2_series.obj \
               random2_monomials.obj random2_polynomials.obj \
-              convolution_job.obj convolution_jobs.obj \
+              convolution_job.obj convolution_jobs.obj test_helpers.obj \
               addition_job.obj addition_jobs.obj prompt_for_setup.obj \
               job_coordinates.obj write_job_counts.obj \
               dbl2_convolutions_host.obj dbl2_monomials_host.obj \
               dbl2_polynomials_host.obj dbl2_polynomials_kernels.obj \
+              write_gpu_timings.obj \
               test_dbl2_polynomials.obj dbl2_polynomials_testers.obj
 
 test_dbl3_polynomials: random_numbers.obj random_series.obj \
@@ -874,6 +889,7 @@ test_polynomials: random_numbers.obj random_series.obj \
                   dbl8_polynomials_host.obj dbl8_polynomials_testers.obj \
                   dbl10_convolutions_host.obj dbl10_monomials_host.obj \
                   dbl10_polynomials_host.obj dbl10_polynomials_testers.obj \
+                  test_helpers.obj write_gpu_timings.obj \
 	          polynomials_kernels.obj test_polynomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_polynomials.exe \
@@ -911,25 +927,27 @@ test_polynomials: random_numbers.obj random_series.obj \
               dbl8_polynomials_host.obj dbl8_polynomials_testers.obj \
               dbl10_convolutions_host.obj dbl10_monomials_host.obj \
               dbl10_polynomials_host.obj dbl10_polynomials_testers.obj \
+              test_helpers.obj write_gpu_timings.obj \
               polynomials_kernels.obj test_polynomials.obj
 
 run_dbl_polynomials: random_numbers.obj random_series.obj \
                      random_monomials.obj random_polynomials.obj \
                      convolution_job.obj convolution_jobs.obj \
-                     addition_job.obj addition_jobs.obj \
+                     addition_job.obj addition_jobs.obj test_helpers.obj \
                      job_coordinates.obj write_job_counts.obj \
                     dbl_convolutions_host.obj dbl_monomials_host.obj \
                     dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
                     run_dbl_polynomials.obj dbl_polynomials_testers.obj \
-                    prompt_for_setup.obj
+                    prompt_for_setup.obj write_gpu_timings.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o run_dbl_polynomials.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
               random_polynomials.obj convolution_job.obj convolution_jobs.obj \
               addition_job.obj addition_jobs.obj prompt_for_setup.obj \
-              job_coordinates.obj write_job_counts.obj \
+              job_coordinates.obj write_job_counts.obj test_helpers.obj \
               dbl_convolutions_host.obj dbl_monomials_host.obj \
               dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
+              write_gpu_timings.obj \
               run_dbl_polynomials.obj dbl_polynomials_testers.obj
 
 run_dbl2_polynomials: random_numbers.obj random_series.obj \
@@ -938,10 +956,11 @@ run_dbl2_polynomials: random_numbers.obj random_series.obj \
                       random2_vectors.obj random2_series.obj \
                       random2_monomials.obj random2_polynomials.obj \
                       convolution_job.obj convolution_jobs.obj \
-                      addition_job.obj addition_jobs.obj \
+                      addition_job.obj addition_jobs.obj test_helpers.obj \
                       job_coordinates.obj write_job_counts.obj \
                       dbl2_convolutions_host.obj dbl2_monomials_host.obj \
                       dbl2_polynomials_host.obj dbl2_polynomials_kernels.obj \
+                      write_gpu_timings.obj \
                       run_dbl2_polynomials.obj dbl2_polynomials_testers.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o run_dbl2_polynomials.exe \
@@ -954,6 +973,7 @@ run_dbl2_polynomials: random_numbers.obj random_series.obj \
               job_coordinates.obj write_job_counts.obj \
               dbl2_convolutions_host.obj dbl2_monomials_host.obj \
               dbl2_polynomials_host.obj dbl2_polynomials_kernels.obj \
+              test_helpers.obj write_gpu_timings.obj \
               run_dbl2_polynomials.obj dbl2_polynomials_testers.obj
 
 run_dbl3_polynomials: random_numbers.obj random_series.obj \
@@ -1123,6 +1143,7 @@ run_polynomials: random_numbers.obj random_series.obj \
                  dbl8_polynomials_host.obj dbl8_polynomials_testers.obj \
                  dbl10_convolutions_host.obj dbl10_monomials_host.obj \
                  dbl10_polynomials_host.obj dbl10_polynomials_testers.obj \
+                 test_helpers.obj write_gpu_timings.obj \
                  polynomials_kernels.obj run_polynomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o run_polynomials.exe \
@@ -1160,6 +1181,7 @@ run_polynomials: random_numbers.obj random_series.obj \
               dbl8_polynomials_host.obj dbl8_polynomials_testers.obj \
               dbl10_convolutions_host.obj dbl10_monomials_host.obj \
               dbl10_polynomials_host.obj dbl10_polynomials_testers.obj \
+              test_helpers.obj write_gpu_timings.obj \
               polynomials_kernels.obj run_polynomials.obj
 
 clean:
