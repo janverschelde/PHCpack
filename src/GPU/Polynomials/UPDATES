@@ -1,5 +1,7 @@
 Sun 17 Jan 2021 : to dbl_polynomials_kernels, added code for complex data,
-  updated dbl_polynomials_testers.
+  updated dbl_polynomials_testers.  Extended random2_polynomials with
+  functions to generate random polynomials with complex coefficients in
+  double double precision.
 
 Sat 16 Jan 2021 : make some corrections to dbl_polynomials_host and
   extended dbl_polynomials_testers for complex data.
