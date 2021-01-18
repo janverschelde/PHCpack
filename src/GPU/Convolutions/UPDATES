@@ -1,3 +1,6 @@
+Sun 17 Jan 2021 : in random2_monomials.cpp, fixed the sqrt into sqr in
+  the generation of random double double complex number.
+
 Tue 12 Jan 2021 : restored the bounds on the shared memory size to 128
   in dbl4_convolutions_kernels.h and in dbl5_convolutions_kernels.h.
 

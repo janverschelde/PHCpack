@@ -63,8 +63,8 @@ bool make_complex2_monomial
          random_double_double(&rndhi,&rndlo);           // random cos
 
          cffrehi[i] = rndhi; cffrelo[i] = rndlo;        // cos(angle)
-         ddf_sqrt(rndhi,rndlo,&sinhi,&sinlo);           // cos^(angle)
-         ddf_minus(&sinhi,&sinlo);                      // -cos^(angle)
+         ddf_sqr(rndhi,rndlo,&sinhi,&sinlo);            // cos^2(angle)
+         ddf_minus(&sinhi,&sinlo);                      // -cos^2(angle)
          ddf_inc_d(&sinhi,&sinlo,1.0);                  // 1-cos^2(angle)
          ddf_sqrt(sinhi,sinlo,&cffimhi[i],&cffimlo[i]); // sin is sqrt
       }
