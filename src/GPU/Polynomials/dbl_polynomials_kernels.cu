@@ -9,6 +9,7 @@
 #include <sys/time.h>
 #endif
 #include "job_coordinates.h"
+#include "write_gpu_timings.h"
 #include "dbl_polynomials_kernels.h"
 
 // The constant d_shmemsize is the bound on the shared memory size.
@@ -489,21 +490,6 @@ void write_coefficient_indices
    for(int i=0; i<nbr; i++) cout << " " << csums[i]; cout << endl;
    cout << "cstart :";
    for(int i=0; i<nbr; i++) cout << " " << cstart[i]; cout << endl;
-}
-
-void write_GPU_timings
- ( double cnvlapms, double addlapms, double elapsedms, double walltimesec )
-{
-   cout << fixed << setprecision(2);
-   cout << "Time spent by convolution kernels : ";
-   cout << cnvlapms << " milliseconds." << endl;
-   cout << "Time spent by addition kernels    : ";
-   cout << addlapms << " milliseconds." << endl;
-   cout << "Time spent by all kernels         : ";
-   cout << elapsedms << " milliseconds." << endl;
-   cout << "Total wall clock computation time : ";
-   cout << fixed << setprecision(3) << walltimesec << " seconds." << endl;
-   cout << scientific << setprecision(16);
 }
 
 void GPU_dbl_poly_evaldiff

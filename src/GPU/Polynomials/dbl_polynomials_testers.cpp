@@ -10,7 +10,11 @@
 #include "random_numbers.h"
 #include "random_monomials.h"
 #include "random_polynomials.h"
+#include "convolution_jobs.h"
+#include "addition_jobs.h"
 #include "write_job_counts.h"
+#include "write_gpu_timings.h"
+#include "test_helpers.h"
 #include "dbl_polynomials_host.h"
 #include "dbl_polynomials_kernels.h"
 #include "dbl_polynomials_testers.h"
@@ -322,69 +326,6 @@ double cmplx_error_sum
    return sumerr;
 }
 
-void dbl_make_jobs
- ( int dim, int nbr, int *nvr, int **idx,
-   ConvolutionJobs *cnvjobs, AdditionJobs *addjobs, bool verbose )
-{
-   cnvjobs->make(nbr,nvr,idx,verbose);
-
-   if(verbose)
-   {
-      write_convolution_counts(*cnvjobs);
-
-      for(int k=0; k<cnvjobs->get_depth(); k++)
-      {
-         cout << "jobs at layer " << k << " :" << endl;
-         for(int i=0; i<cnvjobs->get_layer_count(k); i++)
-            cout << cnvjobs->get_job(k,i) << endl;
-      }
-      cout << endl;
-   }
-
-   addjobs->make(nbr,nvr,idx,verbose);
-
-   if(verbose)
-   {
-      cout << "The differential indices :" << endl;
-      for(int i=0; i<dim; i++)
-      {
-         cout << "variable " << i << " :";
-         for(int j=0; j<=addjobs->get_differential_count(i); j++)
-            cout << " " << addjobs->get_differential_index(i,j);
-         cout << endl;
-      }
-      write_addition_counts(*addjobs);
-   
-      for(int k=0; k<addjobs->get_depth(); k++)
-      {
-         cout << "jobs at layer " << k << " :" << endl;
-         for(int i=0; i<addjobs->get_layer_count(k); i++)
-            cout << addjobs->get_job(k,i) << endl;
-      }
-   }
-}
-
-void write_jobs_report
- ( int dim, int nva, int nbr, int deg,
-   ConvolutionJobs cnvjobs, AdditionJobs addjobs )
-{
-   cout << "dimension : " << dim << endl;
-   if(nva > 0) cout << "number of variables per monomial : " << nva << endl;
-   cout << "number of monomials : " << nbr << endl;
-   write_convolution_counts(cnvjobs);
-   write_addition_counts(addjobs);
-   write_operation_counts(deg,cnvjobs,addjobs);
-}
-
-void write_CPU_timings ( double lapsec1, double lapsec2 )
-{
-   cout << fixed << setprecision(3);
-   cout << "Elapsed CPU time (Linux), Wall time (Windows) : " << endl;
-   cout << "  (1) without jobs : " << lapsec1 << " seconds," << endl;
-   cout << "  (2) cnv/add jobs : " << lapsec2 << " seconds." << endl;
-   cout << scientific << setprecision(16);
-}
-
 double test_dbl_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
@@ -418,7 +359,7 @@ double test_dbl_real_polynomial
       ConvolutionJobs cnvjobs(dim);
       AdditionJobs addjobs(dim,nbr);
 
-      dbl_make_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
+      make_all_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
 
       double timelapsec1_h,timelapsec2_h;
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
@@ -516,7 +457,7 @@ double test_dbl_complex_polynomial
       ConvolutionJobs cnvjobs(dim);
       AdditionJobs addjobs(dim,nbr);
 
-      dbl_make_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
+      make_all_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
 
       double timelapsec1_h,timelapsec2_h;
       double cnvlapms,addlapms,timelapms_d,walltimes_d;

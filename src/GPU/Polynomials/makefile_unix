@@ -401,6 +401,14 @@ write_job_counts.o:
 	@-echo ">>> compiling write_job_counts ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) write_job_counts.cpp
 
+write_gpu_timings.o:
+	@-echo ">>> compiling write_gpu_timings ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) write_gpu_timings.cpp
+
+test_helpers.o:
+	@-echo ">>> compiling test_helpers ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test_helpers.cpp
+
 job_coordinates.o:
 	@-echo ">>> compiling job_coordinates ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) job_coordinates.cpp
@@ -428,20 +436,22 @@ test_addition_jobs: random_numbers.o random_series.o random_monomials.o \
 test_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
                       random_polynomials.o prompt_for_setup.o \
                       convolution_job.o convolution_jobs.o \
-                      addition_job.o addition_jobs.o \
+                      addition_job.o addition_jobs.o test_helpers.o \
                       job_coordinates.o write_job_counts.o \
                       dbl_convolutions_host.o dbl_monomials_host.o \
                       dbl_polynomials_host.o dbl_polynomials_kernels.o \
+                      write_gpu_timings.o \
                       dbl_polynomials_testers.o test_dbl_polynomials.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_polynomials test_dbl_polynomials.o \
                   random_numbers.o random_series.o random_monomials.o \
                   random_polynomials.o \
                   convolution_job.o convolution_jobs.o \
-                  addition_job.o addition_jobs.o \
+                  addition_job.o addition_jobs.o test_helpers.o \
                   job_coordinates.o write_job_counts.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
                   dbl_polynomials_host.o dbl_polynomials_kernels.o \
+                  write_gpu_timings.o \
                   prompt_for_setup.o dbl_polynomials_testers.o \
                -lcuda -lcudart -L$(CUDALIB)
 
@@ -450,10 +460,11 @@ test_dbl2_polynomials: random_numbers.o random_series.o random_monomials.o \
                        random2_vectors.o random2_series.o random2_monomials.o \
                        random2_polynomials.o test_dbl2_polynomials.o \
                        convolution_job.o convolution_jobs.o \
-                       addition_job.o addition_jobs.o \
+                       addition_job.o addition_jobs.o test_helpers.o \
                        job_coordinates.o write_job_counts.o \
                        dbl2_convolutions_host.o dbl2_monomials_host.o \
                        dbl2_polynomials_host.o dbl2_polynomials_kernels.o \
+                       write_gpu_timings.o \
                        prompt_for_setup.o dbl2_polynomials_testers.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_polynomials test_dbl2_polynomials.o \
@@ -462,10 +473,11 @@ test_dbl2_polynomials: random_numbers.o random_series.o random_monomials.o \
                   random2_vectors.o random2_series.o \
                   random2_monomials.o random2_polynomials.o \
                   convolution_job.o convolution_jobs.o \
-                  addition_job.o addition_jobs.o \
+                  addition_job.o addition_jobs.o test_helpers.o \
                   job_coordinates.o write_job_counts.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
                   dbl2_polynomials_host.o dbl2_polynomials_kernels.o \
+                  write_gpu_timings.o \
                   prompt_for_setup.o dbl2_polynomials_testers.o \
                -lcuda -lcudart -L$(CUDALIB)
 
@@ -617,7 +629,7 @@ test_polynomials: random_numbers.o random_series.o random_monomials.o \
                   random10_vectors.o random10_series.o random10_monomials.o \
                   random10_polynomials.o prompt_for_setup.o \
                   convolution_job.o convolution_jobs.o \
-                  addition_job.o addition_jobs.o \
+                  addition_job.o addition_jobs.o test_helpers.o \
                   job_coordinates.o write_job_counts.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
                   dbl_polynomials_host.o dbl_polynomials_testers.o \
@@ -633,9 +645,10 @@ test_polynomials: random_numbers.o random_series.o random_monomials.o \
                   dbl8_polynomials_host.o dbl8_polynomials_testers.o \
                   dbl10_convolutions_host.o dbl10_monomials_host.o \
                   dbl10_polynomials_host.o dbl10_polynomials_testers.o \
+                  write_gpu_timings.o \
                   polynomials_kernels.o test_polynomials.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_polynomials test_polynomials.o \
+	$(gpp) -o test_polynomials test_polynomials.o test_helpers.o \
                   random_numbers.o random_series.o random_monomials.o \
                   random_polynomials.o double_double_functions.o \
                   random2_vectors.o random2_series.o random2_monomials.o \
@@ -667,26 +680,28 @@ test_polynomials: random_numbers.o random_series.o random_monomials.o \
                   dbl8_polynomials_host.o dbl8_polynomials_testers.o \
                   dbl10_convolutions_host.o dbl10_monomials_host.o \
                   dbl10_polynomials_host.o dbl10_polynomials_testers.o \
-                  polynomials_kernels.o \
+                  write_gpu_timings.o polynomials_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 run_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
                      random_polynomials.o prompt_for_setup.o \
                      convolution_job.o convolution_jobs.o \
-                     addition_job.o addition_jobs.o \
+                     addition_job.o addition_jobs.o test_helpers.o \
                      job_coordinates.o write_job_counts.o \
                      dbl_convolutions_host.o dbl_monomials_host.o \
                      dbl_polynomials_host.o dbl_polynomials_kernels.o \
+                     write_gpu_timings.o \
                      dbl_polynomials_testers.o run_dbl_polynomials.o
 	@-echo ">>> linking ..."
 	$(gpp) -o run_dbl_polynomials run_dbl_polynomials.o \
                   random_numbers.o random_series.o random_monomials.o \
                   random_polynomials.o \
                   convolution_job.o convolution_jobs.o \
-                  addition_job.o addition_jobs.o \
+                  addition_job.o addition_jobs.o test_helpers.o \
                   job_coordinates.o write_job_counts.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
                   dbl_polynomials_host.o dbl_polynomials_kernels.o \
+                  write_gpu_timings.o \
                   prompt_for_setup.o dbl_polynomials_testers.o \
                -lcuda -lcudart -L$(CUDALIB)
 
@@ -695,10 +710,11 @@ run_dbl2_polynomials: random_numbers.o random_series.o random_monomials.o \
                       random2_vectors.o random2_series.o random2_monomials.o \
                       random2_polynomials.o run_dbl2_polynomials.o \
                       convolution_job.o convolution_jobs.o \
-                      addition_job.o addition_jobs.o \
+                      addition_job.o addition_jobs.o test_helpers.o \
                       job_coordinates.o write_job_counts.o \
                       dbl2_convolutions_host.o dbl2_monomials_host.o \
                       dbl2_polynomials_host.o dbl2_polynomials_kernels.o \
+                      write_gpu_timings.o \
                       prompt_for_setup.o dbl2_polynomials_testers.o
 	@-echo ">>> linking ..."
 	$(gpp) -o run_dbl2_polynomials run_dbl2_polynomials.o \
@@ -707,10 +723,11 @@ run_dbl2_polynomials: random_numbers.o random_series.o random_monomials.o \
                   random2_vectors.o random2_series.o \
                   random2_monomials.o random2_polynomials.o \
                   convolution_job.o convolution_jobs.o \
-                  addition_job.o addition_jobs.o \
+                  addition_job.o addition_jobs.o test_helpers.o \
                   job_coordinates.o write_job_counts.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
                   dbl2_polynomials_host.o dbl2_polynomials_kernels.o \
+                  write_gpu_timings.o \
                   prompt_for_setup.o dbl2_polynomials_testers.o \
                -lcuda -lcudart -L$(CUDALIB)
 
@@ -952,6 +969,7 @@ clean:
 	/bin/rm -f -r addition_job.o addition_jobs.o
 	/bin/rm -f -r test_addition_jobs test_addition_jobs.o
 	/bin/rm -f -r job_coordinates.o write_job_counts.o prompt_for_setup.o
+	/bin/rm -f -r write_gpu_timings.o test_helpers.o
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o

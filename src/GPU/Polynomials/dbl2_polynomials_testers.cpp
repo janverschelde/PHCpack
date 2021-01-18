@@ -13,8 +13,10 @@
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
 #include "write_job_counts.h"
+#include "write_gpu_timings.h"
 #include "dbl2_polynomials_host.h"
 #include "dbl2_polynomials_kernels.h"
+#include "test_helpers.h"
 #include "dbl2_polynomials_testers.h"
 
 using namespace std;
@@ -143,6 +145,98 @@ void dbl2_make_input
    }
 }
 
+void cmplx2_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputrehi, double **inputrelo,
+   double **inputimhi, double **inputimlo,
+   double *cstrehi, double *cstrelo, double *cstimhi, double *cstimlo,
+   double **cffrehi, double **cffrelo, double **cffimhi, double **cffimlo,
+   bool verbose )
+{
+   make_complex2_input
+      (dim,deg,inputrehi,inputrelo,inputimhi,inputimlo);
+
+   if(verbose)
+   {
+      cout << scientific << setprecision(16);
+      cout << "Random input series :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "-> coefficients of series " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << inputrehi[i][j] << "  " << inputrelo[i][j] << endl
+                 << inputimhi[i][j] << "  " << inputimlo[i][j] << endl;
+      }
+   }
+   if(nva == 0) // random supports
+   {
+      make_supports(dim,nbr,nvr);
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++)
+      {
+         idx[i] = new int[nva];
+         nvr[i] = nva;
+      }
+   }
+   if(nva > 0)
+   {
+      if(nbr == dim)
+         make_complex2_cyclic
+            (dim,nva,deg,idx,cstrehi,cstrelo,cstimhi,cstimlo,
+             cffrehi,cffrelo,cffimhi,cffimlo);
+      else
+         make_complex2_products
+            (dim,nbr,nva,deg,idx,cstrehi,cstrelo,cstimhi,cstimlo,
+             cffrehi,cffrelo,cffimhi,cffimlo);
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
+
+      bool fail = make_complex2_polynomial
+                     (dim,nbr,pwr,deg,nvr,idx,exp,
+                      cstrehi,cstrelo,cstimhi,cstimlo,
+                      cffrehi,cffrelo,cffimhi,cffimlo);
+   }
+   if(verbose)
+   {
+      cout << "Coefficient series of the constant term :" << endl;
+      for(int j=0; j<=deg; j++)
+         cout << cstrehi[j] << "  " << cstrelo[j] << endl
+              << cstimhi[j] << "  " << cstimlo[j] << endl;
+
+      for(int i=0; i<nbr; i++)
+      {
+         cout << "Generated random monomial " << i << " :" << endl;
+         cout << "   the indices :";
+         for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
+         cout << endl;
+         if(nva == 0)
+         {
+            cout << " the exponents :";
+            for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
+            cout << endl;
+         }
+         cout << " coefficient series :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << cffrehi[i][j] << "  " << cffrelo[i][j] << endl
+                 << cffimhi[i][j] << "  " << cffimlo[i][j] << endl;
+      }
+   }
+   if(nva == 0)
+   {
+      bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
+      if(dup)
+         cout << "Duplicate supports found." << endl;
+      else if(verbose)
+         cout << "No duplicate supports found." << endl;
+   }
+}
+
 double dbl2_error_sum
  ( int dim, int deg,
    double **results1hi_h, double **results1lo_h,
@@ -240,45 +334,12 @@ double test_dbl2_real_polynomial
       dbl2_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
                       inputhi,inputlo,csthi,cstlo,cffhi,cfflo,vrb);
 
+
       ConvolutionJobs cnvjobs(dim);
-
-      cnvjobs.make(nbr,nvr,idx,vrb);
-
-      if(vrb)
-      {
-         write_convolution_counts(cnvjobs);
-
-         for(int k=0; k<cnvjobs.get_depth(); k++)
-         {
-            cout << "jobs at layer " << k << " :" << endl;
-            for(int i=0; i<cnvjobs.get_layer_count(k); i++)
-               cout << cnvjobs.get_job(k,i) << endl;
-         }
-         cout << endl;
-      }
       AdditionJobs addjobs(dim,nbr);
 
-      addjobs.make(nbr,nvr,idx,vrb);
+      make_all_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
 
-      if(vrb)
-      {
-         cout << "The differential indices :" << endl;
-         for(int i=0; i<dim; i++)
-         {
-            cout << "variable " << i << " :";
-            for(int j=0; j<=addjobs.get_differential_count(i); j++)
-               cout << " " << addjobs.get_differential_index(i,j);
-            cout << endl;
-         }
-         write_addition_counts(addjobs);
-
-         for(int k=0; k<addjobs.get_depth(); k++)
-         {
-            cout << "jobs at layer " << k << " :" << endl;
-            for(int i=0; i<addjobs.get_layer_count(k); i++)
-               cout << addjobs.get_job(k,i) << endl;
-         }
-      }
       double timelapsec1_h,timelapsec2_h;
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
@@ -308,44 +369,96 @@ double test_dbl2_real_polynomial
 
       if(verbose > 0)
       {
-         if(jobrep)
-         {
-            cout << "dimension : " << dim << endl;
-            if(nva > 0)
-            {
-               cout << "number of variables per monomial : " << nva << endl;
-            }
-            cout << "number of monomials : " << nbr << endl;
-            write_convolution_counts(cnvjobs);
-            write_addition_counts(addjobs);
-            write_operation_counts(deg,cnvjobs,addjobs);
-         }
+         if(jobrep) write_jobs_report(dim,nva,nbr,deg,cnvjobs,addjobs);
          if((mode == 1) || (mode == 2))
-         {
-            cout << fixed << setprecision(3);
-            cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
-                 << endl;
-            cout << "  (1) without jobs : " << timelapsec1_h << " seconds,"
-                 << endl;
-            cout << "  (2) cnv/add jobs : " << timelapsec2_h << " seconds."
-                 << endl;
-         }
+            write_CPU_timings(timelapsec1_h,timelapsec2_h);
          if((mode == 0) || (mode == 2))
-         {
-            cout << fixed << setprecision(2);
-            cout << "Time spent by convolution kernels : "
-                 << cnvlapms << " milliseconds." << endl;
-            cout << "Time spent by addition kernels    : "
-                 << addlapms << " milliseconds." << endl;
-            cout << "Time spent by all kernels         : "
-                 << timelapms_d << " milliseconds." << endl;
-            cout << "Total wall clock computation time : ";
-            cout << fixed << setprecision(3) << walltimes_d
-                 << " seconds." << endl;
-            cout << scientific << setprecision(16);
-         }
+            write_GPU_timings(cnvlapms,addlapms,timelapms_d,walltimes_d);
       }
       return sumerr;
+   }
+}
+
+double test_cmplx2_real_polynomial
+ ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
+   int mode )
+{
+   if(nbr < 1)
+      return 0.0;
+   else
+   {
+      double **inputrehi = new double*[dim]; // dim series of degree deg
+      double **inputrelo = new double*[dim]; 
+      double **inputimhi = new double*[dim];
+      double **inputimlo = new double*[dim];
+      for(int i=0; i<dim; i++) 
+      {
+         inputrehi[i] = new double[deg+1]; inputrelo[i] = new double[deg+1];
+         inputimhi[i] = new double[deg+1]; inputimlo[i] = new double[deg+1];
+      }
+      // The output are dim+1 power series of degree deg
+      // for the evaluated and differentiated polynomial.
+      double **output1rehi_h = new double*[dim+1];
+      double **output1relo_h = new double*[dim+1];
+      double **output1imhi_h = new double*[dim+1];
+      double **output1imlo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++)
+      {
+         output1rehi_h[i] = new double[deg+1];
+         output1relo_h[i] = new double[deg+1];
+         output1imhi_h[i] = new double[deg+1];
+         output1imlo_h[i] = new double[deg+1];
+      }
+      double **output2rehi_h = new double*[dim+1];
+      double **output2relo_h = new double*[dim+1];
+      double **output2imhi_h = new double*[dim+1];
+      double **output2imlo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++)
+      {
+         output2rehi_h[i] = new double[deg+1];
+         output2relo_h[i] = new double[deg+1];
+         output2imhi_h[i] = new double[deg+1];
+         output2imlo_h[i] = new double[deg+1];
+      }
+      double **outputrehi_d = new double*[dim+1];
+      double **outputrelo_d = new double*[dim+1];
+      double **outputimhi_d = new double*[dim+1];
+      double **outputimlo_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++)
+      {
+         outputrehi_d[i] = new double[deg+1];
+         outputrelo_d[i] = new double[deg+1];
+         outputimhi_d[i] = new double[deg+1];
+         outputimlo_d[i] = new double[deg+1];
+      }
+      double *cstrehi = new double[deg+1]; // constant coefficient series
+      double *cstrelo = new double[deg+1];
+      double *cstimhi = new double[deg+1];
+      double *cstimlo = new double[deg+1];
+      double **cffrehi = new double*[nbr]; // coefficient series of terms
+      double **cffrelo = new double*[nbr];
+      double **cffimhi = new double*[nbr];
+      double **cffimlo = new double*[nbr];
+      for(int i=0; i<nbr; i++)
+      {
+         cffrehi[i] = new double[deg+1]; cffrelo[i] = new double[deg+1];
+         cffimhi[i] = new double[deg+1]; cffimlo[i] = new double[deg+1];
+      }
+      int *nvr = new int[nbr]; // number of variables in each monomial
+      int **idx = new int*[nbr];  // indices of variables in monomials
+      int **exp = new int*[nbr];  // exponents of the variables
+
+      bool vrb = (verbose > 1);
+
+      cmplx2_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
+                        inputrehi,inputrelo,inputimhi,inputimlo,
+                        cstrehi,cstrelo,cstimhi,cstimlo,
+                        cffrehi,cffrelo,cffimhi,cffimlo,vrb);
+
+      ConvolutionJobs cnvjobs(dim);
+      AdditionJobs addjobs(dim,nbr);
+
+      make_all_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
    }
 }
 

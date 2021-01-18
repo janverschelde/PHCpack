@@ -276,22 +276,6 @@ void write_coefficient_indices
  *   cstart   fstart[k] has the start position of the cross products
  *            for the k-th monomial. */
 
-void write_GPU_timings
- ( double cnvlapms, double addlapms, double elapsedms, double walltimesec );
-/*
- * DESCRIPTION :
- *   Writes the timings.
- *
- * ON ENTRY :
- *   cnvlapms is the elapsed time spent by all convolution kernels,
- *            expressed in milliseconds;
- *   addlapms is the elapsed time spent by all addition kernels,
- *            expressed in milliseconds;
- *   elapsedms is the elapsed time spent by all kernels,
- *            expressed in milliseconds;
- *   walltimesec is the elapsed wall clock time for all computations
- *            (excluding memory copies) in seconds. */
-
 void GPU_dbl_poly_evaldiff
  ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,
    double *cst, double **cff, double **input, double **output,

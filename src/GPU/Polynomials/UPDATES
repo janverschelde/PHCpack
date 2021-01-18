@@ -1,3 +1,7 @@
+Mon 18 Jan 2021 : extended dbl2_polynomials_host with code for complex data.
+  Moved write_gpu_timings out of dbl_polynomial_kernels.  New test_helpers,
+  used in {dbl,dbl2}_polynomials_testers.  Updated makefiles.
+
 Sun 17 Jan 2021 : to dbl_polynomials_kernels, added code for complex data,
   updated dbl_polynomials_testers.  Extended random2_polynomials with
   functions to generate random polynomials with complex coefficients in
