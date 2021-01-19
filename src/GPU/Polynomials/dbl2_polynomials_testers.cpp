@@ -459,6 +459,27 @@ double test_cmplx2_real_polynomial
       AdditionJobs addjobs(dim,nbr);
 
       make_all_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
+
+      double timelapsec1_h,timelapsec2_h;
+      double cnvlapms,addlapms,timelapms_d,walltimes_d;
+
+      if((mode == 1) || (mode == 2))
+      {
+         if(vrb) cout << "Computing without convolution jobs ..." << endl;
+         CPU_cmplx2_poly_evaldiff
+            (dim,nbr,deg,nvr,idx,cstrehi,cstrelo,cstimhi,cstimlo,
+             cffrehi,cffrelo,cffimhi,cffimlo,
+             inputrehi,inputrelo,inputimhi,inputimlo,
+             output1rehi_h,output1relo_h,output1imhi_h,output1imlo_h,
+             &timelapsec1_h,vrb);
+         if(vrb) cout << "Computing with convolution jobs ..." << endl;
+         CPU_cmplx2_poly_evaldiffjobs
+            (dim,nbr,deg,nvr,idx,cstrehi,cstrelo,cstimhi,cstimlo,
+             cffrehi,cffrelo,cffimhi,cffimlo,
+             inputrehi,inputrelo,inputimhi,inputimlo,
+             output2rehi_h,output2relo_h,output2imhi_h,output2imlo_h,
+             cnvjobs,addjobs,&timelapsec2_h,vrb);
+      }
    }
 }
 

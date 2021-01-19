@@ -1,3 +1,6 @@
+Tue 19 Jan 2021 : extended dbl2_polynomials_host with the functions which
+  use the jobs on complex data, updated dbl2_polynomials_testers.cpp.
+
 Mon 18 Jan 2021 : extended dbl2_polynomials_host with code for complex data.
   Moved write_gpu_timings out of dbl_polynomial_kernels.  New test_helpers,
   used in {dbl,dbl2}_polynomials_testers.  Updated makefiles.
