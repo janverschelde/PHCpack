@@ -1,3 +1,6 @@
+Wed 20 Jan 2021 : restored the precision in dbl2_polynomials_host.cpp,
+  extended dbl2_polynomials_testers with tests on the complex data.
+
 Tue 19 Jan 2021 : extended dbl2_polynomials_host with the functions which
   use the jobs on complex data, updated dbl2_polynomials_testers.cpp.
 

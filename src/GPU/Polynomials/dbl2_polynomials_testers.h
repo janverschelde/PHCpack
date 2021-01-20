@@ -116,7 +116,7 @@ double dbl2_error_sum
 /*
  * DESCRIPTION :
  *   Returns the sum of all errors, comparing results computed on the host
- *   with results computed on the device.
+ *   with results computed on the device, on real data.
  *
  * ON ENTRY :
  *   dim      dimension, total number of variables;
@@ -129,6 +129,48 @@ double dbl2_error_sum
  *            with convolution and addition jobs;
  *   resultshi_d are the high doubles computed on the device;
  *   resultslo_d are the low doubles computed on the device;
+ *   verbose  if true, then all results and intermediate errors are shown. */
+
+double cmplx2_error_sum
+ ( int dim, int deg,
+   double **results1rehi_h, double **results1relo_h,
+   double **results1imhi_h, double **results1imlo_h,
+   double **results2rehi_h, double **results2relo_h,
+   double **results2imhi_h, double **results2imlo_h,
+   double **resultsrehi_d, double **resultsrelo_d,
+   double **resultsimhi_d, double **resultsimlo_d, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all errors, comparing results computed on the host
+ *   with results computed on the device, on complex data.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   deg      truncation degree of the series;
+ *   results1rehi_h are the high doubles of the real parts
+ *            computed on the host without jobs;
+ *   results1relo_h are the low doubles of the real parts
+ *            computed on the host without jobs;
+ *   results1imhi_h are the high doubles of the imaginary parts
+ *            computed on the host without jobs;
+ *   results1imlo_h are the low doubles of the imaginary parts
+ *            computed on the host without jobs;
+ *   results2rehi_h are the high doubles of the real parts
+ *            computed on the host with convolution and addition jobs;
+ *   results2relo_h are the low doubles of the real parts
+ *            computed on the host with convolution and addition jobs;
+ *   results2imhi_h are the high doubles of the imaginary parts
+ *            computed on the host with convolution and addition jobs;
+ *   results2imlo_h are the low doubles of the imaginary parts
+ *            computed on the host with convolution and addition jobs;
+ *   resultsrehi_d are the high doubles of the real parts
+ *            computed on the device;
+ *   resultsrelo_d are the low doubles of the real parts
+ *            computed on the device;
+ *   resultsimhi_d are the high doubles of the imaginary parts
+ *            computed on the device;
+ *   resultsimlo_d are the low doubles of the imaginary parts
+ *            computed on the device;
  *   verbose  if true, then all results and intermediate errors are shown. */
 
 double test_dbl2_real_polynomial
@@ -155,7 +197,7 @@ double test_dbl2_real_polynomial
  *   mode     the mode of execution, either 0, 1, or 2, as follows:
  *            0 : GPU only; 1 : CPU only; 2 : GPU and CPU. */
 
-double test_cmplx2_real_polynomial
+double test_dbl2_complex_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose,
    bool jobrep=true, int mode=2 );
 /*

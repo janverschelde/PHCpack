@@ -42,8 +42,10 @@ int main_dbl2_test_polynomial
 
    double realsum = test_dbl2_real_polynomial
                        (dim,nbr,nva,pwr,deg,vrblvl-1,jobrep,mode);
+   double compsum = test_dbl2_complex_polynomial
+                       (dim,nbr,nva,pwr,deg,vrblvl-1,jobrep,mode);
 
-   int fail = int(realsum > tol);
+   int fail = int(realsum > tol) + int(compsum > tol);
 
    if(vrblvl > 0)
    {
@@ -53,6 +55,14 @@ int main_dbl2_test_polynomial
          cout << "Sum of all errors in double double precision :" << endl;
          cout << "  on real data : " << realsum;
          if(realsum < tol)
+            cout << "  pass." << endl;
+         else
+         { 
+            cout << " > " << tol;
+            cout << "  fail!" << endl;
+         }
+         cout << "  on complex data : " << realsum;
+         if(compsum < tol)
             cout << "  pass." << endl;
          else
          { 
@@ -292,6 +302,76 @@ double dbl2_error_sum
    return sumerr;
 }
 
+double cmplx2_error_sum
+ ( int dim, int deg,
+   double **results1rehi_h, double **results1relo_h,
+   double **results1imhi_h, double **results1imlo_h,
+   double **results2rehi_h, double **results2relo_h,
+   double **results2imhi_h, double **results2imlo_h,
+   double **resultsrehi_d, double **resultsrelo_d,
+   double **resultsimhi_d, double **resultsimlo_d, bool verbose )
+{
+   double err = 0.0;
+
+   if(verbose) cout << "The value of the polynomial :" << endl;
+   for(int i=0; i<=deg; i++)
+   {
+      if(verbose)
+      {
+         cout << results1rehi_h[dim][i] << "  "
+              << results1relo_h[dim][i] << endl;
+         cout << results1imhi_h[dim][i] << "  "
+              << results1imlo_h[dim][i] << endl;
+         cout << results2rehi_h[dim][i] << "  "
+              << results2relo_h[dim][i] << endl;
+         cout << results2imhi_h[dim][i] << "  "
+              << results2imlo_h[dim][i] << endl;
+       //  cout << resultshi_d[dim][i] << "  "
+       //       << resultslo_d[dim][i] << endl;
+      }
+      err = err + abs(results1rehi_h[dim][i] - results2rehi_h[dim][i])
+                + abs(results1relo_h[dim][i] - results2relo_h[dim][i])
+                + abs(results1imhi_h[dim][i] - results2imhi_h[dim][i])
+                + abs(results1imlo_h[dim][i] - results2imlo_h[dim][i]);
+              //  + abs(results1hi_h[dim][i] - resultshi_d[dim][i])
+              //  + abs(results1lo_h[dim][i] - resultslo_d[dim][i]);
+   }
+   if(verbose) cout << "error : " << err << endl;
+
+   double sumerr = err;
+
+   for(int k=0; k<dim; k++)
+   {
+      if(verbose) cout << "Derivative " << k << " :" << endl;
+      err = 0.0;
+      for(int i=0; i<=deg; i++)
+      {
+         if(verbose)
+         {
+            cout << results1rehi_h[k][i] << "  "
+                 << results1relo_h[k][i] << endl;
+            cout << results1imhi_h[k][i] << "  "
+                 << results1imlo_h[k][i] << endl;
+            cout << results2rehi_h[k][i] << "  "
+                 << results2relo_h[k][i] << endl;
+            cout << results2imhi_h[k][i] << "  "
+                 << results2imlo_h[k][i] << endl;
+           // cout << resultshi_d[k][i] << "  "
+           //      << resultslo_d[k][i] << endl;
+         }
+         err = err + abs(results1rehi_h[k][i] - results2rehi_h[k][i])
+                   + abs(results1relo_h[k][i] - results2relo_h[k][i])
+                   + abs(results1imhi_h[k][i] - results2imhi_h[k][i])
+                   + abs(results1imlo_h[k][i] - results2imlo_h[k][i]);
+                 //  + abs(results1hi_h[k][i] - resultshi_d[k][i])
+                 //  + abs(results1lo_h[k][i] - resultslo_d[k][i]);
+      }
+      if(verbose) cout << "error : " << err << endl;
+      sumerr = sumerr + err;
+   }
+   return sumerr;
+}
+
 double test_dbl2_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
@@ -379,7 +459,7 @@ double test_dbl2_real_polynomial
    }
 }
 
-double test_cmplx2_real_polynomial
+double test_dbl2_complex_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
 {
@@ -480,6 +560,22 @@ double test_cmplx2_real_polynomial
              output2rehi_h,output2relo_h,output2imhi_h,output2imlo_h,
              cnvjobs,addjobs,&timelapsec2_h,vrb);
       }
+      double sumerr = 0.0;
+      if(mode == 2)
+         sumerr = cmplx2_error_sum(dim,deg,
+                     output1rehi_h,output1relo_h,output1imhi_h,output1imlo_h,
+                     output2rehi_h,output2relo_h,output2imhi_h,output2imlo_h,
+                     outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d,vrb);
+
+      if(verbose > 0)
+      {
+         if(jobrep) write_jobs_report(dim,nva,nbr,deg,cnvjobs,addjobs);
+         if((mode == 1) || (mode == 2))
+            write_CPU_timings(timelapsec1_h,timelapsec2_h);
+         if((mode == 0) || (mode == 2))
+            write_GPU_timings(cnvlapms,addlapms,timelapms_d,walltimes_d);
+      } 
+      return sumerr;
    }
 }
 
