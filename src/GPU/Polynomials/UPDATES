@@ -1,3 +1,6 @@
+Thu 21 Jan 2021 : added convolution and addition kernels to
+  dbl2_polynomials_kernels for complex data.
+
 Wed 20 Jan 2021 : restored the precision in dbl2_polynomials_host.cpp,
   extended dbl2_polynomials_testers with tests on the complex data.
 
