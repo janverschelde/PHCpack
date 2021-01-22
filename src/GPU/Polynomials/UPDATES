@@ -1,3 +1,6 @@
+Fri 22 Jan 2021 : moved write_coefficient_indices to job_coordinates,
+  extracting the function from dbl_polynomials_kernels.
+
 Thu 21 Jan 2021 : added convolution and addition kernels to
   dbl2_polynomials_kernels for complex data.
 

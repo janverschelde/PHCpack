@@ -48,6 +48,31 @@ void coefficient_indices
  *   cstart   fstart[k] has the start position of the cross products
  *            for the k-th monomial. */
 
+void write_coefficient_indices
+ ( int cnt, int nbr, int *fsums, int *fstart, int *bsums, int *bstart,
+   int *csums, int *cstart );
+/*
+ * DESCRIPTION :
+ *   Writes the information about the coefficient indices in the data.
+ *
+ * ON ENTRY :
+ *   cnt      total coefficient count,
+ *   nbr      number of monomials, excluding the constant term;
+ *   fsums    fsums[k] holds the sum of coefficients for the forward
+ *            products of the k-th monomial and of all monomials before k;
+ *   bsums    fsums[k] holds the sum of coefficients for the backward
+ *            products of the k-th monomial and of all monomials before k;
+ *   csums    fsums[k] holds the sum of coefficients for the cross
+ *            products of the k-th monomial and of all monomials before k;
+ *   fstart   fstart[k] has the start position of the forward products
+ *            for the k-th monomial;
+ *   fstart   fstart[k] has the start position of the forward products
+ *            for the k-th monomial;
+ *   bstart   fstart[k] has the start position of the backward products
+ *            for the k-th monomial;
+ *   cstart   fstart[k] has the start position of the cross products
+ *            for the k-th monomial. */
+
 void convjob_indices
  ( ConvolutionJob job, int *inp1ix, int *inp2ix, int *outidx,
    int dim, int nbr, int deg, int *nvr,

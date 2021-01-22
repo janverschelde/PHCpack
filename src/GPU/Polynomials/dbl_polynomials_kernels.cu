@@ -473,25 +473,6 @@ void cmplx_added_data_to_output
    }
 }
 
-void write_coefficient_indices
- ( int cnt, int nbr, int *fsums, int *fstart, int *bsums, int *bstart,
-   int *csums, int *cstart )
-{
-   cout << "The output coefficient count : " << cnt << endl;
-   cout << "fsums :";
-   for(int i=0; i<nbr; i++) cout << " " << fsums[i]; cout << endl;
-   cout << "fstart :";
-   for(int i=0; i<nbr; i++) cout << " " << fstart[i]; cout << endl;
-   cout << "bsums :";
-   for(int i=0; i<nbr; i++) cout << " " << bsums[i]; cout << endl;
-   cout << "bstart :";
-   for(int i=0; i<nbr; i++) cout << " " << bstart[i]; cout << endl;
-   cout << "csums :";
-   for(int i=0; i<nbr; i++) cout << " " << csums[i]; cout << endl;
-   cout << "cstart :";
-   for(int i=0; i<nbr; i++) cout << " " << cstart[i]; cout << endl;
-}
-
 void GPU_dbl_poly_evaldiff
  ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,
    double *cst, double **cff, double **input, double **output,

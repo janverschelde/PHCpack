@@ -68,6 +68,25 @@ void coefficient_indices
    for(int i=1; i<nbr; i++) cstart[i] = cstart[0] + csums[i-1]*(deg+1);
 }
 
+void write_coefficient_indices
+ ( int cnt, int nbr, int *fsums, int *fstart, int *bsums, int *bstart,
+   int *csums, int *cstart )
+{
+   cout << "The output coefficient count : " << cnt << endl;
+   cout << "fsums :";
+   for(int i=0; i<nbr; i++) cout << " " << fsums[i]; cout << endl;
+   cout << "fstart :";
+   for(int i=0; i<nbr; i++) cout << " " << fstart[i]; cout << endl;
+   cout << "bsums :";
+   for(int i=0; i<nbr; i++) cout << " " << bsums[i]; cout << endl;
+   cout << "bstart :";
+   for(int i=0; i<nbr; i++) cout << " " << bstart[i]; cout << endl;
+   cout << "csums :";
+   for(int i=0; i<nbr; i++) cout << " " << csums[i]; cout << endl;
+   cout << "cstart :";
+   for(int i=0; i<nbr; i++) cout << " " << cstart[i]; cout << endl;
+}
+
 void convjob_indices
  ( ConvolutionJob job, int *inp1ix, int *inp2ix, int *outidx,
    int dim, int nbr, int deg, int *nvr,
