@@ -13,8 +13,10 @@
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
 #include "write_job_counts.h"
+#include "write_gpu_timings.h"
 #include "dbl3_polynomials_host.h"
 #include "dbl3_polynomials_kernels.h"
+#include "test_helpers.h"
 #include "dbl3_polynomials_testers.h"
 
 using namespace std;
@@ -271,44 +273,10 @@ double test_dbl3_real_polynomial
                       cffhi,cffmi,cfflo,vrb);
 
       ConvolutionJobs cnvjobs(dim);
-
-      cnvjobs.make(nbr,nvr,idx,vrb);
-
-      if(vrb)
-      {
-         write_convolution_counts(cnvjobs);
-
-         for(int k=0; k<cnvjobs.get_depth(); k++)
-         {
-            cout << "jobs at layer " << k << " :" << endl;
-            for(int i=0; i<cnvjobs.get_layer_count(k); i++)
-               cout << cnvjobs.get_job(k,i) << endl;
-         }
-         cout << endl;
-      }
       AdditionJobs addjobs(dim,nbr);
 
-      addjobs.make(nbr,nvr,idx,vrb);
+      make_all_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
 
-      if(vrb)
-      {
-         cout << "The differential indices :" << endl;
-         for(int i=0; i<dim; i++)
-         {
-            cout << "variable " << i << " :";
-            for(int j=0; j<=addjobs.get_differential_count(i); j++)
-               cout << " " << addjobs.get_differential_index(i,j);
-            cout << endl;
-         }
-         write_addition_counts(addjobs);
-
-         for(int k=0; k<addjobs.get_depth(); k++)
-         {
-            cout << "jobs at layer " << k << " :" << endl;
-            for(int i=0; i<addjobs.get_layer_count(k); i++)
-               cout << addjobs.get_job(k,i) << endl;
-         }
-      }
       double timelapsec1_h,timelapsec2_h;
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
@@ -343,42 +311,11 @@ double test_dbl3_real_polynomial
 
       if(verbose > 0)
       {
-         if(jobrep)
-         {
-            cout << "dimension : " << dim << endl;
-            if(nva > 0)
-            {
-               cout << "number of variables per monomial : " << nva << endl;
-            }
-            cout << "number of monomials : " << nbr << endl;
-            write_convolution_counts(cnvjobs);
-            write_addition_counts(addjobs);
-            write_operation_counts(deg,cnvjobs,addjobs);
-         }
+         if(jobrep) write_jobs_report(dim,nva,nbr,deg,cnvjobs,addjobs);
          if((mode == 1) || (mode == 2))
-         {
-            cout << fixed << setprecision(3);
-            cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
-                 << endl;
-            cout << "  (1) without jobs : " << timelapsec1_h << " seconds,"
-                 << endl;
-            cout << "  (2) cnv/add jobs : " << timelapsec2_h << " seconds."
-                 << endl;
-         }
+            write_CPU_timings(timelapsec1_h,timelapsec2_h);
          if((mode == 0) || (mode == 2))
-         {
-            cout << fixed << setprecision(2);
-            cout << "Time spent by convolution kernels : "
-                 << cnvlapms << " milliseconds." << endl;
-            cout << "Time spent by addition kernels    : "
-                 << addlapms << " milliseconds." << endl;
-            cout << "Time spent by all kernels         : "
-                 << timelapms_d << " milliseconds." << endl;
-            cout << "Total wall clock computation time : ";
-            cout << fixed << setprecision(3) << walltimes_d
-                 << " seconds." << endl;
-            cout << scientific << setprecision(16);
-         }
+            write_GPU_timings(cnvlapms,addlapms,timelapms_d,walltimes_d);
       }
       return sumerr;
    }

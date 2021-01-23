@@ -15,6 +15,7 @@
 #include "triple_double_gpufun.cu"
 #endif
 #include "dbl3_polynomials_kernels.h"
+#include "write_gpu_timings.h"
 
 // The constant td_shmemsize is the bound on the shared memory size.
 
@@ -349,21 +350,9 @@ void GPU_dbl3_poly_evaldiff
       (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
 
    if(verbose)
-   {
-      cout << "The output coefficient count : " << totalcff << endl;
-      cout << "fsums :";
-      for(int i=0; i<nbr; i++) cout << " " << fsums[i]; cout << endl;
-      cout << "fstart :";
-      for(int i=0; i<nbr; i++) cout << " " << fstart[i]; cout << endl;
-      cout << "bsums :";
-      for(int i=0; i<nbr; i++) cout << " " << bsums[i]; cout << endl;
-      cout << "bstart :";
-      for(int i=0; i<nbr; i++) cout << " " << bstart[i]; cout << endl;
-      cout << "csums :";
-      for(int i=0; i<nbr; i++) cout << " " << csums[i]; cout << endl;
-      cout << "cstart :";
-      for(int i=0; i<nbr; i++) cout << " " << cstart[i]; cout << endl;
-   }
+      write_coefficient_indices
+         (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
+
    double *datahi_h = new double[totalcff];        // data on host
    double *datami_h = new double[totalcff];
    double *datalo_h = new double[totalcff];
@@ -501,18 +490,6 @@ void GPU_dbl3_poly_evaldiff
    added_data3_to_output
       (datahi_h,datami_h,datalo_h,outputhi,outputmi,outputlo,
        dim,nbr,deg,nvr,idx,fstart,bstart,cstart,addjobs,verbose);
-   if(verbose)
-   {
-      cout << fixed << setprecision(2);
-      cout << "Time spent by convolution kernels : ";
-      cout << *cnvlapms << " milliseconds." << endl;
-      cout << "Time spent by addition kernels    : ";
-      cout << *addlapms << " milliseconds." << endl;
-      cout << "Time spent by all kernels         : ";
-      cout << *elapsedms << " milliseconds." << endl;
-      cout << scientific << setprecision(16);
-      cout << "Total wall clock computation time : ";
-      cout << fixed << setprecision(3) << *walltimesec
-           << " seconds." << endl;
-   }
+
+   if(verbose) write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
 }
