@@ -336,7 +336,7 @@ double cmplx2_error_sum
                 + abs(results1imhi_h[dim][i] - results2imhi_h[dim][i])
                 + abs(results1imlo_h[dim][i] - results2imlo_h[dim][i])
                 + abs(results1rehi_h[dim][i] - resultsrehi_d[dim][i])
-                + abs(results1relo_h[dim][i] - resultsrelo_d[dim][i]);
+                + abs(results1relo_h[dim][i] - resultsrelo_d[dim][i])
                 + abs(results1imhi_h[dim][i] - resultsimhi_d[dim][i])
                 + abs(results1imlo_h[dim][i] - resultsimlo_d[dim][i]);
    }
