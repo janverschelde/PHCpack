@@ -44,7 +44,6 @@ bool make_complex2_polynomial
    double **cffrehi, double **cffrelo, double **cffimhi, double **cffimlo )
 {
    bool fail = false;
-   double rndhi,rndlo,sinhi,sinlo;
 
    for(int i=0; i<=deg; i++)
       random_double_double_complex
@@ -54,7 +53,7 @@ bool make_complex2_polynomial
    {
       fail = make_complex2_monomial
                 (dim,nvr[i],pwr,deg,idx[i],exp[i],
-                 cffrehi[i],cffrelo[i], cffimhi[i],cffimlo[i]);
+                 cffrehi[i],cffrelo[i],cffimhi[i],cffimlo[i]);
 
       if(fail) return true;
    }
