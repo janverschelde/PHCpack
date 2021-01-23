@@ -61,7 +61,7 @@ int main_dbl2_test_polynomial
             cout << " > " << tol;
             cout << "  fail!" << endl;
          }
-         cout << "  on complex data : " << realsum;
+         cout << "  on complex data : " << compsum;
          if(compsum < tol)
             cout << "  pass." << endl;
          else
@@ -326,15 +326,19 @@ double cmplx2_error_sum
               << results2relo_h[dim][i] << endl;
          cout << results2imhi_h[dim][i] << "  "
               << results2imlo_h[dim][i] << endl;
-       //  cout << resultshi_d[dim][i] << "  "
-       //       << resultslo_d[dim][i] << endl;
+         cout << resultsrehi_d[dim][i] << "  "
+              << resultsrelo_d[dim][i] << endl;
+         cout << resultsimhi_d[dim][i] << "  "
+              << resultsimlo_d[dim][i] << endl;
       }
       err = err + abs(results1rehi_h[dim][i] - results2rehi_h[dim][i])
                 + abs(results1relo_h[dim][i] - results2relo_h[dim][i])
                 + abs(results1imhi_h[dim][i] - results2imhi_h[dim][i])
-                + abs(results1imlo_h[dim][i] - results2imlo_h[dim][i]);
-              //  + abs(results1hi_h[dim][i] - resultshi_d[dim][i])
-              //  + abs(results1lo_h[dim][i] - resultslo_d[dim][i]);
+                + abs(results1imlo_h[dim][i] - results2imlo_h[dim][i])
+                + abs(results1rehi_h[dim][i] - resultsrehi_d[dim][i])
+                + abs(results1relo_h[dim][i] - resultsrelo_d[dim][i]);
+                + abs(results1imhi_h[dim][i] - resultsimhi_d[dim][i])
+                + abs(results1imlo_h[dim][i] - resultsimlo_d[dim][i]);
    }
    if(verbose) cout << "error : " << err << endl;
 
@@ -356,15 +360,19 @@ double cmplx2_error_sum
                  << results2relo_h[k][i] << endl;
             cout << results2imhi_h[k][i] << "  "
                  << results2imlo_h[k][i] << endl;
-           // cout << resultshi_d[k][i] << "  "
-           //      << resultslo_d[k][i] << endl;
+            cout << resultsrehi_d[k][i] << "  "
+                 << resultsrelo_d[k][i] << endl;
+            cout << resultsimhi_d[k][i] << "  "
+                 << resultsimlo_d[k][i] << endl;
          }
          err = err + abs(results1rehi_h[k][i] - results2rehi_h[k][i])
                    + abs(results1relo_h[k][i] - results2relo_h[k][i])
                    + abs(results1imhi_h[k][i] - results2imhi_h[k][i])
-                   + abs(results1imlo_h[k][i] - results2imlo_h[k][i]);
-                 //  + abs(results1hi_h[k][i] - resultshi_d[k][i])
-                 //  + abs(results1lo_h[k][i] - resultslo_d[k][i]);
+                   + abs(results1imlo_h[k][i] - results2imlo_h[k][i])
+                   + abs(results1rehi_h[k][i] - resultsrehi_d[k][i])
+                   + abs(results1relo_h[k][i] - resultsrelo_d[k][i])
+                   + abs(results1imhi_h[k][i] - resultsimhi_d[k][i])
+                   + abs(results1imlo_h[k][i] - resultsimlo_d[k][i]);
       }
       if(verbose) cout << "error : " << err << endl;
       sumerr = sumerr + err;
@@ -559,6 +567,18 @@ double test_dbl2_complex_polynomial
              inputrehi,inputrelo,inputimhi,inputimlo,
              output2rehi_h,output2relo_h,output2imhi_h,output2imlo_h,
              cnvjobs,addjobs,&timelapsec2_h,vrb);
+      }
+      if((mode == 0) || (mode == 2))
+      {
+         if(vrb) cout << "Computing on the device ..." << endl;
+         GPU_cmplx2_poly_evaldiff
+            (deg+1,dim,nbr,deg,nvr,idx,
+             cstrehi,cstrelo,cstimhi,cstimlo,
+             cffrehi,cffrelo,cffimhi,cffimlo,
+             inputrehi,inputrelo,inputimhi,inputimlo,
+             outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d,
+             cnvjobs,addjobs,&cnvlapms,&addlapms,&timelapms_d,
+             &walltimes_d,vrb);
       }
       double sumerr = 0.0;
       if(mode == 2)
