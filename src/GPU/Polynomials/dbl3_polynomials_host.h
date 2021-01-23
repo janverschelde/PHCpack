@@ -84,6 +84,145 @@ void CPU_dbl3_poly_speel
  *              derivative with respect to the variable k;
  *              outputlo[dim] contains the value of the polynomial. */
 
+void CPU_cmplx3_poly_speel
+ ( int dim, int nbr, int deg, int *nvr, int **idx, 
+   double **cffrehi, double **cffremi, double **cffrelo,
+   double **cffimhi, double **cffimmi, double **cffimlo,
+   double **inputrehi, double **inputremi, double **inputrelo,
+   double **inputimhi, double **inputimmi, double **inputimlo,
+   double **outputrehi, double **outputremi, double **outputrelo,
+   double **outputimhi, double **outputimmi, double **outputimlo,
+   double **forwardrehi, double **forwardremi, double **forwardrelo,
+   double **forwardimhi, double **forwardimmi, double **forwardimlo,
+   double **backwardrehi, double **backwardremi, double **backwardrelo,
+   double **backwardimhi, double **backwardimmi, double **backwardimlo,
+   double **crossrehi, double **crossremi, double **crossrelo,
+   double **crossimhi, double **crossimmi, double **crossimlo,
+   bool verbose=false );
+/*
+ * DESCRIPTION :
+ *   Runs the reverse mode of algorithmic differentiation
+ *   of a polynomial at power series truncated to the same degree,
+ *   for complex coefficients in triple double precision.
+ *
+ * ON ENTRY :
+ *   dim          total number of variables;
+ *   nbr          number of monomials, excluding the constant term;
+ *   deg          truncation degree of the series;
+ *   nvr          nvr[k] holds the number of variables in monomial k;
+ *   idx          idx[k] has as many indices as the value of nvr[k],
+ *                idx[k][i] defines the place of the i-th variable,
+ *                with input values in input[idx[k][i]];
+ *   cffrehi      cffrehi[k] has the deg+1 high doubles of the real
+ *                parts of the coefficient series of monomial k;
+ *   cffremi      cffrehi[k] has the deg+1 middle doubles of the real
+ *                parts of the coefficient series of monomial k;
+ *   cffrelo      cffrelo[k] has the deg+1 low doubles of the real
+ *                parts of the coefficient series of monomial k;
+ *   cffimhi      cffrehi[k] has the deg+1 high doubles of the imaginary
+ *                parts of the coefficient series of monomial k;
+ *   cffimmi      cffrehi[k] has the deg+1 middle doubles of the imaginary
+ *                parts of the coefficient series of monomial k;
+ *   cffimlo      cffrelo[k] has the deg+1 low doubles of the imaginary
+ *                parts of the coefficient series of monomial k;
+ *   inputrehi    has the high doubles of the real parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputremi    has the middle doubles of the real parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputrelo    has the low doubles of the real part
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimhi    has the high doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimmi    has the middle doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimlo    has the low doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   outputrehi   has space for the high doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputremi   has space for the middle doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputrelo   has space for the low doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputimhi   has space for the high doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outputimmi   has space for the middle doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outputimlo   has space for the low doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   forwardrehi  has space for the high doubles of the real parts
+ *                of all nvr forward products,
+ *                forwardrehi[k] has space for deg+1 doubles;
+ *   forwardremi  has space for the middle doubles of the real parts
+ *                of all nvr forward products,
+ *                forwardremi[k] has space for deg+1 doubles;
+ *   forwardrelo  has space for the low doubles of the real parts
+ *                of all nvr forward products,
+ *                forwardrelo[k] has space for deg+1 doubles;
+ *   forwardimhi  has space for the high doubles of the imaginary parts
+ *                of all nvr forward products,
+ *                forwardrehi[k] has space for deg+1 doubles;
+ *   forwardimmi  has space for the middle doubles of the imaginary parts
+ *                of all nvr forward products,
+ *                forwardremi[k] has space for deg+1 doubles;
+ *   forwardimlo  has space for the low doubles of the imaginary parts
+ *                of all nvr forward products,
+ *                forwardrelo[k] has space for deg+1 doubles;
+ *   backwardrehi has space for the high doubles of the real parts 
+ *                of all nvr-2 backward products;
+ *                backwardrehi[k] has space for deg+1 doubles;
+ *   backwardremi has space for the middle doubles of the real parts 
+ *                of all nvr-2 backward products;
+ *                backwardremi[k] has space for deg+1 doubles;
+ *   backwardrelo has space for the low doubles of the real parts 
+ *                of all nvr-2 backward products;
+ *                backwardrelo[k] has space for deg+1 doubles;
+ *   backwardimhi has space for the high doubles of the imaginary parts 
+ *                of all nvr-2 backward products;
+ *                backwardimhi[k] has space for deg+1 doubles;
+ *   backwardimmi has space for the middle doubles of the imaginary parts 
+ *                of all nvr-2 backward products;
+ *                backwardimmi[k] has space for deg+1 doubles;
+ *   backwardimlo has space for the low doubles of the imaginary parts 
+ *                of all nvr-2 backward products;
+ *                backwardimlo[k] has space for deg+1 doubles;
+ *   crossrehi    has space for the high doubles of the real parts
+ *                of all nvr-2 cross products;
+ *                crossrehi[k] has space for deg+1 doubles;
+ *   crossremi    has space for the middle doubles of the real parts
+ *                of all nvr-2 cross products;
+ *                crossrehi[k] has space for deg+1 doubles;
+ *   crossrelo    has space for the low doubles of the real parts
+ *                of all nvr-2 cross products;
+ *                crossrelo[k] has space for deg+1 doubles;
+ *   crossimhi    has space for the high doubles of the imaginary parts
+ *                of all nvr-2 cross products;
+ *                crossrehi[k] has space for deg+1 doubles;
+ *   crossimmi    has space for the middle doubles of the imaginary parts
+ *                of all nvr-2 cross products;
+ *                crossrehi[k] has space for deg+1 doubles;
+ *   crossimlo    has space for the low doubles of the imaginary parts
+ *                of all nvr-2 cross products;
+ *                crossrelo[k] has space for deg+1 doubles;
+ *   verbose      if true, writes one line to screen for every convolution.
+ *
+ * ON RETURN :
+ *   outputrehi   has the high doubles of the real parts,
+ *   outputremi   has the middle doubles of the real parts,
+ *   outputrelo   has the low doubles of the real parts,
+ *   outputimhi   has the high doubles of the imaginary parts,
+ *   outputimmi   has the middle doubles of the imaginary parts,
+ *   outputimlo   has the low doubles of the imaginary parts
+ *                of derivatives and the value,
+ *                output[k], for k from 0 to dim-1, contains the
+ *                derivative with respect to the variable k;
+ *                output[dim] contains the value of the polynomial. */
+
 void CPU_dbl3_poly_evaldiff
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double *csthi, double *cstmi, double *cstlo,
@@ -138,6 +277,100 @@ void CPU_dbl3_poly_evaldiff
  *              derivative with respect to the variable k;
  *              outputhi[dim] contains the value of the polynomial;
  *   elapsedsec is the elapsed time in seconds. */
+
+void CPU_cmplx3_poly_evaldiff
+ ( int dim, int nbr, int deg, int *nvr, int **idx, 
+   double *cstrehi, double *cstremi, double *cstrelo,
+   double *cstimhi, double *cstimmi, double *cstimlo,
+   double **cffrehi, double **cffremi, double **cffrelo,
+   double **cffimhi, double **cffimmi, double **cffimlo,
+   double **inputrehi, double **inputremi, double **inputrelo, 
+   double **inputimhi, double **inputimmi, double **inputimlo, 
+   double **outputrehi, double **outputremi, double **outputrelo,
+   double **outputimhi, double **outputimmi, double **outputimlo,
+   double *elapsedsec, bool verbose=false );
+/*
+ * DESCRIPTION :
+ *   Allocates work space memory to store the forward, backward, and
+ *   cross products in the evaluation and differentiation of a polynomial.
+ *   Evaluates and differentiates the polynomial.
+ *
+ * ON ENTRY :
+ *   dim          total number of variables;
+ *   nbr          number of monomials, excluding the constant term;
+ *   deg          truncation degree of the series;
+ *   nvr          nvr[k] holds the number of variables in monomial k;
+ *   idx          idx[k] has as many indices as the value of nvr[k],
+ *                idx[k][i] defines the place of the i-th variable,
+ *                with input values in input[idx[k][i]];
+ *   cstrehi      high deg+1 doubles of the real parts
+ *                of the constant coefficient series;
+ *   cstremi      middle deg+1 doubles of the real parts
+ *                of the constant coefficient series;
+ *   cstrelo      low deg+1 doubles for the real parts
+ *                of the constant coefficient series;
+ *   cstimhi      high deg+1 doubles of the imaginary parts
+ *                of the constant coefficient series;
+ *   cstimmi      middle deg+1 doubles of the imaginary parts
+ *                of the constant coefficient series;
+ *   cstimlo      low deg+1 doubles for the imaginary parts
+ *                of the constant coefficient series;
+ *   cffrehi      cffrehi[k] has the deg+1 high doubles of the real
+ *                parts of the coefficient series of monomial k;
+ *   cffremi      cffrehi[k] has the deg+1 middle doubles of the real
+ *                parts of the coefficient series of monomial k;
+ *   cffrelo      cffrelo[k] has the deg+1 low doubles of the real
+ *                parts of the coefficient series of monomial k;
+ *   cffimhi      cffrehi[k] has the deg+1 high doubles of the imaginary
+ *                parts of the coefficient series of monomial k;
+ *   cffimmi      cffrehi[k] has the deg+1 middle doubles of the imaginary
+ *                parts of the coefficient series of monomial k;
+ *   cffimlo      cffrelo[k] has the deg+1 low doubles of the imaginary
+ *                parts of the coefficient series of monomial k;
+ *   inputrehi    has the high doubles of the real parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputremi    has the middle doubles of the real parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputrelo    has the low doubles of the real part
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimhi    has the high doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimmi    has the middle doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimlo    has the low doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   outputrehi   has space for the high doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputremi   has space for the middle doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputrelo   has space for the low doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputimhi   has space for the high doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outputimmi   has space for the middle doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outputimlo   has space for the low doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   verbose      if true, writes one line to screen for every convolution.
+ *
+ * ON RETURN :
+ *   outputrehi   has the high doubles of the real parts,
+ *   outputremi   has the middle doubles of the real parts,
+ *   outputrelo   has the low doubles of the real parts,
+ *   outputimhi   has the high doubles of the imaginary parts,
+ *   outputimmi   has the middle doubles of the imaginary parts,
+ *   outputimlo   has the low doubles of the imaginary parts
+ *                of derivatives and the value,
+ *                output[k], for k from 0 to dim-1, contains the
+ *                derivative with respect to the variable k;
+ *                output[dim] contains the value of the polynomial;
+ *   elapsedsec   is the elapsed time in seconds. */
 
 void CPU_dbl3_conv_job
  ( int deg, int nvr, int *idx,

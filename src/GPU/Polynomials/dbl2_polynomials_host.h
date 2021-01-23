@@ -244,6 +244,14 @@ void CPU_cmplx2_poly_evaldiff
  *   idx          idx[k] has as many indices as the value of nvr[k],
  *                idx[k][i] defines the place of the i-th variable,
  *                with input values in input[idx[k][i]];
+ *   cstrehi      high deg+1 doubles of the real parts
+ *                of the constant coefficient series;
+ *   cstrelo      low deg+1 doubles for the real parts
+ *                of the constant coefficient series;
+ *   cstimhi      high deg+1 doubles of the imaginary parts
+ *                of the constant coefficient series;
+ *   cstimlo      low deg+1 doubles for the imaginary parts
+ *                of the constant coefficient series;
  *   cffrehi      cffrehi[k] has the deg+1 high doubles of the real
  *                parts of the coefficient series of monomial k;
  *   cffrelo      cffrelo[k] has the deg+1 low doubles of the real

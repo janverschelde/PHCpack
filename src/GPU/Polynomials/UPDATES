@@ -1,5 +1,7 @@
 Sat 23 Jan 2021 : small update in random2_polynomials.cpp.  Extended random3_
   polynomials with the making of polynomials with complex coefficients.
+  Edited documentation in dbl2_polynomials_host.h.  Added code for complex 
+  data to dbl3_polynomials_host and dbl3_polynomials_testers.
 
 Fri 22 Jan 2021 : moved write_coefficient_indices to job_coordinates,
   extracting the function from dbl_polynomials_kernels.

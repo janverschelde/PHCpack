@@ -152,6 +152,114 @@ void dbl3_make_input
     }
 }
 
+void cmplx3_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputrehi, double **inputremi, double **inputrelo,
+   double **inputimhi, double **inputimmi, double **inputimlo,
+   double *cstrehi, double *cstremi, double *cstrelo,
+   double *cstimhi, double *cstimmi, double *cstimlo,
+   double **cffrehi, double **cffremi, double **cffrelo,
+   double **cffimhi, double **cffimmi, double **cffimlo, bool verbose )
+{
+   make_complex3_input(dim,deg,
+      inputrehi,inputremi,inputrelo,inputimhi,inputimmi,inputimlo);
+
+   if(verbose)
+   {
+      cout << scientific << setprecision(16);
+      cout << "Random input series :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "-> coefficients of series " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+         {
+            cout << inputrehi[i][j]
+                 << "  " << inputremi[i][j]
+                 << "  " << inputrelo[i][j] << endl;
+            cout << inputimhi[i][j]
+                 << "  " << inputimmi[i][j]
+                 << "  " << inputimlo[i][j] << endl;
+         }
+      }
+   }
+   if(nva == 0) // random supports
+   {
+      make_supports(dim,nbr,nvr);
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++)
+      {
+         idx[i] = new int[nva];
+         nvr[i] = nva;
+      }
+   }
+   if(nva > 0)
+   {
+      if(nbr == dim)
+         make_complex3_cyclic
+            (dim,nva,deg,idx,
+             cstrehi,cstremi,cstrelo,cstimhi,cstimmi,cstimlo,
+             cffrehi,cffremi,cffrelo,cffimhi,cffimmi,cffimlo);
+      else
+         make_complex3_products
+            (dim,nbr,nva,deg,idx,
+             cstrehi,cstremi,cstrelo,cstimhi,cstimmi,cstimlo,
+             cffrehi,cffremi,cffrelo,cffimhi,cffimmi,cffimlo);
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
+
+      bool fail = make_complex3_polynomial
+                     (dim,nbr,pwr,deg,nvr,idx,exp,
+                      cstrehi,cstremi,cstrelo,cstimhi,cstimmi,cstimlo,
+                      cffrehi,cffremi,cffrelo,cffimhi,cffimmi,cffimlo);
+   }
+   if(verbose)
+   {
+      cout << "Coefficient series of the constant term :" << endl;
+      for(int j=0; j<=deg; j++)
+      {
+         cout << cstrehi[j] << "  " << cstremi[j]
+                            << "  " << cstrelo[j] << endl;
+         cout << cstimhi[j] << "  " << cstimmi[j]
+                            << "  " << cstimlo[j] << endl;
+      }
+      for(int i=0; i<nbr; i++)
+      {
+         cout << "Generated random monomial " << i << " :" << endl;
+         cout << "   the indices :";
+         for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
+         cout << endl;
+         if(nva == 0)
+         {
+            cout << " the exponents :";
+            for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
+            cout << endl;
+         }
+         cout << " coefficient series :" << endl;
+         for(int j=0; j<=deg; j++)
+         {
+            cout << cffrehi[i][j] << "  " << cffremi[i][j]
+                                  << "  " << cffrelo[i][j] << endl;
+            cout << cffimhi[i][j] << "  " << cffimmi[i][j]
+                                  << "  " << cffimlo[i][j] << endl;
+         }
+      }
+    }
+    if(nva == 0)
+    {
+       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
+       if(dup)
+          cout << "Duplicate supports found." << endl;
+       else if(verbose)
+          cout << "No duplicate supports found." << endl;
+    }
+}
+
 double dbl3_error_sum
  ( int dim, int deg,
    double **results1hi_h, double **results1mi_h, double **results1lo_h,
@@ -318,6 +426,117 @@ double test_dbl3_real_polynomial
             write_GPU_timings(cnvlapms,addlapms,timelapms_d,walltimes_d);
       }
       return sumerr;
+   }
+}
+
+double test_cmplx3_real_polynomial
+ ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
+   int mode )
+{
+   if(nbr < 1)
+      return 0.0;
+   else
+   {
+      double **inputrehi = new double*[dim]; // dim series of degree deg
+      double **inputremi = new double*[dim];
+      double **inputrelo = new double*[dim];
+      double **inputimhi = new double*[dim];
+      double **inputimmi = new double*[dim];
+      double **inputimlo = new double*[dim];
+      for(int i=0; i<dim; i++)
+      {
+         inputrehi[i] = new double[deg+1];
+         inputremi[i] = new double[deg+1];
+         inputrelo[i] = new double[deg+1];
+         inputimhi[i] = new double[deg+1];
+         inputimmi[i] = new double[deg+1];
+         inputimlo[i] = new double[deg+1];
+      }
+      // The output are dim+1 power series of degree deg
+      // for the evaluated and differentiated polynomial.
+      double **output1rehi_h = new double*[dim+1];
+      double **output1remi_h = new double*[dim+1];
+      double **output1relo_h = new double*[dim+1];
+      double **output1imhi_h = new double*[dim+1];
+      double **output1immi_h = new double*[dim+1];
+      double **output1imlo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++)
+      {
+         output1rehi_h[i] = new double[deg+1];
+         output1remi_h[i] = new double[deg+1];
+         output1relo_h[i] = new double[deg+1];
+         output1imhi_h[i] = new double[deg+1];
+         output1immi_h[i] = new double[deg+1];
+         output1imlo_h[i] = new double[deg+1];
+      }
+      double **output2rehi_h = new double*[dim+1];
+      double **output2remi_h = new double*[dim+1];
+      double **output2relo_h = new double*[dim+1];
+      double **output2imhi_h = new double*[dim+1];
+      double **output2immi_h = new double*[dim+1];
+      double **output2imlo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++)
+      {
+         output2rehi_h[i] = new double[deg+1];
+         output2remi_h[i] = new double[deg+1];
+         output2relo_h[i] = new double[deg+1];
+         output2imhi_h[i] = new double[deg+1];
+         output2immi_h[i] = new double[deg+1];
+         output2imlo_h[i] = new double[deg+1];
+      }
+      double **outputrehi_d = new double*[dim+1];
+      double **outputremi_d = new double*[dim+1];
+      double **outputrelo_d = new double*[dim+1];
+      double **outputimhi_d = new double*[dim+1];
+      double **outputimmi_d = new double*[dim+1];
+      double **outputimlo_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++)
+      {
+         outputrehi_d[i] = new double[deg+1];
+         outputremi_d[i] = new double[deg+1];
+         outputrelo_d[i] = new double[deg+1];
+         outputimhi_d[i] = new double[deg+1];
+         outputimmi_d[i] = new double[deg+1];
+         outputimlo_d[i] = new double[deg+1];
+      }
+      double *cstrehi = new double[deg+1]; // constant coefficient series
+      double *cstremi = new double[deg+1];
+      double *cstrelo = new double[deg+1];
+      double *cstimhi = new double[deg+1];
+      double *cstimmi = new double[deg+1];
+      double *cstimlo = new double[deg+1];
+      double **cffrehi = new double*[nbr]; // coefficient series of terms
+      double **cffremi = new double*[nbr];
+      double **cffrelo = new double*[nbr];
+      double **cffimhi = new double*[nbr];
+      double **cffimmi = new double*[nbr];
+      double **cffimlo = new double*[nbr];
+      for(int i=0; i<nbr; i++)
+      {
+         cffrehi[i] = new double[deg+1];
+         cffremi[i] = new double[deg+1];
+         cffrelo[i] = new double[deg+1];
+         cffimhi[i] = new double[deg+1];
+         cffimmi[i] = new double[deg+1];
+         cffimlo[i] = new double[deg+1];
+      }
+      int *nvr = new int[nbr]; // number of variables in each monomial
+      int **idx = new int*[nbr];  // indices of variables in monomials
+      int **exp = new int*[nbr];  // exponents of the variables
+
+      bool vrb = (verbose > 1);
+
+      cmplx3_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
+         inputrehi,inputremi,inputrelo,inputimhi,inputimmi,inputimlo,
+         cstrehi,cstremi,cstrelo,cstimhi,cstimmi,cstimlo,
+         cffrehi,cffremi,cffrelo,cffimhi,cffimmi,cffimlo,vrb);
+
+      ConvolutionJobs cnvjobs(dim);
+      AdditionJobs addjobs(dim,nbr);
+
+      make_all_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
+
+      return 0.0;
    }
 }
 
