@@ -1,3 +1,6 @@
+Sun 24 Jan 2021 : to dbl3_polynomials_host, added code for the functions
+  of the convolution and addition jobs.
+
 Sat 23 Jan 2021 : small update in random2_polynomials.cpp.  Extended random3_
   polynomials with the making of polynomials with complex coefficients.
   Edited documentation in dbl2_polynomials_host.h.  Added code for complex 
