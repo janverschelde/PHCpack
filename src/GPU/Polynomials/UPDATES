@@ -1,3 +1,6 @@
+Mon 25 Jan 2021 : extended dbl3_polynomial_host with code to evaluate and
+  differentiate with convolution and addition jobs.
+
 Sun 24 Jan 2021 : to dbl3_polynomials_host, added code for the functions
   of the convolution and addition jobs.
 

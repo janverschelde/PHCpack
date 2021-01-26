@@ -1418,6 +1418,118 @@ void CPU_dbl3_poly_updates
    }
 }
 
+void CPU_cmplx3_poly_updates
+ ( int dim, int nbr, int deg, int *nvr, int **idx, 
+   double *cstrehi, double *cstremi, double *cstrelo,
+   double *cstimhi, double *cstimmi, double *cstimlo,
+   double **cffrehi, double **cffremi, double **cffrelo,
+   double **cffimhi, double **cffimmi, double **cffimlo,
+   double **inputrehi, double **inputremi, double **inputrelo,
+   double **inputimhi, double **inputimmi, double **inputimlo,
+   double **outputrehi, double **outputremi, double **outputrelo,
+   double **outputimhi, double **outputimmi, double **outputimlo,
+   double ***forwardrehi, double ***forwardremi, double ***forwardrelo,
+   double ***forwardimhi, double ***forwardimmi, double ***forwardimlo,
+   double ***backwardrehi, double ***backwardremi, double ***backwardrelo,
+   double ***backwardimhi, double ***backwardimmi, double ***backwardimlo,
+   double ***crossrehi, double ***crossremi, double ***crossrelo,
+   double ***crossimhi, double ***crossimmi, double ***crossimlo )
+{
+   for(int i=0; i<=deg; i++)
+   {
+      outputrehi[dim][i] = cstrehi[i];
+      outputremi[dim][i] = cstremi[i];
+      outputrelo[dim][i] = cstrelo[i];
+      outputimhi[dim][i] = cstimhi[i];
+      outputimmi[dim][i] = cstimmi[i];
+      outputimlo[dim][i] = cstimlo[i];
+   }
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<=deg; j++)
+      {
+         outputrehi[i][j] = 0.0; outputremi[i][j] = 0.0;
+         outputrelo[i][j] = 0.0;
+         outputimhi[i][j] = 0.0; outputimmi[i][j] = 0.0;
+         outputimlo[i][j] = 0.0;
+      }
+
+   for(int k=0; k<nbr; k++)
+   {
+      int ix0 = idx[k][0];   // first variable in monomial k
+      int ix1 = nvr[k]-1;    // last forward has the value
+      int ix2 = nvr[k]-2;    // next to last forward has last derivative
+                             // last backward has the first derivative
+      int ixn = idx[k][ix1]; // index of the last variable in monomial k
+
+      for(int i=0; i<=deg; i++) // value is last forward location
+         // output[dim][i] = output[dim][i] + forward[k][ix1][i];
+      {
+         tdf_inc(&outputrehi[dim][i],&outputremi[dim][i],&outputrelo[dim][i],
+                 forwardrehi[k][ix1][i],forwardremi[k][ix1][i],
+                 forwardrelo[k][ix1][i]);
+         tdf_inc(&outputimhi[dim][i],&outputimmi[dim][i],&outputimlo[dim][i],
+                 forwardimhi[k][ix1][i],forwardimmi[k][ix1][i],
+                 forwardimlo[k][ix1][i]);
+      }
+      if(ix1 == 0)           // monomial has only one variable
+      {
+         for(int i=0; i<=deg; i++)
+            // output[ix0][i] = output[ix0][i] + cff[k][i]; 
+         {
+            tdf_inc(&outputrehi[ix0][i],&outputremi[ix0][i],
+                    &outputrelo[ix0][i],
+                    cffrehi[k][i],cffremi[k][i],cffrelo[k][i]);
+            tdf_inc(&outputimhi[ix0][i],&outputimmi[ix0][i],
+                    &outputimlo[ix0][i],
+                    cffimhi[k][i],cffimmi[k][i],cffimlo[k][i]);
+         }
+      }
+      else if(ix2 >= 0)      // update first and last derivative
+      {
+         for(int i=0; i<=deg; i++)
+         {
+            // output[ixn][i] = output[ixn][i] + forward[k][ix2][i];
+            tdf_inc(&outputrehi[ixn][i],&outputremi[ixn][i],
+                    &outputrelo[ixn][i],
+                    forwardrehi[k][ix2][i],forwardremi[k][ix2][i],
+                    forwardrelo[k][ix2][i]);
+            tdf_inc(&outputimhi[ixn][i],&outputimmi[ixn][i],
+                    &outputimlo[ixn][i],
+                    forwardimhi[k][ix2][i],forwardimmi[k][ix2][i],
+                    forwardimlo[k][ix2][i]);
+            // output[ix0][i] = output[ix0][i] + backward[k][ix2][i];
+            tdf_inc(&outputrehi[ix0][i],&outputremi[ix0][i],
+                    &outputrelo[ix0][i],
+                    backwardrehi[k][ix2][i],backwardremi[k][ix2][i],
+                    backwardrelo[k][ix2][i]);
+            tdf_inc(&outputimhi[ix0][i],&outputimmi[ix0][i],
+                    &outputimlo[ix0][i],
+                    backwardimhi[k][ix2][i],backwardimmi[k][ix2][i],
+                    backwardimlo[k][ix2][i]);
+         }
+         if(ix2 > 0)         // update all other derivatives
+         {
+            for(int j=1; j<ix1; j++) // j-th variable in monomial k
+            {
+               ix0 = idx[k][j];
+               for(int i=0; i<=deg; i++)
+                  // output[ix0][i] = output[ix0][i] + cross[k][j-1][i];
+               {
+                  tdf_inc(&outputrehi[ix0][i],&outputremi[ix0][i],
+                          &outputrelo[ix0][i],
+                          crossrehi[k][j-1][i],crossremi[k][j-1][i],
+                          crossrelo[k][j-1][i]);
+                  tdf_inc(&outputimhi[ix0][i],&outputimmi[ix0][i],
+                          &outputimlo[ix0][i],
+                          crossimhi[k][j-1][i],crossimmi[k][j-1][i],
+                          crossimlo[k][j-1][i]);
+               }
+            }
+         }
+      }
+   }
+}
+
 void CPU_dbl3_poly_addjobs
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double *csthi, double *cstmi, double *cstlo,
@@ -1546,6 +1658,164 @@ void CPU_dbl3_poly_addjobs
    }
 }
 
+void CPU_cmplx3_poly_addjobs
+ ( int dim, int nbr, int deg, int *nvr, int **idx, 
+   double *cstrehi, double *cstremi, double *cstrelo,
+   double *cstimhi, double *cstimmi, double *cstimlo,
+   double **cffrehi, double **cffremi, double **cffrelo,
+   double **cffimhi, double **cffimmi, double **cffimlo,
+   double **inputrehi, double **inputremi, double **inputrelo,
+   double **inputimhi, double **inputimmi, double **inputimlo,
+   double **outputrehi, double **outputremi, double **outputrelo,
+   double **outputimhi, double **outputimmi, double **outputimlo,
+   double ***forwardrehi, double ***forwardremi, double ***forwardrelo,
+   double ***forwardimhi, double ***forwardimmi, double ***forwardimlo,
+   double ***backwardrehi, double ***backwardremi, double ***backwardrelo,
+   double ***backwardimhi, double ***backwardimmi, double ***backwardimlo,
+   double ***crossrehi, double ***crossremi, double ***crossrelo,
+   double ***crossimhi, double ***crossimmi, double ***crossimlo,
+   AdditionJobs jobs, bool verbose )
+{
+   for(int k=0; k<jobs.get_depth(); k++)
+   {
+      if(verbose) cout << "executing addition jobs at layer "
+                       << k << " :" << endl;
+      for(int i=0; i<jobs.get_layer_count(k); i++)
+      {
+         AdditionJob job = jobs.get_job(k,i);
+         if(verbose) cout << "job " << i << " : " << job << endl;
+
+         CPU_cmplx3_add_job(deg,
+            cstrehi,cstremi,cstrelo,cstimhi,cstimmi,cstimlo,
+            cffrehi,cffremi,cffrelo,cffimhi,cffimmi,cffimlo,
+            forwardrehi,forwardremi,forwardrelo,
+            forwardimhi,forwardimmi,forwardimlo,
+            backwardrehi,backwardremi,backwardrelo,
+            backwardimhi,backwardimmi,backwardimlo,
+            crossrehi,crossremi,crossrelo,
+            crossimhi,crossimmi,crossimlo,job,verbose);
+      }
+   }
+   int lastmon = nbr-1;
+   int lastidx = nvr[lastmon]-1;
+   for(int i=0; i<=deg; i++) // value is last forward location
+   {  // output[dim][i] = forward[lastmon][lastidx][i];
+      outputrehi[dim][i] = forwardrehi[lastmon][lastidx][i];
+      outputremi[dim][i] = forwardremi[lastmon][lastidx][i];
+      outputrelo[dim][i] = forwardrelo[lastmon][lastidx][i];
+      outputimhi[dim][i] = forwardimhi[lastmon][lastidx][i];
+      outputimmi[dim][i] = forwardimmi[lastmon][lastidx][i];
+      outputimlo[dim][i] = forwardimlo[lastmon][lastidx][i];
+   }
+   int cnt = jobs.get_differential_count(0);
+   if(cnt == 0) // it could be there is no first variable anywhere ...
+   {
+      for(int i=0; i<=deg; i++)
+      {
+         outputrehi[0][i] = 0.0; outputremi[0][i] = 0.0;
+         outputrelo[0][i] = 0.0;
+         outputimhi[0][i] = 0.0; outputimmi[0][i] = 0.0; 
+         outputimlo[0][i] = 0.0;
+      }
+   }
+   else
+   {
+      int ix0 = jobs.get_differential_index(0,cnt);
+      int ix2 = nvr[ix0] - 2;
+      
+      if(verbose)
+         cout << "Updating derivative 0, ix0 = " << ix0
+              << ", ix2 = " << ix2
+              << " : b[" << ix0 << "," << ix2 << "]" << endl;
+
+      for(int i=0; i<=deg; i++) // output[0][i] = backward[ix0][ix2][i];
+      {
+         outputrehi[0][i] = backwardrehi[ix0][ix2][i];
+         outputremi[0][i] = backwardremi[ix0][ix2][i];
+         outputrelo[0][i] = backwardrelo[ix0][ix2][i];
+         outputimhi[0][i] = backwardimhi[ix0][ix2][i];
+         outputimmi[0][i] = backwardimmi[ix0][ix2][i];
+         outputimlo[0][i] = backwardimlo[ix0][ix2][i];
+      }
+   }
+   for(int k=1; k<dim; k++) // updating all other derivatives
+   {
+      int cnt = jobs.get_differential_count(k);
+      if(cnt == 0) // it could be there is no variable k anywhere ...
+      {
+         for(int i=0; i<=deg; i++) 
+         {
+            outputrehi[k][i] = 0.0; outputremi[k][i] = 0.0;
+            outputrelo[k][i] = 0.0;
+            outputimhi[k][i] = 0.0; outputimmi[k][i] = 0.0; 
+            outputimlo[k][i] = 0.0;
+         }
+      }
+      else
+      {
+         int ix0 = jobs.get_differential_index(k,cnt);
+
+         if(idx[ix0][0] == k) // k is first variable of monomial
+         {
+            int ix2 = nvr[ix0] - 2;
+
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << ", ix0 = " << ix0 << ", ix2 = " << ix2
+                    << " : b[" << ix0 << "," << ix2 << "]" << endl;
+
+            for(int i=0; i<=deg; i++) // output[k][i] = backward[ix0][ix2][i];
+            {
+               outputrehi[k][i] = backwardrehi[ix0][ix2][i];
+               outputremi[k][i] = backwardremi[ix0][ix2][i];
+               outputrelo[k][i] = backwardrelo[ix0][ix2][i];
+               outputimhi[k][i] = backwardimhi[ix0][ix2][i];
+               outputimmi[k][i] = backwardimmi[ix0][ix2][i];
+               outputimlo[k][i] = backwardimlo[ix0][ix2][i];
+            }
+         }
+         else if(idx[ix0][nvr[ix0]-1] == k) // k is last variable
+         {
+            int ix2 = nvr[ix0] - 2;
+
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << ", ix0 = " << ix0 << ", ix2 = " << ix2
+                    << " : f[" << ix0 << "," << ix2 << "]" << endl;
+
+            for(int i=0; i<=deg; i++) // output[k][i] = forward[ix0][ix2][i];
+            {
+               outputrehi[k][i] = forwardrehi[ix0][ix2][i];
+               outputremi[k][i] = forwardremi[ix0][ix2][i];
+               outputrelo[k][i] = forwardrelo[ix0][ix2][i];
+               outputimhi[k][i] = forwardimhi[ix0][ix2][i];
+               outputimmi[k][i] = forwardimmi[ix0][ix2][i];
+               outputimlo[k][i] = forwardimlo[ix0][ix2][i];
+            }
+         }
+         else // derivative is in some cross product
+         {
+            int ix2 = jobs.position(nvr[ix0],idx[ix0],k) - 1;
+
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << ", ix0 = " << ix0 << ", ix2 = " << ix2
+                    << " : c[" << ix0 << "," << ix2 << "]" << endl;
+
+            for(int i=0; i<=deg; i++) // output[k][i] = cross[ix0][ix2][i];
+            {
+               outputrehi[k][i] = crossrehi[ix0][ix2][i];
+               outputremi[k][i] = crossremi[ix0][ix2][i];
+               outputrelo[k][i] = crossrelo[ix0][ix2][i];
+               outputimhi[k][i] = crossimhi[ix0][ix2][i];
+               outputimmi[k][i] = crossimmi[ix0][ix2][i];
+               outputimlo[k][i] = crossimlo[ix0][ix2][i];
+            }
+         }
+      }
+   }
+}
+
 void CPU_dbl3_poly_evaldiffjobs
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double *csthi, double *cstmi, double *cstlo,
@@ -1666,4 +1936,183 @@ void CPU_dbl3_poly_evaldiffjobs
    free(forwardhi); free(backwardhi); free(crosshi);
    free(forwardmi); free(backwardmi); free(crossmi);
    free(forwardlo); free(backwardlo); free(crosslo);
+}
+
+void CPU_cmplx3_poly_evaldiffjobs
+ ( int dim, int nbr, int deg, int *nvr, int **idx, 
+   double *cstrehi, double *cstremi, double *cstrelo,
+   double *cstimhi, double *cstimmi, double *cstimlo,
+   double **cffrehi, double **cffremi, double **cffrelo,
+   double **cffimhi, double **cffimmi, double **cffimlo,
+   double **inputrehi, double **inputremi, double **inputrelo,
+   double **inputimhi, double **inputimmi, double **inputimlo,
+   double **outputrehi, double **outputremi, double **outputrelo,
+   double **outputimhi, double **outputimmi, double **outputimlo,
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs,
+   double *elapsedsec, bool verbose )
+{
+   double ***forwardrehi = new double**[nbr];
+   double ***forwardremi = new double**[nbr];
+   double ***forwardrelo = new double**[nbr];
+   double ***forwardimhi = new double**[nbr];
+   double ***forwardimmi = new double**[nbr];
+   double ***forwardimlo = new double**[nbr];
+   double ***backwardrehi = new double**[nbr];
+   double ***backwardremi = new double**[nbr];
+   double ***backwardrelo = new double**[nbr];
+   double ***backwardimhi = new double**[nbr];
+   double ***backwardimmi = new double**[nbr];
+   double ***backwardimlo = new double**[nbr];
+   double ***crossrehi = new double**[nbr];
+   double ***crossremi = new double**[nbr];
+   double ***crossrelo = new double**[nbr];
+   double ***crossimhi = new double**[nbr];
+   double ***crossimmi = new double**[nbr];
+   double ***crossimlo = new double**[nbr];
+
+   for(int k=0; k<nbr; k++)
+   {
+      int nvrk = nvr[k]; // number of variables in monomial k
+
+      forwardrehi[k] = new double*[nvrk];
+      forwardremi[k] = new double*[nvrk];
+      forwardrelo[k] = new double*[nvrk];
+      forwardimhi[k] = new double*[nvrk];
+      forwardimmi[k] = new double*[nvrk];
+      forwardimlo[k] = new double*[nvrk];
+      for(int i=0; i<nvrk; i++) 
+      {
+         forwardrehi[k][i] = new double[deg+1];
+         forwardremi[k][i] = new double[deg+1];
+         forwardrelo[k][i] = new double[deg+1];
+         forwardimhi[k][i] = new double[deg+1];
+         forwardimmi[k][i] = new double[deg+1];
+         forwardimlo[k][i] = new double[deg+1];
+      }
+      if(nvrk > 1)
+      {
+         backwardrehi[k] = new double*[nvrk-1];
+         backwardremi[k] = new double*[nvrk-1];
+         backwardrelo[k] = new double*[nvrk-1];
+         backwardimhi[k] = new double*[nvrk-1];
+         backwardimmi[k] = new double*[nvrk-1];
+         backwardimlo[k] = new double*[nvrk-1];
+         for(int i=0; i<nvrk-1; i++) 
+         {
+            backwardrehi[k][i] = new double[deg+1];
+            backwardremi[k][i] = new double[deg+1];
+            backwardrelo[k][i] = new double[deg+1];
+            backwardimhi[k][i] = new double[deg+1];
+            backwardimmi[k][i] = new double[deg+1];
+            backwardimlo[k][i] = new double[deg+1];
+         }
+      }
+      if(nvrk > 2)
+      {
+         crossrehi[k] = new double*[nvrk-2];
+         crossremi[k] = new double*[nvrk-2];
+         crossrelo[k] = new double*[nvrk-2];
+         crossimhi[k] = new double*[nvrk-2];
+         crossimmi[k] = new double*[nvrk-2];
+         crossimlo[k] = new double*[nvrk-2];
+         for(int i=0; i<nvrk-2; i++)
+         {
+            crossrehi[k][i] = new double[deg+1];
+            crossremi[k][i] = new double[deg+1];
+            crossrelo[k][i] = new double[deg+1];
+            crossimhi[k][i] = new double[deg+1];
+            crossimmi[k][i] = new double[deg+1];
+            crossimlo[k][i] = new double[deg+1];
+         }
+      }
+   }
+   clock_t start = clock();
+   for(int k=0; k<cnvjobs.get_depth(); k++)
+   {
+      if(verbose) cout << "executing convolution jobs at layer "
+                       << k << " :" << endl;
+      for(int i=0; i<cnvjobs.get_layer_count(k); i++)
+      {
+         ConvolutionJob job = cnvjobs.get_job(k,i);
+         if(verbose) cout << "job " << i << " : " << job << endl;
+
+         int monidx = job.get_monomial_index();
+
+         CPU_cmplx3_conv_job
+            (deg,nvr[monidx],idx[monidx],
+             cffrehi[monidx],cffremi[monidx],cffrelo[monidx],
+             cffimhi[monidx],cffimmi[monidx],cffimlo[monidx],
+             inputrehi,inputremi,inputrelo,inputimhi,inputimmi,inputimlo,
+             forwardrehi[monidx],forwardremi[monidx],forwardrelo[monidx],
+             forwardimhi[monidx],forwardimmi[monidx],forwardimlo[monidx],
+             backwardrehi[monidx],backwardremi[monidx],backwardrelo[monidx],
+             backwardimhi[monidx],backwardimmi[monidx],backwardimlo[monidx],
+             crossrehi[monidx],crossremi[monidx],crossrelo[monidx],
+             crossimhi[monidx],crossimmi[monidx],crossimlo[monidx],
+             job,verbose);
+      }
+   }
+   //CPU_cmplx2_poly_updates
+   //   (dim,nbr,deg,nvr,idx,cst,cffrehi,cffrelo,cffimhi,cffimlo,
+   //    inputrehi,inputrelo,outputrehi,outputrelo,outputimhi,outputimlo,
+   //    forwardrehi,forwardrelo,forwardimhi,forwardimlo,
+   //    backwardrehi,backwardrelo,backwardimhi,backwardimlo,
+   //    crossrehi,crossrelo,crossimhi,crossimlo);
+   CPU_cmplx3_poly_addjobs
+      (dim,nbr,deg,nvr,idx,
+       cstrehi,cstremi,cstrelo,cstimhi,cstimmi,cstimlo,
+       cffrehi,cffremi,cffrelo,cffimhi,cffimmi,cffimlo,
+       inputrehi,inputremi,inputrelo,inputimhi,inputimmi,inputimlo,
+       outputrehi,outputremi,outputrelo,outputimhi,outputimmi,outputimlo,
+       forwardrehi,forwardremi,forwardrelo,
+       forwardimhi,forwardimmi,forwardimlo,
+       backwardrehi,backwardremi,backwardrelo,
+       backwardimhi,backwardimmi,backwardimlo,
+       crossrehi,crossremi,crossrelo,crossimhi,crossimmi,crossimlo,
+       addjobs,verbose);
+
+   clock_t end = clock();
+   *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
+
+   if(verbose)
+   {
+      cout << fixed << setprecision(3);
+      cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+           << *elapsedsec << " seconds." << endl;
+      cout << scientific << setprecision(16);
+   }
+   for(int k=0; k<nbr; k++)
+   {
+      int nvrk = nvr[k];
+
+      for(int i=0; i<nvrk; i++)
+      {
+         free(forwardrehi[k][i]); free(forwardremi[k][i]);
+         free(forwardrelo[k][i]);
+         free(forwardimhi[k][i]); free(forwardimmi[k][i]);
+         free(forwardimlo[k][i]);
+      }
+      if(nvrk > 1)
+         for(int i=0; i<nvrk-1; i++)
+         {
+            free(backwardrehi[k][i]); free(backwardremi[k][i]);
+            free(backwardrelo[k][i]);
+            free(backwardimhi[k][i]); free(backwardimmi[k][i]);
+            free(backwardimlo[k][i]);
+         }
+      if(nvrk > 2)
+         for(int i=0; i<nvrk-2; i++)
+         {
+            free(crossrehi[k][i]); free(crossremi[k][i]);
+            free(crossrelo[k][i]);
+            free(crossimhi[k][i]); free(crossimmi[k][i]);
+            free(crossimlo[k][i]);
+         }
+   }
+   free(forwardrehi); free(backwardrehi); free(crossrehi);
+   free(forwardremi); free(backwardremi); free(crossremi);
+   free(forwardrelo); free(backwardrelo); free(crossrelo);
+   free(forwardimhi); free(backwardimhi); free(crossimhi);
+   free(forwardimmi); free(backwardimmi); free(crossimmi);
+   free(forwardimlo); free(backwardimlo); free(crossimlo);
 }
