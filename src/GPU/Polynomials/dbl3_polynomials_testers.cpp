@@ -326,6 +326,105 @@ double dbl3_error_sum
    return sumerr;
 }
 
+double cmplx3_error_sum
+ ( int dim, int deg,
+   double **results1rehi_h, double **results1remi_h, double **results1relo_h,
+   double **results1imhi_h, double **results1immi_h, double **results1imlo_h,
+   double **results2rehi_h, double **results2remi_h, double **results2relo_h,
+   double **results2imhi_h, double **results2immi_h, double **results2imlo_h,
+   double **resultsrehi_d, double **resultsremi_d, double **resultsrelo_d,
+   double **resultsimhi_d, double **resultsimmi_d, double **resultsimlo_d,
+   bool verbose )
+{
+   double err = 0.0;
+
+   if(verbose) cout << "The value of the polynomial :" << endl;
+   for(int i=0; i<=deg; i++)
+   {
+      if(verbose)
+      {
+         cout << results1rehi_h[dim][i] << "  "
+              << results1remi_h[dim][i] << "  "
+              << results1relo_h[dim][i] << endl;
+         cout << results1imhi_h[dim][i] << "  "
+              << results1immi_h[dim][i] << "  "
+              << results1imlo_h[dim][i] << endl;
+         cout << results2rehi_h[dim][i] << "  "
+              << results2remi_h[dim][i] << "  "
+              << results2relo_h[dim][i] << endl;
+         cout << results2imhi_h[dim][i] << "  "
+              << results2immi_h[dim][i] << "  "
+              << results2imlo_h[dim][i] << endl;
+      /* cout << resultsrehi_d[dim][i] << "  "
+              << resultsremi_d[dim][i] << "  "
+              << resultsrelo_d[dim][i] << endl;
+         cout << resultsimhi_d[dim][i] << "  "
+              << resultsimmi_d[dim][i] << "  "
+              << resultsimlo_d[dim][i] << endl; */
+      }
+      err = err + abs(results1rehi_h[dim][i] - results2rehi_h[dim][i])
+                + abs(results1remi_h[dim][i] - results2remi_h[dim][i])
+                + abs(results1relo_h[dim][i] - results2relo_h[dim][i])
+                + abs(results1imhi_h[dim][i] - results2imhi_h[dim][i])
+                + abs(results1immi_h[dim][i] - results2immi_h[dim][i])
+                + abs(results1imlo_h[dim][i] - results2imlo_h[dim][i]);
+           /*   + abs(results1rehi_h[dim][i] - resultsrehi_d[dim][i])
+                + abs(results1remi_h[dim][i] - resultsremi_d[dim][i])
+                + abs(results1relo_h[dim][i] - resultsrelo_d[dim][i])
+                + abs(results1imhi_h[dim][i] - resultsimhi_d[dim][i])
+                + abs(results1immi_h[dim][i] - resultsimmi_d[dim][i])
+                + abs(results1imlo_h[dim][i] - resultsimlo_d[dim][i]); */
+   }
+   if(verbose) cout << "error : " << err << endl;
+
+   double sumerr = err;
+
+   for(int k=0; k<dim; k++)
+   {
+      if(verbose) cout << "Derivative " << k << " :" << endl;
+      err = 0.0;
+      for(int i=0; i<=deg; i++)
+      {
+         if(verbose)
+         {
+            cout << results1rehi_h[k][i] << "  "
+                 << results1remi_h[k][i] << "  "
+                 << results1relo_h[k][i] << endl;
+            cout << results1imhi_h[k][i] << "  "
+                 << results1immi_h[k][i] << "  "
+                 << results1imlo_h[k][i] << endl;
+            cout << results2rehi_h[k][i] << "  "
+                 << results2remi_h[k][i] << "  "
+                 << results2relo_h[k][i] << endl;
+            cout << results2imhi_h[k][i] << "  "
+                 << results2immi_h[k][i] << "  "
+                 << results2imlo_h[k][i] << endl;
+       /*   cout << resultsrehi_d[k][i] << "  "
+                 << resultsremi_d[k][i] << "  "
+                 << resultsrelo_d[k][i] << endl;
+            cout << resultsimhi_d[k][i] << "  "
+                 << resultsimmi_d[k][i] << "  "
+                 << resultsimlo_d[k][i] << endl; */
+         }
+         err = err + abs(results1rehi_h[k][i] - results2rehi_h[k][i])
+                   + abs(results1remi_h[k][i] - results2remi_h[k][i])
+                   + abs(results1relo_h[k][i] - results2relo_h[k][i])
+                   + abs(results1imhi_h[k][i] - results2imhi_h[k][i])
+                   + abs(results1immi_h[k][i] - results2immi_h[k][i])
+                   + abs(results1imlo_h[k][i] - results2imlo_h[k][i]);
+               /*  + abs(results1rehi_h[k][i] - resultsrehi_d[k][i])
+                   + abs(results1remi_h[k][i] - resultsremi_d[k][i])
+                   + abs(results1relo_h[k][i] - resultsrelo_d[k][i])
+                   + abs(results1imhi_h[k][i] - resultsimhi_d[k][i])
+                   + abs(results1immi_h[k][i] - resultsimmi_d[k][i])
+                   + abs(results1imlo_h[k][i] - resultsimlo_d[k][i]); */
+      }
+      if(verbose) cout << "error : " << err << endl;
+      sumerr = sumerr + err;
+   }
+   return sumerr;
+}
+
 double test_dbl3_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
@@ -536,7 +635,40 @@ double test_cmplx3_real_polynomial
 
       make_all_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
 
-      return 0.0;
+      double timelapsec1_h,timelapsec2_h;
+      double cnvlapms,addlapms,timelapms_d,walltimes_d;
+
+      if((mode == 1) || (mode == 2))
+      {
+         if(vrb) cout << "Computing without convolution jobs ..." << endl;
+         CPU_cmplx3_poly_evaldiff
+            (dim,nbr,deg,nvr,idx,
+             cstrehi,cstremi,cstrelo,cstimhi,cstimmi,cstimlo,
+             cffrehi,cffremi,cffrelo,cffimhi,cffimmi,cffimlo,
+             inputrehi,inputremi,inputrelo,inputimhi,inputimmi,inputimlo,
+             output1rehi_h,output1remi_h,output1relo_h,
+             output1imhi_h,output1immi_h,output1imlo_h,&timelapsec1_h,vrb);
+         if(vrb) cout << "Computing with convolution jobs ..." << endl;
+         CPU_cmplx3_poly_evaldiffjobs
+            (dim,nbr,deg,nvr,idx,
+             cstrehi,cstremi,cstrelo,cstimhi,cstimmi,cstimlo,
+             cffrehi,cffremi,cffrelo,cffimhi,cffimmi,cffimlo,
+             inputrehi,inputremi,inputrelo,inputimhi,inputimmi,inputimlo,
+             output2rehi_h,output2remi_h,output2relo_h,
+             output2imhi_h,output2immi_h,output2imlo_h,
+             cnvjobs,addjobs,&timelapsec2_h,vrb);
+      }
+      double sumerr = 0.0;
+      if(mode == 2)
+         sumerr = cmplx3_error_sum(dim,deg,
+                     output1rehi_h,output1remi_h,output1relo_h,
+                     output1imhi_h,output1immi_h,output1imlo_h,
+                     output2rehi_h,output2remi_h,output2relo_h,
+                     output2imhi_h,output2immi_h,output2imlo_h,
+                     outputrehi_d,outputremi_d,outputrelo_d,
+                     outputimhi_d,outputimmi_d,outputimlo_d,vrb);
+
+      return sumerr;
    }
 }
 

@@ -1177,4 +1177,103 @@ void CPU_dbl3_poly_evaldiffjobs
  *              outputlo[dim] contains the value of the polynomial;
  *   elapsedsec is the elapsed time in seconds. */
 
+void CPU_cmplx3_poly_evaldiffjobs
+ ( int dim, int nbr, int deg, int *nvr, int **idx, 
+   double *cstrehi, double *cstremi, double *cstrelo,
+   double *cstimhi, double *cstimmi, double *cstimlo,
+   double **cffrehi, double **cffremi, double **cffrelo,
+   double **cffimhi, double **cffimmi, double **cffimlo,
+   double **inputrehi, double **inputremi, double **inputrelo,
+   double **inputimhi, double **inputimmi, double **inputimlo,
+   double **outputrehi, double **outputremi, double **outputrelo,
+   double **outputimhi, double **outputimmi, double **outputimlo,
+   ConvolutionJobs cnvjobs, AdditionJobs addjobs,
+   double *elapsedsec, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Computes the convolutions in the order as defined by cnvjobs,
+ *   performs the updates to the values as defined by addjobs,
+ *   all other parameters are the same as in the other function.
+ *
+ * ON ENTRY :
+ *   dim          total number of variables;
+ *   nbr          number of monomials, excluding the constant term;
+ *   deg          truncation degree of the series;
+ *   nvr          nvr[k] holds the number of variables in monomial k;
+ *   idx          idx[k] has as many indices as the value of nvr[k],
+ *                idx[k][i] defines the place of the i-th variable,
+ *                with input values in input[idx[k][i]];
+ *   cstrehi      high deg+1 doubles of the real parts
+ *                of the constant coefficient series;
+ *   cstremi      middle deg+1 doubles of the real parts
+ *                of the constant coefficient series;
+ *   cstrelo      low deg+1 doubles for the real parts
+ *                of the constant coefficient series;
+ *   cstimhi      high deg+1 doubles of the imaginary parts
+ *                of the constant coefficient series;
+ *   cstimmi      middle deg+1 doubles of the imaginary parts
+ *                of the constant coefficient series;
+ *   cstimlo      low deg+1 doubles for the imaginary parts
+ *                of the constant coefficient series;
+ *   cffrehi      cffrehi[k] has the deg+1 high doubles of the real
+ *                parts of the coefficient series of monomial k;
+ *   cffremi      cffrehi[k] has the deg+1 middle doubles of the real
+ *                parts of the coefficient series of monomial k;
+ *   cffrelo      cffrelo[k] has the deg+1 low doubles of the real
+ *                parts of the coefficient series of monomial k;
+ *   cffimhi      cffrehi[k] has the deg+1 high doubles of the imaginary
+ *                parts of the coefficient series of monomial k;
+ *   cffimmi      cffrehi[k] has the deg+1 middle doubles of the imaginary
+ *                parts of the coefficient series of monomial k;
+ *   cffimlo      cffrelo[k] has the deg+1 low doubles of the imaginary
+ *                parts of the coefficient series of monomial k;
+ *   inputrehi    has the high doubles of the real parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputremi    has the middle doubles of the real parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputrelo    has the low doubles of the real part
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimhi    has the high doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimmi    has the middle doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimlo    has the low doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   outputrehi   has space for the high doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputremi   has space for the middle doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputrelo   has space for the low doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputimhi   has space for the high doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outputimmi   has space for the middle doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outputimlo   has space for the low doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   cnvjobs      convolution jobs organized in layers;
+ *   addjobs      addition jobs organized in layers;
+ *   verbose      if true, writes one line to screen for every convolution.
+ *
+ * ON RETURN :
+ *   outputrehi   are the high doubles of the real parts
+ *                of the values and all derivatives;
+ *   outputremi   are the middle doubles of the real parts
+ *                of the values and all derivatives;
+ *   outputrelo   are the low doubles of the real parts
+ *                of the values and all derivatives;
+ *   outputimhi   are the high doubles of the imaginary parts
+ *                of the values and all derivatives;
+ *   outputimmi   are the middle doubles of the imaginary parts
+ *                of the values and all derivatives;
+ *   outputimlo   are the low doubles of the imaginary parts
+ *                of the values and all derivatives;
+ *   elapsedsec   is the elapsed time in seconds. */
+
 #endif
