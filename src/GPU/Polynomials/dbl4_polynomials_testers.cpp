@@ -154,6 +154,125 @@ void dbl4_make_input
    }
 }
 
+void cmplx4_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputrehihi, double **inputrelohi,
+   double **inputrehilo, double **inputrelolo,
+   double **inputimhihi, double **inputimlohi,
+   double **inputimhilo, double **inputimlolo,
+   double *cstrehihi, double *cstrelohi,
+   double *cstrehilo, double *cstrelolo,
+   double *cstimhihi, double *cstimlohi,
+   double *cstimhilo, double *cstimlolo,
+   double **cffrehihi, double **cffrelohi,
+   double **cffrehilo, double **cffrelolo,
+   double **cffimhihi, double **cffimlohi,
+   double **cffimhilo, double **cffimlolo, bool verbose )
+{
+   make_complex4_input(dim,deg,
+      inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+      inputimhihi,inputimlohi,inputimhilo,inputimlolo);
+
+   if(verbose)
+   {
+      cout << scientific << setprecision(16);
+      cout << "Random input series :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "-> coefficients of series " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+         {
+            cout << inputrehihi[i][j] << "  " << inputrelohi[i][j] << endl
+                 << inputrehilo[i][j] << "  " << inputrelolo[i][j] << endl;
+            cout << inputimhihi[i][j] << "  " << inputimlohi[i][j] << endl
+                 << inputimhilo[i][j] << "  " << inputimlolo[i][j] << endl;
+         }
+      }
+   }
+   if(nva == 0) // random supports
+   {
+      make_supports(dim,nbr,nvr);
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++)
+      {
+         idx[i] = new int[nva];
+         nvr[i] = nva;
+      }
+   }
+   if(nva > 0)
+   {
+      if(nbr == dim)
+         make_complex4_cyclic
+            (dim,nva,deg,idx,
+             cstrehihi,cstrelohi,cstrehilo,cstrelolo,
+             cstimhihi,cstimlohi,cstimhilo,cstimlolo,
+             cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+             cffimhihi,cffimlohi,cffimhilo,cffimlolo);
+      else
+         make_complex4_products
+            (dim,nbr,nva,deg,idx,
+             cstrehihi,cstrelohi,cstrehilo,cstrelolo,
+             cstimhihi,cstimlohi,cstimhilo,cstimlolo,
+             cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+             cffimhihi,cffimlohi,cffimhilo,cffimlolo);
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
+
+      bool fail = make_complex4_polynomial
+                     (dim,nbr,pwr,deg,nvr,idx,exp,
+                      cstrehihi,cstrelohi,cstrehilo,cstrelolo,
+                      cstimhihi,cstimlohi,cstimhilo,cstimlolo,
+                      cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+                      cffimhihi,cffimlohi,cffimhilo,cffimlolo);
+   }
+   if(verbose)
+   {
+      cout << "Coefficient series of the constant term :" << endl;
+      for(int j=0; j<=deg; j++)
+      {
+         cout << cstrehihi[j] << "  " << cstrelohi[j] << endl
+              << cstrehilo[j] << "  " << cstrelolo[j] << endl;
+         cout << cstimhihi[j] << "  " << cstimlohi[j] << endl
+              << cstimhilo[j] << "  " << cstimlolo[j] << endl;
+      }
+      for(int i=0; i<nbr; i++)
+      {
+         cout << "Generated random monomial " << i << " :" << endl;
+         cout << "   the indices :";
+         for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
+         cout << endl;
+         if(nva == 0)
+         {
+            cout << " the exponents :";
+            for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
+            cout << endl;
+         }
+         cout << " coefficient series :" << endl;
+         for(int j=0; j<=deg; j++)
+         {
+            cout << cffrehihi[i][j] << "  " << cffrelohi[i][j] << endl
+                 << cffrehilo[i][j] << "  " << cffrelolo[i][j] << endl;
+            cout << cffimhihi[i][j] << "  " << cffimlohi[i][j] << endl
+                 << cffimhilo[i][j] << "  " << cffimlolo[i][j] << endl;
+         }
+      }
+    }
+    if(nva == 0)
+    {
+       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
+       if(dup)
+          cout << "Duplicate supports found." << endl;
+       else if(verbose)
+          cout << "No duplicate supports found." << endl;
+    }
+}
+
 double dbl4_error_sum
  ( int dim, int deg,
    double **results1hihi_h, double **results1lohi_h, 

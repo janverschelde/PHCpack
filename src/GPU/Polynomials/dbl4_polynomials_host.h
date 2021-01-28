@@ -104,6 +104,198 @@ void CPU_dbl4_poly_speel
  *                derivative with respect to the variable k;
  *                outputlolo[dim] contains the value of the polynomial. */
 
+void CPU_cmplx4_poly_speel
+ ( int dim, int nbr, int deg, int *nvr, int **idx, 
+   double **cffrehihi, double **cffrelohi, 
+   double **cffrehilo, double **cffrelolo,
+   double **cffimhihi, double **cffimlohi,
+   double **cffimhilo, double **cffimlolo,
+   double **inputrehihi, double **inputrelohi,
+   double **inputrehilo, double **inputrelolo,
+   double **inputimhihi, double **inputimlohi,
+   double **inputimhilo, double **inputimlolo,
+   double **outputrehihi, double **outputrelohi,
+   double **outputrehilo, double **outputrelolo,
+   double **outputimhihi, double **outputimlohi,
+   double **outputimhilo, double **outputimlolo,
+   double **forwardrehihi, double **forwardrelohi,
+   double **forwardrehilo, double **forwardrelolo,
+   double **forwardimhihi, double **forwardimlohi,
+   double **forwardimhilo, double **forwardimlolo,
+   double **backwardrehihi, double **backwardrelohi,
+   double **backwardrehilo, double **backwardrelolo,
+   double **backwardimhihi, double **backwardimlohi,
+   double **backwardimhilo, double **backwardimlolo,
+   double **crossrehihi, double **crossrelohi,
+   double **crossrehilo, double **crossrelolo,
+   double **crossimhihi, double **crossimlohi,
+   double **crossimhilo, double **crossimlolo, bool verbose=false );
+/*
+ * DESCRIPTION :
+ *   Runs the reverse mode of algorithmic differentiation
+ *   of a polynomial at power series truncated to the same degree,
+ *   for complex coefficients in quad double precision.
+ *
+ * ON ENTRY :
+ *   dim            total number of variables;
+ *   nbr            number of monomials, excluding the constant term;
+ *   deg            truncation degree of the series;
+ *   nvr            nvr[k] holds the number of variables in monomial k;
+ *   idx            idx[k] has as many indices as the value of nvr[k],
+ *                  idx[k][i] defines the place of the i-th variable,
+ *                  with input values in input[idx[k][i]];
+ *   cffrehihi      has the highest doubles of the real parts
+ *                  of the coefficients, cffrehihi[k] has deg+1 highest
+ *                  coefficients of monomial k;
+ *   cffrelohi      has the second highest doubles of the real parts
+ *                  of the coefficients, cffrelohi[k] has deg+1 second highest
+ *                  coefficients of monomial k;
+ *   cffrehilo      has the second lowest doubles of the real parts
+ *                  of the coefficients, cffrehilo[k] has deg+1 second lowest
+ *                  coefficients of monomial k;
+ *   cffrelolo      has the lowest doubles of the real parts
+ *                  of the coefficients, cffrelolo[k] has deg+1 lowest
+ *                  coefficients of monomial k;
+ *   cffimhihi      has the highest doubles of the imaginary parts
+ *                  of the coefficients, cffimhihi[k] has deg+1 highest
+ *                  coefficients of monomial k;
+ *   cffimlohi      has the second highest doubles of the imaginary parts
+ *                  of the coefficients, cffimlohi[k] has deg+1 second highest
+ *                  coefficients of monomial k;
+ *   cffimhilo      has the second lowest doubles of the imaginary parts
+ *                  of the coefficient, cffimlolo[k] has the deg+1 second
+ *                  lowest coefficients of monomial k;
+ *   cffimlolo      has the lowest doubles of the imaginary parts
+ *                  of the coefficient, cffimlolo[k] has the deg+1 lowest
+ *                  coefficients of monomial k;
+ *   inputrehihi    has the highest doubles of the real parts
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   inputrelohi    has the second highest doubles of the real parts
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   inputrelolo    has the second lowest doubles of the real part
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   inputrelolo    has the lowest doubles of the real part
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   inputimhihi    has the highest doubles of the imaginary parts
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   inputimlohi    has the second highest doubles of the imaginary parts
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   inputimhilo    has the second lowest doubles of the imaginary parts
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   inputimlolo    has the lowest doubles of the imaginary parts
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   outputrehihi   has space for the highest doubles of the real parts
+ *                  of the value and all derivatives;
+ *   outputrelohi   has space for the second highest doubles of the real parts
+ *                  of the value and all derivatives;
+ *   outputrehilo   has space for the second lowest doubles of the real parts
+ *                  of the value and all derivatives;
+ *   outputrelolo   has space for the lowest doubles of the real parts
+ *                  of the value and all derivatives;
+ *   outputimhihi   has space for the highest doubles of the imaginary parts
+ *                  of the value and all derivatives;
+ *   outputimlohi   has space for the second highest doubles of
+ *                  the imaginary parts of the value and all derivatives;
+ *   outputimhilo   has space for the second lowest doubles of
+ *                  the imaginary parts of the value and all derivatives;
+ *   outputimlolo   has space for the lowest doubles of the imaginary parts
+ *                  of the value and all derivatives;
+ *   forwardrehihi  has space for the highest doubles of the real parts
+ *                  of all nvr forward products,
+ *                  forwardrehihi[k] has space for deg+1 doubles;
+ *   forwardrelohi  has space for the second highest doubles of the real parts
+ *                  of all nvr forward products,
+ *                  forwardrelohi[k] has space for deg+1 doubles;
+ *   forwardrehilo  has space for the second lowest doubles of the real parts
+ *                  of all nvr forward products,
+ *                  forwardrehilo[k] has space for deg+1 doubles;
+ *   forwardrelolo  has space for the lowest doubles of the real parts
+ *                  of all nvr forward products,
+ *                  forwardrelolo[k] has space for deg+1 doubles;
+ *   forwardimhihi  has space for the highest doubles of the imaginary parts
+ *                  of all nvr forward products,
+ *                  forwardimhihi[k] has space for deg+1 doubles;
+ *   forwardimlohi  has space for the second highest doubles of 
+ *                  the imaginary parts of all nvr forward products,
+ *                  forwardimlohi[k] has space for deg+1 doubles;
+ *   forwardimhilo  has space for the second lowest doubles of the
+ *                  imaginary parts of all nvr forward products,
+ *                  forwardimhilo[k] has space for deg+1 doubles;
+ *   forwardimlolo  has space for the lowest doubles of the imaginary parts
+ *                  of all nvr forward products,
+ *                  forwardimlolo[k] has space for deg+1 doubles;
+ *   backwardrehihi has space for the highest doubles of the real parts 
+ *                  of all nvr-2 backward products;
+ *                  backwardrehihi[k] has space for deg+1 doubles;
+ *   backwardrelohi has space for the second highest doubles of the real parts 
+ *                  of all nvr-2 backward products;
+ *                  backwardrelohi[k] has space for deg+1 doubles;
+ *   backwardrehilo has space for the second lowest doubles of the real parts 
+ *                  of all nvr-2 backward products;
+ *                  backwardrehilo[k] has space for deg+1 doubles;
+ *   backwardrelolo has space for the lowest doubles of the real parts 
+ *                  of all nvr-2 backward products;
+ *                  backwardrelolo[k] has space for deg+1 doubles;
+ *   backwardimhihi has space for the highest doubles of the imaginary parts 
+ *                  of all nvr-2 backward products;
+ *                  backwardimhihi[k] has space for deg+1 doubles;
+ *   backwardimlohi has space for the second highest doubles
+ *                  of the imaginary parts of all nvr-2 backward products;
+ *                  backwardimlohi[k] has space for deg+1 doubles;
+ *   backwardimhilo has space for the second lowest doubles
+ *                  of the imaginary parts of all nvr-2 backward products;
+ *                  backwardimhilo[k] has space for deg+1 doubles;
+ *   backwardimlolo has space for the lowest doubles of the imaginary parts 
+ *                  of all nvr-2 backward products;
+ *                  backwardimlolo[k] has space for deg+1 doubles;
+ *   crossrehihi    has space for the highest doubles of the real parts
+ *                  of all nvr-2 cross products;
+ *                  crossrehihi[k] has space for deg+1 doubles;
+ *   crossrelohi    has space for the second highest doubles
+ *                  of the real parts of all nvr-2 cross products;
+ *                  crossrelohi[k] has space for deg+1 doubles;
+ *   crossrehilo    has space for the second lowest doubles of the real parts
+ *                  of all nvr-2 cross products;
+ *                  crossimhilo[k] has space for deg+1 doubles;
+ *   crossrelolo    has space for the lowest doubles of the real parts
+ *                  of all nvr-2 cross products;
+ *                  crossimlolo[k] has space for deg+1 doubles;
+ *   crossimhihi    has space for the highest doubles of the imaginary parts
+ *                  of all nvr-2 cross products;
+ *                  crossimhihi[k] has space for deg+1 doubles;
+ *   crossimlohi    has space for the second highest doubles
+ *                  of the imaginary parts of all nvr-2 cross products;
+ *                  crossimlohi[k] has space for deg+1 doubles;
+ *   crossimhilo    has space for the second lowest doubles 
+ *                  of the imaginary parts of all nvr-2 cross products;
+ *                  crossimhilo[k] has space for deg+1 doubles;
+ *   crossimlolo    has space for the lowest doubles of the imaginary parts
+ *                  of all nvr-2 cross products;
+ *                  crossimlolo[k] has space for deg+1 doubles;
+ *   verbose        if true, writes one line to screen for every convolution.
+ *
+ * ON RETURN :
+ *   outputrehihi   has the highest doubles of the real parts,
+ *   outputrelohi   has the second highest doubles of the real parts,
+ *   outputrehilo   has the second lowest doubles of the real parts,
+ *   outputrelolo   has the lowest doubles of the real parts,
+ *   outputimhihi   has the highest doubles of the imaginary parts,
+ *   outputimlohi   has the second highest doubles of the imaginary parts,
+ *   outputimhilo   has the second lowest doubles of the imaginary parts,
+ *   outputimlolo   has the lowest doubles of the imaginary parts
+ *                  of derivatives and the value,
+ *                  output[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  output[dim] contains the value of the polynomial. */
+
 void CPU_dbl4_poly_evaldiff
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double *csthihi, double *cstlohi, double *csthilo, double *cstlolo,

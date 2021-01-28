@@ -60,6 +60,113 @@ void dbl4_make_input
  *   cfflolo   cfflolo[k] has the lowest doubles of the coefficient series
  *             of monomial k. */
 
+void cmplx4_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputrehihi, double **inputrelohi,
+   double **inputrehilo, double **inputrelolo,
+   double **inputimhihi, double **inputimlohi,
+   double **inputimhilo, double **inputimlolo,
+   double *cstrehihi, double *cstrelohi,
+   double *cstrehilo, double *cstrelolo,
+   double *cstimhihi, double *cstimlohi,
+   double *cstimhilo, double *cstimlolo,
+   double **cffrehihi, double **cffrelohi,
+   double **cffrehilo, double **cffrelolo,
+   double **cffimhihi, double **cffimlohi,
+   double **cffimhilo, double **cffimlolo, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Generates random complex polynomials and complex input series.
+ *
+ * ON ENTRY :
+ *   dim          dimension, total number of variables;
+ *   nbr          number of terms in the polynomial;
+ *   nva          number of variables in each monomial (for products, cyclic);
+ *   pwr          highest power of each variable;
+ *   deg          truncation degree of the series;
+ *   nvr          space for nbr integers;
+ *   idx          space for nbr pointers to integers;
+ *   exp          space for nbr pointers to integers;
+ *   inputrehihi  space for dim arrays of deg+1 doubles;
+ *   inputrelohi  space for dim arrays of deg+1 doubles;
+ *   inputrehilo  space for dim arrays of deg+1 doubles;
+ *   inputrelolo  space for dim arrays of deg+1 doubles;
+ *   inputimhihi  space for dim arrays of deg+1 doubles;
+ *   inputimlohi  space for dim arrays of deg+1 doubles;
+ *   inputimhilo  space for dim arrays of deg+1 doubles;
+ *   inputimlolo  space for dim arrays of deg+1 doubles;
+ *   cstrehihi    space for deg+1 doubles;
+ *   cstrelohi    space for deg+1 doubles;
+ *   cstrehilo    space for deg+1 doubles;
+ *   cstrelolo    space for deg+1 doubles;
+ *   cstimhihi    space for deg+1 doubles;
+ *   cstimlohi    space for deg+1 doubles;
+ *   cstimhilo    space for deg+1 doubles;
+ *   cstimlolo    space for deg+1 doubles;
+ *   cffrehihi    space for nbr arrays of deg+1 doubles;
+ *   cffrelohi    space for nbr arrays of deg+1 doubles;
+ *   cffrehilo    space for nbr arrays of deg+1 doubles;
+ *   cffrelolo    space for nbr arrays of deg+1 doubles;
+ *   cffimhihi    space for nbr arrays of deg+1 doubles;
+ *   cffimlohi    space for nbr arrays of deg+1 doubles;
+ *   cffimhilo    space for nbr arrays of deg+1 doubles;
+ *   cffimlolo    space for nbr arrays of deg+1 doubles;
+ *   verbose      if true, then output is written.
+ *
+ * ON RETURN :
+ *   nvr          nvr[k] has the number of variables in monomial k;
+ *   idx          idx[k] holds nvr[k] indices to variables in monomial k;
+ *   exp          exp[k] holds nvr[k] exponents of variables in monomial k;
+ *   inputrehihi  has the highest doubles of the real parts 
+ *                of dim input series of degree deg;
+ *   inputrelohi  has the second highest doubles of the real parts 
+ *                of dim input series of degree deg;
+ *   inputrehilo  has the second lowest doubles of the real parts 
+ *                of dim input series of degree deg;
+ *   inputrelolo  has the lowest doubles of the real parts
+ *                of dim input series of degree deg;
+ *   inputimhihi  has the highest doubles of the imaginary parts 
+ *                of dim input series of degree deg;
+ *   inputimlohi  has the second highest doubles of the imaginary parts 
+ *                of dim input series of degree deg;
+ *   inputimhilo  has the second lowest doubles of the imaginary parts
+ *                of dim input series of degree deg;
+ *   inputimlolo  has the lowest doubles of the imaginary parts
+ *                of dim input series of degree deg;
+ *   cstrehihi    has the highest doubles of the real parts
+ *                of the constant series;
+ *   cstrelohi    has the second highest doubles of the real parts
+ *                of the constant series;
+ *   cstrehilo    has the second lowest doubles of the real parts
+ *                of the constant series;
+ *   cstrelolo    has the lowest doubles of the real parts
+ *                of the constant series;
+ *   cstimhihi    has the highest doubles of the imaginary parts
+ *                of the constant series;
+ *   cstimlohi    has the second highest doubles of the imaginary parts
+ *                of the constant series;
+ *   cstimhilo    has the second lowest doubles of the imaginary parts
+ *                of the constant series;
+ *   cstimlolo    has the lowest doubles of the imaginary parts
+ *                of the constant series;
+ *   cffrehihi    cffrehihi[k] has the highest doubles of the real parts
+ *                of the coefficient series of monomial k;
+ *   cffrelohi    cffrelohi[k] has the second highest doubles of the
+ *                real parts of the coefficient series of monomial k;
+ *   cffrehilo    cffrehilo[k] has the second lowest doubles of the real parts
+ *                of the coefficient series of monomial k;
+ *   cffrelolo    cffrelolo[k] has the lowest doubles of the real parts
+ *                of the coefficient series of monomial k;
+ *   cffimhihi    cffimhihi[k] has the highest doubles of the imaginary parts
+ *                of the coefficient series of monomial k;
+ *   cffimlohi    cffimlohi[k] has the second highest doubles of the
+ *                imaginary parts of the coefficient series of monomial k;
+ *   cffimhilo    cffimhilo[k] has the second lowest doubles of the
+ *                imaginary parts of the coefficient series of monomial k;
+ *   cffimlolo    cffimlo[k] has the lowest doubles of the imaginary parts
+ *                of the coefficient series of monomial k. */
+
 double dbl4_error_sum
  ( int dim, int deg,
    double **results1hihi_h, double **results1lohi_h, 

@@ -142,6 +142,255 @@ void CPU_dbl4_poly_speel
    }
 }
 
+void CPU_cmplx4_poly_speel
+ ( int dim, int nbr, int deg, int *nvr, int **idx, 
+   double **cffrehihi, double **cffrelohi, 
+   double **cffrehilo, double **cffrelolo,
+   double **cffimhihi, double **cffimlohi,
+   double **cffimhilo, double **cffimlolo,
+   double **inputrehihi, double **inputrelohi,
+   double **inputrehilo, double **inputrelolo,
+   double **inputimhihi, double **inputimlohi,
+   double **inputimhilo, double **inputimlolo,
+   double **outputrehihi, double **outputrelohi,
+   double **outputrehilo, double **outputrelolo,
+   double **outputimhihi, double **outputimlohi,
+   double **outputimhilo, double **outputimlolo,
+   double **forwardrehihi, double **forwardrelohi,
+   double **forwardrehilo, double **forwardrelolo,
+   double **forwardimhihi, double **forwardimlohi,
+   double **forwardimhilo, double **forwardimlolo,
+   double **backwardrehihi, double **backwardrelohi,
+   double **backwardrehilo, double **backwardrelolo,
+   double **backwardimhihi, double **backwardimlohi,
+   double **backwardimhilo, double **backwardimlolo,
+   double **crossrehihi, double **crossrelohi,
+   double **crossrehilo, double **crossrelolo,
+   double **crossimhihi, double **crossimlohi,
+   double **crossimhilo, double **crossimlolo, bool verbose )
+{
+   int ix1,ix2;
+
+   for(int i=0; i<nbr; i++)
+   {
+      if(nvr[i] == 1)
+      {
+         ix1 = idx[i][0];
+         CPU_cmplx4_product(deg,
+            inputrehihi[ix1],inputrelohi[ix1],
+            inputrehilo[ix1],inputrelolo[ix1],
+            inputimhihi[ix1],inputimlohi[ix1],
+            inputimhilo[ix1],inputimlolo[ix1],
+            cffrehihi[i],cffrelohi[i],cffrehilo[i],cffrelolo[i],
+            cffimhihi[i],cffimlohi[i],cffimhilo[i],cffimlolo[i],
+            forwardrehihi[0],forwardrelohi[0],
+            forwardrehilo[0],forwardrelolo[0],
+            forwardimhihi[0],forwardimlohi[0],
+            forwardimhilo[0],forwardimlolo[0]);
+
+         if(verbose) cout << "monomial " << i << " : ";
+         if(verbose) cout << "input[" << ix1 << "] * cff to f[0]" << endl;
+         for(int j=0; j<=deg; j++)
+         {
+            // output[dim][j] += forward[0][j];
+            qdf_inc
+               (&outputrehihi[dim][j],&outputrelohi[dim][j],
+                &outputrehilo[dim][j],&outputrelolo[dim][j],
+                forwardrehihi[0][j],forwardrelohi[0][j],
+                forwardrehilo[0][j],forwardrelolo[0][j]);
+            qdf_inc
+               (&outputimhihi[dim][j],&outputimlohi[dim][j],
+                &outputimhilo[dim][j],&outputimlolo[dim][j],
+                forwardimhihi[0][j],forwardimlohi[0][j],
+                forwardimhilo[0][j],forwardimlolo[0][j]);
+            // output[ix1][j] += cff[i][j];
+            qdf_inc
+               (&outputrehihi[ix1][j],&outputrelohi[ix1][j],
+                &outputrehilo[ix1][j],&outputrelolo[ix1][j],
+                cffrehihi[i][j],cffrelohi[i][j],
+                cffrehilo[i][j],cffrelolo[i][j]);
+            qdf_inc
+               (&outputimhihi[ix1][j],&outputimlohi[ix1][j],
+                &outputimhilo[ix1][j],&outputimlolo[ix1][j],
+                cffimhihi[i][j],cffimlohi[i][j],
+                cffimhilo[i][j],cffimlolo[i][j]);
+         }
+      }
+      else if(nvr[i] == 2)
+      {
+         ix1 = idx[i][0]; ix2 = idx[i][1];
+
+         CPU_cmplx4_product(deg,
+            cffrehihi[i],cffrelohi[i],cffrehilo[i],cffrelolo[i],
+            cffimhihi[i],cffimlohi[i],cffimhilo[i],cffimlolo[i],
+            inputrehihi[ix1],inputrelohi[ix1],
+            inputrehilo[ix1],inputrelolo[ix1],
+            inputimhihi[ix1],inputimlohi[ix1],
+            inputimhilo[ix1],inputimlolo[ix1],
+            forwardrehihi[0],forwardrelohi[0],
+            forwardrehilo[0],forwardrelolo[0],
+            forwardimhihi[0],forwardimlohi[0],
+            forwardimhilo[0],forwardimlolo[0]);
+
+         for(int j=0; j<=deg; j++) // output[ix2][j] += forward[0][j];
+         {
+            qdf_inc
+               (&outputrehihi[ix2][j],&outputrelohi[ix2][j],
+                &outputrehilo[ix2][j],&outputrelolo[ix2][j],
+                forwardrehihi[0][j],forwardrelohi[0][j],
+                forwardrehilo[0][j],forwardrelolo[0][j]);
+            qdf_inc
+               (&outputimhihi[ix2][j],&outputimlohi[ix2][j],
+                &outputimhilo[ix2][j],&outputimlolo[ix2][j],
+                forwardimhihi[0][j],forwardimlohi[0][j],
+                forwardimhilo[0][j],forwardimlolo[0][j]);
+         }
+         if(verbose) cout << "monomial " << i << " : ";
+         if(verbose) cout << "cff * "
+                          << "input[" << ix1 << "] to f[0]" << endl;
+
+         CPU_cmplx4_product(deg,
+            cffrehihi[i],cffrelohi[i],cffrehilo[i],cffrelolo[i],
+            cffimhihi[i],cffimlohi[i],cffimhilo[i],cffimlolo[i],
+            inputrehihi[ix2],inputrelohi[ix2],
+            inputrehilo[ix2],inputrelolo[ix2],
+            inputimhihi[ix2],inputimlohi[ix2],
+            inputimhilo[ix2],inputimlolo[ix2],
+            backwardrehihi[0],backwardrelohi[0],
+            backwardrehilo[0],backwardrelolo[0],
+            backwardimhihi[0],backwardimlohi[0],
+            backwardimhilo[0],backwardimlolo[0]);
+
+         if(verbose) cout << "monomial " << i << " : ";
+         if(verbose) cout << "cff * "
+                          << "input[" << ix2 << "] to b[0]" << endl;
+         for(int j=0; j<=deg; j++) // output[ix1][j] += backward[0][j];
+         {
+            qdf_inc
+               (&outputrehihi[ix1][j],&outputrelohi[ix1][j],
+                &outputrehilo[ix1][j],&outputrelolo[ix1][j],
+                backwardrehihi[0][j],backwardrelohi[0][j],
+                backwardrehilo[0][j],backwardrelolo[0][j]);
+            qdf_inc
+               (&outputimhihi[ix1][j],&outputimlohi[ix1][j],
+                &outputimhilo[ix1][j],&outputimlolo[ix1][j],
+                backwardimhihi[0][j],backwardimlohi[0][j],
+                backwardimhilo[0][j],backwardimlolo[0][j]);
+         }
+         CPU_cmplx4_product(deg,
+            forwardrehihi[0],forwardrelohi[0],
+            forwardrehilo[0],forwardrelolo[0],
+            forwardimhihi[0],forwardimlohi[0],
+            forwardimhilo[0],forwardimlolo[0],
+            inputrehihi[ix2],inputrelohi[ix2],
+            inputrehilo[ix2],inputrelolo[ix2],
+            inputimhihi[ix2],inputimlohi[ix2],
+            inputimhilo[ix2],inputimlolo[ix2],
+            forwardrehihi[1],forwardrelohi[1],
+            forwardrehilo[1],forwardrelolo[1],
+            forwardimhihi[1],forwardimlohi[1],
+            forwardimhilo[1],forwardimlolo[1]);
+
+         if(verbose) cout << "monomial " << i << " : ";
+         if(verbose) cout << "f[0] * "
+                          << "input[" << ix2 << "] to f[1]" << endl;
+         for(int j=0; j<=deg; j++) // output[dim][j] += forward[1][j];
+         {
+            qdf_inc
+               (&outputrehihi[dim][j],&outputrelohi[dim][j],
+                &outputrehilo[dim][j],&outputrelolo[dim][j],
+                forwardrehihi[1][j],forwardrelohi[1][j],
+                forwardrehilo[1][j],forwardrelolo[1][j]);
+            qdf_inc
+               (&outputimhihi[dim][j],&outputimlohi[dim][j],
+                &outputimhilo[dim][j],&outputimlolo[dim][j],
+                forwardimhihi[1][j],forwardimlohi[1][j],
+                forwardimhilo[1][j],forwardimlolo[1][j]);
+         }
+      }
+      else if(nvr[i] > 2)
+      {
+         CPU_cmplx4_speel
+            (nvr[i],deg,idx[i],
+             cffrehihi[i],cffrelohi[i],cffimhilo[i],cffrelolo[i],
+             cffimhihi[i],cffimlohi[i],cffimhilo[i],cffimlolo[i],
+             inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+             inputimhihi,inputimlohi,inputimhilo,inputimlolo,
+             forwardrehihi,forwardrelohi,forwardrehilo,forwardrelolo,
+             forwardimhihi,forwardimlohi,forwardimhilo,forwardimlolo,
+             backwardrehihi,backwardrelohi,backwardrehilo,backwardrelolo,
+             backwardimhihi,backwardimlohi,backwardimhilo,backwardimlolo,
+             crossrehihi,crossrelohi,crossrehilo,crossrelolo,
+             crossimhihi,crossimlohi,crossimhilo,crossimlolo);
+
+         ix1 = nvr[i]-1;               // update the value of the polynomial
+         for(int j=0; j<=deg; j++) // output[dim][j] += forward[ix1][j];
+         {
+            qdf_inc
+               (&outputrehihi[dim][j],&outputrelohi[dim][j],
+                &outputrehilo[dim][j],&outputrelolo[dim][j],
+                forwardrehihi[ix1][j],forwardrelohi[ix1][j],
+                forwardrehilo[ix1][j],forwardrelolo[ix1][j]);
+            qdf_inc
+               (&outputimhihi[dim][j],&outputimlohi[dim][j],
+                &outputimhilo[dim][j],&outputimlolo[dim][j],
+                forwardimhihi[ix1][j],forwardimlohi[ix1][j],
+                forwardimhilo[ix1][j],forwardimlolo[ix1][j]);
+         }
+         ix2 = idx[i][ix1];             // derivative with respect to x[n-1]
+         ix1 = nvr[i]-2;
+
+         for(int j=0; j<=deg; j++) // output[ix2][j] += forward[ix1][j];
+         {
+            qdf_inc
+               (&outputrehihi[ix2][j],&outputrelohi[ix2][j],
+                &outputrehilo[ix2][j],&outputrelolo[ix2][j],
+                forwardrehihi[ix1][j],forwardrelohi[ix1][j],
+                forwardrehilo[ix1][j],forwardrelolo[ix1][j]);
+            qdf_inc
+               (&outputimhihi[ix2][j],&outputimlohi[ix2][j],
+                &outputimhilo[ix2][j],&outputimlolo[ix2][j],
+                forwardimhihi[ix1][j],forwardimlohi[ix1][j],
+                forwardimhilo[ix1][j],forwardimlolo[ix1][j]);
+         }
+         ix2 = idx[i][0];                 // derivative with respect to x[0]
+         ix1 = nvr[i]-3;
+
+         for(int j=0; j<=deg; j++) // output[ix2][j] += backward[ix1][j];
+         {
+            qdf_inc
+               (&outputrehihi[ix2][j],&outputrelohi[ix2][j],
+                &outputrehilo[ix2][j],&outputrelolo[ix2][j],
+                backwardrehihi[ix1][j],backwardrelohi[ix1][j],
+                backwardrehilo[ix1][j],backwardrelolo[ix1][j]);
+            qdf_inc
+               (&outputimhihi[ix2][j],&outputimlohi[ix2][j],
+                &outputimhilo[ix2][j],&outputimlolo[ix2][j],
+                backwardimhihi[ix1][j],backwardimlohi[ix1][j],
+                backwardimhilo[ix1][j],backwardimlolo[ix1][j]);
+         }
+         ix1 = nvr[i]-1;                  // derivative with respect to x[k]
+         for(int k=1; k<ix1; k++)
+         { 
+            ix2 = idx[i][k];
+            for(int j=0; j<=deg; j++) // output[ix2][j] += cross[k-1][j];
+            {
+               qdf_inc
+                  (&outputrehihi[ix2][j],&outputrelohi[ix2][j],
+                   &outputrehilo[ix2][j],&outputrelolo[ix2][j],
+                   crossrehihi[k-1][j],crossrelohi[k-1][j],
+                   crossrehilo[k-1][j],crossrelolo[k-1][j]);
+               qdf_inc
+                  (&outputimhihi[ix2][j],&outputimlohi[ix2][j],
+                   &outputimhilo[ix2][j],&outputimlolo[ix2][j],
+                   crossimhihi[k-1][j],crossimlohi[k-1][j],
+                   crossimhilo[k-1][j],crossimlolo[k-1][j]);
+            }
+         }
+      }
+   }
+}
+
 void CPU_dbl4_poly_evaldiff
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double *csthihi, double *cstlohi, double *csthilo, double *cstlolo,
@@ -232,6 +481,160 @@ void CPU_dbl4_poly_evaldiff
    free(forwardlohi); free(backwardlohi); free(crosslohi);
    free(forwardhilo); free(backwardhilo); free(crosshilo);
    free(forwardlolo); free(backwardlolo); free(crosslolo);
+}
+
+void CPU_cmplx4_poly_evaldiff
+ ( int dim, int nbr, int deg, int *nvr, int **idx, 
+   double *cstrehihi, double *cstrelohi,
+   double *cstrehilo, double *cstrelolo,
+   double *cstimhihi, double *cstimlohi,
+   double *cstimhilo, double *cstimlolo,
+   double **cffrehihi, double **cffrelohi,
+   double **cffrehilo, double **cffrelolo,
+   double **cffimhihi, double **cffimlohi,
+   double **cffimhilo, double **cffimlolo,
+   double **inputrehihi, double **inputrelohi,
+   double **inputrehilo, double **inputrelolo, 
+   double **inputimhihi, double **inputimlohi,
+   double **inputimhilo, double **inputimlolo, 
+   double **outputrehihi, double **outputrelohi,
+   double **outputrehilo, double **outputrelolo,
+   double **outputimhihi, double **outputimlohi,
+   double **outputimhilo, double **outputimlolo,
+   double *elapsedsec, bool verbose )
+{
+   double **forwardrehihi = new double*[dim];
+   double **forwardrelohi = new double*[dim];
+   double **forwardrehilo = new double*[dim];
+   double **forwardrelolo = new double*[dim];
+   double **forwardimhihi = new double*[dim];
+   double **forwardimlohi = new double*[dim];
+   double **forwardimhilo = new double*[dim];
+   double **forwardimlolo = new double*[dim];
+   double **backwardrehihi = new double*[dim-1]; // in case dim = 2
+   double **backwardrelohi = new double*[dim-1];
+   double **backwardrehilo = new double*[dim-1];
+   double **backwardrelolo = new double*[dim-1];
+   double **backwardimhihi = new double*[dim-1];
+   double **backwardimlohi = new double*[dim-1];
+   double **backwardimhilo = new double*[dim-1];
+   double **backwardimlolo = new double*[dim-1];
+   double **crossrehihi = new double*[dim-1];    // in case dim = 2
+   double **crossrelohi = new double*[dim-1];
+   double **crossrehilo = new double*[dim-1];
+   double **crossrelolo = new double*[dim-1];
+   double **crossimhihi = new double*[dim-1];
+   double **crossimlohi = new double*[dim-1];
+   double **crossimhilo = new double*[dim-1];
+   double **crossimlolo = new double*[dim-1];
+
+   for(int i=0; i<dim-1; i++)
+   {
+      forwardrehihi[i] = new double[deg+1];
+      forwardrelohi[i] = new double[deg+1];
+      forwardrehilo[i] = new double[deg+1];
+      forwardrelolo[i] = new double[deg+1];
+      forwardimhihi[i] = new double[deg+1];
+      forwardimlohi[i] = new double[deg+1];
+      forwardimhilo[i] = new double[deg+1];
+      forwardimlolo[i] = new double[deg+1];
+      backwardrehihi[i] = new double[deg+1];
+      backwardrelohi[i] = new double[deg+1];
+      backwardrehilo[i] = new double[deg+1];
+      backwardrelolo[i] = new double[deg+1];
+      backwardimhihi[i] = new double[deg+1];
+      backwardimlohi[i] = new double[deg+1];
+      backwardimhilo[i] = new double[deg+1];
+      backwardimlolo[i] = new double[deg+1];
+      crossrehihi[i] = new double[deg+1];
+      crossrelohi[i] = new double[deg+1];
+      crossrehilo[i] = new double[deg+1];
+      crossrelolo[i] = new double[deg+1];
+      crossimhihi[i] = new double[deg+1];
+      crossimlohi[i] = new double[deg+1];
+      crossimhilo[i] = new double[deg+1];
+      crossimlolo[i] = new double[deg+1];
+   }
+   forwardrehihi[dim-1] = new double[deg+1];
+   forwardrelohi[dim-1] = new double[deg+1];
+   forwardrehilo[dim-1] = new double[deg+1];
+   forwardrelolo[dim-1] = new double[deg+1];
+   forwardimhihi[dim-1] = new double[deg+1];
+   forwardimlohi[dim-1] = new double[deg+1];
+   forwardimhilo[dim-1] = new double[deg+1];
+   forwardimlolo[dim-1] = new double[deg+1];
+
+   for(int i=0; i<=deg; i++)
+   {
+      outputrehihi[dim][i] = cstrehihi[i];
+      outputrelohi[dim][i] = cstrelohi[i];
+      outputrehilo[dim][i] = cstrehilo[i];
+      outputrelolo[dim][i] = cstrelolo[i];
+      outputimhihi[dim][i] = cstimhihi[i];
+      outputimlohi[dim][i] = cstimlohi[i];
+      outputimhilo[dim][i] = cstimhilo[i];
+      outputimlolo[dim][i] = cstimlolo[i];
+   }
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<=deg; j++)
+      {
+         outputrehihi[i][j] = 0.0;
+         outputrelohi[i][j] = 0.0;
+         outputrehilo[i][j] = 0.0;
+         outputrelolo[i][j] = 0.0;
+         outputimhihi[i][j] = 0.0;
+         outputimlohi[i][j] = 0.0;
+         outputimhilo[i][j] = 0.0;
+         outputimlolo[i][j] = 0.0;
+      }
+
+   clock_t start = clock();
+   CPU_cmplx4_poly_speel
+      (dim,nbr,deg,nvr,idx,
+       cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+       cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+       inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+       inputimhihi,inputimlohi,inputimhilo,inputimlolo,
+       outputrehihi,outputrelohi,outputrehilo,outputrelolo,
+       outputimhihi,outputimlohi,outputimhilo,outputimlolo,
+       forwardrehihi,forwardrelohi,forwardrehilo,forwardrelolo,
+       forwardimhihi,forwardimlohi,forwardimhilo,forwardimlolo,
+       backwardrehihi,backwardrelohi,backwardrehilo,backwardrelolo,
+       backwardimhihi,backwardimlohi,backwardimhilo,backwardimlolo,
+       crossrehihi,crossrelohi,crossrehilo,crossrelolo,
+       crossimhihi,crossimlohi,crossimhilo,crossimlolo,verbose);
+   clock_t end = clock();
+   *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
+
+   if(verbose)
+   {
+      cout << fixed << setprecision(3);
+      cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+           << *elapsedsec << " seconds." << endl;
+   }
+   for(int i=0; i<dim-1; i++)
+   {
+      free(forwardrehihi[i]); free(backwardrehihi[i]); free(crossrehihi[i]);
+      free(forwardrelohi[i]); free(backwardrelohi[i]); free(crossrelohi[i]);
+      free(forwardrehilo[i]); free(backwardrehilo[i]); free(crossrehilo[i]);
+      free(forwardrelolo[i]); free(backwardrelolo[i]); free(crossrelolo[i]);
+      free(forwardimhihi[i]); free(backwardimhihi[i]); free(crossimhihi[i]);
+      free(forwardimlohi[i]); free(backwardimlohi[i]); free(crossimlohi[i]);
+      free(forwardimhilo[i]); free(backwardimhilo[i]); free(crossimhilo[i]);
+      free(forwardimlolo[i]); free(backwardimlolo[i]); free(crossimlolo[i]);
+   }
+   free(forwardrehihi[dim-1]); free(forwardrelohi[dim-1]);
+   free(forwardrehilo[dim-1]); free(forwardrelolo[dim-1]);
+   free(forwardimhihi[dim-1]); free(forwardimlohi[dim-1]);
+   free(forwardimhilo[dim-1]); free(forwardimlolo[dim-1]);
+   free(forwardrehihi); free(backwardrehihi); free(crossrehihi);
+   free(forwardrelohi); free(backwardrelohi); free(crossrelohi);
+   free(forwardrehilo); free(backwardrehilo); free(crossrehilo);
+   free(forwardrelolo); free(backwardrelolo); free(crossrelolo);
+   free(forwardimhihi); free(backwardimhihi); free(crossimhihi);
+   free(forwardimlohi); free(backwardimlohi); free(crossimlohi);
+   free(forwardimhilo); free(backwardimhilo); free(crossimhilo);
+   free(forwardimlolo); free(backwardimlolo); free(crossimlolo);
 }
 
 void CPU_dbl4_conv_job

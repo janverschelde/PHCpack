@@ -1,4 +1,5 @@
 Thu 28 Jan 2021 : edited {dbl2,dbl3}_polynomials_host.h.
+  Extended dbl4_polynomials_{host,testers} with functions for complex data.
 
 Wed 27 Jan 2021 : to dbl3_polynomials_kernels, added the definition of the
   kernels for complex data in triple double precision.
