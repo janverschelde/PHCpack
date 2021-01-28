@@ -101,9 +101,9 @@ void CPU_cmplx2_poly_speel
  *                parts of the coefficient series of monomial k;
  *   cffrelo      cffrelo[k] has the deg+1 low doubles of the real
  *                parts of the coefficient series of monomial k;
- *   cffimhi      cffrehi[k] has the deg+1 high doubles of the imaginary
+ *   cffimhi      cffimhi[k] has the deg+1 high doubles of the imaginary
  *                parts of the coefficient series of monomial k;
- *   cffimlo      cffrelo[k] has the deg+1 low doubles of the imaginary
+ *   cffimlo      cffimlo[k] has the deg+1 low doubles of the imaginary
  *                parts of the coefficient series of monomial k;
  *   inputrehi    has the high doubles of the real parts
  *                of the coefficients of the power series
@@ -133,10 +133,10 @@ void CPU_cmplx2_poly_speel
  *                forwardrelo[k] has space for deg+1 doubles;
  *   forwardimhi  has space for the high doubles of the imaginary parts
  *                of all nvr forward products,
- *                forwardrehi[k] has space for deg+1 doubles;
+ *                forwardimhi[k] has space for deg+1 doubles;
  *   forwardimlo  has space for the low doubles of the imaginary parts
  *                of all nvr forward products,
- *                forwardrelo[k] has space for deg+1 doubles;
+ *                forwardimlo[k] has space for deg+1 doubles;
  *   backwardrehi has space for the high doubles of the real parts 
  *                of all nvr-2 backward products;
  *                backwardrehi[k] has space for deg+1 doubles;
@@ -157,10 +157,10 @@ void CPU_cmplx2_poly_speel
  *                crossrelo[k] has space for deg+1 doubles;
  *   crossimhi    has space for the high doubles of the imaginary parts
  *                of all nvr-2 cross products;
- *                crossrehi[k] has space for deg+1 doubles;
+ *                crossimhi[k] has space for deg+1 doubles;
  *   crossimlo    has space for the low doubles of the imaginary parts
  *                of all nvr-2 cross products;
- *                crossrelo[k] has space for deg+1 doubles;
+ *                crossimlo[k] has space for deg+1 doubles;
  *   verbose      if true, writes one line to screen for every convolution.
  *
  * ON RETURN :
@@ -256,9 +256,9 @@ void CPU_cmplx2_poly_evaldiff
  *                parts of the coefficient series of monomial k;
  *   cffrelo      cffrelo[k] has the deg+1 low doubles of the real
  *                parts of the coefficient series of monomial k;
- *   cffimhi      cffrehi[k] has the deg+1 high doubles of the imaginary
+ *   cffimhi      cffimhi[k] has the deg+1 high doubles of the imaginary
  *                parts of the coefficient series of monomial k;
- *   cffimlo      cffrelo[k] has the deg+1 low doubles of the imaginary
+ *   cffimlo      cffimlo[k] has the deg+1 low doubles of the imaginary
  *                parts of the coefficient series of monomial k;
  *   inputrehi    has the high doubles of the real parts
  *                of the coefficients of the power series
@@ -363,9 +363,9 @@ void CPU_cmplx2_conv_job
  *                parts of the coefficient series of monomial k;
  *   cffrelo      cffrelo[k] has the deg+1 low doubles of the real
  *                parts of the coefficient series of monomial k;
- *   cffimhi      cffrehi[k] has the deg+1 high doubles of the imaginary
+ *   cffimhi      cffimhi[k] has the deg+1 high doubles of the imaginary
  *                parts of the coefficient series of monomial k;
- *   cffimlo      cffrelo[k] has the deg+1 low doubles of the imaginary
+ *   cffimlo      cffimlo[k] has the deg+1 low doubles of the imaginary
  *                parts of the coefficient series of monomial k;
  *   inputrehi    has the high doubles of the real parts
  *                of the coefficients of the power series
@@ -636,9 +636,9 @@ void CPU_cmplx2_poly_updates
  *                parts of the coefficient series of monomial k;
  *   cffrelo      cffrelo[k] has the deg+1 low doubles of the real
  *                parts of the coefficient series of monomial k;
- *   cffimhi      cffrehi[k] has the deg+1 high doubles of the imaginary
+ *   cffimhi      cffimhi[k] has the deg+1 high doubles of the imaginary
  *                parts of the coefficient series of monomial k;
- *   cffimlo      cffrelo[k] has the deg+1 low doubles of the imaginary
+ *   cffimlo      cffimlo[k] has the deg+1 low doubles of the imaginary
  *                parts of the coefficient series of monomial k;
  *   forwardrehi  are all computed high doubles of the real parts
  *                of forward products;
@@ -756,9 +756,9 @@ void CPU_cmplx2_poly_addjobs
  *                parts of the coefficient series of monomial k;
  *   cffrelo      cffrelo[k] has the deg+1 low doubles of the real
  *                parts of the coefficient series of monomial k;
- *   cffimhi      cffrehi[k] has the deg+1 high doubles of the imaginary
+ *   cffimhi      cffimhi[k] has the deg+1 high doubles of the imaginary
  *                parts of the coefficient series of monomial k;
- *   cffimlo      cffrelo[k] has the deg+1 low doubles of the imaginary
+ *   cffimlo      cffimlo[k] has the deg+1 low doubles of the imaginary
  *                parts of the coefficient series of monomial k;
  *   forwardrehi  are all computed high doubles of the real parts
  *                of forward products;
@@ -880,9 +880,9 @@ void CPU_cmplx2_poly_evaldiffjobs
  *                parts of the coefficient series of monomial k;
  *   cffrelo      cffrelo[k] has the deg+1 low doubles of the real
  *                parts of the coefficient series of monomial k;
- *   cffimhi      cffrehi[k] has the deg+1 high doubles of the imaginary
+ *   cffimhi      cffimhi[k] has the deg+1 high doubles of the imaginary
  *                parts of the coefficient series of monomial k;
- *   cffimlo      cffrelo[k] has the deg+1 low doubles of the imaginary
+ *   cffimlo      cffimlo[k] has the deg+1 low doubles of the imaginary
  *                parts of the coefficient series of monomial k;
  *   inputrehi    has the high doubles of the real parts
  *                of the coefficients of the power series
