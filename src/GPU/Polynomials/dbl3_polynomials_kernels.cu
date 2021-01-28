@@ -80,6 +80,131 @@ __global__ void dbl3_padded_convjobs
    datalo[idx3] = zvlo[tdx];
 }
 
+__global__ void cmplx3_padded_convjobs
+ ( double *datarehi, double *dataremi, double *datarelo,
+   double *dataimhi, double *dataimmi, double *dataimlo,
+   int *in1idx, int *in2idx, int *outidx, int dim )
+{
+   const int bdx = blockIdx.x;           // index to the convolution job
+   const int tdx = threadIdx.x;          // index to the output of the job
+   const int idx1 = in1idx[bdx] + tdx;
+   const int idx2 = in2idx[bdx] + tdx;
+   const int idx3 = outidx[bdx] + tdx;
+
+   __shared__ double xvrehi[td_shmemsize];
+   __shared__ double xvremi[td_shmemsize];
+   __shared__ double xvrelo[td_shmemsize];
+   __shared__ double xvimhi[td_shmemsize];
+   __shared__ double xvimmi[td_shmemsize];
+   __shared__ double xvimlo[td_shmemsize];
+   __shared__ double yvrehi[2*td_shmemsize];
+   __shared__ double yvremi[2*td_shmemsize];
+   __shared__ double yvrelo[2*td_shmemsize];
+   __shared__ double yvimhi[2*td_shmemsize];
+   __shared__ double yvimmi[2*td_shmemsize];
+   __shared__ double yvimlo[2*td_shmemsize];
+   __shared__ double zvrehi[td_shmemsize];
+   __shared__ double zvremi[td_shmemsize];
+   __shared__ double zvrelo[td_shmemsize];
+   __shared__ double zvimhi[td_shmemsize];
+   __shared__ double zvimmi[td_shmemsize];
+   __shared__ double zvimlo[td_shmemsize];
+
+   double prodhi,prodmi,prodlo;
+   int ydx = dim + tdx;
+
+   xvrehi[tdx] = datarehi[idx1];  // loading first input
+   xvremi[tdx] = dataremi[idx1]; 
+   xvrelo[tdx] = datarelo[idx1]; 
+   xvimhi[tdx] = dataimhi[idx1];
+   xvimmi[tdx] = dataimmi[idx1];
+   xvimlo[tdx] = dataimlo[idx1]; 
+   yvrehi[tdx] = 0.0;           // padded with zeros
+   yvremi[tdx] = 0.0;
+   yvrelo[tdx] = 0.0;
+   yvimhi[tdx] = 0.0;
+   yvimmi[tdx] = 0.0;
+   yvimlo[tdx] = 0.0;
+   yvrehi[ydx] = datarehi[idx2];  // loading second input
+   yvremi[ydx] = dataremi[idx2];
+   yvrelo[ydx] = datarelo[idx2];
+   yvimhi[ydx] = dataimhi[idx2];
+   yvimmi[ydx] = dataimmi[idx2];
+   yvimlo[ydx] = dataimlo[idx2];
+
+   __syncthreads();
+
+   // zv[tdx] = xv[0]*yv[tdx];
+   tdg_mul(xvrehi[0],xvremi[0],xvrelo[0],
+           yvrehi[ydx],yvremi[ydx],yvrelo[ydx],
+           &zvrehi[tdx],&zvremi[tdx],&zvrelo[tdx]);
+   __syncthreads();
+   tdg_mul(xvimhi[0],xvimmi[0],xvimlo[0],
+           yvimhi[ydx],yvimmi[ydx],yvimlo[ydx],
+           &prodhi,&prodmi,&prodlo);
+   __syncthreads();
+   tdg_minus(&prodhi,&prodmi,&prodlo);
+   tdg_inc(&zvrehi[tdx],&zvremi[tdx],&zvrelo[tdx],
+           prodhi,prodmi,prodlo);
+   __syncthreads();
+
+   tdg_mul(xvrehi[0],xvremi[0],xvrelo[0],
+           yvimhi[ydx],yvimmi[ydx],yvimlo[ydx],
+           &zvimhi[tdx],&zvimmi[tdx],&zvimlo[tdx]);
+   __syncthreads();
+   tdg_mul(xvimhi[0],xvimmi[0],xvimlo[0],
+           yvrehi[ydx],yvremi[ydx],yvrelo[ydx],
+           &prodhi,&prodmi,&prodlo);
+   __syncthreads();
+   tdg_inc(&zvimhi[tdx],&zvimmi[tdx],&zvimlo[tdx],
+           prodhi,prodmi,prodlo);
+   __syncthreads();
+
+   for(int i=1; i<dim; i++) // zv[tdx] = zv[tdx] + xv[i]*yv[dim+tdx-i];
+   {
+      ydx = dim + tdx - i;
+
+      tdg_mul(xvrehi[i],xvremi[i],xvrelo[i],
+              yvrehi[ydx],yvremi[ydx],yvrelo[ydx],
+              &prodhi,&prodmi,&prodlo);
+      __syncthreads();
+      tdg_inc(&zvrehi[tdx],&zvremi[tdx],&zvrelo[tdx],
+              prodhi,prodmi,prodlo);
+      __syncthreads();
+      tdg_mul(xvimhi[i],xvimmi[i],xvimlo[i],
+              yvimhi[ydx],yvimmi[ydx],yvimlo[ydx],
+              &prodhi,&prodmi,&prodlo);
+      __syncthreads();
+      tdg_minus(&prodhi,&prodmi,&prodlo);
+      tdg_inc(&zvrehi[tdx],&zvremi[tdx],&zvrelo[tdx],
+              prodhi,prodmi,prodlo);
+      __syncthreads();
+
+      tdg_mul(xvrehi[i],xvremi[i],xvrelo[i],
+              yvimhi[ydx],yvimmi[ydx],yvimlo[ydx],
+              &prodhi,&prodmi,&prodlo);
+      __syncthreads();
+      tdg_inc(&zvimhi[tdx],&zvimmi[tdx],&zvimlo[tdx],
+              prodhi,prodmi,prodlo);
+      __syncthreads();
+      tdg_mul(xvimhi[i],xvimmi[i],xvimlo[i],
+              yvrehi[ydx],yvremi[ydx],yvrelo[ydx],
+              &prodhi,&prodmi,&prodlo);
+      __syncthreads();
+      tdg_inc(&zvimhi[tdx],&zvimmi[tdx],&zvimlo[tdx],
+              prodhi,prodmi,prodlo);
+      __syncthreads();
+   }
+   __syncthreads();
+
+   datarehi[idx3] = zvrehi[tdx]; // storing the output
+   dataremi[idx3] = zvremi[tdx];
+   datarelo[idx3] = zvrelo[tdx];
+   dataimhi[idx3] = zvimhi[tdx]; 
+   dataimmi[idx3] = zvimmi[tdx]; 
+   dataimlo[idx3] = zvimlo[tdx];
+}
+
 __global__ void dbl3_update_addjobs
  ( double *datahi, double *datami, double *datalo,
    int *in1idx, int *in2idx, int *outidx, int dim )
@@ -119,6 +244,69 @@ __global__ void dbl3_update_addjobs
    datahi[idx3] = zvhi[tdx]; // storing the output
    datami[idx3] = zvmi[tdx];
    datalo[idx3] = zvlo[tdx];
+}
+
+__global__ void cmplx3_update_addjobs
+ ( double *datarehi, double *dataremi, double *datarelo,
+   double *dataimhi, double *dataimmi, double *dataimlo,
+   int *in1idx, int *in2idx, int *outidx, int dim )
+{
+   const int bdx = blockIdx.x;           // index to the addition job
+   const int tdx = threadIdx.x;          // index to the output of the job
+   const int idx1 = in1idx[bdx] + tdx;
+   const int idx2 = in2idx[bdx] + tdx;
+   const int idx3 = outidx[bdx] + tdx;
+
+   __shared__ double xvrehi[td_shmemsize];
+   __shared__ double xvremi[td_shmemsize];
+   __shared__ double xvrelo[td_shmemsize];
+   __shared__ double xvimhi[td_shmemsize];
+   __shared__ double xvimmi[td_shmemsize];
+   __shared__ double xvimlo[td_shmemsize];
+   __shared__ double yvrehi[td_shmemsize];
+   __shared__ double yvremi[td_shmemsize];
+   __shared__ double yvrelo[td_shmemsize];
+   __shared__ double yvimhi[td_shmemsize];
+   __shared__ double yvimmi[td_shmemsize];
+   __shared__ double yvimlo[td_shmemsize];
+   __shared__ double zvrehi[td_shmemsize];
+   __shared__ double zvremi[td_shmemsize];
+   __shared__ double zvrelo[td_shmemsize];
+   __shared__ double zvimhi[td_shmemsize];
+   __shared__ double zvimmi[td_shmemsize];
+   __shared__ double zvimlo[td_shmemsize];
+
+   xvrehi[tdx] = datarehi[idx1];  // loading first input
+   xvremi[tdx] = dataremi[idx1];
+   xvrelo[tdx] = datarelo[idx1];
+   xvimhi[tdx] = dataimhi[idx1];
+   xvimmi[tdx] = dataimmi[idx1];
+   xvimlo[tdx] = dataimlo[idx1];
+   yvrehi[tdx] = datarehi[idx2];  // loading second input
+   yvremi[tdx] = dataremi[idx2];
+   yvrelo[tdx] = datarelo[idx2];
+   yvimhi[tdx] = dataimhi[idx2];
+   yvimmi[tdx] = dataimmi[idx2];
+   yvimlo[tdx] = dataimlo[idx2];
+
+   // zv[tdx] = xv[tdx] + yv[tdx];
+
+   tdg_add(xvrehi[tdx],xvremi[tdx],xvrelo[tdx],
+           yvrehi[tdx],yvremi[tdx],yvrelo[tdx],
+           &zvrehi[tdx],&zvremi[tdx],&zvrelo[tdx]);
+   __syncthreads();
+
+   tdg_add(xvimhi[tdx],xvimmi[tdx],xvimlo[tdx],
+           yvimhi[tdx],yvimmi[tdx],yvimlo[tdx],
+           &zvimhi[tdx],&zvimmi[tdx],&zvimlo[tdx]);
+   __syncthreads();
+
+   datarehi[idx3] = zvrehi[tdx]; // storing the output
+   dataremi[idx3] = zvremi[tdx];
+   datarelo[idx3] = zvrelo[tdx];
+   dataimhi[idx3] = zvimhi[tdx];
+   dataimmi[idx3] = zvimmi[tdx];
+   dataimlo[idx3] = zvimlo[tdx];
 }
 
 void convoluted_data3_to_output

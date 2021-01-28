@@ -38,6 +38,58 @@ __global__ void dbl3_padded_convjobs
  *   datami   updated middle forward, backward, and cross products;
  *   datalo   updated low forward, backward, and cross products. */
 
+__global__ void cmplx3_padded_convjobs
+ ( double *datarehi, double *dataremi, double *datarelo,
+   double *dataimhi, double *dataimmi, double *dataimlo,
+   int *in1idx, int *in2idx, int *outidx, int dim );
+/*
+ * DESCRIPTION :
+ *   Executes all convolution jobs at the same layer, on complex data.
+ *   The block index defines the convolution job.
+ *
+ * REQUIRED : 
+ *   The number of blocks equals the size of  in1idx, in2idx, outidx,
+ *   and dim equals the number of threads in each block.
+ *
+ * ON ENTRY :
+ *   datarehi   high doubles of the real parts of the coefficients
+ *              of monomials and input series, 
+ *              space for forward, backward, and cross products;
+ *   dataremi   middle doubles of the real parts of the coefficients
+ *              of monomials and input series, 
+ *              space for forward, backward, and cross products;
+ *   datarelo   low doubles of the real parts of coefficients
+ *              of monomials and input series, 
+ *              space for forward, backward, and cross products;
+ *   dataimhi   high doubles of the imaginary parts of the coefficients
+ *              of monomials and input series, 
+ *              space for forward, backward, and cross products;
+ *   dataimmi   middle doubles of the imaginary parts of the coefficients
+ *              of monomials and input series, 
+ *              space for forward, backward, and cross products;
+ *   dataimlo   low doubles of the imaginary parts of coefficients
+ *              of monomials and input series, 
+ *              space for forward, backward, and cross products;
+ *   in1idx     indices of the first input of the convolution jobs;
+ *   in2idx     indices of the second input of the convolution jobs;
+ *   outidx     indices of the output of the convolution jobs;
+ *   dim        the number of coefficients in each series
+ *              equals the number of threads in each block.
+ *
+ * ON RETURN :
+ *   datarehi   updated high doubles of the real parts
+ *              of the forward, backward, and cross products;
+ *   dataremi   updated middle doubles of the real parts
+ *              of the forward, backward, and cross products;
+ *   datarelo   updated low fdoubles of the real parts
+ *              of the forward, backward, and cross products;
+ *   dataimhi   updated high doubles of the imaginary parts
+ *              of the forward, backward, and cross products;
+ *   dataimmi   updated middle doubles of the imaginary parts
+ *              of the forward, backward, and cross products;
+ *   dataimlo   updated low fdoubles of the imaginary parts
+ *              of the forward, backward, and cross products. */
+
 __global__ void dbl3_update_addjobs
  ( double *datahi, double *datami, double *datalo,
    int *in1idx, int *in2idx, int *outidx, int dim );
@@ -67,6 +119,58 @@ __global__ void dbl3_update_addjobs
  *   datahi   updated high forward, backward, and cross products;
  *   datami   updated middle forward, backward, and cross products;
  *   datalo   updated low forward, backward, and cross products. */
+
+__global__ void cmplx3_update_addjobs
+ ( double *datarehi, double *dataremi, double *datarelo,
+   double *dataimhi, double *dataimmi, double *dataimlo,
+   int *in1idx, int *in2idx, int *outidx, int dim );
+/*
+ * DESCRIPTION :
+ *   Executes all addition jobs at the same layer, on complex data.
+ *   The block index defines the addition job.
+ *
+ * REQUIRED : 
+ *   The number of blocks equals the size of  in1idx, in2idx, outidx,
+ *   and dim equals the number of threads in each block.
+ *
+ * ON ENTRY :
+ *   datarehi   high doubles of the real parts of the coefficients
+ *              of monomials and input series, 
+ *              space for forward, backward, and cross products;
+ *   dataremi   middle doubles of the real parts of the coefficients
+ *              of monomials and input series, 
+ *              space for forward, backward, and cross products;
+ *   datarelo   low doubles of the real parts of coefficients
+ *              of monomials and input series, 
+ *              space for forward, backward, and cross products;
+ *   dataimhi   high doubles of the imaginary parts of the coefficients
+ *              of monomials and input series, 
+ *              space for forward, backward, and cross products;
+ *   dataimmi   middle doubles of the imaginary parts of the coefficients
+ *              of monomials and input series, 
+ *              space for forward, backward, and cross products;
+ *   dataimlo   low doubles of the imaginary parts of coefficients
+ *              of monomials and input series, 
+ *              space for forward, backward, and cross products;
+ *   in1idx     indices of the first input of the addition jobs;
+ *   in2idx     indices of the second input of the addition jobs;
+ *   outidx     indices of the output of the addition jobs;
+ *   dim        the number of coefficients in each series
+ *              equals the number of threads in each block.
+ *
+ * ON RETURN :
+ *   datarehi   updated high doubles of the real parts
+ *              of the forward, backward, and cross products;
+ *   dataremi   updated middle doubles of the real parts
+ *              of the forward, backward, and cross products;
+ *   datarelo   updated low fdoubles of the real parts
+ *              of the forward, backward, and cross products;
+ *   dataimhi   updated high doubles of the imaginary parts
+ *              of the forward, backward, and cross products;
+ *   dataimmi   updated middle doubles of the imaginary parts
+ *              of the forward, backward, and cross products;
+ *   dataimlo   updated low fdoubles of the imaginary parts
+ *              of the forward, backward, and cross products. */
 
 void convoluted_data3_to_output
  ( double *datahi, double *datami, double *datalo,
