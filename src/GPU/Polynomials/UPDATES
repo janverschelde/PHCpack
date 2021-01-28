@@ -1,5 +1,6 @@
 Wed 27 Jan 2021 : to dbl3_polynomials_kernels, added the definition of the
   kernels for complex data in triple double precision.
+  Extended dbl3_polynomials_kernels and dbl3_polynomials_testers.cpp.
 
 Tue 26 Jan 2021 : to dbl3_polynomials_host.h, added the specifications of
   the last function, extended dbl3_polynomials_testers.
