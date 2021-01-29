@@ -1,3 +1,6 @@
+Fri 29 Jan 2021 : updated the error sum in dbl3_polynomials_testers.cpp 
+  for complex data, for a superfluous semicolon.
+
 Thu 28 Jan 2021 : edited {dbl2,dbl3}_polynomials_host.h.
   Extended dbl4_polynomials_{host,testers} with functions for complex data.
   Do dbl4_polynomials_host, added the convolution and addition jobs.
