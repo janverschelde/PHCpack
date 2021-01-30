@@ -312,7 +312,7 @@ void CPU_cmplx4_poly_speel
       {
          CPU_cmplx4_speel
             (nvr[i],deg,idx[i],
-             cffrehihi[i],cffrelohi[i],cffimhilo[i],cffrelolo[i],
+             cffrehihi[i],cffrelohi[i],cffrehilo[i],cffrelolo[i],
              cffimhihi[i],cffimlohi[i],cffimhilo[i],cffimlolo[i],
              inputrehihi,inputrelohi,inputrehilo,inputrelolo,
              inputimhihi,inputimlohi,inputimhilo,inputimlolo,
@@ -2575,20 +2575,24 @@ void CPU_cmplx4_poly_evaldiffjobs
              crossimhilo[monidx],crossimlolo[monidx],job,verbose);
       }
    }
-   //CPU_cmplx4_poly_updates
-   //   (dim,nbr,deg,nvr,idx,cst,
-   //    cffrehihi,cffrelohi,cffrehilo,cffrelolo,
-   //    cffimhihi,cffimlohi,cffimhilo,cffimlolo,
-   //    inputrehihi,inputrelohi,inputrehilo,inputrelolo,
-   //    inputimhihi,inputimlohi,inputimhilo,inputimlolo,
-   //    outputrehihi,outputrelohi,outputrehilo,outputrelolo,
-   //    outputimhihi,outputimlohi,outputimhilo,outputimlolo,
-   //    forwardrehihi,forwardrelohi,forwardrehilo,forwardrelolo,
-   //    forwardimhihi,forwardimlohi,forwardimhilo,forwardimlolo,
-   //    backwardrehihi,backwardrelohi,backwardrehilo,backwardrelolo,
-   //    backwardimhihi,backwardimlohi,backwardimhilo,backwardimlolo,
-   //    crossrehihi,crossrelohi,crossrehilo,crossrelolo,
-   //    crossimhihi,crossimlohi,crossimhilo,crossimlolo);
+ /*
+   CPU_cmplx4_poly_updates
+      (dim,nbr,deg,nvr,idx,
+       cstrehihi,cstrelohi,cstrehilo,cstrelolo,
+       cstimhihi,cstimlohi,cstimhilo,cstimlolo,
+       cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+       cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+       inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+       inputimhihi,inputimlohi,inputimhilo,inputimlolo,
+       outputrehihi,outputrelohi,outputrehilo,outputrelolo,
+       outputimhihi,outputimlohi,outputimhilo,outputimlolo,
+       forwardrehihi,forwardrelohi,forwardrehilo,forwardrelolo,
+       forwardimhihi,forwardimlohi,forwardimhilo,forwardimlolo,
+       backwardrehihi,backwardrelohi,backwardrehilo,backwardrelolo,
+       backwardimhihi,backwardimlohi,backwardimhilo,backwardimlolo,
+       crossrehihi,crossrelohi,crossrehilo,crossrelolo,
+       crossimhihi,crossimlohi,crossimhilo,crossimlolo);
+  */
    CPU_cmplx4_poly_addjobs
       (dim,nbr,deg,nvr,idx,
        cstrehihi,cstrelohi,cstrehilo,cstrelolo,
@@ -2605,7 +2609,6 @@ void CPU_cmplx4_poly_evaldiffjobs
        backwardimhihi,backwardimlohi,backwardimhilo,backwardimlolo,
        crossrehihi,crossrelohi,crossrehilo,crossrelolo,
        crossimhihi,crossimlohi,crossimhilo,crossimlolo,addjobs,verbose);
-
    clock_t end = clock();
    *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 

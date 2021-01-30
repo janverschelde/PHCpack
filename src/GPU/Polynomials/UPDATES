@@ -1,3 +1,6 @@
+Sat 30 Jan 2021 : bug fix in dbl4_polynomials_host.cpp, edited cmplx4_error_
+  sum in dbl4_polynomials_testers.cpp.
+
 Fri 29 Jan 2021 : updated the error sum in dbl3_polynomials_testers.cpp 
   for complex data, for a superfluous semicolon.
   Extended dbl4_polynomials_{host,testers}, updated makefiles.

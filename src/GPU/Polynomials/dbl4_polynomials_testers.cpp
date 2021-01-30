@@ -401,6 +401,7 @@ double cmplx4_error_sum
               << results2imlohi_h[dim][i] << endl
               << results2imhilo_h[dim][i] << "  "
               << results2imlolo_h[dim][i] << endl;
+       /*
          cout << resultsrehihi_d[dim][i] << "  "
               << resultsrehilo_d[dim][i] << endl
               << resultsrelohi_d[dim][i] << "  "
@@ -408,7 +409,7 @@ double cmplx4_error_sum
          cout << resultsimhihi_d[dim][i] << "  "
               << resultsimlohi_d[dim][i] << endl
               << resultsimhilo_d[dim][i] << "  "
-              << resultsimlolo_d[dim][i] << endl;
+              << resultsimlolo_d[dim][i] << endl; */
       }
       err = err + abs(results1rehihi_h[dim][i] - results2rehihi_h[dim][i])
                 + abs(results1relohi_h[dim][i] - results2relohi_h[dim][i])
@@ -418,6 +419,7 @@ double cmplx4_error_sum
                 + abs(results1imlohi_h[dim][i] - results2imlohi_h[dim][i])
                 + abs(results1imhilo_h[dim][i] - results2imhilo_h[dim][i])
                 + abs(results1imlolo_h[dim][i] - results2imlolo_h[dim][i])
+             /*
                 + abs(results1rehihi_h[dim][i] - resultsrehihi_d[dim][i])
                 + abs(results1relohi_h[dim][i] - resultsrelohi_d[dim][i])
                 + abs(results1rehilo_h[dim][i] - resultsrehilo_d[dim][i])
@@ -425,7 +427,7 @@ double cmplx4_error_sum
                 + abs(results1imhihi_h[dim][i] - resultsimhihi_d[dim][i])
                 + abs(results1imlohi_h[dim][i] - resultsimlohi_d[dim][i])
                 + abs(results1imhilo_h[dim][i] - resultsimhilo_d[dim][i])
-                + abs(results1imlolo_h[dim][i] - resultsimlolo_d[dim][i]);
+                + abs(results1imlolo_h[dim][i] - resultsimlolo_d[dim][i]) */;
    }
    if(verbose) cout << "error : " << err << endl;
 
@@ -455,14 +457,14 @@ double cmplx4_error_sum
                  << results2imlohi_h[k][i] << endl
                  << results2imhilo_h[k][i] << "  "
                  << results2imlolo_h[k][i] << endl;
-            cout << resultsrehihi_d[k][i] << "  "
+          /*  cout << resultsrehihi_d[k][i] << "  "
                  << resultsrelohi_d[k][i] << endl
                  << resultsrehilo_d[k][i] << "  "
                  << resultsrelolo_d[k][i] << endl;
             cout << resultsimhihi_d[k][i] << "  "
                  << resultsimlohi_d[k][i] << endl
                  << resultsimhilo_d[k][i] << "  "
-                 << resultsimlolo_d[k][i] << endl;
+                 << resultsimlolo_d[k][i] << endl; */
          }
          err = err + abs(results1rehihi_h[k][i] - results2rehihi_h[k][i])
                    + abs(results1relohi_h[k][i] - results2relohi_h[k][i])
@@ -472,6 +474,7 @@ double cmplx4_error_sum
                    + abs(results1imlohi_h[k][i] - results2imlohi_h[k][i])
                    + abs(results1imhilo_h[k][i] - results2imhilo_h[k][i])
                    + abs(results1imlolo_h[k][i] - results2imlolo_h[k][i])
+               /*
                    + abs(results1rehihi_h[k][i] - resultsrehihi_d[k][i])
                    + abs(results1relohi_h[k][i] - resultsrelohi_d[k][i])
                    + abs(results1rehilo_h[k][i] - resultsrehilo_d[k][i])
@@ -479,7 +482,7 @@ double cmplx4_error_sum
                    + abs(results1imhihi_h[k][i] - resultsimhihi_d[k][i])
                    + abs(results1imlohi_h[k][i] - resultsimlohi_d[k][i])
                    + abs(results1imhilo_h[k][i] - resultsimhilo_d[k][i])
-                   + abs(results1imlolo_h[k][i] - resultsimlolo_d[k][i]);
+                   + abs(results1imlolo_h[k][i] - resultsimlolo_d[k][i])*/;
       }
       if(verbose) cout << "error : " << err << endl;
       sumerr = sumerr + err;
