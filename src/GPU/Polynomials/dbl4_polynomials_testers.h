@@ -178,7 +178,7 @@ double dbl4_error_sum
 /*
  * DESCRIPTION :
  *   Returns the sum of all errors, comparing results computed on the host
- *   with results computed on the device.
+ *   with results computed on the device, on real data.
  *
  * ON ENTRY :
  *   dim      dimension, total number of variables;
@@ -203,6 +203,78 @@ double dbl4_error_sum
  *   resultslolo_d are the lowest doubles computed on the device;
  *   verbose  if true, then all results and intermediate errors are shown. */
 
+double cmplx4_error_sum
+ ( int dim, int deg,
+   double **results1rehihi_h, double **results1relohi_h,
+   double **results1rehilo_h, double **results1relolo_h,
+   double **results1imhihi_h, double **results1imlohi_h,
+   double **results1imhilo_h, double **results1imlolo_h,
+   double **results2rehihi_h, double **results2relohi_h,
+   double **results2rehilo_h, double **results2relolo_h,
+   double **results2imhihi_h, double **results2imlohi_h,
+   double **results2imhilo_h, double **results2imlolo_h,
+   double **resultsrehihi_d, double **resultsrelohi_d,
+   double **resultsrehilo_d, double **resultsrelolo_d,
+   double **resultsimhihi_d, double **resultsimlohi_d,
+   double **resultsimhilo_d, double **resultsimlolo_d, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all errors, comparing results computed on the host
+ *   with results computed on the device, on complex data.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   deg      truncation degree of the series;
+ *   results1rehihi_h are the highest doubles of the real parts
+ *            computed on the host without jobs;
+ *   results1relohi_h are the second highest doubles of the real parts
+ *            computed on the host without jobs;
+ *   results1rehilo_h are the second lowest doubles of the real parts
+ *            computed on the host without jobs;
+ *   results1relolo_h are the lowest doubles of the real parts
+ *            computed on the host without jobs;
+ *   results1imhihi_h are the highest doubles of the imaginary parts
+ *            computed on the host without jobs;
+ *   results1imlohi_h are the second highest doubles of the imaginary parts
+ *            computed on the host without jobs;
+ *   results1imhilo_h are the second lowest doubles of the imaginary parts
+ *            computed on the host without jobs;
+ *   results1imlolo_h are the lowest doubles of the imaginary parts
+ *            computed on the host without jobs;
+ *   results2rehihi_h are the highest doubles of the real parts
+ *            computed on the host with convolution and addition jobs;
+ *   results2relohi_h are the second highest doubles of the real parts
+ *            computed on the host with convolution and addition jobs;
+ *   results2rehilo_h are the second lowest doubles of the real parts
+ *            computed on the host with convolution and addition jobs;
+ *   results2relolo_h are the lowest doubles of the real parts
+ *            computed on the host with convolution and addition jobs;
+ *   results2imhihi_h are the highest doubles of the imaginary parts
+ *            computed on the host with convolution and addition jobs;
+ *   results2imlohi_h are the second highest doubles of the imaginary parts
+ *            computed on the host with convolution and addition jobs;
+ *   results2imhilo_h are the second lowest doubles of the imaginary parts
+ *            computed on the host with convolution and addition jobs;
+ *   results2imlolo_h are the lowest doubles of the imaginary parts
+ *            computed on the host with convolution and addition jobs;
+ *   resultsrehihi_d are the highest doubles of the real parts
+ *            computed on the device;
+ *   resultsrelohi_d are the second highest doubles of the real parts
+ *            computed on the device;
+ *   resultsrehilo_d are the second lowest doubles of the real parts
+ *            computed on the device;
+ *   resultsrelolo_d are the lowest doubles of the real parts
+ *            computed on the device;
+ *   resultsimhihi_d are the highest doubles of the imaginary parts
+ *            computed on the device;
+ *   resultsimlohi_d are the second highest doubles of the imaginary parts
+ *            computed on the device;
+ *   resultsimhilo_d are the second lowest doubles of the imaginary parts
+ *            computed on the device;
+ *   resultsimlolo_d are the lowest doubles of the imaginary parts
+ *            computed on the device;
+ *   verbose  if true, then all results and intermediate errors are shown. */
+
 double test_dbl4_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose,
    bool jobrep=true, int mode=2 );
@@ -224,6 +296,30 @@ double test_dbl4_real_polynomial
  *            otherwise no jobs report is written.
  *            When running the same problems in many precisions,
  *            this jobs reports needs to be written only once;
+ *   mode     the mode of execution, either 0, 1, or 2, as follows:
+ *            0 : GPU only; 1 : CPU only; 2 : GPU and CPU. */
+
+double test_cmplx4_real_polynomial
+ ( int dim, int nbr, int nva, int pwr, int deg, int verbose,
+   bool jobrep=true, int mode=2 );
+/*
+ * DESCRIPTION :
+ *   Tests the evaluation and differentiation for random complex data.
+ *   Returns the sum of all errors.
+ * 
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   nbr      number of terms in the polynomial;
+ *   nva      number of variables per monomial (for products and cyclic);
+ *   pwr      highest power of each variable;
+ *   deg      truncation degree of the series;
+ *   verbose  if zero, then no output is written,
+ *            otherwise, the higher the value, the more output;
+ *   jobrep   if verbose is nonzero and jobrep is true,
+ *            then the jobs report is written,
+ *            otherwise no jobs report is written.
+ *            When running the same problems in many precisions,
+ *            the jobs reports needs to be written only once;
  *   mode     the mode of execution, either 0, 1, or 2, as follows:
  *            0 : GPU only; 1 : CPU only; 2 : GPU and CPU. */
 

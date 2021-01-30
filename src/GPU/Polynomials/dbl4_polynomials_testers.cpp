@@ -13,8 +13,10 @@
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
 #include "write_job_counts.h"
+#include "write_gpu_timings.h"
 #include "dbl4_polynomials_host.h"
 #include "dbl4_polynomials_kernels.h"
+#include "test_helpers.h"
 #include "dbl4_polynomials_testers.h"
 
 using namespace std;
@@ -40,8 +42,10 @@ int main_dbl4_test_polynomial
 
    double realsum = test_dbl4_real_polynomial
                        (dim,nbr,nva,pwr,deg,vrblvl-1,jobrep,mode);
+   double compsum = test_cmplx4_real_polynomial
+                       (dim,nbr,nva,pwr,deg,vrblvl-1,jobrep,mode);
 
-   int fail = int(realsum > tol);
+   int fail = int(realsum > tol) + int(compsum > tol);
 
    if(vrblvl > 0)
    {
@@ -51,6 +55,14 @@ int main_dbl4_test_polynomial
          cout << "Sum of all errors in quad double precision :" << endl;
          cout << "  on real data : " << realsum;
          if(realsum < tol)
+            cout << "  pass." << endl;
+         else
+         {
+            cout << " > " << tol;
+            cout << "  fail!" << endl;
+         }
+         cout << "  on complex data : " << compsum;
+         if(compsum < tol)
             cout << "  pass." << endl;
          else
          {
@@ -351,6 +363,130 @@ double dbl4_error_sum
    return sumerr;
 }
 
+double cmplx4_error_sum
+ ( int dim, int deg,
+   double **results1rehihi_h, double **results1relohi_h,
+   double **results1rehilo_h, double **results1relolo_h,
+   double **results1imhihi_h, double **results1imlohi_h,
+   double **results1imhilo_h, double **results1imlolo_h,
+   double **results2rehihi_h, double **results2relohi_h,
+   double **results2rehilo_h, double **results2relolo_h,
+   double **results2imhihi_h, double **results2imlohi_h,
+   double **results2imhilo_h, double **results2imlolo_h,
+   double **resultsrehihi_d, double **resultsrelohi_d,
+   double **resultsrehilo_d, double **resultsrelolo_d,
+   double **resultsimhihi_d, double **resultsimlohi_d,
+   double **resultsimhilo_d, double **resultsimlolo_d, bool verbose )
+{
+   double err = 0.0;
+
+   if(verbose) cout << "The value of the polynomial :" << endl;
+   for(int i=0; i<=deg; i++)
+   {
+      if(verbose)
+      {
+         cout << results1rehihi_h[dim][i] << "  "
+              << results1relohi_h[dim][i] << endl
+              << results1rehilo_h[dim][i] << "  "
+              << results1relolo_h[dim][i] << endl;
+         cout << results1imhihi_h[dim][i] << "  "
+              << results1imlohi_h[dim][i] << endl
+              << results1imhilo_h[dim][i] << "  "
+              << results1imlolo_h[dim][i] << endl;
+         cout << results2rehihi_h[dim][i] << "  "
+              << results2relohi_h[dim][i] << endl
+              << results2rehilo_h[dim][i] << "  "
+              << results2relolo_h[dim][i] << endl;
+         cout << results2imhihi_h[dim][i] << "  "
+              << results2imlohi_h[dim][i] << endl
+              << results2imhilo_h[dim][i] << "  "
+              << results2imlolo_h[dim][i] << endl;
+         cout << resultsrehihi_d[dim][i] << "  "
+              << resultsrehilo_d[dim][i] << endl
+              << resultsrelohi_d[dim][i] << "  "
+              << resultsrelolo_d[dim][i] << endl;
+         cout << resultsimhihi_d[dim][i] << "  "
+              << resultsimlohi_d[dim][i] << endl
+              << resultsimhilo_d[dim][i] << "  "
+              << resultsimlolo_d[dim][i] << endl;
+      }
+      err = err + abs(results1rehihi_h[dim][i] - results2rehihi_h[dim][i])
+                + abs(results1relohi_h[dim][i] - results2relohi_h[dim][i])
+                + abs(results1rehilo_h[dim][i] - results2rehilo_h[dim][i])
+                + abs(results1relolo_h[dim][i] - results2relolo_h[dim][i])
+                + abs(results1imhihi_h[dim][i] - results2imhihi_h[dim][i])
+                + abs(results1imlohi_h[dim][i] - results2imlohi_h[dim][i])
+                + abs(results1imhilo_h[dim][i] - results2imhilo_h[dim][i])
+                + abs(results1imlolo_h[dim][i] - results2imlolo_h[dim][i])
+                + abs(results1rehihi_h[dim][i] - resultsrehihi_d[dim][i])
+                + abs(results1relohi_h[dim][i] - resultsrelohi_d[dim][i])
+                + abs(results1rehilo_h[dim][i] - resultsrehilo_d[dim][i])
+                + abs(results1relolo_h[dim][i] - resultsrelolo_d[dim][i])
+                + abs(results1imhihi_h[dim][i] - resultsimhihi_d[dim][i])
+                + abs(results1imlohi_h[dim][i] - resultsimlohi_d[dim][i])
+                + abs(results1imhilo_h[dim][i] - resultsimhilo_d[dim][i])
+                + abs(results1imlolo_h[dim][i] - resultsimlolo_d[dim][i]);
+   }
+   if(verbose) cout << "error : " << err << endl;
+
+   double sumerr = err;
+
+   for(int k=0; k<dim; k++)
+   {
+      if(verbose) cout << "Derivative " << k << " :" << endl;
+      err = 0.0;
+      for(int i=0; i<=deg; i++)
+      {
+         if(verbose)
+         {
+            cout << results1rehihi_h[k][i] << "  "
+                 << results1relohi_h[k][i] << endl
+                 << results1rehilo_h[k][i] << "  "
+                 << results1relolo_h[k][i] << endl;
+            cout << results1imhihi_h[k][i] << "  "
+                 << results1imlohi_h[k][i] << endl
+                 << results1imhilo_h[k][i] << "  "
+                 << results1imlolo_h[k][i] << endl;
+            cout << results2rehihi_h[k][i] << "  "
+                 << results2relohi_h[k][i] << endl
+                 << results2rehilo_h[k][i] << "  "
+                 << results2relolo_h[k][i] << endl;
+            cout << results2imhihi_h[k][i] << "  "
+                 << results2imlohi_h[k][i] << endl
+                 << results2imhilo_h[k][i] << "  "
+                 << results2imlolo_h[k][i] << endl;
+            cout << resultsrehihi_d[k][i] << "  "
+                 << resultsrelohi_d[k][i] << endl
+                 << resultsrehilo_d[k][i] << "  "
+                 << resultsrelolo_d[k][i] << endl;
+            cout << resultsimhihi_d[k][i] << "  "
+                 << resultsimlohi_d[k][i] << endl
+                 << resultsimhilo_d[k][i] << "  "
+                 << resultsimlolo_d[k][i] << endl;
+         }
+         err = err + abs(results1rehihi_h[k][i] - results2rehihi_h[k][i])
+                   + abs(results1relohi_h[k][i] - results2relohi_h[k][i])
+                   + abs(results1rehilo_h[k][i] - results2rehilo_h[k][i])
+                   + abs(results1relolo_h[k][i] - results2relolo_h[k][i])
+                   + abs(results1imhihi_h[k][i] - results2imhihi_h[k][i])
+                   + abs(results1imlohi_h[k][i] - results2imlohi_h[k][i])
+                   + abs(results1imhilo_h[k][i] - results2imhilo_h[k][i])
+                   + abs(results1imlolo_h[k][i] - results2imlolo_h[k][i])
+                   + abs(results1rehihi_h[k][i] - resultsrehihi_d[k][i])
+                   + abs(results1relohi_h[k][i] - resultsrelohi_d[k][i])
+                   + abs(results1rehilo_h[k][i] - resultsrehilo_d[k][i])
+                   + abs(results1relolo_h[k][i] - resultsrelolo_d[k][i])
+                   + abs(results1imhihi_h[k][i] - resultsimhihi_d[k][i])
+                   + abs(results1imlohi_h[k][i] - resultsimlohi_d[k][i])
+                   + abs(results1imhilo_h[k][i] - resultsimhilo_d[k][i])
+                   + abs(results1imlolo_h[k][i] - resultsimlolo_d[k][i]);
+      }
+      if(verbose) cout << "error : " << err << endl;
+      sumerr = sumerr + err;
+   }
+   return sumerr;
+}
+
 double test_dbl4_real_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
@@ -536,6 +672,214 @@ double test_dbl4_real_polynomial
             cout << scientific << setprecision(16);
          }
       }
+      return sumerr;
+   }
+}
+
+double test_cmplx4_real_polynomial
+ ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
+   int mode )
+{
+   if(nbr < 1)
+      return 0.0;
+   else
+   {
+      double **inputrehihi = new double*[dim]; // dim series of degree deg
+      double **inputrelohi = new double*[dim];
+      double **inputrehilo = new double*[dim];
+      double **inputrelolo = new double*[dim];
+      double **inputimhihi = new double*[dim];
+      double **inputimlohi = new double*[dim];
+      double **inputimhilo = new double*[dim];
+      double **inputimlolo = new double*[dim];
+      for(int i=0; i<dim; i++)
+      {
+         inputrehihi[i] = new double[deg+1];
+         inputrelohi[i] = new double[deg+1];
+         inputrehilo[i] = new double[deg+1];
+         inputrelolo[i] = new double[deg+1];
+         inputimhihi[i] = new double[deg+1];
+         inputimlohi[i] = new double[deg+1];
+         inputimhilo[i] = new double[deg+1];
+         inputimlolo[i] = new double[deg+1];
+      }
+      // The output are dim+1 power series of degree deg
+      // for the evaluated and differentiated polynomial.
+      double **output1rehihi_h = new double*[dim+1];
+      double **output1relohi_h = new double*[dim+1];
+      double **output1rehilo_h = new double*[dim+1];
+      double **output1relolo_h = new double*[dim+1];
+      double **output1imhihi_h = new double*[dim+1];
+      double **output1imlohi_h = new double*[dim+1];
+      double **output1imhilo_h = new double*[dim+1];
+      double **output1imlolo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++)
+      {
+         output1rehihi_h[i] = new double[deg+1];
+         output1relohi_h[i] = new double[deg+1];
+         output1rehilo_h[i] = new double[deg+1];
+         output1relolo_h[i] = new double[deg+1];
+         output1imhihi_h[i] = new double[deg+1];
+         output1imlohi_h[i] = new double[deg+1];
+         output1imhilo_h[i] = new double[deg+1];
+         output1imlolo_h[i] = new double[deg+1];
+      }
+      double **output2rehihi_h = new double*[dim+1];
+      double **output2relohi_h = new double*[dim+1];
+      double **output2rehilo_h = new double*[dim+1];
+      double **output2relolo_h = new double*[dim+1];
+      double **output2imhihi_h = new double*[dim+1];
+      double **output2imlohi_h = new double*[dim+1];
+      double **output2imhilo_h = new double*[dim+1];
+      double **output2imlolo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++)
+      {
+         output2rehihi_h[i] = new double[deg+1];
+         output2relohi_h[i] = new double[deg+1];
+         output2rehilo_h[i] = new double[deg+1];
+         output2relolo_h[i] = new double[deg+1];
+         output2imhihi_h[i] = new double[deg+1];
+         output2imlohi_h[i] = new double[deg+1];
+         output2imhilo_h[i] = new double[deg+1];
+         output2imlolo_h[i] = new double[deg+1];
+      }
+      double **outputrehihi_d = new double*[dim+1];
+      double **outputrelohi_d = new double*[dim+1];
+      double **outputrehilo_d = new double*[dim+1];
+      double **outputrelolo_d = new double*[dim+1];
+      double **outputimhihi_d = new double*[dim+1];
+      double **outputimlohi_d = new double*[dim+1];
+      double **outputimhilo_d = new double*[dim+1];
+      double **outputimlolo_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++)
+      {
+         outputrehihi_d[i] = new double[deg+1];
+         outputrelohi_d[i] = new double[deg+1];
+         outputrehilo_d[i] = new double[deg+1];
+         outputrelolo_d[i] = new double[deg+1];
+         outputimhihi_d[i] = new double[deg+1];
+         outputimlohi_d[i] = new double[deg+1];
+         outputimhilo_d[i] = new double[deg+1];
+         outputimlolo_d[i] = new double[deg+1];
+      }
+      double *cstrehihi = new double[deg+1]; // constant coefficient series
+      double *cstrelohi = new double[deg+1];
+      double *cstrehilo = new double[deg+1];
+      double *cstrelolo = new double[deg+1];
+      double *cstimhihi = new double[deg+1];
+      double *cstimlohi = new double[deg+1];
+      double *cstimhilo = new double[deg+1];
+      double *cstimlolo = new double[deg+1];
+      double **cffrehihi = new double*[nbr]; // coefficient series of terms
+      double **cffrelohi = new double*[nbr];
+      double **cffrehilo = new double*[nbr];
+      double **cffrelolo = new double*[nbr];
+      double **cffimhihi = new double*[nbr];
+      double **cffimlohi = new double*[nbr];
+      double **cffimhilo = new double*[nbr];
+      double **cffimlolo = new double*[nbr];
+      for(int i=0; i<nbr; i++)
+      {
+         cffrehihi[i] = new double[deg+1];
+         cffrelohi[i] = new double[deg+1];
+         cffrehilo[i] = new double[deg+1];
+         cffrelolo[i] = new double[deg+1];
+         cffimhihi[i] = new double[deg+1];
+         cffimlohi[i] = new double[deg+1];
+         cffimhilo[i] = new double[deg+1];
+         cffimlolo[i] = new double[deg+1];
+      }
+      int *nvr = new int[nbr]; // number of variables in each monomial
+      int **idx = new int*[nbr];  // indices of variables in monomials
+      int **exp = new int*[nbr];  // exponents of the variables
+
+      bool vrb = (verbose > 1);
+
+      cmplx4_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
+         inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+         inputimhihi,inputimlohi,inputimhilo,inputimlolo,
+         cstrehihi,cstrelohi,cstrehilo,cstrelolo,
+         cstimhihi,cstimlohi,cstimhilo,cstimlolo,
+         cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+         cffimhihi,cffimlohi,cffimhilo,cffimlolo,vrb);
+
+      ConvolutionJobs cnvjobs(dim);
+      AdditionJobs addjobs(dim,nbr);
+
+      make_all_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
+
+      double timelapsec1_h,timelapsec2_h;
+      double cnvlapms,addlapms,timelapms_d,walltimes_d;
+
+      if((mode == 1) || (mode == 2))
+      {
+         if(vrb) cout << "Computing without convolution jobs ..." << endl;
+         CPU_cmplx4_poly_evaldiff
+            (dim,nbr,deg,nvr,idx,
+             cstrehihi,cstrelohi,cstrehilo,cstrelolo,
+             cstimhihi,cstimlohi,cstimhilo,cstimlolo,
+             cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+             cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+             inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+             inputimhihi,inputimlohi,inputimhilo,inputimlolo,
+             output1rehihi_h,output1relohi_h,output1rehilo_h,output1relolo_h,
+             output1imhihi_h,output1imlohi_h,output1imhilo_h,output1imlolo_h,
+             &timelapsec1_h,vrb);
+         if(vrb) cout << "Computing with convolution jobs ..." << endl;
+         CPU_cmplx4_poly_evaldiffjobs
+            (dim,nbr,deg,nvr,idx,
+             cstrehihi,cstrelohi,cstrehilo,cstrelolo,
+             cstimhihi,cstimlohi,cstimhilo,cstimlolo,
+             cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+             cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+             inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+             inputimhihi,inputimlohi,inputimhilo,inputimlolo,
+             output2rehihi_h,output2relohi_h,output2rehilo_h,output2relolo_h,
+             output2imhihi_h,output2imlohi_h,output2imhilo_h,output2imlolo_h,
+             cnvjobs,addjobs,&timelapsec2_h,vrb);
+      }
+/*
+      if((mode == 0) || (mode == 2))
+      {
+         if(vrb) cout << "Computing on the device ..." << endl;
+         GPU_cmplx4_poly_evaldiff
+            (deg+1,dim,nbr,deg,nvr,idx,
+             cstrehihi,cstrelohi,cstrehilo,cstrelolo,
+             cstimhihi,cstimlohi,cstimhilo,cstimlolo,
+             cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+             cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+             inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+             inputimhihi,inputimlohi,inputimhilo,inputimlolo,
+             outputrehihi_d,outputrelohi_d,outputrehilo_d,outputrelolo_d,
+             outputimhihi_d,outputimlohi_d,outputimhilo_d,outputimlolo_d,
+             cnvjobs,addjobs,&cnvlapms,&addlapms,&timelapms_d,
+             &walltimes_d,vrb);
+      }
+ */
+      double sumerr = 0.0;
+      if(mode == 2)
+         sumerr = cmplx4_error_sum(dim,deg,
+                     output1rehihi_h,output1relohi_h,
+                     output1rehilo_h,output1relolo_h,
+                     output1imhihi_h,output1imlohi_h,
+                     output1imhilo_h,output1imlolo_h,
+                     output2rehihi_h,output2relohi_h,
+                     output2rehilo_h,output2relolo_h,
+                     output2imhihi_h,output2imlohi_h,
+                     output2imhilo_h,output2imlolo_h,
+                     outputrehihi_d,outputrelohi_d,
+                     outputrehilo_d,outputrelolo_d,
+                     outputimhihi_d,outputimlohi_d,
+                     outputimhilo_d,outputimlolo_d,vrb);
+
+      if(verbose > 0)
+      {
+         if(jobrep) write_jobs_report(dim,nva,nbr,deg,cnvjobs,addjobs);
+         if((mode == 1) || (mode == 2))
+            write_CPU_timings(timelapsec1_h,timelapsec2_h);
+         if((mode == 0) || (mode == 2))
+            write_GPU_timings(cnvlapms,addlapms,timelapms_d,walltimes_d);
+      } 
       return sumerr;
    }
 }
