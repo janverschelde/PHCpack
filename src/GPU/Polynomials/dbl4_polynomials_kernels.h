@@ -41,6 +41,70 @@ __global__ void dbl4_padded_convjobs
  *   datahilo  updated second lowest forward, backward, and cross products;
  *   datalolo  updated lowest forward, backward, and cross products. */
 
+__global__ void cmplx3_padded_convjobs
+ ( double *datarehihi, double *datarelohi,
+   double *datarehilo, double *datarelolo,
+   double *dataimhihi, double *dataimlohi,
+   double *dataimhilo, double *dataimlolo,
+   int *in1idx, int *in2idx, int *outidx, int dim );
+/*
+ * DESCRIPTION :
+ *   Executes all convolution jobs at the same layer, on complex data.
+ *   The block index defines the convolution job.
+ *
+ * REQUIRED : 
+ *   The number of blocks equals the size of  in1idx, in2idx, outidx,
+ *   and dim equals the number of threads in each block.
+ *
+ * ON ENTRY :
+ *   datarehihi   highest doubles of the real parts of the coefficients
+ *                of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   datarelohi   second highest doubles of the real parts
+ *                of the coefficients of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   datarehilo   second lowest doubles of the real parts of coefficients
+ *                of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   datarelolo   lowest doubles of the real parts of coefficients
+ *                of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   dataimhihi   highest doubles of the imaginary parts 
+ *                of the coefficients of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   dataimlohi   second highest doubles of the imaginary parts
+ *                of the coefficients of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   dataimhilo   second lowest doubles of the imaginary parts
+ *                of coefficients of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   dataimlolo   lowest doubles of the imaginary parts of coefficients
+ *                of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   in1idx       indices of the first input of the convolution jobs;
+ *   in2idx       indices of the second input of the convolution jobs;
+ *   outidx       indices of the output of the convolution jobs;
+ *   dim          the number of coefficients in each series
+ *                equals the number of threads in each block.
+ *
+ * ON RETURN :
+ *   datarehihi   updated highest doubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   datarelohi   updated second highest doubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   datarehilo   updated second lowest fdoubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   datarelolo   updated lowest fdoubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   dataimhihi   updated highest doubles of the imaginary parts
+ *                of the forward, backward, and cross products;
+ *   dataimlohi   updated second highest doubles of the imaginary parts
+ *                of the forward, backward, and cross products;
+ *   dataimhilo   updated second lowest fdoubles of the imaginary parts
+ *                of the forward, backward, and cross products;
+ *   dataimlolo   updated lowest fdoubles of the imaginary parts
+ *                of the forward, backward, and cross products. */
+
 __global__ void dbl4_update_addjobs
  ( double *datahihi, double *datalohi, double *datahilo, double *datalolo,
    int *in1idx, int *in2idx, int *outidx, int dim );
@@ -73,6 +137,70 @@ __global__ void dbl4_update_addjobs
  *   datalohi  updated second highest forward, backward, and cross products;
  *   datahilo  updated second lowest forward, backward, and cross products;
  *   datalolo  updated lowest forward, backward, and cross products. */
+
+__global__ void cmplx4_update_addjobs
+ ( double *datarehihi, double *datarelohi,
+   double *datarehilo, double *datarelolo,
+   double *dataimhihi, double *dataimlohi,
+   double *dataimhilo, double *dataimlolo,
+   int *in1idx, int *in2idx, int *outidx, int dim );
+/*
+ * DESCRIPTION :
+ *   Executes all addition jobs at the same layer, on complex data.
+ *   The block index defines the addition job.
+ *
+ * REQUIRED : 
+ *   The number of blocks equals the size of  in1idx, in2idx, outidx,
+ *   and dim equals the number of threads in each block.
+ *
+ * ON ENTRY :
+ *   datarehihi   highest doubles of the real parts of the coefficients
+ *                of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   datarelohi   second highest doubles of the real parts
+ *                of the coefficients of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   datarehilo   second lowest doubles of the real parts of coefficients
+ *                of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   datarelolo   lowest doubles of the real parts of coefficients
+ *                of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   dataimhihi   highest doubles of the imaginary parts 
+ *                of the coefficients of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   dataimlohi   second highest doubles of the imaginary parts
+ *                of the coefficients of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   dataimhilo   second lowest doubles of the imaginary parts
+ *                of coefficients of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   dataimlolo   lowest doubles of the imaginary parts of coefficients
+ *                of monomials and input series, 
+ *                space for forward, backward, and cross products;
+ *   in1idx       indices of the first input of the addition jobs;
+ *   in2idx       indices of the second input of the addition jobs;
+ *   outidx       indices of the output of the addition jobs;
+ *   dim          the number of coefficients in each series
+ *                equals the number of threads in each block.
+ *
+ * ON RETURN :
+ *   datarehihi   updated highest doubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   datarelohi   updated second highest doubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   datarehilo   updated second lowest fdoubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   datarelolo   updated lowest fdoubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   dataimhihi   updated highest doubles of the imaginary parts
+ *                of the forward, backward, and cross products;
+ *   dataimlohi   updated second highest doubles of the imaginary parts
+ *                of the forward, backward, and cross products;
+ *   dataimhilo   updated second lowest fdoubles of the imaginary parts
+ *                of the forward, backward, and cross products;
+ *   dataimlolo   updated lowest fdoubles of the imaginary parts
+ *                of the forward, backward, and cross products. */
 
 void convoluted_data4_to_output
  ( double *datahihi, double *datalohi, double *datahilo, double *datalolo,
