@@ -402,8 +402,8 @@ double cmplx4_error_sum
               << results2imhilo_h[dim][i] << "  "
               << results2imlolo_h[dim][i] << endl;
          cout << resultsrehihi_d[dim][i] << "  "
-              << resultsrehilo_d[dim][i] << endl
-              << resultsrelohi_d[dim][i] << "  "
+              << resultsrelohi_d[dim][i] << endl
+              << resultsrehilo_d[dim][i] << "  "
               << resultsrelolo_d[dim][i] << endl;
          cout << resultsimhihi_d[dim][i] << "  "
               << resultsimlohi_d[dim][i] << endl
