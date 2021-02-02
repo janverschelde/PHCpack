@@ -1,3 +1,6 @@
+Mon 1 Feb 2021 : extended dbl4_polynomials_kernels with functions to launch
+  the kernels to evaluate and differentiate on complex data.
+  
 Sun 31 Jan 2021 : to dbl4_polynomials_kernels, added the kernels for the
   convolution and the update jobs.
 
