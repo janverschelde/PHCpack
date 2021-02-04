@@ -543,10 +543,11 @@ test_dbl5_polynomials: random_numbers.o random_series.o random_monomials.o \
                        random5_vectors.o random5_series.o random5_monomials.o \
                        random5_polynomials.o test_dbl5_polynomials.o \
                        convolution_job.o convolution_jobs.o \
-                       addition_job.o addition_jobs.o \
+                       addition_job.o addition_jobs.o test_helpers.o \
                        job_coordinates.o write_job_counts.o \
                        dbl5_convolutions_host.o dbl5_monomials_host.o \
                        dbl5_polynomials_host.o dbl5_polynomials_kernels.o \
+                       write_gpu_timings.o \
                        prompt_for_setup.o dbl5_polynomials_testers.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl5_polynomials test_dbl5_polynomials.o \
@@ -556,10 +557,11 @@ test_dbl5_polynomials: random_numbers.o random_series.o random_monomials.o \
                   random5_vectors.o random5_series.o \
                   random5_monomials.o random5_polynomials.o \
                   convolution_job.o convolution_jobs.o \
-                  addition_job.o addition_jobs.o \
+                  addition_job.o addition_jobs.o test_helpers.o \
                   job_coordinates.o write_job_counts.o \
                   dbl5_convolutions_host.o dbl5_monomials_host.o \
                   dbl5_polynomials_host.o dbl5_polynomials_kernels.o \
+                  write_gpu_timings.o \
                   prompt_for_setup.o dbl5_polynomials_testers.o \
                -lcuda -lcudart -L$(CUDALIB)
 
