@@ -68,6 +68,131 @@ void dbl5_make_input
  *   cffpk    cffpk[k] has the lowest doubles of the coefficient series
  *            of monomial k. */
 
+void cmplx5_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputretb, double **inputreix, double **inputremi,
+   double **inputrerg, double **inputrepk,
+   double **inputimtb, double **inputimix, double **inputimmi,
+   double **inputimrg, double **inputimpk,
+   double *cstretb, double *cstreix, double *cstremi,
+   double *cstrerg, double *cstrepk,
+   double *cstimtb, double *cstimix, double *cstimmi,
+   double *cstimrg, double *cstimpk,
+   double **cffretb, double **cffreix, double **cffremi,
+   double **cffrerg, double **cffrepk,
+   double **cffimtb, double **cffimix, double **cffimmi,
+   double **cffimrg, double **cffimpk, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Generates random complex polynomials and complex input series.
+ *
+ * ON ENTRY :
+ *   dim         dimension, total number of variables;
+ *   nbr         number of terms in the polynomial;
+ *   nva         number of variables in each monomial (for products, cyclic);
+ *   pwr         highest power of each variable;
+ *   deg         truncation degree of the series;
+ *   nvr         space for nbr integers;
+ *   idx         space for nbr pointers to integers;
+ *   exp         space for nbr pointers to integers;
+ *   inputretb   space for dim arrays of deg+1 doubles;
+ *   inputreix   space for dim arrays of deg+1 doubles;
+ *   inputremi   space for dim arrays of deg+1 doubles;
+ *   inputrerg   space for dim arrays of deg+1 doubles;
+ *   inputrepk   space for dim arrays of deg+1 doubles;
+ *   inputimtb   space for dim arrays of deg+1 doubles;
+ *   inputimix   space for dim arrays of deg+1 doubles;
+ *   inputimmi   space for dim arrays of deg+1 doubles;
+ *   inputimrg   space for dim arrays of deg+1 doubles;
+ *   inputimpk   space for dim arrays of deg+1 doubles;
+ *   cstretb     space for deg+1 doubles;
+ *   cstreix     space for deg+1 doubles;
+ *   cstremi     space for deg+1 doubles;
+ *   cstrerg     space for deg+1 doubles;
+ *   cstrepk     space for deg+1 doubles;
+ *   cstimtb     space for deg+1 doubles;
+ *   cstimix     space for deg+1 doubles;
+ *   cstimmi     space for deg+1 doubles;
+ *   cstimrg     space for deg+1 doubles;
+ *   cstimpk     space for deg+1 doubles;
+ *   cffretb     space for nbr arrays of deg+1 doubles;
+ *   cffreix     space for nbr arrays of deg+1 doubles;
+ *   cffremi     space for nbr arrays of deg+1 doubles;
+ *   cffrerg     space for nbr arrays of deg+1 doubles;
+ *   cffrepk     space for nbr arrays of deg+1 doubles;
+ *   cffimtb     space for nbr arrays of deg+1 doubles;
+ *   cffimix     space for nbr arrays of deg+1 doubles;
+ *   cffimmi     space for nbr arrays of deg+1 doubles;
+ *   cffimrg     space for nbr arrays of deg+1 doubles;
+ *   cffimpk     space for nbr arrays of deg+1 doubles;
+ *   verbose     if true, then output is written.
+ *
+ * ON RETURN :
+ *   nvr         nvr[k] has the number of variables in monomial k;
+ *   idx         idx[k] holds nvr[k] indices to variables in monomial k;
+ *   exp         exp[k] holds nvr[k] exponents of variables in monomial k;
+ *   inputretb   has the highest doubles of the real parts 
+ *               of dim input series of degree deg;
+ *   inputreix   has the second highest doubles of the real parts 
+ *               of dim input series of degree deg;
+ *   inputremi   has the middle doubles of the real parts 
+ *               of dim input series of degree deg;
+ *   inputrerg   has the second lowest doubles of the real parts 
+ *               of dim input series of degree deg;
+ *   inputrepk   has the lowest doubles of the real parts
+ *               of dim input series of degree deg;
+ *   inputimtb   has the highest doubles of the imaginary parts 
+ *               of dim input series of degree deg;
+ *   inputimix   has the second highest doubles of the imaginary parts 
+ *               of dim input series of degree deg;
+ *   inputimmi   has the middle doubles of the imaginary parts 
+ *               of dim input series of degree deg;
+ *   inputimrg   has the second lowest doubles of the imaginary parts
+ *               of dim input series of degree deg;
+ *   inputimpk   has the lowest doubles of the imaginary parts
+ *               of dim input series of degree deg;
+ *   cstretb     has the highest doubles of the real parts
+ *               of the constant series;
+ *   cstreix     has the second highest doubles of the real parts
+ *               of the constant series;
+ *   cstremi     has the middle doubles of the real parts
+ *               of the constant series;
+ *   cstrerg     has the second lowest doubles of the real parts
+ *               of the constant series;
+ *   cstrepk     has the lowest doubles of the real parts
+ *               of the constant series;
+ *   cstimtb     has the highest doubles of the imaginary parts
+ *               of the constant series;
+ *   cstimix     has the second highest doubles of the imaginary parts
+ *               of the constant series;
+ *   cstimmi     has the middle doubles of the imaginary parts
+ *               of the constant series;
+ *   cstimrg     has the second lowest doubles of the imaginary parts
+ *               of the constant series;
+ *   cstimpk     has the lowest doubles of the imaginary parts
+ *               of the constant series;
+ *   cffretb     cffretb[k] has the highest doubles of the real parts
+ *               of the coefficient series of monomial k;
+ *   cffreix     cffreix[k] has the second highest doubles of the
+ *               real parts of the coefficient series of monomial k;
+ *   cffremi     cffremi[k] has the middle doubles of the
+ *               real parts of the coefficient series of monomial k;
+ *   cffrerg     cffrerg[k] has the second lowest doubles of the real parts
+ *               of the coefficient series of monomial k;
+ *   cffrepk     cffrepk[k] has the lowest doubles of the real parts
+ *               of the coefficient series of monomial k;
+ *   cffimtb     cffimtb[k] has the highest doubles of the imaginary parts
+ *               of the coefficient series of monomial k;
+ *   cffimix     cffimix[k] has the second highest doubles of the
+ *               imaginary parts of the coefficient series of monomial k;
+ *   cffimmi     cffimmi[k] has the middle doubles of the
+ *               imaginary parts of the coefficient series of monomial k;
+ *   cffimrg     cffimrg[k] has the second lowest doubles of the
+ *               imaginary parts of the coefficient series of monomial k;
+ *   cffimpk     cffimlo[k] has the lowest doubles of the imaginary parts
+ *               of the coefficient series of monomial k. */
+
 double dbl5_error_sum
  ( int dim, int deg,
    double **results1tb_h, double **results1ix_h, double **results1mi_h, 
@@ -114,6 +239,30 @@ double test_dbl5_real_polynomial
 /*
  * DESCRIPTION :
  *   Tests the evaluation and differentiation for random real data.
+ *   Returns the sum of all errors.
+ * 
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   nbr      number of terms in the polynomial;
+ *   nva      number of variables per monomial (for products and cyclic);
+ *   pwr      highest power of each variable;
+ *   deg      truncation degree of the series;
+ *   verbose  if zero, then no output is written,
+ *            otherwise, the higher the value, the more output;
+ *   jobrep   if verbose is nonzero and jobrep is true,
+ *            then the jobs report is written,
+ *            otherwise no jobs report is written.
+ *            When running the same problems in many precisions,
+ *            the jobs reports needs to be written only once;
+ *   mode     the mode of execution, either 0, 1, or 2, as follows:
+ *            0 : GPU only; 1 : CPU only; 2 : GPU and CPU. */
+
+double test_cmplx5_real_polynomial
+ ( int dim, int nbr, int nva, int pwr, int deg, int verbose,
+   bool jobrep=true, int mode=2 );
+/*
+ * DESCRIPTION :
+ *   Tests the evaluation and differentiation for random complex data.
  *   Returns the sum of all errors.
  * 
  * ON ENTRY :

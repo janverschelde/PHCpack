@@ -1,3 +1,6 @@
+Wed 3 Feb 2021 : extended dbl5_polynomials_{host, testers} with functions
+  on complex data.  Updated the makefiles.
+
 Tue 2 Feb 2021 : extended random5_polynomials with function to generate
   random polynomials with complex coefficients in penta double precision.
 

@@ -15,6 +15,7 @@
 #include "write_job_counts.h"
 #include "dbl5_polynomials_host.h"
 #include "dbl5_polynomials_kernels.h"
+#include "test_helpers.h"
 #include "dbl5_polynomials_testers.h"
 
 using namespace std;
@@ -145,6 +146,131 @@ void dbl5_make_input
             cout << cfftb[i][j] << "  " << cffix[i][j]
                                 << "  " << cffmi[i][j] << endl
                  << cffrg[i][j] << "  " << cffpk[i][j] << endl;
+      }
+    }
+    if(nva == 0)
+    {
+       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
+       if(dup)
+          cout << "Duplicate supports found." << endl;
+       else if(verbose)
+          cout << "No duplicate supports found." << endl;
+    }
+}
+
+void cmplx5_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputretb, double **inputreix, double **inputremi,
+   double **inputrerg, double **inputrepk,
+   double **inputimtb, double **inputimix, double **inputimmi,
+   double **inputimrg, double **inputimpk,
+   double *cstretb, double *cstreix, double *cstremi,
+   double *cstrerg, double *cstrepk,
+   double *cstimtb, double *cstimix, double *cstimmi,
+   double *cstimrg, double *cstimpk,
+   double **cffretb, double **cffreix, double **cffremi,
+   double **cffrerg, double **cffrepk,
+   double **cffimtb, double **cffimix, double **cffimmi,
+   double **cffimrg, double **cffimpk, bool verbose )
+{
+   make_complex5_input(dim,deg,
+      inputretb,inputreix,inputremi,inputrerg,inputrepk,
+      inputimtb,inputimix,inputimmi,inputimrg,inputimpk);
+
+   if(verbose)
+   {
+      cout << scientific << setprecision(16);
+      cout << "Random input series :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "-> coefficients of series " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+         {
+            cout << inputretb[i][j] << "  " << inputreix[i][j]
+                                    << "  " << inputremi[i][j] << endl
+                 << inputrerg[i][j] << "  " << inputrepk[i][j] << endl;
+            cout << inputimtb[i][j] << "  " << inputimix[i][j]
+                                    << "  " << inputimmi[i][j] << endl
+                 << inputimrg[i][j] << "  " << inputimpk[i][j] << endl;
+         }
+      }
+   }
+   if(nva == 0) // random supports
+   {
+      make_supports(dim,nbr,nvr);
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++)
+      {
+         idx[i] = new int[nva];
+         nvr[i] = nva;
+      }
+   }
+   if(nva > 0)
+   {
+      if(nbr == dim)
+         make_complex5_cyclic
+            (dim,nva,deg,idx,
+             cstretb,cstreix,cstremi,cstrerg,cstrepk,
+             cstimtb,cstimix,cstimmi,cstimrg,cstimpk,
+             cffretb,cffreix,cffremi,cffrerg,cffrepk,
+             cffimtb,cffimix,cffimmi,cffimrg,cffimpk);
+      else
+         make_complex5_products
+            (dim,nbr,nva,deg,idx,
+             cstretb,cstreix,cstremi,cstrerg,cstrepk,
+             cstimtb,cstimix,cstimmi,cstimrg,cstimpk,
+             cffretb,cffreix,cffremi,cffrerg,cffrepk,
+             cffimtb,cffimix,cffimmi,cffimrg,cffimpk);
+   }
+   else
+   {
+      for(int i=0; i<nbr; i++) exp[i] = new int[nvr[i]];
+
+      bool fail = make_complex5_polynomial
+                     (dim,nbr,pwr,deg,nvr,idx,exp,
+                      cstretb,cstreix,cstremi,cstrerg,cstrepk,
+                      cstimtb,cstimix,cstimmi,cstimrg,cstimpk,
+                      cffretb,cffreix,cffremi,cffrerg,cffrepk,
+                      cffimtb,cffimix,cffimmi,cffimrg,cffimpk);
+   }
+   if(verbose)
+   {
+      cout << "Coefficient series of the constant term :" << endl;
+      for(int j=0; j<=deg; j++)
+      {
+         cout << cstretb[j] << "  " << cstreix[j]
+                            << "  " << cstremi[j] << endl
+              << cstrerg[j] << "  " << cstrepk[j] << endl;
+         cout << cstimtb[j] << "  " << cstimix[j]
+                            << "  " << cstimix[j] << endl
+              << cstimrg[j] << "  " << cstimpk[j] << endl;
+      }
+      for(int i=0; i<nbr; i++)
+      {
+         cout << "Generated random monomial " << i << " :" << endl;
+         cout << "   the indices :";
+         for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
+         cout << endl;
+         if(nva == 0)
+         {
+            cout << " the exponents :";
+            for(int j=0; j<nvr[i]; j++) cout << " " << exp[i][j];
+            cout << endl;
+         }
+         cout << " coefficient series :" << endl;
+         for(int j=0; j<=deg; j++)
+         {
+            cout << cffretb[i][j] << "  " << cffreix[i][j]
+                                  << "  " << cffremi[i][j] << endl
+                 << cffrerg[i][j] << "  " << cffrepk[i][j] << endl;
+            cout << cffimtb[i][j] << "  " << cffimix[i][j]
+                                  << "  " << cffimmi[i][j] << endl
+                 << cffimrg[i][j] << "  " << cffimpk[i][j] << endl;
+         }
       }
     }
     if(nva == 0)
@@ -441,6 +567,243 @@ double test_dbl5_real_polynomial
             cout << scientific << setprecision(16);
          }
       }
+      return sumerr;
+   }
+}
+
+double test_cmplx5_real_polynomial
+ ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
+   int mode )
+{
+   if(nbr < 1)
+      return 0.0;
+   else
+   {
+      double **inputretb = new double*[dim]; // dim series of degree deg
+      double **inputreix = new double*[dim];
+      double **inputremi = new double*[dim];
+      double **inputrerg = new double*[dim];
+      double **inputrepk = new double*[dim];
+      double **inputimtb = new double*[dim];
+      double **inputimix = new double*[dim];
+      double **inputimmi = new double*[dim];
+      double **inputimrg = new double*[dim];
+      double **inputimpk = new double*[dim];
+      for(int i=0; i<dim; i++)
+      {
+         inputretb[i] = new double[deg+1];
+         inputreix[i] = new double[deg+1];
+         inputremi[i] = new double[deg+1];
+         inputrerg[i] = new double[deg+1];
+         inputrepk[i] = new double[deg+1];
+         inputimtb[i] = new double[deg+1];
+         inputimix[i] = new double[deg+1];
+         inputimmi[i] = new double[deg+1];
+         inputimrg[i] = new double[deg+1];
+         inputimpk[i] = new double[deg+1];
+      }
+      // The output are dim+1 power series of degree deg
+      // for the evaluated and differentiated polynomial.
+      double **output1retb_h = new double*[dim+1];
+      double **output1reix_h = new double*[dim+1];
+      double **output1remi_h = new double*[dim+1];
+      double **output1rerg_h = new double*[dim+1];
+      double **output1repk_h = new double*[dim+1];
+      double **output1imtb_h = new double*[dim+1];
+      double **output1imix_h = new double*[dim+1];
+      double **output1immi_h = new double*[dim+1];
+      double **output1imrg_h = new double*[dim+1];
+      double **output1impk_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++)
+      {
+         output1retb_h[i] = new double[deg+1];
+         output1reix_h[i] = new double[deg+1];
+         output1remi_h[i] = new double[deg+1];
+         output1rerg_h[i] = new double[deg+1];
+         output1repk_h[i] = new double[deg+1];
+         output1imtb_h[i] = new double[deg+1];
+         output1imix_h[i] = new double[deg+1];
+         output1immi_h[i] = new double[deg+1];
+         output1imrg_h[i] = new double[deg+1];
+         output1impk_h[i] = new double[deg+1];
+      }
+      double **output2retb_h = new double*[dim+1];
+      double **output2reix_h = new double*[dim+1];
+      double **output2remi_h = new double*[dim+1];
+      double **output2rerg_h = new double*[dim+1];
+      double **output2repk_h = new double*[dim+1];
+      double **output2imtb_h = new double*[dim+1];
+      double **output2imix_h = new double*[dim+1];
+      double **output2immi_h = new double*[dim+1];
+      double **output2imrg_h = new double*[dim+1];
+      double **output2impk_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++)
+      {
+         output2retb_h[i] = new double[deg+1];
+         output2reix_h[i] = new double[deg+1];
+         output2remi_h[i] = new double[deg+1];
+         output2rerg_h[i] = new double[deg+1];
+         output2repk_h[i] = new double[deg+1];
+         output2imtb_h[i] = new double[deg+1];
+         output2imix_h[i] = new double[deg+1];
+         output2immi_h[i] = new double[deg+1];
+         output2imrg_h[i] = new double[deg+1];
+         output2impk_h[i] = new double[deg+1];
+      }
+      double **outputretb_d = new double*[dim+1];
+      double **outputreix_d = new double*[dim+1];
+      double **outputremi_d = new double*[dim+1];
+      double **outputrerg_d = new double*[dim+1];
+      double **outputrepk_d = new double*[dim+1];
+      double **outputimtb_d = new double*[dim+1];
+      double **outputimix_d = new double*[dim+1];
+      double **outputimmi_d = new double*[dim+1];
+      double **outputimrg_d = new double*[dim+1];
+      double **outputimpk_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++)
+      {
+         outputretb_d[i] = new double[deg+1];
+         outputreix_d[i] = new double[deg+1];
+         outputremi_d[i] = new double[deg+1];
+         outputrerg_d[i] = new double[deg+1];
+         outputrepk_d[i] = new double[deg+1];
+         outputimtb_d[i] = new double[deg+1];
+         outputimix_d[i] = new double[deg+1];
+         outputimmi_d[i] = new double[deg+1];
+         outputimrg_d[i] = new double[deg+1];
+         outputimpk_d[i] = new double[deg+1];
+      }
+      double *cstretb = new double[deg+1]; // constant coefficient series
+      double *cstreix = new double[deg+1];
+      double *cstremi = new double[deg+1];
+      double *cstrerg = new double[deg+1];
+      double *cstrepk = new double[deg+1];
+      double *cstimtb = new double[deg+1];
+      double *cstimix = new double[deg+1];
+      double *cstimmi = new double[deg+1];
+      double *cstimrg = new double[deg+1];
+      double *cstimpk = new double[deg+1];
+      double **cffretb = new double*[nbr]; // coefficient series of terms
+      double **cffreix = new double*[nbr];
+      double **cffremi = new double*[nbr];
+      double **cffrerg = new double*[nbr];
+      double **cffrepk = new double*[nbr];
+      double **cffimtb = new double*[nbr];
+      double **cffimix = new double*[nbr];
+      double **cffimmi = new double*[nbr];
+      double **cffimrg = new double*[nbr];
+      double **cffimpk = new double*[nbr];
+      for(int i=0; i<nbr; i++)
+      {
+         cffretb[i] = new double[deg+1];
+         cffreix[i] = new double[deg+1];
+         cffremi[i] = new double[deg+1];
+         cffrerg[i] = new double[deg+1];
+         cffrepk[i] = new double[deg+1];
+         cffimtb[i] = new double[deg+1];
+         cffimix[i] = new double[deg+1];
+         cffimmi[i] = new double[deg+1];
+         cffimrg[i] = new double[deg+1];
+         cffimpk[i] = new double[deg+1];
+      }
+      int *nvr = new int[nbr]; // number of variables in each monomial
+      int **idx = new int*[nbr];  // indices of variables in monomials
+      int **exp = new int*[nbr];  // exponents of the variables
+
+      bool vrb = (verbose > 1);
+
+      cmplx5_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
+         inputretb,inputreix,inputremi,inputrerg,inputrepk,
+         inputimtb,inputimix,inputimmi,inputimrg,inputimpk,
+         cstretb,cstreix,cstremi,cstrerg,cstrepk,
+         cstimtb,cstimix,cstimmi,cstimrg,cstimpk,
+         cffretb,cffreix,cffremi,cffrerg,cffrepk,
+         cffimtb,cffimix,cffimmi,cffimrg,cffimpk,vrb);
+
+      ConvolutionJobs cnvjobs(dim);
+      AdditionJobs addjobs(dim,nbr);
+
+      make_all_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
+
+      double timelapsec1_h,timelapsec2_h;
+      double cnvlapms,addlapms,timelapms_d,walltimes_d;
+
+      if((mode == 1) || (mode == 2))
+      {
+         if(vrb) cout << "Computing without convolution jobs ..." << endl;
+         CPU_cmplx5_poly_evaldiff
+            (dim,nbr,deg,nvr,idx,
+             cstretb,cstreix,cstremi,cstrerg,cstrepk,
+             cstimtb,cstimix,cstimmi,cstimrg,cstimpk,
+             cffretb,cffreix,cffremi,cffrerg,cffrepk,
+             cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+             inputretb,inputreix,inputremi,inputrerg,inputrepk,
+             inputimtb,inputimix,inputimmi,inputimrg,inputimpk,
+             output1retb_h,output1reix_h,output1remi_h,
+             output1rerg_h,output1repk_h,
+             output1imtb_h,output1imix_h,output1imrg_h,
+             output1imrg_h,output1impk_h,&timelapsec1_h,vrb);
+   /*
+         if(vrb) cout << "Computing with convolution jobs ..." << endl;
+         CPU_cmplx5_poly_evaldiffjobs
+            (dim,nbr,deg,nvr,idx,
+             cstretb,cstreix,cstremi,cstrerg,cstrepk,
+             cstimtb,cstimix,cstimmi,cstimrg,cstimpk,
+             cffretb,cffreix,cffremi,cffrerg,cffrepk,
+             cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+             inputretb,inputreix,inputremi,inputrerg,inputrepk,
+             inputimtb,inputimix,inputimmi,inputimrg,inputimpk,
+             output2retb_h,output2reix_h,output2remi_h,
+             output2rerg_h,output2repk_h,
+             output2imtb_h,output2imix_h,output2immi_h,
+             output2imrg_h,output2impk_h,
+             cnvjobs,addjobs,&timelapsec2_h,vrb);
+    */
+      }
+    /*
+      if((mode == 0) || (mode == 2))
+      {
+         if(vrb) cout << "Computing on the device ..." << endl;
+         GPU_cmplx5_poly_evaldiff
+            (deg+1,dim,nbr,deg,nvr,idx,
+             cstretb,cstreix,cstremi,cstrerg,cstrepk,
+             cstimtb,cstimix,cstimmi,cstimrg,cstimpk,
+             cffretb,cffreix,cffremi,cffrerg,cffrepk,
+             cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+             inputretb,inputreix,inputremi,inputrerg,inputrepk,
+             inputimtb,inputimix,inputimmi,inputimrg,inputimpk,
+             outputretb_d,outputreix_d,outputremi_d,outputrerg_d,outputrepk_d,
+             outputimtb_d,outputimix_d,outputimmi_d,outputimrg_d,outputimpk_d,
+             cnvjobs,addjobs,&cnvlapms,&addlapms,&timelapms_d,
+             &walltimes_d,vrb);
+      }
+     */
+      double sumerr = 0.0;
+    /*
+      if(mode == 2)
+         sumerr = cmplx5_error_sum(dim,deg,
+                     output1retb_h,output1reix_h,output1remi_h,
+                     output1rerg_h,output1repk_h,
+                     output1imtb_h,output1imix_h,output1immi_h,
+                     output1imrg_h,output1impk_h,
+                     output2retb_h,output2reix_h,output2remi_h,
+                     output2rerg_h,output2repk_h,
+                     output2imtb_h,output2imix_h,output2immi_h,
+                     output2imrg_h,output2impk_h,
+                     outputretb_d,outputreix_d,outputremi_d,
+                     outputrerg_d,outputrepk_d,
+                     outputimtb_d,outputimix_d,outputimmi_d,
+                     outputimrg_d,outputimpk_d,vrb);
+
+      if(verbose > 0)
+      {
+         if(jobrep) write_jobs_report(dim,nva,nbr,deg,cnvjobs,addjobs);
+         if((mode == 1) || (mode == 2))
+            write_CPU_timings(timelapsec1_h,timelapsec2_h);
+         if((mode == 0) || (mode == 2))
+            write_GPU_timings(cnvlapms,addlapms,timelapms_d,walltimes_d);
+      } 
+      */
       return sumerr;
    }
 }
