@@ -634,7 +634,7 @@ void CPU_cmplx4_conv_job
  *   inputrelohi    has the second highest doubles of the real parts
  *                  of the coefficients of the power series
  *                  for all variables in the polynomial;
- *   inputrelolo    has the second lowest doubles of the real part
+ *   inputrehilo    has the second lowest doubles of the real part
  *                  of the coefficients of the power series
  *                  for all variables in the polynomial;
  *   inputrelolo    has the lowest doubles of the real part
@@ -732,12 +732,16 @@ void CPU_cmplx4_conv_job
  *                  of the forward products;
  *   forwardrelohi  are the updated second highest doubles of the real parts
  *                  of the forward products;
+ *   forwardrehilo  are the updated second lowest doubles of the real parts
+ *                  of the forward products;
  *   forwardrelolo  are the updated lowest doubles of the real parts
  *                  of the forward products;
  *   forwardimhihi  are the updated highest doubles of the imaginary parts
  *                  of the forward products;
  *   forwardimlohi  are the updated second highest doubles of the
  *                  imaginary parts of the forward products;
+ *   forwardimhilo  are the updated second lowest doubles of the imaginary
+ *                  parts of the forward products;
  *   forwardimlolo  are the updated lowest doubles of the imaginary parts
  *                  of the forward products;
  *   backwardrehihi are the updated highest doubles of the real parts 
@@ -915,7 +919,7 @@ void CPU_cmplx4_add_job
  *                  of all nvr forward products;
  *   forwardimlolo  computed lowest doubles of the imaginary parts
  *                  of all nvr forward products;
- *   backwardrehihi computed high doubles of the real parts 
+ *   backwardrehihi computed highest doubles of the real parts 
  *                  of all nvr-2 backward products;
  *   backwardrelohi computed second highest doubles of the real parts 
  *                  of all nvr-2 backward products;
@@ -931,7 +935,7 @@ void CPU_cmplx4_add_job
  *                  of all nvr-2 backward products;
  *   backwardimlolo computed lowest doubles of the imaginary parts 
  *                  of all nvr-2 backward products;
- *   crossrehihi    computed high doubles of the real parts
+ *   crossrehihi    computed highest doubles of the real parts
  *                  of all nvr-2 cross products;
  *   crossrelohi    computed second highest doubles of the real parts
  *                  of all nvr-2 cross products;
@@ -993,7 +997,7 @@ void CPU_cmplx4_add_job
  *                  of the cross products;
  *   crossimhihi    are the updated highest doubles of the
  *                  imaginary parts of the cross products;
- *   crossimhilo    are the updated second highest doubles of the
+ *   crossimlohi    are the updated second highest doubles of the
  *                  imaginary parts of the cross products;
  *   crossimhilo    are the updated lowest doubles of the imaginary parts
  *                  of the cross products;

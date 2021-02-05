@@ -674,6 +674,252 @@ void CPU_dbl5_conv_job
  *   crossrg    are the updated second lowest parts of cross products;
  *   crosspk    are the updated lowest parts cross products. */
 
+void CPU_cmplx5_conv_job
+ ( int deg, int nvr, int *idx,
+   double *cffretb, double *cffreix, double *cffremi,
+   double *cffrerg, double *cffrepk,
+   double *cffimtb, double *cffimix, double *cffimmi,
+   double *cffimrg, double *cffimpk,
+   double **inputretb, double **inputreix, double **inputremi,
+   double **inputrerg, double **inputrepk,
+   double **inputimtb, double **inputimix, double **inputimmi,
+   double **inputimrg, double **inputimpk,
+   double **forwardretb, double **forwardreix, double **forwardremi,
+   double **forwardrerg, double **forwardrepk,
+   double **forwardimtb, double **forwardimix, double **forwardimmi,
+   double **forwardimrg, double **forwardimpk,
+   double **backwardretb, double **backwardreix, double **backwardremi,
+   double **backwardrerg, double **backwardrepk,
+   double **backwardimtb, double **backwardimix, double **backwardimmi,
+   double **backwardimrg, double **backwardimpk,
+   double **crossretb, double **crossreix, double **crossremi,
+   double **crossrerg, double **crossrepk,
+   double **crossimtb, double **crossimix, double **crossimmi,
+   double **crossimrg, double **crossimpk,
+   ConvolutionJob job, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Computes one convolution defined by the job, on complex data.
+ *
+ * ON ENTRY :
+ *   deg          degree of the series;
+ *   nvr          number of variables in the monomial;
+ *   idx          indices to the variables in the monomial;
+ *   cffretb      has the highest doubles of the real parts
+ *                of the coefficients, cffretb[k] has deg+1 highest
+ *                coefficients of monomial k;
+ *   cffreix      has the second highest doubles of the real parts
+ *                of the coefficients, cffreix[k] has deg+1 second highest
+ *                coefficients of monomial k;
+ *   cffremi      has the middle doubles of the real parts
+ *                of the coefficients, cffremi[k] has deg+1 second highest
+ *                coefficients of monomial k;
+ *   cffrerg      has the second lowest doubles of the real parts
+ *                of the coefficients, cffrerg[k] has deg+1 second lowest
+ *                coefficients of monomial k;
+ *   cffrepk      has the lowest doubles of the real parts
+ *                of the coefficients, cffrepk[k] has deg+1 lowest
+ *                coefficients of monomial k;
+ *   cffimtb      has the highest doubles of the imaginary parts
+ *                of the coefficients, cffimtb[k] has deg+1 highest
+ *                coefficients of monomial k;
+ *   cffimix      has the second highest doubles of the imaginary parts
+ *                of the coefficients, cffimix[k] has deg+1 second highest
+ *                coefficients of monomial k;
+ *   cffimmi      has the middle doubles of the imaginary parts
+ *                of the coefficients, cffimix[k] has deg+1 second highest
+ *                coefficients of monomial k;
+ *   cffimrg      has the second lowest doubles of the imaginary parts
+ *                of the coefficient, cffimpk[k] has the deg+1 second
+ *                lowest coefficients of monomial k;
+ *   cffimpk      has the lowest doubles of the imaginary parts
+ *                of the coefficient, cffimpk[k] has the deg+1 lowest
+ *                coefficients of monomial k;
+ *   inputretb    has the highest doubles of the real parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputreix    has the second highest doubles of the real parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputremi    has the middle doubles of the real parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputrerg    has the second lowest doubles of the real part
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputrepk    has the lowest doubles of the real part
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimtb    has the highest doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimix    has the second highest doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimmi    has the middle doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimrg    has the second lowest doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimpk    has the lowest doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   forwardretb  has space for the highest doubles of the real parts
+ *                of all nvr forward products,
+ *                forwardretb[k] has space for deg+1 doubles;
+ *   forwardreix  has space for the second highest doubles of the real parts
+ *                of all nvr forward products,
+ *                forwardreix[k] has space for deg+1 doubles;
+ *   forwardremi  has space for the second highest doubles of the real parts
+ *                of all nvr forward products,
+ *                forwardremi[k] has space for deg+1 doubles;
+ *   forwardrerg  has space for the second lowest doubles of the real parts
+ *                of all nvr forward products,
+ *                forwardrerg[k] has space for deg+1 doubles;
+ *   forwardrepk  has space for the lowest doubles of the real parts
+ *                of all nvr forward products,
+ *                forwardrepk[k] has space for deg+1 doubles;
+ *   forwardimtb  has space for the highest doubles of the imaginary parts
+ *                of all nvr forward products,
+ *                forwardimtb[k] has space for deg+1 doubles;
+ *   forwardimix  has space for the second highest doubles of 
+ *                the imaginary parts of all nvr forward products,
+ *                forwardimix[k] has space for deg+1 doubles;
+ *   forwardimmi  has space for the second highest doubles of 
+ *                the imaginary parts of all nvr forward products,
+ *                forwardimmi[k] has space for deg+1 doubles;
+ *   forwardimrg  has space for the second lowest doubles of the
+ *                imaginary parts of all nvr forward products,
+ *                forwardimrg[k] has space for deg+1 doubles;
+ *   forwardimpk  has space for the lowest doubles of the imaginary parts
+ *                of all nvr forward products,
+ *                forwardimpk[k] has space for deg+1 doubles;
+ *   backwardretb has space for the highest doubles of the real parts 
+ *                of all nvr-2 backward products;
+ *                backwardretb[k] has space for deg+1 doubles;
+ *   backwardreix has space for the second highest doubles of the real parts 
+ *                of all nvr-2 backward products;
+ *                backwardreix[k] has space for deg+1 doubles;
+ *   backwardremi has space for the middle doubles of the real parts 
+ *                of all nvr-2 backward products;
+ *                backwardremi[k] has space for deg+1 doubles;
+ *   backwardrerg has space for the second lowest doubles of the real parts 
+ *                of all nvr-2 backward products;
+ *                backwardrerg[k] has space for deg+1 doubles;
+ *   backwardrepk has space for the lowest doubles of the real parts 
+ *                of all nvr-2 backward products;
+ *                backwardrepk[k] has space for deg+1 doubles;
+ *   backwardimtb has space for the highest doubles of the imaginary parts 
+ *                of all nvr-2 backward products;
+ *                backwardimtb[k] has space for deg+1 doubles;
+ *   backwardimix has space for the second highest doubles
+ *                of the imaginary parts of all nvr-2 backward products;
+ *                backwardimix[k] has space for deg+1 doubles;
+ *   backwardimmi has space for the middle doubles
+ *                of the imaginary parts of all nvr-2 backward products;
+ *                backwardimmi[k] has space for deg+1 doubles;
+ *   backwardimrg has space for the second lowest doubles
+ *                of the imaginary parts of all nvr-2 backward products;
+ *                backwardimrg[k] has space for deg+1 doubles;
+ *   backwardimpk has space for the lowest doubles of the imaginary parts 
+ *                of all nvr-2 backward products;
+ *                backwardimpk[k] has space for deg+1 doubles;
+ *   crossretb    has space for the highest doubles of the real parts
+ *                of all nvr-2 cross products;
+ *                crossretb[k] has space for deg+1 doubles;
+ *   crossreix    has space for the second highest doubles
+ *                of the real parts of all nvr-2 cross products;
+ *                crossreix[k] has space for deg+1 doubles;
+ *   crossremi    has space for the middle doubles
+ *                of the real parts of all nvr-2 cross products;
+ *                crossremi[k] has space for deg+1 doubles;
+ *   crossrerg    has space for the second lowest doubles of the real parts
+ *                of all nvr-2 cross products;
+ *                crossimrg[k] has space for deg+1 doubles;
+ *   crossrepk    has space for the lowest doubles of the real parts
+ *                of all nvr-2 cross products;
+ *                crossimpk[k] has space for deg+1 doubles;
+ *   crossimtb    has space for the highest doubles of the imaginary parts
+ *                of all nvr-2 cross products;
+ *                crossimtb[k] has space for deg+1 doubles;
+ *   crossimix    has space for the second highest doubles
+ *                of the imaginary parts of all nvr-2 cross products;
+ *                crossimix[k] has space for deg+1 doubles;
+ *   crossimmi    has space for the middle doubles
+ *                of the imaginary parts of all nvr-2 cross products;
+ *                crossimmi[k] has space for deg+1 doubles;
+ *   crossimrg    has space for the second lowest doubles 
+ *                of the imaginary parts of all nvr-2 cross products;
+ *                crossimrg[k] has space for deg+1 doubles;
+ *   crossimpk    has space for the lowest doubles of the imaginary parts
+ *                of all nvr-2 cross products;
+ *                crossimpk[k] has space for deg+1 doubles;
+ *   job          defines the convolution job;
+ *   verbose      if true, then is verbose.
+ *
+ * ON RETURN :
+ *   forwardretb  are the updated highest doubles of the real parts
+ *                of the forward products;
+ *   forwardreix  are the updated second highest doubles of the real parts
+ *                of the forward products;
+ *   forwardremi  are the updated middle doubles of the real parts
+ *                of the forward products;
+ *   forwardrerg  are the updated second lowest doubles of the real parts
+ *                of the forward products;
+ *   forwardrepk  are the updated lowest doubles of the real parts
+ *                of the forward products;
+ *   forwardimtb  are the updated highest doubles of the imaginary parts
+ *                of the forward products;
+ *   forwardimix  are the updated second highest doubles of the
+ *                imaginary parts of the forward products;
+ *   forwardimmi  are the updated middle doubles of the
+ *                imaginary parts of the forward products;
+ *   forwardimrg  are the updated second lowest doubles of the imaginary parts
+ *                of the forward products;
+ *   forwardimpk  are the updated lowest doubles of the imaginary parts
+ *                of the forward products;
+ *   backwardretb are the updated highest doubles of the real parts 
+ *                of the backward products;
+ *   backwardreix are the updated second highest doubles of the real parts 
+ *                of the backward products;
+ *   backwardremi are the updated middle doubles of the real parts 
+ *                of the backward products;
+ *   backwardrerg are the updated second lowest doubles of the real parts 
+ *                of the backward products;
+ *   backwardrepk are the updated lowest doubles of the real parts 
+ *                of the backward products;
+ *   backwardimtb are the updated highest doubles of the imaginary parts 
+ *                of the backward products;
+ *   backwardimix are the updated second highest doubles of
+ *                the imaginary parts of the backward products;
+ *   backwardimmi are the updated middle doubles of
+ *                the imaginary parts of the backward products;
+ *   backwardimrg are the updated second lowest doubles of
+ *                the imaginary parts of the backward products;
+ *   backwardimpk are the updated lowest doubles of the imaginary parts 
+ *                of the backward products;
+ *   crossretb    are the updated highest doubles of the real parts
+ *                of the cross products;
+ *   crossreix    are the updated second highest doubles of the real parts
+ *                of the cross products;
+ *   crossremi    are the updated middle doubles of the real parts
+ *                of the cross products;
+ *   crossrerg    are the updated second lowest doubles of the real parts
+ *                of the cross products;
+ *   crossrepk    are the updated lowest doubles of the real parts
+ *                of the cross products;
+ *   crossimtb    are the updated highest doubles of the imaginary parts
+ *                of the cross products;
+ *   crossimix    are the updated second highest doubles of
+ *                the imaginary parts of the cross products;
+ *   crossimmi    are the updated middle doubles of
+ *                the imaginary parts of the cross products;
+ *   crossimrg    are the updated second lowest doubles of
+ *                the imaginary parts of the cross products;
+ *   crossimpk    are the updated lowest doubles of the imaginary parts
+ *                of the cross products. */
+
 void CPU_dbl5_add_job
  ( int deg,
    double *csttb, double *cstix, double *cstmi,
@@ -742,6 +988,209 @@ void CPU_dbl5_add_job
  *   crossmi    are the updated middle parts of cross products;
  *   crossrg    are the updated second lowest parts of cross products;
  *   crosspk    are the updated lowest parts cross products. */
+
+void CPU_cmplx5_add_job
+ ( int deg, double *cstretb, double *cstreix, double *cstremi,
+            double *cstrerg, double *cstrepk,
+   double *cstimtb, double *cstimix, double *cstimmi,
+   double *cstimrg, double *cstimpk,
+   double **cffretb, double **cffreix, double **cffremi,
+   double **cffrerg, double **cffrepk,
+   double **cffimtb, double **cffimix, double **cffimmi,
+   double **cffimrg, double **cffimpk,
+   double ***forwardretb, double ***forwardreix, double ***forwardremi,
+   double ***forwardrerg, double ***forwardrepk,
+   double ***forwardimtb, double ***forwardimix, double ***forwardimmi,
+   double ***forwardimrg, double ***forwardimpk,
+   double ***backwardretb, double ***backwardreix, double ***backwardremi,
+   double ***backwardrerg, double ***backwardrepk, 
+   double ***backwardimtb, double ***backwardimix, double ***backwardimmi,
+   double ***backwardimrg, double ***backwardimpk, 
+   double ***crossretb, double ***crossreix, double ***crossremi,
+   double ***crossrerg, double ***crossrepk,
+   double ***crossimtb, double ***crossimix, double ***crossimmi,
+   double ***crossimrg, double ***crossimpk,
+   AdditionJob job, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Does one update defined by the job, on complex data.
+ *
+ * ON ENTRY :
+ *   deg          degree of the series;
+ *   cstretb      highest deg+1 doubles of the real parts
+ *                of the constant coefficient series;
+ *   cstreix      second highest deg+1 doubles of the real parts
+ *                of the constant coefficient series;
+ *   cstremi      middle deg+1 doubles of the real parts
+ *                of the constant coefficient series;
+ *   cstrerg      second lowest deg+1 doubles for the real parts
+ *                of the constant coefficient series;
+ *   cstrepk      lowest deg+1 doubles for the real parts
+ *                of the constant coefficient series;
+ *   cstimtb      highest deg+1 doubles of the imaginary parts
+ *                of the constant coefficient series;
+ *   cstimix      second highest deg+1 doubles of the imaginary parts
+ *                of the constant coefficient series;
+ *   cstimmi      middle deg+1 doubles of the imaginary parts
+ *                of the constant coefficient series;
+ *   cstimrg      second lowest deg+1 doubles of the imaginary parts
+ *                of the constant coefficient series;
+ *   cstimpk      lowest deg+1 doubles for the imaginary parts
+ *                of the constant coefficient series;
+ *   cffretb      has the highest doubles of the real parts
+ *                of the coefficients, cffretb[k] has deg+1 highest
+ *                coefficients of monomial k;
+ *   cffreix      has the second highest doubles of the real parts
+ *                of the coefficients, cffreix[k] has deg+1 second highest
+ *                coefficients of monomial k;
+ *   cffremi      has the middle doubles of the real parts
+ *                of the coefficients, cffremi[k] has deg+1 second highest
+ *                coefficients of monomial k;
+ *   cffrerg      has the second lowest doubles of the real parts
+ *                of the coefficients, cffrerg[k] has deg+1 second lowest
+ *                coefficients of monomial k;
+ *   cffrepk      has the lowest doubles of the real parts
+ *                of the coefficients, cffrepk[k] has deg+1 lowest
+ *                coefficients of monomial k;
+ *   cffimtb      has the highest doubles of the imaginary parts
+ *                of the coefficients, cffimtb[k] has deg+1 highest
+ *                coefficients of monomial k;
+ *   cffimix      has the second highest doubles of the imaginary parts
+ *                of the coefficients, cffimix[k] has deg+1 second highest
+ *                coefficients of monomial k;
+ *   cffimmi      has the middle doubles of the imaginary parts
+ *                of the coefficients, cffimmi[k] has deg+1 second highest
+ *                coefficients of monomial k;
+ *   cffimrg      has the second lowest doubles of the imaginary parts
+ *                of the coefficient, cffimpk[k] has the deg+1 second
+ *                lowest coefficients of monomial k;
+ *   cffimpk      has the lowest doubles of the imaginary parts
+ *                of the coefficient, cffimpk[k] has the deg+1 lowest
+ *                coefficients of monomial k;
+ *   forwardretb  computed highest doubles of the real parts
+ *                of all nvr forward products;
+ *   forwardreix  computed second highest doubles of the real parts
+ *                of all nvr forward products;
+ *   forwardremi  computed middle doubles of the real parts
+ *                of all nvr forward products;
+ *   forwardrerg  computed second lowest doubles of the real parts
+ *                of all nvr forward products;
+ *   forwardrepk  computed lowest doubles of the real parts
+ *                of all nvr forward products;
+ *   forwardimtb  computed highest doubles of the imaginary parts
+ *                of all nvr forward products;
+ *   forwardimix  computed second highest doubles of the imaginary parts
+ *                of all nvr forward products;
+ *   forwardimmi  computed middle doubles of the imaginary parts
+ *                of all nvr forward products;
+ *   forwardimrg  computed second lowest doubles of the imaginary parts
+ *                of all nvr forward products;
+ *   forwardimpk  computed lowest doubles of the imaginary parts
+ *                of all nvr forward products;
+ *   backwardretb computed highest doubles of the real parts 
+ *                of all nvr-2 backward products;
+ *   backwardreix computed second highest doubles of the real parts 
+ *                of all nvr-2 backward products;
+ *   backwardremi computed middle doubles of the real parts 
+ *                of all nvr-2 backward products;
+ *   backwardrerg computed second lowest doubles of the real parts 
+ *                of all nvr-2 backward products;
+ *   backwardrepk computed lowest doubles of the real parts 
+ *                of all nvr-2 backward products;
+ *   backwardimtb computed highest doubles of the imaginary parts 
+ *                of all nvr-2 backward products;
+ *   backwardimix computed second highest doubles of the imaginary parts 
+ *                of all nvr-2 backward products;
+ *   backwardimmi computed middle doubles of the imaginary parts 
+ *                of all nvr-2 backward products;
+ *   backwardimrg computed second lowest doubles of the imaginary parts 
+ *                of all nvr-2 backward products;
+ *   backwardimpk computed lowest doubles of the imaginary parts 
+ *                of all nvr-2 backward products;
+ *   crossretb    computed highest doubles of the real parts
+ *                of all nvr-2 cross products;
+ *   crossreix    computed second highest doubles of the real parts
+ *                of all nvr-2 cross products;
+ *   crossremi    computed middle doubles of the real parts
+ *                of all nvr-2 cross products;
+ *   crossrerg    computed second lowest doubles of the real parts
+ *                of all nvr-2 cross products;
+ *   crossrepk    computed lowest doubles of the real parts
+ *                of all nvr-2 cross products;
+ *   crossimtb    computed highest doubles of the imaginary parts
+ *                of all nvr-2 cross products;
+ *   crossimix    computed second highest doubles of the imaginary parts
+ *                of all nvr-2 cross products;
+ *   crossimmi    computed middle doubles of the imaginary parts
+ *                of all nvr-2 cross products;
+ *   crossimrg    computed second lowest doubles of the imaginary parts
+ *                of all nvr-2 cross products;
+ *   crossimpk    computed lowest doubles of the imaginary parts
+ *                of all nvr-2 cross products;
+ *   job          defines the addition job;
+ *   verbose      if true, then is verbose.
+
+ * ON RETURN :
+ *   forwardretb  are the updated highest doubles of the real parts
+ *                of the forward products;
+ *   forwardreix  are the updated second highest doubles of the real parts
+ *                of the forward products;
+ *   forwardremi  are the updated middle doubles of the real parts
+ *                of the forward products;
+ *   forwardrerg  are the updated second lowest doubles of the real parts
+ *                of the forward products;
+ *   forwardrepk  are the updated lowest doubles of the real parts
+ *                of the forward products;
+ *   forwardimtb  are the updated highest doubles of the imaginary parts
+ *                of the forward products;
+ *   forwardimix  are the updated second highest doubles of the
+ *                imaginary parts of the forward products;
+ *   forwardimmi  are the updated middle doubles of the
+ *                imaginary parts of the forward products;
+ *   forwardimrg  are the updated second lowest doubles of the
+ *                imaginary parts of the forward products;
+ *   forwardimpk  are the updated lowest doubles of the imaginary parts
+ *                of the forward products;
+ *   backwardretb are the updated highest doubles of the real parts 
+ *                of the backward products;
+ *   backwardreix are the updated second highest doubles of the real parts 
+ *                of the backward products;
+ *   backwardremi are the updated middle doubles of the real parts 
+ *                of the backward products;
+ *   backwardrerg are the updated second lowest doubles of the real parts 
+ *                of the backward products;
+ *   backwardrepk are the updated lowest doubles of the real parts 
+ *                of the backward products;
+ *   backwardimtb are the updated highest doubles of the imaginary parts 
+ *                of the backward products;
+ *   backwardimix are the updated second highest doubles of the
+ *                imaginary parts of the backward products;
+ *   backwardimmi are the updated middle doubles of the
+ *                imaginary parts of the backward products;
+ *   backwardimrg are the updated second lowest doubles of the
+ *                imaginary parts of the backward products;
+ *   backwardimpk are the updated lowest doubles of the imaginary parts 
+ *                of the backward products;
+ *   crossretb    are the updated highest doubles of the real parts
+ *                of the cross products;
+ *   crossreix    are the updated second highest doubles of the real parts
+ *                of the cross products;
+ *   crossremi    are the updated middle doubles of the real parts
+ *                of the cross products;
+ *   crossrerg    are the updated second lowest doubles of the real parts
+ *                of the cross products;
+ *   crossrepk    are the updated lowest doubles of the real parts
+ *                of the cross products;
+ *   crossimtb    are the updated highest doubles of the
+ *                imaginary parts of the cross products;
+ *   crossimix    are the updated second highest doubles of the
+ *                imaginary parts of the cross products;
+ *   crossimmi    are the updated middle doubles of the
+ *                imaginary parts of the cross products;
+ *   crossimrg    are the updated lowest doubles of the imaginary parts
+ *                of the cross products;
+ *   crossimpk    are the updated lowest doubles of the imaginary parts
+ *                of the cross products. */
 
 void CPU_dbl5_poly_updates
  ( int dim, int nbr, int deg, int *nvr, int **idx, 

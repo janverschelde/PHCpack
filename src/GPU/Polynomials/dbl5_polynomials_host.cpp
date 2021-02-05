@@ -930,6 +930,354 @@ void CPU_dbl5_conv_job
    }
 }
 
+void CPU_cmplx5_conv_job
+ ( int deg, int nvr, int *idx,
+   double *cffretb, double *cffreix, double *cffremi,
+   double *cffrerg, double *cffrepk,
+   double *cffimtb, double *cffimix, double *cffimmi,
+   double *cffimrg, double *cffimpk,
+   double **inputretb, double **inputreix, double **inputremi,
+   double **inputrerg, double **inputrepk,
+   double **inputimtb, double **inputimix, double **inputimmi,
+   double **inputimrg, double **inputimpk,
+   double **forwardretb, double **forwardreix, double **forwardremi,
+   double **forwardrerg, double **forwardrepk,
+   double **forwardimtb, double **forwardimix, double **forwardimmi,
+   double **forwardimrg, double **forwardimpk,
+   double **backwardretb, double **backwardreix, double **backwardremi,
+   double **backwardrerg, double **backwardrepk,
+   double **backwardimtb, double **backwardimix, double **backwardimmi,
+   double **backwardimrg, double **backwardimpk,
+   double **crossretb, double **crossreix, double **crossremi,
+   double **crossrerg, double **crossrepk,
+   double **crossimtb, double **crossimix, double **crossimmi,
+   double **crossimrg, double **crossimpk,
+   ConvolutionJob job, bool verbose )
+{
+   const int inp1tp = job.get_first_type();
+   const int inp1ix = job.get_first_input();
+   const int inp2tp = job.get_second_type();
+   const int inp2ix = job.get_second_input();
+   const int outptp = job.get_output_type();
+   const int outidx = job.get_output_index();
+
+   if(outptp == 1) // forward product either initializes or accumulates
+   {
+      if(verbose) cout << "-> computing f[" << outidx << "] = ";
+      if(inp1tp < 0)
+      {
+         if(verbose) cout << "cff * input[" << inp2ix << "]" << endl;
+         CPU_cmplx5_product(deg,
+            cffretb,cffreix,cffremi,cffrerg,cffrepk,
+            cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+            inputretb[inp2ix],inputreix[inp2ix],inputremi[inp2ix],
+            inputrerg[inp2ix],inputrepk[inp2ix],
+            inputimtb[inp2ix],inputimix[inp2ix],inputimmi[inp2ix],
+            inputimrg[inp2ix],inputimpk[inp2ix],
+            forwardretb[outidx],forwardreix[outidx],forwardremi[outidx],
+            forwardrerg[outidx],forwardrepk[outidx],
+            forwardimtb[outidx],forwardimix[outidx],forwardimmi[outidx],
+            forwardimrg[outidx],forwardimpk[outidx]);
+      }
+      else if(inp1tp == 0)
+      {
+         if(inp2tp < 0)
+         {
+            if(verbose) cout << "input[" << inp1ix << "] * cff" << endl;
+            CPU_cmplx5_product(deg,
+               inputretb[inp1ix],inputreix[inp1ix],inputremi[inp1ix],
+               inputrerg[inp1ix],inputrepk[inp1ix],
+               inputimtb[inp1ix],inputimix[inp1ix],inputimmi[inp1ix],
+               inputimrg[inp1ix],inputimpk[inp1ix],
+               cffretb,cffreix,cffremi,cffrerg,cffrepk,
+               cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+               forwardretb[outidx],forwardreix[outidx],forwardremi[outidx],
+               forwardrerg[outidx],forwardrepk[outidx],
+               forwardimtb[outidx],forwardimix[outidx],forwardimmi[outidx],
+               forwardimrg[outidx],forwardimpk[outidx]);
+         }
+         else
+         {
+            if(verbose) cout << "input[" << inp1ix
+                             << "] * f[" << inp2ix << "]" << endl;
+            CPU_cmplx5_product(deg,
+               inputretb[inp1ix],inputreix[inp1ix],inputremi[inp1ix],
+               inputrerg[inp1ix],inputrepk[inp1ix],
+               inputimtb[inp1ix],inputimix[inp1ix],inputimmi[inp1ix],
+               inputimrg[inp1ix],inputimpk[inp1ix],
+               forwardretb[inp2ix],forwardreix[inp2ix],forwardremi[inp2ix],
+               forwardrerg[inp2ix],forwardrepk[inp2ix],
+               forwardimtb[inp2ix],forwardimix[inp2ix],forwardimmi[inp2ix],
+               forwardimrg[inp2ix],forwardimpk[inp2ix],
+               forwardretb[outidx],forwardreix[outidx],forwardremi[outidx],
+               forwardrerg[outidx],forwardrepk[outidx],
+               forwardimtb[outidx],forwardimix[outidx],forwardimmi[outidx],
+               forwardimrg[outidx],forwardimpk[outidx]);
+         }
+      }
+      else if(inp1tp == 3)
+      {
+         if(verbose) cout << "c[" << inp1ix
+                          << "] * input[" << inp2ix << "]" << endl;
+         CPU_cmplx5_product(deg,
+            crossretb[inp1ix],crossreix[inp1ix],crossremi[inp1ix],
+            crossrerg[inp1ix],crossrepk[inp1ix],
+            crossimtb[inp1ix],crossimix[inp1ix],crossimmi[inp1ix],
+            crossimrg[inp1ix],crossimpk[inp1ix],
+            inputretb[inp2ix],inputreix[inp2ix],inputremi[inp2ix],
+            inputrerg[inp2ix],inputrepk[inp2ix],
+            inputimtb[inp2ix],inputimix[inp2ix],inputimmi[inp2ix],
+            inputimrg[inp2ix],inputimpk[inp2ix],
+            forwardretb[outidx],forwardreix[outidx],forwardremi[outidx],
+            forwardrerg[outidx],forwardrepk[outidx],
+            forwardimtb[outidx],forwardimix[outidx],forwardimmi[outidx],
+            forwardimrg[outidx],forwardimpk[outidx]);
+      }
+      else
+      {
+         if(inp2tp < 0)
+         {
+            if(verbose) cout << "input[" << inp1ix << "] * cff" << endl;
+            CPU_cmplx5_product(deg,
+               inputretb[inp1ix],inputreix[inp1ix],inputremi[inp1ix],
+               inputrerg[inp1ix],inputrepk[inp1ix],
+               inputimtb[inp1ix],inputimix[inp1ix],inputimmi[inp1ix],
+               inputimrg[inp1ix],inputimpk[inp1ix],
+               cffretb,cffreix,cffremi,cffrerg,cffrepk,
+               cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+               forwardretb[outidx],forwardreix[outidx],forwardremi[outidx],
+               forwardrerg[outidx],forwardrepk[outidx],
+               forwardimtb[outidx],forwardimix[outidx],forwardimmi[outidx],
+               forwardimrg[outidx],forwardimpk[outidx]);
+         }
+         else if(inp2tp == 0)
+         {
+            if(verbose) cout << "f[" << inp1ix
+                             << "] * input[" << inp2ix << "]" << endl;
+            CPU_cmplx5_product(deg,
+               forwardretb[inp1ix],forwardreix[inp1ix],forwardremi[inp1ix],
+               forwardrerg[inp1ix],forwardrepk[inp1ix],
+               forwardimtb[inp1ix],forwardimix[inp1ix],forwardimmi[inp1ix],
+               forwardimrg[inp1ix],forwardimpk[inp1ix],
+               inputretb[inp2ix],inputreix[inp2ix],inputremi[inp2ix],
+               inputrerg[inp2ix],inputrepk[inp2ix],
+               inputimtb[inp2ix],inputimix[inp2ix],inputimmi[inp2ix],
+               inputimrg[inp2ix],inputimpk[inp2ix],
+               forwardretb[outidx],forwardreix[outidx],forwardremi[outidx],
+               forwardrerg[outidx],forwardrepk[outidx],
+               forwardimtb[outidx],forwardimix[outidx],forwardimmi[outidx],
+               forwardimrg[outidx],forwardimpk[outidx]);
+         }
+      }
+   }
+   else if(outptp == 2) // backward product either initializes or accumulates
+   {
+      if(verbose) cout << "-> computing b[" << outidx << "] = ";
+      if(inp1tp < 0)
+      {
+         if(inp2tp == 0)
+         {
+            if(verbose) cout << "cff * input[" << inp2ix << "]" << endl;
+            CPU_cmplx5_product(deg,
+               cffretb,cffreix,cffremi,cffrerg,cffrepk,
+               cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+               inputretb[inp2ix],inputreix[inp2ix],inputremi[inp2ix],
+               inputrerg[inp2ix],inputrepk[inp2ix],
+               inputimtb[inp2ix],inputimix[inp2ix],inputimmi[inp2ix],
+               inputimrg[inp2ix],inputimpk[inp2ix],
+               backwardretb[outidx],backwardreix[outidx],backwardremi[outidx],
+               backwardrerg[outidx],backwardrepk[outidx],
+               backwardimtb[outidx],backwardimix[outidx],backwardimmi[outidx],
+               backwardimrg[outidx],backwardimpk[outidx]);
+         }
+         else
+         {
+            if(verbose) cout << "cff * b[" << inp2ix << "]" << endl;
+            CPU_cmplx5_product(deg,
+               cffretb,cffreix,cffremi,cffrerg,cffrepk,
+               cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+               backwardretb[inp2ix],backwardreix[inp2ix],backwardremi[inp2ix],
+               backwardrerg[inp2ix],backwardrepk[inp2ix],
+               backwardimtb[inp2ix],backwardimix[inp2ix],backwardimmi[inp2ix],
+               backwardimrg[inp2ix],backwardimpk[inp2ix],
+               backwardretb[outidx],backwardreix[outidx],backwardremi[outidx],
+               backwardrerg[outidx],backwardrepk[outidx],
+               backwardimtb[outidx],backwardimix[outidx],backwardimmi[outidx],
+               backwardimrg[outidx],backwardimpk[outidx]);
+         }
+      }
+      else if(inp1tp == 0)
+      {
+         if(inp2tp == 0)
+         {
+            if(verbose) cout << "input[" << inp1ix
+                             << "] * input[" << inp2ix << endl;
+            CPU_cmplx5_product(deg,
+               inputretb[inp1ix],inputreix[inp1ix],inputremi[inp1ix],
+               inputrerg[inp1ix],inputrepk[inp1ix],
+               inputimtb[inp1ix],inputimix[inp1ix],inputimmi[inp1ix],
+               inputimrg[inp1ix],inputimpk[inp1ix],
+               inputretb[inp2ix],inputreix[inp2ix],inputremi[inp2ix],
+               inputrerg[inp2ix],inputrepk[inp2ix],
+               inputimtb[inp2ix],inputimix[inp2ix],inputimmi[inp2ix],
+               inputimrg[inp2ix],inputimpk[inp2ix],
+               backwardretb[outidx],backwardreix[outidx],backwardremi[outidx],
+               backwardrerg[outidx],backwardrepk[outidx],
+               backwardimtb[outidx],backwardimix[outidx],backwardimmi[outidx],
+               backwardimrg[outidx],backwardimpk[outidx]);
+         }
+         else
+         {
+            if(verbose) cout << "input[" << inp1ix
+                             << "] * b[" << inp2ix << "]" << endl;
+            CPU_cmplx5_product(deg,
+               inputretb[inp1ix],inputreix[inp1ix],inputremi[inp1ix],
+               inputrerg[inp1ix],inputrepk[inp1ix],
+               inputimtb[inp1ix],inputimix[inp1ix],inputimmi[inp1ix],
+               inputimrg[inp1ix],inputimpk[inp1ix],
+               backwardretb[inp2ix],backwardreix[inp2ix],backwardremi[inp2ix],
+               backwardrerg[inp2ix],backwardrepk[inp2ix],
+               backwardimtb[inp2ix],backwardimix[inp2ix],backwardimmi[inp2ix],
+               backwardimrg[inp2ix],backwardimpk[inp2ix],
+               backwardretb[outidx],backwardreix[outidx],backwardremi[outidx],
+               backwardrerg[outidx],backwardrepk[outidx],
+               backwardimtb[outidx],backwardimix[outidx],backwardimmi[outidx],
+               backwardimrg[outidx],backwardimpk[outidx]);
+         }
+      }
+      else
+      {
+         if(inp2tp < 0)
+         {
+            if(verbose) cout << "b[" << inp1ix << "] * cff" << endl;
+            CPU_cmplx5_product(deg,
+               backwardretb[inp1ix],backwardreix[inp1ix],backwardremi[inp1ix],
+               backwardrerg[inp1ix],backwardrepk[inp1ix],
+               backwardimtb[inp1ix],backwardimix[inp1ix],backwardimmi[inp1ix],
+               backwardimrg[inp1ix],backwardimpk[inp1ix],
+               cffretb,cffreix,cffremi,cffrerg,cffrepk,
+               cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+               backwardretb[outidx],backwardreix[outidx],backwardremi[outidx],
+               backwardrerg[outidx],backwardrepk[outidx],
+               backwardimtb[outidx],backwardimix[outidx],backwardimmi[outidx],
+               backwardimrg[outidx],backwardimpk[outidx]);
+         }
+         else if(inp2tp == 0)
+         {
+            if(verbose) cout << "b[" << inp1ix
+                             << "] * input[" << inp2ix << "]" << endl;
+            CPU_cmplx5_product(deg,
+               backwardretb[inp1ix],backwardreix[inp1ix],backwardremi[inp1ix],
+               backwardrerg[inp1ix],backwardrepk[inp1ix],
+               backwardimtb[inp1ix],backwardimix[inp1ix],backwardimmi[inp1ix],
+               backwardimrg[inp1ix],backwardimpk[inp1ix],
+               inputretb[inp2ix],inputreix[inp2ix],inputremi[inp2ix],
+               inputrerg[inp2ix],inputrepk[inp2ix],
+               inputimtb[inp2ix],inputimix[inp2ix],inputimmi[inp2ix],
+               inputimrg[inp2ix],inputimpk[inp2ix],
+               backwardretb[outidx],backwardreix[outidx],backwardremi[outidx],
+               backwardrerg[outidx],backwardrepk[outidx],
+               backwardimtb[outidx],backwardimix[outidx],backwardimmi[outidx],
+               backwardimrg[outidx],backwardimpk[outidx]);
+         }
+      }
+   }
+   else if(outptp == 3) // cross product either initializes or accumulates
+   {
+      if(verbose) cout << "-> computing c[" << outidx << "] = ";
+      if(inp1tp < 0)
+      {
+         if(verbose) cout << "cff * input[" << inp2ix << "]" << endl;
+         CPU_cmplx5_product(deg,
+            cffretb,cffreix,cffremi,cffrerg,cffrepk,
+            cffimtb,cffimix,cffimmi,cffimrg,cffimpk,
+            inputretb[inp2ix],inputreix[inp2ix],inputremi[inp2ix],
+            inputrerg[inp2ix],inputrepk[inp2ix],
+            inputimtb[inp2ix],inputimix[inp2ix],inputimmi[inp2ix],
+            inputimrg[inp2ix],inputimpk[inp2ix],
+            crossretb[outidx],crossreix[outidx],crossremi[outidx],
+            crossrerg[outidx],crossrepk[outidx],
+            crossimtb[outidx],crossimix[outidx],crossimmi[outidx],
+            crossimrg[outidx],crossimpk[outidx]);
+      }
+      if(inp1tp == 0)
+      {
+         if(verbose) cout << "input[" << inp1ix
+                          << "] * f[" << inp2ix << "]" << endl;
+         CPU_cmplx5_product(deg,
+            inputretb[inp1ix],inputreix[inp1ix],inputremi[inp1ix],
+            inputrerg[inp1ix],inputrepk[inp1ix],
+            inputimtb[inp1ix],inputimix[inp1ix],inputimmi[inp1ix],
+            inputimrg[inp1ix],inputimpk[inp1ix],
+            forwardretb[inp2ix],forwardreix[inp2ix],forwardremi[inp2ix],
+            forwardrerg[inp2ix],forwardrepk[inp2ix],
+            forwardimtb[inp2ix],forwardimix[inp2ix],forwardimmi[inp2ix],
+            forwardimrg[inp2ix],forwardimpk[inp2ix],
+            crossretb[outidx],crossreix[outidx],crossremi[outidx],
+            crossrerg[outidx],crossrepk[outidx],
+            crossimtb[outidx],crossimix[outidx],crossimmi[outidx],
+            crossimrg[outidx],crossimpk[outidx]);
+      }
+      else if(inp1tp == 1)
+      {
+        if(inp2tp == 0)
+        {
+           if(verbose) cout << "f[" << inp1ix
+                            << "] * input[" << inp2ix << "]" << endl;
+           CPU_cmplx5_product(deg,
+              forwardretb[inp1ix],forwardreix[inp1ix],forwardremi[inp1ix],
+              forwardrerg[inp1ix],forwardrepk[inp1ix],
+              forwardimtb[inp1ix],forwardimix[inp1ix],forwardimmi[inp1ix],
+              forwardimrg[inp1ix],forwardimpk[inp1ix],
+              inputretb[inp2ix],inputreix[inp2ix],inputremi[inp2ix],
+              inputrerg[inp2ix],inputrepk[inp2ix],
+              inputimtb[inp2ix],inputimix[inp2ix],inputimmi[inp2ix],
+              inputimrg[inp2ix],inputimpk[inp2ix],
+              crossretb[outidx],crossreix[outidx],crossremi[outidx],
+              crossrerg[outidx],crossrepk[outidx],
+              crossimtb[outidx],crossimix[outidx],crossimmi[outidx],
+              crossimrg[outidx],crossimpk[outidx]);
+        }
+        else
+        {
+           if(verbose) cout << "f[" << inp1ix
+                            << "] * b[" << inp2ix << "]" << endl;
+           CPU_cmplx5_product(deg,
+              forwardretb[inp1ix],forwardreix[inp1ix],forwardremi[inp1ix],
+              forwardrerg[inp1ix],forwardrepk[inp1ix],
+              forwardimtb[inp1ix],forwardimix[inp1ix],forwardimmi[inp1ix],
+              forwardimrg[inp1ix],forwardimpk[inp1ix],
+              backwardretb[inp2ix],backwardreix[inp2ix],backwardremi[inp2ix],
+              backwardrerg[inp2ix],backwardrepk[inp2ix],
+              backwardimtb[inp2ix],backwardimix[inp2ix],backwardimmi[inp2ix],
+              backwardimrg[inp2ix],backwardimpk[inp2ix],
+              crossretb[outidx],crossreix[outidx],crossremi[outidx],
+              crossrerg[outidx],crossrepk[outidx],
+              crossimtb[outidx],crossimix[outidx],crossimmi[outidx],
+              crossimrg[outidx],crossimpk[outidx]);
+        }
+      }
+      else if(inp1tp == 2)
+      {
+         if(verbose) cout << "b[" << inp1ix
+                          << "] * f[" << inp2ix << "]" << endl;
+         CPU_cmplx5_product(deg,
+            backwardretb[inp1ix],backwardreix[inp1ix],backwardremi[inp1ix],
+            backwardrerg[inp1ix],backwardrepk[inp1ix],
+            backwardimtb[inp1ix],backwardimix[inp1ix],backwardimmi[inp1ix],
+            backwardimrg[inp1ix],backwardimpk[inp1ix],
+            forwardretb[inp2ix],forwardreix[inp2ix],forwardremi[inp2ix],
+            forwardrerg[inp2ix],forwardrepk[inp2ix],
+            forwardimtb[inp2ix],forwardimix[inp2ix],forwardimmi[inp2ix],
+            forwardimrg[inp2ix],forwardimpk[inp2ix],
+            crossretb[outidx],crossreix[outidx],crossremi[outidx],
+            crossrerg[outidx],crossrepk[outidx],
+            crossimtb[outidx],crossimix[outidx],crossimmi[outidx],
+            crossimrg[outidx],crossimpk[outidx]);
+      }
+   }
+}
+
 void CPU_dbl5_add_job
  ( int deg,
    double *csttb, double *cstix, double *cstmi,
@@ -1139,6 +1487,379 @@ void CPU_dbl5_add_job
                     crossmi[incmon][incidx][i],
                     crossrg[incmon][incidx][i],
                     crosspk[incmon][incidx][i]);
+      }
+   }
+}
+
+void CPU_cmplx5_add_job
+ ( int deg, double *cstretb, double *cstreix, double *cstremi,
+            double *cstrerg, double *cstrepk,
+   double *cstimtb, double *cstimix, double *cstimmi,
+   double *cstimrg, double *cstimpk,
+   double **cffretb, double **cffreix, double **cffremi,
+   double **cffrerg, double **cffrepk,
+   double **cffimtb, double **cffimix, double **cffimmi,
+   double **cffimrg, double **cffimpk,
+   double ***forwardretb, double ***forwardreix, double ***forwardremi,
+   double ***forwardrerg, double ***forwardrepk,
+   double ***forwardimtb, double ***forwardimix, double ***forwardimmi,
+   double ***forwardimrg, double ***forwardimpk,
+   double ***backwardretb, double ***backwardreix, double ***backwardremi,
+   double ***backwardrerg, double ***backwardrepk, 
+   double ***backwardimtb, double ***backwardimix, double ***backwardimmi,
+   double ***backwardimrg, double ***backwardimpk, 
+   double ***crossretb, double ***crossreix, double ***crossremi,
+   double ***crossrerg, double ***crossrepk,
+   double ***crossimtb, double ***crossimix, double ***crossimmi,
+   double ***crossimrg, double ***crossimpk,
+   AdditionJob job, bool verbose )
+{
+   const int adtype = job.get_addition_type();
+   const int intype = job.get_increment_type();
+   const int updmon = job.get_update_monomial();
+   const int updidx = job.get_update_index();
+   const int incmon = job.get_increment_monomial();
+   const int incidx = job.get_increment_index();
+
+   if(adtype == 1)
+   {
+      if(incmon < 0)
+      {
+         if(incidx < 0)
+            for(int i=0; i<=deg; i++)
+               // forward[updmon][updidx][i] += cst[i];
+            {
+               pdf_inc(&forwardretb[updmon][updidx][i],
+                       &forwardreix[updmon][updidx][i],
+                       &forwardremi[updmon][updidx][i],
+                       &forwardrerg[updmon][updidx][i],
+                       &forwardrepk[updmon][updidx][i],
+                       cstretb[i],cstreix[i],cstremi[i],
+                       cstrerg[i],cstrepk[i]);
+               pdf_inc(&forwardimtb[updmon][updidx][i],
+                       &forwardimix[updmon][updidx][i],
+                       &forwardimmi[updmon][updidx][i],
+                       &forwardimrg[updmon][updidx][i],
+                       &forwardimpk[updmon][updidx][i],
+                       cstimtb[i],cstimix[i],cstimmi[i],
+                       cstimrg[i],cstimpk[i]);
+            }
+         else
+            for(int i=0; i<=deg; i++)
+               // forward[updmon][updidx][i] += cff[incidx][i];
+            {
+               pdf_inc(&forwardretb[updmon][updidx][i],
+                       &forwardreix[updmon][updidx][i],
+                       &forwardremi[updmon][updidx][i],
+                       &forwardrerg[updmon][updidx][i],
+                       &forwardrepk[updmon][updidx][i],
+                       cffretb[incidx][i],cffreix[incidx][i],
+                       cffremi[incidx][i],cffrerg[incidx][i],
+                       cffrepk[incidx][i]);
+               pdf_inc(&forwardimtb[updmon][updidx][i],
+                       &forwardimix[updmon][updidx][i],
+                       &forwardimmi[updmon][updidx][i],
+                       &forwardimrg[updmon][updidx][i],
+                       &forwardimpk[updmon][updidx][i],
+                       cffimtb[incidx][i],cffimix[incidx][i],
+                       cffimmi[incidx][i],cffimrg[incidx][i],
+                       cffimpk[incidx][i]);
+            }
+      }
+      else if(intype == 1)
+      {
+         for(int i=0; i<=deg; i++)
+            // forward[updmon][updidx][i] += forward[incmon][incidx][i];
+         {
+            pdf_inc(&forwardretb[updmon][updidx][i],
+                    &forwardreix[updmon][updidx][i],
+                    &forwardremi[updmon][updidx][i],
+                    &forwardrerg[updmon][updidx][i],
+                    &forwardrepk[updmon][updidx][i],
+                    forwardretb[incmon][incidx][i],
+                    forwardreix[incmon][incidx][i],
+                    forwardremi[incmon][incidx][i],
+                    forwardrerg[incmon][incidx][i],
+                    forwardrepk[incmon][incidx][i]);
+            pdf_inc(&forwardimtb[updmon][updidx][i],
+                    &forwardimix[updmon][updidx][i],
+                    &forwardimmi[updmon][updidx][i],
+                    &forwardimrg[updmon][updidx][i],
+                    &forwardimpk[updmon][updidx][i],
+                    forwardimtb[incmon][incidx][i],
+                    forwardimix[incmon][incidx][i],
+                    forwardimmi[incmon][incidx][i],
+                    forwardimrg[incmon][incidx][i],
+                    forwardimpk[incmon][incidx][i]);
+         }
+      }
+      else if(intype == 2)
+      {
+         for(int i=0; i<=deg; i++)
+            // forward[updmon][updidx][i] += backward[incmon][incidx][i];
+         {
+            pdf_inc(&forwardretb[updmon][updidx][i],
+                    &forwardreix[updmon][updidx][i],
+                    &forwardremi[updmon][updidx][i],
+                    &forwardrerg[updmon][updidx][i],
+                    &forwardrepk[updmon][updidx][i],
+                    backwardretb[incmon][incidx][i],
+                    backwardreix[incmon][incidx][i],
+                    backwardremi[incmon][incidx][i],
+                    backwardrerg[incmon][incidx][i],
+                    backwardrepk[incmon][incidx][i]);
+            pdf_inc(&forwardimtb[updmon][updidx][i],
+                    &forwardimix[updmon][updidx][i],
+                    &forwardimmi[updmon][updidx][i],
+                    &forwardimrg[updmon][updidx][i],
+                    &forwardimpk[updmon][updidx][i],
+                    backwardimtb[incmon][incidx][i],
+                    backwardimix[incmon][incidx][i],
+                    backwardimmi[incmon][incidx][i],
+                    backwardimrg[incmon][incidx][i],
+                    backwardimpk[incmon][incidx][i]);
+         }
+      }
+      else if(intype == 3)
+      {
+         for(int i=0; i<=deg; i++)
+            // forward[updmon][updidx][i] += cross[incmon][incidx][i];
+         {
+            pdf_inc(&forwardretb[updmon][updidx][i],
+                    &forwardreix[updmon][updidx][i],
+                    &forwardremi[updmon][updidx][i],
+                    &forwardrerg[updmon][updidx][i],
+                    &forwardrepk[updmon][updidx][i],
+                    crossretb[incmon][incidx][i],
+                    crossreix[incmon][incidx][i],
+                    crossremi[incmon][incidx][i],
+                    crossrerg[incmon][incidx][i],
+                    crossrepk[incmon][incidx][i]);
+            pdf_inc(&forwardimtb[updmon][updidx][i],
+                    &forwardimix[updmon][updidx][i],
+                    &forwardimmi[updmon][updidx][i],
+                    &forwardimrg[updmon][updidx][i],
+                    &forwardimpk[updmon][updidx][i],
+                    crossimtb[incmon][incidx][i],
+                    crossimix[incmon][incidx][i],
+                    crossimmi[incmon][incidx][i],
+                    crossimrg[incmon][incidx][i],
+                    crossimpk[incmon][incidx][i]);
+         }
+      }
+   }
+   else if(adtype == 2)
+   {
+      if(incmon < 0)
+      {
+         for(int i=0; i<=deg; i++)
+            // backward[updmon][updidx][i] += cff[incidx][i];
+         {
+            pdf_inc(&backwardretb[updmon][updidx][i],
+                    &backwardreix[updmon][updidx][i],
+                    &backwardremi[updmon][updidx][i],
+                    &backwardrerg[updmon][updidx][i],
+                    &backwardrepk[updmon][updidx][i],
+                    cffretb[incidx][i],cffreix[incidx][i],
+                    cffremi[incidx][i],cffrerg[incidx][i],
+                    cffrepk[incidx][i]);
+            pdf_inc(&backwardimtb[updmon][updidx][i],
+                    &backwardimix[updmon][updidx][i],
+                    &backwardimmi[updmon][updidx][i],
+                    &backwardimrg[updmon][updidx][i],
+                    &backwardimpk[updmon][updidx][i],
+                    cffimtb[incidx][i],cffimix[incidx][i],
+                    cffimmi[incidx][i],cffimrg[incidx][i],
+                    cffimpk[incidx][i]);
+         }
+      }
+      else if(intype == 1)
+      {
+         for(int i=0; i<=deg; i++)
+            // backward[updmon][updidx][i] += forward[incmon][incidx][i];
+         {
+            pdf_inc(&backwardretb[updmon][updidx][i],
+                    &backwardreix[updmon][updidx][i],
+                    &backwardremi[updmon][updidx][i],
+                    &backwardrerg[updmon][updidx][i],
+                    &backwardrepk[updmon][updidx][i],
+                    forwardretb[incmon][incidx][i],
+                    forwardreix[incmon][incidx][i],
+                    forwardremi[incmon][incidx][i],
+                    forwardrerg[incmon][incidx][i],
+                    forwardrepk[incmon][incidx][i]);
+            pdf_inc(&backwardimtb[updmon][updidx][i],
+                    &backwardimix[updmon][updidx][i],
+                    &backwardimmi[updmon][updidx][i],
+                    &backwardimrg[updmon][updidx][i],
+                    &backwardimpk[updmon][updidx][i],
+                    forwardimtb[incmon][incidx][i],
+                    forwardimix[incmon][incidx][i],
+                    forwardimmi[incmon][incidx][i],
+                    forwardimrg[incmon][incidx][i],
+                    forwardimpk[incmon][incidx][i]);
+         }
+      }
+      else if(intype == 2)
+      {
+         for(int i=0; i<=deg; i++)
+            // backward[updmon][updidx][i] += backward[incmon][incidx][i];
+         {
+            pdf_inc(&backwardretb[updmon][updidx][i],
+                    &backwardreix[updmon][updidx][i],
+                    &backwardremi[updmon][updidx][i],
+                    &backwardrerg[updmon][updidx][i],
+                    &backwardrepk[updmon][updidx][i],
+                    backwardretb[incmon][incidx][i],
+                    backwardreix[incmon][incidx][i],
+                    backwardremi[incmon][incidx][i],
+                    backwardrerg[incmon][incidx][i],
+                    backwardrepk[incmon][incidx][i]);
+            pdf_inc(&backwardimtb[updmon][updidx][i],
+                    &backwardimix[updmon][updidx][i],
+                    &backwardimmi[updmon][updidx][i],
+                    &backwardimrg[updmon][updidx][i],
+                    &backwardimpk[updmon][updidx][i],
+                    backwardimtb[incmon][incidx][i],
+                    backwardimix[incmon][incidx][i],
+                    backwardimmi[incmon][incidx][i],
+                    backwardimrg[incmon][incidx][i],
+                    backwardimpk[incmon][incidx][i]);
+         }
+      }
+      else if(intype == 3)
+      {
+         for(int i=0; i<=deg; i++)
+            // backward[updmon][updidx][i] += cross[incmon][incidx][i];
+         {
+            pdf_inc(&backwardretb[updmon][updidx][i],
+                    &backwardreix[updmon][updidx][i],
+                    &backwardremi[updmon][updidx][i],
+                    &backwardrerg[updmon][updidx][i],
+                    &backwardrepk[updmon][updidx][i],
+                    crossretb[incmon][incidx][i],
+                    crossreix[incmon][incidx][i],
+                    crossremi[incmon][incidx][i],
+                    crossrerg[incmon][incidx][i],
+                    crossrepk[incmon][incidx][i]);
+            pdf_inc(&backwardimtb[updmon][updidx][i],
+                    &backwardimix[updmon][updidx][i],
+                    &backwardimmi[updmon][updidx][i],
+                    &backwardimrg[updmon][updidx][i],
+                    &backwardimpk[updmon][updidx][i],
+                    crossimtb[incmon][incidx][i],
+                    crossimix[incmon][incidx][i],
+                    crossimmi[incmon][incidx][i],
+                    crossimrg[incmon][incidx][i],
+                    crossimpk[incmon][incidx][i]);
+         }
+      }
+   }
+   else if(adtype == 3)
+   {
+      if(incmon < 0)
+      {
+         for(int i=0; i<=deg; i++)
+            // cross[updmon][updidx][i] += cff[incidx][i];
+         {
+            pdf_inc(&crossretb[updmon][updidx][i],
+                    &crossreix[updmon][updidx][i],
+                    &crossremi[updmon][updidx][i],
+                    &crossrerg[updmon][updidx][i],
+                    &crossrepk[updmon][updidx][i],
+                    cffretb[incidx][i],cffreix[incidx][i],
+                    cffremi[incidx][i],cffrerg[incidx][i],
+                    cffrepk[incidx][i]);
+            pdf_inc(&crossimtb[updmon][updidx][i],
+                    &crossimix[updmon][updidx][i],
+                    &crossimmi[updmon][updidx][i],
+                    &crossimrg[updmon][updidx][i],
+                    &crossimpk[updmon][updidx][i],
+                    cffimtb[incidx][i],cffimix[incidx][i],
+                    cffimmi[incidx][i],cffimrg[incidx][i],
+                    cffimpk[incidx][i]);
+         }
+      }
+      else if(intype == 1)
+      {
+         for(int i=0; i<=deg; i++)
+            // cross[updmon][updidx][i] += forward[incmon][incidx][i];
+         {
+            pdf_inc(&crossretb[updmon][updidx][i],
+                    &crossreix[updmon][updidx][i],
+                    &crossremi[updmon][updidx][i],
+                    &crossrerg[updmon][updidx][i],
+                    &crossrepk[updmon][updidx][i],
+                    forwardretb[incmon][incidx][i],
+                    forwardreix[incmon][incidx][i],
+                    forwardremi[incmon][incidx][i],
+                    forwardrerg[incmon][incidx][i],
+                    forwardrepk[incmon][incidx][i]);
+            pdf_inc(&crossimtb[updmon][updidx][i],
+                    &crossimix[updmon][updidx][i],
+                    &crossimmi[updmon][updidx][i],
+                    &crossimrg[updmon][updidx][i],
+                    &crossimpk[updmon][updidx][i],
+                    forwardimtb[incmon][incidx][i],
+                    forwardimix[incmon][incidx][i],
+                    forwardimmi[incmon][incidx][i],
+                    forwardimrg[incmon][incidx][i],
+                    forwardimpk[incmon][incidx][i]);
+         }
+      }
+      else if(intype == 2)
+      {
+         for(int i=0; i<=deg; i++)
+            // cross[updmon][updidx][i] += backward[incmon][incidx][i];
+         {
+            pdf_inc(&crossretb[updmon][updidx][i],
+                    &crossreix[updmon][updidx][i],
+                    &crossremi[updmon][updidx][i],
+                    &crossrerg[updmon][updidx][i],
+                    &crossrepk[updmon][updidx][i],
+                    backwardretb[incmon][incidx][i],
+                    backwardreix[incmon][incidx][i],
+                    backwardremi[incmon][incidx][i],
+                    backwardrerg[incmon][incidx][i],
+                    backwardrepk[incmon][incidx][i]);
+            pdf_inc(&crossimtb[updmon][updidx][i],
+                    &crossimix[updmon][updidx][i],
+                    &crossimmi[updmon][updidx][i],
+                    &crossimrg[updmon][updidx][i],
+                    &crossimpk[updmon][updidx][i],
+                    backwardimtb[incmon][incidx][i],
+                    backwardimix[incmon][incidx][i],
+                    backwardimmi[incmon][incidx][i],
+                    backwardimrg[incmon][incidx][i],
+                    backwardimpk[incmon][incidx][i]);
+         }
+      }
+      else if(intype == 3)
+      {
+         for(int i=0; i<=deg; i++)
+            // cross[updmon][updidx][i] += cross[incmon][incidx][i];
+         {
+            pdf_inc(&crossretb[updmon][updidx][i],
+                    &crossreix[updmon][updidx][i],
+                    &crossremi[updmon][updidx][i],
+                    &crossrerg[updmon][updidx][i],
+                    &crossrepk[updmon][updidx][i],
+                    crossretb[incmon][incidx][i],
+                    crossreix[incmon][incidx][i],
+                    crossremi[incmon][incidx][i],
+                    crossrerg[incmon][incidx][i],
+                    crossrepk[incmon][incidx][i]);
+            pdf_inc(&crossimtb[updmon][updidx][i],
+                    &crossimix[updmon][updidx][i],
+                    &crossimmi[updmon][updidx][i],
+                    &crossimrg[updmon][updidx][i],
+                    &crossimpk[updmon][updidx][i],
+                    crossimtb[incmon][incidx][i],
+                    crossimix[incmon][incidx][i],
+                    crossimmi[incmon][incidx][i],
+                    crossimrg[incmon][incidx][i],
+                    crossimpk[incmon][incidx][i]);
+         }
       }
    }
 }

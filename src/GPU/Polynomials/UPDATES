@@ -1,3 +1,6 @@
+Thu 4 Feb 2021 : edited dbl4_polynomials_host.h.
+  Extended dbl5_polynomials_host with conv and add complex functions.
+
 Wed 3 Feb 2021 : extended dbl5_polynomials_{host, testers} with functions
   on complex data.  Updated the makefiles.
 
