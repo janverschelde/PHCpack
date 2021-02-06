@@ -1,0 +1,11 @@
+Data staging algorithms for matrix factorizations at series in PHCv2.4.84.
+
+Operations on vectors and matrices of power series are staged for
+acceleration on graphics processing units.
+
+-----------------------------------------------------------------------------
+file name                  : short description
+-----------------------------------------------------------------------------
+random_matrices            : random vectors and matrices of power series
+test_dbl_series_vectors    : test on vectors of series in double precision
+-----------------------------------------------------------------------------

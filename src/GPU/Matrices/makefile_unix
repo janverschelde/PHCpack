@@ -1,0 +1,44 @@
+# Tested on four different NVIDIA GPUs.
+
+gpp=/usr/bin/g++
+MPD=../Norms
+CNV=../Convolutions
+CUDA=/usr/local/cuda/include
+CUDALIB=/usr/local/cuda/lib64
+# the architecture flag for Tesla C2050
+smflag=sm_20
+# the architecture flag for Kepler K20C
+# smflag=sm_35
+# the architecture flag for Pascal P100
+# smflag=sm_60
+# the architecture flag for Volta V100
+# smflag=sm_70
+
+random_numbers.o:
+	@-echo ">>> compiling double random number generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random_numbers.cpp
+
+random_series.o:
+	@-echo ">>> compiling double random series generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(CNV)/random_series.cpp
+
+random_matrices.o:
+	@-echo ">>> compiling random_matrices ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) random_matrices.cpp
+
+test_dbl_series_vectors.o:
+	@-echo ">>> compiling test_dbl_series_vectors ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test_dbl_series_vectors.cpp
+
+test_dbl_series_vectors: random_numbers.o random_series.o \
+                         random_matrices.o test_dbl_series_vectors.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl_series_vectors test_dbl_series_vectors.o \
+                  random_numbers.o random_series.o random_matrices.o
+
+clean:
+	/bin/rm -f -r random_matrices.o test_dbl_series_vectors.o
+	/bin/rm -f -r test_dbl_series_vectors
+
+cleanall: clean
+	/bin/rm -f -r random_numbers.o random_series.o
