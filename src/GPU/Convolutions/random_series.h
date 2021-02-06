@@ -4,6 +4,19 @@
 #ifndef __random_series_h__
 #define __random_series_h__
 
+void dbl_exponential ( int deg, double x, double *s );
+/*
+ * DESCRIPTION :
+ *   Returns power series for exp(x) truncated at degree deg.
+ *
+ * ON ENTRY :
+ *   deg      degree to truncate the series;
+ *   x        some double;
+ *   s        space for deg+1 doubles.
+ *
+ * ON RETURN :
+ *   s        power series of exp(x) truncated to degree deg. */
+
 void dbl_exponentials ( int deg, double x, double *plux, double *minx );
 /*
  * DESCRIPTION :
@@ -19,6 +32,12 @@ void dbl_exponentials ( int deg, double x, double *plux, double *minx );
  * ON RETURN :
  *   plux     power series of exp(+x) truncated to degree deg;
  *   minx     power series of exp(-x) truncated to degree deg. */
+
+void random_dbl_exponential ( int deg, double *x, double *s );
+/*
+ * DESCRIPTION :
+ *   Returns a power series of exp(x) truncated at degree deg
+ *   for a randomly generated double x. */
 
 void random_dbl_exponentials
  ( int deg, double *x, double *plux, double *minx );

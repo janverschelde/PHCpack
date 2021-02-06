@@ -4,6 +4,14 @@
 #include <cmath>
 #include "random_numbers.h"
 
+void dbl_exponential ( int deg, double x, double *s )
+{
+   s[0] = 1.0;
+
+   for(int k=1; k<=deg; k++)
+      s[k] = s[k-1]*x/k;
+}
+
 void dbl_exponentials ( int deg, double x, double *plux, double *minx )
 {
    plux[0] = 1.0; minx[0] = 1.0;
@@ -13,6 +21,12 @@ void dbl_exponentials ( int deg, double x, double *plux, double *minx )
       plux[k] = plux[k-1]*x/k;
       minx[k] = minx[k-1]*(-x)/k;
    }
+}
+
+void random_dbl_exponential ( int deg, double *x, double *s )
+{
+   *x = random_double();
+   dbl_exponential(deg,*x,s);
 }
 
 void random_dbl_exponentials
