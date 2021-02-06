@@ -4,12 +4,29 @@
 #ifndef __random_matrices_h__
 #define __random_matrices_h__
 
+void random_dbl_series_vector ( int dim, int deg, double *x, double **v );
+/*
+ * DESCRIPTION :
+ *   Returns in v a random vector of dimension dim,
+ *   of series truncated at degree deg.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the vectors;
+ *   deg      truncation degree of the series;
+ *   x        space for dim doubles;
+ *   v        space for dim arrays of deg+1 doubles.
+ * 
+ * ON RETURN :
+ *   x        dim random doubles;
+ *   v        v[k] is a power series of exp(x[k]) at degree deg,
+ *            for k ranging from 0 to dim-1. */
+
 void random_dbl_series_vectors
  ( int dim, int deg, double *x, double **plux, double **minx );
 /*
  * DESCRIPTION :
- *   Returns a pair of two vectors with series for exp(x[i]) and exp(-x[i])
- *   for i ranging from 0 to dim-1.
+ *   Returns in plux and minx a pair of two vectors with series 
+ *   for exp(x[k]) and exp(-x[k]), for k ranging from 0 to dim-1.
  *
  * ON ENTRY :
  *   dim      dimension of the vectors;
@@ -24,5 +41,23 @@ void random_dbl_series_vectors
  *            truncated to degree deg;
  *   minx     plux[k] is power series of exp(-x[k]), for k from 0 to dim-1,
  *            truncated to degree deg. */
+
+void random_dbl_series_matrix
+ ( int rows, int cols, int deg, double **x, double ***A );
+/*
+ * DESCRIPTION :
+ *   Returns in A and matrix of dimensions rows and cols,
+ *   of power series for exp(x), truncated at degree deg.
+ *
+ * ON ENTRY :
+ *   rows     the number of rows in the matrices x and A;
+ *   cols     the number of columns in the matrices x and A;
+ *   deg      truncation degree of the series;
+ *   x        space for a matrix of doubles, of dimensions rows and cols;
+ *   A        space for a matrix of series, of dimensions rows and cols.
+ *
+ * ON RETURN :
+ *   x        a matrix of randomly generated doubles;
+ *   A        a matrix of randomly generated power series. */
 
 #endif
