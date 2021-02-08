@@ -25,7 +25,7 @@ void random_dbl_series_vectors
  ( int dim, int deg, double *x, double **plux, double **minx );
 /*
  * DESCRIPTION :
- *   Returns in plux and minx a pair of two vectors with series 
+ *   Returns in plux and minx a pair of two real vectors with series 
  *   for exp(x[k]) and exp(-x[k]), for k ranging from 0 to dim-1.
  *
  * ON ENTRY :
@@ -41,6 +41,36 @@ void random_dbl_series_vectors
  *            truncated to degree deg;
  *   minx     plux[k] is power series of exp(-x[k]), for k from 0 to dim-1,
  *            truncated to degree deg. */
+
+void random_cmplx_series_vectors
+ ( int dim, int deg, double *xre, double *xim,
+   double **pluxre, double **pluxim, double **minxre, double **minxim );
+/*
+ * DESCRIPTION :
+ *   Returns in plux and minx a pair of two complex vectors with series 
+ *   for exp(x[k]) and exp(-x[k]), for k ranging from 0 to dim-1.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the vectors;
+ *   deg      truncation degree of the series;
+ *   xre      space for dim doubles;
+ *   xim      space for dim doubles;
+ *   pluxre   space for dim arrays of deg+1 doubles;
+ *   pluxim   space for dim arrays of deg+1 doubles;
+ *   minxre   space for dim arrays of deg+1 doubles;
+ *   minxim   space for dim arrays of deg+1 doubles.
+ *
+ * ON RETURN :
+ *   xre      real parts of dim random complex numbers,
+ *   xim      imaginary parts of dim random complex numbers;
+ *   pluxre   pluxre[k] is the real part of the series of exp(+x[k]),
+ *            for k from 0 to dim-1, truncated to degree deg;
+ *   pluxim   pluxim[k] is the imaginary part of the series of exp(+x[k]),
+ *            for k from 0 to dim-1, truncated to degree deg;
+ *   minxre   pluxre[k] is the real part of the series of exp(-x[k]),
+ *            for k from 0 to dim-1, truncated to degree deg;
+ *   minxim   pluxim[k] is the imaginary part of the series of exp(-x[k]),
+ *            for k from 0 to dim-1, truncated to degree deg. */
 
 void random_dbl_series_matrix
  ( int rows, int cols, int deg, double **x, double ***A );

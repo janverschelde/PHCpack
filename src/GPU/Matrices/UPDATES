@@ -1,3 +1,6 @@
+Sun 7 Feb 2021 : extended random_matrices and test_dbl_series_vectors
+  with functions to work with vectors of complex numbered series.
+
 Sat 6 Feb 2021 : extended random_matrices with function to generate
   one random vector and one random matrix.  Added matrix vector products
   and tests in test_dbl_series_vectors.cpp.
