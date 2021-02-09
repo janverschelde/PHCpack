@@ -1,3 +1,7 @@
+Mon 8 Feb 2021 : extended random_matrices with the generation of complex
+  series matrices and test_dbl_series_vectors with a test on the complex
+  matrix-vector product.
+
 Sun 7 Feb 2021 : extended random_matrices and test_dbl_series_vectors
   with functions to work with vectors of complex numbered series.
 

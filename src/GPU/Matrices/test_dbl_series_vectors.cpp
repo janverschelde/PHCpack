@@ -121,6 +121,12 @@ void test_real_matrix_vector_product ( void );
  * DESCRIPTION :
  *   Prompts the user for a dimension and a degree
  *   and tests the matrix vector product on random real data. */
+
+void test_cmplx_matrix_vector_product ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a dimension and a degree
+ *   and tests the matrix vector product on random complex data. */
   
 int main ( void )
 {
@@ -130,6 +136,8 @@ int main ( void )
    test_cmplx_inner_product();
    cout << "testing a real matrix-vector product ..." << endl;
    test_real_matrix_vector_product();
+   cout << "testing a complex matrix-vector product ..." << endl;
+   test_cmplx_matrix_vector_product();
 
    return 0;
 }
@@ -266,6 +274,75 @@ void test_real_matrix_vector_product ( void )
    {
       cout << "y[" << i << "] :" << endl;
       for(int k=0; k<=deg; k++) cout << y[i][k] << endl;
+   }
+}
+
+void test_cmplx_matrix_vector_product ( void )
+{
+   cout << "Give the number of rows : ";
+   int nbrows; cin >> nbrows;
+
+   cout << "Give the number of columns : ";
+   int nbcols; cin >> nbcols;
+
+   cout << "Give a degree larger than one : ";
+   int deg; cin >> deg;
+
+   double **rndre = new double*[nbrows];
+   double **rndim = new double*[nbrows];
+   double ***matre = new double**[nbrows];
+   double ***matim = new double**[nbrows];
+   for(int i=0; i<nbrows; i++)
+   {
+      rndre[i] = new double[nbcols];
+      rndim[i] = new double[nbcols];
+      matre[i] = new double*[nbcols];
+      matim[i] = new double*[nbcols];
+      for(int j=0; j<nbcols; j++)
+      {
+         matre[i][j] = new double[deg+1];
+         matim[i][j] = new double[deg+1];
+      }
+   }
+   random_cmplx_series_matrix(nbrows,nbcols,deg,rndre,rndim,matre,matim);
+
+   cout << scientific << setprecision(16);
+
+   for(int i=0; i<nbrows; i++)
+      for(int j=0; j<nbcols; j++)
+      {
+         cout << "A[" << i << "][" << j << "] is exp("
+              << rndre[i][j] << ", "
+              << rndim[i][j] << ") :" << endl;
+         for(int k=0; k<=deg; k++)
+            cout << matre[i][j][k] << "  " << matim[i][j][k] << endl;
+      }
+   
+   double **xre = new double*[nbcols];
+   double **xim = new double*[nbcols];
+   for(int i=0; i<nbcols; i++)
+   {
+      xre[i] = new double[deg+1];
+      xim[i] = new double[deg+1];
+   }
+   double **yre = new double*[nbrows];
+   double **yim = new double*[nbrows];
+   for(int i=0; i<nbrows; i++)
+   {
+      yre[i] = new double[deg+1];
+      yim[i] = new double[deg+1];
+   }
+   for(int i=0; i<nbcols; i++)
+      cmplx_exponential
+         (deg,-rndre[nbrows-1][i],-rndim[nbrows-1][i],xre[i],xim[i]);
+
+   cmplx_matrix_vector_product
+      (nbrows,nbcols,deg,matre,matim,xre,xim,yre,yim);
+   for(int i=0; i<nbrows; i++)
+   {
+      cout << "y[" << i << "] :" << endl;
+      for(int k=0; k<=deg; k++)
+         cout << yre[i][k] << "  " << yim[i][k] << endl;
    }
 }
 

@@ -33,3 +33,13 @@ void random_dbl_series_matrix
       for(int j=0; j<cols; j++)
          random_dbl_exponential(deg,&x[i][j],A[i][j]);
 }
+
+void random_cmplx_series_matrix
+ ( int rows, int cols, int deg, double **xre, double **xim,
+   double ***Are, double ***Aim )
+{
+   for(int i=0; i<rows; i++)
+      for(int j=0; j<cols; j++)
+         random_cmplx_exponential
+            (deg,&xre[i][j],&xim[i][j],Are[i][j],Aim[i][j]);
+}

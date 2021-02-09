@@ -76,7 +76,7 @@ void random_dbl_series_matrix
  ( int rows, int cols, int deg, double **x, double ***A );
 /*
  * DESCRIPTION :
- *   Returns in A and matrix of dimensions rows and cols,
+ *   Returns in A a real matrix of dimensions rows and cols,
  *   of power series for exp(x), truncated at degree deg.
  *
  * ON ENTRY :
@@ -89,5 +89,28 @@ void random_dbl_series_matrix
  * ON RETURN :
  *   x        a matrix of randomly generated doubles;
  *   A        a matrix of randomly generated power series. */
+
+void random_cmplx_series_matrix
+ ( int rows, int cols, int deg, double **xre, double **xim,
+   double ***Are, double ***Aim );
+/*
+ * DESCRIPTION :
+ *   Returns in A a complex matrix of dimensions rows and cols,
+ *   of power series for exp(x), truncated at degree deg.
+ *
+ * ON ENTRY :
+ *   rows     the number of rows in the matrices x and A;
+ *   cols     the number of columns in the matrices x and A;
+ *   deg      truncation degree of the series;
+ *   xre      space for a matrix of doubles, of dimensions rows and cols;
+ *   xim      space for a matrix of doubles, of dimensions rows and cols;
+ *   Are      space for a matrix of series, of dimensions rows and cols;
+ *   Aim      space for a matrix of series, of dimensions rows and cols.
+ *
+ * ON RETURN :
+ *   xre      real parts of a matrix of random complex numbers;
+ *   xim      imaginary parts of a matrix of random complex numbers;
+ *   Are      real parts of a matrix of random power series;
+ *   Aim      imaginary parts of a matrix of random power series. */
 
 #endif
