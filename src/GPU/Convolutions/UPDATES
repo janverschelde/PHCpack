@@ -1,5 +1,5 @@
 Mon 8 Feb 2021 : extended random_series with functions to generate series
-  for one exp(x), for complex x.
+  for one exp(x), for complex x.  Fixed index error in random_series.cpp.
 
 Sat 6 Feb 2021 : extended random_series with functions for one exp(x) series.
 

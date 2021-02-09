@@ -40,7 +40,7 @@ void cmplx_exponential
  ( int deg, double xre, double xim, double *sre, double *sim )
 {
    sre[0] = 1.0; sim[0] = 0.0;
-   sre[1] = xre; sim[0] = xim;
+   sre[1] = xre; sim[1] = xim;
 
    for(int k=2; k<=deg; k++)
    {
