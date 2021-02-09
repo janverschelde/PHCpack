@@ -36,6 +36,19 @@ void random_dbl_exponentials
    dbl_exponentials(deg,*x,plux,minx);
 }
 
+void cmplx_exponential
+ ( int deg, double xre, double xim, double *sre, double *sim )
+{
+   sre[0] = 1.0; sim[0] = 0.0;
+   sre[1] = xre; sim[0] = xim;
+
+   for(int k=2; k<=deg; k++)
+   {
+      sre[k] = (sre[k-1]*xre - sim[k-1]*xim)/k;
+      sim[k] = (sre[k-1]*xim + sim[k-1]*xre)/k;
+   }
+}
+
 void cmplx_exponentials
  ( int deg, double xre, double xim,
    double *pluxre, double *pluxim, double *minxre, double *minxim )
@@ -50,6 +63,17 @@ void cmplx_exponentials
       minxre[k] = (minxre[k-1]*(-xre) - minxim[k-1]*(-xim))/k;
       minxim[k] = (minxre[k-1]*(-xim) + minxim[k-1]*(-xre))/k;
    }
+}
+
+void random_cmplx_exponential
+ ( int deg, double *xre, double *xim, double *sre, double *sim )
+{
+   const double r = random_angle();
+
+   *xre = cos(r);
+   *xim = sin(r);
+
+   cmplx_exponential(deg,*xre,*xim,sre,sim);
 }
 
 void random_cmplx_exponentials

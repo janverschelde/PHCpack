@@ -7,7 +7,8 @@
 void dbl_exponential ( int deg, double x, double *s );
 /*
  * DESCRIPTION :
- *   Returns power series for exp(x) truncated at degree deg.
+ *   Returns power series for exp(x) truncated at degree deg,
+ *   for real x.
  *
  * ON ENTRY :
  *   deg      degree to truncate the series;
@@ -48,6 +49,25 @@ void random_dbl_exponentials
  *   Parameters are the same as dbl_exponentials,
  *   except that x is a return parameter. */
 
+void cmplx_exponential
+ ( int deg, double xre, double xim, double *sre, double *sim );
+/*
+ * DESCRIPTION :
+ *   Returns power series for exp(x) truncated at degree deg.
+ *
+ * ON ENTRY :
+ *   deg      degree to truncate the series;
+ *   xre      real part of some complex number x;
+ *   xim      imaginary part of some complex number x;
+ *   sre      space for deg+1 doubles;
+ *   sim      space for deg+1 doubles.
+ *
+ * ON RETURN :
+ *   sre      real parts of power series of exp(x),
+ *            truncated to degree deg;
+ *   sim      imaginary parts of power series of exp(x),
+ *            truncated to degree deg. */
+
 void cmplx_exponentials
  ( int deg, double xre, double xim,
    double *pluxre, double *pluxim, double *minxre, double *minxim );
@@ -78,6 +98,14 @@ void cmplx_exponentials
  *            truncated to degree deg;
  *   minxim   imaginary parts of the power series of exp(-x)
  *            truncated to degree deg. */
+
+void random_cmplx_exponential
+ ( int deg, double *xre, double *xim, double *sre, double *sim );
+/*
+ * DESCRIPTION :
+ *   Returns power series for exp(x), for a complex x, with randomly 
+ *   generated real and imaginary parts returned in xre and xim,
+ *   truncated at degree deg. */
 
 void random_cmplx_exponentials
  ( int deg, double *xre, double *xim,

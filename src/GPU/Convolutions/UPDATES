@@ -1,3 +1,6 @@
+Mon 8 Feb 2021 : extended random_series with functions to generate series
+  for one exp(x), for complex x.
+
 Sat 6 Feb 2021 : extended random_series with functions for one exp(x) series.
 
 Sun 17 Jan 2021 : in random2_monomials.cpp, fixed the sqrt into sqr in
