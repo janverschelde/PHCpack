@@ -30,20 +30,24 @@ dbl_convolutions_host.o:
 	@-echo ">>> compiling dbl_convolutions_host ..."
 	$(gpp) -O3 -c -I$(CNV) $(CNV)/dbl_convolutions_host.cpp
 
+dbl_matrices_host.o:
+	@-echo ">>> compiling dbl_matricess_host ..."
+	$(gpp) -O3 -c -I$(CNV) dbl_matrices_host.cpp
+
 test_dbl_series_vectors.o:
 	@-echo ">>> compiling test_dbl_series_vectors ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test_dbl_series_vectors.cpp
 
 test_dbl_series_vectors: random_numbers.o random_series.o \
                          random_matrices.o dbl_convolutions_host.o \
-                         test_dbl_series_vectors.o 
+                         dbl_matrices_host.o test_dbl_series_vectors.o 
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_series_vectors test_dbl_series_vectors.o \
                   random_numbers.o random_series.o random_matrices.o \
-                  dbl_convolutions_host.o
+                  dbl_convolutions_host.o dbl_matrices_host.o
 
 clean:
-	/bin/rm -f -r random_matrices.o
+	/bin/rm -f -r random_matrices.o dbl_matrices_host.o
 	/bin/rm -f -r test_dbl_series_vectors.o test_dbl_series_vectors
 
 cleanall: clean

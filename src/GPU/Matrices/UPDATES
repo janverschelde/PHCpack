@@ -1,3 +1,6 @@
+Wed 10 Feb 2021 : new dbl_matrices_host with code extracted from the
+  test_dbl_series_vectors.cpp.
+
 Mon 8 Feb 2021 : extended random_matrices with the generation of complex
   series matrices and test_dbl_series_vectors with a test on the complex
   matrix-vector product.
