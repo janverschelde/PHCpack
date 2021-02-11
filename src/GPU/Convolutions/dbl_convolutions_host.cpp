@@ -6,7 +6,7 @@
 void CPU_dbl_product ( int deg, double *x, double *y, double *z )
 {
    z[0] = x[0]*y[0];
-   for(int k=0; k<=deg; k++)
+   for(int k=1; k<=deg; k++)
    {
       z[k] = x[0]*y[k];
       for(int i=1; i<=k; i++)
@@ -28,7 +28,7 @@ void CPU_cmplx_product
    zre[0] = xr0*yr0 - xi0*yi0;
    zim[0] = xi0*yr0 + xr0*yi0;
 
-   for(int k=0; k<=deg; k++)
+   for(int k=1; k<=deg; k++)
    {
 
       xr0 = xre[0]; xi0 = xim[0];
@@ -45,5 +45,16 @@ void CPU_cmplx_product
          ipa = ipa + xi0*yr0 + xr0*yi0;
       }
       zre[k] = rpa; zim[k] = ipa;
+   }
+}
+
+void GPU_dbl_inverse ( int deg, double *x, double *y )
+{
+   y[0] = 1.0/x[0];
+   for(int i=1; i<=deg; i++)
+   {
+      y[i] = -x[1]*y[i-1];
+      for(int j=2; j<=i; j++) y[i] = y[i] - x[j]*y[i-j];
+      y[i] = y[i]/x[0];
    }
 }

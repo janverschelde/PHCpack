@@ -45,4 +45,22 @@ void CPU_cmplx_product
  *   zre      real parts of the coefficients of the product x*y;
  *   zim      imaginary parts of the coefficients of the product x*y. */
 
+void GPU_dbl_inverse ( int deg, double *x, double *y );
+/*
+ * DESCRIPTION :
+ *   Computes the inverse of the series for real coefficients
+ *   in double precision.
+ *
+ * REQUIRED : The lead coefficient x(0) of x is nonzero.
+ *   The arrays x and y have allocated space for deg+1 doubles,
+ *   for range 0 up to deg, deg included.
+ *
+ * ON ENTRY :
+ *   deg      truncation degree of the series x and y;
+ *   x        coefficients of a power series;
+ *   y        space for deg+1 coefficients.
+ *
+ * ON RETURN :
+ *   y        coefficients of the inverse of the series x. */
+
 #endif

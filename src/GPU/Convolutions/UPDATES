@@ -1,3 +1,6 @@
+Wed 10 Feb 2021 : to dbl_convolutions_host, added a function to compute
+  the inverse of a power series.
+
 Mon 8 Feb 2021 : extended random_series with functions to generate series
   for one exp(x), for complex x.  Fixed index error in random_series.cpp.
 
