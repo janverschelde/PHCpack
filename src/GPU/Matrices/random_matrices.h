@@ -90,6 +90,28 @@ void random_dbl_series_matrix
  *   x        a matrix of randomly generated doubles;
  *   A        a matrix of randomly generated power series. */
 
+void random_dbl_upper_series_matrix
+ ( int rows, int cols, int deg, double **x, double ***A );
+/*
+ * DESCRIPTION :
+ *   Returns in A a real upper triangular matrix
+ *   of dimensions rows and cols, of power series for exp(x),
+ *   truncated at degree deg.
+ *
+ * ON ENTRY :
+ *   rows     the number of rows in the matrices x and A;
+ *   cols     the number of columns in the matrices x and A;
+ *   deg      truncation degree of the series;
+ *   x        space for a matrix of doubles, of dimensions rows and cols;
+ *   A        space for a matrix of series, of dimensions rows and cols.
+ *
+ * ON RETURN :
+ *   x        upper triangular matrix of randomly generated doubles,
+ *            undefined for lower triangular elements, below the diagonal;
+ *   A        upper triangular matrix of randomly generated power series;
+ *            elements in the lower triangular part, below the diagonal,
+ *            are equal to zero. */
+
 void random_cmplx_series_matrix
  ( int rows, int cols, int deg, double **xre, double **xim,
    double ***Are, double ***Aim );
@@ -112,5 +134,35 @@ void random_cmplx_series_matrix
  *   xim      imaginary parts of a matrix of random complex numbers;
  *   Are      real parts of a matrix of random power series;
  *   Aim      imaginary parts of a matrix of random power series. */
+
+void random_cmplx_upper_series_matrix
+ ( int rows, int cols, int deg, double **xre, double **xim,
+   double ***Are, double ***Aim );
+/*
+ * DESCRIPTION :
+ *   Returns in A a complex upper triangular matrix
+ *   of dimensions rows and cols, of power series for exp(x),
+ *   for complex x, truncated at degree deg.
+ *
+ * ON ENTRY :
+ *   rows     the number of rows in the matrices x and A;
+ *   cols     the number of columns in the matrices x and A;
+ *   deg      truncation degree of the series;
+ *   xre      space for a matrix of doubles, of dimensions rows and cols;
+ *   xim      space for a matrix of doubles, of dimensions rows and cols;
+ *   Are      space for a matrix of series, of dimensions rows and cols;
+ *   Aim      space for a matrix of series, of dimensions rows and cols.
+ *
+ * ON RETURN :
+ *   xre      real parts of a matrix of random complex numbers,
+ *            undefined for lower triangular elements, below the diagonal;
+ *   xim      imaginary parts of a matrix of random complex numbers,
+ *            undefined for lower triangular elements, below the diagonal;
+ *   Are      real parts of an upper triangular matrix of random power series,
+ *            elements in the lower triangular part, below the diagonal,
+ *            are equal to zero;
+ *   Aim      imaginary parts of an upper triangular matrix of random power
+ *            series, elements in the lower triangular part, below the
+ *            diagonal, are equal to zero. */
 
 #endif

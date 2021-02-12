@@ -1,3 +1,6 @@
+Thu 11 Feb 2021 : extended random_matrices with functions to generate
+  upper triangular matrices of random power series.
+
 Wed 10 Feb 2021 : new dbl_matrices_host with code extracted from the
   test_dbl_series_vectors.cpp.
 
