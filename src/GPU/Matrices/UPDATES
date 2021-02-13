@@ -1,3 +1,6 @@
+Fri 12 Feb 2021 : added an upper triangular solver to dbl_matrices_host,
+  tested by test_dbl_series_vectors.
+
 Thu 11 Feb 2021 : extended random_matrices with functions to generate
   upper triangular matrices of random power series.
 

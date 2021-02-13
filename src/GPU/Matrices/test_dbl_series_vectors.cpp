@@ -32,6 +32,12 @@ void test_cmplx_matrix_vector_product ( void );
  * DESCRIPTION :
  *   Prompts the user for a dimension and a degree
  *   and tests the matrix vector product on random complex data. */
+
+void test_real_upper_solver ( void );
+/*
+ * DESCRIPTION :
+ *   Generates a random real upper triangular matrix
+ *   to test the backward substitution method. */
   
 int main ( void )
 {
@@ -43,6 +49,8 @@ int main ( void )
    test_real_matrix_vector_product();
    cout << "testing a complex matrix-vector product ..." << endl;
    test_cmplx_matrix_vector_product();
+   cout << "testing the real upper solver ..." << endl;
+   test_real_upper_solver();
 
    return 0;
 }
@@ -248,5 +256,60 @@ void test_cmplx_matrix_vector_product ( void )
       cout << "y[" << i << "] :" << endl;
       for(int k=0; k<=deg; k++)
          cout << yre[i][k] << "  " << yim[i][k] << endl;
+   }
+}
+
+void test_real_upper_solver ( void )
+{
+   cout << "Give the dimension : ";
+   int dim; cin >> dim;
+
+   cout << "Give a degree larger than one : ";
+   int deg; cin >> deg;
+
+   double **rnd = new double*[dim];
+   double ***mat = new double**[dim];
+   for(int i=0; i<dim; i++)
+   {
+      rnd[i] = new double[dim];
+      mat[i] = new double*[dim];
+      for(int j=0; j<dim; j++)
+         mat[i][j] = new double[deg+1];
+   }
+   random_dbl_upper_series_matrix(dim,dim,deg,rnd,mat);
+
+   cout << scientific << setprecision(16);
+
+   for(int i=0; i<dim; i++)
+      for(int j=i; j<dim; j++)
+      {
+         cout << "A[" << i << "][" << j << "] is exp("
+              << rnd[i][j] << ") :" << endl;
+         for(int k=0; k<=deg; k++) cout << mat[i][j][k] << endl;
+      }
+
+   double **x = new double*[dim];
+   for(int i=0; i<dim; i++) x[i] = new double[deg+1];
+   double **b = new double*[dim];
+   for(int i=0; i<dim; i++) b[i] = new double[deg+1];
+
+   for(int i=0; i<dim; i++)  // x equals one
+   {
+      x[i][0] = 1.0;
+      for(int k=1; k<=deg; k++) x[i][k] = 0.0;
+   }
+   real_matrix_vector_product(dim,dim,deg,mat,x,b);
+   for(int i=0; i<dim; i++)
+   {
+      cout << "b[" << i << "] :" << endl;
+      for(int k=0; k<=deg; k++) cout << b[i][k] << endl;
+   }
+   real_upper_solver(dim,deg,mat,b,x);
+
+   cout << "The solution of the upper triangular system :" << endl;
+   for(int i=0; i<dim; i++)
+   {
+      cout << "x[" << i << "] :" << endl;
+      for(int k=0; k<=deg; k++) cout << x[i][k] << endl;
    }
 }

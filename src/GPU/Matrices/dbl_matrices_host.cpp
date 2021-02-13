@@ -58,3 +58,25 @@ void cmplx_matrix_vector_product
    for(int k=0; k<rows; k++)
       cmplx_inner_product(cols,deg,Are[k],Aim[k],xre,xim,yre[k],yim[k]);
 }
+
+void real_upper_solver
+ ( int dim, int deg, double ***U, double **b, double **x  )
+{
+   double *prod = new double[deg+1];
+   double *work = new double[deg+1];
+
+   for(int i=dim-1; i>=0; i--)
+   {
+      for(int k=0; k<=deg; k++) prod[k] = b[i][k];
+
+      for(int j=i+1; j<dim; j++)
+      {
+         CPU_dbl_product(deg,U[i][j],x[j],work);
+
+         for(int k=0; k<=deg; k++) prod[k] = prod[k] - work[k];
+      }
+      CPU_dbl_inverse(deg,U[i][i],work);
+      CPU_dbl_product(deg,work,prod,x[i]);
+   }
+   free(prod); free(work);
+}

@@ -99,4 +99,20 @@ void cmplx_matrix_vector_product
  *   yre      real parts of the product of A with x;
  *   yim      imaginary parts of the product of A with x. */
 
+void real_upper_solver
+ ( int dim, int deg, double ***U, double **b, double **x  );
+/*
+ * DESCRIPTION :
+ *   Solves the upper triangular system U*x = b with back substitution.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in the matrix U;
+ *   deg      truncation degree of the series;
+ *   U        upper triangular series matrix;
+ *   b        right hand side vector;
+ *   x        space for dim power series truncated at degree deg.
+ *
+ * ON RETURN :
+ *   x        the solution to U*x = b. */
+
 #endif
