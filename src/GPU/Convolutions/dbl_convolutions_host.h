@@ -45,7 +45,7 @@ void CPU_cmplx_product
  *   zre      real parts of the coefficients of the product x*y;
  *   zim      imaginary parts of the coefficients of the product x*y. */
 
-void GPU_dbl_inverse ( int deg, double *x, double *y );
+void CPU_dbl_inverse ( int deg, double *x, double *y );
 /*
  * DESCRIPTION :
  *   Computes the inverse of the series for real coefficients

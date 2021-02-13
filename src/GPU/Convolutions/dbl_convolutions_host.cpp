@@ -48,7 +48,7 @@ void CPU_cmplx_product
    }
 }
 
-void GPU_dbl_inverse ( int deg, double *x, double *y )
+void CPU_dbl_inverse ( int deg, double *x, double *y )
 {
    y[0] = 1.0/x[0];
    for(int i=1; i<=deg; i++)

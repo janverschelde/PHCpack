@@ -1,3 +1,6 @@
+Fri 12 Feb 2021 : changed GPU_dbl_inverse into CPU_dbl_inverse in
+  dbl_convolutions_host.
+
 Wed 10 Feb 2021 : to dbl_convolutions_host, added a function to compute
   the inverse of a power series.
 
