@@ -38,6 +38,12 @@ void test_real_upper_solver ( void );
  * DESCRIPTION :
  *   Generates a random real upper triangular matrix
  *   to test the backward substitution method. */
+
+void test_cmplx_upper_solver ( void );
+/*
+ * DESCRIPTION :
+ *   Generates a random complex upper triangular matrix
+ *   to test the backward substitution method. */
   
 int main ( void )
 {
@@ -51,6 +57,8 @@ int main ( void )
    test_cmplx_matrix_vector_product();
    cout << "testing the real upper solver ..." << endl;
    test_real_upper_solver();
+   cout << "testing the complex upper solver ..." << endl;
+   test_cmplx_upper_solver();
 
    return 0;
 }
@@ -311,5 +319,85 @@ void test_real_upper_solver ( void )
    {
       cout << "x[" << i << "] :" << endl;
       for(int k=0; k<=deg; k++) cout << x[i][k] << endl;
+   }
+}
+
+void test_cmplx_upper_solver ( void )
+{
+   cout << "Give the dimension : ";
+   int dim; cin >> dim;
+
+   cout << "Give a degree larger than one : ";
+   int deg; cin >> deg;
+
+   double **rndre = new double*[dim];
+   double **rndim = new double*[dim];
+   double ***matre = new double**[dim];
+   double ***matim = new double**[dim];
+   for(int i=0; i<dim; i++)
+   {
+      rndre[i] = new double[dim];
+      rndim[i] = new double[dim];
+      matre[i] = new double*[dim];
+      matim[i] = new double*[dim];
+      for(int j=0; j<dim; j++)
+      {
+         matre[i][j] = new double[deg+1];
+         matim[i][j] = new double[deg+1];
+      }
+   }
+   random_cmplx_upper_series_matrix(dim,dim,deg,rndre,rndim,matre,matim);
+
+   cout << scientific << setprecision(16);
+
+   for(int i=0; i<dim; i++)
+      for(int j=i; j<dim; j++)
+      {
+         cout << "A[" << i << "][" << j << "] is exp("
+              << rndre[i][j] << "  " 
+              << rndim[i][j] << ") :" << endl;
+         for(int k=0; k<=deg; k++)
+            cout << matre[i][j][k] << "  " << matim[i][j][k] << endl;
+      }
+
+   double **xre = new double*[dim];
+   double **xim = new double*[dim];
+   for(int i=0; i<dim; i++)
+   {
+      xre[i] = new double[deg+1];
+      xim[i] = new double[deg+1];
+   }
+   double **bre = new double*[dim];
+   double **bim = new double*[dim];
+   for(int i=0; i<dim; i++)
+   {
+      bre[i] = new double[deg+1];
+      bim[i] = new double[deg+1];
+   }
+   for(int i=0; i<dim; i++)  // x equals one
+   {
+      xre[i][0] = 1.0;
+      xim[i][0] = 0.0;
+      for(int k=1; k<=deg; k++)
+      {
+         xre[i][k] = 0.0;
+         xim[i][k] = 0.0;
+      }
+   }
+   cmplx_matrix_vector_product(dim,dim,deg,matre,matim,xre,xim,bre,bim);
+   for(int i=0; i<dim; i++)
+   {
+      cout << "b[" << i << "] :" << endl;
+      for(int k=0; k<=deg; k++)
+         cout << bre[i][k] << "  " << bim[i][k] << endl;
+   }
+   cmplx_upper_solver(dim,deg,matre,matim,bre,bim,xre,xim);
+
+   cout << "The solution of the upper triangular system :" << endl;
+   for(int i=0; i<dim; i++)
+   {
+      cout << "x[" << i << "] :" << endl;
+      for(int k=0; k<=deg; k++)
+         cout << xre[i][k] << "  " << xim[i][k] << endl;
    }
 }

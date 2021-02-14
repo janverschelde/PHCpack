@@ -80,3 +80,37 @@ void real_upper_solver
    }
    free(prod); free(work);
 }
+
+void cmplx_upper_solver
+ ( int dim, int deg, double ***Ure, double ***Uim,
+   double **bre, double **bim, double **xre, double **xim )
+{
+   double *prodre = new double[deg+1];
+   double *prodim = new double[deg+1];
+   double *workre = new double[deg+1];
+   double *workim = new double[deg+1];
+
+   for(int i=dim-1; i>=0; i--)
+   {
+      for(int k=0; k<=deg; k++)
+      {
+         prodre[k] = bre[i][k];
+         prodim[k] = bim[i][k];
+      }
+      for(int j=i+1; j<dim; j++)
+      {
+         CPU_cmplx_product
+            (deg,Ure[i][j],Uim[i][j],xre[j],xim[j],workre,workim);
+
+         for(int k=0; k<=deg; k++)
+         {
+            prodre[k] = prodre[k] - workre[k];
+            prodim[k] = prodim[k] - workim[k];
+         }
+      }
+      CPU_cmplx_inverse(deg,Ure[i][i],Uim[i][i],workre,workim);
+      CPU_cmplx_product(deg,workre,workim,prodre,prodim,xre[i],xim[i]);
+   }
+   free(prodre); free(workre);
+   free(prodim); free(workim);
+}

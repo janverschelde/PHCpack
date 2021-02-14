@@ -115,4 +115,25 @@ void real_upper_solver
  * ON RETURN :
  *   x        the solution to U*x = b. */
 
+void cmplx_upper_solver
+ ( int dim, int deg, double ***Ure, double ***Uim,
+   double **bre, double **bim, double **xre, double **xim );
+/*
+ * DESCRIPTION :
+ *   Solves the upper triangular system U*x = b with back substitution.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in the matrix U;
+ *   deg      truncation degree of the series;
+ *   Ure      real part of an upper triangular series matrix;
+ *   Uim      imaginary part of an upper triangular series matrix;
+ *   bre      real part of the right hand side vector;
+ *   bim      imaginary part of the right hand side vector;
+ *   xre      space for dim power series truncated at degree deg;
+ *   xim      space for dim power series truncated at degree deg.
+ *
+ * ON RETURN :
+ *   xre      real part of the solution to U*x = b;
+ *   xim      real part of the solution to U*x = b. */
+
 #endif
