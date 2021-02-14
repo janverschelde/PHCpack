@@ -1,3 +1,6 @@
+Sat 13 Feb 2021 : extended dbl_convolutions_host with a function to
+  compute the inverse of a series with complex coefficients.
+
 Fri 12 Feb 2021 : changed GPU_dbl_inverse into CPU_dbl_inverse in
   dbl_convolutions_host.
 

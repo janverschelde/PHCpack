@@ -58,3 +58,40 @@ void CPU_dbl_inverse ( int deg, double *x, double *y )
       y[i] = y[i]/x[0];
    }
 }
+
+void CPU_cmplx_inverse
+ ( int deg, double *xre, double *xim, double *yre, double *yim )
+{
+   double rpa,ipa;
+   double xr0,xi0;
+   double yr0,yi0;
+   int idx;
+
+   xr0 = xre[0]; xi0 = xim[0];
+   rpa = xr0*xr0 + xi0*xi0;
+   yre[0] = xr0/rpa; yim[0] = -xi0/rpa;
+
+   for(int i=1; i<=deg; i++)
+   {
+      xr0 = xre[1];   xi0 = xim[1]; 
+      yr0 = yre[i-1]; yi0 = yim[i-1]; 
+      rpa = - xr0*yr0 + xi0*yi0;
+      ipa = - xi0*yr0 - xr0*yi0;
+
+      for(int j=2; j<=i; j++)
+      {
+         idx = i-j;
+         xr0 = xre[j];   xi0 = xim[j];
+         yr0 = yre[idx]; yi0 = yim[idx];
+         rpa = rpa - (xr0*yr0 - xi0*yi0);
+         ipa = ipa - (xi0*yr0 + xr0*yi0);
+      }
+      yre[i] = rpa; yim[i] = ipa;
+
+      xr0 = yre[0]; xi0 = yim[0]; // contains 1/x[0]
+      yr0 = yre[i]; yi0 = yim[i];
+      rpa = xr0*yr0 - xi0*yi0;
+      ipa = xi0*yr0 + xr0*yi0;
+      yre[i] = rpa; yim[i] = ipa;
+   }
+}

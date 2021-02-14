@@ -63,4 +63,26 @@ void CPU_dbl_inverse ( int deg, double *x, double *y );
  * ON RETURN :
  *   y        coefficients of the inverse of the series x. */
 
+void CPU_cmplx_inverse
+ ( int deg, double *xre, double *xim, double *yre, double *yim );
+/*
+ * DESCRIPTION :
+ *   Computes the inverse of the series for complex coefficients
+ *   in double precision.
+ *
+ * REQUIRED : The lead coefficient x(0) of x is nonzero.
+ *   The arrays x and y have allocated space for deg+1 doubles,
+ *   for range 0 up to deg, deg included.
+ *
+ * ON ENTRY :
+ *   deg      truncation degree of the series x and y;
+ *   xre      real parts of the coefficients of a power series;
+ *   xim      imaginary parts of the coefficients of a power series;
+ *   yre      space for deg+1 coefficients;
+ *   yim      space for deg+1 coefficients.
+ *
+ * ON RETURN :
+ *   yre      real parts of the coefficients of the inverse of x;
+ *   yim      imaginary parts of the coefficients of the inverse of x. */
+
 #endif
