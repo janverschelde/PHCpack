@@ -1,5 +1,6 @@
 Sat 13 Feb 2021 : to dbl_matrices_host, added an upper triangular solver
   for series with complex coefficients, extended test_dbl_series_vectors.
+  Moved functions from test_dbl_series_vectors into dbl_matrices_testers.
 
 Fri 12 Feb 2021 : added an upper triangular solver to dbl_matrices_host,
   tested by test_dbl_series_vectors.

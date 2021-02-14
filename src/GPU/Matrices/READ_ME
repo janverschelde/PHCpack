@@ -8,5 +8,6 @@ file name                  : short description
 -----------------------------------------------------------------------------
 random_matrices            : random vectors and matrices of power series
 dbl_matrices_host          : series matrices on the host in double precision
+dbl_matrices_testers       : test function on series vectors and matrices
 test_dbl_series_vectors    : test on vectors of series in double precision
 -----------------------------------------------------------------------------
