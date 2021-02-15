@@ -1,3 +1,6 @@
+Sun 14 Feb 2021 : added generation of random lower triangular matrices
+  to random matrices.
+
 Sat 13 Feb 2021 : to dbl_matrices_host, added an upper triangular solver
   for series with complex coefficients, extended test_dbl_series_vectors.
   Moved functions from test_dbl_series_vectors into dbl_matrices_testers.

@@ -50,6 +50,26 @@ void random_dbl_upper_series_matrix
    }
 }
 
+void random_dbl_lower_series_matrix
+ ( int rows, int cols, int deg, double **x, double ***A )
+{
+   for(int i=0; i<rows; i++)
+   {
+      for(int j=0; j<i; j++)
+      {
+         random_dbl_exponential(deg,&x[i][j],A[i][j]);
+      }
+      x[i][i] = 0.0;
+      A[i][i][0] = 1.0;
+      for(int k=1; k<=deg; k++) A[i][i][k] = 0.0;
+
+      for(int j=i+1; j<cols; j++)
+      {
+         for(int k=0; k<=deg; k++) A[i][j][k] = 0.0;
+      }
+   }
+}
+
 void random_cmplx_series_matrix
  ( int rows, int cols, int deg, double **xre, double **xim,
    double ***Are, double ***Aim )
@@ -78,6 +98,35 @@ void random_cmplx_upper_series_matrix
       {
          random_cmplx_exponential
             (deg,&xre[i][j],&xim[i][j],Are[i][j],Aim[i][j]);
+      }
+   }
+}
+
+void random_cmplx_lower_series_matrix
+ ( int rows, int cols, int deg, double **xre, double **xim,
+   double ***Are, double ***Aim )
+{
+   for(int i=0; i<rows; i++)
+   {
+      for(int j=0; j<i; j++)
+      {
+         random_cmplx_exponential
+            (deg,&xre[i][j],&xim[i][j],Are[i][j],Aim[i][j]);
+      }
+      xre[i][i] = 0.0; xim[i][i] = 0.0;
+      Are[i][i][0] = 1.0; Aim[i][i][0] = 0.0;
+      for(int k=1; k<=deg; k++)
+      {
+         Are[i][i][k] = 0.0;
+         Aim[i][i][k] = 0.0;
+      }
+      for(int j=i+1; j<cols; j++)
+      {
+         for(int k=0; k<=deg; k++)
+         {
+            Are[i][j][k] = 0.0;
+            Aim[i][j][k] = 0.0;
+         }
       }
    }
 }
