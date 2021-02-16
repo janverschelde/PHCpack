@@ -1,4 +1,4 @@
-Solutions of systems and homotopies in PHCv2.4.82
+Solutions of systems and homotopies in PHCv2.4.84
 
 The second release introduced the solution vectors with multiprecision.
 Version 2.3 has an improved Maple interface.
@@ -55,6 +55,7 @@ decadobl_system_and_solutions_io   : i/o of decadobl system and solutions
 multprec_system_and_solutions_io   : i/o of multprec systems and solutions
 prompt_for_systems                 : scan, read, and prompt for system
 prompt_for_solutions               : scan, read, and prompt for solutions
+ts_getstart                        : test to extract the start system
 ------------------------------------------------------------------------------
 standard_solution_filters          : filters solutions subject to criteria
 dobldobl_solution_filters          : filters of double double solutions
