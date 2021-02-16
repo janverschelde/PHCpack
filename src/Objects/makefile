@@ -357,7 +357,7 @@ test_reduction: ts_fltlu ts_cmplu ts_ddlu ts_qdlu ts_qrd ts_svd ts_eigval \
                 ts_ddnorm ts_tdnorm ts_qdnorm ts_pdnorm ts_odnorm ts_danorm \
                 ts_dqrd ts_ddqrd ts_tdqrd ts_qdqrd ts_pdqrd ts_odqrd ts_daqrd \
                 ts_mpqrd ts_dsvd ts_ddsvd ts_tdsvd ts_qdsvd ts_pdsvd ts_odsvd \
-	        ts_dasvd ts_mpsvd ts_errfree
+                ts_dasvd ts_mpsvd ts_errfree
 
 ts_fltlu:
 	make -f $(MAKEFILE) ts_fltlu
@@ -796,7 +796,7 @@ test_deformations: test_solutions test_homotopy test_newton test_curves \
 test_solutions: ts_sols ts_ddsols ts_qdsols ts_solfilt ts_solar ts_solstr \
                 ts_mapsols_io ts_dicsols_io ts_grepsols ts_selsol \
                 ts_ptlists ts_quadpart ts_contab ts_quad ts_soldrop \
-                ts_trasols_io ts_mixres
+                ts_trasols_io ts_mixres ts_getstart
 
 ts_sols:
 	make -f $(MAKEFILE) ts_sols
@@ -848,6 +848,9 @@ ts_trasols_io:
 
 ts_mixres:
 	make -f $(MAKEFILE) ts_mixres
+
+ts_getstart:
+	make -f $(MAKEFILE) ts_getstart
 
 # Test programs for the Deformations/Homotopy library :
 
@@ -1188,7 +1191,7 @@ ts_unimod:
 
 # Test programs for the Root_Counts/Implift library :
 
-test_implift: ts_supports ts_supspan ts_transfo ts_mainvpts ts_impvol \
+test_implift: ts_supports ts_supspan ts_transfo ts_drivpts ts_impvol \
               ts_drivimpl
 
 ts_supports:
@@ -1200,8 +1203,8 @@ ts_supspan:
 ts_transfo:
 	make -f $(MAKEFILE) ts_transfo
 
-ts_mainvpts:
-	make -f $(MAKEFILE) ts_mainvpts
+ts_drivpts:
+	make -f $(MAKEFILE) ts_drivpts
 
 ts_impvol:
 	make -f $(MAKEFILE) ts_impvol

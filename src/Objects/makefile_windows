@@ -1005,6 +1005,10 @@ ts_trasols_io:
 ts_mixres:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mixres.adb -o $(BIN)/ts_mixres
 
+ts_getstart:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_getstart.adb \
+              -o $(BIN)/ts_getstart
+
 # Test programs for the Deformations/Homotopy library :
 
 ts_mainscal: get_clock.o get_clocks_per_sec.o
