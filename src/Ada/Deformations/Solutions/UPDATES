@@ -1,3 +1,6 @@
+Tue 16 Feb 2021 : extended ts_getstart.adb with a procedure to read
+  the start system and its solutions for an input file.
+
 Mon 15 Feb 2021 : new test ts_getstart.adb to extract the start system
   and start solutions from the output file of the blackbox solver.
 
