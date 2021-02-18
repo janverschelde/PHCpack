@@ -5,7 +5,7 @@ with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 --with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 --with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
-with Drivers_for_Solution_Filters;      use Drivers_for_Solution_Filters;
+with Main_Solution_Filters;             use Main_Solution_Filters;
 with Standard_Select_Solutions;         use Standard_Select_Solutions;
 -- with Drivers_for_Condition_Tables;      use Drivers_for_Condition_Tables;
 
@@ -132,9 +132,9 @@ procedure mainfilt ( infilename,outfilename : in string ) is
    --  else
     precision := Prompt_for_Precision;
     case precision is
-      when 0 => Driver_for_Standard_Solution_Filters(infile,outfile,len,dim);
-      when 1 => Driver_for_DoblDobl_Solution_Filters(infile,outfile,len,dim);
-      when 2 => Driver_for_QuadDobl_Solution_Filters(infile,outfile,len,dim);
+      when 0 => Standard_Solution_Filter(infile,outfile,len,dim);
+      when 1 => DoblDobl_Solution_Filter(infile,outfile,len,dim);
+      when 2 => QuadDobl_Solution_Filter(infile,outfile,len,dim);
       when others => null;
     end case;
    -- end if;

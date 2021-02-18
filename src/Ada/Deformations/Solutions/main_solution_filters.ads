@@ -9,11 +9,11 @@ with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 
-package Drivers_for_Solution_Filters is
+package Main_Solution_Filters is
 
 -- DESCRIPTION :
---   This package provides some utilities and the main drivers to
---   filter lists of solutions, subject to user given criteria.
+--   This package provides some utilities and the main procedures
+--   to filter lists of solutions, subject to user given criteria.
 --   The drivers support double, double double, and quad double precision
 --   and work on solution lists that are entirely in main memory
 --   and on solution lists that are directly read from file.
@@ -53,13 +53,13 @@ package Drivers_for_Solution_Filters is
   --   Shows the user the menu with available options and
   --   returns the selected answer.
 
-  procedure Driver_for_Solution_Filters
+  procedure Main_Solution_Filter
                ( file : in file_type;
                  sols : in Standard_Complex_Solutions.Solution_List );
-  procedure Driver_for_Solution_Filters
+  procedure Main_Solution_Filter
                ( file : in file_type;
                  sols : in DoblDobl_Complex_Solutions.Solution_List );
-  procedure Driver_for_Solution_Filters
+  procedure Main_Solution_Filter
                ( file : in file_type;
                  sols : in QuadDobl_Complex_Solutions.Solution_List );
 
@@ -72,11 +72,11 @@ package Drivers_for_Solution_Filters is
   --     4) reached a target value.
   --   The criteria are set up with respect to a given tolerance.
 
-  procedure Driver_for_Standard_Solution_Filters
+  procedure Standard_Solution_Filter
                ( infile,outfile : in file_type; len,dim : in natural32 );
-  procedure Driver_for_DoblDobl_Solution_Filters
+  procedure DoblDobl_Solution_Filter
                ( infile,outfile : in file_type; len,dim : in natural32 );
-  procedure Driver_for_QuadDobl_Solution_Filters
+  procedure QuadDobl_Solution_Filter
                ( infile,outfile : in file_type; len,dim : in natural32 );
 
   -- DESCRIPTION :
@@ -90,4 +90,4 @@ package Drivers_for_Solution_Filters is
   --   len       length of the solution list;
   --   dim       length of the vectors in the solution list.
 
-end Drivers_for_Solution_Filters;
+end Main_Solution_Filters;

@@ -66,7 +66,7 @@ quaddobl_solution_splitters        : quad double version of solution splitters
 standard_solution_manipulators     : removing imaginary part of target
 dobldobl_solution_manipulators     : dobldobl version of solution manipulators
 quaddobl_solution_manipulators     : quaddobl version of solution manipulators
-drivers_to_solution_filters        : drivers to filter solution lists
+main_solution_filters              : main procedures to filter solution lists
 ts_solfilt                         : calls the solution filters
 ts_grepsols                        : selects specific solutions
 mainfilt                           : access to filtering via phc -f

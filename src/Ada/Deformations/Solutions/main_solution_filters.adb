@@ -15,7 +15,7 @@ with DoblDobl_Solution_Filters;
 with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with QuadDobl_Solution_Filters;
 
-package body Drivers_for_Solution_Filters is
+package body Main_Solution_Filters is
 
   procedure Write_Symbols is
 
@@ -133,7 +133,7 @@ package body Drivers_for_Solution_Filters is
     return ans;
   end Show_Menu_and_Prompt_Answer;
 
-  procedure Driver_for_Solution_Filters
+  procedure Main_Solution_Filter
                ( file : in file_type;
                  sols : in Standard_Complex_Solutions.Solution_List ) is
 
@@ -205,9 +205,9 @@ package body Drivers_for_Solution_Filters is
       put_line("The filtered list is on the output file.");
       put(file,Length_Of(filtsols),natural32(Head_Of(filtsols).n),filtsols);
     end if;
-  end Driver_for_Solution_Filters;
+  end Main_Solution_Filter;
 
-  procedure Driver_for_Solution_Filters
+  procedure Main_Solution_Filter
                ( file : in file_type;
                  sols : in DoblDobl_Complex_Solutions.Solution_List ) is
 
@@ -279,9 +279,9 @@ package body Drivers_for_Solution_Filters is
       put_line("The filtered list is on the output file.");
       put(file,Length_Of(filtsols),natural32(Head_Of(filtsols).n),filtsols);
     end if;
-  end Driver_for_Solution_Filters;
+  end Main_Solution_Filter;
 
-  procedure Driver_for_Solution_Filters
+  procedure Main_Solution_Filter
                ( file : in file_type;
                  sols : in QuadDobl_Complex_Solutions.Solution_List ) is
 
@@ -353,10 +353,10 @@ package body Drivers_for_Solution_Filters is
       put_line("The filtered list is on the output file.");
       put(file,Length_Of(filtsols),natural32(Head_Of(filtsols).n),filtsols);
     end if;
-  end Driver_for_Solution_Filters;
+  end Main_Solution_Filter;
 
-  procedure Driver_for_Standard_Solution_Filters
-               ( infile,outfile : in file_type; len,dim : in natural32 ) is
+  procedure Standard_Solution_Filter
+              ( infile,outfile : in file_type; len,dim : in natural32 ) is
 
     use Standard_Complex_Numbers;
     use Standard_Complex_Solutions;
@@ -456,10 +456,10 @@ package body Drivers_for_Solution_Filters is
            end;
       when others => null;
     end case;
-  end Driver_for_Standard_Solution_Filters;
+  end Standard_Solution_Filter;
 
-  procedure Driver_for_DoblDobl_Solution_Filters
-               ( infile,outfile : in file_type; len,dim : in natural32 ) is
+  procedure DoblDobl_Solution_Filter
+              ( infile,outfile : in file_type; len,dim : in natural32 ) is
 
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Solutions;
@@ -559,10 +559,10 @@ package body Drivers_for_Solution_Filters is
            end;
       when others => null;
     end case;
-  end Driver_for_DoblDobl_Solution_Filters;
+  end DoblDobl_Solution_Filter;
 
-  procedure Driver_for_QuadDobl_Solution_Filters
-               ( infile,outfile : in file_type; len,dim : in natural32 ) is
+  procedure QuadDobl_Solution_Filter
+              ( infile,outfile : in file_type; len,dim : in natural32 ) is
 
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Complex_Solutions;
@@ -662,6 +662,6 @@ package body Drivers_for_Solution_Filters is
            end;
       when others => null;
     end case;
-  end Driver_for_QuadDobl_Solution_Filters;
+  end QuadDobl_Solution_Filter;
 
-end Drivers_for_Solution_Filters;
+end Main_Solution_Filters;
