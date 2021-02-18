@@ -90,4 +90,19 @@ package Main_Solution_Filters is
   --   len       length of the solution list;
   --   dim       length of the vectors in the solution list.
 
+  procedure Read_Dimensions
+              ( infile : out file_type; len,dim : out natural32 );
+
+  -- DESCRIPTION :
+  --   Prompts the user for the name of a file for the solutions,
+  --   eventually preceeded by a polynomial system.  Only the dimensions 
+  --   of the solution list are read, which is fine for huge lists.
+
+  procedure Main ( infilename,outfilename : in string );
+
+  -- DESCRIPTION :
+  --   Filters solution lists on file, subject to criteria selected
+  --   by the user.
+  --   The arguments are the names of the input and output files.
+
 end Main_Solution_Filters;

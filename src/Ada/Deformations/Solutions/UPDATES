@@ -2,7 +2,8 @@ Wed 17 Feb 2021 : moved the scan_for_start_system from ts_getstart
   to the package standard_system_and_solutions_io.
   Renamed drivers_for_solution_filters into main_solution_filters,
   moved code from ts_solfilt into test_solution_filters.
-  Updated mainfilt.adb.
+  Updated mainfilt.adb.  Moved mainfilt into main_solution_filters,
+  removed the files mainfilt.ads and mainfilt.adb.
 
 Tue 16 Feb 2021 : extended ts_getstart.adb with a procedure to read
   the start system and its solutions for an input file.

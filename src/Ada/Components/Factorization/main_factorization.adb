@@ -13,6 +13,7 @@ with Multprec_Complex_Polynomials_io;    use Multprec_Complex_Polynomials_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
+with Main_Solution_Filters;
 with Sampling_Machine;
 with Sample_Point_Lists;                 use Sample_Point_Lists;
 with Standard_Stacked_Sample_Grids;
@@ -27,7 +28,6 @@ with Drivers_to_Factor_Components;       use Drivers_to_Factor_Components;
 with Drivers_to_Factor_Polynomials;      use Drivers_to_Factor_Polynomials;
 with Drivers_to_Breakup_Solutions;       use Drivers_to_Breakup_Solutions;
 with Driver_for_Common_Factor;
-with mainfilt;
 with Greeting_Banners;
 with Write_Seed_Number;
 
@@ -547,7 +547,7 @@ package body Main_Factorization is
     put("Type 1, 2, 3, 4, 5, 6, 7, 8, or 9 to select a task : ");
     Ask_Alternative(ans,"0123456789");
     case ans is
-      when '0' => mainfilt(infilename,outfilename);
+      when '0' => Main_Solution_Filters.Main(infilename,outfilename);
       when '1' => Homotopy_Membership_Test(nt,vrblvl-1);
       when '2' => Standard_Breakup(infilename,outfilename);
       when '3' => Trace_Form_Interpolation(vrblvl-1);

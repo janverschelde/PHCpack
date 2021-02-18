@@ -1,3 +1,5 @@
+Wed 17 Feb 2021 : updated main_factorization for the removal of mainfilt.
+
 Fri 4 Dec 2020 : moved mainfac into the new package main_factorization.
   Added the verbose level to the main procedures in this new package.
 

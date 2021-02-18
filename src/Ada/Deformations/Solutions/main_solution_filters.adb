@@ -10,6 +10,7 @@ with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with Symbol_Table,Symbol_Table_io;      use Symbol_Table;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Standard_Solution_Filters;
+with Standard_Select_Solutions;
 with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
 with DoblDobl_Solution_Filters;
 with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
@@ -663,5 +664,57 @@ package body Main_Solution_Filters is
       when others => null;
     end case;
   end QuadDobl_Solution_Filter;
+
+  procedure Read_Dimensions
+              ( infile : out file_type; len,dim : out natural32 ) is
+
+    bannered,fail : boolean;
+
+  begin
+    loop
+      new_line;
+      put_line("Reading the name of the file for the solutions.");
+      Read_Name_and_Open_File(infile);
+      Standard_Select_Solutions.Prompt_to_Scan_Banner(infile,bannered,fail);
+      exit when not fail;
+      Close(infile);
+      put("Something was wrong with the input file.");
+      put_line("  Please try again...");
+    end loop;
+    Standard_Select_Solutions.Read_Dimensions(infile,len,dim,fail);
+    put("Ready to process "); put(len,1);
+    put(" solutions of dimension "); put(dim,1); put_line(" ... ");
+  exception
+    when others => close(infile); raise;
+  end Read_Dimensions;
+
+  procedure Main ( infilename,outfilename : in string ) is
+
+    infile,outfile : file_type;
+    len,dim : natural32;
+    precision : character;
+
+  begin
+    new_line;
+    put_line("Filtering solution lists subject to criteria.");
+    declare
+    begin
+      Read_Dimensions(infile,len,dim);
+    exception
+      when others
+        => put_line("Please try again...");
+           Read_Dimensions(infile,len,dim);
+    end;
+    new_line;
+    put_line("Reading the name of the output file.");
+    Read_Name_and_Create_File(outfile);
+    precision := Communications_with_User.Prompt_for_Precision;
+    case precision is
+      when '0' => Standard_Solution_Filter(infile,outfile,len,dim);
+      when '1' => DoblDobl_Solution_Filter(infile,outfile,len,dim);
+      when '2' => QuadDobl_Solution_Filter(infile,outfile,len,dim);
+      when others => null;
+    end case;
+  end Main;
 
 end Main_Solution_Filters;

@@ -69,7 +69,6 @@ quaddobl_solution_manipulators     : quaddobl version of solution manipulators
 main_solution_filters              : main procedures to filter solution lists
 ts_solfilt                         : calls the solution filters
 ts_grepsols                        : selects specific solutions
-mainfilt                           : access to filtering via phc -f
 ------------------------------------------------------------------------------
 lists_of_symbols                   : manages lists of symbols
 standard_maple_solutions_io        : output formats to Maple, standard floats
