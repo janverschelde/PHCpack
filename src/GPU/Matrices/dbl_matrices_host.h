@@ -136,4 +136,21 @@ void cmplx_upper_solver
  *   xre      real part of the solution to U*x = b;
  *   xim      real part of the solution to U*x = b. */
 
+void real_lufac ( int dim, int deg, double ***A, int *pivots );
+/*
+ * DESCRIPTION :
+ *   Does an inplace LU factorization with pivoting on the matrix A,
+ *   of power series all truncated to the same degree.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in the matrix A;
+ *   deg      truncation degree of the series;
+ *   A        matrix of power series;
+ *   pivots   space for dim pivots.
+ *
+ * ON RETURN :
+ *   A        the lower triangular part of A contains the multipliers
+ *            and the upper triangular part of A the row reduced A;
+ *   pivots   are the pivots used. */
+
 #endif

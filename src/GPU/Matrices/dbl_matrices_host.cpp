@@ -2,6 +2,7 @@
  * in dbl_matrices_host.h. */
 
 #include <cstdlib>
+#include <cmath>
 #include "dbl_convolutions_host.h"
 
 void real_inner_product
@@ -113,4 +114,52 @@ void cmplx_upper_solver
    }
    free(prodre); free(workre);
    free(prodim); free(workim);
+}
+
+void real_lufac ( int dim, int deg, double ***A, int *pivots )
+{
+   double valmax,valtmp;
+   int idxmax,idxtmp;
+   double *work = new double[deg+1];
+   double *prod = new double[deg+1];
+
+   for(int j=0; j<dim; j++)
+   {
+      valmax = fabs(A[j][j][0]); idxmax = j;
+      for(int i=j+1; i<dim; i++)
+      {                                // find the pivot
+         valtmp = fabs(A[i][j][0]);
+         if(valtmp > valmax) 
+         {
+            valmax = valtmp; idxmax = i;
+         }
+      }
+      if(idxmax != j)                  // swap rows
+      {
+         for(int k=0; k<dim; k++)
+         {
+            for(int i=0; i<=deg; i++)
+            {
+               valtmp = A[idxmax][k][i];
+               A[idxmax][k][i] = A[j][k][i];
+               A[j][k][i] = valtmp;
+            }
+         }
+         idxtmp = pivots[idxmax];
+         pivots[idxmax] = pivots[j];
+         pivots[j] = idxtmp;
+      }
+      for(int i=j+1; i<dim; i++)
+      {                                        // A[i][j] = A[i][j]/A[j][j]
+         CPU_dbl_inverse(deg,A[j][j],work);  
+         CPU_dbl_product(deg,A[i][j],work,prod);
+         for(int k=0; k<=deg; k++) A[i][j][k] = prod[k];
+
+         for(int k=j+1; k<dim; k++)  // A[i][k] = A[i][k] - A[i][j]*A[j][k]
+         {
+            CPU_dbl_product(deg,A[i][j],A[j][k],prod);
+            for(int d=0; d<=deg; d++) A[i][k][d] = A[i][k][d] - prod[d];
+         }
+      }
+   }
 }

@@ -1,3 +1,5 @@
+Thu 18 Feb 2021 : added an inplace lu factorization to dbl_matrices_host.
+
 Sun 14 Feb 2021 : added generation of random lower triangular matrices
   to random matrices.
 
