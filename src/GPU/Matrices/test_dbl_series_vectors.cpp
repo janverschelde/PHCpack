@@ -9,6 +9,9 @@ using namespace std;
 
 int main ( void )
 {
+   cout << "testing the real LU factorization ..." << endl;
+   test_real_lufac();
+
    cout << "testing a real inner product ..." << endl;
    test_real_inner_product();
    cout << "testing a complex inner product ..." << endl;

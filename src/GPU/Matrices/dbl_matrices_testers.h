@@ -40,4 +40,9 @@ void test_cmplx_upper_solver ( void );
  *   Generates a random complex upper triangular matrix
  *   to test the backward substitution method. */
 
+void test_real_lufac ( void );
+/*
+ * DESCRIPTION :
+ *   Generates a random real matrix to test the LU factorization. */
+
 #endif

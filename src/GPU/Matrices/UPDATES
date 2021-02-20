@@ -1,3 +1,8 @@
+Fri 19 Feb 2021 : extended dbl_matrices_host with a matrix-matrix product
+  to test the code for the LU factorization in dbl_matrices_testers,
+  called in test_dbl_series_vectors.cpp.  Updated makefiles because
+  random_numbers are needed to randomize the exp(x) series.
+
 Thu 18 Feb 2021 : added an inplace lu factorization to dbl_matrices_host.
 
 Sun 14 Feb 2021 : added generation of random lower triangular matrices

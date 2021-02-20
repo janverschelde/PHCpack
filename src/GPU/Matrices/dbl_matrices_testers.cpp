@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
+#include "random_numbers.h"
 #include "random_series.h"
 #include "random_matrices.h"
 #include "dbl_matrices_host.h"
@@ -348,4 +349,125 @@ void test_cmplx_upper_solver ( void )
       for(int k=0; k<=deg; k++)
          cout << xre[i][k] << "  " << xim[i][k] << endl;
    }
+}
+
+void test_real_lufac ( void )
+{
+   cout << "Give the dimension : ";
+   int dim; cin >> dim;
+
+   cout << "Give a degree larger than one : ";
+   int deg; cin >> deg;
+
+   double **rnd = new double*[dim];
+   double ***A = new double**[dim];
+   double ***Acopy = new double**[dim];  // need copy for lufac is inplace
+   for(int i=0; i<dim; i++)
+   {
+      rnd[i] = new double[dim];
+      A[i] = new double*[dim];
+      Acopy[i] = new double*[dim];
+      for(int j=0; j<dim; j++)
+      {
+         A[i][j] = new double[deg+1];
+         Acopy[i][j] = new double[deg+1];
+      }
+   }
+   random_dbl_series_matrix(dim,dim,deg,rnd,A);
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         A[i][j][0] = random_double();
+         for(int k=0; k<=deg; k++)
+            Acopy[i][j][k] = A[i][j][k];
+      }
+
+   cout << scientific << setprecision(16);
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         cout << "A[" << i << "][" << j << "] is exp("
+              << rnd[i][j] << ") :" << endl;
+         for(int k=0; k<=deg; k++) cout << A[i][j][k] << endl;
+      }
+
+   int *pivots = new int[dim];
+
+   real_lufac(dim,deg,A,pivots);
+   cout << "done with LU factorization ... " << endl;
+
+   double ***L = new double**[dim]; // lower triangular part of A
+   double ***U = new double**[dim]; // upper triangular part of A
+   double ***B = new double**[dim]; // the product of L with U
+   for(int i=0; i<dim; i++)
+   {
+      L[i] = new double*[dim];
+      U[i] = new double*[dim];
+      B[i] = new double*[dim];
+
+      for(int j=0; j<dim; j++)
+      {
+         L[i][j] = new double[deg+1];
+         U[i][j] = new double[deg+1];
+         B[i][j] = new double[deg+1];
+         if(i < j)
+         {
+            for(int k=0; k<=deg; k++)
+            {
+               L[i][j][k] = 0.0;
+               U[i][j][k] = A[i][j][k];
+            }
+         }
+         else if(i == j)
+         {
+            L[i][j][0] = 1.0;
+            U[i][j][0] = A[i][j][0];
+            for(int k=1; k<=deg; k++)
+            {
+               L[i][j][k] = 0.0;
+               U[i][j][k] = A[i][j][k];
+            }
+         }
+         else
+         {
+            for(int k=0; k<=deg; k++)
+            {
+               L[i][j][k] = A[i][j][k];
+               U[i][j][k] = 0.0;
+            }
+         }
+      }
+   }
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         cout << "L[" << i << "][" << j << "] :" << endl;
+         for(int k=0; k<=deg; k++) cout << L[i][j][k] << endl;
+      }
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         cout << "U[" << i << "][" << j << "] :" << endl;
+         for(int k=0; k<=deg; k++) cout << U[i][j][k] << endl;
+      }
+   cout << "The pivots :";
+   for(int i=0; i<dim; i++) cout << " " << pivots[i];
+   cout << endl;
+
+   cout << "doing the matrix-matrix product ... " << endl;
+   real_matrix_matrix_product(dim,dim,dim,deg,L,U,B);
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         cout << "A[pivots[" << i << "]][" << j << "] versus ";
+         cout << "B[" << i << "][" << j << "] :" << endl;
+         for(int k=0; k<=deg; k++)
+         {
+            cout << Acopy[pivots[i]][j][k] << endl;
+            cout << B[i][j][k] << endl;
+         }
+      }
 }

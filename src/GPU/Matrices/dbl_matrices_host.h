@@ -99,6 +99,28 @@ void cmplx_matrix_vector_product
  *   yre      real parts of the product of A with x;
  *   yim      imaginary parts of the product of A with x. */
 
+void real_matrix_matrix_product
+ ( int rows, int dim, int cols, int deg, 
+   double ***A, double ***B, double ***C );
+/*
+ * DESCRIPTION :
+ *   Computes the product C of the matrix A with B on real data.
+ *
+ * ON ENTRY :
+ *   rows     the number of rows in the matrices A and C;
+ *   dim      the number of columns in A and rows in B;
+ *   cols     the number of columns in the matrices B and C;
+ *   deg      truncation degree of the series;
+ *   A        matrix of dimensions rows and dim,
+ *            of power series truncated at the degree deg;
+ *   B        matrix of dimensions dim and cols,
+ *            of power series truncated at the degree deg;
+ *   C        space allocated for a rows-by_cols matrix
+ *            of power series truncated at the degree deg.
+ *
+ * ON RETURN :
+ *   C        product of A with B. */
+
 void real_upper_solver
  ( int dim, int deg, double ***U, double **b, double **x  );
 /*

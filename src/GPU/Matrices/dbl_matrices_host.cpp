@@ -5,6 +5,10 @@
 #include <cmath>
 #include "dbl_convolutions_host.h"
 
+// for debugging
+#include <iostream>
+using namespace std;
+
 void real_inner_product
  ( int dim, int deg, double **x, double **y, double *z )
 {
@@ -58,6 +62,29 @@ void cmplx_matrix_vector_product
 {
    for(int k=0; k<rows; k++)
       cmplx_inner_product(cols,deg,Are[k],Aim[k],xre,xim,yre[k],yim[k]);
+}
+
+void real_matrix_matrix_product
+ ( int rows, int dim, int cols, int deg, 
+   double ***A, double ***B, double ***C )
+{
+   double *prod = new double[deg+1];
+
+   for(int i=0; i<rows; i++)
+   {
+      for(int j=0; j<cols; j++)
+      {
+         for(int d=0; d<=deg; d++) C[i][j][d] = 0.0;
+
+         for(int k=0; k<dim; k++)
+         {
+            CPU_dbl_product(deg,A[i][k],B[k][j],prod);
+            for(int d=0; d<=deg; d++)
+               C[i][j][d] = C[i][j][d] + prod[d];
+         }
+      }
+   }
+   free(prod);
 }
 
 void real_upper_solver
@@ -123,6 +150,8 @@ void real_lufac ( int dim, int deg, double ***A, int *pivots )
    double *work = new double[deg+1];
    double *prod = new double[deg+1];
 
+   for(int j=0; j<dim; j++) pivots[j] = j;
+   
    for(int j=0; j<dim; j++)
    {
       valmax = fabs(A[j][j][0]); idxmax = j;
@@ -162,4 +191,5 @@ void real_lufac ( int dim, int deg, double ***A, int *pivots )
          }
       }
    }
+   free(work); free(prod);
 }
