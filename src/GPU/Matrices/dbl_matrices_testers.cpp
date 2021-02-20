@@ -471,3 +471,82 @@ void test_real_lufac ( void )
          }
       }
 }
+
+void test_real_lu_solver ( void ) 
+{
+   cout << "Give the dimension : ";
+   int dim; cin >> dim;
+
+   cout << "Give a degree larger than one : ";
+   int deg; cin >> deg;
+
+   double **rnd = new double*[dim];
+   double ***A = new double**[dim];
+   double ***Acopy = new double**[dim];  // need copy for lufac is inplace
+   for(int i=0; i<dim; i++)
+   {
+      rnd[i] = new double[dim];
+      A[i] = new double*[dim];
+      Acopy[i] = new double*[dim];
+      for(int j=0; j<dim; j++)
+      {
+         A[i][j] = new double[deg+1];
+         Acopy[i][j] = new double[deg+1];
+      }
+   }
+   random_dbl_series_matrix(dim,dim,deg,rnd,A);
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         A[i][j][0] = random_double();  // randomize the leading ones
+         for(int k=0; k<=deg; k++)
+            Acopy[i][j][k] = A[i][j][k];
+      }
+
+   cout << scientific << setprecision(16);
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         cout << "A[" << i << "][" << j << "] is exp("
+              << rnd[i][j] << ") :" << endl;
+         for(int k=0; k<=deg; k++) cout << A[i][j][k] << endl;
+      }
+
+   int *pivots = new int[dim];
+
+   double **sol = new double*[dim]; // solution
+   double **rhs = new double*[dim]; // right hand side
+
+   for(int i=0; i<dim; i++)
+   {
+      rhs[i] = new double[deg+1];
+      sol[i] = new double[deg+1];
+
+      sol[i][0] = 1.0;
+      for(int k=1; k<=deg; k++) sol[i][k] = 0.0;
+   }
+   real_matrix_vector_product(dim,dim,deg,A,sol,rhs);
+
+   double **x = new double*[dim]; // space for the solution
+   double **b = new double*[dim]; // copy of right hand side
+
+   for(int i=0; i<dim; i++)
+   {
+      x[i] = new double[deg+1];
+      b[i] = new double[deg+1];
+      for(int k=0; k<=deg; k++) b[i][k] = rhs[i][k];
+   }
+   real_lu_solver(dim,deg,Acopy,pivots,b,x);
+
+   cout << "The pivots :";
+   for(int i=0; i<dim; i++) cout << " " << pivots[i];
+   cout << endl;
+
+   for(int i=0; i<dim; i++)
+   {
+      cout << "x[" << i << "] :" << endl;
+      for(int k=0; k<=deg; k++) cout << x[i][k] << endl;
+   }
+}

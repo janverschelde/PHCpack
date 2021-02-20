@@ -127,6 +127,8 @@ void real_lower_solver
  * DESCRIPTION :
  *   Solves the lower triangular system L*x = b with forward substitution.
  *
+ * REQUIRED : the matrix L has ones on the diagonal.
+ *
  * ON ENTRY :
  *   dim      number of rows and columns in the matrix L;
  *   deg      truncation degree of the series;
@@ -210,7 +212,7 @@ void real_lu_solver
  * ON RETURN :
  *   A        the lower triangular part of A contains the multipliers
  *            and the upper triangular part of A the row reduced A;
- *   b        permuted according to the pivots;
+ *   b        used as work space;
  *   x        the solution to A*x = b. */
 
 #endif

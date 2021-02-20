@@ -91,25 +91,27 @@ void real_lower_solver
  ( int dim, int deg, double ***L, double **b, double **x  )
 {
    double *prod = new double[deg+1]; // products and inverses
-   double *accu = new double[deg+1]; // accumulates products
+   // double *accu = new double[deg+1]; // accumulates products
 
-   CPU_dbl_inverse(deg,L[0][0],prod);      // prod = 1/L[0][0]
-   CPU_dbl_product(deg,b[0],prod,x[0]);    // x[0] = b[0]/L[0][0]
+   // CPU_dbl_inverse(deg,L[0][0],prod);      // prod = 1/L[0][0]
+   // CPU_dbl_product(deg,b[0],prod,x[0]);    // x[0] = b[0]/L[0][0]
+
+   for(int k=0; k<=deg; k++) x[0][k] = b[0][k];
 
    for(int i=1; i<dim; i++)
    {
-      for(int k=0; k<=deg; k++) accu[k] = b[i][k];
+      for(int k=0; k<=deg; k++) x[i][k] = b[i][k];
 
-      for(int j=0; j<dim; j++)
+      for(int j=0; j<i; j++)
       {
          CPU_dbl_product(deg,L[i][j],x[j],prod);
 
-         for(int k=0; k<=deg; k++) accu[k] = accu[k] - prod[k];
+         for(int k=0; k<=deg; k++) x[i][k] = x[i][k] - prod[k];
       }
-      CPU_dbl_inverse(deg,L[i][i],prod);    // prod = 1/L[i][i]
-      CPU_dbl_product(deg,accu,prod,x[i]);  // x[i] = acc/L[i][i]
+      // CPU_dbl_inverse(deg,L[i][i],prod);    // prod = 1/L[i][i]
+      // CPU_dbl_product(deg,accu,prod,x[i]);  // x[i] = acc/L[i][i]
    }
-   free(prod); free(accu);
+   free(prod); // free(accu);
 }
 
 void real_upper_solver
@@ -222,25 +224,12 @@ void real_lufac ( int dim, int deg, double ***A, int *pivots )
 void real_lu_solver
  ( int dim, int deg, double ***A, int *pivots, double **b, double **x )
 {
-   double tmpval;
-   double **y = new double*[dim];
-
-   for(int i=0; i<dim; i++) y[i] = new double[deg+1];
-
    real_lufac(dim,deg,A,pivots);
   
    for(int i=0; i<dim; i++)        // permute b according to the pivots
    {
-      for(int d=0; d<=deg; d++)
-      {
-         tmpval = b[i][d];
-         b[i][d] = b[pivots[i]][d];
-         b[pivots[i]][d] = tmpval;
-      }
+      for(int d=0; d<=deg; d++) x[i][d] = b[pivots[i]][d];
    }
-   real_lower_solver(dim,deg,A,b,y); // forward substitution
-   real_upper_solver(dim,deg,A,y,x); // backward substitution
-
-   for(int i=0; i<dim; i++) free(y[i]);
-   free(y);
+   real_lower_solver(dim,deg,A,x,b); // forward substitution
+   real_upper_solver(dim,deg,A,b,x); // backward substitution
 }
