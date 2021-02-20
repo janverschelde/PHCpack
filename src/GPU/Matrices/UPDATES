@@ -1,3 +1,6 @@
+Sat 20 Feb 2021 : to dbl_matrices_host, added forward substitution and
+  a function for a LU factorization solver.
+
 Fri 19 Feb 2021 : extended dbl_matrices_host with a matrix-matrix product
   to test the code for the LU factorization in dbl_matrices_testers,
   called in test_dbl_series_vectors.cpp.  Updated makefiles because

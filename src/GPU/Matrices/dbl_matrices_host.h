@@ -121,6 +121,22 @@ void real_matrix_matrix_product
  * ON RETURN :
  *   C        product of A with B. */
 
+void real_lower_solver
+ ( int dim, int deg, double ***L, double **b, double **x  );
+/*
+ * DESCRIPTION :
+ *   Solves the lower triangular system L*x = b with forward substitution.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in the matrix L;
+ *   deg      truncation degree of the series;
+ *   L        lower triangular series matrix;
+ *   b        right hand side vector;
+ *   x        space for dim power series truncated at degree deg.
+ *
+ * ON RETURN :
+ *   x        the solution to L*x = b. */
+
 void real_upper_solver
  ( int dim, int deg, double ***U, double **b, double **x  );
 /*
@@ -174,5 +190,27 @@ void real_lufac ( int dim, int deg, double ***A, int *pivots );
  *   A        the lower triangular part of A contains the multipliers
  *            and the upper triangular part of A the row reduced A;
  *   pivots   are the pivots used. */
+
+void real_lu_solver
+ ( int dim, int deg, double ***A, int *pivots, double **b, double **x );
+/*
+ * DESCRIPTION :
+ *   Does an inplace LU factorization with pivoting on the matrix A,
+ *   of power series all truncated to the same degree,
+ *   to solve the system A*x = b.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in the matrix A;
+ *   deg      truncation degree of the series;
+ *   A        matrix of power series;
+ *   pivots   space for dim pivots;
+ *   b        right hand side vector;
+ *   x        space for dim power series truncated at degree deg.
+ *
+ * ON RETURN :
+ *   A        the lower triangular part of A contains the multipliers
+ *            and the upper triangular part of A the row reduced A;
+ *   b        permuted according to the pivots;
+ *   x        the solution to A*x = b. */
 
 #endif

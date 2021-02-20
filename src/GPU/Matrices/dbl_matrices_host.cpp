@@ -87,6 +87,31 @@ void real_matrix_matrix_product
    free(prod);
 }
 
+void real_lower_solver
+ ( int dim, int deg, double ***L, double **b, double **x  )
+{
+   double *prod = new double[deg+1]; // products and inverses
+   double *accu = new double[deg+1]; // accumulates products
+
+   CPU_dbl_inverse(deg,L[0][0],prod);      // prod = 1/L[0][0]
+   CPU_dbl_product(deg,b[0],prod,x[0]);    // x[0] = b[0]/L[0][0]
+
+   for(int i=1; i<dim; i++)
+   {
+      for(int k=0; k<=deg; k++) accu[k] = b[i][k];
+
+      for(int j=0; j<dim; j++)
+      {
+         CPU_dbl_product(deg,L[i][j],x[j],prod);
+
+         for(int k=0; k<=deg; k++) accu[k] = accu[k] - prod[k];
+      }
+      CPU_dbl_inverse(deg,L[i][i],prod);    // prod = 1/L[i][i]
+      CPU_dbl_product(deg,accu,prod,x[i]);  // x[i] = acc/L[i][i]
+   }
+   free(prod); free(accu);
+}
+
 void real_upper_solver
  ( int dim, int deg, double ***U, double **b, double **x  )
 {
@@ -192,4 +217,30 @@ void real_lufac ( int dim, int deg, double ***A, int *pivots )
       }
    }
    free(work); free(prod);
+}
+
+void real_lu_solver
+ ( int dim, int deg, double ***A, int *pivots, double **b, double **x )
+{
+   double tmpval;
+   double **y = new double*[dim];
+
+   for(int i=0; i<dim; i++) y[i] = new double[deg+1];
+
+   real_lufac(dim,deg,A,pivots);
+  
+   for(int i=0; i<dim; i++)        // permute b according to the pivots
+   {
+      for(int d=0; d<=deg; d++)
+      {
+         tmpval = b[i][d];
+         b[i][d] = b[pivots[i]][d];
+         b[pivots[i]][d] = tmpval;
+      }
+   }
+   real_lower_solver(dim,deg,A,b,y); // forward substitution
+   real_upper_solver(dim,deg,A,y,x); // backward substitution
+
+   for(int i=0; i<dim; i++) free(y[i]);
+   free(y);
 }
