@@ -63,7 +63,7 @@ dbl_matrices_host.obj:
 
 dbl_matrices_testers.obj:
 	@-echo ">>> compiling dbl_matrices_testers ..."
-	$(CL)\cl /c -I$(CNV) dbl_matrices_testers.cpp \
+	$(CL)\cl /c -I$(MPD) -I$(CNV) dbl_matrices_testers.cpp \
                  -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: dbl_matrices_testers.obj /EHsc
 
