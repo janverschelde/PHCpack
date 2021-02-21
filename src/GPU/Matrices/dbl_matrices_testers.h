@@ -45,9 +45,19 @@ void test_real_lufac ( void );
  * DESCRIPTION :
  *   Generates a random real matrix to test the LU factorization. */
 
+void test_cmplx_lufac ( void );
+/*
+ * DESCRIPTION :
+ *   Generates a random complex matrix to test the LU factorization. */
+
 void test_real_lu_solver ( void );
 /*
  * DESCRIPTION :
  *   Generates a random real system to test the LU solver. */
+
+void test_cmplx_lu_solver ( void );
+/*
+ * DESCRIPTION :
+ *   Generates a random complex system to test the LU solver. */
 
 #endif

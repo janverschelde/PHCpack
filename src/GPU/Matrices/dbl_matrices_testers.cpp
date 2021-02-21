@@ -378,7 +378,7 @@ void test_real_lufac ( void )
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
       {
-         A[i][j][0] = random_double();
+         A[i][j][0] = random_double(); // must randomize the ones
          for(int k=0; k<=deg; k++)
             Acopy[i][j][k] = A[i][j][k];
       }
@@ -472,6 +472,165 @@ void test_real_lufac ( void )
       }
 }
 
+void test_cmplx_lufac ( void )
+{
+   cout << "Give the dimension : ";
+   int dim; cin >> dim;
+
+   cout << "Give a degree larger than one : ";
+   int deg; cin >> deg;
+
+   double **rndre = new double*[dim];
+   double **rndim = new double*[dim];
+   double ***Are = new double**[dim];
+   double ***Aim = new double**[dim];
+   double ***Arecopy = new double**[dim];  // copy as lufac is inplace
+   double ***Aimcopy = new double**[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      rndre[i] = new double[dim];
+      rndim[i] = new double[dim];
+      Are[i] = new double*[dim];
+      Aim[i] = new double*[dim];
+      Arecopy[i] = new double*[dim];
+      Aimcopy[i] = new double*[dim];
+
+      for(int j=0; j<dim; j++)
+      {
+         Are[i][j] = new double[deg+1];
+         Aim[i][j] = new double[deg+1];
+         Arecopy[i][j] = new double[deg+1];
+         Aimcopy[i][j] = new double[deg+1];
+      }
+   }
+   random_cmplx_series_matrix(dim,dim,deg,rndre,rndim,Are,Aim);
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         Are[i][j][0] = random_double(); // must randomize the ones
+         for(int k=0; k<=deg; k++)
+         {
+            Arecopy[i][j][k] = Are[i][j][k];
+            Aimcopy[i][j][k] = Aim[i][j][k];
+         }
+      }
+
+   cout << scientific << setprecision(16);
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         cout << "A[" << i << "][" << j << "] is exp("
+              << rndre[i][j] << "," << rndim[i][j] << ") :" << endl;
+         for(int k=0; k<=deg; k++)
+            cout << Are[i][j][k] << "  " << Aim[i][j][k] << endl;
+      }
+
+   int *pivots = new int[dim];
+
+   cmplx_lufac(dim,deg,Are,Aim,pivots);
+   cout << "done with LU factorization ... " << endl;
+
+   double ***Lre = new double**[dim]; // lower triangular part of A
+   double ***Lim = new double**[dim];
+   double ***Ure = new double**[dim]; // upper triangular part of A
+   double ***Uim = new double**[dim];
+   double ***Bre = new double**[dim]; // the product of L with U
+   double ***Bim = new double**[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      Lre[i] = new double*[dim];
+      Lim[i] = new double*[dim];
+      Ure[i] = new double*[dim];
+      Uim[i] = new double*[dim];
+      Bre[i] = new double*[dim];
+      Bim[i] = new double*[dim];
+
+      for(int j=0; j<dim; j++)
+      {
+         Lre[i][j] = new double[deg+1];
+         Lim[i][j] = new double[deg+1];
+         Ure[i][j] = new double[deg+1];
+         Uim[i][j] = new double[deg+1];
+         Bre[i][j] = new double[deg+1];
+         Bim[i][j] = new double[deg+1];
+
+         if(i < j)
+         {
+            for(int k=0; k<=deg; k++)
+            {
+               Lre[i][j][k] = 0.0;
+               Lim[i][j][k] = 0.0;
+               Ure[i][j][k] = Are[i][j][k];
+               Uim[i][j][k] = Aim[i][j][k];
+            }
+         }
+         else if(i == j)
+         {
+            Lre[i][j][0] = 1.0;
+            Lim[i][j][0] = 0.0;
+            Ure[i][j][0] = Are[i][j][0];
+            Uim[i][j][0] = Aim[i][j][0];
+
+            for(int k=1; k<=deg; k++)
+            {
+               Lre[i][j][k] = 0.0;
+               Lim[i][j][k] = 0.0;
+               Ure[i][j][k] = Are[i][j][k];
+               Uim[i][j][k] = Aim[i][j][k];
+            }
+         }
+         else
+         {
+            for(int k=0; k<=deg; k++)
+            {
+               Lre[i][j][k] = Are[i][j][k];
+               Lim[i][j][k] = Aim[i][j][k];
+               Ure[i][j][k] = 0.0;
+               Uim[i][j][k] = 0.0;
+            }
+         }
+      }
+   }
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         cout << "L[" << i << "][" << j << "] :" << endl;
+         for(int k=0; k<=deg; k++)
+            cout << Lre[i][j][k] << "  " << Lim[i][j][k] << endl;
+      }
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         cout << "U[" << i << "][" << j << "] :" << endl;
+         for(int k=0; k<=deg; k++)
+            cout << Ure[i][j][k] << "  " << Uim[i][j][k] << endl;
+      }
+   cout << "The pivots :";
+   for(int i=0; i<dim; i++) cout << " " << pivots[i];
+   cout << endl;
+
+   cout << "doing the matrix-matrix product ... " << endl;
+   cmplx_matrix_matrix_product(dim,dim,dim,deg,Lre,Lim,Ure,Uim,Bre,Bim);
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         cout << "A[pivots[" << i << "]][" << j << "] versus ";
+         cout << "B[" << i << "][" << j << "] :" << endl;
+
+         for(int k=0; k<=deg; k++)
+         {
+            cout << Arecopy[pivots[i]][j][k] << "  "
+                 << Aimcopy[pivots[i]][j][k] << endl;
+            cout << Bre[i][j][k] << "  " << Bim[i][j][k] << endl;
+         }
+      }
+}
+
 void test_real_lu_solver ( void ) 
 {
    cout << "Give the dimension : ";
@@ -548,5 +707,115 @@ void test_real_lu_solver ( void )
    {
       cout << "x[" << i << "] :" << endl;
       for(int k=0; k<=deg; k++) cout << x[i][k] << endl;
+   }
+}
+
+void test_cmplx_lu_solver ( void ) 
+{
+   cout << "Give the dimension : ";
+   int dim; cin >> dim;
+
+   cout << "Give a degree larger than one : ";
+   int deg; cin >> deg;
+
+   double **rndre = new double*[dim];
+   double **rndim = new double*[dim];
+   double ***Are = new double**[dim];
+   double ***Aim = new double**[dim];
+   double ***Arecopy = new double**[dim];  // need copy for lufac is inplace
+   double ***Aimcopy = new double**[dim];
+   for(int i=0; i<dim; i++)
+   {
+      rndre[i] = new double[dim];
+      rndim[i] = new double[dim];
+      Are[i] = new double*[dim];
+      Aim[i] = new double*[dim];
+      Arecopy[i] = new double*[dim];
+      Aimcopy[i] = new double*[dim];
+      for(int j=0; j<dim; j++)
+      {
+         Are[i][j] = new double[deg+1];
+         Aim[i][j] = new double[deg+1];
+         Arecopy[i][j] = new double[deg+1];
+         Aimcopy[i][j] = new double[deg+1];
+      }
+   }
+   random_cmplx_series_matrix(dim,dim,deg,rndre,rndim,Are,Aim);
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         Are[i][j][0] = random_double();  // randomize the leading ones
+         for(int k=0; k<=deg; k++)
+         {
+            Arecopy[i][j][k] = Are[i][j][k];
+            Aimcopy[i][j][k] = Aim[i][j][k];
+         }
+      }
+
+   cout << scientific << setprecision(16);
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         cout << "A[" << i << "][" << j << "] is exp("
+              << rndre[i][j] << "," << rndim[i][j] << ") :" << endl;
+         for(int k=0; k<=deg; k++)
+            cout << Are[i][j][k] << "  " << Aim[i][j][k] << endl;
+      }
+
+   int *pivots = new int[dim];
+
+   double **solre = new double*[dim]; // solution
+   double **solim = new double*[dim];
+   double **rhsre = new double*[dim]; // right hand side vector
+   double **rhsim = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      rhsre[i] = new double[deg+1];
+      rhsim[i] = new double[deg+1];
+      solre[i] = new double[deg+1];
+      solim[i] = new double[deg+1];
+
+      solre[i][0] = 1.0;
+      solim[i][0] = 0.0;
+      for(int k=1; k<=deg; k++)
+      {
+         solre[i][k] = 0.0;
+         solim[i][k] = 0.0;
+      }
+   }
+   cmplx_matrix_vector_product(dim,dim,deg,Are,Aim,solre,solim,rhsre,rhsim);
+
+   double **xre = new double*[dim]; // space for the solution
+   double **xim = new double*[dim];
+   double **bre = new double*[dim]; // copy of right hand side
+   double **bim = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      xre[i] = new double[deg+1];
+      xim[i] = new double[deg+1];
+      bre[i] = new double[deg+1];
+      bim[i] = new double[deg+1];
+
+      for(int k=0; k<=deg; k++)
+      {
+         bre[i][k] = rhsre[i][k];
+         bim[i][k] = rhsim[i][k];
+      }
+   }
+   cmplx_lu_solver(dim,deg,Arecopy,Aimcopy,pivots,bre,bim,xre,xim);
+
+   cout << "The pivots :";
+   for(int i=0; i<dim; i++) cout << " " << pivots[i];
+   cout << endl;
+
+   for(int i=0; i<dim; i++)
+   {
+      cout << "x[" << i << "] :" << endl;
+      for(int k=0; k<=deg; k++)
+         cout << xre[i][k] << "  " << xim[i][k] << endl;
    }
 }

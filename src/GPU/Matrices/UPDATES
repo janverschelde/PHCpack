@@ -2,6 +2,8 @@ Sat 20 Feb 2021 : to dbl_matrices_host, added forward substitution and
   a function for a LU factorization solver.  Adjusted the forward
   substitution for systems with ones on the diagonal.  Added testers on
   the LU solver in dbl_matrices_testers, updated test_dbl_series_vectors.
+  Add functions on complex data to dbl_matrices_{host,testers}, updated
+  test_dbl_series_vectors.
 
 Fri 19 Feb 2021 : extended dbl_matrices_host with a matrix-matrix product
   to test the code for the LU factorization in dbl_matrices_testers,

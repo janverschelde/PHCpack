@@ -121,11 +121,42 @@ void real_matrix_matrix_product
  * ON RETURN :
  *   C        product of A with B. */
 
+void cmplx_matrix_matrix_product
+ ( int rows, int dim, int cols, int deg, 
+   double ***Are, double ***Aim, double ***Bre, double ***Bim,
+   double ***Cre, double ***Cim );
+/*
+ * DESCRIPTION :
+ *   Computes the product C of the matrix A with B on complex data.
+ *
+ * ON ENTRY :
+ *   rows     the number of rows in the matrices A and C;
+ *   dim      the number of columns in A and rows in B;
+ *   cols     the number of columns in the matrices B and C;
+ *   deg      truncation degree of the series;
+ *   Are      real parts of a matrix of dimensions rows and dim,
+ *            of power series truncated at the degree deg;
+ *   Aim      imaginary parts of a matrix of dimensions rows and dim,
+ *            of power series truncated at the degree deg;
+ *   Bre      real parts of a matrix of dimensions dim and cols,
+ *            of power series truncated at the degree deg;
+ *   Bim      imaginary parts of a matrix of dimensions dim and cols,
+ *            of power series truncated at the degree deg;
+ *   Cre      space allocated for a rows-by_cols matrix
+ *            of power series truncated at the degree deg;
+ *   Cim      space allocated for a rows-by_cols matrix
+ *            of power series truncated at the degree deg.
+ *
+ * ON RETURN :
+ *   Cre      real parts of the product of A with B;
+ *   Cim      imaginary parts of the product of A with B. */
+
 void real_lower_solver
  ( int dim, int deg, double ***L, double **b, double **x  );
 /*
  * DESCRIPTION :
- *   Solves the lower triangular system L*x = b with forward substitution.
+ *   Solves the lower triangular system L*x = b with forward substitution,
+ *   on real data.
  *
  * REQUIRED : the matrix L has ones on the diagonal.
  *
@@ -139,11 +170,36 @@ void real_lower_solver
  * ON RETURN :
  *   x        the solution to L*x = b. */
 
+void cmplx_lower_solver
+ ( int dim, int deg, double ***Lre, double ***Lim,
+   double **bre, double **bim, double **xre, double **xim );
+/*
+ * DESCRIPTION :
+ *   Solves the lower triangular system L*x = b with forward substitution,
+ *   on complex data.
+ *
+ * REQUIRED : the matrix L has ones on the diagonal.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in the matrix L;
+ *   deg      truncation degree of the series;
+ *   Lre      real part of a lower triangular series matrix;
+ *   Lim      imaginary part of a lower triangular series matrix;
+ *   bre      real part of the right hand side vector;
+ *   bim      imaginary part of the right hand side vector;
+ *   xre      space for dim power series truncated at degree deg;
+ *   xim      space for dim power series truncated at degree deg.
+ *
+ * ON RETURN :
+ *   xre      real part of the solution to L*x = b;
+ *   xim      imaginary part of the solution to L*x = b. */
+
 void real_upper_solver
  ( int dim, int deg, double ***U, double **b, double **x  );
 /*
  * DESCRIPTION :
- *   Solves the upper triangular system U*x = b with back substitution.
+ *   Solves the upper triangular system U*x = b with back substitution,
+ *   on real data.
  *
  * ON ENTRY :
  *   dim      number of rows and columns in the matrix U;
@@ -160,7 +216,8 @@ void cmplx_upper_solver
    double **bre, double **bim, double **xre, double **xim );
 /*
  * DESCRIPTION :
- *   Solves the upper triangular system U*x = b with back substitution.
+ *   Solves the upper triangular system U*x = b with back substitution,
+ *   on complex data.
  *
  * ON ENTRY :
  *   dim      number of rows and columns in the matrix U;
@@ -180,7 +237,7 @@ void real_lufac ( int dim, int deg, double ***A, int *pivots );
 /*
  * DESCRIPTION :
  *   Does an inplace LU factorization with pivoting on the matrix A,
- *   of power series all truncated to the same degree.
+ *   of power series all truncated to the same degree, on real data.
  *
  * ON ENTRY :
  *   dim      number of rows and columns in the matrix A;
@@ -191,6 +248,27 @@ void real_lufac ( int dim, int deg, double ***A, int *pivots );
  * ON RETURN :
  *   A        the lower triangular part of A contains the multipliers
  *            and the upper triangular part of A the row reduced A;
+ *   pivots   are the pivots used. */
+
+void cmplx_lufac
+ ( int dim, int deg, double ***Are, double ***Aim, int *pivots );
+/*
+ * DESCRIPTION :
+ *   Does an inplace LU factorization with pivoting on the matrix A,
+ *   of power series all truncated to the same degree, on complex data.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in the matrix A;
+ *   deg      truncation degree of the series;
+ *   Are      real parts of a matrix of power series;
+ *   Aim      imaginary parts of a matrix of power series;
+ *   pivots   space for dim pivots.
+ *
+ * ON RETURN :
+ *   Are      real parts of the lower triangular part with multipliers
+ *            and the upper triangular part of the row reduced matrix;
+ *   Aim      imaginary parts of the lower triangular part with multipliers
+ *            and the upper triangular part of the row reduced matrix;
  *   pivots   are the pivots used. */
 
 void real_lu_solver
@@ -214,5 +292,35 @@ void real_lu_solver
  *            and the upper triangular part of A the row reduced A;
  *   b        used as work space;
  *   x        the solution to A*x = b. */
+
+void cmplx_lu_solver
+ ( int dim, int deg, double ***Are, double ***Aim, int *pivots,
+   double **bre, double **bim, double **xre, double **xim );
+/*
+ * DESCRIPTION :
+ *   Does an inplace LU factorization with pivoting on the matrix A,
+ *   of power series all truncated to the same degree,
+ *   to solve the system A*x = b.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in the matrix A;
+ *   deg      truncation degree of the series;
+ *   Are      real parts of a matrix of power series;
+ *   Aim      imaginary parts of a matrix of power series;
+ *   pivots   space for dim pivots;
+ *   bre      real parts of the right hand side vector;
+ *   bim      imaginary parts of the right hand side vector;
+ *   xre      space for dim power series truncated at degree deg;
+ *   xim      space for dim power series truncated at degree deg.
+ *
+ * ON RETURN :
+ *   Are      real parts of the lower triangular part with multipliers,
+ *            and the upper triangular part of the row reduced matrix;
+ *   Are      imaginary parts of the lower triangular part with multipliers,
+ *            and the upper triangular part of the row reduced matrix;
+ *   bre      used as work space;
+ *   bim      used as work space;
+ *   xre      real parts of the solution to A*x = b;
+ *   xim      imaginary parts of the solution to A*x = b. */
 
 #endif

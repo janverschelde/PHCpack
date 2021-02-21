@@ -12,6 +12,10 @@ int main ( void )
 {
    srand(time(NULL));
 
+   cout << "testing the complex LU solver ..." << endl;
+   test_cmplx_lu_solver();
+   cout << "testing the complex LU factorization ..." << endl;
+   test_cmplx_lufac();
    cout << "testing the real LU solver ..." << endl;
    test_real_lu_solver();
    cout << "testing the real LU factorization ..." << endl;
