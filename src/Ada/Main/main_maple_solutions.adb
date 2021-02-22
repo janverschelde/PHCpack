@@ -92,7 +92,7 @@ package body Main_Maple_Solutions is
   begin
     if verbose > 0 then
       put("At verbose level "); put(verbose,1);
-      put_line(", in mainzip.Main ...");
+      put_line(", in main_maple_solutions.Main ...");
     end if;
     Scan_Solutions(infilename,sols,solsonfile,maple_format);
     if outfilename = "" then

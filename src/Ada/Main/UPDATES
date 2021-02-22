@@ -1,3 +1,6 @@
+Sun 21 Feb 2021 : fixed message when verbose level is positive,
+  for the renaming of mainzip into main_maple_solutions.
+
 Mon 14 Dec 2020 : updated greeting_banners for version 2.4.83.
 
 Sun 13 Dec 2020 : extended black_box_solvers with the return of gamma.
