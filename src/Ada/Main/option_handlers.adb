@@ -454,7 +454,7 @@ package body Option_Handlers is
                 file1,file2,file3 : in string ) is
 
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
-    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'z');
     bpos : constant integer32 := Actions_and_Options.Position(opts,'b');
     nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
     contprc : constant natural32
@@ -463,8 +463,10 @@ package body Option_Handlers is
     vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
-    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) then
       Greeting_Banners.help4continuation;
+    elsif hpos2 >= integer32(opts'first) then
+      put_line("phc -p -z will come soon ...");
     elsif bpos >= integer32(opts'first) then
       if contprc = 2 or bbprc = 2 then
         DoblDobl_BlackBox_Continuations.Main(file1,file2,file3,vrblvl);
@@ -804,13 +806,16 @@ package body Option_Handlers is
                 opts : in string; infile,outfile : in string ) is
 
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
-    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'p');
     vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
-    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first)
-     then Greeting_Banners.help4mapleform;
-     else Main_Maple_Solutions.Main(infile,outfile,vrblvl);
+    if hpos1 >= integer32(opts'first) then
+      Greeting_Banners.help4mapleform;
+    elsif hpos2 >= integer32(opts'first) then
+      put_line("phc -z -p will come soon ...");
+    else
+      Main_Maple_Solutions.Main(infile,outfile,vrblvl);
     end if;
   end Maple_Format_Handler;
 

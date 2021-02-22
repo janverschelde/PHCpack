@@ -1,5 +1,6 @@
 Sun 21 Feb 2021 : fixed message when verbose level is positive,
   for the renaming of mainzip into main_maple_solutions.
+  Updated option_handlers.adb for the new option -p with phc -z.
 
 Mon 14 Dec 2020 : updated greeting_banners for version 2.4.83.
 
