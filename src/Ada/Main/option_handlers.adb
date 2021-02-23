@@ -3,6 +3,7 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Characters_and_Numbers;             use Characters_and_Numbers;
 with Standard_Random_Numbers;
+with Standard_System_and_Solutions_io;
 with Main_Root_Counters;
 with Write_Seed_Number;
 with Greeting_Banners;
@@ -466,7 +467,7 @@ package body Option_Handlers is
     if hpos1 >= integer32(opts'first) then
       Greeting_Banners.help4continuation;
     elsif hpos2 >= integer32(opts'first) then
-      put_line("phc -p -z will come soon ...");
+      Standard_System_and_Solutions_io.Main(file1,file2,vrblvl);
     elsif bpos >= integer32(opts'first) then
       if contprc = 2 or bbprc = 2 then
         DoblDobl_BlackBox_Continuations.Main(file1,file2,file3,vrblvl);
@@ -813,7 +814,7 @@ package body Option_Handlers is
     if hpos1 >= integer32(opts'first) then
       Greeting_Banners.help4mapleform;
     elsif hpos2 >= integer32(opts'first) then
-      put_line("phc -z -p will come soon ...");
+      Standard_System_and_Solutions_io.Main(infile,outfile,vrblvl);
     else
       Main_Maple_Solutions.Main(infile,outfile,vrblvl);
     end if;
