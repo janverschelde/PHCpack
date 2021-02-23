@@ -192,4 +192,48 @@ package body Standard_System_and_Solutions_io is
     end if;
   end Scan_for_Start_System;
 
+  procedure Main ( infilename,outfilename : in string;
+                   vrblvl : in integer32 := 0 ) is
+
+    infile,outfile : file_type;
+    name : Link_to_String;
+    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : Standard_Complex_Solutions.Solution_List;
+    found : boolean;
+    verbose : constant boolean := (vrblvl > 0);
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in standard_system_and_solutions_io.Main ...");
+    end if;
+    if infilename = "" then
+      new_line;
+      put_line("Reading the name of an input file ...");
+      Read_Name_and_Open_File(infile,name);
+    else
+      Open_Input_File(infile,infilename,name);
+    end if;
+    Scan_for_Start_System(infile,name,lp,sols,found,verbose,vrblvl-1);
+    if not found then
+      if vrblvl > 0
+       then put_line("no start system found in " & name.all);
+      end if;
+    else
+      if outfilename = "" then
+        new_line;
+        put_line("Reading the name of an output file ...");
+        Read_Name_and_Create_File(outfile);
+      else
+        Create_Output_File(outfile,outfilename);
+      end if;
+      put(outfile,natural32(lp'last),lp.all);
+      new_line(outfile);
+      put_line(outfile,"TITLE : start system in file " & name.all);
+      new_line(outfile);
+      put_line(outfile,"THE SOLUTIONS :");
+      put(outfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      close(outfile);
+    end if;
+  end Main;
+
 end Standard_System_and_Solutions_io;

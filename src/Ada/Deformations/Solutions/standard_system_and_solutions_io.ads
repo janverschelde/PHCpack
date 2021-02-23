@@ -89,4 +89,13 @@ package Standard_System_and_Solutions_io is
   --   found    if true, then both q and qsols are found,
   --            otherwise, either q and/or qsols were not present.
 
+  procedure Main ( infilename,outfilename : in string;
+                   vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Defines the phc -z -p option to extract the start system
+  --   and its start solutions from the output of the blackbox solver.
+  --   The names of the input and output files are given
+  --   respectively in infilename and outfilename.
+
 end Standard_System_and_Solutions_io;
