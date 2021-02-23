@@ -61,7 +61,7 @@ with QuadDobl_Continuation_Data;
 with QuadDobl_Path_Trackers;
 with Multprec_Continuation_Data;
 with Multprec_Path_Trackers;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 
 procedure ts_path is
 
