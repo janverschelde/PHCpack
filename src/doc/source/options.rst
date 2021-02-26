@@ -1556,3 +1556,25 @@ as follows:
 
 The left hand sides of the equations are the same as the keys in the
 dictionaries of the Python format, see ``phc -x``.
+
+phc -z -p : extract start system and its solutions
+==================================================
+
+For general polynomial systems, the blackbox solver constructs
+a start system and writes the start system and its solutions to
+the output file.  For a rerun with different tolerances or for
+a system with the same structure but with altered coefficients,
+the start system and start solutions can serve as the input for ``phc -p``.
+
+For a system in the file ``input.txt``, we can do the following:
+
+::
+
+   phc -b input.txt output.txt
+   phc -z -p output.txt startsys.txt
+
+The second run of ``phc`` makes the new file ``startsys.txt``
+with the start system and start solutions used to solve the
+polynomial system in the file ``input.txt``.
+
+Alternatively, ``phc -p -z`` works just as well.
