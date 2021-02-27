@@ -1,3 +1,5 @@
+Fri 26 Feb 2021 : fixed the dates in greeting_banners.
+
 Wed 24 Feb 2021 : updated greeting_banners for version 2.4.84.
 
 Mon 22 Feb 2021 : updated option_handlers.adb with the call to the Main
