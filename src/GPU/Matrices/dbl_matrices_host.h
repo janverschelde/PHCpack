@@ -152,7 +152,7 @@ void cmplx_matrix_matrix_product
  *   Cim      imaginary parts of the product of A with B. */
 
 void real_lower_solver
- ( int dim, int deg, double ***L, double **b, double **x  );
+ ( int dim, int deg, double ***L, double **b, double **x, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Solves the lower triangular system L*x = b with forward substitution,
@@ -165,14 +165,16 @@ void real_lower_solver
  *   deg      truncation degree of the series;
  *   L        lower triangular series matrix;
  *   b        right hand side vector;
- *   x        space for dim power series truncated at degree deg.
+ *   x        space for dim power series truncated at degree deg;
+ *   verbose  if true, then the level of each operation is printed,
+ *            otherwise, the solver remains silent.
  *
  * ON RETURN :
  *   x        the solution to L*x = b. */
 
 void cmplx_lower_solver
  ( int dim, int deg, double ***Lre, double ***Lim,
-   double **bre, double **bim, double **xre, double **xim );
+   double **bre, double **bim, double **xre, double **xim, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Solves the lower triangular system L*x = b with forward substitution,
@@ -188,7 +190,9 @@ void cmplx_lower_solver
  *   bre      real part of the right hand side vector;
  *   bim      imaginary part of the right hand side vector;
  *   xre      space for dim power series truncated at degree deg;
- *   xim      space for dim power series truncated at degree deg.
+ *   xim      space for dim power series truncated at degree deg;
+ *   verbose  if true, then the level of each operation is printed,
+ *            otherwise, the solver remains silent.
  *
  * ON RETURN :
  *   xre      real part of the solution to L*x = b;

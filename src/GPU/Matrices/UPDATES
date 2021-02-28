@@ -1,3 +1,6 @@
+Sat 27 Feb 2021 : added verbose mode to the forward substitution solvers
+  in dbl_matrices_host.
+
 Sat 20 Feb 2021 : to dbl_matrices_host, added forward substitution and
   a function for a LU factorization solver.  Adjusted the forward
   substitution for systems with ones on the diagonal.  Added testers on

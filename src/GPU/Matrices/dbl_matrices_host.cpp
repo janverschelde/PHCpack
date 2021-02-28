@@ -4,8 +4,9 @@
 #include <cstdlib>
 #include <cmath>
 #include "dbl_convolutions_host.h"
+#include "dbl_matrices_host.h"
 
-// for debugging
+// for debugging and verbose mode
 #include <iostream>
 using namespace std;
 
@@ -119,7 +120,7 @@ void cmplx_matrix_matrix_product
 }
 
 void real_lower_solver
- ( int dim, int deg, double ***L, double **b, double **x  )
+ ( int dim, int deg, double ***L, double **b, double **x, bool verbose )
 {
    double *prod = new double[deg+1]; // for products
    // double *accu = new double[deg+1]; // accumulates products
@@ -127,15 +128,25 @@ void real_lower_solver
    // CPU_dbl_inverse(deg,L[0][0],prod);      // prod = 1/L[0][0]
    // CPU_dbl_product(deg,b[0],prod,x[0]);    // x[0] = b[0]/L[0][0]
 
+   if(verbose) cout << "x[0] = b[0], level 0" << endl;
+
    for(int k=0; k<=deg; k++) x[0][k] = b[0][k];
 
    for(int i=1; i<dim; i++)
    {
+      if(verbose) cout << "x[" << i << "] = b[" << i << "], level 0" << endl;
+
       for(int k=0; k<=deg; k++) x[i][k] = b[i][k];
 
       for(int j=0; j<i; j++)
       {
+         if(verbose) cout << "prod = L[" << i << "][" << j << "]*x[" << j
+                          << "], level " << 2*(j+1)-1 << endl;
+
          CPU_dbl_product(deg,L[i][j],x[j],prod);
+
+         if(verbose) cout << "x[" << i << "] = x[" << i
+                          << "] - prod, level " << 2*(j+1) << endl;
 
          for(int k=0; k<=deg; k++) x[i][k] = x[i][k] - prod[k];
       }
@@ -147,10 +158,12 @@ void real_lower_solver
 
 void cmplx_lower_solver
  ( int dim, int deg, double ***Lre, double ***Lim,
-   double **bre, double **bim, double **xre, double **xim )
+   double **bre, double **bim, double **xre, double **xim, bool verbose )
 {
    double *prodre = new double[deg+1];
    double *prodim = new double[deg+1];
+
+   if(verbose) cout << "x[0] = b[0], level 0" << endl;
 
    for(int k=0; k<=deg; k++)
    {
@@ -159,6 +172,8 @@ void cmplx_lower_solver
    }
    for(int i=1; i<dim; i++)
    {
+      if(verbose) cout << "x[" << i << "] = b[" << i << "], level 0" << endl;
+
       for(int k=0; k<=deg; k++)
       {
          xre[i][k] = bre[i][k];
@@ -166,8 +181,14 @@ void cmplx_lower_solver
       }
       for(int j=0; j<i; j++)
       {
+         if(verbose) cout << "prod = L[" << i << "][" << j << "]*x[" << j
+                          << "], level " << 2*(j+1)-1 << endl;
+
          CPU_cmplx_product
             (deg,Lre[i][j],Lim[i][j],xre[j],xim[j],prodre,prodim);
+
+         if(verbose) cout << "x[" << i << "] = x[" << i
+                          << "] - prod, level " << 2*(j+1) << endl;
 
          for(int k=0; k<=deg; k++)
          {
