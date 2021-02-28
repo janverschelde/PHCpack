@@ -128,6 +128,9 @@ void real_lower_solver
    // CPU_dbl_inverse(deg,L[0][0],prod);      // prod = 1/L[0][0]
    // CPU_dbl_product(deg,b[0],prod,x[0]);    // x[0] = b[0]/L[0][0]
 
+   if(verbose) cout << "Level of operations in forward substitution :"
+                    << endl;
+
    if(verbose) cout << "x[0] = b[0], level 0" << endl;
 
    for(int k=0; k<=deg; k++) x[0][k] = b[0][k];
@@ -162,6 +165,9 @@ void cmplx_lower_solver
 {
    double *prodre = new double[deg+1];
    double *prodim = new double[deg+1];
+
+   if(verbose) cout << "Level of operations in forward substitution :"
+                    << endl;
 
    if(verbose) cout << "x[0] = b[0], level 0" << endl;
 
@@ -201,22 +207,46 @@ void cmplx_lower_solver
 }
 
 void real_upper_solver
- ( int dim, int deg, double ***U, double **b, double **x  )
+ ( int dim, int deg, double ***U, double **b, double **x, bool verbose )
 {
    double *prod = new double[deg+1];
    double *work = new double[deg+1];
+   int lvl;
+
+   if(verbose) cout << "Level of operations in backward substitution :"
+                    << endl;
 
    for(int i=dim-1; i>=0; i--)
    {
+      if(verbose) cout << "prod = b[" << i << "], level 0" << endl;
+
       for(int k=0; k<=deg; k++) prod[k] = b[i][k];
 
-      for(int j=i+1; j<dim; j++)
+      lvl = 1;
+
+      for(int j=dim-1; j>i; j--)
       {
+         if(verbose) cout << "work = U[" << i << "][" << j << "]*x[" << j
+                          << "], level " << ++lvl << endl;
+
          CPU_dbl_product(deg,U[i][j],x[j],work);
 
+         if(verbose) cout << "prod = prod - work, level = "
+                          << ++lvl << endl;
+
          for(int k=0; k<=deg; k++) prod[k] = prod[k] - work[k];
+
+         lvl = lvl + 1;
       }
+      if(verbose) cout << "work = 1/U[" << i << "][" << i
+                       << "], level 0" << endl;
+
       CPU_dbl_inverse(deg,U[i][i],work);
+
+      if(verbose) cout << "x[" << i << "] = prod/U["
+                       << i << "][" << i << "], level "
+                       << lvl << endl;
+
       CPU_dbl_product(deg,work,prod,x[i]);
    }
    free(prod); free(work);
@@ -224,32 +254,55 @@ void real_upper_solver
 
 void cmplx_upper_solver
  ( int dim, int deg, double ***Ure, double ***Uim,
-   double **bre, double **bim, double **xre, double **xim )
+   double **bre, double **bim, double **xre, double **xim, bool verbose )
 {
    double *prodre = new double[deg+1];
    double *prodim = new double[deg+1];
    double *workre = new double[deg+1];
    double *workim = new double[deg+1];
+   int lvl;
+
+   if(verbose) cout << "Level of operations in backward substitution :"
+                    << endl;
 
    for(int i=dim-1; i>=0; i--)
    {
+      if(verbose) cout << "prod = b[" << i << "], level 0" << endl;
+
       for(int k=0; k<=deg; k++)
       {
          prodre[k] = bre[i][k];
          prodim[k] = bim[i][k];
       }
-      for(int j=i+1; j<dim; j++)
+      lvl = 1;
+
+      for(int j=dim-1; j>i; j--)
       {
+         if(verbose) cout << "work = U[" << i << "][" << j << "]*x[" << j
+                          << "], level " << ++lvl << endl;
+
          CPU_cmplx_product
             (deg,Ure[i][j],Uim[i][j],xre[j],xim[j],workre,workim);
+
+         if(verbose) cout << "prod = prod - work, level = "
+                          << ++lvl << endl;
 
          for(int k=0; k<=deg; k++)
          {
             prodre[k] = prodre[k] - workre[k];
             prodim[k] = prodim[k] - workim[k];
          }
+         lvl = lvl + 1;
       }
+      if(verbose) cout << "work = 1/U[" << i << "][" << i
+                       << "], level 0" << endl;
+
       CPU_cmplx_inverse(deg,Ure[i][i],Uim[i][i],workre,workim);
+
+      if(verbose) cout << "x[" << i << "] = prod/U["
+                       << i << "][" << i << "], level "
+                       << lvl << endl;
+
       CPU_cmplx_product(deg,workre,workim,prodre,prodim,xre[i],xim[i]);
    }
    free(prodre); free(workre);

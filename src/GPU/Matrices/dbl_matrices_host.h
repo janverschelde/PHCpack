@@ -199,7 +199,7 @@ void cmplx_lower_solver
  *   xim      imaginary part of the solution to L*x = b. */
 
 void real_upper_solver
- ( int dim, int deg, double ***U, double **b, double **x  );
+ ( int dim, int deg, double ***U, double **b, double **x, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Solves the upper triangular system U*x = b with back substitution,
@@ -210,14 +210,17 @@ void real_upper_solver
  *   deg      truncation degree of the series;
  *   U        upper triangular series matrix;
  *   b        right hand side vector;
- *   x        space for dim power series truncated at degree deg.
+ *   x        space for dim power series truncated at degree deg;
+ *   verbose  if true, then the level of each operation is printed,
+ *            otherwise, the solver remains silent.
  *
  * ON RETURN :
  *   x        the solution to U*x = b. */
 
 void cmplx_upper_solver
  ( int dim, int deg, double ***Ure, double ***Uim,
-   double **bre, double **bim, double **xre, double **xim );
+   double **bre, double **bim, double **xre, double **xim,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Solves the upper triangular system U*x = b with back substitution,
@@ -231,7 +234,9 @@ void cmplx_upper_solver
  *   bre      real part of the right hand side vector;
  *   bim      imaginary part of the right hand side vector;
  *   xre      space for dim power series truncated at degree deg;
- *   xim      space for dim power series truncated at degree deg.
+ *   xim      space for dim power series truncated at degree deg;
+ *   verbose  if true, then the level of each operation is printed,
+ *            otherwise, the solver remains silent.
  *
  * ON RETURN :
  *   xre      real part of the solution to U*x = b;
