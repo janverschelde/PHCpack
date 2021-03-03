@@ -1,3 +1,6 @@
+Tue 2 Mar 2021 : added verbose flags in dbl_matrices_host to the lufac
+  functions and the solvers.
+
 Sat 27 Feb 2021 : added verbose mode to the forward substitution solvers in
   dbl_matrices_host; and did the same for the backward substitution solvers.
 

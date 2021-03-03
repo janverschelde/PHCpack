@@ -242,7 +242,8 @@ void cmplx_upper_solver
  *   xre      real part of the solution to U*x = b;
  *   xim      real part of the solution to U*x = b. */
 
-void real_lufac ( int dim, int deg, double ***A, int *pivots );
+void real_lufac
+ ( int dim, int deg, double ***A, int *pivots, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Does an inplace LU factorization with pivoting on the matrix A,
@@ -252,7 +253,9 @@ void real_lufac ( int dim, int deg, double ***A, int *pivots );
  *   dim      number of rows and columns in the matrix A;
  *   deg      truncation degree of the series;
  *   A        matrix of power series;
- *   pivots   space for dim pivots.
+ *   pivots   space for dim pivots;
+ *   verbose  if true, then the level of each operation is printed,
+ *            otherwise, the solver remains silent.
  *
  * ON RETURN :
  *   A        the lower triangular part of A contains the multipliers
@@ -260,7 +263,8 @@ void real_lufac ( int dim, int deg, double ***A, int *pivots );
  *   pivots   are the pivots used. */
 
 void cmplx_lufac
- ( int dim, int deg, double ***Are, double ***Aim, int *pivots );
+ ( int dim, int deg, double ***Are, double ***Aim, int *pivots,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Does an inplace LU factorization with pivoting on the matrix A,
@@ -271,7 +275,9 @@ void cmplx_lufac
  *   deg      truncation degree of the series;
  *   Are      real parts of a matrix of power series;
  *   Aim      imaginary parts of a matrix of power series;
- *   pivots   space for dim pivots.
+ *   pivots   space for dim pivots;
+ *   verbose  if true, then the level of each operation is printed,
+ *            otherwise, the solver remains silent.
  *
  * ON RETURN :
  *   Are      real parts of the lower triangular part with multipliers
@@ -281,7 +287,8 @@ void cmplx_lufac
  *   pivots   are the pivots used. */
 
 void real_lu_solver
- ( int dim, int deg, double ***A, int *pivots, double **b, double **x );
+ ( int dim, int deg, double ***A, int *pivots, double **b, double **x,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Does an inplace LU factorization with pivoting on the matrix A,
@@ -294,7 +301,9 @@ void real_lu_solver
  *   A        matrix of power series;
  *   pivots   space for dim pivots;
  *   b        right hand side vector;
- *   x        space for dim power series truncated at degree deg.
+ *   x        space for dim power series truncated at degree deg;
+ *   verbose  if true, then the level of each operation is printed,
+ *            otherwise, the solver remains silent.
  *
  * ON RETURN :
  *   A        the lower triangular part of A contains the multipliers
@@ -304,7 +313,8 @@ void real_lu_solver
 
 void cmplx_lu_solver
  ( int dim, int deg, double ***Are, double ***Aim, int *pivots,
-   double **bre, double **bim, double **xre, double **xim );
+   double **bre, double **bim, double **xre, double **xim,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Does an inplace LU factorization with pivoting on the matrix A,
@@ -320,7 +330,9 @@ void cmplx_lu_solver
  *   bre      real parts of the right hand side vector;
  *   bim      imaginary parts of the right hand side vector;
  *   xre      space for dim power series truncated at degree deg;
- *   xim      space for dim power series truncated at degree deg.
+ *   xim      space for dim power series truncated at degree deg;
+ *   verbose  if true, then the level of each operation is printed,
+ *            otherwise, the solver remains silent.
  *
  * ON RETURN :
  *   Are      real parts of the lower triangular part with multipliers,

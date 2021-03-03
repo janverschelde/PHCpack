@@ -309,7 +309,7 @@ void cmplx_upper_solver
    free(prodim); free(workim);
 }
 
-void real_lufac ( int dim, int deg, double ***A, int *pivots )
+void real_lufac ( int dim, int deg, double ***A, int *pivots, bool verbose )
 {
    double valmax,valtmp;
    int idxmax,idxtmp;
@@ -361,7 +361,7 @@ void real_lufac ( int dim, int deg, double ***A, int *pivots )
 }
 
 void cmplx_lufac
- ( int dim, int deg, double ***Are, double ***Aim, int *pivots )
+ ( int dim, int deg, double ***Are, double ***Aim, int *pivots, bool verbose )
 {
    double valmax,valtmp;
    int idxmax,idxtmp;
@@ -432,23 +432,24 @@ void cmplx_lufac
 }
 
 void real_lu_solver
- ( int dim, int deg, double ***A, int *pivots, double **b, double **x )
+ ( int dim, int deg, double ***A, int *pivots, double **b, double **x,
+   bool verbose )
 {
-   real_lufac(dim,deg,A,pivots);
+   real_lufac(dim,deg,A,pivots,verbose);
   
    for(int i=0; i<dim; i++)        // permute b according to the pivots
    {
       for(int d=0; d<=deg; d++) x[i][d] = b[pivots[i]][d];
    }
-   real_lower_solver(dim,deg,A,x,b); // forward substitution
-   real_upper_solver(dim,deg,A,b,x); // backward substitution
+   real_lower_solver(dim,deg,A,x,b,verbose); // forward substitution
+   real_upper_solver(dim,deg,A,b,x,verbose); // backward substitution
 }
 
 void cmplx_lu_solver
  ( int dim, int deg, double ***Are, double ***Aim, int *pivots,
-   double **bre, double **bim, double **xre, double **xim )
+   double **bre, double **bim, double **xre, double **xim, bool verbose )
 {
-   cmplx_lufac(dim,deg,Are,Aim,pivots);
+   cmplx_lufac(dim,deg,Are,Aim,pivots,verbose);
   
    for(int i=0; i<dim; i++)        // permute b according to the pivots
    {
@@ -458,6 +459,6 @@ void cmplx_lu_solver
          xim[i][d] = bim[pivots[i]][d];
       }
    }
-   cmplx_lower_solver(dim,deg,Are,Aim,xre,xim,bre,bim);
-   cmplx_upper_solver(dim,deg,Are,Aim,bre,bim,xre,xim);
+   cmplx_lower_solver(dim,deg,Are,Aim,xre,xim,bre,bim,verbose);
+   cmplx_upper_solver(dim,deg,Are,Aim,bre,bim,xre,xim,verbose);
 }
