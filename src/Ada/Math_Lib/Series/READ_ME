@@ -1,4 +1,4 @@
-Truncated power series with complex coefficients for PHCv2.4.83
+Truncated power series with complex coefficients for PHCv2.4.85
 
 Similar to Taylor series approximations for general functions,
 we can approximate roots of polynomials in a parameter by series.
@@ -332,6 +332,8 @@ test_quaddobl_cseries_systems      : tests quaddobl cseries systems
 ts_csersys                         : test systems of series polynomials
 random_series_polynomials          : random polynomials with series coeff
 ts_sercffpol                       : test series coefficient-parameter eval
+------------------------------------------------------------------------------
+ts_pslaur                          : basic test on truncated Laurent series
 ------------------------------------------------------------------------------
 
 Below are the descriptions of the original design,

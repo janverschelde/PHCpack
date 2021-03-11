@@ -1,3 +1,5 @@
+Wed 10 Mar 2021 : new ts_pslaur.adb for basic tests on Laurent series.
+
 Tue 15 Dec 2020 : new {trip,pent,octo,deca}dobl_echelon_forms and
   {trip,pent,octo,deca}dobl_interpolating_cseries to implement the echelon
   solvers in {trip,pent,octo,deca}dobl_series_matrix_solvers.
