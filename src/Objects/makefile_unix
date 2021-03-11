@@ -562,10 +562,6 @@ ts_odnorm:
 ts_danorm:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_danorm.adb -o $(BIN)/ts_danorm
 
-ts_errfree:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_errfree.adb \
-              -o $(BIN)/ts_errfree
-
 # Test programs for Math_Lib/Polynomials :
 
 ts_poly:
@@ -845,6 +841,10 @@ ts_csersys:
 ts_sercffpol:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_sercffpol.adb \
               -o $(BIN)/ts_sercffpol
+
+ts_pslaur:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_pslaur.adb \
+              -o $(BIN)/ts_pslaur
 
 # Test programs for the Math_Lib/AD library :
 

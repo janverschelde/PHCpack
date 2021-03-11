@@ -460,7 +460,7 @@ ts_ddqrd: get_clock.o get_clocks_per_sec.o
                  -largs get_clock.o get_clocks_per_sec.o
 
 ts_tdqrd: get_clock.o get_clocks_per_sec.o
-	gnatmake -o $(BIN)/ts_tdqrd $(INCLULIBS) $(GNATOPTFLAGS) ts_ddqrd.adb \
+	gnatmake -o $(BIN)/ts_tdqrd $(INCLULIBS) $(GNATOPTFLAGS) ts_tdqrd.adb \
                  -largs get_clock.o get_clocks_per_sec.o
 
 ts_qdqrd: get_clock.o get_clocks_per_sec.o
@@ -920,6 +920,10 @@ ts_csersys:
 ts_sercffpol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sercffpol.adb \
               -o $(BIN)/ts_sercffpol
+
+ts_pslaur:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_pslaur.adb \
+              -o $(BIN)/ts_pslaur
 
 # Test programs for the Math_Lib/AD library :
 
