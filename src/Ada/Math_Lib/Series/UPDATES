@@ -1,3 +1,5 @@
+Sat 13 Mar 2021 : extended ts_pslaur with addition and subtraction.
+
 Fri 12 Mar 2021 : extended ts_pslaur with multiplication and division.
 
 Wed 10 Mar 2021 : new ts_pslaur.adb for basic tests on Laurent series.
