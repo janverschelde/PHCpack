@@ -1,3 +1,6 @@
+Sun 14 Mar 2021 : new package standard_laurent_series with code extracted
+  from ts_pslaur.adb.
+
 Sat 13 Mar 2021 : extended ts_pslaur with addition and subtraction.
 
 Fri 12 Mar 2021 : extended ts_pslaur with multiplication and division.

@@ -28,6 +28,8 @@ standard_truncated_series          : defines basic operations on power series
 ts_pstrunc                         : tests proof-of-concept power series
 binomial_coefficients              : export binomial() function
 ts_bincff                          : test on binomial coefficients
+standard_laurent_series            : defines operations on Laurent series
+ts_pslaur                          : basic test on truncated Laurent series
 ------------------------------------------------------------------------------
 generic_dense_series               : series over any ring with division
 standard_complex_series            : series with standard complex coefficients
@@ -332,8 +334,6 @@ test_quaddobl_cseries_systems      : tests quaddobl cseries systems
 ts_csersys                         : test systems of series polynomials
 random_series_polynomials          : random polynomials with series coeff
 ts_sercffpol                       : test series coefficient-parameter eval
-------------------------------------------------------------------------------
-ts_pslaur                          : basic test on truncated Laurent series
 ------------------------------------------------------------------------------
 
 Below are the descriptions of the original design,
