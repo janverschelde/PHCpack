@@ -29,7 +29,8 @@ ts_pstrunc                         : tests proof-of-concept power series
 binomial_coefficients              : export binomial() function
 ts_bincff                          : test on binomial coefficients
 standard_laurent_series            : defines operations on Laurent series
-ts_pslaur                          : basic test on truncated Laurent series
+test_standard_laurent_series       : basic tests on truncated Laurent series
+ts_pslaur                          : call the main test on Laurent series
 ------------------------------------------------------------------------------
 generic_dense_series               : series over any ring with division
 standard_complex_series            : series with standard complex coefficients

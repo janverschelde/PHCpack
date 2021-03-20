@@ -94,6 +94,7 @@ package body Standard_Laurent_Series is
       ze := xe;
       gap := abs(ye - xe);
       for i in 0..gap-1 loop
+        exit when (i > zc'last);
         zc(i) := xc(i);
       end loop;
       for i in gap..d loop
@@ -103,6 +104,7 @@ package body Standard_Laurent_Series is
       ze := ye;
       gap := abs(xe - ye);
       for i in 0..gap-1 loop
+        exit when (i > zc'last);
         zc(i) := yc(i);
       end loop;
       for i in gap..d loop
@@ -130,6 +132,7 @@ package body Standard_Laurent_Series is
       ze := xe;
       gap := abs(ye - xe);
       for i in 0..gap-1 loop
+        exit when (i > zc'last);
         zc(i) := xc(i);
       end loop;
       for i in gap..d loop
@@ -139,6 +142,7 @@ package body Standard_Laurent_Series is
       ze := ye;
       gap := abs(xe - ye);
       for i in 0..gap-1 loop
+        exit when (i > zc'last);
         zc(i) := -yc(i);
       end loop;
       for i in gap..d loop

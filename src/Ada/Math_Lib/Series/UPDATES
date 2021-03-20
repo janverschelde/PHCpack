@@ -1,3 +1,6 @@
+Fri 19 Mar 2021 : fixed indexing error in standard_laurent_series.adb.
+  Moved code from ts_pslaur into the package test_standard_laurent_series.
+
 Sun 14 Mar 2021 : new package standard_laurent_series with code extracted
   from ts_pslaur.adb.
 
