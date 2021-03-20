@@ -1,4 +1,4 @@
-Mathematical library in PHCpack version 2.4.80
+Mathematical library in PHCpack version 2.4.85
 
 The mathematical library contains general tools that are not specific
 for polynomial homotopy continuation.
@@ -21,6 +21,7 @@ version 2.4.21 and improved with linearization in version 2.3.23.
 In 2.4.63, the directory AD was added.  The main change in v2.4.80
 was the introduction of multiple double arithmetic, with code generated 
 by the CAMPARY software, with extensions of the QD library.
+The Laurent folder with code for Laurent series was added in v2.4.85.
 
   Math_Lib             : 1. general mathematical library
      |-- Numbers       : 1.1. number representations
@@ -34,7 +35,9 @@ by the CAMPARY software, with extensions of the QD library.
      |-- Supports      : 1.9. support sets and linear programming
      |-- Circuits      : 1.A. circuits for algorithmic differentiation
      |-- Series        : 1.B. manipulating truncated power series
-     |-- AD            : 1.C. algorithmic differentiation of the Path library
+     |-- Laurent       : 1.C. series with integer leading exponents
+     |-- AD            : 1.D. algorithmic differentiation of the Path library
+     
 
 The directory Numbers specifies the coefficient rings and contains
 definitions of floating-point and complex numbers.
@@ -47,7 +50,7 @@ Work with Genady Yoffe led to this directory in PHCpack.
 
 The directory Vectors provides definitions of data types of
 vectors of natural, integer, real and complex numbers.
-Matrices offers a generic package matrices, and varous instantions.
+Matrices offers a generic package matrices, and various instantions.
 
 Solvers of linear systems with integer linear algebra 
 are provided in the Divisors directory.

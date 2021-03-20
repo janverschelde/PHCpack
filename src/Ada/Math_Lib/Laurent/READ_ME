@@ -1,0 +1,13 @@
+Laurent series with complex coefficients for PHCv2.4.85
+
+Power series with leading nonzero coefficients work provide Taylor series
+expansions of regular solutions of polynomial systems.
+Laurent series allow for negative exponents and are arithmetically closed.
+
+------------------------------------------------------------------------------
+file name                          : short description
+------------------------------------------------------------------------------
+standard_laurent_series            : defines operations on Laurent series
+test_standard_laurent_series       : basic tests on truncated Laurent series
+ts_pslaur                          : call the main test on Laurent series
+------------------------------------------------------------------------------
