@@ -64,7 +64,8 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/Math_Lib/Divisors -I$(PHCAda)/Math_Lib/Reduction \
  -I$(PHCAda)/Math_Lib/Polynomials -I$(PHCAda)/Math_Lib/Functions \
  -I$(PHCAda)/Math_Lib/Supports -I$(PHCAda)/Math_Lib/Circuits \
- -I$(PHCAda)/Math_Lib/Series -I$(PHCAda)/Math_Lib/AD \
+ -I$(PHCAda)/Math_Lib/Series -I$(PHCAda)/Math_Lib/Laurent \
+ -I$(PHCAda)/Math_Lib/AD \
  -I$(PHCAda)/Deformations/Solutions -I$(PHCAda)/Deformations/Homotopy \
  -I$(PHCAda)/Deformations/Newton -I$(PHCAda)/Deformations/Curves \
  -I$(PHCAda)/Deformations/End_Games -I$(PHCAda)/Deformations/Sweep \
@@ -841,6 +842,8 @@ ts_csersys:
 ts_sercffpol:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_sercffpol.adb \
               -o $(BIN)/ts_sercffpol
+
+# Test programs for the Math_Lib/Laurent library :
 
 ts_pslaur:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_pslaur.adb \
