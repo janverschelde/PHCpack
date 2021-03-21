@@ -116,6 +116,12 @@ package Standard_Laurent_Series is
   --   c       shifted coefficient vector so the leading coefficient
   --           is nonzero, or zero for a zero series.
 
+  function Exponent_Gap ( a,b : integer32 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the gap beween a and b,
+  --   viewed as the leading exponents of two Laurent power series.
+
   procedure Add ( d,xe,ye : in integer32;
                   xc,yc : in Standard_Complex_Vectors.Vector;
                   ze : out integer32;

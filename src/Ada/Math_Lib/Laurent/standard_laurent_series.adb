@@ -94,6 +94,28 @@ package body Standard_Laurent_Series is
     end if;
   end Normalize;
 
+  function Exponent_Gap ( a,b : integer32 ) return integer32 is
+
+    result : integer32 := 0;
+
+  begin
+    if a <= b then
+      -- if a >= 0 then -- 0 <= a <= b
+      --   result := b - a;
+      -- else -- a < 0
+      --   if b <= 0 then -- a <= b <= 0
+      --     result := b - a; -- a is more negative than b, so result >= 0
+      --   else -- a < 0 and b > 0
+      --     result := b - a;
+      --   end if;
+      -- end if;
+      result := b - a; -- in all the above case, the same formula
+    else -- a > b
+      result := a - b; -- by symmetry with above case analysis
+    end if;
+    return result;
+  end Exponent_Gap;
+
   procedure Add ( d,xe,ye : in integer32;
                   xc,yc : in Standard_Complex_Vectors.Vector;
                   ze : out integer32;
@@ -116,7 +138,7 @@ package body Standard_Laurent_Series is
     else
       if xe < ye then
         ze := xe;
-        gap := abs(ye - xe);
+        gap := Exponent_Gap(xe,ye);
         for i in 0..gap-1 loop
           exit when (i > zc'last);
           zc(i) := xc(i);
@@ -126,7 +148,7 @@ package body Standard_Laurent_Series is
         end loop;
       elsif xe > ye then
         ze := ye;
-        gap := abs(xe - ye);
+        gap := Exponent_Gap(xe,ye);
         for i in 0..gap-1 loop
           exit when (i > zc'last);
           zc(i) := yc(i);
@@ -166,7 +188,7 @@ package body Standard_Laurent_Series is
     else
       if xe < ye then
         ze := xe;
-        gap := abs(ye - xe);
+        gap := Exponent_Gap(xe,ye);
         for i in 0..gap-1 loop
           exit when (i > zc'last);
           zc(i) := xc(i);
@@ -176,7 +198,7 @@ package body Standard_Laurent_Series is
         end loop;
       elsif xe > ye then
         ze := ye;
-        gap := abs(xe - ye);
+        gap := Exponent_Gap(xe,ye);
         for i in 0..gap-1 loop
           exit when (i > zc'last);
           zc(i) := -yc(i);
