@@ -1,4 +1,4 @@
-Vectors and vectors of vectors in PHCv2.4.81
+Vectors and vectors of vectors in PHCv2.4.85
 
 Because the directory Matrices became too big, 
 this directory was created new for PHCv2.3.33.
@@ -153,6 +153,9 @@ tripdobl_random_vectors            : vectors of random triple doubles
 pentdobl_random_vectors            : vectors of random penta doubles
 octodobl_random_vectors            : vectors of random octo doubles
 decadobl_random_vectors            : vectors of random deca doubles
+------------------------------------------------------------------------------
+standard_floating_vecvecvecs       : vectors of vectors of floating vectors
+standard_complex_vecvecvecs        : vectors of vectors of complex vectors
 ------------------------------------------------------------------------------
 varbprec_vecvec_conversions        : conversions between vecvecs of varb prcs
 ------------------------------------------------------------------------------
