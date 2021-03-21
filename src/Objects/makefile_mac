@@ -871,6 +871,10 @@ ts_pslaur:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_pslaur.adb \
               -o $(BIN)/ts_pslaur
 
+ts_laurmat:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_laurmat.adb \
+              -o $(BIN)/ts_laurmat
+
 # Test programs for the Math_Lib/AD library :
 
 ts_monom:

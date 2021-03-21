@@ -115,7 +115,7 @@ ts_threads:
 
 test_math_lib: test_numbers test_qd test_vectors test_matrices test_divisors \
                test_reduction test_polynomials test_functions test_supports \
-               test_circuits test_ad
+               test_circuits test_series test_laurent test_ad
 
 # Test programs for the library Math_Lib/Numbers :
 
@@ -684,7 +684,7 @@ test_series: ts_pstrunc ts_bincff ts_series ts_series2 ts_cseries \
              ts_seritp ts_seritp2 ts_cseritp ts_sersin ts_sersin2 ts_csersin \
              ts_serlin ts_serlin2 ts_cserlin ts_serinv ts_cserinv \
              ts_serpol ts_cserpol ts_sersys ts_csersys ts_sercffpol \
-             ts_perfserlin ts_pslaur
+             ts_perfserlin
 
 ts_pstrunc:
 	make -f $(MAKEFILE) ts_pstrunc
@@ -770,8 +770,15 @@ ts_csersys:
 ts_sercffpol:
 	make -f $(MAKEFILE) ts_sercffpol
 
+# Test programs for the Math_Lib/Laurent library :
+
+test_laurent: ts_pslaur ts_laurmat
+
 ts_pslaur:
 	make -f $(MAKEFILE) ts_pslaur
+
+ts_laurmat:
+	make -f $(MAKEFILE) ts_laurmat
 
 # Test programs for the Math_Lib/AD library :
 
