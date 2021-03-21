@@ -8,13 +8,12 @@ with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Integer_Matrices;
 with Standard_Integer_Matrices_io;      use Standard_Integer_Matrices_io;
 with Standard_Random_Numbers;
-with Standard_Random_Vectors;
-with Standard_Random_Matrices;
 with Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecVecs;
 with Standard_Laurent_Series;
+with Random_Laurent_Series;             use Random_Laurent_Series;
 
 procedure ts_laurmat is
 
@@ -23,108 +22,6 @@ procedure ts_laurmat is
 --   1) a matrix of leading exponents, and
 --   2) 3-dimensional vector of vector of vectors
 --   with the coefficients of the power series.
-
-  procedure Random_VecVecVec
-              ( v : in Standard_Complex_VecVecVecs.Link_to_VecVecVec ) is
-
-  -- DESCRIPTION :
-  --   Given a fully allocated 3-dimensional v,
-  --   fills it up with random complex numbers on the unit circle.
-
-  begin
-    for i in v'range loop
-      declare
-        vi : constant Standard_Complex_VecVecs.Link_to_VecVec := v(i);
-      begin
-        for j in vi'range loop
-          declare
-            vij : constant Standard_Complex_Vectors.Link_to_Vector := vi(j);
-          begin
-            for k in vij'range loop
-              vij(k) := Standard_Random_Numbers.Random1;
-            end loop;
-          end;
-        end loop;
-      end;
-    end loop;
-  end Random_VecVecVec;
-
-  procedure Random_Lower_VecVecVec
-              ( v : in Standard_Complex_VecVecVecs.Link_to_VecVecVec ) is
-
-  -- DESCRIPTION :
-  --   Given a fully allocated 3-dimensional v,
-  --   fills it up with random complex numbers on the unit circle,
-  --   but only on the lower triangular part, below the diagonal.
-  --   The diagonal elements are set to one.
-
-  begin
-    for i in v'range loop -- row i
-      declare
-        vi : constant Standard_Complex_VecVecs.Link_to_VecVec := v(i);
-        vii : constant Standard_Complex_Vectors.Link_to_Vector := vi(i);
-      begin
-        for j in vi'first..(i-1) loop -- column j
-          declare
-            vij : constant Standard_Complex_Vectors.Link_to_Vector := vi(j);
-          begin
-            for k in vij'range loop
-              vij(k) := Standard_Random_Numbers.Random1;
-            end loop;
-          end;
-        end loop;
-        vii(0) := Standard_Complex_Numbers.Create(1.0);
-      end;
-    end loop;
-  end Random_Lower_VecVecVec;
-
-  procedure Random_Upper_VecVecVec
-              ( v : in Standard_Complex_VecVecVecs.Link_to_VecVecVec ) is
-
-  -- DESCRIPTION :
-  --   Given a fully allocated 3-dimensional v,
-  --   fills it up with random complex numbers on the unit circle,
-  --   but only on the diagonal and the upper triangular part.
-
-  begin
-    for i in v'range loop -- row i
-      declare
-        vi : constant Standard_Complex_VecVecs.Link_to_VecVec := v(i);
-      begin
-        for j in i..vi'last loop -- column j
-          declare
-            vij : constant Standard_Complex_Vectors.Link_to_Vector := vi(j);
-          begin
-            for k in vij'range loop
-              vij(k) := Standard_Random_Numbers.Random1;
-            end loop;
-          end;
-        end loop;
-      end;
-    end loop;
-  end Random_Upper_VecVecVec;
-
-  procedure Random_Series_Coefficients
-              ( dim,deg : in integer32;
-                cff : out Standard_Complex_VecVecs.Link_to_VecVec ) is
-
-  -- DESCRIPTION :
-  --   Returns in cff the coefficients of dim series of degree deg,
-  --   randomly generated on the complex unit circle.
-
-    res : Standard_Complex_VecVecs.VecVec(1..dim);
-
-  begin
-    for i in 1..dim loop
-      declare
-        val : constant Standard_Complex_Vectors.Vector(0..deg)
-            := Standard_Random_Vectors.Random_Vector(0,deg);
-      begin
-        res(i) := new Standard_Complex_Vectors.Vector'(val);
-      end;
-    end loop;
-    cff := new Standard_Complex_VecVecs.VecVec'(res);
-  end Random_Series_Coefficients;
 
   procedure Allocate_Series_Coefficients
               ( dim,deg : in integer32;
@@ -368,6 +265,63 @@ procedure ts_laurmat is
     end loop;
   end Backward_Substitution;
 
+  procedure Test ( nrows,ncols,deg,low,upp : in integer32;
+                   lower,upper : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Generates a random linear system and runs a test.
+
+  -- ON ENTRY :
+  --   nrows    number of rows of the test matrix;
+  --   ncols    number of columns of the test matrix;
+  --   deg      degree of the series in the matrix;
+  --   low      lower bound for the leading exponents;
+  --   upp      upper bound for the leading exponents;
+  --   lower    true if the test matrix is lower triangular;
+  --   upper    true if the test matrix is upper triangular.
+
+    nbrows : constant natural32 := natural32(nrows);
+    nbcols : constant natural32 := natural32(ncols);
+    Alead : Standard_Integer_Matrices.Matrix(1..nrows,1..ncols);
+    xlead : Standard_Integer_Vectors.Vector(1..ncols);
+    Acffs : Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+    xcffs,ycffs : Standard_Complex_VecVecs.Link_to_VecVec;
+    ylead : Standard_Integer_Vectors.Vector(1..ncols);
+    blead : Standard_Integer_Vectors.Vector(1..nrows);
+    bcffs : Standard_Complex_VecVecs.Link_to_VecVec;
+
+  begin
+    Standard_Complex_VecVecVecs.Allocate(Acffs,1,nrows,1,ncols,0,deg);
+    if not lower and not upper then
+      Random_Matrix(nbrows,nbcols,low,upp,Alead,Acffs);
+    elsif lower then
+      Random_Lower_Matrix(nbrows,nbcols,low,upp,Alead,Acffs);
+    else -- upper must be true
+      Random_Upper_Matrix(nbrows,nbcols,low,upp,Alead,Acffs);
+    end if;
+    put_line("The matrix of leading exponents :"); put(Alead,1);
+    put("A "); put(nrows,1); put("-by-"); put(ncols,1);
+    put_line(" matrix of Laurent series : "); Write(Alead,Acffs);
+    Random_Vector(ncols,deg,low,upp,xlead,xcffs);
+    put("The vector of leading exponents :"); put(xlead,1); new_line;
+    put("A "); put(ncols,1); put_line("-vector of Laurent series :");
+    Write(xlead,xcffs,"x");
+    Allocate_Series_Coefficients(nrows,deg,bcffs);
+    Matrix_Vector_Product(deg,Alead,Acffs,xlead,xcffs,blead,bcffs);
+    put_line("The product of the matrix with the vector :");
+    Write(blead,bcffs,"b");
+    Allocate_Series_Coefficients(ncols,deg,ycffs);
+    if lower then
+      Forward_Substitution(deg,Alead,Acffs,blead,bcffs,ylead,ycffs);
+      put_line("The computed solution :");
+      Write(ylead,ycffs,"y");
+    elsif upper then
+      Backward_Substitution(deg,Alead,Acffs,blead,bcffs,ylead,ycffs);
+      put_line("The computed solution :");
+      Write(ylead,ycffs,"y");
+    end if;
+  end Test;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -405,61 +359,7 @@ procedure ts_laurmat is
       put("Give the seed : "); get(seed);
       Standard_Random_Numbers.Set_Seed(natural32(seed));
     end if;
-    declare
-      nbrows : constant natural32 := natural32(nrows);
-      nbcols : constant natural32 := natural32(ncols);
-      Alead : Standard_Integer_Matrices.Matrix(1..nrows,1..ncols)
-            := Standard_Random_Matrices.Random_Matrix(nbrows,nbcols,low,upp);
-      xlead : constant Standard_Integer_Vectors.Vector(1..ncols)
-            := Standard_Random_Vectors.Random_Vector(1,ncols,low,upp);
-      Acffs : Standard_Complex_VecVecVecs.Link_to_VecVecVec;
-      xcffs,ycffs : Standard_Complex_VecVecs.Link_to_VecVec;
-      ylead : Standard_Integer_Vectors.Vector(1..ncols);
-      blead : Standard_Integer_Vectors.Vector(1..nrows);
-      bcffs : Standard_Complex_VecVecs.Link_to_VecVec;
-    begin
-      put_line("The matrix of leading exponents :"); put(Alead,1);
-      put("The vector of leading exponents :"); put(xlead,1); new_line;
-      Standard_Complex_VecVecVecs.Allocate(Acffs,1,nrows,1,ncols,0,deg);
-      if not lower and not upper then
-        Random_VecVecVec(Acffs);
-      elsif lower then
-        Random_Lower_VecVecVec(Acffs);
-        for i in Alead'range(1) loop
-          Alead(i,i) := 0;
-          for j in i+1..Alead'last(2) loop
-            Alead(i,j) := 0;
-          end loop;
-        end loop;
-      else -- upper must be true
-        Random_Upper_VecVecVec(Acffs);
-        for i in Alead'range(1) loop
-          Alead(i,i) := 0;
-          for j in Alead'first(2)..(i-1) loop
-            Alead(i,j) := 0;
-          end loop;
-        end loop;
-      end if;
-      put("A "); put(nrows,1); put("-by-"); put(ncols,1);
-      put_line(" matrix of Laurent series : "); Write(Alead,Acffs);
-      Random_Series_Coefficients(ncols,deg,xcffs);
-      put("A "); put(ncols,1); put_line("-vector of Laurent series :");
-      Write(xlead,xcffs,"x");
-      Allocate_Series_Coefficients(nrows,deg,bcffs);
-      Matrix_Vector_Product(deg,Alead,Acffs,xlead,xcffs,blead,bcffs);
-      put_line("The product of the matrix with the vector :");
-      Write(blead,bcffs,"b");
-      Allocate_Series_Coefficients(ncols,deg,ycffs);
-      if lower then
-        Forward_Substitution(deg,Alead,Acffs,blead,bcffs,ylead,ycffs);
-        put_line("The computed solution :");
-        Write(ylead,ycffs,"y");
-      elsif upper then
-        Backward_Substitution(deg,Alead,Acffs,blead,bcffs,ylead,ycffs);
-        put_line("The computed solution :");
-        Write(ylead,ycffs,"y");
-      end if;
-    end;
+    Test(nrows,ncols,deg,low,upp,lower,upper);
     new_line;
     put("The seed used : "); put(seed,1); new_line;
   end Main;
