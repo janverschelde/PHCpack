@@ -1,6 +1,7 @@
 Sun 21 Mar 2021 : fixed initialization of the matrix-vector product
   in ts_laurmat.  Added Is_Zero function to standard_laurent_series,
   extended ts_laurmat with a forward substitution solver.
+  Modified ts_laurmat to control the seed of the random number generators.
 
 Sat 20 Mar 2021 : moved all code for Laurent series from ../Series.
   New ts_laurmat to develop the matrix-vector product of Laurent series.

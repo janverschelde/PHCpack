@@ -275,7 +275,7 @@ procedure ts_laurmat is
   -- DESCRIPTION :
   --   Prompts for the dimensions and then generates a random matrix.
 
-    deg,nrows,ncols,low,upp : integer32 := 0;
+    deg,nrows,ncols,low,upp,seed : integer32 := 0;
     ans : character;
     lower : boolean;
 
@@ -292,6 +292,14 @@ procedure ts_laurmat is
     else
       put("Lower triangular matrix ? (y/n) "); Ask_Yes_or_No(ans);
       lower := (ans = 'y');
+    end if;
+    new_line;
+    put("Fixed seed ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then
+      seed := Standard_Random_Numbers.Get_Seed;
+    else
+      put("Give the seed : "); get(seed);
+      Standard_Random_Numbers.Set_Seed(natural32(seed));
     end if;
     declare
       nbrows : constant natural32 := natural32(nrows);
@@ -336,6 +344,8 @@ procedure ts_laurmat is
         Write(ylead,ycffs,"y");
       end if;
     end;
+    new_line;
+    put("The seed used : "); put(seed,1); new_line;
   end Main;
 
 begin
