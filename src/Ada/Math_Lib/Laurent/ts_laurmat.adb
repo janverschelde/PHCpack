@@ -1,4 +1,5 @@
 with text_io;                           use text_io;
+with Communications_with_User;          use Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
@@ -47,6 +48,35 @@ procedure ts_laurmat is
       end;
     end loop;
   end Random_VecVecVec;
+
+  procedure Random_Lower_VecVecVec
+              ( v : in Standard_Complex_VecVecVecs.Link_to_VecVecVec ) is
+
+  -- DESCRIPTION :
+  --   Given a fully allocated 3-dimensional v,
+  --   fills it up with random complex numbers on the unit circle,
+  --   but only on the lower triangular part, below the diagonal.
+  --   The diagonal elements are set to one.
+
+  begin
+    for i in v'range loop -- row i
+      declare
+        vi : constant Standard_Complex_VecVecs.Link_to_VecVec := v(i);
+        vii : constant Standard_Complex_Vectors.Link_to_Vector := vi(i);
+      begin
+        for j in vi'first..(i-1) loop -- column j
+          declare
+            vij : constant Standard_Complex_Vectors.Link_to_Vector := vi(j);
+          begin
+            for k in vij'range loop
+              vij(k) := Standard_Random_Numbers.Random1;
+            end loop;
+          end;
+        end loop;
+        vii(0) := Standard_Complex_Numbers.Create(1.0);
+      end;
+    end loop;
+  end Random_Lower_VecVecVec;
 
   procedure Random_Series_Coefficients
               ( dim,deg : in integer32;
@@ -160,22 +190,19 @@ procedure ts_laurmat is
   --   ey       leading exponents of the series of the product;
   --   cy       leading coefficients of the series of the product.
 
-    zero : constant Standard_Complex_Numbers.Complex_Number
-         := Standard_Complex_Numbers.Create(0.0);
     ze,ewrk : integer32;
     zc,cwrk : Standard_Complex_Vectors.Vector(0..d);
 
   begin
     for i in eA'range(1) loop
-      ey(i) := 0;
       declare
         cAi : constant Standard_Complex_VecVecs.Link_to_VecVec := cA(i);
-        cyi : constant Standard_Complex_Vectors.Link_to_Vector := cy(i);
-      begin
-        for k in 0..d loop
-          cyi(k) := zero;
-        end loop;
-        for j in eA'range(2) loop
+        cyi : Standard_Complex_Vectors.Link_to_Vector := cy(i);
+      begin -- initialize with first product instead of with zero
+        Standard_Laurent_Series.Multiply
+          (d,eA(i,eA'first(2)),ex(ex'first),cAi(cAi'first).all,
+           cx(cx'first).all,ey(i),cyi.all);
+        for j in eA'first(2)+1..eA'last(2) loop
           Standard_Laurent_Series.Multiply
             (d,eA(i,j),ex(j),cAi(j).all,cx(j).all,ze,zc);
           Standard_Laurent_Series.Add(d,ey(i),ze,cyi.all,zc,ewrk,cwrk);
@@ -194,6 +221,8 @@ procedure ts_laurmat is
   --   Prompts for the dimensions and then generates a random matrix.
 
     deg,nrows,ncols,low,upp : integer32 := 0;
+    ans : character;
+    lower : boolean;
 
   begin
     new_line;
@@ -202,6 +231,9 @@ procedure ts_laurmat is
     put("Give the upper bound on the leading exponent : "); get(upp);
     put("Give the number of rows : "); get(nrows);
     put("Give the number of columns : "); get(ncols);
+    new_line;
+    put("Lower triangular matrix ? (y/n) "); Ask_Yes_or_No(ans);
+    lower := (ans = 'y');
     declare
       nbrows : constant natural32 := natural32(nrows);
       nbcols : constant natural32 := natural32(ncols);
@@ -217,7 +249,10 @@ procedure ts_laurmat is
       put_line("The matrix of leading exponents :"); put(Alead,1);
       put("The vector of leading exponents :"); put(xlead,1); new_line;
       Standard_Complex_VecVecVecs.Allocate(Acffs,1,nrows,1,ncols,0,deg);
-      Random_VecVecVec(Acffs);
+      if lower
+       then Random_Lower_VecVecVec(Acffs);
+       else Random_VecVecVec(Acffs);
+      end if;
       put("A "); put(nrows,1); put("-by-"); put(ncols,1);
       put_line(" matrix of Laurent series : "); Write(Alead,Acffs);
       Random_Series_Coefficients(ncols,deg,xcffs);
