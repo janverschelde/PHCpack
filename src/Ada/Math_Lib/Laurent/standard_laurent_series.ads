@@ -87,6 +87,14 @@ package Standard_Laurent_Series is
   --   zc      coefficient vector of the product of x with y;
   --   iyc     coefficient vector of the inverse of y, as work space.
 
+  function Is_Zero ( d : integer32;
+                     c : Standard_Complex_Vectors.Vector;
+                     tol : double_float := 1.0E-15 ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if for all i in 0..d,
+  --   the magnitude of c(i) is less than the tolerance tol.
+
   procedure Normalize ( d : in integer32; e : in out integer32;
                         c : in out Standard_Complex_Vectors.Vector;
                         tol : in double_float := 1.0E-15 );

@@ -197,7 +197,7 @@ procedure ts_laurmat is
     for i in eA'range(1) loop
       declare
         cAi : constant Standard_Complex_VecVecs.Link_to_VecVec := cA(i);
-        cyi : Standard_Complex_Vectors.Link_to_Vector := cy(i);
+        cyi : constant Standard_Complex_Vectors.Link_to_Vector := cy(i);
       begin -- initialize with first product instead of with zero
         Standard_Laurent_Series.Multiply
           (d,eA(i,eA'first(2)),ex(ex'first),cAi(cAi'first).all,
@@ -214,6 +214,61 @@ procedure ts_laurmat is
       end;
     end loop;
   end Matrix_Vector_Product;
+
+  procedure Forward_Substitution
+              ( d : in integer32;
+                eL : in Standard_Integer_Matrices.Matrix;
+                cL : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                eb : in Standard_Integer_Vectors.Vector;
+                cb : in Standard_Complex_VecVecs.Link_to_VecVec;
+                ex : out Standard_Integer_Vectors.Vector;
+                cx : out Standard_Complex_VecVecs.Link_to_VecVec ) is
+
+  -- DESCRIPTION :
+  --   Applies forward substitution to solve a lower triangular system
+  --   with ones on the diagonal.
+
+  -- REQUIRED :
+  --   The matrix is square and all ranges are compatible.
+
+  -- ON ENTRY :
+  --   d        only coefficients in the range 0 to d are considered;
+  --   eL       leading exponents in the lower triangular matrix L;
+  --   cL       coefficients of the series in the matrix L;
+  --   eb       leading exponents of the right hand side vector b;
+  --   cb       coefficients of the series in the vector b;
+  --   cx       space allocated for the coefficients of the solution.
+
+  -- ON RETURN :
+  --   ex       leading exponents of the series of the solution;
+  --   cx       leading coefficients of the series of the solution.
+
+    ze,ewrk : integer32;
+    zc,cwrk : Standard_Complex_Vectors.Vector(0..d);
+
+  begin
+    for i in eb'range loop
+      ex(i) := eb(i);
+      declare
+        cbi : constant Standard_Complex_Vectors.Link_to_Vector := cb(i);
+        cLi : constant Standard_Complex_VecVecs.Link_to_VecVec := cL(i);
+        cxi : constant Standard_Complex_Vectors.Link_to_Vector := cx(i);
+      begin
+        for k in 0..d loop
+          cxi(k) := cbi(k);
+        end loop;
+        for j in ex'first..(i-1) loop
+          Standard_Laurent_Series.Multiply
+            (d,eL(i,j),ex(j),cLi(j).all,cx(j).all,ze,zc);
+          Standard_Laurent_Series.Subtract(d,ex(i),ze,cxi.all,zc,ewrk,cwrk);
+          ex(i) := ewrk;
+          for k in 0..d loop
+            cxi(k) := cwrk(k);
+          end loop;
+        end loop;
+      end;
+    end loop;
+  end Forward_Substitution;
 
   procedure Main is
 
@@ -232,26 +287,38 @@ procedure ts_laurmat is
     put("Give the number of rows : "); get(nrows);
     put("Give the number of columns : "); get(ncols);
     new_line;
-    put("Lower triangular matrix ? (y/n) "); Ask_Yes_or_No(ans);
-    lower := (ans = 'y');
+    if nrows /= ncols then
+      lower := false;
+    else
+      put("Lower triangular matrix ? (y/n) "); Ask_Yes_or_No(ans);
+      lower := (ans = 'y');
+    end if;
     declare
       nbrows : constant natural32 := natural32(nrows);
       nbcols : constant natural32 := natural32(ncols);
-      Alead : constant Standard_Integer_Matrices.Matrix(1..nrows,1..ncols)
+      Alead : Standard_Integer_Matrices.Matrix(1..nrows,1..ncols)
             := Standard_Random_Matrices.Random_Matrix(nbrows,nbcols,low,upp);
       xlead : constant Standard_Integer_Vectors.Vector(1..ncols)
             := Standard_Random_Vectors.Random_Vector(1,ncols,low,upp);
       Acffs : Standard_Complex_VecVecVecs.Link_to_VecVecVec;
-      xcffs : Standard_Complex_VecVecs.Link_to_VecVec;
+      xcffs,ycffs : Standard_Complex_VecVecs.Link_to_VecVec;
+      ylead : Standard_Integer_Vectors.Vector(1..ncols);
       blead : Standard_Integer_Vectors.Vector(1..nrows);
       bcffs : Standard_Complex_VecVecs.Link_to_VecVec;
     begin
       put_line("The matrix of leading exponents :"); put(Alead,1);
       put("The vector of leading exponents :"); put(xlead,1); new_line;
       Standard_Complex_VecVecVecs.Allocate(Acffs,1,nrows,1,ncols,0,deg);
-      if lower
-       then Random_Lower_VecVecVec(Acffs);
-       else Random_VecVecVec(Acffs);
+      if lower then
+        Random_Lower_VecVecVec(Acffs);
+        for i in Alead'range(1) loop
+          Alead(i,i) := 0;
+          for j in i+1..Alead'last(2) loop
+            Alead(i,j) := 0;
+          end loop;
+        end loop;
+      else
+        Random_VecVecVec(Acffs);
       end if;
       put("A "); put(nrows,1); put("-by-"); put(ncols,1);
       put_line(" matrix of Laurent series : "); Write(Alead,Acffs);
@@ -262,6 +329,12 @@ procedure ts_laurmat is
       Matrix_Vector_Product(deg,Alead,Acffs,xlead,xcffs,blead,bcffs);
       put_line("The product of the matrix with the vector :");
       Write(blead,bcffs,"b");
+      Allocate_Series_Coefficients(ncols,deg,ycffs);
+      if lower then
+        Forward_Substitution(deg,Alead,Acffs,blead,bcffs,ylead,ycffs);
+        put_line("The computed solution :");
+        Write(ylead,ycffs,"y");
+      end if;
     end;
   end Main;
 

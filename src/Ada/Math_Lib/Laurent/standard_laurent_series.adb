@@ -60,6 +60,19 @@ package body Standard_Laurent_Series is
     Multiply(d,xe,iye,xc,iyc,ze,zc);
   end Divide;
 
+  function Is_Zero ( d : integer32;
+                     c : Standard_Complex_Vectors.Vector;
+                     tol : double_float := 1.0E-15 ) return boolean is
+
+  begin
+    for i in 0..d loop
+      if (AbsVal(c(0)) > tol)
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end Is_Zero;
+
   procedure Normalize ( d : in integer32; e : in out integer32;
                         c : in out Standard_Complex_Vectors.Vector;
                         tol : in double_float := 1.0E-15 ) is
@@ -90,32 +103,44 @@ package body Standard_Laurent_Series is
     gap : integer32; -- gap between the leading coefficients
 
   begin
-    if xe < ye then
-      ze := xe;
-      gap := abs(ye - xe);
-      for i in 0..gap-1 loop
-        exit when (i > zc'last);
-        zc(i) := xc(i);
-      end loop;
-      for i in gap..d loop
-        zc(i) := xc(i) + yc(i-gap);
-      end loop;
-    elsif xe > ye then
+    if Is_Zero(d,xc,tol) then -- z is a copy of y
       ze := ye;
-      gap := abs(xe - ye);
-      for i in 0..gap-1 loop
-        exit when (i > zc'last);
+      for i in 0..d loop
         zc(i) := yc(i);
       end loop;
-      for i in gap..d loop
-        zc(i) := yc(i) + xc(i-gap);
-      end loop;
-    else -- xe = ye
+    elsif Is_Zero(d,yc,tol) then -- z is a copy of x
       ze := xe;
       for i in 0..d loop
-        zc(i) := xc(i) + yc(i);
+        zc(i) := xc(i);
       end loop;
-      Normalize(d,ze,zc,tol);
+    else
+      if xe < ye then
+        ze := xe;
+        gap := abs(ye - xe);
+        for i in 0..gap-1 loop
+          exit when (i > zc'last);
+          zc(i) := xc(i);
+        end loop;
+        for i in gap..d loop
+          zc(i) := xc(i) + yc(i-gap);
+        end loop;
+      elsif xe > ye then
+        ze := ye;
+        gap := abs(xe - ye);
+        for i in 0..gap-1 loop
+          exit when (i > zc'last);
+          zc(i) := yc(i);
+        end loop;
+        for i in gap..d loop
+          zc(i) := yc(i) + xc(i-gap);
+        end loop;
+      else -- xe = ye
+        ze := xe;
+        for i in 0..d loop
+          zc(i) := xc(i) + yc(i);
+        end loop;
+        Normalize(d,ze,zc,tol);
+      end if;
     end if;
   end Add;
 
@@ -128,32 +153,44 @@ package body Standard_Laurent_Series is
     gap : integer32; -- gap between the leading coefficients
 
   begin
-    if xe < ye then
-      ze := xe;
-      gap := abs(ye - xe);
-      for i in 0..gap-1 loop
-        exit when (i > zc'last);
-        zc(i) := xc(i);
-      end loop;
-      for i in gap..d loop
-        zc(i) := xc(i) - yc(i-gap);
-      end loop;
-    elsif xe > ye then
+    if Is_Zero(d,xc,tol) then -- z equals -y
       ze := ye;
-      gap := abs(xe - ye);
-      for i in 0..gap-1 loop
-        exit when (i > zc'last);
+      for i in 0..d loop
         zc(i) := -yc(i);
       end loop;
-      for i in gap..d loop
-        zc(i) := xc(i-gap) - yc(i);
-      end loop;
-    else -- xe = ye
+    elsif Is_Zero(d,yc,tol) then -- z is a copy of x
       ze := xe;
       for i in 0..d loop
-        zc(i) := xc(i) - yc(i);
+        zc(i) := xc(i);
       end loop;
-      Normalize(d,ze,zc,tol);
+    else
+      if xe < ye then
+        ze := xe;
+        gap := abs(ye - xe);
+        for i in 0..gap-1 loop
+          exit when (i > zc'last);
+          zc(i) := xc(i);
+        end loop;
+        for i in gap..d loop
+          zc(i) := xc(i) - yc(i-gap);
+        end loop;
+      elsif xe > ye then
+        ze := ye;
+        gap := abs(xe - ye);
+        for i in 0..gap-1 loop
+          exit when (i > zc'last);
+          zc(i) := -yc(i);
+        end loop;
+        for i in gap..d loop
+          zc(i) := xc(i-gap) - yc(i);
+        end loop;
+      else -- xe = ye
+        ze := xe;
+        for i in 0..d loop
+          zc(i) := xc(i) - yc(i);
+        end loop;
+        Normalize(d,ze,zc,tol);
+      end if;
     end if;
   end Subtract;
 
