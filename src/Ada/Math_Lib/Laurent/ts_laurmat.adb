@@ -78,6 +78,32 @@ procedure ts_laurmat is
     end loop;
   end Random_Lower_VecVecVec;
 
+  procedure Random_Upper_VecVecVec
+              ( v : in Standard_Complex_VecVecVecs.Link_to_VecVecVec ) is
+
+  -- DESCRIPTION :
+  --   Given a fully allocated 3-dimensional v,
+  --   fills it up with random complex numbers on the unit circle,
+  --   but only on the diagonal and the upper triangular part.
+
+  begin
+    for i in v'range loop -- row i
+      declare
+        vi : constant Standard_Complex_VecVecs.Link_to_VecVec := v(i);
+      begin
+        for j in i..vi'last loop -- column j
+          declare
+            vij : constant Standard_Complex_Vectors.Link_to_Vector := vi(j);
+          begin
+            for k in vij'range loop
+              vij(k) := Standard_Random_Numbers.Random1;
+            end loop;
+          end;
+        end loop;
+      end;
+    end loop;
+  end Random_Upper_VecVecVec;
+
   procedure Random_Series_Coefficients
               ( dim,deg : in integer32;
                 cff : out Standard_Complex_VecVecs.Link_to_VecVec ) is
@@ -260,15 +286,87 @@ procedure ts_laurmat is
         for j in ex'first..(i-1) loop
           Standard_Laurent_Series.Multiply
             (d,eL(i,j),ex(j),cLi(j).all,cx(j).all,ze,zc);
+         -- put("L("); put(i,1); put(","); put(j,1);
+         -- put(")*x("); put(j,1); put_line(") :");
+         -- Standard_Laurent_Series.Write(ze,zc);
           Standard_Laurent_Series.Subtract(d,ex(i),ze,cxi.all,zc,ewrk,cwrk);
           ex(i) := ewrk;
           for k in 0..d loop
             cxi(k) := cwrk(k);
           end loop;
+         -- put("x("); put(i,1); put_line(") after the update :");
+         -- Standard_Laurent_Series.Write(ex(i),cxi.all);
         end loop;
       end;
     end loop;
   end Forward_Substitution;
+
+  procedure Backward_Substitution
+              ( d : in integer32;
+                eU : in Standard_Integer_Matrices.Matrix;
+                cU : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                eb : in Standard_Integer_Vectors.Vector;
+                cb : in Standard_Complex_VecVecs.Link_to_VecVec;
+                ex : out Standard_Integer_Vectors.Vector;
+                cx : out Standard_Complex_VecVecs.Link_to_VecVec ) is
+
+  -- DESCRIPTION :
+  --   Applies forward substitution to solve an upper triangular system
+  --   with general, nonzero elements on the diagonal.
+
+  -- REQUIRED :
+  --   The matrix is square and all ranges are compatible.
+
+  -- ON ENTRY :
+  --   d        only coefficients in the range 0 to d are considered;
+  --   eU       leading exponents in the upper triangular matrix U;
+  --   cU       coefficients of the series in the matrix U;
+  --   eb       leading exponents of the right hand side vector b;
+  --   cb       coefficients of the series in the vector b;
+  --   cx       space allocated for the coefficients of the solution.
+
+  -- ON RETURN :
+  --   ex       leading exponents of the series of the solution;
+  --   cx       leading coefficients of the series of the solution.
+
+    ze,ewrk : integer32;
+    zc,cwrk : Standard_Complex_Vectors.Vector(0..d);
+    cbi,cxi : Standard_Complex_Vectors.Link_to_Vector;
+    cUi : Standard_Complex_VecVecs.Link_to_VecVec;
+
+  begin
+    cbi := cb(cb'last); cxi := cx(cx'last); cUi := cU(cU'last);
+    Standard_Laurent_Series.Divide
+      (d,eb(eb'last),eU(eU'last(1),eU'last(2)),cbi.all,cUi(cUi'last).all,
+       ex(ex'last),cxi.all,cwrk);
+    for i in reverse eb'first..eb'last-1 loop
+      ex(i) := eb(i);
+      cbi := cb(i); cxi := cx(i); cUi := cU(i);
+      for k in 0..d loop
+        cxi(k) := cbi(k);
+      end loop;
+      for j in (i+1)..ex'last loop
+        Standard_Laurent_Series.Multiply
+          (d,eU(i,j),ex(j),cUi(j).all,cx(j).all,ze,zc);
+       -- put("U("); put(i,1); put(","); put(j,1);
+       -- put(")*x("); put(j,1); put_line(") :");
+       -- Standard_Laurent_Series.Write(ze,zc);
+        Standard_Laurent_Series.Subtract(d,ex(i),ze,cxi.all,zc,ewrk,cwrk);
+        ex(i) := ewrk;
+        for k in 0..d loop
+          cxi(k) := cwrk(k);
+        end loop;
+       -- put("x("); put(i,1); put_line(") after the update :");
+       -- Standard_Laurent_Series.Write(ex(i),cxi.all);
+      end loop;
+      Standard_Laurent_Series.Divide
+        (d,ex(i),eU(i,i),cxi.all,cUi(i).all,ze,zc,cwrk);
+      ex(i) := ze;
+      for k in 0..d loop
+        cxi(k) := zc(k);
+      end loop;
+    end loop;
+  end Backward_Substitution;
 
   procedure Main is
 
@@ -277,7 +375,7 @@ procedure ts_laurmat is
 
     deg,nrows,ncols,low,upp,seed : integer32 := 0;
     ans : character;
-    lower : boolean;
+    lower,upper : boolean;
 
   begin
     new_line;
@@ -292,6 +390,12 @@ procedure ts_laurmat is
     else
       put("Lower triangular matrix ? (y/n) "); Ask_Yes_or_No(ans);
       lower := (ans = 'y');
+      if lower then
+        upper := false;
+      else
+        put("Upper triangular matrix ? (y/n) "); Ask_Yes_or_No(ans);
+        upper := (ans = 'y');
+      end if;
     end if;
     new_line;
     put("Fixed seed ? (y/n) "); Ask_Yes_or_No(ans);
@@ -317,7 +421,9 @@ procedure ts_laurmat is
       put_line("The matrix of leading exponents :"); put(Alead,1);
       put("The vector of leading exponents :"); put(xlead,1); new_line;
       Standard_Complex_VecVecVecs.Allocate(Acffs,1,nrows,1,ncols,0,deg);
-      if lower then
+      if not lower and not upper then
+        Random_VecVecVec(Acffs);
+      elsif lower then
         Random_Lower_VecVecVec(Acffs);
         for i in Alead'range(1) loop
           Alead(i,i) := 0;
@@ -325,8 +431,14 @@ procedure ts_laurmat is
             Alead(i,j) := 0;
           end loop;
         end loop;
-      else
-        Random_VecVecVec(Acffs);
+      else -- upper must be true
+        Random_Upper_VecVecVec(Acffs);
+        for i in Alead'range(1) loop
+          Alead(i,i) := 0;
+          for j in Alead'first(2)..(i-1) loop
+            Alead(i,j) := 0;
+          end loop;
+        end loop;
       end if;
       put("A "); put(nrows,1); put("-by-"); put(ncols,1);
       put_line(" matrix of Laurent series : "); Write(Alead,Acffs);
@@ -340,6 +452,10 @@ procedure ts_laurmat is
       Allocate_Series_Coefficients(ncols,deg,ycffs);
       if lower then
         Forward_Substitution(deg,Alead,Acffs,blead,bcffs,ylead,ycffs);
+        put_line("The computed solution :");
+        Write(ylead,ycffs,"y");
+      elsif upper then
+        Backward_Substitution(deg,Alead,Acffs,blead,bcffs,ylead,ycffs);
         put_line("The computed solution :");
         Write(ylead,ycffs,"y");
       end if;
