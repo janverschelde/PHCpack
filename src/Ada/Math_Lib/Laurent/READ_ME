@@ -5,11 +5,12 @@ expansions of regular solutions of polynomial systems.
 Laurent series allow for negative exponents and are arithmetically closed.
 
 ------------------------------------------------------------------------------
-file name                          : short description
+file name                         : short description
 ------------------------------------------------------------------------------
-standard_laurent_series            : defines operations on Laurent series
-test_standard_laurent_series       : basic tests on truncated Laurent series
-ts_pslaur                          : call the main test on Laurent series
-random_laurent_series              : random vectors/matrices of Laurent series
-ts_laurmat                         : test on Laurent series matrices
+standard_laurent_series           : defines operations on Laurent series
+test_standard_laurent_series      : basic tests on truncated Laurent series
+ts_pslaur                         : call the main test on Laurent series
+random_laurent_series             : random vectors/matrices of Laurent series
+standard_linear_laurent_solvers   : solvers of linear Laurent series systems
+ts_laurmat                        : test on Laurent series matrices
 ------------------------------------------------------------------------------

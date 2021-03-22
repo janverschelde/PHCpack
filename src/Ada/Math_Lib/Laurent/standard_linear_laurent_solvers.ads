@@ -1,0 +1,98 @@
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_Vectors;
+with Standard_Integer_Matrices;
+with Standard_Complex_VecVecs;
+with Standard_Complex_VecVecVecs;
+
+package Standard_Linear_Laurent_Solvers is
+
+-- DESCRIPTION :
+--   Linear systems defined by coefficient matrices and right hand side
+--   vectors of Laurent series can be solved by an LU factorization.
+
+  procedure Matrix_Vector_Product
+              ( d : in integer32;
+                eA : in Standard_Integer_Matrices.Matrix;
+                cA : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                ex : in Standard_Integer_Vectors.Vector;
+                cx : in Standard_Complex_VecVecs.Link_to_VecVec;
+                ey : out Standard_Integer_Vectors.Vector;
+                cy : out Standard_Complex_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Returns the product of a matrix of Laurent series
+  --   with a vector of Laurent series.
+
+  -- REQUIRED :
+  --   eA'range(1) = ey'range and eA'range(2) = ex'range,
+  --   cA'range(1) = cy'range and cA'range(2) = cx'range.
+
+  -- ON ENTRY :
+  --   d        only coefficients in the range 0 to d are considered;
+  --   eA       leading exponents of the series in the matrix A;
+  --   cA       coefficients of the series in the matrix A;
+  --   ex       leading exponents of the series in the vector x;
+  --   cx       coefficients of the series in the vector x;
+  --   cy       space allocated for the coefficients of the product.
+
+  -- ON RETURN :
+  --   ey       leading exponents of the series of the product;
+  --   cy       leading coefficients of the series of the product.
+
+  procedure Forward_Substitution
+              ( d : in integer32;
+                eL : in Standard_Integer_Matrices.Matrix;
+                cL : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                eb : in Standard_Integer_Vectors.Vector;
+                cb : in Standard_Complex_VecVecs.Link_to_VecVec;
+                ex : out Standard_Integer_Vectors.Vector;
+                cx : out Standard_Complex_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Applies forward substitution to solve a lower triangular system
+  --   with ones on the diagonal.
+
+  -- REQUIRED :
+  --   The matrix is square and all ranges are compatible.
+
+  -- ON ENTRY :
+  --   d        only coefficients in the range 0 to d are considered;
+  --   eL       leading exponents in the lower triangular matrix L;
+  --   cL       coefficients of the series in the matrix L;
+  --   eb       leading exponents of the right hand side vector b;
+  --   cb       coefficients of the series in the vector b;
+  --   cx       space allocated for the coefficients of the solution.
+
+  -- ON RETURN :
+  --   ex       leading exponents of the series of the solution;
+  --   cx       leading coefficients of the series of the solution.
+
+  procedure Backward_Substitution
+              ( d : in integer32;
+                eU : in Standard_Integer_Matrices.Matrix;
+                cU : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                eb : in Standard_Integer_Vectors.Vector;
+                cb : in Standard_Complex_VecVecs.Link_to_VecVec;
+                ex : out Standard_Integer_Vectors.Vector;
+                cx : out Standard_Complex_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Applies forward substitution to solve an upper triangular system
+  --   with general, nonzero elements on the diagonal.
+
+  -- REQUIRED :
+  --   The matrix is square and all ranges are compatible.
+
+  -- ON ENTRY :
+  --   d        only coefficients in the range 0 to d are considered;
+  --   eU       leading exponents in the upper triangular matrix U;
+  --   cU       coefficients of the series in the matrix U;
+  --   eb       leading exponents of the right hand side vector b;
+  --   cb       coefficients of the series in the vector b;
+  --   cx       space allocated for the coefficients of the solution.
+
+  -- ON RETURN :
+  --   ex       leading exponents of the series of the solution;
+  --   cx       leading coefficients of the series of the solution.
+
+end Standard_Linear_Laurent_Solvers;
