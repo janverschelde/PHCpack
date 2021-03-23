@@ -209,9 +209,9 @@ procedure ts_laurmat is
   --   L and U are returned explicitly.
 
   -- ON ENTRY :
-  --   nrows    number of rows of the test matrix;
-  --   ncols    number of columns of the test matrix;
-  --   deg      degree of the series in the matrix;
+  --   nrows    number of rows of the matrix;
+  --   ncols    number of columns of the matrix;
+  --   deg      degree of the series in all matrices;
   --   Alead    leading exponents of the series;
   --   Acffs    coefficients of the series.
 
@@ -313,7 +313,159 @@ procedure ts_laurmat is
     end loop;
   end Plain_LU_Factorization;
 
-  procedure Test_LU_Factorization
+  function Pivot_Row
+              ( nrows,row : in integer32;
+                lead : in Standard_Integer_Matrices.Matrix;
+                column : in Standard_Complex_VecVecs.Link_to_VecVec )
+              return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the row of the pivot in the current column.
+  --   The pivot is determined first by the smallest leading exponent.
+  --   If the leading exponents agree, then the largest coefficient
+  --   determines the pivot row.
+
+  -- ON ENTRY :
+  --   nrows    number of rows;
+  --   row      index of the current row;
+  --   lead     leading exponents of the series;
+  --   column   coefficients of the series in the current column.
+
+    res : integer32 := row;
+    leadval : integer32 := lead(row,row);
+    cff : Standard_Complex_Vectors.Link_to_Vector := column(row);
+    themax : double_float := Standard_Complex_Numbers.AbsVal(cff(0));
+    valmax : double_float;
+
+  begin
+    for i in (row+1)..nrows loop
+      cff := column(i);
+      if lead(i,row) > leadval then
+        null; -- higher leading exponents cannot be pivots
+      else
+        valmax := Standard_Complex_Numbers.AbsVal(cff(0));
+        if lead(i,row) < leadval then -- lower exponents must be pivots
+          themax := valmax;
+          leadval := lead(i,row);
+          res := i;
+        else -- if lead(i,row) = leadval, then compare coefficients
+          if valmax > themax then
+            themax := valmax;
+            res := i;
+          end if;
+        end if;
+      end if;
+    end loop;
+    return res;
+  end Pivot_Row;
+
+  procedure Swap_Rows
+              ( ncols,row,pivrow : in integer32;
+                lead : in out Standard_Integer_Matrices.Matrix;
+                cffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                pivots : in out Standard_Integer_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Swaps the rows, as defined by the index of the pivot row.
+
+  -- ON ENTRY :
+  --   ncols    number of columns;
+  --   row      index of the current row;
+  --   pivrow   index of the pivot row, different from row;
+  --   lead     leading exponents of the series;
+  --   cffs     coefficients of the series;
+  --   pivots   current values of the pivots.
+
+    itmp : integer32;
+    vtmp : Standard_Complex_VecVecs.Link_to_VecVec;
+  
+  begin
+    itmp := pivots(row);
+    pivots(row) := pivots(pivrow);
+    pivots(pivrow) := itmp;
+    vtmp := cffs(row);
+    cffs(row) := cffs(pivrow);
+    cffs(pivrow) := vtmp;
+    for j in 1..ncols loop
+      itmp := lead(row,j);
+      lead(row,j) := lead(pivrow,j);
+      lead(pivrow,j) := itmp;
+    end loop;
+  end Swap_Rows;
+
+  procedure LU_Factorization
+              ( nrows,ncols,deg : in integer32;
+                Alead : in out Standard_Integer_Matrices.Matrix;
+                Acffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                pivots : out Standard_Integer_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   An inplace LU factorization with pivoting.
+
+  -- ON ENTRY :
+  --   nrows    number of rows of the matrix;
+  --   ncols    number of columns of the matrix;
+  --   deg      degree of the series in the matrix;
+  --   Alead    leading exponents of the series;
+  --   Acffs    coefficients of the series;
+  --   pivots   space for the pivots.
+
+  -- ON RETURN :
+  --   Alead    contains the leading exponents of the factors;
+  --   Acffs    the coefficients of the factors L and U;
+  --   pivots   are the pivots used.
+
+    irow,jrow,Acol : Standard_Complex_VecVecs.Link_to_VecVec;
+    icff,jcff : Standard_Complex_Vectors.Link_to_Vector;
+    ze,ewrk,eprd,idx : integer32;
+    zc,cwrk,cprd : Standard_Complex_Vectors.Vector(0..deg);
+
+  begin
+    for i in pivots'range loop
+      pivots(i) := i;
+    end loop;
+    for j in 1..ncols loop
+      Acol := Acffs(j);
+      idx := Pivot_Row(nrows,j,Alead,Acol);
+      if idx /= j
+       then Swap_Rows(ncols,j,idx,Alead,Acffs,pivots);
+      end if;
+      for i in (j+1)..nrows loop
+        irow := Acffs(i); icff := irow(j); -- icff is A(i,j)
+        jrow := Acffs(j); jcff := jrow(j); -- jcff is A(j,j)
+        Standard_Laurent_Series.Divide
+          (deg,Alead(i,j),Alead(j,j),icff.all,jcff.all,ze,zc,cwrk);
+        Alead(i,j) := ze;    -- leading exponent of A(i,j)/A(j,j)
+        for k in 0..deg loop -- zc has coefficients of A(i,j)/A(j,j)
+          icff(k) := zc(k);  -- A(i,j) := A(i,j)/A(j,j)
+        end loop;
+        ewrk := 0;
+        for k in 0..deg loop
+          cwrk(k) := Standard_Complex_Numbers.Create(0.0);
+        end loop;
+        for k in (j+1)..ncols loop -- A(i,k) := A(i,k) - A(i,j)*A(j,k)
+          irow := Acffs(i); icff := irow(j); -- icff is A(i,j)
+          jrow := Acffs(j); jcff := jrow(k); -- jcff is A(j,k)
+          Standard_Laurent_Series.Multiply
+            (deg,Alead(i,j),Alead(j,k),icff.all,jcff.all,eprd,cprd);
+         -- eprd is the leading exponent of A(i,j)*A(j,k)
+         -- cprd has the coefficients of A(i,j)*A(j,k)
+          icff := irow(k); -- icff is A(i,k)
+          ewrk := Alead(i,k);
+          for L in 0..deg loop
+            cwrk(L) := icff(L);
+          end loop;
+          Standard_Laurent_Series.Subtract(deg,ewrk,eprd,cwrk,cprd,ze,zc);
+          Alead(i,k) := ze;
+          for L in 0..deg loop
+            icff(L) := zc(L);
+          end loop;
+        end loop;
+      end loop;
+    end loop;
+  end LU_Factorization;
+
+  procedure Test_Plain_LU_Factorization
               ( nrows,ncols,deg : in integer32;
                 Alead : in Standard_Integer_Matrices.Matrix;
                 Acffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec ) is
@@ -346,6 +498,188 @@ procedure ts_laurmat is
     Write(Plead,Pcffs,"P");
     Write(Alead,Acffs,"A");
     Write_Difference(deg,Alead,Acffs,Plead,Pcffs);
+  end Test_Plain_LU_Factorization;
+
+  procedure Lower_Triangular_Part
+              ( nrows,ncols,deg : in integer32;
+                Alead : in Standard_Integer_Matrices.Matrix;
+                Acffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                Llead : out Standard_Integer_Matrices.Matrix;
+                Lcffs : out Standard_Complex_VecVecVecs.Link_to_VecVecVec ) is
+
+  -- DESCRIPTION :
+  --   Returns the lower triangular part of A, with ones on the diagonal.
+
+  -- ON ENTRY :
+  --   nrows    number of rows of the test matrix;
+  --   ncols    number of columns of the test matrix;
+  --   deg      degree of the series in the matrix;
+  --   Alead    leading exponents of the series;
+  --   Acffs    coefficients of the series in the matrix.
+
+  -- ON RETURN :
+  --   Llead    leading exponents of the lower triangular part of A;
+  --   Lcffs    coefficients of the series in the lower triangular part.
+
+    Lrow,Arow : Standard_Complex_VecVecs.Link_to_VecVec;
+    Lcff,Acff : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in 1..nrows loop
+      Lrow := Lcffs(i);
+      Arow := Acffs(i);
+      for j in 1..(i-1) loop
+        Llead(i,j) := Alead(i,j);
+        Lcff := Lrow(j);
+        Acff := Arow(j);
+        for k in 0..deg loop
+          Lcff(k) := Acff(k);
+        end loop;
+      end loop;
+      Llead(i,i) := 0;
+      Lcff := Lrow(i);
+      Lcff(0) := Standard_Complex_Numbers.Create(1.0);
+      for k in 1..deg loop
+        Lcff(k) := Standard_Complex_Numbers.Create(0.0);
+      end loop;
+      for j in (i+1)..ncols loop
+        Llead(i,j) := 0;
+        Lcff := Lrow(j);
+        for k in 0..deg loop
+          Lcff(k) := Standard_Complex_Numbers.Create(0.0);
+        end loop;
+      end loop;
+    end loop;
+  end Lower_Triangular_Part;
+
+  procedure Upper_Triangular_Part
+              ( nrows,ncols,deg : in integer32;
+                Alead : in Standard_Integer_Matrices.Matrix;
+                Acffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                Ulead : out Standard_Integer_Matrices.Matrix;
+                Ucffs : out Standard_Complex_VecVecVecs.Link_to_VecVecVec ) is
+
+  -- DESCRIPTION :
+  --   Returns the upper triangular part of A,
+  --   which includes the diagonal.
+
+  -- ON ENTRY :
+  --   nrows    number of rows of the test matrix;
+  --   ncols    number of columns of the test matrix;
+  --   deg      degree of the series in the matrix;
+  --   Alead    leading exponents of the series;
+  --   Acffs    coefficients of the series in the matrix.
+
+  -- ON RETURN :
+  --   Ulead    leading exponents of the upper triangular part of A;
+  --   Ucffs    coefficients of the series in the upper triangular part.
+
+    Urow,Arow : Standard_Complex_VecVecs.Link_to_VecVec;
+    Ucff,Acff : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in 1..nrows loop
+      Urow := Ucffs(i);
+      for j in 1..(i-1) loop
+        Ulead(i,j) := 0;
+        Ucff := Urow(j);
+        for k in 0..deg loop
+          Ucff(k) := Standard_Complex_Numbers.Create(0.0);
+        end loop;
+      end loop;
+      Arow := Acffs(i);
+      for j in i..ncols loop
+        Ulead(i,j) := Alead(i,j);
+        Ucff := Urow(j);
+        Acff := Arow(j);
+        for k in 0..deg loop
+          Ucff(k) := Acff(k);
+        end loop;
+      end loop;
+    end loop;
+  end Upper_Triangular_Part;
+
+  procedure Permute
+              ( nrows,ncols,deg : in integer32;
+                Alead : in Standard_Integer_Matrices.Matrix;
+                Acffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                pivots : in Standard_Integer_Vectors.Vector;
+                Blead : out Standard_Integer_Matrices.Matrix;
+                Bcffs : out Standard_Complex_VecVecVecs.Link_to_VecVecVec ) is
+
+  -- DESCRIPTION :
+  --   Returns in B the pivoting applied to A.
+
+  -- ON ENTRY :
+  --   nrows    number of rows of the test matrix;
+  --   ncols    number of columns of the test matrix;
+  --   deg      degree of the series in the matrix;
+  --   Alead    leading exponents of the series;
+  --   Acffs    coefficients of the series in the matrix;
+  --   pivots   pivots computed by the LU factorization.
+
+  -- ON RETURN :
+  --   Blead    leading exponents of the permuted matrix;
+  --   Bcffs    coefficients of the matrix A, permuted with pivots.
+
+    Arow,Brow : Standard_Complex_VecVecs.Link_to_VecVec;
+    Acff,Bcff : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in 1..nrows loop
+      Arow := Acffs(pivots(i));
+      Brow := Bcffs(i);
+      for j in 1..ncols loop
+        Acff := Arow(j);
+        Bcff := Brow(j);
+        for k in 0..deg loop
+          Bcff(k) := Acff(k);
+        end loop;
+        Blead(i,j) := Alead(pivots(i),j);
+      end loop;
+    end loop;
+  end Permute;
+
+  procedure Test_LU_Factorization
+              ( nrows,ncols,deg : in integer32;
+                Alead : in out Standard_Integer_Matrices.Matrix;
+                Acffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec ) is
+
+  -- DESCRIPTION :
+  --   Tests the LU factorization with pivoting.
+
+  -- ON ENTRY :
+  --   nrows    number of rows of the test matrix;
+  --   ncols    number of columns of the test matrix;
+  --   deg      degree of the series in the matrix;
+  --   Alead    leading exponents of the series;
+  --   Acffs    coefficients of the series in the matrix.
+
+    Llead,Ulead,Plead : Standard_Integer_Matrices.Matrix(1..nrows,1..ncols);
+    Lcffs,Ucffs,Pcffs : Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+    pivots : Standard_Integer_Vectors.Vector(1..ncols);
+    Blead : Standard_Integer_Matrices.Matrix(1..nrows,1..ncols);
+    Bcffs : Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+
+  begin
+    Standard_Complex_VecVecVecs.Allocate(Lcffs,1,nrows,1,ncols,0,deg);
+    Standard_Complex_VecVecVecs.Allocate(Ucffs,1,nrows,1,ncols,0,deg);
+    Standard_Complex_VecVecVecs.Allocate(Pcffs,1,nrows,1,ncols,0,deg);
+    Standard_Complex_VecVecVecs.Allocate(Bcffs,1,nrows,1,ncols,0,deg);
+    put_line("Computing a LU factorization ...");
+    LU_Factorization(nrows,ncols,deg,Alead,Acffs,pivots);
+    Lower_Triangular_Part(nrows,ncols,deg,Alead,Acffs,Llead,Lcffs);
+    Upper_Triangular_Part(nrows,ncols,deg,Alead,Acffs,Ulead,Ucffs);
+    put_line("Computing the product of L with U ...");
+    Matrix_Matrix_Product
+      (nrows,ncols,deg,Llead,Lcffs,Ulead,Ucffs,Plead,Pcffs);
+    Write(Llead,Lcffs,"L");
+    Write(Ulead,Ucffs,"U");
+    Write(Plead,Pcffs,"P");
+    put("The pivots : "); put(pivots); new_line;
+    Permute(nrows,ncols,deg,Alead,Acffs,pivots,Blead,Bcffs);
+    Write(Blead,Bcffs,"permutedA");
+    Write_Difference(deg,Blead,Bcffs,Plead,Pcffs);
   end Test_LU_Factorization;
 
   procedure Test ( nrows,ncols,deg,low,upp : in integer32;
@@ -372,6 +706,7 @@ procedure ts_laurmat is
     ylead : Standard_Integer_Vectors.Vector(1..ncols);
     blead : Standard_Integer_Vectors.Vector(1..nrows);
     bcffs : Standard_Complex_VecVecs.Link_to_VecVec;
+    ans : character;
 
   begin
     Standard_Complex_VecVecVecs.Allocate(Acffs,1,nrows,1,ncols,0,deg);
@@ -403,7 +738,13 @@ procedure ts_laurmat is
       put_line("The computed solution :");
       Write(ylead,ycffs,"y");
     else
-      Test_LU_Factorization(nrows,ncols,deg,Alead,Acffs);
+      new_line;
+      put("Apply pivoting in the LU factorization ? ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then Test_LU_Factorization(nrows,ncols,deg,Alead,Acffs);
+       else Test_Plain_LU_Factorization(nrows,ncols,deg,Alead,Acffs);
+      end if;
     end if;
   end Test;
 
