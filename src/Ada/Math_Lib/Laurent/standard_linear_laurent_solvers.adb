@@ -1,3 +1,5 @@
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Laurent_Series;
 
@@ -125,5 +127,118 @@ package body Standard_Linear_Laurent_Solvers is
       end loop;
     end loop;
   end Backward_Substitution;
+
+  function Pivot_Row
+              ( nrows,row : in integer32;
+                lead : in Standard_Integer_Matrices.Matrix;
+                column : in Standard_Complex_VecVecs.Link_to_VecVec )
+              return integer32 is
+
+    res : integer32 := row;
+    leadval : integer32 := lead(row,row);
+    cff : Standard_Complex_Vectors.Link_to_Vector := column(row);
+    themax : double_float := Standard_Complex_Numbers.AbsVal(cff(0));
+    valmax : double_float;
+
+  begin
+    for i in (row+1)..nrows loop
+      cff := column(i);
+      if lead(i,row) > leadval then
+        null; -- higher leading exponents cannot be pivots
+      else
+        valmax := Standard_Complex_Numbers.AbsVal(cff(0));
+        if lead(i,row) < leadval then -- lower exponents must be pivots
+          themax := valmax;
+          leadval := lead(i,row);
+          res := i;
+        else -- if lead(i,row) = leadval, then compare coefficients
+          if valmax > themax then
+            themax := valmax;
+            res := i;
+          end if;
+        end if;
+      end if;
+    end loop;
+    return res;
+  end Pivot_Row;
+
+  procedure Swap_Rows
+              ( ncols,row,pivrow : in integer32;
+                lead : in out Standard_Integer_Matrices.Matrix;
+                cffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                pivots : in out Standard_Integer_Vectors.Vector ) is
+
+    itmp : integer32;
+    vtmp : Standard_Complex_VecVecs.Link_to_VecVec;
+  
+  begin
+    itmp := pivots(row);
+    pivots(row) := pivots(pivrow);
+    pivots(pivrow) := itmp;
+    vtmp := cffs(row);
+    cffs(row) := cffs(pivrow);
+    cffs(pivrow) := vtmp;
+    for j in 1..ncols loop
+      itmp := lead(row,j);
+      lead(row,j) := lead(pivrow,j);
+      lead(pivrow,j) := itmp;
+    end loop;
+  end Swap_Rows;
+
+  procedure LU_Factorization
+              ( nrows,ncols,deg : in integer32;
+                Alead : in out Standard_Integer_Matrices.Matrix;
+                Acffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                pivots : out Standard_Integer_Vectors.Vector ) is
+
+    irow,jrow,Acol : Standard_Complex_VecVecs.Link_to_VecVec;
+    icff,jcff : Standard_Complex_Vectors.Link_to_Vector;
+    ze,ewrk,eprd,idx : integer32;
+    zc,cwrk,cprd : Standard_Complex_Vectors.Vector(0..deg);
+
+  begin
+    for i in pivots'range loop
+      pivots(i) := i;
+    end loop;
+    for j in 1..ncols loop
+      Acol := Acffs(j);
+      idx := Pivot_Row(nrows,j,Alead,Acol);
+      if idx /= j
+       then Swap_Rows(ncols,j,idx,Alead,Acffs,pivots);
+      end if;
+      for i in (j+1)..nrows loop
+        irow := Acffs(i); icff := irow(j); -- icff is A(i,j)
+        jrow := Acffs(j); jcff := jrow(j); -- jcff is A(j,j)
+        Standard_Laurent_Series.Divide
+          (deg,Alead(i,j),Alead(j,j),icff.all,jcff.all,ze,zc,cwrk);
+        Alead(i,j) := ze;    -- leading exponent of A(i,j)/A(j,j)
+        for k in 0..deg loop -- zc has coefficients of A(i,j)/A(j,j)
+          icff(k) := zc(k);  -- A(i,j) := A(i,j)/A(j,j)
+        end loop;
+        ewrk := 0;
+        for k in 0..deg loop
+          cwrk(k) := Standard_Complex_Numbers.Create(0.0);
+        end loop;
+        for k in (j+1)..nrows loop -- A(i,k) := A(i,k) - A(i,j)*A(j,k)
+          irow := Acffs(i); icff := irow(j); -- icff is A(i,j)
+          jrow := Acffs(j); jcff := jrow(k); -- jcff is A(j,k)
+          Standard_Laurent_Series.Multiply
+            (deg,Alead(i,j),Alead(j,k),icff.all,jcff.all,eprd,cprd);
+         -- eprd is the leading exponent of A(i,j)*A(j,k)
+         -- cprd has the coefficients of A(i,j)*A(j,k)
+          icff := irow(k); -- icff is A(i,k)
+          ewrk := Alead(i,k);
+          for L in 0..deg loop
+            cwrk(L) := icff(L);
+          end loop;
+          Standard_Laurent_Series.Subtract(deg,ewrk,eprd,cwrk,cprd,ze,zc);
+          Alead(i,k) := ze;
+          for L in 0..deg loop
+            icff(L) := zc(L);
+          end loop;
+        end loop;
+      end loop;
+    end loop;
+  end LU_Factorization;
 
 end Standard_Linear_Laurent_Solvers;

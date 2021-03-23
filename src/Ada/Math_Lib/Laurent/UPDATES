@@ -1,5 +1,7 @@
 Mon 22 Mar 2021 : added a plain LU factorization to ts_laurmat.
   Added a first LU factorization with pivoting to ts_laurmat.
+  Fixed the test in ts_laurmat on LU factorization with pivoting,
+  added the LU with pivoting to the standard_linear_laurent_solvers.
 
 Sun 21 Mar 2021 : fixed initialization of the matrix-vector product
   in ts_laurmat.  Added Is_Zero function to standard_laurent_series,

@@ -95,4 +95,61 @@ package Standard_Linear_Laurent_Solvers is
   --   ex       leading exponents of the series of the solution;
   --   cx       leading coefficients of the series of the solution.
 
+  function Pivot_Row
+              ( nrows,row : in integer32;
+                lead : in Standard_Integer_Matrices.Matrix;
+                column : in Standard_Complex_VecVecs.Link_to_VecVec )
+              return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the row of the pivot in the current column.
+  --   The pivot is determined first by the smallest leading exponent.
+  --   If the leading exponents agree, then the largest coefficient
+  --   determines the pivot row.
+
+  -- ON ENTRY :
+  --   nrows    number of rows;
+  --   row      index of the current row;
+  --   lead     leading exponents of the series;
+  --   column   coefficients of the series in the current column.
+
+  procedure Swap_Rows
+              ( ncols,row,pivrow : in integer32;
+                lead : in out Standard_Integer_Matrices.Matrix;
+                cffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                pivots : in out Standard_Integer_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Swaps the rows, as defined by the index of the pivot row.
+
+  -- ON ENTRY :
+  --   ncols    number of columns;
+  --   row      index of the current row;
+  --   pivrow   index of the pivot row, different from row;
+  --   lead     leading exponents of the series;
+  --   cffs     coefficients of the series;
+  --   pivots   current values of the pivots.
+
+  procedure LU_Factorization
+              ( nrows,ncols,deg : in integer32;
+                Alead : in out Standard_Integer_Matrices.Matrix;
+                Acffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                pivots : out Standard_Integer_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   An inplace LU factorization with pivoting.
+
+  -- ON ENTRY :
+  --   nrows    number of rows of the matrix;
+  --   ncols    number of columns of the matrix;
+  --   deg      degree of the series in the matrix;
+  --   Alead    leading exponents of the series;
+  --   Acffs    coefficients of the series;
+  --   pivots   space for the pivots.
+
+  -- ON RETURN :
+  --   Alead    contains the leading exponents of the factors;
+  --   Acffs    the coefficients of the factors L and U;
+  --   pivots   are the pivots used.
+
 end Standard_Linear_Laurent_Solvers;
