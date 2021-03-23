@@ -478,6 +478,52 @@ package body Test_Standard_Lseries_Matrices is
     end if;
   end Test;
 
+  procedure Specific_Test is
+
+    deg : constant integer32 := 2;
+    Alead,Llead,Ulead : Standard_Integer_Matrices.Matrix(1..2,1..2);
+    Acffs,Lcffs,Ucffs : Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+    Arow : Standard_Complex_VecVecs.Link_to_VecVec;
+    Acff : Standard_Complex_Vectors.Link_to_Vector;
+    pivots : Standard_Integer_Vectors.Vector(1..2);
+
+  begin
+    Alead(1,1) := 1; Alead(1,2) := 0;
+    Alead(2,1) := 1; Alead(2,2) := 0;
+    Standard_Complex_VecVecVecs.Allocate(Acffs,1,2,1,2,0,deg);
+    Arow := Acffs(1);
+    Acff := Arow(1); -- Acff is A(1,1) = t
+    Acff(0) := Standard_Complex_Numbers.Create(1.0);
+    for k in 1..deg loop
+      Acff(k) := Standard_Complex_Numbers.Create(0.0);
+    end loop;
+    Acff := Arow(2); -- Acff is A(1,2) = 1
+    Acff(0) := Standard_Complex_Numbers.Create(1.0);
+    for k in 1..deg loop
+      Acff(k) := Standard_Complex_Numbers.Create(0.0);
+    end loop;
+    Arow := Acffs(2);
+    Acff := Arow(1); -- Acff is A(2,1) = t
+    Acff(0) := Standard_Complex_Numbers.Create(1.0);
+    for k in 1..deg loop
+      Acff(k) := Standard_Complex_Numbers.Create(0.0);
+    end loop;
+    Acff := Arow(2); -- Acff is A(2,2) = 0
+    Acff(0) := Standard_Complex_Numbers.Create(0.0);
+    for k in 1..deg loop
+      Acff(k) := Standard_Complex_Numbers.Create(0.0);
+    end loop;
+    Write(Alead,Acffs,"A");
+    Standard_Complex_VecVecVecs.Allocate(Lcffs,1,2,1,2,0,deg);
+    Standard_Complex_VecVecVecs.Allocate(Ucffs,1,2,1,2,0,deg);
+    LU_Factorization(2,2,deg,Alead,Acffs,pivots);
+    put("The pivots :"); put(pivots); new_line;
+    Lower_Triangular_Part(2,2,deg,Alead,Acffs,Llead,Lcffs);
+    Upper_Triangular_Part(2,2,deg,Alead,Acffs,Ulead,Ucffs);
+    Write(Llead,Lcffs,"L");
+    Write(Ulead,Ucffs,"U");
+  end Specific_Test;
+
   procedure Main is
 
     deg,nrows,ncols,low,upp,seed : integer32 := 0;
@@ -486,35 +532,41 @@ package body Test_Standard_Lseries_Matrices is
 
   begin
     new_line;
-    put("Give the truncation degree : "); get(deg);
-    put("Give the lower bound on the leading exponent : "); get(low);
-    put("Give the upper bound on the leading exponent : "); get(upp);
-    put("Give the number of rows : "); get(nrows);
-    put("Give the number of columns : "); get(ncols);
-    new_line;
-    if nrows /= ncols then
-      lower := false;
+    put("Run a specific test ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Specific_Test;
     else
-      put("Lower triangular matrix ? (y/n) "); Ask_Yes_or_No(ans);
-      lower := (ans = 'y');
-      if lower then
-        upper := false;
+      new_line;
+      put("Give the truncation degree : "); get(deg);
+      put("Give the lower bound on the leading exponent : "); get(low);
+      put("Give the upper bound on the leading exponent : "); get(upp);
+      put("Give the number of rows : "); get(nrows);
+      put("Give the number of columns : "); get(ncols);
+      new_line;
+      if nrows /= ncols then
+        lower := false;
       else
-        put("Upper triangular matrix ? (y/n) "); Ask_Yes_or_No(ans);
-        upper := (ans = 'y');
+        put("Lower triangular matrix ? (y/n) "); Ask_Yes_or_No(ans);
+        lower := (ans = 'y');
+        if lower then
+          upper := false;
+        else
+          put("Upper triangular matrix ? (y/n) "); Ask_Yes_or_No(ans);
+          upper := (ans = 'y');
+        end if;
       end if;
+      new_line;
+      put("Fixed seed ? (y/n) "); Ask_Yes_or_No(ans);
+      if ans /= 'y' then
+        seed := Standard_Random_Numbers.Get_Seed;
+      else
+        put("Give the seed : "); get(seed);
+        Standard_Random_Numbers.Set_Seed(natural32(seed));
+      end if;
+      Test(nrows,ncols,deg,low,upp,lower,upper);
+      new_line;
+      put("The seed used : "); put(seed,1); new_line;
     end if;
-    new_line;
-    put("Fixed seed ? (y/n) "); Ask_Yes_or_No(ans);
-    if ans /= 'y' then
-      seed := Standard_Random_Numbers.Get_Seed;
-    else
-      put("Give the seed : "); get(seed);
-      Standard_Random_Numbers.Set_Seed(natural32(seed));
-    end if;
-    Test(nrows,ncols,deg,low,upp,lower,upper);
-    new_line;
-    put("The seed used : "); put(seed,1); new_line;
   end Main;
 
 end Test_Standard_Lseries_Matrices;

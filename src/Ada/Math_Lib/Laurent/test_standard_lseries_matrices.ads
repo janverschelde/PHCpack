@@ -243,6 +243,11 @@ package Test_Standard_Lseries_Matrices is
   --   lower    true if the test matrix is lower triangular;
   --   upper    true if the test matrix is upper triangular.
 
+  procedure Specific_Test;
+
+  -- DESCRIPTION :
+  --   Runs a specific test.
+
   procedure Main;
 
   -- DESCRIPTION :
