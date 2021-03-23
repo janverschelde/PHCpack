@@ -16,3 +16,5 @@ standard_linear_laurent_solvers   : solvers of linear Laurent series systems
 test_standard_lseries_matrices    : tests matrices of Laurent series
 ts_laurmat                        : the main test on Laurent series matrices
 ------------------------------------------------------------------------------
+ts_lserpol                        : tests poly eval/diff at Laurent series
+------------------------------------------------------------------------------
