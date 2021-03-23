@@ -772,13 +772,16 @@ ts_sercffpol:
 
 # Test programs for the Math_Lib/Laurent library :
 
-test_laurent: ts_pslaur ts_laurmat
+test_laurent: ts_pslaur ts_laurmat ts_lserpol
 
 ts_pslaur:
 	make -f $(MAKEFILE) ts_pslaur
 
 ts_laurmat:
 	make -f $(MAKEFILE) ts_laurmat
+
+ts_lserpol:
+	make -f $(MAKEFILE) ts_lserpol
 
 # Test programs for the Math_Lib/AD library :
 
