@@ -10,7 +10,9 @@ file name                         : short description
 standard_laurent_series           : defines operations on Laurent series
 test_standard_laurent_series      : basic tests on truncated Laurent series
 ts_pslaur                         : call the main test on Laurent series
+------------------------------------------------------------------------------
 random_laurent_series             : random vectors/matrices of Laurent series
 standard_linear_laurent_solvers   : solvers of linear Laurent series systems
-ts_laurmat                        : test on Laurent series matrices
+test_standard_lseries_matrices    : tests matrices of Laurent series
+ts_laurmat                        : the main test on Laurent series matrices
 ------------------------------------------------------------------------------

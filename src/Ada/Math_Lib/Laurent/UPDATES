@@ -1,3 +1,6 @@
+Tue 23 Mar 2021 : new package test_standard_lseries_matrices, with code
+  extracted from ts_laurmat.
+
 Mon 22 Mar 2021 : added a plain LU factorization to ts_laurmat.
   Added a first LU factorization with pivoting to ts_laurmat.
   Fixed the test in ts_laurmat on LU factorization with pivoting,
