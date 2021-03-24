@@ -1,3 +1,5 @@
+Wed 24 Mar 2021 : added a proposed degree calculation to ts_lserpol.
+
 Tue 23 Mar 2021 : new package test_standard_lseries_matrices, with code
   extracted from ts_laurmat.  To test_standard_lseries_matrices, added
   a specific test to demonstrate the LU factorization on a matrix series

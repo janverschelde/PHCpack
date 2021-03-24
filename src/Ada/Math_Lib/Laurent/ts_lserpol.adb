@@ -62,7 +62,8 @@ procedure ts_lserpol is
   --   to evaluate the system at a vector of Laurent series.
 
     p : Link_to_Laur_Sys;
-    neq,dim,tdx,deg : integer32 := 0;
+    neq,dim,tdx,deg,maxdegt,mindegt : integer32 := 0;
+    ans : character;
 
   begin
     new_line;
@@ -86,8 +87,33 @@ procedure ts_lserpol is
       end loop;
       put("-> index of t : "); put(tdx,1); new_line;
     end if;
-    new_line;
-    put("Give the degree of the series : "); get(deg);
+    if tdx = 0 then
+      new_line;
+      put("Give the degree of the series : "); get(deg);
+    else
+      maxdegt := -2**30;
+      mindegt := +2**30;
+      for i in p'range loop
+        deg := Maximal_Degree(p(i),tdx);
+        if deg > maxdegt
+         then maxdegt := deg;
+        end if;
+        deg := Minimal_Degree(p(i),tdx);
+        if deg < mindegt
+         then mindegt := deg;
+        end if;
+      end loop;
+      put("-> the maximum degree in t : "); put(maxdegt,1); new_line;
+      put("-> the minimum degree in t : "); put(mindegt,1); new_line;
+      deg := maxdegt - mindegt + 1;
+      put("=> the proposed degree of the series : "); put(deg,1); new_line;
+      put("Raise the proposed degree ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        new_line;
+        put("Give the degree of the series : "); get(deg);
+      end if;
+    end if;
     new_line;
     if tdx = 0 then
       for k in p'range loop
