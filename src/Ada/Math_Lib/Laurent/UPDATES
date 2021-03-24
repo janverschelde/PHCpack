@@ -3,6 +3,7 @@ Tue 23 Mar 2021 : new package test_standard_lseries_matrices, with code
   a specific test to demonstrate the LU factorization on a matrix series
   with a singular leading coefficient matrix.  New test procedure ts_lserpol
   to develop the polynomial evaluation and differentiation at Laurent series.
+  New package standard_lseries_polynomials with code from ts_lserpol.
 
 Mon 22 Mar 2021 : added a plain LU factorization to ts_laurmat.
   Added a first LU factorization with pivoting to ts_laurmat.

@@ -1,153 +1,26 @@
 with text_io;                           use text_io;
+with Communications_with_User;          use Communications_with_User;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors;
-with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Integer_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
-with Standard_Random_Vectors;
+with Symbol_Table,Symbol_Table_io;
+with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
+with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Standard_Laurent_Series;
 with Random_Laurent_Series;             use Random_Laurent_Series;
 with Test_Standard_Lseries_Matrices;
+with Standard_Lseries_Polynomials;      use Standard_Lseries_Polynomials;
 
 procedure ts_lserpol is
 
 -- DESCRIPTION :
 --   Development of the evaluation and differentiation of a polynomial
 --   at a sequence of Laurent series.
-
-  procedure Write ( plead : in Standard_Integer_Vectors.Vector;
-                    pcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
-                    pmons : in Standard_Integer_VecVecs.VecVec;
-                    s : in string := "p" ) is
-  begin
-    for k in plead'range loop
-      put(s & "("); put(k,1); put(") :"); put(pmons(k)); new_line;
-      Standard_Laurent_Series.Write(plead(k),pcffs(k).all);
-    end loop;
-  end Write;
-
-  procedure Make_Random_Polynomial
-              ( dim,nbr,deg,pwr,low,upp : in integer32;
-                lead : out Standard_Integer_Vectors.Vector;
-                cffs : out Standard_Complex_VecVecs.Link_to_VecVec;
-                mons : out Standard_Integer_VecVecs.VecVec ) is
-
-  -- DESCRIPTION :
-  --   Makes a random polynomial with Laurent series as coefficients.
-
-  -- ON ENTRY :
-  --   dim      the dimension is the number of variables;
-  --   nbr      number of monomials in the polynomial;
-  --   deg      degree of the series;
-  --   pwr      largest power for every variable;
-  --   low      lower bound on leading exponents of the series;
-  --   upp      upper bound on leading exponents of the series.
-
-  -- ON RETURN :
-  --   lead     an array of range 1..nbr with the leading exponents
-  --            of the power series coefficients;
-  --   cffs     coefficient vectors of the power series coefficients;
-  --   mons     exponents of the monomials in the polynomial.
-
-  begin
-    for k in 1..nbr loop
-      declare
-        mon : constant Standard_Integer_Vectors.Vector(1..dim)
-            := Standard_Random_Vectors.Random_Vector(1,dim,0,pwr);
-      begin
-        mons(k) := new Standard_Integer_Vectors.Vector'(mon);
-      end;
-    end loop;
-    Random_Vector(nbr,deg,low,upp,lead,cffs);
-  end Make_Random_Polynomial;
-
-  procedure Eval ( deg,mlead : in integer32;
-                   cff : in Standard_Complex_Vectors.Link_to_Vector;
-                   mon : in Standard_Integer_Vectors.Link_to_Vector;
-                   xlead : in Standard_Integer_Vectors.Vector;
-                   xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
-                   ye : out integer32;
-                   yc : out Standard_Complex_Vectors.Vector ) is
-
-  -- DESCRIPTION :
-  --   Evaluates a monomial at a Laurent series.
-
-  -- ON ENTRY :
-  --   deg      only coefficients in the range 0..deg are considered;
-  --   mlead    leading exponent of the Laurent series coefficient
-  --            of the monomial;
-  --   cff      Laurent series coefficient of the monomial;
-  --   mon      exponents of the monomial;
-  --   xlead    leading exponents of the argument for the evaluation;
-  --   xcffs    coefficient vectors of the argument for the evaluation.
-
-  -- ON RETURN :
-  --   ye       leading exponent of the result of the evaluation;
-  --   yc       coefficient vector of the value of the monomial.
-
-    ze : integer32;
-    zc : Standard_Complex_Vectors.Vector(0..deg);
-
-  begin
-    ye := mlead;
-    for k in 0..deg loop -- initialize result with monomial coefficient
-      yc(k) := cff(k);
-    end loop;
-    for i in mon'range loop -- mon(i) is the power of the i-th variable
-      if mon(i) > 0 then
-        ye := ye + xlead(i)*mon(i);
-        for j in 1..mon(i) loop
-          Standard_Laurent_Series.Multiply
-            (deg,ye,xlead(i),yc,xcffs(i).all,ze,zc);
-          ye := ze;
-          for k in 0..deg loop
-            yc(k) := zc(k);
-          end loop;
-        end loop;
-      end if;
-    end loop;
-  end Eval;
-
-  procedure Eval ( deg : in integer32;
-                   plead : in Standard_Integer_Vectors.Vector;
-                   pcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
-                   pmons : in Standard_Integer_VecVecs.VecVec;
-                   xlead : in Standard_Integer_Vectors.Vector;
-                   xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
-                   ye : out integer32;
-                   yc : out Standard_Complex_Vectors.Vector ) is
-
-  -- DESCRIPTION :
-  --   Evaluates a polynomial at a Laurent series.
-
-  -- ON ENTRY :
-  --   deg      only coefficients in the range 0..deg are considered;
-  --   plead    leading exponents of the Laurent series coefficients;
-  --   pcffs    coefficient vectors of the Laurent series coefficients;
-  --   pmons    exponents of the monomials in the polynomial;
-  --   xlead    leading exponents of the argument for the evaluation;
-  --   xcffs    coefficient vectors of the argument for the evaluation.
-
-  -- ON RETURN :
-  --   ye       leading exponent of the result of the evaluation;
-  --   yc       coefficient vector of the value of the polynomial.
-
-    ze,ewrk : integer32;
-    zc,cwrk : Standard_Complex_Vectors.Vector(0..deg);
-
-  begin
-    Eval(deg,plead(1),pcffs(1),pmons(1),xlead,xcffs,ye,yc);
-    for i in 2..plead'last loop
-      Eval(deg,plead(i),pcffs(i),pmons(i),xlead,xcffs,ze,zc);
-      Standard_Laurent_Series.Add(deg,ye,ze,yc,zc,ewrk,cwrk);
-      ye := ewrk;
-      for k in 0..deg loop
-        yc(k) := cwrk(k);
-      end loop;
-    end loop;
-  end Eval;
 
   procedure Test ( dim,nbr,deg,pwr,low,upp : in integer32 ) is
 
@@ -182,22 +55,75 @@ procedure ts_lserpol is
     Standard_Laurent_Series.Write(ye,yc);
   end Test;
 
+  procedure Test_Input is
+
+  -- DESCRIPTION :
+  --   Prompts for a Laurent polynomial system and then constructs the data
+  --   to evaluate the system at a vector of Laurent series.
+
+    p : Link_to_Laur_Sys;
+    neq,dim,tdx,deg : integer32 := 0;
+
+  begin
+    new_line;
+    put_line("Reading a Laurent polynomial system ..."); get(p);
+    new_line;
+    put_line("-> your system :"); put(p.all);
+    new_line;
+    neq := p'last;
+    dim := integer32(Number_of_Unknowns(p(p'first)));
+    put("Read "); put(neq,1); put(" polynomials in "); put(dim,1);
+    put(" variables :"); Symbol_Table_io.Write; new_line;
+    if neq /= dim then
+      for k in 1..natural32(dim) loop
+        declare
+          sb : constant Symbol_Table.Symbol := Symbol_Table.get(k);
+        begin
+          if sb(1) = 't'
+           then tdx := integer32(k); exit;
+          end if;
+        end;
+      end loop;
+      put("-> index of t : "); put(tdx,1); new_line;
+    end if;
+    new_line;
+    put("Give the degree of the series : "); get(deg);
+    new_line;
+    if tdx = 0 then
+      for k in p'range loop
+        Make_Series_Polynomial(p(k),dim,dim,0,deg);
+      end loop;
+    else
+      for k in p'range loop
+        Make_Series_Polynomial(p(k),dim,dim-1,tdx,deg);
+      end loop;
+    end if;
+  end Test_Input;
+
   procedure Main is
 
   -- DESCRIPTION :
   --   Prompts for the parameters of the tests and then runs tests.
 
     dim,nbr,deg,pwr,low,upp : integer32 := 0;
+    ans : character;
 
   begin
     new_line;
-    put("Give the number of variables : "); get(dim);
-    put("Give the number of monomials : "); get(nbr);
-    put("Give the degree of the series : "); get(deg);
-    put("Give the largest power of the variables : "); get(pwr);
-    put("Give the lower bound on the leading exponents : "); get(low);
-    put("Give the upper bound on the leading exponents : "); get(upp);
-    Test(dim,nbr,deg,pwr,low,upp);
+    put("Generate a random polynomial ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans /= 'y' then
+      Test_Input;
+    else
+      new_line;
+      put("Give the number of variables : "); get(dim);
+      put("Give the number of monomials : "); get(nbr);
+      put("Give the degree of the series : "); get(deg);
+      put("Give the largest power of the variables : "); get(pwr);
+      put("Give the lower bound on the leading exponents : "); get(low);
+      put("Give the upper bound on the leading exponents : "); get(upp);
+      Test(dim,nbr,deg,pwr,low,upp);
+    end if;
   end Main;
 
 begin
