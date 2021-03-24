@@ -1,13 +1,12 @@
 with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
-with Symbol_Table,Symbol_Table_io;
+with Symbol_Table_io;
 with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
@@ -62,7 +61,7 @@ procedure ts_lserpol is
   --   to evaluate the system at a vector of Laurent series.
 
     p : Link_to_Laur_Sys;
-    neq,dim,tdx,deg,maxdegt,mindegt : integer32 := 0;
+    neq,dim,tdx,deg : integer32 := 0;
     ans : character;
 
   begin
@@ -76,36 +75,14 @@ procedure ts_lserpol is
     put("Read "); put(neq,1); put(" polynomials in "); put(dim,1);
     put(" variables :"); Symbol_Table_io.Write; new_line;
     if neq /= dim then
-      for k in 1..natural32(dim) loop
-        declare
-          sb : constant Symbol_Table.Symbol := Symbol_Table.get(k);
-        begin
-          if sb(1) = 't'
-           then tdx := integer32(k); exit;
-          end if;
-        end;
-      end loop;
+      tdx := tsymbol_Index;
       put("-> index of t : "); put(tdx,1); new_line;
     end if;
     if tdx = 0 then
       new_line;
       put("Give the degree of the series : "); get(deg);
     else
-      maxdegt := -2**30;
-      mindegt := +2**30;
-      for i in p'range loop
-        deg := Maximal_Degree(p(i),tdx);
-        if deg > maxdegt
-         then maxdegt := deg;
-        end if;
-        deg := Minimal_Degree(p(i),tdx);
-        if deg < mindegt
-         then mindegt := deg;
-        end if;
-      end loop;
-      put("-> the maximum degree in t : "); put(maxdegt,1); new_line;
-      put("-> the minimum degree in t : "); put(mindegt,1); new_line;
-      deg := maxdegt - mindegt - 1;
+      deg := Minimum_Laurent_Series_Degree(p.all,tdx);
       put("=> the proposed degree of the series : "); put(deg,1); new_line;
       put("Raise the proposed degree ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -115,31 +92,21 @@ procedure ts_lserpol is
       end if;
     end if;
     new_line;
-    if tdx = 0 then
+    declare
+      plead : Standard_Integer_VecVecs.VecVec(p'range);
+      pcffs : Standard_Complex_VecVecs.Array_of_VecVecs(p'range);
+      pmons : Standard_Integer_VecVecs.Array_of_VecVecs(p'range);
+    begin
+      if tdx = 0
+       then Make_Series_System(p.all,dim,dim,0,deg,plead,pcffs,pmons);
+       else Make_Series_System(p.all,dim,dim-1,tdx,deg,plead,pcffs,pmons);
+      end if;
       for k in p'range loop
-        declare
-          plead : Standard_Integer_Vectors.Link_to_Vector;
-          pcffs : Standard_Complex_VecVecs.Link_to_VecVec;
-          pmons : Standard_Integer_VecVecs.Link_to_VecVec;
-        begin
-          Make_Series_Polynomial(p(k),dim,dim,0,deg,plead,pcffs,pmons);
-          put_line("The polynomial with Laurent series coefficients :");
-          Write(plead.all,pcffs,pmons.all);
-        end;
+        put("Polynomial "); put(k,1);
+        put_line(" with Laurent series coefficients :");
+        Write(plead(k).all,pcffs(k),pmons(k).all);
       end loop;
-    else
-      for k in p'range loop
-        declare
-          plead : Standard_Integer_Vectors.Link_to_Vector;
-          pcffs : Standard_Complex_VecVecs.Link_to_VecVec;
-          pmons : Standard_Integer_VecVecs.Link_to_VecVec;
-        begin
-          Make_Series_Polynomial(p(k),dim,dim-1,tdx,deg,plead,pcffs,pmons);
-          put_line("The polynomial with Laurent series coefficients :");
-          Write(plead.all,pcffs,pmons.all);
-        end;
-      end loop;
-    end if;
+    end;
   end Test_Input;
 
   procedure Main is

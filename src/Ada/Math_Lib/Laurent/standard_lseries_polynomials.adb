@@ -1,8 +1,10 @@
 with text_io;                           use text_io;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Random_Vectors;
+with Symbol_Table;
 with Standard_Laurent_Series;
 with Random_Laurent_Series;             use Random_Laurent_Series;
 
@@ -91,6 +93,24 @@ package body Standard_Lseries_Polynomials is
     end loop;
   end Eval;
 
+  function tsymbol_index return integer32 is
+
+    res : integer32 := 0;
+    nbr : constant natural32 := Symbol_Table.Number;
+
+  begin
+    for k in 1..nbr loop
+      declare
+        sb : constant Symbol_Table.Symbol := Symbol_Table.get(k);
+      begin
+        if sb(1) = 't'
+         then res := integer32(k); exit;
+        end if;
+      end;
+    end loop;
+    return res;
+  end tsymbol_index;
+
   function Index_of_Degrees
              ( mons : Standard_Integer_VecVecs.VecVec;
                idx : integer32;
@@ -113,6 +133,32 @@ package body Standard_Lseries_Polynomials is
     end loop;
     return idx;
   end Index_of_Degrees;
+
+  function Minimum_Laurent_Series_Degree
+             ( p : Poly; tdx : integer32 ) return integer32 is
+
+    maxdegt : constant integer32 := Maximal_Degree(p,tdx);
+    mindegt : constant integer32 := Minimal_Degree(p,tdx);
+
+  begin
+    return (maxdegt - mindegt - 1);
+  end Minimum_Laurent_Series_Degree;
+
+  function Minimum_Laurent_Series_Degree
+             ( p : Laur_Sys; tdx : integer32 ) return integer32 is
+
+    res : integer32 := Minimum_Laurent_Series_Degree(p(p'first),tdx);
+    deg : integer32;
+
+  begin
+    for k in p'first+1..p'last loop
+      deg := Minimum_Laurent_Series_Degree(p(k),tdx);
+      if deg > res
+       then res := deg;
+      end if;
+    end loop;
+    return res;
+  end Minimum_Laurent_Series_Degree;
 
   procedure Make_Series_Polynomial
               ( p : in Poly; dim,nvr,tdx,deg : in integer32;
@@ -202,5 +248,16 @@ package body Standard_Lseries_Polynomials is
     cffs := new Standard_Complex_VecVecs.VecVec'(wcffs(1..cnt));
     mons := new Standard_Integer_VecVecs.VecVec'(pmons(1..cnt));
   end Make_Series_Polynomial;
+
+  procedure Make_Series_System
+              ( p : in Laur_Sys; dim,nvr,tdx,deg : in integer32;
+                lead : out Standard_Integer_VecVecs.VecVec;
+                cffs : out Standard_Complex_VecVecs.Array_of_VecVecs;
+                mons : out Standard_Integer_VecVecs.Array_of_VecVecs ) is
+  begin
+    for k in p'range loop
+      Make_Series_Polynomial(p(k),dim,nvr,tdx,deg,lead(k),cffs(k),mons(k));
+    end loop;
+  end Make_Series_System;
 
 end Standard_Lseries_Polynomials;

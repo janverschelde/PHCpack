@@ -4,6 +4,7 @@ with Standard_Integer_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
+with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 
 package Standard_Lseries_Polynomials is
 
@@ -99,6 +100,13 @@ package Standard_Lseries_Polynomials is
   --   ye       leading exponent of the result of the evaluation;
   --   yc       coefficient vector of the value of the polynomial.
 
+  function tsymbol_index return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the index of the symbol t used in the Laurent series
+  --   in the input Laurent polynomials from the symbol table contents.
+  --   Returns 0 if the symbol table does not contain the symbol t.
+
   function Index_of_Degrees
              ( mons : Standard_Integer_VecVecs.VecVec;
                idx : integer32;
@@ -117,6 +125,18 @@ package Standard_Lseries_Polynomials is
   -- ON RETURN :
   --   idx is returned if the exponents in degs do not occur in mons,
   --   otherwise returns the index in mons where degs exponents occur.
+
+  function Minimum_Laurent_Series_Degree
+             ( p : Poly; tdx : integer32 ) return integer32;
+  function Minimum_Laurent_Series_Degree
+             ( p : Laur_Sys; tdx : integer32 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Given a nonzero index tdx for the position of t in p,
+  --   returns the smallest value for the degree in the range of coefficients
+  --   so no coefficient of p is lost.
+
+  -- REQUIRED : tdx /= 0.
 
   procedure Make_Series_Polynomial
               ( p : in Poly; dim,nvr,tdx,deg : in integer32;
@@ -139,7 +159,30 @@ package Standard_Lseries_Polynomials is
 
   -- ON RETRUN :
   --   lead    leading exponents of the Laurent series coefficients;
-  --   cffs    coefficients in the Laurent series for each monomials;
+  --   cffs    coefficients in the Laurent series for each monomial;
+  --   mons    exponents of the monomials.
+
+  procedure Make_Series_System
+              ( p : in Laur_Sys; dim,nvr,tdx,deg : in integer32;
+                lead : out Standard_Integer_VecVecs.VecVec;
+                cffs : out Standard_Complex_VecVecs.Array_of_VecVecs;
+                mons : out Standard_Integer_VecVecs.Array_of_VecVecs );
+
+  -- DESCRIPTION :
+  --   Given a Laurent polynomial system p, returns the triplet of data
+  --   to represent p as a system with Laurent series coefficients.
+
+  -- ON ENTRY :
+  --   p       a Laurent system with possibly negative exponents in t;
+  --   dim     total number of variables in p, including t,
+  --   nvr     number of variables without t;
+  --   tdx     index of t as one of the dim variables in p,
+  --           if tdx is zero, then dim must equal nvr,
+  --           otherwise nvr = dim - 1.
+
+  -- ON RETRUN :
+  --   lead    leading exponents of the Laurent series coefficients;
+  --   cffs    coefficients in the Laurent series for each monomial;
   --   mons    exponents of the monomials.
 
 end Standard_Lseries_Polynomials;
