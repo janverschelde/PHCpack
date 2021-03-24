@@ -105,7 +105,7 @@ procedure ts_lserpol is
       end loop;
       put("-> the maximum degree in t : "); put(maxdegt,1); new_line;
       put("-> the minimum degree in t : "); put(mindegt,1); new_line;
-      deg := maxdegt - mindegt + 1;
+      deg := maxdegt - mindegt - 1;
       put("=> the proposed degree of the series : "); put(deg,1); new_line;
       put("Raise the proposed degree ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -117,11 +117,27 @@ procedure ts_lserpol is
     new_line;
     if tdx = 0 then
       for k in p'range loop
-        Make_Series_Polynomial(p(k),dim,dim,0,deg);
+        declare
+          plead : Standard_Integer_Vectors.Link_to_Vector;
+          pcffs : Standard_Complex_VecVecs.Link_to_VecVec;
+          pmons : Standard_Integer_VecVecs.Link_to_VecVec;
+        begin
+          Make_Series_Polynomial(p(k),dim,dim,0,deg,plead,pcffs,pmons);
+          put_line("The polynomial with Laurent series coefficients :");
+          Write(plead.all,pcffs,pmons.all);
+        end;
       end loop;
     else
       for k in p'range loop
-        Make_Series_Polynomial(p(k),dim,dim-1,tdx,deg);
+        declare
+          plead : Standard_Integer_Vectors.Link_to_Vector;
+          pcffs : Standard_Complex_VecVecs.Link_to_VecVec;
+          pmons : Standard_Integer_VecVecs.Link_to_VecVec;
+        begin
+          Make_Series_Polynomial(p(k),dim,dim-1,tdx,deg,plead,pcffs,pmons);
+          put_line("The polynomial with Laurent series coefficients :");
+          Write(plead.all,pcffs,pmons.all);
+        end;
       end loop;
     end if;
   end Test_Input;

@@ -99,8 +99,30 @@ package Standard_Lseries_Polynomials is
   --   ye       leading exponent of the result of the evaluation;
   --   yc       coefficient vector of the value of the polynomial.
 
+  function Index_of_Degrees
+             ( mons : Standard_Integer_VecVecs.VecVec;
+               idx : integer32;
+               degs : Standard_Integer_Vectors.Vector ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the index where to place the degrees respective
+  --   to the first exponents in the range 1..idx.
+  --   This function is needed in case tdx /= 0.
+
+  -- ON ENTRY :
+  --   mons    exponents of monomials processed from 1 to idx-1;
+  --   idx     current free index in mons;
+  --   degs    exponents of a new monomial.
+
+  -- ON RETURN :
+  --   idx is returned if the exponents in degs do not occur in mons,
+  --   otherwise returns the index in mons where degs exponents occur.
+
   procedure Make_Series_Polynomial
-              ( p : in Poly; dim,nvr,tdx,deg : in integer32 );
+              ( p : in Poly; dim,nvr,tdx,deg : in integer32;
+                lead : out Standard_Integer_Vectors.Link_to_Vector;
+                cffs : out Standard_Complex_VecVecs.Link_to_VecVec;
+                mons : out Standard_Integer_VecVecs.Link_to_VecVec );
 
   -- DESCRIPTION :
   --   Given a Laurent polynomial p and the index for t,
@@ -114,5 +136,10 @@ package Standard_Lseries_Polynomials is
   --   tdx     index of t as one of the dim variables in p,
   --           if tdx is zero, then dim must equal nvr,
   --           otherwise nvr = dim - 1.
+
+  -- ON RETRUN :
+  --   lead    leading exponents of the Laurent series coefficients;
+  --   cffs    coefficients in the Laurent series for each monomials;
+  --   mons    exponents of the monomials.
 
 end Standard_Lseries_Polynomials;

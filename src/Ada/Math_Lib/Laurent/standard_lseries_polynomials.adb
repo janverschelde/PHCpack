@@ -91,52 +91,116 @@ package body Standard_Lseries_Polynomials is
     end loop;
   end Eval;
 
+  function Index_of_Degrees
+             ( mons : Standard_Integer_VecVecs.VecVec;
+               idx : integer32;
+               degs : Standard_Integer_Vectors.Vector ) return integer32 is
+
+    monexp : Standard_Integer_Vectors.Link_to_Vector;
+    allequal : boolean;
+
+  begin
+    for k in mons'first..(idx-1) loop
+      monexp := mons(k);
+      allequal := true;
+      for i in monexp'range loop
+        allequal := (monexp(i) = degs(i));
+        exit when not allequal;
+      end loop;
+      if allequal
+       then return k;
+      end if;
+    end loop;
+    return idx;
+  end Index_of_Degrees;
+
   procedure Make_Series_Polynomial
-              ( p : in Poly; dim,nvr,tdx,deg : in integer32 ) is
+              ( p : in Poly; dim,nvr,tdx,deg : in integer32;
+                lead : out Standard_Integer_Vectors.Link_to_Vector;
+                cffs : out Standard_Complex_VecVecs.Link_to_VecVec;
+                mons : out Standard_Integer_VecVecs.Link_to_VecVec ) is
 
     nbr : constant integer32 := integer32(Number_of_Terms(p));
     plead : Standard_Integer_Vectors.Vector(1..nbr);
-    cffs : Standard_Complex_VecVecs.VecVec(1..nbr);
-    pcffs : constant Standard_Complex_VecVecs.Link_to_VecVec
-          := new Standard_Complex_VecVecs.VecVec'(cffs);
+    wcffs : Standard_Complex_VecVecs.VecVec(1..nbr);
     pmons : Standard_Integer_VecVecs.VecVec(1..nbr);
     cnt : integer32 := 0;
 
     procedure Visit_Term ( t : in Term; continue : out boolean ) is
 
+    -- DESCRIPTION :
+    --   If tdx is zero, then the monomial is just copied,
+    --   otherwise the terms in the Laurent series need to be
+    --   collected from the expanded form.
+
       mon : Standard_Integer_Vectors.Vector(1..nvr);
       cff : Standard_Complex_Vectors.Vector(0..deg);
+      located,newlead,gap : integer32;
+      cfflocated : Standard_Complex_Vectors.Link_to_Vector;
 
     begin
       cnt := cnt + 1; 
-      if tdx = 0 then
+      if tdx = 0 then          -- constant Laurent series
         plead(cnt) := 0;
         for k in 1..dim loop
           mon(k) := integer32(t.dg(k));
         end loop;
+        pmons(cnt) := new Standard_Integer_Vectors.Vector'(mon);
+        cff(0) := t.cf;
+        for k in 1..deg loop
+          cff(k) := Standard_Complex_Numbers.Create(0.0);
+        end loop;
+        wcffs(cnt) := new Standard_Complex_Vectors.Vector'(cff);
       else
         for k in 1..(tdx-1) loop
           mon(k) := integer32(t.dg(k));
         end loop;
-        plead(cnt) := integer32(t.dg(tdx));
         for k in (tdx+1)..dim loop
           mon(k-1) := integer32(t.dg(k));
         end loop;
+        located := Index_of_Degrees(pmons,cnt,mon);
+        if located = cnt then                        --  a new monomial
+          plead(cnt) := integer32(t.dg(tdx));
+          pmons(cnt) := new Standard_Integer_Vectors.Vector'(mon);
+          cff(0) := t.cf;
+          for k in 1..deg loop
+            cff(k) := Standard_Complex_Numbers.Create(0.0);
+          end loop;
+          wcffs(cnt) := new Standard_Complex_Vectors.Vector'(cff);
+        else
+          cnt := cnt-1;                              -- no new monomial
+          newlead := integer32(t.dg(tdx));
+          cfflocated := wcffs(located);            -- fit in new t-term
+          if newlead = plead(located) then
+            Standard_Complex_Numbers.Add(cfflocated(0),t.cf);
+          elsif newlead > plead(located) then
+            gap := newlead - plead(located);   -- keep leading exponent
+            if gap <= deg then
+              Standard_Complex_Numbers.Add(cfflocated(gap),t.cf);
+            -- else the new coefficient will be ignored ...
+            end if;
+          else -- newlead < plead(located) 
+            gap := plead(located) - newlead; -- leading exponent changes!
+            for k in reverse 0..deg-gap loop        -- shift coefficients
+              cfflocated(gap+k) := cfflocated(k);
+            end loop;
+            for k in 1..(gap-1) loop
+              cfflocated(k) := Standard_Complex_Numbers.Create(0.0);
+            end loop;
+            cfflocated(0) := t.cf;
+            plead(located) := newlead;
+          end if;
+        end if;
       end if;
-      pmons(cnt) := new Standard_Integer_Vectors.Vector'(mon);
-      cff(0) := t.cf;
-      for k in 1..deg loop
-        cff(k) := Standard_Complex_Numbers.Create(0.0);
-      end loop;
-      pcffs(cnt) := new Standard_Complex_Vectors.Vector'(cff);
       continue := true;
     end Visit_Term;
     procedure Visit_Terms is new Visiting_Iterator(Visit_Term);
 
   begin
     Visit_Terms(p);
-    put_line("The polynomial with Laurent series coefficients :");
-    Write(plead,pcffs,pmons);
+    lead := new Standard_Integer_Vectors.Vector'(plead(1..cnt));
+    cffs := new Standard_Complex_VecVecs.VecVec'(wcffs(1..cnt));
+    mons := new Standard_Integer_VecVecs.VecVec'(pmons(1..cnt));
   end Make_Series_Polynomial;
 
 end Standard_Lseries_Polynomials;
