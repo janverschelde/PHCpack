@@ -15,6 +15,123 @@ package Standard_Lseries_Polynomials is
 --   (2) coefficient vectors of the Laurent series for each monomial;
 --   (3) exponent vectors of the monomials in the polynomial.
 
+-- DATA STRUCTURES :
+
+  type Table is record
+    nbt : integer32; -- number of terms
+    nvr : integer32; -- number of variables
+    lead : Standard_Integer_Vectors.Link_to_Vector; -- leading exponents
+    cffs : Standard_Complex_VecVecs.Link_to_VecVec; -- coefficient vectors
+    mons : Standard_Integer_VecVecs.Link_to_VecVec; -- monomial exponents
+  end record;
+
+  type Table_Vector ( nbt : integer32 ) is record -- nbt is number of tables
+    nvr : integer32; -- number of variables in each table
+    lead : Standard_Integer_VecVecs.VecVec(1..nbt);   -- leading exponents
+    cffs : Standard_Complex_VecVecs.Array_of_VecVecs(1..nbt); -- coefficients
+    mons : Standard_Integer_VecVecs.Array_of_VecVecs(1..nbt); -- monomials
+  end record;
+
+  type Link_to_Table_Vector is access Table_Vector;
+
+  type Table_Vector_Array is
+    array ( integer range <> ) of Link_to_Table_Vector;
+
+-- CONSTRUCTORS :
+
+  function Random_Table ( dim,nbr,deg,pwr,low,upp : integer32 ) return Table;
+
+  -- DESCRIPTION :
+  --   Makes a random polynomial with Laurent series as coefficients.
+  --   Wraps the Make_Random_polynomial procedure.
+
+  -- ON ENTRY :
+  --   dim      the dimension is the number of variables;
+  --   nbr      number of monomials in the polynomial;
+  --   deg      degree of the series;
+  --   pwr      largest power for every variable;
+  --   low      lower bound on leading exponents of the series;
+  --   upp      upper bound on leading exponents of the series.
+
+  function Make_Table ( p : Poly; dim,nvr,tdx,deg : integer32 ) return Table;
+
+  -- DESCRIPTION :
+  --   Given a Laurent polynomial p and the index for t,
+  --   makes the data structures to represent p as a polynomial
+  --   with Laurent series coefficients in t.
+  --   Wraps the Make_Series_Polynomial procedure.
+
+  -- ON ENTRY :
+  --   p       a Laurent polynomial with possibly negative exponents in t;
+  --   dim     total number of variables in p, including t,
+  --   nvr     number of variables without t;
+  --   tdx     index of t as one of the dim variables in p,
+  --           if tdx is zero, then dim must equal nvr,
+  --           otherwise nvr = dim - 1.
+
+  function Make_Table_Vector
+             ( p : Laur_Sys; dim,nvr,tdx,deg : integer32 )
+             return Table_Vector;
+
+  -- DESCRIPTION :
+  --   Given a Laurent polynomial system p, returns the triplet of data
+  --   to represent p as a system with Laurent series coefficients.
+  --   Wraps the Make_Series_System procedure.
+
+  -- ON ENTRY :
+  --   p       a Laurent system with possibly negative exponents in t;
+  --   dim     total number of variables in p, including t,
+  --   nvr     number of variables without t;
+  --   tdx     index of t as one of the dim variables in p,
+  --           if tdx is zero, then dim must equal nvr,
+  --           otherwise nvr = dim - 1.
+
+-- EVALUATORS :
+
+  procedure Eval ( deg : in integer32; tab : in Table;
+                   xlead : in Standard_Integer_Vectors.Vector;
+                   xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
+                   ye : out integer32;
+                   yc : out Standard_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Evaluates a Laurent series polynomial at a Laurent series.
+  --   Wraps the Eval procedure.
+
+  -- ON ENTRY :
+  --   deg      only coefficients in the range 0..deg are considered;
+  --   tab      data for a Laurent series polynomial;
+  --   xlead    leading exponents of the argument for the evaluation;
+  --   xcffs    coefficient vectors of the argument for the evaluation.
+
+  -- ON RETURN :
+  --   ye       leading exponent of the result of the evaluation;
+  --   yc       coefficient vector of the value of the polynomial.
+
+  procedure Eval ( deg : in integer32; tab : in Table_Vector;
+                   xlead : in Standard_Integer_Vectors.Vector;
+                   xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
+                   ylead : out Standard_Integer_Vectors.Vector;
+                   ycffs : out Standard_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Evaluates a Laurent series polynomial vector at a Laurent series.
+
+  -- ON ENTRY :
+  --   deg      only coefficients in the range 0..deg are considered;
+  --   tab      data for a Laurent series polynomial;
+  --   xlead    leading exponents of the argument for the evaluation;
+  --   xcffs    coefficient vectors of the argument for the evaluation;
+  --   ylead    must include the range for the number of tables;
+  --   ycffs    must also include the range for the number of tables.
+
+  -- ON RETURN :
+  --   ylead    leading exponents of the result of the evaluation;
+  --   ycffs    coefficient vectors of the evaluation result;
+  --            allocations will be made as needed.
+
+-- BASIC OPERATIONS :
+
   procedure Write ( plead : in Standard_Integer_Vectors.Vector;
                     pcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
                     pmons : in Standard_Integer_VecVecs.VecVec;
@@ -146,7 +263,7 @@ package Standard_Lseries_Polynomials is
 
   -- DESCRIPTION :
   --   Given a Laurent polynomial p and the index for t,
-  --   makes the data structures to represent p as polynomial
+  --   makes the data structures to represent p as a polynomial
   --   with Laurent series coefficients in t.
 
   -- ON ENTRY :

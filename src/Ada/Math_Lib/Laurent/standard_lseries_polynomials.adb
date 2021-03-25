@@ -38,6 +38,21 @@ package body Standard_Lseries_Polynomials is
     Random_Vector(nbr,deg,low,upp,lead,cffs);
   end Make_Random_Polynomial;
 
+  function Random_Table ( dim,nbr,deg,pwr,low,upp : integer32 ) return Table is
+
+    res : Table;
+    lead : Standard_Integer_Vectors.Vector(1..nbr);
+    mons : Standard_Integer_VecVecs.VecVec(1..nbr);
+
+  begin
+    res.nbt := nbr;
+    res.nvr := dim;
+    Make_Random_Polynomial(dim,nbr,deg,pwr,low,upp,lead,res.cffs,mons);
+    res.lead := new Standard_Integer_Vectors.Vector'(lead);
+    res.mons := new Standard_Integer_VecVecs.VecVec'(mons);
+    return res;
+  end Random_Table;
+
   procedure Eval ( deg,mlead : in integer32;
                    cff : in Standard_Complex_Vectors.Link_to_Vector;
                    mon : in Standard_Integer_Vectors.Link_to_Vector;
@@ -90,6 +105,45 @@ package body Standard_Lseries_Polynomials is
       for k in 0..deg loop
         yc(k) := cwrk(k);
       end loop;
+    end loop;
+  end Eval;
+
+  procedure Eval ( deg : in integer32; tab : in Table;
+                   xlead : in Standard_Integer_Vectors.Vector;
+                   xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
+                   ye : out integer32;
+                   yc : out Standard_Complex_Vectors.Vector ) is
+
+  begin
+    Eval(deg,tab.lead.all,tab.cffs,tab.mons.all,xlead,xcffs,ye,yc);
+  end Eval;
+
+  procedure Eval ( deg : in integer32; tab : in Table_Vector;
+                   xlead : in Standard_Integer_Vectors.Vector;
+                   xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
+                   ylead : out Standard_Integer_Vectors.Vector;
+                   ycffs : out Standard_Complex_VecVecs.VecVec ) is
+
+     use Standard_Complex_Vectors;
+     cff : Standard_Complex_Vectors.Link_to_Vector;
+     zero : constant Standard_Complex_Numbers.Complex_Number
+          := Standard_Complex_Numbers.Create(0.0);
+
+  begin
+    for i in 1..tab.nbt loop
+      if ycffs(i) /= null then
+        cff := ycffs(i);
+      else
+        declare
+          v : constant Standard_Complex_Vectors.Vector(0..deg)
+            := (0..deg => zero);
+        begin
+          ycffs(i) := new Standard_Complex_Vectors.Vector'(v);
+          cff := ycffs(i);
+        end;
+      end if;
+      Eval(deg,tab.lead(i).all,tab.cffs(i),tab.mons(i).all,
+           xlead,xcffs,ylead(i),cff.all);
     end loop;
   end Eval;
 
@@ -249,6 +303,17 @@ package body Standard_Lseries_Polynomials is
     mons := new Standard_Integer_VecVecs.VecVec'(pmons(1..cnt));
   end Make_Series_Polynomial;
 
+  function Make_Table ( p : Poly; dim,nvr,tdx,deg : integer32 ) return Table is
+
+    res : Table;
+
+  begin
+    res.nbt := dim;
+    res.nvr := nvr;
+    Make_Series_Polynomial(p,dim,nvr,tdx,deg,res.lead,res.cffs,res.mons);
+    return res;
+  end Make_Table;
+
   procedure Make_Series_System
               ( p : in Laur_Sys; dim,nvr,tdx,deg : in integer32;
                 lead : out Standard_Integer_VecVecs.VecVec;
@@ -259,5 +324,18 @@ package body Standard_Lseries_Polynomials is
       Make_Series_Polynomial(p(k),dim,nvr,tdx,deg,lead(k),cffs(k),mons(k));
     end loop;
   end Make_Series_System;
+
+  function Make_Table_Vector
+             ( p : Laur_Sys; dim,nvr,tdx,deg : integer32 )
+             return Table_Vector is
+
+    neq : constant integer32 := p'last;
+    res : Table_Vector(neq);
+
+  begin
+    res.nvr := nvr;
+    Make_Series_System(p,dim,nvr,tdx,deg,res.lead,res.cffs,res.mons);
+    return res;
+  end Make_Table_Vector;
 
 end Standard_Lseries_Polynomials;
