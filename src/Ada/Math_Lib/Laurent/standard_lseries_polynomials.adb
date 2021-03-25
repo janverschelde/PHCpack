@@ -1,6 +1,7 @@
 with text_io;                           use text_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Characters_and_Numbers;
 with Standard_Complex_Numbers;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Random_Vectors;
@@ -20,6 +21,48 @@ package body Standard_Lseries_Polynomials is
       Standard_Laurent_Series.Write(plead(k),pcffs(k).all);
     end loop;
   end Write;
+
+  procedure Write ( tab : in Table; s : in string := "p" ) is
+  begin
+    Write(tab.lead.all,tab.cffs,tab.mons.all,s);
+  end Write;
+
+  procedure Write ( tab : in Table_Vector; s : in string := "p" ) is
+  begin
+    for i in 1..tab.nbt loop
+      declare
+        stri : constant string := Characters_and_Numbers.Convert(i);
+      begin
+        Write(tab.lead(i).all,tab.cffs(i),tab.mons(i).all,s & stri);
+      end;
+    end loop;
+  end Write;
+
+  procedure Write ( tva : in Table_Vector_Array; s : in string := "p" ) is
+
+    ltv : Link_to_Table_Vector;
+
+  begin
+    for i in tva'range loop
+      ltv := tva(i); 
+      for j in 1..ltv.nbt loop
+        declare
+          stri : constant string := Characters_and_Numbers.Convert(i);
+          strj : constant string := Characters_and_Numbers.Convert(j);
+          tab : Table;
+        begin
+          tab.nvr := ltv.nvr;
+          tab.lead := ltv.lead(j);
+          tab.cffs := ltv.cffs(j);
+          tab.mons := ltv.mons(j);
+          tab.nbt := tab.lead'last;
+          Write(tab,s & stri & "," & strj);
+        end;
+      end loop;
+    end loop;
+  end Write;
+
+-- BASIC OPERATIONS :
 
   procedure Make_Random_Polynomial
               ( dim,nbr,deg,pwr,low,upp : in integer32;
@@ -52,6 +95,8 @@ package body Standard_Lseries_Polynomials is
     res.mons := new Standard_Integer_VecVecs.VecVec'(mons);
     return res;
   end Random_Table;
+
+-- EVALUATORS :
 
   procedure Eval ( deg,mlead : in integer32;
                    cff : in Standard_Complex_Vectors.Link_to_Vector;
@@ -337,5 +382,61 @@ package body Standard_Lseries_Polynomials is
     Make_Series_System(p,dim,nvr,tdx,deg,res.lead,res.cffs,res.mons);
     return res;
   end Make_Table_Vector;
+
+  function Make_Table_Vector_Array
+             ( jp : Jaco_Mat; tdx,deg : integer32 )
+             return Table_Vector_Array is
+
+    res : Table_Vector_Array(jp'range(1));
+    dim : constant integer32 := jp'length(2);
+    nbt,nvr : integer32;
+
+  begin
+    if tdx = 0
+     then nbt := dim;
+     else nbt := dim-1;
+    end if;
+    nvr := nbt;
+    for i in jp'range(1) loop
+      declare
+        tv : Table_Vector(nbt);
+      begin
+        tv.nvr := nvr;
+        if tdx = 0 then
+          for j in jp'range(2) loop
+            declare
+              tab : constant Table := Make_Table(jp(i,j),dim,nvr,tdx,deg);
+            begin
+              tv.lead(j) := new Standard_Integer_Vectors.Vector'(tab.lead.all);
+              tv.cffs(j) := tab.cffs;
+              tv.mons(j) := tab.mons;
+            end;
+          end loop;
+        else
+          for j in jp'first(2)..(tdx-1) loop
+            declare
+              tab : constant Table := Make_Table(jp(i,j),dim,nvr,tdx,deg);
+            begin
+              tv.lead(j) := new Standard_Integer_Vectors.Vector'(tab.lead.all);
+              tv.cffs(j) := tab.cffs;
+              tv.mons(j) := tab.mons;
+            end;
+          end loop;
+          for j in (tdx+1)..jp'last(2) loop
+            declare
+              tab : constant Table := Make_Table(jp(i,j),dim,nvr,tdx,deg);
+              k : constant integer32 := j-1;
+            begin
+              tv.lead(k) := new Standard_Integer_Vectors.Vector'(tab.lead.all);
+              tv.cffs(k) := tab.cffs;
+              tv.mons(k) := tab.mons;
+            end;
+          end loop;
+        end if;
+        res(i) := new Table_Vector'(tv);
+      end;
+    end loop;
+    return res;
+  end Make_Table_Vector_Array;
 
 end Standard_Lseries_Polynomials;

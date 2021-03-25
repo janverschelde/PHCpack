@@ -8,8 +8,10 @@ with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Symbol_Table_io;
 with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
+with Standard_Complex_Laurentials_io;   use Standard_Complex_Laurentials_io;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
+with Standard_Complex_Laur_JacoMats;    use Standard_Complex_Laur_JacoMats;
 with Standard_Laurent_Series;
 with Random_Laurent_Series;             use Random_Laurent_Series;
 with Test_Standard_Lseries_Matrices;
@@ -54,31 +56,34 @@ procedure ts_lserpol is
     Standard_Laurent_Series.Write(ye,yc);
   end Test;
 
-  procedure Test_Input is
+  procedure Set_Parameters
+              ( p : in Link_to_Laur_Sys;
+                neq,dim,tdx,deg : out integer32 ) is
 
   -- DESCRIPTION :
-  --   Prompts for a Laurent polynomial system and then constructs the data
-  --   to evaluate the system at a vector of Laurent series.
+  --   Given a Laurent system, sets the characteristic parameters.
 
-    p : Link_to_Laur_Sys;
-    neq,dim,tdx,deg : integer32 := 0;
+  -- ON RETURN :
+  --   neq      number of equations;
+  --   dim      number of variables;
+  --   tdx      index of the symbol t for the series;
+  --   deg      truncation degree of the series.
+
     ans : character;
 
   begin
-    new_line;
-    put_line("Reading a Laurent polynomial system ..."); get(p);
-    new_line;
-    put_line("-> your system :"); put(p.all);
-    new_line;
     neq := p'last;
     dim := integer32(Number_of_Unknowns(p(p'first)));
     put("Read "); put(neq,1); put(" polynomials in "); put(dim,1);
     put(" variables :"); Symbol_Table_io.Write; new_line;
-    if neq /= dim then
+    if neq = dim then
+      tdx := 0;
+    else
       tdx := tsymbol_Index;
       put("-> index of t : "); put(tdx,1); new_line;
     end if;
     if tdx = 0 then
+      deg := 0;
       new_line;
       put("Give the degree of the series : "); get(deg);
     else
@@ -91,6 +96,24 @@ procedure ts_lserpol is
         put("Give the degree of the series : "); get(deg);
       end if;
     end if;
+  end Set_Parameters;
+
+  procedure Test_Input is
+
+  -- DESCRIPTION :
+  --   Prompts for a Laurent polynomial system and then constructs the data
+  --   to evaluate the system at a vector of Laurent series.
+
+    p : Link_to_Laur_Sys;
+    neq,dim,tdx,deg : integer32 := 0;
+
+  begin
+    new_line;
+    put_line("Reading a Laurent polynomial system ..."); get(p);
+    new_line;
+    put_line("-> your system :"); put(p.all);
+    new_line;
+    Set_Parameters(p,neq,dim,tdx,deg);
     new_line;
     declare
       plead : Standard_Integer_VecVecs.VecVec(p'range);
@@ -109,6 +132,45 @@ procedure ts_lserpol is
     end;
   end Test_Input;
 
+  procedure Test_Jacobian is
+
+  -- DESCRIPTION :
+  --    Prompts for a Laurent polynomial and evaluates its Jacobian matrix.
+
+    p : Link_to_Laur_Sys;
+    neq,dim,tdx,deg,nvr : integer32 := 0;
+
+  begin
+    new_line;
+    put_line("Reading a Laurent polynomial system ..."); get(p);
+    new_line;
+    put_line("-> your system :"); put(p.all);
+    new_line;
+    Set_Parameters(p,neq,dim,tdx,deg);
+    if tdx = 0
+     then nvr := dim;
+     else nvr := dim-1;
+    end if;
+    new_line;
+    declare
+      tv : constant Table_Vector(neq)
+         := Make_Table_Vector(p.all,dim,nvr,tdx,deg);
+      jp : constant Jaco_Mat(1..neq,1..dim) := Create(p.all);
+      tva : constant Table_Vector_Array(1..neq)
+          := Make_Table_Vector_Array(jp,tdx,deg);
+    begin
+      put_line("The table representation :"); Write(tv);
+      put_line("The symbolic Jacobian matrix :");
+      for i in 1..neq loop
+        for j in 1..dim loop
+          put("J("); put(i,1); put(","); put(j,1); put_line(") :");
+          put(jp(i,j)); new_line;
+        end loop;
+      end loop;
+      put_line("The table representation of the Jacobian :"); Write(tva);
+    end;
+  end Test_Jacobian;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -119,19 +181,26 @@ procedure ts_lserpol is
 
   begin
     new_line;
-    put("Generate a random polynomial ? (y/n) ");
+    put("Test the Jacobian matrix ? (y/n) ");
     Ask_Yes_or_No(ans);
-    if ans /= 'y' then
-      Test_Input;
+    if ans = 'y' then
+      Test_Jacobian;
     else
       new_line;
-      put("Give the number of variables : "); get(dim);
-      put("Give the number of monomials : "); get(nbr);
-      put("Give the degree of the series : "); get(deg);
-      put("Give the largest power of the variables : "); get(pwr);
-      put("Give the lower bound on the leading exponents : "); get(low);
-      put("Give the upper bound on the leading exponents : "); get(upp);
-      Test(dim,nbr,deg,pwr,low,upp);
+      put("Generate a random polynomial ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans /= 'y' then
+        Test_Input;
+      else
+        new_line;
+        put("Give the number of variables : "); get(dim);
+        put("Give the number of monomials : "); get(nbr);
+        put("Give the degree of the series : "); get(deg);
+        put("Give the largest power of the variables : "); get(pwr);
+        put("Give the lower bound on the leading exponents : "); get(low);
+        put("Give the upper bound on the leading exponents : "); get(upp);
+        Test(dim,nbr,deg,pwr,low,upp);
+      end if;
     end if;
   end Main;
 

@@ -5,6 +5,7 @@ with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_JacoMats;    use Standard_Complex_Laur_JacoMats;
 
 package Standard_Lseries_Polynomials is
 
@@ -35,7 +36,7 @@ package Standard_Lseries_Polynomials is
   type Link_to_Table_Vector is access Table_Vector;
 
   type Table_Vector_Array is
-    array ( integer range <> ) of Link_to_Table_Vector;
+    array ( integer32 range <> ) of Link_to_Table_Vector;
 
 -- CONSTRUCTORS :
 
@@ -129,6 +130,19 @@ package Standard_Lseries_Polynomials is
   --   ylead    leading exponents of the result of the evaluation;
   --   ycffs    coefficient vectors of the evaluation result;
   --            allocations will be made as needed.
+
+-- OUTPUT :
+
+  procedure Write ( tab : in Table; s : in string := "p" );
+  procedure Write ( tab : in Table_Vector; s : in string := "p" );
+
+  -- DESCRIPTION :
+  --   Writes the table or table vector tab.
+
+  procedure Write ( tva : in Table_Vector_Array; s : in string := "p" );
+
+  -- DESCRIPTION :
+  --   Writes the table vector array.
 
 -- BASIC OPERATIONS :
 
@@ -301,5 +315,14 @@ package Standard_Lseries_Polynomials is
   --   lead    leading exponents of the Laurent series coefficients;
   --   cffs    coefficients in the Laurent series for each monomial;
   --   mons    exponents of the monomials.
+
+  function Make_Table_Vector_Array
+             ( jp : Jaco_Mat; tdx,deg : integer32 )
+             return Table_Vector_Array;
+
+  -- DESCRIPTION :
+  --   Returns an array of table vectors for the symbolic Jacobian matrix,
+  --   skipping the column with index tdx.
+  --   The degree of the series equals deg.
 
 end Standard_Lseries_Polynomials;
