@@ -17,5 +17,6 @@ test_standard_lseries_matrices    : tests matrices of Laurent series
 ts_laurmat                        : the main test on Laurent series matrices
 ------------------------------------------------------------------------------
 standard_lseries_polynomials      : Laurent series polynomials
-ts_lserpol                        : tests poly eval/diff at Laurent series
+test_standard_lseries_polynomials : tests on Laurent series polynomials
+ts_lserpol                        : main test on Laurent series polynomials
 ------------------------------------------------------------------------------
