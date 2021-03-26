@@ -192,6 +192,29 @@ package body Standard_Lseries_Polynomials is
     end loop;
   end Eval;
 
+  procedure Eval ( deg : in integer32; tab : in Table_Vector_Array;
+                   xlead : in Standard_Integer_Vectors.Vector;
+                   xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
+                Alead : in out Standard_Integer_Matrices.Matrix;
+                Acffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec ) is
+
+    ltv : Link_to_Table_Vector;
+    row : Standard_Complex_VecVecs.Link_to_VecVec;
+    cff : Standard_Complex_Vectors.Link_to_Vector;
+   
+
+  begin
+    for i in tab'range loop
+      ltv := tab(i); 
+      row := Acffs(i);
+      for j in 1..ltv.nbt loop
+        cff := row(j);
+        Eval(deg,ltv.lead(j).all,ltv.cffs(j),ltv.mons(j).all,
+             xlead,xcffs,Alead(i,j),cff.all);
+      end loop;
+    end loop;
+  end Eval;
+
   function tsymbol_index return integer32 is
 
     res : integer32 := 0;
@@ -330,6 +353,7 @@ package body Standard_Lseries_Polynomials is
               cfflocated(gap+k) := cfflocated(k);
             end loop;
             for k in 1..(gap-1) loop
+              exit when (k > deg);
               cfflocated(k) := Standard_Complex_Numbers.Create(0.0);
             end loop;
             cfflocated(0) := t.cf;
