@@ -3,7 +3,7 @@ with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 
-package body Standard_Laurent_Series is
+package body Double_Laurent_Series is
 
   procedure Write ( e : in integer32;
                     c : in Standard_Complex_Vectors.Vector ) is
@@ -216,4 +216,4 @@ package body Standard_Laurent_Series is
     end if;
   end Subtract;
 
-end Standard_Laurent_Series;
+end Double_Laurent_Series;

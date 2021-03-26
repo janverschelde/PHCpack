@@ -4,7 +4,7 @@ with Standard_Integer_Matrices;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecVecs;
 
-package Test_Standard_Lseries_Matrices is
+package Test_Double_Lseries_Matrices is
 
 -- DESCRIPTION :
 --   A matrix of Laurent series is a tuple of
@@ -12,7 +12,7 @@ package Test_Standard_Lseries_Matrices is
 --   2) a 3-dimensional vector of vector of vectors
 --   with the coefficients of the power series.
 --   The procedures in this package test the LU factorization
---   of a matrix of Laurent series.
+--   of a matrix of Laurent series, in double precision.
 
   procedure Allocate_Series_Coefficients
               ( dim,deg : in integer32;
@@ -253,4 +253,4 @@ package Test_Standard_Lseries_Matrices is
   -- DESCRIPTION :
   --   Prompts for the parameters of the tests and the runs tests.
 
-end Test_Standard_Lseries_Matrices;
+end Test_Double_Lseries_Matrices;

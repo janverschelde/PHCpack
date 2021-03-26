@@ -2,10 +2,11 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Vectors;
 
-package Standard_Laurent_Series is
+package Double_Laurent_Series is
 
 -- DESCRIPTION :
---   Defines operations on Laurent series with complex coefficients.
+--   Defines operations on Laurent series with complex coefficients,
+--   in double precision.
 --   A Laurent series is defined by a leading exponent and a coefficient
 --   vector, with a typical range from 0 to some degree d, d > 0.
 --   In this intermediate proof-of-concept package,
@@ -176,4 +177,4 @@ package Standard_Laurent_Series is
   --   ze      leading exponent of the difference x - y;
   --   zc      coefficient vector of the difference x - y.
 
-end Standard_Laurent_Series;
+end Double_Laurent_Series;

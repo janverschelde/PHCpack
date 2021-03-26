@@ -14,11 +14,11 @@ with Symbol_Table_io;
 with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
 with Standard_Complex_Laurentials_io;   use Standard_Complex_Laurentials_io;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
-with Standard_Laurent_Series;
+with Double_Laurent_Series;
 with Random_Laurent_Series;             use Random_Laurent_Series;
-with Test_Standard_Lseries_Matrices;
+with Test_Double_Lseries_Matrices;
 
-package body Test_Standard_Lseries_Polynomials is
+package body Test_Double_Lseries_Polynomials is
 
   procedure Test ( dim,nbr,deg,pwr,low,upp : in integer32 ) is
 
@@ -36,10 +36,10 @@ package body Test_Standard_Lseries_Polynomials is
     Write(plead,pcffs,pmons);
     Random_Vector(dim,deg,low,upp,xlead,xcffs);
     put_line("A random vector of Laurent series :");
-    Test_Standard_Lseries_Matrices.Write(xlead,xcffs,"x");
+    Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
     Eval(deg,plead,pcffs,pmons,xlead,xcffs,ye,yc);
     put_line("The result of the evaluation :");
-    Standard_Laurent_Series.Write(ye,yc);
+    Double_Laurent_Series.Write(ye,yc);
   end Test;
 
   procedure Set_Parameters
@@ -148,7 +148,7 @@ package body Test_Standard_Lseries_Polynomials is
     Random_Vector(dim,deg,low,upp,xlead,xcffs);
     put("Leading exponents of a random vector :"); put(xlead,1); new_line;
     put("A "); put(dim,1); put_line("-vector of Laurent series :");
-    Test_Standard_Lseries_Matrices.Write(xlead,xcffs,"x");
+    Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
     for k in 1..dim loop
       cff := xcffs(k);
       x0cff(k) := cff(0);
@@ -276,4 +276,4 @@ package body Test_Standard_Lseries_Polynomials is
     end if;
   end Main;
 
-end Test_Standard_Lseries_Polynomials;
+end Test_Double_Lseries_Polynomials;

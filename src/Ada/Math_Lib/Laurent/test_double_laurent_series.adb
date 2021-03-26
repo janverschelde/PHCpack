@@ -2,9 +2,9 @@ with text_io;                           use text_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Random_Vectors;
-with Standard_Laurent_Series;           use Standard_Laurent_Series;
+with Double_Laurent_Series;             use Double_Laurent_Series;
 
-package body Test_Standard_Laurent_Series is
+package body Test_Double_Laurent_Series is
 
   procedure Test_Multiply_Inverse_Divide ( deg : in integer32 ) is
 
@@ -76,4 +76,4 @@ package body Test_Standard_Laurent_Series is
     Test_Add_and_Subtract(d);
   end Main;
 
-end Test_Standard_Laurent_Series;
+end Test_Double_Laurent_Series;

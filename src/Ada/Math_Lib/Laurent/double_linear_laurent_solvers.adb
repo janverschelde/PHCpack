@@ -1,9 +1,9 @@
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
-with Standard_Laurent_Series;
+with Double_Laurent_Series;
 
-package body Standard_Linear_Laurent_Solvers is
+package body Double_Linear_Laurent_Solvers is
 
   procedure Matrix_Vector_Product
               ( d : in integer32;
@@ -23,13 +23,13 @@ package body Standard_Linear_Laurent_Solvers is
         cAi : constant Standard_Complex_VecVecs.Link_to_VecVec := cA(i);
         cyi : constant Standard_Complex_Vectors.Link_to_Vector := cy(i);
       begin -- initialize with first product instead of with zero
-        Standard_Laurent_Series.Multiply
+        Double_Laurent_Series.Multiply
           (d,eA(i,eA'first(2)),ex(ex'first),cAi(cAi'first).all,
            cx(cx'first).all,ey(i),cyi.all);
         for j in eA'first(2)+1..eA'last(2) loop
-          Standard_Laurent_Series.Multiply
+          Double_Laurent_Series.Multiply
             (d,eA(i,j),ex(j),cAi(j).all,cx(j).all,ze,zc);
-          Standard_Laurent_Series.Add(d,ey(i),ze,cyi.all,zc,ewrk,cwrk);
+          Double_Laurent_Series.Add(d,ey(i),ze,cyi.all,zc,ewrk,cwrk);
           ey(i) := ewrk;
           for k in 0..d loop
             cyi(k) := cwrk(k);
@@ -63,18 +63,18 @@ package body Standard_Linear_Laurent_Solvers is
           cxi(k) := cbi(k);
         end loop;
         for j in ex'first..(i-1) loop
-          Standard_Laurent_Series.Multiply
+          Double_Laurent_Series.Multiply
             (d,eL(i,j),ex(j),cLi(j).all,cx(j).all,ze,zc);
          -- put("L("); put(i,1); put(","); put(j,1);
          -- put(")*x("); put(j,1); put_line(") :");
-         -- Standard_Laurent_Series.Write(ze,zc);
-          Standard_Laurent_Series.Subtract(d,ex(i),ze,cxi.all,zc,ewrk,cwrk);
+         -- Double_Laurent_Series.Write(ze,zc);
+          Double_Laurent_Series.Subtract(d,ex(i),ze,cxi.all,zc,ewrk,cwrk);
           ex(i) := ewrk;
           for k in 0..d loop
             cxi(k) := cwrk(k);
           end loop;
          -- put("x("); put(i,1); put_line(") after the update :");
-         -- Standard_Laurent_Series.Write(ex(i),cxi.all);
+         -- Double_Laurent_Series.Write(ex(i),cxi.all);
         end loop;
       end;
     end loop;
@@ -96,7 +96,7 @@ package body Standard_Linear_Laurent_Solvers is
 
   begin
     cbi := cb(cb'last); cxi := cx(cx'last); cUi := cU(cU'last);
-    Standard_Laurent_Series.Divide
+    Double_Laurent_Series.Divide
       (d,eb(eb'last),eU(eU'last(1),eU'last(2)),cbi.all,cUi(cUi'last).all,
        ex(ex'last),cxi.all,cwrk);
     for i in reverse eb'first..eb'last-1 loop
@@ -106,20 +106,20 @@ package body Standard_Linear_Laurent_Solvers is
         cxi(k) := cbi(k);
       end loop;
       for j in (i+1)..ex'last loop
-        Standard_Laurent_Series.Multiply
+        Double_Laurent_Series.Multiply
           (d,eU(i,j),ex(j),cUi(j).all,cx(j).all,ze,zc);
        -- put("U("); put(i,1); put(","); put(j,1);
        -- put(")*x("); put(j,1); put_line(") :");
-       -- Standard_Laurent_Series.Write(ze,zc);
-        Standard_Laurent_Series.Subtract(d,ex(i),ze,cxi.all,zc,ewrk,cwrk);
+       -- Double_Laurent_Series.Write(ze,zc);
+        Double_Laurent_Series.Subtract(d,ex(i),ze,cxi.all,zc,ewrk,cwrk);
         ex(i) := ewrk;
         for k in 0..d loop
           cxi(k) := cwrk(k);
         end loop;
        -- put("x("); put(i,1); put_line(") after the update :");
-       -- Standard_Laurent_Series.Write(ex(i),cxi.all);
+       -- Double_Laurent_Series.Write(ex(i),cxi.all);
       end loop;
-      Standard_Laurent_Series.Divide
+      Double_Laurent_Series.Divide
         (d,ex(i),eU(i,i),cxi.all,cUi(i).all,ze,zc,cwrk);
       ex(i) := ze;
       for k in 0..d loop
@@ -209,7 +209,7 @@ package body Standard_Linear_Laurent_Solvers is
       for i in (j+1)..nrows loop
         irow := Acffs(i); icff := irow(j); -- icff is A(i,j)
         jrow := Acffs(j); jcff := jrow(j); -- jcff is A(j,j)
-        Standard_Laurent_Series.Divide
+        Double_Laurent_Series.Divide
           (deg,Alead(i,j),Alead(j,j),icff.all,jcff.all,ze,zc,cwrk);
         Alead(i,j) := ze;    -- leading exponent of A(i,j)/A(j,j)
         for k in 0..deg loop -- zc has coefficients of A(i,j)/A(j,j)
@@ -222,7 +222,7 @@ package body Standard_Linear_Laurent_Solvers is
         for k in (j+1)..nrows loop -- A(i,k) := A(i,k) - A(i,j)*A(j,k)
           irow := Acffs(i); icff := irow(j); -- icff is A(i,j)
           jrow := Acffs(j); jcff := jrow(k); -- jcff is A(j,k)
-          Standard_Laurent_Series.Multiply
+          Double_Laurent_Series.Multiply
             (deg,Alead(i,j),Alead(j,k),icff.all,jcff.all,eprd,cprd);
          -- eprd is the leading exponent of A(i,j)*A(j,k)
          -- cprd has the coefficients of A(i,j)*A(j,k)
@@ -231,7 +231,7 @@ package body Standard_Linear_Laurent_Solvers is
           for L in 0..deg loop
             cwrk(L) := icff(L);
           end loop;
-          Standard_Laurent_Series.Subtract(deg,ewrk,eprd,cwrk,cprd,ze,zc);
+          Double_Laurent_Series.Subtract(deg,ewrk,eprd,cwrk,cprd,ze,zc);
           Alead(i,k) := ze;
           for L in 0..deg loop
             icff(L) := zc(L);
@@ -241,4 +241,4 @@ package body Standard_Linear_Laurent_Solvers is
     end loop;
   end LU_Factorization;
 
-end Standard_Linear_Laurent_Solvers;
+end Double_Linear_Laurent_Solvers;

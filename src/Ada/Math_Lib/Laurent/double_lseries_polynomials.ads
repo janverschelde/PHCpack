@@ -1,13 +1,15 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
+with Standard_Integer_Matrices;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with Standard_Complex_VecVecVecs;
 with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_JacoMats;    use Standard_Complex_Laur_JacoMats;
 
-package Standard_Lseries_Polynomials is
+package Double_Lseries_Polynomials is
 
 -- DESCRIPTION :
 --   A Laurent series polynomial is a polynomial in several variables
@@ -87,6 +89,15 @@ package Standard_Lseries_Polynomials is
   --           if tdx is zero, then dim must equal nvr,
   --           otherwise nvr = dim - 1.
 
+  function Make_Table_Vector_Array
+             ( jp : Jaco_Mat; tdx,deg : integer32 )
+             return Table_Vector_Array;
+
+  -- DESCRIPTION :
+  --   Returns an array of table vectors for the symbolic Jacobian matrix,
+  --   skipping the column with index tdx.
+  --   The degree of the series equals deg.
+
 -- EVALUATORS :
 
   procedure Eval ( deg : in integer32; tab : in Table;
@@ -130,6 +141,27 @@ package Standard_Lseries_Polynomials is
   --   ylead    leading exponents of the result of the evaluation;
   --   ycffs    coefficient vectors of the evaluation result;
   --            allocations will be made as needed.
+
+  procedure Eval ( deg : in integer32; tab : in Table_Vector_Array;
+                   xlead : in Standard_Integer_Vectors.Vector;
+                   xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
+                   Alead : in out Standard_Integer_Matrices.Matrix;
+                   Acffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec );
+
+  -- DESCRIPTION :
+  --   Evaluates a Laurent series Jacobian matrix at a Laurent series.
+
+  -- ON ENTRY :
+  --   deg      only coefficients in the range 0..deg are considered;
+  --   tab      data for a Laurent series Jacobian matrix;
+  --   xlead    leading exponents of the argument for the evaluation;
+  --   xcffs    coefficient vectors of the argument for the evaluation;
+  --   Acffs    allocated space for all rows and columns of Laurent
+  --            series of degree deg for the evaluated matrix.
+
+  -- ON RETURN :
+  --   Alead    leading exponents of the evaluated Jacobian matrix;
+  --   Acffs    Jacobian matrix evaluated at (xlead, xcffs).
 
 -- OUTPUT :
 
@@ -316,13 +348,4 @@ package Standard_Lseries_Polynomials is
   --   cffs    coefficients in the Laurent series for each monomial;
   --   mons    exponents of the monomials.
 
-  function Make_Table_Vector_Array
-             ( jp : Jaco_Mat; tdx,deg : integer32 )
-             return Table_Vector_Array;
-
-  -- DESCRIPTION :
-  --   Returns an array of table vectors for the symbolic Jacobian matrix,
-  --   skipping the column with index tdx.
-  --   The degree of the series equals deg.
-
-end Standard_Lseries_Polynomials;
+end Double_Lseries_Polynomials;

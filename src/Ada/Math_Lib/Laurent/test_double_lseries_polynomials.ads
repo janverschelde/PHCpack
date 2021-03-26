@@ -3,13 +3,13 @@ with Standard_Integer_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_JacoMats;    use Standard_Complex_Laur_JacoMats;
-with Standard_Lseries_Polynomials;      use Standard_Lseries_Polynomials;
+with Double_Lseries_Polynomials;        use Double_Lseries_Polynomials;
 
-package Test_Standard_Lseries_Polynomials is
+package Test_Double_Lseries_Polynomials is
 
 -- DESCRIPTION :
 --   Tests the evaluation and differentiation of a polynomial
---   at a sequence of Laurent series.
+--   at a sequence of Laurent series, in double precision.
 
   procedure Test ( dim,nbr,deg,pwr,low,upp : in integer32 );
 
@@ -82,4 +82,4 @@ package Test_Standard_Lseries_Polynomials is
   -- DESCRIPTION :
   --   Prompts for the parameters of the tests and then runs tests.
 
-end Test_Standard_Lseries_Polynomials;
+end Test_Double_Lseries_Polynomials;

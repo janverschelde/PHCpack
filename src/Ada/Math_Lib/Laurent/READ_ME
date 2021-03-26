@@ -7,16 +7,16 @@ Laurent series allow for negative exponents and are arithmetically closed.
 ------------------------------------------------------------------------------
 file name                         : short description
 ------------------------------------------------------------------------------
-standard_laurent_series           : defines operations on Laurent series
-test_standard_laurent_series      : basic tests on truncated Laurent series
+double_laurent_series             : defines operations on Laurent series
+test_double_laurent_series        : basic tests on truncated Laurent series
 ts_pslaur                         : call the main test on Laurent series
 ------------------------------------------------------------------------------
 random_laurent_series             : random vectors/matrices of Laurent series
-standard_linear_laurent_solvers   : solvers of linear Laurent series systems
-test_standard_lseries_matrices    : tests matrices of Laurent series
+double_linear_laurent_solvers     : solvers of linear Laurent series systems
+test_double_lseries_matrices      : tests matrices of Laurent series
 ts_laurmat                        : the main test on Laurent series matrices
 ------------------------------------------------------------------------------
-standard_lseries_polynomials      : Laurent series polynomials
-test_standard_lseries_polynomials : tests on Laurent series polynomials
+double_lseries_polynomials        : Laurent series polynomials
+test_double_lseries_polynomials   : tests on Laurent series polynomials
 ts_lserpol                        : main test on Laurent series polynomials
 ------------------------------------------------------------------------------

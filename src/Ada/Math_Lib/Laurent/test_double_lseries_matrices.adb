@@ -9,11 +9,11 @@ with Standard_Integer_Matrices_io;      use Standard_Integer_Matrices_io;
 with Standard_Random_Numbers;
 with Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
-with Standard_Laurent_Series;
+with Double_Laurent_Series;
 with Random_Laurent_Series;             use Random_Laurent_Series;
-with Standard_Linear_Laurent_Solvers;   use Standard_Linear_Laurent_Solvers;
+with Double_Linear_Laurent_Solvers;     use Double_Linear_Laurent_Solvers;
 
-package body Test_Standard_Lseries_Matrices is
+package body Test_Double_Lseries_Matrices is
 
   procedure Allocate_Series_Coefficients
               ( dim,deg : in integer32;
@@ -42,7 +42,7 @@ package body Test_Standard_Lseries_Matrices is
     for i in e'range(1) loop
       for j in e'range(2) loop
         put(s & "("); put(i,1); put(","); put(j,1); put_line(") :");
-        Standard_Laurent_Series.Write(e(i,j),c(i)(j).all);
+        Double_Laurent_Series.Write(e(i,j),c(i)(j).all);
       end loop;
     end loop;
   end Write;
@@ -53,7 +53,7 @@ package body Test_Standard_Lseries_Matrices is
   begin
     for i in e'range loop
       put(s & "("); put(i,1); put_line(") :");
-      Standard_Laurent_Series.Write(e(i),c(i).all);
+      Double_Laurent_Series.Write(e(i),c(i).all);
     end loop;
   end Write;
 
@@ -93,11 +93,11 @@ package body Test_Standard_Lseries_Matrices is
         for k in 1..ncols loop
           Acff := Arow(k);                   -- Acff is A(i,k)
           Brow := Bcffs(k); Bcff := Brow(j); -- Bcff is B(k,j)
-          Standard_Laurent_Series.Multiply
+          Double_Laurent_Series.Multiply
             (deg,Alead(i,k),Blead(k,j),Acff.all,Bcff.all,eprd,cprd);
          -- eprd is the leading exponent of A(i,k)*B(k,j)
          -- cprd has the coefficients of A(i,k)*B(k,j)
-          Standard_Laurent_Series.Add(deg,ewrk,eprd,cwrk,cprd,ze,zc);
+          Double_Laurent_Series.Add(deg,ewrk,eprd,cwrk,cprd,ze,zc);
           ewrk := ze;          -- leading exponent of accumulator 
           for L in 0..deg loop -- copy coefficients of accumulator
             cwrk(L) := zc(L);
@@ -132,10 +132,10 @@ package body Test_Standard_Lseries_Matrices is
       for j in Alead'range(2) loop
         Acff := Arow(j);
         Bcff := Brow(j);
-        Standard_Laurent_Series.Subtract
+        Double_Laurent_Series.Subtract
           (deg,Alead(i,j),Blead(i,j),Acff.all,Bcff.all,ze,zc);
         put("D("); put(i,1); put(","); put(j,1); put_line(") :");
-        Standard_Laurent_Series.Write(ze,zc);
+        Double_Laurent_Series.Write(ze,zc);
         for k in 0..deg loop
           nrm := nrm + Standard_Complex_Numbers.AbsVal(zc(k));
         end loop;
@@ -193,11 +193,11 @@ package body Test_Standard_Lseries_Matrices is
         for k in 1..(i-1) loop        -- U(i,j) := U(i,j) - L(i,k)*U(k,j)
           Lrow := Lcffs(i); Lcff := Lrow(k); -- Lcff is L(i,k)
           Urow := Ucffs(k); Ucff := Urow(j); -- Ucff is U(k,j)
-          Standard_Laurent_Series.Multiply
+          Double_Laurent_Series.Multiply
             (deg,Llead(i,k),Ulead(k,j),Lcff.all,Ucff.all,eprd,cprd);
          -- eprd is the leading exponent of L(i,k)*U(k,j)
          -- cprd has the coefficients of L(i,k)*U(k,j)
-          Standard_Laurent_Series.Subtract(deg,ewrk,eprd,cwrk,cprd,ze,zc);
+          Double_Laurent_Series.Subtract(deg,ewrk,eprd,cwrk,cprd,ze,zc);
           ewrk := ze;          -- leading exponent of U(i,j) - L(i,k)*U(k,j)
           for L in 0..deg loop -- copy coefficients of U(i,j) - L(i,k)*U(k,j)
             cwrk(L) := zc(L);
@@ -218,11 +218,11 @@ package body Test_Standard_Lseries_Matrices is
         for k in 1..(j-1) loop -- L(i,j) := L(i,j) - L(i,k)*U(k,j)
           Lrow := Lcffs(i); Lcff := Lrow(k); -- Lcff is L(i,k)
           Urow := Ucffs(k); Ucff := Urow(j); -- Ucff is U(k,j)
-          Standard_Laurent_Series.Multiply
+          Double_Laurent_Series.Multiply
             (deg,Llead(i,k),Ulead(k,j),Lcff.all,Ucff.all,eprd,cprd);
          -- eprd is the leading exponent of L(i,k)*U(k,j)
          -- cprd has the coefficients of L(i,k)*U(k,j)
-          Standard_Laurent_Series.Subtract(deg,ewrk,eprd,cwrk,cprd,ze,zc);
+          Double_Laurent_Series.Subtract(deg,ewrk,eprd,cwrk,cprd,ze,zc);
           ewrk := ze;          -- leading exponent of L(i,j) - L(i,k)*U(k,j)
           for L in 0..deg loop -- copy coefficients of L(i,j) - L(i,k)*U(k,j)
             cwrk(L) := zc(L);
@@ -234,7 +234,7 @@ package body Test_Standard_Lseries_Matrices is
           Lcff(k) := cwrk(k);
         end loop;
         Urow := Ucffs(j); Ucff := Urow(j); -- Ucff is U(j,j) 
-        Standard_Laurent_Series.Divide
+        Double_Laurent_Series.Divide
           (deg,Llead(i,j),Ulead(j,j),Lcff.all,Ucff.all,ze,zc,cwrk);
         Llead(i,j) := ze;    -- leading exponent of L(i,j)/U(j,j)
         for k in 0..deg loop -- copy coefficients of L(i,j)/U(j,j)
@@ -569,4 +569,4 @@ package body Test_Standard_Lseries_Matrices is
     end if;
   end Main;
 
-end Test_Standard_Lseries_Matrices;
+end Test_Double_Lseries_Matrices;

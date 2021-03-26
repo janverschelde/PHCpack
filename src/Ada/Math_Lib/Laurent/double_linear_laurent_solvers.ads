@@ -4,11 +4,12 @@ with Standard_Integer_Matrices;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecVecs;
 
-package Standard_Linear_Laurent_Solvers is
+package Double_Linear_Laurent_Solvers is
 
 -- DESCRIPTION :
 --   Linear systems defined by coefficient matrices and right hand side
 --   vectors of Laurent series can be solved by an LU factorization.
+--   All computations happen in double precision.
 
   procedure Matrix_Vector_Product
               ( d : in integer32;
@@ -152,4 +153,4 @@ package Standard_Linear_Laurent_Solvers is
   --   Acffs    the coefficients of the factors L and U;
   --   pivots   are the pivots used.
 
-end Standard_Linear_Laurent_Solvers;
+end Double_Linear_Laurent_Solvers;

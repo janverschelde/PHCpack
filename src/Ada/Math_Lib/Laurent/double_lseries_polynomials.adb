@@ -6,10 +6,10 @@ with Standard_Complex_Numbers;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Random_Vectors;
 with Symbol_Table;
-with Standard_Laurent_Series;
+with Double_Laurent_Series;
 with Random_Laurent_Series;             use Random_Laurent_Series;
 
-package body Standard_Lseries_Polynomials is
+package body Double_Lseries_Polynomials is
 
   procedure Write ( plead : in Standard_Integer_Vectors.Vector;
                     pcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
@@ -18,7 +18,7 @@ package body Standard_Lseries_Polynomials is
   begin
     for k in plead'range loop
       put(s & "("); put(k,1); put(") :"); put(pmons(k)); new_line;
-      Standard_Laurent_Series.Write(plead(k),pcffs(k).all);
+      Double_Laurent_Series.Write(plead(k),pcffs(k).all);
     end loop;
   end Write;
 
@@ -118,7 +118,7 @@ package body Standard_Lseries_Polynomials is
       if mon(i) > 0 then
         ye := ye + xlead(i)*mon(i);
         for j in 1..mon(i) loop
-          Standard_Laurent_Series.Multiply
+          Double_Laurent_Series.Multiply
             (deg,ye,xlead(i),yc,xcffs(i).all,ze,zc);
           ye := ze;
           for k in 0..deg loop
@@ -145,7 +145,7 @@ package body Standard_Lseries_Polynomials is
     Eval(deg,plead(1),pcffs(1),pmons(1),xlead,xcffs,ye,yc);
     for i in 2..plead'last loop
       Eval(deg,plead(i),pcffs(i),pmons(i),xlead,xcffs,ze,zc);
-      Standard_Laurent_Series.Add(deg,ye,ze,yc,zc,ewrk,cwrk);
+      Double_Laurent_Series.Add(deg,ye,ze,yc,zc,ewrk,cwrk);
       ye := ewrk;
       for k in 0..deg loop
         yc(k) := cwrk(k);
@@ -463,4 +463,4 @@ package body Standard_Lseries_Polynomials is
     return res;
   end Make_Table_Vector_Array;
 
-end Standard_Lseries_Polynomials;
+end Double_Lseries_Polynomials;
