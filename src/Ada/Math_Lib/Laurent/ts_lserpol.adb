@@ -2,10 +2,17 @@ with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Standard_Integer_Vectors;
+with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Integer_VecVecs;
+with Standard_Integer_Matrices;
 with Standard_Complex_Vectors;
+with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
+with Standard_Complex_Matrices;
+with Standard_Complex_VecVecVecs;
 with Symbol_Table_io;
 with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
 with Standard_Complex_Laurentials_io;   use Standard_Complex_Laurentials_io;
@@ -132,6 +139,129 @@ procedure ts_lserpol is
     end;
   end Test_Input;
 
+  procedure Chop ( tdx : in integer32;
+                   xlead : in Standard_Integer_Vectors.Vector;
+                   xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
+                   ylead : out Standard_Integer_Vectors.Vector;
+                   ycffs : in Standard_Complex_VecVecs.Link_to_VecVec ) is
+
+  -- DESCRIPTION :
+  --   Copies all data from (xlead, xcffs) to (ylead, ycffs),
+  --   except the data at the nonzero index tdx.
+ 
+  -- REQUIRED :
+  --   The range of ylead and ycffs should be one less than xlead and ycffs.
+
+  begin
+    for k in 1..(tdx-1) loop
+      ylead(k) := xlead(k);
+      ycffs(k) := xcffs(k);
+    end loop;
+    for k in (tdx+1)..xlead'last loop
+      ylead(k-1) := xlead(k);
+      ycffs(k-1) := xcffs(k);
+    end loop;
+  end Chop;
+
+  procedure Test_Jacobian_Evaluation
+              ( dim,nvr,tdx,deg : integer32; jp : in Jaco_Mat;
+                tva : in Table_Vector_Array ) is
+
+  -- DESCRIPTION :
+  --   Tests the evaluation of the Jacobian matrix
+  --   at a vector of a random series.
+
+  -- ON ENTRY :
+  --   dim      original number of variables, including t;
+  --   nvr      number of variables, not including t;
+  --   deg      degree of the power series;
+  --   jp       symbolic form of the Jacobian matrix;
+  --   tva      table representation of the Jacobian.    
+
+    xlead : Standard_Integer_Vectors.Vector(1..dim);
+    ylead : Standard_Integer_Vectors.Vector(1..nvr);
+    xcffs : Standard_Complex_VecVecs.Link_to_VecVec;
+    ycff : Standard_Complex_VecVecs.VecVec(1..nvr);
+    ycffs : constant Standard_Complex_VecVecs.Link_to_VecVec
+          := new Standard_Complex_VecVecs.VecVec'(ycff);
+    cff : Standard_Complex_Vectors.Link_to_Vector;
+    x0cff : Standard_Complex_Vectors.Vector(1..dim);
+    low,upp : constant integer32 := 0;
+    evamat : Standard_Complex_Matrices.Matrix(jp'range(1),jp'range(2));
+    Alead : Standard_Integer_Matrices.Matrix(jp'range(1),1..nvr);
+    Acffs : Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+    neq : constant integer32 := jp'last(1);
+    row : Standard_Complex_VecVecs.Link_to_VecVec;
+    cffrow : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    new_line;
+   -- put("Give the lower bound on the leading exponents : "); get(low);
+   -- put("Give the upper bound on the leading exponents : "); get(upp);
+    Random_Vector(dim,deg,low,upp,xlead,xcffs);
+    put("Leading exponents of a random vector :"); put(xlead,1); new_line;
+    put("A "); put(dim,1); put_line("-vector of Laurent series :");
+    Test_Standard_Lseries_Matrices.Write(xlead,xcffs,"x");
+    for k in 1..dim loop
+      cff := xcffs(k);
+      x0cff(k) := cff(0);
+    end loop;
+    if tdx /= 0 then -- set value for t at one
+      x0cff(tdx) := Standard_Complex_Numbers.Create(1.0);
+      for i in 1..dim loop
+        cff := xcffs(i);        -- make the series constant
+        for k in 1..deg loop
+          cff(k) := Standard_Complex_Numbers.Create(0.0);
+        end loop; 
+      end loop;
+    end if;
+    put_line("The leading coefficients :"); put_line(x0cff);
+    evamat := Eval(jp,x0cff); 
+    Standard_Complex_VecVecVecs.Allocate(Acffs,1,neq,1,nvr,0,deg);
+    if tdx = 0 then
+      Eval(deg,tva,xlead,xcffs,Alead,Acffs);
+    else
+      Chop(tdx,xlead,xcffs,ylead,ycffs);
+      Eval(deg,tva,ylead,ycffs,Alead,Acffs);
+    end if;
+    if tdx = 0 then
+      for i in evamat'range(1) loop
+        row := Acffs(i);
+        for j in evamat'range(2) loop
+          cffrow := row(j);
+          put("J("); put(i,1); put(","); put(j,1); put(")    : ");
+          put(evamat(i,j)); new_line;
+          put("A("); put(i,1); put(","); put(j,1); put(")(0) : ");
+          put(cffrow(0)); new_line;
+        end loop;
+      end loop;
+    else
+      for i in evamat'range(1) loop -- recall that t equals one 
+        row := Acffs(i);
+        for j in 1..(tdx-1) loop
+          cffrow := row(j);
+          put("J("); put(i,1); put(","); put(j,1); put(")    : ");
+          put(evamat(i,j)); new_line;
+          for k in 1..deg loop
+            cffrow(0) := cffrow(0) + cffrow(k);
+          end loop;
+          put("A("); put(i,1); put(","); put(j,1); put(")(0) : ");
+          put(cffrow(0)); new_line;
+        end loop;
+        for j in (tdx+1)..evamat'last(2) loop
+          cffrow := row(j-1);
+          put("J("); put(i,1); put(","); put(j,1); put(")    : ");
+          put(evamat(i,j)); new_line;
+          for k in 1..deg loop
+            cffrow(0) := cffrow(0) + cffrow(k);
+          end loop;
+          put("A("); put(i,1); put(","); put(j,1); put(")(0) : ");
+          put(cffrow(0)); new_line;
+        end loop;
+      end loop;
+    end if;
+  end Test_Jacobian_Evaluation;
+
   procedure Test_Jacobian is
 
   -- DESCRIPTION :
@@ -168,6 +298,7 @@ procedure ts_lserpol is
         end loop;
       end loop;
       put_line("The table representation of the Jacobian :"); Write(tva);
+      Test_Jacobian_Evaluation(dim,nvr,tdx,deg,jp,tva);
     end;
   end Test_Jacobian;
 

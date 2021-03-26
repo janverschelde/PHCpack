@@ -3,6 +3,7 @@ Thu 25 Mar 2021 : to standard_lseries_polynomials, added Table, Table_Vector,
   To standard_lseries_polynomials, added the construction of the table
   representations for the Jacobian matrix, tested by ts_lserpol.
   Fixed index error in standard_lseries_polynomials.adb.
+  Tested evaluation of Jacobian in ts_lserpol.
 
 Wed 24 Mar 2021 : added a proposed degree calculation to ts_lserpol.
   Improved in standard_lseries_polynomials the making of a series polynomial 
