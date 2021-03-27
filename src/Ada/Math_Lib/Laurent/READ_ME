@@ -20,3 +20,5 @@ double_lseries_polynomials        : Laurent series polynomials
 test_double_lseries_polynomials   : tests on Laurent series polynomials
 ts_lserpol                        : main test on Laurent series polynomials
 ------------------------------------------------------------------------------
+ts_lsernew                        : tests Newton on Laurent series polynomials
+------------------------------------------------------------------------------

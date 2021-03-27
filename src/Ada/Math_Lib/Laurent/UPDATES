@@ -1,6 +1,7 @@
 Fri 26 Mar 2021 : new test_standard_lseries_polynomials with the tests
   taken from ts_lserpol.  Replace 'standard' by 'double' in the names
   of all packages in this folder.  This changed all ts_ files as well.
+  The Newton step in ts_lsernew works in the regular case.
 
 Thu 25 Mar 2021 : to standard_lseries_polynomials, added Table, Table_Vector,
   and Table_Vector_Array data types with wrapper functions.
