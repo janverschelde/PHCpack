@@ -936,6 +936,10 @@ ts_lserpol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_lserpol.adb \
               -o $(BIN)/ts_lserpol
 
+ts_lsernew:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_lsernew.adb \
+              -o $(BIN)/ts_lsernew
+
 # Test programs for the Math_Lib/AD library :
 
 ts_monom:
