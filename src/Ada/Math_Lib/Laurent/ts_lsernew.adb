@@ -12,6 +12,7 @@ with Standard_Integer_Matrices;
 with Standard_Complex_VecVecVecs;
 with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Laur_JacoMats;    use Standard_Complex_Laur_JacoMats;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Standard_System_and_Solutions_io;
@@ -228,7 +229,7 @@ procedure ts_lsernew is
     end loop;
   end Test_Regular_Newton;
 
-  procedure Main is
+  procedure Test_Isolated_Start is
 
   -- DESCRIPTION :
   --   Prompts for a system with start solutions and a degree of t.
@@ -263,6 +264,51 @@ procedure ts_lsernew is
         put(" != "); put(nvr,1); put_line(".");
       end if;
     end if;
+  end Test_Isolated_Start;
+
+  procedure Test_Series_Start is
+
+  -- DESCRIPTION :
+  --   Prompts for a system, a series, and a degree of t.
+
+    lp,lsol : Link_to_Laur_Sys;
+    neq,nvr,dim,deg : integer32 := 0;
+
+  begin
+    new_line;
+    put_line("Reading a Laurent polynomial system ...");
+    get(lp);
+    neq := lp'last;
+    nvr := integer32(Number_of_Unknowns(lp(lp'first)));
+    new_line;
+    put("Read "); put(neq,1); put(" polynomials in ");
+    put(nvr,1); put_line(" variables ...");
+    new_line;
+    put_line("Reading initial terms of a series ...");
+    get(lsol);
+    dim := lsol'last; 
+    new_line;
+    put("Read "); put(dim,1); put_line(" polynomials ...");
+    deg := Degree(lsol(lsol'first));
+    put("The degree of the first polynomial : "); put(deg,1); new_line;
+  end Test_Series_Start;
+ 
+  procedure Main is
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("Testing Laurent series expansions ...");
+    put_line("  1. start at a system with isolated solutions; or");
+    put_line("  2. give some leading terms of a power series.");
+    put("Type 1 or 2 to select a test : "); 
+    Ask_Alternative(ans,"12");
+    case ans is
+      when '1' => Test_Isolated_Start;
+      when '2' => Test_Series_Start;
+      when others => null;
+    end case;
   end Main;
 
 begin

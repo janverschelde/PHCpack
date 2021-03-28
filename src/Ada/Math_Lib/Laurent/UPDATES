@@ -1,3 +1,6 @@
+Sat 27 Mar 2021 : to ts_lsernew, added new test procedure to start Newton
+  at some initial terms of a power series.
+
 Fri 26 Mar 2021 : new test_standard_lseries_polynomials with the tests
   taken from ts_lserpol.  Replace 'standard' by 'double' in the names
   of all packages in this folder.  This changed all ts_ files as well.
