@@ -10,6 +10,7 @@ with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Integer_Matrices;
 with Standard_Complex_VecVecVecs;
+with Symbol_Table;
 with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
@@ -99,6 +100,43 @@ procedure ts_lsernew is
     cffs := new Standard_Complex_VecVecs.VecVec'(xcffs);
   end Make_Series;
 
+  procedure Make_Series
+              ( sol : in Laur_Sys; deg : in integer32;
+                lead : out Standard_Integer_Vectors.Vector;
+                cffs : out Standard_Complex_VecVecs.Link_to_VecVec ) is
+
+  -- DESCRIPTION :
+  --   Returns a regular power series of degree deg,
+  --   with as leading terms the coordinates in sol.
+  --   Allocates all space for cffs.
+
+  -- REQUIRED : 
+  --   lead'range = sol'range.
+
+    xcffs : Standard_Complex_VecVecs.VecVec(sol'range);
+    dg : constant Standard_Integer_Vectors.Vector(1..1) := (1..1 => 0);
+    ldg : Standard_Complex_Laurentials.Degrees
+        := new Standard_Integer_Vectors.Vector'(dg);
+
+  begin
+    lead := (sol'range => 0);
+    for i in sol'range loop
+      put("Number of variables : ");
+      put(integer32(Number_of_Unknowns(sol(i))),1); new_line;
+      declare
+        cff : Standard_Complex_Vectors.Vector(0..deg);
+      begin
+        for k in 0..deg loop
+          ldg(1) := k;
+          cff(k) := Standard_Complex_Laurentials.Coeff(sol(i),ldg);
+        end loop;
+        xcffs(i) := new Standard_Complex_Vectors.Vector'(cff);
+      end;
+    end loop;
+    cffs := new Standard_Complex_VecVecs.VecVec'(xcffs);
+    Standard_Complex_Laurentials.Clear(ldg);
+  end Make_Series;
+
   procedure Newton_Step
               ( deg : in integer32;
                 p : in Table_Vector; jp : in Table_Vector_Array;
@@ -143,10 +181,12 @@ procedure ts_lsernew is
     use Standard_Complex_Numbers;
 
   begin
+    put_line("Evaluating the table vector ...");
     Eval(deg,p,xlead,xcffs,ylead,ycffs.all);
     if verbose
      then Test_Double_Lseries_Matrices.Write(ylead,ycffs,"y");
     end if;
+    put_line("Evaluating the table vector array ...");
     Eval(deg,jp,xlead,xcffs,Alead,Acffs);
     if verbose then
       Test_Double_Lseries_Matrices.Copy
@@ -229,6 +269,55 @@ procedure ts_lsernew is
     end loop;
   end Test_Regular_Newton;
 
+  procedure Test_Singular_Newton
+              ( p,sol : in Laur_Sys; tdx,deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method on the system p,
+  --   starting at the series defined in sol,
+  --   on Laurent series where the highest power of t equals deg. 
+
+  -- REQUIRED : tdx /= 0 and 
+  --   p has one more variable than the number of equations.
+
+  -- ON ENTRY :
+  --   p       a system with one parameter t;
+  --   sol     as many univariate polynomials in t as p'length;
+  --   tdx     the index of t in p;
+  --   deg     precision of the series.
+
+    neq : constant integer32 := p'last;
+    dim : constant integer32 := neq + 1;
+    nvr : constant integer32 := neq; -- number of variables minus t
+    tv : constant Table_Vector(neq) := Make_Table_Vector(p,dim,nvr,tdx,deg);
+    jp : constant Jaco_Mat(1..neq,1..dim) := Create(p);
+    tva : constant Table_Vector_Array(1..neq)
+        := Make_Table_Vector_Array(jp,tdx,deg);
+    xlead,ylead,dxlead,rlead : Standard_Integer_Vectors.Vector(1..nvr);
+    xcffs,ycffs,dxcffs,rcffs : Standard_Complex_VecVecs.Link_to_VecVec;
+    Alead,Blead : Standard_Integer_Matrices.Matrix(1..neq,1..nvr);
+    Acffs,Bcffs : Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+    ans : character;
+
+  begin
+    put_line("The table representation :"); Write(tv);
+    Make_Series(sol,deg,xlead,xcffs);
+    put("A "); put(nvr,1); put_line("-vector of Laurent series :");
+    Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
+    Test_Double_Lseries_Matrices.Allocate_Series_Coefficients(nvr,deg,ycffs);
+    Test_Double_Lseries_Matrices.Allocate_Series_Coefficients(nvr,deg,dxcffs);
+    Test_Double_Lseries_Matrices.Allocate_Series_Coefficients(nvr,deg,rcffs);
+    Standard_Complex_VecVecVecs.Allocate(Acffs,1,neq,1,nvr,0,deg);
+    Standard_Complex_VecVecVecs.Allocate(Bcffs,1,neq,1,nvr,0,deg);
+    loop
+      Newton_Step(deg,tv,tva,xlead,xcffs,ylead,ycffs,
+                  Alead,Acffs,Blead,Bcffs,dxlead,dxcffs,rlead,rcffs);
+      Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
+      put("Do another step ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
+  end Test_Singular_Newton;
+
   procedure Test_Isolated_Start is
 
   -- DESCRIPTION :
@@ -272,7 +361,7 @@ procedure ts_lsernew is
   --   Prompts for a system, a series, and a degree of t.
 
     lp,lsol : Link_to_Laur_Sys;
-    neq,nvr,dim,deg : integer32 := 0;
+    neq,nvr,dim,tdx,deg : integer32 := 0;
 
   begin
     new_line;
@@ -283,14 +372,22 @@ procedure ts_lsernew is
     new_line;
     put("Read "); put(neq,1); put(" polynomials in ");
     put(nvr,1); put_line(" variables ...");
-    new_line;
-    put_line("Reading initial terms of a series ...");
-    get(lsol);
-    dim := lsol'last; 
-    new_line;
-    put("Read "); put(dim,1); put_line(" polynomials ...");
-    deg := Degree(lsol(lsol'first));
-    put("The degree of the first polynomial : "); put(deg,1); new_line;
+    tdx := tsymbol_Index;
+    put("-> index of t : "); put(tdx,1); new_line;
+    if tdx /= 0 then
+      new_line;
+      put_line("Reading initial terms of a series ...");
+      Symbol_Table.Clear;
+      get(lsol);
+      dim := lsol'last; 
+      new_line;
+      put("Read "); put(dim,1); put_line(" polynomials ...");
+      deg := Degree(lsol(lsol'first));
+      put("The degree of the first polynomial : "); put(deg,1); new_line;
+      new_line;
+      put("Give the degree : "); get(deg);
+      Test_Singular_Newton(lp.all,lsol.all,tdx,deg);
+    end if;
   end Test_Series_Start;
  
   procedure Main is
