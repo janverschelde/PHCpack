@@ -1,3 +1,6 @@
+Sun 28 Mar 2021 : bug fix in evaluation of table vector array, for null
+  polynomial in a Jacobian matrix, in double_lseries_polynomials.adb.
+  
 Sat 27 Mar 2021 : to ts_lsernew, added new test procedure to start Newton
   at some initial terms of a power series.
 

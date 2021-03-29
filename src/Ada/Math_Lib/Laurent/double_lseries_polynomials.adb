@@ -142,15 +142,22 @@ package body Double_Lseries_Polynomials is
     zc,cwrk : Standard_Complex_Vectors.Vector(0..deg);
 
   begin
-    Eval(deg,plead(1),pcffs(1),pmons(1),xlead,xcffs,ye,yc);
-    for i in 2..plead'last loop
-      Eval(deg,plead(i),pcffs(i),pmons(i),xlead,xcffs,ze,zc);
-      Double_Laurent_Series.Add(deg,ye,ze,yc,zc,ewrk,cwrk);
-      ye := ewrk;
+    if plead'last < plead'first then
+      ye := 0;
       for k in 0..deg loop
-        yc(k) := cwrk(k);
+        yc(k) := Standard_Complex_Numbers.Create(0.0);
       end loop;
-    end loop;
+    else
+      Eval(deg,plead(1),pcffs(1),pmons(1),xlead,xcffs,ye,yc);
+      for i in 2..plead'last loop
+        Eval(deg,plead(i),pcffs(i),pmons(i),xlead,xcffs,ze,zc);
+        Double_Laurent_Series.Add(deg,ye,ze,yc,zc,ewrk,cwrk);
+        ye := ewrk;
+        for k in 0..deg loop
+          yc(k) := cwrk(k);
+        end loop;
+      end loop;
+    end if;
   end Eval;
 
   procedure Eval ( deg : in integer32; tab : in Table;
@@ -201,7 +208,8 @@ package body Double_Lseries_Polynomials is
     ltv : Link_to_Table_Vector;
     row : Standard_Complex_VecVecs.Link_to_VecVec;
     cff : Standard_Complex_Vectors.Link_to_Vector;
-   
+
+    use Standard_Complex_Vectors;
 
   begin
     for i in tab'range loop
