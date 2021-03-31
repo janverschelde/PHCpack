@@ -88,6 +88,9 @@ package body Double_Laurent_Series is
       for k in 1..d-i loop -- shift the coefficients
         c(k-1) := c(k);
       end loop;
+      for k in (d-i)..d loop -- must insert zeros at the end
+        c(k) := Standard_Complex_Numbers.Create(0.0);
+      end loop;
     end loop;
     if allzero
      then e := 0;

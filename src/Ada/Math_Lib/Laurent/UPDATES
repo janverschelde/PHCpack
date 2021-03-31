@@ -1,3 +1,6 @@
+Tue 30 Mar 2021 : fixed bug in double_laurent_series.adb, in the normalize
+  procedure, applied normalization in ts_lsernew, on the series read.
+
 Sun 28 Mar 2021 : bug fix in evaluation of table vector array, for null
   polynomial in a Jacobian matrix, in double_lseries_polynomials.adb.
   Added procedure to ts_lsernew to run Newton's method starting at

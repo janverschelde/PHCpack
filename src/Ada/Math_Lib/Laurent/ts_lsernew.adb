@@ -130,6 +130,7 @@ procedure ts_lsernew is
           ldg(1) := k;
           cff(k) := Standard_Complex_Laurentials.Coeff(sol(i),ldg);
         end loop;
+        Double_Laurent_Series.Normalize(deg,lead(i),cff);
         xcffs(i) := new Standard_Complex_Vectors.Vector'(cff);
       end;
     end loop;
