@@ -1,7 +1,9 @@
 Tue 30 Mar 2021 : fixed bug in double_laurent_series.adb, in the normalize
   procedure, applied normalization in ts_lsernew, on the series read.
   Added verbose flag to an eval procedure in double_laurent_series,
-  fixed bug in the evaluation of a monomial.
+  fixed bug in the evaluation of a monomial.  Third bug fix in ts_lsernew,
+  fixed initialization of the leading exponent in the right hand side in
+  the linear system for the update.
 
 Sun 28 Mar 2021 : bug fix in evaluation of table vector array, for null
   polynomial in a Jacobian matrix, in double_lseries_polynomials.adb.

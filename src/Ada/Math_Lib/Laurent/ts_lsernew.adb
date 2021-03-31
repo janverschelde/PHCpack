@@ -199,7 +199,7 @@ procedure ts_lsernew is
      then put("The pivots : "); put(pivots); new_line;
     end if;
     for i in pivots'range loop
-      dxlead(i) := 0;
+      dxlead(i) := ylead(i);
       acff := ycffs(pivots(i));
       bcff := dxcffs(i);
       for k in 0..deg loop
