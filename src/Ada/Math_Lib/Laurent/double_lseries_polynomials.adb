@@ -116,7 +116,6 @@ package body Double_Lseries_Polynomials is
     end loop;
     for i in mon'range loop -- mon(i) is the power of the i-th variable
       if mon(i) > 0 then
-        ye := ye + xlead(i)*mon(i);
         for j in 1..mon(i) loop
           Double_Laurent_Series.Multiply
             (deg,ye,xlead(i),yc,xcffs(i).all,ze,zc);
@@ -136,7 +135,8 @@ package body Double_Lseries_Polynomials is
                    xlead : in Standard_Integer_Vectors.Vector;
                    xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
                    ye : out integer32;
-                   yc : out Standard_Complex_Vectors.Vector ) is
+                   yc : out Standard_Complex_Vectors.Vector;
+                   verbose : in boolean := true ) is
 
     ze,ewrk : integer32;
     zc,cwrk : Standard_Complex_Vectors.Vector(0..deg);
@@ -149,13 +149,22 @@ package body Double_Lseries_Polynomials is
       end loop;
     else
       Eval(deg,plead(1),pcffs(1),pmons(1),xlead,xcffs,ye,yc);
+      if verbose then
+        put_line("After evaluating the first monomial :");
+        Double_Laurent_Series.Write(ye,yc);
+      end if;
       for i in 2..plead'last loop
         Eval(deg,plead(i),pcffs(i),pmons(i),xlead,xcffs,ze,zc);
+        put("The value of monomial : "); put(i,1); put_line(" :");
+        Double_Laurent_Series.Write(ze,zc);
         Double_Laurent_Series.Add(deg,ye,ze,yc,zc,ewrk,cwrk);
         ye := ewrk;
         for k in 0..deg loop
           yc(k) := cwrk(k);
         end loop;
+        put("After update with the value of monomial ");
+        put(i,1); put_line(" :");
+        Double_Laurent_Series.Write(ye,yc);
       end loop;
     end if;
   end Eval;

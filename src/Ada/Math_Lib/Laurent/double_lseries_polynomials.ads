@@ -246,7 +246,8 @@ package Double_Lseries_Polynomials is
                    xlead : in Standard_Integer_Vectors.Vector;
                    xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
                    ye : out integer32;
-                   yc : out Standard_Complex_Vectors.Vector );
+                   yc : out Standard_Complex_Vectors.Vector;
+                   verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Evaluates a polynomial at a Laurent series.
@@ -257,7 +258,9 @@ package Double_Lseries_Polynomials is
   --   pcffs    coefficient vectors of the Laurent series coefficients;
   --   pmons    exponents of the monomials in the polynomial;
   --   xlead    leading exponents of the argument for the evaluation;
-  --   xcffs    coefficient vectors of the argument for the evaluation.
+  --   xcffs    coefficient vectors of the argument for the evaluation;
+  --   verbose  if true, then the value of every monomial is written,
+  --            and also the value after each update.
 
   -- ON RETURN :
   --   ye       leading exponent of the result of the evaluation;
