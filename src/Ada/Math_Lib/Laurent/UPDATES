@@ -1,3 +1,5 @@
+Sat 3 Apr 2021 : updated ts_lsernew to prompt for the leading degree.
+
 Tue 30 Mar 2021 : fixed bug in double_laurent_series.adb, in the normalize
   procedure, applied normalization in ts_lsernew, on the series read.
   Added verbose flag to an eval procedure in double_laurent_series,

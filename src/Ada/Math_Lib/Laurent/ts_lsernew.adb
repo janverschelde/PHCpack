@@ -117,6 +117,7 @@ procedure ts_lsernew is
     dg : constant Standard_Integer_Vectors.Vector(1..1) := (1..1 => 0);
     ldg : Standard_Complex_Laurentials.Degrees
         := new Standard_Integer_Vectors.Vector'(dg);
+    ans : character;
 
   begin
     lead := (sol'range => 0);
@@ -132,6 +133,15 @@ procedure ts_lsernew is
         end loop;
         Double_Laurent_Series.Normalize(deg,lead(i),cff);
         xcffs(i) := new Standard_Complex_Vectors.Vector'(cff);
+        new_line;
+        loop
+          put("-> the leading degree of series "); put(i,1);
+          put(" : "); put(lead(i)); new_line;
+          put("   Change the leading degree ? (y/n) ");
+          Ask_Yes_or_No(ans);
+          exit when (ans /= 'y');
+          put("Give the new leading degree : "); get(lead(i));
+        end loop;
       end;
     end loop;
     cffs := new Standard_Complex_VecVecs.VecVec'(xcffs);
@@ -248,6 +258,7 @@ procedure ts_lsernew is
     Alead,Blead : Standard_Integer_Matrices.Matrix(1..neq,1..nvr);
     Acffs,Bcffs : Standard_Complex_VecVecVecs.Link_to_VecVecVec;
     ans : character;
+    stepcnt : integer32 := 1;
 
   begin
     put_line("The table representation :"); Write(tv);
@@ -262,11 +273,13 @@ procedure ts_lsernew is
     Standard_Complex_VecVecVecs.Allocate(Acffs,1,neq,1,nvr,0,deg);
     Standard_Complex_VecVecVecs.Allocate(Bcffs,1,neq,1,nvr,0,deg);
     loop
+      put("Step "); put(stepcnt,1); put_line(" ...");
       Newton_Step(deg,tv,tva,xlead,xcffs,ylead,ycffs,
                   Alead,Acffs,Blead,Bcffs,dxlead,dxcffs,rlead,rcffs);
       Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
       put("Do another step ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
+      stepcnt := stepcnt + 1;
     end loop;
   end Test_Regular_Newton;
 
@@ -299,6 +312,7 @@ procedure ts_lsernew is
     Alead,Blead : Standard_Integer_Matrices.Matrix(1..neq,1..nvr);
     Acffs,Bcffs : Standard_Complex_VecVecVecs.Link_to_VecVecVec;
     ans : character;
+    stepcnt : integer32 := 1;
 
   begin
     put_line("The table representation :"); Write(tv);
@@ -311,11 +325,13 @@ procedure ts_lsernew is
     Standard_Complex_VecVecVecs.Allocate(Acffs,1,neq,1,nvr,0,deg);
     Standard_Complex_VecVecVecs.Allocate(Bcffs,1,neq,1,nvr,0,deg);
     loop
+      put("Step "); put(stepcnt,1); put_line(" ...");
       Newton_Step(deg,tv,tva,xlead,xcffs,ylead,ycffs,
                   Alead,Acffs,Blead,Bcffs,dxlead,dxcffs,rlead,rcffs);
       Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
       put("Do another step ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
+      stepcnt := stepcnt + 1;
     end loop;
   end Test_Singular_Newton;
 
