@@ -1,3 +1,5 @@
+Sun 4 Apr 2021 : new double_lseries_newton_steps with code from ts_lsernew.
+
 Sat 3 Apr 2021 : updated ts_lsernew to prompt for the leading degree.
 
 Tue 30 Mar 2021 : fixed bug in double_laurent_series.adb, in the normalize
