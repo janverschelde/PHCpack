@@ -1,3 +1,6 @@
+Mon 5 Apr 2021 : extended dbl_convolutions_host with functions to multiply
+  Laurent series and to compute the inverse of a Laurent series.
+
 Sat 13 Feb 2021 : extended dbl_convolutions_host with a function to
   compute the inverse of a series with complex coefficients.
 

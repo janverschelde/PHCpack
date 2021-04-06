@@ -1,4 +1,4 @@
-Accelerated Convolutions for Power Series Multiplication in PHCv2.4.84.
+Accelerated Convolutions for Power Series Multiplication in PHCv2.4.85.
 
 The code in this folder concerns the product of two power series,
 truncated to the same degree.

@@ -14,6 +14,13 @@ void CPU_dbl_product ( int deg, double *x, double *y, double *z )
    }
 }
 
+void CPU_dbl_Laurent_product
+ ( int deg, int xe, int ye, int *ze, double *x, double *y, double *z )
+{
+   *ze = xe + ye;
+   CPU_dbl_product(deg,x,y,z);
+}
+
 void CPU_cmplx_product
  ( int deg, double *xre, double *xim, double *yre, double *yim,
             double *zre, double *zim )
@@ -48,6 +55,14 @@ void CPU_cmplx_product
    }
 }
 
+void CPU_cmplx_Laurent_product
+ ( int deg, int xe, int ye, int *ze, double *xre, double *xim,
+   double *yre, double *yim, double *zre, double *zim )
+{
+   *ze = xe + ye;
+   CPU_cmplx_product(deg,xre,xim,yre,yim,zre,zim);
+}
+
 void CPU_dbl_inverse ( int deg, double *x, double *y )
 {
    y[0] = 1.0/x[0];
@@ -57,6 +72,13 @@ void CPU_dbl_inverse ( int deg, double *x, double *y )
       for(int j=2; j<=i; j++) y[i] = y[i] - x[j]*y[i-j];
       y[i] = y[i]/x[0];
    }
+}
+
+void CPU_dbl_Laurent_inverse
+ ( int deg, int xe, int *ye, double *x, double *y )
+{
+   *ye = -xe;
+   CPU_dbl_inverse(deg,x,y);
 }
 
 void CPU_cmplx_inverse
@@ -94,4 +116,12 @@ void CPU_cmplx_inverse
       ipa = xi0*yr0 + xr0*yi0;
       yre[i] = rpa; yim[i] = ipa;
    }
+}
+
+void CPU_cmplx_Laurent_inverse
+ ( int deg, int xe, int *ye, double *xre, double *xim,
+   double *yre, double *yim )
+{
+   *ye = -xe;
+   CPU_cmplx_inverse(deg,xre,xim,yre,yim);
 }
