@@ -248,6 +248,21 @@ package Test_Double_Lseries_Matrices is
   -- DESCRIPTION :
   --   Runs a specific test.
 
+  function Seed_Prompt return integer32;
+
+  -- DESCRIPTION :
+  --   Prompts for a fixed seed or a random seed.
+
+  procedure Determinant_Test;
+
+  -- DESCRIPTION :
+  --   Tests the determinant of a random 2-by-2 matrix.
+
+  procedure Random_Test;
+
+  -- DESCRIPTION :
+  --   Tests the LU factorization for a general random matrix.
+
   procedure Main;
 
   -- DESCRIPTION :

@@ -4,10 +4,11 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
+with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
+with Standard_Random_Numbers;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Integer_Matrices_io;      use Standard_Integer_Matrices_io;
-with Standard_Random_Numbers;
-with Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Double_Laurent_Series;
 with Random_Laurent_Series;             use Random_Laurent_Series;
@@ -524,7 +525,93 @@ package body Test_Double_Lseries_Matrices is
     Write(Ulead,Ucffs,"U");
   end Specific_Test;
 
-  procedure Main is
+  function Seed_Prompt return integer32 is
+
+    ans : character;
+    seed : integer32 := 0;
+
+  begin
+    new_line;
+    put("Fixed seed ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then
+      seed := Standard_Random_Numbers.Get_Seed;
+    else
+      put("Give the seed : "); get(seed);
+      Standard_Random_Numbers.Set_Seed(natural32(seed));
+    end if;
+    return seed;
+  end Seed_Prompt;
+
+  procedure Determinant_Test is
+
+    deg,low,upp,seed : integer32 := 0;
+    Alead,Llead,Ulead : Standard_Integer_Matrices.Matrix(1..2,1..2);
+    Acffs,Lcffs,Ucffs : Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+    Arow1,Arow2 : Standard_Complex_VecVecs.Link_to_VecVec;
+    pivots : Standard_Integer_Vectors.Vector(1..2);
+    xdetlead,left,right : integer32 := 0;
+    xdetcff0 : Complex_Number;
+
+  begin
+    new_line;
+    put("Give the truncation degree : "); get(deg);
+    put("Give the lower bound on the leading exponent : "); get(low);
+    put("Give the upper bound on the leading exponent : "); get(upp);
+    seed := Seed_Prompt;
+    Standard_Complex_VecVecVecs.Allocate(Acffs,1,2,1,2,0,deg);
+    Random_Matrix(2,2,low,upp,Alead,Acffs);
+    Write(Alead,Acffs,"A");
+    put_line("The leading exponents : "); put(Alead);
+   -- xdetlead := min(Alead(1,1) + Alead(2,2),Alead(2,1) + Alead(1,2));
+    left := Alead(1,1) + Alead(2,2);
+    right := Alead(2,1) + Alead(1,2);
+    put("Leading exponent of determinant : "); put(xdetlead,1); new_line;
+    Arow1 := Acffs(1);
+    Arow2 := Acffs(2);
+    if left = right then
+      xdetcff0 := Arow1(1)(0)*Arow2(2)(0) - Arow2(1)(0)*Arow1(2)(0);
+      xdetlead := left;
+    elsif left < right then 
+      xdetcff0 := Arow1(1)(0)*Arow2(2)(0);
+      xdetlead := left;
+    else
+      xdetcff0 := -Arow2(1)(0)*Arow1(2)(0);
+      xdetlead := right;
+    end if;
+    Standard_Complex_VecVecVecs.Allocate(Lcffs,1,2,1,2,0,deg);
+    Standard_Complex_VecVecVecs.Allocate(Ucffs,1,2,1,2,0,deg);
+    LU_Factorization(2,2,deg,Alead,Acffs,pivots);
+    put_line("The matrix after the LU factorization :");
+    Write(Alead,Acffs,"A");
+    put("The pivots :"); put(pivots); new_line;
+    Lower_Triangular_Part(2,2,deg,Alead,Acffs,Llead,Lcffs);
+    Upper_Triangular_Part(2,2,deg,Alead,Acffs,Ulead,Ucffs);
+    Write(Llead,Lcffs,"L");
+    Write(Ulead,Ucffs,"U");
+    new_line;
+    put_line("Now we do the determinant test ...");
+    declare
+      ydetlead : integer32 := 0;
+      ydetcff : Standard_Complex_Vectors.Vector(0..deg);
+    begin
+      Double_Laurent_Series.Multiply
+        (deg,Ulead(1,1),Ulead(2,2),Ucffs(1)(1).all,Ucffs(2)(2).all,
+         ydetlead,ydetcff);
+      put("xdetlead : "); put(xdetlead,1); new_line;
+      put("ydetlead : "); put(ydetlead,1); 
+      if xdetlead /= ydetlead then
+        put_line("  mismatched leading exponents of determinant!");
+      else
+        put_line("  matching leading exponents of determinant.");
+        put("xdet(0) : "); put(xdetcff0); new_line;
+        put("ydet(0) : "); put(ydetcff(0)); new_line;
+      end if;
+    end;
+    new_line;
+    put("The seed used : "); put(seed,1); new_line;
+  end Determinant_Test;
+
+  procedure Random_Test is
 
     deg,nrows,ncols,low,upp,seed : integer32 := 0;
     ans : character;
@@ -532,41 +619,48 @@ package body Test_Double_Lseries_Matrices is
 
   begin
     new_line;
-    put("Run a specific test ? (y/n) "); Ask_Yes_or_No(ans);
-    if ans = 'y' then
-      Specific_Test;
+    put("Give the truncation degree : "); get(deg);
+    put("Give the lower bound on the leading exponent : "); get(low);
+    put("Give the upper bound on the leading exponent : "); get(upp);
+    put("Give the number of rows : "); get(nrows);
+    put("Give the number of columns : "); get(ncols);
+    new_line;
+    if nrows /= ncols then
+      lower := false;
     else
-      new_line;
-      put("Give the truncation degree : "); get(deg);
-      put("Give the lower bound on the leading exponent : "); get(low);
-      put("Give the upper bound on the leading exponent : "); get(upp);
-      put("Give the number of rows : "); get(nrows);
-      put("Give the number of columns : "); get(ncols);
-      new_line;
-      if nrows /= ncols then
-        lower := false;
+      put("Lower triangular matrix ? (y/n) "); Ask_Yes_or_No(ans);
+      lower := (ans = 'y');
+      if lower then
+        upper := false;
       else
-        put("Lower triangular matrix ? (y/n) "); Ask_Yes_or_No(ans);
-        lower := (ans = 'y');
-        if lower then
-          upper := false;
-        else
-          put("Upper triangular matrix ? (y/n) "); Ask_Yes_or_No(ans);
-          upper := (ans = 'y');
-        end if;
+        put("Upper triangular matrix ? (y/n) "); Ask_Yes_or_No(ans);
+        upper := (ans = 'y');
       end if;
-      new_line;
-      put("Fixed seed ? (y/n) "); Ask_Yes_or_No(ans);
-      if ans /= 'y' then
-        seed := Standard_Random_Numbers.Get_Seed;
-      else
-        put("Give the seed : "); get(seed);
-        Standard_Random_Numbers.Set_Seed(natural32(seed));
-      end if;
-      Test(nrows,ncols,deg,low,upp,lower,upper);
-      new_line;
-      put("The seed used : "); put(seed,1); new_line;
     end if;
+    seed := Seed_Prompt;
+    Test(nrows,ncols,deg,low,upp,lower,upper);
+    new_line;
+    put("The seed used : "); put(seed,1); new_line;
+  end Random_Test;
+
+  procedure Main is
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU for testing the Laurent matrix operations :");
+    put_line("  1. LU factorization of a specific 2-by-2 matrix");
+    put_line("  2. determinant of a random 2-by-2 matrix");
+    put_line("  3. LU factorization of a random general matrix");
+    put("Type 1, 2, or 3 to select a test : ");
+    Ask_Alternative(ans,"123");
+    case ans is
+      when '1' => Specific_Test;
+      when '2' => Determinant_Test;
+      when '3' => Random_Test;
+      when others => null;
+    end case;
   end Main;
 
 end Test_Double_Lseries_Matrices;

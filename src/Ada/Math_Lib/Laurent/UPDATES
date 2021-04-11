@@ -1,3 +1,6 @@
+Sun 11 Apr 2021 : added test on determinant of a random 2-by-2 matrix
+  to test_double_lseries_matrices.
+
 Sun 4 Apr 2021 : new double_lseries_newton_steps with code from ts_lsernew.
 
 Sat 3 Apr 2021 : updated ts_lsernew to prompt for the leading degree.
