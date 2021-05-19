@@ -29,7 +29,7 @@ package body Standard_Select_Solutions is
 
   begin
     new_line;
-    put("Are the solutions preceeded by a system ? (y/n) ");
+    put("Are the solutions preceded by a system ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
       bannered := true;
