@@ -53,7 +53,7 @@ package body Drivers_for_Symmetric_Lifting is
     i : array(1..6) of string(1..65);
 
   begin
-    i(1):="  Symmetric lifting allows to exploit permutation  symmetries  in";
+    i(1):="  Symmetric lifting allows one to exploit permutation  symmetries  in";
     i(2):="the  tuple  of  Newton  polytopes.   A  symmetric  subdivision is";
     i(3):="induced by lifting the points in the same orbit up  to  the  same";
     i(4):="height.   The  corresponding  random coefficient start system has";

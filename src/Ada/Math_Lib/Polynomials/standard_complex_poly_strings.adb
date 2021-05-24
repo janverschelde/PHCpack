@@ -813,10 +813,10 @@ package body Standard_Complex_Poly_Strings is
       put(integer32(p),1);
       put_line(" of " & s & " in Parse_Term.");
       put_line("The character is " & s(p));
-      put_line("Surrouding characters are " & s(s'first..p+1));
-      put_line("Surrouding characters are " & s(p-3..p+1));
-      put_line("Surrouding characters are " & s(p-5..p+1));
-      put_line("Surrouding characters are " & s(p-7..p+1));
+      put_line("Surrounding characters are " & s(s'first..p+1));
+      put_line("Surrounding characters are " & s(p-3..p+1));
+      put_line("Surrounding characters are " & s(p-5..p+1));
+      put_line("Surrounding characters are " & s(p-7..p+1));
       raise;
     when others =>
       put("Exception raised at character "); put(integer32(p),1);

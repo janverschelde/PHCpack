@@ -15,7 +15,7 @@ another seed for the :index:`random number` generator,
 leading to different random constants in each run.
 As different random values give different random start systems,
 this may cause differences in the solution paths and fluctuations
-in the executation time.  Another notable effect of generating a
+in the execution time.  Another notable effect of generating a
 different random constant each time is that the order of the
 solutions in the list may differ.  Although the same solutions
 should be found with each run, a solution that appears first
@@ -991,7 +991,7 @@ One can view the construction of a linear-product start system as
 the degeneration of the given polynomial system on input such that
 every input polynomial is degenerated to a product of linear factors.
 
-The fourth option of the ``-r`` allows to take 
+The fourth option of the ``-r`` allows one to take
 :index:`permutation symmetry`
 into account to construct symmetric start systems.
 If the start system respects the same permutation symmetry as the

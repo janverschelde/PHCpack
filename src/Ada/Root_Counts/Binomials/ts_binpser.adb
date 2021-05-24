@@ -239,7 +239,7 @@ procedure ts_binpser is
         put("  give the number of equations : "); get(nq);
        -- put("  give the number of variables : "); get(nv);
         nv := nq + 1;
-        put("-> the number of variabes is "); put(nv,1); new_line;
+        put("-> the number of variables is "); put(nv,1); new_line;
         lp := new Poly_Sys'(Create_Random_Binomial_System(nq,nv));
       else
         put_line("Reading a polynomial system...");

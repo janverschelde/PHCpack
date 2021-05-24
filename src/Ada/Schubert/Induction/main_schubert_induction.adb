@@ -849,7 +849,7 @@ package body Main_Schubert_Induction is
     new_line;
     put_line("MENU for kind of output in Littlewood-Richardson homotopies :");
     put_line("  0. no intermediate output will be written to file;");
-    put_line("  1. output to file allows to monitor the progress;");
+    put_line("  1. output to file allows one to monitor the progress;");
     put_line("  2. monitoring progress with extra verifying diagnostics.");
     put("Type 0, 1, or 2 to select the kind of output : ");
     Ask_Alternative(ans,"012");

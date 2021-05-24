@@ -837,7 +837,7 @@ package body Series_Path_Trackers is
   begin
     new_line;
     put("Let us define a partition of "); put(nvr,1);
-    put(" variabes, of size "); put(mhom,1); put_line(" ...");
+    put(" variables, of size "); put(mhom,1); put_line(" ...");
     declare
       res : constant Standard_Natural_Vectors.Vector(1..integer32(nvr))
           := Partitions_of_Sets_of_Unknowns_io.iget(mhom);

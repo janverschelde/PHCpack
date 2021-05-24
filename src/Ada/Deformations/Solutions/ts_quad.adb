@@ -405,7 +405,7 @@ procedure ts_quad is
     put_line("Reading solution list first into memory...");
     Read_Name_and_Open_File(infile);
     new_line;
-    put("Is the solution list preceeded by a system ? (y/n) ");
+    put("Is the solution list preceded by a system ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'n' then
       get(infile,sols); fail := false;
