@@ -1,3 +1,6 @@
+Mon 31 May 2021 : number_of_cores.adb uses System.Multiprocessors instead
+  of the C interface.
+
 Sat 5 Dec 2020 : new package multitasked_power_newton with code extracted
   from test_mtnewton_convolutions.adb.
 
