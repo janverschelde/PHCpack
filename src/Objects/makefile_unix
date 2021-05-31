@@ -97,7 +97,7 @@ COFLAGS = -O2
 
 phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o parameter.o lib2path.o \
      inputData.o outputData.o iTest.o fTest.o reltab.o \
-     simplex4phc.o mvc4phc.o demicsrun4phc.o corecount.o
+     simplex4phc.o mvc4phc.o demicsrun4phc.o
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
@@ -107,7 +107,7 @@ phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o parameter.o lib2path.o \
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gnatbind phctop use_c2phc pieri_solver
 	gnatlink phctop syscon.o solcon.o phcpack.o feedback.o \
-                 parameter.o lib2path.o corecount.o \
+                 parameter.o lib2path.o \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
                  lib.a $(QD_LIB)/libqd.a \
@@ -117,7 +117,7 @@ phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o parameter.o lib2path.o \
 phc_noqd: lib.a feedback.o get_clock.o get_clocks_per_sec.o parameter.o \
           lib2path_d.o \
      inputData.o outputData.o iTest.o fTest.o reltab.o \
-     simplex4phc.o mvc4phc.o demicsrun4phc.o corecount.o
+     simplex4phc.o mvc4phc.o demicsrun4phc.o
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
@@ -127,7 +127,7 @@ phc_noqd: lib.a feedback.o get_clock.o get_clocks_per_sec.o parameter.o \
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gnatbind phctop use_c2phc pieri_solver
 	gnatlink phctop syscon.o solcon.o phcpack.o feedback.o \
-                 parameter.o lib2path_d.o corecount.o \
+                 parameter.o lib2path_d.o \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
                  lib.a $(QD_LIB)/libqd.a \
@@ -3064,10 +3064,14 @@ ts_pathpars:
 corecount.o:
 	gcc -c $(PHCAda)/Tasking/corecount.c
 
-ts_corecount: corecount.o
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_corecount.adb
-	gnatbind ts_corecount
-	gnatlink ts_corecount corecount.o -o $(BIN)/ts_corecount
+# ts_corecount: corecount.o
+# 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_corecount.adb
+# 	gnatbind ts_corecount
+# 	gnatlink ts_corecount corecount.o -o $(BIN)/ts_corecount
+
+ts_corecount:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_corecount.adb \
+              -o $(BIN)/ts_corecount
 
 ts_mtmatvec:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtmatvec.adb \
@@ -3212,12 +3216,15 @@ ts_greet:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_greet.adb \
               -o $(BIN)/ts_greet
 
-ts_actopt: corecount.o
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_actopt.adb
-	gnatbind ts_actopt
-	gnatlink ts_actopt corecount.o -o $(BIN)/ts_actopt
+# ts_actopt: corecount.o
+# 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_actopt.adb
+# 	gnatbind ts_actopt
+# 	gnatlink ts_actopt corecount.o -o $(BIN)/ts_actopt
 
-ts_opthand: corecount.o inputData.o outputData.o iTest.o fTest.o \
+ts_actopt:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_actopt.adb -o $(BIN)/ts_actopt
+
+ts_opthand: inputData.o outputData.o iTest.o fTest.o \
             simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o mvc4phc.o \
             parameter.o lib2path.o feedback.o lib.a
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -3228,7 +3235,7 @@ ts_opthand: corecount.o inputData.o outputData.o iTest.o fTest.o \
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) pieri_solver.adb
 	gnatbind ts_opthand use_c2phc pieri_solver
-	gnatlink ts_opthand corecount.o inputData.o outputData.o iTest.o \
+	gnatlink ts_opthand inputData.o outputData.o iTest.o \
                             fTest.o simplex4phc.o reltab.o mvc4phc.o \
                             demicsrun4phc.o lib2path.o $(QD_LIB)/libqd.a \
                             syscon.o solcon.o phcpack.o parameter.o \

@@ -75,7 +75,7 @@ GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatv
 
 phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
         inputData.o outputData.o iTest.o fTest.o reltab.o \
-        simplex4phc.o mvc4phc.o demicsrun4phc.o corecountwindows.o \
+        simplex4phc.o mvc4phc.o demicsrun4phc.o \
         parameter.o lib2path.o
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
@@ -89,13 +89,13 @@ phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
                  lib.a parameter.o lib2path.o \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
-                 get_clock.o get_clocks_per_sec.o corecountwindows.o \
+                 get_clock.o get_clocks_per_sec.o \
                  $(QD_LIB)/libqd.a -o $(BIN)/phc -lm \
 --LINK="g++ -static-libgcc -static-libstdc++ -Wl,-Bstatic,--whole-archive -Wl,--no-whole-archive"
 
 phc_noqd: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
         inputData.o outputData.o iTest.o fTest.o reltab.o \
-        simplex4phc.o mvc4phc.o demicsrun4phc.o corecountwindows.o \
+        simplex4phc.o mvc4phc.o demicsrun4phc.o \
         parameter.o lib2path_d.o
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
@@ -109,7 +109,7 @@ phc_noqd: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
                  lib.a parameter.o lib2path_d.o \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
-                 get_clock.o get_clocks_per_sec.o corecountwindows.o \
+                 get_clock.o get_clocks_per_sec.o \
                  -o $(BIN)/phc -lm \
 --LINK="g++ -static-libgcc -static-libstdc++ -Wl,-Bstatic,--whole-archive -Wl,--no-whole-archive"
 
@@ -2205,10 +2205,14 @@ lib2path.o:
 corecountwindows.o:
 	$(gcc) -c $(PHCAda)/Tasking/corecountwindows.c -o corecountwindows.o
 
-ts_corecount: corecountwindows.o
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_corecount.adb
-	gnatbind ts_corecount
-	gnatlink ts_corecount corecountwindows.o -o $(BIN)/ts_corecount
+# ts_corecount: corecountwindows.o
+# 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_corecount.adb
+# 	gnatbind ts_corecount
+# 	gnatlink ts_corecount corecountwindows.o -o $(BIN)/ts_corecount
+
+ts_corecount:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_corecount.adb \
+                 -o $(BIN)/ts_corecount
 
 ts_mtmatvec:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtmatvec.adb \
@@ -2388,7 +2392,10 @@ ts_bbsolve: get_clock.o get_clocks_per_sec.o \
                  simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
                  -o $(BIN)/ts_bbsolve --LINK=$(gpp) 
 
-ts_opthand: corecountwindows.o inputData.o outputData.o iTest.o fTest.o \
+ts_actopt:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_actopt.adb -o $(BIN)/ts_actopt
+
+ts_opthand: inputData.o outputData.o iTest.o fTest.o \
             simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o mvc4phc.o \
             parameter.o lib2path.o feedback.o lib.a
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -2399,7 +2406,7 @@ ts_opthand: corecountwindows.o inputData.o outputData.o iTest.o fTest.o \
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) pieri_solver.adb
 	gnatbind ts_opthand use_c2phc pieri_solver
-	gnatlink ts_opthand corecountwindows.o inputData.o outputData.o \
+	gnatlink ts_opthand inputData.o outputData.o \
                             iTest.o fTest.o simplex4phc.o reltab.o mvc4phc.o \
                             demicsrun4phc.o lib2path.o $(QD_LIB)/libqd.a \
                             syscon.o solcon.o phcpack.o parameter.o \
