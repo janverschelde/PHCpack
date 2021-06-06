@@ -106,13 +106,17 @@ package body Double_Lseries_Newton_Steps is
     use Standard_Complex_Numbers;
 
   begin
-    put_line("Evaluating the table vector ...");
-    Eval(deg,p,xlead,xcffs,ylead,ycffs.all);
+    if verbose
+     then put_line("Evaluating the table vector ...");
+    end if;
+    Eval(deg,p,xlead,xcffs,ylead,ycffs.all,verbose);
     if verbose
      then Test_Double_Lseries_Matrices.Write(ylead,ycffs,"y");
     end if;
-    put_line("Evaluating the table vector array ...");
-    Eval(deg,jp,xlead,xcffs,Alead,Acffs);
+    if verbose
+     then put_line("Evaluating the table vector array ...");
+    end if;
+    Eval(deg,jp,xlead,xcffs,Alead,Acffs,verbose);
     if verbose then
       Test_Double_Lseries_Matrices.Copy
         (p.nbt,p.nbt,deg,Alead,Acffs,Blead,Bcffs);
@@ -130,7 +134,9 @@ package body Double_Lseries_Newton_Steps is
         bcff(k) := -acff(k);
       end loop;
     end loop;
-    Test_Double_Lseries_Matrices.Write(dxlead,dxcffs,"b");
+    if verbose
+     then Test_Double_Lseries_Matrices.Write(dxlead,dxcffs,"b");
+    end if;
     Forward_Substitution(deg,Alead,Acffs,dxlead,dxcffs,ylead,ycffs);
     Backward_Substitution(deg,Alead,Acffs,ylead,ycffs,dxlead,dxcffs);
     if verbose then

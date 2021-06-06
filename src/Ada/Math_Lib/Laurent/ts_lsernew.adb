@@ -116,7 +116,8 @@ procedure ts_lsernew is
   end Test_Regular_Newton;
 
   procedure Test_Singular_Newton
-              ( p,sol : in Laur_Sys; tdx,deg : in integer32 ) is
+              ( p,sol : in Laur_Sys; tdx,deg : in integer32;
+                verbose : in boolean := true ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method on the system p,
@@ -130,7 +131,8 @@ procedure ts_lsernew is
   --   p       a system with one parameter t;
   --   sol     as many univariate polynomials in t as p'length;
   --   tdx     the index of t in p;
-  --   deg     precision of the series.
+  --   deg     precision of the series;
+  --   verbose is the verbose flag.
 
     neq : constant integer32 := p'last;
     dim : constant integer32 := neq + 1;
@@ -161,7 +163,7 @@ procedure ts_lsernew is
       put("Step "); put(stepcnt,1); put_line(" ...");
       Double_Lseries_Newton_Steps.Newton_Step
        (deg,tv,tva,xlead,xcffs,ylead,ycffs,
-        Alead,Acffs,Blead,Bcffs,dxlead,dxcffs,rlead,rcffs);
+        Alead,Acffs,Blead,Bcffs,dxlead,dxcffs,rlead,rcffs,verbose);
       Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
       put("Do another step ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
@@ -213,6 +215,8 @@ procedure ts_lsernew is
 
     lp,lsol : Link_to_Laur_Sys;
     neq,nvr,dim,tdx,deg : integer32 := 0;
+    ans : character;
+    verbose : boolean;
 
   begin
     new_line;
@@ -237,7 +241,10 @@ procedure ts_lsernew is
       put("The degree of the first polynomial : "); put(deg,1); new_line;
       new_line;
       put("Give the degree : "); get(deg);
-      Test_Singular_Newton(lp.all,lsol.all,tdx,deg);
+      new_line;
+      put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+      verbose := (ans = 'y');
+      Test_Singular_Newton(lp.all,lsol.all,tdx,deg,verbose);
     end if;
   end Test_Series_Start;
  

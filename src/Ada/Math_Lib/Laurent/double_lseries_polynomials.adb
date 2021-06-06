@@ -155,16 +155,20 @@ package body Double_Lseries_Polynomials is
       end if;
       for i in 2..plead'last loop
         Eval(deg,plead(i),pcffs(i),pmons(i),xlead,xcffs,ze,zc);
-        put("The value of monomial : "); put(i,1); put_line(" :");
-        Double_Laurent_Series.Write(ze,zc);
+        if verbose then
+          put("The value of monomial : "); put(i,1); put_line(" :");
+          Double_Laurent_Series.Write(ze,zc);
+        end if;
         Double_Laurent_Series.Add(deg,ye,ze,yc,zc,ewrk,cwrk);
         ye := ewrk;
         for k in 0..deg loop
           yc(k) := cwrk(k);
         end loop;
-        put("After update with the value of monomial ");
-        put(i,1); put_line(" :");
-        Double_Laurent_Series.Write(ye,yc);
+        if verbose then
+          put("After update with the value of monomial ");
+          put(i,1); put_line(" :");
+          Double_Laurent_Series.Write(ye,yc);
+        end if;
       end loop;
     end if;
   end Eval;
@@ -173,17 +177,19 @@ package body Double_Lseries_Polynomials is
                    xlead : in Standard_Integer_Vectors.Vector;
                    xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
                    ye : out integer32;
-                   yc : out Standard_Complex_Vectors.Vector ) is
+                   yc : out Standard_Complex_Vectors.Vector;
+                   verbose : in boolean := true ) is
 
   begin
-    Eval(deg,tab.lead.all,tab.cffs,tab.mons.all,xlead,xcffs,ye,yc);
+    Eval(deg,tab.lead.all,tab.cffs,tab.mons.all,xlead,xcffs,ye,yc,verbose);
   end Eval;
 
   procedure Eval ( deg : in integer32; tab : in Table_Vector;
                    xlead : in Standard_Integer_Vectors.Vector;
                    xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
                    ylead : out Standard_Integer_Vectors.Vector;
-                   ycffs : out Standard_Complex_VecVecs.VecVec ) is
+                   ycffs : out Standard_Complex_VecVecs.VecVec;
+                   verbose : in boolean := true ) is
 
      use Standard_Complex_Vectors;
      cff : Standard_Complex_Vectors.Link_to_Vector;
@@ -204,7 +210,7 @@ package body Double_Lseries_Polynomials is
         end;
       end if;
       Eval(deg,tab.lead(i).all,tab.cffs(i),tab.mons(i).all,
-           xlead,xcffs,ylead(i),cff.all);
+           xlead,xcffs,ylead(i),cff.all,verbose);
     end loop;
   end Eval;
 
@@ -212,7 +218,8 @@ package body Double_Lseries_Polynomials is
                    xlead : in Standard_Integer_Vectors.Vector;
                    xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
                 Alead : in out Standard_Integer_Matrices.Matrix;
-                Acffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec ) is
+                Acffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                verbose : in boolean := true ) is
 
     ltv : Link_to_Table_Vector;
     row : Standard_Complex_VecVecs.Link_to_VecVec;
@@ -227,7 +234,7 @@ package body Double_Lseries_Polynomials is
       for j in 1..ltv.nbt loop
         cff := row(j);
         Eval(deg,ltv.lead(j).all,ltv.cffs(j),ltv.mons(j).all,
-             xlead,xcffs,Alead(i,j),cff.all);
+             xlead,xcffs,Alead(i,j),cff.all,verbose);
       end loop;
     end loop;
   end Eval;

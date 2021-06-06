@@ -104,7 +104,8 @@ package Double_Lseries_Polynomials is
                    xlead : in Standard_Integer_Vectors.Vector;
                    xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
                    ye : out integer32;
-                   yc : out Standard_Complex_Vectors.Vector );
+                   yc : out Standard_Complex_Vectors.Vector;
+                   verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Evaluates a Laurent series polynomial at a Laurent series.
@@ -114,7 +115,8 @@ package Double_Lseries_Polynomials is
   --   deg      only coefficients in the range 0..deg are considered;
   --   tab      data for a Laurent series polynomial;
   --   xlead    leading exponents of the argument for the evaluation;
-  --   xcffs    coefficient vectors of the argument for the evaluation.
+  --   xcffs    coefficient vectors of the argument for the evaluation;
+  --   verbose  is the verbose flag.
 
   -- ON RETURN :
   --   ye       leading exponent of the result of the evaluation;
@@ -124,7 +126,8 @@ package Double_Lseries_Polynomials is
                    xlead : in Standard_Integer_Vectors.Vector;
                    xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
                    ylead : out Standard_Integer_Vectors.Vector;
-                   ycffs : out Standard_Complex_VecVecs.VecVec );
+                   ycffs : out Standard_Complex_VecVecs.VecVec;
+                   verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Evaluates a Laurent series polynomial vector at a Laurent series.
@@ -135,7 +138,8 @@ package Double_Lseries_Polynomials is
   --   xlead    leading exponents of the argument for the evaluation;
   --   xcffs    coefficient vectors of the argument for the evaluation;
   --   ylead    must include the range for the number of tables;
-  --   ycffs    must also include the range for the number of tables.
+  --   ycffs    must also include the range for the number of tables;
+  --   verbose  is the verbose flag.
 
   -- ON RETURN :
   --   ylead    leading exponents of the result of the evaluation;
@@ -146,7 +150,8 @@ package Double_Lseries_Polynomials is
                    xlead : in Standard_Integer_Vectors.Vector;
                    xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
                    Alead : in out Standard_Integer_Matrices.Matrix;
-                   Acffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec );
+                   Acffs : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                   verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Evaluates a Laurent series Jacobian matrix at a Laurent series.
@@ -157,7 +162,8 @@ package Double_Lseries_Polynomials is
   --   xlead    leading exponents of the argument for the evaluation;
   --   xcffs    coefficient vectors of the argument for the evaluation;
   --   Acffs    allocated space for all rows and columns of Laurent
-  --            series of degree deg for the evaluated matrix.
+  --            series of degree deg for the evaluated matrix;
+  --   verbose  is the verbose flag.
 
   -- ON RETURN :
   --   Alead    leading exponents of the evaluated Jacobian matrix;
