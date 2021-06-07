@@ -1,3 +1,6 @@
+Mon 7 Jun 2021 : new package test_double_lseries_newton, with code from
+  ts_lsernew.
+
 Sun 6 Jun 2021 : to the evaluators in double_lseries_polynomials, added
   the verbose flag to make them silent in double_lseries_newton_steps.adb,
   tested by ts_lsernew.adb.

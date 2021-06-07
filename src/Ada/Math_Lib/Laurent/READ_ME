@@ -21,5 +21,6 @@ test_double_lseries_polynomials   : tests on Laurent series polynomials
 ts_lserpol                        : main test on Laurent series polynomials
 ------------------------------------------------------------------------------
 double_lseries_newton_steps       : runs Newton's method on Laurent series
-ts_lsernew                        : tests Newton on Laurent series polynomials
+test_double_lseries_newton        : tests Newton on Laurent series polynomials
+ts_lsernew                        : main test on Laurent series Newton
 ------------------------------------------------------------------------------
