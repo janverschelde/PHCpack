@@ -1,3 +1,5 @@
+Tue 8 Jun 2021 : added a basic laurent.gpr to make the test programs.
+
 Mon 7 Jun 2021 : new package test_double_lseries_newton, with code from
   ts_lsernew.
 

@@ -1,0 +1,21 @@
+project Laurent is
+
+    for Source_Dirs
+        use (".", "../../System", "../Numbers", "../QD",
+             "../Vectors", "../Matrices", "../Reduction",
+             "../Polynomials", "../Functions", 
+             "../../Deformations/Solutions");
+
+    for Object_Dir use "../../../Objects";
+
+    for Main
+        use ("ts_pslaur.adb", "ts_laurmat.adb",
+             "ts_lserpol.adb", "ts_lsernew.adb");
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end Laurent;

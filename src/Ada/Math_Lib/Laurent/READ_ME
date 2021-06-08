@@ -4,6 +4,8 @@ Power series with leading nonzero coefficients work provide Taylor series
 expansions of regular solutions of polynomial systems.
 Laurent series allow for negative exponents and are arithmetically closed.
 
+Run "gprbuild laurent.gpr" to make all test programs.
+
 ------------------------------------------------------------------------------
 file name                         : short description
 ------------------------------------------------------------------------------
