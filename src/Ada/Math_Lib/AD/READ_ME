@@ -1,7 +1,11 @@
-Algorithmic differentation from the Path library for PHCv2.4.63
+Algorithmic differentation from the Path library for PHCv2.4.85
 
 The packages in this folder are based on the reference code on the host
 of the GPU library Path, developed by Xiangcheng Yu.
+
+Run "gprbuild ad.gpr" to make all test programs.
+On windows, type "gprbuild ad.gpr -Xos=windows" at the PowerShell prompt.
+The "gprclean ad.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                       : short description

@@ -21,6 +21,11 @@ and defines series over any ring extended with division.
 In v2.4.80, series in triple, penta, octo, and deca double precision
 were added.
 
+Run "gprbuild series.gpr" to make all test programs.
+On windows, type "gprbuild series.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean series.gpr" removes all files created by gprbuild.
+
 ------------------------------------------------------------------------------
 file name                          : short description
 ------------------------------------------------------------------------------

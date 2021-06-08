@@ -1,0 +1,38 @@
+project ad is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Supports", "../Polynomials",
+                 "../Functions");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Supports", "../Polynomials",
+                 "../Functions");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_monom.adb",     -- tests the monomials
+        "ts_monvec.adb",    -- tests the monomial vectors
+        "ts_polvec.adb",    -- tests the polynomial vectors
+        "ts_sys2vec.adb"    -- tests system to polynomial vector converts
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end ad;

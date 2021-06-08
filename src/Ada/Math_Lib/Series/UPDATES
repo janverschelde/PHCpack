@@ -1,3 +1,5 @@
+Tue 8 Jun 2021 : defined series.gpr to build the test procedures.
+
 Sat 20 Mar 2021 : moved all code for Laurent series to ../Laurent.
 
 Fri 19 Mar 2021 : fixed indexing error in standard_laurent_series.adb.

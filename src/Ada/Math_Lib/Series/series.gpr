@@ -1,0 +1,61 @@
+project series is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Supports", "../Polynomials",
+                 "../Functions");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Supports", "../Polynomials",
+                 "../Functions");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_pstrunc.adb",    -- tests proof-of-concept power series
+        "ts_bincff.adb",     -- tests binomial coefficients
+        "ts_cseries.adb",    -- tests 3rd version of series
+        "ts_cservec.adb",    -- tests 3rd version of vector series
+        "ts_csermat.adb",    -- tests 3rd version of matrices of series
+        "ts_cseritp.adb",    -- tests linear series interpolation
+        "ts_csersin.adb",    -- tests solving singular linear systems
+        "ts_cserlin.adb",    -- tests linearization
+        "ts_cserinv.adb",    -- tests inverting singular problems
+        "ts_cserpol.adb",    -- tests series polynomials
+        "ts_csersys.adb",    -- tests systems of series polynomials
+        "ts_sercffpol.adb",  -- tests series coefficient-parameter eval
+        "ts_series2.adb",    -- tests 2nd design of series
+        "ts_servec2.adb",    -- tests vectors of standard series
+        "ts_sermat2.adb",    -- tests matrices of standard series
+        "ts_seritp2.adb",    -- tests linear series interpolation
+        "ts_sersin2.adb",    -- tests solving singular linear systems
+        "ts_serlin2.adb",    -- tests linearization
+        "ts_perfserlin.adb", -- tests a better performing solver
+        "ts_series.adb",     -- tests truncated dense series
+        "ts_servec.adb",     -- tests vectors of dense power series
+        "ts_sermat.adb",     -- tests matrices of dense power series
+        "ts_serlin.adb",     -- tests matrix series solver
+        "ts_seritp.adb",     -- tests interpolation on linear series systems
+        "ts_sersin.adb",     -- tests solving of singular matrix series
+        "ts_serpol.adb",     -- tests series polynomials
+        "ts_sersys.adb"      -- tests systems of series polynomials
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end series;
