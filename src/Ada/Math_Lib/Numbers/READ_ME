@@ -1,4 +1,4 @@
-Basic number definitions, coefficient rings and fields for PHCv2.4.80
+Basic number definitions, coefficient rings and fields for PHCv2.4.85
 
 This directory was established in release 2 of PHCpack and was upgraded
 for efficiency in later versions.  In v2.3, only the i/o of multiprecision
@@ -24,6 +24,11 @@ In addition we have random number generators and numbers_io,
 besides the usual testing facilities.
 
 In v2.4.80, code from test procedures was moved into separate test packages.
+
+Run "gprbuild numbers.gpr" to make all test programs.
+On windows, type "gprbuild numbers.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean numbers.gpr" removes file created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                        : short description

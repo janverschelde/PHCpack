@@ -1,0 +1,47 @@
+project Numbers is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_strnum.adb",  -- test number strings
+        "ts_natnum.adb",  -- test multiprecision natural numbers
+        "ts_intnum.adb",  -- test multiprecision integer numbers
+        "ts_fltnum.adb",  -- test multiprecision floating numbers
+        "ts_cmpnum.adb",  -- test multiprecision complex numbers
+        "ts_plrexp.adb",  -- test exponentation via polar representation
+        "ts_random.adb",  -- test random number generators
+        "ts_matfun.adb",  -- test mathematical functions
+        "ts_longflt.adb", -- test on long_long number types
+        "ts_numbio.adb",  -- test input/output of numbers
+        "ts_mpcst.adb",   -- test multiprecision constants
+        "ts_natdiv.adb",  -- test division of natural numbers
+        "ts_intval.adb"   -- test interval arithmetic
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+    package Linker is
+
+       for Switches ("ts_matfun.adb") use ("-lm");
+
+    end Linker;
+
+end Numbers;
