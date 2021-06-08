@@ -1,4 +1,4 @@
-Multivariate polynomials and polynomial systems over rings in PHCv2.4.83
+Multivariate polynomials and polynomial systems over rings in PHCv2.4.85
 
 New in release 2 is the availability of multiprecision numbers.
 The data structures are entirely redefined using Ada 95 concepts.
@@ -15,6 +15,11 @@ This library is organized in three parts:
 1) generic packages: polynomials and systems
 2) instantiations
 3) utilities
+
+Run "gprbuild polynomials.gpr" to make all test programs.
+On windows, type "gprbuild polynomials.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean polynomials.gpr" removes all files created by gprbuild.
 
 -------------------------------------------------------------------------------
 file name                         : short description

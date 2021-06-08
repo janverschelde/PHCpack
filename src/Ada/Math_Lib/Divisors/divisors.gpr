@@ -1,0 +1,37 @@
+project divisors is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Polynomials", "../Supports");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Polynomials", "../Supports");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_gcd.adb",      -- tests greatest common divisors
+        "ts_intlina.adb",  -- tests integer linear solvers
+        "ts_smith.adb",    -- tests normal forms
+        "ts_intinv.adb",   -- tests the inverse of integer matrix
+        "ts_circuit.adb"   -- tests circuit computation
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end divisors;

@@ -1,4 +1,4 @@
-Integer Linear Algebra in PHCv2.4.80
+Integer Linear Algebra in PHCv2.4.85
 
 This "Divisors" directory implements the greatest common divisors method
 to perform fraction-free row reduction on linear systems of integer numbers,
@@ -13,6 +13,11 @@ The Smith normal form was extended in version 2.3.68 for the
 general binomial system solvers.
 
 In version 2.4.80, the test procedures were organized in test packages.
+
+Run "gprbuild divisors.gpr" to make all test programs.
+On windows, type "gprbuild divisors.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean divisors.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                          : short description

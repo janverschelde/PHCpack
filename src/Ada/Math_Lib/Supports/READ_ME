@@ -1,4 +1,4 @@
-Support sets, polytopes, and linear-inequality systems in PHCv2.3.91
+Support sets, polytopes, and linear-inequality systems in PHCv2.4.85
 
 New in release 2 is the usage of Ada 95 concepts to build the lists.
 Reverse search is added in release 2.1 to enumerate vertices and facets.
@@ -8,6 +8,11 @@ The library is divided in two parts :
 1) algorithms for linear programming;
 2) data structures for support sets and faces of polytopes.
 The algorithms are independent from the data structures.
+
+Run "gprbuild supports.gpr" to make all test programs.
+On windows, type "gprbuild supports.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean supports.gpr" removes all files created by gprbuild.
 
 -------------------------------------------------------------------------------
 file name                          : short description

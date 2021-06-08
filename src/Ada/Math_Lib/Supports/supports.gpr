@@ -1,0 +1,40 @@
+project supports is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Supports", "../Polynomials",
+                 "../Circuits");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Supports", "../Polynomials",
+                 "../Circuits");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_basex.adb",    -- tests basis exchanges
+        "ts_feasi.adb",    -- tests linear minimization + reverse search
+        "ts_enurs.adb",    -- tests enumeration by reverse research
+        "ts_diclp.adb",    -- tests dictionaries and linear programming
+        "ts_givrot.adb",   -- tests givens rotations
+        "ts_lstvec.adb"    -- tests lists of links to vectors
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end supports;

@@ -1,4 +1,4 @@
-Polynomial evaluation and differentiation algorithms in PHCv2.4.80
+Polynomial evaluation and differentiation algorithms in PHCv2.4.85
 
 This directory was created new in v2.3.69, collecting the former nested 
 Horner scheme algorithms of the directory polynomials, and with the new
@@ -13,6 +13,11 @@ presented at PASCO 2010.  See also the directory ../Circuits.
 
 Since the different ways to evaluate polynomials use different orders of
 computation, the results may differ when multiprecision arithmetic is used.
+
+Run "gprbuild functions.gpr" to make all test programs.
+On windows, type "gprbuild functions.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean functions.gpr" removes all files created by gprbuild.
 
 -------------------------------------------------------------------------------
 file name                         : short description

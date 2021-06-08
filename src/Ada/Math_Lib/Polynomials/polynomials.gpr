@@ -1,0 +1,50 @@
+project polynomials is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Supports", "../Functions");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Supports", "../Functions");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_tdpol.adb",      -- tests tripdobl polynomials
+        "ts_pdpol.adb",      -- tests pentdobl polynomials
+        "ts_odpol.adb",      -- tests octodobl polynomials
+        "ts_dapol.adb",      -- tests decadobl polynomials
+        "ts_hessian.adb",    -- tests Hessian matrices
+        "ts_poly.adb",       -- tests polynomials and polynomial systems
+        "ts_rpol.adb",       -- tests polynomials with real coefficients
+        "ts_laurpoly.adb",   -- tests Laurent polynomials and systems
+        "ts_laurlist.adb",   -- tests lists of Laurent polynomials
+        "ts_randpoly.adb",   -- tests random polynomial generation
+        "ts_tabform.adb",    -- tests tableau format
+        "ts_jaco.adb",       -- tests Jacobian matrices
+        "ts_parse.adb",      -- tests poly-string conversions
+        "ts_subs.adb",       -- tests substitution of variables
+        "ts_ddpol.adb",      -- tests double double polynomials
+        "ts_qdpol.adb",      -- tests quad double polynomials
+        "ts_termlist.adb",   -- tests lists of terms
+        "ts_rwspol.adb"      -- tests the writing of long polynomials
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end polynomials;

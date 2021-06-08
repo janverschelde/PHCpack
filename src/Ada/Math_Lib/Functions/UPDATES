@@ -1,3 +1,5 @@
+Tue 8 Jun 2021 : defined functions.gpr to build the test procedures.
+
 Wed 23 Sep 2020 :  defined {trip,pent,octo,deca}dobl_complex_poly_functions
   and {trip,pent,octo,deca}dobl_complex_poly_sysfun.
 

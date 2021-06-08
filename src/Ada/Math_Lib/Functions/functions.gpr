@@ -1,0 +1,40 @@
+project functions is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Supports", "../Polynomials",
+                 "../Circuits");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Supports", "../Polynomials",
+                 "../Circuits");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_evaline.adb",     --  calls the evaluator package
+        "ts_evalpoly.adb",    --  development of nested Horner scheme
+        "ts_expvec.adb",      --  tests exponent vector extraction
+        "ts_polyflat.adb",    --  tests the flattening
+        "ts_perfeval.adb",    --  performance testing on poly evaluation
+        "ts_evddpol.adb"      --  evaluation of double double polynomials
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end functions;

@@ -1,4 +1,4 @@
-Algorithmic differentiation and arithmetic circuits in PHCv2.4.83
+Algorithmic differentiation and arithmetic circuits in PHCv2.4.85
 
 This directory was created new in v2.3.98, with code that had been building
 up in the directory Functions.  In Functions, polynomials are evaluated by
@@ -15,6 +15,11 @@ evaluation of Hessians, as needed for a robust path tracker.
 
 Since the different ways to evaluate polynomials use different orders of
 computation, the results may differ when multiprecision arithmetic is used.
+
+Run "gprbuild circuits.gpr" to make all test programs.
+On windows, type "gprbuild circuits.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean circuits.gpr" removes all files created by gprbuild.
 
 -------------------------------------------------------------------------------
 file name                          : short description

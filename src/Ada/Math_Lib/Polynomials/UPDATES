@@ -1,3 +1,5 @@
+Tue 8 Jun 2021 : defined polynomials.gpr to build the test procedures.
+
 Sat 5 Dec 2020 : moved mainsymb into the new package symbol_table_order.
 
 Wed 2 Dec 2020 : moved the code for maingood into the Main procedure of

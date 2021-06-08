@@ -1,0 +1,52 @@
+project circuits is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Supports", "../Polynomials",
+                 "../Functions", "../Series", "../../Deformations/Solutions" );
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Supports", "../Polynomials",
+                 "../Functions", "../Series", "../../Deformations/Solutions" );
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_vmpeval.adb",       -- tests variable precision evaluation
+        "ts_vmpdiff.adb",       -- tests variable precision differentiation
+        "ts_cffsup.adb",        -- tests coefficient supported polynomials
+        "ts_speel.adb",         -- development of Speelpenning product
+        "ts_speelsys.adb",      -- tests eval and diff of systems
+        "ts_cycfun.adb",        -- tests the cyclic n-roots problems
+        "ts_gradcirc.adb",      -- tests on eval & diff circuits
+        "ts_speelser.adb",      -- tests reverse mode on power series
+        "ts_speelcnv.adb",      -- tests convolutions for series polynomials
+        "ts_fabry.adb",         -- tests the Fabry ratio theorem
+        "ts_evalcnv.adb",       -- tests plain evaluation
+        "ts_hesscnv.adb",       -- tests plain Hessian computation
+        "ts_jacocnv.adb",       -- tests plain Jacobian computation
+        "ts_shiftcnv.adb",      -- tests shifting coefficients
+        "ts_perfconv.adb",      -- tests performance and convolutions
+        "ts_perfcirc.adb",      -- tests performance of splitted circuits
+        "ts_perfade.adb",       -- tests performance of algo diff eval
+        "ts_perfhess.adb"       -- tests Hessian circuits
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end circuits;
