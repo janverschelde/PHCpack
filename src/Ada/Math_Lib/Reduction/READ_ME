@@ -1,4 +1,4 @@
-Numerical Linear Algebra in PHCv2.4.82
+Numerical Linear Algebra in PHCv2.4.85
 
 This "Reduction" directory implements "row reduction" on linear systems
 of floating-point number of various precisions: double, double double,
@@ -13,6 +13,11 @@ The modified Gram-Schmidt method was added in version 2.3.70.
 
 Added solvers in triple, penta, octo, and deca double precision
 in version 2.4.80.
+
+Run "gprbuild reduction.gpr" to make all test programs.
+On windows, type "gprbuild reduction.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean reduction.gpr" removes all files created by gprbuild.
 
 -------------------------------------------------------------------------------
 file name                          : short description

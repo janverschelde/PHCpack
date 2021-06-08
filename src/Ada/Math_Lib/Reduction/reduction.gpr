@@ -1,0 +1,74 @@
+project reduction is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_ddnorm.adb",   -- tests double double vector norms
+        "ts_qdnorm.adb",   -- tests quad double vector norms
+        "ts_tdnorm.adb",   -- tests triple double vector norms
+        "ts_pdnorm.adb",   -- tests penta double vector norms
+        "ts_odnorm.adb",   -- tests octo double vector norms
+        "ts_danorm.adb",   -- tests deca double vector norms
+        "ts_errfree.adb",  -- illustrates error free transformations
+        "ts_fltdls.adb",   -- tests dynamic matrix triangulators
+        "ts_fltlu.adb",    -- tests floating-point LU factorization
+        "ts_cmplu.adb",    -- tests complex LU factorization
+        "ts_ddlu.adb",     -- tests double double LU solver
+        "ts_tdlu.adb",     -- tests triple double LU solver
+        "ts_qdlu.adb",     -- tests quad double LU solver 
+        "ts_pdlu.adb",     -- tests penta double LU solver 
+        "ts_odlu.adb",     -- tests octo double LU solver 
+        "ts_dalu.adb",     -- tests deca double LU solver 
+        "ts_backsubs.adb", -- tests accuracy of back substitution
+        "ts_vvlu.adb",     -- tests LU factorization on vecvecs
+        "ts_perflu.adb",   -- performance test on lufac
+        "ts_perfdlu.adb",  -- better performing complex lufac
+        "ts_rowred.adb",   -- tests incremental row reduction
+        "ts_dqrd.adb",     -- tests double QR and LS
+        "ts_ddqrd.adb",    -- tests double double QR and LS
+        "ts_tdqrd.adb",    -- tests triple double QR and LS
+        "ts_qdqrd.adb",    -- tests quad double QR and LS
+        "ts_pdqrd.adb",    -- tests penta double QR and LS
+        "ts_odqrd.adb",    -- tests octo double QR and LS
+        "ts_daqrd.adb",    -- tests deca double QR and LS
+        "ts_mpqrd.adb",    -- tests multiprecision QR and LS
+        "ts_qrd.adb",      -- tests QR and least squares
+        "ts_mgs.adb",      -- tests modified Gram-Schmidt
+        "ts_mgsrnk.adb",   -- Gram-Schmidt for rank determination
+        "ts_dsvd.adb",     -- tests double SVD
+        "ts_ddsvd.adb",    -- tests double double SVD
+        "ts_tdsvd.adb",    -- tests triple double SVD
+        "ts_qdsvd.adb",    -- tests quad double SVD
+        "ts_pdsvd.adb",    -- tests penta double SVD
+        "ts_odsvd.adb",    -- tests octo double SVD
+        "ts_dasvd.adb",    -- tests deca double SVD
+        "ts_mpsvd.adb",    -- tests multiprecision SVD
+        "ts_svd.adb",      -- tests the SVD
+        "ts_perfdsvd.adb", -- develop better performing SVD
+        "ts_eigval.adb",   -- tests eigenvalue computation
+        "ts_vmplu.adb"     -- tests variable precision solvers
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end reduction;

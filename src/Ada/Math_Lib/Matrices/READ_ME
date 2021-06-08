@@ -1,4 +1,4 @@
-Matrix types in PHCv2.4.80
+Matrix types in PHCv2.4.85
 
 Below are some milestones in the development of this library.
 New in the second release is the availability of multiprecision numbers,
@@ -23,6 +23,11 @@ classifications by numeric types (e.g., everything with standard_integer*,
 
 In v2.4.80, the test procedures were moved into test packages.
 Matrices in triple, penta, octo, and deca double precision were added.
+
+Run "gprbuild matrices.gpr" to make all test programs.
+On windows, type "gprbuild matrices.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean matrices.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                          : short description

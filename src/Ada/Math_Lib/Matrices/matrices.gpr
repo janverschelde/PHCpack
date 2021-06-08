@@ -1,0 +1,40 @@
+project matrices is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Reduction");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Reduction");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_natmat.adb",  -- tests natural matrices 
+        "ts_intmat.adb",  -- tests integer matrices
+        "ts_fltmat.adb",  -- tests floating-point matrices
+        "ts_cmpmat.adb",  -- tests complex matrices
+        "ts_ddmat.adb",   -- tests double double matrices
+        "ts_qdmat.adb",   -- tests quad double matrices
+        "ts_tdmat.adb",   -- tests triple double matrices
+        "ts_pdmat.adb",   -- tests penta double matrices
+        "ts_odmat.adb",   -- tests octo double matrices
+        "ts_damat.adb"    -- tests deca double matrices
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end matrices;
