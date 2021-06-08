@@ -1,3 +1,5 @@
+Tue 8 Jun 2021 : defined qd.gpr to build the test procedures.
+
 Wed 21 Oct 2020 : extended deca_double_numbers with type casts to
   double double, triple double, quad double, penta double, and octo double,
   with similar extensions to decadobl_complex_numbers_cv.

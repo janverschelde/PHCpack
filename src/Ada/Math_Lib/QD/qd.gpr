@@ -1,0 +1,58 @@
+project QD is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../Numbers");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../Numbers");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_dbldbl.adb",   -- test double doubles
+        "ts_qddbl.adb",    -- test quad doubles
+        "ts_ddcmplx.adb",  -- test complex double doubles
+        "ts_qdcmplx.adb",  -- test complex quad doubles
+        "ts_mpddcv.adb",   -- test multiprecision double double conversions
+        "ts_mpqdcv.adb",   -- test multiprecision quad double conversions
+        "ts_ddfun.adb",    -- test double double functions
+        "ts_qdfun.adb",    -- test quad double function
+        "ts_cmpexp.adb",   -- test complex exponentation
+        "ts_tridbl.adb",   -- test triple doubles
+        "ts_tdcmplx.adb",  -- test complex triple doubles
+        "ts_pentadbl.adb", -- test_penta doubles
+        "ts_pdcmplx.adb",  -- test complex penta doubles
+        "ts_octdbl.adb",   -- test octo doubles
+        "ts_odcmplx.adb",  -- test complex octo doubles
+        "ts_decadbl.adb",  -- test deca doubles
+        "ts_dacmplx.adb",  -- test complex deca doubles
+        "ts_tdfun.adb",    -- test triple double functions
+        "ts_pdfun.adb",    -- test penta double functions
+        "ts_odfun.adb",    -- test octo double functions
+        "ts_dafun.adb",    -- test deca double functions
+        "ts_mpcasts.adb"   -- test multiprecision multiple double casts
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+    package Linker is
+
+       for Switches ("ts_matfun.adb") use ("-lm");
+
+    end Linker;
+
+end QD;
