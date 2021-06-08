@@ -1,3 +1,5 @@
+Tue 8 Jun 2021 : defined vectors.gpr to build the test procedures.
+
 Sat 20 Mar 2021 : new package standard_complex_vecvecvecs.
 
 Sat 24 Oct 2020 : new packages {tripdobl,pentdobl,octodobl,decadobl}_vector_

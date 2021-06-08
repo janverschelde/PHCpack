@@ -49,10 +49,4 @@ project QD is
 
     end Compiler;
 
-    package Linker is
-
-       for Switches ("ts_matfun.adb") use ("-lm");
-
-    end Linker;
-
 end QD;

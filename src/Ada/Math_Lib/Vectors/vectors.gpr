@@ -1,0 +1,44 @@
+project vectors is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../Numbers", "../QD");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../Numbers", "../QD");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_natvec.adb",   -- test natural vectors
+        "ts_intvec.adb",   -- test integer vectors
+        "ts_fltvec.adb",   -- test floating-point vectors
+        "ts_cmpvec.adb",   -- test complex vectors
+        "ts_strvec.adb",   -- test vectors in strings
+        "ts_nesvec.adb",   -- test nested vectors
+        "ts_ddvec.adb",    -- test vectors of double doubles
+        "ts_qdvec.adb",    -- test vectors of quad doubles
+        "ts_tdvec.adb",    -- test vectors of triple doubles
+        "ts_pdvec.adb",    -- test vectors of penta doubles
+        "ts_odvec.adb",    -- test vectors of octo doubles
+        "ts_davec.adb",    -- test vectors of deca doubles
+        "ts_perfddvc.adb", -- test dd vector performance
+        "ts_perfqdvc.adb"  -- test qd vector performance
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end vectors;
