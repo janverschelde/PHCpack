@@ -1,8 +1,13 @@
-Polyhedral end games for polynomial homotopies in PHCv2.4.82
+Polyhedral end games for polynomial homotopies in PHCv2.4.85
 
 This directory was isolated in version 2.3.75 for clarity.
 New in release 2.3 is Newton's method with deflation for singularities
 and improved endgame routines based on extrapolation methods.
+
+Run "gprbuild end_games.gpr" to make all test programs.
+On windows, type "gprbuild end_games.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean end_games.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                        : short description

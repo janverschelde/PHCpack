@@ -1,4 +1,4 @@
-Predictors, correctors, and path trackers in PHCv2.4.84
+Predictors, correctors, and path trackers in PHCv2.4.85
 
 This directory is newly created in version 2.3.75 to focus on the
 predictors, correctors, and path trackers.  Higher-order extrapolators
@@ -22,6 +22,11 @@ of correctors with double double and quad double arithmetic.
 In v2.3.59 we can run entire paths with double double arithmetic.
 Version 2.3.84 offers a basic version of a path tracker with a get_next
 method, i.e.: with a generator, for use in phcpy.
+
+Run "gprbuild trackers.gpr" to make all test programs.
+On windows, type "gprbuild trackers.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean trackers.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                        : short description
