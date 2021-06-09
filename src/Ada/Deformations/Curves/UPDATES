@@ -1,3 +1,5 @@
+Wed 9 Jun 2021 : defined curves.gpr to build the test procedures.
+
 Tue 15 Dec 2020 : in {trip,pent,octo,deca}dobl_newton_matrix_series.adb,
   applied the echelon solvers for linear systems.
 

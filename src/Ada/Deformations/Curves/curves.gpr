@@ -1,0 +1,67 @@
+project curves is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Supports",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Series", "../../Math_Lib/Circuits",
+                 "../Solutions", "../Homotopy", "../Newton", "../Sweep",
+                 "../../Root_Counts/Product", "../../Tasking", "../../Main");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Supports",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Series", "../../Math_Lib/Circuits",
+                 "../Solutions", "../Homotopy", "../Newton", "../Sweep",
+                 "../../Root_Counts/Product", "../../Tasking", "../../Main");
+            for Excluded_Source_Files use ("corecount.c");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_durker.adb",     -- tests polynomial equation solver
+        "ts_extrapol.adb",   -- tests extrapolation
+        "ts_extrapts.adb",   -- tests points on skew line
+        "ts_sernew.adb",     -- tests the Newton series packages
+        "ts_sersol.adb",     -- tests solution series
+        "ts_sernewcnv.adb",  -- tests Newton power series convolutions
+        "ts_serhom.adb",     -- tests series and homotopies
+        "ts_serpade.adb",    -- tests rational approximations given series
+        "ts_ratapp.adb",     -- calls the main test on rational approxs
+        "ts_fabryhom.adb",   -- tests Newton-Fabry on a homotopy
+        "ts_hesscrit.adb",   -- tests development of the Hessian criterion
+        "ts_hesspred.adb",   -- tests step size based on nearest solution
+        "ts_hesspcnv.adb",   -- tests Hessian criterion on convolutions
+        "ts_corcnv.adb",     -- tests corrector convolutions
+        "ts_serpred.adb",    -- tests series predictor
+        "ts_jacrabin.adb",   -- tests the application of Rabinowitsch trick
+        "ts_padepred.adb",   -- tests the Pade predictors
+        "ts_padepcnv.adb",   -- tests Pade predictors for convolution circuits
+        "ts_predstep.adb",   -- tests setting of step size
+        "ts_pcscnv.adb",     -- tests predictor-corrector-shift step
+        "ts_scalecnv.adb",   -- tests scaling of solutions
+        "ts_serpath.adb",    -- tests series path tracker
+        "ts_nxtpadsol.adb",  -- tests the get_next() trackers
+        "ts_wrappade.adb"    -- tests the wrapping
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end curves;

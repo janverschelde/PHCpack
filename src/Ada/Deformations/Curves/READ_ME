@@ -1,4 +1,4 @@
-Univariate solvers and algebraic curves in PHCpack version 2.4.83
+Univariate solvers and algebraic curves in PHCpack version 2.4.85
 
 The numerical treatment of plane algebraic curves needs the solution of
 polynomial equations in one variable.  To solve univariate polynomials,
@@ -17,6 +17,11 @@ solution paths in a polynomial homotopy.  Since version 2.4.61,
 phc -u provides access to a robust path tracker, with a priori step
 control and detection of the nearest singularity via the application
 of the theorem of Fabry.
+
+Run "gprbuild curves.gpr" to make all test programs.
+On windows, type "gprbuild curves.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean curves.gpr" removes all files created by gprbuild.
 
 -------------------------------------------------------------------------------
 file name                         : short description

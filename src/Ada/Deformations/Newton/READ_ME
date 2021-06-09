@@ -1,4 +1,4 @@
-Root refining and a modified Newton's method in PHCv2.4.82
+Root refining and a modified Newton's method in PHCv2.4.85
 
 This directory is entirely new in release 2.3.  It contains the
 older root refiners, which were extended in the second release with
@@ -8,6 +8,11 @@ New in release 2.3 is Newton's method with deflation for singularities.
 Most recently added in release 2.3.18 is Aitken extrapolation.
 Root refiners with double double and quad double complex arithmetic
 were added in v2.3.55.
+
+Run "gprbuild newton.gpr" to make all test programs.
+On windows, type "gprbuild newton.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean newton.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                        : short description
