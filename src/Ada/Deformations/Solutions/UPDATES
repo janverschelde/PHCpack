@@ -1,3 +1,5 @@
+Wed 9 Jun 2021 : defined solutions.gpr to build the test procedures.
+
 Mon 22 Feb 2021 : to standard_system_and_solutions_io added a main procedure.
 
 Wed 17 Feb 2021 : moved the scan_for_start_system from ts_getstart

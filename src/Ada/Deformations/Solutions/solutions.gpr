@@ -1,0 +1,54 @@
+project solutions is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Supports",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Supports",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_sols.adb",         -- tests i/o of solutions
+        "ts_ddsols.adb",       -- tests double double complex solutions
+        "ts_qdsols.adb",       -- tests quad double complex solutions
+        "ts_solstr.adb",       -- tests string representations
+        "ts_getstart.adb",     -- tests the extract the start system
+        "ts_solfilt.adb",      -- tests the solution filters
+        "ts_grepsols.adb",     -- tests the selection of solutions
+        "ts_mapsols_io.adb",   -- tests the Maple output format
+        "ts_dicsols_io.adb",   -- tests the dictionary solutions
+        "ts_solar.adb",        -- tests lists of solution arrays
+        "ts_ptlists.adb",      -- tests sorting point lists
+        "ts_quadpart.adb",     -- tests the partitioning with quad tree
+        "ts_quad.adb",         -- tests the quad tree development
+        "ts_selsol.adb",       -- tests selecting solutions from file
+        "ts_trasols_io.adb",   -- tests processing output files of trackers
+        "ts_contab.adb",       -- tests frequency tables for solutions
+        "ts_soldrop.adb",      -- interactive tests on solution drops
+        "ts_mixres.adb"        -- tests the residual computations
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end solutions;

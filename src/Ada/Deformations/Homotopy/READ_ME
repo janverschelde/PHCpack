@@ -1,4 +1,4 @@
-Homotopies, scaling and reduction in PHCv2.4.82
+Homotopies, scaling and reduction in PHCv2.4.85
 
 The Creators in the package Homotopy allow more accessibility constants for
 the Cheater's homotopy.  A multiprecision version of the homotopy package
@@ -8,6 +8,12 @@ scaling routines is under development.
 This library is organized in three parts:
 1) Homotopy with homogenization 
 2) Scaling and reduction of polynomial systems.
+3) Encapsulation of convolution circuits.
+
+Run "gprbuild homotopy.gpr" to make all test programs.
+On windows, type "gprbuild homotopy.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean homotopy.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                          : short description

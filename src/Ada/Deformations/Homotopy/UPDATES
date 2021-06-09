@@ -1,3 +1,5 @@
+Wed 9 Jun 2021 : defined homotopy.gpr to build the test procedures.
+
 Sun 29 Nov 2020 : renamed drivers_for_scaling into scaling_methods.
   Reworked the procedure mainenum into the package main_scaling.
   Renamed ts_drivscal.adb into ts_mainscal.adb.

@@ -1,0 +1,54 @@
+project homotopy is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Supports",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Series", "../../Math_Lib/Circuits",
+                 "../Solutions", "../Newton", "../Curves",
+                 "../../Root_Counts/Product");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Supports",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Series", "../../Math_Lib/Circuits",
+                 "../Solutions", "../Newton", "../Curves",
+                 "../../Root_Counts/Product");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_qdhom.adb",         -- compares eval & diff for dd & qd
+        "ts_homotopy.adb",      -- runs tests on homotopies
+        "ts_evalhomt.adb",      -- tests coefficient homotopies
+        "ts_scalplane.adb",     -- tests scaling last hyperplane
+        "ts_multproj.adb",      -- tests multi-homogenization
+        "ts_scal.adb",          -- simple test program on scaling
+        "ts_mainscal.adb",      -- calls main scaling procedures
+        "ts_reduce.adb",        -- calls a main reduction procedure
+        "ts_linsol.adb",        -- tests the linear poly solvers
+        "ts_poldrop.adb",       -- interactive test on dropping of coordinates
+        "ts_vmphom.adb",        -- test variable precision homotopies
+        "ts_homcnv.adb"         -- tests convolution circuits for homotopies
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end homotopy;
