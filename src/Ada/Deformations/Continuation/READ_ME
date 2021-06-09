@@ -1,4 +1,4 @@
-Data management and drivers for polynomial continuation in PHCv2.4.84
+Data management and drivers for polynomial continuation in PHCv2.4.85
 
 In version 2.3.75, this directory was simplified with the moving of specific
 code for end games, sweeps, and path trackers to separate directories.
@@ -28,6 +28,11 @@ This library of continuation routines is organized in three layers:
   0. The basic data structures
   1. Increment-and-Fix continuation
   2. Driver routines
+
+Run "gprbuild continuation.gpr" to make all test programs.
+On windows, type "gprbuild continuation.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean continuation.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                        : short description

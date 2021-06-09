@@ -1,7 +1,12 @@
-Sweeping for singularities and parameter continuation in PHCv2.4.82
+Sweeping for singularities and parameter continuation in PHCv2.4.85
 
 For clarity, this directory was isolated from Continuation in v2.3.75.
 The path trackers in this directory rely on natural parameter homotopies.
+
+Run "gprbuild sweep.gpr" to make all test programs.
+On windows, type "gprbuild sweep.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean sweep.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                        : short description
