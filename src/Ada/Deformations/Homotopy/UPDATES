@@ -1,3 +1,5 @@
+Thu 10 Jun 2021 : added the exec_dir attribute to homotopy.gpr.
+
 Wed 9 Jun 2021 : defined homotopy.gpr to build the test procedures.
 
 Sun 29 Nov 2020 : renamed drivers_for_scaling into scaling_methods.

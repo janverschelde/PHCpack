@@ -1,3 +1,5 @@
+Thu 10 Jun 2021 : added the exec_dir attribute to sweep.gpr.
+
 Wed 9 Jun 2021 : defined sweep.gpr to build the test procedures.
 
 Sun 8 Nov 2020 : updated parameter_homotopy_continuation.adb for the renaming

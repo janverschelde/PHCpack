@@ -35,6 +35,7 @@ project continuation is
     end case;
 
     for Object_Dir use "../../../Objects";
+    for Exec_Dir use "../../../bin";
 
     for Main use
     (

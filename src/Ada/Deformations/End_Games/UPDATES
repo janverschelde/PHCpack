@@ -1,3 +1,5 @@
+Thu 10 Jun 2021 : added the exec_dir attribute to end_games.gpr.
+
 Wed 9 Jun 2021 : defined end_games.gpr to build the test procedures.
 
 Sun 8 Nov 2020 : updated driver_for_winding_numbers.adb for the renaming of
