@@ -1,4 +1,4 @@
-The MixedVol Algorithm for fast mixed volume computation in PHCv2.4.06
+The MixedVol Algorithm for fast mixed volume computation in PHCv2.4.85
 
 This directory is the main feature in release v2.3.13 of PHCpack.
 Since v2.3.31, support for stable mixed volumes was added.
@@ -23,6 +23,11 @@ The conversion of the source code from C++ down to C was done by Yan Zhuang.
 
 The program "ts_mv2c.adb" calls the C software "MixedVol" via
 the intermediate interface program mv.c.
+
+Run "gprbuild mixedvol.gpr" to make test procedures.
+On windows, type "gprbuild mixedvol.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean mixedvol.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                        : short description

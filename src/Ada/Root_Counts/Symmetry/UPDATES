@@ -1,4 +1,5 @@
-Wed 9 Jun 2021 : defined symmetry.gpr to build the test procedures.
+Thu 10 Jun 2021 : defined symmetry.gpr to build the test procedures.
+  Added Exec_Dir attribute to symmetry.gpr.
 
 Fri 4 Dec 2020 : replaced mainsmvc by the package mixed_volume_calculator.
 
