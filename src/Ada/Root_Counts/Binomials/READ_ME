@@ -1,4 +1,4 @@
-Solvers for binomial and simplex systems in PHCv2.4.79
+Solvers for binomial and simplex systems in PHCv2.4.85
 
 Systems with exactly two monomials in every equation are called "binomial".
 Systems in n variables with no more than n+1 monomials (eventually after 
@@ -22,6 +22,11 @@ solution sets of binomial systems admit monomial parametrizations.
 The solvers for general binomial systems are based on new algorithms
 developed jointly with Danko Adrovic.  Version 2.3.68 extended phc -b
 with a new solver, developed in this directory with ts_binset.
+
+Run "gprbuild binomials.gpr" to make all test programs.
+On windows, type "gprbuild binomials.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean binomials.gpr" removes all files created by gprbuild.
 
 -------------------------------------------------------------------------------
 file name                          : short description

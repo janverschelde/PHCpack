@@ -1,3 +1,5 @@
+Wed 9 Jun 2021 : defines product.gpr to build the test procedures.
+
 Fri 23 Oct 2020 : new packages test_product_systems, test_pivot_selection,
   and test_start_systems, with code extracted from respectively ts_prodsys,
   ts_pivset, and ts_startsys.

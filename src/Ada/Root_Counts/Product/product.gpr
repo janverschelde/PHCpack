@@ -1,0 +1,48 @@
+project product is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Deformations/Solutions");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Deformations/Solutions");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+       "ts_startsys.adb",      -- tests total degree start systems
+       "ts_strpart.adb",       -- tests sets and partitions strings
+       "ts_permanent.adb",     -- tests the permanent computation
+       "ts_permstar.adb",      -- mirroring permanent computations
+       "ts_mainmhom.adb",      -- tests main m-homogenization
+       "ts_mainmuho.adb",      -- tests main multi-homogenization
+       "ts_pivsel.adb",        -- tests pivot selection
+       "ts_strset.adb",        -- tests set structures as strings
+       "ts_mainsets.adb",      -- tests main set structures
+       "ts_prodsys.adb"        -- tests product systems
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end product;

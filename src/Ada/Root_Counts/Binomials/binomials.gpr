@@ -1,0 +1,55 @@
+project binomials is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Deformations/Solutions",
+                 "../Implift", "../Stalift", "../Dynlift",
+                 "../../Schubert/SAGBI");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Deformations/Solutions",
+                 "../Implift", "../Stalift", "../Dynlift",
+                 "../../Schubert/SAGBI");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_binsys.adb",     -- tests binomial solvers
+        "ts_simsys.adb",     -- tests simplex systems
+        "ts_simposol.adb",   -- tests simpomial solvers
+       -- "ts_cspsol.adb",     -- solving initial cell systems efficiently
+        "ts_powtrans.adb",   -- tests the power transformations
+        "ts_binpser.adb",    -- tests Puiseux series
+        "ts_kernel.adb",     -- tests kernel calculations
+        "ts_unimod.adb",     -- tests unimodular exponent transformations
+        "ts_incols.adb",     -- tests column span tests
+        "ts_binset.adb",     -- tests binomial varieties
+        "ts_binsol.adb",     -- tests affine solution sets of binomials
+        "ts_monmap.adb"      -- tests monomial maps
+       -- "ts_mapsubs.adb"     -- tests map substitution
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end binomials;

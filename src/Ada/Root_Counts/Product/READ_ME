@@ -1,4 +1,4 @@
-Generalized Bezout numbers and linear-product start systems in PHCv2.4.81
+Generalized Bezout numbers and linear-product start systems in PHCv2.4.85
 
 Four types of start systems are implemented, based on total degree,
 m-homogeneous, multi-homegenous, and generalized Bezout number.
@@ -12,6 +12,11 @@ In release 2.4.49, code was added to compute the generalized permanent
 for a supporting set structure, with maximum bipartite matching.
 The formal root count based on a set structure in phc -r is then
 computed much faster than with the previous permanent computation.
+
+Run "gprbuild product.gpr" to make all test programs.
+On windows, type "gprbuild product.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean product.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                          : short description
@@ -45,7 +50,7 @@ m_homogeneous_start_systems        : creation of m-homogeneous start systems
 interpolating_homotopies           : homotopies based on interpolation
 interpolating_homotopies_driver    : driver for interpolating homotopies
 main_m_homogenization              : main interactive m-homogenization
-ts_mainvmhom                       : calls the main m-homogenization
+ts_mainmhom                        : calls the main m-homogenization
 ------------------------------------------------------------------------------
 generate_unions                    : all unions of k numbers from a range
 degree_structure                   : model for multi-homogeneous structure
