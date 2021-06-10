@@ -1,3 +1,5 @@
+Thu 10 Jun 2021 : defined the exec_dir attribute in induction.gpr.
+
 Wed 9 Jun 2021 : defined induction.gpr to build the test procedures.
 
 Mon 14 Dec 2020 : commented out message in setup_flag_homotopies.adb.

@@ -1,3 +1,5 @@
+Thu 10 Jun 2021 : defined the exec_dir attribute in sagbi.gpr.
+
 Wed 9 Jun 2021 : defined sagbi.gpr to build the test procedures.
 
 Sun 29 Nov 2020 : renamed the package drivers_for_sagbi_homotopies into

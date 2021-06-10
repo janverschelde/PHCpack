@@ -51,6 +51,7 @@ project induction is
     end case;
 
     for Object_Dir use "../../../Objects";
+    for Exec_Dir use "../../../bin";
 
     for Main use
     (
@@ -58,7 +59,6 @@ project induction is
         "ts_induce.adb",      -- tests homotopies
         "ts_flagcond.adb",    -- tests Schubert conditions
         "ts_lrhom.adb"        -- tests Littlewood-Richardson homotopies
-
     );
 
     package Compiler is
