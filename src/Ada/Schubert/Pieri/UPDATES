@@ -1,3 +1,5 @@
+Wed 9 Jun 2021 : defined pieri.gpr to build the test procedures.
+
 Thu 3 Dec 2020 : moved the procedure bablenum to the package main_pieri_count.
 
 Sun 29 Nov 2020 : removed superfluous procedures driver_for_pieri_homotopies

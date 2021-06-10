@@ -1,8 +1,13 @@
-Numerical Schubert Calculus defining Schubert Induction with PHCv2.4.83
+Numerical Schubert Calculus defining Schubert Induction with PHCv2.4.85
 
 This directory is entirely new in release 2.2 of PHCpack,
 it implements a geometric Littlewood-Richardson rule and defines
 Littlewood-Richardson homotopies to solve Schubert problems.
+
+Run "gprbuild induction.gpr" to make all test programs.
+On windows, type "gprbuild induction.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean induction.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                      : short description

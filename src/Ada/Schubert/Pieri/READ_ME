@@ -1,4 +1,4 @@
-Numerical Schubert Calculus using Pieri homotopies with PHCv2.4.83
+Numerical Schubert Calculus using Pieri homotopies with PHCv2.4.85
 
 This directory was delivered with release 2 of PHCpack.
 Release 2.1 has only minor updates to facilitate the connection with C.
@@ -8,6 +8,11 @@ There are two parts in this library:
 1) original Pieri homotopy algorithm : chain by chain
 2) poset-based organization of the Pieri homotopies
 The test programs are grouped per part.
+
+Run "gprbuild pieri.gpr" to make all test programs.
+On windows, type "gprbuild pieri.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean pieri.gpr" removes all files created by gprbuild.
 
 -------------------------------------------------------------------------------
 file name                        : short description

@@ -1,0 +1,62 @@
+project pieri is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Deformations/Solutions",
+                 "../../Deformations/Homotopy",
+                 "../../Deformations/Newton", "../../Deformations/Curves",
+                 "../../Deformations/Trackers",
+                 "../../Deformations/End_Games",
+                 "../../Deformations/Continuation",
+                 "../../Root_Counts/Product", "../../Root_Counts/Binomials",
+                 "../../Root_Counts/Implift", "../../Root_Counts/Stalift",
+                 "../../Root_Counts/Dynlift", "../SAGBI");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Deformations/Solutions",
+                 "../../Deformations/Homotopy",
+                 "../../Deformations/Newton", "../../Deformations/Curves",
+                 "../../Deformations/Trackers",
+                 "../../Deformations/End_Games",
+                 "../../Deformations/Continuation",
+                 "../../Root_Counts/Product", "../../Root_Counts/Binomials",
+                 "../../Root_Counts/Implift", "../../Root_Counts/Stalift",
+                 "../../Root_Counts/Dynlift", "../SAGBI");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_detsys.adb",     -- tests determinantal systems
+       -- "ts_org_pieri.adb",  -- tests the original Pieri homotopy algorithm
+        "ts_canocurv.adb",   -- tests localization patterns for q-curves
+        "ts_posets.adb",     -- tests posets definitions
+        "ts_defpos.adb",     -- tests deformation posets
+        "ts_matinv.adb",     -- tests matrix inversion
+        "ts_pieri.adb",      -- tests the Pieri homotopies
+        "ts_piroco.adb"      -- tests the Pieri root count
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end pieri;

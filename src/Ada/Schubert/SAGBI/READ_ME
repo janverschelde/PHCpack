@@ -1,4 +1,4 @@
-Numerical Schubert Calculus using SAGBI homotopy in PHCv2.4.82
+Numerical Schubert Calculus using SAGBI homotopies in PHCv2.4.85
 
 This directory was delivered with release 2 of PHCpack, and stowed
 away in a separate directory in release 2.2.
@@ -11,6 +11,11 @@ SAGBI homotopies are a concatenation of three homotopies:
 Historically, SAGBI homotopies were the first tools in numerical
 Schubert calculus, but were later outperformed (both in mathematical
 beauty and efficiency) by the Pieri homotopies.
+
+Run "gprbuild sagbi.gpr" to make all test programs.
+On windows, type "gprbuild sagbi.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean sagbi.gpr" removes all files created by gprbuild.
 
 -------------------------------------------------------------------------------
 file name                        : short description
