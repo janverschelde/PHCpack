@@ -1,4 +1,6 @@
-Wed 9 Jun 2021 : defined implift.gpr to build the test procedures.
+Thu 10 Jun 2021 : added the exec_dir attribute to stalift.gpr.
+
+Wed 9 Jun 2021 : defined stalift.gpr to build the test procedures.
 
 Sun 8 Nov 2020 : updated driver_for_{mixedvol,demics}_algorithm.adb for the
   renaming of drivers_for_poly_continuation into main_poly_continuation.
