@@ -1,0 +1,59 @@
+project implift is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Deformations/Solutions",
+                 "../../Deformations/Homotopy",
+                 "../../Deformations/Newton", "../../Deformations/Curves",
+                 "../../Deformations/End_Games",
+                 "../../Deformations/Trackers",
+                 "../../Deformations/Continuation",
+                 "../Product", "../Binomials", "../Stalift",
+                 "../../Schubert/SAGBI");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Deformations/Solutions",
+                 "../../Deformations/Homotopy",
+                 "../../Deformations/Newton", "../../Deformations/Curves",
+                 "../../Deformations/End_Games",
+                 "../../Deformations/Trackers",
+                 "../../Deformations/Continuation",
+                 "../Product", "../Binomials", "../Stalift",
+                 "../../Schubert/SAGBI");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_supports.adb",       -- tests power lists
+        "ts_mainvpts.adb",       -- tests the main vertex extraction
+        "ts_transfo.adb",        -- tests transformations from vectors
+        "ts_tropelim.adb",       -- tests transforming Laurent systems
+        "ts_impvol.adb",         -- tests the mixed-volume computation
+        "ts_drivimpl.adb",       -- tests the main implicit lifting
+        "ts_supspan.adb"         -- tests the span computation
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end implift;

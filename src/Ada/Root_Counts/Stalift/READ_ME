@@ -1,4 +1,4 @@
-Static lifting for mixed volumes and polyhedral continuation in PHCv2.4.82
+Static lifting for mixed volumes and polyhedral continuation in PHCv2.4.85
 
 In release 2.3, one file had to be changed for the optimizer in Mac OS X
 and default options were set to floating-point point-wise lifting.
@@ -27,6 +27,11 @@ There are four parts in this library:
 2. Floating-point lifting, mixed subdivisions and polyhedral continuation
 3. Influence of points to mixed volume: a simple criterion
 4. Driver packages
+
+Run "gprbuild stalift.gpr" to make all test programs.
+On windows, type "gprbuild stalift.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean stalift.gpr" removes all files created by gprbuild.
 
 -------------------------------------------------------------------------------
 file name                         : short description

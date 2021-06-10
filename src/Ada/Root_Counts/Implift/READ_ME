@@ -1,4 +1,4 @@
-Polyhedral homotopies by implicit lifting in PHCpack version 2.4.82
+Polyhedral homotopies by implicit lifting in PHCpack version 2.4.85
 
 This directory contains software for the computation of mixed volumes,
 according to the recursive formula Bershtein used in his proof.
@@ -17,6 +17,11 @@ new separate directory Curves.
 
 Version 2.3.86 offered a tool to transform a Laurent polynomial system
 with support sets of positive corank.
+
+Run "gprbuild implift.gpr" to make all test programs.
+On windows, type "gprbuild implift.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean implift.gpr" removes all files created by gprbuild.
 
 -------------------------------------------------------------------------------
 file name                           : short description

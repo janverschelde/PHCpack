@@ -1,0 +1,71 @@
+project stalift is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Deformations/Solutions",
+                 "../../Deformations/Homotopy",
+                 "../../Deformations/Newton", "../../Deformations/Curves",
+                 "../../Deformations/End_Games",
+                 "../../Deformations/Trackers",
+                 "../../Deformations/Continuation",
+                 "../Product", "../Binomials", "../Implift", "../MixedVol",
+                 "../DEMiCs", "../../Tasking", "../../CtoPHC/Funky");
+            for Excluded_Source_Files use ("demicsrun.cpp", "main.cpp");
+            for Languages use ("Ada", "C++");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Deformations/Solutions",
+                 "../../Deformations/Homotopy",
+                 "../../Deformations/Newton", "../../Deformations/Curves",
+                 "../../Deformations/End_Games",
+                 "../../Deformations/Trackers",
+                 "../../Deformations/Continuation",
+                 "../Product", "../Binomials", "../Implift", "../MixedVol",
+                 "../DEMiCs", "../../Tasking", "../../CtoPHC/Funky");
+            for Excluded_Source_Files use
+                ("demicsrun.cpp", "main.cpp", "double_double.c",
+                 "zero_index_tree.c", "index_tree_lp.c", "relation_table.c",
+                 "prepare_for_mv.c", "one_level_lp.c", "mv.c",
+                 "mixed_volume.c", "form_lp.c", "cell_stack.c", "corecount.c");
+            for Languages use ("Ada", "C", "C++");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+
+    for Main use
+    (
+        "ts_rndcff.adb",        -- tests random systems
+        "ts_mixvol.adb",        -- tests mixed volume of supports
+        "ts_userlift.adb",      -- tests user defined integer lifting
+        "ts_stable.adb",        -- tests stable mixed volumes
+        "ts_drivcrit.adb",      -- tests the main criterion
+        "ts_drivstal.adb",      -- tests the main static lifting
+        "ts_mvasta.adb",        -- tests the MixedVol algorithm
+        "ts_calldemics.adb",    -- tests the DEMiCs Algorithm
+        "ts_mixlab.adb",        -- tests coordinate/labeled subdivisions
+        "ts_jpmix.adb",         -- tests jumpstarting
+        "ts_exptrack.adb",      -- tests exponential continuation parameters
+        "ts_balance.adb"        -- tests balancing lifting values
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end stalift;
