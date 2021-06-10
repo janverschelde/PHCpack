@@ -1,3 +1,5 @@
+Thu 10 Jun 2021 : added the exec_dir attribute to reduction.gpr.
+
 Tue 8 Jun 2021 : defined reduction.gpr to build the test procedures.
 
 Sat 7 Nov 2020 : test program ts_errfree to illustrate the concept of the

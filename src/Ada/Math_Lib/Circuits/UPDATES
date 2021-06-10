@@ -1,3 +1,5 @@
+Thu 10 Jun 2021 : added the exec_dir attribute to circuits.gpr.
+
 Tue 8 Jun 2021 : defined circuits.gpr to build the test procedures.
 
 Sat 5 Dec 2020 : added wrappers to convergence_radius_estimates.

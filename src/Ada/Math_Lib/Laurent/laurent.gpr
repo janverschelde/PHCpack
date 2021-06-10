@@ -7,10 +7,15 @@ project Laurent is
              "../../Deformations/Solutions");
 
     for Object_Dir use "../../../Objects";
+    for Exec_Dir use "../../../bin";
 
-    for Main
-        use ("ts_pslaur.adb", "ts_laurmat.adb",
-             "ts_lserpol.adb", "ts_lsernew.adb");
+    for Main use 
+    (
+        "ts_pslaur.adb",   -- tests Laurent power series
+        "ts_laurmat.adb",  -- tests matrices of Laurent series
+        "ts_lserpol.adb",  -- tests Laurent series polynomials
+        "ts_lsernew.adb"   -- tests Newton's method on Laurent series
+    );
 
     package Compiler is
 

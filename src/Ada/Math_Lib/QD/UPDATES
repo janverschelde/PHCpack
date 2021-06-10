@@ -1,3 +1,5 @@
+Thu 10 Jun 2021 : added the exec_dir attribute to qd.gqr.
+
 Tue 8 Jun 2021 : defined qd.gpr to build the test procedures.
 
 Wed 21 Oct 2020 : extended deca_double_numbers with type casts to

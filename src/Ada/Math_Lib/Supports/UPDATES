@@ -1,3 +1,5 @@
+Thu 10 Jun 2021 : added the exec_dir attribute to supports.gpr.
+
 Tue 8 Jun 2021 : defined supports.gpr to build the test procedures.
 
 Mon 4 Aug 2014 : new instantiations {dobl,quad}dobl_complex_veclists and io.

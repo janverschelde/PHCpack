@@ -1,3 +1,5 @@
+Thu 10 Jun 2021 : added the exec_dir attribute to matrices.gpr.
+
 Tue 8 Jun 2021 : defined matrices.gpr to build the test procedures.
 
 Wed 21 Oct 2020 : new package quaddobl_complex_matrices_cv.

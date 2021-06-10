@@ -1,3 +1,5 @@
+Thu 10 Jun 2021 : added the exec_dir attribute to series.gpr.
+
 Tue 8 Jun 2021 : defined series.gpr to build the test procedures.
 
 Sat 20 Mar 2021 : moved all code for Laurent series to ../Laurent.

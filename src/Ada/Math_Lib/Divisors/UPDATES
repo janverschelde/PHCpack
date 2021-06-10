@@ -1,3 +1,5 @@
+Thu 10 Jun 2021 : added the exec_dir attribute to divisors.gpr.
+
 Tue 8 Jun 2021 : defined divisors.gpr to build the test procedures.
 
 Sun 6 Sep 2020 : moved the test procedures from ts_gcd, ts_intlina, ts_smith,

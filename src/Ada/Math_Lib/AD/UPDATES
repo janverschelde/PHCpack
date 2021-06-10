@@ -1,3 +1,5 @@
+Thu 10 Jun 2021 : added the exec_dir attribute to ad.gpr.
+
 Tue 8 Jun 2021 : defined ad.gpr to build the test procedures.
 
 Fri 21 Dec 2018 : new type system in generic_polynomial_vectors to

@@ -1,3 +1,5 @@
+Thu 10 Jun 2021 : added exec_dir attributed to numbers.gpr.
+
 Tue 8 Jun 2021 : defined numbers.gpr to build the test procedures.
 
 Sat 29 Aug 2020 : moved code from ts_strnum, ts_natnum, ts_intnum, ts_fltnum,
