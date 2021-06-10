@@ -1,4 +1,4 @@
-Exploitation of permutation symmetry for symmetric homotopies in PHCv2.4.83
+Exploitation of permutation symmetry for symmetric homotopies in PHCv2.4.85
 
 If the polynomial system is invariant under permutations of its unknowns,
 then it suffices to compute the generators of the solution set.
@@ -10,6 +10,11 @@ This library is organized in four parts :
 2) symmetric linear-product start systems with drivers
 3) symmetric integer and floating-point lifting
 4) the main procedures, as called by phc -m
+
+Run "gprbuild symmetry.gpr" to make all test programs.
+On windows, type "gprbuild symmetry.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean symmetry.gpr" removes all files created by gprbuild.
 
 -------------------------------------------------------------------------------
 file name                          : short description

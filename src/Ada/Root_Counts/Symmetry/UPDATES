@@ -1,3 +1,5 @@
+Wed 9 Jun 2021 : defined symmetry.gpr to build the test procedures.
+
 Fri 4 Dec 2020 : replaced mainsmvc by the package mixed_volume_calculator.
 
 Sun 8 Nov 2020 : updated drivers_for_symmetric_lifting for the renaming of

@@ -1,4 +1,4 @@
-Mixed-volume computation by dynamic lifting in PHCv2.4.83
+Mixed-volume computation by dynamic lifting in PHCv2.4.85
 
 The aim of dynamic lifting is to control the heights of the lifting values,
 to obtain a stable evaluation of the polyhedral homotopy.
@@ -13,6 +13,11 @@ ordinary volume, which is computed by a regular triangulation.
 
 A 64-bit version of the dynamic lifting algorithm was provided
 in version 2.3.71.
+
+Run "gprbuild dynlift.gpr" to make all test programs.
+On windows, type "gprbuild dynlift.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean dynlift.gpr" removes all files created by gprbuild.
 
 -------------------------------------------------------------------------------
 file name                            : short descriptio

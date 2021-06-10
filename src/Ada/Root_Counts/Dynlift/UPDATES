@@ -1,3 +1,5 @@
+Wed 9 Jun 2021 : defined dynlift.gpr to build the test procedures.
+
 Sun 5 Dec 2020 : moved babldmvc into black_polyhedral_continuations.
 
 Sun 4 Oct 2020 : updated drivers_for_dynamic_lifting for package name changes.
