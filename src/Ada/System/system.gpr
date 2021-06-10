@@ -1,0 +1,38 @@
+project system is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    for Languages use ("Ada", "C");
+
+    case os is
+        when "linux" | "macosx" => 
+            for Source_Dirs use (".", "Unix_Timer");
+        when "windows" =>
+            for Source_Dirs use (".", "Basic_Timer");
+    end case;
+
+    for Object_Dir use "../../Objects";
+    for Exec_Dir use "../../bin";
+
+    for Main use
+    (
+       "ts_stamps.adb",      -- tests on date, time, and elapsed time
+      -- "ts_ctimer.adb",      -- timing with a call to ANSI C
+       "ts_syscall.adb",     -- execution of a system call : "ls"
+       "ts_mach.adb",        -- prints system information of current process
+       "ts_cmdline.adb",     -- prints the arguments of the command line
+       "ts_byemess.adb",     -- prints the message at the end of the program
+       "ts_strsplit.adb",    -- tests string_splitters package
+       "ts_commuser.adb",    -- tests the dialogues with the user
+       "ts_filescan.adb",    -- reads a file name and banner, and scans for it
+       "ts_striscan.adb"     -- interactive test on string_parsing.scan()
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end system;

@@ -1,4 +1,4 @@
-OS dependent features and general utilities in PHCv2.4.80
+OS dependent features and general utilities in PHCv2.4.85
 
 New in the second release is the inclusion of test programs (prefix "ts_").
 A timer interfacing with C was needed for the Windows platform and Itanium
@@ -7,6 +7,11 @@ The unix timing facilities were moved to the subdirectory Unix_Timer.
 An extra procedure was added to communications_with_user in release 2.3.
 Multithreading was added in release 2.3.39.  New in 2.3.58 is the package
 string_splitters.
+
+Run "gprbuild system.gpr" to make all test procedures.
+On windows, type "gprbuild system.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean system.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                 : short description

@@ -1,3 +1,5 @@
+Thu 10 Jun 2021 : defined system.gpr to build the test procedures.
+
 Sun 23 Aug 2020 : extended communications_with_user with end of input message.
 
 Fri 10 Jul 2020 : minor layout adjustments in communications_with_user.adb.
