@@ -1,3 +1,7 @@
+Fri 11 Jun 2021 : updated ts_divdif.adb, ts_powtrc.adb, ts_traces.adb,
+  and ts_dvdexp.adb for compiler errors.  Defined interpolators.gpr to
+  build all test procedures.
+
 Sat 19 Sep 2015 : in {dobldobl,quaddobl}_trace_interpolators.adb, bug fix
   in the normalize of a polynomial, changed tuning in ts_traces.adb.
   The test ts_trapol.adb must use the new standard_lined_hypersurfaces.

@@ -37,7 +37,7 @@ with DoblDobl_Durand_Kerner;             use DoblDobl_Durand_Kerner;
 with QuadDobl_Durand_Kerner;             use QuadDobl_Durand_Kerner;
 with Witness_Sets,Witness_Sets_io;       use Witness_Sets,Witness_Sets_io;
 with Rectangular_Sample_Grids;           use Rectangular_Sample_Grids;
-with Drivers_to_Grid_Creators;           use Drivers_to_Grid_Creators;
+with Make_Sample_Grids;                  use Make_Sample_Grids;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Multprec_Floating_Numbers_io;       use Multprec_Floating_Numbers_io;
 with Multprec_Complex_Numbers;

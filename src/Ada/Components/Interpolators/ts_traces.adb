@@ -65,7 +65,7 @@ with DoblDobl_Sample_Lists;             use DoblDobl_Sample_Lists;
 with QuadDobl_Sample_Points;            use QuadDobl_Sample_Points;
 with QuadDobl_Sample_Lists;             use QuadDobl_Sample_Lists;
 with Witness_Sets,Witness_Sets_io;      use Witness_Sets,Witness_Sets_io;
-with Drivers_to_Grid_Creators;          use Drivers_to_Grid_Creators;
+with Make_Sample_Grids;                 use Make_Sample_Grids;
 with Standard_Stacked_Sample_Grids;
 with DoblDobl_Stacked_Sample_Grids;
 with QuadDobl_Stacked_Sample_Grids;

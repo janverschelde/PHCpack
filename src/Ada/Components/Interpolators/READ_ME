@@ -1,4 +1,4 @@
-Interpolation module for solution components with PHCv2.4.01
+Interpolation module for solution components with PHCv2.4.85
 
 The interpolation routines constitute a separate module.
 Three approaches have been studied and implemented :
@@ -15,6 +15,11 @@ The filtering module encapsulates projectors and interpolators :
   c) interpolators and management of filtering polynomials.
 The span of a component is needed to ensure the number of central points
 in the projector, but is otherwise not an essential part of the filter.
+
+Run "gprbuild interpolators.gpr" to make all test programs.
+On windows, type "gprbuild interpolators.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean interpolators.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                          : short description

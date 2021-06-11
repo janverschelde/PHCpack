@@ -1,5 +1,9 @@
-with text_io,integer_io;                 use text_io,integer_io;
+with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
@@ -28,7 +32,7 @@ with Total_Degree_Start_Systems;         use Total_Degree_Start_Systems;
 with Standard_Homotopy;
 with Standard_Complex_Solutions;
 with Continuation_Parameters;
-with Increment_and_Fix_Continuation;     use Increment_and_Fix_Continuation;
+with Standard_IncFix_Continuation;       use Standard_IncFix_Continuation;
 with Standard_Polynomial_Interpolators;
 with Multprec_Polynomial_Interpolators;
 with Witness_Sets;                       use Witness_Sets;
@@ -96,9 +100,9 @@ procedure ts_dvdexp is
   end Set_Constant_to_One;
 
   procedure Generate_Test_Standard_Polynomial
-              ( file : in file_type; d,cff : in natural;
+              ( file : in file_type; d,cff : in natural32;
                 p : out Standard_Complex_Polynomials.Poly;
-                m : out natural ) is
+                m : out natural32 ) is
 
   -- DESCRIPTION :
   --   Generates a test polynomial and writes this on file.
@@ -164,8 +168,8 @@ procedure ts_dvdexp is
   end Add_Slice;
 
   procedure Write_Summary
-               ( file : in file_type;
-                 sols : in Standard_Complex_Solutions.Solution_List;
+              -- ( file : in file_type;
+               ( sols : in Standard_Complex_Solutions.Solution_List;
                  maxerr,minrco,maxres : out double_float ) is
 
   -- DESCRIPTION :
@@ -217,9 +221,10 @@ procedure ts_dvdexp is
     epsxa : constant double_float := 1.0E-13;
     epsfa : constant double_float := 1.0E-13;
     tolsing : constant double_float := 1.0E-8;
-    numit : natural := 0;
-    max : constant natural := 5;
+    numit : natural32 := 0;
+    max : constant natural32 := 5;
     maxerr,minrco,maxres : double_float;
+    deflate : boolean := false;
 
     procedure Continue is
       new Silent_Continue(Max_Norm,Standard_Homotopy.Eval,
@@ -229,9 +234,10 @@ procedure ts_dvdexp is
     Start_System(sys,q,sols);
     Standard_Homotopy.Create(sys,q,2,Random1);
     Continuation_Parameters.Tune(2);
-    Continue(sols,false,Create(1.0));
-    Silent_Root_Refiner(sys,sols,epsxa,epsfa,tolsing,numit,max,false);
-    Write_Summary(file,sols,maxerr,minrco,maxres);
+    Continue(sols,false); -- ,Create(1.0));
+    Silent_Root_Refiner(sys,sols,epsxa,epsfa,tolsing,numit,max,deflate);
+   -- Write_Summary(file,sols,maxerr,minrco,maxres);
+    Write_Summary(sols,maxerr,minrco,maxres);
     put(file,"GP Max err :"); put(file,maxerr,3);
     put(file,"  Min rco :"); put(file,minrco,3);
     put(file,"  Max res :"); put(file,maxres,3); new_line(file);
@@ -258,21 +264,21 @@ procedure ts_dvdexp is
   -- ON RETURN :
   --   grid      grid of samples.
 
-    lhyp : Standard_Complex_Vectors.Link_to_Vector
+    lhyp : constant Standard_Complex_Vectors.Link_to_Vector
          := new Standard_Complex_Vectors.Vector'(hyp);
-    sli : Standard_Complex_VecVecs.VecVec(1..1) := (1..1 => lhyp);
-    sps : Standard_Sample_List := Create(sols,sli);
+    sli : constant Standard_Complex_VecVecs.VecVec(1..1) := (1..1 => lhyp);
+    sps : constant Standard_Sample_List := Create(sols,sli);
 
   begin
     Sampling_Machine.Initialize(sys);
     Sampling_Machine.Default_Tune_Sampler(2);
     Sampling_Machine.Default_Tune_Refiner;
-    grid := Create1(sps,grid'last);
+    grid := Create1(sps,natural32(grid'last));
     Sampling_Machine.Clear;
   end Create_Standard_Sample_Grid;
 
   procedure Create_Multprec_Sample_Grid
-               ( file : in file_type; size : in natural;
+               ( file : in file_type; size : in natural32;
                  sys : Standard_Complex_Poly_Systems.Poly_Sys;
                  embsys : Standard_Complex_Poly_Systems.Poly_Sys;
                  hyp : in Standard_Complex_Vectors.Vector;
@@ -291,8 +297,8 @@ procedure ts_dvdexp is
   -- ON RETURN :
   --   grid      grid of samples.
 
-    sli : Standard_Complex_VecVecs.VecVec := Slices(embsys,1);
-    sps : Standard_Sample_List := Create(sols,sli);
+    sli : constant Standard_Complex_VecVecs.VecVec := Slices(embsys,1);
+    sps : constant Standard_Sample_List := Create(sols,sli);
     mpsys : Multprec_Complex_Poly_Systems.Poly_Sys(1..2);
 
   begin
@@ -300,7 +306,7 @@ procedure ts_dvdexp is
     Sampling_Machine.Initialize(embsys,mpsys,1,size);
     Sampling_Machine.Default_Tune_Sampler(2);
     Sampling_Machine.Default_Tune_Refiner;
-    grid := Create1(sps,grid'last,size);
+    grid := Create1(sps,natural32(grid'last),size);
     Sampling_Machine.Clear;
   end Create_Multprec_Sample_Grid;
 
@@ -363,7 +369,7 @@ procedure ts_dvdexp is
     maxres : double_float;
 
   begin
-    q := Create(grid,Create(0));
+    q := Create(grid,Create(integer32(0)));
     eq := Create(q);
     exp := Expand(eq);
     tmp := Maximal_Error(q,grid); maxres := Round(tmp); Clear(tmp);
@@ -428,14 +434,14 @@ procedure ts_dvdexp is
   end Multprec_Direct_Interpolate;
 
   procedure Standard_Experiment
-               ( file : in file_type; d,cff : in natural;
-                 restab : out Matrix ) is
+               ( file : in file_type; d : in integer32;
+                 cff : in natural32; restab : out Matrix ) is
 
   -- DESCRIPTION :
   --   Performs the comparison Newton versus direct with standard arithmetic.
 
     dense,nip,dip : Standard_Complex_Polynomials.Poly;
-    nbmon : natural;
+    nbmon : natural32;
     sys : Standard_Complex_Poly_Systems.Poly_Sys(1..2);
     sols : Standard_Complex_Solutions.Solution_List;
     hyp : Standard_Complex_Vectors.Vector(0..2);
@@ -444,7 +450,7 @@ procedure ts_dvdexp is
 
   begin
     Add_Symbols;
-    Generate_Test_Standard_Polynomial(file,d,cff,dense,nbmon);
+    Generate_Test_Standard_Polynomial(file,natural32(d),cff,dense,nbmon);
     restab(d,1) := double_float(nbmon);
     Generic_Points(file,dense,sys,sols,hyp);
     Create_Standard_Sample_Grid(file,sys,hyp,sols,grid);
@@ -503,8 +509,8 @@ procedure ts_dvdexp is
   end Embed;
 
   procedure Multprec_Experiment
-               ( file : in file_type; d,cff,size : in natural;
-                 restab : out Matrix ) is
+               ( file : in file_type; d : in integer32;
+                 cff,size : in natural32; restab : out Matrix ) is
 
   -- DESCRIPTION :
   --   Performs the comparison Newton versus direct with multi-precision
@@ -512,7 +518,7 @@ procedure ts_dvdexp is
 
     stdense : Standard_Complex_Polynomials.Poly;
     mpdense,nip,dip : Multprec_Complex_Polynomials.Poly;
-    nbmon : natural;
+    nbmon : natural32;
     sys : Standard_Complex_Poly_Systems.Poly_Sys(1..2);
     embsys : Standard_Complex_Poly_Systems.Poly_Sys(1..3);
     sols,embsols : Standard_Complex_Solutions.Solution_List;
@@ -523,7 +529,7 @@ procedure ts_dvdexp is
 
   begin
     Add_Symbols;
-    Generate_Test_Standard_Polynomial(file,d,cff,stdense,nbmon);
+    Generate_Test_Standard_Polynomial(file,natural32(d),cff,stdense,nbmon);
     restab(d,1) := double_float(nbmon);
     Generic_Points(file,stdense,sys,sols,hyp);
     Embed(sys,sols,embsys,embsols);
@@ -585,7 +591,7 @@ procedure ts_dvdexp is
       "--------------------------------------------------------------");
     for i in restab'range(1) loop
       put(file,i,3); put(file,"  ");
-      put(file,integer(restab(i,1)),4); put(file,"      ");
+      put(file,integer32(restab(i,1)),4); put(file,"      ");
       put(file,restab(i,2),2,3,0);      put(file,"          ");
       put(file,restab(i,3),2,3,0);      put(file,"          ");
       put(file,restab(i,4),2,3,0); new_line(file);
@@ -597,7 +603,8 @@ procedure ts_dvdexp is
   procedure Main is
 
     file : file_type;
-    d1,d2,cff,deci,size : natural;
+    cff,deci,size : natural32;
+    d1,d2 : integer32;
 
   begin
     new_line;
@@ -621,21 +628,22 @@ procedure ts_dvdexp is
       new_line;
       put("Give the number of decimal places (<= 16 is standard) : ");
       get(deci);
-      if deci > 16
-       then size := Decimal_to_Size(deci);
-            Sampling_Machine.Interactive_Tune_Refiner(size);
-            new_line;
-            put_line("See the output file for results...");
-            new_line;
-            for d in d1..d2 loop
-              Multprec_Experiment(file,d,cff,size,restab);
-            end loop;
-       else new_line;
-            put_line("See the output file for results...");
-            new_line;
-            for d in d1..d2 loop
-              Standard_Experiment(file,d,cff,restab);
-            end loop;
+      if deci > 16 then
+        size := Decimal_to_Size(deci);
+        Sampling_Machine.Interactive_Tune_Refiner(size);
+        new_line;
+        put_line("See the output file for results...");
+        new_line;
+        for d in d1..d2 loop
+          Multprec_Experiment(file,d,cff,size,restab);
+        end loop;
+      else
+        new_line;
+        put_line("See the output file for results...");
+        new_line;
+        for d in d1..d2 loop
+          Standard_Experiment(file,d,cff,restab);
+        end loop;
       end if;
       Write_Results(file,restab);
     end;
