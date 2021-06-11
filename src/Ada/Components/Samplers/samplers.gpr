@@ -1,0 +1,75 @@
+project samplers is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Math_Lib/Circuits",
+                 "../../Deformations/Solutions",
+                 "../../Deformations/Homotopy",
+                 "../../Deformations/Newton", "../../Deformations/Curves",
+                 "../../Deformations/Trackers",
+                 "../../Deformations/End_Games",
+                 "../../Deformations/Continuation",
+                 "../../Root_Counts/Product", "../../Root_Counts/Symmetry");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Math_Lib/Circuits",
+                 "../../Deformations/Solutions",
+                 "../../Deformations/Homotopy",
+                 "../../Deformations/Newton", "../../Deformations/Curves",
+                 "../../Deformations/Trackers",
+                 "../../Deformations/End_Games",
+                 "../../Deformations/Continuation",
+                 "../../Root_Counts/Product", "../../Root_Counts/Symmetry");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+    for Exec_Dir use "../../../bin";
+
+    for Main use
+    (
+        "ts_planes.adb",      -- tests manipulating planes
+        "ts_flag.adb",        -- tests formats of flags
+        "ts_coords.adb",      -- tests representations of witness points
+        "ts_square.adb",      -- tests making polynomial systems square
+        "ts_embed.adb",       -- tests embedding a polynomial system
+        "ts_squemb.adb",      -- tests squaring and embedding
+        "ts_locdim.adb",      -- attempt at a local dimension test
+        "ts_iddnewt.adb",     -- tests {dobl,quad}dobl intrinsic Newton
+        "ts_ispan.adb",       -- tests determining linear span
+        "ts_iwset.adb",       -- convert to intrinsic witness sets
+       -- "ts_inewt.adb",       -- tests intrinsic Newton's method
+       -- "ts_itrack.adb",      -- tests intrinsic path trackers
+       -- "ts_ilocal.adb",      -- tests local intrinsic coordinates
+       -- "ts_sampar.adb",      -- tests affine sampler
+        "ts_sample.adb",      -- tests sampler
+        "ts_ddqdsam.adb",     -- tests double double & quad double sampling
+       -- "ts_mulhom.adb",      -- tests multiplicity samplers
+        "ts_unisam.adb",      -- tests Weierstrass method
+        "ts_hypsam.adb",      -- tests hypersurface sampler
+        "ts_roots.adb",       -- tests root finder
+        "ts_hyppts.adb",      -- tests solving p(b+t*v) = 0
+        "ts_hyprts.adb"       -- tests solving p(t*v) = 0
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end samplers;

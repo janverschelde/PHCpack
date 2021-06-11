@@ -1,4 +1,4 @@
-Sampling module for positive dimensional solution components with PHCv2.4.82
+Sampling module for positive dimensional solution components with PHCv2.4.85
 
 This directory is entirely new in release 2.1, with no changes in
 release 2.2.  Intrinsic samplers were added in release 2.3.
@@ -14,6 +14,11 @@ Intrinsic samplers which use these generators are still under development.
 New since 2.3.53 are the use of local intrinsic coordinates, see ts_ilocal.
 Samplers in double double and quad double arithmetic were added in
 version 2.3.87 of PHCpack.
+
+Run "gprbuild samplers.gpr" to make all test programs.
+On windows, type "gprbuild samplers.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean samplers.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                         : short description
