@@ -1,4 +1,4 @@
-A Numerical Irreducible Decomposition with PHCv2.4.83
+A Numerical Irreducible Decomposition with PHCv2.4.85
 
 This directory is entirely new in release 2.1 and contains homotopies to
 compute witness points on all positive dimensional solution components.
@@ -8,6 +8,11 @@ There are two approaches:
 The extrinsic/intrinsic approach to implement diagonal homotopies is
 under development and is improved in release 2.2.
 The binomial solver was added as an option to phc -c in release 2.3.70.
+
+Run "gprbuild decomposition.gpr" to make all test programs.
+On windows, type "gprbuild decomposition.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean decomposition.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                        : short description

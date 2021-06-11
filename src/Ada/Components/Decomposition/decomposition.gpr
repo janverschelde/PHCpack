@@ -1,0 +1,75 @@
+project decomposition is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Math_Lib/Circuits",
+                 "../../Math_Lib/Series", "../../Deformations/Solutions",
+                 "../../Deformations/Homotopy",
+                 "../../Deformations/Newton", "../../Deformations/Curves",
+                 "../../Deformations/Trackers",
+                 "../../Deformations/End_Games",
+                 "../../Deformations/Continuation",
+                 "../../Root_Counts/Product", "../../Root_Counts/Binomials",
+                 "../../Root_Counts/Stalift", "../../Root_Counts/MixedVol", 
+                 "../../Root_Counts/Dynlift", "../../Root_Counts/Implift",
+                 "../../Root_Counts/Symmetry",
+                 "../Samplers", "../Interpolators", "../Factorization",
+                 "../../Tasking", "../../Main", "../../CtoPHC/State");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Math_Lib/Circuits",
+                 "../../Math_Lib/Series", "../../Deformations/Solutions",
+                 "../../Deformations/Homotopy",
+                 "../../Deformations/Newton", "../../Deformations/Curves",
+                 "../../Deformations/Trackers",
+                 "../../Deformations/End_Games",
+                 "../../Deformations/Continuation",
+                 "../../Root_Counts/Product", "../../Root_Counts/Binomials",
+                 "../../Root_Counts/Stalift", "../../Root_Counts/MixedVol",
+                 "../../Root_Counts/Dynlift", "../../Root_Counts/Implift",
+                 "../../Root_Counts/Symmetry",
+                 "../Samplers", "../Interpolators", "../Factorization",
+                 "../../Tasking", "../../Main", "../../CtoPHC/State");
+            for Excluded_Source_Files use
+                ("corecount.c", "zero_index_tree.c", "index_tree_lp.c",
+                 "relation_table.c", "prepare_for_mv.c", "one_level_lp.c",
+                 "mv.c", "mixed_volume.c", "form_lp.c", "cell_stack.c");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+    for Exec_Dir use "../../../bin";
+
+    for Main use
+    (
+        "ts_irdeco.adb",      -- tests witness generate and classify
+       -- "ts_diahom.adb",      -- tests diagonal homotopies
+        "ts_intdia.adb",      -- tests intersect varieties intrinsically
+        "ts_jmpdia.adb",      -- tests jumpstarting diagonal homotopies
+        "ts_dimred.adb",      -- tests dimension determination
+        "ts_breakup.adb",     -- tests breaking up components
+        "ts_witsols.adb",     -- tests witness solutions
+        "ts_cascade.adb"      -- tests the cascade homotopy
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end decomposition;

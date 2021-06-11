@@ -1,5 +1,7 @@
-with text_io,integer_io;                use text_io,integer_io;
+with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Random_Numbers;           use Standard_Random_Numbers;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
@@ -50,7 +52,7 @@ procedure ts_dimred is
     new_line;
     put_line("Reading the name of the output file.");
     Read_Name_and_Create_File(file);
-    put(file,lp'length,1);
+    put(file,integer32(lp'length),1);
     new_line(file);
     put(file,lp.all);
     declare
