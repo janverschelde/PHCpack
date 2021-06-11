@@ -1,3 +1,5 @@
+Fri 11 Jun 2021 : defined factorization.gpr to build all test procedures.
+
 Wed 17 Feb 2021 : updated main_factorization for the removal of mainfilt.
 
 Fri 4 Dec 2020 : moved mainfac into the new package main_factorization.

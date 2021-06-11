@@ -1,4 +1,4 @@
-project interpolators is
+project factorization is
 
     type OS_type is ("linux", "windows", "macosx");
     os : OS_type := external("os", "linux");
@@ -12,14 +12,15 @@ project interpolators is
                  "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
                  "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
                  "../../Math_Lib/Supports", "../../Math_Lib/Circuits",
-                 "../../Deformations/Solutions",
+                 "../../Math_Lib/Series", "../../Deformations/Solutions",
                  "../../Deformations/Homotopy",
                  "../../Deformations/Newton", "../../Deformations/Curves",
                  "../../Deformations/Trackers",
                  "../../Deformations/End_Games",
                  "../../Deformations/Continuation",
                  "../../Root_Counts/Product", "../../Root_Counts/Symmetry",
-                 "../Samplers");
+                 "../Samplers", "../Interpolators", "../Decomposition",
+                 "../../Tasking", "../../Main", "../../CtoPHC/State");
         when "windows" =>
             for Source_Dirs use
                 (".", "../../System", "../../System/Basic_Timer",
@@ -28,14 +29,16 @@ project interpolators is
                  "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
                  "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
                  "../../Math_Lib/Supports", "../../Math_Lib/Circuits",
-                 "../../Deformations/Solutions",
+                 "../../Math_Lib/Series", "../../Deformations/Solutions",
                  "../../Deformations/Homotopy",
                  "../../Deformations/Newton", "../../Deformations/Curves",
                  "../../Deformations/Trackers",
                  "../../Deformations/End_Games",
                  "../../Deformations/Continuation",
                  "../../Root_Counts/Product", "../../Root_Counts/Symmetry",
-                 "../Samplers");
+                 "../Samplers", "../Interpolators", "../Decomposition",
+                 "../../Tasking", "../../Main", "../../CtoPHC/State");
+            for Excluded_Source_Files use ("corecount.c");
             for Languages use ("Ada", "C");
     end case;
 
@@ -44,19 +47,15 @@ project interpolators is
 
     for Main use
     (
-        "ts_span.adb",         -- tests the span
-        "ts_nbterms.adb",      -- number of terms of dense polynomials
-        "ts_stpolin.adb",      -- tests standard arithmetic interpolation
-        "ts_mupolin.adb",      -- tests multi-precision interpolation
-        "ts_adpolin.adb",      -- interpolation with adaptive precision
-        "ts_divdif.adb",       -- tests Newton interpolation
-        "ts_dvdexp.adb",       -- experiment on conditioning/stability
-        "ts_powtrc.adb",       -- tests Newton identities
-        "ts_newint.adb",       -- tests the direct Newton interpolators
-        "ts_traces.adb",       -- tests trace interpolation
-        "ts_trapol.adb",       -- tests trace interpolators for one poly
-        "ts_project.adb",      -- tests linear and central projectors
-        "ts_filter.adb"        -- tests the filter
+        "ts_irco.adb",       -- tests irreducible components
+       -- "ts_rwpoly.adb",     -- tests rewriting
+        "ts_combfac.adb",    -- tests combinatorial factorization
+        "ts_mbthom.adb",     -- tests the homotopy membership test
+        "ts_factor.adb",     -- tests factorization of one polynomial
+        "ts_hypfac.adb",     -- test on factoring hypersurfaces
+        "ts_newfac.adb",     -- calls monodromy component breakup routines
+       -- "ts_ifactor.adb",    -- tests factorization in intrinsic coordinates
+        "ts_serwit.adb"      -- tests series developments on curves
     );
 
     package Compiler is
@@ -65,4 +64,4 @@ project interpolators is
 
     end Compiler;
 
-end interpolators;
+end factorization;
