@@ -1,3 +1,5 @@
+Sat 12 Jun 2021 : defined tropical.gpr to build the test procedures.
+
 Wed 2 Jan 2019 : fixed compiler error in ts_tropawit.adb because of
   changed specification in standard_blackbox_continuations.
 

@@ -1,4 +1,4 @@
-Tropicalization of witness sets with PHCv2.4.64
+Tropicalization of witness sets with PHCv2.4.85
 
 This directory is new since release 2.3.48.  The asymptotics of witness sets
 have tropical interpretations.  Via the computation of tropisms we develop
@@ -7,6 +7,11 @@ Added in v2.3.49 are the giftwrapping routines.
 
 A first step is to compute certificates for a regular common factor of
 two Laurent polynomials with complex coefficients.
+
+Run "gprbuild tropical.gpr" to make all test programs.
+On windows, type "gprbuild tropical.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean tropical.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                        : short description

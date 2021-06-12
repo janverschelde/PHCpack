@@ -1,0 +1,50 @@
+project tropical is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports",
+                 "../../Deformations/Curves",
+                 "../../Root_Counts/Implift", "../../Root_Counts/Binomials",
+                 "../../Root_Counts/Stalift");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports",
+                 "../../Deformations/Curves",
+                 "../../Root_Counts/Implift", "../../Root_Counts/Binomials",
+                 "../../Root_Counts/Stalift");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+    for Exec_Dir use "../../../bin";
+
+    for Main use
+    (
+        "ts_comfac.adb",    -- tests regular common factor 
+        "ts_intorto.adb",   -- tests orthogonalization
+        "ts_convhull.adb",  -- tests convex hull operations
+        "ts_pretrop.adb",   -- tests standard lattice facets
+        "ts_ptlstr.adb"     -- tests conversions
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end tropical;
