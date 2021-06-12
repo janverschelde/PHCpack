@@ -1,8 +1,13 @@
-A new and progressive equation-by-equation solver with PHCv2.4.83
+A new and progressive equation-by-equation solver with PHCv2.4.85
 
 This directory was created for release 2.3 of PHCpack.
 The straight-line versions to run the nine-point problem
 (and the five-point version) were provided by Charles Wampler.
+
+Run "gprbuild solver.gpr" to make all test programs.
+On windows, type "gprbuild solver.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean solver.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                        : short description

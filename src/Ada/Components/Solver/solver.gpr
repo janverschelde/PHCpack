@@ -1,0 +1,59 @@
+project solver is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Math_Lib/Circuits",
+                 "../../Math_Lib/Series", "../../Deformations/Solutions",
+                 "../../Deformations/Homotopy",
+                 "../../Deformations/Newton", "../../Deformations/Curves",
+                 "../../Deformations/Trackers",
+                 "../../Deformations/End_Games",
+                 "../../Deformations/Continuation",
+                 "../../Root_Counts/Symmetry",
+                 "../Samplers", "../Interpolators", "../Factorization",
+                 "../Decomposition");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Math_Lib/Circuits",
+                 "../../Math_Lib/Series", "../../Deformations/Solutions",
+                 "../../Deformations/Homotopy",
+                 "../../Deformations/Newton", "../../Deformations/Curves",
+                 "../../Deformations/Trackers",
+                 "../../Deformations/End_Games",
+                 "../../Deformations/Continuation",
+                 "../../Root_Counts/Symmetry",
+                 "../Samplers", "../Interpolators", "../Factorization",
+                 "../Decomposition");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+    for Exec_Dir use "../../../bin";
+
+    for Main use
+    (
+        "ts_hypwit.adb",     -- tests hypersurface witness sets
+        "ts_solver.adb"      -- tests the solver
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end solver;
