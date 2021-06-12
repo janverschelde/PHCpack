@@ -66,7 +66,7 @@ project tasking is
         "ts_mtddref.adb",    -- multitasking refiner with dd cmplx numbers
         "ts_mtqdref.adb",    -- multitasking refiner with qd cmplx numbers
         "ts_mtsharp.adb",    -- multitasking multiprecision refinement
-       -- "ts_mtcont.adb",     -- tests multitasking continuation
+        "ts_mtcont.adb",     -- tests multitasking continuation
        -- "ts_mtsam.adb",      -- tests multitasking sampling
         "ts_mtvol.adb",      -- tests multitasking volume computation
         "ts_mtvolcon.adb",   -- tests polyhedral path trackers

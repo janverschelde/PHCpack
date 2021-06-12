@@ -11,7 +11,7 @@ with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Homotopy;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Standard_System_and_Solutions_io;  use Standard_System_and_Solutions_io;
-with Drivers_for_Poly_Continuation;     use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;            use Main_Poly_Continuation;
 with Multitasking_Continuation;         use Multitasking_Continuation;
 
 procedure ts_mtcont is
