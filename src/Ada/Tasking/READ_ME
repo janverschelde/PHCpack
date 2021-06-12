@@ -26,6 +26,11 @@ form system determined by the inner normal to that new mixed cell.
 With this pipelining, the tracking of the paths is interlaced with the
 mixed volume computation.
 
+Run "gprbuild tasking.gpr" to make all test programs.
+On windows, type "gprbuild tasking.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean tasking.gpr" removes all files created by gprbuild.
+
 -------------------------------------------------------------------------------
 file name                         : short description
 -------------------------------------------------------------------------------

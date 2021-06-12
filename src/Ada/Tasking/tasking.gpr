@@ -1,0 +1,94 @@
+project tasking is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../System", "../System/Unix_Timer",
+                 "../Math_Lib/Numbers", "../Math_Lib/QD",
+                 "../Math_Lib/Vectors", "../Math_Lib/Matrices",
+                 "../Math_Lib/Reduction", "../Math_Lib/Divisors",
+                 "../Math_Lib/Polynomials", "../Math_Lib/Functions",
+                 "../Math_Lib/Series", "../Math_Lib/Circuits",
+                 "../Math_Lib/Supports",
+                 "../Deformations/Solutions", "../Deformations/Homotopy",
+                 "../Deformations/Newton", "../Deformations/Curves",
+                 "../Deformations/Trackers", "../Deformations/End_Games",
+                 "../Deformations/Sweep", "../Deformations/Continuation",
+                 "../Root_Counts/Product", "../Root_Counts/Binomials",
+                 "../Root_Counts/Implift", "../Root_Counts/Stalift",
+                 "../Root_Counts/MixedVol", "../Root_Counts/Symmetry",
+                 "../Components/Samplers", "../Components/Factorization",
+                 "../Components/Decomposition",
+                 "../CtoPHC/State", "../Main");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../System", "../System/Basic_Timer",
+                 "../Math_Lib/Numbers", "../Math_Lib/QD",
+                 "../Math_Lib/Vectors", "../Math_Lib/Matrices",
+                 "../Math_Lib/Reduction", "../Math_Lib/Divisors",
+                 "../Math_Lib/Polynomials", "../Math_Lib/Functions",
+                 "../Math_Lib/Series", "../Math_Lib/Circuits",
+                 "../Math_Lib/Supports",
+                 "../Deformations/Solutions", "../Deformations/Homotopy",
+                 "../Deformations/Newton", "../Deformations/Curves",
+                 "../Deformations/Trackers", "../Deformations/End_Games",
+                 "../Deformations/Sweep", "../Deformations/Continuation",
+                 "../Root_Counts/Product", "../Root_Counts/Binomials",
+                 "../Root_Counts/Implift", "../Root_Counts/Stalift",
+                 "../Root_Counts/MixedVol", "../Root_Counts/Symmetry",
+                 "../Components/Samplers", "../Components/Factorization",
+                 "../Components/Decomposition",
+                 "../CtoPHC/State", "../Main");
+            for Excluded_Source_Files use
+                ("corecount.c", "zero_index_tree.c", "index_tree_lp.c",
+                 "relation_table.c", "prepare_for_mv.c", "one_level_lp.c",
+                 "mv.c", "mixed_volume.c", "form_lp.c", "cell_stack.c");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../Objects";
+    for Exec_Dir use "../../bin";
+
+    for Main use
+    (
+        "ts_corecount.adb",  -- prints the number of cores
+        "ts_tasking.adb",    -- tests task creation
+        "ts_mutex.adb",      -- tests mutual exclusion
+        "ts_jobs.adb",       -- tests dynamic job scheduling
+       -- "ts_mtmatvec.adb",   -- tests multitasked matrix*vector
+       -- "ts_mtpolval.adb",   -- tests multitasked polynomial evaluation
+        "ts_mtlinsol.adb",   -- tests multitasked linear system solving
+        "ts_mtsols.adb",     -- multitasking on solutions
+        "ts_mtstref.adb",    -- multitasking solution refinement
+        "ts_mtddref.adb",    -- multitasking refiner with dd cmplx numbers
+        "ts_mtqdref.adb",    -- multitasking refiner with qd cmplx numbers
+        "ts_mtsharp.adb",    -- multitasking multiprecision refinement
+       -- "ts_mtcont.adb",     -- tests multitasking continuation
+       -- "ts_mtsam.adb",      -- tests multitasking sampling
+        "ts_mtvol.adb",      -- tests multitasking volume computation
+        "ts_mtvolcon.adb",   -- tests polyhedral path trackers
+        "ts_mtmva.adb",      -- tests cell production/processing
+        "ts_mtverify.adb",   -- tesst multitasked root refinement
+        "ts_mtperm.adb",     -- tests multitasked permanent computation
+        "ts_mtmbthom.adb",   -- tests multitasked homotopy membertest
+       -- "ts_mtcelidx.adb",   -- tests pipelining cell indices
+        "ts_mtadcnv.adb",    -- tests multitasked algorithmic differentiation
+        "ts_mtserlin.adb",   -- tests multitasked linearization
+        "ts_mtnewton.adb",   -- tests multitasked Newton
+        "ts_mthessian.adb",  -- tests multitasked Hessian
+        "ts_mthesscrc.adb",  -- tests multitasked Hessian circuits
+        "ts_mtratapp.adb",   -- tests multitasked Pade approximation
+        "ts_mtshiftcnv.adb", -- tests multitasked shift circuits
+        "ts_mtpcscnv.adb"    -- tests predictor-corrector-shift loops
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end tasking;
