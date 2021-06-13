@@ -1,3 +1,5 @@
+Sun 13 Jun 2021 : fixed orbits_of_solutions_io.adb.
+
 Thu 10 Jun 2021 : defined symmetry.gpr to build the test procedures.
   Added Exec_Dir attribute to symmetry.gpr.
 
