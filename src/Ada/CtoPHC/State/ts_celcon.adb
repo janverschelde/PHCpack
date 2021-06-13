@@ -21,7 +21,7 @@ with Floating_Mixed_Subdivisions_io;     use Floating_Mixed_Subdivisions_io;
 with Integer_Mixed_Subdivisions;
 with Integer_Mixed_Subdivisions_io;      use Integer_Mixed_Subdivisions_io;
 with Mixed_Volume_Computation;
-with Drivers_for_Lifting_Functions;
+with Main_Lifting_Functions;
 with Cells_Container;
 with Integer_Cells_Container;
 
@@ -400,7 +400,7 @@ procedure ts_celcon is
     perms : Standard_Integer_Vectors.Link_to_Vector;
     r : integer32;
 
-    use Drivers_for_Lifting_Functions;
+    use Main_Lifting_Functions;
 
   begin
     Mixed_Volume_Computation.Compute_Mixture(sup,mix,perms);

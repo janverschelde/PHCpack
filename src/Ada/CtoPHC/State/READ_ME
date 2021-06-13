@@ -1,22 +1,163 @@
-An interface to call PHCpack from C functions in PHCv2.4.13
+Calling PHCpack from C as a state machine in PHCv2.4.85
 
-This directory was created in release 2.1 to call the Pieri homotopies
-from C programs and for parallel implementations of the path trackers.
-In release 2.3, the code was splitted among two subdirectories:
-(1) Funky, a functional interface: C -> Ada -> C; and
-(2) State, a state machine usage:  C <-> Ada.
+This directory was created in release 2.3 as subdirectory to CtoPHC.
+The idea for using PHCpack as a state machine originated from the need
+to create a parallel path tracker with MPI, first used in release 2.2,
+to be used in the implementation of a parallel Pieri homotopy.
+New in release 2.3 are additions to this state machine to implement
+a parallel monodromy breakup algorithm.
 
-While in both cases, the main program is written in C and calls an
-Ada procedure, the two subdirectories implement two fundamentally
-different types of interfaces.  
+The default extension is .ads (specification of Ada package).
+In mixing C with Ada we give the extension, because sometimes we give
+the same name (but different suffix) to related C and Ada routines.
 
-In (1), actual data is passed from the C function to the Ada procedure.
-To process the results, the Ada procedure calls another C function. 
-The interface programmer thus provides the main program and functions
-to process the output provided by the Ada software.  This type of
-interface is efficient, but requires either a programmer knowledgable
-of both C and Ada, or two programmers collaborating with each other.
+In version 2.4.79, many new interface packages were added to organize
+and document the definitions of the interface functions better.
 
-In (2), the data passed from the C function to the Ada procedure is
-more generic in nature.  The Ada procedure operates as a gateway
-interface to PHCpack.
+------------------------------------------------------------------------------
+file name                        : short description
+------------------------------------------------------------------------------
+assignments_in_ada_and_c         : assign data in Ada and C format
+file_management                  : encapsulation of file_type variables
+file_management_interface        : interface to file management methods
+ts_filman                        : quick test on file_management
+standard_polysys_container       : management of Ada polynomial systems
+standard_polysys_interface       : interface to double precision polynomials
+dobldobl_polysys_container       : polynomial systems with double doubles
+dobldobl_polysys_interface       : interface to double double polynomials
+quaddobl_polysys_container       : polynomial systems with quad doubles
+quaddobl_polysys_interface       : interface to quad double polynomials
+multprec_polysys_container       : multiprecision poly system container
+multprec_polysys_interface       : interface to multiprecision polynomials
+standard_laursys_container       : management of Ada Laurent systems
+dobldobl_laursys_container       : for Laurent systems with dobldobl coeffs
+quaddobl_laursys_container       : for Laurent systems with quaddobl coeffs
+multprec_laursys_container       : for Laurent systems with multprec coeffs
+multprec_laursys_interface       : interface to multiprecision Laurent systems
+ts_syscon                        : tests the systems container
+use_syscon                       : Ada gateway to the systems container
+tableau_form_interface           : tableau form of systems
+use_tabform                      : pass tableau forms of systems
+ts_use_syscon.c                  : C routine calls the Ada gateway use_syscon
+standard_systems_pool            : pool of systems and associated structures
+dobldobl_systems_pool            : pool of dobldobl complex systems
+quaddobl_systems_pool            : pool of quaddobl complex systems
+ts_syspool                       : test on the systems pool
+standard_syspool_interface       : interface to the pool of double systems
+dobldobl_syspool_interface       : interface to the pool of dobldobl systems
+quaddobl_syspool_interface       : interface to the pool of quaddobl systems
+use_syspool                      : Ada gateway to the systems pool
+ts_use_syspool.c                 : C routine calls the Ada gateway
+------------------------------------------------------------------------------
+standard_solutions_container     : management of Ada solution lists
+standard_solutions_interface     : interface to double precision solutions
+dobldobl_solutions_container     : solutions with double doubles
+dobldobl_solutions_interface     : interface to double double solutions
+quaddobl_solutions_container     : solutions with quad doubles
+quaddobl_solutions_interface     : interface to quad double solutions
+multprec_solutions_container     : multiprecision solutions
+multprec_solutions_interface     : interface to multiprecision solutions
+assignments_of_solutions         : converts between PHCpack and (b,c) format
+ts_solcon                        : tests the solutions container
+use_solcon                       : Ada gateway to the solutions container
+ts_use_solcon.c                  : C routine calls the Ada gateway use_solcon
+solutions_pool                   : pool of solution lists
+ts_solpool                       : test on the solutions pool
+standard_solspool_interface      : interface to functions on the pool of sols
+use_solpool                      : Ada gateway to the solutions pool
+ts_use_solpool.c                 : C routine calls the Ada gateway use_solpool
+newton_interface                 : interface to Newton's method
+------------------------------------------------------------------------------
+phcpack_operations               : PHCpack as a state machine
+phcpack_operations_io            : input/output of main data of PHCpack
+c_to_phcpack                     : Ada routine as gateway to the machine
+ts_c2str.c                       : test on having phc write C strings
+------------------------------------------------------------------------------
+scaling_interface                : interface to equation & coefficient scaling
+use_scaling                      : access to scaling systems and solutions
+reduction_interface              : interface to degree reduction methods
+use_reduction                    : reduction of system to lower total degree
+linear_products_interface        : linear product bounds and start systems
+use_roco                         : job handlers for linear products
+------------------------------------------------------------------------------
+continuation_parameters_interface : tune continuation parameters
+path_trackers_interface           : interface to path trackers
+cascade_homotopy_interface        : interface to cascade homotopies
+diagonal_homotopy_interface       : interface to diagonal homotopy
+use_track                         : access to jumpstarting path trackers
+------------------------------------------------------------------------------
+pieri_homotopy                   : Pieri homotopies as a state machine
+ts_pirhom                        : interactive test on pieri_homotopy
+pieri_interface                  : interface to Pieri homotopy functions
+use_c2pieri                      : Ada routine as gateway to Pieri machine
+ts_use_c2pieri                   : C test on the interactive operations
+schubert_interface               : interface to LR homotopies
+use_c2lrhom                      : calls Littlewood-Richardson homotopies
+------------------------------------------------------------------------------
+standard_sampling_operations     : provides access to the sampling machine
+dobldobl_sampling_operations     : supports monodromy with double doubles
+quaddobl_sampling_operations     : supports monodromy with quad doubles
+standard_monodromy_permutations  : computes permutations by monodromy
+dobldobl_monodromy_permutations  : permutations on double double data
+quaddobl_monodromy_permutations  : permutations on quad double data
+witness_interface                : interface to witness sets
+monodromy_interface              : interface to monodromy loops
+use_c2fac                        : Ada gateway to factorization in PHCpack
+ts_use_c2fac                     : C testing operations in use_c2fac
+member_interface                 : interface functions for membership test
+use_c2mbt                        : homotopy membership test jobs for in C
+------------------------------------------------------------------------------
+cells_container                  : manages mixed-cell configurations
+integer_cells_container          : integer lifting valued cells container
+cells_interface                  : interface to the cells containers
+ts_celcon                        : tests the cells container
+use_celcon                       : Ada gateway to the cells container
+ts_use_celcon.c                  : C routine to test the cells container
+------------------------------------------------------------------------------
+monomial_maps_container          : monomial maps as solution to binomials
+monomial_maps_interface          : interface function to monomial maps
+use_mapcon                       : Ada gateway to monomial maps container
+------------------------------------------------------------------------------
+univariate_solvers_interface     : interface functions to the root finders
+unisolve                         : roots of univariate polynomials
+ts_unisolve                      : test on unisolve
+------------------------------------------------------------------------------
+multprec_giftwrap_container      : hold results of giftwrapping method
+giftwrap_interface               : interface to giftwrapping functions
+use_giftwrap                     : giftwrapping for convex hulls
+ts_use_giftwrap                  : test on use_giftwrap
+ts_giftwcon                      : test on giftwrapping container
+-----------------------------------------------------------------------------
+numerical_tropisms_container     : manages numerically computed tropisms
+numerical_tropisms_interface     : to define the C interface to the tropisms
+use_numbtrop                     : interface to the tropisms container
+------------------------------------------------------------------------------
+parameter_homotopy_state         : definition of parameter indices
+sweep_interface                  : interface to the sweep operations
+use_sweep                        : C interface for sweep homotopy
+ts_use_sweep                     : test on use_sweep
+------------------------------------------------------------------------------
+step_trackers_interface          : interface to step-by-step trackers
+use_nxtsol                       : handles jobs to step-by-step trackers
+crude_path_trackers              : path trackers without postprocessing
+ts_runtrack                      : calls the crude path trackers
+------------------------------------------------------------------------------
+power_series_interface           : interface to Newton's method on series
+use_series                       : power series Newton method
+pade_continuation_interface      : interface to Pade continuation
+use_padcon                       : handles Pade continuation
+------------------------------------------------------------------------------
+deflation_interface              : interface to deflation and multiplicities
+use_multip                       : compute multiplicity structure
+------------------------------------------------------------------------------
+ts_c2phc.c                       : C routine calls the Ada gateway to PHCpack
+job_containers                   : jobs to move data from/into containers
+job_handlers                     : functions to handle jobs in use_c2phc4c
+symbol_table_interface           : interface to manipulating symbol table
+use_c2phc4c                      : exports PHCpack functionality to C
+use_c2phc                        : includes use_c2phc4c and DEMiCs interface
+ts_use_c2phc.c                   : C test on the interactive operations
+-----------------------------------------------------------------------------
+irreducible_components_interface : numerical irreducible decomposition
+use_witsols                      : gateway to blackbox solver
+-----------------------------------------------------------------------------
