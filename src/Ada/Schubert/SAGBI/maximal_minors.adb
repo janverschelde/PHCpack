@@ -1,10 +1,12 @@
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Natural_Vectors;           use Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
+with Standard_Integer_Vectors;           use Standard_Integer_Vectors;
 with Standard_Floating_Linear_Solvers;   use Standard_Floating_Linear_Solvers;
 
 procedure Maximal_Minors ( file : in file_type;
-                           n,d : in natural; mat : in Matrix;
+                           n,d : in natural32; mat : in Matrix;
                            min,max : out double_float ) is
 
   function Determinant
@@ -16,14 +18,14 @@ procedure Maximal_Minors ( file : in file_type;
 
     res : double_float := 1.0;
     sqm : Matrix(rows'range,rows'range);
-    piv : Standard_Natural_Vectors.Vector(rows'range);
-    inf : natural;
+    piv : Standard_Integer_Vectors.Vector(rows'range);
+    inf : integer32;
 
   begin
     for i in rows'range loop
       piv(i) := i;
       for j in rows'range loop
-        sqm(i,j) := mat(rows(i),j);
+        sqm(i,j) := mat(integer32(rows(i)),j);
       end loop;
     end loop;
     lufac(sqm,rows'last,piv,inf);
@@ -40,32 +42,34 @@ procedure Maximal_Minors ( file : in file_type;
 
   procedure Main is
 
-    rows : Standard_Natural_Vectors.Vector(1..d);
+    rows : Standard_Natural_Vectors.Vector(1..integer32(d));
     first : boolean := true;
     mindet,maxdet : double_float;
 
-    procedure Select_Rows ( k,start : in natural ) is
+    procedure Select_Rows ( k,start : in integer32 ) is
 
       det : double_float;
 
     begin
-      if k > d 
-       then det := Determinant(mat,rows);
-            put(file,"Minor "); put(file,rows); put(file," equals ");
-            put(file,det); new_line(file);
-            det := abs(det);
-            if first
-             then mindet := det; maxdet := det; first := false;
-             else if det > maxdet
-                   then maxdet := det;
-                   elsif det < mindet
-                       then mindet := det;
-                  end if;
-            end if;
-       else for j in start..n loop
-              rows(k) := j;
-              Select_Rows(k+1,j+1);
-            end loop;
+      if k > integer32(d) then
+        det := Determinant(mat,rows);
+        put(file,"Minor "); put(file,rows); put(file," equals ");
+        put(file,det); new_line(file);
+        det := abs(det);
+        if first then
+          mindet := det; maxdet := det; first := false;
+        else
+          if det > maxdet then
+            maxdet := det;
+          elsif det < mindet then
+            mindet := det;
+          end if;
+         end if;
+       else
+         for j in start..integer32(n) loop
+           rows(k) := natural32(j);
+           Select_Rows(k+1,j+1);
+         end loop;
       end if;
     end Select_Rows;
 

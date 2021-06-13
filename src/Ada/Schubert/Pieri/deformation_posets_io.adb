@@ -1,4 +1,6 @@
-with integer_io;                         use integer_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_VecMats;           use Standard_Complex_VecMats;
 
 package body Deformation_Posets_io is
@@ -11,7 +13,7 @@ package body Deformation_Posets_io is
   procedure put_size 
               ( file : in file_type; poset : in Array_of_Array_of_VecMats ) is
 
-    np : natural;
+    np : natural32;
     lavm : Link_to_VecMat;
 
   begin
@@ -21,14 +23,14 @@ package body Deformation_Posets_io is
     end if;
     for i in poset'range loop
       put(file,"n = "); put(file,i,np); put(file," : ");
-      if poset(i) /= null
-       then for j in poset(i)'range loop
-              lavm := poset(i)(j);
-              if lavm = null
-               then put(file," 0");
-               else put(file," "); put(file,lavm'length,1);
-              end if;
-            end loop;
+      if poset(i) /= null then
+        for j in poset(i)'range loop
+          lavm := poset(i)(j);
+          if lavm = null
+           then put(file," 0");
+           else put(file," "); put(file,integer32(lavm'length),1);
+          end if;
+        end loop;
       end if;
       new_line(file);
     end loop;

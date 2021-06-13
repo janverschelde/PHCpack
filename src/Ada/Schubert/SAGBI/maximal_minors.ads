@@ -1,9 +1,10 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Matrices;         use Standard_Floating_Matrices;
 
 procedure Maximal_Minors ( file : in file_type;
-                           n,d : in natural; mat : in Matrix;
+                           n,d : in natural32; mat : in Matrix;
                            min,max : out double_float );
 
 -- DESCRIPTION :
