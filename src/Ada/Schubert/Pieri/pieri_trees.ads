@@ -68,13 +68,13 @@ package Pieri_Trees is
   -- DESCRIPTION :
   --   Returns true if the node has no children.
 
-  function Jump ( b1,b2 : Bracket ) return natural32;
+  function Jump ( b1,b2 : Bracket ) return integer32;
 
   -- DESCRIPTION :
   --   Returns the largest index j such that b1(j) < b2(j),
   --   or zero when no such index exists.
 
-  function Jump ( nd : Pieri_Node ) return natural32;
+  function Jump ( nd : Pieri_Node ) return integer32;
 
   -- DESCRIPTION :
   --   Returns the largest index of increase with the ancestor nodes,

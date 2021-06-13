@@ -1,3 +1,8 @@
+Sun 13 Jun 2021 : fixed pieri_trees, pieri_trees_io, pieri_root_counts,
+  pieri_deformations, solve_pieri_leaves, ts_org_pieri.adb, so the code
+  for the original Pieri homotopy algorithm compiles again,
+  with the build instructions in pieri.gpr.
+
 Thu 10 Jun 2021 : defined the exec_dir attribute in pieri.gpr.
 
 Wed 9 Jun 2021 : defined pieri.gpr to build the test procedures.

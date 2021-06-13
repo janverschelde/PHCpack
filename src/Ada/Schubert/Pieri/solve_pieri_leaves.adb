@@ -1,6 +1,8 @@
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
-with Standard_Natural_Vectors;
+with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 
@@ -8,9 +10,9 @@ function Solve_Pieri_Leaves
            ( file : file_type; b1,b2 : Bracket; m : Matrix ) return Matrix is
 
   res : Matrix(m'range(1),b1'range);
-  n : constant natural := m'last(1);
-  dim : constant natural := m'last(2)-1;  -- dimension of linear system
-  equ : Bracket(1..dim);                  -- equations : res(equ(i),*) = 0
+  n : constant integer32 := m'last(1);
+  dim : constant integer32 := m'last(2)-1;  -- dimension of linear system
+  equ : Bracket(1..dim);                    -- equations : res(equ(i),*) = 0
   sys : Matrix(1..dim,1..dim);
   rhs : Standard_Complex_Vectors.Vector(1..dim);
   gen : Standard_Complex_Vectors.Vector(1..n);
@@ -22,21 +24,21 @@ function Solve_Pieri_Leaves
   --   equations that the resulting plane has to satisfy.
   --   These equations define the space C.
 
-    cnt : natural := 0;
+    cnt : integer32 := 0;
     zero_row : boolean;
 
   begin
     for i in 1..n loop
       zero_row := true;
       for j in b1'range loop
-        if ((i < b2(j)) or (i > n+1-b1(b1'last+1-j)))
+        if ((i < integer32(b2(j))) or (i > n+1-integer32(b1(b1'last+1-j))))
          then null;
          else zero_row := false;
         end if;
       end loop;
-      if zero_row
-       then cnt := cnt+1;
-            equ(cnt) := i;
+      if zero_row then
+        cnt := cnt+1;
+        equ(cnt) := natural32(i);
       end if;
     end loop;
   end Initialize_Solution_Plane;
@@ -50,21 +52,21 @@ function Solve_Pieri_Leaves
   --   determines the generator for the line of intersection with the
   --   space C and the given m-plane.
 
-    ipvt : Standard_Natural_Vectors.Vector(1..dim);
-    info : natural;
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info : integer32;
    -- orgsys : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
    -- orgrhs,resi : Standard_Complex_Vectors.Vector(1..dim);
-    use Standard_Complex_Vectors,Standard_Complex_Matrices;
+    use Standard_Complex_Vectors;
 
   begin
     for j in 1..dim loop
       for i in equ'range loop
-        sys(i,j) := m(equ(i),j);
+        sys(i,j) := m(integer32(equ(i)),j);
       end loop;
     end loop;
    -- orgsys := sys;
     for i in 1..dim loop
-      rhs(i) := m(equ(i),m'last(2));
+      rhs(i) := m(integer32(equ(i)),m'last(2));
     end loop;
    -- orgrhs := rhs;
     lufac(sys,dim,ipvt,info);
@@ -93,7 +95,7 @@ function Solve_Pieri_Leaves
   begin
     for i in 1..n loop
       for j in b1'range loop
-        if ((i < b2(j)) or (i > n+1-b1(b1'last+1-j)))
+        if ((i < integer32(b2(j))) or (i > n+1-integer32(b1(b1'last+1-j))))
          then res(i,j) := Create(0.0);
          else res(i,j) := gen(i);
         end if;

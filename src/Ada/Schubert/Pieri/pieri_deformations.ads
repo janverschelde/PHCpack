@@ -1,6 +1,5 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_natural_Numbers;
-with Standard_Natural_Vectors;
 with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
 with Standard_Complex_VecMats;           use Standard_Complex_VecMats;
 with Pieri_Root_Counts;                  use Pieri_Root_Counts;

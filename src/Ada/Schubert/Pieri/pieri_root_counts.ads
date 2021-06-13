@@ -1,4 +1,6 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Generic_Lists;
 with Pieri_Trees;                        use Pieri_Trees;
 
@@ -25,23 +27,23 @@ package Pieri_Root_Counts is
   package Lists_of_Paired_Nodes is new Generic_Lists(Paired_Nodes);
   type List_of_Paired_Nodes is new Lists_of_Paired_Nodes.List;
 
-  type Paired_Chain is array ( integer range <> ) of Paired_Nodes;
+  type Paired_Chain is array ( integer32 range <> ) of Paired_Nodes;
 
   type Nodal_Pair;
   type Link_to_Nodal_Pair is access Nodal_Pair;
-  type Nodal_Matrix
-         is array (integer range <>,integer range <>) of Link_to_Nodal_Pair;
+  type Nodal_Matrix is 
+     array (integer32 range <>,integer32 range <>) of Link_to_Nodal_Pair;
 
-  type Nodal_Pair ( d : natural ) is record
+  type Nodal_Pair ( d : integer32 ) is record
     pnd : Paired_Nodes;
-    sols : natural;                       -- #paths arriving at the node
+    sols : natural32;                     -- #paths arriving at the node
     children : Nodal_Matrix(0..d,0..d);   -- indices in children are jumps
     ancestor : Link_to_Nodal_Pair;
   end record;
 
 -- CREATORS :
 
-  function Create ( n,d : natural; t1,t2 : Pieri_Tree )
+  function Create ( n,d : integer32; t1,t2 : Pieri_Tree )
                   return List_of_Paired_Nodes;
 
   -- DESCRIPTION :
@@ -54,7 +56,8 @@ package Pieri_Root_Counts is
   --   and end at the given pair of leaves pnd.
   --   This is an intermediate data structure in the Create operation below.
 
-  function Create ( d : natural; lp : List_of_Paired_Nodes ) return Nodal_Pair;
+  function Create
+             ( d : integer32; lp : List_of_Paired_Nodes ) return Nodal_Pair;
 
   -- DESCRIPTION :
   --   Creates a tree of nodal pairs and returns its root.
@@ -63,7 +66,7 @@ package Pieri_Root_Counts is
 
 -- SELECTORS :
 
-  function Height ( pnd : Paired_Nodes ) return natural;
+  function Height ( pnd : Paired_Nodes ) return natural32;
 
   -- DESCRIPTION :
   --   Returns Max(pnd.left.h,pnd.right.h).
@@ -95,7 +98,7 @@ package Pieri_Root_Counts is
   --   Returns the pair of nodes down in the chains of pnd where the
   --   first branch point occurs.
 
-  function Height ( np : Nodal_Pair ) return natural;
+  function Height ( np : Nodal_Pair ) return natural32;
 
   -- DESCRIPTION :
   --   Returns the number of nodes above the current nodal pair.
@@ -106,7 +109,7 @@ package Pieri_Root_Counts is
   --   Returns true if the paired nodes occur somewhere in the tree of
   --   nodal pairs starting at the root.
 
-  function Number_of_Paths ( root : Nodal_Pair ) return natural;
+  function Number_of_Paths ( root : Nodal_Pair ) return natural32;
 
   -- DESCRIPTION :
   --   Returns the number of paths that need to be followed.

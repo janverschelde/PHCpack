@@ -1,4 +1,5 @@
 with text_io;                         use text_io;
+with Standard_Natural_Numbers;        use Standard_Natural_Numbers;
 with Pieri_Trees;                     use Pieri_Trees;
 
 package Pieri_Trees_io is
@@ -24,8 +25,9 @@ package Pieri_Trees_io is
   -- DESCRIPTION :
   --   Writes all nodes of the Pieri tree, level by level.
 
-  procedure put ( t : in Pieri_Tree; level : in natural );
-  procedure put ( file : in file_type; t : in Pieri_Tree; level : in natural );
+  procedure put ( t : in Pieri_Tree; level : in natural32 );
+  procedure put ( file : in file_type; t : in Pieri_Tree;
+                  level : in natural32 );
 
   -- DESCRIPTION :
   --   Writes all nodes of the Pieri tree at the indicated level.

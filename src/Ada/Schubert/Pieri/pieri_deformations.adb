@@ -1,3 +1,4 @@
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -18,9 +19,9 @@ with Standard_Complex_Poly_SysFun;       use Standard_Complex_Poly_SysFun;
 with Brackets,Brackets_io;               use Brackets,Brackets_io;
 with Bracket_Monomials;                  use Bracket_Monomials;
 with Bracket_Monomials_io;               use Bracket_Monomials_io;
-with Bracket_Polynomials;                use Bracket_Polynomials;
-with Bracket_Polynomials_io;             use Bracket_Polynomials_io;
-with Bracket_Systems;                    use Bracket_Systems;
+with Standard_Bracket_Polynomials;       use Standard_Bracket_Polynomials;
+with Standard_Bracket_Polynomials_io;    use Standard_Bracket_Polynomials_io;
+with Standard_Bracket_Systems;           use Standard_Bracket_Systems;
 with Pieri_Trees,Pieri_Trees_io;         use Pieri_Trees,Pieri_Trees_io;
 with Symbolic_Minor_Equations;           use Symbolic_Minor_Equations;
 with Numeric_Minor_Equations;            use Numeric_Minor_Equations;
@@ -33,7 +34,7 @@ with Pieri_Continuation;                 use Pieri_Continuation;
 package body Pieri_Deformations is
 
   function Coordinate_Bracket
-             ( nd : Pieri_Node; jmp : natural ) return Bracket is
+             ( nd : Pieri_Node; jmp : integer32 ) return Bracket is
 
   -- DESCRIPTION :
   --   On return we find the bracket determines the local coordinates.
@@ -48,7 +49,7 @@ package body Pieri_Deformations is
 
   procedure Test_Solution
               ( file : in file_type; nd1,nd2 : in Pieri_Node;
-                id : in natural; l1,l2 : in VecMat; l : in Matrix;
+                id : in natural32; l1,l2 : in VecMat; l : in Matrix;
                 x : Standard_Complex_Poly_Matrices.Matrix;
                 solpla : in Matrix ) is
 
@@ -64,9 +65,9 @@ package body Pieri_Deformations is
     if Is_Leaf(nd1) then
       fst := l1'last+1;
     elsif nd1.i = 0 then
-      fst := nd1.c;
+      fst := integer32(nd1.c);
     else 
-      fst := nd1.c+1;
+      fst := integer32(nd1.c)+1;
     end if;
     for i in fst..l1'last loop
       Concat(sys,Polynomial_Equations(l1(i).all,x));
@@ -74,9 +75,9 @@ package body Pieri_Deformations is
     if Is_Leaf(nd2) then
       fst := l2'last+1;
     elsif nd2.i = 0 then
-      fst := nd2.c;
+      fst := integer32(nd2.c);
     else 
-      fst := nd2.c+1;
+      fst := integer32(nd2.c)+1;
     end if;
     for i in fst..l2'last loop
       Concat(sys,Polynomial_Equations(l2(i).all,x));
@@ -160,20 +161,21 @@ package body Pieri_Deformations is
 
     n : constant integer32 := f'length(1);
     p : constant integer32 := lb'length;
-    nva : constant natural := n*p+1;
-    m : constant natural := n-p;
-    lc : constant natural := l(nd.c)'length(2);
-    r : natural;
+    nva : constant integer32 := n*p+1;
+    m : constant integer32 := n-p;
+    lc : constant integer32 := l(integer32(nd.c))'length(2);
+    r : integer32;
     U : constant Standard_Complex_Matrices.Matrix := U_Matrix(f,lb);
 
   begin
     if outlog
      then put_line(file,"The U-matrix : "); put(file,U,2);
     end if;
-    if nd.i = 0
-     then return Moving_U_Matrix(nva,U,l(nd.c).all);
-     else r := m+1 - lc;
-          return Moving_U_Matrix(U,nd.i,r,lb);
+    if nd.i = 0 then
+      return Moving_U_Matrix(nva,U,l(integer32(nd.c)).all);
+    else
+      r := m+1 - lc;
+      return Moving_U_Matrix(U,integer32(nd.i),r,lb);
     end if;
   end Moving_U_Matrix;
 
@@ -183,11 +185,11 @@ package body Pieri_Deformations is
   -- DESCRIPTION :
   --   Returns the moving cycle expaned as polynomial system.
 
-    n : constant natural := x'length(1);
-    p : constant natural := x'length(2);
-    kd : constant natural := p + movU'length(2);
+    n : constant natural32 := natural32(x'length(1));
+    p : constant natural32 := natural32(x'length(2));
+    kd : constant natural32 := p + natural32(movU'length(2));
     bm : Bracket_Monomial := Maximal_Minors(n,kd);
-    bs : Bracket_System(0..Number_of_Brackets(bm))
+    bs : Bracket_System(0..integer32(Number_of_Brackets(bm)))
        := Minor_Equations(kd,kd-p,bm);
     res : constant Poly_Sys := Lifted_Expanded_Minors(movU,x,bs);
 
@@ -207,22 +209,23 @@ package body Pieri_Deformations is
 
   -- REQUIRED : nd.c > 0.
 
-    lc : constant natural := l(nd.c)'length(2);
+    lc : constant integer32 := l(integer32(nd.c))'length(2);
     movU : Standard_Complex_Poly_Matrices.Matrix(x'range(1),1..lc)
          := Moving_U_Matrix(file,outlog,nd,lb,f,l);
     res : constant Poly_Sys := Moving_Cycle(movU,x);
 
   begin
-    if outlog
-     then put_line(file,"The moving U matrix : "); put(file,MovU);
-          put_line(file,"The equations of the moving cycle : "); put(file,res);
+    if outlog then
+      put_line(file,"The moving U matrix : "); put(file,MovU);
+      put_line(file,"The equations of the moving cycle : "); put(file,res);
     end if;
     Standard_Complex_Poly_Matrices.Clear(movU);
     return res;
   end One_Moving_Cycle;
 
   function Left_Moving_Cycle
-              ( file : file_type; nd : Pieri_Node; lb : Bracket; jmp : natural;
+              ( file : file_type; nd : Pieri_Node; lb : Bracket;
+                jmp : integer32;
                 f : Standard_Complex_Matrices.Matrix; l : VecMat;
                 x : Standard_Complex_Poly_Matrices.Matrix; outlog : boolean )
               return Poly_Sys is
@@ -233,27 +236,28 @@ package body Pieri_Deformations is
 
   -- REQUIRED : nd.c > 0.
 
-    n : constant natural := x'length(1);
-    p : constant natural := x'length(2);
-    lc : constant natural := l(nd.c)'length(2);
+    n : constant integer32 := x'length(1);
+   -- p : constant natural32 := natural32(x'length(2));
+    lc : constant integer32 := integer32(l(integer32(nd.c))'length(2));
     movU : Standard_Complex_Poly_Matrices.Matrix(x'range(1),1..lc)
          := Moving_U_Matrix(file,outlog,nd,lb,f,l);
     movUsec : constant Standard_Complex_Poly_Matrices.Matrix
-            := Lower_Section(movU,n+1-lb(jmp));
+            := Lower_Section(movU,n+1-integer32(lb(jmp)));
     res : constant Poly_Sys := Moving_Cycle(movUsec,x);
 
   begin
-    if outlog
-     then put_line(file,"The left moving U matrix : "); put(file,movU);
-          put_line(file,"The left moving cycle : "); put(file,movUsec);
-          put_line(file,"The equations of the moving cycle : "); put(file,res);
+    if outlog then
+      put_line(file,"The left moving U matrix : "); put(file,movU);
+      put_line(file,"The left moving cycle : "); put(file,movUsec);
+      put_line(file,"The equations of the moving cycle : "); put(file,res);
     end if;
     Standard_Complex_Poly_Matrices.Clear(movU);
     return res;
   end Left_Moving_Cycle;
 
   function Right_Moving_Cycle
-              ( file : file_type; nd : Pieri_Node; lb : Bracket; jmp : natural;
+              ( file : file_type; nd : Pieri_Node; lb : Bracket;
+                jmp : integer32;
                 f : Standard_Complex_Matrices.Matrix; l : VecMat;
                 x : Standard_Complex_Poly_Matrices.Matrix; outlog : boolean )
               return Poly_Sys is
@@ -264,26 +268,27 @@ package body Pieri_Deformations is
 
   -- REQUIRED : nd.c > 0.
 
-    lc : constant natural := l(nd.c)'length(2);
+    lc : constant integer32 := l(integer32(nd.c))'length(2);
     movU : Standard_Complex_Poly_Matrices.Matrix(x'range(1),1..lc)
          := Moving_U_Matrix(file,outlog,nd,lb,f,l);
     movUsec : constant Standard_Complex_Poly_Matrices.Matrix
-            := Upper_Section(movU,lb(jmp));
+            := Upper_Section(movU,integer32(lb(jmp)));
     res : constant Poly_Sys := Moving_Cycle(movUsec,x);
 
   begin
-    if outlog
-     then put_line(file,"The right moving U matrix : "); put(file,movU);
-          put_line(file,"The right moving cycle : "); put(file,movUsec);
-          put_line(file,"The equations of the moving cycle :"); put(file,res);
+    if outlog then
+      put_line(file,"The right moving U matrix : "); put(file,movU);
+      put_line(file,"The right moving cycle : "); put(file,movUsec);
+      put_line(file,"The equations of the moving cycle :"); put(file,res);
     end if;
     Standard_Complex_Poly_Matrices.Clear(movU);
     return res;
   end Right_Moving_Cycle;
 
   procedure Moving_Cycles
-              ( file : in file_type; pnd : in Paired_Nodes; id : in natural;
-                jmp1,jmp2 : in natural; b1,b2 : in Bracket;
+              ( file : in file_type; pnd : in Paired_Nodes;
+                id : in natural32;
+                jmp1,jmp2 : in integer32; b1,b2 : in Bracket;
                 f1,f2 : in Standard_Complex_Matrices.Matrix;
                 l1,l2 : in VecMat; ln : in Matrix; report,outlog : in boolean;
                 sol : in out Matrix ) is
@@ -296,7 +301,7 @@ package body Pieri_Deformations is
     cb1 : constant Bracket := Coordinate_Bracket(pnd.left.all,jmp1);
     cb2 : constant Bracket := Coordinate_Bracket(pnd.right.all,jmp2);
     xpm : Standard_Complex_Poly_Matrices.Matrix(sol'range(1),sol'range(2))
-        := Schubert_Pattern(sol'last(1),cb1,cb2);
+        := Schubert_Pattern(natural32(sol'last(1)),cb1,cb2);
     homotopy : Link_to_Poly_Sys;
     locmap : constant Standard_Natural_Matrices.Matrix
            := Standard_Coordinate_Frame(xpm,sol);
@@ -308,10 +313,10 @@ package body Pieri_Deformations is
        put(file,xpm);
     end if;
     homotopy := new Poly_Sys'(Polynomial_Equations(ln,xpm));
-    for i in pnd.left.c+1..l1'last loop
+    for i in integer32(pnd.left.c)+1..l1'last loop
       Concat(homotopy,Polynomial_Equations(l1(i).all,xpm));
     end loop;
-    for i in pnd.right.c+1..l2'last loop
+    for i in integer32(pnd.right.c)+1..l2'last loop
       Concat(homotopy,Polynomial_Equations(l2(i).all,xpm));
     end loop;
     for i in homotopy'range loop
@@ -354,8 +359,8 @@ package body Pieri_Deformations is
                 sol : in out Matrix ) is
 
     down : Paired_Nodes;
-    jmp1 : constant natural := Jump(pnd.left.all);
-    jmp2 : constant natural := Jump(pnd.right.all);
+    jmp1 : constant integer32 := Jump(pnd.left.all);
+    jmp2 : constant integer32 := Jump(pnd.right.all);
     lb1 : constant Bracket := Lower_Jump_Decrease(pnd.left.all);
     lb2 : constant Bracket := Lower_Jump_Decrease(pnd.right.all);
 
@@ -393,8 +398,9 @@ package body Pieri_Deformations is
    -- end if;
   end Deform_Pair;
 
-  procedure Write_Paired_Chains ( file : in file_type;
-                                  pnd : in Paired_Nodes; ind : in natural ) is
+  procedure Write_Paired_Chains
+              ( file : in file_type;
+                pnd : in Paired_Nodes; ind : in integer32 ) is
 
   -- DESCRIPTION :
   --   Writes the chains downwards that start at the leaves of pnd.
@@ -408,7 +414,7 @@ package body Pieri_Deformations is
   end Write_Paired_Chains;
 
   procedure Deform_Pairs
-              ( file : in file_type; n,d : in natural;
+              ( file : in file_type; n,d : in natural32;
                 lp : in List_of_Paired_Nodes; l1,l2 : in VecMat;
                 ln : in Matrix; report,outlog : in boolean;
                 sols : out VecMat ) is
@@ -416,21 +422,23 @@ package body Pieri_Deformations is
     tmp : List_of_Paired_Nodes := lp;
     pnd : Paired_Nodes;
     f1 : constant Standard_Complex_Matrices.Matrix
-       := Random_Upper_Triangular(n);
+       := Random_Upper_Triangular(integer32(n));
     f2 : constant Standard_Complex_Matrices.Matrix
-       := Random_Lower_Triangular(n);
-    firstpair : Paired_Nodes := Head_Of(lp);
+       := Random_Lower_Triangular(integer32(n));
+    firstpair : constant Paired_Nodes := Head_Of(lp);
     lb1 : constant Bracket := Lowest_Jump_Decrease(firstpair.left.all);
     lb2 : constant Bracket := Lowest_Jump_Decrease(firstpair.right.all);
-    xpm : Standard_Complex_Poly_Matrices.Matrix(ln'range(1),lb1'range)
-        := Schubert_Pattern(ln'last(1),lb1,lb2);
+    xpm : constant Standard_Complex_Poly_Matrices.Matrix(ln'range(1),lb1'range)
+        := Schubert_Pattern(natural32(ln'last(1)),lb1,lb2);
 
   begin
-    for i in 1..Length_Of(lp) loop
+    for i in 1..integer32(Length_Of(lp)) loop
       pnd := Head_Of(tmp);
       Write_Paired_Chains(file,pnd,i);
-      sols(i) := new Standard_Complex_Matrices.Matrix(1..n,1..d);
-      Deform_Pair(file,pnd,i,f1,f2,l1,l2,ln,report,outlog,sols(i).all);
+      sols(i) := new Standard_Complex_Matrices.Matrix
+                       (1..integer32(n),1..integer32(d));
+      Deform_Pair(file,pnd,natural32(i),f1,f2,l1,l2,ln,report,outlog,
+                  sols(i).all);
       tmp := Tail_Of(tmp);
     end loop;
     Test_Solutions(file,l1,l2,ln,xpm,sols);

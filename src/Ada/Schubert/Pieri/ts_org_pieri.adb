@@ -1,6 +1,10 @@
-with text_io,integer_io;                 use text_io,integer_io;
+with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Natural_Vectors;           use Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
@@ -21,14 +25,14 @@ with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;       use Standard_Complex_Poly_SysFun;
 with Matrix_Indeterminates;              use Matrix_Indeterminates;
-with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;             use Main_Poly_Continuation;
 with Brackets,Brackets_io;               use Brackets,Brackets_io;
 with Bracket_Monomials;                  use Bracket_Monomials;
 with Bracket_Monomials_io;               use Bracket_Monomials_io;
 with Bracket_Expansions;                 use Bracket_Expansions;
-with Bracket_Polynomials;                use Bracket_Polynomials;
-with Bracket_Polynomials_io;             use Bracket_Polynomials_io;
-with Bracket_Systems;                    use Bracket_Systems;
+with Standard_Bracket_Polynomials;       use Standard_Bracket_Polynomials;
+with Standard_Bracket_Polynomials_io;    use Standard_Bracket_Polynomials_io;
+with Standard_Bracket_Systems;           use Standard_Bracket_Systems;
 with Pieri_Trees,Pieri_Trees_io;         use Pieri_Trees,Pieri_Trees_io;
 with Pieri_Root_Counts;                  use Pieri_Root_Counts;
 with Symbolic_Minor_Equations;           use Symbolic_Minor_Equations;
@@ -45,7 +49,7 @@ procedure ts_org_pieri is
 --   the paper "Numerical Schubert Calculus" of Birkett Huber, Frank Sottile
 --   and Bernd Sturmfels.
 
-  function Maximum ( n1,n2 : natural ) return natural is
+  function Maximum ( n1,n2 : natural32 ) return natural32 is
   begin
     if n1 >= n2
      then return n1;
@@ -72,13 +76,13 @@ procedure ts_org_pieri is
 -- DISPLAYING THE REPRESENTATIONS OF THE PLANES :
 
   procedure Display_Polynomial_Pattern
-              ( file : in file_type; n : in natural; b1,b2 : in Bracket ) is
+              ( file : in file_type; n : in integer32; b1,b2 : in Bracket ) is
 
   -- DESCRIPTION :
   --   Displays the pattern by a polynomial matrix.
 
     pm : Standard_Complex_Poly_Matrices.Matrix(1..n,b1'range)
-       := Schubert_Pattern(n,b1,b2);
+       := Schubert_Pattern(natural32(n),b1,b2);
 
   begin
     put(file,pm);
@@ -144,16 +148,16 @@ procedure ts_org_pieri is
   end Expand_Minors;
 
   procedure Pieri_Equations
-              ( file : in file_type; n,d : in natural; bs : in Bracket_System;
-                b1,b2 : in Bracket ) is
+              ( file : in file_type; n,d : in integer32;
+                bs : in Bracket_System; b1,b2 : in Bracket ) is
 
   -- DESCRIPTION :
   --   Writes the Pieri equations corresponding to the pair of brackets.
 
-    cffmat : Standard_Complex_Matrices.Matrix(1..n,1..(n-d))
-           := Random_Matrix(n,n-d);
+    cffmat : constant Standard_Complex_Matrices.Matrix(1..n,1..(n-d))
+           := Random_Matrix(natural32(n),natural32(n-d));
     polmat : Standard_Complex_Poly_Matrices.Matrix(1..n,1..d)
-           := Schubert_Pattern(n,b1,b2);
+           := Schubert_Pattern(natural32(n),b1,b2);
     sys : Poly_Sys(bs'first+1..bs'last);
     sol : Standard_Complex_Matrices.Matrix(1..n,1..d);
 
@@ -175,16 +179,17 @@ procedure ts_org_pieri is
     sys := Expanded_Minors(cffmat,polmat,bs);
     put_line(sys);
     Standard_Complex_Poly_Matrices.Clear(polmat);
-    if Pieri_Condition(n,b1,b2)
-     then put("The "); put(d,1); put_line("-plane at the leaves :");
-          sol := Solve_Pieri_Leaves(Standard_Output,b1,b2,cffmat); put(sol);
-          put_line("The solution evaluated at the system : ");
-          put(Evaluate(sys,sol)); new_line;
-     else put_line("Pair of leaves does not satisfy Pieri's condition.");
+    if Pieri_Condition(natural32(n),b1,b2) then
+      put("The "); put(d,1); put_line("-plane at the leaves :");
+      sol := Solve_Pieri_Leaves(Standard_Output,b1,b2,cffmat); put(sol);
+      put_line("The solution evaluated at the system : ");
+      put(Evaluate(sys,sol)); new_line;
+    else
+      put_line("Pair of leaves does not satisfy Pieri's condition.");
     end if;
   end Pieri_Equations;
 
-  procedure Expand_Minors ( n,d : in natural; bs : in Bracket_System ) is
+  procedure Expand_Minors ( n,d : in integer32; bs : in Bracket_System ) is
 
   -- DESCRIPTION :
   --   Expands the minors to obtain a symbolic formulation of the equations.
@@ -198,17 +203,18 @@ procedure ts_org_pieri is
   end Expand_Minors;
 
   procedure Pieri_Equations_for_Paired_Chains
-              ( file : in file_type; n,d : in natural; bs : in Bracket_System;
-                b1,b2 : in bracket_Array ) is
+              ( file : in file_type; n,d : in integer32;
+                bs : in Bracket_System; b1,b2 : in bracket_Array ) is
 
   -- DESCRIPTION :
   --   Writes the equations for each node along a pair of chains.
 
-    maxlen : constant natural := Maximum(b1'last,b2'last);
+    maxlen : constant natural32
+           := Maximum(natural32(b1'last),natural32(b2'last));
     lb1,lb2 : Link_to_Bracket;
 
   begin
-    for i in b1'first..maxlen loop
+    for i in b1'first..integer32(maxlen) loop
       if i <= b1'last
        then lb1 := b1(i);
        else lb1 := b1(b1'last);
@@ -222,8 +228,8 @@ procedure ts_org_pieri is
   end Pieri_Equations_for_Paired_Chains;
 
   procedure Write_Pieri_Equations
-              ( file : in file_type; n,d : in natural; t1,t2 : in Pieri_Tree;
-                bs : in Bracket_System ) is
+              ( file : in file_type; n,d : in integer32;
+                t1,t2 : in Pieri_Tree; bs : in Bracket_System ) is
 
   -- DESCRIPTION :
   --   Writes the Pieri Equations for all pairs of chains.
@@ -240,9 +246,9 @@ procedure ts_org_pieri is
   end Write_Pieri_Equations;
 
   procedure Write_Pieri_Equations
-              ( n,d : in natural; t1,t2 : in Pieri_Tree ) is
+              ( n,d : in integer32; t1,t2 : in Pieri_Tree ) is
 
-    k,kd : natural;
+    k,kd : integer32 := 0;
     bm : Bracket_Monomial;
     file : file_type;
 
@@ -252,10 +258,11 @@ procedure ts_org_pieri is
     Read_Name_and_Create_File(file);
     put("Give k to determine (m-k+1)-plane : "); get(k);
     kd := n-k+1;
-    bm := Maximal_Minors(n,kd);      -- because n = m+p
+    bm := Maximal_Minors(natural32(n),natural32(kd));      -- because n = m+p
     put(file,"All maximal minors : "); put(file,bm); new_line(file);
     declare
-      bs : constant Bracket_System := Minor_Equations(kd,kd-d,bm);
+      bs : constant Bracket_System
+         := Minor_Equations(natural32(kd),natural32(kd-d),bm);
     begin
       put_line(file,"The generic equation in the Laplace expansion : ");
       put(file,bs(0));
@@ -297,17 +304,18 @@ procedure ts_org_pieri is
 
   procedure Write_Polynomial_Patterns
               ( file : in file_type;
-                n : in natural; b1,b2 : in Bracket_Array ) is
+                n : in integer32; b1,b2 : in Bracket_Array ) is
 
   -- DESCRIPTION :
   --   Writes the two chains in a paired fashion.  If they have unequal
   --   length, then the last element of the shortest chain appears repeated.
 
-    maxlen : constant natural := Maximum(b1'last,b2'last);
+    maxlen : constant natural32
+           := Maximum(natural32(b1'last),natural32(b2'last));
     lb1,lb2 : Link_to_Bracket;
 
   begin
-    for i in b1'first..maxlen loop
+    for i in b1'first..integer32(maxlen) loop
       put(file,"(");
       if i <= b1'last
        then lb1 := b1(i);
@@ -325,18 +333,19 @@ procedure ts_org_pieri is
 
   procedure Write_Paired_Chain
               ( file : in file_type;
-                n : in natural; b1,b2 : in Bracket_Array ) is
+                n : in integer32; b1,b2 : in Bracket_Array ) is
 
   -- DESCRIPTION :
   --   Writes the two chains in a paired fashion.  If they have unequal
   --   length, then the last element of the shortest chain appears repeated.
 
-    maxlen : constant natural := Maximum(b1'last,b2'last);
+    maxlen : constant natural32
+           := Maximum(natural32(b1'last),natural32(b2'last));
 
   begin
     put(file,"("); put(file,b1(b1'first).all); put(file,",");
                    put(file,b2(b2'first).all); put(file,")");
-    for i in b1'first+1..maxlen loop
+    for i in b1'first+1..integer32(maxlen) loop
       put(file," < "); put(file,"(");
       if i <= b1'last
        then put(file,b1(i).all);
@@ -351,13 +360,14 @@ procedure ts_org_pieri is
     end loop;
     new_line(file);
     Write_Polynomial_Patterns(Standard_Output,n,b1,b2);
-    if Pieri_Condition(n,b1(b1'last).all,b2(b2'last).all)
+    if Pieri_Condition(natural32(n),b1(b1'last).all,b2(b2'last).all)
      then put_line("Leaves satisfy Pieri's condition.");
      else put_line("Leaves do not satisfy Pieri's condition.");
     end if;
   end Write_Paired_Chain;
 
-  procedure Write_Pieri_Chains ( n : in natural; t1,t2 : in Pieri_Tree ) is
+  procedure Write_Pieri_Chains
+              ( n : in integer32; t1,t2 : in Pieri_Tree ) is
 
   -- DESCRIPTION :
   --   Enumerates all pairs of chains and checks Pieri's condition
@@ -375,12 +385,13 @@ procedure ts_org_pieri is
   end Write_Pieri_Chains;
 
   function First_Standard_Plane
-              ( n,m,r : natural ) return Standard_Complex_Matrices.Matrix is
+              ( n,m,r : integer32 ) return Standard_Complex_Matrices.Matrix is
 
   -- DESCRIPTION :
   --   Returns the plane spanned by the first m+1-r standard basis vectors.
 
-    res : Standard_Complex_Matrices.Matrix := Random_Matrix(n,m+1-r);
+    res : Standard_Complex_Matrices.Matrix
+        := Random_Matrix(natural32(n),natural32(m+1-r));
 
   begin
     for i in res'range(1) loop
@@ -395,12 +406,13 @@ procedure ts_org_pieri is
   end First_Standard_Plane;
 
   function Last_Standard_Plane
-              ( n,m,r : natural ) return Standard_Complex_Matrices.Matrix is
+              ( n,m,r : integer32 ) return Standard_Complex_Matrices.Matrix is
 
   -- DESCRIPTION :
   --   Returns the plane spanned by the first m+1-r standard basis vectors.
 
-    res : Standard_Complex_Matrices.Matrix := Random_Matrix(n,m+1-r);
+    res : Standard_Complex_Matrices.Matrix
+        := Random_Matrix(natural32(n),natural32(m+1-r));
 
   begin
     for i in res'range(1) loop
@@ -415,7 +427,7 @@ procedure ts_org_pieri is
   end Last_Standard_Plane;
 
   function First_Random_Input_Sequence
-             ( n,m,a : natural; kp : Vector ) return VecMat is
+             ( n,m,a : integer32; kp : Vector ) return VecMat is
 
   -- DESCRIPTION :
   --   Returns the first sequence of random input planes.  The first plane
@@ -426,16 +438,17 @@ procedure ts_org_pieri is
 
   begin
     res(0) := new Standard_Complex_Matrices.Matrix'
-                    (First_Standard_Plane(n,m,kp(1)));
+                    (First_Standard_Plane(n,m,integer32(kp(1))));
     for i in 1..res'last loop
       res(i) := new Standard_Complex_Matrices.Matrix'
-                      (Random_Matrix(n,m+1-kp(i+1)));
+                      (Random_Matrix(natural32(n),
+                                     natural32(m)+1-natural32(kp(i+1))));
     end loop;
     return res;
   end First_Random_Input_Sequence;
 
   function Second_Random_Input_Sequence
-             ( n,m,a : natural; kp : Vector ) return VecMat is
+             ( n,m,a : integer32; kp : Vector ) return VecMat is
 
   -- DESCRIPTION :
   --   Returns the second sequence of random input planes.  The first plane
@@ -445,10 +458,11 @@ procedure ts_org_pieri is
 
   begin
     res(0) := new Standard_Complex_Matrices.Matrix'
-                    (Last_Standard_Plane(n,m,kp(1)));
+                    (Last_Standard_Plane(n,m,integer32(kp(1))));
     for i in 1..res'last loop
       res(i) := new Standard_Complex_Matrices.Matrix'
-                      (Random_Matrix(n,m+1-kp(a+1+i)));
+                      (Random_Matrix(natural32(n),
+                                     natural32(m)+1-natural32(kp(a+1+i))));
     end loop;
     return res;
   end Second_Random_Input_Sequence;
@@ -504,7 +518,7 @@ procedure ts_org_pieri is
   -- DESCRIPTION :
   --   Interactive determination of the continuation and output parameters.
 
-    oc : natural;
+    oc : natural32;
 
   begin
     new_line;
@@ -521,21 +535,21 @@ procedure ts_org_pieri is
   --   Returns a selection of the list of pairs.
 
     res,res_last : List_of_Paired_Nodes;
-    k : natural;
+    k : integer32 := 0;
     tmp : List_of_Paired_Nodes := lps;
 
   begin
     put("Give the number of pairs : "); get(k);
     declare
       sel : Standard_Natural_Vectors.Vector(1..k);
-      ind : natural := 1;
+      ind : integer32 := 1;
     begin
       put("Give an increasing sequence of "); put(k,1); put(" numbers : ");
       get(sel);
       for i in 1..Length_Of(lps) loop
-        if i = sel(ind)
-         then ind := ind+1;
-              Append(res,res_last,Head_Of(tmp));
+        if i = sel(ind) then
+          ind := ind+1;
+          Append(res,res_last,Head_Of(tmp));
         end if;
         tmp := Tail_Of(tmp);
       end loop;
@@ -560,7 +574,7 @@ procedure ts_org_pieri is
     end loop;
   end put;
 
-  procedure Root_Count ( n,d,a : in natural; kp : in Vector ) is
+  procedure Root_Count ( n,d,a : in integer32; kp : in Vector ) is
 
   -- DESCRIPTION :
   --   Set up of Pieri trees from a partition of the planes.
@@ -575,23 +589,24 @@ procedure ts_org_pieri is
     file : file_type;
     timer : Timing_Widget;
     ans : character;
-    m : constant natural := n-d;
-    v1 : Vector(0..a-1) := kp(1..a);
-    t1 : Pieri_Tree(d,a-1) := Create(n,d,v1);
-    a2 : constant natural := kp'last-a-1;
-    v2 : Vector(0..a2-1) := kp(a+1..kp'last-1);
-    t2 : Pieri_Tree(d,a2) := Create(n,d,v2);
+    m : constant integer32 := n-d;
+    v1 : constant Vector(0..a-1) := kp(1..a);
+    t1 : Pieri_Tree(d,a-1) := Create(natural32(n),natural32(d),v1);
+    a2 : constant integer32 := kp'last-a-1;
+    v2 : constant Vector(0..a2-1) := kp(a+1..kp'last-1);
+    t2 : Pieri_Tree(d,a2) := Create(natural32(n),natural32(d),v2);
     lp : List_of_Paired_Nodes := Create(n,d,t1,t2);
-    np : Nodal_Pair(d) := Create(d,lp);
+    np : constant Nodal_Pair(d) := Create(d,lp);
     sel_lp : List_of_Paired_Nodes;
-    rc : constant natural := Length_Of(lp);
-    nb : constant natural := Number_of_Paths(np);
+    rc : constant natural32 := Length_Of(lp);
+    nb : constant natural32 := Number_of_Paths(np);
     l1 : VecMat(0..a-1) := First_Random_Input_Sequence(n,m,a,kp);
     l2 : VecMat(0..kp'last-a-2) := Second_Random_Input_Sequence(n,m,a,kp);
-    ln : Standard_Complex_Matrices.Matrix(1..n,1..m+1-kp(kp'last))
-       := Random_Matrix(n,m+1-kp(kp'last));
+    ln : Standard_Complex_Matrices.Matrix(1..n,1..m+1-integer32(kp(kp'last)))
+       := Random_Matrix(natural32(n),
+                        natural32(m)+1-natural32(kp(kp'last)));
     report,outlog : boolean;
-    sols : VecMat(1..rc);
+    sols : VecMat(1..integer32(rc));
 
   begin
     skip_line;
@@ -652,10 +667,11 @@ procedure ts_org_pieri is
     put(file,l2,2);
     put_line(file,"The last random input plane :"); put(file,ln,2);
     put_line(file,"Starting the deformations at the paired leaves.");
-    Matrix_Indeterminates.Initialize_Symbols(n,d);
+    Matrix_Indeterminates.Initialize_Symbols(natural32(n),natural32(d));
     Add_t_Symbol;
     tstart(timer);
-    Deform_Pairs(file,n,d,sel_lp,l1,l2,ln,report,outlog,sols);
+    Deform_Pairs(file,natural32(n),natural32(d),sel_lp,l1,l2,ln,report,
+                 outlog,sols);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Pieri Deformations");
@@ -667,25 +683,24 @@ procedure ts_org_pieri is
 
 -- FIVE MAJOR TEST PROGRAMS :
 
-  procedure Test_Pieri_Condition ( n,d : in natural ) is
+  procedure Test_Pieri_Condition ( n,d : in integer32 ) is
 
   -- DESCRIPTION :
   --   Reads two brackets and tests Pieri's condition.
 
     b1,b2 : Bracket(1..d);
     ans : character;
-    cnt : natural := 0;
 
   begin
     new_line;
     put_line("Interactive test on Pieri's condition for pair of brackets.");
-    Matrix_Indeterminates.Initialize_Symbols(n,d);
+    Matrix_Indeterminates.Initialize_Symbols(natural32(n),natural32(d));
     loop
       new_line;
       put("Give first bracket : "); get(b1);
       put("Give second bracket : "); get(b2);
       put("("); put(b1); put(","); put(b2); put(")");
-      if Pieri_Condition(n,b1,b2)
+      if Pieri_Condition(natural32(n),b1,b2)
        then put_line(" satisfies Pieri's condition.");
        else put_line(" does not satisfy Pieri's condition.");
       end if;
@@ -695,11 +710,11 @@ procedure ts_org_pieri is
     Matrix_Indeterminates.Clear_Symbols;
   end Test_Pieri_Condition;
 
-  procedure Test_Pieri_Tree ( n,d : in natural ) is
+  procedure Test_Pieri_Tree ( n,d : in integer32 ) is
 
   -- DESCRIPTION :  Constructs T(r_0,r_1,..,r_a).
 
-    a : natural;
+    a : integer32 := 0;
     ans : character;
 
   begin
@@ -713,7 +728,7 @@ procedure ts_org_pieri is
         t : Pieri_Tree(d,a);
       begin
         put("Give "); put(a+1,1); put(" natural numbers : "); get(v);
-        t := Create(n,d,v);
+        t := Create(natural32(n),natural32(d),v);
         put_line("The Pieri tree : "); Write_Tree(t); --put(t);
         put_line("The chains in the Pieri tree :"); Write_Chains(t);
         Clear(t);
@@ -723,14 +738,15 @@ procedure ts_org_pieri is
     end loop;
   end Test_Pieri_Tree;
 
-  procedure Test_Root_Count ( n,d : in natural ) is
+  procedure Test_Root_Count ( n,d : in integer32 ) is
 
   -- DESCRIPTION :
   --   Reads the input planes and sets up a pair of trees to perform
   --   the combinatorial root count.
 
-    m : constant natural := n-d;
-    np,sum,a : natural;
+    m : constant integer32 := n-d;
+    sum : natural32;
+    np,a : integer32 := 0;
     ans : character;
 
   begin
@@ -752,16 +768,17 @@ procedure ts_org_pieri is
           sum := sum + kp(i);
         end loop;
         put(" = "); put(sum,1);
-        if sum = m*d
-         then put_line(" = m*p");
-              loop
-                put("Give number of elements in first set : "); get(a);
-                Root_Count(n,d,a,kp);
-                new_line;
-                put("Do you want to test other partitions ? (y/n) "); get(ans);
-                exit when ans /= 'y';
-              end loop;
-         else put_line(" /= m*p");
+        if integer32(sum) = m*d then
+          put_line(" = m*p");
+          loop
+            put("Give number of elements in first set : "); get(a);
+            Root_Count(n,d,a,kp);
+            new_line;
+            put("Do you want to test other partitions ? (y/n) "); get(ans);
+            exit when ans /= 'y';
+          end loop;
+        else
+          put_line(" /= m*p");
         end if;
       end;
       put("Do you want more tests ? (y/n) "); get(ans);
@@ -769,12 +786,12 @@ procedure ts_org_pieri is
     end loop;
   end Test_Root_Count;
 
-  procedure Test_Pieri_Equations ( n,d : in natural ) is
+  procedure Test_Pieri_Equations ( n,d : in integer32 ) is
 
   -- DESCRIPTION :
   --   Set up of the expansions of the maximal minors.
 
-    k,kd,nb : natural;
+    k,kd,nb : integer32 := 0;
     bm : Bracket_Monomial;
     ans : character;
     b1,b2 : Bracket(1..d);
@@ -782,15 +799,16 @@ procedure ts_org_pieri is
   begin
     new_line;
     put_line("Set up equations for certain Schubert conditions.");
-    Matrix_Indeterminates.Initialize_Symbols(n,d);
+    Matrix_Indeterminates.Initialize_Symbols(natural32(n),natural32(d));
     loop
       new_line;
       put("Give k to determine (m-k+1)-plane : "); get(k);
       kd := n-k+1;
-      bm := Maximal_Minors(n,kd);      -- because n = m+p
+      bm := Maximal_Minors(natural32(n),natural32(kd));  -- because n = m+p
       put("All maximal minors : "); put(bm); new_line;
       declare
-        bs : constant Bracket_System := Minor_Equations(kd,kd-d,bm);
+        bs : constant Bracket_System 
+           := Minor_Equations(natural32(kd),natural32(kd-d),bm);
       begin
         put_line("The generic equation in the Laplace expansion : ");
         put(bs(0));
@@ -807,52 +825,52 @@ procedure ts_org_pieri is
     Matrix_Indeterminates.Clear_Symbols;
     new_line;
     put("Do you want to test memory consumption ? (y/n) "); get(ans);
-    if ans = 'y'
-     then put("Give number of times : "); get(nb);
-          k := 1;
-          for i in 1..d loop
-            b1(i) := i;
-            b2(i) := i;
-          end loop;
-          for i in 1..nb loop
-            kd := n-k+1;
-            bm := Maximal_Minors(n,kd);
-            declare
-              nva : constant natural := n*d+1;
-              bs : Bracket_System(0..Number_of_Brackets(bm))
-                 := Minor_Equations(kd,kd-d,bm);
-              cffmat : Standard_Complex_Matrices.Matrix(1..n,1..(n-d))
-                     := Random_Matrix(n,n-d);
-              stamat : Standard_Complex_Matrices.Matrix(1..n,1..(n-d))
-                     := Random_Matrix(n,n-d);
-              movmat : Standard_Complex_Poly_Matrices.Matrix
-                         (cffmat'range(1),cffmat'range(2))
-                     := Moving_U_Matrix(nva,stamat,cffmat);
-              polmat : Standard_Complex_Poly_Matrices.Matrix(1..n,1..d)
-                     := Schubert_Pattern(n,b1,b2);  
-              sys : Poly_Sys(1..bs'last)
-                  := Expanded_Minors(cffmat,polmat,bs);
-              movcyc : Poly_Sys(1..bs'last)
-                     := Lifted_Expanded_Minors(movmat,polmat,bs);
-            begin
-              Clear(bm); Clear(bs);
-              Standard_Complex_Poly_Matrices.Clear(movmat);
-              Standard_Complex_Poly_Matrices.Clear(polmat);
-              Clear(sys); Clear(movcyc);
-            end;
-          end loop;
+    if ans = 'y' then
+      put("Give number of times : "); get(nb);
+      k := 1;
+      for i in 1..d loop
+        b1(i) := natural32(i);
+        b2(i) := natural32(i);
+      end loop;
+      for i in 1..nb loop
+        kd := n-k+1;
+        bm := Maximal_Minors(natural32(n),natural32(kd));
+        declare
+          nva : constant integer32 := n*d+1;
+          bs : Bracket_System(0..integer32(Number_of_Brackets(bm)))
+             := Minor_Equations(natural32(kd),natural32(kd-d),bm);
+          cffmat : constant Standard_Complex_Matrices.Matrix(1..n,1..(n-d))
+                 := Random_Matrix(natural32(n),natural32(n-d));
+          stamat : constant Standard_Complex_Matrices.Matrix(1..n,1..(n-d))
+                 := Random_Matrix(natural32(n),natural32(n-d));
+          movmat : Standard_Complex_Poly_Matrices.Matrix
+                     (cffmat'range(1),cffmat'range(2))
+                 := Moving_U_Matrix(nva,stamat,cffmat);
+          polmat : Standard_Complex_Poly_Matrices.Matrix(1..n,1..d)
+                 := Schubert_Pattern(natural32(n),b1,b2);  
+          sys : Poly_Sys(1..bs'last)
+              := Expanded_Minors(cffmat,polmat,bs);
+          movcyc : Poly_Sys(1..bs'last)
+                 := Lifted_Expanded_Minors(movmat,polmat,bs);
+        begin
+          Clear(bm); Clear(bs);
+          Standard_Complex_Poly_Matrices.Clear(movmat);
+          Standard_Complex_Poly_Matrices.Clear(polmat);
+          Clear(sys); Clear(movcyc);
+        end;
+      end loop;
     end if;
   end Test_Pieri_Equations;
 
-  procedure Test_Pieri_Homotopies ( n,d : in natural ) is
+  procedure Test_Pieri_Homotopies ( n,d : in integer32 ) is
 
   -- DESCRIPTION :
   --   Set up of the parametric families in the Pieri homotopy algorithm.
 
     b1,b2 : Bracket(1..d);
-    m : constant natural := n-d;
-    nva : constant natural := n*d+1;
-    k,kd : natural;
+    m : constant integer32 := n-d;
+    nva : constant integer32 := n*d+1;
+    k,kd : integer32 := 0;
     bm : Bracket_Monomial;
     F1 : constant Standard_Complex_Matrices.Matrix
        := Random_Upper_Triangular(n);
@@ -863,7 +881,7 @@ procedure ts_org_pieri is
     new_line;
     put_line("Set up the moving cycles in the Pieri homotopy algorithm.");
     new_line;
-    Matrix_Indeterminates.Initialize_Symbols(n,d);
+    Matrix_Indeterminates.Initialize_Symbols(natural32(n),natural32(d));
     Add_t_Symbol;
     put_line("The general upper triangular matrix F : "); put(F1,2);
     put_line("The general lower triangular matrix F' : "); put(F2,2);
@@ -873,15 +891,17 @@ procedure ts_org_pieri is
     put("("); put(b1); put(","); put(b2); put_line(")");
     put("Give k to determine (m-k+1)-plane : "); get(k);
     kd := n-k+1;
-    bm := Maximal_Minors(n,kd);
+    bm := Maximal_Minors(natural32(n),natural32(kd));
     declare
-      L : constant Standard_Complex_Matrices.Matrix := Random_Matrix(n,m+1-k);
+      L : constant Standard_Complex_Matrices.Matrix
+        := Random_Matrix(natural32(n),natural32(m+1-k));
       X : Standard_Complex_Poly_Matrices.Matrix(1..n,b1'range);
       U1 : constant Standard_Complex_Matrices.Matrix := U_Matrix(F1,b1);
       movU1 : Standard_Complex_Poly_Matrices.Matrix(L'range(1),L'range(2));
       U2 : constant Standard_Complex_Matrices.Matrix := U_Matrix(F2,b2);
       movU2 : Standard_Complex_Poly_Matrices.Matrix(L'range(1),L'range(2));
-      bs : constant Bracket_System := Minor_Equations(kd,kd-d,bm);
+      bs : constant Bracket_System
+         := Minor_Equations(natural32(kd),natural32(kd-d),bm);
       movcyc1,movcyc2 : Poly_Sys(1..bs'last);
     begin
       put("The U-matrix for F and "); put(b1); put_line(" :"); put(U1,2);
@@ -891,7 +911,7 @@ procedure ts_org_pieri is
       put_line("The first moving U-matrix :"); put(movU1);
       movU2 := Moving_U_Matrix(nva,U2,L);
       put_line("The second moving U-matrix :"); put(movU2);
-      X := Schubert_Pattern(n,b1,b2);
+      X := Schubert_Pattern(natural32(n),b1,b2);
       put("The unknown "); put(d,1); put_line("-plane X :"); put(X);
       movcyc1 := Lifted_Expanded_Minors(movU1,X,bs);
       put_line("The polynomial system for the first moving U-matrix :");
@@ -900,7 +920,8 @@ procedure ts_org_pieri is
       put_line("The polynomial system for the second moving U-matrix :");
       put_line(movcyc2);
       put_line("Target system at t = 1 :");
-      put_line(Eval(movcyc2,Create(1.0),Number_of_Unknowns(movcyc2(1))));
+      put_line(Eval(movcyc2,Create(1.0),
+                    integer32(Number_of_Unknowns(movcyc2(1)))));
       put_line("System that must be solved :");
       put_line(Expanded_Minors(L,X,bs));
     end;
@@ -909,7 +930,7 @@ procedure ts_org_pieri is
 
   procedure Main is
 
-    m,p,n : natural;
+    m,p,n : integer32 := 0;
     ans : character;
 
   begin

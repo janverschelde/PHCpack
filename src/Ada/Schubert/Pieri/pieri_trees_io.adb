@@ -1,10 +1,12 @@
-with integer_io;                         use integer_io;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Brackets_io;                        use Brackets_io;
 
 package body Pieri_Trees_io is
 
-  type Boolean_Array is array ( integer range <> ) of boolean;
+  type Boolean_Array is array ( integer32 range <> ) of boolean;
 
   procedure put ( nd : in Pieri_Node ) is
   begin
@@ -27,9 +29,9 @@ package body Pieri_Trees_io is
   procedure put ( file : in file_type; lnd : in Link_to_Pieri_Node ) is
   begin
     put(file,lnd.all);
-    if lnd.ancestor /= null
-     then put(file," > ");
-          put(file,lnd.ancestor);
+    if lnd.ancestor /= null then
+      put(file," > ");
+      put(file,lnd.ancestor);
     end if;
   end put;
 
@@ -38,13 +40,13 @@ package body Pieri_Trees_io is
     put(Standard_Output,t);
   end put;
 
-  procedure put ( t : in Pieri_Tree; level : in natural ) is
+  procedure put ( t : in Pieri_Tree; level : in natural32 ) is
   begin
     put(Standard_Output,t,level);
   end put;
 
   procedure put ( file : in file_type;
-                  t : in Pieri_Tree; level : in natural ) is
+                  t : in Pieri_Tree; level : in natural32 ) is
 
     procedure Write_Node ( lnd : in Link_to_Pieri_Node;
                            continue : out boolean ) is
@@ -60,7 +62,7 @@ package body Pieri_Trees_io is
 
   procedure put ( file : in file_type; t : in Pieri_Tree ) is
 
-    h : constant natural := Height(t);
+    h : constant natural32 := Height(t);
 
   begin
     put(file,"Branching at "); put(file,t.branches); new_line(file);
@@ -71,7 +73,7 @@ package body Pieri_Trees_io is
     end loop;
   end put;
 
-  function Last_Child ( nd : Pieri_Node; i : natural ) return boolean is
+  function Last_Child ( nd : Pieri_Node; i : integer32 ) return boolean is
 
   -- DESCRIPTION :
   --   Returns true if the ith child is the last child of the node.
@@ -86,7 +88,7 @@ package body Pieri_Trees_io is
   end Last_Child;
 
   procedure Write_Labels ( file : in file_type;
-                           nd : in Pieri_Node; jump : in natural;
+                           nd : in Pieri_Node; jump : in integer32;
                            last : in Boolean_Array ) is
 
   -- DESCRIPTION :
@@ -97,7 +99,7 @@ package body Pieri_Trees_io is
     if nd.h /= 0
      then put(file,"   ");
     end if;
-    for i in 1..(nd.h-1) loop
+    for i in 1..(integer32(nd.h)-1) loop
       if last(i)
        then put(file,"     ");
        else put(file,"|    ");
@@ -111,7 +113,7 @@ package body Pieri_Trees_io is
   end Write_Labels;
 
   procedure Write_Nodes ( file : in file_type;
-                          nd : in Pieri_Node; jump : in natural;
+                          nd : in Pieri_Node; jump : in integer32;
                           last : in out Boolean_Array ) is
 
   -- DESCRIPTION :
@@ -121,9 +123,9 @@ package body Pieri_Trees_io is
   begin
     Write_Labels(file,nd,jump,last);
     for i in nd.children'range loop
-      if nd.children(i) /= null
-       then last(nd.h+1) := Last_Child(nd,i);
-            Write_Nodes(file,nd.children(i).all,i,last);
+      if nd.children(i) /= null then
+        last(integer32(nd.h)+1) := Last_Child(nd,i);
+        Write_Nodes(file,nd.children(i).all,i,last);
       end if;
     end loop;
   end Write_Nodes;
@@ -135,7 +137,7 @@ package body Pieri_Trees_io is
 
   procedure Write_Tree ( file : in file_type; t : in Pieri_Tree ) is
 
-    last : Boolean_Array(1..Height(t));
+    last : Boolean_Array(1..integer32(Height(t)));
 
   begin
     Write_Nodes(file,t.root.all,0,last);

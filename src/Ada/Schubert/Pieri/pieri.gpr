@@ -45,7 +45,7 @@ project pieri is
     for Main use
     (
         "ts_detsys.adb",     -- tests determinantal systems
-       -- "ts_org_pieri.adb",  -- tests the original Pieri homotopy algorithm
+        "ts_org_pieri.adb",  -- tests the original Pieri homotopy algorithm
         "ts_canocurv.adb",   -- tests localization patterns for q-curves
         "ts_posets.adb",     -- tests posets definitions
         "ts_defpos.adb",     -- tests deformation posets
