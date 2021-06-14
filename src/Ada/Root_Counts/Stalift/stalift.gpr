@@ -18,7 +18,7 @@ project stalift is
                  "../../Deformations/Trackers",
                  "../../Deformations/Continuation",
                  "../Product", "../Binomials", "../Implift", "../MixedVol",
-                 "../DEMiCs", "../../Tasking", "../../CtoPHC/Funky");
+                 "../DEMiCs", "../../Tasking", "../../CtoPHC/Types");
             for Excluded_Source_Files use ("demicsrun.cpp", "main.cpp");
             for Languages use ("Ada", "C++");
         when "windows" =>
@@ -56,7 +56,6 @@ project stalift is
         "ts_drivcrit.adb",      -- tests the main criterion
         "ts_drivstal.adb",      -- tests the main static lifting
         "ts_mvasta.adb",        -- tests the MixedVol algorithm
-        "ts_calldemics.adb",    -- tests the DEMiCs Algorithm
         "ts_mixlab.adb",        -- tests coordinate/labeled subdivisions
         "ts_jpmix.adb",         -- tests jumpstarting
         "ts_exptrack.adb",      -- tests exponential continuation parameters
