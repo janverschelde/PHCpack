@@ -1,4 +1,7 @@
-with text_io,integer_io;                use text_io,integer_io;
+with text_io;                           use text_io;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Communications_with_User;          use Communications_with_User;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
@@ -12,7 +15,7 @@ procedure ts_mtsam is
 
   procedure Main is
 
-    n,d : natural;
+    n,d : natural32 := 0;
     p : Link_to_Poly_Sys;
     sols : Solution_List;
     file : file_type;
@@ -29,7 +32,8 @@ procedure ts_mtsam is
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
    -- Multitasking_Sampling.Driver_to_Sampler(file,n,d,p.all,sols);
-    Multitasking_Sampling.Driver_to_Monodromy(file,n,d,p.all,sols);
+    Multitasking_Sampling.Driver_to_Monodromy
+      (file,integer32(n),integer32(d),p.all,sols);
   end Main;
 
 begin

@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;       use Standard_Integer_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
 with DoblDobl_Complex_Vectors;
@@ -12,17 +13,17 @@ package Multitasking_Matrix_x_Vector is
 --   for various types of arithmetic.
 
   function Silent_Multiply
-              ( n : natural;
+              ( n : integer32;
                 A : Standard_Complex_Matrices.Matrix;
                 v : Standard_Complex_Vectors.Vector ) 
               return Standard_Complex_Vectors.Vector;
   function Silent_Multiply
-              ( n : natural;
+              ( n : integer32;
                 A : DoblDobl_Complex_Matrices.Matrix;
                 v : DoblDobl_Complex_Vectors.Vector ) 
               return DoblDobl_Complex_Vectors.Vector;
   function Silent_Multiply
-              ( n : natural;
+              ( n : integer32;
                 A : QuadDobl_Complex_Matrices.Matrix;
                 v : QuadDobl_Complex_Vectors.Vector ) 
               return QuadDobl_Complex_Vectors.Vector;
@@ -31,17 +32,17 @@ package Multitasking_Matrix_x_Vector is
   --   Returns A*v computed with n tasks without any output.
 
   function Reporting_Multiply
-              ( n : natural;
+              ( n : integer32;
                 A : Standard_Complex_Matrices.Matrix;
                 v : Standard_Complex_Vectors.Vector ) 
               return Standard_Complex_Vectors.Vector;
   function Reporting_Multiply
-              ( n : natural;
+              ( n : integer32;
                 A : DoblDobl_Complex_Matrices.Matrix;
                 v : DoblDobl_Complex_Vectors.Vector ) 
               return DoblDobl_Complex_Vectors.Vector;
   function Reporting_Multiply
-              ( n : natural;
+              ( n : integer32;
                 A : QuadDobl_Complex_Matrices.Matrix;
                 v : QuadDobl_Complex_Vectors.Vector ) 
               return QuadDobl_Complex_Vectors.Vector;

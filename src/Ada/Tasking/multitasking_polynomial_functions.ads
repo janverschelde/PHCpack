@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;       use Standard_Integer_Numbers;
 with Standard_Natural_VecVecs;
 with Standard_Integer_VecVecs;
 with Standard_Complex_Vectors;
@@ -20,17 +21,17 @@ package Multitasking_Polynomial_Functions is
 -- EVALUATION OF THE MONOMIALS :
 
   function Silent_Eval
-             ( n : natural;
+             ( n : integer32;
                v : Standard_Integer_VecVecs.VecVec;
                x : Standard_Complex_Vectors.Vector )
              return Standard_Complex_Vectors.Vector;
   function Silent_Eval
-             ( n : natural;
+             ( n : integer32;
                v : Standard_Integer_VecVecs.VecVec;
                x : DoblDobl_Complex_Vectors.Vector )
              return DoblDobl_Complex_Vectors.Vector;
   function Silent_Eval
-             ( n : natural;
+             ( n : integer32;
                v : Standard_Integer_VecVecs.VecVec;
                x : QuadDobl_Complex_Vectors.Vector )
              return QuadDobl_Complex_Vectors.Vector;
@@ -40,17 +41,17 @@ package Multitasking_Polynomial_Functions is
   --   at the complex vector x.  There is no intermediate output.
 
   function Reporting_Eval
-             ( n : natural;
+             ( n : integer32;
                v : Standard_Integer_VecVecs.VecVec;
                x : Standard_Complex_Vectors.Vector )
              return Standard_Complex_Vectors.Vector;
   function Reporting_Eval
-             ( n : natural;
+             ( n : integer32;
                v : Standard_Integer_VecVecs.VecVec;
                x : DoblDobl_Complex_Vectors.Vector )
              return DoblDobl_Complex_Vectors.Vector;
   function Reporting_Eval
-             ( n : natural;
+             ( n : integer32;
                v : Standard_Integer_VecVecs.VecVec;
                x : QuadDobl_Complex_Vectors.Vector )
              return QuadDobl_Complex_Vectors.Vector;
@@ -62,19 +63,19 @@ package Multitasking_Polynomial_Functions is
 -- EVALUATION OF THE DENSE FLATTENED SYSTEM :
 
   function Silent_Eval
-             ( n : natural;
+             ( n : integer32;
                A : Standard_Complex_Matrices.Matrix;
                v : Standard_Integer_VecVecs.VecVec;
                x : Standard_Complex_Vectors.Vector )
              return Standard_Complex_Vectors.Vector;
   function Silent_Eval
-             ( n : natural;
+             ( n : integer32;
                A : DoblDobl_Complex_Matrices.Matrix;
                v : Standard_Integer_VecVecs.VecVec;
                x : DoblDobl_Complex_Vectors.Vector )
              return DoblDobl_Complex_Vectors.Vector;
   function Silent_Eval
-             ( n : natural;
+             ( n : integer32;
                A : QuadDobl_Complex_Matrices.Matrix;
                v : Standard_Integer_VecVecs.VecVec;
                x : QuadDobl_Complex_Vectors.Vector )
@@ -86,19 +87,19 @@ package Multitasking_Polynomial_Functions is
   --   There is no intermediate output.
 
   function Reporting_Eval
-             ( n : natural;
+             ( n : integer32;
                A : Standard_Complex_Matrices.Matrix;
                v : Standard_Integer_VecVecs.VecVec;
                x : Standard_Complex_Vectors.Vector )
              return Standard_Complex_Vectors.Vector;
   function Reporting_Eval
-             ( n : natural;
+             ( n : integer32;
                A : DoblDobl_Complex_Matrices.Matrix;
                v : Standard_Integer_VecVecs.VecVec;
                x : DoblDobl_Complex_Vectors.Vector )
              return DoblDobl_Complex_Vectors.Vector;
   function Reporting_Eval
-             ( n : natural;
+             ( n : integer32;
                A : QuadDobl_Complex_Matrices.Matrix;
                v : Standard_Integer_VecVecs.VecVec;
                x : QuadDobl_Complex_Vectors.Vector )
@@ -112,21 +113,21 @@ package Multitasking_Polynomial_Functions is
 -- EVALUATION OF THE SPARSE FLATTENED SYSTEM :
 
   function Silent_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : Standard_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
                x : Standard_Complex_Vectors.Vector )
              return Standard_Complex_Vectors.Vector;
   function Silent_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : DoblDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
                x : DoblDobl_Complex_Vectors.Vector )
              return DoblDobl_Complex_Vectors.Vector;
   function Silent_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : QuadDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
@@ -139,21 +140,21 @@ package Multitasking_Polynomial_Functions is
   --   There is no intermediate output.
 
   function Reporting_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : Standard_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
                x : Standard_Complex_Vectors.Vector )
              return Standard_Complex_Vectors.Vector;
   function Reporting_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : DoblDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
                x : DoblDobl_Complex_Vectors.Vector )
              return DoblDobl_Complex_Vectors.Vector;
   function Reporting_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : QuadDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
@@ -168,21 +169,21 @@ package Multitasking_Polynomial_Functions is
 -- EVALUATION OF THE SPARSE FLATTENED SYSTEM with LOOPING Workers :
 
   function Silent_Looping_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : Standard_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
                x : Standard_Complex_Vectors.Vector )
              return Standard_Complex_Vectors.Vector;
   function Silent_Looping_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : DoblDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
                x : DoblDobl_Complex_Vectors.Vector )
              return DoblDobl_Complex_Vectors.Vector;
   function Silent_Looping_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : QuadDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
@@ -195,21 +196,21 @@ package Multitasking_Polynomial_Functions is
   --   There is no intermediate output.
 
   function Reporting_Looping_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : Standard_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
                x : Standard_Complex_Vectors.Vector )
              return Standard_Complex_Vectors.Vector;
   function Reporting_Looping_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : DoblDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
                x : DoblDobl_Complex_Vectors.Vector )
              return DoblDobl_Complex_Vectors.Vector;
   function Reporting_Looping_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : QuadDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;

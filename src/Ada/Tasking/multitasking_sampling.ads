@@ -1,4 +1,5 @@
 with text_io;                           use text_io;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
@@ -23,12 +24,12 @@ package Multitasking_Sampling is
   -- REQUIRED : h'range = 1..d.
 
   procedure Silent_Sampler
-               ( s : in out Solution_List; n,d : in natural;
+               ( s : in out Solution_List; n,d : in integer32;
                  h : in Standard_Complex_VecVecs.VecVec;
                  gamma : in Complex_Number; q : in Poly_Sys;
                  p : out Poly_Sys );
   procedure Reporting_Sampler
-               ( s : in out Solution_List; n,d : in natural;
+               ( s : in out Solution_List; n,d : in integer32;
                  h : in Standard_Complex_VecVecs.VecVec;
                  gamma : in Complex_Number;
                  q : in Poly_Sys; p : out Poly_Sys );
@@ -51,7 +52,7 @@ package Multitasking_Sampling is
   ---            in particular, we have: p = Change_Slices(q,d,h).
 
   procedure Driver_to_Sampler
-               ( file : in file_type; n,d : in natural;
+               ( file : in file_type; n,d : in integer32;
                  ep : in Poly_Sys; esols : in out Solution_List );
 
   -- DESCRIPTION :
@@ -69,7 +70,7 @@ package Multitasking_Sampling is
   --    esols    embedded list of solution for ep.
 
   procedure Driver_to_Monodromy
-               ( file : in file_type; n,d : in natural;
+               ( file : in file_type; n,d : in integer32;
                  ep : in Poly_Sys; esols : in out Solution_List );
 
   -- DESCRIPTION :

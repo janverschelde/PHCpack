@@ -1,6 +1,9 @@
-with text_io,integer_io;                use text_io,integer_io;
+with text_io;                           use text_io;
 with Timing_Package;                    use Timing_Package;
 with Communications_with_User;          use Communications_with_User;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Natural_VecVecs;
 with Standard_Integer_VecVecs;
@@ -53,7 +56,7 @@ procedure ts_mtpolval is
   --   needs to be fixed or not.  Allows the user to give a seed.
 
     ans : character;
-    seed : natural;
+    seed : integer32 := 0;
 
   begin
     put("Set the seed for the random number generator ? (y/n) ");
@@ -61,12 +64,12 @@ procedure ts_mtpolval is
     if ans = 'y' then
       put("Give a value for the seed : "); get(seed);
       put("Setting the seed to "); put(seed,1); put_line(".");
-      Standard_Random_Numbers.Set_Seed(seed);
+      Standard_Random_Numbers.Set_Seed(natural32(seed));
     end if;
   end Prompt_to_Fix_Seed;
 
   function Standard_Random_System 
-             ( n,d,m : natural)
+             ( n,d,m : integer32)
              return Standard_Complex_Poly_Systems.Poly_Sys is
 
   -- DESCRIPTION :
@@ -84,8 +87,9 @@ procedure ts_mtpolval is
     Prompt_to_Fix_Seed;
     for i in 1..n loop
       if m = 0
-       then res(i) := Random_Dense_Poly(n,d,0);
-       else res(i) := Random_Sparse_Poly(n,d,m,0);
+       then res(i) := Random_Dense_Poly(natural32(n),natural32(d),0);
+       else res(i) := Random_Sparse_Poly
+                        (natural32(n),natural32(d),natural32(m),0);
       end if;
     end loop;
     for i in 1..n loop
@@ -97,7 +101,7 @@ procedure ts_mtpolval is
   end Standard_Random_System;
 
   function DoblDobl_Random_System 
-             ( n,d,m : natural)
+             ( n,d,m : integer32)
              return DoblDobl_Complex_Poly_Systems.Poly_Sys is
 
   -- DESCRIPTION :
@@ -115,8 +119,9 @@ procedure ts_mtpolval is
     Prompt_to_Fix_Seed;
     for i in 1..n loop
       if m = 0
-       then res(i) := Random_Dense_Poly(n,d,0);
-       else res(i) := Random_Sparse_Poly(n,d,m,0);
+       then res(i) := Random_Dense_Poly(natural32(n),natural32(d),0);
+       else res(i) := Random_Sparse_Poly
+                        (natural32(n),natural32(d),natural32(m),0);
       end if;
     end loop;
     for i in 1..n loop
@@ -128,7 +133,7 @@ procedure ts_mtpolval is
   end DoblDobl_Random_System;
 
   function QuadDobl_Random_System 
-             ( n,d,m : natural)
+             ( n,d,m : integer32)
              return QuadDobl_Complex_Poly_Systems.Poly_Sys is
 
   -- DESCRIPTION :
@@ -146,8 +151,9 @@ procedure ts_mtpolval is
     Prompt_to_Fix_Seed;
     for i in 1..n loop
       if m = 0
-       then res(i) := Random_Dense_Poly(n,d,0);
-       else res(i) := Random_Sparse_Poly(n,d,m,0);
+       then res(i) := Random_Dense_Poly(natural32(n),natural32(d),0);
+       else res(i) := Random_Sparse_Poly
+                        (natural32(n),natural32(d),natural32(m),0);
       end if;
     end loop;
     for i in 1..n loop
@@ -159,7 +165,7 @@ procedure ts_mtpolval is
   end QuadDobl_Random_System;
 
   procedure Standard_Dense_Test
-              ( nt,n : in natural;
+              ( nt,n : in integer32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
@@ -202,7 +208,7 @@ procedure ts_mtpolval is
   end Standard_Dense_Test;
 
   procedure Standard_Sparse_Test
-              ( nt,n : in natural;
+              ( nt,n : in integer32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
@@ -241,7 +247,7 @@ procedure ts_mtpolval is
     end loop;
   end Standard_Sparse_Test;
 
-  procedure Standard_Test ( nt,n,d,m : in natural ) is
+  procedure Standard_Test ( nt,n,d,m : in integer32 ) is
 
   -- DESCRIPTION :
   --   Tests evaluation at a random system.
@@ -259,7 +265,7 @@ procedure ts_mtpolval is
     end if;
   end Standard_Test;
 
-  procedure Standard_Performance_Test ( nt,n,d,m : in natural ) is
+  procedure Standard_Performance_Test ( nt,n,d,m : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a random system of dimension n, with largest degree d
@@ -269,7 +275,7 @@ procedure ts_mtpolval is
 
     p : constant Standard_Complex_Poly_Systems.Poly_Sys
       := Standard_Random_System(n,d,m);
-    ntimes : natural;
+    ntimes : integer32;
     timer : Timing_Widget;
     sup : List := Standard_Polynomial_Flatteners.Distinct_Supports(p);
     lsp : List := Lexicographical_Supports.Sort(sup);
@@ -297,7 +303,7 @@ procedure ts_mtpolval is
   end Standard_Performance_Test;
 
   procedure DoblDobl_Dense_Test
-              ( nt,n : in natural;
+              ( nt,n : in integer32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
@@ -341,7 +347,7 @@ procedure ts_mtpolval is
   end DoblDobl_Dense_Test;
 
   procedure DoblDobl_Sparse_Test
-              ( nt,n : in natural;
+              ( nt,n : in integer32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
@@ -380,7 +386,7 @@ procedure ts_mtpolval is
     end loop;
   end DoblDobl_Sparse_Test;
 
-  procedure DoblDobl_Test ( nt,n,d,m : in natural ) is
+  procedure DoblDobl_Test ( nt,n,d,m : in integer32 ) is
 
   -- DESCRIPTION :
   --   Tests evaluation at a random system.
@@ -398,7 +404,7 @@ procedure ts_mtpolval is
     end if;
   end DoblDobl_Test;
 
-  procedure DoblDobl_Performance_Test ( nt,n,d,m : in natural ) is
+  procedure DoblDobl_Performance_Test ( nt,n,d,m : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a random system of dimension n, with largest degree d
@@ -408,7 +414,7 @@ procedure ts_mtpolval is
 
     p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
       := DoblDobl_Random_System(n,d,m);
-    ntimes : natural;
+    ntimes : integer32;
     timer : Timing_Widget;
     sup : List := DoblDobl_Polynomial_Flatteners.Distinct_Supports(p);
     lsp : List := Lexicographical_Supports.Sort(sup);
@@ -436,7 +442,7 @@ procedure ts_mtpolval is
   end DoblDobl_Performance_Test;
 
   procedure QuadDobl_Dense_Test
-              ( nt,n : in natural;
+              ( nt,n : in integer32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
@@ -480,7 +486,7 @@ procedure ts_mtpolval is
   end QuadDobl_Dense_Test;
 
   procedure QuadDobl_Sparse_Test
-              ( nt,n : in natural;
+              ( nt,n : in integer32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
@@ -519,7 +525,7 @@ procedure ts_mtpolval is
     end loop;
   end QuadDobl_Sparse_Test;
 
-  procedure QuadDobl_Test ( nt,n,d,m : in natural ) is
+  procedure QuadDobl_Test ( nt,n,d,m : in integer32 ) is
 
   -- DESCRIPTION :
   --   Tests evaluation at a random system.
@@ -537,7 +543,7 @@ procedure ts_mtpolval is
     end if;
   end QuadDobl_Test;
 
-  procedure QuadDobl_Performance_Test ( nt,n,d,m : in natural ) is
+  procedure QuadDobl_Performance_Test ( nt,n,d,m : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a random system of dimension n, with largest degree d
@@ -547,7 +553,7 @@ procedure ts_mtpolval is
 
     p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
       := QuadDobl_Random_System(n,d,m);
-    ntimes : natural;
+    ntimes : integer32;
     timer : Timing_Widget;
     sup : List := QuadDobl_Polynomial_Flatteners.Distinct_Supports(p);
     lsp : List := Lexicographical_Supports.Sort(sup);
@@ -587,7 +593,7 @@ procedure ts_mtpolval is
 
   procedure Main is
 
-    n,d,m,nt : natural;
+    n,d,m,nt : integer32 := 0;
     ans : character;
 
   begin

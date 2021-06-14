@@ -1,5 +1,7 @@
 with text_io;                            use text_io;
 with Multitasking;                       use Multitasking;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Vectors;
@@ -117,7 +119,7 @@ procedure ts_mtmatvec is
     A : constant Standard_Complex_Matrices.Matrix
       := Standard_Random_Matrices.Random_Matrix(r,c); 
     v : constant Standard_Complex_Vectors.Vector
-      := Standard_Random_Vectors.Random_Vector(1,c);
+      := Standard_Random_Vectors.Random_Vector(1,integer32(c));
 
   begin
     Run_Standard_Multiply(A,v);
@@ -132,7 +134,7 @@ procedure ts_mtmatvec is
     A : constant DoblDobl_Complex_Matrices.Matrix
       := DoblDobl_Random_Matrices.Random_Matrix(r,c); 
     v : constant DoblDobl_Complex_Vectors.Vector
-      := DoblDobl_Random_Vectors.Random_Vector(1,c);
+      := DoblDobl_Random_Vectors.Random_Vector(1,integer32(c));
 
   begin
     Run_DoblDobl_Multiply(A,v);
@@ -147,7 +149,7 @@ procedure ts_mtmatvec is
     A : constant QuadDobl_Complex_Matrices.Matrix
       := QuadDobl_Random_Matrices.Random_Matrix(r,c); 
     v : constant QuadDobl_Complex_Vectors.Vector
-      := QuadDobl_Random_Vectors.Random_Vector(1,c);
+      := QuadDobl_Random_Vectors.Random_Vector(1,integer32(c));
 
   begin
     Run_QuadDobl_Multiply(A,v);

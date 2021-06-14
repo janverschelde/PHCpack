@@ -13,7 +13,7 @@ package body Multitasking_Polynomial_Functions is
 -- JOBS to EVALUATE THE MONOMIALS :
 
   procedure Silent_Eval_Job
-             ( i,n : in natural;
+             ( i,n : in integer32;
                v : in Standard_Integer_VecVecs.VecVec;
                x : in Standard_Complex_Vectors.Vector;
                y : out Standard_Complex_Vectors.Vector ) is
@@ -26,7 +26,7 @@ package body Multitasking_Polynomial_Functions is
   end Silent_Eval_Job;
 
   procedure Silent_Eval_Job
-             ( i,n : in natural;
+             ( i,n : in integer32;
                v : in Standard_Integer_VecVecs.VecVec;
                x : in DoblDobl_Complex_Vectors.Vector;
                y : out DoblDobl_Complex_Vectors.Vector ) is
@@ -39,7 +39,7 @@ package body Multitasking_Polynomial_Functions is
   end Silent_Eval_Job;
 
   procedure Silent_Eval_Job
-             ( i,n : in natural;
+             ( i,n : in integer32;
                v : in Standard_Integer_VecVecs.VecVec;
                x : in QuadDobl_Complex_Vectors.Vector;
                y : out QuadDobl_Complex_Vectors.Vector ) is
@@ -52,7 +52,7 @@ package body Multitasking_Polynomial_Functions is
   end Silent_Eval_Job;
 
   procedure Reporting_Eval_Job
-             ( i,n : in natural;
+             ( i,n : in integer32;
                v : in Standard_Integer_VecVecs.VecVec;
                x : in Standard_Complex_Vectors.Vector;
                y : out Standard_Complex_Vectors.Vector ) is
@@ -67,7 +67,7 @@ package body Multitasking_Polynomial_Functions is
   end Reporting_Eval_Job;
 
   procedure Reporting_Eval_Job
-             ( i,n : in natural;
+             ( i,n : in integer32;
                v : in Standard_Integer_VecVecs.VecVec;
                x : in DoblDobl_Complex_Vectors.Vector;
                y : out DoblDobl_Complex_Vectors.Vector ) is
@@ -82,7 +82,7 @@ package body Multitasking_Polynomial_Functions is
   end Reporting_Eval_Job;
 
   procedure Reporting_Eval_Job
-             ( i,n : in natural;
+             ( i,n : in integer32;
                v : in Standard_Integer_VecVecs.VecVec;
                x : in QuadDobl_Complex_Vectors.Vector;
                y : out QuadDobl_Complex_Vectors.Vector ) is
@@ -99,14 +99,14 @@ package body Multitasking_Polynomial_Functions is
 -- EVALUATION OF THE MONOMIALS :
 
   function Silent_Eval
-             ( n : natural;
+             ( n : integer32;
                v : Standard_Integer_VecVecs.VecVec;
                x : Standard_Complex_Vectors.Vector )
              return Standard_Complex_Vectors.Vector is
 
     res : Standard_Complex_Vectors.Vector(v'range);
 
-    procedure Job ( i,n : in natural ) is
+    procedure Job ( i,n : in integer32 ) is
     begin
       for r in v'range loop
         if r mod n = i-1 then
@@ -122,14 +122,14 @@ package body Multitasking_Polynomial_Functions is
   end Silent_Eval;
 
   function Silent_Eval
-             ( n : natural;
+             ( n : integer32;
                v : Standard_Integer_VecVecs.VecVec;
                x : DoblDobl_Complex_Vectors.Vector )
              return DoblDobl_Complex_Vectors.Vector is
 
     res : DoblDobl_Complex_Vectors.Vector(v'range);
 
-    procedure Job ( i,n : in natural ) is
+    procedure Job ( i,n : in integer32 ) is
     begin
       for r in v'range loop
         if r mod n = i-1 then
@@ -145,14 +145,14 @@ package body Multitasking_Polynomial_Functions is
   end Silent_Eval;
 
   function Silent_Eval
-             ( n : natural;
+             ( n : integer32;
                v : Standard_Integer_VecVecs.VecVec;
                x : QuadDobl_Complex_Vectors.Vector )
              return QuadDobl_Complex_Vectors.Vector is
 
     res : QuadDobl_Complex_Vectors.Vector(v'range);
 
-    procedure Job ( i,n : in natural ) is
+    procedure Job ( i,n : in integer32 ) is
     begin
       for r in v'range loop
         if r mod n = i-1 then
@@ -168,14 +168,14 @@ package body Multitasking_Polynomial_Functions is
   end Silent_Eval;
 
   function Reporting_Eval
-             ( n : natural;
+             ( n : integer32;
                v : Standard_Integer_VecVecs.VecVec;
                x : Standard_Complex_Vectors.Vector )
              return Standard_Complex_Vectors.Vector is
 
     res : Standard_Complex_Vectors.Vector(v'range);
 
-    procedure Job ( i,n : in natural ) is
+    procedure Job ( i,n : in integer32 ) is
     begin
       put_line("hello from task " & to_string(i));
       for r in v'range loop
@@ -193,14 +193,14 @@ package body Multitasking_Polynomial_Functions is
   end Reporting_Eval;
 
   function Reporting_Eval
-             ( n : natural;
+             ( n : integer32;
                v : Standard_Integer_VecVecs.VecVec;
                x : DoblDobl_Complex_Vectors.Vector )
              return DoblDobl_Complex_Vectors.Vector is
 
     res : DoblDobl_Complex_Vectors.Vector(v'range);
 
-    procedure Job ( i,n : in natural ) is
+    procedure Job ( i,n : in integer32 ) is
     begin
       put_line("hello from task " & to_string(i));
       for r in v'range loop
@@ -218,14 +218,14 @@ package body Multitasking_Polynomial_Functions is
   end Reporting_Eval;
 
   function Reporting_Eval
-             ( n : natural;
+             ( n : integer32;
                v : Standard_Integer_VecVecs.VecVec;
                x : QuadDobl_Complex_Vectors.Vector )
              return QuadDobl_Complex_Vectors.Vector is
 
     res : QuadDobl_Complex_Vectors.Vector(v'range);
 
-    procedure Job ( i,n : in natural ) is
+    procedure Job ( i,n : in integer32 ) is
     begin
       put_line("hello from task " & to_string(i));
       for r in v'range loop
@@ -245,7 +245,7 @@ package body Multitasking_Polynomial_Functions is
 -- EVALUATION OF THE DENSE FLATTENED SYSTEM :
 
   function Silent_Eval
-             ( n : natural;
+             ( n : integer32;
                A : Standard_Complex_Matrices.Matrix;
                v : Standard_Integer_VecVecs.VecVec;
                x : Standard_Complex_Vectors.Vector )
@@ -258,7 +258,7 @@ package body Multitasking_Polynomial_Functions is
   end Silent_Eval;
 
   function Silent_Eval
-             ( n : natural;
+             ( n : integer32;
                A : DoblDobl_Complex_Matrices.Matrix;
                v : Standard_Integer_VecVecs.VecVec;
                x : DoblDobl_Complex_Vectors.Vector )
@@ -271,7 +271,7 @@ package body Multitasking_Polynomial_Functions is
   end Silent_Eval;
 
   function Silent_Eval
-             ( n : natural;
+             ( n : integer32;
                A : QuadDobl_Complex_Matrices.Matrix;
                v : Standard_Integer_VecVecs.VecVec;
                x : QuadDobl_Complex_Vectors.Vector )
@@ -284,7 +284,7 @@ package body Multitasking_Polynomial_Functions is
   end Silent_Eval;
 
   function Reporting_Eval
-             ( n : natural;
+             ( n : integer32;
                A : Standard_Complex_Matrices.Matrix;
                v : Standard_Integer_VecVecs.VecVec;
                x : Standard_Complex_Vectors.Vector )
@@ -297,7 +297,7 @@ package body Multitasking_Polynomial_Functions is
   end Reporting_Eval;
 
   function Reporting_Eval
-             ( n : natural;
+             ( n : integer32;
                A : DoblDobl_Complex_Matrices.Matrix;
                v : Standard_Integer_VecVecs.VecVec;
                x : DoblDobl_Complex_Vectors.Vector )
@@ -310,7 +310,7 @@ package body Multitasking_Polynomial_Functions is
   end Reporting_Eval;
 
   function Reporting_Eval
-             ( n : natural;
+             ( n : integer32;
                A : QuadDobl_Complex_Matrices.Matrix;
                v : Standard_Integer_VecVecs.VecVec;
                x : QuadDobl_Complex_Vectors.Vector )
@@ -325,7 +325,7 @@ package body Multitasking_Polynomial_Functions is
 -- EVALUATION OF THE SPARSE FLATTENED SYSTEM :
 
   function Silent_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : Standard_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
@@ -335,7 +335,7 @@ package body Multitasking_Polynomial_Functions is
     res : Standard_Complex_Vectors.Vector(c'range);
     vx : constant Standard_Complex_Vectors.Vector := Silent_Eval(n,v,x);
 
-    procedure Job ( i,n : in natural ) is
+    procedure Job ( i,n : in integer32 ) is
     begin
       for r in c'range loop
         if r mod n = i-1 then
@@ -354,7 +354,7 @@ package body Multitasking_Polynomial_Functions is
   end Silent_Eval;
 
   function Silent_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : DoblDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
@@ -364,7 +364,7 @@ package body Multitasking_Polynomial_Functions is
     res : DoblDobl_Complex_Vectors.Vector(c'range);
     vx : constant DoblDobl_Complex_Vectors.Vector := Silent_Eval(n,v,x);
 
-    procedure Job ( i,n : in natural ) is
+    procedure Job ( i,n : in integer32 ) is
     begin
       for r in c'range loop
         if r mod n = i-1 then
@@ -376,14 +376,14 @@ package body Multitasking_Polynomial_Functions is
 
   begin
     for i in res'range loop
-      res(i) := DoblDobl_Complex_Numbers.Create(0);
+      res(i) := DoblDobl_Complex_Numbers.Create(integer32(0));
     end loop;
     do_jobs(n);
     return res;
   end Silent_Eval;
 
   function Silent_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : QuadDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
@@ -393,7 +393,7 @@ package body Multitasking_Polynomial_Functions is
     res : QuadDobl_Complex_Vectors.Vector(c'range);
     vx : constant QuadDobl_Complex_Vectors.Vector := Silent_Eval(n,v,x);
 
-    procedure Job ( i,n : in natural ) is
+    procedure Job ( i,n : in integer32 ) is
     begin
       for r in c'range loop
         if r mod n = i-1 then
@@ -405,14 +405,14 @@ package body Multitasking_Polynomial_Functions is
 
   begin
     for i in res'range loop
-      res(i) := QuadDobl_Complex_Numbers.Create(0);
+      res(i) := QuadDobl_Complex_Numbers.Create(integer32(0));
     end loop;
     do_jobs(n);
     return res;
   end Silent_Eval;
 
   function Reporting_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : Standard_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
@@ -422,7 +422,7 @@ package body Multitasking_Polynomial_Functions is
     res : Standard_Complex_Vectors.Vector(c'range);
     vx : constant Standard_Complex_Vectors.Vector := Reporting_Eval(n,v,x);
 
-    procedure Job ( i,n : in natural ) is
+    procedure Job ( i,n : in integer32 ) is
     begin
       put_line("hello from task " & to_string(i));
       for r in res'range loop
@@ -443,7 +443,7 @@ package body Multitasking_Polynomial_Functions is
   end Reporting_Eval;
 
   function Reporting_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : DoblDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
@@ -453,7 +453,7 @@ package body Multitasking_Polynomial_Functions is
     res : DoblDobl_Complex_Vectors.Vector(c'range);
     vx : constant DoblDobl_Complex_Vectors.Vector := Reporting_Eval(n,v,x);
 
-    procedure Job ( i,n : in natural ) is
+    procedure Job ( i,n : in integer32 ) is
     begin
       put_line("hello from task " & to_string(i));
       for r in res'range loop
@@ -467,14 +467,14 @@ package body Multitasking_Polynomial_Functions is
 
   begin
     for i in res'range loop
-      res(i) := DoblDobl_Complex_Numbers.Create(0);
+      res(i) := DoblDobl_Complex_Numbers.Create(integer32(0));
     end loop;
     do_jobs(n);
     return res;
   end Reporting_Eval;
 
   function Reporting_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : QuadDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
@@ -484,7 +484,7 @@ package body Multitasking_Polynomial_Functions is
     res : QuadDobl_Complex_Vectors.Vector(c'range);
     vx : constant QuadDobl_Complex_Vectors.Vector := Reporting_Eval(n,v,x);
 
-    procedure Job ( i,n : in natural ) is
+    procedure Job ( i,n : in integer32 ) is
     begin
       put_line("hello from task " & to_string(i));
       for r in res'range loop
@@ -498,7 +498,7 @@ package body Multitasking_Polynomial_Functions is
 
   begin
     for i in res'range loop
-      res(i) := QuadDobl_Complex_Numbers.Create(0);
+      res(i) := QuadDobl_Complex_Numbers.Create(integer32(0));
     end loop;
     do_jobs(n);
     return res;
@@ -507,7 +507,7 @@ package body Multitasking_Polynomial_Functions is
 -- EVALUATION OF THE SPARSE FLATTENED SYSTEM with LOOPING Workers :
 
   function Silent_Looping_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : Standard_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
@@ -520,7 +520,7 @@ package body Multitasking_Polynomial_Functions is
 
     use Standard_Polynomial_Flatteners;
 
-    procedure Job ( i,n : in natural; continue : out boolean ) is
+    procedure Job ( i,n : in integer32; continue : out boolean ) is
     begin
       if first(i) then
         Silent_Eval_Job(i,n,v,x,vx);
@@ -546,7 +546,7 @@ package body Multitasking_Polynomial_Functions is
   end Silent_Looping_Eval;
 
   function Silent_Looping_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : DoblDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
@@ -559,7 +559,7 @@ package body Multitasking_Polynomial_Functions is
 
     use DoblDobl_Polynomial_Flatteners;
 
-    procedure Job ( i,n : in natural; continue : out boolean ) is
+    procedure Job ( i,n : in integer32; continue : out boolean ) is
     begin
       if first(i) then
         Silent_Eval_Job(i,n,v,x,vx);
@@ -578,14 +578,14 @@ package body Multitasking_Polynomial_Functions is
 
   begin
     for i in res'range loop
-      res(i) := DoblDobl_Complex_Numbers.Create(0);
+      res(i) := DoblDobl_Complex_Numbers.Create(integer32(0));
     end loop;
     do_jobs(n);
     return res;
   end Silent_Looping_Eval;
 
   function Silent_Looping_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : QuadDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
@@ -598,7 +598,7 @@ package body Multitasking_Polynomial_Functions is
 
     use QuadDobl_Polynomial_Flatteners;
 
-    procedure Job ( i,n : in natural; continue : out boolean ) is
+    procedure Job ( i,n : in integer32; continue : out boolean ) is
     begin
       if first(i) then
         Silent_Eval_Job(i,n,v,x,vx);
@@ -617,14 +617,14 @@ package body Multitasking_Polynomial_Functions is
 
   begin
     for i in res'range loop
-      res(i) := QuadDobl_Complex_Numbers.Create(0);
+      res(i) := QuadDobl_Complex_Numbers.Create(integer32(0));
     end loop;
     do_jobs(n);
     return res;
   end Silent_Looping_Eval;
 
   function Reporting_Looping_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : Standard_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
@@ -637,7 +637,7 @@ package body Multitasking_Polynomial_Functions is
 
     use Standard_Polynomial_Flatteners;
 
-    procedure Job ( i,n : in natural; continue : out boolean ) is
+    procedure Job ( i,n : in integer32; continue : out boolean ) is
     begin
       if first(i) then
         put_line("hello from task " & to_string(i) & " at first stage");
@@ -666,7 +666,7 @@ package body Multitasking_Polynomial_Functions is
   end Reporting_Looping_Eval;
 
   function Reporting_Looping_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : DoblDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
@@ -679,7 +679,7 @@ package body Multitasking_Polynomial_Functions is
 
     use DoblDobl_Polynomial_Flatteners;
 
-    procedure Job ( i,n : in natural; continue : out boolean ) is
+    procedure Job ( i,n : in integer32; continue : out boolean ) is
     begin
       if first(i) then
         put_line("hello from task " & to_string(i) & " at first stage");
@@ -701,14 +701,14 @@ package body Multitasking_Polynomial_Functions is
 
   begin
     for i in res'range loop
-      res(i) := DoblDobl_Complex_Numbers.Create(0);
+      res(i) := DoblDobl_Complex_Numbers.Create(integer32(0));
     end loop;
     do_jobs(n);
     return res;
   end Reporting_Looping_Eval;
 
   function Reporting_Looping_Eval 
-             ( n : natural;
+             ( n : integer32;
                c : QuadDobl_Complex_VecVecs.VecVec;
                v : Standard_Integer_VecVecs.VecVec;
                k : Standard_Natural_VecVecs.VecVec;
@@ -721,7 +721,7 @@ package body Multitasking_Polynomial_Functions is
 
     use QuadDobl_Polynomial_Flatteners;
 
-    procedure Job ( i,n : in natural; continue : out boolean ) is
+    procedure Job ( i,n : in integer32; continue : out boolean ) is
     begin
       if first(i) then
         put_line("hello from task " & to_string(i) & " at first stage");
@@ -743,7 +743,7 @@ package body Multitasking_Polynomial_Functions is
 
   begin
     for i in res'range loop
-      res(i) := QuadDobl_Complex_Numbers.Create(0);
+      res(i) := QuadDobl_Complex_Numbers.Create(integer32(0));
     end loop;
     do_jobs(n);
     return res;
