@@ -1,3 +1,6 @@
+Mon 14 Jun 2021 : moved c_double_arrays*, c_integer_arrays*, ts_arrays.adb
+  c_double_io.ads, c_integer_io.ads, c_to_ada_arrays* to ../Types.
+
 Sun 29 Nov 2020 : updated pieri_solver.adb for the renaming of the package
   drivers_for_input_planes into make_input_planes.
 

@@ -1,0 +1,20 @@
+Working with C types in PHCv2.4.85
+
+This folder was added in version 2.4.85 to simplify the building process.
+The first part of the code in this folder was moved from ../Funky 
+and the assignments_in_ada_and_c was moved from ../State.
+
+------------------------------------------------------------------------------
+file name                        : short description
+------------------------------------------------------------------------------
+c_integer_io                     : input/output of C integers
+c_integer_arrays                 : defines arrays of C integers
+c_integer_arrays_io              : output of arrays of C integers
+c_double_io                      : input/output of C doubles
+c_double_arrays                  : defines arrays of C doubles
+c_double_arrays_io               : output of arrays of C doubles
+c_to_ada_arrays                  : converting arrays between C and Ada
+ts_arrays                        : interactive test of array conversions
+------------------------------------------------------------------------------
+assignments_in_ada_and_c         : assign data in Ada and C format
+------------------------------------------------------------------------------

@@ -1,0 +1,67 @@
+Mon 14 Jun 2021 : new folder "Types" with basic types from "Funky"
+  and the "assigments_in_ada_and_c" from "State".
+
+Wed 16 Mar 2005 : splitted directory into "Funky" and "State".
+
+Fri 25 Feb 2005 : numerous changes were made to use_c2phc, use_c2fac,
+  monodromy_permutations and sampling_operations for mpi2fac.
+
+Sun 20 Feb 2005 : added option 9 to use_c2phc to validate the solutions.
+
+Tue 15 Feb 2005 : fixed bug in monodromy_permutations.adb, touched
+  use_c2fac.adb only for printing diagnostics.
+
+Sun 7 Nov 2004 : changed phcpack_operations to define an output file,
+  modifications to phcpack_operations_io.adb, c_to_phcpack, use_c2phc.
+
+Tue 21 Sep 2004 : creates sampling_operations to use sampling_machine
+  in mpi2fac, also modified use_c2fac and use_c2phc
+
+Sun 19 Sep 2004 : created monodromy_permutations, changed use_c2fac,
+  use_c2phc, and their test programs, also phcpack_operations.adb.
+
+Thu 16 Sep 2004 : more changes in phcpack_operations, use_c2fac, and
+  use_c2phc to make one loop in the parallel monodromy.
+
+Wed 15 Sep 2004 : changes in phcpack_operations.adb for random gamma
+
+Mon 13 Sep 2004 : use_c2fac leads to changes in use_c2phc
+
+Sat 29 May 2004 : fixed pieri_homotopy.adb with corrected local
+  solutions for use with mixed pivots.
+
+Thu 27 May 2004 : fixed pieri_homotopy.adb with corrected locmaps
+  for use with top pivots.
+
+Tue 11 May 2004 : updated pieri_homotopy.adb to also deal with top
+  and mixed top+bottom Pieri homotopies.
+
+Wed 7 Jan 2004 : create use_c2pieri.ads, use_c2pieri.adb, tested
+  by ts_use_c2pieri.c
+
+Mon 5 Jan 2004 : created pieri_homotopy, tested by ts_pirhom.adb
+
+******************* after release of version 2.2 ***************
+
+Mon 14 July 2003 : changed solutions_container.adb to fix bug
+
+Wed 11 June 2003 : changed procedure c_to_phcpack into function
+  and created use_c2phc, bundling containers and c_to_phcpack,
+  the new test routine is ts_use_c2phc.c
+
+Tue 10 June 2003 : simplified interface of use_syscon and use_solcon
+
+Mon 9 June 2003 : upgraded use_solcon.ads and ts_use_solcon.c.
+  Creation of new package "assignments_in_ada_and_c", which also
+  changes use_syscon.adb.
+
+Fri 6 June 2003 : ts_use_syscon.c works fine, calls use_syscon (Ada),
+  which relies on the updated systems_container.
+  Added new entries in the READ_ME file.
+
+Thu 5 June 2003 : c_to_phcpack.ads and .adb changed, and also
+  ts_c2phc.c and phcpack_operations_io was updated.
+  Added systems_container and ts_syscon.adb.
+
+*** bookkeeping since release 2.2alpha on 30 May 2003 ***
+*** most recent updates are inserted to the top of this file ***

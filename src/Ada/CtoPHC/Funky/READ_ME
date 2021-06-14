@@ -1,4 +1,4 @@
-Calling PHCpack from C functions in PHCv2.4.82
+Calling PHCpack from C functions in PHCv2.4.85
 
 This directory was originally created in release 2.1,
 to use the Pieri homotopies in linear systems control.
@@ -40,20 +40,13 @@ The default extension is .ads (specification of Ada package).
 In mixing C with Ada we give the extension, because sometimes we give
 the same name (but different suffix) to related C and Ada routines.
 
+In v2.4.85, moved the C type definitions to the ../Types folder.
+
 ------------------------------------------------------------------------------
 file name                        : short description
 ------------------------------------------------------------------------------
 pass_poly.c                      : passing polynomial as a string
 print_poly.adb                   : routine called by pass_poly
-------------------------------------------------------------------------------
-c_integer_io                     : input/output of C integers
-c_integer_arrays                 : defines arrays of C integers
-c_integer_arrays_io              : output of arrays of C integers
-c_double_io                      : input/output of C doubles
-c_double_arrays                  : defines arrays of C doubles
-c_double_arrays_io               : output of arrays of C doubles
-c_to_ada_arrays                  : converting arrays between C and Ada
-ts_arrays                        : interactive test of array conversions
 ------------------------------------------------------------------------------
 coefficient_support_polynomials  : convert between polynomials and vectors
 coefficient_support_poly_systems : convert between systems and vectors

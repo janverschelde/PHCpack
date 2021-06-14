@@ -83,8 +83,9 @@ The Ada sources are organized in a tree of directories:
   |      |-- Solver        : 5.5. incremental equation by equation solver
   |      |-- Tropical      : 5.6. tropical view on witness sets
   |-- CtoPHC               : 6. interface from C to phc
-  |      |-- Funky         : 6.1. functional interface, C -> Ada -> C 
-  |      |-- State         : 6.2. state machine gateway, C <-> Ada
+  |      |-- Types         : 6.1. C types equivalent to Ada
+  |      |-- Funky         : 6.2. functional interface, C -> Ada -> C 
+  |      |-- State         : 6.3. state machine gateway, C <-> Ada
   |-- PHCtoC               : 7. GPU acceleration via a C interface
   |-- Tasking              : 8. multitasking
   |-- Main                 : 9. main dispatcher

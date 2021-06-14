@@ -1,4 +1,4 @@
-with text_io,integer_io;                 use text_io,integer_io; 
+with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -27,7 +27,7 @@ procedure ts_arrays is
   -- DESCRIPTION :
   --   Reads in an array of C integers and writes the converted Ada array.
 
-    n : natural;
+    n : integer32 := 0;
 
   begin
     put("Give the number of elements in the array : "); get(n);
@@ -38,7 +38,7 @@ procedure ts_arrays is
       for i in ca'range loop
         get(ca(i));
       end loop;
-      put("Your integer array : "); put(n,ca); new_line;
+      put("Your integer array : "); put(integer(n),ca); new_line;
       declare
         aa : constant Standard_Integer_Vectors.Vector := Convert(ca);
       begin
@@ -53,7 +53,7 @@ procedure ts_arrays is
   --   Reads in an array of C doubles and writes the converted Ada
   --   array of complex numbers.
 
-    n : natural;
+    n : integer32 := 0;
 
   begin
     loop
@@ -69,7 +69,7 @@ procedure ts_arrays is
       for i in ca'range loop
         get(ca(i));
       end loop;
-      put_line("Your double array : "); put(n,ca);
+      put_line("Your double array : "); put(integer(n),ca);
       declare
         aa : constant Standard_Complex_Vectors.Vector := Convert(ca);
       begin
