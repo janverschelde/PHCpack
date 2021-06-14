@@ -1,3 +1,5 @@
+Mon 14 Jun 2021 : bug fix in face_structures.adb.
+
 Thu 10 Jun 2021 : defined dynlift.gpr to build the test procedures.
   Added Exec_Dir attribute to dynlift.gpr.
 

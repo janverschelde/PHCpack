@@ -110,7 +110,7 @@ package body Face_Structures is
     end loop;
   end Deep_Clear;
 
-  procedure Shallow_Clear ( fs : in out Array_of_Face_Structures );
+  procedure Shallow_Clear ( fs : in out Array_of_Face_Structures ) is
   begin
     for i in fs'range loop
       Shallow_Clear(fs(i));
