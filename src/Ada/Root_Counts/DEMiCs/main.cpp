@@ -54,12 +54,12 @@ int main ( int argc, char* argv[] )
    mvc MV_Comp;
 
    double cpuTime_start, cpuTime_end;
-   struct tms cpuTime;
+   // struct tms cpuTime;
 
    getInputPara(argc,argv,seedNum,output,&inputFileName);
 
-   times(&cpuTime);
-   cpuTime_start = (double) cpuTime.tms_utime;
+   //times(&cpuTime);
+   //cpuTime_start = (double) cpuTime.tms_utime;
 
    Data.getInputFile(inputFileName);
 
@@ -67,8 +67,8 @@ int main ( int argc, char* argv[] )
 
    MV_Comp.Enum();
 
-   times(&cpuTime);
-   cpuTime_end = (double) cpuTime.tms_utime;
+   //times(&cpuTime);
+   //cpuTime_end = (double) cpuTime.tms_utime;
  
    MV_Comp.info_cpuTime(cpuTime_start,cpuTime_end);
     
