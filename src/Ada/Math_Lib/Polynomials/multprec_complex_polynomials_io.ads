@@ -91,6 +91,15 @@ package Multprec_Complex_Polynomials_io is
   --   n          the number of unknows of p,
   --              if specified, n will first be written.
 
+  procedure put_terms ( p : in Poly; dp : in natural32 );
+  procedure put_terms ( file : in file_type; p : in Poly; dp : in natural32 );
+  procedure put ( p : in Poly; dp : in natural32 );
+  procedure put ( file : in file_type; p : in Poly; dp : in natural32 );
+
+  -- DESCRIPTION :
+  --   Writes the coefficients of the polynomials with dp decimal places.
+  --   The "put_terms" procedure does not write the delimiter at the end.
+
   procedure put_line ( p : in Poly );
   procedure put_line ( file : in file_type; p : in Poly );
   procedure put_line ( p : in Poly; pow : in Power );

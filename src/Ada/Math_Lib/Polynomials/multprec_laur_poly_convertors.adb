@@ -1,3 +1,5 @@
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Multprec_Complex_Numbers;           use Multprec_Complex_Numbers;
 with Standard_Natural_Vectors;
 
@@ -57,7 +59,7 @@ package body Multprec_Laur_Poly_Convertors is
       Copy(t.cf,pt.cf);
       pt.dg := new Standard_Natural_Vectors.Vector(t.dg'range);
       for i in pt.dg'range loop
-        pt.dg(i) := natural(t.dg(i));
+        pt.dg(i) := natural32(t.dg(i));
       end loop;
       Multprec_Complex_Polynomials.Add(res,pt);
       c := true;
@@ -100,7 +102,7 @@ package body Multprec_Laur_Poly_Convertors is
                t : out Multprec_Complex_Laurentials.Term; 
                p : out Multprec_Complex_Polynomials.Poly ) is
 
-    min : Multprec_Complex_Laurentials.Degrees 
+    min : constant Multprec_Complex_Laurentials.Degrees 
         := Multprec_Complex_Laurentials.Minimal_Degrees(l);
     tt : Multprec_Complex_Laurentials.Term;
 
@@ -111,7 +113,7 @@ package body Multprec_Laur_Poly_Convertors is
        else min(i) := 0;
       end if;
     end loop;
-    tt.cf := Create(1);
+    tt.cf := Create(integer32(1));
     tt.dg := min;
     p := Laurent_Polynomial_to_Polynomial(l,tt); t := tt;
   end Laurent_Polynomial_to_Polynomial;
@@ -132,7 +134,7 @@ package body Multprec_Laur_Poly_Convertors is
       Copy(tt.cf,rt.cf);
       rt.dg := new Standard_Natural_Vectors.Vector(tt.dg'range);
       for i in tt.dg'range loop
-        rt.dg(i) := tt.dg(i) + t.dg(i);
+        rt.dg(i) := natural32(tt.dg(i)) + natural32(t.dg(i));
       end loop;
       Multprec_Complex_Polynomials.Add(res,rt);
       Multprec_Complex_Polynomials.Clear(rt);

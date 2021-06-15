@@ -1,3 +1,5 @@
+Tue 15 Jun 2021 : fixed integer_faces_of_polytope_io.adb.
+
 Thu 10 Jun 2021 : added the exec_dir attribute to supports.gpr.
 
 Tue 8 Jun 2021 : defined supports.gpr to build the test procedures.

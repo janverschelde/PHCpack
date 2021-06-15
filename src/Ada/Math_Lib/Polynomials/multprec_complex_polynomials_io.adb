@@ -542,6 +542,27 @@ package body Multprec_Complex_Polynomials_io is
     put(file,p,s);
   end put;
 
+  procedure put_terms ( p : in Poly; dp : in natural32 ) is
+  begin
+    put_terms(Standard_Output,p,dp);
+  end put_terms;
+
+  procedure put ( p : in Poly; dp : in natural32 ) is
+  begin
+    put(Standard_Output,p,dp);
+  end put;
+
+  procedure put_terms ( file : in file_type;
+                         p : in Poly; dp : in natural32 ) is
+  begin
+    put_terms(file,p,dp);
+  end put_terms;
+
+  procedure put ( file : in file_type; p : in Poly; dp : in natural32 ) is
+  begin
+    put(file,p);
+  end put;
+
   procedure put_line ( p : in Poly ) is
   begin
     put_line(Standard_Output,p);
