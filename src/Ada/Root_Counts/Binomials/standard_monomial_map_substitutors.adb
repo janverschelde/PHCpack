@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;            use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 
@@ -25,7 +26,7 @@ package body Standard_Monomial_Map_Substitutors is
 
     res : Laur_Sys(p'range);
     f : Poly;
-    cnt : integer := p'first - 1;
+    cnt : integer32 := p'first - 1;
 
   begin
     for i in p'range loop

@@ -43,8 +43,8 @@ project binomials is
         "ts_incols.adb",     -- tests column span tests
         "ts_binset.adb",     -- tests binomial varieties
         "ts_binsol.adb",     -- tests affine solution sets of binomials
-        "ts_monmap.adb"      -- tests monomial maps
-       -- "ts_mapsubs.adb"     -- tests map substitution
+        "ts_monmap.adb",     -- tests monomial maps
+        "ts_mapsubs.adb"     -- tests map substitution
     );
 
     package Compiler is

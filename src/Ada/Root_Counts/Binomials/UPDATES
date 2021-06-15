@@ -1,3 +1,6 @@
+Tue 15 Jun 2021 : fixed standard_monomial_map_substitutors.adb
+  and ts_mapsubs.adb, updated binomials.gpr.
+
 Thu 10 Jun 2021 : added the exec_dir attribute to binomials.gpr.
 
 Wed 9 Jun 2021 : defined binomials.gpr to build the test procedures.
