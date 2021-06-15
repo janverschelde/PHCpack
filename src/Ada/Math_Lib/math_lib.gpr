@@ -1,0 +1,20 @@
+aggregate project math_lib is
+
+   for Project_Files use
+   (
+       "Numbers/numbers.gpr",         -- number representations
+       "QD/qd.gpr",                   -- multiple double arithmetic
+       "Vectors/vectors.gpr",         -- vectors and vectors of vectors   
+       "Matrices/matrices.gpr",       -- matrix types
+       "Divisors/divisors.gpr",       -- integer linear algebra
+       "Reduction/reduction.gpr",     -- numerical linear algebra
+       "Polynomials/polynomials.gpr", -- polynomials and systems
+       "Functions/functions.gpr",     -- evaluation 
+       "Supports/supports.gpr",       -- support sets
+       "Circuits/circuits.gpr",       -- algorithmic differentiation circuits
+       "Series/series.gpr",           -- power series
+       "Laurent/laurent.gpr",         -- Laurent series
+       "AD/ad.gpr"                    -- algorithmic differentiation
+   );
+
+end math_lib;

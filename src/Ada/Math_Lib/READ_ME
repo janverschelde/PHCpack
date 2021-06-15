@@ -3,6 +3,11 @@ Mathematical library in PHCpack version 2.4.85
 The mathematical library contains general tools that are not specific
 for polynomial homotopy continuation.
 
+Run "gprbuild math_lib.gpr" to make all test programs.
+On windows, type "gprbuild math_lib.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean math_lib.gpr" removes all files created by gprbuild.
+
 New in release 2 are the multiprecision numbers and the use of Ada 95.
 Release 2.1 has faster multiprecision arithmetic and linear programming.
 Only minor changes are made in release 2.2.  Changes in version 2.3 are
