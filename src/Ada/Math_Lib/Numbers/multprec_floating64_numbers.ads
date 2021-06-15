@@ -19,6 +19,7 @@ package Multprec_Floating64_Numbers is
 
 -- CONSTRUCTORS :
 
+  function Create ( i : integer ) return Floating_Number;
   function Create ( i : integer64 ) return Floating_Number;
   function Create ( i : Integer_Number ) return Floating_Number;
   function Create ( f : double_float ) return Floating_Number;

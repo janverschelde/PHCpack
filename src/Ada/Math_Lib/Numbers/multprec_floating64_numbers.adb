@@ -106,6 +106,11 @@ package body Multprec_Floating64_Numbers is
 
 -- CONSTRUCTORS :
 
+  function Create ( i : integer ) return Floating_Number is
+  begin
+    return Create(integer64(i));
+  end Create;
+
   function Create ( i : integer64 ) return Floating_Number is
 
     res : Floating_Number;

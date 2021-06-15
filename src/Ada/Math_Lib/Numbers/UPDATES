@@ -1,3 +1,6 @@
+Tue 15 Jun 2021 : extended multprec_floating64_numbers with a create function,
+  to instantiate the abstract_ring, so multprec_floating64_ring compiles.
+
 Thu 10 Jun 2021 : added exec_dir attributed to numbers.gpr.
 
 Tue 8 Jun 2021 : defined numbers.gpr to build the test procedures.
