@@ -1,0 +1,10 @@
+aggregate project schubert is
+
+    for Project_Files use
+    (
+        "SAGBI/sagbi.gpr",         -- SAGBI homotopies
+        "Pieri/pieri.gpr",         -- deformations based on Pieri's rule
+        "Induction/induction.gpr"  -- Littlewood-Richardson homotopies
+    );
+
+end schubert;

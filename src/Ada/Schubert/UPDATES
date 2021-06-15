@@ -1,0 +1,60 @@
+Tue 15 Jun 2021 : defined schubert.gpr to build all test procedures.
+
+Thu 27 Mar 2003 : created directories SAGBI and Pieri under Schubert
+
+Sun 13 Oct 2002 : quantum Pieri solver has now limit on number of
+  solution maps that need to be computed.
+
+Mon 24 Jun 2002 : deformation_posets has now a silent quantum solver,
+  and pieri_continuation has a silent Quantum_Trace_Paths
+  Moved some routines from driver_for_quantum_pieri into
+  determinantal_systems, needed for the pieri_solver.adb.
+
+Wed 14 Nov 2001 : changes driver_for_pieri_homotopies.adb so that it
+  prints the solutions in matrix format
+
+Tue 13 Nov 2001 : changed drivers_for_input_planes.adb to allow also
+  to give in complex input planes for the Pieri homotopy algorithm
+Wed 31 May 2000 : due to modified Newton in root refiners, changed
+  driver_for_pieri_homotopies.adb, driver_for_quantum_pieri.adb,
+  driver_for_sagbi_homotopies.adb, and pieri_continuation.adb.
+
+Sat 1 Sep 2001 : created pieri_root_count and ts_piroco to call the
+  combinatorial Pieri root count of the Schubert calculus
+
+Thu 30 Nov 2000 : changed driver_for_quantum_pieri.adb, line 284
+  contained "lnd : Link_to_Node" was never assigned a value.
+  pieri_homotopies.adb had empty "Two_General_Quantum_Homotopy",
+  commented that one out.
+
+Wed 2 May 2000 : added the package complex_osculating_planes to test
+  a variant of the Shapiro^2 conjectures, ts_emerenko.adb does a small
+  comparison on the generation of the input planes.
+  Also updated "drivers_for_input_planes.adb".
+
+Thu 16 Sep 1999: copied brackets, localization_posets, ts_posets,
+  deformation_posets, pieri_homotopies, ts_defpos, specialization_of_planes,
+  numeric_minor_equations, determinantal_systems, driver_for_pieri_homotopies,
+  drivers_for_input_planes, driver_for_quantum_pieri, pieri_continuation,
+  pieri_deformations and ts_org_pieri to the public distribution.
+
+Mon 6 Sep 1999: changed specialization_of_planes.ads + adb,
+  numerical_minor_equations.ads + adb and determinantal_systems.adb.
+  Also changed are driver_for_pieri_homotopies.adb,
+  ts_org_pieri.adb and pieri_deformations.adb.
+
+Sun 5 Sep 1999: adapted specifications and implementations of
+  deformation_posets.  Expanded the testing program ts_defpos.
+  Changed also the package pieri_homotopies.ads.
+
+Sat 4 Sep 1999: implemented new root count for general quantum
+  Pieri rule, in the file localization_posets.adb, also updated the
+  testing program ts_posets.adb.  Also localization_posets.ads
+  is slightly modified.
+
+Mon 30 Aug 1999: changed deformation_posets.ad* so that now an
+  overview of timings for each level is maintained.
+
+Sat 19 Jun 1999: changed driver_for_pieri_homotopies so that
+  now determinantal cheater for overconstrained systems.
+  Copied to the public distribution directory.

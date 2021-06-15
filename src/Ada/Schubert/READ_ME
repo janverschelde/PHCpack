@@ -1,10 +1,15 @@
-Numerical Schubert Calculus with PHCv2.4.82
+Numerical Schubert Calculus with PHCv2.4.85
+
+Run "gprbuild schubert.gpr" to make all test programs.
+On windows, type "gprbuild schubert.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean schubert.gpr" removes all files created by gprbuild.
 
 This directory was delivered with release 2 of PHCpack,
 with some minor updates in release 2.1 for the connection with C.
 In release 2.2, the code for SAGBI and Pieri homotopies was
 dispersed in two separate subdirectories, to make room for the
-new homotopies to implement Schubert Induction.
+Littlewood-Richardson homotopies to implement Schubert Induction.
 In release 2.3 most changes are in Induction.
 
 The Littlewood-Richardson homotopies became available in double double
@@ -16,4 +21,7 @@ of the source code of PHCpack is as follows:
    Schubert             : 5. numerical Schubert calculus
       |-- SAGBI         : 5.1 SAGBI homotopies
       |-- Pieri         : 5.2 deformations based on Pieri's rule
-      |-- Induction     : 5.3 Schubert induction
+      |-- Induction     : 5.3 Littlewood-Richardson homotopies
+
+The numerical Schubert calculus provides homotopy methods derived
+from geometric root counting formulas.

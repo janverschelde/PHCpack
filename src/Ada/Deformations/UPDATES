@@ -1,4 +1,4 @@
-Mon 14 May 2021 : added deformations.gpr to build all test procedures.
+Tue 15 Jun 2021 : added deformations.gpr to build all test procedures.
 
 Tue 14 May 2013 : new directory curves for solving univariate polynomials
   and working with plane algebraic curves.
