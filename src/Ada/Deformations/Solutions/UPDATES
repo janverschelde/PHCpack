@@ -1,3 +1,5 @@
+Fri 15 Jun 2021 : removed the obsolete mergesols.adb.
+
 Thu 10 Jun 2021 : added the exec_dir attribute to solutions.gpr.
 
 Wed 9 Jun 2021 : defined solutions.gpr to build the test procedures.

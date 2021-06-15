@@ -136,7 +136,3 @@ standard_solutions_heap            : make cluster report efficiently
 The standard and multiprecision solutions lists are two separate packages,
 not implemented by means of generics, because of the difficulties with
 mixed real-complex numbers.
-
-Note: some little tools have been added to manipulate lists of solutions.
-
-mergesols : merge the list of solutions
