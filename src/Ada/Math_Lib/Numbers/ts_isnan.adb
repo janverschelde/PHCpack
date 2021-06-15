@@ -79,11 +79,11 @@ begin
    then put_line("quo = 0");
    else put_line("quo /= 0");
   end if;
-  if is_valid(1.0)
+  if Standard_Floating_Numbers.is_valid(double_float(1.0))
    then put_line("1 is valid");
    else put_line("1 is not valid");
   end if;
-  if is_valid(quo)
+  if Standard_Floating_Numbers.is_valid(quo)
    then put_line("quo is valid");
    else put_line("quo is not valid");
   end if;

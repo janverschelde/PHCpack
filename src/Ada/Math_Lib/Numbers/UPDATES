@@ -1,6 +1,8 @@
 Tue 15 Jun 2021 : extended multprec_floating64_numbers with a create function,
   to instantiate the abstract_ring, so multprec_floating64_ring compiles.
   Updates are needed to multprec_floating64_numbers.adb for the new create.
+  Fixed multprec_complex64_ring.ads.
+  Fixed multprec_complex64_numbers_io and ts_isnan.adb.
 
 Thu 10 Jun 2021 : added exec_dir attributed to numbers.gpr.
 

@@ -39,13 +39,13 @@ package body Multprec_Complex64_Numbers_io is
     Clear(xim);
   end put;
 
-  procedure put ( c : in Complex_Number; fore,aft,exp : in natural ) is
+  procedure put ( c : in Complex_Number; fore,aft,exp : in natural32 ) is
   begin
     put(Standard_Output,c,fore,aft,exp);
   end put;
 
   procedure put ( file : in file_type;
-                  c : in Complex_Number; fore,aft,exp : in natural ) is
+                  c : in Complex_Number; fore,aft,exp : in natural32 ) is
 
     cre,cim : Floating_Number;
 
@@ -59,13 +59,13 @@ package body Multprec_Complex64_Numbers_io is
     Clear(cim);
   end put;
 
-  procedure put ( c : in Complex_Number; dp : in natural ) is
+  procedure put ( c : in Complex_Number; dp : in natural32 ) is
   begin
     put(c,dp,dp,dp);
   end put;
 
   procedure put ( file : in file_type;
-                  c : in Complex_Number; dp : in natural ) is
+                  c : in Complex_Number; dp : in natural32 ) is
   begin
     put(file,c,dp,dp,dp);
   end put;                                       
