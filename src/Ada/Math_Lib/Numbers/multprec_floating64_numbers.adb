@@ -194,9 +194,9 @@ package body Multprec_Floating64_Numbers is
     fraction,exponent,intinc : Integer_Number;
 
   begin
-    if f = 0.0
-     then res := Create(0);
-          return res;
+    if f = 0.0 then
+      res := Create(integer64(0));
+      return res;
     end if;
     if f > 0.0
      then wrkflt := f;
@@ -1132,10 +1132,10 @@ package body Multprec_Floating64_Numbers is
         end if;
         Normalize(res);
       else
-        res := Create(0);
+        res := Create(integer64(0));
       end if;
     else
-      res := Create(0);
+      res := Create(integer64(0));
     end if;
     return res;
   end "*";
@@ -1159,7 +1159,7 @@ package body Multprec_Floating64_Numbers is
 
   begin
     if (Empty(n) or else Equal(n,0)) then
-      res := Create(1);
+      res := Create(integer64(1));
     else
       Copy(f,res);
       cnt := Create(1);
@@ -1187,7 +1187,7 @@ package body Multprec_Floating64_Numbers is
           Mul(res,f);
         end loop;
       else
-        res := Create(1);
+        res := Create(integer64(1));
         for j in 1..(-i) loop
           Div(res,f);
         end loop;
@@ -1216,7 +1216,7 @@ package body Multprec_Floating64_Numbers is
 
   begin
     if (Empty(i) or else Equal(i,0)) then
-      res := Create(1);
+      res := Create(integer64(1));
     else
       n := Unsigned(i);
       if i > 0 then
@@ -1227,7 +1227,7 @@ package body Multprec_Floating64_Numbers is
           Add(cnt,1);
         end loop;
       else
-        res := Create(1);
+        res := Create(integer64(1));
         cnt := Create(0);
         while cnt < n loop
           Div(res,f);
@@ -1455,7 +1455,7 @@ package body Multprec_Floating64_Numbers is
         raise NUMERIC_ERROR;
       end if;
     else
-      res := Create(0);
+      res := Create(integer64(0));
     end if;
     return res;
   end "/";
@@ -1583,9 +1583,9 @@ package body Multprec_Floating64_Numbers is
 
   begin
     if Empty(f2.fraction) then
-      Clear(f1); f1 := Create(0);
+      Clear(f1); f1 := Create(integer64(0));
     elsif Equal(f2.fraction,0) then
-      Clear(f1); f1 := Create(0);
+      Clear(f1); f1 := Create(integer64(0));
     elsif Empty(f1.fraction) then
       null;
     elsif Equal(f1.fraction,0) then
