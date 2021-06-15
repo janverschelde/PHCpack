@@ -1,0 +1,13 @@
+aggregate project components is
+
+    for Project_Files use
+    (
+        "Samplers/samplers.gpr",           -- witness sets
+        "Interpolators/interpolators.gpr", -- equations for components
+        "Factorization/factorization.gpr", -- the absolute factorization
+        "Decomposition/decomposition.gpr", -- cascade homotopies
+        "Solver/solver.gpr",               -- equation-by-equation solver
+        "Tropical/tropical.gpr"            -- tropical view on witness sets
+    );
+
+end components;
