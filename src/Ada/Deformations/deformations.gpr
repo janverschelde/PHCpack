@@ -1,0 +1,15 @@
+aggregate project deformations is
+
+    for Project_Files use
+    (
+        "Solutions/solutions.gpr",      -- solutions of systems
+        "Homotopy/homotopy.gpr",        -- homotopies, scaling, reduction
+        "Newton/newton.gpr",            -- Newton's method and deflation
+        "Curves/curves.gpr",            -- algebraic space curves
+        "End_Games/end_games.gpr",      -- polyhedral end games
+        "Trackers/trackers.gpr",        -- path trackers
+        "Sweep/sweep.gpr",              -- sweeping for singularities
+        "Continuation/continuation.gpr" -- main continuation
+    );
+
+end deformations;

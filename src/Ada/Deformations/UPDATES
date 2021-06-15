@@ -1,0 +1,10 @@
+Mon 14 May 2021 : added deformations.gpr to build all test procedures.
+
+Tue 14 May 2013 : new directory curves for solving univariate polynomials
+  and working with plane algebraic curves.
+
+Mon 21 Jan 2013 : the Continuation directory in Deformation was split into
+  End_Games, Sweep, Trackers, and Continuation.
+
+Sun 20 Jan 2013 : new directory "Deformations" houses Homotopy, Newton,
+  and Continuation.  The directory Differentials moves to Experiments.
