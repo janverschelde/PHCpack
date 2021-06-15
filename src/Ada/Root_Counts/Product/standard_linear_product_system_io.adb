@@ -41,7 +41,7 @@ package body Standard_Linear_Product_System_io is
           stop := (pp = Null_Poly);
           exit when stop;
           h(0) := Coeff(pp,d);
-          for j in 1..nn loop
+          for j in 1..integer32(nn) loop
             d(j) := 1;
             h(j) := Coeff(pp,d);
             d(j) := 0;
@@ -49,6 +49,7 @@ package body Standard_Linear_Product_System_io is
           Standard_Linear_Product_System.Add_Hyperplane(i,h);
         end loop;
       end loop;
+      Clear(d);
     end;
   end get;
 
@@ -82,7 +83,7 @@ package body Standard_Linear_Product_System_io is
         h := Standard_Linear_Product_System.Get_Hyperplane(i,j);
         put(file,' ');
         for k in 1..n loop
-  	  Write_Number(file,h(k));
+  	  Write_Number(file,h(integer32(k)));
 	  put(file,'*');
 	  Symbol_Table_io.put(file,Symbol_Table.Get(k));
 	  put(file," + ");
