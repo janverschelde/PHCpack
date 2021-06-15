@@ -1,5 +1,9 @@
-with text_io,integer_io;                 use text_io,integer_io;
+with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
@@ -52,7 +56,7 @@ procedure ts_cspsol is
       first := Head_Of(s(i));
       second := Head_Of(Tail_Of(s(i)));
       for j in A'range(2) loop
-        A(i,j) := integer(first(j)) - integer(second(j));
+        A(i,j) := integer32(first(j)) - integer32(second(j));
       end loop;
       b(i) := (-c(i)(1))/c(i)(2);
     end loop;
@@ -60,13 +64,13 @@ procedure ts_cspsol is
 
   procedure Solve_Binomial_System
                ( A : in Standard_Integer_Matrices.Matrix;
-                 c : in Standard_Complex_Vectors.Vector; r : out natural;
+                 c : in Standard_Complex_Vectors.Vector; r : out integer32;
                  M,U : out Standard_Integer_Matrices.Matrix;
                  Usols : out Standard_Complex_Solutions.Solution_List;
                  Asols : out Standard_Complex_Solutions.Solution_List ) is
 
-    nv : constant natural := A'last(1);
-    nq : constant natural := A'last(2);
+    nv : constant integer32 := A'last(1);
+    nq : constant integer32 := A'last(2);
     rd : constant Standard_Floating_Vectors.Vector(c'range)
        := Standard_Radial_Solvers.Radii(c);
     ec : constant Standard_Complex_Vectors.Vector(c'range)
@@ -102,16 +106,16 @@ procedure ts_cspsol is
 
     tmp : Mixed_Subdivision := mcc;
     mic : Mixed_Cell;
-    dim : constant natural
+    dim : constant natural32
         := Standard_Complex_Polynomials.Number_of_Unknowns(p(p'first));
     deg : Standard_Complex_Polynomials.Degrees
-        := new Standard_Natural_Vectors.Vector(1..dim);
+        := new Standard_Natural_Vectors.Vector(1..integer32(dim));
     cff : Standard_Complex_VecVecs.VecVec(p'range);
     A,M,U : Standard_Integer_Matrices.Matrix(p'range,p'range);
     b : Standard_Complex_Vectors.Vector(p'range);
     Usols,Asols : Standard_Complex_Solutions.Solution_List;
-    mv : natural := 0;
-    r,vol : natural;
+    mv,vol : natural32 := 0;
+    r : integer32;
     sum : double_float := 0.0;
 
   begin
@@ -140,7 +144,7 @@ procedure ts_cspsol is
     infile : file_type;
     mcc : Mixed_Subdivision;
     mix : Standard_Integer_Vectors.Link_to_Vector;
-    n,r : natural;
+    n,r : natural32;
 
   begin
     new_line;

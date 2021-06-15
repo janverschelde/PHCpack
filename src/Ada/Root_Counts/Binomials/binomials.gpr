@@ -35,7 +35,7 @@ project binomials is
         "ts_binsys.adb",     -- tests binomial solvers
         "ts_simsys.adb",     -- tests simplex systems
         "ts_simposol.adb",   -- tests simpomial solvers
-       -- "ts_cspsol.adb",     -- solving initial cell systems efficiently
+        "ts_cspsol.adb",     -- solving initial cell systems efficiently
         "ts_powtrans.adb",   -- tests the power transformations
         "ts_binpser.adb",    -- tests Puiseux series
         "ts_kernel.adb",     -- tests kernel calculations
