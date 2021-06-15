@@ -1,5 +1,6 @@
 with text_io;                           use text_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Multprec_Complex_Vectors;          use Multprec_Complex_Vectors;
 with Multprec_Complex_Matrices;
@@ -62,17 +63,17 @@ package Multprec_Multiple_Deflation is
               ( p : in Eval_Poly_sys;
                 A : in out Multprec_Complex_Matrices.Matrix;
                 z : in Vector; size : in natural32;
-                tol : in double_float; max_d : in natural32;
+                tol : in double_float; max_d : in integer32;
                 corank : out natural32; d : out natural32 );
   procedure Predict_Order
               ( file : in file_type; p : in Eval_Poly_Sys;
                 A : in out Multprec_Complex_Matrices.Matrix;
                 z : in Vector; size : in natural32;
-                tol : in double_float; max_d : in natural32;
+                tol : in double_float; max_d : in integer32;
                 corank : out natural32; d : out natural32 );
   procedure Predict_Order
               ( p : in Poly_Sys; z : in Vector;
-                size : in natural; tol : in double_float;
+                size : in natural32; tol : in double_float;
                 corank : out natural32; d : out natural32 );
   procedure Predict_Order
               ( file : in file_type;

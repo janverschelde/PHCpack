@@ -1,6 +1,5 @@
 with Communications_with_User;          use Communications_with_User;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
@@ -35,33 +34,33 @@ package body Standard_Multiple_Deflation is
   begin
     for i in 1..integer32(nq) loop
       if a(i,1) /= Null_Poly
-       then res(i) := Add_Variables(a(i,1),nm);
+       then res(i) := Add_Variables(a(i,1),natural32(nm));
       end if;
     end loop;
     mt.cf := Create(1.0);
-    mt.dg := new Standard_Natural_Vectors.Vector'(1..nv+nm => 0);
+    mt.dg := new Standard_Natural_Vectors.Vector'(1..integer32(nv)+nm => 0);
     for i in a'range(1) loop
-      res(nq+i) := Null_Poly;
+      res(integer32(nq)+i) := Null_Poly;
       for j in 1..nm loop
         if a(i,j+1) /= Null_Poly then
-          mt.dg(nv+j) := 1;
-          acc := Add_Variables(a(i,j+1),nm);
+          mt.dg(integer32(nv)+j) := 1;
+          acc := Add_Variables(a(i,j+1),natural32(nm));
           Mul(acc,mt);
-          Add(res(nq+i),acc);
+          Add(res(integer32(nq)+i),acc);
           Clear(acc);
-          mt.dg(nv+j) := 0;
+          mt.dg(integer32(nv)+j) := 0;
         end if;
       end loop;
     end loop;
-    offset := nq+a'last(1);
+    offset := integer32(nq)+a'last(1);
     for i in h'range(1) loop
       mt.cf := h(i,1);
       res(offset+i) := Create(mt); 
       for j in 1..nm loop
-        mt.dg(nv+j) := 1;
+        mt.dg(integer32(nv)+j) := 1;
         mt.cf := h(i,j+1);
         Add(res(offset+i),mt);
-        mt.dg(nv+j) := 0;
+        mt.dg(integer32(nv)+j) := 0;
       end loop;
     end loop;
     Clear(mt);
@@ -91,8 +90,8 @@ package body Standard_Multiple_Deflation is
     declare
       a : constant Standard_Complex_Poly_Matrices.Matrix(1..nr,1..nc)
         := Create_Nullity_Matrix(nq,nv,natural32(nr),natural32(nc),d,p);
-      h : constant Standard_Complex_Matrices.Matrix(1..r,1..nc)
-        := Random_Matrix(r,nc);
+      h : constant Standard_Complex_Matrices.Matrix(1..integer32(r),1..nc)
+        := Random_Matrix(r,natural32(nc));
     begin
       return Symbolic_Deflate(nq,nv,a,h);
     end;
@@ -101,7 +100,7 @@ package body Standard_Multiple_Deflation is
   procedure Predict_Order
               ( p : in Eval_Poly_Sys;
                 A : in out Standard_Complex_Matrices.Matrix;
-                z : in Vector; tol : in double_float; max_d : in natural32;
+                z : in Vector; tol : in double_float; max_d : in integer32;
                 corank : out natural32; d : out natural32 ) is
 
     U : Standard_Complex_Matrices.Matrix(A'range(1),A'range(1));
@@ -111,7 +110,7 @@ package body Standard_Multiple_Deflation is
     rco : double_float;
     rank : natural32;
     w : Vector(z'range);
-    t,y,c : Vector(0..integer32(max_d));
+    t,y,c : Vector(0..max_d);
 
   begin
     Numerical_Rank(A,tol,S,U,V,rco,rank);
@@ -120,7 +119,7 @@ package body Standard_Multiple_Deflation is
       d := 0;
     else
       w := Random_Vector_in_Kernel(V,corank);
-      t := Random_Vector(0,integer32(max_d));
+      t := Random_Vector(0,max_d);
       y := Sample_Sum_on_Line(p,z,w,t);
       c := Interpolation_Coefficients(t,y);
       d := Numerical_Order(c,tol);
@@ -132,8 +131,8 @@ package body Standard_Multiple_Deflation is
 
   procedure Predict_Order
               ( file : in file_type; p : in Eval_Poly_Sys;
-                A : in Standard_Complex_Matrices.Matrix;
-                z : in Vector; tol : in double_float; max_d : in natural32;
+                A : in out Standard_Complex_Matrices.Matrix;
+                z : in Vector; tol : in double_float; max_d : in integer32;
                 corank : out natural32; d : out natural32 ) is
 
     use Standard_Complex_Matrices;
@@ -147,7 +146,7 @@ package body Standard_Multiple_Deflation is
     rank : natural32;
     w : Vector(z'range);
     r : Vector(A'range(1));
-    t,y,c : Vector(0..integer32(max_d));
+    t,y,c : Vector(0..max_d);
 
   begin
    -- put_line(file,"The approximate zero : "); put_line(file,z);
@@ -155,7 +154,7 @@ package body Standard_Multiple_Deflation is
     put_line(file,"The singular values :");
     put_line(file,S);
     put(file,"The numerical rank : "); put(file,rank,1);
-    if rank = A'last(2)
+    if integer32(rank) = A'last(2)
      then put(file," = ");
      else put(file," < ");
     end if;
@@ -200,7 +199,7 @@ package body Standard_Multiple_Deflation is
     jm : Jaco_Mat(p'range,z'range) := Create(p);
     A : Matrix(p'range,z'range) := Eval(jm,z);
     f : Eval_Poly_Sys(p'range) := Create(p);
-    max_d : constant natural32 := Standard_Probe_Kernel.Maximal_Degree(p)+1;
+    max_d : constant integer32 := Standard_Probe_Kernel.Maximal_Degree(p)+1;
 
   begin
     Predict_Order(f,A,z,tol,max_d,corank,d);
@@ -217,7 +216,7 @@ package body Standard_Multiple_Deflation is
     jm : Jaco_Mat(p'range,z'range) := Create(p);
     A : Matrix(p'range,z'range) := Eval(jm,z);
     f : Eval_Poly_Sys(p'range) := Create(p);
-    max_d : constant natural32 := Standard_Probe_Kernel.Maximal_Degree(p)+1;
+    max_d : constant integer32 := Standard_Probe_Kernel.Maximal_Degree(p)+1;
 
   begin
     put(file,"Bound for the maximal order : "); put(file,max_d,1);
@@ -242,7 +241,7 @@ package body Standard_Multiple_Deflation is
         := Create_Nullity_Matrix(nq,nv,natural32(nr),natural32(nc),d,p);
       y : constant Standard_Complex_Matrices.Matrix(1..nr,1..nc-1)
         := Eval1(a,z);
-      rank : constant natural := Numerical_Rank(y,tol);
+      rank : constant natural32 := Numerical_Rank(y,tol);
     begin
       r := natural32(nc) - rank;
       dp := new Poly_Sys'(Symbolic_Deflate(nq,nv,r,a));

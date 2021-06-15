@@ -1,4 +1,6 @@
-with integer_io;                        use integer_io;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Multprec_Floating_Numbers;         use Multprec_Floating_Numbers;
 with Multprec_Complex_Numbers;          use Multprec_Complex_Numbers;
 with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
@@ -26,16 +28,17 @@ package body Multprec_Nullity_Polynomials is
     return res;
   end Derivative;
 
-  function Factorial ( m : Standard_Natural_Vectors.Vector ) return natural is
+  function Factorial ( m : Standard_Natural_Vectors.Vector )
+                     return natural32 is
 
-    res : natural := 1;
+    res : natural32 := 1;
 
   begin
     for i in m'range loop
-      if m(i) > 1
-       then for j in 2..m(i) loop
-              res := res*j;
-            end loop;
+      if m(i) > 1 then
+        for j in 2..m(i) loop
+          res := res*j;
+        end loop;
       end if;
     end loop;
     return res;
@@ -49,7 +52,7 @@ package body Multprec_Nullity_Polynomials is
     t : Term;
 
   begin
-    t.cf := Create(1);
+    t.cf := Create(integer32(1));
     t.dg := new Standard_Natural_Vectors.Vector'(m);
     for i in f'range loop
       res(i) := t*f(i);
@@ -60,24 +63,25 @@ package body Multprec_Nullity_Polynomials is
 
   procedure Evaluate_Derivatives
               ( a : in out Multprec_Complex_Matrices.Matrix;
-                r : in natural; c : in out natural; nq,nv,k : in natural;
+                r : in natural32; c : in out natural32; nq,nv,k : in natural32;
                 f : in Poly_Sys; z : in Multprec_Complex_Vectors.Vector ) is
 
     procedure Monomial ( m : in Standard_Natural_Vectors.Vector ) is
 
       dp : Poly;
-      row : natural := r;
-      fac : constant integer := Factorial(m);
+      row : natural32 := r;
+      fac : constant natural32 := Factorial(m);
       mpf_fac : Floating_Number := Create(fac);
 
     begin
-      for i in 1..nq loop
+      for i in 1..integer32(nq) loop
         dp := Derivative(f(i),m);
-        if dp = Null_Poly
-         then a(row,c) := Create(0);
-         else a(row,c) := Eval(dp,z);
-              Div(a(row,c),mpf_fac);
-              Clear(dp);
+        if dp = Null_Poly then
+          a(integer32(row),integer32(c)) := Create(integer32(0));
+        else
+          a(integer32(row),integer32(c)) := Eval(dp,z);
+          Div(a(integer32(row),integer32(c)),mpf_fac);
+          Clear(dp);
         end if;
         row := row + 1;
       end loop;       
@@ -93,24 +97,25 @@ package body Multprec_Nullity_Polynomials is
   procedure Evaluate_Derivatives
               ( file : in file_type;
                 a : in out Multprec_Complex_Matrices.Matrix;
-                r : in natural; c : in out natural; nq,nv,k : in natural;
+                r : in natural32; c : in out natural32; nq,nv,k : in natural32;
                 f : in Poly_Sys; z : in Multprec_Complex_Vectors.Vector ) is
 
     procedure Monomial ( m : in Standard_Natural_Vectors.Vector ) is
 
       dp : Poly;
-      row : natural := r;
-      fac : constant integer := Factorial(m);
+      row : natural32 := r;
+      fac : constant natural32 := Factorial(m);
       mpf_fac : Floating_Number := Create(fac);
 
     begin
-      for i in 1..nq loop
+      for i in 1..integer32(nq) loop
         dp := Derivative(f(i),m);
-        if dp = Null_Poly
-         then a(row,c) := Create(0);
-         else a(row,c) := Eval(dp,z);
-              Div(a(row,c),mpf_fac);
-              Clear(dp);
+        if dp = Null_Poly then
+          a(integer32(row),integer32(c)) := Create(integer32(0));
+        else
+          a(integer32(row),integer32(c)) := Eval(dp,z);
+          Div(a(integer32(row),integer32(c)),mpf_fac);
+          Clear(dp);
         end if;
         put(file,"row = "); put(file,row,1);
         put(file,"  column = "); put(file,c,1); new_line(file);
@@ -127,24 +132,25 @@ package body Multprec_Nullity_Polynomials is
 
   procedure Compute_Derivatives
               ( a : in out Multprec_Complex_Poly_Matrices.Matrix;
-                r : in natural; c : in out natural; nq,nv,k : in natural;
+                r : in natural32; c : in out natural32; nq,nv,k : in natural32;
                 f : in Poly_Sys ) is
 
     procedure Monomial ( m : in Standard_Natural_Vectors.Vector ) is
 
       dp : Poly;
-      row : natural := r;
-      fac : constant integer := Factorial(m);
+      row : natural32 := r;
+      fac : constant natural32 := Factorial(m);
       mpf_fac : Floating_Number := Create(fac);
       mpc_fac : Complex_Number := Create(1.0/mpf_fac);
 
     begin
-      for i in 1..nq loop
+      for i in 1..integer32(nq) loop
         dp := Derivative(f(i),m);
-        if dp = Null_Poly
-         then a(row,c) := Null_Poly;
-         else Mul(dp,mpc_fac);
-              a(row,c) := dp;
+        if dp = Null_Poly then
+          a(integer32(row),integer32(c)) := Null_Poly;
+        else
+          Mul(dp,mpc_fac);
+          a(integer32(row),integer32(c)) := dp;
         end if;
         row := row + 1;
       end loop;
@@ -161,24 +167,25 @@ package body Multprec_Nullity_Polynomials is
   procedure Compute_Derivatives
               ( file : in file_type;
                 a : in out Multprec_Complex_Poly_Matrices.Matrix;
-                r : in natural; c : in out natural; nq,nv,k : in natural;
+                r : in natural32; c : in out natural32; nq,nv,k : in natural32;
                 f : in Poly_Sys ) is
 
     procedure Monomial ( m : in Standard_Natural_Vectors.Vector ) is
 
       dp : Poly;
-      row : natural := r;
-      fac : constant integer := Factorial(m);
+      row : natural32 := r;
+      fac : constant natural32 := Factorial(m);
       mpf_fac : Floating_Number := Create(fac);
       mpc_fac : Complex_Number := Create(1.0/mpf_fac);
 
     begin
-      for i in 1..nq loop
+      for i in 1..integer32(nq) loop
         dp := Derivative(f(i),m);
-        if dp = Null_Poly
-         then a(row,c) := Null_Poly;
-         else Mul(dp,mpc_fac);
-              a(row,c) := dp;
+        if dp = Null_Poly then
+          a(integer32(row),integer32(c)) := Null_Poly;
+        else
+          Mul(dp,mpc_fac);
+          a(integer32(row),integer32(c)) := dp;
         end if;
         put(file,"row = "); put(file,row,1);
         put(file,"  column = "); put(file,c,1); new_line(file);
@@ -196,10 +203,10 @@ package body Multprec_Nullity_Polynomials is
 
   procedure Evaluate_All_Derivatives
               ( a : in out Multprec_Complex_Matrices.Matrix;
-                r,c : in natural; nq,nv,k : in natural;
+                r,c : in natural32; nq,nv,k : in natural32;
                 f : in Poly_Sys; z : in Multprec_Complex_Vectors.Vector ) is
 
-    wr : natural := r;
+    wr : natural32 := r;
 
     procedure Monomial ( m : in Standard_Natural_Vectors.Vector ) is
  
@@ -207,12 +214,12 @@ package body Multprec_Nullity_Polynomials is
     --   Evaluates all derivatives up to order k of m*f.
 
       mf : Poly_Sys(f'range) := Monomial_Multiple(m,f);
-      row : natural := wr;
-      wc : natural;
+      row : natural32 := wr;
+      wc : natural32;
  
     begin
-      for i in 1..nq loop
-        a(row,c) := Eval(mf(i),z);
+      for i in 1..integer32(nq) loop
+        a(integer32(row),integer32(c)) := Eval(mf(i),z);
         row := row + 1;
       end loop;
       wc := c+1;
@@ -230,22 +237,23 @@ package body Multprec_Nullity_Polynomials is
 
   procedure Compute_All_Derivatives
               ( a : in out Multprec_Complex_Poly_Matrices.Matrix;
-                r,c : in natural; nq,nv,k : in natural; f : in Poly_Sys ) is
+                r,c : in natural32; nq,nv,k : in natural32;
+                f : in Poly_Sys ) is
 
-    wr : natural := r;
+    wr : natural32 := r;
 
     procedure Monomial ( m : in Standard_Natural_Vectors.Vector ) is
  
     -- DESCRIPTION :
     --   Computes all derivatives up to order k of m*f.
 
-      mf : Poly_Sys(f'range) := Monomial_Multiple(m,f);
-      row : natural := wr;
-      wc : natural;
+      mf : constant Poly_Sys(f'range) := Monomial_Multiple(m,f);
+      row : natural32 := wr;
+      wc : natural32;
  
     begin
-      for i in 1..nq loop
-        a(row,c) := mf(i);
+      for i in 1..integer32(nq) loop
+        a(integer32(row),integer32(c)) := mf(i);
         row := row + 1;
       end loop;
       wc := c+1;
@@ -262,18 +270,18 @@ package body Multprec_Nullity_Polynomials is
 
   procedure Evaluate_Highest_Order
               ( a : in out Multprec_Complex_Matrices.Matrix;
-                r,c : in natural; nq,nv,k : in natural;
+                r,c : in natural32; nq,nv,k : in natural32;
                 f : in Poly_Sys; z : in Multprec_Complex_Vectors.Vector ) is
 
-    wr : natural := r;
+    wr : natural32 := r;
 
     procedure Highest_Order ( m : in Standard_Natural_Vectors.Vector ) is
 
     -- DESCRIPTION :
     --   Evaluates the highest order derivative of m*f at z.
 
-      mf : Poly_Sys(f'range) := Monomial_Multiple(m,f);
-      wc : natural := c;
+      mf : constant Poly_Sys(f'range) := Monomial_Multiple(m,f);
+      wc : natural32 := c;
 
     begin
       Evaluate_Derivatives(a,wr,wc,nq,nv,k,mf,z);
@@ -289,17 +297,18 @@ package body Multprec_Nullity_Polynomials is
 
   procedure Compute_Highest_Order
               ( a : in out Multprec_Complex_Poly_Matrices.Matrix;
-                r,c : in natural; nq,nv,k : in natural; f : in Poly_Sys ) is
+                r,c : in natural32; nq,nv,k : in natural32;
+                f : in Poly_Sys ) is
 
-    wr : natural := r;
+    wr : natural32 := r;
 
     procedure Highest_Order ( m : in Standard_Natural_Vectors.Vector ) is
 
     -- DESCRIPTION :
     --   Computes the highest order derivative of m*f at z.
 
-      mf : Poly_Sys(f'range) := Monomial_Multiple(m,f);
-      wc : natural := c;
+      mf : constant Poly_Sys(f'range) := Monomial_Multiple(m,f);
+      wc : natural32 := c;
 
     begin
       Compute_Derivatives(a,wr,wc,nq,nv,k,mf);
@@ -315,10 +324,10 @@ package body Multprec_Nullity_Polynomials is
 
   procedure Evaluate_Monomial_Multiples
               ( a : in out Multprec_Complex_Matrices.Matrix;
-                r,c,nq,nv,k,nc1 : in natural;
+                r,c,nq,nv,k,nc1 : in natural32;
                 f : in Poly_Sys; z : in Multprec_Complex_Vectors.Vector ) is
 
-    wr,wc : natural;
+    wr,wc : natural32;
 
   begin
     wc := nc1+1;
@@ -333,10 +342,10 @@ package body Multprec_Nullity_Polynomials is
   procedure Evaluate_Monomial_Multiples
               ( file : in file_type;
                 a : in out Multprec_Complex_Matrices.Matrix;
-                r,c,nq,nv,k,nc1 : in natural;
+                r,c,nq,nv,k,nc1 : in natural32;
                 f : in Poly_Sys; z : in Multprec_Complex_Vectors.Vector ) is
 
-    wr,wc : natural;
+    wr,wc : natural32;
 
     procedure Monomial ( m : in Standard_Natural_Vectors.Vector ) is
  
@@ -344,14 +353,14 @@ package body Multprec_Nullity_Polynomials is
     --   Evaluates all derivatives up to order k of m*f.
 
       mf : Poly_Sys(f'range) := Monomial_Multiple(m,f);
-      row : natural := wr;
+      row : natural32 := wr;
  
     begin
       put(file,"multiply f with monomial "); put(file,m); new_line(file);
-      for i in 1..nq loop
+      for i in 1..integer32(nq) loop
         put(file,"row = "); put(file,row,1);
         put(file,"  column = "); put(file,c,1); new_line(file);
-        a(row,c) := Eval(mf(i),z);
+        a(integer32(row),integer32(c)) := Eval(mf(i),z);
         row := row + 1;
       end loop;
       wc := c+1;
@@ -369,7 +378,7 @@ package body Multprec_Nullity_Polynomials is
     -- DESCRIPTION :
     --   Evaluates the highest order derivative of m*f at z.
 
-      mf : Poly_Sys(f'range) := Monomial_Multiple(m,f);
+      mf : constant Poly_Sys(f'range) := Monomial_Multiple(m,f);
 
     begin
       put(file,"multiply f with monomial "); put(file,m); new_line(file);
@@ -397,9 +406,9 @@ package body Multprec_Nullity_Polynomials is
 
   procedure Compute_Monomial_Multiples
               ( a : in out Multprec_Complex_Poly_Matrices.Matrix;
-                r,c,nq,nv,k,nc1 : in natural; f : in Poly_Sys ) is
+                r,c,nq,nv,k,nc1 : in natural32; f : in Poly_Sys ) is
 
-    wr,wc : natural;
+    wr,wc : natural32;
 
   begin
     wc := nc1+1;
@@ -414,9 +423,9 @@ package body Multprec_Nullity_Polynomials is
   procedure Compute_Monomial_Multiples
               ( file : in file_type;
                 a : in out Multprec_Complex_Poly_Matrices.Matrix;
-                r,c,nq,nv,k,nc1 : in natural; f : in Poly_Sys ) is
+                r,c,nq,nv,k,nc1 : in natural32; f : in Poly_Sys ) is
 
-    wr,wc : natural;
+    wr,wc : natural32;
 
     procedure Monomial ( m : in Standard_Natural_Vectors.Vector ) is
  
@@ -424,14 +433,14 @@ package body Multprec_Nullity_Polynomials is
     --   Computes all derivatives up to order k of m*f.
 
       mf : constant Poly_Sys(f'range) := Monomial_Multiple(m,f);
-      row : natural := wr;
+      row : natural32 := wr;
  
     begin
       put(file,"multiply f with monomial "); put(file,m); new_line(file);
-      for i in 1..nq loop
+      for i in 1..integer32(nq) loop
         put(file,"row = "); put(file,row,1);
         put(file,"  column = "); put(file,c,1); new_line(file);
-        a(row,c) := mf(i);
+        a(integer32(row),integer32(c)) := mf(i);
         row := row + 1;
       end loop;
       wc := c+1;

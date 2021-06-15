@@ -1,5 +1,6 @@
 with text_io;                           use text_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Vectors;          use Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
@@ -59,12 +60,12 @@ package Standard_Multiple_Deflation is
   procedure Predict_Order
               ( p : in Eval_Poly_sys;
                 A : in out Standard_Complex_Matrices.Matrix;
-                z : in Vector; tol : in double_float; max_d : in natural32;
+                z : in Vector; tol : in double_float; max_d : in integer32;
                 corank : out natural32; d : out natural32 );
   procedure Predict_Order
               ( file : in file_type; p : in Eval_Poly_Sys;
                 A : in out Standard_Complex_Matrices.Matrix;
-                z : in Vector; tol : in double_float; max_d : in natural32;
+                z : in Vector; tol : in double_float; max_d : in integer32;
                 corank : out natural32; d : out natural32 );
   procedure Predict_Order
               ( p : in Poly_Sys; z : in Vector; tol : in double_float;

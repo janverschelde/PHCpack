@@ -1,3 +1,5 @@
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Vectors;          use Standard_Complex_Vectors; 
 with Standard_Complex_Matrices;         use Standard_Complex_Matrices; 
@@ -10,14 +12,14 @@ package Standard_Probe_Kernel is
 --   This package provides primitive operations used to determine
 --   the minimal deflation order needed to recondition a singular root.
 
-  function Maximal_Degree ( p : Poly_Sys ) return integer;
+  function Maximal_Degree ( p : Poly_Sys ) return integer32;
 
   -- DESCRIPTION :
   --   Returns the maximal degree of the polynomials in p,
   --   as the natural upper bound for the order of the deflation.
 
   function Random_Vector_in_Kernel
-              ( V : Matrix; corank : positive ) return Vector;
+              ( V : Matrix; corank : natural32 ) return Vector;
 
   -- DESCRIPTION :
   --   Returns a random vector in the kernel of a matrix,
@@ -59,7 +61,7 @@ package Standard_Probe_Kernel is
   --   coefficients of the interpolating polynomial of degree d,
   --   in a vector of range 0..d.
 
-  function Numerical_Order ( c : Vector; tol : double_float ) return natural;
+  function Numerical_Order ( c : Vector; tol : double_float ) return natural32;
 
   -- DESCRIPTION :
   --   Returns the index of the first element in c whose magnitude

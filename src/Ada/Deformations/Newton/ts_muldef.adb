@@ -248,7 +248,7 @@ procedure ts_muldef is
   procedure Multprec_Execute_Multiple_Deflation
               ( p : in Multprec_Complex_Poly_Systems.Poly_Sys;
                 sols : in out Multprec_Complex_Solutions.Solution_List;
-                size : in natural ) is
+                size : in natural32 ) is
 
     use Multprec_Multiple_Deflation;
 

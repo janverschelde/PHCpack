@@ -1,4 +1,5 @@
 with text_io;                           use text_io;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Vectors;          use Standard_Natural_Vectors;
 with Multprec_Complex_Vectors;          use Multprec_Complex_Vectors;
 with Multprec_Complex_Matrices;
@@ -19,7 +20,7 @@ package Multprec_Nullity_Polynomials is
   -- DESCRIPTION :
   --   Returns the derivative of p with respect to the variables in m.
 
-  function Factorial ( m : Standard_Natural_Vectors.Vector ) return natural;
+  function Factorial ( m : Standard_Natural_Vectors.Vector ) return natural32;
 
   -- DESCRIPTION :
   --   Returns the product of all factorials of the elements in m.
@@ -33,12 +34,14 @@ package Multprec_Nullity_Polynomials is
 
   procedure Evaluate_Derivatives
               ( a : in out Multprec_Complex_Matrices.Matrix;
-                r : in natural; c : in out natural; nq,nv,k : in natural;
+                r : in natural32; c : in out natural32;
+                nq,nv,k : in natural32;
                 f : in Poly_Sys; z : in Multprec_Complex_Vectors.Vector );
   procedure Evaluate_Derivatives
               ( file : in file_type;
                 a : in out Multprec_Complex_Matrices.Matrix;
-                r : in natural; c : in out natural; nq,nv,k : in natural;
+                r : in natural32; c : in out natural32;
+                nq,nv,k : in natural32;
                 f : in Poly_Sys; z : in Multprec_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
@@ -48,13 +51,13 @@ package Multprec_Nullity_Polynomials is
 
   procedure Compute_Derivatives
               ( a : in out Multprec_Complex_Poly_Matrices.Matrix;
-                r : in natural; c : in out natural; nq,nv,k : in natural;
-                f : in Poly_Sys );
+                r : in natural32; c : in out natural32;
+                nq,nv,k : in natural32; f : in Poly_Sys );
   procedure Compute_Derivatives
               ( file : in file_type;
                 a : in out Multprec_Complex_Poly_Matrices.Matrix;
-                r : in natural; c : in out natural; nq,nv,k : in natural;
-                f : in Poly_Sys );
+                r : in natural32; c : in out natural32;
+                nq,nv,k : in natural32; f : in Poly_Sys );
 
   -- DESCRIPTION :
   --   Computes all derivatives up to order k of the system f,
@@ -63,7 +66,7 @@ package Multprec_Nullity_Polynomials is
 
   procedure Evaluate_All_Derivatives
               ( a : in out Multprec_Complex_Matrices.Matrix;
-                r,c : in natural; nq,nv,k : in natural;
+                r,c : in natural32; nq,nv,k : in natural32;
                 f : in Poly_Sys; z : in Multprec_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
@@ -72,7 +75,7 @@ package Multprec_Nullity_Polynomials is
 
   procedure Compute_All_Derivatives
               ( a : in out Multprec_Complex_Poly_Matrices.Matrix;
-                r,c : in natural; nq,nv,k : in natural; f : in Poly_Sys );
+                r,c : in natural32; nq,nv,k : in natural32; f : in Poly_Sys );
 
   -- DESCRIPTION :
   --   Computes all derivatives of f multiplied with all monomials of
@@ -80,7 +83,7 @@ package Multprec_Nullity_Polynomials is
 
   procedure Evaluate_Highest_Order
               ( a : in out Multprec_Complex_Matrices.Matrix;
-                r,c : in natural; nq,nv,k : in natural;
+                r,c : in natural32; nq,nv,k : in natural32;
                 f : in Poly_Sys; z : in Multprec_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
@@ -89,7 +92,7 @@ package Multprec_Nullity_Polynomials is
 
   procedure Compute_Highest_Order
               ( a : in out Multprec_Complex_Poly_Matrices.Matrix;
-                r,c : in natural; nq,nv,k : in natural; f : in Poly_Sys );
+                r,c : in natural32; nq,nv,k : in natural32; f : in Poly_Sys );
 
   -- DESCRIPTION :
   --   Computes the k-th order derivative of f at all monomial multiples of
@@ -97,12 +100,12 @@ package Multprec_Nullity_Polynomials is
 
   procedure Evaluate_Monomial_Multiples
               ( a : in out Multprec_Complex_Matrices.Matrix;
-                r,c,nq,nv,k,nc1 : in natural;
+                r,c,nq,nv,k,nc1 : in natural32;
                 f : in Poly_Sys; z : in Multprec_Complex_Vectors.Vector );
   procedure Evaluate_Monomial_Multiples
               ( file : in file_type;
                 a : in out Multprec_Complex_Matrices.Matrix;
-                r,c,nq,nv,k,nc1 : in natural;
+                r,c,nq,nv,k,nc1 : in natural32;
                 f : in Poly_Sys; z : in Multprec_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
@@ -112,11 +115,11 @@ package Multprec_Nullity_Polynomials is
 
   procedure Compute_Monomial_Multiples
               ( a : in out Multprec_Complex_Poly_Matrices.Matrix;
-                r,c,nq,nv,k,nc1 : in natural; f : in Poly_Sys );
+                r,c,nq,nv,k,nc1 : in natural32; f : in Poly_Sys );
   procedure Compute_Monomial_Multiples
               ( file : in file_type;
                 a : in out Multprec_Complex_Poly_Matrices.Matrix;
-                r,c,nq,nv,k,nc1 : in natural; f : in Poly_Sys );
+                r,c,nq,nv,k,nc1 : in natural32; f : in Poly_Sys );
 
   -- DESCRIPTION :
   --   Evaluates monomial multiples of the degree k with the system f

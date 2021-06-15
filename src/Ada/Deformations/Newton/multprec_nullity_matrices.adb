@@ -131,7 +131,7 @@ package body Multprec_Nullity_Matrices is
   end Eval1;
 
   function Evaluate_Nullity_Matrix
-             ( nq,nv,nr,nc : natural; k : positive; f : Poly_Sys;
+             ( nq,nv,nr,nc,k : natural32; f : Poly_Sys;
                z : Multprec_Complex_Vectors.Vector )
              return Multprec_Complex_Matrices.Matrix is
 
@@ -212,7 +212,7 @@ package body Multprec_Nullity_Matrices is
     res : Multprec_Complex_Matrices.Matrix
             (1..integer32(nr),1..integer32(nc));
     nr1,nc1 : natural32;
-    y : Multprec_Complex_Vectors.Vector(1..nq);
+    y : Multprec_Complex_Vectors.Vector(1..integer32(nq));
     dp : Poly;
 
   begin

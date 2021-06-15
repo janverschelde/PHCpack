@@ -13,7 +13,8 @@ project newton is
                  "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
                  "../../Math_Lib/Series", "../../Math_Lib/Circuits",
                  "../Solutions", "../Homotopy", "../../Tasking",
-                 "../../Schubert/SAGBI");
+                 "../../Schubert/SAGBI",
+                 "../../Components/Interpolators");
         when "windows" =>
             for Source_Dirs use
                 (".", "../../System", "../../System/Basic_Timer",
@@ -23,7 +24,8 @@ project newton is
                  "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
                  "../../Math_Lib/Series", "../../Math_Lib/Circuits",
                  "../Solutions", "../Homotopy", "../../Tasking",
-                 "../../Schubert/SAGBI");
+                 "../../Schubert/SAGBI",
+                 "../../Components/Interpolators");
             for Excluded_Source_Files use ("corecount.c");
             for Languages use ("Ada", "C");
     end case;
@@ -48,7 +50,7 @@ project newton is
         "ts_straight.adb",     -- tests straight-line programs
         "ts_stair.adb",        -- tests examples from the staircase
         "ts_multip.adb",       -- computation of multiplicity structure
-       -- "ts_muldef.adb",       -- tests higher-order deflation
+        "ts_muldef.adb",       -- tests higher-order deflation
         "ts_vmpnewt.adb",      -- tests variable precision Newton
         "ts_newcirc.adb"       -- tests Newton on coefficient circuits
     );

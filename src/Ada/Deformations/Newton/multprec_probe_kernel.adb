@@ -6,10 +6,10 @@ with Multprec_Univariate_Interpolators;
 
 package body Multprec_Probe_Kernel is
 
-  function Maximal_Degree ( p : Poly_Sys ) return integer is
+  function Maximal_Degree ( p : Poly_Sys ) return integer32 is
 
-    res : integer := Degree(p(p'first));
-    dpi : integer;
+    res : integer32 := Degree(p(p'first));
+    dpi : integer32;
 
   begin
     for i in p'first+1..p'last loop
@@ -22,7 +22,7 @@ package body Multprec_Probe_Kernel is
   end Maximal_Degree;
 
   function Random_Vector_in_Kernel
-              ( V : Matrix; corank : positive; s : natural ) return Vector is
+              ( V : Matrix; corank,s : natural32 ) return Vector is
 
     res : Vector(V'range(1));
     r,t : Complex_Number;
@@ -31,8 +31,8 @@ package body Multprec_Probe_Kernel is
     for i in res'range loop       -- initialize with last column in V
       Copy(V(i,V'last(2)),res(i));
     end loop;
-    for j in 1..corank-1 loop     -- add the (j+1)-to-last column of V
-      r := Random(s);             -- multiplied with a random number
+    for j in 1..integer32(corank)-1 loop -- add the (j+1)-to-last column of V
+      r := Random(s);                    -- multiplied with a random number
       for i in res'range loop
         t := r*V(i,V'last(2)-j);
         Add(res(i),t);
@@ -73,19 +73,19 @@ package body Multprec_Probe_Kernel is
   end Interpolation_Coefficients;
 
   function Numerical_Order
-              ( c : Vector; tol : double_float ) return natural is
+              ( c : Vector; tol : double_float ) return natural32 is
 
-    res : natural := c'last+1;
+    res : natural32 := natural32(c'last)+1;
     v : Floating_Number;
 
   begin
     for i in c'range loop
       v := AbsVal(c(i));
       if v > tol
-       then res := i;
+       then res := natural32(i);
       end if;
       Clear(v);
-      exit when (res < c'last+1);
+      exit when (res < natural32(c'last)+1);
     end loop;
     return res;
   end Numerical_Order;

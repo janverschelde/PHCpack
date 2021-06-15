@@ -5,10 +5,10 @@ with Standard_Univariate_Interpolators;
 
 package body Standard_Probe_Kernel is
 
-  function Maximal_Degree ( p : Poly_Sys ) return integer is
+  function Maximal_Degree ( p : Poly_Sys ) return integer32 is
 
-    res : integer := Degree(p(p'first));
-    dpi : integer;
+    res : integer32 := Degree(p(p'first));
+    dpi : integer32;
 
   begin
     for i in p'first+1..p'last loop
@@ -21,7 +21,7 @@ package body Standard_Probe_Kernel is
   end Maximal_Degree;
 
   function Random_Vector_in_Kernel
-              ( V : Matrix; corank : positive ) return Vector is
+              ( V : Matrix; corank : natural32 ) return Vector is
 
     res : Vector(V'range(1));
     r : Complex_Number;
@@ -30,8 +30,8 @@ package body Standard_Probe_Kernel is
     for i in res'range loop       -- initialize with last column in V
       res(i) := V(i,V'last(2));
     end loop;
-    for j in 1..corank-1 loop     -- add the (j+1)-to-last column of V
-      r := Random1;               -- multiplied with a random number
+    for j in 1..integer32(corank)-1 loop  -- add the (j+1)-to-last column of V
+      r := Random1;                       -- multiplied with a random number
       for i in res'range loop
         res(i) := res(i) + r*V(i,V'last(2)-j);
       end loop;
@@ -64,14 +64,14 @@ package body Standard_Probe_Kernel is
   end Interpolation_Coefficients;
 
   function Numerical_Order
-              ( c : Vector; tol : double_float ) return natural is
+              ( c : Vector; tol : double_float ) return natural32 is
   begin
     for i in c'range loop
       if AbsVal(c(i)) > tol
-       then return i;
+       then return natural32(i);
       end if;
     end loop;
-    return c'last+1;
+    return natural32(c'last)+1;
   end Numerical_Order;
 
 end Standard_Probe_Kernel;
