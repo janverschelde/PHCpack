@@ -59,9 +59,9 @@ project funky is
         "ts_getsys.c",           -- tests reading/writing systems
         "ts_phc_sys_rw.c",       -- tests read/write of systems in C
         "ts_csols.adb",          -- tests conversion operations
-        "ts_phc_sol_rw.c"        -- tests read/write of solutions in C
+        "ts_phc_sol_rw.c",       -- tests read/write of solutions in C
+        "ts_cpm.adb"             -- tests complex polynomial matrices
        -- "ts_pieri_count.c",      -- C function calls Ada Pieri_Count
-       -- "ts_cpm.adb"            -- tests complex polynomial matrices
        -- "ts_pieri_solver.c",     -- C function calls Ada Pieri_Solver
        -- "ts_phc_solver.c"        -- C function calls Ada phc_solver
        -- "ts_path_tracker.adb"    -- Ada program calls path_tracker.c
