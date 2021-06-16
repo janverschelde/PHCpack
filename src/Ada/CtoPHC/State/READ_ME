@@ -13,35 +13,22 @@ the same name (but different suffix) to related C and Ada routines.
 
 In version 2.4.79, many new interface packages were added to organize
 and document the definitions of the interface functions better.
+In version 2.4.85, systems and solution containers were moved
+to the new folder ../Structures.
 
 ------------------------------------------------------------------------------
 file name                        : short description
 ------------------------------------------------------------------------------
-file_management                  : encapsulation of file_type variables
 file_management_interface        : interface to file management methods
-ts_filman                        : quick test on file_management
-standard_polysys_container       : management of Ada polynomial systems
 standard_polysys_interface       : interface to double precision polynomials
-dobldobl_polysys_container       : polynomial systems with double doubles
 dobldobl_polysys_interface       : interface to double double polynomials
-quaddobl_polysys_container       : polynomial systems with quad doubles
 quaddobl_polysys_interface       : interface to quad double polynomials
-multprec_polysys_container       : multiprecision poly system container
 multprec_polysys_interface       : interface to multiprecision polynomials
-standard_laursys_container       : management of Ada Laurent systems
-dobldobl_laursys_container       : for Laurent systems with dobldobl coeffs
-quaddobl_laursys_container       : for Laurent systems with quaddobl coeffs
-multprec_laursys_container       : for Laurent systems with multprec coeffs
 multprec_laursys_interface       : interface to multiprecision Laurent systems
-ts_syscon                        : tests the systems container
 use_syscon                       : Ada gateway to the systems container
 tableau_form_interface           : tableau form of systems
 use_tabform                      : pass tableau forms of systems
 ts_use_syscon.c                  : C routine calls the Ada gateway use_syscon
-standard_systems_pool            : pool of systems and associated structures
-dobldobl_systems_pool            : pool of dobldobl complex systems
-quaddobl_systems_pool            : pool of quaddobl complex systems
-ts_syspool                       : test on the systems pool
 standard_syspool_interface       : interface to the pool of double systems
 dobldobl_syspool_interface       : interface to the pool of dobldobl systems
 quaddobl_syspool_interface       : interface to the pool of quaddobl systems

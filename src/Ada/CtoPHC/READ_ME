@@ -5,13 +5,16 @@ from C programs and for parallel implementations of the path trackers.
 In release 2.3, the code was splitted among two subdirectories:
 (1) Funky, a functional interface: C -> Ada -> C; and
 (2) State, a state machine usage:  C <-> Ada.
+
 In version 2.4.85, the folder Types was added with the definitions
 of C types equivalent to the basic types in Ada.
+The folder Structures defines packages to wrap systems and solutions.
 
    CtoPHC               : 6. interface from C to phc
       |-- Types         : 6.1. C types equivalent to Ada
-      |-- Funky         : 6.2. functional interface, C -> Ada -> C 
-      |-- State         : 6.3. state machine gateway, C <-> Ada
+      |-- Structures    : 6.2. system and solution wrappers
+      |-- Funky         : 6.3. functional interface, C -> Ada -> C 
+      |-- State         : 6.4. state machine gateway, C <-> Ada
 
 While in both cases, the main program is written in C and calls an
 Ada procedure, the two subdirectories implement two fundamentally

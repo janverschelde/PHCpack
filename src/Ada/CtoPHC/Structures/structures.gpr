@@ -1,0 +1,49 @@
+project structures is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Circuits", "../../Math_Lib/Supports",
+                 "../../Math_Lib/Series", "../../Deformations/Solutions",
+                 "../Types");
+            for Languages use ("Ada", "C");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Math_Lib/Circuits", 
+                 "../../Math_Lib/Series", "../../Deformations/Solutions",
+                 "../Types");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+    for Exec_Dir use "../../../bin";
+
+    for Main use
+    (
+        "ts_filman.adb",       -- tests encapsulation of type_type variables
+        "ts_syscon.adb",       -- tests system containers
+        "ts_syspool.adb",      -- tests systems pool
+        "ts_solcon.adb",       -- tests solutions containers
+        "ts_solpool.adb"       -- tests pool of solution lists
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end structures;

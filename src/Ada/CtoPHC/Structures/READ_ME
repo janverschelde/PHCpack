@@ -1,0 +1,43 @@
+Structures defines wrappers to systems and solutions in PHCv2.4.85.
+
+The packages in this folder wrap the data structures to represent
+polynomial systems, systems of Laurent polynomials, and solution lists.
+
+This directory was splitted off from the ../State folder in v2.4.85
+and contains only pure Ada code, using the C type equivalents.
+
+Run "gprbuild structures.gpr" to make all test procedures.
+On windows, type "gprbuild structures.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean structures.gpr" removes all files created by gprbuild.
+
+------------------------------------------------------------------------------
+file name                        : short description
+------------------------------------------------------------------------------
+file_management                  : encapsulation of file_type variables
+ts_filman                        : tests encapsulation of type_type variables
+------------------------------------------------------------------------------
+standard_polysys_container       : management of polynomial systems
+dobldobl_polysys_container       : polynomial systems with double doubles
+quaddobl_polysys_container       : polynomial systems with quad doubles
+multprec_polysys_container       : multiprecision poly system container
+standard_laursys_container       : management of Laurent systems
+dobldobl_laursys_container       : for Laurent systems with dobldobl coeffs
+quaddobl_laursys_container       : for Laurent systems with quaddobl coeffs
+multprec_laursys_container       : for Laurent systems with multprec coeffs
+ts_syscon                        : tests the systems container
+------------------------------------------------------------------------------
+standard_systems_pool            : pool of systems and associated structures
+dobldobl_systems_pool            : pool of dobldobl complex systems
+quaddobl_systems_pool            : pool of quaddobl complex systems
+ts_syspool                       : test on the systems pool
+------------------------------------------------------------------------------
+standard_solutions_container     : management of solution lists
+dobldobl_solutions_container     : solutions with double doubles
+quaddobl_solutions_container     : solutions with quad doubles
+multprec_solutions_container     : multiprecision solutions
+ts_solcon                        : tests the solutions container
+------------------------------------------------------------------------------
+solutions_pool                   : pool of solution lists
+ts_solpool                       : test on the solutions pool
+------------------------------------------------------------------------------
