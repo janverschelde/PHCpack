@@ -1,4 +1,5 @@
-with Interfaces.C;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with C_Integer_Arrays;                  use C_Integer_Arrays;
 with C_Double_Arrays;                   use C_Double_Arrays;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
@@ -19,13 +20,13 @@ package Coefficient_Support_Poly_Systems is
   --   Returns a C integer array of range 0..p'length with the number of
   --   monomials in every polynomial of p.
 
-  function Sum ( a : C_Integer_Array ) return integer;
+  function Sum ( a : C_Integer_Array ) return integer32;
 
   -- DESCRIPTION :
   --   Returns the sum of the integers in the array a.
 
-  function Support ( n,m : natural; moncnt : C_Integer_Array; p : Poly_Sys )
-                   return C_Integer_Array;
+  function Support ( n,m : natural32; moncnt : C_Integer_Array;
+                     p : Poly_Sys ) return C_Integer_Array;
 
   -- DESCRIPTION :
   --   Returns the support of the polynomial p as a one dimensional array
@@ -35,8 +36,8 @@ package Coefficient_Support_Poly_Systems is
   --   The array on return is a sequence of blocks of n numbers,
   --   where each block encodes an exponent vector of a monomial of p.
 
-  function Coefficients ( m : natural; moncnt : C_Integer_Array; p : Poly_Sys )
-                        return C_Double_Array;
+  function Coefficients ( m : natural32; moncnt : C_Integer_Array;
+                          p : Poly_Sys ) return C_Double_Array;
 
   -- DESCRIPTION :
   --   Returns the coefficients of the system p as a one dimensional
@@ -44,7 +45,7 @@ package Coefficient_Support_Poly_Systems is
   --   number of terms in p.  The doubles in the array on return represent
   --   consecutively the real and imaginary parts of each coefficient.
 
-  function Create ( n : natural; m : C_Integer_Array;
+  function Create ( n : natural32; m : C_Integer_Array;
                     c : C_Double_Array; s : C_Integer_Array ) return Poly_Sys;
 
   -- DESCRIPTION :
@@ -55,7 +56,7 @@ package Coefficient_Support_Poly_Systems is
   --   If m(i) is the number of monomials of the i-th polynomial on return,
   --   then c'length is 2*m(i) and s'length is a multiple of n*m(i).
 
-  function Concat ( n : natural; m : C_Integer_Array;
+  function Concat ( n : natural32; m : C_Integer_Array;
                     c : C_Double_Array; s : C_Integer_Array )
                   return C_Double_Array;
 
@@ -65,7 +66,7 @@ package Coefficient_Support_Poly_Systems is
   --   Applying the next four function to the result of Concat allows
   --   to reconstruct the polynomial system.
 
-  function Dimension ( x : C_Double_Array ) return natural;
+  function Dimension ( x : C_Double_Array ) return natural32;
 
   -- DESCRIPTION :
   --   Returns the dimension from the concatenated coefficient

@@ -1,3 +1,4 @@
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with C_Integer_Arrays;                  use C_Integer_Arrays;
 with C_Double_Arrays;                   use C_Double_Arrays;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
@@ -30,7 +31,7 @@ package Coefficient_Support_Polynomials is
   --   number of terms in p.  The doubles in the array on return represent
   --   consecutively the real and imaginary parts of each coefficient.
 
-  function Create ( n : natural; c : C_Double_Array; s : C_Integer_Array ) 
+  function Create ( n : natural32; c : C_Double_Array; s : C_Integer_Array ) 
                   return Poly;
 
   -- DESCRIPTION :

@@ -1,6 +1,4 @@
-with text_io,integer_io;                use text_io,integer_io;
 with Interfaces.C;                      use Interfaces.C;
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
@@ -10,8 +8,8 @@ package body Coefficient_Support_Polynomials is
 
   function Support ( p : Poly ) return C_Integer_Array is
 
-    m : constant natural := natural(Number_of_Terms(p));
-    n : constant natural := natural(Number_of_Unknowns(p));
+    m : constant natural32 := Number_of_Terms(p);
+    n : constant natural32 := Number_of_Unknowns(p);
     numexp : constant size_T := size_T(n*m-1);
     res : C_Integer_Array(0..numexp);
     ind : Size_T := 0;
@@ -33,7 +31,7 @@ package body Coefficient_Support_Polynomials is
 
   function Coefficients ( p : Poly ) return C_Double_Array is
 
-    m : constant natural := natural(Number_of_Terms(p));
+    m : constant natural32 := Number_of_Terms(p);
     numcff : constant size_T := size_T(2*m-1);
     res : C_Double_Array(0..numcff);
     ind : Size_T := 0;
@@ -53,7 +51,7 @@ package body Coefficient_Support_Polynomials is
     return res;
   end Coefficients;
 
-  function Create ( n : natural; c : C_Double_Array; s : C_Integer_Array ) 
+  function Create ( n : natural32; c : C_Double_Array; s : C_Integer_Array ) 
                   return Poly is
 
     res : Poly := Null_Poly;

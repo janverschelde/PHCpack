@@ -1,13 +1,12 @@
-with text_io,integer_io;                use text_io,integer_io;
+with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
 with Interfaces.C;                      use Interfaces.C;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with C_Integer_io;
 with C_Integer_Arrays;                  use C_Integer_Arrays;
 with C_Double_io;
 with C_Double_Arrays;                   use C_Double_Arrays;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
-with Standard_Natural_Vectors;
 with Symbol_Table;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;   use Standard_Complex_Polynomials_io;
@@ -46,7 +45,7 @@ procedure ts_cosup is
     end loop;
   end put;
 
-  procedure Test_Poly_Creation ( n,m : in natural ) is
+  procedure Test_Poly_Creation ( n,m : in natural32 ) is
 
     numexp : constant size_T := size_T(n*m-1);
     numcff : constant size_T := size_T(2*m-1);
@@ -88,7 +87,7 @@ procedure ts_cosup is
 
   procedure Test_Cosup_to_Poly is
 
-    n,m : natural;
+    n,m : natural32 := 0;
 
   begin
     new_line;
@@ -101,7 +100,7 @@ procedure ts_cosup is
 
   procedure Test_Cosup_to_Poly_Sys is
 
-    n,m : natural;
+    n,m : natural32 := 0;
 
   begin
     new_line;
@@ -114,7 +113,7 @@ procedure ts_cosup is
   procedure Test_Poly_to_Cosup is
 
     p,q : Poly;
-    n : natural;
+    n : natural32 := 0;
 
   begin
     new_line;
@@ -147,9 +146,9 @@ procedure ts_cosup is
     new_line;
     get(lp);
     declare
-      n : constant natural := Number_of_Unknowns(lp(lp'first));
+      n : constant natural32 := Number_of_Unknowns(lp(lp'first));
       mon : constant C_Integer_Array := Monomial_Count(lp.all);
-      moncnt : constant natural := Sum(mon);
+      moncnt : constant natural32 := natural32(Sum(mon));
       sup : constant C_Integer_Array := Support(n,moncnt,mon,lp.all);
     begin
       put("The number of monomials : "); put(mon); 
@@ -164,7 +163,7 @@ procedure ts_cosup is
   --   Writes the polynomial system from its concatenated 
   --   coefficient support representation.
 
-    n : constant natural := Dimension(x);
+    n : constant natural32 := Dimension(x);
     m : constant C_Integer_Array := Monomial_Count(x);
     s : constant C_Integer_Array := Support(x);
     c : constant C_Double_Array := Coefficients(x);
@@ -184,9 +183,9 @@ procedure ts_cosup is
     new_line;
     get(lp);
     declare
-      n : constant natural := Number_of_Unknowns(lp(lp'first));
+      n : constant natural32 := Number_of_Unknowns(lp(lp'first));
       mon : constant C_Integer_Array := Monomial_Count(lp.all);
-      moncnt : constant natural := Sum(mon);
+      moncnt : constant natural32 := natural32(Sum(mon));
       sup : constant C_Integer_Array := Support(n,moncnt,mon,lp.all);
       cff : constant C_Double_Array := Coefficients(moncnt,mon,lp.all);
       cct : constant C_Double_Array := Concat(n,mon,cff,sup);

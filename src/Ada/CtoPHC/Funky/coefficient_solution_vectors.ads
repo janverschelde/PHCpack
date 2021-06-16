@@ -1,3 +1,5 @@
+with Standard_Natural_Numbers;            use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Complex_Solutions;          use Standard_Complex_Solutions;
 with C_Integer_Arrays;                    use C_Integer_Arrays;
 with C_Double_Arrays;                     use C_Double_Arrays;
@@ -10,7 +12,7 @@ package Coefficient_Solution_Vectors is
 
 -- PART I : converting to the coefficient vector representation
 
-  function Multiplicity ( s : Solution ) return integer;
+  function Multiplicity ( s : Solution ) return integer32;
 
   -- DESCRIPTION :
   --   Returns the multiplicity information of the solution.
@@ -37,14 +39,14 @@ package Coefficient_Solution_Vectors is
 
 -- PART I bis : concatenating the coefficients representation
 
-  function Concat ( n : natural; m : C_Integer_Array; c : C_Double_Array )
+  function Concat ( n : natural32; m : C_Integer_Array; c : C_Double_Array )
                   return C_Double_Array;
 
   -- DESCRIPTION :
   --   Concatenates the dimension n, multiplicies m, and coefficients c
   --   into one long C double array.
 
-  function Dimension ( x : C_Double_Array ) return natural;
+  function Dimension ( x : C_Double_Array ) return natural32;
 
   -- DESCRIPTION :
   --   Returns the dimension of the solution vectors.
@@ -61,13 +63,13 @@ package Coefficient_Solution_Vectors is
 
 -- PART II : creating solutions from the coefficient vector representation
 
-  function Create ( n,m : natural; c : C_Double_Array ) return Solution;
+  function Create ( n,m : natural32; c : C_Double_Array ) return Solution;
 
   -- DESCRIPTION :
   --   Returns an n-dimensional solution of multiplicity m from the
   --   coefficient vector representation in c.
 
-  function Create ( n : natural; m : C_Integer_Array; c : C_Double_Array )
+  function Create ( n : natural32; m : C_Integer_Array; c : C_Double_Array )
                   return Solution_List;
 
   -- DESCRIPTION :

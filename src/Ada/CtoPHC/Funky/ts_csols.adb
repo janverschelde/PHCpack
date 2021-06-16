@@ -24,7 +24,7 @@ procedure ts_csols is
   begin
    -- put(file,"The Multiplicities : "); put(file,m); new_line(file);
    -- put_line(file,"The Coefficients : "); put_line(file,c);
-    s := Create(natural(n),m,c);
+    s := Create(natural32(n),m,c);
     put_line(file,"The created solution list :");
     put(file,Length_Of(s),natural32(Head_Of(s).n),s);
   end Test_Conversions;

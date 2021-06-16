@@ -1,5 +1,9 @@
-with text_io,integer_io;               use text_io,integer_io;
+with text_io;                          use text_io;
 with Interfaces.C;
+with Standard_Natural_Numbers;         use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;      use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;         use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;      use Standard_Integer_Numbers_io;
 with C_Integer_io,C_Double_io;         use C_Integer_io,C_Double_io;
 with C_Integer_Arrays;                 use C_Integer_Arrays;
 with C_Double_Arrays;                  use C_Double_Arrays;
@@ -7,8 +11,8 @@ with Standard_Complex_Polynomials;     use Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;  use Standard_Complex_Polynomials_io;
 with Coefficient_Support_Polynomials;  use Coefficient_Support_Polynomials;
 
-procedure cosupoly ( n : in integer; s : in C_intarrs.Pointer;
-                     m : in integer; c : in C_dblarrs.Pointer ) is
+procedure cosupoly ( n : in integer32; s : in C_intarrs.Pointer;
+                     m : in integer32; c : in C_dblarrs.Pointer ) is
 
 -- DESCRIPTION :
 --   The support vector s has range 0..n-1 and the coefficient
@@ -18,7 +22,7 @@ procedure cosupoly ( n : in integer; s : in C_intarrs.Pointer;
       := C_intarrs.Value(s,Interfaces.C.ptrdiff_T(n));
   cva : C_Double_Array(0..Interfaces.C.size_T(m-1)) 
       := C_dblarrs.Value(c,Interfaces.C.ptrdiff_T(m));
-  numvars : constant natural := n/(m/2);
+  numvars : constant natural32 := natural32(n)/(natural32(m)/2);
   p : Poly := Create(numvars,cva,sva);
 
 begin

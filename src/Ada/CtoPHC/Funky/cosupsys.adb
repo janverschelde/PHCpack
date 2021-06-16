@@ -1,5 +1,8 @@
-with text_io,integer_io;                use text_io,integer_io;
+with text_io;                           use text_io;
 with Interfaces.C;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with C_Integer_io,C_Double_io;          use C_Integer_io,C_Double_io;
 with C_Integer_Arrays;                  use C_Integer_Arrays;
 with C_Double_Arrays;                   use C_Double_Arrays;
@@ -7,9 +10,9 @@ with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Coefficient_Support_Poly_Systems;  use Coefficient_Support_Poly_Systems;
 
-procedure cosupsys ( n,m : in integer; mc : in C_intarrs.Pointer;
-                     ns : in integer; s : in C_intarrs.Pointer;
-                     nc : in integer; c : in C_dblarrs.Pointer ) is
+procedure cosupsys ( n,m : in integer32; mc : in C_intarrs.Pointer;
+                     ns : in integer32; s : in C_intarrs.Pointer;
+                     nc : in integer32; c : in C_dblarrs.Pointer ) is
 
 -- DESCRIPTION :
 --   The number of monomials in the i-th equation is mc[i], where
@@ -54,7 +57,7 @@ begin
     put(" "); put(cva(Interfaces.C.size_T(i)));
     new_line;
   end loop;
-  p := Create(n,mva,cva,sva);
+  p := Create(natural32(n),mva,cva,sva);
   put_line("The polynomial system defined by coefficients and support : ");
   put_line(p);
 end cosupsys;

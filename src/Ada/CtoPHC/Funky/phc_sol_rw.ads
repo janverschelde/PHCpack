@@ -1,6 +1,7 @@
+with Standard_Integer_Numbers;       use Standard_Integer_Numbers;
 with C_Double_Arrays;                use C_Double_Arrays;
 
-function phc_sol_rw ( rw,size_p : integer; p : C_DblArrs.Pointer )
+function phc_sol_rw ( rw,size_p : integer32; p : C_DblArrs.Pointer )
                     return C_DblArrs.Pointer;
 
 -- DESCRIPTION :

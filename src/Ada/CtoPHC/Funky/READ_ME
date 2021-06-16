@@ -42,6 +42,11 @@ the same name (but different suffix) to related C and Ada routines.
 
 In v2.4.85, moved the C type definitions to the ../Types folder.
 
+Run "gprbuild funky.gpr" to make all test procedures.
+On windows, type "gprbuild funky.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean funky.gpr" removes all files created by gprbuild.
+
 ------------------------------------------------------------------------------
 file name                        : short description
 ------------------------------------------------------------------------------

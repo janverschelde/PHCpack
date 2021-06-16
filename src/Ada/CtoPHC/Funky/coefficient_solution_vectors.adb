@@ -4,14 +4,14 @@ with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 
 package body Coefficient_Solution_Vectors is
 
-  function Multiplicity ( s : Solution ) return integer is
+  function Multiplicity ( s : Solution ) return integer32 is
   begin
     return s.m;
   end Multiplicity;
 
   function Multiplicities ( s : Solution_List ) return C_Integer_Array is
 
-    len : Interfaces.C.size_T := Interfaces.C.size_T(Length_Of(s));
+    len : constant Interfaces.C.size_T := Interfaces.C.size_T(Length_Of(s));
     res : C_Integer_Array(1..len);
     tmp : Solution_List := s;
     ls : Link_to_Solution;
@@ -27,7 +27,7 @@ package body Coefficient_Solution_Vectors is
 
   function Coefficients ( s : Solution ) return C_Double_Array is
 
-    len : constant natural := 2*s.n + 5;
+    len : constant natural32 := 2*natural32(s.n) + 5;
     res : C_Double_Array(1..Interfaces.C.size_T(len));
     ind : Interfaces.C.size_T := 2;
 
@@ -51,8 +51,8 @@ package body Coefficient_Solution_Vectors is
 
   function Coefficients ( s : Solution_List ) return C_Double_Array is
 
-    n : constant natural := Head_Of(s).n;
-    len : constant natural := Length_Of(s)*(2*n+5);
+    n : constant natural32 := natural32(Head_Of(s).n);
+    len : constant natural32 := Length_Of(s)*(2*n+5);
     res : C_Double_Array(1..Interfaces.C.size_T(len));
     tmp : Solution_List := s;
     ls : Link_to_Solution;
@@ -74,7 +74,7 @@ package body Coefficient_Solution_Vectors is
     return res;
   end Coefficients; 
 
-  function Concat ( n : natural; m : C_Integer_Array; c : C_Double_Array )
+  function Concat ( n : natural32; m : C_Integer_Array; c : C_Double_Array )
                   return C_Double_Array is
 
     d : constant size_T := 8 + m'last-m'first+1 + c'last-c'first+1;
@@ -102,9 +102,9 @@ package body Coefficient_Solution_Vectors is
     return res;
   end Concat;
 
-  function Dimension ( x : C_Double_Array ) return natural is
+  function Dimension ( x : C_Double_Array ) return natural32 is
   begin
-    return natural(x(1));
+    return natural32(x(1));
   end Dimension;
 
   function Multiplicities ( x : C_Double_Array ) return C_Integer_Array is
@@ -131,21 +131,21 @@ package body Coefficient_Solution_Vectors is
 
   begin
     for i in res'range loop
-      res(i) := Interfaces.C.double(x(ind));
+      res(i) := x(ind);
       ind := ind + 1;
     end loop;
     return res;
   end Coefficients;
 
-  function Create ( n,m : natural; c : C_Double_Array ) return Solution is
+  function Create ( n,m : natural32; c : C_Double_Array ) return Solution is
 
-    res : Solution(n);
+    res : Solution(integer32(n));
     ind : Interfaces.C.size_T := c'first;
 
   begin
     res.t := Create(double_float(c(ind)),double_float(c(ind+1)));
-    res.m := m;
-    for i in 1..n loop
+    res.m := integer32(m);
+    for i in 1..integer32(n) loop
       ind := ind + 2;
       res.v(i) := Create(double_float(c(ind)),double_float(c(ind+1)));
     end loop;
@@ -156,7 +156,7 @@ package body Coefficient_Solution_Vectors is
     return res;
   end Create;
 
-  function Create ( n : natural; m : C_Integer_Array; c : C_Double_Array )
+  function Create ( n : natural32; m : C_Integer_Array; c : C_Double_Array )
                   return Solution_List is
 
     res,res_last : Solution_List;
@@ -165,11 +165,11 @@ package body Coefficient_Solution_Vectors is
   begin
     for i in m'range loop
       declare
-        s : Solution(n);
+        s : Solution(integer32(n));
       begin
-        s.m := integer(m(i));
+        s.m := integer32(m(i));
         s.t := Create(double_float(c(ind)),double_float(c(ind+1)));
-        for i in 1..n loop
+        for i in 1..integer32(n) loop
           ind := ind + 2;
           s.v(i) := Create(double_float(c(ind)),double_float(c(ind+1)));
         end loop;

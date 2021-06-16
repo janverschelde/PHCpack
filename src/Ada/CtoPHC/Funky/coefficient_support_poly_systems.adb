@@ -1,6 +1,4 @@
-with text_io,integer_io;                use text_io,integer_io;
 with Interfaces.C;                      use Interfaces.C;
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
 with Coefficient_Support_Polynomials;   use Coefficient_Support_Polynomials;
 
@@ -19,19 +17,19 @@ package body Coefficient_Support_Poly_Systems is
     return res;
   end Monomial_Count;
 
-  function Sum ( a : C_Integer_Array ) return integer is
+  function Sum ( a : C_Integer_Array ) return integer32 is
 
-    res : integer := 0;
+    res : integer32 := 0;
 
   begin
     for i in a'range loop
-      res := res + integer(a(i));
+      res := res + integer32(a(i));
     end loop;
     return res;
   end Sum;
 
-  function Support ( n,m : natural; moncnt : C_Integer_Array; p : Poly_Sys ) 
-                   return C_Integer_Array is
+  function Support ( n,m : natural32; moncnt : C_Integer_Array;
+                     p : Poly_Sys ) return C_Integer_Array is
 
     res : C_Integer_Array(0..Interfaces.C.size_T(n*m-1));
     indmon : Interfaces.C.size_T := 0;
@@ -40,8 +38,8 @@ package body Coefficient_Support_Poly_Systems is
   begin
     for i in p'range loop
       declare
-        dimsup : constant natural := natural(moncnt(indmon))*n;
-        sup : C_Integer_Array(0..Interfaces.C.size_T(dimsup-1))
+        dimsup : constant natural32 := natural32(moncnt(indmon))*n;
+        sup : constant C_Integer_Array(0..Interfaces.C.size_T(dimsup-1))
             := Support(p(i));
       begin
         for j in sup'range loop
@@ -54,8 +52,8 @@ package body Coefficient_Support_Poly_Systems is
     return res;
   end Support;
 
-  function Coefficients ( m : natural; moncnt : C_Integer_Array; p : Poly_Sys )
-                        return C_Double_Array is
+  function Coefficients ( m : natural32; moncnt : C_Integer_Array;
+                          p : Poly_Sys ) return C_Double_Array is
 
     res : C_Double_Array(0..Interfaces.C.size_T(2*m-1));
     indmon : Interfaces.C.size_T := 0;
@@ -64,8 +62,8 @@ package body Coefficient_Support_Poly_Systems is
   begin
     for i in p'range loop
       declare
-        dimcff : constant natural := 2*natural(moncnt(indmon));
-        cff : C_Double_Array(0..Interfaces.C.size_T(dimcff-1))
+        dimcff : constant natural32 := 2*natural32(moncnt(indmon));
+        cff : constant C_Double_Array(0..Interfaces.C.size_T(dimcff-1))
             := Coefficients(p(i));
       begin
         for j in cff'range loop
@@ -78,7 +76,7 @@ package body Coefficient_Support_Poly_Systems is
     return res;
   end Coefficients;
 
-  function Create ( n : natural; m : C_Integer_Array;
+  function Create ( n : natural32; m : C_Integer_Array;
                     c : C_Double_Array; s : C_Integer_Array )
                   return Poly_Sys is
 
@@ -90,9 +88,9 @@ package body Coefficient_Support_Poly_Systems is
   begin
     for i in res'range loop
       declare
-        dimsup : constant natural := n*natural(m(indmon));
+        dimsup : constant natural32 := n*natural32(m(indmon));
         sup : C_Integer_Array(0..Interfaces.C.size_T(dimsup-1));
-        dimcff : constant natural := 2*natural(m(indmon));
+        dimcff : constant natural32 := 2*natural32(m(indmon));
         cff : C_Double_Array(0..Interfaces.C.size_T(dimcff-1));
       begin
         for j in cff'range loop
@@ -110,7 +108,7 @@ package body Coefficient_Support_Poly_Systems is
     return res;
   end Create;
 
-  function Concat ( n : natural; m : C_Integer_Array;
+  function Concat ( n : natural32; m : C_Integer_Array;
                     c : C_Double_Array; s : C_Integer_Array )
                   return C_Double_Array is
 
@@ -147,9 +145,9 @@ package body Coefficient_Support_Poly_Systems is
     return res;
   end Concat;
 
-  function Dimension ( x : C_Double_Array ) return natural is
+  function Dimension ( x : C_Double_Array ) return natural32 is
   begin
-    return natural(x(1));
+    return natural32(x(1));
   end Dimension;
 
   function Monomial_Count ( x : C_Double_Array ) return C_Integer_Array is
