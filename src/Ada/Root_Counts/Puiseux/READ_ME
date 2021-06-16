@@ -1,8 +1,13 @@
-Puiseux series for curves in PHCv2.4.60
+Puiseux series for curves in PHCv2.4.85
 
 This directory was added to compute the degree of curves via a lifting
 blending implicit lifting of Bernshtein with the lifting procedure to
 compute mixed volumes.  The basic functionality is a wrapper to MixedVol.
+
+Run "gprbuild puiseux.gpr" to make all test programs.
+On windows, type "gprbuild puiseux.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean puiseux.gpr" removes all files created by gprbuild.
 
 -------------------------------------------------------------------------------
 file name                         : short description

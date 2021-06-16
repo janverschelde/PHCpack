@@ -1,0 +1,88 @@
+project puiseux is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+            (
+                ".", "../../System", "../../System/Unix_Timer",
+                "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                "../../Math_Lib/Supports", "../../Math_Lib/Series",
+                "../../Math_Lib/Circuits", "../../Deformations/Solutions",
+                "../../Deformations/Homotopy",
+                "../../Deformations/Newton", "../../Deformations/Curves",
+                "../../Deformations/End_Games",
+                "../../Deformations/Trackers",
+                "../../Deformations/Continuation",
+                "../Product", "../Binomials", "../Implift", "../Stalift",
+                "../Dynlift", "../MixedVol", "../Symmetry",
+                "../../Components/Samplers", "../../Components/Interpolators",
+                "../../Components/Factorization",
+                "../../Components/Decomposition",
+                "../../Components/Solver", "../../Components/Tropical",
+                "../../CtoPHC/Types", "../../CtoPHC/Structures",
+                "../../CtoPHC/Funky", "../../CtoPHC/State",
+                "../../Tasking", "../../Main"
+            );
+            for Languages use ("Ada");
+            for Excluded_Source_Files use
+            (
+                "tropisms_of_supports.ads", "tropisms_of_supports.adb",
+                "ts_degcurve.adb"
+            );
+        when "windows" =>
+            for Source_Dirs use
+            (
+                ".", "../../System", "../../System/Basic_Timer",
+                "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                "../../Math_Lib/Supports", "../../Math_Lib/Series",
+                "../../Math_Lib/Circuits", "../../Deformations/Solutions",
+                "../../Deformations/Homotopy",
+                "../../Deformations/Newton", "../../Deformations/Curves",
+                "../../Deformations/End_Games",
+                "../../Deformations/Trackers",
+                "../../Deformations/Continuation",
+                "../Product", "../Binomials", "../Implift", "../Stalift",
+                "../Dynlift", "../MixedVol", "../Symmetry",
+                "../../Components/Samplers", "../../Components/Interpolators",
+                "../../Components/Factorization",
+                "../../Components/Decomposition",
+                "../../Components/Solver", "../../Components/Tropical",
+                "../../CtoPHC/Types", "../../CtoPHC/Structures",
+                "../../CtoPHC/Funky", "../../CtoPHC/State",
+                "../../Tasking", "../../Main"
+            );
+            for Excluded_Source_Files use
+            (
+                "double_double.c", "corecount.c", "corecountwindows.c",
+                "zero_index_tree.c", "index_tree_lp.c", "one_level_lp.c",
+                "relation_table.c", "prepare_for_mv.c", "mixed_volume.c",
+                "mv.c", "form_lp.c", "cell_stack.c"
+            );
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+    for Exec_Dir use "../../../bin";
+
+    for Main use
+    (
+       -- "ts_degcurve.adb",  -- tests polyhedral degree of curve 
+        "ts_puiseux.adb"    -- tests the Newton-Puiseux algorithm
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end puiseux;
