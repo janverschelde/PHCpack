@@ -62,7 +62,8 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/Components/Samplers -I$(PHCAda)/Components/Interpolators \
  -I$(PHCAda)/Components/Factorization -I$(PHCAda)/Components/Decomposition \
  -I$(PHCAda)/Components/Solver -I$(PHCAda)/Components/Tropical \
- -I$(PHCAda)/CtoPHC/Types -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State \
+ -I$(PHCAda)/CtoPHC/Types -I$(PHCAda)/CtoPHC/Structures \
+ -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State \
  -I$(MPILib) -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
 # GNATFLAGS=-gnatv -O3 -gnatp -gnatf
