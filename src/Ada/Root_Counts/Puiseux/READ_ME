@@ -1,8 +1,8 @@
 Puiseux series for curves in PHCv2.4.85
 
-This directory was added to compute the degree of curves via a lifting
-blending implicit lifting of Bernshtein with the lifting procedure to
-compute mixed volumes.  The basic functionality is a wrapper to MixedVol.
+Code in this folder connects mixed-cell configurations induced by
+integer valued lifting functions with the Newton-Puiseux algorithm
+to compute multiple terms in a regular expansion.
 
 Run "gprbuild puiseux.gpr" to make all test programs.
 On windows, type "gprbuild puiseux.gpr -Xos=windows"
@@ -12,11 +12,7 @@ The "gprclean puiseux.gpr" removes all files created by gprbuild.
 -------------------------------------------------------------------------------
 file name                         : short description
 -------------------------------------------------------------------------------
-parallel_directions               : auxiliary functions for parallel_edges
-parallel_edges                    : looks for edges that are parallel
-tropisms_of_curves                : algorithms to compute tropisms
-ts_degcurve                       : interactive test program
--------------------------------------------------------------------------------
 regular_solution_curves_series    : operations for series of solution curves
+regular_newton_puiseux            : Newton-Puiseux for mixed cells
 ts_puiseux                        : development of Newton-Puiseux algorithm
 -------------------------------------------------------------------------------

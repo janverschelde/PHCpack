@@ -1,3 +1,6 @@
+Thu 17 Jun 2021 : removed the obsolete parallel_edges, parallel_directions,
+  tropisms_of_supports, and ts_degcurve.  Updated puiseux.gpr.
+
 Wed 16 Jun 2021 : added puiseux.gpr for the build of tests.
 
 Fri 9 Nov 2018 : updated regular_solution_curves_series and

@@ -30,11 +30,6 @@ project puiseux is
                 "../../Tasking", "../../Main"
             );
             for Languages use ("Ada");
-            for Excluded_Source_Files use
-            (
-                "tropisms_of_supports.ads", "tropisms_of_supports.adb",
-                "ts_degcurve.adb"
-            );
         when "windows" =>
             for Source_Dirs use
             (
@@ -75,7 +70,6 @@ project puiseux is
 
     for Main use
     (
-       -- "ts_degcurve.adb",  -- tests polyhedral degree of curve 
         "ts_puiseux.adb"    -- tests the Newton-Puiseux algorithm
     );
 
