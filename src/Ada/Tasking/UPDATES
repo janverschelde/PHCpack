@@ -1,3 +1,6 @@
+Thu 17 Jun 2021 : added "with use_c2phc;" to ts_mtcelidx.adb to force the
+  compilation of use_c2phc when building with the updated tasking.gpr.
+
 Mon 14 Jun 2021 : fixed ts_mtmatvec, ts_mtpolval, ts_mtsam, and the packages
   multitasking_{matrix_x_vector,polynomial_functions,sampling},
   updated tasking.gpr.

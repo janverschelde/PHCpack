@@ -26,7 +26,8 @@ project tasking is
                  "../Components/Solver", "../Components/Tropical",
                  "../Schubert/SAGBI", "../Schubert/Pieri",
                  "../Schubert/Induction",
-                 "../CtoPHC/Types", "../CtoPHC/State", "../Main");
+                 "../CtoPHC/Types", "../CtoPHC/Structures",
+                 "../CtoPHC/State", "../Main");
             for Languages use ("Ada", "C", "C++");
             for Excluded_Source_Files use
                 (
@@ -57,7 +58,8 @@ project tasking is
                  "../Components/Solver", "../Components/Tropical",
                  "../Schubert/SAGBI", "../Schubert/Pieri",
                  "../Schubert/Induction",
-                 "../CtoPHC/Types", "../CtoPHC/State", "../Main");
+                 "../CtoPHC/Types", "../CtoPHC/Structures",
+                 "../CtoPHC/State", "../Main");
             for Excluded_Source_Files use
                 (
                     "corecount.c", "zero_index_tree.c", "index_tree_lp.c",
@@ -110,9 +112,19 @@ project tasking is
 
         for Switches ("use_c2phc.adb") use ("-c");
 
-        for Switches ("simplex.cpp") use ("-Dcompile4phc");
-        for Switches ("mvc.cpp") use ("-Dcompile4phc");
-        for Switches ("demicsrun.cpp") use ("-Dcompile4phc");
+        for Switches ("simplex.cpp") use 
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc=1"
+        );
+        for Switches ("mvc.cpp") use
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc=1"
+        );
+        for Switches ("demicsrun.cpp") use 
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc"
+        );
+        for Switches ("outputData.cpp") use ("-Dcompilewgpp=1");
 
     end Compiler;
 

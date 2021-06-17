@@ -40,8 +40,8 @@ with Semaphore;
 with Multitasking;
 with Polyhedral_Start_Systems;          use Polyhedral_Start_Systems;
 with Pipelined_Cell_Trackers;           use Pipelined_Cell_Trackers;
-
 with Pipelined_Polyhedral_Homotopies;   use Pipelined_Polyhedral_Homotopies;
+with use_c2phc; -- to force compilation ...
 
 procedure ts_mtcelidx is
 
