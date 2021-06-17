@@ -1621,7 +1621,8 @@ demicsrun.o:
 	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/demicsrun.cpp
 
 ts_demicsrun: inputData.o outputData.o iTest.o fTest.o \
-              simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o
+              simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+	      get_clock.o get_clocks_per_sec.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_demicsrun.adb \
                  -o ts_demicsrun.o
