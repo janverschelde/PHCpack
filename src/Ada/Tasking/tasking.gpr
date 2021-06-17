@@ -38,35 +38,38 @@ project tasking is
                 );
         when "windows" =>
             for Source_Dirs use
-                (".", "../System", "../System/Basic_Timer",
-                 "../Math_Lib/Numbers", "../Math_Lib/QD",
-                 "../Math_Lib/Vectors", "../Math_Lib/Matrices",
-                 "../Math_Lib/Reduction", "../Math_Lib/Divisors",
-                 "../Math_Lib/Polynomials", "../Math_Lib/Functions",
-                 "../Math_Lib/Series", "../Math_Lib/Circuits",
-                 "../Math_Lib/Supports",
-                 "../Deformations/Solutions", "../Deformations/Homotopy",
-                 "../Deformations/Newton", "../Deformations/Curves",
-                 "../Deformations/Trackers", "../Deformations/End_Games",
-                 "../Deformations/Sweep", "../Deformations/Continuation",
-                 "../Root_Counts/Product", "../Root_Counts/Binomials",
-                 "../Root_Counts/Implift", "../Root_Counts/Stalift",
-                 "../Root_Counts/MixedVol", "../Root_Counts/DEMiCs",
-                 "../Root_Counts/Dynlift", "../Root_Counts/Symmetry",
-                 "../Components/Samplers", "../Components/Factorization",
-                 "../Components/Interpolators", "../Components/Decomposition",
-                 "../Components/Solver", "../Components/Tropical",
-                 "../Schubert/SAGBI", "../Schubert/Pieri",
-                 "../Schubert/Induction",
-                 "../CtoPHC/Types", "../CtoPHC/Structures",
-                 "../CtoPHC/State", "../Main");
+            (
+                ".", "../System", "../System/Basic_Timer",
+                "../Math_Lib/Numbers", "../Math_Lib/QD",
+                "../Math_Lib/Vectors", "../Math_Lib/Matrices",
+                "../Math_Lib/Reduction", "../Math_Lib/Divisors",
+                "../Math_Lib/Polynomials", "../Math_Lib/Functions",
+                "../Math_Lib/Series", "../Math_Lib/Circuits",
+                "../Math_Lib/Supports",
+                "../Deformations/Solutions", "../Deformations/Homotopy",
+                "../Deformations/Newton", "../Deformations/Curves",
+                "../Deformations/Trackers", "../Deformations/End_Games",
+                "../Deformations/Sweep", "../Deformations/Continuation",
+                "../Root_Counts/Product", "../Root_Counts/Binomials",
+                "../Root_Counts/Implift", "../Root_Counts/Stalift",
+                "../Root_Counts/MixedVol", "../Root_Counts/DEMiCs",
+                "../Root_Counts/Dynlift", "../Root_Counts/Symmetry",
+                "../Components/Samplers", "../Components/Factorization",
+                "../Components/Interpolators", "../Components/Decomposition",
+                "../Components/Solver", "../Components/Tropical",
+                "../Schubert/SAGBI", "../Schubert/Pieri",
+                "../Schubert/Induction",
+                "../CtoPHC/Types", "../CtoPHC/Structures",
+                "../CtoPHC/State", "../Main"
+            );
             for Excluded_Source_Files use
-                (
-                    "corecount.c", "zero_index_tree.c", "index_tree_lp.c",
-                    "relation_table.c", "prepare_for_mv.c", "one_level_lp.c",
-                    "mv.c", "mixed_volume.c", "form_lp.c", "cell_stack.c"
-                );
-            for Languages use ("Ada", "C");
+            (
+                "double_double.c",
+                "corecount.c", "zero_index_tree.c", "index_tree_lp.c",
+                "relation_table.c", "prepare_for_mv.c", "one_level_lp.c",
+                "mv.c", "mixed_volume.c", "form_lp.c", "cell_stack.c"
+            );
+            for Languages use ("Ada", "C", "C++");
     end case;
 
     for Object_Dir use "../../Objects";
