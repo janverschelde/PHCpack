@@ -1,3 +1,5 @@
+Thu 17 Jun 2021 : removed the obsolete standard_floating_newton_steps.
+
 Tue 15 Jun 2021 : fixed ts_muldef.adb and {standard,multprec}_probe_kernel,
    {standard,multprec}_multiple_deflation, multprec_nullity_polynomials,
    and multprec_nullity_matrices.adb.  Updated newton.gpr.

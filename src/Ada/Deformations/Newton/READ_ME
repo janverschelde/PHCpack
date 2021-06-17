@@ -38,7 +38,6 @@ standard_complex_newton_steps    : Newton/SVD in standard complex arithmetic
 dobldobl_complex_newton_steps    : Newton/SVD in dobldobl complex arithmetic
 quaddobl_complex_newton_steps    : Newton/SVD in quaddobl complex arithmetic
 multprec_complex_newton_steps    : Newton/SVD in multprec complex arithmetic
-standard_floating_newton_steps   : Newton/SVD in standard real arithmetic
 standard_aitken_extrapolation    : Aitken extrapolation in several variables
 ts_newton                        : interactive testing routine
 ts_realnewt                      : development of Newton for real numbers
