@@ -1,0 +1,235 @@
+project demics is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+            (
+                ".", "../../System", "../../System/Unix_Timer",
+                "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                "../../Math_Lib/Series", "../../Math_Lib/Circuits",
+                "../../Math_Lib/Supports",
+                "../../Deformations/Solutions",
+                "../../Deformations/Homotopy",
+                "../../Deformations/Newton", "../../Deformations/Curves",
+                "../../Deformations/End_Games",
+                "../../Deformations/Trackers", "../../Deformations/Sweep",
+                "../../Deformations/Continuation",
+                "../Product", "../Binomials", "../Implift", "../Stalift",
+                "../MixedVol", "../Dynlift", "../Symmetry", "../Puiseux",
+                "../../CtoPHC/Types", "../../CtoPHC/Structures",
+                "../../CtoPHC/Funky", "../../CtoPHC/State",
+                "../../Components/Samplers", "../../Components/Interpolators",
+                "../../Components/Factorization",
+                "../../Components/Decomposition",
+                "../../Components/Solver", "../../Components/Tropical",
+                "../../Schubert/SAGBI", "../../Schubert/Pieri",
+                "../../Schubert/Induction",
+                "../../PHCtoC", "../../PHCtoC/Main_noqd",
+                "../../Tasking", "../../Main"
+            );
+            for Languages use ("Ada", "C", "C++");
+            for Excluded_Source_Files use
+            (
+                "double_double.c",
+                "zero_index_tree.c", "index_tree_lp.c", "relation_table.c",
+                "prepare_for_mv.c", "one_level_lp.c", "mv.c",
+                "mixed_volume.c", "form_lp.c", "cell_stack.c",
+                "corecount.c", "corecountwindows.c",
+                "adenewton_d.cpp", "adenewton_dd.cpp", "adenewton_qd.cpp",
+                "adeonepath_d.cpp", "adeonepath_dd.cpp", "adeonepath_qd.cpp",
+                "ademanypaths_d.cpp", "ademanypaths_dd.cpp",
+                "ademanypaths_qd.cpp", "ademanypaths.cpp",
+                "gpu2norm_d.cpp", "gpu2norm_dd.cpp", "gpu2norm_qd.cpp",
+                "gpunewton_d.cpp", "gpunewton_dd.cpp", "gpunewton_qd.cpp",
+                "gpuonepath_d.cpp", "gpuonepath_dd.cpp", "gpuonepath_qd.cpp",
+                "gpumanypaths_d.cpp", "gpumanypaths_dd.cpp",
+                "gpumanypaths_qd.cpp", "ts_ademanypaths.adb",
+                "evaluate_schubert_conditions.ads",
+                "evaluate_schubert_conditions.adb",
+                "multprec_lattice_facets.ads",
+                "multprec_lattice_facets.adb",
+                "multprec_lattice_facets_io.ads",
+                "multprec_lattice_facets_io.adb",
+                "testfivehom1.adb", "testnine.adb",
+                "multihomogeneous_solutions.ads",
+                "multihomogeneous_solutions.adb",
+                "p_intrinsic_diagonal_continuation.ads",
+                "p_intrinsic_diagonal_continuation.adb",
+                "p_intrinsic_diagonal_homotopies.ads",
+                "p_intrinsic_diagonal_homotopies.adb",
+                "p_intrinsic_diagonal_solvers.ads",
+                "p_intrinsic_diagonal_solvers.adb",
+                "intrinsic_diagonal_homotopies.ads",
+                "intrinsic_diagonal_homotopies.adb",
+                "intrinsic_diagonal_solvers.ads",
+                "intrinsic_diagonal_solvers.adb",
+                "drivers_to_intrinsic_solvers.ads",
+                "drivers_to_intrinsic_solvers.adb",
+                "ts_diahom.adb", "ts_elim.adb", "ts_reorder.adb",
+                "ts_ifactor.adb", "ts_itrack.adb", "ts_ilocal.adb",
+                "ts_inewt.adb",
+                "rewrite_polynomials.ads", "rewrite_polynomials.adb",
+                "ts_rwpoly.adb", "ts_rewrite.adb", "phc_factor.adb",
+                "ts_squeeze.adb", "ts_intcas.adb", "ts_sqem.adb",
+                "multiplicity_homotopies.ads",
+                "multiplicity_homotopies.adb", "ts_mulhom.adb",
+                "ts_mulsam.adb", "ts_sampar.adb", "ts_endgm.adb",
+                "intrinsic_sampling_machine.ads",
+                "intrinsic_sampling_machine.adb",
+                "filter_and_split_solutions.ads",
+                "filter_and_split_solutions.adb",
+                "track_paths.ads", "track_paths.adb", "ts_path_tracker.adb",
+                "phc_solver.ads", "phc_solver.adb",
+                "pieri_count.ads", "pieri_count.adb",
+                "pieri_solver_trf.adb",
+                "face_structures.ads", "face_structures.adb",
+                "weighted_projective_transfos.ads",
+                "weighted_projective_transfos.adb"
+            );
+        when "windows" =>
+            for Source_Dirs use
+            (
+                ".", "../../System", "../../System/Basic_Timer",
+                "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                "../../Math_Lib/Series", "../../Math_Lib/Circuits",
+                "../../Math_Lib/Supports",
+                "../../Deformations/Solutions", "../../Deformations/Homotopy",
+                "../../Deformations/Newton", "../../Deformations/Curves",
+                "../../Deformations/End_Games",
+                "../../Deformations/Trackers", "../../Deformations/Sweep",
+                "../../Deformations/Continuation",
+                "../Product", "../Binomials", "../Implift", "../Stalift",
+                "../Dynlift", "../MixedVol", "../Symmetry", "../Puiseux",
+                "../../CtoPHC/Types", "../../CtoPHC/Structures",
+                "../../CtoPHC/Funky", "../../CtoPHC/State",
+                "../../Components/Samplers", "../../Components/Interpolators",
+                "../../Components/Factorization",
+                "../../Components/Decomposition",
+                "../../Components/Solver", "../../Components/Tropical",
+                "../../Schubert/SAGBI", "../../Schubert/Pieri",
+                "../../Schubert/Induction",
+                "../../PHCtoC", "../../PHCtoC/Main_noqd",
+                "../../Tasking", "../../Main"
+            );
+            for Excluded_Source_Files use
+            (
+                "double_double.c",
+                "zero_index_tree.c", "index_tree_lp.c", "relation_table.c",
+                "prepare_for_mv.c", "one_level_lp.c", "mv.c",
+                "mixed_volume.c", "form_lp.c", "cell_stack.c", "corecount.c",
+                "adenewton_d.cpp", "adenewton_dd.cpp", "adenewton_qd.cpp",
+                "adeonepath_d.cpp", "adeonepath_dd.cpp", "adeonepath_qd.cpp",
+                "ademanypaths_d.cpp", "ademanypaths_dd.cpp",
+                "ademanypaths_qd.cpp", "ademanypaths.cpp",
+                "gpu2norm_d.cpp", "gpu2norm_dd.cpp", "gpu2norm_qd.cpp",
+                "gpunewton_d.cpp", "gpunewton_dd.cpp", "gpunewton_qd.cpp",
+                "gpuonepath_d.cpp", "gpuonepath_dd.cpp", "gpuonepath_qd.cpp",
+                "gpumanypaths_d.cpp", "gpumanypaths_dd.cpp",
+                "gpumanypaths_qd.cpp", "ts_ademanypaths.adb",
+                "evaluate_schubert_conditions.ads",
+                "evaluate_schubert_conditions.adb",
+                "multprec_lattice_facets.ads",
+                "multprec_lattice_facets.adb",
+                "multprec_lattice_facets_io.ads",
+                "multprec_lattice_facets_io.adb",
+                "testfivehom1.adb", "testnine.adb",
+                "multihomogeneous_solutions.ads",
+                "multihomogeneous_solutions.adb",
+                "p_intrinsic_diagonal_continuation.ads",
+                "p_intrinsic_diagonal_continuation.adb",
+                "p_intrinsic_diagonal_homotopies.ads",
+                "p_intrinsic_diagonal_homotopies.adb",
+                "p_intrinsic_diagonal_solvers.ads",
+                "p_intrinsic_diagonal_solvers.adb",
+                "intrinsic_diagonal_homotopies.ads",
+                "intrinsic_diagonal_homotopies.adb",
+                "intrinsic_diagonal_solvers.ads",
+                "intrinsic_diagonal_solvers.adb",
+                "drivers_to_intrinsic_solvers.ads",
+                "drivers_to_intrinsic_solvers.adb",
+                "ts_diahom.adb", "ts_elim.adb", "ts_reorder.adb",
+                "ts_ifactor.adb", "ts_itrack.adb", "ts_ilocal.adb",
+                "ts_inewt.adb",
+                "rewrite_polynomials.ads", "rewrite_polynomials.adb",
+                "ts_rwpoly.adb", "ts_rewrite.adb", "phc_factor.adb",
+                "ts_squeeze.adb", "ts_intcas.adb", "ts_sqem.adb",
+                "multiplicity_homotopies.ads",
+                "multiplicity_homotopies.adb", "ts_mulhom.adb",
+                "ts_mulsam.adb", "ts_sampar.adb", "ts_endgm.adb",
+                "intrinsic_sampling_machine.ads",
+                "intrinsic_sampling_machine.adb",
+                "filter_and_split_solutions.ads",
+                "filter_and_split_solutions.adb",
+                "track_paths.ads", "track_paths.adb", "ts_path_tracker.adb",
+                "phc_solver.ads", "phc_solver.adb",
+                "pieri_count.ads", "pieri_count.adb",
+                "pieri_solver_trf.adb",
+                "face_structures.ads", "face_structures.adb",
+                "weighted_projective_transfos.ads",
+                "weighted_projective_transfos.adb"
+            );
+            for Languages use ("Ada", "C", "C++");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+    for Exec_Dir use "../../../bin";
+
+    for Main use
+    (
+      -- "use_c2phc.adb",     -- how to force compilation?
+       "ts_calldemics.adb",   -- file based interface to DEMiCs
+      -- "main.cpp",            -- the main of demics
+       "ts_outdata.adb",      -- tests demics_output_data
+      -- "ts_outputData.cpp",   -- tests output data from C++
+       "ts_demicsrun.adb"    -- tests the second interface to demics
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+        for Switches ("simplex.cpp") use 
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc=1"
+        );
+        for Switches ("mvc.cpp") use 
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc=1"
+        );
+        for Switches ("demicsrun.cpp") use 
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc=1"
+        );
+        for Switches ("outputData.cpp") use ("-Dcompilewgpp=1");
+
+        for Switches ("use_c2phc.adb") use ("-c");
+
+    end Compiler;
+
+    package Binder is
+
+        for Switches ("use_c2phc.adb") use ("-n");
+        for Switches ("ts_demicsrun.adb") use ("use_c2phc");
+
+    end Binder;
+
+    package Linker is
+
+        for Switches ("main.cpp") use ("-o demics");
+
+      -- for Switches ("use_c2phc.adb") use ("-c");
+
+      --  for Switches ("ts_demicsrun.adb") use ("use_c2phc.o");
+
+    end Linker;
+
+end demics;

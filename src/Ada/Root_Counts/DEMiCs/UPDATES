@@ -1,3 +1,7 @@
+Thu 17 Jun 2021 : added "with use_c2phc;" to ts_demicsrun.adb, to force the
+  compilation in a standalone build.  First version of demics.gpr to define
+  the instructions for ts_demicsrun and some other test procedures ...
+
 Thu 10 Jun 2021 : commented out the timer in main.cpp because 
   compiler errors prevented the compilation of demics.
 

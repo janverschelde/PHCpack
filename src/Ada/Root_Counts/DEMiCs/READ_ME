@@ -43,6 +43,14 @@ directly processing of the cells) is within #if blocks, compiled when
 the flag compile4phc is set.  See the makefiles in the Objects folder
 for the compilation instructions.
 
+The switches "-Dcompilewgpp=1" and "-Dcompile4phc=1" are critical,
+see the demics.gpr file.
+
+Run "gprbuild demics.gpr" to make all test programs.
+On windows, type "gprbuild demics.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean demics.gpr" removes all files created by gprbuild.
+
 ------------------------------------------------------------------------------
 file name                   : short description
 ------------------------------------------------------------------------------

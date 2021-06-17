@@ -15,6 +15,7 @@ with Floating_Mixed_Subdivisions_io;
 with DEMiCs_Algorithm;                   use DEMiCs_Algorithm;
 with DEMiCs_Output_Data;
 with Drivers_for_Static_Lifting;
+with use_c2phc; -- to force the compilation of use_c2phc.adb ...
 
 procedure ts_demicsrun is
 
