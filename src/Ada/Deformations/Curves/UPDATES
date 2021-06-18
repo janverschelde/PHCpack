@@ -1,3 +1,8 @@
+Fri 18 Jun 2021 : extended main_pade_trackers, to prompt the user for the
+  Laurent series option to run Newton's method at a series.
+  Updated the documentation in main_pade_trackers.ads for the extended
+  precision levels: triple, penta, octo, and deca double precision.
+
 Thu 10 Jun 2021 : added the exec_dir attribute to curves.gpr.
 
 Wed 9 Jun 2021 : defined curves.gpr to build the test procedures.

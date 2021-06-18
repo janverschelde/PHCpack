@@ -103,7 +103,9 @@ package Main_Pade_Trackers is
   --   This main procedure is called when the precision is determined,
   --   either interactively or via the value of precision in valprc.
   --   The value for the precision in valprc is not '0', it is
-  --   '1' for double, '2' for double double, or '4' for quad double.
+  --   '1' for double, '2' for double double, '3' for quad double,
+  --   '4' for quad double, '5' for penta double, '6' for octo double,
+  --   or '7' for deca double,
   --   The procedure can be called immediately if the precision is
   --   set at the command line.
 
@@ -129,7 +131,11 @@ package Main_Pade_Trackers is
   --                '0' : the user will be prompted for the precision,
   --                '1' : standard double precision,
   --                '2' : double double precision,
+  --                '3' : triple double precision,
   --                '4' : quad double precision;
+  --                '5' : penta double precision;
+  --                '6' : octo double precision;
+  --                '7' : deca double precision;
   --   infilename   name of the input file, if "", then the user will
   --                be prompted to provide the name of the input file;
   --   outfilename  name of the output file, if "", then the user will

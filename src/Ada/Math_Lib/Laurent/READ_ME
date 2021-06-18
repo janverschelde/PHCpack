@@ -25,4 +25,5 @@ ts_lserpol                        : main test on Laurent series polynomials
 double_lseries_newton_steps       : runs Newton's method on Laurent series
 test_double_lseries_newton        : tests Newton on Laurent series polynomials
 ts_lsernew                        : main test on Laurent series Newton
+main_laurent_series_newton        : main procedure for phc -u
 ------------------------------------------------------------------------------

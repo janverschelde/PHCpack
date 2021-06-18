@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Run_Power_Series_Methods;           use Run_Power_Series_Methods;
+with Main_Laurent_Series_Newton;         use Main_Laurent_Series_Newton;
 with Regular_Newton_Puiseux;
 with Series_Path_Trackers;
 with Interactive_Pade_Trackers;
@@ -234,7 +235,7 @@ package body Main_Pade_Trackers is
                 nbtasks : in natural32; valprc : in character;
                 vrb : in integer32 := 0 ) is
 
-    method : character;
+    method,ans : character;
 
   begin 
     if vrb > 0 then
@@ -243,7 +244,14 @@ package body Main_Pade_Trackers is
     method := Prompt_for_Method;
     case method is
       when '1' => Run_Regular_Newton_Puiseux(valprc);
-      when '2' => Run_Power_Series_Newton(infilename,outfilename,valprc,vrb-1);
+      when '2' => 
+        new_line;
+        put("Run on Laurent series ? (y/n) "); Ask_Yes_or_No(ans);
+        if ans = 'y' then
+          Run_Laurent_Series_Newton(infilename,outfilename,vrb-1);
+        else
+          Run_Power_Series_Newton(infilename,outfilename,valprc,vrb-1);
+        end if;
       when '3' => Run_Path_Trackers(valprc,vrb-1);
       when '4' => Run_Path_Convolution_Trackers(nbtasks,valprc,vrb-1);
       when '5' => Run_Newton_Fabry(nbtasks,valprc,vrb-1);
@@ -255,7 +263,7 @@ package body Main_Pade_Trackers is
               ( infilename,outfilename : in string;
                 nbtasks : in natural32; vrb : in integer32 := 0 ) is
 
-    method : character;
+    method,ans : character;
 
   begin 
     if vrb > 0 then
@@ -264,14 +272,20 @@ package body Main_Pade_Trackers is
     method := Prompt_for_Method;
     case method is
       when '1' => Run_Regular_Newton_Puiseux;
-      when '2' => Run_Power_Series_Newton(infilename,outfilename,vrb-1);
+      when '2' =>
+        new_line;
+        put("Run on Laurent series ? (y/n) "); Ask_Yes_or_No(ans);
+        if ans = 'y' then
+          Run_Laurent_Series_Newton(infilename,outfilename,vrb-1);
+        else
+          Run_Power_Series_Newton(infilename,outfilename,vrb-1);
+        end if;
       when '3' => Run_Path_Trackers(vrb-1);
       when '4' => Run_Path_Convolution_Trackers(nbtasks,vrb-1);
       when '5' => Run_Newton_Fabry(nbtasks,'0',vrb-1);
       when others => null;
     end case;
   end Zero_Precision_Main;
-
 
   procedure Main ( infilename,outfilename : in string;
                    nbtasks : in natural32; precision : in character;
