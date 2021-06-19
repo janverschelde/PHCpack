@@ -1,3 +1,6 @@
+Sat 19 Jun 2021 : filled in the stub of main_laurent_series_newton, so
+  phc -u now has the same ad hoc functionality as ts_lsernew.
+
 Fri 18 Jun 2021 : new main_laurent_series_newton with a stub procedure.
 
 Thu 10 Jun 2021 : added the exec_dir attribute to laurent.gpr.
