@@ -20,7 +20,7 @@ package Test_Double_Lseries_Newton is
 
   procedure Test_Regular_Newton
               ( p : in Laur_Sys; sol : in Standard_Complex_Vectors.Vector;
-                deg : in integer32 );
+                deg : in integer32; verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Runs Newton's method on the system p,

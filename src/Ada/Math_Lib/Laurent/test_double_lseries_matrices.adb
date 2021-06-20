@@ -16,26 +16,6 @@ with Double_Linear_Laurent_Solvers;     use Double_Linear_Laurent_Solvers;
 
 package body Test_Double_Lseries_Matrices is
 
-  procedure Allocate_Series_Coefficients
-              ( dim,deg : in integer32;
-                cff : out Standard_Complex_VecVecs.Link_to_VecVec ) is
-
-    res : Standard_Complex_VecVecs.VecVec(1..dim);
-    zero : constant Standard_Complex_Numbers.Complex_Number
-         := Standard_Complex_Numbers.Create(0.0);
-
-  begin
-    for i in 1..dim loop
-      declare
-        val : constant Standard_Complex_Vectors.Vector(0..deg)
-            := (0..deg => zero);
-      begin
-        res(i) := new Standard_Complex_Vectors.Vector'(val);
-      end;
-    end loop;
-    cff := new Standard_Complex_VecVecs.VecVec'(res);
-  end Allocate_Series_Coefficients;
-
   procedure Write ( e : in Standard_Integer_Matrices.Matrix;
                     c : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
                     s : in string := "A" ) is

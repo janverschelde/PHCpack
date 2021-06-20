@@ -1,3 +1,7 @@
+Sun 20 Jun 2021 : moved allocate procedure from test_double_lseries_matrices
+  into double_linear_laurent_solvers.  Added interactive Newton procedure
+  to test_double_lseries_newton.
+
 Sat 19 Jun 2021 : filled in the stub of main_laurent_series_newton, so
   phc -u now has the same ad hoc functionality as ts_lsernew.
 

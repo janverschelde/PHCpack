@@ -13,6 +13,7 @@ with Standard_Complex_Laur_JacoMats;    use Standard_Complex_Laur_JacoMats;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Standard_System_and_Solutions_io;
 with Test_Double_Lseries_Matrices;
+with Double_Linear_Laurent_Solvers;
 with Double_Lseries_Newton_Steps;
 
 package body Test_Double_Lseries_Newton is
@@ -51,9 +52,46 @@ package body Test_Double_Lseries_Newton is
     end if;
   end Add_Parameter;
 
+  procedure Interactive_Newton_Steps
+              ( neq,nvr,deg : in integer32;
+                tv : in Table_Vector; tva : in Table_Vector_Array;
+                xlead : in out Standard_Integer_Vectors.Vector;
+                xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
+                verbose : in boolean := true ) is
+             
+    ylead,dxlead,rlead : Standard_Integer_Vectors.Vector(1..nvr);
+    ycffs,dxcffs,rcffs : Standard_Complex_VecVecs.Link_to_VecVec;
+    Alead,Blead : Standard_Integer_Matrices.Matrix(1..neq,1..nvr);
+    Acffs,Bcffs : Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+    ans : character;
+    stepcnt : integer32 := 1;
+
+  begin
+    Double_Linear_Laurent_Solvers.Allocate_Series_Coefficients(nvr,deg,ycffs);
+    Double_Linear_Laurent_Solvers.Allocate_Series_Coefficients(nvr,deg,dxcffs);
+    Double_Linear_Laurent_Solvers.Allocate_Series_Coefficients(nvr,deg,rcffs);
+    Standard_Complex_VecVecVecs.Allocate(Acffs,1,neq,1,nvr,0,deg);
+    Standard_Complex_VecVecVecs.Allocate(Bcffs,1,neq,1,nvr,0,deg);
+    loop
+      put("Step "); put(stepcnt,1); put_line(" ...");
+      Double_Lseries_Newton_Steps.Newton_Step
+        (deg,tv,tva,xlead,xcffs,ylead,ycffs,
+         Alead,Acffs,Blead,Bcffs,dxlead,dxcffs,rlead,rcffs,verbose);
+      Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
+      put("Do another step ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      stepcnt := stepcnt + 1;
+    end loop;
+    Standard_Complex_VecVecs.Deep_Clear(ycffs);
+    Standard_Complex_VecVecs.Deep_Clear(dxcffs);
+    Standard_Complex_VecVecs.Deep_Clear(rcffs);
+    Standard_Complex_VecVecVecs.Clear(Acffs);
+    Standard_Complex_VecVecVecs.Clear(Bcffs);
+  end Interactive_Newton_Steps;
+
   procedure Test_Regular_Newton
               ( p : in Laur_Sys; sol : in Standard_Complex_Vectors.Vector;
-                deg : in integer32 ) is
+                deg : in integer32; verbose : in boolean := true ) is
 
     neq : constant integer32 := p'last;
     dim : constant integer32 := neq;
@@ -63,12 +101,8 @@ package body Test_Double_Lseries_Newton is
     jp : constant Jaco_Mat(1..neq,1..dim) := Create(p);
     tva : constant Table_Vector_Array(1..neq)
         := Make_Table_Vector_Array(jp,tdx,deg);
-    xlead,ylead,dxlead,rlead : Standard_Integer_Vectors.Vector(1..nvr);
-    xcffs,ycffs,dxcffs,rcffs : Standard_Complex_VecVecs.Link_to_VecVec;
-    Alead,Blead : Standard_Integer_Matrices.Matrix(1..neq,1..nvr);
-    Acffs,Bcffs : Standard_Complex_VecVecVecs.Link_to_VecVecVec;
-    ans : character;
-    stepcnt : integer32 := 1;
+    xlead : Standard_Integer_Vectors.Vector(1..nvr);
+    xcffs : Standard_Complex_VecVecs.Link_to_VecVec;
 
   begin
     put_line("The table representation :"); Write(tv);
@@ -78,21 +112,7 @@ package body Test_Double_Lseries_Newton is
     Double_Lseries_Newton_Steps.Set_Leading_Exponents(xlead);
     put("A "); put(nvr,1); put_line("-vector of Laurent series :");
     Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
-    Test_Double_Lseries_Matrices.Allocate_Series_Coefficients(nvr,deg,ycffs);
-    Test_Double_Lseries_Matrices.Allocate_Series_Coefficients(nvr,deg,dxcffs);
-    Test_Double_Lseries_Matrices.Allocate_Series_Coefficients(nvr,deg,rcffs);
-    Standard_Complex_VecVecVecs.Allocate(Acffs,1,neq,1,nvr,0,deg);
-    Standard_Complex_VecVecVecs.Allocate(Bcffs,1,neq,1,nvr,0,deg);
-    loop
-      put("Step "); put(stepcnt,1); put_line(" ...");
-      Double_Lseries_Newton_Steps.Newton_Step
-        (deg,tv,tva,xlead,xcffs,ylead,ycffs,
-         Alead,Acffs,Blead,Bcffs,dxlead,dxcffs,rlead,rcffs);
-      Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
-      put("Do another step ? (y/n) "); Ask_Yes_or_No(ans);
-      exit when (ans /= 'y');
-      stepcnt := stepcnt + 1;
-    end loop;
+    Interactive_Newton_Steps(neq,nvr,deg,tv,tva,xlead,xcffs,verbose);
   end Test_Regular_Newton;
 
   procedure Test_Singular_Newton
@@ -106,12 +126,8 @@ package body Test_Double_Lseries_Newton is
     jp : constant Jaco_Mat(1..neq,1..dim) := Create(p);
     tva : constant Table_Vector_Array(1..neq)
         := Make_Table_Vector_Array(jp,tdx,deg);
-    xlead,ylead,dxlead,rlead : Standard_Integer_Vectors.Vector(1..nvr);
-    xcffs,ycffs,dxcffs,rcffs : Standard_Complex_VecVecs.Link_to_VecVec;
-    Alead,Blead : Standard_Integer_Matrices.Matrix(1..neq,1..nvr);
-    Acffs,Bcffs : Standard_Complex_VecVecVecs.Link_to_VecVecVec;
-    ans : character;
-    stepcnt : integer32 := 1;
+    xlead : Standard_Integer_Vectors.Vector(1..nvr);
+    xcffs : Standard_Complex_VecVecs.Link_to_VecVec;
 
   begin
     put_line("The table representation :"); Write(tv);
@@ -119,21 +135,7 @@ package body Test_Double_Lseries_Newton is
     Double_Lseries_Newton_Steps.Set_Leading_Exponents(xlead);
     put("A "); put(nvr,1); put_line("-vector of Laurent series :");
     Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
-    Test_Double_Lseries_Matrices.Allocate_Series_Coefficients(nvr,deg,ycffs);
-    Test_Double_Lseries_Matrices.Allocate_Series_Coefficients(nvr,deg,dxcffs);
-    Test_Double_Lseries_Matrices.Allocate_Series_Coefficients(nvr,deg,rcffs);
-    Standard_Complex_VecVecVecs.Allocate(Acffs,1,neq,1,nvr,0,deg);
-    Standard_Complex_VecVecVecs.Allocate(Bcffs,1,neq,1,nvr,0,deg);
-    loop
-      put("Step "); put(stepcnt,1); put_line(" ...");
-      Double_Lseries_Newton_Steps.Newton_Step
-       (deg,tv,tva,xlead,xcffs,ylead,ycffs,
-        Alead,Acffs,Blead,Bcffs,dxlead,dxcffs,rlead,rcffs,verbose);
-      Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
-      put("Do another step ? (y/n) "); Ask_Yes_or_No(ans);
-      exit when (ans /= 'y');
-      stepcnt := stepcnt + 1;
-    end loop;
+    Interactive_Newton_Steps(neq,nvr,deg,tv,tva,xlead,xcffs,verbose);
   end Test_Singular_Newton;
 
   procedure Test_Isolated_Start is

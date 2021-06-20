@@ -14,14 +14,6 @@ package Test_Double_Lseries_Matrices is
 --   The procedures in this package test the LU factorization
 --   of a matrix of Laurent series, in double precision.
 
-  procedure Allocate_Series_Coefficients
-              ( dim,deg : in integer32;
-                cff : out Standard_Complex_VecVecs.Link_to_VecVec );
-
-  -- DESCRIPTION :
-  --   Returns in cff the coefficients of dim series of degree deg,
-  --   all equal to zero.
-
   procedure Write ( e : in Standard_Integer_Matrices.Matrix;
                     c : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
                     s : in string := "A" );

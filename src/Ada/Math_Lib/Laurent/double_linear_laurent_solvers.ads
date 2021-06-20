@@ -11,6 +11,14 @@ package Double_Linear_Laurent_Solvers is
 --   vectors of Laurent series can be solved by an LU factorization.
 --   All computations happen in double precision.
 
+  procedure Allocate_Series_Coefficients
+              ( dim,deg : in integer32;
+                cff : out Standard_Complex_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Returns in cff the coefficients of dim series of degree deg,
+  --   all equal to zero.
+
   procedure Matrix_Vector_Product
               ( d : in integer32;
                 eA : in Standard_Integer_Matrices.Matrix;

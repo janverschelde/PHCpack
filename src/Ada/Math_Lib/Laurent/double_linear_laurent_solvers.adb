@@ -5,6 +5,26 @@ with Double_Laurent_Series;
 
 package body Double_Linear_Laurent_Solvers is
 
+  procedure Allocate_Series_Coefficients
+              ( dim,deg : in integer32;
+                cff : out Standard_Complex_VecVecs.Link_to_VecVec ) is
+
+    res : Standard_Complex_VecVecs.VecVec(1..dim);
+    zero : constant Standard_Complex_Numbers.Complex_Number
+         := Standard_Complex_Numbers.Create(0.0);
+
+  begin
+    for i in 1..dim loop
+      declare
+        val : constant Standard_Complex_Vectors.Vector(0..deg)
+            := (0..deg => zero);
+      begin
+        res(i) := new Standard_Complex_Vectors.Vector'(val);
+      end;
+    end loop;
+    cff := new Standard_Complex_VecVecs.VecVec'(res);
+  end Allocate_Series_Coefficients;
+
   procedure Matrix_Vector_Product
               ( d : in integer32;
                 eA : in Standard_Integer_Matrices.Matrix;
