@@ -19,6 +19,29 @@ package Double_Linear_Laurent_Solvers is
   --   Returns in cff the coefficients of dim series of degree deg,
   --   all equal to zero.
 
+  procedure Write ( e : in Standard_Integer_Matrices.Matrix;
+                    c : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                    s : in string := "A" );
+
+  -- DESCRIPTION :
+  --   Writes the matrix of Laurent series, defined by
+  --   the leading exponents in e and coefficients in c.
+  --   The string is used as the name of the matrix.
+
+  -- REQUIRED :
+  --   e'range(1) = c'range(1) and e'range(2) = c'range(2).
+
+  procedure Write ( e : in Standard_Integer_Vectors.Vector;
+                    c : in Standard_Complex_VecVecs.Link_to_VecVec;
+                    s : in string := "v" );
+
+  -- DESCRIPTION :
+  --   Writes the vector of Laurent series, defined by
+  --   the leading exponents in e and coefficients in c.
+  --   The string s is used as the name of the vector.
+
+  -- REQUIRED : e'range = c'range.
+
   procedure Matrix_Vector_Product
               ( d : in integer32;
                 eA : in Standard_Integer_Matrices.Matrix;

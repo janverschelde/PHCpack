@@ -12,7 +12,6 @@ with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Laur_JacoMats;    use Standard_Complex_Laur_JacoMats;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Standard_System_and_Solutions_io;
-with Test_Double_Lseries_Matrices;
 with Double_Linear_Laurent_Solvers;
 with Double_Lseries_Newton_Steps;
 
@@ -77,7 +76,7 @@ package body Test_Double_Lseries_Newton is
       Double_Lseries_Newton_Steps.Newton_Step
         (deg,tv,tva,xlead,xcffs,ylead,ycffs,
          Alead,Acffs,Blead,Bcffs,dxlead,dxcffs,rlead,rcffs,verbose);
-      Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
+      Double_Linear_Laurent_Solvers.Write(xlead,xcffs,"x");
       put("Do another step ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       stepcnt := stepcnt + 1;
@@ -111,7 +110,7 @@ package body Test_Double_Lseries_Newton is
     Double_Lseries_Newton_Steps.Make_Series(sol,deg,xlead,xcffs);
     Double_Lseries_Newton_Steps.Set_Leading_Exponents(xlead);
     put("A "); put(nvr,1); put_line("-vector of Laurent series :");
-    Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
+    Double_Linear_Laurent_Solvers.Write(xlead,xcffs,"x");
     Interactive_Newton_Steps(neq,nvr,deg,tv,tva,xlead,xcffs,verbose);
   end Test_Regular_Newton;
 
@@ -134,7 +133,7 @@ package body Test_Double_Lseries_Newton is
     Double_Lseries_Newton_Steps.Make_Series(sol,deg,xlead,xcffs);
     Double_Lseries_Newton_Steps.Set_Leading_Exponents(xlead);
     put("A "); put(nvr,1); put_line("-vector of Laurent series :");
-    Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
+    Double_Linear_Laurent_Solvers.Write(xlead,xcffs,"x");
     Interactive_Newton_Steps(neq,nvr,deg,tv,tva,xlead,xcffs,verbose);
   end Test_Singular_Newton;
 

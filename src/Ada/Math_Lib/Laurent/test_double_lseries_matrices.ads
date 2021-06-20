@@ -1,7 +1,6 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_Matrices;
-with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecVecs;
 
 package Test_Double_Lseries_Matrices is
@@ -13,29 +12,6 @@ package Test_Double_Lseries_Matrices is
 --   with the coefficients of the power series.
 --   The procedures in this package test the LU factorization
 --   of a matrix of Laurent series, in double precision.
-
-  procedure Write ( e : in Standard_Integer_Matrices.Matrix;
-                    c : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
-                    s : in string := "A" );
-
-  -- DESCRIPTION :
-  --   Writes the matrix of Laurent series, defined by
-  --   the leading exponents in e and coefficients in c.
-  --   The string is used as the name of the matrix.
-
-  -- REQUIRED :
-  --   e'range(1) = c'range(1) and e'range(2) = c'range(2).
-
-  procedure Write ( e : in Standard_Integer_Vectors.Vector;
-                    c : in Standard_Complex_VecVecs.Link_to_VecVec;
-                    s : in string := "v" );
-
-  -- DESCRIPTION :
-  --   Writes the vector of Laurent series, defined by
-  --   the leading exponents in e and coefficients in c.
-  --   The string s is used as the name of the vector.
-
-  -- REQUIRED : e'range = c'range.
 
   procedure Matrix_Matrix_Product
               ( nrows,ncols,deg : in integer32;

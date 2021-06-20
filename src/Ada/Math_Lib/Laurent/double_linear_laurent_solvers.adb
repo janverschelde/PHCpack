@@ -1,3 +1,5 @@
+with text_io;                           use text_io;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
@@ -24,6 +26,28 @@ package body Double_Linear_Laurent_Solvers is
     end loop;
     cff := new Standard_Complex_VecVecs.VecVec'(res);
   end Allocate_Series_Coefficients;
+
+  procedure Write ( e : in Standard_Integer_Matrices.Matrix;
+                    c : in Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+                    s : in string := "A" ) is
+  begin
+    for i in e'range(1) loop
+      for j in e'range(2) loop
+        put(s & "("); put(i,1); put(","); put(j,1); put_line(") :");
+        Double_Laurent_Series.Write(e(i,j),c(i)(j).all);
+      end loop;
+    end loop;
+  end Write;
+
+  procedure Write ( e : in Standard_Integer_Vectors.Vector;
+                    c : in Standard_Complex_VecVecs.Link_to_VecVec;
+                    s : in string := "v" ) is
+  begin
+    for i in e'range loop
+      put(s & "("); put(i,1); put_line(") :");
+      Double_Laurent_Series.Write(e(i),c(i).all);
+    end loop;
+  end Write;
 
   procedure Matrix_Vector_Product
               ( d : in integer32;

@@ -111,7 +111,7 @@ package body Double_Lseries_Newton_Steps is
     end if;
     Eval(deg,p,xlead,xcffs,ylead,ycffs.all,verbose);
     if verbose
-     then Test_Double_Lseries_Matrices.Write(ylead,ycffs,"y");
+     then Double_Linear_Laurent_Solvers.Write(ylead,ycffs,"y");
     end if;
     if verbose
      then put_line("Evaluating the table vector array ...");
@@ -120,7 +120,7 @@ package body Double_Lseries_Newton_Steps is
     if verbose then
       Test_Double_Lseries_Matrices.Copy
         (p.nbt,p.nbt,deg,Alead,Acffs,Blead,Bcffs);
-      Test_Double_Lseries_Matrices.Write(Blead,Bcffs,"B");
+      Double_Linear_Laurent_Solvers.Write(Blead,Bcffs,"B");
     end if;
     LU_Factorization(p.nbt,p.nbt,deg,Alead,Acffs,pivots);
     if verbose
@@ -135,14 +135,14 @@ package body Double_Lseries_Newton_Steps is
       end loop;
     end loop;
     if verbose
-     then Test_Double_Lseries_Matrices.Write(dxlead,dxcffs,"b");
+     then Double_Linear_Laurent_Solvers.Write(dxlead,dxcffs,"b");
     end if;
     Forward_Substitution(deg,Alead,Acffs,dxlead,dxcffs,ylead,ycffs);
     Backward_Substitution(deg,Alead,Acffs,ylead,ycffs,dxlead,dxcffs);
     if verbose then
-      Test_Double_Lseries_Matrices.Write(dxlead,dxcffs,"dx");
+      Double_Linear_Laurent_Solvers.Write(dxlead,dxcffs,"dx");
       Matrix_Vector_Product(deg,Blead,Bcffs,dxlead,dxcffs,rlead,rcffs);
-      Test_Double_Lseries_Matrices.Write(rlead,rcffs,"r");
+      Double_Linear_Laurent_Solvers.Write(rlead,rcffs,"r");
     end if;
     for i in dxlead'range loop
       Double_Laurent_Series.Add(deg,
@@ -155,5 +155,47 @@ package body Double_Lseries_Newton_Steps is
       end loop;
     end loop;
   end Newton_Step;
+
+  procedure Run_Newton_Steps
+              ( nvr,deg : in integer32;
+                tv : in Table_Vector; tva : in Table_Vector_Array;
+                xlead : in out Standard_Integer_Vectors.Vector;
+                xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
+                numit : out integer32; maxit : in integer32 := 4;
+                verbose : in boolean := true ) is
+             
+    neq : constant integer32 := tva'last;
+    ylead,dxlead,rlead : Standard_Integer_Vectors.Vector(1..nvr);
+    ycffs,dxcffs,rcffs : Standard_Complex_VecVecs.Link_to_VecVec;
+    Alead,Blead : Standard_Integer_Matrices.Matrix(1..neq,1..nvr);
+    Acffs,Bcffs : Standard_Complex_VecVecVecs.Link_to_VecVecVec;
+    stepcnt : integer32 := 1;
+
+  begin
+    Double_Linear_Laurent_Solvers.Allocate_Series_Coefficients(nvr,deg,ycffs);
+    Double_Linear_Laurent_Solvers.Allocate_Series_Coefficients(nvr,deg,dxcffs);
+    Double_Linear_Laurent_Solvers.Allocate_Series_Coefficients(nvr,deg,rcffs);
+    Standard_Complex_VecVecVecs.Allocate(Acffs,1,neq,1,nvr,0,deg);
+    Standard_Complex_VecVecVecs.Allocate(Bcffs,1,neq,1,nvr,0,deg);
+    loop
+      if verbose
+       then put("Step "); put(stepcnt,1); put_line(" ...");
+      end if;
+      Double_Lseries_Newton_Steps.Newton_Step
+        (deg,tv,tva,xlead,xcffs,ylead,ycffs,
+         Alead,Acffs,Blead,Bcffs,dxlead,dxcffs,rlead,rcffs,verbose);
+      if verbose
+       then Double_Linear_Laurent_Solvers.Write(xlead,xcffs,"x");
+      end if;
+      exit when (stepcnt = maxit);
+      stepcnt := stepcnt + 1;
+    end loop;
+    numit := stepcnt;
+    Standard_Complex_VecVecs.Deep_Clear(ycffs);
+    Standard_Complex_VecVecs.Deep_Clear(dxcffs);
+    Standard_Complex_VecVecs.Deep_Clear(rcffs);
+    Standard_Complex_VecVecVecs.Clear(Acffs);
+    Standard_Complex_VecVecVecs.Clear(Bcffs);
+  end Run_Newton_Steps;
 
 end Double_Lseries_Newton_Steps;

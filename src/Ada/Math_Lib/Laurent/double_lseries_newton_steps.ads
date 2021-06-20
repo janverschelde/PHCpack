@@ -85,4 +85,16 @@ package Double_Lseries_Newton_Steps is
   --   Blead    leading exponents of the evaluated Jacobian matrix;
   --   Bcffs    Jacobian matrix evaluated at (xlead, xcffs).
 
+  procedure Run_Newton_Steps
+              ( nvr,deg : in integer32;
+                tv : in Table_Vector; tva : in Table_Vector_Array;
+                xlead : in out Standard_Integer_Vectors.Vector;
+                xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
+                numit : out integer32; maxit : in integer32 := 4;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Wraps the allocation of the coefficients
+  --   and runs a number of Newton steps.
+
 end Double_Lseries_Newton_Steps;
