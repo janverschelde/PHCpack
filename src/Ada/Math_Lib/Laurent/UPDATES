@@ -3,6 +3,9 @@ Sun 20 Jun 2021 : moved allocate procedure from test_double_lseries_matrices
   to test_double_lseries_newton.  Moved write procedures from test_double_
   lseries_matrices into double_linear_laurent_solvers, updated the test_
   double_lseries_newton.adb, added procedure to double_lseries_newton_steps.
+  Added output procedures to double_{laurent_series,linear_laurent_solvers},
+  updated test_double_lseries_newton.adb, double_lseries_newton_steps, and
+  main_laurent_series_newton, so phc -u now writes to file.
 
 Sat 19 Jun 2021 : filled in the stub of main_laurent_series_newton, so
   phc -u now has the same ad hoc functionality as ts_lsernew.

@@ -8,12 +8,19 @@ package body Double_Laurent_Series is
   procedure Write ( e : in integer32;
                     c : in Standard_Complex_Vectors.Vector ) is
   begin
+    Write(standard_output,e,c);
+  end Write;
+
+  procedure Write ( file : in file_type; e : in integer32;
+                    c : in Standard_Complex_Vectors.Vector ) is
+  begin
     for i in c'range loop
       if i > c'first
-       then put(" + (");
-       else put("   (");
+       then put(file," + (");
+       else put(file,"   (");
       end if;
-      put(c(i)); put(")*t^"); put(e+i,1); new_line;
+      put(file,c(i)); put(file,")*t^"); put(file,e+i,1);
+      new_line(file);
     end loop;
   end Write;
 

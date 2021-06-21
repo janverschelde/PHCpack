@@ -1,3 +1,4 @@
+with text_io;                           use text_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Vectors;
@@ -14,10 +15,12 @@ package Double_Laurent_Series is
 
   procedure Write ( e : in integer32;
                     c : in Standard_Complex_Vectors.Vector );
+  procedure Write ( file : in file_type; e : in integer32;
+                    c : in Standard_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Writes the power series with leading exponent e
-  --   and coefficients in c.
+  --   and coefficients in c, to standard output or to file.
 
   procedure Multiply ( d,xe,ye : in integer32;
                        xc,yc : in Standard_Complex_Vectors.Vector;

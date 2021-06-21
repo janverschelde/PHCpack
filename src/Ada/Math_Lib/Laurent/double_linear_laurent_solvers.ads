@@ -1,3 +1,4 @@
+with text_io;                           use text_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_Matrices;
@@ -34,9 +35,14 @@ package Double_Linear_Laurent_Solvers is
   procedure Write ( e : in Standard_Integer_Vectors.Vector;
                     c : in Standard_Complex_VecVecs.Link_to_VecVec;
                     s : in string := "v" );
+  procedure Write ( file : in file_type;
+                    e : in Standard_Integer_Vectors.Vector;
+                    c : in Standard_Complex_VecVecs.Link_to_VecVec;
+                    s : in string := "v" );
 
   -- DESCRIPTION :
-  --   Writes the vector of Laurent series, defined by
+  --   Writes the vector of Laurent series to standard output,
+  --   or to file.  The vector of Laurent series is defined by
   --   the leading exponents in e and coefficients in c.
   --   The string s is used as the name of the vector.
 

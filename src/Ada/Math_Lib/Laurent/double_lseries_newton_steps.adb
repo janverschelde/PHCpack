@@ -1,8 +1,10 @@
 with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
+with Standard_Complex_Vector_Norms;
 with Double_Laurent_Series;
 with Double_Linear_Laurent_Solvers;     use Double_Linear_Laurent_Solvers;
 with Test_Double_Lseries_Matrices;
@@ -83,6 +85,23 @@ package body Double_Lseries_Newton_Steps is
     end loop;
   end Set_Leading_Exponents;
 
+  function Max_Norm ( v : Standard_Complex_VecVecs.Link_to_VecVec )
+                    return double_float is
+
+    res : double_float
+        := Standard_Complex_Vector_Norms.Max_Norm(v(v'first).all);
+    val : double_float;
+
+  begin
+    for k in v'first+1..v'last loop
+      val := Standard_Complex_Vector_Norms.Max_Norm(v(k).all);
+      if val > res
+       then res := val;
+      end if;
+    end loop;
+    return res;
+  end Max_Norm;
+
   procedure Newton_Step
               ( deg : in integer32;
                 p : in Table_Vector; jp : in Table_Vector_Array;
@@ -98,6 +117,7 @@ package body Double_Lseries_Newton_Steps is
                 dxcffs : in out Standard_Complex_VecVecs.Link_to_VecVec;
                 rlead : in out Standard_Integer_Vectors.Vector;
                 rcffs : in out Standard_Complex_VecVecs.Link_to_VecVec;
+                dxnrm,pxnrm : out double_float;
                 verbose : in boolean := true ) is
 
     pivots : Standard_Integer_Vectors.Vector(xlead'range);
@@ -139,10 +159,14 @@ package body Double_Lseries_Newton_Steps is
     end if;
     Forward_Substitution(deg,Alead,Acffs,dxlead,dxcffs,ylead,ycffs);
     Backward_Substitution(deg,Alead,Acffs,ylead,ycffs,dxlead,dxcffs);
+    dxnrm := Max_Norm(dxcffs);
+    pxnrm := Max_Norm(rcffs);
     if verbose then
       Double_Linear_Laurent_Solvers.Write(dxlead,dxcffs,"dx");
       Matrix_Vector_Product(deg,Blead,Bcffs,dxlead,dxcffs,rlead,rcffs);
       Double_Linear_Laurent_Solvers.Write(rlead,rcffs,"r");
+      put("Maximum |dx| :"); put(dxnrm,3);
+      put("  residual :"); put(pxnrm,3); new_line;
     end if;
     for i in dxlead'range loop
       Double_Laurent_Series.Add(deg,
@@ -157,14 +181,18 @@ package body Double_Lseries_Newton_Steps is
   end Newton_Step;
 
   procedure Run_Newton_Steps
-              ( nvr,deg : in integer32;
+              ( deg : in integer32;
                 tv : in Table_Vector; tva : in Table_Vector_Array;
                 xlead : in out Standard_Integer_Vectors.Vector;
                 xcffs : in Standard_Complex_VecVecs.Link_to_VecVec;
+                dxnrm,pxnrm : out double_float;
                 numit : out integer32; maxit : in integer32 := 4;
+                dxtol : in double_float := 1.0E-8;
+                pxtol : in double_float := 1.0E-8;
                 verbose : in boolean := true ) is
              
     neq : constant integer32 := tva'last;
+    nvr : constant integer32 := xlead'last;
     ylead,dxlead,rlead : Standard_Integer_Vectors.Vector(1..nvr);
     ycffs,dxcffs,rcffs : Standard_Complex_VecVecs.Link_to_VecVec;
     Alead,Blead : Standard_Integer_Matrices.Matrix(1..neq,1..nvr);
@@ -182,12 +210,13 @@ package body Double_Lseries_Newton_Steps is
        then put("Step "); put(stepcnt,1); put_line(" ...");
       end if;
       Double_Lseries_Newton_Steps.Newton_Step
-        (deg,tv,tva,xlead,xcffs,ylead,ycffs,
-         Alead,Acffs,Blead,Bcffs,dxlead,dxcffs,rlead,rcffs,verbose);
+        (deg,tv,tva,xlead,xcffs,ylead,ycffs,Alead,Acffs,Blead,Bcffs,
+         dxlead,dxcffs,rlead,rcffs,dxnrm,pxnrm,verbose);
       if verbose
        then Double_Linear_Laurent_Solvers.Write(xlead,xcffs,"x");
       end if;
       exit when (stepcnt = maxit);
+      exit when ((dxnrm < dxtol) and (pxnrm < pxtol));
       stepcnt := stepcnt + 1;
     end loop;
     numit := stepcnt;

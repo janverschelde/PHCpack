@@ -1,4 +1,3 @@
-with text_io;                           use text_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
@@ -43,9 +42,17 @@ package body Double_Linear_Laurent_Solvers is
                     c : in Standard_Complex_VecVecs.Link_to_VecVec;
                     s : in string := "v" ) is
   begin
+    Write(standard_output,e,c,s);
+  end Write;
+
+  procedure Write ( file : in file_type;
+                    e : in Standard_Integer_Vectors.Vector;
+                    c : in Standard_Complex_VecVecs.Link_to_VecVec;
+                    s : in string := "v" ) is
+  begin
     for i in e'range loop
-      put(s & "("); put(i,1); put_line(") :");
-      Double_Laurent_Series.Write(e(i),c(i).all);
+      put(file,s & "("); put(file,i,1); put_line(file,") :");
+      Double_Laurent_Series.Write(file,e(i),c(i).all);
     end loop;
   end Write;
 
