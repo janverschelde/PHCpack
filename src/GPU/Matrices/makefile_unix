@@ -31,31 +31,50 @@ dbl_convolutions_host.o:
 	$(gpp) -O3 -c -I$(CNV) $(CNV)/dbl_convolutions_host.cpp
 
 dbl_matrices_host.o:
-	@-echo ">>> compiling dbl_matricess_host ..."
+	@-echo ">>> compiling dbl_matrices_host ..."
 	$(gpp) -O3 -c -I$(CNV) dbl_matrices_host.cpp
 
+dbl_vectors_testers.o:
+	@-echo ">>> compiling dbl_vectors_testers ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) dbl_vectors_testers.cpp
+
+test_dbl_vectors.o:
+	@-echo ">>> compiling test_dbl_vectors ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test_dbl_vectors.cpp
+
+test_dbl_vectors: random_numbers.o random_series.o \
+                  random_matrices.o dbl_convolutions_host.o \
+                  dbl_matrices_host.o dbl_vectors_testers.o \
+                  test_dbl_vectors.o 
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl_vectors test_dbl_vectors.o \
+                  random_numbers.o random_series.o random_matrices.o \
+                  dbl_convolutions_host.o dbl_matrices_host.o \
+                  dbl_vectors_testers.o
+
 dbl_matrices_testers.o:
-	@-echo ">>> compiling dbl_matricess_testers ..."
+	@-echo ">>> compiling dbl_matrices_testers ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) dbl_matrices_testers.cpp
 
-test_dbl_series_vectors.o:
-	@-echo ">>> compiling test_dbl_series_vectors ..."
-	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test_dbl_series_vectors.cpp
+test_dbl_matrices.o:
+	@-echo ">>> compiling test_dbl_matrices ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test_dbl_matrices.cpp
 
-test_dbl_series_vectors: random_numbers.o random_series.o \
-                         random_matrices.o dbl_convolutions_host.o \
-                         dbl_matrices_host.o dbl_matrices_testers.o \
-                         test_dbl_series_vectors.o 
+test_dbl_matrices: random_numbers.o random_series.o \
+                   random_matrices.o dbl_convolutions_host.o \
+                   dbl_matrices_host.o dbl_matrices_testers.o \
+                   test_dbl_matrices.o 
 	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl_series_vectors test_dbl_series_vectors.o \
+	$(gpp) -o test_dbl_matrices test_dbl_matrices.o \
                   random_numbers.o random_series.o random_matrices.o \
                   dbl_convolutions_host.o dbl_matrices_host.o \
                   dbl_matrices_testers.o
 
 clean:
 	/bin/rm -f -r random_matrices.o dbl_matrices_host.o
-	/bin/rm -f -r dbl_matrices_testers.o
-	/bin/rm -f -r test_dbl_series_vectors.o test_dbl_series_vectors
+	/bin/rm -f -r dbl_matrices_testers.o dbl_vectors_testers.o
+	/bin/rm -f -r test_dbl_vectors.o test_dbl_vectors
+	/bin/rm -f -r test_dbl_matrices.o test_dbl_matrices
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o

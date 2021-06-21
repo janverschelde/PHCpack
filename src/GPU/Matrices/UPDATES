@@ -1,3 +1,7 @@
+Mon 21 Jun 2021 : new dbl_vectors_testers with code from dbl_matrices_testers;
+  splitted test_dbl_series_vectors into test_dbl_vectors, test_dbl_matrices.
+  Updated all makefiles accordingly.
+
 Tue 2 Mar 2021 : added verbose flags in dbl_matrices_host to the lufac
   functions and the solvers.
 
