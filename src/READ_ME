@@ -12,6 +12,7 @@ The public distribution for PHCpack version 2.4.84 contains
              and PHCpack.m2 with Elizabeth Gross and Sonja Petrovic,
              with contributions of Anton Leykin
   Maple      simple Maple interface, forerunner of PHCmaple with Anton Leykin
+  Mod        defines the code of the extension module for Python
   MPI        parallel PHCpack, bindings to MPI,
              in collaboration with Yusong Wang, Anton Leykin, Yan Zhuang
   Objects    makefile, .o and .ali files to create phc

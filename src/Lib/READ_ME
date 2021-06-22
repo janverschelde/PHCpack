@@ -1,4 +1,4 @@
-PHCpack as a library of C functions with a state machine in PHCv2.4.83
+PHCpack as a library of C functions with a state machine in PHCv2.4.85
 
 This directory collects header files and definitions of C which bind the
 operations of PHCpack as a state machine in a systematic manner.
@@ -7,8 +7,8 @@ work of Yusong Wang, continued with Yan Zhuang and Yun Guan.
 Thanks to Anton Leykin for suggesting changes in the syntax of functions
 having arrays of parameters.
 
-Jointly with Kathy Piret, we use the library to build a C extension 
-module "phcpy2c.c" for the Python interpreter.
+This C library was used for the C extension module for Python and
+to integrate the Path library, moved to the ../Mod folder in v2.4.85.
 
 Support for Laurent systems was added in version 2.3.72.
 New in 2.3.84 are path trackers with generators, available in the files
@@ -17,12 +17,6 @@ next_track and lib_nxtsol.
 To create executable versions of the program, use the makefile(s)
 in the directory ../Objects.
 Files starting with the prefix lib_ are test files.
-
-The main upgrade in version 2.4 is the integration of the Path library
-of Xiangcheng Yu.
-
-In 2.4.09, the phcpy2c3.c defines the code of the phcpy2c3 extension
-module for use with Python 3.5.
 
 ------------------------------------------------------------------------------
 file name            : short description
@@ -112,22 +106,5 @@ lib_multip.c         : test multiplicity structure computation
 sweep.c              : interface to the sweep homotopy
 lib_sweep.c          : test on the sweep
 ------------------------------------------------------------------------------
-adepath_d            : algorithmic diff in trackers with doubles
-adepath_dd           : algorithmic diff in trackers with double doubles
-adepath_qd           : algorithmic diff in trackers with quad doubles
-lib_adepath_d        : test on functions in adepath_d
-lib_adepath_dd       : test on functions in adepath_dd
-lib_adepath_qd       : test on functions in adepath_qd
-gpupath_d            : interface to Path library on GPU for doubles
-gpupath_dd           : interface to Path library on GPU for double doubles
-gpupath_qd           : interface to Path library on GPU for quad doubles
-lib_gpupath_d        : test on functions in gpupath_d
-lib_gpupath_dd       : test on functions in gpupath_dd
-lib_gpupath_qd       : test on functions in gpupath_qd
-------------------------------------------------------------------------------
 phc_solve.c          : test on the blackbox solver in PHCpack
-phcpy2c.c            : C extension module for Python 2.6 and 2.7
-phcpy2cadepath_d.cpp : C++ extension of phcpy2c with Path (CPU) for doubles 
-phcpy2cpath_d.cpp    : C++ extension of phcpy2c with Path (GPU) for doubles 
-phcpy2c3.c           : C extension module for Python 3.5
 ------------------------------------------------------------------------------

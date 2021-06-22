@@ -1,0 +1,31 @@
+The extension module for phcpy in PHCv2.4.85
+
+The C extension module phcpy2c was initiated with Kathy Piret,
+to extend the Python interpreter with what would become phcpy.
+
+Version 2.4 added code to integrate the Path library of Xiangcheng Yu.
+
+In 2.4.09, the phcpy2c3.c defines the code of the phcpy2c3 extension
+module for use with Python 3.5.
+
+------------------------------------------------------------------------------
+file name            : short description
+------------------------------------------------------------------------------
+adepath_d            : algorithmic diff in trackers with doubles
+adepath_dd           : algorithmic diff in trackers with double doubles
+adepath_qd           : algorithmic diff in trackers with quad doubles
+lib_adepath_d        : test on functions in adepath_d
+lib_adepath_dd       : test on functions in adepath_dd
+lib_adepath_qd       : test on functions in adepath_qd
+gpupath_d            : interface to Path library on GPU for doubles
+gpupath_dd           : interface to Path library on GPU for double doubles
+gpupath_qd           : interface to Path library on GPU for quad doubles
+lib_gpupath_d        : test on functions in gpupath_d
+lib_gpupath_dd       : test on functions in gpupath_dd
+lib_gpupath_qd       : test on functions in gpupath_qd
+------------------------------------------------------------------------------
+phcpy2c.c            : C extension module for Python 2.6 and 2.7
+phcpy2cadepath_d.cpp : C++ extension of phcpy2c with Path (CPU) for doubles 
+phcpy2cpath_d.cpp    : C++ extension of phcpy2c with Path (GPU) for doubles 
+phcpy2c3.c           : C extension module for Python 3.5
+------------------------------------------------------------------------------
