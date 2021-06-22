@@ -13,3 +13,5 @@ test_dbl_vectors           : test on vectors of series in double precision
 dbl_matrices_testers       : test function on series vectors and matrices
 test_dbl_matrices          : test on series matrices in double precision
 -----------------------------------------------------------------------------
+test_upper_jobs            : test on jobs for back substitution
+-----------------------------------------------------------------------------

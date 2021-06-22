@@ -107,12 +107,25 @@ test_dbl_matrices: random_numbers.obj random_series.obj \
               dbl_convolutions_host.obj dbl_matrices_host.obj \
               dbl_matrices_testers.obj test_dbl_matrices.obj
 
+test_upper_jobs.obj:
+	@-echo ">>> compiling test_upper_jobs ..."
+	$(CL)\cl /c test_upper_jobs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_upper_jobs.obj /EHsc
+
+test_upper_jobs: test_upper_jobs.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_upper_jobs.exe test_upper_jobs.obj
+
 clean:
 	del *~
 	del test_dbl_vectors.obj test_dbl_vectors_lib
 	del test_dbl_vectors.exe test_dbl_vectors.exp
 	del test_dbl_matrices.obj test_dbl_matrices_lib
 	del test_dbl_matrices.exe test_dbl_matrices.exp
+	del test_upper_jobs.obj test_upper_jobs_lib
+	del test_upper_jobs.exe test_upper_jobs.exp
 	del random_matrices.obj dbl_matrices_host.obj
 	del dbl_matrices_testers.obj
 	del dbl_vectors_testers.obj
