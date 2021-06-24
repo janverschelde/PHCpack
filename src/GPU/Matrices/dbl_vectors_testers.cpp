@@ -52,7 +52,7 @@ void test_real_inner_product ( void )
    cout << "the inner product computed by the CPU :" << endl;
    for(int i=0; i<=deg; i++) cout << ip_h[i] << endl;
 
-   GPU_dbl_inner_product(deg+1,dim,deg,px,mx,ip_d,1);
+   GPU_dbl_inner_product(deg+1,dim,deg,px,mx,ip_d,0);
 
    cout << "the inner product computed by the GPU :" << endl;
    for(int i=0; i<=deg; i++) cout << ip_d[i] << endl;
