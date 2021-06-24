@@ -19,7 +19,7 @@ __global__ void dbl_convolutions ( double *x, double *y, int deg1 );
  * ON RETURN :
  *   x        coefficient of the product of the series in x with y. */
 
-__global__ void dbl_additions ( double *x, int lag, int deg1 );
+__global__ void dbl_additions ( double *x, int lag, int shf, int deg1 );
 /*
  * DESCRIPTION :
  *   Sums two series in x with distance apart as defined by lag,
@@ -28,6 +28,7 @@ __global__ void dbl_additions ( double *x, int lag, int deg1 );
  * ON ENTRY :
  *   x        deg1 coefficients of dim series;
  *   lag      defines distance between two series;
+ *   shf      shift for an odd number of series;
  *   deg1     number of coefficients in all series.
  *
  * ON RETURN :
@@ -35,7 +36,8 @@ __global__ void dbl_additions ( double *x, int lag, int deg1 );
  *            at the end of the sum reduction. */
 
 void GPU_dbl_inner_product
- ( int BS, int dim, int deg, double **x, double **y, double *z, int mode );
+ ( int BS, int dim, int deg, double **x, double **y, double *z,
+   int mode, bool verbose );
 /*
  * DESCRIPTION :
  *   Computes the product of two real vectors x and y of power series
@@ -49,7 +51,8 @@ void GPU_dbl_inner_product
  *   y        dim series truncated to degree deg;
  *   z        space for deg+1 doubles;
  *   mode     if 1, then the addition happens on the CPU,
- *            otherwise the addition kernel is called.
+ *            otherwise the addition kernel is called;
+ *   verbose  is the verbose flag.
  *
  * ON RETURN :
  *   z        the sum of all x[k]*y[k] for k from 0 to dim-1,

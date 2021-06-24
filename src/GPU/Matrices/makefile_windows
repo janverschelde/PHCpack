@@ -59,7 +59,7 @@ dbl_matrices_host.obj:
 	@-echo ">>> compiling dbl_matrices_host ..."
 	$(CL)\cl /c -I$(CNV) dbl_matrices_host.cpp \
                  -I$(winkitucrt) -I$(includepath) -O2 \
-                 /Fo: dbl_matrices_host.obj
+                 /Fo: dbl_matrices_host.obj /EHsc
 
 dbl_matrices_kernels.obj:
 	@-echo ">>> compiling dbl_matrices_kernels ..."
@@ -71,6 +71,7 @@ dbl_vectors_testers.obj:
 	@-echo ">>> compiling dbl_vectors_testers ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) dbl_vectors_testers.cpp \
                  -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
                  /Fo: dbl_vectors_testers.obj /EHsc
 
 test_dbl_vectors.obj:
