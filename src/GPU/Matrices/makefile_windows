@@ -61,6 +61,12 @@ dbl_matrices_host.obj:
                  -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: dbl_matrices_host.obj
 
+dbl_matrices_kernels.obj:
+	@-echo ">>> compiling dbl_matrices_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 \
+                dbl_matrices_kernels.cu \
+             -o dbl_matrices_kernels.obj
+
 dbl_vectors_testers.obj:
 	@-echo ">>> compiling dbl_vectors_testers ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) dbl_vectors_testers.cpp \
@@ -76,13 +82,14 @@ test_dbl_vectors.obj:
 
 test_dbl_vectors: random_numbers.obj random_series.obj \
 	          random_matrices.obj dbl_convolutions_host.obj \
-                  dbl_matrices_host.obj dbl_vectors_testers.obj \
-                  test_dbl_vectors.obj
+                  dbl_matrices_host.obj dbl_matrices_kernels.obj \
+                  dbl_vectors_testers.obj test_dbl_vectors.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_vectors.exe \
               random_numbers.obj random_series.obj random_matrices.obj \
               dbl_convolutions_host.obj dbl_matrices_host.obj \
-              dbl_vectors_testers.obj test_dbl_vectors.obj
+              dbl_matrices_kernels.obj dbl_vectors_testers.obj \
+              test_dbl_vectors.obj
 
 dbl_matrices_testers.obj:
 	@-echo ">>> compiling dbl_matrices_testers ..."
@@ -126,9 +133,9 @@ clean:
 	del test_dbl_matrices.exe test_dbl_matrices.exp
 	del test_upper_jobs.obj test_upper_jobs_lib
 	del test_upper_jobs.exe test_upper_jobs.exp
-	del random_matrices.obj dbl_matrices_host.obj
-	del dbl_matrices_testers.obj
-	del dbl_vectors_testers.obj
+	del random_matrices.obj
+	del dbl_matrices_host.obj dbl_matrices_kernels.obj
+	del dbl_matrices_testers.obj dbl_vectors_testers.obj
 
 cleanall: clean
 	del *exe *obj *exp *lib

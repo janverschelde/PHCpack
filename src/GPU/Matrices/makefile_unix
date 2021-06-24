@@ -6,13 +6,13 @@ CNV=../Convolutions
 CUDA=/usr/local/cuda/include
 CUDALIB=/usr/local/cuda/lib64
 # the architecture flag for Tesla C2050
-smflag=sm_20
+# smflag=sm_20
 # the architecture flag for Kepler K20C
 # smflag=sm_35
 # the architecture flag for Pascal P100
 # smflag=sm_60
 # the architecture flag for Volta V100
-# smflag=sm_70
+smflag=sm_70
 
 random_numbers.o:
 	@-echo ">>> compiling double random number generators ..."
@@ -34,6 +34,10 @@ dbl_matrices_host.o:
 	@-echo ">>> compiling dbl_matrices_host ..."
 	$(gpp) -O3 -c -I$(CNV) dbl_matrices_host.cpp
 
+dbl_matrices_kernels.o:
+	@-echo ">>> compiling dbl_matrices_kernels ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -c dbl_matrices_kernels.cu
+
 dbl_vectors_testers.o:
 	@-echo ">>> compiling dbl_vectors_testers ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) dbl_vectors_testers.cpp
@@ -44,13 +48,14 @@ test_dbl_vectors.o:
 
 test_dbl_vectors: random_numbers.o random_series.o \
                   random_matrices.o dbl_convolutions_host.o \
-                  dbl_matrices_host.o dbl_vectors_testers.o \
-                  test_dbl_vectors.o 
+                  dbl_matrices_host.o dbl_matrices_kernels.o \
+                  dbl_vectors_testers.o test_dbl_vectors.o 
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_vectors test_dbl_vectors.o \
                   random_numbers.o random_series.o random_matrices.o \
                   dbl_convolutions_host.o dbl_matrices_host.o \
-                  dbl_vectors_testers.o
+                  dbl_matrices_kernels.o dbl_vectors_testers.o \
+               -lcuda -lcudart -L$(CUDALIB)
 
 dbl_matrices_testers.o:
 	@-echo ">>> compiling dbl_matrices_testers ..."
@@ -79,7 +84,8 @@ test_upper_jobs: test_upper_jobs.o
 	$(gpp) -o test_upper_jobs test_upper_jobs.o
 
 clean:
-	/bin/rm -f -r random_matrices.o dbl_matrices_host.o
+	/bin/rm -f -r random_matrices.o
+	/bin/rm -f -r dbl_matrices_host.o dbl_matrices_kernels.o
 	/bin/rm -f -r dbl_matrices_testers.o dbl_vectors_testers.o
 	/bin/rm -f -r test_dbl_vectors.o test_dbl_vectors
 	/bin/rm -f -r test_dbl_matrices.o test_dbl_matrices

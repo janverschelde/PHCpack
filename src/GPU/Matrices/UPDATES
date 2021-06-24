@@ -1,4 +1,5 @@
 Tue 22 Jun 2021 : new dbl_matrices_kernels with kernels for inner products.
+  Updated the makefile_unix and makefile_windows.
 
 Mon 21 Jun 2021 : new dbl_vectors_testers with code from dbl_matrices_testers;
   splitted test_dbl_series_vectors into test_dbl_vectors, test_dbl_matrices.
