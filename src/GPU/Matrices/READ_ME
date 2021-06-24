@@ -4,14 +4,15 @@ Operations on vectors and matrices of power series are staged for
 acceleration on graphics processing units.
 
 -----------------------------------------------------------------------------
-file name                  : short description
+file name                 : short description
 -----------------------------------------------------------------------------
-random_matrices            : random vectors and matrices of power series
-dbl_matrices_host          : series matrices on the host in double precision
-dbl_vectors_testers        : test functions on series vectors
-test_dbl_vectors           : test on vectors of series in double precision
-dbl_matrices_testers       : test function on series vectors and matrices
-test_dbl_matrices          : test on series matrices in double precision
+random_matrices           : random vectors and matrices of power series
+dbl_matrices_host         : series matrices on the host in double precision
+dbl_matrices_kernels      : series matrices on the device in double precision
+dbl_vectors_testers       : test functions on series vectors
+test_dbl_vectors          : test on vectors of series in double precision
+dbl_matrices_testers      : test function on series vectors and matrices
+test_dbl_matrices         : test on series matrices in double precision
 -----------------------------------------------------------------------------
-test_upper_jobs            : test on jobs for back substitution
+test_upper_jobs           : test on jobs for back substitution
 -----------------------------------------------------------------------------
