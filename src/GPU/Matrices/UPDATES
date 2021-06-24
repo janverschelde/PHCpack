@@ -6,6 +6,8 @@ Wed 23 Jun 2021 : more uniform and consistent naming of functions
   tested by dbl_vectors_testers.cpp, okay for dimensions equal to powers of 2.
   Updated dbl_matrices_kernels and dbl_vectors_testers.cpp
   so the sum reduction now works for any dimension.
+  Added complex versions to dbl_matrices_kernels, with added tests
+  to dbl_vectors_testers.cpp.
 
 Tue 22 Jun 2021 : new dbl_matrices_kernels with kernels for inner products.
   Updated the makefile_unix and makefile_windows.

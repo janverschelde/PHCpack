@@ -97,14 +97,23 @@ void test_cmplx_inner_product ( void )
          cout << mxre[k][i] << "  " << mxim[k][i] << endl;
    }
 
-   double *ipre = new double[deg+1];
-   double *ipim = new double[deg+1];
+   double *ipre_h = new double[deg+1];
+   double *ipim_h = new double[deg+1];
+   double *ipre_d = new double[deg+1];
+   double *ipim_d = new double[deg+1];
 
-   CPU_cmplx_inner_product(dim,deg,pxre,pxim,mxre,mxim,ipre,ipim);
+   CPU_cmplx_inner_product(dim,deg,pxre,pxim,mxre,mxim,ipre_h,ipim_h);
 
-   cout << "the inner product :" << endl;
+   cout << "the inner product computed by the CPU :" << endl;
    for(int i=0; i<=deg; i++)
-      cout << ipre[i] << "  " << ipim[i] << endl;
+      cout << ipre_h[i] << "  " << ipim_h[i] << endl;
+
+   GPU_cmplx_inner_product
+      (deg+1,dim,deg,pxre,pxim,mxre,mxim,ipre_d,ipim_d,0,false);
+
+   cout << "the inner product computed by the GPU :" << endl;
+   for(int i=0; i<=deg; i++)
+      cout << ipre_d[i] << "  " << ipim_d[i] << endl;
 }
 
 void test_real_matrix_vector_product ( void )
