@@ -26,7 +26,7 @@ __global__ void dbl_convolutions ( double *x, double *y, int deg1 )
       idx = deg1 + k - i;
       zv[k] = zv[k] + xv[i]*yv[idx];
    }
-   x[offset+k] = zv[k];
+   x[offset] = zv[k];
 }
 
 void GPU_dbl_inner_product
@@ -58,4 +58,16 @@ void GPU_dbl_inner_product
    cudaMemcpy(y_d,y_h,szdim,cudaMemcpyHostToDevice);
 
    if(BS == deg1) dbl_convolutions<<<dim,BS>>>(x_d,y_d,deg1);
+
+   if(mode==1) // do all additions on the host
+   {
+      cudaMemcpy(x_h,x_d,szdim,cudaMemcpyDeviceToHost);
+
+      for(int i=0; i<deg1; i++) z[i] = 0.0;
+
+      int ix=0;
+      for(int j=0; j<dim; j++)
+         for(int i=0; i<deg1; i++) z[i] = z[i] + x_h[ix++];
+   }
+   free(x_h); free(y_h);
 }

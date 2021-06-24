@@ -4,10 +4,12 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
+#include <vector_types.h>
 #include "random_numbers.h"
 #include "random_series.h"
 #include "random_matrices.h"
 #include "dbl_matrices_host.h"
+#include "dbl_matrices_kernels.h"
 #include "dbl_vectors_testers.h"
 
 using namespace std;
@@ -42,12 +44,18 @@ void test_real_inner_product ( void )
       for(int i=0; i<=deg; i++) cout << mx[k][i] << endl;
    }
 
-   double *ip = new double[deg+1];
+   double *ip_h = new double[deg+1];
+   double *ip_d = new double[deg+1];
 
-   CPU_dbl_inner_product(dim,deg,px,mx,ip);
+   CPU_dbl_inner_product(dim,deg,px,mx,ip_h);
 
-   cout << "the inner product :" << endl;
-   for(int i=0; i<=deg; i++) cout << ip[i] << endl;
+   cout << "the inner product computed by the CPU :" << endl;
+   for(int i=0; i<=deg; i++) cout << ip_h[i] << endl;
+
+   GPU_dbl_inner_product(deg+1,dim,deg,px,mx,ip_d,1);
+
+   cout << "the inner product computed by the GPU :" << endl;
+   for(int i=0; i<=deg; i++) cout << ip_d[i] << endl;
 }
 
 void test_cmplx_inner_product ( void )
