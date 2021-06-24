@@ -44,7 +44,7 @@ void test_real_inner_product ( void )
 
    double *ip = new double[deg+1];
 
-   real_inner_product(dim,deg,px,mx,ip);
+   CPU_dbl_inner_product(dim,deg,px,mx,ip);
 
    cout << "the inner product :" << endl;
    for(int i=0; i<=deg; i++) cout << ip[i] << endl;
@@ -92,7 +92,7 @@ void test_cmplx_inner_product ( void )
    double *ipre = new double[deg+1];
    double *ipim = new double[deg+1];
 
-   cmplx_inner_product(dim,deg,pxre,pxim,mxre,mxim,ipre,ipim);
+   CPU_cmplx_inner_product(dim,deg,pxre,pxim,mxre,mxim,ipre,ipim);
 
    cout << "the inner product :" << endl;
    for(int i=0; i<=deg; i++)
@@ -139,7 +139,8 @@ void test_real_matrix_vector_product ( void )
    for(int i=0; i<nbcols; i++)
       dbl_exponential(deg,-rnd[nbrows-1][i],x[i]);
 
-   real_matrix_vector_product(nbrows,nbcols,deg,mat,x,y);
+   CPU_dbl_matrix_vector_product(nbrows,nbcols,deg,mat,x,y);
+
    for(int i=0; i<nbrows; i++)
    {
       cout << "y[" << i << "] :" << endl;
@@ -206,8 +207,9 @@ void test_cmplx_matrix_vector_product ( void )
       cmplx_exponential
          (deg,-rndre[nbrows-1][i],-rndim[nbrows-1][i],xre[i],xim[i]);
 
-   cmplx_matrix_vector_product
+   CPU_cmplx_matrix_vector_product
       (nbrows,nbcols,deg,matre,matim,xre,xim,yre,yim);
+
    for(int i=0; i<nbrows; i++)
    {
       cout << "y[" << i << "] :" << endl;

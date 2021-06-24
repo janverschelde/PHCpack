@@ -3,7 +3,7 @@
 
 #include "dbl_matrices_kernels.h"
 
-__global__ void real_convolutions ( double *x, double *y, int deg1 )
+__global__ void dbl_convolutions ( double *x, double *y, int deg1 )
 {
    int j = blockIdx.x;     // convolution of j-th series in x and y
    int k = threadIdx.x;    // thread k computes k-th coefficient in product
@@ -29,8 +29,9 @@ __global__ void real_convolutions ( double *x, double *y, int deg1 )
    x[offset+k] = zv[k];
 }
 
-void GPU_real_inner_product
- ( int BS, int dim, int deg, double **x, double **y, double *z )
+void GPU_dbl_inner_product
+ ( int BS, int dim, int deg, double **x, double **y, double *z,
+   int mode )
 {
    const int deg1 = deg+1;         // coefficient series length
 
@@ -56,5 +57,5 @@ void GPU_real_inner_product
    cudaMemcpy(x_d,x_h,szdim,cudaMemcpyHostToDevice);
    cudaMemcpy(y_d,y_h,szdim,cudaMemcpyHostToDevice);
 
-   real_convolutions<<<dim,BS>>>(x_d,y_d,deg1);
+   if(BS == deg1) dbl_convolutions<<<dim,BS>>>(x_d,y_d,deg1);
 }

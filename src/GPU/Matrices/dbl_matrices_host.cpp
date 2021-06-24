@@ -8,9 +8,10 @@
 
 // for debugging and verbose mode
 #include <iostream>
+
 using namespace std;
 
-void real_inner_product
+void CPU_dbl_inner_product
  ( int dim, int deg, double **x, double **y, double *z )
 {
    double *prod = new double[deg+1];
@@ -26,7 +27,7 @@ void real_inner_product
    free(prod);
 }
 
-void cmplx_inner_product
+void CPU_cmplx_inner_product
  ( int dim, int deg,
    double **xre, double **xim, double **yre, double **yim,
    double *zre, double *zim )
@@ -50,22 +51,22 @@ void cmplx_inner_product
    free(prodre); free(prodim);
 }
 
-void real_matrix_vector_product
+void CPU_dbl_matrix_vector_product
  ( int rows, int cols, int deg, double ***A, double **x, double **y )
 {
    for(int k=0; k<rows; k++)
-      real_inner_product(cols,deg,A[k],x,y[k]);
+      CPU_dbl_inner_product(cols,deg,A[k],x,y[k]);
 }
 
-void cmplx_matrix_vector_product
+void CPU_cmplx_matrix_vector_product
  ( int rows, int cols, int deg, double ***Are, double ***Aim,
    double **xre, double **xim, double **yre, double **yim )
 {
    for(int k=0; k<rows; k++)
-      cmplx_inner_product(cols,deg,Are[k],Aim[k],xre,xim,yre[k],yim[k]);
+      CPU_cmplx_inner_product(cols,deg,Are[k],Aim[k],xre,xim,yre[k],yim[k]);
 }
 
-void real_matrix_matrix_product
+void CPU_dbl_matrix_matrix_product
  ( int rows, int dim, int cols, int deg, 
    double ***A, double ***B, double ***C )
 {
@@ -88,7 +89,7 @@ void real_matrix_matrix_product
    free(prod);
 }
 
-void cmplx_matrix_matrix_product
+void CPU_cmplx_matrix_matrix_product
  ( int rows, int dim, int cols, int deg, 
    double ***Are, double ***Aim, double ***Bre, double ***Bim,
    double ***Cre, double ***Cim )
@@ -119,7 +120,7 @@ void cmplx_matrix_matrix_product
    free(prodre); free(prodim);
 }
 
-void real_lower_solver
+void CPU_dbl_lower_solver
  ( int dim, int deg, double ***L, double **b, double **x, bool verbose )
 {
    double *prod = new double[deg+1]; // for products
@@ -159,7 +160,7 @@ void real_lower_solver
    free(prod); // free(accu);
 }
 
-void cmplx_lower_solver
+void CPU_cmplx_lower_solver
  ( int dim, int deg, double ***Lre, double ***Lim,
    double **bre, double **bim, double **xre, double **xim, bool verbose )
 {
@@ -206,7 +207,7 @@ void cmplx_lower_solver
    free(prodre); free(prodim);
 }
 
-void real_upper_solver
+void CPU_dbl_upper_solver
  ( int dim, int deg, double ***U, double **b, double **x, bool verbose )
 {
    double *prod = new double[deg+1];
@@ -252,7 +253,7 @@ void real_upper_solver
    free(prod); free(work);
 }
 
-void cmplx_upper_solver
+void CPU_cmplx_upper_solver
  ( int dim, int deg, double ***Ure, double ***Uim,
    double **bre, double **bim, double **xre, double **xim, bool verbose )
 {
@@ -309,7 +310,8 @@ void cmplx_upper_solver
    free(prodim); free(workim);
 }
 
-void real_lufac ( int dim, int deg, double ***A, int *pivots, bool verbose )
+void CPU_dbl_lufac
+ ( int dim, int deg, double ***A, int *pivots, bool verbose )
 {
    double valmax,valtmp;
    int idxmax,idxtmp;
@@ -360,7 +362,7 @@ void real_lufac ( int dim, int deg, double ***A, int *pivots, bool verbose )
    free(work); free(prod);
 }
 
-void cmplx_lufac
+void CPU_cmplx_lufac
  ( int dim, int deg, double ***Are, double ***Aim, int *pivots, bool verbose )
 {
    double valmax,valtmp;
@@ -431,25 +433,25 @@ void cmplx_lufac
    free(prodre); free(prodim);
 }
 
-void real_lu_solver
+void CPU_dbl_lu_solver
  ( int dim, int deg, double ***A, int *pivots, double **b, double **x,
    bool verbose )
 {
-   real_lufac(dim,deg,A,pivots,verbose);
+   CPU_dbl_lufac(dim,deg,A,pivots,verbose);
   
    for(int i=0; i<dim; i++)        // permute b according to the pivots
    {
       for(int d=0; d<=deg; d++) x[i][d] = b[pivots[i]][d];
    }
-   real_lower_solver(dim,deg,A,x,b,verbose); // forward substitution
-   real_upper_solver(dim,deg,A,b,x,verbose); // backward substitution
+   CPU_dbl_lower_solver(dim,deg,A,x,b,verbose); // forward substitution
+   CPU_dbl_upper_solver(dim,deg,A,b,x,verbose); // backward substitution
 }
 
-void cmplx_lu_solver
+void CPU_cmplx_lu_solver
  ( int dim, int deg, double ***Are, double ***Aim, int *pivots,
    double **bre, double **bim, double **xre, double **xim, bool verbose )
 {
-   cmplx_lufac(dim,deg,Are,Aim,pivots,verbose);
+   CPU_cmplx_lufac(dim,deg,Are,Aim,pivots,verbose);
   
    for(int i=0; i<dim; i++)        // permute b according to the pivots
    {
@@ -459,6 +461,6 @@ void cmplx_lu_solver
          xim[i][d] = bim[pivots[i]][d];
       }
    }
-   cmplx_lower_solver(dim,deg,Are,Aim,xre,xim,bre,bim,verbose);
-   cmplx_upper_solver(dim,deg,Are,Aim,bre,bim,xre,xim,verbose);
+   CPU_cmplx_lower_solver(dim,deg,Are,Aim,xre,xim,bre,bim,verbose);
+   CPU_cmplx_upper_solver(dim,deg,Are,Aim,bre,bim,xre,xim,verbose);
 }

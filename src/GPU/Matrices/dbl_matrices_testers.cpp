@@ -51,13 +51,13 @@ void test_real_upper_solver ( void )
       x[i][0] = 1.0;
       for(int k=1; k<=deg; k++) x[i][k] = 0.0;
    }
-   real_matrix_vector_product(dim,dim,deg,mat,x,b);
+   CPU_dbl_matrix_vector_product(dim,dim,deg,mat,x,b);
    for(int i=0; i<dim; i++)
    {
       cout << "b[" << i << "] :" << endl;
       for(int k=0; k<=deg; k++) cout << b[i][k] << endl;
    }
-   real_upper_solver(dim,deg,mat,b,x);
+   CPU_dbl_upper_solver(dim,deg,mat,b,x);
 
    cout << "The solution of the upper triangular system :" << endl;
    for(int i=0; i<dim; i++)
@@ -129,14 +129,14 @@ void test_cmplx_upper_solver ( void )
          xim[i][k] = 0.0;
       }
    }
-   cmplx_matrix_vector_product(dim,dim,deg,matre,matim,xre,xim,bre,bim);
+   CPU_cmplx_matrix_vector_product(dim,dim,deg,matre,matim,xre,xim,bre,bim);
    for(int i=0; i<dim; i++)
    {
       cout << "b[" << i << "] :" << endl;
       for(int k=0; k<=deg; k++)
          cout << bre[i][k] << "  " << bim[i][k] << endl;
    }
-   cmplx_upper_solver(dim,deg,matre,matim,bre,bim,xre,xim);
+   CPU_cmplx_upper_solver(dim,deg,matre,matim,bre,bim,xre,xim);
 
    cout << "The solution of the upper triangular system :" << endl;
    for(int i=0; i<dim; i++)
@@ -191,7 +191,7 @@ void test_real_lufac ( void )
 
    int *pivots = new int[dim];
 
-   real_lufac(dim,deg,A,pivots);
+   CPU_dbl_lufac(dim,deg,A,pivots);
    cout << "done with LU factorization ... " << endl;
 
    double ***L = new double**[dim]; // lower triangular part of A
@@ -253,7 +253,7 @@ void test_real_lufac ( void )
    cout << endl;
 
    cout << "doing the matrix-matrix product ... " << endl;
-   real_matrix_matrix_product(dim,dim,dim,deg,L,U,B);
+   CPU_dbl_matrix_matrix_product(dim,dim,dim,deg,L,U,B);
 
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
@@ -326,7 +326,7 @@ void test_cmplx_lufac ( void )
 
    int *pivots = new int[dim];
 
-   cmplx_lufac(dim,deg,Are,Aim,pivots);
+   CPU_cmplx_lufac(dim,deg,Are,Aim,pivots);
    cout << "done with LU factorization ... " << endl;
 
    double ***Lre = new double**[dim]; // lower triangular part of A
@@ -410,7 +410,7 @@ void test_cmplx_lufac ( void )
    cout << endl;
 
    cout << "doing the matrix-matrix product ... " << endl;
-   cmplx_matrix_matrix_product(dim,dim,dim,deg,Lre,Lim,Ure,Uim,Bre,Bim);
+   CPU_cmplx_matrix_matrix_product(dim,dim,dim,deg,Lre,Lim,Ure,Uim,Bre,Bim);
 
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
@@ -482,7 +482,7 @@ void test_real_lu_solver ( void )
       sol[i][0] = 1.0;
       for(int k=1; k<=deg; k++) sol[i][k] = 0.0;
    }
-   real_matrix_vector_product(dim,dim,deg,A,sol,rhs);
+   CPU_dbl_matrix_vector_product(dim,dim,deg,A,sol,rhs);
 
    double **x = new double*[dim]; // space for the solution
    double **b = new double*[dim]; // copy of right hand side
@@ -493,7 +493,7 @@ void test_real_lu_solver ( void )
       b[i] = new double[deg+1];
       for(int k=0; k<=deg; k++) b[i][k] = rhs[i][k];
    }
-   real_lu_solver(dim,deg,Acopy,pivots,b,x);
+   CPU_dbl_lu_solver(dim,deg,Acopy,pivots,b,x);
 
    cout << "The pivots :";
    for(int i=0; i<dim; i++) cout << " " << pivots[i];
@@ -582,7 +582,8 @@ void test_cmplx_lu_solver ( void )
          solim[i][k] = 0.0;
       }
    }
-   cmplx_matrix_vector_product(dim,dim,deg,Are,Aim,solre,solim,rhsre,rhsim);
+   CPU_cmplx_matrix_vector_product
+      (dim,dim,deg,Are,Aim,solre,solim,rhsre,rhsim);
 
    double **xre = new double*[dim]; // space for the solution
    double **xim = new double*[dim];
@@ -602,7 +603,7 @@ void test_cmplx_lu_solver ( void )
          bim[i][k] = rhsim[i][k];
       }
    }
-   cmplx_lu_solver(dim,deg,Arecopy,Aimcopy,pivots,bre,bim,xre,xim);
+   CPU_cmplx_lu_solver(dim,deg,Arecopy,Aimcopy,pivots,bre,bim,xre,xim);
 
    cout << "The pivots :";
    for(int i=0; i<dim; i++) cout << " " << pivots[i];

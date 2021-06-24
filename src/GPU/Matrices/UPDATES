@@ -1,3 +1,7 @@
+Wed 23 Jun 2021 : more uniform and consistent naming of functions
+  in dbl_matrices_host, dbl_matrices_kernels, with caused updates
+  in dbl_vectors_testers.cpp and dbl_matrices_testers.cpp.
+
 Tue 22 Jun 2021 : new dbl_matrices_kernels with kernels for inner products.
   Updated the makefile_unix and makefile_windows.
 

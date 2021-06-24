@@ -4,7 +4,7 @@
 #ifndef __dbl_matrices_host_h__
 #define __dbl_matrices_host_h__
 
-void real_inner_product
+void CPU_dbl_inner_product
  ( int dim, int deg, double **x, double **y, double *z );
 /*
  * DESCRIPTION :
@@ -22,7 +22,7 @@ void real_inner_product
  *   z        the sum of all x[k]*y[k] for k from 0 to dim-1,
  *            as a power series truncated to the degree deg. */
 
-void cmplx_inner_product
+void CPU_cmplx_inner_product
  ( int dim, int deg,
    double **xre, double **xim, double **yre, double **yim,
    double *zre, double *zim );
@@ -47,7 +47,7 @@ void cmplx_inner_product
  *   zim      imaginary parts of the sum of all x[k]*y[k] for k from 0
  *            to dim-1, as a power series truncated to the degree deg. */
 
-void real_matrix_vector_product
+void CPU_dbl_matrix_vector_product
  ( int rows, int cols, int deg, double ***A, double **x, double **y );
 /*
  * DESCRIPTION :
@@ -69,7 +69,7 @@ void real_matrix_vector_product
  * ON RETURN :
  *   y        product of A with x. */
 
-void cmplx_matrix_vector_product
+void CPU_cmplx_matrix_vector_product
  ( int rows, int cols, int deg, double ***Are, double ***Aim,
    double **xre, double **xim, double **yre, double **yim );
 /*
@@ -99,7 +99,7 @@ void cmplx_matrix_vector_product
  *   yre      real parts of the product of A with x;
  *   yim      imaginary parts of the product of A with x. */
 
-void real_matrix_matrix_product
+void CPU_dbl_matrix_matrix_product
  ( int rows, int dim, int cols, int deg, 
    double ***A, double ***B, double ***C );
 /*
@@ -121,7 +121,7 @@ void real_matrix_matrix_product
  * ON RETURN :
  *   C        product of A with B. */
 
-void cmplx_matrix_matrix_product
+void CPU_cmplx_matrix_matrix_product
  ( int rows, int dim, int cols, int deg, 
    double ***Are, double ***Aim, double ***Bre, double ***Bim,
    double ***Cre, double ***Cim );
@@ -151,7 +151,7 @@ void cmplx_matrix_matrix_product
  *   Cre      real parts of the product of A with B;
  *   Cim      imaginary parts of the product of A with B. */
 
-void real_lower_solver
+void CPU_dbl_lower_solver
  ( int dim, int deg, double ***L, double **b, double **x, bool verbose=true );
 /*
  * DESCRIPTION :
@@ -172,7 +172,7 @@ void real_lower_solver
  * ON RETURN :
  *   x        the solution to L*x = b. */
 
-void cmplx_lower_solver
+void CPU_cmplx_lower_solver
  ( int dim, int deg, double ***Lre, double ***Lim,
    double **bre, double **bim, double **xre, double **xim, bool verbose=true );
 /*
@@ -198,7 +198,7 @@ void cmplx_lower_solver
  *   xre      real part of the solution to L*x = b;
  *   xim      imaginary part of the solution to L*x = b. */
 
-void real_upper_solver
+void CPU_dbl_upper_solver
  ( int dim, int deg, double ***U, double **b, double **x, bool verbose=true );
 /*
  * DESCRIPTION :
@@ -217,7 +217,7 @@ void real_upper_solver
  * ON RETURN :
  *   x        the solution to U*x = b. */
 
-void cmplx_upper_solver
+void CPU_cmplx_upper_solver
  ( int dim, int deg, double ***Ure, double ***Uim,
    double **bre, double **bim, double **xre, double **xim,
    bool verbose=true );
@@ -242,7 +242,7 @@ void cmplx_upper_solver
  *   xre      real part of the solution to U*x = b;
  *   xim      real part of the solution to U*x = b. */
 
-void real_lufac
+void CPU_dbl_lufac
  ( int dim, int deg, double ***A, int *pivots, bool verbose=true );
 /*
  * DESCRIPTION :
@@ -262,7 +262,7 @@ void real_lufac
  *            and the upper triangular part of A the row reduced A;
  *   pivots   are the pivots used. */
 
-void cmplx_lufac
+void CPU_cmplx_lufac
  ( int dim, int deg, double ***Are, double ***Aim, int *pivots,
    bool verbose=true );
 /*
@@ -286,7 +286,7 @@ void cmplx_lufac
  *            and the upper triangular part of the row reduced matrix;
  *   pivots   are the pivots used. */
 
-void real_lu_solver
+void CPU_dbl_lu_solver
  ( int dim, int deg, double ***A, int *pivots, double **b, double **x,
    bool verbose=true );
 /*
@@ -311,7 +311,7 @@ void real_lu_solver
  *   b        used as work space;
  *   x        the solution to A*x = b. */
 
-void cmplx_lu_solver
+void CPU_cmplx_lu_solver
  ( int dim, int deg, double ***Are, double ***Aim, int *pivots,
    double **bre, double **bim, double **xre, double **xim,
    bool verbose=true );

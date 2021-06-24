@@ -6,7 +6,7 @@
 
 #define d_shmemsize 256
 
-__global__ void real_convolutions ( double *x, double *y, int deg1 );
+__global__ void dbl_convolutions ( double *x, double *y, int deg1 );
 /*
  * DESCRIPTION :
  *   Makes all convolutions in the inner product of the vector x with y.
@@ -19,8 +19,8 @@ __global__ void real_convolutions ( double *x, double *y, int deg1 );
  * ON RETURN :
  *   x        coefficient of the product of the series in x with y. */
 
-void GPU_real_inner_product
- ( int BS, int dim, int deg, double **x, double **y, double *z );
+void GPU_dbl_inner_product
+ ( int BS, int dim, int deg, double **x, double **y, double *z, int mode );
 /*
  * DESCRIPTION :
  *   Computes the product of two real vectors x and y of power series
@@ -32,7 +32,9 @@ void GPU_real_inner_product
  *   deg      truncation degree of the series;
  *   x        dim series truncated to degree deg;
  *   y        dim series truncated to degree deg;
- *   z        space for deg+1 doubles.
+ *   z        space for deg+1 doubles;
+ *   mode     if 1, then the addition happens on the CPU,
+ *            otherwise the addition kernel is called.
  *
  * ON RETURN :
  *   z        the sum of all x[k]*y[k] for k from 0 to dim-1,
