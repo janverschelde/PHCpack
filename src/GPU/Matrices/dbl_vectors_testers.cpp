@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
+#include <cmath>
 #include <vector_types.h>
 #include "random_numbers.h"
 #include "random_series.h"
@@ -22,6 +23,9 @@ void test_real_inner_product ( void )
    cout << "Give a degree larger than one : ";
    int deg; cin >> deg;
 
+   cout << "Give the verbose level : ";
+   int vrblvl; cin >> vrblvl;
+
    double *x = new double[dim];
    double **px = new double*[dim];
    double **mx = new double*[dim];
@@ -33,29 +37,45 @@ void test_real_inner_product ( void )
    }
    random_dbl_series_vectors(dim,deg,x,px,mx);
 
-   cout << scientific << setprecision(16);
-
-   for(int k=0; k<dim; k++)
+   if(vrblvl > 1)
    {
-      cout << "a random x : " << x[k] << endl;
-      cout << "series for exp(+x) :" << endl; 
-      for(int i=0; i<=deg; i++) cout << px[k][i] << endl;
-      cout << "series for exp(-x) :" << endl; 
-      for(int i=0; i<=deg; i++) cout << mx[k][i] << endl;
-   }
+      cout << scientific << setprecision(16);
 
+      for(int k=0; k<dim; k++)
+      {
+         cout << "a random x : " << x[k] << endl;
+         cout << "series for exp(+x) :" << endl; 
+         for(int i=0; i<=deg; i++) cout << px[k][i] << endl;
+         cout << "series for exp(-x) :" << endl; 
+         for(int i=0; i<=deg; i++) cout << mx[k][i] << endl;
+      }
+   }
    double *ip_h = new double[deg+1];
    double *ip_d = new double[deg+1];
 
    CPU_dbl_inner_product(dim,deg,px,mx,ip_h);
 
-   cout << "the inner product computed by the CPU :" << endl;
-   for(int i=0; i<=deg; i++) cout << ip_h[i] << endl;
+   if(vrblvl > 1)
+   {
+      cout << "the inner product computed by the CPU :" << endl;
+      for(int i=0; i<=deg; i++) cout << ip_h[i] << endl;
+   }
+   if(vrblvl > 0)
+      GPU_dbl_inner_product(deg+1,dim,deg,px,mx,ip_d,0,true);
+   else
+      GPU_dbl_inner_product(deg+1,dim,deg,px,mx,ip_d,0,false);
 
-   GPU_dbl_inner_product(deg+1,dim,deg,px,mx,ip_d,0,false);
+   if(vrblvl > 1)
+   {
+      cout << "the inner product computed by the GPU :" << endl;
+      for(int i=0; i<=deg; i++) cout << ip_d[i] << endl;
+   }
+   double sumerr = 0.0;
 
-   cout << "the inner product computed by the GPU :" << endl;
-   for(int i=0; i<=deg; i++) cout << ip_d[i] << endl;
+   for(int i=0; i<=deg; i++)
+      sumerr = sumerr + abs(ip_h[i] - ip_d[i]); 
+   cout << scientific << setprecision(2);
+   cout << "Sum of all errors : " << sumerr << endl;
 }
 
 void test_cmplx_inner_product ( void )
@@ -65,6 +85,9 @@ void test_cmplx_inner_product ( void )
 
    cout << "Give a degree larger than one : ";
    int deg; cin >> deg;
+
+   cout << "Give the verbose level : ";
+   int vrblvl; cin >> vrblvl;
 
    double *xre = new double[dim];
    double *xim = new double[dim];
@@ -83,20 +106,22 @@ void test_cmplx_inner_product ( void )
    random_cmplx_series_vectors
       (dim,deg,xre,xim,pxre,pxim,mxre,mxim);
 
-   cout << scientific << setprecision(16);
-
-   for(int k=0; k<dim; k++)
+   if(vrblvl > 1)
    {
-      cout << "a random x : "
-           << xre[k] << "  " << xim[k] << endl;
-      cout << "series for exp(+x) :" << endl; 
-      for(int i=0; i<=deg; i++)
-         cout << pxre[k][i] << "  " << pxim[k][i] << endl;
-      cout << "series for exp(-x) :" << endl; 
-      for(int i=0; i<=deg; i++)
-         cout << mxre[k][i] << "  " << mxim[k][i] << endl;
-   }
+      cout << scientific << setprecision(16);
 
+      for(int k=0; k<dim; k++)
+      {
+         cout << "a random x : "
+              << xre[k] << "  " << xim[k] << endl;
+         cout << "series for exp(+x) :" << endl; 
+         for(int i=0; i<=deg; i++)
+            cout << pxre[k][i] << "  " << pxim[k][i] << endl;
+         cout << "series for exp(-x) :" << endl; 
+         for(int i=0; i<=deg; i++)
+         cout << mxre[k][i] << "  " << mxim[k][i] << endl;
+      }
+   }
    double *ipre_h = new double[deg+1];
    double *ipim_h = new double[deg+1];
    double *ipre_d = new double[deg+1];
@@ -104,16 +129,32 @@ void test_cmplx_inner_product ( void )
 
    CPU_cmplx_inner_product(dim,deg,pxre,pxim,mxre,mxim,ipre_h,ipim_h);
 
-   cout << "the inner product computed by the CPU :" << endl;
-   for(int i=0; i<=deg; i++)
-      cout << ipre_h[i] << "  " << ipim_h[i] << endl;
+   if(vrblvl > 1)
+   {
+      cout << "the inner product computed by the CPU :" << endl;
+      for(int i=0; i<=deg; i++)
+         cout << ipre_h[i] << "  " << ipim_h[i] << endl;
+   }
+   if(vrblvl > 0)
+      GPU_cmplx_inner_product
+         (deg+1,dim,deg,pxre,pxim,mxre,mxim,ipre_d,ipim_d,0,true);
+   else
+      GPU_cmplx_inner_product
+         (deg+1,dim,deg,pxre,pxim,mxre,mxim,ipre_d,ipim_d,0,false);
 
-   GPU_cmplx_inner_product
-      (deg+1,dim,deg,pxre,pxim,mxre,mxim,ipre_d,ipim_d,0,false);
-
-   cout << "the inner product computed by the GPU :" << endl;
+   if(vrblvl > 1)
+   {
+      cout << "the inner product computed by the GPU :" << endl;
+      for(int i=0; i<=deg; i++)
+         cout << ipre_d[i] << "  " << ipim_d[i] << endl;
+   }
+   double sumerr = 0.0;
    for(int i=0; i<=deg; i++)
-      cout << ipre_d[i] << "  " << ipim_d[i] << endl;
+      sumerr = sumerr + abs(ipre_h[i] - ipre_d[i])
+                      + abs(ipim_h[i] - ipim_d[i]);
+
+   cout << scientific << setprecision(2);
+   cout << "Sum of all errors : " << sumerr << endl;
 }
 
 void test_real_matrix_vector_product ( void )
@@ -127,6 +168,9 @@ void test_real_matrix_vector_product ( void )
    cout << "Give a degree larger than one : ";
    int deg; cin >> deg;
 
+   cout << "Give the verbose level : ";
+   int vrblvl; cin >> vrblvl;
+
    double **rnd = new double*[nbrows];
    double ***mat = new double**[nbrows];
    for(int i=0; i<nbrows; i++)
@@ -138,16 +182,18 @@ void test_real_matrix_vector_product ( void )
    }
    random_dbl_series_matrix(nbrows,nbcols,deg,rnd,mat);
 
-   cout << scientific << setprecision(16);
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
 
-   for(int i=0; i<nbrows; i++)
-      for(int j=0; j<nbcols; j++)
-      {
-         cout << "A[" << i << "][" << j << "] is exp("
-              << rnd[i][j] << ") :" << endl;
-         for(int k=0; k<=deg; k++) cout << mat[i][j][k] << endl;
-      }
-   
+      for(int i=0; i<nbrows; i++)
+         for(int j=0; j<nbcols; j++)
+         {
+            cout << "A[" << i << "][" << j << "] is exp("
+                 << rnd[i][j] << ") :" << endl;
+            for(int k=0; k<=deg; k++) cout << mat[i][j][k] << endl;
+         }
+   }
    double **x = new double*[nbcols];
    for(int i=0; i<nbcols; i++) x[i] = new double[deg+1];
    double **y = new double*[nbrows];
@@ -176,6 +222,9 @@ void test_cmplx_matrix_vector_product ( void )
    cout << "Give a degree larger than one : ";
    int deg; cin >> deg;
 
+   cout << "Give the verbose level : ";
+   int vrblvl; cin >> vrblvl;
+
    double **rndre = new double*[nbrows];
    double **rndim = new double*[nbrows];
    double ***matre = new double**[nbrows];
@@ -194,18 +243,20 @@ void test_cmplx_matrix_vector_product ( void )
    }
    random_cmplx_series_matrix(nbrows,nbcols,deg,rndre,rndim,matre,matim);
 
-   cout << scientific << setprecision(16);
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
 
-   for(int i=0; i<nbrows; i++)
-      for(int j=0; j<nbcols; j++)
-      {
-         cout << "A[" << i << "][" << j << "] is exp("
-              << rndre[i][j] << ", "
-              << rndim[i][j] << ") :" << endl;
-         for(int k=0; k<=deg; k++)
-            cout << matre[i][j][k] << "  " << matim[i][j][k] << endl;
-      }
-   
+      for(int i=0; i<nbrows; i++)
+         for(int j=0; j<nbcols; j++)
+         {
+            cout << "A[" << i << "][" << j << "] is exp("
+                 << rndre[i][j] << ", "
+                 << rndim[i][j] << ") :" << endl;
+            for(int k=0; k<=deg; k++)
+               cout << matre[i][j][k] << "  " << matim[i][j][k] << endl;
+         }
+   }
    double **xre = new double*[nbcols];
    double **xim = new double*[nbcols];
    for(int i=0; i<nbcols; i++)

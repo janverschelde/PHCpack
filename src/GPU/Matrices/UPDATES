@@ -1,13 +1,18 @@
-Wed 23 Jun 2021 : more uniform and consistent naming of functions
-  in dbl_matrices_host, dbl_matrices_kernels, with caused updates
-  in dbl_vectors_testers.cpp and dbl_matrices_testers.cpp.
-  Fixed bug in the convolutions kernel of dbl_matrices_kernels.cu, 
-  tested by dbl_vectors_testers.cpp.  Added summation to dbl_matrices_kernels,
-  tested by dbl_vectors_testers.cpp, okay for dimensions equal to powers of 2.
+Fri 25 Jun 2021 : added prompt for verbose level in dbl_vectors_testers.cpp,
+  with a sum of errors computation on the inner products.
+
+Thu 24 Jun 2021 : fixed bug in the convolutions kernel of 
+  dbl_matrices_kernels.cu, tested by dbl_vectors_testers.cpp.
+  Added summation to dbl_matrices_kernels, tested by dbl_vectors_testers.cpp,
+  okay for dimensions equal to powers of 2.
   Updated dbl_matrices_kernels and dbl_vectors_testers.cpp
   so the sum reduction now works for any dimension.
   Added complex versions to dbl_matrices_kernels, with added tests
   to dbl_vectors_testers.cpp.
+
+Wed 23 Jun 2021 : more uniform and consistent naming of functions
+  in dbl_matrices_host, dbl_matrices_kernels, with caused updates
+  in dbl_vectors_testers.cpp and dbl_matrices_testers.cpp.
 
 Tue 22 Jun 2021 : new dbl_matrices_kernels with kernels for inner products.
   Updated the makefile_unix and makefile_windows.
