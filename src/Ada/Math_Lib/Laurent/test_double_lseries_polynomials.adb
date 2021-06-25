@@ -16,7 +16,7 @@ with Standard_Complex_Laurentials_io;   use Standard_Complex_Laurentials_io;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Double_Laurent_Series;
 with Random_Laurent_Series;             use Random_Laurent_Series;
-with Test_Double_Lseries_Matrices;
+with Double_Linear_Laurent_Solvers;
 
 package body Test_Double_Lseries_Polynomials is
 
@@ -36,7 +36,7 @@ package body Test_Double_Lseries_Polynomials is
     Write(plead,pcffs,pmons);
     Random_Vector(dim,deg,low,upp,xlead,xcffs);
     put_line("A random vector of Laurent series :");
-    Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
+    Double_Linear_Laurent_Solvers.Write(xlead,xcffs,"x");
     Eval(deg,plead,pcffs,pmons,xlead,xcffs,ye,yc);
     put_line("The result of the evaluation :");
     Double_Laurent_Series.Write(ye,yc);
@@ -148,7 +148,7 @@ package body Test_Double_Lseries_Polynomials is
     Random_Vector(dim,deg,low,upp,xlead,xcffs);
     put("Leading exponents of a random vector :"); put(xlead,1); new_line;
     put("A "); put(dim,1); put_line("-vector of Laurent series :");
-    Test_Double_Lseries_Matrices.Write(xlead,xcffs,"x");
+    Double_Linear_Laurent_Solvers.Write(xlead,xcffs,"x");
     for k in 1..dim loop
       cff := xcffs(k);
       x0cff(k) := cff(0);
