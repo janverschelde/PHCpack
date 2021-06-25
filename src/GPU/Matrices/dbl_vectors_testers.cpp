@@ -214,8 +214,12 @@ void test_real_matrix_vector_product ( void )
          for(int k=0; k<=deg; k++) cout << y_h[i][k] << endl;
       }
    }
-   GPU_dbl_matrix_vector_product
-      (deg+1,nbrows,nbcols,deg,mat,x,y_d,1,true);
+   if(vrblvl > 0)
+      GPU_dbl_matrix_vector_product
+         (deg+1,nbrows,nbcols,deg,mat,x,y_d,0,true);
+   else
+      GPU_dbl_matrix_vector_product
+         (deg+1,nbrows,nbcols,deg,mat,x,y_d,0,false);
 
    if(vrblvl > 1)
    {
@@ -315,8 +319,12 @@ void test_cmplx_matrix_vector_product ( void )
             cout << yre_h[i][k] << "  " << yim_h[i][k] << endl;
       }
    }
-   GPU_cmplx_matrix_vector_product
-      (deg+1,nbrows,nbcols,deg,matre,matim,xre,xim,yre_d,yim_d,1,true);
+   if(vrblvl > 0)
+      GPU_cmplx_matrix_vector_product
+         (deg+1,nbrows,nbcols,deg,matre,matim,xre,xim,yre_d,yim_d,0,true);
+   else
+      GPU_cmplx_matrix_vector_product
+         (deg+1,nbrows,nbcols,deg,matre,matim,xre,xim,yre_d,yim_d,0,false);
 
    if(vrblvl > 1)
    {

@@ -182,36 +182,36 @@ void GPU_dbl_inner_product
       }
       if(BS == deg1)
       {
-          int restshift = (dim % 2 == 0 ? 0 : deg1);
-          int lag = dim/2;
+         int restshift = (dim % 2 == 0 ? 0 : deg1);
+         int lag = dim/2;
 
-          for(int L=0; L<ceil2log; L++)
-          {
-              if(L == ceil2log-1) restshift = 0; // no shift at end
+         for(int L=0; L<ceil2log; L++)
+         {
+            if(L == ceil2log-1) restshift = 0; // no shift at end
 
-              if(verbose)
-                 cout << "restshift : " << restshift
-                      << "  lag : " << lag << "  L : " << L << endl;
+            if(verbose)
+               cout << "restshift : " << restshift
+                    << "  lag : " << lag << "  L : " << L << endl;
 
-              dbl_additions<<<lag,BS>>>(x_d,lag,restshift,deg1);
+            dbl_additions<<<lag,BS>>>(x_d,lag,restshift,deg1);
 
-              if(restshift == 0)                // no shift left
-              {
-                 restshift = (lag % 2 == 0 ? 0 : deg1);
-                 lag = (lag == 1 ? 1 : lag/2);
-              }
-              else                              // have shift left
-              {
-                 if(lag % 2 == 0)               // if even lag,
-                    lag = lag/2;                // then keep the shift
-                 else
-                 {
-                    restshift = 0;              // set shift to zero
-                    lag = (lag == 1 ? 1 : lag/2);
-                    if(L < ceil2log-2) lag = lag + 1;
-                 }
-              }
-          }
+            if(restshift == 0)                // no shift left
+            {
+               restshift = (lag % 2 == 0 ? 0 : deg1);
+               lag = (lag == 1 ? 1 : lag/2);
+            }
+            else                              // have shift left
+            {
+               if(lag % 2 == 0)               // if even lag,
+                  lag = lag/2;                // then keep the shift
+               else
+               {
+                  restshift = 0;              // set shift to zero
+                  lag = (lag == 1 ? 1 : lag/2);
+                  if(L < ceil2log-2) lag = lag + 1;
+               }
+            }
+         }
       }
       cudaMemcpy(z,x_d,szdeg,cudaMemcpyDeviceToHost);
    }
@@ -297,36 +297,36 @@ void GPU_cmplx_inner_product
       }
       if(BS == deg1)
       {
-          int restshift = (dim % 2 == 0 ? 0 : deg1);
-          int lag = dim/2;
+         int restshift = (dim % 2 == 0 ? 0 : deg1);
+         int lag = dim/2;
 
-          for(int L=0; L<ceil2log; L++)
-          {
-              if(L == ceil2log-1) restshift = 0; // no shift at end
+         for(int L=0; L<ceil2log; L++)
+         {
+            if(L == ceil2log-1) restshift = 0; // no shift at end
 
-              if(verbose)
-                 cout << "restshift : " << restshift
-                      << "  lag : " << lag << "  L : " << L << endl;
+            if(verbose)
+               cout << "restshift : " << restshift
+                    << "  lag : " << lag << "  L : " << L << endl;
 
-              cmplx_additions<<<lag,BS>>>(xre_d,xim_d,lag,restshift,deg1);
+            cmplx_additions<<<lag,BS>>>(xre_d,xim_d,lag,restshift,deg1);
 
-              if(restshift == 0)                // no shift left
-              {
-                 restshift = (lag % 2 == 0 ? 0 : deg1);
-                 lag = (lag == 1 ? 1 : lag/2);
-              }
-              else                              // have shift left
-              {
-                 if(lag % 2 == 0)               // if even lag,
-                    lag = lag/2;                // then keep the shift
-                 else
-                 {
-                    restshift = 0;              // set shift to zero
-                    lag = (lag == 1 ? 1 : lag/2);
-                    if(L < ceil2log-2) lag = lag + 1;
-                 }
-              }
-          }
+            if(restshift == 0)                // no shift left
+            {
+               restshift = (lag % 2 == 0 ? 0 : deg1);
+               lag = (lag == 1 ? 1 : lag/2);
+            }
+            else                              // have shift left
+            {
+               if(lag % 2 == 0)               // if even lag,
+                  lag = lag/2;                // then keep the shift
+               else
+               {
+                  restshift = 0;              // set shift to zero
+                  lag = (lag == 1 ? 1 : lag/2);
+                  if(L < ceil2log-2) lag = lag + 1;
+               }
+            }
+         }
       }
       cudaMemcpy(zre,xre_d,szdeg,cudaMemcpyDeviceToHost);
       cudaMemcpy(zim,xim_d,szdeg,cudaMemcpyDeviceToHost);
@@ -343,7 +343,6 @@ void GPU_dbl_matrix_vector_product
 
    double* row_d;                  // row_d is a row of A
    double* x_d;                    // x_d is x_h on the device
-   // double* y_d;                    // y_d is y_h on the device
 
    size_t szdeg = deg1*sizeof(double);
    size_t szcol = cols*szdeg;
@@ -375,15 +374,65 @@ void GPU_dbl_matrix_vector_product
 
       if(BS == deg1) dbl_convolutions<<<cols,BS>>>(row_d,x_d,deg1);
 
-      cudaMemcpy(row_h,row_d,szcol,cudaMemcpyDeviceToHost);
-
       if(mode == 1) // do all additions on the host
       {
+         cudaMemcpy(row_h,row_d,szcol,cudaMemcpyDeviceToHost);
+
          for(int k=0; k<deg1; k++) y[i][k] = 0.0;
 
          ix=0;
          for(int j=0; j<cols; j++)
             for(int k=0; k<deg1; k++) y[i][k] = y[i][k] + row_h[ix++];
+      }
+      else          // launch log2(cols) summation kernels
+      {
+         using namespace std;
+
+         int dim = cols;
+         double logdim = log2((double)dim);
+         double ceil_logdim = ceil(logdim);
+         int ceil2log = int(ceil_logdim);
+
+         if(verbose)
+         {
+            cout << "log(" << dim << ") : " << logdim << endl;
+            cout << "ceil(log(" << dim << ")) : " << ceil_logdim << endl;
+            cout << "ceil2log : " << ceil2log << endl;
+         }
+         if(BS == deg1)
+         {
+            int restshift = (dim % 2 == 0 ? 0 : deg1);
+            int lag = dim/2;
+
+            for(int L=0; L<ceil2log; L++)
+            {
+               if(L == ceil2log-1) restshift = 0; // no shift at end
+
+               if(verbose)
+                  cout << "restshift : " << restshift
+                       << "  lag : " << lag << "  L : " << L << endl;
+
+               dbl_additions<<<lag,BS>>>(row_d,lag,restshift,deg1);
+
+               if(restshift == 0)                // no shift left
+               {
+                  restshift = (lag % 2 == 0 ? 0 : deg1);
+                  lag = (lag == 1 ? 1 : lag/2);
+               }
+               else                              // have shift left
+               {
+                  if(lag % 2 == 0)               // if even lag,
+                     lag = lag/2;                // then keep the shift
+                  else
+                  {
+                     restshift = 0;              // set shift to zero
+                     lag = (lag == 1 ? 1 : lag/2);
+                     if(L < ceil2log-2) lag = lag + 1;
+                  }
+               }
+            }
+            cudaMemcpy(y[i],row_d,szdeg,cudaMemcpyDeviceToHost);
+         }
       }
    }
 }
@@ -463,6 +512,58 @@ void GPU_cmplx_matrix_vector_product
                yre[i][k] = yre[i][k] + rowre_h[ix];
                yim[i][k] = yim[i][k] + rowim_h[ix++];
             }
+      }
+      else          // launch log2(cols) summation kernels
+      {
+         using namespace std;
+
+         int dim = cols;
+         double logdim = log2((double)dim);
+         double ceil_logdim = ceil(logdim);
+         int ceil2log = int(ceil_logdim);
+
+         if(verbose)
+         {
+            cout << "log(" << dim << ") : " << logdim << endl;
+            cout << "ceil(log(" << dim << ")) : " << ceil_logdim << endl;
+            cout << "ceil2log : " << ceil2log << endl;
+         }
+         if(BS == deg1)
+         {
+            int restshift = (dim % 2 == 0 ? 0 : deg1);
+            int lag = dim/2;
+
+            for(int L=0; L<ceil2log; L++)
+            {
+               if(L == ceil2log-1) restshift = 0; // no shift at end
+
+               if(verbose)
+                  cout << "restshift : " << restshift
+                       << "  lag : " << lag << "  L : " << L << endl;
+
+               cmplx_additions<<<lag,BS>>>
+                  (rowre_d,rowim_d,lag,restshift,deg1);
+
+               if(restshift == 0)                // no shift left
+               {
+                  restshift = (lag % 2 == 0 ? 0 : deg1);
+                  lag = (lag == 1 ? 1 : lag/2);
+               }
+               else                              // have shift left
+               {
+                  if(lag % 2 == 0)               // if even lag,
+                     lag = lag/2;                // then keep the shift
+                  else
+                  {
+                     restshift = 0;              // set shift to zero
+                     lag = (lag == 1 ? 1 : lag/2);
+                     if(L < ceil2log-2) lag = lag + 1;
+                  }
+               }
+            }
+            cudaMemcpy(yre[i],rowre_d,szdeg,cudaMemcpyDeviceToHost);
+            cudaMemcpy(yim[i],rowim_d,szdeg,cudaMemcpyDeviceToHost);
+         }
       }
    }
 }
