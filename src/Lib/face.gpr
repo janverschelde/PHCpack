@@ -1,4 +1,4 @@
-project lib is
+project face is
 
     type OS_type is ("linux", "windows", "macosx");
     os : OS_type := external("os", "linux");
@@ -39,7 +39,10 @@ project lib is
             for Languages use ("Ada", "C", "C++");
             for Excluded_Source_Files use
             (
+                "ts_use_syscon.c",
                 "ts_ctimer.adb",
+                "multithreading.ads", "multithreading.adb",
+                "ts_threads.adb", "ts_natdiv.adb",
                 "double_double.c",
                 "zero_index_tree.c", "index_tree_lp.c", "relation_table.c",
                 "prepare_for_mv.c", "one_level_lp.c", "mv.c",
@@ -64,6 +67,7 @@ project lib is
                 "gpumanypaths_d.cpp", "gpumanypaths_dd.cpp",
                 "gpumanypaths_qd.cpp",
                 "main_ade_trackers.ads", "main_ade_trackers.adb",
+                "mainadep.ads", "mainadep.adb",
                 "algorithmic_diffeval_trackers.ads",
                 "algorithmic_diffeval_trackers.adb",
                 "standard_accelerated_trackers.ads",
@@ -162,8 +166,11 @@ project lib is
 
     for Main use
     (
-        "lib_syscon.c", -- test systems container
-        "lib_solcon.c"  -- test solutions container
+       -- "lib_pieri.c",   -- test Pieri homotopies
+        "ts_list2str.c", -- test lists and string conversions
+        "lib_syscon.c",  -- test systems container
+        "lib_solcon.c",  -- test solutions container
+        "lib_celcon.c"   -- test cells container
     );
 
     package Compiler is
@@ -200,4 +207,4 @@ project lib is
 
     end Linker;
 
-end lib;
+end face;
