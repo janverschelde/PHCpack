@@ -1,3 +1,5 @@
+Thu 24 Jun 2021 : added a preliminary lib.gpr.
+
 Tue 22 Jun 2021 : moved the code for the extension module for phcpy to the
   new, separate folder ../Mod.  Moved also all code for the Path library.
 
