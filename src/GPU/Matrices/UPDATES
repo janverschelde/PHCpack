@@ -1,5 +1,7 @@
 Fri 25 Jun 2021 : added prompt for verbose level in dbl_vectors_testers.cpp,
   with a sum of errors computation on the inner products.
+  Extended dbl_matrices_kernels with complex versions of the matrix-vector
+  products, tested by dbl_vectors_testers.cpp.
 
 Thu 24 Jun 2021 : fixed bug in the convolutions kernel of 
   dbl_matrices_kernels.cu, tested by dbl_vectors_testers.cpp.

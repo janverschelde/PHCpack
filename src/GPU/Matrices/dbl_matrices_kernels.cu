@@ -334,3 +334,135 @@ void GPU_cmplx_inner_product
    free(xre_h); free(yre_h);
    free(xim_h); free(yim_h);
 }
+
+void GPU_dbl_matrix_vector_product
+ ( int BS, int rows, int cols, int deg, double ***A, double **x,
+   double **y, int mode, bool verbose )
+{
+   const int deg1 = deg+1;         // coefficient series length
+
+   double* row_d;                  // row_d is a row of A
+   double* x_d;                    // x_d is x_h on the device
+   // double* y_d;                    // y_d is y_h on the device
+
+   size_t szdeg = deg1*sizeof(double);
+   size_t szcol = cols*szdeg;
+
+   double* x_h = new double[cols*deg1];
+   int ix = 0;
+   for(int i=0; i<cols; i++)
+      for(int j=0; j<deg1; j++) x_h[ix++] = x[i][j];
+
+   cudaMalloc((void**)&x_d,szcol);
+   cudaMemcpy(x_d,x_h,szcol,cudaMemcpyHostToDevice);
+
+   cudaMalloc((void**)&row_d,szcol);
+   double* row_h = new double[cols*deg1];
+
+   for(int i=0; i<rows; i++)
+   {
+      using namespace std;
+
+      if(verbose) cout << "Computing row " << i << " ..." << endl;
+
+      ix = 0;
+      for(int j=0; j<cols; j++)
+         for(int k=0; k<deg1; k++) row_h[ix++] = A[i][j][k];
+
+      cudaMemcpy(row_d,row_h,szcol,cudaMemcpyHostToDevice);
+
+      if(verbose) cout << "  ... launching the kernel ..." << endl;
+
+      if(BS == deg1) dbl_convolutions<<<cols,BS>>>(row_d,x_d,deg1);
+
+      cudaMemcpy(row_h,row_d,szcol,cudaMemcpyDeviceToHost);
+
+      if(mode == 1) // do all additions on the host
+      {
+         for(int k=0; k<deg1; k++) y[i][k] = 0.0;
+
+         ix=0;
+         for(int j=0; j<cols; j++)
+            for(int k=0; k<deg1; k++) y[i][k] = y[i][k] + row_h[ix++];
+      }
+   }
+}
+
+void GPU_cmplx_matrix_vector_product
+ ( int BS, int rows, int cols, int deg, double ***Are, double ***Aim,
+   double **xre, double **xim, double **yre, double **yim,
+   int mode, bool verbose )
+{
+   const int deg1 = deg+1;         // coefficient series length
+
+   double* rowre_d;                // row_d is a row of Are
+   double* rowim_d;                // row_d is a row of Aim
+   double* xre_d;                  // xre_d is xre_h on the device
+   double* xim_d;                  // xim_d is xim_h on the device
+   // double* y_d;                    // y_d is y_h on the device
+
+   size_t szdeg = deg1*sizeof(double);
+   size_t szcol = cols*szdeg;
+
+   double* xre_h = new double[cols*deg1];
+   double* xim_h = new double[cols*deg1];
+   int ix = 0;
+   for(int i=0; i<cols; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         xre_h[ix] = xre[i][j];
+         xim_h[ix++] = xim[i][j];
+      }
+
+   cudaMalloc((void**)&xre_d,szcol);
+   cudaMalloc((void**)&xim_d,szcol);
+   cudaMemcpy(xre_d,xre_h,szcol,cudaMemcpyHostToDevice);
+   cudaMemcpy(xim_d,xim_h,szcol,cudaMemcpyHostToDevice);
+
+   cudaMalloc((void**)&rowre_d,szcol);
+   cudaMalloc((void**)&rowim_d,szcol);
+   double* rowre_h = new double[cols*deg1];
+   double* rowim_h = new double[cols*deg1];
+
+   for(int i=0; i<rows; i++)
+   {
+      using namespace std;
+
+      if(verbose) cout << "Computing row " << i << " ..." << endl;
+
+      ix = 0;
+      for(int j=0; j<cols; j++)
+         for(int k=0; k<deg1; k++)
+         {
+            rowre_h[ix] = Are[i][j][k];
+            rowim_h[ix++] = Aim[i][j][k];
+         }
+
+      cudaMemcpy(rowre_d,rowre_h,szcol,cudaMemcpyHostToDevice);
+      cudaMemcpy(rowim_d,rowim_h,szcol,cudaMemcpyHostToDevice);
+
+      if(verbose) cout << "  ... launching the kernel ..." << endl;
+
+      if(BS == deg1)
+         cmplx_convolutions<<<cols,BS>>>(rowre_d,rowim_d,xre_d,xim_d,deg1);
+
+      cudaMemcpy(rowre_h,rowre_d,szcol,cudaMemcpyDeviceToHost);
+      cudaMemcpy(rowim_h,rowim_d,szcol,cudaMemcpyDeviceToHost);
+
+      if(mode == 1) // do all additions on the host
+      {
+         for(int k=0; k<deg1; k++)
+         {
+            yre[i][k] = 0.0;
+            yim[i][k] = 0.0;
+         }
+         ix=0;
+         for(int j=0; j<cols; j++)
+            for(int k=0; k<deg1; k++)
+            {
+               yre[i][k] = yre[i][k] + rowre_h[ix];
+               yim[i][k] = yim[i][k] + rowim_h[ix++];
+            }
+      }
+   }
+}

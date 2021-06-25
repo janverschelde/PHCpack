@@ -196,19 +196,43 @@ void test_real_matrix_vector_product ( void )
    }
    double **x = new double*[nbcols];
    for(int i=0; i<nbcols; i++) x[i] = new double[deg+1];
-   double **y = new double*[nbrows];
-   for(int i=0; i<nbrows; i++) y[i] = new double[deg+1];
+   double **y_h = new double*[nbrows];
+   for(int i=0; i<nbrows; i++) y_h[i] = new double[deg+1];
+   double **y_d = new double*[nbrows];
+   for(int i=0; i<nbrows; i++) y_d[i] = new double[deg+1];
 
    for(int i=0; i<nbcols; i++)
       dbl_exponential(deg,-rnd[nbrows-1][i],x[i]);
 
-   CPU_dbl_matrix_vector_product(nbrows,nbcols,deg,mat,x,y);
+   CPU_dbl_matrix_vector_product(nbrows,nbcols,deg,mat,x,y_h);
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<nbrows; i++)
+      {
+         cout << "y[" << i << "] :" << endl;
+         for(int k=0; k<=deg; k++) cout << y_h[i][k] << endl;
+      }
+   }
+   GPU_dbl_matrix_vector_product
+      (deg+1,nbrows,nbcols,deg,mat,x,y_d,1,true);
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<nbrows; i++)
+      {
+         cout << "y[" << i << "] :" << endl;
+         for(int k=0; k<=deg; k++) cout << y_d[i][k] << endl;
+      }
+   }
+   double sumerr = 0.0;
 
    for(int i=0; i<nbrows; i++)
-   {
-      cout << "y[" << i << "] :" << endl;
-      for(int k=0; k<=deg; k++) cout << y[i][k] << endl;
-   }
+      for(int j=0; j<=deg; j++)
+         sumerr = sumerr + abs(y_h[i][j] - y_d[i][j]); 
+
+   cout << scientific << setprecision(2);
+   cout << "Sum of all errors : " << sumerr << endl;
 }
 
 void test_cmplx_matrix_vector_product ( void )
@@ -264,24 +288,52 @@ void test_cmplx_matrix_vector_product ( void )
       xre[i] = new double[deg+1];
       xim[i] = new double[deg+1];
    }
-   double **yre = new double*[nbrows];
-   double **yim = new double*[nbrows];
+   double **yre_h = new double*[nbrows];
+   double **yim_h = new double*[nbrows];
+   double **yre_d = new double*[nbrows];
+   double **yim_d = new double*[nbrows];
    for(int i=0; i<nbrows; i++)
    {
-      yre[i] = new double[deg+1];
-      yim[i] = new double[deg+1];
+      yre_h[i] = new double[deg+1];
+      yim_h[i] = new double[deg+1];
+      yre_d[i] = new double[deg+1];
+      yim_d[i] = new double[deg+1];
    }
    for(int i=0; i<nbcols; i++)
       cmplx_exponential
          (deg,-rndre[nbrows-1][i],-rndim[nbrows-1][i],xre[i],xim[i]);
 
    CPU_cmplx_matrix_vector_product
-      (nbrows,nbcols,deg,matre,matim,xre,xim,yre,yim);
+      (nbrows,nbcols,deg,matre,matim,xre,xim,yre_h,yim_h);
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<nbrows; i++)
+      {
+         cout << "y[" << i << "] :" << endl;
+         for(int k=0; k<=deg; k++)
+            cout << yre_h[i][k] << "  " << yim_h[i][k] << endl;
+      }
+   }
+   GPU_cmplx_matrix_vector_product
+      (deg+1,nbrows,nbcols,deg,matre,matim,xre,xim,yre_d,yim_d,1,true);
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<nbrows; i++)
+      {
+         cout << "y[" << i << "] :" << endl;
+         for(int k=0; k<=deg; k++)
+            cout << yre_d[i][k] << "  " << yim_d[i][k] << endl;
+      }
+   }
+   double sumerr = 0.0;
 
    for(int i=0; i<nbrows; i++)
-   {
-      cout << "y[" << i << "] :" << endl;
-      for(int k=0; k<=deg; k++)
-         cout << yre[i][k] << "  " << yim[i][k] << endl;
-   }
+      for(int j=0; j<=deg; j++)
+         sumerr = sumerr + abs(yre_h[i][j] - yre_d[i][j])
+                         + abs(yim_h[i][j] - yim_d[i][j]); 
+
+   cout << scientific << setprecision(2);
+   cout << "Sum of all errors : " << sumerr << endl;
 }

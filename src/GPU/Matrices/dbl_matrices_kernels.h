@@ -126,4 +126,68 @@ void GPU_cmplx_inner_product
  *            for k from 0 to dim-1,
  *            as a power series truncated to the degree deg. */
 
+void GPU_dbl_matrix_vector_product
+ ( int BS, int rows, int cols, int deg, double ***A, double **x,
+   double **y, int mode, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Computes the product y of the matrix A with x,
+ *   for truncated power series on real data.
+ *
+ * ON ENTRY :
+ *   BS       number of threads in a block, must equal deg+1; 
+ *   rows     the number of rows in the matrix A
+ *            and the dimension of y;
+ *   cols     the number of columns in the matrix A
+ *            and the dimension of x;
+ *   deg      truncation degree of the series;
+ *   A        matrix of dimensions rows and cols,
+ *            of power series truncated at the degree deg;
+ *   x        vector of dimension cols
+ *            of power series truncated at the degree deg;
+ *   y        space allocated for a vector of dimension rows 
+ *            of power series truncated at the degree deg;
+ *   mode     if 1, then the addition happens on the CPU,
+ *            otherwise the addition kernel is called;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   y        the product of A with x. */
+
+void GPU_cmplx_matrix_vector_product
+ ( int BS, int rows, int cols, int deg, double ***Are, double ***Aim,
+   double **xre, double **xim, double **yre, double **yim,
+   int mode, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Computes the product y of the matrix A with x,
+ *   for truncated power series on complex data.
+ *
+ * ON ENTRY :
+ *   BS       number of threads in a block, must equal deg+1; 
+ *   rows     the number of rows in the matrix A
+ *            and the dimension of y;
+ *   cols     the number of columns in the matrix A
+ *            and the dimension of x;
+ *   deg      truncation degree of the series;
+ *   Are      real parts of a matrix of dimensions rows and cols,
+ *            of power series truncated at the degree deg;
+ *   Aim      imaginary parts of a matrix of dimensions rows and cols,
+ *            of power series truncated at the degree deg;
+ *   xre      real parts of a vector of dimension cols
+ *            of power series truncated at the degree deg;
+ *   xim      imaginary parts of a vector of dimension cols
+ *            of power series truncated at the degree deg;
+ *   yre      space allocated for a vector of dimension rows 
+ *            of power series truncated at the degree deg;
+ *   yim      space allocated for a vector of dimension rows 
+ *            of power series truncated at the degree deg;
+ *   mode     if 1, then the addition happens on the CPU,
+ *            otherwise the addition kernel is called;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   yre      real parts of the product of A with x;
+ *   yim      imaginary parts of the product of A with x. */
+
 #endif
