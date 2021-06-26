@@ -7,26 +7,40 @@ project system is
         when "linux" | "macosx" => 
             for Languages use ("Ada");
             for Source_Dirs use (".", "Unix_Timer");
+            for Main use
+            (
+               "ts_stamps.adb",   -- tests date, time, and elapsed time
+               "ts_syscall.adb",  -- tests execution of a system call
+               "ts_mach.adb",     -- prints system information
+               "ts_cmdline.adb",  -- prints command line arguments
+               "ts_byemess.adb",  -- prints the end message
+               "ts_strsplit.adb", -- tests string_splitters package
+               "ts_commuser.adb", -- tests the dialogues with the user
+               "ts_filescan.adb", -- tests file scanning
+               "ts_striscan.adb", -- tests on string_parsing.scan()
+               "ts_timer.adb"     -- tests the timer
+            );
         when "windows" =>
             for Languages use ("Ada", "C");
             for Source_Dirs use (".", "Basic_Timer");
+            for Main use
+            (
+               "ts_stamps.adb",   -- tests date, time, and elapsed time
+               "ts_syscall.adb",  -- tests execution of a system call
+               "ts_mach.adb",     -- prints system information
+               "ts_cmdline.adb",  -- prints command line arguments
+               "ts_byemess.adb",  -- prints the end message
+               "ts_strsplit.adb", -- tests string_splitters package
+               "ts_commuser.adb", -- tests the dialogues with the user
+               "ts_filescan.adb", -- tests file scanning
+               "ts_striscan.adb", -- tests on string_parsing.scan()
+               "ts_ctimer.adb",   -- tests the C timer
+               "ts_timer.adb"     -- tests the timer
+            );
     end case;
 
     for Object_Dir use "../../Objects";
     for Exec_Dir use "../../bin";
-
-    for Main use
-    (
-       "ts_stamps.adb",      -- tests on date, time, and elapsed time
-       "ts_syscall.adb",     -- execution of a system call : "ls"
-       "ts_mach.adb",        -- prints system information of current process
-       "ts_cmdline.adb",     -- prints the arguments of the command line
-       "ts_byemess.adb",     -- prints the message at the end of the program
-       "ts_strsplit.adb",    -- tests string_splitters package
-       "ts_commuser.adb",    -- tests the dialogues with the user
-       "ts_filescan.adb",    -- reads a file name and banner, and scans for it
-       "ts_striscan.adb"     -- interactive test on string_parsing.scan()
-    );
 
     package Compiler is
 
