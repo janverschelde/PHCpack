@@ -1,3 +1,6 @@
+Sat 26 Jun 2021 : moved ts_ctimer.adb to the folder Basic_Timer,
+  updated system.gpr.
+
 Thu 10 Jun 2021 : defined system.gpr to build the test procedures.
 
 Sun 23 Aug 2020 : extended communications_with_user with end of input message.

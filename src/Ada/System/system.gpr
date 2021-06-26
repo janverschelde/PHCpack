@@ -18,7 +18,6 @@ project system is
     for Main use
     (
        "ts_stamps.adb",      -- tests on date, time, and elapsed time
-      -- "ts_ctimer.adb",      -- timing with a call to ANSI C
        "ts_syscall.adb",     -- execution of a system call : "ls"
        "ts_mach.adb",        -- prints system information of current process
        "ts_cmdline.adb",     -- prints the arguments of the command line

@@ -10,6 +10,8 @@ file name                 : short description
 ------------------------------------------------------------------------------
 get_clock.c               : calls the C routine "clock"
 get_clocks_per_sec.c      : returns the constant CLOCKS_PER_SEC from time.h 
+ts_ctimer                 : timing with a call to ANSI C
+------------------------------------------------------------------------------
 timing_package            : measures usage of computing resources
 ts_timer                  : timing of summation of natural numbers
 ------------------------------------------------------------------------------

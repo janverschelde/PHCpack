@@ -33,7 +33,6 @@ string_parsing            : scanning a string for a banner
 multithreading            : encapsulation for GNAT.Threads
 ------------------------------------------------------------------------------
 ts_stamps                 : test on date, time, and elapsed time
-ts_ctimer                 : timing with a call to ANSI C
 ts_syscall                : execution of a system call : "ls"
 ts_mach                   : prints system information of current process
 ts_cmdline                : prints the arguments of the command line
