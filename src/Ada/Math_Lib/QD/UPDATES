@@ -1,3 +1,6 @@
+Sat 26 Jun 2021 : removed double_double.cpp and downgraded dd_funtest.cpp
+  to dd_funtest.c.  Added the building of the C tests to qd.gpr.
+
 Thu 10 Jun 2021 : added the exec_dir attribute to qd.gqr.
 
 Tue 8 Jun 2021 : defined qd.gpr to build the test procedures.

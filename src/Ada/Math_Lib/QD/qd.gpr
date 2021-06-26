@@ -12,36 +12,44 @@ project QD is
             for Source_Dirs use
                 (".", "../../System", "../../System/Basic_Timer",
                  "../Numbers");
-            for Languages use ("Ada", "C");
     end case;
+
+    for Languages use ("Ada", "C");
 
     for Object_Dir use "../../../Objects";
     for Exec_Dir use "../../../bin";
 
     for Main use
     (
-        "ts_dbldbl.adb",   -- test double doubles
-        "ts_qddbl.adb",    -- test quad doubles
-        "ts_ddcmplx.adb",  -- test complex double doubles
-        "ts_qdcmplx.adb",  -- test complex quad doubles
-        "ts_mpddcv.adb",   -- test multiprecision double double conversions
-        "ts_mpqdcv.adb",   -- test multiprecision quad double conversions
-        "ts_ddfun.adb",    -- test double double functions
-        "ts_qdfun.adb",    -- test quad double function
-        "ts_cmpexp.adb",   -- test complex exponentation
-        "ts_tridbl.adb",   -- test triple doubles
-        "ts_tdcmplx.adb",  -- test complex triple doubles
-        "ts_pentadbl.adb", -- test_penta doubles
-        "ts_pdcmplx.adb",  -- test complex penta doubles
-        "ts_octdbl.adb",   -- test octo doubles
-        "ts_odcmplx.adb",  -- test complex octo doubles
-        "ts_decadbl.adb",  -- test deca doubles
-        "ts_dacmplx.adb",  -- test complex deca doubles
-        "ts_tdfun.adb",    -- test triple double functions
-        "ts_pdfun.adb",    -- test penta double functions
-        "ts_odfun.adb",    -- test octo double functions
-        "ts_dafun.adb",    -- test deca double functions
-        "ts_mpcasts.adb"   -- test multiprecision multiple double casts
+        "dd_test.c",       -- tests C double doubles
+        "dd_funtest.c",    -- tests C double double functions
+        "td_test.c",       -- tests C triple doubles
+        "qd_test.c",       -- tests C quad doubles
+        "pd_test.c",       -- tests C penta doubles
+        "od_test.c",       -- tests C octo doubles
+        "da_test.c",       -- tests C deca doubles
+        "ts_dbldbl.adb",   -- tests double doubles
+        "ts_qddbl.adb",    -- tests quad doubles
+        "ts_ddcmplx.adb",  -- tests complex double doubles
+        "ts_qdcmplx.adb",  -- tests complex quad doubles
+        "ts_mpddcv.adb",   -- tests multiprecision double double conversions
+        "ts_mpqdcv.adb",   -- tests multiprecision quad double conversions
+        "ts_ddfun.adb",    -- tests double double functions
+        "ts_qdfun.adb",    -- tests quad double function
+        "ts_cmpexp.adb",   -- tests complex exponentation
+        "ts_tridbl.adb",   -- tests triple doubles
+        "ts_tdcmplx.adb",  -- tests complex triple doubles
+        "ts_pentadbl.adb", -- tests_penta doubles
+        "ts_pdcmplx.adb",  -- tests complex penta doubles
+        "ts_octdbl.adb",   -- tests octo doubles
+        "ts_odcmplx.adb",  -- tests complex octo doubles
+        "ts_decadbl.adb",  -- tests deca doubles
+        "ts_dacmplx.adb",  -- tests complex deca doubles
+        "ts_tdfun.adb",    -- tests triple double functions
+        "ts_pdfun.adb",    -- tests penta double functions
+        "ts_odfun.adb",    -- tests octo double functions
+        "ts_dafun.adb",    -- tests deca double functions
+        "ts_mpcasts.adb"   -- tests multiprecision multiple double casts
     );
 
     package Compiler is
@@ -49,5 +57,17 @@ project QD is
         for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
 
     end Compiler;
+
+    package Linker is
+
+        for Switches ("dd_test.c") use ("-lm");
+        for Switches ("dd_funtest.c") use ("-lm");
+        for Switches ("td_test.c") use ("-lm");
+        for Switches ("qd_test.c") use ("-lm");
+        for Switches ("pd_test.c") use ("-lm");
+        for Switches ("od_test.c") use ("-lm");
+        for Switches ("da_test.c") use ("-lm");
+
+    end Linker;
 
 end QD;

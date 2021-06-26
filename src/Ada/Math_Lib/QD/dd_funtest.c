@@ -1,12 +1,9 @@
 /* Test on the sin and cos functions in double double precision. */
 
-#include <iostream>
-#include <iomanip>
-#include <ctime>
-#include <cstdlib>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include "double_double.h"
-
-using namespace std;
 
 int test_sincostaylor ( void );
 /*
@@ -47,21 +44,21 @@ int test_sincostaylor ( void )
    dd_cos_taylor(dd_pi32,cospi32a);
    dd_sincos_taylor(dd_pi32,sinpi32b,cospi32b);
 
-   cout << "test on sincostaylor ..." << endl;
+   printf("test on sincostaylor ...\n");
 
-   cout << "sin(pi/32) : "; dd_write(sinpi32a,32); cout << endl;
-   cout << "sin(pi/32) : "; dd_write(sinpi32b,32); cout << endl;
-   cout << "cos(pi/32) : "; dd_write(cospi32a,32); cout << endl;
-   cout << "cos(pi/32) : "; dd_write(cospi32b,32); cout << endl;
+   printf("sin(pi/32) : "); dd_write(sinpi32a,32); printf("\n");
+   printf("sin(pi/32) : "); dd_write(sinpi32b,32); printf("\n");
+   printf("cos(pi/32) : "); dd_write(cospi32a,32); printf("\n");
+   printf("cos(pi/32) : "); dd_write(cospi32b,32); printf("\n");
 
-   cout << scientific << setprecision(16);
-   cout << "cospi32b hi : " << cospi32b[0] << endl;
-   cout << "cospi32b lo : " << cospi32b[1] << endl;
+   printf("cospi32b hi : %.16e\n", cospi32b[0]);
+   printf("cospi32b lo : %.16e\n", cospi32b[1]);
 
    dd_sqr(sinpi32a,x);
    dd_sqr(cospi32a,y);
    dd_inc(x,y);
-   cout << "sin(pi/32)^2 + cos(pi/32)^2 : "; dd_write(x,32); cout << endl;
+   printf("sin(pi/32)^2 + cos(pi/32)^2 : "); dd_write(x,32);
+   printf("\n");
 
    return 0;
 }
@@ -80,37 +77,41 @@ int test_sincos ( void )
    double ddrnd[2];
    ddrnd[0] = rnd; ddrnd[1] = 0.0;
 
-   cout << "test on sin and cos of a random number r ..." << endl;
+   printf("test on sin and cos of a random number r ...\n");
 
-   cout << "r : "; dd_write(ddrnd,32); cout << endl;
+   printf("r : "); dd_write(ddrnd,32); printf("\n");
 
    double sinrnd[2],cosrnd[2],x[2],y[2];
 
-   cout << "computing sin(r) ..." << endl; dd_sin(ddrnd,sinrnd);
-   cout << "sin(r) : "; dd_write(sinrnd,32); cout << endl;
-   cout << "computing cos(r) ..." << endl; dd_cos(ddrnd,cosrnd);
-   cout << "cos(r) : "; dd_write(cosrnd,32); cout << endl;
+   printf("computing sin(r) ...\n");
+   dd_sin(ddrnd,sinrnd);
+   printf("sin(r) : "); dd_write(sinrnd,32); printf("\n");
+   printf("computing cos(r) ...\n");
+   dd_cos(ddrnd,cosrnd);
+   printf("cos(r) : "); dd_write(cosrnd,32); printf("\n");
 
    dd_sqr(sinrnd,x);
    dd_sqr(cosrnd,y);
    dd_inc(x,y);
-   cout << "sin(r)^2 + cos(r)^2 : "; dd_write(x,32); cout << endl;
+   printf("sin(r)^2 + cos(r)^2 : "); dd_write(x,32); printf("\n");
 
    ddrnd[0] = pi16_hi; ddrnd[1] = pi16_lo;
 
-   cout << "test on sin and cos of r = pi/32 ..." << endl;
+   printf("test on sin and cos of r = pi/32 ...\n");
 
-   cout << "r : "; dd_write(ddrnd,32); cout << endl;
+   printf("r : "); dd_write(ddrnd,32); printf("\n");
 
-   cout << "computing sin(r) ..." << endl; dd_sin(ddrnd,sinrnd);
-   cout << "sin(r) : "; dd_write(sinrnd,32); cout << endl;
-   cout << "computing cos(r) ..." << endl; dd_cos(ddrnd,cosrnd);
-   cout << "cos(r) : "; dd_write(cosrnd,32); cout << endl;
+   printf("computing sin(r) ...\n"); 
+   dd_sin(ddrnd,sinrnd);
+   printf("sin(r) : "); dd_write(sinrnd,32); printf("\n");
+   printf("computing cos(r) ...\n");
+   dd_cos(ddrnd,cosrnd);
+   printf("cos(r) : "); dd_write(cosrnd,32); printf("\n");
 
    dd_sqr(sinrnd,x);
    dd_sqr(cosrnd,y);
    dd_inc(x,y);
-   cout << "sin(r)^2 + cos(r)^2 : "; dd_write(x,32); cout << endl;
+   printf("sin(r)^2 + cos(r)^2 : "); dd_write(x,32); printf("\n");
 
    return 0;
 }
