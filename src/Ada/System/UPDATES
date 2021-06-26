@@ -1,5 +1,5 @@
 Sat 26 Jun 2021 : moved ts_ctimer.adb to the folder Basic_Timer,
-  updated system.gpr.
+  updated system.gpr.  Modified system.gpr, as C timer is only for Windows.
 
 Thu 10 Jun 2021 : defined system.gpr to build the test procedures.
 

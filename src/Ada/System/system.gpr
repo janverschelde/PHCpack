@@ -3,12 +3,12 @@ project system is
     type OS_type is ("linux", "windows", "macosx");
     os : OS_type := external("os", "linux");
 
-    for Languages use ("Ada", "C");
-
     case os is
         when "linux" | "macosx" => 
+            for Languages use ("Ada");
             for Source_Dirs use (".", "Unix_Timer");
         when "windows" =>
+            for Languages use ("Ada", "C");
             for Source_Dirs use (".", "Basic_Timer");
     end case;
 
