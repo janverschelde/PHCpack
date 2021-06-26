@@ -1,3 +1,5 @@
+Sat 26 Jun 2021 : updated stalift.gpr to no longer exclude double_double.c.
+
 Mon 14 Jun 2021 : fixed stalift.gpr for the new Types folder and removed
   the ts_calldemics from the main test procedures.
 

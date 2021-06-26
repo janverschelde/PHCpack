@@ -1,0 +1,16 @@
+aggregate project root_counts is
+
+   for Project_Files use
+   (
+       "Product/product.gpr",      -- linear-product start systems
+       "Binomials/binomials.gpr",  -- binomial and simplicial systems
+       "Implift/implift.gpr",      -- implicit lifting
+       "Stalift/stalift.gpr",      -- static lifting
+       "Dynlift/dynlift.gpr",      -- dynamic lifting
+       "Symmetry/symmetry.gpr",    -- exploitation of symmetry relations
+       "MixedVol/mixedvol.gpr",    -- translation of ACM TOMS Algorithm 846
+       "DEMiCs/demics.gpr",        -- interface to the DEMiCs program
+       "Puiseux/puiseux.gpr"       -- Puiseux series for curves
+   );
+
+end root_counts;

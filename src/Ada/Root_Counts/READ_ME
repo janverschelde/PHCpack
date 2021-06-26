@@ -1,4 +1,9 @@
-Root Counting and Start Systems Library in PHCpack version 2.4.55
+Root Counting and Start Systems Library in PHCpack version 2.4.85
+
+Run "gprbuild root_counts.gpr" to make all test programs.
+On windows, type "gprbuild root_counts.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean root_counts.gpr" removes all files created by gprbuild.
 
 This library formed the main part of the first version of PHCpack.
 Modifications in version 2 were mainly due to the rewrite of the

@@ -6,34 +6,37 @@ project dynlift is
     case os is
         when "linux" | "macosx" =>
             for Source_Dirs use
-                (".", "../../System", "../../System/Unix_Timer",
-                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
-                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
-                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
-                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
-                 "../../Math_Lib/Supports", "../../Deformations/Solutions",
-                 "../../Deformations/Homotopy",
-                 "../../Deformations/Newton", "../../Deformations/Curves",
-                 "../../Deformations/End_Games",
-                 "../../Deformations/Trackers",
-                 "../../Deformations/Continuation",
-                 "../Product", "../Binomials", "../Implift", "../Stalift");
+            (
+                ".", "../../System", "../../System/Unix_Timer",
+                "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                "../../Math_Lib/Supports", "../../Deformations/Solutions",
+                "../../Deformations/Homotopy",
+                "../../Deformations/Newton", "../../Deformations/Curves",
+                "../../Deformations/End_Games",
+                "../../Deformations/Trackers",
+                "../../Deformations/Continuation",
+                "../Product", "../Binomials", "../Implift", "../Stalift"
+            );
             for Languages use ("Ada");
         when "windows" =>
             for Source_Dirs use
-                (".", "../../System", "../../System/Basic_Timer",
-                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
-                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
-                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
-                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
-                 "../../Math_Lib/Supports", "../../Deformations/Solutions",
-                 "../../Deformations/Homotopy",
-                 "../../Deformations/Newton", "../../Deformations/Curves",
-                 "../../Deformations/End_Games",
-                 "../../Deformations/Trackers",
-                 "../../Deformations/Continuation",
-                 "../Product", "../Binomials", "../Implift", "../Stalift");
-            for Excluded_Source_Files use ("double_double.c");
+            (
+                ".", "../../System", "../../System/Basic_Timer",
+                "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                "../../Math_Lib/Supports", "../../Deformations/Solutions",
+                "../../Deformations/Homotopy",
+                "../../Deformations/Newton", "../../Deformations/Curves",
+                "../../Deformations/End_Games",
+                "../../Deformations/Trackers",
+                "../../Deformations/Continuation",
+                "../Product", "../Binomials", "../Implift", "../Stalift"
+            );
             for Languages use ("Ada", "C");
     end case;
 
@@ -50,6 +53,22 @@ project dynlift is
     package Compiler is
 
         for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+        for Switches ("simplex.cpp") use 
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc=1"
+        );
+        for Switches ("mvc.cpp") use 
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc=1"
+        );
+        for Switches ("demicsrun.cpp") use 
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc=1"
+        );
+        for Switches ("outputData.cpp") use ("-Dcompilewgpp=1");
+
+        for Switches ("use_c2phc.adb") use ("-c");
 
     end Compiler;
 
