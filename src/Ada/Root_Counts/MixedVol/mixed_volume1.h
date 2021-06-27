@@ -1,10 +1,10 @@
-/* The file "mixed_volume.h" contains the main program to compute the mixed
+/* The file "mixed_volume1.h" contains the main program to compute the mixed
  * volume of a tuple of supports, usually invoked after some preprocessing. */
 
-#ifndef _Mixed_Vol_
-#define _Mixed_Vol_
+#ifndef _Mixed_Vol1_
+#define _Mixed_Vol1_
 
-#include "cell_stack.h"
+#include "cell_stack1.h"
 
 void MixedVol 
  ( int nVar, int nSpt, int CellSize, int *SptType, int *SptIdx, int **Spt,

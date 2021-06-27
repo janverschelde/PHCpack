@@ -1,9 +1,9 @@
-/* The file "cell_stack.c" contains the definitions of the prototypes
- * in the file "cell_stack.h". */
+/* The file "cell_stack1.c" contains the definitions of the prototypes
+ * in the file "cell_stack1.h". */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "cell_stack.h"
+#include "cell_stack1.h"
 
 #define verbose_stack 0
 

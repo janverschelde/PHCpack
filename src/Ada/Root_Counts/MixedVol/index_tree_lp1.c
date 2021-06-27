@@ -1,9 +1,9 @@
-/* The file "index_tree_lp.c" contains the definitions of the functions
- * whose prototypes are documented in the file "index_tree_lp.h". */
+/* The file "index_tree_lp1.c" contains the definitions of the functions
+ * whose prototypes are documented in the file "index_tree_lp1.h". */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "index_tree_lp.h"
+#include "index_tree_lp1.h"
 
 void LPdata_Init ( LPdata *p, int n, int *J, double *x, double **A )
 {

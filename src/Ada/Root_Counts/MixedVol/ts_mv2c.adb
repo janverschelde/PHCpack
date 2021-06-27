@@ -23,10 +23,10 @@ procedure ts_mv2c is
 --   This test procedure is a prototype to interface with other
 --   software to compute mixed volumes, written in C.
 
-  function mv ( ns : integer32; fn : C_Integer_Array;
-                n,m : integer32; ind,cnt,sup : C_Integer_Array )
-              return integer32;
-  pragma Import(C,mv,"mv");
+  function mv1 ( ns : integer32; fn : C_Integer_Array;
+                 n,m : integer32; ind,cnt,sup : C_Integer_Array )
+               return integer32;
+  pragma Import(C,mv1,"mv1");
 
   function Mixed_Volume
              ( file : string; n,m : integer32;
@@ -68,7 +68,7 @@ procedure ts_mv2c is
   --    end loop;
   --  end loop;
   --  return mv(file,n,m,ind,cnt,sup); -- Ada
-    return mv(fnv'last,c_fnv,n,m,c_ind,c_cnt,c_sup); -- C
+    return mv1(fnv'last,c_fnv,n,m,c_ind,c_cnt,c_sup); -- C
   end Mixed_Volume;
 
   procedure Flatten_Supports

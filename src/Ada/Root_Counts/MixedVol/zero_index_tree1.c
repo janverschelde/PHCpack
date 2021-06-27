@@ -1,10 +1,10 @@
-/* This file "zero_index_tree.c" defines the functions whose prototypes
- * are documented in the file "zero_index_tree.h". */
+/* This file "zero_index_tree1.c" defines the functions whose prototypes
+ * are documented in the file "zero_index_tree1.h". */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
-#include "zero_index_tree.h"
+#include "zero_index_tree1.h"
 
 void L0IdxNode_Init ( L0IdxNode *p, int i )
 {

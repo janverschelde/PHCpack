@@ -1,15 +1,15 @@
-/* The file "mixed_volume.c" contains the definitions of the prototypes
- * in the file "mixed_volume.h". */
+/* The file "mixed_volume1.c" contains the definitions of the prototypes
+ * in the file "mixed_volume1.h". */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <float.h>  
-#include "mixed_volume.h"
-#include "index_tree_lp.h"
-#include "form_lp.h"
-#include "relation_table.h"
+#include "mixed_volume1.h"
+#include "index_tree_lp1.h"
+#include "form_lp1.h"
+#include "relation_table1.h"
 
 void write_relation_table ( int n, int **RelTab )
 {

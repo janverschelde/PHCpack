@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "relation_table.h"
+#include "relation_table1.h"
 
 #define verbose_reltab 0
 

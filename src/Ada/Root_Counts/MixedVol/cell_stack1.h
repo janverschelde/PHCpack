@@ -1,8 +1,8 @@
-/* The file "cell_stack.h" collects the definition of a stack of mixed cells
+/* The file "cell_stack1.h" collects the definition of a stack of mixed cells
  * and the prototypes of the operations on the stack. */
 
-#ifndef _CELL_STACK_H_
-#define _CELL_STACK_H_
+#ifndef _CELL_STACK1_H_
+#define _CELL_STACK1_H_
 
 typedef struct cell cell;
 typedef struct CellStack CellStack;

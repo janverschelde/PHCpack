@@ -32,20 +32,28 @@ The "gprclean mixedvol.gpr" removes all files created by gprbuild.
 ------------------------------------------------------------------------------
 file name                        : short description
 ------------------------------------------------------------------------------
-convsub.adb                      : converting output into phc format
+ts_convsub.adb                   : converting output into phc format
 ------------------------------------------------------------------------------
 simplex_pivoting                 : pivoting operations in simplex algorithm
+prepare_for_mv1                  : C definition of the preprocessing code
 prepare_for_mv                   : preprocessing for mixed-volume computation
+cell_stack1                      : C definition of the cell stack
 cell_stack                       : stack of mixed cells
+mixed_volume1                    : C main function
 mixed_volume                     : main routine to compute the mixed volume
+relation_table1                  : C definition of the relation table
 relation_table                   : edges on lower hull of Minkowski sums
+one_level_lp1                    : C definition of one level LP tests
 one_level_lp                     : performs LP tests at one level
+form_lp1                         : C definition of LP problems
 form_lp                          : defines the LP problems at all levels
+index_tree_lp1                   : C definition of trees of LP problems
 index_tree_lp                    : data + operations on trees of LP problems
+zero_index_tree1                 : C definition of the zero index tree
 zero_index_tree                  : case of level 0 at tree of LP problems
 ------------------------------------------------------------------------------
-mv.h and mv.c                    : C program to compute mixed volume
-mv.ads and mv.adb                : Ada tranlation of the program mv
+mv1                              : C program to compute the mixed volume
+mv                               : Ada tranlation of the program mv
 ts_mv2c.adb                      : calls the C program mv
 ts_mv.adb                        : calls the Ada translation of mv
 ------------------------------------------------------------------------------

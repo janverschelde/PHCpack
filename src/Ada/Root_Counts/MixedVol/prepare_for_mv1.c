@@ -1,5 +1,5 @@
-/* The file "prepare_for_mv.c" contains the definitions of the prototypes
- * in the file "prepare_for_mv.h". */
+/* The file "prepare_for_mv1.c" contains the definitions of the prototypes
+ * in the file "prepare_for_mv1.h". */
 
 #include <stdlib.h>
 #include <string.h>
@@ -7,7 +7,7 @@
 #include <float.h>
 #include <stdio.h>
 #include <math.h>
-#include "prepare_for_mv.h"
+#include "prepare_for_mv1.h"
 
 #define verbose_prepare 0
  /* 0 : no output; 1 : one line messages; 2 : extra data */

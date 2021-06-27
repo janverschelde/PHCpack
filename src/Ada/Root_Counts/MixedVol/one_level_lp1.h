@@ -1,10 +1,10 @@
-/* The file "one_level_lp.h" collects the prototypes to perform tests at
- * one level, as called by the main program "mixed_volume.c". */
+/* The file "one_level_lp1.h" collects the prototypes to perform tests at
+ * one level, as called by the main program "mixed_volume1.c". */
  
-#ifndef _OneLevelLP_
-#define _OneLevelLP_
+#ifndef _OneLevelLP1_
+#define _OneLevelLP1_
  
-#include "index_tree_lp.h"
+#include "index_tree_lp1.h"
 
 void one_level_LP 
  ( int Strt1Pt, int End1Pt, int *PtIn, int LPdim, double **A,

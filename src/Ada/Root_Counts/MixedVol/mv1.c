@@ -6,8 +6,8 @@
 #include <string.h>
 #include <limits.h>
 #include <stdio.h>
-#include "prepare_for_mv.h"
-#include "mixed_volume.h"
+#include "prepare_for_mv1.h"
+#include "mixed_volume1.h"
 
 int max ( int x, int y );  /* returns max(x,y) */
 int min ( int x, int y );  /* returns min(x,y) */
@@ -19,7 +19,7 @@ int quick_return ( int nVar, int *SptIdx, int **Spt );
  *   have fewer than two terms in them, printing a message;
  *   otherwise 0 is returned. */
 
-int mv ( int fns, int *fn, int nVar, int nPts, int *ind, int *cnt, int *sup )
+int mv1 ( int fns, int *fn, int nVar, int nPts, int *ind, int *cnt, int *sup )
 {
    int i,j,p,nS,nSpt,CellSize,MVol,nbCells;
    int *SptIdx,**Spt,*SptType,*VtxIdx,**Vtx,*NuIdx2OldIdx;

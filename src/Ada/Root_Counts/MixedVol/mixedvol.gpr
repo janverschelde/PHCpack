@@ -18,9 +18,9 @@ project mixedvol is
                 "../../Deformations/End_Games",
                 "../../Deformations/Trackers",
                 "../../Deformations/Continuation",
-                "../Product", "../Binomials", "../Implift", "../Stalift"
+                "../Product", "../Binomials", "../Implift", "../Stalift",
+                "../../CtoPHC/Types"
             );
-            for Languages use ("Ada");
         when "windows" =>
             for Source_Dirs use
             (
@@ -35,24 +35,20 @@ project mixedvol is
                 "../../Deformations/End_Games",
                 "../../Deformations/Trackers",
                 "../../Deformations/Continuation",
-                "../Product", "../Binomials", "../Implift", "../Stalift"
+                "../Product", "../Binomials", "../Implift", "../Stalift",
+                "../../CtoPHC/Types"
             );
-            for Excluded_Source_Files use
-            (
-                "zero_index_tree.c", "index_tree_lp.c",
-                "relation_table.c", "prepare_for_mv.c", "one_level_lp.c",
-                "mv.c", "mixed_volume.c", "form_lp.c", "cell_stack.c"
-            );
-            for Languages use ("Ada", "C");
     end case;
 
+    for Languages use ("Ada", "C");
     for Object_Dir use "../../../Objects";
     for Exec_Dir use "../../../bin";
 
     for Main use
     (
-       -- "ts_mv2c.adb",    -- tests the C program mv
-       -- "ts_mv.adb",      -- tests the Ada translation of mv
+        "ts_convsub.adb", -- tests a subdivision conversion
+        "ts_mv2c.adb",    -- tests the C program mv
+        "ts_mv.adb",      -- tests the Ada translation of mv
         "ts_mva"          -- tests the code in MixedVol_Algorithm
     );
 
@@ -77,5 +73,11 @@ project mixedvol is
         for Switches ("use_c2phc.adb") use ("-c");
 
     end Compiler;
+
+    package Linker is
+
+        for Switches ("ts_mv2c.adb") use ("-lm");
+
+    end Linker;
 
 end mixedvol;

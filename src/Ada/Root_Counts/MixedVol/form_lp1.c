@@ -1,11 +1,11 @@
-/* The file "form_lp.c" contains the definitions of the two functions
- * whose prototypes are documented in the file "form_lp.h". */
+/* The file "form_lp1.c" contains the definitions of the two functions
+ * whose prototypes are documented in the file "form_lp1.h". */
 
 #include <float.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "form_lp.h"
+#include "form_lp1.h"
 
 void form_LP
  ( int nVar, int nSpt, int *SptType, int *SptIdx, int **RelTab, 

@@ -17,9 +17,8 @@ with Lists_of_Floating_Vectors;          use Lists_of_Floating_Vectors;
 with Arrays_of_Floating_Vector_Lists;    use Arrays_of_Floating_Vector_Lists;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;     use Floating_Mixed_Subdivisions_io;
-with Mixed_Volume_Computation;           use Mixed_Volume_Computation;
 
-procedure convsub is
+procedure ts_convsub is
 
 -- DESCRIPTION :
 --   Converts the output file of Xing Li his program into
@@ -125,8 +124,10 @@ procedure convsub is
       get(file,pt2); cnt := cnt+1; pts(cnt) := pt2;
       declare
         last : List;
-        point1 : Standard_Floating_Vectors.Vector := lifsup(i)(pt1+1).all;
-        point2 : Standard_Floating_Vectors.Vector := lifsup(i)(pt2+1).all;
+        point1 : constant Standard_Floating_Vectors.Vector
+               := lifsup(i)(pt1+1).all;
+        point2 : constant Standard_Floating_Vectors.Vector
+               := lifsup(i)(pt2+1).all;
       begin
         Append(mic.pts(i),last,point1);
         Append(mic.pts(i),last,point2);
@@ -173,7 +174,7 @@ procedure convsub is
   --   The input dimension n has alredy been read.
 
     lifsup : Standard_Floating_VecVecs.Array_of_VecVecs(1..n);
-    m : integer32;
+    m : integer32 := 0;
     mv : natural32;
     ans : character;
 
@@ -231,4 +232,4 @@ begin
             & " into mixed subdivision.");
   new_line;
   Main;
-end convsub;
+end ts_convsub;

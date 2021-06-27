@@ -1,10 +1,10 @@
 /* This file constains the prototypes of the routines called by the main
- * program in "mixed_volume.h", used to define the LP problems. */
+ * program in "mixed_volume1.h", used to define the LP problems. */
 
-#ifndef _FORMLP_
-#define _FORMLP_
+#ifndef _FORMLP1_
+#define _FORMLP1_
 
-#include "index_tree_lp.h"
+#include "index_tree_lp1.h"
 
 void form_LP
  ( int nVar, int nSpt, int *SptType, int *SptIdx, int **RelTab, 

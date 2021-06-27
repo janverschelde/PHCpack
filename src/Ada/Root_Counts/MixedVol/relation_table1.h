@@ -1,12 +1,12 @@
-/* The file "relation_table.h" collects the prototypes of routines to
+/* The file "relation_tabl1e.h" collects the prototypes of routines to
  * create a so-called "relation table" which records all edges on the
  * lower hulls of all pairwise Minkowski sums. */
 
-#ifndef _RelationTable_
-#define _RelationTable_  
+#ifndef _RelationTable1_
+#define _RelationTable1_  
 
-#include "zero_index_tree.h"
-#include "index_tree_lp.h"
+#include "zero_index_tree1.h"
+#include "index_tree_lp1.h"
 
 void RelTable ( int nVar, int nSpt, int **Spt, int *SptIdx,
                 double *lft, int **RelTab, L0_IML *L0 );

@@ -1,8 +1,8 @@
-/* The file "prepare_for_mv.h" collects the prototypes for the routines used
+/* The file "prepare_for_mv1.h" collects the prototypes for the routines used
  * to preprocess a tuple of supports for the mixed-volume computation. */
 
-#ifndef _Preprocess_for_Mixed_Volume_Supports_
-#define _Preprocess_for_Mixed_Volume_Supports_
+#ifndef _Preprocess_for_Mixed_Volume_Supports1_
+#define _Preprocess_for_Mixed_Volume_Supports1_
 
 void Pre4MV ( int nVar, int nSpt, int *nS, int *SptType,
               int **Spt, int *SptIdx, int **Vtx, int *VtxIdx, int *OldIdx );

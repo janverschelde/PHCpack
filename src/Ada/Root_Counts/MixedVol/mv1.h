@@ -1,4 +1,4 @@
-int mv ( int ns, int *fn, int nVar, int nPts, int *ind, int *cnt, int *sup );
+int mv1 ( int ns, int *fn, int nVar, int nPts, int *ind, int *cnt, int *sup );
 /*
  * DESCRITPION :
  *   Computes the mixed volume of the polytopes spanned by given supports.

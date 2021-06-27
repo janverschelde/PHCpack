@@ -1,12 +1,12 @@
-/* The file "one_level_lp.c" collects the definitions of the functions 
- * with prototypes in "one_level_lp.h". */
+/* The file "one_level_lp1.c" collects the definitions of the functions 
+ * with prototypes in "one_level_lp1.h". */
 
 #include <string.h>
 #include <float.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "one_level_lp.h"
+#include "one_level_lp1.h"
 
 #define verbose_sort 0
 #define verbose_one_level_lp 0

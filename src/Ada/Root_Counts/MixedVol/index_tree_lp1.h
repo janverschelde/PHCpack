@@ -1,9 +1,9 @@
-/* The file "index_tree_lp.h" defines the general data structures for an
+/* The file "index_tree_lp1.h" defines the general data structures for an
  * index tree of LP problems, with unused level 0, treated separtedly by
- * the data structures and prototypes in zero_index_tree.h. */
+ * the data structures and prototypes in zero_index_tree1.h. */
 
-#ifndef _IT_LP_H_
-#define _IT_LP_H_
+#ifndef _IT_LP1_H_
+#define _IT_LP1_H_
 
 #include <memory.h>
 

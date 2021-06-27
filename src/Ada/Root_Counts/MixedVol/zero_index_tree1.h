@@ -1,11 +1,11 @@
-/* The file "zero_index_tree.h" defines the data structures for the specific
+/* The file "zero_index_tree1.h" defines the data structures for the specific
  * case of level 0 in the index tree of LP problems. */
 
-#ifndef _L0_IML_H_
-#define _L0_IML_H_
+#ifndef _L0_IML1_H_
+#define _L0_IML1_H_
 
 #include <memory.h>
-#include "index_tree_lp.h"
+#include "index_tree_lp1.h"
 
 typedef struct L0IdxNode L0IdxNode;
 typedef struct L0_IML L0_IML;
