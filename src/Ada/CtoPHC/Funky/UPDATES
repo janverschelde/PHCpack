@@ -1,3 +1,6 @@
+Sun 27 Jun 2021 : removed the obsolete pieri_count, updated ts_pieri_count.c
+  to call the pieri_root_count of the Pieri folder.
+
 Wed 16 Jun 2021 : added ts_cpm.adb to the Main list of funky.gpr.
 
 Tue 15 Jun 2021 : fixed coefficient_support_{polynomials, poly_systems},

@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-extern int _ada_pieri_count(int m, int p, int q);
+extern int _ada_pieri_root_count(int m, int p, int q);
 extern void adainit();
 extern void adafinal();
 
@@ -16,7 +16,7 @@ int main()
   printf("Give the degree of the maps : "); scanf("%d",&q);
 
   adainit();
-  root_number = _ada_pieri_count(m,p,q);
+  root_number = _ada_pieri_root_count(m,p,q);
   adafinal();
 
   printf("The number of the roots : %d\n", root_number);

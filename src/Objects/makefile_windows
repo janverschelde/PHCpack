@@ -2134,10 +2134,10 @@ ts_cpm:
 	gnatbl -o $(BIN)/ts_cpm ts_cpm.ali
 
 ts_pieri_count:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) pieri_count.adb
-	gcc -c $(PHCAda)/CtoPHC/ts_pieri_count.c
-	gnatbind -n -C pieri_count
-	gnatlink -o $(BIN)/ts_pieri_count ts_pieri_count.o -C pieri_count
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) pieri_root_count.adb
+	gcc -c $(PHCAda)/CtoPHC/Funky/ts_pieri_count.c
+	gnatbind -n pieri_root_count
+	gnatlink -o $(BIN)/ts_pieri_count ts_pieri_count.o -C pieri_root_count
 
 ts_pieri_solver:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) pieri_solver.adb

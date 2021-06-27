@@ -77,8 +77,7 @@ phc_sol_rw.ads                   : read/write of solutions prototype
 phc_sol_rw.adb                   : read/write of solution lists
 ts_phc_sol_rw.c                  : test on read/write of solutions in C
 ------------------------------------------------------------------------------
-pieri_count.adb                  : returns Pieri root count, given (m,p,q)
-ts_pieri_count.c                 : C function calls Ada Pieri_Count
+ts_pieri_count.c                 : C function calls Ada Pieri_Root_Count
 pieri_sols.c                     : C function takes output of Pieri_Solver
 complex_polynomial_matrices      : matrices of univariate complex polynomials
 complex_polynomial_matrices_io   : i/o of complex polynomial matrices

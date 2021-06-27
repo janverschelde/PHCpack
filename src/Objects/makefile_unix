@@ -1940,10 +1940,10 @@ ts_cpm:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cpm.adb -o $(BIN)/ts_cpm
 
 ts_pieri_count:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) pieri_count.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) pieri_root_count.adb
 	gcc -c $(PHCAda)/CtoPHC/Funky/ts_pieri_count.c
-	gnatbind -n pieri_count
-	gnatlink -C pieri_count ts_pieri_count.o -o $(BIN)/ts_pieri_count
+	gnatbind -n pieri_root_count
+	gnatlink -C pieri_root_count ts_pieri_count.o -o $(BIN)/ts_pieri_count
 
 ts_pieri_solver:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) pieri_solver.adb
