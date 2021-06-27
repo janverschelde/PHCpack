@@ -4,7 +4,8 @@ Sun 27 Jun 2021 : renamed all *.c files into *1.c; nine files in total:
   and updated ts_mv2c.adb to call mv1 instead of mv.
   Renamed convsub.adb into ts_convsub.adb.
   Updated the mixedvol.gpr to include all test procedures and to
-  exclude no source files.
+  exclude no source files.  Added an #include to mixed_volume1.c
+  for a compiler warning.
 
 Sat 26 Jun 2021 : updated mixedvol.gpr for no longer need to exclude
   the double_double.c.

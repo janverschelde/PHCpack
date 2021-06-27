@@ -10,6 +10,7 @@
 #include "index_tree_lp1.h"
 #include "form_lp1.h"
 #include "relation_table1.h"
+#include "one_level_lp1.h"
 
 void write_relation_table ( int n, int **RelTab )
 {
