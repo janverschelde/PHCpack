@@ -45,7 +45,6 @@ ts_drivmink                      : calls the driver for volume polynomials
 -------------------------------------------------------------------------------
 common_faces_of_polytope         : computation of neighboring faces
 enumerate_faces_of_polytope      : extract faces of a triangulation
-face_structures                  : management of faces of triangulations
 frequency_graph                  : computes occurencies of points in supports
 initial_mixed_cell               : finds an initial mixed cell
 flatten_mixed_subdivisions       : flattening of mixed subdivisions

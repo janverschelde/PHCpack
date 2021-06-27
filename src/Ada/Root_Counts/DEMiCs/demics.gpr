@@ -84,7 +84,6 @@ project demics is
                 "phc_solver.ads", "phc_solver.adb",
                 "pieri_count.ads", "pieri_count.adb",
                 "pieri_solver_trf.adb",
-                "face_structures.ads", "face_structures.adb",
                 "weighted_projective_transfos.ads",
                 "weighted_projective_transfos.adb"
             );
@@ -166,7 +165,6 @@ project demics is
                 "phc_solver.ads", "phc_solver.adb",
                 "pieri_count.ads", "pieri_count.adb",
                 "pieri_solver_trf.adb",
-                "face_structures.ads", "face_structures.adb",
                 "weighted_projective_transfos.ads",
                 "weighted_projective_transfos.adb"
             );
