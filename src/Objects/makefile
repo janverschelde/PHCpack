@@ -1307,10 +1307,10 @@ ts_drivsss:
 
 # Test programs for the Root_Counts/MixedVol library :
 
-test_mixedvol: convsub ts_mv2c ts_mva
+test_mixedvol: ts_convsub ts_mv2c ts_mv ts_mva
 
-convsub:
-	make -f $(MAKEFILE) convsub
+ts_convsub:
+	make -f $(MAKEFILE) ts_convsub
 
 ts_mv2c:
 	make -f $(MAKEFILE) ts_mv2c

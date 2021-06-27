@@ -1410,23 +1410,23 @@ ts_drivsss:
 
 # Test programs for the Root_Counts/MixedVol library :
 
-convsub:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) convsub.adb -o $(BIN)/convsub
+ts_convsub:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_convsub.adb -o $(BIN)/ts_convsub
 
 ts_mv2c:
-	gcc -c $(PHCAda)/Root_Counts/MixedVol/mv.c
-	gcc -c $(PHCAda)/Root_Counts/MixedVol/cell_stack.c
-	gcc -c $(PHCAda)/Root_Counts/MixedVol/form_lp.c 
-	gcc -c $(PHCAda)/Root_Counts/MixedVol/index_tree_lp.c 
-	gcc -c $(PHCAda)/Root_Counts/MixedVol/zero_index_tree.c
-	gcc -c $(PHCAda)/Root_Counts/MixedVol/one_level_lp.c
-	gcc -c $(PHCAda)/Root_Counts/MixedVol/mixed_volume.c
-	gcc -c $(PHCAda)/Root_Counts/MixedVol/relation_table.c
-	gcc -c $(PHCAda)/Root_Counts/MixedVol/prepare_for_mv.c
+	gcc -c $(PHCAda)/Root_Counts/MixedVol/mv1.c
+	gcc -c $(PHCAda)/Root_Counts/MixedVol/cell_stack1.c
+	gcc -c $(PHCAda)/Root_Counts/MixedVol/form_lp1.c 
+	gcc -c $(PHCAda)/Root_Counts/MixedVol/index_tree_lp1.c 
+	gcc -c $(PHCAda)/Root_Counts/MixedVol/zero_index_tree1.c
+	gcc -c $(PHCAda)/Root_Counts/MixedVol/one_level_lp1.c
+	gcc -c $(PHCAda)/Root_Counts/MixedVol/mixed_volume1.c
+	gcc -c $(PHCAda)/Root_Counts/MixedVol/relation_table1.c
+	gcc -c $(PHCAda)/Root_Counts/MixedVol/prepare_for_mv1.c
 	gnatmake -o $(BIN)/ts_mv2c $(INCLULIBS) $(GNATOPTFLAGS) ts_mv2c.adb \
-                 -largs mv.o cell_stack.o form_lp.o index_tree_lp.o \
-                        zero_index_tree.o one_level_lp.o mixed_volume.o \
-                        relation_table.o prepare_for_mv.o -lm
+                 -largs mv1.o cell_stack1.o form_lp1.o index_tree_lp1.o \
+                        zero_index_tree1.o one_level_lp1.o mixed_volume1.o \
+                        relation_table1.o prepare_for_mv1.o -lm
 
 ts_mv:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mv.adb -o $(BIN)/ts_mv
