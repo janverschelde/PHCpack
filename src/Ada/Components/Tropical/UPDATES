@@ -1,3 +1,5 @@
+Sun 27 Jun 2021 : deleted multprec_lattice_facets and its io package.
+
 Sat 12 Jun 2021 : defined tropical.gpr to build the test procedures.
 
 Wed 2 Jan 2019 : fixed compiler error in ts_tropawit.adb because of

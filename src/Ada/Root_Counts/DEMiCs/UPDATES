@@ -1,6 +1,7 @@
 Sun 27 Jun 2021 : updated demics.gpr to no longer exclude the C MixedVol.
   Updated demics.gpr for the removal of the obsolete face_structures.
   Updated demics.gpr for the removal of evaluate_schubert_conditions.
+  Updated demics.gpr for the removal of multprec_lattice_facets and its io.
 
 Sat 26 Jun 2021 : updated demics.gpr to no longer exclude double_double.c.
 
