@@ -1,4 +1,6 @@
-Sat 26 Jun 2021 : updated demic.gpr to no longer exclude double_double.c.
+Sun 27 Jun 2021 : updated demics.gpr to no longer exclude the C MixedVol.
+
+Sat 26 Jun 2021 : updated demics.gpr to no longer exclude double_double.c.
 
 Thu 17 Jun 2021 : added "with use_c2phc;" to ts_demicsrun.adb, to force the
   compilation in a standalone build.  First version of demics.gpr to define

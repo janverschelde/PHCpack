@@ -36,9 +36,6 @@ project demics is
             for Languages use ("Ada", "C", "C++");
             for Excluded_Source_Files use
             (
-                "zero_index_tree.c", "index_tree_lp.c", "relation_table.c",
-                "prepare_for_mv.c", "one_level_lp.c", "mv.c",
-                "mixed_volume.c", "form_lp.c", "cell_stack.c",
                 "corecount.c", "corecountwindows.c",
                 "adenewton_d.cpp", "adenewton_dd.cpp", "adenewton_qd.cpp",
                 "adeonepath_d.cpp", "adeonepath_dd.cpp", "adeonepath_qd.cpp",
@@ -121,9 +118,7 @@ project demics is
             );
             for Excluded_Source_Files use
             (
-                "zero_index_tree.c", "index_tree_lp.c", "relation_table.c",
-                "prepare_for_mv.c", "one_level_lp.c", "mv.c",
-                "mixed_volume.c", "form_lp.c", "cell_stack.c", "corecount.c",
+                "corecount.c",
                 "adenewton_d.cpp", "adenewton_dd.cpp", "adenewton_qd.cpp",
                 "adeonepath_d.cpp", "adeonepath_dd.cpp", "adeonepath_qd.cpp",
                 "ademanypaths_d.cpp", "ademanypaths_dd.cpp",
