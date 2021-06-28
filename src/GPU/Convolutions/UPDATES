@@ -1,3 +1,6 @@
+Mon 28 Jun 2021 : extended random_series with function to generate series
+  following the expansion of log(1+x).
+
 Mon 5 Apr 2021 : extended dbl_convolutions_host with functions to multiply
   Laurent series and to compute the inverse of a Laurent series.
 
