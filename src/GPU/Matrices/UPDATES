@@ -1,3 +1,6 @@
+Mon 28 Jun 2021 : updated random_matrices with new versions of functions to
+  generate random matrices based on the log(1+x) expansion.
+
 Fri 25 Jun 2021 : added prompt for verbose level in dbl_vectors_testers.cpp,
   with a sum of errors computation on the inner products.
   Extended dbl_matrices_kernels with complex versions of the matrix-vector

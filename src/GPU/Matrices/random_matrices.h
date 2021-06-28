@@ -4,7 +4,8 @@
 #ifndef __random_matrices_h__
 #define __random_matrices_h__
 
-void random_dbl_series_vector ( int dim, int deg, double *x, double **v );
+void random_dbl_series_vector
+ ( int dim, int deg, double *x, double **v, bool expform=true );
 /*
  * DESCRIPTION :
  *   Returns in v a random vector of dimension dim,
@@ -14,7 +15,9 @@ void random_dbl_series_vector ( int dim, int deg, double *x, double **v );
  *   dim      dimension of the vectors;
  *   deg      truncation degree of the series;
  *   x        space for dim doubles;
- *   v        space for dim arrays of deg+1 doubles.
+ *   v        space for dim arrays of deg+1 doubles;
+ *   expform  if true, then the exp() expansion is applied,
+ *            otherwise, the log(1+x) expansion is applied.
  * 
  * ON RETURN :
  *   x        dim random doubles;
@@ -73,7 +76,7 @@ void random_cmplx_series_vectors
  *            for k from 0 to dim-1, truncated to degree deg. */
 
 void random_dbl_series_matrix
- ( int rows, int cols, int deg, double **x, double ***A );
+ ( int rows, int cols, int deg, double **x, double ***A, bool expform=true );
 /*
  * DESCRIPTION :
  *   Returns in A a real matrix of dimensions rows and cols,
@@ -84,14 +87,16 @@ void random_dbl_series_matrix
  *   cols     the number of columns in the matrices x and A;
  *   deg      truncation degree of the series;
  *   x        space for a matrix of doubles, of dimensions rows and cols;
- *   A        space for a matrix of series, of dimensions rows and cols.
+ *   A        space for a matrix of series, of dimensions rows and cols;
+ *   expform  if true, then the exp() expansion is applied,
+ *            otherwise, the log(1+x) expansion is applied.
  *
  * ON RETURN :
  *   x        a matrix of randomly generated doubles;
  *   A        a matrix of randomly generated power series. */
 
 void random_dbl_upper_series_matrix
- ( int rows, int cols, int deg, double **x, double ***A );
+ ( int rows, int cols, int deg, double **x, double ***A, bool expform=true );
 /*
  * DESCRIPTION :
  *   Returns in A a real upper triangular matrix
@@ -103,7 +108,9 @@ void random_dbl_upper_series_matrix
  *   cols     the number of columns in the matrices x and A;
  *   deg      truncation degree of the series;
  *   x        space for a matrix of doubles, of dimensions rows and cols;
- *   A        space for a matrix of series, of dimensions rows and cols.
+ *   A        space for a matrix of series, of dimensions rows and cols;
+ *   expform  if true, then the exp() expansion is applied,
+ *            otherwise, the log(1+x) expansion is applied.
  *
  * ON RETURN :
  *   x        upper triangular matrix of randomly generated doubles,
@@ -113,7 +120,7 @@ void random_dbl_upper_series_matrix
  *            are equal to zero. */
 
 void random_dbl_lower_series_matrix
- ( int rows, int cols, int deg, double **x, double ***A );
+ ( int rows, int cols, int deg, double **x, double ***A, bool expform=true );
 /*
  * DESCRIPTION :
  *   Returns in A a real lower triangular matrix
@@ -126,7 +133,9 @@ void random_dbl_lower_series_matrix
  *   cols     the number of columns in the matrices x and A;
  *   deg      truncation degree of the series;
  *   x        space for a matrix of doubles, of dimensions rows and cols;
- *   A        space for a matrix of series, of dimensions rows and cols.
+ *   A        space for a matrix of series, of dimensions rows and cols;
+ *   expform  if true, then the exp() expansion is applied,
+ *            otherwise, the log(1+x) expansion is applied.
  *
  * ON RETURN :
  *   x        lower triangular matrix of randomly generated doubles,
@@ -138,7 +147,7 @@ void random_dbl_lower_series_matrix
 
 void random_cmplx_series_matrix
  ( int rows, int cols, int deg, double **xre, double **xim,
-   double ***Are, double ***Aim );
+   double ***Are, double ***Aim, bool expform=true );
 /*
  * DESCRIPTION :
  *   Returns in A a complex matrix of dimensions rows and cols,
@@ -151,7 +160,9 @@ void random_cmplx_series_matrix
  *   xre      space for a matrix of doubles, of dimensions rows and cols;
  *   xim      space for a matrix of doubles, of dimensions rows and cols;
  *   Are      space for a matrix of series, of dimensions rows and cols;
- *   Aim      space for a matrix of series, of dimensions rows and cols.
+ *   Aim      space for a matrix of series, of dimensions rows and cols;
+ *   expform  if true, then the exp() expansion is applied,
+ *            otherwise, the log(1+x) expansion is applied.
  *
  * ON RETURN :
  *   xre      real parts of a matrix of random complex numbers;
@@ -161,7 +172,7 @@ void random_cmplx_series_matrix
 
 void random_cmplx_upper_series_matrix
  ( int rows, int cols, int deg, double **xre, double **xim,
-   double ***Are, double ***Aim );
+   double ***Are, double ***Aim, bool expform=true );
 /*
  * DESCRIPTION :
  *   Returns in A a complex upper triangular matrix
@@ -175,7 +186,9 @@ void random_cmplx_upper_series_matrix
  *   xre      space for a matrix of doubles, of dimensions rows and cols;
  *   xim      space for a matrix of doubles, of dimensions rows and cols;
  *   Are      space for a matrix of series, of dimensions rows and cols;
- *   Aim      space for a matrix of series, of dimensions rows and cols.
+ *   Aim      space for a matrix of series, of dimensions rows and cols;
+ *   expform  if true, then the exp() expansion is applied,
+ *            otherwise, the log(1+x) expansion is applied.
  *
  * ON RETURN :
  *   xre      real parts of a matrix of random complex numbers,
@@ -191,7 +204,7 @@ void random_cmplx_upper_series_matrix
 
 void random_cmplx_lower_series_matrix
  ( int rows, int cols, int deg, double **xre, double **xim,
-   double ***Are, double ***Aim );
+   double ***Are, double ***Aim, bool expform=true );
 /*
  * DESCRIPTION :
  *   Returns in A a complex lower triangular matrix
@@ -206,7 +219,9 @@ void random_cmplx_lower_series_matrix
  *   xre      space for a matrix of doubles, of dimensions rows and cols;
  *   xim      space for a matrix of doubles, of dimensions rows and cols;
  *   Are      space for a matrix of series, of dimensions rows and cols;
- *   Aim      space for a matrix of series, of dimensions rows and cols.
+ *   Aim      space for a matrix of series, of dimensions rows and cols;
+ *   expform  if true, then the exp() expansion is applied,
+ *            otherwise, the log(1+x) expansion is applied.
  *
  * ON RETURN :
  *   xre      real parts of a matrix of random complex numbers,
