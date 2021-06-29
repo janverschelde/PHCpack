@@ -126,6 +126,28 @@ test_upper_jobs: test_upper_jobs.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_upper_jobs.exe test_upper_jobs.obj
 
+dbl_linearization.obj:
+	@-echo ">>> compiling dbl_linearization ..."
+	$(CL)\cl /c dbl_linearization.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_linearization.obj /EHsc
+
+test_dbl_linearization.obj:
+	@-echo ">>> compiling test_dbl_linearization ..."
+	$(CL)\cl /c test_dbl_linearization.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl_linearization.obj /EHsc
+
+test_dbl_linearization: test_dbl_linearization.obj dbl_linearization.obj \
+                        random_numbers.obj random_series.obj \
+                        random_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_linearization.exe \
+             test_dbl_linearization.obj dbl_linearization.obj \
+             random_numbers.obj random_series.obj random_matrices.obj
+
 clean:
 	del *~
 	del test_dbl_vectors.obj test_dbl_vectors_lib
@@ -134,6 +156,9 @@ clean:
 	del test_dbl_matrices.exe test_dbl_matrices.exp
 	del test_upper_jobs.obj test_upper_jobs_lib
 	del test_upper_jobs.exe test_upper_jobs.exp
+	del dbl_linearization.obj
+	del test_dbl_linearization.obj test_dbl_linearization_lib
+	del test_dbl_linearization.exe test_dbl_linearization.exp
 	del random_matrices.obj
 	del dbl_matrices_host.obj dbl_matrices_kernels.obj
 	del dbl_matrices_testers.obj dbl_vectors_testers.obj

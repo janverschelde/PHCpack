@@ -8,7 +8,7 @@ void random_dbl_series_vector
  ( int dim, int deg, double *x, double **v, bool expform=true );
 /*
  * DESCRIPTION :
- *   Returns in v a random vector of dimension dim,
+ *   Returns in v a random real vector of dimension dim,
  *   of series truncated at degree deg.
  *
  * ON ENTRY :
@@ -23,6 +23,32 @@ void random_dbl_series_vector
  *   x        dim random doubles;
  *   v        v[k] is a power series of exp(x[k]) at degree deg,
  *            for k ranging from 0 to dim-1. */
+
+void random_cmplx_series_vector
+ ( int dim, int deg, double *xre, double *xim,
+   double **vre, double **vim, bool expform=true );
+/*
+ * DESCRIPTION :
+ *   Returns in v a random complex vector of dimension dim,
+ *   of series truncated at degree deg.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the vectors;
+ *   deg      truncation degree of the series;
+ *   xre      space for dim doubles;
+ *   xim      space for dim doubles;
+ *   vre      space for dim arrays of deg+1 doubles;
+ *   vim      space for dim arrays of deg+1 doubles;
+ *   expform  if true, then the exp() expansion is applied,
+ *            otherwise, the log(1+x) expansion is applied.
+ * 
+ * ON RETURN :
+ *   xre      dim random doubles;
+ *   xim      dim random doubles;
+ *   vre      vre[k] is the real part of a power series truncated 
+ *            at degree deg, for k ranging from 0 to dim-1;
+ *   vim      vre[k] is the imaginary part of a power series truncated 
+ *            at degree deg, for k ranging from 0 to dim-1. */
 
 void random_dbl_series_vectors
  ( int dim, int deg, double *x, double **plux, double **minx );

@@ -13,6 +13,18 @@ void random_dbl_series_vector
       for(int k=0; k<dim; k++) random_dbl_logarithm(deg,&x[k],v[k]);
 }
 
+void random_cmplx_series_vector
+ ( int dim, int deg, double *xre, double *xim,
+   double **vre, double **vim, bool expform )
+{
+   if(expform)
+      for(int k=0; k<dim; k++)
+         random_cmplx_exponential(deg,&xre[k],&xim[k],vre[k],vim[k]);
+   else
+      for(int k=0; k<dim; k++)
+         random_cmplx_logarithm(deg,&xre[k],&xim[k],vre[k],vim[k]);
+}
+
 void random_dbl_series_vectors
  ( int dim, int deg, double *x, double **plux, double **minx )
 {

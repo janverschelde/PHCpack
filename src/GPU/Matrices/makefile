@@ -15,6 +15,9 @@ test_dbl_matrices:
 test_upper_jobs:
 	make -f $(MAKEFILE) test_upper_jobs
 
+test_dbl_linearization:
+	make -f $(MAKEFILE) test_dbl_linearization
+
 clean:
 	make -f $(MAKEFILE) clean
 
