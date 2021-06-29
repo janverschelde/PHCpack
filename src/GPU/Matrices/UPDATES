@@ -1,5 +1,7 @@
 Tue 29 Jun 2021 : extended dbl_linearization with matrix versions,
-  tested by test_dbl_linearization.
+  tested by test_dbl_linearization.  Added the linearized versions of the
+  upper triangular solvers to dbl_matrices_host, with added tests in
+  test_matrices_testers.cpp.  Updated makefile_unix and makefile_windows.
 
 Mon 28 Jun 2021 : updated random_matrices with new versions of functions to
   generate random matrices based on the log(1+x) expansion.

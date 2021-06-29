@@ -310,6 +310,119 @@ void CPU_cmplx_upper_solver
    free(prodim); free(workim);
 }
 
+void CPU_dbl_upper_lead_solver
+ ( int dim, double **U, double *b, double *x )
+{
+   int idx = dim-1;
+   x[idx] = b[idx]/U[idx][idx];
+
+   for(int i=idx-1; i>=0; i--)
+   {
+      x[i] = b[i];
+      for(int j=i+1; j<dim; j++) x[i] = x[i] - U[i][j]*x[j];
+      x[i] = x[i]/U[i][i];
+   }
+}
+
+void CPU_cmplx_upper_lead_solver
+ ( int dim, double **Ure, double **Uim, double *bre, double *bim,
+   double *xre, double *xim )
+{
+   double zre,zim,det,vre,vim;
+   int idx = dim-1;
+
+   det = Ure[idx][idx]*Ure[idx][idx] + Uim[idx][idx]*Uim[idx][idx];
+   vre = Ure[idx][idx]/det;   // vim is the real part of 1/U[idx][idx]
+   vim = -Uim[idx][idx]/det;  // vim is imaginary part of 1/U[idx][idx]
+   xre[idx] = bre[idx]*vre - bim[idx]*vim;
+   xim[idx] = bim[idx]*vre + bre[idx]*vim; // x[idx] = b[idx]/U[idx][idx];
+
+   for(int i=idx-1; i>=0; i--)
+   {
+      xre[i] = bre[i]; xim[i] = bim[i];
+      for(int j=i+1; j<dim; j++) // x[i] = x[i] - U[i][j]*x[j];
+      {
+         zre = Ure[i][j]*xre[j] - Uim[i][j]*xim[j];
+         zim = Uim[i][j]*xre[j] + Ure[i][j]*xim[j];
+         xre[i] = xre[i] - zre;
+         xim[i] = xim[i] - zim;
+      }
+      det = Ure[i][i]*Ure[i][i] + Uim[i][i]*Uim[i][i];
+      vre = Ure[i][i]/det;   // vim is the real part of 1/U[i][i]
+      vim = -Uim[i][i]/det;  // vim is imaginary part of 1/U[i][i]
+      zre = xre[i]*vre - xim[i]*vim;
+      zim = xim[i]*vre - xre[i]*vim;
+      xre[i] = zre; xim[i] = zim;     // x[i] = x[i]/U[i][i];
+   }
+}
+
+void CPU_dbl_upper_linearized_solver
+ ( int dim, int deg, double ***U, double **b, double **x )
+{
+   CPU_dbl_upper_lead_solver(dim,U[0],b[0],x[0]);
+
+   double *work = new double[dim];
+   double prod;
+
+   for(int i=1; i<deg; i++)
+   {
+      for(int j=0; j<dim; j++) work[j] = b[i][j];
+      for(int j=1; j<=i; j++)
+      {                            // multiply U[j] with x[i-j]
+         for(int k=0; k<dim; k++)  // multiply k-th row of U[j] with x[i-j]
+         {
+            prod = 0.0;                   // accumulate over dim columns
+            for(int L=0; L<dim; L++)
+               prod = prod + U[j][k][L]*x[i-j][L];
+            work[k] = work[k] - prod;
+         }
+      }
+      CPU_dbl_upper_lead_solver(dim,U[0],work,x[i]);
+   }
+   free(work);
+}
+
+void CPU_cmplx_upper_linearized_solver
+ ( int dim, int deg, double ***Ure, double ***Uim,
+   double **bre, double **bim, double **xre, double **xim )
+{
+   CPU_cmplx_upper_lead_solver
+      (dim,Ure[0],Uim[0],bre[0],bim[0],xre[0],xim[0]);
+
+   double *workre = new double[dim];
+   double *workim = new double[dim];
+   double prodre,prodim,zre,zim;
+
+   for(int i=1; i<deg; i++)
+   {
+      for(int j=0; j<dim; j++)
+      {
+         workre[j] = bre[i][j];
+         workim[j] = bim[i][j];
+      }
+      for(int j=1; j<=i; j++)
+      {                            // multiply U[j] with x[i-j]
+         for(int k=0; k<dim; k++)  // multiply k-th row of U[j] with x[i-j]
+         {
+            prodre = 0.0;                   // accumulate over dim columns
+            prodim = 0.0;
+            for(int L=0; L<dim; L++)  // prod = prod + U[j][k][L]*x[i-j][L]
+            {
+               zre = Ure[j][k][L]*xre[i-j][L] - Uim[j][k][L]*xim[i-j][L];
+               zim = Ure[j][k][L]*xim[i-j][L] + Uim[j][k][L]*xre[i-j][L];
+               prodre = prodre + zre;
+               prodim = prodim + zim;
+            }
+            workre[k] = workre[k] - prodre;
+            workim[k] = workim[k] - prodim;
+         }
+      }
+      CPU_cmplx_upper_lead_solver
+         (dim,Ure[0],Uim[0],workre,workim,xre[i],xim[i]);
+   }
+   free(workre); free(workim);
+}
+
 void CPU_dbl_lufac
  ( int dim, int deg, double ***A, int *pivots, bool verbose )
 {

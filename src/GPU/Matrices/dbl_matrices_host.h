@@ -242,6 +242,67 @@ void CPU_cmplx_upper_solver
  *   xre      real part of the solution to U*x = b;
  *   xim      real part of the solution to U*x = b. */
 
+void CPU_dbl_upper_lead_solver
+ ( int dim, double **U, double *b, double *x );
+/*
+ * DESCRIPTION :
+ *   Solves the upper triangular linear system with matrix in U,
+ *   right hand sides in b, and computed solution in x,
+ *   as the first step in the CPU_dbl_linearized solver. */
+
+void CPU_cmplx_upper_lead_solver
+ ( int dim, double **Ure, double **Uim, double *bre, double *bim,
+   double *xre, double *xim );
+/*
+ * DESCRIPTION :
+ *   Solves the upper triangular linear system with matrix in U,
+ *   right hand sides in b, and computed solution in x,
+ *   as the first step in the CPU_cmplx_linearized solver. */
+
+void CPU_dbl_upper_linearized_solver
+ ( int dim, int deg, double ***U, double **b, double **x );
+/*
+ * DESCRIPTION :
+ *   Solves the upper triangular system U*x = b with back substitution,
+ *   on real data, using linearization.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in the coefficient matrices;
+ *   deg      truncation degree of the series;
+ *   U        series with upper triangular coefficient matrices;
+ *   b        series with the right hand side vectors;
+ *   x        space for power series truncated at degree deg,
+ *            with coefficient vectors of dimension dim.
+ *
+ * ON RETURN :
+ *   x        the solution to U*x = b, in linearized format. */
+
+void CPU_cmplx_upper_linearized_solver
+ ( int dim, int deg, double ***Ure, double ***Uim, double **bre,
+   double **bim, double **xre, double **xim );
+/*
+ * DESCRIPTION :
+ *   Solves the upper triangular system U*x = b with back substitution,
+ *   on complex data, using linearization.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in the coefficient matrices;
+ *   deg      truncation degree of the series;
+ *   Ure      real part of series 
+ *            with upper triangular coefficient matrices;
+ *   Uim      imaginary part of series 
+ *            with upper triangular coefficient matrices;
+ *   bre      real part of series with the right hand side vectors;
+ *   bim      imaginary part of series with the right hand side vectors;
+ *   xre      space for real power series truncated at degree deg,
+ *            with coefficient vectors of dimension dim;
+ *   xim      space for imaginary power series truncated at degree deg,
+ *            with coefficient vectors of dimension dim.
+ *
+ * ON RETURN :
+ *   xre      real part of the solution to U*x = b, in linearized format;
+ *   xim      imaginary part of the linearized solution to U*x = b. */
+
 void CPU_dbl_lufac
  ( int dim, int deg, double ***A, int *pivots, bool verbose=true );
 /*

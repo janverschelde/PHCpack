@@ -68,13 +68,13 @@ test_dbl_matrices.o:
 
 test_dbl_matrices: random_numbers.o random_series.o \
                    random_matrices.o dbl_convolutions_host.o \
-                   dbl_matrices_host.o dbl_matrices_testers.o \
-                   test_dbl_matrices.o 
+                   dbl_linearization.o dbl_matrices_host.o \
+                   dbl_matrices_testers.o test_dbl_matrices.o 
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_matrices test_dbl_matrices.o \
                   random_numbers.o random_series.o random_matrices.o \
-                  dbl_convolutions_host.o dbl_matrices_host.o \
-                  dbl_matrices_testers.o
+                  dbl_convolutions_host.o dbl_linearization.o \
+                  dbl_matrices_host.o dbl_matrices_testers.o
 
 test_upper_jobs.o:
 	@-echo ">>> compiling test_upper_jobs ..."

@@ -7,6 +7,7 @@
 #include "random_numbers.h"
 #include "random_series.h"
 #include "random_matrices.h"
+#include "dbl_linearization.h"
 #include "dbl_matrices_host.h"
 #include "dbl_matrices_testers.h"
 
@@ -64,6 +65,31 @@ void test_real_upper_solver ( void )
    {
       cout << "x[" << i << "] :" << endl;
       for(int k=0; k<=deg; k++) cout << x[i][k] << endl;
+   }
+   cout << "Testing the linearized version ..." << endl;
+
+   double **z = new double*[deg+1];
+   for(int i=0; i<=deg; i++) z[i] = new double[dim];
+
+   double **linb = new double*[deg+1];
+   for(int i=0; i<=deg; i++) linb[i] = new double[dim];
+   dbl_linear_series_vector(dim,deg,b,linb);
+
+   double ***linmat = new double**[deg+1];
+   for(int i=0; i<=deg; i++) 
+   {
+      linmat[i] = new double*[dim];
+      for(int j=0; j<dim; j++) linmat[i][j] = new double[dim];
+   }
+   dbl_linear_series_matrix(dim,dim,deg,mat,linmat);
+
+   CPU_dbl_upper_linearized_solver(dim,deg,linmat,linb,z);
+
+   cout << "The solution of the upper triangular system :" << endl;
+   for(int i=0; i<dim; i++)
+   {
+      cout << "z[" << i << "] :" << endl;
+      for(int k=0; k<=deg; k++) cout << z[k][i] << endl;
    }
 }
 
@@ -144,6 +170,48 @@ void test_cmplx_upper_solver ( void )
       cout << "x[" << i << "] :" << endl;
       for(int k=0; k<=deg; k++)
          cout << xre[i][k] << "  " << xim[i][k] << endl;
+   }
+   cout << "Testing the linearized version ..." << endl;
+
+   double **zre = new double*[deg+1];
+   double **zim = new double*[deg+1];
+   for(int i=0; i<=deg; i++)
+   {
+      zre[i] = new double[dim];
+      zim[i] = new double[dim];
+   }
+   double **linbre = new double*[deg+1];
+   double **linbim = new double*[deg+1];
+   for(int i=0; i<=deg; i++)
+   {
+      linbre[i] = new double[dim];
+      linbim[i] = new double[dim];
+   }
+   cmplx_linear_series_vector(dim,deg,bre,bim,linbre,linbim);
+
+   double ***linmatre = new double**[deg+1];
+   double ***linmatim = new double**[deg+1];
+   for(int i=0; i<=deg; i++) 
+   {
+      linmatre[i] = new double*[dim];
+      linmatim[i] = new double*[dim];
+      for(int j=0; j<dim; j++)
+      {
+         linmatre[i][j] = new double[dim];
+         linmatim[i][j] = new double[dim];
+      }
+   }
+   cmplx_linear_series_matrix(dim,dim,deg,matre,matim,linmatre,linmatim);
+
+   CPU_cmplx_upper_linearized_solver
+      (dim,deg,linmatre,linmatim,linbre,linbim,zre,zim);
+
+   cout << "The solution of the upper triangular system :" << endl;
+   for(int i=0; i<dim; i++)
+   {
+      cout << "z[" << i << "] :" << endl;
+      for(int k=0; k<=deg; k++)
+         cout << zre[k][i] << "  " << zim[k][i] << endl;
    }
 }
 
