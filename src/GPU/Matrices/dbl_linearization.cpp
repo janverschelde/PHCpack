@@ -21,3 +21,24 @@ void cmplx_linear_series_vector
          wim[j][i] = vim[i][j];
       }
 }
+
+void dbl_linear_series_matrix
+ ( int nrows, int ncols, int deg, double ***A, double ***B )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+         for(int k=0; k<=deg; k++) B[k][i][j] = A[i][j][k];
+}
+
+void cmplx_linear_series_matrix
+ ( int nrows, int ncols, int deg, double ***Are, double ***Aim,
+   double ***Bre, double ***Bim )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+         for(int k=0; k<=deg; k++)
+         {
+            Bre[k][i][j] = Are[i][j][k];
+            Bim[k][i][j] = Aim[i][j][k];
+         }
+}

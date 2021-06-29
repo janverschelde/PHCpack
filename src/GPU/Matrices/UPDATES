@@ -1,3 +1,6 @@
+Tue 29 Jun 2021 : extended dbl_linearization with matrix versions,
+  tested by test_dbl_linearization.
+
 Mon 28 Jun 2021 : updated random_matrices with new versions of functions to
   generate random matrices based on the log(1+x) expansion.
   Add dbl_linearization and test_dbl_linearization, updated makefiles;
