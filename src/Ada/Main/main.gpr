@@ -1,0 +1,109 @@
+project main is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+            (
+                ".", "../System", "../System/Unix_Timer",
+                "../Math_Lib/Numbers", "../Math_Lib/QD",
+                "../Math_Lib/Vectors", "../Math_Lib/Matrices",
+                "../Math_Lib/Reduction", "../Math_Lib/Divisors",
+                "../Math_Lib/Polynomials", "../Math_Lib/Functions",
+                "../Math_Lib/Supports", "../Math_Lib/Series",
+                "../Math_Lib/Circuits", "../Math_Lib/Laurent",
+                "../Deformations/Solutions", "../Deformations/Homotopy",
+                "../Deformations/Newton", "../Deformations/Curves",
+                "../Deformations/End_Games",
+                "../Deformations/Trackers", "../Deformations/Sweep",
+                "../Deformations/Continuation",
+                "../Root_Counts/Product", "../Root_Counts/Binomials",
+                "../Root_Counts/Implift", "../Root_Counts/Stalift",
+                "../Root_Counts/Dynlift", "../Root_Counts/Symmetry",
+                "../Root_Counts/MixedVol", "../Root_Counts/Puiseux",
+                "../Root_Counts/DEMiCs",
+                "../Schubert/SAGBI", "../Schubert/Pieri",
+                "../Schubert/Induction",
+                "../Components/Samplers", "../Components/Interpolators",
+                "../Components/Factorization", "../Components/Decomposition",
+                "../Components/Solver", "../Components/Tropical",
+                "../CtoPHC/Types", "../CtoPHC/Structures",
+                "../CtoPHC/Funky", "../CtoPHC/State", "../Tasking"
+            );
+            for Languages use ("Ada", "C++");
+        when "windows" =>
+            for Source_Dirs use
+            (
+                ".", "../../System", "../../System/Basic_Timer",
+                "../Math_Lib/Numbers", "../Math_Lib/QD",
+                "../Math_Lib/Vectors", "../Math_Lib/Matrices",
+                "../Math_Lib/Reduction", "../Math_Lib/Divisors",
+                "../Math_Lib/Polynomials", "../Math_Lib/Functions",
+                "../Math_Lib/Supports", "../Math_Lib/Series",
+                "../Math_Lib/Circuits", "../Math_Lib/Laurent",
+                "../Deformations/Solutions", "../Deformations/Homotopy",
+                "../Deformations/Newton", "../Deformations/Curves",
+                "../Deformations/End_Games",
+                "../Deformations/Trackers", "../Deformations/Sweep",
+                "../Deformations/Continuation",
+                "../Root_Counts/Product", "../Root_Counts/Binomials",
+                "../Root_Counts/Implift", "../Root_Counts/Stalift",
+                "../Root_Counts/Dynlift", "../Root_Counts/Symmetry",
+                "../Root_Counts/MixedVol", "../Root_Counts/Puiseux",
+                "../Root_Counts/DEMiCs",
+                "../Schubert/SAGBI", "../Schubert/Pieri",
+                "../Schubert/Induction",
+                "../Components/Samplers", "../Components/Interpolators",
+                "../Components/Factorization", "../Components/Decomposition",
+                "../Components/Solver", "../Components/Tropical",
+                "../CtoPHC/Types", "../CtoPHC/Structures",
+                "../CtoPHC/Funky", "../CtoPHC/State", "../Tasking"
+            );
+            for Languages use ("Ada", "C", "C++");
+    end case;
+
+    for Object_Dir use "../../Objects";
+    for Exec_Dir use "../../bin";
+
+    for Main use
+    (
+        "phctop.adb"    -- the main program
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+        for Switches ("use_c2phc.adb") use ("-c");
+
+        for Switches ("simplex.cpp") use 
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc=1"
+        );
+        for Switches ("mvc.cpp") use
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc=1"
+        );
+        for Switches ("demicsrun.cpp") use 
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc"
+        );
+        for Switches ("outputData.cpp") use ("-Dcompilewgpp=1");
+
+    end Compiler;
+
+    package Binder is
+
+        for Switches ("use_c2phc.adb") use ("-n");
+
+    end Binder;
+
+    package Linker is
+
+        for Switches ("main.cpp") use ("-o demics");
+
+    end Linker;
+
+end main;

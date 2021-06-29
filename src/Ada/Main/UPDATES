@@ -1,3 +1,7 @@
+Tue 29 Jun 2021 : in option_handlers.adb commented out the code for phc -j
+  and phc -k so the main.gpr works on Linux to build phctop.
+  Updated phctop.adb to force the compilation of use_c2phc on Windows.
+
 Sun 13 Jun 2021 : removed obsolete tableau_formats package and the
   convert_formats.adb.
 
