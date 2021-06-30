@@ -71,57 +71,60 @@ The Ada sources are organized in a tree of directories:
 
 ::
 
-   Ada                       : Ada source code of PHC
-    |-- System               : 0. OS dependencies, e.g.: timing package
-    |-- Math_Lib             : 1. general mathematical library
-    |      |-- Numbers       : 1.1. number representations
-    |      |-- QD            : 1.2. multiple double arithmetic
-    |      |-- Vectors       : 1.3. vectors and vectors of vectors
-    |      |-- Matrices      : 1.4. matrices and linear-system solvers
-    |      |-- Divisors      : 1.5. common divisors, integer linear algebra
-    |      |-- Reduction     : 1.6. row reduction, numerical linear algebra
-    |      |-- Polynomials   : 1.7. multivariate polynomial systems
-    |      |-- Functions     : 1.8. evaluation and differentiation
-    |      |-- Supports      : 1.9. support sets and linear programming
-    |      |-- Circuits      : 1.A. circuits for algorithmic differentation
-    |      |-- Series        : 1.B. manipulating truncated series
-    |      |-- AD            : 1.C. algorithmic differentiation of Path library
-    |-- Deformations         : 2. homotopies, Newton's method & path trackers
-    |      |-- Solutions     : 2.1. solutions of systems and homotopies
-    |      |-- Homotopy      : 2.2. homotopies, scaling and reduction
-    |      |-- Newton        : 2.3. root refining and modified Newton's method
-    |      |-- Curves        : 2.4. univariate solving & plane algebraic curves
-    |      |-- End_Games     : 2.5. extrapolation end games with Puiseux series
-    |      |-- Trackers      : 2.6. path-tracking routines
-    |      |-- Sweep         : 2.7. sweeping for singularities
-    |      |-- Continuation  : 2.8. drivers and data management
-    |-- Root_Counts          : 3. root counts and homotopy construction
-    |      |-- Product       : 3.1. linear-product start systems
-    |      |-- Binomials     : 3.2. solvers for binomial and simplicial systems
-    |      |-- Implift       : 3.3. implicit lifting
-    |      |-- Stalift       : 3.4. static lifting
-    |      |-- Dynlift       : 3.5. dynamic lifting
-    |      |-- Symmetry      : 3.6. exploitation of symmetry relations
-    |      |-- MixedVol      : 3.7. translation of ACM TOMS Algorithm 846
-    |      |-- DEMiCs        : 3.8. interface to the DEMiCs program
-    |      |-- Puiseux       : 3.9. Puiseux series for curves
-    |-- Schubert             : 4. numerical Schubert calculus
-    |      |-- SAGBI         : 4.1. SAGBI homotopies
-    |      |-- Pieri         : 4.2. deformations based on Pieri's rule
-    |      |-- Induction     : 4.3. Schubert induction
-    |-- Components           : 5. numerical irreducible decomposition
-    |      |-- Samplers      : 5.1. computing witness points
-    |      |-- Interpolators : 5.2. finding equations for components
-    |      |-- Factorization : 5.3. factorization into irreducible components
-    |      |-- Decomposition : 5.4. sequence of homotopies to filter and factor
-    |      |-- Solver        : 5.5. incremental equation by equation solver
-    |      |-- Tropical      : 5.6. tropical view on witness sets
-    |-- CtoPHC               : 6. interface from C to phc
-    |      |-- Funky         : 6.1. functional interface, C -> Ada -> C 
-    |      |-- State         : 6.2. state machine gateway, C <-> Ada
-    |-- PHCtoC               : 7. GPU acceleration via a C interface
-    |-- Tasking              : 8. multitasking
-    |-- Main                 : 9. main dispatcher
+ Ada                       : Ada source code of PHC
+  |-- System               : 0. OS dependencies, e.g.: timing package
+  |-- Math_Lib             : 1. general mathematical library
+  |      |-- Numbers       : 1.1. number representations
+  |      |-- QD            : 1.2. multiple double arithmetic
+  |      |-- Vectors       : 1.3. vectors and vectors of vectors
+  |      |-- Matrices      : 1.4. matrices and linear-system solvers
+  |      |-- Divisors      : 1.5. common divisors, integer linear algebra
+  |      |-- Reduction     : 1.6. row reduction, numerical linear algebra
+  |      |-- Polynomials   : 1.7. multivariate polynomial systems
+  |      |-- Functions     : 1.8. evaluation and differentiation
+  |      |-- Supports      : 1.9. support sets and linear programming
+  |      |-- Circuits      : 1.A. circuits for algorithmic differentation
+  |      |-- Series        : 1.B. manipulating truncated series
+  |      |-- Laurent       : 1.C. series with integer leading exponents
+  |      |-- AD            : 1.D. algorithmic differentiation of Path library
+  |-- Deformations         : 2. homotopies, Newton's method & path trackers
+  |      |-- Solutions     : 2.1. solutions of systems and homotopies
+  |      |-- Homotopy      : 2.2. homotopies, scaling and reduction
+  |      |-- Newton        : 2.3. root refining and modified Newton's method
+  |      |-- Curves        : 2.4. univariate solving & plane algebraic curves
+  |      |-- End_Games     : 2.5. extrapolation end games with Puiseux series
+  |      |-- Trackers      : 2.6. path-tracking routines
+  |      |-- Sweep         : 2.7. sweeping for singularities
+  |      |-- Continuation  : 2.8. drivers and data management
+  |-- Root_Counts          : 3. root counts and homotopy construction
+  |      |-- Product       : 3.1. linear-product start systems
+  |      |-- Binomials     : 3.2. solvers for binomial and simplicial systems
+  |      |-- Implift       : 3.3. implicit lifting
+  |      |-- Stalift       : 3.4. static lifting
+  |      |-- Dynlift       : 3.5. dynamic lifting
+  |      |-- Symmetry      : 3.6. exploitation of symmetry relations
+  |      |-- MixedVol      : 3.7. translation of ACM TOMS Algorithm 846
+  |      |-- DEMiCs        : 3.8. interface to the DEMiCs program
+  |      |-- Puiseux       : 3.9. Puiseux series for curves
+  |-- Schubert             : 4. numerical Schubert calculus
+  |      |-- SAGBI         : 4.1. SAGBI homotopies
+  |      |-- Pieri         : 4.2. deformations based on Pieri's rule
+  |      |-- Induction     : 4.3. Schubert induction
+  |-- Components           : 5. numerical irreducible decomposition
+  |      |-- Samplers      : 5.1. computing witness points
+  |      |-- Interpolators : 5.2. finding equations for components
+  |      |-- Factorization : 5.3. factorization into irreducible components
+  |      |-- Decomposition : 5.4. sequence of homotopies to filter and factor
+  |      |-- Solver        : 5.5. incremental equation by equation solver
+  |      |-- Tropical      : 5.6. tropical view on witness sets
+  |-- CtoPHC               : 6. interface from C to phc
+  |      |-- Types         : 6.1. C types equivalent to Ada
+  |      |-- Structures    : 6.2. system and solution wrappers
+  |      |-- Funky         : 6.3. functional interface, C -> Ada -> C 
+  |      |-- State         : 6.4. state machine gateway, C <-> Ada
+  |-- PHCtoC               : 7. GPU acceleration via a C interface
+  |-- Tasking              : 8. multitasking
+  |-- Main                 : 9. the main programs
 
 Every directory contains a collection of test procedures.
 The following sections describe the functionality defined

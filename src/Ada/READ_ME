@@ -90,7 +90,7 @@ The Ada sources are organized in a tree of directories:
   |      |-- State         : 6.4. state machine gateway, C <-> Ada
   |-- PHCtoC               : 7. GPU acceleration via a C interface
   |-- Tasking              : 8. multitasking
-  |-- Main                 : 9. main dispatcher
+  |-- Main                 : 9. the main programs
 
 To create the executable version, do cd ../Objects and type make phc.
 
