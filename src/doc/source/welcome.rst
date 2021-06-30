@@ -141,6 +141,13 @@ One cannot link object code produced by, for example g++ 4.9.3,
 with other object code compiled by another version of gcc,
 for example gcc 4.9.2.
 
+Last but certainly not least, programs can be build with
+the ``GPRbuild`` of the the GNAT Project Manager,
+a multi-language builder tool.
+The folders of the source contain each one file with the extension
+``.gpr`` which defines the build-related characteristics of the
+main programs provided in the source folder.
+
 Project History
 ===============
 
