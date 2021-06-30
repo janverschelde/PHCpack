@@ -35,6 +35,7 @@ project main is
             );
             for Excluded_Source_Files use
             (
+                "ts_use_syscon.c",
                 "corecount.c", "corecountwindows.c",
                 "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
                 "testfivehom1.adb", "testnine.adb",

@@ -2,6 +2,7 @@ Wed 30 Jun 2021 : fixed feedback so main.gpr can build also the -k option,
   after uncommenting out the proper code in option_handlers.
   The main.gpr now builds phc almost entirely, except for phc -j.
   To phctop.adb, added with pieri_solver to force its compilation.
+  Excluded ts_use_syscon.c in main.gpr for the build of phctop on macOS.
 
 Tue 29 Jun 2021 : in option_handlers.adb commented out the code for phc -j
   and phc -k so the main.gpr works on Linux to build phctop.
