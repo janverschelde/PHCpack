@@ -1,3 +1,11 @@
+Realization of feedback laws computed by Pieri homotopies in PHCv2.4.85
+
+Run "gprbuild feedback.gpr" to make all test programs.
+On windows, type "gprbuild feedback.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean feedback.gpr" removes all files created by gprbuild.
+On windows, add the "-Xos=windows" at the end of the gprclean command.
+
 Software to realize the application of Pieri homotopies
    to find dynamic compensators for linear systems
 

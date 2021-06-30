@@ -19,7 +19,9 @@ extern int _ada_pieri_solver(int m, int p, int q, int nb, int output_level,
 extern void adainit();
 extern void adafinal();
 
-void feedback(int n, int m, int p, int q, int nb, int output_level, int nn, int input, char *ifn, char *ofn);
+void feedback2
+ ( int n, int m, int p, int q, int nb, int output_level, int nn,
+   int input, char *ifn, char *ofn );
 
 int main(int argc, char **argv)
 {
@@ -71,12 +73,14 @@ int main(int argc, char **argv)
      exit(1);
   }
   srand(time(NULL));
-  feedback(n, m, p, q, nb, level, nn, input, argv[1], argv[2]);
+  feedback2(n, m, p, q, nb, level, nn, input, argv[1], argv[2]);
 
   return 0;
 }
 
-void feedback(int n, int m, int p, int q, int nb, int output_level, int nn, int input, char *ifn, char *ofn)
+void feedback2
+ ( int n, int m, int p, int q, int nb, int output_level, int nn,
+   int input, char *ifn, char *ofn )
 {
   dcmplx A[n][n], B[n][m], C[p][n];
   dcmplx s[nn], Is[n][n], Is_A[n][n], tmp[p][n], M[p][m];  

@@ -75,7 +75,7 @@ void manual_test ( int n, int m, int l )
     for(j=0; j<=l; j++)
        b[i+j]=add_dcmplx(b[i+j], mul_dcmplx(bb[i], c[j]));
 
-  gcd( n+l+1, a, m+l+1, b, &c_num, ra, rb );
+  rootsGCD(n+l+1,a,m+l+1,b,&c_num,ra,rb);
 
   printf("the roots number of the given common diviser is: %d \n", l);
   multiple_roots(l+1, c, eps, 10*l, rc, mul_tol, mult);
@@ -228,7 +228,7 @@ void random_test ( int n, int m, int l )
     for(j=0; j<=l; j++)
        b[i+j]=add_dcmplx(b[i+j], mul_dcmplx(bb[i], c[j]));
 
-  gcd( n+l+1, a, m+l+1, b, &c_num, ra, rb );
+  rootsGCD(n+l+1,a,m+l+1,b,&c_num,ra,rb);
 
   printf("the roots number of the given common diviser is: %d \n", l);
   
