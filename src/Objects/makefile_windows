@@ -1633,15 +1633,15 @@ outputData.o:
                -c $(PHCAda)/Root_Counts/DEMiCs/outputData.cpp
 
 simplex4phc.o:
-	$(gpp) -Dcompilewgpp=1 -Dcompile4phc=1 $(DEMiCS_CFLAGS) \
+	$(gpp) -Dcompilewgpp=1 -Dcompile4phc=1 $(DEMiCs_CFLAGS) \
             -c $(PHCAda)/Root_Counts/DEMiCs/simplex.cpp -o simplex4phc.o
 
 mvc4phc.o:
-	$(gpp) -Dcompilewgpp=1 -Dcompile4phc=1 $(DEMiCS_CFLAGS) \
+	$(gpp) -Dcompilewgpp=1 -Dcompile4phc=1 $(DEMiCs_CFLAGS) \
             -c $(PHCAda)/Root_Counts/DEMiCs/mvc.cpp -o mvc4phc.o
 
 demicsrun4phc.o:
-	$(gpp) -Dcompilewgpp=1 -Dcompile4phc=1 $(DEMiCS_CFLAGS) \
+	$(gpp) -Dcompilewgpp=1 -Dcompile4phc=1 $(DEMiCs_CFLAGS) \
             -c $(PHCAda)/Root_Counts/DEMiCs/demicsrun.cpp -o demicsrun4phc.o
 
 demicsrun.o:
