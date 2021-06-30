@@ -1,3 +1,8 @@
+Wed 30 Jun 2021 : fixed feedback so main.gpr can build also the -k option,
+  after uncommenting out the proper code in option_handlers.
+  The main.gpr now builds phc almost entirely, except for phc -j.
+  To phctop.adb, added with pieri_solver to force its compilation.
+
 Tue 29 Jun 2021 : in option_handlers.adb commented out the code for phc -j
   and phc -k so the main.gpr works on Linux to build phctop.
   Updated phctop.adb to force the compilation of use_c2phc on Windows.

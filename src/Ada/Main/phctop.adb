@@ -7,7 +7,8 @@ with Unix_Command_Line;
 with String_Splitters;                   use String_Splitters;
 with Actions_and_Options;
 with Option_Handlers;
-with use_c2phc; -- to force compilation on Windows
+with use_c2phc;    -- to force compilation on Windows
+with pieri_solver; -- to force compilation
 
 procedure phctop is
 
