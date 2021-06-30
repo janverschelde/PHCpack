@@ -2,6 +2,8 @@ Wed 30 Jun 2021 : in poly_gcd.h and poly_gcd.c, renamed the gcd function
   into rootsGCD to resolve a conflict with a gcd in mixed_volume1.c.
   Updated ts_gcd.c as well.  Renamed the function feedback in ts_feedback.c
   into feedback2 to avoid a naming conflict with feedback.c.
+  Copied the skip function from pieri_sols into feedback.c as skip_info
+  because in need for the linker of phctop in the ../Main folder.
 
 Mon 31 Dec 2018 : took care of compiler warnings.  Fixed typo in timer.h.  
   Fixed function declarations in ts_multiply.c and ts_divide.c.

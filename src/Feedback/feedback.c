@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <ctype.h>
 #include <string.h>
 
 #include "timer.h"
@@ -20,6 +21,9 @@ extern int _ada_pieri_solver
  ( int m, int p, int q, int nb, int output_level,
    double *pts, double *input, char *filename );
 extern void adafinal();
+
+void skip_info(FILE *ifp);
+/* skips the dimensions information */
 
 void feedback
  ( int n, int m, int p, int q, int nb, int output_level, 
@@ -77,6 +81,20 @@ int main_feedback ( char *inputfile, char *outputfile )
    return 0;
 }
 
+void skip_info(FILE *ifp)
+{
+  int i;
+  char s[30];
+  
+  i=0;
+  while(1)            /*skips all the space before the first number*/
+  {
+    if(!isspace(fgetc(ifp))) 
+       break;
+  } 
+  fgets(s, 30, ifp);  /*skips first line */
+}
+
 void feedback
  ( int n, int m, int p, int q, int nb, int output_level,
    int nn, int input, char *ifn, char *ofn)
@@ -97,7 +115,7 @@ void feedback
    if(input == 0)
    {
       ifp=fopen(ifn, "r"); /* open for reading */
-      skip(ifp);
+      skip_info(ifp);
       read_dcmatrix0(n, n, A, ifp);
       printf("The given matrix A(%d*%d) is:\n", n, n);
       print_dcmatrix(n, n, A);
@@ -119,7 +137,7 @@ void feedback
    if(input == 1)
    {
       ifp=fopen(ifn, "r"); /*open for reading*/
-      skip(ifp);
+      skip_info(ifp);
       read_dcmatrix2(n, n, A, ifp);
       printf("The given matrix A(%d*%d) is:\n", n, n);
       print_dcmatrix(n, n, A);
@@ -193,7 +211,7 @@ void feedback
    if(input == 4)
    {
       ifp=fopen(ifn, "r"); /*open for reading*/
-      skip(ifp);
+      skip_info(ifp);
       read_dcmatrix0(n, n, A, ifp);
       printf( "The given matrix A(%d*%d) is:\n", n, n);
       print_dcmatrix(n, n, A);
