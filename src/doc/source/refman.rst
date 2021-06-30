@@ -306,7 +306,7 @@ polynomials in the system.
 For sparse system, the information of the Newton polytopes provides
 a much sharper root count than the ones provided by the degrees.
 
-There are eight subdirecties in the ``Root_Counts`` directory.
+There are nine subdirecties in the ``Root_Counts`` directory.
 Total degree and linear-product start systems are constructed
 in the subdirectory ``Product``.  The subdirectory ``Binomials``
 provides solvers for the sparsest polynomial systems.
@@ -314,6 +314,8 @@ The subdirectories ``Implift``, ``Stalift``, and ``Dynlift``
 implement polyhedral homotopies, respectively with implicit,
 static, and dynamic lifting methods.  In ``MixedVol`` is an
 adaptation of a fast mixed volume calculator.
+The code in the folder ``DEMiCs`` applies dynamic enumeration 
+to compute mixed cells.
 Code to exploit permutation symmetry is in the subdirectory ``Symmetry``.
 A generalization of the Newton-Puiseux algorithm is implemented in
 the subdirectory ``Puiseux``.
@@ -391,6 +393,8 @@ The directory ``CtoPHC`` has two subdirectories, ``Funky`` and ``State``,
 which define two different types of interfacing the Ada code with C.
 The first type is a functional interface, the second type is an interface
 which operates as a state machine.
+The first folder ``Types`` in ``CtoPHC`` defines the equivalenties
+between the basic array types in C and in Ada.
 
 In a functional interface, the main C program calls an Ada function,
 which then calls a C function to process the results computed by the
@@ -406,7 +410,9 @@ The subdirectory ``State`` contains the definition of the
 ``use_c2phc`` function, which defines more than 700 jobs.
 The implementation of this function relies on various container
 packages which hold the persistent objects, mainly polynomial systems
-and solution lists.
+and solution lists.  Those container types are defined in the folder
+``Structures`` intended to give the C programming access to the main
+data structures.
 
 If the main program is not an Ada procedure, but a C function,
 then ``adainit`` and ``adafinal`` must be called by the C code,
@@ -788,6 +794,9 @@ for overdetermined problems we solve in the least squares sense,
 either with a QR or an SVD decomposition.
 To solve Hermite-Laurent interpolation problems,
 a lower triangular echelon form is provided.
+
+The directory ``Laurent`` contains code to work with series
+that have a leading terms with negative or positive exponents.
 
 Homotopies, Newton's Method, and Path Trackers
 ==============================================
@@ -1195,6 +1204,18 @@ The C version of the code (written by Yan Zhuang) is contained
 for comparison and correctness verification.
 
 The code is restricted for randomly generated lifting values.
+
+DEMiCs applies dynamic enumeration to compute mixed cells
+---------------------------------------------------------
+
+The code in the directory ``DEMiCs`` was developed by
+Tomohiko Mizutani, Akiko Takeda, and Masakazu Kojima.
+The directory contains the original code with a basic interface
+and a second interface that calls the code modified with
+callback functions.
+
+The pace at which the mixed cells are computed is faster than
+MixedVol which is beneficial for pipelined polyhedral homotopies.
 
 The Newton-Puiseux Method
 -------------------------
