@@ -1,6 +1,7 @@
 // The file random_matrices.cpp defines the functions with prototypes
 // in random_matrices.h.
 
+#include "random_numbers.h"
 #include "random_series.h"
 #include "random_matrices.h"
 
@@ -52,6 +53,15 @@ void random_dbl_series_matrix
       for(int i=0; i<rows; i++)
          for(int j=0; j<cols; j++)
             random_dbl_logarithm(deg,&x[i][j],A[i][j]);
+}
+
+void random_dbl_upper_matrix ( int rows, int cols, double **A )
+{
+   for(int i=0; i<rows; i++)
+   {
+      for(int j=0; j<i; j++) A[i][j] = 0.0;
+      for(int j=i; j<cols; j++) A[i][j] = random_double();
+   }
 }
 
 void random_dbl_upper_series_matrix

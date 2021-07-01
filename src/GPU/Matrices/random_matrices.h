@@ -121,6 +121,20 @@ void random_dbl_series_matrix
  *   x        a matrix of randomly generated doubles;
  *   A        a matrix of randomly generated power series. */
 
+void random_dbl_upper_matrix ( int rows, int cols, double **A );
+/*
+ * DESCRIPTION :
+ *   Returns in A a real matrix of dimensions rows and cols,
+ *   of randomly generated doubles.
+ *
+ * ON ENTRY :
+ *   rows     the number of rows in A;
+ *   cols     the number of columns in A;
+ *   A        space for a matrix of doubles, of dimensions rows and cols.
+ *
+ * ON RETURN :
+ *   A        a matrix of randomly generated doubles. */
+
 void random_dbl_upper_series_matrix
  ( int rows, int cols, int deg, double **x, double ***A, bool expform=true );
 /*
