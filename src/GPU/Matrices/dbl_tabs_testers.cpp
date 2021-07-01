@@ -4,11 +4,51 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
+#include <cmath>
 #include "random_matrices.h"
 #include "dbl_tabs_host.h"
 #include "dbl_tabs_testers.h"
 
 using namespace std;
+
+double dbl_Difference_Sum ( int n, double *x, double *y )
+{
+   double result = 0.0;
+
+   for(int i=0; i<n; i++) result = result + abs(x[i] - y[i]);
+
+   return result;
+}
+
+double dbl_Column_Sum ( int dim, int col, double **A )
+{
+   double result = 0.0;
+
+   for(int i=0; i<dim; i++) result = result + abs(A[i][col]);
+
+   return result;
+}
+
+double dbl_Max_Column_Sum ( int dim, double **A )
+{
+   double result = dbl_Column_Sum(dim,0,A);
+   double colsum;
+   
+   for(int j=1; j<dim; j++)
+   {
+      colsum = dbl_Column_Sum(dim,j,A);
+      if(colsum > result) result = colsum;
+   }
+   return result;  
+}
+
+double dbl_condition ( int dim, double **A, double **invA )
+{
+   double Amaxcolsum = dbl_Max_Column_Sum(dim,A);
+   double invAmaxcolsum = dbl_Max_Column_Sum(dim,invA);
+
+   return Amaxcolsum*invAmaxcolsum;
+}
 
 void test_real_upper_inverse ( void )
 {
@@ -62,4 +102,8 @@ void test_real_upper_inverse ( void )
    cout << "The solution computed with the inverse :" << endl;
    for(int i=0; i<dim; i++)
       cout << "x[" << i << "] : " << x[i] << endl;
+
+   cout << scientific << setprecision(2);
+   cout << "   Sum of errors : " << dbl_Difference_Sum(dim,sol,x) << endl;
+   cout << "Condition number : " << dbl_condition(dim,A,invA) << endl;
 }

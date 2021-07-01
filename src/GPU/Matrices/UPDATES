@@ -1,6 +1,7 @@
 Thu 1 Jul 2021 : extended random_matrices with a function to generate
   a random upper triangular matrix.  New dbl_tabs_host, dbl_tabs_testers,
-  and test_dbl_tabs, with updated makefiles.
+  and test_dbl_tabs, with updated makefiles.  Added the computation of
+  the error and condition number to dbl_tabs_testers.
 
 Tue 29 Jun 2021 : extended dbl_linearization with matrix versions,
   tested by test_dbl_linearization.  Added the linearized versions of the
