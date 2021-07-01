@@ -19,3 +19,7 @@ test_upper_jobs           : test on jobs for back substitution
 dbl_linearization         : linearization of double vectors and matrices
 test_dbl_linearization    : test on linearization in double precision
 -----------------------------------------------------------------------------
+dbl_tabs_host             : tiled accelerated back substitution on host
+dbl_tabs_testers          : tests tiled accelerated back substitution
+test_dbl_tabs             : main test on accelerated back substitution
+-----------------------------------------------------------------------------
