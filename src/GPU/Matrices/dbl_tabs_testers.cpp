@@ -107,3 +107,53 @@ void test_real_upper_inverse ( void )
    cout << "   Sum of errors : " << dbl_Difference_Sum(dim,sol,x) << endl;
    cout << "Condition number : " << dbl_condition(dim,A,invA) << endl;
 }
+
+void test_real_upper_tiling ( void )
+{
+   cout << "Give the size of each tile : ";
+   int sizetile; cin >> sizetile;
+
+   cout << "Give the number of tiles : ";
+   int numtiles; cin >> numtiles;
+
+   const int dim = sizetile*numtiles;
+
+   cout << "-> generating a random upper triangular matrix of dimension "
+        << dim << " ..." << endl;
+
+   double **A = new double*[dim];
+   for(int i=0; i<dim; i++) A[i] = new double[dim];
+
+   random_dbl_upper_matrix(dim,dim,A);
+
+   cout << scientific << setprecision(16);
+
+   cout << "A random upper triangular matrix :" << endl;
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+         cout << "A[" << i << "][" << j << "] : " << A[i][j] << endl;
+
+   double *sol = new double[dim];
+   for(int i=0; i<dim; i++) sol[i] = 1.0;
+
+   double *rhs = new double[dim];
+   for(int i=0; i<dim; i++)
+   {
+      rhs[i] = 0.0;
+      for(int j=0; j<dim; j++) rhs[i] = rhs[i] + A[i][j]*sol[j];
+   }
+   cout << "The sums of the columns :" << endl;
+   for(int i=0; i<dim; i++)
+      cout << "b[" << i << "] : " << rhs[i] << endl;
+
+   double *x = new double[dim];
+
+   CPU_dbl_upper_tiled_solver(dim,sizetile,numtiles,A,rhs,x);
+
+   cout << "The solution computed with tiling :" << endl;
+   for(int i=0; i<dim; i++)
+      cout << "x[" << i << "] : " << x[i] << endl;
+
+   cout << scientific << setprecision(2);
+   cout << "   Sum of errors : " << dbl_Difference_Sum(dim,sol,x) << endl;
+}
