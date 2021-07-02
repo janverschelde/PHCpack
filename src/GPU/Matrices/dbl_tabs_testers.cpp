@@ -5,8 +5,10 @@
 #include <iomanip>
 #include <cstdlib>
 #include <cmath>
+#include <vector_types.h>
 #include "random_matrices.h"
 #include "dbl_tabs_host.h"
+#include "dbl_tabs_kernels.h"
 #include "dbl_tabs_testers.h"
 
 using namespace std;
@@ -83,29 +85,42 @@ void test_real_upper_inverse ( void )
    for(int i=0; i<dim; i++)
       cout << "b[" << i << "] : " << rhs[i] << endl;
 
-   double **invA = new double*[dim];
-   for(int i=0; i<dim; i++) invA[i] = new double[dim];
+   double **invA_h = new double*[dim];
+   for(int i=0; i<dim; i++) invA_h[i] = new double[dim];
 
-   CPU_dbl_upper_inverse(dim,A,invA);
+   CPU_dbl_upper_inverse(dim,A,invA_h);
 
-   cout << "The inverse of the upper triangular matrix :" << endl;
+   cout << "The CPU inverse of the upper triangular matrix :" << endl;
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
-         cout << "invA[" << i << "][" << j << "] : " << invA[i][j] << endl;
+         cout << "invA_h[" << i << "][" << j << "] : "
+              << invA_h[i][j] << endl;
+
+   double **invA_d = new double*[dim];
+   for(int i=0; i<dim; i++) invA_d[i] = new double[dim];
+
+   GPU_dbl_upper_inverse(dim,A,invA_d);
+
+   cout << "The GPU inverse of the upper triangular matrix :" << endl;
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+         cout << "invA_d[" << i << "][" << j << "] : "
+              << invA_d[i][j] << endl;
 
    double *x = new double[dim];
    for(int i=0; i<dim; i++)
    {
       x[i] = 0.0;
-      for(int j=0; j<dim; j++) x[i] = x[i] + invA[i][j]*rhs[j];
+      for(int j=0; j<dim; j++) x[i] = x[i] + invA_h[i][j]*rhs[j];
    }
-   cout << "The solution computed with the inverse :" << endl;
+   cout << "The solution computed with the CPU inverse :" << endl;
    for(int i=0; i<dim; i++)
       cout << "x[" << i << "] : " << x[i] << endl;
 
    cout << scientific << setprecision(2);
    cout << "   Sum of errors : " << dbl_Difference_Sum(dim,sol,x) << endl;
-   cout << "Condition number : " << dbl_condition(dim,A,invA) << endl;
+   cout << "Condition number : "
+        << dbl_condition(dim,A,invA_h) << endl;
 }
 
 void test_real_upper_tiling ( void )

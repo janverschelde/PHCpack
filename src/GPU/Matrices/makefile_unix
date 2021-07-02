@@ -103,21 +103,29 @@ dbl_tabs_host.o:
 	@-echo ">>> compiling dbl_tabs_host ..."
 	$(gpp) -O3 -c dbl_tabs_host.cpp
 
+dbl_tabs_kernels.o:
+	@-echo ">>> compiling tabs kernels for doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             -c dbl_tabs_kernels.cu
+
 dbl_tabs_testers.o:
 	@-echo ">>> compiling dbl_tabs_testers ..."
-	$(gpp) -O3 -c dbl_tabs_testers.cpp
+	$(gpp) -O3 -c -I$(CUDA) dbl_tabs_testers.cpp
 
 test_dbl_tabs.o:
 	@-echo ">>> compiling test_dbl_tabs ..."
 	$(gpp) -O3 -c test_dbl_tabs.cpp
 
 test_dbl_tabs: test_dbl_tabs.o dbl_tabs_testers.o dbl_tabs_host.o \
+               dbl_tabs_kernels.o \
                dbl_convolutions_host.o dbl_matrices_host.o \
                random_numbers.o random_series.o random_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_tabs test_dbl_tabs.o dbl_tabs_testers.o \
                   random_numbers.o random_series.o random_matrices.o \
-                  dbl_convolutions_host.o dbl_matrices_host.o dbl_tabs_host.o
+                  dbl_convolutions_host.o dbl_matrices_host.o \
+                  dbl_tabs_host.o dbl_tabs_kernels.o \
+               -lcuda -lcudart -L$(CUDALIB)
 
 clean:
 	/bin/rm -f -r random_matrices.o
@@ -128,7 +136,8 @@ clean:
 	/bin/rm -f -r test_upper_jobs.o test_upper_jobs
 	/bin/rm -f -r dbl_linearization.o
 	/bin/rm -f -r test_dbl_linearization.o test_dbl_linearization
-	/bin/rm -f -r dbl_tabs_host.o dbl_tabs_testers.o
+	/bin/rm -f -r dbl_tabs_host.o dbl_tabs_kernels.o
+	/bin/rm -f -r dbl_tabs_testers.o
 	/bin/rm -f -r test_dbl_tabs.o test_dbl_tabs
 
 cleanall: clean
