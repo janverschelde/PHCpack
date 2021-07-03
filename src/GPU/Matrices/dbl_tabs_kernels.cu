@@ -1,7 +1,10 @@
 /* The file dbl_tabs_kernels.cu defines the functions with prototypes in
  * the file dbl_tabs_kernels.h. */
 
+#include <iostream>
 #include "dbl_tabs_kernels.h"
+
+using namespace std;
 
 __global__ void dbl_invert_upper ( int dim, double *U, double *invU )
 {
@@ -15,11 +18,10 @@ __global__ void dbl_invert_upper ( int dim, double *U, double *invU )
    int colidx = dim*(dim-1);          // start with the last column
 
    Ucol[k] = U[colidx+k];             // load the last column
-
    rhs = ((double) int(k == dim-1));  // right hand side for each thread
+   int rowidx = (dim - 1)*dim + k;    // the row index in the inverse
 
-   int rowidx = dim - 1 + k*dim;      // the row index in the inverse
-
+   __syncthreads();
    invUrows[rowidx] = rhs/Ucol[k];    // last row of the inverse
 
    for(int i=dim-2; i>=0; i--)        // compute row with index i
@@ -29,24 +31,105 @@ __global__ void dbl_invert_upper ( int dim, double *U, double *invU )
       for(int j=i+1; j<dim; j++)
       {
          colidx = dim*j;              // need column j of U
+
          Ucol[k] = U[colidx+k];
-         rowidx = j + k*dim;          // need solution value
+
+         rowidx = j*dim + k;          // need solution value
+
          xval = invUrows[rowidx];
+
          __syncthreads();
-         rhs = rhs - Ucol[j]*xval;    // update right hand side
+         rhs = rhs - Ucol[i]*xval;    // update right hand side
       }
-      rowidx = i + k*dim;             // save in i-th row of inverse
-      colidx = dim*i;
+      rowidx = i*dim + k;             // save in i-th row of inverse
+
+      colidx = dim*i;                 // need column i of U
       Ucol[k] = U[colidx+k];
+
       __syncthreads();
       invUrows[rowidx] = rhs/Ucol[i];
    }
    rowidx = 0;
    for(int i=0; i<dim; i++)
    {
+      __syncthreads();
       invU[rowidx+k] = invUrows[rowidx+k];
       rowidx = rowidx + dim;
    }
+}
+
+void test_invert_upper ( int dim, double *U, double *invU )
+{
+   double *Ucol = new double[d_shmemsize];
+   double *invUrows = new double[d_shmemsize];
+
+   for(int i=0; i<dim*dim; i++)
+      cout << "U[" << i << "] : " << U[i] << endl;
+
+   for(int k=0; k<dim; k++)  // compute k-th column of inverse
+   {
+      double rhs,xval;
+
+      cout << "******** step " << k << " *********" << endl;
+
+      int colidx = dim*(dim-1);          // start with the last column
+
+      Ucol[k] = U[colidx+k];             // load the last column
+      rhs = ((double) int(k == dim-1));  // right hand side for each thread
+      int rowidx = (dim - 1)*dim + k;    // the row index in the inverse
+
+      cout << "  k : " << k
+           << "  i : " << dim-1
+           << "  rhs : " << rhs << endl;
+      cout << "  k : " << k
+           << "  i : " << dim-1
+           << "  assigning to rowidx : " << rowidx << endl;
+      invUrows[rowidx] = rhs/Ucol[k];    // last row of the inverse
+      cout << "  value : " << invUrows[rowidx] << endl;
+    
+      cout << "            entering loop" << endl;
+
+      for(int i=dim-2; i>=0; i--)        // compute row with index i
+      {
+         rhs = ((double) int(k == i));   // set rhs for i-th unit vector
+ 
+         cout << "  k : " << k
+              << "  i : " << i
+              << "  rhs : " << rhs << endl;
+
+         for(int j=i+1; j<dim; j++)
+         {
+            colidx = dim*j;              // need column j of U
+            cout << "i : " << i << "  j : " << j << "  k : " << k
+                 << "  colidx : " << colidx << endl;
+            // Ucol[k] = U[colidx+k];
+            for(int L=0; L<dim; L++) Ucol[L] = U[colidx+L];
+            rowidx = j*dim + k;          // need solution value
+            xval = invUrows[rowidx];
+            cout << "Ucol[" << i << "] : " << Ucol[i] << endl;
+            cout << "xval : " << xval << endl;
+            rhs = rhs - Ucol[i]*xval;    // update right hand side
+         }
+         rowidx = i*dim + k;             // save in i-th row of inverse
+
+         colidx = dim*i;                 // need column i of U
+         // Ucol[k] = U[colidx+k];
+         for(int L=0; L<dim; L++) Ucol[L] = U[colidx+L];
+         cout << "  k : " << k
+              << "  i : " << i
+              << "  assigning to rowidx : " << rowidx << endl;
+         invUrows[rowidx] = rhs/Ucol[i];
+         cout << "  value : " << invUrows[rowidx] << endl;
+      }
+      rowidx = 0;
+      for(int i=0; i<dim; i++)
+      {
+         invU[rowidx+k] = invUrows[rowidx+k];
+         rowidx = rowidx + dim;
+      }
+   }
+   for(int i=0; i<dim*dim; i++)
+      cout << "invUrows[" << i << "] : " << invUrows[i] << endl;
 }
 
 void GPU_dbl_upper_inverse ( int dim, double **U, double **invU )
@@ -61,6 +144,8 @@ void GPU_dbl_upper_inverse ( int dim, double **U, double **invU )
    int ix = 0;
    for(int j=0; j<dim; j++)
       for(int i=0; i<dim; i++) U_h[ix++] = U[i][j];
+
+   // test_invert_upper(dim,U_h,invU_h); // only for debugging
 
    size_t szmat = szU*sizeof(double);
    cudaMalloc((void**)&U_d,szmat);

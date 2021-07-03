@@ -1,5 +1,5 @@
 Fri 2 Jul 2021 : new dbl_tabs_kernels, tested by dbl_tabs_testers.cpp;
-  updated the makefiles.
+  updated the makefiles.  Fixed bug in dbl_tabs_kernels.cu.
 
 Thu 1 Jul 2021 : extended random_matrices with a function to generate
   a random upper triangular matrix.  New dbl_tabs_host, dbl_tabs_testers,
