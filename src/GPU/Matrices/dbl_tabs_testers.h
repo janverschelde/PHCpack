@@ -28,6 +28,12 @@ double dbl_condition ( int dim, double **A, double **invA );
  *   Returns the condition number of A using the 1-norm
  *   on the matrix of dimension dim and its inverse invA. */
 
+double dbl_Matrix_Difference_Sum ( int n, double **A, double **B );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute value of the differences
+ *   between two n-by-n matrices A and B. */
+
 void test_real_upper_inverse ( void );
 /*
  * DESCRIPTION :

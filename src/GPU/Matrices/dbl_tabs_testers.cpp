@@ -52,6 +52,17 @@ double dbl_condition ( int dim, double **A, double **invA )
    return Amaxcolsum*invAmaxcolsum;
 }
 
+double dbl_Matrix_Difference_Sum ( int n, double **A, double **B )
+{
+   double result = 0.0;
+
+   for(int i=0; i<n; i++)
+      for(int j=0; j<n; j++)
+         result = result + abs(A[i][j] - B[i][j]);
+
+   return result;
+}
+
 void test_real_upper_inverse ( void )
 {
    cout << "Give the dimension : ";
@@ -106,6 +117,9 @@ void test_real_upper_inverse ( void )
       for(int j=0; j<dim; j++)
          cout << "invA_d[" << i << "][" << j << "] : "
               << invA_d[i][j] << endl;
+
+   cout << "   Sum of errors : "
+        << dbl_Matrix_Difference_Sum(dim,invA_h,invA_d) << endl;
 
    double *x = new double[dim];
    for(int i=0; i<dim; i++)
