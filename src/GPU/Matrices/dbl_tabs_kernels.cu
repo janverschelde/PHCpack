@@ -6,7 +6,7 @@
 
 using namespace std;
 
-__global__ void dbl_invert_upper ( int dim, double *U, double *invU )
+__global__ void dbl_small_invert_upper ( int dim, double *U, double *invU )
 {
    const int k = threadIdx.x; // thread k computes k-th column of inverse
 
@@ -58,7 +58,7 @@ __global__ void dbl_invert_upper ( int dim, double *U, double *invU )
    }
 }
 
-void test_invert_upper ( int dim, double *U, double *invU )
+void test_dbl_small_invert_upper ( int dim, double *U, double *invU )
 {
    double *Ucol = new double[d_shmemsize];
    double *invUrows = new double[d_shmemsize];
@@ -145,14 +145,14 @@ void GPU_dbl_upper_inverse ( int dim, double **U, double **invU )
    for(int j=0; j<dim; j++)
       for(int i=0; i<dim; i++) U_h[ix++] = U[i][j];
 
-   // test_invert_upper(dim,U_h,invU_h); // only for debugging
+   // test_small_invert_upper(dim,U_h,invU_h); // only for debugging
 
    size_t szmat = szU*sizeof(double);
    cudaMalloc((void**)&U_d,szmat);
    cudaMalloc((void**)&invU_d,szmat);
    cudaMemcpy(U_d,U_h,szmat,cudaMemcpyHostToDevice);
 
-   dbl_invert_upper<<<1,dim>>>(dim,U_d,invU_d);
+   dbl_small_invert_upper<<<1,dim>>>(dim,U_d,invU_d);
 
    cudaMemcpy(invU_h,invU_d,szmat,cudaMemcpyDeviceToHost);
 
