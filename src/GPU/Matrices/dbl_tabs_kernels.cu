@@ -132,6 +132,50 @@ void test_dbl_small_invert_upper ( int dim, double *U, double *invU )
       cout << "invUrows[" << i << "] : " << invUrows[i] << endl;
 }
 
+__global__ void dbl_medium_invert_upper ( int dim, double *U, double *invU )
+{
+   const int k = threadIdx.x;  // thread k computes k-th column of inverse
+
+   __shared__ double Ucol[d_shmemsize];      // one column of U
+   __shared__ double invUrow[d_shmemsize];   // one row of invU
+
+   double rhs,xval;
+
+   int colidx = dim*(dim-1);          // start with the last column
+
+   Ucol[k] = U[colidx+k];             // load the last column
+   rhs = ((double) int(k == dim-1));  // right hand side for each thread
+   int rowidx = (dim - 1)*dim + k;    // the row index in the inverse
+
+   invUrow[k] = rhs/Ucol[k];          // last row of the inverse
+   invU[rowidx] = invUrow[k];         // store the last row into invU
+
+   for(int i=dim-2; i>=0; i--)        // compute row with index i
+   {
+      rhs = ((double) int(k == i));   // set rhs for i-th unit vector
+
+      for(int j=i+1; j<dim; j++)
+      {
+         colidx = dim*j;              // need column j of U
+         Ucol[k] = U[colidx+k];
+
+         rowidx = j*dim + k;          // need solution value
+         invUrow[k] = invU[rowidx];   // load invU row into invUrow
+         xval = invUrow[k];
+
+         __syncthreads();
+         rhs = rhs - Ucol[i]*xval;    // update right hand side
+      }
+      colidx = dim*i;                 // need column i of U
+      Ucol[k] = U[colidx+k];
+      rowidx = i*dim + k;             // save in i-th row of inverse
+
+      __syncthreads();
+      invUrow[k] = rhs/Ucol[i];
+      invU[rowidx] = invUrow[k];
+   }
+}
+
 void GPU_dbl_upper_inverse ( int dim, double **U, double **invU )
 {
    const int szU = dim*dim;
@@ -152,7 +196,10 @@ void GPU_dbl_upper_inverse ( int dim, double **U, double **invU )
    cudaMalloc((void**)&invU_d,szmat);
    cudaMemcpy(U_d,U_h,szmat,cudaMemcpyHostToDevice);
 
-   dbl_small_invert_upper<<<1,dim>>>(dim,U_d,invU_d);
+   if(dim <= 16)
+      dbl_small_invert_upper<<<1,dim>>>(dim,U_d,invU_d);
+   else
+      dbl_medium_invert_upper<<<1,dim>>>(dim,U_d,invU_d);
 
    cudaMemcpy(invU_h,invU_d,szmat,cudaMemcpyDeviceToHost);
 
