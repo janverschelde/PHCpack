@@ -2,6 +2,8 @@ Sat 3 Jul 2021 : added dbl_Matrix_Difference_Sum function to the
   dbl_tabs_testers.h and dbl_tabs_testers.cpp.
   Improved the documentation of dbl_tabs_kernels.
   Added a function to dbl_tabs_kernels for matrices of medium size.
+  New random2_matrices, dbl2_tabs_host, dbl2_tabs_testers, test_dbl2_tabs,
+  with updated makefiles.
 
 Fri 2 Jul 2021 : new dbl_tabs_kernels, tested by dbl_tabs_testers.cpp;
   updated the makefiles.  Fixed bug in dbl_tabs_kernels.cu.

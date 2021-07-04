@@ -21,6 +21,9 @@ test_dbl_linearization:
 test_dbl_tabs:
 	make -f $(MAKEFILE) test_dbl_tabs
 
+test_dbl2_tabs:
+	make -f $(MAKEFILE) test_dbl2_tabs
+
 clean:
 	make -f $(MAKEFILE) clean
 

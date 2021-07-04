@@ -20,7 +20,10 @@ dbl_linearization         : linearization of double vectors and matrices
 test_dbl_linearization    : test on linearization in double precision
 -----------------------------------------------------------------------------
 dbl_tabs_host             : tiled accelerated back substitution on host
+dbl2_tabs_host            : double double tabs on host
 dbl_tabs_kernels          : tiled accelerated back substitution on device
 dbl_tabs_testers          : tests tiled accelerated back substitution
+dbl2_tabs_testers         : tests on double double tabs
 test_dbl_tabs             : main test on accelerated back substitution
+test_dbl2_tabs            : main test on double double tabs
 -----------------------------------------------------------------------------
