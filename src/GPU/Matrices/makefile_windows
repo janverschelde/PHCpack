@@ -187,6 +187,54 @@ test_dbl_tabs: test_dbl_tabs.obj dbl_tabs_testers.obj \
              dbl_convolutions_host.obj dbl_matrices_host.obj \
              random_numbers.obj random_series.obj random_matrices.obj
 
+double_double_functions.obj:
+	@-echo ">>> compiling double double functions ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/double_double_functions.cpp \
+                 /Fo: double_double_functions.obj /EHsc
+
+random2_vectors.obj:
+	@-echo ">>> compiling double double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random2_vectors.cpp \
+                 /Fo: random2_vectors.obj /EHsc
+
+random2_matrices.obj:
+	@-echo ">>> compiling double double random matrix generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random2_matrices.cpp \
+                 /Fo: random2_matrices.obj /EHsc
+
+dbl2_tabs_host.obj:
+	@-echo ">>> compiling dbl2_tabs_host ..."
+	$(CL)\cl /c dbl2_tabs_host.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl2_tabs_host.obj /EHsc
+
+dbl2_tabs_testers.obj:
+	@-echo ">>> compiling dbl2_tabs_testers ..."
+	$(CL)\cl /c dbl2_tabs_testers.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl2_tabs_testers.obj /EHsc
+
+test_dbl2_tabs.obj:
+	@-echo ">>> compiling test_dbl2_tabs ..."
+	$(CL)\cl /c test_dbl2_tabs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl2_tabs.obj /EHsc
+
+test_dbl2_tabs: test_dbl2_tabs.obj dbl2_tabs_testers.obj \
+                double_double_functions.obj dbl2_tabs_host.obj \
+                random_numbers.obj random2_vectors.obj random2_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl2_tabs.exe \
+             test_dbl2_tabs.obj dbl2_tabs_testers.obj \
+             dbl2_tabs_host.obj double_double_functions.obj \
+             random_numbers.obj random2_vectors.obj random2_matrices.obj
+
 clean:
 	del *~
 	del test_dbl_vectors.obj test_dbl_vectors_lib
@@ -205,6 +253,12 @@ clean:
 	del dbl_tabs_testers.obj test_dbl_tabs.obj
 	del test_dbl_tabs.obj test_dbl_tabs_lib
 	del test_dbl_tabs.exe test_dbl_tabs.exp
+	del double_double_functions.obj
+	del random2_vectors.obj random2_matrices.obj
+	del dbl2_tabs_host.obj
+	del dbl2_tabs_testers.obj
+	del test_dbl2_tabs.obj test_dbl2_tabs_lib
+	del test_dbl2_tabs.exe test_dbl2_tabs.exp
 
 cleanall: clean
 	del *exe *obj *exp *lib
