@@ -22,6 +22,7 @@ test_dbl_linearization    : test on linearization in double precision
 dbl_tabs_host             : tiled accelerated back substitution on host
 dbl2_tabs_host            : double double tabs on host
 dbl_tabs_kernels          : tiled accelerated back substitution on device
+dbl2_tabs_kernels         : double double tabs kernels
 dbl_tabs_testers          : tests tiled accelerated back substitution
 dbl2_tabs_testers         : tests on double double tabs
 test_dbl_tabs             : main test on accelerated back substitution

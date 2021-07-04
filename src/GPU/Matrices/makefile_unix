@@ -143,6 +143,12 @@ dbl2_tabs_host.o:
 	@-echo ">>> compiling dbl2_tabs_host ..."
 	$(gpp) -O3 -c -I$(MPD) dbl2_tabs_host.cpp
 
+dbl2_tabs_kernels.o:
+	@-echo ">>> compiling tabs kernels for doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+             --define-macro gpufun=1 \
+             -c dbl2_tabs_kernels.cu
+
 dbl2_tabs_testers.o:
 	@-echo ">>> compiling dbl2_tabs_testers ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl2_tabs_testers.cpp
@@ -153,10 +159,12 @@ test_dbl2_tabs.o:
 
 test_dbl2_tabs: test_dbl2_tabs.o dbl2_tabs_testers.o \
                 double_double_functions.o dbl2_tabs_host.o \
+                dbl2_tabs_kernels.o \
                 random_numbers.o random2_vectors.o random2_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_tabs test_dbl2_tabs.o dbl2_tabs_testers.o \
                   double_double_functions.o dbl2_tabs_host.o \
+                  dbl2_tabs_kernels.o \
                   random_numbers.o random2_vectors.o random2_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
@@ -174,7 +182,8 @@ clean:
 	/bin/rm -f -r test_dbl_tabs.o test_dbl_tabs
 	/bin/rm -f -r double_double_functions.o
 	/bin/rm -f -r random2_vectors.o random2_matrices.o
-	/bin/rm -f -r dbl2_tabs_host.o dbl2_tabs_testers.o
+	/bin/rm -f -r dbl2_tabs_host.o dbl2_tabs_kernels.o
+	/bin/rm -f -r dbl2_tabs_testers.o
 	/bin/rm -f -r test_dbl2_tabs.o test_dbl2_tabs
 
 cleanall: clean

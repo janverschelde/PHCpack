@@ -5,9 +5,11 @@
 #include <iomanip>
 #include <cstdlib>
 #include <cmath>
+#include <vector_types.h>
 #include "double_double_functions.h"
 #include "random2_matrices.h"
 #include "dbl2_tabs_host.h"
+#include "dbl2_tabs_kernels.h"
 
 using namespace std;
 
@@ -132,6 +134,26 @@ void test_real2_upper_inverse ( void )
       for(int j=0; j<dim; j++)
          cout << "invA_h[" << i << "][" << j << "] : "
               << invAhi_h[i][j] << "  " << invAlo_h[i][j] << endl;
+
+   double **invAhi_d = new double*[dim];
+   double **invAlo_d = new double*[dim];
+   for(int i=0; i<dim; i++)
+   {
+      invAhi_d[i] = new double[dim];
+      invAlo_d[i] = new double[dim];
+   }
+   GPU_dbl2_upper_inverse(dim,Ahi,Alo,invAhi_d,invAlo_d);
+
+   cout << "The GPU inverse of the upper triangular matrix :" << endl;
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+         cout << "invA_d[" << i << "][" << j << "] : "
+              << invAhi_d[i][j] << "  " << invAlo_d[i][j] << endl;
+
+   cout << "   Sum of errors : "
+        << dbl2_Matrix_Difference_Sum
+              (dim,invAhi_h,invAlo_h,invAhi_d,invAlo_d)
+        << endl;
 
    double *xhi = new double[dim];
    double *xlo = new double[dim];
