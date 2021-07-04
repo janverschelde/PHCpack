@@ -4,11 +4,69 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
+#include <cmath>
 #include "double_double_functions.h"
 #include "random2_matrices.h"
 #include "dbl2_tabs_host.h"
 
 using namespace std;
+
+double dbl2_Difference_Sum
+ ( int n, double *xhi, double *xlo, double *yhi, double *ylo )
+{
+   double result = 0.0;
+
+   for(int i=0; i<n; i++)
+      result = result + abs(xhi[i] - yhi[i]) + abs(xlo[i] - ylo[i]);
+
+   return result;
+}
+
+double dbl2_Column_Sum ( int dim, int col, double **Ahi, double **Alo )
+{
+   double resulthi = 0.0;
+   double resultlo = 0.0;
+
+   for(int i=0; i<dim; i++)
+      ddf_inc(&resulthi,&resultlo,abs(Ahi[i][col]),abs(Alo[i][col]));
+
+   return resulthi;
+}
+
+double dbl2_Max_Column_Sum ( int dim, double **Ahi, double **Alo )
+{
+   double result = dbl2_Column_Sum(dim,0,Ahi,Alo);
+   double colsum;
+   
+   for(int j=1; j<dim; j++)
+   {
+      colsum = dbl2_Column_Sum(dim,j,Ahi,Alo);
+      if(colsum > result) result = colsum;
+   }
+   return result;  
+}
+
+double dbl2_condition
+ ( int dim, double **Ahi, double **Alo, double **invAhi, double **invAlo )
+{
+   double Amaxcolsum = dbl2_Max_Column_Sum(dim,Ahi,Alo);
+   double invAmaxcolsum = dbl2_Max_Column_Sum(dim,invAhi,invAlo);
+
+   return Amaxcolsum*invAmaxcolsum;
+}
+
+double dbl2_Matrix_Difference_Sum
+ ( int n, double **Ahi, double **Alo, double **Bhi, double **Blo )
+{
+   double result = 0.0;
+
+   for(int i=0; i<n; i++)
+      for(int j=0; j<n; j++)
+         result = result + abs(Ahi[i][j] - Bhi[i][j])
+                         + abs(Alo[i][j] - Blo[i][j]);
+
+   return result;
+}
 
 void test_real2_upper_inverse ( void )
 {
@@ -92,4 +150,10 @@ void test_real2_upper_inverse ( void )
    for(int i=0; i<dim; i++)
       cout << "x[" << i << "] : "
            << xhi[i] << "  " << xlo[i] << endl;
+
+   cout << scientific << setprecision(2);
+   cout << "   Sum of errors : "
+        << dbl2_Difference_Sum(dim,solhi,sollo,xhi,xlo) << endl;
+   cout << "Condition number : "
+        << dbl2_condition(dim,Ahi,Alo,invAhi_h,invAlo_h) << endl;
 }

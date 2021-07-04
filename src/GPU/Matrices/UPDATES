@@ -1,3 +1,5 @@
+Sun 4 Jul 2021 : added diagnostics to dbl2_tabs_testers.
+
 Sat 3 Jul 2021 : added dbl_Matrix_Difference_Sum function to the
   dbl_tabs_testers.h and dbl_tabs_testers.cpp.
   Improved the documentation of dbl_tabs_kernels.
