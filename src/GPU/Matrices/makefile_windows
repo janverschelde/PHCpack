@@ -207,13 +207,13 @@ test_dbl_tabs.obj:
                  /Fo: test_dbl_tabs.obj /EHsc
 
 test_dbl_tabs: test_dbl_tabs.obj dbl_tabs_testers.obj \
-	       dbl_tabs_host.obj dbl_tabs_kernels.obj \
+	       dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_factorizations.obj \
                dbl_convolutions_host.obj dbl_matrices_host.obj \
                random_numbers.obj random_series.obj random_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_tabs.exe \
              test_dbl_tabs.obj dbl_tabs_testers.obj \
-             dbl_tabs_host.obj dbl_tabs_kernels.obj \
+             dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_factorizations.obj \
              dbl_convolutions_host.obj dbl_matrices_host.obj \
              random_numbers.obj random_series.obj random_matrices.obj
 

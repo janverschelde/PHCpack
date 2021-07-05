@@ -1,5 +1,7 @@
 Mon 5 Jul 2021 : new dbl_factorizations, dbl_factors_testers,
   test_dbl_factors, with an update to random_matrices; updated makefiles.
+  Applied the LU factorization to generate a random upper triangular matrix,
+  in the dbl_tabs_testers; updated makefile_unix and makefile_windows.
 
 Sun 4 Jul 2021 : added diagnostics to dbl2_tabs_testers.
   New dbl2_tabs_kernels, tested by dbl2_tabs_testers, updated makefiles.

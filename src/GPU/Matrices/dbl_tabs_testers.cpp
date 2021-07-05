@@ -7,6 +7,7 @@
 #include <cmath>
 #include <vector_types.h>
 #include "random_matrices.h"
+#include "dbl_factorizations.h"
 #include "dbl_tabs_host.h"
 #include "dbl_tabs_kernels.h"
 #include "dbl_tabs_testers.h"
@@ -63,10 +64,27 @@ double dbl_Matrix_Difference_Sum ( int n, double **A, double **B )
    return result;
 }
 
+void dbl_random_upper_factor ( int dim, double ** A )
+{
+   random_dbl_matrix(dim,dim,A);
+
+   int *pivots = new int[dim];
+
+   CPU_dbl_factors_lufac(dim,A,pivots);
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<i; j++) A[i][j] = 0.0;
+
+   free(pivots);
+}
+
 void test_real_upper_inverse ( void )
 {
    cout << "Give the dimension : ";
    int dim; cin >> dim;
+
+   cout << "Give the verbose level (1 to see all numbers) : ";
+   int verbose; cin >> verbose;
 
    cout << "-> generating a random upper triangular matrix of dimension "
         << dim << " ..." << endl;
@@ -74,15 +92,18 @@ void test_real_upper_inverse ( void )
    double **A = new double*[dim];
    for(int i=0; i<dim; i++) A[i] = new double[dim];
 
-   random_dbl_upper_matrix(dim,dim,A);
+   // random_dbl_upper_matrix(dim,dim,A);
+   dbl_random_upper_factor(dim,A);
 
    cout << scientific << setprecision(16);
 
-   cout << "A random upper triangular matrix :" << endl;
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<dim; j++)
-         cout << "A[" << i << "][" << j << "] : " << A[i][j] << endl;
-
+   if(verbose > 0)
+   {
+      cout << "A random upper triangular matrix :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "A[" << i << "][" << j << "] : " << A[i][j] << endl;
+   }
    double *sol = new double[dim];
    for(int i=0; i<dim; i++) sol[i] = 1.0;
 
@@ -92,32 +113,38 @@ void test_real_upper_inverse ( void )
       rhs[i] = 0.0;
       for(int j=0; j<dim; j++) rhs[i] = rhs[i] + A[i][j]*sol[j];
    }
-   cout << "The sums of the columns :" << endl;
-   for(int i=0; i<dim; i++)
-      cout << "b[" << i << "] : " << rhs[i] << endl;
-
+   if(verbose > 0)
+   {
+      cout << "The sums of the columns :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << "b[" << i << "] : " << rhs[i] << endl;
+   }
    double **invA_h = new double*[dim];
    for(int i=0; i<dim; i++) invA_h[i] = new double[dim];
 
    CPU_dbl_upper_inverse(dim,A,invA_h);
 
-   cout << "The CPU inverse of the upper triangular matrix :" << endl;
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<dim; j++)
-         cout << "invA_h[" << i << "][" << j << "] : "
-              << invA_h[i][j] << endl;
-
+   if(verbose > 0)
+   {
+      cout << "The CPU inverse of the upper triangular matrix :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "invA_h[" << i << "][" << j << "] : "
+                 << invA_h[i][j] << endl;
+   }
    double **invA_d = new double*[dim];
    for(int i=0; i<dim; i++) invA_d[i] = new double[dim];
 
    GPU_dbl_upper_inverse(dim,A,invA_d);
 
-   cout << "The GPU inverse of the upper triangular matrix :" << endl;
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<dim; j++)
-         cout << "invA_d[" << i << "][" << j << "] : "
-              << invA_d[i][j] << endl;
-
+   if(verbose > 0)
+   {
+      cout << "The GPU inverse of the upper triangular matrix :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "invA_d[" << i << "][" << j << "] : "
+                 << invA_d[i][j] << endl;
+   }
    cout << "   Sum of errors : "
         << dbl_Matrix_Difference_Sum(dim,invA_h,invA_d) << endl;
 
@@ -127,10 +154,12 @@ void test_real_upper_inverse ( void )
       x[i] = 0.0;
       for(int j=0; j<dim; j++) x[i] = x[i] + invA_h[i][j]*rhs[j];
    }
-   cout << "The solution computed with the CPU inverse :" << endl;
-   for(int i=0; i<dim; i++)
-      cout << "x[" << i << "] : " << x[i] << endl;
-
+   if(verbose > 0)
+   {
+      cout << "The solution computed with the CPU inverse :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << "x[" << i << "] : " << x[i] << endl;
+   }
    cout << scientific << setprecision(2);
    cout << "   Sum of errors : " << dbl_Difference_Sum(dim,sol,x) << endl;
    cout << "Condition number : "
