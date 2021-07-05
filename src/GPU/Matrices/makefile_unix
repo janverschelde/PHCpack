@@ -119,6 +119,27 @@ test_dbl_factors: test_dbl_factors.o dbl_factors_testers.o \
                   random_numbers.o random_series.o random_matrices.o \
                   dbl_factorizations.o dbl_factors_testers.o
 
+dbl2_factorizations.o:
+	@-echo ">>> compiling dbl2_factorizations ..."
+	$(gpp) -O3 -c -I$(MPD) dbl2_factorizations.cpp
+
+dbl2_factors_testers.o:
+	@-echo ">>> compiling dbl2_factors_testers ..."
+	$(gpp) -O3 -c -I$(MPD) dbl2_factors_testers.cpp
+
+test_dbl2_factors.o:
+	@-echo ">>> compiling test_dbl2_factors ..."
+	$(gpp) -O3 -c test_dbl2_factors.cpp
+
+test_dbl2_factors: test_dbl2_factors.o dbl2_factors_testers.o \
+                   double_double_functions.o dbl2_factorizations.o \
+                   random_numbers.o random2_vectors.o random2_matrices.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl2_factors test_dbl2_factors.o \
+                  double_double_functions.o \
+                  random_numbers.o random2_vectors.o random2_matrices.o \
+                  dbl2_factorizations.o dbl2_factors_testers.o
+
 dbl_tabs_host.o:
 	@-echo ">>> compiling dbl_tabs_host ..."
 	$(gpp) -O3 -c dbl_tabs_host.cpp
@@ -200,6 +221,8 @@ clean:
 	/bin/rm -f -r test_dbl_linearization.o test_dbl_linearization
 	/bin/rm -f -r dbl_factorizations.o dbl_factors_testers.o
 	/bin/rm -f -r test_dbl_factors.o test_dbl_factors
+	/bin/rm -f -r dbl2_factorizations.o dbl2_factors_testers.o
+	/bin/rm -f -r test_dbl2_factors.o test_dbl2_factors
 	/bin/rm -f -r dbl_tabs_host.o dbl_tabs_kernels.o
 	/bin/rm -f -r dbl_tabs_testers.o
 	/bin/rm -f -r test_dbl_tabs.o test_dbl_tabs

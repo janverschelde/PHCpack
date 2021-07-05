@@ -18,3 +18,13 @@ void random_dbl2_upper_matrix
          random_double_double(&Ahi[i][j],&Alo[i][j]);
    }
 }
+
+void random_dbl2_matrix
+ ( int rows, int cols, double **Ahi, double **Alo )
+{
+   for(int i=0; i<rows; i++)
+   {
+      for(int j=0; j<cols; j++)
+         random_double_double(&Ahi[i][j],&Alo[i][j]);
+   }
+}
