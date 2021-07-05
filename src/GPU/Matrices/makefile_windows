@@ -149,6 +149,36 @@ test_dbl_linearization: test_dbl_linearization.obj dbl_linearization.obj \
              test_dbl_linearization.obj dbl_linearization.obj \
              random_numbers.obj random_series.obj random_matrices.obj
 
+dbl_factorizations.obj:
+	@-echo ">>> compiling dbl_factorizations ..."
+	$(CL)\cl /c dbl_factorizations.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_factorizations.obj /EHsc
+
+dbl_factors_testers.obj:
+	@-echo ">>> compiling dbl_factors_testers ..."
+	$(CL)\cl /c dbl_factors_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_factors_testers.obj /EHsc
+
+test_dbl_factors.obj:
+	@-echo ">>> compiling test_dbl_factors ..."
+	$(CL)\cl /c test_dbl_factors.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl_factors.obj /EHsc
+
+test_dbl_factors: test_dbl_factors.obj dbl_factorizations.obj \
+                  random_numbers.obj random_series.obj \
+                  random_matrices.obj dbl_factors_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_factors.exe \
+             test_dbl_factors.obj dbl_factorizations.obj \
+	     dbl_factors_testers.obj \
+             random_numbers.obj random_series.obj random_matrices.obj
+
 dbl_tabs_host.obj:
 	@-echo ">>> compiling dbl_tabs_host ..."
 	$(CL)\cl /c dbl_tabs_host.cpp \
@@ -255,6 +285,9 @@ clean:
 	del dbl_linearization.obj
 	del test_dbl_linearization.obj test_dbl_linearization_lib
 	del test_dbl_linearization.exe test_dbl_linearization.exp
+	del dbl_factorizations.obj dbl_factors_testers.obj
+	del test_dbl_factors.obj test_dbl_factors_lib
+	del test_dbl_factors.exe test_dbl_factors.exp
 	del random_matrices.obj
 	del dbl_matrices_host.obj dbl_matrices_kernels.obj
 	del dbl_matrices_testers.obj dbl_vectors_testers.obj
