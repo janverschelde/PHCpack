@@ -18,6 +18,9 @@ test_upper_jobs:
 test_dbl_linearization:
 	make -f $(MAKEFILE) test_dbl_linearization
 
+test_dbl_factors:
+	make -f $(MAKEFILE) test_dbl_factors
+
 test_dbl_tabs:
 	make -f $(MAKEFILE) test_dbl_tabs
 

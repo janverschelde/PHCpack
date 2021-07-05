@@ -64,6 +64,12 @@ void random_dbl_upper_matrix ( int rows, int cols, double **A )
    }
 }
 
+void random_dbl_matrix ( int rows, int cols, double **A )
+{
+   for(int i=0; i<rows; i++)
+      for(int j=0; j<cols; j++) A[i][j] = random_double();
+}
+
 void random_dbl_upper_series_matrix
  ( int rows, int cols, int deg, double **x, double ***A, bool expform )
 {

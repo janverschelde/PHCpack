@@ -19,6 +19,10 @@ test_upper_jobs           : test on jobs for back substitution
 dbl_linearization         : linearization of double vectors and matrices
 test_dbl_linearization    : test on linearization in double precision
 -----------------------------------------------------------------------------
+dbl_factorizations        : matrix factorizations in double precision
+dbl_factors_testers       : tests matrix factorizations
+test_dbl_factors          : main test on factorizations
+-----------------------------------------------------------------------------
 dbl_tabs_host             : tiled accelerated back substitution on host
 dbl2_tabs_host            : double double tabs on host
 dbl_tabs_kernels          : tiled accelerated back substitution on device
