@@ -174,6 +174,9 @@ void test_real_upper_tiling ( void )
    cout << "Give the number of tiles : ";
    int numtiles; cin >> numtiles;
 
+   cout << "Give the verbose level (1 to see all numbers) : ";
+   int verbose; cin >> verbose;
+
    const int dim = sizetile*numtiles;
 
    cout << "-> generating a random upper triangular matrix of dimension "
@@ -182,15 +185,18 @@ void test_real_upper_tiling ( void )
    double **A = new double*[dim];
    for(int i=0; i<dim; i++) A[i] = new double[dim];
 
-   random_dbl_upper_matrix(dim,dim,A);
+   // random_dbl_upper_matrix(dim,dim,A);
+   dbl_random_upper_factor(dim,A);
 
    cout << scientific << setprecision(16);
 
-   cout << "A random upper triangular matrix :" << endl;
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<dim; j++)
-         cout << "A[" << i << "][" << j << "] : " << A[i][j] << endl;
-
+   if(verbose > 0)
+   {
+      cout << "A random upper triangular matrix :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "A[" << i << "][" << j << "] : " << A[i][j] << endl;
+   }
    double *sol = new double[dim];
    for(int i=0; i<dim; i++) sol[i] = 1.0;
 
@@ -200,18 +206,22 @@ void test_real_upper_tiling ( void )
       rhs[i] = 0.0;
       for(int j=0; j<dim; j++) rhs[i] = rhs[i] + A[i][j]*sol[j];
    }
-   cout << "The sums of the columns :" << endl;
-   for(int i=0; i<dim; i++)
-      cout << "b[" << i << "] : " << rhs[i] << endl;
-
+   if(verbose > 0)
+   {
+      cout << "The sums of the columns :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << "b[" << i << "] : " << rhs[i] << endl;
+   }
    double *x = new double[dim];
 
    CPU_dbl_upper_tiled_solver(dim,sizetile,numtiles,A,rhs,x);
 
-   cout << "The solution computed with tiling :" << endl;
-   for(int i=0; i<dim; i++)
-      cout << "x[" << i << "] : " << x[i] << endl;
-
+   if(verbose > 0)
+   {
+      cout << "The solution computed with tiling :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << "x[" << i << "] : " << x[i] << endl;
+   }
    cout << scientific << setprecision(2);
    cout << "   Sum of errors : " << dbl_Difference_Sum(dim,sol,x) << endl;
 }
