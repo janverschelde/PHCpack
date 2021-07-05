@@ -1,8 +1,8 @@
-/* The file dbl_factors_host.h specifies functions to factor matrices
+/* The file dbl_factorizations.h specifies functions to factor matrices
  * in double precision. */
 
-#ifndef __dbl_factors_host_h__
-#define __dbl_factors_host_h__
+#ifndef __dbl_factorizations_h__
+#define __dbl_factorizations_h__
 
 void CPU_dbl_factors_matmatmul
  ( int rows, int dim, int cols, double **A, double **B, double **C );
@@ -16,7 +16,7 @@ void CPU_dbl_factors_matmatmul
  *   cols     the number of columns in the matrices B and C;
  *   A        matrix of dimensions rows and dim;
  *   B        matrix of dimensions dim and cols;
- *   C        space allocated for a rows-by_cols matrix.
+ *   C        space allocated for a rows-by-cols matrix.
  *
  * ON RETURN :
  *   C        product of A with B. */
@@ -78,7 +78,7 @@ void CPU_dbl_factors_lusolve
  *
  * ON ENTRY :
  *   dim      number of rows and columns in the matrix A;
- *   A        matrix of power series;
+ *   A        matrix of dimension dim;
  *   pivots   space for dim pivots;
  *   b        right hand side vector;
  *   x        space for dim doubles.

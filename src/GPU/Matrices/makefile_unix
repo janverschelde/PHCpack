@@ -201,12 +201,12 @@ test_dbl2_tabs.o:
 
 test_dbl2_tabs: test_dbl2_tabs.o dbl2_tabs_testers.o \
                 double_double_functions.o dbl2_tabs_host.o \
-                dbl2_tabs_kernels.o \
+                dbl2_tabs_kernels.o dbl2_factorizations.o \
                 random_numbers.o random2_vectors.o random2_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_tabs test_dbl2_tabs.o dbl2_tabs_testers.o \
                   double_double_functions.o dbl2_tabs_host.o \
-                  dbl2_tabs_kernels.o \
+                  dbl2_tabs_kernels.o dbl2_factorizations.o \
                   random_numbers.o random2_vectors.o random2_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 

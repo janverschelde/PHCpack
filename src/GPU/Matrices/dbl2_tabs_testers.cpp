@@ -8,6 +8,7 @@
 #include <vector_types.h>
 #include "double_double_functions.h"
 #include "random2_matrices.h"
+#include "dbl2_factorizations.h"
 #include "dbl2_tabs_host.h"
 #include "dbl2_tabs_kernels.h"
 
@@ -70,10 +71,31 @@ double dbl2_Matrix_Difference_Sum
    return result;
 }
 
+void dbl2_random_upper_factor ( int dim, double **Ahi, double **Alo )
+{
+   random_dbl2_matrix(dim,dim,Ahi,Alo);
+
+   int *pivots = new int[dim];
+
+   CPU_dbl2_factors_lufac(dim,Ahi,Alo,pivots);
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<i; j++)
+      {
+         Ahi[i][j] = 0.0;
+         Alo[i][j] = 0.0;
+      }
+
+   free(pivots);
+}
+
 void test_real2_upper_inverse ( void )
 {
    cout << "Give the dimension : ";
    int dim; cin >> dim;
+
+   cout << "Give the verbose level (1 to see all numbers) : ";
+   int verbose; cin >> verbose;
 
    cout << "-> generating a random upper triangular matrix of dimension "
         << dim << " ..." << endl;
@@ -85,16 +107,19 @@ void test_real2_upper_inverse ( void )
       Ahi[i] = new double[dim];
       Alo[i] = new double[dim];
    }
-   random_dbl2_upper_matrix(dim,dim,Ahi,Alo);
+   // random_dbl2_upper_matrix(dim,dim,Ahi,Alo);
+   dbl2_random_upper_factor(dim,Ahi,Alo);
 
    cout << scientific << setprecision(16);
 
-   cout << "A random upper triangular matrix :" << endl;
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<dim; j++)
-         cout << "A[" << i << "][" << j << "] : "
-              << Ahi[i][j] << "  " << Alo[i][j] << endl;
-
+   if(verbose > 0)
+   {
+      cout << "A random upper triangular matrix :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "A[" << i << "][" << j << "] : "
+                 << Ahi[i][j] << "  " << Alo[i][j] << endl;
+   }
    double *solhi = new double[dim];
    double *sollo = new double[dim];
    for(int i=0; i<dim; i++)
@@ -116,10 +141,12 @@ void test_real2_upper_inverse ( void )
          ddf_inc(&rhshi[i],&rhslo[i],acchi,acclo);
       }
    }
-   cout << "The sums of the columns :" << endl;
-   for(int i=0; i<dim; i++)
-      cout << "b[" << i << "] : " << rhshi[i] << "  " << rhslo[i] << endl;
-
+   if(verbose > 0)
+   {
+      cout << "The sums of the columns :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << "b[" << i << "] : " << rhshi[i] << "  " << rhslo[i] << endl;
+   }
    double **invAhi_h = new double*[dim];
    double **invAlo_h = new double*[dim];
    for(int i=0; i<dim; i++)
@@ -129,12 +156,14 @@ void test_real2_upper_inverse ( void )
    }
    CPU_dbl2_upper_inverse(dim,Ahi,Alo,invAhi_h,invAlo_h);
 
-   cout << "The CPU inverse of the upper triangular matrix :" << endl;
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<dim; j++)
-         cout << "invA_h[" << i << "][" << j << "] : "
-              << invAhi_h[i][j] << "  " << invAlo_h[i][j] << endl;
-
+   if(verbose > 0)
+   {
+      cout << "The CPU inverse of the upper triangular matrix :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "invA_h[" << i << "][" << j << "] : "
+                 << invAhi_h[i][j] << "  " << invAlo_h[i][j] << endl;
+   }
    double **invAhi_d = new double*[dim];
    double **invAlo_d = new double*[dim];
    for(int i=0; i<dim; i++)
@@ -144,12 +173,14 @@ void test_real2_upper_inverse ( void )
    }
    GPU_dbl2_upper_inverse(dim,Ahi,Alo,invAhi_d,invAlo_d);
 
-   cout << "The GPU inverse of the upper triangular matrix :" << endl;
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<dim; j++)
-         cout << "invA_d[" << i << "][" << j << "] : "
-              << invAhi_d[i][j] << "  " << invAlo_d[i][j] << endl;
-
+   if(verbose > 0)
+   {
+      cout << "The GPU inverse of the upper triangular matrix :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "invA_d[" << i << "][" << j << "] : "
+                 << invAhi_d[i][j] << "  " << invAlo_d[i][j] << endl;
+   }
    cout << "   Sum of errors : "
         << dbl2_Matrix_Difference_Sum
               (dim,invAhi_h,invAlo_h,invAhi_d,invAlo_d)
@@ -168,11 +199,13 @@ void test_real2_upper_inverse ( void )
          ddf_inc(&xhi[i],&xlo[i],acchi,acclo);
       }
    }
-   cout << "The solution computed with the CPU inverse :" << endl;
-   for(int i=0; i<dim; i++)
-      cout << "x[" << i << "] : "
-           << xhi[i] << "  " << xlo[i] << endl;
-
+   if(verbose > 0)
+   {
+      cout << "The solution computed with the CPU inverse :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << "x[" << i << "] : "
+              << xhi[i] << "  " << xlo[i] << endl;
+   }
    cout << scientific << setprecision(2);
    cout << "   Sum of errors : "
         << dbl2_Difference_Sum(dim,solhi,sollo,xhi,xlo) << endl;

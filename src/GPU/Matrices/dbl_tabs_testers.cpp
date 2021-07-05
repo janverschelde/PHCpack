@@ -64,7 +64,7 @@ double dbl_Matrix_Difference_Sum ( int n, double **A, double **B )
    return result;
 }
 
-void dbl_random_upper_factor ( int dim, double ** A )
+void dbl_random_upper_factor ( int dim, double **A )
 {
    random_dbl_matrix(dim,dim,A);
 

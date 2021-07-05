@@ -37,6 +37,14 @@ double dbl2_Matrix_Difference_Sum
  *   Returns the sum of the absolute value of the differences
  *   between two n-by-n matrices A and B. */
 
+void dbl2_random_upper_factor ( int dim, double **Ahi, double **Alo );
+/*
+ * DESCRIPTION :
+ *   Returns the upper triangular factor of the LU factorization
+ *   with row pivoting on a random matrix of dimension dim.
+ *   This yields a much better conditioned upper triangular matrix
+ *   than the direct generation of a random upper triangular matrix. */
+
 void test_real2_upper_inverse ( void );
 /*
  * DESCRIPTION :
