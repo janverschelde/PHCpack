@@ -75,6 +75,22 @@ __global__ void  dbl_invert_tiles ( int dim, double *U, double *invU );
  * ON RETURN :
  *   invU     rows of the inverse of the tiles in U. */
 
+__global__ void dbl_multiply_inverse
+ ( int dim, int idx, double *invU, double *w );
+/*
+ * DESCRIPTION :
+ *   Replaces b with the product of the inverse tile in U.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of each tile;
+ *   idx      index of the diagonal tile;
+ *   invU     contains the inverse of the diagonal tiles;
+ *   w        right hand side vector
+ *
+ * ON RETURN :
+ *   w        product of the proper inverse of the diagonal tile
+ *            defines by the index idx with the w on input. */
+
 void GPU_dbl_upper_inverse ( int dim, double **U, double **invU );
 /*
  * DESCRIPTION :

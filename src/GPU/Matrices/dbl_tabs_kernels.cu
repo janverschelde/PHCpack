@@ -222,6 +222,28 @@ __global__ void  dbl_invert_tiles ( int dim, double *U, double *invU )
    }
 }
 
+__global__ void dbl_multiply_inverse
+ ( int dim, int idx, double *invU, double *w )
+{
+   const int k = threadIdx.x;     // thread k computes k-th product
+   const int rhsoff = dim*idx;    // offset for the right hand size
+   const int offset = dim*rhsoff; // offset for diagonal tile
+
+   __shared__ double work[d_shmemsize];      // copy of w
+
+   double result = 0.0; // each thread stores its product in result
+   double coeff;
+
+   work[k] = w[rhsoff+k];
+
+   for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
+   {
+      coeff = invU[offset+k*dim+j]; // thread k does row k
+      result = result + coeff*work[j];
+   }
+   w[rhsoff+k] = result;
+}
+
 void GPU_dbl_upper_inverse ( int dim, double **U, double **invU )
 {
    const int szU = dim*dim;
@@ -273,13 +295,22 @@ void GPU_dbl_upper_tiled_solver
       for(int j=0; j<szt; j++)
          for(int i=0; i<szt; i++) D_h[ix++] = U[offset+i][offset+j];
    }
-   size_t sznum = nbr*sizeof(double);
+   const size_t sznum = nbr*sizeof(double);
    cudaMalloc((void**)&D_d,sznum);
    cudaMalloc((void**)&invD_d,sznum);
    cudaMemcpy(D_d,D_h,sznum,cudaMemcpyHostToDevice);
 
    dbl_invert_tiles<<<nbt,szt>>>(szt,D_d,invD_d);
 
+   double *rhs_d;                    // right hand side on device
+   const size_t szrhs = dim*sizeof(double);
+   cudaMalloc((void**)&rhs_d,szrhs);
+   cudaMemcpy(rhs_d,b,szrhs,cudaMemcpyHostToDevice);
+
+   dbl_multiply_inverse<<<1,szt>>>(szt,nbt-1,invD_d,rhs_d);
+
+   cudaMemcpy(x,rhs_d,szrhs,cudaMemcpyDeviceToHost);
+   // copy of invD_d is needed only for testing purposes
    cudaMemcpy(invD_h,invD_d,sznum,cudaMemcpyDeviceToHost);
 
    ix = 0;

@@ -270,11 +270,17 @@ void test_real_upper_tiling ( void )
 
    if(verbose > 0)
    {
-      cout << "The solution computed with tiling :" << endl;
+      cout << "CPU solution computed with tiling :" << endl;
       cout << scientific << setprecision(16);
       for(int i=0; i<dim; i++)
          cout << "x[" << i << "] : " << x[i] << endl;
+      cout << "GPU solution computed with tiling :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << "x[" << i << "] : " << x_d[i] << endl;
    }
    cout << scientific << setprecision(2);
-   cout << "   Sum of errors : " << dbl_Difference_Sum(dim,sol,x) << endl;
+   cout << "   Sum of CPU errors : "
+        << dbl_Difference_Sum(dim,sol,x) << endl;
+   cout << "   Sum of GPU errors : "
+        << dbl_Difference_Sum(dim,sol,x_d) << endl;
 }

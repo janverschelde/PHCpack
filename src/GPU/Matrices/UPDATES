@@ -1,6 +1,8 @@
 Tue 6 Jul 2021 : to dbl_tabs_kernels, added code to invert the diagonal tiles,
   compared in dbl_tabs_testers with the result on the host, updated the code
   in dbl_tabs_host to have the diagonal tiles returned.
+  To dbl_tabs_kernels added multiplication with the inverse,
+  tested by dbl_tabs_testers.cpp.
 
 Mon 5 Jul 2021 : new dbl_factorizations, dbl_factors_testers,
   test_dbl_factors, with an update to random_matrices; updated makefiles.
