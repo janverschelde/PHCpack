@@ -176,6 +176,52 @@ __global__ void dbl_medium_invert_upper ( int dim, double *U, double *invU )
    }
 }
 
+__global__ void  dbl_invert_tiles ( int dim, double *U, double *invU )
+{
+   const int B = blockIdx.x;   // block index
+   const int k = threadIdx.x;  // thread k computes k-th column of inverse
+   const int offset = dim*dim*B; // offset in U and invU
+
+   __shared__ double Ucol[d_shmemsize];      // one column of U
+   __shared__ double invUrow[d_shmemsize];   // one row of invU
+
+   double rhs,xval;
+
+   int colidx = offset + dim*(dim-1); // start with the last column
+
+   Ucol[k] = U[colidx+k];             // load the last column
+   rhs = ((double) int(k == dim-1));  // right hand side for each thread
+   int rowidx = offset + (dim - 1)*dim + k; // row index in the inverse
+
+   invUrow[k] = rhs/Ucol[k];          // last row of the inverse
+   invU[rowidx] = invUrow[k];         // store the last row into invU
+
+   for(int i=dim-2; i>=0; i--)        // compute row with index i
+   {
+      rhs = ((double) int(k == i));   // set rhs for i-th unit vector
+
+      for(int j=i+1; j<dim; j++)
+      {
+         colidx = offset + dim*j;     // need column j of U
+         Ucol[k] = U[colidx+k];
+
+         rowidx = offset + j*dim + k; // need solution value
+         invUrow[k] = invU[rowidx];   // load invU row into invUrow
+         xval = invUrow[k];
+
+         __syncthreads();
+         rhs = rhs - Ucol[i]*xval;    // update right hand side
+      }
+      colidx = offset + dim*i;        // need column i of U
+      Ucol[k] = U[colidx+k];
+      rowidx = offset + i*dim + k;    // save in i-th row of inverse
+
+      __syncthreads();
+      invUrow[k] = rhs/Ucol[i];
+      invU[rowidx] = invUrow[k];
+   }
+}
+
 void GPU_dbl_upper_inverse ( int dim, double **U, double **invU )
 {
    const int szU = dim*dim;
@@ -208,4 +254,40 @@ void GPU_dbl_upper_inverse ( int dim, double **U, double **invU )
       for(int j=0; j<dim; j++) invU[i][j] = invU_h[ix++];
 
    free(U_h); free(invU_h);
+}
+
+void GPU_dbl_upper_tiled_solver
+ ( int dim, int szt, int nbt, double **U, double *b, double *x )
+{
+   const int nbr = nbt*szt*szt;   // number of doubles on diagonal tiles
+   double *D_h = new double[nbr];    // the diagonal tiles on the host
+   double *D_d;                      // diagonal tiles on the device
+   double *invD_h = new double[nbr]; // inverse of diagonal tiles on host 
+   double *invD_d;                   // invD_d is invD_h on device
+   int offset;
+   int ix = 0;
+
+   for(int k=0; k<nbt; k++) // copy columns of the k-th tile
+   {
+      offset = k*szt;
+      for(int j=0; j<szt; j++)
+         for(int i=0; i<szt; i++) D_h[ix++] = U[offset+i][offset+j];
+   }
+   size_t sznum = nbr*sizeof(double);
+   cudaMalloc((void**)&D_d,sznum);
+   cudaMalloc((void**)&invD_d,sznum);
+   cudaMemcpy(D_d,D_h,sznum,cudaMemcpyHostToDevice);
+
+   dbl_invert_tiles<<<nbt,szt>>>(szt,D_d,invD_d);
+
+   cudaMemcpy(invD_h,invD_d,sznum,cudaMemcpyDeviceToHost);
+
+   ix = 0;
+   for(int k=0; k<nbt; k++) // copy rows of the inverse of the k-th tile
+   {
+      offset = k*szt;
+      for(int i=0; i<szt; i++)
+         for(int j=0; j<szt; j++) U[offset+i][offset+j] = invD_h[ix++];
+   }
+   free(D_h); free(invD_h);
 }

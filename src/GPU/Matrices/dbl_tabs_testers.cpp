@@ -64,6 +64,23 @@ double dbl_Matrix_Difference_Sum ( int n, double **A, double **B )
    return result;
 }
 
+double dbl_Diagonal_Difference_Sum
+ ( int nbt, int szt, double **A, double **B )
+{
+   double result = 0.0;
+   int offset;
+
+   for(int k=0; k<nbt; k++) // difference between k-th tiles
+   {
+      offset = k*szt;
+      for(int i=0; i<szt; i++)
+         for(int j=0; j<szt; j++)
+            result = result + abs(A[offset+i][offset+j]
+                                - B[offset+i][offset+j]);
+   }
+   return result;
+}
+
 void dbl_random_upper_factor ( int dim, double **A )
 {
    random_dbl_matrix(dim,dim,A);
@@ -145,6 +162,7 @@ void test_real_upper_inverse ( void )
             cout << "invA_d[" << i << "][" << j << "] : "
                  << invA_d[i][j] << endl;
    }
+   cout << scientific << setprecision(2);
    cout << "   Sum of errors : "
         << dbl_Matrix_Difference_Sum(dim,invA_h,invA_d) << endl;
 
@@ -157,6 +175,7 @@ void test_real_upper_inverse ( void )
    if(verbose > 0)
    {
       cout << "The solution computed with the CPU inverse :" << endl;
+      cout << scientific << setprecision(16);
       for(int i=0; i<dim; i++)
          cout << "x[" << i << "] : " << x[i] << endl;
    }
@@ -213,12 +232,46 @@ void test_real_upper_tiling ( void )
          cout << "b[" << i << "] : " << rhs[i] << endl;
    }
    double *x = new double[dim];
+   double *x_d = new double[dim];
+   double *rhs_d = new double[dim];
+   double **A_d = new double*[dim];
+   for(int i=0; i<dim; i++)
+   {
+      rhs_d[i] = rhs[i];
+      A_d[i] = new double[dim];
+      for(int j=0; j<dim; j++) A_d[i][j] = A[i][j];
+   }
 
    CPU_dbl_upper_tiled_solver(dim,sizetile,numtiles,A,rhs,x);
 
    if(verbose > 0)
    {
+      cout << "The matrix computed by the host :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "A[" << i << "][" << j << "] : "
+                 << A[i][j] << endl;
+   }
+
+   GPU_dbl_upper_tiled_solver(dim,sizetile,numtiles,A_d,rhs_d,x_d);
+
+   if(verbose > 0)
+   {
+      cout << "The matrix returned by the device :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "A[" << i << "][" << j << "] : "
+                 << A_d[i][j] << endl;
+   }
+
+   cout << scientific << setprecision(2);
+   cout << "   Sum of errors on diagonal tiles : "
+        << dbl_Diagonal_Difference_Sum(numtiles,sizetile,A,A_d) << endl;
+
+   if(verbose > 0)
+   {
       cout << "The solution computed with tiling :" << endl;
+      cout << scientific << setprecision(16);
       for(int i=0; i<dim; i++)
          cout << "x[" << i << "] : " << x[i] << endl;
    }

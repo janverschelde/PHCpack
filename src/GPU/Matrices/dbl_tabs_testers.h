@@ -34,6 +34,14 @@ double dbl_Matrix_Difference_Sum ( int n, double **A, double **B );
  *   Returns the sum of the absolute value of the differences
  *   between two n-by-n matrices A and B. */
 
+double dbl_Diagonal_Difference_Sum
+ ( int nbt, int szt, double **A, double **B );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute value of all differences 
+ *   of the diagonal tiles of the matrices A and B.
+ *   The number of tiles equals nbt and the size of each tile is szt. */
+
 void dbl_random_upper_factor ( int dim, double **A );
 /*
  * DESCRIPTION :

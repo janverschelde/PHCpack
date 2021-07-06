@@ -57,6 +57,24 @@ __global__ void dbl_medium_invert_upper ( int dim, double *U, double *invU );
  * ON RETURN :
  *   invU     the inverse of the matrix U, stored row wise. */
 
+__global__ void  dbl_invert_tiles ( int dim, double *U, double *invU );
+/*
+ * DESCRIPTION :
+ *   Replaces the columns of the tiles with the rows of the inverses.
+ *   The number of blocks equals the number of tiles in U.
+ *   The number of threads per block equals the dimension of each tile.
+ *
+ * REQUIRED : dim <= 256 = d_shmemsize.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of each tile;
+ *   U        columns of all tiles on the diagonal 
+ *            of an upper triangular matrix;
+ *   invU     space allocated for the inverse of all tiles in U.
+ *
+ * ON RETURN :
+ *   invU     rows of the inverse of the tiles in U. */
+
 void GPU_dbl_upper_inverse ( int dim, double **U, double **invU );
 /*
  * DESCRIPTION :
@@ -70,5 +88,22 @@ void GPU_dbl_upper_inverse ( int dim, double **U, double **invU );
  *
  * ON RETURN :
  *   invU     the inverse of the matrix U. */
+
+void GPU_dbl_upper_tiled_solver
+ ( int dim, int szt, int nbt, double **U, double *b, double *x );
+/*
+ * DESCRIPTION :
+ *   Solves an upper triangular system with a tiled algorithm.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the upper triangular matrix U;
+ *   szt      size of each tile;
+ *   nbt      number of tiles, dim = szt*nbt;
+ *   U        an upper triangular matrix of dimension dim;
+ *   b        the right hand side of the linear system;
+ *   x        space allocated for dim doubles.
+ *
+ * ON RETURN :
+ *   x        the solution to the system U*x = b. */
 
 #endif

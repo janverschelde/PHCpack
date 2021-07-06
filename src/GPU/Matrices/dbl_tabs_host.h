@@ -60,6 +60,8 @@ void CPU_dbl_upper_tiled_solver
  *   x        space allocated for dim doubles.
  *
  * ON RETURN :
+ *   U        the diagonal tiles contain the inverse matrices,
+ *            for comparison with the result computed on the GPU;
  *   x        the solution to the system U*x = b. */
 
 #endif

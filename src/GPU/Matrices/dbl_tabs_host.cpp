@@ -64,6 +64,9 @@ void CPU_dbl_upper_tiled_solver
    CPU_dbl_upper_inverse(szt,T,invT);
 
    for(int i=0; i<szt; i++)
+      for(int j=0; j<szt; j++) U[idx+i][idx+j] = invT[i][j];
+
+   for(int i=0; i<szt; i++)
    {
       x[idx+i] = 0.0;
       for(int j=0; j<szt; j++) x[idx+i] = x[idx+i] + invT[i][j]*b[idx+j];
@@ -83,6 +86,9 @@ void CPU_dbl_upper_tiled_solver
          for(int j=0; j<szt; j++) T[i][j] = U[idx+i][idx+j];
 
       CPU_dbl_upper_inverse(szt,T,invT);
+
+      for(int i=0; i<szt; i++)
+         for(int j=0; j<szt; j++) U[idx+i][idx+j] = invT[i][j];
 
       for(int i=0; i<szt; i++)   // wb = invT*b
       {
