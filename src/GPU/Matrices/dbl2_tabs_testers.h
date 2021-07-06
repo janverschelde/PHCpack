@@ -51,4 +51,10 @@ void test_real2_upper_inverse ( void );
  *   Generates a random real upper triangular matrix
  *   to test the computation of its inverse. */
 
+void test_real2_upper_tiling ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts for the size of each tile and the number of tiles
+ *   and applies the tiled back substitution to a random system. */
+
 #endif

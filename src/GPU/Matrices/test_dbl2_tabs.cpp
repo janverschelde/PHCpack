@@ -15,5 +15,10 @@ int main ( void )
    cout << "Testing the real upper inverse ..." << endl;
    test_real2_upper_inverse();
 
+   cout << endl
+        << "Testing tiling on a real upper triangular matrix ..."
+        << endl;
+   test_real2_upper_tiling();
+
    return 0;
 }

@@ -212,3 +212,86 @@ void test_real2_upper_inverse ( void )
    cout << "Condition number : "
         << dbl2_condition(dim,Ahi,Alo,invAhi_h,invAlo_h) << endl;
 }
+
+void test_real2_upper_tiling ( void )
+{
+   cout << "Give the size of each tile : ";
+   int sizetile; cin >> sizetile;
+
+   cout << "Give the number of tiles : ";
+   int numtiles; cin >> numtiles;
+
+   cout << "Give the verbose level (1 to see all numbers) : ";
+   int verbose; cin >> verbose;
+
+   const int dim = sizetile*numtiles;
+
+   cout << "-> generating a random upper triangular matrix of dimension "
+        << dim << " ..." << endl;
+
+   double **Ahi = new double*[dim];
+   double **Alo = new double*[dim];
+   for(int i=0; i<dim; i++) 
+   {
+      Ahi[i] = new double[dim];
+      Alo[i] = new double[dim];
+   }
+
+   // random_dbl_upper_matrix(dim,dim,A);
+   dbl2_random_upper_factor(dim,Ahi,Alo);
+
+   cout << scientific << setprecision(16);
+
+   if(verbose > 0)
+   {
+      cout << "A random upper triangular matrix :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "A[" << i << "][" << j << "] : "
+                 << Ahi[i][j] << "  " << Alo[i][j] << endl;
+   }
+   double *solhi = new double[dim];
+   double *sollo = new double[dim];
+   for(int i=0; i<dim; i++)
+   {
+      solhi[i] = 1.0;
+      sollo[i] = 0.0;
+   }
+   double *rhshi = new double[dim];
+   double *rhslo = new double[dim];
+   double acchi,acclo;
+
+   for(int i=0; i<dim; i++)
+   {
+      rhshi[i] = 0.0;
+      rhslo[i] = 0.0;
+      for(int j=0; j<dim; j++) // rhs[i] = rhs[i] + A[i][j]*sol[j];
+      {
+         ddf_mul(Ahi[i][j],Alo[i][j],solhi[j],sollo[j],&acchi,&acclo);
+         ddf_inc(&rhshi[i],&rhslo[i],acchi,acclo);
+      }
+   }
+   if(verbose > 0)
+   {
+      cout << "The sums of the columns :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << "b[" << i << "] : "
+              << rhshi[i] << "  " << rhslo[i] << endl;
+   }
+   double *xhi = new double[dim];
+   double *xlo = new double[dim];
+
+   CPU_dbl2_upper_tiled_solver
+      (dim,sizetile,numtiles,Ahi,Alo,rhshi,rhslo,xhi,xlo);
+
+   if(verbose > 0)
+   {
+      cout << "The solution computed with tiling :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << "x[" << i << "] : "
+              << xhi[i] << "  " << xlo[i] << endl;
+   }
+   cout << scientific << setprecision(2);
+   cout << "   Sum of errors : "
+        << dbl2_Difference_Sum(dim,solhi,sollo,xhi,xlo) << endl;
+}
