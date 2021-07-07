@@ -78,41 +78,43 @@ void CPU_dbl_upper_tiled_solver
 
    double prod;
 
-   for(int k=1; k<nbt; k++)
+   for(int k=nbt-1; k>0; k--)  // update with solution tile k
    {
-      idx = idx - szt;
+      idx = idx - szt; // idx is start index of diagonal tile
 
       for(int i=0; i<szt; i++)
          for(int j=0; j<szt; j++) T[i][j] = U[idx+i][idx+j];
 
-      CPU_dbl_upper_inverse(szt,T,invT);
+      CPU_dbl_upper_inverse(szt,T,invT); // invert diagonal tile
 
       for(int i=0; i<szt; i++)
          for(int j=0; j<szt; j++) U[idx+i][idx+j] = invT[i][j];
 
+      for(int L=0; L<k; L++)   // update wb as many times as k
+      {
+         int rowidx = L*szt;
+
+         for(int i=0; i<szt; i++) // load the work space
+         {
+            wb[i] = b[rowidx+i];
+            for(int j=0; j<szt; j++) wT[i][j] = U[rowidx+i][idx+szt+j];
+         }
+         for(int i=0; i<szt; i++) // update wb
+         {
+            prod = 0.0;
+            for(int j=0; j<szt; j++) prod = prod + wT[i][j]*x[idx+szt+j];
+            wb[i] = wb[i] - prod;
+         }
+         for(int i=0; i<szt; i++) b[rowidx+i] = wb[i]; // for next update
+      }
       for(int i=0; i<szt; i++)   // wb = invT*b
       {
          prod = 0.0;
          for(int j=0; j<szt; j++) prod = prod + invT[i][j]*b[idx+j];
          wb[i] = prod;
       }
-      for(int L=1; L<=k; L++)   // update wb as many times as k
-      {
-         for(int i=0; i<szt; i++)
-            for(int j=0; j<szt; j++) wT[i][j] = U[idx+i][idx+L*szt+j];
-
-         CPU_dbl_matmatmul(szt,wT,invT); // multiply tile with invT
-
-         for(int i=0; i<szt; i++) // update wb
-         {
-            prod = 0.0;
-            for(int j=0; j<szt; j++) prod = prod + wT[i][j]*x[idx+L*szt+j];
-            wb[i] = wb[i] - prod;
-         }
-      }
       for(int i=0; i<szt; i++) x[idx+i] = wb[i];
    }
-
    for(int i=0; i<szt; i++)
    {
       free(T[i]); free(invT[i]); free(wT[i]);

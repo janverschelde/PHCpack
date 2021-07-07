@@ -146,9 +146,9 @@ void CPU_dbl2_upper_tiled_solver
       wThi[i] = new double[szt];
       wTlo[i] = new double[szt];
    }
-   for(int k=1; k<nbt; k++)
+   for(int k=nbt-1; k>0; k--)  // update with solution tile k
    {
-      idx = idx - szt;
+      idx = idx - szt;  // idx is start index of diagonal tile
 
       for(int i=0; i<szt; i++)
          for(int j=0; j<szt; j++)
@@ -159,6 +159,46 @@ void CPU_dbl2_upper_tiled_solver
 
       CPU_dbl2_upper_inverse(szt,Thi,Tlo,invThi,invTlo);
 
+      for(int i=0; i<szt; i++)
+         for(int j=0; j<szt; j++)
+         {
+            Uhi[idx+i][idx+j] = invThi[i][j];
+            Ulo[idx+i][idx+j] = invTlo[i][j];
+         }
+
+      for(int L=0; L<k; L++)   // update wb as many times as k
+      {
+         int rowidx = L*szt;
+
+         for(int i=0; i<szt; i++)  // load the work space
+         {
+            wbhi[i] = bhi[rowidx+i];
+            wblo[i] = blo[rowidx+i];
+            for(int j=0; j<szt; j++)
+            {
+               wThi[i][j] = Uhi[rowidx+i][idx+szt+j];
+               wTlo[i][j] = Ulo[rowidx+i][idx+szt+j];
+            }
+         }
+         for(int i=0; i<szt; i++) // update wb
+         {
+            prodhi = 0.0;
+            prodlo = 0.0;
+            for(int j=0; j<szt; j++)
+            {  // prod = prod + wT[i][j]*x[idx+szt+j];
+               ddf_mul(wThi[i][j],wTlo[i][j],xhi[idx+szt+j],
+                       xlo[idx+szt+j],&acchi,&acclo);
+               ddf_inc(&prodhi,&prodlo,acchi,acclo);
+            }
+            // wb[i] = wb[i] - prod;
+            ddf_dec(&wbhi[i],&wblo[i],prodhi,prodlo);
+         }
+         for(int i=0; i<szt; i++) // store wb into b for next update
+         {
+            bhi[rowidx+i] = wbhi[i];
+            blo[rowidx+i] = wblo[i];
+         }
+      }
       for(int i=0; i<szt; i++)   // wb = invT*b
       {
          prodhi = 0.0;
@@ -172,39 +212,12 @@ void CPU_dbl2_upper_tiled_solver
          wbhi[i] = prodhi;
          wblo[i] = prodlo;
       }
-      for(int L=1; L<=k; L++)   // update wb as many times as k
-      {
-         for(int i=0; i<szt; i++)
-            for(int j=0; j<szt; j++)
-            {
-               wThi[i][j] = Uhi[idx+i][idx+L*szt+j];
-               wTlo[i][j] = Ulo[idx+i][idx+L*szt+j];
-            }
-
-         // multiply tile with invT
-         CPU_dbl2_matmatmul(szt,wThi,wTlo,invThi,invTlo);
-
-         for(int i=0; i<szt; i++) // update wb
-         {
-            prodhi = 0.0;
-            prodlo = 0.0;
-            for(int j=0; j<szt; j++)
-            {  // prod = prod + wT[i][j]*x[idx+L*szt+j];
-               ddf_mul(wThi[i][j],wTlo[i][j],xhi[idx+L*szt+j],
-                       xlo[idx+L*szt+j],&acchi,&acclo);
-               ddf_inc(&prodhi,&prodlo,acchi,acclo);
-            }
-            // wb[i] = wb[i] - prod;
-            ddf_dec(&wbhi[i],&wblo[i],prodhi,prodlo);
-         }
-      }
       for(int i=0; i<szt; i++)
       {
          xhi[idx+i] = wbhi[i];
          xlo[idx+i] = wblo[i];
       }
    }
-
    for(int i=0; i<szt; i++)
    {
       free(Thi[i]); free(invThi[i]); free(wThi[i]);
