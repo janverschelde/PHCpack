@@ -231,10 +231,10 @@ __global__ void dbl_multiply_inverse
 
    __shared__ double work[d_shmemsize];      // copy of w
 
+   work[k] = w[rhsoff+k];
+
    double result = 0.0; // each thread stores its product in result
    double coeff;
-
-   work[k] = w[rhsoff+k];
 
    for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
    {
@@ -242,6 +242,31 @@ __global__ void dbl_multiply_inverse
       result = result + coeff*work[j];
    }
    w[rhsoff+k] = result;
+}
+
+__global__ void dbl_back_substitute
+ ( int dim, int idx, double *U, double *w )
+{
+   const int B = blockIdx.x;     // block index
+   const int k = threadIdx.x;    // thread k computes k-th product
+   const int offset = B*dim*dim; // numbers to skip
+
+   __shared__ double wrk[d_shmemsize];    // copy of w
+   __shared__ double sol[d_shmemsize];    // solution to update with
+
+   wrk[k] = w[B*dim+k];    // block B updates B-th slice of w
+   sol[k] = w[idx*dim+k];  // solution that is back substituted
+
+   double result = 0.0; // each thread stores its product in result
+   double coeff;
+
+   for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
+   {
+      coeff = U[offset+k*dim+j];
+      result = result + coeff*sol[j];
+   }
+   wrk[k] = wrk[k] - result; // subtract product
+   w[B*dim+k] = wrk[k];
 }
 
 void GPU_dbl_upper_inverse ( int dim, double **U, double **invU )
@@ -309,7 +334,36 @@ void GPU_dbl_upper_tiled_solver
 
    dbl_multiply_inverse<<<1,szt>>>(szt,nbt-1,invD_d,rhs_d);
 
+   int nbrUcol = (nbt-1)*szt*szt;         // #doubles in column of U
+   double *Ucol_h = new double[nbrUcol];  // column of U on host
+   double *Ucol_d;
+   const size_t szUcol = nbrUcol*sizeof(double);
+   cudaMalloc((void**)&Ucol_d,szUcol);
+
+   int coloff,rowoff;
+
+   for(int k=nbt-1; k>0; k--)      // update with solution tile k
+   {
+      coloff = k*szt;      // column offset to update with solution tile k
+      ix = 0;
+      for(int L=0; L<k; L++)       // copy k tiles of U
+      {
+         rowoff = L*szt;           // row offset for update data
+         for(int i=0; i<szt; i++)
+            for(int j=0; j<szt; j++) Ucol_h[ix++] = U[rowoff+i][coloff+j];
+      }
+      cudaMemcpy(Ucol_d,Ucol_h,nbrUcol*sizeof(double),
+                 cudaMemcpyHostToDevice);
+
+      dbl_back_substitute<<<k,szt>>>(szt,k,Ucol_d,rhs_d);
+
+      // (k-1)-th solution tile is ready for inverse multiplication
+      dbl_multiply_inverse<<<1,szt>>>(szt,k-1,invD_d,rhs_d);
+
+      nbrUcol = nbrUcol - szt*szt; // one tile less used in update
+   }
    cudaMemcpy(x,rhs_d,szrhs,cudaMemcpyDeviceToHost);
+
    // copy of invD_d is needed only for testing purposes
    cudaMemcpy(invD_h,invD_d,sznum,cudaMemcpyDeviceToHost);
 
@@ -320,5 +374,5 @@ void GPU_dbl_upper_tiled_solver
       for(int i=0; i<szt; i++)
          for(int j=0; j<szt; j++) U[offset+i][offset+j] = invD_h[ix++];
    }
-   free(D_h); free(invD_h);
+   free(D_h); free(invD_h); free(Ucol_h);
 }

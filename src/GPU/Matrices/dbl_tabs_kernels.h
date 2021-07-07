@@ -85,11 +85,27 @@ __global__ void dbl_multiply_inverse
  *   dim      the dimension of each tile;
  *   idx      index of the diagonal tile;
  *   invU     contains the inverse of the diagonal tiles;
- *   w        right hand side vector
+ *   w        right hand side vector.
  *
  * ON RETURN :
  *   w        product of the proper inverse of the diagonal tile
  *            defines by the index idx with the w on input. */
+
+__global__ void dbl_back_substitute
+ ( int dim, int idx, double *U, double *w );
+/*
+ * DESCRIPTION :
+ *   Updates the right hand side vector subtracting the solution
+ *   defined by idx, multiplied with the corresponding rows in U.
+ *
+ * ON ENTRY :
+ *   dim      dimension of each tile;
+ *   idx      index of the solution tile in the multiplication;
+ *   U        contains tiles to multiply the solution with;
+ *   w        current right hand side vector.
+ *
+ * ON RETURN :
+ *   w        updated right hand side vector. */
 
 void GPU_dbl_upper_inverse ( int dim, double **U, double **invU );
 /*
