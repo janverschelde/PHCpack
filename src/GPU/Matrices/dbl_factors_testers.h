@@ -9,4 +9,10 @@ void test_factors_real_lufac ( void );
  * DESCRIPTION :
  *   Prompts for a dimension and tests the LU factorization on real data. */
 
+void test_factors_cmplx_lufac ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts for a dimension and tests the LU factorization
+ *   on complex data. */
+
 #endif

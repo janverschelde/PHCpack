@@ -3,6 +3,7 @@ Wed 7 Jul 2021 : improved dbl_tabs_host.cpp and dbl2_tabs_host.cpp not to
   Added writing of inverse diagonal tiles to dbl2_tabs_host.cpp, added
   code for inverse to dbl2_tabs_kernels, and tests to dbl2_tabs_testers.
   Bug fixed in CPU_cmplx_upper_lead_solver of dbl_matrices_host.cpp.
+  Extended *dbl_factor* with complex versions of the LU solvers.
 
 Tue 6 Jul 2021 : to dbl_tabs_kernels, added code to invert the diagonal tiles,
   compared in dbl_tabs_testers with the result on the host, updated the code
