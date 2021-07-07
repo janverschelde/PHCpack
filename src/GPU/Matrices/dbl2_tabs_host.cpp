@@ -127,6 +127,13 @@ void CPU_dbl2_upper_tiled_solver
    CPU_dbl2_upper_inverse(szt,Thi,Tlo,invThi,invTlo);
 
    for(int i=0; i<szt; i++)
+      for(int j=0; j<szt; j++)
+      {
+         Uhi[idx+i][idx+j] = invThi[i][j];
+         Ulo[idx+i][idx+j] = invTlo[i][j];
+      }
+
+   for(int i=0; i<szt; i++)
    {
       xhi[idx+i] = 0.0;
       xlo[idx+i] = 0.0;

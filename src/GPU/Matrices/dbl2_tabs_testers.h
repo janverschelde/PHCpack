@@ -37,6 +37,15 @@ double dbl2_Matrix_Difference_Sum
  *   Returns the sum of the absolute value of the differences
  *   between two n-by-n matrices A and B. */
 
+double dbl2_Diagonal_Difference_Sum
+ ( int nbt, int szt, double **Ahi, double **Alo,
+   double **Bhi, double **Blo );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute value of all differences 
+ *   of the diagonal tiles of the matrices A and B.
+ *   The number of tiles equals nbt and the size of each tile is szt. */
+
 void dbl2_random_upper_factor ( int dim, double **Ahi, double **Alo );
 /*
  * DESCRIPTION :

@@ -71,6 +71,26 @@ double dbl2_Matrix_Difference_Sum
    return result;
 }
 
+double dbl2_Diagonal_Difference_Sum
+ ( int nbt, int szt, double **Ahi, double **Alo,
+   double **Bhi, double **Blo )
+{
+   double result = 0.0;
+   int offset;
+
+   for(int k=0; k<nbt; k++) // difference between k-th tiles
+   {
+      offset = k*szt;
+      for(int i=0; i<szt; i++)
+         for(int j=0; j<szt; j++)
+            result = result + abs(Ahi[offset+i][offset+j]
+                                - Bhi[offset+i][offset+j])
+                            + abs(Alo[offset+i][offset+j]
+                                - Blo[offset+i][offset+j]);
+   }
+   return result;
+}
+
 void dbl2_random_upper_factor ( int dim, double **Ahi, double **Alo )
 {
    random_dbl2_matrix(dim,dim,Ahi,Alo);
@@ -181,6 +201,7 @@ void test_real2_upper_inverse ( void )
             cout << "invA_d[" << i << "][" << j << "] : "
                  << invAhi_d[i][j] << "  " << invAlo_d[i][j] << endl;
    }
+   cout << scientific << setprecision(2);
    cout << "   Sum of errors : "
         << dbl2_Matrix_Difference_Sum
               (dim,invAhi_h,invAlo_h,invAhi_d,invAlo_d)
@@ -257,6 +278,8 @@ void test_real2_upper_tiling ( void )
       solhi[i] = 1.0;
       sollo[i] = 0.0;
    }
+   double *xhi = new double[dim];
+   double *xlo = new double[dim];
    double *rhshi = new double[dim];
    double *rhslo = new double[dim];
    double acchi,acclo;
@@ -271,6 +294,24 @@ void test_real2_upper_tiling ( void )
          ddf_inc(&rhshi[i],&rhslo[i],acchi,acclo);
       }
    }
+   double *xhi_d = new double[dim];
+   double *xlo_d = new double[dim];
+   double *rhshi_d = new double[dim];
+   double *rhslo_d = new double[dim];
+   double **Ahi_d = new double*[dim];
+   double **Alo_d = new double*[dim];
+   for(int i=0; i<dim; i++)
+   {
+      rhshi_d[i] = rhshi[i];
+      rhslo_d[i] = rhslo[i];
+      Ahi_d[i] = new double[dim];
+      Alo_d[i] = new double[dim];
+      for(int j=0; j<dim; j++)
+      {
+         Ahi_d[i][j] = Ahi[i][j];
+         Alo_d[i][j] = Alo[i][j];
+      }
+   }
    if(verbose > 0)
    {
       cout << "The sums of the columns :" << endl;
@@ -278,18 +319,47 @@ void test_real2_upper_tiling ( void )
          cout << "b[" << i << "] : "
               << rhshi[i] << "  " << rhslo[i] << endl;
    }
-   double *xhi = new double[dim];
-   double *xlo = new double[dim];
 
    CPU_dbl2_upper_tiled_solver
       (dim,sizetile,numtiles,Ahi,Alo,rhshi,rhslo,xhi,xlo);
 
    if(verbose > 0)
    {
-      cout << "The solution computed with tiling :" << endl;
+      cout << "The matrix computed by the host :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "A[" << i << "][" << j << "] : "
+                 << Ahi[i][j] << "  " << Alo[i][j] << endl;
+   }
+
+   GPU_dbl2_upper_tiled_solver
+      (dim,sizetile,numtiles,Ahi_d,Alo_d,rhshi_d,rhslo_d,xhi_d,xlo_d);
+
+   if(verbose > 0)
+   {
+      cout << "The matrix returned by the device :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "A[" << i << "][" << j << "] : "
+                 << Ahi_d[i][j] << "  " << Alo_d[i][j] << endl;
+   }
+
+   cout << scientific << setprecision(2);
+   cout << "   Sum of errors on diagonal tiles : "
+        << dbl2_Diagonal_Difference_Sum(numtiles,sizetile,Ahi,Alo,Ahi_d,Alo_d)
+        << endl;
+
+   if(verbose > 0)
+   {
+      cout << "CPU solution computed with tiling :" << endl;
+      cout << scientific << setprecision(16);
       for(int i=0; i<dim; i++)
          cout << "x[" << i << "] : "
               << xhi[i] << "  " << xlo[i] << endl;
+      cout << "GPU solution computed with tiling :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << "x[" << i << "] : "
+              << xhi_d[i] << "  " << xlo_d[i] << endl;
    }
    cout << scientific << setprecision(2);
    cout << "   Sum of errors : "
