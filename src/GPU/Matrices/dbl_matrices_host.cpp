@@ -351,7 +351,7 @@ void CPU_cmplx_upper_lead_solver
       vre = Ure[i][i]/det;   // vim is the real part of 1/U[i][i]
       vim = -Uim[i][i]/det;  // vim is imaginary part of 1/U[i][i]
       zre = xre[i]*vre - xim[i]*vim;
-      zim = xim[i]*vre - xre[i]*vim;
+      zim = xim[i]*vre + xre[i]*vim;
       xre[i] = zre; xim[i] = zim;     // x[i] = x[i]/U[i][i];
    }
 }
