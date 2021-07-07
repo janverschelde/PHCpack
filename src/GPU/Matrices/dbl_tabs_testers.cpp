@@ -137,6 +137,26 @@ double dbl_Diagonal_Difference_Sum
    return result;
 }
 
+double cmplx_Diagonal_Difference_Sum
+ ( int nbt, int szt, double **Are, double **Aim,
+   double **Bre, double **Bim )
+{
+   double result = 0.0;
+   int offset;
+
+   for(int k=0; k<nbt; k++) // difference between k-th tiles
+   {
+      offset = k*szt;
+      for(int i=0; i<szt; i++)
+         for(int j=0; j<szt; j++)
+            result = result + abs(Are[offset+i][offset+j]
+                                - Bre[offset+i][offset+j])
+                            + abs(Aim[offset+i][offset+j]
+                                - Bim[offset+i][offset+j]);
+   }
+   return result;
+}
+
 void dbl_random_upper_factor ( int dim, double **A )
 {
    random_dbl_matrix(dim,dim,A);
@@ -487,4 +507,135 @@ void test_real_upper_tiling ( void )
         << dbl_Difference_Sum(dim,sol,x) << endl;
    cout << "   Sum of GPU errors : "
         << dbl_Difference_Sum(dim,sol,x_d) << endl;
+}
+
+void test_cmplx_upper_tiling ( void )
+{
+   cout << "Give the size of each tile : ";
+   int sizetile; cin >> sizetile;
+
+   cout << "Give the number of tiles : ";
+   int numtiles; cin >> numtiles;
+
+   cout << "Give the verbose level (1 to see all numbers) : ";
+   int verbose; cin >> verbose;
+
+   const int dim = sizetile*numtiles;
+
+   cout << "-> generating a random upper triangular matrix of dimension "
+        << dim << " ..." << endl;
+
+   double **Are = new double*[dim];
+   double **Aim = new double*[dim];
+   for(int i=0; i<dim; i++)
+   {
+      Are[i] = new double[dim];
+      Aim[i] = new double[dim];
+   }
+   // random_cmplx_upper_matrix(dim,dim,Are,Aim);
+   cmplx_random_upper_factor(dim,Are,Aim);
+
+   cout << scientific << setprecision(16);
+
+   if(verbose > 0)
+   {
+      cout << "A random upper triangular matrix :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "A[" << i << "][" << j << "] : "
+                 << Are[i][j] << "  " << Aim[i][j] << endl;
+   }
+   double *solre = new double[dim];
+   double *solim = new double[dim];
+   for(int i=0; i<dim; i++)
+   {
+      solre[i] = 1.0;
+      solim[i] = 0.0;
+   }
+   double *rhsre = new double[dim];
+   double *rhsim = new double[dim];
+   double accre,accim;
+
+   for(int i=0; i<dim; i++)
+   {
+      rhsre[i] = 0.0;
+      rhsim[i] = 0.0;
+      for(int j=0; j<dim; j++) // rhs[i] = rhs[i] + A[i][j]*sol[j];
+      {
+         accre = Are[i][j]*solre[j] - Aim[i][j]*solim[j];
+         accim = Aim[i][j]*solre[j] + Are[i][j]*solim[j];
+         rhsre[i] = rhsre[i] + accre;
+         rhsim[i] = rhsim[i] + accim;
+      }
+   }
+   if(verbose > 0)
+   {
+      cout << "The sums of the columns :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << "b[" << i << "] : "
+              << rhsre[i] << "  " << rhsim[i] << endl;
+   }
+   double *xre = new double[dim];
+   double *xim = new double[dim];
+   double *xre_d = new double[dim];
+   double *xim_d = new double[dim];
+   double *rhsre_d = new double[dim];
+   double *rhsim_d = new double[dim];
+   double **Are_d = new double*[dim];
+   double **Aim_d = new double*[dim];
+   for(int i=0; i<dim; i++)
+   {
+      rhsre_d[i] = rhsre[i];
+      rhsim_d[i] = rhsim[i];
+      Are_d[i] = new double[dim];
+      Aim_d[i] = new double[dim];
+      for(int j=0; j<dim; j++)
+      {
+         Are_d[i][j] = Are[i][j];
+         Aim_d[i][j] = Aim[i][j];
+      }
+   }
+   CPU_cmplx_upper_tiled_solver
+      (dim,sizetile,numtiles,Are,Aim,rhsre,rhsim,xre,xim);
+
+   if(verbose > 0)
+   {
+      cout << "The matrix computed by the host :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "A[" << i << "][" << j << "] : "
+                 << Are[i][j] << "  " << Aim[i][j] << endl;
+   }
+   GPU_cmplx_upper_tiled_solver
+      (dim,sizetile,numtiles,Are_d,Aim_d,rhsre_d,rhsim_d,xre_d,xim_d);
+
+   if(verbose > 0)
+   {
+      cout << "The matrix returned by the device :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "A[" << i << "][" << j << "] : "
+                 << Are_d[i][j] << "  " << Aim_d[i][j] << endl;
+   }
+
+   cout << scientific << setprecision(2);
+   cout << "   Sum of errors on diagonal tiles : "
+        << cmplx_Diagonal_Difference_Sum
+              (numtiles,sizetile,Are,Aim,Are_d,Aim_d) << endl;
+
+   if(verbose > 0)
+   {
+      cout << "CPU solution computed with tiling :" << endl;
+      cout << scientific << setprecision(16);
+      for(int i=0; i<dim; i++)
+         cout << "x[" << i << "] : " << xre[i] << "  " << xim[i] << endl;
+      cout << "GPU solution computed with tiling :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << "x[" << i << "] : " << xre_d[i] << "  " << xim_d[i] << endl;
+   }
+   cout << scientific << setprecision(2);
+   cout << "   Sum of CPU errors : "
+        << cmplx_Difference_Sum(dim,solre,solim,xre,xim) << endl;
+   cout << "   Sum of GPU errors : "
+        << cmplx_Difference_Sum(dim,solre,solim,xre_d,xim_d) << endl;
 }

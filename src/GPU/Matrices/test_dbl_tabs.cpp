@@ -19,6 +19,11 @@ int main ( void )
    test_real_upper_inverse();
 
    cout << endl
+        << "Testing tiling on a complex upper triangular matrix ..."
+        << endl;
+   test_cmplx_upper_tiling();
+
+   cout << endl
         << "Testing tiling on a real upper triangular matrix ..."
         << endl;
    test_real_upper_tiling();

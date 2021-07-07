@@ -160,3 +160,146 @@ void CPU_dbl_upper_tiled_solver
    }
    free(T); free(invT); free(wb); free(wT);
 }
+
+void CPU_cmplx_upper_tiled_solver
+ ( int dim, int szt, int nbt, double **Ure, double **Uim,
+   double *bre, double *bim, double *xre, double *xim )
+{
+   double **Tre = new double*[szt];
+   double **Tim = new double*[szt];
+   double **invTre = new double*[szt];
+   double **invTim = new double*[szt];
+
+   for(int i=0; i<szt; i++)
+   {
+      Tre[i] = new double[szt];
+      Tim[i] = new double[szt];
+      invTre[i] = new double[szt];
+      invTim[i] = new double[szt];
+   }
+   int idx = (nbt-1)*szt;
+   for(int i=0; i<szt; i++)
+      for(int j=0; j<szt; j++)
+      {
+         Tre[i][j] = Ure[idx+i][idx+j];
+         Tim[i][j] = Uim[idx+i][idx+j];
+      }
+
+   CPU_cmplx_upper_inverse(szt,Tre,Tim,invTre,invTim);
+
+   for(int i=0; i<szt; i++)
+      for(int j=0; j<szt; j++)
+      {
+         Ure[idx+i][idx+j] = invTre[i][j];
+         Uim[idx+i][idx+j] = invTim[i][j];
+      }
+
+   double accre,accim;
+
+   for(int i=0; i<szt; i++)
+   {
+      xre[idx+i] = 0.0;
+      xim[idx+i] = 0.0;
+      for(int j=0; j<szt; j++) // x[idx+i] = x[idx+i] + invT[i][j]*b[idx+j];
+      {
+         accre = invTre[i][j]*bre[idx+j] - invTim[i][j]*bim[idx+j];
+         accim = invTim[i][j]*bre[idx+j] + invTre[i][j]*bim[idx+j];
+         xre[idx+i] = xre[idx+i] + accre;
+         xim[idx+i] = xim[idx+i] + accim;
+      }
+   }
+   double *wbre = new double[szt];    // work space for b
+   double *wbim = new double[szt];    // work space for b
+   double **wTre = new double*[szt];  // work space for a tile
+   double **wTim = new double*[szt];  // work space for a tile
+
+   for(int i=0; i<szt; i++)
+   {
+      wTre[i] = new double[szt];
+      wTim[i] = new double[szt];
+   }
+   double prodre,prodim;
+
+   for(int k=nbt-1; k>0; k--)  // update with solution tile k
+   {
+      idx = idx - szt; // idx is start index of diagonal tile
+
+      for(int i=0; i<szt; i++)
+         for(int j=0; j<szt; j++)
+         {
+            Tre[i][j] = Ure[idx+i][idx+j];
+            Tim[i][j] = Uim[idx+i][idx+j];
+         }
+
+      // invert diagonal tile
+      CPU_cmplx_upper_inverse(szt,Tre,Tim,invTre,invTim);
+
+      for(int i=0; i<szt; i++)
+         for(int j=0; j<szt; j++)
+         {
+            Ure[idx+i][idx+j] = invTre[i][j];
+            Uim[idx+i][idx+j] = invTim[i][j];
+         }
+
+      for(int L=0; L<k; L++)   // update wb as many times as k
+      {
+         int rowidx = L*szt;
+
+         for(int i=0; i<szt; i++) // load the work space
+         {
+            wbre[i] = bre[rowidx+i];
+            wbim[i] = bim[rowidx+i];
+            for(int j=0; j<szt; j++)
+            {
+               wTre[i][j] = Ure[rowidx+i][idx+szt+j];
+               wTim[i][j] = Uim[rowidx+i][idx+szt+j];
+            }
+         }
+         for(int i=0; i<szt; i++) // update wb
+         {
+            prodre = 0.0;
+            prodim = 0.0;
+            for(int j=0; j<szt; j++) // prod = prod + wT[i][j]*x[idx+szt+j];
+            {
+               accre = wTre[i][j]*xre[idx+szt+j] - wTim[i][j]*xim[idx+szt+j];
+               accim = wTim[i][j]*xre[idx+szt+j] + wTre[i][j]*xim[idx+szt+j];
+               prodre = prodre + accre;
+               prodim = prodim + accim;
+            }
+            wbre[i] = wbre[i] - prodre;
+            wbim[i] = wbim[i] - prodim;
+         }
+         for(int i=0; i<szt; i++)
+         {
+            bre[rowidx+i] = wbre[i]; // for next update
+            bim[rowidx+i] = wbim[i];
+         }
+      }
+      for(int i=0; i<szt; i++)   // wb = invT*b
+      {
+         prodre = 0.0;
+         prodim = 0.0;
+         for(int j=0; j<szt; j++) // prod = prod + invT[i][j]*b[idx+j];
+         {
+            accre = invTre[i][j]*bre[idx+j] - invTim[i][j]*bim[idx+j];
+            accim = invTim[i][j]*bre[idx+j] + invTre[i][j]*bim[idx+j];
+            prodre = prodre + accre;
+            prodim = prodim + accim;
+         }
+         wbre[i] = prodre;
+         wbim[i] = prodim;
+      }
+      for(int i=0; i<szt; i++)
+      {
+         xre[idx+i] = wbre[i];
+         xim[idx+i] = wbim[i];
+      }
+   }
+   for(int i=0; i<szt; i++)
+   {
+      free(Tre[i]); free(invTre[i]); free(wTre[i]);
+      free(Tim[i]); free(invTim[i]); free(wTim[i]);
+   }
+   free(Tre); free(invTre); free(wbre); free(wTre);
+   free(Tim); free(invTim); free(wbim); free(wTim);
+}

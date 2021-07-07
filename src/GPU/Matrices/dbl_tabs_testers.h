@@ -76,6 +76,15 @@ double dbl_Diagonal_Difference_Sum
  *   of the diagonal tiles of the matrices A and B.
  *   The number of tiles equals nbt and the size of each tile is szt. */
 
+double cmplx_Diagonal_Difference_Sum
+ ( int nbt, int szt, double **Are, double **Aim,
+   double **Bre, double **Bim );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute value of all differences 
+ *   of the diagonal tiles of the matrices A and B.
+ *   The number of tiles equals nbt and the size of each tile is szt. */
+
 void dbl_random_upper_factor ( int dim, double **A );
 /*
  * DESCRIPTION :
@@ -107,7 +116,13 @@ void test_cmplx_upper_inverse ( void );
 void test_real_upper_tiling ( void );
 /*
  * DESCRIPTION :
- *   Prompts for the size of each tile and the number of tiles
- *   and applies the tiled back substitution to a random system. */
+ *   Prompts for the size of each tile and the number of tiles and
+ *   applies the tiled back substitution to a random real system. */
+
+void test_cmplx_upper_tiling ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts for the size of each tile and the number of tiles and
+ *   applies the tiled back substitution to a complex random system. */
 
 #endif

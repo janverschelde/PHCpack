@@ -368,6 +368,78 @@ __global__ void  dbl_invert_tiles ( int dim, double *U, double *invU )
    }
 }
 
+__global__ void  cmplx_invert_tiles
+ ( int dim, double *Ure, double *Uim, double *invUre, double *invUim )
+{
+   const int B = blockIdx.x;   // block index
+   const int k = threadIdx.x;  // thread k computes k-th column of inverse
+   const int offset = dim*dim*B; // offset in U and invU
+
+   __shared__ double Ucolre[d_shmemsize];    // one column of U
+   __shared__ double Ucolim[d_shmemsize];    // imaginary parts
+   __shared__ double invUrowre[d_shmemsize]; // one row of invU
+   __shared__ double invUrowim[d_shmemsize]; // imaginary parts
+
+   double rhsre,rhsim,xvalre,xvalim,det,accre,accim;
+
+   int colidx = offset + dim*(dim-1);   // start with the last column
+
+   Ucolre[k] = Ure[colidx+k];           // load the last column
+   Ucolim[k] = Uim[colidx+k];
+   rhsre = ((double) int(k == dim-1));  // right hand side for each thread
+   rhsim = 0.0;
+   int rowidx = offset + (dim - 1)*dim + k; // row index in the inverse
+
+   // invUrow[k] = rhs/Ucol[k];         // last row of the inverse
+   det = Ucolre[k]*Ucolre[k] + Ucolim[k]*Ucolim[k];
+   accre = Ucolre[k]/det;
+   accim = -Ucolim[k]/det;
+   invUrowre[k] = rhsre*accre - rhsim*accim;
+   invUrowim[k] = rhsim*accre + rhsre*accim;
+   invUre[rowidx] = invUrowre[k];       // store the last row into invU
+   invUim[rowidx] = invUrowim[k]; 
+
+   for(int i=dim-2; i>=0; i--)          // compute row with index i
+   {
+      rhsre = ((double) int(k == i));   // set rhs for i-th unit vector
+      rhsim = 0.0;
+
+      for(int j=i+1; j<dim; j++)
+      {
+         colidx = offset + dim*j;       // need column j of U
+         Ucolre[k] = Ure[colidx+k];
+         Ucolim[k] = Uim[colidx+k];
+
+         rowidx = offset + j*dim + k;   // need solution value
+         invUrowre[k] = invUre[rowidx]; // load invU row into invUrow
+         invUrowim[k] = invUim[rowidx];
+         xvalre = invUrowre[k];
+         xvalim = invUrowim[k];
+
+         __syncthreads();
+         // rhs = rhs - Ucol[i]*xval;   // update right hand side
+         accre = Ucolre[i]*xvalre - Ucolim[i]*xvalim;
+         accim = Ucolim[i]*xvalre + Ucolre[i]*xvalim;
+         rhsre = rhsre - accre;
+         rhsim = rhsim - accim;
+      }
+      colidx = offset + dim*i;        // need column i of U
+      Ucolre[k] = Ure[colidx+k];
+      Ucolim[k] = Uim[colidx+k];
+      rowidx = offset + i*dim + k;    // save in i-th row of inverse
+
+      __syncthreads();
+      // invUrow[k] = rhs/Ucol[i];
+      det = Ucolre[i]*Ucolre[i] + Ucolim[i]*Ucolim[i];
+      accre = Ucolre[i]/det;
+      accim = -Ucolim[i]/det;
+      invUrowre[k] = rhsre*accre - rhsim*accim;
+      invUrowim[k] = rhsim*accre + rhsre*accim;
+      invUre[rowidx] = invUrowre[k];
+      invUim[rowidx] = invUrowim[k];
+   }
+}
+
 __global__ void dbl_multiply_inverse
  ( int dim, int idx, double *invU, double *w )
 {
@@ -388,6 +460,38 @@ __global__ void dbl_multiply_inverse
       result = result + coeff*work[j];
    }
    w[rhsoff+k] = result;
+}
+
+__global__ void cmplx_multiply_inverse
+ ( int dim, int idx, double *invUre, double *invUim,
+   double *wre, double *wim )
+{
+   const int k = threadIdx.x;     // thread k computes k-th product
+   const int rhsoff = dim*idx;    // offset for the right hand size
+   const int offset = dim*rhsoff; // offset for diagonal tile
+
+   __shared__ double workre[d_shmemsize];      // copy of wre
+   __shared__ double workim[d_shmemsize];      // copy of wim
+
+   workre[k] = wre[rhsoff+k];
+   workim[k] = wim[rhsoff+k];
+
+   double resultre = 0.0; // each thread stores its product in result
+   double resultim = 0.0;
+   double coeffre,coeffim,accre,accim;
+
+   for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
+   {
+      coeffre = invUre[offset+k*dim+j]; // thread k does row k
+      coeffim = invUim[offset+k*dim+j];
+      // result = result + coeff*work[j];
+      accre = coeffre*workre[j] - coeffim*workim[j];
+      accim = coeffim*workre[j] + coeffre*workim[j];
+      resultre = resultre + accre;
+      resultim = resultim + accim;
+   }
+   wre[rhsoff+k] = resultre;
+   wim[rhsoff+k] = resultim;
 }
 
 __global__ void dbl_back_substitute
@@ -413,6 +517,43 @@ __global__ void dbl_back_substitute
    }
    wrk[k] = wrk[k] - result; // subtract product
    w[B*dim+k] = wrk[k];
+}
+
+__global__ void cmplx_back_substitute
+ ( int dim, int idx, double *Ure, double *Uim, double *wre, double *wim )
+{
+   const int B = blockIdx.x;     // block index
+   const int k = threadIdx.x;    // thread k computes k-th product
+   const int offset = B*dim*dim; // numbers to skip
+
+   __shared__ double wrkre[d_shmemsize];    // copy of wre
+   __shared__ double wrkim[d_shmemsize];    // copy of wim
+   __shared__ double solre[d_shmemsize];    // solution to update with
+   __shared__ double solim[d_shmemsize];    // imaginary parts
+
+   wrkre[k] = wre[B*dim+k];    // block B updates B-th slice of w
+   wrkim[k] = wim[B*dim+k];
+   solre[k] = wre[idx*dim+k];  // solution that is back substituted
+   solim[k] = wim[idx*dim+k];
+
+   double resultre = 0.0; // each thread stores its product in result
+   double resultim = 0.0;
+   double coeffre,coeffim,accre,accim;
+
+   for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
+   {
+      coeffre = Ure[offset+k*dim+j];
+      coeffim = Uim[offset+k*dim+j];
+      // result = result + coeff*sol[j];
+      accre = coeffre*solre[j] - coeffim*solim[j];
+      accim = coeffim*solre[j] + coeffre*solim[j];
+      resultre = resultre + accre;
+      resultim = resultim + accim;
+   }
+   wrkre[k] = wrkre[k] - resultre; // subtract product
+   wrkim[k] = wrkim[k] - resultim;
+   wre[B*dim+k] = wrkre[k];
+   wim[B*dim+k] = wrkim[k];
 }
 
 void GPU_dbl_upper_inverse ( int dim, double **U, double **invU )
@@ -571,4 +712,112 @@ void GPU_dbl_upper_tiled_solver
          for(int j=0; j<szt; j++) U[offset+i][offset+j] = invD_h[ix++];
    }
    free(D_h); free(invD_h); free(Ucol_h);
+}
+
+void GPU_cmplx_upper_tiled_solver
+ ( int dim, int szt, int nbt, double **Ure, double **Uim,
+   double *bre, double *bim, double *xre, double *xim )
+{
+   const int nbr = nbt*szt*szt;   // number of doubles on diagonal tiles
+   double *Dre_h = new double[nbr];    // the diagonal tiles on the host
+   double *Dim_h = new double[nbr];    // imaginary parts of diagonal tiles
+   double *Dre_d;                      // diagonal tiles on the device
+   double *Dim_d;                      // imaginary parts of diagonal tiles
+   double *invDre_h = new double[nbr]; // inverse of diagonal tiles on host 
+   double *invDim_h = new double[nbr]; // inverse of diagonal tiles on host 
+   double *invDre_d;                   // invDre_d is invDre_h on device
+   double *invDim_d;                   // invDim_d is invDim_h on device
+   int offset;
+   int ix = 0;
+
+   for(int k=0; k<nbt; k++) // copy columns of the k-th tile
+   {
+      offset = k*szt;
+      for(int j=0; j<szt; j++)
+         for(int i=0; i<szt; i++)
+         {
+            Dre_h[ix]   = Ure[offset+i][offset+j];
+            Dim_h[ix++] = Uim[offset+i][offset+j];
+         }
+   }
+   const size_t sznum = nbr*sizeof(double);
+   cudaMalloc((void**)&Dre_d,sznum);
+   cudaMalloc((void**)&Dim_d,sznum);
+   cudaMalloc((void**)&invDre_d,sznum);
+   cudaMalloc((void**)&invDim_d,sznum);
+   cudaMemcpy(Dre_d,Dre_h,sznum,cudaMemcpyHostToDevice);
+   cudaMemcpy(Dim_d,Dim_h,sznum,cudaMemcpyHostToDevice);
+
+   cmplx_invert_tiles<<<nbt,szt>>>(szt,Dre_d,Dim_d,invDre_d,invDim_d);
+
+   double *rhsre_d;                    // right hand side on device
+   double *rhsim_d;
+   const size_t szrhs = dim*sizeof(double);
+   cudaMalloc((void**)&rhsre_d,szrhs);
+   cudaMalloc((void**)&rhsim_d,szrhs);
+   cudaMemcpy(rhsre_d,bre,szrhs,cudaMemcpyHostToDevice);
+   cudaMemcpy(rhsim_d,bim,szrhs,cudaMemcpyHostToDevice);
+
+   cmplx_multiply_inverse<<<1,szt>>>
+      (szt,nbt-1,invDre_d,invDim_d,rhsre_d,rhsim_d);
+
+   int nbrUcol = (nbt-1)*szt*szt;           // #doubles in column of U
+   double *Ucolre_h = new double[nbrUcol];  // column of U on host
+   double *Ucolim_h = new double[nbrUcol];  // imaginary parts of the column
+   double *Ucolre_d;
+   double *Ucolim_d;
+   const size_t szUcol = nbrUcol*sizeof(double);
+   cudaMalloc((void**)&Ucolre_d,szUcol);
+   cudaMalloc((void**)&Ucolim_d,szUcol);
+
+   int coloff,rowoff;
+
+   for(int k=nbt-1; k>0; k--)      // update with solution tile k
+   {
+      coloff = k*szt;      // column offset to update with solution tile k
+      ix = 0;
+      for(int L=0; L<k; L++)       // copy k tiles of U
+      {
+         rowoff = L*szt;           // row offset for update data
+         for(int i=0; i<szt; i++)
+            for(int j=0; j<szt; j++)
+            {
+               Ucolre_h[ix]   = Ure[rowoff+i][coloff+j];
+               Ucolim_h[ix++] = Uim[rowoff+i][coloff+j];
+            }
+      }
+      cudaMemcpy(Ucolre_d,Ucolre_h,nbrUcol*sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(Ucolim_d,Ucolim_h,nbrUcol*sizeof(double),
+                 cudaMemcpyHostToDevice);
+
+      cmplx_back_substitute<<<k,szt>>>
+         (szt,k,Ucolre_d,Ucolim_d,rhsre_d,rhsim_d);
+
+      // (k-1)-th solution tile is ready for inverse multiplication
+      cmplx_multiply_inverse<<<1,szt>>>
+         (szt,k-1,invDre_d,invDim_d,rhsre_d,rhsim_d);
+
+      nbrUcol = nbrUcol - szt*szt; // one tile less used in update
+   }
+   cudaMemcpy(xre,rhsre_d,szrhs,cudaMemcpyDeviceToHost);
+   cudaMemcpy(xim,rhsim_d,szrhs,cudaMemcpyDeviceToHost);
+
+   // copy of invD_d is needed only for testing purposes
+   cudaMemcpy(invDre_h,invDre_d,sznum,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invDim_h,invDim_d,sznum,cudaMemcpyDeviceToHost);
+
+   ix = 0;
+   for(int k=0; k<nbt; k++) // copy rows of the inverse of the k-th tile
+   {
+      offset = k*szt;
+      for(int i=0; i<szt; i++)
+         for(int j=0; j<szt; j++)
+         {
+            Ure[offset+i][offset+j] = invDre_h[ix];
+            Uim[offset+i][offset+j] = invDim_h[ix++];
+         }
+   }
+   free(Dre_h); free(invDre_h); free(Ucolre_h);
+   free(Dim_h); free(invDim_h); free(Ucolim_h);
 }

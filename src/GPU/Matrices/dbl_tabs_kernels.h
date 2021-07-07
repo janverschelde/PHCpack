@@ -129,6 +129,31 @@ __global__ void  dbl_invert_tiles ( int dim, double *U, double *invU );
  * ON RETURN :
  *   invU     rows of the inverse of the tiles in U. */
 
+__global__ void  cmplx_invert_tiles
+ ( int dim, double *Ure, double *Uim, double *invUre, double *invUim );
+/*
+ * DESCRIPTION :
+ *   Replaces the columns of the tiles with the rows of the inverses.
+ *   The number of blocks equals the number of tiles in U.
+ *   The number of threads per block equals the dimension of each tile.
+ *
+ * REQUIRED : dim <= 256 = d_shmemsize.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of each tile;
+ *   Ure      real parts of the columns of all tiles on the diagonal 
+ *            of an upper triangular matrix;
+ *   Uim      imaginary parts of the columns of all tiles on the diagonal 
+ *            of an upper triangular matrix;
+ *   invUre   space allocated for the real parts of
+ *            the inverse of all tiles in U;
+ *   invUim   space allocated for the imaginary parts of
+ *            the inverse of all tiles in U.
+ *
+ * ON RETURN :
+ *   invUre   real parts of rows of the inverse of the tiles in U;
+ *   invU     imaginary parts of rows of the inverse of the tiles in U. */
+
 __global__ void dbl_multiply_inverse
  ( int dim, int idx, double *invU, double *w );
 /*
@@ -145,6 +170,27 @@ __global__ void dbl_multiply_inverse
  *   w        product of the proper inverse of the diagonal tile
  *            defines by the index idx with the w on input. */
 
+__global__ void cmplx_multiply_inverse
+ ( int dim, int idx, double *invUre, double *invUim,
+   double *wre, double *wim );
+/*
+ * DESCRIPTION :
+ *   Replaces b with the product of the inverse tile in U.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of each tile;
+ *   idx      index of the diagonal tile;
+ *   invUre   real parts of the inverse of the diagonal tiles;
+ *   invUim   imaginary parts of the inverse of the diagonal tiles;
+ *   wre      real parts of the right hand side vector;
+ *   wim      imaginary parts of the right hand side vector.
+ *
+ * ON RETURN :
+ *   wre      real parts of the product of the inverse of the diagonal
+ *            tile defined by the index idx with the w on input;
+ *   wim      imaginary parts of the product of the inverse of the diagonal
+ *            tile defined by the index idx with the w on input. */
+
 __global__ void dbl_back_substitute
  ( int dim, int idx, double *U, double *w );
 /*
@@ -160,6 +206,25 @@ __global__ void dbl_back_substitute
  *
  * ON RETURN :
  *   w        updated right hand side vector. */
+
+__global__ void cmplx_back_substitute
+ ( int dim, int idx, double *Ure, double *Uim, double *wre, double *wim );
+/*
+ * DESCRIPTION :
+ *   Updates the right hand side vector subtracting the solution
+ *   defined by idx, multiplied with the corresponding rows in U.
+ *
+ * ON ENTRY :
+ *   dim      dimension of each tile;
+ *   idx      index of the solution tile in the multiplication;
+ *   Ure      real parts of tiles to multiply the solution with;
+ *   Uim      imaginary parts of tiles to multiply the solution with;
+ *   wre      real parts of the current right hand side vector;
+ *   wim      imaginary parts of the current right hand side vector.
+ *
+ * ON RETURN :
+ *   wre      real parts of the updated right hand side vector;
+ *   wim      imaginary parts of the updated right hand side vector. */
 
 void GPU_dbl_upper_inverse ( int dim, double **U, double **invU );
 /*
@@ -209,5 +274,27 @@ void GPU_dbl_upper_tiled_solver
  *
  * ON RETURN :
  *   x        the solution to the system U*x = b. */
+
+void GPU_cmplx_upper_tiled_solver
+ ( int dim, int szt, int nbt, double **Ure, double **Uim,
+   double *bre, double *bim, double *xre, double *xim );
+/*
+ * DESCRIPTION :
+ *   Solves an upper triangular system with a tiled algorithm.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the upper triangular matrix U;
+ *   szt      size of each tile;
+ *   nbt      number of tiles, dim = szt*nbt;
+ *   Ure      real parts of an upper triangular matrix of dimension dim;
+ *   Uim      imaginary parts of an upper triangular matrix of dimension dim;
+ *   bre      real parts of the right hand side of the linear system;
+ *   bim      imaginary parts of the right hand side of the linear system;
+ *   xre      space allocated for dim doubles;
+ *   xim      space allocated for dim doubles.
+ *
+ * ON RETURN :
+ *   xre      real parts of the solution to the system U*x = b;
+ *   xim      imaginary parts of the solution to the system U*x = b. */
 
 #endif

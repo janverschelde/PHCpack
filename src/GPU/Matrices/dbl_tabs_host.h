@@ -102,4 +102,30 @@ void CPU_dbl_upper_tiled_solver
  *            for comparison with the result computed on the GPU;
  *   x        the solution to the system U*x = b. */
 
+void CPU_cmplx_upper_tiled_solver
+ ( int dim, int szt, int nbt, double **Ure, double **Uim,
+   double *bre, double *bim, double *xre, double *xim );
+/*
+ * DESCRIPTION :
+ *   Solves an upper triangular system with a tiled algorithm.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the upper triangular matrix U;
+ *   szt      size of each tile;
+ *   nbt      number of tiles, dim = szt*nbt;
+ *   Ure      real parts of an upper triangular matrix of dimension dim;
+ *   Uim      imaginary parts of an upper triangular matrix of dimension dim;
+ *   bre      real parts of the right hand side of the linear system;
+ *   bim      imaginary parts of the right hand side of the linear system;
+ *   xre      space allocated for dim doubles;
+ *   xim      space allocated for dim doubles.
+ *
+ * ON RETURN :
+ *   Ure      the diagonal tiles contain the real parts of inverse matrices,
+ *            for comparison with the result computed on the GPU;
+ *   Uim      the diagonal tiles contain the imaginary parts of inverse
+ *            matrices, for comparison with the result computed on the GPU;
+ *   xre      real parts of the solution to the system U*x = b;
+ *   xim      imaginary part of the solution to the system U*x = b. */
+
 #endif
