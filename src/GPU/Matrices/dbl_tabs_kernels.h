@@ -27,6 +27,32 @@ __global__ void dbl_small_invert_upper ( int dim, double *U, double *invU );
  * ON RETURN :
  *   invU     the inverse of the matrix U, stored row wise. */
 
+__global__ void cmplx_small_invert_upper
+ ( int dim, double *Ure, double *Uim, double *invUre, double *invUim );
+/*
+ * DESCRIPTION :
+ *   Computes the inverse of an upper triangular matrix.
+ *   The U matrix is stored in columnwise fashion,
+ *   as the row-by-row computation of the inverse invU
+ *   applies a column-by-column load of U.
+ *
+ * REQUIRED : dim <= 16.
+ *   Because the inverse is stored entirely in shared memory,
+ *   the dimension dim is limited to 16 = 2^4, as 16^2 = 256,
+ *   the upper limit on the shared memory, d_shmemsize.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the upper triangular matrix U;
+ *   Ure      real parts of an upper triangular matrix stored column wise;
+ *   Uim      imaginary parts of an upper triangular matrix;
+ *   invUre   space allocated for a matrix of dimension dim;
+ *   invUim   space allocated for a matrix of dimension dim.
+ *
+ * ON RETURN :
+ *   invUre   real parts of the inverse of the matrix U, stored row wise;
+ *   invUim   imaginary parts of the inverse of the matrix U,
+ *            also stored row wise. */
+
 void test_dbl_small_invert_upper ( int dim, double *U, double *invU );
 /*
  * DESCRIPTION :
@@ -56,6 +82,34 @@ __global__ void dbl_medium_invert_upper ( int dim, double *U, double *invU );
  *
  * ON RETURN :
  *   invU     the inverse of the matrix U, stored row wise. */
+
+__global__ void cmplx_medium_invert_upper
+ ( int dim, double *Ure, double *Uim, double *invUre, double *invUim );
+/*
+ * DESCRIPTION :
+ *   Computes the inverse of an upper triangular matrix.
+ *   The U matrix is stored in columnwise fashion,
+ *   as the row-by-row computation of the inverse invU
+ *   applies a column-by-column load of U.
+ *
+ * REQUIRED : dim <= 256.
+ *   Because the columns of U are loaded entirely into shared memory
+ *   and the rows of the inverses are computed first entirely in
+ *   shared memory before storing, the dimension dim is limited 
+ *   to 256, the upper limit on the shared memory, d_shmemsize.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the upper triangular matrix U;
+ *   Ure      real parts of an upper triangular matrix stored column wise;
+ *   Uim      imaginary parts of an upper triangular matrix,
+ *            also store column wise;
+ *   invUre   space allocated for a matrix of dimension dim;
+ *   invUim   space allocated for a matrix of dimension dim.
+ *
+ * ON RETURN :
+ *   invUre   real parts of the inverse of the matrix U, stored row wise;
+ *   invUim   imaginary parts of the inverse of the matrix U,
+ *            also stored row wise. */
 
 __global__ void  dbl_invert_tiles ( int dim, double *U, double *invU );
 /*
@@ -120,6 +174,24 @@ void GPU_dbl_upper_inverse ( int dim, double **U, double **invU );
  *
  * ON RETURN :
  *   invU     the inverse of the matrix U. */
+
+void GPU_cmplx_upper_inverse
+ ( int dim, double **Ure, double **Uim, double **invUre, double **invUim );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to invert the upper triangular matrix U.
+ *   The matrices are stored in the conventional rowwise fashion.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the upper triangular matrix U;
+ *   Ure      real parts of an upper triangular matrix of dimension dim;
+ *   Uim      imaginary parts of an upper triangular matrix of dimension dim;
+ *   invUre   space allocated for a matrix of dimension dim;
+ *   invUim   space allocated for a matrix of dimension dim.
+ *
+ * ON RETURN :
+ *   invUre   real parts of the inverse of the matrix U;
+ *   invUim   imaginary parts of the inverse of the matrix U. */
 
 void GPU_dbl_upper_tiled_solver
  ( int dim, int szt, int nbt, double **U, double *b, double *x );

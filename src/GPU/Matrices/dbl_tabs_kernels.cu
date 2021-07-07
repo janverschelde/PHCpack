@@ -58,6 +58,82 @@ __global__ void dbl_small_invert_upper ( int dim, double *U, double *invU )
    }
 }
 
+__global__ void cmplx_small_invert_upper
+ ( int dim, double *Ure, double *Uim, double *invUre, double *invUim )
+{
+   const int k = threadIdx.x; // thread k computes k-th column of inverse
+
+   __shared__ double Ucolre[d_shmemsize];
+   __shared__ double Ucolim[d_shmemsize];
+   __shared__ double invUrowsre[d_shmemsize];
+   __shared__ double invUrowsim[d_shmemsize];
+
+   double rhsre,rhsim,xvalre,xvalim,accre,accim,det;
+
+   int colidx = dim*(dim-1);           // start with the last column
+
+   Ucolre[k] = Ure[colidx+k];          // load the last column
+   Ucolim[k] = Uim[colidx+k];
+   rhsre = ((double) int(k == dim-1)); // right hand side for each thread
+   rhsim = 0.0;
+   int rowidx = (dim - 1)*dim + k;     // the row index in the inverse
+
+   __syncthreads();
+   // invUrows[rowidx] = rhs/Ucol[k];  // last row of the inverse
+   det = Ucolre[k]*Ucolre[k] + Ucolim[k]*Ucolim[k];
+   accre = Ucolre[k]/det;
+   accim = -Ucolim[k]/det;
+   invUrowsre[rowidx] = rhsre*accre - rhsim*accim;
+   invUrowsim[rowidx] = rhsim*accre + rhsre*accim;
+
+   for(int i=dim-2; i>=0; i--)        // compute row with index i
+   {
+      rhsre = ((double) int(k == i)); // set rhs for i-th unit vector
+      rhsim = 0.0;
+
+      for(int j=i+1; j<dim; j++)
+      {
+         colidx = dim*j;              // need column j of U
+
+         Ucolre[k] = Ure[colidx+k];
+         Ucolim[k] = Uim[colidx+k];
+
+         rowidx = j*dim + k;          // need solution value
+
+         xvalre = invUrowsre[rowidx];
+         xvalim = invUrowsim[rowidx];
+
+         __syncthreads();
+         // rhs = rhs - Ucol[i]*xval; // update right hand side
+         accre = Ucolre[i]*xvalre - Ucolim[i]*xvalim;
+         accim = Ucolim[i]*xvalre + Ucolre[i]*xvalim;
+         rhsre = rhsre - accre;
+         rhsim = rhsim - accim;
+      }
+      rowidx = i*dim + k;             // save in i-th row of inverse
+
+      colidx = dim*i;                 // need column i of U
+      Ucolre[k] = Ure[colidx+k];
+      Ucolim[k] = Uim[colidx+k];
+
+      __syncthreads();
+      // invUrows[rowidx] = rhs/Ucol[i];
+      det = Ucolre[i]*Ucolre[i] + Ucolim[i]*Ucolim[i];
+      accre = Ucolre[i]/det;
+      accim = -Ucolim[i]/det;
+      invUrowsre[rowidx] = rhsre*accre - rhsim*accim;
+      invUrowsim[rowidx] = rhsim*accre + rhsre*accim;
+   }
+   rowidx = 0;
+   for(int i=0; i<dim; i++)
+   {
+      __syncthreads();
+      invUre[rowidx+k] = invUrowsre[rowidx+k];
+      invUim[rowidx+k] = invUrowsim[rowidx+k];
+      rowidx = rowidx + dim;
+   }
+}
+
 void test_dbl_small_invert_upper ( int dim, double *U, double *invU )
 {
    double *Ucol = new double[d_shmemsize];
@@ -173,6 +249,76 @@ __global__ void dbl_medium_invert_upper ( int dim, double *U, double *invU )
       __syncthreads();
       invUrow[k] = rhs/Ucol[i];
       invU[rowidx] = invUrow[k];
+   }
+}
+
+__global__ void cmplx_medium_invert_upper
+ ( int dim, double *Ure, double *Uim, double *invUre, double *invUim )
+{
+   const int k = threadIdx.x;  // thread k computes k-th column of inverse
+
+   __shared__ double Ucolre[d_shmemsize];    // one column of U
+   __shared__ double Ucolim[d_shmemsize];    // imaginary parts of U
+   __shared__ double invUrowre[d_shmemsize]; // one row of invU
+   __shared__ double invUrowim[d_shmemsize]; // imaginary parts of invU
+
+   double rhsre,rhsim,xvalre,xvalim,det,accre,accim;
+
+   int colidx = dim*(dim-1);            // start with the last column
+
+   Ucolre[k] = Ure[colidx+k];           // load the last column
+   Ucolim[k] = Uim[colidx+k]; 
+   rhsre = ((double) int(k == dim-1));  // right hand side for each thread
+   rhsim = 0.0;
+   int rowidx = (dim - 1)*dim + k;      // the row index in the inverse
+
+   // invUrow[k] = rhs/Ucol[k];         // last row of the inverse
+   det = Ucolre[k]*Ucolre[k] + Ucolim[k]*Ucolim[k];
+   accre = Ucolre[k]/det;
+   accim = -Ucolim[k]/det;
+   invUrowre[k] = rhsre*accre - rhsim*accim;
+   invUrowim[k] = rhsim*accre + rhsre*accim;
+   invUre[rowidx] = invUrowre[k];       // store the last row into invU
+   invUim[rowidx] = invUrowim[k];
+
+   for(int i=dim-2; i>=0; i--)          // compute row with index i
+   {
+      rhsre = ((double) int(k == i));   // set rhs for i-th unit vector
+      rhsim = 0.0;
+
+      for(int j=i+1; j<dim; j++)
+      {
+         colidx = dim*j;                // need column j of U
+         Ucolre[k] = Ure[colidx+k];
+         Ucolim[k] = Uim[colidx+k];
+
+         rowidx = j*dim + k;            // need solution value
+         invUrowre[k] = invUre[rowidx]; // load invU row into invUrow
+         invUrowim[k] = invUim[rowidx];
+         xvalre = invUrowre[k];
+         xvalim = invUrowim[k];
+
+         __syncthreads();
+         // rhs = rhs - Ucol[i]*xval;   // update right hand side
+         accre = Ucolre[i]*xvalre - Ucolim[i]*xvalim;
+         accim = Ucolim[i]*xvalre + Ucolre[i]*xvalim;
+         rhsre = rhsre - accre;
+         rhsim = rhsim - accim;
+      }
+      colidx = dim*i;                   // need column i of U
+      Ucolre[k] = Ure[colidx+k];
+      Ucolim[k] = Uim[colidx+k];
+      rowidx = i*dim + k;               // save in i-th row of inverse
+
+      __syncthreads();
+      // invUrow[k] = rhs/Ucol[i];
+      det = Ucolre[i]*Ucolre[i] + Ucolim[i]*Ucolim[i];
+      accre = Ucolre[i]/det;
+      accim = -Ucolim[i]/det;
+      invUrowre[k] = rhsre*accre - rhsim*accim;
+      invUrowim[k] = rhsim*accre + rhsre*accim;
+      invUre[rowidx] = invUrowre[k];
+      invUim[rowidx] = invUrowim[k];
    }
 }
 
@@ -301,6 +447,56 @@ void GPU_dbl_upper_inverse ( int dim, double **U, double **invU )
       for(int j=0; j<dim; j++) invU[i][j] = invU_h[ix++];
 
    free(U_h); free(invU_h);
+}
+
+void GPU_cmplx_upper_inverse
+ ( int dim, double **Ure, double **Uim, double **invUre, double **invUim )
+{
+   const int szU = dim*dim;
+
+   double *Ure_h = new double[szU];    // Ure_h stores real U 
+   double *Uim_h = new double[szU];    // Uim_h stores imaginary U 
+   double *Ure_d;                      // Ure_d is Ure_h on the device
+   double *Uim_d;                      // Uim_d is Uim_h on the device
+   double *invUre_h = new double[szU]; // real parts of the inverse
+   double *invUim_h = new double[szU]; // imaginary parts of the inverse
+   double *invUre_d;                   // invUre_d is invUre_h on the device
+   double *invUim_d;                   // invUim_d is invUim_h on the device
+
+   int ix = 0;
+   for(int j=0; j<dim; j++)
+      for(int i=0; i<dim; i++)
+      {
+         Ure_h[ix]   = Ure[i][j];
+         Uim_h[ix++] = Uim[i][j];
+      }
+
+   size_t szmat = szU*sizeof(double);
+   cudaMalloc((void**)&Ure_d,szmat);
+   cudaMalloc((void**)&Uim_d,szmat);
+   cudaMalloc((void**)&invUre_d,szmat);
+   cudaMalloc((void**)&invUim_d,szmat);
+   cudaMemcpy(Ure_d,Ure_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Uim_d,Uim_h,szmat,cudaMemcpyHostToDevice);
+
+   if(dim <= 16)
+      cmplx_small_invert_upper<<<1,dim>>>(dim,Ure_d,Uim_d,invUre_d,invUim_d);
+   else
+      cmplx_medium_invert_upper<<<1,dim>>>(dim,Ure_d,Uim_d,invUre_d,invUim_d);
+
+   cudaMemcpy(invUre_h,invUre_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUim_h,invUim_d,szmat,cudaMemcpyDeviceToHost);
+
+   ix = 0;
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         invUre[i][j] = invUre_h[ix];
+         invUim[i][j] = invUim_h[ix++];
+      }
+
+   free(Ure_h); free(invUre_h);
+   free(Uim_h); free(invUim_h);
 }
 
 void GPU_dbl_upper_tiled_solver

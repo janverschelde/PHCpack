@@ -10,6 +10,13 @@ void CPU_dbl_backsubs ( int dim, double **U, double *b, double *x )
    CPU_dbl_upper_lead_solver(dim,U,b,x);
 }
 
+void CPU_cmplx_backsubs
+ ( int dim, double **Ure, double **Uim, double *bre, double *bim,
+   double *xre, double *xim )
+{
+   CPU_cmplx_upper_lead_solver(dim,Ure,Uim,bre,bim,xre,xim);
+}
+
 void CPU_dbl_upper_inverse ( int dim, double **U, double **invU )
 {
    double *col = new double[dim];
@@ -25,6 +32,38 @@ void CPU_dbl_upper_inverse ( int dim, double **U, double **invU )
       rhs[j] = 0.0;
    }
    free(rhs); free(col);
+}
+
+void CPU_cmplx_upper_inverse
+ ( int dim, double **Ure, double **Uim, double **invUre, double **invUim )
+{
+   double *colre = new double[dim];
+   double *colim = new double[dim];
+   double *rhsre = new double[dim];
+   double *rhsim = new double[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      rhsre[i] = 0.0;
+      rhsim[i] = 0.0;
+   }
+   for(int j=0; j<dim; j++) // compute j-th column of the inverse
+   {
+      rhsre[j] = 1.0;
+      rhsim[j] = 0.0;
+
+      CPU_cmplx_backsubs(dim,Ure,Uim,rhsre,rhsim,colre,colim);
+
+      for(int i=0; i<dim; i++)
+      {
+         invUre[i][j] = colre[i];
+         invUim[i][j] = colim[i];
+      }
+      rhsre[j] = 0.0;
+      rhsim[j] = 0.0;
+   }
+   free(rhsre); free(colre);
+   free(rhsim); free(colim);
 }
 
 void CPU_dbl_matmatmul ( int dim, double **A, double **F )

@@ -149,6 +149,44 @@ void random_dbl_matrix ( int rows, int cols, double **A );
  * ON RETURN :
  *   A        a matrix of randomly generated doubles. */
 
+void random_cmplx_upper_matrix
+ ( int rows, int cols, double **Are, double **Aim );
+/*
+ * DESCRIPTION :
+ *   Returns in A a complex upper triangular matrix of dimensions 
+ *   rows and cols, of randomly generated doubles.
+ *
+ * ON ENTRY :
+ *   rows     the number of rows in A;
+ *   cols     the number of columns in A;
+ *   Are      space for the real parts of a matrix of doubles,
+ *            of dimensions rows and cols;
+ *   Aim      space for the imaginary parts of a matrix of doubles,
+ *            of dimensions rows and cols.
+ *
+ * ON RETURN :
+ *   Are      real parts of a matrix of randomly generated doubles;
+ *   Aim      imaginary parts of a matrix of randomly generated doubles. */
+
+void random_cmplx_matrix
+ ( int rows, int cols, double **Are, double **Aim );
+/*
+ * DESCRIPTION :
+ *   Returns in A a complex matrix of dimensions rows and cols,
+ *   of randomly generated doubles.
+ *
+ * ON ENTRY :
+ *   rows     the number of rows in A;
+ *   cols     the number of columns in A;
+ *   Are      space for the real parts of a matrix of doubles,
+ *            of dimensions rows and cols;
+ *   Aim      space for the imaginary parts of a matrix of doubles,
+ *            of dimensions rows and cols.
+ *
+ * ON RETURN :
+ *   Are      real parts of a matrix of randomly generated doubles;
+ *   Aim      imaginary parts of a matrix of randomly generated doubles. */
+
 void random_dbl_upper_series_matrix
  ( int rows, int cols, int deg, double **x, double ***A, bool expform=true );
 /*

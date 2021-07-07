@@ -19,6 +19,27 @@ void CPU_dbl_backsubs ( int dim, double **U, double *b, double *x );
  * ON RETURN :
  *   x        the solution to the system U*x = b. */
 
+void CPU_cmplx_backsubs
+ ( int dim, double **Ure, double **Uim, double *bre, double *bim,
+   double *xre, double *xim );
+/*
+ * DESCRIPTION :
+ *   Applies back substitution to solve an upper triangular system.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the upper triangular matrix U
+ *            and the vectors b and x;
+ *   Ure      real parts of an upper triangular matrix of dimension dim;
+ *   Uim      imaginary pars of an upper triangular matrix of dimension dim;
+ *   bre      real parts of the right hand side of the linear system;
+ *   bim      imaginary parts of the right hand side of the linear system;
+ *   xre      space allocated for dim doubles;
+ *   xim      space allocated for dim doubles.
+ *
+ * ON RETURN :
+ *   xre      real parts of the solution to the system U*x = b;
+ *   xim      imaginary parts of the solution to the system U*x = b. */
+
 void CPU_dbl_upper_inverse ( int dim, double **U, double **invU );
 /*
  * DESCRIPTION :
@@ -31,6 +52,23 @@ void CPU_dbl_upper_inverse ( int dim, double **U, double **invU );
  *
  * ON RETURN :
  *   invU     the inverse of the matrix U. */
+
+void CPU_cmplx_upper_inverse
+ ( int dim, double **Ure, double **Uim, double **invUre, double **invUim );
+/*
+ * DESCRIPTION :
+ *   Computes the inverse of an upper triangular matrix.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the upper triangular matrix U;
+ *   Ure      real parts of an upper triangular matrix of dimension dim;
+ *   Uim      imaginary parts of an upper triangular matrix of dimension dim;
+ *   invUre   space allocated for a matrix of dimension dim;
+ *   invUim   space allocated for a matrix of dimension dim.
+ *
+ * ON RETURN :
+ *   invUre   real parts of the inverse of the matrix U;
+ *   invUim   imaginary parts of the inverse of the matrix U. */
 
 void CPU_dbl_matmatmul ( int dim, double **A, double **F );
 /*

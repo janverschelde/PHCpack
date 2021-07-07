@@ -12,6 +12,9 @@ int main ( void )
 {
    srand(time(NULL));
 
+   cout << "Testing the complex upper inverse ..." << endl;
+   test_cmplx_upper_inverse();
+
    cout << "Testing the real upper inverse ..." << endl;
    test_real_upper_inverse();
 
