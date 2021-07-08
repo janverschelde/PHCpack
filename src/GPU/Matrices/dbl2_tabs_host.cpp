@@ -266,3 +266,205 @@ void CPU_dbl2_upper_tiled_solver
    free(Thi); free(invThi); free(wbhi); free(wThi);
    free(Tlo); free(invTlo); free(wblo); free(wTlo);
 }
+
+void CPU_cmplx2_upper_tiled_solver
+ ( int dim, int szt, int nbt,
+   double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
+   double *brehi, double *brelo, double *bimhi, double *bimlo,
+   double *xrehi, double *xrelo, double *ximhi, double *ximlo )
+{
+   double acc1hi,acc1lo,acc2hi,acc2lo;
+   double acc3hi,acc3lo,acc4hi,acc4lo;
+   double prodrehi,prodrelo,prodimhi,prodimlo;
+   double **Trehi = new double*[szt];
+   double **Trelo = new double*[szt];
+   double **Timhi = new double*[szt];
+   double **Timlo = new double*[szt];
+   double **invTrehi = new double*[szt];
+   double **invTrelo = new double*[szt];
+   double **invTimhi = new double*[szt];
+   double **invTimlo = new double*[szt];
+
+   for(int i=0; i<szt; i++)
+   {
+      Trehi[i] = new double[szt];
+      Trelo[i] = new double[szt];
+      Timhi[i] = new double[szt];
+      Timlo[i] = new double[szt];
+      invTrehi[i] = new double[szt];
+      invTrelo[i] = new double[szt];
+      invTimhi[i] = new double[szt];
+      invTimlo[i] = new double[szt];
+   }
+   int idx = (nbt-1)*szt;
+   for(int i=0; i<szt; i++)
+      for(int j=0; j<szt; j++)
+      {
+         Trehi[i][j] = Urehi[idx+i][idx+j];
+         Trelo[i][j] = Urelo[idx+i][idx+j];
+         Timhi[i][j] = Uimhi[idx+i][idx+j];
+         Timlo[i][j] = Uimlo[idx+i][idx+j];
+      }
+
+   CPU_cmplx2_upper_inverse
+      (szt,Trehi,Trelo,Timhi,Timlo,invTrehi,invTrelo,invTimhi,invTimlo);
+
+   for(int i=0; i<szt; i++)
+      for(int j=0; j<szt; j++)
+      {
+         Urehi[idx+i][idx+j] = invTrehi[i][j];
+         Urelo[idx+i][idx+j] = invTrelo[i][j];
+         Uimhi[idx+i][idx+j] = invTimhi[i][j];
+         Uimlo[idx+i][idx+j] = invTimlo[i][j];
+      }
+
+   for(int i=0; i<szt; i++)
+   {
+      xrehi[idx+i] = 0.0; xrelo[idx+i] = 0.0;
+      ximhi[idx+i] = 0.0; ximlo[idx+i] = 0.0;
+
+      for(int j=0; j<szt; j++) // x[idx+i] = x[idx+i] + invT[i][j]*b[idx+j];
+      {
+         ddf_mul(invTrehi[i][j],invTrelo[i][j],
+                    brehi[idx+j],  brelo[idx+j],&acc1hi,&acc1lo);
+         ddf_mul(invTimhi[i][j],invTimlo[i][j],
+                    bimhi[idx+j],  bimlo[idx+j],&acc2hi,&acc2lo);
+         ddf_mul(invTimhi[i][j],invTimlo[i][j],
+                    brehi[idx+j],  brelo[idx+j],&acc3hi,&acc3lo);
+         ddf_mul(invTrehi[i][j],invTrelo[i][j],
+                    bimhi[idx+j],  bimlo[idx+j],&acc4hi,&acc4lo);
+         ddf_dec(&acc1hi,&acc1lo,acc2hi,acc2lo);
+         ddf_inc(&xrehi[idx+i],&xrelo[idx+i],acc1hi,acc1lo);
+         ddf_inc(&acc3hi,&acc3lo,acc4hi,acc4lo);
+         ddf_inc(&ximhi[idx+i],&ximlo[idx+i],acc3hi,acc3lo);
+      }
+   }
+   double *wbrehi = new double[szt];    // work space for brehi
+   double *wbrelo = new double[szt];    // work space for brelo
+   double *wbimhi = new double[szt];    // work space for bimhi
+   double *wbimlo = new double[szt];    // work space for bimlo
+   double **wTrehi = new double*[szt];  // work space for a tile
+   double **wTrelo = new double*[szt];  // work space for a tile
+   double **wTimhi = new double*[szt];  // work space for a tile
+   double **wTimlo = new double*[szt];  // work space for a tile
+
+   for(int i=0; i<szt; i++)
+   {
+      wTrehi[i] = new double[szt];
+      wTrelo[i] = new double[szt];
+      wTimhi[i] = new double[szt];
+      wTimlo[i] = new double[szt];
+   }
+   for(int k=nbt-1; k>0; k--)  // update with solution tile k
+   {
+      idx = idx - szt;  // idx is start index of diagonal tile
+
+      for(int i=0; i<szt; i++)
+         for(int j=0; j<szt; j++)
+         {
+            Trehi[i][j] = Urehi[idx+i][idx+j];
+            Trelo[i][j] = Urelo[idx+i][idx+j];
+            Timhi[i][j] = Uimhi[idx+i][idx+j];
+            Timlo[i][j] = Uimlo[idx+i][idx+j];
+         }
+
+      CPU_cmplx2_upper_inverse
+         (szt,Trehi,Trelo,Timhi,Timlo,invTrehi,invTrelo,invTimhi,invTimlo);
+
+      for(int i=0; i<szt; i++)
+         for(int j=0; j<szt; j++)
+         {
+            Urehi[idx+i][idx+j] = invTrehi[i][j];
+            Urelo[idx+i][idx+j] = invTrelo[i][j];
+            Uimhi[idx+i][idx+j] = invTimhi[i][j];
+            Uimlo[idx+i][idx+j] = invTimlo[i][j];
+         }
+
+      for(int L=0; L<k; L++)   // update wb as many times as k
+      {
+         int rowidx = L*szt;
+
+         for(int i=0; i<szt; i++)  // load the work space
+         {
+            wbrehi[i] = brehi[rowidx+i]; wbrelo[i] = brelo[rowidx+i];
+            wbimhi[i] = bimhi[rowidx+i]; wbimlo[i] = bimlo[rowidx+i];
+
+            for(int j=0; j<szt; j++)
+            {
+               wTrehi[i][j] = Urehi[rowidx+i][idx+szt+j];
+               wTrelo[i][j] = Urelo[rowidx+i][idx+szt+j];
+               wTimhi[i][j] = Uimhi[rowidx+i][idx+szt+j];
+               wTimlo[i][j] = Uimlo[rowidx+i][idx+szt+j];
+            }
+         }
+         for(int i=0; i<szt; i++) // update wb
+         {
+            prodrehi = 0.0; prodrelo = 0.0;
+            prodimhi = 0.0; prodimlo = 0.0;
+
+            for(int j=0; j<szt; j++) // prod = prod + wT[i][j]*x[idx+szt+j];
+            {
+               ddf_mul(wTrehi[i][j],wTrelo[i][j],
+                       xrehi[idx+szt+j],xrelo[idx+szt+j],&acc1hi,&acc1lo);
+               ddf_mul(wTimhi[i][j],wTimlo[i][j],
+                       ximhi[idx+szt+j],ximlo[idx+szt+j],&acc2hi,&acc2lo);
+               ddf_mul(wTimhi[i][j],wTimlo[i][j],
+                       xrehi[idx+szt+j],xrelo[idx+szt+j],&acc3hi,&acc3lo);
+               ddf_mul(wTrehi[i][j],wTrelo[i][j],
+                       ximhi[idx+szt+j],ximlo[idx+szt+j],&acc4hi,&acc4lo);
+               ddf_dec(&acc1hi,&acc1lo,acc2hi,acc2lo);
+               ddf_inc(&prodrehi,&prodrelo,acc1hi,acc1lo);
+               ddf_inc(&acc3hi,&acc3lo,acc4hi,acc4lo);
+               ddf_inc(&prodimhi,&prodimlo,acc3hi,acc3lo);
+            }
+            // wb[i] = wb[i] - prod;
+            ddf_dec(&wbrehi[i],&wbrelo[i],prodrehi,prodrelo);
+            ddf_dec(&wbimhi[i],&wbimlo[i],prodimhi,prodimlo);
+         }
+         for(int i=0; i<szt; i++) // store wb into b for next update
+         {
+            brehi[rowidx+i] = wbrehi[i]; brelo[rowidx+i] = wbrelo[i];
+            bimhi[rowidx+i] = wbimhi[i]; bimlo[rowidx+i] = wbimlo[i];
+         }
+      }
+      for(int i=0; i<szt; i++)   // wb = invT*b
+      {
+         prodrehi = 0.0; prodrelo = 0.0;
+         prodimhi = 0.0; prodimlo = 0.0;
+
+         for(int j=0; j<szt; j++) // prod = prod + invT[i][j]*b[idx+j];
+         {
+            ddf_mul(invTrehi[i][j],invTrelo[i][j],
+                    brehi[idx+j],brelo[idx+j],&acc1hi,&acc1lo);
+            ddf_mul(invTimhi[i][j],invTimlo[i][j],
+                    bimhi[idx+j],bimlo[idx+j],&acc2hi,&acc2lo);
+            ddf_mul(invTimhi[i][j],invTimlo[i][j],
+                    brehi[idx+j],brelo[idx+j],&acc3hi,&acc3lo);
+            ddf_mul(invTrehi[i][j],invTrelo[i][j],
+                    bimhi[idx+j],bimlo[idx+j],&acc4hi,&acc4lo);
+            ddf_dec(&acc1hi,&acc1lo,acc2hi,acc2lo);
+            ddf_inc(&prodrehi,&prodrelo,acc1hi,acc1lo);
+            ddf_inc(&acc3hi,&acc3lo,acc4hi,acc4lo);
+            ddf_inc(&prodimhi,&prodimlo,acc3hi,acc3lo);
+         }
+         wbrehi[i] = prodrehi; wbrelo[i] = prodrelo;
+         wbimhi[i] = prodimhi; wbimlo[i] = prodimlo;
+      }
+      for(int i=0; i<szt; i++)
+      {
+         xrehi[idx+i] = wbrehi[i]; xrelo[idx+i] = wbrelo[i];
+         ximhi[idx+i] = wbimhi[i]; ximlo[idx+i] = wbimlo[i];
+      }
+   }
+   for(int i=0; i<szt; i++)
+   {
+      free(Trehi[i]); free(invTrehi[i]); free(wTrehi[i]);
+      free(Trelo[i]); free(invTrelo[i]); free(wTrelo[i]);
+      free(Timhi[i]); free(invTimhi[i]); free(wTimhi[i]);
+      free(Timlo[i]); free(invTimlo[i]); free(wTimlo[i]);
+   }
+   free(Trehi); free(invTrehi); free(wbrehi); free(wTrehi);
+   free(Trelo); free(invTrelo); free(wbrelo); free(wTrelo);
+   free(Timhi); free(invTimhi); free(wbimhi); free(wTimhi);
+   free(Timlo); free(invTimlo); free(wbimlo); free(wTimlo);
+}

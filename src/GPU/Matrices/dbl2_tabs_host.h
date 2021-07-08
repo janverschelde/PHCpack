@@ -137,4 +137,48 @@ void CPU_dbl2_upper_tiled_solver
  *   xhi      high doubles of the solution to the system U*x = b;
  *   xlo      low doubles of the solution to the system U*x = b. */
 
+void CPU_cmplx2_upper_tiled_solver
+ ( int dim, int szt, int nbt,
+   double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
+   double *brehi, double *brelo, double *bimhi, double *bimlo,
+   double *xrehi, double *xrelo, double *ximhi, double *ximlo );
+/*
+ * DESCRIPTION :
+ *   Solves an upper triangular system with a tiled algorithm.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the upper triangular matrix U;
+ *   szt      size of each tile;
+ *   nbt      number of tiles, dim = szt*nbt;
+ *   Urehi    high doubles of the real parts of U;
+ *   Urelo    low doubles of the real parts of U;
+ *   Uimhi    high doubles of the imaginary parts of U;
+ *   Uimlo    low doubles of the imaginary parts of U;
+ *   brehi    high doubles of the real parts of b;
+ *   brelo    low doubles of the real parts of b;
+ *   bimhi    high doubles of the imaginary parts of b;
+ *   bimlo    low doubles of the imaginary parts of b;
+ *   xrehi    space allocated for dim doubles;
+ *   xrelo    space allocated for dim doubles;
+ *   ximhi    space allocated for dim doubles;
+ *   ximlo    space allocated for dim doubles.
+ *
+ * ON RETURN :
+ *   Urehi    the diagonal tiles contain the high doubles of
+ *            the real parts of inverse matrices,
+ *            for comparison with the result computed on the GPU;
+ *   Urelo    the diagonal tiles contain the low doubles of
+ *            the real parts of inverse matrices,
+ *            for comparison with the result computed on the GPU;
+ *   Uimhi    the diagonal tiles contain the high doubles of
+ *            the imaginary parts of inverse matrices,
+ *            for comparison with the result computed on the GPU;
+ *   Uimlo    the diagonal tiles contain the low doubles of
+ *            the imaginary parts of inverse matrices,
+ *            for comparison with the result computed on the GPU;
+ *   xrehi    high doubles of the real parts of the solution x;
+ *   xrelo    low doubles of the real parts of the solution x;
+ *   ximhi    high doubles of the imaginary parts of the solution x;
+ *   ximlo    low doubles of the imaginary parts of the solution x. */
+
 #endif

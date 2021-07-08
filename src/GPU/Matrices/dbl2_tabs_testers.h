@@ -118,7 +118,13 @@ void test_cmplx2_upper_inverse ( void );
 void test_real2_upper_tiling ( void );
 /*
  * DESCRIPTION :
- *   Prompts for the size of each tile and the number of tiles
- *   and applies the tiled back substitution to a random system. */
+ *   Prompts for the size of each tile and the number of tiles and
+ *   applies the tiled back substitution to a real random system. */
+
+void test_cmplx2_upper_tiling ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts for the size of each tile and the number of tiles and
+ *   applies the tiled back substitution to a complex random system. */
 
 #endif
