@@ -49,6 +49,38 @@ void CPU_dbl2_factors_forward
  *   xhi      high doubles of the solution to L*x = b;
  *   xlo      low doubles of the solution to L*x = b. */
 
+void CPU_cmplx2_factors_forward
+ ( int dim, double **Lrehi, double **Lrelo, double **Limhi, double **Limlo,
+   double *brehi, double *brelo, double *bimhi, double *bimlo,
+   double *xrehi, double *xrelo, double *ximhi, double *ximlo );
+/*
+ * DESCRIPTION :
+ *   Solves the lower triangular system L*x = b with forward substitution,
+ *   on real data.
+ *
+ * REQUIRED : the matrix L has ones on the diagonal.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in the matrix L;
+ *   Lrehi    high doubles of the real parts of a lower triangular matrix;
+ *   Lrelo    low doubles of the real parts of a lower triangular matrix;
+ *   Limhi    high doubles of the imaginary parts of a lower triangular matrix;
+ *   Limlo    low doubles of the imaginary parts of a lower triangular matrix;
+ *   brehi    high doubles of the real parts of a right hand side vector;
+ *   brelo    low doubles of the real parts of a right hand side vector;
+ *   bimhi    high doubles of the imaginary parts of a right hand side vector;
+ *   bimlo    low doubles of the imaginary parts of a right hand side vector;
+ *   xrehi    space for dim doubles;
+ *   xrelo    space for dim doubles;
+ *   ximhi    space for dim doubles;
+ *   ximlo    space for dim doubles.
+ *
+ * ON RETURN :
+ *   xrehi    high doubles of the real parts of the solution to L*x = b;
+ *   xrelo    low doubles of the real parts of the solution to L*x = b;
+ *   ximhi    high doubles of the imaginary parts of the solution to L*x = b;
+ *   ximlo    low doubles of the imaginary parts of the solution to L*x = b. */
+
 void CPU_dbl2_factors_backward
  ( int dim, double **Uhi, double **Ulo, double *bhi, double *blo,
    double *xhi, double *xlo );
@@ -69,6 +101,36 @@ void CPU_dbl2_factors_backward
  * ON RETURN :
  *   xhi      high doubles of the solution to U*x = b;
  *   xlo      low doubles of the solution to U*x = b. */
+
+void CPU_cmplx2_factors_backward
+ ( int dim, double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
+   double *brehi, double *brelo, double *bimhi, double *bimlo,
+   double *xrehi, double *xrelo, double *ximhi, double *ximlo );
+/*
+ * DESCRIPTION :
+ *   Solves the upper triangular system U*x = b with back substitution,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in the upper triangular matrix U;
+ *   Urehi    high doubles of the real parts of U;
+ *   Urelo    low doubles of the real parts of U;
+ *   Uimhi    high doubles of the imaginary parts of U;
+ *   Uimlo    low doubles of the imaginary parts of U;
+ *   brehi    high doubles of the real parts of a right hand side vector;
+ *   brelo    low doubles of the real parts of a right hand side vector;
+ *   bimhi    high doubles of the imaginary parts of a right hand side vector;
+ *   bimlo    low doubles of the imaginary parts of a right hand side vector;
+ *   xrehi    space for dim doubles;
+ *   xrelo    space for dim doubles;
+ *   ximhi    space for dim doubles;
+ *   ximlo    space for dim doubles.
+ *
+ * ON RETURN :
+ *   xrehi    high doubles of the real parts of the solution to U*x = b;
+ *   xrelo    low doubles of the imaginary parts of the solution to U*x = b;
+ *   ximhi    high doubles of the real parts of the solution to U*x = b;
+ *   ximlo    low doubles of the imaginary parts of the solution to U*x = b. */
 
 void CPU_dbl2_factors_lufac
  ( int dim, double **Ahi, double **Alo, int *pivots );
@@ -92,13 +154,40 @@ void CPU_dbl2_factors_lufac
  *            the low doubles of the row reduced A;
  *   pivots   are the pivots used. */
 
+void CPU_cmplx2_factors_lufac
+ ( int dim, double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
+   int *pivots );
+/*
+ * DESCRIPTION :
+ *   Does an inplace LU factorization with pivoting on the matrix A,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in the matrix A;
+ *   Arehi    high doubles of the real parts of A;
+ *   Arelo    low doubles of the real parts of A;
+ *   Aimhi    high doubles of the imaginary parts of A;
+ *   Aimlo    low doubles of the imaginary parts of A;
+ *   pivots   space for dim pivots.
+ *
+ * ON RETURN :
+ *   Arehi    high doubles of the real parts
+ *            of the multipliers and the row reduced A;
+ *   Arelo    low doubles of the real parts
+ *            of the multipliers and the row reduced A;
+ *   Aimhi    high doubles of the imaginary parts
+ *            of the multipliers and the row reduced A;
+ *   Aimlo    low doubles of the imaginary parts
+ *            of the multipliers and the row reduced A;
+ *   pivots   are the pivots used. */
+
 void CPU_dbl2_factors_lusolve
  ( int dim, double **Ahi, double **Alo, int *pivots,
    double *bhi, double *blo, double *xhi, double *xlo );
 /*
  * DESCRIPTION :
  *   Does an inplace LU factorization with pivoting on the matrix A,
- *   to solve the system A*x = b.
+ *   to solve the system A*x = b, on real data.
  *
  * ON ENTRY :
  *   dim      number of rows and columns in the matrix A;
@@ -121,5 +210,48 @@ void CPU_dbl2_factors_lusolve
  *   blo      used as work space;
  *   xhi      high doubles of the solution to A*x = b;
  *   xlo      low doubles of the solution to A*x = b. */
+
+void CPU_cmplx2_factors_lusolve
+ ( int dim, double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
+   int *pivots, double *brehi, double *brelo, double *bimhi, double *bimlo,
+   double *xrehi, double *xrelo, double *ximhi, double *ximlo );
+/*
+ * DESCRIPTION :
+ *   Does an inplace LU factorization with pivoting on the matrix A,
+ *   to solve the system A*x = b, on complex data.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in the matrix A;
+ *   Arehi    high doubles of the real parts of A;
+ *   Arelo    low doubles of the imaginary parts of A;
+ *   Aimhi    high doubles of the real parts of A;
+ *   Aimlo    low doubles of the imaginary parts of A;
+ *   pivots   space for dim pivots;
+ *   brehi    high doubles of the real parts of b;
+ *   brelo    low doubles of the real parts of b;
+ *   bimhi    high doubles of the imaginary parts of b;
+ *   bimlo    low doubles of the imaginary parts of b;
+ *   xrehi    space for dim doubles;
+ *   xrelo    space for dim doubles;
+ *   ximhi    space for dim doubles;
+ *   ximlo    space for dim doubles.
+ *
+ * ON RETURN :
+ *   Arehi    high doubles of the real parts
+ *            of the multipliers and the row reduced A;
+ *   Arelo    low doubles of the real parts
+ *            of the multipliers and the row reduced A;
+ *   Aimhi    high doubles of the imaginary parts
+ *            of the multipliers and the row reduced A;
+ *   Aimlo    low doubles of the imaginary parts
+ *            of the multipliers and the row reduced A;
+ *   brehi    used as work space;
+ *   brelo    used as work space;
+ *   bimhi    used as work space;
+ *   bimlo    used as work space;
+ *   xrehi    high doubles of the real parts of the solution x;
+ *   xrelo    low doubles of the real parts of the solution x;
+ *   ximhi    high doubles of the imaginary parts of the solution x;
+ *   ximlo    low doubles of the imaginary parts of the solution x. */
 
 #endif

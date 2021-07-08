@@ -12,6 +12,9 @@ int main ( void )
 {
    srand(time(NULL));
 
+   cout << "testing a complex lu factorization ..." << endl;
+   test_factors_cmplx2_lufac();
+
    cout << "testing a real lu factorization ..." << endl;
    test_factors_real2_lufac();
 
