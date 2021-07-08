@@ -2,19 +2,19 @@
  * the file dbl_tabs_host.h. */
 
 #include <cstdlib>
-#include "dbl_matrices_host.h"
+#include "dbl_factorizations.h"
 #include "dbl_tabs_host.h"
 
 void CPU_dbl_backsubs ( int dim, double **U, double *b, double *x )
 {
-   CPU_dbl_upper_lead_solver(dim,U,b,x);
+   CPU_dbl_factors_backward(dim,U,b,x);
 }
 
 void CPU_cmplx_backsubs
  ( int dim, double **Ure, double **Uim, double *bre, double *bim,
    double *xre, double *xim )
 {
-   CPU_cmplx_upper_lead_solver(dim,Ure,Uim,bre,bim,xre,xim);
+   CPU_cmplx_factors_backward(dim,Ure,Uim,bre,bim,xre,xim);
 }
 
 void CPU_dbl_upper_inverse ( int dim, double **U, double **invU )

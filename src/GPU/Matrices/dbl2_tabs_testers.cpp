@@ -25,6 +25,21 @@ double dbl2_Difference_Sum
    return result;
 }
 
+double cmplx2_Difference_Sum
+ ( int n, double *xrehi, double *xrelo, double *ximhi, double *ximlo,
+          double *yrehi, double *yrelo, double *yimhi, double *yimlo )
+{
+   double result = 0.0;
+
+   for(int i=0; i<n; i++)
+      result = result + abs(xrehi[i] - yrehi[i])
+                      + abs(xrelo[i] - yrelo[i])
+                      + abs(ximhi[i] - yimhi[i])
+                      + abs(ximlo[i] - yimlo[i]);
+
+   return result;
+}
+
 double dbl2_Column_Sum ( int dim, int col, double **Ahi, double **Alo )
 {
    double resulthi = 0.0;
@@ -34,6 +49,23 @@ double dbl2_Column_Sum ( int dim, int col, double **Ahi, double **Alo )
       ddf_inc(&resulthi,&resultlo,abs(Ahi[i][col]),abs(Alo[i][col]));
 
    return resulthi;
+}
+
+double cmplx2_Column_Sum
+ ( int dim, int col,
+   double **Arehi, double **Arelo, double **Aimhi, double **Aimlo )
+{
+   double resultrehi = 0.0;
+   double resultrelo = 0.0;
+   double resultimhi = 0.0;
+   double resultimlo = 0.0;
+
+   for(int i=0; i<dim; i++)
+   {
+      ddf_inc(&resultrehi,&resultrelo,abs(Arehi[i][col]),abs(Arelo[i][col]));
+      ddf_inc(&resultimhi,&resultimlo,abs(Aimhi[i][col]),abs(Aimlo[i][col]));
+   }
+   return (resultrehi + resultimhi);
 }
 
 double dbl2_Max_Column_Sum ( int dim, double **Ahi, double **Alo )
@@ -49,11 +81,37 @@ double dbl2_Max_Column_Sum ( int dim, double **Ahi, double **Alo )
    return result;  
 }
 
+double cmplx2_Max_Column_Sum
+ ( int dim, double **Arehi, double **Arelo, double **Aimhi, double **Aimlo )
+{
+   double result = cmplx2_Column_Sum(dim,0,Arehi,Arelo,Aimhi,Aimlo);
+   double colsum;
+   
+   for(int j=1; j<dim; j++)
+   {
+      colsum = cmplx2_Column_Sum(dim,j,Arehi,Arelo,Aimhi,Aimlo);
+      if(colsum > result) result = colsum;
+   }
+   return result;  
+}
+
 double dbl2_condition
  ( int dim, double **Ahi, double **Alo, double **invAhi, double **invAlo )
 {
    double Amaxcolsum = dbl2_Max_Column_Sum(dim,Ahi,Alo);
    double invAmaxcolsum = dbl2_Max_Column_Sum(dim,invAhi,invAlo);
+
+   return Amaxcolsum*invAmaxcolsum;
+}
+
+double cmplx2_condition
+ ( int dim, double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
+   double **invArehi, double **invArelo,
+   double **invAimhi, double **invAimlo )
+{
+   double Amaxcolsum = cmplx2_Max_Column_Sum(dim,Arehi,Arelo,Aimhi,Aimlo);
+   double invAmaxcolsum = cmplx2_Max_Column_Sum(dim,invArehi,invArelo,
+                                                    invAimhi,invAimlo);
 
    return Amaxcolsum*invAmaxcolsum;
 }
@@ -232,6 +290,172 @@ void test_real2_upper_inverse ( void )
         << dbl2_Difference_Sum(dim,solhi,sollo,xhi,xlo) << endl;
    cout << "Condition number : "
         << dbl2_condition(dim,Ahi,Alo,invAhi_h,invAlo_h) << endl;
+}
+
+void test_cmplx2_upper_inverse ( void )
+{
+   cout << "Give the dimension : ";
+   int dim; cin >> dim;
+
+   cout << "Give the verbose level (1 to see all numbers) : ";
+   int verbose; cin >> verbose;
+
+   cout << "-> generating a random upper triangular matrix of dimension "
+        << dim << " ..." << endl;
+
+   double **Arehi = new double*[dim];
+   double **Arelo = new double*[dim];
+   double **Aimhi = new double*[dim];
+   double **Aimlo = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      Arehi[i] = new double[dim];
+      Arelo[i] = new double[dim];
+      Aimhi[i] = new double[dim];
+      Aimlo[i] = new double[dim];
+   }
+   random_cmplx2_upper_matrix(dim,dim,Arehi,Arelo,Aimhi,Aimlo);
+   // cmplx2_random_upper_factor(dim,Arehi,Arelo,Aimhi,Aimlo);
+
+   cout << scientific << setprecision(16);
+
+   if(verbose > 0)
+   {
+      cout << "A random upper triangular matrix :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+            cout << "A[" << i << "][" << j << "]re : "
+                 << Arehi[i][j] << "  " << Arelo[i][j] << endl;
+            cout << "A[" << i << "][" << j << "]im : "
+                 << Aimhi[i][j] << "  " << Aimlo[i][j] << endl;
+         }
+   }
+   double *solrehi = new double[dim];
+   double *solrelo = new double[dim];
+   double *solimhi = new double[dim];
+   double *solimlo = new double[dim];
+
+   for(int i=0; i<dim; i++) 
+   {
+      solrehi[i] = 1.0; solrelo[i] = 0.0;
+      solimhi[i] = 0.0; solimlo[i] = 0.0;
+   }
+   double *rhsrehi = new double[dim];
+   double *rhsrelo = new double[dim];
+   double *rhsimhi = new double[dim];
+   double *rhsimlo = new double[dim];
+   double acc1hi,acc1lo,acc2hi,acc2lo;
+   double acc3hi,acc3lo,acc4hi,acc4lo;
+
+   for(int i=0; i<dim; i++)
+   {
+      rhsrehi[i] = 0.0; rhsrelo[i] = 0.0;
+      rhsimhi[i] = 0.0; rhsimlo[i] = 0.0;
+
+      for(int j=0; j<dim; j++) // rhs[i] = rhs[i] + A[i][j]*sol[j];
+      {
+         ddf_mul(Arehi[i][j],Arelo[i][j],solrehi[j],solrelo[j],
+                 &acc1hi,&acc1lo);
+         ddf_mul(Aimhi[i][j],Aimlo[i][j],solimhi[j],solimlo[j],
+                 &acc2hi,&acc2lo);
+         ddf_mul(Aimhi[i][j],Aimlo[i][j],solrehi[j],solrelo[j],
+                 &acc3hi,&acc3lo);
+         ddf_mul(Arehi[i][j],Arelo[i][j],solimhi[j],solimlo[j],
+                 &acc4hi,&acc4lo);
+         ddf_inc(&rhsrehi[i],&rhsrelo[i],acc1hi,acc1lo);
+         ddf_dec(&rhsrehi[i],&rhsrelo[i],acc2hi,acc2lo);
+         ddf_inc(&rhsimhi[i],&rhsimlo[i],acc3hi,acc3lo);
+         ddf_inc(&rhsimhi[i],&rhsimlo[i],acc4hi,acc4lo);
+      }
+   }
+   if(verbose > 0)
+   {
+      cout << "The sums of the columns :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "b[" << i << "]re : "
+              << rhsrehi[i] << "  " << rhsrelo[i] << endl;
+         cout << "b[" << i << "]im : "
+              << rhsimhi[i] << "  " << rhsimlo[i] << endl;
+      }
+   }
+   double **invArehi_h = new double*[dim];
+   double **invArelo_h = new double*[dim];
+   double **invAimhi_h = new double*[dim];
+   double **invAimlo_h = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      invArehi_h[i] = new double[dim];
+      invArelo_h[i] = new double[dim];
+      invAimhi_h[i] = new double[dim];
+      invAimlo_h[i] = new double[dim];
+   }
+   CPU_cmplx2_upper_inverse
+      (dim,   Arehi,     Arelo,     Aimhi,     Aimlo,
+           invArehi_h,invArelo_h,invAimhi_h,invAimlo_h);
+
+   if(verbose > 0)
+   {
+      cout << "The CPU inverse of the upper triangular matrix :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+            cout << "invA_h[" << i << "][" << j << "]re : "
+                 << invArehi_h[i][j] << "  " << invArelo_h[i][j] << endl;
+            cout << "invA_h[" << i << "][" << j << "]im : "
+                 << invAimhi_h[i][j] << "  " << invAimlo_h[i][j] << endl;
+         }
+   }
+   double *xrehi = new double[dim];
+   double *xrelo = new double[dim];
+   double *ximhi = new double[dim];
+   double *ximlo = new double[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      xrehi[i] = 0.0; xrelo[i] = 0.0;
+      ximhi[i] = 0.0; ximlo[i] = 0.0;
+
+      for(int j=0; j<dim; j++) // x[i] = x[i] + invA_h[i][j]*rhs[j];
+      {
+         ddf_mul(invArehi_h[i][j],invArelo_h[i][j],rhsrehi[j],rhsrelo[j],
+                 &acc1hi,&acc1lo);
+         ddf_mul(invAimhi_h[i][j],invAimlo_h[i][j],rhsimhi[j],rhsimlo[j],
+                 &acc2hi,&acc2lo);
+         ddf_mul(invAimhi_h[i][j],invAimlo_h[i][j],rhsrehi[j],rhsrelo[j],
+                 &acc3hi,&acc3lo);
+         ddf_mul(invArehi_h[i][j],invArelo_h[i][j],rhsimhi[j],rhsimlo[j],
+                 &acc4hi,&acc4lo);
+         ddf_inc(&xrehi[i],&xrelo[i],acc1hi,acc1lo);
+         ddf_dec(&xrehi[i],&xrelo[i],acc2hi,acc2lo);
+         ddf_inc(&ximhi[i],&ximlo[i],acc3hi,acc3lo);
+         ddf_inc(&ximhi[i],&ximlo[i],acc4hi,acc4lo);
+      }
+   }
+   if(verbose > 0)
+   {
+      cout << "The solution computed with the CPU inverse :" << endl;
+      cout << scientific << setprecision(16);
+      for(int i=0; i<dim; i++)
+      {
+         cout << "x[" << i << "]re : "
+              << xrehi[i] << "  " << xrelo[i] << endl;
+         cout << "x[" << i << "]im : "
+              << ximhi[i] << "  " << ximlo[i] << endl;
+      }
+   }
+   cout << scientific << setprecision(2);
+   cout << "   Sum of errors : "
+        << cmplx2_Difference_Sum
+              (dim,solrehi,solrelo,solimhi,solimlo,
+                     xrehi,  xrelo,  ximhi,  ximlo) << endl;
+   cout << "Condition number : "
+        << cmplx2_condition(dim,   Arehi,     Arelo,     Aimhi,     Aimlo,
+                                invArehi_h,invArelo_h,invAimhi_h,invAimlo_h)
+        << endl;
 }
 
 void test_real2_upper_tiling ( void )

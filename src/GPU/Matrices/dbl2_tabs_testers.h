@@ -11,7 +11,23 @@ double dbl2_Difference_Sum
  *   Returns the sum of the absolute value of the differences
  *   between the entries of the n-dimensional vectors x and y. */
 
+double cmplx2_Difference_Sum
+ ( int n, double *xrehi, double *xrelo, double *ximhi, double *ximlo,
+          double *yrehi, double *yrelo, double *yimhi, double *yimlo );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute value of the differences
+ *   between the entries of the n-dimensional vectors x and y. */
+
 double dbl2_Column_Sum ( int dim, int col, double **Ahi, double **Alo );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute values of all dim elements
+ *   of the matrix A in the column with index col. */
+
+double cmplx2_Column_Sum
+ ( int dim, int col,
+   double **Arehi, double **Arelo, double **Aimhi, double **Aimlo );
 /*
  * DESCRIPTION :
  *   Returns the sum of the absolute values of all dim elements
@@ -23,8 +39,24 @@ double dbl2_Max_Column_Sum ( int dim, double **Ahi, double **Alo );
  *   Returns the maximum column sum of the elements
  *   in the matrix A of dimension dim. */
 
+double cmplx2_Max_Column_Sum
+ ( int dim, double **Arehi, double **Arelo, double **Aimhi, double **Aimlo );
+/*
+ * DESCRIPTION :
+ *   Returns the maximum column sum of the elements
+ *   in the matrix A of dimension dim. */
+
 double dbl2_condition
  ( int dim, double **Ahi, double **Alo, double **invAhi, double **invAlo );
+/*
+ * DESCRIPTION :
+ *   Returns the condition number of A using the 1-norm
+ *   on the matrix of dimension dim and its inverse invA. */
+
+double cmplx2_condition
+ ( int dim, double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
+   double **invArehi, double **invArelo,
+   double **invAimhi, double **invAimlo );
 /*
  * DESCRIPTION :
  *   Returns the condition number of A using the 1-norm
@@ -58,6 +90,12 @@ void test_real2_upper_inverse ( void );
 /*
  * DESCRIPTION :
  *   Generates a random real upper triangular matrix
+ *   to test the computation of its inverse. */
+
+void test_cmplx2_upper_inverse ( void );
+/*
+ * DESCRIPTION :
+ *   Generates a random complex upper triangular matrix
  *   to test the computation of its inverse. */
 
 void test_real2_upper_tiling ( void );

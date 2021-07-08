@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include "double_double_functions.h"
+#include "dbl2_factorizations.h"
 #include "dbl2_tabs_host.h"
 
 using namespace std;
@@ -11,25 +12,19 @@ void CPU_dbl2_backsubs
  ( int dim, double **Uhi, double **Ulo, double *bhi, double *blo,
    double *xhi, double *xlo )
 {
-   double acchi,acclo;
-   int idx = dim-1;
-   
-   // x[idx] = b[idx]/U[idx][idx];
-   ddf_div(bhi[idx],blo[idx],Uhi[idx][idx],Ulo[idx][idx],&xhi[idx],&xlo[idx]);
+   CPU_dbl2_factors_backward(dim,Uhi,Ulo,bhi,blo,xhi,xlo);
+}
 
-   for(int i=idx-1; i>=0; i--)
-   {
-      xhi[i] = bhi[i]; xlo[i] = blo[i];
-
-      for(int j=i+1; j<dim; j++)     // x[i] = x[i] - U[i][j]*x[j];
-      {
-         ddf_mul(Uhi[i][j],Ulo[i][j],xhi[j],xlo[j],&acchi,&acclo);
-         ddf_dec(&xhi[i],&xlo[i],acchi,acclo);
-      }
-      // x[i] = x[i]/U[i][i];
-      ddf_div(xhi[i],xlo[i],Uhi[i][i],Ulo[i][i],&acchi,&acclo);
-      xhi[i] = acchi; xlo[i] = acclo;
-   }
+void CPU_cmplx2_backsubs
+ ( int dim, double **Urehi, double **Urelo,
+            double **Uimhi, double **Uimlo,
+   double *brehi, double *brelo, double *bimhi, double *bimlo,
+   double *xrehi, double *xrelo, double *ximhi, double *ximlo )
+{
+   CPU_cmplx2_factors_backward
+      (dim,Urehi,Urelo,Uimhi,Uimlo,
+           brehi,brelo,bimhi,bimlo,
+           xrehi,xrelo,ximhi,ximlo);
 }
 
 void CPU_dbl2_upper_inverse
@@ -58,6 +53,44 @@ void CPU_dbl2_upper_inverse
    }
    free(rhshi); free(colhi);
    free(rhslo); free(collo);
+}
+
+void CPU_cmplx2_upper_inverse
+ ( int dim, double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
+   double **invUrehi, double **invUrelo,
+   double **invUimhi, double **invUimlo )
+{
+   double *colrehi = new double[dim];
+   double *colrelo = new double[dim];
+   double *colimhi = new double[dim];
+   double *colimlo = new double[dim];
+   double *rhsrehi = new double[dim];
+   double *rhsrelo = new double[dim];
+   double *rhsimhi = new double[dim];
+   double *rhsimlo = new double[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      rhsrehi[i] = 0.0; rhsrelo[i] = 0.0;
+      rhsimhi[i] = 0.0; rhsimlo[i] = 0.0;
+   }
+   for(int j=0; j<dim; j++) // compute j-th column of the inverse
+   {
+      rhsrehi[j] = 1.0;
+      CPU_cmplx2_backsubs(dim,  Urehi,  Urelo,  Uimhi,  Uimlo,
+                              rhsrehi,rhsrelo,rhsimhi,rhsimlo,
+                              colrehi,colrelo,colimhi,colimlo);
+      for(int i=0; i<dim; i++)
+      {
+         invUrehi[i][j] = colrehi[i]; invUrelo[i][j] = colrelo[i];
+         invUimhi[i][j] = colimhi[i]; invUimlo[i][j] = colimlo[i];
+      }
+      rhsrehi[j] = 0.0;
+   }
+   free(rhsrehi); free(colrehi);
+   free(rhsrelo); free(colrelo);
+   free(rhsimhi); free(colimhi);
+   free(rhsimlo); free(colimlo);
 }
 
 void CPU_dbl2_matmatmul

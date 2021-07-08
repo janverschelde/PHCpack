@@ -159,13 +159,12 @@ test_dbl_tabs.o:
 
 test_dbl_tabs: test_dbl_tabs.o dbl_tabs_testers.o dbl_tabs_host.o \
                dbl_tabs_kernels.o dbl_factorizations.o \
-               dbl_convolutions_host.o dbl_matrices_host.o \
+               dbl_convolutions_host.o \
                random_numbers.o random_series.o random_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_tabs test_dbl_tabs.o dbl_tabs_testers.o \
                   random_numbers.o random_series.o random_matrices.o \
-                  dbl_factorizations.o \
-                  dbl_convolutions_host.o dbl_matrices_host.o \
+                  dbl_factorizations.o dbl_convolutions_host.o \
                   dbl_tabs_host.o dbl_tabs_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
 

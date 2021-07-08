@@ -25,6 +25,37 @@ void CPU_dbl2_backsubs
  *   xhi      high doubles of the solution to the system U*x = b;
  *   xlo      low doubles of the solution to the system U*x = b. */
 
+void CPU_cmplx2_backsubs
+ ( int dim, double **Urehi, double **Urelo,
+            double **Uimhi, double **Uimlo,
+   double *brehi, double *brelo, double *bimhi, double *bimlo,
+   double *xrehi, double *xrelo, double *ximhi, double *ximlo );
+/*
+ * DESCRIPTION :
+ *   Applies back substitution to solve an upper triangular system.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the upper triangular matrix U
+ *            and the vectors b and x;
+ *   Urehi    high doubles of the real parts of U;
+ *   Urelo    low doubles of the real parts of U;
+ *   Uimhi    high doubles of the imaginary parts of U;
+ *   Uimlo    low doubles of the imaginary parts of U;
+ *   brehi    high doubles of the real parts of b;
+ *   brelo    low doubles of the real parts of b;
+ *   bimhi    high doubles of the imaginary parts of b;
+ *   bimlo    low doubles of the imaginary parts of b;
+ *   xrehi    space allocated for dim doubles;
+ *   xrelo    space allocated for dim doubles;
+ *   ximhi    space allocated for dim doubles;
+ *   ximlo    space allocated for dim doubles.
+ *
+ * ON RETURN :
+ *   xrehi    high doubles of the real parts of the solution x;
+ *   xrelo    low doubles of the real parts of the solution x;
+ *   ximhi    high doubles of the imaginary parts of the solution x;
+ *   ximlo    low doubles of the imaginary parts of the solution x. */
+
 void CPU_dbl2_upper_inverse
  ( int dim, double **Uhi, double **Ulo, double **invUhi, double **invUlo );
 /*
@@ -41,6 +72,31 @@ void CPU_dbl2_upper_inverse
  * ON RETURN :
  *   invUhi   high doubles of the inverse of the matrix U;
  *   invUlo   low doubles of the inverse of the matrix U. */
+
+void CPU_cmplx2_upper_inverse
+ ( int dim, double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
+   double **invUrehi, double **invUrelo,
+   double **invUimhi, double **invUimlo );
+/*
+ * DESCRIPTION :
+ *   Computes the inverse of an upper triangular matrix.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the upper triangular matrix U;
+ *   Urehi    high doubles of the real parts of U;
+ *   Urelo    low doubles of the real parts of U;
+ *   Uimhi    high doubles of the imaginary parts of U;
+ *   Uimlo    low doubles of the imaginary parts of U;
+ *   invUrehi has space allocated for a matrix of dimension dim;
+ *   invUrelo has space allocated for a matrix of dimension dim;
+ *   invUimhi has space allocated for a matrix of dimension dim;
+ *   invUimlo has space allocated for a matrix of dimension dim.
+ *
+ * ON RETURN :
+ *   invUrehi has the high doubles of the real parts of the inverse;
+ *   invUrelo has the low doubles of the real parts of the inverse;
+ *   invUimhi has the high doubles of the imaginary parts of the inverse;
+ *   invUimlo has the low doubles of the imaginary parts of the inverse. */
 
 void CPU_dbl2_matmatmul
  ( int dim, double **Ahi, double **Alo, double **Fhi, double **Flo );

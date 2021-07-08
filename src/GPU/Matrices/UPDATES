@@ -1,4 +1,8 @@
 Thu 8 Jul 2021 : fixed bug in dbl2_factorizations.cpp.
+  In dbl_tabs_host.cpp, used the back substitution of dbl_factorizations,
+  instead of the dbl_matrices_host; updated the makefiles.
+  Extended test_dbl2_tabs, random2_matrices, dbl2_tabs_host, and
+  dbl2_tabs_testers with the inverse of one upper triangular matrix.
 
 Wed 7 Jul 2021 : improved dbl_tabs_host.cpp and dbl2_tabs_host.cpp not to
   use the matrix-matrix multiplication with the inverse diagonal tile.
