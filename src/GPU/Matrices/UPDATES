@@ -1,3 +1,5 @@
+Thu 8 Jul 2021 : fixed bug in dbl2_factorizations.cpp.
+
 Wed 7 Jul 2021 : improved dbl_tabs_host.cpp and dbl2_tabs_host.cpp not to
   use the matrix-matrix multiplication with the inverse diagonal tile.
   Added writing of inverse diagonal tiles to dbl2_tabs_host.cpp, added

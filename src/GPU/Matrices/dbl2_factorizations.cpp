@@ -272,6 +272,22 @@ void CPU_cmplx2_factors_lufac
          ddf_dec(&Arehi[i][j],&Arelo[i][j],acc3imhi,acc3imlo);
          Aimhi[i][j] = acc4rehi; Aimlo[i][j] = acc4relo;
          ddf_inc(&Aimhi[i][j],&Aimlo[i][j],acc4imhi,acc4imlo);
+
+         for(int k=j+1; k<dim; k++) // A[i][k] = A[i][k] - A[i][j]*A[j][k];
+         {
+            ddf_mul(Arehi[i][j],Arelo[i][j],Arehi[j][k],Arelo[j][k],
+                    &acc3rehi,&acc3relo);
+            ddf_mul(Aimhi[i][j],Aimlo[i][j],Aimhi[j][k],Aimlo[j][k],
+                    &acc3imhi,&acc3imlo);
+            ddf_mul(Aimhi[i][j],Aimlo[i][j],Arehi[j][k],Arelo[j][k],
+                    &acc4rehi,&acc4relo);
+            ddf_mul(Arehi[i][j],Arelo[i][j],Aimhi[j][k],Aimlo[j][k],
+                    &acc4imhi,&acc4imlo);
+            ddf_dec(&Arehi[i][k],&Arelo[i][k],acc3rehi,acc3relo);
+            ddf_inc(&Arehi[i][k],&Arelo[i][k],acc3imhi,acc3imlo);
+            ddf_dec(&Aimhi[i][k],&Aimlo[i][k],acc4rehi,acc4relo);
+            ddf_dec(&Aimhi[i][k],&Aimlo[i][k],acc4imhi,acc4imlo);
+         }
       }
    }
 }
