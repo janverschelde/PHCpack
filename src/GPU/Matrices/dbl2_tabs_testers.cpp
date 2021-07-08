@@ -129,6 +129,22 @@ double dbl2_Matrix_Difference_Sum
    return result;
 }
 
+double cmplx2_Matrix_Difference_Sum
+ ( int n, double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
+   double **Brehi, double **Brelo, double **Bimhi, double **Bimlo )
+{
+   double result = 0.0;
+
+   for(int i=0; i<n; i++)
+      for(int j=0; j<n; j++)
+         result = result + abs(Arehi[i][j] - Brehi[i][j])
+                         + abs(Arelo[i][j] - Brelo[i][j])
+                         + abs(Aimhi[i][j] - Bimhi[i][j])
+                         + abs(Aimlo[i][j] - Bimlo[i][j]);
+
+   return result;
+}
+
 double dbl2_Diagonal_Difference_Sum
  ( int nbt, int szt, double **Ahi, double **Alo,
    double **Bhi, double **Blo )
@@ -162,6 +178,25 @@ void dbl2_random_upper_factor ( int dim, double **Ahi, double **Alo )
       {
          Ahi[i][j] = 0.0;
          Alo[i][j] = 0.0;
+      }
+
+   free(pivots);
+}
+
+void cmplx2_random_upper_factor
+ ( int dim, double **Arehi, double **Arelo, double **Aimhi, double **Aimlo )
+{
+   random_cmplx2_matrix(dim,dim,Arehi,Arelo,Aimhi,Aimlo);
+
+   int *pivots = new int[dim];
+
+   CPU_cmplx2_factors_lufac(dim,Arehi,Arelo,Aimhi,Aimlo,pivots);
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<i; j++)
+      {
+         Arehi[i][j] = 0.0; Arelo[i][j] = 0.0;
+         Aimhi[i][j] = 0.0; Aimlo[i][j] = 0.0;
       }
 
    free(pivots);
@@ -315,8 +350,8 @@ void test_cmplx2_upper_inverse ( void )
       Aimhi[i] = new double[dim];
       Aimlo[i] = new double[dim];
    }
-   random_cmplx2_upper_matrix(dim,dim,Arehi,Arelo,Aimhi,Aimlo);
-   // cmplx2_random_upper_factor(dim,Arehi,Arelo,Aimhi,Aimlo);
+   // random_cmplx2_upper_matrix(dim,dim,Arehi,Arelo,Aimhi,Aimlo);
+   cmplx2_random_upper_factor(dim,Arehi,Arelo,Aimhi,Aimlo);
 
    cout << scientific << setprecision(16);
 
@@ -409,6 +444,41 @@ void test_cmplx2_upper_inverse ( void )
                  << invAimhi_h[i][j] << "  " << invAimlo_h[i][j] << endl;
          }
    }
+
+   double **invArehi_d = new double*[dim];
+   double **invArelo_d = new double*[dim];
+   double **invAimhi_d = new double*[dim];
+   double **invAimlo_d = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      invArehi_d[i] = new double[dim];
+      invArelo_d[i] = new double[dim];
+      invAimhi_d[i] = new double[dim];
+      invAimlo_d[i] = new double[dim];
+   }
+   GPU_cmplx2_upper_inverse
+      (dim,   Arehi,     Arelo,     Aimhi,     Aimlo,
+           invArehi_d,invArelo_d,invAimhi_d,invAimlo_d);
+
+   if(verbose > 0)
+   {
+      cout << "The GPU inverse of the upper triangular matrix :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+            cout << "invA_d[" << i << "][" << j << "]re : "
+                 << invArehi_d[i][j] << "  " << invArelo_d[i][j] << endl;
+            cout << "invA_d[" << i << "][" << j << "]im : "
+                 << invAimhi_d[i][j] << "  " << invAimlo_d[i][j] << endl;
+         }
+   }
+   cout << scientific << setprecision(2);
+   cout << "   Sum of errors : "
+        << cmplx2_Matrix_Difference_Sum
+              (dim,invArehi_h,invArelo_h,invAimhi_h,invAimlo_h,
+                   invArehi_d,invArelo_d,invAimhi_d,invAimlo_d) << endl;
+
    double *xrehi = new double[dim];
    double *xrelo = new double[dim];
    double *ximhi = new double[dim];

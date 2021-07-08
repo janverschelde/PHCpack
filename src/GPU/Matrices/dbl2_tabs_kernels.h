@@ -31,6 +31,42 @@ __global__ void dbl2_small_invert_upper
  *   invUhi   high doubles of the inverse of the matrix U, stored row wise;
  *   invU     low doubles the inverse of the matrix U, stored row wise. */
 
+__global__ void cmplx2_small_invert_upper
+ ( int dim, double *Urehi, double *Urelo, double *Uimhi, double *Uimlo,
+   double *invUrehi, double *invUrelo, double *invUimhi, double *invUimlo );
+/*
+ * DESCRIPTION :
+ *   Computes the inverse of an upper triangular matrix.
+ *   The U matrix is stored in columnwise fashion,
+ *   as the row-by-row computation of the inverse invU
+ *   applies a column-by-column load of U.
+ *
+ * REQUIRED : dim <= 16.
+ *   Because the inverse is stored entirely in shared memory,
+ *   the dimension dim is limited to 16 = 2^4, as 16^2 = 256,
+ *   the upper limit on the shared memory, d_shmemsize.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the upper triangular matrix U;
+ *   Urehi    high doubles of the real parts of U stored column wise;
+ *   Urelo    low doubles of the real parts of U stored column wise;
+ *   Uimhi    high doubles of the imaginary parts of U;
+ *   Uimlo    low doubles of the imaginary parts of U;
+ *   invUrehi has space allocated for a matrix of dimension dim;
+ *   invUrelo has space allocated for a matrix of dimension dim;
+ *   invUimhi has space allocated for a matrix of dimension dim;
+ *   invUimlo has space allocated for a matrix of dimension dim.
+ *
+ * ON RETURN :
+ *   invUrehi has the high doubles of the real parts of the inverse of U,
+ *            stored row wise;
+ *   invUrelo has the low doubles of the real parts of the inverse of U,
+ *            stored row wise;
+ *   invUimhi has the high doubles of the imaginary parts of the inverse of U,
+ *            also stored row wise;
+ *   invUimlo has the low doubles of the imaginary parts of the inverse of U,
+ *            also stored row wise. */
+
 __global__ void dbl2_medium_invert_upper
  ( int dim, double *Uhi, double *Ulo, double *invUhi, double *invUlo);
 /*
@@ -56,6 +92,43 @@ __global__ void dbl2_medium_invert_upper
  * ON RETURN :
  *   invUhi   high doubles of the inverse of the matrix U, stored row wise;
  *   invUlo   low doubles of the inverse of the matrix U, stored row wise. */
+
+__global__ void cmplx2_medium_invert_upper
+ ( int dim, double *Urehi, double *Urelo, double *Uimhi, double *Uimlo,
+   double *invUrehi, double *invUrelo, double *invUimhi, double *invUimlo );
+/*
+ * DESCRIPTION :
+ *   Computes the inverse of an upper triangular matrix.
+ *   The U matrix is stored in columnwise fashion,
+ *   as the row-by-row computation of the inverse invU
+ *   applies a column-by-column load of U.
+ *
+ * REQUIRED : dim <= 256.
+ *   Because the columns of U are loaded entirely into shared memory
+ *   and the rows of the inverses are computed first entirely in
+ *   shared memory before storing, the dimension dim is limited 
+ *   to 256, the upper limit on the shared memory, dd_shmemsize.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the upper triangular matrix U;
+ *   Urehi    high doubles of the real parts of U stored column wise;
+ *   Urelo    low doubles of the real parts of U stored column wise;
+ *   Uimhi    high doubles of the imaginary parts of U;
+ *   Uimlo    low doubles of the imaginary parts of U;
+ *   invUrehi has space allocated for a matrix of dimension dim;
+ *   invUrelo has space allocated for a matrix of dimension dim;
+ *   invUimhi has space allocated for a matrix of dimension dim;
+ *   invUimlo has space allocated for a matrix of dimension dim.
+ *
+ * ON RETURN :
+ *   invUrehi has the high doubles of the real parts of the inverse of U,
+ *            stored row wise;
+ *   invUrelo has the low doubles of the real parts of the inverse of U,
+ *            stored row wise;
+ *   invUimhi has the high doubles of the imaginary parts of the inverse of U,
+ *            also stored row wise;
+ *   invUimlo has the low doubles of the imaginary parts of the inverse of U,
+ *            also stored row wise. */
 
 __global__ void  dbl2_invert_tiles
  ( int dim, double *Uhi, double *Ulo, double *invUhi, double *invUlo );
@@ -137,6 +210,32 @@ void GPU_dbl2_upper_inverse
  * ON RETURN :
  *   invUhi   high doubles of the inverse of the matrix U;
  *   invUlo   low doubles of the inverse of the matrix U. */
+
+void GPU_cmplx2_upper_inverse
+ ( int dim, double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
+   double **invUrehi, double **invUrelo,
+   double **invUimhi, double **invUimlo );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to invert the upper triangular matrix U.
+ *   The matrices are stored in the conventional row wise fashion.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the upper triangular matrix U;
+ *   Urehi    high doubles of the real parts of U;
+ *   Urelo    low doubles of the real parts of U;
+ *   Uimhi    high doubles of the imaginary parts of U;
+ *   Uimlo    low doubles of the imaginary parts of U;
+ *   invUrehi has space allocated for a matrix of dimension dim;
+ *   invUrelo has space allocated for a matrix of dimension dim;
+ *   invUimhi has space allocated for a matrix of dimension dim;
+ *   invUimlo has space allocated for a matrix of dimension dim.
+ *
+ * ON RETURN :
+ *   invUrehi has the high doubles of the real parts of the inverse;
+ *   invUrelo has the low doubles of the real parts of the inverse;
+ *   invUimhi has the high doubles of the imaginary parts of the inverse;
+ *   invUimlo has the low doubles of the imaginary parts of the inverse. */
 
 void GPU_dbl2_upper_tiled_solver
  ( int dim, int szt, int nbt, double **Uhi, double **Ulo,
