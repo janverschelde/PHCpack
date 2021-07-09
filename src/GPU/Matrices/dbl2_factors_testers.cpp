@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
+#include <cmath>
 #include "double_double_functions.h"
 #include "random2_matrices.h"
 #include "dbl2_factorizations.h"
@@ -171,4 +172,113 @@ void test_factors_cmplx2_lufac ( void )
       cout << "x[" << i << "]im : "
            << ximhi[i] << "  " << ximlo[i] << endl;
    }
+}
+
+void test_factors_real2_houseqr ( void )
+{
+   cout << "Give the number of rows : ";
+   int nrows; cin >> nrows;
+
+   cout << "Give the number of columns : ";
+   int ncols; cin >> ncols;
+
+   cout << "Generating a random " << nrows
+        << "-by-" << ncols << " matrix ..." << endl;
+
+   double **Ahi = new double*[nrows];
+   double **Alo = new double*[nrows];
+   double **Qhi = new double*[nrows];
+   double **Qlo = new double*[nrows];
+   double **QThi = new double*[nrows];
+   double **QTlo = new double*[nrows];
+   double **QTQhi = new double*[nrows];
+   double **QTQlo = new double*[nrows];
+   double **Rhi = new double*[nrows];
+   double **Rlo = new double*[nrows];
+   double **QTAhi = new double*[nrows];
+   double **QTAlo = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Ahi[i] = new double[ncols];
+      Alo[i] = new double[ncols];
+      Qhi[i] = new double[nrows];
+      Qlo[i] = new double[nrows];
+      QThi[i] = new double[nrows];
+      QTlo[i] = new double[nrows];
+      QTQhi[i] = new double[nrows];
+      QTQlo[i] = new double[nrows];
+      Rhi[i] = new double[ncols];
+      Rlo[i] = new double[ncols];
+      QTAhi[i] = new double[ncols];
+      QTAlo[i] = new double[ncols];
+   }
+
+   random_dbl2_matrix(nrows,ncols,Ahi,Alo);
+
+   cout << scientific << setprecision(16);
+
+   cout << "A random matrix :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+         cout << "A[" << i << "][" << j << "] : "
+              << Ahi[i][j] << "  " << Alo[i][j] << endl;
+
+   CPU_dbl2_factors_houseqr(nrows,ncols,Ahi,Alo,Qhi,Qlo,Rhi,Rlo);
+
+   cout << "The matrix Q :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<nrows; j++)
+      {
+         cout << "Q[" << i << "][" << j << "] : "
+              << Qhi[i][j] << "  " << Qlo[i][j] << endl;
+         QThi[j][i] = Qhi[i][j];
+         QTlo[j][i] = Qlo[i][j];
+      }
+
+   cout << "The matrix R :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+         cout << "R[" << i << "][" << j << "] : "
+              << Rhi[i][j] << "  " << Rlo[i][j] << endl;
+
+   CPU_dbl2_factors_matmatmul
+      (nrows,nrows,nrows,QThi,QTlo,Qhi,Qlo,QTQhi,QTQlo);
+
+   double error = 0.0;
+
+   cout << "The matrix transpose(Q)*Q :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<nrows; j++)
+      {
+         cout << "Q'*Q[" << i << "][" << j << "] : "
+              << QTQhi[i][j] << "  " << QTQlo[i][j] << endl;
+         if(i == j)
+            error = error + fabs(QTQhi[i][j] - 1.0) + fabs(QTQlo[i][j]);
+         else
+            error = error + fabs(QTQhi[i][j]) + fabs(QTQlo[i][j]);
+      }
+
+   cout << scientific << setprecision(2);
+   cout << "Sum of errors : " << error << endl;
+
+   CPU_dbl2_factors_matmatmul
+      (nrows,nrows,ncols,QThi,QTlo,Ahi,Alo,QTAhi,QTAlo);
+
+   error = 0.0;
+
+   cout << scientific << setprecision(16);
+
+   cout << "The matrix transpose(Q)*A :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         cout << "Q'*A[" << i << "][" << j << "] : "
+              << QTAhi[i][j] << "  " << QTAlo[i][j] << endl;
+         error = error + fabs(Rhi[i][j] - QTAhi[i][j])
+                       + fabs(Rlo[i][j] - QTAlo[i][j]);
+      }
+
+   cout << scientific << setprecision(2);
+   cout << "Sum of errors : " << error << endl;
 }

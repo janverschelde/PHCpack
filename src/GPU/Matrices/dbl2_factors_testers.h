@@ -15,4 +15,10 @@ void test_factors_cmplx2_lufac ( void );
  *   Prompts for a dimension and tests the LU factorization
  *   on complex data. */
 
+void test_factors_real2_houseqr ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts for dimensions and tests the QR decomposition
+ *   with Householder matrices on real data. */
+
 #endif

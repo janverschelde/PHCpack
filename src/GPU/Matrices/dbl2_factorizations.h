@@ -254,4 +254,94 @@ void CPU_cmplx2_factors_lusolve
  *   ximhi    high doubles of the imaginary parts of the solution x;
  *   ximlo    low doubles of the imaginary parts of the solution x. */
 
+void CPU_dbl2_factors_house
+ ( int n, double *xhi, double *xlo, double *vhi, double *vlo,
+   double *betahi, double *betalo );
+/*
+ * DESCRIPTION :
+ *   Computes the Householder vector of an n-dimensional vector x.
+ *
+ * ON ENTRY :
+ *   n        dimension of the vector x;
+ *   xhi      the n high doubles of x;
+ *   xlo      the n low doubles of x;
+ *   vhi      space for n doubles;
+ *   vhi      space for n doubles.
+ *
+ * ON RETURN :
+ *   vhi      high doubles of the Householder vector;
+ *   vlo      low doubles of the Householder vector;
+ *   betahi   equals the high double of 2/(transpose(v)*v);
+ *   betalo   equals the high double of 2/(transpose(v)*v). */
+
+void CPU_dbl2_factors_leftRupdate
+ ( int nrows, int ncols, int k, double **Rhi, double **Rlo,
+   double *vhi, double *vlo, double betahi, double betalo );
+/*
+ * DESCRIPTION :
+ *   Applies the Householder matrix to R.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrix R;
+ *   ncols    number of columns in the matrix R;
+ *   k        current column index in R;
+ *   Rhi      high doubles of an nrows-by-ncols matrix;
+ *   Rlo      low doubles of an nrows-by-ncols matrix;
+ *   vhi      high doubles of the Householder vector;
+ *   vlo      low doubles of the Householder vector;
+ *   betahi   the betahi computed by CPU_dbl_house;
+ *   betalo   the betalo computed by CPU_dbl_house.
+ *
+ * ON RETURN :
+ *   Rhi      high doubles of the update with the Householder matrix;
+ *   Rlo      low doubles of the update with the Householder matrix. */
+
+void CPU_dbl2_factors_rightQupdate
+ ( int n, int k, double **Qhi, double **Qlo,
+   double *vhi, double *vlo, double betahi, double betalo );
+/*
+ * DESCRIPTION :
+ *   Applies the Householder matrix to Q.
+ *
+ * ON ENTRY :
+ *   n        dimension of the matrix Q;
+ *   k        current column index in Q;
+ *   Qhi      high doubles of an n-by-n matrix;
+ *   Qlo      low doubles of an n-by-n matrix;
+ *   vhi      high doubles of the Householder vector;
+ *   vlo      low doubles of the Householder vector;
+ *   betahi   the betahi computed by CPU_dbl_house;
+ *   betalo   the betalo computed by CPU_dbl_house.
+ *
+ * ON RETURN :
+ *   Qhi      high doubles of the update with the Householder matrix;
+ *   Qlo      low doubles of the update with the Householder matrix. */
+
+void CPU_dbl2_factors_houseqr
+ ( int nrows, int ncols, double **Ahi, double **Alo,
+   double **Qhi, double **Qlo, double **Rhi, double **Rlo );
+/*
+ * DESCRIPTION :
+ *   Applies Householder matrices to compute a QR decomposition of A.
+ *
+ * REQUIRED : nrows >= ncols.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of A;
+ *   ncols    number of columns of A;
+ *   Ahi      high doubles of an nrows-by-ncols matrix,
+ *            stored as nrows arrays of ncols numbers;
+ *   Alo      low doubles of an nrows-by-ncols matrix,
+ *            stored as nrows arrays of ncols numbers;
+ *   Qhi      space for an nrows-by-nrows matrix;
+ *   Qlo      space for an nrows-by-nrows matrix;
+ *   Rhi      space for an nrows-by-ncols matrix;
+ *   Rlo      space for an nrows-by-ncols matrix.
+ *
+ * ON RETURN :
+ *   Qhi      high doubles of an orthogonal matrix, transpose(Q)*A = R;
+ *   Qlo      low doubles of an orthogonal matrix, transpose(Q)*A = R;
+ *   Rhi      high doubles of the reduced upper triangular form of A;
+ *   Rlo      low doubles of the reduced upper triangular form of A. */
+
 #endif

@@ -1,6 +1,7 @@
 /* The file dbl2_factorizations.cpp defines functions specified in
  * the file dbl2_factorizations.h. */
 
+#include <cstdlib>
 #include <cmath>
 #include "double_double_functions.h"
 #include "dbl2_factorizations.h"
@@ -329,4 +330,173 @@ void CPU_cmplx2_factors_lusolve
       (dim,Arehi,Arelo,Aimhi,Aimlo,
            brehi,brelo,bimhi,bimlo,
            xrehi,xrelo,ximhi,ximlo);
+}
+
+void CPU_dbl2_factors_house
+ ( int n, double *xhi, double *xlo, double *vhi, double *vlo,
+   double *betahi, double *betalo )
+{
+   double sigmahi = 0.0;
+   double sigmalo = 0.0;
+   double muhi,v0p2hi,acchi;
+   double mulo,v0p2lo,acclo;
+   
+   vhi[0] = 1.0;
+   vlo[0] = 0.0;
+
+   for(int i=1; i<n; i++) 
+   {
+      // sigma = sigma + x[i]*x[i];
+      ddf_sqr(xhi[i],xlo[i],&acchi,&acclo);
+      ddf_inc(&sigmahi,&sigmalo,acchi,acclo);
+      vhi[i] = xhi[i];
+      vlo[i] = xlo[i];
+   }
+   if((sigmahi == 0.0) && (sigmalo == 0.0))
+   {
+      *betahi = 0.0;
+      *betalo = 0.0;
+   }
+   else
+   {
+      // mu = sqrt(x[0]*x[0] + sigma);
+      ddf_sqr(xhi[0],xlo[0],&acchi,&acclo);
+      ddf_inc(&acchi,&acclo,sigmahi,sigmalo);
+      ddf_sqrt(acchi,acclo,&muhi,&mulo);
+
+      if(xhi[0] <= 0.0)
+      {
+         // v[0] = x[0] - mu;
+         ddf_sub(xhi[0],xlo[0],muhi,mulo,&vhi[0],&vlo[0]);
+      }
+      else
+      {
+         // v[0] = -sigma/(x[0] + mu);
+         ddf_add(xhi[0],xlo[0],muhi,mulo,&acchi,&acclo);
+         ddf_div(sigmahi,sigmalo,acchi,acclo,&vhi[0],&vlo[0]);
+         ddf_minus(&vhi[0],&vlo[0]);
+      }
+      // v0p2 = v[0]*v[0];
+      ddf_sqr(vhi[0],vlo[0],&v0p2hi,&v0p2lo);
+      // *beta = 2.0*v0p2/(sigma + v0p2);
+      ddf_add(sigmahi,sigmalo,v0p2hi,v0p2lo,&acchi,&acclo);
+      ddf_div(v0p2hi,v0p2lo,acchi,acclo,betahi,betalo);
+      ddf_mlt_d(betahi,betalo,2.0);
+      
+      for(int i=1; i<n; i++) // v[i] = v[i]/v[0];
+      {
+         ddf_div(vhi[i],vlo[i],vhi[0],vlo[0],&acchi,&acclo);
+         vhi[i] = acchi;
+         vlo[i] = acclo;
+      }
+      vhi[0] = 1.0;
+      vlo[0] = 0.0;
+   }
+}
+
+void CPU_dbl2_factors_leftRupdate
+ ( int nrows, int ncols, int k, double **Rhi, double **Rlo,
+   double *vhi, double *vlo, double betahi, double betalo )
+{
+   double *whi = new double[ncols-k];
+   double *wlo = new double[ncols-k];
+   double acchi,acclo;
+
+   for(int j=k; j<ncols; j++)
+   {
+      whi[j-k] = 0.0;
+      wlo[j-k] = 0.0;
+
+      for(int i=k; i<nrows; i++) // w[j-k] = w[j-k] + R[i][j]*v[i-k];
+      {
+         ddf_mul(Rhi[i][j],Rlo[i][j],vhi[i-k],vlo[i-k],&acchi,&acclo);
+         ddf_inc(&whi[j-k],&wlo[j-k],acchi,acclo);
+      }
+      // w[j-k] = beta*w[j-k];
+      ddf_mul(betahi,betalo,whi[j-k],wlo[j-k],&acchi,&acclo);
+      whi[j-k] = acchi;
+      wlo[j-k] = acclo;
+   }
+   for(int i=k; i<nrows; i++)
+      for(int j=k; j<ncols; j++) // R[i][j] = R[i][j] - v[i-k]*w[j-k];
+      {
+         ddf_mul(vhi[i-k],vlo[i-k],whi[j-k],wlo[j-k],&acchi,&acclo);
+         ddf_dec(&Rhi[i][j],&Rlo[i][j],acchi,acclo);
+      }
+
+   free(whi); free(wlo);
+}
+
+void CPU_dbl2_factors_rightQupdate
+ ( int n, int k, double **Qhi, double **Qlo,
+   double *vhi, double *vlo, double betahi, double betalo )
+{
+   double *whi = new double[n];
+   double *wlo = new double[n];
+   double acchi,acclo;
+
+   for(int i=0; i<n; i++)
+   {
+      whi[i] = 0.0;
+      wlo[i] = 0.0;
+
+      for(int j=k; j<n; j++) // w[i] = w[i] + Q[i][j]*v[j-k];
+      {
+         ddf_mul(Qhi[i][j],Qlo[i][j],vhi[j-k],vlo[j-k],&acchi,&acclo);
+         ddf_inc(&whi[i],&wlo[i],acchi,acclo);
+      }
+      // w[i] = beta*w[i];
+      ddf_mul(betahi,betalo,whi[i],wlo[i],&acchi,&acclo);
+      whi[i] = acchi;
+      wlo[i] = acclo;
+   }
+   for(int i=0; i<n; i++)
+      for(int j=k; j<n; j++) // Q[i][j] = Q[i][j] - w[i]*v[j-k];
+      {
+         ddf_mul(whi[i],wlo[i],vhi[j-k],vlo[j-k],&acchi,&acclo);
+         ddf_dec(&Qhi[i][j],&Qlo[i][j],acchi,acclo);
+      }
+
+   free(whi); free(wlo);
+}
+
+void CPU_dbl2_factors_houseqr
+ ( int nrows, int ncols, double **Ahi, double **Alo,
+   double **Qhi, double **Qlo, double **Rhi, double **Rlo )
+{
+   double *xhi = new double[nrows];
+   double *xlo = new double[nrows];
+   double *vhi = new double[nrows];
+   double *vlo = new double[nrows];
+   double betahi,betalo;
+
+   for(int i=0; i<nrows; i++)   // Q = I, R = A
+   {
+      for(int j=0; j<nrows; j++)
+      {
+         Qhi[i][j] = 0.0;
+         Qlo[i][j] = 0.0;
+      }
+      Qhi[i][i] = 1.0;
+      Qlo[i][i] = 0.0;
+      for(int j=0; j<ncols; j++)
+      {
+         Rhi[i][j] = Ahi[i][j];
+         Rlo[i][j] = Alo[i][j];
+      }
+   }
+   for(int k=0; k<ncols; k++)
+   {
+      for(int i=k; i<nrows; i++)
+      {
+         xhi[i-k] = Rhi[i][k];
+         xlo[i-k] = Rlo[i][k];
+      }
+      CPU_dbl2_factors_house(nrows-k,xhi,xlo,vhi,vlo,&betahi,&betalo);
+      CPU_dbl2_factors_leftRupdate
+         (nrows,ncols,k,Rhi,Rlo,vhi,vlo,betahi,betalo);
+      CPU_dbl2_factors_rightQupdate(nrows,k,Qhi,Qlo,vhi,vlo,betahi,betalo);
+   }
+   free(xhi); free(vhi);
+   free(xlo); free(vlo);
 }
