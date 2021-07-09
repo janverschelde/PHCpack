@@ -86,6 +86,16 @@ double dbl2_Diagonal_Difference_Sum
  *   of the diagonal tiles of the matrices A and B.
  *   The number of tiles equals nbt and the size of each tile is szt. */
 
+double cmplx2_Diagonal_Difference_Sum
+ ( int nbt, int szt,
+   double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
+   double **Brehi, double **Brelo, double **Bimhi, double **Bimlo );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute value of all differences 
+ *   of the diagonal tiles of the matrices A and B.
+ *   The number of tiles equals nbt and the size of each tile is szt. */
+
 void dbl2_random_upper_factor ( int dim, double **Ahi, double **Alo );
 /*
  * DESCRIPTION :

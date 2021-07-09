@@ -450,6 +450,131 @@ __global__ void  dbl2_invert_tiles
    }
 }
 
+__global__ void  cmplx2_invert_tiles
+ ( int dim, double *Urehi, double *Urelo, double *Uimhi, double *Uimlo,
+   double *invUrehi, double *invUrelo, double *invUimhi, double *invUimlo )
+{
+   const int B = blockIdx.x;   // block index
+   const int k = threadIdx.x;  // thread k computes k-th column of inverse
+   const int offset = dim*dim*B; // offset in U and invU
+
+   __shared__ double Ucolrehi[dd_shmemsize];    // one column of U
+   __shared__ double Ucolrelo[dd_shmemsize];
+   __shared__ double Ucolimhi[dd_shmemsize]; 
+   __shared__ double Ucolimlo[dd_shmemsize];
+   __shared__ double invUrowrehi[dd_shmemsize];   // one row of invU
+   __shared__ double invUrowrelo[dd_shmemsize]; 
+   __shared__ double invUrowimhi[dd_shmemsize];
+   __shared__ double invUrowimlo[dd_shmemsize]; 
+
+   double rhsrehi,rhsrelo,rhsimhi,rhsimlo;
+   double xvalrehi,xvalrelo,xvalimhi,xvalimlo;
+   double acc1hi,acc1lo,acc2hi,acc2lo;
+   double acc3hi,acc3lo,acc4hi,acc4lo;
+   double invrehi,invrelo,invimhi,invimlo,denhi,denlo;
+
+   int colidx = offset + dim*(dim-1); // start with the last column
+
+   Ucolrehi[k] = Urehi[colidx+k];       // load the last column
+   Ucolrelo[k] = Urelo[colidx+k];
+   Ucolimhi[k] = Uimhi[colidx+k];
+   Ucolimlo[k] = Uimlo[colidx+k];
+   rhsrehi = ((double) int(k == dim-1));  // right hand side for each thread
+   rhsrelo = 0.0;
+   rhsimhi = 0.0;
+   rhsimlo = 0.0;
+   int rowidx = offset + (dim - 1)*dim + k; // row index in the inverse
+
+   // invUrow[k] = rhs/Ucol[k];       // last row of the inverse
+   ddg_mul(Ucolrehi[k],Ucolrelo[k],Ucolrehi[k],Ucolrelo[k],&denhi,&denlo);
+   ddg_mul(Ucolimhi[k],Ucolimlo[k],Ucolimhi[k],Ucolimlo[k],&acc1hi,&acc1lo);
+   ddg_inc(&denhi,&denlo,acc1hi,acc1lo);
+   ddg_div(Ucolrehi[k],Ucolrelo[k],denhi,denlo,&invrehi,&invrelo);
+   ddg_div(Ucolimhi[k],Ucolimlo[k],denhi,denlo,&invimhi,&invimlo);
+   ddg_minus(&invimhi,&invimlo);
+   ddg_mul(rhsrehi,rhsrelo,invrehi,invrelo,&acc1hi,&acc1lo);
+   ddg_mul(rhsimhi,rhsimlo,invimhi,invimlo,&acc2hi,&acc2lo);
+   ddg_mul(rhsimhi,rhsimlo,invrehi,invrelo,&acc3hi,&acc3lo);
+   ddg_mul(rhsrehi,rhsrelo,invimhi,invimlo,&acc4hi,&acc4lo);
+   ddg_dec(&acc1hi,&acc1lo,acc2hi,acc2lo);
+   invUrowrehi[k] = acc1hi;
+   invUrowrelo[k] = acc1lo;
+   ddg_inc(&acc3hi,&acc3lo,acc4hi,acc4lo);
+   invUrowimhi[k] = acc3hi;
+   invUrowimlo[k] = acc3lo;
+   invUrehi[rowidx] = invUrowrehi[k];     // store the last row into invU
+   invUrelo[rowidx] = invUrowrelo[k];
+   invUimhi[rowidx] = invUrowimhi[k];
+   invUimlo[rowidx] = invUrowimlo[k];
+
+   for(int i=dim-2; i>=0; i--)        // compute row with index i
+   {
+      rhsrehi = ((double) int(k == i));   // set rhs for i-th unit vector
+      rhsrelo = 0.0;
+      rhsimhi = 0.0;
+      rhsimlo = 0.0;
+
+      for(int j=i+1; j<dim; j++)
+      {
+         colidx = offset + dim*j;        // need column j of U
+         Ucolrehi[k] = Urehi[colidx+k];
+         Ucolrelo[k] = Urelo[colidx+k];
+         Ucolimhi[k] = Uimhi[colidx+k];
+         Ucolimlo[k] = Uimlo[colidx+k];
+
+         rowidx = offset + j*dim + k;       // need solution value
+         invUrowrehi[k] = invUrehi[rowidx]; // load invU row into invUrow
+         invUrowrelo[k] = invUrelo[rowidx];
+         invUrowimhi[k] = invUimhi[rowidx];
+         invUrowimlo[k] = invUimlo[rowidx];
+         xvalrehi = invUrowrehi[k];
+         xvalrelo = invUrowrelo[k];
+         xvalimhi = invUrowimhi[k];
+         xvalimlo = invUrowimlo[k];
+
+         __syncthreads();
+         // rhs = rhs - Ucol[i]*xval;    // update right hand side
+         ddg_mul(Ucolrehi[i],Ucolrelo[i],xvalrehi,xvalrelo,&acc1hi,&acc1lo);
+         ddg_mul(Ucolimhi[i],Ucolimlo[i],xvalimhi,xvalimlo,&acc2hi,&acc2lo);
+         ddg_mul(Ucolimhi[i],Ucolimlo[i],xvalrehi,xvalrelo,&acc3hi,&acc3lo);
+         ddg_mul(Ucolrehi[i],Ucolrelo[i],xvalimhi,xvalimlo,&acc4hi,&acc4lo);
+         ddg_dec(&rhsrehi,&rhsrelo,acc1hi,acc1lo);
+         ddg_inc(&rhsrehi,&rhsrelo,acc2hi,acc2lo);
+         ddg_dec(&rhsimhi,&rhsimlo,acc3hi,acc3lo);
+         ddg_dec(&rhsimhi,&rhsimlo,acc4hi,acc4lo);
+      }
+      colidx = offset + dim*i;        // need column i of U
+      Ucolrehi[k] = Urehi[colidx+k];
+      Ucolrelo[k] = Urelo[colidx+k];
+      Ucolimhi[k] = Uimhi[colidx+k];
+      Ucolimlo[k] = Uimlo[colidx+k];
+      rowidx = offset + i*dim + k;    // save in i-th row of inverse
+
+      __syncthreads();
+      // invUrow[k] = rhs/Ucol[i];
+      ddg_mul(Ucolrehi[i],Ucolrelo[i],Ucolrehi[i],Ucolrelo[i],&denhi,&denlo);
+      ddg_mul(Ucolimhi[i],Ucolimlo[i],Ucolimhi[i],Ucolimlo[i],&acc1hi,&acc1lo);
+      ddg_inc(&denhi,&denlo,acc1hi,acc1lo);
+      ddg_div(Ucolrehi[i],Ucolrelo[i],denhi,denlo,&invrehi,&invrelo);
+      ddg_div(Ucolimhi[i],Ucolimlo[i],denhi,denlo,&invimhi,&invimlo);
+      ddg_minus(&invimhi,&invimlo);
+      ddg_mul(rhsrehi,rhsrelo,invrehi,invrelo,&acc1hi,&acc1lo);
+      ddg_mul(rhsimhi,rhsimlo,invimhi,invimlo,&acc2hi,&acc2lo);
+      ddg_mul(rhsimhi,rhsimlo,invrehi,invrelo,&acc3hi,&acc3lo);
+      ddg_mul(rhsrehi,rhsrelo,invimhi,invimlo,&acc4hi,&acc4lo);
+      ddg_dec(&acc1hi,&acc1lo,acc2hi,acc2lo);
+      invUrowrehi[k] = acc1hi;
+      invUrowrelo[k] = acc1lo;
+      ddg_inc(&acc3hi,&acc3lo,acc4hi,acc4lo);
+      invUrowimhi[k] = acc3hi;
+      invUrowimlo[k] = acc3lo;
+      invUrehi[rowidx] = invUrowrehi[k];
+      invUrelo[rowidx] = invUrowrelo[k];
+      invUimhi[rowidx] = invUrowimhi[k];
+      invUimlo[rowidx] = invUrowimlo[k];
+   }
+}
+
 __global__ void dbl2_multiply_inverse
  ( int dim, int idx, double *invUhi, double *invUlo,
    double *whi, double *wlo )
@@ -478,6 +603,52 @@ __global__ void dbl2_multiply_inverse
    }
    whi[rhsoff+k] = resulthi;
    wlo[rhsoff+k] = resultlo;
+}
+
+__global__ void cmplx2_multiply_inverse
+ ( int dim, int idx,
+   double *invUrehi, double *invUrelo, double *invUimhi, double *invUimlo,
+   double *wrehi, double *wrelo, double *wimhi, double *wimlo )
+{
+   const int k = threadIdx.x;     // thread k computes k-th product
+   const int rhsoff = dim*idx;    // offset for the right hand size
+   const int offset = dim*rhsoff; // offset for diagonal tile
+
+   __shared__ double workrehi[dd_shmemsize];      // copy of w
+   __shared__ double workrelo[dd_shmemsize]; 
+   __shared__ double workimhi[dd_shmemsize];
+   __shared__ double workimlo[dd_shmemsize];
+
+   workrehi[k] = wrehi[rhsoff+k];
+   workrelo[k] = wrelo[rhsoff+k];
+   workimhi[k] = wimhi[rhsoff+k];
+   workimlo[k] = wimlo[rhsoff+k];
+
+   double resultrehi = 0.0; // each thread stores its product in result
+   double resultrelo = 0.0;
+   double resultimhi = 0.0;
+   double resultimlo = 0.0;
+   double coeffrehi,coeffrelo,coeffimhi,coeffimlo;
+   double acc1hi,acc1lo,acc2hi,acc2lo;
+
+   for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
+   {
+      coeffrehi = invUrehi[offset+k*dim+j]; // thread k does row k
+      coeffrelo = invUrelo[offset+k*dim+j];
+      coeffimhi = invUimhi[offset+k*dim+j];
+      coeffimlo = invUimlo[offset+k*dim+j];
+      // result = result + coeff*work[j];
+      ddg_mul(coeffrehi,coeffrelo,workrehi[j],workrelo[j],&acc1hi,&acc1lo);
+      ddg_mul(coeffimhi,coeffimlo,workimhi[j],workimlo[j],&acc2hi,&acc2lo);
+      ddg_inc(&resultrehi,&resultrelo,acc1hi,acc1lo);
+      ddg_dec(&resultrehi,&resultrelo,acc2hi,acc2lo);
+      ddg_mul(coeffimhi,coeffimlo,workrehi[j],workrelo[j],&acc1hi,&acc1lo);
+      ddg_mul(coeffrehi,coeffrelo,workimhi[j],workimlo[j],&acc2hi,&acc2lo);
+      ddg_inc(&resultimhi,&resultimlo,acc1hi,acc1lo);
+      ddg_inc(&resultimhi,&resultimlo,acc2hi,acc2lo);
+   }
+   wrehi[rhsoff+k] = resultrehi; wrelo[rhsoff+k] = resultrelo;
+   wimhi[rhsoff+k] = resultimhi; wimlo[rhsoff+k] = resultimlo;
 }
 
 __global__ void dbl2_back_substitute
@@ -513,6 +684,65 @@ __global__ void dbl2_back_substitute
    ddg_dec(&wrkhi[k],&wrklo[k],resulthi,resultlo);
    whi[B*dim+k] = wrkhi[k];
    wlo[B*dim+k] = wrklo[k];
+}
+
+__global__ void cmplx2_back_substitute
+ ( int dim, int idx,
+   double *Urehi, double *Urelo, double *Uimhi, double *Uimlo,
+   double *wrehi, double *wrelo, double *wimhi, double *wimlo )
+{
+   const int B = blockIdx.x;     // block index
+   const int k = threadIdx.x;    // thread k computes k-th product
+   const int offset = B*dim*dim; // numbers to skip
+
+   __shared__ double wrkrehi[dd_shmemsize];   // copy of w
+   __shared__ double wrkrelo[dd_shmemsize]; 
+   __shared__ double wrkimhi[dd_shmemsize];
+   __shared__ double wrkimlo[dd_shmemsize]; 
+   __shared__ double solrehi[dd_shmemsize];    // solution to update with
+   __shared__ double solrelo[dd_shmemsize];
+   __shared__ double solimhi[dd_shmemsize];
+   __shared__ double solimlo[dd_shmemsize];
+
+   wrkrehi[k] = wrehi[B*dim+k];    // block B updates B-th slice of w
+   wrkrelo[k] = wrelo[B*dim+k];
+   wrkimhi[k] = wimhi[B*dim+k];
+   wrkimlo[k] = wimlo[B*dim+k];
+   solrehi[k] = wrehi[idx*dim+k];  // solution that is back substituted
+   solrelo[k] = wrelo[idx*dim+k];
+   solimhi[k] = wimhi[idx*dim+k];
+   solimlo[k] = wimlo[idx*dim+k];
+
+   double resultrehi = 0.0; // each thread stores its product in result
+   double resultrelo = 0.0;
+   double resultimhi = 0.0;
+   double resultimlo = 0.0;
+   double coeffrehi,coeffrelo,coeffimhi,coeffimlo;
+   double acc1hi,acc1lo,acc2hi,acc2lo;
+
+   for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
+   {
+      coeffrehi = Urehi[offset+k*dim+j];
+      coeffrelo = Urelo[offset+k*dim+j];
+      coeffimhi = Uimhi[offset+k*dim+j];
+      coeffimlo = Uimlo[offset+k*dim+j];
+      // result = result + coeff*sol[j];
+      ddg_mul(coeffrehi,coeffrelo,solrehi[j],solrelo[j],&acc1hi,&acc1lo);
+      ddg_mul(coeffimhi,coeffimlo,solimhi[j],solimlo[j],&acc2hi,&acc2lo);
+      ddg_inc(&resultrehi,&resultrelo,acc1hi,acc1lo);
+      ddg_dec(&resultrehi,&resultrelo,acc2hi,acc2lo);
+      ddg_mul(coeffimhi,coeffimlo,solrehi[j],solrelo[j],&acc1hi,&acc1lo);
+      ddg_mul(coeffrehi,coeffrelo,solimhi[j],solimlo[j],&acc2hi,&acc2lo);
+      ddg_inc(&resultimhi,&resultimlo,acc1hi,acc1lo);
+      ddg_inc(&resultimhi,&resultimlo,acc2hi,acc2lo);
+   }
+   // wrk[k] = wrk[k] - result; // subtract product
+   ddg_dec(&wrkrehi[k],&wrkrelo[k],resultrehi,resultrelo);
+   ddg_dec(&wrkimhi[k],&wrkimlo[k],resultimhi,resultimlo);
+   wrehi[B*dim+k] = wrkrehi[k];
+   wrelo[B*dim+k] = wrkrelo[k];
+   wimhi[B*dim+k] = wrkimhi[k];
+   wimlo[B*dim+k] = wrkimlo[k];
 }
 
 void GPU_dbl2_upper_inverse
@@ -747,4 +977,161 @@ void GPU_dbl2_upper_tiled_solver
    }
    free(Dhi_h); free(invDhi_h); free(Ucolhi_h);
    free(Dlo_h); free(invDlo_h); free(Ucollo_h);
+}
+
+void GPU_cmplx2_upper_tiled_solver
+ ( int dim, int szt, int nbt,
+   double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
+   double *brehi, double *brelo, double *bimhi, double *bimlo,
+   double *xrehi, double *xrelo, double *ximhi, double *ximlo )
+{
+   const int nbr = nbt*szt*szt;       // number of doubles on diagonal tiles
+   double *Drehi_h = new double[nbr];    // the diagonal tiles on the host
+   double *Drelo_h = new double[nbr];    // low doubles of real parts
+   double *Dimhi_h = new double[nbr];    // high doubles of imaginary parts
+   double *Dimlo_h = new double[nbr];    // low doubles of imaginary parts
+   double *Drehi_d;                      // diagonal tiles on the device
+   double *Drelo_d;                      // low doubles of real parts
+   double *Dimhi_d;                      // high doubles of imaginary parts
+   double *Dimlo_d;                      // low doubles of imaginary parts
+   double *invDrehi_h = new double[nbr]; // inverse of tiles on host 
+   double *invDrelo_h = new double[nbr]; // low doubles of inverse tiles
+   double *invDimhi_h = new double[nbr]; // high doubles of imaginary parts
+   double *invDimlo_h = new double[nbr]; // low doubles of imaginary parts
+   double *invDrehi_d;                   // invDrehi_d ~ invDrehi_h on device
+   double *invDrelo_d;                   // invDrelo_d ~ invDrelo_h on device
+   double *invDimhi_d;                   // invDimhi_d ~ invDimhi_h on device
+   double *invDimlo_d;                   // invDimlo_d ~ invDimlo_h on device
+   int offset;
+   int ix = 0;
+
+   for(int k=0; k<nbt; k++) // copy columns of the k-th tile
+   {
+      offset = k*szt;
+      for(int j=0; j<szt; j++)
+         for(int i=0; i<szt; i++)
+         {
+            Drehi_h[ix]   = Urehi[offset+i][offset+j];
+            Drelo_h[ix]   = Urelo[offset+i][offset+j];
+            Dimhi_h[ix]   = Uimhi[offset+i][offset+j];
+            Dimlo_h[ix++] = Uimlo[offset+i][offset+j];
+         }
+   }
+   const size_t sznum = nbr*sizeof(double);
+   cudaMalloc((void**)&Drehi_d,sznum);
+   cudaMalloc((void**)&Drelo_d,sznum);
+   cudaMalloc((void**)&Dimhi_d,sznum);
+   cudaMalloc((void**)&Dimlo_d,sznum);
+   cudaMalloc((void**)&invDrehi_d,sznum);
+   cudaMalloc((void**)&invDrelo_d,sznum);
+   cudaMalloc((void**)&invDimhi_d,sznum);
+   cudaMalloc((void**)&invDimlo_d,sznum);
+   cudaMemcpy(Drehi_d,Drehi_h,sznum,cudaMemcpyHostToDevice);
+   cudaMemcpy(Drelo_d,Drelo_h,sznum,cudaMemcpyHostToDevice);
+   cudaMemcpy(Dimhi_d,Dimhi_h,sznum,cudaMemcpyHostToDevice);
+   cudaMemcpy(Dimlo_d,Dimlo_h,sznum,cudaMemcpyHostToDevice);
+
+   cmplx2_invert_tiles<<<nbt,szt>>>
+      (szt,   Drehi_d,   Drelo_d,   Dimhi_d,   Dimlo_d,
+           invDrehi_d,invDrelo_d,invDimhi_d,invDimlo_d);
+
+   double *rhsrehi_d;                    // right hand side on device
+   double *rhsrelo_d;
+   double *rhsimhi_d;
+   double *rhsimlo_d;
+   const size_t szrhs = dim*sizeof(double);
+   cudaMalloc((void**)&rhsrehi_d,szrhs);
+   cudaMalloc((void**)&rhsrelo_d,szrhs);
+   cudaMalloc((void**)&rhsimhi_d,szrhs);
+   cudaMalloc((void**)&rhsimlo_d,szrhs);
+   cudaMemcpy(rhsrehi_d,brehi,szrhs,cudaMemcpyHostToDevice);
+   cudaMemcpy(rhsrelo_d,brelo,szrhs,cudaMemcpyHostToDevice);
+   cudaMemcpy(rhsimhi_d,bimhi,szrhs,cudaMemcpyHostToDevice);
+   cudaMemcpy(rhsimlo_d,bimlo,szrhs,cudaMemcpyHostToDevice);
+
+   cmplx2_multiply_inverse<<<1,szt>>>
+      (szt,nbt-1,invDrehi_d,invDrelo_d,invDimhi_d,invDimlo_d,
+                  rhsrehi_d, rhsrelo_d, rhsimhi_d, rhsimlo_d);
+
+   int nbrUcol = (nbt-1)*szt*szt;             // #doubles in column of U
+   double *Ucolrehi_h = new double[nbrUcol];  // column of U on host
+   double *Ucolrelo_h = new double[nbrUcol];
+   double *Ucolimhi_h = new double[nbrUcol];
+   double *Ucolimlo_h = new double[nbrUcol];
+   double *Ucolrehi_d;
+   double *Ucolrelo_d;
+   double *Ucolimhi_d;
+   double *Ucolimlo_d;
+   const size_t szUcol = nbrUcol*sizeof(double);
+   cudaMalloc((void**)&Ucolrehi_d,szUcol);
+   cudaMalloc((void**)&Ucolrelo_d,szUcol);
+   cudaMalloc((void**)&Ucolimhi_d,szUcol);
+   cudaMalloc((void**)&Ucolimlo_d,szUcol);
+
+   int coloff,rowoff;
+
+   for(int k=nbt-1; k>0; k--)      // update with solution tile k
+   {
+      coloff = k*szt;      // column offset to update with solution tile k
+      ix = 0;
+      for(int L=0; L<k; L++)       // copy k tiles of U
+      {
+         rowoff = L*szt;           // row offset for update data
+         for(int i=0; i<szt; i++)
+            for(int j=0; j<szt; j++)
+            {
+               Ucolrehi_h[ix]   = Urehi[rowoff+i][coloff+j];
+               Ucolrelo_h[ix]   = Urelo[rowoff+i][coloff+j];
+               Ucolimhi_h[ix]   = Uimhi[rowoff+i][coloff+j];
+               Ucolimlo_h[ix++] = Uimlo[rowoff+i][coloff+j];
+            }
+      }
+      cudaMemcpy(Ucolrehi_d,Ucolrehi_h,nbrUcol*sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(Ucolrelo_d,Ucolrelo_h,nbrUcol*sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(Ucolimhi_d,Ucolimhi_h,nbrUcol*sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(Ucolimlo_d,Ucolimlo_h,nbrUcol*sizeof(double),
+                 cudaMemcpyHostToDevice);
+
+      cmplx2_back_substitute<<<k,szt>>>
+         (szt,k ,Ucolrehi_d,Ucolrelo_d,Ucolimhi_d,Ucolimlo_d,
+                  rhsrehi_d, rhsrelo_d, rhsimhi_d, rhsimlo_d);
+
+      // (k-1)-th solution tile is ready for inverse multiplication
+      cmplx2_multiply_inverse<<<1,szt>>>
+         (szt,k-1,invDrehi_d,invDrelo_d,invDimhi_d,invDimlo_d,
+                   rhsrehi_d, rhsrelo_d, rhsimhi_d, rhsimlo_d);
+
+      nbrUcol = nbrUcol - szt*szt; // one tile less used in update
+   }
+   cudaMemcpy(xrehi,rhsrehi_d,szrhs,cudaMemcpyDeviceToHost);
+   cudaMemcpy(xrelo,rhsrelo_d,szrhs,cudaMemcpyDeviceToHost);
+   cudaMemcpy(ximhi,rhsimhi_d,szrhs,cudaMemcpyDeviceToHost);
+   cudaMemcpy(ximlo,rhsimlo_d,szrhs,cudaMemcpyDeviceToHost);
+
+   // copy of invD_d is needed only for testing purposes
+   cudaMemcpy(invDrehi_h,invDrehi_d,sznum,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invDrelo_h,invDrelo_d,sznum,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invDimhi_h,invDimhi_d,sznum,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invDimlo_h,invDimlo_d,sznum,cudaMemcpyDeviceToHost);
+
+   ix = 0;
+   for(int k=0; k<nbt; k++) // copy rows of the inverse of the k-th tile
+   {
+      offset = k*szt;
+      for(int i=0; i<szt; i++)
+         for(int j=0; j<szt; j++)
+         {
+            Urehi[offset+i][offset+j] = invDrehi_h[ix];
+            Urelo[offset+i][offset+j] = invDrelo_h[ix];
+            Uimhi[offset+i][offset+j] = invDimhi_h[ix];
+            Uimlo[offset+i][offset+j] = invDimlo_h[ix++];
+         }
+   }
+   free(Drehi_h); free(invDrehi_h); free(Ucolrehi_h);
+   free(Drelo_h); free(invDrelo_h); free(Ucolrelo_h);
+   free(Dimhi_h); free(invDimhi_h); free(Ucolimhi_h);
+   free(Dimlo_h); free(invDimlo_h); free(Ucolimlo_h);
 }

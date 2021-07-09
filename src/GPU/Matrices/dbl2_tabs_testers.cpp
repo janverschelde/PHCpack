@@ -165,6 +165,31 @@ double dbl2_Diagonal_Difference_Sum
    return result;
 }
 
+double cmplx2_Diagonal_Difference_Sum
+ ( int nbt, int szt,
+   double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
+   double **Brehi, double **Brelo, double **Bimhi, double **Bimlo )
+{
+   double result = 0.0;
+   int offset;
+
+   for(int k=0; k<nbt; k++) // difference between k-th tiles
+   {
+      offset = k*szt;
+      for(int i=0; i<szt; i++)
+         for(int j=0; j<szt; j++)
+            result = result + abs(Arehi[offset+i][offset+j]
+                                - Brehi[offset+i][offset+j])
+                            + abs(Arelo[offset+i][offset+j]
+                                - Brelo[offset+i][offset+j])
+                            + abs(Aimhi[offset+i][offset+j]
+                                - Bimhi[offset+i][offset+j])
+                            + abs(Aimlo[offset+i][offset+j]
+                                - Bimlo[offset+i][offset+j]);
+   }
+   return result;
+}
+
 void dbl2_random_upper_factor ( int dim, double **Ahi, double **Alo )
 {
    random_dbl2_matrix(dim,dim,Ahi,Alo);
@@ -656,8 +681,10 @@ void test_real2_upper_tiling ( void )
               << xhi_d[i] << "  " << xlo_d[i] << endl;
    }
    cout << scientific << setprecision(2);
-   cout << "   Sum of errors : "
+   cout << "   Sum of CPU errors : "
         << dbl2_Difference_Sum(dim,solhi,sollo,xhi,xlo) << endl;
+   cout << "   Sum of GPU errors : "
+        << dbl2_Difference_Sum(dim,solhi,sollo,xhi_d,xlo_d) << endl;
 }
 
 void test_cmplx2_upper_tiling ( void )
@@ -808,24 +835,31 @@ void test_cmplx2_upper_tiling ( void )
                  << Aimhi[i][j] << "  " << Aimlo[i][j] << endl;
          }
    }
-/*
-   GPU_dbl2_upper_tiled_solver
-      (dim,sizetile,numtiles,Ahi_d,Alo_d,rhshi_d,rhslo_d,xhi_d,xlo_d);
+   GPU_cmplx2_upper_tiled_solver
+      (dim,sizetile,numtiles,Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
+       rhsrehi_d,rhsrelo_d,rhsimhi_d,rhsimlo_d,
+         xrehi_d,  xrelo_d,  ximhi_d,  ximlo_d);
 
    if(verbose > 0)
    {
       cout << "The matrix returned by the device :" << endl;
       for(int i=0; i<dim; i++)
          for(int j=0; j<dim; j++)
-            cout << "A[" << i << "][" << j << "] : "
-                 << Ahi_d[i][j] << "  " << Alo_d[i][j] << endl;
+         {
+            cout << "A[" << i << "][" << j << "]re : "
+                 << Arehi_d[i][j] << "  " << Arelo_d[i][j] << endl;
+            cout << "A[" << i << "][" << j << "]im : "
+                 << Aimhi_d[i][j] << "  " << Aimlo_d[i][j] << endl;
+         }
    }
 
    cout << scientific << setprecision(2);
    cout << "   Sum of errors on diagonal tiles : "
-        << dbl2_Diagonal_Difference_Sum(numtiles,sizetile,Ahi,Alo,Ahi_d,Alo_d)
+        << cmplx2_Diagonal_Difference_Sum
+             (numtiles,sizetile,Arehi,  Arelo,  Aimhi,  Aimlo,
+                                Arehi_d,Arelo_d,Aimhi_d,Aimlo_d)
         << endl;
- */
+
    if(verbose > 0)
    {
       cout << "CPU solution computed with tiling :" << endl;
@@ -837,16 +871,22 @@ void test_cmplx2_upper_tiling ( void )
          cout << "x[" << i << "]im : "
               << ximhi[i] << "  " << ximlo[i] << endl;
       }
- /*
       cout << "GPU solution computed with tiling :" << endl;
       for(int i=0; i<dim; i++)
-         cout << "x[" << i << "] : "
-              << xhi_d[i] << "  " << xlo_d[i] << endl;
-  */
+      {
+         cout << "x[" << i << "]re : "
+              << xrehi_d[i] << "  " << xrelo_d[i] << endl;
+         cout << "x[" << i << "]im : "
+              << ximhi_d[i] << "  " << ximlo_d[i] << endl;
+      }
    }
    cout << scientific << setprecision(2);
-   cout << "   Sum of errors : "
+   cout << "   Sum of CPU errors : "
         << cmplx2_Difference_Sum(dim,solrehi,solrelo,solimhi,solimlo,
                                        xrehi,  xrelo,  ximhi,  ximlo)
+        << endl;
+   cout << "   Sum of GPU errors : "
+        << cmplx2_Difference_Sum(dim,solrehi,solrelo,solimhi,solimlo,
+                                       xrehi_d,xrelo_d,ximhi_d,ximlo_d)
         << endl;
 }
