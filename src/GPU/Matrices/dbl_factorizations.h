@@ -185,4 +185,71 @@ void CPU_cmplx_factors_lusolve
  *   xre      real parts of the solution to A*x = b;
  *   xim      imaginary parts of the solution to A*x = b. */
 
+void CPU_dbl_factors_house ( int n, double *x, double *v, double *beta );
+/*
+ * DESCRIPTION :
+ *   Computes the Householder vector of an n-dimensional vector x.
+ *
+ * ON ENTRY :
+ *   n        dimension of the vector x;
+ *   x        n doubles;
+ *   v        space for n doubles.
+ *
+ * ON RETURN :
+ *   v        the Householder vector;
+ *   beta     equals 2/(transpose(v)*v). */
+
+void CPU_dbl_factors_leftRupdate
+ ( int nrows, int ncols, int k, double **R, double *v, double beta );
+/*
+ * DESCRIPTION :
+ *   Applies the Householder matrix to R.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrix R;
+ *   ncols    number of columns in the matrix R;
+ *   k        current column index in R;
+ *   R        an nrows-by-ncols matrix;
+ *   v        the Householder vector;
+ *   beta     the beta computed by CPU_dbl_house.
+ *
+ * ON RETURN :
+ *   R        update with the Householder matrix. */
+
+void CPU_dbl_factors_rightQupdate
+ ( int n, int k, double **Q, double *v, double beta );
+/*
+ * DESCRIPTION :
+ *   Applies the Householder matrix to Q.
+ *
+ * ON ENTRY :
+ *   n        dimension of the matrix Q;
+ *   k        current column index in Q;
+ *   Q        an n-by-n matrix;
+ *   v        the Householder vector;
+ *   beta     the beta computed by CPU_dbl_house.
+ *
+ * ON RETURN :
+ *   Q        update with the Householder matrix. */
+
+void CPU_dbl_factors_houseqr
+ ( int nrows, int ncols, double **A, double **Q, double **R );
+/*
+ * DESCRIPTION :
+ *   Applies Householder matrices to compute a QR decomposition of A.
+ *
+ * REQUIRED : nrows >= ncols.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of A;
+ *   ncols    number of columns of A;
+ *   A        an nrows-by-ncols matrix,
+ *            stored as nrows arrays of ncols numbers;
+ *   Q        space for an nrows-by-nrows matrix;
+ *   R        space for an nrows-by-ncols matrix.
+ *
+ * ON RETURN :
+ *   Q        an orthogonal matrix, transpose(Q)*A = R;
+ *   R        the reduced upper triangular form of A. */
+
 #endif

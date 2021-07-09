@@ -1,3 +1,6 @@
+Fri 9 Jul 2021 : extended dbl_factorizations with a Householder QR,
+  extended dbl_factors_testers and test_dbl_factors.
+
 Thu 8 Jul 2021 : fixed bug in dbl2_factorizations.cpp.
   In dbl_tabs_host.cpp, used the back substitution of dbl_factorizations,
   instead of the dbl_matrices_host; updated the makefiles.

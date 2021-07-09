@@ -1,6 +1,7 @@
 /* The file dbl_factorizations.cpp defines the functions specified in
  * the file dbl_factorizations.h. */
 
+#include <cstdlib>
 #include <cmath>
 #include "dbl_factorizations.h"
 
@@ -200,4 +201,92 @@ void CPU_cmplx_factors_lusolve
    }
    CPU_cmplx_factors_forward(dim,Are,Aim,xre,xim,bre,bim);
    CPU_cmplx_factors_backward(dim,Are,Aim,bre,bim,xre,xim);
+}
+
+void CPU_dbl_factors_house ( int n, double *x, double *v, double *beta )
+{
+   double sigma = 0.0;
+   double mu,v0p2;
+   
+   v[0] = 1.0;
+   for(int i=1; i<n; i++) 
+   {
+      sigma = sigma + x[i]*x[i];
+      v[i] = x[i];
+   }
+   if(sigma == 0.0)
+      *beta = 0.0;
+   else
+   {
+      mu = sqrt(x[0]*x[0] + sigma);
+      if(x[0] <= 0.0)
+         v[0] = x[0] - mu;
+      else
+         v[0] = -sigma/(x[0] + mu);
+
+      v0p2 = v[0]*v[0];
+      *beta = 2.0*v0p2/(sigma + v0p2);
+      
+      for(int i=1; i<n; i++) v[i] = v[i]/v[0];
+      v[0] = 1.0;
+   }
+}
+
+void CPU_dbl_factors_leftRupdate
+ ( int nrows, int ncols, int k, double **R, double *v, double beta )
+{
+   double *w = new double[ncols-k];
+
+   for(int j=k; j<ncols; j++)
+   {
+      w[j-k] = 0.0;
+      for(int i=k; i<nrows; i++) w[j-k] = w[j-k] + R[i][j]*v[i-k];
+      w[j-k] = beta*w[j-k];
+   }
+   for(int i=k; i<nrows; i++)
+      for(int j=k; j<ncols; j++)
+         R[i][j] = R[i][j] - v[i-k]*w[j-k];
+
+   free(w);
+}
+
+void CPU_dbl_factors_rightQupdate
+ ( int n, int k, double **Q, double *v, double beta )
+{
+   double *w = new double[n];
+
+   for(int i=0; i<n; i++)
+   {
+      w[i] = 0.0;
+      for(int j=k; j<n; j++) w[i] = w[i] + Q[i][j]*v[j-k];
+      w[i] = beta*w[i];
+   }
+   for(int i=0; i<n; i++)
+      for(int j=k; j<n; j++)
+         Q[i][j] = Q[i][j] - w[i]*v[j-k];
+
+   free(w);
+}
+
+void CPU_dbl_factors_houseqr
+ ( int nrows, int ncols, double **A, double **Q, double **R )
+{
+   double *x = new double[nrows];
+   double *v = new double[nrows];
+   double beta;
+
+   for(int i=0; i<nrows; i++)   // Q = I, R = A
+   {
+      for(int j=0; j<nrows; j++) Q[i][j] = 0.0;
+      Q[i][i] = 1.0;
+      for(int j=0; j<ncols; j++) R[i][j] = A[i][j];
+   }
+   for(int k=0; k<ncols; k++)
+   {
+      for(int i=k; i<nrows; i++) x[i-k] = R[i][k];
+      CPU_dbl_factors_house(nrows-k,x,v,&beta);
+      CPU_dbl_factors_leftRupdate(nrows,ncols,k,R,v,beta);
+      CPU_dbl_factors_rightQupdate(nrows,k,Q,v,beta);
+   }
+   free(x); free(v);
 }
