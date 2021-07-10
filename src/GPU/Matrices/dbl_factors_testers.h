@@ -21,4 +21,10 @@ void test_factors_real_houseqr ( void );
  *   Prompts for dimensions and tests the QR decomposition
  *   with Householder matrices on real data. */
 
+void test_factors_cmplx_houseqr ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts for dimensions and tests the QR decomposition
+ *   with Householder matrices on complex data. */
+
 #endif

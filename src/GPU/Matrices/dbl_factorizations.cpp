@@ -17,6 +17,28 @@ void CPU_dbl_factors_matmatmul
       }
 }
 
+void CPU_cmplx_factors_matmatmul
+ ( int rows, int dim, int cols, double **Are, double **Aim,
+   double **Bre, double **Bim, double **Cre, double **Cim )
+{
+   double zre,zim;
+
+   for(int i=0; i<rows; i++)
+      for(int j=0; j<cols; j++)
+      {
+         Cre[i][j] = 0.0;
+         Cim[i][j] = 0.0;
+
+         for(int k=0; k<dim; k++) // C[i][j] = C[i][j] + A[i][k]*B[k][j];
+         {
+            zre = Are[i][k]*Bre[k][j] - Aim[i][k]*Bim[k][j];
+            zim = Aim[i][k]*Bre[k][j] + Are[i][k]*Bim[k][j];
+            Cre[i][j] = Cre[i][j] + zre;
+            Cim[i][j] = Cim[i][j] + zim;
+         }
+      }
+}
+
 void CPU_dbl_factors_forward ( int dim, double **L, double *b, double *x )
 {
    x[0] = b[0];
@@ -232,6 +254,57 @@ void CPU_dbl_factors_house ( int n, double *x, double *v, double *beta )
    }
 }
 
+void CPU_cmplx_factors_house 
+( int n, double *xre, double *xim, double *vre, double *vim, double *beta )
+{
+   double sigma = 0.0;
+   double mu,sqrx0,x0rad,sqrv0,inv0re,inv0im,zre,zim;
+   
+   vre[0] = 1.0;
+   vim[0] = 0.0;
+
+   for(int i=1; i<n; i++) 
+   {
+      sigma = sigma + xre[i]*xre[i] + xim[i]*xim[i];
+      vre[i] = xre[i];
+      vim[i] = xim[i];
+   }
+   if(sigma == 0.0)
+      *beta = 0.0;
+   else
+   {
+      sqrx0 = xre[0]*xre[0] + xim[0]*xim[0];
+      x0rad = sqrt(sqrx0);
+      mu = sqrt(sqrx0 + sigma); // norm of the vector x
+
+      if(x0rad == 0.0)
+      {
+         vre[0] = -mu;
+         vim[0] = 0.0;
+      }
+      else // if(x0rad /= 0.0)   // xre[0]/xrad = cos(angle)
+      {                          // xim[0]/xrad = sin(angle)
+         mu = mu/x0rad;
+         vre[0] = xre[0] - mu*xre[0];
+         vim[0] = xim[0] - mu*xim[0];
+      }
+      sqrv0 = vre[0]*vre[0] + vim[0]*vim[0];
+      *beta = 2.0*sqrv0/(sigma + sqrv0);
+
+      inv0re = vre[0]/sqrv0;  // real part of 1/v[0]
+      inv0im = -vim[0]/sqrv0; // imaginary part of 1/v[0]
+
+      for(int i=1; i<n; i++)  // v[i] = v[i]/v[0]
+      {
+         zre = vre[i]*inv0re - vim[i]*inv0im;
+         zim = vim[i]*inv0re + vre[i]*inv0im;
+         vre[i] = zre;
+         vim[i] = zim;
+      }
+      vre[0] = 1.0; vim[0] = 0.0;
+   }
+}
+
 void CPU_dbl_factors_leftRupdate
  ( int nrows, int ncols, int k, double **R, double *v, double beta )
 {
@@ -248,6 +321,41 @@ void CPU_dbl_factors_leftRupdate
          R[i][j] = R[i][j] - v[i-k]*w[j-k];
 
    free(w);
+}
+
+void CPU_cmplx_factors_leftRupdate
+ ( int nrows, int ncols, int k, double **Rre, double **Rim,
+   double *vre, double *vim, double beta )
+{
+   double *wre = new double[ncols-k];
+   double *wim = new double[ncols-k];
+   double zre,zim;
+
+   for(int j=k; j<ncols; j++)
+   {
+      wre[j-k] = 0.0;
+      wim[j-k] = 0.0;
+
+      for(int i=k; i<nrows; i++) // w[j-k] = w[j-k] + R[i][j]*v[i-k];
+      {
+         zre =   Rre[i][j]*vre[i-k] + Rim[i][j]*vim[i-k]; // Hermitian of R
+         zim = - Rim[i][j]*vre[i-k] + Rre[i][j]*vim[i-k]; // flip Rim sign
+         wre[j-k] = wre[j-k] + zre;
+         wim[j-k] = wim[j-k] + zim;
+      }
+      wre[j-k] = beta*wre[j-k];
+      wim[j-k] = beta*wim[j-k];
+   }
+   for(int i=k; i<nrows; i++)
+      for(int j=k; j<ncols; j++) // R[i][j] = R[i][j] - v[i-k]*w[j-k];
+      {
+         zre = vre[i-k]*wre[j-k] + vim[i-k]*wim[j-k]; // Hermitian of w
+         zim = vim[i-k]*wre[j-k] - vre[i-k]*wim[j-k]; // flip wim sign
+         Rre[i][j] = Rre[i][j] - zre;
+         Rim[i][j] = Rim[i][j] - zim;
+      }
+
+   free(wre); free(wim);
 }
 
 void CPU_dbl_factors_rightQupdate
@@ -267,6 +375,42 @@ void CPU_dbl_factors_rightQupdate
 
    free(w);
 }
+
+void CPU_cmplx_factors_rightQupdate
+ ( int n, int k, double **Qre, double **Qim,
+   double *vre, double *vim, double beta )
+{
+   double *wre = new double[n];
+   double *wim = new double[n];
+   double zre,zim;
+
+   for(int i=0; i<n; i++)
+   {
+      wre[i] = 0.0;
+      wim[i] = 0.0;
+
+      for(int j=k; j<n; j++) // w[i] = w[i] + Q[i][j]*v[j-k];
+      {
+         zre = Qre[i][j]*vre[j-k] - Qim[i][j]*vim[j-k];
+         zim = Qim[i][j]*vre[j-k] + Qre[i][j]*vim[j-k];
+         wre[i] = wre[i] + zre;
+         wim[i] = wim[i] + zim;
+      }
+      wre[i] = beta*wre[i];
+      wim[i] = beta*wim[i];
+   }
+   for(int i=0; i<n; i++)
+      for(int j=k; j<n; j++) // Q[i][j] = Q[i][j] - w[i]*v[j-k];
+      {
+         zre = wre[i]*vre[j-k] + wim[i]*vim[j-k]; // Hermitian tranpose
+         zim = wim[i]*vre[j-k] - wre[i]*vim[j-k]; // flip sign of vim
+         Qre[i][j] = Qre[i][j] - zre;
+         Qim[i][j] = Qim[i][j] - zim;
+      }
+
+   free(wre); free(wim);
+}
+
 
 void CPU_dbl_factors_houseqr
  ( int nrows, int ncols, double **A, double **Q, double **R )
@@ -289,4 +433,43 @@ void CPU_dbl_factors_houseqr
       CPU_dbl_factors_rightQupdate(nrows,k,Q,v,beta);
    }
    free(x); free(v);
+}
+
+void CPU_cmplx_factors_houseqr
+ ( int nrows, int ncols, double **Are, double **Aim,
+   double **Qre, double **Qim, double **Rre, double **Rim )
+{
+   double *xre = new double[nrows];
+   double *xim = new double[nrows];
+   double *vre = new double[nrows];
+   double *vim = new double[nrows];
+   double beta;
+
+   for(int i=0; i<nrows; i++)   // Q = I, R = A
+   {
+      for(int j=0; j<nrows; j++)
+      {
+         Qre[i][j] = 0.0;
+         Qim[i][j] = 0.0;
+      }
+      Qre[i][i] = 1.0;
+
+      for(int j=0; j<ncols; j++)
+      {
+         Rre[i][j] = Are[i][j];
+         Rim[i][j] = Aim[i][j];
+      }
+   }
+   for(int k=0; k<ncols; k++)
+   {
+      for(int i=k; i<nrows; i++)
+      {
+         xre[i-k] = Rre[i][k];
+         xim[i-k] = Rim[i][k];
+      }
+      CPU_cmplx_factors_house(nrows-k,xre,xim,vre,vim,&beta);
+      CPU_cmplx_factors_leftRupdate(nrows,ncols,k,Rre,Rim,vre,vim,beta);
+      CPU_cmplx_factors_rightQupdate(nrows,k,Qre,Qim,vre,vim,beta);
+   }
+   free(xre); free(xim); free(vre); free(vim);
 }

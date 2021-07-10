@@ -21,6 +21,28 @@ void CPU_dbl_factors_matmatmul
  * ON RETURN :
  *   C        product of A with B. */
 
+void CPU_cmplx_factors_matmatmul
+ ( int rows, int dim, int cols, double **Are, double **Aim,
+   double **Bre, double **Bim, double **Cre, double **Cim );
+/*
+ * DESCRIPTION :
+ *   Computes the product C of the matrix A with B on complex data.
+ *
+ * ON ENTRY :
+ *   rows     the number of rows in the matrices A and C;
+ *   dim      the number of columns in A and rows in B;
+ *   cols     the number of columns in the matrices B and C;
+ *   Are      real parts of a matrix of dimensions rows and dim;
+ *   Aim      imaginary parts of a matrix of dimensions rows and dim;
+ *   Bre      real parts of a matrix of dimensions dim and cols;
+ *   Bim      imaginary parts of a  matrix of dimensions dim and cols;
+ *   Cre      space allocated for a rows-by-cols matrix;
+ *   Cim      space allocated for a rows-by-cols matrix.
+ *
+ * ON RETURN :
+ *   Cre      real parts of the product of A with B;
+ *   Cim      imaginary parts of product of A with B. */
+
 void CPU_dbl_factors_forward ( int dim, double **L, double *b, double *x );
 /*
  * DESCRIPTION :
@@ -199,6 +221,24 @@ void CPU_dbl_factors_house ( int n, double *x, double *v, double *beta );
  *   v        the Householder vector;
  *   beta     equals 2/(transpose(v)*v). */
 
+void CPU_cmplx_factors_house 
+( int n, double *xre, double *xim, double *vre, double *vim, double *beta );
+/*
+ * DESCRIPTION :
+ *   Computes the Householder vector of an n-dimensional vector x.
+ *
+ * ON ENTRY :
+ *   n        dimension of the vector x;
+ *   xre      real parts of the vector x;
+ *   xim      imaginary parts of the vector x;
+ *   vre      space for n doubles;
+ *   vim      space for n doubles.
+ *
+ * ON RETURN :
+ *   vre      real parts of the Householder vector;
+ *   vim      imaginary parts of the Householder vector;
+ *   beta     equals 2/(transpose(v)*v). */
+
 void CPU_dbl_factors_leftRupdate
  ( int nrows, int ncols, int k, double **R, double *v, double beta );
 /*
@@ -216,6 +256,27 @@ void CPU_dbl_factors_leftRupdate
  * ON RETURN :
  *   R        update with the Householder matrix. */
 
+void CPU_cmplx_factors_leftRupdate
+ ( int nrows, int ncols, int k, double **Rre, double **Rim,
+   double *vre, double *vim, double beta );
+/*
+ * DESCRIPTION :
+ *   Applies the Householder matrix to R.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrix R;
+ *   ncols    number of columns in the matrix R;
+ *   k        current column index in R;
+ *   Rre      real parts of an nrows-by-ncols matrix;
+ *   Rim      imaginary parts of an nrows-by-ncols matrix;
+ *   vre      real parts of the Householder vector;
+ *   vim      imaginary parts of the Householder vector;
+ *   beta     the beta computed by CPU_dbl_house.
+ *
+ * ON RETURN :
+ *   Rre      real parts of the update with the Householder matrix;
+ *   Rim      imaginary parts of the update with the Householder matrix. */
+
 void CPU_dbl_factors_rightQupdate
  ( int n, int k, double **Q, double *v, double beta );
 /*
@@ -231,6 +292,26 @@ void CPU_dbl_factors_rightQupdate
  *
  * ON RETURN :
  *   Q        update with the Householder matrix. */
+
+void CPU_cmplx_factors_rightQupdate
+ ( int n, int k, double **Qre, double **Qim,
+   double *vre, double *vim, double beta );
+/*
+ * DESCRIPTION :
+ *   Applies the Householder matrix to Q.
+ *
+ * ON ENTRY :
+ *   n        dimension of the matrix Q;
+ *   k        current column index in Q;
+ *   Qre      real parts of an n-by-n matrix;
+ *   Qim      imaginary parts of an n-by-n matrix;
+ *   vre      real parts of the Householder vector;
+ *   vim      imaginary parts the Householder vector;
+ *   beta     the beta computed by CPU_dbl_house.
+ *
+ * ON RETURN :
+ *   Qre      real parts of the update with the Householder matrix;
+ *   Qim      imaginary parts of the update with the Householder matrix. */
 
 void CPU_dbl_factors_houseqr
  ( int nrows, int ncols, double **A, double **Q, double **R );
@@ -251,5 +332,32 @@ void CPU_dbl_factors_houseqr
  * ON RETURN :
  *   Q        an orthogonal matrix, transpose(Q)*A = R;
  *   R        the reduced upper triangular form of A. */
+
+void CPU_cmplx_factors_houseqr
+ ( int nrows, int ncols, double **Are, double **Aim,
+   double **Qre, double **Qim, double **Rre, double **Rim );
+/*
+ * DESCRIPTION :
+ *   Applies Householder matrices to compute a QR decomposition of A.
+ *
+ * REQUIRED : nrows >= ncols.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of A;
+ *   ncols    number of columns of A;
+ *   Are      real parts of an nrows-by-ncols matrix,
+ *            stored as nrows arrays of ncols numbers;
+ *   Aim      imaginary parts of an nrows-by-ncols matrix,
+ *            stored as nrows arrays of ncols numbers;
+ *   Qre      space for an nrows-by-nrows matrix;
+ *   Qim      space for an nrows-by-nrows matrix;
+ *   Rre      space for an nrows-by-ncols matrix;
+ *   Rim      space for an nrows-by-ncols matrix.
+ *
+ * ON RETURN :
+ *   Qre      real parts of an orthogonal matrix, transpose(Q)*A = R;
+ *   Qim      imaginary parts of an orthogonal matrix, transpose(Q)*A = R;
+ *   Rre      real parts of the reduced upper triangular form of A;
+ *   Rim      imaginary parts of the reduced upper triangular form of A. */
 
 #endif

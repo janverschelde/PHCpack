@@ -203,3 +203,112 @@ void test_factors_real_houseqr ( void )
    cout << scientific << setprecision(2);
    cout << "Sum of errors : " << error << endl;
 }
+
+void test_factors_cmplx_houseqr ( void )
+{
+   cout << "Give the number of rows : ";
+   int nrows; cin >> nrows;
+
+   cout << "Give the number of columns : ";
+   int ncols; cin >> ncols;
+
+   cout << "Generating a random " << nrows
+        << "-by-" << ncols << " matrix ..." << endl;
+
+   double **Are = new double*[nrows];
+   double **Aim = new double*[nrows];
+   double **Qre = new double*[nrows];
+   double **Qim = new double*[nrows];
+   double **QHre = new double*[nrows];
+   double **QHim = new double*[nrows];
+   double **QHQre = new double*[nrows];
+   double **QHQim = new double*[nrows];
+   double **Rre = new double*[nrows];
+   double **Rim = new double*[nrows];
+   double **QHAre = new double*[nrows];
+   double **QHAim = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Are[i] = new double[ncols];
+      Aim[i] = new double[ncols];
+      Qre[i] = new double[nrows];
+      Qim[i] = new double[nrows];
+      QHre[i] = new double[nrows];
+      QHim[i] = new double[nrows];
+      QHQre[i] = new double[nrows];
+      QHQim[i] = new double[nrows];
+      Rre[i] = new double[ncols];
+      Rim[i] = new double[ncols];
+      QHAre[i] = new double[ncols];
+      QHAim[i] = new double[ncols];
+   }
+
+   random_cmplx_matrix(nrows,ncols,Are,Aim);
+
+   cout << scientific << setprecision(16);
+
+   cout << "A random matrix :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+         cout << "A[" << i << "][" << j << "] : "
+              << Are[i][j] << "  " << Aim[i][j] << endl;
+
+   CPU_cmplx_factors_houseqr(nrows,ncols,Are,Aim,Qre,Qim,Rre,Rim);
+
+   cout << "The matrix Q :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<nrows; j++)
+      {
+         cout << "Q[" << i << "][" << j << "] : "
+              << Qre[i][j] << "  " << Qim[i][j] << endl;
+         QHre[j][i] = Qre[i][j];
+         QHim[j][i] = -Qim[i][j]; // Hermitian transpose
+      }
+
+   cout << "The matrix R :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+         cout << "R[" << i << "][" << j << "] : "
+              << Rre[i][j] << "  " << Rim[i][j] << endl;
+
+   CPU_cmplx_factors_matmatmul
+      (nrows,nrows,nrows,QHre,QHim,Qre,Qim,QHQre,QHQim);
+
+   double error = 0.0;
+
+   cout << "The matrix transpose(Q)*Q :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<nrows; j++)
+      {
+         cout << "Q^H*Q[" << i << "][" << j << "] : "
+              << QHQre[i][j] << "  " << QHQim[i][j] << endl;
+         if(i == j)
+            error = error + abs(QHQre[i][j] - 1.0) + abs(QHQim[i][j]);
+         else
+            error = error + abs(QHQre[i][j]) + abs(QHQim[i][j]);
+      }
+
+   cout << scientific << setprecision(2);
+   cout << "Sum of errors : " << error << endl;
+
+   CPU_cmplx_factors_matmatmul
+      (nrows,nrows,ncols,QHre,QHim,Are,Aim,QHAre,QHAim);
+
+   error = 0.0;
+
+   cout << scientific << setprecision(16);
+
+   cout << "The matrix transpose(Q)*A :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         cout << "Q^H*A[" << i << "][" << j << "] : "
+              << QHAre[i][j] << "  " << QHAim[i][j] << endl;
+         error = error + abs(Rre[i][j] - QHAre[i][j])
+                       + abs(Rim[i][j] - QHAim[i][j]);
+      }
+
+   cout << scientific << setprecision(2);
+   cout << "Sum of errors : " << error << endl;
+}
