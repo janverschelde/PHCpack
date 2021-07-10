@@ -222,7 +222,7 @@ void CPU_dbl_factors_house ( int n, double *x, double *v, double *beta );
  *   beta     equals 2/(transpose(v)*v). */
 
 void CPU_cmplx_factors_house 
-( int n, double *xre, double *xim, double *vre, double *vim, double *beta );
+ ( int n, double *xre, double *xim, double *vre, double *vim, double *beta );
 /*
  * DESCRIPTION :
  *   Computes the Householder vector of an n-dimensional vector x.

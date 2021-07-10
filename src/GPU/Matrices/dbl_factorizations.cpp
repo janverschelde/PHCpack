@@ -255,7 +255,7 @@ void CPU_dbl_factors_house ( int n, double *x, double *v, double *beta )
 }
 
 void CPU_cmplx_factors_house 
-( int n, double *xre, double *xim, double *vre, double *vim, double *beta )
+ ( int n, double *xre, double *xim, double *vre, double *vim, double *beta )
 {
    double sigma = 0.0;
    double mu,sqrx0,x0rad,sqrv0,inv0re,inv0im,zre,zim;
@@ -402,7 +402,7 @@ void CPU_cmplx_factors_rightQupdate
    for(int i=0; i<n; i++)
       for(int j=k; j<n; j++) // Q[i][j] = Q[i][j] - w[i]*v[j-k];
       {
-         zre = wre[i]*vre[j-k] + wim[i]*vim[j-k]; // Hermitian tranpose
+         zre = wre[i]*vre[j-k] + wim[i]*vim[j-k]; // Hermitian transpose
          zim = wim[i]*vre[j-k] - wre[i]*vim[j-k]; // flip sign of vim
          Qre[i][j] = Qre[i][j] - zre;
          Qim[i][j] = Qim[i][j] - zim;
@@ -410,7 +410,6 @@ void CPU_cmplx_factors_rightQupdate
 
    free(wre); free(wim);
 }
-
 
 void CPU_dbl_factors_houseqr
  ( int nrows, int ncols, double **A, double **Q, double **R )
