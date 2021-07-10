@@ -222,7 +222,7 @@ numfig = True
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'phcpack', u'PHCpack Documentation',
+    ('userman', 'phc', u'PHCpack Documentation',
      [u'Jan Verschelde'], 1)
 ]
 
