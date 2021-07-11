@@ -16,6 +16,9 @@ void test_factors_real2_lufac ( void )
    cout << "Give the dimension : ";
    int dim; cin >> dim;
 
+   cout << "Give the verbose level (1 to see all numbers) : ";
+   int verbose; cin >> verbose;
+
    cout << "Generating a random matrix of dimension " << dim
         << " ..." << endl;
 
@@ -28,14 +31,16 @@ void test_factors_real2_lufac ( void )
    }
    random_dbl2_matrix(dim,dim,Ahi,Alo);
 
-   cout << scientific << setprecision(16);
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
 
-   cout << "A random matrix :" << endl;
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<dim; j++)
-         cout << "A[" << i << "][" << j << "] : "
-              << Ahi[i][j] << "  " << Alo[i][j] << endl;
-
+      cout << "A random matrix :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "A[" << i << "][" << j << "] : "
+                 << Ahi[i][j] << "  " << Alo[i][j] << endl;
+   }
    double *solhi = new double[dim];
    double *sollo = new double[dim];
    for(int i=0; i<dim; i++)
@@ -57,27 +62,41 @@ void test_factors_real2_lufac ( void )
          ddf_inc(&rhshi[i],&rhslo[i],acchi,acclo);
       }
    }
-   cout << "The sums of the columns :" << endl;
-   for(int i=0; i<dim; i++)
-      cout << "b[" << i << "] : "
-           << rhshi[i] << "  " << rhslo[i] << endl;
-
+   if(verbose > 0)
+   {
+      cout << "The sums of the columns :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << "b[" << i << "] : "
+              << rhshi[i] << "  " << rhslo[i] << endl;
+   }
    double *xhi = new double[dim];
    double *xlo = new double[dim];
    int *pivots = new int[dim];
 
    CPU_dbl2_factors_lusolve(dim,Ahi,Alo,pivots,rhshi,rhslo,xhi,xlo);
 
-   cout << "The computed solution :" << endl;
+   if(verbose > 0)
+   {
+      cout << "The computed solution :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << "x[" << i << "] : "
+              << xhi[i] << "  " << xlo[i] << endl;
+   }
+   double error = 0.0;
    for(int i=0; i<dim; i++)
-      cout << "x[" << i << "] : "
-           << xhi[i] << "  " << xlo[i] << endl;
+      error = error + abs(xhi[i] - 1.0) + abs(xlo[i]);
+
+   cout << scientific << setprecision(2);
+   cout << "Sum of errors : " << error << endl;
 }
 
 void test_factors_cmplx2_lufac ( void )
 {
    cout << "Give the dimension : ";
    int dim; cin >> dim;
+
+   cout << "Give the verbose level (1 to see all numbers) : ";
+   int verbose; cin >> verbose;
 
    cout << "Generating a random matrix of dimension " << dim
         << " ..." << endl;
@@ -96,18 +115,20 @@ void test_factors_cmplx2_lufac ( void )
    }
    random_cmplx2_matrix(dim,dim,Arehi,Arelo,Aimhi,Aimlo);
 
-   cout << scientific << setprecision(16);
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
 
-   cout << "A random matrix :" << endl;
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<dim; j++)
-      {
-         cout << "A[" << i << "][" << j << "]re : "
-              << Arehi[i][j] << "  " << Arelo[i][j] << endl;
-         cout << "A[" << i << "][" << j << "]im : "
-              << Aimhi[i][j] << "  " << Aimlo[i][j] << endl;
-      }
-
+      cout << "A random matrix :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+            cout << "A[" << i << "][" << j << "]re : "
+                 << Arehi[i][j] << "  " << Arelo[i][j] << endl;
+            cout << "A[" << i << "][" << j << "]im : "
+                 << Aimhi[i][j] << "  " << Aimlo[i][j] << endl;
+         }
+   }
    double *solrehi = new double[dim];
    double *solrelo = new double[dim];
    double *solimhi = new double[dim];
@@ -146,13 +167,16 @@ void test_factors_cmplx2_lufac ( void )
          ddf_inc(&rhsimhi[i],&rhsimlo[i],acc4hi,acc4lo);
       }
    }
-   cout << "The sums of the columns :" << endl;
-   for(int i=0; i<dim; i++)
+   if(verbose > 0)
    {
-      cout << "b[" << i << "]re : "
-           << rhsrehi[i] << "  " << rhsrelo[i] << endl;
-      cout << "b[" << i << "]im : "
-           << rhsimhi[i] << "  " << rhsimlo[i] << endl;
+      cout << "The sums of the columns :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "b[" << i << "]re : "
+              << rhsrehi[i] << "  " << rhsrelo[i] << endl;
+         cout << "b[" << i << "]im : "
+              << rhsimhi[i] << "  " << rhsimlo[i] << endl;
+      }
    }
    double *xrehi = new double[dim];
    double *xrelo = new double[dim];
@@ -164,14 +188,24 @@ void test_factors_cmplx2_lufac ( void )
       (dim,Arehi,Arelo,Aimhi,Aimlo,pivots,
        rhsrehi,rhsrelo,rhsimhi,rhsimlo,xrehi,xrelo,ximhi,ximlo);
 
-   cout << "The computed solution :" << endl;
-   for(int i=0; i<dim; i++)
+   if(verbose > 0)
    {
-      cout << "x[" << i << "]re : "
-           << xrehi[i] << "  " << xrelo[i] << endl;
-      cout << "x[" << i << "]im : "
-           << ximhi[i] << "  " << ximlo[i] << endl;
+      cout << "The computed solution :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "x[" << i << "]re : "
+              << xrehi[i] << "  " << xrelo[i] << endl;
+         cout << "x[" << i << "]im : "
+              << ximhi[i] << "  " << ximlo[i] << endl;
+      }
    }
+   double error = 0.0;
+   for(int i=0; i<dim; i++)
+      error = error + abs(xrehi[i] - 1.0) + abs(xrelo[i])
+                    + abs(ximhi[i]) + abs(ximlo[i]);
+
+   cout << scientific << setprecision(2);
+   cout << "Sum of errors : " << error << endl;
 }
 
 void test_factors_real2_houseqr ( void )
@@ -181,6 +215,9 @@ void test_factors_real2_houseqr ( void )
 
    cout << "Give the number of columns : ";
    int ncols; cin >> ncols;
+
+   cout << "Give the verbose level (1 to see all numbers) : ";
+   int verbose; cin >> verbose;
 
    cout << "Generating a random " << nrows
         << "-by-" << ncols << " matrix ..." << endl;
@@ -216,43 +253,49 @@ void test_factors_real2_houseqr ( void )
 
    random_dbl2_matrix(nrows,ncols,Ahi,Alo);
 
-   cout << scientific << setprecision(16);
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
 
-   cout << "A random matrix :" << endl;
-   for(int i=0; i<nrows; i++)
-      for(int j=0; j<ncols; j++)
-         cout << "A[" << i << "][" << j << "] : "
-              << Ahi[i][j] << "  " << Alo[i][j] << endl;
-
+      cout << "A random matrix :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "A[" << i << "][" << j << "] : "
+                 << Ahi[i][j] << "  " << Alo[i][j] << endl;
+   }
    CPU_dbl2_factors_houseqr(nrows,ncols,Ahi,Alo,Qhi,Qlo,Rhi,Rlo);
 
-   cout << "The matrix Q :" << endl;
+   if(verbose > 0) cout << "The matrix Q :" << endl;
    for(int i=0; i<nrows; i++)
       for(int j=0; j<nrows; j++)
       {
-         cout << "Q[" << i << "][" << j << "] : "
-              << Qhi[i][j] << "  " << Qlo[i][j] << endl;
+         if(verbose > 0)
+            cout << "Q[" << i << "][" << j << "] : "
+                 << Qhi[i][j] << "  " << Qlo[i][j] << endl;
          QThi[j][i] = Qhi[i][j];
          QTlo[j][i] = Qlo[i][j];
       }
 
-   cout << "The matrix R :" << endl;
-   for(int i=0; i<nrows; i++)
-      for(int j=0; j<ncols; j++)
-         cout << "R[" << i << "][" << j << "] : "
-              << Rhi[i][j] << "  " << Rlo[i][j] << endl;
-
+   if(verbose > 0)
+   {
+      cout << "The matrix R :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "R[" << i << "][" << j << "] : "
+                 << Rhi[i][j] << "  " << Rlo[i][j] << endl;
+   }
    CPU_dbl2_factors_matmatmul
       (nrows,nrows,nrows,QThi,QTlo,Qhi,Qlo,QTQhi,QTQlo);
 
    double error = 0.0;
 
-   cout << "The matrix transpose(Q)*Q :" << endl;
+   if(verbose > 0) cout << "The matrix transpose(Q)*Q :" << endl;
    for(int i=0; i<nrows; i++)
       for(int j=0; j<nrows; j++)
       {
-         cout << "Q'*Q[" << i << "][" << j << "] : "
-              << QTQhi[i][j] << "  " << QTQlo[i][j] << endl;
+         if(verbose > 0)
+            cout << "Q'*Q[" << i << "][" << j << "] : "
+                 << QTQhi[i][j] << "  " << QTQlo[i][j] << endl;
          if(i == j)
             error = error + fabs(QTQhi[i][j] - 1.0) + fabs(QTQlo[i][j]);
          else
@@ -260,7 +303,7 @@ void test_factors_real2_houseqr ( void )
       }
 
    cout << scientific << setprecision(2);
-   cout << "Sum of errors : " << error << endl;
+   cout << "Sum of errors on |Q^T*Q - I| : " << error << endl;
 
    CPU_dbl2_factors_matmatmul
       (nrows,nrows,ncols,QThi,QTlo,Ahi,Alo,QTAhi,QTAlo);
@@ -269,18 +312,19 @@ void test_factors_real2_houseqr ( void )
 
    cout << scientific << setprecision(16);
 
-   cout << "The matrix transpose(Q)*A :" << endl;
+   if(verbose > 0) cout << "The matrix transpose(Q)*A :" << endl;
    for(int i=0; i<nrows; i++)
       for(int j=0; j<ncols; j++)
       {
-         cout << "Q'*A[" << i << "][" << j << "] : "
-              << QTAhi[i][j] << "  " << QTAlo[i][j] << endl;
+         if(verbose > 0)
+            cout << "Q'*A[" << i << "][" << j << "] : "
+                 << QTAhi[i][j] << "  " << QTAlo[i][j] << endl;
          error = error + fabs(Rhi[i][j] - QTAhi[i][j])
                        + fabs(Rlo[i][j] - QTAlo[i][j]);
       }
 
    cout << scientific << setprecision(2);
-   cout << "Sum of errors : " << error << endl;
+   cout << "Sum of errors on |Q^T*A - R| : " << error << endl;
 }
 
 void test_factors_cmplx2_houseqr ( void )
@@ -290,6 +334,9 @@ void test_factors_cmplx2_houseqr ( void )
 
    cout << "Give the number of columns : ";
    int ncols; cin >> ncols;
+
+   cout << "Give the verbose level (1 to see all numbers) : ";
+   int verbose; cin >> verbose;
 
    cout << "Generating a random " << nrows
         << "-by-" << ncols << " matrix ..." << endl;
@@ -349,46 +396,53 @@ void test_factors_cmplx2_houseqr ( void )
 
    random_cmplx2_matrix(nrows,ncols,Arehi,Arelo,Aimhi,Aimlo);
 
-   cout << scientific << setprecision(16);
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
 
-   cout << "A random matrix :" << endl;
-   for(int i=0; i<nrows; i++)
-      for(int j=0; j<ncols; j++)
-      {
-         cout << "A[" << i << "][" << j << "]re : "
-              << Arehi[i][j] << "  " << Arelo[i][j] << endl;
-         cout << "A[" << i << "][" << j << "]im : "
-              << Aimhi[i][j] << "  " << Aimlo[i][j] << endl;
-      }
-
+      cout << "A random matrix :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+         {
+            cout << "A[" << i << "][" << j << "]re : "
+                 << Arehi[i][j] << "  " << Arelo[i][j] << endl;
+            cout << "A[" << i << "][" << j << "]im : "
+                 << Aimhi[i][j] << "  " << Aimlo[i][j] << endl;
+         }
+   }
    CPU_cmplx2_factors_houseqr
       (nrows,ncols,Arehi,Arelo,Aimhi,Aimlo,
                    Qrehi,Qrelo,Qimhi,Qimlo,
                    Rrehi,Rrelo,Rimhi,Rimlo);
 
-   cout << "The matrix Q :" << endl;
+   if(verbose > 0) cout << "The matrix Q :" << endl;
    for(int i=0; i<nrows; i++)
       for(int j=0; j<nrows; j++)
       {
-         cout << "Q[" << i << "][" << j << "]re : "
-              << Qrehi[i][j] << "  " << Qrelo[i][j] << endl;
-         cout << "Q[" << i << "][" << j << "]im : "
-              << Qimhi[i][j] << "  " << Qimlo[i][j] << endl;
+         if(verbose > 0)
+         {
+            cout << "Q[" << i << "][" << j << "]re : "
+                 << Qrehi[i][j] << "  " << Qrelo[i][j] << endl;
+            cout << "Q[" << i << "][" << j << "]im : "
+                 << Qimhi[i][j] << "  " << Qimlo[i][j] << endl;
+         }
          QHrehi[j][i] = Qrehi[i][j]; QHimhi[j][i] = Qimhi[i][j];
          QHrelo[j][i] = Qrelo[i][j]; QHimlo[j][i] = Qimlo[i][j];
          ddf_minus(&QHimhi[j][i],&QHimlo[j][i]); // Hermitian transpose
       }
 
-   cout << "The matrix R :" << endl;
-   for(int i=0; i<nrows; i++)
-      for(int j=0; j<ncols; j++)
-      {
-         cout << "R[" << i << "][" << j << "]re : "
-              << Rrehi[i][j] << "  " << Rrelo[i][j] << endl;
-         cout << "R[" << i << "][" << j << "]im : "
-              << Rimhi[i][j] << "  " << Rimlo[i][j] << endl;
-      }
-
+   if(verbose > 0)
+   {
+      cout << "The matrix R :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+         {
+            cout << "R[" << i << "][" << j << "]re : "
+                 << Rrehi[i][j] << "  " << Rrelo[i][j] << endl;
+            cout << "R[" << i << "][" << j << "]im : "
+                 << Rimhi[i][j] << "  " << Rimlo[i][j] << endl;
+         }
+   }
    CPU_cmplx2_factors_matmatmul
       (nrows,nrows,nrows,QHrehi, QHrelo, QHimhi, QHimlo,
                           Qrehi,  Qrelo,  Qimhi,  Qimlo,
@@ -396,14 +450,17 @@ void test_factors_cmplx2_houseqr ( void )
 
    double error = 0.0;
 
-   cout << "The matrix transpose(Q)*Q :" << endl;
+   if(verbose > 0) cout << "The matrix transpose(Q)*Q :" << endl;
    for(int i=0; i<nrows; i++)
       for(int j=0; j<nrows; j++)
       {
-         cout << "Q^H*Q[" << i << "][" << j << "]re : "
-              << QHQrehi[i][j] << "  " << QHQrelo[i][j] << endl;
-         cout << "Q^H*Q[" << i << "][" << j << "]im : "
-              << QHQimhi[i][j] << "  " << QHQimlo[i][j] << endl;
+         if(verbose > 0)
+         {
+            cout << "Q^H*Q[" << i << "][" << j << "]re : "
+                 << QHQrehi[i][j] << "  " << QHQrelo[i][j] << endl;
+            cout << "Q^H*Q[" << i << "][" << j << "]im : "
+                 << QHQimhi[i][j] << "  " << QHQimlo[i][j] << endl;
+         }
          if(i == j)
             error = error + abs(QHQrehi[i][j] - 1.0) + abs(QHQrelo[i][j])
                           + abs(QHQimhi[i][j]) + abs(QHQimlo[i][j]);
@@ -413,7 +470,7 @@ void test_factors_cmplx2_houseqr ( void )
       }
 
    cout << scientific << setprecision(2);
-   cout << "Sum of errors : " << error << endl;
+   cout << "Sum of errors on |Q^H*Q - I| : " << error << endl;
 
    CPU_cmplx2_factors_matmatmul
       (nrows,nrows,ncols,QHrehi, QHrelo, QHimhi, QHimlo,
@@ -422,16 +479,22 @@ void test_factors_cmplx2_houseqr ( void )
 
    error = 0.0;
 
-   cout << scientific << setprecision(16);
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
 
-   cout << "The matrix transpose(Q)*A :" << endl;
+      cout << "The matrix transpose(Q)*A :" << endl;
+   }
    for(int i=0; i<nrows; i++)
       for(int j=0; j<ncols; j++)
       {
-         cout << "Q^H*A[" << i << "][" << j << "]re : "
-              << QHArehi[i][j] << "  " << QHArelo[i][j] << endl;
-         cout << "Q^H*A[" << i << "][" << j << "]im : "
-              << QHAimhi[i][j] << "  " << QHAimlo[i][j] << endl;
+         if(verbose > 0)
+         {
+            cout << "Q^H*A[" << i << "][" << j << "]re : "
+                 << QHArehi[i][j] << "  " << QHArelo[i][j] << endl;
+            cout << "Q^H*A[" << i << "][" << j << "]im : "
+                 << QHAimhi[i][j] << "  " << QHAimlo[i][j] << endl;
+         }
          error = error + abs(Rrehi[i][j] - QHArehi[i][j])
                        + abs(Rrelo[i][j] - QHArelo[i][j])
                        + abs(Rimhi[i][j] - QHAimhi[i][j])
@@ -439,5 +502,5 @@ void test_factors_cmplx2_houseqr ( void )
       }
 
    cout << scientific << setprecision(2);
-   cout << "Sum of errors : " << error << endl;
+   cout << "Sum of errors on |Q^H*A - R| : " << error << endl;
 }
