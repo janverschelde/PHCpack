@@ -233,7 +233,9 @@ void test_real_upper_inverse ( void )
    double **invA_h = new double*[dim];
    for(int i=0; i<dim; i++) invA_h[i] = new double[dim];
 
-   CPU_dbl_upper_inverse(dim,A,invA_h);
+   double timelapsed_h,timelapsed_d,elapsedms;
+
+   CPU_dbl_upper_inverse(dim,A,invA_h,&timelapsed_h);
 
    if(verbose > 0)
    {
@@ -246,7 +248,7 @@ void test_real_upper_inverse ( void )
    double **invA_d = new double*[dim];
    for(int i=0; i<dim; i++) invA_d[i] = new double[dim];
 
-   GPU_dbl_upper_inverse(dim,A,invA_d);
+   GPU_dbl_upper_inverse(dim,A,invA_d,&elapsedms,&timelapsed_d);
 
    if(verbose > 0)
    {
@@ -277,6 +279,14 @@ void test_real_upper_inverse ( void )
    cout << "   Sum of errors : " << dbl_Difference_Sum(dim,sol,x) << endl;
    cout << "Condition number : "
         << dbl_condition(dim,A,invA_h) << endl;
+
+   cout << fixed << setprecision(3);
+   cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+        << timelapsed_h << " seconds." << endl;
+   cout << "                     Time spent by the kernel : ";
+   cout << elapsedms << " milliseconds." << endl;
+   cout << "        Total GPU wall clock computation time : ";
+   cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
 }
 
 void test_cmplx_upper_inverse ( void )
@@ -347,7 +357,9 @@ void test_cmplx_upper_inverse ( void )
       invAre_h[i] = new double[dim];
       invAim_h[i] = new double[dim];
    }
-   CPU_cmplx_upper_inverse(dim,Are,Aim,invAre_h,invAim_h);
+   double timelapsed_h,timelapsed_d,elapsedms;
+ 
+   CPU_cmplx_upper_inverse(dim,Are,Aim,invAre_h,invAim_h,&timelapsed_h);
 
    if(verbose > 0)
    {
@@ -365,7 +377,8 @@ void test_cmplx_upper_inverse ( void )
       invAre_d[i] = new double[dim];
       invAim_d[i] = new double[dim];
    }
-   GPU_cmplx_upper_inverse(dim,Are,Aim,invAre_d,invAim_d);
+   GPU_cmplx_upper_inverse
+      (dim,Are,Aim,invAre_d,invAim_d,&elapsedms,&timelapsed_d);
 
    if(verbose > 0)
    {
@@ -407,6 +420,14 @@ void test_cmplx_upper_inverse ( void )
         << cmplx_Difference_Sum(dim,solre,solim,xre,xim) << endl;
    cout << "Condition number : "
         << cmplx_condition(dim,Are,Aim,invAre_h,invAim_h) << endl;
+
+   cout << fixed << setprecision(3);
+   cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+        << timelapsed_h << " seconds." << endl;
+   cout << "                     Time spent by the kernel : ";
+   cout << elapsedms << " milliseconds." << endl;
+   cout << "        Total GPU wall clock computation time : ";
+   cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
 }
 
 void test_real_upper_tiling ( void )
@@ -465,8 +486,9 @@ void test_real_upper_tiling ( void )
       A_d[i] = new double[dim];
       for(int j=0; j<dim; j++) A_d[i][j] = A[i][j];
    }
+   double timelapsed_h,timelapsed_d,elapsedms;
 
-   CPU_dbl_upper_tiled_solver(dim,sizetile,numtiles,A,rhs,x);
+   CPU_dbl_upper_tiled_solver(dim,sizetile,numtiles,A,rhs,x,&timelapsed_h);
 
    if(verbose > 0)
    {
@@ -477,7 +499,8 @@ void test_real_upper_tiling ( void )
                  << A[i][j] << endl;
    }
 
-   GPU_dbl_upper_tiled_solver(dim,sizetile,numtiles,A_d,rhs_d,x_d);
+   GPU_dbl_upper_tiled_solver
+      (dim,sizetile,numtiles,A_d,rhs_d,x_d,&elapsedms,&timelapsed_d);
 
    if(verbose > 0)
    {
@@ -507,6 +530,14 @@ void test_real_upper_tiling ( void )
         << dbl_Difference_Sum(dim,sol,x) << endl;
    cout << "   Sum of GPU errors : "
         << dbl_Difference_Sum(dim,sol,x_d) << endl;
+
+   cout << fixed << setprecision(3);
+   cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+        << timelapsed_h << " seconds." << endl;
+   cout << "                    Time spent by all kernels : ";
+   cout << elapsedms << " milliseconds." << endl;
+   cout << "        Total GPU wall clock computation time : ";
+   cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
 }
 
 void test_cmplx_upper_tiling ( void )
@@ -595,8 +626,10 @@ void test_cmplx_upper_tiling ( void )
          Aim_d[i][j] = Aim[i][j];
       }
    }
+   double timelapsed_h,timelapsed_d,elapsedms;
+
    CPU_cmplx_upper_tiled_solver
-      (dim,sizetile,numtiles,Are,Aim,rhsre,rhsim,xre,xim);
+      (dim,sizetile,numtiles,Are,Aim,rhsre,rhsim,xre,xim,&timelapsed_h);
 
    if(verbose > 0)
    {
@@ -607,7 +640,8 @@ void test_cmplx_upper_tiling ( void )
                  << Are[i][j] << "  " << Aim[i][j] << endl;
    }
    GPU_cmplx_upper_tiled_solver
-      (dim,sizetile,numtiles,Are_d,Aim_d,rhsre_d,rhsim_d,xre_d,xim_d);
+      (dim,sizetile,numtiles,Are_d,Aim_d,rhsre_d,rhsim_d,xre_d,xim_d,
+       &elapsedms,&timelapsed_d);
 
    if(verbose > 0)
    {
@@ -638,4 +672,12 @@ void test_cmplx_upper_tiling ( void )
         << cmplx_Difference_Sum(dim,solre,solim,xre,xim) << endl;
    cout << "   Sum of GPU errors : "
         << cmplx_Difference_Sum(dim,solre,solim,xre_d,xim_d) << endl;
+
+   cout << fixed << setprecision(3);
+   cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+        << timelapsed_h << " seconds." << endl;
+   cout << "                    Time spent by all kernels : ";
+   cout << elapsedms << " milliseconds." << endl;
+   cout << "        Total GPU wall clock computation time : ";
+   cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
 }

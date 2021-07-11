@@ -2,6 +2,7 @@
  * the file dbl_tabs_host.h. */
 
 #include <cstdlib>
+#include <ctime>
 #include "dbl_factorizations.h"
 #include "dbl_tabs_host.h"
 
@@ -17,10 +18,13 @@ void CPU_cmplx_backsubs
    CPU_cmplx_factors_backward(dim,Ure,Uim,bre,bim,xre,xim);
 }
 
-void CPU_dbl_upper_inverse ( int dim, double **U, double **invU )
+void CPU_dbl_upper_inverse
+ ( int dim, double **U, double **invU, double *lapsec )
 {
    double *col = new double[dim];
    double *rhs = new double[dim];
+
+   clock_t start = clock();
 
    for(int i=0; i<dim; i++) rhs[i] = 0.0;
 
@@ -31,16 +35,22 @@ void CPU_dbl_upper_inverse ( int dim, double **U, double **invU )
       for(int i=0; i<dim; i++) invU[i][j] = col[i];
       rhs[j] = 0.0;
    }
+   clock_t end = clock();
+   *lapsec = double(end - start)/CLOCKS_PER_SEC;
+
    free(rhs); free(col);
 }
 
 void CPU_cmplx_upper_inverse
- ( int dim, double **Ure, double **Uim, double **invUre, double **invUim )
+ ( int dim, double **Ure, double **Uim, double **invUre, double **invUim,
+   double *lapsec )
 {
    double *colre = new double[dim];
    double *colim = new double[dim];
    double *rhsre = new double[dim];
    double *rhsim = new double[dim];
+
+   clock_t start = clock();
 
    for(int i=0; i<dim; i++)
    {
@@ -62,6 +72,9 @@ void CPU_cmplx_upper_inverse
       rhsre[j] = 0.0;
       rhsim[j] = 0.0;
    }
+   clock_t end = clock();
+   *lapsec = double(end - start)/CLOCKS_PER_SEC;
+
    free(rhsre); free(colre);
    free(rhsim); free(colim);
 }
@@ -87,7 +100,8 @@ void CPU_dbl_matmatmul ( int dim, double **A, double **F )
 }
 
 void CPU_dbl_upper_tiled_solver
- ( int dim, int szt, int nbt, double **U, double *b, double *x )
+ ( int dim, int szt, int nbt, double **U, double *b, double *x,
+   double *lapsec )
 {
    double **T = new double*[szt];
    double **invT = new double*[szt];
@@ -96,11 +110,15 @@ void CPU_dbl_upper_tiled_solver
       T[i] = new double[szt];
       invT[i] = new double[szt];
    }
+   double timelapsed;
+
+   clock_t start = clock();
+
    int idx = (nbt-1)*szt;
    for(int i=0; i<szt; i++)
       for(int j=0; j<szt; j++) T[i][j] = U[idx+i][idx+j];
 
-   CPU_dbl_upper_inverse(szt,T,invT);
+   CPU_dbl_upper_inverse(szt,T,invT,&timelapsed);
 
    for(int i=0; i<szt; i++)
       for(int j=0; j<szt; j++) U[idx+i][idx+j] = invT[i][j];
@@ -124,7 +142,7 @@ void CPU_dbl_upper_tiled_solver
       for(int i=0; i<szt; i++)
          for(int j=0; j<szt; j++) T[i][j] = U[idx+i][idx+j];
 
-      CPU_dbl_upper_inverse(szt,T,invT); // invert diagonal tile
+      CPU_dbl_upper_inverse(szt,T,invT,&timelapsed); // invert diagonal tile
 
       for(int i=0; i<szt; i++)
          for(int j=0; j<szt; j++) U[idx+i][idx+j] = invT[i][j];
@@ -154,6 +172,9 @@ void CPU_dbl_upper_tiled_solver
       }
       for(int i=0; i<szt; i++) x[idx+i] = wb[i];
    }
+   clock_t end = clock();
+   *lapsec = double(end - start)/CLOCKS_PER_SEC;
+
    for(int i=0; i<szt; i++)
    {
       free(T[i]); free(invT[i]); free(wT[i]);
@@ -163,7 +184,7 @@ void CPU_dbl_upper_tiled_solver
 
 void CPU_cmplx_upper_tiled_solver
  ( int dim, int szt, int nbt, double **Ure, double **Uim,
-   double *bre, double *bim, double *xre, double *xim )
+   double *bre, double *bim, double *xre, double *xim, double *lapsec )
 {
    double **Tre = new double*[szt];
    double **Tim = new double*[szt];
@@ -177,6 +198,10 @@ void CPU_cmplx_upper_tiled_solver
       invTre[i] = new double[szt];
       invTim[i] = new double[szt];
    }
+   double timelapsed;
+
+   clock_t start = clock();
+
    int idx = (nbt-1)*szt;
    for(int i=0; i<szt; i++)
       for(int j=0; j<szt; j++)
@@ -185,7 +210,7 @@ void CPU_cmplx_upper_tiled_solver
          Tim[i][j] = Uim[idx+i][idx+j];
       }
 
-   CPU_cmplx_upper_inverse(szt,Tre,Tim,invTre,invTim);
+   CPU_cmplx_upper_inverse(szt,Tre,Tim,invTre,invTim,&timelapsed);
 
    for(int i=0; i<szt; i++)
       for(int j=0; j<szt; j++)
@@ -232,7 +257,7 @@ void CPU_cmplx_upper_tiled_solver
          }
 
       // invert diagonal tile
-      CPU_cmplx_upper_inverse(szt,Tre,Tim,invTre,invTim);
+      CPU_cmplx_upper_inverse(szt,Tre,Tim,invTre,invTim,&timelapsed);
 
       for(int i=0; i<szt; i++)
          for(int j=0; j<szt; j++)
@@ -295,6 +320,9 @@ void CPU_cmplx_upper_tiled_solver
          xim[idx+i] = wbim[i];
       }
    }
+   clock_t end = clock();
+   *lapsec = double(end - start)/CLOCKS_PER_SEC;
+
    for(int i=0; i<szt; i++)
    {
       free(Tre[i]); free(invTre[i]); free(wTre[i]);

@@ -307,7 +307,8 @@ __global__ void cmplx2_back_substitute
  *            of the updated right hand side vector. */
 
 void GPU_dbl2_upper_inverse
- ( int dim, double **Uhi, double **Ulo, double **invUhi, double **invUlo );
+ ( int dim, double **Uhi, double **Ulo, double **invUhi, double **invUlo,
+   double *lapms, double *walltimesec );
 /*
  * DESCRIPTION :
  *   Calls the kernel to invert the upper triangular matrix U.
@@ -322,12 +323,14 @@ void GPU_dbl2_upper_inverse
  *
  * ON RETURN :
  *   invUhi   high doubles of the inverse of the matrix U;
- *   invUlo   low doubles of the inverse of the matrix U. */
+ *   invUlo   low doubles of the inverse of the matrix U;
+ *   lapms    elapsed time spent by the kernels;
+ *   walltimesec is the elapsed wall clock computation time. */
 
 void GPU_cmplx2_upper_inverse
  ( int dim, double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
    double **invUrehi, double **invUrelo,
-   double **invUimhi, double **invUimlo );
+   double **invUimhi, double **invUimlo, double *lapms, double *walltimesec );
 /*
  * DESCRIPTION :
  *   Calls the kernel to invert the upper triangular matrix U.
@@ -348,11 +351,14 @@ void GPU_cmplx2_upper_inverse
  *   invUrehi has the high doubles of the real parts of the inverse;
  *   invUrelo has the low doubles of the real parts of the inverse;
  *   invUimhi has the high doubles of the imaginary parts of the inverse;
- *   invUimlo has the low doubles of the imaginary parts of the inverse. */
+ *   invUimlo has the low doubles of the imaginary parts of the inverse;
+ *   lapms    elapsed time spent by the kernels;
+ *   walltimesec is the elapsed wall clock computation time. */
 
 void GPU_dbl2_upper_tiled_solver
  ( int dim, int szt, int nbt, double **Uhi, double **Ulo,
-   double *bhi, double *blo, double *xhi, double *xlo );
+   double *bhi, double *blo, double *xhi, double *xlo,
+   double *lapms, double *walltimesec );
 /*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
@@ -370,13 +376,16 @@ void GPU_dbl2_upper_tiled_solver
  *
  * ON RETURN :
  *   xhi      high doubles of the solution to the system U*x = b;
- *   xlo      low doubles of the solution to the system U*x = b. */
+ *   xlo      low doubles of the solution to the system U*x = b;
+ *   lapms    elapsed time spent by the kernels;
+ *   walltimesec is the elapsed wall clock computation time. */
 
 void GPU_cmplx2_upper_tiled_solver
  ( int dim, int szt, int nbt,
    double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
    double *brehi, double *brelo, double *bimhi, double *bimlo,
-   double *xrehi, double *xrelo, double *ximhi, double *ximlo );
+   double *xrehi, double *xrelo, double *ximhi, double *ximlo,
+   double *lapms, double *walltimesec );
 /*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
@@ -402,6 +411,8 @@ void GPU_cmplx2_upper_tiled_solver
  *   xrehi    high doubles of the real parts of the solution;
  *   xrelo    low doubles of the real parts of the solution;
  *   ximhi    high doubles of the imaginary parts of the solution;
- *   ximlo    low doubles of the imaginary parts of the solution. */
+ *   ximlo    low doubles of the imaginary parts of the solution;
+ *   lapms    elapsed time spent by the kernels;
+ *   walltimesec is the elapsed wall clock computation time. */
 
 #endif

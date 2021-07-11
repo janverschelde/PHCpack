@@ -2,6 +2,11 @@
  * the file dbl2_tabs_kernels.h. */
 
 #include <iostream>
+#ifdef winwalltime
+#include "wingettimeofday.h"
+#else
+#include <sys/time.h>
+#endif
 #ifdef gpufun
 #include "double_double_gpufun.cu"
 #endif
@@ -746,7 +751,8 @@ __global__ void cmplx2_back_substitute
 }
 
 void GPU_dbl2_upper_inverse
- ( int dim, double **Uhi, double **Ulo, double **invUhi, double **invUlo )
+ ( int dim, double **Uhi, double **Ulo, double **invUhi, double **invUlo,
+   double *lapms, double *walltimesec )
 {
    const int szU = dim*dim;
 
@@ -778,10 +784,31 @@ void GPU_dbl2_upper_inverse
    cudaMemcpy(Uhi_d,Uhi_h,szmat,cudaMemcpyHostToDevice);
    cudaMemcpy(Ulo_d,Ulo_h,szmat,cudaMemcpyHostToDevice);
 
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *lapms = 0.0;
+   float milliseconds;
+   struct timeval begintime,endtime; // wall clock time of computations
+
+   gettimeofday(&begintime,0);
+
+   cudaEventRecord(start);
+
    if(dim <= 16)
       dbl2_small_invert_upper<<<1,dim>>>(dim,Uhi_d,Ulo_d,invUhi_d,invUlo_d);
    else
       dbl2_medium_invert_upper<<<1,dim>>>(dim,Uhi_d,Ulo_d,invUhi_d,invUlo_d);
+
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+
+   gettimeofday(&endtime,0);
+   long seconds = endtime.tv_sec - begintime.tv_sec;
+   long microseconds = endtime.tv_usec - begintime.tv_usec;
+   *walltimesec = seconds + microseconds*1.0e-6;
 
    cudaMemcpy(invUhi_h,invUhi_d,szmat,cudaMemcpyDeviceToHost);
    cudaMemcpy(invUlo_h,invUlo_d,szmat,cudaMemcpyDeviceToHost);
@@ -800,7 +827,8 @@ void GPU_dbl2_upper_inverse
 
 void GPU_cmplx2_upper_inverse
  ( int dim, double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
-   double **invUrehi, double **invUrelo, double **invUimhi, double **invUimlo )
+   double **invUrehi, double **invUrelo, double **invUimhi, double **invUimlo,
+   double *lapms, double *walltimesec )
 {
    const int szU = dim*dim;
 
@@ -843,6 +871,17 @@ void GPU_cmplx2_upper_inverse
    cudaMemcpy(Uimhi_d,Uimhi_h,szmat,cudaMemcpyHostToDevice);
    cudaMemcpy(Uimlo_d,Uimlo_h,szmat,cudaMemcpyHostToDevice);
 
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *lapms = 0.0;
+   float milliseconds;
+   struct timeval begintime,endtime; // wall clock time of computations
+
+   gettimeofday(&begintime,0);
+
+   cudaEventRecord(start);
+
    if(dim <= 16)
       cmplx2_small_invert_upper<<<1,dim>>>
          (dim,   Urehi_d,   Urelo_d,   Uimhi_d,   Uimlo_d,
@@ -851,6 +890,16 @@ void GPU_cmplx2_upper_inverse
       cmplx2_medium_invert_upper<<<1,dim>>>
          (dim,   Urehi_d,   Urelo_d,   Uimhi_d,   Uimlo_d,
               invUrehi_d,invUrelo_d,invUimhi_d,invUimlo_d);
+
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+
+   gettimeofday(&endtime,0);
+   long seconds = endtime.tv_sec - begintime.tv_sec;
+   long microseconds = endtime.tv_usec - begintime.tv_usec;
+   *walltimesec = seconds + microseconds*1.0e-6;
 
    cudaMemcpy(invUrehi_h,invUrehi_d,szmat,cudaMemcpyDeviceToHost);
    cudaMemcpy(invUrelo_h,invUrelo_d,szmat,cudaMemcpyDeviceToHost);
@@ -873,7 +922,8 @@ void GPU_cmplx2_upper_inverse
 
 void GPU_dbl2_upper_tiled_solver
  ( int dim, int szt, int nbt, double **Uhi, double **Ulo,
-   double *bhi, double *blo, double *xhi, double *xlo )
+   double *bhi, double *blo, double *xhi, double *xlo,
+   double *lapms, double *walltimesec )
 {
    const int nbr = nbt*szt*szt;   // number of doubles on diagonal tiles
    double *Dhi_h = new double[nbr];    // the diagonal tiles on the host
@@ -905,7 +955,21 @@ void GPU_dbl2_upper_tiled_solver
    cudaMemcpy(Dhi_d,Dhi_h,sznum,cudaMemcpyHostToDevice);
    cudaMemcpy(Dlo_d,Dlo_h,sznum,cudaMemcpyHostToDevice);
 
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *lapms = 0.0;
+   float milliseconds;
+   struct timeval begintime,endtime; // wall clock time of computations
+
+   gettimeofday(&begintime,0);
+
+   cudaEventRecord(start);
    dbl2_invert_tiles<<<nbt,szt>>>(szt,Dhi_d,Dlo_d,invDhi_d,invDlo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
 
    double *rhshi_d;                    // right hand side on device
    double *rhslo_d;
@@ -915,8 +979,13 @@ void GPU_dbl2_upper_tiled_solver
    cudaMemcpy(rhshi_d,bhi,szrhs,cudaMemcpyHostToDevice);
    cudaMemcpy(rhslo_d,blo,szrhs,cudaMemcpyHostToDevice);
 
+   cudaEventRecord(start);
    dbl2_multiply_inverse<<<1,szt>>>
       (szt,nbt-1,invDhi_d,invDlo_d,rhshi_d,rhslo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
 
    int nbrUcol = (nbt-1)*szt*szt;           // #doubles in column of U
    double *Ucolhi_h = new double[nbrUcol];  // column of U on host
@@ -948,15 +1017,30 @@ void GPU_dbl2_upper_tiled_solver
       cudaMemcpy(Ucollo_d,Ucollo_h,nbrUcol*sizeof(double),
                  cudaMemcpyHostToDevice);
 
+      cudaEventRecord(start);
       dbl2_back_substitute<<<k,szt>>>
          (szt,k,Ucolhi_d,Ucollo_d,rhshi_d,rhslo_d);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
 
       // (k-1)-th solution tile is ready for inverse multiplication
+      cudaEventRecord(start);
       dbl2_multiply_inverse<<<1,szt>>>
          (szt,k-1,invDhi_d,invDlo_d,rhshi_d,rhslo_d);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
 
       nbrUcol = nbrUcol - szt*szt; // one tile less used in update
    }
+   gettimeofday(&endtime,0);
+   long seconds = endtime.tv_sec - begintime.tv_sec;
+   long microseconds = endtime.tv_usec - begintime.tv_usec;
+   *walltimesec = seconds + microseconds*1.0e-6;
+
    cudaMemcpy(xhi,rhshi_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(xlo,rhslo_d,szrhs,cudaMemcpyDeviceToHost);
 
@@ -983,7 +1067,8 @@ void GPU_cmplx2_upper_tiled_solver
  ( int dim, int szt, int nbt,
    double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
    double *brehi, double *brelo, double *bimhi, double *bimlo,
-   double *xrehi, double *xrelo, double *ximhi, double *ximlo )
+   double *xrehi, double *xrelo, double *ximhi, double *ximlo,
+   double *lapms, double *walltimesec )
 {
    const int nbr = nbt*szt*szt;       // number of doubles on diagonal tiles
    double *Drehi_h = new double[nbr];    // the diagonal tiles on the host
@@ -1031,9 +1116,23 @@ void GPU_cmplx2_upper_tiled_solver
    cudaMemcpy(Dimhi_d,Dimhi_h,sznum,cudaMemcpyHostToDevice);
    cudaMemcpy(Dimlo_d,Dimlo_h,sznum,cudaMemcpyHostToDevice);
 
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *lapms = 0.0;
+   float milliseconds;
+   struct timeval begintime,endtime; // wall clock time of computations
+
+   gettimeofday(&begintime,0);
+
+   cudaEventRecord(start);
    cmplx2_invert_tiles<<<nbt,szt>>>
       (szt,   Drehi_d,   Drelo_d,   Dimhi_d,   Dimlo_d,
            invDrehi_d,invDrelo_d,invDimhi_d,invDimlo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
 
    double *rhsrehi_d;                    // right hand side on device
    double *rhsrelo_d;
@@ -1049,9 +1148,14 @@ void GPU_cmplx2_upper_tiled_solver
    cudaMemcpy(rhsimhi_d,bimhi,szrhs,cudaMemcpyHostToDevice);
    cudaMemcpy(rhsimlo_d,bimlo,szrhs,cudaMemcpyHostToDevice);
 
+   cudaEventRecord(start);
    cmplx2_multiply_inverse<<<1,szt>>>
       (szt,nbt-1,invDrehi_d,invDrelo_d,invDimhi_d,invDimlo_d,
                   rhsrehi_d, rhsrelo_d, rhsimhi_d, rhsimlo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
 
    int nbrUcol = (nbt-1)*szt*szt;             // #doubles in column of U
    double *Ucolrehi_h = new double[nbrUcol];  // column of U on host
@@ -1095,17 +1199,32 @@ void GPU_cmplx2_upper_tiled_solver
       cudaMemcpy(Ucolimlo_d,Ucolimlo_h,nbrUcol*sizeof(double),
                  cudaMemcpyHostToDevice);
 
+      cudaEventRecord(start);
       cmplx2_back_substitute<<<k,szt>>>
          (szt,k ,Ucolrehi_d,Ucolrelo_d,Ucolimhi_d,Ucolimlo_d,
                   rhsrehi_d, rhsrelo_d, rhsimhi_d, rhsimlo_d);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
 
       // (k-1)-th solution tile is ready for inverse multiplication
+      cudaEventRecord(start);
       cmplx2_multiply_inverse<<<1,szt>>>
          (szt,k-1,invDrehi_d,invDrelo_d,invDimhi_d,invDimlo_d,
                    rhsrehi_d, rhsrelo_d, rhsimhi_d, rhsimlo_d);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
 
       nbrUcol = nbrUcol - szt*szt; // one tile less used in update
    }
+   gettimeofday(&endtime,0);
+   long seconds = endtime.tv_sec - begintime.tv_sec;
+   long microseconds = endtime.tv_usec - begintime.tv_usec;
+   *walltimesec = seconds + microseconds*1.0e-6;
+
    cudaMemcpy(xrehi,rhsrehi_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(xrelo,rhsrelo_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(ximhi,rhsimhi_d,szrhs,cudaMemcpyDeviceToHost);

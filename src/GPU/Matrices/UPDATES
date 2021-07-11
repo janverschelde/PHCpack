@@ -1,3 +1,6 @@
+Sun 11 Jul 2021 : added timers to dbl*_tabs_{host,kernels},
+  and dbl*_tabs_testers.cpp, modifying 10 files.
+
 Sat 10 Jul 2021 : small edits in dbl_factorizations.{h,cpp}.
   Extended dbl2_factorizations, dbl2_factors_testers, test_dbl2_factors
   with a complex Householder QR in double double precision.

@@ -2,6 +2,7 @@
  * the file dbl2_tabs_host.h. */
 
 #include <cstdlib>
+#include <ctime>
 #include "double_double_functions.h"
 #include "dbl2_factorizations.h"
 #include "dbl2_tabs_host.h"
@@ -28,12 +29,15 @@ void CPU_cmplx2_backsubs
 }
 
 void CPU_dbl2_upper_inverse
- ( int dim, double **Uhi, double **Ulo, double **invUhi, double **invUlo )
+ ( int dim, double **Uhi, double **Ulo, double **invUhi, double **invUlo,
+   double *lapsec )
 {
    double *colhi = new double[dim];
    double *collo = new double[dim];
    double *rhshi = new double[dim];
    double *rhslo = new double[dim];
+
+   clock_t start = clock();
 
    for(int i=0; i<dim; i++)
    {
@@ -51,6 +55,9 @@ void CPU_dbl2_upper_inverse
       }
       rhshi[j] = 0.0;
    }
+   clock_t end = clock();
+   *lapsec = double(end - start)/CLOCKS_PER_SEC;
+
    free(rhshi); free(colhi);
    free(rhslo); free(collo);
 }
@@ -58,7 +65,7 @@ void CPU_dbl2_upper_inverse
 void CPU_cmplx2_upper_inverse
  ( int dim, double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
    double **invUrehi, double **invUrelo,
-   double **invUimhi, double **invUimlo )
+   double **invUimhi, double **invUimlo, double *lapsec )
 {
    double *colrehi = new double[dim];
    double *colrelo = new double[dim];
@@ -68,6 +75,8 @@ void CPU_cmplx2_upper_inverse
    double *rhsrelo = new double[dim];
    double *rhsimhi = new double[dim];
    double *rhsimlo = new double[dim];
+
+   clock_t start = clock();
 
    for(int i=0; i<dim; i++)
    {
@@ -87,6 +96,9 @@ void CPU_cmplx2_upper_inverse
       }
       rhsrehi[j] = 0.0;
    }
+   clock_t end = clock();
+   *lapsec = double(end - start)/CLOCKS_PER_SEC;
+
    free(rhsrehi); free(colrehi);
    free(rhsrelo); free(colrelo);
    free(rhsimhi); free(colimhi);
@@ -134,7 +146,7 @@ void CPU_dbl2_matmatmul
 
 void CPU_dbl2_upper_tiled_solver
  ( int dim, int szt, int nbt, double **Uhi, double **Ulo,
-   double *bhi, double *blo, double *xhi, double *xlo )
+   double *bhi, double *blo, double *xhi, double *xlo, double *lapsec )
 {
    double acchi,acclo,prodhi,prodlo;
    double **Thi = new double*[szt];
@@ -149,6 +161,10 @@ void CPU_dbl2_upper_tiled_solver
       invThi[i] = new double[szt];
       invTlo[i] = new double[szt];
    }
+   double timelapsed;
+
+   clock_t start = clock();
+
    int idx = (nbt-1)*szt;
    for(int i=0; i<szt; i++)
       for(int j=0; j<szt; j++)
@@ -157,7 +173,7 @@ void CPU_dbl2_upper_tiled_solver
          Tlo[i][j] = Ulo[idx+i][idx+j];
       }
 
-   CPU_dbl2_upper_inverse(szt,Thi,Tlo,invThi,invTlo);
+   CPU_dbl2_upper_inverse(szt,Thi,Tlo,invThi,invTlo,&timelapsed);
 
    for(int i=0; i<szt; i++)
       for(int j=0; j<szt; j++)
@@ -197,7 +213,7 @@ void CPU_dbl2_upper_tiled_solver
             Tlo[i][j] = Ulo[idx+i][idx+j];
          }
 
-      CPU_dbl2_upper_inverse(szt,Thi,Tlo,invThi,invTlo);
+      CPU_dbl2_upper_inverse(szt,Thi,Tlo,invThi,invTlo,&timelapsed);
 
       for(int i=0; i<szt; i++)
          for(int j=0; j<szt; j++)
@@ -258,6 +274,9 @@ void CPU_dbl2_upper_tiled_solver
          xlo[idx+i] = wblo[i];
       }
    }
+   clock_t end = clock();
+   *lapsec = double(end - start)/CLOCKS_PER_SEC;
+
    for(int i=0; i<szt; i++)
    {
       free(Thi[i]); free(invThi[i]); free(wThi[i]);
@@ -271,7 +290,8 @@ void CPU_cmplx2_upper_tiled_solver
  ( int dim, int szt, int nbt,
    double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
    double *brehi, double *brelo, double *bimhi, double *bimlo,
-   double *xrehi, double *xrelo, double *ximhi, double *ximlo )
+   double *xrehi, double *xrelo, double *ximhi, double *ximlo,
+   double *lapsec )
 {
    double acc1hi,acc1lo,acc2hi,acc2lo;
    double acc3hi,acc3lo,acc4hi,acc4lo;
@@ -296,6 +316,10 @@ void CPU_cmplx2_upper_tiled_solver
       invTimhi[i] = new double[szt];
       invTimlo[i] = new double[szt];
    }
+   double timelapsed;
+
+   clock_t start = clock();
+
    int idx = (nbt-1)*szt;
    for(int i=0; i<szt; i++)
       for(int j=0; j<szt; j++)
@@ -307,7 +331,8 @@ void CPU_cmplx2_upper_tiled_solver
       }
 
    CPU_cmplx2_upper_inverse
-      (szt,Trehi,Trelo,Timhi,Timlo,invTrehi,invTrelo,invTimhi,invTimlo);
+      (szt,Trehi,Trelo,Timhi,Timlo,invTrehi,invTrelo,invTimhi,invTimlo,
+       &timelapsed);
 
    for(int i=0; i<szt; i++)
       for(int j=0; j<szt; j++)
@@ -369,7 +394,8 @@ void CPU_cmplx2_upper_tiled_solver
          }
 
       CPU_cmplx2_upper_inverse
-         (szt,Trehi,Trelo,Timhi,Timlo,invTrehi,invTrelo,invTimhi,invTimlo);
+         (szt,Trehi,Trelo,Timhi,Timlo,invTrehi,invTrelo,invTimhi,invTimlo,
+          &timelapsed);
 
       for(int i=0; i<szt; i++)
          for(int j=0; j<szt; j++)
@@ -456,6 +482,9 @@ void CPU_cmplx2_upper_tiled_solver
          ximhi[idx+i] = wbimhi[i]; ximlo[idx+i] = wbimlo[i];
       }
    }
+   clock_t end = clock();
+   *lapsec = double(end - start)/CLOCKS_PER_SEC;
+
    for(int i=0; i<szt; i++)
    {
       free(Trehi[i]); free(invTrehi[i]); free(wTrehi[i]);

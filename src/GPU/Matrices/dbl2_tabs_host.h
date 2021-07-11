@@ -57,7 +57,8 @@ void CPU_cmplx2_backsubs
  *   ximlo    low doubles of the imaginary parts of the solution x. */
 
 void CPU_dbl2_upper_inverse
- ( int dim, double **Uhi, double **Ulo, double **invUhi, double **invUlo );
+ ( int dim, double **Uhi, double **Ulo, double **invUhi, double **invUlo,
+   double *lapsec );
 /*
  * DESCRIPTION :
  *   Computes the inverse of an upper triangular matrix.
@@ -71,12 +72,13 @@ void CPU_dbl2_upper_inverse
  *
  * ON RETURN :
  *   invUhi   high doubles of the inverse of the matrix U;
- *   invUlo   low doubles of the inverse of the matrix U. */
+ *   invUlo   low doubles of the inverse of the matrix U;
+ *   lapsec   elapsed time in seconds. */
 
 void CPU_cmplx2_upper_inverse
  ( int dim, double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
    double **invUrehi, double **invUrelo,
-   double **invUimhi, double **invUimlo );
+   double **invUimhi, double **invUimlo, double *lapsec );
 /*
  * DESCRIPTION :
  *   Computes the inverse of an upper triangular matrix.
@@ -96,7 +98,8 @@ void CPU_cmplx2_upper_inverse
  *   invUrehi has the high doubles of the real parts of the inverse;
  *   invUrelo has the low doubles of the real parts of the inverse;
  *   invUimhi has the high doubles of the imaginary parts of the inverse;
- *   invUimlo has the low doubles of the imaginary parts of the inverse. */
+ *   invUimlo has the low doubles of the imaginary parts of the inverse;
+ *   lapsec   elapsed time in seconds. */
 
 void CPU_dbl2_matmatmul
  ( int dim, double **Ahi, double **Alo, double **Fhi, double **Flo );
@@ -117,7 +120,7 @@ void CPU_dbl2_matmatmul
 
 void CPU_dbl2_upper_tiled_solver
  ( int dim, int szt, int nbt, double **Uhi, double **Ulo,
-   double *bhi, double *blo, double *xhi, double *xlo );
+   double *bhi, double *blo, double *xhi, double *xlo, double *lapsec );
 /*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
@@ -135,13 +138,15 @@ void CPU_dbl2_upper_tiled_solver
  *
  * ON RETURN :
  *   xhi      high doubles of the solution to the system U*x = b;
- *   xlo      low doubles of the solution to the system U*x = b. */
+ *   xlo      low doubles of the solution to the system U*x = b;
+ *   lapsec   elapsed time in seconds. */
 
 void CPU_cmplx2_upper_tiled_solver
  ( int dim, int szt, int nbt,
    double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
    double *brehi, double *brelo, double *bimhi, double *bimlo,
-   double *xrehi, double *xrelo, double *ximhi, double *ximlo );
+   double *xrehi, double *xrelo, double *ximhi, double *ximlo,
+   double *lapsec );
 /*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
@@ -179,6 +184,7 @@ void CPU_cmplx2_upper_tiled_solver
  *   xrehi    high doubles of the real parts of the solution x;
  *   xrelo    low doubles of the real parts of the solution x;
  *   ximhi    high doubles of the imaginary parts of the solution x;
- *   ximlo    low doubles of the imaginary parts of the solution x. */
+ *   ximlo    low doubles of the imaginary parts of the solution x;
+ *   lapsec   elapsed time in seconds. */
 
 #endif
