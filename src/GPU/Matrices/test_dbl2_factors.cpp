@@ -12,6 +12,11 @@ int main ( void )
 {
    srand(time(NULL));
 
+   cout << "testing a complex QR decomposition ..." << endl;
+   test_factors_cmplx2_houseqr();
+
+   cout << endl;
+
    cout << "testing a real QR decomposition ..." << endl;
    test_factors_real2_houseqr();
 

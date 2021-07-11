@@ -1,4 +1,6 @@
 Sat 10 Jul 2021 : small edits in dbl_factorizations.{h,cpp}.
+  Extended dbl2_factorizations, dbl2_factors_testers, test_dbl2_factors
+  with a complex Householder QR in double double precision.
 
 Fri 9 Jul 2021 : extended dbl_factorizations with a Householder QR,
   extended dbl_factors_testers and test_dbl_factors.  Added Householder QR

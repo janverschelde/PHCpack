@@ -26,6 +26,38 @@ void CPU_dbl2_factors_matmatmul
  *   Chi      high doubles of the product of A with B;
  *   Clo      low doubles of the product of A with B. */
 
+void CPU_cmplx2_factors_matmatmul
+ ( int rows, int dim, int cols,
+   double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
+   double **Brehi, double **Brelo, double **Bimhi, double **Bimlo,
+   double **Crehi, double **Crelo, double **Cimhi, double **Cimlo );
+/*
+ * DESCRIPTION :
+ *   Computes the product C of the matrix A with B on complex data.
+ *
+ * ON ENTRY :
+ *   rows     the number of rows in the matrices A and C;
+ *   dim      the number of columns in A and rows in B;
+ *   cols     the number of columns in the matrices B and C;
+ *   Are      high doubles of the real parts of A;
+ *   Are      low doubles of the real parts of A;
+ *   Aim      high doubles of the imaginary parts of A; 
+ *   Aim      low doubles of the imaginary parts of A;
+ *   Brehi    high doubles of the real parts of B;
+ *   Brelo    low doubles of the real parts of B;
+ *   Bimhi    high doubles of the imaginary parts of B;
+ *   Bimlo    low doubles of the imaginary parts of B;
+ *   Crehi    space allocated for a rows-by-cols matrix;
+ *   Crelo    space allocated for a rows-by-cols matrix;
+ *   Cimhi    space allocated for a rows-by-cols matrix.
+ *   Cimlo    space allocated for a rows-by-cols matrix.
+ *
+ * ON RETURN :
+ *   Crehi    high doubles of the real parts of the product of A with B;
+ *   Crelo    low doubles of the real parts of the product of A with B;
+ *   Cimhi    high doubles of the imaginary parts of product of A with B;
+ *   Cimlo    low doubles of the imaginary parts of product of A with B. */
+
 void CPU_dbl2_factors_forward
  ( int dim, double **Lhi, double **Llo, double *bhi, double *blo,
    double *xhi, double *xlo );
@@ -274,6 +306,33 @@ void CPU_dbl2_factors_house
  *   betahi   equals the high double of 2/(transpose(v)*v);
  *   betalo   equals the high double of 2/(transpose(v)*v). */
 
+void CPU_cmplx2_factors_house 
+( int n, double *xrehi, double *xrelo, double *ximhi, double *ximlo,
+  double *vrehi, double *vrelo, double *vimhi, double *vimlo, double *beta,
+  double *betahi, double *betalo );
+/*
+ * DESCRIPTION :
+ *   Computes the Householder vector of an n-dimensional vector x.
+ *
+ * ON ENTRY :
+ *   n        dimension of the vector x;
+ *   xrehi    high doubles of the real parts of the vector x;
+ *   xrelo    low doubles of the real parts of the vector x;
+ *   ximhi    high doubles of the imaginary parts of the vector x;
+ *   ximlo    low doubles of the imaginary parts of the vector x;
+ *   vrehi    space for n doubles;
+ *   vrelo    space for n doubles;
+ *   vimhi    space for n doubles;
+ *   vimlo    space for n doubles.
+ *
+ * ON RETURN :
+ *   vrehi    high doubles of the real parts of the Householder vector;
+ *   vrelo    low doubles of the real parts of the Householder vector;
+ *   vimhi    high doubles of the imaginary parts of the Householder vector;
+ *   vimlo    low doubles of the imaginary parts of the Householder vector;
+ *   betahi   high double of 2/(transpose(v)*v);
+ *   betalo   low double of 2/(transpose(v)*v). */
+
 void CPU_dbl2_factors_leftRupdate
  ( int nrows, int ncols, int k, double **Rhi, double **Rlo,
    double *vhi, double *vlo, double betahi, double betalo );
@@ -296,6 +355,40 @@ void CPU_dbl2_factors_leftRupdate
  *   Rhi      high doubles of the update with the Householder matrix;
  *   Rlo      low doubles of the update with the Householder matrix. */
 
+void CPU_cmplx2_factors_leftRupdate
+ ( int nrows, int ncols, int k,
+   double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
+   double *vrehi, double *vrelo, double *vimhi, double *vimlo,
+   double betahi, double betalo );
+/*
+ * DESCRIPTION :
+ *   Applies the Householder matrix to R.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrix R;
+ *   ncols    number of columns in the matrix R;
+ *   k        current column index in R;
+ *   Rrehi    high doubles of the real parts of an nrows-by-ncols matrix;
+ *   Rrelo    low doubles of the real parts of an nrows-by-ncols matrix;
+ *   Rimhi    high doubles of the imaginary parts of an nrows-by-ncols matrix;
+ *   Rimlo    low doubles of the imaginary parts of an nrows-by-ncols matrix;
+ *   vrehi    high doubles of the real parts of the Householder vector;
+ *   vrelo    low doubles of the real parts of the Householder vector;
+ *   vimhi    high doubles of the imaginary parts of the Householder vector;
+ *   vimlo    low doubles of the imaginary parts of the Householder vector;
+ *   betahi   high double of the the beta computed by CPU_dbl_house.
+ *   betalo   low double of the the beta computed by CPU_dbl_house.
+ *
+ * ON RETURN :
+ *   Rrehi    high doubles of the real parts of the update
+ *            with the Householder matrix;
+ *   Rrelo    low doubles of the real parts of the update
+ *            with the Householder matrix;
+ *   Rimhi    high doubles of the imaginary parts of the update
+ *            with the Householder matrix;
+ *   Rimlo    low doubles of the imaginary parts of the update
+ *            with the Householder matrix. */
+
 void CPU_dbl2_factors_rightQupdate
  ( int n, int k, double **Qhi, double **Qlo,
    double *vhi, double *vlo, double betahi, double betalo );
@@ -316,6 +409,39 @@ void CPU_dbl2_factors_rightQupdate
  * ON RETURN :
  *   Qhi      high doubles of the update with the Householder matrix;
  *   Qlo      low doubles of the update with the Householder matrix. */
+
+void CPU_cmplx2_factors_rightQupdate
+ ( int n, int k,
+   double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
+   double *vrehi, double *vrelo, double *vimhi, double *vimlo,
+   double betahi, double betalo );
+/*
+ * DESCRIPTION :
+ *   Applies the Householder matrix to Q.
+ *
+ * ON ENTRY :
+ *   n        dimension of the matrix Q;
+ *   k        current column index in Q;
+ *   Qrehi    high doubles of the real parts of an n-by-n matrix;
+ *   Qrelo    low doubles of the real parts of an n-by-n matrix;
+ *   Qimhi    high doubles of the imaginary parts of an n-by-n matrix;
+ *   Qimlo    low doubles of the imaginary parts of an n-by-n matrix;
+ *   vrehi    high doubles of the real parts of the Householder vector;
+ *   vrelo    low doubles of the real parts of the Householder vector;
+ *   vimhi    high doubles of the imaginary parts the Householder vector;
+ *   vimlo    low doubles of the imaginary parts the Householder vector;
+ *   betahi   high double of the the beta computed by CPU_dbl_house;
+ *   betalo   low double of the the beta computed by CPU_dbl_house.
+ *
+ * ON RETURN :
+ *   Qrehi    high doubles of the real parts of the update
+ *            with the Householder matrix;
+ *   Qrelo    low doubles of the real parts of the update
+ *            with the Householder matrix;
+ *   Qimhi    high doubles of the imaginary parts of the update
+ *            with the Householder matrix;
+ *   Qimlo    low doubles of the imaginary parts of the update
+ *            with the Householder matrix. */
 
 void CPU_dbl2_factors_houseqr
  ( int nrows, int ncols, double **Ahi, double **Alo,
@@ -343,5 +469,48 @@ void CPU_dbl2_factors_houseqr
  *   Qlo      low doubles of an orthogonal matrix, transpose(Q)*A = R;
  *   Rhi      high doubles of the reduced upper triangular form of A;
  *   Rlo      low doubles of the reduced upper triangular form of A. */
+
+void CPU_cmplx2_factors_houseqr
+ ( int nrows, int ncols,
+   double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
+   double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
+   double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo );
+/*
+ * DESCRIPTION :
+ *   Applies Householder matrices to compute a QR decomposition of A.
+ *
+ * REQUIRED : nrows >= ncols.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of A;
+ *   ncols    number of columns of A;
+ *   Arehi    high doubles of the real parts of an nrows-by-ncols matrix,
+ *            stored as nrows arrays of ncols numbers;
+ *   Arelo    low doubles of the real parts of an nrows-by-ncols matrix,
+ *            stored as nrows arrays of ncols numbers;
+ *   Aimhi    high doubles of the imaginary parts of an nrows-by-ncols matrix,
+ *            stored as nrows arrays of ncols numbers;
+ *   Aimlo    low doubles of the imaginary parts of an nrows-by-ncols matrix,
+ *            stored as nrows arrays of ncols numbers;
+ *   Qrehi    space for an nrows-by-nrows matrix;
+ *   Qrelo    space for an nrows-by-nrows matrix;
+ *   Qimhi    space for an nrows-by-nrows matrix;
+ *   Qimlo    space for an nrows-by-nrows matrix;
+ *   Rrehi    space for an nrows-by-ncols matrix;
+ *   Rrelo    space for an nrows-by-ncols matrix;
+ *   Rimhi    space for an nrows-by-ncols matrix;
+ *   Rimlo    space for an nrows-by-ncols matrix.
+ *
+ * ON RETURN :
+ *   Qrehi    high doubles of the real parts of the orthogonal matrix Q
+ *            that triangulates A: transpose(Q)*A = R;
+ *   Qrelo    low doubles of the real parts of the orthogonal matrix Q;
+ *   Qimhi    high doubles of the imaginary parts of the orthogonal matrix Q;
+ *   Qimlo    low doubles of the imaginary parts of the orthogonal matrix Q;
+ *   Rrehi    high doubles of the real parts of R,
+ *            the reduced upper triangular form of A;
+ *   Rrelo    low doubles of the real parts of R;
+ *   Rimhi    high doubles of the imaginary parts of R;
+ *   Rimlo    low doubles of the imaginary parts of R. */
 
 #endif

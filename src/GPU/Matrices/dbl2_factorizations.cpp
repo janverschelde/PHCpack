@@ -25,6 +25,42 @@ void CPU_dbl2_factors_matmatmul
       }
 }
 
+void CPU_cmplx2_factors_matmatmul
+ ( int rows, int dim, int cols,
+   double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
+   double **Brehi, double **Brelo, double **Bimhi, double **Bimlo,
+   double **Crehi, double **Crelo, double **Cimhi, double **Cimlo )
+{
+   double zrehi,zrelo,zimhi,zimlo,acchi,acclo;
+
+   for(int i=0; i<rows; i++)
+      for(int j=0; j<cols; j++)
+      {
+         Crehi[i][j] = 0.0; Cimhi[i][j] = 0.0;
+         Crelo[i][j] = 0.0; Cimlo[i][j] = 0.0;
+
+         for(int k=0; k<dim; k++) // C[i][j] = C[i][j] + A[i][k]*B[k][j];
+         {
+            // zre = Are[i][k]*Bre[k][j] - Aim[i][k]*Bim[k][j];
+            ddf_mul(Arehi[i][k],Arelo[i][k],Brehi[k][j],Brelo[k][j],
+                    &zrehi,&zrelo);
+            ddf_mul(Aimhi[i][k],Aimlo[i][k],Bimhi[k][j],Bimlo[k][j],
+                    &acchi,&acclo);
+            ddf_dec(&zrehi,&zrelo,acchi,acclo);
+            // zim = Aim[i][k]*Bre[k][j] + Are[i][k]*Bim[k][j];
+            ddf_mul(Aimhi[i][k],Aimlo[i][k],Brehi[k][j],Brelo[k][j],
+                    &zimhi,&zimlo);
+            ddf_mul(Arehi[i][k],Arelo[i][k],Bimhi[k][j],Bimlo[k][j],
+                    &acchi,&acclo);
+            ddf_inc(&zimhi,&zimlo,acchi,acclo);
+            // Cre[i][j] = Cre[i][j] + zre;
+            ddf_inc(&Crehi[i][j],&Crelo[i][j],zrehi,zrelo);
+            // Cim[i][j] = Cim[i][j] + zim;
+            ddf_inc(&Cimhi[i][j],&Cimlo[i][j],zimhi,zimlo);
+         }
+      }
+}
+
 void CPU_dbl2_factors_forward
  ( int dim, double **Lhi, double **Llo, double *bhi, double *blo,
    double *xhi, double *xlo )
@@ -394,6 +430,98 @@ void CPU_dbl2_factors_house
    }
 }
 
+void CPU_cmplx2_factors_house 
+( int n, double *xrehi, double *xrelo, double *ximhi, double *ximlo,
+  double *vrehi, double *vrelo, double *vimhi, double *vimlo,
+  double *betahi, double *betalo )
+{
+   double sigmahi = 0.0;
+   double sigmalo = 0.0;
+   double acchi,acclo;
+   double muhi,sqrx0hi,x0radhi,sqrv0hi;
+   double mulo,sqrx0lo,x0radlo,sqrv0lo;
+   double inv0rehi,inv0imhi,zrehi,zimhi;
+   double inv0relo,inv0imlo,zrelo,zimlo;
+   
+   vrehi[0] = 1.0; vimhi[0] = 0.0;
+   vrelo[0] = 0.0; vimlo[0] = 0.0;
+
+   for(int i=1; i<n; i++) 
+   {
+      // sigma = sigma + xre[i]*xre[i] + xim[i]*xim[i];
+      ddf_sqr(xrehi[i],xrelo[i],&acchi,&acclo);
+      ddf_inc(&sigmahi,&sigmalo,acchi,acclo);
+      ddf_sqr(ximhi[i],ximlo[i],&acchi,&acclo);
+      ddf_inc(&sigmahi,&sigmalo,acchi,acclo);
+      vrehi[i] = xrehi[i]; vimhi[i] = ximhi[i];
+      vrelo[i] = xrelo[i]; vimlo[i] = ximlo[i];
+   }
+   if((sigmahi == 0.0) && (sigmalo == 0.0))
+   {
+      *betahi = 0.0;
+      *betalo = 0.0;
+   }
+   else
+   {
+      // sqrx0 = xre[0]*xre[0] + xim[0]*xim[0];
+      ddf_sqr(xrehi[0],xrelo[0],&sqrx0hi,&sqrx0lo);
+      ddf_sqr(ximhi[0],ximlo[0],&acchi,&acclo);
+      ddf_inc(&sqrx0hi,&sqrx0lo,acchi,acclo);
+      // x0rad = sqrt(sqrx0);
+      ddf_sqrt(sqrx0hi,sqrx0lo,&x0radhi,&x0radlo);
+      // mu = sqrt(sqrx0 + sigma); // norm of the vector x
+      ddf_inc(&sqrx0hi,&sqrx0lo,sigmahi,sigmalo);
+      ddf_sqrt(sqrx0hi,sqrx0lo,&muhi,&mulo);
+
+      if((x0radhi == 0.0) && (x0radlo == 0.0))
+      {
+         vrehi[0] = -muhi; vimhi[0] = 0.0;
+         vrelo[0] = -mulo; vimlo[0] = 0.0;
+      }
+      else // if(x0rad /= 0.0)   // xre[0]/xrad = cos(angle)
+      {                          // xim[0]/xrad = sin(angle)
+         // mu = mu/x0rad;
+         ddf_div(muhi,mulo,x0radhi,x0radlo,&acchi,&acclo);
+         muhi = acchi; mulo = acclo;
+         // vre[0] = xre[0] - mu*xre[0];
+         ddf_mul(muhi,mulo,xrehi[0],xrelo[0],&acchi,&acclo);
+         ddf_sub(xrehi[0],xrelo[0],acchi,acclo,&vrehi[0],&vrelo[0]);
+         // vim[0] = xim[0] - mu*xim[0];
+         ddf_mul(muhi,mulo,ximhi[0],ximlo[0],&acchi,&acclo);
+         ddf_sub(ximhi[0],ximlo[0],acchi,acclo,&vimhi[0],&vimlo[0]);
+      }
+      // sqrv0 = vre[0]*vre[0] + vim[0]*vim[0];
+      ddf_sqr(vrehi[0],vrelo[0],&sqrv0hi,&sqrv0lo);
+      ddf_sqr(vimhi[0],vimlo[0],&acchi,&acclo);
+      ddf_inc(&sqrv0hi,&sqrv0lo,acchi,acclo);
+      // *beta = 2.0*sqrv0/(sigma + sqrv0);
+      ddf_inc(&sigmahi,&sigmalo,sqrv0hi,sqrv0lo);
+      ddf_div(sqrv0hi,sqrv0lo,sigmahi,sigmalo,betahi,betalo);
+      ddf_mlt_d(betahi,betalo,2.0);
+      // inv0re = vre[0]/sqrv0;  // real part of 1/v[0]
+      ddf_div(vrehi[0],vrelo[0],sqrv0hi,sqrv0lo,&inv0rehi,&inv0relo);
+      // inv0im = -vim[0]/sqrv0; // imaginary part of 1/v[0]
+      ddf_div(vimhi[0],vimlo[0],sqrv0hi,sqrv0lo,&inv0imhi,&inv0imlo);
+      ddf_minus(&inv0imhi,&inv0imlo);
+
+      for(int i=1; i<n; i++)  // v[i] = v[i]/v[0]
+      {
+         // zre = vre[i]*inv0re - vim[i]*inv0im;
+         ddf_mul(vrehi[i],vrelo[i],inv0rehi,inv0relo,&zrehi,&zrelo);
+         ddf_mul(vimhi[i],vimlo[i],inv0imhi,inv0imlo,&acchi,&acclo);
+         ddf_dec(&zrehi,&zrelo,acchi,acclo);
+         // zim = vim[i]*inv0re + vre[i]*inv0im;
+         ddf_mul(vimhi[i],vimlo[i],inv0rehi,inv0relo,&zimhi,&zimlo);
+         ddf_mul(vrehi[i],vrelo[i],inv0imhi,inv0imlo,&acchi,&acclo);
+         ddf_inc(&zimhi,&zimlo,acchi,acclo);
+         vrehi[i] = zrehi; vimhi[i] = zimhi;
+         vrelo[i] = zrelo; vimlo[i] = zimlo;
+      }
+      vrehi[0] = 1.0; vimhi[0] = 0.0;
+      vrelo[0] = 0.0; vimlo[0] = 0.0;
+   }
+}
+
 void CPU_dbl2_factors_leftRupdate
  ( int nrows, int ncols, int k, double **Rhi, double **Rlo,
    double *vhi, double *vlo, double betahi, double betalo )
@@ -427,6 +555,68 @@ void CPU_dbl2_factors_leftRupdate
    free(whi); free(wlo);
 }
 
+void CPU_cmplx2_factors_leftRupdate
+ ( int nrows, int ncols, int k,
+   double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
+   double *vrehi, double *vrelo, double *vimhi, double *vimlo,
+   double betahi, double betalo )
+{
+   double *wrehi = new double[ncols-k];
+   double *wrelo = new double[ncols-k];
+   double *wimhi = new double[ncols-k];
+   double *wimlo = new double[ncols-k];
+   double zrehi,zrelo,zimhi,zimlo,acchi,acclo;
+
+   for(int j=k; j<ncols; j++)
+   {
+      wrehi[j-k] = 0.0; wimhi[j-k] = 0.0;
+      wrelo[j-k] = 0.0; wimlo[j-k] = 0.0;
+
+      for(int i=k; i<nrows; i++) // w[j-k] = w[j-k] + R[i][j]*v[i-k];
+      {
+         // Hermitian of R => flip sign of Rim
+         // zre =   Rre[i][j]*vre[i-k] + Rim[i][j]*vim[i-k];
+         ddf_mul(Rrehi[i][j],Rrelo[i][j],vrehi[i-k],vrelo[i-k],&zrehi,&zrelo);
+         ddf_mul(Rimhi[i][j],Rimlo[i][j],vimhi[i-k],vimlo[i-k],&acchi,&acclo);
+         ddf_inc(&zrehi,&zrelo,acchi,acclo);
+         // zim = - Rim[i][j]*vre[i-k] + Rre[i][j]*vim[i-k];
+         ddf_mul(Rrehi[i][j],Rrelo[i][j],vimhi[i-k],vimlo[i-k],&zimhi,&zimlo);
+         ddf_mul(Rimhi[i][j],Rimlo[i][j],vrehi[i-k],vrelo[i-k],&acchi,&acclo);
+         ddf_dec(&zimhi,&zimlo,acchi,acclo);
+         // wre[j-k] = wre[j-k] + zre;
+         ddf_inc(&wrehi[j-k],&wrelo[j-k],zrehi,zrelo);
+         // wim[j-k] = wim[j-k] + zim;
+         ddf_inc(&wimhi[j-k],&wimlo[j-k],zimhi,zimlo);
+      }
+      // wre[j-k] = beta*wre[j-k];
+      ddf_mul(betahi,betalo,wrehi[j-k],wrelo[j-k],&acchi,&acclo);
+      wrehi[j-k] = acchi; wrelo[j-k] = acclo;
+      // wim[j-k] = beta*wim[j-k];
+      ddf_mul(betahi,betalo,wimhi[j-k],wimlo[j-k],&acchi,&acclo);
+      wimhi[j-k] = acchi; wimlo[j-k] = acclo;
+   }
+   for(int i=k; i<nrows; i++)
+      for(int j=k; j<ncols; j++) // R[i][j] = R[i][j] - v[i-k]*w[j-k];
+      {
+         // Hermitian of w => flip sign of wim
+         // zre = vre[i-k]*wre[j-k] + vim[i-k]*wim[j-k];
+         ddf_mul(vrehi[i-k],vrelo[i-k],wrehi[j-k],wrelo[j-k],&zrehi,&zrelo);
+         ddf_mul(vimhi[i-k],vimlo[i-k],wimhi[j-k],wimlo[j-k],&acchi,&acclo);
+         ddf_inc(&zrehi,&zrelo,acchi,acclo);
+         // zim = vim[i-k]*wre[j-k] - vre[i-k]*wim[j-k];
+         ddf_mul(vimhi[i-k],vimlo[i-k],wrehi[j-k],wrelo[j-k],&zimhi,&zimlo);
+         ddf_mul(vrehi[i-k],vrelo[i-k],wimhi[j-k],wimlo[j-k],&acchi,&acclo);
+         ddf_dec(&zimhi,&zimlo,acchi,acclo);
+         // Rre[i][j] = Rre[i][j] - zre;
+         ddf_dec(&Rrehi[i][j],&Rrelo[i][j],zrehi,zrelo);
+         // Rim[i][j] = Rim[i][j] - zim;
+         ddf_dec(&Rimhi[i][j],&Rimlo[i][j],zimhi,zimlo);
+      }
+
+   free(wrehi); free(wimhi);
+   free(wrelo); free(wimlo);
+}
+
 void CPU_dbl2_factors_rightQupdate
  ( int n, int k, double **Qhi, double **Qlo,
    double *vhi, double *vlo, double betahi, double betalo )
@@ -458,6 +648,67 @@ void CPU_dbl2_factors_rightQupdate
       }
 
    free(whi); free(wlo);
+}
+
+void CPU_cmplx2_factors_rightQupdate
+ ( int n, int k,
+   double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
+   double *vrehi, double *vrelo, double *vimhi, double *vimlo,
+   double betahi, double betalo )
+{
+   double *wrehi = new double[n];
+   double *wrelo = new double[n];
+   double *wimhi = new double[n];
+   double *wimlo = new double[n];
+   double zrehi,zrelo,zimhi,zimlo,acchi,acclo;
+
+   for(int i=0; i<n; i++)
+   {
+      wrehi[i] = 0.0; wimhi[i] = 0.0;
+      wrelo[i] = 0.0; wimlo[i] = 0.0;
+
+      for(int j=k; j<n; j++) // w[i] = w[i] + Q[i][j]*v[j-k];
+      {
+         // zre = Qre[i][j]*vre[j-k] - Qim[i][j]*vim[j-k];
+         ddf_mul(Qrehi[i][j],Qrelo[i][j],vrehi[j-k],vrelo[j-k],&zrehi,&zrelo);
+         ddf_mul(Qimhi[i][j],Qimlo[i][j],vimhi[j-k],vimlo[j-k],&acchi,&acclo);
+         ddf_dec(&zrehi,&zrelo,acchi,acclo);
+         // zim = Qim[i][j]*vre[j-k] + Qre[i][j]*vim[j-k];
+         ddf_mul(Qimhi[i][j],Qimlo[i][j],vrehi[j-k],vrelo[j-k],&zimhi,&zimlo);
+         ddf_mul(Qrehi[i][j],Qrelo[i][j],vimhi[j-k],vimlo[j-k],&acchi,&acclo);
+         ddf_inc(&zimhi,&zimlo,acchi,acclo);
+         // wre[i] = wre[i] + zre;
+         ddf_inc(&wrehi[i],&wrelo[i],zrehi,zrelo);
+         // wim[i] = wim[i] + zim;
+         ddf_inc(&wimhi[i],&wimlo[i],zimhi,zimlo);
+      }
+      // wre[i] = beta*wre[i];
+      ddf_mul(betahi,betalo,wrehi[i],wrelo[i],&acchi,&acclo);
+      wrehi[i] = acchi; wrelo[i] = acclo;
+      // wim[i] = beta*wim[i];
+      ddf_mul(betahi,betalo,wimhi[i],wimlo[i],&acchi,&acclo);
+      wimhi[i] = acchi; wimlo[i] = acclo;
+   }
+   for(int i=0; i<n; i++)
+      for(int j=k; j<n; j++) // Q[i][j] = Q[i][j] - w[i]*v[j-k];
+      {
+         // Hermitian transpose => flip sign of vim
+         // zre = wre[i]*vre[j-k] + wim[i]*vim[j-k];
+         ddf_mul(wrehi[i],wrelo[i],vrehi[j-k],vrelo[j-k],&zrehi,&zrelo);
+         ddf_mul(wimhi[i],wimlo[i],vimhi[j-k],vimlo[j-k],&acchi,&acclo);
+         ddf_inc(&zrehi,&zrelo,acchi,acclo);
+         // zim = wim[i]*vre[j-k] - wre[i]*vim[j-k];
+         ddf_mul(wimhi[i],wimlo[i],vrehi[j-k],vrelo[j-k],&zimhi,&zimlo);
+         ddf_mul(wrehi[i],wrelo[i],vimhi[j-k],vimlo[j-k],&acchi,&acclo);
+         ddf_dec(&zimhi,&zimlo,acchi,acclo);
+         // Qre[i][j] = Qre[i][j] - zre;
+         ddf_dec(&Qrehi[i][j],&Qrelo[i][j],zrehi,zrelo);
+         // Qim[i][j] = Qim[i][j] - zim;
+         ddf_dec(&Qimhi[i][j],&Qimlo[i][j],zimhi,zimlo);
+      }
+
+   free(wrehi); free(wimhi);
+   free(wrelo); free(wimlo);
 }
 
 void CPU_dbl2_factors_houseqr
@@ -499,4 +750,57 @@ void CPU_dbl2_factors_houseqr
    }
    free(xhi); free(vhi);
    free(xlo); free(vlo);
+}
+
+void CPU_cmplx2_factors_houseqr
+ ( int nrows, int ncols,
+   double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
+   double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
+   double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo )
+{
+   double *xrehi = new double[nrows];
+   double *xrelo = new double[nrows];
+   double *ximhi = new double[nrows];
+   double *ximlo = new double[nrows];
+   double *vrehi = new double[nrows];
+   double *vrelo = new double[nrows];
+   double *vimhi = new double[nrows];
+   double *vimlo = new double[nrows];
+   double betahi,betalo;
+
+   for(int i=0; i<nrows; i++)   // Q = I, R = A
+   {
+      for(int j=0; j<nrows; j++)
+      {
+         Qrehi[i][j] = 0.0; Qimhi[i][j] = 0.0;
+         Qrelo[i][j] = 0.0; Qimlo[i][j] = 0.0;
+      }
+      Qrehi[i][i] = 1.0; Qimhi[i][i] = 0.0;
+      Qrelo[i][i] = 0.0; Qimlo[i][i] = 0.0;
+
+      for(int j=0; j<ncols; j++)
+      {
+         Rrehi[i][j] = Arehi[i][j]; Rimhi[i][j] = Aimhi[i][j];
+         Rrelo[i][j] = Arelo[i][j]; Rimlo[i][j] = Aimlo[i][j];
+      }
+   }
+   for(int k=0; k<ncols; k++)
+   {
+      for(int i=k; i<nrows; i++)
+      {
+         xrehi[i-k] = Rrehi[i][k]; ximhi[i-k] = Rimhi[i][k];
+         xrelo[i-k] = Rrelo[i][k]; ximlo[i-k] = Rimlo[i][k];
+      }
+      CPU_cmplx2_factors_house
+         (nrows-k,xrehi,xrelo,ximhi,ximlo,
+                  vrehi,vrelo,vimhi,vimlo,&betahi,&betalo);
+      CPU_cmplx2_factors_leftRupdate
+         (nrows,ncols,k,Rrehi,Rrelo,Rimhi,Rimlo,
+                        vrehi,vrelo,vimhi,vimlo,betahi,betalo);
+      CPU_cmplx2_factors_rightQupdate
+         (nrows,k,Qrehi,Qrelo,Qimhi,Qimlo,
+                  vrehi,vrelo,vimhi,vimlo,betahi,betalo);
+   }
+   free(xrehi); free(ximhi); free(vrehi); free(vimhi);
+   free(xrelo); free(ximlo); free(vrelo); free(vimlo);
 }
