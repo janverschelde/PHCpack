@@ -6,6 +6,8 @@
 MPD=../Norms
 # location for the code for monomial evaluation and differentiation
 CNV=../Convolutions
+# location for the Polynomials folder for the wingettimeofday.h
+POL=../Polynomials
 
 # architecture flag
 smflag=sm_75
@@ -219,7 +221,8 @@ dbl_tabs_host.obj:
 
 dbl_tabs_kernels.obj:
 	@-echo ">>> compiling dbl_tabs_kernels ..."
-	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 \
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) \
+             --define-macro winwalltime=1 \
                 dbl_tabs_kernels.cu \
              -o dbl_tabs_kernels.obj
 
@@ -275,7 +278,8 @@ dbl2_tabs_host.obj:
 
 dbl2_tabs_kernels.obj:
 	@-echo ">>> compiling dbl2_tabs_kernels ..."
-	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(POL) \
+             --define-macro winwalltime=1 \
              --define-macro gpufun=1 \
                 dbl2_tabs_kernels.cu \
              -o dbl2_tabs_kernels.obj
