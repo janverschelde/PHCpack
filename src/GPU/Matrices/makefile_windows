@@ -226,6 +226,12 @@ dbl_tabs_kernels.obj:
                 dbl_tabs_kernels.cu \
              -o dbl_tabs_kernels.obj
 
+dbl_test_utilities.obj:
+	@-echo ">>> compiling dbl_test_utilities ..."
+	$(CL)\cl /c dbl_test_utilities.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl_test_utilities.obj /EHsc
+
 dbl_tabs_testers.obj:
 	@-echo ">>> compiling dbl_tabs_testers ..."
 	$(CL)\cl /c dbl_tabs_testers.cpp \
@@ -241,13 +247,13 @@ test_dbl_tabs.obj:
                  /Fo: test_dbl_tabs.obj /EHsc
 
 test_dbl_tabs: test_dbl_tabs.obj dbl_tabs_testers.obj \
-	       dbl_tabs_host.obj dbl_tabs_kernels.obj \
+	       dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_test_utilities.obj \
                dbl_convolutions_host.obj dbl_factorizations.obj \
                random_numbers.obj random_series.obj random_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_tabs.exe \
              test_dbl_tabs.obj dbl_tabs_testers.obj \
-             dbl_tabs_host.obj dbl_tabs_kernels.obj \
+             dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_test_utilities.obj \
              dbl_convolutions_host.obj dbl_factorizations.obj \
              random_numbers.obj random_series.obj random_matrices.obj
 
@@ -309,6 +315,30 @@ test_dbl2_tabs: test_dbl2_tabs.obj dbl2_tabs_testers.obj \
 	     dbl2_tabs_kernels.obj dbl2_factorizations.obj \
              random_numbers.obj random2_vectors.obj random2_matrices.obj
 
+dbl_baqr_testers.obj:
+	@-echo ">>> compiling dbl_baqr_testers ..."
+	$(CL)\cl /c dbl_baqr_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_baqr_testers.obj /EHsc
+
+test_dbl_baqr.obj:
+	@-echo ">>> compiling test_dbl_baqr ..."
+	$(CL)\cl /c test_dbl_baqr.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl_baqr.obj /EHsc
+
+test_dbl_baqr: test_dbl_baqr.obj dbl_baqr_testers.obj \
+	       dbl_test_utilities.obj \
+               dbl_convolutions_host.obj dbl_factorizations.obj \
+               random_numbers.obj random_series.obj random_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_baqr.exe \
+             test_dbl_baqr.obj dbl_baqr_testers.obj dbl_test_utilities.obj \
+             dbl_convolutions_host.obj dbl_factorizations.obj \
+             random_numbers.obj random_series.obj random_matrices.obj
+
 clean:
 	del *~
 	del test_dbl_vectors.obj test_dbl_vectors_lib
@@ -329,7 +359,7 @@ clean:
 	del random_matrices.obj
 	del dbl_matrices_host.obj dbl_matrices_kernels.obj
 	del dbl_matrices_testers.obj dbl_vectors_testers.obj
-	del dbl_tabs_host.obj dbl_tabs_kernels.obj
+	del dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_test_utilities.obj
 	del dbl_tabs_testers.obj test_dbl_tabs.obj
 	del test_dbl_tabs.obj test_dbl_tabs_lib
 	del test_dbl_tabs.exe test_dbl_tabs.exp
@@ -339,6 +369,9 @@ clean:
 	del dbl2_tabs_testers.obj
 	del test_dbl2_tabs.obj test_dbl2_tabs_lib
 	del test_dbl2_tabs.exe test_dbl2_tabs.exp
+	del dbl_baqr_testers.obj
+	del test_dbl_baqr.obj test_dbl_baqr_lib
+	del test_dbl_baqr.exe test_dbl_baqr.exp
 
 cleanall: clean
 	del *exe *obj *exp *lib
