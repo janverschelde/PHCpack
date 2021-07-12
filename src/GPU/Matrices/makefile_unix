@@ -213,6 +213,10 @@ test_dbl2_tabs: test_dbl2_tabs.o dbl2_tabs_testers.o \
                   random_numbers.o random2_vectors.o random2_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
+dbl_baqr_host.o:
+	@-echo ">>> compiling dbl_baqr_host ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl_baqr_host.cpp
+
 dbl_baqr_testers.o:
 	@-echo ">>> compiling dbl_baqr_testers ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl_baqr_testers.cpp
@@ -222,11 +226,12 @@ test_dbl_baqr.o:
 	$(gpp) -O3 -c test_dbl_baqr.cpp
 
 test_dbl_baqr: test_dbl_baqr.o dbl_baqr_testers.o dbl_factorizations.o \
-               dbl_test_utilities.o \
+               dbl_test_utilities.o dbl_baqr_host.o \
                random_numbers.o random_series.o random_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_baqr test_dbl_baqr.o dbl_baqr_testers.o \
                   dbl_factorizations.o dbl_test_utilities.o \
+                  dbl_baqr_host.o \
                   random_numbers.o random_series.o random_matrices.o
 
 clean:
@@ -250,7 +255,7 @@ clean:
 	/bin/rm -f -r dbl2_tabs_host.o dbl2_tabs_kernels.o
 	/bin/rm -f -r dbl2_tabs_testers.o
 	/bin/rm -f -r test_dbl2_tabs.o test_dbl2_tabs
-	/bin/rm -f -r dbl_baqr_testers.o
+	/bin/rm -f -r dbl_baqr_host.o dbl_baqr_testers.o
 	/bin/rm -f -r test_dbl_baqr.o test_dbl_baqr
 
 cleanall: clean

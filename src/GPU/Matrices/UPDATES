@@ -1,6 +1,7 @@
 Mon 12 Jul 2021 : factored out test function from dbl_tabs_testers into the
   new dbl_test_utilities, for use in dbl_baqr_testers, called by
-  test_dbl_baqr, updated the makefiles.
+  test_dbl_baqr, updated the makefiles.  New dbl_bqr_host, tested by
+  dbl_baqr_testers.cpp, with updated makefiles.
 
 Sun 11 Jul 2021 : added timers to dbl*_tabs_{host,kernels},
   and dbl*_tabs_testers.cpp, modifying 10 files.
