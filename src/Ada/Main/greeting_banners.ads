@@ -212,4 +212,10 @@ package Greeting_Banners is
   -- DESCRIPTION :
   --   Writes help on converting solutions to Maple format.
 
+  procedure help4getstart;
+
+  -- DESCRIPTION :
+  --   Writes help on extracting the start system and start solutions
+  --   from the output of the blackbox solver.
+
 end Greeting_Banners;

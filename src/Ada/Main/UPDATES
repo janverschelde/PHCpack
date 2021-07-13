@@ -1,3 +1,6 @@
+Tue 13 Jul 2021 : extended greeting_banners with help for phc -z -h,
+  updated option_handlers.adb.
+
 Wed 30 Jun 2021 : fixed feedback so main.gpr can build also the -k option,
   after uncommenting out the proper code in option_handlers.
   The main.gpr now builds phc almost entirely, except for phc -j.

@@ -738,6 +738,24 @@ package body Greeting_Banners is
     put_line("or from Maple to PHCpack format, depending on the input format)");
     put_line("is written to the file 'output'.");
     put_line("If 'output' is omitted, then the result is written to screen.");
+    new_line;
+    put_line("A related option is phc -z -p or phc -p -z to extract the");
+    put_line("start system and solution from the phc -b output file."); 
   end help4mapleform;
+
+  procedure help4getstart is
+  begin
+    put_line("phc -z -p returns the start system from the phc -b output.");
+    new_line;
+    put_line("The output file of the blackbox solver contains the start");
+    put_line("system and start solutions used to solve a system.");
+    put_line("If a system with the same structure but other coefficients");
+    put_line("needs to be solved, then the start system computed by phc -b");
+    put_line("can be used as the start system for phc -p or phc -u.");
+    new_line;
+    put_line("At the command line, type 'phc -z -p input output'");
+    put_line("where 'input' is the name of the output file of 'phc -b'");
+    put_line("If 'output' is omitted, then 'phc -z -p' writes to screen.");
+  end help4getstart;
 
 end Greeting_Banners;

@@ -465,7 +465,10 @@ package body Option_Handlers is
 
   begin
     if hpos1 >= integer32(opts'first) then
-      Greeting_Banners.help4continuation;
+      if hpos2 >= integer32(opts'first)
+       then Greeting_Banners.help4getstart;
+       else Greeting_Banners.help4continuation;
+      end if;
     elsif hpos2 >= integer32(opts'first) then
       Standard_System_and_Solutions_io.Main(file1,file2,vrblvl);
     elsif bpos >= integer32(opts'first) then
@@ -812,7 +815,10 @@ package body Option_Handlers is
 
   begin
     if hpos1 >= integer32(opts'first) then
-      Greeting_Banners.help4mapleform;
+      if hpos2 >= integer32(opts'first)
+       then Greeting_Banners.help4getstart;
+       else Greeting_Banners.help4mapleform;
+      end if;
     elsif hpos2 >= integer32(opts'first) then
       Standard_System_and_Solutions_io.Main(infile,outfile,vrblvl);
     else
