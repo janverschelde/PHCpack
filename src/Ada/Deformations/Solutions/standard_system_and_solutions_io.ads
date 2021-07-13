@@ -89,6 +89,26 @@ package Standard_System_and_Solutions_io is
   --   found    if true, then both q and qsols are found,
   --            otherwise, either q and/or qsols were not present.
 
+  procedure Write_Scanned_Start_System
+              ( name : in Link_to_String;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List );
+  procedure Write_Scanned_Start_System
+              ( file : in file_type;
+                name : in Link_to_String;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Writes the scanned start system to standard output or to file.
+
+  -- ON ENTRY :
+  --   file     must be opened for output, or if omitted,
+  --            the output will be sent to standard output;
+  --   name     name of the file where the start system was scanned from;
+  --   p        start system;
+  --   sols     start solutions.
+
   procedure Main ( infilename,outfilename : in string;
                    vrblvl : in integer32 := 0 );
 

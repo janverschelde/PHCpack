@@ -192,6 +192,28 @@ package body Standard_System_and_Solutions_io is
     end if;
   end Scan_for_Start_System;
 
+  procedure Write_Scanned_Start_System
+              ( name : in Link_to_String;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List ) is
+  begin
+    Write_Scanned_Start_System(standard_output,name,p,sols);
+  end Write_Scanned_Start_System;
+
+  procedure Write_Scanned_Start_System
+              ( file : in file_type;
+                name : in Link_to_String;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List ) is
+  begin
+    put(file,natural32(p'last),p);
+    new_line(file);
+    put_line(file,"TITLE : start system in file " & name.all);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+  end Write_Scanned_Start_System;
+
   procedure Main ( infilename,outfilename : in string;
                    vrblvl : in integer32 := 0 ) is
 
@@ -220,19 +242,15 @@ package body Standard_System_and_Solutions_io is
       end if;
     else
       if outfilename = "" then
-        new_line;
-        put_line("Reading the name of an output file ...");
-        Read_Name_and_Create_File(outfile);
+       -- new_line;
+       -- put_line("Reading the name of an output file ...");
+       -- Read_Name_and_Create_File(outfile);
+        Write_Scanned_Start_System(name,lp.all,sols);
       else
         Create_Output_File(outfile,outfilename);
+        Write_Scanned_Start_System(outfile,name,lp.all,sols);
+        close(outfile);
       end if;
-      put(outfile,natural32(lp'last),lp.all);
-      new_line(outfile);
-      put_line(outfile,"TITLE : start system in file " & name.all);
-      new_line(outfile);
-      put_line(outfile,"THE SOLUTIONS :");
-      put(outfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      close(outfile);
     end if;
   end Main;
 
