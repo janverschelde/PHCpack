@@ -7,7 +7,13 @@
 void test_real2_blocked_qr ( void );
 /*
  * DESCRIPTION :
- *   Generates a random real upper triangular matrix
- *   to test the computation of the QR decomposition. */
+ *   Generates a random real matrix to test the blocked
+ *   computation of the QR decomposition. */
+
+void test_cmplx2_blocked_qr ( void );
+/*
+ * DESCRIPTION :
+ *   Generates a random complex matrix to test the blocked
+ *   computation of the QR decomposition. */
 
 #endif

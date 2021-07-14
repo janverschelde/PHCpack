@@ -432,7 +432,7 @@ void CPU_dbl2_factors_house
 
 void CPU_cmplx2_factors_house 
 ( int n, double *xrehi, double *xrelo, double *ximhi, double *ximlo,
-  double *vrehi, double *vrelo, double *vimhi, double *vimlo,
+         double *vrehi, double *vrelo, double *vimhi, double *vimlo,
   double *betahi, double *betalo )
 {
    double sigmahi = 0.0;
