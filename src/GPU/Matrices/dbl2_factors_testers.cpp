@@ -208,64 +208,31 @@ void test_factors_cmplx2_lufac ( void )
    cout << "Sum of errors : " << error << endl;
 }
 
-void test_factors_real2_houseqr ( void )
+void test_real2_qr_factors
+ ( int nrows, int ncols, double **Ahi, double **Alo,
+   double **Qhi, double **Qlo, double **Rhi, double **Rlo, int verbose )
 {
-   cout << "Give the number of rows : ";
-   int nrows; cin >> nrows;
-
-   cout << "Give the number of columns : ";
-   int ncols; cin >> ncols;
-
-   cout << "Give the verbose level (1 to see all numbers) : ";
-   int verbose; cin >> verbose;
-
-   cout << "Generating a random " << nrows
-        << "-by-" << ncols << " matrix ..." << endl;
-
-   double **Ahi = new double*[nrows];
-   double **Alo = new double*[nrows];
-   double **Qhi = new double*[nrows];
-   double **Qlo = new double*[nrows];
    double **QThi = new double*[nrows];
    double **QTlo = new double*[nrows];
    double **QTQhi = new double*[nrows];
    double **QTQlo = new double*[nrows];
-   double **Rhi = new double*[nrows];
-   double **Rlo = new double*[nrows];
    double **QTAhi = new double*[nrows];
    double **QTAlo = new double*[nrows];
 
    for(int i=0; i<nrows; i++)
    {
-      Ahi[i] = new double[ncols];
-      Alo[i] = new double[ncols];
-      Qhi[i] = new double[nrows];
-      Qlo[i] = new double[nrows];
       QThi[i] = new double[nrows];
       QTlo[i] = new double[nrows];
       QTQhi[i] = new double[nrows];
       QTQlo[i] = new double[nrows];
-      Rhi[i] = new double[ncols];
-      Rlo[i] = new double[ncols];
       QTAhi[i] = new double[ncols];
       QTAlo[i] = new double[ncols];
    }
-
-   random_dbl2_matrix(nrows,ncols,Ahi,Alo);
-
    if(verbose > 0)
    {
       cout << scientific << setprecision(16);
-
-      cout << "A random matrix :" << endl;
-      for(int i=0; i<nrows; i++)
-         for(int j=0; j<ncols; j++)
-            cout << "A[" << i << "][" << j << "] : "
-                 << Ahi[i][j] << "  " << Alo[i][j] << endl;
+      cout << "The matrix Q :" << endl;
    }
-   CPU_dbl2_factors_houseqr(nrows,ncols,Ahi,Alo,Qhi,Qlo,Rhi,Rlo);
-
-   if(verbose > 0) cout << "The matrix Q :" << endl;
    for(int i=0; i<nrows; i++)
       for(int j=0; j<nrows; j++)
       {
@@ -275,15 +242,6 @@ void test_factors_real2_houseqr ( void )
          QThi[j][i] = Qhi[i][j];
          QTlo[j][i] = Qlo[i][j];
       }
-
-   if(verbose > 0)
-   {
-      cout << "The matrix R :" << endl;
-      for(int i=0; i<nrows; i++)
-         for(int j=0; j<ncols; j++)
-            cout << "R[" << i << "][" << j << "] : "
-                 << Rhi[i][j] << "  " << Rlo[i][j] << endl;
-   }
    CPU_dbl2_factors_matmatmul
       (nrows,nrows,nrows,QThi,QTlo,Qhi,Qlo,QTQhi,QTQlo);
 
@@ -305,12 +263,19 @@ void test_factors_real2_houseqr ( void )
    cout << scientific << setprecision(2);
    cout << "Sum of errors on |Q^T*Q - I| : " << error << endl;
 
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(2);
+      cout << "The matrix R :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "R[" << i << "][" << j << "] : "
+                 << Rhi[i][j] << "  " << Rlo[i][j] << endl;
+   }
    CPU_dbl2_factors_matmatmul
       (nrows,nrows,ncols,QThi,QTlo,Ahi,Alo,QTAhi,QTAlo);
 
    error = 0.0;
-
-   cout << scientific << setprecision(16);
 
    if(verbose > 0) cout << "The matrix transpose(Q)*A :" << endl;
    for(int i=0; i<nrows; i++)
@@ -325,30 +290,23 @@ void test_factors_real2_houseqr ( void )
 
    cout << scientific << setprecision(2);
    cout << "Sum of errors on |Q^T*A - R| : " << error << endl;
+
+   for(int i=0; i<nrows; i++)
+   {
+      free(QThi[i]); free(QTQhi[i]); free(QTAhi[i]);
+      free(QTlo[i]); free(QTQlo[i]); free(QTAlo[i]);
+   }
+   free(QThi); free(QTQhi); free(QTAhi);
+   free(QTlo); free(QTQlo); free(QTAlo);
 }
 
-void test_factors_cmplx2_houseqr ( void )
+void test_cmplx2_qr_factors
+ ( int nrows, int ncols,
+   double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
+   double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
+   double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
+   int verbose )
 {
-   cout << "Give the number of rows : ";
-   int nrows; cin >> nrows;
-
-   cout << "Give the number of columns : ";
-   int ncols; cin >> ncols;
-
-   cout << "Give the verbose level (1 to see all numbers) : ";
-   int verbose; cin >> verbose;
-
-   cout << "Generating a random " << nrows
-        << "-by-" << ncols << " matrix ..." << endl;
-
-   double **Arehi = new double*[nrows];
-   double **Arelo = new double*[nrows];
-   double **Aimhi = new double*[nrows];
-   double **Aimlo = new double*[nrows];
-   double **Qrehi = new double*[nrows];
-   double **Qrelo = new double*[nrows];
-   double **Qimhi = new double*[nrows];
-   double **Qimlo = new double*[nrows];
    double **QHrehi = new double*[nrows];
    double **QHrelo = new double*[nrows];
    double **QHimhi = new double*[nrows];
@@ -357,10 +315,6 @@ void test_factors_cmplx2_houseqr ( void )
    double **QHQrelo = new double*[nrows];
    double **QHQimhi = new double*[nrows];
    double **QHQimlo = new double*[nrows];
-   double **Rrehi = new double*[nrows];
-   double **Rrelo = new double*[nrows];
-   double **Rimhi = new double*[nrows];
-   double **Rimlo = new double*[nrows];
    double **QHArehi = new double*[nrows];
    double **QHArelo = new double*[nrows];
    double **QHAimhi = new double*[nrows];
@@ -368,14 +322,6 @@ void test_factors_cmplx2_houseqr ( void )
 
    for(int i=0; i<nrows; i++)
    {
-      Arehi[i] = new double[ncols];
-      Arelo[i] = new double[ncols];
-      Aimhi[i] = new double[ncols];
-      Aimlo[i] = new double[ncols];
-      Qrehi[i] = new double[nrows];
-      Qrelo[i] = new double[nrows];
-      Qimhi[i] = new double[nrows];
-      Qimlo[i] = new double[nrows];
       QHrehi[i] = new double[nrows];
       QHrelo[i] = new double[nrows];
       QHimhi[i] = new double[nrows];
@@ -384,38 +330,16 @@ void test_factors_cmplx2_houseqr ( void )
       QHQrelo[i] = new double[nrows];
       QHQimhi[i] = new double[nrows];
       QHQimlo[i] = new double[nrows];
-      Rrehi[i] = new double[ncols];
-      Rrelo[i] = new double[ncols];
-      Rimhi[i] = new double[ncols];
-      Rimlo[i] = new double[ncols];
       QHArehi[i] = new double[ncols];
       QHArelo[i] = new double[ncols];
       QHAimhi[i] = new double[ncols];
       QHAimlo[i] = new double[ncols];
    }
-
-   random_cmplx2_matrix(nrows,ncols,Arehi,Arelo,Aimhi,Aimlo);
-
    if(verbose > 0)
    {
       cout << scientific << setprecision(16);
-
-      cout << "A random matrix :" << endl;
-      for(int i=0; i<nrows; i++)
-         for(int j=0; j<ncols; j++)
-         {
-            cout << "A[" << i << "][" << j << "]re : "
-                 << Arehi[i][j] << "  " << Arelo[i][j] << endl;
-            cout << "A[" << i << "][" << j << "]im : "
-                 << Aimhi[i][j] << "  " << Aimlo[i][j] << endl;
-         }
+      cout << "The matrix Q :" << endl;
    }
-   CPU_cmplx2_factors_houseqr
-      (nrows,ncols,Arehi,Arelo,Aimhi,Aimlo,
-                   Qrehi,Qrelo,Qimhi,Qimlo,
-                   Rrehi,Rrelo,Rimhi,Rimlo);
-
-   if(verbose > 0) cout << "The matrix Q :" << endl;
    for(int i=0; i<nrows; i++)
       for(int j=0; j<nrows; j++)
       {
@@ -431,18 +355,6 @@ void test_factors_cmplx2_houseqr ( void )
          ddf_minus(&QHimhi[j][i],&QHimlo[j][i]); // Hermitian transpose
       }
 
-   if(verbose > 0)
-   {
-      cout << "The matrix R :" << endl;
-      for(int i=0; i<nrows; i++)
-         for(int j=0; j<ncols; j++)
-         {
-            cout << "R[" << i << "][" << j << "]re : "
-                 << Rrehi[i][j] << "  " << Rrelo[i][j] << endl;
-            cout << "R[" << i << "][" << j << "]im : "
-                 << Rimhi[i][j] << "  " << Rimlo[i][j] << endl;
-         }
-   }
    CPU_cmplx2_factors_matmatmul
       (nrows,nrows,nrows,QHrehi, QHrelo, QHimhi, QHimlo,
                           Qrehi,  Qrelo,  Qimhi,  Qimlo,
@@ -472,6 +384,19 @@ void test_factors_cmplx2_houseqr ( void )
    cout << scientific << setprecision(2);
    cout << "Sum of errors on |Q^H*Q - I| : " << error << endl;
 
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
+      cout << "The matrix R :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+         {
+            cout << "R[" << i << "][" << j << "]re : "
+                 << Rrehi[i][j] << "  " << Rrelo[i][j] << endl;
+            cout << "R[" << i << "][" << j << "]im : "
+                 << Rimhi[i][j] << "  " << Rimlo[i][j] << endl;
+         }
+   }
    CPU_cmplx2_factors_matmatmul
       (nrows,nrows,ncols,QHrehi, QHrelo, QHimhi, QHimlo,
                           Arehi,  Arelo,  Aimhi,  Aimlo,
@@ -479,12 +404,7 @@ void test_factors_cmplx2_houseqr ( void )
 
    error = 0.0;
 
-   if(verbose > 0)
-   {
-      cout << scientific << setprecision(16);
-
-      cout << "The matrix transpose(Q)*A :" << endl;
-   }
+   if(verbose > 0) cout << "The matrix transpose(Q)*A :" << endl;
    for(int i=0; i<nrows; i++)
       for(int j=0; j<ncols; j++)
       {
@@ -503,4 +423,154 @@ void test_factors_cmplx2_houseqr ( void )
 
    cout << scientific << setprecision(2);
    cout << "Sum of errors on |Q^H*A - R| : " << error << endl;
+
+   for(int i=0; i<nrows; i++)
+   {
+      free(QHrehi[i]); free(QHimhi[i]);
+      free(QHrelo[i]); free(QHimlo[i]);
+      free(QHQrehi[i]); free(QHQimhi[i]);
+      free(QHQrelo[i]); free(QHQimlo[i]);
+      free(QHArehi[i]); free(QHAimhi[i]);
+      free(QHArelo[i]); free(QHAimlo[i]);
+   }
+   free(QHrehi); free(QHQrehi); free(QHArehi);
+   free(QHrelo); free(QHQrelo); free(QHArelo);
+   free(QHimhi); free(QHQimhi); free(QHAimhi);
+   free(QHimlo); free(QHQimlo); free(QHAimlo);
+}
+
+void test_factors_real2_houseqr ( void )
+{
+   cout << "Give the number of rows : ";
+   int nrows; cin >> nrows;
+
+   cout << "Give the number of columns : ";
+   int ncols; cin >> ncols;
+
+   cout << "Give the verbose level (1 to see all numbers) : ";
+   int verbose; cin >> verbose;
+
+   cout << "Generating a random " << nrows
+        << "-by-" << ncols << " matrix ..." << endl;
+
+   double **Ahi = new double*[nrows];
+   double **Alo = new double*[nrows];
+   double **Qhi = new double*[nrows];
+   double **Qlo = new double*[nrows];
+   double **Rhi = new double*[nrows];
+   double **Rlo = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Ahi[i] = new double[ncols];
+      Alo[i] = new double[ncols];
+      Qhi[i] = new double[nrows];
+      Qlo[i] = new double[nrows];
+      Rhi[i] = new double[ncols];
+      Rlo[i] = new double[ncols];
+   }
+   random_dbl2_matrix(nrows,ncols,Ahi,Alo);
+
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
+
+      cout << "A random matrix :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "A[" << i << "][" << j << "] : "
+                 << Ahi[i][j] << "  " << Alo[i][j] << endl;
+   }
+   CPU_dbl2_factors_houseqr(nrows,ncols,Ahi,Alo,Qhi,Qlo,Rhi,Rlo);
+
+   test_real2_qr_factors(nrows,ncols,Ahi,Alo,Qhi,Qlo,Rhi,Rlo,verbose);
+
+   for(int i=0; i<nrows; i++)
+   {
+      free(Ahi[i]); free(Qhi[i]); free(Rhi[i]);
+      free(Alo[i]); free(Qlo[i]); free(Rlo[i]);
+   }
+   free(Ahi); free(Qhi); free(Rhi);
+   free(Alo); free(Qlo); free(Rlo);
+}
+
+void test_factors_cmplx2_houseqr ( void )
+{
+   cout << "Give the number of rows : ";
+   int nrows; cin >> nrows;
+
+   cout << "Give the number of columns : ";
+   int ncols; cin >> ncols;
+
+   cout << "Give the verbose level (1 to see all numbers) : ";
+   int verbose; cin >> verbose;
+
+   cout << "Generating a random " << nrows
+        << "-by-" << ncols << " matrix ..." << endl;
+
+   double **Arehi = new double*[nrows];
+   double **Arelo = new double*[nrows];
+   double **Aimhi = new double*[nrows];
+   double **Aimlo = new double*[nrows];
+   double **Qrehi = new double*[nrows];
+   double **Qrelo = new double*[nrows];
+   double **Qimhi = new double*[nrows];
+   double **Qimlo = new double*[nrows];
+   double **Rrehi = new double*[nrows];
+   double **Rrelo = new double*[nrows];
+   double **Rimhi = new double*[nrows];
+   double **Rimlo = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Arehi[i] = new double[ncols];
+      Arelo[i] = new double[ncols];
+      Aimhi[i] = new double[ncols];
+      Aimlo[i] = new double[ncols];
+      Qrehi[i] = new double[nrows];
+      Qrelo[i] = new double[nrows];
+      Qimhi[i] = new double[nrows];
+      Qimlo[i] = new double[nrows];
+      Rrehi[i] = new double[ncols];
+      Rrelo[i] = new double[ncols];
+      Rimhi[i] = new double[ncols];
+      Rimlo[i] = new double[ncols];
+   }
+   random_cmplx2_matrix(nrows,ncols,Arehi,Arelo,Aimhi,Aimlo);
+
+   if(verbose > 0)
+   {
+      cout << scientific << setprecision(16);
+
+      cout << "A random matrix :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+         {
+            cout << "A[" << i << "][" << j << "]re : "
+                 << Arehi[i][j] << "  " << Arelo[i][j] << endl;
+            cout << "A[" << i << "][" << j << "]im : "
+                 << Aimhi[i][j] << "  " << Aimlo[i][j] << endl;
+         }
+   }
+   CPU_cmplx2_factors_houseqr
+      (nrows,ncols,Arehi,Arelo,Aimhi,Aimlo,
+                   Qrehi,Qrelo,Qimhi,Qimlo,
+                   Rrehi,Rrelo,Rimhi,Rimlo);
+
+   test_cmplx2_qr_factors
+      (nrows,ncols,Arehi,Arelo,Aimhi,Aimlo,
+                   Qrehi,Qrelo,Qimhi,Qimlo,
+                   Rrehi,Rrelo,Rimhi,Rimlo,verbose);
+
+   for(int i=0; i<nrows; i++)
+   {
+      free(Arehi[i]); free(Qrehi[i]); free(Rrehi[i]);
+      free(Arelo[i]); free(Qrelo[i]); free(Rrelo[i]);
+      free(Aimhi[i]); free(Qimhi[i]); free(Rimhi[i]);
+      free(Aimlo[i]); free(Qimlo[i]); free(Rimlo[i]);
+   }
+   free(Arehi); free(Qrehi); free(Rrehi);
+   free(Arelo); free(Qrelo); free(Rrelo);
+   free(Aimhi); free(Qimhi); free(Rimhi);
+   free(Aimlo); free(Qimlo); free(Rimlo);
 }
