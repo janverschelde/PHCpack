@@ -233,6 +233,28 @@ test_dbl_baqr: test_dbl_baqr.o dbl_baqr_testers.o dbl_factorizations.o \
                   dbl_factorizations.o dbl_factors_testers.o dbl_baqr_host.o \
                   random_numbers.o random_series.o random_matrices.o
 
+dbl2_baqr_host.o:
+	@-echo ">>> compiling dbl2_baqr_host ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl2_baqr_host.cpp
+
+dbl2_baqr_testers.o:
+	@-echo ">>> compiling dbl2_baqr_testers ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl2_baqr_testers.cpp
+
+test_dbl2_baqr.o:
+	@-echo ">>> compiling test_dbl2_baqr ..."
+	$(gpp) -O3 -c test_dbl2_baqr.cpp
+
+test_dbl2_baqr: test_dbl2_baqr.o dbl2_baqr_testers.o \
+                double_double_functions.o dbl2_factorizations.o \
+                dbl2_factors_testers.o dbl2_baqr_host.o \
+                random_numbers.o random2_vectors.o random2_matrices.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl2_baqr test_dbl2_baqr.o dbl2_baqr_testers.o \
+                  double_double_functions.o dbl2_factorizations.o \
+                  dbl2_factors_testers.o dbl2_baqr_host.o \
+                  random_numbers.o random2_vectors.o random2_matrices.o
+
 clean:
 	/bin/rm -f -r random_matrices.o
 	/bin/rm -f -r dbl_matrices_host.o dbl_matrices_kernels.o
@@ -256,6 +278,8 @@ clean:
 	/bin/rm -f -r test_dbl2_tabs.o test_dbl2_tabs
 	/bin/rm -f -r dbl_baqr_host.o dbl_baqr_testers.o
 	/bin/rm -f -r test_dbl_baqr.o test_dbl_baqr
+	/bin/rm -f -r test_dbl2_baqr.o test_dbl2_baqr
+	/bin/rm -f -r dbl2_baqr_host.o dbl2_baqr_testers.o
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o

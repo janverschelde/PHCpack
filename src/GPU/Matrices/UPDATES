@@ -1,6 +1,9 @@
 Wed 14 Jul 2021 : factored out test functions in dbl_factors_testers, for
   use in dbl_baqr_testers.cpp.  Update makefile_unix and makefile_windows.
   Factored out test functions in dbl2_factors_testers.
+  Fixed formatting in dbl2_factors_testers.cpp.
+  New dbl2_baqr_host, dbl2_baqr_testers, test_dbl2_baqr.cpp,
+  with updated makefiles.
 
 Tue 13 Jul 2021 : added blocked Householder QR to dbl_baqr_host,
   with updates in dbl_baqr_testers.cpp.  Added complex versions

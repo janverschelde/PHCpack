@@ -265,7 +265,7 @@ void test_real2_qr_factors
 
    if(verbose > 0)
    {
-      cout << scientific << setprecision(2);
+      cout << scientific << setprecision(16);
       cout << "The matrix R :" << endl;
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)
