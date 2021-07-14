@@ -10,4 +10,10 @@ void test_real_blocked_qr ( void );
  *   Generates a random real upper triangular matrix
  *   to test the computation of the QR decomposition. */
 
+void test_cmplx_blocked_qr ( void );
+/*
+ * DESCRIPTION :
+ *   Generates a random complex upper triangular matrix
+ *   to test the computation of the QR decomposition. */
+
 #endif

@@ -12,6 +12,11 @@ int main ( void )
 {
    srand(time(NULL));
 
+   cout << "Testing the complex blocked QR ..." << endl;
+   test_cmplx_blocked_qr();
+
+   cout << endl;
+
    cout << "Testing the real blocked QR ..." << endl;
    test_real_blocked_qr();
 
