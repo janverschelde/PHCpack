@@ -15,19 +15,19 @@ using namespace std;
 
 void test_real_blocked_qr ( void )
 {
-   cout << "Give the number of rows : ";
-   int nrows; cin >> nrows;
-
    cout << "Give the size of each tile : ";
    int sizetile; cin >> sizetile;
 
    cout << "Give the number of tiles : ";
    int numtiles; cin >> numtiles;
 
+   const int ncols = sizetile*numtiles;
+
+   cout << "Give the number of rows (" << " >= " << ncols << " ) : ";
+   int nrows; cin >> nrows;
+
    cout << "Give the verbose level (1 to see all numbers) : ";
    int verbose; cin >> verbose;
-
-   const int ncols = sizetile*numtiles;
 
    cout << "Generating a random " << nrows
         << "-by-" << ncols << " matrix ..." << endl;
@@ -59,7 +59,8 @@ void test_real_blocked_qr ( void )
          for(int j=0; j<ncols; j++)
             cout << "A[" << i << "][" << j << "] : " << A[i][j] << endl;
    }
-   CPU_dbl_blocked_houseqr(nrows,ncols,sizetile,numtiles,A,Q,R);
+   bool vrb = (verbose > 0);
+   CPU_dbl_blocked_houseqr(nrows,ncols,sizetile,numtiles,A,Q,R,vrb);
 
    if(verbose > 0) cout << "The matrix Q :" << endl;
    for(int i=0; i<nrows; i++)
