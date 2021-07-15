@@ -6,7 +6,8 @@ Wed 14 Jul 2021 : factored out test functions in dbl_factors_testers, for
   Fixed specification of the complex house function in dbl2_factorizations.h.
   Edited function head in dbl2_factorizations.cpp.
   Added complex blocked Householder QR to dbl2_baqr_host, dbl2_baqr_testers,
-  and test_dbl2_baqr.cpp.
+  and test_dbl2_baqr.cpp.  Added to {dbl,dbl2}_baqr_host,
+  updated {dbl,dbl2}_baqr_testers.cpp.
 
 Tue 13 Jul 2021 : added blocked Householder QR to dbl_baqr_host,
   with updates in dbl_baqr_testers.cpp.  Added complex versions

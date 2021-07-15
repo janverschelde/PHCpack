@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <ctime>
 #include "dbl_factorizations.h"
 #include "dbl_baqr_host.h"
 
@@ -335,6 +336,16 @@ void CPU_cmplx_blocked_rightQupdate
       cout << "updating Q ..." << endl;
       cout << "-> dim : " << dim << "  szt : " << szt << "  idx : " << idx
            << "  rowdim : " << rowdim << "  coloff : " << coloff << endl;
+
+      for(int i=0; i<rowdim; i++)
+         for(int j=0; j<szt; j++)
+            cout << "Y[" << i << "][" << j << "] : "
+                 << Yre[i][j] << "  " << Yim[i][j] << endl;
+
+      for(int i=0; i<rowdim; i++)
+         for(int j=0; j<szt; j++)
+            cout << "W[" << i << "][" << j << "] : "
+                 << Wre[i][j] << "  " << Wim[i][j] << endl;
    }
 
    double **WYTre = new double*[rowdim];
@@ -417,7 +428,8 @@ void CPU_cmplx_blocked_rightQupdate
 
 void CPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
-   double **A, double **Q, double **R, bool verbose )
+   double **A, double **Q, double **R, double *lapsec,
+   bool verbose )
 {
    double beta;
    double *x = new double[nrows]; // input vector for house
@@ -431,6 +443,8 @@ void CPU_dbl_blocked_houseqr
       Y[j] = new double[nrows];
       W[j] = new double[nrows];
    }
+   clock_t start = clock();
+
    for(int i=0; i<nrows; i++)   // Q = I, R = A
    {
       for(int j=0; j<nrows; j++) Q[i][j] = 0.0;
@@ -460,6 +474,9 @@ void CPU_dbl_blocked_houseqr
          CPU_dbl_blocked_leftRupdate(nrows,ncols,szt,k,R,Y,W,verbose);
       CPU_dbl_blocked_rightQupdate(nrows,szt,k,Q,Y,W,verbose);
    }
+   clock_t end = clock();
+   *lapsec = double(end - start)/CLOCKS_PER_SEC;
+
    free(x); free(v); free(B);
    for(int j=0; j<szt; j++)
    {
@@ -472,7 +489,8 @@ void CPU_dbl_blocked_houseqr
 void CPU_cmplx_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **Are, double **Aim, double **Qre, double **Qim,
-   double **Rre, double **Rim, bool verbose )
+   double **Rre, double **Rim, double *lapsec,
+   bool verbose )
 {
    double beta;
    double *xre = new double[nrows]; // real input vector for house
@@ -492,6 +510,8 @@ void CPU_cmplx_blocked_houseqr
       Wre[j] = new double[nrows];
       Wim[j] = new double[nrows];
    }
+   clock_t start = clock();
+
    for(int i=0; i<nrows; i++)   // Q = I, R = A
    {
       for(int j=0; j<nrows; j++)
@@ -544,6 +564,9 @@ void CPU_cmplx_blocked_houseqr
       CPU_cmplx_blocked_rightQupdate
          (nrows,szt,k,Qre,Qim,Yre,Yim,Wre,Wim,verbose);
    }
+   clock_t end = clock();
+   *lapsec = double(end - start)/CLOCKS_PER_SEC;
+
    free(xre); free(vre); free(B);
    free(xim); free(vim);
    for(int j=0; j<szt; j++)

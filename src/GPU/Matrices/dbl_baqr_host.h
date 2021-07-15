@@ -141,7 +141,8 @@ void CPU_cmplx_blocked_rightQupdate
 
 void CPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
-   double **A, double **Q, double **R, bool verbose=true );
+   double **A, double **Q, double **R, double *lapsec,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
@@ -162,12 +163,14 @@ void CPU_dbl_blocked_houseqr
  *
  * ON RETURN :
  *   Q        an orthogonal matrix, transpose(Q)*A = R;
- *   R        the reduced upper triangular form of A. */
+ *   R        the reduced upper triangular form of A;
+ *   lapsec   elapsed time in seconds. */
 
 void CPU_cmplx_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **Are, double **Aim, double **Qre, double **Qim,
-   double **Rre, double **Rim, bool verbose=true );
+   double **Rre, double **Rim, double *lapsec,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
@@ -194,6 +197,7 @@ void CPU_cmplx_blocked_houseqr
  *   Qre      real parts of an orthogonal matrix, transpose(Q)*A = R;
  *   Qim      imaginary parts of an orthogonal matrix, transpose(Q)*A = R;
  *   Rre      real parts of the reduced upper triangular form of A;
- *   Rim      imaginary parts of the reduced upper triangular form of A. */
+ *   Rim      imaginary parts of the reduced upper triangular form of A;
+ *   lapsec   elapsed time in seconds. */
 
 #endif

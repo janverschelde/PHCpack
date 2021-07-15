@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <ctime>
 #include "double_double_functions.h"
 #include "dbl2_factorizations.h"
 #include "dbl2_baqr_host.h"
@@ -640,7 +641,8 @@ void CPU_cmplx2_blocked_rightQupdate
 
 void CPU_dbl2_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt, double **Ahi, double **Alo,
-   double **Qhi, double **Qlo, double **Rhi, double **Rlo, bool verbose )
+   double **Qhi, double **Qlo, double **Rhi, double **Rlo,
+   double *lapsec, bool verbose )
 {
    double betahi,betalo;
    double *xhi = new double[nrows]; // input vector for house
@@ -661,6 +663,8 @@ void CPU_dbl2_blocked_houseqr
       Whi[j] = new double[nrows];
       Wlo[j] = new double[nrows];
    }
+   clock_t start = clock();
+
    for(int i=0; i<nrows; i++)   // Q = I, R = A
    {
       for(int j=0; j<nrows; j++)
@@ -716,6 +720,9 @@ void CPU_dbl2_blocked_houseqr
       CPU_dbl2_blocked_rightQupdate
          (nrows,szt,k,Qhi,Qlo,Yhi,Ylo,Whi,Wlo,verbose);
    }
+   clock_t end = clock();
+   *lapsec = double(end - start)/CLOCKS_PER_SEC;
+
    free(xhi); free(vhi); free(Bhi);
    free(xlo); free(vlo); free(Blo);
 
@@ -733,7 +740,7 @@ void CPU_cmplx2_blocked_houseqr
    double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
    double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
-   bool verbose )
+   double *lapsec, bool verbose )
 {
    double betahi,betalo;
    double *xrehi = new double[nrows]; // real input vector for house
@@ -766,6 +773,8 @@ void CPU_cmplx2_blocked_houseqr
       Wimhi[j] = new double[nrows];
       Wimlo[j] = new double[nrows];
    }
+   clock_t start = clock();
+
    for(int i=0; i<nrows; i++)   // Q = I, R = A
    {
       for(int j=0; j<nrows; j++)
@@ -836,6 +845,9 @@ void CPU_cmplx2_blocked_houseqr
                       Yrehi,Yrelo,Yimhi,Yimlo,
                       Wrehi,Wrelo,Wimhi,Wimlo,verbose);
    }
+   clock_t end = clock();
+   *lapsec = double(end - start)/CLOCKS_PER_SEC;
+
    free(xrehi); free(vrehi); free(Bhi);
    free(xrelo); free(vrelo); free(Blo);
    free(ximhi); free(vimhi);

@@ -206,7 +206,7 @@ void CPU_cmplx2_blocked_rightQupdate
 void CPU_dbl2_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt, double **Ahi, double **Alo,
    double **Qhi, double **Qlo, double **Rhi, double **Rlo,
-   bool verbose=true );
+   double *lapsed, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
@@ -233,14 +233,15 @@ void CPU_dbl2_blocked_houseqr
  *   Qhi      high doubles of an orthogonal matrix, transpose(Q)*A = R;
  *   Qlo      low doubles of an orthogonal matrix, transpose(Q)*A = R;
  *   Rhi      high doubles of the reduced upper triangular form of A;
- *   Rlo      low doubles of the reduced upper triangular form of A. */
+ *   Rlo      low doubles of the reduced upper triangular form of A;
+ *   lapsec   elapsed time in seconds. */
 
 void CPU_cmplx2_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
    double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
-   bool verbose=true );
+   double *lapsec, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
@@ -287,7 +288,8 @@ void CPU_cmplx2_blocked_houseqr
  *   Rimhi    high doubles of the imaginary parts of the reduced
  *            upper triangular form of A;
  *   Rimlo    low doubles of the imaginary parts of the reduced
- *            upper triangular form of A. */
+ *            upper triangular form of A;
+ *   lapsec   elapsed time in seconds. */
 
 
 #endif

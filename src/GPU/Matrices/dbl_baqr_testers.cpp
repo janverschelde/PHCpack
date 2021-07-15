@@ -29,7 +29,7 @@ void test_real_blocked_qr ( void )
    cout << "Give the verbose level (1 to see all numbers) : ";
    int verbose; cin >> verbose;
 
-   cout << "Generating a random " << nrows
+   cout << "-> Generating a random " << nrows
         << "-by-" << ncols << " matrix ..." << endl;
 
    double **A = new double*[nrows];
@@ -54,9 +54,20 @@ void test_real_blocked_qr ( void )
             cout << "A[" << i << "][" << j << "] : " << A[i][j] << endl;
    }
    bool vrb = (verbose > 0);
-   CPU_dbl_blocked_houseqr(nrows,ncols,sizetile,numtiles,A,Q,R,vrb);
+   double timelapsed_h;
+
+   cout << "-> Computed the block Householder QR ..." << endl;
+
+   CPU_dbl_blocked_houseqr
+      (nrows,ncols,sizetile,numtiles,A,Q,R,&timelapsed_h,vrb);
+
+   cout << "-> Testing the QR factorization ..." << endl;
 
    test_real_qr_factors(nrows,ncols,A,Q,R,verbose);
+
+   cout << fixed << setprecision(3);
+   cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+        << timelapsed_h << " seconds." << endl;
 
    for(int i=0; i<nrows; i++)
    {
@@ -81,7 +92,7 @@ void test_cmplx_blocked_qr ( void )
    cout << "Give the verbose level (1 to see all numbers) : ";
    int verbose; cin >> verbose;
 
-   cout << "Generating a random " << nrows
+   cout << "-> Generating a random " << nrows
         << "-by-" << ncols << " matrix ..." << endl;
 
    double **Are = new double*[nrows];
@@ -112,11 +123,22 @@ void test_cmplx_blocked_qr ( void )
             cout << "A[" << i << "][" << j << "] : "
                  << Are[i][j] << "  " << Aim[i][j] << endl;
    }
+   double timelapsed_h;
    bool vrb = (verbose > 0);
+
+   cout << "-> Computed the block Householder QR ..." << endl;
+
    CPU_cmplx_blocked_houseqr
-      (nrows,ncols,sizetile,numtiles,Are,Aim,Qre,Qim,Rre,Rim,vrb);
+      (nrows,ncols,sizetile,numtiles,Are,Aim,Qre,Qim,Rre,Rim,
+       &timelapsed_h,vrb);
+
+   cout << "-> Testing the QR factorization ..." << endl;
 
    test_cmplx_qr_factors(nrows,ncols,Are,Aim,Qre,Qim,Rre,Rim,verbose);
+
+   cout << fixed << setprecision(3);
+   cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+        << timelapsed_h << " seconds." << endl;
 
    for(int i=0; i<nrows; i++)
    {

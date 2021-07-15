@@ -29,7 +29,7 @@ void test_real2_blocked_qr ( void )
    cout << "Give the verbose level (1 to see all numbers) : ";
    int verbose; cin >> verbose;
 
-   cout << "Generating a random " << nrows
+   cout << "-> Generating a random " << nrows
         << "-by-" << ncols << " matrix ..." << endl;
 
    double **Ahi = new double*[nrows];
@@ -60,11 +60,22 @@ void test_real2_blocked_qr ( void )
             cout << "A[" << i << "][" << j << "] : "
                  << Ahi[i][j] << "  " << Alo[i][j] << endl;
    }
+   double timelapsed_h;
    bool vrb = (verbose > 0);
+
+   cout << "-> Computed the block Householder QR ..." << endl;
+
    CPU_dbl2_blocked_houseqr
-      (nrows,ncols,sizetile,numtiles,Ahi,Alo,Qhi,Qlo,Rhi,Rlo,vrb);
+      (nrows,ncols,sizetile,numtiles,Ahi,Alo,Qhi,Qlo,Rhi,Rlo,
+       &timelapsed_h,vrb);
+
+   cout << "-> Testing the QR factorization ..." << endl;
 
    test_real2_qr_factors(nrows,ncols,Ahi,Alo,Qhi,Qlo,Rhi,Rlo,verbose);
+
+   cout << fixed << setprecision(3);
+   cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+        << timelapsed_h << " seconds." << endl;
 
    for(int i=0; i<nrows; i++)
    {
@@ -91,7 +102,7 @@ void test_cmplx2_blocked_qr ( void )
    cout << "Give the verbose level (1 to see all numbers) : ";
    int verbose; cin >> verbose;
 
-   cout << "Generating a random " << nrows
+   cout << "-> Generating a random " << nrows
         << "-by-" << ncols << " matrix ..." << endl;
 
    double **Arehi = new double*[nrows];
@@ -138,18 +149,27 @@ void test_cmplx2_blocked_qr ( void )
                  << Aimhi[i][j] << "  " << Aimlo[i][j] << endl;
          }
    }
-
+   double timelapsed_h;
    bool vrb = (verbose > 0);
+
+   cout << "-> Computed the block Householder QR ..." << endl;
+
    CPU_cmplx2_blocked_houseqr
       (nrows,ncols,sizetile,numtiles,
        Arehi,Arelo,Aimhi,Aimlo,
        Qrehi,Qrelo,Qimhi,Qimlo,
-       Rrehi,Rrelo,Rimhi,Rimlo,vrb);
+       Rrehi,Rrelo,Rimhi,Rimlo,&timelapsed_h,vrb);
+
+   cout << "-> Testing the QR factorization ..." << endl;
 
    test_cmplx2_qr_factors
       (nrows,ncols,Arehi,Arelo,Aimhi,Aimlo,
                    Qrehi,Qrelo,Qimhi,Qimlo,
                    Rrehi,Rrelo,Rimhi,Rimlo,verbose);
+
+   cout << fixed << setprecision(3);
+   cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+        << timelapsed_h << " seconds." << endl;
 
    for(int i=0; i<nrows; i++)
    {
