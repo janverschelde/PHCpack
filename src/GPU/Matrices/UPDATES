@@ -1,3 +1,5 @@
+Thu 15 Jul 2021 : a first kernel in dbl_baqr_kernels, updated makefiles.
+
 Wed 14 Jul 2021 : factored out test functions in dbl_factors_testers, for
   use in dbl_baqr_testers.cpp.  Update makefile_unix and makefile_windows.
   Factored out test functions in dbl2_factors_testers.
