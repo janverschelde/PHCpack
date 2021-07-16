@@ -294,6 +294,8 @@ void test_real2_upper_inverse ( void )
    }
    double timelapsed_h,timelapsed_d,elapsedms;
 
+   cout << "-> CPU computes the inverse ..." << endl;
+
    CPU_dbl2_upper_inverse(dim,Ahi,Alo,invAhi_h,invAlo_h,&timelapsed_h);
 
    if(verbose > 0)
@@ -311,6 +313,8 @@ void test_real2_upper_inverse ( void )
       invAhi_d[i] = new double[dim];
       invAlo_d[i] = new double[dim];
    }
+   cout << "-> GPU computes the inverse ..." << endl;
+
    GPU_dbl2_upper_inverse
       (dim,Ahi,Alo,invAhi_d,invAlo_d,&elapsedms,&timelapsed_d);
 
@@ -466,6 +470,8 @@ void test_cmplx2_upper_inverse ( void )
    }
    double timelapsed_h,timelapsed_d,elapsedms;
 
+   cout << "-> CPU computes the inverse ..." << endl;
+
    CPU_cmplx2_upper_inverse
       (dim,   Arehi,     Arelo,     Aimhi,     Aimlo,
            invArehi_h,invArelo_h,invAimhi_h,invAimlo_h,&timelapsed_h);
@@ -495,6 +501,8 @@ void test_cmplx2_upper_inverse ( void )
       invAimhi_d[i] = new double[dim];
       invAimlo_d[i] = new double[dim];
    }
+   cout << "-> GPU computes the inverse ..." << endl;
+
    GPU_cmplx2_upper_inverse
       (dim,   Arehi,     Arelo,     Aimhi,     Aimlo,
            invArehi_d,invArelo_d,invAimhi_d,invAimlo_d,
@@ -662,6 +670,8 @@ void test_real2_upper_tiling ( void )
    }
    double timelapsed_h,timelapsed_d,elapsedms;
 
+   cout << "-> CPU solves an upper triangular system ..." << endl;
+
    CPU_dbl2_upper_tiled_solver
       (dim,sizetile,numtiles,Ahi,Alo,rhshi,rhslo,xhi,xlo,&timelapsed_h);
 
@@ -673,6 +683,7 @@ void test_real2_upper_tiling ( void )
             cout << "A[" << i << "][" << j << "] : "
                  << Ahi[i][j] << "  " << Alo[i][j] << endl;
    }
+   cout << "-> GPU solves an upper triangular system ..." << endl;
 
    GPU_dbl2_upper_tiled_solver
       (dim,sizetile,numtiles,Ahi_d,Alo_d,rhshi_d,rhslo_d,xhi_d,xlo_d,
@@ -852,6 +863,8 @@ void test_cmplx2_upper_tiling ( void )
    }
    double timelapsed_h,timelapsed_d,elapsedms;
 
+   cout << "-> CPU solves an upper triangular system ..." << endl;
+
    CPU_cmplx2_upper_tiled_solver
       (dim,sizetile,numtiles,Arehi,Arelo,Aimhi,Aimlo,
        rhsrehi,rhsrelo,rhsimhi,rhsimlo,xrehi,xrelo,ximhi,ximlo,&timelapsed_h);
@@ -868,6 +881,8 @@ void test_cmplx2_upper_tiling ( void )
                  << Aimhi[i][j] << "  " << Aimlo[i][j] << endl;
          }
    }
+   cout << "-> GPU solves an upper triangular system ..." << endl;
+
    GPU_cmplx2_upper_tiled_solver
       (dim,sizetile,numtiles,Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
        rhsrehi_d,rhsrelo_d,rhsimhi_d,rhsimlo_d,

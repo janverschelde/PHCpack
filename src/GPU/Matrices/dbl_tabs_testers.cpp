@@ -61,6 +61,8 @@ void test_real_upper_inverse ( void )
 
    double timelapsed_h,timelapsed_d,elapsedms;
 
+   cout << "-> CPU computes the inverse ..." << endl;
+
    CPU_dbl_upper_inverse(dim,A,invA_h,&timelapsed_h);
 
    if(verbose > 0)
@@ -73,6 +75,8 @@ void test_real_upper_inverse ( void )
    }
    double **invA_d = new double*[dim];
    for(int i=0; i<dim; i++) invA_d[i] = new double[dim];
+
+   cout << "-> GPU computes the inverse ..." << endl;
 
    GPU_dbl_upper_inverse(dim,A,invA_d,&elapsedms,&timelapsed_d);
 
@@ -184,6 +188,8 @@ void test_cmplx_upper_inverse ( void )
       invAim_h[i] = new double[dim];
    }
    double timelapsed_h,timelapsed_d,elapsedms;
+
+   cout << "-> CPU computes the inverse ..." << endl;
  
    CPU_cmplx_upper_inverse(dim,Are,Aim,invAre_h,invAim_h,&timelapsed_h);
 
@@ -203,6 +209,8 @@ void test_cmplx_upper_inverse ( void )
       invAre_d[i] = new double[dim];
       invAim_d[i] = new double[dim];
    }
+   cout << "-> GPU computes the inverse ..." << endl;
+
    GPU_cmplx_upper_inverse
       (dim,Are,Aim,invAre_d,invAim_d,&elapsedms,&timelapsed_d);
 
@@ -314,6 +322,8 @@ void test_real_upper_tiling ( void )
    }
    double timelapsed_h,timelapsed_d,elapsedms;
 
+   cout << "-> CPU solves an upper triangular system ..." << endl;
+
    CPU_dbl_upper_tiled_solver(dim,sizetile,numtiles,A,rhs,x,&timelapsed_h);
 
    if(verbose > 0)
@@ -324,6 +334,7 @@ void test_real_upper_tiling ( void )
             cout << "A[" << i << "][" << j << "] : "
                  << A[i][j] << endl;
    }
+   cout << "-> GPU solves an upper triangular system ..." << endl;
 
    GPU_dbl_upper_tiled_solver
       (dim,sizetile,numtiles,A_d,rhs_d,x_d,&elapsedms,&timelapsed_d);
@@ -454,6 +465,8 @@ void test_cmplx_upper_tiling ( void )
    }
    double timelapsed_h,timelapsed_d,elapsedms;
 
+   cout << "-> CPU solves an upper triangular system ..." << endl;
+
    CPU_cmplx_upper_tiled_solver
       (dim,sizetile,numtiles,Are,Aim,rhsre,rhsim,xre,xim,&timelapsed_h);
 
@@ -465,6 +478,8 @@ void test_cmplx_upper_tiling ( void )
             cout << "A[" << i << "][" << j << "] : "
                  << Are[i][j] << "  " << Aim[i][j] << endl;
    }
+   cout << "-> GPU solves an upper triangular system ..." << endl;
+
    GPU_cmplx_upper_tiled_solver
       (dim,sizetile,numtiles,Are_d,Aim_d,rhsre_d,rhsim_d,xre_d,xim_d,
        &elapsedms,&timelapsed_d);
