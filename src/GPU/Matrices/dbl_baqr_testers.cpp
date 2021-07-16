@@ -10,6 +10,7 @@
 #include "dbl_factorizations.h"
 #include "dbl_factors_testers.h"
 #include "dbl_baqr_host.h"
+#include "dbl_baqr_kernels.h"
 
 using namespace std;
 
@@ -33,14 +34,18 @@ void test_real_blocked_qr ( void )
         << "-by-" << ncols << " matrix ..." << endl;
 
    double **A = new double*[nrows];
-   double **Q = new double*[nrows];
-   double **R = new double*[nrows];
+   double **Q_h = new double*[nrows];
+   double **Q_d = new double*[nrows];
+   double **R_h = new double*[nrows];
+   double **R_d = new double*[nrows];
 
    for(int i=0; i<nrows; i++)
    {
       A[i] = new double[ncols];
-      Q[i] = new double[nrows];
-      R[i] = new double[ncols];
+      Q_h[i] = new double[nrows];
+      Q_d[i] = new double[nrows];
+      R_h[i] = new double[ncols];
+      R_d[i] = new double[ncols];
    }
    random_dbl_matrix(nrows,ncols,A);
 
@@ -54,26 +59,35 @@ void test_real_blocked_qr ( void )
             cout << "A[" << i << "][" << j << "] : " << A[i][j] << endl;
    }
    bool vrb = (verbose > 0);
-   double timelapsed_h;
+   double timelapsed_h,elapsedms,timelapsed_d;
 
-   cout << "-> Computed the block Householder QR ..." << endl;
+   cout << "-> CPU computes the block Householder QR ..." << endl;
 
    CPU_dbl_blocked_houseqr
-      (nrows,ncols,sizetile,numtiles,A,Q,R,&timelapsed_h,vrb);
+      (nrows,ncols,sizetile,numtiles,A,Q_h,R_h,&timelapsed_h,vrb);
 
    cout << "-> Testing the QR factorization ..." << endl;
 
-   test_real_qr_factors(nrows,ncols,A,Q,R,verbose);
+   test_real_qr_factors(nrows,ncols,A,Q_h,R_h,verbose);
+
+   cout << "-> GPU computes the block Householder QR ..." << endl;
+
+   GPU_dbl_blocked_houseqr
+      (nrows,ncols,sizetile,numtiles,A,Q_d,R_d,&timelapsed_h,&elapsedms,vrb);
 
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
+   cout << "                    Time spent by the kernels : ";
+   cout << elapsedms << " milliseconds." << endl;
+   cout << "        Total GPU wall clock computation time : ";
+   cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
 
    for(int i=0; i<nrows; i++)
    {
-      free(A[i]); free(Q[i]); free(R[i]);
+      free(A[i]); free(Q_h[i]); free(Q_d[i]); free(R_h[i]); free(R_d[i]);
    }
-   free(A); free(Q); free(R);
+   free(A); free(Q_h); free(Q_d); free(R_h); free(R_d);
 }
 
 void test_cmplx_blocked_qr ( void )
@@ -126,7 +140,7 @@ void test_cmplx_blocked_qr ( void )
    double timelapsed_h;
    bool vrb = (verbose > 0);
 
-   cout << "-> Computed the block Householder QR ..." << endl;
+   cout << "-> CPU computes the block Householder QR ..." << endl;
 
    CPU_cmplx_blocked_houseqr
       (nrows,ncols,sizetile,numtiles,Are,Aim,Qre,Qim,Rre,Rim,

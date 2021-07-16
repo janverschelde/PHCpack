@@ -7,7 +7,7 @@
 #define d_shmemsize 1024
 
 __global__ void dbl_small_house
- ( double x0, double *x1, int dim, int dimLog2, double *v, double *beta );
+ ( double *x0, double *x1, int dim, int dimLog2, double *v, double *beta );
 /*
  * DESCRIPTION :
  *   Computes the Householder vector of a vector of dimension dim+1.
@@ -23,10 +23,10 @@ __global__ void dbl_small_house
  *   v        the Householder vector;
  *   beta     equals 2/(transpose(v)*v). */
 
-void GPU_dbl_blocked_qr
+void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
-   double *lapms, double *walltimesec );
+   double *lapms, double *walltimesec, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
@@ -42,7 +42,8 @@ void GPU_dbl_blocked_qr
  *   A        an nrows-by-ncols matrix,
  *            stored as nrows arrays of ncols numbers;
  *   Q        space for an nrows-by-nrows matrix;
- *   R        space for an nrows-by-ncols matrix.
+ *   R        space for an nrows-by-ncols matrix;
+ *   verbose  is the verbose flag.
  *
  * ON RETURN :
  *   Q        an orthogonal matrix, transpose(Q)*A = R;
