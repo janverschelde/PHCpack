@@ -105,7 +105,8 @@ __global__ void dbl_factors_leftRupdate
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
-   double *lapms, double *walltimesec, bool verbose )
+   double *houselapms, double *tileRlapms,
+   double *walltimesec, bool verbose )
 {
    const int dim = nrows*ncols;     // total number of doubles
    double *A_h = new double[dim];   // matrix A on the host
@@ -131,7 +132,8 @@ void GPU_dbl_blocked_houseqr
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
    cudaEventCreate(&stop);
-   *lapms = 0.0;
+   *houselapms = 0.0;
+   *tileRlapms = 0.0;
    float milliseconds;
    struct timeval begintime,endtime; // wall clock time of computations
 
@@ -167,7 +169,7 @@ void GPU_dbl_blocked_houseqr
          cudaEventRecord(stop);
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
-         *lapms += milliseconds;
+         *houselapms += milliseconds;
  
          if(verbose)
          {
@@ -190,7 +192,7 @@ void GPU_dbl_blocked_houseqr
          cudaEventRecord(stop);
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
-         *lapms += milliseconds;
+         *tileRlapms += milliseconds;
 
          if(verbose)
          {

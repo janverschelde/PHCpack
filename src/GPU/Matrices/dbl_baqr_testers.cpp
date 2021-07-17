@@ -59,7 +59,8 @@ void test_real_blocked_qr ( void )
             cout << "A[" << i << "][" << j << "] : " << A[i][j] << endl;
    }
    bool vrb = (verbose > 0);
-   double timelapsed_h,elapsedms,timelapsed_d;
+   double timelapsed_h,timelapsed_d;
+   double houselapsedms,tileRlapsedms;
 
    cout << "-> CPU computes the block Householder QR ..." << endl;
 
@@ -73,13 +74,16 @@ void test_real_blocked_qr ( void )
    cout << "-> GPU computes the block Householder QR ..." << endl;
 
    GPU_dbl_blocked_houseqr
-      (nrows,ncols,sizetile,numtiles,A,Q_d,R_d,&timelapsed_h,&elapsedms,vrb);
+      (nrows,ncols,sizetile,numtiles,A,Q_d,R_d,
+       &houselapsedms,&tileRlapsedms,&timelapsed_d,vrb);
 
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
-   cout << "                    Time spent by the kernels : ";
-   cout << elapsedms << " milliseconds." << endl;
+   cout << "         Time spent by the Householder kernel : ";
+   cout << houselapsedms << " milliseconds." << endl;
+   cout << "  Time spent by the kernel to reduce one tile : ";
+   cout << tileRlapsedms << " milliseconds." << endl;
    cout << "        Total GPU wall clock computation time : ";
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
 

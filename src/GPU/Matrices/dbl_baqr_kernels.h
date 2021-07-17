@@ -46,7 +46,8 @@ __global__ void dbl_factors_leftRupdate
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
-   double *lapms, double *walltimesec, bool verbose=true );
+   double *houselapms, double *tileRlapms,
+   double *walltimesec, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
@@ -68,7 +69,10 @@ void GPU_dbl_blocked_houseqr
  * ON RETURN :
  *   Q        an orthogonal matrix, transpose(Q)*A = R;
  *   R        the reduced upper triangular form of A;
- *   lapms    elapsed time spent by the kernels;
+ *   houselapms is the elapsed time spent by the kernel
+ *            to compute the Householder vector and the beta;
+ *   tileRlapms is the elapsed time spent by the kernel
+ *            to reduce one tile;
  *   walltimesec is the elapsed wall clock computation time. */
 
 #endif
