@@ -1,3 +1,6 @@
+Sat 17 Jul 2021 : adjusted the column loop counter in dbl_factorizations.cpp
+  to skip the very last step in the reduction to upper triangular form.
+
 Fri 16 Jul 2021 : added messages to {dbl,dbl2}_tabs_testers.cpp to announce
   the separate computational stages.  Added second kernel to reduce a
   square tile to an upper triangular one.  To dbl_baqr_kernels, added

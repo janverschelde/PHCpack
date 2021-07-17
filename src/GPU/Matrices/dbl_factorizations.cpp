@@ -424,7 +424,7 @@ void CPU_dbl_factors_houseqr
       Q[i][i] = 1.0;
       for(int j=0; j<ncols; j++) R[i][j] = A[i][j];
    }
-   for(int k=0; k<ncols; k++)
+   for(int k=0; k<ncols-1; k++)
    {
       for(int i=k; i<nrows; i++) x[i-k] = R[i][k];
       CPU_dbl_factors_house(nrows-k,x,v,&beta);
@@ -459,7 +459,7 @@ void CPU_cmplx_factors_houseqr
          Rim[i][j] = Aim[i][j];
       }
    }
-   for(int k=0; k<ncols; k++)
+   for(int k=0; k<ncols-1; k++)
    {
       for(int i=k; i<nrows; i++)
       {
