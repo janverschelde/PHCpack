@@ -66,6 +66,42 @@ __global__ void dbl_small_house
    if(j == 0) v[0] = 1.0;
 }
 
+__global__ void dbl_factors_leftRupdate
+ ( int nrows, int ncols, int szt, int k, double *R, double *v, double *beta )
+{
+   int bdx = blockIdx.x;           // index of block
+   int tdx = threadIdx.x;          // index of thread in block
+   int idx = bdx*szt + tdx;        // global thread index
+   int Roffset = (k+bdx)*szt + k;
+   int Rcolidx;
+   double w,Rtdx;
+
+   __shared__ double shv[d_shmemsize]; // slice of v
+
+   if(idx < nrows - k)   // nrows - k threads in all blocks work
+   {
+      shv[tdx] = v[tdx];
+      __syncthreads();
+      w = 0.0;
+
+      for(int i=0; i<nrows-k; i++)   // loop through rows of R
+      {
+         Rtdx = R[Roffset + i + tdx*nrows];
+         w = w + Rtdx*shv[i];
+      }
+      w = (*beta)*w;
+      __syncthreads();
+      for(int i=0; i<nrows-k; i++)   // update i-th row of R
+      {
+         Rcolidx = Roffset + i + tdx*nrows;
+         Rtdx = R[Rcolidx];
+         Rtdx = Rtdx - shv[i]*w;
+         __syncthreads();
+         R[Rcolidx] = Rtdx;
+      }
+   }
+}
+
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
@@ -90,11 +126,7 @@ void GPU_dbl_blocked_houseqr
    const size_t szhouse = nrows*sizeof(double);
    cudaMalloc((void**)&v_d,szhouse);
    cudaMalloc((void**)&x0_d,sizeof(double));
-   cudaMemcpy(x0_d,&A_h[0],sizeof(double),cudaMemcpyHostToDevice);
    cudaMalloc((void**)&beta_d,sizeof(double));
-
-   const int nrows1 = nrows-1;
-   const int nrLog2 = ceil(log2((double) nrows1));
 
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -105,23 +137,76 @@ void GPU_dbl_blocked_houseqr
 
    gettimeofday(&begintime,0);
 
-   cudaEventRecord(start);
-   dbl_small_house<<<1,nrows1>>>(x0_d,&A_d[1],nrows1,nrLog2,v_d,beta_d);
-   cudaEventRecord(stop);
-   cudaEventSynchronize(stop);
-   cudaEventElapsedTime(&milliseconds,start,stop);
-   *lapms += milliseconds;
+   for(int k=0; k<nbt; k++)       // k runs over the number of blocks
+   {
+      int colidx,nrows1,nrLog2,nbrblocks,rowidx;
 
+      for(int L=0; L<szt-1; L++)  // L runs over the columns in one block
+      {
+         colidx = k*szt + L;              // index of the current column
+         nrows1 = nrows - colidx - 1;     // #rows in Householder vector - 1
+         nrLog2 = ceil(log2((double) nrows1));
+         rowidx = colidx*(nrows+1);       // start of number in A_h
+
+         if(verbose)
+         {
+            cout << "nrows : " << nrows
+                 << "  ncols : " << ncols
+                 << "  szt : " << szt
+                 << "  nbt : " << nbt << endl;
+            cout << "k : " << k 
+                 << "  L : " << L
+                 << "  nrows1 : " << nrows1
+                 << "  colidx : " << colidx
+                 << "  rowidx : " << rowidx << endl;
+         }
+         cudaMemcpy(x0_d,&A_h[rowidx],sizeof(double),cudaMemcpyHostToDevice);
+         cudaEventRecord(start);
+         dbl_small_house<<<1,nrows1>>>
+            (x0_d,&A_d[rowidx+1],nrows1,nrLog2,v_d,beta_d);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *lapms += milliseconds;
+ 
+         if(verbose)
+         {
+            cudaMemcpy(&beta_h,beta_d,sizeof(double),cudaMemcpyDeviceToHost);
+            cudaMemcpy(v_h,v_d,szhouse,cudaMemcpyDeviceToHost);
+            cout << scientific << setprecision(16)
+                 << "beta[" << L+k*szt << "] : " << beta_h << endl;
+            for(int i=0; i<nrows1+1; i++)
+               cout << "v[" << i << "] : " << v_h[i] << endl;
+         }
+         nbrblocks = (nrows - colidx)/szt;
+         if(((nrows - colidx) % szt) > 0) nbrblocks = nbrblocks + 1;
+
+         if(verbose)
+            cout << "launching " << nbrblocks 
+                 << " blocks of " << szt << " threads ..." << endl;
+         cudaEventRecord(start);
+         dbl_factors_leftRupdate<<<nbrblocks,szt>>>
+            (nrows,ncols,szt,colidx,A_d,v_d,beta_d);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *lapms += milliseconds;
+
+         if(verbose)
+         {
+            cudaMemcpy(A_h,A_d,sznum,cudaMemcpyDeviceToHost);
+            cout << "the matrix after the update :" << endl;
+            for(int i=0; i<nrows; i++)
+               for(int j=0; j<ncols; j++)
+                  cout << "A_d[" << i << "][" << j << "] : "
+                       << A_h[j*nrows+i] << endl;
+         }
+      }
+   }
    gettimeofday(&endtime,0);
    long seconds = endtime.tv_sec - begintime.tv_sec;
    long microseconds = endtime.tv_usec - begintime.tv_usec;
    *walltimesec = seconds + microseconds*1.0e-6;
-
-   cudaMemcpy(&beta_h,beta_d,sizeof(double),cudaMemcpyDeviceToHost);
-
-   if(verbose)
-      cout << scientific << setprecision(16)
-           << "The first beta : " << beta_h << endl;
 
    free(A_h); free(v_h);
 }

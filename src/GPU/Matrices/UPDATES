@@ -1,5 +1,6 @@
 Fri 16 Jul 2021 : added messages to {dbl,dbl2}_tabs_testers.cpp to announce
-  the separate computational stages.
+  the separate computational stages.  Added second kernel to reduce a
+  square tile to an upper triangular one.
 
 Thu 15 Jul 2021 : a first kernel in dbl_baqr_kernels, updated makefiles.
   Tested and corrected the kernel to compute the Householder vector in

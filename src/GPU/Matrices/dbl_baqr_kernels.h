@@ -10,7 +10,8 @@ __global__ void dbl_small_house
  ( double *x0, double *x1, int dim, int dimLog2, double *v, double *beta );
 /*
  * DESCRIPTION :
- *   Computes the Householder vector of a vector of dimension dim+1.
+ *   Computes the Householder vector of a vector of dimension dim+1,
+ *   with one block of dim threads.
  *
  * ON ENTRY :
  *   x0       first element of the vector x; 
@@ -22,6 +23,25 @@ __global__ void dbl_small_house
  * ON RETURN :
  *   v        the Householder vector;
  *   beta     equals 2/(transpose(v)*v). */
+
+__global__ void dbl_factors_leftRupdate
+ ( int nrows, int ncols, int szt, int k, double *R, double *v, double *beta );
+/*
+ * DESCRIPTION :
+ *   Updates the matrix R starting at column k
+ *   with the Householder vector in v and beta,
+ *   with a total of ncols - k threads 
+ *   and (ncols - k)/szt + 1 number of blocks.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   ncols    number of columns of R;
+ *   szt      size of each block;
+ *   k        index of the current column;
+ *   R        an nrows-by-ncols matrix, stored column wise.
+ *
+ * ON RETURN :
+ *   R        the updated matrix is trapezoidal. */
 
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,

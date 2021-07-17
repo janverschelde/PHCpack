@@ -464,7 +464,12 @@ void CPU_dbl_blocked_houseqr
          for(int i=colidx; i<nrows; i++) x[i-colidx] = R[i][colidx];
 
          CPU_dbl_factors_house(nrowscol,x,v,&beta);
-         if(verbose) cout << "beta[" << colidx << "] : " << beta << endl;
+         if(verbose)
+         {
+            cout << "beta[" << colidx << "] : " << beta << endl;
+            for(int i=colidx; i<nrows; i++)
+               cout << "v[" << i-colidx << "] : " << v[i-colidx] << endl;
+         }
          CPU_dbl_factors_leftRupdate(nrows,endcol,colidx,R,v,beta);
          B[L] = beta;
          for(int i=0; i<L; i++) Y[L][i] = 0.0;
