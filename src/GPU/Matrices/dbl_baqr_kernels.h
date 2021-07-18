@@ -33,6 +33,28 @@ __global__ void dbl_factors_leftRupdate
  *   with a total of ncols - k threads 
  *   and (ncols - k)/szt + 1 number of blocks.
  *
+ * NOTE :
+ *   This kernel can only work for one block.
+ *   because thread blocks do not synchronize.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   ncols    number of columns of R;
+ *   szt      size of each block;
+ *   k        index of the current column;
+ *   R        an nrows-by-ncols matrix, stored column wise.
+ *
+ * ON RETURN :
+ *   R        the updated matrix is trapezoidal. */
+
+__global__ void dbl_small_leftRupdate
+ ( int nrows, int ncols, int szt, int k, double *R, double *v, double *beta );
+/*
+ * DESCRIPTION :
+ *   Updates the matrix R starting at column k
+ *   with the Householder vector in v and beta,
+ *   with a total of ncols - k threads in one block.
+ *
  * ON ENTRY :
  *   nrows    number of rows of R;
  *   ncols    number of columns of R;

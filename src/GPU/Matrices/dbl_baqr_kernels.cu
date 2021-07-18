@@ -102,6 +102,37 @@ __global__ void dbl_factors_leftRupdate
    }
 }
 
+__global__ void dbl_small_leftRupdate
+ ( int nrows, int ncols, int szt, int k, double *R, double *v, double *beta )
+{
+   int tdx = threadIdx.x;          // index of thread in block
+   int Roffset = k*nrows + k;
+   int Rcolidx;
+   double w,Rtdx;
+
+   __shared__ double shv[d_shmemsize]; // slice of v
+
+   shv[tdx] = v[tdx];
+   __syncthreads();
+   w = 0.0;
+
+   for(int i=0; i<nrows-k; i++)   // loop through rows of R
+   {
+      Rtdx = R[Roffset + i + tdx*nrows];
+      w = w + Rtdx*shv[i];
+   }
+   w = (*beta)*w;
+   __syncthreads();
+   for(int i=0; i<nrows-k; i++)   // update i-th row of R
+   {
+      Rcolidx = Roffset + i + tdx*nrows;
+      Rtdx = R[Rcolidx];
+      Rtdx = Rtdx - shv[i]*w;
+      __syncthreads();
+      R[Rcolidx] = Rtdx;
+   }
+}
+
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
@@ -141,7 +172,8 @@ void GPU_dbl_blocked_houseqr
 
    for(int k=0; k<nbt; k++)       // k runs over the number of blocks
    {
-      int colidx,nrows1,nrLog2,nbrblocks,rowidx;
+      int colidx,nrows1,nrLog2,rowidx;
+      // int nbrblocks;
 
       for(int L=0; L<szt-1; L++)  // L runs over the columns in one block
       {
@@ -180,12 +212,17 @@ void GPU_dbl_blocked_houseqr
             for(int i=0; i<nrows1+1; i++)
                cout << "v[" << i << "] : " << v_h[i] << endl;
          }
+       /*
          nbrblocks = (nrows - colidx)/szt;
          if(((nrows - colidx) % szt) > 0) nbrblocks = nbrblocks + 1;
 
          if(verbose)
+         {
             cout << "launching " << nbrblocks 
-                 << " blocks of " << szt << " threads ..." << endl;
+                 << " blocks of " << szt << " threads, ";
+            cout << nbrblocks*szt << " threads to process "
+                 << nrows - colidx << " rows ..." << endl;
+         }
          cudaEventRecord(start);
          dbl_factors_leftRupdate<<<nbrblocks,szt>>>
             (nrows,ncols,szt,colidx,A_d,v_d,beta_d);
@@ -193,7 +230,14 @@ void GPU_dbl_blocked_houseqr
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *tileRlapms += milliseconds;
-
+        */
+         cudaEventRecord(start);
+         dbl_small_leftRupdate<<<1,nrows-colidx>>>
+            (nrows,ncols,szt,colidx,A_d,v_d,beta_d);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *tileRlapms += milliseconds;
          if(verbose)
          {
             cudaMemcpy(A_h,A_d,sznum,cudaMemcpyDeviceToHost);
