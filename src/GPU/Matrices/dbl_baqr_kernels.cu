@@ -129,7 +129,7 @@ __global__ void dbl_small_leftRupdate
       Rtdx = R[Rcolidx];
       Rtdx = Rtdx - shv[i]*w;
       __syncthreads();
-      R[Rcolidx] = Rtdx;
+      if(tdx < ncols-k) R[Rcolidx] = Rtdx;
    }
 }
 
@@ -175,43 +175,45 @@ void GPU_dbl_blocked_houseqr
       int colidx,nrows1,nrLog2,rowidx;
       // int nbrblocks;
 
-      for(int L=0; L<szt-1; L++)  // L runs over the columns in one block
+      for(int L=0; L<szt; L++)  // L runs over the columns in one block
       {
          colidx = k*szt + L;              // index of the current column
          nrows1 = nrows - colidx - 1;     // #rows in Householder vector - 1
-         nrLog2 = ceil(log2((double) nrows1));
-         rowidx = colidx*(nrows+1);       // start of number in A_h
+         if(nrows1 > 0)
+         {
+            nrLog2 = ceil(log2((double) nrows1));
+            rowidx = colidx*(nrows+1);       // start of number in A_h
 
-         if(verbose)
-         {
-            cout << "nrows : " << nrows
-                 << "  ncols : " << ncols
-                 << "  szt : " << szt
-                 << "  nbt : " << nbt << endl;
-            cout << "k : " << k 
-                 << "  L : " << L
-                 << "  nrows1 : " << nrows1
-                 << "  colidx : " << colidx
-                 << "  rowidx : " << rowidx << endl;
-         }
-         cudaMemcpy(x0_d,&A_h[rowidx],sizeof(double),cudaMemcpyHostToDevice);
-         cudaEventRecord(start);
-         dbl_small_house<<<1,nrows1>>>
-            (x0_d,&A_d[rowidx+1],nrows1,nrLog2,v_d,beta_d);
-         cudaEventRecord(stop);
-         cudaEventSynchronize(stop);
-         cudaEventElapsedTime(&milliseconds,start,stop);
-         *houselapms += milliseconds;
+            if(verbose)
+            {
+               cout << "nrows : " << nrows
+                    << "  ncols : " << ncols
+                    << "  szt : " << szt
+                    << "  nbt : " << nbt << endl;
+               cout << "k : " << k 
+                    << "  L : " << L
+                    << "  nrows1 : " << nrows1
+                    << "  colidx : " << colidx
+                    << "  rowidx : " << rowidx << endl;
+            }
+            cudaMemcpy(x0_d,&A_h[rowidx],sizeof(double),cudaMemcpyHostToDevice);
+            cudaEventRecord(start);
+            dbl_small_house<<<1,nrows1>>>
+               (x0_d,&A_d[rowidx+1],nrows1,nrLog2,v_d,beta_d);
+            cudaEventRecord(stop);
+            cudaEventSynchronize(stop);
+            cudaEventElapsedTime(&milliseconds,start,stop);
+            *houselapms += milliseconds;
  
-         if(verbose)
-         {
-            cudaMemcpy(&beta_h,beta_d,sizeof(double),cudaMemcpyDeviceToHost);
-            cudaMemcpy(v_h,v_d,szhouse,cudaMemcpyDeviceToHost);
-            cout << scientific << setprecision(16)
-                 << "beta[" << L+k*szt << "] : " << beta_h << endl;
-            for(int i=0; i<nrows1+1; i++)
-               cout << "v[" << i << "] : " << v_h[i] << endl;
-         }
+            if(verbose)
+            {
+               cudaMemcpy(&beta_h,beta_d,sizeof(double),cudaMemcpyDeviceToHost);
+               cudaMemcpy(v_h,v_d,szhouse,cudaMemcpyDeviceToHost);
+               cout << scientific << setprecision(16)
+                    << "beta[" << L+k*szt << "] : " << beta_h << endl;
+               for(int i=0; i<nrows1+1; i++)
+                  cout << "v[" << i << "] : " << v_h[i] << endl;
+            }
        /*
          nbrblocks = (nrows - colidx)/szt;
          if(((nrows - colidx) % szt) > 0) nbrblocks = nbrblocks + 1;
@@ -231,21 +233,22 @@ void GPU_dbl_blocked_houseqr
          cudaEventElapsedTime(&milliseconds,start,stop);
          *tileRlapms += milliseconds;
         */
-         cudaEventRecord(start);
-         dbl_small_leftRupdate<<<1,nrows-colidx>>>
-            (nrows,ncols,szt,colidx,A_d,v_d,beta_d);
-         cudaEventRecord(stop);
-         cudaEventSynchronize(stop);
-         cudaEventElapsedTime(&milliseconds,start,stop);
-         *tileRlapms += milliseconds;
-         if(verbose)
-         {
-            cudaMemcpy(A_h,A_d,sznum,cudaMemcpyDeviceToHost);
-            cout << "the matrix after the update :" << endl;
-            for(int i=0; i<nrows; i++)
-               for(int j=0; j<ncols; j++)
-                  cout << "A_d[" << i << "][" << j << "] : "
-                       << A_h[j*nrows+i] << endl;
+            cudaEventRecord(start);
+            dbl_small_leftRupdate<<<1,nrows-colidx>>>
+               (nrows,ncols,szt,colidx,A_d,v_d,beta_d);
+            cudaEventRecord(stop);
+            cudaEventSynchronize(stop);
+            cudaEventElapsedTime(&milliseconds,start,stop);
+            *tileRlapms += milliseconds;
+            if(verbose)
+            {
+               cudaMemcpy(A_h,A_d,sznum,cudaMemcpyDeviceToHost);
+               cout << "the matrix after the update :" << endl;
+               for(int i=0; i<nrows; i++)
+                  for(int j=0; j<ncols; j++)
+                     cout << "A_d[" << i << "][" << j << "] : "
+                          << A_h[j*nrows+i] << endl;
+            }
          }
       }
    }
