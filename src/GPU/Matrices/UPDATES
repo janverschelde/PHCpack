@@ -1,3 +1,6 @@
+Mon 19 Jul 2021 : in {dbl,dbl2}_factorizations.cpp, fixed the loop end to
+  not skip the very last step for matrices with more rows than columns.
+
 Sun 18 Jul 2021 : new kernel to update one tile by one block of threads.
 
 Sat 17 Jul 2021 : adjusted the column loop counter in dbl_factorizations.cpp

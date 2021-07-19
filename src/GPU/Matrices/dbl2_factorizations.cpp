@@ -738,15 +738,18 @@ void CPU_dbl2_factors_houseqr
    }
    for(int k=0; k<ncols; k++)
    {
-      for(int i=k; i<nrows; i++)
+      if(nrows - k > 0)
       {
-         xhi[i-k] = Rhi[i][k];
-         xlo[i-k] = Rlo[i][k];
+         for(int i=k; i<nrows; i++)
+         {
+            xhi[i-k] = Rhi[i][k];
+            xlo[i-k] = Rlo[i][k];
+         }
+         CPU_dbl2_factors_house(nrows-k,xhi,xlo,vhi,vlo,&betahi,&betalo);
+         CPU_dbl2_factors_leftRupdate
+            (nrows,ncols,k,Rhi,Rlo,vhi,vlo,betahi,betalo);
+         CPU_dbl2_factors_rightQupdate(nrows,k,Qhi,Qlo,vhi,vlo,betahi,betalo);
       }
-      CPU_dbl2_factors_house(nrows-k,xhi,xlo,vhi,vlo,&betahi,&betalo);
-      CPU_dbl2_factors_leftRupdate
-         (nrows,ncols,k,Rhi,Rlo,vhi,vlo,betahi,betalo);
-      CPU_dbl2_factors_rightQupdate(nrows,k,Qhi,Qlo,vhi,vlo,betahi,betalo);
    }
    free(xhi); free(vhi);
    free(xlo); free(vlo);
@@ -786,20 +789,23 @@ void CPU_cmplx2_factors_houseqr
    }
    for(int k=0; k<ncols; k++)
    {
-      for(int i=k; i<nrows; i++)
+      if(nrows - k > 0)
       {
-         xrehi[i-k] = Rrehi[i][k]; ximhi[i-k] = Rimhi[i][k];
-         xrelo[i-k] = Rrelo[i][k]; ximlo[i-k] = Rimlo[i][k];
+         for(int i=k; i<nrows; i++)
+         {
+            xrehi[i-k] = Rrehi[i][k]; ximhi[i-k] = Rimhi[i][k];
+            xrelo[i-k] = Rrelo[i][k]; ximlo[i-k] = Rimlo[i][k];
+         }
+         CPU_cmplx2_factors_house
+            (nrows-k,xrehi,xrelo,ximhi,ximlo,
+                     vrehi,vrelo,vimhi,vimlo,&betahi,&betalo);
+         CPU_cmplx2_factors_leftRupdate
+            (nrows,ncols,k,Rrehi,Rrelo,Rimhi,Rimlo,
+                           vrehi,vrelo,vimhi,vimlo,betahi,betalo);
+         CPU_cmplx2_factors_rightQupdate
+            (nrows,k,Qrehi,Qrelo,Qimhi,Qimlo,
+                     vrehi,vrelo,vimhi,vimlo,betahi,betalo);
       }
-      CPU_cmplx2_factors_house
-         (nrows-k,xrehi,xrelo,ximhi,ximlo,
-                  vrehi,vrelo,vimhi,vimlo,&betahi,&betalo);
-      CPU_cmplx2_factors_leftRupdate
-         (nrows,ncols,k,Rrehi,Rrelo,Rimhi,Rimlo,
-                        vrehi,vrelo,vimhi,vimlo,betahi,betalo);
-      CPU_cmplx2_factors_rightQupdate
-         (nrows,k,Qrehi,Qrelo,Qimhi,Qimlo,
-                  vrehi,vrelo,vimhi,vimlo,betahi,betalo);
    }
    free(xrehi); free(ximhi); free(vrehi); free(vimhi);
    free(xrelo); free(ximlo); free(vrelo); free(vimlo);

@@ -424,12 +424,15 @@ void CPU_dbl_factors_houseqr
       Q[i][i] = 1.0;
       for(int j=0; j<ncols; j++) R[i][j] = A[i][j];
    }
-   for(int k=0; k<ncols-1; k++)
+   for(int k=0; k<ncols; k++)
    {
-      for(int i=k; i<nrows; i++) x[i-k] = R[i][k];
-      CPU_dbl_factors_house(nrows-k,x,v,&beta);
-      CPU_dbl_factors_leftRupdate(nrows,ncols,k,R,v,beta);
-      CPU_dbl_factors_rightQupdate(nrows,k,Q,v,beta);
+      if(nrows - k > 0)
+      {
+         for(int i=k; i<nrows; i++) x[i-k] = R[i][k];
+         CPU_dbl_factors_house(nrows-k,x,v,&beta);
+         CPU_dbl_factors_leftRupdate(nrows,ncols,k,R,v,beta);
+         CPU_dbl_factors_rightQupdate(nrows,k,Q,v,beta);
+      }
    }
    free(x); free(v);
 }
@@ -459,16 +462,19 @@ void CPU_cmplx_factors_houseqr
          Rim[i][j] = Aim[i][j];
       }
    }
-   for(int k=0; k<ncols-1; k++)
+   for(int k=0; k<ncols; k++)
    {
-      for(int i=k; i<nrows; i++)
+      if(nrows - k > 0)
       {
-         xre[i-k] = Rre[i][k];
-         xim[i-k] = Rim[i][k];
+         for(int i=k; i<nrows; i++)
+         {
+            xre[i-k] = Rre[i][k];
+            xim[i-k] = Rim[i][k];
+         }
+         CPU_cmplx_factors_house(nrows-k,xre,xim,vre,vim,&beta);
+         CPU_cmplx_factors_leftRupdate(nrows,ncols,k,Rre,Rim,vre,vim,beta);
+         CPU_cmplx_factors_rightQupdate(nrows,k,Qre,Qim,vre,vim,beta);
       }
-      CPU_cmplx_factors_house(nrows-k,xre,xim,vre,vim,&beta);
-      CPU_cmplx_factors_leftRupdate(nrows,ncols,k,Rre,Rim,vre,vim,beta);
-      CPU_cmplx_factors_rightQupdate(nrows,k,Qre,Qim,vre,vim,beta);
    }
    free(xre); free(xim); free(vre); free(vim);
 }
