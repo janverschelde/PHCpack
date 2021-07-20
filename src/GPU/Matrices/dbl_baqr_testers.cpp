@@ -84,7 +84,7 @@ void test_real_blocked_qr ( void )
    cout << houselapsedms << " milliseconds." << endl;
    cout << "  Time spent by the kernel to reduce one tile : ";
    cout << tileRlapsedms << " milliseconds." << endl;
-   cout << "   Time spent by the kernel to compute the Ws : ";
+   cout << "    Time spent by the kernel for the W matrix : ";
    cout << vb2Wlapsedms << " milliseconds." << endl;
    cout << "        Total GPU wall clock computation time : ";
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;

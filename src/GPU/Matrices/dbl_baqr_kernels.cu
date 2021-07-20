@@ -137,10 +137,11 @@ __global__ void dbl_VB_to_W
  ( int nrows, int ncols, double *B, double *V, double *W )
 {
    int tdx = threadIdx.x;              // index of thread in block
-   double wrk,pk,zi;
+   double wrk,pk,mypk,zi;
 
    __shared__ double shv[d_shmemsize]; // one work vector
    __shared__ double shw[d_shmemsize]; // the other work vector
+   __shared__ double shp[d_shmemsize]; // to share Y^T*v
 
    shv[tdx] = V[tdx];
    wrk = -B[0]*shv[tdx];               // first column of W
@@ -149,21 +150,27 @@ __global__ void dbl_VB_to_W
    for(int j=1; j<ncols; j++)          // compute column j of W
    {
       shv[tdx] = V[j*nrows + tdx];     // j-th Householder vector
-      pk = 0.0;                        // k-th component of Y^T*v
       for(int k=0; k<j; k++)
       {
-         shw[tdx] = V[k*nrows+tdx];    // k-th Householder vector
-         pk = pk + shw[tdx]*shv[tdx];
+         pk = 0.0;                     // k-th component of Y^T*v
+         shw[tdx] = V[k*nrows + tdx];  // load V[k][i]
+         shp[tdx] = shw[tdx]*shv[tdx]; // V[k][i]*v[i]
+         __syncthreads();
+         for(int i=0; i<nrows; i++) pk = pk + shp[i];
+         if(tdx == k) mypk = pk;
       }
+      __syncthreads();
+      shp[tdx] = mypk;                 // share p[k]
+      __syncthreads();
       zi = 0.0;                        // i-th component of W*p
       for(int k=0; k<j; k++)
       {
-         shw[tdx] = W[k*nrows+tdx];    // k-the vector of W
-         zi = zi + shw[tdx]*pk;
+         shw[tdx] = W[k*nrows + tdx];  // load W[k][i]
+         zi = zi + shw[tdx]*shp[k];
       }
       zi = zi + shv[tdx];
       wrk = -B[j]*zi;
-      W[j*nrows+tdx] = wrk;            // wrk is assigned to W[j][tdx]
+      W[j*nrows + tdx] = wrk;          // wrk is assigned to W[j][tdx]
       __syncthreads();
    }
 }
@@ -183,6 +190,7 @@ void GPU_dbl_blocked_houseqr
    double *beta_d;                      // beta on the device
    double *V_h = new double[nrows*szt]; // matrix of Householder vectors
    double *V_d;                         // Householder vectors on device
+   double *W_h = new double[nrows*szt]; // the W matrix on the host
    double *W_d;                         // the W matrix 
 
    int ix=0;                            // copy the columns of A to A_h
@@ -196,10 +204,14 @@ void GPU_dbl_blocked_houseqr
    cudaMalloc((void**)&x0_d,sizeof(double));
    const size_t szbeta = szt*sizeof(double);
    cudaMalloc((void**)&beta_d,szbeta);
+   for(int i=0; i<szt; i++) beta_h[i] = 0.0;
+   // beta_h[szt-1] = 1.0; // initialize last beta for square tiles
+   cudaMemcpy(beta_d,beta_h,szbeta,cudaMemcpyHostToDevice);
    const size_t szVandW = szt*szhouse;
    cudaMalloc((void**)&V_d,szVandW);
    ix = 0;
    for(int i=0; i<nrows*szt; i++) V_h[ix++] = 0.0; 
+   V_h[--ix] = 1.0; // initialize last vector for square tiles
    cudaMemcpy(V_d,V_h,szVandW,cudaMemcpyHostToDevice);
    cudaMalloc((void**)&W_d,szVandW);
 
@@ -244,7 +256,7 @@ void GPU_dbl_blocked_houseqr
                (x0_d,&A_h[rowidx],sizeof(double),cudaMemcpyHostToDevice);
             cudaEventRecord(start);
             dbl_small_house<<<1,nrows1>>>
-               (x0_d,&A_d[rowidx+1],nrows1,nrLog2,&V_d[L*nrows],&beta_d[L]);
+               (x0_d,&A_d[rowidx+1],nrows1,nrLog2,&V_d[L*nrows+L],&beta_d[L]);
             cudaEventRecord(stop);
             cudaEventSynchronize(stop);
             cudaEventElapsedTime(&milliseconds,start,stop);
@@ -256,8 +268,8 @@ void GPU_dbl_blocked_houseqr
                           cudaMemcpyDeviceToHost);
                cudaMemcpy(v_h,&V_d[L*nrows],szhouse,cudaMemcpyDeviceToHost);
                cout << scientific << setprecision(16)
-                    << "beta[" << L+k*szt << "] : " << beta_h[L] << endl;
-               for(int i=0; i<nrows1+1; i++)
+                    << "beta[" << L << "] : " << beta_h[L] << endl;
+               for(int i=0; i<nrows; i++)
                   cout << "v[" << i << "] : " << v_h[i] << endl;
             }
        /*
@@ -281,7 +293,7 @@ void GPU_dbl_blocked_houseqr
         */
             cudaEventRecord(start);
             dbl_small_leftRupdate<<<1,nrows-colidx>>>
-               (nrows,ncols,szt,colidx,A_d,&V_d[L*nrows],&beta_d[L]);
+               (nrows,ncols,szt,colidx,A_d,&V_d[L*nrows+L],&beta_d[L]);
             cudaEventRecord(stop);
             cudaEventSynchronize(stop);
             cudaEventElapsedTime(&milliseconds,start,stop);
@@ -303,11 +315,30 @@ void GPU_dbl_blocked_houseqr
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *vb2Wlapms += milliseconds;
+      if(verbose)
+      {
+         cudaMemcpy(beta_h,beta_d,szbeta,cudaMemcpyDeviceToHost);
+         cout << "the betas :" << endl;
+         for(int j=0; j<szt; j++)
+            cout << "beta[" << j << "] : " << beta_h[j] << endl;
+         cudaMemcpy(V_h,V_d,szVandW,cudaMemcpyDeviceToHost);
+         cout << "the columns of the V matrix :" << endl;
+         ix = 0;
+         for(int j=0; j<szt; j++) 
+            for(int i=0; i<nrows; i++) 
+               cout << "V[" << i << "][" << j << "] : " << V_h[ix++] << endl;
+         cudaMemcpy(W_h,W_d,szVandW,cudaMemcpyDeviceToHost);
+         cout << "the columns of the W matrix :" << endl;
+         ix = 0;
+         for(int j=0; j<szt; j++) 
+            for(int i=0; i<nrows; i++) 
+               cout << "W[" << i << "][" << j << "] : " << W_h[ix++] << endl;
+      }
    }
    gettimeofday(&endtime,0);
    long seconds = endtime.tv_sec - begintime.tv_sec;
    long microseconds = endtime.tv_usec - begintime.tv_usec;
    *walltimesec = seconds + microseconds*1.0e-6;
 
-   free(A_h); free(v_h); free(V_h);
+   free(A_h); free(v_h); free(V_h); free(W_h);
 }

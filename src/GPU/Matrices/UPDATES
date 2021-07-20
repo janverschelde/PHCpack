@@ -1,3 +1,7 @@
+Tue 20 Jul 2021 : fixed the W kernel in dbl_baqr_kernels.cu, with corrected
+  printing of V and W in dbl_baqr_host.cpp, when verbose, for nrows > ncols.
+  Adjusted printing of elapsed time in dbl_baqr.testers.cpp.
+
 Mon 19 Jul 2021 : in {dbl,dbl2}_factorizations.cpp, fixed the loop end to
   not skip the very last step for matrices with more rows than columns.
   Fixed a kernel in dbl_baqr_kernels.cu so it works for one tile, also

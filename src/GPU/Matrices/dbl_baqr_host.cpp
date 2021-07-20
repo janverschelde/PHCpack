@@ -293,6 +293,14 @@ void CPU_dbl_blocked_rightQupdate
 
    if(verbose)
    {
+      for(int j=0; j<szt; j++)
+         for(int i=0; i<rowdim; i++)
+            cout << "V[" << i << "][" << j << "] : " << Y[j][i] << endl;
+
+      for(int j=0; j<szt; j++)
+         for(int i=0; i<rowdim; i++)
+            cout << "W[" << i << "][" << j << "] : " << W[j][i] << endl;
+
       for(int i=0; i<rowdim; i++)
          for(int j=0; j<rowdim; j++)
             cout << "WYT[" << i << "][" << j << "] : " << WYT[i][j] << endl;
