@@ -86,6 +86,102 @@ __global__ void dbl_VB_to_W
  * ON RETURN :
  *   W        the W matrix in the WY representation. */
 
+void GPU_dbl_small_house
+ ( int nrows, int ncols, int szt, int nbt,
+   int colidx, int nrows1, int k, int L,
+   double *x0_d, double *A_h, double *A_d,
+   double *v_h, double *V_d, double *beta_h, double *beta_d,
+   double *lapms, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to compute the Householder vector for small
+ *   enough matrices for the vector to fit entirely in shared memory.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrix A;
+ *   ncols    number of columns in the matrix A;
+ *   szt      size of one tile;
+ *   nbt      number of tiles, szt*nbt = ncols;
+ *   colidx   global index of the current column;
+ *   nrows1   number of threads in the block equals the number
+ *            of elements computed in the Householder vector;
+ *   L        local index of the column in the current tile;
+ *   x0_d     space on the device for the first element of the vector
+ *            in the current column;
+ *   A_h      matrix on the host;
+ *   A_d      matrix on the device;
+ *   v_h      space for the current Householder vector;
+ *   V_d      space allocated for the Householder vectors on the device;
+ *   beta_h   space allocated for the betas if verbose;
+ *   beta_d   space allocated on the device for the betas;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   v_h      the next Householder vector on the host, if verbose;
+ *   V_d      contains the next computed Householder vector;
+ *   beta_h   updated vector of betas, if verbose;
+ *   beta_d   the next beta constant;
+ *   lapms    elapsed time spent by the kernel. */
+
+void GPU_dbl_small_leftRupdate
+ ( int nrows, int ncols, int szt, int colidx, int L,
+   double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
+   double *lapms, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to update one tile.
+ *   Wraps the timer and the print statements if verbose.
+ *   If verbose, then the reduced matrix is returned on the host.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrix A;
+ *   ncols    number of columns in the matrix A;
+ *   szt      size of one tile;
+ *   colidx   global index of the current column;
+ *   L        local index of the column in the current tile;
+ *   A_h      matrix on the host;
+ *   A_d      matrix on the device;
+ *   V_d      space allocated for the Householder vectors on the device;
+ *   beta_h   space allocated for the betas if verbose;
+ *   beta_d   space allocated on the device for the betas;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   V_d      contains the Householder vectors on the device;
+ *   beta_h   vector of betas, if verbose;
+ *   beta_d   the next beta constant;
+ *   lapms    elapsed time spent by the kernel. */
+
+void GPU_dbl_VB_to_W
+ ( int nrows, int ncols, int szt,
+   double *V_h, double *V_d, double *W_h, double *W_d,
+   double *beta_h, double *beta_d, double *lapms, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to compute the W in the WY representation.
+ *   Wraps the timer and the print statements if verbose.
+ *   If verbose, then the W matrix is returned on the host.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrices V, Y, and W;
+ *   ncols    equals the size of one tile, or equivalently,
+ *            is the number of elements in B,
+ *            and the number of columns in V, Y, and W;
+ *   V_h      space allocated for the Householder vectors, if verbose;
+ *   V_d      space allocated for V on the device;
+ *   W_h      space allocated for the W matrix, if verbose;
+ *   W_d      space allocated for W on the device;
+ *   beta_h   space allocated for the betas if verbose;
+ *   beta_d   space allocated on the device for the betas;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   V_h      equals the Y matrix, if verbose;
+ *   V_d      the Y matrix on the device;
+ *   W_d      the W matrix in the WY representation, on the device;
+ *   W_h      the W matrix in the WY representation, if verbose;
+ *   lapms    elapsed time spent by the kernel. */
+
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
