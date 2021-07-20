@@ -65,10 +65,31 @@ __global__ void dbl_small_leftRupdate
  * ON RETURN :
  *   R        the updated matrix is trapezoidal. */
 
+__global__ void dbl_VB_to_W
+ ( int nrows, int ncols, double *B, double *V, double *W );
+/*
+ * DESCRIPTION :
+ *   Computes the W in the WY representation of the Householder
+ *   transformations defined by V and B, on real data,
+ *   with one block of nrows threads.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrices V, Y, and W;
+ *   ncols    equals the size of one tile, or equivalently,
+ *            is the number of elements in B,
+ *            and the number of columns in V, Y, and W;
+ *   B        B[i] is the i-th beta computed by house;
+ *   V        V[nrows*i] is the start of the i-th Householder vector,
+ *            with i zeros inserted so V is trapezoidal;
+ *   W        space for ncols columns with rows from 0 to nrows-1.
+ *
+ * ON RETURN :
+ *   W        the W matrix in the WY representation. */
+
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
-   double *houselapms, double *tileRlapms,
+   double *houselapms, double *tileRlapms, double *vb2Wlapms,
    double *walltimesec, bool verbose=true );
 /*
  * DESCRIPTION :
@@ -95,6 +116,8 @@ void GPU_dbl_blocked_houseqr
  *            to compute the Householder vector and the beta;
  *   tileRlapms is the elapsed time spent by the kernel
  *            to reduce one tile;
+ *   vb2Wlapms is the elapsed time spent by the kernel
+ *            to compute the W representation;
  *   walltimesec is the elapsed wall clock computation time. */
 
 #endif

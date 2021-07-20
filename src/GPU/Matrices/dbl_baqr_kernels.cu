@@ -133,22 +133,59 @@ __global__ void dbl_small_leftRupdate
    }
 }
 
+__global__ void dbl_VB_to_W
+ ( int nrows, int ncols, double *B, double *V, double *W )
+{
+   int tdx = threadIdx.x;              // index of thread in block
+   double wrk,pk,zi;
+
+   __shared__ double shv[d_shmemsize]; // one work vector
+   __shared__ double shw[d_shmemsize]; // the other work vector
+
+   shv[tdx] = V[tdx];
+   wrk = -B[0]*shv[tdx];               // first column of W
+   W[tdx] = wrk;
+
+   for(int j=1; j<ncols; j++)          // compute column j of W
+   {
+      shv[tdx] = V[j*nrows + tdx];     // j-th Householder vector
+      pk = 0.0;                        // k-th component of Y^T*v
+      for(int k=0; k<j; k++)
+      {
+         shw[tdx] = V[k*nrows+tdx];    // k-th Householder vector
+         pk = pk + shw[tdx]*shv[tdx];
+      }
+      zi = 0.0;                        // i-th component of W*p
+      for(int k=0; k<j; k++)
+      {
+         shw[tdx] = W[k*nrows+tdx];    // k-the vector of W
+         zi = zi + shw[tdx]*pk;
+      }
+      zi = zi + shv[tdx];
+      wrk = -B[j]*zi;
+      W[j*nrows+tdx] = wrk;            // wrk is assigned to W[j][tdx]
+      __syncthreads();
+   }
+}
+
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
-   double *houselapms, double *tileRlapms,
+   double *houselapms, double *tileRlapms, double *vb2Wlapms,
    double *walltimesec, bool verbose )
 {
-   const int dim = nrows*ncols;     // total number of doubles
-   double *A_h = new double[dim];   // matrix A on the host
-   double *A_d;                     // matrix on the device
-   double *v_h = new double[nrows]; // Householder vector on host
-   double *v_d;                     // Householder vector on device
-   double *x0_d;                    // first element for house on device
-   double beta_h;                   // beta on the host
-   double *beta_d;                  // beta on the device
+   const int dim = nrows*ncols;         // total number of doubles
+   double *A_h = new double[dim];       // matrix A on the host
+   double *A_d;                         // matrix on the device
+   double *v_h = new double[nrows];     // Householder vector on host
+   double *x0_d;                        // first element for house on device
+   double *beta_h = new double[szt];    // beta on the host
+   double *beta_d;                      // beta on the device
+   double *V_h = new double[nrows*szt]; // matrix of Householder vectors
+   double *V_d;                         // Householder vectors on device
+   double *W_d;                         // the W matrix 
 
-   int ix=0;                        // copy the columns of A to A_h
+   int ix=0;                            // copy the columns of A to A_h
    for(int j=0; j<ncols; j++)   
       for(int i=0; i<nrows; i++) A_h[ix++] = A[i][j];
 
@@ -156,15 +193,22 @@ void GPU_dbl_blocked_houseqr
    cudaMalloc((void**)&A_d,sznum);
    cudaMemcpy(A_d,A_h,sznum,cudaMemcpyHostToDevice);
    const size_t szhouse = nrows*sizeof(double);
-   cudaMalloc((void**)&v_d,szhouse);
    cudaMalloc((void**)&x0_d,sizeof(double));
-   cudaMalloc((void**)&beta_d,sizeof(double));
+   const size_t szbeta = szt*sizeof(double);
+   cudaMalloc((void**)&beta_d,szbeta);
+   const size_t szVandW = szt*szhouse;
+   cudaMalloc((void**)&V_d,szVandW);
+   ix = 0;
+   for(int i=0; i<nrows*szt; i++) V_h[ix++] = 0.0; 
+   cudaMemcpy(V_d,V_h,szVandW,cudaMemcpyHostToDevice);
+   cudaMalloc((void**)&W_d,szVandW);
 
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
    cudaEventCreate(&stop);
    *houselapms = 0.0;
    *tileRlapms = 0.0;
+   *vb2Wlapms = 0.0;
    float milliseconds;
    struct timeval begintime,endtime; // wall clock time of computations
 
@@ -196,10 +240,11 @@ void GPU_dbl_blocked_houseqr
                     << "  colidx : " << colidx
                     << "  rowidx : " << rowidx << endl;
             }
-            cudaMemcpy(x0_d,&A_h[rowidx],sizeof(double),cudaMemcpyHostToDevice);
+            cudaMemcpy
+               (x0_d,&A_h[rowidx],sizeof(double),cudaMemcpyHostToDevice);
             cudaEventRecord(start);
             dbl_small_house<<<1,nrows1>>>
-               (x0_d,&A_d[rowidx+1],nrows1,nrLog2,v_d,beta_d);
+               (x0_d,&A_d[rowidx+1],nrows1,nrLog2,&V_d[L*nrows],&beta_d[L]);
             cudaEventRecord(stop);
             cudaEventSynchronize(stop);
             cudaEventElapsedTime(&milliseconds,start,stop);
@@ -207,10 +252,11 @@ void GPU_dbl_blocked_houseqr
  
             if(verbose)
             {
-               cudaMemcpy(&beta_h,beta_d,sizeof(double),cudaMemcpyDeviceToHost);
-               cudaMemcpy(v_h,v_d,szhouse,cudaMemcpyDeviceToHost);
+               cudaMemcpy(&beta_h[L],&beta_d[L],sizeof(double),
+                          cudaMemcpyDeviceToHost);
+               cudaMemcpy(v_h,&V_d[L*nrows],szhouse,cudaMemcpyDeviceToHost);
                cout << scientific << setprecision(16)
-                    << "beta[" << L+k*szt << "] : " << beta_h << endl;
+                    << "beta[" << L+k*szt << "] : " << beta_h[L] << endl;
                for(int i=0; i<nrows1+1; i++)
                   cout << "v[" << i << "] : " << v_h[i] << endl;
             }
@@ -235,7 +281,7 @@ void GPU_dbl_blocked_houseqr
         */
             cudaEventRecord(start);
             dbl_small_leftRupdate<<<1,nrows-colidx>>>
-               (nrows,ncols,szt,colidx,A_d,v_d,beta_d);
+               (nrows,ncols,szt,colidx,A_d,&V_d[L*nrows],&beta_d[L]);
             cudaEventRecord(stop);
             cudaEventSynchronize(stop);
             cudaEventElapsedTime(&milliseconds,start,stop);
@@ -249,13 +295,19 @@ void GPU_dbl_blocked_houseqr
                      cout << "A_d[" << i << "][" << j << "] : "
                           << A_h[j*nrows+i] << endl;
             }
-         }
-      }
+         } // end if(nrows1 > 0)
+      } // end for(int L=0; L<szt; L++) loop
+      cudaEventRecord(start);
+      dbl_VB_to_W<<<1,nrows>>>(nrows,ncols,beta_d,V_d,W_d);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *vb2Wlapms += milliseconds;
    }
    gettimeofday(&endtime,0);
    long seconds = endtime.tv_sec - begintime.tv_sec;
    long microseconds = endtime.tv_usec - begintime.tv_usec;
    *walltimesec = seconds + microseconds*1.0e-6;
 
-   free(A_h); free(v_h);
+   free(A_h); free(v_h); free(V_h);
 }

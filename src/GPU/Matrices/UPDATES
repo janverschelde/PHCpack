@@ -1,7 +1,8 @@
 Mon 19 Jul 2021 : in {dbl,dbl2}_factorizations.cpp, fixed the loop end to
   not skip the very last step for matrices with more rows than columns.
   Fixed a kernel in dbl_baqr_kernels.cu so it works for one tile, also
-  with more rows than columns.
+  with more rows than columns.  First version of a kernel to compute W
+  added to dbl_baqr_kernels, updated dbl_baqr_testers.cpp.
 
 Sun 18 Jul 2021 : new kernel to update one tile by one block of threads.
 
