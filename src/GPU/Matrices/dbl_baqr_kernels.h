@@ -121,12 +121,28 @@ __global__ void dbl_small_QWYT
  * ON RETURN :
  *   QWYT     the product of Q with QWYT. */
 
+__global__ void dbl_small_Qupdate
+ ( int dim, int szt, int coloff, double *Q, double *QWYT );
+/*
+ * DESCRIPTION :
+ *   Updates Q by adding QWYT.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns of all matrices;
+ *   szt      the number of threads in a block;
+ *   coloff   offset for the column index in QWYT;
+ *   Q        the current orthogonal matrix;
+ *   QWYT     space for a dim-by-dim matrix.
+ *
+ * ON RETURN :
+ *   Q        Q + QWYT. */
+
 void GPU_dbl_small_house
  ( int nrows, int ncols, int szt, int nbt,
    int colidx, int nrows1, int k, int L,
    double *x0_d, double *A_h, double *A_d,
    double *v_h, double *V_d, double *beta_h, double *beta_d,
-   double *lapms, bool verbose );
+   double *lapms, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the Householder vector for small
@@ -161,7 +177,7 @@ void GPU_dbl_small_house
 void GPU_dbl_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
-   double *lapms, bool verbose );
+   double *lapms, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update one tile.
@@ -190,7 +206,7 @@ void GPU_dbl_small_leftRupdate
 void GPU_dbl_VB_to_W
  ( int nrows, int ncols, int szt,
    double *V_h, double *V_d, double *W_h, double *W_d,
-   double *beta_h, double *beta_d, double *lapms, bool verbose );
+   double *beta_h, double *beta_d, double *lapms, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the W in the WY representation.
@@ -219,7 +235,7 @@ void GPU_dbl_VB_to_W
 
 void GPU_dbl_small_WYT
  ( int nrows, int szt, double *W_d, double *Y_d, double *WYT_d,
-   double *WYT_h, double *lapms, bool verbose );
+   double *WYT_h, double *lapms, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute W*Y^T.
@@ -240,7 +256,7 @@ void GPU_dbl_small_WYT
 
 void GPU_dbl_small_QWYT
  ( int dim, int szt, int idx, double *Q_d, double *WYT_d, double *QWYT_d,
-   double *QWYT_h, double *lapms, bool verbose );
+   double *QWYT_h, double *lapms, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute Q*WYT.
@@ -262,12 +278,34 @@ void GPU_dbl_small_QWYT
  *   QWYT_h   the product Q*WYT, if verbose;
  *   lapms    elapsed time spent by the kernel. */
 
+void GPU_dbl_small_Qupdate
+ ( int dim, int szt, int idx, double *Q_d, double *QWYT_d,
+   double *Q_h, double *lapms, bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to update Q as Q + QWYT.
+ *   Wraps the timer and the print statement if verbose.
+ *   If verbose, then the update Q is returned.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and column in Q and QWYT;
+ *   szt      size of one tile and the number of threads in a block;
+ *   idx      index of the current tile;
+ *   Q_d      a dim-by-dim matrix, on the device;
+ *   QWYT_d   the product Q*W*Y^T, on the device;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   Q_d      the updated Q on the device;
+ *   Q_h      the updated Q, if verbose;
+ *   lapms    elapsed time spent by the kernel. */
+
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
-   double *WYTlapms, double *QWYTlapms, double *walltimesec,
-   bool verbose=true );
+   double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
+   double *walltimesec, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
@@ -299,6 +337,8 @@ void GPU_dbl_blocked_houseqr
  *            to compute the W*Y^T matrix;
  *   QWYTlapms is the elapsed time spent by the kernel
  *            to compute the Q*WYT matrix;
+ *   Qaddlapms is the elapsed time spent by the kernel
+ *            to compute Q by adding the Q*W*Y^T matrix;
  *   walltimesec is the elapsed wall clock computation time. */
 
 #endif

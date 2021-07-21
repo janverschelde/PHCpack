@@ -200,11 +200,11 @@ __global__ void dbl_small_WYT
 __global__ void dbl_small_QWYT
  ( int dim, int szt, int coloff, double *Q, double *WYT, double *QWYT )
 {
-   const int bdx = blockIdx.x;           // index of block
-   const int tdx = threadIdx.x;          // index of thread in block
-   const int offset = bdx*szt + tdx;     // offset in result
+   const int bdx = blockIdx.x;         // index of block
+   const int tdx = threadIdx.x;        // index of thread in block
+   const int offset = bdx*szt + tdx;   // offset in result
    const int row = offset / dim;
-   const int col = offset % dim;         // thread 0 computes WYT[row][col]
+   const int col = offset % dim;       // thread 0 computes QWYT[row][col]
 
    double result = 0.0;
    double a,b;
@@ -217,6 +217,26 @@ __global__ void dbl_small_QWYT
    }
    __syncthreads();
    QWYT[row*coloff + offset] = result;
+}
+
+__global__ void dbl_small_Qupdate
+ ( int dim, int szt, int coloff, double *Q, double *QWYT )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int offset = bdx*szt + tdx;   // offset in result
+   const int row = offset / dim;
+   // const int col = offset % dim;       // thread 0 computes Q[row][col]
+
+   double result = 0.0;
+   double a,b;
+
+   a = Q[row*coloff + offset];     // row = bdx, if dim == szt, coloff == 0
+   b = QWYT[row*coloff + offset];  // if(dim == szt) then col = tdx
+   result = a + b;
+
+   __syncthreads();
+   Q[row*coloff + offset] = result;
 }
 
 void GPU_dbl_small_house
@@ -410,12 +430,46 @@ void GPU_dbl_small_QWYT
    }
 }
 
+void GPU_dbl_small_Qupdate
+ ( int dim, int szt, int idx, double *Q_d, double *QWYT_d,
+   double *Q_h, double *lapms, bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int coloff = idx*szt;
+   const int rowdim = dim - coloff;
+   const int nbrblocks = (int) ceil(dim*rowdim/((double) szt));
+
+   cudaEventRecord(start);
+   dbl_small_Qupdate<<<nbrblocks,szt>>>(dim,szt,coloff,Q_d,QWYT_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+
+   if(verbose)
+   {
+      const size_t szmat = dim*dim*sizeof(double);
+
+      cudaMemcpy(Q_h,Q_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the Q matrix :" << endl;
+      int ix = 0;
+      for(int i=0; i<dim; i++) 
+         for(int j=0; j<dim; j++) 
+            cout << "Q[" << i << "][" << j << "] : "
+                 << Q_h[ix++] << endl;
+   }
+}
+
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
-   double *WYTlapms, double *QWYTlapms, double *walltimesec,
-   bool verbose )
+   double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
+   double *walltimesec, bool verbose )
 {
    const int dim = nrows*ncols;         // total number of doubles
    const int nrows2 = nrows*nrows;
@@ -480,6 +534,9 @@ void GPU_dbl_blocked_houseqr
    *houselapms = 0.0;
    *tileRlapms = 0.0;
    *vb2Wlapms = 0.0;
+   *WYTlapms = 0.0;
+   *QWYTlapms = 0.0;
+   *Qaddlapms = 0.0;
    struct timeval begintime,endtime; // wall clock time of computations
 
    gettimeofday(&begintime,0);
@@ -505,16 +562,26 @@ void GPU_dbl_blocked_houseqr
       }
       GPU_dbl_VB_to_W
          (nrows,ncols,szt,V_h,V_d,W_h,W_d,beta_h,beta_d,vb2Wlapms,verbose);
-
       GPU_dbl_small_WYT(nrows,szt,W_d,V_d,WYT_d,WYT_h,WYTlapms,verbose);
-
       GPU_dbl_small_QWYT
         (nrows,szt,k,Q_d,WYT_d,QWYT_d,QWYT_h,QWYTlapms,verbose);
+      GPU_dbl_small_Qupdate
+        (nrows,szt,k,Q_d,QWYT_d,Q_h,Qaddlapms,verbose);
    }
    gettimeofday(&endtime,0);
    long seconds = endtime.tv_sec - begintime.tv_sec;
    long microseconds = endtime.tv_usec - begintime.tv_usec;
    *walltimesec = seconds + microseconds*1.0e-6;
+
+   cudaMemcpy(Q_h,Q_d,szWYT,cudaMemcpyHostToDevice);
+   ix = 0;                                           // copy rows of Q
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<nrows; j++) Q[i][j] = Q_h[ix++];
+
+   cudaMemcpy(A_h,A_d,sznum,cudaMemcpyHostToDevice);
+   ix = 0;                                           // copy columns of R
+   for(int j=0; j<ncols; j++)
+      for(int i=0; i<nrows; i++) R[i][j] = A_h[ix++];
 
    free(A_h); free(v_h); free(V_h); free(W_h); free(WYT_h); free(QWYT_h);
 }
