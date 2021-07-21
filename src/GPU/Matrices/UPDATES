@@ -1,3 +1,6 @@
+Wed 21 Jul 2021 : kernels to compute W*Y^T in dbl_baqr_kernels.cu works for
+  one square tile.
+
 Tue 20 Jul 2021 : fixed the W kernel in dbl_baqr_kernels.cu, with corrected
   printing of V and W in dbl_baqr_host.cpp, when verbose, for nrows > ncols.
   Adjusted printing of elapsed time in dbl_baqr.testers.cpp.

@@ -181,18 +181,16 @@ __global__ void dbl_small_WYT
    const int bdx = blockIdx.x;           // index of block
    const int tdx = threadIdx.x;          // index of thread in block
    const int offset = bdx*szt;           // offset in result
-   // const int row = 0; // offset/nrows;
-   // const int col = 0; // offset%nrows; // thread 0 computes WYT[row][col]
+   const int row = offset/nrows;
+   const int col = offset%nrows;         // thread 0 computes WYT[row][col]
 
    double result = 0.0;
    double a,b;
 
    for(int k=0; k<szt; k++)
    {
-      a = W[k*nrows + tdx];
-      __syncthreads();
-      b = Y[k*nrows + tdx];
-      __syncthreads();
+      a = W[k*nrows + bdx];   // block index runs over W
+      b = Y[k*nrows + tdx];   // thread index runs over Y
       result = result + a*b;
    }
    __syncthreads();
@@ -334,8 +332,7 @@ void GPU_dbl_small_WYT
    float milliseconds;
 
    cudaEventRecord(start);
-   // dbl_small_WYT<<<nrows*nrows/szt,szt>>>(nrows,szt,W_d,Y_d,WYT_d);
-   dbl_small_WYT<<<1,szt>>>(nrows,szt,W_d,Y_d,WYT_d);
+   dbl_small_WYT<<<nrows*nrows/szt,szt>>>(nrows,szt,W_d,Y_d,WYT_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
