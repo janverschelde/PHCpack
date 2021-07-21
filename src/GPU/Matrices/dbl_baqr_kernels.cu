@@ -180,7 +180,7 @@ __global__ void dbl_small_WYT
 {
    const int bdx = blockIdx.x;           // index of block
    const int tdx = threadIdx.x;          // index of thread in block
-   const int offset = bdx*szt;           // offset in result
+   const int offset = bdx*szt + tdx;     // offset in result
    const int row = offset/nrows;
    const int col = offset%nrows;         // thread 0 computes WYT[row][col]
 
@@ -189,12 +189,12 @@ __global__ void dbl_small_WYT
 
    for(int k=0; k<szt; k++)
    {
-      a = W[k*nrows + bdx];   // block index runs over W
-      b = Y[k*nrows + tdx];   // thread index runs over Y
+      a = W[k*nrows + row];   // if(nrows == szt) then row = bdx
+      b = Y[k*nrows + col];   // if(nrows == szt) then col = tdx
       result = result + a*b;
    }
    __syncthreads();
-   WYT[offset+tdx] = result;
+   WYT[offset] = result;
 }
 
 void GPU_dbl_small_house
@@ -330,9 +330,10 @@ void GPU_dbl_small_WYT
    cudaEventCreate(&start);
    cudaEventCreate(&stop);
    float milliseconds;
+   int nbrblocks = (int) ceil(nrows*nrows/((double) szt));
 
    cudaEventRecord(start);
-   dbl_small_WYT<<<nrows*nrows/szt,szt>>>(nrows,szt,W_d,Y_d,WYT_d);
+   dbl_small_WYT<<<nbrblocks,szt>>>(nrows,szt,W_d,Y_d,WYT_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
@@ -389,16 +390,17 @@ void GPU_dbl_blocked_houseqr
    cudaMemcpy(beta_d,beta_h,szbeta,cudaMemcpyHostToDevice);
 
    const size_t szhouse = nrows*sizeof(double);
+   const size_t szpad = szt*sizeof(double);  // padding for nonsquare tiles
    const size_t szVandW = szt*szhouse;
-   cudaMalloc((void**)&V_d,szVandW);
+   cudaMalloc((void**)&V_d,szVandW + szpad); // padding only in allocation
    ix = 0;
    for(int i=0; i<nrows*szt; i++) V_h[ix++] = 0.0; 
    V_h[--ix] = 1.0; // initialize last vector for square tiles
    cudaMemcpy(V_d,V_h,szVandW,cudaMemcpyHostToDevice);
-   cudaMalloc((void**)&W_d,szVandW);
+   cudaMalloc((void**)&W_d,szVandW + szpad); // padding only in allocation
 
    const size_t szWYT = nrows2*sizeof(double);
-   cudaMalloc((void**)&WYT_d,szWYT);
+   cudaMalloc((void**)&WYT_d,szWYT + szpad); // padding for W*Y^T product
 
    *houselapms = 0.0;
    *tileRlapms = 0.0;
