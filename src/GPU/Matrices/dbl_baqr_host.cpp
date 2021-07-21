@@ -99,10 +99,10 @@ void CPU_dbl_blocked_leftRupdate
  ( int nrows, int ncols, int szt, int idx,
    double **C, double **Y, double **W, bool verbose )
 {
-   const int rowdim = nrows - idx*szt;      // number of rows in Y and W
-   const int coldim = ncols - (idx+1)*szt;  // number of columns in C
-   const int rowoff = idx*szt;              // row offset for C
-   const int coloff = (idx+1)*szt;          // column offset for C
+   const int rowoff = idx*szt;             // row offset for C
+   const int rowdim = nrows - rowoff;      // number of rows in Y and W
+   const int coloff = (idx+1)*szt;         // column offset for C
+   const int coldim = ncols - coloff;      // number of columns in C
 
    if(verbose)
    {
@@ -168,10 +168,10 @@ void CPU_cmplx_blocked_leftRupdate
    double **Cre, double **Cim, double **Yre, double **Yim,
    double **Wre, double **Wim, bool verbose )
 {
-   const int rowdim = nrows - idx*szt;      // number of rows in Y and W
-   const int coldim = ncols - (idx+1)*szt;  // number of columns in C
-   const int rowoff = idx*szt;              // row offset for C
-   const int coloff = (idx+1)*szt;          // column offset for C
+   const int rowoff = idx*szt;            // row offset for C
+   const int rowdim = nrows - rowoff;     // number of rows in Y and W
+   const int coloff = (idx+1)*szt;        // column offset for C
+   const int coldim = ncols - coloff;     // number of columns in C
    double accre,accim;
 
    if(verbose)
@@ -267,9 +267,9 @@ void CPU_dbl_blocked_rightQupdate
  ( int dim, int szt, int idx, double **Q, double **Y, double **W,
    bool verbose )
 {
-   const int rowdim = dim - idx*szt;  // number of rows in Y and W
-                                      // is number of columns to update
-   const int coloff = idx*szt;        // column offset for Q
+   const int coloff = idx*szt;       // column offset for Q
+   const int rowdim = dim - coloff; 
+   // the number of rows in Y and W is the number of columns to update
 
    if(verbose)
    {
@@ -334,9 +334,9 @@ void CPU_cmplx_blocked_rightQupdate
    double **Yre, double **Yim, double **Wre, double **Wim,
    bool verbose )
 {
-   const int rowdim = dim - idx*szt;  // number of rows in Y and W
-                                      // is number of columns to update
    const int coloff = idx*szt;        // column offset for Q
+   const int rowdim = dim - coloff;
+   // the number of rows in Y and W is the number of columns to update
    double accre,accim;
 
    if(verbose)
