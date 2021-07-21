@@ -181,8 +181,8 @@ __global__ void dbl_small_WYT
    const int bdx = blockIdx.x;           // index of block
    const int tdx = threadIdx.x;          // index of thread in block
    const int offset = bdx*szt + tdx;     // offset in result
-   const int row = offset/nrows;
-   const int col = offset%nrows;         // thread 0 computes WYT[row][col]
+   const int row = offset / nrows;
+   const int col = offset % nrows;       // thread 0 computes WYT[row][col]
 
    double result = 0.0;
    double a,b;
@@ -195,6 +195,28 @@ __global__ void dbl_small_WYT
    }
    __syncthreads();
    WYT[offset] = result;
+}
+
+__global__ void dbl_small_QWYT
+ ( int dim, int szt, int coloff, double *Q, double *WYT, double *QWYT )
+{
+   const int bdx = blockIdx.x;           // index of block
+   const int tdx = threadIdx.x;          // index of thread in block
+   const int offset = bdx*szt + tdx;     // offset in result
+   const int row = offset / dim;
+   const int col = offset % dim;         // thread 0 computes WYT[row][col]
+
+   double result = 0.0;
+   double a,b;
+
+   for(int k=0; k<szt; k++)
+   {                                 // coloff shifts by col*row elements
+      a = Q[k*dim + row*(1+coloff)]; // row = bdx, if dim == szt, coloff == 0
+      b = WYT[k*dim + col];          // if(dim == szt) then col = tdx
+      result = result + a*b;
+   }
+   __syncthreads();
+   QWYT[row*coloff + offset] = result;
 }
 
 void GPU_dbl_small_house
@@ -354,11 +376,46 @@ void GPU_dbl_small_WYT
    }
 }
 
+void GPU_dbl_small_QWYT
+ ( int dim, int szt, int idx, double *Q_d, double *WYT_d, double *QWYT_d,
+   double *QWYT_h, double *lapms, bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int coloff = idx*szt;
+   const int rowdim = dim - coloff;
+   const int nbrblocks = (int) ceil(dim*rowdim/((double) szt));
+
+   cudaEventRecord(start);
+   dbl_small_QWYT<<<nbrblocks,szt>>>(dim,szt,coloff,Q_d,WYT_d,QWYT_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+
+   if(verbose)
+   {
+      const size_t szmat = dim*dim*sizeof(double);
+
+      cudaMemcpy(QWYT_h,QWYT_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the QWYT matrix :" << endl;
+      int ix = 0;
+      for(int i=0; i<dim; i++) 
+         for(int j=0; j<dim; j++) 
+            cout << "QWYT[" << i << "][" << j << "] : "
+                 << QWYT_h[ix++] << endl;
+   }
+}
+
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
-   double *WYTlapms, double *walltimesec, bool verbose )
+   double *WYTlapms, double *QWYTlapms, double *walltimesec,
+   bool verbose )
 {
    const int dim = nrows*ncols;         // total number of doubles
    const int nrows2 = nrows*nrows;
@@ -374,11 +431,26 @@ void GPU_dbl_blocked_houseqr
    double *W_d;                         // the W matrix 
    double *WYT_h = new double[nrows2];  // W times Y^T on host
    double *WYT_d;                       // W times Y^T on device
+   double *Q_h = new double[nrows2];    // orthogonal Q on host
+   double *Q_d;                         // orthogonal Q on device
+   double *QWYT_h = new double[nrows2]; // Q times WY^T on host
+   double *QWYT_d;                      // Q times WY^T on device
 
-   int ix=0;                            // copy the columns of A to A_h
+   int ix = 0;                          // copy the columns of A to A_h
    for(int j=0; j<ncols; j++)   
       for(int i=0; i<nrows; i++) A_h[ix++] = A[i][j];
 
+   ix = 0;                              // initialize Q with identity
+   for(int i=0; i<nrows; i++)
+   {
+      for(int j=0; j<nrows; j++)
+      {
+         if(i == j)
+            Q_h[ix++] = 1.0;
+         else
+            Q_h[ix++] = 0.0;
+      }
+   }
    const size_t sznum = dim*sizeof(double);
    cudaMalloc((void**)&A_d,sznum);
    cudaMemcpy(A_d,A_h,sznum,cudaMemcpyHostToDevice);
@@ -401,6 +473,9 @@ void GPU_dbl_blocked_houseqr
 
    const size_t szWYT = nrows2*sizeof(double);
    cudaMalloc((void**)&WYT_d,szWYT + szpad); // padding for W*Y^T product
+   cudaMalloc((void**)&Q_d,szWYT);
+   cudaMemcpy(Q_d,Q_h,szWYT,cudaMemcpyHostToDevice);
+   cudaMalloc((void**)&QWYT_d,szWYT);
 
    *houselapms = 0.0;
    *tileRlapms = 0.0;
@@ -432,11 +507,14 @@ void GPU_dbl_blocked_houseqr
          (nrows,ncols,szt,V_h,V_d,W_h,W_d,beta_h,beta_d,vb2Wlapms,verbose);
 
       GPU_dbl_small_WYT(nrows,szt,W_d,V_d,WYT_d,WYT_h,WYTlapms,verbose);
+
+      GPU_dbl_small_QWYT
+        (nrows,szt,k,Q_d,WYT_d,QWYT_d,QWYT_h,QWYTlapms,verbose);
    }
    gettimeofday(&endtime,0);
    long seconds = endtime.tv_sec - begintime.tv_sec;
    long microseconds = endtime.tv_usec - begintime.tv_usec;
    *walltimesec = seconds + microseconds*1.0e-6;
 
-   free(A_h); free(v_h); free(V_h); free(W_h); free(WYT_h);
+   free(A_h); free(v_h); free(V_h); free(W_h); free(WYT_h); free(QWYT_h);
 }

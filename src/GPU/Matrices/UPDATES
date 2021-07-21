@@ -2,6 +2,7 @@ Wed 21 Jul 2021 : kernels to compute W*Y^T in dbl_baqr_kernels.cu works for
   one square tile.  Update dbl_baqr_kernels.cu to compute W*Y^T for tiles
   with more rows than columns, with extra memory padding.
   Improved offset and dimension computation in {dbl,dbl2}_baqr_host.cpp.
+  To dbl_baqr_kernels, added a kernel to compute Q*W*Y^T.
 
 Tue 20 Jul 2021 : fixed the W kernel in dbl_baqr_kernels.cu, with corrected
   printing of V and W in dbl_baqr_host.cpp, when verbose, for nrows > ncols.

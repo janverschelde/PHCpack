@@ -86,6 +86,41 @@ __global__ void dbl_VB_to_W
  * ON RETURN :
  *   W        the W matrix in the WY representation. */
 
+__global__ void dbl_small_WYT
+ ( int nrows, int szt, double *W, double *Y, double *WYT );
+/*
+ * DESCRIPTION :
+ *   Multiplies W with Y^T into the matrix WYT.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of all matrices;
+ *   szt      number of columns in W and Y,
+ *            equals the number of threads in a block;
+ *   W        the W matrix in the WY representation;
+ *   Y        the columns of Y are the Householder vectors;
+ *   WYT      space for an nrows-by-nrows matrix,
+ *            with extra padding for when nrows > szt.
+ *
+ * ON RETURN :
+ *   WYT      the product of W with Y^T. */
+
+__global__ void dbl_small_QWYT
+ ( int dim, int szt, int coloff, double *Q, double *WYT, double *QWYT );
+/*
+ * DESCRIPTION :
+ *   Multiplies Q with WYT into the matrix QWYT.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns of all matrices;
+ *   szt      the number of threads in a block;
+ *   coloff   offset for the column index in QWYT;
+ *   Q        the current orthogonal matrix;
+ *   WYT      the product of W with Y^T;
+ *   QWYT     space for a dim-by-dim matrix.
+ *
+ * ON RETURN :
+ *   QWYT     the product of Q with QWYT. */
+
 void GPU_dbl_small_house
  ( int nrows, int ncols, int szt, int nbt,
    int colidx, int nrows1, int k, int L,
@@ -200,14 +235,39 @@ void GPU_dbl_small_WYT
  *
  * ON RETURN :
  *   WYT_d    the product W*Y^T on the device;
- *   WYT_h    the product W*Y^T , if verbose;
+ *   WYT_h    the product W*Y^T, if verbose;
+ *   lapms    elapsed time spent by the kernel. */
+
+void GPU_dbl_small_QWYT
+ ( int dim, int szt, int idx, double *Q_d, double *WYT_d, double *QWYT_d,
+   double *QWYT_h, double *lapms, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to compute Q*WYT.
+ *   Wraps the timer and the print statement if verbose.
+ *   If verbose, then the Q*WYT matrix is returned.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and column in Q and WYT;
+ *   szt      size of one tile and the number of threads in a block;
+ *   idx      index of the current tile;
+ *   Q_d      a dim-by-dim matrix, on the device;
+ *   WYT_d    the product W*Y^T, on the device;
+ *   QWYT_d   space for the product Q*WYT, on the device;
+ *   QWYT_h   space for the product Q*WYT, on the host, if verbose;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   QWYT_d   the product Q*WYT on the device;
+ *   QWYT_h   the product Q*WYT, if verbose;
  *   lapms    elapsed time spent by the kernel. */
 
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
-   double *WYTlapms, double *walltimesec, bool verbose=true );
+   double *WYTlapms, double *QWYTlapms, double *walltimesec,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
@@ -236,7 +296,9 @@ void GPU_dbl_blocked_houseqr
  *   vb2Wlapms is the elapsed time spent by the kernel
  *            to compute the W representation;
  *   WYTlapms is the elapsed time spent by the kernel
- *            to compute the WYT matrix;
+ *            to compute the W*Y^T matrix;
+ *   QWYTlapms is the elapsed time spent by the kernel
+ *            to compute the Q*WYT matrix;
  *   walltimesec is the elapsed wall clock computation time. */
 
 #endif
