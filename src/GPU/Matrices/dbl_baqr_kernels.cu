@@ -209,7 +209,7 @@ __global__ void dbl_small_QWYT
    double result = 0.0;
    double a,b;
 
-   for(int k=0; k<szt; k++)
+   for(int k=0; k<dim; k++)          // run over dim, not just szt
    {                                 // coloff shifts by col*row elements
       a = Q[k*dim + row*(1+coloff)]; // row = bdx, if dim == szt, coloff == 0
       b = WYT[k*dim + col];          // if(dim == szt) then col = tdx
