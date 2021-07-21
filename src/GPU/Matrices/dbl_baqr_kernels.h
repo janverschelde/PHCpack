@@ -182,11 +182,32 @@ void GPU_dbl_VB_to_W
  *   W_h      the W matrix in the WY representation, if verbose;
  *   lapms    elapsed time spent by the kernel. */
 
+void GPU_dbl_small_WYT
+ ( int nrows, int szt, double *W_d, double *Y_d, double *WYT_d,
+   double *WYT_h, double *lapms, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to compute W*Y^T.
+ *   Wraps the timer and the print statements if verbose.
+ *   If verbose, then the W*Y^T matrix is returned.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in all matrices;
+ *   szt      size of one tile and the number of threads in a block;
+ *   Y_d      the matrix of Householder vectors;
+ *   W_d      the matrix W in the WY representation;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   WYT_d    the product W*Y^T on the device;
+ *   WYT_h    the product W*Y^T , if verbose;
+ *   lapms    elapsed time spent by the kernel. */
+
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
-   double *walltimesec, bool verbose=true );
+   double *WYTlapms, double *walltimesec, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
@@ -214,6 +235,8 @@ void GPU_dbl_blocked_houseqr
  *            to reduce one tile;
  *   vb2Wlapms is the elapsed time spent by the kernel
  *            to compute the W representation;
+ *   WYTlapms is the elapsed time spent by the kernel
+ *            to compute the WYT matrix;
  *   walltimesec is the elapsed wall clock computation time. */
 
 #endif

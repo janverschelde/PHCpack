@@ -15,7 +15,7 @@ using namespace std;
 __global__ void dbl_small_house
  ( double *x0, double *x1, int dim, int dimLog2, double *v, double *beta )
 {
-   int j = threadIdx.x;
+   const int j = threadIdx.x;
 
    __shared__ double shv[d_shmemsize];
    __shared__ double prd[d_shmemsize];
@@ -69,10 +69,10 @@ __global__ void dbl_small_house
 __global__ void dbl_factors_leftRupdate
  ( int nrows, int ncols, int szt, int k, double *R, double *v, double *beta )
 {
-   int bdx = blockIdx.x;           // index of block
-   int tdx = threadIdx.x;          // index of thread in block
-   int idx = bdx*szt + tdx;        // global thread index
-   int Roffset = (k+bdx)*szt + k;
+   const int bdx = blockIdx.x;           // index of block
+   const int tdx = threadIdx.x;          // index of thread in block
+   const int idx = bdx*szt + tdx;        // global thread index
+   const int Roffset = (k+bdx)*szt + k;
    int Rcolidx;
    double w,Rtdx;
 
@@ -105,8 +105,8 @@ __global__ void dbl_factors_leftRupdate
 __global__ void dbl_small_leftRupdate
  ( int nrows, int ncols, int szt, int k, double *R, double *v, double *beta )
 {
-   int tdx = threadIdx.x;          // index of thread in block
-   int Roffset = k*nrows + k;
+   const int tdx = threadIdx.x;          // index of thread in block
+   const int Roffset = k*nrows + k;
    int Rcolidx;
    double w,Rtdx;
 
@@ -136,7 +136,7 @@ __global__ void dbl_small_leftRupdate
 __global__ void dbl_VB_to_W
  ( int nrows, int ncols, double *B, double *V, double *W )
 {
-   int tdx = threadIdx.x;              // index of thread in block
+   const int tdx = threadIdx.x;        // index of thread in block
    double wrk,pk,mypk,zi;
 
    __shared__ double shv[d_shmemsize]; // one work vector
@@ -173,6 +173,30 @@ __global__ void dbl_VB_to_W
       W[j*nrows + tdx] = wrk;          // wrk is assigned to W[j][tdx]
       __syncthreads();
    }
+}
+
+__global__ void dbl_small_WYT
+ ( int nrows, int szt, double *W, double *Y, double *WYT )
+{
+   const int bdx = blockIdx.x;           // index of block
+   const int tdx = threadIdx.x;          // index of thread in block
+   const int offset = bdx*szt;           // offset in result
+   // const int row = 0; // offset/nrows;
+   // const int col = 0; // offset%nrows; // thread 0 computes WYT[row][col]
+
+   double result = 0.0;
+   double a,b;
+
+   for(int k=0; k<szt; k++)
+   {
+      a = W[k*nrows + tdx];
+      __syncthreads();
+      b = Y[k*nrows + tdx];
+      __syncthreads();
+      result = result + a*b;
+   }
+   __syncthreads();
+   WYT[offset+tdx] = result;
 }
 
 void GPU_dbl_small_house
@@ -300,13 +324,46 @@ void GPU_dbl_VB_to_W
    }
 }
 
+void GPU_dbl_small_WYT
+ ( int nrows, int szt, double *W_d, double *Y_d, double *WYT_d,
+   double *WYT_h, double *lapms, bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+
+   cudaEventRecord(start);
+   // dbl_small_WYT<<<nrows*nrows/szt,szt>>>(nrows,szt,W_d,Y_d,WYT_d);
+   dbl_small_WYT<<<1,szt>>>(nrows,szt,W_d,Y_d,WYT_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+
+   if(verbose)
+   {
+      const size_t szmat = nrows*nrows*sizeof(double);
+
+      cudaMemcpy(WYT_h,WYT_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the WYT matrix :" << endl;
+      int ix = 0;
+      for(int i=0; i<nrows; i++) 
+         for(int j=0; j<nrows; j++) 
+            cout << "WYT[" << i << "][" << j << "] : "
+                 << WYT_h[ix++] << endl;
+   }
+}
+
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
-   double *walltimesec, bool verbose )
+   double *WYTlapms, double *walltimesec, bool verbose )
 {
    const int dim = nrows*ncols;         // total number of doubles
+   const int nrows2 = nrows*nrows;
    double *A_h = new double[dim];       // matrix A on the host
    double *A_d;                         // matrix on the device
    double *v_h = new double[nrows];     // Householder vector on host
@@ -317,6 +374,8 @@ void GPU_dbl_blocked_houseqr
    double *V_d;                         // Householder vectors on device
    double *W_h = new double[nrows*szt]; // the W matrix on the host
    double *W_d;                         // the W matrix 
+   double *WYT_h = new double[nrows2];  // W times Y^T on host
+   double *WYT_d;                       // W times Y^T on device
 
    int ix=0;                            // copy the columns of A to A_h
    for(int j=0; j<ncols; j++)   
@@ -325,12 +384,14 @@ void GPU_dbl_blocked_houseqr
    const size_t sznum = dim*sizeof(double);
    cudaMalloc((void**)&A_d,sznum);
    cudaMemcpy(A_d,A_h,sznum,cudaMemcpyHostToDevice);
-   const size_t szhouse = nrows*sizeof(double);
    cudaMalloc((void**)&x0_d,sizeof(double));
+
    const size_t szbeta = szt*sizeof(double);
    cudaMalloc((void**)&beta_d,szbeta);
    for(int i=0; i<szt; i++) beta_h[i] = 0.0;
    cudaMemcpy(beta_d,beta_h,szbeta,cudaMemcpyHostToDevice);
+
+   const size_t szhouse = nrows*sizeof(double);
    const size_t szVandW = szt*szhouse;
    cudaMalloc((void**)&V_d,szVandW);
    ix = 0;
@@ -338,6 +399,9 @@ void GPU_dbl_blocked_houseqr
    V_h[--ix] = 1.0; // initialize last vector for square tiles
    cudaMemcpy(V_d,V_h,szVandW,cudaMemcpyHostToDevice);
    cudaMalloc((void**)&W_d,szVandW);
+
+   const size_t szWYT = nrows2*sizeof(double);
+   cudaMalloc((void**)&WYT_d,szWYT);
 
    *houselapms = 0.0;
    *tileRlapms = 0.0;
@@ -367,11 +431,13 @@ void GPU_dbl_blocked_houseqr
       }
       GPU_dbl_VB_to_W
          (nrows,ncols,szt,V_h,V_d,W_h,W_d,beta_h,beta_d,vb2Wlapms,verbose);
+
+      GPU_dbl_small_WYT(nrows,szt,W_d,V_d,WYT_d,WYT_h,WYTlapms,verbose);
    }
    gettimeofday(&endtime,0);
    long seconds = endtime.tv_sec - begintime.tv_sec;
    long microseconds = endtime.tv_usec - begintime.tv_usec;
    *walltimesec = seconds + microseconds*1.0e-6;
 
-   free(A_h); free(v_h); free(V_h); free(W_h);
+   free(A_h); free(v_h); free(V_h); free(W_h); free(WYT_h);
 }
