@@ -1,5 +1,6 @@
 Thu 22 Jul 2021 : the kernel for W*Y^T also works for Y*W^T, updated
-  dbl_baqr_kernels and dbl_baqr_testers.cpp.
+  dbl_baqr_kernels and dbl_baqr_testers.cpp.  First version of a kernel to
+  multiply W*Y^T with C in dbl_baqr_kernels, updated dbl_baqr_testers.cpp.
 
 Wed 21 Jul 2021 : kernels to compute W*Y^T in dbl_baqr_kernels.cu works for
   one square tile.  Update dbl_baqr_kernels.cu to compute W*Y^T for tiles

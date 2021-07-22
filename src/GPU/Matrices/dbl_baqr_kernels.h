@@ -122,6 +122,28 @@ __global__ void dbl_small_QWYT
  * ON RETURN :
  *   QWYT     the product of Q with QWYT. */
 
+__global__ void dbl_small_YWTC
+ ( int nrows, int ncols, int rowdim, int coldim, int szt,
+   int rowoff, int coloff, double *YWT, double *C, double *YWTC );
+/*
+ * DESCRIPTION :
+ *   Multiplies YWT with C into the matrix YWTC.
+ *
+ * ON ENTRY :
+ *   nrows    total number of rows, nrows = rowdim + rowoff;
+ *   ncols    total number of colums, ncols = coldim + coloff;
+ *   rowdim   number of rows minus the row offset;
+ *   coldim   number of columns minus the column offset;
+ *   szt      the number of threads in a block;
+ *   rowoff   offset for the row index in C;
+ *   coloff   offset for the column index in C;
+ *   C        the current matrix to be reduced;
+ *   YWT      the product of Y with W^T;
+ *   YWTC     space for a rowdim-by-coldim matrix.
+ *
+ * ON RETURN :
+ *   YWTC     the product of YWT with C. */
+
 __global__ void dbl_small_Qupdate
  ( int dim, int szt, int coloff, double *Q, double *QWYT );
 /*
@@ -290,7 +312,7 @@ void GPU_dbl_small_QWYT
  *   If verbose, then the Q*WYT matrix is returned.
  *
  * ON ENTRY :
- *   dim      number of rows and column in Q and WYT;
+ *   dim      number of rows and columns in Q and WYT;
  *   szt      size of one tile and the number of threads in a block;
  *   idx      index of the current tile;
  *   Q_d      a dim-by-dim matrix, on the device;
@@ -302,6 +324,33 @@ void GPU_dbl_small_QWYT
  * ON RETURN :
  *   QWYT_d   the product Q*WYT on the device;
  *   QWYT_h   the product Q*WYT, if verbose;
+ *   lapms    elapsed time spent by the kernel. */
+
+void GPU_dbl_small_YWTC
+ ( int nrows, int ncols, int szt, int idx,
+   double *YWT_d, double *C_d, double *YWTC_d, double *YWTC_h,
+   double *lapms, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to compute YWT*C.
+ *   Wraps the timer and the print statement if verbose.
+ *   If verbose, then the YWT*C matrix is returned.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of the matrices C, YWT, YWTC,
+ *            and the number of columns of the matrix YWT;
+ *   ncols    number of columns of the matrix C;
+ *   szt      size of one tile and the number of threads in a block;
+ *   idx      index of the current tile;
+ *   YWT_d    the product Y*W^T, on the device;
+ *   C_d      an nrows-by-ncols matrix, on the device;
+ *   YWTC_d   space for the product YWT*C, on the device;
+ *   YWTC_h   space for the product YWT*C, on the host, if verbose;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   YWTC_d   the product YWT*C on the device;
+ *   YWTC_h   the product YWT*C, if verbose;
  *   lapms    elapsed time spent by the kernel. */
 
 void GPU_dbl_small_Qupdate
@@ -331,7 +380,8 @@ void GPU_dbl_blocked_houseqr
    double **A, double **Q, double **R,
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
    double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
-   double *YWTlapms, double *walltimesec, bool verbose=true );
+   double *YWTlapms, double *YWTClapms, 
+   double *walltimesec, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
@@ -360,13 +410,15 @@ void GPU_dbl_blocked_houseqr
  *   vb2Wlapms is the elapsed time spent by the kernel
  *            to compute the W representation;
  *   WYTlapms is the elapsed time spent by the kernel
- *            to compute the W*Y^T matrix;
+ *            to compute the W*Y^T product;
  *   QWYTlapms is the elapsed time spent by the kernel
- *            to compute the Q*WYT matrix;
+ *            to compute the Q*WYT product;
  *   Qaddlapms is the elapsed time spent by the kernel
  *            to compute Q by adding the Q*W*Y^T matrix;
  *   YWTlapms is the elapsed time spent by the kernel
- *            to compute the Y*W^T matrix;
+ *            to compute the Y*W^T product;
+ *   YWTClapms is the elapsed time spent by the kernel
+ *            to compute the YWT*C product;
  *   walltimesec is the elapsed wall clock computation time. */
 
 #endif

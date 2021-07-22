@@ -61,7 +61,7 @@ void test_real_blocked_qr ( void )
    bool vrb = (verbose > 0);
    double timelapsed_h,timelapsed_d;
    double houselapsedms,tileRlapsedms,vb2Wlapsedms;
-   double WYTlapsedms,YWTlapsedms,QWYTlapsedms,Qaddlapsedms;
+   double WYTlapsedms,YWTlapsedms,QWYTlapsedms,YWTClapsedms,Qaddlapsedms;
 
    cout << "-> CPU computes the block Householder QR ..." << endl;
 
@@ -77,7 +77,8 @@ void test_real_blocked_qr ( void )
    GPU_dbl_blocked_houseqr
       (nrows,ncols,sizetile,numtiles,A,Q_d,R_d,
        &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,&WYTlapsedms,
-       &QWYTlapsedms,&Qaddlapsedms,&YWTlapsedms,&timelapsed_d,vrb);
+       &QWYTlapsedms,&Qaddlapsedms,&YWTlapsedms,&YWTClapsedms,
+       &timelapsed_d,vrb);
 
    test_real_qr_factors(nrows,ncols,A,Q_d,R_d,verbose);
 
@@ -92,8 +93,12 @@ void test_real_blocked_qr ( void )
    cout << vb2Wlapsedms << " milliseconds." << endl;
    cout << " Time spent by the kernel for computing W*Y^T : ";
    cout << WYTlapsedms << " milliseconds." << endl;
+   cout << " Time spent by the kernel for computing Y*W^T : ";
+   cout << YWTlapsedms << " milliseconds." << endl;
    cout << " Time spent by the kernel for computing Q*WYT : ";
    cout << QWYTlapsedms << " milliseconds." << endl;
+   cout << " Time spent by the kernel for computing YWT*C : ";
+   cout << YWTClapsedms << " milliseconds." << endl;
    cout << "Time spent by the kernel for adding QWYT to Q : ";
    cout << Qaddlapsedms << " milliseconds." << endl;
    cout << "        Total GPU wall clock computation time : ";
