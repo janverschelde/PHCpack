@@ -396,6 +396,38 @@ void GPU_dbl_small_WYT
    }
 }
 
+void GPU_dbl_small_YWT
+ ( int nrows, int szt, double *Y_d, double *W_d, double *YWT_d,
+   double *YWT_h, double *lapms, bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   int nbrblocks = (int) ceil(nrows*nrows/((double) szt));
+
+   cudaEventRecord(start);
+   dbl_small_WYT<<<nbrblocks,szt>>>(nrows,szt,Y_d,W_d,YWT_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+
+   if(verbose)
+   {
+      const size_t szmat = nrows*nrows*sizeof(double);
+
+      cudaMemcpy(YWT_h,YWT_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the YWT matrix :" << endl;
+      int ix = 0;
+      for(int i=0; i<nrows; i++) 
+         for(int j=0; j<nrows; j++) 
+            cout << "YWT[" << i << "][" << j << "] : "
+                 << YWT_h[ix++] << endl;
+   }
+}
+
 void GPU_dbl_small_QWYT
  ( int dim, int szt, int idx, double *Q_d, double *WYT_d, double *QWYT_d,
    double *QWYT_h, double *lapms, bool verbose )
@@ -469,7 +501,7 @@ void GPU_dbl_blocked_houseqr
    double **A, double **Q, double **R,
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
    double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
-   double *walltimesec, bool verbose )
+   double *YWTlapms, double *walltimesec, bool verbose )
 {
    const int dim = nrows*ncols;         // total number of doubles
    const int nrows2 = nrows*nrows;
@@ -485,6 +517,8 @@ void GPU_dbl_blocked_houseqr
    double *W_d;                         // the W matrix 
    double *WYT_h = new double[nrows2];  // W times Y^T on host
    double *WYT_d;                       // W times Y^T on device
+   double *YWT_h = new double[nrows2];  // Y times W^T on host
+   double *YWT_d;                       // Y times W^T on device
    double *Q_h = new double[nrows2];    // orthogonal Q on host
    double *Q_d;                         // orthogonal Q on device
    double *QWYT_h = new double[nrows2]; // Q times WY^T on host
@@ -531,10 +565,14 @@ void GPU_dbl_blocked_houseqr
    cudaMemcpy(Q_d,Q_h,szWYT,cudaMemcpyHostToDevice);
    cudaMalloc((void**)&QWYT_d,szWYT);
 
+   const size_t szYWT = nrows2*sizeof(double);
+   cudaMalloc((void**)&YWT_d,szYWT + szpad); // padding for Y*W^T product
+
    *houselapms = 0.0;
    *tileRlapms = 0.0;
    *vb2Wlapms = 0.0;
    *WYTlapms = 0.0;
+   *YWTlapms = 0.0;
    *QWYTlapms = 0.0;
    *Qaddlapms = 0.0;
    struct timeval begintime,endtime; // wall clock time of computations
@@ -562,11 +600,16 @@ void GPU_dbl_blocked_houseqr
       }
       GPU_dbl_VB_to_W
          (nrows,ncols,szt,V_h,V_d,W_h,W_d,beta_h,beta_d,vb2Wlapms,verbose);
+      // update Q
       GPU_dbl_small_WYT(nrows,szt,W_d,V_d,WYT_d,WYT_h,WYTlapms,verbose);
       GPU_dbl_small_QWYT
         (nrows,szt,k,Q_d,WYT_d,QWYT_d,QWYT_h,QWYTlapms,verbose);
       GPU_dbl_small_Qupdate
         (nrows,szt,k,Q_d,QWYT_d,Q_h,Qaddlapms,verbose);
+      if(k < nbt-1) // update R
+      {
+         GPU_dbl_small_YWT(nrows,szt,V_d,W_d,YWT_d,YWT_h,YWTlapms,verbose);
+      }
    }
    gettimeofday(&endtime,0);
    long seconds = endtime.tv_sec - begintime.tv_sec;
@@ -583,5 +626,6 @@ void GPU_dbl_blocked_houseqr
    for(int j=0; j<ncols; j++)
       for(int i=0; i<nrows; i++) R[i][j] = A_h[ix++];
 
-   free(A_h); free(v_h); free(V_h); free(W_h); free(WYT_h); free(QWYT_h);
+   free(A_h); free(v_h); free(V_h); free(W_h);
+   free(WYT_h); free(QWYT_h); free(YWT_h);
 }

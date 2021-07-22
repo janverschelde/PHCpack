@@ -91,6 +91,7 @@ __global__ void dbl_small_WYT
 /*
  * DESCRIPTION :
  *   Multiplies W with Y^T into the matrix WYT.
+ *   Computes Y*W^T, swapping W with Y in the input arguments.
  *
  * ON ENTRY :
  *   nrows    number of rows of all matrices;
@@ -245,13 +246,38 @@ void GPU_dbl_small_WYT
  * ON ENTRY :
  *   nrows    number of rows in all matrices;
  *   szt      size of one tile and the number of threads in a block;
- *   Y_d      the matrix of Householder vectors;
  *   W_d      the matrix W in the WY representation;
+ *   Y_d      the matrix of Householder vectors;
+ *   WYT_d    space for an nrows-by-nrows matrix on the device;
+ *   WYT_h    space for an nrows-by-nrows matrix on the host, if verbose;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
  *   WYT_d    the product W*Y^T on the device;
  *   WYT_h    the product W*Y^T, if verbose;
+ *   lapms    elapsed time spent by the kernel. */
+
+void GPU_dbl_small_YWT
+ ( int nrows, int szt, double *Y_d, double *W_d, double *YWT_d,
+   double *YWT_h, double *lapms, bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to compute W*Y^T.
+ *   Wraps the timer and the print statements if verbose.
+ *   If verbose, then the W*Y^T matrix is returned.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in all matrices;
+ *   szt      size of one tile and the number of threads in a block;
+ *   Y_d      the matrix of Householder vectors;
+ *   W_d      the matrix W in the WY representation;
+ *   YWT_d    space for an nrows-by-nrows matrix on the device;
+ *   YWT_h    space for an nrows-by-nrows matrix on the host, if verbose;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   YWT_d    the product Y*W^T on the device;
+ *   YWT_h    the product Y*W^T, if verbose;
  *   lapms    elapsed time spent by the kernel. */
 
 void GPU_dbl_small_QWYT
@@ -305,7 +331,7 @@ void GPU_dbl_blocked_houseqr
    double **A, double **Q, double **R,
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
    double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
-   double *walltimesec, bool verbose=true );
+   double *YWTlapms, double *walltimesec, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
@@ -339,6 +365,8 @@ void GPU_dbl_blocked_houseqr
  *            to compute the Q*WYT matrix;
  *   Qaddlapms is the elapsed time spent by the kernel
  *            to compute Q by adding the Q*W*Y^T matrix;
+ *   YWTlapms is the elapsed time spent by the kernel
+ *            to compute the Y*W^T matrix;
  *   walltimesec is the elapsed wall clock computation time. */
 
 #endif

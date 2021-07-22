@@ -61,7 +61,7 @@ void test_real_blocked_qr ( void )
    bool vrb = (verbose > 0);
    double timelapsed_h,timelapsed_d;
    double houselapsedms,tileRlapsedms,vb2Wlapsedms;
-   double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
+   double WYTlapsedms,YWTlapsedms,QWYTlapsedms,Qaddlapsedms;
 
    cout << "-> CPU computes the block Householder QR ..." << endl;
 
@@ -77,7 +77,7 @@ void test_real_blocked_qr ( void )
    GPU_dbl_blocked_houseqr
       (nrows,ncols,sizetile,numtiles,A,Q_d,R_d,
        &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,&WYTlapsedms,
-       &QWYTlapsedms,&Qaddlapsedms,&timelapsed_d,vrb);
+       &QWYTlapsedms,&Qaddlapsedms,&YWTlapsedms,&timelapsed_d,vrb);
 
    test_real_qr_factors(nrows,ncols,A,Q_d,R_d,verbose);
 
