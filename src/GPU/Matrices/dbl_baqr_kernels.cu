@@ -519,11 +519,10 @@ void GPU_dbl_small_YWTC
       cudaMemcpy(C_h,C_d,szmat,cudaMemcpyDeviceToHost);
 
       cout << "the matrix C : " << endl;
-      int ix=0;
-      for(int j=0; j<ncols; j++)
-         for(int i=0; i<nrows; i++)
-            cout << "C[" << j << "][" << i << "] : "
-                 << C_h[ix++] << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "C_h[" << i << "][" << j << "] : "
+                 << C_h[j*nrows+i] << endl;
 
       free(C_h);
    }
@@ -543,14 +542,10 @@ void GPU_dbl_small_YWTC
       cudaMemcpy(YWTC_h,YWTC_d,szmat,cudaMemcpyDeviceToHost);
 
       cout << "the YWTC matrix :" << endl;
-      int ix = rowoff*ncols + coloff; // first element
-      for(int i=0; i<rowdim; i++) 
-      {
-         for(int j=0; j<coldim; j++) 
+      for(int i=rowoff; i<nrows; i++) 
+         for(int j=coloff; j<ncols; j++)
             cout << "YWTC[" << i << "][" << j << "] : "
-                 << YWTC_h[ix++] << endl;
-         ix = ix + coloff; // all rows have an offset
-      }
+                 << YWTC_h[j*nrows + i] << endl;
    }
 }
 
