@@ -323,9 +323,9 @@ void GPU_dbl_small_leftRupdate
    cudaEventCreate(&stop);
    float milliseconds;
 
-   cudaEventRecord(start);
+   cudaEventRecord(start);           // 2nd argument: ncols -> szt
    dbl_small_leftRupdate<<<1,nrows-colidx>>>
-      (nrows,ncols,szt,colidx,A_d,&V_d[L*nrows+L],&beta_d[L]);
+      (nrows,szt,szt,colidx,A_d,&V_d[L*nrows+L],&beta_d[L]);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);

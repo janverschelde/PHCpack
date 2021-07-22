@@ -479,6 +479,13 @@ void CPU_dbl_blocked_houseqr
                cout << "v[" << i-colidx << "] : " << v[i-colidx] << endl;
          }
          CPU_dbl_factors_leftRupdate(nrows,endcol,colidx,R,v,beta);
+         if(verbose)
+         {
+            cout << "the matrix after the update :" << endl;
+            for(int i=0; i<nrows; i++)
+               for(int j=0; j<ncols; j++)
+                  cout << "R[" << i << "][" << j << "] : " << R[i][j] << endl;
+         }
          B[L] = beta;
          for(int i=0; i<L; i++) Y[L][i] = 0.0;
          for(int i=0; i<nrowscol; i++) Y[L][i+L] = v[i];
