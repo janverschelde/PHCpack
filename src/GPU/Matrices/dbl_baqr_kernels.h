@@ -160,6 +160,25 @@ __global__ void dbl_small_Qupdate
  * ON RETURN :
  *   Q        Q + QWYT. */
 
+__global__ void dbl_small_R_add_YWTC
+ ( int nrows, int coldim, int szt, int rowoff, int coloff,
+   double *R, double *YWTC );
+/*
+ * DESCRIPTION :
+ *   Updates R by adding YWTC.
+ *
+ * ON ENTRY :
+ *   nrows    total number of rows in R and YWTC;
+ *   coldim   number of columns minus the column offset;
+ *   szt      the number of threads in a block;
+ *   rowoff   offset for the row index in R;
+ *   coloff   offset for the column index in R;
+ *   R        the current matrix to be reduced;
+ *   YWTC     the product of YWT with C.
+ *
+ * ON RETURN :
+ *   R        R + YWTC. */
+
 void GPU_dbl_small_house
  ( int nrows, int ncols, int szt, int nbt,
    int colidx, int nrows1, int k, int L,
@@ -360,7 +379,7 @@ void GPU_dbl_small_Qupdate
  * DESCRIPTION :
  *   Calls the kernel to update Q as Q + QWYT.
  *   Wraps the timer and the print statement if verbose.
- *   If verbose, then the update Q is returned.
+ *   If verbose, then the updated Q is returned.
  *
  * ON ENTRY :
  *   dim      number of rows and column in Q and QWYT;
@@ -375,12 +394,35 @@ void GPU_dbl_small_Qupdate
  *   Q_h      the updated Q, if verbose;
  *   lapms    elapsed time spent by the kernel. */
 
+void GPU_dbl_small_R_add_YWTC
+ ( int nrows, int ncols, int szt, int idx, double *R_d, double *YWTC_d,
+   double *R_h, double *lapms, bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to update R as R + YWTC.
+ *   Wraps the timer and the print statement if verbose.
+ *   If verbose, then the updated R is returned.
+ *
+ * ON ENTRY :
+ *   nrows    total number of rows in R and YWTC;
+ *   ncols    total number of columns in R and YWTC;
+ *   szt      size of one tile and the number of threads in a block;
+ *   idx      index of the current tile;
+ *   R_d      an nrows-by-ncols matrix, on the device;
+ *   YWTC_d   the product Y*W^T*C, on the device;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   R_d      the updated R on the device;
+ *   R_h      the updated R, if verbose;
+ *   lapms    elapsed time spent by the kernel. */
+
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
    double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
-   double *YWTlapms, double *YWTClapms, 
+   double *YWTlapms, double *YWTClapms, double *Raddlapms,
    double *walltimesec, bool verbose=true );
 /*
  * DESCRIPTION :
@@ -419,6 +461,8 @@ void GPU_dbl_blocked_houseqr
  *            to compute the Y*W^T product;
  *   YWTClapms is the elapsed time spent by the kernel
  *            to compute the YWT*C product;
+ *   Raddlapms is the elapsed time spent by the kernel
+ *            to compute R by adding the Y*W^T*C matrix;
  *   walltimesec is the elapsed wall clock computation time. */
 
 #endif

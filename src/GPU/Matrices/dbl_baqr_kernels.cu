@@ -250,16 +250,37 @@ __global__ void dbl_small_Qupdate
    const int tdx = threadIdx.x;
    const int offset = bdx*szt + tdx;   // offset in result
    const int row = offset / dim;
+   const int idx = row*coloff + offset;
 
-   double result = 0.0;
    double a,b;
 
-   a = Q[row*coloff + offset];     // row = bdx, if dim == szt, coloff == 0
-   b = QWYT[row*coloff + offset];  // if(dim == szt) then col = tdx
-   result = a + b;
+   a = Q[idx];     // row = bdx, if dim == szt, coloff == 0
+   b = QWYT[idx];  // if(dim == szt) then col = tdx
+   a = a + b;
 
    __syncthreads();
-   Q[row*coloff + offset] = result;
+   Q[idx] = a;
+}
+
+__global__ void dbl_small_R_add_YWTC
+ ( int nrows, int coldim, int szt, int rowoff, int coloff,
+   double *R, double *YWTC )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int offset = bdx*szt + tdx;   // offset in result
+   const int row = offset / coldim;    // thread updates R[row][col]
+   const int col = offset % coldim;
+   const int idx = (coloff + col)*nrows + (rowoff + row);
+ 
+   double a,b;
+   
+   a = R[idx];
+   b = YWTC[idx];
+   a = a + b;
+  
+   __syncthreads();
+   R[idx] = a;
 }
 
 void GPU_dbl_small_house
@@ -324,8 +345,10 @@ void GPU_dbl_small_leftRupdate
    float milliseconds;
 
    cudaEventRecord(start);           // 2nd argument: ncols -> szt
-   dbl_small_leftRupdate<<<1,nrows-colidx>>>
-      (nrows,szt,szt,colidx,A_d,&V_d[L*nrows+L],&beta_d[L]);
+   // dbl_small_leftRupdate<<<1,nrows-colidx>>>
+   //   (nrows,szt,szt,colidx,A_d,&V_d[L*nrows+L],&beta_d[L]);
+    dbl_small_leftRupdate<<<1,nrows-colidx>>>
+      (nrows,ncols,szt,colidx,A_d,&V_d[L*nrows+L],&beta_d[L]);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
@@ -583,12 +606,48 @@ void GPU_dbl_small_Qupdate
    }
 }
 
+void GPU_dbl_small_R_add_YWTC
+ ( int nrows, int ncols, int szt, int idx, double *R_d, double *YWTC_d,
+   double *R_h, double *lapms, bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int rowoff = idx*szt;
+   const int rowdim = nrows - rowoff;
+   const int coloff = (idx+1)*szt;
+   const int coldim = ncols - coloff;
+   const int nbrblocks = (int) ceil(rowdim*coldim/((double) szt));
+
+   cudaEventRecord(start);
+   dbl_small_R_add_YWTC<<<nbrblocks,szt>>>
+      (nrows,coldim,szt,rowoff,coloff,R_d,YWTC_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+
+   if(verbose)
+   {
+      const size_t szmat = nrows*ncols*sizeof(double);
+
+      cudaMemcpy(R_h,R_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the R matrix :" << endl;
+      for(int i=rowoff; i<nrows; i++) 
+         for(int j=coloff; j<ncols; j++)
+            cout << "R[" << i << "][" << j << "] : "
+                 << R_h[j*nrows + i] << endl;
+   }
+}
+
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
    double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
-   double *YWTlapms, double *YWTClapms,
+   double *YWTlapms, double *YWTClapms, double *Raddlapms,
    double *walltimesec, bool verbose )
 {
    const int dim = nrows*ncols;         // total number of doubles
@@ -662,11 +721,8 @@ void GPU_dbl_blocked_houseqr
    *houselapms = 0.0;
    *tileRlapms = 0.0;
    *vb2Wlapms = 0.0;
-   *WYTlapms = 0.0;
-   *YWTlapms = 0.0;
-   *QWYTlapms = 0.0;
-   *YWTClapms = 0.0;
-   *Qaddlapms = 0.0;
+   *WYTlapms = 0.0; *QWYTlapms = 0.0; *Qaddlapms = 0.0;
+   *YWTlapms = 0.0; *YWTClapms = 0.0; *Raddlapms = 0.0;
    struct timeval begintime,endtime; // wall clock time of computations
 
    gettimeofday(&begintime,0);
@@ -703,6 +759,8 @@ void GPU_dbl_blocked_houseqr
          GPU_dbl_small_YWT(nrows,szt,V_d,W_d,YWT_d,YWT_h,YWTlapms,verbose);
          GPU_dbl_small_YWTC
             (nrows,ncols,szt,k,YWT_d,A_d,YWTC_d,YWTC_h,YWTClapms,verbose);
+         GPU_dbl_small_R_add_YWTC
+            (nrows,ncols,szt,k,A_d,YWTC_d,A_h,Raddlapms,verbose);
       }
    }
    gettimeofday(&endtime,0);
@@ -710,15 +768,15 @@ void GPU_dbl_blocked_houseqr
    long microseconds = endtime.tv_usec - begintime.tv_usec;
    *walltimesec = seconds + microseconds*1.0e-6;
 
-   cudaMemcpy(Q_h,Q_d,szWYT,cudaMemcpyHostToDevice);
+   cudaMemcpy(Q_h,Q_d,szWYT,cudaMemcpyDeviceToHost);
    ix = 0;                                           // copy rows of Q
    for(int i=0; i<nrows; i++)
       for(int j=0; j<nrows; j++) Q[i][j] = Q_h[ix++];
 
-   cudaMemcpy(A_h,A_d,sznum,cudaMemcpyHostToDevice);
-   ix = 0;                                           // copy columns of R
-   for(int j=0; j<ncols; j++)
-      for(int i=0; i<nrows; i++) R[i][j] = A_h[ix++];
+   cudaMemcpy(A_h,A_d,sznum,cudaMemcpyDeviceToHost);
+   for(int i=0; i<nrows; i++)                       // copy columns of R
+      for(int j=0; j<ncols; j++)
+         R[i][j] = A_h[j*nrows+i];
 
    free(A_h); free(v_h); free(V_h); free(W_h);
    free(WYT_h); free(QWYT_h); free(YWT_h); free(YWTC_h);

@@ -3,7 +3,8 @@ Thu 22 Jul 2021 : the kernel for W*Y^T also works for Y*W^T, updated
   multiply W*Y^T with C in dbl_baqr_kernels, updated dbl_baqr_testers.cpp.
   Added extra print of the reduced matrix in dbl_baqr_host.cpp,
   fixed many problems with the latest kernel in dbl_baqr_kernels.cu.
-  Updated dbl_baqr_kernels.cu to fix the WYTC kernel.
+  Updated dbl_baqr_kernels.cu to fix the WYTC kernel.  Added the kernel
+  to update R to dbl_baqr_kernels, updated dbl_baqr_testers.cpp.
 
 Wed 21 Jul 2021 : kernels to compute W*Y^T in dbl_baqr_kernels.cu works for
   one square tile.  Update dbl_baqr_kernels.cu to compute W*Y^T for tiles
