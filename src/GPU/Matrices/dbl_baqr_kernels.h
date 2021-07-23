@@ -182,7 +182,7 @@ __global__ void dbl_small_R_add_YWTC
 void GPU_dbl_small_house
  ( int nrows, int ncols, int szt, int nbt,
    int colidx, int nrows1, int k, int L,
-   double *x0_d, double *A_h, double *A_d,
+   double *A_h, double *A_d,
    double *v_h, double *V_d, double *beta_h, double *beta_d,
    double *lapms, bool verbose=true );
 /*
@@ -199,8 +199,6 @@ void GPU_dbl_small_house
  *   nrows1   number of threads in the block equals the number
  *            of elements computed in the Householder vector;
  *   L        local index of the column in the current tile;
- *   x0_d     space on the device for the first element of the vector
- *            in the current column;
  *   A_h      matrix on the host;
  *   A_d      matrix on the device;
  *   v_h      space for the current Householder vector;

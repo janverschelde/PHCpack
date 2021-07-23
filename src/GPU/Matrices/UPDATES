@@ -1,3 +1,6 @@
+Fri 23 Jul 2021 : eliminated the x0_d as a separate variable on the device
+  in dbl_baqr_kernels, fixing a bug when verbose is set to false.
+
 Thu 22 Jul 2021 : the kernel for W*Y^T also works for Y*W^T, updated
   dbl_baqr_kernels and dbl_baqr_testers.cpp.  First version of a kernel to
   multiply W*Y^T with C in dbl_baqr_kernels, updated dbl_baqr_testers.cpp.

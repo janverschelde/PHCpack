@@ -129,7 +129,7 @@ __global__ void dbl_small_leftRupdate
       Rtdx = R[Rcolidx];
       Rtdx = Rtdx - shv[i]*w;
       __syncthreads();
-      if(tdx < ncols-k) R[Rcolidx] = Rtdx;
+      if(tdx < nrows-k) R[Rcolidx] = Rtdx;
    }
 }
 
@@ -286,7 +286,7 @@ __global__ void dbl_small_R_add_YWTC
 void GPU_dbl_small_house
  ( int nrows, int ncols, int szt, int nbt,
    int colidx, int nrows1, int k, int L,
-   double *x0_d, double *A_h, double *A_d,
+   double *A_h, double *A_d,
    double *v_h, double *V_d, double *beta_h, double *beta_d,
    double *lapms, bool verbose )
 {
@@ -311,11 +311,9 @@ void GPU_dbl_small_house
    cudaEventCreate(&stop);
    float milliseconds;
 
-   cudaMemcpy(x0_d,&A_h[rowidx],sizeof(double),cudaMemcpyHostToDevice);
-
    cudaEventRecord(start);
    dbl_small_house<<<1,nrows1>>>
-      (x0_d,&A_d[rowidx+1],nrows1,nrLog2,&V_d[L*nrows+L],&beta_d[L]);
+      (&A_d[rowidx],&A_d[rowidx+1],nrows1,nrLog2,&V_d[L*nrows+L],&beta_d[L]);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
@@ -347,7 +345,7 @@ void GPU_dbl_small_leftRupdate
    cudaEventRecord(start);           // 2nd argument: ncols -> szt
    // dbl_small_leftRupdate<<<1,nrows-colidx>>>
    //   (nrows,szt,szt,colidx,A_d,&V_d[L*nrows+L],&beta_d[L]);
-    dbl_small_leftRupdate<<<1,nrows-colidx>>>
+   dbl_small_leftRupdate<<<1,nrows-colidx>>>
       (nrows,ncols,szt,colidx,A_d,&V_d[L*nrows+L],&beta_d[L]);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
@@ -655,7 +653,6 @@ void GPU_dbl_blocked_houseqr
    double *A_h = new double[dim];       // matrix A on the host
    double *A_d;                         // matrix on the device
    double *v_h = new double[nrows];     // Householder vector on host
-   double *x0_d;                        // first element for house on device
    double *beta_h = new double[szt];    // beta on the host
    double *beta_d;                      // beta on the device
    double *V_h = new double[nrows*szt]; // matrix of Householder vectors
@@ -691,7 +688,6 @@ void GPU_dbl_blocked_houseqr
    const size_t sznum = dim*sizeof(double);
    cudaMalloc((void**)&A_d,sznum);
    cudaMemcpy(A_d,A_h,sznum,cudaMemcpyHostToDevice);
-   cudaMalloc((void**)&x0_d,sizeof(double));
 
    const size_t szbeta = szt*sizeof(double);
    cudaMalloc((void**)&beta_d,szbeta);
@@ -739,7 +735,7 @@ void GPU_dbl_blocked_houseqr
          {
             GPU_dbl_small_house
                (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
-                x0_d,A_h,A_d,v_h,V_d,beta_h,beta_d,houselapms,verbose);
+                A_h,A_d,v_h,V_d,beta_h,beta_d,houselapms,verbose);
 
             GPU_dbl_small_leftRupdate
                (nrows,ncols,szt,colidx,L,A_h,A_d,V_d,beta_h,beta_d,
