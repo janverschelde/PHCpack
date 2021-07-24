@@ -148,8 +148,9 @@ void test_factors_cmplx_lufac ( void )
    cout << "Sum of errors : " << error << endl;
 }
 
-void test_real_qr_factors
- ( int nrows, int ncols, double **A, double **Q, double **R, int verbose )
+int test_real_qr_factors
+ ( int nrows, int ncols, double **A, double **Q, double **R,
+   double tol, int verbose )
 {
    double **QT = new double*[nrows];
    double **QTQ = new double*[nrows];
@@ -176,7 +177,7 @@ void test_real_qr_factors
       }
    CPU_dbl_factors_matmatmul(nrows,nrows,nrows,QT,Q,QTQ);
 
-   double error = 0.0;
+   double errorQ = 0.0;
 
    if(verbose > 0) cout << "The matrix transpose(Q)*Q :" << endl;
    for(int i=0; i<nrows; i++)
@@ -186,13 +187,13 @@ void test_real_qr_factors
             cout << "Q'*Q[" << i << "][" << j << "] : "
                  << QTQ[i][j] << endl;
          if(i == j)
-            error = error + abs(QTQ[i][j] - 1.0);
+            errorQ = errorQ + abs(QTQ[i][j] - 1.0);
          else
-            error = error + abs(QTQ[i][j]);
+            errorQ = errorQ + abs(QTQ[i][j]);
       }
 
    cout << scientific << setprecision(2);
-   cout << "Sum of errors on |Q^T*Q - I| : " << error << endl;
+   cout << "Sum of errors on |Q^T*Q - I| : " << errorQ << endl;
 
    if(verbose > 0)
    {
@@ -202,10 +203,9 @@ void test_real_qr_factors
          for(int j=0; j<ncols; j++)
             cout << "R[" << i << "][" << j << "] : " << R[i][j] << endl;
    }
-
    CPU_dbl_factors_matmatmul(nrows,nrows,ncols,QT,A,QTA);
 
-   error = 0.0;
+   double errorR = 0.0;
 
    if(verbose > 0) cout << "The matrix transpose(Q)*A :" << endl;
    for(int i=0; i<nrows; i++)
@@ -214,22 +214,25 @@ void test_real_qr_factors
          if(verbose > 0)
             cout << "Q'*A[" << i << "][" << j << "] : "
                  << QTA[i][j] << endl;
-         error = error + abs(R[i][j] - QTA[i][j]);
+         errorR = errorR + abs(R[i][j] - QTA[i][j]);
       }
 
    cout << scientific << setprecision(2);
-   cout << "Sum of errors on |Q^T*A - R| : " << error << endl;
+   cout << "Sum of errors on |Q^T*A - R| : " << errorR << endl;
 
    for(int i=0; i<nrows; i++)
    {
       free(QT[i]); free(QTQ[i]); free(QTA[i]);
    }
    free(QT); free(QTQ); free(QTA);
+
+   return int(errorQ + errorR > tol);
 }
 
-void test_cmplx_qr_factors
+int test_cmplx_qr_factors
  ( int nrows, int ncols, double **Are, double **Aim,
-   double **Qre, double **Qim, double **Rre, double **Rim, int verbose )
+   double **Qre, double **Qim, double **Rre, double **Rim,
+   double tol, int verbose )
 {
    double **QHre = new double*[nrows];
    double **QHim = new double*[nrows];
@@ -265,7 +268,7 @@ void test_cmplx_qr_factors
    CPU_cmplx_factors_matmatmul
       (nrows,nrows,nrows,QHre,QHim,Qre,Qim,QHQre,QHQim);
 
-   double error = 0.0;
+   double errorQ = 0.0;
 
    if(verbose > 0) cout << "The matrix transpose(Q)*Q :" << endl;
    for(int i=0; i<nrows; i++)
@@ -275,13 +278,13 @@ void test_cmplx_qr_factors
             cout << "Q^H*Q[" << i << "][" << j << "] : "
                  << QHQre[i][j] << "  " << QHQim[i][j] << endl;
          if(i == j)
-            error = error + abs(QHQre[i][j] - 1.0) + abs(QHQim[i][j]);
+            errorQ = errorQ + abs(QHQre[i][j] - 1.0) + abs(QHQim[i][j]);
          else
-            error = error + abs(QHQre[i][j]) + abs(QHQim[i][j]);
+            errorQ = errorQ + abs(QHQre[i][j]) + abs(QHQim[i][j]);
       }
 
    cout << scientific << setprecision(2);
-   cout << "Sum of errors on |Q^H*Q - I| : " << error << endl;
+   cout << "Sum of errors on |Q^H*Q - I| : " << errorQ << endl;
 
    if(verbose > 0)
    {
@@ -295,7 +298,7 @@ void test_cmplx_qr_factors
    CPU_cmplx_factors_matmatmul
       (nrows,nrows,ncols,QHre,QHim,Are,Aim,QHAre,QHAim);
 
-   error = 0.0;
+   double errorR = 0.0;
 
    if(verbose > 0) cout << "The matrix transpose(Q)*A :" << endl;
    for(int i=0; i<nrows; i++)
@@ -304,12 +307,12 @@ void test_cmplx_qr_factors
          if(verbose > 0)
             cout << "Q^H*A[" << i << "][" << j << "] : "
                  << QHAre[i][j] << "  " << QHAim[i][j] << endl;
-         error = error + abs(Rre[i][j] - QHAre[i][j])
-                       + abs(Rim[i][j] - QHAim[i][j]);
+         errorR = errorR + abs(Rre[i][j] - QHAre[i][j])
+                         + abs(Rim[i][j] - QHAim[i][j]);
       }
 
    cout << scientific << setprecision(2);
-   cout << "Sum of errors on |Q^H*A - R| : " << error << endl;
+   cout << "Sum of errors on |Q^H*A - R| : " << errorR << endl;
 
    for(int i=0; i<nrows; i++)
    {
@@ -318,6 +321,8 @@ void test_cmplx_qr_factors
    }
    free(QHre); free(QHQre); free(QHAre);
    free(QHim); free(QHQim); free(QHAim);
+
+   return int(errorQ + errorR > tol);
 }
 
 void test_factors_real_houseqr ( void )
@@ -357,8 +362,15 @@ void test_factors_real_houseqr ( void )
    }
    CPU_dbl_factors_houseqr(nrows,ncols,A,Q,R);
 
-   test_real_qr_factors(nrows,ncols,A,Q,R,verbose);
-
+   const double tol = 1.0e-12;
+   const int fail = test_real_qr_factors(nrows,ncols,A,Q,R,tol,verbose);
+   if(fail == 0)
+      cout << "The test succeeded." << endl;
+   else
+   {
+      cout << scientific << setprecision(2);
+      cout << "The test failed for tol = " << tol << "." << endl;
+   }
    for(int i=0; i<nrows; i++)
    {
       free(A[i]); free(Q[i]); free(R[i]);
@@ -410,8 +422,16 @@ void test_factors_cmplx_houseqr ( void )
    }
    CPU_cmplx_factors_houseqr(nrows,ncols,Are,Aim,Qre,Qim,Rre,Rim);
 
-   test_cmplx_qr_factors(nrows,ncols,Are,Aim,Qre,Qim,Rre,Rim,verbose);
-
+   const double tol = 1.0e-12;
+   const int fail = test_cmplx_qr_factors
+      (nrows,ncols,Are,Aim,Qre,Qim,Rre,Rim,tol,verbose);
+   if(fail == 0)
+      cout << "The test succeeded." << endl;
+   else
+   {
+      cout << scientific << setprecision(2);
+      cout << "The test failed for tol = " << tol << "." << endl;
+   }
    for(int i=0; i<nrows; i++)
    {
       free(Are[i]); free(Qre[i]); free(Rre[i]);

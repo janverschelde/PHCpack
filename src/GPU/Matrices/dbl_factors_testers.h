@@ -15,8 +15,9 @@ void test_factors_cmplx_lufac ( void );
  *   Prompts for a dimension and tests the LU factorization
  *   on complex data. */
 
-void test_real_qr_factors
- ( int nrows, int ncols, double **A, double **Q, double **R, int verbose );
+int test_real_qr_factors
+ ( int nrows, int ncols, double **A, double **Q, double **R,
+   double tol, int verbose );
 /*
  * DESCRIPTION :
  *   Computes the errors of |Q^T*A - R| and |Q^T*Q - I|, for real data.
@@ -27,11 +28,17 @@ void test_real_qr_factors
  *   A        an nrows-by-ncols matrix;
  *   Q        an nrows-by-nrows matrix;
  *   R        an nrows-by-ncols matrix;
- *   verbose  is the verbose level. */
+ *   tol      is the tolerance on the errors;
+ *   verbose  is the verbose level.
+ *
+ * RETURN :
+ *   0        if all errors are less than the tolerance tol;
+ *   1        if one error is larger than the tolearnce tol. */
 
-void test_cmplx_qr_factors
+int test_cmplx_qr_factors
  ( int nrows, int ncols, double **Are, double **Aim,
-   double **Qre, double **Qim, double **Rre, double **Rim, int verbose );
+   double **Qre, double **Qim, double **Rre, double **Rim,
+   double tol, int verbose );
 /*
  * DESCRIPTION :
  *   Computes the errors of |Q^T*A - R| and |Q^T*Q - I|, for complex data.
@@ -45,7 +52,12 @@ void test_cmplx_qr_factors
  *   Qim      imaginary parts of an nrows-by-nrows matrix;
  *   Rre      real parts of an nrows-by-ncols matrix;
  *   Rim      imaginary parts of an nrows-by-ncols matrix;
- *   verbose  is the verbose level. */
+ *   tol      is the tolerance on the errors;
+ *   verbose  is the verbose level.
+ *
+ * RETURN :
+ *   0        if all errors are less than the tolerance tol;
+ *   1        if one error is larger than the tolearnce tol. */
 
 void test_factors_real_houseqr ( void );
 /*

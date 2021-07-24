@@ -27,6 +27,14 @@ void test_real_blocked_qr ( void )
    cout << "Give the number of rows (" << " >= " << ncols << " ) : ";
    int nrows; cin >> nrows;
 
+   if(nrows < ncols)
+   {
+      cout << "Number of rows = " << nrows
+           << " < " << ncols
+           << " = number of columns." << endl;
+      cout << "Please try again." << endl;
+      return;
+   }
    cout << "Give the verbose level (1 to see all numbers) : ";
    int verbose; cin >> verbose;
 
@@ -71,8 +79,15 @@ void test_real_blocked_qr ( void )
 
    cout << "-> Testing the QR factorization ..." << endl;
 
-   test_real_qr_factors(nrows,ncols,A,Q_h,R_h,verbose);
-
+   const double tol = 1.0e-12;
+   int fail = test_real_qr_factors(nrows,ncols,A,Q_h,R_h,tol,verbose);
+   if(fail == 0)
+      cout << "The test succeeded." << endl;
+   else
+   {
+      cout << scientific << setprecision(2);
+      cout << "The test failed for tol = " << tol << "." << endl;
+   }
    cout << "-> GPU computes the block Householder QR ..." << endl;
 
    GPU_dbl_blocked_houseqr
@@ -81,7 +96,14 @@ void test_real_blocked_qr ( void )
        &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,vrb);
 
-   test_real_qr_factors(nrows,ncols,A,Q_d,R_d,verbose);
+   fail = test_real_qr_factors(nrows,ncols,A,Q_d,R_d,tol,verbose);
+   if(fail == 0)
+      cout << "The test succeeded." << endl;
+   else
+   {
+      cout << scientific << setprecision(2);
+      cout << "The test failed for tol = " << tol << "." << endl;
+   }
 
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
@@ -127,6 +149,14 @@ void test_cmplx_blocked_qr ( void )
    cout << "Give the number of rows (" << " >= " << ncols << " ) : ";
    int nrows; cin >> nrows;
 
+   if(nrows < ncols)
+   {
+      cout << "Number of rows = " << nrows
+           << " < " << ncols
+           << " = number of columns." << endl;
+      cout << "Please try again." << endl;
+      return;
+   }
    cout << "Give the verbose level (1 to see all numbers) : ";
    int verbose; cin >> verbose;
 
@@ -172,8 +202,16 @@ void test_cmplx_blocked_qr ( void )
 
    cout << "-> Testing the QR factorization ..." << endl;
 
-   test_cmplx_qr_factors(nrows,ncols,Are,Aim,Qre,Qim,Rre,Rim,verbose);
-
+   const double tol = 1.0e-12;
+   int fail = test_cmplx_qr_factors
+      (nrows,ncols,Are,Aim,Qre,Qim,Rre,Rim,tol,verbose);
+   if(fail == 0)
+      cout << "The test succeeded." << endl;
+   else
+   {
+      cout << scientific << setprecision(2);
+      cout << "The test failed for tol = " << tol << "." << endl;
+   }
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
