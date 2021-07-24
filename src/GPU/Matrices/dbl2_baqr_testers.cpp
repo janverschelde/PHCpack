@@ -71,8 +71,16 @@ void test_real2_blocked_qr ( void )
 
    cout << "-> Testing the QR factorization ..." << endl;
 
-   test_real2_qr_factors(nrows,ncols,Ahi,Alo,Qhi,Qlo,Rhi,Rlo,verbose);
-
+   const double tol = 1.0e-26;
+   const int fail = test_real2_qr_factors
+      (nrows,ncols,Ahi,Alo,Qhi,Qlo,Rhi,Rlo,tol,verbose);
+   if(fail == 0)
+      cout << "The test succeeded." << endl;
+   else
+   {
+      cout << scientific << setprecision(2);
+      cout << "The test failed for tol = " << tol << "." << endl;
+   }
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
@@ -162,11 +170,18 @@ void test_cmplx2_blocked_qr ( void )
 
    cout << "-> Testing the QR factorization ..." << endl;
 
-   test_cmplx2_qr_factors
+   const double tol = 1.0e-26;
+   const int fail = test_cmplx2_qr_factors
       (nrows,ncols,Arehi,Arelo,Aimhi,Aimlo,
                    Qrehi,Qrelo,Qimhi,Qimlo,
-                   Rrehi,Rrelo,Rimhi,Rimlo,verbose);
-
+                   Rrehi,Rrelo,Rimhi,Rimlo,tol,verbose);
+   if(fail == 0)
+      cout << "The test succeeded." << endl;
+   else
+   {
+      cout << scientific << setprecision(2);
+      cout << "The test failed for tol = " << tol << "." << endl;
+   }
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;

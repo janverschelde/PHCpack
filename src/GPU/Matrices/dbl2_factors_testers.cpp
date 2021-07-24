@@ -208,9 +208,10 @@ void test_factors_cmplx2_lufac ( void )
    cout << "Sum of errors : " << error << endl;
 }
 
-void test_real2_qr_factors
+int test_real2_qr_factors
  ( int nrows, int ncols, double **Ahi, double **Alo,
-   double **Qhi, double **Qlo, double **Rhi, double **Rlo, int verbose )
+   double **Qhi, double **Qlo, double **Rhi, double **Rlo,
+   double tol, int verbose )
 {
    double **QThi = new double*[nrows];
    double **QTlo = new double*[nrows];
@@ -245,7 +246,7 @@ void test_real2_qr_factors
    CPU_dbl2_factors_matmatmul
       (nrows,nrows,nrows,QThi,QTlo,Qhi,Qlo,QTQhi,QTQlo);
 
-   double error = 0.0;
+   double errorQ = 0.0;
 
    if(verbose > 0) cout << "The matrix transpose(Q)*Q :" << endl;
    for(int i=0; i<nrows; i++)
@@ -255,13 +256,13 @@ void test_real2_qr_factors
             cout << "Q'*Q[" << i << "][" << j << "] : "
                  << QTQhi[i][j] << "  " << QTQlo[i][j] << endl;
          if(i == j)
-            error = error + fabs(QTQhi[i][j] - 1.0) + fabs(QTQlo[i][j]);
+            errorQ = errorQ + fabs(QTQhi[i][j] - 1.0) + fabs(QTQlo[i][j]);
          else
-            error = error + fabs(QTQhi[i][j]) + fabs(QTQlo[i][j]);
+            errorQ = errorQ + fabs(QTQhi[i][j]) + fabs(QTQlo[i][j]);
       }
 
    cout << scientific << setprecision(2);
-   cout << "Sum of errors on |Q^T*Q - I| : " << error << endl;
+   cout << "Sum of errors on |Q^T*Q - I| : " << errorQ << endl;
 
    if(verbose > 0)
    {
@@ -275,7 +276,7 @@ void test_real2_qr_factors
    CPU_dbl2_factors_matmatmul
       (nrows,nrows,ncols,QThi,QTlo,Ahi,Alo,QTAhi,QTAlo);
 
-   error = 0.0;
+   double errorR = 0.0;
 
    if(verbose > 0) cout << "The matrix transpose(Q)*A :" << endl;
    for(int i=0; i<nrows; i++)
@@ -284,12 +285,12 @@ void test_real2_qr_factors
          if(verbose > 0)
             cout << "Q'*A[" << i << "][" << j << "] : "
                  << QTAhi[i][j] << "  " << QTAlo[i][j] << endl;
-         error = error + fabs(Rhi[i][j] - QTAhi[i][j])
-                       + fabs(Rlo[i][j] - QTAlo[i][j]);
+         errorR = errorR + fabs(Rhi[i][j] - QTAhi[i][j])
+                         + fabs(Rlo[i][j] - QTAlo[i][j]);
       }
 
    cout << scientific << setprecision(2);
-   cout << "Sum of errors on |Q^T*A - R| : " << error << endl;
+   cout << "Sum of errors on |Q^T*A - R| : " << errorR << endl;
 
    for(int i=0; i<nrows; i++)
    {
@@ -298,14 +299,16 @@ void test_real2_qr_factors
    }
    free(QThi); free(QTQhi); free(QTAhi);
    free(QTlo); free(QTQlo); free(QTAlo);
+
+   return int(errorQ + errorR > tol);
 }
 
-void test_cmplx2_qr_factors
+int test_cmplx2_qr_factors
  ( int nrows, int ncols,
    double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
    double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
-   int verbose )
+   double tol, int verbose )
 {
    double **QHrehi = new double*[nrows];
    double **QHrelo = new double*[nrows];
@@ -360,7 +363,7 @@ void test_cmplx2_qr_factors
                           Qrehi,  Qrelo,  Qimhi,  Qimlo,
                         QHQrehi,QHQrelo,QHQimhi,QHQimlo);
 
-   double error = 0.0;
+   double errorQ = 0.0;
 
    if(verbose > 0) cout << "The matrix transpose(Q)*Q :" << endl;
    for(int i=0; i<nrows; i++)
@@ -374,15 +377,15 @@ void test_cmplx2_qr_factors
                  << QHQimhi[i][j] << "  " << QHQimlo[i][j] << endl;
          }
          if(i == j)
-            error = error + abs(QHQrehi[i][j] - 1.0) + abs(QHQrelo[i][j])
-                          + abs(QHQimhi[i][j]) + abs(QHQimlo[i][j]);
+            errorQ = errorQ + abs(QHQrehi[i][j] - 1.0) + abs(QHQrelo[i][j])
+                            + abs(QHQimhi[i][j]) + abs(QHQimlo[i][j]);
          else
-            error = error + abs(QHQrehi[i][j]) + abs(QHQrelo[i][j])
-                          + abs(QHQimhi[i][j]) + abs(QHQimlo[i][j]);
+            errorQ = errorQ + abs(QHQrehi[i][j]) + abs(QHQrelo[i][j])
+                            + abs(QHQimhi[i][j]) + abs(QHQimlo[i][j]);
       }
 
    cout << scientific << setprecision(2);
-   cout << "Sum of errors on |Q^H*Q - I| : " << error << endl;
+   cout << "Sum of errors on |Q^H*Q - I| : " << errorQ << endl;
 
    if(verbose > 0)
    {
@@ -402,7 +405,7 @@ void test_cmplx2_qr_factors
                           Arehi,  Arelo,  Aimhi,  Aimlo,
                         QHArehi,QHArelo,QHAimhi,QHAimlo);
 
-   error = 0.0;
+   double errorR = 0.0;
 
    if(verbose > 0) cout << "The matrix transpose(Q)*A :" << endl;
    for(int i=0; i<nrows; i++)
@@ -415,14 +418,14 @@ void test_cmplx2_qr_factors
             cout << "Q^H*A[" << i << "][" << j << "]im : "
                  << QHAimhi[i][j] << "  " << QHAimlo[i][j] << endl;
          }
-         error = error + abs(Rrehi[i][j] - QHArehi[i][j])
-                       + abs(Rrelo[i][j] - QHArelo[i][j])
-                       + abs(Rimhi[i][j] - QHAimhi[i][j])
-                       + abs(Rimlo[i][j] - QHAimlo[i][j]);
+         errorR = errorR + abs(Rrehi[i][j] - QHArehi[i][j])
+                         + abs(Rrelo[i][j] - QHArelo[i][j])
+                         + abs(Rimhi[i][j] - QHAimhi[i][j])
+                         + abs(Rimlo[i][j] - QHAimlo[i][j]);
       }
 
    cout << scientific << setprecision(2);
-   cout << "Sum of errors on |Q^H*A - R| : " << error << endl;
+   cout << "Sum of errors on |Q^H*A - R| : " << errorR << endl;
 
    for(int i=0; i<nrows; i++)
    {
@@ -437,6 +440,8 @@ void test_cmplx2_qr_factors
    free(QHrelo); free(QHQrelo); free(QHArelo);
    free(QHimhi); free(QHQimhi); free(QHAimhi);
    free(QHimlo); free(QHQimlo); free(QHAimlo);
+
+   return int(errorQ + errorR > tol);
 }
 
 void test_factors_real2_houseqr ( void )
@@ -483,8 +488,16 @@ void test_factors_real2_houseqr ( void )
    }
    CPU_dbl2_factors_houseqr(nrows,ncols,Ahi,Alo,Qhi,Qlo,Rhi,Rlo);
 
-   test_real2_qr_factors(nrows,ncols,Ahi,Alo,Qhi,Qlo,Rhi,Rlo,verbose);
-
+   const double tol = 1.0E-26;
+   const int fail = test_real2_qr_factors
+      (nrows,ncols,Ahi,Alo,Qhi,Qlo,Rhi,Rlo,tol,verbose);
+   if(fail == 0)
+      cout << "The test succeeded." << endl;
+   else
+   {
+      cout << scientific << setprecision(2);
+      cout << "The test failed for tol = " << tol << "." << endl;
+   }
    for(int i=0; i<nrows; i++)
    {
       free(Ahi[i]); free(Qhi[i]); free(Rhi[i]);
@@ -557,11 +570,18 @@ void test_factors_cmplx2_houseqr ( void )
                    Qrehi,Qrelo,Qimhi,Qimlo,
                    Rrehi,Rrelo,Rimhi,Rimlo);
 
-   test_cmplx2_qr_factors
+   const double tol = 1.0e-12;
+   const int fail = test_cmplx2_qr_factors
       (nrows,ncols,Arehi,Arelo,Aimhi,Aimlo,
                    Qrehi,Qrelo,Qimhi,Qimlo,
-                   Rrehi,Rrelo,Rimhi,Rimlo,verbose);
-
+                   Rrehi,Rrelo,Rimhi,Rimlo,tol,verbose);
+   if(fail == 0)
+      cout << "The test succeeded." << endl;
+   else
+   {
+      cout << scientific << setprecision(2);
+      cout << "The test failed for tol = " << tol << "." << endl;
+   }
    for(int i=0; i<nrows; i++)
    {
       free(Arehi[i]); free(Qrehi[i]); free(Rrehi[i]);

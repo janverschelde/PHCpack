@@ -15,9 +15,10 @@ void test_factors_cmplx2_lufac ( void );
  *   Prompts for a dimension and tests the LU factorization
  *   on complex data. */
 
-void test_real2_qr_factors
+int test_real2_qr_factors
  ( int nrows, int ncols, double **Ahi, double **Alo,
-   double **Qhi, double **Qlo, double **Rhi, double **Rlo, int verbose );
+   double **Qhi, double **Qlo, double **Rhi, double **Rlo,
+   double tol, int verbose );
 /*
  * DESCRIPTION :
  *   Computes the errors of |Q^T*A - R| and |Q^T*Q - I|, for real data.
@@ -31,14 +32,19 @@ void test_real2_qr_factors
  *   Qlo      low doubles of an nrows-by-nrows matrix;
  *   Rhi      high doubles of an nrows-by-ncols matrix;
  *   Rlo      low doubles of an nrows-by-ncols matrix;
- *   verbose  is the verbose level. */
+ *   tol      is the tolerance on the errors;
+ *   verbose  is the verbose level.
+ *
+ * RETURN :
+ *   0        if all errors are less than the tolerance tol;
+ *   1        if one error is larger than the tolearnce tol. */
 
-void test_cmplx2_qr_factors
+int test_cmplx2_qr_factors
  ( int nrows, int ncols,
    double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
    double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
-   int verbose );
+   double tol, int verbose );
 /*
  * DESCRIPTION :
  *   Computes the errors of |Q^T*A - R| and |Q^T*Q - I|, for complex data.
@@ -58,7 +64,12 @@ void test_cmplx2_qr_factors
  *   Rrelo    low doubles of the real parts of an nrows-by-ncols matrix;
  *   Rimhi    high doubles of the imaginary parts of an nrows-by-ncols matrix;
  *   Rimlo    low doubles of the imaginary parts of an nrows-by-ncols matrix;
- *   verbose  is the verbose level. */
+ *   tol      is the tolerance on the errors;
+ *   verbose  is the verbose level.
+ *
+ * RETURN :
+ *   0        if all errors are less than the tolerance tol;
+ *   1        if one error is larger than the tolearnce tol. */
 
 void test_factors_real2_houseqr ( void );
 /*
