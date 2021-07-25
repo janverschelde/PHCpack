@@ -1,3 +1,5 @@
+Sun 25 Jul 2021 : more messages in dbl_baqr_host.cpp and dbl_baqr_kernels.cu.
+
 Sat 24 Jul 2021 : improved the tests in dbl_factors_testers, updated the
   calls in dbl_baqr_testers.cpp.  Likewise, improved dbl2_factors_testers
   and updated dbl2_baqr_testers.cpp.  In dbl_baqr_kernels.cu, fixed the

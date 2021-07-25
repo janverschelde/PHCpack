@@ -327,8 +327,8 @@ void GPU_dbl_small_house
       cudaMemcpy(&beta_h[L],&beta_d[L],sizeof(double),cudaMemcpyDeviceToHost);
       cudaMemcpy(v_h,&V_d[L*nrows],szhouse,cudaMemcpyDeviceToHost);
       cout << scientific << setprecision(16)
-           << "beta[" << L << "] : " << beta_h[L] << endl;
-      for(int i=0; i<nrows; i++)
+           << "beta[" << colidx << "] : " << beta_h[L] << endl;
+      for(int i=0; i<nrows-colidx; i++)
          cout << "v[" << i << "] : " << v_h[i] << endl;
    }
 }
@@ -726,6 +726,9 @@ void GPU_dbl_blocked_houseqr
 
    for(int k=0; k<nbt; k++)       // k runs over the number of blocks
    {
+      if(verbose)
+         cout << "Tile k = " << k << " out of " << nbt << " ..." << endl;
+
       int colidx,nrows1;
 
       for(int L=0; L<szt; L++)  // L runs over the columns in one block
@@ -737,7 +740,6 @@ void GPU_dbl_blocked_houseqr
             GPU_dbl_small_house
                (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
                 A_h,A_d,v_h,V_d,beta_h,beta_d,houselapms,verbose);
-
             GPU_dbl_small_leftRupdate
                (nrows,ncols,szt,colidx,L,A_h,A_d,V_d,beta_h,beta_d,
                 tileRlapms,verbose);
@@ -748,9 +750,9 @@ void GPU_dbl_blocked_houseqr
       // update Q
       GPU_dbl_small_WYT(nrows,szt,W_d,V_d,WYT_d,WYT_h,WYTlapms,verbose);
       GPU_dbl_small_QWYT
-        (nrows,szt,k,Q_d,WYT_d,QWYT_d,QWYT_h,QWYTlapms,verbose);
+         (nrows,szt,k,Q_d,WYT_d,QWYT_d,QWYT_h,QWYTlapms,verbose);
       GPU_dbl_small_Qupdate
-        (nrows,szt,k,Q_d,QWYT_d,Q_h,Qaddlapms,verbose);
+         (nrows,szt,k,Q_d,QWYT_d,Q_h,Qaddlapms,verbose);
       if(k < nbt-1) // update R
       {
          GPU_dbl_small_YWT(nrows,szt,V_d,W_d,YWT_d,YWT_h,YWTlapms,verbose);

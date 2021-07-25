@@ -149,11 +149,22 @@ void CPU_dbl_blocked_leftRupdate
       for(int i=0; i<rowdim; i++)
          for(int j=0; j<coldim; j++)
             cout << "YWTC[" << i << "][" << j << "] : " << prd[i][j] << endl;
+      for(int i=0; i<rowdim; i++)
+         for(int j=0; j<coldim; j++)
+            cout << "C[" << rowoff+i << "][" << coloff+j << "] : "
+                 << C[rowoff+i][coloff+j] << endl;
    }
    for(int i=0; i<rowdim; i++)        // C = C + (Y*W^T)*C
       for(int j=0; j<coldim; j++)
         C[rowoff+i][coloff+j] = C[rowoff+i][coloff+j] + prd[i][j];
-
+   if(verbose)
+   {
+      cout << "C after the update with YWTC :" << endl;
+      for(int i=0; i<rowdim; i++)
+         for(int j=0; j<coldim; j++)
+            cout << "C[" << rowoff+i << "][" << coloff+j << "] : "
+                 << C[rowoff+i][coloff+j] << endl;
+   }
    for(int i=0; i<rowdim; i++)
    {
       free(YWT[i]);
@@ -316,11 +327,23 @@ void CPU_dbl_blocked_rightQupdate
       for(int i=0; i<dim; i++)
          for(int j=0; j<rowdim; j++)
             cout << "QWYT[" << i << "][" << j << "] : " << prd[i][j] << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<rowdim; j++)
+            cout << "Q[" << i << "][" << coloff+j << "] : "
+                 << Q[i][coloff+j] << endl;
    }
    for(int i=0; i<dim; i++)           // Q = Q + Q*W*Y^T
       for(int j=0; j<rowdim; j++)
         Q[i][coloff+j] = Q[i][coloff+j] + prd[i][j];
 
+   if(verbose)
+   {
+      cout << "Q after the update with QWYT :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<rowdim; j++)
+            cout << "Q[" << i << "][" << coloff+j << "] : "
+                 << Q[i][coloff+j] << endl;
+   }
    for(int i=0; i<rowdim; i++) free(WYT[i]);
    for(int i=0; i<dim; i++) free(prd[i]);
    free(WYT); free(prd);
@@ -459,6 +482,9 @@ void CPU_dbl_blocked_houseqr
 
    for(int k=0; k<nbt; k++)       // k runs over the number of blocks
    {
+      if(verbose)
+         cout << "Tile k = " << k << " out of " << nbt << " ..." << endl;
+
       for(int L=0; L<szt; L++)    // L runs over the columns in one block
       {
          colidx = k*szt + L;      // index of the current column
@@ -548,6 +574,9 @@ void CPU_cmplx_blocked_houseqr
 
    for(int k=0; k<nbt; k++)       // k runs over the number of blocks
    {
+      if(verbose)
+         cout << "Tile k = " << k << " out of " << nbt << " ..." << endl;
+
       for(int L=0; L<szt; L++)    // L runs over the columns in one block
       {
          colidx = k*szt + L;      // index of the current column
