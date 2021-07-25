@@ -306,20 +306,27 @@ void GPU_dbl_small_house
            << "  colidx : " << colidx
            << "  rowidx : " << rowidx << endl;
    }
+   if(nrows1 == 0)
+   {
+      beta_h[L] = 0.0; v_h[0] = 1.0;
+      cudaMemcpy(&beta_d[L],&beta_h[L],sizeof(double),cudaMemcpyHostToDevice);
+      cudaMemcpy(&V_d[L*nrows],v_h,sizeof(double),cudaMemcpyHostToDevice);
+   }
+   else
+   {
+      cudaEvent_t start,stop;           // to measure time spent by kernels 
+      cudaEventCreate(&start);
+      cudaEventCreate(&stop);
+      float milliseconds;
 
-   cudaEvent_t start,stop;           // to measure time spent by kernels 
-   cudaEventCreate(&start);
-   cudaEventCreate(&stop);
-   float milliseconds;
-
-   cudaEventRecord(start);
-   dbl_small_house<<<1,nrows1>>>
-      (&A_d[rowidx],&A_d[rowidx+1],nrows1,nrLog2,&V_d[L*nrows+L],&beta_d[L]);
-   cudaEventRecord(stop);
-   cudaEventSynchronize(stop);
-   cudaEventElapsedTime(&milliseconds,start,stop);
-   *lapms += milliseconds;
- 
+      cudaEventRecord(start);
+      dbl_small_house<<<1,nrows1>>>
+         (&A_d[rowidx],&A_d[rowidx+1],nrows1,nrLog2,&V_d[L*nrows+L],&beta_d[L]);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
+   }
    if(verbose)
    {
       const size_t szhouse = nrows*sizeof(double);
@@ -735,15 +742,12 @@ void GPU_dbl_blocked_houseqr
       {
          colidx = k*szt + L;              // index of the current column
          nrows1 = nrows - colidx - 1;     // #rows in Householder vector - 1
-         if(nrows1 > 0)
-         {
-            GPU_dbl_small_house
-               (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
-                A_h,A_d,v_h,V_d,beta_h,beta_d,houselapms,verbose);
-            GPU_dbl_small_leftRupdate
-               (nrows,ncols,szt,colidx,L,A_h,A_d,V_d,beta_h,beta_d,
-                tileRlapms,verbose);
-         }
+         GPU_dbl_small_house
+            (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
+             A_h,A_d,v_h,V_d,beta_h,beta_d,houselapms,verbose);
+         GPU_dbl_small_leftRupdate
+            (nrows,ncols,szt,colidx,L,A_h,A_d,V_d,beta_h,beta_d,
+             tileRlapms,verbose);
       }
       GPU_dbl_VB_to_W
          (nrows,ncols,szt,V_h,V_d,W_h,W_d,beta_h,beta_d,vb2Wlapms,verbose);
