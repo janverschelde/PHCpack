@@ -146,10 +146,9 @@ void CPU_dbl_blocked_leftRupdate
 
    if(verbose)
    {
-      cout << endl;
       for(int i=0; i<rowdim; i++)
          for(int j=0; j<coldim; j++)
-            cout << "prd[" << i << "][" << j << "] : " << prd[i][j] << endl;
+            cout << "YWTC[" << i << "][" << j << "] : " << prd[i][j] << endl;
    }
    for(int i=0; i<rowdim; i++)        // C = C + (Y*W^T)*C
       for(int j=0; j<coldim; j++)
@@ -241,10 +240,9 @@ void CPU_cmplx_blocked_leftRupdate
 
    if(verbose)
    {
-      cout << endl;
       for(int i=0; i<rowdim; i++)
          for(int j=0; j<coldim; j++)
-            cout << "prd[" << i << "][" << j << "] : "
+            cout << "YWHC[" << i << "][" << j << "] : "
                  << prdre[i][j] << "  " << prdim[i][j] << endl;
    }
    for(int i=0; i<rowdim; i++)        // C = C + (Y*W^T)*C
@@ -315,10 +313,9 @@ void CPU_dbl_blocked_rightQupdate
 
    if(verbose)
    {
-      cout << endl;
       for(int i=0; i<dim; i++)
          for(int j=0; j<rowdim; j++)
-            cout << "prd[" << i << "][" << j << "] : " << prd[i][j] << endl;
+            cout << "QWYT[" << i << "][" << j << "] : " << prd[i][j] << endl;
    }
    for(int i=0; i<dim; i++)           // Q = Q + Q*W*Y^T
       for(int j=0; j<rowdim; j++)
@@ -409,10 +406,9 @@ void CPU_cmplx_blocked_rightQupdate
 
    if(verbose)
    {
-      cout << endl;
       for(int i=0; i<dim; i++)
          for(int j=0; j<rowdim; j++)
-            cout << "prd[" << i << "][" << j << "] : "
+            cout << "QWYH[" << i << "][" << j << "] : "
                  << prdre[i][j] << "  " << prdim[i][j] << endl;
    }
    for(int i=0; i<dim; i++)           // Q = Q + Q*W*Y^H
