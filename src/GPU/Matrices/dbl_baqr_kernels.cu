@@ -129,7 +129,8 @@ __global__ void dbl_small_leftRupdate
       Rtdx = R[Rcolidx];
       Rtdx = Rtdx - shv[i]*w;
       __syncthreads();
-      if(tdx < nrows-k) R[Rcolidx] = Rtdx;
+      // changed nrows-k into ncols-k, where ncols = szt
+      if(tdx < ncols-k) R[Rcolidx] = Rtdx;
    }
 }
 
@@ -343,10 +344,10 @@ void GPU_dbl_small_leftRupdate
    float milliseconds;
 
    cudaEventRecord(start);           // 2nd argument: ncols -> szt
-   // dbl_small_leftRupdate<<<1,nrows-colidx>>>
-   //   (nrows,szt,szt,colidx,A_d,&V_d[L*nrows+L],&beta_d[L]);
+   // changed second argument ncols into szt
+   // to avoid updating the next tile
    dbl_small_leftRupdate<<<1,nrows-colidx>>>
-      (nrows,ncols,szt,colidx,A_d,&V_d[L*nrows+L],&beta_d[L]);
+      (nrows,szt,szt,colidx,A_d,&V_d[L*nrows+L],&beta_d[L]);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);

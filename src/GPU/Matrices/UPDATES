@@ -1,6 +1,7 @@
 Sat 24 Jul 2021 : improved the tests in dbl_factors_testers, updated the
   calls in dbl_baqr_testers.cpp.  Likewise, improved dbl2_factors_testers
-  and updated dbl2_baqr_testers.cpp.
+  and updated dbl2_baqr_testers.cpp.  In dbl_baqr_kernels.cu, fixed the
+  bugs so only the first tile is reduced and not the next tiles.
 
 Fri 23 Jul 2021 : eliminated the x0_d as a separate variable on the device
   in dbl_baqr_kernels, fixing a bug when verbose is set to false.
