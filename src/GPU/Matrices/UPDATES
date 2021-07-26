@@ -1,5 +1,6 @@
 Sun 25 Jul 2021 : more messages in dbl_baqr_host.cpp and dbl_baqr_kernels.cu.
   Defined the case when nrows1 == 0 in dbl_baqr_kernels.cu.
+  In dbl_baqr_kernels.cu, fixed dbl_small_leftRupdate with endcol index.
 
 Sat 24 Jul 2021 : improved the tests in dbl_factors_testers, updated the
   calls in dbl_baqr_testers.cpp.  Likewise, improved dbl2_factors_testers

@@ -341,7 +341,7 @@ void GPU_dbl_small_house
 }
 
 void GPU_dbl_small_leftRupdate
- ( int nrows, int ncols, int szt, int colidx, int L,
+ ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
    double *lapms, bool verbose )
 {
@@ -349,12 +349,13 @@ void GPU_dbl_small_leftRupdate
    cudaEventCreate(&start);
    cudaEventCreate(&stop);
    float milliseconds;
+   const int endcol = (k+1)*szt;     // 1 + last column index in tile
 
    cudaEventRecord(start);           // 2nd argument: ncols -> szt
    // changed second argument ncols into szt
    // to avoid updating the next tile
    dbl_small_leftRupdate<<<1,nrows-colidx>>>
-      (nrows,szt,szt,colidx,A_d,&V_d[L*nrows+L],&beta_d[L]);
+      (nrows,endcol,szt,colidx,A_d,&V_d[L*nrows+L],&beta_d[L]);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
@@ -746,7 +747,7 @@ void GPU_dbl_blocked_houseqr
             (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
              A_h,A_d,v_h,V_d,beta_h,beta_d,houselapms,verbose);
          GPU_dbl_small_leftRupdate
-            (nrows,ncols,szt,colidx,L,A_h,A_d,V_d,beta_h,beta_d,
+            (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
              tileRlapms,verbose);
       }
       GPU_dbl_VB_to_W
