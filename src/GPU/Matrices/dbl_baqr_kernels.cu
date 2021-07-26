@@ -291,8 +291,9 @@ void GPU_dbl_small_house
    double *v_h, double *V_d, double *beta_h, double *beta_d,
    double *lapms, bool verbose )
 {
-   int nrLog2 = ceil(log2((double) nrows1));
-   int rowidx = colidx*(nrows+1);       // start of number in A_h
+   const int nrLog2 = ceil(log2((double) nrows1));
+   const int rowidx = colidx*(nrows+1);       // start of number in A_h
+   const int nVrows = nrows - k*szt;          // dimension of V matrix
 
    if(verbose)
    {
@@ -306,11 +307,17 @@ void GPU_dbl_small_house
            << "  colidx : " << colidx
            << "  rowidx : " << rowidx << endl;
    }
+   if(L > 0)
+   {
+      for(int i=0; i<L; i++) v_h[i] = 0.0; // insert zeros
+      cudaMemcpy(&V_d[L*nVrows],v_h,L*sizeof(double),
+                 cudaMemcpyHostToDevice);
+   }
    if(nrows1 == 0)
    {
       beta_h[L] = 0.0; v_h[0] = 1.0;
       cudaMemcpy(&beta_d[L],&beta_h[L],sizeof(double),cudaMemcpyHostToDevice);
-      cudaMemcpy(&V_d[L*nrows],v_h,sizeof(double),cudaMemcpyHostToDevice);
+      cudaMemcpy(&V_d[L*nVrows+L],v_h,sizeof(double),cudaMemcpyHostToDevice);
    }
    else
    {
@@ -321,7 +328,8 @@ void GPU_dbl_small_house
 
       cudaEventRecord(start);
       dbl_small_house<<<1,nrows1>>>
-         (&A_d[rowidx],&A_d[rowidx+1],nrows1,nrLog2,&V_d[L*nrows+L],&beta_d[L]);
+         (&A_d[rowidx],&A_d[rowidx+1],nrows1,nrLog2,
+          &V_d[L*nVrows+L],&beta_d[L]);
       cudaEventRecord(stop);
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);

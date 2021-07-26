@@ -1,3 +1,5 @@
+Mon 26 Jul 2021 : fixed the size of matrix V in dbl_baqr_kernels.cu.
+
 Sun 25 Jul 2021 : more messages in dbl_baqr_host.cpp and dbl_baqr_kernels.cu.
   Defined the case when nrows1 == 0 in dbl_baqr_kernels.cu.
   In dbl_baqr_kernels.cu, fixed dbl_small_leftRupdate with endcol index.
