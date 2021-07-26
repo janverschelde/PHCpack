@@ -106,13 +106,15 @@ __global__ void dbl_small_WYT
  *   WYT      the product of W with Y^T. */
 
 __global__ void dbl_small_QWYT
- ( int dim, int szt, int coloff, double *Q, double *WYT, double *QWYT );
+ ( int dim, int rowdim, int szt, int coloff,
+   double *Q, double *WYT, double *QWYT );
 /*
  * DESCRIPTION :
  *   Multiplies Q with WYT into the matrix QWYT.
  *
  * ON ENTRY :
- *   dim      number of rows and columns of all matrices;
+ *   dim      number of rows and columns of the Q matrix;
+ *   rowdim   number of rows and columns of the WYT matrix;
  *   szt      the number of threads in a block;
  *   coloff   offset for the column index in QWYT;
  *   Q        the current orthogonal matrix;
@@ -215,7 +217,7 @@ void GPU_dbl_small_house
  *   lapms    elapsed time spent by the kernel. */
 
 void GPU_dbl_small_leftRupdate
- ( int nrows, int ncols, int szt, int colidx, int L,
+ ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
    double *lapms, bool verbose=true );
 /*
@@ -229,6 +231,7 @@ void GPU_dbl_small_leftRupdate
  *   ncols    number of columns in the matrix A;
  *   szt      size of one tile;
  *   colidx   global index of the current column;
+ *   k        index of the current tile;
  *   L        local index of the column in the current tile;
  *   A_h      matrix on the host;
  *   A_d      matrix on the device;
@@ -321,7 +324,7 @@ void GPU_dbl_small_YWT
 
 void GPU_dbl_small_QWYT
  ( int dim, int szt, int idx, double *Q_d, double *WYT_d, double *QWYT_d,
-   double *QWYT_h, double *lapms, bool verbose=true );
+   double *QWYT_h, double *Q_h, double *lapms, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute Q*WYT.
@@ -336,6 +339,7 @@ void GPU_dbl_small_QWYT
  *   WYT_d    the product W*Y^T, on the device;
  *   QWYT_d   space for the product Q*WYT, on the device;
  *   QWYT_h   space for the product Q*WYT, on the host, if verbose;
+ *   Q_h      if verbose, then used to print Q before the product;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -371,7 +375,7 @@ void GPU_dbl_small_YWTC
  *   lapms    elapsed time spent by the kernel. */
 
 void GPU_dbl_small_Qupdate
- ( int dim, int szt, int idx, double *Q_d, double *QWYT_d,
+ ( int dim, int rowdim, int szt, int idx, double *Q_d, double *QWYT_d,
    double *Q_h, double *lapms, bool verbose=true );
 /*
  * DESCRIPTION :
@@ -380,7 +384,9 @@ void GPU_dbl_small_Qupdate
  *   If verbose, then the updated Q is returned.
  *
  * ON ENTRY :
- *   dim      number of rows and column in Q and QWYT;
+ *   dim      number of rows and columns in Q,
+ *            number of rows in QWYT;
+ *   rowdim   number of columns in QWYT;
  *   szt      size of one tile and the number of threads in a block;
  *   idx      index of the current tile;
  *   Q_d      a dim-by-dim matrix, on the device;

@@ -199,25 +199,26 @@ __global__ void dbl_small_WYT
 }
 
 __global__ void dbl_small_QWYT
- ( int dim, int szt, int coloff, double *Q, double *WYT, double *QWYT )
+ ( int dim, int rowdim, int szt, int coloff,
+   double *Q, double *WYT, double *QWYT )
 {
    const int bdx = blockIdx.x;         // index of block
    const int tdx = threadIdx.x;        // index of thread in block
    const int offset = bdx*szt + tdx;   // offset in result
-   const int row = offset / dim;
-   const int col = offset % dim;       // thread 0 computes QWYT[row][col]
+   const int row = offset / rowdim;
+   const int col = offset % rowdim;    // thread 0 computes QWYT[row][col]
 
    double result = 0.0;
    double a,b;
 
-   for(int k=0; k<dim; k++)          // run over dim, not just szt
+   for(int k=0; k<rowdim; k++)       // run over rowdim, not just szt
    {                                 // coloff shifts by col*row elements
-      a = Q[k*dim + row*(1+coloff)]; // row = bdx, if dim == szt, coloff == 0
-      b = WYT[k*dim + col];          // if(dim == szt) then col = tdx
+      a = Q[row*dim + coloff + k];   // row = bdx, if dim == szt, coloff == 0
+      b = WYT[k*rowdim + col];       // if(dim == szt) then col = tdx
       result = result + a*b;
    }
    __syncthreads();
-   QWYT[offset + row*coloff] = result;
+   QWYT[offset] = result;            // no column offset in saving QWYT
 }
 
 __global__ void dbl_small_YWTC
@@ -245,22 +246,23 @@ __global__ void dbl_small_YWTC
 }
 
 __global__ void dbl_small_Qupdate
- ( int dim, int szt, int coloff, double *Q, double *QWYT )
+ ( int dim, int rowdim, int szt, int coloff, double *Q, double *QWYT )
 {
    const int bdx = blockIdx.x;
    const int tdx = threadIdx.x;
    const int offset = bdx*szt + tdx;   // offset in result
-   const int row = offset / dim;
-   const int idx = row*coloff + offset;
+   const int row = offset / rowdim;
+   const int col = offset % rowdim;
+   const int idx1 = row*dim + coloff + col;
 
    double a,b;
 
-   a = Q[idx];     // row = bdx, if dim == szt, coloff == 0
-   b = QWYT[idx];  // if(dim == szt) then col = tdx
+   a = Q[idx1];       // row = bdx, if dim == szt, coloff == 0
+   b = QWYT[offset];  // if(dim == szt) then col = tdx
    a = a + b;
 
    __syncthreads();
-   Q[idx] = a;
+   Q[idx1] = a;
 }
 
 __global__ void dbl_small_R_add_YWTC
@@ -491,7 +493,7 @@ void GPU_dbl_small_YWT
 
 void GPU_dbl_small_QWYT
  ( int dim, int szt, int idx, double *Q_d, double *WYT_d, double *QWYT_d,
-   double *QWYT_h, double *lapms, bool verbose )
+   double *QWYT_h, double *Q_h, double *lapms, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -501,8 +503,22 @@ void GPU_dbl_small_QWYT
    const int rowdim = dim - coloff;
    const int nbrblocks = (int) ceil(dim*rowdim/((double) szt));
 
+   if(verbose)
+   {
+      const size_t szmat = dim*dim*sizeof(double);
+
+      cudaMemcpy(Q_h,Q_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the Q matrix :" << endl;
+      int ix = 0;
+      for(int i=0; i<dim; i++) 
+         for(int j=0; j<dim; j++) 
+            cout << "Q[" << i << "][" << j << "] : "
+                 << Q_h[ix++] << endl;
+   }
+
    cudaEventRecord(start);
-   dbl_small_QWYT<<<nbrblocks,szt>>>(dim,szt,coloff,Q_d,WYT_d,QWYT_d);
+   dbl_small_QWYT<<<nbrblocks,szt>>>(dim,rowdim,szt,coloff,Q_d,WYT_d,QWYT_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
@@ -510,14 +526,14 @@ void GPU_dbl_small_QWYT
 
    if(verbose)
    {
-      const size_t szmat = dim*dim*sizeof(double);
+      const size_t szmat = dim*rowdim*sizeof(double);
 
       cudaMemcpy(QWYT_h,QWYT_d,szmat,cudaMemcpyDeviceToHost);
 
       cout << "the QWYT matrix :" << endl;
       int ix = 0;
       for(int i=0; i<dim; i++) 
-         for(int j=0; j<dim; j++) 
+         for(int j=0; j<rowdim; j++) 
             cout << "QWYT[" << i << "][" << j << "] : "
                  << QWYT_h[ix++] << endl;
    }
@@ -600,7 +616,7 @@ void GPU_dbl_small_Qupdate
    const int nbrblocks = (int) ceil(dim*rowdim/((double) szt));
 
    cudaEventRecord(start);
-   dbl_small_Qupdate<<<nbrblocks,szt>>>(dim,szt,coloff,Q_d,QWYT_d);
+   dbl_small_Qupdate<<<nbrblocks,szt>>>(dim,rowdim,szt,coloff,Q_d,QWYT_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
@@ -761,10 +777,10 @@ void GPU_dbl_blocked_houseqr
       // changed nrows into nrows - k*szt and ncols into szt
       GPU_dbl_VB_to_W
          (nrows-k*szt,szt,szt,V_h,V_d,W_h,W_d,beta_h,beta_d,vb2Wlapms,verbose);
-      // update Q
-      GPU_dbl_small_WYT(nrows,szt,W_d,V_d,WYT_d,WYT_h,WYTlapms,verbose);
+      // update Q, WYT matrix has nrows - k*szt instead of nrows
+      GPU_dbl_small_WYT(nrows-k*szt,szt,W_d,V_d,WYT_d,WYT_h,WYTlapms,verbose);
       GPU_dbl_small_QWYT
-         (nrows,szt,k,Q_d,WYT_d,QWYT_d,QWYT_h,QWYTlapms,verbose);
+         (nrows,szt,k,Q_d,WYT_d,QWYT_d,QWYT_h,Q_h,QWYTlapms,verbose);
       GPU_dbl_small_Qupdate
          (nrows,szt,k,Q_d,QWYT_d,Q_h,Qaddlapms,verbose);
       if(k < nbt-1) // update R
