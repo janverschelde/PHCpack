@@ -300,6 +300,7 @@ void GPU_dbl_small_house
    if(verbose)
    {
       cout << "nrows : " << nrows
+           << "  nVrows : " << nVrows
            << "  ncols : " << ncols
            << "  szt : " << szt
            << "  nbt : " << nbt << endl;
@@ -339,13 +340,13 @@ void GPU_dbl_small_house
    }
    if(verbose)
    {
-      const size_t szhouse = nrows*sizeof(double);
+      const size_t szhouse = nVrows*sizeof(double);
 
       cudaMemcpy(&beta_h[L],&beta_d[L],sizeof(double),cudaMemcpyDeviceToHost);
-      cudaMemcpy(v_h,&V_d[L*nrows],szhouse,cudaMemcpyDeviceToHost);
+      cudaMemcpy(v_h,&V_d[L*nVrows],szhouse,cudaMemcpyDeviceToHost);
       cout << scientific << setprecision(16)
            << "beta[" << colidx << "] : " << beta_h[L] << endl;
-      for(int i=0; i<nrows-colidx; i++)
+      for(int i=0; i<nVrows; i++)
          cout << "v[" << i << "] : " << v_h[i] << endl;
    }
 }
@@ -360,12 +361,13 @@ void GPU_dbl_small_leftRupdate
    cudaEventCreate(&stop);
    float milliseconds;
    const int endcol = (k+1)*szt;     // 1 + last column index in tile
+   const int nVrows = nrows - k*szt;          // dimension of V matrix
 
    cudaEventRecord(start);           // 2nd argument: ncols -> szt
    // changed second argument ncols into szt
    // to avoid updating the next tile
    dbl_small_leftRupdate<<<1,nrows-colidx>>>
-      (nrows,endcol,szt,colidx,A_d,&V_d[L*nrows+L],&beta_d[L]);
+      (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L]);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
