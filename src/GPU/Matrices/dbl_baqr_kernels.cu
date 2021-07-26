@@ -750,8 +750,9 @@ void GPU_dbl_blocked_houseqr
             (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
              tileRlapms,verbose);
       }
+      // changed nrows into nrows - k*szt and ncols into szt
       GPU_dbl_VB_to_W
-         (nrows,ncols,szt,V_h,V_d,W_h,W_d,beta_h,beta_d,vb2Wlapms,verbose);
+         (nrows-k*szt,szt,szt,V_h,V_d,W_h,W_d,beta_h,beta_d,vb2Wlapms,verbose);
       // update Q
       GPU_dbl_small_WYT(nrows,szt,W_d,V_d,WYT_d,WYT_h,WYTlapms,verbose);
       GPU_dbl_small_QWYT
