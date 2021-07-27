@@ -237,7 +237,7 @@ __global__ void dbl_small_YWTC
 
    for(int k=0; k<rowdim; k++)         // innermost loop runs over rowdim
    {
-      a = YWT[row*ncols + k];          // YWT is stored row by row
+      a = YWT[row*rowdim + k];         // YWT is stored row by row
       b = C[colCoff0 + k];             // but C is stored column by column
       result = result + a*b;
    }
@@ -437,7 +437,7 @@ void GPU_dbl_small_WYT
    cudaEventCreate(&start);
    cudaEventCreate(&stop);
    float milliseconds;
-   int nbrblocks = (int) ceil(nrows*nrows/((double) szt));
+   const int nbrblocks = (int) ceil(nrows*nrows/((double) szt));
 
    cudaEventRecord(start);
    dbl_small_WYT<<<nbrblocks,szt>>>(nrows,szt,W_d,Y_d,WYT_d);
@@ -462,17 +462,18 @@ void GPU_dbl_small_WYT
 }
 
 void GPU_dbl_small_YWT
- ( int nrows, int szt, double *Y_d, double *W_d, double *YWT_d,
+ ( int nrows, int szt, int idx, double *Y_d, double *W_d, double *YWT_d,
    double *YWT_h, double *lapms, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
    cudaEventCreate(&stop);
    float milliseconds;
-   int nbrblocks = (int) ceil(nrows*nrows/((double) szt));
+   const int rowdim = nrows - idx*szt;
+   int nbrblocks = (int) ceil(rowdim*rowdim/((double) szt));
 
    cudaEventRecord(start);
-   dbl_small_WYT<<<nbrblocks,szt>>>(nrows,szt,Y_d,W_d,YWT_d);
+   dbl_small_WYT<<<nbrblocks,szt>>>(rowdim,szt,Y_d,W_d,YWT_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
@@ -480,14 +481,14 @@ void GPU_dbl_small_YWT
 
    if(verbose)
    {
-      const size_t szmat = nrows*nrows*sizeof(double);
+      const size_t szmat = rowdim*rowdim*sizeof(double);
 
       cudaMemcpy(YWT_h,YWT_d,szmat,cudaMemcpyDeviceToHost);
 
       cout << "the YWT matrix :" << endl;
       int ix = 0;
-      for(int i=0; i<nrows; i++) 
-         for(int j=0; j<nrows; j++) 
+      for(int i=0; i<rowdim; i++) 
+         for(int j=0; j<rowdim; j++) 
             cout << "YWT[" << i << "][" << j << "] : "
                  << YWT_h[ix++] << endl;
    }
@@ -575,8 +576,8 @@ void GPU_dbl_small_YWTC
       cudaMemcpy(C_h,C_d,szmat,cudaMemcpyDeviceToHost);
 
       cout << "the matrix C : " << endl;
-      for(int i=0; i<nrows; i++)
-         for(int j=0; j<ncols; j++)
+      for(int i=rowoff; i<nrows; i++)
+         for(int j=coloff; j<ncols; j++)
             cout << "C_h[" << i << "][" << j << "] : "
                  << C_h[j*nrows+i] << endl;
 
@@ -787,7 +788,7 @@ void GPU_dbl_blocked_houseqr
          (nrows,szt,k,Q_d,QWYT_d,Q_h,Qaddlapms,verbose);
       if(k < nbt-1) // update R
       {
-         GPU_dbl_small_YWT(nrows,szt,V_d,W_d,YWT_d,YWT_h,YWTlapms,verbose);
+         GPU_dbl_small_YWT(nrows,szt,k,V_d,W_d,YWT_d,YWT_h,YWTlapms,verbose);
          GPU_dbl_small_YWTC
             (nrows,ncols,szt,k,YWT_d,A_d,YWTC_d,YWTC_h,YWTClapms,verbose);
          GPU_dbl_small_R_add_YWTC

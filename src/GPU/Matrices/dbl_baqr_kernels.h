@@ -300,7 +300,7 @@ void GPU_dbl_small_WYT
  *   lapms    elapsed time spent by the kernel. */
 
 void GPU_dbl_small_YWT
- ( int nrows, int szt, double *Y_d, double *W_d, double *YWT_d,
+ ( int nrows, int szt, int idx, double *Y_d, double *W_d, double *YWT_d,
    double *YWT_h, double *lapms, bool verbose=true );
 /*
  * DESCRIPTION :
@@ -311,6 +311,7 @@ void GPU_dbl_small_YWT
  * ON ENTRY :
  *   nrows    number of rows in all matrices;
  *   szt      size of one tile and the number of threads in a block;
+ *   idx      index of the current tile;
  *   Y_d      the matrix of Householder vectors;
  *   W_d      the matrix W in the WY representation;
  *   YWT_d    space for an nrows-by-nrows matrix on the device;

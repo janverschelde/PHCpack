@@ -1,7 +1,9 @@
 Mon 26 Jul 2021 : fixed the size of matrix V in dbl_baqr_kernels.cu.
   Passed rowdim in the update of Q in dbl_baqr_kernels.
-  In dbl_baqr_kernels, applied the correct dimensions of the V matrix
+  In dbl_baqr_kernels.cu, applied the correct dimensions of the V matrix
   in case of multiple tiles so it now works for 2 square tiles.
+  Updated dbl_baqr_kernels.h and dbl_baqr_kernels.cu with an additional
+  input parameters, which makes it work for all dimensions.
 
 Sun 25 Jul 2021 : more messages in dbl_baqr_host.cpp and dbl_baqr_kernels.cu.
   Defined the case when nrows1 == 0 in dbl_baqr_kernels.cu.
