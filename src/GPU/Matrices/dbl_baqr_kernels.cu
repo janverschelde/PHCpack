@@ -351,6 +351,32 @@ void GPU_dbl_small_house
    }
 }
 
+void GPU_cmplx_small_house
+ ( int nrows, int ncols, int szt, int nbt,
+   int colidx, int nrows1, int k, int L,
+   double *Are_h, double *Aim_h, double *Are_d, double *Aim_d,
+   double *vre_h, double *vim_h, double *Vre_d, double *Vim_d,
+   double *beta_h, double *beta_d, double *lapms, bool verbose )
+{
+   const int nrLog2 = ceil(log2((double) nrows1));
+   const int rowidx = colidx*(nrows+1);       // start of number in A_h
+   const int nVrows = nrows - k*szt;          // dimension of V matrix
+
+   if(verbose)
+   {
+      cout << "nrows : " << nrows
+           << "  nVrows : " << nVrows
+           << "  ncols : " << ncols
+           << "  szt : " << szt
+           << "  nbt : " << nbt << endl;
+      cout << "k : " << k 
+           << "  L : " << L
+           << "  nrows1 : " << nrows1
+           << "  colidx : " << colidx
+           << "  rowidx : " << rowidx << endl;
+   }
+}
+
 void GPU_dbl_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
@@ -385,6 +411,20 @@ void GPU_dbl_small_leftRupdate
             cout << "A_d[" << i << "][" << j << "] : "
                  << A_h[j*nrows+i] << endl;
    }
+}
+
+void GPU_cmplx_small_leftRupdate
+ ( int nrows, int ncols, int szt, int colidx, int k, int L,
+   double *Are_h, double *Aim_h, double *Are_d, double *Aim_d,
+   double *Vre_d, double *Vim_d, double *beta_h, double *beta_d,
+   double *lapms, bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int endcol = (k+1)*szt;     // 1 + last column index in tile
+   const int nVrows = nrows - k*szt;          // dimension of V matrix
 }
 
 void GPU_dbl_VB_to_W
@@ -429,6 +469,18 @@ void GPU_dbl_VB_to_W
    }
 }
 
+void GPU_cmplx_VB_to_W
+ ( int nrows, int ncols, int szt, double *Vre_h, double *Vim_h,
+   double *Vre_d, double *Vim_d, double *Wre_h, double *Wim_h,
+   double *Wre_d, double *Wim_d, double *beta_h, double *beta_d,
+   double *lapms, bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+}
+
 void GPU_dbl_small_WYT
  ( int nrows, int szt, double *W_d, double *Y_d, double *WYT_d,
    double *WYT_h, double *lapms, bool verbose )
@@ -459,6 +511,18 @@ void GPU_dbl_small_WYT
             cout << "WYT[" << i << "][" << j << "] : "
                  << WYT_h[ix++] << endl;
    }
+}
+
+void GPU_cmplx_small_WYT
+ ( int nrows, int szt, double *Wre_d, double *Wim_d,
+   double *Yre_d, double *Yim_d, double *WYTre_d, double *WYTim_d,
+   double *WYTre_h, double *WYTim_h, double *lapms, bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int nbrblocks = (int) ceil(nrows*nrows/((double) szt));
 }
 
 void GPU_dbl_small_YWT
@@ -492,6 +556,20 @@ void GPU_dbl_small_YWT
             cout << "YWT[" << i << "][" << j << "] : "
                  << YWT_h[ix++] << endl;
    }
+}
+
+void GPU_cmplx_small_YWT
+ ( int nrows, int szt, int idx,
+   double *Yre_d, double *Yim_d, double *Wre_d, double *Wim_d,
+   double *YWTre_d, double *YWTim_d, double *YWTre_h, double *YWTim_h,
+   double *lapms, bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int rowdim = nrows - idx*szt;
+   int nbrblocks = (int) ceil(rowdim*rowdim/((double) szt));
 }
 
 void GPU_dbl_small_QWYT
@@ -540,6 +618,21 @@ void GPU_dbl_small_QWYT
             cout << "QWYT[" << i << "][" << j << "] : "
                  << QWYT_h[ix++] << endl;
    }
+}
+
+void GPU_cmplx_small_QWYT
+ ( int dim, int szt, int idx, double *Qre_d, double *Qim_d,
+   double *WYTre_d, double *WYTim_d, double *QWYTre_d, double *QWYTim_d,
+   double *QWYTre_h, double *QWYTim_h, double *Qre_h, double *Qim_h,
+   double *lapms, bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int coloff = idx*szt;
+   const int rowdim = dim - coloff;
+   const int nbrblocks = (int) ceil(dim*rowdim/((double) szt));
 }
 
 void GPU_dbl_small_YWTC
@@ -606,6 +699,23 @@ void GPU_dbl_small_YWTC
    }
 }
 
+void GPU_cmplx_small_YWTC
+ ( int nrows, int ncols, int szt, int idx,
+   double *YWTre_d, double *YWTim_d, double *Cre_d, double *Cim_d,
+   double *YWTCre_d, double *YWTCim_d, double *YWTCre_h, double *YWTCim_h,
+   double *lapms, bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int rowoff = idx*szt;
+   const int rowdim = nrows - rowoff;
+   const int coloff = (idx+1)*szt;
+   const int coldim = ncols - coloff;
+   const int nbrblocks = (int) ceil(rowdim*coldim/((double) szt));
+}
+
 void GPU_dbl_small_Qupdate
  ( int dim, int szt, int idx, double *Q_d, double *QWYT_d,
    double *Q_h, double *lapms, bool verbose )
@@ -638,6 +748,20 @@ void GPU_dbl_small_Qupdate
             cout << "Q[" << i << "][" << j << "] : "
                  << Q_h[ix++] << endl;
    }
+}
+
+void GPU_cmplx_small_Qupdate
+ ( int dim, int szt, int idx, double *Qre_d, double *Qim_d,
+   double *QWYTre_d, double *QWYTim_d, double *Qre_h, double *Qim_h,
+   double *lapms, bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int coloff = idx*szt;
+   const int rowdim = dim - coloff;
+   const int nbrblocks = (int) ceil(dim*rowdim/((double) szt));
 }
 
 void GPU_dbl_small_R_add_YWTC
@@ -676,6 +800,22 @@ void GPU_dbl_small_R_add_YWTC
    }
 }
 
+void GPU_cmplx_small_R_add_YWTC
+ ( int nrows, int ncols, int szt, int idx,
+   double *Rre_d, double *Rim_d, double *YWTCre_d, double *YWTCim_d,
+   double *Rre_h, double *Rim_h, double *lapms, bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int rowoff = idx*szt;
+   const int rowdim = nrows - rowoff;
+   const int coloff = (idx+1)*szt;
+   const int coldim = ncols - coloff;
+   const int nbrblocks = (int) ceil(rowdim*coldim/((double) szt));
+}
+
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
@@ -688,23 +828,23 @@ void GPU_dbl_blocked_houseqr
    const int nrows2 = nrows*nrows;
    double *A_h = new double[dim];       // matrix A on the host
    double *A_d;                         // matrix on the device
+   double *Q_h = new double[nrows2];    // orthogonal Q on host
+   double *Q_d;                         // orthogonal Q on device
    double *v_h = new double[nrows];     // Householder vector on host
    double *beta_h = new double[szt];    // beta on the host
    double *beta_d;                      // beta on the device
    double *V_h = new double[nrows*szt]; // matrix of Householder vectors
    double *V_d;                         // Householder vectors on device
    double *W_h = new double[nrows*szt]; // the W matrix on the host
-   double *W_d;                         // the W matrix 
-   double *WYT_h = new double[nrows2];  // W*Y^T on host
-   double *WYT_d;                       // W*Y^T on device
-   double *YWT_h = new double[nrows2];  // Y*W^T on host
-   double *YWT_d;                       // Y*W^T on device
-   double *Q_h = new double[nrows2];    // orthogonal Q on host
-   double *Q_d;                         // orthogonal Q on device
-   double *QWYT_h = new double[nrows2]; // Q*WY^T on host
-   double *QWYT_d;                      // Q*WY^T on device
-   double *YWTC_h = new double[dim];    // YWT*C on host
-   double *YWTC_d;                      // YWT*C on device
+   double *W_d;                         // the W matrix on the device
+   double *WYT_h = new double[nrows2];  // W*Y^T on the host
+   double *WYT_d;                       // W*Y^T on the device
+   double *YWT_h = new double[nrows2];  // Y*W^T on the host
+   double *YWT_d;                       // Y*W^T on the device
+   double *QWYT_h = new double[nrows2]; // Q*WY^T on the host
+   double *QWYT_d;                      // Q*WY^T on the device
+   double *YWTC_h = new double[dim];    // YWT*C on the host
+   double *YWTC_d;                      // YWT*C on the device
 
    int ix = 0;                          // copy the columns of A to A_h
    for(int j=0; j<ncols; j++)   
@@ -786,7 +926,7 @@ void GPU_dbl_blocked_houseqr
          (nrows,szt,k,Q_d,WYT_d,QWYT_d,QWYT_h,Q_h,QWYTlapms,verbose);
       GPU_dbl_small_Qupdate
          (nrows,szt,k,Q_d,QWYT_d,Q_h,Qaddlapms,verbose);
-      if(k < nbt-1) // update R
+      if(k < nbt-1)                                           // update R
       {
          GPU_dbl_small_YWT(nrows,szt,k,V_d,W_d,YWT_d,YWT_h,YWTlapms,verbose);
          GPU_dbl_small_YWTC
@@ -810,6 +950,205 @@ void GPU_dbl_blocked_houseqr
       for(int j=0; j<ncols; j++)
          R[i][j] = A_h[j*nrows+i];
 
-   free(A_h); free(v_h); free(V_h); free(W_h);
+   free(A_h); free(Q_h); free(v_h); free(V_h); free(W_h);
    free(WYT_h); free(QWYT_h); free(YWT_h); free(YWTC_h);
+}
+
+void GPU_cmplx_blocked_houseqr
+ ( int nrows, int ncols, int szt, int nbt,
+   double **Are, double **Aim, double **Qre, double **Qim,
+   double **Rre, double **Rim,
+   double *houselapms, double *tileRlapms, double *vb2Wlapms,
+   double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
+   double *YWTlapms, double *YWTClapms, double *Raddlapms,
+   double *walltimesec, bool verbose )
+{
+   const int dim = nrows*ncols;           // total number of doubles
+   const int nrows2 = nrows*nrows;
+   double *Are_h = new double[dim];       // real parts of A on the host
+   double *Aim_h = new double[dim];       // imaginary parts of A on the host
+   double *Are_d;                         // Are on the device
+   double *Aim_d;                         // Aim on the device
+   double *Qre_h = new double[nrows2];    // real parts of Q on host
+   double *Qim_h = new double[nrows2];    // imaginary parts of Q on host
+   double *Qre_d;                         // Qre on device
+   double *Qim_d;                         // Qim on device
+   double *vre_h = new double[nrows];     // real parts of Householder vector
+   double *vim_h = new double[nrows];     // imaginary parts on host
+   double *beta_h = new double[szt];      // beta on the host
+   double *beta_d;                        // beta on the device
+   double *Vre_h = new double[nrows*szt]; // real parts of Householder vectors
+   double *Vim_h = new double[nrows*szt]; // imaginary parts
+   double *Vre_d;                         // Vre on device
+   double *Vim_d;                         // Vim on device
+   double *Wre_h = new double[nrows*szt]; // real parts of the W matrix
+   double *Wim_h = new double[nrows*szt]; // imaginary parts of the W matrix
+   double *Wre_d;                         // Wre on the device
+   double *Wim_d;                         // Wim on the device
+   double *WYTre_h = new double[nrows2];  // real parts of W*Y^T on the host
+   double *WYTim_h = new double[nrows2];  // imaginary parts of W*Y^T
+   double *WYTre_d;                       // WYTre on the device 
+   double *WYTim_d;                       // WYTim on the device
+   double *YWTre_h = new double[nrows2];  // real parts of Y*W^T on the host
+   double *YWTim_h = new double[nrows2];  // imginary parts of Y*W^T
+   double *YWTre_d;                       // YWTre on the device
+   double *YWTim_d;                       // YWTim on the device
+   double *QWYTre_h = new double[nrows2]; // real parts of Q*WY^T on the host
+   double *QWYTim_h = new double[nrows2]; // imaginary parts of Q*WY^T
+   double *QWYTre_d;                      // QWYTre on the device
+   double *QWYTim_d;                      // QWYTim on the device
+   double *YWTCre_h = new double[dim];    // real parts of YWT*C on the host
+   double *YWTCim_h = new double[dim];    // imaginary parts of YWT*C
+   double *YWTCre_d;                      // YWTCre on the device
+   double *YWTCim_d;                      // YWTCim on the device
+
+   int ix = 0;                            // copy the columns of A to A_h
+   for(int j=0; j<ncols; j++)   
+      for(int i=0; i<nrows; i++)
+      {
+         Are_h[ix] = Are[i][j];
+         Aim_h[ix++] = Aim[i][j];
+      }
+
+   ix = 0;                                // initialize Q with identity
+   for(int i=0; i<nrows; i++)
+   {
+      for(int j=0; j<nrows; j++)
+      {
+         if(i == j)
+         {
+            Qre_h[ix] = 1.0;
+            Qim_h[ix++] = 0.0;
+         }
+         else
+         {
+            Qre_h[ix] = 0.0;
+            Qim_h[ix++] = 0.0;
+         }
+      }
+   }
+   const size_t sznum = dim*sizeof(double);
+   cudaMalloc((void**)&Are_d,sznum);
+   cudaMalloc((void**)&Aim_d,sznum);
+   cudaMemcpy(Are_d,Are_h,sznum,cudaMemcpyHostToDevice);
+   cudaMemcpy(Aim_d,Aim_h,sznum,cudaMemcpyHostToDevice);
+
+   const size_t szbeta = szt*sizeof(double);
+   cudaMalloc((void**)&beta_d,szbeta);
+   for(int i=0; i<szt; i++) beta_h[i] = 0.0;
+   cudaMemcpy(beta_d,beta_h,szbeta,cudaMemcpyHostToDevice);
+
+   const size_t szhouse = nrows*sizeof(double);
+   const size_t szpad = szt*sizeof(double);    // padding for nonsquare tiles
+   const size_t szVandW = szt*szhouse;
+   cudaMalloc((void**)&Vre_d,szVandW + szpad); // padding added
+   cudaMalloc((void**)&Vim_d,szVandW + szpad); // padding added
+   ix = 0;
+   for(int i=0; i<nrows*szt; i++)
+   {
+      Vre_h[ix] = 0.0; 
+      Vim_h[ix++] = 0.0; 
+   }
+   Vre_h[--ix] = 1.0; // initialize last vector for square tiles
+   cudaMemcpy(Vre_d,Vre_h,szVandW,cudaMemcpyHostToDevice);
+   cudaMemcpy(Vim_d,Vim_h,szVandW,cudaMemcpyHostToDevice);
+   cudaMalloc((void**)&Wre_d,szVandW + szpad); // padding added
+   cudaMalloc((void**)&Wim_d,szVandW + szpad); // padding added
+
+   const size_t szWYT = nrows2*sizeof(double);
+   cudaMalloc((void**)&WYTre_d,szWYT + szpad); // padding for W*Y^T 
+   cudaMalloc((void**)&WYTim_d,szWYT + szpad);
+   cudaMalloc((void**)&Qre_d,szWYT);
+   cudaMalloc((void**)&Qim_d,szWYT);
+   cudaMemcpy(Qre_d,Qre_h,szWYT,cudaMemcpyHostToDevice);
+   cudaMemcpy(Qim_d,Qim_h,szWYT,cudaMemcpyHostToDevice);
+   cudaMalloc((void**)&QWYTre_d,szWYT);
+   cudaMalloc((void**)&QWYTim_d,szWYT);
+
+   const size_t szYWT = nrows2*sizeof(double);
+   cudaMalloc((void**)&YWTre_d,szYWT + szpad); // padding for Y*W^T
+   cudaMalloc((void**)&YWTim_d,szYWT + szpad);
+   cudaMalloc((void**)&YWTCre_d,sznum + szpad);
+   cudaMalloc((void**)&YWTCim_d,sznum + szpad);
+
+   cudaMemcpy(Qre_h,Qre_d,szWYT,cudaMemcpyDeviceToHost);
+   cudaMemcpy(Qim_h,Qim_d,szWYT,cudaMemcpyDeviceToHost);
+   ix = 0;                                           // copy rows of Q
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<nrows; j++)
+      {
+         Qre[i][j] = Qre_h[ix];
+         Qim[i][j] = Qim_h[ix++];
+      }
+
+   cudaMemcpy(Are_h,Are_d,sznum,cudaMemcpyDeviceToHost);
+   cudaMemcpy(Aim_h,Aim_d,sznum,cudaMemcpyDeviceToHost);
+   for(int i=0; i<nrows; i++)                       // copy columns of R
+      for(int j=0; j<ncols; j++)
+      {
+         Rre[i][j] = Are_h[j*nrows+i];
+         Rim[i][j] = Aim_h[j*nrows+i];
+      }
+
+   *houselapms = 0.0;
+   *tileRlapms = 0.0;
+   *vb2Wlapms = 0.0;
+   *WYTlapms = 0.0; *QWYTlapms = 0.0; *Qaddlapms = 0.0;
+   *YWTlapms = 0.0; *YWTClapms = 0.0; *Raddlapms = 0.0;
+   struct timeval begintime,endtime; // wall clock time of computations
+
+   gettimeofday(&begintime,0);
+
+   for(int k=0; k<nbt; k++)       // k runs over the number of blocks
+   {
+      if(verbose)
+         cout << "Tile k = " << k << " out of " << nbt << " ..." << endl;
+
+      int colidx,nrows1;
+
+      for(int L=0; L<szt; L++)  // L runs over the columns in one block
+      {
+         colidx = k*szt + L;              // index of the current column
+         nrows1 = nrows - colidx - 1;     // #rows in Householder vector - 1
+         GPU_cmplx_small_house
+            (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
+             Are_h,Aim_h,Are_d,Aim_d,vre_h,vim_h,Vre_d,Vim_d,
+             beta_h,beta_d,houselapms,verbose);
+         GPU_cmplx_small_leftRupdate
+            (nrows,ncols,szt,colidx,k,L,Are_h,Aim_h,Are_d,Aim_d,
+             Vre_d,Vim_d,beta_h,beta_d,tileRlapms,verbose);
+      }
+      GPU_cmplx_VB_to_W
+         (nrows-k*szt,szt,szt,Vre_h,Vim_h,Vre_d,Vim_d,Wre_h,Wim_h,
+          Wre_d,Wim_d,beta_h,beta_d,vb2Wlapms,verbose);
+      GPU_cmplx_small_WYT
+         (nrows-k*szt,szt,Wre_d,Wim_d,Vre_d,Vim_d,WYTre_d,WYTim_d,
+          WYTre_h,WYTim_h,WYTlapms,verbose);
+      GPU_cmplx_small_QWYT
+         (nrows,szt,k,Qre_d,Qim_d,WYTre_d,WYTim_d,QWYTre_d,QWYTim_d,
+          QWYTre_h,QWYTim_h,Qre_h,Qim_h,QWYTlapms,verbose);
+      GPU_cmplx_small_Qupdate
+         (nrows,szt,k,Qre_d,Qim_d,QWYTre_d,QWYTim_d,Qre_h,Qim_h,
+          Qaddlapms,verbose);
+      if(k < nbt-1)                              // update R
+      {
+         GPU_cmplx_small_YWT
+            (nrows,szt,k,Vre_d,Vim_d,Wre_d,Wim_d,YWTre_d,YWTim_d,
+             YWTre_h,YWTim_h,YWTlapms,verbose);
+         GPU_cmplx_small_YWTC
+            (nrows,ncols,szt,k,YWTre_d,YWTim_d,Are_d,Aim_d,YWTCre_d,
+             YWTCim_d,YWTCre_h,YWTCim_h,YWTClapms,verbose);
+         GPU_cmplx_small_R_add_YWTC
+            (nrows,ncols,szt,k,Are_d,Aim_d,YWTCre_d,YWTCim_d,Are_h,Aim_h,
+             Raddlapms,verbose);
+      }
+   }
+   gettimeofday(&endtime,0);
+   long seconds = endtime.tv_sec - begintime.tv_sec;
+   long microseconds = endtime.tv_usec - begintime.tv_usec;
+   *walltimesec = seconds + microseconds*1.0e-6;
+
+   free(Are_h); free(Aim_h); free(Qre_h); free(Qim_h);
+   free(vre_h); free(vim_h); free(Vre_h); free(Vim_h);
+   free(Wre_h); free(Wim_h);
 }
