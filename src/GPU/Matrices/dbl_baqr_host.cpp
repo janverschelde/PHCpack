@@ -304,7 +304,7 @@ void CPU_dbl_blocked_rightQupdate
    {
       for(int j=0; j<szt; j++)
          for(int i=0; i<rowdim; i++)
-            cout << "V[" << i << "][" << j << "] : " << Y[j][i] << endl;
+            cout << "Y[" << i << "][" << j << "] : " << Y[j][i] << endl;
 
       for(int j=0; j<szt; j++)
          for(int i=0; i<rowdim; i++)
@@ -365,15 +365,15 @@ void CPU_cmplx_blocked_rightQupdate
       cout << "-> dim : " << dim << "  szt : " << szt << "  idx : " << idx
            << "  rowdim : " << rowdim << "  coloff : " << coloff << endl;
 
-      for(int i=0; i<rowdim; i++)
-         for(int j=0; j<szt; j++)
+      for(int j=0; j<szt; j++)
+         for(int i=0; i<rowdim; i++)
             cout << "Y[" << i << "][" << j << "] : "
-                 << Yre[i][j] << "  " << Yim[i][j] << endl;
+                 << Yre[j][i] << "  " << Yim[j][i] << endl;
 
-      for(int i=0; i<rowdim; i++)
-         for(int j=0; j<szt; j++)
+      for(int j=0; j<szt; j++)
+         for(int i=0; i<rowdim; i++)
             cout << "W[" << i << "][" << j << "] : "
-                 << Wre[i][j] << "  " << Wim[i][j] << endl;
+                 << Wre[j][i] << "  " << Wim[j][i] << endl;
    }
 
    double **WYTre = new double*[rowdim];
