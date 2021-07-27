@@ -1,5 +1,6 @@
 Tue 27 Jul 2021 : added stubs to dbl_baqr_kernels, to prepare for the complex
   versions of the accelerated blocked Householder QR decomposition.
+  To dbl_baqr_kernels, added stubs to all kernels on complex data.
 
 Mon 26 Jul 2021 : fixed the size of matrix V in dbl_baqr_kernels.cu.
   Passed rowdim in the update of Q in dbl_baqr_kernels.

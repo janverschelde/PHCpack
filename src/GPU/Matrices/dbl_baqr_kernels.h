@@ -11,7 +11,7 @@ __global__ void dbl_small_house
 /*
  * DESCRIPTION :
  *   Computes the Householder vector of a vector of dimension dim+1,
- *   with one block of dim threads.
+ *   with one block of dim threads, on real data.
  *
  * ON ENTRY :
  *   x0       first element of the vector x; 
@@ -24,35 +24,35 @@ __global__ void dbl_small_house
  *   v        the Householder vector;
  *   beta     equals 2/(transpose(v)*v). */
 
-__global__ void dbl_factors_leftRupdate
- ( int nrows, int ncols, int szt, int k, double *R, double *v, double *beta );
+__global__ void cmplx_small_house
+ ( double *x0re, double *x0im, double *x1re, double *x1im,
+   int dim, int dimLog2, double *vre, double *vim, double *beta );
 /*
  * DESCRIPTION :
- *   Updates the matrix R starting at column k
- *   with the Householder vector in v and beta,
- *   with a total of ncols - k threads 
- *   and (ncols - k)/szt + 1 number of blocks.
- *
- * NOTE :
- *   This kernel can only work for one block.
- *   because thread blocks do not synchronize.
+ *   Computes the Householder vector of a vector of dimension dim+1,
+ *   with one block of dim threads, on complex data.
  *
  * ON ENTRY :
- *   nrows    number of rows of R;
- *   ncols    number of columns of R;
- *   szt      size of each block;
- *   k        index of the current column;
- *   R        an nrows-by-ncols matrix, stored column wise.
+ *   x0re     real part of the first element of the vector x; 
+ *   x0im     imaginary part of the first element of the vector x; 
+ *   x1re     real parts of an array of dim doubles;
+ *   x1im     imaginary parts of an array of dim doubles;
+ *   dim      the dimension of the vector must equal the block size;
+ *   dimLog2  equals ceil(log2((double) dim), used in sum reduction;
+ *   vre      space allocated for dim+1 doubles.
+ *   vim      space allocated for dim+1 doubles.
  *
  * ON RETURN :
- *   R        the updated matrix is trapezoidal. */
+ *   vre      real parts of the Householder vector;
+ *   vim      imaginary parts of the Householder vector;
+ *   beta     equals 2/(transpose(v)*v). */
 
 __global__ void dbl_small_leftRupdate
  ( int nrows, int ncols, int szt, int k, double *R, double *v, double *beta );
 /*
  * DESCRIPTION :
  *   Updates the matrix R starting at column k
- *   with the Householder vector in v and beta,
+ *   with the Householder vector in v and beta, on real data,
  *   with a total of ncols - k threads in one block.
  *
  * ON ENTRY :
@@ -64,6 +64,28 @@ __global__ void dbl_small_leftRupdate
  *
  * ON RETURN :
  *   R        the updated matrix is trapezoidal. */
+
+__global__ void cmplx_small_leftRupdate
+ ( int nrows, int ncols, int szt, int k,
+   double *Rre, double *Rim, double *vre, double *vim, double *beta );
+/*
+ * DESCRIPTION :
+ *   Updates the matrix R starting at column k
+ *   with the Householder vector in v and beta, on complex data,
+ *   with a total of ncols - k threads in one block.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   ncols    number of columns of R;
+ *   szt      size of each block;
+ *   k        index of the current column;
+ *   Rre      real parts of an nrows-by-ncols matrix, stored column wise.
+ *   Rim      imaginary parts of an nrows-by-ncols matrix,
+ *            stored column wise.
+ *
+ * ON RETURN :
+ *   Rre      real parts of the updated matrix, which is trapezoidal;
+ *   Rim      imaginary parts of the updated matrix. */
 
 __global__ void dbl_VB_to_W
  ( int nrows, int ncols, double *B, double *V, double *W );
@@ -86,11 +108,37 @@ __global__ void dbl_VB_to_W
  * ON RETURN :
  *   W        the W matrix in the WY representation. */
 
+__global__ void cmplx_VB_to_W
+ ( int nrows, int ncols, double *B,
+   double *Vre, double *Vim, double *Wre, double *Wim );
+/*
+ * DESCRIPTION :
+ *   Computes the W in the WY representation of the Householder
+ *   transformations defined by V and B, on complex data,
+ *   with one block of nrows threads.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrices V, Y, and W;
+ *   ncols    equals the size of one tile, or equivalently,
+ *            is the number of elements in B,
+ *            and the number of columns in V, Y, and W;
+ *   B        B[i] is the i-th beta computed by house;
+ *   Vre      Vre[nrows*i] is the start of the real parts of the i-th
+ *            Householder vector, with i zeros inserted so V is trapezoidal;
+ *   Vim      Vim[nrows*i] is the start of the imaginary parts of the i-th
+ *            Householder vector, with i zeros inserted so V is trapezoidal;
+ *   Wre      space for ncols columns with rows from 0 to nrows-1;
+ *   Wim      space for ncols columns with rows from 0 to nrows-1.
+ *
+ * ON RETURN :
+ *   Wre      real parts of the W matrix in the WY representation;
+ *   Wim      imaginary parts of the W matrix in the WY representation. */
+
 __global__ void dbl_small_WYT
  ( int nrows, int szt, double *W, double *Y, double *WYT );
 /*
  * DESCRIPTION :
- *   Multiplies W with Y^T into the matrix WYT.
+ *   Multiplies W with Y^T into the matrix WYT, on real data.
  *   Computes Y*W^T, swapping W with Y in the input arguments.
  *
  * ON ENTRY :
@@ -105,12 +153,37 @@ __global__ void dbl_small_WYT
  * ON RETURN :
  *   WYT      the product of W with Y^T. */
 
+__global__ void cmplx_small_WYT
+ ( int nrows, int szt, double *Wre, double *Wim,
+   double *Yre, double *Yim, double *WYTre, double *WYTim );
+/*
+ * DESCRIPTION :
+ *   Multiplies W with Y^T into the matrix WYT, on complex data.
+ *   Computes Y*W^T, swapping W with Y in the input arguments.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of all matrices;
+ *   szt      number of columns in W and Y,
+ *            equals the number of threads in a block;
+ *   Wre      real parts of the W matrix in the WY representation;
+ *   Wim      imaginary parts of the W matrix in the WY representation;
+ *   Yre      real parts of the columns of Y are the Householder vectors;
+ *   Yim      imaginary parts of the columns of Y are the Householder vectors;
+ *   WYTre    space for an nrows-by-nrows matrix,
+ *            with extra padding for when nrows > szt;
+ *   WYTim    space for an nrows-by-nrows matrix,
+ *            with extra padding for when nrows > szt.
+ *
+ * ON RETURN :
+ *   WYTre    real parts of the product of W with Y^T;
+ *   WYTim    imaginary parts of the product of W with Y^T. */
+
 __global__ void dbl_small_QWYT
  ( int dim, int rowdim, int szt, int coloff,
    double *Q, double *WYT, double *QWYT );
 /*
  * DESCRIPTION :
- *   Multiplies Q with WYT into the matrix QWYT.
+ *   Multiplies Q with WYT into the matrix QWYT, on real data.
  *
  * ON ENTRY :
  *   dim      number of rows and columns of the Q matrix;
@@ -124,12 +197,36 @@ __global__ void dbl_small_QWYT
  * ON RETURN :
  *   QWYT     the product of Q with QWYT. */
 
+__global__ void cmplx_small_QWYT
+ ( int dim, int rowdim, int szt, int coloff,
+   double *Qre, double *Qim, double *WYTre, double *WYTim,
+   double *QWYTre, double *QWYTim );
+/*
+ * DESCRIPTION :
+ *   Multiplies Q with WYT into the matrix QWYT, on complex data.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns of the Q matrix;
+ *   rowdim   number of rows and columns of the WYT matrix;
+ *   szt      the number of threads in a block;
+ *   coloff   offset for the column index in QWYT;
+ *   Qre      real parts of the current orthogonal matrix;
+ *   Qim      imaginary parts of the current orthogonal matrix;
+ *   WYTre    real parts of the product of W with Y^T;
+ *   WYTim    imaginary parts of the product of W with Y^T;
+ *   QWYTre   space for a dim-by-dim matrix;
+ *   QWYTim   space for a dim-by-dim matrix.
+ *
+ * ON RETURN :
+ *   QWYTre   real parts of the product of Q with QWYT;
+ *   QWYTim   imaginary parts of the product of Q with QWYT. */
+
 __global__ void dbl_small_YWTC
  ( int nrows, int ncols, int rowdim, int coldim, int szt,
    int rowoff, int coloff, double *YWT, double *C, double *YWTC );
 /*
  * DESCRIPTION :
- *   Multiplies YWT with C into the matrix YWTC.
+ *   Multiplies YWT with C into the matrix YWTC, on real data.
  *
  * ON ENTRY :
  *   nrows    total number of rows, nrows = rowdim + rowoff;
@@ -146,11 +243,38 @@ __global__ void dbl_small_YWTC
  * ON RETURN :
  *   YWTC     the product of YWT with C. */
 
+__global__ void cmplx_small_YWTC
+ ( int nrows, int ncols, int rowdim, int coldim, int szt,
+   int rowoff, int coloff, double *YWTre, double *YWTim,
+   double *Cre, double *Cim, double *YWTCre, double *YWTCim );
+/*
+ * DESCRIPTION :
+ *   Multiplies YWT with C into the matrix YWTC, on complex data.
+ *
+ * ON ENTRY :
+ *   nrows    total number of rows, nrows = rowdim + rowoff;
+ *   ncols    total number of colums, ncols = coldim + coloff;
+ *   rowdim   number of rows minus the row offset;
+ *   coldim   number of columns minus the column offset;
+ *   szt      the number of threads in a block;
+ *   rowoff   offset for the row index in C;
+ *   coloff   offset for the column index in C;
+ *   Cre      real parts of the current matrix to be reduced;
+ *   Cim      imaginary parts of the current matrix to be reduced;
+ *   YWT      real parts of the product of Y with W^T;
+ *   YWT      imaginary parts of the product of Y with W^T;
+ *   YWTCre   has space for a rowdim-by-coldim matrix;
+ *   YWTCim   has space for a rowdim-by-coldim matrix.
+ *
+ * ON RETURN :
+ *   YWTCre   real parts of the product of YWT with C;
+ *   YWTCim   imaginary parts of the product of YWT with C. */
+
 __global__ void dbl_small_Qupdate
  ( int dim, int szt, int coloff, double *Q, double *QWYT );
 /*
  * DESCRIPTION :
- *   Updates Q by adding QWYT.
+ *   Updates Q by adding QWYT, on real data.
  *
  * ON ENTRY :
  *   dim      number of rows and columns of all matrices;
@@ -162,12 +286,32 @@ __global__ void dbl_small_Qupdate
  * ON RETURN :
  *   Q        Q + QWYT. */
 
+__global__ void cmplx_small_Qupdate
+ ( int dim, int rowdim, int szt, int coloff,
+   double *Qre, double *Qim, double *QWYTre, double *QWYTim );
+/*
+ * DESCRIPTION :
+ *   Updates Q by adding QWYT, on complex data.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns of all matrices;
+ *   szt      the number of threads in a block;
+ *   coloff   offset for the column index in QWYT;
+ *   Qre      real parts of the current orthogonal matrix;
+ *   Qim      imaginary parts of the current orthogonal matrix;
+ *   QWYTre   space for a dim-by-dim matrix;
+ *   QWYTim   space for a dim-by-dim matrix.
+ *
+ * ON RETURN :
+ *   Qre      real parts of Q + QWYT;
+ *   Qim      imaginary parts Q + QWYT. */
+
 __global__ void dbl_small_R_add_YWTC
  ( int nrows, int coldim, int szt, int rowoff, int coloff,
    double *R, double *YWTC );
 /*
  * DESCRIPTION :
- *   Updates R by adding YWTC.
+ *   Updates R by adding YWTC, on real data.
  *
  * ON ENTRY :
  *   nrows    total number of rows in R and YWTC;
@@ -180,6 +324,28 @@ __global__ void dbl_small_R_add_YWTC
  *
  * ON RETURN :
  *   R        R + YWTC. */
+
+__global__ void cmplx_small_R_add_YWTC
+ ( int nrows, int coldim, int szt, int rowoff, int coloff,
+   double *Rre, double *Rim, double *YWTCre, double *YWTCim );
+/*
+ * DESCRIPTION :
+ *   Updates R by adding YWTC, on complex data.
+ *
+ * ON ENTRY :
+ *   nrows    total number of rows in R and YWTC;
+ *   coldim   number of columns minus the column offset;
+ *   szt      the number of threads in a block;
+ *   rowoff   offset for the row index in R;
+ *   coloff   offset for the column index in R;
+ *   Rre      real parts of the current matrix to be reduced;
+ *   Rim      imaginary parts of the current matrix to be reduced;
+ *   YWTCre   real parts of the product of YWT with C.
+ *   YWTCim   imaginary parts of the product of YWT with C.
+ *
+ * ON RETURN :
+ *   R        real parts of R + YWTC;
+ *   R        imaginary parts R + YWTC. */
 
 void GPU_dbl_small_house
  ( int nrows, int ncols, int szt, int nbt,
