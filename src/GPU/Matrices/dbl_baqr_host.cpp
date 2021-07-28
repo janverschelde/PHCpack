@@ -589,8 +589,23 @@ void CPU_cmplx_blocked_houseqr
             xim[i-colidx] = Rim[i][colidx];
          }
          CPU_cmplx_factors_house(nrowscol,xre,xim,vre,vim,&beta);
+         if(verbose)
+         {
+            cout << "beta[" << colidx << "] : " << beta << endl;
+            for(int i=colidx; i<nrows; i++)
+               cout << "v[" << i-colidx << "] : "
+                     << vre[i-colidx] << "  " << vim[i-colidx] << endl;
+         }
          CPU_cmplx_factors_leftRupdate
             (nrows,endcol,colidx,Rre,Rim,vre,vim,beta);
+         if(verbose)
+         {
+            cout << "the matrix after the update :" << endl;
+            for(int i=0; i<nrows; i++)
+               for(int j=0; j<ncols; j++)
+                  cout << "R[" << i << "][" << j << "] : "
+                       << Rre[i][j] << "  " << Rim[i][j] << endl;
+         }
          B[L] = beta;
          for(int i=0; i<L; i++)
          {

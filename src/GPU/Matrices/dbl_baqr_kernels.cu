@@ -71,6 +71,77 @@ __global__ void cmplx_small_house
    int dim, int dimLog2, double *vre, double *vim, double *beta )
 {
    const int j = threadIdx.x;
+
+   __shared__ double shvre[d_shmemsize];
+   __shared__ double shvim[d_shmemsize];
+   __shared__ double prd[d_shmemsize];
+   __shared__ double v0parts[2];
+
+   bool stopflag = false;
+   double mu,v0re,v0im,x0rad,sqrx0,sqrv0,inv0re,inv0im,zre,zim;
+
+   shvre[j] = x1re[j];          // reading of vector into shared memory
+   shvim[j] = x1im[j];
+   // prd[j] = shv[j]*shv[j];   // for the 2-norm computation
+   prd[j] = shvre[j]*shvre[j] + shvim[j]*shvim[j];
+
+   vre[j+1] = shvre[j];         // copies x to v, in case beta is zero
+   vim[j+1] = shvim[j];
+   if(j == 0) vre[0] = 1.0;
+   if(j == 0) vim[0] = 0.0;
+
+   __syncthreads();
+   int powTwo = 1;                          // sum reduction
+   for(int k=0; k < dimLog2; k++)
+   {
+      if((j%(powTwo*2)) == 0)
+         if(j+powTwo < dim) prd[j] = prd[j] + prd[j+powTwo];
+      powTwo = powTwo*2;
+      __syncthreads();
+   }
+   // thread 0 computes the sqrt of the inner product, others wait
+   if(j == 0)
+   {
+      if(prd[0] == 0.0)                    // prd[0] is sigma of house
+      {
+         *beta = 0.0; stopflag = true;
+      }
+   }
+   __syncthreads();
+   if(stopflag) return;                    // case when sigma is zero
+   if(j == 0)                              // thread zero sets beta
+   {
+      sqrx0 = (*x0re)*(*x0re) + (*x0im)*(*x0im);
+      x0rad = sqrt(sqrx0);
+      mu = sqrt(sqrx0 + prd[0]);
+
+      if(x0rad == 0.0)
+      {
+         v0re = -mu;
+         v0im = 0.0;
+      }
+      else
+      {
+         mu = mu/x0rad;
+         v0re = (*x0re) - mu*(*x0re);
+         v0im = (*x0im) - mu*(*x0im);
+      }
+      sqrv0 = v0re*v0re + v0im*v0im;
+      *beta = 2.0*sqrv0/(prd[0] + sqrv0);
+
+      prd[0] = sqrv0;                     // sqrv0 needed for normalization
+      v0parts[0] = v0re;                  // share v0re with all threads
+      v0parts[1] = v0im;                  // share v0im with all threads
+   }
+   __syncthreads();
+   inv0re = v0parts[0]/prd[0];               // real part of 1/v[0]
+   inv0im = -v0parts[1]/prd[0];              // imag part of 1/v[0]
+   zre = shvre[j]*inv0re - shvim[j]*inv0im;  // real part of v[j]/v[0]
+   zim = shvim[j]*inv0re + shvre[j]*inv0im;  // imag part of v[j]/v[0]
+   vre[j+1] = zre;
+   vim[j+1] = zim;
+   if(j == 0) vre[0] = 1.0;
+   if(j == 0) vim[0] = 0.0;
 }
 
 __global__ void dbl_small_leftRupdate
@@ -110,6 +181,46 @@ __global__ void cmplx_small_leftRupdate
    double *Rre, double *Rim, double *vre, double *vim, double *beta )
 {
    const int tdx = threadIdx.x;          // index of thread in block
+   const int Roffset = k*nrows + k;
+   int Rcolidx;
+   double w_re,w_im,Rtdx_re,Rtdx_im,acc;
+
+   __shared__ double shvre[d_shmemsize]; // slice of vre
+   __shared__ double shvim[d_shmemsize]; // slice of vim
+
+   shvre[tdx] = vre[tdx];
+   shvim[tdx] = vim[tdx];
+   __syncthreads();
+   w_re = 0.0;
+   w_im = 0.0;
+
+   for(int i=0; i<nrows-k; i++)   // loop through rows of R
+   {
+      Rcolidx = Roffset + i + tdx*nrows;
+      Rtdx_re = Rre[Rcolidx];
+      Rtdx_im = Rim[Rcolidx];
+      // w = w + Rtdx*shv[i]; beware of the Hermitian transpose!
+      w_re = w_re + Rtdx_re*shvre[i] + Rtdx_im*shvim[i];
+      w_im = w_im - Rtdx_im*shvre[i] + Rtdx_re*shvim[i];
+   }
+   acc = *beta;
+   w_re = acc*w_re;
+   w_im = acc*w_im;
+   __syncthreads();
+   for(int i=0; i<nrows-k; i++)   // update i-th row of R
+   {
+      Rcolidx = Roffset + i + tdx*nrows;
+      Rtdx_re = Rre[Rcolidx];
+      Rtdx_im = Rim[Rcolidx];
+      // Rtdx = Rtdx - shv[i]*w; beware of the Hermitian transpose!
+      Rtdx_re = Rtdx_re - (shvre[i]*w_re + shvim[i]*w_im);
+      Rtdx_im = Rtdx_im - (shvim[i]*w_re - shvre[i]*w_im);
+      __syncthreads();
+      // changed nrows-k into ncols-k, where ncols = szt
+      if(tdx < ncols-k) Rre[Rcolidx] = Rtdx_re;
+      __syncthreads();
+      if(tdx < ncols-k) Rim[Rcolidx] = Rtdx_im;
+   }
 }
 
 __global__ void dbl_VB_to_W
@@ -159,6 +270,72 @@ __global__ void cmplx_VB_to_W
    double *Vre, double *Vim, double *Wre, double *Wim )
 {
    const int tdx = threadIdx.x;        // index of thread in block
+   double wrk_re,wrk_im,pk_re,pk_im,mypk_re,mypk_im,zi_re,zi_im;
+   int VWidx;
+
+   __shared__ double shvre[d_shmemsize]; // one work vector
+   __shared__ double shvim[d_shmemsize];
+   __shared__ double shwre[d_shmemsize]; // the other work vector
+   __shared__ double shwim[d_shmemsize];
+   __shared__ double shpre[d_shmemsize]; // to share Y^T*v
+   __shared__ double shpim[d_shmemsize];
+
+   shvre[tdx] = Vre[tdx];
+   shvim[tdx] = Vim[tdx];
+   wrk_re = -B[0]*shvre[tdx];            // first column of W
+   wrk_im = -B[0]*shvim[tdx];
+   Wre[tdx] = wrk_re;
+   Wim[tdx] = wrk_im;
+
+   for(int j=1; j<ncols; j++)          // compute column j of W
+   {
+      VWidx = j*nrows + tdx;
+      shvre[tdx] = Vre[VWidx];         // j-th Householder vector
+      shvim[tdx] = Vim[VWidx];
+
+      for(int k=0; k<j; k++)
+      {
+         pk_re = 0.0;                  // k-th component of Y^H*v
+         pk_im = 0.0;
+         VWidx = k*nrows + tdx;
+         shwre[tdx] = Vre[VWidx];      // load V[k][i]
+         shwim[tdx] = Vim[VWidx];
+         // shp[tdx] = shw[tdx]*shv[tdx]; V[k][i]*v[i], Hermitian transpose!
+         shpre[tdx] =   shwre[tdx]*shvre[tdx] + shwim[tdx]*shvim[tdx];
+         shpim[tdx] = - shwim[tdx]*shvre[tdx] + shwre[tdx]*shvim[tdx];
+         __syncthreads();
+         for(int i=0; i<nrows; i++)
+         {
+            pk_re = pk_re + shpre[i];
+            pk_im = pk_im + shpim[i];
+         }
+         if(tdx == k) mypk_re = pk_re;
+         if(tdx == k) mypk_im = pk_im;
+      }
+      __syncthreads();
+      shpre[tdx] = mypk_re;            // share p[k]
+      shpim[tdx] = mypk_im;
+      __syncthreads();
+      zi_re = 0.0;                     // i-th component of W*p
+      zi_im = 0.0;
+      for(int k=0; k<j; k++)
+      {
+         VWidx = k*nrows + tdx;
+         shwre[tdx] = Wre[VWidx];      // load W[k][i]
+         shwim[tdx] = Wim[VWidx];
+         // zi = zi + shw[tdx]*shp[k];
+         zi_re = zi_re + shvre[tdx]*shpre[k] - shvim[tdx]*shpim[k];
+         zi_im = zi_im + shvim[tdx]*shpre[k] + shvre[tdx]*shpim[k];
+      }
+      zi_re = zi_re + shvre[tdx];
+      zi_im = zi_im + shvim[tdx];
+      wrk_re = -B[j]*zi_re;
+      wrk_im = -B[j]*zi_im;
+      VWidx = j*nrows + tdx;
+      Wre[VWidx] = wrk_re;             // wrk is assigned to W[j][tdx]
+      Wim[VWidx] = wrk_im;
+      __syncthreads();
+   }
 }
 
 __global__ void dbl_small_WYT
@@ -189,6 +366,30 @@ __global__ void cmplx_small_WYT
 {
    const int bdx = blockIdx.x;           // index of block
    const int tdx = threadIdx.x;          // index of thread in block
+   const int offset = bdx*szt + tdx;     // offset in result
+   const int row = offset / nrows;
+   const int col = offset % nrows;       // thread 0 computes WYT[row][col]
+
+   double resultre = 0.0;
+   double resultim = 0.0;
+   double a_re,a_im,b_re,b_im;
+   int Widx,Yidx;
+
+   for(int k=0; k<szt; k++)
+   {
+      Widx = k*nrows + row;
+      a_re = Wre[Widx];            // if(nrows == szt) then row = bdx
+      a_im = Wim[Widx]; 
+      Yidx = k*nrows + col;
+      b_re = Yre[Yidx];            // if(nrows == szt) then col = tdx
+      b_im = Yim[Yidx];
+      // result = result + a*b;
+      resultre = resultre + a_re*b_re - a_im*b_im;
+      resultim = resultim + a_im*b_re + a_re*b_im;
+   }
+   __syncthreads();
+   WYTre[offset] = resultre;
+   WYTim[offset] = resultim;
 }
 
 __global__ void dbl_small_QWYT
@@ -221,6 +422,30 @@ __global__ void cmplx_small_QWYT
 {
    const int bdx = blockIdx.x;         // index of block
    const int tdx = threadIdx.x;        // index of thread in block
+   const int offset = bdx*szt + tdx;   // offset in result
+   const int row = offset / rowdim;
+   const int col = offset % rowdim;    // thread 0 computes QWYT[row][col]
+
+   double resultre = 0.0;
+   double resultim = 0.0;
+   double a_re,a_im,b_re,b_im;
+   int Qidx,WYTidx;
+
+   for(int k=0; k<rowdim; k++)          // run over rowdim, not just szt
+   {                                    // coloff shifts by col*row elements
+      Qidx = row*dim + coloff + k;
+      a_re = Qre[Qidx];                 // row = bdx,
+      a_im = Qim[Qidx];                 // if dim == szt, coloff == 0
+      WYTidx = k*rowdim + col;
+      b_re = WYTre[WYTidx];             // if(dim == szt) then col = tdx
+      b_im = WYTim[WYTidx];
+      // result = result + a*b;
+      resultre = resultre + a_re*b_re - a_im*b_im;
+      resultim = resultim + a_im*b_re + a_re*b_im;
+   }
+   __syncthreads();
+   QWYTre[offset] = resultre;           // no column offset in saving QWYT
+   QWYTim[offset] = resultim;
 }
 
 __global__ void dbl_small_YWTC
@@ -254,6 +479,31 @@ __global__ void cmplx_small_YWTC
 {
    const int bdx = blockIdx.x;         // bdx*szt done by previous blocks
    const int tdx = threadIdx.x;        // index of thread in block
+   const int offset = bdx*szt + tdx;   // offset in result
+   const int row = offset / coldim;    // 1st thread does YWTC[row][col]
+   const int col = offset % coldim;
+   const int colCoff0 = (coloff+col)*nrows + rowoff; // 1st element in C
+
+   double resultre = 0.0;
+   double resultim = 0.0;
+   double a_re,a_im,b_re,b_im;
+   int YWTidx,Cidx;
+
+   for(int k=0; k<rowdim; k++)         // innermost loop runs over rowdim
+   {
+      YWTidx = row*rowdim + k;
+      a_re = YWTre[YWTidx];           // YWT is stored row by row
+      a_im = YWTim[YWTidx];
+      Cidx = colCoff0 + k;
+      b_re = Cre[Cidx];               // but C is stored column by column
+      b_im = Cim[Cidx];
+      // result = result + a*b;
+      resultre = resultre + a_re*b_re - a_im*b_im;
+      resultim = resultim + a_im*b_re + a_re*b_im;
+   }
+   __syncthreads();
+   YWTCre[(coloff + col)*nrows + (rowoff + row)] = resultre;
+   YWTCim[(coloff + col)*nrows + (rowoff + row)] = resultim;
 }
 
 __global__ void dbl_small_Qupdate
@@ -282,6 +532,23 @@ __global__ void cmplx_small_Qupdate
 {
    const int bdx = blockIdx.x;
    const int tdx = threadIdx.x;
+   const int offset = bdx*szt + tdx;   // offset in result
+   const int row = offset / rowdim;
+   const int col = offset % rowdim;
+   const int idx1 = row*dim + coloff + col;
+
+   double a_re,a_im,b_re,b_im;
+
+   a_re = Qre[idx1];       // row = bdx, if dim == szt, coloff == 0
+   a_im = Qim[idx1];
+   b_re = QWYTre[offset];  // if(dim == szt) then col = tdx
+   b_im = QWYTim[offset];
+   a_re = a_re + b_re;
+   a_im = a_im + b_im;
+
+   __syncthreads();
+   Qre[idx1] = a_re;
+   Qim[idx1] = a_im;
 }
 
 __global__ void dbl_small_R_add_YWTC
@@ -311,6 +578,23 @@ __global__ void cmplx_small_R_add_YWTC
 {
    const int bdx = blockIdx.x;
    const int tdx = threadIdx.x;
+   const int offset = bdx*szt + tdx;   // offset in result
+   const int row = offset / coldim;    // thread updates R[row][col]
+   const int col = offset % coldim;
+   const int idx = (coloff + col)*nrows + (rowoff + row);
+ 
+   double a_re,a_im,b_re,b_im;
+   
+   a_re = Rre[idx];
+   a_im = Rim[idx];
+   b_re = YWTCre[idx];
+   b_im = YWTCim[idx];
+   a_re = a_re + b_re;
+   a_im = a_im + b_im;
+  
+   __syncthreads();
+   Rre[idx] = a_re;
+   Rim[idx] = a_im;
 }
 
 void GPU_dbl_small_house
@@ -416,7 +700,7 @@ void GPU_cmplx_small_house
    }
    if(nrows1 == 0)
    {
-      beta_h[L] = 0.0; vre_h[0] = 1.0; vim_h[0] = 1.0;
+      beta_h[L] = 0.0; vre_h[0] = 1.0; vim_h[0] = 0.0;
       cudaMemcpy(&beta_d[L],&beta_h[L],sizeof(double),cudaMemcpyHostToDevice);
       cudaMemcpy(&Vre_d[L*nVrows+L],vre_h,sizeof(double),
                  cudaMemcpyHostToDevice);
@@ -571,10 +855,10 @@ void GPU_dbl_VB_to_W
 }
 
 void GPU_cmplx_VB_to_W
- ( int nrows, int ncols, int szt, double *Vre_h, double *Vim_h,
-   double *Vre_d, double *Vim_d, double *Wre_h, double *Wim_h,
-   double *Wre_d, double *Wim_d, double *beta_h, double *beta_d,
-   double *lapms, bool verbose )
+ ( int nrows, int ncols, int szt,
+   double *Vre_h, double *Vim_h, double *Vre_d, double *Vim_d,
+   double *Wre_h, double *Wim_h, double *Wre_d, double *Wim_d,
+   double *beta_h, double *beta_d, double *lapms, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1330,7 +1614,7 @@ void GPU_cmplx_blocked_houseqr
    for(int j=0; j<ncols; j++)   
       for(int i=0; i<nrows; i++)
       {
-         Are_h[ix] = Are[i][j];
+         Are_h[ix]   = Are[i][j];
          Aim_h[ix++] = Aim[i][j];
       }
 
@@ -1341,12 +1625,12 @@ void GPU_cmplx_blocked_houseqr
       {
          if(i == j)
          {
-            Qre_h[ix] = 1.0;
+            Qre_h[ix]   = 1.0;
             Qim_h[ix++] = 0.0;
          }
          else
          {
-            Qre_h[ix] = 0.0;
+            Qre_h[ix]   = 0.0;
             Qim_h[ix++] = 0.0;
          }
       }
@@ -1370,7 +1654,7 @@ void GPU_cmplx_blocked_houseqr
    ix = 0;
    for(int i=0; i<nrows*szt; i++)
    {
-      Vre_h[ix] = 0.0; 
+      Vre_h[ix]   = 0.0; 
       Vim_h[ix++] = 0.0; 
    }
    Vre_h[--ix] = 1.0; // initialize last vector for square tiles
@@ -1394,25 +1678,6 @@ void GPU_cmplx_blocked_houseqr
    cudaMalloc((void**)&YWTim_d,szYWT + szpad);
    cudaMalloc((void**)&YWTCre_d,sznum + szpad);
    cudaMalloc((void**)&YWTCim_d,sznum + szpad);
-
-   cudaMemcpy(Qre_h,Qre_d,szWYT,cudaMemcpyDeviceToHost);
-   cudaMemcpy(Qim_h,Qim_d,szWYT,cudaMemcpyDeviceToHost);
-   ix = 0;                                           // copy rows of Q
-   for(int i=0; i<nrows; i++)
-      for(int j=0; j<nrows; j++)
-      {
-         Qre[i][j] = Qre_h[ix];
-         Qim[i][j] = Qim_h[ix++];
-      }
-
-   cudaMemcpy(Are_h,Are_d,sznum,cudaMemcpyDeviceToHost);
-   cudaMemcpy(Aim_h,Aim_d,sznum,cudaMemcpyDeviceToHost);
-   for(int i=0; i<nrows; i++)                       // copy columns of R
-      for(int j=0; j<ncols; j++)
-      {
-         Rre[i][j] = Are_h[j*nrows+i];
-         Rim[i][j] = Aim_h[j*nrows+i];
-      }
 
    *houselapms = 0.0;
    *tileRlapms = 0.0;
@@ -1472,7 +1737,28 @@ void GPU_cmplx_blocked_houseqr
    long microseconds = endtime.tv_usec - begintime.tv_usec;
    *walltimesec = seconds + microseconds*1.0e-6;
 
+   cudaMemcpy(Qre_h,Qre_d,szWYT,cudaMemcpyDeviceToHost);
+   cudaMemcpy(Qim_h,Qim_d,szWYT,cudaMemcpyDeviceToHost);
+   ix = 0;                                           // copy rows of Q
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<nrows; j++)
+      {
+         Qre[i][j] = Qre_h[ix];
+         Qim[i][j] = Qim_h[ix++];
+      }
+
+   cudaMemcpy(Are_h,Are_d,sznum,cudaMemcpyDeviceToHost);
+   cudaMemcpy(Aim_h,Aim_d,sznum,cudaMemcpyDeviceToHost);
+   for(int i=0; i<nrows; i++)                       // copy columns of R
+      for(int j=0; j<ncols; j++)
+      {
+         Rre[i][j] = Are_h[j*nrows+i];
+         Rim[i][j] = Aim_h[j*nrows+i];
+      }
+
    free(Are_h); free(Aim_h); free(Qre_h); free(Qim_h);
    free(vre_h); free(vim_h); free(Vre_h); free(Vim_h);
    free(Wre_h); free(Wim_h);
+   free(WYTre_h); free(QWYTre_h); free(YWTre_h); free(YWTCre_h);
+   free(WYTim_h); free(QWYTim_h); free(YWTim_h); free(YWTCim_h);
 }

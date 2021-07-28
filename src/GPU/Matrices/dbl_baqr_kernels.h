@@ -522,10 +522,10 @@ void GPU_dbl_VB_to_W
  *   lapms    elapsed time spent by the kernel. */
 
 void GPU_cmplx_VB_to_W
- ( int nrows, int ncols, int szt, double *Vre_h, double *Vim_h,
-   double *Vre_d, double *Vim_d, double *Wre_h, double *Wim_h,
-   double *Wre_d, double *Wim_d, double *beta_h, double *beta_d,
-   double *lapms, bool verbose=true );
+ ( int nrows, int ncols, int szt,
+   double *Vre_h, double *Vim_h, double *Vre_d, double *Vim_d,
+   double *Wre_h, double *Wim_h, double *Wre_d, double *Wim_d,
+   double *beta_h, double *beta_d, double *lapms, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the W in the WY representation.
