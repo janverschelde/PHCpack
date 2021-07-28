@@ -845,6 +845,7 @@ void GPU_dbl_VB_to_W
       for(int j=0; j<szt; j++) 
          for(int i=0; i<nrows; i++) 
             cout << "V[" << i << "][" << j << "] : " << V_h[ix++] << endl;
+
       cudaMemcpy(W_h,W_d,szVandW,cudaMemcpyDeviceToHost);
       cout << "the columns of the W matrix :" << endl;
       ix = 0;
@@ -864,6 +865,24 @@ void GPU_cmplx_VB_to_W
    cudaEventCreate(&start);
    cudaEventCreate(&stop);
    float milliseconds;
+
+   if(verbose)
+   {
+      const size_t szhouse = nrows*sizeof(double);
+      const size_t szVandW = szt*szhouse;
+
+      cudaMemcpy(Vre_h,Vre_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Vim_h,Vim_d,szVandW,cudaMemcpyDeviceToHost);
+      cout << "the columns of the V matrix :" << endl;
+      int ix = 0;
+      for(int j=0; j<szt; j++) 
+         for(int i=0; i<nrows; i++) 
+         {
+            cout << "V[" << i << "][" << j << "] : "
+                 << Vre_h[ix] << "  " << Vim_h[ix] << endl;
+            ix = ix + 1;
+         }
+   }
 
    cudaEventRecord(start);
    cmplx_VB_to_W<<<1,nrows>>>(nrows,ncols,beta_d,Vre_d,Vim_d,Wre_d,Wim_d);
@@ -889,8 +908,11 @@ void GPU_cmplx_VB_to_W
       int ix = 0;
       for(int j=0; j<szt; j++) 
          for(int i=0; i<nrows; i++) 
+         {
             cout << "V[" << i << "][" << j << "] : "
-                 << Vre_h[ix] << "  " << Vim_h[ix++] << endl;
+                 << Vre_h[ix] << "  " << Vim_h[ix] << endl;
+            ix = ix + 1;
+         }
 
       cudaMemcpy(Wre_h,Wre_d,szVandW,cudaMemcpyDeviceToHost);
       cudaMemcpy(Wim_h,Wim_d,szVandW,cudaMemcpyDeviceToHost);
@@ -898,8 +920,11 @@ void GPU_cmplx_VB_to_W
       ix = 0;
       for(int j=0; j<szt; j++) 
          for(int i=0; i<nrows; i++) 
+         {
             cout << "W[" << i << "][" << j << "] : "
-                 << Wre_h[ix] << "  " << Wim_h[ix++] << endl;
+                 << Wre_h[ix] << "  " << Wim_h[ix] << endl;
+            ix = ix + 1;
+         }
    }
 }
 
@@ -965,9 +990,11 @@ void GPU_cmplx_small_WYT
       int ix = 0;
       for(int i=0; i<nrows; i++) 
          for(int j=0; j<nrows; j++) 
+         {
             cout << "WYT[" << i << "][" << j << "] : "
-                 << WYTre_h[ix] << "  "
-                 << WYTim_h[ix++] << endl;
+                 << WYTre_h[ix] << "  " << WYTim_h[ix] << endl;
+            ix = ix + 1;
+         }
    }
 }
 
@@ -1036,8 +1063,11 @@ void GPU_cmplx_small_YWT
       int ix = 0;
       for(int i=0; i<rowdim; i++) 
          for(int j=0; j<rowdim; j++) 
+         {
             cout << "YWT[" << i << "][" << j << "] : "
-                 << YWTre_h[ix] << "  " << YWTim_h[ix++] << endl;
+                 << YWTre_h[ix] << "  " << YWTim_h[ix] << endl;
+            ix = ix + 1;
+         }
    }
 }
 
@@ -1114,8 +1144,11 @@ void GPU_cmplx_small_QWYT
       int ix = 0;
       for(int i=0; i<dim; i++) 
          for(int j=0; j<dim; j++) 
+         {
             cout << "Q[" << i << "][" << j << "] : "
-                 << Qre_h[ix] << "  " << Qim_h[ix++] << endl;
+                 << Qre_h[ix] << "  " << Qim_h[ix] << endl;
+            ix = ix + 1;
+         }
    }
 
    cudaEventRecord(start);
@@ -1138,8 +1171,11 @@ void GPU_cmplx_small_QWYT
       int ix = 0;
       for(int i=0; i<dim; i++) 
          for(int j=0; j<rowdim; j++) 
+         {
             cout << "QWYT[" << i << "][" << j << "] : "
-                 << QWYTre_h[ix] << "  " << QWYTim_h[ix++] << endl;
+                 << QWYTre_h[ix] << "  " << QWYTim_h[ix] << endl;
+            ix = ix + 1;
+         }
    }
 }
 
@@ -1633,7 +1669,24 @@ void GPU_cmplx_blocked_houseqr
             Qre_h[ix]   = 0.0;
             Qim_h[ix++] = 0.0;
          }
+         // cout << "Q[" << ix-1 << "] : "
+         //      << Qre_h[ix-1] << "  " << Qim_h[ix-1] << endl;
       }
+   }
+   if(verbose)
+   {
+      ix = 0;
+      cout << "The identity matrix :" << endl;
+      cout << scientific << setprecision(16);
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<nrows; j++)
+         {
+            cout << "Q[" << i << "][" << j << "] : "
+                 << Qre_h[ix] << "  " << Qim_h[ix] << endl;
+            ix = ix + 1;
+            // cout << "Q[" << i << "][" << j << "] : "
+            //      << Qre_h[j*nrows+i] << "  " << Qim_h[j*nrows+i] << endl;
+         }
    }
    const size_t sznum = dim*sizeof(double);
    cudaMalloc((void**)&Are_d,sznum);
