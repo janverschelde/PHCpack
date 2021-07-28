@@ -39,6 +39,7 @@ test_dbl2_tabs            : main test on double double tabs
 dbl_baqr_host             : blocked qr on host in double precision
 dbl2_baqr_host            : blocked qr on host in double double precision
 dbl_baqr_kernels          : kernels for baqr in double precision
+dbl2_baqr_kernels         : kernels for baqr in double double precision
 dbl_baqr_testers          : tests blocked accelerated qr in double precision
 dbl2_baqr_testers         : tests baqr in double double precision
 test_dbl_baqr             : main test on double blocked accelerated qr
