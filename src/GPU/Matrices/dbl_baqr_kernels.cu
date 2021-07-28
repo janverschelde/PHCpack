@@ -324,8 +324,8 @@ __global__ void cmplx_VB_to_W
          shwre[tdx] = Wre[VWidx];      // load W[k][i]
          shwim[tdx] = Wim[VWidx];
          // zi = zi + shw[tdx]*shp[k];
-         zi_re = zi_re + shvre[tdx]*shpre[k] - shvim[tdx]*shpim[k];
-         zi_im = zi_im + shvim[tdx]*shpre[k] + shvre[tdx]*shpim[k];
+         zi_re = zi_re + shwre[tdx]*shpre[k] - shwim[tdx]*shpim[k];
+         zi_im = zi_im + shwim[tdx]*shpre[k] + shwre[tdx]*shpim[k];
       }
       zi_re = zi_re + shvre[tdx];
       zi_im = zi_im + shvim[tdx];
