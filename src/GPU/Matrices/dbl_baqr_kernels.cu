@@ -383,9 +383,9 @@ __global__ void cmplx_small_WYT
       Yidx = k*nrows + col;
       b_re = Yre[Yidx];            // if(nrows == szt) then col = tdx
       b_im = Yim[Yidx];
-      // result = result + a*b;
-      resultre = resultre + a_re*b_re - a_im*b_im;
-      resultim = resultim + a_im*b_re + a_re*b_im;
+      // result = result + a*b; with Hermitian transpose of Y
+      resultre = resultre + a_re*b_re + a_im*b_im;
+      resultim = resultim + a_im*b_re - a_re*b_im;
    }
    __syncthreads();
    WYTre[offset] = resultre;

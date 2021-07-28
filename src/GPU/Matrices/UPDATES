@@ -1,5 +1,6 @@
 Wed 28 Jul 2021 : in dbl_baqr_kernels.cu, fixed the printing of matrices
-  of real and imaginary parts of complex numbers.
+  of real and imaginary parts of complex numbers.  Fixed the W*Y^H
+  in dbl_baqr_kernels.cu.
 
 Tue 27 Jul 2021 : added stubs to dbl_baqr_kernels, to prepare for the complex
   versions of the accelerated blocked Householder QR decomposition.
