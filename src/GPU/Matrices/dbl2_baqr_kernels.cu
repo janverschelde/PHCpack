@@ -124,7 +124,10 @@ __global__ void dbl2_small_leftRupdate
       ddg_inc(&whi,&wlo,acchi,acclo);
    }
    // w = (*beta)*w;
-   ddg_mlt(&whi,&wlo,*betahi,*betalo);
+   // ddg_mlt(&whi,&wlo,*betahi,*betalo); <-- this does not work!
+   ddg_mul(*betahi,*betalo,whi,wlo,&acchi,&acclo);
+   whi = acchi;
+   wlo = acclo;
    __syncthreads();
    for(int i=0; i<nrows-k; i++)   // update i-th row of R
    {
@@ -138,6 +141,7 @@ __global__ void dbl2_small_leftRupdate
       // changed nrows-k into ncols-k, where ncols = szt
       if(tdx < ncols-k) Rhi[Rcolidx] = Rtdxhi;
       if(tdx < ncols-k) Rlo[Rcolidx] = Rtdxlo;
+      __syncthreads();
    }
 }
 
@@ -982,7 +986,7 @@ void GPU_dbl2_blocked_houseqr
              betahi_h,betalo_h,betahi_d,betalo_d,houselapms,verbose);
          GPU_dbl2_small_leftRupdate
             (nrows,ncols,szt,colidx,k,L,Ahi_h,Alo_h,Ahi_d,Alo_d,
-             Vhi_d,Vlo_d,betahi_h,betalo_d,betahi_d,betalo_d,
+             Vhi_d,Vlo_d,betahi_h,betalo_h,betahi_d,betalo_d,
              tileRlapms,verbose);
       }
       // changed nrows into nrows - k*szt and ncols into szt
