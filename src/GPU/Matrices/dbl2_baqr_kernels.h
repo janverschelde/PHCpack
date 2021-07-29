@@ -160,7 +160,7 @@ __global__ void dbl2_small_YWTC
  *   YWTClo   low doubles of the product of YWT with C. */
 
 __global__ void dbl2_small_Qupdate
- ( int dim, int szt, int coloff,
+ ( int dim, int rowdim, int szt, int coloff,
    double *Qhi, double *Qlo, double *QWYThi, double *QWYTlo );
 /*
  * DESCRIPTION :

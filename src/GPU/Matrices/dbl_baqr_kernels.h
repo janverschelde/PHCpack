@@ -271,13 +271,14 @@ __global__ void cmplx_small_YWTC
  *   YWTCim   imaginary parts of the product of YWT with C. */
 
 __global__ void dbl_small_Qupdate
- ( int dim, int szt, int coloff, double *Q, double *QWYT );
+ ( int dim, int rowdim, int szt, int coloff, double *Q, double *QWYT );
 /*
  * DESCRIPTION :
  *   Updates Q by adding QWYT, on real data.
  *
  * ON ENTRY :
  *   dim      number of rows and columns of all matrices;
+ *   rowdim   dimension minus the column offset;
  *   szt      the number of threads in a block;
  *   coloff   offset for the column index in QWYT;
  *   Q        the current orthogonal matrix;
@@ -295,6 +296,7 @@ __global__ void cmplx_small_Qupdate
  *
  * ON ENTRY :
  *   dim      number of rows and columns of all matrices;
+ *   rowdim   dimension minus the column offset;
  *   szt      the number of threads in a block;
  *   coloff   offset for the column index in QWYT;
  *   Qre      real parts of the current orthogonal matrix;

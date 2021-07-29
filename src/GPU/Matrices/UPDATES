@@ -2,7 +2,9 @@ Wed 28 Jul 2021 : in dbl_baqr_kernels.cu, fixed the printing of matrices
   of real and imaginary parts of complex numbers.  Fixed the W*Y^H
   in dbl_baqr_kernels.cu.  In dbl_baqr_kernels.cu, fixed the computation
   of the W matrix for complex inputs.  New dbl2_baqr_kernels with stubs
-  for the kernels in double double precision.  Updated makefiles.
+  for the kernels in double double precision.  To dbl2_baqr_kernels,
+  added kernels, edited dbl_baqr_kernels.h, updated dbl2_baqr_testers.cpp
+  and test_dbl2_baqr.cpp.
 
 Tue 27 Jul 2021 : added stubs to dbl_baqr_kernels, to prepare for the complex
   versions of the accelerated blocked Householder QR decomposition.

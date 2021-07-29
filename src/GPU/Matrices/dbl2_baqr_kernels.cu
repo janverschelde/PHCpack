@@ -8,6 +8,9 @@
 #else
 #include <sys/time.h>
 #endif
+#ifdef gpufun
+#include "double_double_gpufun.cu"
+#endif
 #include "dbl2_baqr_kernels.h"
 
 using namespace std;
@@ -18,27 +21,225 @@ __global__ void dbl2_small_house
    double *vhi, double *vlo, double *betahi, double *betalo )
 {
    const int j = threadIdx.x;
+
+   __shared__ double shvhi[d_shmemsize];
+   __shared__ double shvlo[d_shmemsize];
+   __shared__ double prdhi[d_shmemsize];
+   __shared__ double prdlo[d_shmemsize];
+
+   bool stopflag = false;
+   double acchi,acclo,muhi,mulo,v0hi,v0lo,v0p2hi,v0p2lo;
+
+   shvhi[j] = x1hi[j];          // reading of vector into shared memory
+   shvlo[j] = x1lo[j];
+   // prd[j] = shv[j]*shv[j];   // for the 2-norm computation
+   ddg_sqr(shvhi[j],shvlo[j],&prdhi[j],&prdlo[j]);
+
+   vhi[j+1] = shvhi[j];         // copies x to v, in case beta is zero
+   vlo[j+1] = shvlo[j];
+   if(j == 0) vhi[0] = 1.0;
+   if(j == 0) vlo[0] = 0.0;
+
+   __syncthreads();
+   int powTwo = 1;                          // sum reduction
+   for(int k=0; k < dimLog2; k++)
+   {
+      if((j%(powTwo*2)) == 0)
+         if(j+powTwo < dim) // prd[j] = prd[j] + prd[j+powTwo];
+            ddg_inc(&prdhi[j],&prdlo[j],prdhi[j+powTwo],prdlo[j+powTwo]);
+      powTwo = powTwo*2;
+      __syncthreads();
+   }
+   // thread 0 computes the sqrt of the inner product, others wait
+   if(j == 0)
+   {
+      if((prdhi[0] == 0.0) && (prdlo[0] == 0.0))  // prd[0] is sigma of house
+      {
+         *betahi = 0.0; *betalo = 0.0; stopflag = true;
+      }
+   }
+   __syncthreads();
+   if(stopflag) return;                    // case when sigma is zero
+   if(j == 0)                              // thread zero sets beta
+   {
+      // mu = sqrt((*x0)*(*x0) + prd[0]);
+      ddg_sqr(*x0hi,*x0lo,&acchi,&acclo);
+      ddg_inc(&acchi,&acclo,prdhi[0],prdlo[0]);
+      ddg_sqrt(prdhi[0],prdlo[0],&muhi,&mulo);
+      if(*x0hi <= 0.0)
+      {
+         // v0 = *x0 - mu;
+         ddg_sub(*x0hi,*x0lo,muhi,mulo,&v0hi,&v0lo);
+      }
+      else
+      {
+         // v0 = -prd[0]/(*x0 + mu);
+         ddg_add(*x0hi,*x0lo,muhi,mulo,&acchi,&acclo);
+         ddg_div(prdhi[0],prdlo[0],acchi,acclo,&v0hi,&v0lo);
+         ddg_minus(&v0hi,&v0lo);
+      }
+      // v0p2 = v0*v0;
+      ddg_sqr(v0hi,v0lo,&v0p2hi,&v0p2lo);
+      // *beta = 2.0*v0p2/(prd[0] + v0p2);
+      ddg_add(v0p2hi,v0p2lo,prdhi[0],prdlo[0],&acchi,&acclo);
+      ddg_mlt_d(&v0p2hi,&v0p2lo,2.0);
+      ddg_div(v0p2hi,v0p2lo,acchi,acclo,betahi,betalo);
+      prdhi[0] = v0hi;
+      prdlo[0] = v0lo;                     // v0 needed for normalization
+   }
+   __syncthreads();
+   // shv[j] = shv[j]/prd[0];
+   ddg_div(shvhi[j],shvlo[j],prdhi[0],prdlo[0],&acchi,&acclo);
+   vhi[j+1] = acchi;
+   vlo[j+1] = acclo;
+   if(j == 0) vhi[0] = 1.0;
+   if(j == 0) vlo[0] = 0.0;
 }
 
 __global__ void dbl2_small_leftRupdate
  ( int nrows, int ncols, int szt, int k, double *Rhi, double *Rlo,
    double *vhi, double *vlo, double *betahi, double *betalo )
 {
-   const int j = threadIdx.x;
+   const int tdx = threadIdx.x;          // index of thread in block
+   const int Roffset = k*nrows + k;
+   int Rcolidx;
+   double whi,wlo,Rtdxhi,Rtdxlo,acchi,acclo;
+
+   __shared__ double shvhi[d_shmemsize]; // slice of v
+   __shared__ double shvlo[d_shmemsize]; 
+
+   shvhi[tdx] = vhi[tdx];
+   shvlo[tdx] = vlo[tdx];
+   __syncthreads();
+   whi = 0.0;
+   wlo = 0.0;
+
+   for(int i=0; i<nrows-k; i++)   // loop through rows of R
+   {
+      Rcolidx = Roffset + i + tdx*nrows;
+      Rtdxhi = Rhi[Rcolidx];
+      Rtdxlo = Rlo[Rcolidx];
+      // w = w + Rtdx*shv[i];
+      ddg_mul(Rtdxhi,Rtdxlo,shvhi[i],shvlo[i],&acchi,&acclo);
+      ddg_inc(&whi,&wlo,acchi,acclo);
+   }
+   // w = (*beta)*w;
+   ddg_mlt(&whi,&wlo,*betahi,*betalo);
+   __syncthreads();
+   for(int i=0; i<nrows-k; i++)   // update i-th row of R
+   {
+      Rcolidx = Roffset + i + tdx*nrows;
+      Rtdxhi = Rhi[Rcolidx];
+      Rtdxlo = Rlo[Rcolidx];
+      // Rtdx = Rtdx - shv[i]*w;
+      ddg_mul(shvhi[i],shvlo[i],whi,wlo,&acchi,&acclo);
+      ddg_dec(&Rtdxhi,&Rtdxlo,acchi,acclo);
+      __syncthreads();
+      // changed nrows-k into ncols-k, where ncols = szt
+      if(tdx < ncols-k) Rhi[Rcolidx] = Rtdxhi;
+      if(tdx < ncols-k) Rlo[Rcolidx] = Rtdxlo;
+   }
 }
 
 __global__ void dbl2_VB_to_W
  ( int nrows, int ncols, double *Bhi, double *Blo,
    double *Vhi, double *Vlo, double *Whi, double *Wlo )
 {
-   const int j = threadIdx.x;
+   const int tdx = threadIdx.x;        // index of thread in block
+   double wrkhi,wrklo,pkhi,pklo,mypkhi,mypklo,zihi,zilo;
+   int idx;
+
+   __shared__ double shvhi[d_shmemsize]; // one work vector
+   __shared__ double shvlo[d_shmemsize];
+   __shared__ double shwhi[d_shmemsize]; // the other work vector
+   __shared__ double shwlo[d_shmemsize];
+   __shared__ double shphi[d_shmemsize]; // to share Y^T*v
+   __shared__ double shplo[d_shmemsize]; 
+
+   shvhi[tdx] = Vhi[tdx];
+   shvlo[tdx] = Vlo[tdx];
+   // wrk = -B[0]*shv[tdx];               // first column of W
+   ddg_mul(Bhi[0],Blo[0],shvhi[tdx],shvlo[tdx],&wrkhi,&wrklo);
+   ddg_minus(&wrkhi,&wrklo);
+   Whi[tdx] = wrkhi;
+   Wlo[tdx] = wrklo;
+
+   for(int j=1; j<ncols; j++)          // compute column j of W
+   {
+      idx = j*nrows + tdx;
+      shvhi[tdx] = Vhi[idx];           // j-th Householder vector
+      shvlo[tdx] = Vlo[idx]; 
+
+      for(int k=0; k<j; k++)
+      {
+         pkhi = 0.0;                   // k-th component of Y^T*v
+         pklo = 0.0;
+         idx = k*nrows + tdx;
+         shwhi[tdx] = Vhi[idx];        // load V[k][i]
+         shwlo[tdx] = Vlo[idx]; 
+         // shp[tdx] = shw[tdx]*shv[tdx]; // V[k][i]*v[i]
+         ddg_mul(shwhi[tdx],shwlo[tdx],shvhi[tdx],shvlo[tdx],
+                 &shphi[tdx],&shplo[tdx]);
+         __syncthreads();
+         for(int i=0; i<nrows; i++) // pk = pk + shp[i];
+            ddg_inc(&pkhi,&pklo,shphi[i],shplo[i]);
+         if(tdx == k) mypkhi = pkhi;
+         if(tdx == k) mypklo = pklo;
+      }
+      __syncthreads();
+      shphi[tdx] = mypkhi;             // share p[k]
+      shplo[tdx] = mypklo;
+      __syncthreads();
+      zihi = 0.0;                      // i-th component of W*p
+      zilo = 0.0;
+      for(int k=0; k<j; k++)
+      {
+         idx = k*nrows + tdx;
+         shwhi[tdx] = Whi[idx];        // load W[k][i]
+         shwlo[tdx] = Wlo[idx];
+         // zi = zi + shw[tdx]*shp[k];
+         ddg_mul(shwhi[tdx],shwlo[tdx],shphi[k],shplo[k],&wrkhi,&wrklo);
+         ddg_inc(&zihi,&zilo,wrkhi,wrklo);
+      }
+      // zi = zi + shv[tdx];
+      ddg_inc(&zihi,&zilo,shvhi[tdx],shvlo[tdx]);
+      // wrk = -B[j]*zi;
+      ddg_mul(Bhi[j],Blo[j],zihi,zilo,&wrkhi,&wrklo);
+      ddg_minus(&wrkhi,&wrklo);
+      idx = j*nrows + tdx;
+      Whi[idx] = wrkhi;               // wrk is assigned to W[j][tdx]
+      Wlo[idx] = wrklo;
+      __syncthreads();
+   }
 }
 
 __global__ void dbl2_small_WYT
  ( int nrows, int szt, double *Whi, double *Wlo, double *Yhi, double *Ylo,
    double *WYThi, double *WYTlo )
 {
-   const int j = threadIdx.x;
+   const int bdx = blockIdx.x;           // index of block
+   const int tdx = threadIdx.x;          // index of thread in block
+   const int offset = bdx*szt + tdx;     // offset in result
+   const int row = offset / nrows;
+   const int col = offset % nrows;       // thread 0 computes WYT[row][col]
+
+   double resulthi = 0.0;
+   double resultlo = 0.0;
+   double ahi,alo,bhi,blo,chi,clo;
+
+   for(int k=0; k<szt; k++)
+   {
+      ahi = Whi[k*nrows + row];   // if(nrows == szt) then row = bdx
+      alo = Wlo[k*nrows + row];
+      bhi = Yhi[k*nrows + col];   // if(nrows == szt) then col = tdx
+      blo = Ylo[k*nrows + col]; 
+      // result = result + a*b;
+      ddg_mul(ahi,alo,bhi,blo,&chi,&clo);
+      ddg_inc(&resulthi,&resultlo,chi,clo);
+   }
+   __syncthreads();
+   WYThi[offset] = resulthi;
+   WYTlo[offset] = resultlo;
 }
 
 __global__ void dbl2_small_QWYT
@@ -46,7 +247,32 @@ __global__ void dbl2_small_QWYT
    double *Qhi, double *Qlo, double *WYThi, double *WYTlo,
    double *QWYThi, double *QWYTlo )
 {
-   const int j = threadIdx.x;
+   const int bdx = blockIdx.x;         // index of block
+   const int tdx = threadIdx.x;        // index of thread in block
+   const int offset = bdx*szt + tdx;   // offset in result
+   const int row = offset / rowdim;
+   const int col = offset % rowdim;    // thread 0 computes QWYT[row][col]
+
+   double resulthi = 0.0;
+   double resultlo = 0.0;
+   double ahi,alo,bhi,blo,chi,clo;
+   int idx;
+
+   for(int k=0; k<rowdim; k++)       // run over rowdim, not just szt
+   {                                 // coloff shifts by col*row elements
+      idx = row*dim + coloff + k;
+      ahi = Qhi[idx];                // row = bdx,
+      alo = Qlo[idx];                // if dim == szt, coloff == 0
+      idx = k*rowdim + col;
+      bhi = WYThi[idx];              // if(dim == szt) then col = tdx
+      blo = WYTlo[idx];              // if(dim == szt) then col = tdx
+      // result = result + a*b;
+      ddg_mul(ahi,alo,bhi,blo,&chi,&clo);
+      ddg_inc(&resulthi,&resultlo,chi,clo);
+   }
+   __syncthreads();
+   QWYThi[offset] = resulthi;        // no column offset in saving QWYT
+   QWYTlo[offset] = resultlo;  
 }
 
 __global__ void dbl2_small_YWTC
@@ -54,21 +280,83 @@ __global__ void dbl2_small_YWTC
    int rowoff, int coloff, double *YWThi, double *YWTlo,
    double *Chi, double *Clo, double *YWTChi, double *YWTClo )
 {
-   const int j = threadIdx.x;
+   const int bdx = blockIdx.x;         // bdx*szt done by previous blocks
+   const int tdx = threadIdx.x;        // index of thread in block
+   const int offset = bdx*szt + tdx;   // offset in result
+   const int row = offset / coldim;    // 1st thread does YWTC[row][col]
+   const int col = offset % coldim;
+   const int colCoff0 = (coloff+col)*nrows + rowoff; // 1st element in C
+
+   double resulthi = 0.0;
+   double resultlo = 0.0;
+   double ahi,alo,bhi,blo,chi,clo;
+   int idx;
+
+   for(int k=0; k<rowdim; k++)         // innermost loop runs over rowdim
+   {
+      idx = row*rowdim + k;
+      ahi = YWThi[idx];                // YWT is stored row by row
+      alo = YWTlo[idx];
+      idx = colCoff0 + k;
+      bhi = Chi[idx];                  // but C is stored column by column
+      blo = Clo[idx];
+      // result = result + a*b;
+      ddg_mul(ahi,alo,bhi,blo,&chi,&clo);
+      ddg_inc(&resulthi,&resultlo,chi,clo);
+   }
+   __syncthreads();
+   idx = (coloff + col)*nrows + (rowoff + row);
+   YWTChi[idx] = resulthi;
+   YWTClo[idx] = resultlo;
 }
 
 __global__ void dbl2_small_Qupdate
- ( int dim, int szt, int coloff,
+ ( int dim, int rowdim, int szt, int coloff,
    double *Qhi, double *Qlo, double *QWYThi, double *QWYTlo )
 {
-   const int j = threadIdx.x;
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int offset = bdx*szt + tdx;   // offset in result
+   const int row = offset / rowdim;
+   const int col = offset % rowdim;
+   const int idx1 = row*dim + coloff + col;
+
+   double ahi,alo,bhi,blo;
+
+   ahi = Qhi[idx1];       // row = bdx, if dim == szt, coloff == 0
+   alo = Qlo[idx1];
+   bhi = QWYThi[offset];  // if(dim == szt) then col = tdx
+   blo = QWYTlo[offset];
+   // a = a + b;
+   ddg_inc(&ahi,&alo,bhi,blo);
+   __syncthreads();
+   Qhi[idx1] = ahi;
+   Qlo[idx1] = alo;
 }
 
 __global__ void dbl2_small_R_add_YWTC
  ( int nrows, int coldim, int szt, int rowoff, int coloff,
    double *Rhi, double *Rlo, double *YWTChi, double *YWTClo )
 {
-   const int j = threadIdx.x;
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int offset = bdx*szt + tdx;   // offset in result
+   const int row = offset / coldim;    // thread updates R[row][col]
+   const int col = offset % coldim;
+   const int idx = (coloff + col)*nrows + (rowoff + row);
+ 
+   double ahi,alo,bhi,blo;
+   
+   ahi = Rhi[idx];
+   alo = Rlo[idx];
+   bhi = YWTChi[idx];
+   blo = YWTClo[idx];
+   // a = a + b;
+   ddg_inc(&ahi,&alo,bhi,blo);
+  
+   __syncthreads();
+   Rhi[idx] = ahi;
+   Rlo[idx] = alo;
 }
 
 void GPU_dbl2_small_house
@@ -403,6 +691,65 @@ void GPU_dbl2_small_YWTC
    cudaEventCreate(&start);
    cudaEventCreate(&stop);
    float milliseconds;
+   const int rowoff = idx*szt;
+   const int rowdim = nrows - rowoff;
+   const int coloff = (idx+1)*szt;
+   const int coldim = ncols - coloff;
+   const int nbrblocks = (int) ceil(rowdim*coldim/((double) szt));
+
+   if(verbose)
+   {
+      cout << "in GPU_dbl_small_YWTC ..." << endl;
+      cout << "-> nrows : " << nrows
+           << "  ncols : " << ncols
+           << "  szt : " << szt
+           << "  idx : " << idx << endl;
+      cout << "   rowdim : " << rowdim
+           << "  coldim : " << coldim
+           << "  rowoff : " << rowoff
+           << "  coloff : " << coloff
+           << "  nbrblocks : " << nbrblocks << endl;
+
+      double *Chi_h = new double[nrows*ncols];
+      double *Clo_h = new double[nrows*ncols];
+      const size_t szmat = nrows*ncols*sizeof(double);
+
+      cudaMemcpy(Chi_h,Chi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Clo_h,Clo_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the matrix C : " << endl;
+      for(int i=rowoff; i<nrows; i++)
+         for(int j=coloff; j<ncols; j++)
+            cout << "C_h[" << i << "][" << j << "] : "
+                 << Chi_h[j*nrows+i] << "  "
+                 << Clo_h[j*nrows+i] << endl;
+
+      free(Chi_h); free(Clo_h);
+   }
+
+   cudaEventRecord(start);
+   dbl2_small_YWTC<<<nbrblocks,szt>>>
+      (nrows,ncols,rowdim,coldim,szt,rowoff,coloff,
+       YWThi_d,YWTlo_d,Chi_d,Clo_d,YWTChi_d,YWTClo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+
+   if(verbose)
+   {
+      const size_t szmat = nrows*ncols*sizeof(double);
+
+      cudaMemcpy(YWTChi_h,YWTChi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(YWTClo_h,YWTClo_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the YWTC matrix :" << endl;
+      for(int i=rowoff; i<nrows; i++) 
+         for(int j=coloff; j<ncols; j++)
+            cout << "YWTC[" << i << "][" << j << "] : "
+                 << YWTChi_h[j*nrows + i] << "  "
+                 << YWTClo_h[j*nrows + i] << endl;
+   }
 }
 
 void GPU_dbl2_small_Qupdate
@@ -420,7 +767,7 @@ void GPU_dbl2_small_Qupdate
 
    cudaEventRecord(start);
    dbl2_small_Qupdate<<<nbrblocks,szt>>>
-      (dim,szt,coloff,Qhi_d,Qlo_d,QWYThi_d,QWYTlo_d);
+      (dim,rowdim,szt,coloff,Qhi_d,Qlo_d,QWYThi_d,QWYTlo_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);

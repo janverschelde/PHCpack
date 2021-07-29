@@ -10,6 +10,7 @@
 #include "dbl2_factorizations.h"
 #include "dbl2_factors_testers.h"
 #include "dbl2_baqr_host.h"
+#include "dbl2_baqr_kernels.h"
 
 using namespace std;
 
@@ -34,19 +35,27 @@ void test_real2_blocked_qr ( void )
 
    double **Ahi = new double*[nrows];
    double **Alo = new double*[nrows];
-   double **Qhi = new double*[nrows];
-   double **Qlo = new double*[nrows];
-   double **Rhi = new double*[nrows];
-   double **Rlo = new double*[nrows];
+   double **Qhi_h = new double*[nrows];
+   double **Qlo_h = new double*[nrows];
+   double **Qhi_d = new double*[nrows];
+   double **Qlo_d = new double*[nrows];
+   double **Rhi_h = new double*[nrows];
+   double **Rlo_h = new double*[nrows];
+   double **Rhi_d = new double*[nrows];
+   double **Rlo_d = new double*[nrows];
 
    for(int i=0; i<nrows; i++)
    {
       Ahi[i] = new double[ncols];
       Alo[i] = new double[ncols];
-      Qhi[i] = new double[nrows];
-      Qlo[i] = new double[nrows];
-      Rhi[i] = new double[ncols];
-      Rlo[i] = new double[ncols];
+      Qhi_h[i] = new double[nrows];
+      Qlo_h[i] = new double[nrows];
+      Qhi_d[i] = new double[nrows];
+      Qlo_d[i] = new double[nrows];
+      Rhi_h[i] = new double[ncols];
+      Rlo_h[i] = new double[ncols];
+      Rhi_d[i] = new double[ncols];
+      Rlo_d[i] = new double[ncols];
    }
    random_dbl2_matrix(nrows,ncols,Ahi,Alo);
 
@@ -63,17 +72,17 @@ void test_real2_blocked_qr ( void )
    double timelapsed_h;
    bool vrb = (verbose > 0);
 
-   cout << "-> Computed the block Householder QR ..." << endl;
+   cout << "-> CPU computes the block Householder QR ..." << endl;
 
    CPU_dbl2_blocked_houseqr
-      (nrows,ncols,sizetile,numtiles,Ahi,Alo,Qhi,Qlo,Rhi,Rlo,
+      (nrows,ncols,sizetile,numtiles,Ahi,Alo,Qhi_h,Qlo_h,Rhi_h,Rlo_h,
        &timelapsed_h,vrb);
 
    cout << "-> Testing the QR factorization ..." << endl;
 
    const double tol = 1.0e-26;
-   const int fail = test_real2_qr_factors
-      (nrows,ncols,Ahi,Alo,Qhi,Qlo,Rhi,Rlo,tol,verbose);
+   int fail = test_real2_qr_factors
+      (nrows,ncols,Ahi,Alo,Qhi_h,Qlo_h,Rhi_h,Rlo_h,tol,verbose);
    if(fail == 0)
       cout << "The test succeeded." << endl;
    else
@@ -81,17 +90,63 @@ void test_real2_blocked_qr ( void )
       cout << scientific << setprecision(2);
       cout << "The test failed for tol = " << tol << "." << endl;
    }
+   double timelapsed_d;
+   double houselapsedms,tileRlapsedms,vb2Wlapsedms;
+   double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
+   double YWTlapsedms,YWTClapsedms,Raddlapsedms;
+
+   cout << "-> GPU computes the block Householder QR ..." << endl;
+
+   GPU_dbl2_blocked_houseqr
+      (nrows,ncols,sizetile,numtiles,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,
+       &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,
+       &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
+       &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,vrb);
+
+   fail = test_real2_qr_factors
+             (nrows,ncols,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,tol,verbose);
+   if(fail == 0)
+      cout << "The test succeeded." << endl;
+   else
+   {
+      cout << scientific << setprecision(2);
+      cout << "The test failed for tol = " << tol << "." << endl;
+   }
+
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
+   cout << "         Time spent by the Householder kernel : ";
+   cout << houselapsedms << " milliseconds." << endl;
+   cout << "  Time spent by the kernel to reduce one tile : ";
+   cout << tileRlapsedms << " milliseconds." << endl;
+   cout << "    Time spent by the kernel for the W matrix : ";
+   cout << vb2Wlapsedms << " milliseconds." << endl;
+   cout << " Time spent by the kernel for computing W*Y^T : ";
+   cout << WYTlapsedms << " milliseconds." << endl;
+   cout << " Time spent by the kernel for computing Y*W^T : ";
+   cout << YWTlapsedms << " milliseconds." << endl;
+   cout << " Time spent by the kernel for computing Q*WYT : ";
+   cout << QWYTlapsedms << " milliseconds." << endl;
+   cout << " Time spent by the kernel for computing YWT*C : ";
+   cout << YWTClapsedms << " milliseconds." << endl;
+   cout << "Time spent by the kernel for adding QWYT to Q : ";
+   cout << Qaddlapsedms << " milliseconds." << endl;
+   cout << "Time spent by the kernel for adding R to YWTC : ";
+   cout << Raddlapsedms << " milliseconds." << endl;
+   cout << "        Total GPU wall clock computation time : ";
+   cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
 
    for(int i=0; i<nrows; i++)
    {
-      free(Ahi[i]); free(Qhi[i]); free(Rhi[i]);
-      free(Alo[i]); free(Qlo[i]); free(Rlo[i]);
+      free(Ahi[i]); free(Alo[i]);
+      free(Qhi_h[i]); free(Rhi_h[i]);
+      free(Qhi_d[i]); free(Rhi_d[i]);
+      free(Qlo_h[i]); free(Rlo_h[i]);
+      free(Qlo_d[i]); free(Rlo_d[i]);
    }
-   free(Ahi); free(Qhi); free(Rhi);
-   free(Alo); free(Qlo); free(Rlo);
+   free(Ahi); free(Qhi_h); free(Rhi_h); free(Qhi_d); free(Rhi_d);
+   free(Alo); free(Qlo_h); free(Rlo_h); free(Qlo_d); free(Rlo_d);
 }
 
 void test_cmplx2_blocked_qr ( void )
