@@ -71,7 +71,8 @@ void CPU_cmplx2_blocked_VB_to_W
 
 void CPU_dbl2_blocked_leftRupdate
  ( int nrows, int ncols, int szt, int idx, double **Chi, double **Clo,
-   double **Yhi, double **Ylo, double **Whi, double **Wlo );
+   double **Yhi, double **Ylo, double **Whi, double **Wlo,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies the blocked Householder update to C,
@@ -87,7 +88,8 @@ void CPU_dbl2_blocked_leftRupdate
  *   Yhi      high doubles of the matrix of Householder vectors;
  *   Ylo      low doubles of the matrix of Householder vectors;
  *   Whi      high doubles of the W matrix in the WY representation;
- *   Wlo      low doubles of the W matrix in the WY representation.
+ *   Wlo      low doubles of the W matrix in the WY representation;
+ *   verbose  is the verbose flag.
  *
  * ON RETURN :
  *   Chi      high doubles of the update with the Householder matrix;

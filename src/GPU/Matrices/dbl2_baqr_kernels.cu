@@ -65,7 +65,7 @@ __global__ void dbl2_small_house
       // mu = sqrt((*x0)*(*x0) + prd[0]);
       ddg_sqr(*x0hi,*x0lo,&acchi,&acclo);
       ddg_inc(&acchi,&acclo,prdhi[0],prdlo[0]);
-      ddg_sqrt(prdhi[0],prdlo[0],&muhi,&mulo);
+      ddg_sqrt(acchi,acclo,&muhi,&mulo);
       if(*x0hi <= 0.0)
       {
          // v0 = *x0 - mu;
@@ -81,9 +81,9 @@ __global__ void dbl2_small_house
       // v0p2 = v0*v0;
       ddg_sqr(v0hi,v0lo,&v0p2hi,&v0p2lo);
       // *beta = 2.0*v0p2/(prd[0] + v0p2);
-      ddg_add(v0p2hi,v0p2lo,prdhi[0],prdlo[0],&acchi,&acclo);
-      ddg_mlt_d(&v0p2hi,&v0p2lo,2.0);
+      ddg_add(prdhi[0],prdlo[0],v0p2hi,v0p2lo,&acchi,&acclo);
       ddg_div(v0p2hi,v0p2lo,acchi,acclo,betahi,betalo);
+      ddg_mlt_d(betahi,betalo,2.0);
       prdhi[0] = v0hi;
       prdlo[0] = v0lo;                     // v0 needed for normalization
    }
@@ -475,7 +475,7 @@ void GPU_dbl2_small_leftRupdate
       const size_t sznum = dim*sizeof(double);
 
       cudaMemcpy(Ahi_h,Ahi_d,sznum,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Ahi_h,Alo_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Alo_h,Alo_d,sznum,cudaMemcpyDeviceToHost);
       cout << "the matrix after the update :" << endl;
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)

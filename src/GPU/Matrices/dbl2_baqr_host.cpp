@@ -168,12 +168,25 @@ void CPU_cmplx2_blocked_VB_to_W
 
 void CPU_dbl2_blocked_leftRupdate
  ( int nrows, int ncols, int szt, int idx, double **Chi, double **Clo,
-   double **Yhi, double **Ylo, double **Whi, double **Wlo )
+   double **Yhi, double **Ylo, double **Whi, double **Wlo, bool verbose )
 {
    const int rowoff = idx*szt;            // row offset for C
    const int rowdim = nrows - rowoff;     // number of rows in Y and W
    const int coloff = (idx+1)*szt;        // column offset for C
    const int coldim = ncols - coloff;     // number of columns in C
+
+   if(verbose)
+   {
+      cout << "updating R ..." << endl;
+      cout << "-> nrows : " << nrows
+           << "  ncols : " << ncols
+           << "  szt : " << szt
+           << "  idx : " << idx << endl;
+      cout << "   rowdim : " << rowdim
+           << "  coldim : " << coldim
+           << "  rowoff : " << rowoff
+           << "  coloff : " << coloff << endl;
+   }
 
    double **YWThi = new double*[rowdim];
    double **YWTlo = new double*[rowdim];
@@ -205,6 +218,13 @@ void CPU_dbl2_blocked_leftRupdate
          }
       }
 
+   if(verbose)
+   {
+      for(int i=0; i<rowdim; i++)
+         for(int j=0; j<rowdim; j++)
+            cout << "YWT[" << i << "][" << j << "] : "
+                 << YWThi[i][j] << "  " << YWTlo[i][j] << endl;
+   }
    for(int i=0; i<rowdim; i++)        // prd = (Y*W^T)*C
       for(int j=0; j<coldim; j++)
       {
@@ -683,6 +703,9 @@ void CPU_dbl2_blocked_houseqr
 
    for(int k=0; k<nbt; k++)       // k runs over the number of blocks
    {
+      if(verbose)
+         cout << "Tile k = " << k << " out of " << nbt << " ..." << endl;
+
       for(int L=0; L<szt; L++)    // L runs over the columns in one block
       {
          colidx = k*szt + L;      // index of the current column
@@ -695,8 +718,24 @@ void CPU_dbl2_blocked_houseqr
             xlo[i-colidx] = Rlo[i][colidx];
          }
          CPU_dbl2_factors_house(nrowscol,xhi,xlo,vhi,vlo,&betahi,&betalo);
+         if(verbose)
+         {
+            cout << "beta[" << colidx << "] : "
+                 << betahi << "  " << betalo << endl;
+            for(int i=colidx; i<nrows; i++)
+               cout << "v[" << i-colidx << "] : "
+                    << vhi[i-colidx] << "  " << vlo[i-colidx] << endl;
+         }
          CPU_dbl2_factors_leftRupdate
             (nrows,endcol,colidx,Rhi,Rlo,vhi,vlo,betahi,betalo);
+         if(verbose)
+         {
+            cout << "the matrix after the update :" << endl;
+            for(int i=0; i<nrows; i++)
+               for(int j=0; j<ncols; j++)
+                  cout << "R[" << i << "][" << j << "] : "
+                       << Rhi[i][j] << "  " << Rlo[i][j] << endl;
+         }
          Bhi[L] = betahi;
          Blo[L] = betalo;
          for(int i=0; i<L; i++)
@@ -714,7 +753,7 @@ void CPU_dbl2_blocked_houseqr
       if(k<nbt-1)
       {
          CPU_dbl2_blocked_leftRupdate
-            (nrows,ncols,szt,k,Rhi,Rlo,Yhi,Ylo,Whi,Wlo);
+            (nrows,ncols,szt,k,Rhi,Rlo,Yhi,Ylo,Whi,Wlo,verbose);
       }
       CPU_dbl2_blocked_rightQupdate
          (nrows,szt,k,Qhi,Qlo,Yhi,Ylo,Whi,Wlo,verbose);
@@ -793,6 +832,9 @@ void CPU_cmplx2_blocked_houseqr
 
    for(int k=0; k<nbt; k++)       // k runs over the number of blocks
    {
+      if(verbose)
+         cout << "Tile k = " << k << " out of " << nbt << " ..." << endl;
+
       for(int L=0; L<szt; L++)    // L runs over the columns in one block
       {
          colidx = k*szt + L;      // index of the current column
@@ -809,9 +851,33 @@ void CPU_cmplx2_blocked_houseqr
          CPU_cmplx2_factors_house
             (nrowscol,xrehi,xrelo,ximhi,ximlo,
                       vrehi,vrelo,vimhi,vimlo,&betahi,&betalo);
+         if(verbose)
+         {
+            cout << "beta[" << colidx << "] : "
+                 << betahi << "  " << betalo << endl;
+            for(int i=colidx; i<nrows; i++)
+            {
+               cout << "vre[" << i-colidx << "] : "
+                    << vrehi[i-colidx] << "  " << vrelo[i-colidx] << endl;
+               cout << "vim[" << i-colidx << "] : "
+                    << vimhi[i-colidx] << "  " << vimlo[i-colidx] << endl;
+            }
+         }
          CPU_cmplx2_factors_leftRupdate
             (nrows,endcol,colidx,Rrehi,Rrelo,Rimhi,Rimlo,
                                  vrehi,vrelo,vimhi,vimlo,betahi,betalo);
+         if(verbose)
+         {
+            cout << "the matrix after the update :" << endl;
+            for(int i=0; i<nrows; i++)
+               for(int j=0; j<ncols; j++)
+               {
+                  cout << "Rre[" << i << "][" << j << "] : "
+                       << Rrehi[i][j] << "  " << Rrelo[i][j] << endl;
+                  cout << "Rim[" << i << "][" << j << "] : "
+                       << Rimhi[i][j] << "  " << Rimlo[i][j] << endl;
+               }
+         }
          Bhi[L] = betahi;
          Blo[L] = betalo;
          for(int i=0; i<L; i++)
