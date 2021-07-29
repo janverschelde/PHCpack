@@ -6,11 +6,11 @@ CNV=../Convolutions
 CUDA=/usr/local/cuda/include
 CUDALIB=/usr/local/cuda/lib64
 # the architecture flag for Tesla C2050
-smflag=sm_20
+# smflag=sm_20
 # the architecture flag for Kepler K20C
 # smflag=sm_35
 # the architecture flag for Pascal P100
-# smflag=sm_60
+smflag=sm_60
 # the architecture flag for Volta V100
 # smflag=sm_70
 
@@ -267,7 +267,8 @@ test_dbl2_baqr: test_dbl2_baqr.o dbl2_baqr_testers.o \
 	$(gpp) -o test_dbl2_baqr test_dbl2_baqr.o dbl2_baqr_testers.o \
                   double_double_functions.o dbl2_factorizations.o \
                   dbl2_factors_testers.o dbl2_baqr_host.o dbl2_baqr_kernels.o \
-                  random_numbers.o random2_vectors.o random2_matrices.o
+                  random_numbers.o random2_vectors.o random2_matrices.o \
+               -lcuda -lcudart -L$(CUDALIB)
 
 clean:
 	/bin/rm -f -r random_matrices.o
