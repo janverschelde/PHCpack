@@ -998,7 +998,7 @@ void GPU_dbl2_blocked_houseqr
          (nrows-k*szt,szt,Whi_d,Wlo_d,Vhi_d,Vlo_d,WYThi_d,WYTlo_d,
           WYThi_h,WYTlo_h,WYTlapms,verbose);
       GPU_dbl2_small_QWYT
-         (nrows,szt,k,Qhi_d,Qlo_d,WYThi_d,WYThi_d,QWYThi_d,QWYTlo_d,
+         (nrows,szt,k,Qhi_d,Qlo_d,WYThi_d,WYTlo_d,QWYThi_d,QWYTlo_d,
           QWYThi_h,QWYTlo_h,Qhi_h,Qlo_h,QWYTlapms,verbose);
       GPU_dbl2_small_Qupdate
          (nrows,szt,k,Qhi_d,Qlo_d,QWYThi_d,QWYTlo_d,Qhi_h,Qlo_h,

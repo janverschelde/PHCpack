@@ -1,6 +1,8 @@
 Thu 29 Jul 2021 : added verbose options and messages to dbl2_baqr_host,
   fixed the kernel to compute the Householder vector in dbl2_baqr_kernels.cu.
   In dbl2_baqr_kernels.cu, fixed the leftRupdate kernel.
+  Added more print messages to dbl2_baqr_host.cpp and fixed the call to
+  the kernel to compute QWYT in dbl2_baqr_kernels.cu.
 
 Wed 28 Jul 2021 : in dbl_baqr_kernels.cu, fixed the printing of matrices
   of real and imaginary parts of complex numbers.  Fixed the W*Y^H

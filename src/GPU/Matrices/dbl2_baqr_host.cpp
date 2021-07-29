@@ -460,6 +460,16 @@ void CPU_dbl2_blocked_rightQupdate
 
    if(verbose)
    {
+      for(int j=0; j<szt; j++)
+         for(int i=0; i<rowdim; i++)
+            cout << "Y[" << i << "][" << j << "] : "
+                 << Yhi[j][i] << "  " << Ylo[j][i] << endl;
+
+      for(int j=0; j<szt; j++)
+         for(int i=0; i<rowdim; i++)
+            cout << "W[" << i << "][" << j << "] : "
+                 << Whi[j][i] << "  " << Wlo[j][i] << endl;
+
       for(int i=0; i<rowdim; i++)
          for(int j=0; j<rowdim; j++)
             cout << "WYT[" << i << "][" << j << "] : "
@@ -480,11 +490,16 @@ void CPU_dbl2_blocked_rightQupdate
 
    if(verbose)
    {
-      cout << endl;
       for(int i=0; i<dim; i++)
          for(int j=0; j<rowdim; j++)
-            cout << "prd[" << i << "][" << j << "] : "
+            cout << "QWYT[" << i << "][" << j << "] : "
                  << prdhi[i][j] << "  " << prdlo[i][j] << endl;
+
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<rowdim; j++)
+            cout << "Q[" << i << "][" << coloff+j << "] : "
+                 << Qhi[i][coloff+j] << "  "
+                 << Qlo[i][coloff+j] << endl;
    }
    for(int i=0; i<dim; i++)        // Q = Q + Q*W*Y^T
       for(int j=0; j<rowdim; j++)  // Q[i][coloff+j] += prd[i][j];
@@ -492,6 +507,15 @@ void CPU_dbl2_blocked_rightQupdate
          ddf_inc(&Qhi[i][coloff+j],&Qlo[i][coloff+j],prdhi[i][j],prdlo[i][j]);
       }
 
+   if(verbose)
+   {
+      cout << "Q after the update with QWYT :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<rowdim; j++)
+            cout << "Q[" << i << "][" << coloff+j << "] : "
+                 << Qhi[i][coloff+j] << "  "
+                 << Qlo[i][coloff+j] << endl;
+   }
    for(int i=0; i<rowdim; i++)
    {
       free(WYThi[i]);
@@ -579,6 +603,24 @@ void CPU_cmplx2_blocked_rightQupdate
 
    if(verbose)
    {
+      for(int j=0; j<szt; j++)
+         for(int i=0; i<rowdim; i++)
+         {
+            cout << "Y[" << i << "][" << j << "]re : "
+                 << Yrehi[j][i] << "  " << Yrelo[j][i] << endl;
+            cout << "Y[" << i << "][" << j << "]im : "
+                 << Yimhi[j][i] << "  " << Yimlo[j][i] << endl;
+         }
+
+      for(int j=0; j<szt; j++)
+         for(int i=0; i<rowdim; i++)
+         {
+            cout << "W[" << i << "][" << j << "]re : "
+                 << Wrehi[j][i] << "  " << Wrelo[j][i] << endl;
+            cout << "W[" << i << "][" << j << "]im : "
+                 << Wimhi[j][i] << "  " << Wimlo[j][i] << endl;
+         }
+
       for(int i=0; i<rowdim; i++)
          for(int j=0; j<rowdim; j++)
          {
@@ -625,10 +667,21 @@ void CPU_cmplx2_blocked_rightQupdate
       for(int i=0; i<dim; i++)
          for(int j=0; j<rowdim; j++)
          {
-            cout << "prd[" << i << "][" << j << "]re : "
+            cout << "QWYT[" << i << "][" << j << "]re : "
                  << prdrehi[i][j] << "  " << prdrelo[i][j] << endl;
-            cout << "prd[" << i << "][" << j << "]im : "
+            cout << "QWYT[" << i << "][" << j << "]im : "
                  << prdimlo[i][j] << "  " << prdimlo[i][j] << endl;
+         }
+
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<rowdim; j++)
+         {
+            cout << "Q[" << i << "][" << coloff+j << "]re : "
+                 << Qrehi[i][coloff+j] << "  "
+                 << Qrelo[i][coloff+j] << endl;
+            cout << "Q[" << i << "][" << coloff+j << "]im : "
+                 << Qimhi[i][coloff+j] << "  "
+                 << Qimlo[i][coloff+j] << endl;
          }
    }
    for(int i=0; i<dim; i++)           // Q = Q + Q*W*Y^H
@@ -642,6 +695,20 @@ void CPU_cmplx2_blocked_rightQupdate
                  &Qimlo[i][coloff+j],prdimhi[i][j],prdimlo[i][j]);
       }
 
+   if(verbose)
+   {
+      cout << "Q after the update with QWYT :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<rowdim; j++)
+         {
+            cout << "Q[" << i << "][" << coloff+j << "]re : "
+                 << Qrehi[i][coloff+j] << "  "
+                 << Qrelo[i][coloff+j] << endl;
+            cout << "Q[" << i << "][" << coloff+j << "]im : "
+                 << Qimhi[i][coloff+j] << "  "
+                 << Qimlo[i][coloff+j] << endl;
+         }
+   }
    for(int i=0; i<rowdim; i++)
    {
       free(WYTrehi[i]); free(WYTimhi[i]);
