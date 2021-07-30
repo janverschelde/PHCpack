@@ -247,6 +247,7 @@ __global__ void dbl_VB_to_W
          shp[tdx] = shw[tdx]*shv[tdx]; // V[k][i]*v[i]
          __syncthreads();
          for(int i=0; i<nrows; i++) pk = pk + shp[i];
+         __syncthreads();              // critical synchronization
          if(tdx == k) mypk = pk;
       }
       __syncthreads();
@@ -309,8 +310,12 @@ __global__ void cmplx_VB_to_W
             pk_re = pk_re + shpre[i];
             pk_im = pk_im + shpim[i];
          }
-         if(tdx == k) mypk_re = pk_re;
-         if(tdx == k) mypk_im = pk_im;
+         __syncthreads();              // important synchronization
+         if(tdx == k)
+         {
+            mypk_re = pk_re;
+            mypk_im = pk_im;
+         }
       }
       __syncthreads();
       shpre[tdx] = mypk_re;            // share p[k]
