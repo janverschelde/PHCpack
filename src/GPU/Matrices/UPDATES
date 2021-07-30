@@ -1,3 +1,6 @@
+Fri 30 Jul 2021 : adding a __syncthreads() in the kernel to compute W
+  in dbl2_baqr_kernels.cu improved the accuracy dramatically.
+
 Thu 29 Jul 2021 : added verbose options and messages to dbl2_baqr_host,
   fixed the kernel to compute the Householder vector in dbl2_baqr_kernels.cu.
   In dbl2_baqr_kernels.cu, fixed the leftRupdate kernel.

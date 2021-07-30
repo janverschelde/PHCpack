@@ -139,8 +139,11 @@ __global__ void dbl2_small_leftRupdate
       ddg_dec(&Rtdxhi,&Rtdxlo,acchi,acclo);
       __syncthreads();
       // changed nrows-k into ncols-k, where ncols = szt
-      if(tdx < ncols-k) Rhi[Rcolidx] = Rtdxhi;
-      if(tdx < ncols-k) Rlo[Rcolidx] = Rtdxlo;
+      if(tdx < ncols-k)
+      {
+         Rhi[Rcolidx] = Rtdxhi;
+         Rlo[Rcolidx] = Rtdxlo;
+      }
       __syncthreads();
    }
 }
@@ -184,11 +187,17 @@ __global__ void dbl2_VB_to_W
          // shp[tdx] = shw[tdx]*shv[tdx]; // V[k][i]*v[i]
          ddg_mul(shwhi[tdx],shwlo[tdx],shvhi[tdx],shvlo[tdx],
                  &shphi[tdx],&shplo[tdx]);
+
          __syncthreads();
          for(int i=0; i<nrows; i++) // pk = pk + shp[i];
             ddg_inc(&pkhi,&pklo,shphi[i],shplo[i]);
-         if(tdx == k) mypkhi = pkhi;
-         if(tdx == k) mypklo = pklo;
+
+         __syncthreads();        // this synchronization is critical!
+         if(tdx == k)
+         {
+            mypkhi = pkhi;
+            mypklo = pklo;
+         }
       }
       __syncthreads();
       shphi[tdx] = mypkhi;             // share p[k]
