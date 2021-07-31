@@ -112,7 +112,6 @@ void test_real2_blocked_qr ( void )
       cout << scientific << setprecision(2);
       cout << "The test failed for tol = " << tol << "." << endl;
    }
-
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
@@ -172,14 +171,22 @@ void test_cmplx2_blocked_qr ( void )
    double **Arelo = new double*[nrows];
    double **Aimhi = new double*[nrows];
    double **Aimlo = new double*[nrows];
-   double **Qrehi = new double*[nrows];
-   double **Qrelo = new double*[nrows];
-   double **Qimhi = new double*[nrows];
-   double **Qimlo = new double*[nrows];
-   double **Rrehi = new double*[nrows];
-   double **Rrelo = new double*[nrows];
-   double **Rimhi = new double*[nrows];
-   double **Rimlo = new double*[nrows];
+   double **Qrehi_h = new double*[nrows];
+   double **Qrelo_h = new double*[nrows];
+   double **Qimhi_h = new double*[nrows];
+   double **Qimlo_h = new double*[nrows];
+   double **Qrehi_d = new double*[nrows];
+   double **Qrelo_d = new double*[nrows];
+   double **Qimhi_d = new double*[nrows];
+   double **Qimlo_d = new double*[nrows];
+   double **Rrehi_h = new double*[nrows];
+   double **Rrelo_h = new double*[nrows];
+   double **Rimhi_h = new double*[nrows];
+   double **Rimlo_h = new double*[nrows];
+   double **Rrehi_d = new double*[nrows];
+   double **Rrelo_d = new double*[nrows];
+   double **Rimhi_d = new double*[nrows];
+   double **Rimlo_d = new double*[nrows];
 
    for(int i=0; i<nrows; i++)
    {
@@ -187,14 +194,22 @@ void test_cmplx2_blocked_qr ( void )
       Arelo[i] = new double[ncols];
       Aimhi[i] = new double[ncols];
       Aimlo[i] = new double[ncols];
-      Qrehi[i] = new double[nrows];
-      Qrelo[i] = new double[nrows];
-      Qimhi[i] = new double[nrows];
-      Qimlo[i] = new double[nrows];
-      Rrehi[i] = new double[ncols];
-      Rrelo[i] = new double[ncols];
-      Rimhi[i] = new double[ncols];
-      Rimlo[i] = new double[ncols];
+      Qrehi_h[i] = new double[nrows];
+      Qrelo_h[i] = new double[nrows];
+      Qimhi_h[i] = new double[nrows];
+      Qimlo_h[i] = new double[nrows];
+      Qrehi_d[i] = new double[nrows];
+      Qrelo_d[i] = new double[nrows];
+      Qimhi_d[i] = new double[nrows];
+      Qimlo_d[i] = new double[nrows];
+      Rrehi_h[i] = new double[ncols];
+      Rrelo_h[i] = new double[ncols];
+      Rimhi_h[i] = new double[ncols];
+      Rimlo_h[i] = new double[ncols];
+      Rrehi_d[i] = new double[ncols];
+      Rrelo_d[i] = new double[ncols];
+      Rimhi_d[i] = new double[ncols];
+      Rimlo_d[i] = new double[ncols];
    }
    random_cmplx2_matrix(nrows,ncols,Arehi,Arelo,Aimhi,Aimlo);
 
@@ -215,21 +230,21 @@ void test_cmplx2_blocked_qr ( void )
    double timelapsed_h;
    bool vrb = (verbose > 0);
 
-   cout << "-> Computed the block Householder QR ..." << endl;
+   cout << "-> CPU computes the block Householder QR ..." << endl;
 
    CPU_cmplx2_blocked_houseqr
       (nrows,ncols,sizetile,numtiles,
-       Arehi,Arelo,Aimhi,Aimlo,
-       Qrehi,Qrelo,Qimhi,Qimlo,
-       Rrehi,Rrelo,Rimhi,Rimlo,&timelapsed_h,vrb);
+       Arehi,  Arelo,  Aimhi,  Aimlo,
+       Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,
+       Rrehi_h,Rrelo_h,Rimhi_h,Rimlo_h,&timelapsed_h,vrb);
 
    cout << "-> Testing the QR factorization ..." << endl;
 
    const double tol = 1.0e-26;
-   const int fail = test_cmplx2_qr_factors
-      (nrows,ncols,Arehi,Arelo,Aimhi,Aimlo,
-                   Qrehi,Qrelo,Qimhi,Qimlo,
-                   Rrehi,Rrelo,Rimhi,Rimlo,tol,verbose);
+   int fail = test_cmplx2_qr_factors
+      (nrows,ncols,Arehi,  Arelo,  Aimhi,  Aimlo,
+                   Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,
+                   Rrehi_h,Rrelo_h,Rimhi_h,Rimlo_h,tol,verbose);
    if(fail == 0)
       cout << "The test succeeded." << endl;
    else
@@ -237,19 +252,55 @@ void test_cmplx2_blocked_qr ( void )
       cout << scientific << setprecision(2);
       cout << "The test failed for tol = " << tol << "." << endl;
    }
+   double timelapsed_d;
+   double houselapsedms,tileRlapsedms,vb2Wlapsedms;
+   double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
+   double YWTlapsedms,YWTClapsedms,Raddlapsedms;
+
+   cout << "-> GPU computes the block Householder QR ..." << endl;
+
+   GPU_cmplx2_blocked_houseqr
+      (nrows,ncols,sizetile,numtiles,
+       Arehi,  Arelo,  Aimhi,  Aimlo,
+       Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
+       Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,
+       &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,
+       &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
+       &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,vrb);
+
+   fail = test_cmplx2_qr_factors
+             (nrows,ncols,Arehi,  Arelo,  Aimhi,  Aimlo,
+                          Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
+                          Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,tol,verbose);
+   if(fail == 0)
+      cout << "The test succeeded." << endl;
+   else
+   {
+      cout << scientific << setprecision(2);
+      cout << "The test failed for tol = " << tol << "." << endl;
+   }
+
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
 
    for(int i=0; i<nrows; i++)
    {
-      free(Arehi[i]); free(Qrehi[i]); free(Rrehi[i]);
-      free(Arelo[i]); free(Qrelo[i]); free(Rrelo[i]);
-      free(Aimhi[i]); free(Qimhi[i]); free(Rimhi[i]);
-      free(Aimlo[i]); free(Qimlo[i]); free(Rimlo[i]);
+      free(Arehi[i]);
+      free(Qrehi_h[i]); free(Rrehi_h[i]);
+      free(Qrehi_d[i]); free(Rrehi_d[i]);
+      free(Arelo[i]);
+      free(Qrelo_h[i]); free(Rrelo_h[i]);
+      free(Qrelo_d[i]); free(Rrelo_d[i]);
+      free(Aimhi[i]);
+      free(Qimhi_h[i]); free(Rimhi_h[i]);
+      free(Qimhi_d[i]); free(Rimhi_d[i]);
+      free(Aimlo[i]);
+      free(Qimlo_h[i]); free(Rimlo_h[i]);
+      free(Qimlo_d[i]); free(Rimlo_d[i]);
    }
-   free(Arehi); free(Qrehi); free(Rrehi);
-   free(Arelo); free(Qrelo); free(Rrelo);
-   free(Aimhi); free(Qimhi); free(Rimhi);
-   free(Aimlo); free(Qimlo); free(Rimlo);
+   free(Arehi); free(Qrehi_h); free(Rrehi_h); free(Qrehi_d); free(Rrehi_d);
+   free(Arelo); free(Qrelo_h); free(Rrelo_h); free(Qrelo_d); free(Rrelo_d);
+   free(Aimhi); free(Qimhi_h); free(Rimhi_h); free(Qimhi_d); free(Rimhi_d);
+   free(Aimlo); free(Qimlo_h); free(Rimlo_h); free(Qimlo_d); free(Rimlo_d);
 }
