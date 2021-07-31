@@ -1384,8 +1384,11 @@ void GPU_cmplx_small_Qupdate
       int ix = 0;
       for(int i=0; i<dim; i++) 
          for(int j=0; j<dim; j++) 
+         {
             cout << "Q[" << i << "][" << j << "] : "
-                 << Qre_h[ix] << "  " << Qim_h[ix++] << endl;
+                 << Qre_h[ix] << "  " << Qim_h[ix] << endl;
+            ix = ix + 1;
+         }
    }
 }
 

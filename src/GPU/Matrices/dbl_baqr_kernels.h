@@ -346,8 +346,8 @@ __global__ void cmplx_small_R_add_YWTC
  *   YWTCim   imaginary parts of the product of YWT with C.
  *
  * ON RETURN :
- *   R        real parts of R + YWTC;
- *   R        imaginary parts R + YWTC. */
+ *   Rre      real parts of R + YWTC;
+ *   Rim      imaginary parts R + YWTC. */
 
 void GPU_dbl_small_house
  ( int nrows, int ncols, int szt, int nbt,
