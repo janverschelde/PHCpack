@@ -36,7 +36,7 @@ __global__ void cmplx2_small_house
    double *x1rehi, double *x1relo, double *x1imhi, double *x1imlo,
    int dim, int dimLog2,
    double *vrehi, double *vrelo, double *vimhi, double *vimlo,
-   double *betahi, double *betalo );
+   double *betahi, double *betalo, double *mu_hi, double *mu_lo );
 /*
  * DESCRIPTION :
  *   Computes the Householder vector of a vector x of dimension dim+1,

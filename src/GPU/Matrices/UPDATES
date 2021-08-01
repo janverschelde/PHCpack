@@ -1,5 +1,7 @@
 Sat 31 Jul 2021 : defined all complex kernels in dbl2_baqr_kernels
-  and extended dbl2_baqr_testers.cpp.
+  and extended dbl2_baqr_testers.cpp.  Added output statements to
+  dbl2_factorizations.cpp for debugging, extended dbl2_baqr_kernels 
+  and dbl2_baqr_testers.cpp; swap tests in test_dbl2_baqr.cpp.
 
 Fri 30 Jul 2021 : adding a __syncthreads() in the kernel to compute W
   in dbl2_baqr_kernels.cu improved the accuracy dramatically.

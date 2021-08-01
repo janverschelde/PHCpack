@@ -6,6 +6,9 @@
 #include "double_double_functions.h"
 #include "dbl2_factorizations.h"
 
+#include <iostream>
+using namespace std;
+
 void CPU_dbl2_factors_matmatmul
  ( int rows, int dim, int cols, double **Ahi, double **Alo,
    double **Bhi, double **Blo, double **Chi, double **Clo )
@@ -469,6 +472,7 @@ void CPU_cmplx2_factors_house
       ddf_inc(&sqrx0hi,&sqrx0lo,acchi,acclo);
       // x0rad = sqrt(sqrx0);
       ddf_sqrt(sqrx0hi,sqrx0lo,&x0radhi,&x0radlo);
+      cout << "x0rad : " << x0radhi << "  " << x0radlo << endl;
       // mu = sqrt(sqrx0 + sigma); // norm of the vector x
       ddf_inc(&sqrx0hi,&sqrx0lo,sigmahi,sigmalo);
       ddf_sqrt(sqrx0hi,sqrx0lo,&muhi,&mulo);
@@ -490,10 +494,15 @@ void CPU_cmplx2_factors_house
          ddf_mul(muhi,mulo,ximhi[0],ximlo[0],&acchi,&acclo);
          ddf_sub(ximhi[0],ximlo[0],acchi,acclo,&vimhi[0],&vimlo[0]);
       }
+      cout << "mu : " << muhi << "  " << mulo << endl;
+
       // sqrv0 = vre[0]*vre[0] + vim[0]*vim[0];
       ddf_sqr(vrehi[0],vrelo[0],&sqrv0hi,&sqrv0lo);
+      cout << "vre[0] : " << vrehi[0] << "  " << vrelo[0] << endl;
+      cout << "vim[0] : " << vimhi[0] << "  " << vimlo[0] << endl;
       ddf_sqr(vimhi[0],vimlo[0],&acchi,&acclo);
       ddf_inc(&sqrv0hi,&sqrv0lo,acchi,acclo);
+      cout << "sqrv0 : " << sqrv0hi << "  " << sqrv0lo << endl;
       // *beta = 2.0*sqrv0/(sigma + sqrv0);
       ddf_inc(&sigmahi,&sigmalo,sqrv0hi,sqrv0lo);
       ddf_div(sqrv0hi,sqrv0lo,sigmahi,sigmalo,betahi,betalo);

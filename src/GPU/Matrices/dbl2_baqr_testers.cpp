@@ -259,6 +259,20 @@ void test_cmplx2_blocked_qr ( void )
 
    cout << "-> GPU computes the block Householder QR ..." << endl;
 
+   if(verbose > 0) // to verify that A has not changed ...
+   {
+      cout << scientific << setprecision(16);
+
+      cout << "A random matrix :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+         {
+            cout << "A[" << i << "][" << j << "]re : "
+                 << Arehi[i][j] << "  " << Arelo[i][j] << endl;
+            cout << "A[" << i << "][" << j << "]im : "
+                 << Aimhi[i][j] << "  " << Aimlo[i][j] << endl;
+         }
+   }
    GPU_cmplx2_blocked_houseqr
       (nrows,ncols,sizetile,numtiles,
        Arehi,  Arelo,  Aimhi,  Aimlo,
