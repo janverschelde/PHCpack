@@ -2189,12 +2189,12 @@ void GPU_dbl2_blocked_houseqr
    const size_t szWYT = nrows2*sizeof(double);
    cudaMalloc((void**)&WYThi_d,szWYT + szpad); // padding for W*Y^T product
    cudaMalloc((void**)&WYTlo_d,szWYT + szpad); 
-   cudaMalloc((void**)&Qhi_d,szWYT);
-   cudaMalloc((void**)&Qlo_d,szWYT);
+   cudaMalloc((void**)&Qhi_d,szWYT + szpad);
+   cudaMalloc((void**)&Qlo_d,szWYT + szpad);
    cudaMemcpy(Qhi_d,Qhi_h,szWYT,cudaMemcpyHostToDevice);
    cudaMemcpy(Qlo_d,Qlo_h,szWYT,cudaMemcpyHostToDevice);
-   cudaMalloc((void**)&QWYThi_d,szWYT);
-   cudaMalloc((void**)&QWYTlo_d,szWYT);
+   cudaMalloc((void**)&QWYThi_d,szWYT + szpad);
+   cudaMalloc((void**)&QWYTlo_d,szWYT + szpad);
 
    const size_t szYWT = nrows2*sizeof(double);
    cudaMalloc((void**)&YWThi_d,szYWT + szpad); // padding for Y*W^T product
@@ -2458,18 +2458,18 @@ void GPU_cmplx2_blocked_houseqr
    cudaMalloc((void**)&WYTrelo_d,szWYT + szpad);
    cudaMalloc((void**)&WYTimhi_d,szWYT + szpad);
    cudaMalloc((void**)&WYTimlo_d,szWYT + szpad);
-   cudaMalloc((void**)&Qrehi_d,szWYT);
-   cudaMalloc((void**)&Qrelo_d,szWYT);
-   cudaMalloc((void**)&Qimhi_d,szWYT);
-   cudaMalloc((void**)&Qimlo_d,szWYT);
+   cudaMalloc((void**)&Qrehi_d,szWYT + szpad);
+   cudaMalloc((void**)&Qrelo_d,szWYT + szpad);
+   cudaMalloc((void**)&Qimhi_d,szWYT + szpad);
+   cudaMalloc((void**)&Qimlo_d,szWYT + szpad);
    cudaMemcpy(Qrehi_d,Qrehi_h,szWYT,cudaMemcpyHostToDevice);
    cudaMemcpy(Qrelo_d,Qrelo_h,szWYT,cudaMemcpyHostToDevice);
    cudaMemcpy(Qimhi_d,Qimhi_h,szWYT,cudaMemcpyHostToDevice);
    cudaMemcpy(Qimlo_d,Qimlo_h,szWYT,cudaMemcpyHostToDevice);
-   cudaMalloc((void**)&QWYTrehi_d,szWYT);
-   cudaMalloc((void**)&QWYTrelo_d,szWYT);
-   cudaMalloc((void**)&QWYTimhi_d,szWYT);
-   cudaMalloc((void**)&QWYTimlo_d,szWYT);
+   cudaMalloc((void**)&QWYTrehi_d,szWYT + szpad);
+   cudaMalloc((void**)&QWYTrelo_d,szWYT + szpad);
+   cudaMalloc((void**)&QWYTimhi_d,szWYT + szpad);
+   cudaMalloc((void**)&QWYTimlo_d,szWYT + szpad);
 
    const size_t szYWT = nrows2*sizeof(double);
    cudaMalloc((void**)&YWTrehi_d,szYWT + szpad); // padding for Y*W^T
