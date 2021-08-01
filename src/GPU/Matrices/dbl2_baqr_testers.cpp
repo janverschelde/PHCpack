@@ -80,7 +80,7 @@ void test_real2_blocked_qr ( void )
 
    cout << "-> Testing the QR factorization ..." << endl;
 
-   const double tol = 1.0e-26;
+   const double tol = 1.0e-20;
    int fail = test_real2_qr_factors
       (nrows,ncols,Ahi,Alo,Qhi_h,Qlo_h,Rhi_h,Rlo_h,tol,verbose);
    if(fail == 0)
@@ -240,7 +240,7 @@ void test_cmplx2_blocked_qr ( void )
 
    cout << "-> Testing the QR factorization ..." << endl;
 
-   const double tol = 1.0e-26;
+   const double tol = 1.0e-20;
    int fail = test_cmplx2_qr_factors
       (nrows,ncols,Arehi,  Arelo,  Aimhi,  Aimlo,
                    Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,

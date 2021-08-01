@@ -76,7 +76,7 @@ void test_real_blocked_qr ( void )
 
    cout << "-> Testing the QR factorization ..." << endl;
 
-   const double tol = 1.0e-12;
+   const double tol = 1.0e-8;
    int fail = test_real_qr_factors(nrows,ncols,A,Q_h,R_h,tol,verbose);
    if(fail == 0)
       cout << "The test succeeded." << endl;
@@ -211,7 +211,7 @@ void test_cmplx_blocked_qr ( void )
 
    cout << "-> Testing the QR factorization ..." << endl;
 
-   const double tol = 1.0e-12;
+   const double tol = 1.0e-8;
    int fail = test_cmplx_qr_factors
       (nrows,ncols,Are,Aim,Qre_h,Qim_h,Rre_h,Rim_h,tol,verbose);
    if(fail == 0)
