@@ -1,6 +1,8 @@
 Sun 1 Aug 2021 : removed ad hoc output statements in dbl2_factorizations.cpp,
   and from dbl2_baqr_kernels, fixed cmplx2_VB_to_W kernel, added printing
-  of timers in dbl2_baqr_testers.cpp.
+  of timers in dbl2_baqr_testers.cpp.  In dbl_baqr_kernels.cu, added the
+  padding also in the allocation of Q and QWYH, to obtain the correct Q
+  for a 129-by-128 matrix in one tile of size 128.
 
 Sat 31 Jul 2021 : defined all complex kernels in dbl2_baqr_kernels
   and extended dbl2_baqr_testers.cpp.  Added output statements to

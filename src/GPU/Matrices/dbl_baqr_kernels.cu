@@ -1534,9 +1534,9 @@ void GPU_dbl_blocked_houseqr
 
    const size_t szWYT = nrows2*sizeof(double);
    cudaMalloc((void**)&WYT_d,szWYT + szpad); // padding for W*Y^T product
-   cudaMalloc((void**)&Q_d,szWYT);
+   cudaMalloc((void**)&Q_d,szWYT + szpad);
    cudaMemcpy(Q_d,Q_h,szWYT,cudaMemcpyHostToDevice);
-   cudaMalloc((void**)&QWYT_d,szWYT);
+   cudaMalloc((void**)&QWYT_d,szWYT + szpad);
 
    const size_t szYWT = nrows2*sizeof(double);
    cudaMalloc((void**)&YWT_d,szYWT + szpad); // padding for Y*W^T product
@@ -1727,12 +1727,12 @@ void GPU_cmplx_blocked_houseqr
    const size_t szWYT = nrows2*sizeof(double);
    cudaMalloc((void**)&WYTre_d,szWYT + szpad); // padding for W*Y^T 
    cudaMalloc((void**)&WYTim_d,szWYT + szpad);
-   cudaMalloc((void**)&Qre_d,szWYT);
-   cudaMalloc((void**)&Qim_d,szWYT);
+   cudaMalloc((void**)&Qre_d,szWYT + szpad); // needed for 129-by-128
+   cudaMalloc((void**)&Qim_d,szWYT + szpad); // and one tile of size 128
    cudaMemcpy(Qre_d,Qre_h,szWYT,cudaMemcpyHostToDevice);
    cudaMemcpy(Qim_d,Qim_h,szWYT,cudaMemcpyHostToDevice);
-   cudaMalloc((void**)&QWYTre_d,szWYT);
-   cudaMalloc((void**)&QWYTim_d,szWYT);
+   cudaMalloc((void**)&QWYTre_d,szWYT + szpad); // padding also here needed
+   cudaMalloc((void**)&QWYTim_d,szWYT + szpad); // for correct Q computation
 
    const size_t szYWT = nrows2*sizeof(double);
    cudaMalloc((void**)&YWTre_d,szYWT + szpad); // padding for Y*W^T
