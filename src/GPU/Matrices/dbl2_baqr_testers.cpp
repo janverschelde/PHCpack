@@ -297,6 +297,26 @@ void test_cmplx2_blocked_qr ( void )
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
+   cout << "         Time spent by the Householder kernel : ";
+   cout << houselapsedms << " milliseconds." << endl;
+   cout << "  Time spent by the kernel to reduce one tile : ";
+   cout << tileRlapsedms << " milliseconds." << endl;
+   cout << "    Time spent by the kernel for the W matrix : ";
+   cout << vb2Wlapsedms << " milliseconds." << endl;
+   cout << " Time spent by the kernel for computing W*Y^T : ";
+   cout << WYTlapsedms << " milliseconds." << endl;
+   cout << " Time spent by the kernel for computing Y*W^T : ";
+   cout << YWTlapsedms << " milliseconds." << endl;
+   cout << " Time spent by the kernel for computing Q*WYT : ";
+   cout << QWYTlapsedms << " milliseconds." << endl;
+   cout << " Time spent by the kernel for computing YWT*C : ";
+   cout << YWTClapsedms << " milliseconds." << endl;
+   cout << "Time spent by the kernel for adding QWYT to Q : ";
+   cout << Qaddlapsedms << " milliseconds." << endl;
+   cout << "Time spent by the kernel for adding R to YWTC : ";
+   cout << Raddlapsedms << " milliseconds." << endl;
+   cout << "        Total GPU wall clock computation time : ";
+   cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
 
    for(int i=0; i<nrows; i++)
    {

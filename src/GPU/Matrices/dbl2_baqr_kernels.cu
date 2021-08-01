@@ -101,7 +101,7 @@ __global__ void cmplx2_small_house
    double *x1rehi, double *x1relo, double *x1imhi, double *x1imlo,
    int dim, int dimLog2,
    double *vrehi, double *vrelo, double *vimhi, double *vimlo,
-   double *betahi, double *betalo, double *mu_hi, double *mu_lo )
+   double *betahi, double *betalo )
 {
    const int j = threadIdx.x;
 
@@ -186,8 +186,6 @@ __global__ void cmplx2_small_house
          ddg_div(muhi,mulo,x0radhi,x0radlo,&acchi,&acclo);
          muhi = acchi;
          mulo = acclo;
-         // *mu_hi = muhi;
-         // *mu_lo = mulo;
          // v0re = (*x0re) - mu*(*x0re);
          ddg_mul(muhi,mulo,x0rehi[0],x0relo[0],&acchi,&acclo);
          ddg_sub(x0rehi[0],x0relo[0],acchi,acclo,&v0rehi,&v0relo);
@@ -195,14 +193,10 @@ __global__ void cmplx2_small_house
          ddg_mul(muhi,mulo,x0imhi[0],x0imlo[0],&acchi,&acclo);
          ddg_sub(x0imhi[0],x0imlo[0],acchi,acclo,&v0imhi,&v0imlo);
       }
-      *mu_hi = v0imhi;
-      *mu_lo = v0imlo;
       // sqrv0 = v0re*v0re + v0im*v0im;
       ddg_sqr(v0rehi,v0relo,&sqrv0hi,&sqrv0lo);
       ddg_sqr(v0imhi,v0imlo,&acchi,&acclo);
       ddg_inc(&sqrv0hi,&sqrv0lo,acchi,acclo);
-      // *mu_hi = sqrv0hi;
-      // *mu_lo = sqrv0lo;
       // *beta = 2.0*sqrv0/(prd[0] + sqrv0);
       ddg_add(prdhi[0],prdlo[0],sqrv0hi,sqrv0lo,&acchi,&acclo);
       ddg_div(sqrv0hi,sqrv0lo,acchi,acclo,betahi,betalo);
@@ -568,18 +562,18 @@ __global__ void cmplx2_VB_to_W
          shwimlo[tdx] = Wimlo[VWidx];
          // zi = zi + shw[tdx]*shp[k];
          // zi_re = zi_re + shwre[tdx]*shpre[k] - shwim[tdx]*shpim[k];
-         ddg_mul(shwrehi[tdx],shwrelo[tdx],
-                 shprehi[tdx],shprelo[tdx],&wrk_rehi,&wrk_relo);
+         ddg_mul(shwrehi[tdx],shwrelo[tdx],shprehi[k],shprelo[k],
+                 &wrk_rehi,&wrk_relo);
          ddg_inc(&zi_rehi,&zi_relo,wrk_rehi,wrk_relo);
-         ddg_mul(shwimhi[tdx],shwimlo[tdx],
-                 shpimhi[tdx],shpimlo[tdx],&wrk_rehi,&wrk_relo);
+         ddg_mul(shwimhi[tdx],shwimlo[tdx],shpimhi[k],shpimlo[k],
+                 &wrk_rehi,&wrk_relo);
          ddg_dec(&zi_rehi,&zi_relo,wrk_rehi,wrk_relo);
          // zi_im = zi_im + shwim[tdx]*shpre[k] + shwre[tdx]*shpim[k];
-         ddg_mul(shwimhi[tdx],shwimlo[tdx],
-                 shprehi[tdx],shprelo[tdx],&wrk_rehi,&wrk_relo);
+         ddg_mul(shwimhi[tdx],shwimlo[tdx],shprehi[k],shprelo[k],
+                 &wrk_rehi,&wrk_relo);
          ddg_inc(&zi_imhi,&zi_imlo,wrk_rehi,wrk_relo);
-         ddg_mul(shwrehi[tdx],shwrelo[tdx],
-                 shpimhi[tdx],shpimlo[tdx],&wrk_rehi,&wrk_relo);
+         ddg_mul(shwrehi[tdx],shwrelo[tdx],shpimhi[k],shpimlo[k],
+                 &wrk_rehi,&wrk_relo);
          ddg_inc(&zi_imhi,&zi_imlo,wrk_rehi,wrk_relo);
       }
       // zi_re = zi_re + shvre[tdx];
@@ -1075,12 +1069,6 @@ void GPU_cmplx2_small_house
    const int rowidx = colidx*(nrows+1);       // start of number in A_h
    const int nVrows = nrows - k*szt;          // dimension of V matrix
 
-   double *mu_hi_d;
-   double *mu_lo_d;
-
-   cudaMalloc((void**)&mu_hi_d,sizeof(double));
-   cudaMalloc((void**)&mu_lo_d,sizeof(double));
-
    if(verbose)
    {
       cout << "nrows : " << nrows
@@ -1162,7 +1150,7 @@ void GPU_cmplx2_small_house
           &Aimhi_d[rowidx+1],&Aimlo_d[rowidx+1],nrows1,nrLog2,
           &Vrehi_d[L*nVrows+L],&Vrelo_d[L*nVrows+L],
           &Vimhi_d[L*nVrows+L],&Vimlo_d[L*nVrows+L],
-          &betahi_d[L],&betalo_d[L],mu_hi_d,mu_lo_d);
+          &betahi_d[L],&betalo_d[L]);
       cudaEventRecord(stop);
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
@@ -1171,14 +1159,6 @@ void GPU_cmplx2_small_house
    if(verbose)
    {
       const size_t szhouse = nVrows*sizeof(double);
-
-      double mu_hi_h,mu_lo_h;
-      cudaMemcpy(&mu_hi_h,mu_hi_d,sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&mu_lo_h,mu_lo_d,sizeof(double),
-                 cudaMemcpyDeviceToHost);
-
-      cout << "mu : " << mu_hi_h << "  " << mu_lo_h << endl;
 
       cudaMemcpy(&betahi_h[L],&betahi_d[L],sizeof(double),
                  cudaMemcpyDeviceToHost);
