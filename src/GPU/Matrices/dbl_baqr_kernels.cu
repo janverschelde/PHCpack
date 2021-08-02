@@ -217,9 +217,11 @@ __global__ void cmplx_small_leftRupdate
       Rtdx_im = Rtdx_im - (shvim[i]*w_re - shvre[i]*w_im);
       __syncthreads();
       // changed nrows-k into ncols-k, where ncols = endcol
-      if(tdx < ncols-k) Rre[Rcolidx] = Rtdx_re;
-      __syncthreads();
-      if(tdx < ncols-k) Rim[Rcolidx] = Rtdx_im;
+      if(tdx < ncols-k)
+      {
+         Rre[Rcolidx] = Rtdx_re;
+         Rim[Rcolidx] = Rtdx_im;
+      }
    }
 }
 
@@ -827,7 +829,8 @@ void GPU_dbl_small_leftRupdate
    cudaEventRecord(start);           // 2nd argument: ncols -> endcol
    // changed second argument ncols into endcol
    // to avoid updating the next tile
-   dbl_small_leftRupdate<<<1,nrows-colidx>>>
+   // dbl_small_leftRupdate<<<1,nrows-colidx>>>
+   dbl_small_leftRupdate<<<1,ncols-colidx>>>
       (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L]);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
@@ -862,7 +865,8 @@ void GPU_cmplx_small_leftRupdate
    const int nVrows = nrows - k*szt;          // dimension of V matrix
 
    cudaEventRecord(start);
-   cmplx_small_leftRupdate<<<1,nrows-colidx>>>
+   // cmplx_small_leftRupdate<<<1,nrows-colidx>>>
+   cmplx_small_leftRupdate<<<1,ncols-colidx>>>
       (nrows,endcol,szt,colidx,Are_d,Aim_d,
        &Vre_d[L*nVrows+L],&Vim_d[L*nVrows+L],&beta_d[L]);
    cudaEventRecord(stop);
@@ -1683,18 +1687,19 @@ void GPU_dbl_blocked_houseqr
          GPU_dbl_small_house
             (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
              A_h,A_d,v_h,V_d,beta_h,beta_d,houselapms,verbose);
-         if(nrows - colidx <= szt)
-         {
+         // if(nrows - colidx <= szt)
+         //{
             GPU_dbl_small_leftRupdate
                (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
                 tileRlapms,verbose);
-         }
-         else
+         //}
+         /*else
          {
             GPU_dbl_medium_leftRupdate
                (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
                 bRTv_h,bRTv_d,tileRlapms,verbose);
          }
+          */
       }
       // changed nrows into nrows - k*szt and ncols into szt
       GPU_dbl_VB_to_W
