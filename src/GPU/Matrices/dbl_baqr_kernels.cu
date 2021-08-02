@@ -249,6 +249,42 @@ __global__ void dbl_small_betaRTv
    w[tdx] = result;
 }
 
+__global__ void cmplx_small_betaRTv
+ ( int nrows, int ncols, int szt, int k,
+   double *Rre, double *Rim, double *vre, double *vim, double *beta,
+   double *wre, double *wim )
+{
+   const int tdx = threadIdx.x;          // index of thread in block
+   const int Roffset = k*nrows + k;
+   int Rcolidx;
+   double resultre = 0.0;
+   double resultim = 0.0;
+   const double mybeta = *beta;
+   double Rtdx_re;
+   double Rtdx_im;
+
+   __shared__ double shvre[d_shmemsize]; // slice of v
+   __shared__ double shvim[d_shmemsize]; 
+
+   shvre[tdx] = vre[tdx];
+   shvim[tdx] = vim[tdx];
+   __syncthreads();
+
+   for(int i=0; i<nrows-k; i++)   // loop through rows of R
+   {
+      Rcolidx = Roffset + i + tdx*nrows;
+      Rtdx_re = Rre[Rcolidx];
+      Rtdx_im = Rim[Rcolidx];
+      // do not forget about the Hermitian transpose of R
+      resultre = resultre + (  Rtdx_re*shvre[i] + Rtdx_im*shvim[i]);
+      resultim = resultim + (- Rtdx_im*shvre[i] + Rtdx_re*shvim[i]);
+   }
+   resultre = mybeta*resultre;
+   resultim = mybeta*resultim;
+   wre[tdx] = resultre;
+   wim[tdx] = resultim;
+}
+
 __global__ void dbl_medium_betaRTv
  ( int nrows, int ncols, int szt, int k,
    double *R, double *v, double *beta, double *w )
@@ -309,6 +345,48 @@ __global__ void dbl_medium_subvbetaRTv
    Rwidx = Rwidx - vValue*wValue;      // update R[rowidx,colidx]
 
    if(widx < bound) R[Ridx] = Rwidx;   // if() takes care of padding
+}
+
+__global__ void cmplx_medium_subvbetaRTv
+ ( int nrows, int ncols, int szt, int k,
+   double *Rre, double *Rim, double *vre, double *vim, double *beta,
+   double *wre, double *wim )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int Roffset = k*nrows + k;    // start in R
+   const int widx = bdx*szt + tdx;     // global thread index 
+
+   const int coldim = ncols - k;       // number of columns in R
+   const int bound = coldim*(nrows-k); // bound on Ridx
+   const int rowidx = widx / coldim;   // row index
+   const int colidx = widx % coldim;   // column index
+
+   const int Ridx = Roffset + nrows*colidx + rowidx;
+
+   __shared__ double shwre[d_shmemsize];  // values in beta*R^T*v
+   __shared__ double shwim[d_shmemsize];  // are less in number than szt
+   shwre[tdx] = wre[tdx];
+   shwim[tdx] = wim[tdx];
+   __syncthreads();
+
+   double Rwidxre = Rre[Ridx];         // number that tdx updates
+   double Rwidxim = Rim[Ridx];
+   double vValre = vre[rowidx];        // value in Householder vector
+   double vValim = vim[rowidx];
+   double wValre = shwre[colidx];      // value in beta*R^T*v
+   double wValim = shwim[colidx];
+ 
+   // Rwidx = Rwidx - vValue*wValue;   // update R[rowidx,colidx]
+   // take the Hermitian transpose of w
+   Rwidxre = Rwidxre - (vValre*wValre + vValim*wValim);
+   Rwidxim = Rwidxim - (vValim*wValre - vValre*wValim);
+
+   if(widx < bound)                    // if() takes care of padding
+   {
+      Rre[Ridx] = Rwidxre;
+      Rim[Ridx] = Rwidxim;
+   }
 }
 
 __global__ void dbl_VB_to_W
@@ -928,10 +1006,8 @@ void GPU_dbl_medium_leftRupdate
    // dbl_medium_betaRTv<<<nbrblocks,szt>>>
    //   (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
    // number of threads must be ncols - colidx, not endcol - colidx
-   // cout << "calling dbl_small_betaRTv ..." << endl;
    dbl_small_betaRTv<<<1,nrows-colidx>>> // nrows ...
      (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
-   // cout << "calling dbl_medium_subvbetaRTv ..." << endl;
 
    if(verbose)
    {
@@ -942,8 +1018,6 @@ void GPU_dbl_medium_leftRupdate
    }
    dbl_medium_subvbetaRTv<<<nbrblocks,szt>>>
       (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
-   // cout << "... returning from the call to dbl_medium_subvbetaRTv" << endl;
-   // -> crash for 32-by-32
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
@@ -966,6 +1040,73 @@ void GPU_dbl_medium_leftRupdate
          for(int j=0; j<ncols; j++)
             cout << "A_d[" << i << "][" << j << "] : "
                  << A_h[j*nrows+i] << endl;
+   }
+}
+
+void GPU_cmplx_medium_leftRupdate
+ ( int nrows, int ncols, int szt, int colidx, int k, int L,
+   double *Are_h, double *Aim_h, double *Are_d, double *Aim_d,
+   double *Vre_d, double *Vim_d, double *beta_h, double *beta_d,
+   double *wre_h, double *wim_h, double *wre_d, double *wim_d,
+   double *lapms, bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int endcol = (k+1)*szt;     // 1 + last column index in tile
+   const int nVrows = nrows - k*szt;          // dimension of V matrix
+   // total number of entries in R that will be modified
+   const int sizenum = (nrows - colidx)*(endcol - colidx);
+   const int nbrblocks = (int) ceil(sizenum/((double) szt));
+
+   cudaEventRecord(start);           // 2nd argument: ncols -> endcol
+   // changed second argument ncols into endcol
+   // to avoid updating the next tile
+   // dbl_medium_betaRTv<<<nbrblocks,szt>>>
+   //   (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
+   // number of threads must be ncols - colidx, not endcol - colidx
+   cmplx_small_betaRTv<<<1,nrows-colidx>>> // nrows ...
+     (nrows,endcol,szt,colidx,Are_d,Aim_d,
+      &Vre_d[L*nVrows+L],&Vim_d[L*nVrows+L],&beta_d[L],wre_d,wim_d);
+
+   if(verbose)
+   {
+      cout << "-> launching " << nbrblocks << " blocks of " << szt
+           << " threads to update " << sizenum << " numbers ..." << endl;
+      cout << "   nrows : " << nrows << "  endcol : " << endcol
+           << "  szt : " << szt << "  colidx : " << colidx << endl;
+   }
+   cmplx_medium_subvbetaRTv<<<nbrblocks,szt>>>
+      (nrows,endcol,szt,colidx,Are_d,Aim_d,
+       &Vre_d[L*nVrows+L],&Vim_d[L*nVrows+L],&beta_d[L],wre_d,wim_d);
+
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+
+   if(verbose)
+   {
+      const int dim = nrows*ncols;
+      const size_t sznum = dim*sizeof(double);
+      const size_t szbRTv = (endcol-colidx)*sizeof(double);
+
+      cudaMemcpy(wre_h,wre_d,szbRTv,cudaMemcpyDeviceToHost);
+      cudaMemcpy(wim_h,wim_d,szbRTv,cudaMemcpyDeviceToHost);
+      cout << "the vector w = beta*R^T*v : " << endl;
+      for(int i=0; i<endcol-colidx; i++)
+         cout << "w[" << i << "] : "
+              << wre_h[i] << "  " << wim_h[i] << endl;
+
+      cudaMemcpy(Are_h,Are_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Aim_h,Aim_d,sznum,cudaMemcpyDeviceToHost);
+      cout << "the matrix after the update :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "A_d[" << i << "][" << j << "] : "
+                 << Are_h[j*nrows+i] << "  "
+                 << Aim_h[j*nrows+i] << endl;
    }
 }
 
@@ -1818,6 +1959,10 @@ void GPU_cmplx_blocked_houseqr
    double *YWTCim_h = new double[dim];    // imaginary parts of YWT*C
    double *YWTCre_d;                      // YWTCre on the device
    double *YWTCim_d;                      // YWTCim on the device
+   double *bRTvre_h = new double[nrows];  // real parts of beta*R^T*v
+   double *bRTvim_h = new double[nrows];  // imaginary parts of beta*R^T*v
+   double *bRTvre_d;                      // bRTvre_h on the device
+   double *bRTvim_d;                      // bRTvim_d on the device
 
    int ix = 0;                            // copy the columns of A to A_h
    for(int j=0; j<ncols; j++)   
@@ -1889,6 +2034,9 @@ void GPU_cmplx_blocked_houseqr
    cudaMalloc((void**)&Wre_d,szVandW + szpad); // padding added
    cudaMalloc((void**)&Wim_d,szVandW + szpad); // padding added
 
+   cudaMalloc((void**)&bRTvre_d,szhouse + szpad);
+   cudaMalloc((void**)&bRTvim_d,szhouse + szpad);
+
    const size_t szWYT = nrows2*sizeof(double);
    cudaMalloc((void**)&WYTre_d,szWYT + szpad); // padding for W*Y^T 
    cudaMalloc((void**)&WYTim_d,szWYT + szpad);
@@ -1929,9 +2077,19 @@ void GPU_cmplx_blocked_houseqr
             (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
              Are_h,Aim_h,Are_d,Aim_d,vre_h,vim_h,Vre_d,Vim_d,
              beta_h,beta_d,houselapms,verbose);
-         GPU_cmplx_small_leftRupdate
-            (nrows,ncols,szt,colidx,k,L,Are_h,Aim_h,Are_d,Aim_d,
-             Vre_d,Vim_d,beta_h,beta_d,tileRlapms,verbose);
+         if(nrows - colidx <= szt)
+         {
+            GPU_cmplx_small_leftRupdate
+               (nrows,ncols,szt,colidx,k,L,Are_h,Aim_h,Are_d,Aim_d,
+                Vre_d,Vim_d,beta_h,beta_d,tileRlapms,verbose);
+         }
+         else
+         {
+            GPU_cmplx_medium_leftRupdate
+               (nrows,ncols,szt,colidx,k,L,Are_h,Aim_h,Are_d,Aim_d,
+                Vre_d,Vim_d,beta_h,beta_d,
+                bRTvre_h,bRTvim_h,bRTvre_d,bRTvim_d,tileRlapms,verbose);
+         }
       }
       GPU_cmplx_VB_to_W
          (nrows-k*szt,szt,szt,Vre_h,Vim_h,Vre_d,Vim_d,Wre_h,Wim_h,
@@ -1984,7 +2142,7 @@ void GPU_cmplx_blocked_houseqr
 
    free(Are_h); free(Aim_h); free(Qre_h); free(Qim_h);
    free(vre_h); free(vim_h); free(Vre_h); free(Vim_h);
-   free(Wre_h); free(Wim_h);
+   free(Wre_h); free(Wim_h); free(bRTvre_h); free(bRTvim_h);
    free(WYTre_h); free(QWYTre_h); free(YWTre_h); free(YWTCre_h);
    free(WYTim_h); free(QWYTim_h); free(YWTim_h); free(YWTCim_h);
 }

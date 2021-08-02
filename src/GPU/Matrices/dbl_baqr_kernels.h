@@ -83,11 +83,64 @@ __global__ void cmplx_small_leftRupdate
  *   k        index of the current column;
  *   Rre      real parts of an nrows-by-ncols matrix, stored column wise.
  *   Rim      imaginary parts of an nrows-by-ncols matrix,
- *            stored column wise.
+ *            stored column wise;
+ *   vre      real parts of the Householder vector;
+ *   vim      imaginary parts of the Householder vector;
+ *   beta     the beat corresponding with v.
  *
  * ON RETURN :
  *   Rre      real parts of the updated matrix, which is trapezoidal;
  *   Rim      imaginary parts of the updated matrix. */
+
+__global__ void dbl_small_betaRTv
+ ( int nrows, int ncols, int szt, int k,
+   double *R, double *v, double *beta, double *w );
+/*
+ * DESCRIPTION :
+ *   Computes the vector w = beta*R^T*v, on real data,
+ *   with one block of ncols - k threads.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   ncols    number of columns of R;
+ *   szt      size of each block;
+ *   k        index of the current column;
+ *   R        nrows-by-ncols matrix, stored column wise;
+ *   v        the Householder vector;
+ *   beta     the beta corresponding with v,
+ *   w        space for ncols numbers;
+ *
+ * ON RETURN :
+ *   w        the first ncols-k numbers define beta*R^T*v. */
+
+__global__ void cmplx_small_betaRTv
+ ( int nrows, int ncols, int szt, int k,
+   double *Rre, double *Rim, double *vre, double *vim, double *beta,
+   double *wre, double *wim );
+/*
+ * DESCRIPTION :
+ *   Computes the vector w = beta*R^T*v, on complex data,
+ *   with one block of ncols - k threads.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   ncols    number of columns of R;
+ *   szt      size of each block;
+ *   k        index of the current column;
+ *   Rre      real parts of an nrows-by-ncols matrix, stored column wise;
+ *   Rim      imaginary parts of an  nrows-by-ncols matrix,
+ *            stored column wise;
+ *   vre      real parts of the Householder vector;
+ *   vim      imaginary parts of the Householder vector;
+ *   beta     the beta corresponding with v,
+ *   wre      space for ncols numbers;
+ *   wim      space for ncols numbers;
+ *
+ * ON RETURN :
+ *   wre      the first ncols-k numbers define
+ *            the real parts of beta*R^T*v;
+ *   wim      the first ncols-k numbers define
+ *            the imaginary parts of beta*R^T*v. */
 
 __global__ void dbl_medium_betaRTv
  ( int nrows, int ncols, int szt, int k,
@@ -107,10 +160,10 @@ __global__ void dbl_medium_betaRTv
  *   v        the Householder vector;
  *   beta     the beta corresponding with v,
  *            of length nrows+szt, the extra szt for padding;
- *   w        space for nrows numbers, with additional szt spots for padding.
+ *   w        space for ncols numbers, with additional szt spots for padding.
  *
  * ON RETURN :
- *   w        the first nrows-k numbers define beta*R^T*v. */
+ *   w        the first ncols-k numbers define beta*R^T*v. */
 
 __global__ void dbl_medium_subvbetaRTv
  ( int nrows, int ncols, int szt, int k,
@@ -134,6 +187,35 @@ __global__ void dbl_medium_subvbetaRTv
  *
  * ON RETURN :
  *   R        the updated matrix is trapezoidal. */
+
+__global__ void cmplx_medium_subvbetaRTv
+ ( int nrows, int ncols, int szt, int k,
+   double *Rre, double *Rim, double *vre, double *vim, double *beta,
+   double *wre, double *wim );
+/*
+ * DESCRIPTION :
+ *   Applies the Householder vector to update R, on complex data.
+ *
+ * REQUIRED : nrows - k > szt as multiple blocks are used.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   ncols    number of columns of R;
+ *   szt      size of each block;
+ *   k        index of the current column;
+ *   Rre      real parts of the nrows-by-ncols matrix, stored column wise;
+ *   Rim      imaginary parts of the nrows-by-ncols matrix,
+ *            stored column wise;
+ *   vre      real parts of the Householder vector;
+ *   vim      imaginary parts of the Householder vector;
+ *   beta     the beta corresponding with v,
+ *            of length nrows+szt, the extra szt for padding;
+ *   wre      real parts of the vector beta*R^T*v;
+ *   wim      imaginary parts of the vector beta*R^T*v.
+ *
+ * ON RETURN :
+ *   Rre      real parts of the updated matrix, which is trapezoidal;
+ *   Rim      imaginary parts of the updated matrix. */
 
 __global__ void dbl_VB_to_W
  ( int nrows, int ncols, double *B, double *V, double *W );
@@ -544,7 +626,7 @@ void GPU_cmplx_small_leftRupdate
 void GPU_dbl_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
-   double *w_h, double *w_d, double *lapms, bool verbose );
+   double *w_h, double *w_d, double *lapms, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernels to update one tile.
@@ -574,6 +656,46 @@ void GPU_dbl_medium_leftRupdate
  *   beta_h   vector of betas, if verbose;
  *   beta_d   the next beta constant;
  *   w_h      stores the beta*R^T*v, if verbose;
+ *   lapms    elapsed time spent by the kernel. */
+
+void GPU_cmplx_medium_leftRupdate
+ ( int nrows, int ncols, int szt, int colidx, int k, int L,
+   double *Are_h, double *Aim_h, double *Are_d, double *Aim_d,
+   double *Vre_d, double *Vim_d, double *beta_h, double *beta_d,
+   double *wre_h, double *wim_h, double *wre_d, double *wim_d,
+   double *lapms, bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Calls the kernels to update one tile.
+ *   Wraps the timer and the print statements if verbose.
+ *   If verbose, then the reduced matrix is returned on the host.
+ *
+ * REQUIRED : nrows - colidx > szt.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrix A;
+ *   ncols    number of columns in the matrix A;
+ *   szt      size of one tile;
+ *   colidx   global index of the current column;
+ *   k        index of the current tile;
+ *   L        local index of the column in the current tile;
+ *   Are_h    real parts of the matrix on the host;
+ *   Aim_h    imaginary parts of the matrix on the host;
+ *   Are_d    real parts of the matrix on the device;
+ *   Aim_d    imaginary parts of the matrix on the device;
+ *   Vre_d    space for the real parts of the Householder vectors
+ *            on the device;
+ *   Vim_d    space for the imaginary parts of the Householder vectors
+ *            on the device;
+ *   beta_h   space allocated for the betas if verbose;
+ *   beta_d   space allocated on the device for the betas;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   Vre_d    real parts of the Householder vectors on the device;
+ *   Vim_d    imaginary parts of the Householder vectors on the device;
+ *   beta_h   vector of betas, if verbose;
+ *   beta_d   the next beta constant;
  *   lapms    elapsed time spent by the kernel. */
 
 void GPU_dbl_VB_to_W
