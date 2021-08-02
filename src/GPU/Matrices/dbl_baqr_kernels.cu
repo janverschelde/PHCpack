@@ -225,6 +225,30 @@ __global__ void cmplx_small_leftRupdate
    }
 }
 
+__global__ void dbl_small_betaRTv
+ ( int nrows, int ncols, int szt, int k,
+   double *R, double *v, double *beta, double *w )
+{
+   const int tdx = threadIdx.x;          // index of thread in block
+   const int Roffset = k*nrows + k;
+   double result = 0.0;
+   const double mybeta = *beta;
+   double Rtdx;
+
+   __shared__ double shv[d_shmemsize]; // slice of v
+
+   shv[tdx] = v[tdx];
+   __syncthreads();
+
+   for(int i=0; i<nrows-k; i++)   // loop through rows of R
+   {
+      Rtdx = R[Roffset + i + tdx*nrows];
+      result = result + Rtdx*shv[i];
+   }
+   result = mybeta*result;
+   w[tdx] = result;
+}
+
 __global__ void dbl_medium_betaRTv
  ( int nrows, int ncols, int szt, int k,
    double *R, double *v, double *beta, double *w )
@@ -906,10 +930,17 @@ void GPU_dbl_medium_leftRupdate
    cudaEventRecord(start);           // 2nd argument: ncols -> endcol
    // changed second argument ncols into endcol
    // to avoid updating the next tile
-   dbl_medium_betaRTv<<<nbrblocks,szt>>>
-      (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
+   // dbl_medium_betaRTv<<<nbrblocks,szt>>>
+   //   (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
+   // number of threads must be ncols - colidx, not endcol - colidx
+   // cout << "calling dbl_small_betaRTv ..." << endl;
+   dbl_small_betaRTv<<<1,nrows-colidx>>> // nrows ...
+     (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
+   // cout << "calling dbl_medium_subvbetaRTv ..." << endl;
    dbl_medium_subvbetaRTv<<<nbrblocks,szt>>>
       (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
+   // cout << "... returning from the call to dbl_medium_subvbetaRTv" << endl;
+   // -> crash for 32-by-32
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
@@ -919,11 +950,11 @@ void GPU_dbl_medium_leftRupdate
    {
       const int dim = nrows*ncols;
       const size_t sznum = dim*sizeof(double);
-      const size_t szbRTv = (nrows-colidx)*sizeof(double);
+      const size_t szbRTv = (endcol-colidx)*sizeof(double);
 
       cudaMemcpy(w_h,w_d,szbRTv,cudaMemcpyDeviceToHost);
       cout << "the vector w = beta*R^T*v : " << endl;
-      for(int i=0; i<nrows-colidx; i++)
+      for(int i=0; i<endcol-colidx; i++)
          cout << "w[" << i << "] : " << w_h[i] << endl;
 
       cudaMemcpy(A_h,A_d,sznum,cudaMemcpyDeviceToHost);
@@ -1687,19 +1718,18 @@ void GPU_dbl_blocked_houseqr
          GPU_dbl_small_house
             (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
              A_h,A_d,v_h,V_d,beta_h,beta_d,houselapms,verbose);
-         // if(nrows - colidx <= szt)
-         //{
+         if(nrows - colidx <= szt)
+         {
             GPU_dbl_small_leftRupdate
                (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
                 tileRlapms,verbose);
-         //}
-         /*else
+         }
+         else
          {
             GPU_dbl_medium_leftRupdate
                (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
                 bRTv_h,bRTv_d,tileRlapms,verbose);
          }
-          */
       }
       // changed nrows into nrows - k*szt and ncols into szt
       GPU_dbl_VB_to_W
