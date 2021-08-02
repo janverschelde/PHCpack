@@ -1,6 +1,8 @@
 Mon 2 Aug 2021 : in dbl_baqr_kernels.cu, reduced the number of threads in
   the small update of R kernel.  Used the small kernel for w = beta*R^T*v
   in dbl_baqr_kernels.cu, to then use w in the medium leftRupdate kernel.
+  Rewrote the leftRupdate kernel with multiple blocks of threads in
+  dbl_baqr_kernels.cu.
 
 Sun 1 Aug 2021 : removed ad hoc output statements in dbl2_factorizations.cpp,
   and from dbl2_baqr_kernels, fixed cmplx2_VB_to_W kernel, added printing

@@ -287,35 +287,28 @@ __global__ void dbl_medium_subvbetaRTv
    double *R, double *v, double *beta, double *w )
 {
    const int bdx = blockIdx.x;
-   const int tdx = threadIdx.x;        // index of thread in block
-   const int Roffset = k*nrows + k;
-   const int widx = bdx*szt + tdx;     // thread tdx uses w[widx]
-   const double wValue = w[widx];
-   const int endrow = nrows - k;
-   const int nbr = endrow/szt;
-   int vidx = 0;
-   int Rcolidx;
-   double Rtdx;
+   const int tdx = threadIdx.x;
+   const int Roffset = k*nrows + k;    // start in R
+   const int widx = bdx*szt + tdx;     // global thread index 
 
-   __shared__ double shv[d_shmemsize]; // slice of v
+   const int coldim = ncols - k;       // number of columns in R
+   const int bound = coldim*(nrows-k); // bound on Ridx
+   const int rowidx = widx / coldim;   // row index
+   const int colidx = widx % coldim;   // column index
 
-   shv[tdx] = v[tdx];
-   for(int i=0; i<nbr; i++) 
-   {
-      vidx = vidx + szt;
-      shv[vidx] = v[vidx];
-   }
+   const int Ridx = Roffset + nrows*colidx + rowidx;
+
+   __shared__ double shw[d_shmemsize];  // values in beta*R^T*v
+   shw[tdx] = w[tdx];                   // are less in number than szt
    __syncthreads();
-   for(int i=0; i<endrow; i++)   // update i-th row of R
-   {
-      Rcolidx = Roffset + i + widx*nrows; // use global index
-      Rtdx = R[Rcolidx];
-      Rtdx = Rtdx - shv[i]*wValue;
-      __syncthreads();
-      // changed nrows-k into ncols-k, where ncols = endcol
-      if(widx < ncols-k) R[Rcolidx] = Rtdx;
-      // instead of tdx, the global widx must be used
-   }
+
+   double Rwidx = R[Ridx];             // number that tdx updates
+   double vValue = v[rowidx];          // value in Householder vector
+   double wValue = shw[colidx];        // value in beta*R^T*v
+ 
+   Rwidx = Rwidx - vValue*wValue;      // update R[rowidx,colidx]
+
+   if(widx < bound) R[Ridx] = Rwidx;   // if() takes care of padding
 }
 
 __global__ void dbl_VB_to_W
@@ -925,7 +918,9 @@ void GPU_dbl_medium_leftRupdate
    float milliseconds;
    const int endcol = (k+1)*szt;     // 1 + last column index in tile
    const int nVrows = nrows - k*szt;          // dimension of V matrix
-   const int nbrblocks = (int) ceil((nrows-colidx)/((double) szt));
+   // total number of entries in R that will be modified
+   const int sizenum = (nrows - colidx)*(endcol - colidx);
+   const int nbrblocks = (int) ceil(sizenum/((double) szt));
 
    cudaEventRecord(start);           // 2nd argument: ncols -> endcol
    // changed second argument ncols into endcol
@@ -937,6 +932,14 @@ void GPU_dbl_medium_leftRupdate
    dbl_small_betaRTv<<<1,nrows-colidx>>> // nrows ...
      (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
    // cout << "calling dbl_medium_subvbetaRTv ..." << endl;
+
+   if(verbose)
+   {
+      cout << "-> launching " << nbrblocks << " blocks of " << szt
+           << " threads to update " << sizenum << " numbers ..." << endl;
+      cout << "   nrows : " << nrows << "  endcol : " << endcol
+           << "  szt : " << szt << "  colidx : " << colidx << endl;
+   }
    dbl_medium_subvbetaRTv<<<nbrblocks,szt>>>
       (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
    // cout << "... returning from the call to dbl_medium_subvbetaRTv" << endl;
