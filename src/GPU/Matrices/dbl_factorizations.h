@@ -240,7 +240,8 @@ void CPU_cmplx_factors_house
  *   beta     equals 2/(transpose(v)*v). */
 
 void CPU_dbl_factors_leftRupdate
- ( int nrows, int ncols, int k, double **R, double *v, double beta );
+ ( int nrows, int ncols, int k, double **R, double *v, double beta,
+   bool verbose=false );
 /*
  * DESCRIPTION :
  *   Applies the Householder matrix to R.
@@ -251,7 +252,8 @@ void CPU_dbl_factors_leftRupdate
  *   k        current column index in R;
  *   R        an nrows-by-ncols matrix;
  *   v        the Householder vector;
- *   beta     the beta computed by CPU_dbl_house.
+ *   beta     the beta computed by CPU_dbl_house;
+ *   verbose  is the verbose flag.
  *
  * ON RETURN :
  *   R        update with the Householder matrix. */

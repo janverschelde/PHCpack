@@ -171,7 +171,7 @@ __global__ void dbl_small_leftRupdate
       Rtdx = R[Rcolidx];
       Rtdx = Rtdx - shv[i]*w;
       __syncthreads();
-      // changed nrows-k into ncols-k, where ncols = szt
+      // changed nrows-k into ncols-k, where ncols = endcol
       if(tdx < ncols-k) R[Rcolidx] = Rtdx;
    }
 }
@@ -216,10 +216,79 @@ __global__ void cmplx_small_leftRupdate
       Rtdx_re = Rtdx_re - (shvre[i]*w_re + shvim[i]*w_im);
       Rtdx_im = Rtdx_im - (shvim[i]*w_re - shvre[i]*w_im);
       __syncthreads();
-      // changed nrows-k into ncols-k, where ncols = szt
+      // changed nrows-k into ncols-k, where ncols = endcol
       if(tdx < ncols-k) Rre[Rcolidx] = Rtdx_re;
       __syncthreads();
       if(tdx < ncols-k) Rim[Rcolidx] = Rtdx_im;
+   }
+}
+
+__global__ void dbl_medium_betaRTv
+ ( int nrows, int ncols, int szt, int k,
+   double *R, double *v, double *beta, double *w )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;       // index of thread in block
+   const int Roffset = k*nrows + k;
+   const int widx = bdx*szt + tdx;    // thread tdx computes w[widx]
+   const int endrow = nrows - k;
+   const int nbr = endrow/szt;
+   int vidx = 0;
+   double result = 0.0;
+   double Rtdx;
+
+   __shared__ double shv[d_shmemsize]; // slice of v
+
+   shv[tdx] = v[tdx];
+   for(int i=0; i<nbr; i++) 
+   {
+      vidx = vidx + szt;
+      shv[vidx] = v[vidx];
+   }
+   __syncthreads();
+
+   for(int i=0; i<endrow; i++)   // loop through rows of R
+   {
+      Rtdx = R[Roffset + i + widx*nrows];  // instead of tdx, use widx
+      result = result + Rtdx*shv[i];
+   }
+   result = (*beta)*result;
+   w[widx] = result;
+}
+
+__global__ void dbl_medium_subvbetaRTv
+ ( int nrows, int ncols, int szt, int k,
+   double *R, double *v, double *beta, double *w )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;        // index of thread in block
+   const int Roffset = k*nrows + k;
+   const int widx = bdx*szt + tdx;     // thread tdx uses w[widx]
+   const double wValue = w[widx];
+   const int endrow = nrows - k;
+   const int nbr = endrow/szt;
+   int vidx = 0;
+   int Rcolidx;
+   double Rtdx;
+
+   __shared__ double shv[d_shmemsize]; // slice of v
+
+   shv[tdx] = v[tdx];
+   for(int i=0; i<nbr; i++) 
+   {
+      vidx = vidx + szt;
+      shv[vidx] = v[vidx];
+   }
+   __syncthreads();
+   for(int i=0; i<endrow; i++)   // update i-th row of R
+   {
+      Rcolidx = Roffset + i + widx*nrows; // use global index
+      Rtdx = R[Rcolidx];
+      Rtdx = Rtdx - shv[i]*wValue;
+      __syncthreads();
+      // changed nrows-k into ncols-k, where ncols = endcol
+      if(widx < ncols-k) R[Rcolidx] = Rtdx;
+      // instead of tdx, the global widx must be used
    }
 }
 
@@ -755,8 +824,8 @@ void GPU_dbl_small_leftRupdate
    const int endcol = (k+1)*szt;     // 1 + last column index in tile
    const int nVrows = nrows - k*szt;          // dimension of V matrix
 
-   cudaEventRecord(start);           // 2nd argument: ncols -> szt
-   // changed second argument ncols into szt
+   cudaEventRecord(start);           // 2nd argument: ncols -> endcol
+   // changed second argument ncols into endcol
    // to avoid updating the next tile
    dbl_small_leftRupdate<<<1,nrows-colidx>>>
       (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L]);
@@ -814,6 +883,51 @@ void GPU_cmplx_small_leftRupdate
             cout << "A_d[" << i << "][" << j << "] : "
                  << Are_h[j*nrows+i] << "  "
                  << Aim_h[j*nrows+i] << endl;
+   }
+}
+
+void GPU_dbl_medium_leftRupdate
+ ( int nrows, int ncols, int szt, int colidx, int k, int L,
+   double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
+   double *w_h, double *w_d, double *lapms, bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int endcol = (k+1)*szt;     // 1 + last column index in tile
+   const int nVrows = nrows - k*szt;          // dimension of V matrix
+   const int nbrblocks = (int) ceil((nrows-colidx)/((double) szt));
+
+   cudaEventRecord(start);           // 2nd argument: ncols -> endcol
+   // changed second argument ncols into endcol
+   // to avoid updating the next tile
+   dbl_medium_betaRTv<<<nbrblocks,szt>>>
+      (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
+   dbl_medium_subvbetaRTv<<<nbrblocks,szt>>>
+      (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+
+   if(verbose)
+   {
+      const int dim = nrows*ncols;
+      const size_t sznum = dim*sizeof(double);
+      const size_t szbRTv = (nrows-colidx)*sizeof(double);
+
+      cudaMemcpy(w_h,w_d,szbRTv,cudaMemcpyDeviceToHost);
+      cout << "the vector w = beta*R^T*v : " << endl;
+      for(int i=0; i<nrows-colidx; i++)
+         cout << "w[" << i << "] : " << w_h[i] << endl;
+
+      cudaMemcpy(A_h,A_d,sznum,cudaMemcpyDeviceToHost);
+      cout << "the matrix after the update :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "A_d[" << i << "][" << j << "] : "
+                 << A_h[j*nrows+i] << endl;
    }
 }
 
@@ -1497,6 +1611,8 @@ void GPU_dbl_blocked_houseqr
    double *QWYT_d;                      // Q*WY^T on the device
    double *YWTC_h = new double[dim];    // YWT*C on the host
    double *YWTC_d;                      // YWT*C on the device
+   double *bRTv_h = new double[nrows];  // beta*R^T*v
+   double *bRTv_d;                      // beta*R^T*v on the device
 
    int ix = 0;                          // copy the columns of A to A_h
    for(int j=0; j<ncols; j++)   
@@ -1532,6 +1648,8 @@ void GPU_dbl_blocked_houseqr
    cudaMemcpy(V_d,V_h,szVandW,cudaMemcpyHostToDevice);
    cudaMalloc((void**)&W_d,szVandW + szpad); // padding only in allocation
 
+   cudaMalloc((void**)&bRTv_d,szhouse + szpad);
+
    const size_t szWYT = nrows2*sizeof(double);
    cudaMalloc((void**)&WYT_d,szWYT + szpad); // padding for W*Y^T product
    cudaMalloc((void**)&Q_d,szWYT + szpad);
@@ -1565,9 +1683,18 @@ void GPU_dbl_blocked_houseqr
          GPU_dbl_small_house
             (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
              A_h,A_d,v_h,V_d,beta_h,beta_d,houselapms,verbose);
-         GPU_dbl_small_leftRupdate
-            (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
-             tileRlapms,verbose);
+         if(nrows - colidx <= szt)
+         {
+            GPU_dbl_small_leftRupdate
+               (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
+                tileRlapms,verbose);
+         }
+         else
+         {
+            GPU_dbl_medium_leftRupdate
+               (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
+                bRTv_h,bRTv_d,tileRlapms,verbose);
+         }
       }
       // changed nrows into nrows - k*szt and ncols into szt
       GPU_dbl_VB_to_W
@@ -1602,7 +1729,7 @@ void GPU_dbl_blocked_houseqr
       for(int j=0; j<ncols; j++)
          R[i][j] = A_h[j*nrows+i];
 
-   free(A_h); free(Q_h); free(v_h); free(V_h); free(W_h);
+   free(A_h); free(Q_h); free(v_h); free(bRTv_h); free(V_h); free(W_h);
    free(WYT_h); free(QWYT_h); free(YWT_h); free(YWTC_h);
 }
 

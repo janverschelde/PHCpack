@@ -5,7 +5,10 @@ Sun 1 Aug 2021 : removed ad hoc output statements in dbl2_factorizations.cpp,
   for a 129-by-128 matrix in one tile of size 128.
   Added the padding for Q and QWYT also in dbl2_baqr_kernels.cu.
   In dbl_baqr_testers.cpp and dbl2_baqr_testers.cpp, raised the
-  tolerances to declare success or failure.
+  tolerances to declare success or failure.  Added a verbose option
+  to the leftRupdate in dbl_factorizations, updated dbl_baqr_host.cpp.
+  To dbl_baqr_kernels, added two new kernels to attempt to reduce
+  with multiple blocks of threads.
 
 Sat 31 Jul 2021 : defined all complex kernels in dbl2_baqr_kernels
   and extended dbl2_baqr_testers.cpp.  Added output statements to

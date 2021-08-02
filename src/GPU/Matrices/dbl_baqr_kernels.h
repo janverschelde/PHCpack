@@ -60,7 +60,9 @@ __global__ void dbl_small_leftRupdate
  *   ncols    number of columns of R;
  *   szt      size of each block;
  *   k        index of the current column;
- *   R        an nrows-by-ncols matrix, stored column wise.
+ *   R        an nrows-by-ncols matrix, stored column wise;
+ *   v        the Householder vector;
+ *   beta     beta corresponding with v.
  *
  * ON RETURN :
  *   R        the updated matrix is trapezoidal. */
@@ -86,6 +88,52 @@ __global__ void cmplx_small_leftRupdate
  * ON RETURN :
  *   Rre      real parts of the updated matrix, which is trapezoidal;
  *   Rim      imaginary parts of the updated matrix. */
+
+__global__ void dbl_medium_betaRTv
+ ( int nrows, int ncols, int szt, int k,
+   double *R, double *v, double *beta, double *w );
+/*
+ * DESCRIPTION :
+ *   Computes the vector w = beta*R^T*v, on real data.
+ *
+ * REQUIRED : nrows - k > szt as multiple blocks are used.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   ncols    number of columns of R;
+ *   szt      size of each block;
+ *   k        index of the current column;
+ *   R        nrows-by-ncols matrix, stored column wise;
+ *   v        the Householder vector;
+ *   beta     the beta corresponding with v,
+ *            of length nrows+szt, the extra szt for padding;
+ *   w        space for nrows numbers, with additional szt spots for padding.
+ *
+ * ON RETURN :
+ *   w        the first nrows-k numbers define beta*R^T*v. */
+
+__global__ void dbl_medium_subvbetaRTv
+ ( int nrows, int ncols, int szt, int k,
+   double *R, double *v, double *beta, double *w );
+/*
+ * DESCRIPTION :
+ *   Applies the Householder vector to update R, on real data.
+ *
+ * REQUIRED : nrows - k > szt as multiple blocks are used.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   ncols    number of columns of R;
+ *   szt      size of each block;
+ *   k        index of the current column;
+ *   R        nrows-by-ncols matrix, stored column wise;
+ *   v        the Householder vector;
+ *   beta     the beta corresponding with v,
+ *            of length nrows+szt, the extra szt for padding;
+ *   w        the vector beta*R^T*v.
+ *
+ * ON RETURN :
+ *   R        the updated matrix is trapezoidal. */
 
 __global__ void dbl_VB_to_W
  ( int nrows, int ncols, double *B, double *V, double *W );
@@ -445,9 +493,9 @@ void GPU_dbl_small_leftRupdate
  *   L        local index of the column in the current tile;
  *   A_h      matrix on the host;
  *   A_d      matrix on the device;
- *   V_d      space allocated for the Householder vectors on the device;
- *   beta_h   space allocated for the betas if verbose;
- *   beta_d   space allocated on the device for the betas;
+ *   V_d      space for the Householder vectors on the device;
+ *   beta_h   space for the betas if verbose;
+ *   beta_d   space on the device for the betas;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -491,6 +539,41 @@ void GPU_cmplx_small_leftRupdate
  *   Vim_d    imaginary parts of the Householder vectors on the device;
  *   beta_h   vector of betas, if verbose;
  *   beta_d   the next beta constant;
+ *   lapms    elapsed time spent by the kernel. */
+
+void GPU_dbl_medium_leftRupdate
+ ( int nrows, int ncols, int szt, int colidx, int k, int L,
+   double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
+   double *w_h, double *w_d, double *lapms, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Calls the kernels to update one tile.
+ *   Wraps the timer and the print statements if verbose.
+ *   If verbose, then the reduced matrix is returned on the host.
+ *
+ * REQUIRED : nrows - colidx > szt.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrix A;
+ *   ncols    number of columns in the matrix A;
+ *   szt      size of one tile;
+ *   colidx   global index of the current column;
+ *   k        index of the current tile;
+ *   L        local index of the column in the current tile;
+ *   A_h      matrix on the host;
+ *   A_d      matrix on the device;
+ *   V_d      space for the Householder vectors on the device;
+ *   beta_h   space for the betas if verbose;
+ *   beta_d   space on the device for the betas;
+ *   w_h      space for the beta*R^T*v on the host, if verbose;
+ *   w_d      space for the beta*R^T*v plus szt padding;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   V_d      contains the Householder vectors on the device;
+ *   beta_h   vector of betas, if verbose;
+ *   beta_d   the next beta constant;
+ *   w_h      stores the beta*R^T*v, if verbose;
  *   lapms    elapsed time spent by the kernel. */
 
 void GPU_dbl_VB_to_W

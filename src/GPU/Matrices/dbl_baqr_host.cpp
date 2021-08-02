@@ -500,7 +500,7 @@ void CPU_dbl_blocked_houseqr
             for(int i=colidx; i<nrows; i++)
                cout << "v[" << i-colidx << "] : " << v[i-colidx] << endl;
          }
-         CPU_dbl_factors_leftRupdate(nrows,endcol,colidx,R,v,beta);
+         CPU_dbl_factors_leftRupdate(nrows,endcol,colidx,R,v,beta,verbose);
          if(verbose)
          {
             cout << "the matrix after the update :" << endl;

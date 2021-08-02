@@ -3,7 +3,10 @@
 
 #include <cstdlib>
 #include <cmath>
+#include <iostream>
 #include "dbl_factorizations.h"
+
+using namespace std;
 
 void CPU_dbl_factors_matmatmul
  ( int rows, int dim, int cols, double **A, double **B, double **C )
@@ -306,7 +309,8 @@ void CPU_cmplx_factors_house
 }
 
 void CPU_dbl_factors_leftRupdate
- ( int nrows, int ncols, int k, double **R, double *v, double beta )
+ ( int nrows, int ncols, int k, double **R, double *v, double beta,
+   bool verbose )
 {
    double *w = new double[ncols-k];
 
@@ -315,6 +319,12 @@ void CPU_dbl_factors_leftRupdate
       w[j-k] = 0.0;
       for(int i=k; i<nrows; i++) w[j-k] = w[j-k] + R[i][j]*v[i-k];
       w[j-k] = beta*w[j-k];
+   }
+   if(verbose)
+   {
+      cout << "the vector w = beta*R^T*v : " << endl;
+      for(int i=0; i<ncols-k; i++)
+         cout << "w[" << i << "] : " << w[i] << endl;
    }
    for(int i=k; i<nrows; i++)
       for(int j=k; j<ncols; j++)
