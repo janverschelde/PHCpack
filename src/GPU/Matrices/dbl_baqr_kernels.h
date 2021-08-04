@@ -25,7 +25,8 @@ __global__ void dbl_small_house
  *   beta     equals 2/(transpose(v)*v). */
 
 void flopcount_dbl_small_house
- ( int dim, int dimLog2, long int *add, long int *mul, long int *div );
+ ( int dim, int dimLog2, long int *add, long int *mul, long int *div,
+   long int *sqrtfun );
 /*
  * DESCRIPTION :
  *   Returns the accumulated floating-point operation counts to compute
@@ -36,12 +37,14 @@ void flopcount_dbl_small_house
  *   dimLog2  equals ceil(log2((double) dim), used in sum reduction;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
- *   div      current number of divisions.
+ *   div      current number of divisions;
+ *   sqrtfun  current number of calls to sqrt().
  *
  * ON RETURN :
  *   add      accumulated number of additions and subtractions;
  *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   div      accumulated number of divisions;
+ *   sqrtfun  accumulated number of calls to sqrt(). */
 
 __global__ void cmplx_small_house
  ( double *x0re, double *x0im, double *x1re, double *x1im,
@@ -65,6 +68,28 @@ __global__ void cmplx_small_house
  *   vre      real parts of the Householder vector;
  *   vim      imaginary parts of the Householder vector;
  *   beta     equals 2/(transpose(v)*v). */
+
+void flopcount_cmplx_small_house
+ ( int dim, int dimLog2, long int *add, long int *mul, long int *div,
+   long int *sqrtfun );
+/*
+ * DESCRIPTION :
+ *   Returns the accumulated floating-point operation counts to compute
+ *   the Householder vector of dimension dim+1, on complex data.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of the vector must equal the block size;
+ *   dimLog2  equals ceil(log2((double) dim), used in sum reduction;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
+ *   sqrtfun  current number of calls to sqrt().
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions;
+ *   sqrtfun  accumulated number of calls to sqrt(). */
 
 __global__ void dbl_small_leftRupdate
  ( int nrows, int ncols, int szt, int k, double *R, double *v, double *beta );
@@ -698,7 +723,7 @@ void GPU_dbl_small_house
    double *A_h, double *A_d,
    double *v_h, double *V_d, double *beta_h, double *beta_d,
    double *lapms, long int *add, long int *mul, long int *div,
-   bool verbose=true );
+   long int *sqrtfun, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the Householder vector for small
@@ -722,6 +747,7 @@ void GPU_dbl_small_house
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
  *   div      current number of divisions;
+ *   sqrtfun  current number of calls to sqrt();
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -732,7 +758,8 @@ void GPU_dbl_small_house
  *   lapms    elapsed time spent by the kernel;
  *   add      accumulated number of additions and subtractions;
  *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   div      accumulated number of divisions;
+ *   sqrtfun  accumulated number of calls to sqrt(). */
 
 void GPU_cmplx_small_house
  ( int nrows, int ncols, int szt, int nbt,
@@ -1408,8 +1435,8 @@ void GPU_dbl_blocked_houseqr
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
    double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
    double *YWTlapms, double *YWTClapms, double *Raddlapms,
-   double *walltimesec, long int *addcnt, long int *mulcnt, long int *divcnt,
-   bool verbose=true );
+   double *walltimesec, long int *addcnt, long int *mulcnt,
+   long int *divcnt, long int *sqrtcnt, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
@@ -1449,7 +1476,11 @@ void GPU_dbl_blocked_houseqr
  *            to compute the YWT*C product;
  *   Raddlapms is the elapsed time spent by the kernel
  *            to compute R by adding the Y*W^T*C matrix;
- *   walltimesec is the elapsed wall clock computation time. */
+ *   walltimesec is the elapsed wall clock computation time;
+ *   addcnt   counts the number of additions and subtractions;
+ *   mulcnt   counts the number of multiplications;
+ *   divcnt   counts the number of divisions;
+ *   sqrtcnt  counts the number of calls to sqrt(). */
 
 void GPU_cmplx_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,

@@ -92,6 +92,7 @@ void test_real_blocked_qr ( void )
    long int addcnt = 0;
    long int mulcnt = 0;
    long int divcnt = 0;
+   long int sqrtcnt = 0;
 
    cout << "-> GPU computes the block Householder QR ..." << endl;
 
@@ -100,7 +101,7 @@ void test_real_blocked_qr ( void )
        &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,
        &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
-       &addcnt,&mulcnt,&divcnt,vrb);
+       &addcnt,&mulcnt,&divcnt,&sqrtcnt,vrb);
 
    fail = test_real_qr_factors(nrows,ncols,A,Q_d,R_d,tol,verbose);
    if(fail == 0)
@@ -110,6 +111,7 @@ void test_real_blocked_qr ( void )
       cout << scientific << setprecision(2);
       cout << "The test failed for tol = " << tol << "." << endl;
    }
+   cout << endl;
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
@@ -140,7 +142,9 @@ void test_real_blocked_qr ( void )
         << mulcnt << endl;
    cout << "                          Number of divisions : "
         << divcnt << endl;
-   long int flopcnt = addcnt + mulcnt + divcnt;
+   cout << "                    Number of calls to sqrt() : "
+        << sqrtcnt << endl;
+   long int flopcnt = addcnt + mulcnt + divcnt + sqrtcnt;
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
 

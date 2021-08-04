@@ -67,11 +67,13 @@ __global__ void dbl_small_house
 }
 
 void flopcount_dbl_small_house
- ( int dim, int dimLog2, long int *add, long int *mul, long int *div )
+ ( int dim, int dimLog2, long int *add, long int *mul, long int *div,
+   long int *sqrtfun )
 {
    *add += dimLog2 + 4;
    *mul += dim + 3;
    *div += dim + 1;
+   *sqrtfun += 1;
 }
 
 __global__ void cmplx_small_house
@@ -150,6 +152,16 @@ __global__ void cmplx_small_house
    vim[j+1] = zim;
    if(j == 0) vre[0] = 1.0;
    if(j == 0) vim[0] = 0.0;
+}
+
+void flopcount_cmplx_small_house
+ ( int dim, int dimLog2, long int *add, long int *mul, long int *div,
+   long int *sqrtfun )
+{
+   *add += 3*dim + dimLog2 + 6;
+   *mul += 6*dim + 6;
+   *div += 2*dim + 2;
+   *sqrtfun += 3;
 }
 
 __global__ void dbl_small_leftRupdate
@@ -869,7 +881,7 @@ void GPU_dbl_small_house
    double *A_h, double *A_d,
    double *v_h, double *V_d, double *beta_h, double *beta_d,
    double *lapms, long int *add, long int *mul, long int *div,
-   bool verbose )
+   long int *sqrtfun, bool verbose )
 {
    const int nrLog2 = ceil(log2((double) nrows1));
    const int rowidx = colidx*(nrows+1);       // start of number in A_h
@@ -915,7 +927,7 @@ void GPU_dbl_small_house
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
-      flopcount_dbl_small_house(nrows1,nrLog2,add,mul,div);
+      flopcount_dbl_small_house(nrows1,nrLog2,add,mul,div,sqrtfun);
    }
    if(verbose)
    {
@@ -1885,8 +1897,8 @@ void GPU_dbl_blocked_houseqr
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
    double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
    double *YWTlapms, double *YWTClapms, double *Raddlapms,
-   double *walltimesec, long int *addcnt, long int *mulcnt, long int *divcnt,
-   bool verbose )
+   double *walltimesec, long int *addcnt, long int *mulcnt,
+   long int *divcnt, long int *sqrtcnt, bool verbose )
 {
    const int dim = nrows*ncols;         // total number of doubles
    const int nrows2 = nrows*nrows;
@@ -1980,7 +1992,7 @@ void GPU_dbl_blocked_houseqr
          GPU_dbl_small_house
             (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
              A_h,A_d,v_h,V_d,beta_h,beta_d,
-             houselapms,addcnt,mulcnt,divcnt,verbose);
+             houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
          if(nrows - colidx <= szt)
          {
             GPU_dbl_small_leftRupdate

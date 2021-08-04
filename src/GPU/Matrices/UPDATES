@@ -1,3 +1,6 @@
+Wed 4 Aug 2021 : added the count of calls to sqrt() in dbl_baqr_kernels,
+  updated dbl_baqr_testers.cpp.
+
 Tue 3 Aug 2021 : to dbl_baqr_kernels, added functions to accumulate the
   number of floating-point operations for each kernel.  Updated the
   dbl_baqr_testers.cpp, for the extra arguments in the GPU_dbl function.
