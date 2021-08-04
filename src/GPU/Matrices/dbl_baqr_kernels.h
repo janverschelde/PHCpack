@@ -4,7 +4,9 @@
 #ifndef __dbl_baqr_kernels_h__
 #define __dbl_baqr_kernels_h__
 
-#define d_shmemsize 1024
+#define d_shmemsize 2048
+#define cd_shmemsize 1024
+// for complex problems, the d_shmemsize is divided in half
 
 __global__ void dbl_small_house
  ( double *x0, double *x1, int dim, int dimLog2, double *v, double *beta );

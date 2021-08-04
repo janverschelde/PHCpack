@@ -82,9 +82,9 @@ __global__ void cmplx_small_house
 {
    const int j = threadIdx.x;
 
-   __shared__ double shvre[d_shmemsize];
-   __shared__ double shvim[d_shmemsize];
-   __shared__ double prd[d_shmemsize];
+   __shared__ double shvre[cd_shmemsize];
+   __shared__ double shvim[cd_shmemsize];
+   __shared__ double prd[cd_shmemsize];
    __shared__ double v0parts[2];
 
    bool stopflag = false;
@@ -215,8 +215,8 @@ __global__ void cmplx_small_leftRupdate
    int Rcolidx;
    double w_re,w_im,Rtdx_re,Rtdx_im,acc;
 
-   __shared__ double shvre[d_shmemsize]; // slice of vre
-   __shared__ double shvim[d_shmemsize]; // slice of vim
+   __shared__ double shvre[cd_shmemsize]; // slice of vre
+   __shared__ double shvim[cd_shmemsize]; // slice of vim
 
    shvre[tdx] = vre[tdx];
    shvim[tdx] = vim[tdx];
@@ -303,8 +303,8 @@ __global__ void cmplx_small_betaRTv
    double Rtdx_re;
    double Rtdx_im;
 
-   __shared__ double shvre[d_shmemsize]; // slice of v
-   __shared__ double shvim[d_shmemsize]; 
+   __shared__ double shvre[cd_shmemsize]; // slice of v
+   __shared__ double shvim[cd_shmemsize]; 
 
    shvre[tdx] = vre[tdx];
    shvim[tdx] = vim[tdx];
@@ -417,8 +417,8 @@ __global__ void cmplx_medium_subvbetaRTv
 
    const int Ridx = Roffset + nrows*colidx + rowidx;
 
-   __shared__ double shwre[d_shmemsize];  // values in beta*R^T*v
-   __shared__ double shwim[d_shmemsize];  // are less in number than szt
+   __shared__ double shwre[cd_shmemsize];  // values in beta*R^T*v
+   __shared__ double shwim[cd_shmemsize];  // are less in number than szt
    shwre[tdx] = wre[tdx];
    shwim[tdx] = wim[tdx];
    __syncthreads();
@@ -501,12 +501,12 @@ __global__ void cmplx_VB_to_W
    double wrk_re,wrk_im,pk_re,pk_im,mypk_re,mypk_im,zi_re,zi_im;
    int VWidx;
 
-   __shared__ double shvre[d_shmemsize]; // one work vector
-   __shared__ double shvim[d_shmemsize];
-   __shared__ double shwre[d_shmemsize]; // the other work vector
-   __shared__ double shwim[d_shmemsize];
-   __shared__ double shpre[d_shmemsize]; // to share Y^T*v
-   __shared__ double shpim[d_shmemsize];
+   __shared__ double shvre[cd_shmemsize]; // one work vector
+   __shared__ double shvim[cd_shmemsize];
+   __shared__ double shwre[cd_shmemsize]; // the other work vector
+   __shared__ double shwim[cd_shmemsize];
+   __shared__ double shpre[cd_shmemsize]; // to share Y^T*v
+   __shared__ double shpim[cd_shmemsize];
 
    shvre[tdx] = Vre[tdx];
    shvim[tdx] = Vim[tdx];

@@ -4,7 +4,8 @@
 #ifndef __dbl2_baqr_kernels_h__
 #define __dbl2_baqr_kernels_h__
 
-#define dd_shmemsize 512
+#define dd_shmemsize 1024
+#define cdd_shmemsize 512
 
 __global__ void dbl2_small_house
  ( double *x0hi, double *x0lo, double *x1hi, double *x1lo,

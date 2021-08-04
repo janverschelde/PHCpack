@@ -105,12 +105,12 @@ __global__ void cmplx2_small_house
 {
    const int j = threadIdx.x;
 
-   __shared__ double shvrehi[dd_shmemsize];
-   __shared__ double shvrelo[dd_shmemsize];
-   __shared__ double shvimhi[dd_shmemsize];
-   __shared__ double shvimlo[dd_shmemsize];
-   __shared__ double prdhi[dd_shmemsize];
-   __shared__ double prdlo[dd_shmemsize];
+   __shared__ double shvrehi[cdd_shmemsize];
+   __shared__ double shvrelo[cdd_shmemsize];
+   __shared__ double shvimhi[cdd_shmemsize];
+   __shared__ double shvimlo[cdd_shmemsize];
+   __shared__ double prdhi[cdd_shmemsize];
+   __shared__ double prdlo[cdd_shmemsize];
    __shared__ double v0parts[4];
 
    bool stopflag = false;
@@ -301,10 +301,10 @@ __global__ void cmplx2_small_leftRupdate
    double Rtdx_rehi,Rtdx_relo,Rtdx_imhi,Rtdx_imlo;
    double acchi,acclo,bthi,btlo;
 
-   __shared__ double shvrehi[dd_shmemsize]; // slice of vrehi
-   __shared__ double shvrelo[dd_shmemsize]; // slice of vrelo
-   __shared__ double shvimhi[dd_shmemsize]; // slice of vimhi
-   __shared__ double shvimlo[dd_shmemsize]; // slice of vimlo
+   __shared__ double shvrehi[cdd_shmemsize]; // slice of vrehi
+   __shared__ double shvrelo[cdd_shmemsize]; // slice of vrelo
+   __shared__ double shvimhi[cdd_shmemsize]; // slice of vimhi
+   __shared__ double shvimlo[cdd_shmemsize]; // slice of vimlo
 
    shvrehi[tdx] = vrehi[tdx];
    shvrelo[tdx] = vrelo[tdx];
@@ -544,18 +544,18 @@ __global__ void cmplx2_VB_to_W
    double zi_rehi,zi_relo,zi_imhi,zi_imlo;
    int VWidx;
 
-   __shared__ double shvrehi[dd_shmemsize]; // one work vector
-   __shared__ double shvrelo[dd_shmemsize]; 
-   __shared__ double shvimhi[dd_shmemsize];
-   __shared__ double shvimlo[dd_shmemsize];
-   __shared__ double shwrehi[dd_shmemsize]; // the other work vector
-   __shared__ double shwrelo[dd_shmemsize];
-   __shared__ double shwimhi[dd_shmemsize];
-   __shared__ double shwimlo[dd_shmemsize];
-   __shared__ double shprehi[dd_shmemsize]; // to share Y^T*v
-   __shared__ double shprelo[dd_shmemsize];
-   __shared__ double shpimhi[dd_shmemsize];
-   __shared__ double shpimlo[dd_shmemsize];
+   __shared__ double shvrehi[cdd_shmemsize]; // one work vector
+   __shared__ double shvrelo[cdd_shmemsize]; 
+   __shared__ double shvimhi[cdd_shmemsize];
+   __shared__ double shvimlo[cdd_shmemsize];
+   __shared__ double shwrehi[cdd_shmemsize]; // the other work vector
+   __shared__ double shwrelo[cdd_shmemsize];
+   __shared__ double shwimhi[cdd_shmemsize];
+   __shared__ double shwimlo[cdd_shmemsize];
+   __shared__ double shprehi[cdd_shmemsize]; // to share Y^T*v
+   __shared__ double shprelo[cdd_shmemsize];
+   __shared__ double shpimhi[cdd_shmemsize];
+   __shared__ double shpimlo[cdd_shmemsize];
 
    shvrehi[tdx] = Vrehi[tdx];
    shvrelo[tdx] = Vrelo[tdx];

@@ -1,5 +1,6 @@
 Wed 4 Aug 2021 : added the count of calls to sqrt() in dbl_baqr_kernels,
-  updated dbl_baqr_testers.cpp.
+  updated dbl_baqr_testers.cpp.  Increased the shared memory limits for
+  real data in {dbl,dbl2}_baqr_kernels.
 
 Tue 3 Aug 2021 : to dbl_baqr_kernels, added functions to accumulate the
   number of floating-point operations for each kernel.  Updated the
