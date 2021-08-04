@@ -89,6 +89,9 @@ void test_real_blocked_qr ( void )
    double houselapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
+   long int addcnt = 0;
+   long int mulcnt = 0;
+   long int divcnt = 0;
 
    cout << "-> GPU computes the block Householder QR ..." << endl;
 
@@ -96,7 +99,8 @@ void test_real_blocked_qr ( void )
       (nrows,ncols,sizetile,numtiles,A,Q_d,R_d,
        &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,
        &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
-       &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,vrb);
+       &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
+       &addcnt,&mulcnt,&divcnt,vrb);
 
    fail = test_real_qr_factors(nrows,ncols,A,Q_d,R_d,tol,verbose);
    if(fail == 0)
@@ -129,6 +133,16 @@ void test_real_blocked_qr ( void )
    cout << Raddlapsedms << " milliseconds." << endl;
    cout << "        Total GPU wall clock computation time : ";
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
+   cout << endl;
+   cout << "             Number of additions/subtractions : "
+        << addcnt << endl;
+   cout << "                    Number of multiplications : "
+        << mulcnt << endl;
+   cout << "                          Number of divisions : "
+        << divcnt << endl;
+   long int flopcnt = addcnt + mulcnt + divcnt;
+   cout << "    Total number of floating-point operations : "
+        << flopcnt << endl;
 
    for(int i=0; i<nrows; i++)
    {

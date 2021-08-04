@@ -66,6 +66,14 @@ __global__ void dbl_small_house
    if(j == 0) v[0] = 1.0;
 }
 
+void flopcount_dbl_small_house
+ ( int dim, int dimLog2, long int *add, long int *mul, long int *div )
+{
+   *add += dimLog2 + 4;
+   *mul += dim + 3;
+   *div += dim + 1;
+}
+
 __global__ void cmplx_small_house
  ( double *x0re, double *x0im, double *x1re, double *x1im,
    int dim, int dimLog2, double *vre, double *vim, double *beta )
@@ -176,6 +184,16 @@ __global__ void dbl_small_leftRupdate
    }
 }
 
+void flopcount_dbl_small_leftRupdate
+ ( int nrows, int ncols, int szt, int k,
+   long int *add, long int *mul, long int *div )
+{
+   const int nbthreads = ncols - k;
+
+   *add += 2*(nrows - k)*nbthreads;
+   *mul += 2*(nrows - k)*nbthreads + nbthreads;
+}
+
 __global__ void cmplx_small_leftRupdate
  ( int nrows, int ncols, int szt, int k,
    double *Rre, double *Rim, double *vre, double *vim, double *beta )
@@ -247,6 +265,16 @@ __global__ void dbl_small_betaRTv
    }
    result = mybeta*result;
    w[tdx] = result;
+}
+
+void flopcount_dbl_small_betaRTv 
+ ( int nrows, int ncols, int szt, int k,
+   long int *add, long int *mul, long int *div )
+{
+   const int nbthreads = nrows - k;
+
+   *add += (nrows-k)*nbthreads;
+   *mul += (nrows-k)*nbthreads + nbthreads;
 }
 
 __global__ void cmplx_small_betaRTv
@@ -347,6 +375,19 @@ __global__ void dbl_medium_subvbetaRTv
    if(widx < bound) R[Ridx] = Rwidx;   // if() takes care of padding
 }
 
+void flopcount_dbl_medium_subvbetaRTv
+ ( int nrows, int ncols, int szt, int k,
+   long int *add, long int *mul, long int *div )
+{
+   const int endcol = (k+1)*szt;     // 1 + last column index in tile
+   // total number of entries in R that will be modified
+   // equals the number of threads that compute
+   const int nbthreads = (nrows - k)*(endcol - k);
+
+   *add += nbthreads;
+   *mul += nbthreads;
+}
+
 __global__ void cmplx_medium_subvbetaRTv
  ( int nrows, int ncols, int szt, int k,
    double *Rre, double *Rim, double *vre, double *vim, double *beta,
@@ -430,6 +471,14 @@ __global__ void dbl_VB_to_W
       W[j*nrows + tdx] = wrk;          // wrk is assigned to W[j][tdx]
       __syncthreads();
    }
+}
+
+void flopcount_dbl_VB_to_W
+ ( int nrows, int ncols, long int *add, long int *mul, long int* div )
+{
+   // the number of threads equals nrows
+   *add += nrows*(ncols-1)*ncols;
+   *mul += nrows + nrows*(ncols-1)*ncols + nrows*(ncols-1);
 }
 
 __global__ void cmplx_VB_to_W
@@ -531,6 +580,15 @@ __global__ void dbl_small_WYT
    WYT[offset] = result;
 }
 
+void flopcount_dbl_small_WYT
+ ( int nrows, int szt, long int *add, long int *mul, long int *div )
+{
+   const int nbthreads = nrows*nrows;
+
+   *add += nbthreads;
+   *mul += nbthreads;
+}
+
 __global__ void cmplx_small_WYT
  ( int nrows, int szt, double *Wre, double *Wim,
    double *Yre, double *Yim, double *WYTre, double *WYTim )
@@ -584,6 +642,16 @@ __global__ void dbl_small_QWYT
    }
    __syncthreads();
    QWYT[offset] = result;            // no column offset in saving QWYT
+}
+
+void flopcount_dbl_small_QWYT
+ ( int dim, int rowdim, int szt, int coloff,
+   long int *add, long int *mul, long int *div )
+{
+   const int nbthreads = dim*rowdim;
+
+   *add += rowdim*nbthreads;
+   *mul += rowdim*nbthreads;
 }
 
 __global__ void cmplx_small_QWYT
@@ -643,6 +711,15 @@ __global__ void dbl_small_YWTC
    YWTC[(coloff + col)*nrows + (rowoff + row)] = result;
 }
 
+void flopcount_dbl_small_YWTC
+ ( int rowdim, int coldim, long int *add, long int *mul, long int *div )
+{
+   const int nbthreads = rowdim*coldim;
+
+   *add += nbthreads;
+   *mul += nbthreads;
+}
+
 __global__ void cmplx_small_YWTC
  ( int nrows, int ncols, int rowdim, int coldim, int szt,
    int rowoff, int coloff, double *YWTre, double *YWTim,
@@ -697,6 +774,14 @@ __global__ void dbl_small_Qupdate
    Q[idx1] = a;
 }
 
+void flopcount_dbl_small_Qupdate
+ ( int dim, int rowdim, long int *add, long int *mul, long int *div )
+{
+   const int nbthreads = dim*rowdim;
+
+   *add += nbthreads;
+}
+
 __global__ void cmplx_small_Qupdate
  ( int dim, int rowdim, int szt, int coloff,
    double *Qre, double *Qim, double *QWYTre, double *QWYTim )
@@ -743,6 +828,16 @@ __global__ void dbl_small_R_add_YWTC
    R[idx] = a;
 }
 
+void flopcount_dbl_small_R_add_YWTC
+ ( int nrows, int coldim, int szt, int rowoff, int coloff,
+   long int *add, long int *mul, long int *div )
+{
+   const int rowdim = nrows - rowoff;
+   const int nbthreads = rowdim*coldim;
+
+   *add += nbthreads;
+}
+
 __global__ void cmplx_small_R_add_YWTC
  ( int nrows, int coldim, int szt, int rowoff, int coloff,
    double *Rre, double *Rim, double *YWTCre, double *YWTCim )
@@ -773,7 +868,8 @@ void GPU_dbl_small_house
    int colidx, int nrows1, int k, int L,
    double *A_h, double *A_d,
    double *v_h, double *V_d, double *beta_h, double *beta_d,
-   double *lapms, bool verbose )
+   double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose )
 {
    const int nrLog2 = ceil(log2((double) nrows1));
    const int rowidx = colidx*(nrows+1);       // start of number in A_h
@@ -819,6 +915,7 @@ void GPU_dbl_small_house
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
+      flopcount_dbl_small_house(nrows1,nrLog2,add,mul,div);
    }
    if(verbose)
    {
@@ -912,7 +1009,8 @@ void GPU_cmplx_small_house
 void GPU_dbl_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
-   double *lapms, bool verbose )
+   double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -931,6 +1029,7 @@ void GPU_dbl_small_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_small_leftRupdate(nrows,ncols,szt,colidx,add,mul,div);
 
    if(verbose)
    {
@@ -988,7 +1087,9 @@ void GPU_cmplx_small_leftRupdate
 void GPU_dbl_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
-   double *w_h, double *w_d, double *lapms, bool verbose )
+   double *w_h, double *w_d,
+   double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1022,6 +1123,8 @@ void GPU_dbl_medium_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_small_betaRTv(nrows,endcol,szt,colidx,add,mul,div);
+   flopcount_dbl_medium_subvbetaRTv(nrows,endcol,szt,colidx,add,mul,div);
 
    if(verbose)
    {
@@ -1113,7 +1216,8 @@ void GPU_cmplx_medium_leftRupdate
 void GPU_dbl_VB_to_W
  ( int nrows, int ncols, int szt,
    double *V_h, double *V_d, double *W_h, double *W_d,
-   double *beta_h, double *beta_d, double *lapms, bool verbose )
+   double *beta_h, double *beta_d, double *lapms,
+   long int *add, long int *mul, long int *div, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1126,6 +1230,7 @@ void GPU_dbl_VB_to_W
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_VB_to_W(nrows,ncols,add,mul,div);
 
    if(verbose)
    {
@@ -1228,7 +1333,8 @@ void GPU_cmplx_VB_to_W
 
 void GPU_dbl_small_WYT
  ( int nrows, int szt, double *W_d, double *Y_d, double *WYT_d,
-   double *WYT_h, double *lapms, bool verbose )
+   double *WYT_h, double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1242,6 +1348,7 @@ void GPU_dbl_small_WYT
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_small_WYT(nrows,szt,add,mul,div);
 
    if(verbose)
    {
@@ -1298,7 +1405,8 @@ void GPU_cmplx_small_WYT
 
 void GPU_dbl_small_YWT
  ( int nrows, int szt, int idx, double *Y_d, double *W_d, double *YWT_d,
-   double *YWT_h, double *lapms, bool verbose )
+   double *YWT_h, double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1313,6 +1421,7 @@ void GPU_dbl_small_YWT
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_small_WYT(rowdim,szt,add,mul,div);
 
    if(verbose)
    {
@@ -1371,7 +1480,9 @@ void GPU_cmplx_small_YWT
 
 void GPU_dbl_small_QWYT
  ( int dim, int szt, int idx, double *Q_d, double *WYT_d, double *QWYT_d,
-   double *QWYT_h, double *Q_h, double *lapms, bool verbose )
+   double *QWYT_h, double *Q_h,
+   double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1401,6 +1512,7 @@ void GPU_dbl_small_QWYT
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_small_QWYT(dim,rowdim,szt,coloff,add,mul,div);
 
    if(verbose)
    {
@@ -1480,7 +1592,8 @@ void GPU_cmplx_small_QWYT
 void GPU_dbl_small_YWTC
  ( int nrows, int ncols, int szt, int idx,
    double *YWT_d, double *C_d, double *YWTC_d, double *YWTC_h,
-   double *lapms, bool verbose )
+   double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1526,6 +1639,7 @@ void GPU_dbl_small_YWTC
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_small_YWTC(rowdim,coldim,add,mul,div);
 
    if(verbose)
    {
@@ -1559,7 +1673,7 @@ void GPU_cmplx_small_YWTC
 
    if(verbose)
    {
-      cout << "in GPU_dbl_small_YWTC ..." << endl;
+      cout << "in GPU_cmplx_small_YWTC ..." << endl;
       cout << "-> nrows : " << nrows
            << "  ncols : " << ncols
            << "  szt : " << szt
@@ -1613,7 +1727,8 @@ void GPU_cmplx_small_YWTC
 
 void GPU_dbl_small_Qupdate
  ( int dim, int szt, int idx, double *Q_d, double *QWYT_d,
-   double *Q_h, double *lapms, bool verbose )
+   double *Q_h, double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1629,6 +1744,7 @@ void GPU_dbl_small_Qupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_small_Qupdate(dim,rowdim,add,mul,div);
 
    if(verbose)
    {
@@ -1687,7 +1803,8 @@ void GPU_cmplx_small_Qupdate
 
 void GPU_dbl_small_R_add_YWTC
  ( int nrows, int ncols, int szt, int idx, double *R_d, double *YWTC_d,
-   double *R_h, double *lapms, bool verbose )
+   double *R_h, double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1706,6 +1823,7 @@ void GPU_dbl_small_R_add_YWTC
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_small_R_add_YWTC(nrows,coldim,szt,rowoff,coloff,add,mul,div);
 
    if(verbose)
    {
@@ -1767,7 +1885,8 @@ void GPU_dbl_blocked_houseqr
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
    double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
    double *YWTlapms, double *YWTClapms, double *Raddlapms,
-   double *walltimesec, bool verbose )
+   double *walltimesec, long int *addcnt, long int *mulcnt, long int *divcnt,
+   bool verbose )
 {
    const int dim = nrows*ncols;         // total number of doubles
    const int nrows2 = nrows*nrows;
@@ -1839,11 +1958,10 @@ void GPU_dbl_blocked_houseqr
    cudaMalloc((void**)&YWT_d,szYWT + szpad); // padding for Y*W^T product
    cudaMalloc((void**)&YWTC_d,sznum + szpad);
 
-   *houselapms = 0.0;
-   *tileRlapms = 0.0;
-   *vb2Wlapms = 0.0;
+   *houselapms = 0.0; *tileRlapms = 0.0; *vb2Wlapms = 0.0;
    *WYTlapms = 0.0; *QWYTlapms = 0.0; *Qaddlapms = 0.0;
    *YWTlapms = 0.0; *YWTClapms = 0.0; *Raddlapms = 0.0;
+   *addcnt = 0; *mulcnt = 0; *divcnt = 0;
    struct timeval begintime,endtime; // wall clock time of computations
 
    gettimeofday(&begintime,0);
@@ -1861,36 +1979,45 @@ void GPU_dbl_blocked_houseqr
          nrows1 = nrows - colidx - 1;     // #rows in Householder vector - 1
          GPU_dbl_small_house
             (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
-             A_h,A_d,v_h,V_d,beta_h,beta_d,houselapms,verbose);
+             A_h,A_d,v_h,V_d,beta_h,beta_d,
+             houselapms,addcnt,mulcnt,divcnt,verbose);
          if(nrows - colidx <= szt)
          {
             GPU_dbl_small_leftRupdate
                (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
-                tileRlapms,verbose);
+                tileRlapms,addcnt,mulcnt,divcnt,verbose);
          }
          else
          {
             GPU_dbl_medium_leftRupdate
                (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
-                bRTv_h,bRTv_d,tileRlapms,verbose);
+                bRTv_h,bRTv_d,tileRlapms,addcnt,mulcnt,divcnt,verbose);
          }
       }
       // changed nrows into nrows - k*szt and ncols into szt
       GPU_dbl_VB_to_W
-         (nrows-k*szt,szt,szt,V_h,V_d,W_h,W_d,beta_h,beta_d,vb2Wlapms,verbose);
+         (nrows-k*szt,szt,szt,V_h,V_d,W_h,W_d,beta_h,beta_d,
+          vb2Wlapms,addcnt,mulcnt,divcnt,verbose);
       // update Q, WYT matrix has nrows - k*szt instead of nrows
-      GPU_dbl_small_WYT(nrows-k*szt,szt,W_d,V_d,WYT_d,WYT_h,WYTlapms,verbose);
+      GPU_dbl_small_WYT
+         (nrows-k*szt,szt,W_d,V_d,WYT_d,WYT_h,
+          WYTlapms,addcnt,mulcnt,divcnt,verbose);
       GPU_dbl_small_QWYT
-         (nrows,szt,k,Q_d,WYT_d,QWYT_d,QWYT_h,Q_h,QWYTlapms,verbose);
+         (nrows,szt,k,Q_d,WYT_d,QWYT_d,QWYT_h,Q_h,
+          QWYTlapms,addcnt,mulcnt,divcnt,verbose);
       GPU_dbl_small_Qupdate
-         (nrows,szt,k,Q_d,QWYT_d,Q_h,Qaddlapms,verbose);
+         (nrows,szt,k,Q_d,QWYT_d,Q_h,Qaddlapms,addcnt,mulcnt,divcnt,verbose);
       if(k < nbt-1)                                           // update R
       {
-         GPU_dbl_small_YWT(nrows,szt,k,V_d,W_d,YWT_d,YWT_h,YWTlapms,verbose);
+         GPU_dbl_small_YWT
+            (nrows,szt,k,V_d,W_d,YWT_d,YWT_h,
+             YWTlapms,addcnt,mulcnt,divcnt,verbose);
          GPU_dbl_small_YWTC
-            (nrows,ncols,szt,k,YWT_d,A_d,YWTC_d,YWTC_h,YWTClapms,verbose);
+            (nrows,ncols,szt,k,YWT_d,A_d,YWTC_d,YWTC_h,
+             YWTClapms,addcnt,mulcnt,divcnt,verbose);
          GPU_dbl_small_R_add_YWTC
-            (nrows,ncols,szt,k,A_d,YWTC_d,A_h,Raddlapms,verbose);
+            (nrows,ncols,szt,k,A_d,YWTC_d,A_h,
+             Raddlapms,addcnt,mulcnt,divcnt,verbose);
       }
    }
    gettimeofday(&endtime,0);

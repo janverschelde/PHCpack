@@ -24,6 +24,25 @@ __global__ void dbl_small_house
  *   v        the Householder vector;
  *   beta     equals 2/(transpose(v)*v). */
 
+void flopcount_dbl_small_house
+ ( int dim, int dimLog2, long int *add, long int *mul, long int *div );
+/*
+ * DESCRIPTION :
+ *   Returns the accumulated floating-point operation counts to compute
+ *   the Householder vector of dimension dim+1, on real data.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of the vector must equal the block size;
+ *   dimLog2  equals ceil(log2((double) dim), used in sum reduction;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
+
 __global__ void cmplx_small_house
  ( double *x0re, double *x0im, double *x1re, double *x1im,
    int dim, int dimLog2, double *vre, double *vim, double *beta );
@@ -66,6 +85,28 @@ __global__ void dbl_small_leftRupdate
  *
  * ON RETURN :
  *   R        the updated matrix is trapezoidal. */
+
+void flopcount_small_leftRupdate
+ ( int nrows, int ncols, int szt, int k,
+   long int *add, long int *mul, long int *div );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating point operations to update
+ *   one tile of the matrix with one block of threads.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   ncols    number of columns of R;
+ *   szt      size of each block;
+ *   k        index of the current column;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 __global__ void cmplx_small_leftRupdate
  ( int nrows, int ncols, int szt, int k,
@@ -112,6 +153,29 @@ __global__ void dbl_small_betaRTv
  *
  * ON RETURN :
  *   w        the first ncols-k numbers define beta*R^T*v. */
+
+void flopcount_dbl_small_betaRTv 
+ ( int nrows, int ncols, int szt, int k,
+   long int *add, long int *mul, long int *div );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to compute
+ *   the vector beta*R^T*v, with one block of ncols - k threads,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   ncols    number of columns of R;
+ *   szt      size of each block;
+ *   k        index of the current column;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 __global__ void cmplx_small_betaRTv
  ( int nrows, int ncols, int szt, int k,
@@ -188,6 +252,29 @@ __global__ void dbl_medium_subvbetaRTv
  * ON RETURN :
  *   R        the updated matrix is trapezoidal. */
 
+void flopcount_dbl_medium_subvbetaRTv
+ ( int nrows, int ncols, int szt, int k,
+   long int *add, long int *mul, long int *div );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to apply
+ *   the Householder vector to update R, with multiple blocks,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   ncols    number of columns of R;
+ *   szt      size of each block;
+ *   k        index of the current column;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
+
 __global__ void cmplx_medium_subvbetaRTv
  ( int nrows, int ncols, int szt, int k,
    double *Rre, double *Rim, double *vre, double *vim, double *beta,
@@ -230,6 +317,7 @@ __global__ void dbl_VB_to_W
  *   ncols    equals the size of one tile, or equivalently,
  *            is the number of elements in B,
  *            and the number of columns in V, Y, and W;
+ *   szt      the number of columns in one tile;
  *   B        B[i] is the i-th beta computed by house;
  *   V        V[nrows*i] is the start of the i-th Householder vector,
  *            with i zeros inserted so V is trapezoidal;
@@ -237,6 +325,27 @@ __global__ void dbl_VB_to_W
  *
  * ON RETURN :
  *   W        the W matrix in the WY representation. */
+
+void flopcount_dbl_VB_to_W
+ ( int nrows, int ncols, long int *add, long int *mul, long int* div );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to
+ *   compute the W, with one block of threads, on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrices V, Y, and W;
+ *   ncols    equals the size of one tile, or equivalently,
+ *            is the number of elements in B,
+ *            and the number of columns in V, Y, and W;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 __global__ void cmplx_VB_to_W
  ( int nrows, int ncols, double *B,
@@ -283,6 +392,27 @@ __global__ void dbl_small_WYT
  * ON RETURN :
  *   WYT      the product of W with Y^T. */
 
+void flopcount_dbl_small_WYT
+ ( int nrows, int szt, long int *add, long int *mul, long int *div );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of accumulated floating-point operations
+ *   for the multiplication of W with Y^T with multiple blocks,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of all matrices;
+ *   szt      number of columns in W and Y,
+ *            equals the number of threads in a block;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
+
 __global__ void cmplx_small_WYT
  ( int nrows, int szt, double *Wre, double *Wim,
    double *Yre, double *Yim, double *WYTre, double *WYTim );
@@ -326,6 +456,28 @@ __global__ void dbl_small_QWYT
  *
  * ON RETURN :
  *   QWYT     the product of Q with QWYT. */
+
+void flopcount_dbl_small_QWYT
+ ( int dim, int rowdim, int szt, int coloff,
+   long int *add, long int *mul, long int *div );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to multiply Q
+ *   with the WYT, with multiple blocks of threads, on real data.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns of the Q matrix;
+ *   rowdim   number of rows and columns of the WYT matrix;
+ *   szt      the number of threads in a block;
+ *   coloff   offset for the column index in QWYT;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 __global__ void cmplx_small_QWYT
  ( int dim, int rowdim, int szt, int coloff,
@@ -373,6 +525,25 @@ __global__ void dbl_small_YWTC
  * ON RETURN :
  *   YWTC     the product of YWT with C. */
 
+void flopcount_dbl_small_YWTC
+ ( int rowdim, int coldim, long int *add, long int *mul, long int *div );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to multiply
+ *   YWT with C, with multiple blocks, on real data.
+ *
+ * ON ENTRY :
+ *   rowdim   number of rows minus the row offset;
+ *   coldim   number of columns minus the column offset;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
+
 __global__ void cmplx_small_YWTC
  ( int nrows, int ncols, int rowdim, int coldim, int szt,
    int rowoff, int coloff, double *YWTre, double *YWTim,
@@ -417,6 +588,25 @@ __global__ void dbl_small_Qupdate
  * ON RETURN :
  *   Q        Q + QWYT. */
 
+void flopcount_dbl_small_Qupdate
+ ( int dim, int rowdim, long int *add, long int *mul, long int *div );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to update Q,
+ *   with multiple blocks of threads, on real data.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns of all matrices;
+ *   rowdim   dimension minus the column offset;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
+
 __global__ void cmplx_small_Qupdate
  ( int dim, int rowdim, int szt, int coloff,
    double *Qre, double *Qim, double *QWYTre, double *QWYTim );
@@ -457,6 +647,29 @@ __global__ void dbl_small_R_add_YWTC
  * ON RETURN :
  *   R        R + YWTC. */
 
+void flopcount_dbl_small_R_and_YWTC
+ ( int nrows, int coldim, int szt, int rowoff, int coloff,
+   long int *add, long int *mul, long int *div );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to update R
+ *   by adding YWTC, with multiple blocks, on real data.
+ *
+ * ON ENTRY :
+ *   nrows    total number of rows in R and YWTC;
+ *   coldim   number of columns minus the column offset;
+ *   szt      the number of threads in a block;
+ *   rowoff   offset for the row index in R;
+ *   coloff   offset for the column index in R;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
+
 __global__ void cmplx_small_R_add_YWTC
  ( int nrows, int coldim, int szt, int rowoff, int coloff,
    double *Rre, double *Rim, double *YWTCre, double *YWTCim );
@@ -484,7 +697,8 @@ void GPU_dbl_small_house
    int colidx, int nrows1, int k, int L,
    double *A_h, double *A_d,
    double *v_h, double *V_d, double *beta_h, double *beta_d,
-   double *lapms, bool verbose=true );
+   double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the Householder vector for small
@@ -505,6 +719,9 @@ void GPU_dbl_small_house
  *   V_d      space for the Householder vectors on the device;
  *   beta_h   space for the betas if verbose;
  *   beta_d   space on the device for the betas;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -512,7 +729,10 @@ void GPU_dbl_small_house
  *   V_d      contains the next computed Householder vector;
  *   beta_h   updated vector of betas, if verbose;
  *   beta_d   the next beta constant;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 void GPU_cmplx_small_house
  ( int nrows, int ncols, int szt, int nbt,
@@ -559,7 +779,8 @@ void GPU_cmplx_small_house
 void GPU_dbl_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
-   double *lapms, bool verbose=true );
+   double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update one tile.
@@ -578,13 +799,19 @@ void GPU_dbl_small_leftRupdate
  *   V_d      space for the Householder vectors on the device;
  *   beta_h   space for the betas if verbose;
  *   beta_d   space on the device for the betas;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
  *   V_d      contains the Householder vectors on the device;
  *   beta_h   vector of betas, if verbose;
  *   beta_d   the next beta constant;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel.
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 void GPU_cmplx_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
@@ -626,7 +853,9 @@ void GPU_cmplx_small_leftRupdate
 void GPU_dbl_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
-   double *w_h, double *w_d, double *lapms, bool verbose=true );
+   double *w_h, double *w_d,
+   double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernels to update one tile.
@@ -649,6 +878,9 @@ void GPU_dbl_medium_leftRupdate
  *   beta_d   space on the device for the betas;
  *   w_h      space for the beta*R^T*v on the host, if verbose;
  *   w_d      space for the beta*R^T*v plus szt padding;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -656,7 +888,10 @@ void GPU_dbl_medium_leftRupdate
  *   beta_h   vector of betas, if verbose;
  *   beta_d   the next beta constant;
  *   w_h      stores the beta*R^T*v, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 void GPU_cmplx_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
@@ -701,7 +936,8 @@ void GPU_cmplx_medium_leftRupdate
 void GPU_dbl_VB_to_W
  ( int nrows, int ncols, int szt,
    double *V_h, double *V_d, double *W_h, double *W_d,
-   double *beta_h, double *beta_d, double *lapms, bool verbose=true );
+   double *beta_h, double *beta_d, double *lapms,
+   long int *add, long int *mul, long int *div, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the W in the WY representation.
@@ -719,6 +955,9 @@ void GPU_dbl_VB_to_W
  *   W_d      space for W on the device;
  *   beta_h   space for the betas if verbose;
  *   beta_d   space on the device for the betas;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -726,7 +965,10 @@ void GPU_dbl_VB_to_W
  *   V_d      the Y matrix on the device;
  *   W_d      the W matrix in the WY representation, on the device;
  *   W_h      the W matrix in the WY representation, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 void GPU_cmplx_VB_to_W
  ( int nrows, int ncols, int szt,
@@ -775,7 +1017,8 @@ void GPU_cmplx_VB_to_W
 
 void GPU_dbl_small_WYT
  ( int nrows, int szt, double *W_d, double *Y_d, double *WYT_d,
-   double *WYT_h, double *lapms, bool verbose=true );
+   double *WYT_h, double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute W*Y^T.
@@ -789,12 +1032,18 @@ void GPU_dbl_small_WYT
  *   Y_d      the matrix of Householder vectors;
  *   WYT_d    space for an nrows-by-nrows matrix on the device;
  *   WYT_h    space for an nrows-by-nrows matrix on the host, if verbose;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
  *   WYT_d    the product W*Y^T on the device;
  *   WYT_h    the product W*Y^T, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 void GPU_cmplx_small_WYT
  ( int nrows, int szt, double *Wre_d, double *Wim_d,
@@ -828,7 +1077,8 @@ void GPU_cmplx_small_WYT
 
 void GPU_dbl_small_YWT
  ( int nrows, int szt, int idx, double *Y_d, double *W_d, double *YWT_d,
-   double *YWT_h, double *lapms, bool verbose=true );
+   double *YWT_h, double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute W*Y^T.
@@ -843,12 +1093,18 @@ void GPU_dbl_small_YWT
  *   W_d      the matrix W in the WY representation;
  *   YWT_d    space for an nrows-by-nrows matrix on the device;
  *   YWT_h    space for an nrows-by-nrows matrix on the host, if verbose;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
  *   YWT_d    the product Y*W^T on the device;
  *   YWT_h    the product Y*W^T, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 void GPU_cmplx_small_YWT
  ( int nrows, int szt, int idx,
@@ -884,7 +1140,9 @@ void GPU_cmplx_small_YWT
 
 void GPU_dbl_small_QWYT
  ( int dim, int szt, int idx, double *Q_d, double *WYT_d, double *QWYT_d,
-   double *QWYT_h, double *Q_h, double *lapms, bool verbose=true );
+   double *QWYT_h, double *Q_h,
+   double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute Q*WYT.
@@ -900,12 +1158,18 @@ void GPU_dbl_small_QWYT
  *   QWYT_d   space for the product Q*WYT, on the device;
  *   QWYT_h   space for the product Q*WYT, on the host, if verbose;
  *   Q_h      if verbose, then used to print Q before the product;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
  *   QWYT_d   the product Q*WYT on the device;
  *   QWYT_h   the product Q*WYT, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 void GPU_cmplx_small_QWYT
  ( int dim, int szt, int idx, double *Qre_d, double *Qim_d,
@@ -950,7 +1214,8 @@ void GPU_cmplx_small_QWYT
 void GPU_dbl_small_YWTC
  ( int nrows, int ncols, int szt, int idx,
    double *YWT_d, double *C_d, double *YWTC_d, double *YWTC_h,
-   double *lapms, bool verbose );
+   double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute YWT*C.
@@ -967,12 +1232,18 @@ void GPU_dbl_small_YWTC
  *   C_d      an nrows-by-ncols matrix, on the device;
  *   YWTC_d   space for the product YWT*C, on the device;
  *   YWTC_h   space for the product YWT*C, on the host, if verbose;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
  *   YWTC_d   the product YWT*C on the device;
  *   YWTC_h   the product YWT*C, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 void GPU_cmplx_small_YWTC
  ( int nrows, int ncols, int szt, int idx,
@@ -1014,7 +1285,8 @@ void GPU_cmplx_small_YWTC
 
 void GPU_dbl_small_Qupdate
  ( int dim, int rowdim, int szt, int idx, double *Q_d, double *QWYT_d,
-   double *Q_h, double *lapms, bool verbose=true );
+   double *Q_h, double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update Q as Q + QWYT.
@@ -1029,12 +1301,18 @@ void GPU_dbl_small_Qupdate
  *   idx      index of the current tile;
  *   Q_d      a dim-by-dim matrix, on the device;
  *   QWYT_d   the product Q*W*Y^T, on the device;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
  *   Q_d      the updated Q on the device;
  *   Q_h      the updated Q, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 void GPU_cmplx_small_Qupdate
  ( int dim, int szt, int idx, double *Qre_d, double *Qim_d,
@@ -1067,7 +1345,8 @@ void GPU_cmplx_small_Qupdate
 
 void GPU_dbl_small_R_add_YWTC
  ( int nrows, int ncols, int szt, int idx, double *R_d, double *YWTC_d,
-   double *R_h, double *lapms, bool verbose=true );
+   double *R_h, double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update R as R + YWTC.
@@ -1081,12 +1360,18 @@ void GPU_dbl_small_R_add_YWTC
  *   idx      index of the current tile;
  *   R_d      an nrows-by-ncols matrix, on the device;
  *   YWTC_d   the product Y*W^T*C, on the device;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
  *   R_d      the updated R on the device;
  *   R_h      the updated R, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 void GPU_cmplx_small_R_add_YWTC
  ( int nrows, int ncols, int szt, int idx,
@@ -1123,7 +1408,8 @@ void GPU_dbl_blocked_houseqr
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
    double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
    double *YWTlapms, double *YWTClapms, double *Raddlapms,
-   double *walltimesec, bool verbose=true );
+   double *walltimesec, long int *addcnt, long int *mulcnt, long int *divcnt,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
