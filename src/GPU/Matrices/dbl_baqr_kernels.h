@@ -400,6 +400,79 @@ __global__ void cmplx_VB_to_W
  *   Wre      real parts of the W matrix in the WY representation;
  *   Wim      imaginary parts of the W matrix in the WY representation. */
 
+__global__ void dbl_beta_times_V
+ ( int nrows, int szt, double *B, double *V, double *W );
+/*
+ * DESCRIPTION :
+ *   Computes the first vector in the W representation of the Householder
+ *   transformations, multiplying B[0] with the first vector of V,
+ *   and flipping the sign, with multiple blocks of threads.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in V and W;
+ *   szt      size of one tile and the number of threads in a block;
+ *   B        B[i] is the i-th beta computed by house;
+ *   V        V[nrows*i] is the start of the i-th Householder vector,
+ *            with i zeros inserted so V is trapezoidal;
+ *   W        space for the W matrix.
+ *
+ * ON RETURN :
+ *   W        the first nrows numbers store the first vector
+ *            of the W matrix in the WY representation. */
+
+__global__ void dbl_initialize_YWT
+ ( int dim, int szt, double *V, double *W, double *YWT );
+/*
+ * DESCRIPTION :
+ *   Initializes the matrix YWT with the product of the first dim products
+ *   of V with W elements with multiple blocks of szt threads,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   dim     number of rows and columns in YWT;
+ *   szt     number of threads in one block;
+ *   V       the first dim numbers define the first Householder vector;
+ *   W       the first dim numbers define the first column in the W matrix;
+ *   YWT     space for a dim-by-dim matrix.
+ *
+ * ON RETURN :
+ *   YWT     equals y*w^T, where y and w are the first columns of V and W. */
+
+__global__ void dbl_update_YWT
+ ( int dim, int szt, double *V, double *W, double *YWT );
+/*
+ * DESCRIPTION :
+ *   Updates the matrix YWT with the product of the first dim products
+ *   of V with W elements with multiple blocks of szt threads,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   dim     number of rows and columns in YWT;
+ *   szt     number of threads in one block;
+ *   V       the first dim numbers define the next Householder vector;
+ *   W       the first dim numbers define the next column in the W matrix;
+ *   YWT     an dim-by-dim matrix with the current values for YWT.
+ *
+ * ON RETURN :
+ *   YWT     equal the updated matrix Y*W^T. */
+
+__global__ void dbl_beta_next_W
+ ( int nrows, int szt, double *B, double *V, double *W, double *YWT );
+/*
+ * DECRIPTION :
+ *   Computes the next column in the W matrix, with multiple blocks,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in V, W, and the dimension of YWT;
+ *   szt      number of threads in one block;
+ *   V        the first nrows numbers define the next Householder vector;
+ *   W        the first nrows numbers define the next column in the W matrix;
+ *   YWT      an nrows-by-nrows matrix with the current values for YWT.
+ *
+ * ON RETURN :
+ *   W        constains the values of the next column of W. */
+
 __global__ void dbl_small_WYT
  ( int nrows, int szt, double *W, double *Y, double *WYT );
 /*
@@ -1043,6 +1116,50 @@ void GPU_cmplx_VB_to_W
  *   Wim_h    the imaginary parts of the W matrix in the WY representation,
  *            if verbose;
  *   lapms    elapsed time spent by the kernel. */
+
+void GPU_dbl_medium_VB_to_W
+ ( int nrows, int ncols, int szt, int idx,
+   double *V_h, double *V_d, double *W_h, double *W_d,
+   double *YWT_h, double *YWT_d, double *beta_h, double *beta_d,
+   double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to compute the W in the WY representation.
+ *   Wraps the timer and the print statements if verbose.
+ *   If verbose, then the W matrix is returned on the host.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrices V, Y, and W;
+ *   ncols    equals the size of one tile, or equivalently,
+ *            is the number of elements in B,
+ *            and the number of columns in V, Y, and W;
+ *   szt      size of one tile and the number of threads in a block;
+ *   idx      index of the current tile;
+ *   V_h      space for the Householder vectors, if verbose;
+ *   V_d      space for V on the device;
+ *   W_h      space for the W matrix, if verbose;
+ *   W_d      space for W on the device;
+ *   YWT_h    space for the outer product of Y with W^T, if verbose;
+ *   YWT_d    space for the outer product of Y with W^T, on the device;
+ *   beta_h   space for the betas if verbose;
+ *   beta_d   space on the device for the betas;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   V_h      equals the Y matrix, if verbose;
+ *   V_d      the Y matrix on the device;
+ *   W_d      the W matrix in the WY representation, on the device;
+ *   W_h      the W matrix in the WY representation, if verbose;
+ *   YWT_h    the outer product of Y with W^T, if verbose;
+ *   YWT_d    the outer product of Y with W^T, on the device;
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 void GPU_dbl_small_WYT
  ( int nrows, int szt, double *W_d, double *Y_d, double *WYT_d,

@@ -94,7 +94,7 @@ void test_real_blocked_qr ( void )
    long int divcnt = 0;
    long int sqrtcnt = 0;
 
-   cout << "-> GPU computes the block Householder QR ..." << endl;
+   cout << "-> GPU computes the blocked Householder QR ..." << endl;
 
    GPU_dbl_blocked_houseqr
       (nrows,ncols,sizetile,numtiles,A,Q_d,R_d,
@@ -244,7 +244,7 @@ void test_cmplx_blocked_qr ( void )
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
 
-   cout << "-> GPU computes the block Householder QR ..." << endl;
+   cout << "-> GPU computes the blocked Householder QR ..." << endl;
 
    GPU_cmplx_blocked_houseqr
       (nrows,ncols,sizetile,numtiles,Are,Aim,Qre_d,Qim_d,Rre_d,Rim_d,
