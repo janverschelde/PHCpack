@@ -406,7 +406,7 @@ __global__ void dbl_beta_times_V
  * DESCRIPTION :
  *   Computes the first vector in the W representation of the Householder
  *   transformations, multiplying B[0] with the first vector of V,
- *   and flipping the sign, with multiple blocks of threads.
+ *   and flipping the sign, with multiple blocks of threads, on real data.
  *
  * ON ENTRY :
  *   nrows    number of rows in V and W;
@@ -420,6 +420,32 @@ __global__ void dbl_beta_times_V
  *   W        the first nrows numbers store the first vector
  *            of the W matrix in the WY representation. */
 
+__global__ void cmplx_beta_times_V
+ ( int nrows, int szt, double *B,
+   double *Vre, double *Vim, double *Wre, double *Wim );
+/*
+ * DESCRIPTION :
+ *   Computes the first vector in the W representation of the Householder
+ *   transformations, multiplying B[0] with the first vector of V,
+ *   and flipping the sign, with multiple blocks of threads, on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in V and W;
+ *   szt      size of one tile and the number of threads in a block;
+ *   B        B[i] is the i-th beta computed by house;
+ *   Vre      Vre[nrows*i] is the start of the real parts of the i-th
+ *            Householder vector, with i zeros inserted so V is trapezoidal;
+ *   Vim      Vim[nrows*i] is the start of the imaginary parts of the i-th
+ *            Householder vector, with i zeros inserted so V is trapezoidal;
+ *   Wre      space for the real parts of the W matrix;
+ *   Wim      space for the imaginary parts of the W matrix.
+ *
+ * ON RETURN :
+ *   Wre      the first nrows numbers store the real parts of the first
+ *            vector of the W matrix in the WY representation;
+ *   Wim      the first nrows numbers store the imaginary parts of the first
+ *            vector of the W matrix in the WY representation. */
+
 __global__ void dbl_initialize_YWT
  ( int dim, int szt, double *V, double *W, double *YWT );
 /*
@@ -429,14 +455,43 @@ __global__ void dbl_initialize_YWT
  *   on real data.
  *
  * ON ENTRY :
- *   dim     number of rows and columns in YWT;
- *   szt     number of threads in one block;
- *   V       the first dim numbers define the first Householder vector;
- *   W       the first dim numbers define the first column in the W matrix;
- *   YWT     space for a dim-by-dim matrix.
+ *   dim      number of rows and columns in YWT;
+ *   szt      number of threads in one block;
+ *   V        the first dim numbers define the first Householder vector;
+ *   W        the first dim numbers define the first column in the W matrix;
+ *   YWT      space for a dim-by-dim matrix.
  *
  * ON RETURN :
- *   YWT     equals y*w^T, where y and w are the first columns of V and W. */
+ *   YWT      equals y*w^T, where y and w are the first columns of V and W. */
+
+__global__ void cmplx_initialize_YWT
+ ( int dim, int szt, double *Vre, double *Vim, double *Wre, double *Wim,
+   double *YWTre, double *YWTim );
+/*
+ * DESCRIPTION :
+ *   Initializes the matrix YWT with the product of the first dim products
+ *   of V with W elements with multiple blocks of szt threads,
+ *   on complex data.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in YWT;
+ *   szt      number of threads in one block;
+ *   Vre      the first dim numbers define the real parts
+ *            of the first Householder vector;
+ *   Vim      the first dim numbers define the imaginary parts
+ *            of the first Householder vector;
+ *   Wre      the first dim numbers define the real parts
+ *            of the first column in the W matrix;
+ *   Wim      the first dim numbers define the real parts
+ *            of the first column in the W matrix;
+ *   YWTre    space for a dim-by-dim matrix;
+ *   YWTim    space for a dim-by-dim matrix.
+ *
+ * ON RETURN :
+ *   YWTre    equals the real parts of y*w^T,
+ *            where y and w are the first columns of V and W;
+ *   YWTim    equals the imaginary parts of y*w^T,
+ *            where y and w are the first columns of V and W. */
 
 __global__ void dbl_update_YWT
  ( int dim, int szt, double *V, double *W, double *YWT );
@@ -447,14 +502,41 @@ __global__ void dbl_update_YWT
  *   on real data.
  *
  * ON ENTRY :
- *   dim     number of rows and columns in YWT;
- *   szt     number of threads in one block;
- *   V       the first dim numbers define the next Householder vector;
- *   W       the first dim numbers define the next column in the W matrix;
- *   YWT     an dim-by-dim matrix with the current values for YWT.
+ *   dim      number of rows and columns in YWT;
+ *   szt      number of threads in one block;
+ *   V        the first dim numbers define the next Householder vector;
+ *   W        the first dim numbers define the next column in the W matrix;
+ *   YWT      an dim-by-dim matrix with the current values for YWT.
  *
  * ON RETURN :
- *   YWT     equal the updated matrix Y*W^T. */
+ *   YWT      the updated matrix Y*W^T. */
+
+__global__ void cmplx_update_YWT
+ ( int dim, int szt, double *Vre, double *Vim, double *Wre, double *Wim,
+   double *YWTre, double *YWTim );
+/*
+ * DESCRIPTION :
+ *   Updates the matrix YWT with the product of the first dim products
+ *   of V with W elements with multiple blocks of szt threads,
+ *   on complex data.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in YWT;
+ *   szt      number of threads in one block;
+ *   Vre      the first dim numbers define the real parts
+ *            of the first Householder vector;
+ *   Vim      the first dim numbers define the imaginary parts
+ *            of the first Householder vector;
+ *   Wre      the first dim numbers define the real parts
+ *            of the first column in the W matrix;
+ *   Wim      the first dim numbers define the real parts
+ *            of the first column in the W matrix;
+ *   YWTre    real parts of the current values for YWT;
+ *   YWTim    imaginary parts of the current values for YWT.
+ *
+ * ON RETURN :
+ *   YWTre    the real parts of the updated Y*W^T;
+ *   YWTim    the imaginary parts of the update Y*W^T. */
 
 __global__ void dbl_beta_next_W
  ( int nrows, int szt, double *B, double *V, double *W, double *YWT );
@@ -471,7 +553,33 @@ __global__ void dbl_beta_next_W
  *   YWT      an nrows-by-nrows matrix with the current values for YWT.
  *
  * ON RETURN :
- *   W        constains the values of the next column of W. */
+ *   W        contains the values of the next column of W. */
+
+__global__ void cmplx_beta_next_W
+ ( int nrows, int szt, double *B, double *Vre, double *Vim,
+   double *Wre, double *Wim, double *YWTre, double *YWTim );
+/*
+ * DECRIPTION :
+ *   Computes the next column in the W matrix, with multiple blocks,
+ *   on complex data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in V, W, and the dimension of YWT;
+ *   szt      number of threads in one block;
+ *   Vre      the first nrows numbers define the real parts
+ *            of the first Householder vector;
+ *   Vim      the first nrows numbers define the imaginary parts
+ *            of the first Householder vector;
+ *   Wre      the first nrows numbers define the real parts
+ *            of the first column in the W matrix;
+ *   Wim      the first nrows numbers define the real parts
+ *            of the first column in the W matrix;
+ *   YWTre    real parts of YWT;
+ *   YWTim    imaginary parts of YWT.
+ *
+ * ON RETURN :
+ *   Wre      contains the real parts of the next column of W;
+ *   Wim      contains the imaginary parts of the next column of W. */
 
 __global__ void dbl_small_WYT
  ( int nrows, int szt, double *W, double *Y, double *WYT );
@@ -1125,7 +1233,8 @@ void GPU_dbl_medium_VB_to_W
    bool verbose=true );
 /*
  * DESCRIPTION :
- *   Calls the kernel to compute the W in the WY representation.
+ *   Calls the kernel to compute the W in the WY representation,
+ *   on real data.
  *   Wraps the timer and the print statements if verbose.
  *   If verbose, then the W matrix is returned on the host.
  *
@@ -1136,8 +1245,8 @@ void GPU_dbl_medium_VB_to_W
  *            and the number of columns in V, Y, and W;
  *   szt      size of one tile and the number of threads in a block;
  *   idx      index of the current tile;
- *   V_h      space for the Householder vectors, if verbose;
- *   V_d      space for V on the device;
+ *   V_h      the Householder vectors, if verbose;
+ *   V_d      the Householder vectors on the device;
  *   W_h      space for the W matrix, if verbose;
  *   W_d      space for W on the device;
  *   YWT_h    space for the outer product of Y with W^T, if verbose;
@@ -1150,12 +1259,86 @@ void GPU_dbl_medium_VB_to_W
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
- *   V_h      equals the Y matrix, if verbose;
+ *   V_h      the Y matrix, if verbose;
  *   V_d      the Y matrix on the device;
  *   W_d      the W matrix in the WY representation, on the device;
  *   W_h      the W matrix in the WY representation, if verbose;
  *   YWT_h    the outer product of Y with W^T, if verbose;
  *   YWT_d    the outer product of Y with W^T, on the device;
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
+
+void GPU_cmplx_medium_VB_to_W
+ ( int nrows, int ncols, int szt, int idx,
+   double *Vre_h, double *Vim_h, double *Vre_d, double *Vim_d,
+   double *Wre_h, double *Wim_h, double *Wre_d, double *Wim_d,
+   double *YWTre_h, double *YWTim_h, double *YWTre_d, double *YWTim_d,
+   double *beta_h, double *beta_d,
+   double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to compute the W in the WY representation,
+ *   on real data.
+ *   Wraps the timer and the print statements if verbose.
+ *   If verbose, then the W matrix is returned on the host.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrices V, Y, and W;
+ *   ncols    equals the size of one tile, or equivalently,
+ *            is the number of elements in B,
+ *            and the number of columns in V, Y, and W;
+ *   szt      size of one tile and the number of threads in a block;
+ *   idx      index of the current tile;
+ *   Vre_h    space for the real parts of the Householder vectors,
+ *            if verbose;
+ *   Vim_h    space for the imaginary parts of the Householder vectors,
+ *            if verbose;
+ *   Vre_d    the real parts of the Householder vectors on the device;
+ *   Vim_d    the imaginary parts of the Householder vectors,
+ *            on the device;
+ *   Wre_h    space for the real parts of the W matrix, if verbose;
+ *   Wim_h    space for the imaginary parts of the W matrix, if verbose;
+ *   Wre_d    space for the real parts of W on the device;
+ *   Wim_d    space for the imaginary parts of W on the device;
+ *   YWTre_h  has space for the real parts of the outer product
+ *            of Y with W^T, if verbose;
+ *   YWTim_h  has space for the imaginary parts of the outer product
+ *            of Y with W^T, if verbose;
+ *   YWTre_d  has space for the real parts of the outer product
+ *            of Y with W^T, on the device;
+ *   YWTim_d  has space for the imaginary parts of the outer product
+ *            of Y with W^T, on the device;
+ *   beta_h   space for the betas if verbose;
+ *   beta_d   space on the device for the betas;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   Vre_h    the real parts of the Y matrix, if verbose;
+ *   Vim_h    the imaginary parts of the Y matrix, if verbose;
+ *   Vre_d    the real parts of the Y matrix on the device;
+ *   Vim_d    the imaginary parts of the Y matrix on the device;
+ *   Wre_d    the real parts of the W matrix in the WY representation,
+ *            on the device;
+ *   Wim_d    the imaginary parts of the W matrix in the WY representation,
+ *            on the device;
+ *   Wre_h    the real parts of the W matrix in the WY representation,
+ *            if verbose;
+ *   Wim_h    the imaginary parts of the W matrix in the WY representation,
+ *            if verbose;
+ *   YWTre_h  has the real parts of the outer product of Y with W^T,
+ *            if verbose;
+ *   YWTim_h  has the imaginary parts of the outer product of Y with W^T,
+ *            if verbose;
+ *   YWTre_d  has the real parts of the outer product of Y with W^T,
+ *            on the device;
+ *   YWTim_d  has the imaginary parts of the outer product of Y with W^T,
+ *            on the device;
  *   lapms    elapsed time spent by the kernel;
  *   add      accumulated number of additions and subtractions;
  *   mul      accumulated number of multiplications;
