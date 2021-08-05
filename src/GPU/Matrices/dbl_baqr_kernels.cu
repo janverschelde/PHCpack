@@ -612,8 +612,8 @@ __global__ void cmplx_beta_times_V
    }
 }
 
-__global__ void dbl_initialize_YWT
- ( int dim, int szt, double *V, double *W, double *YWT )
+__global__ void dbl_initialize_WYT
+ ( int dim, int szt, double *V, double *W, double *WYT )
 {
    const int bdx = blockIdx.x;        // index of block
    const int tdx = threadIdx.x;       // index of thread in block
@@ -625,12 +625,12 @@ __global__ void dbl_initialize_YWT
    const double Wval = W[row];
    const double result = Vval*Wval;
 
-   if(idx < dim*dim) YWT[idx] = result;
+   if(idx < dim*dim) WYT[idx] = result;
 }
 
-__global__ void cmplx_initialize_YWT
+__global__ void cmplx_initialize_WYH
  ( int dim, int szt, double *Vre, double *Vim, double *Wre, double *Wim,
-   double *YWTre, double *YWTim )
+   double *WYHre, double *WYHim )
 {
    const int bdx = blockIdx.x;        // index of block
    const int tdx = threadIdx.x;       // index of thread in block
@@ -648,13 +648,13 @@ __global__ void cmplx_initialize_YWT
 
    if(idx < dim*dim)
    {
-      YWTre[idx] = resultre;
-      YWTim[idx] = resultim;
+      WYHre[idx] = resultre;
+      WYHim[idx] = resultim;
    }
 }
 
-__global__ void dbl_update_YWT
- ( int dim, int szt, double *V, double *W, double *YWT )
+__global__ void dbl_update_WYT
+ ( int dim, int szt, double *V, double *W, double *WYT )
 {
    const int bdx = blockIdx.x;        // index of block
    const int tdx = threadIdx.x;       // index of thread in block
@@ -664,16 +664,16 @@ __global__ void dbl_update_YWT
 
    const double Vval = V[col];
    const double Wval = W[row];
-   double result = YWT[idx];
+   double result = WYT[idx];
 
    result = result + Vval*Wval;
 
-   if(idx < dim*dim) YWT[idx] = result;
+   if(idx < dim*dim) WYT[idx] = result;
 }
 
-__global__ void cmplx_update_YWT
+__global__ void cmplx_update_WYH
  ( int dim, int szt, double *Vre, double *Vim, double *Wre, double *Wim,
-   double *YWTre, double *YWTim )
+   double *WYHre, double *WYHim )
 {
    const int bdx = blockIdx.x;        // index of block
    const int tdx = threadIdx.x;       // index of thread in block
@@ -686,8 +686,8 @@ __global__ void cmplx_update_YWT
    const double Wvalre = Wre[row];
    const double Wvalim = Wim[row];
 
-   double resultre = YWTre[idx];
-   double resultim = YWTim[idx];
+   double resultre = WYHre[idx];
+   double resultim = WYHim[idx];
 
    // beware of the Hermitian transpose of W, must be V instead!
    resultre = resultre + Vvalre*Wvalre + Vvalim*Wvalim;
@@ -695,21 +695,21 @@ __global__ void cmplx_update_YWT
 
    if(idx < dim*dim)
    {
-      YWTre[idx] = resultre;
-      YWTim[idx] = resultim;
+      WYHre[idx] = resultre;
+      WYHim[idx] = resultim;
    }
 }
 
 __global__ void dbl_beta_next_W
- ( int nrows, int szt, double *B, double *V, double *W, double *YWT )
+ ( int nrows, int szt, double *B, double *V, double *W, double *WYT )
 {
    const int bdx = blockIdx.x;        // index of block
    const int tdx = threadIdx.x;       // index of thread in block
    const int idx = bdx*szt + tdx;     // global index of the thread
-   const int YWToff = idx*nrows;      // start of idx row in YWT
+   const int WYToff = idx*nrows;      // start of idx row in YWT
    const double mybeta = B[0];
    int vdx;
-   double result,YWTval,Vvalue;
+   double result,WYTval,Vvalue;
 
    __shared__ double shV[d_shmemsize];   // to store a slice of V
 
@@ -726,9 +726,9 @@ __global__ void dbl_beta_next_W
       __syncthreads();
       for(int j=0; j<szt; j++)           // multiply szt values with YWT
       {
-         YWTval = YWT[YWToff+i*szt+j];   // YWT is stored row by row
+         WYTval = WYT[WYToff+i*szt+j];   // YWT is stored row by row
          Vvalue = shV[j];
-         result = result + YWTval*Vvalue;
+         result = result + WYTval*Vvalue;
       }
       __syncthreads();
    }
@@ -741,9 +741,9 @@ __global__ void dbl_beta_next_W
    for(int j=0; j<rest; j++)            // rest < szt prevents overflow
    {
       __syncthreads();
-      YWTval = YWT[YWToff+quot*szt+j];
+      WYTval = WYT[WYToff+quot*szt+j];
       Vvalue = shV[j];
-      result = result + YWTval*Vvalue;
+      result = result + WYTval*Vvalue;
    }
    result = -mybeta*result;
 
@@ -752,15 +752,15 @@ __global__ void dbl_beta_next_W
 
 __global__ void cmplx_beta_next_W
  ( int nrows, int szt, double *B, double *Vre, double *Vim,
-   double *Wre, double *Wim, double *YWTre, double *YWTim )
+   double *Wre, double *Wim, double *WYHre, double *WYHim )
 {
    const int bdx = blockIdx.x;        // index of block
    const int tdx = threadIdx.x;       // index of thread in block
    const int idx = bdx*szt + tdx;     // global index of the thread
-   const int YWToff = idx*nrows;      // start of idx row in YWT
+   const int WYHoff = idx*nrows;      // start of idx row in YWT
    const double mybeta = B[0];
    int vdx,ydx;
-   double resultre,resultim,YWTvre,YWTvim,Vvalre,Vvalim;
+   double resultre,resultim,WYHvre,WYHvim,Vvalre,Vvalim;
 
    __shared__ double shVre[cd_shmemsize];   // to store a slice of V
    __shared__ double shVim[cd_shmemsize];
@@ -781,14 +781,14 @@ __global__ void cmplx_beta_next_W
       __syncthreads();
       for(int j=0; j<szt; j++)           // multiply szt values with YWT
       {
-         ydx = YWToff + i*szt + j;       // YWT is stored row by row
-         YWTvre = YWTre[ydx];
-         YWTvim = YWTim[ydx];
+         ydx = WYHoff + i*szt + j;       // YWT is stored row by row
+         WYHvre = WYHre[ydx];
+         WYHvim = WYHim[ydx];
          Vvalre = shVre[j];
          Vvalim = shVim[j];
          // result = result + YWTval*Vvalue;
-         resultre = resultre + YWTvre*Vvalre - YWTvim*Vvalim;
-         resultim = resultim + YWTvim*Vvalre + YWTvre*Vvalim;
+         resultre = resultre + WYHvre*Vvalre - WYHvim*Vvalim;
+         resultim = resultim + WYHvim*Vvalre + WYHvre*Vvalim;
       }
       __syncthreads();
    }
@@ -802,14 +802,14 @@ __global__ void cmplx_beta_next_W
    for(int j=0; j<rest; j++)            // rest < szt prevents overflow
    {
       __syncthreads();
-      ydx = YWToff + quot*szt + j;
-      YWTvre = YWTre[ydx];
-      YWTvim = YWTim[ydx];
+      ydx = WYHoff + quot*szt + j;
+      WYHvre = WYHre[ydx];
+      WYHvim = WYHim[ydx];
       Vvalre = shVre[j];
       Vvalim = shVim[j];
       // result = result + YWTval*Vvalue;
-      resultre = resultre + YWTvre*Vvalre - YWTvim*Vvalim;
-      resultim = resultim + YWTvim*Vvalre + YWTvre*Vvalim;
+      resultre = resultre + WYHvre*Vvalre - WYHvim*Vvalim;
+      resultim = resultim + WYHvim*Vvalre + WYHvre*Vvalim;
    }
    resultre = -mybeta*resultre;
    resultim = -mybeta*resultim;
@@ -1595,7 +1595,7 @@ void GPU_cmplx_VB_to_W
 void GPU_dbl_medium_VB_to_W
  ( int nrows, int ncols, int szt, int idx,
    double *V_h, double *V_d, double *W_h, double *W_d,
-   double *YWT_h, double *YWT_d, double *beta_h, double *beta_d,
+   double *WYT_h, double *WYT_d, double *beta_h, double *beta_d,
    double *lapms, long int *add, long int *mul, long int *div,
    bool verbose )
 {
@@ -1616,7 +1616,7 @@ void GPU_dbl_medium_VB_to_W
    const int nbrblocks2 = (int) ceil(rowdim*rowdim/((double) szt));
 
    cudaEventRecord(start);
-   dbl_initialize_YWT<<<nbrblocks2,szt>>>(rowdim,szt,V_d,W_d,YWT_d);
+   dbl_initialize_WYT<<<nbrblocks2,szt>>>(rowdim,szt,V_d,W_d,WYT_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
@@ -1626,15 +1626,15 @@ void GPU_dbl_medium_VB_to_W
    {
       cudaEventRecord(start);
       dbl_beta_next_W<<<nbrblocks1,szt>>>
-         (rowdim,szt,&beta_d[j],&V_d[j*rowdim],&W_d[j*rowdim],YWT_d);
+         (rowdim,szt,&beta_d[j],&V_d[j*rowdim],&W_d[j*rowdim],WYT_d);
       cudaEventRecord(stop);
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
 
       cudaEventRecord(start);
-      dbl_update_YWT<<<nbrblocks2,szt>>>
-         (rowdim,szt,&V_d[j*rowdim],&W_d[j*rowdim],YWT_d);
+      dbl_update_WYT<<<nbrblocks2,szt>>>
+         (rowdim,szt,&V_d[j*rowdim],&W_d[j*rowdim],WYT_d);
       cudaEventRecord(stop);
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
@@ -1667,13 +1667,13 @@ void GPU_dbl_medium_VB_to_W
          for(int i=0; i<rowdim; i++) 
             cout << "W[" << i << "][" << j << "] : " << W_h[ix++] << endl;
 
-      cudaMemcpy(YWT_h,YWT_d,szmat,cudaMemcpyDeviceToHost);
-      cout << "the YWT matrix :" << endl;
+      cudaMemcpy(WYT_h,WYT_d,szmat,cudaMemcpyDeviceToHost);
+      cout << "the WYT matrix :" << endl;
       ix = 0;
       for(int i=0; i<rowdim; i++) 
          for(int j=0; j<rowdim; j++) 
-            cout << "YWT[" << i << "][" << j << "] : "
-                 << YWT_h[ix++] << endl;
+            cout << "WYT[" << i << "][" << j << "] : "
+                 << WYT_h[ix++] << endl;
    }
 }
 
@@ -1681,7 +1681,7 @@ void GPU_cmplx_medium_VB_to_W
  ( int nrows, int ncols, int szt, int idx,
    double *Vre_h, double *Vim_h, double *Vre_d, double *Vim_d,
    double *Wre_h, double *Wim_h, double *Wre_d, double *Wim_d,
-   double *YWTre_h, double *YWTim_h, double *YWTre_d, double *YWTim_d,
+   double *WYHre_h, double *WYHim_h, double *WYHre_d, double *WYHim_d,
    double *beta_h, double *beta_d,
    double *lapms, long int *add, long int *mul, long int *div,
    bool verbose )
@@ -1692,16 +1692,6 @@ void GPU_cmplx_medium_VB_to_W
    float milliseconds;
    const int rowdim = nrows - idx*szt;
    const int nbrblocks1 = (int) ceil(rowdim/((double) szt));
-/*
-   const int szmat = (nrows*szt)*sizeof(double);
-   for(int i=0; i<nrows*szt; i++) 
-   {
-      Wre_h[i] = 0.0;
-      Wim_h[i] = 0.0;
-   }
-   cudaMemcpy(Wre_d,Wre_h,szmat,cudaMemcpyHostToDevice);
-   cudaMemcpy(Wim_d,Wim_h,szmat,cudaMemcpyHostToDevice);
- */
 
    if(verbose)
    {
@@ -1721,11 +1711,11 @@ void GPU_cmplx_medium_VB_to_W
 
    if(verbose)
       cout << "-> launching " << nbrblocks2 << " blocks of " << szt
-           << " threads to initialize YWT ... " << endl;
+           << " threads to initialize WYH ... " << endl;
 
    cudaEventRecord(start);
-   cmplx_initialize_YWT<<<nbrblocks2,szt>>>
-      (rowdim,szt,Vre_d,Vim_d,Wre_d,Wim_d,YWTre_d,YWTim_d);
+   cmplx_initialize_WYH<<<nbrblocks2,szt>>>
+      (rowdim,szt,Vre_d,Vim_d,Wre_d,Wim_d,WYHre_d,WYHim_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
@@ -1740,7 +1730,7 @@ void GPU_cmplx_medium_VB_to_W
       cudaEventRecord(start);
       cmplx_beta_next_W<<<nbrblocks1,szt>>>
          (rowdim,szt,&beta_d[j],&Vre_d[j*rowdim],&Vim_d[j*rowdim],
-          &Wre_d[j*rowdim],&Wim_d[j*rowdim],YWTre_d,YWTim_d);
+          &Wre_d[j*rowdim],&Wim_d[j*rowdim],WYHre_d,WYHim_d);
       cudaEventRecord(stop);
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
@@ -1748,12 +1738,12 @@ void GPU_cmplx_medium_VB_to_W
 
       if(verbose)
          cout << "-> launching " << nbrblocks2 << " blocks of " << szt
-              << " threads to update YWT ... " << endl;
+              << " threads to update WYH ... " << endl;
 
       cudaEventRecord(start);
-      cmplx_update_YWT<<<nbrblocks2,szt>>>
+      cmplx_update_WYH<<<nbrblocks2,szt>>>
          (rowdim,szt,&Vre_d[j*rowdim],&Vim_d[j*rowdim],
-          &Wre_d[j*rowdim],&Wim_d[j*rowdim],YWTre_d,YWTim_d);
+          &Wre_d[j*rowdim],&Wim_d[j*rowdim],WYHre_d,WYHim_d);
       cudaEventRecord(stop);
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
@@ -1796,15 +1786,15 @@ void GPU_cmplx_medium_VB_to_W
             ix = ix + 1;
          }
 
-      cudaMemcpy(YWTre_h,YWTre_d,szmat,cudaMemcpyDeviceToHost);
-      cudaMemcpy(YWTim_h,YWTim_d,szmat,cudaMemcpyDeviceToHost);
-      cout << "the YWT matrix :" << endl;
+      cudaMemcpy(WYHre_h,WYHre_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYHim_h,WYHim_d,szmat,cudaMemcpyDeviceToHost);
+      cout << "the WYH matrix :" << endl;
       ix = 0;
       for(int i=0; i<rowdim; i++) 
          for(int j=0; j<rowdim; j++) 
          {
-            cout << "YWT[" << i << "][" << j << "] : "
-                 << YWTre_h[ix] << "  " << YWTim_h[ix] << endl;
+            cout << "WYH[" << i << "][" << j << "] : "
+                 << WYHre_h[ix] << "  " << WYHim_h[ix] << endl;
             ix = ix + 1;
          }
    }
@@ -2479,12 +2469,14 @@ void GPU_dbl_blocked_houseqr
           vb2Wlapms,addcnt,mulcnt,divcnt,verbose);
  */
       GPU_dbl_medium_VB_to_W
-         (nrows,szt,szt,k,V_h,V_d,W_h,W_d,YWT_h,YWT_d,beta_h,beta_d,
+         (nrows,szt,szt,k,V_h,V_d,W_h,W_d,WYT_h,WYT_d,beta_h,beta_d,
           vb2Wlapms,addcnt,mulcnt,divcnt,verbose);
       // update Q, WYT matrix has nrows - k*szt instead of nrows
+/*
       GPU_dbl_small_WYT
          (nrows-k*szt,szt,W_d,V_d,WYT_d,WYT_h,
           WYTlapms,addcnt,mulcnt,divcnt,verbose);
+ */
       GPU_dbl_small_QWYT
          (nrows,szt,k,Q_d,WYT_d,QWYT_d,QWYT_h,Q_h,
           QWYTlapms,addcnt,mulcnt,divcnt,verbose);
@@ -2709,11 +2701,13 @@ void GPU_cmplx_blocked_houseqr
  */
       GPU_cmplx_medium_VB_to_W
          (nrows,szt,szt,k,Vre_h,Vim_h,Vre_d,Vim_d,Wre_h,Wim_h,Wre_d,Wim_d,
-          YWTre_h,YWTim_h,YWTre_d,YWTim_d,beta_h,beta_d,
+          WYTre_h,WYTim_h,WYTre_d,WYTim_d,beta_h,beta_d,
           vb2Wlapms,addcnt,mulcnt,divcnt,verbose);
+/*
       GPU_cmplx_small_WYT
          (nrows-k*szt,szt,Wre_d,Wim_d,Vre_d,Vim_d,WYTre_d,WYTim_d,
           WYTre_h,WYTim_h,WYTlapms,verbose);
+ */
       GPU_cmplx_small_QWYT
          (nrows,szt,k,Qre_d,Qim_d,WYTre_d,WYTim_d,QWYTre_d,QWYTim_d,
           QWYTre_h,QWYTim_h,Qre_h,Qim_h,QWYTlapms,verbose);

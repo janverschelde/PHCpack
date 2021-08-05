@@ -2,7 +2,8 @@ Thu 5 Aug 2021 : fixed call to _small_leftRupdate in dbl_baqr_kernels.cu
   so it now works for all dimensions.  Added first versions of kernels to
   compute the W matrix better for complex data.  Applied Hermitian
   transpose to V instead of to W in dbl_baqr_kernels.cu, which fixed
-  the complex case for square matrices.
+  the complex case for square matrices.  Fixed the naming of the functions
+  in dbl_baqr_kernels, no longer calling the separate kernel for WYT.
 
 Wed 4 Aug 2021 : added the count of calls to sqrt() in dbl_baqr_kernels,
   updated dbl_baqr_testers.cpp.  Increased the shared memory limits for
