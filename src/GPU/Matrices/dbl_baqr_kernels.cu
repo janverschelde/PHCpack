@@ -596,8 +596,8 @@ __global__ void dbl_initialize_YWT
    const int row = idx / dim;         // row index in YWT
    const int col = idx % dim;         // column index in YWT
 
-   const double Vval = V[row];
-   const double Wval = W[col];
+   const double Vval = V[col];
+   const double Wval = W[row];
    __syncthreads();
    const double result = Vval*Wval;
 
@@ -613,8 +613,8 @@ __global__ void dbl_update_YWT
    const int row = idx / dim;         // row index in YWT
    const int col = idx % dim;         // column index in YWT
 
-   const double Vval = V[row];
-   const double Wval = W[col];
+   const double Vval = V[col];
+   const double Wval = W[row];
    __syncthreads();
    double result = YWT[idx];
 
@@ -1500,7 +1500,7 @@ void GPU_dbl_medium_VB_to_W
    if(verbose)
    {
       const size_t szbeta = szt*sizeof(double);
-      const size_t szhouse = nrows*sizeof(double);
+      const size_t szhouse = rowdim*sizeof(double);
       const size_t szVandW = szt*szhouse;
       const size_t szmat = rowdim*rowdim*sizeof(double);
 
@@ -1513,14 +1513,14 @@ void GPU_dbl_medium_VB_to_W
       cout << "the columns of the V matrix :" << endl;
       int ix = 0;
       for(int j=0; j<szt; j++) 
-         for(int i=0; i<nrows; i++) 
+         for(int i=0; i<rowdim; i++) 
             cout << "V[" << i << "][" << j << "] : " << V_h[ix++] << endl;
 
       cudaMemcpy(W_h,W_d,szVandW,cudaMemcpyDeviceToHost);
       cout << "the columns of the W matrix :" << endl;
       ix = 0;
       for(int j=0; j<szt; j++) 
-         for(int i=0; i<nrows; i++) 
+         for(int i=0; i<rowdim; i++) 
             cout << "W[" << i << "][" << j << "] : " << W_h[ix++] << endl;
 
       cudaMemcpy(YWT_h,YWT_d,szmat,cudaMemcpyDeviceToHost);
@@ -2215,9 +2215,9 @@ void GPU_dbl_blocked_houseqr
          (nrows,szt,k,Q_d,QWYT_d,Q_h,Qaddlapms,addcnt,mulcnt,divcnt,verbose);
       if(k < nbt-1)                                           // update R
       {
-         // GPU_dbl_small_YWT
-         //   (nrows,szt,k,V_d,W_d,YWT_d,YWT_h,
-         //    YWTlapms,addcnt,mulcnt,divcnt,verbose);
+         GPU_dbl_small_YWT
+            (nrows,szt,k,V_d,W_d,YWT_d,YWT_h,
+             YWTlapms,addcnt,mulcnt,divcnt,verbose);
          GPU_dbl_small_YWTC
             (nrows,ncols,szt,k,YWT_d,A_d,YWTC_d,YWTC_h,
              YWTClapms,addcnt,mulcnt,divcnt,verbose);
