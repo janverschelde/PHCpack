@@ -642,9 +642,9 @@ __global__ void cmplx_initialize_YWT
    const double Vvalim = Vim[col];
    const double Wvalre = Wre[row];
    const double Wvalim = Wim[row];
-   // beware of the Hermitian transpose of W
-   const double resultre = Vvalre*Wvalre + Vvalim*Wvalim;
-   const double resultim = Vvalim*Wvalre - Vvalre*Wvalim;
+   // beware of the Hermitian transpose of W, must be V instead!
+   const double resultre =   Vvalre*Wvalre + Vvalim*Wvalim;
+   const double resultim = - Vvalim*Wvalre + Vvalre*Wvalim;
 
    if(idx < dim*dim)
    {
@@ -689,9 +689,9 @@ __global__ void cmplx_update_YWT
    double resultre = YWTre[idx];
    double resultim = YWTim[idx];
 
-   // beware of the Hermitian transpose of W
+   // beware of the Hermitian transpose of W, must be V instead!
    resultre = resultre + Vvalre*Wvalre + Vvalim*Wvalim;
-   resultim = resultim + Vvalim*Wvalre - Vvalre*Wvalim;
+   resultim = resultim - Vvalim*Wvalre + Vvalre*Wvalim;
 
    if(idx < dim*dim)
    {
