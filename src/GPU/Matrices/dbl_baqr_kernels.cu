@@ -655,7 +655,6 @@ __global__ void dbl_beta_next_W
       }
       __syncthreads();
    }
-/*
    int quot = nrows/szt;
    int rest = nrows - quot*szt;          // remainder to compute
 
@@ -669,7 +668,6 @@ __global__ void dbl_beta_next_W
       Vvalue = shV[j];
       result = result + YWTval*Vvalue;
    }
- */
    result = -mybeta*result;
 
    if(idx < nrows) W[idx] = result;
@@ -1139,8 +1137,8 @@ void GPU_dbl_small_leftRupdate
    cudaEventRecord(start);           // 2nd argument: ncols -> endcol
    // changed second argument ncols into endcol
    // to avoid updating the next tile
-   // dbl_small_leftRupdate<<<1,nrows-colidx>>>
-   dbl_small_leftRupdate<<<1,ncols-colidx>>>
+   // must use nrows - colidx instead of ncols - colidx
+   dbl_small_leftRupdate<<<1,nrows-colidx>>>
       (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L]);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
@@ -1176,8 +1174,7 @@ void GPU_cmplx_small_leftRupdate
    const int nVrows = nrows - k*szt;          // dimension of V matrix
 
    cudaEventRecord(start);
-   // cmplx_small_leftRupdate<<<1,nrows-colidx>>>
-   cmplx_small_leftRupdate<<<1,ncols-colidx>>>
+   cmplx_small_leftRupdate<<<1,nrows-colidx>>>
       (nrows,endcol,szt,colidx,Are_d,Aim_d,
        &Vre_d[L*nVrows+L],&Vim_d[L*nVrows+L],&beta_d[L]);
    cudaEventRecord(stop);

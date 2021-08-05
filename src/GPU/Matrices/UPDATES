@@ -1,3 +1,6 @@
+Thu 5 Aug 2021 : fixed call to _small_leftRupdate in dbl_baqr_kernels.cu
+  so it now works for all dimensions.
+
 Wed 4 Aug 2021 : added the count of calls to sqrt() in dbl_baqr_kernels,
   updated dbl_baqr_testers.cpp.  Increased the shared memory limits for
   real data in {dbl,dbl2}_baqr_kernels.  Edit in test_dbl_baqr_testers.cpp;
