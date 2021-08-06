@@ -273,6 +273,44 @@ __global__ void dbl2_beta_times_V
  *   Wlo      the first nrows numbers store the low doubles of the
  *            first vector of the W matrix in the WY representation. */
 
+__global__ void cmplx2_beta_times_V
+ ( int nrows, int szt, double *Bhi, double *Blo,
+   double *Vrehi, double *Vrelo, double *Vimhi, double *Vimlo,
+   double *Wrehi, double *Wrelo, double *Wimhi, double *Wimlo );
+/*
+ * DESCRIPTION :
+ *   Computes the first vector in the W representation of the Householder
+ *   transformations, multiplying B[0] with the first vector of V,
+ *   and flipping the sign, with multiple blocks of threads, on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in V and W;
+ *   szt      size of one tile and the number of threads in a block;
+ *   Bhi      Bhi[i] is the high double of the i-th beta computed by house;
+ *   Blo      Blo[i] is the low double of the i-th beta computed by house;
+ *   Vrehi    Vrehi[nrows*i] is the start of the high doubles of the real
+ *            parts of the i-th Householder vector, with i zeros inserted;
+ *   Vrelo    Vrelo[nrows*i] is the start of the low doubles of the real
+ *            parts of the i-th Householder vector, with i zeros inserted;
+ *   Vimhi    Vimhi[nrows*i] is the start of the high doubles of the imaginary
+ *            parts of the i-th Householder vector, with i zeros inserted;
+ *   Vimlo    Vimlo[nrows*i] is the start of the low doubles of the imaginary
+ *            parts of the i-th Householder vector, with i zeros inserted;
+ *   Wrehi    space for the high doubles of the real parts of the W matrix;
+ *   Wrelo    space for the low doubles of the real parts of the W matrix;
+ *   Wimhi    space for the high doubles of the imaginary parts of W;
+ *   Wimlo    space for the low doubles of the imaginary parts of the W.
+ *
+ * ON RETURN :
+ *   Wrehi    the first nrows numbers store the high doubles of the real
+ *            parts of the first vector of the W the WY representation;
+ *   Wrelo    the first nrows numbers store the low doubles of the real
+ *            parts of the first vector of the W the WY representation;
+ *   Wimhi    the first nrows numbers store the high doubles of the imaginary
+ *            parts of the first vector of the W the WY representation;
+ *   Wimlo    the first nrows numbers store the low doubles of the imaginary
+ *            parts of the first vector of the W the WY representation. */
+
 __global__ void dbl2_initialize_WYT
  ( int dim, int szt, double *Vhi, double *Vlo,
    double *Whi, double *Wlo, double *WYThi, double *WYTlo );
@@ -302,6 +340,201 @@ __global__ void dbl2_initialize_WYT
  *   WYTlo    low doubles of w*y^T,
  *            where y and w are the first columns of V and W. */
 
+__global__ void cmplx2_initialize_WYT
+ ( int dim, int szt,
+   double *Vrehi, double *Vrelo, double *Vimhi, double *Vimlo,
+   double *Wrehi, double *Wrelo, double *Wimhi, double *Wimlo,
+   double *WYTrehi, double *WYTrelo, double *WYTimhi, double *WYTimlo );
+/*
+ * DESCRIPTION :
+ *   Initializes the matrix YWT with the product of the first dim products
+ *   of W with Y elements with multiple blocks of szt threads,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in WYT;
+ *   szt      number of threads in one block;
+ *   Vrehi    the first dim numbers define the high doubles of
+ *            the real parts of the first Householder vector;
+ *   Vrelo    the first dim numbers define the low doubles of
+ *            the real parts of the first Householder vector;
+ *   Vimhi    the first dim numbers define the high doubles of
+ *            the imaginary parts of the first Householder vector;
+ *   Vimlo    the first dim numbers define the low doubles of
+ *            the imaginary parts of the first Householder vector;
+ *   Wrehi    the first dim numbers define the high doubles of
+ *            the real parts of the first column in the W matrix;
+ *   Wrelo    the first dim numbers define the low doubles of
+ *            the real parts of the first column in the W matrix;
+ *   Wimhi    the first dim numbers define the high doubles of
+ *            the imaginary parts of the first column in the W matrix;
+ *   Wimlo    the first dim numbers define the low doubles of
+ *            the imaginary parts of the first column in the W matrix;
+ *   WYTrehi  space for a dim-by-dim matrix;
+ *   WYTrelo  space for a dim-by-dim matrix;
+ *   WYTimhi  space for a dim-by-dim matrix;
+ *   WYTimlo  space for a dim-by-dim matrix.
+ *
+ * ON RETURN :
+ *   WYTrehi  high doubles of the real part of w*y^T,
+ *            where y and w are the first columns of V and W;
+ *   WYTrelo  low doubles of the real part of w*y^T,
+ *            where y and w are the first columns of V and W;
+ *   WYTimhi  high doubles of the imaginary part of w*y^T,
+ *            where y and w are the first columns of V and W;
+ *   WYTimlo  low doubles of the imaginary part of w*y^T,
+ *            where y and w are the first columns of V and W. */
+
+__global__ void dbl2_update_WYT
+ ( int dim, int szt, double *Vhi, double *Vlo, double *Whi, double *Wlo,
+   double *WYThi, double *WYTlo );
+/*
+ * DESCRIPTION :
+ *   Updates the matrix WYT with the product of the first dim products
+ *   of W with Y elements with multiple blocks of szt threads,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in YWT;
+ *   szt      number of threads in one block;
+ *   Vhi      the first dim numbers define the high doubles
+ *            of the next Householder vector;
+ *   Vlo      the first dim numbers define the low doubles
+ *            of the next Householder vector;
+ *   Whi      the first dim numbers define the high doubles
+ *            of the next column in the W matrix;
+ *   Wlo      the first dim numbers define the low doubles
+ *            of the next column in the W matrix;
+ *   WYThi    dim-by-dim matrix with the high doubles for WYT;
+ *   WYTlo    dim-by-dim matrix with the low doubles for WYT.
+ *
+ * ON RETURN :
+ *   WYThi    high doubles of the updated matrix W*Y^T;
+ *   WYTlo    low doubles of the updated matrix W*Y^T. */
+
+__global__ void cmplx2_update_WYH
+ ( int dim, int szt,
+   double *Vrehi, double *Vrelo, double *Vimhi, double *Vimlo,
+   double *Wrehi, double *Wrelo, double *Wimhi, double *Wimlo,
+   double *WYHrehi, double *WYHrelo, double *WYHimhi, double *WYHimlo );
+/*
+ * DESCRIPTION :
+ *   Updates the matrix YWT with the product of the first dim products
+ *   of W with Y elements with multiple blocks of szt threads,
+ *   on complex data.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in WYT;
+ *   szt      number of threads in one block;
+ *   Vrehi    the first dim numbers define the high doubles of
+ *            the real parts of the first Householder vector;
+ *   Vrelo    the first dim numbers define the low doubles of
+ *            the real parts of the first Householder vector;
+ *   Vimhi    the first dim numbers define the high doubles of
+ *            the imaginary parts of the first Householder vector;
+ *   Vimlo    the first dim numbers define the low doubles of
+ *            the imaginary parts of the first Householder vector;
+ *   Wrehi    the first dim numbers define the high doubles of
+ *            the real parts of the first column in the W matrix;
+ *   Wrelo    the first dim numbers define the low doubles of
+ *            the real parts of the first column in the W matrix;
+ *   Wimhi    the first dim numbers define the high doubles of
+ *            the imaginary parts of the first column in the W matrix;
+ *   Wimlo    the first dim numbers define the low doubles of
+ *            the imaginary parts of the first column in the W matrix;
+ *   WYHrehi  dim-by-dim matrix with the high doubles of the real
+ *            parts of W*Y^H;
+ *   WYHrelo  dim-by-dim matrix with the low doubles of the imaginary
+ *            parts of W*Y^H;
+ *   WYHimhi  dim-by-dim matrix with the high doubles of the real
+ *            parts of W*Y^H;
+ *   WYHimlo  dim-by-dim matrix with the low doubles of the imaginary
+ *            parts of W*Y^H.
+ *
+ * ON RETURN :
+ *   WYHrehi  high doubles of the real parts of the updated W*Y^H,
+ *            where y and w are the first columns of V and W;
+ *   WYHrelo  low doubles of the real parts of the updated W*Y^H,
+ *            where y and w are the first columns of V and W;
+ *   WYHimhi  high doubles of the imaginary parts of the updated W*Y^H,
+ *            where y and w are the first columns of V and W;
+ *   WYHimlo  low doubles of the imaginary part of the updated W*Y^H,
+ *            where y and w are the first columns of V and W. */
+
+__global__ void dbl2_beta_next_W
+ ( int nrows, int szt, double *Bhi, double *Blo, double *Vhi, double *Vlo,
+   double *Whi, double *Wlo, double *WYThi, double *WYTlo );
+/*
+ * DECRIPTION :
+ *   Computes the next column in the W matrix, with multiple blocks,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in V, W, and the dimension of WYT;
+ *   szt      number of threads in one block;
+ *   Bhi      high double of the beta with the next Householder vector;
+ *   Blo      low double of the beta with the next Householder vector;
+ *   Vhi      the first dim numbers define the high doubles
+ *            of the next Householder vector;
+ *   Vlo      the first dim numbers define the low doubles
+ *            of the next Householder vector;
+ *   Whi      the first dim numbers define the high doubles
+ *            of the next column in the W matrix;
+ *   Wlo      the first dim numbers define the low doubles
+ *            of the next column in the W matrix;
+ *   WYThi    dim-by-dim matrix with the high doubles for WYT;
+ *   WYTlo    dim-by-dim matrix with the low doubles for WYT.
+ *
+ * ON RETURN :
+ *   Whi      the high doubles of the next column of W;
+ *   Wlo      the low doubles of the next column of W. */
+
+__global__ void cmplx2_beta_next_W
+ ( int nrows, int szt, double *Bhi, double *Blo,
+   double *Vrehi, double *Vrelo, double *Vimhi, double *Vimlo,
+   double *Wrehi, double *Wrelo, double *Wimhi, double *Wimlo,
+   double *WYHrehi, double *WYHrelo, double *WYHimhi, double *WYHimlo );
+/*
+ * DECRIPTION :
+ *   Computes the next column in the W matrix, with multiple blocks,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in V, W, and the dimension of WYT;
+ *   szt      number of threads in one block;
+ *   Bhi      high double of the beta with the next Householder vector;
+ *   Blo      low double of the beta with the next Householder vector;
+ *   Vrehi    the first dim numbers define the high doubles of
+ *            the real parts of the next Householder vector;
+ *   Vrelo    the next dim numbers define the low doubles of
+ *            the real parts of the next Householder vector;
+ *   Vimhi    the next dim numbers define the high doubles of
+ *            the imaginary parts of the next Householder vector;
+ *   Vimlo    the next dim numbers define the low doubles of
+ *            the imaginary parts of the next Householder vector;
+ *   Wrehi    the next dim numbers define the high doubles of
+ *            the real parts of the next column in the W matrix;
+ *   Wrelo    the next dim numbers define the low doubles of
+ *            the real parts of the next column in the W matrix;
+ *   Wimhi    the next dim numbers define the high doubles of
+ *            the imaginary parts of the next column in the W matrix;
+ *   Wimlo    the next dim numbers define the low doubles of
+ *            the imaginary parts of the next column in the W matrix;
+ *   WYHrehi  dim-by-dim matrix with the high doubles of the real
+ *            parts of W*Y^H;
+ *   WYHrelo  dim-by-dim matrix with the low doubles of the imaginary
+ *            parts of W*Y^H;
+ *   WYHimhi  dim-by-dim matrix with the high doubles of the real
+ *            parts of W*Y^H;
+ *   WYHimlo  dim-by-dim matrix with the low doubles of the imaginary
+ *            parts of W*Y^H.
+ *
+ * ON RETURN :
+ *   Wrehi    high doubles of the real parts of the next column of W;
+ *   Wrelo    low doubles of the real parts of the next column of W;
+ *   Wimhi    high doubles of the imaginary parts of the next column of W;
+ *   Wimlo    low doubles of the imaginary parts of the next column of W. */
+
 __global__ void dbl2_small_WYT
  ( int nrows, int szt, double *Whi, double *Wlo, double *Vhi, double *Vlo,
    double *WYThi, double *WYTlo );
@@ -326,61 +559,6 @@ __global__ void dbl2_small_WYT
  * ON RETURN :
  *   WYThi    high doubles of the product of W with Y^T;
  *   WYTlo    low doubles of the product of W with Y^T. */
-
-__global__ void dbl2_update_WYT
- ( int dim, int szt, double *Vhi, double *Vlo, double *Whi, double *Wlo,
-   double *WYThi, double *WYTlo );
-/*
- * DESCRIPTION :
- *   Updates the matrix WYT with the product of the first dim products
- *   of W with Y elements with multiple blocks of szt threads,
- *   on real data.
- *
- * ON ENTRY :
- *   dim      number of rows and columns in YWT;
- *   szt      number of threads in one block;
- *   Vhi      the first dim numbers define the high doubles
- *            of the next Householder vector;
- *   Vlo      the first dim numbers define the low doubles
- *            of the next Householder vector;
- *   Whi      the first dim numbers define the high doubles
- *            of the next column in the W matrix;
- *   Wlo      the first dim numbers define the low doubles
- *            of the next column in the W matrix;
- *   WYThi    an dim-by-dim matrix with the high doubles for WYT;
- *   WYTlo    an dim-by-dim matrix with the low doubles for WYT.
- *
- * ON RETURN :
- *   WYThi    high doubles of the updated matrix W*Y^T;
- *   WYTlo    low doubles of the updated matrix W*Y^T. */
-
-__global__ void dbl2_beta_next_W
- ( int nrows, int szt, double *Bhi, double *Blo, double *Vhi, double *Vlo,
-   double *Whi, double *Wlo, double *WYThi, double *WYTlo );
-/*
- * DECRIPTION :
- *   Computes the next column in the W matrix, with multiple blocks,
- *   on real data.
- *
- * ON ENTRY :
- *   nrows    number of rows in V, W, and the dimension of WYT;
- *   szt      number of threads in one block;
- *   Bhi      high double of the beta with the next Householder vector;
- *   Blo      low double of the beta with the next Householder vector;
- *   Vhi      the first dim numbers define the high doubles
- *            of the next Householder vector;
- *   Vlo      the first dim numbers define the low doubles
- *            of the next Householder vector;
- *   Whi      the first dim numbers define the high doubles
- *            of the next column in the W matrix;
- *   Wlo      the first dim numbers define the low doubles
- *            of the next column in the W matrix;
- *   WYThi    an dim-by-dim matrix with the high doubles for WYT;
- *   WYTlo    an dim-by-dim matrix with the low doubles for WYT.
- *
- * ON RETURN :
- *   Whi      the high doubles of the next column of W;
- *   Wlo      the low doubles of the next column of W. */
 
 __global__ void cmplx2_small_WYT
  ( int nrows, int szt,
@@ -1099,6 +1277,124 @@ void GPU_dbl2_medium_VB_to_W
  *   WYTlo_h  low doubles of W*Y^T, if verbose;
  *   WYThi_d  high doubles of W*Y^T, on the device;
  *   WYTlo_d  low doubles of W*Y^T, on the device;
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
+
+void GPU_cmplx2_medium_VB_to_W
+ ( int nrows, int ncols, int szt, int idx,
+   double *Vrehi_h, double *Vrelo_h, double *Vimhi_h, double *Vimlo_h,
+   double *Vrehi_d, double *Vrelo_d, double *Vimhi_d, double *Vimlo_d,
+   double *Wrehi_h, double *Wrelo_h, double *Wimhi_h, double *Wimlo_h,
+   double *Wrehi_d, double *Wrelo_d, double *Wimhi_d, double *Wimlo_d,
+   double *WYHrehi_h, double *WYHrelo_h, double *WYHimhi_h, double *WYHimlo_h,
+   double *WYHrehi_d, double *WYHrelo_d, double *WYHimhi_d, double *WYHimlo_d,
+   double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
+   double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to compute the W in the WY representation,
+ *   on complex data.
+ *   Wraps the timer and the print statements if verbose.
+ *   If verbose, then the W matrix is returned on the host.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrices V, Y, and W;
+ *   ncols    equals the size of one tile, or equivalently,
+ *            is the number of elements in B,
+ *            and the number of columns in V, Y, and W;
+ *   szt      size of one tile and the number of threads in a block;
+ *   idx      index of the current tile;
+ *   Vrehi_h  high doubles of the real parts
+ *            of the Householder vectors, if verbose;
+ *   Vrelo_h  low doubles of the real parts
+ *            of the Householder vectors, if verbose;
+ *   Vimhi_h  high doubles of the imaginary parts
+ *            of the Householder vectors, if verbose;
+ *   Vimlo_h  low doubles of the imaginary parts
+ *            of the Householder vectors, if verbose;
+ *   Vrehi_d  high doubles of the the real parts of V, on the device;
+ *   Vrelo_d  low doubles of the real parts of V, on the device;
+ *   Vimhi_d  high doubles of the imaginary parts of V, on the device;
+ *   Vimlo_d  low doubles of the imaginary parts of V, on the device;
+ *   Wrehi_h  has space for the high doubles of the real parts of W,
+ *            if verbose;
+ *   Wrelo_h  has space for the low doubles of the real parts of W,
+ *            if verbose;
+ *   Wimhi_h  has space for the high doubles of the imaginary parts of W,
+ *            if verbose;
+ *   Wimlo_h  has space for the low doubles of the imaginary parts of W,
+ *            if verbose;
+ *   Wrehi_d  has space for the high doubles of the real parts of W,
+ *            on the device;
+ *   Wrelo_d  has space for the low doubles of the real parts of W,
+ *            on the device;
+ *   Wimhi_d  has space for the high doubles of the imaginary parts of W,
+ *            on the device;
+ *   Wimlo_d  has space for the low doubles of the imaginary parts of W,
+ *            on the device;
+ *   WYHrehi_h has space for the high doubles of the real parts of W*Y^H,
+ *            if verbose;
+ *   WYHrelo_h has space for the low doubles of the real parts of W*Y^H,
+ *            if verbose;
+ *   WYHimhi_h has space for the high doubles of the imaginary parts of W*Y^H,
+ *            if verbose;
+ *   WYHimlo_h has space for the low doubles of the imaginary parts of W*Y^H,
+ *            if verbose;
+ *   WYHrehi_d has space for the high doubles of the real parts of W*Y^H,
+ *            on the device;
+ *   WYHrelo_d has space for the low doubles of the real parts of W*Y^H,
+ *            on the device;
+ *   WYHimhi_d has space for the high doubles of the imaginary parts of W*Y^H,
+ *            on the device;
+ *   WYHimlo_d has space for the low doubles of the imaginary parts of W*Y^H,
+ *            on the device;
+ *   betahi_h has space for the betas if verbose;
+ *   betalo_h has space for the betas if verbose;
+ *   betahi_d has space on the device for the betas;
+ *   betalo_d has space on the device for the betas;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   Vrehi_h  high doubles of the real parts of the Y matrix, if verbose;
+ *   Vrelo_h  low doubles of the real parts of the Y matrix, if verbose;
+ *   Vimhi_h  high doubles of the imaginary parts of the Y matrix, if verbose;
+ *   Vimlo_h  low doubles of the imaginary parts of the Y matrix, if verbose;
+ *   Vrehi_d  high doubles of the real parts of the Y matrix on the device;
+ *   Vrelo_d  low doubles of the real parts of the Y matrix on the device;
+ *   Vimhi_d  high doubles of the imaginary parts of the Y matrix,
+ *            on the device;
+ *   Vimlo_d  low doubles of the imaginary parts of the Y matrix,
+ *            on the device;
+ *   Wrehi_d  high doubles of the the real parts of W, on the device;
+ *   Wrelo_d  low doubles of the the real parts of W, on the device;
+ *   Wimhi_d  high doubles of the imaginary parts of W, on the device;
+ *   Wimlo_d  low doubles of the imaginary parts of W, on the device;
+ *   Wrehi_h  high doubles of the real parts of W, if verbose;
+ *   Wrelo_h  low doubles of the real parts of W, if verbose;
+ *   Wimhi_h  high doubles of the imaginary parts of W, if verbose;
+ *   Wimlo_h  low doubles of the imaginary parts of W, if verbose;
+ *   WYHrehi_h has the high doubles of the real parts of W*Y^H,
+ *            if verbose;
+ *   WYHrelo_h has the low doubles of the real parts of W*Y^H,
+ *            if verbose;
+ *   WYHimhi_h has the high doubles of the imaginary parts of W*Y^H,
+ *            if verbose;
+ *   WYHimlo_h has the low doubles of the imaginary parts of W*Y^H,
+ *            if verbose;
+ *   WYHrehi_d has the high doubles of the real parts of W*Y^H,
+ *            on the device;
+ *   WYHrelo_d has the low doubles of the real parts of W*Y^H,
+ *            on the device;
+ *   WYHimhi_d has the high doubles of the imaginary parts of W*Y^H,
+ *            on the device;
+ *   WYHimlo_d has the low doubles of the imaginary parts of W*Y^H,
+ *            on the device;
  *   lapms    elapsed time spent by the kernel;
  *   add      accumulated number of additions and subtractions;
  *   mul      accumulated number of multiplications;

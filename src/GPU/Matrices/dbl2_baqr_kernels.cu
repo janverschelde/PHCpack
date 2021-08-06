@@ -698,6 +698,43 @@ __global__ void dbl2_beta_times_V
    }
 }
 
+__global__ void cmplx2_beta_times_V
+ ( int nrows, int szt, double *Bhi, double *Blo,
+   double *Vrehi, double *Vrelo, double *Vimhi, double *Vimlo,
+   double *Wrehi, double *Wrelo, double *Wimhi, double *Wimlo )
+{
+   const int bdx = blockIdx.x;        // index of block
+   const int tdx = threadIdx.x;       // index of thread in block
+   const int idx = bdx*szt + tdx;     // thread tdx computes W[idx]
+   double resultrehi,resultrelo;
+   double resultimhi,resultimlo;
+
+   __shared__ double shvrehi[cdd_shmemsize]; // to store a slice of V
+   __shared__ double shvrelo[cdd_shmemsize];
+   __shared__ double shvimhi[cdd_shmemsize];
+   __shared__ double shvimlo[cdd_shmemsize];
+
+   shvrehi[tdx] = Vrehi[idx]; // thread tdx loads data at the global index
+   shvrelo[tdx] = Vrelo[idx];
+   shvimhi[tdx] = Vimhi[idx];
+   shvimlo[tdx] = Vimlo[idx];
+
+   // resultre = -B[0]*shvre[tdx];
+   // resultim = -B[0]*shvim[tdx];
+   ddg_mul(-Bhi[0],-Blo[0],shvrehi[tdx],shvrelo[tdx],
+           &resultrehi,&resultrelo);
+   ddg_mul(-Bhi[0],-Blo[0],shvimhi[tdx],shvimlo[tdx],
+           &resultimhi,&resultimlo);
+
+   if(idx < nrows)
+   {
+      Wrehi[idx] = resultrehi;
+      Wrelo[idx] = resultrelo;
+      Wimhi[idx] = resultimhi;
+      Wimlo[idx] = resultimlo;
+   }
+}
+
 __global__ void dbl2_initialize_WYT
  ( int dim, int szt, double *Vhi, double *Vlo,
    double *Whi, double *Wlo, double *WYThi, double *WYTlo )
@@ -723,6 +760,47 @@ __global__ void dbl2_initialize_WYT
       WYTlo[idx] = resultlo;
    }
 }
+
+__global__ void cmplx2_initialize_WYH
+ ( int dim, int szt,
+   double *Vrehi, double *Vrelo, double *Vimhi, double *Vimlo,
+   double *Wrehi, double *Wrelo, double *Wimhi, double *Wimlo,
+   double *WYHrehi, double *WYHrelo, double *WYHimhi, double *WYHimlo )
+{
+   const int bdx = blockIdx.x;        // index of block
+   const int tdx = threadIdx.x;       // index of thread in block
+   const int idx = bdx*szt + tdx;     // global index of the thread
+   const int row = idx / dim;         // row index in WYH
+   const int col = idx % dim;         // column index in WYH
+
+   const double Vvalrehi = Vrehi[col];
+   const double Vvalrelo = Vrelo[col];
+   const double Vvalimhi = Vimhi[col];
+   const double Vvalimlo = Vimlo[col];
+   const double Wvalrehi = Wrehi[row];
+   const double Wvalrelo = Wrelo[row];
+   const double Wvalimhi = Wimhi[row];
+   const double Wvalimlo = Wimlo[row];
+   // const double result = Vval*Wval;
+   double resultrehi,resultrelo,resultimhi,resultimlo,acchi,acclo;
+
+   // take the Hermitian transpose of V
+   ddg_mul(Vvalrehi,Vvalrelo,Wvalrehi,Wvalrelo,&resultrehi,&resultrelo);
+   ddg_mul(Vvalimhi,Vvalimlo,Wvalimhi,Wvalimlo,&acchi,&acclo);
+   ddg_inc(&resultrehi,&resultrelo,acchi,acclo);
+   ddg_mul(Vvalrehi,Vvalrelo,Wvalimhi,Wvalimlo,&resultimhi,&resultimlo);
+   ddg_mul(Vvalimhi,Vvalimlo,Wvalrehi,Wvalrelo,&acchi,&acclo);
+   ddg_dec(&resultimhi,&resultimlo,acchi,acclo);
+
+   if(idx < dim*dim)
+   {
+      WYHrehi[idx] = resultrehi;
+      WYHrelo[idx] = resultrelo;
+      WYHimhi[idx] = resultimhi;
+      WYHimlo[idx] = resultimlo;
+   }
+}
+
 __global__ void dbl2_update_WYT
  ( int dim, int szt, double *Vhi, double *Vlo, double *Whi, double *Wlo,
    double *WYThi, double *WYTlo )
@@ -750,6 +828,52 @@ __global__ void dbl2_update_WYT
    {
       WYThi[idx] = resulthi;
       WYTlo[idx] = resultlo;
+   }
+}
+
+__global__ void cmplx2_update_WYH
+ ( int dim, int szt,
+   double *Vrehi, double *Vrelo, double *Vimhi, double *Vimlo,
+   double *Wrehi, double *Wrelo, double *Wimhi, double *Wimlo,
+   double *WYHrehi, double *WYHrelo, double *WYHimhi, double *WYHimlo )
+{
+   const int bdx = blockIdx.x;        // index of block
+   const int tdx = threadIdx.x;       // index of thread in block
+   const int idx = bdx*szt + tdx;     // global index of the thread
+   const int row = idx / dim;         // row index in WYH
+   const int col = idx % dim;         // column index in WYH
+
+   const double Vvalrehi = Vrehi[col];
+   const double Vvalrelo = Vrelo[col];
+   const double Vvalimhi = Vimhi[col];
+   const double Vvalimlo = Vimlo[col];
+   const double Wvalrehi = Wrehi[row];
+   const double Wvalrelo = Wrelo[row];
+   const double Wvalimhi = Wimhi[row];
+   const double Wvalimlo = Wimlo[row];
+   // const double result = Vval*Wval;
+   double resultrehi = WYHrehi[idx];
+   double resultrelo = WYHrelo[idx];
+   double resultimhi = WYHimhi[idx];
+   double resultimlo = WYHimlo[idx];
+   double acchi,acclo;
+
+   // take the Hermitian transpose of V
+   ddg_mul(Vvalrehi,Vvalrelo,Wvalrehi,Wvalrelo,&acchi,&acclo);
+   ddg_inc(&resultrehi,&resultrelo,acchi,acclo);
+   ddg_mul(Vvalimhi,Vvalimlo,Wvalimhi,Wvalimlo,&acchi,&acclo);
+   ddg_inc(&resultrehi,&resultrelo,acchi,acclo);
+   ddg_mul(Vvalrehi,Vvalrelo,Wvalimhi,Wvalimlo,&acchi,&acclo);
+   ddg_inc(&resultimhi,&resultimlo,acchi,acclo);
+   ddg_mul(Vvalimhi,Vvalimlo,Wvalrehi,Wvalrelo,&acchi,&acclo);
+   ddg_dec(&resultimhi,&resultimlo,acchi,acclo);
+
+   if(idx < dim*dim)
+   {
+      WYHrehi[idx] = resultrehi;
+      WYHrelo[idx] = resultrelo;
+      WYHimhi[idx] = resultimhi;
+      WYHimlo[idx] = resultimlo;
    }
 }
 
@@ -823,6 +947,122 @@ __global__ void dbl2_beta_next_W
    {
       Whi[idx] = acchi;
       Wlo[idx] = acclo;
+   }
+}
+
+__global__ void cmplx2_beta_next_W
+ ( int nrows, int szt, double *Bhi, double *Blo,
+   double *Vrehi, double *Vrelo, double *Vimhi, double *Vimlo,
+   double *Wrehi, double *Wrelo, double *Wimhi, double *Wimlo,
+   double *WYHrehi, double *WYHrelo, double *WYHimhi, double *WYHimlo )
+{
+   const int bdx = blockIdx.x;        // index of block
+   const int tdx = threadIdx.x;       // index of thread in block
+   const int idx = bdx*szt + tdx;     // global index of the thread
+   const int WYHoff = idx*nrows;      // start of idx row in YWH
+   const double mybetahi = Bhi[0];
+   const double mybetalo = Blo[0];
+   int vdx,ydx;
+   double resultrehi,WYHvalrehi,Vvalrehi,acchi;
+   double resultrelo,WYHvalrelo,Vvalrelo,acclo;
+   double resultimhi,WYHvalimhi,Vvalimhi;
+   double resultimlo,WYHvalimlo,Vvalimlo;
+
+   __shared__ double shVrehi[cdd_shmemsize];   // to store a slice of V
+   __shared__ double shVrelo[cdd_shmemsize];
+   __shared__ double shVimhi[cdd_shmemsize];
+   __shared__ double shVimlo[cdd_shmemsize];
+
+   shVrehi[tdx] = Vrehi[idx]; // thread tdx loads data at the global index
+   shVrelo[tdx] = Vrelo[idx];
+   shVimhi[tdx] = Vimhi[idx];
+   shVimlo[tdx] = Vimlo[idx];
+
+   __syncthreads();
+   resultrehi = shVrehi[tdx]; // thread tdx computes the value at index idx
+   resultrelo = shVrelo[tdx];
+   resultimhi = shVimhi[tdx];
+   resultimlo = shVimlo[tdx];
+
+   for(int i=0; i<nrows/szt; i++)
+   {
+      vdx = i*szt + tdx;                 // index in V and in YWT
+      shVrehi[tdx] = Vrehi[vdx];         // threads load next szt values
+      shVrelo[tdx] = Vrelo[vdx];
+      shVimhi[tdx] = Vimhi[vdx];
+      shVimlo[tdx] = Vimlo[vdx];
+
+      __syncthreads();
+      for(int j=0; j<szt; j++)           // multiply szt values with YWT
+      {
+         ydx = WYHoff + i*szt + j;       // WYH is stored row by row
+         WYHvalrehi = WYHrehi[ydx];
+         WYHvalrelo = WYHrelo[ydx];
+         WYHvalimhi = WYHimhi[ydx];
+         WYHvalimlo = WYHimlo[ydx];
+         Vvalrehi = shVrehi[j];
+         Vvalrelo = shVrelo[j];
+         Vvalimhi = shVimhi[j];
+         Vvalimlo = shVimlo[j];
+         // result = result + WYHval*Vvalue;
+         // take the Hermitian transpose of V
+         ddg_mul(Vvalrehi,Vvalrelo,WYHvalrehi,WYHvalrelo,&acchi,&acclo);
+         ddg_inc(&resultrehi,&resultrelo,acchi,acclo);
+         ddg_mul(Vvalimhi,Vvalimlo,WYHvalimhi,WYHvalimlo,&acchi,&acclo);
+         ddg_dec(&resultrehi,&resultrelo,acchi,acclo);
+         ddg_mul(Vvalimhi,Vvalimlo,WYHvalrehi,WYHvalrelo,&acchi,&acclo);
+         ddg_inc(&resultrehi,&resultrelo,acchi,acclo);
+         ddg_mul(Vvalrehi,Vvalrelo,WYHvalimhi,WYHvalimlo,&acchi,&acclo);
+         ddg_inc(&resultrehi,&resultrelo,acchi,acclo);
+      }
+      __syncthreads();
+   }
+   int quot = nrows/szt;
+   int rest = nrows - quot*szt;          // remainder to compute
+
+   vdx = quot*szt + tdx;                 // next index to compute
+   shVrehi[tdx] = Vrehi[vdx];
+   shVrelo[tdx] = Vrelo[vdx];
+   shVimhi[tdx] = Vimhi[vdx];
+   shVimlo[tdx] = Vimlo[vdx];
+
+   for(int j=0; j<rest; j++)            // rest < szt prevents overflow
+   {
+      __syncthreads();
+      ydx = WYHoff + quot*szt + j;
+      WYHvalrehi = WYHrehi[ydx];
+      WYHvalrelo = WYHrelo[ydx];
+      WYHvalimhi = WYHimhi[ydx];
+      WYHvalimlo = WYHimlo[ydx];
+      Vvalrehi = shVrehi[j];
+      Vvalrelo = shVrelo[j];
+      Vvalimhi = shVimhi[j];
+      Vvalimlo = shVimlo[j];
+      // result = result + WYTval*Vvalue;
+      // take the Hermitian transpose of V
+      ddg_mul(Vvalrehi,Vvalrelo,WYHvalrehi,WYHvalrelo,&acchi,&acclo);
+      ddg_inc(&resultrehi,&resultrelo,acchi,acclo);
+      ddg_mul(Vvalimhi,Vvalimlo,WYHvalimhi,WYHvalimlo,&acchi,&acclo);
+      ddg_dec(&resultrehi,&resultrelo,acchi,acclo);
+      ddg_mul(Vvalimhi,Vvalimlo,WYHvalrehi,WYHvalrelo,&acchi,&acclo);
+      ddg_inc(&resultrehi,&resultrelo,acchi,acclo);
+      ddg_mul(Vvalrehi,Vvalrelo,WYHvalimhi,WYHvalimlo,&acchi,&acclo);
+      ddg_inc(&resultrehi,&resultrelo,acchi,acclo);
+   }
+   // result = -mybeta*result;
+   ddg_mul(-mybetahi,-mybetalo,resultrehi,resultrelo,&acchi,&acclo);
+
+   if(idx < nrows) 
+   {
+      Wrehi[idx] = acchi;
+      Wrelo[idx] = acclo;
+   }
+   ddg_mul(-mybetahi,-mybetalo,resultimhi,resultimlo,&acchi,&acclo);
+
+   if(idx < nrows) 
+   {
+      Wimhi[idx] = acchi;
+      Wimlo[idx] = acclo;
    }
 }
 
@@ -1836,6 +2076,136 @@ void GPU_dbl2_medium_VB_to_W
    }
 }
 
+void GPU_cmplx2_medium_VB_to_W
+ ( int nrows, int ncols, int szt, int idx,
+   double *Vrehi_h, double *Vrelo_h, double *Vimhi_h, double *Vimlo_h,
+   double *Vrehi_d, double *Vrelo_d, double *Vimhi_d, double *Vimlo_d,
+   double *Wrehi_h, double *Wrelo_h, double *Wimhi_h, double *Wimlo_h,
+   double *Wrehi_d, double *Wrelo_d, double *Wimhi_d, double *Wimlo_d,
+   double *WYHrehi_h, double *WYHrelo_h, double *WYHimhi_h, double *WYHimlo_h,
+   double *WYHrehi_d, double *WYHrelo_d, double *WYHimhi_d, double *WYHimlo_d,
+   double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
+   double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose )
+{
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int rowdim = nrows - idx*szt;
+   const int nbrblocks1 = (int) ceil(rowdim/((double) szt));
+
+   cudaEventRecord(start);
+   cmplx2_beta_times_V<<<nbrblocks1,szt>>>
+      (rowdim,szt,betahi_d,betalo_d,
+       Vrehi_d,Vrelo_d,Vimhi_d,Vimlo_d,Wrehi_d,Wrelo_d,Wimhi_d,Wimlo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+
+   const int nbrblocks2 = (int) ceil(rowdim*rowdim/((double) szt));
+
+   cudaEventRecord(start);
+   cmplx2_initialize_WYH<<<nbrblocks2,szt>>>
+      (rowdim,szt,Vrehi_d,Vrelo_d,Vimhi_d,Vimlo_d,Wrehi_d,Wrelo_d,
+       Wimhi_d,Wimlo_d,WYHrehi_d,WYHrelo_d,WYHimhi_d,WYHimlo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+
+   for(int j=1; j<szt; j++)
+   {
+      cudaEventRecord(start);
+      cmplx2_beta_next_W<<<nbrblocks1,szt>>>
+         (rowdim,szt,&betahi_d[j],&betalo_d[j],
+          &Vrehi_d[j*rowdim],&Vrelo_d[j*rowdim],
+          &Vimhi_d[j*rowdim],&Vimlo_d[j*rowdim],
+          &Wrehi_d[j*rowdim],&Wrelo_d[j*rowdim],
+          &Wimhi_d[j*rowdim],&Wimlo_d[j*rowdim],
+          WYHrehi_d,WYHrelo_d,WYHimhi_d,WYHimlo_d);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
+
+      cudaEventRecord(start);
+      cmplx2_update_WYH<<<nbrblocks2,szt>>>
+         (rowdim,szt,&Vrehi_d[j*rowdim],&Vrelo_d[j*rowdim],
+                     &Vimhi_d[j*rowdim],&Vimlo_d[j*rowdim],
+                     &Wrehi_d[j*rowdim],&Wrelo_d[j*rowdim],
+                     &Wimhi_d[j*rowdim],&Wimlo_d[j*rowdim],
+          WYHrehi_d,WYHrelo_d,WYHimhi_d,WYHimlo_d);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
+   }
+   if(verbose)
+   {
+      const size_t szbeta = szt*sizeof(double);
+      const size_t szhouse = rowdim*sizeof(double);
+      const size_t szVandW = szt*szhouse;
+      const size_t szmat = rowdim*rowdim*sizeof(double);
+
+      cudaMemcpy(betahi_h,betahi_d,szbeta,cudaMemcpyDeviceToHost);
+      cudaMemcpy(betalo_h,betalo_d,szbeta,cudaMemcpyDeviceToHost);
+      cout << "the betas :" << endl;
+      for(int j=0; j<szt; j++)
+         cout << "beta[" << j << "] : "
+              << betahi_h[j] << "  " << betalo_h[j] << endl;
+
+      cudaMemcpy(Vrehi_h,Vrehi_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Vrelo_h,Vrelo_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Vimhi_h,Vimhi_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Vimlo_h,Vimlo_d,szVandW,cudaMemcpyDeviceToHost);
+      cout << "the columns of the V matrix :" << endl;
+      int ix = 0;
+      for(int j=0; j<szt; j++) 
+         for(int i=0; i<rowdim; i++) 
+         {
+            cout << "V[" << i << "][" << j << "]re : "
+                 << Vrehi_h[ix] << "  " << Vrelo_h[ix] << endl;
+            cout << "V[" << i << "][" << j << "]im : "
+                 << Vimhi_h[ix] << "  " << Vimlo_h[ix] << endl;
+            ix = ix + 1;
+         }
+
+      cudaMemcpy(Wrehi_h,Wrehi_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Wrelo_h,Wrelo_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Wimhi_h,Wimhi_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Wimlo_h,Wimlo_d,szVandW,cudaMemcpyDeviceToHost);
+      cout << "the columns of the W matrix :" << endl;
+      ix = 0;
+      for(int j=0; j<szt; j++) 
+         for(int i=0; i<rowdim; i++) 
+         {
+            cout << "W[" << i << "][" << j << "]re : "
+                 << Wrehi_h[ix] << "  " << Wrelo_h[ix] << endl;
+            cout << "W[" << i << "][" << j << "]im : "
+                 << Wimhi_h[ix] << "  " << Wimlo_h[ix] << endl;
+            ix = ix + 1;
+         }
+
+      cudaMemcpy(WYHrehi_h,WYHrehi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYHrelo_h,WYHrelo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYHimhi_h,WYHimhi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYHimlo_h,WYHimlo_d,szmat,cudaMemcpyDeviceToHost);
+      cout << "the WYT matrix :" << endl;
+      ix = 0;
+      for(int i=0; i<rowdim; i++) 
+         for(int j=0; j<rowdim; j++) 
+         {
+            cout << "WYH[" << i << "][" << j << "]re : "
+                 << WYHrehi_h[ix] << "  " << WYHrelo_h[ix] << endl;
+            cout << "WYH[" << i << "][" << j << "]im : "
+                 << WYHimhi_h[ix] << "  " << WYHimlo_h[ix] << endl;
+            ix = ix + 1;
+         }
+   }
+}
+
 void GPU_dbl2_small_WYT
  ( int nrows, int szt,
    double *Whi_d, double *Wlo_d, double *Yhi_d, double *Ylo_d,
@@ -2654,18 +3024,16 @@ void GPU_dbl2_blocked_houseqr
                 bRTvhi_h,bRTvlo_h,bRTvhi_d,bRTvlo_d,tileRlapms,verbose);
          }
       }
-      // changed nrows into nrows - k*szt and ncols into szt
-/*
-      GPU_dbl2_VB_to_W
-         (nrows-k*szt,szt,szt,Vhi_h,Vlo_h,Vhi_d,Vlo_d,Whi_h,Wlo_h,
-          Whi_d,Wlo_d,betahi_h,betalo_h,betahi_d,betalo_d,vb2Wlapms,verbose);
- */
       GPU_dbl2_medium_VB_to_W
          (nrows,szt,szt,k,Vhi_h,Vlo_h,Vhi_d,Vlo_d,Whi_h,Wlo_h,Whi_d,Wlo_d,
           WYThi_h,WYTlo_h,WYThi_d,WYTlo_d,betahi_h,betalo_h,betahi_d,betalo_d,
           vb2Wlapms,addcnt,mulcnt,divcnt,verbose);
-      // update Q, WYT matrix has nrows - k*szt instead of nrows
 /*
+      // changed nrows into nrows - k*szt and ncols into szt
+      GPU_dbl2_VB_to_W
+         (nrows-k*szt,szt,szt,Vhi_h,Vlo_h,Vhi_d,Vlo_d,Whi_h,Wlo_h,
+          Whi_d,Wlo_d,betahi_h,betalo_h,betahi_d,betalo_d,vb2Wlapms,verbose);
+      // update Q, WYT matrix has nrows - k*szt instead of nrows
       GPU_dbl2_small_WYT
          (nrows-k*szt,szt,Whi_d,Wlo_d,Vhi_d,Vlo_d,WYThi_d,WYTlo_d,
           WYThi_h,WYTlo_h,WYTlapms,verbose);
@@ -2912,11 +3280,12 @@ void GPU_cmplx2_blocked_houseqr
    cudaMalloc((void**)&YWTCimhi_d,sznum + szpad);
    cudaMalloc((void**)&YWTCimlo_d,sznum + szpad);
 
-   *houselapms = 0.0;
-   *tileRlapms = 0.0;
-   *vb2Wlapms = 0.0;
+   *houselapms = 0.0; *tileRlapms = 0.0; *vb2Wlapms = 0.0;
    *WYTlapms = 0.0; *QWYTlapms = 0.0; *Qaddlapms = 0.0;
    *YWTlapms = 0.0; *YWTClapms = 0.0; *Raddlapms = 0.0;
+   long int *addcnt = 0;
+   long int *mulcnt = 0;
+   long int *divcnt = 0;
    struct timeval begintime,endtime; // wall clock time of computations
 
    gettimeofday(&begintime,0);
@@ -2943,6 +3312,15 @@ void GPU_cmplx2_blocked_houseqr
              Vrehi_d,Vrelo_d,Vimhi_d,Vimlo_d,
              betahi_h,betalo_h,betahi_d,betalo_d,tileRlapms,verbose);
       }
+      GPU_cmplx2_medium_VB_to_W
+         (nrows,szt,szt,k,
+          Vrehi_h,Vrelo_h,Vimhi_h,Vimlo_h,Vrehi_d,Vrelo_d,Vimhi_d,Vimlo_d,
+          Wrehi_h,Wrelo_h,Wimhi_h,Wimlo_h,Wrehi_d,Wrelo_d,Wimhi_d,Wimlo_d,
+          WYTrehi_h,WYTrelo_h,WYTimhi_h,WYTimlo_h,
+          WYTrehi_d,WYTrelo_d,WYTimhi_d,WYTimlo_d,
+          betahi_h,betalo_h,betahi_d,betalo_d,
+          vb2Wlapms,addcnt,mulcnt,divcnt,verbose);
+/*
       GPU_cmplx2_VB_to_W(nrows-k*szt,szt,szt,
           Vrehi_h,Vrelo_h,Vimhi_h,Vimlo_h,Vrehi_d,Vrelo_d,Vimhi_d,Vimlo_d,
           Wrehi_h,Wrelo_h,Wimhi_h,Wimlo_h,Wrehi_d,Wrelo_d,Wimhi_d,Wimlo_d,
@@ -2952,6 +3330,7 @@ void GPU_cmplx2_blocked_houseqr
             Vrehi_d,  Vrelo_d,  Vimhi_d,  Vimlo_d,
           WYTrehi_d,WYTrelo_d,WYTimhi_d,WYTimlo_d,
           WYTrehi_h,WYTrelo_h,WYTimhi_h,WYTimlo_h,WYTlapms,verbose);
+ */
       GPU_cmplx2_small_QWYT(nrows,szt,k,
              Qrehi_d,   Qrelo_d,   Qimhi_d,   Qimlo_d,
            WYTrehi_d, WYTrelo_d, WYTimhi_d, WYTimlo_d,
