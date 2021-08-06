@@ -4,6 +4,7 @@ Thu 5 Aug 2021 : fixed call to _small_leftRupdate in dbl_baqr_kernels.cu
   transpose to V instead of to W in dbl_baqr_kernels.cu, which fixed
   the complex case for square matrices.  Fixed the naming of the functions
   in dbl_baqr_kernels, no longer calling the separate kernel for WYT.
+  Improved the computation of W in dbl2_baqr_kernels, on real data.
 
 Wed 4 Aug 2021 : added the count of calls to sqrt() in dbl_baqr_kernels,
   updated dbl_baqr_testers.cpp.  Increased the shared memory limits for

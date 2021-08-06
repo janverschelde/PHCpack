@@ -222,7 +222,7 @@ __global__ void cmplx2_VB_to_W
  *            is the number of elements in B,
  *            and the number of columns in V, Y, and W;
  *   Bhi      Bhi[i] is the high double of the i-th beta computed by house;
- *   Blo      Blo[i] is the low doubles of the i-th beta computed by house;
+ *   Blo      Blo[i] is the low double of the i-th beta computed by house;
  *   Vrehi    Vrehi[nrows*i] is the start of the high doubles
  *            of the real parts of the i-th Householder vector,
  *            with i zeros inserted so V is trapezoidal;
@@ -246,12 +246,68 @@ __global__ void cmplx2_VB_to_W
  *   Wimhi    high doubles of the imaginary parts of the W matrix;
  *   Wimlo    low doubles of the imaginary parts of the W matrix. */
 
+__global__ void dbl2_beta_times_V
+ ( int nrows, int szt, double *Bhi, double *Blo,
+   double *Vhi, double *Vlo, double *Whi, double *Wlo );
+/*
+ * DESCRIPTION :
+ *   Computes the first vector in the W representation of the Householder
+ *   transformations, multiplying B[0] with the first vector of V,
+ *   and flipping the sign, with multiple blocks of threads, on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in V and W;
+ *   szt      size of one tile and the number of threads in a block;
+ *   Bhi      Bhi[i] is the high double of the i-th beta computed by house;
+ *   Blo      Blo[i] is the low double of the i-th beta computed by house;
+ *   Vhi      Vhi[nrows*i] is the start of the high doubles of the i-th
+ *            Householder vector, with i zeros inserted so V is trapezoidal;
+ *   Vlo      Vlo[nrows*i] is the start of the low doubles of the i-th
+ *            Householder vector, with i zeros inserted so V is trapezoidal;
+ *   Whi      space for the high doubles of the W matrix;
+ *   Wlo      space for the low doubles of the W matrix.
+ *
+ * ON RETURN :
+ *   Whi      the first nrows numbers store the high doubles of the
+ *            first vector of the W matrix in the WY representation;
+ *   Wlo      the first nrows numbers store the low doubles of the
+ *            first vector of the W matrix in the WY representation. */
+
+__global__ void dbl2_initialize_WYT
+ ( int dim, int szt, double *Vhi, double *Vlo,
+   double *Whi, double *Wlo, double *WYThi, double *WYTlo );
+/*
+ * DESCRIPTION :
+ *   Initializes the matrix YWT with the product of the first dim products
+ *   of W with Y elements with multiple blocks of szt threads,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in WYT;
+ *   szt      number of threads in one block;
+ *   Vhi      the first dim numbers define the high doubles of
+ *            the first Householder vector;
+ *   Vlo      the first dim numbers define the low doubles of
+ *            the first Householder vector;
+ *   Whi      the first dim numbers define the high doubles of
+ *            the first column in the W matrix;
+ *   Wlo      the first dim numbers define the low doubles of
+ *            the first column in the W matrix;
+ *   WYThi    space for a dim-by-dim matrix;
+ *   WYTlo    space for a dim-by-dim matrix.
+ *
+ * ON RETURN :
+ *   WYThi    high doubles of w*y^T,
+ *            where y and w are the first columns of V and W;
+ *   WYTlo    low doubles of w*y^T,
+ *            where y and w are the first columns of V and W. */
+
 __global__ void dbl2_small_WYT
- ( int nrows, int szt, double *Whi, double *Wlo, double *Yhi, double *Ylo,
+ ( int nrows, int szt, double *Whi, double *Wlo, double *Vhi, double *Vlo,
    double *WYThi, double *WYTlo );
 /*
  * DESCRIPTION :
- *   Multiplies W with Y^T into the matrix WYT, on real data.
+ *   Multiplies W with V^T into the matrix WYT, on real data.
  *   Computes Y*W^T, swapping W with Y in the input arguments.
  *
  * ON ENTRY :
@@ -260,8 +316,8 @@ __global__ void dbl2_small_WYT
  *            equals the number of threads in a block;
  *   Whi      high doubles of the W matrix in the WY representation;
  *   Wlo      low doubles of the W matrix in the WY representation;
- *   Yhi      the columns of Y are high doubles of the Householder vectors;
- *   Ylo      the columns of Y are low doubles of the Householder vectors;
+ *   Vhi      the columns of V are high doubles of the Householder vectors;
+ *   Vlo      the columns of V are low doubles of the Householder vectors;
  *   WYThi    space for an nrows-by-nrows matrix,
  *            with extra padding for when nrows > szt;
  *   WYTlo    space for an nrows-by-nrows matrix,
@@ -270,6 +326,61 @@ __global__ void dbl2_small_WYT
  * ON RETURN :
  *   WYThi    high doubles of the product of W with Y^T;
  *   WYTlo    low doubles of the product of W with Y^T. */
+
+__global__ void dbl2_update_WYT
+ ( int dim, int szt, double *Vhi, double *Vlo, double *Whi, double *Wlo,
+   double *WYThi, double *WYTlo );
+/*
+ * DESCRIPTION :
+ *   Updates the matrix WYT with the product of the first dim products
+ *   of W with Y elements with multiple blocks of szt threads,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   dim      number of rows and columns in YWT;
+ *   szt      number of threads in one block;
+ *   Vhi      the first dim numbers define the high doubles
+ *            of the next Householder vector;
+ *   Vlo      the first dim numbers define the low doubles
+ *            of the next Householder vector;
+ *   Whi      the first dim numbers define the high doubles
+ *            of the next column in the W matrix;
+ *   Wlo      the first dim numbers define the low doubles
+ *            of the next column in the W matrix;
+ *   WYThi    an dim-by-dim matrix with the high doubles for WYT;
+ *   WYTlo    an dim-by-dim matrix with the low doubles for WYT.
+ *
+ * ON RETURN :
+ *   WYThi    high doubles of the updated matrix W*Y^T;
+ *   WYTlo    low doubles of the updated matrix W*Y^T. */
+
+__global__ void dbl2_beta_next_W
+ ( int nrows, int szt, double *Bhi, double *Blo, double *Vhi, double *Vlo,
+   double *Whi, double *Wlo, double *WYThi, double *WYTlo );
+/*
+ * DECRIPTION :
+ *   Computes the next column in the W matrix, with multiple blocks,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in V, W, and the dimension of WYT;
+ *   szt      number of threads in one block;
+ *   Bhi      high double of the beta with the next Householder vector;
+ *   Blo      low double of the beta with the next Householder vector;
+ *   Vhi      the first dim numbers define the high doubles
+ *            of the next Householder vector;
+ *   Vlo      the first dim numbers define the low doubles
+ *            of the next Householder vector;
+ *   Whi      the first dim numbers define the high doubles
+ *            of the next column in the W matrix;
+ *   Wlo      the first dim numbers define the low doubles
+ *            of the next column in the W matrix;
+ *   WYThi    an dim-by-dim matrix with the high doubles for WYT;
+ *   WYTlo    an dim-by-dim matrix with the low doubles for WYT.
+ *
+ * ON RETURN :
+ *   Whi      the high doubles of the next column of W;
+ *   Wlo      the low doubles of the next column of W. */
 
 __global__ void cmplx2_small_WYT
  ( int nrows, int szt,
@@ -931,6 +1042,67 @@ void GPU_cmplx2_VB_to_W
  *   Wimlo_h  has the low doubles of the imaginary parts of the W matrix,
  *            if verbose;
  *   lapms    elapsed time spent by the kernel. */
+
+void GPU_dbl2_medium_VB_to_W
+ ( int nrows, int ncols, int szt, int idx,
+   double *Vhi_h, double *Vlo_h, double *Vhi_d, double *Vlo_d,
+   double *Whi_h, double *Wlo_h, double *Whi_d, double *Wlo_d,
+   double *WYThi_h, double *WYTlo_h, double *WYThi_d, double *WYTlo_d,
+   double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
+   double *lapms, long int *add, long int *mul, long int *div,
+   bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to compute the W in the WY representation,
+ *   on real data.
+ *   Wraps the timer and the print statements if verbose.
+ *   If verbose, then the W matrix is returned on the host.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrices V, Y, and W;
+ *   ncols    equals the size of one tile, or equivalently,
+ *            is the number of elements in B,
+ *            and the number of columns in V, Y, and W;
+ *   szt      size of one tile and the number of threads in a block;
+ *   idx      index of the current tile;
+ *   Vhi_h    high doubles of the Householder vectors, if verbose;
+ *   Vlo_h    low doubles of the Householder vectors, if verbose;
+ *   Vhi_d    high doubles of the Householder vectors on the device;
+ *   Vlo_d    low doubles of the Householder vectors on the device;
+ *   Whi_h    space for the high doubles of the W matrix, if verbose;
+ *   Wlo_h    space for the low doubles of the W matrix, if verbose;
+ *   Whi_d    space for high doubles of W on the device;
+ *   Wlo_d    space for low doubles of W on the device;
+ *   WYThi_h  space for the high doubles of W*Y^T, if verbose;
+ *   WYTlo_h  space for the low doubles of W*Y^T, if verbose;
+ *   WYThi_d  space for the high doubles of W*Y^T, on the device;
+ *   WYTlo_d  space for the low doubles of W*Y^T, on the device;
+ *   betahi_h has space for the betas if verbose;
+ *   betalo_h has space for the betas if verbose;
+ *   betahi_d has space on the device for the betas;
+ *   betalo_d has space on the device for the betas;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   Vhi_h    high doubles of the Y matrix, if verbose;
+ *   Vlo_h    low doubles of the Y matrix, if verbose;
+ *   Vhi_d    high doubles of the Y matrix on the device;
+ *   Vlo_d    low doubles of the Y matrix on the device;
+ *   Whi_d    high doubles of the W matrix, on the device;
+ *   Wlo_d    low doubles of the W matrix, on the device;
+ *   Whi_h    high doubles of the W matrix, if verbose;
+ *   Wlo_h    low doubles of the W matrix, if verbose;
+ *   WYThi_h  high doubles of W*Y^T, if verbose;
+ *   WYTlo_h  low doubles of W*Y^T, if verbose;
+ *   WYThi_d  high doubles of W*Y^T, on the device;
+ *   WYTlo_d  low doubles of W*Y^T, on the device;
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
 
 void GPU_dbl2_small_WYT
  ( int nrows, int szt,
