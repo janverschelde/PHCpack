@@ -227,6 +227,10 @@ void test_cmplx_blocked_qr
    double houselapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
+   long int addcnt = 0;
+   long int mulcnt = 0;
+   long int divcnt = 0;
+   long int sqrtcnt = 0;
 
    if((mode == 0) || (mode == 2))
    {
@@ -236,7 +240,8 @@ void test_cmplx_blocked_qr
          (nrows,ncols,sizetile,numtiles,Are,Aim,Qre_d,Qim_d,Rre_d,Rim_d,
           &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
-          &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,bvrb);
+          &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
+          &addcnt,&mulcnt,&divcnt,&sqrtcnt,bvrb);
 
       fail = test_cmplx_qr_factors
                 (nrows,ncols,Are,Aim,Qre_d,Qim_d,Rre_d,Rim_d,tol,verbose);
@@ -248,6 +253,7 @@ void test_cmplx_blocked_qr
          cout << "The test failed for tol = " << tol << "." << endl;
       }
    }
+   cout << endl;
    cout << fixed << setprecision(3);
    if((mode == 1) || (mode == 2))
    {
@@ -276,6 +282,18 @@ void test_cmplx_blocked_qr
       cout << Raddlapsedms << " milliseconds." << endl;
       cout << "        Total GPU wall clock computation time : ";
       cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
+      cout << endl;
+      cout << "             Number of additions/subtractions : "
+           << addcnt << endl;
+      cout << "                    Number of multiplications : "
+           << mulcnt << endl;
+      cout << "                          Number of divisions : "
+           << divcnt << endl;
+      cout << "                    Number of calls to sqrt() : "
+           << sqrtcnt << endl;
+      long int flopcnt = addcnt + mulcnt + divcnt + sqrtcnt;
+      cout << "    Total number of floating-point operations : "
+           << flopcnt << endl;
    }
    for(int i=0; i<nrows; i++)
    {
