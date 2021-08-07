@@ -1,5 +1,6 @@
 Fri 6 Aug 2021 : first version of improved kernels to compute W on complex
   data in dbl2_baqr_kernels.  Bug fixed in dbl2_baqr_kernels.cu.
+  Updated the flopcounts in dbl_baqr_kernels, for real data.
 
 Thu 5 Aug 2021 : fixed call to _small_leftRupdate in dbl_baqr_kernels.cu
   so it now works for all dimensions.  Added first versions of kernels to

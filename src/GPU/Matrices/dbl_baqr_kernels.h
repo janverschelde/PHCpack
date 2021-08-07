@@ -113,13 +113,12 @@ __global__ void dbl_small_leftRupdate
  * ON RETURN :
  *   R        the updated matrix is trapezoidal. */
 
-void flopcount_small_leftRupdate
- ( int nrows, int ncols, int szt, int k,
-   long int *add, long int *mul, long int *div );
+void flopcount_dbl_small_leftRupdate
+ ( int nrows, int ncols, int szt, int k, long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating point operations to update
- *   one tile of the matrix with one block of threads.
+ *   one tile of the matrix with one block of threads, on real data.
  *
  * ON ENTRY :
  *   nrows    number of rows of R;
@@ -127,13 +126,11 @@ void flopcount_small_leftRupdate
  *   szt      size of each block;
  *   k        index of the current column;
  *   add      current number of additions and subtractions;
- *   mul      current number of multiplications;
- *   div      current number of divisions.
+ *   mul      current number of multiplications.
  *
  * ON RETURN :
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 __global__ void cmplx_small_leftRupdate
  ( int nrows, int ncols, int szt, int k,
@@ -160,6 +157,25 @@ __global__ void cmplx_small_leftRupdate
  *   Rre      real parts of the updated matrix, which is trapezoidal;
  *   Rim      imaginary parts of the updated matrix. */
 
+void flopcount_cmplx_small_leftRupdate
+ ( int nrows, int ncols, int szt, int k, long int *add, long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating point operations to update
+ *   one tile of the matrix with one block of threads, on complex data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   ncols    number of columns of R;
+ *   szt      size of each block;
+ *   k        index of the current column;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
+
 __global__ void dbl_small_betaRTv
  ( int nrows, int ncols, int szt, int k,
    double *R, double *v, double *beta, double *w );
@@ -182,8 +198,7 @@ __global__ void dbl_small_betaRTv
  *   w        the first ncols-k numbers define beta*R^T*v. */
 
 void flopcount_dbl_small_betaRTv 
- ( int nrows, int ncols, int szt, int k,
-   long int *add, long int *mul, long int *div );
+ ( int nrows, int ncols, int szt, int k, long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to compute
@@ -196,13 +211,11 @@ void flopcount_dbl_small_betaRTv
  *   szt      size of each block;
  *   k        index of the current column;
  *   add      current number of additions and subtractions;
- *   mul      current number of multiplications;
- *   div      current number of divisions.
+ *   mul      current number of multiplications.
  *
  * ON RETURN :
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 __global__ void cmplx_small_betaRTv
  ( int nrows, int ncols, int szt, int k,
@@ -232,6 +245,26 @@ __global__ void cmplx_small_betaRTv
  *            the real parts of beta*R^T*v;
  *   wim      the first ncols-k numbers define
  *            the imaginary parts of beta*R^T*v. */
+
+void flopcount_cmplx_small_betaRTv 
+ ( int nrows, int ncols, int szt, int k, long int *add, long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to compute
+ *   the vector beta*R^T*v, with one block of ncols - k threads,
+ *   on complex data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   ncols    number of columns of R;
+ *   szt      size of each block;
+ *   k        index of the current column;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
 
 __global__ void dbl_medium_betaRTv
  ( int nrows, int ncols, int szt, int k,
@@ -280,8 +313,7 @@ __global__ void dbl_medium_subvbetaRTv
  *   R        the updated matrix is trapezoidal. */
 
 void flopcount_dbl_medium_subvbetaRTv
- ( int nrows, int ncols, int szt, int k,
-   long int *add, long int *mul, long int *div );
+ ( int nrows, int ncols, int szt, int k, long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to apply
@@ -294,13 +326,11 @@ void flopcount_dbl_medium_subvbetaRTv
  *   szt      size of each block;
  *   k        index of the current column;
  *   add      current number of additions and subtractions;
- *   mul      current number of multiplications;
- *   div      current number of divisions.
+ *   mul      current number of multiplications.
  *
  * ON RETURN :
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 __global__ void cmplx_medium_subvbetaRTv
  ( int nrows, int ncols, int szt, int k,
@@ -331,6 +361,26 @@ __global__ void cmplx_medium_subvbetaRTv
  *   Rre      real parts of the updated matrix, which is trapezoidal;
  *   Rim      imaginary parts of the updated matrix. */
 
+void flopcount_cmplx_medium_subvbetaRTv
+ ( int nrows, int ncols, int szt, int k, long int *add, long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to apply
+ *   the Householder vector to update R, with multiple blocks,
+ *   on complex data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   ncols    number of columns of R;
+ *   szt      size of each block;
+ *   k        index of the current column;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
+
 __global__ void dbl_VB_to_W
  ( int nrows, int ncols, double *B, double *V, double *W );
 /*
@@ -354,7 +404,7 @@ __global__ void dbl_VB_to_W
  *   W        the W matrix in the WY representation. */
 
 void flopcount_dbl_VB_to_W
- ( int nrows, int ncols, long int *add, long int *mul, long int* div );
+ ( int nrows, int ncols, long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to
@@ -366,13 +416,11 @@ void flopcount_dbl_VB_to_W
  *            is the number of elements in B,
  *            and the number of columns in V, Y, and W;
  *   add      current number of additions and subtractions;
- *   mul      current number of multiplications;
- *   div      current number of divisions.
+ *   mul      current number of multiplications.
  *
  * ON RETURN :
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 __global__ void cmplx_VB_to_W
  ( int nrows, int ncols, double *B,
@@ -400,6 +448,25 @@ __global__ void cmplx_VB_to_W
  *   Wre      real parts of the W matrix in the WY representation;
  *   Wim      imaginary parts of the W matrix in the WY representation. */
 
+void flopcount_cmplx_VB_to_W
+ ( int nrows, int ncols, long int *add, long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to
+ *   compute the W, with one block of threads, on complex data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrices V, Y, and W;
+ *   ncols    equals the size of one tile, or equivalently,
+ *            is the number of elements in B,
+ *            and the number of columns in V, Y, and W;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
+
 __global__ void dbl_beta_times_V
  ( int nrows, int szt, double *B, double *V, double *W );
 /*
@@ -419,6 +486,19 @@ __global__ void dbl_beta_times_V
  * ON RETURN :
  *   W        the first nrows numbers store the first vector
  *            of the W matrix in the WY representation. */
+
+void flopcount_dbl_beta_times_V ( int nrows, long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of multiplications to multipy beta with the
+ *   first Householder vector, with multiple blocks, on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in V, minus the inserted zeros;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   mul      accumulated number of multiplications. */
 
 __global__ void cmplx_beta_times_V
  ( int nrows, int szt, double *B,
@@ -446,8 +526,21 @@ __global__ void cmplx_beta_times_V
  *   Wim      the first nrows numbers store the imaginary parts of the first
  *            vector of the W matrix in the WY representation. */
 
+void flopcount_cmplx_beta_times_V ( int nrows, long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of multiplications to multipy beta with the
+ *   first Householder vector, with multiple blocks, on complex data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in V, minus the inserted zeros;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   mul      accumulated number of multiplications. */
+
 __global__ void dbl_initialize_WYT
- ( int dim, int szt, double *V, double *W, double *YWT );
+ ( int dim, int szt, double *V, double *W, double *WYT );
 /*
  * DESCRIPTION :
  *   Initializes the matrix YWT with the product of the first dim products
@@ -463,6 +556,19 @@ __global__ void dbl_initialize_WYT
  *
  * ON RETURN :
  *   WYT      equals w*y^T, where y and w are the first columns of V and W. */
+
+void flopcount_dbl_initialize_WYT ( int dim, long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of multiplications to initialize W*Y^T,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the matrix W*Y^T;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   mul      accumulated number of multiplications. */
 
 __global__ void cmplx_initialize_WYH
  ( int dim, int szt, double *Vre, double *Vim, double *Wre, double *Wim,
@@ -493,6 +599,22 @@ __global__ void cmplx_initialize_WYH
  *   WYHim    equals the imaginary parts of y*w^H,
  *            where y and w are the first columns of V and W. */
 
+void flopcount_cmplx_initialize_WYH
+ ( int dim, long int *add, long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to initialize W*Y^H,
+ *   on complex data.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the matrix W*Y^H;
+ *   add      current number of additions;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions;
+ *   mul      accumulated number of multiplications. */
+
 __global__ void dbl_update_WYT
  ( int dim, int szt, double *V, double *W, double *WYT );
 /*
@@ -510,6 +632,22 @@ __global__ void dbl_update_WYT
  *
  * ON RETURN :
  *   WYT      the updated matrix W*Y^T. */
+
+void flopcount_dbl_update_WYT
+ ( int dim, long int *add, long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to update W*Y^T,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the matrix W*Y^T;
+ *   add      current number of additions;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions;
+ *   mul      accumulated number of multiplications. */
 
 __global__ void cmplx_update_WYH
  ( int dim, int szt, double *Vre, double *Vim, double *Wre, double *Wim,
@@ -538,6 +676,22 @@ __global__ void cmplx_update_WYH
  *   WYHre    the real parts of the updated W*Y*H;
  *   WYHim    the imaginary parts of the update W*Y^H. */
 
+void flopcount_cmplx_update_WYH
+ ( int dim, long int *add, long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to update W*Y^H,
+ *   on complex data.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the matrix W*Y^H;
+ *   add      current number of additions;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions;
+ *   mul      accumulated number of multiplications. */
+
 __global__ void dbl_beta_next_W
  ( int nrows, int szt, double *B, double *V, double *W, double *WYT );
 /*
@@ -554,6 +708,21 @@ __global__ void dbl_beta_next_W
  *
  * ON RETURN :
  *   W        contains the values of the next column of W. */
+
+void flopcount_dbl_beta_next_W ( int nrows, long int *add, long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to compute the
+ *   next column of W, with multiple blocks, on real data.
+ *
+ * ON ENTRY :
+ *   nrows    the number of rows and the total number of threads;
+ *   add      current number of additions;
+ *   mul      current number of multipications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions;
+ *   mul      accumulated number of multiplications. */
 
 __global__ void cmplx_beta_next_W
  ( int nrows, int szt, double *B, double *Vre, double *Vim,
@@ -580,6 +749,21 @@ __global__ void cmplx_beta_next_W
  * ON RETURN :
  *   Wre      contains the real parts of the next column of W;
  *   Wim      contains the imaginary parts of the next column of W. */
+
+void flopcount_cmplx_beta_next_W ( int nrows, long int *add, long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to compute the
+ *   next column of W, with multiple blocks, on complex data.
+ *
+ * ON ENTRY :
+ *   nrows    the number of rows and the total number of threads;
+ *   add      current number of additions;
+ *   mul      current number of multipications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions;
+ *   mul      accumulated number of multiplications. */
 
 __global__ void dbl_small_WYT
  ( int nrows, int szt, double *W, double *Y, double *WYT );

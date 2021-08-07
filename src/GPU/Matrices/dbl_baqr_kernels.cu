@@ -197,8 +197,7 @@ __global__ void dbl_small_leftRupdate
 }
 
 void flopcount_dbl_small_leftRupdate
- ( int nrows, int ncols, int szt, int k,
-   long int *add, long int *mul, long int *div )
+ ( int nrows, int ncols, int szt, int k, long int *add, long int *mul )
 {
    const int nbthreads = ncols - k;
 
@@ -255,6 +254,15 @@ __global__ void cmplx_small_leftRupdate
    }
 }
 
+void flopcount_cmplx_small_leftRupdate
+ ( int nrows, int ncols, int szt, int k, long int *add, long int *mul )
+{
+   const int nbthreads = ncols - k;
+
+   *add += 8*(nrows - k)*nbthreads;
+   *mul += 8*(nrows - k)*nbthreads + nbthreads;
+}
+
 __global__ void dbl_small_betaRTv
  ( int nrows, int ncols, int szt, int k,
    double *R, double *v, double *beta, double *w )
@@ -280,8 +288,7 @@ __global__ void dbl_small_betaRTv
 }
 
 void flopcount_dbl_small_betaRTv 
- ( int nrows, int ncols, int szt, int k,
-   long int *add, long int *mul, long int *div )
+ ( int nrows, int ncols, int szt, int k, long int *add, long int *mul )
 {
    const int nbthreads = nrows - k;
 
@@ -323,6 +330,15 @@ __global__ void cmplx_small_betaRTv
    resultim = mybeta*resultim;
    wre[tdx] = resultre;
    wim[tdx] = resultim;
+}
+
+void flopcount_cmplx_small_betaRTv 
+ ( int nrows, int ncols, int szt, int k, long int *add, long int *mul )
+{
+   const int nbthreads = nrows - k;
+
+   *add += 4*(nrows-k)*nbthreads;
+   *mul += 4*(nrows-k)*nbthreads + 2*nbthreads;
 }
 
 __global__ void dbl_medium_betaRTv
@@ -388,8 +404,7 @@ __global__ void dbl_medium_subvbetaRTv
 }
 
 void flopcount_dbl_medium_subvbetaRTv
- ( int nrows, int ncols, int szt, int k,
-   long int *add, long int *mul, long int *div )
+ ( int nrows, int ncols, int szt, int k, long int *add, long int *mul )
 {
    const int endcol = (k+1)*szt;     // 1 + last column index in tile
    // total number of entries in R that will be modified
@@ -442,6 +457,18 @@ __global__ void cmplx_medium_subvbetaRTv
    }
 }
 
+void flopcount_cmplx_medium_subvbetaRTv
+ ( int nrows, int ncols, int szt, int k, long int *add, long int *mul )
+{
+   const int endcol = (k+1)*szt;     // 1 + last column index in tile
+   // total number of entries in R that will be modified
+   // equals the number of threads that compute
+   const int nbthreads = (nrows - k)*(endcol - k);
+
+   *add += 4*nbthreads;
+   *mul += 4*nbthreads;
+}
+
 __global__ void dbl_VB_to_W
  ( int nrows, int ncols, double *B, double *V, double *W )
 {
@@ -486,11 +513,11 @@ __global__ void dbl_VB_to_W
 }
 
 void flopcount_dbl_VB_to_W
- ( int nrows, int ncols, long int *add, long int *mul, long int* div )
+ ( int nrows, int ncols, long int *add, long int *mul )
 {
    // the number of threads equals nrows
-   *add += nrows*(ncols-1)*ncols;
-   *mul += nrows + nrows*(ncols-1)*ncols + nrows*(ncols-1);
+   *add += nrows*((ncols-1)*ncols/2*(1+nrows) + ncols-1);
+   *mul += nrows*(1 + (ncols-1)*ncols + ncols-1);
 }
 
 __global__ void cmplx_VB_to_W
@@ -570,6 +597,14 @@ __global__ void cmplx_VB_to_W
    }
 }
 
+void flopcount_cmplx_VB_to_W
+ ( int nrows, int ncols, long int *add, long int *mul )
+{
+   // the number of threads equals nrows
+   *add += nrows*((ncols-1)*ncols/2*(6+2*nrows) + 2*(ncols-1));
+   *mul += nrows*(2 + 4*(ncols-1)*ncols + 2*(ncols-1));
+}
+
 __global__ void dbl_beta_times_V
  ( int nrows, int szt, double *B, double *V, double *W )
 {
@@ -585,6 +620,14 @@ __global__ void dbl_beta_times_V
    result = -B[0]*shv[tdx];
 
    if(idx < nrows) W[idx] = result;
+}
+
+void flopcount_dbl_beta_times_V ( int nrows, long int *mul )
+{
+   const int nbthreads = nrows;
+   // equals rowdim as in the call to the dbl_beta_times kernel
+
+   *mul += nbthreads;
 }
 
 __global__ void cmplx_beta_times_V
@@ -612,6 +655,14 @@ __global__ void cmplx_beta_times_V
    }
 }
 
+void flopcount_cmplx_beta_times_V ( int nrows, long int *mul )
+{
+   const int nbthreads = nrows;
+   // equals rowdim as in the call to the dbl_beta_times kernel
+
+   *mul += 2*nbthreads;
+}
+
 __global__ void dbl_initialize_WYT
  ( int dim, int szt, double *V, double *W, double *WYT )
 {
@@ -626,6 +677,12 @@ __global__ void dbl_initialize_WYT
    const double result = Vval*Wval;
 
    if(idx < dim*dim) WYT[idx] = result;
+}
+
+void flopcount_dbl_initialize_WYT ( int dim, long int *mul )
+{
+   // the number of threads equals dim*dim
+   *mul += dim*dim;
 }
 
 __global__ void cmplx_initialize_WYH
@@ -653,6 +710,14 @@ __global__ void cmplx_initialize_WYH
    }
 }
 
+void flopcount_cmplx_initialize_WYH
+ ( int dim, long int *add, long int *mul )
+{
+   // the number of threads equals dim*dim
+   *add += 2*dim*dim;
+   *mul += 4*dim*dim;
+}
+
 __global__ void dbl_update_WYT
  ( int dim, int szt, double *V, double *W, double *WYT )
 {
@@ -669,6 +734,14 @@ __global__ void dbl_update_WYT
    result = result + Vval*Wval;
 
    if(idx < dim*dim) WYT[idx] = result;
+}
+
+void flopcount_dbl_update_WYT
+ ( int dim, long int *add, long int *mul )
+{
+   // the number of threads equals dim*dim
+   *add += dim*dim;
+   *mul += dim*dim;
 }
 
 __global__ void cmplx_update_WYH
@@ -698,6 +771,14 @@ __global__ void cmplx_update_WYH
       WYHre[idx] = resultre;
       WYHim[idx] = resultim;
    }
+}
+
+void flopcount_cmplx_update_WYH
+ ( int dim, long int *add, long int *mul )
+{
+   // the number of threads equals dim*dim
+   *add += 4*dim*dim;
+   *mul += 4*dim*dim;
 }
 
 __global__ void dbl_beta_next_W
@@ -748,6 +829,13 @@ __global__ void dbl_beta_next_W
    result = -mybeta*result;
 
    if(idx < nrows) W[idx] = result;
+}
+
+void flopcount_dbl_beta_next_W ( int nrows, long int *add, long int *mul )
+{
+   // the number of threads equals nrows
+   *add += nrows;
+   *mul += nrows + 1;
 }
 
 __global__ void cmplx_beta_next_W
@@ -820,6 +908,14 @@ __global__ void cmplx_beta_next_W
       Wim[idx] = resultim;
    }
 }
+
+void flopcount_cmplx_beta_next_W ( int nrows, long int *add, long int *mul )
+{
+   // the number of threads equals nrows
+   *add += 4*nrows;
+   *mul += 4*nrows + 2;
+}
+
 
 __global__ void dbl_small_WYT
  ( int nrows, int szt, double *W, double *Y, double *WYT )
@@ -1292,7 +1388,7 @@ void GPU_dbl_small_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
-   flopcount_dbl_small_leftRupdate(nrows,ncols,szt,colidx,add,mul,div);
+   flopcount_dbl_small_leftRupdate(nrows,ncols,szt,colidx,add,mul);
 
    if(verbose)
    {
@@ -1385,8 +1481,8 @@ void GPU_dbl_medium_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
-   flopcount_dbl_small_betaRTv(nrows,endcol,szt,colidx,add,mul,div);
-   flopcount_dbl_medium_subvbetaRTv(nrows,endcol,szt,colidx,add,mul,div);
+   flopcount_dbl_small_betaRTv(nrows,endcol,szt,colidx,add,mul);
+   flopcount_dbl_medium_subvbetaRTv(nrows,endcol,szt,colidx,add,mul);
 
    if(verbose)
    {
@@ -1492,7 +1588,7 @@ void GPU_dbl_VB_to_W
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
-   flopcount_dbl_VB_to_W(nrows,ncols,add,mul,div);
+   flopcount_dbl_VB_to_W(nrows,ncols,add,mul);
 
    if(verbose)
    {
@@ -1612,6 +1708,7 @@ void GPU_dbl_medium_VB_to_W
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_beta_times_V(rowdim,mul);
 
    const int nbrblocks2 = (int) ceil(rowdim*rowdim/((double) szt));
 
@@ -1621,6 +1718,7 @@ void GPU_dbl_medium_VB_to_W
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_initialize_WYT(rowdim,mul);
 
    for(int j=1; j<szt; j++)
    {
@@ -1631,6 +1729,7 @@ void GPU_dbl_medium_VB_to_W
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
+      flopcount_dbl_beta_next_W(rowdim,add,mul);
 
       cudaEventRecord(start);
       dbl_update_WYT<<<nbrblocks2,szt>>>
@@ -1639,6 +1738,7 @@ void GPU_dbl_medium_VB_to_W
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
+      flopcount_dbl_update_WYT(rowdim,add,mul);
    }
 
    if(verbose)
@@ -1706,6 +1806,7 @@ void GPU_cmplx_medium_VB_to_W
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_cmplx_beta_times_V(rowdim,mul);
 
    const int nbrblocks2 = (int) ceil(rowdim*rowdim/((double) szt));
 
@@ -1720,6 +1821,7 @@ void GPU_cmplx_medium_VB_to_W
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_cmplx_initialize_WYH(rowdim,add,mul);
 
    for(int j=1; j<szt; j++)
    {
@@ -1735,6 +1837,7 @@ void GPU_cmplx_medium_VB_to_W
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
+      flopcount_cmplx_beta_next_W(rowdim,add,mul);
 
       if(verbose)
          cout << "-> launching " << nbrblocks2 << " blocks of " << szt
@@ -1748,6 +1851,7 @@ void GPU_cmplx_medium_VB_to_W
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
+      flopcount_cmplx_update_WYH(rowdim,add,mul);
    }
 
    if(verbose)
