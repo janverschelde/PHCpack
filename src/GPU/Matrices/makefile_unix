@@ -10,9 +10,9 @@ CUDALIB=/usr/local/cuda/lib64
 # the architecture flag for Kepler K20C
 # smflag=sm_35
 # the architecture flag for Pascal P100
-smflag=sm_60
+# smflag=sm_60
 # the architecture flag for Volta V100
-# smflag=sm_70
+smflag=sm_70
 
 random_numbers.o:
 	@-echo ">>> compiling double random number generators ..."
@@ -226,17 +226,22 @@ dbl_baqr_testers.o:
 	@-echo ">>> compiling dbl_baqr_testers ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl_baqr_testers.cpp
 
+prompt_baqr_setup.o:
+	@-echo ">>> compiling prompt_baqr_setup ..."
+	$(gpp) -O3 -c prompt_baqr_setup.cpp
+
 test_dbl_baqr.o:
 	@-echo ">>> compiling test_dbl_baqr ..."
 	$(gpp) -O3 -c test_dbl_baqr.cpp
 
-test_dbl_baqr: test_dbl_baqr.o dbl_baqr_testers.o dbl_factorizations.o \
-               dbl_factors_testers.o dbl_baqr_host.o dbl_baqr_kernels.o \
+test_dbl_baqr: test_dbl_baqr.o prompt_baqr_setup.o dbl_baqr_testers.o \
+               dbl_factorizations.o dbl_factors_testers.o \
+               dbl_baqr_host.o dbl_baqr_kernels.o \
                random_numbers.o random_series.o random_matrices.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl_baqr test_dbl_baqr.o dbl_baqr_testers.o \
-                  dbl_factorizations.o dbl_factors_testers.o \
-                  dbl_baqr_host.o dbl_baqr_kernels.o \
+	$(gpp) -o test_dbl_baqr prompt_baqr_setup.o test_dbl_baqr.o \
+                  dbl_baqr_testers.o dbl_factorizations.o \
+                  dbl_factors_testers.o dbl_baqr_host.o dbl_baqr_kernels.o \
                   random_numbers.o random_series.o random_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
@@ -285,7 +290,7 @@ clean:
 	/bin/rm -f -r test_dbl2_factors.o test_dbl2_factors
 	/bin/rm -f -r dbl_tabs_host.o dbl_tabs_kernels.o
 	/bin/rm -f -r dbl_test_utilities.o dbl_tabs_testers.o
-	/bin/rm -f -r test_dbl_tabs.o test_dbl_tabs
+	/bin/rm -f -r test_dbl_tabs.o test_dbl_tabs prompt_baqr_setup.o
 	/bin/rm -f -r double_double_functions.o
 	/bin/rm -f -r random2_vectors.o random2_matrices.o
 	/bin/rm -f -r dbl2_tabs_host.o dbl2_tabs_kernels.o

@@ -336,6 +336,13 @@ dbl_baqr_testers.obj:
                  /I$(CUDASDK)/include \
                  /Fo: dbl_baqr_testers.obj /EHsc
 
+prompt_baqr_setup.obj:
+	@-echo ">>> compiling prompt_baqr_setup ..."
+	$(CL)\cl /c prompt_baqr_setup.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: prompt_baqr_setup.obj /EHsc
+
 test_dbl_baqr.obj:
 	@-echo ">>> compiling test_dbl_baqr ..."
 	$(CL)\cl /c test_dbl_baqr.cpp \
@@ -343,15 +350,15 @@ test_dbl_baqr.obj:
                  /I$(CUDASDK)/include \
                  /Fo: test_dbl_baqr.obj /EHsc
 
-test_dbl_baqr: test_dbl_baqr.obj dbl_baqr_testers.obj \
-	       dbl_factors_testers.obj dbl_baqr_host.obj \
-               dbl_baqr_kernels.obj \
-               dbl_convolutions_host.obj dbl_factorizations.obj \
+test_dbl_baqr: test_dbl_baqr.obj prompt_baqr_setup.obj \
+               dbl_baqr_testers.obj dbl_factors_testers.obj \
+               dbl_baqr_host.obj dbl_baqr_kernels.obj \
+               dbl_factorizations.obj \
                random_numbers.obj random_series.obj random_matrices.obj
 	@-echo ">>> linking ..."
-	nvcc -ccbin=$(CL) -o test_dbl_baqr.exe \
-             test_dbl_baqr.obj dbl_baqr_testers.obj dbl_factors_testers.obj \
-             dbl_convolutions_host.obj dbl_factorizations.obj \
+	nvcc -ccbin=$(CL) -o test_dbl_baqr.exe test_dbl_baqr.obj \
+             prompt_baqr_setup.obj dbl_baqr_testers.obj \
+             dbl_factors_testers.obj dbl_factorizations.obj \
              dbl_baqr_host.obj dbl_baqr_kernels.obj \
              random_numbers.obj random_series.obj random_matrices.obj
 
@@ -427,7 +434,7 @@ clean:
 	del test_dbl2_tabs.obj test_dbl2_tabs_lib
 	del test_dbl2_tabs.exe test_dbl2_tabs.exp
 	del dbl_baqr_host.obj dbl_baqr_kernels.obj dbl_baqr_testers.obj
-	del test_dbl_baqr.obj test_dbl_baqr_lib
+	del test_dbl_baqr.obj test_dbl_baqr_lib prompt_baqr_setup.obj
 	del test_dbl_baqr.exe test_dbl_baqr.exp
 	del dbl2_baqr_host.obj dbl2_baqr_kernels.obj dbl2_baqr_testers.obj
 	del test_dbl2_baqr.obj test_dbl2_baqr_lib

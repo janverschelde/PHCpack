@@ -42,6 +42,7 @@ dbl_baqr_kernels          : kernels for baqr in double precision
 dbl2_baqr_kernels         : kernels for baqr in double double precision
 dbl_baqr_testers          : tests blocked accelerated qr in double precision
 dbl2_baqr_testers         : tests baqr in double double precision
+prompt_baqr_setup         : prompts for the parameters in the tests
 test_dbl_baqr             : main test on double blocked accelerated qr
 test_dbl2_baqr            : main test on double double blocked accelerated qr
 -----------------------------------------------------------------------------
