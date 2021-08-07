@@ -721,10 +721,8 @@ __global__ void cmplx2_beta_times_V
 
    // resultre = -B[0]*shvre[tdx];
    // resultim = -B[0]*shvim[tdx];
-   ddg_mul(-Bhi[0],-Blo[0],shvrehi[tdx],shvrelo[tdx],
-           &resultrehi,&resultrelo);
-   ddg_mul(-Bhi[0],-Blo[0],shvimhi[tdx],shvimlo[tdx],
-           &resultimhi,&resultimlo);
+   ddg_mul(-Bhi[0],-Blo[0],shvrehi[tdx],shvrelo[tdx],&resultrehi,&resultrelo);
+   ddg_mul(-Bhi[0],-Blo[0],shvimhi[tdx],shvimlo[tdx],&resultimhi,&resultimlo);
 
    if(idx < nrows)
    {
@@ -1011,9 +1009,9 @@ __global__ void cmplx2_beta_next_W
          ddg_mul(Vvalimhi,Vvalimlo,WYHvalimhi,WYHvalimlo,&acchi,&acclo);
          ddg_dec(&resultrehi,&resultrelo,acchi,acclo);
          ddg_mul(Vvalimhi,Vvalimlo,WYHvalrehi,WYHvalrelo,&acchi,&acclo);
-         ddg_inc(&resultrehi,&resultrelo,acchi,acclo);
+         ddg_inc(&resultimhi,&resultimlo,acchi,acclo);
          ddg_mul(Vvalrehi,Vvalrelo,WYHvalimhi,WYHvalimlo,&acchi,&acclo);
-         ddg_inc(&resultrehi,&resultrelo,acchi,acclo);
+         ddg_inc(&resultimhi,&resultimlo,acchi,acclo);
       }
       __syncthreads();
    }
@@ -1045,9 +1043,9 @@ __global__ void cmplx2_beta_next_W
       ddg_mul(Vvalimhi,Vvalimlo,WYHvalimhi,WYHvalimlo,&acchi,&acclo);
       ddg_dec(&resultrehi,&resultrelo,acchi,acclo);
       ddg_mul(Vvalimhi,Vvalimlo,WYHvalrehi,WYHvalrelo,&acchi,&acclo);
-      ddg_inc(&resultrehi,&resultrelo,acchi,acclo);
+      ddg_inc(&resultimhi,&resultimlo,acchi,acclo);
       ddg_mul(Vvalrehi,Vvalrelo,WYHvalimhi,WYHvalimlo,&acchi,&acclo);
-      ddg_inc(&resultrehi,&resultrelo,acchi,acclo);
+      ddg_inc(&resultimhi,&resultimlo,acchi,acclo);
    }
    // result = -mybeta*result;
    ddg_mul(-mybetahi,-mybetalo,resultrehi,resultrelo,&acchi,&acclo);
