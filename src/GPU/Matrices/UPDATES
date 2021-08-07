@@ -1,5 +1,6 @@
 Sat 7 Aug 2021 : new prompt_baqr_setup to set the parameters of the tests,
   updated dbl_baqr_testers, test_dbl_baqr.cpp, and the makefiles.
+  Completed taking mode into account in dbl_baqr_testers.cpp.
 
 Fri 6 Aug 2021 : first version of improved kernels to compute W on complex
   data in dbl2_baqr_kernels.  Bug fixed in dbl2_baqr_kernels.cu.

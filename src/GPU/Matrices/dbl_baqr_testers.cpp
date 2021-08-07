@@ -104,12 +104,12 @@ void test_real_blocked_qr
    }
    cout << endl;
    cout << fixed << setprecision(3);
-   if(mode == 1)
+   if((mode == 1) || (mode == 2))
    {
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
            << timelapsed_h << " seconds." << endl;
    }
-   if(mode == 0)
+   if((mode == 0) || (mode == 2))
    {
       cout << "         Time spent by the Householder kernel : ";
       cout << houselapsedms << " milliseconds." << endl;
@@ -200,71 +200,83 @@ void test_cmplx_blocked_qr
    }
    double timelapsed_h;
    bool bvrb = (verbose > 0);
-
-   cout << "-> CPU computes the block Householder QR ..." << endl;
-
-   CPU_cmplx_blocked_houseqr
-      (nrows,ncols,sizetile,numtiles,Are,Aim,Qre_h,Qim_h,Rre_h,Rim_h,
-       &timelapsed_h,bvrb);
-
-   cout << "-> Testing the QR factorization ..." << endl;
-
    const double tol = 1.0e-8;
-   int fail = test_cmplx_qr_factors
-      (nrows,ncols,Are,Aim,Qre_h,Qim_h,Rre_h,Rim_h,tol,verbose);
-   if(fail == 0)
-      cout << "The test succeeded." << endl;
-   else
+   int fail;
+
+   if((mode == 1) || (mode == 2))
    {
-      cout << scientific << setprecision(2);
-      cout << "The test failed for tol = " << tol << "." << endl;
+      cout << "-> CPU computes the block Householder QR ..." << endl;
+
+      CPU_cmplx_blocked_houseqr
+         (nrows,ncols,sizetile,numtiles,Are,Aim,Qre_h,Qim_h,Rre_h,Rim_h,
+          &timelapsed_h,bvrb);
+
+      cout << "-> Testing the QR factorization ..." << endl;
+
+      fail = test_cmplx_qr_factors
+         (nrows,ncols,Are,Aim,Qre_h,Qim_h,Rre_h,Rim_h,tol,verbose);
+      if(fail == 0)
+         cout << "The test succeeded." << endl;
+      else
+      {
+         cout << scientific << setprecision(2);
+         cout << "The test failed for tol = " << tol << "." << endl;
+      }
    }
    double timelapsed_d;
    double houselapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
 
-   cout << "-> GPU computes the blocked Householder QR ..." << endl;
-
-   GPU_cmplx_blocked_houseqr
-      (nrows,ncols,sizetile,numtiles,Are,Aim,Qre_d,Qim_d,Rre_d,Rim_d,
-       &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,
-       &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
-       &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,bvrb);
-
-   fail = test_cmplx_qr_factors
-             (nrows,ncols,Are,Aim,Qre_d,Qim_d,Rre_d,Rim_d,tol,verbose);
-   if(fail == 0)
-      cout << "The test succeeded." << endl;
-   else
+   if((mode == 0) || (mode == 2))
    {
-      cout << scientific << setprecision(2);
-      cout << "The test failed for tol = " << tol << "." << endl;
+      cout << "-> GPU computes the blocked Householder QR ..." << endl;
+
+      GPU_cmplx_blocked_houseqr
+         (nrows,ncols,sizetile,numtiles,Are,Aim,Qre_d,Qim_d,Rre_d,Rim_d,
+          &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,
+          &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
+          &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,bvrb);
+
+      fail = test_cmplx_qr_factors
+                (nrows,ncols,Are,Aim,Qre_d,Qim_d,Rre_d,Rim_d,tol,verbose);
+      if(fail == 0)
+         cout << "The test succeeded." << endl;
+      else
+      {
+         cout << scientific << setprecision(2);
+         cout << "The test failed for tol = " << tol << "." << endl;
+      }
    }
    cout << fixed << setprecision(3);
-   cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
-        << timelapsed_h << " seconds." << endl;
-   cout << "         Time spent by the Householder kernel : ";
-   cout << houselapsedms << " milliseconds." << endl;
-   cout << "  Time spent by the kernel to reduce one tile : ";
-   cout << tileRlapsedms << " milliseconds." << endl;
-   cout << "    Time spent by the kernel for the W matrix : ";
-   cout << vb2Wlapsedms << " milliseconds." << endl;
-   // cout << " Time spent by the kernel for computing W*Y^T : ";
-   // cout << WYTlapsedms << " milliseconds." << endl;
-   cout << " Time spent by the kernel for computing Y*W^T : ";
-   cout << YWTlapsedms << " milliseconds." << endl;
-   cout << " Time spent by the kernel for computing Q*WYT : ";
-   cout << QWYTlapsedms << " milliseconds." << endl;
-   cout << " Time spent by the kernel for computing YWT*C : ";
-   cout << YWTClapsedms << " milliseconds." << endl;
-   cout << "Time spent by the kernel for adding QWYT to Q : ";
-   cout << Qaddlapsedms << " milliseconds." << endl;
-   cout << "Time spent by the kernel for adding R to YWTC : ";
-   cout << Raddlapsedms << " milliseconds." << endl;
-   cout << "        Total GPU wall clock computation time : ";
-   cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
-
+   if((mode == 1) || (mode == 2))
+   {
+      cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+           << timelapsed_h << " seconds." << endl;
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      cout << "         Time spent by the Householder kernel : ";
+      cout << houselapsedms << " milliseconds." << endl;
+      cout << "  Time spent by the kernel to reduce one tile : ";
+      cout << tileRlapsedms << " milliseconds." << endl;
+      cout << "    Time spent by the kernel for the W matrix : ";
+      cout << vb2Wlapsedms << " milliseconds." << endl;
+      // cout << " Time spent by the kernel for computing W*Y^T : ";
+      // cout << WYTlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing Y*W^T : ";
+      cout << YWTlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing Q*WYT : ";
+      cout << QWYTlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing YWT*C : ";
+      cout << YWTClapsedms << " milliseconds." << endl;
+      cout << "Time spent by the kernel for adding QWYT to Q : ";
+      cout << Qaddlapsedms << " milliseconds." << endl;
+      cout << "Time spent by the kernel for adding R to YWTC : ";
+      cout << Raddlapsedms << " milliseconds." << endl;
+      cout << "        Total GPU wall clock computation time : ";
+      cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
+   }
    for(int i=0; i<nrows; i++)
    {
       free(Are[i]); free(Qre_h[i]); free(Rre_h[i]);
