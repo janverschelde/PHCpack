@@ -1492,9 +1492,8 @@ void GPU_cmplx_small_leftRupdate
 void GPU_dbl_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
-   double *w_h, double *w_d,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose )
+   double *w_h, double *w_d, double *RTvlapms, double *redlapms,
+   long long int *add, long long int *mul, long long int *div, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1506,7 +1505,8 @@ void GPU_dbl_medium_leftRupdate
    const int sizenum = (nrows - colidx)*(endcol - colidx);
    const int nbrblocks = (int) ceil(sizenum/((double) szt));
 
-   cudaEventRecord(start);           // 2nd argument: ncols -> endcol
+   cudaEventRecord(start);
+   // 2nd argument: ncols -> endcol
    // changed second argument ncols into endcol
    // to avoid updating the next tile
    // dbl_medium_betaRTv<<<nbrblocks,szt>>>
@@ -1514,6 +1514,11 @@ void GPU_dbl_medium_leftRupdate
    // number of threads must be ncols - colidx, not endcol - colidx
    dbl_small_betaRTv<<<1,nrows-colidx>>> // nrows ...
      (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *RTvlapms += milliseconds;
+   flopcount_dbl_small_betaRTv(nrows,endcol,szt,colidx,add,mul);
 
    if(verbose)
    {
@@ -1522,13 +1527,13 @@ void GPU_dbl_medium_leftRupdate
       cout << "   nrows : " << nrows << "  endcol : " << endcol
            << "  szt : " << szt << "  colidx : " << colidx << endl;
    }
+   cudaEventRecord(start);
    dbl_medium_subvbetaRTv<<<nbrblocks,szt>>>
       (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
-   *lapms += milliseconds;
-   flopcount_dbl_small_betaRTv(nrows,endcol,szt,colidx,add,mul);
+   *redlapms += milliseconds;
    flopcount_dbl_medium_subvbetaRTv(nrows,endcol,szt,colidx,add,mul);
 
    if(verbose)
@@ -1556,8 +1561,8 @@ void GPU_cmplx_medium_leftRupdate
    double *Are_h, double *Aim_h, double *Are_d, double *Aim_d,
    double *Vre_d, double *Vim_d, double *beta_h, double *beta_d,
    double *wre_h, double *wim_h, double *wre_d, double *wim_d,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose )
+   double *RHvlapms, double *redlapms,
+   long long int *add, long long int *mul, long long int *div, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1569,7 +1574,8 @@ void GPU_cmplx_medium_leftRupdate
    const int sizenum = (nrows - colidx)*(endcol - colidx);
    const int nbrblocks = (int) ceil(sizenum/((double) szt));
 
-   cudaEventRecord(start);           // 2nd argument: ncols -> endcol
+   cudaEventRecord(start);
+   // 2nd argument: ncols -> endcol
    // changed second argument ncols into endcol
    // to avoid updating the next tile
    // dbl_medium_betaRTv<<<nbrblocks,szt>>>
@@ -1578,6 +1584,11 @@ void GPU_cmplx_medium_leftRupdate
    cmplx_small_betaRHv<<<1,nrows-colidx>>> // nrows ...
       (nrows,endcol,szt,colidx,Are_d,Aim_d,
        &Vre_d[L*nVrows+L],&Vim_d[L*nVrows+L],&beta_d[L],wre_d,wim_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *RHvlapms += milliseconds;
+   flopcount_cmplx_small_betaRHv(nrows,endcol,szt,colidx,add,mul);
 
    if(verbose)
    {
@@ -1586,15 +1597,14 @@ void GPU_cmplx_medium_leftRupdate
       cout << "   nrows : " << nrows << "  endcol : " << endcol
            << "  szt : " << szt << "  colidx : " << colidx << endl;
    }
+   cudaEventRecord(start);
    cmplx_medium_subvbetaRHv<<<nbrblocks,szt>>>
       (nrows,endcol,szt,colidx,Are_d,Aim_d,
        &Vre_d[L*nVrows+L],&Vim_d[L*nVrows+L],&beta_d[L],wre_d,wim_d);
-
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
-   *lapms += milliseconds;
-   flopcount_cmplx_small_betaRHv(nrows,endcol,szt,colidx,add,mul);
+   *redlapms += milliseconds;
    flopcount_cmplx_medium_subvbetaRHv(nrows,endcol,szt,colidx,add,mul);
 
    if(verbose)
@@ -2514,8 +2524,8 @@ void GPU_cmplx_small_R_add_YWHC
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
-   double *houselapms, double *tileRlapms, double *vb2Wlapms,
-   double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
+   double *houselapms, double *RTvlapms, double *tileRlapms,
+   double *vb2Wlapms, double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
    double *YWTlapms, double *YWTClapms, double *Raddlapms,
    double *walltimesec, long long int *addcnt, long long int *mulcnt,
    long long int *divcnt, long long int *sqrtcnt, bool verbose )
@@ -2590,7 +2600,7 @@ void GPU_dbl_blocked_houseqr
    cudaMalloc((void**)&YWT_d,szYWT + szpad); // padding for Y*W^T product
    cudaMalloc((void**)&YWTC_d,sznum + szpad);
 
-   *houselapms = 0.0; *tileRlapms = 0.0; *vb2Wlapms = 0.0;
+   *houselapms = 0.0; *RTvlapms = 0.0; *tileRlapms = 0.0; *vb2Wlapms = 0.0;
    *WYTlapms = 0.0; *QWYTlapms = 0.0; *Qaddlapms = 0.0;
    *YWTlapms = 0.0; *YWTClapms = 0.0; *Raddlapms = 0.0;
    *addcnt = 0; *mulcnt = 0; *divcnt = 0;
@@ -2623,7 +2633,8 @@ void GPU_dbl_blocked_houseqr
          {
             GPU_dbl_medium_leftRupdate
                (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
-                bRTv_h,bRTv_d,tileRlapms,addcnt,mulcnt,divcnt,verbose);
+                bRTv_h,bRTv_d,RTvlapms,tileRlapms,addcnt,mulcnt,divcnt,
+                verbose);
          }
       }
 /*
@@ -2681,9 +2692,9 @@ void GPU_cmplx_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **Are, double **Aim, double **Qre, double **Qim,
    double **Rre, double **Rim,
-   double *houselapms, double *tileRlapms, double *vb2Wlapms,
-   double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
-   double *YWTlapms, double *YWTClapms, double *Raddlapms,
+   double *houselapms, double *RHvlapms, double *tileRlapms,
+   double *vb2Wlapms, double *WYHlapms, double *QWYHlapms, double *Qaddlapms,
+   double *YWHlapms, double *YWHClapms, double *Raddlapms,
    double *walltimesec, long long int *addcnt, long long int *mulcnt,
    long long int *divcnt, long long int *sqrtcnt, bool verbose )
 {
@@ -2819,9 +2830,9 @@ void GPU_cmplx_blocked_houseqr
    cudaMalloc((void**)&YWTCre_d,sznum + szpad);
    cudaMalloc((void**)&YWTCim_d,sznum + szpad);
 
-   *houselapms = 0.0; *tileRlapms = 0.0; *vb2Wlapms = 0.0;
-   *WYTlapms = 0.0; *QWYTlapms = 0.0; *Qaddlapms = 0.0;
-   *YWTlapms = 0.0; *YWTClapms = 0.0; *Raddlapms = 0.0;
+   *houselapms = 0.0; *RHvlapms = 0.0; *tileRlapms = 0.0; *vb2Wlapms = 0.0;
+   *WYHlapms = 0.0; *QWYHlapms = 0.0; *Qaddlapms = 0.0;
+   *YWHlapms = 0.0; *YWHClapms = 0.0; *Raddlapms = 0.0;
    struct timeval begintime,endtime; // wall clock time of computations
 
    gettimeofday(&begintime,0);
@@ -2853,7 +2864,7 @@ void GPU_cmplx_blocked_houseqr
             GPU_cmplx_medium_leftRupdate
                (nrows,ncols,szt,colidx,k,L,Are_h,Aim_h,Are_d,Aim_d,
                 Vre_d,Vim_d,beta_h,beta_d,
-                bRTvre_h,bRTvim_h,bRTvre_d,bRTvim_d,tileRlapms,
+                bRTvre_h,bRTvim_h,bRTvre_d,bRTvim_d,RHvlapms,tileRlapms,
                 addcnt,mulcnt,divcnt,verbose);
          }
       }
@@ -2870,11 +2881,11 @@ void GPU_cmplx_blocked_houseqr
 /*
       GPU_cmplx_small_WYT
          (nrows-k*szt,szt,Wre_d,Wim_d,Vre_d,Vim_d,WYTre_d,WYTim_d,
-          WYTre_h,WYTim_h,WYTlapms,addcnt,mulcnt,divcnt,verbose);
+          WYTre_h,WYTim_h,WYHlapms,addcnt,mulcnt,divcnt,verbose);
  */
       GPU_cmplx_small_QWYH
          (nrows,szt,k,Qre_d,Qim_d,WYTre_d,WYTim_d,QWYTre_d,QWYTim_d,
-          QWYTre_h,QWYTim_h,Qre_h,Qim_h,QWYTlapms,
+          QWYTre_h,QWYTim_h,Qre_h,Qim_h,QWYHlapms,
           addcnt,mulcnt,divcnt,verbose);
       GPU_cmplx_small_Qupdate
          (nrows,szt,k,Qre_d,Qim_d,QWYTre_d,QWYTim_d,Qre_h,Qim_h,
@@ -2883,10 +2894,10 @@ void GPU_cmplx_blocked_houseqr
       {
          GPU_cmplx_small_YWH
             (nrows,szt,k,Vre_d,Vim_d,Wre_d,Wim_d,YWTre_d,YWTim_d,
-             YWTre_h,YWTim_h,YWTlapms,addcnt,mulcnt,divcnt,verbose);
+             YWTre_h,YWTim_h,YWHlapms,addcnt,mulcnt,divcnt,verbose);
          GPU_cmplx_small_YWHC
             (nrows,ncols,szt,k,YWTre_d,YWTim_d,Are_d,Aim_d,YWTCre_d,
-             YWTCim_d,YWTCre_h,YWTCim_h,YWTClapms,
+             YWTCim_d,YWTCre_h,YWTCim_h,YWHClapms,
              addcnt,mulcnt,divcnt,verbose);
          GPU_cmplx_small_R_add_YWHC
             (nrows,ncols,szt,k,Are_d,Aim_d,YWTCre_d,YWTCim_d,Are_h,Aim_h,

@@ -74,7 +74,7 @@ void test_real_blocked_qr
       }
    }
    double timelapsed_d;
-   double houselapsedms,tileRlapsedms,vb2Wlapsedms;
+   double houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
    long long int addcnt = 0;
@@ -88,7 +88,7 @@ void test_real_blocked_qr
 
       GPU_dbl_blocked_houseqr
          (nrows,ncols,sizetile,numtiles,A,Q_d,R_d,
-          &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,
+          &houselapsedms,&RTvlapsedms,&tileRlapsedms,&vb2Wlapsedms,
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
           &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
           &addcnt,&mulcnt,&divcnt,&sqrtcnt,bvrb);
@@ -113,6 +113,8 @@ void test_real_blocked_qr
    {
       cout << "         Time spent by the Householder kernel : ";
       cout << houselapsedms << " milliseconds." << endl;
+      cout << "      Time spent by the kernel for beta*R^T*v : ";
+      cout << RTvlapsedms << " milliseconds." << endl;
       cout << "  Time spent by the kernel to reduce one tile : ";
       cout << tileRlapsedms << " milliseconds." << endl;
       cout << "    Time spent by the kernel for the W matrix : ";
@@ -224,7 +226,7 @@ void test_cmplx_blocked_qr
       }
    }
    double timelapsed_d;
-   double houselapsedms,tileRlapsedms,vb2Wlapsedms;
+   double houselapsedms,RHvlapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
    long long int addcnt = 0;
@@ -238,7 +240,7 @@ void test_cmplx_blocked_qr
 
       GPU_cmplx_blocked_houseqr
          (nrows,ncols,sizetile,numtiles,Are,Aim,Qre_d,Qim_d,Rre_d,Rim_d,
-          &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,
+          &houselapsedms,&RHvlapsedms,&tileRlapsedms,&vb2Wlapsedms,
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
           &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
           &addcnt,&mulcnt,&divcnt,&sqrtcnt,bvrb);
@@ -264,21 +266,23 @@ void test_cmplx_blocked_qr
    {
       cout << "         Time spent by the Householder kernel : ";
       cout << houselapsedms << " milliseconds." << endl;
+      cout << "      Time spent by the kernel for beta*R^H*v : ";
+      cout << RHvlapsedms << " milliseconds." << endl;
       cout << "  Time spent by the kernel to reduce one tile : ";
       cout << tileRlapsedms << " milliseconds." << endl;
       cout << "    Time spent by the kernel for the W matrix : ";
       cout << vb2Wlapsedms << " milliseconds." << endl;
-      // cout << " Time spent by the kernel for computing W*Y^T : ";
+      // cout << " Time spent by the kernel for computing W*Y^H : ";
       // cout << WYTlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing Y*W^T : ";
+      cout << " Time spent by the kernel for computing Y*W^H : ";
       cout << YWTlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing Q*WYT : ";
+      cout << " Time spent by the kernel for computing Q*WYH : ";
       cout << QWYTlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing YWT*C : ";
+      cout << " Time spent by the kernel for computing YWH*C : ";
       cout << YWTClapsedms << " milliseconds." << endl;
-      cout << "Time spent by the kernel for adding QWYT to Q : ";
+      cout << "Time spent by the kernel for adding QWYH to Q : ";
       cout << Qaddlapsedms << " milliseconds." << endl;
-      cout << "Time spent by the kernel for adding R to YWTC : ";
+      cout << "Time spent by the kernel for adding R to YWHC : ";
       cout << Raddlapsedms << " milliseconds." << endl;
       cout << "        Total GPU wall clock computation time : ";
       cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;

@@ -1334,9 +1334,8 @@ void GPU_cmplx_small_leftRupdate
 void GPU_dbl_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
-   double *w_h, double *w_d,
-   double *lapms, long long int *add, long int *mul, long int *div,
-   bool verbose=true );
+   double *w_h, double *w_d, double *RTvlapms, double *redlapms,
+   long long int *add, long int *mul, long int *div, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernels to update one tile.
@@ -1369,7 +1368,8 @@ void GPU_dbl_medium_leftRupdate
  *   beta_h   vector of betas, if verbose;
  *   beta_d   the next beta constant;
  *   w_h      stores the beta*R^T*v, if verbose;
- *   lapms    elapsed time spent by the kernel;
+ *   RTvlapms is the elapsed time spent to compute beta*R^T*v;
+ *   redlapms is the elapsed time spent to reduce one tile;
  *   add      accumulated number of additions and subtractions;
  *   mul      accumulated number of multiplications;
  *   div      accumulated number of divisions. */
@@ -1379,7 +1379,8 @@ void GPU_cmplx_medium_leftRupdate
    double *Are_h, double *Aim_h, double *Are_d, double *Aim_d,
    double *Vre_d, double *Vim_d, double *beta_h, double *beta_d,
    double *wre_h, double *wim_h, double *wre_d, double *wim_d,
-   double *lapms, long long int *add, long int *mul, long int *div,
+   double *RHvlapms, double *redlapms,
+   long long int *add, long long int *mul, long long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1416,7 +1417,8 @@ void GPU_cmplx_medium_leftRupdate
  *   Vim_d    imaginary parts of the Householder vectors on the device;
  *   beta_h   vector of betas, if verbose;
  *   beta_d   the next beta constant;
- *   lapms    elapsed time spent by the kernel;
+ *   RHvlapms elapsed time spent on beta*R^H*v;
+ *   redlapms elapsed time spent to reduce one tile;
  *   add      accumulated number of additions and subtractions;
  *   mul      accumulated number of multiplications;
  *   div      accumulated number of divisions. */
@@ -2061,8 +2063,8 @@ void GPU_cmplx_small_R_add_YWHC
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R,
-   double *houselapms, double *tileRlapms, double *vb2Wlapms,
-   double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
+   double *houselapms, double *RTvlapms, double *tileRlapms,
+   double *vb2Wlapms, double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
    double *YWTlapms, double *YWTClapms, double *Raddlapms,
    double *walltimesec, long long int *addcnt, long long int *mulcnt,
    long long int *divcnt, long long int *sqrtcnt, bool verbose=true );
@@ -2089,6 +2091,7 @@ void GPU_dbl_blocked_houseqr
  *   R        the reduced upper triangular form of A;
  *   houselapms is the elapsed time spent by the kernel
  *            to compute the Householder vector and the beta;
+ *   RTvlapms is the elapsed time to compute beta*R^T*v;
  *   tileRlapms is the elapsed time spent by the kernel
  *            to reduce one tile;
  *   vb2Wlapms is the elapsed time spent by the kernel
@@ -2115,9 +2118,9 @@ void GPU_cmplx_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **Are, double **Aim, double **Qre, double **Qim,
    double **Rre, double **Rim,
-   double *houselapms, double *tileRlapms, double *vb2Wlapms,
-   double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
-   double *YWTlapms, double *YWTClapms, double *Raddlapms,
+   double *houselapms, double *RHvlapms, double *tileRlapms,
+   double *vb2Wlapms, double *WYHlapms, double *QWYHlapms, double *Qaddlapms,
+   double *YWHlapms, double *YWHClapms, double *Raddlapms,
    double *walltimesec, long long int *addcnt, long long int *mulcnt,
    long long int *divcnt, long long int *sqrtcnt, bool verbose=true );
 /*
@@ -2149,22 +2152,23 @@ void GPU_cmplx_blocked_houseqr
  *   Rim      imaginary parts of the reduced upper triangular form of A;
  *   houselapms is the elapsed time spent by the kernel
  *            to compute the Householder vector and the beta;
+ *   RHvlapms is the elapsed time to compute beta*R^H*v;
  *   tileRlapms is the elapsed time spent by the kernel
  *            to reduce one tile;
  *   vb2Wlapms is the elapsed time spent by the kernel
  *            to compute the W representation;
- *   WYTlapms is the elapsed time spent by the kernel
- *            to compute the W*Y^T product;
- *   QWYTlapms is the elapsed time spent by the kernel
- *            to compute the Q*WYT product;
+ *   WYHlapms is the elapsed time spent by the kernel
+ *            to compute the W*Y^H product;
+ *   QWYHlapms is the elapsed time spent by the kernel
+ *            to compute the Q*WYH product;
  *   Qaddlapms is the elapsed time spent by the kernel
- *            to compute Q by adding the Q*W*Y^T matrix;
- *   YWTlapms is the elapsed time spent by the kernel
- *            to compute the Y*W^T product;
- *   YWTClapms is the elapsed time spent by the kernel
- *            to compute the YWT*C product;
+ *            to compute Q by adding the Q*W*Y^H matrix;
+ *   YWHlapms is the elapsed time spent by the kernel
+ *            to compute the Y*W^H product;
+ *   YWHClapms is the elapsed time spent by the kernel
+ *            to compute the YWH*C product;
  *   Raddlapms is the elapsed time spent by the kernel
- *            to compute R by adding the Y*W^T*C matrix;
+ *            to compute R by adding the Y*W^H*C matrix;
  *   walltimesec is the elapsed wall clock computation time;
  *   addcnt   counts the number of additions and subtractions;
  *   mulcnt   counts the number of multiplications;
