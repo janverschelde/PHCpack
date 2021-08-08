@@ -77,10 +77,10 @@ void test_real_blocked_qr
    double houselapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
-   long int addcnt = 0;
-   long int mulcnt = 0;
-   long int divcnt = 0;
-   long int sqrtcnt = 0;
+   long long int addcnt = 0;
+   long long int mulcnt = 0;
+   long long int divcnt = 0;
+   long long int sqrtcnt = 0;
 
    if((mode == 0) || (mode == 2))
    {
@@ -140,7 +140,7 @@ void test_real_blocked_qr
            << divcnt << endl;
       cout << "                    Number of calls to sqrt() : "
            << sqrtcnt << endl;
-      long int flopcnt = addcnt + mulcnt + divcnt + sqrtcnt;
+      long long int flopcnt = addcnt + mulcnt + divcnt + sqrtcnt;
       cout << "    Total number of floating-point operations : "
            << flopcnt << endl;
    }
@@ -227,10 +227,10 @@ void test_cmplx_blocked_qr
    double houselapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
-   long int addcnt = 0;
-   long int mulcnt = 0;
-   long int divcnt = 0;
-   long int sqrtcnt = 0;
+   long long int addcnt = 0;
+   long long int mulcnt = 0;
+   long long int divcnt = 0;
+   long long int sqrtcnt = 0;
 
    if((mode == 0) || (mode == 2))
    {
@@ -291,7 +291,7 @@ void test_cmplx_blocked_qr
            << divcnt << endl;
       cout << "                    Number of calls to sqrt() : "
            << sqrtcnt << endl;
-      long int flopcnt = addcnt + mulcnt + divcnt + sqrtcnt;
+      long long int flopcnt = addcnt + mulcnt + divcnt + sqrtcnt;
       cout << "    Total number of floating-point operations : "
            << flopcnt << endl;
    }

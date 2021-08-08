@@ -27,8 +27,8 @@ __global__ void dbl_small_house
  *   beta     equals 2/(transpose(v)*v). */
 
 void flopcount_dbl_small_house
- ( int dim, int dimLog2, long int *add, long int *mul, long int *div,
-   long int *sqrtfun );
+ ( int dim, int dimLog2, long long int *add, long int *mul, long int *div,
+   long long int *sqrtfun );
 /*
  * DESCRIPTION :
  *   Returns the accumulated floating-point operation counts to compute
@@ -72,8 +72,8 @@ __global__ void cmplx_small_house
  *   beta     equals 2/(transpose(v)*v). */
 
 void flopcount_cmplx_small_house
- ( int dim, int dimLog2, long int *add, long int *mul, long int *div,
-   long int *sqrtfun );
+ ( int dim, int dimLog2, long long int *add, long int *mul, long int *div,
+   long long int *sqrtfun );
 /*
  * DESCRIPTION :
  *   Returns the accumulated floating-point operation counts to compute
@@ -114,7 +114,7 @@ __global__ void dbl_small_leftRupdate
  *   R        the updated matrix is trapezoidal. */
 
 void flopcount_dbl_small_leftRupdate
- ( int nrows, int ncols, int szt, int k, long int *add, long int *mul );
+ ( int nrows, int ncols, int szt, int k, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating point operations to update
@@ -158,7 +158,7 @@ __global__ void cmplx_small_leftRupdate
  *   Rim      imaginary parts of the updated matrix. */
 
 void flopcount_cmplx_small_leftRupdate
- ( int nrows, int ncols, int szt, int k, long int *add, long int *mul );
+ ( int nrows, int ncols, int szt, int k, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating point operations to update
@@ -198,7 +198,7 @@ __global__ void dbl_small_betaRTv
  *   w        the first ncols-k numbers define beta*R^T*v. */
 
 void flopcount_dbl_small_betaRTv 
- ( int nrows, int ncols, int szt, int k, long int *add, long int *mul );
+ ( int nrows, int ncols, int szt, int k, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to compute
@@ -247,7 +247,7 @@ __global__ void cmplx_small_betaRHv
  *            the imaginary parts of beta*R^T*v. */
 
 void flopcount_cmplx_small_betaRHv 
- ( int nrows, int ncols, int szt, int k, long int *add, long int *mul );
+ ( int nrows, int ncols, int szt, int k, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to compute
@@ -313,7 +313,7 @@ __global__ void dbl_medium_subvbetaRTv
  *   R        the updated matrix is trapezoidal. */
 
 void flopcount_dbl_medium_subvbetaRTv
- ( int nrows, int ncols, int szt, int k, long int *add, long int *mul );
+ ( int nrows, int ncols, int szt, int k, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to apply
@@ -362,7 +362,7 @@ __global__ void cmplx_medium_subvbetaRHv
  *   Rim      imaginary parts of the updated matrix. */
 
 void flopcount_cmplx_medium_subvbetaRHv
- ( int nrows, int ncols, int szt, int k, long int *add, long int *mul );
+ ( int nrows, int ncols, int szt, int k, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to apply
@@ -404,7 +404,7 @@ __global__ void dbl_VB_to_W
  *   W        the W matrix in the WY representation. */
 
 void flopcount_dbl_VB_to_W
- ( int nrows, int ncols, long int *add, long int *mul );
+ ( int nrows, int ncols, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to
@@ -449,7 +449,7 @@ __global__ void cmplx_VB_to_W
  *   Wim      imaginary parts of the W matrix in the WY representation. */
 
 void flopcount_cmplx_VB_to_W
- ( int nrows, int ncols, long int *add, long int *mul );
+ ( int nrows, int ncols, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to
@@ -487,7 +487,7 @@ __global__ void dbl_beta_times_V
  *   W        the first nrows numbers store the first vector
  *            of the W matrix in the WY representation. */
 
-void flopcount_dbl_beta_times_V ( int nrows, long int *mul );
+void flopcount_dbl_beta_times_V ( int nrows, long long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of multiplications to multipy beta with the
@@ -526,7 +526,7 @@ __global__ void cmplx_beta_times_V
  *   Wim      the first nrows numbers store the imaginary parts of the first
  *            vector of the W matrix in the WY representation. */
 
-void flopcount_cmplx_beta_times_V ( int nrows, long int *mul );
+void flopcount_cmplx_beta_times_V ( int nrows, long long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of multiplications to multipy beta with the
@@ -557,7 +557,7 @@ __global__ void dbl_initialize_WYT
  * ON RETURN :
  *   WYT      equals w*y^T, where y and w are the first columns of V and W. */
 
-void flopcount_dbl_initialize_WYT ( int dim, long int *mul );
+void flopcount_dbl_initialize_WYT ( int dim, long long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of multiplications to initialize W*Y^T,
@@ -600,7 +600,7 @@ __global__ void cmplx_initialize_WYH
  *            where y and w are the first columns of V and W. */
 
 void flopcount_cmplx_initialize_WYH
- ( int dim, long int *add, long int *mul );
+ ( int dim, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to initialize W*Y^H,
@@ -634,7 +634,7 @@ __global__ void dbl_update_WYT
  *   WYT      the updated matrix W*Y^T. */
 
 void flopcount_dbl_update_WYT
- ( int dim, long int *add, long int *mul );
+ ( int dim, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to update W*Y^T,
@@ -677,7 +677,7 @@ __global__ void cmplx_update_WYH
  *   WYHim    the imaginary parts of the update W*Y^H. */
 
 void flopcount_cmplx_update_WYH
- ( int dim, long int *add, long int *mul );
+ ( int dim, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to update W*Y^H,
@@ -709,7 +709,7 @@ __global__ void dbl_beta_next_W
  * ON RETURN :
  *   W        contains the values of the next column of W. */
 
-void flopcount_dbl_beta_next_W ( int nrows, long int *add, long int *mul );
+void flopcount_dbl_beta_next_W ( int nrows, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to compute the
@@ -750,7 +750,7 @@ __global__ void cmplx_beta_next_W
  *   Wre      contains the real parts of the next column of W;
  *   Wim      contains the imaginary parts of the next column of W. */
 
-void flopcount_cmplx_beta_next_W ( int nrows, long int *add, long int *mul );
+void flopcount_cmplx_beta_next_W ( int nrows, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to compute the
@@ -785,7 +785,7 @@ __global__ void dbl_small_WYT
  *   WYT      the product of W with Y^T. */
 
 void flopcount_dbl_small_WYT
- ( int nrows, int szt, long int *add, long int *mul );
+ ( int nrows, int szt, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of accumulated floating-point operations
@@ -829,7 +829,7 @@ __global__ void cmplx_small_WYH
  *   WYHim    imaginary parts of the product of W with Y^H. */
 
 void flopcount_cmplx_small_WYH
- ( int nrows, int szt, long int *add, long int *mul );
+ ( int nrows, int szt, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of accumulated floating-point operations
@@ -867,7 +867,7 @@ __global__ void dbl_small_QWYT
  *   QWYT     the product of Q with QWYT. */
 
 void flopcount_dbl_small_QWYT
- ( int dim, int rowdim, int szt, int coloff, long int *add, long int *mul );
+ ( int dim, int rowdim, int szt, int coloff, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to multiply Q
@@ -910,7 +910,7 @@ __global__ void cmplx_small_QWYH
  *   QWYHim   imaginary parts of the product of Q with QWYH. */
 
 void flopcount_cmplx_small_QWYH
- ( int dim, int rowdim, int szt, int coloff, long int *add, long int *mul );
+ ( int dim, int rowdim, int szt, int coloff, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to multiply Q
@@ -951,7 +951,7 @@ __global__ void dbl_small_YWTC
  *   YWTC     the product of YWT with C. */
 
 void flopcount_dbl_small_YWTC
- ( int rowdim, int coldim, long int *add, long int *mul );
+ ( int rowdim, int coldim, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to multiply
@@ -995,7 +995,7 @@ __global__ void cmplx_small_YWHC
  *   YWHCim   imaginary parts of the product of YWH with C. */
 
 void flopcount_cmplx_small_YWHC
- ( int rowdim, int coldim, long int *add, long int *mul );
+ ( int rowdim, int coldim, long long int *add, long int *mul );
 /*
  * DESCRIPTION :
  *   Accumulates the number of floating-point operations to multiply
@@ -1028,7 +1028,7 @@ __global__ void dbl_small_Qupdate
  * ON RETURN :
  *   Q        Q + QWYT. */
 
-void flopcount_dbl_small_Qupdate ( int dim, int rowdim, long int *add );
+void flopcount_dbl_small_Qupdate ( int dim, int rowdim, long long int *add );
 /*
  * DESCRIPTION :
  *   Accumulates the number of additions and subtractions to update Q,
@@ -1063,7 +1063,7 @@ __global__ void cmplx_small_Qupdate
  *   Qre      real parts of Q + QWYT;
  *   Qim      imaginary parts Q + QWYT. */
 
-void flopcount_cmplx_small_Qupdate ( int dim, int rowdim, long int *add );
+void flopcount_cmplx_small_Qupdate ( int dim, int rowdim, long long int *add );
 /*
  * DESCRIPTION :
  *   Accumulates the number of additions and subtractions to update Q,
@@ -1097,7 +1097,7 @@ __global__ void dbl_small_R_add_YWTC
  *   R        R + YWTC. */
 
 void flopcount_dbl_small_R_and_YWTC
- ( int nrows, int coldim, int szt, int rowoff, int coloff, long int *add );
+ ( int nrows, int coldim, int szt, int rowoff, int coloff, long long int *add );
 /*
  * DESCRIPTION :
  *   Accumulates the number of additions and subtractions to update R
@@ -1137,7 +1137,7 @@ __global__ void cmplx_small_R_add_YWHC
  *   Rim      imaginary parts R + YWHC. */
 
 void flopcount_cmplx_small_R_add_YWHC
- ( int nrows, int coldim, int szt, int rowoff, int coloff, long int *add );
+ ( int nrows, int coldim, int szt, int rowoff, int coloff, long long int *add );
 /*
  * DESCRIPTION :
  *   Accumulates the number of additions and subtractions to update R
@@ -1159,8 +1159,8 @@ void GPU_dbl_small_house
    int colidx, int nrows1, int k, int L,
    double *A_h, double *A_d,
    double *v_h, double *V_d, double *beta_h, double *beta_d,
-   double *lapms, long int *add, long int *mul, long int *div,
-   long int *sqrtfun, bool verbose=true );
+   double *lapms, long long int *add, long int *mul, long int *div,
+   long long int *sqrtfun, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the Householder vector for small
@@ -1204,8 +1204,8 @@ void GPU_cmplx_small_house
    double *Are_h, double *Aim_h, double *Are_d, double *Aim_d,
    double *vre_h, double *vim_h, double *Vre_d, double *Vim_d,
    double *beta_h, double *beta_d,
-   double *lapms, long int *add, long int *mul, long int *div,
-   long int *sqrtfun, bool verbose=true );
+   double *lapms, long long int *add, long int *mul, long int *div,
+   long long int *sqrtfun, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the Householder vector for small
@@ -1253,7 +1253,7 @@ void GPU_cmplx_small_house
 void GPU_dbl_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
-   double *lapms, long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1291,7 +1291,7 @@ void GPU_cmplx_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *Are_h, double *Aim_h, double *Are_d, double *Aim_d,
    double *Vre_d, double *Vim_d, double *beta_h, double *beta_d,
-   double *lapms, long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1335,7 +1335,7 @@ void GPU_dbl_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
    double *w_h, double *w_d,
-   double *lapms, long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1379,7 +1379,7 @@ void GPU_cmplx_medium_leftRupdate
    double *Are_h, double *Aim_h, double *Are_d, double *Aim_d,
    double *Vre_d, double *Vim_d, double *beta_h, double *beta_d,
    double *wre_h, double *wim_h, double *wre_d, double *wim_d,
-   double *lapms, long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1425,7 +1425,7 @@ void GPU_dbl_VB_to_W
  ( int nrows, int ncols, int szt,
    double *V_h, double *V_d, double *W_h, double *W_d,
    double *beta_h, double *beta_d, double *lapms,
-   long int *add, long int *mul, long int *div, bool verbose=true );
+   long long int *add, long int *mul, long int *div, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the W in the WY representation.
@@ -1463,7 +1463,7 @@ void GPU_cmplx_VB_to_W
    double *Vre_h, double *Vim_h, double *Vre_d, double *Vim_d,
    double *Wre_h, double *Wim_h, double *Wre_d, double *Wim_d,
    double *beta_h, double *beta_d, double *lapms,
-   long int *add, long int *mul, long int *div, bool verbose=true );
+   long long int *add, long int *mul, long int *div, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the W in the WY representation.
@@ -1514,7 +1514,7 @@ void GPU_dbl_medium_VB_to_W
  ( int nrows, int ncols, int szt, int idx,
    double *V_h, double *V_d, double *W_h, double *W_d,
    double *WYT_h, double *YWT_d, double *beta_h, double *beta_d,
-   double *lapms, long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1561,7 +1561,7 @@ void GPU_cmplx_medium_VB_to_W
    double *Wre_h, double *Wim_h, double *Wre_d, double *Wim_d,
    double *WYHre_h, double *WYHim_h, double *WYHre_d, double *WYHim_d,
    double *beta_h, double *beta_d,
-   double *lapms, long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1631,7 +1631,7 @@ void GPU_cmplx_medium_VB_to_W
 
 void GPU_dbl_small_WYT
  ( int nrows, int szt, double *W_d, double *Y_d, double *WYT_d,
-   double *WYT_h, double *lapms, long int *add, long int *mul, long int *div,
+   double *WYT_h, double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1663,7 +1663,7 @@ void GPU_cmplx_small_WYH
  ( int nrows, int szt, double *Wre_d, double *Wim_d,
    double *Yre_d, double *Yim_d, double *WYHre_d, double *WYHim_d,
    double *WYHre_h, double *WYHim_h, double *lapms,
-   long int *add, long int *mul, long int *div, bool verbose=true );
+   long long int *add, long int *mul, long int *div, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute W*Y^H.
@@ -1698,7 +1698,7 @@ void GPU_cmplx_small_WYH
 
 void GPU_dbl_small_YWT
  ( int nrows, int szt, int idx, double *Y_d, double *W_d, double *YWT_d,
-   double *YWT_h, double *lapms, long int *add, long int *mul, long int *div,
+   double *YWT_h, double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1731,7 +1731,7 @@ void GPU_cmplx_small_YWH
  ( int nrows, int szt, int idx,
    double *Yre_d, double *Yim_d, double *Wre_d, double *Wim_d,
    double *YWHre_d, double *YWHim_d, double *YWHre_h, double *YWHim_h,
-   double *lapms, long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1769,7 +1769,7 @@ void GPU_cmplx_small_YWH
 void GPU_dbl_small_QWYT
  ( int dim, int szt, int idx, double *Q_d, double *WYT_d, double *QWYT_d,
    double *QWYT_h, double *Q_h,
-   double *lapms, long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1803,7 +1803,7 @@ void GPU_cmplx_small_QWYH
  ( int dim, int szt, int idx, double *Qre_d, double *Qim_d,
    double *WYHre_d, double *WYHim_d, double *QWYHre_d, double *QWYHim_d,
    double *QWYHre_h, double *QWYHim_h, double *Qre_h, double *Qim_h,
-   double *lapms, long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1849,7 +1849,7 @@ void GPU_cmplx_small_QWYH
 void GPU_dbl_small_YWTC
  ( int nrows, int ncols, int szt, int idx,
    double *YWT_d, double *C_d, double *YWTC_d, double *YWTC_h,
-   double *lapms, long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1884,7 +1884,7 @@ void GPU_cmplx_small_YWHC
  ( int nrows, int ncols, int szt, int idx,
    double *YWHre_d, double *YWHim_d, double *Cre_d, double *Cim_d,
    double *YWHCre_d, double *YWHCim_d, double *YWHCre_h, double *YWHCim_h,
-   double *lapms, long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1927,7 +1927,7 @@ void GPU_cmplx_small_YWHC
 
 void GPU_dbl_small_Qupdate
  ( int dim, int rowdim, int szt, int idx, double *Q_d, double *QWYT_d,
-   double *Q_h, double *lapms, long int *add, long int *mul, long int *div,
+   double *Q_h, double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1959,7 +1959,7 @@ void GPU_dbl_small_Qupdate
 void GPU_cmplx_small_Qupdate
  ( int dim, int szt, int idx, double *Qre_d, double *Qim_d,
    double *QWYHre_d, double *QWYHim_d, double *Qre_h, double *Qim_h,
-   double *lapms, long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1994,7 +1994,7 @@ void GPU_cmplx_small_Qupdate
 
 void GPU_dbl_small_R_add_YWTC
  ( int nrows, int ncols, int szt, int idx, double *R_d, double *YWTC_d,
-   double *R_h, double *lapms, long int *add, long int *mul, long int *div,
+   double *R_h, double *lapms, long long int *add, long int *mul, long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -2026,7 +2026,7 @@ void GPU_cmplx_small_R_add_YWHC
  ( int nrows, int ncols, int szt, int idx,
    double *Rre_d, double *Rim_d, double *YWHCre_d, double *YWHCim_d,
    double *Rre_h, double *Rim_h, double *lapms,
-   long int *add, long int *mul, long int *div, bool verbose=true );
+   long long int *add, long int *mul, long int *div, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update R as R + YWHC.
@@ -2064,8 +2064,8 @@ void GPU_dbl_blocked_houseqr
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
    double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
    double *YWTlapms, double *YWTClapms, double *Raddlapms,
-   double *walltimesec, long int *addcnt, long int *mulcnt,
-   long int *divcnt, long int *sqrtcnt, bool verbose=true );
+   double *walltimesec, long long int *addcnt, long long int *mulcnt,
+   long long int *divcnt, long long int *sqrtcnt, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
@@ -2118,8 +2118,8 @@ void GPU_cmplx_blocked_houseqr
    double *houselapms, double *tileRlapms, double *vb2Wlapms,
    double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
    double *YWTlapms, double *YWTClapms, double *Raddlapms,
-   double *walltimesec, long int *addcnt, long int *mulcnt,
-   long int *divcnt, long int *sqrtcnt, bool verbose=true );
+   double *walltimesec, long long int *addcnt, long long int *mulcnt,
+   long long int *divcnt, long long int *sqrtcnt, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
