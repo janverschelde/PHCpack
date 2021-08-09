@@ -374,6 +374,42 @@ __global__ void dbl_medium_betaRTv
    w[widx] = result;
 }
 
+__global__ void dbl_RTdotv
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *R, double *v, double *RTdotv )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx;        // thread tdx computes RTv[idx]
+
+   const int vdx = idx % nrows;          // index in v is column in R^T
+   const int Rdx = Roffset + idx;
+                                        // R is stored column-by-column
+   const double Vval = v[vdx];
+   const double Rval = R[Rdx];
+   double result = Rval*Vval;
+
+   RTdotv[idx] = result;
+}
+
+__global__ void dbl_sum_betaRTdotv
+ ( int nrows, double *beta, double *RTdotv, double *w )
+{
+   const int tdx = threadIdx.x;  // tdx sums elements on row tdx
+   const int offset = tdx*nrows; // number of rows before current row
+
+   double result = 0.0;
+   double Rval;
+
+   for(int i=0; i<nrows; i++)
+   {
+      Rval = RTdotv[offset + i];
+      result = result + Rval;
+   }
+   Rval = *beta;
+   w[tdx] = Rval*result;
+}
+
 __global__ void dbl_medium_subvbetaRTv
  ( int nrows, int ncols, int szt, int k,
    double *R, double *v, double *beta, double *w )
@@ -1492,7 +1528,8 @@ void GPU_cmplx_small_leftRupdate
 void GPU_dbl_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
-   double *w_h, double *w_d, double *RTvlapms, double *redlapms,
+   double *RTdotv_h, double *RTdotv_d, double *w_h, double *w_d,
+   double *RTvlapms, double *redlapms,
    long long int *add, long long int *mul, long long int *div, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
@@ -1501,9 +1538,20 @@ void GPU_dbl_medium_leftRupdate
    float milliseconds;
    const int endcol = (k+1)*szt;     // 1 + last column index in tile
    const int nVrows = nrows - k*szt;          // dimension of V matrix
+   const int nhouse = nrows - colidx;  // length of Householder vector
    // total number of entries in R that will be modified
-   const int sizenum = (nrows - colidx)*(endcol - colidx);
+   const int RToffset = colidx*nrows + colidx;
+   const int dimRTdotv = endcol - colidx;
+   const int sizenum = (nrows - colidx)*dimRTdotv;
    const int nbrblocks = (int) ceil(sizenum/((double) szt));
+
+   if(verbose)
+   {
+      cout << "-> launching " << nbrblocks << " blocks of " << szt
+           << " threads to compute RTdotv ..." << endl;
+      cout << "   nhouse : " << nhouse << "  RToffset : " << RToffset
+           << "  dimRTdotv : " << dimRTdotv << endl;
+   }
 
    cudaEventRecord(start);
    // 2nd argument: ncols -> endcol
@@ -1512,8 +1560,16 @@ void GPU_dbl_medium_leftRupdate
    // dbl_medium_betaRTv<<<nbrblocks,szt>>>
    //   (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
    // number of threads must be ncols - colidx, not endcol - colidx
-   dbl_small_betaRTv<<<1,nrows-colidx>>> // nrows ...
-     (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
+   // dbl_small_betaRTv<<<1,nrows-colidx>>> // nrows ...
+   //   (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
+   dbl_RTdotv<<<nbrblocks,szt>>>
+      (nhouse,szt,colidx,RToffset,dimRTdotv,A_d,&V_d[L*nVrows+L],RTdotv_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *RTvlapms += milliseconds;
+   cudaEventRecord(start);
+   dbl_sum_betaRTdotv<<<1,dimRTdotv>>>(nhouse,&beta_d[L],RTdotv_d,w_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
@@ -1540,7 +1596,27 @@ void GPU_dbl_medium_leftRupdate
    {
       const int dim = nrows*ncols;
       const size_t sznum = dim*sizeof(double);
-      const size_t szbRTv = (endcol-colidx)*sizeof(double);
+      const size_t szbRTv = dimRTdotv*sizeof(double);
+      const size_t szRTdotv = nVrows*szbRTv;
+
+      cudaMemcpy(RTdotv_h,RTdotv_d,szRTdotv,cudaMemcpyDeviceToHost);
+      cout << "the matrix R^T dot v : " << endl;
+      int ix = 0;
+      for(int i=0; i<endcol-colidx; i++)
+      {
+         w_h[i] = 0.0;                    // take the row sum
+         for(int j=0; j<nhouse; j++)      // must use nhouse
+         {
+            w_h[i] = w_h[i] + RTdotv_h[ix];
+            cout << "RTdotv[" << i << "][" << j << "] : "
+                 << RTdotv_h[ix++] << endl;
+         }
+         w_h[i] = beta_h[L]*w_h[i];
+      }
+      cudaMemcpy(&beta_h[L],&beta_d[L],sizeof(double),cudaMemcpyDeviceToHost);
+      cout << "row sum of R^T dot v times beta : " << endl;
+      for(int i=0; i<endcol-colidx; i++)
+         cout << "w[" << i << "] : " << w_h[i] << endl;
 
       cudaMemcpy(w_h,w_d,szbRTv,cudaMemcpyDeviceToHost);
       cout << "the vector w = beta*R^T*v : " << endl;
@@ -2551,6 +2627,8 @@ void GPU_dbl_blocked_houseqr
    double *QWYT_d;                      // Q*WY^T on the device
    double *YWTC_h = new double[dim];    // YWT*C on the host
    double *YWTC_d;                      // YWT*C on the device
+   double *RTdotv_h = new double[nrows2]; // R^T dotted with v
+   double *RTdotv_d;                      // RTdotv on the device
    double *bRTv_h = new double[nrows];  // beta*R^T*v
    double *bRTv_d;                      // beta*R^T*v on the device
 
@@ -2588,6 +2666,7 @@ void GPU_dbl_blocked_houseqr
    cudaMemcpy(V_d,V_h,szVandW,cudaMemcpyHostToDevice);
    cudaMalloc((void**)&W_d,szVandW + szpad); // padding only in allocation
 
+   cudaMalloc((void**)&RTdotv_d,szVandW + szpad);
    cudaMalloc((void**)&bRTv_d,szhouse + szpad);
 
    const size_t szWYT = nrows2*sizeof(double);
@@ -2633,8 +2712,8 @@ void GPU_dbl_blocked_houseqr
          {
             GPU_dbl_medium_leftRupdate
                (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
-                bRTv_h,bRTv_d,RTvlapms,tileRlapms,addcnt,mulcnt,divcnt,
-                verbose);
+                RTdotv_h,RTdotv_d,bRTv_h,bRTv_d,
+                RTvlapms,tileRlapms,addcnt,mulcnt,divcnt,verbose);
          }
       }
 /*
@@ -2684,7 +2763,8 @@ void GPU_dbl_blocked_houseqr
       for(int j=0; j<ncols; j++)
          R[i][j] = A_h[j*nrows+i];
 
-   free(A_h); free(Q_h); free(v_h); free(bRTv_h); free(V_h); free(W_h);
+   free(A_h); free(Q_h); free(v_h); free(V_h);
+   free(RTdotv_h); free(bRTv_h); free(W_h);
    free(WYT_h); free(QWYT_h); free(YWT_h); free(YWTC_h);
 }
 

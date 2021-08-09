@@ -1,5 +1,6 @@
 Sun 8 Aug 2021 : added separate value to time the beta*R^T*v kernel
-  in dbl_baqr_kernels, updated dbl_baqr_testers.cpp.
+  in dbl_baqr_kernels, updated dbl_baqr_testers.cpp.  In dbl_baqr_kernels,
+  splitted the kernel to compute beta*R^T*v in two separate kernels.
 
 Sat 7 Aug 2021 : new prompt_baqr_setup to set the parameters of the tests,
   updated dbl_baqr_testers, test_dbl_baqr.cpp, and the makefiles.

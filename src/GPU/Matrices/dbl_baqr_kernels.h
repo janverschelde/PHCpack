@@ -289,6 +289,45 @@ __global__ void dbl_medium_betaRTv
  * ON RETURN :
  *   w        the first ncols-k numbers define beta*R^T*v. */
 
+__global__ void dbl_RTdotv
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *R, double *v, double *RTdotv );
+/*
+ * DESCRIPTION :
+ *   The elements of the matrix RTdotv are the elements of R^T,
+ *   multiplied with the corresponding element of v.
+ *   Multiple blocks of threads operate on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   szt      size of one tile and number of threads in one block;
+ *   colidx   index of the current column in R;
+ *   Roffset  offset in R for the first row to start;
+ *   dim      number of columns in RTv;
+ *   R        column wise stored matrix with number of rows equal to nrows;
+ *   v        start of the first nonzero element of a Householder vector;
+ *   RTdotv   space for a matrix of nrows-by-szt, plus some padding.
+ *
+ * ON RETURN :
+ *   RTdotv   the element-by-element products of R^T with v,
+ *            stored row by row. */
+
+__global__ void dbl_sum_betaRTdotv
+ ( int nrows, double *beta, double *RTdotv, double *w );
+/*
+ * DESCRIPTION :
+ *   Adds the rows in RTdotv to obtain w = beta*R^T*v,
+ *   with one block of threads.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in RTdotv;
+ *   beta     the beta value corresponding to the Householder vector;
+ *   RTdotv   contains all products of the elements of R dotted v;
+ *   w        space for beta*R^T*v.
+ *
+ * ON RETURN :
+ *   w        contains beta*R^T*v. */
+
 __global__ void dbl_medium_subvbetaRTv
  ( int nrows, int ncols, int szt, int k,
    double *R, double *v, double *beta, double *w );
@@ -1334,7 +1373,8 @@ void GPU_cmplx_small_leftRupdate
 void GPU_dbl_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
-   double *w_h, double *w_d, double *RTvlapms, double *redlapms,
+   double *RTdotv_h, double *RTdotv_d, double *w_h, double *w_d,
+   double *RTvlapms, double *redlapms,
    long long int *add, long int *mul, long int *div, bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1356,6 +1396,10 @@ void GPU_dbl_medium_leftRupdate
  *   V_d      space for the Householder vectors on the device;
  *   beta_h   space for the betas if verbose;
  *   beta_d   space on the device for the betas;
+ *   RTdotv_h has space for the componentwise product of R^T with v,
+ *            if verbose;
+ *   RTdotv_d has space for the componentwise product of R^T with v,
+ *            on the device;
  *   w_h      space for the beta*R^T*v on the host, if verbose;
  *   w_d      space for the beta*R^T*v plus szt padding;
  *   add      current number of additions and subtractions;
@@ -1367,7 +1411,10 @@ void GPU_dbl_medium_leftRupdate
  *   V_d      contains the Householder vectors on the device;
  *   beta_h   vector of betas, if verbose;
  *   beta_d   the next beta constant;
+ *   RTdotv_h stores the componentwise product of R^T with v, if verbose;
+ *   RTdotv_d stores R^T*v, on the device;
  *   w_h      stores the beta*R^T*v, if verbose;
+ *   w_d      stores the beta*R^T*v, on the device;
  *   RTvlapms is the elapsed time spent to compute beta*R^T*v;
  *   redlapms is the elapsed time spent to reduce one tile;
  *   add      accumulated number of additions and subtractions;
