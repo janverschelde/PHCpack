@@ -401,6 +401,41 @@ void flopcount_dbl_RTdotv ( int nrows, int szt, long long int *mul )
    *mul += nbthreads;
 }
 
+__global__ void cmplx_RHdotv
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *Rre, double *Rim, double *vre, double *vim,
+   double *RHdotvre, double *RHdotvim )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx;        // thread tdx computes RTv[idx]
+
+   const int vdx = idx % nrows;          // index in v is column in R^T
+   const int row = idx / nrows;          // R is stored column-by-column
+
+   const int Rdx = Roffset + idx + (row+1)*colidx;
+
+   const double Vvalre = vre[vdx];
+   const double Vvalim = vim[vdx];
+   const double Rvalre = Rre[Rdx];
+   const double Rvalim = Rim[Rdx];
+   // Hermitian transpose of R
+   double resultre =   Rvalre*Vvalre + Rvalim*Vvalim;
+   double resultim = - Rvalim*Vvalre + Rvalre*Vvalim;
+
+   RHdotvre[idx] = resultre;
+   RHdotvim[idx] = resultim;
+}
+
+void flopcount_cmplx_RHdotv
+ ( int nrows, int szt, long long int *add, long long int *mul )
+{
+   int nbthreads = nrows*szt;
+
+   *add += 2*nbthreads;
+   *mul += 4*nbthreads;
+}
+
 __global__ void dbl_sum_betaRTdotv
  ( int nrows, double *beta, double *RTdotv, double *w )
 {
@@ -424,6 +459,38 @@ void flopcount_dbl_sum_betaRTdotv
 {
    *add += dim*nrows;
    *mul += dim;
+}
+
+__global__ void cmplx_sum_betaRHdotv
+ ( int nrows, double *beta, double *RHdotvre, double *RHdotvim,
+   double *wre, double *wim )
+{
+   const int tdx = threadIdx.x;  // tdx sums elements on row tdx
+   const int offset = tdx*nrows; // number of rows before current row
+   int idx;
+
+   double resultre = 0.0;
+   double resultim = 0.0;
+   double Rvalre,Rvalim;
+
+   for(int i=0; i<nrows; i++)
+   {
+      idx = offset + i;
+      Rvalre = RHdotvre[idx];
+      Rvalim = RHdotvim[idx];
+      resultre = resultre + Rvalre;
+      resultim = resultim + Rvalim;
+   }
+   Rvalre = *beta;
+   wre[tdx] = Rvalre*resultre;
+   wim[tdx] = Rvalre*resultim;
+}
+
+void flopcount_cmplx_sum_betaRHdotv
+ ( int nrows, int dim, long long int *add, long long int *mul )
+{
+   *add += 2*dim*nrows;
+   *mul += 2*dim;
 }
 
 __global__ void dbl_medium_subvbetaRTv
@@ -1654,6 +1721,8 @@ void GPU_cmplx_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *Are_h, double *Aim_h, double *Are_d, double *Aim_d,
    double *Vre_d, double *Vim_d, double *beta_h, double *beta_d,
+   double *RHdotvre_h, double *RHdotvim_h,
+   double *RHdotvre_d, double *RHdotvim_d,
    double *wre_h, double *wim_h, double *wre_d, double *wim_d,
    double *RHvlapms, double *redlapms,
    long long int *add, long long int *mul, long long int *div, bool verbose )
@@ -1664,8 +1733,11 @@ void GPU_cmplx_medium_leftRupdate
    float milliseconds;
    const int endcol = (k+1)*szt;     // 1 + last column index in tile
    const int nVrows = nrows - k*szt;          // dimension of V matrix
+   const int nhouse = nrows - colidx;  // length of Householder vector
    // total number of entries in R that will be modified
-   const int sizenum = (nrows - colidx)*(endcol - colidx);
+   const int RToffset = colidx*nrows;
+   const int dimRTdotv = endcol - colidx;
+   const int sizenum = (nrows - colidx)*dimRTdotv;
    const int nbrblocks = (int) ceil(sizenum/((double) szt));
 
    cudaEventRecord(start);
@@ -1675,14 +1747,26 @@ void GPU_cmplx_medium_leftRupdate
    // dbl_medium_betaRTv<<<nbrblocks,szt>>>
    //   (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
    // number of threads must be ncols - colidx, not endcol - colidx
-   cmplx_small_betaRHv<<<1,nrows-colidx>>> // nrows ...
-      (nrows,endcol,szt,colidx,Are_d,Aim_d,
-       &Vre_d[L*nVrows+L],&Vim_d[L*nVrows+L],&beta_d[L],wre_d,wim_d);
+   // cmplx_small_betaRHv<<<1,nrows-colidx>>> // nrows ...
+   //    (nrows,endcol,szt,colidx,Are_d,Aim_d,
+   //     &Vre_d[L*nVrows+L],&Vim_d[L*nVrows+L],&beta_d[L],wre_d,wim_d);
+   cmplx_RHdotv<<<nbrblocks,szt>>>
+      (nhouse,szt,colidx,RToffset,dimRTdotv,Are_d,Aim_d,
+       &Vre_d[L*nVrows+L],&Vim_d[L*nVrows+L],RHdotvre_d,RHdotvim_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *RHvlapms += milliseconds;
-   flopcount_cmplx_small_betaRHv(nrows,endcol,szt,colidx,add,mul);
+   cudaEventRecord(start);
+   cmplx_sum_betaRHdotv<<<1,dimRTdotv>>>
+      (nhouse,&beta_d[L],RHdotvre_d,RHdotvim_d,wre_d,wim_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *RHvlapms += milliseconds;
+   flopcount_cmplx_RHdotv(nhouse,szt,add,mul);
+   flopcount_cmplx_sum_betaRHdotv(nhouse,dimRTdotv,add,mul);
+   // flopcount_cmplx_small_betaRHv(nrows,endcol,szt,colidx,add,mul);
 
    if(verbose)
    {
@@ -2834,10 +2918,14 @@ void GPU_cmplx_blocked_houseqr
    double *YWTCim_h = new double[dim];    // imaginary parts of YWT*C
    double *YWTCre_d;                      // YWTCre on the device
    double *YWTCim_d;                      // YWTCim on the device
-   double *bRTvre_h = new double[nrows];  // real parts of beta*R^T*v
-   double *bRTvim_h = new double[nrows];  // imaginary parts of beta*R^T*v
-   double *bRTvre_d;                      // bRTvre_h on the device
-   double *bRTvim_d;                      // bRTvim_d on the device
+   double *RHdotvre_h = new double[nrows2]; // real part of R^H dotted with v
+   double *RHdotvim_h = new double[nrows2]; // imag part of R^H dotted with v
+   double *RHdotvre_d;                      // RHdotvre on the device
+   double *RHdotvim_d;                      // RHdotvim on the device
+   double *bRHvre_h = new double[nrows];  // real parts of beta*R^H*v
+   double *bRHvim_h = new double[nrows];  // imaginary parts of beta*R^H*v
+   double *bRHvre_d;                      // bRHvre_h on the device
+   double *bRHvim_d;                      // bRHvim_d on the device
 
    int ix = 0;                            // copy the columns of A to A_h
    for(int j=0; j<ncols; j++)   
@@ -2909,8 +2997,10 @@ void GPU_cmplx_blocked_houseqr
    cudaMalloc((void**)&Wre_d,szVandW + szpad); // padding added
    cudaMalloc((void**)&Wim_d,szVandW + szpad); // padding added
 
-   cudaMalloc((void**)&bRTvre_d,szhouse + szpad);
-   cudaMalloc((void**)&bRTvim_d,szhouse + szpad);
+   cudaMalloc((void**)&RHdotvre_d,szVandW + szpad);
+   cudaMalloc((void**)&RHdotvim_d,szVandW + szpad);
+   cudaMalloc((void**)&bRHvre_d,szhouse + szpad);
+   cudaMalloc((void**)&bRHvim_d,szhouse + szpad);
 
    const size_t szWYT = nrows2*sizeof(double);
    cudaMalloc((void**)&WYTre_d,szWYT + szpad); // padding for W*Y^T 
@@ -2962,8 +3052,9 @@ void GPU_cmplx_blocked_houseqr
             GPU_cmplx_medium_leftRupdate
                (nrows,ncols,szt,colidx,k,L,Are_h,Aim_h,Are_d,Aim_d,
                 Vre_d,Vim_d,beta_h,beta_d,
-                bRTvre_h,bRTvim_h,bRTvre_d,bRTvim_d,RHvlapms,tileRlapms,
-                addcnt,mulcnt,divcnt,verbose);
+                RHdotvre_h,RHdotvim_h,RHdotvre_d,RHdotvim_d,
+                bRHvre_h,bRHvim_h,bRHvre_d,bRHvim_d,
+                RHvlapms,tileRlapms,addcnt,mulcnt,divcnt,verbose);
          }
       }
 /*
@@ -3028,7 +3119,8 @@ void GPU_cmplx_blocked_houseqr
 
    free(Are_h); free(Aim_h); free(Qre_h); free(Qim_h);
    free(vre_h); free(vim_h); free(Vre_h); free(Vim_h);
-   free(Wre_h); free(Wim_h); free(bRTvre_h); free(bRTvim_h);
+   free(Wre_h); free(Wim_h);
+   free(RHdotvre_h); free(RHdotvim_h); free(bRHvre_h); free(bRHvim_h);
    free(WYTre_h); free(QWYTre_h); free(YWTre_h); free(YWTCre_h);
    free(WYTim_h); free(QWYTim_h); free(YWTim_h); free(YWTCim_h);
 }

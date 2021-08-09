@@ -326,6 +326,56 @@ void flopcount_dbl_RTdotv ( int nrows, int szt, long long int *mul );
  * ON RETURN :
  *   mul      accumulated number of multiplications. */
 
+__global__ void cmplx_RHdotv
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *Rre, double *Rim, double *vre, double *vim,
+   double *RHdotvre, double *RHdotvim );
+/*
+ * DESCRIPTION :
+ *   The elements of the matrix RHdotv are the elements of R^H,
+ *   multiplied with the corresponding element of v.
+ *   Multiple blocks of threads operate on complex data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   szt      size of one tile and number of threads in one block;
+ *   colidx   index of the current column in R;
+ *   Roffset  offset in R for the first row to start;
+ *   dim      number of columns in R;
+ *   Rre      real parts of a column wise stored matrix
+ *            with number of rows equal to nrows;
+ *   Rim      imaginary parts of a column wise stored matrix
+ *            with number of rows equal to nrows;
+ *   vre      start of the real parts of the first nonzero element
+ *            of a Householder vector;
+ *   vim      start of the imaginary parts of the first nonzero element
+ *            of a Householder vector;
+ *   RTdotvre has space for a matrix of nrows-by-szt, plus some padding;
+ *   RTdotvim has space for a matrix of nrows-by-szt, plus some padding.
+ *
+ * ON RETURN :
+ *   RTdotvre has the real parts of the element-by-element products
+ *            of R^T with v, stored row by row;
+ *   RTdotvim has the imaginary parts of the element-by-element products
+ *            of R^T with v, stored row by row. */
+
+void flopcount_cmplx_RHdotv
+ ( int nrows, int szt, long long int *add, long long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to compute RHdotv,
+ *   using multiple blocks of threads, on complex data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of the Householder vector;
+ *   szt      number of threads in one block;
+ *   add      current number of additions;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions;
+ *   mul      accumulated number of multiplications. */
+
 __global__ void dbl_sum_betaRTdotv
  ( int nrows, double *beta, double *RTdotv, double *w );
 /*
@@ -352,6 +402,43 @@ void flopcount_dbl_sum_betaRTdotv
  * ON ENTRY :
  *   nrows    number of rows in RTdotv;
  *   dim      dimension of w = beta*R^T*v,
+ *            equals the number of threads in the block;
+ *   add      current number of additions;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions;
+ *   mul      accumulated number of multiplications. */
+
+__global__ void cmplx_sum_betaRHdotv
+ ( int nrows, double *beta, double *RHdotvre, double *RHdotvim,
+   double *wre, double *wim );
+/*
+ * DESCRIPTION :
+ *   Adds the rows in RHdotv to obtain w = beta*R^H*v,
+ *   with one block of threads, on complex data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in RHdotv;
+ *   beta     the beta value corresponding to the Householder vector;
+ *   RTdotv   contains all products of the elements of R dotted v;
+ *   wre      space for the real parts of beta*R^H*v.
+ *   wim      space for the imaginary parts of beta*R^H*v.
+ *
+ * ON RETURN :
+ *   wre      the real parts of beta*R^H*v;
+ *   wim      the imaginary parts of beta*R^H*v. */
+
+void flopcount_cmplx_sum_betaRHdotv
+ ( int nrows, int dim, long long int *add, long long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of additions to compute beta*R^H*v,
+ *   given RHdotv, with one block of dim threads, on complex data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in RHdotv;
+ *   dim      dimension of w = beta*R^H*v,
  *            equals the number of threads in the block;
  *   add      current number of additions;
  *   mul      current number of multiplications.
@@ -1457,6 +1544,8 @@ void GPU_cmplx_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *Are_h, double *Aim_h, double *Are_d, double *Aim_d,
    double *Vre_d, double *Vim_d, double *beta_h, double *beta_d,
+   double *RHdotvre_h, double *RHdotvim_h,
+   double *RHdotvre_d, double *RHdotvim_d,
    double *wre_h, double *wim_h, double *wre_d, double *wim_d,
    double *RHvlapms, double *redlapms,
    long long int *add, long long int *mul, long long int *div,
@@ -1486,6 +1575,12 @@ void GPU_cmplx_medium_leftRupdate
  *            on the device;
  *   beta_h   space allocated for the betas if verbose;
  *   beta_d   space allocated on the device for the betas;
+ *   RHdotvre_h has space for the real parts of the componentwise products
+ *            of R^H with v, if verbose;
+ *   RHdotvim_h has space for the imaginary parts of the componentwise
+ *            products of R^H with v, if verbose;
+ *   RHdotvre_d has space for RHdotvre, on the device;
+ *   RHdotvim_d has space for RHdotvim, on the device;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
  *   div      current number of divisions;
@@ -1496,6 +1591,12 @@ void GPU_cmplx_medium_leftRupdate
  *   Vim_d    imaginary parts of the Householder vectors on the device;
  *   beta_h   vector of betas, if verbose;
  *   beta_d   the next beta constant;
+ *   RHdotvre_h stores the real parts of the componentwise products
+ *            of R^H with v, if verbose;
+ *   RHdotvim_h stores the imaginary parts of the componentwise
+ *            products of R^H with v, if verbose;
+ *   RHdotvre_d stores RHdotvre, on the device;
+ *   RHdotvim_d stores RHdotvim, on the device;
  *   RHvlapms elapsed time spent on beta*R^H*v;
  *   redlapms elapsed time spent to reduce one tile;
  *   add      accumulated number of additions and subtractions;
