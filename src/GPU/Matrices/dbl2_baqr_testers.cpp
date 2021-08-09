@@ -88,7 +88,7 @@ void test_real2_blocked_qr
       }
    }
    double timelapsed_d;
-   double houselapsedms,tileRlapsedms,vb2Wlapsedms;
+   double houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
 
@@ -98,7 +98,7 @@ void test_real2_blocked_qr
 
       GPU_dbl2_blocked_houseqr
          (nrows,ncols,sizetile,numtiles,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,
-          &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,
+          &houselapsedms,&RTvlapsedms,&tileRlapsedms,&vb2Wlapsedms,
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
           &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,bvrb);
 
@@ -123,12 +123,14 @@ void test_real2_blocked_qr
    {
       cout << "         Time spent by the Householder kernel : ";
       cout << houselapsedms << " milliseconds." << endl;
+      cout << "      Time spent by the kernel for beta*R^T*v : ";
+      cout << RTvlapsedms << " milliseconds." << endl;
       cout << "  Time spent by the kernel to reduce one tile : ";
       cout << tileRlapsedms << " milliseconds." << endl;
       cout << "    Time spent by the kernel for the W matrix : ";
       cout << vb2Wlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing W*Y^T : ";
-      cout << WYTlapsedms << " milliseconds." << endl;
+      // cout << " Time spent by the kernel for computing W*Y^T : ";
+      // cout << WYTlapsedms << " milliseconds." << endl;
       cout << " Time spent by the kernel for computing Y*W^T : ";
       cout << YWTlapsedms << " milliseconds." << endl;
       cout << " Time spent by the kernel for computing Q*WYT : ";
@@ -255,7 +257,7 @@ void test_cmplx2_blocked_qr
       }
    }
    double timelapsed_d;
-   double houselapsedms,tileRlapsedms,vb2Wlapsedms;
+   double houselapsedms,RHvlapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
 
@@ -282,7 +284,7 @@ void test_cmplx2_blocked_qr
           Arehi,  Arelo,  Aimhi,  Aimlo,
           Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
           Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,
-          &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,
+          &houselapsedms,&RHvlapsedms,&tileRlapsedms,&vb2Wlapsedms,
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
           &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,bvrb);
 
@@ -310,12 +312,14 @@ void test_cmplx2_blocked_qr
    {
       cout << "         Time spent by the Householder kernel : ";
       cout << houselapsedms << " milliseconds." << endl;
+      cout << "      Time spent by the kernel for beta*R^H*v : ";
+      cout << RHvlapsedms << " milliseconds." << endl;
       cout << "  Time spent by the kernel to reduce one tile : ";
       cout << tileRlapsedms << " milliseconds." << endl;
       cout << "    Time spent by the kernel for the W matrix : ";
       cout << vb2Wlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing W*Y^H : ";
-      cout << WYTlapsedms << " milliseconds." << endl;
+      // cout << " Time spent by the kernel for computing W*Y^H : ";
+      // cout << WYTlapsedms << " milliseconds." << endl;
       cout << " Time spent by the kernel for computing Y*W^H : ";
       cout << YWTlapsedms << " milliseconds." << endl;
       cout << " Time spent by the kernel for computing Q*WYH : ";

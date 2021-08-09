@@ -151,6 +151,142 @@ __global__ void dbl2_small_betaRTv
  *   whi      high doubles of beta*R^T*v in the first ncols-k numbers;
  *   wlo      low doubles of beta*R^T*v in the first ncols-k numbers. */
 
+__global__ void dbl2_RTdotv
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *Rhi, double *Rlo, double *vhi, double *vlo,
+   double *RTdotvhi, double *RTdotvlo );
+/*
+ * DESCRIPTION :
+ *   The elements of the matrix RTdotv are the elements of R^T,
+ *   multiplied with the corresponding element of v.
+ *   Multiple blocks of threads operate on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   szt      size of one tile and number of threads in one block;
+ *   colidx   index of the current column in R;
+ *   Roffset  offset in R for the first row to start;
+ *   dim      number of columns in R;
+ *   Rhi      high doubles of acolumn wise stored matrix 
+ *            with number of rows equal to nrows;
+ *   Rlo      low doubles of acolumn wise stored matrix 
+ *            with number of rows equal to nrows;
+ *   vhi      start of the high doubles of the first nonzero element
+ *            of a Householder vector;
+ *   vlo      start of the low doubles of the first nonzero element
+ *            of a Householder vector;
+ *   RTdotvhi has space for a matrix of nrows-by-szt, plus some padding.
+ *   RTdotvlo has space for a matrix of nrows-by-szt, plus some padding.
+ *
+ * ON RETURN :
+ *   RTdotvhi are the high doubles of the element-by-element products
+ *            of R^T with v, stored row by row;
+ *   RTdotvlo are the low doubles of the element-by-element products
+ *            of R^T with v, stored row by row. */
+
+__global__ void cmplx2_RHdotv
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *Rrehi, double *Rrelo, double *Rimhi, double *Rimlo,
+   double *vrehi, double *vrelo, double *vimhi, double *vimlo,
+   double *RHdotvrehi, double *RHdotvrelo,
+   double *RHdotvimhi, double *RHdotvimlo );
+/*
+ * DESCRIPTION :
+ *   The elements of the matrix RHdotv are the elements of R^H,
+ *   multiplied with the corresponding element of v.
+ *   Multiple blocks of threads operate on complex data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   szt      size of one tile and number of threads in one block;
+ *   colidx   index of the current column in R;
+ *   Roffset  offset in R for the first row to start;
+ *   dim      number of columns in R;
+ *   Rrehi    high doubles of the real parts of a column wise stored matrix
+ *            with number of rows equal to nrows;
+ *   Rrelo    low doubles of the real parts of a column wise stored matrix
+ *            with number of rows equal to nrows;
+ *   Rimhi    high doubles of the imaginary parts of a column wise stored
+ *            matrix with number of rows equal to nrows;
+ *   Rimlo    low doubles of the imaginary parts of a column wise stored
+ *            matrix with number of rows equal to nrows;
+ *   vrehi    start of the the high doubles of the real parts of the first
+ *            nonzero element of a Householder vector;
+ *   vrelo    start of the the low doubles of the real parts of the first
+ *            nonzero element of a Householder vector;
+ *   vimhi    start of the high doubles of the imaginary parts of the first
+ *            nonzero element of a Householder vector;
+ *   vimlo    start of the low doubles of the imaginary parts of the first
+ *            nonzero element of a Householder vector;
+ *   RHdotvrehi has space for a matrix of nrows-by-szt, plus some padding;
+ *   RHdotvrelo has space for a matrix of nrows-by-szt, plus some padding;
+ *   RHdotvimhi has space for a matrix of nrows-by-szt, plus some padding;
+ *   RHdotvimlo has space for a matrix of nrows-by-szt, plus some padding.
+ *
+ * ON RETURN :
+ *   RHdotvrehi has the high doubles of the real parts of the 
+ *            element-by-element products of R^H with v, stored row by row;
+ *   RHdotvrelo has the low doubles of the real parts of the 
+ *            element-by-element products of R^H with v, stored row by row;
+ *   RHdotvimhi has the high doubles of the imaginary parts of the 
+ *            element-by-element products of R^H with v, stored row by row;
+ *   RHdotvimlo has the low doubles of the imaginary parts of the 
+ *            element-by-element products of R^H with v, stored row by row. */
+
+__global__ void cmplx2_sum_betaRHdotv
+ ( int nrows, double *betahi, double *betalo,
+   double *RTdotvrehi, double *RTdotvrelo,
+   double *RTdotvimhi, double *RTdotvimlo,
+   double *wrehi, double *wrelo, double *wimhi, double *wimlo );
+/*
+ * DESCRIPTION :
+ *   Adds the rows in RHdotv to obtain w = beta*R^H*v,
+ *   with one block of threads, on complex data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in RHdotv;
+ *   beta     the beta value corresponding to the Householder vector;
+ *   RTdotvrehi has the high doubles of the real parts of all products
+ *            of the elements of R dotted v;
+ *   RTdotvrelo has the low doubles of the real parts of all products
+ *            of the elements of R dotted v;
+ *   RTdotvimhi has the high doubles of the imaginary parts of all products
+ *            of the elements of R dotted v;
+ *   RTdotvimlo has the low doubles of the imaginary parts of all products
+ *            of the elements of R dotted v;
+ *   wrehi    space for the high doubles of the real parts of beta*R^H*v;
+ *   wrelo    space for the low doubles of the real parts of beta*R^H*v;
+ *   wimhi    space for the high doubles of the imaginary parts of beta*R^H*v;
+ *   wimlo    space for the low doubles of the imaginary parts of beta*R^H*v.
+ *
+ * ON RETURN :
+ *   wrehi    high doubles of the real parts of beta*R^H*v;
+ *   wrelo    low doubles of the real parts of beta*R^H*v;
+ *   wimhi    high doubles of the imaginary parts of beta*R^H*v;
+ *   wimlo    low doubles of the imaginary parts of beta*R^H*v. */
+
+__global__ void dbl2_sum_betaRTdotv
+ ( int nrows, double *betahi, double *betalo,
+   double *RTdotvhi, double *RTdotvlo, double *whi, double *wlo );
+/*
+ * DESCRIPTION :
+ *   Adds the rows in RTdotv to obtain w = beta*R^T*v,
+ *   with one block of threads, on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in RTdotv;
+ *   beta     the beta value corresponding to the Householder vector;
+ *   RTdotvhi has the high doubles of all products of the elements
+ *            of R dotted v;
+ *   RTdotvlo has the low doubles of all products of the elements
+ *            of R dotted v;
+ *   whi      space for the high doubles of beta*R^T*v.
+ *   wlo      space for the low doubles of beta*R^T*v.
+ *
+ * ON RETURN :
+ *   whi      the high doubles of beta*R^T*v;
+ *   wlo      the low doubles of beta*R^T*v. */
+
 __global__ void dbl2_medium_subvbetaRTv
  ( int nrows, int ncols, int szt, int k,
    double *Rhi, double *Rlo, double *vhi, double *vlo,
@@ -178,6 +314,48 @@ __global__ void dbl2_medium_subvbetaRTv
  * ON RETURN :
  *   Rhi      high doubles of the updated trapezoidal matrix;
  *   Rlo      low doubles of the updated trapezoidal matrix. */
+
+__global__ void cmplx2_medium_subvbetaRTv
+ ( int nrows, int ncols, int szt, int k,
+   double *Rrehi, double *Rrelo, double *Rimhi, double *Rimlo,
+   double *vrehi, double *vrelo, double *vimhi, double *vimlo,
+   double *betahi, double *betalo,
+   double *wrehi, double *wrelo, double *wimhi, double *wimlo );
+/*
+ * DESCRIPTION :
+ *   Applies the Householder vector to update R, on complex data.
+ *
+ * REQUIRED : nrows - k > szt as multiple blocks are used.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R;
+ *   ncols    number of columns of R;
+ *   szt      size of each block;
+ *   k        index of the current column;
+ *   Rhi      high doubles of the real parts of an nrows-by-ncols matrix,
+ *            stored column wise;
+ *   Rlo      low doubles of the real parts of an nrows-by-ncols matrix,
+ *            stored column wise;
+ *   Rhi      high doubles of the imaginary parts of an nrows-by-ncols matrix,
+ *            stored column wise;
+ *   Rlo      low doubles of the imaginary parts of an nrows-by-ncols matrix,
+ *            stored column wise;
+ *   vrehi    high doubles of the real parts of the Householder vector;
+ *   vrelo    low doubles of the real parts of the Householder vector;
+ *   vimhi    high doubles of the imaginary parts of the Householder vector;
+ *   vimlo    low doubles of the imaginary parts of the Householder vector;
+ *   betahi   high double of the beta corresponding with v;
+ *   betalo   low double of the beta corresponding with v;
+ *   wrehi    high doubles of the real parts of beta*R^H*v;
+ *   wrelo    low doubles of the real parts of beta*R^H*v;
+ *   wimhi    high doubles of the imaginary parts of beta*R^H*v;
+ *   wimlo    low doubles of the imaginary parts of beta*R^H*v.
+ *
+ * ON RETURN :
+ *   Rrehi    high doubles of the real parts of the updated R;
+ *   Rrelo    low doubles of the real parts of the updated R;
+ *   Rimhi    high doubles of the imaginary parts of the updated R;
+ *   Rimlo    low doubles of the imaginary parts of the updated R. */
 
 __global__ void dbl2_VB_to_W
  ( int nrows, int ncols, double *Bhi, double *Blo,
@@ -1033,11 +1211,13 @@ void GPU_dbl2_medium_leftRupdate
    double *Ahi_h, double *Alo_h, double *Ahi_d, double *Alo_d,
    double *Vhi_d, double *Vlo_d,
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
+   double *RTdotvhi_h, double *RTdotvlo_h,
+   double *RTdotvhi_d, double *RTdotvlo_d,
    double *whi_h, double *wlo_h, double *whi_d, double *wlo_d,
-   double *lapms, bool verbose=true );
+   double *RTvlapms, double *redlapms, bool verbose=true );
 /*
  * DESCRIPTION :
- *   Calls the kernels to update one tile.
+ *   Calls the kernels to update one tile, on real data.
  *   Wraps the timer and the print statements if verbose.
  *   If verbose, then the reduced matrix is returned on the host.
  *
@@ -1062,6 +1242,14 @@ void GPU_dbl2_medium_leftRupdate
  *   betalo_h has space for the low doubles of the betas if verbose;
  *   betahi_d has space on the device for the high doubles of the betas;
  *   betalo_d has space on the device for the low doubles of the betas;
+ *   RTdotvhi_h has space for the high doubles of the componentwise product
+ *            of R^T with v, if verbose;
+ *   RTdotvlo_h has space for the low doubles of the componentwise product
+ *            of R^T with v, if verbose;
+ *   RTdotvhi_d has space for high doubles of the componentwise product
+ *            of R^T with v, on the device;
+ *   RTdotvlo_d has space for the low doubles of the componentwise product
+ *            of R^T with v, on the device;
  *   whi_h    space for the high doubles of beta*R^T*v on the host,
  *            if verbose;
  *   wlo_h    space for the high doubles of beta*R^T*v on the host,
@@ -1079,9 +1267,132 @@ void GPU_dbl2_medium_leftRupdate
  *   betalo_h is the vector of the low doubles of betas, if verbose;
  *   betahi_d has the high double of the next beta constant;
  *   betalo_d has the low double of the next beta constant;
+ *   RTdotvhi_h stores the high doubles of the componentwise product
+ *            of R^T with v, if verbose;
+ *   RTdotvlo_h stores the low doubles of the componentwise product
+ *            of R^T with v, if verbose;
+ *   RTdotvhi_d stores the high doubles of R^T*v, on the device;
+ *   RTdotvlo_d stores the low doubles of R^T*v, on the device;
  *   whi_h    stores the high doubles of beta*R^T*v, if verbose;
  *   wlo_h    stores the low doubles of beta*R^T*v, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   RTvlapms is the elapsed time spent to compute beta*R^T*v;
+ *   redlapms is the elapsed time spent to reduce one tile. */
+
+void GPU_cmplx2_medium_leftRupdate
+ ( int nrows, int ncols, int szt, int colidx, int k, int L,
+   double *Arehi_h, double *Arelo_h, double *Aimhi_h, double *Aimlo_h,
+   double *Arehi_d, double *Arelo_d, double *Aimhi_d, double *Aimlo_d,
+   double *Vrehi_d, double *Vrelo_d, double *Vimhi_d, double *Vimlo_d,
+   double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
+   double *RTdotvrehi_h, double *RTdotvrelo_h,
+   double *RTdotvimhi_h, double *RTdotvimlo_h,
+   double *RTdotvrehi_d, double *RTdotvrelo_d,
+   double *RTdotvimhi_d, double *RTdotvimlo_d,
+   double *wrehi_h, double *wrelo_h, double *wimhi_h, double *wimlo_h,
+   double *wrehi_d, double *wrelo_d, double *wimhi_d, double *wimlo_d,
+   double *RHvlapms, double *redlapms, bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Calls the kernels to update one tile, on complex data.
+ *   Wraps the timer and the print statements if verbose.
+ *   If verbose, then the reduced matrix is returned on the host.
+ *
+ * REQUIRED : nrows - colidx > szt.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrix A;
+ *   ncols    number of columns in the matrix A;
+ *   szt      size of one tile;
+ *   colidx   global index of the current column;
+ *   k        index of the current tile;
+ *   L        local index of the column in the current tile;
+ *   Arehi_h  high doubles of the real parts of the matrix on the host;
+ *   Arelo_h  low doubles of the real parts of the matrix on the host;
+ *   Aimhi_h  high doubles of the imaginary parts of the matrix on the host;
+ *   Aimlo_h  low doubles of the imaginary parts of the matrix on the host;
+ *   Arehi_d  high doubles of the real parts of the matrix on the device;
+ *   Arelo_d  low doubles of the real parts of the matrix on the device;
+ *   Aimhi_d  high doubles of the imaginary parts of the matrix on the device;
+ *   Aimlo_d  low doubles of the imaginary parts of the matrix on the device;
+ *   Vrehi_d  space for the high doubles of the real parts
+ *            of the Householder vectors, on the device;
+ *   Vrelo_d  space for the low doubles of the real parts
+ *            of the Householder vectors, on the device;
+ *   Vimhi_d  space for the high doubles of the imaginary parts
+ *            of the Householder vectors, on the device;
+ *   Vrelo_d  space for the low doubles of the imaginary parts
+ *            of the Householder vectors, on the device;
+ *   betahi_h has space for the high doubles of the betas if verbose;
+ *   betalo_h has space for the low doubles of the betas if verbose;
+ *   betahi_d has space on the device for the high doubles of the betas;
+ *   betalo_d has space on the device for the low doubles of the betas;
+ *   RHdotvrehi_h has space for the high doubles of the real parts
+ *            of the componentwise product of R^H with v, if verbose;
+ *   RHdotvrelo_h has space for the low doubles of the real parts of
+ *            the componentwise product of R^H with v, if verbose;
+ *   RHdotvimhi_h has space for the high doubles of the imaginary parts
+ *            of the componentwise product of R^H with v, if verbose;
+ *   RHdotvimlo_h has space for the low doubles of the imaginary parts of
+ *            the componentwise product of R^H with v, if verbose;
+ *   RHdotvrehi_d has space for high doubles of the real parts
+ *            of the componentwise product of R^H with v, on the device;
+ *   RHdotvrelo_d has space for the low doubles of the real parts
+ *            of the componentwise product of R^H with v, on the device;
+ *   RHdotvimhi_d has space for high doubles of the imaginary parts
+ *            of the componentwise product of R^H with v, on the device;
+ *   RHdotvimlo_d has space for the low doubles of the imaginary parts
+ *            of the componentwise product of R^H with v, on the device;
+ *   wrehi_h  space for the high doubles of the real parts of beta*R^H*v,
+ *            on the host, if verbose;
+ *   wrelo_h  space for the high doubles of the real parts of beta*R^H*v
+ *            on the host, if verbose;
+ *   wimhi_h  space for the high doubles of the imaginary parts of beta*R^H*v,
+ *            on the host, if verbose;
+ *   wimlo_h  space for the high doubles of the imaginary parts of beta*R^H*v
+ *            on the host, if verbose;
+ *   wrehi_d  space for the high doubles of the real parts of beta*R^H*v,
+ *            plus szt padding;
+ *   wrelo_d  space for the low doubles of the real parts of beta*R^H*v,
+ *            plus szt padding;
+ *   wimhi_d  space for the high doubles of the imaginary parts of beta*R^H*v,
+ *            plus szt padding;
+ *   wimlo_d  space for the low doubles of the imaginary parts of beta*R^H*v,
+ *            plus szt padding;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   Vrehi_d  high doubles of the real parts
+ *            of the Householder vectors, on the device;
+ *   Vrelo_d  low doubles of the real parts
+ *            of the Householder vectors, on the device;
+ *   Vimhi_d  high doubles of the imaginary parts
+ *            of the Householder vectors, on the device;
+ *   Vimlo_d  low doubles of the imaginary parts
+ *            of the Householder vectors, on the device;
+ *   betahi_h is the vector of the high doubles of betas, if verbose;
+ *   betalo_h is the vector of the low doubles of betas, if verbose;
+ *   betahi_d has the high double of the next beta constant;
+ *   betalo_d has the low double of the next beta constant;
+ *   RHdotvrehi_h stores the high doubles of the real parts
+ *            of the componentwise product of R^H with v, if verbose;
+ *   RHdotvrelo_h stores the low doubles of the real parts
+ *            of the componentwise product of R^H with v, if verbose;
+ *   RHdotvimhi_h stores the high doubles of the imaginary parts
+ *            of the componentwise product of R^H with v, if verbose;
+ *   RHdotvimlo_h stores the low doubles of the imaginary parts
+ *            of the componentwise product of R^H with v, if verbose;
+ *   RHdotvhi_d stores the high doubles of R^H*v, on the device;
+ *   RHdotvlo_d stores the low doubles of R^H*v, on the device;
+ *   wrehi_h  stores the high doubles of the real parts of beta*R^H*v,
+ *            if verbose;
+ *   wrelo_h  stores the low doubles of the real parts of beta*R^H*v,
+ *            if verbose;
+ *   wimhi_h  stores the high doubles of the imaginary parts of beta*R^H*v,
+ *            if verbose;
+ *   wimlo_h  stores the low doubles of the imaginary parts of beta*R^H*v,
+ *            if verbose;
+ *   RHvlapms is the elapsed time spent to compute beta*R^H*v;
+ *   redlapms is the elapsed time spent to reduce one tile. */
 
 void GPU_dbl2_VB_to_W
  ( int nrows, int ncols, int szt,
@@ -1883,8 +2194,8 @@ void GPU_dbl2_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **Ahi, double **Alo, double **Qhi, double **Qlo,
    double **Rhi, double **Rlo,
-   double *houselapms, double *tileRlapms, double *vb2Wlapms,
-   double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
+   double *houselapms, double *RTvlapms, double *tileRlapms,
+   double *vb2Wlapms, double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
    double *YWTlapms, double *YWTClapms, double *Raddlapms,
    double *walltimesec, bool verbose=true );
 /*
@@ -1916,6 +2227,7 @@ void GPU_dbl2_blocked_houseqr
  *   Rlo      low doubles of the reduced upper triangular form of A;
  *   houselapms is the elapsed time spent by the kernel
  *            to compute the Householder vector and the beta;
+ *   RTvlapms is the elapsed time spent to compute beta*R^T*v;
  *   tileRlapms is the elapsed time spent by the kernel
  *            to reduce one tile;
  *   vb2Wlapms is the elapsed time spent by the kernel
@@ -1939,9 +2251,9 @@ void GPU_cmplx2_blocked_houseqr
    double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
    double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
-   double *houselapms, double *tileRlapms, double *vb2Wlapms,
-   double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
-   double *YWTlapms, double *YWTClapms, double *Raddlapms,
+   double *houselapms, double *RHvlapms, double *tileRlapms,
+   double *vb2Wlapms, double *WYHlapms, double *QWYHlapms, double *Qaddlapms,
+   double *YWHlapms, double *YWHClapms, double *Raddlapms,
    double *walltimesec, bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1986,22 +2298,23 @@ void GPU_cmplx2_blocked_houseqr
  *   Rimlo    low doubles of the imaginary parts of the reduced form R;
  *   houselapms is the elapsed time spent by the kernel
  *            to compute the Householder vector and the beta;
+ *   RHvlapms is the elapsed time spent to compute beta*R^H*v;
  *   tileRlapms is the elapsed time spent by the kernel
  *            to reduce one tile;
  *   vb2Wlapms is the elapsed time spent by the kernel
  *            to compute the W representation;
- *   WYTlapms is the elapsed time spent by the kernel
- *            to compute the W*Y^T product;
- *   QWYTlapms is the elapsed time spent by the kernel
- *            to compute the Q*WYT product;
+ *   WYHlapms is the elapsed time spent by the kernel
+ *            to compute the W*Y^H product;
+ *   QWYHlapms is the elapsed time spent by the kernel
+ *            to compute the Q*WYH product;
  *   Qaddlapms is the elapsed time spent by the kernel
- *            to compute Q by adding the Q*W*Y^T matrix;
- *   YWTlapms is the elapsed time spent by the kernel
- *            to compute the Y*W^T product;
- *   YWTClapms is the elapsed time spent by the kernel
- *            to compute the YWT*C product;
+ *            to compute Q by adding the Q*W*Y^H matrix;
+ *   YWHlapms is the elapsed time spent by the kernel
+ *            to compute the Y*W^H product;
+ *   YWHClapms is the elapsed time spent by the kernel
+ *            to compute the YWH*C product;
  *   Raddlapms is the elapsed time spent by the kernel
- *            to compute R by adding the Y*W^T*C matrix;
+ *            to compute R by adding the Y*W^H*C matrix;
  *   walltimesec is the elapsed wall clock computation time. */
 
 #endif
