@@ -383,8 +383,10 @@ __global__ void dbl_RTdotv
    const int idx = bdx*szt + tdx;        // thread tdx computes RTv[idx]
 
    const int vdx = idx % nrows;          // index in v is column in R^T
-   const int Rdx = Roffset + idx;
-                                        // R is stored column-by-column
+   const int row = idx / nrows;          // R is stored column-by-column
+
+   const int Rdx = Roffset + idx + (row+1)*colidx;
+
    const double Vval = v[vdx];
    const double Rval = R[Rdx];
    double result = Rval*Vval;
@@ -1540,7 +1542,7 @@ void GPU_dbl_medium_leftRupdate
    const int nVrows = nrows - k*szt;          // dimension of V matrix
    const int nhouse = nrows - colidx;  // length of Householder vector
    // total number of entries in R that will be modified
-   const int RToffset = colidx*nrows + colidx;
+   const int RToffset = colidx*nrows;
    const int dimRTdotv = endcol - colidx;
    const int sizenum = (nrows - colidx)*dimRTdotv;
    const int nbrblocks = (int) ceil(sizenum/((double) szt));
