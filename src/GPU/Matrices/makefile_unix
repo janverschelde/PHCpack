@@ -263,13 +263,14 @@ test_dbl2_baqr.o:
 	@-echo ">>> compiling test_dbl2_baqr ..."
 	$(gpp) -O3 -c test_dbl2_baqr.cpp
 
-test_dbl2_baqr: test_dbl2_baqr.o dbl2_baqr_testers.o \
+test_dbl2_baqr: test_dbl2_baqr.o prompt_baqr_setup.o dbl2_baqr_testers.o \
                 double_double_functions.o dbl2_factorizations.o \
                 dbl2_factors_testers.o dbl2_baqr_host.o \
                 dbl2_baqr_kernels.o \
                 random_numbers.o random2_vectors.o random2_matrices.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl2_baqr test_dbl2_baqr.o dbl2_baqr_testers.o \
+	$(gpp) -o test_dbl2_baqr test_dbl2_baqr.o \
+                  prompt_baqr_setup.o dbl2_baqr_testers.o \
                   double_double_functions.o dbl2_factorizations.o \
                   dbl2_factors_testers.o dbl2_baqr_host.o dbl2_baqr_kernels.o \
                   random_numbers.o random2_vectors.o random2_matrices.o \

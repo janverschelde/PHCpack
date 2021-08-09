@@ -392,13 +392,13 @@ test_dbl2_baqr.obj:
                  /Fo: test_dbl2_baqr.obj /EHsc
 
 test_dbl2_baqr: test_dbl2_baqr.obj dbl2_baqr_testers.obj \
-                double_double_functions.obj \
+                prompt_baqr_setup.obj double_double_functions.obj \
 	        dbl2_factors_testers.obj dbl2_baqr_host.obj \
                 dbl2_factorizations.obj dbl2_baqr_kernels.obj \
                 random_numbers.obj random2_vectors.obj random2_matrices.obj
 	@-echo ">>> linking ..."
-	nvcc -ccbin=$(CL) -o test_dbl2_baqr.exe \
-             test_dbl2_baqr.obj dbl2_baqr_testers.obj \
+	nvcc -ccbin=$(CL) -o test_dbl2_baqr.exe test_dbl2_baqr.obj \
+             prompt_baqr_setup.obj dbl2_baqr_testers.obj \
              double_double_functions.obj dbl2_factors_testers.obj \
              dbl2_factorizations.obj dbl2_baqr_host.obj dbl2_baqr_kernels.obj \
              random_numbers.obj random2_vectors.obj random2_matrices.obj

@@ -14,21 +14,13 @@
 
 using namespace std;
 
-void test_real2_blocked_qr ( void )
+void test_real2_blocked_qr
+ ( int seed, int szt, int nbt, int nrows, int vrb, int mode )
 {
-   cout << "Give the size of each tile : ";
-   int sizetile; cin >> sizetile;
-
-   cout << "Give the number of tiles : ";
-   int numtiles; cin >> numtiles;
-
+   const int sizetile = szt;
+   const int numtiles = nbt;
    const int ncols = sizetile*numtiles;
-
-   cout << "Give the number of rows (" << " >= " << ncols << " ) : ";
-   int nrows; cin >> nrows;
-
-   cout << "Give the verbose level (1 to see all numbers) : ";
-   int verbose; cin >> verbose;
+   const int verbose = vrb;
 
    cout << "-> Generating a random " << nrows
         << "-by-" << ncols << " matrix ..." << endl;
@@ -70,72 +62,86 @@ void test_real2_blocked_qr ( void )
                  << Ahi[i][j] << "  " << Alo[i][j] << endl;
    }
    double timelapsed_h;
-   bool vrb = (verbose > 0);
-
-   cout << "-> CPU computes the block Householder QR ..." << endl;
-
-   CPU_dbl2_blocked_houseqr
-      (nrows,ncols,sizetile,numtiles,Ahi,Alo,Qhi_h,Qlo_h,Rhi_h,Rlo_h,
-       &timelapsed_h,vrb);
-
-   cout << "-> Testing the QR factorization ..." << endl;
-
+   bool bvrb = (verbose > 0);
    const double tol = 1.0e-20;
-   int fail = test_real2_qr_factors
-      (nrows,ncols,Ahi,Alo,Qhi_h,Qlo_h,Rhi_h,Rlo_h,tol,verbose);
-   if(fail == 0)
-      cout << "The test succeeded." << endl;
-   else
+   int fail;
+
+   if((mode == 1) || (mode == 2))
    {
-      cout << scientific << setprecision(2);
-      cout << "The test failed for tol = " << tol << "." << endl;
+
+      cout << "-> CPU computes the blocked Householder QR ..." << endl;
+
+      CPU_dbl2_blocked_houseqr
+         (nrows,ncols,sizetile,numtiles,Ahi,Alo,Qhi_h,Qlo_h,Rhi_h,Rlo_h,
+          &timelapsed_h,bvrb);
+
+      cout << "-> Testing the QR factorization ..." << endl;
+
+      fail = test_real2_qr_factors
+         (nrows,ncols,Ahi,Alo,Qhi_h,Qlo_h,Rhi_h,Rlo_h,tol,verbose);
+      if(fail == 0)
+         cout << "The test succeeded." << endl;
+      else
+      {
+         cout << scientific << setprecision(2);
+         cout << "The test failed for tol = " << tol << "." << endl;
+      }
    }
    double timelapsed_d;
    double houselapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
 
-   cout << "-> GPU computes the block Householder QR ..." << endl;
-
-   GPU_dbl2_blocked_houseqr
-      (nrows,ncols,sizetile,numtiles,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,
-       &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,
-       &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
-       &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,vrb);
-
-   fail = test_real2_qr_factors
-             (nrows,ncols,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,tol,verbose);
-   if(fail == 0)
-      cout << "The test succeeded." << endl;
-   else
+   if((mode == 0) || (mode == 2))
    {
-      cout << scientific << setprecision(2);
-      cout << "The test failed for tol = " << tol << "." << endl;
-   }
-   cout << fixed << setprecision(3);
-   cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
-        << timelapsed_h << " seconds." << endl;
-   cout << "         Time spent by the Householder kernel : ";
-   cout << houselapsedms << " milliseconds." << endl;
-   cout << "  Time spent by the kernel to reduce one tile : ";
-   cout << tileRlapsedms << " milliseconds." << endl;
-   cout << "    Time spent by the kernel for the W matrix : ";
-   cout << vb2Wlapsedms << " milliseconds." << endl;
-   cout << " Time spent by the kernel for computing W*Y^T : ";
-   cout << WYTlapsedms << " milliseconds." << endl;
-   cout << " Time spent by the kernel for computing Y*W^T : ";
-   cout << YWTlapsedms << " milliseconds." << endl;
-   cout << " Time spent by the kernel for computing Q*WYT : ";
-   cout << QWYTlapsedms << " milliseconds." << endl;
-   cout << " Time spent by the kernel for computing YWT*C : ";
-   cout << YWTClapsedms << " milliseconds." << endl;
-   cout << "Time spent by the kernel for adding QWYT to Q : ";
-   cout << Qaddlapsedms << " milliseconds." << endl;
-   cout << "Time spent by the kernel for adding R to YWTC : ";
-   cout << Raddlapsedms << " milliseconds." << endl;
-   cout << "        Total GPU wall clock computation time : ";
-   cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
+      cout << "-> GPU computes the blocked Householder QR ..." << endl;
 
+      GPU_dbl2_blocked_houseqr
+         (nrows,ncols,sizetile,numtiles,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,
+          &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,
+          &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
+          &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,bvrb);
+
+      fail = test_real2_qr_factors
+                (nrows,ncols,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,tol,verbose);
+      if(fail == 0)
+         cout << "The test succeeded." << endl;
+      else
+      {
+         cout << scientific << setprecision(2);
+         cout << "The test failed for tol = " << tol << "." << endl;
+      }
+   }
+   cout << endl;
+   cout << fixed << setprecision(3);
+   if((mode == 1) || (mode == 2))
+   {
+      cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+           << timelapsed_h << " seconds." << endl;
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      cout << "         Time spent by the Householder kernel : ";
+      cout << houselapsedms << " milliseconds." << endl;
+      cout << "  Time spent by the kernel to reduce one tile : ";
+      cout << tileRlapsedms << " milliseconds." << endl;
+      cout << "    Time spent by the kernel for the W matrix : ";
+      cout << vb2Wlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing W*Y^T : ";
+      cout << WYTlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing Y*W^T : ";
+      cout << YWTlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing Q*WYT : ";
+      cout << QWYTlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing YWT*C : ";
+      cout << YWTClapsedms << " milliseconds." << endl;
+      cout << "Time spent by the kernel for adding QWYT to Q : ";
+      cout << Qaddlapsedms << " milliseconds." << endl;
+      cout << "Time spent by the kernel for adding R to YWTC : ";
+      cout << Raddlapsedms << " milliseconds." << endl;
+      cout << "        Total GPU wall clock computation time : ";
+      cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
+   }
    for(int i=0; i<nrows; i++)
    {
       free(Ahi[i]); free(Alo[i]);
@@ -148,21 +154,13 @@ void test_real2_blocked_qr ( void )
    free(Alo); free(Qlo_h); free(Rlo_h); free(Qlo_d); free(Rlo_d);
 }
 
-void test_cmplx2_blocked_qr ( void )
+void test_cmplx2_blocked_qr
+ ( int seed, int szt, int nbt, int nrows, int vrb, int mode )
 {
-   cout << "Give the size of each tile : ";
-   int sizetile; cin >> sizetile;
-
-   cout << "Give the number of tiles : ";
-   int numtiles; cin >> numtiles;
-
+   const int sizetile = szt;
+   const int numtiles = nbt;
    const int ncols = sizetile*numtiles;
-
-   cout << "Give the number of rows (" << " >= " << ncols << " ) : ";
-   int nrows; cin >> nrows;
-
-   cout << "Give the verbose level (1 to see all numbers) : ";
-   int verbose; cin >> verbose;
+   const int verbose = vrb;
 
    cout << "-> Generating a random " << nrows
         << "-by-" << ncols << " matrix ..." << endl;
@@ -228,96 +226,109 @@ void test_cmplx2_blocked_qr ( void )
          }
    }
    double timelapsed_h;
-   bool vrb = (verbose > 0);
-
-   cout << "-> CPU computes the block Householder QR ..." << endl;
-
-   CPU_cmplx2_blocked_houseqr
-      (nrows,ncols,sizetile,numtiles,
-       Arehi,  Arelo,  Aimhi,  Aimlo,
-       Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,
-       Rrehi_h,Rrelo_h,Rimhi_h,Rimlo_h,&timelapsed_h,vrb);
-
-   cout << "-> Testing the QR factorization ..." << endl;
-
+   bool bvrb = (verbose > 0);
    const double tol = 1.0e-20;
-   int fail = test_cmplx2_qr_factors
-      (nrows,ncols,Arehi,  Arelo,  Aimhi,  Aimlo,
-                   Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,
-                   Rrehi_h,Rrelo_h,Rimhi_h,Rimlo_h,tol,verbose);
-   if(fail == 0)
-      cout << "The test succeeded." << endl;
-   else
+   int fail;
+
+   if((mode == 1) || (mode == 2))
    {
-      cout << scientific << setprecision(2);
-      cout << "The test failed for tol = " << tol << "." << endl;
+      cout << "-> CPU computes the blocked Householder QR ..." << endl;
+
+      CPU_cmplx2_blocked_houseqr
+         (nrows,ncols,sizetile,numtiles,
+          Arehi,  Arelo,  Aimhi,  Aimlo,
+          Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,
+          Rrehi_h,Rrelo_h,Rimhi_h,Rimlo_h,&timelapsed_h,bvrb);
+
+      cout << "-> Testing the QR factorization ..." << endl;
+
+      fail = test_cmplx2_qr_factors
+         (nrows,ncols,Arehi,  Arelo,  Aimhi,  Aimlo,
+                      Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,
+                      Rrehi_h,Rrelo_h,Rimhi_h,Rimlo_h,tol,verbose);
+      if(fail == 0)
+         cout << "The test succeeded." << endl;
+      else
+      {
+         cout << scientific << setprecision(2);
+         cout << "The test failed for tol = " << tol << "." << endl;
+      }
    }
    double timelapsed_d;
    double houselapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
 
-   cout << "-> GPU computes the block Householder QR ..." << endl;
-
-   if(verbose > 0) // to verify that A has not changed ...
+   if((mode == 0) || (mode == 2))
    {
-      cout << scientific << setprecision(16);
+      cout << "-> GPU computes the blocked Householder QR ..." << endl;
 
-      cout << "A random matrix :" << endl;
-      for(int i=0; i<nrows; i++)
-         for(int j=0; j<ncols; j++)
-         {
-            cout << "A[" << i << "][" << j << "]re : "
-                 << Arehi[i][j] << "  " << Arelo[i][j] << endl;
-            cout << "A[" << i << "][" << j << "]im : "
-                 << Aimhi[i][j] << "  " << Aimlo[i][j] << endl;
-         }
+      if(verbose > 0) // to verify that A has not changed ...
+      {
+         cout << scientific << setprecision(16);
+ 
+         cout << "A random matrix :" << endl;
+         for(int i=0; i<nrows; i++)
+            for(int j=0; j<ncols; j++)
+            {
+               cout << "A[" << i << "][" << j << "]re : "
+                    << Arehi[i][j] << "  " << Arelo[i][j] << endl;
+               cout << "A[" << i << "][" << j << "]im : "
+                    << Aimhi[i][j] << "  " << Aimlo[i][j] << endl;
+            }
+      }
+      GPU_cmplx2_blocked_houseqr
+         (nrows,ncols,sizetile,numtiles,
+          Arehi,  Arelo,  Aimhi,  Aimlo,
+          Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
+          Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,
+          &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,
+          &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
+          &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,bvrb);
+
+      fail = test_cmplx2_qr_factors
+                (nrows,ncols,Arehi,  Arelo,  Aimhi,  Aimlo,
+                             Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
+                             Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,tol,verbose);
+      if(fail == 0)
+         cout << "The test succeeded." << endl;
+      else
+      {
+         cout << scientific << setprecision(2);
+         cout << "The test failed for tol = " << tol << "." << endl;
+      }
    }
-   GPU_cmplx2_blocked_houseqr
-      (nrows,ncols,sizetile,numtiles,
-       Arehi,  Arelo,  Aimhi,  Aimlo,
-       Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
-       Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,
-       &houselapsedms,&tileRlapsedms,&vb2Wlapsedms,
-       &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
-       &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,vrb);
-
-   fail = test_cmplx2_qr_factors
-             (nrows,ncols,Arehi,  Arelo,  Aimhi,  Aimlo,
-                          Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
-                          Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,tol,verbose);
-   if(fail == 0)
-      cout << "The test succeeded." << endl;
-   else
-   {
-      cout << scientific << setprecision(2);
-      cout << "The test failed for tol = " << tol << "." << endl;
-   }
-
+   cout << endl;
    cout << fixed << setprecision(3);
-   cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
-        << timelapsed_h << " seconds." << endl;
-   cout << "         Time spent by the Householder kernel : ";
-   cout << houselapsedms << " milliseconds." << endl;
-   cout << "  Time spent by the kernel to reduce one tile : ";
-   cout << tileRlapsedms << " milliseconds." << endl;
-   cout << "    Time spent by the kernel for the W matrix : ";
-   cout << vb2Wlapsedms << " milliseconds." << endl;
-   cout << " Time spent by the kernel for computing W*Y^T : ";
-   cout << WYTlapsedms << " milliseconds." << endl;
-   cout << " Time spent by the kernel for computing Y*W^T : ";
-   cout << YWTlapsedms << " milliseconds." << endl;
-   cout << " Time spent by the kernel for computing Q*WYT : ";
-   cout << QWYTlapsedms << " milliseconds." << endl;
-   cout << " Time spent by the kernel for computing YWT*C : ";
-   cout << YWTClapsedms << " milliseconds." << endl;
-   cout << "Time spent by the kernel for adding QWYT to Q : ";
-   cout << Qaddlapsedms << " milliseconds." << endl;
-   cout << "Time spent by the kernel for adding R to YWTC : ";
-   cout << Raddlapsedms << " milliseconds." << endl;
-   cout << "        Total GPU wall clock computation time : ";
-   cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
 
+   if((mode == 1) || (mode == 2))
+   {
+      cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+           << timelapsed_h << " seconds." << endl;
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      cout << "         Time spent by the Householder kernel : ";
+      cout << houselapsedms << " milliseconds." << endl;
+      cout << "  Time spent by the kernel to reduce one tile : ";
+      cout << tileRlapsedms << " milliseconds." << endl;
+      cout << "    Time spent by the kernel for the W matrix : ";
+      cout << vb2Wlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing W*Y^H : ";
+      cout << WYTlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing Y*W^H : ";
+      cout << YWTlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing Q*WYH : ";
+      cout << QWYTlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing YWH*C : ";
+      cout << YWTClapsedms << " milliseconds." << endl;
+      cout << "Time spent by the kernel for adding QWYH to Q : ";
+      cout << Qaddlapsedms << " milliseconds." << endl;
+      cout << "Time spent by the kernel for adding R to YWHC : ";
+      cout << Raddlapsedms << " milliseconds." << endl;
+      cout << "        Total GPU wall clock computation time : ";
+      cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
+   }
    for(int i=0; i<nrows; i++)
    {
       free(Arehi[i]);
