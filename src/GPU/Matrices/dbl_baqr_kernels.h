@@ -303,7 +303,7 @@ __global__ void dbl_RTdotv
  *   szt      size of one tile and number of threads in one block;
  *   colidx   index of the current column in R;
  *   Roffset  offset in R for the first row to start;
- *   dim      number of columns in RTv;
+ *   dim      number of columns in R;
  *   R        column wise stored matrix with number of rows equal to nrows;
  *   v        start of the first nonzero element of a Householder vector;
  *   RTdotv   space for a matrix of nrows-by-szt, plus some padding.
@@ -312,12 +312,26 @@ __global__ void dbl_RTdotv
  *   RTdotv   the element-by-element products of R^T with v,
  *            stored row by row. */
 
+void flopcount_dbl_RTdotv ( int nrows, int szt, long long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of multiplications to compute RTdotv,
+ *   using multiple blocks of threads, on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of the Householder vector;
+ *   szt      number of threads in one block;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   mul      accumulated number of multiplications. */
+
 __global__ void dbl_sum_betaRTdotv
  ( int nrows, double *beta, double *RTdotv, double *w );
 /*
  * DESCRIPTION :
  *   Adds the rows in RTdotv to obtain w = beta*R^T*v,
- *   with one block of threads.
+ *   with one block of threads, on real data.
  *
  * ON ENTRY :
  *   nrows    number of rows in RTdotv;
@@ -327,6 +341,24 @@ __global__ void dbl_sum_betaRTdotv
  *
  * ON RETURN :
  *   w        contains beta*R^T*v. */
+
+void flopcount_dbl_sum_betaRTdotv
+ ( int nrows, int dim, long long int *add, long long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of additions to compute beta*R^T*v,
+ *   given RTdotv, with one block of dim threads, on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in RTdotv;
+ *   dim      dimension of w = beta*R^T*v,
+ *            equals the number of threads in the block;
+ *   add      current number of additions;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions;
+ *   mul      accumulated number of multiplications. */
 
 __global__ void dbl_medium_subvbetaRTv
  ( int nrows, int ncols, int szt, int k,

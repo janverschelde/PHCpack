@@ -394,6 +394,13 @@ __global__ void dbl_RTdotv
    RTdotv[idx] = result;
 }
 
+void flopcount_dbl_RTdotv ( int nrows, int szt, long long int *mul )
+{
+   int nbthreads = nrows*szt;
+
+   *mul += nbthreads;
+}
+
 __global__ void dbl_sum_betaRTdotv
  ( int nrows, double *beta, double *RTdotv, double *w )
 {
@@ -410,6 +417,13 @@ __global__ void dbl_sum_betaRTdotv
    }
    Rval = *beta;
    w[tdx] = Rval*result;
+}
+
+void flopcount_dbl_sum_betaRTdotv
+ ( int nrows, int dim, long long int *add, long long int *mul )
+{
+   *add += dim*nrows;
+   *mul += dim;
 }
 
 __global__ void dbl_medium_subvbetaRTv
@@ -1576,7 +1590,9 @@ void GPU_dbl_medium_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *RTvlapms += milliseconds;
-   flopcount_dbl_small_betaRTv(nrows,endcol,szt,colidx,add,mul);
+   flopcount_dbl_RTdotv(nhouse,szt,mul);
+   flopcount_dbl_sum_betaRTdotv(nhouse,dimRTdotv,add,mul);
+   // flopcount_dbl_small_betaRTv(nrows,endcol,szt,colidx,add,mul);
 
    if(verbose)
    {

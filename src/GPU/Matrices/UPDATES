@@ -1,4 +1,5 @@
 Mon 9 Aug 2021 : fixed the RTdotv kernel in dbl_baqr_kernels.cu.
+  Added flopcount functions in dbl_baqr_kernels.
 
 Sun 8 Aug 2021 : added separate value to time the beta*R^T*v kernel
   in dbl_baqr_kernels, updated dbl_baqr_testers.cpp.  In dbl_baqr_kernels,
