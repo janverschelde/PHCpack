@@ -2059,15 +2059,15 @@ void GPU_dbl2_large_house
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
-
-      double v0hi = 1.0;
-      double v0lo = 0.0;
-
-      cudaMemcpy(&Vhi_d[L*nVrows+L],&v0hi,sizeof(double),
-                 cudaMemcpyHostToDevice);
-      cudaMemcpy(&Vlo_d[L*nVrows+L],&v0lo,sizeof(double),
-                 cudaMemcpyHostToDevice);
    }
+   double v0hi = 1.0;
+   double v0lo = 0.0;
+
+   cudaMemcpy(&Vhi_d[L*nVrows+L],&v0hi,sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&Vlo_d[L*nVrows+L],&v0lo,sizeof(double),
+              cudaMemcpyHostToDevice);
+
    if(verbose)
    {
       const size_t szhouse = nVrows*sizeof(double);
