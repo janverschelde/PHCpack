@@ -792,6 +792,11 @@ void CPU_dbl2_blocked_houseqr
             for(int i=colidx; i<nrows; i++)
                cout << "v[" << i-colidx << "] : "
                     << vhi[i-colidx] << "  " << vlo[i-colidx] << endl;
+            cout << "the R matrix :" << endl;
+            for(int i=0; i<nrows; i++)
+               for(int j=0; j<ncols; j++)
+                  cout << "R[" << i << "][" << j << "] : "
+                       << Rhi[i][j] << "  " << Rlo[i][j] << endl;
          }
          CPU_dbl2_factors_leftRupdate
             (nrows,endcol,colidx,Rhi,Rlo,vhi,vlo,betahi,betalo);

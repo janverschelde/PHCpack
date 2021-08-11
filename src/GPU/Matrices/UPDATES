@@ -1,3 +1,6 @@
+Wed 11 Aug 2021 : fixed bugs in dbl2_baqr_kernels.cu, added extra cout
+  in dbl2_baqr_host.cpp.
+
 Tue 10 Aug 2021 : added new kernels to dbl2_baqr_kernels to compute the
   Householder vectors for larger matrices.  Added the value of the dimension
   to a kernel in dbl2_baqr_kernels, to fix the sum of squares computation.

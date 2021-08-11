@@ -328,12 +328,14 @@ __global__ void dbl2_normalize
 
    shvhi[tdx] = xhi[idx];
    shvlo[tdx] = xlo[idx];
+   __syncthreads();
 
    double resulthi,resultlo;
 
    // shv[j] = shv[j]/v0;
    ddg_div(shvhi[tdx],shvlo[tdx],v0hi[0],v0lo[0],&resulthi,&resultlo);
 
+   __syncthreads();
    if(idx < dim)
    {
       vhi[idx] = resulthi;    
@@ -1961,6 +1963,7 @@ void GPU_dbl2_large_house
    double *sigmahi_h, double *sigmalo_h, double *sigmahi_d, double *sigmalo_d,
    double *lapms, bool verbose )
 {
+   // nrows1 = nrows - colidx - 1 = size of Householder vector
    const int nblocks = ceil(((double) nrows1)/szt); // sufficient threads
    const int nblLog2 = ceil(log2((double) nblocks));
    const int sztLog2 = ceil(log2((double) szt));
@@ -1972,16 +1975,54 @@ void GPU_dbl2_large_house
    cudaEventCreate(&stop);
    float milliseconds;
 
+   if(L > 0)
+   {
+      for(int i=0; i<L; i++)             // insert zeros
+      {
+         vhi_h[i] = 0.0;
+         vlo_h[i] = 0.0;
+      }
+   }
+   vhi_h[L] = 1.0;                    // set one on the diagonal
+   vlo_h[L] = 0.0;
+   cudaMemcpy(&Vhi_d[L*nVrows],vhi_h,(L+1)*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&Vlo_d[L*nVrows],vlo_h,(L+1)*sizeof(double),
+              cudaMemcpyHostToDevice);
+
    if(verbose)
    {
       cout << "-> launching " << nblocks << " blocks of "
            << szt << " threads to compute the sum of squares ..." << endl;
-      cout << "nrows1 : " << nrows1 << "  rowidx : " << rowidx << endl;
+      cout << "nrows1 : " << nrows1 << "  rowidx : " << rowidx;
+      cout << "  ceil(log2(#blocks)) : " << nblLog2;
+      cout << "  ceil(log2(szt)) : " << sztLog2 << endl;
    }
+   for(int i=0; i<nblocks; i++)
+   {
+      sumshi_h[i] = 0.0;
+      sumslo_h[i] = 0.0;
+   }
+   cudaMemcpy(sumshi_d,sumshi_h,nblocks*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(sumslo_d,sumslo_h,nblocks*sizeof(double),
+              cudaMemcpyHostToDevice);
+
    cudaEventRecord(start);
    dbl2_large_sum_of_squares<<<nblocks,szt>>>
       (&Ahi_d[rowidx+1],&Alo_d[rowidx+1],sumshi_d,sumslo_d,
        nrows1,szt,sztLog2);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+
+   if(verbose)
+   {
+      cout << "-> launching 1 block of " << nblocks
+           << " threads to accumulate the sums ..." << endl;
+   }
+   cudaEventRecord(start);
    dbl2_sum_accumulator<<<1,nblocks>>>
       (sumshi_d,sumslo_d,nblocks,nblLog2,sigmahi_d,sigmalo_d);
    cudaEventRecord(stop);
@@ -1997,12 +2038,20 @@ void GPU_dbl2_large_house
    if((sigmahi_h[0] == 0.0) && (sigmalo_h[0] == 0.0))
    {
       betahi_h[L] = 0.0; betalo_h[L] = 0.0; done = true;
+      if(verbose)
+         cout << "Zero sigma value encountered." << endl;
    }
    else // beta is computed on the host instead of by one GPU thread
    {
-      const double x0hi = Ahi_h[rowidx];
-      const double x0lo = Alo_h[rowidx];
+      // const double x0hi = Ahi_h[rowidx];
+      // const double x0lo = Alo_h[rowidx];
       double acchi,acclo,muhi,mulo,v0hi,v0lo,v0p2hi,v0p2lo;
+      double x0hi,x0lo;
+
+      cudaMemcpy(&x0hi,&Ahi_d[rowidx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&x0lo,&Alo_d[rowidx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
 
       // mu = sqrt((*x0)*(*x0) + sigma[0]);
       ddf_sqr(x0hi,x0lo,&acchi,&acclo);
@@ -2060,6 +2109,7 @@ void GPU_dbl2_large_house
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
    }
+/*
    double v0hi = 1.0;
    double v0lo = 0.0;
 
@@ -2067,7 +2117,7 @@ void GPU_dbl2_large_house
               cudaMemcpyHostToDevice);
    cudaMemcpy(&Vlo_d[L*nVrows+L],&v0lo,sizeof(double),
               cudaMemcpyHostToDevice);
-
+ */
    if(verbose)
    {
       const size_t szhouse = nVrows*sizeof(double);
@@ -3632,7 +3682,12 @@ void GPU_dbl2_blocked_houseqr
          colidx = k*szt + L;              // index of the current column
          nrows1 = nrows - colidx - 1;     // #rows in Householder vector - 1
 
-         if(nrows - colidx <= szt)
+         if(verbose)
+            cout << "-> current column : " << colidx << endl
+                 << "-> #nrows in Householder vector - 1 : "
+                 << nrows1 << endl;
+
+         if(nrows1 <= szt)
          {
             GPU_dbl2_small_house
                (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
