@@ -4,8 +4,24 @@
 #ifndef __dbl2_baqr_kernels_h__
 #define __dbl2_baqr_kernels_h__
 
+/* The constants dd_shmemsize and cdd_shmemsize,
+ * respectively for real and complex data, determine the upper bounds
+ * on the size of the largest vectors the small kernels can handle.
+ * The bounds were set experimentally, based on the available amount
+ * of shared memory. */
+
 #define dd_shmemsize 1024
 #define cdd_shmemsize 512
+
+/* The constants inner_dd_shmemsize and outer_dd_shmemsize,
+ * respectively for the many blocks of threads and the accumulating kernel,
+ * determine how munch the shared memory is consumed. */
+
+#define inner_dd_shmemsize 256
+#define outer_dd_shmemsize 256
+
+/* Both constants correspond to the number of threads in a block,
+ * which typically are multiples of 32. */
 
 __global__ void dbl2_small_house
  ( double *x0hi, double *x0lo, double *x1hi, double *x1lo,
@@ -66,6 +82,72 @@ __global__ void cmplx2_small_house
  *   vimlo    low doubles of the imaginary parts of the Householder vector;
  *   betahi   the high double of 2/(transpose(v)*v);
  *   betalo   the low double of 2/(transpose(v)*v). */
+
+__global__ void dbl2_large_sum_of_squares
+ ( double *vhi, double *vlo, double *sumshi, double *sumslo,
+   int BS, int BSLog2 );
+/*
+ * DESCRIPTION :
+ *   Computes the sums of the squares of the numbers in a vector,
+ *   given with high doubles in vhi and low doubles in vlo,
+ *   as needed in the 2-norm of the vector, with many blocks.
+ *
+ * REQUIRED :
+ *   Space in sums is allocated for as many blocks in the launch.
+ *
+ * ON ENTRY :
+ *   vhi       high doubles of a double double vector;
+ *   vlo       low doubles of a double double vector;
+ *   BS        the block size or the number of threads in the block;
+ *   BSLog2    equals ceil(log2((double) BS), used in sum reduction.
+ *
+ * ON RETURN :
+ *   sumshi    high parts of computed sums of squares of vector slices,
+ *             the i-th entry is computed by the i-th block of threads;
+ *   sumslo    low parts of computed sums of squares of vector slices,
+ *             the i-th entry is computed by the i-th block of threads. */
+
+__global__ void dbl2_sum_accumulator
+ ( double *sumshi, double *sumslo, int nbsums, int nbsumsLog2,
+   double *acchi, double *acclo );
+/*
+ * DESCRIPTION :
+ *   Accumulates the sum by one block of threads, on real data.
+ *
+ * REQUIRED : the number of threads should be equal to nbsums.
+ *
+ * ON ENTRY :
+ *   sumshi    high doubles of computed sums of squares of vector slices;
+ *   sumslo    low doubles of computed sums of squares of vector slices;
+ *   nbsums    the number of elements in sums equals
+ *             the number of blocks in the kernel launch;
+ *   nbsumsLog2 is ceil(log2((double) nbsums), used in sum reduction.
+ *
+ * ON RETURN :
+ *   acchi     the high double of the sum;
+ *   acclo     the low double of the sum. */
+
+__global__ void dbl_normalize
+ ( int dim, int szt, double *xhi, double *xlo, double *v0hi, double *v0lo,
+   double *vhi, double *vlo );
+/*
+ * DESCRIPTION :
+ *   Divides every element in the vector x with the same number v0,
+ *   using multiple blocks of threads, on real data.
+ *
+ * ON ENTRY :
+ *   dim       number of elements in the vectors x and v;
+ *   szt       size of one block;
+ *   xhi       high doubles of the vector x;
+ *   xlo       low doubles of the vector x;
+ *   v0hi      high double of v0;
+ *   v0lo      low double of v0;
+ *   vhi       space for dim doubles;
+ *   vlo       space of dim doubles.
+ *
+ * ON RETURN :
+ *   vhi       high doubles of x divided by v0;
+ *   vlo       low doubles of x divided by v0. */
 
 __global__ void dbl2_small_leftRupdate
  ( int nrows, int ncols, int szt, int k, double *Rhi, double *Rlo,
@@ -1109,6 +1191,72 @@ void GPU_cmplx2_small_house
  *   betalo_h has the low doubles of the updated vector of betas, if verbose;
  *   betahi_d has the high doubles of the next beta constant;
  *   betalo_d has the low doubles of the next beta constant;
+ *   lapms    elapsed time spent by the kernel. */
+
+void GPU_dbl2_large_house
+ ( int nrows, int ncols, int szt, int nbt,
+   int colidx, int nrows1, int k, int L,
+   double *Ahi_h, double *Alo_h, double *Ahi_d, double *Alo_d,
+   double *vhi_h, double *vlo_h, double *Vhi_d, double *Vlo_d,
+   double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
+   double *sumshi_h, double *sumslo_h, double *sumshi_d, double *sumslo_d,
+   double *sigmahi_h, double *sigmalo_h, double *sigmahi_d, double *sigmalo_d,
+   double *lapms, bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to compute the Householder vector for matrices
+ *   of any size, with multiple blocks of threads, on real data.
+ *
+ * REQUIRED : nrows1 > szt, for nrows1 <= szt, call GPU_dbl2_small_house.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrix A;
+ *   ncols    number of columns in the matrix A;
+ *   szt      size of one tile, equals the number of threads in a block;
+ *   nbt      number of tiles, szt*nbt = ncols;
+ *   colidx   global index of the current column;
+ *   nrows1   number of threads in the block equals the number
+ *            of elements computed in the Householder vector;
+ *   L        local index of the column in the current tile;
+ *   Ahi_h    high doubles of the matrix on the host;
+ *   Alo_h    low doubles of the matrix on the host;
+ *   Ahi_d    high doubles of the matrix on the device;
+ *   Alo_d    low doubles of the matrix on the device;
+ *   vhi_h    space for the current Householder vector;
+ *   vlo_h    space for the current Householder vector;
+ *   Vhi_d    space for the Householder vectors on the device;
+ *   Vlo_d    space for the Householder vectors on the device;
+ *   betahi_h has space for the high doubles of the betas if verbose;
+ *   betalo_h has space for the low doubles of the betas if verbose;
+ *   betahi_d has space on the device for the high doubles of the betas;
+ *   betalo_d has space on the device for the low doubles of the betas;
+ *   sumshi_h has space for the high doubles of sums, if verbose;
+ *   sumslo_h has space for the low doubles of sums, if verbose;
+ *   sumshi_d has space for the high doubles of sums, on the device;
+ *   sumslo_d has space for the low doubles of sums, on the device;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   vhi_h    high doubles of the next Householder vector on the host,
+ *            if verbose;
+ *   vlo_h    low doubles of the next Householder vector on the host,
+ *            if verbose;
+ *   Vhi_d    high doubles of the next computed Householder vector;
+ *   Vlo_d    low doubles of the next computed Householder vector;
+ *   betahi_h has the updated vector of the high doubles of the betas,
+ *            if verbose;
+ *   betalo_h has the updated vector of low doubles of the betas,
+ *            if verbose;
+ *   betahi_d has the high double of the next beta constant;
+ *   betalo_d has the low double of the next beta constant;
+ *   sumshi_h are the high doubles of the sums, if verbose;
+ *   sumslo_h are the low doubles of the sums, if verbose;
+ *   sumshi_h are the high doubles of the sums, on the device;
+ *   sumslo_h are the low doubles of the sums, on the device;
+ *   sigmahi_h is the high double of sigma, on the host;
+ *   sigmalo_h is the low double of sigma, on the host;
+ *   sigmahi_d is the high double of sigma, on the device;
+ *   sigmalo_d is the low double of sigma, on the device;
  *   lapms    elapsed time spent by the kernel. */
 
 void GPU_dbl2_small_leftRupdate

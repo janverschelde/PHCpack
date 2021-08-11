@@ -12,6 +12,7 @@
 #include "double_double_gpufun.cu"
 #endif
 #include "dbl2_baqr_kernels.h"
+#include "double_double_functions.h"
 
 using namespace std;
 
@@ -233,6 +234,102 @@ __global__ void cmplx2_small_house
       vrelo[0] = 0.0;
       vimhi[0] = 0.0;
       vimlo[0] = 0.0;
+   }
+}
+
+__global__ void dbl2_large_sum_of_squares
+ ( double *vhi, double *vlo, double *sumshi, double *sumslo,
+   int BS, int BSLog2 )
+{
+   const int i = blockIdx.x;
+   const int j = threadIdx.x;
+   const int k = i*BS + j;
+
+   __shared__ double shvhi[inner_dd_shmemsize];
+   __shared__ double shvlo[inner_dd_shmemsize];
+   __shared__ double prdhi[inner_dd_shmemsize];
+   __shared__ double prdlo[inner_dd_shmemsize];
+
+   shvhi[j] = vhi[k];
+   shvlo[j] = vlo[k];
+   ddg_sqr(shvhi[j],shvlo[j],&prdhi[j],&prdlo[j]);
+
+   __syncthreads();
+
+   int powTwo = 1;                          // sum reduction
+   for(int L=0; L < BSLog2; L++)
+   {
+      if((j%(powTwo*2)) == 0)
+         if(j+powTwo < BS) 
+            ddg_inc(&prdhi[j],&prdlo[j],prdhi[j+powTwo],prdlo[j+powTwo]);
+      powTwo = powTwo*2;
+
+      __syncthreads();
+   }
+   if(j == 0)                              // thread 0 writes the sum
+   {
+      sumshi[i] = prdhi[0];
+      sumslo[i] = prdlo[0];
+   }
+}
+
+__global__ void dbl2_sum_accumulator
+ ( double *sumshi, double *sumslo, int nbsums, int nbsumsLog2,
+   double *acchi, double *acclo )
+{
+   const int j = threadIdx.x;
+
+   __shared__ double shvhi[outer_dd_shmemsize];
+   __shared__ double shvlo[outer_dd_shmemsize];
+
+   // if(j < nbsums)
+   // {
+   shvhi[j] = sumshi[j];
+   shvlo[j] = sumslo[j];
+   // }
+   __syncthreads();
+
+   int powTwo = 1;                          // sum reduction
+   for(int L=0; L < nbsumsLog2; L++)
+   {
+      if((j%(powTwo*2)) == 0)
+         if(j+powTwo < nbsums)
+            ddg_inc(&shvhi[j],&shvlo[j],shvhi[j+powTwo],shvlo[j+powTwo]);
+      powTwo = powTwo*2;
+
+      __syncthreads();
+   }
+   __syncthreads();
+   if(j == 0)
+   {
+      *acchi = shvhi[0];
+      *acclo = shvlo[0];
+   }
+}
+
+__global__ void dbl2_normalize
+ ( int dim, int szt, double *xhi, double *xlo, double *v0hi, double *v0lo,
+   double *vhi, double *vlo )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx;  // thread tdx scales idx
+
+   __shared__ double shvhi[inner_dd_shmemsize];
+   __shared__ double shvlo[inner_dd_shmemsize];
+
+   shvhi[tdx] = xhi[idx];
+   shvlo[tdx] = xlo[idx];
+
+   double resulthi,resultlo;
+
+   // shv[j] = shv[j]/v0;
+   ddg_div(shvhi[tdx],shvlo[tdx],v0hi[0],v0lo[0],&resulthi,&resultlo);
+
+   if(idx < dim)
+   {
+      vhi[idx] = resulthi;    
+      vlo[idx] = resultlo;    
    }
 }
 
@@ -1846,6 +1943,122 @@ void GPU_cmplx2_small_house
    }
 }
 
+void GPU_dbl2_large_house
+ ( int nrows, int ncols, int szt, int nbt,
+   int colidx, int nrows1, int k, int L,
+   double *Ahi_h, double *Alo_h, double *Ahi_d, double *Alo_d,
+   double *vhi_h, double *vlo_h, double *Vhi_d, double *Vlo_d,
+   double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
+   double *sumshi_h, double *sumslo_h, double *sumshi_d, double *sumslo_d,
+   double *sigmahi_h, double *sigmalo_h, double *sigmahi_d, double *sigmalo_d,
+   double *lapms, bool verbose )
+{
+   const int nblocks = ceil(((double) nrows1)/szt); // sufficient threads
+   const int nblLog2 = ceil(log2((double) nblocks));
+   const int sztLog2 = ceil(log2((double) szt));
+   const int rowidx = colidx*(nrows+1);         // start of number in A_h
+   const int nVrows = nrows - k*szt;             // dimension of V matrix
+
+   cudaEvent_t start,stop;            // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+
+   cudaEventRecord(start);
+   dbl2_large_sum_of_squares<<<nblocks,szt>>>
+      (&Ahi_d[rowidx+1],&Alo_d[rowidx+1],sumshi_d,sumslo_d,szt,sztLog2);
+   dbl2_sum_accumulator<<<1,nblocks>>>
+      (sumshi_d,sumslo_d,nblocks,nblLog2,sigmahi_d,sigmalo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+
+   cudaMemcpy(sigmahi_h,sigmahi_d,sizeof(double),cudaMemcpyDeviceToHost);
+   cudaMemcpy(sigmalo_h,sigmalo_d,sizeof(double),cudaMemcpyDeviceToHost);
+
+   bool done = false;
+
+   if((sigmahi_h[0] == 0.0) && (sigmalo_h[0] == 0.0))
+   {
+      betahi_h[L] = 0.0; betalo_h[L] = 0.0; done = true;
+   }
+   else // beta is computed on the host instead of by one GPU thread
+   {
+      const double x0hi = Ahi_h[rowidx];
+      const double x0lo = Alo_h[rowidx];
+      double acchi,acclo,muhi,mulo,v0hi,v0lo,v0p2hi,v0p2lo;
+
+      // mu = sqrt((*x0)*(*x0) + sigma[0]);
+      ddf_sqr(x0hi,x0lo,&acchi,&acclo);
+      ddf_inc(&acchi,&acclo,sigmahi_h[0],sigmalo_h[0]);
+      ddf_sqrt(acchi,acclo,&muhi,&mulo);
+      if(x0hi <= 0.0)
+      {
+         // v0 = *x0 - mu;
+         ddf_sub(x0hi,x0lo,muhi,mulo,&v0hi,&v0lo);
+      }
+      else
+      {
+         // v0 = -sigma[0]/(*x0 + mu);
+         ddf_add(x0hi,x0lo,muhi,mulo,&acchi,&acclo);
+         ddf_div(sigmahi_h[0],sigmalo_h[0],acchi,acclo,&v0hi,&v0lo);
+         ddf_minus(&v0hi,&v0lo);
+      }
+      // v0p2 = v0*v0;
+      ddf_sqr(v0hi,v0lo,&v0p2hi,&v0p2lo);
+      // *beta = 2.0*v0p2/(sigma[0] + v0p2);
+      ddf_add(sigmahi_h[0],sigmalo_h[0],v0p2hi,v0p2lo,&acchi,&acclo);
+      ddf_div(v0p2hi,v0p2lo,acchi,acclo,&betahi_h[L],&betalo_h[L]);
+      ddf_mlt_d(&betahi_h[L],&betalo_h[L],2.0);
+      sigmahi_h[0] = v0hi;
+      sigmalo_h[0] = v0lo;                     // v0 needed for normalization
+   }
+   if(verbose)
+   {
+      cout << scientific << setprecision(16)
+           << "beta[" << colidx << "] : "
+           << betahi_h[L] << "  " << betalo_h[L] << endl;
+   }
+   cudaMemcpy(&betahi_d[L],&betahi_h[L],sizeof(double),cudaMemcpyHostToDevice);
+   cudaMemcpy(&betalo_d[L],&betalo_h[L],sizeof(double),cudaMemcpyHostToDevice);
+
+   if(!done)  // normalization needed
+   {
+      // (sigmahi_h, sigmalo_h) has the values for (v0hi, v0lo).
+      cudaMemcpy(sigmahi_d,sigmahi_h,sizeof(double),cudaMemcpyHostToDevice);
+      cudaMemcpy(sigmalo_d,sigmalo_h,sizeof(double),cudaMemcpyHostToDevice);
+
+      dbl2_normalize<<<nblocks,szt>>>
+         (nrows1,szt,&Ahi_d[rowidx+1],&Alo_d[rowidx+1],sigmahi_d,sigmalo_d,
+          &Vhi_d[L*nVrows+L+1],&Vlo_d[L*nVrows+L+1]);
+
+      double v0hi = 1.0;
+      double v0lo = 0.0;
+
+      cudaMemcpy(&Vhi_d[L*nVrows+L],&v0hi,sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vlo_d[L*nVrows+L],&v0lo,sizeof(double),
+                 cudaMemcpyHostToDevice);
+   }
+   if(verbose)
+   {
+      const size_t szhouse = nVrows*sizeof(double);
+
+      cudaMemcpy(&betahi_h[L],&betahi_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&betalo_h[L],&betalo_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vhi_h,&Vhi_d[L*nVrows],szhouse,cudaMemcpyDeviceToHost);
+      cudaMemcpy(vlo_h,&Vlo_d[L*nVrows],szhouse,cudaMemcpyDeviceToHost);
+      cout << scientific << setprecision(16)
+           << "beta[" << colidx << "] : "
+           << betahi_h[L] << "  " << betalo_h[L] << endl;
+      for(int i=0; i<nVrows; i++)
+         cout << "v[" << i << "] : " << vhi_h[i] << "  " << vlo_h[i] << endl;
+   }
+}
+
 void GPU_dbl2_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *Ahi_h, double *Alo_h, double *Ahi_d, double *Alo_d,
@@ -3277,6 +3490,13 @@ void GPU_dbl2_blocked_houseqr
    double *bRTvlo_h = new double[nrows];  // low doubles of beta*R^T*v
    double *bRTvhi_d;                      // bRTvhi_h on the device
    double *bRTvlo_d;                      // bRTvlo_h on the device
+   double *sumshi_h = new double[nrows];  // subsums for large house
+   double *sumslo_h = new double[nrows];  // low doubles of subsums
+   double *sumshi_d;                      // sumshi on the device
+   double *sumslo_d;                      // sumslo on the device
+   double sigmahi_h,sigmalo_h;
+   double *sigmahi_d;                     // sigmahi on the device
+   double *sigmalo_d;                     // sigmalo on the device
 
    int ix = 0;                          // copy the columns of A to A_h
    for(int j=0; j<ncols; j++)   
@@ -3342,6 +3562,11 @@ void GPU_dbl2_blocked_houseqr
    cudaMalloc((void**)&bRTvhi_d,szhouse + szpad);
    cudaMalloc((void**)&bRTvlo_d,szhouse + szpad);
 
+   cudaMalloc((void**)&sumshi_d,szhouse);
+   cudaMalloc((void**)&sumslo_d,szhouse);
+   cudaMalloc((void**)&sigmahi_d,sizeof(double));
+   cudaMalloc((void**)&sigmalo_d,sizeof(double));
+
    const size_t szWYT = nrows2*sizeof(double);
    cudaMalloc((void**)&WYThi_d,szWYT + szpad); // padding for W*Y^T product
    cudaMalloc((void**)&WYTlo_d,szWYT + szpad); 
@@ -3379,12 +3604,14 @@ void GPU_dbl2_blocked_houseqr
       {
          colidx = k*szt + L;              // index of the current column
          nrows1 = nrows - colidx - 1;     // #rows in Householder vector - 1
-         GPU_dbl2_small_house
-            (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
-             Ahi_h,Alo_h,Ahi_d,Alo_d,vhi_h,vlo_h,Vhi_d,Vlo_d,
-             betahi_h,betalo_h,betahi_d,betalo_d,houselapms,verbose);
+
          if(nrows - colidx <= szt)
          {
+            GPU_dbl2_small_house
+               (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
+                Ahi_h,Alo_h,Ahi_d,Alo_d,vhi_h,vlo_h,Vhi_d,Vlo_d,
+                betahi_h,betalo_h,betahi_d,betalo_d,houselapms,verbose);
+
             GPU_dbl2_small_leftRupdate
                (nrows,ncols,szt,colidx,k,L,Ahi_h,Alo_h,Ahi_d,Alo_d,
                 Vhi_d,Vlo_d,betahi_h,betalo_h,betahi_d,betalo_d,
@@ -3392,6 +3619,14 @@ void GPU_dbl2_blocked_houseqr
          }
          else
          {
+            GPU_dbl2_large_house
+               (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
+                Ahi_h,Alo_h,Ahi_d,Alo_d,vhi_h,vlo_h,Vhi_d,Vlo_d,
+                betahi_h,betalo_h,betahi_d,betalo_d,
+                sumshi_h,sumslo_h,sumshi_d,sumslo_d,
+                &sigmahi_h,&sigmalo_h,sigmahi_d,sigmalo_d,
+                houselapms,verbose);
+
             GPU_dbl2_medium_leftRupdate
                (nrows,ncols,szt,colidx,k,L,Ahi_h,Alo_h,Ahi_d,Alo_d,
                 Vhi_d,Vlo_d,betahi_h,betalo_h,betahi_d,betalo_d,
@@ -3459,7 +3694,7 @@ void GPU_dbl2_blocked_houseqr
 
    free(Ahi_h); free(Alo_h); free(Qhi_h); free(Qlo_h); 
    free(vhi_h); free(vlo_h); free(Vhi_h); free(Vlo_h);
-   free(Whi_h); free(Wlo_h);
+   free(Whi_h); free(Wlo_h); free(sumshi_h); free(sumslo_h);
    free(RTdotvhi_h); free(RTdotvlo_h); free(bRTvhi_h); free(bRTvlo_h);
    free(WYThi_h); free(QWYThi_h); free(YWThi_h); free(YWTChi_h);
    free(WYTlo_h); free(QWYTlo_h); free(YWTlo_h); free(YWTClo_h);
