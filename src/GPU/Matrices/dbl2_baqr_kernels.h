@@ -90,7 +90,8 @@ __global__ void dbl2_large_sum_of_squares
  * DESCRIPTION :
  *   Computes the sums of the squares of the numbers in a vector,
  *   given with high doubles in vhi and low doubles in vlo,
- *   as needed in the 2-norm of the vector, with many blocks.
+ *   as needed in the 2-norm of the vector, with many blocks,
+ *   on real data.
  *
  * REQUIRED :
  *   Space in sums is allocated for as many blocks in the launch.
@@ -98,14 +99,46 @@ __global__ void dbl2_large_sum_of_squares
  * ON ENTRY :
  *   vhi       high doubles of a double double vector;
  *   vlo       low doubles of a double double vector;
+ *   sumshi    space for as many doubles as the number of blocks;
+ *   sumslo    space for as many doubles as the number of blocks;
  *   dim       number of elements in v;
  *   BS        the block size or the number of threads in the block;
  *   BSLog2    equals ceil(log2((double) BS), used in sum reduction.
  *
  * ON RETURN :
- *   sumshi    high parts of computed sums of squares of vector slices,
+ *   sumshi    high doubles of computed sums of squares of vector slices,
  *             the i-th entry is computed by the i-th block of threads;
- *   sumslo    low parts of computed sums of squares of vector slices,
+ *   sumslo    low doubles of computed sums of squares of vector slices,
+ *             the i-th entry is computed by the i-th block of threads. */
+
+__global__ void cmplx2_large_sum_of_squares
+ ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
+   double *sumshi, double *sumslo, int dim, int BS, int BSLog2 );
+/*
+ * DESCRIPTION :
+ *   Computes the sums of the squares of the numbers in a vector,
+ *   given with high doubles in vhi and low doubles in vlo,
+ *   as needed in the 2-norm of the vector, with many blocks,
+ *   on complex data.
+ *
+ * REQUIRED :
+ *   Space in sums is allocated for as many blocks in the launch.
+ *
+ * ON ENTRY :
+ *   vrehi     high doubles of the real parts of a double double vector;
+ *   vrelo     low doubles of the real parts of a double double vector;
+ *   vimhi     high doubles of the imaginary parts of a double double vector;
+ *   vimlo     low doubles of the imaginary parts of a double double vector;
+ *   sumshi    has space for as many doubles as the number of blocks;
+ *   sumslo     has space for as many doubles as the number of blocks;
+ *   dim       number of elements in v;
+ *   BS        the block size or the number of threads in the block;
+ *   BSLog2    equals ceil(log2((double) BS), used in sum reduction.
+ *
+ * ON RETURN :
+ *   sumshi    high doubles of computed sums of squares of vector slices,
+ *             the i-th entry is computed by the i-th block of threads;
+ *   sumslo    low doubles of computed sums of squares of vector slices,
  *             the i-th entry is computed by the i-th block of threads. */
 
 __global__ void dbl2_sum_accumulator
@@ -149,6 +182,38 @@ __global__ void dbl2_normalize
  * ON RETURN :
  *   vhi       high doubles of x divided by v0;
  *   vlo       low doubles of x divided by v0. */
+
+__global__ void cmplx2_normalize
+ ( int dim, int szt,
+   double *xrehi, double *xrelo, double *ximhi, double *ximlo,
+   double *inv0rehi, double *inv0relo, double *inv0imhi, double *inv0imlo,
+   double *vrehi, double *vrelo, double *vimhi, double *vimlo );
+/*
+ * DESCRIPTION :
+ *   Multiplies every element in the vector x with the same number v0,
+ *   using multiple blocks of threads, on complex data.
+ *
+ * ON ENTRY :
+ *   dim       number of elements in the vectors x and v;
+ *   szt       size of one block;
+ *   xrehi     high doubles of the real parts of the vector x;
+ *   xrelo     low doubles of the real parts of the vector x;
+ *   ximhi     high doubles of the imaginary parts of the vector x;
+ *   ximlo     low doubles of the imaginary parts of the vector x;
+ *   inv0rehi  is the high double of the real part of 1/v0;
+ *   inv0relo  is the low double of the real part of 1/v0;
+ *   inv0imhi  is the high double of the imaginary part of 1/v0;
+ *   inv0imlo  is the low double of the imaginary part of 1/v0;
+ *   vrehi     space for dim doubles;
+ *   vrelo     space of dim doubles.
+ *   vimhi     space for dim doubles;
+ *   vimlo     space of dim doubles.
+ *
+ * ON RETURN :
+ *   vrehi       high doubles of x multiplied by 1/v0;
+ *   vrelo       low doubles of x multiplied by 1/v0;
+ *   vimhi       high doubles of x multiplied by 1/v0;
+ *   vimlo       low doubles of x multiplied by 1/v0. */
 
 __global__ void dbl2_small_leftRupdate
  ( int nrows, int ncols, int szt, int k, double *Rhi, double *Rlo,
@@ -1205,7 +1270,7 @@ void GPU_dbl2_large_house
    double *lapms, bool verbose=true );
 /*
  * DESCRIPTION :
- *   Calls the kernel to compute the Householder vector for matrices
+ *   Calls the kernels to compute the Householder vector for matrices
  *   of any size, with multiple blocks of threads, on real data.
  *
  * REQUIRED : nrows1 > szt, for nrows1 <= szt, call GPU_dbl2_small_house.
@@ -1244,6 +1309,88 @@ void GPU_dbl2_large_house
  *            if verbose;
  *   Vhi_d    high doubles of the next computed Householder vector;
  *   Vlo_d    low doubles of the next computed Householder vector;
+ *   betahi_h has the updated vector of the high doubles of the betas,
+ *            if verbose;
+ *   betalo_h has the updated vector of low doubles of the betas,
+ *            if verbose;
+ *   betahi_d has the high double of the next beta constant;
+ *   betalo_d has the low double of the next beta constant;
+ *   sumshi_h are the high doubles of the sums, if verbose;
+ *   sumslo_h are the low doubles of the sums, if verbose;
+ *   sumshi_h are the high doubles of the sums, on the device;
+ *   sumslo_h are the low doubles of the sums, on the device;
+ *   sigmahi_h is the high double of sigma, on the host;
+ *   sigmalo_h is the low double of sigma, on the host;
+ *   sigmahi_d is the high double of sigma, on the device;
+ *   sigmalo_d is the low double of sigma, on the device;
+ *   lapms    elapsed time spent by the kernel. */
+
+void GPU_cmplx2_large_house
+ ( int nrows, int ncols, int szt, int nbt,
+   int colidx, int nrows1, int k, int L,
+   double *Arehi_h, double *Arelo_h, double *Aimhi_h, double *Aimlo_h,
+   double *Arehi_d, double *Arelo_d, double *Aimhi_d, double *Aimlo_d,
+   double *vrehi_h, double *vrelo_h, double *vimhi_h, double *vimlo_h,
+   double *Vrehi_d, double *Vrelo_d, double *Vimhi_d, double *Vimlo_d,
+   double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
+   double *sumshi_h, double *sumslo_h, double *sumshi_d, double *sumslo_d,
+   double *sigmahi_h, double *sigmalo_h, double *sigmahi_d, double *sigmalo_d,
+   double *lapms, bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Calls the kernels to compute the Householder vector for matrices
+ *   of any size, with multiple blocks of threads, on real data.
+ *
+ * REQUIRED : nrows1 > szt, for nrows1 <= szt, call GPU_dbl2_small_house.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in the matrix A;
+ *   ncols    number of columns in the matrix A;
+ *   szt      size of one tile, equals the number of threads in a block;
+ *   nbt      number of tiles, szt*nbt = ncols;
+ *   colidx   global index of the current column;
+ *   nrows1   number of threads in the block equals the number
+ *            of elements computed in the Householder vector;
+ *   L        local index of the column in the current tile;
+ *   Arehi_h  high doubles of the real parts of the matrix on the host;
+ *   Arelo_h  low doubles of the real parts of the matrix on the host;
+ *   Aimhi_d  high doubles of imaginary parts of the matrix on the device;
+ *   Aimlo_d  low doubles of imaginary parts of the matrix on the device;
+ *   vrehi_h  space for the current Householder vector;
+ *   vrelo_h  space for the current Householder vector;
+ *   vimhi_h  space for the current Householder vector;
+ *   vimlo_h  space for the current Householder vector;
+ *   Vrehi_d    space for the Householder vectors on the device;
+ *   Vrelo_d    space for the Householder vectors on the device;
+ *   Vimhi_d    space for the Householder vectors on the device;
+ *   Vimlo_d    space for the Householder vectors on the device;
+ *   betahi_h has space for the high doubles of the betas if verbose;
+ *   betalo_h has space for the low doubles of the betas if verbose;
+ *   betahi_d has space on the device for the high doubles of the betas;
+ *   betalo_d has space on the device for the low doubles of the betas;
+ *   sumshi_h has space for the high doubles of sums, if verbose;
+ *   sumslo_h has space for the low doubles of sums, if verbose;
+ *   sumshi_d has space for the high doubles of sums, on the device;
+ *   sumslo_d has space for the low doubles of sums, on the device;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   vrehi_h  high doubles of the real parts of the next Householder vector
+ *            on the host, if verbose;
+ *   vrelo_h  low doubles of the real parts of the next Householder vector
+ *            on the host, if verbose;
+ *   vimhi_h  high doubles of imaginary parts of the next Householder vector
+ *            on the host, if verbose;
+ *   vimlo_h  low doubles of imaginary parts of the next Householder vector
+ *            on the host, if verbose;
+ *   Vrehi_d  high doubles of the real parts of the next Householder vector,
+ *            on the device;
+ *   Vrelo_d  low doubles of the real parts of the next Householder vector,
+ *            on the device;
+ *   Vimhi_d  high doubles of imaginary parts of the next Householder vector,
+ *            on the device;
+ *   Vimlo_d  low doubles of imaginary parts of the next Householder vector,
+ *            on the device;
  *   betahi_h has the updated vector of the high doubles of the betas,
  *            if verbose;
  *   betalo_h has the updated vector of low doubles of the betas,
