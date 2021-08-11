@@ -239,7 +239,7 @@ __global__ void cmplx2_small_house
 
 __global__ void dbl2_large_sum_of_squares
  ( double *vhi, double *vlo, double *sumshi, double *sumslo,
-   int BS, int BSLog2 )
+   int dim, int BS, int BSLog2 )
 {
    const int i = blockIdx.x;
    const int j = threadIdx.x;
@@ -252,6 +252,11 @@ __global__ void dbl2_large_sum_of_squares
 
    shvhi[j] = vhi[k];
    shvlo[j] = vlo[k];
+   if(k >= dim)
+   {
+      shvhi[j] = 0.0;
+      shvlo[j] = 0.0;
+   }
    ddg_sqr(shvhi[j],shvlo[j],&prdhi[j],&prdlo[j]);
 
    __syncthreads();
@@ -282,11 +287,14 @@ __global__ void dbl2_sum_accumulator
    __shared__ double shvhi[outer_dd_shmemsize];
    __shared__ double shvlo[outer_dd_shmemsize];
 
-   // if(j < nbsums)
-   // {
    shvhi[j] = sumshi[j];
    shvlo[j] = sumslo[j];
-   // }
+
+   if(j >= nbsums)
+   {
+      shvhi[j] = 0.0;
+      shvlo[j] = 0.0;
+   }
    __syncthreads();
 
    int powTwo = 1;                          // sum reduction
@@ -1964,9 +1972,16 @@ void GPU_dbl2_large_house
    cudaEventCreate(&stop);
    float milliseconds;
 
+   if(verbose)
+   {
+      cout << "-> launching " << nblocks << " blocks of "
+           << szt << " threads to compute the sum of squares ..." << endl;
+      cout << "nrows1 : " << nrows1 << "  rowidx : " << rowidx << endl;
+   }
    cudaEventRecord(start);
    dbl2_large_sum_of_squares<<<nblocks,szt>>>
-      (&Ahi_d[rowidx+1],&Alo_d[rowidx+1],sumshi_d,sumslo_d,szt,sztLog2);
+      (&Ahi_d[rowidx+1],&Alo_d[rowidx+1],sumshi_d,sumslo_d,
+       nrows1,szt,sztLog2);
    dbl2_sum_accumulator<<<1,nblocks>>>
       (sumshi_d,sumslo_d,nblocks,nblLog2,sigmahi_d,sigmalo_d);
    cudaEventRecord(stop);
@@ -2029,9 +2044,21 @@ void GPU_dbl2_large_house
       cudaMemcpy(sigmahi_d,sigmahi_h,sizeof(double),cudaMemcpyHostToDevice);
       cudaMemcpy(sigmalo_d,sigmalo_h,sizeof(double),cudaMemcpyHostToDevice);
 
+      if(verbose)
+      {
+         cout << "-> launching " << nblocks << " blocks of "
+              << szt << " threads to normalize ..." << endl;
+         cout << "   nrows1 : " << nrows1
+              << "  rowidx : " << rowidx << "  nVrows : " << nVrows << endl;
+      }
+      cudaEventRecord(start);
       dbl2_normalize<<<nblocks,szt>>>
          (nrows1,szt,&Ahi_d[rowidx+1],&Alo_d[rowidx+1],sigmahi_d,sigmalo_d,
           &Vhi_d[L*nVrows+L+1],&Vlo_d[L*nVrows+L+1]);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
 
       double v0hi = 1.0;
       double v0lo = 0.0;

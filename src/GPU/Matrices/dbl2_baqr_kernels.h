@@ -85,7 +85,7 @@ __global__ void cmplx2_small_house
 
 __global__ void dbl2_large_sum_of_squares
  ( double *vhi, double *vlo, double *sumshi, double *sumslo,
-   int BS, int BSLog2 );
+   int dim, int BS, int BSLog2 );
 /*
  * DESCRIPTION :
  *   Computes the sums of the squares of the numbers in a vector,
@@ -98,6 +98,7 @@ __global__ void dbl2_large_sum_of_squares
  * ON ENTRY :
  *   vhi       high doubles of a double double vector;
  *   vlo       low doubles of a double double vector;
+ *   dim       number of elements in v;
  *   BS        the block size or the number of threads in the block;
  *   BSLog2    equals ceil(log2((double) BS), used in sum reduction.
  *
@@ -127,7 +128,7 @@ __global__ void dbl2_sum_accumulator
  *   acchi     the high double of the sum;
  *   acclo     the low double of the sum. */
 
-__global__ void dbl_normalize
+__global__ void dbl2_normalize
  ( int dim, int szt, double *xhi, double *xlo, double *v0hi, double *v0lo,
    double *vhi, double *vlo );
 /*

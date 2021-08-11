@@ -1,5 +1,6 @@
 Tue 10 Aug 2021 : added new kernels to dbl2_baqr_kernels to compute the
-  Householder vectors for larger matrices.
+  Householder vectors for larger matrices.  Added the value of the dimension
+  to a kernel in dbl2_baqr_kernels, to fix the sum of squares computation.
 
 Mon 9 Aug 2021 : fixed the RTdotv kernel in dbl_baqr_kernels.cu.
   Added flopcount functions in dbl_baqr_kernels.  Added analogous kernels 
