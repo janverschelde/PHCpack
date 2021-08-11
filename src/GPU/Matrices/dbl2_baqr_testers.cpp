@@ -102,6 +102,8 @@ void test_real2_blocked_qr
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
           &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,bvrb);
 
+      cout << "-> Testing the QR factorization ..." << endl;
+
       fail = test_real2_qr_factors
                 (nrows,ncols,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,tol,verbose);
       if(fail == 0)
@@ -287,6 +289,8 @@ void test_cmplx2_blocked_qr
           &houselapsedms,&RHvlapsedms,&tileRlapsedms,&vb2Wlapsedms,
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
           &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,bvrb);
+
+      cout << "-> Testing the QR factorization ..." << endl;
 
       fail = test_cmplx2_qr_factors
                 (nrows,ncols,Arehi,  Arelo,  Aimhi,  Aimlo,

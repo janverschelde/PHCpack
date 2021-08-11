@@ -92,6 +92,8 @@ void test_real_blocked_qr
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
           &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
           &addcnt,&mulcnt,&divcnt,&sqrtcnt,bvrb);
+
+      cout << "-> Testing the QR factorization ..." << endl;
  
       fail = test_real_qr_factors(nrows,ncols,A,Q_d,R_d,tol,verbose);
       if(fail == 0)
@@ -244,6 +246,8 @@ void test_cmplx_blocked_qr
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
           &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
           &addcnt,&mulcnt,&divcnt,&sqrtcnt,bvrb);
+
+      cout << "-> Testing the QR factorization ..." << endl;
 
       fail = test_cmplx_qr_factors
                 (nrows,ncols,Are,Aim,Qre_d,Qim_d,Rre_d,Rim_d,tol,verbose);
