@@ -9,6 +9,7 @@
 #include <sys/time.h>
 #endif
 #include "dbl_baqr_kernels.h"
+#include "dbl_baqr_flopcounts.h"
 
 using namespace std;
 
@@ -64,16 +65,6 @@ __global__ void dbl_small_house
    shv[j] = shv[j]/prd[0];
    v[j+1] = shv[j];
    if(j == 0) v[0] = 1.0;
-}
-
-void flopcount_dbl_small_house
- ( int dim, int dimLog2, long long int *add, long long int *mul, long long int *div,
-   long long int *sqrtfun )
-{
-   *add += dimLog2 + 4;
-   *mul += dim + 3;
-   *div += dim + 1;
-   *sqrtfun += 1;
 }
 
 __global__ void cmplx_small_house
@@ -154,16 +145,6 @@ __global__ void cmplx_small_house
    if(j == 0) vim[0] = 0.0;
 }
 
-void flopcount_cmplx_small_house
- ( int dim, int dimLog2, long long int *add, long long int *mul, long long int *div,
-   long long int *sqrtfun )
-{
-   *add += 3*dim + dimLog2 + 6;
-   *mul += 6*dim + 6;
-   *div += 2*dim + 2;
-   *sqrtfun += 3;
-}
-
 __global__ void dbl_small_leftRupdate
  ( int nrows, int ncols, int szt, int k, double *R, double *v, double *beta )
 {
@@ -194,15 +175,6 @@ __global__ void dbl_small_leftRupdate
       // changed nrows-k into ncols-k, where ncols = endcol
       if(tdx < ncols-k) R[Rcolidx] = Rtdx;
    }
-}
-
-void flopcount_dbl_small_leftRupdate
- ( int nrows, int ncols, int szt, int k, long long int *add, long long int *mul )
-{
-   const int nbthreads = ncols - k;
-
-   *add += 2*(nrows - k)*nbthreads;
-   *mul += 2*(nrows - k)*nbthreads + nbthreads;
 }
 
 __global__ void cmplx_small_leftRupdate
@@ -254,15 +226,6 @@ __global__ void cmplx_small_leftRupdate
    }
 }
 
-void flopcount_cmplx_small_leftRupdate
- ( int nrows, int ncols, int szt, int k, long long int *add, long long int *mul )
-{
-   const int nbthreads = ncols - k;
-
-   *add += 8*(nrows - k)*nbthreads;
-   *mul += 8*(nrows - k)*nbthreads + nbthreads;
-}
-
 __global__ void dbl_small_betaRTv
  ( int nrows, int ncols, int szt, int k,
    double *R, double *v, double *beta, double *w )
@@ -285,15 +248,6 @@ __global__ void dbl_small_betaRTv
    }
    result = mybeta*result;
    w[tdx] = result;
-}
-
-void flopcount_dbl_small_betaRTv 
- ( int nrows, int ncols, int szt, int k, long long int *add, long long int *mul )
-{
-   const int nbthreads = nrows - k;
-
-   *add += (nrows-k)*nbthreads;
-   *mul += (nrows-k)*nbthreads + nbthreads;
 }
 
 __global__ void cmplx_small_betaRHv
@@ -330,15 +284,6 @@ __global__ void cmplx_small_betaRHv
    resultim = mybeta*resultim;
    wre[tdx] = resultre;
    wim[tdx] = resultim;
-}
-
-void flopcount_cmplx_small_betaRHv 
- ( int nrows, int ncols, int szt, int k, long long int *add, long long int *mul )
-{
-   const int nbthreads = nrows - k;
-
-   *add += 4*(nrows-k)*nbthreads;
-   *mul += 4*(nrows-k)*nbthreads + 2*nbthreads;
 }
 
 __global__ void dbl_medium_betaRTv
@@ -394,13 +339,6 @@ __global__ void dbl_RTdotv
    RTdotv[idx] = result;
 }
 
-void flopcount_dbl_RTdotv ( int nrows, int szt, long long int *mul )
-{
-   int nbthreads = nrows*szt;
-
-   *mul += nbthreads;
-}
-
 __global__ void cmplx_RHdotv
  ( int nrows, int szt, int colidx, int Roffset, int dim,
    double *Rre, double *Rim, double *vre, double *vim,
@@ -427,15 +365,6 @@ __global__ void cmplx_RHdotv
    RHdotvim[idx] = resultim;
 }
 
-void flopcount_cmplx_RHdotv
- ( int nrows, int szt, long long int *add, long long int *mul )
-{
-   int nbthreads = nrows*szt;
-
-   *add += 2*nbthreads;
-   *mul += 4*nbthreads;
-}
-
 __global__ void dbl_sum_betaRTdotv
  ( int nrows, double *beta, double *RTdotv, double *w )
 {
@@ -452,13 +381,6 @@ __global__ void dbl_sum_betaRTdotv
    }
    Rval = *beta;
    w[tdx] = Rval*result;
-}
-
-void flopcount_dbl_sum_betaRTdotv
- ( int nrows, int dim, long long int *add, long long int *mul )
-{
-   *add += dim*nrows;
-   *mul += dim;
 }
 
 __global__ void cmplx_sum_betaRHdotv
@@ -484,13 +406,6 @@ __global__ void cmplx_sum_betaRHdotv
    Rvalre = *beta;
    wre[tdx] = Rvalre*resultre;
    wim[tdx] = Rvalre*resultim;
-}
-
-void flopcount_cmplx_sum_betaRHdotv
- ( int nrows, int dim, long long int *add, long long int *mul )
-{
-   *add += 2*dim*nrows;
-   *mul += 2*dim;
 }
 
 __global__ void dbl_medium_subvbetaRTv
@@ -520,18 +435,6 @@ __global__ void dbl_medium_subvbetaRTv
    Rwidx = Rwidx - vValue*wValue;      // update R[rowidx,colidx]
 
    if(widx < bound) R[Ridx] = Rwidx;   // if() takes care of padding
-}
-
-void flopcount_dbl_medium_subvbetaRTv
- ( int nrows, int ncols, int szt, int k, long long int *add, long long int *mul )
-{
-   const int endcol = (k+1)*szt;     // 1 + last column index in tile
-   // total number of entries in R that will be modified
-   // equals the number of threads that compute
-   const int nbthreads = (nrows - k)*(endcol - k);
-
-   *add += nbthreads;
-   *mul += nbthreads;
 }
 
 __global__ void cmplx_medium_subvbetaRHv
@@ -576,18 +479,6 @@ __global__ void cmplx_medium_subvbetaRHv
    }
 }
 
-void flopcount_cmplx_medium_subvbetaRHv
- ( int nrows, int ncols, int szt, int k, long long int *add, long long int *mul )
-{
-   const int endcol = (k+1)*szt;     // 1 + last column index in tile
-   // total number of entries in R that will be modified
-   // equals the number of threads that compute
-   const int nbthreads = (nrows - k)*(endcol - k);
-
-   *add += 4*nbthreads;
-   *mul += 4*nbthreads;
-}
-
 __global__ void dbl_VB_to_W
  ( int nrows, int ncols, double *B, double *V, double *W )
 {
@@ -629,14 +520,6 @@ __global__ void dbl_VB_to_W
       W[j*nrows + tdx] = wrk;          // wrk is assigned to W[j][tdx]
       __syncthreads();
    }
-}
-
-void flopcount_dbl_VB_to_W
- ( int nrows, int ncols, long long int *add, long long int *mul )
-{
-   // the number of threads equals nrows
-   *add += nrows*((ncols-1)*ncols/2*(1+nrows) + ncols-1);
-   *mul += nrows*(1 + (ncols-1)*ncols + ncols-1);
 }
 
 __global__ void cmplx_VB_to_W
@@ -716,14 +599,6 @@ __global__ void cmplx_VB_to_W
    }
 }
 
-void flopcount_cmplx_VB_to_W
- ( int nrows, int ncols, long long int *add, long long int *mul )
-{
-   // the number of threads equals nrows
-   *add += nrows*((ncols-1)*ncols/2*(6+2*nrows) + 2*(ncols-1));
-   *mul += nrows*(2 + 4*(ncols-1)*ncols + 2*(ncols-1));
-}
-
 __global__ void dbl_beta_times_V
  ( int nrows, int szt, double *B, double *V, double *W )
 {
@@ -739,14 +614,6 @@ __global__ void dbl_beta_times_V
    result = -B[0]*shv[tdx];
 
    if(idx < nrows) W[idx] = result;
-}
-
-void flopcount_dbl_beta_times_V ( int nrows, long long int *mul )
-{
-   const int nbthreads = nrows;
-   // equals rowdim as in the call to the dbl_beta_times kernel
-
-   *mul += nbthreads;
 }
 
 __global__ void cmplx_beta_times_V
@@ -774,14 +641,6 @@ __global__ void cmplx_beta_times_V
    }
 }
 
-void flopcount_cmplx_beta_times_V ( int nrows, long long int *mul )
-{
-   const int nbthreads = nrows;
-   // equals rowdim as in the call to the dbl_beta_times kernel
-
-   *mul += 2*nbthreads;
-}
-
 __global__ void dbl_initialize_WYT
  ( int dim, int szt, double *V, double *W, double *WYT )
 {
@@ -796,12 +655,6 @@ __global__ void dbl_initialize_WYT
    const double result = Vval*Wval;
 
    if(idx < dim*dim) WYT[idx] = result;
-}
-
-void flopcount_dbl_initialize_WYT ( int dim, long long int *mul )
-{
-   // the number of threads equals dim*dim
-   *mul += dim*dim;
 }
 
 __global__ void cmplx_initialize_WYH
@@ -829,14 +682,6 @@ __global__ void cmplx_initialize_WYH
    }
 }
 
-void flopcount_cmplx_initialize_WYH
- ( int dim, long long int *add, long long int *mul )
-{
-   // the number of threads equals dim*dim
-   *add += 2*dim*dim;
-   *mul += 4*dim*dim;
-}
-
 __global__ void dbl_update_WYT
  ( int dim, int szt, double *V, double *W, double *WYT )
 {
@@ -853,14 +698,6 @@ __global__ void dbl_update_WYT
    result = result + Vval*Wval;
 
    if(idx < dim*dim) WYT[idx] = result;
-}
-
-void flopcount_dbl_update_WYT
- ( int dim, long long int *add, long long int *mul )
-{
-   // the number of threads equals dim*dim
-   *add += dim*dim;
-   *mul += dim*dim;
 }
 
 __global__ void cmplx_update_WYH
@@ -890,14 +727,6 @@ __global__ void cmplx_update_WYH
       WYHre[idx] = resultre;
       WYHim[idx] = resultim;
    }
-}
-
-void flopcount_cmplx_update_WYH
- ( int dim, long long int *add, long long int *mul )
-{
-   // the number of threads equals dim*dim
-   *add += 4*dim*dim;
-   *mul += 4*dim*dim;
 }
 
 __global__ void dbl_beta_next_W
@@ -948,13 +777,6 @@ __global__ void dbl_beta_next_W
    result = -mybeta*result;
 
    if(idx < nrows) W[idx] = result;
-}
-
-void flopcount_dbl_beta_next_W ( int nrows, long long int *add, long long int *mul )
-{
-   // the number of threads equals nrows
-   *add += nrows;
-   *mul += nrows + 1;
 }
 
 __global__ void cmplx_beta_next_W
@@ -1028,14 +850,6 @@ __global__ void cmplx_beta_next_W
    }
 }
 
-void flopcount_cmplx_beta_next_W ( int nrows, long long int *add, long long int *mul )
-{
-   // the number of threads equals nrows
-   *add += 4*nrows;
-   *mul += 4*nrows + 2;
-}
-
-
 __global__ void dbl_small_WYT
  ( int nrows, int szt, double *W, double *Y, double *WYT )
 {
@@ -1056,15 +870,6 @@ __global__ void dbl_small_WYT
    }
    __syncthreads();
    WYT[offset] = result;
-}
-
-void flopcount_dbl_small_WYT
- ( int nrows, int szt, long long int *add, long long int *mul )
-{
-   const int nbthreads = nrows*nrows;
-
-   *add += nbthreads;
-   *mul += nbthreads;
 }
 
 __global__ void cmplx_small_WYH
@@ -1099,15 +904,6 @@ __global__ void cmplx_small_WYH
    WYHim[offset] = resultim;
 }
 
-void flopcount_cmplx_small_WYH
- ( int nrows, int szt, long long int *add, long long int *mul )
-{
-   const int nbthreads = nrows*nrows;
-
-   *add += 4*nbthreads;
-   *mul += 4*nbthreads;
-}
-
 __global__ void dbl_small_QWYT
  ( int dim, int rowdim, int szt, int coloff,
    double *Q, double *WYT, double *QWYT )
@@ -1129,15 +925,6 @@ __global__ void dbl_small_QWYT
    }
    __syncthreads();
    QWYT[offset] = result;            // no column offset in saving QWYT
-}
-
-void flopcount_dbl_small_QWYT
- ( int dim, int rowdim, int szt, int coloff, long long int *add, long long int *mul )
-{
-   const int nbthreads = dim*rowdim;
-
-   *add += rowdim*nbthreads;
-   *mul += rowdim*nbthreads;
 }
 
 __global__ void cmplx_small_QWYH
@@ -1173,15 +960,6 @@ __global__ void cmplx_small_QWYH
    QWYHim[offset] = resultim;
 }
 
-void flopcount_cmplx_small_QWYH
- ( int dim, int rowdim, int szt, int coloff, long long int *add, long long int *mul )
-{
-   const int nbthreads = dim*rowdim;
-
-   *add += 4*rowdim*nbthreads;
-   *mul += 4*rowdim*nbthreads;
-}
-
 __global__ void dbl_small_YWTC
  ( int nrows, int ncols, int rowdim, int coldim, int szt,
    int rowoff, int coloff, double *YWT, double *C, double *YWTC )
@@ -1204,15 +982,6 @@ __global__ void dbl_small_YWTC
    }
    __syncthreads();
    YWTC[(coloff + col)*nrows + (rowoff + row)] = result;
-}
-
-void flopcount_dbl_small_YWTC
- ( int rowdim, int coldim, long long int *add, long long int *mul )
-{
-   const int nbthreads = rowdim*coldim;
-
-   *add += nbthreads;
-   *mul += nbthreads;
 }
 
 __global__ void cmplx_small_YWHC
@@ -1249,15 +1018,6 @@ __global__ void cmplx_small_YWHC
    YWHCim[(coloff + col)*nrows + (rowoff + row)] = resultim;
 }
 
-void flopcount_cmplx_small_YWHC
- ( int rowdim, int coldim, long long int *add, long long int *mul )
-{
-   const int nbthreads = rowdim*coldim;
-
-   *add += 4*nbthreads;
-   *mul += 4*nbthreads;
-}
-
 __global__ void dbl_small_Qupdate
  ( int dim, int rowdim, int szt, int coloff, double *Q, double *QWYT )
 {
@@ -1276,14 +1036,6 @@ __global__ void dbl_small_Qupdate
 
    __syncthreads();
    Q[idx1] = a;
-}
-
-void flopcount_dbl_small_Qupdate
- ( int dim, int rowdim, long long int *add )
-{
-   const int nbthreads = dim*rowdim;
-
-   *add += nbthreads;
 }
 
 __global__ void cmplx_small_Qupdate
@@ -1311,14 +1063,6 @@ __global__ void cmplx_small_Qupdate
    Qim[idx1] = a_im;
 }
 
-void flopcount_cmplx_small_Qupdate
- ( int dim, int rowdim, long long int *add )
-{
-   const int nbthreads = dim*rowdim;
-
-   *add += 2*nbthreads;
-}
-
 __global__ void dbl_small_R_add_YWTC
  ( int nrows, int coldim, int szt, int rowoff, int coloff,
    double *R, double *YWTC )
@@ -1338,15 +1082,6 @@ __global__ void dbl_small_R_add_YWTC
   
    __syncthreads();
    R[idx] = a;
-}
-
-void flopcount_dbl_small_R_add_YWTC
- ( int nrows, int coldim, int szt, int rowoff, int coloff, long long int *add )
-{
-   const int rowdim = nrows - rowoff;
-   const int nbthreads = rowdim*coldim;
-
-   *add += nbthreads;
 }
 
 __global__ void cmplx_small_R_add_YWHC
@@ -1372,15 +1107,6 @@ __global__ void cmplx_small_R_add_YWHC
    __syncthreads();
    Rre[idx] = a_re;
    Rim[idx] = a_im;
-}
-
-void flopcount_cmplx_small_R_add_YWHC
- ( int nrows, int coldim, int szt, int rowoff, int coloff, long long int *add )
-{
-   const int rowdim = nrows - rowoff;
-   const int nbthreads = rowdim*coldim;
-
-   *add += 2*nbthreads;
 }
 
 void GPU_dbl_small_house
