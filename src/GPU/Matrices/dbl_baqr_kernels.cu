@@ -1872,8 +1872,8 @@ void GPU_cmplx_medium_VB_to_W
 
 void GPU_dbl_small_WYT
  ( int nrows, int szt, double *W_d, double *Y_d, double *WYT_d,
-   double *WYT_h, double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose )
+   double *WYT_h, double *lapms, long long int *add, long long int *mul,
+   long long int *div, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1946,8 +1946,8 @@ void GPU_cmplx_small_WYH
 
 void GPU_dbl_small_YWT
  ( int nrows, int szt, int idx, double *Y_d, double *W_d, double *YWT_d,
-   double *YWT_h, double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose )
+   double *YWT_h, double *lapms, long long int *add, long long int *mul,
+   long long int *div, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1983,7 +1983,8 @@ void GPU_cmplx_small_YWH
  ( int nrows, int szt, int idx,
    double *Yre_d, double *Yim_d, double *Wre_d, double *Wim_d,
    double *YWHre_d, double *YWHim_d, double *YWHre_h, double *YWHim_h,
-   double *lapms, long long int *add, long long int *mul, long long int *div, bool verbose )
+   double *lapms, long long int *add, long long int *mul, long long int *div,
+   bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2074,7 +2075,8 @@ void GPU_cmplx_small_QWYH
  ( int dim, int szt, int idx, double *Qre_d, double *Qim_d,
    double *WYHre_d, double *WYHim_d, double *QWYHre_d, double *QWYHim_d,
    double *QWYHre_h, double *QWYHim_h, double *Qre_h, double *Qim_h,
-   double *lapms, long long int *add, long long int *mul, long long int *div, bool verbose )
+   double *lapms, long long int *add, long long int *mul, long long int *div,
+   bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2201,7 +2203,8 @@ void GPU_cmplx_small_YWHC
  ( int nrows, int ncols, int szt, int idx,
    double *YWHre_d, double *YWHim_d, double *Cre_d, double *Cim_d,
    double *YWHCre_d, double *YWHCim_d, double *YWHCre_h, double *YWHCim_h,
-   double *lapms, long long int *add, long long int *mul, long long int *div, bool verbose )
+   double *lapms, long long int *add, long long int *mul, long long int *div,
+   bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2269,9 +2272,9 @@ void GPU_cmplx_small_YWHC
 }
 
 void GPU_dbl_small_Qupdate
- ( int dim, int szt, int idx, double *Q_d, double *QWYT_d,
-   double *Q_h, double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose )
+ ( int dim, int szt, int idx, double *Q_d, double *QWYT_d, double *Q_h,
+   double *lapms, long long int *add, long long int *mul,
+   long long int *div, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2307,7 +2310,8 @@ void GPU_dbl_small_Qupdate
 void GPU_cmplx_small_Qupdate
  ( int dim, int szt, int idx, double *Qre_d, double *Qim_d,
    double *QWYHre_d, double *QWYHim_d, double *Qre_h, double *Qim_h,
-   double *lapms, long long int *add, long long int *mul, long long int *div, bool verbose )
+   double *lapms, long long int *add, long long int *mul, long long int *div,
+   bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2347,8 +2351,8 @@ void GPU_cmplx_small_Qupdate
 
 void GPU_dbl_small_R_add_YWTC
  ( int nrows, int ncols, int szt, int idx, double *R_d, double *YWTC_d,
-   double *R_h, double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose )
+   double *R_h, double *lapms, long long int *add, long long int *mul,
+   long long int *div, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2510,7 +2514,7 @@ void GPU_dbl_blocked_houseqr
    *houselapms = 0.0; *RTvlapms = 0.0; *tileRlapms = 0.0; *vb2Wlapms = 0.0;
    *WYTlapms = 0.0; *QWYTlapms = 0.0; *Qaddlapms = 0.0;
    *YWTlapms = 0.0; *YWTClapms = 0.0; *Raddlapms = 0.0;
-   *addcnt = 0; *mulcnt = 0; *divcnt = 0;
+   *addcnt = 0; *mulcnt = 0; *divcnt = 0; *sqrtcnt = 0;
    struct timeval begintime,endtime; // wall clock time of computations
 
    gettimeofday(&begintime,0);
@@ -2747,6 +2751,7 @@ void GPU_cmplx_blocked_houseqr
    *houselapms = 0.0; *RHvlapms = 0.0; *tileRlapms = 0.0; *vb2Wlapms = 0.0;
    *WYHlapms = 0.0; *QWYHlapms = 0.0; *Qaddlapms = 0.0;
    *YWHlapms = 0.0; *YWHClapms = 0.0; *Raddlapms = 0.0;
+   *addcnt = 0; *mulcnt = 0; *divcnt = 0; *sqrtcnt = 0;
    struct timeval begintime,endtime; // wall clock time of computations
 
    gettimeofday(&begintime,0);

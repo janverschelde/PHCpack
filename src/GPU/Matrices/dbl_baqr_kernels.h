@@ -759,7 +759,7 @@ void GPU_dbl_small_house
    int colidx, int nrows1, int k, int L,
    double *A_h, double *A_d,
    double *v_h, double *V_d, double *beta_h, double *beta_d,
-   double *lapms, long long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long long int *mul, long long int *div,
    long long int *sqrtfun, bool verbose=true );
 /*
  * DESCRIPTION :
@@ -804,7 +804,7 @@ void GPU_cmplx_small_house
    double *Are_h, double *Aim_h, double *Are_d, double *Aim_d,
    double *vre_h, double *vim_h, double *Vre_d, double *Vim_d,
    double *beta_h, double *beta_d,
-   double *lapms, long long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long int *mul, long long int *div,
    long long int *sqrtfun, bool verbose=true );
 /*
  * DESCRIPTION :
@@ -853,7 +853,7 @@ void GPU_cmplx_small_house
 void GPU_dbl_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
-   double *lapms, long long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long long int *mul, long long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -891,7 +891,7 @@ void GPU_cmplx_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *Are_h, double *Aim_h, double *Are_d, double *Aim_d,
    double *Vre_d, double *Vim_d, double *beta_h, double *beta_d,
-   double *lapms, long long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long long int *mul, long long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -935,8 +935,8 @@ void GPU_dbl_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
    double *RTdotv_h, double *RTdotv_d, double *w_h, double *w_d,
-   double *RTvlapms, double *redlapms,
-   long long int *add, long int *mul, long int *div, bool verbose=true );
+   double *RTvlapms, double *redlapms, long long int *add,
+   long long int *mul, long long int *div, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernels to update one tile.
@@ -1049,7 +1049,8 @@ void GPU_dbl_VB_to_W
  ( int nrows, int ncols, int szt,
    double *V_h, double *V_d, double *W_h, double *W_d,
    double *beta_h, double *beta_d, double *lapms,
-   long long int *add, long int *mul, long int *div, bool verbose=true );
+   long long int *add, long long int *mul, long long int *div,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the W in the WY representation.
@@ -1087,7 +1088,8 @@ void GPU_cmplx_VB_to_W
    double *Vre_h, double *Vim_h, double *Vre_d, double *Vim_d,
    double *Wre_h, double *Wim_h, double *Wre_d, double *Wim_d,
    double *beta_h, double *beta_d, double *lapms,
-   long long int *add, long int *mul, long int *div, bool verbose=true );
+   long long int *add, long long int *mul, long long int *div,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the W in the WY representation.
@@ -1138,7 +1140,7 @@ void GPU_dbl_medium_VB_to_W
  ( int nrows, int ncols, int szt, int idx,
    double *V_h, double *V_d, double *W_h, double *W_d,
    double *WYT_h, double *YWT_d, double *beta_h, double *beta_d,
-   double *lapms, long long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long long int *mul, long long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1185,7 +1187,7 @@ void GPU_cmplx_medium_VB_to_W
    double *Wre_h, double *Wim_h, double *Wre_d, double *Wim_d,
    double *WYHre_h, double *WYHim_h, double *WYHre_d, double *WYHim_d,
    double *beta_h, double *beta_d,
-   double *lapms, long long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long long int *mul, long long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1255,8 +1257,8 @@ void GPU_cmplx_medium_VB_to_W
 
 void GPU_dbl_small_WYT
  ( int nrows, int szt, double *W_d, double *Y_d, double *WYT_d,
-   double *WYT_h, double *lapms, long long int *add, long int *mul, long int *div,
-   bool verbose=true );
+   double *WYT_h, double *lapms, long long int *add, long long int *mul,
+   long long int *div, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute W*Y^T.
@@ -1287,7 +1289,8 @@ void GPU_cmplx_small_WYH
  ( int nrows, int szt, double *Wre_d, double *Wim_d,
    double *Yre_d, double *Yim_d, double *WYHre_d, double *WYHim_d,
    double *WYHre_h, double *WYHim_h, double *lapms,
-   long long int *add, long int *mul, long int *div, bool verbose=true );
+   long long int *add, long long int *mul, long long int *div,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute W*Y^H.
@@ -1322,8 +1325,8 @@ void GPU_cmplx_small_WYH
 
 void GPU_dbl_small_YWT
  ( int nrows, int szt, int idx, double *Y_d, double *W_d, double *YWT_d,
-   double *YWT_h, double *lapms, long long int *add, long int *mul, long int *div,
-   bool verbose=true );
+   double *YWT_h, double *lapms, long long int *add, long long int *mul,
+   long long int *div, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute W*Y^T.
@@ -1355,7 +1358,7 @@ void GPU_cmplx_small_YWH
  ( int nrows, int szt, int idx,
    double *Yre_d, double *Yim_d, double *Wre_d, double *Wim_d,
    double *YWHre_d, double *YWHim_d, double *YWHre_h, double *YWHim_h,
-   double *lapms, long long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long long int *mul, long long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1393,7 +1396,7 @@ void GPU_cmplx_small_YWH
 void GPU_dbl_small_QWYT
  ( int dim, int szt, int idx, double *Q_d, double *WYT_d, double *QWYT_d,
    double *QWYT_h, double *Q_h,
-   double *lapms, long long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long long int *mul, long long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1427,7 +1430,7 @@ void GPU_cmplx_small_QWYH
  ( int dim, int szt, int idx, double *Qre_d, double *Qim_d,
    double *WYHre_d, double *WYHim_d, double *QWYHre_d, double *QWYHim_d,
    double *QWYHre_h, double *QWYHim_h, double *Qre_h, double *Qim_h,
-   double *lapms, long long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long long int *mul, long long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1473,7 +1476,7 @@ void GPU_cmplx_small_QWYH
 void GPU_dbl_small_YWTC
  ( int nrows, int ncols, int szt, int idx,
    double *YWT_d, double *C_d, double *YWTC_d, double *YWTC_h,
-   double *lapms, long long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long long int *mul, long long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1508,7 +1511,7 @@ void GPU_cmplx_small_YWHC
  ( int nrows, int ncols, int szt, int idx,
    double *YWHre_d, double *YWHim_d, double *Cre_d, double *Cim_d,
    double *YWHCre_d, double *YWHCim_d, double *YWHCre_h, double *YWHCim_h,
-   double *lapms, long long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long long int *mul, long long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1551,8 +1554,8 @@ void GPU_cmplx_small_YWHC
 
 void GPU_dbl_small_Qupdate
  ( int dim, int rowdim, int szt, int idx, double *Q_d, double *QWYT_d,
-   double *Q_h, double *lapms, long long int *add, long int *mul, long int *div,
-   bool verbose=true );
+   double *Q_h, double *lapms, long long int *add, long long int *mul,
+   long long int *div, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update Q as Q + QWYT.
@@ -1583,7 +1586,7 @@ void GPU_dbl_small_Qupdate
 void GPU_cmplx_small_Qupdate
  ( int dim, int szt, int idx, double *Qre_d, double *Qim_d,
    double *QWYHre_d, double *QWYHim_d, double *Qre_h, double *Qim_h,
-   double *lapms, long long int *add, long int *mul, long int *div,
+   double *lapms, long long int *add, long long int *mul, long long int *div,
    bool verbose=true );
 /*
  * DESCRIPTION :
@@ -1618,8 +1621,8 @@ void GPU_cmplx_small_Qupdate
 
 void GPU_dbl_small_R_add_YWTC
  ( int nrows, int ncols, int szt, int idx, double *R_d, double *YWTC_d,
-   double *R_h, double *lapms, long long int *add, long int *mul, long int *div,
-   bool verbose=true );
+   double *R_h, double *lapms, long long int *add, long long int *mul,
+   long long int *div, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update R as R + YWTC.
@@ -1650,7 +1653,8 @@ void GPU_cmplx_small_R_add_YWHC
  ( int nrows, int ncols, int szt, int idx,
    double *Rre_d, double *Rim_d, double *YWHCre_d, double *YWHCim_d,
    double *Rre_h, double *Rim_h, double *lapms,
-   long long int *add, long int *mul, long int *div, bool verbose=true );
+   long long int *add, long long int *mul, long long int *div,
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update R as R + YWHC.
