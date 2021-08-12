@@ -208,6 +208,61 @@ void test_factors_cmplx2_lufac ( void )
    cout << "Sum of errors : " << error << endl;
 }
 
+int test_real2_qr_factors_probe
+ ( int nrows, int ncols, double **Ahi, double **Alo,
+   double **Qhi, double **Qlo, double **Rhi, double **Rlo,
+   double tol, int nbprobes, int verbose )
+{
+   int rowidx,colidx;
+   double Qsumhi,Qsumlo,Rsumhi,Rsumlo,acchi,acclo,errorQ,errorR;
+
+   for(int p=0; p<nbprobes; p++)
+   {
+      rowidx = rand() % nrows;
+      colidx = rand() % ncols;
+
+      if(verbose > 0)
+      {
+         cout << "Probing row index : " << rowidx
+              << ", column index : " << colidx << "." << endl;
+      }
+      Qsumhi = 0.0; Qsumlo = 0.0;
+      Rsumhi = 0.0; Rsumlo = 0.0;
+
+      for(int i=0; i<nrows; i++)
+      {
+         ddf_mul(Qhi[i][rowidx],Qlo[i][rowidx],
+                 Qhi[i][colidx],Qlo[i][colidx],&acchi,&acclo);
+         ddf_inc(&Qsumhi,&Qsumlo,acchi,acclo);
+         ddf_mul(Qhi[i][rowidx],Qlo[i][rowidx],
+                 Ahi[i][colidx],Alo[i][colidx],&acchi,&acclo);
+         ddf_inc(&Rsumhi,&Rsumlo,acchi,acclo);
+      }
+      if(verbose > 0)
+      {
+         cout << scientific << setprecision(16);
+         cout << "Q^T*Q[" << rowidx << "][" << rowidx << "] : "
+              << Qsumhi << "  " << Qsumlo << endl;
+         cout << "Q^T*A[" << rowidx << "][" << colidx << "] : "
+              << Rsumhi << "  " << Rsumlo << endl;
+         cout << "    R[" << rowidx << "][" << colidx << "] : "
+              << Rhi[rowidx][colidx] << "  "
+              << Rlo[rowidx][colidx] << endl;
+      }
+      if(rowidx == colidx)
+         errorQ = errorQ + fabs(Qsumhi - 1.0) + fabs(Qsumlo);
+      else
+         errorQ = errorQ + fabs(Qsumhi) + fabs(Qsumlo);
+      errorR = errorR + fabs(Rsumhi - Rhi[rowidx][colidx])
+                      + fabs(Rsumlo - Rlo[rowidx][colidx]);
+   }
+   cout << scientific << setprecision(2);
+   cout << "Sum of errors on |Q^T*Q - I| : " << errorQ << endl;
+   cout << "Sum of errors on |Q^T*A - R| : " << errorR << endl;
+
+   return int(errorQ + errorR > tol);
+}
+
 int test_real2_qr_factors
  ( int nrows, int ncols, double **Ahi, double **Alo,
    double **Qhi, double **Qlo, double **Rhi, double **Rlo,
@@ -299,6 +354,102 @@ int test_real2_qr_factors
    }
    free(QThi); free(QTQhi); free(QTAhi);
    free(QTlo); free(QTQlo); free(QTAlo);
+
+   return int(errorQ + errorR > tol);
+}
+
+int test_cmplx2_qr_factors_probe
+ ( int nrows, int ncols,
+   double **Arehi, double **Arelo, double **Aimhi, double **Aimlo,
+   double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
+   double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
+   double tol, int nbprobes, int verbose )
+{
+   int rowidx,colidx;
+   double Qsumrehi,Qsumrelo,Rsumrehi,Rsumrelo;
+   double Qsumimhi,Qsumimlo,Rsumimhi,Rsumimlo;
+   double acchi,acclo,errorQ,errorR;
+
+   for(int p=0; p<nbprobes; p++)
+   {
+      rowidx = rand() % nrows;
+      colidx = rand() % ncols;
+
+      if(verbose > 0)
+      {
+         cout << "Probing row index : " << rowidx
+              << ", column index : " << colidx << "." << endl;
+      }
+      Qsumrehi = 0.0; Qsumrelo = 0.0;
+      Qsumimhi = 0.0; Qsumimlo = 0.0;
+      Rsumrehi = 0.0; Rsumrelo = 0.0;
+      Rsumimhi = 0.0; Rsumimlo = 0.0;
+
+      for(int i=0; i<nrows; i++)
+      {
+         // multiply Q^H with Q
+         ddf_mul(Qrehi[i][rowidx],Qrelo[i][rowidx],
+                 Qrehi[i][colidx],Qrelo[i][colidx],&acchi,&acclo);
+         ddf_inc(&Qsumrehi,&Qsumrelo,acchi,acclo);
+         ddf_mul(Qimhi[i][rowidx],Qimlo[i][rowidx],
+                 Qimhi[i][colidx],Qimlo[i][colidx],&acchi,&acclo);
+         ddf_inc(&Qsumrehi,&Qsumrelo,acchi,acclo);
+         ddf_mul(Qimhi[i][rowidx],Qimlo[i][rowidx],
+                 Qrehi[i][colidx],Qrelo[i][colidx],&acchi,&acclo);
+         ddf_dec(&Qsumimhi,&Qsumimlo,acchi,acclo);
+         ddf_mul(Qrehi[i][rowidx],Qrelo[i][rowidx],
+                 Qimhi[i][colidx],Qimlo[i][colidx],&acchi,&acclo);
+         ddf_inc(&Qsumimhi,&Qsumimlo,acchi,acclo);
+         // multiply Q^H with A
+         ddf_mul(Qrehi[i][rowidx],Qrelo[i][rowidx],
+                 Arehi[i][colidx],Arelo[i][colidx],&acchi,&acclo);
+         ddf_inc(&Rsumrehi,&Rsumrelo,acchi,acclo);
+         ddf_mul(Qimhi[i][rowidx],Qimlo[i][rowidx],
+                 Aimhi[i][colidx],Aimlo[i][colidx],&acchi,&acclo);
+         ddf_inc(&Rsumrehi,&Rsumrelo,acchi,acclo);
+         ddf_mul(Qimhi[i][rowidx],Qimlo[i][rowidx],
+                 Arehi[i][colidx],Arelo[i][colidx],&acchi,&acclo);
+         ddf_dec(&Rsumimhi,&Rsumimlo,acchi,acclo);
+         ddf_mul(Qrehi[i][rowidx],Qrelo[i][rowidx],
+                 Aimhi[i][colidx],Aimlo[i][colidx],&acchi,&acclo);
+         ddf_inc(&Rsumimhi,&Rsumimlo,acchi,acclo);
+      }
+      if(verbose > 0)
+      {
+         cout << scientific << setprecision(16);
+         cout << "Q^T*Q[" << rowidx << "][" << rowidx << "]re : "
+              << Qsumrehi << "  " << Qsumrelo << endl;
+         cout << "Q^T*Q[" << rowidx << "][" << rowidx << "]im : "
+              << Qsumimhi << "  " << Qsumimlo << endl;
+         cout << "Q^T*A[" << rowidx << "][" << colidx << "]re : "
+              << Rsumrehi << "  " << Rsumrelo << endl;
+         cout << "    R[" << rowidx << "][" << colidx << "]re : "
+              << Rrehi[rowidx][colidx] << "  "
+              << Rrelo[rowidx][colidx] << endl;
+         cout << "Q^T*A[" << rowidx << "][" << colidx << "]im : "
+              << Rsumimhi << "  " << Rsumimlo << endl;
+         cout << "    R[" << rowidx << "][" << colidx << "]im : "
+              << Rimhi[rowidx][colidx] << "  "
+              << Rimlo[rowidx][colidx] << endl;
+      }
+      if(rowidx == colidx)
+      {
+         errorQ = errorQ + fabs(Qsumrehi - 1.0) + fabs(Qsumrelo)
+                         + fabs(Qsumimhi)       + fabs(Qsumimlo);
+      }
+      else
+      {
+         errorQ = errorQ + fabs(Qsumrehi) + fabs(Qsumrelo);
+                         + fabs(Qsumimhi) + fabs(Qsumimlo);
+      }
+      errorR = errorR + fabs(Rsumrehi - Rrehi[rowidx][colidx])
+                      + fabs(Rsumrelo - Rrelo[rowidx][colidx]);
+                      + fabs(Rsumimhi - Rimhi[rowidx][colidx])
+                      + fabs(Rsumimlo - Rimlo[rowidx][colidx]);
+   }
+   cout << scientific << setprecision(2);
+   cout << "Sum of errors on |Q^T*Q - I| : " << errorQ << endl;
+   cout << "Sum of errors on |Q^T*A - R| : " << errorR << endl;
 
    return int(errorQ + errorR > tol);
 }

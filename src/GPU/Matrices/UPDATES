@@ -2,6 +2,9 @@ Wed 11 Aug 2021 : fixed bugs in dbl2_baqr_kernels.cu, added extra cout
   in dbl2_baqr_host.cpp.  Added the "-> Testing ..." banner after the GPU
   computation in dbl*_baqr_testers.cpp.  Extended dbl2_baqr_kernels
   with kernels for Householder vectors of larger, complex matrices.
+  To dbl2_factors_testers, added test functions with random index probes,
+  as more efficient alternatives to testing the complete matrix.
+  Applied in dbl2_baqr_testers.cpp.
 
 Tue 10 Aug 2021 : added new kernels to dbl2_baqr_kernels to compute the
   Householder vectors for larger matrices.  Added the value of the dimension

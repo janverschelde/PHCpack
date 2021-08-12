@@ -77,8 +77,10 @@ void test_real2_blocked_qr
 
       cout << "-> Testing the QR factorization ..." << endl;
 
-      fail = test_real2_qr_factors
-         (nrows,ncols,Ahi,Alo,Qhi_h,Qlo_h,Rhi_h,Rlo_h,tol,verbose);
+      // fail = test_real2_qr_factors
+      //   (nrows,ncols,Ahi,Alo,Qhi_h,Qlo_h,Rhi_h,Rlo_h,tol,verbose);
+      fail = test_real2_qr_factors_probe
+         (nrows,ncols,Ahi,Alo,Qhi_h,Qlo_h,Rhi_h,Rlo_h,tol,2,true);
       if(fail == 0)
          cout << "The test succeeded." << endl;
       else
@@ -104,8 +106,10 @@ void test_real2_blocked_qr
 
       cout << "-> Testing the QR factorization ..." << endl;
 
-      fail = test_real2_qr_factors
-                (nrows,ncols,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,tol,verbose);
+      // fail = test_real2_qr_factors
+      //          (nrows,ncols,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,tol,verbose);
+      fail = test_real2_qr_factors_probe
+                (nrows,ncols,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,tol,2,true);
       if(fail == 0)
          cout << "The test succeeded." << endl;
       else
@@ -246,10 +250,14 @@ void test_cmplx2_blocked_qr
 
       cout << "-> Testing the QR factorization ..." << endl;
 
-      fail = test_cmplx2_qr_factors
+      // fail = test_cmplx2_qr_factors
+      //    (nrows,ncols,Arehi,  Arelo,  Aimhi,  Aimlo,
+      //                 Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,
+      //                 Rrehi_h,Rrelo_h,Rimhi_h,Rimlo_h,tol,verbose);
+      fail = test_cmplx2_qr_factors_probe
          (nrows,ncols,Arehi,  Arelo,  Aimhi,  Aimlo,
                       Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,
-                      Rrehi_h,Rrelo_h,Rimhi_h,Rimlo_h,tol,verbose);
+                      Rrehi_h,Rrelo_h,Rimhi_h,Rimlo_h,tol,2,true);
       if(fail == 0)
          cout << "The test succeeded." << endl;
       else
@@ -292,10 +300,14 @@ void test_cmplx2_blocked_qr
 
       cout << "-> Testing the QR factorization ..." << endl;
 
-      fail = test_cmplx2_qr_factors
+      // fail = test_cmplx2_qr_factors
+      //           (nrows,ncols,Arehi,  Arelo,  Aimhi,  Aimlo,
+      //                        Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
+      //                        Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,tol,verbose);
+      fail = test_cmplx2_qr_factors_probe
                 (nrows,ncols,Arehi,  Arelo,  Aimhi,  Aimlo,
                              Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
-                             Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,tol,verbose);
+                             Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,tol,2,true);
       if(fail == 0)
          cout << "The test succeeded." << endl;
       else
