@@ -166,6 +166,13 @@ void test_real2_blocked_qr
       long long int flopcnt = 20*addcnt + 23*mulcnt + 70*divcnt + 50*sqrtcnt;
       cout << "    Total number of floating-point operations : "
            << flopcnt << endl;
+      cout << endl;
+      cout << scientific << setprecision(3);
+      double flops = ((double) flopcnt)/timelapsed_d;
+      const int gigacnt = pow(2.0,30);
+      cout << "Flops : " << flops;
+      cout << fixed << setprecision(3)
+           << " = " << flops/gigacnt << " Gigaflops" << endl;
    }
    for(int i=0; i<nrows; i++)
    {
@@ -382,6 +389,13 @@ void test_cmplx2_blocked_qr
       long long int flopcnt = 20*addcnt + 23*mulcnt + 70*divcnt + 50*sqrtcnt;
       cout << "    Total number of floating-point operations : "
            << flopcnt << endl;
+      cout << endl;
+      cout << scientific << setprecision(3);
+      double flops = ((double) flopcnt)/timelapsed_d;
+      const int gigacnt = pow(2.0,30);
+      cout << "Flops : " << flops;
+      cout << fixed << setprecision(3)
+           << " = " << flops/gigacnt << " Gigaflops" << endl;
    }
    for(int i=0; i<nrows; i++)
    {

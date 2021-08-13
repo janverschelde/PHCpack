@@ -1,3 +1,6 @@
+Fri 13 Aug 2021 : to dbl_baqr_testers.cpp and dbl2_baqr_testers.cpp,
+  added the explicit computation of the flops at the end.
+
 Thu 12 Aug 2021 : new dbl_baqr_flopcounts, with code factored out from
   the dbl_baqr_kernels.  Updated the makefiles.
   In dbl_baqr_kernels.cu, initialized the global flop counts properly.
