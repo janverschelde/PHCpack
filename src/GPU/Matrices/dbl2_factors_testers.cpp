@@ -214,7 +214,9 @@ int test_real2_qr_factors_probe
    double tol, int nbprobes, int verbose )
 {
    int rowidx,colidx;
-   double Qsumhi,Qsumlo,Rsumhi,Rsumlo,acchi,acclo,errorQ,errorR;
+   double Qsumhi,Qsumlo,Rsumhi,Rsumlo,acchi,acclo;
+   double errorQ = 0.0;
+   double errorR = 0.0;
 
    for(int p=0; p<nbprobes; p++)
    {
@@ -368,7 +370,9 @@ int test_cmplx2_qr_factors_probe
    int rowidx,colidx;
    double Qsumrehi,Qsumrelo,Rsumrehi,Rsumrelo;
    double Qsumimhi,Qsumimlo,Rsumimhi,Rsumimlo;
-   double acchi,acclo,errorQ,errorR;
+   double acchi,acclo;
+   double errorQ = 0.0;
+   double errorR = 0.0;
 
    for(int p=0; p<nbprobes; p++)
    {
@@ -439,11 +443,11 @@ int test_cmplx2_qr_factors_probe
       }
       else
       {
-         errorQ = errorQ + fabs(Qsumrehi) + fabs(Qsumrelo);
+         errorQ = errorQ + fabs(Qsumrehi) + fabs(Qsumrelo)
                          + fabs(Qsumimhi) + fabs(Qsumimlo);
       }
       errorR = errorR + fabs(Rsumrehi - Rrehi[rowidx][colidx])
-                      + fabs(Rsumrelo - Rrelo[rowidx][colidx]);
+                      + fabs(Rsumrelo - Rrelo[rowidx][colidx])
                       + fabs(Rsumimhi - Rimhi[rowidx][colidx])
                       + fabs(Rsumimlo - Rimlo[rowidx][colidx]);
    }
