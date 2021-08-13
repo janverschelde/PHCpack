@@ -853,8 +853,7 @@ void GPU_cmplx_small_house
 void GPU_dbl_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update one tile.
@@ -875,7 +874,6 @@ void GPU_dbl_small_leftRupdate
  *   beta_d   space on the device for the betas;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -884,15 +882,13 @@ void GPU_dbl_small_leftRupdate
  *   beta_d   the next beta constant;
  *   lapms    elapsed time spent by the kernel.
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *Are_h, double *Aim_h, double *Are_d, double *Aim_d,
    double *Vre_d, double *Vim_d, double *beta_h, double *beta_d,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update one tile.
@@ -918,7 +914,6 @@ void GPU_cmplx_small_leftRupdate
  *   beta_d   space allocated on the device for the betas;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -935,8 +930,8 @@ void GPU_dbl_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
    double *RTdotv_h, double *RTdotv_d, double *w_h, double *w_d,
-   double *RTvlapms, double *redlapms, long long int *add,
-   long long int *mul, long long int *div, bool verbose=true );
+   double *RTvlapms, double *redlapms,
+   long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernels to update one tile.
@@ -965,7 +960,6 @@ void GPU_dbl_medium_leftRupdate
  *   w_d      space for the beta*R^T*v plus szt padding;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -979,8 +973,7 @@ void GPU_dbl_medium_leftRupdate
  *   RTvlapms is the elapsed time spent to compute beta*R^T*v;
  *   redlapms is the elapsed time spent to reduce one tile;
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
@@ -990,8 +983,7 @@ void GPU_cmplx_medium_leftRupdate
    double *RHdotvre_d, double *RHdotvim_d,
    double *wre_h, double *wim_h, double *wre_d, double *wim_d,
    double *RHvlapms, double *redlapms,
-   long long int *add, long long int *mul, long long int *div,
-   bool verbose=true );
+   long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernels to update one tile.
@@ -1025,7 +1017,6 @@ void GPU_cmplx_medium_leftRupdate
  *   RHdotvim_d has space for RHdotvim, on the device;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1042,8 +1033,7 @@ void GPU_cmplx_medium_leftRupdate
  *   RHvlapms elapsed time spent on beta*R^H*v;
  *   redlapms elapsed time spent to reduce one tile;
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 void GPU_dbl_VB_to_W
  ( int nrows, int ncols, int szt,
@@ -1140,8 +1130,7 @@ void GPU_dbl_medium_VB_to_W
  ( int nrows, int ncols, int szt, int idx,
    double *V_h, double *V_d, double *W_h, double *W_d,
    double *WYT_h, double *YWT_d, double *beta_h, double *beta_d,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the W in the WY representation,
@@ -1166,7 +1155,6 @@ void GPU_dbl_medium_VB_to_W
  *   beta_d   space on the device for the betas;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1178,8 +1166,7 @@ void GPU_dbl_medium_VB_to_W
  *   WYT_d    the outer product of W with Y^T, on the device;
  *   lapms    elapsed time spent by the kernel;
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx_medium_VB_to_W
  ( int nrows, int ncols, int szt, int idx,
@@ -1187,8 +1174,7 @@ void GPU_cmplx_medium_VB_to_W
    double *Wre_h, double *Wim_h, double *Wre_d, double *Wim_d,
    double *WYHre_h, double *WYHim_h, double *WYHre_d, double *WYHim_d,
    double *beta_h, double *beta_d,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the W in the WY representation,
@@ -1226,7 +1212,6 @@ void GPU_cmplx_medium_VB_to_W
  *   beta_d   space on the device for the betas;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1252,8 +1237,7 @@ void GPU_cmplx_medium_VB_to_W
  *            on the device;
  *   lapms    elapsed time spent by the kernel;
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 void GPU_dbl_small_WYT
  ( int nrows, int szt, double *W_d, double *Y_d, double *WYT_d,
@@ -1326,7 +1310,7 @@ void GPU_cmplx_small_WYH
 void GPU_dbl_small_YWT
  ( int nrows, int szt, int idx, double *Y_d, double *W_d, double *YWT_d,
    double *YWT_h, double *lapms, long long int *add, long long int *mul,
-   long long int *div, bool verbose=true );
+   bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute W*Y^T.
@@ -1343,7 +1327,6 @@ void GPU_dbl_small_YWT
  *   YWT_h    space for an nrows-by-nrows matrix on the host, if verbose;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1351,15 +1334,13 @@ void GPU_dbl_small_YWT
  *   YWT_h    the product Y*W^T, if verbose;
  *   lapms    elapsed time spent by the kernel;
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx_small_YWH
  ( int nrows, int szt, int idx,
    double *Yre_d, double *Yim_d, double *Wre_d, double *Wim_d,
    double *YWHre_d, double *YWHim_d, double *YWHre_h, double *YWHim_h,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute W*Y^H.
@@ -1380,7 +1361,6 @@ void GPU_cmplx_small_YWH
  *   YWHim_h  space for an nrows-by-nrows matrix on the host, if verbose;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1390,14 +1370,12 @@ void GPU_cmplx_small_YWH
  *   YWHim_h  imaginary parts of the product Y*W^H, if verbose;
  *   lapms    elapsed time spent by the kernel;
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 void GPU_dbl_small_QWYT
  ( int dim, int szt, int idx, double *Q_d, double *WYT_d, double *QWYT_d,
    double *QWYT_h, double *Q_h,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute Q*WYT.
@@ -1415,7 +1393,6 @@ void GPU_dbl_small_QWYT
  *   Q_h      if verbose, then used to print Q before the product;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1423,15 +1400,13 @@ void GPU_dbl_small_QWYT
  *   QWYT_h   the product Q*WYT, if verbose;
  *   lapms    elapsed time spent by the kernel;
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx_small_QWYH
  ( int dim, int szt, int idx, double *Qre_d, double *Qim_d,
    double *WYHre_d, double *WYHim_d, double *QWYHre_d, double *QWYHim_d,
    double *QWYHre_h, double *QWYHim_h, double *Qre_h, double *Qim_h,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute Q*WYT.
@@ -1460,7 +1435,6 @@ void GPU_cmplx_small_QWYH
  *            of the matrix Q before the product;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1470,14 +1444,12 @@ void GPU_cmplx_small_QWYH
  *   QWYHim_h are the imaginary parts of the product Q*WYH, if verbose;
  *   lapms    elapsed time spent by the kernel;
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 void GPU_dbl_small_YWTC
  ( int nrows, int ncols, int szt, int idx,
    double *YWT_d, double *C_d, double *YWTC_d, double *YWTC_h,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute YWT*C.
@@ -1496,7 +1468,6 @@ void GPU_dbl_small_YWTC
  *   YWTC_h   space for the product YWT*C, on the host, if verbose;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1504,15 +1475,13 @@ void GPU_dbl_small_YWTC
  *   YWTC_h   the product YWT*C, if verbose;
  *   lapms    elapsed time spent by the kernel;
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx_small_YWHC
  ( int nrows, int ncols, int szt, int idx,
    double *YWHre_d, double *YWHim_d, double *Cre_d, double *Cim_d,
    double *YWHCre_d, double *YWHCim_d, double *YWHCre_h, double *YWHCim_h,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute YWT*C.
@@ -1539,7 +1508,6 @@ void GPU_cmplx_small_YWHC
  *            on the host, if verbose;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1549,13 +1517,11 @@ void GPU_cmplx_small_YWHC
  *   YWHCim_h are the imaginary parts of the product YWH*C, if verbose;
  *   lapms    elapsed time spent by the kernel;
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 void GPU_dbl_small_Qupdate
  ( int dim, int rowdim, int szt, int idx, double *Q_d, double *QWYT_d,
-   double *Q_h, double *lapms, long long int *add, long long int *mul,
-   long long int *div, bool verbose=true );
+   double *Q_h, double *lapms, long long int *add, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update Q as Q + QWYT.
@@ -1571,23 +1537,18 @@ void GPU_dbl_small_Qupdate
  *   Q_d      a dim-by-dim matrix, on the device;
  *   QWYT_d   the product Q*W*Y^T, on the device;
  *   add      current number of additions and subtractions;
- *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
  *   Q_d      the updated Q on the device;
  *   Q_h      the updated Q, if verbose;
  *   lapms    elapsed time spent by the kernel;
- *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   add      accumulated number of additions and subtractions. */
 
 void GPU_cmplx_small_Qupdate
  ( int dim, int szt, int idx, double *Qre_d, double *Qim_d,
    double *QWYHre_d, double *QWYHim_d, double *Qre_h, double *Qim_h,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose=true );
+   double *lapms, long long int *add, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update Q as Q + QWYH.
@@ -1605,8 +1566,6 @@ void GPU_cmplx_small_Qupdate
  *   QWYHre_d are the real parts of the product Q*W*Y^H, on the device;
  *   QWYHim_d are the imaginary parts of the product Q*W*Y^H, on the device;
  *   add      current number of additions and subtractions;
- *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1615,14 +1574,11 @@ void GPU_cmplx_small_Qupdate
  *   Qre_h    real parts of the updated Q, if verbose;
  *   Qim_h    imaginary parts of the updated Q, if verbose;
  *   lapms    elapsed time spent by the kernel;
- *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   add      accumulated number of additions and subtractions. */
 
 void GPU_dbl_small_R_add_YWTC
  ( int nrows, int ncols, int szt, int idx, double *R_d, double *YWTC_d,
-   double *R_h, double *lapms, long long int *add, long long int *mul,
-   long long int *div, bool verbose=true );
+   double *R_h, double *lapms, long long int *add, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update R as R + YWTC.
@@ -1637,24 +1593,19 @@ void GPU_dbl_small_R_add_YWTC
  *   R_d      an nrows-by-ncols matrix, on the device;
  *   YWTC_d   the product Y*W^T*C, on the device;
  *   add      current number of additions and subtractions;
- *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
  *   R_d      the updated R on the device;
  *   R_h      the updated R, if verbose;
  *   lapms    elapsed time spent by the kernel;
- *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   add      accumulated number of additions and subtractions. */
 
 void GPU_cmplx_small_R_add_YWHC
  ( int nrows, int ncols, int szt, int idx,
    double *Rre_d, double *Rim_d, double *YWHCre_d, double *YWHCim_d,
-   double *Rre_h, double *Rim_h, double *lapms,
-   long long int *add, long long int *mul, long long int *div,
-   bool verbose=true );
+   double *Rre_h, double *Rim_h,
+   double *lapms, long long int *add, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update R as R + YWHC.
@@ -1672,8 +1623,6 @@ void GPU_cmplx_small_R_add_YWHC
  *   YWHCim_d are the imaginary parts of the product Y*W^H*C,
  *            on the device;
  *   add      current number of additions and subtractions;
- *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1682,9 +1631,7 @@ void GPU_cmplx_small_R_add_YWHC
  *   Rre_h    real parts of the updated R, if verbose;
  *   Rim_h    imaginary parts of the updated R, if verbose;
  *   lapms    elapsed time spent by the kernel;
- *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   add      accumulated number of additions and subtractions. */
 
 void GPU_dbl_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,

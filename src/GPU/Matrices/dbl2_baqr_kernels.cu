@@ -788,7 +788,7 @@ __global__ void dbl2_medium_subvbetaRTv
    }
 }
 
-__global__ void cmplx2_medium_subvbetaRTv
+__global__ void cmplx2_medium_subvbetaRHv
  ( int nrows, int ncols, int szt, int k,
    double *Rrehi, double *Rrelo, double *Rimhi, double *Rimlo,
    double *vrehi, double *vrelo, double *vimhi, double *vimlo,
@@ -849,225 +849,6 @@ __global__ void cmplx2_medium_subvbetaRTv
       Rimhi[Ridx] = Rwidximhi;
       Rimlo[Ridx] = Rwidximlo;
    }
-}
-
-__global__ void dbl2_VB_to_W
- ( int nrows, int ncols, double *Bhi, double *Blo,
-   double *Vhi, double *Vlo, double *Whi, double *Wlo )
-{
-   const int tdx = threadIdx.x;        // index of thread in block
-   double wrkhi,wrklo,pkhi,pklo,mypkhi,mypklo,zihi,zilo;
-   int idx;
-
-   __shared__ double shvhi[dd_shmemsize]; // one work vector
-   __shared__ double shvlo[dd_shmemsize];
-   __shared__ double shwhi[dd_shmemsize]; // the other work vector
-   __shared__ double shwlo[dd_shmemsize];
-   __shared__ double shphi[dd_shmemsize]; // to share Y^T*v
-   __shared__ double shplo[dd_shmemsize]; 
-
-   shvhi[tdx] = Vhi[tdx];
-   shvlo[tdx] = Vlo[tdx];
-   // wrk = -B[0]*shv[tdx];               // first column of W
-   ddg_mul(Bhi[0],Blo[0],shvhi[tdx],shvlo[tdx],&wrkhi,&wrklo);
-   ddg_minus(&wrkhi,&wrklo);
-   Whi[tdx] = wrkhi;
-   Wlo[tdx] = wrklo;
-
-   for(int j=1; j<ncols; j++)          // compute column j of W
-   {
-      idx = j*nrows + tdx;
-      shvhi[tdx] = Vhi[idx];           // j-th Householder vector
-      shvlo[tdx] = Vlo[idx]; 
-
-      for(int k=0; k<j; k++)
-      {
-         pkhi = 0.0;                   // k-th component of Y^T*v
-         pklo = 0.0;
-         idx = k*nrows + tdx;
-         shwhi[tdx] = Vhi[idx];        // load V[k][i]
-         shwlo[tdx] = Vlo[idx]; 
-         // shp[tdx] = shw[tdx]*shv[tdx]; // V[k][i]*v[i]
-         ddg_mul(shwhi[tdx],shwlo[tdx],shvhi[tdx],shvlo[tdx],
-                 &shphi[tdx],&shplo[tdx]);
-
-         __syncthreads();
-         for(int i=0; i<nrows; i++) // pk = pk + shp[i];
-            ddg_inc(&pkhi,&pklo,shphi[i],shplo[i]);
-
-         __syncthreads();        // this synchronization is critical!
-         if(tdx == k)
-         {
-            mypkhi = pkhi;
-            mypklo = pklo;
-         }
-      }
-      __syncthreads();
-      shphi[tdx] = mypkhi;             // share p[k]
-      shplo[tdx] = mypklo;
-      __syncthreads();
-      zihi = 0.0;                      // i-th component of W*p
-      zilo = 0.0;
-      for(int k=0; k<j; k++)
-      {
-         idx = k*nrows + tdx;
-         shwhi[tdx] = Whi[idx];        // load W[k][i]
-         shwlo[tdx] = Wlo[idx];
-         // zi = zi + shw[tdx]*shp[k];
-         ddg_mul(shwhi[tdx],shwlo[tdx],shphi[k],shplo[k],&wrkhi,&wrklo);
-         ddg_inc(&zihi,&zilo,wrkhi,wrklo);
-      }
-      // zi = zi + shv[tdx];
-      ddg_inc(&zihi,&zilo,shvhi[tdx],shvlo[tdx]);
-      // wrk = -B[j]*zi;
-      ddg_mul(Bhi[j],Blo[j],zihi,zilo,&wrkhi,&wrklo);
-      ddg_minus(&wrkhi,&wrklo);
-      idx = j*nrows + tdx;
-      Whi[idx] = wrkhi;               // wrk is assigned to W[j][tdx]
-      Wlo[idx] = wrklo;
-      __syncthreads();
-   }
-}
-
-__global__ void cmplx2_VB_to_W
- ( int nrows, int ncols, double *Bhi, double *Blo,
-   double *Vrehi, double *Vrelo, double *Vimhi, double *Vimlo,
-   double *Wrehi, double *Wrelo, double *Wimhi, double *Wimlo )
-{
-   const int tdx = threadIdx.x;        // index of thread in block
-   double wrk_rehi,wrk_relo,wrk_imhi,wrk_imlo;
-   double pk_rehi,pk_relo,pk_imhi,pk_imlo;
-   double mypk_rehi,mypk_relo,mypk_imhi,mypk_imlo;
-   double zi_rehi,zi_relo,zi_imhi,zi_imlo;
-   int VWidx;
-
-   __shared__ double shvrehi[cdd_shmemsize]; // one work vector
-   __shared__ double shvrelo[cdd_shmemsize]; 
-   __shared__ double shvimhi[cdd_shmemsize];
-   __shared__ double shvimlo[cdd_shmemsize];
-   __shared__ double shwrehi[cdd_shmemsize]; // the other work vector
-   __shared__ double shwrelo[cdd_shmemsize];
-   __shared__ double shwimhi[cdd_shmemsize];
-   __shared__ double shwimlo[cdd_shmemsize];
-   __shared__ double shprehi[cdd_shmemsize]; // to share Y^T*v
-   __shared__ double shprelo[cdd_shmemsize];
-   __shared__ double shpimhi[cdd_shmemsize];
-   __shared__ double shpimlo[cdd_shmemsize];
-
-   shvrehi[tdx] = Vrehi[tdx];
-   shvrelo[tdx] = Vrelo[tdx];
-   shvimhi[tdx] = Vimhi[tdx];
-   shvimlo[tdx] = Vimlo[tdx];
-   // wrk_re = -B[0]*shvre[tdx];            // first column of W
-   ddg_mul(Bhi[0],Blo[0],shvrehi[tdx],shvrelo[tdx],&wrk_rehi,&wrk_relo);
-   ddg_minus(&wrk_rehi,&wrk_relo);
-   // wrk_im = -B[0]*shvim[tdx];
-   ddg_mul(Bhi[0],Blo[0],shvimhi[tdx],shvimlo[tdx],&wrk_imhi,&wrk_imlo);
-   ddg_minus(&wrk_imhi,&wrk_imlo);
-   Wrehi[tdx] = wrk_rehi;
-   Wrelo[tdx] = wrk_relo;
-   Wimhi[tdx] = wrk_imhi;
-   Wimlo[tdx] = wrk_imlo;
-
-   for(int j=1; j<ncols; j++)          // compute column j of W
-   {
-      VWidx = j*nrows + tdx;
-      shvrehi[tdx] = Vrehi[VWidx];     // j-th Householder vector
-      shvrelo[tdx] = Vrelo[VWidx];
-      shvimhi[tdx] = Vimhi[VWidx];
-      shvimlo[tdx] = Vimlo[VWidx];
-
-      for(int k=0; k<j; k++)
-      {
-         pk_rehi = 0.0;                // k-th component of Y^H*v
-         pk_relo = 0.0;
-         pk_imhi = 0.0;
-         pk_imlo = 0.0;
-         VWidx = k*nrows + tdx;
-         shwrehi[tdx] = Vrehi[VWidx];  // load V[k][i]
-         shwrelo[tdx] = Vrelo[VWidx];
-         shwimhi[tdx] = Vimhi[VWidx];
-         shwimlo[tdx] = Vimlo[VWidx];
-         // shp[tdx] = shw[tdx]*shv[tdx]; V[k][i]*v[i], Hermitian transpose!
-         // shpre[tdx] =   shwre[tdx]*shvre[tdx] + shwim[tdx]*shvim[tdx];
-         ddg_mul(shwrehi[tdx],shwrelo[tdx],
-                 shvrehi[tdx],shvrelo[tdx],&shprehi[tdx],&shprelo[tdx]);
-         ddg_mul(shwimhi[tdx],shwimlo[tdx],
-                 shvimhi[tdx],shvimlo[tdx],&wrk_imhi,&wrk_imlo);
-         ddg_inc(&shprehi[tdx],&shprelo[tdx],wrk_imhi,wrk_imlo);
-         // shpim[tdx] = - shwim[tdx]*shvre[tdx] + shwre[tdx]*shvim[tdx];
-         ddg_mul(shwrehi[tdx],shwrelo[tdx],
-                 shvimhi[tdx],shvimlo[tdx],&shpimhi[tdx],&shpimlo[tdx]);
-         ddg_mul(shwimhi[tdx],shwimlo[tdx],
-                 shvrehi[tdx],shvrelo[tdx],&wrk_imhi,&wrk_imlo);
-         ddg_dec(&shpimhi[tdx],&shpimlo[tdx],wrk_imhi,wrk_imlo);
-         __syncthreads();
-         for(int i=0; i<nrows; i++)
-         {
-            // pk_re = pk_re + shpre[i];
-            ddg_inc(&pk_rehi,&pk_relo,shprehi[i],shprelo[i]);
-            // pk_im = pk_im + shpim[i];
-            ddg_inc(&pk_imhi,&pk_imlo,shpimhi[i],shpimlo[i]);
-         }
-         __syncthreads();              // important synchronization
-         if(tdx == k)
-         {
-            mypk_rehi = pk_rehi;
-            mypk_relo = pk_relo;
-            mypk_imhi = pk_imhi;
-            mypk_imlo = pk_imlo;
-         }
-      }
-      __syncthreads();
-      shprehi[tdx] = mypk_rehi;        // share p[k]
-      shprelo[tdx] = mypk_relo;
-      shpimhi[tdx] = mypk_imhi;
-      shpimlo[tdx] = mypk_imlo;
-      __syncthreads();
-      zi_rehi = 0.0;                   // i-th component of W*p
-      zi_relo = 0.0;
-      zi_imhi = 0.0;
-      zi_imlo = 0.0;
-      for(int k=0; k<j; k++)
-      {
-         VWidx = k*nrows + tdx;
-         shwrehi[tdx] = Wrehi[VWidx];  // load W[k][i]
-         shwrelo[tdx] = Wrelo[VWidx];
-         shwimhi[tdx] = Wimhi[VWidx];
-         shwimlo[tdx] = Wimlo[VWidx];
-         // zi = zi + shw[tdx]*shp[k];
-         // zi_re = zi_re + shwre[tdx]*shpre[k] - shwim[tdx]*shpim[k];
-         ddg_mul(shwrehi[tdx],shwrelo[tdx],shprehi[k],shprelo[k],
-                 &wrk_rehi,&wrk_relo);
-         ddg_inc(&zi_rehi,&zi_relo,wrk_rehi,wrk_relo);
-         ddg_mul(shwimhi[tdx],shwimlo[tdx],shpimhi[k],shpimlo[k],
-                 &wrk_rehi,&wrk_relo);
-         ddg_dec(&zi_rehi,&zi_relo,wrk_rehi,wrk_relo);
-         // zi_im = zi_im + shwim[tdx]*shpre[k] + shwre[tdx]*shpim[k];
-         ddg_mul(shwimhi[tdx],shwimlo[tdx],shprehi[k],shprelo[k],
-                 &wrk_rehi,&wrk_relo);
-         ddg_inc(&zi_imhi,&zi_imlo,wrk_rehi,wrk_relo);
-         ddg_mul(shwrehi[tdx],shwrelo[tdx],shpimhi[k],shpimlo[k],
-                 &wrk_rehi,&wrk_relo);
-         ddg_inc(&zi_imhi,&zi_imlo,wrk_rehi,wrk_relo);
-      }
-      // zi_re = zi_re + shvre[tdx];
-      ddg_inc(&zi_rehi,&zi_relo,shvrehi[tdx],shvrelo[tdx]);
-      // zi_im = zi_im + shvim[tdx];
-      ddg_inc(&zi_imhi,&zi_imlo,shvimhi[tdx],shvimlo[tdx]);
-      // wrk_re = -B[j]*zi_re;
-      ddg_mul(Bhi[j],Blo[j],zi_rehi,zi_relo,&wrk_rehi,&wrk_relo);
-      ddg_minus(&wrk_rehi,&wrk_relo);
-      // wrk_im = -B[j]*zi_im;
-      ddg_mul(Bhi[j],Blo[j],zi_imhi,zi_imlo,&wrk_imhi,&wrk_imlo);
-      ddg_minus(&wrk_imhi,&wrk_imlo);
-      VWidx = j*nrows + tdx;
-      Wrehi[VWidx] = wrk_rehi;        // wrk is assigned to W[j][tdx]
-      Wrelo[VWidx] = wrk_relo;
-      Wimhi[VWidx] = wrk_imhi;
-      Wimlo[VWidx] = wrk_imlo;
-      __syncthreads();
-  }
 }
 
 __global__ void dbl2_beta_times_V
@@ -1490,7 +1271,7 @@ __global__ void dbl2_small_WYT
    WYTlo[offset] = resultlo;
 }
 
-__global__ void cmplx2_small_WYT
+__global__ void cmplx2_small_WYH
  ( int nrows, int szt,
    double *Wrehi, double *Wrelo, double *Wimhi, double *Wimlo,
    double *Yrehi, double *Yrelo, double *Yimhi, double *Yimlo,
@@ -1574,7 +1355,7 @@ __global__ void dbl2_small_QWYT
    QWYTlo[offset] = resultlo;  
 }
 
-__global__ void cmplx2_small_QWYT
+__global__ void cmplx2_small_QWYH
  ( int dim, int rowdim, int szt, int coloff,
    double *Qrehi, double *Qrelo, double *Qimhi, double *Qimlo,
    double *WYTrehi, double *WYTrelo, double *WYTimhi, double *WYTimlo,
@@ -1661,7 +1442,7 @@ __global__ void dbl2_small_YWTC
    YWTClo[idx] = resultlo;
 }
 
-__global__ void cmplx2_small_YWTC
+__global__ void cmplx2_small_YWHC
  ( int nrows, int ncols, int rowdim, int coldim, int szt,
    int rowoff, int coloff,
    double *YWTrehi, double *YWTrelo, double *YWTimhi, double *YWTimlo,
@@ -1801,7 +1582,7 @@ __global__ void dbl2_small_R_add_YWTC
    Rlo[idx] = alo;
 }
 
-__global__ void cmplx2_small_R_add_YWTC
+__global__ void cmplx2_small_R_add_YWHC
  ( int nrows, int coldim, int szt, int rowoff, int coloff,
    double *Rrehi, double *Rrelo, double *Rimhi, double *Rimlo, 
    double *YWTCrehi, double *YWTCrelo, double *YWTCimhi, double *YWTCimlo )
@@ -1842,7 +1623,8 @@ void GPU_dbl2_small_house
    double *Ahi_h, double *Alo_h, double *Ahi_d, double *Alo_d,
    double *vhi_h, double *vlo_h, double *Vhi_d, double *Vlo_d,
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, bool verbose )
+   double *lapms, long long int *add, long long int *mul, long long int *div,
+   long long int *sqrtfun, bool verbose )
 {
    const int nrLog2 = ceil(log2((double) nrows1));
    const int rowidx = colidx*(nrows+1);       // start of number in A_h
@@ -1929,7 +1711,8 @@ void GPU_cmplx2_small_house
    double *vrehi_h, double *vrelo_h, double *vimhi_h, double *vimlo_h,
    double *Vrehi_d, double *Vrelo_d, double *Vimhi_d, double *Vimlo_d,
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, bool verbose )
+   double *lapms, long long int *add, long long int *mul, long long int *div,
+   long long int *sqrtfun, bool verbose )
 {
    const int nrLog2 = ceil(log2((double) nrows1));
    const int rowidx = colidx*(nrows+1);       // start of number in A_h
@@ -2059,7 +1842,8 @@ void GPU_dbl2_large_house
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
    double *sumshi_h, double *sumslo_h, double *sumshi_d, double *sumslo_d,
    double *sigmahi_h, double *sigmalo_h, double *sigmahi_d, double *sigmalo_d,
-   double *lapms, bool verbose )
+   double *lapms, long long int *add, long long int *mul, long long int *div,
+   long long int *sqrtfun, bool verbose )
 {
    // nrows1 = nrows - colidx - 1 = size of Householder vector
    const int nblocks = ceil(((double) nrows1)/szt); // sufficient threads
@@ -2235,7 +2019,8 @@ void GPU_cmplx2_large_house
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
    double *sumshi_h, double *sumslo_h, double *sumshi_d, double *sumslo_d,
    double *sigmahi_h, double *sigmalo_h, double *sigmahi_d, double *sigmalo_d,
-   double *lapms, bool verbose )
+   double *lapms, long long int *add, long long int *mul, long long int *div,
+   long long int *sqrtfun, bool verbose )
 {
    // nrows1 = nrows - colidx - 1 = size of Householder vector
    const int nblocks = ceil(((double) nrows1)/szt); // sufficient threads
@@ -2455,7 +2240,7 @@ void GPU_dbl2_small_leftRupdate
    double *Ahi_h, double *Alo_h, double *Ahi_d, double *Alo_d,
    double *Vhi_d, double *Vlo_d,
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2497,7 +2282,7 @@ void GPU_cmplx2_small_leftRupdate
    double *Arehi_d, double *Arelo_d, double *Aimhi_d, double *Aimlo_d,
    double *Vrehi_d, double *Vrelo_d, double *Vimhi_d, double *Vimlo_d,
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2549,7 +2334,8 @@ void GPU_dbl2_medium_leftRupdate
    double *RTdotvhi_h, double *RTdotvlo_h,
    double *RTdotvhi_d, double *RTdotvlo_d,
    double *whi_h, double *wlo_h, double *whi_d, double *wlo_d,
-   double *RTvlapms, double *redlapms, bool verbose )
+   double *RTvlapms, double *redlapms,
+   long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2662,13 +2448,14 @@ void GPU_cmplx2_medium_leftRupdate
    double *Arehi_d, double *Arelo_d, double *Aimhi_d, double *Aimlo_d,
    double *Vrehi_d, double *Vrelo_d, double *Vimhi_d, double *Vimlo_d,
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *RTdotvrehi_h, double *RTdotvrelo_h,
-   double *RTdotvimhi_h, double *RTdotvimlo_h,
-   double *RTdotvrehi_d, double *RTdotvrelo_d,
-   double *RTdotvimhi_d, double *RTdotvimlo_d,
+   double *RHdotvrehi_h, double *RHdotvrelo_h,
+   double *RHdotvimhi_h, double *RHdotvimlo_h,
+   double *RHdotvrehi_d, double *RHdotvrelo_d,
+   double *RHdotvimhi_d, double *RHdotvimlo_d,
    double *wrehi_h, double *wrelo_h, double *wimhi_h, double *wimlo_h,
    double *wrehi_d, double *wrelo_d, double *wimhi_d, double *wimlo_d,
-   double *RHvlapms, double *redlapms, bool verbose )
+   double *RHvlapms, double *redlapms,
+   long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2678,34 +2465,34 @@ void GPU_cmplx2_medium_leftRupdate
    const int nVrows = nrows - k*szt;          // dimension of V matrix
    const int nhouse = nrows - colidx;  // length of Householder vector
    // total number of entries in R that will be modified
-   const int RToffset = colidx*nrows;
-   const int dimRTdotv = endcol - colidx;
+   const int RHoffset = colidx*nrows;
+   const int dimRHdotv = endcol - colidx;
    // total number of entries in R that will be modified
-   const int sizenum = (nrows - colidx)*dimRTdotv;
+   const int sizenum = (nrows - colidx)*dimRHdotv;
    const int nbrblocks = (int) ceil(sizenum/((double) szt));
 
    if(verbose)
    {
       cout << "-> launching " << nbrblocks << " blocks of " << szt
-           << " threads to compute RTdotv ..." << endl;
-      cout << "   nhouse : " << nhouse << "  RToffset : " << RToffset
-           << "  dimRTdotv : " << dimRTdotv << endl;
+           << " threads to compute RHdotv ..." << endl;
+      cout << "   nhouse : " << nhouse << "  RHoffset : " << RHoffset
+           << "  dimRHdotv : " << dimRHdotv << endl;
    }
 
    cudaEventRecord(start);
    cmplx2_RHdotv<<<nbrblocks,szt>>>
-      (nhouse,szt,colidx,RToffset,dimRTdotv,Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
+      (nhouse,szt,colidx,RHoffset,dimRHdotv,Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
        &Vrehi_d[L*nVrows+L],&Vrelo_d[L*nVrows+L],
        &Vimhi_d[L*nVrows+L],&Vimlo_d[L*nVrows+L],
-       RTdotvrehi_d,RTdotvrelo_d,RTdotvimhi_d,RTdotvimlo_d);
+       RHdotvrehi_d,RHdotvrelo_d,RHdotvimhi_d,RHdotvimlo_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *RHvlapms += milliseconds;
    cudaEventRecord(start);
-   cmplx2_sum_betaRHdotv<<<1,dimRTdotv>>>
+   cmplx2_sum_betaRHdotv<<<1,dimRHdotv>>>
       (nhouse,&betahi_d[L],&betalo_d[L],
-       RTdotvrehi_d,RTdotvrelo_d,RTdotvimhi_d,RTdotvimlo_d,
+       RHdotvrehi_d,RHdotvrelo_d,RHdotvimhi_d,RHdotvimlo_d,
        wrehi_d,wrelo_d,wimhi_d,wimlo_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
@@ -2721,7 +2508,7 @@ void GPU_cmplx2_medium_leftRupdate
    }
 
    cudaEventRecord(start);
-   cmplx2_medium_subvbetaRTv<<<nbrblocks,szt>>>
+   cmplx2_medium_subvbetaRHv<<<nbrblocks,szt>>>
       (nrows,endcol,szt,colidx,Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
        &Vrehi_d[L*nVrows+L],&Vrelo_d[L*nVrows+L],
        &Vimhi_d[L*nVrows+L],&Vimlo_d[L*nVrows+L],
@@ -2735,13 +2522,13 @@ void GPU_cmplx2_medium_leftRupdate
    {
       const int dim = nrows*ncols;
       const size_t sznum = dim*sizeof(double);
-      const size_t szbRTv = dimRTdotv*sizeof(double);
-      const size_t szRTdotv = nVrows*szbRTv;
+      const size_t szbRHv = dimRHdotv*sizeof(double);
+      const size_t szRHdotv = nVrows*szbRHv;
 
-      cudaMemcpy(RTdotvrehi_h,RTdotvrehi_d,szRTdotv,cudaMemcpyDeviceToHost);
-      cudaMemcpy(RTdotvrelo_h,RTdotvrelo_d,szRTdotv,cudaMemcpyDeviceToHost);
-      cudaMemcpy(RTdotvimhi_h,RTdotvimhi_d,szRTdotv,cudaMemcpyDeviceToHost);
-      cudaMemcpy(RTdotvimlo_h,RTdotvimlo_d,szRTdotv,cudaMemcpyDeviceToHost);
+      cudaMemcpy(RHdotvrehi_h,RHdotvrehi_d,szRHdotv,cudaMemcpyDeviceToHost);
+      cudaMemcpy(RHdotvrelo_h,RHdotvrelo_d,szRHdotv,cudaMemcpyDeviceToHost);
+      cudaMemcpy(RHdotvimhi_h,RHdotvimhi_d,szRHdotv,cudaMemcpyDeviceToHost);
+      cudaMemcpy(RHdotvimlo_h,RHdotvimlo_d,szRHdotv,cudaMemcpyDeviceToHost);
       cout << "the matrix R^H dot v : " << endl;
       int ix = 0;
       for(int i=0; i<endcol-colidx; i++)
@@ -2749,20 +2536,20 @@ void GPU_cmplx2_medium_leftRupdate
          for(int j=0; j<nhouse; j++)      // must use nhouse
          {
             cout << "RHdotv[" << i << "][" << j << "]re : "
-                 << RTdotvrehi_h[ix] << "  "
-                 << RTdotvrelo_h[ix] << endl;
+                 << RHdotvrehi_h[ix] << "  "
+                 << RHdotvrelo_h[ix] << endl;
             cout << "RHdotv[" << i << "][" << j << "]im : "
-                 << RTdotvimhi_h[ix] << "  "
-                 << RTdotvimlo_h[ix] << endl;
+                 << RHdotvimhi_h[ix] << "  "
+                 << RHdotvimlo_h[ix] << endl;
             ix = ix + 1;
          }
       }
 
-      cudaMemcpy(wrehi_h,wrehi_d,szbRTv,cudaMemcpyDeviceToHost);
-      cudaMemcpy(wrelo_h,wrelo_d,szbRTv,cudaMemcpyDeviceToHost);
-      cudaMemcpy(wimhi_h,wimhi_d,szbRTv,cudaMemcpyDeviceToHost);
-      cudaMemcpy(wimlo_h,wimlo_d,szbRTv,cudaMemcpyDeviceToHost);
-      cout << "the vector w = beta*R^T*v : " << endl;
+      cudaMemcpy(wrehi_h,wrehi_d,szbRHv,cudaMemcpyDeviceToHost);
+      cudaMemcpy(wrelo_h,wrelo_d,szbRHv,cudaMemcpyDeviceToHost);
+      cudaMemcpy(wimhi_h,wimhi_d,szbRHv,cudaMemcpyDeviceToHost);
+      cudaMemcpy(wimlo_h,wimlo_d,szbRHv,cudaMemcpyDeviceToHost);
+      cout << "the vector w = beta*R^H*v : " << endl;
       for(int i=0; i<endcol-colidx; i++)
       {
          cout << "w[" << i << "]re : "
@@ -2801,8 +2588,8 @@ void GPU_dbl2_VB_to_W
    float milliseconds;
 
    cudaEventRecord(start);
-   dbl2_VB_to_W<<<1,nrows>>>
-      (nrows,ncols,betahi_d,betalo_d,Vhi_d,Vlo_d,Whi_d,Wlo_d);
+//   dbl2_VB_to_W<<<1,nrows>>>
+//      (nrows,ncols,betahi_d,betalo_d,Vhi_d,Vlo_d,Whi_d,Wlo_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
@@ -2884,9 +2671,9 @@ void GPU_cmplx2_VB_to_W
          }
    }
    cudaEventRecord(start);
-   cmplx2_VB_to_W<<<1,nrows>>>
-      (nrows,ncols,betahi_d,betalo_d,Vrehi_d,Vrelo_d,Vimhi_d,Vimlo_d,
-       Wrehi_d,Wrelo_d,Wimhi_d,Wimlo_d);
+//   cmplx2_VB_to_W<<<1,nrows>>>
+//      (nrows,ncols,betahi_d,betalo_d,Vrehi_d,Vrelo_d,Vimhi_d,Vimlo_d,
+//       Wrehi_d,Wrelo_d,Wimhi_d,Wimlo_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
@@ -2948,8 +2735,7 @@ void GPU_dbl2_medium_VB_to_W
    double *Whi_h, double *Wlo_h, double *Whi_d, double *Wlo_d,
    double *WYThi_h, double *WYTlo_h, double *WYThi_d, double *WYTlo_d,
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, long int *add, long int *mul, long int *div,
-   bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -3057,8 +2843,7 @@ void GPU_cmplx2_medium_VB_to_W
    double *WYHrehi_h, double *WYHrelo_h, double *WYHimhi_h, double *WYHimlo_h,
    double *WYHrehi_d, double *WYHrelo_d, double *WYHimhi_d, double *WYHimlo_d,
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, long int *add, long int *mul, long int *div,
-   bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -3217,7 +3002,7 @@ void GPU_dbl2_small_WYT
    }
 }
 
-void GPU_cmplx2_small_WYT
+void GPU_cmplx2_small_WYH
  ( int nrows, int szt,
    double *Wrehi_d, double *Wrelo_d, double *Wimhi_d, double *Wimlo_d,
    double *Yrehi_d, double *Yrelo_d, double *Yimhi_d, double *Yimlo_d,
@@ -3232,7 +3017,7 @@ void GPU_cmplx2_small_WYT
    const int nbrblocks = (int) ceil(nrows*nrows/((double) szt));
 
    cudaEventRecord(start);
-   cmplx2_small_WYT<<<nbrblocks,szt>>>
+   cmplx2_small_WYH<<<nbrblocks,szt>>>
       (nrows,szt,Wrehi_d,  Wrelo_d,  Wimhi_d,  Wimlo_d,
                  Yrehi_d,  Yrelo_d,  Yimhi_d,  Yimlo_d,
                WYTrehi_d,WYTrelo_d,WYTimhi_d,WYTimlo_d);
@@ -3268,7 +3053,7 @@ void GPU_dbl2_small_YWT
  ( int nrows, int szt, int idx,
    double *Yhi_d, double *Ylo_d, double *Whi_d, double *Wlo_d,
    double *YWThi_d, double *YWTlo_d, double *YWThi_h, double *YWTlo_h,
-   double *lapms, bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -3304,13 +3089,13 @@ void GPU_dbl2_small_YWT
    }
 }
 
-void GPU_cmplx2_small_YWT
+void GPU_cmplx2_small_YWH
  ( int nrows, int szt, int idx,
    double *Yrehi_d, double *Yrelo_d, double *Yimhi_d, double *Yimlo_d,
    double *Wrehi_d, double *Wrelo_d, double *Wimhi_d, double *Wimlo_d,
    double *YWTrehi_d, double *YWTrelo_d, double *YWTimhi_d, double *YWTimlo_d,
    double *YWTrehi_h, double *YWTrelo_h, double *YWTimhi_h, double *YWTimlo_h,
-   double *lapms, bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -3320,7 +3105,7 @@ void GPU_cmplx2_small_YWT
    int nbrblocks = (int) ceil(rowdim*rowdim/((double) szt));
 
    cudaEventRecord(start);
-   cmplx2_small_WYT<<<nbrblocks,szt>>>
+   cmplx2_small_WYH<<<nbrblocks,szt>>>
       (rowdim,szt,Yrehi_d,  Yrelo_d,  Yimhi_d,  Yimlo_d,
                   Wrehi_d,  Wrelo_d,  Wimhi_d,  Wimlo_d,
                 YWTrehi_d,YWTrelo_d,YWTimhi_d,YWTimlo_d);
@@ -3356,7 +3141,7 @@ void GPU_dbl2_small_QWYT
  ( int dim, int szt, int idx, double *Qhi_d, double *Qlo_d,
    double *WYThi_d, double *WYTlo_d, double *QWYThi_d, double *QWYTlo_d,
    double *QWYThi_h, double *QWYTlo_h, double *Qhi_h, double *Qlo_h,
-   double *lapms, bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -3411,7 +3196,7 @@ void GPU_dbl2_small_QWYT
    }
 }
 
-void GPU_cmplx2_small_QWYT
+void GPU_cmplx2_small_QWYH
  ( int dim, int szt, int idx,
    double *Qrehi_d, double *Qrelo_d, double *Qimhi_d, double *Qimlo_d,
    double *WYTrehi_d, double *WYTrelo_d, double *WYTimhi_d, double *WYTimlo_d,
@@ -3420,7 +3205,7 @@ void GPU_cmplx2_small_QWYT
    double *QWYTrehi_h, double *QWYTrelo_h,
    double *QWYTimhi_h, double *QWYTimlo_h,
    double *Qrehi_h, double *Qrelo_h, double *Qimhi_h, double *Qimlo_h,
-   double *lapms, bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -3453,7 +3238,7 @@ void GPU_cmplx2_small_QWYT
    }
 
    cudaEventRecord(start);
-   cmplx2_small_QWYT<<<nbrblocks,szt>>>
+   cmplx2_small_QWYH<<<nbrblocks,szt>>>
       (dim,rowdim,szt,coloff,Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
         WYTrehi_d, WYTrelo_d, WYTimhi_d, WYTimlo_d,
        QWYTrehi_d,QWYTrelo_d,QWYTimhi_d,QWYTimlo_d);
@@ -3488,7 +3273,8 @@ void GPU_cmplx2_small_QWYT
 void GPU_dbl2_small_YWTC
  ( int nrows, int ncols, int szt, int idx, double *YWThi_d, double *YWTlo_d,
    double *Chi_d, double *Clo_d, double *YWTChi_d, double *YWTClo_d,
-   double *YWTChi_h, double *YWTClo_h, double *lapms, bool verbose )
+   double *YWTChi_h, double *YWTClo_h,
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -3555,14 +3341,15 @@ void GPU_dbl2_small_YWTC
    }
 }
 
-void GPU_cmplx2_small_YWTC
+void GPU_cmplx2_small_YWHC
  ( int nrows, int ncols, int szt, int idx,
    double *YWTrehi_d, double *YWTrelo_d, double *YWTimhi_d, double *YWTimlo_d,
    double *Crehi_d, double *Crelo_d, double *Cimhi_d, double *Cimlo_d,
    double *YWTCrehi_d, double *YWTCrelo_d,
    double *YWTCimhi_d, double *YWTCimlo_d,
    double *YWTCrehi_h, double *YWTCrelo_h,
-   double *YWTCimhi_h, double *YWTCimlo_h, double *lapms, bool verbose )
+   double *YWTCimhi_h, double *YWTCimlo_h,
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -3613,7 +3400,7 @@ void GPU_cmplx2_small_YWTC
       free(Crehi_h); free(Crelo_h); free(Cimhi_h); free(Cimlo_h);
    }
    cudaEventRecord(start);
-   cmplx2_small_YWTC<<<nbrblocks,szt>>>
+   cmplx2_small_YWHC<<<nbrblocks,szt>>>
       (nrows,ncols,rowdim,coldim,szt,rowoff,coloff,
         YWTrehi_d, YWTrelo_d, YWTimhi_d, YWTimlo_d,
           Crehi_d,   Crelo_d,   Cimhi_d,   Cimlo_d,
@@ -3649,7 +3436,8 @@ void GPU_cmplx2_small_YWTC
 void GPU_dbl2_small_Qupdate
  ( int dim, int szt, int idx,
    double *Qhi_d, double *Qlo_d, double *QWYThi_d, double *QWYTlo_d,
-   double *Qhi_h, double *Qlo_h, double *lapms, bool verbose )
+   double *Qhi_h, double *Qlo_h,
+   double *lapms, long long int *add, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -3692,7 +3480,7 @@ void GPU_cmplx2_small_Qupdate
    double *QWYTrehi_d, double *QWYTrelo_d,
    double *QWYTimhi_d, double *QWYTimlo_d,
    double *Qrehi_h, double *Qrelo_h, double *Qimhi_h, double *Qimlo_h,
-   double *lapms, bool verbose )
+   double *lapms, long long int *add, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -3737,7 +3525,7 @@ void GPU_cmplx2_small_Qupdate
 void GPU_dbl2_small_R_add_YWTC
  ( int nrows, int ncols, int szt, int idx, double *Rhi_d, double *Rlo_d,
    double *YWTChi_d, double *YWTClo_d, double *Rhi_h, double *Rlo_h,
-   double *lapms, bool verbose )
+   double *lapms, long long int *add, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -3773,13 +3561,13 @@ void GPU_dbl2_small_R_add_YWTC
    }
 }
 
-void GPU_cmplx2_small_R_add_YWTC
+void GPU_cmplx2_small_R_add_YWHC
  ( int nrows, int ncols, int szt, int idx,
    double *Rrehi_d, double *Rrelo_d, double *Rimhi_d, double *Rimlo_d,
    double *YWTCrehi_d, double *YWTCrelo_d,
    double *YWTCimhi_d, double *YWTCimlo_d,
    double *Rrehi_h, double *Rrelo_h, double *Rimhi_h, double *Rimlo_h,
-   double *lapms, bool verbose )
+   double *lapms, long long int *add, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -3792,7 +3580,7 @@ void GPU_cmplx2_small_R_add_YWTC
    const int nbrblocks = (int) ceil(rowdim*coldim/((double) szt));
 
    cudaEventRecord(start);
-   cmplx2_small_R_add_YWTC<<<nbrblocks,szt>>>
+   cmplx2_small_R_add_YWHC<<<nbrblocks,szt>>>
       (nrows,coldim,szt,rowoff,coloff,
           Rrehi_d,   Rrelo_d,   Rimhi_d,   Rimlo_d,
        YWTCrehi_d,YWTCrelo_d,YWTCimhi_d,YWTCimlo_d);
@@ -3831,7 +3619,8 @@ void GPU_dbl2_blocked_houseqr
    double *houselapms, double *RTvlapms, double *tileRlapms,
    double *vb2Wlapms, double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
    double *YWTlapms, double *YWTClapms, double *Raddlapms,
-   double *walltimesec, bool verbose )
+   double *walltimesec, long long int *addcnt, long long int *mulcnt,
+   long long int *divcnt, long long int *sqrtcnt, bool verbose )
 {
    const int dim = nrows*ncols;         // total number of doubles
    const int nrows2 = nrows*nrows;
@@ -3977,9 +3766,7 @@ void GPU_dbl2_blocked_houseqr
    *houselapms = 0.0; *RTvlapms = 0.0; *tileRlapms = 0.0; *vb2Wlapms = 0.0;
    *WYTlapms = 0.0; *QWYTlapms = 0.0; *Qaddlapms = 0.0;
    *YWTlapms = 0.0; *YWTClapms = 0.0; *Raddlapms = 0.0;
-   long int *addcnt = 0;
-   long int *mulcnt = 0;
-   long int *divcnt = 0;
+   *addcnt = 0; *mulcnt = 0; *divcnt = 0; *sqrtcnt = 0;
    struct timeval begintime,endtime; // wall clock time of computations
 
    gettimeofday(&begintime,0);
@@ -4006,12 +3793,13 @@ void GPU_dbl2_blocked_houseqr
             GPU_dbl2_small_house
                (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
                 Ahi_h,Alo_h,Ahi_d,Alo_d,vhi_h,vlo_h,Vhi_d,Vlo_d,
-                betahi_h,betalo_h,betahi_d,betalo_d,houselapms,verbose);
+                betahi_h,betalo_h,betahi_d,betalo_d,
+                houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
             GPU_dbl2_small_leftRupdate
                (nrows,ncols,szt,colidx,k,L,Ahi_h,Alo_h,Ahi_d,Alo_d,
                 Vhi_d,Vlo_d,betahi_h,betalo_h,betahi_d,betalo_d,
-                tileRlapms,verbose);
+                tileRlapms,addcnt,mulcnt,verbose);
          }
          else
          {
@@ -4021,47 +3809,43 @@ void GPU_dbl2_blocked_houseqr
                 betahi_h,betalo_h,betahi_d,betalo_d,
                 sumshi_h,sumslo_h,sumshi_d,sumslo_d,
                 &sigmahi_h,&sigmalo_h,sigmahi_d,sigmalo_d,
-                houselapms,verbose);
+                houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
             GPU_dbl2_medium_leftRupdate
                (nrows,ncols,szt,colidx,k,L,Ahi_h,Alo_h,Ahi_d,Alo_d,
                 Vhi_d,Vlo_d,betahi_h,betalo_h,betahi_d,betalo_d,
                 RTdotvhi_h,RTdotvlo_h,RTdotvhi_d,RTdotvlo_d,
                 bRTvhi_h,bRTvlo_h,bRTvhi_d,bRTvlo_d,
-                RTvlapms,tileRlapms,verbose);
+                RTvlapms,tileRlapms,addcnt,mulcnt,verbose);
          }
       }
       GPU_dbl2_medium_VB_to_W
          (nrows,szt,szt,k,Vhi_h,Vlo_h,Vhi_d,Vlo_d,Whi_h,Wlo_h,Whi_d,Wlo_d,
           WYThi_h,WYTlo_h,WYThi_d,WYTlo_d,betahi_h,betalo_h,betahi_d,betalo_d,
-          vb2Wlapms,addcnt,mulcnt,divcnt,verbose);
+          vb2Wlapms,addcnt,mulcnt,verbose);
 /*
-      // changed nrows into nrows - k*szt and ncols into szt
-      GPU_dbl2_VB_to_W
-         (nrows-k*szt,szt,szt,Vhi_h,Vlo_h,Vhi_d,Vlo_d,Whi_h,Wlo_h,
-          Whi_d,Wlo_d,betahi_h,betalo_h,betahi_d,betalo_d,vb2Wlapms,verbose);
-      // update Q, WYT matrix has nrows - k*szt instead of nrows
       GPU_dbl2_small_WYT
          (nrows-k*szt,szt,Whi_d,Wlo_d,Vhi_d,Vlo_d,WYThi_d,WYTlo_d,
           WYThi_h,WYTlo_h,WYTlapms,verbose);
  */
       GPU_dbl2_small_QWYT
          (nrows,szt,k,Qhi_d,Qlo_d,WYThi_d,WYTlo_d,QWYThi_d,QWYTlo_d,
-          QWYThi_h,QWYTlo_h,Qhi_h,Qlo_h,QWYTlapms,verbose);
+          QWYThi_h,QWYTlo_h,Qhi_h,Qlo_h,QWYTlapms,addcnt,mulcnt,verbose);
       GPU_dbl2_small_Qupdate
          (nrows,szt,k,Qhi_d,Qlo_d,QWYThi_d,QWYTlo_d,Qhi_h,Qlo_h,
-          Qaddlapms,verbose);
+          Qaddlapms,addcnt,verbose);
       if(k < nbt-1)                                           // update R
       {
          GPU_dbl2_small_YWT
             (nrows,szt,k,Vhi_d,Vlo_d,Whi_d,Wlo_d,YWThi_d,YWTlo_d,
-             YWThi_h,YWTlo_h,YWTlapms,verbose);
+             YWThi_h,YWTlo_h,YWTlapms,addcnt,mulcnt,verbose);
          GPU_dbl2_small_YWTC
             (nrows,ncols,szt,k,YWThi_d,YWTlo_d,Ahi_d,Alo_d,
-             YWTChi_d,YWTClo_d,YWTChi_h,YWTClo_h,YWTClapms,verbose);
+             YWTChi_d,YWTClo_d,YWTChi_h,YWTClo_h,
+             YWTClapms,addcnt,mulcnt,verbose);
          GPU_dbl2_small_R_add_YWTC
             (nrows,ncols,szt,k,Ahi_d,Alo_d,YWTChi_d,YWTClo_d,
-             Ahi_h,Alo_h,Raddlapms,verbose);
+             Ahi_h,Alo_h,Raddlapms,addcnt,verbose);
       }
    }
    gettimeofday(&endtime,0);
@@ -4104,7 +3888,8 @@ void GPU_cmplx2_blocked_houseqr
    double *houselapms, double *RHvlapms, double *tileRlapms,
    double *vb2Wlapms, double *WYHlapms, double *QWYHlapms, double *Qaddlapms,
    double *YWHlapms, double *YWHClapms, double *Raddlapms,
-   double *walltimesec, bool verbose )
+   double *walltimesec, long long int *addcnt, long long int *mulcnt,
+   long long int *divcnt, long long int *sqrtcnt, bool verbose )
 {
    const int dim = nrows*ncols;        // total number of doubles
    const int nrows2 = nrows*nrows;
@@ -4328,9 +4113,7 @@ void GPU_cmplx2_blocked_houseqr
    *houselapms = 0.0; *RHvlapms = 0.0; *tileRlapms = 0.0; *vb2Wlapms = 0.0;
    *WYHlapms = 0.0; *QWYHlapms = 0.0; *Qaddlapms = 0.0;
    *YWHlapms = 0.0; *YWHClapms = 0.0; *Raddlapms = 0.0;
-   long int *addcnt = 0;
-   long int *mulcnt = 0;
-   long int *divcnt = 0;
+   *addcnt = 0; *mulcnt = 0; *divcnt = 0; *sqrtcnt = 0;
    struct timeval begintime,endtime; // wall clock time of computations
 
    gettimeofday(&begintime,0);
@@ -4354,14 +4137,16 @@ void GPU_cmplx2_blocked_houseqr
                 Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
                 vrehi_h,vrelo_h,vimhi_h,vimlo_h,
                 Vrehi_d,Vrelo_d,Vimhi_d,Vimlo_d,
-                betahi_h,betalo_h,betahi_d,betalo_d,houselapms,verbose);
+                betahi_h,betalo_h,betahi_d,betalo_d,
+                houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
             GPU_cmplx2_small_leftRupdate
                (nrows,ncols,szt,colidx,k,L,
                 Arehi_h,Arelo_h,Aimhi_h,Aimlo_h,
                 Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
                 Vrehi_d,Vrelo_d,Vimhi_d,Vimlo_d,
-                betahi_h,betalo_h,betahi_d,betalo_d,tileRlapms,verbose);
+                betahi_h,betalo_h,betahi_d,betalo_d,
+                tileRlapms,addcnt,mulcnt,verbose);
          }
          else
          {
@@ -4374,7 +4159,7 @@ void GPU_cmplx2_blocked_houseqr
                 betahi_h,betalo_h,betahi_d,betalo_d,
                 sumshi_h,sumslo_h,sumshi_d,sumslo_d,
                 &sigmahi_h,&sigmalo_h,sigmahi_d,sigmalo_d,
-                houselapms,verbose);
+                houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
             GPU_cmplx2_medium_leftRupdate
                (nrows,ncols,szt,colidx,k,L,
@@ -4386,7 +4171,7 @@ void GPU_cmplx2_blocked_houseqr
                 RHdotvrehi_d,RHdotvrelo_d,RHdotvimhi_d,RHdotvimlo_d,
                 bRHvrehi_h,bRHvrelo_h,bRHvimhi_h,bRHvimlo_h,
                 bRHvrehi_d,bRHvrelo_d,bRHvimhi_d,bRHvimlo_d,
-                RHvlapms,tileRlapms,verbose);
+                RHvlapms,tileRlapms,addcnt,mulcnt,verbose);
          }
       }
       GPU_cmplx2_medium_VB_to_W
@@ -4396,47 +4181,47 @@ void GPU_cmplx2_blocked_houseqr
           WYTrehi_h,WYTrelo_h,WYTimhi_h,WYTimlo_h,
           WYTrehi_d,WYTrelo_d,WYTimhi_d,WYTimlo_d,
           betahi_h,betalo_h,betahi_d,betalo_d,
-          vb2Wlapms,addcnt,mulcnt,divcnt,verbose);
+          vb2Wlapms,addcnt,mulcnt,verbose);
 /*
-      GPU_cmplx2_VB_to_W(nrows-k*szt,szt,szt,
-          Vrehi_h,Vrelo_h,Vimhi_h,Vimlo_h,Vrehi_d,Vrelo_d,Vimhi_d,Vimlo_d,
-          Wrehi_h,Wrelo_h,Wimhi_h,Wimlo_h,Wrehi_d,Wrelo_d,Wimhi_d,Wimlo_d,
-          betahi_h,betalo_h,betahi_d,betalo_d,vb2Wlapms,verbose);
-      GPU_cmplx2_small_WYT(nrows-k*szt,szt,
+      GPU_cmplx2_small_WYH(nrows-k*szt,szt,
             Wrehi_d,  Wrelo_d,  Wimhi_d,  Wimlo_d,
             Vrehi_d,  Vrelo_d,  Vimhi_d,  Vimlo_d,
           WYTrehi_d,WYTrelo_d,WYTimhi_d,WYTimlo_d,
           WYTrehi_h,WYTrelo_h,WYTimhi_h,WYTimlo_h,WYHlapms,verbose);
  */
-      GPU_cmplx2_small_QWYT(nrows,szt,k,
+      GPU_cmplx2_small_QWYH(nrows,szt,k,
              Qrehi_d,   Qrelo_d,   Qimhi_d,   Qimlo_d,
            WYTrehi_d, WYTrelo_d, WYTimhi_d, WYTimlo_d,
           QWYTrehi_d,QWYTrelo_d,QWYTimhi_d,QWYTimlo_d,
           QWYTrehi_h,QWYTrelo_h,QWYTimhi_h,QWYTimlo_h,
-             Qrehi_h,   Qrelo_h,   Qimhi_h,   Qimlo_h, QWYHlapms,verbose);
+             Qrehi_h,   Qrelo_h,   Qimhi_h,   Qimlo_h,
+          QWYHlapms,addcnt,mulcnt,verbose);
       GPU_cmplx2_small_Qupdate
          (nrows,szt,k,Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
           QWYTrehi_d,QWYTrelo_d,QWYTimhi_d,QWYTimlo_d,
-          Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,Qaddlapms,verbose);
+          Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,Qaddlapms,addcnt,verbose);
       if(k < nbt-1)                              // update R
       {
-         GPU_cmplx2_small_YWT
+         GPU_cmplx2_small_YWH
             (nrows,szt,k,
                Vrehi_d,  Vrelo_d,  Vimhi_d,  Vimlo_d,
                Wrehi_d,  Wrelo_d,  Wimhi_d,  Wimlo_d,
              YWTrehi_d,YWTrelo_d,YWTimhi_d,YWTimlo_d,
-             YWTrehi_h,YWTrelo_h,YWTimhi_h,YWTimlo_h,YWHlapms,verbose);
-         GPU_cmplx2_small_YWTC
+             YWTrehi_h,YWTrelo_h,YWTimhi_h,YWTimlo_h,
+             YWHlapms,addcnt,mulcnt,verbose);
+         GPU_cmplx2_small_YWHC
             (nrows,ncols,szt,k,
               YWTrehi_d, YWTrelo_d, YWTimhi_d, YWTimlo_d,
                 Arehi_d,   Arelo_d,   Aimhi_d,   Aimlo_d,
              YWTCrehi_d,YWTCrelo_d,YWTCimhi_d,YWTCimlo_d,
-             YWTCrehi_h,YWTCrelo_h,YWTCimhi_h,YWTCimlo_h,YWHClapms,verbose);
-         GPU_cmplx2_small_R_add_YWTC
+             YWTCrehi_h,YWTCrelo_h,YWTCimhi_h,YWTCimlo_h,
+             YWHClapms,addcnt,mulcnt,verbose);
+         GPU_cmplx2_small_R_add_YWHC
             (nrows,ncols,szt,k,
                 Arehi_d,   Arelo_d,   Aimhi_d,   Aimlo_d,
              YWTCrehi_d,YWTCrelo_d,YWTCimhi_d,YWTCimlo_d,
-                Arehi_h,   Arelo_h,   Aimhi_h,   Aimlo_h,Raddlapms,verbose);
+                Arehi_h,   Arelo_h,   Aimhi_h,   Aimlo_h,
+             Raddlapms,addcnt,verbose);
       }
    }
    gettimeofday(&endtime,0);

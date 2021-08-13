@@ -666,7 +666,7 @@ __global__ void dbl2_initialize_WYT
  *   WYTlo    low doubles of w*y^T,
  *            where y and w are the first columns of V and W. */
 
-__global__ void cmplx2_initialize_WYT
+__global__ void cmplx2_initialize_WYH
  ( int dim, int szt,
    double *Vrehi, double *Vrelo, double *Vimhi, double *Vimlo,
    double *Wrehi, double *Wrelo, double *Wimhi, double *Wimlo,
@@ -886,7 +886,7 @@ __global__ void dbl2_small_WYT
  *   WYThi    high doubles of the product of W with Y^T;
  *   WYTlo    low doubles of the product of W with Y^T. */
 
-__global__ void cmplx2_small_WYT
+__global__ void cmplx2_small_WYH
  ( int nrows, int szt,
    double *Wrehi, double *Wrelo, double *Wimhi, double *Wimlo,
    double *Yrehi, double *Yrelo, double *Yimhi, double *Yimlo,
@@ -947,7 +947,7 @@ __global__ void dbl2_small_QWYT
  *   QWYThi   high doubles of the product of Q with QWYT;
  *   QWYTlo   low doubles of the product of Q with QWYT. */
 
-__global__ void cmplx2_small_QWYT
+__global__ void cmplx2_small_QWYH
  ( int dim, int rowdim, int szt, int coloff,
    double *Qrehi, double *Qrelo, double *Qimhi, double *Qimlo,
    double *WYTrehi, double *WYTrelo, double *WYTimhi, double *WYTimlo,
@@ -1007,7 +1007,7 @@ __global__ void dbl2_small_YWTC
  *   YWTChi   high doubles of the product of YWT with C;
  *   YWTClo   low doubles of the product of YWT with C. */
 
-__global__ void cmplx2_small_YWTC
+__global__ void cmplx2_small_YWHC
  ( int nrows, int ncols, int rowdim, int coldim, int szt,
    int rowoff, int coloff,
    double *YWTrehi, double *YWTrelo, double *YWTimhi, double *YWTimlo,
@@ -1114,7 +1114,7 @@ __global__ void dbl2_small_R_add_YWTC
  *   Rhi      high doubles of R + YWTC;
  *   Rlo      low doubles of R + YWTC. */
 
-__global__ void cmplx2_small_R_add_YWTC
+__global__ void cmplx2_small_R_add_YWHC
  ( int nrows, int coldim, int szt, int rowoff, int coloff,
    double *Rrehi, double *Rrelo, double *Rimhi, double *Rimlo, 
    double *YWTCrehi, double *YWTCrelo, double *YWTCimhi, double *YWTCimlo );
@@ -1149,7 +1149,8 @@ void GPU_dbl2_small_house
    double *Ahi_h, double *Alo_h, double *Ahi_d, double *Alo_d,
    double *vhi_h, double *vlo_h, double *Vhi_d, double *Vlo_d,
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, long long int *div,
+   long long int *sqrtfun, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the Householder vector for small
@@ -1176,6 +1177,10 @@ void GPU_dbl2_small_house
  *   betalo_h has space for the low doubles of the betas if verbose;
  *   betahi_d has space on the device for the high doubles of the betas;
  *   betalo_d has space on the device for the low doubles of the betas;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
+ *   sqrtfun  current number of calls to sqrt();
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1191,7 +1196,11 @@ void GPU_dbl2_small_house
  *            if verbose;
  *   betahi_d has the high double of the next beta constant;
  *   betalo_d has the low double of the next beta constant;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions;
+ *   sqrtfun  accumulated number of calls to sqrt(). */
 
 void GPU_cmplx2_small_house
  ( int nrows, int ncols, int szt, int nbt,
@@ -1201,7 +1210,8 @@ void GPU_cmplx2_small_house
    double *vrehi_h, double *vrelo_h, double *vimhi_h, double *vimlo_h,
    double *Vrehi_d, double *Vrelo_d, double *Vimhi_d, double *Vimlo_d,
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, long long int *div,
+   long long int *sqrtfun, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the Householder vector for small
@@ -1244,6 +1254,10 @@ void GPU_cmplx2_small_house
  *   betalo_h has space for the low doubles of betas if verbose;
  *   betahi_d has space on the device for the high doubles of the betas;
  *   betalo_d has space on the device for the low doubles of the betas;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
+ *   sqrtfun  current number of calls to sqrt();
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1257,7 +1271,11 @@ void GPU_cmplx2_small_house
  *   betalo_h has the low doubles of the updated vector of betas, if verbose;
  *   betahi_d has the high doubles of the next beta constant;
  *   betalo_d has the low doubles of the next beta constant;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions;
+ *   sqrtfun  accumulated number of calls to sqrt(). */
 
 void GPU_dbl2_large_house
  ( int nrows, int ncols, int szt, int nbt,
@@ -1267,7 +1285,8 @@ void GPU_dbl2_large_house
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
    double *sumshi_h, double *sumslo_h, double *sumshi_d, double *sumslo_d,
    double *sigmahi_h, double *sigmalo_h, double *sigmahi_d, double *sigmalo_d,
-   double *lapms, bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, long long int *div,
+   long long int *sqrtfun, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernels to compute the Householder vector for matrices
@@ -1300,6 +1319,10 @@ void GPU_dbl2_large_house
  *   sumslo_h has space for the low doubles of sums, if verbose;
  *   sumshi_d has space for the high doubles of sums, on the device;
  *   sumslo_d has space for the low doubles of sums, on the device;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
+ *   sqrtfun  current number of calls to sqrt();
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1323,7 +1346,11 @@ void GPU_dbl2_large_house
  *   sigmalo_h is the low double of sigma, on the host;
  *   sigmahi_d is the high double of sigma, on the device;
  *   sigmalo_d is the low double of sigma, on the device;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions;
+ *   sqrtfun  accumulated number of calls to sqrt(). */
 
 void GPU_cmplx2_large_house
  ( int nrows, int ncols, int szt, int nbt,
@@ -1335,7 +1362,8 @@ void GPU_cmplx2_large_house
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
    double *sumshi_h, double *sumslo_h, double *sumshi_d, double *sumslo_d,
    double *sigmahi_h, double *sigmalo_h, double *sigmahi_d, double *sigmalo_d,
-   double *lapms, bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, long long int *div,
+   long long int *sqrtfun, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernels to compute the Householder vector for matrices
@@ -1372,6 +1400,10 @@ void GPU_cmplx2_large_house
  *   sumslo_h has space for the low doubles of sums, if verbose;
  *   sumshi_d has space for the high doubles of sums, on the device;
  *   sumslo_d has space for the low doubles of sums, on the device;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   div      current number of divisions;
+ *   sqrtfun  current number of calls to sqrt();
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1405,14 +1437,18 @@ void GPU_cmplx2_large_house
  *   sigmalo_h is the low double of sigma, on the host;
  *   sigmahi_d is the high double of sigma, on the device;
  *   sigmalo_d is the low double of sigma, on the device;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions;
+ *   sqrtfun  accumulated number of calls to sqrt(). */
 
 void GPU_dbl2_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *Ahi_h, double *Alo_h, double *Ahi_d, double *Alo_d,
    double *Vhi_d, double *Vlo_d,
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update one tile.
@@ -1436,6 +1472,8 @@ void GPU_dbl2_small_leftRupdate
  *   betalo_h has space allocated for the betas if verbose;
  *   betahi_d has space allocated on the device for the betas;
  *   betalo_d has space allocated on the device for the betas;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1443,7 +1481,9 @@ void GPU_dbl2_small_leftRupdate
  *   Alo_d    low doubles of the reduced matrix on the device;
  *   Ahi_h    high doubles of the reduced matrix on the host, if verbose;
  *   Alo_h    low doubles of the reduced matrix on the host, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx2_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
@@ -1451,7 +1491,7 @@ void GPU_cmplx2_small_leftRupdate
    double *Arehi_d, double *Arelo_d, double *Aimhi_d, double *Aimlo_d,
    double *Vrehi_d, double *Vrelo_d, double *Vimhi_d, double *Vimlo_d,
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update one tile.
@@ -1485,6 +1525,8 @@ void GPU_cmplx2_small_leftRupdate
  *   betalo_h has space for the low doubles of the betas if verbose;
  *   betahi_d has space on the device for the high doubles of the betas;
  *   betalo_d has space on the device for the low doubles of the betas;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1500,7 +1542,9 @@ void GPU_cmplx2_small_leftRupdate
  *   betalo_h has the vector of low doubles of the betas, if verbose;
  *   betahi_d has the high doubles of the next beta constant;
  *   betalo_d has the low doubles of the next beta constant;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
 
 void GPU_dbl2_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
@@ -1510,7 +1554,8 @@ void GPU_dbl2_medium_leftRupdate
    double *RTdotvhi_h, double *RTdotvlo_h,
    double *RTdotvhi_d, double *RTdotvlo_d,
    double *whi_h, double *wlo_h, double *whi_d, double *wlo_d,
-   double *RTvlapms, double *redlapms, bool verbose=true );
+   double *RTvlapms, double *redlapms,
+   long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernels to update one tile, on real data.
@@ -1552,6 +1597,8 @@ void GPU_dbl2_medium_leftRupdate
  *            if verbose;
  *   whi_d    space for the high doubles of beta*R^T*v plus szt padding;
  *   wlo_d    space for the low doubles of beta*R^T*v plus szt padding;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1572,7 +1619,9 @@ void GPU_dbl2_medium_leftRupdate
  *   whi_h    stores the high doubles of beta*R^T*v, if verbose;
  *   wlo_h    stores the low doubles of beta*R^T*v, if verbose;
  *   RTvlapms is the elapsed time spent to compute beta*R^T*v;
- *   redlapms is the elapsed time spent to reduce one tile. */
+ *   redlapms is the elapsed time spent to reduce one tile;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx2_medium_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
@@ -1580,13 +1629,14 @@ void GPU_cmplx2_medium_leftRupdate
    double *Arehi_d, double *Arelo_d, double *Aimhi_d, double *Aimlo_d,
    double *Vrehi_d, double *Vrelo_d, double *Vimhi_d, double *Vimlo_d,
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *RTdotvrehi_h, double *RTdotvrelo_h,
-   double *RTdotvimhi_h, double *RTdotvimlo_h,
-   double *RTdotvrehi_d, double *RTdotvrelo_d,
-   double *RTdotvimhi_d, double *RTdotvimlo_d,
+   double *RHdotvrehi_h, double *RHdotvrelo_h,
+   double *RHdotvimhi_h, double *RHdotvimlo_h,
+   double *RHdotvrehi_d, double *RHdotvrelo_d,
+   double *RHdotvimhi_d, double *RHdotvimlo_d,
    double *wrehi_h, double *wrelo_h, double *wimhi_h, double *wimlo_h,
    double *wrehi_d, double *wrelo_d, double *wimhi_d, double *wimlo_d,
-   double *RHvlapms, double *redlapms, bool verbose=true );
+   double *RHvlapms, double *redlapms,
+   long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernels to update one tile, on complex data.
@@ -1654,6 +1704,8 @@ void GPU_cmplx2_medium_leftRupdate
  *            plus szt padding;
  *   wimlo_d  space for the low doubles of the imaginary parts of beta*R^H*v,
  *            plus szt padding;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1688,145 +1740,9 @@ void GPU_cmplx2_medium_leftRupdate
  *   wimlo_h  stores the low doubles of the imaginary parts of beta*R^H*v,
  *            if verbose;
  *   RHvlapms is the elapsed time spent to compute beta*R^H*v;
- *   redlapms is the elapsed time spent to reduce one tile. */
-
-void GPU_dbl2_VB_to_W
- ( int nrows, int ncols, int szt,
-   double *Vhi_h, double *Vlo_h, double *Vhi_d, double *Vlo_d,
-   double *Whi_h, double *Wlo_h, double *Whi_d, double *Wlo_d,
-   double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, bool verbose=true );
-/*
- * DESCRIPTION :
- *   Calls the kernel to compute the W in the WY representation.
- *   Wraps the timer and the print statements if verbose.
- *   If verbose, then the W matrix is returned on the host.
- *
- * ON ENTRY :
- *   nrows    number of rows in the matrices V, Y, and W;
- *   ncols    equals the size of one tile, or equivalently,
- *            is the number of elements in B,
- *            and the number of columns in V, Y, and W;
- *   Vhi_h    space for the Householder vectors, if verbose;
- *   Vlo_h    space for the Householder vectors, if verbose;
- *   Vhi_d    space for V on the device;
- *   Vlo_d    space for V on the device;
- *   Whi_h    space for the W matrix, if verbose;
- *   Wlo_h    space for the W matrix, if verbose;
- *   Whi_d    space for W on the device;
- *   Wlo_d    space for W on the device;
- *   betahi_h has space for the betas if verbose;
- *   betalo_h has space for the betas if verbose;
- *   betahi_d has space on the device for the betas;
- *   betalo_d has space on the device for the betas;
- *   verbose  is the verbose flag.
- *
- * ON RETURN :
- *   Vhi_h    equals the high doubles of the Y matrix, if verbose;
- *   Vlo_h    equals the low doubles of the Y matrix, if verbose;
- *   Vhi_d    high doubles of the Y matrix on the device;
- *   Vlo_d    low doubles of the Y matrix on the device;
- *   Whi_d    high doubles of the W matrix in the WY representation,
- *            on the device;
- *   Wlo_d    low doubles of the W matrix in the WY representation,
- *            on the device;
- *   Whi_h    high doubles of the W matrix in the WY representation,
- *            if verbose;
- *   Wlo_h    low doubles of the W matrix in the WY representation,
- *            if verbose;
- *   lapms    elapsed time spent by the kernel. */
-
-void GPU_cmplx2_VB_to_W
- ( int nrows, int ncols, int szt,
-   double *Vrehi_h, double *Vrelo_h, double *Vimhi_h, double *Vimlo_h,
-   double *Vrehi_d, double *Vrelo_d, double *Vimhi_d, double *Vimlo_d,
-   double *Wrehi_h, double *Wrelo_h, double *Wimhi_h, double *Wimlo_h,
-   double *Wrehi_d, double *Wrelo_d, double *Wimhi_d, double *Wimlo_d,
-   double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, bool verbose=true );
-/*
- * DESCRIPTION :
- *   Calls the kernel to compute the W in the WY representation.
- *   Wraps the timer and the print statements if verbose.
- *   If verbose, then the W matrix is returned on the host.
- *
- * ON ENTRY :
- *   nrows    number of rows in the matrices V, Y, and W;
- *   ncols    equals the size of one tile, or equivalently,
- *            is the number of elements in B,
- *            and the number of columns in V, Y, and W;
- *   Vrehi_h  has space for the high doubles of the real parts
- *            of the Householder vectors, if verbose;
- *   Vrelo_h  has space for the low doubles of the real parts
- *            of the Householder vectors, if verbose;
- *   Vimhi_h  has space for the high doubles of the imaginary parts
- *            of the Householder vectors, if verbose;
- *   Vimlo_h  has space for the low doubles of the imaginary parts
- *            of the Householder vectors, if verbose;
- *   Vrehi_d  has space for the high doubles of the the real parts of V
- *            on the device;
- *   Vrelo_d  has space for the low doubles of the real parts of V
- *            on the device;
- *   Vimhi_d  has space for the high doubles of the imaginary parts of V
- *            on the device;
- *   Vimlo_d  has space for the low doubles of the imaginary parts of V
- *            on the device;
- *   Wrehi_h  has space for the high doubles of the real parts of W,
- *            if verbose;
- *   Wrelo_h  has space for the low doubles of the real parts of W,
- *            if verbose;
- *   Wimhi_h  has space for the high doubles of the imaginary parts of W,
- *            if verbose;
- *   Wimlo_h  has space for the low doubles of the imaginary parts of W,
- *            if verbose;
- *   Wrehi_d  has space for the high doubles of the real parts of W,
- *            on the device;
- *   Wrelo_d  has space for the low doubles of the real parts of W,
- *            on the device;
- *   Wimhi_d  has space for the high doubles of the imaginary parts of W,
- *            on the device;
- *   Wimlo_d  has space for the low doubles of the imaginary parts of W,
- *            on the device;
- *   betahi_h has space for the high doubles of the betas if verbose;
- *   betalo_h has space for the low doubles of the betas if verbose;
- *   betahi_d has space on the device for the high doubles of the betas;
- *   betalo_d has space on the device for the low doubles of the betas;
- *   verbose  is the verbose flag.
- *
- * ON RETURN :
- *   Vrehi_h  equals the high doubles of the real parts of the Y matrix,
- *            if verbose;
- *   Vrelo_h  equals the low doubles of the real parts of the Y matrix,
- *            if verbose;
- *   Vimhi_h  equals the high doubles of the imaginary parts of the Y matrix,
- *            if verbose;
- *   Vimlo_h  equals the low doubles of the imaginary parts of the Y matrix,
- *            if verbose;
- *   Vrehi_d  has the high doubles of the real parts of the Y matrix,
- *            on the device;
- *   Vrelo_d  has the low doubles of the real parts of the Y matrix,
- *            on the device;
- *   Vimhi_d  has the high doubles of the imaginary parts of the Y matrix,
- *            on the device;
- *   Vimlo_d  has the low doubles of the imaginary parts of the Y matrix,
- *            on the device;
- *   Wrehi_d  has the high doubles of the real parts of the W matrix,
- *            on the device;
- *   Wrelo_d  has the low doubles of the real parts of the W matrix,
- *            on the device;
- *   Wimhi_d  has the high doubles of the imaginary parts of the W matrix,
- *            on the device;
- *   Wimlo_d  has the low doubles of the imaginary parts of the W matrix,
- *            on the device;
- *   Wrehi_h  has the high doubles of the real parts of the W matrix,
- *            if verbose;
- *   Wrelo_h  has the low doubles of the real parts of the W matrix,
- *            if verbose;
- *   Wimhi_h  has the high doubles of the imaginary parts of the W matrix,
- *            if verbose;
- *   Wimlo_h  has the low doubles of the imaginary parts of the W matrix,
- *            if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   redlapms is the elapsed time spent to reduce one tile;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
 
 void GPU_dbl2_medium_VB_to_W
  ( int nrows, int ncols, int szt, int idx,
@@ -1834,8 +1750,7 @@ void GPU_dbl2_medium_VB_to_W
    double *Whi_h, double *Wlo_h, double *Whi_d, double *Wlo_d,
    double *WYThi_h, double *WYTlo_h, double *WYThi_d, double *WYTlo_d,
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, long int *add, long int *mul, long int *div,
-   bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the W in the WY representation,
@@ -1868,7 +1783,6 @@ void GPU_dbl2_medium_VB_to_W
  *   betalo_d has space on the device for the betas;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -1886,8 +1800,7 @@ void GPU_dbl2_medium_VB_to_W
  *   WYTlo_d  low doubles of W*Y^T, on the device;
  *   lapms    elapsed time spent by the kernel;
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx2_medium_VB_to_W
  ( int nrows, int ncols, int szt, int idx,
@@ -1898,8 +1811,7 @@ void GPU_cmplx2_medium_VB_to_W
    double *WYHrehi_h, double *WYHrelo_h, double *WYHimhi_h, double *WYHimlo_h,
    double *WYHrehi_d, double *WYHrelo_d, double *WYHimhi_d, double *WYHimlo_d,
    double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, long int *add, long int *mul, long int *div,
-   bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute the W in the WY representation,
@@ -1964,7 +1876,6 @@ void GPU_cmplx2_medium_VB_to_W
  *   betalo_d has space on the device for the betas;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
- *   div      current number of divisions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -2004,8 +1915,7 @@ void GPU_cmplx2_medium_VB_to_W
  *            on the device;
  *   lapms    elapsed time spent by the kernel;
  *   add      accumulated number of additions and subtractions;
- *   mul      accumulated number of multiplications;
- *   div      accumulated number of divisions. */
+ *   mul      accumulated number of multiplications. */
 
 void GPU_dbl2_small_WYT
  ( int nrows, int szt,
@@ -2099,7 +2009,7 @@ void GPU_dbl2_small_YWT
  ( int nrows, int szt, int idx,
    double *Yhi_d, double *Ylo_d, double *Whi_d, double *Wlo_d,
    double *YWThi_d, double *YWTlo_d, double *YWThi_h, double *YWTlo_h,
-   double *lapms, bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute W*Y^T.
@@ -2118,6 +2028,8 @@ void GPU_dbl2_small_YWT
  *   YWTlo_d  space for an nrows-by-nrows matrix on the device;
  *   YWThi_h  space for an nrows-by-nrows matrix on the host, if verbose;
  *   YWTlo_h  space for an nrows-by-nrows matrix on the host, if verbose;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -2125,13 +2037,65 @@ void GPU_dbl2_small_YWT
  *   YWTlo_d  low doubles of the product Y*W^T on the device;
  *   YWThi_h  high doubles of the product Y*W^T, if verbose;
  *   YWTlo_h  low doubles of the product Y*W^T, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
+
+void GPU_cmplx2_small_YWT
+ ( int nrows, int szt, int idx,
+   double *Yrehi_d, double *Yrelo_d, double *Yimhi_d, double *Yimlo_d,
+   double *Wrehi_d, double *Wrelo_d, double *Wimhi_d, double *Wimlo_d,
+   double *YWTrehi_d, double *YWTrelo_d, double *YWTimhi_d, double *YWTimlo_d,
+   double *YWTrehi_h, double *YWTrelo_h, double *YWTimhi_h, double *YWTimlo_h,
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Calls the kernel to compute W*Y^H.
+ *   Wraps the timer and the print statements if verbose.
+ *   If verbose, then the W*Y^H matrix is returned.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in all matrices;
+ *   szt      size of one tile and the number of threads in a block;
+ *   idx      index of the current tile;
+ *   Yrehi_d  high doubles of the real parts of Householder vectors;
+ *   Yrelo_d  low doubles of the real parts of Householder vectors;
+ *   Yimhi_d  high doubles of the imaginary parts of Householder vectors;
+ *   Yimlo_d  low doubles of the imaginary parts of Householder vectors;
+ *   Wrehi_d  high doubles of the real parts of the matrix W;
+ *   Wrelo_d  low doubles of the real parts of the matrix W; 
+ *   Wimhi_d  high doubles of the imaginary parts of the matrix W;
+ *   Wimlo_d  low doubles of the imaginary parts of the matrix W;
+ *   YWHrehi_d has space for an nrows-by-nrows matrix on the device;
+ *   YWHrelo_d has space for an nrows-by-nrows matrix on the device;
+ *   YWHimhi_d has space for an nrows-by-nrows matrix on the device;
+ *   YWHimlo_d has space for an nrows-by-nrows matrix on the device;
+ *   YWHrehi_h has space for an nrows-by-nrows matrix on the host, if verbose;
+ *   YWHrelo_h has space for an nrows-by-nrows matrix on the host, if verbose;
+ *   YWHimhi_h has space for an nrows-by-nrows matrix on the host, if verbose;
+ *   YWHimlo_h has space for an nrows-by-nrows matrix on the host, if verbose;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   YWHrehi_d are the high doubles of the real parts of Y*W^H on the device;
+ *   YWHrelo_d are the low doubles of the real parts of on the device;
+ *   YWHimhi_d are the high doubles of imaginary parts of Y*W^H on the device;
+ *   YWHimlo_d are the low doubles of imaginary parts of Y*W^H on the device;
+ *   YWHrehi_h are the high doubles of the real parts of Y*W^H, if verbose;
+ *   YWHrelo_h are the low doubles of the real parts of Y*W^H, if verbose;
+ *   YWHimhi_h are the high doubles of imaginary parts of Y*W^H, if verbose;
+ *   YWHimlo_h are the low doubles of imaginary parts of Y*W^H, if verbose;
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
 
 void GPU_dbl2_small_QWYT
  ( int dim, int szt, int idx, double *Qhi_d, double *Qlo_d,
    double *WYThi_d, double *WYTlo_d, double *QWYThi_d, double *QWYTlo_d,
    double *QWYThi_h, double *QWYTlo_h, double *Qhi_h, double *Qlo_h,
-   double *lapms, bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute Q*WYT.
@@ -2152,6 +2116,8 @@ void GPU_dbl2_small_QWYT
  *   QWYTlo_h has space for the product Q*WYT, on the host, if verbose;
  *   Qhi_h    if verbose, then used to print Q before the product;
  *   Qlo_h    if verbose, then used to print Q before the product;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -2159,7 +2125,9 @@ void GPU_dbl2_small_QWYT
  *   QWYTlo_d has the low doubles of the product Q*WYT on the device;
  *   QWYThi_h has the high doubles of the product Q*WYT, if verbose;
  *   QWYTlo_h has the low doubles of the product Q*WYT, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx2_small_QWYT
  ( int dim, int szt, int idx,
@@ -2170,7 +2138,7 @@ void GPU_cmplx2_small_QWYT
    double *QWYTrehi_h, double *QWYTrelo_h,
    double *QWYTimhi_h, double *QWYTimlo_h,
    double *Qrehi_h, double *Qrelo_h, double *Qimhi_h, double *Qimlo_h,
-   double *lapms, bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute Q*WYT.
@@ -2219,6 +2187,8 @@ void GPU_cmplx2_small_QWYT
  *            of the imaginary parts of Q;
  *   Qimlo_h  if verbose, then used to print the low doubles
  *            of the imaginary parts of Q;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -2234,12 +2204,15 @@ void GPU_cmplx2_small_QWYT
  *            if verbose;
  *   QWYTimlo_h are the low doubles of the imaginary parts of Q*WYT,
  *            if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
 
 void GPU_dbl2_small_YWTC
  ( int nrows, int ncols, int szt, int idx, double *YWThi_d, double *YWTlo_d,
    double *Chi_d, double *Clo_d, double *YWTChi_d, double *YWTClo_d,
-   double *YWTChi_h, double *YWTClo_h, double *lapms, bool verbose=true );
+   double *YWTChi_h, double *YWTClo_h,
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute YWT*C.
@@ -2260,6 +2233,8 @@ void GPU_dbl2_small_YWTC
  *   YWTClo_d has space for the product YWT*C, on the device;
  *   YWTChi_h has space for the product YWT*C, on the host, if verbose;
  *   YWTClo_h has space for the product YWT*C, on the host, if verbose;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -2267,7 +2242,9 @@ void GPU_dbl2_small_YWTC
  *   YWTClo_d has the low doubles of the product YWT*C on the device;
  *   YWTChi_h has the high doubles of the product YWT*C, if verbose;
  *   YWTClo_h has the low doubles of the product YWT*C, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx2_small_YWTC
  ( int nrows, int ncols, int szt, int idx,
@@ -2277,7 +2254,7 @@ void GPU_cmplx2_small_YWTC
    double *YWTCimhi_d, double *YWTCimlo_d,
    double *YWTCrehi_h, double *YWTCrelo_h,
    double *YWTCimhi_h, double *YWTCimlo_h,
-   double *lapms, bool verbose=true );
+   double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to compute YWT*C.
@@ -2320,6 +2297,8 @@ void GPU_cmplx2_small_YWTC
  *            on the host, if verbose;
  *   YWTCimlo_h has space for the low doubles of the imaginary parts of YWT*C,
  *            on the host, if verbose;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -2335,12 +2314,15 @@ void GPU_cmplx2_small_YWTC
  *            if verbose;
  *   YWTCimlo_h are the low doubles of the imaginary parts of YWT*C,
  *            if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
 
 void GPU_dbl2_small_Qupdate
  ( int dim, int szt, int idx,
    double *Qhi_d, double *Qlo_d, double *QWYThi_d, double *QWYTlo_d,
-   double *Qhi_h, double *Qlo_h, double *lapms, bool verbose=true );
+   double *Qhi_h, double *Qlo_h,
+   double *lapms, long long int *add, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update Q as Q + QWYT.
@@ -2356,6 +2338,7 @@ void GPU_dbl2_small_Qupdate
  *   Qlo_d    a dim-by-dim matrix, on the device;
  *   QWYThi_d has the high doubles of the product Q*W*Y^T, on the device;
  *   QWYTlo_d has the low doubles of the product Q*W*Y^T, on the device;
+ *   add      current number of additions and subtractions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -2363,7 +2346,8 @@ void GPU_dbl2_small_Qupdate
  *   Qlo_d    low doubles of the updated Q on the device;
  *   Qhi_h    high doubles of the updated Q, if verbose;
  *   Qlo_h    low doubles of the updated Q, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions. */
 
 void GPU_cmplx2_small_Qupdate
  ( int dim, int szt, int idx,
@@ -2371,7 +2355,7 @@ void GPU_cmplx2_small_Qupdate
    double *QWYTrehi_d, double *QWYTrelo_d,
    double *QWYTimhi_d, double *QWYTimlo_d,
    double *Qrehi_h, double *Qrelo_h, double *Qimhi_h, double *Qimlo_h,
-   double *lapms, bool verbose=true );
+   double *lapms, long long int *add, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update Q as Q + QWYT.
@@ -2396,6 +2380,7 @@ void GPU_cmplx2_small_Qupdate
  *            on the device;
  *   QWYTimlo_d are the low doubles of the imaginary parts of Q*W*Y^T,
  *            on the device;
+ *   add      current number of additions and subtractions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -2409,12 +2394,13 @@ void GPU_cmplx2_small_Qupdate
  *   Qrelo_h  low doubles of the real parts of the updated Q, if verbose;
  *   Qimhi_h  high doubles of the imaginary parts of the updated Q, if verbose;
  *   Qimlo_h  low doubles of the imaginary parts of the updated Q, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions. */
 
 void GPU_dbl2_small_R_add_YWTC
  ( int nrows, int ncols, int szt, int idx, double *Rhi_d, double *Rlo_d,
    double *YWTChi_d, double *YWTClo_d, double *Rhi_h, double *Rlo_h,
-   double *lapms, bool verbose=true );
+   double *lapms, long long int *add, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update R as R + YWTC.
@@ -2430,6 +2416,7 @@ void GPU_dbl2_small_R_add_YWTC
  *   Rlo_d    an nrows-by-ncols matrix, on the device;
  *   YWTChi_d has the high doubles of the product Y*W^T*C, on the device;
  *   YWTClo_d has the low doubles of the product Y*W^T*C, on the device;
+ *   add      current number of additions and subtractions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -2437,7 +2424,8 @@ void GPU_dbl2_small_R_add_YWTC
  *   Rlo_d    low doubles of the updated R on the device;
  *   Rhi_h    high doubles of the updated R, if verbose;
  *   Rlo_h    low doubles of the updated R, if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions. */
 
 void GPU_cmplx2_small_R_add_YWTC
  ( int nrows, int ncols, int szt, int idx,
@@ -2445,7 +2433,7 @@ void GPU_cmplx2_small_R_add_YWTC
    double *YWTCrehi_d, double *YWTCrelo_d,
    double *YWTCimhi_d, double *YWTCimlo_d,
    double *Rrehi_h, double *Rrelo_h, double *Rimhi_h, double *Rimlo_h,
-   double *lapms, bool verbose=true );
+   double *lapms, long long int *add, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Calls the kernel to update R as R + YWTC.
@@ -2469,6 +2457,7 @@ void GPU_cmplx2_small_R_add_YWTC
  *            on the device;
  *   YWTCimlo_d are the low doubles of the imaginary parts of Y*W^T*C,
  *            on the device;
+ *   add      current number of additions and subtractions;
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
@@ -2484,7 +2473,8 @@ void GPU_cmplx2_small_R_add_YWTC
  *            if verbose;
  *   Rimlo_h  low doubles of the imaginary parts of the updated R,
  *            if verbose;
- *   lapms    elapsed time spent by the kernel. */
+ *   lapms    elapsed time spent by the kernel;
+ *   add      accumulated number of additions and subtractions. */
 
 void GPU_dbl2_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
@@ -2493,7 +2483,8 @@ void GPU_dbl2_blocked_houseqr
    double *houselapms, double *RTvlapms, double *tileRlapms,
    double *vb2Wlapms, double *WYTlapms, double *QWYTlapms, double *Qaddlapms,
    double *YWTlapms, double *YWTClapms, double *Raddlapms,
-   double *walltimesec, bool verbose=true );
+   double *walltimesec, long long int *addcnt, long long int *mulcnt,
+   long long int *divcnt, long long int *sqrtcnt, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
@@ -2540,7 +2531,11 @@ void GPU_dbl2_blocked_houseqr
  *            to compute the YWT*C product;
  *   Raddlapms is the elapsed time spent by the kernel
  *            to compute R by adding the Y*W^T*C matrix;
- *   walltimesec is the elapsed wall clock computation time. */
+ *   walltimesec is the elapsed wall clock computation time;
+ *   addcnt   counts the number of additions and subtractions;
+ *   mulcnt   counts the number of multiplications;
+ *   divcnt   counts the number of divisions;
+ *   sqrtcnt  counts the number of calls to sqrt(). */
 
 void GPU_cmplx2_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
@@ -2550,7 +2545,8 @@ void GPU_cmplx2_blocked_houseqr
    double *houselapms, double *RHvlapms, double *tileRlapms,
    double *vb2Wlapms, double *WYHlapms, double *QWYHlapms, double *Qaddlapms,
    double *YWHlapms, double *YWHClapms, double *Raddlapms,
-   double *walltimesec, bool verbose=true );
+   double *walltimesec, long long int *addcnt, long long int *mulcnt,
+   long long int *divcnt, long long int *sqrtcnt, bool verbose=true );
 /*
  * DESCRIPTION :
  *   Applies Householder transformations in a blocked manner
@@ -2611,6 +2607,10 @@ void GPU_cmplx2_blocked_houseqr
  *            to compute the YWH*C product;
  *   Raddlapms is the elapsed time spent by the kernel
  *            to compute R by adding the Y*W^H*C matrix;
- *   walltimesec is the elapsed wall clock computation time. */
+ *   walltimesec is the elapsed wall clock computation time;
+ *   addcnt   counts the number of additions and subtractions;
+ *   mulcnt   counts the number of multiplications;
+ *   divcnt   counts the number of divisions;
+ *   sqrtcnt  counts the number of calls to sqrt(). */
 
 #endif

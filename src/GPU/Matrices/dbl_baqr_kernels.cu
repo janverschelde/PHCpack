@@ -1258,8 +1258,7 @@ void GPU_cmplx_small_house
 void GPU_dbl_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1298,8 +1297,7 @@ void GPU_cmplx_small_leftRupdate
  ( int nrows, int ncols, int szt, int colidx, int k, int L,
    double *Are_h, double *Aim_h, double *Are_d, double *Aim_d,
    double *Vre_d, double *Vim_d, double *beta_h, double *beta_d,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1339,7 +1337,7 @@ void GPU_dbl_medium_leftRupdate
    double *A_h, double *A_d, double *V_d, double *beta_h, double *beta_d,
    double *RTdotv_h, double *RTdotv_d, double *w_h, double *w_d,
    double *RTvlapms, double *redlapms,
-   long long int *add, long long int *mul, long long int *div, bool verbose )
+   long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1451,7 +1449,7 @@ void GPU_cmplx_medium_leftRupdate
    double *RHdotvre_d, double *RHdotvim_d,
    double *wre_h, double *wim_h, double *wre_d, double *wim_d,
    double *RHvlapms, double *redlapms,
-   long long int *add, long long int *mul, long long int *div, bool verbose )
+   long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1658,8 +1656,7 @@ void GPU_dbl_medium_VB_to_W
  ( int nrows, int ncols, int szt, int idx,
    double *V_h, double *V_d, double *W_h, double *W_d,
    double *WYT_h, double *WYT_d, double *beta_h, double *beta_d,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1749,8 +1746,7 @@ void GPU_cmplx_medium_VB_to_W
    double *Wre_h, double *Wim_h, double *Wre_d, double *Wim_d,
    double *WYHre_h, double *WYHim_h, double *WYHre_d, double *WYHim_d,
    double *beta_h, double *beta_d,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1947,7 +1943,7 @@ void GPU_cmplx_small_WYH
 void GPU_dbl_small_YWT
  ( int nrows, int szt, int idx, double *Y_d, double *W_d, double *YWT_d,
    double *YWT_h, double *lapms, long long int *add, long long int *mul,
-   long long int *div, bool verbose )
+   bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1983,8 +1979,7 @@ void GPU_cmplx_small_YWH
  ( int nrows, int szt, int idx,
    double *Yre_d, double *Yim_d, double *Wre_d, double *Wim_d,
    double *YWHre_d, double *YWHim_d, double *YWHre_h, double *YWHim_h,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2024,7 +2019,7 @@ void GPU_cmplx_small_YWH
 void GPU_dbl_small_QWYT
  ( int dim, int szt, int idx, double *Q_d, double *WYT_d, double *QWYT_d,
    double *QWYT_h, double *Q_h, double *lapms,
-   long long int *add, long long int *mul, long long int *div, bool verbose )
+   long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2075,8 +2070,7 @@ void GPU_cmplx_small_QWYH
  ( int dim, int szt, int idx, double *Qre_d, double *Qim_d,
    double *WYHre_d, double *WYHim_d, double *QWYHre_d, double *QWYHim_d,
    double *QWYHre_h, double *QWYHim_h, double *Qre_h, double *Qim_h,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2136,8 +2130,7 @@ void GPU_cmplx_small_QWYH
 void GPU_dbl_small_YWTC
  ( int nrows, int ncols, int szt, int idx,
    double *YWT_d, double *C_d, double *YWTC_d, double *YWTC_h,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2203,8 +2196,7 @@ void GPU_cmplx_small_YWHC
  ( int nrows, int ncols, int szt, int idx,
    double *YWHre_d, double *YWHim_d, double *Cre_d, double *Cim_d,
    double *YWHCre_d, double *YWHCim_d, double *YWHCre_h, double *YWHCim_h,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose )
+   double *lapms, long long int *add, long long int *mul, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2273,8 +2265,7 @@ void GPU_cmplx_small_YWHC
 
 void GPU_dbl_small_Qupdate
  ( int dim, int szt, int idx, double *Q_d, double *QWYT_d, double *Q_h,
-   double *lapms, long long int *add, long long int *mul,
-   long long int *div, bool verbose )
+   double *lapms, long long int *add, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2310,8 +2301,7 @@ void GPU_dbl_small_Qupdate
 void GPU_cmplx_small_Qupdate
  ( int dim, int szt, int idx, double *Qre_d, double *Qim_d,
    double *QWYHre_d, double *QWYHim_d, double *Qre_h, double *Qim_h,
-   double *lapms, long long int *add, long long int *mul, long long int *div,
-   bool verbose )
+   double *lapms, long long int *add, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2351,8 +2341,7 @@ void GPU_cmplx_small_Qupdate
 
 void GPU_dbl_small_R_add_YWTC
  ( int nrows, int ncols, int szt, int idx, double *R_d, double *YWTC_d,
-   double *R_h, double *lapms, long long int *add, long long int *mul,
-   long long int *div, bool verbose )
+   double *R_h, double *lapms, long long int *add, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2391,7 +2380,7 @@ void GPU_cmplx_small_R_add_YWHC
  ( int nrows, int ncols, int szt, int idx,
    double *Rre_d, double *Rim_d, double *YWHCre_d, double *YWHCim_d,
    double *Rre_h, double *Rim_h, double *lapms,
-   long long int *add, long long int *mul, long long int *div, bool verbose )
+   long long int *add, bool verbose )
 {
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -2405,8 +2394,7 @@ void GPU_cmplx_small_R_add_YWHC
 
    cudaEventRecord(start);
    cmplx_small_R_add_YWHC<<<nbrblocks,szt>>>
-      (nrows,coldim,szt,rowoff,coloff,
-       Rre_d,Rim_d,YWHCre_d,YWHCim_d);
+      (nrows,coldim,szt,rowoff,coloff,Rre_d,Rim_d,YWHCre_d,YWHCim_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
@@ -2538,14 +2526,14 @@ void GPU_dbl_blocked_houseqr
          {
             GPU_dbl_small_leftRupdate
                (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
-                tileRlapms,addcnt,mulcnt,divcnt,verbose);
+                tileRlapms,addcnt,mulcnt,verbose);
          }
          else
          {
             GPU_dbl_medium_leftRupdate
                (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
                 RTdotv_h,RTdotv_d,bRTv_h,bRTv_d,
-                RTvlapms,tileRlapms,addcnt,mulcnt,divcnt,verbose);
+                RTvlapms,tileRlapms,addcnt,mulcnt,verbose);
          }
       }
 /*
@@ -2555,7 +2543,7 @@ void GPU_dbl_blocked_houseqr
  */
       GPU_dbl_medium_VB_to_W
          (nrows,szt,szt,k,V_h,V_d,W_h,W_d,WYT_h,WYT_d,beta_h,beta_d,
-          vb2Wlapms,addcnt,mulcnt,divcnt,verbose);
+          vb2Wlapms,addcnt,mulcnt,verbose);
       // update Q, WYT matrix has nrows - k*szt instead of nrows
 /*
       GPU_dbl_small_WYT
@@ -2564,20 +2552,18 @@ void GPU_dbl_blocked_houseqr
  */
       GPU_dbl_small_QWYT
          (nrows,szt,k,Q_d,WYT_d,QWYT_d,QWYT_h,Q_h,
-          QWYTlapms,addcnt,mulcnt,divcnt,verbose);
+          QWYTlapms,addcnt,mulcnt,verbose);
       GPU_dbl_small_Qupdate
-         (nrows,szt,k,Q_d,QWYT_d,Q_h,Qaddlapms,addcnt,mulcnt,divcnt,verbose);
+         (nrows,szt,k,Q_d,QWYT_d,Q_h,Qaddlapms,addcnt,verbose);
       if(k < nbt-1)                                           // update R
       {
          GPU_dbl_small_YWT
-            (nrows,szt,k,V_d,W_d,YWT_d,YWT_h,
-             YWTlapms,addcnt,mulcnt,divcnt,verbose);
+            (nrows,szt,k,V_d,W_d,YWT_d,YWT_h,YWTlapms,addcnt,mulcnt,verbose);
          GPU_dbl_small_YWTC
             (nrows,ncols,szt,k,YWT_d,A_d,YWTC_d,YWTC_h,
-             YWTClapms,addcnt,mulcnt,divcnt,verbose);
+             YWTClapms,addcnt,mulcnt,verbose);
          GPU_dbl_small_R_add_YWTC
-            (nrows,ncols,szt,k,A_d,YWTC_d,A_h,
-             Raddlapms,addcnt,mulcnt,divcnt,verbose);
+            (nrows,ncols,szt,k,A_d,YWTC_d,A_h,Raddlapms,addcnt,verbose);
       }
    }
    gettimeofday(&endtime,0);
@@ -2776,7 +2762,7 @@ void GPU_cmplx_blocked_houseqr
             GPU_cmplx_small_leftRupdate
                (nrows,ncols,szt,colidx,k,L,Are_h,Aim_h,Are_d,Aim_d,
                 Vre_d,Vim_d,beta_h,beta_d,tileRlapms,
-                addcnt,mulcnt,divcnt,verbose);
+                addcnt,mulcnt,verbose);
          }
          else
          {
@@ -2785,7 +2771,7 @@ void GPU_cmplx_blocked_houseqr
                 Vre_d,Vim_d,beta_h,beta_d,
                 RHdotvre_h,RHdotvim_h,RHdotvre_d,RHdotvim_d,
                 bRHvre_h,bRHvim_h,bRHvre_d,bRHvim_d,
-                RHvlapms,tileRlapms,addcnt,mulcnt,divcnt,verbose);
+                RHvlapms,tileRlapms,addcnt,mulcnt,verbose);
          }
       }
 /*
@@ -2797,7 +2783,7 @@ void GPU_cmplx_blocked_houseqr
       GPU_cmplx_medium_VB_to_W
          (nrows,szt,szt,k,Vre_h,Vim_h,Vre_d,Vim_d,Wre_h,Wim_h,Wre_d,Wim_d,
           WYTre_h,WYTim_h,WYTre_d,WYTim_d,beta_h,beta_d,
-          vb2Wlapms,addcnt,mulcnt,divcnt,verbose);
+          vb2Wlapms,addcnt,mulcnt,verbose);
 /*
       GPU_cmplx_small_WYT
          (nrows-k*szt,szt,Wre_d,Wim_d,Vre_d,Vim_d,WYTre_d,WYTim_d,
@@ -2805,23 +2791,22 @@ void GPU_cmplx_blocked_houseqr
  */
       GPU_cmplx_small_QWYH
          (nrows,szt,k,Qre_d,Qim_d,WYTre_d,WYTim_d,QWYTre_d,QWYTim_d,
-          QWYTre_h,QWYTim_h,Qre_h,Qim_h,QWYHlapms,
-          addcnt,mulcnt,divcnt,verbose);
+          QWYTre_h,QWYTim_h,Qre_h,Qim_h,QWYHlapms,addcnt,mulcnt,verbose);
       GPU_cmplx_small_Qupdate
          (nrows,szt,k,Qre_d,Qim_d,QWYTre_d,QWYTim_d,Qre_h,Qim_h,
-          Qaddlapms,addcnt,mulcnt,divcnt,verbose);
+          Qaddlapms,addcnt,verbose);
       if(k < nbt-1)                              // update R
       {
          GPU_cmplx_small_YWH
             (nrows,szt,k,Vre_d,Vim_d,Wre_d,Wim_d,YWTre_d,YWTim_d,
-             YWTre_h,YWTim_h,YWHlapms,addcnt,mulcnt,divcnt,verbose);
+             YWTre_h,YWTim_h,YWHlapms,addcnt,mulcnt,verbose);
          GPU_cmplx_small_YWHC
             (nrows,ncols,szt,k,YWTre_d,YWTim_d,Are_d,Aim_d,YWTCre_d,
              YWTCim_d,YWTCre_h,YWTCim_h,YWHClapms,
-             addcnt,mulcnt,divcnt,verbose);
+             addcnt,mulcnt,verbose);
          GPU_cmplx_small_R_add_YWHC
             (nrows,ncols,szt,k,Are_d,Aim_d,YWTCre_d,YWTCim_d,Are_h,Aim_h,
-             Raddlapms,addcnt,mulcnt,divcnt,verbose);
+             Raddlapms,addcnt,verbose);
       }
    }
    gettimeofday(&endtime,0);
