@@ -13,6 +13,7 @@
 #endif
 #include "dbl2_baqr_kernels.h"
 #include "double_double_functions.h"
+#include "dbl_baqr_flopcounts.h"
 
 using namespace std;
 
@@ -278,6 +279,13 @@ __global__ void dbl2_large_sum_of_squares
    }
 }
 
+void flopcount_dbl2_large_sum_of_squares
+ ( int nblocks, int szt, int sztLog2, long long int *add, long long int *mul )
+{
+   *add += nblocks*szt*sztLog2;
+   *mul += nblocks*szt;
+}
+
 __global__ void cmplx2_large_sum_of_squares
  ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
    double *sumshi, double *sumslo, int dim, int BS, int BSLog2 )
@@ -329,6 +337,13 @@ __global__ void cmplx2_large_sum_of_squares
    }
 }
 
+void flopcount_cmplx2_large_sum_of_squares
+ ( int nblocks, int szt, int sztLog2, long long int *add, long long int *mul )
+{
+   *add += nblocks*szt*(1+sztLog2);
+   *mul += 2*nblocks*szt;
+}
+
 __global__ void dbl2_sum_accumulator
  ( double *sumshi, double *sumslo, int nbsums, int nbsumsLog2,
    double *acchi, double *acclo )
@@ -366,6 +381,12 @@ __global__ void dbl2_sum_accumulator
    }
 }
 
+void flopcount_dbl2_sum_accumulator
+ ( int nbt, int nbtLog2, long long int *add )
+{
+   *add += nbt*nbtLog2;
+}
+
 __global__ void dbl2_normalize
  ( int dim, int szt, double *xhi, double *xlo, double *v0hi, double *v0lo,
    double *vhi, double *vlo )
@@ -392,6 +413,11 @@ __global__ void dbl2_normalize
       vhi[idx] = resulthi;    
       vlo[idx] = resultlo;    
    }
+}
+
+void flopcount_dbl2_normalize ( int nblocks, int szt, long long int *div )
+{
+   *div += nblocks*szt;
 }
 
 __global__ void cmplx2_normalize
@@ -439,6 +465,13 @@ __global__ void cmplx2_normalize
       vimhi[idx] = resultimhi;    
       vimlo[idx] = resultimlo;    
    }
+}
+
+void flopcount_cmplx2_normalize
+ ( int nblocks, int szt, long long int *add, long long int *mul )
+{
+   *add += 2*nblocks*szt;
+   *mul += 4*nblocks*szt;
 }
 
 __global__ void dbl2_small_leftRupdate
@@ -1684,6 +1717,7 @@ void GPU_dbl2_small_house
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
+      flopcount_dbl_small_house(nrows1,nrLog2,add,mul,div,sqrtfun);
    }
    if(verbose)
    {
@@ -1804,6 +1838,7 @@ void GPU_cmplx2_small_house
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
+      flopcount_cmplx_small_house(nrows1,nrLog2,add,mul,div,sqrtfun);
    }
    if(verbose)
    {
@@ -1898,6 +1933,7 @@ void GPU_dbl2_large_house
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl2_large_sum_of_squares(nblocks,szt,sztLog2,add,mul);
 
    if(verbose)
    {
@@ -1911,6 +1947,7 @@ void GPU_dbl2_large_house
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl2_sum_accumulator(nblocks,nblLog2,add);
 
    cudaMemcpy(sigmahi_h,sigmahi_d,sizeof(double),cudaMemcpyDeviceToHost);
    cudaMemcpy(sigmalo_h,sigmalo_d,sizeof(double),cudaMemcpyDeviceToHost);
@@ -1959,6 +1996,11 @@ void GPU_dbl2_large_house
       ddf_mlt_d(&betahi_h[L],&betalo_h[L],2.0);
       sigmahi_h[0] = v0hi;
       sigmalo_h[0] = v0lo;                     // v0 needed for normalization
+      // update the flop counts
+      *add += 3;
+      *mul += 3;
+      *div += 2;
+      *sqrtfun += 1;
    }
    if(verbose)
    {
@@ -1990,6 +2032,7 @@ void GPU_dbl2_large_house
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
+      flopcount_dbl2_normalize(nblocks,szt,div);
    }
    if(verbose)
    {
@@ -2084,6 +2127,7 @@ void GPU_cmplx2_large_house
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_cmplx2_large_sum_of_squares(nblocks,szt,sztLog2,add,mul);
 
    if(verbose)
    {
@@ -2097,6 +2141,7 @@ void GPU_cmplx2_large_house
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl2_sum_accumulator(nblocks,nblLog2,add);
 
    cudaMemcpy(sigmahi_h,sigmahi_d,sizeof(double),cudaMemcpyDeviceToHost);
    cudaMemcpy(sigmalo_h,sigmalo_d,sizeof(double),cudaMemcpyDeviceToHost);
@@ -2170,6 +2215,11 @@ void GPU_cmplx2_large_house
       *sigmalo_h = inv0relo;
       betahi_h[szt] = inv0imhi;
       betalo_h[szt] = inv0imlo;
+      // update the flop counts
+      *add += 6;
+      *mul += 7;
+      *div += 4;
+      *sqrtfun += 2;
    }
    if(verbose)
    {
@@ -2209,6 +2259,7 @@ void GPU_cmplx2_large_house
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
+      flopcount_cmplx2_normalize(nblocks,szt,add,mul);
    }
    if(verbose)
    {
@@ -2259,6 +2310,7 @@ void GPU_dbl2_small_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_small_leftRupdate(nrows,ncols,szt,colidx,add,mul);
 
    if(verbose)
    {
@@ -2302,6 +2354,7 @@ void GPU_cmplx2_small_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_cmplx_small_leftRupdate(nrows,ncols,szt,colidx,add,mul);
 
    if(verbose)
    {
@@ -2384,6 +2437,8 @@ void GPU_dbl2_medium_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *RTvlapms += milliseconds;
+   flopcount_dbl_RTdotv(nhouse,szt,mul);
+   flopcount_dbl_sum_betaRTdotv(nhouse,dimRTdotv,add,mul);
 
    if(verbose)
    {
@@ -2401,6 +2456,7 @@ void GPU_dbl2_medium_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *redlapms += milliseconds;
+   flopcount_dbl_medium_subvbetaRTv(nrows,endcol,szt,colidx,add,mul);
 
    if(verbose)
    {
@@ -2498,6 +2554,8 @@ void GPU_cmplx2_medium_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *RHvlapms += milliseconds;
+   flopcount_cmplx_RHdotv(nhouse,szt,add,mul);
+   flopcount_cmplx_sum_betaRHdotv(nhouse,dimRHdotv,add,mul);
 
    if(verbose)
    {
@@ -2517,6 +2575,7 @@ void GPU_cmplx2_medium_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *redlapms += milliseconds;
+   flopcount_cmplx_medium_subvbetaRHv(nrows,endcol,szt,colidx,add,mul);
 
    if(verbose)
    {
@@ -2575,160 +2634,6 @@ void GPU_cmplx2_medium_leftRupdate
    }
 }
 
-void GPU_dbl2_VB_to_W
- ( int nrows, int ncols, int szt,
-   double *Vhi_h, double *Vlo_h, double *Vhi_d, double *Vlo_d,
-   double *Whi_h, double *Wlo_h, double *Whi_d, double *Wlo_d,
-   double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, bool verbose )
-{
-   cudaEvent_t start,stop;           // to measure time spent by kernels 
-   cudaEventCreate(&start);
-   cudaEventCreate(&stop);
-   float milliseconds;
-
-   cudaEventRecord(start);
-//   dbl2_VB_to_W<<<1,nrows>>>
-//      (nrows,ncols,betahi_d,betalo_d,Vhi_d,Vlo_d,Whi_d,Wlo_d);
-   cudaEventRecord(stop);
-   cudaEventSynchronize(stop);
-   cudaEventElapsedTime(&milliseconds,start,stop);
-   *lapms += milliseconds;
-
-   if(verbose)
-   {
-      const size_t szbeta = szt*sizeof(double);
-      const size_t szhouse = nrows*sizeof(double);
-      const size_t szVandW = szt*szhouse;
-
-      cudaMemcpy(betahi_h,betahi_d,szbeta,cudaMemcpyDeviceToHost);
-      cudaMemcpy(betalo_h,betalo_d,szbeta,cudaMemcpyDeviceToHost);
-      cout << "the betas :" << endl;
-      for(int j=0; j<szt; j++)
-         cout << "beta[" << j << "] : "
-              << betahi_h[j] << "  " << betalo_h[j] << endl;
-
-      cudaMemcpy(Vhi_h,Vhi_d,szVandW,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Vlo_h,Vlo_d,szVandW,cudaMemcpyDeviceToHost);
-      cout << "the columns of the V matrix :" << endl;
-      int ix = 0;
-      for(int j=0; j<szt; j++) 
-         for(int i=0; i<nrows; i++) 
-         {
-            cout << "V[" << i << "][" << j << "] : "
-                 << Vhi_h[ix] << "  " << Vlo_h[ix] << endl;
-            ix = ix + 1;
-         }
-
-      cudaMemcpy(Whi_h,Whi_d,szVandW,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Wlo_h,Wlo_d,szVandW,cudaMemcpyDeviceToHost);
-      cout << "the columns of the W matrix :" << endl;
-      ix = 0;
-      for(int j=0; j<szt; j++) 
-         for(int i=0; i<nrows; i++) 
-         {
-            cout << "W[" << i << "][" << j << "] : "
-                 << Whi_h[ix] << "  " << Wlo_h[ix] << endl;
-            ix = ix + 1;
-         }
-   }
-}
-
-void GPU_cmplx2_VB_to_W
- ( int nrows, int ncols, int szt,
-   double *Vrehi_h, double *Vrelo_h, double *Vimhi_h, double *Vimlo_h,
-   double *Vrehi_d, double *Vrelo_d, double *Vimhi_d, double *Vimlo_d,
-   double *Wrehi_h, double *Wrelo_h, double *Wimhi_h, double *Wimlo_h,
-   double *Wrehi_d, double *Wrelo_d, double *Wimhi_d, double *Wimlo_d,
-   double *betahi_h, double *betalo_h, double *betahi_d, double *betalo_d,
-   double *lapms, bool verbose )
-{
-   cudaEvent_t start,stop;           // to measure time spent by kernels 
-   cudaEventCreate(&start);
-   cudaEventCreate(&stop);
-   float milliseconds;
-
-   if(verbose)
-   {
-      const size_t szhouse = nrows*sizeof(double);
-      const size_t szVandW = szt*szhouse;
-
-      cudaMemcpy(Vrehi_h,Vrehi_d,szVandW,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Vrelo_h,Vrelo_d,szVandW,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Vimhi_h,Vimhi_d,szVandW,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Vimlo_h,Vimlo_d,szVandW,cudaMemcpyDeviceToHost);
-
-      cout << "the columns of the V matrix :" << endl;
-      int ix = 0;
-      for(int j=0; j<szt; j++) 
-         for(int i=0; i<nrows; i++) 
-         {
-            cout << "V[" << i << "][" << j << "]re : "
-                 << Vrehi_h[ix] << "  " << Vrelo_h[ix] << endl;
-            cout << "V[" << i << "][" << j << "]im : "
-                 << Vimhi_h[ix] << "  " << Vimlo_h[ix] << endl;
-            ix = ix + 1;
-         }
-   }
-   cudaEventRecord(start);
-//   cmplx2_VB_to_W<<<1,nrows>>>
-//      (nrows,ncols,betahi_d,betalo_d,Vrehi_d,Vrelo_d,Vimhi_d,Vimlo_d,
-//       Wrehi_d,Wrelo_d,Wimhi_d,Wimlo_d);
-   cudaEventRecord(stop);
-   cudaEventSynchronize(stop);
-   cudaEventElapsedTime(&milliseconds,start,stop);
-   *lapms += milliseconds;
-
-   if(verbose)
-   {
-      const size_t szbeta = szt*sizeof(double);
-      const size_t szhouse = nrows*sizeof(double);
-      const size_t szVandW = szt*szhouse;
-
-      cudaMemcpy(betahi_h,betahi_d,szbeta,cudaMemcpyDeviceToHost);
-      cudaMemcpy(betalo_h,betalo_d,szbeta,cudaMemcpyDeviceToHost);
-
-      cout << "the betas :" << endl;
-      for(int j=0; j<szt; j++)
-         cout << "beta[" << j << "] : "
-              << betahi_h[j] << "  " << betalo_h[j] << endl;
-
-      cudaMemcpy(Vrehi_h,Vrehi_d,szVandW,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Vrelo_h,Vrelo_d,szVandW,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Vimhi_h,Vimhi_d,szVandW,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Vimlo_h,Vimlo_d,szVandW,cudaMemcpyDeviceToHost);
-
-      cout << "the columns of the V matrix :" << endl;
-      int ix = 0;
-      for(int j=0; j<szt; j++) 
-         for(int i=0; i<nrows; i++) 
-         {
-            cout << "V[" << i << "][" << j << "]re : "
-                 << Vrehi_h[ix] << "  " << Vrelo_h[ix] << endl;
-            cout << "V[" << i << "][" << j << "]im : "
-                 << Vimhi_h[ix] << "  " << Vimlo_h[ix] << endl;
-            ix = ix + 1;
-         }
-
-      cudaMemcpy(Wrehi_h,Wrehi_d,szVandW,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Wrelo_h,Wrelo_d,szVandW,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Wimhi_h,Wimhi_d,szVandW,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Wimlo_h,Wimlo_d,szVandW,cudaMemcpyDeviceToHost);
-
-      cout << "the columns of the W matrix :" << endl;
-      ix = 0;
-      for(int j=0; j<szt; j++) 
-         for(int i=0; i<nrows; i++) 
-         {
-            cout << "W[" << i << "][" << j << "]re : "
-                 << Wrehi_h[ix] << "  " << Wrelo_h[ix] << endl;
-            cout << "W[" << i << "][" << j << "]im : "
-                 << Wimhi_h[ix] << "  " << Wimlo_h[ix] << endl;
-            ix = ix + 1;
-         }
-   }
-}
-
 void GPU_dbl2_medium_VB_to_W
  ( int nrows, int ncols, int szt, int idx,
    double *Vhi_h, double *Vlo_h, double *Vhi_d, double *Vlo_d,
@@ -2751,6 +2656,7 @@ void GPU_dbl2_medium_VB_to_W
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_beta_times_V(rowdim,mul);
 
    const int nbrblocks2 = (int) ceil(rowdim*rowdim/((double) szt));
 
@@ -2761,6 +2667,7 @@ void GPU_dbl2_medium_VB_to_W
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_initialize_WYT(rowdim,mul);
 
    for(int j=1; j<szt; j++)
    {
@@ -2772,6 +2679,7 @@ void GPU_dbl2_medium_VB_to_W
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
+      flopcount_dbl_beta_next_W(rowdim,add,mul);
 
       cudaEventRecord(start);
       dbl2_update_WYT<<<nbrblocks2,szt>>>
@@ -2781,6 +2689,7 @@ void GPU_dbl2_medium_VB_to_W
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
+      flopcount_dbl_update_WYT(rowdim,add,mul);
    }
    if(verbose)
    {
@@ -2860,6 +2769,7 @@ void GPU_cmplx2_medium_VB_to_W
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_cmplx_beta_times_V(rowdim,mul);
 
    const int nbrblocks2 = (int) ceil(rowdim*rowdim/((double) szt));
 
@@ -2871,6 +2781,7 @@ void GPU_cmplx2_medium_VB_to_W
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_cmplx_initialize_WYH(rowdim,add,mul);
 
    for(int j=1; j<szt; j++)
    {
@@ -2886,6 +2797,7 @@ void GPU_cmplx2_medium_VB_to_W
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
+      flopcount_cmplx_beta_next_W(rowdim,add,mul);
 
       cudaEventRecord(start);
       cmplx2_update_WYH<<<nbrblocks2,szt>>>
@@ -2898,6 +2810,7 @@ void GPU_cmplx2_medium_VB_to_W
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
+      flopcount_cmplx_update_WYH(rowdim,add,mul);
    }
    if(verbose)
    {
@@ -2982,6 +2895,7 @@ void GPU_dbl2_small_WYT
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   // flopcount_dbl_small_WYT(nrows,szt,add,mul);
 
    if(verbose)
    {
@@ -3025,6 +2939,7 @@ void GPU_cmplx2_small_WYH
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   // flopcount_cmplx_small_WYH(nrows,szt,add,mul);
 
    if(verbose)
    {
@@ -3069,6 +2984,7 @@ void GPU_dbl2_small_YWT
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_small_WYT(rowdim,szt,add,mul);
 
    if(verbose)
    {
@@ -3113,6 +3029,7 @@ void GPU_cmplx2_small_YWH
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_cmplx_small_WYH(rowdim,szt,add,mul);
 
    if(verbose)
    {
@@ -3176,6 +3093,7 @@ void GPU_dbl2_small_QWYT
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_small_QWYT(dim,rowdim,szt,coloff,add,mul);
 
    if(verbose)
    {
@@ -3246,6 +3164,7 @@ void GPU_cmplx2_small_QWYH
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_cmplx_small_QWYH(dim,rowdim,szt,coloff,add,mul);
 
    if(verbose)
    {
@@ -3324,6 +3243,7 @@ void GPU_dbl2_small_YWTC
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_small_YWTC(rowdim,coldim,add,mul);
 
    if(verbose)
    {
@@ -3409,6 +3329,7 @@ void GPU_cmplx2_small_YWHC
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_cmplx_small_YWHC(rowdim,coldim,add,mul);
 
    if(verbose)
    {
@@ -3454,6 +3375,7 @@ void GPU_dbl2_small_Qupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_small_Qupdate(dim,rowdim,add);
 
    if(verbose)
    {
@@ -3498,6 +3420,7 @@ void GPU_cmplx2_small_Qupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_cmplx_small_Qupdate(dim,rowdim,add);
 
    if(verbose)
    {
@@ -3544,6 +3467,7 @@ void GPU_dbl2_small_R_add_YWTC
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_dbl_small_R_add_YWTC(nrows,coldim,szt,rowoff,coloff,add);
 
    if(verbose)
    {
@@ -3588,6 +3512,7 @@ void GPU_cmplx2_small_R_add_YWHC
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
+   flopcount_cmplx_small_R_add_YWHC(nrows,coldim,szt,rowoff,coloff,add);
 
    if(verbose)
    {

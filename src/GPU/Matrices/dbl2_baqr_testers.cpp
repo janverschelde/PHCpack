@@ -93,6 +93,10 @@ void test_real2_blocked_qr
    double houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
+   long long int addcnt = 0;
+   long long int mulcnt = 0;
+   long long int divcnt = 0;
+   long long int sqrtcnt = 0;
 
    if((mode == 0) || (mode == 2))
    {
@@ -102,7 +106,8 @@ void test_real2_blocked_qr
          (nrows,ncols,sizetile,numtiles,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,
           &houselapsedms,&RTvlapsedms,&tileRlapsedms,&vb2Wlapsedms,
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
-          &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,bvrb);
+          &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
+          &addcnt,&mulcnt,&divcnt,&sqrtcnt,bvrb);
 
       cout << "-> Testing the QR factorization ..." << endl;
 
@@ -149,6 +154,18 @@ void test_real2_blocked_qr
       cout << Raddlapsedms << " milliseconds." << endl;
       cout << "        Total GPU wall clock computation time : ";
       cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
+      cout << endl;
+      cout << "             Number of additions/subtractions : "
+           << addcnt << " x 20 " << endl;
+      cout << "                    Number of multiplications : "
+           << mulcnt << " x 23 " << endl;
+      cout << "                          Number of divisions : "
+           << divcnt << " x 70 " << endl;
+      cout << "                    Number of calls to sqrt() : "
+           << sqrtcnt << " x 50 " << endl;
+      long long int flopcnt = 20*addcnt + 23*mulcnt + 70*divcnt + 50*sqrtcnt;
+      cout << "    Total number of floating-point operations : "
+           << flopcnt << endl;
    }
    for(int i=0; i<nrows; i++)
    {
@@ -270,6 +287,10 @@ void test_cmplx2_blocked_qr
    double houselapsedms,RHvlapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
+   long long int addcnt = 0;
+   long long int mulcnt = 0;
+   long long int divcnt = 0;
+   long long int sqrtcnt = 0;
 
    if((mode == 0) || (mode == 2))
    {
@@ -296,7 +317,8 @@ void test_cmplx2_blocked_qr
           Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,
           &houselapsedms,&RHvlapsedms,&tileRlapsedms,&vb2Wlapsedms,
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
-          &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,bvrb);
+          &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
+          &addcnt,&mulcnt,&divcnt,&sqrtcnt,bvrb);
 
       cout << "-> Testing the QR factorization ..." << endl;
 
@@ -348,6 +370,18 @@ void test_cmplx2_blocked_qr
       cout << Raddlapsedms << " milliseconds." << endl;
       cout << "        Total GPU wall clock computation time : ";
       cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
+      cout << endl;
+      cout << "             Number of additions/subtractions : "
+           << addcnt << " x 20 " << endl;
+      cout << "                    Number of multiplications : "
+           << mulcnt << " x 23 " << endl;
+      cout << "                          Number of divisions : "
+           << divcnt << " x 70 " << endl;
+      cout << "                    Number of calls to sqrt() : "
+           << sqrtcnt << " x 50 " << endl;
+      long long int flopcnt = 20*addcnt + 23*mulcnt + 70*divcnt + 50*sqrtcnt;
+      cout << "    Total number of floating-point operations : "
+           << flopcnt << endl;
    }
    for(int i=0; i<nrows; i++)
    {

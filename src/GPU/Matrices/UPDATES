@@ -4,6 +4,8 @@ Thu 12 Aug 2021 : new dbl_baqr_flopcounts, with code factored out from
   In dbl_baqr_kernels.h, ensured "long long int" instead of "long int"
   is used for all flop counters.  Improved the flopcount parameters in
   dbl_baqr_kernels and added flopcount parameters to dbl2_baqr_kernels.
+  Added flopcount functions to dbl2_baqr_kernels, updated makefiles
+  and dbl2_baqr_testers.cpp.
 
 Wed 11 Aug 2021 : fixed bugs in dbl2_baqr_kernels.cu, added extra cout
   in dbl2_baqr_host.cpp.  Added the "-> Testing ..." banner after the GPU

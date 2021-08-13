@@ -271,11 +271,11 @@ test_dbl2_baqr.o:
 test_dbl2_baqr: test_dbl2_baqr.o prompt_baqr_setup.o dbl2_baqr_testers.o \
                 double_double_functions.o dbl2_factorizations.o \
                 dbl2_factors_testers.o dbl2_baqr_host.o \
-                dbl2_baqr_kernels.o \
+                dbl2_baqr_kernels.o dbl_baqr_flopcounts.o \
                 random_numbers.o random2_vectors.o random2_matrices.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl2_baqr test_dbl2_baqr.o \
-                  prompt_baqr_setup.o dbl2_baqr_testers.o \
+	$(gpp) -o test_dbl2_baqr test_dbl2_baqr.o prompt_baqr_setup.o \
+                  dbl2_baqr_testers.o dbl_baqr_flopcounts.o \
                   double_double_functions.o dbl2_factorizations.o \
                   dbl2_factors_testers.o dbl2_baqr_host.o dbl2_baqr_kernels.o \
                   random_numbers.o random2_vectors.o random2_matrices.o \
