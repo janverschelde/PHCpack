@@ -1,3 +1,6 @@
+Sat 14 Aug 2021 : added probing testers to dbl_factors_testers.cpp,
+  applied in dbl_baqr_testers.cpp.
+
 Fri 13 Aug 2021 : to dbl_baqr_testers.cpp and dbl2_baqr_testers.cpp,
   added the explicit computation of the flops at the end.
 

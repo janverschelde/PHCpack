@@ -64,7 +64,8 @@ void test_real_blocked_qr
 
       cout << "-> Testing the QR factorization ..." << endl;
 
-      fail = test_real_qr_factors(nrows,ncols,A,Q_h,R_h,tol,verbose);
+      // fail = test_real_qr_factors(nrows,ncols,A,Q_h,R_h,tol,verbose);
+      fail = test_real_qr_factors_probe(nrows,ncols,A,Q_h,R_h,tol,2,1);
       if(fail == 0)
          cout << "The test succeeded." << endl;
       else
@@ -92,10 +93,11 @@ void test_real_blocked_qr
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
           &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
           &addcnt,&mulcnt,&divcnt,&sqrtcnt,bvrb);
- 
-      cout << "-> Testing the QR factorization ..." << endl;
 
-      fail = test_real_qr_factors(nrows,ncols,A,Q_d,R_d,tol,verbose);
+      cout << "-> Testing the QR factorization ..." << endl;
+ 
+      // fail = test_real_qr_factors(nrows,ncols,A,Q_d,R_d,tol,verbose);
+      fail = test_real_qr_factors_probe(nrows,ncols,A,Q_d,R_d,tol,2,1);
       if(fail == 0)
          cout << "The test succeeded." << endl;
       else
@@ -224,8 +226,10 @@ void test_cmplx_blocked_qr
 
       cout << "-> Testing the QR factorization ..." << endl;
 
-      fail = test_cmplx_qr_factors
-         (nrows,ncols,Are,Aim,Qre_h,Qim_h,Rre_h,Rim_h,tol,verbose);
+      // fail = test_cmplx_qr_factors
+      //   (nrows,ncols,Are,Aim,Qre_h,Qim_h,Rre_h,Rim_h,tol,verbose);
+      fail = test_cmplx_qr_factors_probe
+         (nrows,ncols,Are,Aim,Qre_h,Qim_h,Rre_h,Rim_h,tol,2,1);
       if(fail == 0)
          cout << "The test succeeded." << endl;
       else
@@ -256,8 +260,10 @@ void test_cmplx_blocked_qr
 
       cout << "-> Testing the QR factorization ..." << endl;
 
-      fail = test_cmplx_qr_factors
-                (nrows,ncols,Are,Aim,Qre_d,Qim_d,Rre_d,Rim_d,tol,verbose);
+      // fail = test_cmplx_qr_factors
+      //           (nrows,ncols,Are,Aim,Qre_d,Qim_d,Rre_d,Rim_d,tol,verbose);
+      fail = test_cmplx_qr_factors_probe
+                (nrows,ncols,Are,Aim,Qre_d,Qim_d,Rre_d,Rim_d,tol,2,1);
       if(fail == 0)
          cout << "The test succeeded." << endl;
       else

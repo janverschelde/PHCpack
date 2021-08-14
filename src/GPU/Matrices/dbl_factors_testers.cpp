@@ -229,6 +229,57 @@ int test_real_qr_factors
    return int(errorQ + errorR > tol);
 }
 
+int test_real_qr_factors_probe
+ ( int nrows, int ncols, double **A, double **Q, double **R,
+   double tol, int nbprobes, int verbose )
+{
+   int rowidx,colidx;
+   double Qsum,Rsum;
+   double errorQ = 0.0;
+   double errorR = 0.0;
+
+   for(int p=0; p<nbprobes; p++)
+   {
+      rowidx = rand() % nrows;
+      colidx = rand() % ncols;
+
+      if(verbose > 0)
+      {
+         cout << "Probing row index : " << rowidx
+              << ", column index : " << colidx << "." << endl;
+      }
+      Qsum = 0.0;
+      Rsum = 0.0;
+
+      for(int i=0; i<nrows; i++)
+      {
+         Qsum = Qsum + Q[i][rowidx]*Q[i][colidx];
+         Rsum = Rsum + Q[i][rowidx]*A[i][colidx];
+      }
+      if(verbose > 0)
+      {
+         cout << scientific << setprecision(16);
+         cout << "Q^T*Q[" << rowidx << "][" << rowidx << "] : "
+              << Qsum << endl;
+         cout << "Q^T*A[" << rowidx << "][" << colidx << "] : "
+              << Rsum << endl;
+         cout << "    R[" << rowidx << "][" << colidx << "] : "
+              << R[rowidx][colidx] << endl;
+      }
+      if(rowidx == colidx)
+         errorQ = errorQ + fabs(Qsum - 1.0);
+      else
+         errorQ = errorQ + fabs(Qsum);
+
+      errorR = errorR + fabs(Rsum - R[rowidx][colidx]);
+   }
+   cout << scientific << setprecision(2);
+   cout << "Sum of errors on |Q^T*Q - I| : " << errorQ << endl;
+   cout << "Sum of errors on |Q^T*A - R| : " << errorR << endl;
+
+   return int(errorQ + errorR > tol);
+}
+
 int test_cmplx_qr_factors
  ( int nrows, int ncols, double **Are, double **Aim,
    double **Qre, double **Qim, double **Rre, double **Rim,
@@ -321,6 +372,75 @@ int test_cmplx_qr_factors
    }
    free(QHre); free(QHQre); free(QHAre);
    free(QHim); free(QHQim); free(QHAim);
+
+   return int(errorQ + errorR > tol);
+}
+
+int test_cmplx_qr_factors_probe
+ ( int nrows, int ncols, double **Are, double **Aim,
+   double **Qre, double **Qim, double **Rre, double **Rim,
+   double tol, int nbprobes, int verbose )
+{
+   int rowidx,colidx;
+   double Qsumre,Rsumre;
+   double Qsumim,Rsumim;
+   double acc;
+   double errorQ = 0.0;
+   double errorR = 0.0;
+
+   for(int p=0; p<nbprobes; p++)
+   {
+      rowidx = rand() % nrows;
+      colidx = rand() % ncols;
+
+      if(verbose > 0)
+      {
+         cout << "Probing row index : " << rowidx
+              << ", column index : " << colidx << "." << endl;
+      }
+      Qsumre = 0.0;
+      Qsumim = 0.0;
+      Rsumre = 0.0;
+      Rsumim = 0.0;
+
+      for(int i=0; i<nrows; i++)
+      {
+         // multiply Q^H with Q
+         Qsumre = Qsumre + Qre[i][rowidx]*Qre[i][colidx];
+         Qsumre = Qsumre + Qim[i][rowidx]*Qim[i][colidx];
+         Qsumim = Qsumim - Qim[i][rowidx]*Qre[i][colidx];
+         Qsumim = Qsumim + Qre[i][rowidx]*Qim[i][colidx];
+         // multiply Q^H with A
+         Rsumre = Rsumre + Qre[i][rowidx]*Are[i][colidx];
+         Rsumre = Rsumre + Qim[i][rowidx]*Aim[i][colidx];
+         Rsumim = Rsumim - Qim[i][rowidx]*Are[i][colidx];
+         Rsumim = Rsumim + Qre[i][rowidx]*Aim[i][colidx];
+      }
+      if(verbose > 0)
+      {
+         cout << scientific << setprecision(16);
+         cout << "Q^T*Q[" << rowidx << "][" << rowidx << "] : "
+              << Qsumre << "  " << Qsumim << endl;
+         cout << "Q^T*A[" << rowidx << "][" << colidx << "] : "
+              << Rsumre << "  " << Rsumim << endl;
+         cout << "    R[" << rowidx << "][" << colidx << "] : "
+              << Rre[rowidx][colidx] << "  "
+              << Rim[rowidx][colidx] << endl;
+      }
+      if(rowidx == colidx)
+      {
+         errorQ = errorQ + fabs(Qsumre - 1.0) + fabs(Qsumim);
+      }
+      else
+      {
+         errorQ = errorQ + fabs(Qsumre) + fabs(Qsumim);
+      }
+      errorR = errorR + fabs(Rsumre - Rre[rowidx][colidx])
+                      + fabs(Rsumim - Rim[rowidx][colidx]);
+   }
+   cout << scientific << setprecision(2);
+   cout << "Sum of errors on |Q^T*Q - I| : " << errorQ << endl;
+   cout << "Sum of errors on |Q^T*A - R| : " << errorR << endl;
 
    return int(errorQ + errorR > tol);
 }
