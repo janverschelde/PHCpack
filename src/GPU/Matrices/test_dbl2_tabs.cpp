@@ -12,21 +12,22 @@ int main ( void )
 {
    srand(time(NULL));
 
-   cout << "Testing tiling on a complex upper triangular matrix ..."
-        << endl;
-
-   test_cmplx2_upper_tiling();
-
-   cout << endl << "Testing the complex upper inverse ..." << endl;
-   test_cmplx2_upper_inverse();
-
-   cout << endl << "Testing the real upper inverse ..." << endl;
+   cout << "Testing the real upper inverse of one tile ..." << endl;
    test_real2_upper_inverse();
+
+   cout << "Testing the complex upper inverse of one tile ..." << endl;
+   test_cmplx2_upper_inverse();
 
    cout << endl
         << "Testing tiling on a real upper triangular matrix ..."
         << endl;
    test_real2_upper_tiling();
+
+   cout << endl
+        << "Testing tiling on a complex upper triangular matrix ..."
+        << endl;
+
+   test_cmplx2_upper_tiling();
 
    return 0;
 }

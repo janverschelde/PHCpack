@@ -327,7 +327,7 @@ void test_real2_upper_inverse ( void )
                  << invAhi_d[i][j] << "  " << invAlo_d[i][j] << endl;
    }
    cout << scientific << setprecision(2);
-   cout << "   Sum of errors : "
+   cout << "   Sum of errors on inverse : "
         << dbl2_Matrix_Difference_Sum
               (dim,invAhi_h,invAlo_h,invAhi_d,invAlo_d)
         << endl;
@@ -353,7 +353,7 @@ void test_real2_upper_inverse ( void )
               << xhi[i] << "  " << xlo[i] << endl;
    }
    cout << scientific << setprecision(2);
-   cout << "   Sum of errors : "
+   cout << "   Sum of errors on solution : "
         << dbl2_Difference_Sum(dim,solhi,sollo,xhi,xlo) << endl;
    cout << "Condition number : "
         << dbl2_condition(dim,Ahi,Alo,invAhi_h,invAlo_h) << endl;
@@ -521,7 +521,7 @@ void test_cmplx2_upper_inverse ( void )
          }
    }
    cout << scientific << setprecision(2);
-   cout << "   Sum of errors : "
+   cout << "   Sum of errors on inverse : "
         << cmplx2_Matrix_Difference_Sum
               (dim,invArehi_h,invArelo_h,invAimhi_h,invAimlo_h,
                    invArehi_d,invArelo_d,invAimhi_d,invAimlo_d) << endl;
@@ -565,7 +565,7 @@ void test_cmplx2_upper_inverse ( void )
       }
    }
    cout << scientific << setprecision(2);
-   cout << "   Sum of errors : "
+   cout << "   Sum of errors on solution : "
         << cmplx2_Difference_Sum
               (dim,solrehi,solrelo,solimhi,solimlo,
                      xrehi,  xrelo,  ximhi,  ximlo) << endl;
@@ -716,9 +716,9 @@ void test_real2_upper_tiling ( void )
               << xhi_d[i] << "  " << xlo_d[i] << endl;
    }
    cout << scientific << setprecision(2);
-   cout << "   Sum of CPU errors : "
+   cout << "   Sum of CPU errors on solution : "
         << dbl2_Difference_Sum(dim,solhi,sollo,xhi,xlo) << endl;
-   cout << "   Sum of GPU errors : "
+   cout << "   Sum of GPU errors on solution : "
         << dbl2_Difference_Sum(dim,solhi,sollo,xhi_d,xlo_d) << endl;
 
    cout << fixed << setprecision(3);
@@ -929,11 +929,11 @@ void test_cmplx2_upper_tiling ( void )
       }
    }
    cout << scientific << setprecision(2);
-   cout << "   Sum of CPU errors : "
+   cout << "   Sum of CPU errors on solution : "
         << cmplx2_Difference_Sum(dim,solrehi,solrelo,solimhi,solimlo,
                                        xrehi,  xrelo,  ximhi,  ximlo)
         << endl;
-   cout << "   Sum of GPU errors : "
+   cout << "   Sum of GPU errors on solution : "
         << cmplx2_Difference_Sum(dim,solrehi,solrelo,solimhi,solimlo,
                                        xrehi_d,xrelo_d,ximhi_d,ximlo_d)
         << endl;

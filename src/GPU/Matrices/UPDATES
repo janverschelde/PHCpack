@@ -1,5 +1,6 @@
 Sun 15 Aug 2021 : improved dbl_tabs_testers.cpp and test_dbl_tabs.cpp,
   with improved output messages on kind of tests and error types.
+  Improved dbl2_tabs_testers.cpp and test_dbl2_tabs.cpp similarly.
 
 Sat 14 Aug 2021 : added probing testers to dbl_factors_testers.cpp,
   applied in dbl_baqr_testers.cpp.
