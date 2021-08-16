@@ -89,7 +89,7 @@ void test_real_upper_inverse ( void )
                  << invA_d[i][j] << endl;
    }
    cout << scientific << setprecision(2);
-   cout << "   Sum of errors : "
+   cout << "   Sum of errors on inverse : "
         << dbl_Matrix_Difference_Sum(dim,invA_h,invA_d) << endl;
 
    double *x = new double[dim];
@@ -106,7 +106,8 @@ void test_real_upper_inverse ( void )
          cout << "x[" << i << "] : " << x[i] << endl;
    }
    cout << scientific << setprecision(2);
-   cout << "   Sum of errors : " << dbl_Difference_Sum(dim,sol,x) << endl;
+   cout << "   Sum of errors on solution : "
+        << dbl_Difference_Sum(dim,sol,x) << endl;
    cout << "Condition number : "
         << dbl_condition(dim,A,invA_h) << endl;
 
@@ -223,7 +224,7 @@ void test_cmplx_upper_inverse ( void )
                  << invAre_d[i][j] << "  " << invAim_d[i][j] << endl;
    }
    cout << scientific << setprecision(2);
-   cout << "   Sum of errors : "
+   cout << "   Sum of errors on inverse : "
         << cmplx_Matrix_Difference_Sum
               (dim,invAre_h,invAim_h,invAre_d,invAim_d) << endl;
 
@@ -250,7 +251,7 @@ void test_cmplx_upper_inverse ( void )
               << xre[i] << "  " << xim[i] << endl;
    }
    cout << scientific << setprecision(2);
-   cout << "   Sum of errors : "
+   cout << "   Sum of errors on solution : "
         << cmplx_Difference_Sum(dim,solre,solim,xre,xim) << endl;
    cout << "Condition number : "
         << cmplx_condition(dim,Are,Aim,invAre_h,invAim_h) << endl;
@@ -363,9 +364,9 @@ void test_real_upper_tiling ( void )
          cout << "x[" << i << "] : " << x_d[i] << endl;
    }
    cout << scientific << setprecision(2);
-   cout << "   Sum of CPU errors : "
+   cout << "   Sum of CPU errors on solution : "
         << dbl_Difference_Sum(dim,sol,x) << endl;
-   cout << "   Sum of GPU errors : "
+   cout << "   Sum of GPU errors on solution : "
         << dbl_Difference_Sum(dim,sol,x_d) << endl;
 
    cout << fixed << setprecision(3);
@@ -509,9 +510,9 @@ void test_cmplx_upper_tiling ( void )
          cout << "x[" << i << "] : " << xre_d[i] << "  " << xim_d[i] << endl;
    }
    cout << scientific << setprecision(2);
-   cout << "   Sum of CPU errors : "
+   cout << "   Sum of CPU errors on solution : "
         << cmplx_Difference_Sum(dim,solre,solim,xre,xim) << endl;
-   cout << "   Sum of GPU errors : "
+   cout << "   Sum of GPU errors on solution : "
         << cmplx_Difference_Sum(dim,solre,solim,xre_d,xim_d) << endl;
 
    cout << fixed << setprecision(3);
