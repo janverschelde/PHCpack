@@ -266,7 +266,8 @@ void GPU_cmplx_upper_inverse
 
 void GPU_dbl_upper_tiled_solver
  ( int dim, int szt, int nbt, double **U, double *b, double *x,
-   double *lapms, double *walltimesec );
+   double *invlapms, double *mullapms, double *sublapms, double *totlapms,
+   double *walltimesec );
 /*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
@@ -281,13 +282,18 @@ void GPU_dbl_upper_tiled_solver
  *
  * ON RETURN :
  *   x        the solution to the system U*x = b;
- *   lapms    elapsed time spent by the kernels;
+ *   invlapms is the elapsed time spent by the kernel to invert a tile;
+ *   mullapms is the elapsed time spent by the kernel to multiply
+ *            with the inversed diagonal tile;
+ *   sublapms is the elapsed time spent by the kernel for back substitution;
+ *   totlapms is the total elapsed time spent by all kernels;
  *   walltimesec is the elapsed wall clock computation time. */
 
 void GPU_cmplx_upper_tiled_solver
  ( int dim, int szt, int nbt, double **Ure, double **Uim,
    double *bre, double *bim, double *xre, double *xim,
-   double *lapms, double *walltimesec );
+   double *invlapms, double *mullapms, double *sublapms, double *totlapms,
+   double *walltimesec );
 /*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
@@ -306,7 +312,11 @@ void GPU_cmplx_upper_tiled_solver
  * ON RETURN :
  *   xre      real parts of the solution to the system U*x = b;
  *   xim      imaginary parts of the solution to the system U*x = b;
- *   lapms    elapsed time spent by the kernels;
+ *   invlapms is the elapsed time spent by the kernel to invert a tile;
+ *   mullapms is the elapsed time spent by the kernel to multiply
+ *            with the inversed diagonal tile;
+ *   sublapms is the elapsed time spent by the kernel for back substitution;
+ *   totlapms is the total elapsed time spent by all kernels;
  *   walltimesec is the elapsed wall clock computation time. */
 
 #endif

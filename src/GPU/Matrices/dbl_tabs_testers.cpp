@@ -322,6 +322,7 @@ void test_real_upper_tiling ( void )
       for(int j=0; j<dim; j++) A_d[i][j] = A[i][j];
    }
    double timelapsed_h,timelapsed_d,elapsedms;
+   double invlapsed,mullapsed,sublapsed;
 
    cout << "-> CPU solves an upper triangular system ..." << endl;
 
@@ -338,7 +339,8 @@ void test_real_upper_tiling ( void )
    cout << "-> GPU solves an upper triangular system ..." << endl;
 
    GPU_dbl_upper_tiled_solver
-      (dim,sizetile,numtiles,A_d,rhs_d,x_d,&elapsedms,&timelapsed_d);
+      (dim,sizetile,numtiles,A_d,rhs_d,x_d,
+       &invlapsed,&mullapsed,&sublapsed,&elapsedms,&timelapsed_d);
 
    if(verbose > 0)
    {
@@ -372,6 +374,12 @@ void test_real_upper_tiling ( void )
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
+   cout << "          Time spent to invert diagonal tiles : ";
+   cout << invlapsed << " milliseconds." << endl;
+   cout << "   Time spent to multiply with inverted tiles : ";
+   cout << mullapsed << " milliseconds." << endl;
+   cout << "             Time spent for back substitution : ";
+   cout << sublapsed << " milliseconds." << endl;
    cout << "                    Time spent by all kernels : ";
    cout << elapsedms << " milliseconds." << endl;
    cout << "        Total GPU wall clock computation time : ";
@@ -465,6 +473,7 @@ void test_cmplx_upper_tiling ( void )
       }
    }
    double timelapsed_h,timelapsed_d,elapsedms;
+   double invlapsed,mullapsed,sublapsed;
 
    cout << "-> CPU solves an upper triangular system ..." << endl;
 
@@ -483,7 +492,7 @@ void test_cmplx_upper_tiling ( void )
 
    GPU_cmplx_upper_tiled_solver
       (dim,sizetile,numtiles,Are_d,Aim_d,rhsre_d,rhsim_d,xre_d,xim_d,
-       &elapsedms,&timelapsed_d);
+       &invlapsed,&mullapsed,&sublapsed,&elapsedms,&timelapsed_d);
 
    if(verbose > 0)
    {
@@ -518,6 +527,12 @@ void test_cmplx_upper_tiling ( void )
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
+   cout << "          Time spent to invert diagonal tiles : ";
+   cout << invlapsed << " milliseconds." << endl;
+   cout << "   Time spent to multiply with inverted tiles : ";
+   cout << mullapsed << " milliseconds." << endl;
+   cout << "             Time spent for back substitution : ";
+   cout << sublapsed << " milliseconds." << endl;
    cout << "                    Time spent by all kernels : ";
    cout << elapsedms << " milliseconds." << endl;
    cout << "        Total GPU wall clock computation time : ";

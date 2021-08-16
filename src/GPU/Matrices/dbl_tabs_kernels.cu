@@ -691,7 +691,8 @@ void GPU_cmplx_upper_inverse
 
 void GPU_dbl_upper_tiled_solver
  ( int dim, int szt, int nbt, double **U, double *b, double *x,
-   double *lapms, double *walltimesec )
+   double *invlapms, double *mullapms, double *sublapms, double *totlapms,
+   double *walltimesec )
 {
    const int nbr = nbt*szt*szt;   // number of doubles on diagonal tiles
    double *D_h = new double[nbr];    // the diagonal tiles on the host
@@ -715,7 +716,10 @@ void GPU_dbl_upper_tiled_solver
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
    cudaEventCreate(&stop);
-   *lapms = 0.0;
+   *invlapms = 0.0;
+   *mullapms = 0.0;
+   *sublapms = 0.0;
+   *totlapms = 0.0;
    float milliseconds;
    struct timeval begintime,endtime; // wall clock time of computations
 
@@ -726,7 +730,8 @@ void GPU_dbl_upper_tiled_solver
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
-   *lapms += milliseconds;
+   *invlapms += milliseconds;
+   *totlapms += milliseconds;
 
    double *rhs_d;                    // right hand side on device
    const size_t szrhs = dim*sizeof(double);
@@ -738,7 +743,8 @@ void GPU_dbl_upper_tiled_solver
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
-   *lapms += milliseconds;
+   *mullapms += milliseconds;
+   *totlapms += milliseconds;
 
    int nbrUcol = (nbt-1)*szt*szt;         // #doubles in column of U
    double *Ucol_h = new double[nbrUcol];  // column of U on host
@@ -766,7 +772,8 @@ void GPU_dbl_upper_tiled_solver
       cudaEventRecord(stop);
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
-      *lapms += milliseconds;
+      *sublapms += milliseconds;
+      *totlapms += milliseconds;
 
       // (k-1)-th solution tile is ready for inverse multiplication
       cudaEventRecord(start);
@@ -774,7 +781,8 @@ void GPU_dbl_upper_tiled_solver
       cudaEventRecord(stop);
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
-      *lapms += milliseconds;
+      *mullapms += milliseconds;
+      *totlapms += milliseconds;
 
       nbrUcol = nbrUcol - szt*szt; // one tile less used in update
    }
@@ -801,7 +809,8 @@ void GPU_dbl_upper_tiled_solver
 void GPU_cmplx_upper_tiled_solver
  ( int dim, int szt, int nbt, double **Ure, double **Uim,
    double *bre, double *bim, double *xre, double *xim,
-   double *lapms, double *walltimesec )
+   double *invlapms, double *mullapms, double *sublapms, double *totlapms,
+   double *walltimesec )
 {
    const int nbr = nbt*szt*szt;   // number of doubles on diagonal tiles
    double *Dre_h = new double[nbr];    // the diagonal tiles on the host
@@ -836,7 +845,10 @@ void GPU_cmplx_upper_tiled_solver
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
    cudaEventCreate(&stop);
-   *lapms = 0.0;
+   *invlapms = 0.0;
+   *mullapms = 0.0;
+   *sublapms = 0.0;
+   *totlapms = 0.0;
    float milliseconds;
    struct timeval begintime,endtime; // wall clock time of computations
 
@@ -847,7 +859,8 @@ void GPU_cmplx_upper_tiled_solver
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
-   *lapms += milliseconds;
+   *invlapms += milliseconds;
+   *totlapms += milliseconds;
 
    double *rhsre_d;                    // right hand side on device
    double *rhsim_d;
@@ -863,7 +876,8 @@ void GPU_cmplx_upper_tiled_solver
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
-   *lapms += milliseconds;
+   *mullapms += milliseconds;
+   *totlapms += milliseconds;
 
    int nbrUcol = (nbt-1)*szt*szt;           // #doubles in column of U
    double *Ucolre_h = new double[nbrUcol];  // column of U on host
@@ -901,7 +915,8 @@ void GPU_cmplx_upper_tiled_solver
       cudaEventRecord(stop);
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
-      *lapms += milliseconds;
+      *sublapms += milliseconds;
+      *totlapms += milliseconds;
 
       // (k-1)-th solution tile is ready for inverse multiplication
       cudaEventRecord(start);
@@ -910,7 +925,8 @@ void GPU_cmplx_upper_tiled_solver
       cudaEventRecord(stop);
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
-      *lapms += milliseconds;
+      *mullapms += milliseconds;
+      *totlapms += milliseconds;
 
       nbrUcol = nbrUcol - szt*szt; // one tile less used in update
    }

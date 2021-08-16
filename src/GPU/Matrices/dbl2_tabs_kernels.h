@@ -358,7 +358,8 @@ void GPU_cmplx2_upper_inverse
 void GPU_dbl2_upper_tiled_solver
  ( int dim, int szt, int nbt, double **Uhi, double **Ulo,
    double *bhi, double *blo, double *xhi, double *xlo,
-   double *lapms, double *walltimesec );
+   double *invlapms, double *mullapms, double *sublapms, double *totlapms,
+   double *walltimesec );
 /*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
@@ -377,7 +378,11 @@ void GPU_dbl2_upper_tiled_solver
  * ON RETURN :
  *   xhi      high doubles of the solution to the system U*x = b;
  *   xlo      low doubles of the solution to the system U*x = b;
- *   lapms    elapsed time spent by the kernels;
+ *   invlapms is the elapsed time spent by the kernel to invert a tile;
+ *   mullapms is the elapsed time spent by the kernel to multiply
+ *            with the inversed diagonal tile;
+ *   sublapms is the elapsed time spent by the kernel for back substitution;
+ *   totlapms is the total elapsed time spent by all kernels;
  *   walltimesec is the elapsed wall clock computation time. */
 
 void GPU_cmplx2_upper_tiled_solver
@@ -385,7 +390,8 @@ void GPU_cmplx2_upper_tiled_solver
    double **Urehi, double **Urelo, double **Uimhi, double **Uimlo,
    double *brehi, double *brelo, double *bimhi, double *bimlo,
    double *xrehi, double *xrelo, double *ximhi, double *ximlo,
-   double *lapms, double *walltimesec );
+   double *invlapms, double *mullapms, double *sublapms, double *totlapms,
+   double *walltimesec );
 /*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
@@ -412,7 +418,11 @@ void GPU_cmplx2_upper_tiled_solver
  *   xrelo    low doubles of the real parts of the solution;
  *   ximhi    high doubles of the imaginary parts of the solution;
  *   ximlo    low doubles of the imaginary parts of the solution;
- *   lapms    elapsed time spent by the kernels;
+ *   invlapms is the elapsed time spent by the kernel to invert a tile;
+ *   mullapms is the elapsed time spent by the kernel to multiply
+ *            with the inversed diagonal tile;
+ *   sublapms is the elapsed time spent by the kernel for back substitution;
+ *   totlapms is the total elapsed time spent by all kernels;
  *   walltimesec is the elapsed wall clock computation time. */
 
 #endif
