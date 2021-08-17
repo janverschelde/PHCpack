@@ -399,12 +399,17 @@ void test_real_upper_tiling ( void )
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
    cout << endl;
-   cout << scientific << setprecision(3);
-   double flops = ((double) flopcnt)/timelapsed_d;
+   double kernflops = 1000.0*((double) flopcnt)/elapsedms;
+   double wallflops = ((double) flopcnt)/timelapsed_d;
    const int gigacnt = pow(2.0,30);
-   cout << "Flops : " << flops;
+   cout << "Kernel Time Flops : "
+        << scientific << setprecision(3) << kernflops;
    cout << fixed << setprecision(3)
-        << " = " << flops/gigacnt << " Gigaflops" << endl;
+        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+   cout << " Wall Clock Flops : "
+        << scientific << setprecision(3) << wallflops;
+   cout << fixed << setprecision(3)
+        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
 
    for(int i=0; i<dim; i++)
    {
@@ -580,12 +585,17 @@ void test_cmplx_upper_tiling ( void )
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
    cout << endl;
-   cout << scientific << setprecision(3);
-   double flops = ((double) flopcnt)/timelapsed_d;
+   double kernflops = 1000.0*((double) flopcnt)/elapsedms;
+   double wallflops = ((double) flopcnt)/timelapsed_d;
    const int gigacnt = pow(2.0,30);
-   cout << "Flops : " << flops;
+   cout << "Kernel Time Flops : "
+        << scientific << setprecision(3) << kernflops;
    cout << fixed << setprecision(3)
-        << " = " << flops/gigacnt << " Gigaflops" << endl;
+        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+   cout << " Wall Clock Flops : "
+        << scientific << setprecision(3) << wallflops;
+   cout << fixed << setprecision(3)
+        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
 
    for(int i=0; i<dim; i++)
    {
