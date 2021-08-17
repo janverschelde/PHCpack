@@ -373,6 +373,18 @@ __global__ void  dbl_invert_tiles ( int dim, double *U, double *invU )
    }
 }
 
+void flopcount_dbl_invert_tiles
+ ( int nbt, int szt, long long int *add, long long int *mul,
+   long long int *div )
+{
+   const int nbthreads = nbt*szt;
+   const int dim = szt;
+
+   *add += nbthreads*(dim-1)*(dim-2)/2;
+   *mul += nbthreads*(dim-1)*(dim-2)/2;
+   *div += nbthreads*(dim-1);
+}
+
 __global__ void  cmplx_invert_tiles
  ( int dim, double *Ure, double *Uim, double *invUre, double *invUim )
 {
@@ -445,6 +457,18 @@ __global__ void  cmplx_invert_tiles
    }
 }
 
+void flopcount_cmplx_invert_tiles
+ ( int nbt, int szt, long long int *add, long long int *mul,
+   long long int *div )
+{
+   const int nbthreads = nbt*szt;
+   const int dim = szt;
+
+   *add += 4*nbthreads*(dim-1)*(dim-2)/2;
+   *mul += 4*nbthreads*(dim-1)*(dim-2)/2;
+   *div += 2*nbthreads*(dim-1);
+}
+
 __global__ void dbl_multiply_inverse
  ( int dim, int idx, double *invU, double *w )
 {
@@ -465,6 +489,13 @@ __global__ void dbl_multiply_inverse
       result = result + coeff*work[j];
    }
    w[rhsoff+k] = result;
+}
+
+void flopcount_dbl_multiply_inverse
+ ( int szt, long long int *add, long long int *mul )
+{
+   *add += szt*szt;
+   *mul += szt*szt;
 }
 
 __global__ void cmplx_multiply_inverse
@@ -499,6 +530,13 @@ __global__ void cmplx_multiply_inverse
    wim[rhsoff+k] = resultim;
 }
 
+void flopcount_cmplx_multiply_inverse
+ ( int szt, long long int *add, long long int *mul )
+{
+   *add += szt*szt;
+   *mul += szt*szt;
+}
+
 __global__ void dbl_back_substitute
  ( int dim, int idx, double *U, double *w )
 {
@@ -522,6 +560,15 @@ __global__ void dbl_back_substitute
    }
    wrk[k] = wrk[k] - result; // subtract product
    w[B*dim+k] = wrk[k];
+}
+
+void flopcount_dbl_back_substitute
+ ( int nblocks, int szt, long long int *add, long long int *mul )
+{
+   const int nbthreads = nblocks*szt;
+
+   *add += nbthreads*(szt + 1); // dim equals szt, one extract subtraction
+   *mul += nbthreads*szt;
 }
 
 __global__ void cmplx_back_substitute
@@ -559,6 +606,15 @@ __global__ void cmplx_back_substitute
    wrkim[k] = wrkim[k] - resultim;
    wre[B*dim+k] = wrkre[k];
    wim[B*dim+k] = wrkim[k];
+}
+
+void flopcount_cmplx_back_substitute
+ ( int nblocks, int szt, long long int *add, long long int *mul )
+{
+   const int nbthreads = nblocks*szt;
+
+   *add += 4*nbthreads*szt + 2*nbthreads;
+   *mul += 4*nbthreads*szt;
 }
 
 void GPU_dbl_upper_inverse
@@ -692,7 +748,8 @@ void GPU_cmplx_upper_inverse
 void GPU_dbl_upper_tiled_solver
  ( int dim, int szt, int nbt, double **U, double *b, double *x,
    double *invlapms, double *mullapms, double *sublapms, double *totlapms,
-   double *walltimesec )
+   double *walltimesec,
+   long long int *addcnt, long long int *mulcnt, long long int *divcnt )
 {
    const int nbr = nbt*szt*szt;   // number of doubles on diagonal tiles
    double *D_h = new double[nbr];    // the diagonal tiles on the host
@@ -720,6 +777,7 @@ void GPU_dbl_upper_tiled_solver
    *mullapms = 0.0;
    *sublapms = 0.0;
    *totlapms = 0.0;
+   *addcnt = 0; *mulcnt = 0; *divcnt = 0;
    float milliseconds;
    struct timeval begintime,endtime; // wall clock time of computations
 
@@ -732,6 +790,7 @@ void GPU_dbl_upper_tiled_solver
    cudaEventElapsedTime(&milliseconds,start,stop);
    *invlapms += milliseconds;
    *totlapms += milliseconds;
+   flopcount_dbl_invert_tiles(nbt,szt,addcnt,mulcnt,divcnt);
 
    double *rhs_d;                    // right hand side on device
    const size_t szrhs = dim*sizeof(double);
@@ -745,6 +804,7 @@ void GPU_dbl_upper_tiled_solver
    cudaEventElapsedTime(&milliseconds,start,stop);
    *mullapms += milliseconds;
    *totlapms += milliseconds;
+   flopcount_dbl_multiply_inverse(szt,addcnt,mulcnt);
 
    int nbrUcol = (nbt-1)*szt*szt;         // #doubles in column of U
    double *Ucol_h = new double[nbrUcol];  // column of U on host
@@ -774,6 +834,7 @@ void GPU_dbl_upper_tiled_solver
       cudaEventElapsedTime(&milliseconds,start,stop);
       *sublapms += milliseconds;
       *totlapms += milliseconds;
+      flopcount_dbl_back_substitute(k,szt,addcnt,mulcnt);
 
       // (k-1)-th solution tile is ready for inverse multiplication
       cudaEventRecord(start);
@@ -783,6 +844,7 @@ void GPU_dbl_upper_tiled_solver
       cudaEventElapsedTime(&milliseconds,start,stop);
       *mullapms += milliseconds;
       *totlapms += milliseconds;
+      flopcount_dbl_multiply_inverse(szt,addcnt,mulcnt);
 
       nbrUcol = nbrUcol - szt*szt; // one tile less used in update
    }
@@ -810,7 +872,8 @@ void GPU_cmplx_upper_tiled_solver
  ( int dim, int szt, int nbt, double **Ure, double **Uim,
    double *bre, double *bim, double *xre, double *xim,
    double *invlapms, double *mullapms, double *sublapms, double *totlapms,
-   double *walltimesec )
+   double *walltimesec,
+   long long int *addcnt, long long int *mulcnt, long long int *divcnt )
 {
    const int nbr = nbt*szt*szt;   // number of doubles on diagonal tiles
    double *Dre_h = new double[nbr];    // the diagonal tiles on the host
@@ -849,6 +912,7 @@ void GPU_cmplx_upper_tiled_solver
    *mullapms = 0.0;
    *sublapms = 0.0;
    *totlapms = 0.0;
+   *addcnt = 0; *divcnt = 0; *mulcnt = 0;
    float milliseconds;
    struct timeval begintime,endtime; // wall clock time of computations
 
@@ -861,6 +925,7 @@ void GPU_cmplx_upper_tiled_solver
    cudaEventElapsedTime(&milliseconds,start,stop);
    *invlapms += milliseconds;
    *totlapms += milliseconds;
+   flopcount_cmplx_invert_tiles(nbt,szt,addcnt,mulcnt,divcnt);
 
    double *rhsre_d;                    // right hand side on device
    double *rhsim_d;
@@ -878,6 +943,7 @@ void GPU_cmplx_upper_tiled_solver
    cudaEventElapsedTime(&milliseconds,start,stop);
    *mullapms += milliseconds;
    *totlapms += milliseconds;
+   flopcount_cmplx_multiply_inverse(szt,addcnt,mulcnt);
 
    int nbrUcol = (nbt-1)*szt*szt;           // #doubles in column of U
    double *Ucolre_h = new double[nbrUcol];  // column of U on host
@@ -917,6 +983,7 @@ void GPU_cmplx_upper_tiled_solver
       cudaEventElapsedTime(&milliseconds,start,stop);
       *sublapms += milliseconds;
       *totlapms += milliseconds;
+      flopcount_cmplx_back_substitute(k,szt,addcnt,mulcnt);
 
       // (k-1)-th solution tile is ready for inverse multiplication
       cudaEventRecord(start);
@@ -927,6 +994,7 @@ void GPU_cmplx_upper_tiled_solver
       cudaEventElapsedTime(&milliseconds,start,stop);
       *mullapms += milliseconds;
       *totlapms += milliseconds;
+      flopcount_cmplx_multiply_inverse(szt,addcnt,mulcnt);
 
       nbrUcol = nbrUcol - szt*szt; // one tile less used in update
    }

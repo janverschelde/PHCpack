@@ -129,6 +129,27 @@ __global__ void  dbl_invert_tiles ( int dim, double *U, double *invU );
  * ON RETURN :
  *   invU     rows of the inverse of the tiles in U. */
 
+void flopcount_dbl_invert_tiles
+ ( int nbt, int szt, long long int *add, long long int *mul,
+   long long int *div );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to invert
+ *   an upper triangular matrix of dimension szt with nbt*szt threads,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   nbt      the number of tiles equals the number of blocks;
+ *   szt      equals the number of threads in one block;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   mul      current number of divisions.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
+
 __global__ void  cmplx_invert_tiles
  ( int dim, double *Ure, double *Uim, double *invUre, double *invUim );
 /*
@@ -154,6 +175,27 @@ __global__ void  cmplx_invert_tiles
  *   invUre   real parts of rows of the inverse of the tiles in U;
  *   invU     imaginary parts of rows of the inverse of the tiles in U. */
 
+void flopcount_cmplx_invert_tiles
+ ( int nbt, int szt, long long int *add, long long int *mul,
+   long long int *div );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to invert
+ *   an upper triangular matrix of dimension szt with nbt*szt threads,
+ *   on complex data.
+ *
+ * ON ENTRY :
+ *   nbt      the number of tiles equals the number of blocks;
+ *   szt      equals the number of threads in one block;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications;
+ *   mul      current number of divisions.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications;
+ *   div      accumulated number of divisions. */
+
 __global__ void dbl_multiply_inverse
  ( int dim, int idx, double *invU, double *w );
 /*
@@ -169,6 +211,24 @@ __global__ void dbl_multiply_inverse
  * ON RETURN :
  *   w        product of the proper inverse of the diagonal tile
  *            defines by the index idx with the w on input. */
+
+void flopcount_dbl_multiply_inverse
+ ( int szt, long long int *add, long long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to compute the
+ *   product of a right hand side slice with an inverse diagonal tile,
+ *   on real data.
+ *
+ * ON ENTRY :
+ *   szt      number of threads in a block
+ *            and the dimension of the tiles;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
 
 __global__ void cmplx_multiply_inverse
  ( int dim, int idx, double *invUre, double *invUim,
@@ -191,6 +251,24 @@ __global__ void cmplx_multiply_inverse
  *   wim      imaginary parts of the product of the inverse of the diagonal
  *            tile defined by the index idx with the w on input. */
 
+void flopcount_cmplx_multiply_inverse
+ ( int szt, long long int *add, long long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to compute the
+ *   product of a right hand side slice with an inverse diagonal tile,
+ *   on complex data.
+ *
+ * ON ENTRY :
+ *   szt      number of threads in a block
+ *            and the dimension of the tiles;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
+
 __global__ void dbl_back_substitute
  ( int dim, int idx, double *U, double *w );
 /*
@@ -206,6 +284,23 @@ __global__ void dbl_back_substitute
  *
  * ON RETURN :
  *   w        updated right hand side vector. */
+
+void flopcount_dbl_back_substitute
+ ( int nblocks, int szt, long long int *add, long long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to update
+ *   the right hand side vector with back substitution, on real data.
+ *
+ * ON ENTRY :
+ *   nblocks  the number of blocks;
+ *   szt      number of threads in each block;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
 
 __global__ void cmplx_back_substitute
  ( int dim, int idx, double *Ure, double *Uim, double *wre, double *wim );
@@ -225,6 +320,23 @@ __global__ void cmplx_back_substitute
  * ON RETURN :
  *   wre      real parts of the updated right hand side vector;
  *   wim      imaginary parts of the updated right hand side vector. */
+
+void flopcount_cmplx_back_substitute
+ ( int nblocks, int szt, long long int *add, long long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to update
+ *   the right hand side vector with back substitution, on complex data.
+ *
+ * ON ENTRY :
+ *   nblocks  the number of blocks;
+ *   szt      number of threads in each block;
+ *   add      current number of additions and subtractions;
+ *   mul      current number of multiplications.
+ *
+ * ON RETURN :
+ *   add      accumulated number of additions and subtractions;
+ *   mul      accumulated number of multiplications. */
 
 void GPU_dbl_upper_inverse
  ( int dim, double **U, double **invU, double *lapms, double *walltimesec );
@@ -267,7 +379,8 @@ void GPU_cmplx_upper_inverse
 void GPU_dbl_upper_tiled_solver
  ( int dim, int szt, int nbt, double **U, double *b, double *x,
    double *invlapms, double *mullapms, double *sublapms, double *totlapms,
-   double *walltimesec );
+   double *walltimesec,
+   long long int *addcnt, long long int *mulcnt, long long int *divcnt );
 /*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
@@ -287,13 +400,17 @@ void GPU_dbl_upper_tiled_solver
  *            with the inversed diagonal tile;
  *   sublapms is the elapsed time spent by the kernel for back substitution;
  *   totlapms is the total elapsed time spent by all kernels;
- *   walltimesec is the elapsed wall clock computation time. */
+ *   walltimesec is the elapsed wall clock computation time;
+ *   addcnt   counts the number of additions and subtractions;
+ *   mulcnt   counts the number of multiplications;
+ *   divcnt   counts the number of divisions. */
 
 void GPU_cmplx_upper_tiled_solver
  ( int dim, int szt, int nbt, double **Ure, double **Uim,
    double *bre, double *bim, double *xre, double *xim,
    double *invlapms, double *mullapms, double *sublapms, double *totlapms,
-   double *walltimesec );
+   double *walltimesec,
+   long long int *addcnt, long long int *mulcnt, long long int *divcnt );
 /*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
@@ -317,6 +434,9 @@ void GPU_cmplx_upper_tiled_solver
  *            with the inversed diagonal tile;
  *   sublapms is the elapsed time spent by the kernel for back substitution;
  *   totlapms is the total elapsed time spent by all kernels;
- *   walltimesec is the elapsed wall clock computation time. */
+ *   walltimesec is the elapsed wall clock computation time;
+ *   addcnt   counts the number of additions and subtractions;
+ *   mulcnt   counts the number of multiplications;
+ *   divcnt   counts the number of divisions. */
 
 #endif

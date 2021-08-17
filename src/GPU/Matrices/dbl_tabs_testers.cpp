@@ -323,6 +323,9 @@ void test_real_upper_tiling ( void )
    }
    double timelapsed_h,timelapsed_d,elapsedms;
    double invlapsed,mullapsed,sublapsed;
+   long long int addcnt = 0;
+   long long int mulcnt = 0;
+   long long int divcnt = 0;
 
    cout << "-> CPU solves an upper triangular system ..." << endl;
 
@@ -340,7 +343,8 @@ void test_real_upper_tiling ( void )
 
    GPU_dbl_upper_tiled_solver
       (dim,sizetile,numtiles,A_d,rhs_d,x_d,
-       &invlapsed,&mullapsed,&sublapsed,&elapsedms,&timelapsed_d);
+       &invlapsed,&mullapsed,&sublapsed,&elapsedms,&timelapsed_d,
+       &addcnt,&mulcnt,&divcnt);
 
    if(verbose > 0)
    {
@@ -384,6 +388,30 @@ void test_real_upper_tiling ( void )
    cout << elapsedms << " milliseconds." << endl;
    cout << "        Total GPU wall clock computation time : ";
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
+   cout << endl;
+   cout << "             Number of additions/subtractions : "
+        << addcnt << endl;
+   cout << "                    Number of multiplications : "
+        << mulcnt << endl;
+   cout << "                          Number of divisions : "
+        << divcnt << endl;
+   long long int flopcnt = addcnt + mulcnt + divcnt;
+   cout << "    Total number of floating-point operations : "
+        << flopcnt << endl;
+   cout << endl;
+   cout << scientific << setprecision(3);
+   double flops = ((double) flopcnt)/timelapsed_d;
+   const int gigacnt = pow(2.0,30);
+   cout << "Flops : " << flops;
+   cout << fixed << setprecision(3)
+        << " = " << flops/gigacnt << " Gigaflops" << endl;
+
+   for(int i=0; i<dim; i++)
+   {
+      free(A[i]); free(A_d[i]);
+   }
+   free(A); free(A_d); free(sol);
+   free(rhs); free(rhs_d); free(x); free(x_d);
 }
 
 void test_cmplx_upper_tiling ( void )
@@ -474,6 +502,9 @@ void test_cmplx_upper_tiling ( void )
    }
    double timelapsed_h,timelapsed_d,elapsedms;
    double invlapsed,mullapsed,sublapsed;
+   long long int addcnt = 0;
+   long long int mulcnt = 0;
+   long long int divcnt = 0;
 
    cout << "-> CPU solves an upper triangular system ..." << endl;
 
@@ -492,7 +523,8 @@ void test_cmplx_upper_tiling ( void )
 
    GPU_cmplx_upper_tiled_solver
       (dim,sizetile,numtiles,Are_d,Aim_d,rhsre_d,rhsim_d,xre_d,xim_d,
-       &invlapsed,&mullapsed,&sublapsed,&elapsedms,&timelapsed_d);
+       &invlapsed,&mullapsed,&sublapsed,&elapsedms,&timelapsed_d,
+       &addcnt,&mulcnt,&divcnt);
 
    if(verbose > 0)
    {
@@ -537,4 +569,31 @@ void test_cmplx_upper_tiling ( void )
    cout << elapsedms << " milliseconds." << endl;
    cout << "        Total GPU wall clock computation time : ";
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
+   cout << endl;
+   cout << "             Number of additions/subtractions : "
+        << addcnt << endl;
+   cout << "                    Number of multiplications : "
+        << mulcnt << endl;
+   cout << "                          Number of divisions : "
+        << divcnt << endl;
+   long long int flopcnt = addcnt + mulcnt + divcnt;
+   cout << "    Total number of floating-point operations : "
+        << flopcnt << endl;
+   cout << endl;
+   cout << scientific << setprecision(3);
+   double flops = ((double) flopcnt)/timelapsed_d;
+   const int gigacnt = pow(2.0,30);
+   cout << "Flops : " << flops;
+   cout << fixed << setprecision(3)
+        << " = " << flops/gigacnt << " Gigaflops" << endl;
+
+   for(int i=0; i<dim; i++)
+   {
+      free(Are[i]); free(Are_d[i]);
+      free(Aim[i]); free(Aim_d[i]);
+   }
+   free(Are); free(Aim); free(Are_d); free(Aim_d);
+   free(solre); free(solim);
+   free(rhsre); free(rhsim); free(rhsre_d); free(rhsim_d);
+   free(xre); free(xim); free(xre_d); free(xim_d);
 }
