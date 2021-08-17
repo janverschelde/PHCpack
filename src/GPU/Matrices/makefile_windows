@@ -219,6 +219,13 @@ dbl_tabs_host.obj:
                  /I$(CUDASDK)/include \
                  /Fo: dbl_tabs_host.obj /EHsc
 
+dbl_tabs_flopcounts.obj:
+	@-echo ">>> compiling dbl_tabs_flopcounts ..."
+	$(CL)\cl /c dbl_tabs_flopcounts.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_tabs_flopcounts.obj /EHsc
+
 dbl_tabs_kernels.obj:
 	@-echo ">>> compiling dbl_tabs_kernels ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) \
@@ -246,13 +253,13 @@ test_dbl_tabs.obj:
                  /I$(CUDASDK)/include \
                  /Fo: test_dbl_tabs.obj /EHsc
 
-test_dbl_tabs: test_dbl_tabs.obj dbl_tabs_testers.obj \
+test_dbl_tabs: test_dbl_tabs.obj dbl_tabs_testers.obj dbl_tabs_flopcounts.obj \
 	       dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_test_utilities.obj \
                dbl_convolutions_host.obj dbl_factorizations.obj \
                random_numbers.obj random_series.obj random_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_tabs.exe \
-             test_dbl_tabs.obj dbl_tabs_testers.obj \
+             test_dbl_tabs.obj dbl_tabs_testers.obj dbl_tabs_flopcounts.obj \
              dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_test_utilities.obj \
              dbl_convolutions_host.obj dbl_factorizations.obj \
              random_numbers.obj random_series.obj random_matrices.obj
@@ -433,7 +440,7 @@ clean:
 	del dbl_matrices_host.obj dbl_matrices_kernels.obj
 	del dbl_matrices_testers.obj dbl_vectors_testers.obj
 	del dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_test_utilities.obj
-	del dbl_tabs_testers.obj test_dbl_tabs.obj
+	del dbl_tabs_testers.obj test_dbl_tabs.obj dbl_tabs_flopcounts.obj
 	del test_dbl_tabs.obj test_dbl_tabs_lib
 	del test_dbl_tabs.exe test_dbl_tabs.exp
 	del double_double_functions.obj
