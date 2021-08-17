@@ -670,6 +670,9 @@ void test_real2_upper_tiling ( void )
    }
    double timelapsed_h,timelapsed_d,elapsedms;
    double invlapsed,mullapsed,sublapsed;
+   long long int addcnt = 0;
+   long long int mulcnt = 0;
+   long long int divcnt = 0;
 
    cout << "-> CPU solves an upper triangular system ..." << endl;
 
@@ -688,7 +691,8 @@ void test_real2_upper_tiling ( void )
 
    GPU_dbl2_upper_tiled_solver
       (dim,sizetile,numtiles,Ahi_d,Alo_d,rhshi_d,rhslo_d,xhi_d,xlo_d,
-       &invlapsed,&mullapsed,&sublapsed,&elapsedms,&timelapsed_d);
+       &invlapsed,&mullapsed,&sublapsed,&elapsedms,&timelapsed_d,
+       &addcnt,&mulcnt,&divcnt);
 
    if(verbose > 0)
    {
@@ -735,6 +739,38 @@ void test_real2_upper_tiling ( void )
    cout << elapsedms << " milliseconds." << endl;
    cout << "        Total GPU wall clock computation time : ";
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
+   cout << endl;
+   cout << "             Number of additions/subtractions : "
+        << addcnt << " x 20 " << endl;
+   cout << "                    Number of multiplications : "
+        << mulcnt << " x 23 " << endl;
+   cout << "                          Number of divisions : "
+        << divcnt << " x 70 " << endl;
+   long long int flopcnt = 20*addcnt + 23*mulcnt + 70*divcnt;
+   cout << "    Total number of floating-point operations : "
+        << flopcnt << endl;
+   cout << endl;
+   double kernflops = 1000.0*((double) flopcnt)/elapsedms;
+   double wallflops = ((double) flopcnt)/timelapsed_d;
+   const int gigacnt = pow(2.0,30);
+   cout << "Kernel Time Flops : "
+        << scientific << setprecision(3) << kernflops;
+   cout << fixed << setprecision(3)
+        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+   cout << " Wall Clock Flops : "
+        << scientific << setprecision(3) << wallflops;
+   cout << fixed << setprecision(3)
+        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+
+   for(int i=0; i<dim; i++)
+   {
+      free(Ahi[i]); free(Ahi_d[i]);
+      free(Alo[i]); free(Alo_d[i]);
+   }
+   free(Ahi); free(Ahi_d); free(solhi);
+   free(Alo); free(Alo_d); free(sollo);
+   free(rhshi); free(rhshi_d); free(xhi); free(xhi_d);
+   free(rhslo); free(rhslo_d); free(xlo); free(xlo_d);
 }
 
 void test_cmplx2_upper_tiling ( void )
@@ -870,6 +906,9 @@ void test_cmplx2_upper_tiling ( void )
    }
    double timelapsed_h,timelapsed_d,elapsedms;
    double invlapsed,mullapsed,sublapsed;
+   long long int addcnt = 0;
+   long long int mulcnt = 0;
+   long long int divcnt = 0;
 
    cout << "-> CPU solves an upper triangular system ..." << endl;
 
@@ -895,7 +934,8 @@ void test_cmplx2_upper_tiling ( void )
       (dim,sizetile,numtiles,Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
        rhsrehi_d,rhsrelo_d,rhsimhi_d,rhsimlo_d,
          xrehi_d,  xrelo_d,  ximhi_d,  ximlo_d,
-       &invlapsed,&mullapsed,&sublapsed,&elapsedms,&timelapsed_d);
+       &invlapsed,&mullapsed,&sublapsed,&elapsedms,&timelapsed_d,
+       &addcnt,&mulcnt,&divcnt);
 
    if(verbose > 0)
    {
@@ -960,4 +1000,42 @@ void test_cmplx2_upper_tiling ( void )
    cout << elapsedms << " milliseconds." << endl;
    cout << "        Total GPU wall clock computation time : ";
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
+   cout << endl;
+   cout << "             Number of additions/subtractions : "
+        << addcnt << " x 20 " << endl;
+   cout << "                    Number of multiplications : "
+        << mulcnt << " x 23 " << endl;
+   cout << "                          Number of divisions : "
+        << divcnt << " x 70 " << endl;
+   long long int flopcnt = 20*addcnt + 23*mulcnt + 70*divcnt;
+   cout << "    Total number of floating-point operations : "
+        << flopcnt << endl;
+   cout << endl;
+   double kernflops = 1000.0*((double) flopcnt)/elapsedms;
+   double wallflops = ((double) flopcnt)/timelapsed_d;
+   const int gigacnt = pow(2.0,30);
+   cout << "Kernel Time Flops : "
+        << scientific << setprecision(3) << kernflops;
+   cout << fixed << setprecision(3)
+        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+   cout << " Wall Clock Flops : "
+        << scientific << setprecision(3) << wallflops;
+   cout << fixed << setprecision(3)
+        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+
+   for(int i=0; i<dim; i++)
+   {
+      free(Arehi[i]); free(Arehi_d[i]);
+      free(Arelo[i]); free(Arelo_d[i]);
+      free(Aimhi[i]); free(Aimhi_d[i]);
+      free(Aimlo[i]); free(Aimlo_d[i]);
+   }
+   free(Arehi); free(Aimhi); free(Arehi_d); free(Aimhi_d);
+   free(Arelo); free(Aimlo); free(Arelo_d); free(Aimlo_d);
+   free(solrehi); free(solimhi);
+   free(solrelo); free(solimlo);
+   free(rhsrehi); free(rhsimhi); free(rhsrehi_d); free(rhsimhi_d);
+   free(rhsrelo); free(rhsimlo); free(rhsrelo_d); free(rhsimlo_d);
+   free(xrehi); free(ximhi); free(xrehi_d); free(ximhi_d);
+   free(xrelo); free(ximlo); free(xrelo_d); free(ximlo_d);
 }

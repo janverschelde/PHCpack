@@ -359,7 +359,8 @@ void GPU_dbl2_upper_tiled_solver
  ( int dim, int szt, int nbt, double **Uhi, double **Ulo,
    double *bhi, double *blo, double *xhi, double *xlo,
    double *invlapms, double *mullapms, double *sublapms, double *totlapms,
-   double *walltimesec );
+   double *walltimesec,
+   long long int *addcnt, long long int *mulcnt, long long int *divcnt );
 /*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
@@ -383,7 +384,10 @@ void GPU_dbl2_upper_tiled_solver
  *            with the inversed diagonal tile;
  *   sublapms is the elapsed time spent by the kernel for back substitution;
  *   totlapms is the total elapsed time spent by all kernels;
- *   walltimesec is the elapsed wall clock computation time. */
+ *   walltimesec is the elapsed wall clock computation time;
+ *   addcnt   counts the number of additions and subtractions;
+ *   mulcnt   counts the number of multiplications;
+ *   divcnt   counts the number of divisions. */
 
 void GPU_cmplx2_upper_tiled_solver
  ( int dim, int szt, int nbt,
@@ -391,7 +395,8 @@ void GPU_cmplx2_upper_tiled_solver
    double *brehi, double *brelo, double *bimhi, double *bimlo,
    double *xrehi, double *xrelo, double *ximhi, double *ximlo,
    double *invlapms, double *mullapms, double *sublapms, double *totlapms,
-   double *walltimesec );
+   double *walltimesec,
+   long long int *addcnt, long long int *mulcnt, long long int *divcnt );
 /*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
@@ -423,6 +428,9 @@ void GPU_cmplx2_upper_tiled_solver
  *            with the inversed diagonal tile;
  *   sublapms is the elapsed time spent by the kernel for back substitution;
  *   totlapms is the total elapsed time spent by all kernels;
- *   walltimesec is the elapsed wall clock computation time. */
+ *   walltimesec is the elapsed wall clock computation time;
+ *   addcnt   counts the number of additions and subtractions;
+ *   mulcnt   counts the number of multiplications;
+ *   divcnt   counts the number of divisions. */
 
 #endif

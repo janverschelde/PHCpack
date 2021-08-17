@@ -6,13 +6,13 @@ CNV=../Convolutions
 CUDA=/usr/local/cuda/include
 CUDALIB=/usr/local/cuda/lib64
 # the architecture flag for Tesla C2050
-smflag=sm_20
+# smflag=sm_20
 # the architecture flag for Kepler K20C
 # smflag=sm_35
 # the architecture flag for Pascal P100
 # smflag=sm_60
 # the architecture flag for Volta V100
-# smflag=sm_70
+smflag=sm_70
 
 random_numbers.o:
 	@-echo ">>> compiling double random number generators ..."
@@ -207,12 +207,13 @@ test_dbl2_tabs.o:
 	@-echo ">>> compiling test_dbl2_tabs ..."
 	$(gpp) -O3 -c test_dbl2_tabs.cpp
 
-test_dbl2_tabs: test_dbl2_tabs.o dbl2_tabs_testers.o \
+test_dbl2_tabs: test_dbl2_tabs.o dbl2_tabs_testers.o dbl_tabs_flopcounts.o \
                 double_double_functions.o dbl2_tabs_host.o \
                 dbl2_tabs_kernels.o dbl2_factorizations.o \
                 random_numbers.o random2_vectors.o random2_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_tabs test_dbl2_tabs.o dbl2_tabs_testers.o \
+                  dbl_tabs_flopcounts.o \
                   double_double_functions.o dbl2_tabs_host.o \
                   dbl2_tabs_kernels.o dbl2_factorizations.o \
                   random_numbers.o random2_vectors.o random2_matrices.o \
