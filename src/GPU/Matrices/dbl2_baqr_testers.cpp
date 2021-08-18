@@ -132,26 +132,31 @@ void test_real2_blocked_qr
    }
    if((mode == 0) || (mode == 2))
    {
-      cout << "         Time spent by the Householder kernel : ";
-      cout << houselapsedms << " milliseconds." << endl;
-      cout << "      Time spent by the kernel for beta*R^T*v : ";
-      cout << RTvlapsedms << " milliseconds." << endl;
-      cout << "  Time spent by the kernel to reduce one tile : ";
-      cout << tileRlapsedms << " milliseconds." << endl;
-      cout << "    Time spent by the kernel for the W matrix : ";
-      cout << vb2Wlapsedms << " milliseconds." << endl;
+      cout << "         Time spent by the Householder kernel : "
+           << houselapsedms << " milliseconds." << endl;
+      cout << "      Time spent by the kernel for beta*R^T*v : "
+           << RTvlapsedms << " milliseconds." << endl;
+      cout << "  Time spent by the kernel to reduce one tile : "
+           << tileRlapsedms << " milliseconds." << endl;
+      cout << "    Time spent by the kernel for the W matrix : "
+           << vb2Wlapsedms << " milliseconds." << endl;
       // cout << " Time spent by the kernel for computing W*Y^T : ";
       // cout << WYTlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing Y*W^T : ";
-      cout << YWTlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing Q*WYT : ";
-      cout << QWYTlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing YWT*C : ";
-      cout << YWTClapsedms << " milliseconds." << endl;
-      cout << "Time spent by the kernel for adding QWYT to Q : ";
-      cout << Qaddlapsedms << " milliseconds." << endl;
-      cout << "Time spent by the kernel for adding R to YWTC : ";
-      cout << Raddlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing Y*W^T : "
+           << YWTlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing Q*WYT : "
+           << QWYTlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing YWT*C : "
+           << YWTClapsedms << " milliseconds." << endl;
+      cout << "Time spent by the kernel for adding QWYT to Q : "
+           << Qaddlapsedms << " milliseconds." << endl;
+      cout << "Time spent by the kernel for adding R to YWTC : "
+           << Raddlapsedms << " milliseconds." << endl;
+      const double totlapsedms = houselapsedms + RTvlapsedms
+         + tileRlapsedms + vb2Wlapsedms + YWTlapsedms + QWYTlapsedms
+         + YWTClapsedms + Qaddlapsedms + Raddlapsedms;
+      cout << "                    Time spent by all kernels : "
+           << totlapsedms << " milliseconds." << endl;
       cout << "        Total GPU wall clock computation time : ";
       cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
       cout << endl;
@@ -167,12 +172,17 @@ void test_real2_blocked_qr
       cout << "    Total number of floating-point operations : "
            << flopcnt << endl;
       cout << endl;
-      cout << scientific << setprecision(3);
-      double flops = ((double) flopcnt)/timelapsed_d;
+      double kernflops = 1000.0*((double) flopcnt)/totlapsedms;
+      double wallflops = ((double) flopcnt)/timelapsed_d;
       const int gigacnt = pow(2.0,30);
-      cout << "Flops : " << flops;
+      cout << "Kernel Time Flops : "
+           << scientific << setprecision(3) << kernflops;
       cout << fixed << setprecision(3)
-           << " = " << flops/gigacnt << " Gigaflops" << endl;
+           << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+      cout << " Wall Clock Flops : "
+           << scientific << setprecision(3) << wallflops;
+      cout << fixed << setprecision(3)
+           << " = " << wallflops/gigacnt << " Gigaflops" << endl;
    }
    for(int i=0; i<nrows; i++)
    {
@@ -355,26 +365,31 @@ void test_cmplx2_blocked_qr
    }
    if((mode == 0) || (mode == 2))
    {
-      cout << "         Time spent by the Householder kernel : ";
-      cout << houselapsedms << " milliseconds." << endl;
-      cout << "      Time spent by the kernel for beta*R^H*v : ";
-      cout << RHvlapsedms << " milliseconds." << endl;
-      cout << "  Time spent by the kernel to reduce one tile : ";
-      cout << tileRlapsedms << " milliseconds." << endl;
-      cout << "    Time spent by the kernel for the W matrix : ";
-      cout << vb2Wlapsedms << " milliseconds." << endl;
+      cout << "         Time spent by the Householder kernel : "
+           << houselapsedms << " milliseconds." << endl;
+      cout << "      Time spent by the kernel for beta*R^H*v : "
+           << RHvlapsedms << " milliseconds." << endl;
+      cout << "  Time spent by the kernel to reduce one tile : "
+           << tileRlapsedms << " milliseconds." << endl;
+      cout << "    Time spent by the kernel for the W matrix : "
+           << vb2Wlapsedms << " milliseconds." << endl;
       // cout << " Time spent by the kernel for computing W*Y^H : ";
       // cout << WYTlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing Y*W^H : ";
-      cout << YWTlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing Q*WYH : ";
-      cout << QWYTlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing YWH*C : ";
-      cout << YWTClapsedms << " milliseconds." << endl;
-      cout << "Time spent by the kernel for adding QWYH to Q : ";
-      cout << Qaddlapsedms << " milliseconds." << endl;
-      cout << "Time spent by the kernel for adding R to YWHC : ";
-      cout << Raddlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing Y*W^H : "
+           << YWTlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing Q*WYH : "
+           << QWYTlapsedms << " milliseconds." << endl;
+      cout << " Time spent by the kernel for computing YWH*C : "
+           << YWTClapsedms << " milliseconds." << endl;
+      cout << "Time spent by the kernel for adding QWYH to Q : "
+           << Qaddlapsedms << " milliseconds." << endl;
+      cout << "Time spent by the kernel for adding R to YWHC : "
+           << Raddlapsedms << " milliseconds." << endl;
+      const double totlapsedms = houselapsedms + RHvlapsedms
+         + tileRlapsedms + vb2Wlapsedms + YWTlapsedms + QWYTlapsedms
+         + YWTClapsedms + Qaddlapsedms + Raddlapsedms;
+      cout << "                    Time spent by all kernels : "
+           << totlapsedms << " milliseconds." << endl;
       cout << "        Total GPU wall clock computation time : ";
       cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
       cout << endl;
@@ -390,12 +405,17 @@ void test_cmplx2_blocked_qr
       cout << "    Total number of floating-point operations : "
            << flopcnt << endl;
       cout << endl;
-      cout << scientific << setprecision(3);
-      double flops = ((double) flopcnt)/timelapsed_d;
+      double kernflops = 1000.0*((double) flopcnt)/totlapsedms;
+      double wallflops = ((double) flopcnt)/timelapsed_d;
       const int gigacnt = pow(2.0,30);
-      cout << "Flops : " << flops;
+      cout << "Kernel Time Flops : "
+           << scientific << setprecision(3) << kernflops;
       cout << fixed << setprecision(3)
-           << " = " << flops/gigacnt << " Gigaflops" << endl;
+           << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+      cout << " Wall Clock Flops : "
+           << scientific << setprecision(3) << wallflops;
+      cout << fixed << setprecision(3)
+           << " = " << wallflops/gigacnt << " Gigaflops" << endl;
    }
    for(int i=0; i<nrows; i++)
    {

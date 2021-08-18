@@ -1,6 +1,9 @@
+Wed 18 Aug 2021 : to {dbl,dbl2}_baqr_testers.cpp, added total of all times
+  spent by the kernels and computed also the "kernel time flops."
+
 Tue 17 Aug 2021 : added flopcounts to dbl2_tabs_kernels, updated 
   dbl2_tabs_testers.cpp and the makefiles.  To dbl_tabs_testers.cpp,
-  added the computation of the "kernel time flops".
+  added the computation of the "kernel time flops."
 
 Mon 16 Aug 2021 : added timers for each different kernel to
   {dbl,dbl2}_tabs_kernels, updated {dbl,dbl2}_tabs_testers.cpp.
