@@ -590,11 +590,11 @@ void test_cmplx_blocked_qrbs
       double bskernflops = 1000.0*((double) bsflopcnt)/bselapsedms;
       double bswallflops = ((double) bsflopcnt)/bstimelapsed_d;
       // const int gigacnt = pow(2.0,30);
-      cout << "Kernel Time Flops : "
+      cout << "BS Kernel Time Flops : "
            << scientific << setprecision(3) << bskernflops;
       cout << fixed << setprecision(3)
            << " = " << bskernflops/gigacnt << " Gigaflops" << endl;
-      cout << " Wall Clock Flops : "
+      cout << " BS Wall Clock Flops : "
            << scientific << setprecision(3) << bswallflops;
       cout << fixed << setprecision(3)
            << " = " << bswallflops/gigacnt << " Gigaflops" << endl;

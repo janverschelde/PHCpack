@@ -226,6 +226,12 @@ dbl_tabs_flopcounts.obj:
                  /I$(CUDASDK)/include \
                  /Fo: dbl_tabs_flopcounts.obj /EHsc
 
+gettimeofday4win.obj:
+	@-echo ">>> compiling gettimeofday4win ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 \
+                gettimeofday4win.cpp \
+             -o gettimeofday4win.obj
+
 dbl_tabs_kernels.obj:
 	@-echo ">>> compiling dbl_tabs_kernels ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) \
@@ -256,12 +262,14 @@ test_dbl_tabs.obj:
 test_dbl_tabs: test_dbl_tabs.obj dbl_tabs_testers.obj dbl_tabs_flopcounts.obj \
 	       dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_test_utilities.obj \
                dbl_convolutions_host.obj dbl_factorizations.obj \
+               gettimeofday4win.obj \
                random_numbers.obj random_series.obj random_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_tabs.exe \
              test_dbl_tabs.obj dbl_tabs_testers.obj dbl_tabs_flopcounts.obj \
              dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_test_utilities.obj \
              dbl_convolutions_host.obj dbl_factorizations.obj \
+             gettimeofday4win.obj \
              random_numbers.obj random_series.obj random_matrices.obj
 
 double_double_functions.obj:
@@ -377,12 +385,14 @@ test_dbl_baqr: test_dbl_baqr.obj prompt_baqr_setup.obj \
                dbl_baqr_testers.obj dbl_factors_testers.obj \
                dbl_baqr_host.obj dbl_baqr_kernels.obj \
                dbl_factorizations.obj dbl_baqr_flopcounts.obj \
+	       gettimeofday4win.obj \
                random_numbers.obj random_series.obj random_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_baqr.exe test_dbl_baqr.obj \
              prompt_baqr_setup.obj dbl_baqr_testers.obj \
              dbl_factors_testers.obj dbl_factorizations.obj \
              dbl_baqr_host.obj dbl_baqr_kernels.obj dbl_baqr_flopcounts.obj \
+             gettimeofday4win.obj \
              random_numbers.obj random_series.obj random_matrices.obj
 
 dbl2_baqr_host.obj:
@@ -447,6 +457,8 @@ test_dbl_qrbs: test_dbl_qrbs.obj prompt_baqr_setup.obj \
                dbl_baqr_host.obj dbl_baqr_kernels.obj \
 	       dbl_tabs_host.obj dbl_test_utilities.obj \
                dbl_factorizations.obj dbl_baqr_flopcounts.obj \
+	       dbl_tabs_kernels.obj dbl_tabs_flopcounts.obj \
+	       gettimeofday4win.obj \
                random_numbers.obj random_series.obj random_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_qrbs.exe test_dbl_qrbs.obj \
@@ -454,6 +466,8 @@ test_dbl_qrbs: test_dbl_qrbs.obj prompt_baqr_setup.obj \
 	     dbl_tabs_host.obj dbl_test_utilities.obj \
              dbl_factors_testers.obj dbl_factorizations.obj \
              dbl_baqr_host.obj dbl_baqr_kernels.obj dbl_baqr_flopcounts.obj \
+             dbl_tabs_kernels.obj dbl_tabs_flopcounts.obj \
+	     gettimeofday4win.obj \
              random_numbers.obj random_series.obj random_matrices.obj
 
 dbl2_qrbs_testers.obj:
@@ -503,7 +517,7 @@ clean:
 	del dbl2_factorizations.obj dbl2_factors_testers.obj
 	del test_dbl2_factors.obj test_dbl2_factors_lib
 	del test_dbl2_factors.exe test_dbl2_factors.exp
-	del random_matrices.obj
+	del random_matrices.obj gettimeofday4win.obj
 	del dbl_matrices_host.obj dbl_matrices_kernels.obj
 	del dbl_matrices_testers.obj dbl_vectors_testers.obj
 	del dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_test_utilities.obj
