@@ -28,9 +28,11 @@ test_dbl2_factors         : main test on double double factorizations
 -----------------------------------------------------------------------------
 dbl_tabs_host             : tiled accelerated back substitution on host
 dbl2_tabs_host            : double double tabs on host
+dbl_tabs_flopcounts       : counts the flops for all kernels
 dbl_tabs_kernels          : tiled accelerated back substitution on device
 dbl2_tabs_kernels         : double double tabs kernels
-dbl_test_utilities        : test functions on vectors and matrices
+dbl_test_utilities        : test utilities in double precision
+dbl2_test_utilities       : test utilities in double double precision
 dbl_tabs_testers          : tests tiled accelerated back substitution
 dbl2_tabs_testers         : tests on double double tabs
 test_dbl_tabs             : main test on accelerated back substitution
@@ -46,4 +48,8 @@ dbl2_baqr_testers         : tests baqr in double double precision
 prompt_baqr_setup         : prompts for the parameters in the tests
 test_dbl_baqr             : main test on double blocked accelerated qr
 test_dbl2_baqr            : main test on double double blocked accelerated qr
+dbl_qrbs_testers          : tests qr + back substitution in double precision
+dbl2_qrbs_testers         : tests qr + back substitution with double doubles
+test_dbl_qrbs             : main test on double qr + back substitution
+test_dbl2_qrbs            : main test on double double qr + back substitution
 -----------------------------------------------------------------------------
