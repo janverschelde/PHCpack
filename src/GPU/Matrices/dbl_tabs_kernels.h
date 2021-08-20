@@ -4,7 +4,7 @@
 #ifndef __dbl_tabs_kernels_h__
 #define __dbl_tabs_kernels_h__
 
-#define d_shmemsize 256
+#define tabsd_shmemsize 256
 
 __global__ void dbl_small_invert_upper ( int dim, double *U, double *invU );
 /*

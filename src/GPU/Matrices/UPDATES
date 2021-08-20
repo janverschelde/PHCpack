@@ -1,3 +1,7 @@
+Fri 20 Aug 2021 : renamed the bound on the shared memory size in
+  dbl_tabs_kernels and applied the GPU tiled back substitution in
+  dbl_qrbs_testers.cpp, updated the makefile_unix and makefile_windows.
+
 Thu 19 Aug 2021 : edited dbl_baqr_testers.h.  New dbl_qrbs_testers and
   test_dbl_qrbs.cpp, to test QR + back substitution on the CPU in double
   precision, with updated makefiles.  New dbl2_test_utilities with code

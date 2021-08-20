@@ -16,8 +16,8 @@ __global__ void dbl_small_invert_upper ( int dim, double *U, double *invU )
 {
    const int k = threadIdx.x; // thread k computes k-th column of inverse
 
-   __shared__ double Ucol[d_shmemsize];
-   __shared__ double invUrows[d_shmemsize];
+   __shared__ double Ucol[tabsd_shmemsize];
+   __shared__ double invUrows[tabsd_shmemsize];
 
    double rhs,xval;
 
@@ -69,10 +69,10 @@ __global__ void cmplx_small_invert_upper
 {
    const int k = threadIdx.x; // thread k computes k-th column of inverse
 
-   __shared__ double Ucolre[d_shmemsize];
-   __shared__ double Ucolim[d_shmemsize];
-   __shared__ double invUrowsre[d_shmemsize];
-   __shared__ double invUrowsim[d_shmemsize];
+   __shared__ double Ucolre[tabsd_shmemsize];
+   __shared__ double Ucolim[tabsd_shmemsize];
+   __shared__ double invUrowsre[tabsd_shmemsize];
+   __shared__ double invUrowsim[tabsd_shmemsize];
 
    double rhsre,rhsim,xvalre,xvalim,accre,accim,det;
 
@@ -142,8 +142,8 @@ __global__ void cmplx_small_invert_upper
 
 void test_dbl_small_invert_upper ( int dim, double *U, double *invU )
 {
-   double *Ucol = new double[d_shmemsize];
-   double *invUrows = new double[d_shmemsize];
+   double *Ucol = new double[tabsd_shmemsize];
+   double *invUrows = new double[tabsd_shmemsize];
 
    for(int i=0; i<dim*dim; i++)
       cout << "U[" << i << "] : " << U[i] << endl;
@@ -218,8 +218,8 @@ __global__ void dbl_medium_invert_upper ( int dim, double *U, double *invU )
 {
    const int k = threadIdx.x;  // thread k computes k-th column of inverse
 
-   __shared__ double Ucol[d_shmemsize];      // one column of U
-   __shared__ double invUrow[d_shmemsize];   // one row of invU
+   __shared__ double Ucol[tabsd_shmemsize];      // one column of U
+   __shared__ double invUrow[tabsd_shmemsize];   // one row of invU
 
    double rhs,xval;
 
@@ -263,10 +263,10 @@ __global__ void cmplx_medium_invert_upper
 {
    const int k = threadIdx.x;  // thread k computes k-th column of inverse
 
-   __shared__ double Ucolre[d_shmemsize];    // one column of U
-   __shared__ double Ucolim[d_shmemsize];    // imaginary parts of U
-   __shared__ double invUrowre[d_shmemsize]; // one row of invU
-   __shared__ double invUrowim[d_shmemsize]; // imaginary parts of invU
+   __shared__ double Ucolre[tabsd_shmemsize];    // one column of U
+   __shared__ double Ucolim[tabsd_shmemsize];    // imaginary parts of U
+   __shared__ double invUrowre[tabsd_shmemsize]; // one row of invU
+   __shared__ double invUrowim[tabsd_shmemsize]; // imaginary parts of invU
 
    double rhsre,rhsim,xvalre,xvalim,det,accre,accim;
 
@@ -334,8 +334,8 @@ __global__ void  dbl_invert_tiles ( int dim, double *U, double *invU )
    const int k = threadIdx.x;  // thread k computes k-th column of inverse
    const int offset = dim*dim*B; // offset in U and invU
 
-   __shared__ double Ucol[d_shmemsize];      // one column of U
-   __shared__ double invUrow[d_shmemsize];   // one row of invU
+   __shared__ double Ucol[tabsd_shmemsize];      // one column of U
+   __shared__ double invUrow[tabsd_shmemsize];   // one row of invU
 
    double rhs,xval;
 
@@ -381,10 +381,10 @@ __global__ void  cmplx_invert_tiles
    const int k = threadIdx.x;  // thread k computes k-th column of inverse
    const int offset = dim*dim*B; // offset in U and invU
 
-   __shared__ double Ucolre[d_shmemsize];    // one column of U
-   __shared__ double Ucolim[d_shmemsize];    // imaginary parts
-   __shared__ double invUrowre[d_shmemsize]; // one row of invU
-   __shared__ double invUrowim[d_shmemsize]; // imaginary parts
+   __shared__ double Ucolre[tabsd_shmemsize];    // one column of U
+   __shared__ double Ucolim[tabsd_shmemsize];    // imaginary parts
+   __shared__ double invUrowre[tabsd_shmemsize]; // one row of invU
+   __shared__ double invUrowim[tabsd_shmemsize]; // imaginary parts
 
    double rhsre,rhsim,xvalre,xvalim,det,accre,accim;
 
@@ -453,7 +453,7 @@ __global__ void dbl_multiply_inverse
    const int rhsoff = dim*idx;    // offset for the right hand size
    const int offset = dim*rhsoff; // offset for diagonal tile
 
-   __shared__ double work[d_shmemsize];      // copy of w
+   __shared__ double work[tabsd_shmemsize];      // copy of w
 
    work[k] = w[rhsoff+k];
 
@@ -476,8 +476,8 @@ __global__ void cmplx_multiply_inverse
    const int rhsoff = dim*idx;    // offset for the right hand size
    const int offset = dim*rhsoff; // offset for diagonal tile
 
-   __shared__ double workre[d_shmemsize];      // copy of wre
-   __shared__ double workim[d_shmemsize];      // copy of wim
+   __shared__ double workre[tabsd_shmemsize];      // copy of wre
+   __shared__ double workim[tabsd_shmemsize];      // copy of wim
 
    workre[k] = wre[rhsoff+k];
    workim[k] = wim[rhsoff+k];
@@ -507,8 +507,8 @@ __global__ void dbl_back_substitute
    const int k = threadIdx.x;    // thread k computes k-th product
    const int offset = B*dim*dim; // numbers to skip
 
-   __shared__ double wrk[d_shmemsize];    // copy of w
-   __shared__ double sol[d_shmemsize];    // solution to update with
+   __shared__ double wrk[tabsd_shmemsize];    // copy of w
+   __shared__ double sol[tabsd_shmemsize];    // solution to update with
 
    wrk[k] = w[B*dim+k];    // block B updates B-th slice of w
    sol[k] = w[idx*dim+k];  // solution that is back substituted
@@ -532,10 +532,10 @@ __global__ void cmplx_back_substitute
    const int k = threadIdx.x;    // thread k computes k-th product
    const int offset = B*dim*dim; // numbers to skip
 
-   __shared__ double wrkre[d_shmemsize];    // copy of wre
-   __shared__ double wrkim[d_shmemsize];    // copy of wim
-   __shared__ double solre[d_shmemsize];    // solution to update with
-   __shared__ double solim[d_shmemsize];    // imaginary parts
+   __shared__ double wrkre[tabsd_shmemsize];    // copy of wre
+   __shared__ double wrkim[tabsd_shmemsize];    // copy of wim
+   __shared__ double solre[tabsd_shmemsize];    // solution to update with
+   __shared__ double solim[tabsd_shmemsize];    // imaginary parts
 
    wrkre[k] = wre[B*dim+k];    // block B updates B-th slice of w
    wrkim[k] = wim[B*dim+k];
