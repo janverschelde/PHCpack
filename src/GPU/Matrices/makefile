@@ -36,6 +36,9 @@ test_dbl_baqr:
 test_dbl2_baqr:
 	make -f $(MAKEFILE) test_dbl2_baqr
 
+test_dbl_qrbs:
+	make -f $(MAKEFILE) test_dbl_qrbs
+
 clean:
 	make -f $(MAKEFILE) clean
 

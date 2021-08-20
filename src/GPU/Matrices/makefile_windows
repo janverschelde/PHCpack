@@ -420,6 +420,34 @@ test_dbl2_baqr: test_dbl2_baqr.obj dbl2_baqr_testers.obj \
 	     dbl_baqr_flopcounts.obj \
              random_numbers.obj random2_vectors.obj random2_matrices.obj
 
+dbl_qrbs_testers.obj:
+	@-echo ">>> compiling dbl_qrbs_testers ..."
+	$(CL)\cl /c dbl_qrbs_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_qrbs_testers.obj /EHsc
+
+test_dbl_qrbs.obj:
+	@-echo ">>> compiling test_dbl_qrbs ..."
+	$(CL)\cl /c test_dbl_qrbs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl_qrbs.obj /EHsc
+
+test_dbl_qrbs: test_dbl_qrbs.obj prompt_baqr_setup.obj \
+               dbl_qrbs_testers.obj dbl_factors_testers.obj \
+               dbl_baqr_host.obj dbl_baqr_kernels.obj \
+	       dbl_tabs_host.obj dbl_test_utilities.obj \
+               dbl_factorizations.obj dbl_baqr_flopcounts.obj \
+               random_numbers.obj random_series.obj random_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_qrbs.exe test_dbl_qrbs.obj \
+             prompt_baqr_setup.obj dbl_qrbs_testers.obj \
+	     dbl_tabs_host.obj dbl_test_utilities.obj \
+             dbl_factors_testers.obj dbl_factorizations.obj \
+             dbl_baqr_host.obj dbl_baqr_kernels.obj dbl_baqr_flopcounts.obj \
+             random_numbers.obj random_series.obj random_matrices.obj
+
 clean:
 	del *~
 	del test_dbl_vectors.obj test_dbl_vectors_lib
@@ -457,6 +485,9 @@ clean:
 	del dbl2_baqr_host.obj dbl2_baqr_kernels.obj dbl2_baqr_testers.obj
 	del test_dbl2_baqr.obj test_dbl2_baqr_lib
 	del test_dbl2_baqr.exe test_dbl2_baqr.exp
+	del test_dbl_qrbs.obj test_dbl_qrbs_lib
+	del test_dbl_qrbs.exe test_dbl_qrbs.exp
+	del dbl_qrbs_testers.obj
 
 cleanall: clean
 	del *exe *obj *exp *lib

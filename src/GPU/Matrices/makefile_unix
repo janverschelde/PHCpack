@@ -287,6 +287,28 @@ test_dbl2_baqr: test_dbl2_baqr.o prompt_baqr_setup.o dbl2_baqr_testers.o \
                   random_numbers.o random2_vectors.o random2_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
+dbl_qrbs_testers.o:
+	@-echo ">>> compiling dbl_qrbs_testers ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl_qrbs_testers.cpp
+
+test_dbl_qrbs.o:
+	@-echo ">>> compiling test_dbl_qrbs ..."
+	$(gpp) -O3 -c test_dbl_qrbs.cpp
+
+test_dbl_qrbs: test_dbl_qrbs.o prompt_baqr_setup.o dbl_qrbs_testers.o \
+               dbl_factorizations.o dbl_factors_testers.o \
+               dbl_baqr_host.o dbl_baqr_kernels.o dbl_baqr_flopcounts.o \
+               dbl_tabs_host.o dbl_test_utilities.o \
+               random_numbers.o random_series.o random_matrices.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl_qrbs prompt_baqr_setup.o test_dbl_qrbs.o \
+                  dbl_qrbs_testers.o dbl_factorizations.o \
+                  dbl_factors_testers.o dbl_baqr_host.o dbl_baqr_kernels.o \
+                  dbl_tabs_host.o dbl_test_utilities.o \
+                  dbl_baqr_flopcounts.o \
+                  random_numbers.o random_series.o random_matrices.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
 clean:
 	/bin/rm -f -r random_matrices.o
 	/bin/rm -f -r dbl_matrices_host.o dbl_matrices_kernels.o
@@ -315,6 +337,8 @@ clean:
 	/bin/rm -f -r test_dbl2_baqr.o test_dbl2_baqr
 	/bin/rm -f -r dbl2_baqr_host.o dbl2_baqr_kernels.o
 	/bin/rm -f -r dbl2_baqr_testers.o
+	/bin/rm -f -r test_dbl_qrbs.o test_dbl_qrbs
+	/bin/rm -f -r dbl_qrbs_testers.o
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o
