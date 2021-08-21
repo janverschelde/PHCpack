@@ -4,6 +4,10 @@ Fri 20 Aug 2021 : renamed the bound on the shared memory size in
   New gettimeofday4win.h and gettimeofday4win.cpp for separate compilation
   to avoid redefinitions in dbl_baqr_kernels.cu and dbl_tabs_kernels.cu.
   Updated makefile_windows.  Modified dbl_qrbs_testers.cpp.
+  Updated dbl2_baqr_kernels.cu and dbl2_tabs_kernels.cu for the new
+  gettimeofday4win.  Renamed dd_shmemsize in dbl2_tabs_kernels.h.
+  Updated dbl2_qrbs_testers.cpp to work on complex data,
+  updated makefile_unix and makefile_windows.
 
 Thu 19 Aug 2021 : edited dbl_baqr_testers.h.  New dbl_qrbs_testers and
   test_dbl_qrbs.cpp, to test QR + back substitution on the CPU in double

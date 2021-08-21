@@ -13,6 +13,7 @@
 #include "dbl2_baqr_host.h"
 #include "dbl2_baqr_kernels.h"
 #include "dbl2_tabs_host.h"
+#include "dbl2_tabs_kernels.h"
 #include "dbl2_tabs_testers.h"
 #include "dbl2_test_utilities.h"
 
@@ -156,25 +157,34 @@ void test_real2_blocked_qrbs
 
       free(xhi); free(xlo); free(qTrhshi); free(qTrhslo);
    }
-   double timelapsed_d;
+   double qrtimelapsed_d,bstimelapsed_d;
    double houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
-   long long int addcnt = 0;
-   long long int mulcnt = 0;
-   long long int divcnt = 0;
+   double invlapsed,mullapsed,sublapsed,bselapsedms;
+   long long int qraddcnt = 0;
+   long long int qrmulcnt = 0;
+   long long int qrdivcnt = 0;
    long long int sqrtcnt = 0;
+   long long int bsaddcnt = 0;
+   long long int bsmulcnt = 0;
+   long long int bsdivcnt = 0;
 
    if((mode == 0) || (mode == 2))
    {
+      double *xhi_d = new double[ncols];
+      double *xlo_d = new double[ncols];
+      double *qTrhshi_d = new double[nrows];
+      double *qTrhslo_d = new double[nrows];
+
       cout << "-> GPU computes the blocked Householder QR ..." << endl;
 
       GPU_dbl2_blocked_houseqr
          (nrows,ncols,sizetile,numtiles,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,
           &houselapsedms,&RTvlapsedms,&tileRlapsedms,&vb2Wlapsedms,
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
-          &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
-          &addcnt,&mulcnt,&divcnt,&sqrtcnt,bvrb);
+          &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
+          &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,bvrb);
 
       cout << "-> Testing the QR factorization ..." << endl;
 
@@ -189,6 +199,39 @@ void test_real2_blocked_qrbs
          cout << scientific << setprecision(2);
          cout << "The test failed for tol = " << tol << "." << endl;
       }
+      // preliminary CPU computation, for testing purposes only
+      cout << "-> CPU multiplies Q^T with b ..." << endl;
+
+      for(int i=0; i<nrows; i++)
+      {
+         qTrhshi_d[i] = 0.0;
+         qTrhslo_d[i] = 0.0;
+         for(int j=0; j<ncols; j++) // qTrhs[i] = qTrhs[i] + Q[j][i]*rhs[j];
+         {
+            ddf_mul(Qhi_d[j][i],Qlo_d[j][i],rhshi[j],rhslo[j],&acchi,&acclo);
+            ddf_inc(&qTrhshi_d[i],&qTrhslo_d[i],acchi,acclo);
+         }
+      }
+      cout << "-> GPU solves an upper triangular system ..." << endl;
+
+      GPU_dbl2_upper_tiled_solver
+         (ncols,sizetile,numtiles,Rhi_d,Rlo_d,qTrhshi_d,qTrhslo_d,xhi_d,xlo_d,
+          &invlapsed,&mullapsed,&sublapsed,&bselapsedms,&bstimelapsed_d,
+          &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+      if(verbose > 0)
+      {
+         cout << scientific << setprecision(16);
+         cout << "GPU solution computed with tiling :" << endl;
+         for(int i=0; i<ncols; i++)
+            cout << "x[" << i << "] : "
+                 << xhi_d[i] << "  " << xlo_d[i] << endl;
+      }
+      cout << scientific << setprecision(2);
+      cout << "   Sum of GPU errors on solution : "
+           << dbl2_Difference_Sum(ncols,solhi,sollo,xhi_d,xlo_d) << endl;
+
+      free(xhi_d); free(xlo_d); free(qTrhshi_d); free(qTrhslo_d);
    }
    cout << endl;
    cout << fixed << setprecision(3);
@@ -226,32 +269,68 @@ void test_real2_blocked_qrbs
          + YWTClapsedms + Qaddlapsedms + Raddlapsedms;
       cout << "                    Time spent by all kernels : "
            << totlapsedms << " milliseconds." << endl;
-      cout << "        Total GPU wall clock computation time : ";
-      cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
+      cout << "     Total QR GPU wall clock computation time : ";
+      cout << fixed << setprecision(3)
+           << qrtimelapsed_d << " seconds." << endl;
       cout << endl;
       cout << "             Number of additions/subtractions : "
-           << addcnt << " x 20 " << endl;
+           << qraddcnt << " x 20" << endl;
       cout << "                    Number of multiplications : "
-           << mulcnt << " x 23 " << endl;
+           << qrmulcnt << " x 23" << endl;
       cout << "                          Number of divisions : "
-           << divcnt << " x 70 " << endl;
+           << qrdivcnt << " x 70" << endl;
       cout << "                    Number of calls to sqrt() : "
-           << sqrtcnt << " x 50 " << endl;
-      long long int flopcnt = 20*addcnt + 23*mulcnt + 70*divcnt + 50*sqrtcnt;
+           << sqrtcnt << " x 50" << endl;
+      long long int qrflopcnt
+          = 20*qraddcnt + 23*qrmulcnt + 70*qrdivcnt + 50*sqrtcnt;
       cout << "    Total number of floating-point operations : "
-           << flopcnt << endl;
+           << qrflopcnt << endl;
       cout << endl;
-      double kernflops = 1000.0*((double) flopcnt)/totlapsedms;
-      double wallflops = ((double) flopcnt)/timelapsed_d;
+      double qrkernflops = 1000.0*((double) qrflopcnt)/totlapsedms;
+      double qrwallflops = ((double) qrflopcnt)/qrtimelapsed_d;
       const int gigacnt = pow(2.0,30);
-      cout << "Kernel Time Flops : "
-           << scientific << setprecision(3) << kernflops;
+      cout << "QR Kernel Time Flops : "
+           << scientific << setprecision(3) << qrkernflops;
       cout << fixed << setprecision(3)
-           << " = " << kernflops/gigacnt << " Gigaflops" << endl;
-      cout << " Wall Clock Flops : "
-           << scientific << setprecision(3) << wallflops;
+           << " = " << qrkernflops/gigacnt << " Gigaflops" << endl;
+      cout << " QR Wall Clock Flops : "
+           << scientific << setprecision(3) << qrwallflops;
       cout << fixed << setprecision(3)
-           << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+           << " = " << qrwallflops/gigacnt << " Gigaflops" << endl;
+      cout << endl;
+      cout << "          Time spent to invert diagonal tiles : ";
+      cout << invlapsed << " milliseconds." << endl;
+      cout << "   Time spent to multiply with inverted tiles : ";
+      cout << mullapsed << " milliseconds." << endl;
+      cout << "             Time spent for back substitution : ";
+      cout << sublapsed << " milliseconds." << endl;
+      cout << "                    Time spent by all kernels : ";
+      cout << bselapsedms << " milliseconds." << endl;
+      cout << "     Total BS GPU wall clock computation time : ";
+      cout << fixed << setprecision(3)
+           << bstimelapsed_d << " seconds." << endl;
+      cout << endl;
+      cout << "             Number of additions/subtractions : "
+           << bsaddcnt << " x 20" << endl;
+      cout << "                    Number of multiplications : "
+           << bsmulcnt << " x 23" << endl;
+      cout << "                          Number of divisions : "
+           << bsdivcnt << " x 70" << endl;
+      long long int bsflopcnt = 20*bsaddcnt + 23*bsmulcnt + 70*bsdivcnt;
+      cout << "    Total number of floating-point operations : "
+           << bsflopcnt << endl;
+      cout << endl;
+      double bskernflops = 1000.0*((double) bsflopcnt)/bselapsedms;
+      double bswallflops = ((double) bsflopcnt)/bstimelapsed_d;
+      // const int gigacnt = pow(2.0,30);
+      cout << "BS Kernel Time Flops : "
+           << scientific << setprecision(3) << bskernflops;
+      cout << fixed << setprecision(3)
+           << " = " << bskernflops/gigacnt << " Gigaflops" << endl;
+      cout << " BS Wall Clock Flops : "
+           << scientific << setprecision(3) << bswallflops;
+      cout << fixed << setprecision(3)
+           << " = " << bswallflops/gigacnt << " Gigaflops" << endl;
    }
    for(int i=0; i<nrows; i++)
    {
@@ -478,17 +557,30 @@ void test_cmplx2_blocked_qrbs
       free(xrehi); free(xrelo); free(ximhi); free(ximlo);
       free(qHrhsrehi); free(qHrhsrelo); free(qHrhsimhi); free(qHrhsimlo);
    }
-   double timelapsed_d;
+   double qrtimelapsed_d,bstimelapsed_d;
    double houselapsedms,RHvlapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
    double YWTlapsedms,YWTClapsedms,Raddlapsedms;
-   long long int addcnt = 0;
-   long long int mulcnt = 0;
-   long long int divcnt = 0;
+   double invlapsed,mullapsed,sublapsed,bselapsedms;
+   long long int qraddcnt = 0;
+   long long int qrmulcnt = 0;
+   long long int qrdivcnt = 0;
    long long int sqrtcnt = 0;
+   long long int bsaddcnt = 0;
+   long long int bsmulcnt = 0;
+   long long int bsdivcnt = 0;
 
    if((mode == 0) || (mode == 2))
    {
+      double *xrehi_d = new double[ncols];
+      double *xrelo_d = new double[ncols];
+      double *ximhi_d = new double[ncols];
+      double *ximlo_d = new double[ncols];
+      double *qHrhsrehi_d = new double[nrows];
+      double *qHrhsrelo_d = new double[nrows];
+      double *qHrhsimhi_d = new double[nrows];
+      double *qHrhsimlo_d = new double[nrows];
+
       cout << "-> GPU computes the blocked Householder QR ..." << endl;
 
       if(verbose > 0) // to verify that A has not changed ...
@@ -512,8 +604,8 @@ void test_cmplx2_blocked_qrbs
           Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,
           &houselapsedms,&RHvlapsedms,&tileRlapsedms,&vb2Wlapsedms,
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
-          &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
-          &addcnt,&mulcnt,&divcnt,&sqrtcnt,bvrb);
+          &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
+          &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,bvrb);
 
       cout << "-> Testing the QR factorization ..." << endl;
 
@@ -532,6 +624,57 @@ void test_cmplx2_blocked_qrbs
          cout << scientific << setprecision(2);
          cout << "The test failed for tol = " << tol << "." << endl;
       }
+      // preliminary CPU computation, for testing purposes
+      cout << "-> CPU multiplies Q^H with b ..." << endl;
+
+      for(int i=0; i<nrows; i++)
+      {
+         qHrhsrehi_d[i] = 0.0; qHrhsrelo_d[i] = 0.0;
+         qHrhsimhi_d[i] = 0.0; qHrhsimlo_d[i] = 0.0;
+
+         for(int j=0; j<nrows; j++) // qHrhs[i] = qHrhs[i] + Q[j][i]*rhs[j];
+         {
+            ddf_mul(Qrehi_d[j][i],Qrelo_d[j][i],rhsrehi[j],rhsrelo[j],
+                    &acc1hi,&acc1lo);
+            ddf_mul(Qimhi_d[j][i],Qimlo_d[j][i],rhsimhi[j],rhsimlo[j],
+                    &acc2hi,&acc2lo);
+            ddf_mul(Qimhi_d[j][i],Qimlo_d[j][i],rhsrehi[j],rhsrelo[j],
+                    &acc3hi,&acc3lo);
+            ddf_mul(Qrehi_d[j][i],Qrelo_d[j][i],rhsimhi[j],rhsimlo[j],
+                    &acc4hi,&acc4lo);
+            ddf_inc(&acc1hi,&acc1lo,acc2hi,acc2lo);
+            ddf_inc(&qHrhsrehi_d[i],&qHrhsrelo_d[i],acc1hi,acc1lo);
+            ddf_dec(&acc4hi,&acc4lo,acc3hi,acc3lo);
+            ddf_inc(&qHrhsimhi_d[i],&qHrhsimlo_d[i],acc4hi,acc4lo);
+         }
+      }
+      cout << "-> GPU solves an upper triangular system ..." << endl;
+
+      GPU_cmplx2_upper_tiled_solver
+         (ncols,sizetile,numtiles,Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,
+          qHrhsrehi_d,qHrhsrelo_d,qHrhsimhi_d,qHrhsimlo_d,
+              xrehi_d,    xrelo_d,    ximhi_d,    ximlo_d,
+          &invlapsed,&mullapsed,&sublapsed,&bselapsedms,&bstimelapsed_d,
+          &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+      if(verbose > 0)
+      {
+         cout << scientific << setprecision(16);
+         cout << "GPU solution computed with tiling :" << endl;
+         for(int i=0; i<ncols; i++)
+         {
+            cout << "x[" << i << "]re : "
+                 << xrehi_d[i] << "  " << xrelo_d[i] << endl;
+            cout << "x[" << i << "]im : "
+                 << ximhi_d[i] << "  " << ximlo_d[i] << endl;
+         }
+      }
+      cout << scientific << setprecision(2);
+      cout << "   Sum of GPU errors on solution : "
+           << cmplx2_Difference_Sum
+                 (ncols,solrehi,solrelo,solimhi,solimlo,
+                          xrehi_d,xrelo_d,ximhi_d,ximlo_d)
+           << endl;
    }
    cout << endl;
    cout << fixed << setprecision(3);
@@ -570,32 +713,68 @@ void test_cmplx2_blocked_qrbs
          + YWTClapsedms + Qaddlapsedms + Raddlapsedms;
       cout << "                    Time spent by all kernels : "
            << totlapsedms << " milliseconds." << endl;
-      cout << "        Total GPU wall clock computation time : ";
-      cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
+      cout << "     Total QR GPU wall clock computation time : ";
+      cout << fixed << setprecision(3)
+           << qrtimelapsed_d << " seconds." << endl;
       cout << endl;
       cout << "             Number of additions/subtractions : "
-           << addcnt << " x 20 " << endl;
+           << qraddcnt << " x 20 " << endl;
       cout << "                    Number of multiplications : "
-           << mulcnt << " x 23 " << endl;
+           << qrmulcnt << " x 23 " << endl;
       cout << "                          Number of divisions : "
-           << divcnt << " x 70 " << endl;
+           << qrdivcnt << " x 70 " << endl;
       cout << "                    Number of calls to sqrt() : "
            << sqrtcnt << " x 50 " << endl;
-      long long int flopcnt = 20*addcnt + 23*mulcnt + 70*divcnt + 50*sqrtcnt;
+      long long int qrflopcnt
+          = 20*qraddcnt + 23*qrmulcnt + 70*qrdivcnt + 50*sqrtcnt;
       cout << "    Total number of floating-point operations : "
-           << flopcnt << endl;
+           << qrflopcnt << endl;
       cout << endl;
-      double kernflops = 1000.0*((double) flopcnt)/totlapsedms;
-      double wallflops = ((double) flopcnt)/timelapsed_d;
+      double qrkernflops = 1000.0*((double) qrflopcnt)/totlapsedms;
+      double qrwallflops = ((double) qrflopcnt)/qrtimelapsed_d;
       const int gigacnt = pow(2.0,30);
       cout << "Kernel Time Flops : "
-           << scientific << setprecision(3) << kernflops;
+           << scientific << setprecision(3) << qrkernflops;
       cout << fixed << setprecision(3)
-           << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+           << " = " << qrkernflops/gigacnt << " Gigaflops" << endl;
       cout << " Wall Clock Flops : "
-           << scientific << setprecision(3) << wallflops;
+           << scientific << setprecision(3) << qrwallflops;
       cout << fixed << setprecision(3)
-           << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+           << " = " << qrwallflops/gigacnt << " Gigaflops" << endl;
+      cout << endl;
+      cout << "          Time spent to invert diagonal tiles : ";
+      cout << invlapsed << " milliseconds." << endl;
+      cout << "   Time spent to multiply with inverted tiles : ";
+      cout << mullapsed << " milliseconds." << endl;
+      cout << "             Time spent for back substitution : ";
+      cout << sublapsed << " milliseconds." << endl;
+      cout << "                    Time spent by all kernels : ";
+      cout << bselapsedms << " milliseconds." << endl;
+      cout << "     Total BS GPU wall clock computation time : ";
+      cout << fixed << setprecision(3)
+           << bstimelapsed_d << " seconds." << endl;
+      cout << endl;
+      cout << "             Number of additions/subtractions : "
+           << bsaddcnt << " x 20 " << endl;
+      cout << "                    Number of multiplications : "
+           << bsmulcnt << " x 23 " << endl;
+      cout << "                          Number of divisions : "
+           << bsdivcnt << " x 70 " << endl;
+      long long int bsflopcnt = 20*bsaddcnt + 23*bsmulcnt + 70*bsdivcnt;
+      cout << "    Total number of floating-point operations : "
+           << bsflopcnt << endl;
+      cout << endl;
+      double bskernflops = 1000.0*((double) bsflopcnt)/bselapsedms;
+      double bswallflops = ((double) bsflopcnt)/bstimelapsed_d;
+      // const int gigacnt = pow(2.0,30);
+      cout << "Kernel Time Flops : "
+           << scientific << setprecision(3) << bskernflops;
+      cout << fixed << setprecision(3)
+           << " = " << bskernflops/gigacnt << " Gigaflops" << endl;
+      cout << " Wall Clock Flops : "
+           << scientific << setprecision(3) << bswallflops;
+      cout << fixed << setprecision(3)
+           << " = " << bswallflops/gigacnt << " Gigaflops" << endl;
    }
    for(int i=0; i<nrows; i++)
    {

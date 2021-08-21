@@ -303,14 +303,15 @@ test_dbl_qrbs.o:
 test_dbl_qrbs: test_dbl_qrbs.o prompt_baqr_setup.o dbl_qrbs_testers.o \
                dbl_factorizations.o dbl_factors_testers.o \
                dbl_baqr_host.o dbl_baqr_kernels.o dbl_baqr_flopcounts.o \
-               dbl_tabs_host.o dbl_test_utilities.o \
+               dbl_tabs_host.o dbl_tabs_kernels.o dbl_test_utilities.o \
+               dbl_tabs_flopcounts.o \
                random_numbers.o random_series.o random_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_qrbs prompt_baqr_setup.o test_dbl_qrbs.o \
                   dbl_qrbs_testers.o dbl_factorizations.o \
                   dbl_factors_testers.o dbl_baqr_host.o dbl_baqr_kernels.o \
-                  dbl_tabs_host.o dbl_test_utilities.o \
-                  dbl_baqr_flopcounts.o \
+                  dbl_tabs_host.o dbl_tabs_kernels.o dbl_test_utilities.o \
+                  dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   random_numbers.o random_series.o random_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
@@ -325,14 +326,16 @@ test_dbl2_qrbs.o:
 test_dbl2_qrbs: test_dbl2_qrbs.o prompt_baqr_setup.o dbl2_qrbs_testers.o \
                 double_double_functions.o dbl2_factorizations.o \
                 dbl2_factors_testers.o dbl2_baqr_host.o dbl2_baqr_kernels.o \
-                dbl_baqr_flopcounts.o dbl2_tabs_host.o dbl2_test_utilities.o \
+                dbl_baqr_flopcounts.o dbl2_tabs_host.o dbl2_tabs_kernels.o \
+                dbl_tabs_flopcounts.o dbl2_test_utilities.o \
                 random_numbers.o random2_vectors.o random2_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_qrbs prompt_baqr_setup.o test_dbl2_qrbs.o \
                   double_double_functions.o dbl2_qrbs_testers.o \
                   dbl2_factorizations.o dbl2_factors_testers.o \
-                  dbl2_baqr_host.o dbl2_baqr_kernels.o dbl2_tabs_host.o \
-                  dbl2_test_utilities.o dbl_baqr_flopcounts.o \
+                  dbl2_baqr_host.o dbl2_baqr_kernels.o dbl_baqr_flopcounts.o \
+                  dbl2_tabs_host.o dbl2_tabs_kernels.o dbl_tabs_flopcounts.o \
+                  dbl2_test_utilities.o \
                   random_numbers.o random2_vectors.o random2_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 

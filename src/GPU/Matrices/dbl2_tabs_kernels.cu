@@ -3,7 +3,7 @@
 
 #include <iostream>
 #ifdef winwalltime
-#include "wingettimeofday.h"
+#include "gettimeofday4win.h"
 #else
 #include <sys/time.h>
 #endif
@@ -20,10 +20,10 @@ __global__ void dbl2_small_invert_upper
 {
    const int k = threadIdx.x; // thread k computes k-th column of inverse
 
-   __shared__ double Ucolhi[dd_shmemsize];
-   __shared__ double Ucollo[dd_shmemsize];
-   __shared__ double invUrowshi[dd_shmemsize];
-   __shared__ double invUrowslo[dd_shmemsize];
+   __shared__ double Ucolhi[tabsdd_shmemsize];
+   __shared__ double Ucollo[tabsdd_shmemsize];
+   __shared__ double invUrowshi[tabsdd_shmemsize];
+   __shared__ double invUrowslo[tabsdd_shmemsize];
 
    double rhshi,rhslo,xvalhi,xvallo,acchi,acclo;
 
@@ -89,14 +89,14 @@ __global__ void cmplx2_small_invert_upper
 {
    const int k = threadIdx.x; // thread k computes k-th column of inverse
 
-   __shared__ double Ucolrehi[dd_shmemsize];
-   __shared__ double Ucolrelo[dd_shmemsize];
-   __shared__ double Ucolimhi[dd_shmemsize];
-   __shared__ double Ucolimlo[dd_shmemsize];
-   __shared__ double invUrowsrehi[dd_shmemsize];
-   __shared__ double invUrowsrelo[dd_shmemsize];
-   __shared__ double invUrowsimhi[dd_shmemsize];
-   __shared__ double invUrowsimlo[dd_shmemsize];
+   __shared__ double Ucolrehi[tabsdd_shmemsize];
+   __shared__ double Ucolrelo[tabsdd_shmemsize];
+   __shared__ double Ucolimhi[tabsdd_shmemsize];
+   __shared__ double Ucolimlo[tabsdd_shmemsize];
+   __shared__ double invUrowsrehi[tabsdd_shmemsize];
+   __shared__ double invUrowsrelo[tabsdd_shmemsize];
+   __shared__ double invUrowsimhi[tabsdd_shmemsize];
+   __shared__ double invUrowsimlo[tabsdd_shmemsize];
 
    double rhsrehi,rhsrelo,rhsimhi,rhsimlo;
    double xvalrehi,xvalrelo,xvalimhi,xvalimlo;
@@ -215,10 +215,10 @@ __global__ void dbl2_medium_invert_upper
 {
    const int k = threadIdx.x;  // thread k computes k-th column of inverse
 
-   __shared__ double Ucolhi[dd_shmemsize];      // one column of U
-   __shared__ double Ucollo[dd_shmemsize];      // one column of U
-   __shared__ double invUrowhi[dd_shmemsize];   // one row of invU
-   __shared__ double invUrowlo[dd_shmemsize];   // one row of invU
+   __shared__ double Ucolhi[tabsdd_shmemsize];      // one column of U
+   __shared__ double Ucollo[tabsdd_shmemsize];      // one column of U
+   __shared__ double invUrowhi[tabsdd_shmemsize];   // one row of invU
+   __shared__ double invUrowlo[tabsdd_shmemsize];   // one row of invU
 
    double rhshi,rhslo,xvalhi,xvallo,acchi,acclo;
 
@@ -276,14 +276,14 @@ __global__ void cmplx2_medium_invert_upper
 {
    const int k = threadIdx.x;  // thread k computes k-th column of inverse
 
-   __shared__ double Ucolrehi[dd_shmemsize];    // one column of U
-   __shared__ double Ucolrelo[dd_shmemsize]; 
-   __shared__ double Ucolimhi[dd_shmemsize];
-   __shared__ double Ucolimlo[dd_shmemsize]; 
-   __shared__ double invUrowrehi[dd_shmemsize]; // one row of invU
-   __shared__ double invUrowrelo[dd_shmemsize]; 
-   __shared__ double invUrowimhi[dd_shmemsize]; 
-   __shared__ double invUrowimlo[dd_shmemsize]; 
+   __shared__ double Ucolrehi[tabsdd_shmemsize];    // one column of U
+   __shared__ double Ucolrelo[tabsdd_shmemsize]; 
+   __shared__ double Ucolimhi[tabsdd_shmemsize];
+   __shared__ double Ucolimlo[tabsdd_shmemsize]; 
+   __shared__ double invUrowrehi[tabsdd_shmemsize]; // one row of invU
+   __shared__ double invUrowrelo[tabsdd_shmemsize]; 
+   __shared__ double invUrowimhi[tabsdd_shmemsize]; 
+   __shared__ double invUrowimlo[tabsdd_shmemsize]; 
 
    double rhsrehi,rhsrelo,rhsimhi,rhsimlo;
    double xvalrehi,xvalrelo,xvalimhi,xvalimlo;
@@ -401,10 +401,10 @@ __global__ void  dbl2_invert_tiles
    const int k = threadIdx.x;  // thread k computes k-th column of inverse
    const int offset = dim*dim*B; // offset in U and invU
 
-   __shared__ double Ucolhi[dd_shmemsize];      // one column of U
-   __shared__ double Ucollo[dd_shmemsize];
-   __shared__ double invUrowhi[dd_shmemsize];   // one row of invU
-   __shared__ double invUrowlo[dd_shmemsize]; 
+   __shared__ double Ucolhi[tabsdd_shmemsize];      // one column of U
+   __shared__ double Ucollo[tabsdd_shmemsize];
+   __shared__ double invUrowhi[tabsdd_shmemsize];   // one row of invU
+   __shared__ double invUrowlo[tabsdd_shmemsize]; 
 
    double rhshi,rhslo,xvalhi,xvallo,acchi,acclo;
 
@@ -464,14 +464,14 @@ __global__ void  cmplx2_invert_tiles
    const int k = threadIdx.x;  // thread k computes k-th column of inverse
    const int offset = dim*dim*B; // offset in U and invU
 
-   __shared__ double Ucolrehi[dd_shmemsize];    // one column of U
-   __shared__ double Ucolrelo[dd_shmemsize];
-   __shared__ double Ucolimhi[dd_shmemsize]; 
-   __shared__ double Ucolimlo[dd_shmemsize];
-   __shared__ double invUrowrehi[dd_shmemsize];   // one row of invU
-   __shared__ double invUrowrelo[dd_shmemsize]; 
-   __shared__ double invUrowimhi[dd_shmemsize];
-   __shared__ double invUrowimlo[dd_shmemsize]; 
+   __shared__ double Ucolrehi[tabsdd_shmemsize];    // one column of U
+   __shared__ double Ucolrelo[tabsdd_shmemsize];
+   __shared__ double Ucolimhi[tabsdd_shmemsize]; 
+   __shared__ double Ucolimlo[tabsdd_shmemsize];
+   __shared__ double invUrowrehi[tabsdd_shmemsize];   // one row of invU
+   __shared__ double invUrowrelo[tabsdd_shmemsize]; 
+   __shared__ double invUrowimhi[tabsdd_shmemsize];
+   __shared__ double invUrowimlo[tabsdd_shmemsize]; 
 
    double rhsrehi,rhsrelo,rhsimhi,rhsimlo;
    double xvalrehi,xvalrelo,xvalimhi,xvalimlo;
@@ -589,8 +589,8 @@ __global__ void dbl2_multiply_inverse
    const int rhsoff = dim*idx;    // offset for the right hand size
    const int offset = dim*rhsoff; // offset for diagonal tile
 
-   __shared__ double workhi[dd_shmemsize];      // copy of w
-   __shared__ double worklo[dd_shmemsize];      // copy of w
+   __shared__ double workhi[tabsdd_shmemsize];      // copy of w
+   __shared__ double worklo[tabsdd_shmemsize];      // copy of w
 
    workhi[k] = whi[rhsoff+k];
    worklo[k] = wlo[rhsoff+k];
@@ -620,10 +620,10 @@ __global__ void cmplx2_multiply_inverse
    const int rhsoff = dim*idx;    // offset for the right hand size
    const int offset = dim*rhsoff; // offset for diagonal tile
 
-   __shared__ double workrehi[dd_shmemsize];      // copy of w
-   __shared__ double workrelo[dd_shmemsize]; 
-   __shared__ double workimhi[dd_shmemsize];
-   __shared__ double workimlo[dd_shmemsize];
+   __shared__ double workrehi[tabsdd_shmemsize];      // copy of w
+   __shared__ double workrelo[tabsdd_shmemsize]; 
+   __shared__ double workimhi[tabsdd_shmemsize];
+   __shared__ double workimlo[tabsdd_shmemsize];
 
    workrehi[k] = wrehi[rhsoff+k];
    workrelo[k] = wrelo[rhsoff+k];
@@ -664,10 +664,10 @@ __global__ void dbl2_back_substitute
    const int k = threadIdx.x;    // thread k computes k-th product
    const int offset = B*dim*dim; // numbers to skip
 
-   __shared__ double wrkhi[dd_shmemsize];   // copy of w
-   __shared__ double wrklo[dd_shmemsize]; 
-   __shared__ double solhi[dd_shmemsize];    // solution to update with
-   __shared__ double sollo[dd_shmemsize];
+   __shared__ double wrkhi[tabsdd_shmemsize];   // copy of w
+   __shared__ double wrklo[tabsdd_shmemsize]; 
+   __shared__ double solhi[tabsdd_shmemsize];    // solution to update with
+   __shared__ double sollo[tabsdd_shmemsize];
 
    wrkhi[k] = whi[B*dim+k];    // block B updates B-th slice of w
    wrklo[k] = wlo[B*dim+k];
@@ -701,14 +701,14 @@ __global__ void cmplx2_back_substitute
    const int k = threadIdx.x;    // thread k computes k-th product
    const int offset = B*dim*dim; // numbers to skip
 
-   __shared__ double wrkrehi[dd_shmemsize];   // copy of w
-   __shared__ double wrkrelo[dd_shmemsize]; 
-   __shared__ double wrkimhi[dd_shmemsize];
-   __shared__ double wrkimlo[dd_shmemsize]; 
-   __shared__ double solrehi[dd_shmemsize];    // solution to update with
-   __shared__ double solrelo[dd_shmemsize];
-   __shared__ double solimhi[dd_shmemsize];
-   __shared__ double solimlo[dd_shmemsize];
+   __shared__ double wrkrehi[tabsdd_shmemsize];   // copy of w
+   __shared__ double wrkrelo[tabsdd_shmemsize]; 
+   __shared__ double wrkimhi[tabsdd_shmemsize];
+   __shared__ double wrkimlo[tabsdd_shmemsize]; 
+   __shared__ double solrehi[tabsdd_shmemsize];    // solution to update with
+   __shared__ double solrelo[tabsdd_shmemsize];
+   __shared__ double solimhi[tabsdd_shmemsize];
+   __shared__ double solimlo[tabsdd_shmemsize];
 
    wrkrehi[k] = wrehi[B*dim+k];    // block B updates B-th slice of w
    wrkrelo[k] = wrelo[B*dim+k];
