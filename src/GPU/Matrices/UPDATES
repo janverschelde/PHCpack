@@ -1,3 +1,6 @@
+Sat 21 Aug 2021 : new random4_matrices to generate real and complex random
+   matrices of quad doubles.
+
 Fri 20 Aug 2021 : renamed the bound on the shared memory size in
   dbl_tabs_kernels and applied the GPU tiled back substitution in
   dbl_qrbs_testers.cpp, updated the makefile_unix.

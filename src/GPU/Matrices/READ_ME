@@ -19,6 +19,9 @@ test_upper_jobs           : test on jobs for back substitution
 dbl_linearization         : linearization of double vectors and matrices
 test_dbl_linearization    : test on linearization in double precision
 -----------------------------------------------------------------------------
+random2_matrices          : random matrices of double doubles
+random4_matrices          : random matrices of quad doubles
+-----------------------------------------------------------------------------
 dbl_factorizations        : matrix factorizations in double precision
 dbl2_factorizations       : matrix factorizations in double double precision
 dbl_factors_testers       : tests double matrix factorizations
