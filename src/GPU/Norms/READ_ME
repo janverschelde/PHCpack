@@ -1,4 +1,4 @@
-Accelerated Vector Norm computation in PHCv2.4.82.
+Accelerated Vector Norm computation in PHCv2.4.86.
 
 The code in this folder is to experiment with GPU accelerated algorithms
 to compute 2-norms of vectors in multiple double precision.

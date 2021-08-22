@@ -175,6 +175,30 @@ void qdf_inc_d
  *   a_hilo   the third highest part of the quad double a + b;
  *   a_lolo   the fourth highest part of the quad double a + b. */
 
+void qdf_dec
+ ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo,
+   double b_hihi, double b_lohi, double b_hilo, double b_lolo );
+/*
+ * DESCRIPTION : a = a - b.
+ *   Inplace decrement of the quad double a (a_hihi, a_lohi, a_hilo, a_lolo)
+ *   with the quad double in b (b_hihi, b_lohi, b_hilo, b_lolo).
+ *
+ * ON ENTRY :
+ *   a_hihi   the highest part of the quad double a;
+ *   a_lohi   the second highest part of the quad double a;
+ *   a_hilo   the third highest part of the quad double a;
+ *   a_lolo   the fourth highest part of the quad double a;
+ *   b_hihi   the highest part of the quad double b;
+ *   b_lohi   the second highest part of the quad double b;
+ *   b_hilo   the third highest part of the quad double b;
+ *   b_lolo   the fourth highest part of the quad double b.
+ *
+ * ON RETURN :
+ *   a_hihi   the highest part of the quad double a - b;
+ *   a_lohi   the second highest part of the quad double a - b;
+ *   a_hilo   the third highest part of the quad double a - b;
+ *   a_lolo   the fourth highest part of the quad double a - b. */
+
 void qdf_minus
  ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo );
 /*
@@ -297,6 +321,27 @@ void qdf_mul_qd_d
  *   c_lohi   the second highest part of the quad double c = a * b;
  *   c_hilo   the third highest part of the quad double c = a * b;
  *   c_lolo   the fourth highest part of the quad double c = a * b. */
+
+void qdf_mlt_d
+ ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo,
+   double b );
+/*
+ * DESCRIPTION : a = a * b.
+ *   Inplace multiplication of the quad double a (a_hihi, a_lohi,
+ *   a_hilo, a_lolo) with the double b.
+ *
+ * ON ENTRY :
+ *   a_hihi   the highest part of the quad double a;
+ *   a_lohi   the second highest part of the quad double a;
+ *   a_hilo   the third highest part of the quad double a;
+ *   a_lolo   the fourth highest part of the quad double a;
+ *   b        some double.
+ *
+ * ON RETURN :
+ *   a_hihi   the highest part of the quad double a = a * b;
+ *   a_lohi   the second highest part of the quad double a = a * b;
+ *   a_hilo   the third highest part of the quad double a = a * b;
+ *   a_lolo   the fourth highest part of the quad double a = a * b. */
 
 void qdf_div
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,

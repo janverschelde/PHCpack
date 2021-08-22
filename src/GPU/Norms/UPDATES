@@ -1,3 +1,6 @@
+Sun 22 Aug 2021 : extended quad_double_functions with wrappers to decrement
+  a quad double and to multiply a quad double with a double. 
+
 Sat 28 Nov 2020 : added __forceinline__ to all functions of all *gpufun*.
   Removed a __syncthreads() from penta_double_gpufun.cu.
 

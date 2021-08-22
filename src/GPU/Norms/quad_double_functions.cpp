@@ -272,6 +272,19 @@ void qdf_inc_d
                    a_hihi,a_lohi,a_hilo,a_lolo);
 }
 
+void qdf_dec
+ ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo,
+   double b_hihi, double b_lohi, double b_hilo, double b_lolo )
+{
+   double mbhihi = -b_hihi;
+   double mblohi = -b_lohi;
+   double mbhilo = -b_hilo;
+   double mblolo = -b_lolo;
+
+   qdf_inc(a_hihi,a_lohi,a_hilo,a_lolo,
+           mbhihi,mblohi,mbhilo,mblolo);
+}
+
 void qdf_minus
  ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo )
 {
@@ -450,6 +463,21 @@ void qdf_mul_qd_d
    f4 += e;
 
    qdf_fast_renorm(f0,f1,f2,f3,f4,c_hihi,c_lohi,c_hilo,c_lolo);
+}
+
+void qdf_mlt_d
+ ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo,
+   double b )
+{
+   double c_hihi,c_lohi,c_hilo,c_lolo;
+
+   qdf_mul_qd_d(*a_hihi,*a_lohi,*a_hilo,*a_lolo,b,
+                &c_hihi,&c_lohi,&c_hilo,&c_lolo);
+
+   *a_hihi = c_hihi;
+   *a_lohi = c_lohi;
+   *a_hilo = c_hilo;
+   *a_lolo = c_lolo;
 }
 
 void qdf_div
