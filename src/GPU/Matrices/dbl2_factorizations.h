@@ -1,8 +1,8 @@
 /* The file dbl2_factorizations.h specifies functions to factor matrices
  * in double double precision. */
 
-#ifndef __dbl_factorizations_h__
-#define __dbl_factorizations_h__
+#ifndef __dbl2_factorizations_h__
+#define __dbl2_factorizations_h__
 
 void CPU_dbl2_factors_matmatmul
  ( int rows, int dim, int cols, double **Ahi, double **Alo,

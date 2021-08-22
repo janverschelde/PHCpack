@@ -24,6 +24,7 @@ random4_matrices          : random matrices of quad doubles
 -----------------------------------------------------------------------------
 dbl_factorizations        : matrix factorizations in double precision
 dbl2_factorizations       : matrix factorizations in double double precision
+dbl4_factorizations       : matrix factorizations in quad double precision
 dbl_factors_testers       : tests double matrix factorizations
 dbl2_factors_testers      : tests double double matrix factorizations
 test_dbl_factors          : main test on double factorizations
