@@ -181,6 +181,42 @@ test_dbl_factors: test_dbl_factors.obj dbl_factorizations.obj \
 	     dbl_factors_testers.obj \
              random_numbers.obj random_series.obj random_matrices.obj
 
+double_double_functions.obj:
+	@-echo ">>> compiling double double functions ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/double_double_functions.cpp \
+                 /Fo: double_double_functions.obj /EHsc
+
+quad_double_functions.obj:
+	@-echo ">>> compiling quad double functions ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/quad_double_functions.cpp \
+                 /Fo: quad_double_functions.obj /EHsc
+
+random2_vectors.obj:
+	@-echo ">>> compiling double double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random2_vectors.cpp \
+                 /Fo: random2_vectors.obj /EHsc
+
+random4_vectors.obj:
+	@-echo ">>> compiling quad double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random4_vectors.cpp \
+                 /Fo: random4_vectors.obj /EHsc
+
+random2_matrices.obj:
+	@-echo ">>> compiling double double random matrix generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random2_matrices.cpp \
+                 /Fo: random2_matrices.obj /EHsc
+
+random4_matrices.obj:
+	@-echo ">>> compiling quad double random matrix generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random4_matrices.cpp \
+                 /Fo: random4_matrices.obj /EHsc
+
 dbl2_factorizations.obj:
 	@-echo ">>> compiling dbl2_factorizations ..."
 	$(CL)\cl /c dbl2_factorizations.cpp \
@@ -211,6 +247,39 @@ test_dbl2_factors: test_dbl2_factors.obj dbl2_factorizations.obj \
              test_dbl2_factors.obj dbl2_factorizations.obj \
 	     double_double_functions.obj dbl2_factors_testers.obj \
              random_numbers.obj random2_vectors.obj random2_matrices.obj
+
+dbl4_factorizations.obj:
+	@-echo ">>> compiling dbl4_factorizations ..."
+	$(CL)\cl /c dbl4_factorizations.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_factorizations.obj /EHsc
+
+dbl4_factors_testers.obj:
+	@-echo ">>> compiling dbl4_factors_testers ..."
+	$(CL)\cl /c dbl4_factors_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_factors_testers.obj /EHsc
+
+test_dbl4_factors.obj:
+	@-echo ">>> compiling test_dbl4_factors ..."
+	$(CL)\cl /c test_dbl4_factors.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl4_factors.obj /EHsc
+
+test_dbl4_factors: test_dbl4_factors.obj dbl4_factorizations.obj \
+                   double_double_functions.obj \
+                   quad_double_functions.obj \
+                   random_numbers.obj random4_vectors.obj \
+                   random4_matrices.obj dbl4_factors_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl4_factors.exe \
+             test_dbl4_factors.obj dbl4_factorizations.obj \
+	     double_double_functions.obj quad_double_functions.obj \
+             dbl4_factors_testers.obj \
+             random_numbers.obj random4_vectors.obj random4_matrices.obj
 
 dbl_tabs_host.obj:
 	@-echo ">>> compiling dbl_tabs_host ..."
@@ -271,24 +340,6 @@ test_dbl_tabs: test_dbl_tabs.obj dbl_tabs_testers.obj dbl_tabs_flopcounts.obj \
              dbl_convolutions_host.obj dbl_factorizations.obj \
              gettimeofday4win.obj \
              random_numbers.obj random_series.obj random_matrices.obj
-
-double_double_functions.obj:
-	@-echo ">>> compiling double double functions ..."
-	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
-                      $(MPD)/double_double_functions.cpp \
-                 /Fo: double_double_functions.obj /EHsc
-
-random2_vectors.obj:
-	@-echo ">>> compiling double double random vector generators ..."
-	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
-                      $(MPD)/random2_vectors.cpp \
-                 /Fo: random2_vectors.obj /EHsc
-
-random2_matrices.obj:
-	@-echo ">>> compiling double double random matrix generators ..."
-	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
-                      random2_matrices.cpp \
-                 /Fo: random2_matrices.obj /EHsc
 
 dbl2_tabs_host.obj:
 	@-echo ">>> compiling dbl2_tabs_host ..."
@@ -521,6 +572,9 @@ clean:
 	del dbl2_factorizations.obj dbl2_factors_testers.obj
 	del test_dbl2_factors.obj test_dbl2_factors_lib
 	del test_dbl2_factors.exe test_dbl2_factors.exp
+	del dbl4_factorizations.obj dbl4_factors_testers.obj
+	del test_dbl4_factors.obj test_dbl4_factors_lib
+	del test_dbl4_factors.exe test_dbl4_factors.exp
 	del random_matrices.obj gettimeofday4win.obj
 	del dbl_matrices_host.obj dbl_matrices_kernels.obj
 	del dbl_matrices_testers.obj dbl_vectors_testers.obj
@@ -529,7 +583,9 @@ clean:
 	del test_dbl_tabs.obj test_dbl_tabs_lib
 	del test_dbl_tabs.exe test_dbl_tabs.exp
 	del double_double_functions.obj
+	del quad_double_functions.obj
 	del random2_vectors.obj random2_matrices.obj
+	del random4_vectors.obj random4_matrices.obj
 	del dbl2_tabs_host.obj dbl2_tabs_kernels.obj
 	del dbl2_test_utilities.obj dbl2_tabs_testers.obj
 	del test_dbl2_tabs.obj test_dbl2_tabs_lib
