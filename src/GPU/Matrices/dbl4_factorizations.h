@@ -588,9 +588,11 @@ void CPU_dbl4_factors_rightQupdate
 
 void CPU_cmplx4_factors_rightQupdate
  ( int n, int k,
-   double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
-   double *vrehi, double *vrelo, double *vimhi, double *vimlo,
-   double betahi, double betalo );
+   double **Qrehihi, double **Qrelohi, double **Qrehilo, double **Qrelolo,
+   double **Qimhihi, double **Qimlohi, double **Qimhilo, double **Qimlolo,
+   double *vrehihi, double *vrelohi, double *vrehilo, double *vrelolo,
+   double *vimhihi, double *vimlohi, double *vimhilo, double *vimlolo,
+   double betahihi, double betalohi, double betahilo, double betalolo );
 /*
  * DESCRIPTION :
  *   Applies the Householder matrix to Q.

@@ -26,6 +26,30 @@ random_matrices.o:
 	@-echo ">>> compiling random_matrices ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) random_matrices.cpp
 
+double_double_functions.o:
+	@-echo ">>> compiling double double functions ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
+
+quad_double_functions.o:
+	@-echo ">>> compiling quad double functions ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/quad_double_functions.cpp
+
+random2_vectors.o:
+	@-echo ">>> compiling double double random vector generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random2_vectors.cpp
+
+random2_matrices.o:
+	@-echo ">>> compiling double double random matrix generators ..."
+	$(gpp) -O3 -c -I$(MPD) random2_matrices.cpp
+
+random4_vectors.o:
+	@-echo ">>> compiling quad double random vector generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random4_vectors.cpp
+
+random4_matrices.o:
+	@-echo ">>> compiling quad double random matrix generators ..."
+	$(gpp) -O3 -c -I$(MPD) random4_matrices.cpp
+
 dbl_convolutions_host.o:
 	@-echo ">>> compiling dbl_convolutions_host ..."
 	$(gpp) -O3 -c -I$(CNV) $(CNV)/dbl_convolutions_host.cpp
@@ -140,6 +164,28 @@ test_dbl2_factors: test_dbl2_factors.o dbl2_factors_testers.o \
                   random_numbers.o random2_vectors.o random2_matrices.o \
                   dbl2_factorizations.o dbl2_factors_testers.o
 
+dbl4_factorizations.o:
+	@-echo ">>> compiling dbl4_factorizations ..."
+	$(gpp) -O3 -c -I$(MPD) dbl4_factorizations.cpp
+
+dbl4_factors_testers.o:
+	@-echo ">>> compiling dbl4_factors_testers ..."
+	$(gpp) -O3 -c -I$(MPD) dbl4_factors_testers.cpp
+
+test_dbl4_factors.o:
+	@-echo ">>> compiling test_dbl4_factors ..."
+	$(gpp) -O3 -c test_dbl4_factors.cpp
+
+test_dbl4_factors: test_dbl4_factors.o dbl4_factors_testers.o \
+                   double_double_functions.o quad_double_functions.o \
+                   dbl4_factorizations.o \
+                   random_numbers.o random4_vectors.o random4_matrices.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl4_factors test_dbl4_factors.o \
+                  double_double_functions.o quad_double_functions.o \
+                  random_numbers.o random4_vectors.o random4_matrices.o \
+                  dbl4_factorizations.o dbl4_factors_testers.o
+
 dbl_tabs_host.o:
 	@-echo ">>> compiling dbl_tabs_host ..."
 	$(gpp) -O3 -c dbl_tabs_host.cpp
@@ -176,18 +222,6 @@ test_dbl_tabs: test_dbl_tabs.o dbl_tabs_testers.o dbl_tabs_host.o \
                   dbl_factorizations.o dbl_convolutions_host.o \
                   dbl_tabs_host.o dbl_tabs_kernels.o dbl_test_utilities.o \
                -lcuda -lcudart -L$(CUDALIB)
-
-double_double_functions.o:
-	@-echo ">>> compiling double double functions ..."
-	$(gpp) -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
-
-random2_vectors.o:
-	@-echo ">>> compiling double double random vector generators ..."
-	$(gpp) -O3 -c -I$(MPD) $(MPD)/random2_vectors.cpp
-
-random2_matrices.o:
-	@-echo ">>> compiling double double random matrix generators ..."
-	$(gpp) -O3 -c -I$(MPD) random2_matrices.cpp
 
 dbl2_tabs_host.o:
 	@-echo ">>> compiling dbl2_tabs_host ..."
@@ -352,12 +386,16 @@ clean:
 	/bin/rm -f -r test_dbl_factors.o test_dbl_factors
 	/bin/rm -f -r dbl2_factorizations.o dbl2_factors_testers.o
 	/bin/rm -f -r test_dbl2_factors.o test_dbl2_factors
+	/bin/rm -f -r dbl4_factorizations.o dbl4_factors_testers.o
+	/bin/rm -f -r test_dbl4_factors.o test_dbl4_factors
 	/bin/rm -f -r dbl_tabs_host.o dbl_tabs_kernels.o
 	/bin/rm -f -r dbl_test_utilities.o dbl_tabs_testers.o
 	/bin/rm -f -r dbl_tabs_flopcounts.o
 	/bin/rm -f -r test_dbl_tabs.o test_dbl_tabs prompt_baqr_setup.o
 	/bin/rm -f -r double_double_functions.o
+	/bin/rm -f -r quad_double_functions.o
 	/bin/rm -f -r random2_vectors.o random2_matrices.o
+	/bin/rm -f -r random4_vectors.o random4_matrices.o
 	/bin/rm -f -r dbl2_tabs_host.o dbl2_tabs_kernels.o
 	/bin/rm -f -r dbl2_test_utilities.o dbl2_tabs_testers.o
 	/bin/rm -f -r test_dbl2_tabs.o test_dbl2_tabs

@@ -43,7 +43,9 @@ void CPU_cmplx4_factors_matmatmul
    double **Crehihi, double **Crelohi, double **Crehilo, double **Crelolo,
    double **Cimhihi, double **Cimlohi, double **Cimhilo, double **Cimlolo )
 {
-   double zrehi,zrelo,zimhi,zimlo,acchi,acclo;
+   double zrehihi,zrelohi,zrehilo,zrelolo;
+   double zimhihi,zimlohi,zimhilo,zimlolo;
+   double acchihi,acclohi,acchilo,acclolo;
 
    for(int i=0; i<rows; i++)
       for(int j=0; j<cols; j++)
@@ -206,7 +208,7 @@ void CPU_cmplx4_factors_backward
 {
    double acc1rehihi,acc1relohi,acc1rehilo,acc1relolo;
    double acc1imhihi,acc1imlohi,acc1imhilo,acc1imlolo;
-   double acc2rehihi,acc2relohi,acc2rehilo,acc2relolo,
+   double acc2rehihi,acc2relohi,acc2rehilo,acc2relolo;
    double acc2imhihi,acc2imlohi,acc2imhilo,acc2imlolo;
    double acc3rehihi,acc3relohi,acc3rehilo,acc3relolo;
    double acc3imhihi,acc3imlohi,acc3imhilo,acc3imlolo;
@@ -358,7 +360,7 @@ void CPU_cmplx4_factors_lufac
    double acc2hihi,acc2lohi,acc2hilo,acc2lolo;
    double denhihi,denlohi,denhilo,denlolo;
    double acc3rehihi,acc3relohi,acc3rehilo,acc3relolo;
-   double acc3imhihi,acc3imlohi;acc3imhilo,acc3imlolo;
+   double acc3imhihi,acc3imlohi,acc3imhilo,acc3imlolo;
    double acc4rehihi,acc4relohi,acc4rehilo,acc4relolo;
    double acc4imhihi,acc4imlohi,acc4imhilo,acc4imlolo;
 
@@ -380,21 +382,21 @@ void CPU_cmplx4_factors_lufac
          for(int k=0; k<dim; k++)
          {
             valtmp = Arehihi[idxmax][k]; Arehihi[idxmax][k] = Arehihi[j][k];
-            Arehi[j][k] = valtmp;
+            Arehihi[j][k] = valtmp;
             valtmp = Arelohi[idxmax][k]; Arelohi[idxmax][k] = Arelohi[j][k];
-            Arelo[j][k] = valtmp;
+            Arelohi[j][k] = valtmp;
             valtmp = Arehilo[idxmax][k]; Arehilo[idxmax][k] = Arehilo[j][k];
-            Arehi[j][k] = valtmp;
+            Arehilo[j][k] = valtmp;
             valtmp = Arelolo[idxmax][k]; Arelolo[idxmax][k] = Arelolo[j][k];
-            Arelo[j][k] = valtmp;
+            Arelolo[j][k] = valtmp;
             valtmp = Aimhihi[idxmax][k]; Aimhihi[idxmax][k] = Aimhihi[j][k];
-            Aimhi[j][k] = valtmp;
+            Aimhihi[j][k] = valtmp;
             valtmp = Aimlohi[idxmax][k]; Aimlohi[idxmax][k] = Aimlohi[j][k];
-            Aimlo[j][k] = valtmp;
+            Aimlohi[j][k] = valtmp;
             valtmp = Aimhilo[idxmax][k]; Aimhilo[idxmax][k] = Aimhilo[j][k];
-            Aimhi[j][k] = valtmp;
+            Aimhilo[j][k] = valtmp;
             valtmp = Aimlolo[idxmax][k]; Aimlolo[idxmax][k] = Aimlolo[j][k];
-            Aimlo[j][k] = valtmp;
+            Aimlolo[j][k] = valtmp;
          }
          idxtmp = pivots[idxmax];
          pivots[idxmax] = pivots[j];
@@ -632,8 +634,8 @@ void CPU_cmplx4_factors_house
   double *betahihi, double *betalohi, double *betahilo, double *betalolo )
 {
    double sigmahihi = 0.0;
-   double sigmalolo = 0.0;
-   double sigmahihi = 0.0;
+   double sigmalohi = 0.0;
+   double sigmahilo = 0.0;
    double sigmalolo = 0.0;
    double acchihi,acclohi,acchilo,acclolo;
    double muhihi,mulohi,muhilo,mulolo;
@@ -760,7 +762,8 @@ void CPU_cmplx4_factors_house
          qdf_mul(vimhihi[i],vimlohi[i],vimhilo[i],vimlolo[i],
               inv0imhihi,inv0imlohi,inv0imhilo,inv0imlolo,
                 &acchihi,  &acclohi,  &acchilo,  &acclolo);
-         qdf_dec(&zrehi,&zrelo,acchi,acclo);
+         qdf_dec(&zrehihi,&zrelohi,&zrehilo,&zrelolo,
+                  acchihi, acclohi, acchilo, acclolo);
          // zim = vim[i]*inv0re + vre[i]*inv0im;
          qdf_mul(vimhihi[i],vimlohi[i],vimhilo[i],vimlolo[i],
               inv0rehihi,inv0relohi,inv0rehilo,inv0relolo,
@@ -884,7 +887,7 @@ void CPU_cmplx4_factors_leftRupdate
                   zimhihi,      zimlohi,      zimhilo,      zimlolo);
       }
       // wre[j-k] = beta*wre[j-k];
-      qdf_mul(betahihi,     etalohi,    betahilo,    betalolo,
+      qdf_mul(betahihi,    betalohi,    betahilo,    betalolo,
                wrehihi[j-k],wrelohi[j-k],wrehilo[j-k],wrelolo[j-k],
               &acchihi,    &acclohi,    &acchilo,    &acclolo);
       wrehihi[j-k] = acchihi; wrelohi[j-k] = acclohi;
@@ -893,8 +896,8 @@ void CPU_cmplx4_factors_leftRupdate
       qdf_mul(betahihi,    betalohi,    betahilo,    betalolo,
                wimhihi[j-k],wimlohi[j-k],wimhilo[j-k],wimlolo[j-k],
               &acchihi,    &acclohi,    &acchilo,    &acclolo);
-      wimhihi[j-k] = acchihi; wimlo[j-k] = acclohi;
-      wimhilo[j-k] = acchilo; wimlo[j-k] = acclolo;
+      wimhihi[j-k] = acchihi; wimlohi[j-k] = acclohi;
+      wimhilo[j-k] = acchilo; wimlolo[j-k] = acclolo;
    }
    for(int i=k; i<nrows; i++)
       for(int j=k; j<ncols; j++) // R[i][j] = R[i][j] - v[i-k]*w[j-k];
@@ -958,7 +961,7 @@ void CPU_dbl4_factors_rightQupdate
       // w[i] = beta*w[i];
       qdf_mul(betahihi,betalohi,betahilo,betalolo,
                  whihi[i],wlohi[i],whilo[i],wlolo[i],
-              &acchihi &acclohi,&acchilo,&acclolo);
+              &acchihi,&acclohi,&acchilo,&acclolo);
       whihi[i] = acchihi; wlohi[i] = acclohi;
       whilo[i] = acchilo; wlolo[i] = acclolo;
    }
@@ -977,18 +980,20 @@ void CPU_dbl4_factors_rightQupdate
 
 void CPU_cmplx4_factors_rightQupdate
  ( int n, int k,
-   double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
-   double *vrehi, double *vrelo, double *vimhi, double *vimlo,
-   double betahi, double betalo )
+   double **Qrehihi, double **Qrelohi, double **Qrehilo, double **Qrelolo,
+   double **Qimhihi, double **Qimlohi, double **Qimhilo, double **Qimlolo,
+   double *vrehihi, double *vrelohi, double *vrehilo, double *vrelolo,
+   double *vimhihi, double *vimlohi, double *vimhilo, double *vimlolo,
+   double betahihi, double betalohi, double betahilo, double betalolo )
 {
-   double *wrehi = new double[n];
-   double *wrelo = new double[n];
-   double *wrehi = new double[n];
-   double *wrelo = new double[n];
-   double *wimhi = new double[n];
-   double *wimlo = new double[n];
-   double *wimhi = new double[n];
-   double *wimlo = new double[n];
+   double *wrehihi = new double[n];
+   double *wrelohi = new double[n];
+   double *wrehilo = new double[n];
+   double *wrelolo = new double[n];
+   double *wimhihi = new double[n];
+   double *wimlohi = new double[n];
+   double *wimhilo = new double[n];
+   double *wimlolo = new double[n];
    double zrehihi,zrelohi,zrehilo,zrelolo;
    double zimhihi,zimlohi,zimhilo,zimlolo;
    double acchihi,acclohi,acchilo,acclolo;
@@ -1045,17 +1050,29 @@ void CPU_cmplx4_factors_rightQupdate
       {
          // Hermitian transpose => flip sign of vim
          // zre = wre[i]*vre[j-k] + wim[i]*vim[j-k];
-         qdf_mul(wrehi[i],wrelo[i],vrehi[j-k],vrelo[j-k],&zrehi,&zrelo);
-         qdf_mul(wimhi[i],wimlo[i],vimhi[j-k],vimlo[j-k],&acchi,&acclo);
-         qdf_inc(&zrehi,&zrelo,acchi,acclo);
+         qdf_mul(wrehihi[i],  wrelohi[i],  wrehilo[i],  wrelolo[i],
+                 vrehihi[j-k],vrelohi[j-k],vrehilo[j-k],vrelolo[j-k],
+                 &zrehihi,   &zrelohi,    &zrehilo,    &zrelolo);
+         qdf_mul(wimhihi[i],  wimlohi[i],  wimhilo[i],  wimlolo[i],
+                 vimhihi[j-k],vimlohi[j-k],vimhilo[j-k],vimlolo[j-k],
+                &acchihi,    &acclohi,    &acchilo,    &acclolo);
+         qdf_inc(&zrehihi,&zrelohi,&zrehilo,&zrelolo,
+                  acchihi, acclohi, acchilo, acclolo);
          // zim = wim[i]*vre[j-k] - wre[i]*vim[j-k];
-         qdf_mul(wimhi[i],wimlo[i],vrehi[j-k],vrelo[j-k],&zimhi,&zimlo);
-         qdf_mul(wrehi[i],wrelo[i],vimhi[j-k],vimlo[j-k],&acchi,&acclo);
-         qdf_dec(&zimhi,&zimlo,acchi,acclo);
+         qdf_mul(wimhihi[i],  wimlohi[i],  wimhilo[i],  wimlolo[i],
+                 vrehihi[j-k],vrelohi[j-k],vrehilo[j-k],vrelolo[j-k],
+                &zimhihi,    &zimlohi,    &zimhilo,    &zimlolo);
+         qdf_mul(wrehihi[i],  wrelohi[i],  wrehilo[i],  wrelolo[i],
+                 vimhihi[j-k],vimlohi[j-k],vimhilo[j-k],vimlolo[j-k],
+                &acchihi,    &acclohi,    &acchilo,    &acclolo);
+         qdf_dec(&zimhihi,&zimlohi,&zimhilo,&zimlolo,
+                  acchihi, acclohi, acchilo, acclolo);
          // Qre[i][j] = Qre[i][j] - zre;
-         qdf_dec(&Qrehi[i][j],&Qrelo[i][j],zrehi,zrelo);
+         qdf_dec(&Qrehihi[i][j],&Qrelohi[i][j],&Qrehilo[i][j],&Qrelolo[i][j],
+                  zrehihi,       zrelohi,       zrehilo,       zrelolo);
          // Qim[i][j] = Qim[i][j] - zim;
-         qdf_dec(&Qimhi[i][j],&Qimlo[i][j],zimhi,zimlo);
+         qdf_dec(&Qimhihi[i][j],&Qimlohi[i][j],&Qimhilo[i][j],&Qimlolo[i][j],
+                  zimhihi,       zimlohi,       zimhilo,       zimlolo);
       }
 
    free(wrehihi); free(wrelohi); free(wrehilo); free(wrelolo);
@@ -1194,7 +1211,7 @@ void CPU_cmplx4_factors_houseqr
             (nrows-k,
              xrehihi,xrelohi,xrehilo,xrelolo,ximhihi,ximlohi,ximhilo,ximlolo,
              vrehihi,vrelohi,vrehilo,vrelolo,vimhihi,vimlohi,vimhilo,vimlolo,
-             &betahihi,&betalohi,&betahilo,&betalolo)
+             &betahihi,&betalohi,&betahilo,&betalolo);
          CPU_cmplx4_factors_leftRupdate
             (nrows,ncols,k,
              Rrehihi,Rrelohi,Rrehilo,Rrelolo,Rimhihi,Rimlohi,Rimhilo,Rimlolo,
