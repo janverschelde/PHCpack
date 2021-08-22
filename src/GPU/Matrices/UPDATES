@@ -1,3 +1,5 @@
+Sun 22 Aug 2021 : fixed two errors in random4_matrices.cpp.
+
 Sat 21 Aug 2021 : new random4_matrices to generate real and complex random
    matrices of quad doubles.  Minor edit in dbl2_factorizations.h.
    New dbl4_factorizations to factor matrices in quad double precision.

@@ -48,7 +48,8 @@ void random_cmplx4_upper_matrix
 
          double y_hihi,y_lohi,y_hilo,y_lolo;  // work around to compute cos
 
-         qdf_sqr(sinrnd_hi,sinrnd_lo,&y_hi,&y_lo);
+         qdf_sqr(sinrnd_hihi,sinrnd_lohi,sinrnd_hilo,sinrnd_lolo,
+                     &y_hihi,    &y_lohi,    &y_hilo,    &y_lolo);
          qdf_minus(&y_hihi,&y_lohi,&y_hilo,&y_lolo);       // y = -sin^2
          qdf_inc_d(&y_hihi,&y_lohi,&y_hilo,&y_lolo,1.0);   // y = 1 - sin^2
                                                       // cos is sqrt(1-sin^2)
@@ -94,7 +95,8 @@ void random_cmplx4_matrix
 
          double y_hihi,y_lohi,y_hilo,y_lolo;  // work around to compute cos
 
-         qdf_sqr(sinrnd_hi,sinrnd_lo,&y_hi,&y_lo);
+         qdf_sqr(sinrnd_hihi,sinrnd_lohi,sinrnd_hilo,sinrnd_lolo,
+                     &y_hihi,    &y_lohi,    &y_hilo,    &y_lolo);
          qdf_minus(&y_hihi,&y_lohi,&y_hilo,&y_lolo);       // y = -sin^2
          qdf_inc_d(&y_hihi,&y_lohi,&y_hilo,&y_lolo,1.0);   // y = 1 - sin^2
                                                       // cos is sqrt(1-sin^2)
