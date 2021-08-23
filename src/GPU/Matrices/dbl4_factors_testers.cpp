@@ -1057,8 +1057,8 @@ void test_factors_cmplx4_houseqr ( void )
       Rimlolo[i] = new double[ncols];
    }
    random_cmplx4_matrix
-      (nrows,ncols,Arehihi,Arehilo,Arelohi,Arelolo,
-                   Aimhihi,Aimhilo,Aimlohi,Aimlolo);
+      (nrows,ncols,Arehihi,Arelohi,Arehilo,Arelolo,
+                   Aimhihi,Aimlohi,Aimhilo,Aimlolo);
 
    if(verbose > 0)
    {

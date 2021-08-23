@@ -562,8 +562,8 @@ void CPU_dbl4_factors_house
            &acchihi,&acclohi,&acchilo,&acclolo);
       qdf_inc(&sigmahihi,&sigmalohi,&sigmahilo,&sigmalolo,
                  acchihi,   acclohi,   acchilo,   acclolo);
-      vhihi[i] = xhihi[i]; vlohi[i] = xlolo[i];
-      vhilo[i] = xhihi[i]; vlolo[i] = xlolo[i];
+      vhihi[i] = xhihi[i]; vlohi[i] = xlohi[i];
+      vhilo[i] = xhilo[i]; vlolo[i] = xlolo[i];
    }
    if((sigmahihi == 0.0) && (sigmalohi == 0.0) &&
       (sigmahilo == 0.0) && (sigmalolo == 0.0))
@@ -617,8 +617,8 @@ void CPU_dbl4_factors_house
                  vhihi[0],vlohi[0],vhilo[0],vlolo[0],
               &acchihi,&acclohi,&acchilo,&acclolo);
 
-         vhihi[i] = acchihi; vlolo[i] = acclolo;
-         vhihi[i] = acchihi; vlolo[i] = acclolo;
+         vhihi[i] = acchihi; vlohi[i] = acclohi;
+         vhilo[i] = acchilo; vlolo[i] = acclolo;
       }
       vhihi[0] = 1.0; vlohi[0] = 0.0;
       vhilo[0] = 0.0; vlolo[0] = 0.0;
@@ -640,7 +640,7 @@ void CPU_cmplx4_factors_house
    double acchihi,acclohi,acchilo,acclolo;
    double muhihi,mulohi,muhilo,mulolo;
    double sqrx0hihi,sqrx0lohi,sqrx0hilo,sqrx0lolo;
-   double x0radhihi,x0radhilo,x0radlohi,x0radlolo;
+   double x0radhihi,x0radlohi,x0radhilo,x0radlolo;
    double sqrv0hihi,sqrv0lohi,sqrv0hilo,sqrv0lolo;
    double inv0rehihi,inv0relohi,inv0rehilo,inv0relolo;
    double inv0imhihi,inv0imlohi,inv0imhilo,inv0imlolo;
@@ -1185,7 +1185,7 @@ void CPU_cmplx4_factors_houseqr
          Rrehihi[i][j] = Arehihi[i][j];
          Rrelohi[i][j] = Arelohi[i][j];
          Rrehilo[i][j] = Arehilo[i][j];
-         Rrelolo[i][j] = Arelohi[i][j];
+         Rrelolo[i][j] = Arelolo[i][j];
          Rimhihi[i][j] = Aimhihi[i][j];
          Rimlohi[i][j] = Aimlohi[i][j];
          Rimhilo[i][j] = Aimhilo[i][j];
