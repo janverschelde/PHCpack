@@ -391,6 +391,56 @@ test_dbl2_tabs: test_dbl2_tabs.obj dbl2_tabs_testers.obj \
 	     dbl2_tabs_kernels.obj dbl2_factorizations.obj \
              random_numbers.obj random2_vectors.obj random2_matrices.obj
 
+dbl4_tabs_host.obj:
+	@-echo ">>> compiling dbl4_tabs_host ..."
+	$(CL)\cl /c dbl4_tabs_host.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_tabs_host.obj /EHsc
+
+dbl4_tabs_kernels.obj:
+	@-echo ">>> compiling dbl4_tabs_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(POL) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl4_tabs_kernels.cu \
+             -o dbl4_tabs_kernels.obj
+
+dbl4_test_utilities.obj:
+	@-echo ">>> compiling dbl4_test_utilities ..."
+	$(CL)\cl /c dbl4_test_utilities.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_test_utilities.obj /EHsc
+
+dbl4_tabs_testers.obj:
+	@-echo ">>> compiling dbl4_tabs_testers ..."
+	$(CL)\cl /c dbl4_tabs_testers.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_tabs_testers.obj /EHsc
+
+test_dbl4_tabs.obj:
+	@-echo ">>> compiling test_dbl4_tabs ..."
+	$(CL)\cl /c test_dbl4_tabs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl4_tabs.obj /EHsc
+
+test_dbl4_tabs: test_dbl4_tabs.obj dbl4_tabs_testers.obj \
+                dbl4_test_utilities.obj \
+                double_double_functions.obj quad_double_functions.obj \
+                dbl4_tabs_host.obj dbl4_factorizations.obj \
+		gettimeofday4win.obj \
+                random_numbers.obj random4_vectors.obj random4_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl4_tabs.exe test_dbl4_tabs.obj \
+             dbl4_tabs_testers.obj dbl4_test_utilities.obj \
+	     gettimeofday4win.obj  \
+             double_double_functions.obj quad_double_functions.obj \
+	     dbl4_tabs_host.obj dbl4_factorizations.obj \
+             random_numbers.obj random4_vectors.obj random4_matrices.obj
+
 dbl_baqr_host.obj:
 	@-echo ">>> compiling dbl_baqr_host ..."
 	$(CL)\cl /c dbl_baqr_host.cpp \
