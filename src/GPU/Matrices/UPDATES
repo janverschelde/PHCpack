@@ -1,3 +1,7 @@
+Mon 23 Aug 2021 : new dbl4_{test_utilities,tabs_host,tabs_testers} and
+  test_dbl4_tabs.cpp for a tiled back substitution with quad doubles.
+  Updated the makefiles.
+
 Sun 22 Aug 2021 : fixed two errors in random4_matrices.cpp.
   Fixed compilation errors with dbl4_factorizations.
   New dbl4_factors_testers and test_dbl4_factors.cpp.  Updated the makefiles.

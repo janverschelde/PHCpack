@@ -228,7 +228,7 @@ dbl2_tabs_host.o:
 	$(gpp) -O3 -c -I$(MPD) dbl2_tabs_host.cpp
 
 dbl2_tabs_kernels.o:
-	@-echo ">>> compiling tabs kernels for doubles ..."
+	@-echo ">>> compiling tabs kernels for double doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
              --define-macro gpufun=1 \
              -c dbl2_tabs_kernels.cu
@@ -256,6 +256,41 @@ test_dbl2_tabs: test_dbl2_tabs.o dbl2_tabs_testers.o dbl_tabs_flopcounts.o \
                   double_double_functions.o dbl2_tabs_host.o \
                   dbl2_tabs_kernels.o dbl2_factorizations.o \
                   random_numbers.o random2_vectors.o random2_matrices.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
+dbl4_tabs_host.o:
+	@-echo ">>> compiling dbl4_tabs_host ..."
+	$(gpp) -O3 -c -I$(MPD) dbl4_tabs_host.cpp
+
+dbl4_tabs_kernels.o:
+	@-echo ">>> compiling tabs kernels for quad doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+             --define-macro gpufun=1 \
+             -c dbl4_tabs_kernels.cu
+
+dbl4_test_utilities.o:
+	@-echo ">>> compiling dbl4_test_utilities ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl4_test_utilities.cpp
+
+dbl4_tabs_testers.o:
+	@-echo ">>> compiling dbl4_tabs_testers ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl4_tabs_testers.cpp
+
+test_dbl4_tabs.o:
+	@-echo ">>> compiling test_dbl4_tabs ..."
+	$(gpp) -O3 -c test_dbl4_tabs.cpp
+
+test_dbl4_tabs: test_dbl4_tabs.o \
+                double_double_functions.o quad_double_functions.o \
+                dbl4_test_utilities.o dbl4_tabs_testers.o \
+                dbl4_factorizations.o dbl4_tabs_host.o \
+                random_numbers.o random4_vectors.o random4_matrices.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl4_tabs test_dbl4_tabs.o \
+                  double_double_functions.o quad_double_functions.o \
+                  dbl4_test_utilities.o dbl4_tabs_testers.o \
+                  dbl4_tabs_host.o dbl4_factorizations.o \
+                  random_numbers.o random4_vectors.o random4_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 dbl_baqr_host.o:
@@ -399,6 +434,9 @@ clean:
 	/bin/rm -f -r dbl2_tabs_host.o dbl2_tabs_kernels.o
 	/bin/rm -f -r dbl2_test_utilities.o dbl2_tabs_testers.o
 	/bin/rm -f -r test_dbl2_tabs.o test_dbl2_tabs
+	/bin/rm -f -r dbl4_tabs_host.o
+	/bin/rm -f -r dbl4_test_utilities.o dbl4_tabs_testers.o
+	/bin/rm -f -r test_dbl4_tabs.o test_dbl4_tabs
 	/bin/rm -f -r dbl_baqr_host.o dbl_baqr_kernels.o
 	/bin/rm -f -r dbl_baqr_testers.o dbl_baqr_flopcounts.o
 	/bin/rm -f -r test_dbl_baqr.o test_dbl_baqr
