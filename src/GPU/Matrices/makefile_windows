@@ -431,6 +431,7 @@ test_dbl4_tabs: test_dbl4_tabs.obj dbl4_tabs_testers.obj \
                 dbl4_test_utilities.obj \
                 double_double_functions.obj quad_double_functions.obj \
                 dbl4_tabs_host.obj dbl4_factorizations.obj \
+		dbl4_tabs_kernels.obj dbl_tabs_flopcounts.obj \
 		gettimeofday4win.obj \
                 random_numbers.obj random4_vectors.obj random4_matrices.obj
 	@-echo ">>> linking ..."
@@ -439,6 +440,7 @@ test_dbl4_tabs: test_dbl4_tabs.obj dbl4_tabs_testers.obj \
 	     gettimeofday4win.obj  \
              double_double_functions.obj quad_double_functions.obj \
 	     dbl4_tabs_host.obj dbl4_factorizations.obj \
+	     dbl4_tabs_kernels.obj dbl_tabs_flopcounts.obj \
              random_numbers.obj random4_vectors.obj random4_matrices.obj
 
 dbl_baqr_host.obj:
@@ -640,6 +642,10 @@ clean:
 	del dbl2_test_utilities.obj dbl2_tabs_testers.obj
 	del test_dbl2_tabs.obj test_dbl2_tabs_lib
 	del test_dbl2_tabs.exe test_dbl2_tabs.exp
+	del dbl4_tabs_host.obj dbl4_tabs_kernels.obj
+	del dbl4_test_utilities.obj dbl4_tabs_testers.obj
+	del test_dbl4_tabs.obj test_dbl4_tabs_lib
+	del test_dbl4_tabs.exe test_dbl4_tabs.exp
 	del dbl_baqr_host.obj dbl_baqr_kernels.obj dbl_baqr_testers.obj
 	del dbl_baqr_flopcounts.obj
 	del test_dbl_baqr.obj test_dbl_baqr_lib prompt_baqr_setup.obj
