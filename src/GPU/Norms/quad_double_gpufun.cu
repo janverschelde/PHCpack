@@ -267,6 +267,18 @@ __device__ void __forceinline__ qdg_inc_d
                    a_hihi,a_lohi,a_hilo,a_lolo);
 }
 
+__device__ __forceinline__ void qdg_dec
+ ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo,
+   double b_hihi, double b_lohi, double b_hilo, double b_lolo )
+{
+   const double mb_hihi = -b_hihi;
+   const double mb_lohi = -b_lohi;
+   const double mb_hilo = -b_hilo;
+   const double mb_lolo = -b_lolo;
+
+   qdg_inc(a_hihi,a_lohi,a_hilo,a_lolo,mb_hihi,mb_lohi,mb_hilo,mb_lolo);
+}
+
 __device__ void __forceinline__ qdg_minus
  ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo )
 {

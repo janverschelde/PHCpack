@@ -1,3 +1,5 @@
+Tue 24 Aug 2021 : added a decrement function to quad_double_gpufun.
+
 Sun 22 Aug 2021 : extended quad_double_functions with wrappers to decrement
   a quad double and to multiply a quad double with a double. 
 
