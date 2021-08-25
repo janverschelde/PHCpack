@@ -284,12 +284,14 @@ test_dbl4_tabs: test_dbl4_tabs.o \
                 double_double_functions.o quad_double_functions.o \
                 dbl4_test_utilities.o dbl4_tabs_testers.o \
                 dbl4_factorizations.o dbl4_tabs_host.o \
+                dbl4_tabs_kernels.o dbl_tabs_flopcounts.o \
                 random_numbers.o random4_vectors.o random4_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl4_tabs test_dbl4_tabs.o \
                   double_double_functions.o quad_double_functions.o \
                   dbl4_test_utilities.o dbl4_tabs_testers.o \
                   dbl4_tabs_host.o dbl4_factorizations.o \
+                  dbl4_tabs_kernels.o dbl_tabs_flopcounts.o \
                   random_numbers.o random4_vectors.o random4_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
@@ -434,7 +436,7 @@ clean:
 	/bin/rm -f -r dbl2_tabs_host.o dbl2_tabs_kernels.o
 	/bin/rm -f -r dbl2_test_utilities.o dbl2_tabs_testers.o
 	/bin/rm -f -r test_dbl2_tabs.o test_dbl2_tabs
-	/bin/rm -f -r dbl4_tabs_host.o
+	/bin/rm -f -r dbl4_tabs_host.o dbl4_tabs_kernels.o
 	/bin/rm -f -r dbl4_test_utilities.o dbl4_tabs_testers.o
 	/bin/rm -f -r test_dbl4_tabs.o test_dbl4_tabs
 	/bin/rm -f -r dbl_baqr_host.o dbl_baqr_kernels.o
