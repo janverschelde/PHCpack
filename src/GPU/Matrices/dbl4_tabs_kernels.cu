@@ -1142,8 +1142,8 @@ __global__ void cmplx4_multiply_inverse
 
 __global__ void dbl4_back_substitute
  ( int dim, int idx, 
-   double *Uhihi, double *Uhilo, double *Ulohi, double *Ulolo, 
-   double *whihi, double *whilo, double *wlohi, double *wlolo )
+   double *Uhihi, double *Ulohi, double *Uhilo, double *Ulolo, 
+   double *whihi, double *wlohi, double *whilo, double *wlolo )
 {
    const int B = blockIdx.x;     // block index
    const int k = threadIdx.x;    // thread k computes k-th product
