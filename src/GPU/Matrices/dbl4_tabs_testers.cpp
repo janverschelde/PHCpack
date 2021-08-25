@@ -10,7 +10,7 @@
 #include "random4_matrices.h"
 #include "dbl4_factorizations.h"
 #include "dbl4_tabs_host.h"
-// #include "dbl4_tabs_kernels.h"
+#include "dbl4_tabs_kernels.h"
 #include "dbl4_test_utilities.h"
 
 using namespace std;
@@ -122,18 +122,24 @@ void test_real4_upper_inverse ( void )
                  << "               "
                  << invAhilo_h[i][j] << "  " << invAlolo_h[i][j] << endl;
    }
-/*
-   double **invAhi_d = new double*[dim];
-   double **invAlo_d = new double*[dim];
+   double **invAhihi_d = new double*[dim];
+   double **invAlohi_d = new double*[dim];
+   double **invAhilo_d = new double*[dim];
+   double **invAlolo_d = new double*[dim];
+
    for(int i=0; i<dim; i++)
    {
-      invAhi_d[i] = new double[dim];
-      invAlo_d[i] = new double[dim];
+      invAhihi_d[i] = new double[dim];
+      invAlohi_d[i] = new double[dim];
+      invAhilo_d[i] = new double[dim];
+      invAlolo_d[i] = new double[dim];
    }
    cout << "-> GPU computes the inverse ..." << endl;
 
    GPU_dbl4_upper_inverse
-      (dim,Ahi,Alo,invAhi_d,invAlo_d,&elapsedms,&timelapsed_d);
+      (dim,Ahihi,     Alohi,     Ahilo,     Alolo,
+        invAhihi_d,invAlohi_d,invAhilo_d,invAlolo_d,
+       &elapsedms,&timelapsed_d);
 
    if(verbose > 0)
    {
@@ -141,14 +147,17 @@ void test_real4_upper_inverse ( void )
       for(int i=0; i<dim; i++)
          for(int j=0; j<dim; j++)
             cout << "invA_d[" << i << "][" << j << "] : "
-                 << invAhi_d[i][j] << "  " << invAlo_d[i][j] << endl;
+                 << invAhihi_d[i][j] << "  " << invAlohi_d[i][j] << endl
+                 << "               "
+                 << invAhilo_d[i][j] << "  " << invAlolo_d[i][j] << endl;
    }
    cout << scientific << setprecision(2);
    cout << "   Sum of errors on inverse : "
         << dbl4_Matrix_Difference_Sum
-              (dim,invAhi_h,invAlo_h,invAhi_d,invAlo_d)
+              (dim,invAhihi_h,invAlohi_h,invAhilo_h,invAlolo_h,
+                   invAhihi_d,invAlohi_d,invAhilo_d,invAlolo_d)
         << endl;
- */
+
    double *xhihi = new double[dim];
    double *xlohi = new double[dim];
    double *xhilo = new double[dim];
@@ -171,6 +180,7 @@ void test_real4_upper_inverse ( void )
    }
    if(verbose > 0)
    {
+      cout << scientific << setprecision(16);
       cout << "The solution computed with the CPU inverse :" << endl;
       for(int i=0; i<dim; i++)
          cout << "x[" << i << "] : "
@@ -190,12 +200,10 @@ void test_real4_upper_inverse ( void )
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
-/*
    cout << "                     Time spent by the kernel : ";
    cout << elapsedms << " milliseconds." << endl;
    cout << "        Total GPU wall clock computation time : ";
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
- */
 }
 
 void test_cmplx4_upper_inverse ( void )
@@ -393,12 +401,14 @@ void test_cmplx4_upper_inverse ( void )
       invAimhilo_d[i] = new double[dim];
       invAimlolo_d[i] = new double[dim];
    }
-/*
+
    cout << "-> GPU computes the inverse ..." << endl;
 
    GPU_cmplx4_upper_inverse
-      (dim,   Arehi,     Arelo,     Aimhi,     Aimlo,
-           invArehi_d,invArelo_d,invAimhi_d,invAimlo_d,
+      (dim,   Arehihi,     Arelohi,     Arehilo,     Arelolo,     
+              Aimhihi,     Aimlohi,     Aimhilo,     Aimlolo,
+           invArehihi_d,invArelohi_d,invArehilo_d,invArelolo_d,
+           invAimhihi_d,invAimlohi_d,invAimhilo_d,invAimlolo_d,
        &elapsedms,&timelapsed_d);
 
    if(verbose > 0)
@@ -408,17 +418,23 @@ void test_cmplx4_upper_inverse ( void )
          for(int j=0; j<dim; j++)
          {
             cout << "invA_d[" << i << "][" << j << "]re : "
-                 << invArehi_d[i][j] << "  " << invArelo_d[i][j] << endl;
+                 << invArehihi_d[i][j] << "  " << invArelohi_d[i][j] << endl
+                 << "                 "
+                 << invArehilo_d[i][j] << "  " << invArelolo_d[i][j] << endl;
             cout << "invA_d[" << i << "][" << j << "]im : "
-                 << invAimhi_d[i][j] << "  " << invAimlo_d[i][j] << endl;
+                 << invAimhihi_d[i][j] << "  " << invAimlohi_d[i][j] << endl
+                 << "                 "
+                 << invAimhilo_d[i][j] << "  " << invAimlolo_d[i][j] << endl;
          }
    }
    cout << scientific << setprecision(2);
    cout << "   Sum of errors on inverse : "
         << cmplx4_Matrix_Difference_Sum
-              (dim,invArehi_h,invArelo_h,invAimhi_h,invAimlo_h,
-                   invArehi_d,invArelo_d,invAimhi_d,invAimlo_d) << endl;
- */
+              (dim,invArehihi_h,invArelohi_h,invArehilo_h,invArelolo_h,
+                   invAimhihi_h,invAimlohi_h,invAimhilo_h,invAimlolo_h,
+                   invArehihi_d,invArelohi_d,invArehilo_d,invArelolo_d,
+                   invAimhihi_d,invAimlohi_d,invAimhilo_d,invAimlolo_d)
+        << endl;
 
    double *xrehihi = new double[dim];
    double *xrelohi = new double[dim];
@@ -645,11 +661,14 @@ void test_real4_upper_tiling ( void )
                  << "          "
                  << Ahilo[i][j] << "  " << Alolo[i][j] << endl;
    }
-/*
+
    cout << "-> GPU solves an upper triangular system ..." << endl;
 
    GPU_dbl4_upper_tiled_solver
-      (dim,sizetile,numtiles,Ahi_d,Alo_d,rhshi_d,rhslo_d,xhi_d,xlo_d,
+      (dim,sizetile,numtiles,
+         Ahihi_d,  Alohi_d,  Ahilo_d,  Alolo_d,
+       rhshihi_d,rhslohi_d,rhshilo_d,rhslolo_d,
+         xhihi_d,  xlohi_d,  xhilo_d,  xlolo_d,
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&timelapsed_d,
        &addcnt,&mulcnt,&divcnt);
 
@@ -659,16 +678,20 @@ void test_real4_upper_tiling ( void )
       for(int i=0; i<dim; i++)
          for(int j=0; j<dim; j++)
             cout << "A[" << i << "][" << j << "] : "
-                 << Ahi_d[i][j] << "  " << Alo_d[i][j] << endl;
+                 << Ahihi_d[i][j] << "  " << Alohi_d[i][j] << endl
+                 << "          "
+                 << Ahilo_d[i][j] << "  " << Alolo_d[i][j] << endl;
    }
-
    cout << scientific << setprecision(2);
    cout << "   Sum of errors on diagonal tiles : "
-        << dbl4_Diagonal_Difference_Sum(numtiles,sizetile,Ahi,Alo,Ahi_d,Alo_d)
+        << dbl4_Diagonal_Difference_Sum
+              (numtiles,sizetile,
+               Ahihi,Alohi,Ahilo,Alolo,Ahihi_d,Alohi_d,Ahilo_d,Alolo_d)
         << endl;
- */
+
    if(verbose > 0)
    {
+      cout << scientific << setprecision(16);
       cout << "CPU solution computed with tiling :" << endl;
       cout << scientific << setprecision(16);
       for(int i=0; i<dim; i++)
@@ -676,26 +699,27 @@ void test_real4_upper_tiling ( void )
               << xhihi[i] << "  " << xlohi[i] << endl
               << "       "
               << xhilo[i] << "  " << xlolo[i] << endl;
-/*
+
       cout << "GPU solution computed with tiling :" << endl;
       for(int i=0; i<dim; i++)
          cout << "x[" << i << "] : "
-              << xhi_d[i] << "  " << xlo_d[i] << endl;
- */
+              << xhihi_d[i] << "  " << xlohi_d[i] << endl
+              << "       "
+              << xhilo_d[i] << "  " << xlolo_d[i] << endl;
    }
    cout << scientific << setprecision(2);
    cout << "   Sum of CPU errors on solution : "
         << dbl4_Difference_Sum(dim,solhihi,sollohi,solhilo,sollolo,
-                                     xhihi,  xlohi,  xhilo,  xlolo) << endl;
-/*
+                                     xhihi,  xlohi,  xhilo,  xlolo)
+        << endl;
    cout << "   Sum of GPU errors on solution : "
-        << dbl4_Difference_Sum(dim,solhi,sollo,xhi_d,xlo_d) << endl;
- */
+        << dbl4_Difference_Sum(dim,solhihi,sollohi,solhilo,sollolo,
+                                     xhihi_d,xlohi_d,xhilo_d,xlolo_d)
+        << endl;
 
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
-/*
    cout << "          Time spent to invert diagonal tiles : ";
    cout << invlapsed << " milliseconds." << endl;
    cout << "   Time spent to multiply with inverted tiles : ";
@@ -708,12 +732,12 @@ void test_real4_upper_tiling ( void )
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
    cout << endl;
    cout << "             Number of additions/subtractions : "
-        << addcnt << " x 20 " << endl;
+        << addcnt << " x 89 " << endl;
    cout << "                    Number of multiplications : "
-        << mulcnt << " x 23 " << endl;
+        << mulcnt << " x 336 " << endl;
    cout << "                          Number of divisions : "
-        << divcnt << " x 70 " << endl;
-   long long int flopcnt = 20*addcnt + 23*mulcnt + 70*divcnt;
+        << divcnt << " x 893 " << endl;
+   long long int flopcnt = 89*addcnt + 336*mulcnt + 893*divcnt;
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
    cout << endl;
@@ -728,7 +752,7 @@ void test_real4_upper_tiling ( void )
         << scientific << setprecision(3) << wallflops;
    cout << fixed << setprecision(3)
         << " = " << wallflops/gigacnt << " Gigaflops" << endl;
- */
+
    for(int i=0; i<dim; i++)
    {
       free(Ahihi[i]); free(Alohi[i]); free(Ahilo[i]); free(Alolo[i]);
@@ -973,13 +997,16 @@ void test_cmplx4_upper_tiling ( void )
                  << Aimhilo[i][j] << "  " << Aimlolo[i][j] << endl;
          }
    }
-/*
    cout << "-> GPU solves an upper triangular system ..." << endl;
 
    GPU_cmplx4_upper_tiled_solver
-      (dim,sizetile,numtiles,Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
-       rhsrehi_d,rhsrelo_d,rhsimhi_d,rhsimlo_d,
-         xrehi_d,  xrelo_d,  ximhi_d,  ximlo_d,
+      (dim,sizetile,numtiles,
+         Arehihi_d,  Arelohi_d,  Arehilo_d,  Arelolo_d,
+         Aimhihi_d,  Aimlohi_d,  Aimhilo_d,  Aimlolo_d,
+       rhsrehihi_d,rhsrelohi_d,rhsrehilo_d,rhsrelolo_d,
+       rhsimhihi_d,rhsimlohi_d,rhsimhilo_d,rhsimlolo_d,
+         xrehihi_d,  xrelohi_d,  xrehilo_d,  xrelolo_d,
+         ximhihi_d,  ximlohi_d,  ximhilo_d,  ximlolo_d,
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&timelapsed_d,
        &addcnt,&mulcnt,&divcnt);
 
@@ -990,19 +1017,25 @@ void test_cmplx4_upper_tiling ( void )
          for(int j=0; j<dim; j++)
          {
             cout << "A[" << i << "][" << j << "]re : "
-                 << Arehi_d[i][j] << "  " << Arelo_d[i][j] << endl;
+                 << Arehihi_d[i][j] << "  " << Arelohi_d[i][j] << endl
+                 << "            "
+                 << Arehilo_d[i][j] << "  " << Arelolo_d[i][j] << endl;
             cout << "A[" << i << "][" << j << "]im : "
-                 << Aimhi_d[i][j] << "  " << Aimlo_d[i][j] << endl;
+                 << Aimhihi_d[i][j] << "  " << Aimlohi_d[i][j] << endl
+                 << "            "
+                 << Aimhilo_d[i][j] << "  " << Aimlolo_d[i][j] << endl;
          }
    }
 
    cout << scientific << setprecision(2);
    cout << "   Sum of errors on diagonal tiles : "
         << cmplx4_Diagonal_Difference_Sum
-             (numtiles,sizetile,Arehi,  Arelo,  Aimhi,  Aimlo,
-                                Arehi_d,Arelo_d,Aimhi_d,Aimlo_d)
+             (numtiles,sizetile,
+              Arehihi,  Arelohi,  Arehilo,  Arelolo,
+              Aimhihi,  Aimlohi,  Aimhilo,  Aimlolo,
+              Arehihi_d,Arelohi_d,Arehilo_d,Arelolo_d,
+              Aimhihi_d,Aimlohi_d,Aimhilo_d,Aimlolo_d)
         << endl;
- */
 
    if(verbose > 0)
    {
@@ -1019,16 +1052,18 @@ void test_cmplx4_upper_tiling ( void )
               << "         "
               << ximhilo[i] << "  " << ximlolo[i] << endl;
       }
-/*
       cout << "GPU solution computed with tiling :" << endl;
       for(int i=0; i<dim; i++)
       {
          cout << "x[" << i << "]re : "
-              << xrehi_d[i] << "  " << xrelo_d[i] << endl;
+              << xrehihi_d[i] << "  " << xrelohi_d[i] << endl
+              << "         "
+              << xrehilo_d[i] << "  " << xrelolo_d[i] << endl;
          cout << "x[" << i << "]im : "
-              << ximhi_d[i] << "  " << ximlo_d[i] << endl;
+              << ximhihi_d[i] << "  " << ximlohi_d[i] << endl
+              << "         "
+              << ximhilo_d[i] << "  " << ximlolo_d[i] << endl;
       }
- */
    }
    cout << scientific << setprecision(2);
    cout << "   Sum of CPU errors on solution : "
@@ -1038,16 +1073,16 @@ void test_cmplx4_upper_tiling ( void )
                 xrehihi,  xrelohi,  xrehilo,  xrelolo, 
                 ximhihi,  ximlohi,  ximhilo,  ximlolo)
         << endl;
- /*
    cout << "   Sum of GPU errors on solution : "
-        << cmplx4_Difference_Sum(dim,solrehi,solrelo,solimhi,solimlo,
-                                       xrehi_d,xrelo_d,ximhi_d,ximlo_d)
+        << cmplx4_Difference_Sum(dim,
+               solrehihi,solrelohi,solrehilo,solrelolo,
+               solimhihi,solimlohi,solimhilo,solimlolo,
+                 xrehihi_d,xrelohi_d,xrehilo_d,xrelolo_d,
+                 ximhihi_d,ximlohi_d,ximhilo_d,ximlolo_d)
         << endl;
-  */
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
- /*
    cout << "          Time spent to invert diagonal tiles : ";
    cout << invlapsed << " milliseconds." << endl;
    cout << "   Time spent to multiply with inverted tiles : ";
@@ -1060,12 +1095,12 @@ void test_cmplx4_upper_tiling ( void )
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
    cout << endl;
    cout << "             Number of additions/subtractions : "
-        << addcnt << " x 20 " << endl;
+        << addcnt << " x 89 " << endl;
    cout << "                    Number of multiplications : "
-        << mulcnt << " x 23 " << endl;
+        << mulcnt << " x 336 " << endl;
    cout << "                          Number of divisions : "
-        << divcnt << " x 70 " << endl;
-   long long int flopcnt = 20*addcnt + 23*mulcnt + 70*divcnt;
+        << divcnt << " x 893 " << endl;
+   long long int flopcnt = 89*addcnt + 336*mulcnt + 893*divcnt;
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
    cout << endl;
@@ -1080,7 +1115,6 @@ void test_cmplx4_upper_tiling ( void )
         << scientific << setprecision(3) << wallflops;
    cout << fixed << setprecision(3)
         << " = " << wallflops/gigacnt << " Gigaflops" << endl;
- */
 
    for(int i=0; i<dim; i++)
    {
@@ -1088,31 +1122,23 @@ void test_cmplx4_upper_tiling ( void )
       free(Arehilo[i]); free(Arelolo[i]);
       free(Aimhihi[i]); free(Aimlohi[i]);
       free(Aimhilo[i]); free(Aimlolo[i]);
- /*
       free(Arehihi_d[i]); free(Arelohi_d[i]);
       free(Arehilo_d[i]); free(Arelolo_d[i]);
       free(Aimhihi_d[i]); free(Aimlohi_d[i]);
       free(Aimhilo_d[i]); free(Aimlolo_d[i]);
-  */
    }
    free(Arehihi); free(Arelohi); free(Arehilo); free(Arelolo);
    free(Aimhihi); free(Aimlohi); free(Aimhilo); free(Aimlolo);
- /*
    free(Arehihi_d); free(Arelohi_d); free(Arehilo_d); free(Arelolo_d);
    free(Aimhihi_d); free(Aimlohi_d); free(Aimhilo_d); free(Aimlolo_d);
-  */
    free(solrehihi); free(solrelohi); free(solrehilo); free(solrelolo);
    free(solimhihi); free(solimlohi); free(solimhilo); free(solimlolo);
    free(rhsrehihi); free(rhsrelohi); free(rhsrehilo); free(rhsrelolo);
    free(rhsimhihi); free(rhsimlohi); free(rhsimhilo); free(rhsimlolo);
- /*
    free(rhsrehihi_d); free(rhsrelohi_d); free(rhsrehilo_d); free(rhsrelolo_d);
    free(rhsimhihi_d); free(rhsimlohi_d); free(rhsimhilo_d); free(rhsimlolo_d);
-  */
    free(xrehihi); free(xrelohi); free(xrehilo); free(xrelolo);
    free(ximhihi); free(ximlohi); free(ximhilo); free(ximlolo);
-  /*
    free(xrehihi_d); free(xrelohi_d); free(xrehilo_d); free(xrelolo_d);
    free(ximhihi_d); free(ximlohi_d); free(ximhilo_d); free(ximlolo_d);
-  */
 }

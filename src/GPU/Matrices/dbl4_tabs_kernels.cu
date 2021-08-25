@@ -83,6 +83,7 @@ __global__ void dbl4_small_invert_upper
          qdg_mul(Ucolhihi[i],Ucollohi[i],Ucolhilo[i],Ucollolo[i],
                  xvalhihi,   xvallohi,   xvalhilo,   xvallolo,
                  &acchihi,   &acclohi,   &acchilo,   &acclolo);
+         __syncthreads();
          qdg_dec(&rhshihi,&rhslohi,&rhshilo,&rhslolo,
                   acchihi, acclohi, acchilo, acclolo);
       }
@@ -106,8 +107,8 @@ __global__ void dbl4_small_invert_upper
    {
       __syncthreads();
       invUhihi[rowidx+k] = invUrowshihi[rowidx+k];
-      invUhilo[rowidx+k] = invUrowshilo[rowidx+k];
       invUlohi[rowidx+k] = invUrowslohi[rowidx+k];
+      invUhilo[rowidx+k] = invUrowshilo[rowidx+k];
       invUlolo[rowidx+k] = invUrowslolo[rowidx+k];
       rowidx = rowidx + dim;
    }
@@ -377,9 +378,9 @@ __global__ void dbl4_medium_invert_upper
    int rowidx = (dim - 1)*dim + k;       // the row index in the inverse
 
    // invUrow[k] = rhs/Ucol[k];          // last row of the inverse
-   qdg_div(rhshihi,rhslohi,rhshilo,rhslolo,
-           Ucolhihi[k],Ucollohi[k],Ucolhilo[k],Ucollolo[k],
-           &invUrowhihi[k],&invUrowlohi[k],&invUrowhilo[k],&invUrowlolo[k]);
+   qdg_div( rhshihi,        rhslohi,        rhshilo,        rhslolo,
+           Ucolhihi[k],    Ucollohi[k],    Ucolhilo[k],    Ucollolo[k],
+       &invUrowhihi[k],&invUrowlohi[k],&invUrowhilo[k],&invUrowlolo[k]);
    invUhihi[rowidx] = invUrowhihi[k];    // store the last row into invU
    invUlohi[rowidx] = invUrowlohi[k]; 
    invUhilo[rowidx] = invUrowhilo[k];
