@@ -51,6 +51,7 @@ test_dbl4_tabs            : main test on quad double tabs
 -----------------------------------------------------------------------------
 dbl_baqr_host             : blocked qr on host in double precision
 dbl2_baqr_host            : blocked qr on host in double double precision
+dbl4_baqr_host            : blocked qr on host in quad double precision
 dbl_baqr_flopcounts       : counts the flops for all kernels
 dbl_baqr_kernels          : kernels for baqr in double precision
 dbl2_baqr_kernels         : kernels for baqr in double double precision
