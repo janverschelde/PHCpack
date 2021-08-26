@@ -373,9 +373,9 @@ int test_real4_qr_factors_probe
               << Rsumhilo << "  " << Rsumlolo << endl;
          cout << "    R[" << rowidx << "][" << colidx << "] : "
               << Rhihi[rowidx][colidx] << "  "
-              << Rlolo[rowidx][colidx] << endl
+              << Rlohi[rowidx][colidx] << endl
               << "              "
-              << Rhihi[rowidx][colidx] << "  "
+              << Rhilo[rowidx][colidx] << "  "
               << Rlolo[rowidx][colidx] << endl;
       }
       if(rowidx == colidx)
@@ -646,9 +646,9 @@ int test_cmplx4_qr_factors_probe
               << Rsumrehilo << "  " << Rsumrelolo << endl;
          cout << "    R[" << rowidx << "][" << colidx << "]re : "
               << Rrehihi[rowidx][colidx] << "  "
-              << Rrelolo[rowidx][colidx] << endl
+              << Rrelohi[rowidx][colidx] << endl
               << "                "
-              << Rrehihi[rowidx][colidx] << "  "
+              << Rrehilo[rowidx][colidx] << "  "
               << Rrelolo[rowidx][colidx] << endl;
          cout << "Q^T*A[" << rowidx << "][" << colidx << "]im : "
               << Rsumimhihi << "  " << Rsumimlohi << endl
@@ -656,9 +656,9 @@ int test_cmplx4_qr_factors_probe
               << Rsumimhilo << "  " << Rsumimlolo << endl;
          cout << "    R[" << rowidx << "][" << colidx << "]im : "
               << Rimhihi[rowidx][colidx] << "  "
-              << Rimlolo[rowidx][colidx] << endl
+              << Rimlohi[rowidx][colidx] << endl
               << "                "
-              << Rimhihi[rowidx][colidx] << "  "
+              << Rimhilo[rowidx][colidx] << "  "
               << Rimlolo[rowidx][colidx] << endl;
       }
       if(rowidx == colidx)

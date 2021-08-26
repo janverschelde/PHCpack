@@ -1,7 +1,12 @@
+Thu 26 Aug 2021 : new dbl4_baqr_testers and test_dbl4_baqr.cpp.
+  Fixed bugs in dbl4_baqr_host.cpp and dbl4_factors_testers.cpp.
+  Updated the makefiles.
+
+Wed 25 Aug 2021 : added dbl4_baqr_host, a blocked Householder QR on the host.
+
 Tue 24 Aug 2021 : updated dbl4_tabs_testers.cpp with the calls to the GPU
   code, applied some modifications to dbl4_tabs_kernels.cu.
   Corrected prototype of dbl4_back_substitute in dbl4_tabs_kernels.
-  Added dbl4_baqr_host, a blocked Householder QR on the host.
 
 Mon 23 Aug 2021 : new dbl4_{test_utilities,tabs_host,tabs_testers} and
   test_dbl4_tabs.cpp for a tiled back substitution with quad doubles.

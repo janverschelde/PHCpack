@@ -29,8 +29,8 @@ void CPU_dbl4_blocked_VB_to_W
 
    for(int i=0; i<nrows; i++)           //  W[0][i] = -B[0]*V[0][i];
    {
-      qdf_mul(Bhihi[0],    Blohi[0],    Blohi[0],    Blolo[0],
-              Vhihi[0][i], Vlohi[0][i], Vlohi[0][i], Vlolo[0][i],
+      qdf_mul(Bhihi[0],    Blohi[0],    Bhilo[0],    Blolo[0],
+              Vhihi[0][i], Vlohi[0][i], Vhilo[0][i], Vlolo[0][i],
              &Whihi[0][i],&Wlohi[0][i],&Whilo[0][i],&Wlolo[0][i]);
       qdf_minus(&Whihi[0][i],&Wlohi[0][i],&Whilo[0][i],&Wlolo[0][i]);
    }
@@ -63,7 +63,7 @@ void CPU_dbl4_blocked_VB_to_W
       for(int i=0; i<nrows; i++)
       {
          zihihi = 0.0;                  // compute i-th component of W*p
-         zihilo = 0.0;                  // over all rows of k-th column of W
+         zilohi = 0.0;                  // over all rows of k-th column of W
          zihilo = 0.0;
          zilolo = 0.0;
 
@@ -332,7 +332,7 @@ void CPU_dbl4_blocked_leftRupdate
                       Chilo[rowoff+k][coloff+j],Clolo[rowoff+k][coloff+j],
                    &acchihi,&acclohi,&acchilo,&acclolo);
             qdf_inc(&prdhihi[i][j],&prdlohi[i][j],
-                    &prdlohi[i][j],&prdlolo[i][j],
+                    &prdhilo[i][j],&prdlolo[i][j],
                     acchihi,acclohi,acchilo,acclolo);
          }
       }
@@ -684,7 +684,7 @@ void CPU_dbl4_blocked_rightQupdate
                     &acchihi,&acclohi,&acchilo,&acclolo);
             qdf_inc(&prdhihi[i][j],&prdlohi[i][j],
                     &prdhilo[i][j],&prdlolo[i][j],
-                    acchihi,acchilo,acchilo,acclolo);
+                    acchihi,acclohi,acchilo,acclolo);
          }
       }
 
@@ -1079,7 +1079,7 @@ void CPU_dbl4_blocked_houseqr
          Qhihi[i][j] = 0.0;
          Qlohi[i][j] = 0.0;
          Qhilo[i][j] = 0.0;
-         Qlohi[i][j] = 0.0;
+         Qlolo[i][j] = 0.0;
       }
       Qhihi[i][i] = 1.0;
 
@@ -1417,8 +1417,8 @@ void CPU_cmplx4_blocked_houseqr
    clock_t end = clock();
    *lapsec = double(end - start)/CLOCKS_PER_SEC;
 
-   free(ximhihi); free(ximlohi); free(ximhilo); free(ximlolo);
    free(xrehihi); free(xrelohi); free(xrehilo); free(xrelolo);
+   free(ximhihi); free(ximlohi); free(ximhilo); free(ximlolo);
    free(vrehihi); free(vrelohi); free(vrehilo); free(vrelolo); 
    free(vimhihi); free(vimlohi); free(vimhilo); free(vimlolo);
    free(Bhihi); free(Blohi); free(Bhilo); free(Blolo);
@@ -1426,12 +1426,12 @@ void CPU_cmplx4_blocked_houseqr
    for(int j=0; j<szt; j++)
    {
       free(Yrehihi[j]); free(Yrelohi[j]); free(Yrehilo[j]); free(Yrelolo[j]);
-      free(Wrehihi[j]); free(Wrelohi[j]); free(Wrehilo[j]); free(Wrelolo[j]);
       free(Yimhihi[j]); free(Yimlohi[j]); free(Yimhilo[j]); free(Yimlolo[j]);
+      free(Wrehihi[j]); free(Wrelohi[j]); free(Wrehilo[j]); free(Wrelolo[j]);
       free(Wimhihi[j]); free(Wimlohi[j]); free(Wimhilo[j]); free(Wimlolo[j]);
    }
    free(Yrehihi); free(Yrelohi); free(Yrehilo); free(Yrelolo);
-   free(Wrehihi); free(Wrelohi); free(Wrehilo); free(Wrelolo);
    free(Yimhihi); free(Yimlohi); free(Yimhilo); free(Yimlolo);
+   free(Wrehihi); free(Wrelohi); free(Wrehilo); free(Wrelolo);
    free(Wimhihi); free(Wimlohi); free(Wimhilo); free(Wimlolo);
 }
