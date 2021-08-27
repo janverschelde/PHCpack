@@ -1,6 +1,7 @@
 Thu 26 Aug 2021 : new dbl4_baqr_testers and test_dbl4_baqr.cpp.
   Fixed bugs in dbl4_baqr_host.cpp and dbl4_factors_testers.cpp.
-  Updated the makefiles.
+  Updated the makefiles.  Bug fixed in dbl4_baqr_host.cpp so now
+  also the complex case works correctly.
 
 Wed 25 Aug 2021 : added dbl4_baqr_host, a blocked Householder QR on the host.
 

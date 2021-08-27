@@ -915,7 +915,7 @@ void CPU_cmplx4_blocked_rightQupdate
             qdf_mul(Qimhihi[i][coloff+k],Qimlohi[i][coloff+k],
                     Qimhilo[i][coloff+k],Qimlolo[i][coloff+k],
                     WYTimhihi[k][j],WYTimlohi[k][j],
-                    WYTimhihi[k][j],WYTimlolo[k][j],
+                    WYTimhilo[k][j],WYTimlolo[k][j],
                     &acchihi,&acclohi,&acchilo,&acclolo);
             qdf_dec(&prdrehihi[i][j],&prdrelohi[i][j],
                     &prdrehilo[i][j],&prdrelolo[i][j],
