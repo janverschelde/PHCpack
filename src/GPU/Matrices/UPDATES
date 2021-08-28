@@ -1,3 +1,6 @@
+Fri 27 Aug 2021 : defined the specifications of the kernels for the
+  blocked Householder QR in quad double precison, in dbl4_baqr_kernels.h.
+
 Thu 26 Aug 2021 : new dbl4_baqr_testers and test_dbl4_baqr.cpp.
   Fixed bugs in dbl4_baqr_host.cpp and dbl4_factors_testers.cpp.
   Updated the makefiles.  Bug fixed in dbl4_baqr_host.cpp so now
