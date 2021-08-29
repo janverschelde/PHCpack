@@ -55,6 +55,7 @@ dbl4_baqr_host            : blocked qr on host in quad double precision
 dbl_baqr_flopcounts       : counts the flops for all kernels
 dbl_baqr_kernels          : kernels for baqr in double precision
 dbl2_baqr_kernels         : kernels for baqr in double double precision
+dbl4_baqr_kernels         : kernels for baqr in quad double precision
 dbl_baqr_testers          : tests blocked accelerated qr in double precision
 dbl2_baqr_testers         : tests baqr in double double precision
 dbl4_baqr_testers         : tests baqr in quad double precision

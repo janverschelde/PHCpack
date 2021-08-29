@@ -123,7 +123,7 @@ __global__ void cmplx4_small_house
  *   betalolo is the lowest double of 2/(transpose(v)*v). */
 
 __global__ void dbl4_large_sum_of_squares
- ( double *vhihi, double *vhilo, double *vhilo, double *vlolo,
+ ( double *vhihi, double *vlohi, double *vhilo, double *vlolo,
    double *sumshihi, double *sumshilo, double *sumslohi, double *sumslolo,
    int dim, int BS, int BSLog2 );
 /*
@@ -234,9 +234,9 @@ void flopcount_cmplx4_large_sum_of_squares
  *   mul       accumulated number of multiplications. */
 
 __global__ void dbl4_sum_accumulator
- ( double *sumshihi, double *sumshilo, double *sumshilo, double *sumslolo,
+ ( double *sumshihi, double *sumslohi, double *sumshilo, double *sumslolo,
    int nbsums, int nbsumsLog2,
-   double *acchihi, double *acchilo, double *acchilo, double *acclolo );
+   double *acchihi, double *acclohi, double *acchilo, double *acclolo );
 /*
  * DESCRIPTION :
  *   Accumulates the sum by one block of threads, on real data.
@@ -371,6 +371,23 @@ __global__ void cmplx4_normalize
  *   vimlohi   second highest doubles of x multiplied by 1/v0;
  *   vimhilo   second lowest doubles of x multiplied by 1/v0;
  *   vimlolo   lowest doubles of x multiplied by 1/v0. */
+
+void flopcount_cmplx4_normalize
+ ( int nblocks, int szt, long long int *add, long long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of divisions to divide a vector,
+ *   using multiple blocks of threads, on complex data.
+ *
+ * ON ENTRY :
+ *   nblocks   the number of blocks;
+ *   szt       the number of threads in one block;
+ *   add       current number of additions and subtractions;
+ *   mul       current number of multiplications.
+ *
+ * ON RETURN :
+ *   add       accumulated number of additions and subtractions;
+ *   mul       accumulated number of multiplications. */
 
 __global__ void dbl4_small_leftRupdate
  ( int nrows, int ncols, int szt, int k,
@@ -582,6 +599,39 @@ __global__ void cmplx4_RHdotv
  *   RHdotvimlo has the low doubles of the imaginary parts of the 
  *            element-by-element products of R^H with v, stored row by row. */
 
+__global__ void dbl4_sum_betaRTdotv
+ ( int nrows,
+   double *betahihi, double *betalohi, double *betahilo, double *betalolo,
+   double *RTdotvhihi, double *RTdotvlohi,
+   double *RTdotvhilo, double *RTdotvlolo,
+   double *whihi, double *wlohi, double *whilo, double *wlolo );
+/*
+ * DESCRIPTION :
+ *   Adds the rows in RTdotv to obtain w = beta*R^T*v,
+ *   with one block of threads, on real data.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in RTdotv;
+ *   betahihi is the highest double of the beta for the Householder vector;
+ *   betalohi is the second highest double of the beta;
+ *   betahilo is the second lowest double of the beta;
+ *   betahilo is the lowest double of the beta;
+ *   RTdotvhihi has the highest doubles of all products of the elements
+ *            of R dotted v;
+ *   RTdotvlohi has the second highest doubles of of R dotted v;
+ *   RTdotvhilo has the scond lowest doubles of of R dotted v;
+ *   RTdotvlolo has the lowest doubles of of R dotted v;
+ *   whihi    space for the highest doubles of beta*R^T*v.
+ *   wlohi    space for the second highest doubles of beta*R^T*v.
+ *   whilo    space for the second lowest doubles of beta*R^T*v.
+ *   wlolo    space for the lowest doubles of beta*R^T*v.
+ *
+ * ON RETURN :
+ *   whihi    the highest doubles of beta*R^T*v;
+ *   wlohi    the second highest doubles of beta*R^T*v;
+ *   whilo    the second lowest doubles of beta*R^T*v;
+ *   wlolo    the lowest doubles of beta*R^T*v. */
+
 __global__ void cmplx4_sum_betaRHdotv
  ( int nrows,
    double *betahihi, double *betalohi, double *betahilo, double *betalolo,
@@ -598,7 +648,10 @@ __global__ void cmplx4_sum_betaRHdotv
  *
  * ON ENTRY :
  *   nrows    number of rows in RHdotv;
- *   beta     the beta value corresponding to the Householder vector;
+ *   betahihi is the highest double of the beta for the Householder vector;
+ *   betalohi is the second highest double of the beta;
+ *   betahilo is the second lowest double of the beta;
+ *   betahilo is the lowest double of the beta;
  *   RTdotvrehihi has the highest doubles of the real parts of all products
  *            of the elements of R dotted v;
  *   RTdotvrelohi has the second highest doubles of the real parts
@@ -638,36 +691,6 @@ __global__ void cmplx4_sum_betaRHdotv
  *   wimlohi  second highest doubles of the imaginary parts of beta*R^H*v;
  *   wimhilo  second lowest doubles of the imaginary parts of beta*R^H*v;
  *   wimlolo  lowest doubles of the imaginary parts of beta*R^H*v. */
-
-__global__ void dbl4_sum_betaRTdotv
- ( int nrows,
-   double *betahihi, double *betalohi, double *betahilo, double *betalolo,
-   double *RTdotvhihi, double *RTdotvlohi,
-   double *RTdotvhilo, double *RTdotvlolo,
-   double *whihi, double *wlohi, double *whilo, double *wlolo );
-/*
- * DESCRIPTION :
- *   Adds the rows in RTdotv to obtain w = beta*R^T*v,
- *   with one block of threads, on real data.
- *
- * ON ENTRY :
- *   nrows    number of rows in RTdotv;
- *   beta     the beta value corresponding to the Householder vector;
- *   RTdotvhihi has the highest doubles of all products of the elements
- *            of R dotted v;
- *   RTdotvlohi has the second highest doubles of of R dotted v;
- *   RTdotvhilo has the scond lowest doubles of of R dotted v;
- *   RTdotvlolo has the lowest doubles of of R dotted v;
- *   whihi    space for the highest doubles of beta*R^T*v.
- *   wlohi    space for the second highest doubles of beta*R^T*v.
- *   whilo    space for the second lowest doubles of beta*R^T*v.
- *   wlolo    space for the lowest doubles of beta*R^T*v.
- *
- * ON RETURN :
- *   whihi    the highest doubles of beta*R^T*v;
- *   wlohi    the second highest doubles of beta*R^T*v;
- *   whilo    the second lowest doubles of beta*R^T*v;
- *   wlolo    the lowest doubles of beta*R^T*v. */
 
 __global__ void dbl4_medium_subvbetaRTv
  ( int nrows, int ncols, int szt, int k,
@@ -759,85 +782,6 @@ __global__ void cmplx4_medium_subvbetaRTv
  *   Rimlohi  second highest doubles of the imaginary parts of the updated R;
  *   Rimhilo  second lowest doubles of the imaginary parts of the updated R;
  *   Rimlolo  lowest doubles of the imaginary parts of the updated R. */
-
-__global__ void dbl4_VB_to_W
- ( int nrows, int ncols,
-   double *Bhihi, double *Blohi, double *Bhilo, double *Blolo,
-   double *Vhihi, double *Vlohi, double *Vhilo, double *Vlolo,
-   double *Whihi, double *Wlohi, double *Whilo, double *Wlolo );
-/*
- * DESCRIPTION :
- *   Computes the W in the WY representation of the Householder
- *   transformations defined by V and B, on real data,
- *   with one block of nrows threads.
- *
- * ON ENTRY :
- *   nrows    number of rows in the matrices V, Y, and W;
- *   ncols    equals the size of one tile, or equivalently,
- *            is the number of elements in B,
- *            and the number of columns in V, Y, and W;
- *   Bhihi    highest double of the betas computed by house;
- *   Blohi    second highest double of the betas;
- *   Bhilo    second lowest double of the betas;
- *   Blolo    lowest double of the betas;
- *   Vhihi    Vhi[nrows*i] is the start of the highest doubles of the i-th
- *            Householder vector, with i zeros inserted so V is trapezoidal;
- *   Vlohi    second highest doubles of the Householder vectors;
- *   Vhilo    second lowest doubles of the Householder vectors;
- *   Vlolo    lowest doubles of the Householder vectors;
- *   Whihi    space for ncols columns with rows from 0 to nrows-1;
- *   Wlohi    space for ncols columns with rows from 0 to nrows-1;
- *   Whilo    space for ncols columns with rows from 0 to nrows-1;
- *   Wlolo    space for ncols columns with rows from 0 to nrows-1.
- *
- * ON RETURN :
- *   Whihi    highest doubles of the W matrix in the WY representation;
- *   Whilo    second highest doubles of W;
- *   Whilo    second lowest doubles of W;
- *   Wlolo    lowest doubles of W. */
-
-__global__ void cmplx4_VB_to_W
- ( int nrows, int ncols,
-   double *Bhihi, double *Blohi, double *Bhilo, double *Blolo,
-   double *Vrehihi, double *Vrelohi, double *Vrehilo, double *Vrelolo,
-   double *Vimhihi, double *Vimlohi, double *Vimhilo, double *Vimlolo,
-   double *Wrehihi, double *Wrelohi, double *Wrehilo, double *Wrelolo,
-   double *Wimhihi, double *Wimlohi, double *Wimhilo, double *Wimlolo );
-/*
- * DESCRIPTION :
- *   Computes the W in the WY representation of the Householder
- *   transformations defined by V and B, on complex data,
- *   with one block of nrows threads.
- *
- * ON ENTRY :
- *   nrows    number of rows in the matrices V, Y, and W;
- *   ncols    equals the size of one tile, or equivalently,
- *            is the number of elements in B,
- *            and the number of columns in V, Y, and W;
- *   Bhihi    highest double of the betas computed by house;
- *   Blohi    second highest double of the betas;
- *   Bhilo    second lowest double of the betas;
- *   Blolo    lowest double of the betas;
- *   Vrehihi  Vrehihi[nrows*i] is the start of the highest doubles
- *            of the real parts of the i-th Householder vector,
- *            with i zeros inserted so V is trapezoidal;
- *   Vrelohi  second highest doubles of the real parts of V;
- *   Vrehilo  second lowest doubles of the real parts of V;
- *   Vrelolo  lowest doubles of the real parts of V;
- *   Vimhihi  highest doubles of the imaginary parts of V;
- *   Vimlohi  second highest doubles of the imaginary parts of V;
- *   Vimhilo  second lowest doubles of the imaginary parts of V;
- *   Vimlolo  lowest doubles of the imaginary parts of V;
- *   Wrehi    space for ncols columns with rows from 0 to nrows-1;
- *   Wrelo    space for ncols columns with rows from 0 to nrows-1;
- *   Wimhi    space for ncols columns with rows from 0 to nrows-1;
- *   Wimlo    space for ncols columns with rows from 0 to nrows-1.
- *
- * ON RETURN :
- *   Wrehi    high doubles of the real parts of the W matrix;
- *   Wrelo    low doubles of the real parts of the W matrix;
- *   Wimhi    high doubles of the imaginary parts of the W matrix;
- *   Wimlo    low doubles of the imaginary parts of the W matrix. */
 
 __global__ void dbl4_beta_times_V
  ( int nrows, int szt,
@@ -2916,7 +2860,7 @@ void GPU_dbl4_small_WYT
  *   WYTlolo_h has the lowest doubles of W*Y^T, if verbose;
  *   lapms    elapsed time spent by the kernel. */
 
-void GPU_cmplx4_small_WYT
+void GPU_cmplx4_small_WYH
  ( int nrows, int szt,
    double *Wrehihi_d, double *Wrelohi_d, double *Wrehilo_d, double *Wrelolo_d,
    double *Wimhihi_d, double *Wimlohi_d, double *Wimhilo_d, double *Wimlolo_d,
@@ -2933,9 +2877,9 @@ void GPU_cmplx4_small_WYT
    double *lapms, bool verbose=true );
 /*
  * DESCRIPTION :
- *   Calls the kernel to compute W*Y^T.
+ *   Calls the kernel to compute W*Y^H.
  *   Wraps the timer and the print statements if verbose.
- *   If verbose, then the W*Y^T matrix is returned.
+ *   If verbose, then the W*Y^H matrix is returned.
  *
  * ON ENTRY :
  *   nrows    number of rows in all matrices;
@@ -3061,7 +3005,7 @@ void GPU_dbl4_small_YWT
  *   add      accumulated number of additions and subtractions;
  *   mul      accumulated number of multiplications. */
 
-void GPU_cmplx4_small_YWT
+void GPU_cmplx4_small_YWH
  ( int nrows, int szt, int idx,
    double *Yrehihi_d, double *Yrelohi_d, double *Yrehilo_d, double *Yrelolo_d,
    double *Yimhihi_d, double *Yimlohi_d, double *Yimhilo_d, double *Yimlolo_d,
@@ -3214,7 +3158,7 @@ void GPU_dbl4_small_QWYT
  *   add      accumulated number of additions and subtractions;
  *   mul      accumulated number of multiplications. */
 
-void GPU_cmplx4_small_QWYT
+void GPU_cmplx4_small_QWYH
  ( int dim, int szt, int idx,
    double *Qrehihi_d, double *Qrelohi_d, double *Qrehilo_d, double *Qrelolo_d,
    double *Qimhihi_d, double *Qimlohi_d, double *Qimhilo_d, double *Qimlolo_d,
@@ -3386,7 +3330,7 @@ void GPU_dbl4_small_YWTC
  *   add      accumulated number of additions and subtractions;
  *   mul      accumulated number of multiplications. */
 
-void GPU_cmplx4_small_YWTC
+void GPU_cmplx4_small_YWHC
  ( int nrows, int ncols, int szt, int idx,
    double *YWTrehihi_d, double *YWTrelohi_d,
    double *YWTrehilo_d, double *YWTrelolo_d,
@@ -3653,7 +3597,7 @@ void GPU_dbl4_small_R_add_YWTC
  *   lapms    elapsed time spent by the kernel;
  *   add      accumulated number of additions and subtractions. */
 
-void GPU_cmplx4_small_R_add_YWTC
+void GPU_cmplx4_small_R_add_YWHC
  ( int nrows, int ncols, int szt, int idx,
    double *Rrehihi_d, double *Rrelohi_d, double *Rrehilo_d, double *Rrelolo_d,
    double *Rimhihi_d, double *Rimlohi_d, double *Rimhilo_d, double *Rimlolo_d,

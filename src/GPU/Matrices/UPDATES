@@ -1,3 +1,6 @@
+Sat 28 Aug 2021 : fixed errors in dbl4_baqr_kernels.h and defined the
+  two main functions in dbl4_baqr_kernels.cu.
+
 Fri 27 Aug 2021 : defined the specifications of the kernels for the
   blocked Householder QR in quad double precison, in dbl4_baqr_kernels.h.
 
