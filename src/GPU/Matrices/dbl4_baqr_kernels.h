@@ -552,10 +552,14 @@ __global__ void dbl4_RTdotv
 
 __global__ void cmplx4_RHdotv
  ( int nrows, int szt, int colidx, int Roffset, int dim,
-   double *Rrehi, double *Rrelo, double *Rimhi, double *Rimlo,
-   double *vrehi, double *vrelo, double *vimhi, double *vimlo,
-   double *RHdotvrehi, double *RHdotvrelo,
-   double *RHdotvimhi, double *RHdotvimlo );
+   double *Rrehihi, double *Rrelohi, double *Rrehilo, double *Rrelolo,
+   double *Rimhihi, double *Rimlohi, double *Rimhilo, double *Rimlolo,
+   double *vrehihi, double *vrelohi, double *vrehilo, double *vrelolo,
+   double *vimhihi, double *vimlohi, double *vimhilo, double *vimlolo,
+   double *RHdotvrehihi, double *RHdotvrelohi,
+   double *RHdotvrehilo, double *RHdotvrelolo,
+   double *RHdotvimhihi, double *RHdotvimlohi,
+   double *RHdotvimhilo, double *RHdotvimlolo );
 /*
  * DESCRIPTION :
  *   The elements of the matrix RHdotv are the elements of R^H,
@@ -568,36 +572,43 @@ __global__ void cmplx4_RHdotv
  *   colidx   index of the current column in R;
  *   Roffset  offset in R for the first row to start;
  *   dim      number of columns in R;
- *   Rrehi    high doubles of the real parts of a column wise stored matrix
- *            with number of rows equal to nrows;
- *   Rrelo    low doubles of the real parts of a column wise stored matrix
- *            with number of rows equal to nrows;
- *   Rimhi    high doubles of the imaginary parts of a column wise stored
+ *   Rrehihi  highest doubles of the real parts of R, a column wise stored
  *            matrix with number of rows equal to nrows;
- *   Rimlo    low doubles of the imaginary parts of a column wise stored
- *            matrix with number of rows equal to nrows;
- *   vrehi    start of the the high doubles of the real parts of the first
- *            nonzero element of a Householder vector;
- *   vrelo    start of the the low doubles of the real parts of the first
- *            nonzero element of a Householder vector;
- *   vimhi    start of the high doubles of the imaginary parts of the first
- *            nonzero element of a Householder vector;
- *   vimlo    start of the low doubles of the imaginary parts of the first
- *            nonzero element of a Householder vector;
- *   RHdotvrehi has space for a matrix of nrows-by-szt, plus some padding;
- *   RHdotvrelo has space for a matrix of nrows-by-szt, plus some padding;
- *   RHdotvimhi has space for a matrix of nrows-by-szt, plus some padding;
- *   RHdotvimlo has space for a matrix of nrows-by-szt, plus some padding.
+ *   Rrelohi  second highest doubles of the real parts of R;
+ *   Rrehilo  second lowest doubles of the real parts of R;
+ *   Rrelolo  lowest doubles of the real parts of R;
+ *   Rimhihi  highest doubles of the imaginary parts of R;
+ *   Rimlohi  second highest doubles of the imaginary parts of R;
+ *   Rimhilo  second lowest doubles of the imaginary parts of R;
+ *   Rimlolo  lowest doubles of the imaginary parts of R;
+ *   vrehihi  start of the the highest doubles of the real parts of the
+ *            first nonzero element of a Householder vector v;
+ *   vrelohi  second highest doubles of the real parts of v;
+ *   vrehilo  second lowest doubles of the real parts of v;
+ *   vrelolo  lowest doubles of the real parts of v;
+ *   vimhihi  highest doubles of the imaginary parts of v;
+ *   vimlohi  second highest doubles of the imaginary parts of v;
+ *   vimhilo  second lowest doubles of the imaginary parts of v;
+ *   vimlolo  lowest doubles of the imaginary parts of v;
+ *   RHdotvrehihi has space for a matrix of nrows-by-szt, plus some padding;
+ *   RHdotvrelohi has space for a matrix of nrows-by-szt, plus some padding;
+ *   RHdotvrehilo has space for a matrix of nrows-by-szt, plus some padding;
+ *   RHdotvrelolo has space for a matrix of nrows-by-szt, plus some padding;
+ *   RHdotvimhihi has space for a matrix of nrows-by-szt, plus some padding;
+ *   RHdotvimlohi has space for a matrix of nrows-by-szt, plus some padding;
+ *   RHdotvimhilo has space for a matrix of nrows-by-szt, plus some padding.
+ *   RHdotvimlolo has space for a matrix of nrows-by-szt, plus some padding.
  *
  * ON RETURN :
- *   RHdotvrehi has the high doubles of the real parts of the 
+ *   RHdotvrehihi has the highest doubles of the real parts of the 
  *            element-by-element products of R^H with v, stored row by row;
- *   RHdotvrelo has the low doubles of the real parts of the 
- *            element-by-element products of R^H with v, stored row by row;
- *   RHdotvimhi has the high doubles of the imaginary parts of the 
- *            element-by-element products of R^H with v, stored row by row;
- *   RHdotvimlo has the low doubles of the imaginary parts of the 
- *            element-by-element products of R^H with v, stored row by row. */
+ *   RHdotvrelohi has the second highest doubles of the real parts of RHdotv;
+ *   RHdotvrehilo has the second lowest doubles of the real parts of RHdotv;
+ *   RHdotvrelolo has the lowest doubles of the real parts of RHdotv;
+ *   RHdotvimhihi has the highest doubles of the imag parts of RHdotv;
+ *   RHdotvimlohi has the second highest doubles of the imag parts of RHdotv;
+ *   RHdotvimhilo has the second lowest doubles of the imag parts of RHdotv;
+ *   RHdotvimlolo has the lowest doubles of the imag parts of RHdotv. */
 
 __global__ void dbl4_sum_betaRTdotv
  ( int nrows,
@@ -733,7 +744,7 @@ __global__ void dbl4_medium_subvbetaRTv
  *   Rhilo    second lowest doubles of the updated R;
  *   Rlolo    lowest doubles of the updated R. */
 
-__global__ void cmplx4_medium_subvbetaRTv
+__global__ void cmplx4_medium_subvbetaRHv
  ( int nrows, int ncols, int szt, int k,
    double *Rrehihi, double *Rrelohi, double *Rrehilo, double *Rrelolo,
    double *Rimhihi, double *Rimlohi, double *Rimhilo, double *Rimlolo,
@@ -1093,7 +1104,8 @@ __global__ void dbl4_beta_next_W
  *   Wlolo    the lowest doubles of the next column of W. */
 
 __global__ void cmplx4_beta_next_W
- ( int nrows, int szt, double *Bhi, double *Blo,
+ ( int nrows, int szt,
+   double *Bhihi, double *Blohi, double *Bhilo, double *Blolo,
    double *Vrehihi, double *Vrelohi, double *Vrehilo, double *Vrelolo,
    double *Vimhihi, double *Vimlohi, double *Vimhilo, double *Vimlolo,
    double *Wrehihi, double *Wrelohi, double *Wrehilo, double *Wrelolo,
@@ -1110,8 +1122,10 @@ __global__ void cmplx4_beta_next_W
  * ON ENTRY :
  *   nrows    number of rows in V, W, and the dimension of WYT;
  *   szt      number of threads in one block;
- *   Bhi      high double of the beta with the next Householder vector;
- *   Blo      low double of the beta with the next Householder vector;
+ *   Bhihi    highest double of the beta with the next Householder vector;
+ *   Blohi    second highest double of the beta;
+ *   Bhilo    second lowest double of the beta;
+ *   Blolo    lowest double of the beta;
  *   Vrehihi  the first dim numbers define the highest doubles of
  *            the real parts of V, the next Householder vector;
  *   Vrelohi  second highest doubles of the real parts of V;
