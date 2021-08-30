@@ -462,45 +462,6 @@ __global__ void cmplx4_small_leftRupdate
  *   Rimhilo  second lowest doubles of the imaginary parts of the updated R;
  *   Rimlolo  lowest doubles of the imaginary parts of the updated R. */
 
-__global__ void dbl4_small_betaRTv
- ( int nrows, int ncols, int szt, int k,
-   double *Rhihi, double *Rlohi, double *Rhilo, double *Rlolo,
-   double *vhihi, double *vlohi, double *vhilo, double *vlolo,
-   double *betahihi, double *betalohi, double *betahilo, double *betalolo,
-   double *whihi, double *wlohi, double *whilo, double *wlolo );
-/*
- * DESCRIPTION :
- *   Computes the vector w = beta*R^T*v, on real data,
- *   with one block of ncols - k threads.
- *
- * ON ENTRY :
- *   nrows    number of rows of R;
- *   ncols    number of columns of R;
- *   szt      size of each block;
- *   k        index of the current column;
- *   Rhihi    highest doubles of R, stored column wise;
- *   Rlohi    second highest doubles of R;
- *   Rhilo    second lowest doubles of R;
- *   Rlolo    lowest doubles of R;
- *   vhihi    highest double of the Householder vector;
- *   vlohi    second highest double of the Householder vector;
- *   vhilo    second lowest double of the Householder vector;
- *   vlolo    lowest double of the Householder vector;
- *   betahihi is the highest double of the beta corresponding with v;
- *   betalohi is the second highest double of the beta corresponding with v;
- *   betahilo is the second lowest double of the beta corresponding with v;
- *   betalolo is the lowest double of the beta corresponding with v;
- *   whihi    space for ncols numbers;
- *   wlohi    space for ncols numbers;
- *   whilo    space for ncols numbers;
- *   wlolo    space for ncols numbers.
- *
- * ON RETURN :
- *   whihi    highest doubles of beta*R^T*v in the first ncols-k numbers;
- *   wlohi    second highest doubles of beta*R^T*v;
- *   whilo    second lowest doubles of beta*R^T*v;
- *   wlolo    lowest doubles of beta*R^T*v . */
-
 __global__ void dbl4_RTdotv
  ( int nrows, int szt, int colidx, int Roffset, int dim,
    double *Rhihi, double *Rlohi, double *Rhilo, double *Rlolo,
