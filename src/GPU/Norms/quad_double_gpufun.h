@@ -324,6 +324,26 @@ __device__ __forceinline__ void qdg_mul_qd_d
  *   c_hilo   the third highest part of the quad double c = a * b;
  *   c_lolo   the fourth highest part of the quad double c = a * b. */
 
+__device__  __forceinline__ void qdg_mlt_d
+ ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo,
+   double b );
+/*
+ * DESCRIPTION : a = a * b.
+ *   Inplace multiplication of the quad double a with the double b.
+ *
+ * ON ENTRY :
+ *   a_hihi   highest double of a;
+ *   a_lohi   second highest double of a;
+ *   a_hilo   second lowest double of a;
+ *   a_lolo   lowest double of a;
+ *   b        some double.
+ *
+ * ON RETURN :
+ *   a_lohi   second highest double of a*b;
+ *   a_hilo   second lowest double of a*b;
+ *   a_lolo   lowest double of a*b;
+ *   a_hi     highe double double a*b. */
+
 __device__ __forceinline__ void qdg_div
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double b_hihi, double b_lohi, double b_hilo, double b_lolo,

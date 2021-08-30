@@ -459,6 +459,21 @@ __device__ __forceinline__ void qdg_mul_qd_d
    qdg_fast_renorm(f0,f1,f2,f3,f4,c_hihi,c_lohi,c_hilo,c_lolo);
 }
 
+__device__  __forceinline__ void qdg_mlt_d
+ ( double *a_hihi, double *a_lohi, double *a_hilo, double *a_lolo,
+   double b )
+{
+   double c_hihi,c_lohi,c_hilo,c_lolo;
+
+   qdg_mul_qd_d(*a_hihi,*a_lohi,*a_hilo,*a_lolo,b,
+                &c_hihi,&c_lohi,&c_hilo,&c_lolo);
+
+   *a_hihi = c_hihi;
+   *a_lohi = c_lohi;
+   *a_hilo = c_hilo;
+   *a_lolo = c_lolo;
+}
+
 __device__ void qdg_div
  ( double a_hihi, double a_lohi, double a_hilo, double a_lolo,
    double b_hihi, double b_lohi, double b_hilo, double b_lolo,
