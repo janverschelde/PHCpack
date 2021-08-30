@@ -1,5 +1,6 @@
 Sun 29 Aug 2021 : fixed more errors in dbl4_baqr_kernels.h and defined
-  all kernel wrappers in dbl4_baqr_kernels.cu.
+  all kernel wrappers in dbl4_baqr_kernels.cu.  Defined several kernels
+  in dbl4_baqr_kernels.cu.
 
 Sat 28 Aug 2021 : fixed errors in dbl4_baqr_kernels.h and defined the
   two main functions in dbl4_baqr_kernels.cu.
