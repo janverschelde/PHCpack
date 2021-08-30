@@ -10,7 +10,7 @@
 #include "dbl4_factorizations.h"
 #include "dbl4_factors_testers.h"
 #include "dbl4_baqr_host.h"
-// #include "dbl4_baqr_kernels.h"
+#include "dbl4_baqr_kernels.h"
 
 using namespace std;
 
@@ -113,7 +113,7 @@ void test_real4_blocked_qr
          cout << "The test failed for tol = " << tol << "." << endl;
       }
    }
-/*
+
    double timelapsed_d;
    double houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
@@ -127,8 +127,11 @@ void test_real4_blocked_qr
    {
       cout << "-> GPU computes the blocked Householder QR ..." << endl;
 
-      GPU_dbl2_blocked_houseqr
-         (nrows,ncols,sizetile,numtiles,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,
+      GPU_dbl4_blocked_houseqr
+         (nrows,ncols,sizetile,numtiles,
+          Ahihi,  Alohi,  Ahilo,  Alolo,
+          Qhihi_d,Qlohi_d,Qhilo_d,Qlolo_d,
+          Rhihi_d,Rlohi_d,Rhilo_d,Rlolo_d,
           &houselapsedms,&RTvlapsedms,&tileRlapsedms,&vb2Wlapsedms,
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
           &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
@@ -136,10 +139,10 @@ void test_real4_blocked_qr
 
       cout << "-> Testing the QR factorization ..." << endl;
 
-      // fail = test_real2_qr_factors
-      //          (nrows,ncols,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,tol,verbose);
-      fail = test_real2_qr_factors_probe
-                (nrows,ncols,Ahi,Alo,Qhi_d,Qlo_d,Rhi_d,Rlo_d,tol,2,true);
+      fail = test_real4_qr_factors_probe
+                (nrows,ncols,Ahihi,  Alohi,  Ahilo,  Alolo,
+                             Qhihi_d,Qlohi_d,Qhilo_d,Qlolo_d,
+                             Rhihi_d,Rlohi_d,Rhilo_d,Rlolo_d,tol,2,true);
       if(fail == 0)
          cout << "The test succeeded." << endl;
       else
@@ -148,7 +151,7 @@ void test_real4_blocked_qr
          cout << "The test failed for tol = " << tol << "." << endl;
       }
    }
- */
+
    cout << endl;
    cout << fixed << setprecision(3);
    if((mode == 1) || (mode == 2))
@@ -156,7 +159,6 @@ void test_real4_blocked_qr
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
            << timelapsed_h << " seconds." << endl;
    }
- /*
    if((mode == 0) || (mode == 2))
    {
       cout << "         Time spent by the Householder kernel : "
@@ -188,14 +190,15 @@ void test_real4_blocked_qr
       cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
       cout << endl;
       cout << "             Number of additions/subtractions : "
-           << addcnt << " x 20 " << endl;
+           << addcnt << " x 89 " << endl;
       cout << "                    Number of multiplications : "
-           << mulcnt << " x 23 " << endl;
+           << mulcnt << " x 336 " << endl;
       cout << "                          Number of divisions : "
-           << divcnt << " x 70 " << endl;
+           << divcnt << " x 893 " << endl;
       cout << "                    Number of calls to sqrt() : "
-           << sqrtcnt << " x 50 " << endl;
-      long long int flopcnt = 20*addcnt + 23*mulcnt + 70*divcnt + 50*sqrtcnt;
+           << sqrtcnt << " x 1345 " << endl;
+      long long int flopcnt = 89*addcnt + 336*mulcnt
+                            + 893*divcnt + 1345*sqrtcnt;
       cout << "    Total number of floating-point operations : "
            << flopcnt << endl;
       cout << endl;
@@ -211,7 +214,7 @@ void test_real4_blocked_qr
       cout << fixed << setprecision(3)
            << " = " << wallflops/gigacnt << " Gigaflops" << endl;
    }
- */
+
    for(int i=0; i<nrows; i++)
    {
       free(Ahihi[i]);   free(Alohi[i]);   free(Ahilo[i]);   free(Alolo[i]);
@@ -364,6 +367,7 @@ void test_cmplx4_blocked_qr
 
       cout << "-> Testing the QR factorization ..." << endl;
 
+/*
       fail = test_cmplx4_qr_factors
          (nrows,ncols,Arehihi,  Arelohi,  Arehilo,  Arelolo,
                       Aimhihi,  Aimlohi,  Aimhilo,  Aimlolo,
@@ -371,7 +375,7 @@ void test_cmplx4_blocked_qr
                       Qimhihi_h,Qimlohi_h,Qimhilo_h,Qimlolo_h,
                       Rrehihi_h,Rrelohi_h,Rrehilo_h,Rrelolo_h,
                       Rimhihi_h,Rimlohi_h,Rimhilo_h,Rimlolo_h,tol,bvrb);
-/*
+ */
       fail = test_cmplx4_qr_factors_probe
          (nrows,ncols,Arehihi,  Arelohi,  Arehilo,  Arelolo,
                       Aimhihi,  Aimlohi,  Aimhilo,  Aimlolo,
@@ -379,7 +383,7 @@ void test_cmplx4_blocked_qr
                       Qimhihi_h,Qimlohi_h,Qimhilo_h,Qimlolo_h,
                       Rrehihi_h,Rrelohi_h,Rrehilo_h,Rrelolo_h,
                       Rimhihi_h,Rimlohi_h,Rimhilo_h,Rimlolo_h,tol,2,true);
- */
+
       if(fail == 0)
          cout << "The test succeeded." << endl;
       else
@@ -388,7 +392,6 @@ void test_cmplx4_blocked_qr
          cout << "The test failed for tol = " << tol << "." << endl;
       }
    }
-/*
    double timelapsed_d;
    double houselapsedms,RHvlapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
@@ -411,16 +414,23 @@ void test_cmplx4_blocked_qr
             for(int j=0; j<ncols; j++)
             {
                cout << "A[" << i << "][" << j << "]re : "
-                    << Arehi[i][j] << "  " << Arelo[i][j] << endl;
+                    << Arehihi[i][j] << "  " << Arelohi[i][j] << endl
+                    << "            "
+                    << Arehilo[i][j] << "  " << Arelolo[i][j] << endl;
                cout << "A[" << i << "][" << j << "]im : "
-                    << Aimhi[i][j] << "  " << Aimlo[i][j] << endl;
+                    << Aimhihi[i][j] << "  " << Aimlohi[i][j] << endl
+                    << "            "
+                    << Aimhilo[i][j] << "  " << Aimlolo[i][j] << endl;
             }
       }
-      GPU_cmplx2_blocked_houseqr
+      GPU_cmplx4_blocked_houseqr
          (nrows,ncols,sizetile,numtiles,
-          Arehi,  Arelo,  Aimhi,  Aimlo,
-          Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
-          Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,
+          Arehihi,  Arelohi,  Arehilo,  Arelolo, 
+          Aimhihi,  Aimlohi,  Aimhilo,  Aimlolo,
+          Qrehihi_d,Qrelohi_d,Qrehilo_d,Qrelolo_d,
+          Qimhihi_d,Qimlohi_d,Qimhilo_d,Qimlolo_d,
+          Rrehihi_d,Rrelohi_d,Rrehilo_d,Rrelolo_d,
+          Rimhihi_d,Rimlohi_d,Rimhilo_d,Rimlolo_d,
           &houselapsedms,&RHvlapsedms,&tileRlapsedms,&vb2Wlapsedms,
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
           &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
@@ -432,10 +442,15 @@ void test_cmplx4_blocked_qr
       //           (nrows,ncols,Arehi,  Arelo,  Aimhi,  Aimlo,
       //                        Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
       //                        Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,tol,verbose);
-      fail = test_cmplx2_qr_factors_probe
-                (nrows,ncols,Arehi,  Arelo,  Aimhi,  Aimlo,
-                             Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
-                             Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,tol,2,true);
+      fail = test_cmplx4_qr_factors_probe
+                (nrows,ncols,Arehihi,  Arelohi,  Arehilo,  Arelolo,
+                             Aimhihi,  Aimlohi,  Aimhilo,  Aimlolo,
+                             Qrehihi_d,Qrelohi_d,Qrehilo_d,Qrelolo_d,
+                             Qimhihi_d,Qimlohi_d,Qimhilo_d,Qimlolo_d,
+                             Rrehihi_d,Rrelohi_d,Rrehilo_d,Rrelolo_d,
+                             Rimhihi_d,Rimlohi_d,Rimhilo_d,Rimlolo_d,
+                 tol,2,true);
+
       if(fail == 0)
          cout << "The test succeeded." << endl;
       else
@@ -444,7 +459,6 @@ void test_cmplx4_blocked_qr
          cout << "The test failed for tol = " << tol << "." << endl;
       }
    }
- */
    cout << endl;
    cout << fixed << setprecision(3);
 
@@ -453,7 +467,6 @@ void test_cmplx4_blocked_qr
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
            << timelapsed_h << " seconds." << endl;
    }
- /*
    if((mode == 0) || (mode == 2))
    {
       cout << "         Time spent by the Householder kernel : "
@@ -485,14 +498,15 @@ void test_cmplx4_blocked_qr
       cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
       cout << endl;
       cout << "             Number of additions/subtractions : "
-           << addcnt << " x 20 " << endl;
+           << addcnt << " x 89 " << endl;
       cout << "                    Number of multiplications : "
-           << mulcnt << " x 23 " << endl;
+           << mulcnt << " x 336 " << endl;
       cout << "                          Number of divisions : "
-           << divcnt << " x 70 " << endl;
+           << divcnt << " x 893 " << endl;
       cout << "                    Number of calls to sqrt() : "
-           << sqrtcnt << " x 50 " << endl;
-      long long int flopcnt = 20*addcnt + 23*mulcnt + 70*divcnt + 50*sqrtcnt;
+           << sqrtcnt << " x 1345 " << endl;
+      long long int flopcnt = 89*addcnt + 336*mulcnt
+                            + 893*divcnt + 1345*sqrtcnt;
       cout << "    Total number of floating-point operations : "
            << flopcnt << endl;
       cout << endl;
@@ -508,7 +522,6 @@ void test_cmplx4_blocked_qr
       cout << fixed << setprecision(3)
            << " = " << wallflops/gigacnt << " Gigaflops" << endl;
    }
- */
    for(int i=0; i<nrows; i++)
    {
       free(Arehihi[i]); free(Arelohi[i]); free(Arehilo[i]); free(Arelolo[i]);

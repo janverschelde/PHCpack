@@ -337,7 +337,7 @@ dbl2_baqr_host.o:
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl2_baqr_host.cpp
 
 dbl2_baqr_kernels.o:
-	@-echo ">>> compiling baqr kernels for doubles ..."
+	@-echo ">>> compiling baqr kernels for double doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
              --define-macro gpufun=1 \
              -c dbl2_baqr_kernels.cu
@@ -367,6 +367,12 @@ dbl4_baqr_host.o:
 	@-echo ">>> compiling dbl4_baqr_host ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl4_baqr_host.cpp
 
+dbl4_baqr_kernels.o:
+	@-echo ">>> compiling baqr kernels for quad doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+             --define-macro gpufun=1 \
+             -c dbl4_baqr_kernels.cu
+
 dbl4_baqr_testers.o:
 	@-echo ">>> compiling dbl4_baqr_testers ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl4_baqr_testers.cpp
@@ -378,13 +384,14 @@ test_dbl4_baqr.o:
 test_dbl4_baqr: test_dbl4_baqr.o prompt_baqr_setup.o dbl4_baqr_testers.o \
                 double_double_functions.o quad_double_functions.o \
                 dbl4_factorizations.o dbl4_factors_testers.o \
-                dbl4_baqr_host.o \
+                dbl4_baqr_host.o dbl4_baqr_kernels.o dbl_baqr_flopcounts.o \
                 random_numbers.o random4_vectors.o random4_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl4_baqr test_dbl4_baqr.o prompt_baqr_setup.o \
                   double_double_functions.o quad_double_functions.o \
                   dbl4_factorizations.o dbl4_factors_testers.o \
                   dbl4_baqr_host.o dbl4_baqr_testers.o \
+                  dbl4_baqr_kernels.o dbl_baqr_flopcounts.o \
                   random_numbers.o random4_vectors.o random4_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
@@ -471,7 +478,7 @@ clean:
 	/bin/rm -f -r test_dbl4_baqr.o test_dbl4_baqr
 	/bin/rm -f -r dbl2_baqr_host.o dbl2_baqr_kernels.o
 	/bin/rm -f -r dbl2_baqr_testers.o dbl4_baqr_testers.o
-	/bin/rm -f -r dbl4_baqr_host.o
+	/bin/rm -f -r dbl4_baqr_host.o dbl4_baqr_kernels.o
 	/bin/rm -f -r test_dbl_qrbs.o test_dbl_qrbs
 	/bin/rm -f -r dbl_qrbs_testers.o
 	/bin/rm -f -r test_dbl2_qrbs.o test_dbl2_qrbs

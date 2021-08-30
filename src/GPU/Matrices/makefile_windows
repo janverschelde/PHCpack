@@ -549,6 +549,14 @@ dbl4_baqr_host.obj:
                  /I$(CUDASDK)/include \
                  /Fo: dbl4_baqr_host.obj /EHsc
 
+dbl4_baqr_kernels.obj:
+	@-echo ">>> compiling dbl4_baqr_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl4_baqr_kernels.cu \
+             -o dbl4_baqr_kernels.obj
+
 dbl4_baqr_testers.obj:
 	@-echo ">>> compiling dbl4_baqr_testers ..."
 	$(CL)\cl /c dbl4_baqr_testers.cpp \
@@ -567,16 +575,16 @@ test_dbl4_baqr: test_dbl4_baqr.obj dbl4_baqr_testers.obj \
                 prompt_baqr_setup.obj \
                 double_double_functions.obj quad_double_functions.obj \
 	        dbl4_factors_testers.obj dbl4_baqr_host.obj \
-                dbl4_factorizations.obj \
-		gettimeofday4win.obj \
+                dbl4_factorizations.obj dbl4_baqr_kernels.obj \
+		gettimeofday4win.obj dbl_baqr_flopcounts.obj \
                 random_numbers.obj random4_vectors.obj random4_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl4_baqr.exe test_dbl4_baqr.obj \
              prompt_baqr_setup.obj dbl4_baqr_testers.obj \
              double_double_functions.obj quad_double_functions.obj \
-             dbl4_factors_testers.obj \
+             dbl4_factors_testers.obj dbl_baqr_flopcounts.obj \
              dbl4_factorizations.obj dbl4_baqr_host.obj \
-	     gettimeofday4win.obj \
+	     gettimeofday4win.obj dbl4_baqr_kernels.obj \
              random_numbers.obj random4_vectors.obj random4_matrices.obj
 
 dbl_qrbs_testers.obj:
@@ -690,7 +698,7 @@ clean:
 	del dbl2_baqr_host.obj dbl2_baqr_kernels.obj dbl2_baqr_testers.obj
 	del test_dbl2_baqr.obj test_dbl2_baqr_lib
 	del test_dbl2_baqr.exe test_dbl2_baqr.exp
-	del dbl4_baqr_host.obj dbl4_baqr_testers.obj
+	del dbl4_baqr_host.obj dbl4_baqr_kernels.obj dbl4_baqr_testers.obj
 	del test_dbl4_baqr.obj test_dbl4_baqr_lib
 	del test_dbl4_baqr.exe test_dbl4_baqr.exp
 	del test_dbl_qrbs.obj test_dbl_qrbs_lib

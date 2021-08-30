@@ -1,4 +1,6 @@
 Mon 30 Aug 2021 : completed the code transformation in dbl4_baqr_kernels.
+  Added calls to the GPU code in dbl4_baqr_testers.cpp, and updated 
+  the makefiles for unix and windows.
 
 Sun 29 Aug 2021 : fixed more errors in dbl4_baqr_kernels.h and defined
   all kernel wrappers in dbl4_baqr_kernels.cu.  Defined several kernels
