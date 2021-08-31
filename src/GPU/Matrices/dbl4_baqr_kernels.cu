@@ -5320,7 +5320,7 @@ void GPU_dbl4_blocked_houseqr
    cudaMemcpy(Vhilo_d,Vhilo_h,szVandW,cudaMemcpyHostToDevice);
    cudaMemcpy(Vlolo_d,Vlolo_h,szVandW,cudaMemcpyHostToDevice);
    cudaMalloc((void**)&Whihi_d,szVandW + szpad); // padding only in allocation
-   cudaMalloc((void**)&Wlolo_d,szVandW + szpad); 
+   cudaMalloc((void**)&Wlohi_d,szVandW + szpad); 
    cudaMalloc((void**)&Whilo_d,szVandW + szpad); 
    cudaMalloc((void**)&Wlolo_d,szVandW + szpad); 
 
@@ -6190,7 +6190,7 @@ void GPU_cmplx4_blocked_houseqr
    free(Qrehihi_h); free(Qrelohi_h); free(Qrehilo_h); free(Qrelolo_h);
    free(Qimhihi_h); free(Qimlohi_h); free(Qimhilo_h); free(Qimlolo_h);
    free(vrehihi_h); free(vrelohi_h); free(vrehilo_h); free(vrelolo_h); 
-   free(vimhihi_h); free(vimlohi_h); free(vimlohi_h); free(vimlolo_h);
+   free(vimhihi_h); free(vimlohi_h); free(vimhilo_h); free(vimlolo_h);
    free(Vrehihi_h); free(Vrelohi_h); free(Vrehilo_h); free(Vrelolo_h);
    free(Vimhihi_h); free(Vimlohi_h); free(Vimhilo_h); free(Vimlolo_h);
    free(RHdotvrehihi_h); free(RHdotvrelohi_h);
