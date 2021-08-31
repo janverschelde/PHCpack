@@ -1,5 +1,6 @@
 Tue 31 Aug 2021 : corrected errors with allocation and deallocation
   in dbl4_baqr_kernels.cu.  Fixed another error in dbl4_baqr_kernels.cu.
+  Removed many double free() in dbl4_baqr_kernels.cu.
 
 Mon 30 Aug 2021 : completed the code transformation in dbl4_baqr_kernels.
   Added calls to the GPU code in dbl4_baqr_testers.cpp, and updated 

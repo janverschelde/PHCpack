@@ -2454,7 +2454,7 @@ __global__ void cmplx4_small_R_add_YWHC
    a_rehihi = Rrehihi[idx];
    a_relohi = Rrelohi[idx];
    a_rehilo = Rrehilo[idx];
-   a_relolo = Rrelohi[idx];
+   a_relolo = Rrelolo[idx];
    a_imhihi = Rimhihi[idx];
    a_imlohi = Rimlohi[idx];
    a_imhilo = Rimhilo[idx];
@@ -2550,7 +2550,7 @@ void GPU_dbl4_small_house
                  cudaMemcpyHostToDevice);
       cudaMemcpy(&betahilo_d[L],&betahilo_h[L],sizeof(double),
                  cudaMemcpyHostToDevice);
-      cudaMemcpy(&betalohi_d[L],&betalolo_h[L],sizeof(double),
+      cudaMemcpy(&betalolo_d[L],&betalolo_h[L],sizeof(double),
                  cudaMemcpyHostToDevice);
       cudaMemcpy(&Vhihi_d[L*nVrows+L],vhihi_h,sizeof(double),
                  cudaMemcpyHostToDevice);
@@ -4288,7 +4288,7 @@ void GPU_dbl4_small_WYT
       const size_t szmat = nrows*nrows*sizeof(double);
 
       cudaMemcpy(WYThihi_h,WYThihi_d,szmat,cudaMemcpyDeviceToHost);
-      cudaMemcpy(WYTlolo_h,WYTlolo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYTlohi_h,WYTlohi_d,szmat,cudaMemcpyDeviceToHost);
       cudaMemcpy(WYThihi_h,WYThihi_d,szmat,cudaMemcpyDeviceToHost);
       cudaMemcpy(WYTlolo_h,WYTlolo_d,szmat,cudaMemcpyDeviceToHost);
 
@@ -5035,7 +5035,7 @@ void GPU_dbl4_small_R_add_YWTC
       const size_t szmat = nrows*ncols*sizeof(double);
 
       cudaMemcpy(Rhihi_h,Rlohi_d,szmat,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Rhilo_h,Rlolo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Rlohi_h,Rlohi_d,szmat,cudaMemcpyDeviceToHost);
       cudaMemcpy(Rhilo_h,Rhilo_d,szmat,cudaMemcpyDeviceToHost);
       cudaMemcpy(Rlolo_h,Rlolo_d,szmat,cudaMemcpyDeviceToHost);
 
@@ -6213,8 +6213,6 @@ void GPU_cmplx4_blocked_houseqr
    free(QWYTimhilo_h); free(QWYTimlolo_h);
    free(YWTrehihi_h); free(YWTrelohi_h); free(YWTrehilo_h); free(YWTrelolo_h);
    free(YWTimhihi_h); free(YWTimlohi_h); free(YWTimhilo_h); free(YWTimlolo_h);
-   free(WYTrehihi_h); free(WYTrelohi_h); free(WYTrehilo_h); free(WYTrelolo_h);
-   free(WYTimhihi_h); free(WYTimlohi_h); free(WYTimhilo_h); free(WYTimlolo_h);
    free(YWTCrehihi_h); free(YWTCrelohi_h);
    free(YWTCrehilo_h); free(YWTCrelolo_h);
    free(YWTCimhihi_h); free(YWTCimlohi_h);
