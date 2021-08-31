@@ -1930,7 +1930,7 @@ __global__ void dbl4_small_WYT
       bhihi = Vhihi[k*nrows + col];   // if(nrows == szt) then col = tdx
       blohi = Vlohi[k*nrows + col]; 
       bhilo = Vhilo[k*nrows + col]; 
-      blolo = Vhilo[k*nrows + col]; 
+      blolo = Vlolo[k*nrows + col]; 
       // result = result + a*b;
       qdg_mul( ahihi, alohi, ahilo, alolo,
                bhihi, blohi, bhilo, blolo,
@@ -2026,7 +2026,7 @@ __global__ void cmplx4_small_WYH
    WYTrelohi[offset] = resultrelohi;
    WYTrehilo[offset] = resultrehilo;
    WYTrelolo[offset] = resultrelolo;
-   WYTimhilo[offset] = resultimhihi;
+   WYTimhihi[offset] = resultimhihi;
    WYTimlohi[offset] = resultimlohi;
    WYTimhilo[offset] = resultimhilo;
    WYTimlolo[offset] = resultimlolo;
