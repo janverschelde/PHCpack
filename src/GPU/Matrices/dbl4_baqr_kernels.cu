@@ -678,11 +678,11 @@ __global__ void cmplx4_normalize
       vrehihi[idx] = resultrehihi;
       vrelohi[idx] = resultrelohi;    
       vrehilo[idx] = resultrehilo;
-      vrelolo[idx] = resultrelohi;    
-      vimhihi[idx] = resultimhilo;    
+      vrelolo[idx] = resultrelolo;    
+      vimhihi[idx] = resultimhihi;    
       vimlohi[idx] = resultimlohi;    
       vimhilo[idx] = resultimhilo;    
-      vimlolo[idx] = resultimlohi;    
+      vimlolo[idx] = resultimlolo;
    }
 }
 
@@ -5026,7 +5026,7 @@ void GPU_dbl4_small_R_add_YWTC
    {
       const size_t szmat = nrows*ncols*sizeof(double);
 
-      cudaMemcpy(Rhihi_h,Rlohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Rhihi_h,Rhihi_d,szmat,cudaMemcpyDeviceToHost);
       cudaMemcpy(Rlohi_h,Rlohi_d,szmat,cudaMemcpyDeviceToHost);
       cudaMemcpy(Rhilo_h,Rhilo_d,szmat,cudaMemcpyDeviceToHost);
       cudaMemcpy(Rlolo_h,Rlolo_d,szmat,cudaMemcpyDeviceToHost);
