@@ -390,7 +390,7 @@ __global__ void dbl4_large_sum_of_squares
 
    shvhihi[j] = vhihi[k];
    shvlohi[j] = vlohi[k];
-   shvhilo[j] = vhihi[k];
+   shvhilo[j] = vhilo[k];
    shvlolo[j] = vlolo[k];
 
    if(k >= dim)
@@ -3890,14 +3890,6 @@ void GPU_cmplx4_medium_leftRupdate
       cudaMemcpy(Arelohi_h,Arelohi_d,sznum,cudaMemcpyDeviceToHost);
       cudaMemcpy(Arehilo_h,Arehilo_d,sznum,cudaMemcpyDeviceToHost);
       cudaMemcpy(Arelolo_h,Arelolo_d,sznum,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Arehihi_h,Arehihi_d,sznum,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Arelohi_h,Arelohi_d,sznum,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Arehilo_h,Arehilo_d,sznum,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Arelolo_h,Arelolo_d,sznum,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Aimhihi_h,Aimhihi_d,sznum,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Aimlohi_h,Aimlohi_d,sznum,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Aimhilo_h,Aimhilo_d,sznum,cudaMemcpyDeviceToHost);
-      cudaMemcpy(Aimlolo_h,Aimlolo_d,sznum,cudaMemcpyDeviceToHost);
       cudaMemcpy(Aimhihi_h,Aimhihi_d,sznum,cudaMemcpyDeviceToHost);
       cudaMemcpy(Aimlohi_h,Aimlohi_d,sznum,cudaMemcpyDeviceToHost);
       cudaMemcpy(Aimhilo_h,Aimhilo_d,sznum,cudaMemcpyDeviceToHost);
@@ -4289,7 +4281,7 @@ void GPU_dbl4_small_WYT
 
       cudaMemcpy(WYThihi_h,WYThihi_d,szmat,cudaMemcpyDeviceToHost);
       cudaMemcpy(WYTlohi_h,WYTlohi_d,szmat,cudaMemcpyDeviceToHost);
-      cudaMemcpy(WYThihi_h,WYThihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYThilo_h,WYThilo_d,szmat,cudaMemcpyDeviceToHost);
       cudaMemcpy(WYTlolo_h,WYTlolo_d,szmat,cudaMemcpyDeviceToHost);
 
       cout << "the WYT matrix :" << endl;
