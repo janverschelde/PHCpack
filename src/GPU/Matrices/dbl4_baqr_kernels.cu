@@ -389,7 +389,7 @@ __global__ void dbl4_large_sum_of_squares
    __shared__ double prdlolo[inner_qd_shmemsize];
 
    shvhihi[j] = vhihi[k];
-   shvlohi[j] = vlolo[k];
+   shvlohi[j] = vlohi[k];
    shvhilo[j] = vhihi[k];
    shvlolo[j] = vlolo[k];
 
