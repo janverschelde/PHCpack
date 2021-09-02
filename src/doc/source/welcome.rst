@@ -454,6 +454,10 @@ global optimization, and computational physics:
    likelihood equations, II: The Behrens-Fisher problem**.
    *Statistica Sinica* 17(4):1343-1354, 2007.
 
+#. M. Casanellas, J. Fernandez-Sachez, and M. Garrote-Lopez:
+   **Distance to the stochastic part of phylogenetic varieties**.
+   *Journal of Symbolic Computation* 104:653-682, 2021.
+
 #. Enric Celaya, Tom Creemers, Lluis Ros:
    **Exact interval propagation for the efficient solution of position
    analysis problems on planar linkages**.
@@ -798,6 +802,11 @@ global optimization, and computational physics:
    homotopy continuation**.
    *AIChE Journal.  Thermodynamics and Molecular-Scale Phenomena*,
    2016.  doi:10.1002/aic.15319
+
+#. J. Song, M. Cheah-Mane, E. Prieto-Araujo, and O. Gomis-Bellmunt:
+   **On the solution of equilibrium points of power systems with
+   penetration of power electronics considering converter limitation**.
+   *IEEE Access*, 9:67143-67153, 2021.
 
 #. Frank Sottile:
    **Real Schubert Calculus: Polynomial systems and a conjecture
