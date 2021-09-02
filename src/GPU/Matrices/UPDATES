@@ -1,3 +1,5 @@
+Wed 1 Sep 2021 : added __syncthreads() statements in dbl4_baqr_kernels.cu.
+
 Tue 31 Aug 2021 : corrected errors with allocation and deallocation
   in dbl4_baqr_kernels.cu.  Fixed another error in dbl4_baqr_kernels.cu.
   Removed many double free() in dbl4_baqr_kernels.cu.

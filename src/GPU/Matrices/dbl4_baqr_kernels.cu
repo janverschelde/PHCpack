@@ -920,6 +920,7 @@ __global__ void cmplx4_small_leftRupdate
          Rimhilo[Rcolidx] = Rtdx_imhilo;
          Rimlolo[Rcolidx] = Rtdx_imlolo;
       }
+      __syncthreads();
    }
 }
 
@@ -1056,6 +1057,7 @@ __global__ void dbl4_sum_betaRTdotv
       qdg_inc(&resulthihi,&resultlohi,&resulthilo,&resultlolo,
                  Rvalhihi,   Rvallohi,   Rvalhilo,   Rvallolo);
    }
+   __syncthreads();
    Rvalhihi = *betahihi;
    Rvallohi = *betalohi;
    Rvalhilo = *betahilo;
@@ -1108,6 +1110,7 @@ __global__ void cmplx4_sum_betaRHdotv
       qdg_inc(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
                  Rvalimhihi,   Rvalimlohi,   Rvalimhilo,   Rvalimlolo);
    }
+   __syncthreads();
    Rvalrehihi = *betahihi;
    Rvalrelohi = *betalohi;
    Rvalrehilo = *betahilo;
@@ -1170,7 +1173,7 @@ __global__ void dbl4_medium_subvbetaRTv
            &acchihi,&acclohi,&acchilo,&acclolo);
    qdg_dec(&Rwidxhihi,&Rwidxlohi,&Rwidxhilo,&Rwidxlolo,
               acchihi,   acclohi,   acchilo,   acclolo);
-
+   __syncthreads();
    if(widx < bound)                    // if() takes care of padding
    {
       Rhihi[Ridx] = Rwidxhihi;
@@ -1248,6 +1251,7 @@ __global__ void cmplx4_medium_subvbetaRHv
  
    // Rwidx = Rwidx - vValue*wValue;   // update R[rowidx,colidx]
    // take the Hermitian transpose of w
+   __syncthreads();
    qdg_mul(vValrehihi,vValrelohi,vValrehilo,vValrelolo,
            wValrehihi,wValrelohi,wValrehilo,wValrelolo,
              &acchihi,  &acclohi,  &acchilo,  &acclolo);
@@ -1269,6 +1273,7 @@ __global__ void cmplx4_medium_subvbetaRHv
    qdg_inc(&Rwidximhihi,&Rwidximlohi,&Rwidximhilo,&Rwidximlolo,
                 acchihi,     acclohi,     acchilo,     acclolo);
 
+   __syncthreads();
    if(widx < bound)                    // if() takes care of padding
    {
       Rrehihi[Ridx] = Rwidxrehihi;
@@ -1304,10 +1309,12 @@ __global__ void dbl4_beta_times_V
    shvlolo[tdx] = Vlolo[idx];
 
    // result = -B[0]*shv[tdx];
+   __syncthreads();
    qdg_mul(     -Bhihi[0],   -Blohi[0],   -Bhilo[0],   -Blolo[0],
                shvhihi[tdx],shvlohi[tdx],shvhilo[tdx],shvlolo[tdx],
            &resulthihi, &resultlohi, &resulthilo, &resultlolo);
 
+   __syncthreads();
    if(idx < nrows)
    {
       Whihi[idx] = resulthihi;
@@ -1351,6 +1358,7 @@ __global__ void cmplx4_beta_times_V
 
    // resultre = -B[0]*shvre[tdx];
    // resultim = -B[0]*shvim[tdx];
+   __syncthreads();
    qdg_mul(       -Bhihi[0],     -Blohi[0],     -Bhilo[0],     -Blolo[0],
                shvrehihi[tdx],shvrelohi[tdx],shvrehilo[tdx],shvrelolo[tdx],
            &resultrehihi, &resultrelohi, &resultrehilo, &resultrelolo);
@@ -1358,6 +1366,7 @@ __global__ void cmplx4_beta_times_V
                shvimhihi[tdx],shvimlohi[tdx],shvimhilo[tdx],shvimlolo[tdx],
            &resultimhihi, &resultimlohi, &resultimhilo, &resultimlolo);
 
+   __syncthreads();
    if(idx < nrows)
    {
       Wrehihi[idx] = resultrehihi;
@@ -1394,10 +1403,12 @@ __global__ void dbl4_initialize_WYT
    // const double result = Vval*Wval;
    double resulthihi,resultlohi,resulthilo,resultlolo; 
 
+   __syncthreads();
    qdg_mul(   Vvalhihi,   Vvallohi,   Vvalhilo,   Vvallolo,
               Wvalhihi,   Wvallohi,   Wvalhilo,   Wvallolo,
            &resulthihi,&resultlohi,&resulthilo,&resultlolo);
 
+   __syncthreads();
    if(idx < dim*dim)
    {
       WYThihi[idx] = resulthihi;
@@ -1446,6 +1457,7 @@ __global__ void cmplx4_initialize_WYH
    double acchihi,acclohi,acchilo,acclolo;
 
    // take the Hermitian transpose of V
+   __syncthreads();
    qdg_mul(   Vvalrehihi,   Vvalrelohi,   Vvalrehilo,   Vvalrelolo,
               Wvalrehihi,   Wvalrelohi,   Wvalrehilo,   Wvalrelolo,
            &resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo);
@@ -1463,6 +1475,7 @@ __global__ void cmplx4_initialize_WYH
    qdg_dec(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
                  acchihi,      acclohi,      acchilo,      acclolo);
 
+   __syncthreads();
    if(idx < dim*dim)
    {
       WYHrehihi[idx] = resultrehihi;
@@ -1504,12 +1517,14 @@ __global__ void dbl4_update_WYT
 
    // result = result + Vval*Wval;
 
+   __syncthreads();
    qdg_mul(Vvalhihi,Vvallohi,Vvalhilo,Vvallolo,
            Wvalhihi,Wvallohi,Wvalhilo,Wvallolo,
            &acchihi,&acclohi,&acchilo,&acclolo);
    qdg_inc(&resulthihi,&resultlohi,&resulthilo,&resultlolo,
                acchihi,    acclohi,    acchilo,    acclolo);
    
+   __syncthreads();
    if(idx < dim*dim)
    {
       WYThihi[idx] = resulthihi;
@@ -1564,6 +1579,7 @@ __global__ void cmplx4_update_WYH
    double acchihi,acclohi,acchilo,acclolo;
 
    // take the Hermitian transpose of V
+   __syncthreads();
    qdg_mul(Vvalrehihi,Vvalrelohi,Vvalrehilo,Vvalrelolo,
            Wvalrehihi,Wvalrelohi,Wvalrehilo,Wvalrelolo,
              &acchihi , &acclohi,  &acchilo,  &acclolo);
@@ -1585,6 +1601,7 @@ __global__ void cmplx4_update_WYH
    qdg_dec(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
                  acchihi,      acclohi,      acchilo,      acclolo);
 
+   __syncthreads();
    if(idx < dim*dim)
    {
       WYHrehihi[idx] = resultrehihi;
@@ -1693,10 +1710,12 @@ __global__ void dbl4_beta_next_W
                   acchihi,    acclohi,    acchilo,    acclolo);
    }
    // result = -mybeta*result;
+   __syncthreads();
    qdg_mul(-mybetahihi,-mybetalohi,-mybetahilo,-mybetalolo,
             resulthihi, resultlohi, resulthilo, resultlolo,
               &acchihi,   &acclohi,   &acchilo,   &acclolo);
 
+   __syncthreads();
    if(idx < nrows) 
    {
       Whihi[idx] = acchihi;
@@ -1765,6 +1784,7 @@ __global__ void cmplx4_beta_next_W
 
    for(int i=0; i<nrows/szt; i++)
    {
+      __syncthreads();
       vdx = i*szt + tdx;                 // index in V and in YWT
       shVrehihi[tdx] = Vrehihi[vdx];     // threads load next szt values
       shVrelohi[tdx] = Vrelohi[vdx];
@@ -1855,6 +1875,7 @@ __global__ void cmplx4_beta_next_W
       Vvalimlolo = shVimlolo[j];
       // result = result + WYTval*Vvalue;
       // take the Hermitian transpose of V
+      __syncthreads();
       qdg_mul(  Vvalrehihi,  Vvalrelohi,  Vvalrehilo,  Vvalrelolo,
               WYHvalrehihi,WYHvalrelohi,WYHvalrehilo,WYHvalrelolo,
                   &acchihi,    &acclohi,    &acchilo,    &acclolo);
@@ -1877,10 +1898,12 @@ __global__ void cmplx4_beta_next_W
                     acchihi,      acclohi,      acchilo,      acclolo);
    }
    // result = -mybeta*result;
+   __syncthreads();
    qdg_mul( -mybetahihi, -mybetalohi, -mybetahilo, -mybetalolo,
            resultrehihi,resultrelohi,resultrehilo,resultrelolo,
                &acchihi,    &acclohi,    &acchilo,    &acclolo);
 
+   __syncthreads();
    if(idx < nrows) 
    {
       Wrehihi[idx] = acchihi;
@@ -1888,10 +1911,12 @@ __global__ void cmplx4_beta_next_W
       Wrehilo[idx] = acchilo;
       Wrelolo[idx] = acclolo;
    }
+   __syncthreads();
    qdg_mul( -mybetahihi, -mybetalohi, -mybetahilo, -mybetalolo,
            resultimhihi,resultimlohi,resultimhilo,resultimlolo,
                &acchihi,    &acclohi,    &acchilo,    &acclolo);
 
+   __syncthreads();
    if(idx < nrows) 
    {
       Wimhihi[idx] = acchihi;
@@ -1923,6 +1948,7 @@ __global__ void dbl4_small_WYT
 
    for(int k=0; k<szt; k++)
    {
+      __syncthreads();
       ahihi = Whihi[k*nrows + row];   // if(nrows == szt) then row = bdx
       alohi = Wlohi[k*nrows + row];
       ahilo = Whilo[k*nrows + row];
@@ -1932,6 +1958,7 @@ __global__ void dbl4_small_WYT
       bhilo = Vhilo[k*nrows + col]; 
       blolo = Vlolo[k*nrows + col]; 
       // result = result + a*b;
+      __syncthreads();
       qdg_mul( ahihi, alohi, ahilo, alolo,
                bhihi, blohi, bhilo, blolo,
               &chihi,&clohi,&chilo,&clolo);
@@ -1979,6 +2006,7 @@ __global__ void cmplx4_small_WYH
 
    for(int k=0; k<szt; k++)
    {
+      __syncthreads();
       Widx = k*nrows + row;
       a_rehihi = Wrehihi[Widx];        // if(nrows == szt) then row = bdx
       a_relohi = Wrelohi[Widx];
@@ -1999,6 +2027,7 @@ __global__ void cmplx4_small_WYH
       b_imlolo = Yimlolo[Yidx];
       // result = result + a*b; with Hermitian transpose of Y
       // resultre = resultre + a_re*b_re + a_im*b_im;
+      __syncthreads();
       qdg_mul(a_rehihi,a_relohi,a_rehilo,a_relolo,
               b_rehihi,b_relohi,b_rehilo,b_relolo,
               &acchihi,&acclohi,&acchilo,&acclolo);
@@ -2055,6 +2084,7 @@ __global__ void dbl4_small_QWYT
 
    for(int k=0; k<rowdim; k++)       // run over rowdim, not just szt
    {                                 // coloff shifts by col*row elements
+      __syncthreads();
       idx = row*dim + coloff + k;
       ahihi = Qhihi[idx];            // row = bdx,
       alohi = Qlohi[idx];
@@ -2113,6 +2143,7 @@ __global__ void cmplx4_small_QWYH
 
    for(int k=0; k<rowdim; k++)          // run over rowdim, not just szt
    {                                    // coloff shifts by col*row elements
+      __syncthreads();
       Qidx = row*dim + coloff + k;
       a_rehihi = Qrehihi[Qidx];         // row = bdx,
       a_relohi = Qrelohi[Qidx];
@@ -2133,6 +2164,7 @@ __global__ void cmplx4_small_QWYH
       b_imlolo = WYTimlolo[WYTidx];
       // result = result + a*b;
       // resultre = resultre + a_re*b_re - a_im*b_im;
+      __syncthreads();
       qdg_mul(a_rehihi,a_relohi,a_rehilo,a_relolo,
               b_rehihi,b_relohi,b_rehilo,b_relolo,
               &acchihi,&acclohi,&acchilo,&acclolo);
@@ -2191,6 +2223,7 @@ __global__ void dbl4_small_YWTC
 
    for(int k=0; k<rowdim; k++)         // innermost loop runs over rowdim
    {
+      __syncthreads();
       idx = row*rowdim + k;
       ahihi = YWThihi[idx];            // YWT is stored row by row
       alohi = YWTlohi[idx];
@@ -2202,6 +2235,7 @@ __global__ void dbl4_small_YWTC
       bhilo = Chilo[idx];
       blolo = Clolo[idx];
       // result = result + a*b;
+      __syncthreads();
       qdg_mul( ahihi, alohi, ahilo, alolo,
                bhihi, blohi, bhilo, blolo,
               &chihi,&clohi,&chilo,&clolo);
@@ -2254,6 +2288,7 @@ __global__ void cmplx4_small_YWHC
    for(int k=0; k<rowdim; k++)         // innermost loop runs over rowdim
    {
       YWTidx = row*rowdim + k;
+      __syncthreads();
       a_rehihi = YWTrehihi[YWTidx];    // YWT is stored row by row
       a_relohi = YWTrelohi[YWTidx];
       a_rehilo = YWTrehilo[YWTidx];
@@ -2273,6 +2308,7 @@ __global__ void cmplx4_small_YWHC
       b_imlolo = Cimlolo[Cidx];
       // result = result + a*b;
       // resultre = resultre + a_re*b_re - a_im*b_im;
+      __syncthreads();
       qdg_mul(a_rehihi,a_relohi,a_rehilo,a_relolo,
               b_rehihi,b_relohi,b_rehilo,b_relolo,
               &acchihi,&acclohi,&acchilo,&acclolo);
@@ -2331,6 +2367,7 @@ __global__ void dbl4_small_Qupdate
    bhilo = QWYThilo[offset];
    blolo = QWYTlolo[offset];
    // a = a + b;
+   __syncthreads();
    qdg_inc(&ahihi,&alohi,&ahilo,&alolo,
             bhihi, blohi, bhilo, blolo);
    __syncthreads();
@@ -2379,6 +2416,7 @@ __global__ void cmplx4_small_Qupdate
    b_imhilo = QWYTimhilo[offset];
    b_imlolo = QWYTimlolo[offset];
    // a_re = a_re + b_re;
+   __syncthreads();
    qdg_inc(&a_rehihi,&a_relohi,&a_rehilo,&a_relolo,
             b_rehihi, b_relohi, b_rehilo, b_relolo);
    // a_im = a_im + b_im;
@@ -2420,6 +2458,7 @@ __global__ void dbl4_small_R_add_YWTC
    bhilo = YWTChilo[idx];
    blolo = YWTClolo[idx];
    // a = a + b;
+   __syncthreads();
    qdg_inc(&ahihi,&alohi,&ahilo,&alolo,
             bhihi, blohi, bhilo, blolo);
   
@@ -2468,6 +2507,7 @@ __global__ void cmplx4_small_R_add_YWHC
    b_imhilo = YWTCimhilo[idx];
    b_imlolo = YWTCimlolo[idx];
    // a_re = a_re + b_re;
+   __syncthreads();
    qdg_inc(&a_rehihi,&a_relohi,&a_rehilo,&a_relolo,
             b_rehihi, b_relohi, b_rehilo, b_relolo);
    // a_im = a_im + b_im;
