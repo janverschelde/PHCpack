@@ -2961,30 +2961,30 @@ void GPU_dbl4_large_house
       if(x0hihi <= 0.0)
       {
          // v0 = *x0 - mu;
-         qdf_sub(x0hihi,x0lohi,x0hilo,x0lolo,
-                 muhihi,mulohi,muhilo,mulolo,
+         qdf_sub( x0hihi, x0lohi, x0hilo, x0lolo,
+                  muhihi, mulohi, muhilo, mulolo,
                  &v0hihi,&v0lohi,&v0hilo,&v0lolo);
       }
       else
       {
          // v0 = -sigma[0]/(*x0 + mu);
-         qdf_add(x0hihi,x0lohi,x0hilo,x0lolo,
-                 muhihi,mulohi,muhilo,mulolo,
+         qdf_add(  x0hihi,  x0lohi,  x0hilo,  x0lolo,
+                   muhihi,  mulohi,  muhilo,  mulolo,
                  &acchihi,&acclohi,&acchilo,&acclolo);
          qdf_div(sigmahihi_h[0],sigmalohi_h[0],sigmahilo_h[0],sigmalolo_h[0],
-                 acchihi,acclohi,acchilo,acclolo,
-                 &v0hihi,&v0lohi,&v0hilo,&v0lolo);
+                   acchihi,       acclohi,       acchilo,       acclolo,
+                   &v0hihi,       &v0lohi,       &v0hilo,       &v0lolo);
          qdf_minus(&v0hihi,&v0lohi,&v0hilo,&v0lolo);
       }
       // v0p2 = v0*v0;
-      qdf_sqr(v0hihi,v0lohi,v0hilo,v0lolo,
+      qdf_sqr(   v0hihi,   v0lohi,   v0hilo,   v0lolo,
               &v0p2hihi,&v0p2lohi,&v0p2hilo,&v0p2lolo);
       // *beta = 2.0*v0p2/(sigma[0] + v0p2);
       qdf_add(sigmahihi_h[0],sigmalohi_h[0],sigmahilo_h[0],sigmalolo_h[0],
-              v0p2hihi,v0p2lohi,v0p2hilo,v0p2lolo,
-              &acchihi,&acclohi,&acchilo,&acclolo);
-      qdf_div(v0p2hihi,v0p2lohi,v0p2hilo,v0p2lolo,
-              acchihi,acclohi,acchilo,acclolo,
+               v0p2hihi,      v0p2lohi,      v0p2hilo,      v0p2lolo,
+               &acchihi,      &acclohi,      &acchilo,      &acclolo);
+      qdf_div( v0p2hihi,      v0p2lohi,      v0p2hilo,      v0p2lolo,
+                acchihi,       acclohi,       acchilo,       acclolo,
               &betahihi_h[L],&betalohi_h[L],&betahilo_h[L],&betalolo_h[L]);
       qdf_mlt_d(&betahihi_h[L],&betalohi_h[L],
                 &betahilo_h[L],&betalolo_h[L],2.0);
@@ -3626,7 +3626,7 @@ void GPU_dbl4_medium_leftRupdate
        Ahihi_d,Alohi_d,Ahilo_d,Alolo_d,
        &Vhihi_d[L*nVrows+L],&Vlohi_d[L*nVrows+L],
        &Vhilo_d[L*nVrows+L],&Vlolo_d[L*nVrows+L],
-       RTdotvhihi_d,RTdotvlohi_d, RTdotvhilo_d,RTdotvlolo_d);
+       RTdotvhihi_d,RTdotvlohi_d,RTdotvhilo_d,RTdotvlolo_d);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
