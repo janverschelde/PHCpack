@@ -444,6 +444,10 @@ global optimization, and computational physics:
    channel**.
    *IEEE Transactions on Information Theory* 60(9):5573-5586, 2014.
 
+#. Taylor Brysiewicz, Jose Israel Rodriguez, Frank Sottile, and Thomas Yahl:
+   **Solving decomposable sparse systems.**
+   *Numerical Algorithms* 88:453-474, 2021.
+
 #. M.-L. G. Buot and D. St. P. Richards:
    **Counting and Locating the Solutions of Polynomial Systems of
    Maximum Likelihood Equations I**.
