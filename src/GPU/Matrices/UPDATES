@@ -1,3 +1,7 @@
+Tue 7 Sep 2021 : small edits in the documentation of random4_matrices.h,
+  added the new file random8_matrices.h with the specifications of functions
+  to generate random matrices of octo doubles.
+
 Wed 1 Sep 2021 : added __syncthreads() statements in dbl4_baqr_kernels.cu.
 
 Tue 31 Aug 2021 : corrected errors with allocation and deallocation

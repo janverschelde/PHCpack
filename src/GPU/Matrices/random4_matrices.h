@@ -15,10 +15,10 @@ void random_dbl4_upper_matrix
  * ON ENTRY :
  *   rows     the number of rows of all matrices;
  *   cols     the number of columns of all matrices;
- *   Ahi      space for a matrix, of dimensions rows and cols;
- *   Alo      space for a matrix, of dimensions rows and cols;
- *   Ahi      space for a matrix, of dimensions rows and cols;
- *   Alo      space for a matrix, of dimensions rows and cols.
+ *   Ahihi    space for a matrix, of dimensions rows and cols;
+ *   Alohi    space for a matrix, of dimensions rows and cols;
+ *   Ahilo    space for a matrix, of dimensions rows and cols;
+ *   Alolo    space for a matrix, of dimensions rows and cols.
  *
  * ON RETURN :
  *   Ahihi    the highest doubles of an upper triangular matrix
@@ -48,19 +48,19 @@ void random_cmplx4_upper_matrix
  *   Arehilo  space for a matrix, of dimensions rows and cols;
  *   Arelolo  space for a matrix, of dimensions rows and cols;
  *   Aimhihi  space for a matrix, of dimensions rows and cols;
- *   Aimlohi  space for a matrix, of dimensions rows and cols.
+ *   Aimlohi  space for a matrix, of dimensions rows and cols;
  *   Aimhilo  space for a matrix, of dimensions rows and cols;
  *   Aimlolo  space for a matrix, of dimensions rows and cols.
  *
  * ON RETURN :
- *   Arehihi    highest doubles of the real parts of a random matrix;
- *   Arelohi    second highest doubles of the real parts of a random matrix;
- *   Arehilo    second low doubles of the real parts of a random matrix;
- *   Arelolo    lowest doubles of the real parts of a random matrix;
- *   Aimhihi    highest doubles of the imaginary parts of a random matrix;
- *   Aimlohi    second highest doubles of the imaginary parts;
- *   Aimhilo    second lowest doubles of the imaginary parts;
- *   Aimlolo    lowest doubles of the imaginary parts of a random matrix. */
+ *   Arehihi  highest doubles of the real parts of a random matrix;
+ *   Arelohi  second highest doubles of the real parts of a random matrix;
+ *   Arehilo  second low doubles of the real parts of a random matrix;
+ *   Arelolo  lowest doubles of the real parts of a random matrix;
+ *   Aimhihi  highest doubles of the imaginary parts of a random matrix;
+ *   Aimlohi  second highest doubles of the imaginary parts;
+ *   Aimhilo  second lowest doubles of the imaginary parts;
+ *   Aimlolo  lowest doubles of the imaginary parts of a random matrix. */
 
 void random_dbl4_matrix
  ( int rows, int cols,
@@ -75,7 +75,7 @@ void random_dbl4_matrix
  *   cols     the number of columns of all matrices;
  *   Ahihi    space for a matrix, of dimensions rows and cols;
  *   Alohi    space for a matrix, of dimensions rows and cols;
- *   Ahilo    space for a matrix, of dimensions rows and cols.
+ *   Ahilo    space for a matrix, of dimensions rows and cols;
  *   Alolo    space for a matrix, of dimensions rows and cols.
  *
  * ON RETURN :
@@ -102,18 +102,18 @@ void random_cmplx4_matrix
  *   Arehilo  space for a matrix, of dimensions rows and cols;
  *   Arelolo  space for a matrix, of dimensions rows and cols;
  *   Aimhihi  space for a matrix, of dimensions rows and cols;
- *   Aimlohi  space for a matrix, of dimensions rows and cols.
+ *   Aimlohi  space for a matrix, of dimensions rows and cols;
  *   Aimhilo  space for a matrix, of dimensions rows and cols;
  *   Aimlolo  space for a matrix, of dimensions rows and cols.
  *
  * ON RETURN :
- *   Arehihi    highest doubles of the real parts of a random matrix;
- *   Arelohi    second highest doubles of the real parts of a random matrix;
- *   Arehilo    second low doubles of the real parts of a random matrix;
- *   Arelolo    lowest doubles of the real parts of a random matrix;
- *   Aimhihi    highest doubles of the imaginary parts of a random matrix;
- *   Aimlohi    second highest doubles of the imaginary parts;
- *   Aimhilo    second lowest doubles of the imaginary parts;
- *   Aimlolo    lowest doubles of the imaginary parts of a random matrix. */
+ *   Arehihi  highest doubles of the real parts of a random matrix;
+ *   Arelohi  second highest doubles of the real parts of a random matrix;
+ *   Arehilo  second low doubles of the real parts of a random matrix;
+ *   Arelolo  lowest doubles of the real parts of a random matrix;
+ *   Aimhihi  highest doubles of the imaginary parts of a random matrix;
+ *   Aimlohi  second highest doubles of the imaginary parts;
+ *   Aimhilo  second lowest doubles of the imaginary parts;
+ *   Aimlolo  lowest doubles of the imaginary parts of a random matrix. */
 
 #endif
