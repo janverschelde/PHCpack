@@ -203,24 +203,40 @@ void CPU_cmplx4_factors_backward
  *
  * ON ENTRY :
  *   dim      number of rows and columns in the upper triangular matrix U;
- *   Urehi    high doubles of the real parts of U;
- *   Urelo    low doubles of the real parts of U;
- *   Uimhi    high doubles of the imaginary parts of U;
- *   Uimlo    low doubles of the imaginary parts of U;
- *   brehi    high doubles of the real parts of a right hand side vector;
- *   brelo    low doubles of the real parts of a right hand side vector;
- *   bimhi    high doubles of the imaginary parts of a right hand side vector;
- *   bimlo    low doubles of the imaginary parts of a right hand side vector;
- *   xrehi    space for dim doubles;
- *   xrelo    space for dim doubles;
- *   ximhi    space for dim doubles;
- *   ximlo    space for dim doubles.
+ *   Urehihi  are the highest doubles of the real parts of U;
+ *   Urelohi  are the second highest doubles of the real parts of U;
+ *   Urehilo  are the second lowest doubles of the real parts of U;
+ *   Urelolo  are the lowest doubles of the real parts of U;
+ *   Uimhihi  are the highest doubles of the imaginary parts of U;
+ *   Uimlohi  are the second highest doubles of the imaginary parts of U;
+ *   Uimhilo  are the second lowest doubles of the imaginary parts of U;
+ *   Uimlolo  are the lowest doubles of the imaginary parts of U;
+ *   brehihi  are the highest doubles of the real parts of b;
+ *   brelohi  are the second highest doubles of the real parts of b;
+ *   brehilo  are the second lowest doubles of the real parts of b;
+ *   brelolo  are the lowest doubles of the real parts of b;
+ *   bimhihi  are the highest doubles of the imaginary parts of b;
+ *   bimlohi  are the second highest doubles of the imaginary parts of b;
+ *   bimhilo  are the second lowest doubles of the imaginary parts of b;
+ *   bimlolo  are the lowest doubles of the imaginary parts of b;
+ *   xrehihi  has space for dim doubles;
+ *   xrelohi  has space for dim doubles;
+ *   xrehilo  has space for dim doubles;
+ *   xrelolo  has space for dim doubles;
+ *   ximhihi  has space for dim doubles;
+ *   ximlohi  has space for dim doubles;
+ *   ximhilo  has space for dim doubles;
+ *   ximlolo  has space for dim doubles.
  *
  * ON RETURN :
- *   xrehi    high doubles of the real parts of the solution to U*x = b;
- *   xrelo    low doubles of the imaginary parts of the solution to U*x = b;
- *   ximhi    high doubles of the real parts of the solution to U*x = b;
- *   ximlo    low doubles of the imaginary parts of the solution to U*x = b. */
+ *   xrehihi  are the highest doubles of the real parts of x;
+ *   xrelohi  are the second highest doubles of the real parts of x;
+ *   xrehilo  are the second lowest doubles of the imaginary parts of x;
+ *   xrelolo  are the lowest doubles of the imaginary parts of x;
+ *   ximhihi  are the highest doubles of the real parts of x;
+ *   ximlohi  are the second highest doubles of the real parts of x;
+ *   ximhilo  are the second lowest doubles of the imaginary parts of x;
+ *   ximlolo  are the lowest doubles of the imaginary parts of x. */
 
 void CPU_dbl4_factors_lufac
  ( int dim, double **Ahihi, double **Alohi, double **Ahilo, double **Alolo,
