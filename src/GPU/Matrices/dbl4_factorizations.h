@@ -21,14 +21,14 @@ void CPU_dbl4_factors_matmatmul
  *   Alohi    second highest doubles of a matrix of dimensions rows and dim;
  *   Ahilo    second lowest doubles of a matrix of dimensions rows and dim;
  *   Alolo    lowest doubles of a matrix of dimensions rows and dim;
- *   Bhihi    second highest doubles of a matrix of dimensions dim and cols;
+ *   Bhihi    highest doubles of a matrix of dimensions dim and cols;
  *   Blohi    second highest doubles of a matrix of dimensions dim and cols;
  *   Bhilo    second lowest doubles of a matrix of dimensions dim and cols;
  *   Blolo    lowest doubles of a matrix of dimensions dim and cols;
  *   Chihi    space allocated for a rows-by-cols matrix;
  *   Clohi    space allocated for a rows-by-cols matrix;
- *   Chilo    space allocated for a rows-by-cols matrix.
- *   Chilo    space allocated for a rows-by-cols matrix.
+ *   Chilo    space allocated for a rows-by-cols matrix;
+ *   Clolo    space allocated for a rows-by-cols matrix.
  *
  * ON RETURN :
  *   Chihi    highest doubles of the product of A with B;
@@ -52,24 +52,41 @@ void CPU_cmplx4_factors_matmatmul
  *   rows     the number of rows in the matrices A and C;
  *   dim      the number of columns in A and rows in B;
  *   cols     the number of columns in the matrices B and C;
- *   Are      high doubles of the real parts of A;
- *   Are      low doubles of the real parts of A;
- *   Aim      high doubles of the imaginary parts of A; 
- *   Aim      low doubles of the imaginary parts of A;
- *   Brehi    high doubles of the real parts of B;
- *   Brelo    low doubles of the real parts of B;
- *   Bimhi    high doubles of the imaginary parts of B;
- *   Bimlo    low doubles of the imaginary parts of B;
- *   Crehi    space allocated for a rows-by-cols matrix;
- *   Crelo    space allocated for a rows-by-cols matrix;
- *   Cimhi    space allocated for a rows-by-cols matrix.
- *   Cimlo    space allocated for a rows-by-cols matrix.
+ *   Arehihi  are the highest doubles of the real parts of A;
+ *   Arelohi  are the second highest doubles of the real parts of A;
+ *   Arehilo  are the second lowest doubles of the real parts of A;
+ *   Arelolo  are the lowest doubles of the real parts of A;
+ *   Aimhihi  are the highest doubles of the imaginary parts of A; 
+ *   Aimlohi  are the second highest doubles of the imaginary parts of A; 
+ *   Aimhilo  are the second lowest doubles of the imaginary parts of A;
+ *   Aimlolo  are the lowest doubles of the imaginary parts of A;
+ *   Brehihi  are the highest doubles of the real parts of B;
+ *   Brelohi  are the second highest doubles of the real parts of B;
+ *   Brehilo  are the second lowest doubles of the real parts of B;
+ *   Brelolo  are the lowest doubles of the real parts of B;
+ *   Bimhihi  are the highest doubles of the imaginary parts of B;
+ *   Bimlohi  are the second highest doubles of the imaginary parts of B;
+ *   Bimhilo  are the second lowest doubles of the imaginary parts of B;
+ *   Bimlolo  are the lowest doubles of the imaginary parts of B;
+ *   Crehihi  has space allocated for a rows-by-cols matrix;
+ *   Crelohi  has space allocated for a rows-by-cols matrix;
+ *   Crehilo  has space allocated for a rows-by-cols matrix;
+ *   Crelolo  has space allocated for a rows-by-cols matrix;
+ *   Cimhihi  has space allocated for a rows-by-cols matrix;
+ *   Cimlohi  has space allocated for a rows-by-cols matrix;
+ *   Cimhilo  has space allocated for a rows-by-cols matrix;
+ *   Cimlolo  has space allocated for a rows-by-cols matrix.
  *
  * ON RETURN :
- *   Crehi    high doubles of the real parts of the product of A with B;
- *   Crelo    low doubles of the real parts of the product of A with B;
- *   Cimhi    high doubles of the imaginary parts of product of A with B;
- *   Cimlo    low doubles of the imaginary parts of product of A with B. */
+ *   Crehihi  are the highest doubles of the real parts of C,
+              the product of A with B;
+ *   Crelohi  second highest doubles of the real parts of C;
+ *   Crehilo  second lowest doubles of the real parts of C;
+ *   Crelolo  lowest doubles of the real parts of C;
+ *   Cimhihi  highest doubles of the imaginary parts of C;
+ *   Cimlohi  second highest doubles of the imaginary parts of C;
+ *   Cimhilo  second lowest doubles of the imaginary parts of C;
+ *   Cimlolo  lowest doubles of the imaginary parts of C. */
 
 void CPU_dbl4_factors_forward
  ( int dim,
