@@ -247,7 +247,47 @@ void odf_inc_d
  *   a_hihilo is the fourth lowest part of the octo double a + b;
  *   a_lohilo is the third lowest part of the octo double a + b;
  *   a_hilolo is the second lowest part of the octo double a + b;
- *   a_lololo is the lowest part of the octo double a + b; */
+ *   a_lololo is the lowest part of the octo double a + b. */
+
+void odf_dec
+ ( double *a_hihihi, double *a_lohihi, double *a_hilohi, double *a_lolohi,
+   double *a_hihilo, double *a_lohilo, double *a_hilolo, double *a_lololo,
+   double b_hihihi, double b_lohihi, double b_hilohi, double b_lolohi,
+   double b_hihilo, double b_lohilo, double b_hilolo, double b_lololo );
+/*
+ * DESCRIPTION : a = a - b.
+ *   Inplace decrement of the octo double a (a_hihihi, a_lohihi, a_hilohi,
+ *   a_lolohi, a_hihilo, a_lohilo, a_hilolo, a_lololo) with the octo double
+ *   in b (b_hihihi, b_lohihi, b_hilohi, b_lolohi, b_hihilo, b_lohilo,
+ *   b_hilolo, b_lololo).
+ *
+ * ON ENTRY :
+ *   a_hihihi is the highest part of the octo double a;
+ *   a_lohihi is the second highest part of the octo double a;
+ *   a_hilohi is the third highest part of the octo double a;
+ *   a_lolohi is the fourth highest part of the octo double a;
+ *   a_hihilo is the fourth lowest part of the octo double a;
+ *   a_lohilo is the third lowest part of the octo double a;
+ *   a_hilolo is the second lowest part of the octo double a;
+ *   a_lololo is the lowest part of the octo double a;
+ *   b_hihihi is the highest part of the octo double b;
+ *   b_lohihi is the second highest part of the octo double b;
+ *   b_hilohi is the third highest part of the octo double b;
+ *   b_lolohi is the fourth highest part of the octo double b;
+ *   b_hihilo is the fourth lowest part of the octo double b;
+ *   b_lohilo is the third lowest part of the octo double b;
+ *   b_hilolo is the second lowest part of the octo double b;
+ *   b_lololo is the lowest part of the octo double b;
+ *
+ * ON RETURN :
+ *   a_hihihi is the highest part of the octo double a - b;
+ *   a_lohihi is the second highest part of the octo double a - b;
+ *   a_hilohi is the third highest part of the octo double a - b;
+ *   a_lolohi is the fourth highest part of the octo double a - b;
+ *   a_hihilo is the fourth lowest part of the octo double a - b;
+ *   a_lohilo is the third lowest part of the octo double a - b;
+ *   a_hilolo is the second lowest part of the octo double a - b;
+ *   a_lololo is the lowest part of the octo double a - b. */
 
 void odf_minus
  ( double *a_hihihi, double *a_lohihi, double *a_hilohi, double *a_lolohi,

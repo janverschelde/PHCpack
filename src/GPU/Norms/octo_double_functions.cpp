@@ -643,6 +643,27 @@ void odf_inc_d
                    a_hihilo,a_lohilo,a_hilolo,a_lololo);
 }
 
+void odf_dec
+ ( double *a_hihihi, double *a_lohihi, double *a_hilohi, double *a_lolohi,
+   double *a_hihilo, double *a_lohilo, double *a_hilolo, double *a_lololo,
+   double b_hihihi, double b_lohihi, double b_hilohi, double b_lolohi,
+   double b_hihilo, double b_lohilo, double b_hilolo, double b_lololo )
+{
+   double mbhihihi = -b_hihihi;
+   double mblohihi = -b_lohihi;
+   double mbhilohi = -b_hilohi;
+   double mblolohi = -b_lolohi;
+   double mbhihilo = -b_hihilo;
+   double mblohilo = -b_lohilo;
+   double mbhilolo = -b_hilolo;
+   double mblololo = -b_lololo;
+
+   odf_inc(a_hihihi,a_lohihi,a_hilohi,a_lolohi,
+           a_hihilo,a_lohilo,a_hilolo,a_lololo,
+           mbhihihi,mblohihi,mbhilohi,mblolohi,
+           mbhihilo,mblohilo,mbhilolo,mblololo);
+}
+
 void odf_minus
  ( double *a_hihihi, double *a_lohihi, double *a_hilohi, double *a_lolohi,
    double *a_hihilo, double *a_lohilo, double *a_hilolo, double *a_lololo )
