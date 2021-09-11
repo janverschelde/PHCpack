@@ -484,6 +484,37 @@ void odf_mul_od_d
  *   c_hilolo is the second lowest part of the octo double c = a * b;
  *   c_lololo is the lowest part of the octo double c = a * b. */
 
+void odf_mlt_d
+ ( double *a_hihihi, double *a_lohihi, double *a_hilohi, double *a_lolohi,
+   double *a_hihilo, double *a_lohilo, double *a_hilolo, double *a_lololo,
+   double b );
+/*
+ * DESCRIPTION : a = a * b.
+ *   Inplace multiplication of the octo double a (a_hihihi, a_lohihi,
+ *   a_hilohi, a_lolohi, a_hihilo, a_lohilo, a_hilolo, a_lololo)
+ *   with the double b.
+ *
+ * ON ENTRY :
+ *   a_hihihi is the highest part of the octo double a;
+ *   a_lohihi is the second highest part of the octo double a;
+ *   a_hilohi is the third highest part of the octo double a;
+ *   a_lolohi is the fourth highest part of the octo double a;
+ *   a_hihilo is the fourth lowest part of the octo double a;
+ *   a_lohilo is the third lowest part of the octo double a;
+ *   a_hilolo is the second lowest part of the octo double a;
+ *   a_lololo is the lowest part of the octo double a;
+ *   b        some double.
+ *
+ * ON RETURN :
+ *   a_hihihi is the highest part of the octo double a * b;
+ *   a_lohihi is the second highest part of the octo double a * b;
+ *   a_hilohi is the third highest part of the octo double a * b;
+ *   a_lolohi is the fourth highest part of the octo double a * b;
+ *   a_hihilo is the fourth lowest part of the octo double a * b;
+ *   a_lohilo is the third lowest part of the octo double a * b;
+ *   a_hilolo is the second lowest part of the octo double a * b;
+ *   a_lololo is the lowest part of the octo double a * b. */
+
 void odf_div
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
    double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,

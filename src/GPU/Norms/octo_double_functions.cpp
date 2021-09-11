@@ -1362,6 +1362,29 @@ void odf_mul_od_d
                    c_hihilo,c_lohilo,c_hilolo,c_lololo);
 }
 
+void odf_mlt_d
+ ( double *a_hihihi, double *a_lohihi, double *a_hilohi, double *a_lolohi,
+   double *a_hihilo, double *a_lohilo, double *a_hilolo, double *a_lololo,
+   double b )
+{
+   double c_hihihi,c_lohihi,c_hilohi,c_lolohi;
+   double c_hihilo,c_lohilo,c_hilolo,c_lololo;
+
+   odf_mul_od_d(*a_hihihi,*a_lohihi,*a_hilohi,*a_lolohi,
+                *a_hihilo,*a_lohilo,*a_hilolo,*a_lololo,b,
+                &c_hihihi,&c_lohihi,&c_hilohi,&c_lolohi,
+                &c_hihilo,&c_lohilo,&c_hilolo,&c_lololo);
+
+   *a_hihihi = c_hihihi;
+   *a_lohihi = c_lohihi;
+   *a_hilohi = c_hilohi;
+   *a_lolohi = c_lolohi;
+   *a_hihilo = c_hihilo;
+   *a_lohilo = c_lohilo;
+   *a_hilolo = c_hilolo;
+   *a_lololo = c_lololo;
+}
+
 void odf_div
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
    double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,

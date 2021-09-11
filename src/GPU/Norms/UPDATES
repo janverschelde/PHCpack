@@ -1,3 +1,6 @@
+Sat 11 Sep 2021 : added an inplace multiplication function with a double
+  to octo_double_functions.
+
 Fri 10 Sep 2021 : added a decrement function to octo_double_functions.
 
 Mon 30 Aug 2021 : to quad_double_gpufun, added function for an inplace
