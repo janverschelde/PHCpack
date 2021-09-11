@@ -516,6 +516,7 @@ int test_real8_qr_factors
    double **Rhihilo, double **Rlohilo, double **Rhilolo, double **Rlololo,
    double tol, int verbose )
 {
+   return 0;
 }
 
 int test_real8_qr_factors_probe
@@ -528,6 +529,7 @@ int test_real8_qr_factors_probe
    double **Rhihilo, double **Rlohilo, double **Rhilolo, double **Rlololo,
    double tol, int nbprobes, int verbose )
 {
+   return 0;
 }
 
 int test_cmplx8_qr_factors
@@ -558,6 +560,7 @@ int test_cmplx8_qr_factors
    double **Rimhilolo, double **Rimlololo,
    double tol, int verbose )
 {
+   return 0;
 }
 
 int test_cmplx8_qr_factors_probe
@@ -588,6 +591,7 @@ int test_cmplx8_qr_factors_probe
    double **Rimhilolo, double **Rimlololo,
    double tol, int nbprobes, int verbose )
 {
+   return 0;
 }
 
 void test_factors_real8_houseqr ( void )
