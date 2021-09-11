@@ -317,10 +317,10 @@ void test_factors_cmplx8_lufac ( void )
    {
       rhsrehihihi[i] = 0.0; rhsrelohihi[i] = 0.0;
       rhsrehilohi[i] = 0.0; rhsrelolohi[i] = 0.0;
-      rhsimhihilo[i] = 0.0; rhsimlohilo[i] = 0.0;
-      rhsimhilolo[i] = 0.0; rhsimlololo[i] = 0.0;
-      rhsrehihihi[i] = 0.0; rhsrelohihi[i] = 0.0;
-      rhsrehilohi[i] = 0.0; rhsrelolohi[i] = 0.0;
+      rhsrehihilo[i] = 0.0; rhsrelohilo[i] = 0.0;
+      rhsrehilolo[i] = 0.0; rhsrelololo[i] = 0.0;
+      rhsimhihihi[i] = 0.0; rhsimlohihi[i] = 0.0;
+      rhsimhilohi[i] = 0.0; rhsimlolohi[i] = 0.0;
       rhsimhihilo[i] = 0.0; rhsimlohilo[i] = 0.0;
       rhsimhilolo[i] = 0.0; rhsimlololo[i] = 0.0;
 

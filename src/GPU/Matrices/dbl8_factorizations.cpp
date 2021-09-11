@@ -392,10 +392,10 @@ void CPU_cmplx8_factors_backward
    {
       xrehihihi[i] = brehihihi[i]; xrelohihi[i] = brelohihi[i];
       xrehilohi[i] = brehilohi[i]; xrelolohi[i] = brelolohi[i];
-      ximhihilo[i] = bimhihilo[i]; ximlohilo[i] = bimlohilo[i];
-      ximhilolo[i] = bimhilolo[i]; ximlololo[i] = bimlololo[i];
-      xrehihihi[i] = brehihihi[i]; xrelohihi[i] = brelohihi[i];
-      xrehilohi[i] = brehilohi[i]; xrelolohi[i] = brelolohi[i];
+      xrehihilo[i] = brehihilo[i]; xrelohilo[i] = brelohilo[i];
+      xrehilolo[i] = brehilolo[i]; xrelololo[i] = brelololo[i];
+      ximhihihi[i] = bimhihihi[i]; ximlohihi[i] = bimlohihi[i];
+      ximhilohi[i] = bimhilohi[i]; ximlolohi[i] = bimlolohi[i];
       ximhihilo[i] = bimhihilo[i]; ximlohilo[i] = bimlohilo[i];
       ximhilolo[i] = bimhilolo[i]; ximlololo[i] = bimlololo[i];
 
@@ -511,8 +511,8 @@ void CPU_cmplx8_factors_backward
           &acc3imhihilo,&acc3imlohilo,&acc3imhilolo,&acc3imlololo);
       // acc3 stores the doubles for xim
       xrehihihi[i] = acc2rehihihi; xrelohihi[i] = acc2relohihi;
-      xrehilolo[i] = acc2rehilohi; xrelolohi[i] = acc2relolohi;
-      xrehihihi[i] = acc2rehihilo; xrelohilo[i] = acc2relohilo;
+      xrehilohi[i] = acc2rehilohi; xrelolohi[i] = acc2relolohi;
+      xrehihilo[i] = acc2rehihilo; xrelohilo[i] = acc2relohilo;
       xrehilolo[i] = acc2rehilolo; xrelololo[i] = acc2relololo;
       odf_dec(&xrehihihi[i],&xrelohihi[i],&xrehilohi[i],&xrelolohi[i],
               &xrehihilo[i],&xrelohilo[i],&xrehilolo[i],&xrelololo[i],
@@ -701,6 +701,7 @@ void CPU_cmplx8_factors_lufac
             valtmp = Aimlolohi[idxmax][k];
             Aimlolohi[idxmax][k] = Aimlolohi[j][k];
             Aimlolohi[j][k] = valtmp;
+            valtmp = Aimhihilo[idxmax][k];
             Aimhihilo[idxmax][k] = Aimhihilo[j][k];
             Aimhihilo[j][k] = valtmp;
             valtmp = Aimlohilo[idxmax][k];
@@ -799,8 +800,8 @@ void CPU_cmplx8_factors_lufac
              &acc4imhihilo,  &acc4imlohilo,  &acc4imhilolo,  &acc4imlololo);
          // acc4 stores doubles for Aimhi
          Arehihihi[i][j] = acc3rehihihi; Arelohihi[i][j] = acc3relohihi;
-         Arehilolo[i][j] = acc3rehilohi; Arelolohi[i][j] = acc3relolohi;
-         Arehihihi[i][j] = acc3rehihilo; Arelohilo[i][j] = acc3relohilo;
+         Arehilohi[i][j] = acc3rehilohi; Arelolohi[i][j] = acc3relolohi;
+         Arehihilo[i][j] = acc3rehihilo; Arelohilo[i][j] = acc3relohilo;
          Arehilolo[i][j] = acc3rehilolo; Arelololo[i][j] = acc3relololo;
          odf_dec(&Arehihihi[i][j],&Arelohihi[i][j],
                  &Arehilohi[i][j],&Arelolohi[i][j],
