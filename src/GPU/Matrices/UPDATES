@@ -1,3 +1,6 @@
+Fir 10 Sep 2021 : new dbl8_factorizations, dbl8_factors_testers,
+  and test_dbl8_factors.cpp, updated the makefiles.
+
 Thu 9 Sep 2021 : completed the corrections in the documentation of
   dbl4_factorizations.h.
 

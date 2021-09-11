@@ -27,6 +27,9 @@ test_dbl2_factors:
 test_dbl4_factors:
 	make -f $(MAKEFILE) test_dbl4_factors
 
+test_dbl8_factors:
+	make -f $(MAKEFILE) test_dbl8_factors
+
 test_dbl_tabs:
 	make -f $(MAKEFILE) test_dbl_tabs
 
