@@ -1,3 +1,6 @@
+Sun 12 Sep 2021 : completed dbl8_factors_testers.cpp and test_dbl8_factors.cpp
+  with tests on the Householder QR decomposition.
+
 Sat 11 Sep 2021 : fixed bugs in dbl8_factorizations.cpp and
   dbl8_factors_testers.cpp so the complex LU solver works.
   Completed the code for the Householder QR in dbl8_factorizations.

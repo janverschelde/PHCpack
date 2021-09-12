@@ -19,7 +19,7 @@ int main ( void )
 
    cout << "testing a complex LU factorization ..." << endl;
    test_factors_cmplx8_lufac();
-/*
+
    cout << endl;
 
    cout << "testing a real QR decomposition ..." << endl;
@@ -29,6 +29,6 @@ int main ( void )
 
    cout << "testing a complex QR decomposition ..." << endl;
    test_factors_cmplx8_houseqr();
- */
+
    return 0;
 }
