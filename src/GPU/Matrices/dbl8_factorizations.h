@@ -802,88 +802,148 @@ void CPU_cmplx8_factors_lusolve
  *   ximhilolo has the second lowest doubles of the imaginary parts of x;
  *   ximlololo has the lowest doubles of the imaginary parts of x. */
 
-/*
-
 void CPU_dbl8_factors_house
  ( int n,
-   double *xhihi, double *xlohi, double *xhilo, double *xlolo,
-   double *vhihi, double *vlohi, double *vhilo, double *vlolo,
-   double *betahihi, double *betalohi, double *betahilo, double *betalolo );
-*
+   double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
+   double *xhihilo, double *xlohilo, double *xhilolo, double *xlololo,
+   double *vhihihi, double *vlohihi, double *vhilohi, double *vlolohi,
+   double *vhihilo, double *vlohilo, double *vhilolo, double *vlololo,
+   double *betahihihi, double *betalohihi,
+   double *betahilohi, double *betalolohi,
+   double *betahihilo, double *betalohilo,
+   double *betahilolo, double *betalololo );
+/*
  * DESCRIPTION :
  *   Computes the Householder vector of an n-dimensional vector x.
  *
  * ON ENTRY :
  *   n        dimension of the vector x;
- *   xhihi    the n high doubles of x;
- *   xlohi    the n high doubles of x;
- *   xhilo    the n low doubles of x;
- *   xlolo    the n low doubles of x;
- *   vhihi    space for n doubles;
- *   vlohi    space for n doubles;
- *   vhilo    space for n doubles;
- *   vlolo    space for n doubles.
+ *   xhihihi  are the n highest doubles of x;
+ *   xlohihi  are the n second highest doubles of x;
+ *   xhilohi  are the n third highest doubles of x;
+ *   xlolohi  are the n fourth highest doubles of x;
+ *   xhihilo  are the n fourth lowest doubles of x;
+ *   xlohilo  are the n third lowest doubles of x;
+ *   xhilolo  are the n second lowest doubles of x;
+ *   xlololo  are the n lowest doubles of x;
+ *   vhihihi  has space for n doubles;
+ *   vlohihi  has space for n doubles;
+ *   vhilohi  has space for n doubles;
+ *   vlolohi  has space for n doubles;
+ *   vhihilo  has space for n doubles;
+ *   vlohilo  has space for n doubles;
+ *   vhilolo  has space for n doubles;
+ *   vlololo  has space for n doubles.
  *
  * ON RETURN :
- *   vhihi    highest doubles of the Householder vector;
- *   vlohi    second highest doubles of the Householder vector;
- *   vhilo    second lowest doubles of the Householder vector;
- *   vlolo    lowest doubles of the Householder vector;
- *   betahihi equals the highest double of 2/(transpose(v)*v);
- *   betalohi equals the second highest double of 2/(transpose(v)*v);
- *   betahilo equals the second lowest double of 2/(transpose(v)*v);
- *   betalolo equals the lowest double of 2/(transpose(v)*v). *
+ *   vhihihi  highest doubles of the Householder vector;
+ *   vlohihi  second highest doubles of the Householder vector;
+ *   vhilohi  third highest doubles of the Householder vector;
+ *   vlolohi  fourth highest doubles of the Householder vector;
+ *   vhihilo  fourth lowest doubles of the Householder vector;
+ *   vlohilo  third lowest doubles of the Householder vector;
+ *   vhilolo  second lowest doubles of the Householder vector;
+ *   vlololo  lowest doubles of the Householder vector;
+ *   betahihihi equals the highest double of 2/(transpose(v)*v);
+ *   betalohihi equals the second highest double of 2/(transpose(v)*v);
+ *   betahilohi equals the third highest double of 2/(transpose(v)*v);
+ *   betalolohi equals the fourth highest double of 2/(transpose(v)*v);
+ *   betahihilo equals the fourth lowest double of 2/(transpose(v)*v);
+ *   betalohilo equals the third lowest double of 2/(transpose(v)*v);
+ *   betahilolo equals the second lowest double of 2/(transpose(v)*v);
+ *   betalololo equals the lowest double of 2/(transpose(v)*v). */
 
 void CPU_cmplx8_factors_house 
-( int n,
-  double *xrehihi, double *xrelohi, double *xrehilo, double *xrelolo,
-  double *ximhihi, double *ximlohi, double *ximhilo, double *ximlolo,
-  double *vrehihi, double *vrelohi, double *vrehilo, double *vrelolo,
-  double *vimhihi, double *vimlohi, double *vimhilo, double *vimlolo,
-  double *betahihi, double *betalohi, double *betahilo, double *betalolo );
-*
+ ( int n,
+   double *xrehihihi, double *xrelohihi, double *xrehilohi, double *xrelolohi,
+   double *xrehihilo, double *xrelohilo, double *xrehilolo, double *xrelololo,
+   double *ximhihihi, double *ximlohihi, double *ximhilohi, double *ximlolohi,
+   double *ximhihilo, double *ximlohilo, double *ximhilolo, double *ximlololo,
+   double *vrehihihi, double *vrelohihi, double *vrehilohi, double *vrelolohi,
+   double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
+   double *vimhihihi, double *vimlohihi, double *vimhilohi, double *vimlolohi,
+   double *vimhihilo, double *vimlohilo, double *vimhilolo, double *vimlololo,
+   double *betahihihi, double *betalohihi,
+   double *betahilohi, double *betalolohi,
+   double *betahihilo, double *betalohilo,
+   double *betahilolo, double *betalololo );
+/*
  * DESCRIPTION :
  *   Computes the Householder vector of an n-dimensional vector x.
  *
  * ON ENTRY :
- *   n        dimension of the vector x;
- *   xrehihi  highest doubles of the real parts of the vector x;
- *   xrelohi  second highest doubles of the real parts of the vector x;
- *   xrehilo  second lowest doubles of the real parts of the vector x;
- *   xrelolo  lowest doubles of the real parts of the vector x;
- *   ximhihi  highest doubles of the imaginary parts of the vector x;
- *   ximlohi  second highest doubles of the imaginary parts of the vector x;
- *   ximhilo  second lowest doubles of the imaginary parts of the vector x;
- *   ximlolo  lowest doubles of the imaginary parts of the vector x;
- *   vrehihi  space for n doubles;
- *   vrelohi  space for n doubles;
- *   vrehilo  space for n doubles;
- *   vrelolo  space for n doubles;
- *   vimhihi  space for n doubles;
- *   vimlohi  space for n doubles;
- *   vimhilo  space for n doubles;
- *   vimlolo  space for n doubles.
+ *   n         dimension of the vector x;
+ *   xrehihihi has the highest doubles of the real parts of x;
+ *   xrelohihi has the second highest doubles of the real parts of x;
+ *   xrehilohi has the third highest doubles of the real parts of x;
+ *   xrelolohi has the fourth highest doubles of the real parts of x;
+ *   xrehihilo has the fourth lowest doubles of the real parts of x;
+ *   xrelohilo has the third lowest doubles of the real parts of x;
+ *   xrehilolo has the second lowest doubles of the real parts of x;
+ *   xrelololo has the lowest doubles of the real parts of x;
+ *   ximhihihi has the highest doubles of the imaginary parts of x;
+ *   ximlohihi has the second highest doubles of the imaginary parts of x;
+ *   ximhilohi has the third highest doubles of the imaginary parts of x;
+ *   ximlolohi has the fourth highest doubles of the imaginary parts of x;
+ *   ximhihilo has the fourth lowest doubles of the imaginary parts of x;
+ *   ximlohilo has the third lowest doubles of the imaginary parts of x;
+ *   ximhilolo has the second lowest doubles of the imaginary parts of x;
+ *   ximlololo has the lowest doubles of the imaginary parts of x;
+ *   vrehihihi has space for n doubles;
+ *   vrelohihi has space for n doubles;
+ *   vrehilohi has space for n doubles;
+ *   vrelolohi has space for n doubles;
+ *   vrehihilo has space for n doubles;
+ *   vrelohilo has space for n doubles;
+ *   vrehilolo has space for n doubles;
+ *   vrelololo has space for n doubles;
+ *   vimhihihi has space for n doubles;
+ *   vimlohihi has space for n doubles;
+ *   vimhilohi has space for n doubles;
+ *   vimlolohi has space for n doubles;
+ *   vimhihilo has space for n doubles;
+ *   vimlohilo has space for n doubles;
+ *   vimhilolo has space for n doubles;
+ *   vimlololo has space for n doubles.
  *
  * ON RETURN :
- *   vrehihi  highest doubles of the real parts of the Householder vector v;
- *   vrelohi  second highest doubles of the real parts of v;
- *   vrehilo  second lowest doubles of the real parts of v;
- *   vrelolo  lowest doubles of the real parts of v;
- *   vimhihi  highest doubles of the imaginary parts of v;
- *   vimlohi  second highest doubles of the imaginary parts of v;
- *   vimhilo  second lowest doubles of the imaginary parts of v;
- *   vimlolo  lowest doubles of the imaginary parts of v;
- *   betahihi is the highest double of 2/(transpose(v)*v);
- *   betalohi is the second highest double of 2/(transpose(v)*v);
- *   betahilo is the second lowest double of 2/(transpose(v)*v);
- *   betalolo is the lowest double of 2/(transpose(v)*v). *
+ *   vrehihihi has the highest doubles of the real parts
+ *             of the Householder vector v;
+ *   vrelohihi has the second highest doubles of the real parts of v;
+ *   vrehilohi has the third highest doubles of the real parts of v;
+ *   vrelolohi has the fourth highest doubles of the real parts of v;
+ *   vrehihilo has the fourth lowest doubles of the real parts of v;
+ *   vrelohilo has the third lowest doubles of the real parts of v;
+ *   vrehilolo has the second lowest doubles of the real parts of v;
+ *   vrelololo has the lowest doubles of the real parts of v;
+ *   vimhihihi has the highest doubles of the imaginary parts of v;
+ *   vimlohihi has the second highest doubles of the imaginary parts of v;
+ *   vimhilohi has the third highest doubles of the imaginary parts of v;
+ *   vimlolohi has the fourth highest doubles of the imaginary parts of v;
+ *   vimhihilo has the fourth lowest doubles of the imaginary parts of v;
+ *   vimlohilo has the third lowest doubles of the imaginary parts of v;
+ *   vimhilolo has the second lowest doubles of the imaginary parts of v;
+ *   vimlololo has the lowest doubles of the imaginary parts of v;
+ *   betahihihi is the highest double of 2/(transpose(v)*v);
+ *   betalohihi is the second highest double of 2/(transpose(v)*v);
+ *   betahilohi is the third highest double of 2/(transpose(v)*v);
+ *   betalolohi is the fourth highest double of 2/(transpose(v)*v);
+ *   betahihilo is the fourth lowest double of 2/(transpose(v)*v);
+ *   betalohilo is the third lowest double of 2/(transpose(v)*v);
+ *   betahilolo is the second lowest double of 2/(transpose(v)*v);
+ *   betalololo is the lowest double of 2/(transpose(v)*v). */
 
 void CPU_dbl8_factors_leftRupdate
  ( int nrows, int ncols, int k,
-   double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo,
-   double *vhihi, double *vlohi, double *vhilo, double *vlolo,
-   double betahihi, double betalohi, double betahilo, double betalolo );
-*
+   double **Rhihihi, double **Rlohihi, double **Rhilohi, double **Rlolohi,
+   double **Rhihilo, double **Rlohilo, double **Rhilolo, double **Rlololo,
+   double *vhihihi, double *vlohihi, double *vhilohi, double *vlolohi,
+   double *vhihilo, double *vlohilo, double *vhilolo, double *vlololo,
+   double betahihihi, double betalohihi,
+   double betahilohi, double betalolohi,
+   double betahihilo, double betalohilo,
+   double betahilolo, double betalololo );
+/*
  * DESCRIPTION :
  *   Applies the Householder matrix to R.
  *
@@ -891,155 +951,289 @@ void CPU_dbl8_factors_leftRupdate
  *   nrows    number of rows in the matrix R;
  *   ncols    number of columns in the matrix R;
  *   k        current column index in R;
- *   Rhihi    highest doubles of an nrows-by-ncols matrix;
- *   Rlohi    second highest doubles of an nrows-by-ncols matrix;
- *   Rhilo    second lowest doubles of an nrows-by-ncols matrix;
- *   Rlolo    lowest doubles of an nrows-by-ncols matrix;
- *   vhihi    highest doubles of the Householder vector;
- *   vlohi    second highest doubles of the Householder vector;
- *   vhilo    second lowest doubles of the Householder vector;
- *   vlolo    lowest doubles of the Householder vector;
- *   betahihi is the betahihi computed by CPU_dbl8_factors_house;
- *   betalohi is the betalohi computed by CPU_dbl8_factors_house;
- *   betahilo is the betahilo computed by CPU_dbl8_factors_house;
- *   betalolo is the betalolo computed by CPU_dbl8_factors_house.
+ *   Rhihihi  are the highest doubles of R;
+ *   Rlohihi  are the second highest doubles of R;
+ *   Rhilohi  are the third highest doubles of R;
+ *   Rlolohi  are the fourth highest doubles of R;
+ *   Rhihilo  are the fourth lowest doubles of R;
+ *   Rlohilo  are the third lowest doubles of R;
+ *   Rhilolo  are the second lowest doubles of R;
+ *   Rlololo  are the lowest doubles of R;
+ *   vhihihi  are the highest doubles of the Householder vector v;
+ *   vlohihi  are the second highest doubles of v; 
+ *   vhilohi  are the third highest doubles of v; 
+ *   vlolohi  are the fourth highest doubles of v; 
+ *   vhihilo  are the fourth lowest doubles of v;
+ *   vlohilo  are the third lowest doubles of v;
+ *   vhilolo  are the second lowest doubles of v;
+ *   vlololo  are the lowest doubles of v;
+ *   betahihihi is the highest double of 2/(transpose(v)*v);
+ *   betalohihi is the second highest double of 2/(transpose(v)*v);
+ *   betahilohi is the third highest double of 2/(transpose(v)*v);
+ *   betalolohi is the fourth highest double of 2/(transpose(v)*v);
+ *   betahihilo is the fourth lowest double of 2/(transpose(v)*v);
+ *   betalohilo is the third lowest double of 2/(transpose(v)*v);
+ *   betahilolo is the second lowest double of 2/(transpose(v)*v);
+ *   betalololo is the lowest double of 2/(transpose(v)*v).
  *
  * ON RETURN :
- *   Rhihi    highest doubles of the update with the Householder matrix;
- *   Rlohi    second highest doubles of the update;
- *   Rhilo    second lowest doubles of the update;
- *   Rlolo    lowest doubles of the update with the Householder matrix. *
+ *   Rhihihi  are the highest doubles of the update
+ *            with the Householder matrix;
+ *   Rlohihi  are the second highest doubles of the update;
+ *   Rhilohi  are the third highest doubles of the update;
+ *   Rlolohi  are the fourth highest doubles of the update;
+ *   Rhihilo  are the fourth lowest doubles of the update;
+ *   Rlohilo  are the third lowest doubles of the update;
+ *   Rhilolo  are the second lowest doubles of the update;
+ *   Rlololo  are the lowest doubles of the update. */
 
 void CPU_cmplx8_factors_leftRupdate
  ( int nrows, int ncols, int k,
-   double **Rrehihi, double **Rrelohi, double **Rrehilo, double **Rrelolo,
-   double **Rimhihi, double **Rimlohi, double **Rimhilo, double **Rimlolo,
-   double *vrehihi, double *vrelohi, double *vrehilo, double *vrelolo,
-   double *vimhihi, double *vimlohi, double *vimhilo, double *vimlolo,
-   double betahihi, double betalohi, double betahilo, double betalolo );
-*
+   double **Rrehihihi, double **Rrelohihi,
+   double **Rrehilohi, double **Rrelolohi,
+   double **Rrehihilo, double **Rrelohilo,
+   double **Rrehilolo, double **Rrelololo,
+   double **Rimhihihi, double **Rimlohihi,
+   double **Rimhilohi, double **Rimlolohi,
+   double **Rimhihilo, double **Rimlohilo,
+   double **Rimhilolo, double **Rimlololo,
+   double *vrehihihi, double *vrelohihi, double *vrehilohi, double *vrelolohi,
+   double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
+   double *vimhihihi, double *vimlohihi, double *vimhilohi, double *vimlolohi,
+   double *vimhihilo, double *vimlohilo, double *vimhilolo, double *vimlololo,
+   double betahihihi, double betalohihi,
+   double betahilohi, double betalolohi,
+   double betahihilo, double betalohilo,
+   double betahilolo, double betalololo );
+/*
  * DESCRIPTION :
  *   Applies the Householder matrix to R.
  *
  * ON ENTRY :
- *   nrows    number of rows in the matrix R;
- *   ncols    number of columns in the matrix R;
- *   k        current column index in R;
- *   Rrehihi  highest doubles of the real parts of an nrows-by-ncols matrix R;
- *   Rrelohi  second highest doubles of the real parts of R;
- *   Rrehilo  second lowest doubles of the real parts of R;
- *   Rrelolo  lowest doubles of the real parts of R;
- *   Rimhihi  highest doubles of the imaginary parts of R;
- *   Rimlohi  second highest doubles of the imaginary parts of R;
- *   Rimhilo  second lowest doubles of the imaginary parts of R;
- *   Rimlolo  lowest doubles of the imaginary parts of R;
- *   vrehihi  highest doubles of the real parts of the Householder vector v;
- *   vrelohi  second highest doubles of the real parts of v;
- *   vrehilo  second lowest doubles of the real parts of v;
- *   vrelolo  lowest doubles of the real parts of v;
- *   vimhihi  highest doubles of the imaginary parts of v;
- *   vimlohi  second highest doubles of the imaginary parts of v;
- *   vimhilo  second lowest doubles of the imaginary parts of v;
- *   vimlolo  lowest doubles of the imaginary parts of v;
- *   betahihi is the betahihi computed by CPU_cmplx8_factors_house;
- *   betalohi is the betalohi computed by CPU_cmplx8_factors_house;
- *   betahilo is the betahilo computed by CPU_cmplx8_factors_house;
- *   betalolo is the betalolo computed by CPU_cmplx8_factors_house.
+ *   nrows     number of rows in the matrix R;
+ *   ncols     number of columns in the matrix R;
+ *   k         current column index in R;
+ *   Rrehihihi are the highest doubles of the real parts of R;
+ *   Rrelohihi are the second highest doubles of the real parts of R;
+ *   Rrehilohi are the third highest doubles of the real parts of R;
+ *   Rrelolohi are the fourth highest doubles of the real parts of R;
+ *   Rrehihilo are the fourth lowest doubles of the real parts of R;
+ *   Rrelohilo are the third lowest doubles of the real parts of R;
+ *   Rrehilolo are the second lowest doubles of the real parts of R;
+ *   Rrelololo are the lowest doubles of the real parts of R;
+ *   Rimhihihi are the highest doubles of the imaginary parts of R;
+ *   Rimlohihi are the second highest doubles of the imaginary parts of R;
+ *   Rimhilohi are the third highest doubles of the imaginary parts of R;
+ *   Rimlolohi are the fourth highest doubles of the imaginary parts of R;
+ *   Rimhihilo are the fourth lowest doubles of the imaginary parts of R;
+ *   Rimlohilo are the third lowest doubles of the imaginary parts of R;
+ *   Rimhilolo are the second lowest doubles of the imaginary parts of R;
+ *   Rimlololo are the lowest doubles of the imaginary parts of R;
+ *   vrehihihi are the highest doubles of the real parts 
+ *             of the Householder vector v;
+ *   vrelohihi are the second highest doubles of the real parts of v;
+ *   vrehilohi are the third highest doubles of the real parts of v;
+ *   vrelolohi are the fourth highest doubles of the real parts of v;
+ *   vrehihilo are the fourth lowest doubles of the real parts of v;
+ *   vrelohilo are the third lowest doubles of the real parts of v;
+ *   vrehilolo are the second lowest doubles of the real parts of v;
+ *   vrelololo are the lowest doubles of the real parts of v;
+ *   vimhihihi are the highest doubles of the imaginary parts of v;
+ *   vimlohihi are the second highest doubles of the imaginary parts of v;
+ *   vimhilohi are the third highest doubles of the imaginary parts of v;
+ *   vimlolohi are the fourth highest doubles of the imaginary parts of v;
+ *   vimhihilo are the fourth lowest doubles of the imaginary parts of v;
+ *   vimlohilo are the third lowest doubles of the imaginary parts of v;
+ *   vimhilolo are the second lowest doubles of the imaginary parts of v;
+ *   vimlololo are the lowest doubles of the imaginary parts of v;
+ *   betahihihi is the highest double of 2/(transpose(v)*v);
+ *   betalohihi is the second highest double of 2/(transpose(v)*v);
+ *   betahilohi is the third highest double of 2/(transpose(v)*v);
+ *   betalolohi is the fourth highest double of 2/(transpose(v)*v);
+ *   betahihilo is the fourth lowest double of 2/(transpose(v)*v);
+ *   betalohilo is the third lowest double of 2/(transpose(v)*v);
+ *   betahilolo is the second lowest double of 2/(transpose(v)*v);
+ *   betalololo is the lowest double of 2/(transpose(v)*v).
  *
  * ON RETURN :
- *   Rrehihi  highest doubles of the real parts of the update
- *            with the Householder matrix;
- *   Rrelohi  second highest doubles of the real parts of the update;
- *   Rrehilo  second lowest doubles of the real parts of the update;
- *   Rrelolo  lowest doubles of the real parts of the update;
- *   Rimhihi  highest doubles of the imaginary parts of the update;
- *   Rimlohi  second highest doubles of the imaginary parts of the update;
- *   Rimhilo  second lowest doubles of the imaginary parts of the update;
- *   Rimlolo  lowest doubles of the imaginary parts of the update. *
+ *   Rrehihihi are the highest doubles of the real parts of the update
+ *             with the Householder matrix;
+ *   Rrelohihi are the second highest doubles of the real parts of the update;
+ *   Rrehilohi are the third highest doubles of the real parts of the update;
+ *   Rrelolohi are the fourth highest doubles of the real parts of the update;
+ *   Rrehihilo are the fourth lowest doubles of the real parts of the update;
+ *   Rrelohilo are the third lowest doubles of the real parts of the update;
+ *   Rrehilolo are the second lowest doubles of the real parts of the update;
+ *   Rrelololo are the lowest doubles of the real parts of the update;
+ *   Rimhihihi are the highest doubles of the imaginary parts of the update;
+ *   Rimlohihi are the second highest doubles of the imaginary parts
+ *             of the update;
+ *   Rimhilohi are the third highest doubles of the imaginary parts
+ *             of the update;
+ *   Rimlolohi are the fourth highest doubles of the imaginary parts
+ *             of the update;
+ *   Rimhihilo are the fourth lowest doubles of the imaginary parts
+ *             of the update;
+ *   Rimlohilo are the third lowest doubles of the imaginary parts
+ *             of the update;
+ *   Rimhilolo are the second lowest doubles of the imaginary parts
+ *             of the update;
+ *   Rimlololo are the lowest doubles of the imaginary parts of the update. */
 
 void CPU_dbl8_factors_rightQupdate
  ( int n, int k,
-   double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
-   double *vhihi, double *vlohi, double *vhilo, double *vlolo,
-   double betahihi, double betalohi, double betahilo, double betalolo );
-*
+   double **Qhihihi, double **Qlohihi, double **Qhilohi, double **Qlolohi,
+   double **Qhihilo, double **Qlohilo, double **Qhilolo, double **Qlololo,
+   double *vhihihi, double *vlohihi, double *vhilohi, double *vlolohi,
+   double *vhihilo, double *vlohilo, double *vhilolo, double *vlololo,
+   double betahihihi, double betalohihi,
+   double betahilohi, double betalolohi,
+   double betahihilo, double betalohilo,
+   double betahilolo, double betalololo );
+/*
  * DESCRIPTION :
  *   Applies the Householder matrix to Q.
  *
  * ON ENTRY :
  *   n        dimension of the matrix Q;
  *   k        current column index in Q;
- *   Qhihi    highest doubles of an n-by-n matrix;
- *   Qlohi    highest doubles of an n-by-n matrix;
- *   Qhilo    lowest doubles of an n-by-n matrix;
- *   Qlolo    lowest doubles of an n-by-n matrix;
- *   vhihi    highest doubles of the Householder vector;
- *   vlohi    second highest doubles of the Householder vector;
- *   vhilo    second lowest doubles of the Householder vector;
- *   vlolo    lowest doubles of the Householder vector;
- *   betahihi is the betahihi computed by CPU_dbl8_factors_house;
- *   betalohi is the betalohi computed by CPU_dbl8_factors_house;
- *   betahilo is the betahilo computed by CPU_dbl8_factors_house;
- *   betalolo is the betalolo computed by CPU_dbl8_factors_house.
+ *   Qhihihi  are the highest doubles of Q;
+ *   Qlohihi  are the second highest doubles of Q;
+ *   Qhilohi  are the third highest doubles of Q;
+ *   Qlolohi  are the fourth highest doubles of Q;
+ *   Qhihilo  are the fourth lowest doubles of Q;
+ *   Qlohilo  are the third lowest doubles of Q;
+ *   Qhilolo  are the second lowest doubles of Q;
+ *   Qlololo  are the lowest doubles of Q;
+ *   vhihihi  are the highest doubles of the Householder vector v;
+ *   vlohihi  are the second highest doubles of v;
+ *   vhilohi  are the third highest doubles of v;
+ *   vlolohi  are the fourth highest doubles of v;
+ *   vhihilo  are the fourth lowest doubles of v;
+ *   vlohilo  are the third lowest doubles of v;
+ *   vhilolo  are the second lowest doubles of v;
+ *   vlololo  are the lowest doubles of v;
+ *   betahihihi is the highest double of 2/(transpose(v)*v);
+ *   betalohihi is the second highest double of 2/(transpose(v)*v);
+ *   betahilohi is the third highest double of 2/(transpose(v)*v);
+ *   betalolohi is the fourth highest double of 2/(transpose(v)*v);
+ *   betahihilo is the fourth lowest double of 2/(transpose(v)*v);
+ *   betalohilo is the third lowest double of 2/(transpose(v)*v);
+ *   betahilolo is the second lowest double of 2/(transpose(v)*v);
+ *   betalololo is the lowest double of 2/(transpose(v)*v).
  *
  * ON RETURN :
- *   Qhihi    highest doubles of the update with the Householder matrix;
- *   Qlohi    second highest doubles of the update;
- *   Qhilo    second lowest doubles of the update;
- *   Qlolo    lowest doubles of the update with the Householder matrix. *
+ *   Qhihihi  are the highest doubles of the update 
+ *            with the Householder matrix;
+ *   Qlohihi  are the second highest doubles of the update;
+ *   Qhilohi  are the third highest doubles of the update;
+ *   Qlolohi  are the fourth highest doubles of the update;
+ *   Qhihilo  are the fourth lowest doubles of the update;
+ *   Qlohilo  are the third lowest doubles of the update;
+ *   Qhilolo  are the second lowest doubles of the update;
+ *   Qlololo  are the lowest doubles of the update. */
 
 void CPU_cmplx8_factors_rightQupdate
  ( int n, int k,
-   double **Qrehihi, double **Qrelohi, double **Qrehilo, double **Qrelolo,
-   double **Qimhihi, double **Qimlohi, double **Qimhilo, double **Qimlolo,
-   double *vrehihi, double *vrelohi, double *vrehilo, double *vrelolo,
-   double *vimhihi, double *vimlohi, double *vimhilo, double *vimlolo,
-   double betahihi, double betalohi, double betahilo, double betalolo );
-*
+   double **Qrehihihi, double **Qrelohihi,
+   double **Qrehilohi, double **Qrelolohi,
+   double **Qrehihilo, double **Qrelohilo,
+   double **Qrehilolo, double **Qrelololo,
+   double **Qimhihihi, double **Qimlohihi,
+   double **Qimhilohi, double **Qimlolohi,
+   double **Qimhihilo, double **Qimlohilo,
+   double **Qimhilolo, double **Qimlololo,
+   double *vrehihihi, double *vrelohihi, double *vrehilohi, double *vrelolohi,
+   double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
+   double *vimhihihi, double *vimlohihi, double *vimhilohi, double *vimlolohi,
+   double *vimhihilo, double *vimlohilo, double *vimhilolo, double *vimlololo,
+   double betahihihi, double betalohihi,
+   double betahilohi, double betalolohi,
+   double betahihilo, double betalohilo,
+   double betahilolo, double betalololo );
+/*
  * DESCRIPTION :
  *   Applies the Householder matrix to Q.
  *
  * ON ENTRY :
- *   n        dimension of the matrix Q;
- *   k        current column index in Q;
- *   Qrehihi  highest doubles of the real parts of an n-by-n matrix Q;
- *   Qrelohi  second highest doubles of the real parts of Q;
- *   Qrehilo  second lowest doubles of the real parts of Q;
- *   Qrelolo  lowest doubles of the real parts of Q;
- *   Qimhihi  highest doubles of the imaginary parts of Q;
- *   Qimlohi  second highest doubles of the imaginary parts of Q;
- *   Qimhilo  second lowest doubles of the imaginary parts of Q;
- *   Qimlolo  lowest doubles of the imaginary parts of Q;
- *   vrehihi  highest doubles of the real parts of the Householder vector v;
- *   vrelohi  second highest doubles of the real parts of v;
- *   vrehilo  second lowest doubles of the real parts of v;
- *   vrelolo  lowest doubles of the real parts of v;
- *   vimhihi  highest doubles of the imaginary parts of v;
- *   vimlohi  second highest doubles of the imaginary parts of v;
- *   vimhilo  second lowest doubles of the imaginary parts of v;
- *   vimlolo  lowest doubles of the imaginary parts of v;
- *   betahihi is the betahihi computed by CPU_cmplx8_factors_house;
- *   betalohi is the betalohi computed by CPU_cmplx8_factors_house;
- *   betahilo is the betahilo computed by CPU_cmplx8_factors_house;
- *   betalolo is the betalolo computed by CPU_cmplx8_factors_house.
+ *   n         dimension of the matrix Q;
+ *   k         current column index in Q;
+ *   Qrehihihi are the highest doubles of the real parts of Q;
+ *   Qrelohihi are the second highest doubles of the real parts of Q;
+ *   Qrehilohi are the third lowest doubles of the real parts of Q;
+ *   Qrelolohi are the fourth lowest doubles of the real parts of Q;
+ *   Qrehihilo are the fourth lowest doubles of the real parts of Q;
+ *   Qrelohilo are the third lowest doubles of the real parts of Q;
+ *   Qrehilolo are the second lowest doubles of the real parts of Q;
+ *   Qrelololo are the lowest doubles of the real parts of Q;
+ *   Qimhihihi are the highest doubles of the imaginary parts of Q;
+ *   Qimlohihi are the second highest doubles of the imaginary parts of Q;
+ *   Qimhilohi are the second highest doubles of the imaginary parts of Q;
+ *   Qimlolohi are the second highest doubles of the imaginary parts of Q;
+ *   Qimhihilo are the second lowest doubles of the imaginary parts of Q;
+ *   Qimlohilo are the second lowest doubles of the imaginary parts of Q;
+ *   Qimhilolo are the second lowest doubles of the imaginary parts of Q;
+ *   Qimlololo are the lowest doubles of the imaginary parts of Q;
+ *   vrehihihi are the highest doubles of the real parts
+ *             of the Householder vector v;
+ *   vrelohihi are the second highest doubles of the real parts of v;
+ *   vrehilohi are the third highest doubles of the real parts of v;
+ *   vrelolohi are the fourth highest doubles of the real parts of v;
+ *   vrehihilo are the fourth lowest doubles of the real parts of v;
+ *   vrelohilo are the third lowest doubles of the real parts of v;
+ *   vrehilolo are the second lowest doubles of the real parts of v;
+ *   vrelololo are the lowest doubles of the real parts of v;
+ *   vimhihihi are the highest doubles of the imaginary parts of v;
+ *   vimlohihi are the second highest doubles of the imaginary parts of v;
+ *   vimhilohi are the third highest doubles of the imaginary parts of v;
+ *   vimlolohi are the fourth highest doubles of the imaginary parts of v;
+ *   vimhihilo are the fourth lowest doubles of the imaginary parts of v;
+ *   vimlohilo are the third lowest doubles of the imaginary parts of v;
+ *   vimhilolo are the second lowest doubles of the imaginary parts of v;
+ *   vimlololo are the lowest doubles of the imaginary parts of v;
+ *   betahihihi is the highest double of 2/(transpose(v)*v);
+ *   betalohihi is the second highest double of 2/(transpose(v)*v);
+ *   betahilohi is the third highest double of 2/(transpose(v)*v);
+ *   betalolohi is the fourth highest double of 2/(transpose(v)*v);
+ *   betahihilo is the fourth lowest double of 2/(transpose(v)*v);
+ *   betalohilo is the third lowest double of 2/(transpose(v)*v);
+ *   betahilolo is the second lowest double of 2/(transpose(v)*v);
+ *   betalololo is the lowest double of 2/(transpose(v)*v).
  *
  * ON RETURN :
- *   Qrehihi  highest doubles of the real parts of the update
- *            with the Householder matrix;
- *   Qrelohi  second highest doubles of the real parts of the update;
- *   Qrehilo  second lowest doubles of the real parts of the update;
- *   Qrelolo  lowest doubles of the real parts of the update;
- *   Qimhihi  highest doubles of the imaginary parts of the update;
- *   Qimlohi  second highest doubles of the imaginary parts of the update;
- *   Qimhilo  second lowest doubles of the imaginary parts of the update;
- *   Qimlolo  lowest doubles of the imaginary parts of the update. *
+ *   Qrehihihi has the highest doubles of the real parts of the update
+ *             with the Householder matrix;
+ *   Qrelohihi has the second highest doubles of the real parts of the update;
+ *   Qrehilohi has the third highest doubles of the real parts of the update;
+ *   Qrelolohi has the fourth highest doubles of the real parts of the update;
+ *   Qrehihilo has the fourth lowest doubles of the real parts of the update;
+ *   Qrelohilo has the third lowest doubles of the real parts of the update;
+ *   Qrehilolo has the second lowest doubles of the real parts of the update;
+ *   Qrelololo has the lowest doubles of the real parts of the update;
+ *   Qimhihihi has the highest doubles of the imaginary parts of the update;
+ *   Qimlohihi has the second highest doubles of the imaginary parts
+ *             of the update;
+ *   Qimhilohi has the third highest doubles of the imaginary parts
+ *             of the update;
+ *   Qimlolohi has the fourth highest doubles of the imaginary parts
+ *             of the update;
+ *   Qimhihilo has the fourth lowest doubles of the imaginary parts
+ *             of the update;
+ *   Qimlohilo has the third lowest doubles of the imaginary parts
+ *             of the update;
+ *   Qimhilolo has the second lowest doubles of the imaginary parts
+ *             of the update;
+ *   Qimlololo has the lowest doubles of the imaginary parts of the update. */
 
 void CPU_dbl8_factors_houseqr
  ( int nrows, int ncols,
-   double **Ahihi, double **Alohi, double **Ahilo, double **Alolo,
-   double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
-   double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo );
-*
+   double **Ahihihi, double **Alohihi, double **Ahilohi, double **Alolohi,
+   double **Ahihilo, double **Alohilo, double **Ahilolo, double **Alololo,
+   double **Qhihihi, double **Qlohihi, double **Qhilohi, double **Qlolohi,
+   double **Qhihilo, double **Qlohilo, double **Qhilolo, double **Qlololo,
+   double **Rhihihi, double **Rlohihi, double **Rhilohi, double **Rlolohi,
+   double **Rhihilo, double **Rlohilo, double **Rhilolo, double **Rlololo );
+/*
  * DESCRIPTION :
  *   Applies Householder matrices to compute a QR decomposition of A.
  *
@@ -1048,96 +1242,168 @@ void CPU_dbl8_factors_houseqr
  * ON ENTRY :
  *   nrows    number of rows of A;
  *   ncols    number of columns of A;
- *   Ahihi    highest doubles of an nrows-by-ncols matrix,
- *            stored as nrows arrays of ncols numbers;
- *   Alohi    second highest doubles of an nrows-by-ncols matrix,
- *            stored as nrows arrays of ncols numbers;
- *   Ahilo    second lowest doubles of an nrows-by-ncols matrix,
- *            stored as nrows arrays of ncols numbers;
- *   Alolo    lowest doubles of an nrows-by-ncols matrix,
- *            stored as nrows arrays of ncols numbers;
- *   Qhihi    space for an nrows-by-nrows matrix;
- *   Qlohi    space for an nrows-by-nrows matrix;
- *   Qhilo    space for an nrows-by-nrows matrix;
- *   Qlolo    space for an nrows-by-nrows matrix;
- *   Rhihi    space for an nrows-by-ncols matrix;
- *   Rlohi    space for an nrows-by-ncols matrix;
- *   Rhilo    space for an nrows-by-ncols matrix;
- *   Rlolo    space for an nrows-by-ncols matrix.
+ *   Ahihihi  has the highest doubles of A;
+ *   Alohihi  has the second highest doubles of A;
+ *   Ahilohi  has the third highest doubles of A;
+ *   Alolohi  has the fourth highest doubles of A;
+ *   Ahihilo  has the fourth lowest doubles of A;
+ *   Alohilo  has the third lowest doubles of A;
+ *   Ahilolo  has the second lowest doubles of A;
+ *   Alololo  has the lowest doubles of A;
+ *   Qhihihi  has space for an nrows-by-nrows matrix;
+ *   Qlohihi  has space for an nrows-by-nrows matrix;
+ *   Qhilohi  has space for an nrows-by-nrows matrix;
+ *   Qlolohi  has space for an nrows-by-nrows matrix;
+ *   Qhihilo  has space for an nrows-by-nrows matrix;
+ *   Qlohilo  has space for an nrows-by-nrows matrix;
+ *   Qhilolo  has space for an nrows-by-nrows matrix;
+ *   Qlololo  has space for an nrows-by-nrows matrix;
+ *   Rhihihi  has space for an nrows-by-ncols matrix;
+ *   Rlohihi  has space for an nrows-by-ncols matrix;
+ *   Rhilohi  has space for an nrows-by-ncols matrix;
+ *   Rlolohi  has space for an nrows-by-ncols matrix.
+ *   Rhihilo  has space for an nrows-by-ncols matrix;
+ *   Rlohilo  has space for an nrows-by-ncols matrix;
+ *   Rhilolo  has space for an nrows-by-ncols matrix;
+ *   Rlololo  has space for an nrows-by-ncols matrix.
  *
  * ON RETURN :
- *   Qhihi    highest doubles of an orthogonal matrix, transpose(Q)*A = R;
- *   Qlohi    second highest doubles of an orthogonal matrix;
- *   Qhilo    second lowest doubles of an orthogonal matrix;
- *   Qlolo    lowest doubles of an orthogonal matrix, transpose(Q)*A = R;
- *   Rhihi    highest doubles of the reduced upper triangular form;
- *   Rlohi    second highest doubles of the reduced upper triangular form;
- *   Rhilo    second lowest doubles of the reduced upper triangular form;
- *   Rlolo    lowest doubles of the reduced upper triangular form. *
+ *   Qhihihi  are the highest doubles of an orthogonal matrix,
+ *            transpose(Q)*A = R;
+ *   Qlohihi  are the second highest doubles of Q
+ *   Qhilohi  are the third highest doubles of Q
+ *   Qlolohi  are the fourth highest doubles of Q
+ *   Qhihilo  are the fourth lowest doubles of Q;
+ *   Qlohilo  are the third lowest doubles of Q;
+ *   Qhilolo  are the second lowest doubles of Q;
+ *   Qlololo  are the lowest doubles of Q;
+ *   Rhihihi  are the highest doubles of R;
+ *   Rlohihi  are the second highest doubles of R;
+ *   Rhilohi  are the third highest doubles of R;
+ *   Rlolohi  are the fourth highest doubles of R;
+ *   Rhihilo  are the fourth lowest doubles of R;
+ *   Rlohilo  are the third lowest doubles of R;
+ *   Rhilolo  are the second lowest doubles of R;
+ *   Rlololo  are the lowest doubles of R. */
 
 void CPU_cmplx8_factors_houseqr
  ( int nrows, int ncols,
-   double **Arehihi, double **Arelohi, double **Arehilo, double **Arelolo,
-   double **Aimhihi, double **Aimlohi, double **Aimhilo, double **Aimlolo,
-   double **Qrehihi, double **Qrelohi, double **Qrehilo, double **Qrelolo,
-   double **Qimhihi, double **Qimlohi, double **Qimhilo, double **Qimlolo,
-   double **Rrehihi, double **Rrelohi, double **Rrehilo, double **Rrelolo,
-   double **Rimhihi, double **Rimlohi, double **Rimhilo, double **Rimlolo );
-*
+   double **Arehihihi, double **Arelohihi,
+   double **Arehilohi, double **Arelolohi,
+   double **Arehihilo, double **Arelohilo,
+   double **Arehilolo, double **Arelololo,
+   double **Aimhihihi, double **Aimlohihi,
+   double **Aimhilohi, double **Aimlolohi,
+   double **Aimhihilo, double **Aimlohilo,
+   double **Aimhilolo, double **Aimlololo,
+   double **Qrehihihi, double **Qrelohihi,
+   double **Qrehilohi, double **Qrelolohi,
+   double **Qrehihilo, double **Qrelohilo,
+   double **Qrehilolo, double **Qrelololo,
+   double **Qimhihihi, double **Qimlohihi,
+   double **Qimhilohi, double **Qimlolohi,
+   double **Qimhihilo, double **Qimlohilo,
+   double **Qimhilolo, double **Qimlololo,
+   double **Rrehihihi, double **Rrelohihi,
+   double **Rrehilohi, double **Rrelolohi,
+   double **Rrehihilo, double **Rrelohilo,
+   double **Rrehilolo, double **Rrelololo,
+   double **Rimhihihi, double **Rimlohihi,
+   double **Rimhilohi, double **Rimlolohi,
+   double **Rimhihilo, double **Rimlohilo,
+   double **Rimhilolo, double **Rimlololo );
+/*
  * DESCRIPTION :
  *   Applies Householder matrices to compute a QR decomposition of A.
  *
  * REQUIRED : nrows >= ncols.
  *
  * ON ENTRY :
- *   nrows    number of rows of A;
- *   ncols    number of columns of A;
- *   Arehihi  highest doubles of the real parts of an nrows-by-ncols
- *            matrix A, stored as nrows arrays of ncols numbers;
- *   Arelohi  second highest doubles of the real parts of A;
- *   Arehilo  second lowest doubles of the real parts of :
- *   Arelolo  lowest doubles of the real parts of A;
- *   Aimhi    highest doubles of the imaginary parts of A;
- *   Aimhi    second highest doubles of the imaginary parts of A;
- *   Aimlo    second lowest doubles of the imaginary parts of A;
- *   Aimlo    lowest doubles of the imaginary parts of A;
- *   Qrehihi  space for an nrows-by-nrows matrix;
- *   Qrelohi  space for an nrows-by-nrows matrix;
- *   Qrehilo  space for an nrows-by-nrows matrix;
- *   Qrelolo  space for an nrows-by-nrows matrix;
- *   Qimhihi  space for an nrows-by-nrows matrix;
- *   Qimlohi  space for an nrows-by-nrows matrix;
- *   Qimhilo  space for an nrows-by-nrows matrix;
- *   Qimlolo  space for an nrows-by-nrows matrix;
- *   Rrehihi  space for an nrows-by-ncols matrix;
- *   Rrelohi  space for an nrows-by-ncols matrix;
- *   Rrehilo  space for an nrows-by-ncols matrix;
- *   Rrelolo  space for an nrows-by-ncols matrix;
- *   Rimhihi  space for an nrows-by-ncols matrix;
- *   Rimlohi  space for an nrows-by-ncols matrix;
- *   Rimhilo  space for an nrows-by-ncols matrix;
- *   Rimlolo  space for an nrows-by-ncols matrix.
+ *   nrows     number of rows of A;
+ *   ncols     number of columns of A;
+ *   Arehihihi are the highest doubles of the real parts of A;
+ *   Arelohihi are the second highest doubles of the real parts of A;
+ *   Arehilohi are the third highest doubles of the real parts of A;
+ *   Arelolohi are the fourth highest doubles of the real parts of A;
+ *   Arehihilo are the fourth lowest doubles of the real parts of :
+ *   Arelohilo are the third lowest doubles of the real parts of :
+ *   Arehilolo are the second lowest doubles of the real parts of :
+ *   Arelololo are the lowest doubles of the real parts of A;
+ *   Aimhihihi are the highest doubles of the imaginary parts of A;
+ *   Aimlohihi are the second highest doubles of the imaginary parts of A;
+ *   Aimhilohi are the third highest doubles of the imaginary parts of A;
+ *   Aimlolohi are the fourth highest doubles of the imaginary parts of A;
+ *   Aimhihilo are the fourth lowest doubles of the imaginary parts of A;
+ *   Aimlohilo are the third lowest doubles of the imaginary parts of A;
+ *   Aimhilolo are the second lowest doubles of the imaginary parts of A;
+ *   Aimlololo are the lowest doubles of the imaginary parts of A;
+ *   Qrehihihi has space for an nrows-by-nrows matrix;
+ *   Qrelohihi has space for an nrows-by-nrows matrix;
+ *   Qrehilohi has space for an nrows-by-nrows matrix;
+ *   Qrelolohi has space for an nrows-by-nrows matrix;
+ *   Qrehihilo has space for an nrows-by-nrows matrix;
+ *   Qrelohilo has space for an nrows-by-nrows matrix;
+ *   Qrehilolo has space for an nrows-by-nrows matrix;
+ *   Qrelololo has space for an nrows-by-nrows matrix;
+ *   Qimhihihi has space for an nrows-by-nrows matrix;
+ *   Qimlohihi has space for an nrows-by-nrows matrix;
+ *   Qimhilohi has space for an nrows-by-nrows matrix;
+ *   Qimlolohi has space for an nrows-by-nrows matrix;
+ *   Qimhihilo has space for an nrows-by-nrows matrix;
+ *   Qimlohilo has space for an nrows-by-nrows matrix;
+ *   Qimhilolo has space for an nrows-by-nrows matrix;
+ *   Qimlololo has space for an nrows-by-nrows matrix;
+ *   Rrehihihi has space for an nrows-by-ncols matrix;
+ *   Rrelohihi has space for an nrows-by-ncols matrix;
+ *   Rrehilohi has space for an nrows-by-ncols matrix;
+ *   Rrelolohi has space for an nrows-by-ncols matrix;
+ *   Rrehihilo has space for an nrows-by-ncols matrix;
+ *   Rrelohilo has space for an nrows-by-ncols matrix;
+ *   Rrehilolo has space for an nrows-by-ncols matrix;
+ *   Rrelololo has space for an nrows-by-ncols matrix;
+ *   Rimhihihi has space for an nrows-by-ncols matrix;
+ *   Rimlohihi has space for an nrows-by-ncols matrix;
+ *   Rimhihihi has space for an nrows-by-ncols matrix;
+ *   Rimlohihi has space for an nrows-by-ncols matrix;
+ *   Rimhilolo has space for an nrows-by-ncols matrix;
+ *   Rimlololo has space for an nrows-by-ncols matrix.
+ *   Rimhilolo has space for an nrows-by-ncols matrix;
+ *   Rimlololo has space for an nrows-by-ncols matrix.
  *
  * ON RETURN :
- *   Qrehihi  highest doubles of the real parts
- *            of the orthogonal matrix Q, transpose(Q)*A = R;
- *   Qrelohi  second highest doubles of the real parts of Q;
- *   Qrehilo  second lowest doubles of the real parts of Q;
- *   Qrelolo  lowest doubles of the real parts of Q;
- *   Qimhihi  highest doubles of the imaginary parts of Q;
- *   Qimlohi  second highest doubles of the imaginary parts of Q;
- *   Qimhilo  second lowest doubles of the imaginary parts of Q;
- *   Qimlolo  lowest doubles of the imaginary parts of Q;
- *   Rrehi    highest doubles of the real parts of R,
- *            the reduced upper triangular form of A;
- *   Rrelohi  second highest doubles of the real parts of R,
- *   Rrehilo  second lowest doubles of the real parts of R;
- *   Rrelolo  lowest doubles of the real parts of R;
- *   Rimhihi  highest doubles of the imaginary parts of R;
- *   Rimlohi  second highest doubles of the imaginary parts of R;
- *   Rimhilo  second lowest doubles of the imaginary parts of R;
- *   Rimlolo  lowest doubles of the imaginary parts of R. *
-
-*/
+ *   Qrehihihi are the highest doubles of the real parts
+ *             of the orthogonal matrix Q, transpose(Q)*A = R;
+ *   Qrelohihi are the second highest doubles of the real parts of Q;
+ *   Qrehilohi are the third highest doubles of the real parts of Q;
+ *   Qrelolohi are the fourth highest doubles of the real parts of Q;
+ *   Qrehihilo are the fourth lowest doubles of the real parts of Q;
+ *   Qrelohilo are the third lowest doubles of the real parts of Q;
+ *   Qrehilolo are the second lowest doubles of the real parts of Q;
+ *   Qrelololo are the lowest doubles of the real parts of Q;
+ *   Qimhihihi are the highest doubles of the imaginary parts of Q;
+ *   Qimlohihi are the second highest doubles of the imaginary parts of Q;
+ *   Qimlohihi are the third highest doubles of the imaginary parts of Q;
+ *   Qimhilohi are the fourth highest doubles of the imaginary parts of Q;
+ *   Qimhihilo are the fourth lowest doubles of the imaginary parts of Q;
+ *   Qimlohilo are the third lowest doubles of the imaginary parts of Q;
+ *   Qimhilolo are the second lowest doubles of the imaginary parts of Q;
+ *   Qimlololo are the lowest doubles of the imaginary parts of Q;
+ *   Rrehihihi are the highest doubles of the real parts of R,
+ *             the reduced upper triangular form of A;
+ *   Rrelohihi are the second highest doubles of the real parts of R,
+ *   Rrehilohi are the third highest doubles of the real parts of R,
+ *   Rrelolohi are the fourth highest doubles of the real parts of R,
+ *   Rrehihilo are the fourth lowest doubles of the real parts of R;
+ *   Rrelohilo are the third lowest doubles of the real parts of R;
+ *   Rrehilolo are the second lowest doubles of the real parts of R;
+ *   Rrelololo are the lowest doubles of the real parts of R;
+ *   Rimhihihi are the highest doubles of the imaginary parts of R;
+ *   Rimlohihi are the second highest doubles of the imaginary parts of R;
+ *   Rimhilohi are the third highest doubles of the imaginary parts of R;
+ *   Rimlolohi are the fourth highest doubles of the imaginary parts of R;
+ *   Rimhihilo are the fourth lowest doubles of the imaginary parts of R;
+ *   Rimlohilo are the third lowest doubles of the imaginary parts of R;
+ *   Rimhilolo are the second lowest doubles of the imaginary parts of R;
+ *   Rimlololo are the lowest doubles of the imaginary parts of R. */
 
 #endif

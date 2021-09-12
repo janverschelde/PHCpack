@@ -1,5 +1,6 @@
 Sat 11 Sep 2021 : fixed bugs in dbl8_factorizations.cpp and
   dbl8_factors_testers.cpp so the complex LU solver works.
+  Completed the code for the Householder QR in dbl8_factorizations.
 
 Fri 10 Sep 2021 : new dbl8_factorizations, dbl8_factors_testers,
   and test_dbl8_factors.cpp, updated the makefiles.
