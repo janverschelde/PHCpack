@@ -1,3 +1,6 @@
+Mon 13 Sep 2021 : new dbl8_tabs_host with code for a tiled back substitution
+  in octo double precision on the host.
+
 Sun 12 Sep 2021 : completed dbl8_factors_testers.cpp and test_dbl8_factors.cpp
   with tests on the Householder QR decomposition.
   Corrected dbl8_factors_testers.cpp.

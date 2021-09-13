@@ -39,6 +39,7 @@ test_dbl8_factors         : main test on octo double factorizations
 dbl_tabs_host             : tiled accelerated back substitution on host
 dbl2_tabs_host            : double double tabs on host
 dbl4_tabs_host            : quad double tabs on host
+dbl8_tabs_host            : octo double tabs on host
 dbl_tabs_flopcounts       : counts the flops for all kernels
 dbl_tabs_kernels          : tiled accelerated back substitution on device
 dbl2_tabs_kernels         : double double tabs kernels
