@@ -1590,6 +1590,14 @@ void test_factors_real8_houseqr ( void )
                  << "          "
                  << Ahilolo[i][j] << "  " << Alololo[i][j] << endl;
    }
+   CPU_dbl8_factors_houseqr
+      (nrows,ncols,Ahihihi,Alohihi,Ahilohi,Alolohi,
+                   Ahihilo,Alohilo,Ahilolo,Alololo,
+                   Qhihihi,Qlohihi,Qhilohi,Qlolohi,
+                   Qhihilo,Qlohilo,Qhilolo,Qlololo,
+                   Rhihihi,Rlohihi,Rhilohi,Rlolohi,
+                   Rhihilo,Rlohilo,Rhilolo,Rlololo);
+
    const double tol = 1.0E-80;
    const int fail = test_real8_qr_factors
       (nrows,ncols,Ahihihi,Alohihi,Ahilohi,Alolohi,
