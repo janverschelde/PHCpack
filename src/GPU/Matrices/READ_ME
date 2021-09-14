@@ -50,9 +50,11 @@ dbl4_test_utilities       : test utilities in quad double precision
 dbl_tabs_testers          : tests tiled accelerated back substitution
 dbl2_tabs_testers         : tests on double double tabs
 dbl4_tabs_testers         : tests on quad double tabs
+dbl8_tabs_testers         : tests on octo double tabs
 test_dbl_tabs             : main test on accelerated back substitution
 test_dbl2_tabs            : main test on double double tabs
 test_dbl4_tabs            : main test on quad double tabs
+test_dbl8_tabs            : main test on octo double tabs
 -----------------------------------------------------------------------------
 dbl_baqr_host             : blocked qr on host in double precision
 dbl2_baqr_host            : blocked qr on host in double double precision

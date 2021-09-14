@@ -39,6 +39,9 @@ test_dbl2_tabs:
 test_dbl4_tabs:
 	make -f $(MAKEFILE) test_dbl4_tabs
 
+test_dbl8_tabs:
+	make -f $(MAKEFILE) test_dbl8_tabs
+
 test_dbl_baqr:
 	make -f $(MAKEFILE) test_dbl_baqr
 
