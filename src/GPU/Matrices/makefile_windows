@@ -502,6 +502,13 @@ dbl8_tabs_host.obj:
                  /I$(CUDASDK)/include \
                  /Fo: dbl8_tabs_host.obj /EHsc
 
+dbl8_test_utilities.obj:
+	@-echo ">>> compiling dbl8_test_utilities ..."
+	$(CL)\cl /c dbl8_test_utilities.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl8_test_utilities.obj /EHsc
+
 dbl8_tabs_testers.obj:
 	@-echo ">>> compiling dbl8_tabs_testers ..."
 	$(CL)\cl /c dbl8_tabs_testers.cpp \
@@ -520,13 +527,13 @@ test_dbl8_tabs: test_dbl8_tabs.obj dbl8_tabs_testers.obj \
                 double_double_functions.obj quad_double_functions.obj \
 		octo_double_functions.obj \
                 dbl8_tabs_host.obj dbl8_factorizations.obj \
-		gettimeofday4win.obj \
+		dbl8_test_utilities.obj gettimeofday4win.obj \
                 random_numbers.obj random8_vectors.obj random8_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl8_tabs.exe test_dbl8_tabs.obj \
              dbl8_tabs_testers.obj gettimeofday4win.obj  \
              double_double_functions.obj quad_double_functions.obj \
-	     octo_double_functions.obj \
+	     octo_double_functions.obj dbl8_test_utilities.obj \
 	     dbl8_tabs_host.obj dbl8_factorizations.obj \
              random_numbers.obj random8_vectors.obj random8_matrices.obj
 
@@ -783,7 +790,8 @@ clean:
 	del dbl4_test_utilities.obj dbl4_tabs_testers.obj
 	del test_dbl4_tabs.obj test_dbl4_tabs_lib
 	del test_dbl4_tabs.exe test_dbl4_tabs.exp
-	del dbl8_tabs_host.obj dbl8_tabs_testers.obj
+	del dbl8_tabs_host.obj
+	del dbl8_test_utilities.obj dbl8_tabs_testers.obj
 	del test_dbl8_tabs.obj test_dbl8_tabs_lib
 	del test_dbl8_tabs.exe test_dbl8_tabs.exp
 	del dbl_baqr_host.obj dbl_baqr_kernels.obj dbl_baqr_testers.obj
