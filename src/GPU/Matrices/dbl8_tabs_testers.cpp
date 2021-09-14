@@ -713,8 +713,8 @@ void test_cmplx8_upper_inverse ( void )
                  &acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
                  &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo);
          odf_mul(invArehihihi_h[i][j],invArelohihi_h[i][j],
-                 invArehilolo_h[i][j],invArelololo_h[i][j],
-                 invArehihihi_h[i][j],invArelohihi_h[i][j],
+                 invArehilohi_h[i][j],invArelolohi_h[i][j],
+                 invArehihilo_h[i][j],invArelohilo_h[i][j],
                  invArehilolo_h[i][j],invArelololo_h[i][j],
                  rhsimhihihi[j],rhsimlohihi[j],rhsimhilohi[j],rhsimlolohi[j],
                  rhsimhihilo[j],rhsimlohilo[j],rhsimhilolo[j],rhsimlololo[j],

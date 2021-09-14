@@ -768,8 +768,8 @@ void CPU_cmplx8_upper_tiled_solver
                   acc2hihihi, acc2lohihi, acc2hilohi, acc2lolohi,
                   acc2hihilo, acc2lohilo, acc2hilolo, acc2lololo);
          odf_inc(&xrehihihi[idx+i],&xrelohihi[idx+i],
-                 &xrehilolo[idx+i],&xrelolohi[idx+i],
-                 &xrehihihi[idx+i],&xrelohilo[idx+i],
+                 &xrehilohi[idx+i],&xrelolohi[idx+i],
+                 &xrehihilo[idx+i],&xrelohilo[idx+i],
                  &xrehilolo[idx+i],&xrelololo[idx+i],
                  acc1hihihi,acc1lohihi,acc1hilohi,acc1lolohi,
                  acc1hihilo,acc1lohilo,acc1hilolo,acc1lololo);
