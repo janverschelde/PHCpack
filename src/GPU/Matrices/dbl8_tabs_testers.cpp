@@ -11,7 +11,7 @@
 #include "dbl8_factorizations.h"
 #include "dbl8_tabs_host.h"
 // #include "dbl8_tabs_kernels.h"
-// #include "dbl8_test_utilities.h"
+#include "dbl8_test_utilities.h"
 
 using namespace std;
 
@@ -46,10 +46,14 @@ void test_real8_upper_inverse ( void )
       Ahilolo[i] = new double[dim];
       Alololo[i] = new double[dim];
    }
+ /*
    random_dbl8_upper_matrix
       (dim,dim,Ahihihi,Alohihi,Ahilohi,Alolohi,
                Ahihilo,Alohilo,Ahilolo,Alololo);
-   // dbl8_random_upper_factor(dim,Ahihi,Alohi,Ahilo,Alolo);
+  */
+   dbl8_random_upper_factor
+      (dim,Ahihihi,Alohihi,Ahilohi,Alolohi,
+           Ahihilo,Alohilo,Ahilolo,Alololo);
 
    cout << scientific << setprecision(16);
 
@@ -208,25 +212,37 @@ void test_real8_upper_inverse ( void )
               (dim,invAhihi_h,invAlohi_h,invAhilo_h,invAlolo_h,
                    invAhihi_d,invAlohi_d,invAhilo_d,invAlolo_d)
         << endl;
-
-   double *xhihi = new double[dim];
-   double *xlohi = new double[dim];
-   double *xhilo = new double[dim];
-   double *xlolo = new double[dim];
+ */
+   double *xhihihi = new double[dim];
+   double *xlohihi = new double[dim];
+   double *xhilohi = new double[dim];
+   double *xlolohi = new double[dim];
+   double *xhihilo = new double[dim];
+   double *xlohilo = new double[dim];
+   double *xhilolo = new double[dim];
+   double *xlololo = new double[dim];
 
    for(int i=0; i<dim; i++)
    {
-      xhihi[i] = 0.0; xlohi[i] = 0.0;
-      xhilo[i] = 0.0; xlolo[i] = 0.0;
+      xhihihi[i] = 0.0; xlohihi[i] = 0.0;
+      xhilohi[i] = 0.0; xlolohi[i] = 0.0;
+      xhihilo[i] = 0.0; xlohilo[i] = 0.0;
+      xhilolo[i] = 0.0; xlololo[i] = 0.0;
 
       for(int j=0; j<dim; j++)   // x[i] = x[i] + invA_h[i][j]*rhs[j];
       {
-         qdf_mul(invAhihi_h[i][j],invAlohi_h[i][j],
-                 invAhilo_h[i][j],invAlolo_h[i][j],
-                 rhshihi[j],rhslohi[j],rhshilo[j],rhslolo[j],
-                &acchihi,  &acclohi,  &acchilo,  &acclolo);
-         qdf_inc(&xhihi[i],&xlohi[i],&xhilo[i],&xlolo[i],
-                acchihi,  acclohi,  acchilo,  acclolo);
+         odf_mul(invAhihihi_h[i][j],invAlohihi_h[i][j],
+                 invAhilohi_h[i][j],invAlolohi_h[i][j],
+                 invAhihilo_h[i][j],invAlohilo_h[i][j],
+                 invAhilolo_h[i][j],invAlololo_h[i][j],
+                 rhshihihi[j],rhslohihi[j],rhshilohi[j],rhslolohi[j],
+                 rhshihilo[j],rhslohilo[j],rhshilolo[j],rhslololo[j],
+                &acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
+                &acchihilo,  &acclohilo,  &acchilolo,  &acclololo);
+         odf_inc(&xhihihi[i],&xlohihi[i],&xhilohi[i],&xlolohi[i],
+                 &xhihilo[i],&xlohilo[i],&xhilolo[i],&xlololo[i],
+                acchihihi,  acclohihi,  acchilohi,  acclolohi,
+                acchihilo,  acclohilo,  acchilolo,  acclololo);
       }
    }
    if(verbose > 0)
@@ -235,28 +251,38 @@ void test_real8_upper_inverse ( void )
       cout << "The solution computed with the CPU inverse :" << endl;
       for(int i=0; i<dim; i++)
          cout << "x[" << i << "] : "
-              << xhihi[i] << "  " << xlohi[i] << endl
+              << xhihihi[i] << "  " << xlohihi[i] << endl
               << "       "
-              << xhilo[i] << "  " << xlolo[i] << endl;
+              << xhilohi[i] << "  " << xlolohi[i] << endl
+              << "       "
+              << xhihilo[i] << "  " << xlohilo[i] << endl
+              << "       "
+              << xhilolo[i] << "  " << xlololo[i] << endl;
    }
    cout << scientific << setprecision(2);
    cout << "   Sum of errors on solution : "
-        << dbl4_Difference_Sum(dim, solhihi,sollohi,solhilo,sollolo,
-                                      xhihi,  xlohi,  xhilo,  xlolo) << endl;
+        << dbl8_Difference_Sum
+              (dim, solhihihi,sollohihi,solhilohi,sollolohi,
+                    solhihilo,sollohilo,solhilolo,sollololo,
+                      xhihihi,  xlohihi,  xhilohi,  xlolohi,
+                      xhihilo,  xlohilo,  xhilolo,  xlololo) << endl;
    cout << "Condition number : "
-        << dbl4_condition(dim,Ahihi,     Alohi,      Ahilo,     Alolo,
-                           invAhihi_h,invAlohi_h, invAhilo_h,invAlolo_h)
+        << dbl8_condition
+              (dim,Ahihihi,     Alohihi,      Ahilohi,     Alolohi,
+                   Ahihilo,     Alohilo,      Ahilolo,     Alololo,
+                invAhihihi_h,invAlohihi_h, invAhilohi_h,invAlolohi_h,
+                invAhihilo_h,invAlohilo_h, invAhilolo_h,invAlololo_h)
         << endl;
 
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
+/*
    cout << "                     Time spent by the kernel : ";
    cout << elapsedms << " milliseconds." << endl;
    cout << "        Total GPU wall clock computation time : ";
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
-*/
-
+ */
 }
 
 void test_cmplx8_upper_inverse ( void )
@@ -307,13 +333,18 @@ void test_cmplx8_upper_inverse ( void )
       Aimhilolo[i] = new double[dim];
       Aimlololo[i] = new double[dim];
    }
+  /*
    random_cmplx8_upper_matrix
       (dim,dim,Arehihihi,Arelohihi,Arehilohi,Arelolohi,
                Arehihilo,Arelohilo,Arehilolo,Arelololo,
                Aimhihihi,Aimlohihi,Aimhilohi,Aimlolohi,
                Aimhihilo,Aimlohilo,Aimhilolo,Aimlololo);
-  // cmplx4_random_upper_factor
-  //    (dim,Arehihi,Arelohi,Arehilo,Arelolo,Aimhihi,Aimlohi,Aimhilo,Aimlolo);
+   */
+   cmplx8_random_upper_factor
+      (dim,Arehihihi,Arelohihi,Arehilohi,Arelolohi,
+           Arehihilo,Arelohilo,Arehilolo,Arelololo,
+           Aimhihihi,Aimlohihi,Aimhilohi,Aimlolohi,
+           Aimhihilo,Aimlohilo,Aimhilolo,Aimlololo);
 
    cout << scientific << setprecision(16);
 
@@ -626,49 +657,85 @@ void test_cmplx8_upper_inverse ( void )
                    invArehihi_d,invArelohi_d,invArehilo_d,invArelolo_d,
                    invAimhihi_d,invAimlohi_d,invAimhilo_d,invAimlolo_d)
         << endl;
-
-   double *xrehihi = new double[dim];
-   double *xrelohi = new double[dim];
-   double *xrehilo = new double[dim];
-   double *xrelolo = new double[dim];
-   double *ximhihi = new double[dim];
-   double *ximlohi = new double[dim];
-   double *ximhilo = new double[dim];
-   double *ximlolo = new double[dim];
+ */
+   double *xrehihihi = new double[dim];
+   double *xrelohihi = new double[dim];
+   double *xrehilohi = new double[dim];
+   double *xrelolohi = new double[dim];
+   double *xrehihilo = new double[dim];
+   double *xrelohilo = new double[dim];
+   double *xrehilolo = new double[dim];
+   double *xrelololo = new double[dim];
+   double *ximhihihi = new double[dim];
+   double *ximlohihi = new double[dim];
+   double *ximhilohi = new double[dim];
+   double *ximlolohi = new double[dim];
+   double *ximhihilo = new double[dim];
+   double *ximlohilo = new double[dim];
+   double *ximhilolo = new double[dim];
+   double *ximlololo = new double[dim];
 
    for(int i=0; i<dim; i++)
    {
-      xrehihi[i] = 0.0; xrelohi[i] = 0.0;
-      xrehilo[i] = 0.0; xrelolo[i] = 0.0;
-      ximhihi[i] = 0.0; ximlohi[i] = 0.0;
-      ximhilo[i] = 0.0; ximlolo[i] = 0.0;
+      xrehihihi[i] = 0.0; xrelohihi[i] = 0.0;
+      xrehilohi[i] = 0.0; xrelolohi[i] = 0.0;
+      xrehihilo[i] = 0.0; xrelohilo[i] = 0.0;
+      xrehilolo[i] = 0.0; xrelololo[i] = 0.0;
+      ximhihihi[i] = 0.0; ximlohihi[i] = 0.0;
+      ximhilohi[i] = 0.0; ximlolohi[i] = 0.0;
+      ximhihilo[i] = 0.0; ximlohilo[i] = 0.0;
+      ximhilolo[i] = 0.0; ximlololo[i] = 0.0;
 
       for(int j=0; j<dim; j++) // x[i] = x[i] + invA_h[i][j]*rhs[j];
       {
-         qdf_mul(invArehihi_h[i][j],invArelohi_h[i][j],
-                 invArehilo_h[i][j],invArelolo_h[i][j],
-                 rhsrehihi[j],rhsrelohi[j],rhsrehilo[j],rhsrelolo[j],
-                 &acc1hihi,&acc1lohi,&acc1hilo,&acc1lolo);
-         qdf_mul(invAimhihi_h[i][j],invAimlohi_h[i][j],
-                 invAimhilo_h[i][j],invAimlolo_h[i][j],
-                 rhsimhihi[j],rhsimlohi[j],rhsimhilo[j],rhsimlolo[j],
-                 &acc2hihi,&acc2lohi,&acc2hilo,&acc2lolo);
-         qdf_mul(invAimhihi_h[i][j],invAimlohi_h[i][j],
-                 invAimhilo_h[i][j],invAimlolo_h[i][j],
-                 rhsrehihi[j],rhsrelohi[j],rhsrehilo[j],rhsrelolo[j],
-                 &acc3hihi,&acc3lohi,&acc3hilo,&acc3lolo);
-         qdf_mul(invArehihi_h[i][j],invArelohi_h[i][j],
-                 invArehilo_h[i][j],invArelolo_h[i][j],
-                 rhsimhihi[j],rhsimlohi[j],rhsimhilo[j],rhsimlolo[j],
-                 &acc4hihi,&acc4lohi,&acc4hilo,&acc4lolo);
-         qdf_inc(&xrehihi[i],&xrelohi[i],&xrehilo[i],&xrelolo[i],
-                 acc1hihi,acc1lohi,acc1hilo,acc1lolo);
-         qdf_dec(&xrehihi[i],&xrelohi[i],&xrehilo[i],&xrelolo[i],
-                 acc2hihi,acc2lohi,acc2hilo,acc2lolo);
-         qdf_inc(&ximhihi[i],&ximlohi[i],&ximhilo[i],&ximlolo[i],
-                 acc3hihi,acc3lohi,acc3hilo,acc3lolo);
-         qdf_inc(&ximhihi[i],&ximlohi[i],&ximhilo[i],&ximlolo[i],
-                 acc4hihi,acc4lohi,acc4hilo,acc4lolo);
+         odf_mul(invArehihihi_h[i][j],invArelohihi_h[i][j],
+                 invArehilohi_h[i][j],invArelolohi_h[i][j],
+                 invArehihilo_h[i][j],invArelohilo_h[i][j],
+                 invArehilolo_h[i][j],invArelololo_h[i][j],
+                 rhsrehihihi[j],rhsrelohihi[j],rhsrehilohi[j],rhsrelolohi[j],
+                 rhsrehihilo[j],rhsrelohilo[j],rhsrehilolo[j],rhsrelololo[j],
+                 &acc1hihihi,&acc1lohihi,&acc1hilohi,&acc1lolohi,
+                 &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo);
+         odf_mul(invAimhihihi_h[i][j],invAimlohihi_h[i][j],
+                 invAimhilohi_h[i][j],invAimlolohi_h[i][j],
+                 invAimhihilo_h[i][j],invAimlohilo_h[i][j],
+                 invAimhilolo_h[i][j],invAimlololo_h[i][j],
+                 rhsimhihihi[j],rhsimlohihi[j],rhsimhilohi[j],rhsimlolohi[j],
+                 rhsimhihilo[j],rhsimlohilo[j],rhsimhilolo[j],rhsimlololo[j],
+                 &acc2hihihi,&acc2lohihi,&acc2hilohi,&acc2lolohi,
+                 &acc2hihilo,&acc2lohilo,&acc2hilolo,&acc2lololo);
+         odf_mul(invAimhihihi_h[i][j],invAimlohihi_h[i][j],
+                 invAimhilohi_h[i][j],invAimlolohi_h[i][j],
+                 invAimhihilo_h[i][j],invAimlohilo_h[i][j],
+                 invAimhilolo_h[i][j],invAimlololo_h[i][j],
+                 rhsrehihihi[j],rhsrelohihi[j],rhsrehilohi[j],rhsrelolohi[j],
+                 rhsrehihilo[j],rhsrelohilo[j],rhsrehilolo[j],rhsrelololo[j],
+                 &acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
+                 &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo);
+         odf_mul(invArehihihi_h[i][j],invArelohihi_h[i][j],
+                 invArehilolo_h[i][j],invArelololo_h[i][j],
+                 invArehihihi_h[i][j],invArelohihi_h[i][j],
+                 invArehilolo_h[i][j],invArelololo_h[i][j],
+                 rhsimhihihi[j],rhsimlohihi[j],rhsimhilohi[j],rhsimlolohi[j],
+                 rhsimhihilo[j],rhsimlohilo[j],rhsimhilolo[j],rhsimlololo[j],
+                 &acc4hihihi,&acc4lohihi,&acc4hilohi,&acc4lolohi,
+                 &acc4hihilo,&acc4lohilo,&acc4hilolo,&acc4lololo);
+         odf_inc(&xrehihihi[i],&xrelohihi[i],&xrehilohi[i],&xrelolohi[i],
+                 &xrehihilo[i],&xrelohilo[i],&xrehilolo[i],&xrelololo[i],
+                 acc1hihihi,acc1lohihi,acc1hilohi,acc1lolohi,
+                 acc1hihilo,acc1lohilo,acc1hilolo,acc1lololo);
+         odf_dec(&xrehihihi[i],&xrelohihi[i],&xrehilohi[i],&xrelolohi[i],
+                 &xrehihilo[i],&xrelohilo[i],&xrehilolo[i],&xrelololo[i],
+                 acc2hihihi,acc2lohihi,acc2hilohi,acc2lolohi,
+                 acc2hihilo,acc2lohilo,acc2hilolo,acc2lololo);
+         odf_inc(&ximhihihi[i],&ximlohihi[i],&ximhilohi[i],&ximlolohi[i],
+                 &ximhihilo[i],&ximlohilo[i],&ximhilolo[i],&ximlololo[i],
+                 acc3hihihi,acc3lohihi,acc3hilohi,acc3lolohi,
+                 acc3hihilo,acc3lohilo,acc3hilolo,acc3lololo);
+         odf_inc(&ximhihihi[i],&ximlohihi[i],&ximhilohi[i],&ximlolohi[i],
+                 &ximhihilo[i],&ximlohilo[i],&ximhilolo[i],&ximlololo[i],
+                 acc4hihihi,acc4lohihi,acc4hilohi,acc4lolohi,
+                 acc4hihilo,acc4lohilo,acc4hilolo,acc4lololo);
       }
    }
    if(verbose > 0)
@@ -678,34 +745,51 @@ void test_cmplx8_upper_inverse ( void )
       for(int i=0; i<dim; i++)
       {
          cout << "x[" << i << "]re : "
-              << xrehihi[i] << "  " << xrelohi[i] << endl
+              << xrehihihi[i] << "  " << xrelohihi[i] << endl
               << "         "
-              << xrehilo[i] << "  " << xrelolo[i] << endl;
+              << xrehilohi[i] << "  " << xrelolohi[i] << endl
+              << "         "
+              << xrehihilo[i] << "  " << xrelohilo[i] << endl
+              << "         "
+              << xrehilolo[i] << "  " << xrelololo[i] << endl;
          cout << "x[" << i << "]im : "
-              << ximhihi[i] << "  " << ximlohi[i] << endl
+              << ximhihihi[i] << "  " << ximlohihi[i] << endl
               << "         "
-              << ximhilo[i] << "  " << ximlolo[i] << endl;
+              << ximhilohi[i] << "  " << ximlolohi[i] << endl
+              << "         "
+              << ximhihilo[i] << "  " << ximlohilo[i] << endl
+              << "         "
+              << ximhilolo[i] << "  " << ximlololo[i] << endl;
       }
    }
    cout << scientific << setprecision(2);
    cout << "   Sum of errors on solution : "
-        << cmplx4_Difference_Sum
-              (dim,solrehihi,solrelohi,solrehilo,solrelolo,
-                   solimhihi,solimlohi,solimhilo,solimlolo,
-                     xrehihi,  xrelohi,  xrehilo,  xrelolo,
-                     ximhihi,  ximlohi, ximhilo,  ximlolo) << endl;
+        << cmplx8_Difference_Sum
+              (dim,solrehihihi,solrelohihi,solrehilohi,solrelolohi,
+                   solrehihilo,solrelohilo,solrehilolo,solrelololo,
+                   solimhihihi,solimlohihi,solimhilohi,solimlolohi,
+                   solimhihilo,solimlohilo,solimhilolo,solimlololo,
+                     xrehihihi,  xrelohihi,  xrehilohi,  xrelolohi,
+                     xrehihilo,  xrelohilo,  xrehilolo,  xrelololo,
+                     ximhihihi,  ximlohihi, ximhilohi,  ximlolohi,
+                     ximhihilo,  ximlohilo, ximhilolo,  ximlololo) << endl;
    cout << "Condition number : "
-        << cmplx4_condition(dim, 
-                 Arehihi,     Arelohi,     Arehilo,     Arelolo, 
-                 Aimhihi,     Aimlohi,     Aimhilo,     Aimlolo,
-              invArehihi_h,invArelohi_h,invArehilo_h,invArelolo_h,
-              invAimhihi_h,invAimlohi_h,invAimhilo_h,invAimlolo_h)
+        << cmplx8_condition(dim, 
+                 Arehihihi,     Arelohihi,     Arehilohi,     Arelolohi, 
+                 Arehihilo,     Arelohilo,     Arehilolo,     Arelololo, 
+                 Aimhihihi,     Aimlohihi,     Aimhilohi,     Aimlolohi,
+                 Aimhihilo,     Aimlohilo,     Aimhilolo,     Aimlololo,
+              invArehihihi_h,invArelohihi_h,invArehilohi_h,invArelolohi_h,
+              invArehihilo_h,invArelohilo_h,invArehilolo_h,invArelololo_h,
+              invAimhihihi_h,invAimlohihi_h,invAimhilohi_h,invAimlolohi_h,
+              invAimhihilo_h,invAimlohilo_h,invAimhilolo_h,invAimlololo_h)
         << endl;
 
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
    cout << "                     Time spent by the kernel : ";
+ /*
    cout << elapsedms << " milliseconds." << endl;
    cout << "        Total GPU wall clock computation time : ";
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
@@ -928,7 +1012,7 @@ void test_real8_upper_tiling ( void )
               (numtiles,sizetile,
                Ahihi,Alohi,Ahilo,Alolo,Ahihi_d,Alohi_d,Ahilo_d,Alolo_d)
         << endl;
-
+*/
    if(verbose > 0)
    {
       cout << scientific << setprecision(16);
@@ -936,30 +1020,40 @@ void test_real8_upper_tiling ( void )
       cout << scientific << setprecision(16);
       for(int i=0; i<dim; i++)
          cout << "x[" << i << "] : "
-              << xhihi[i] << "  " << xlohi[i] << endl
+              << xhihihi[i] << "  " << xlohihi[i] << endl
               << "       "
-              << xhilo[i] << "  " << xlolo[i] << endl;
-
+              << xhilohi[i] << "  " << xlolohi[i] << endl
+              << "       "
+              << xhihilo[i] << "  " << xlohilo[i] << endl
+              << "       "
+              << xhilolo[i] << "  " << xlololo[i] << endl;
+    /*
       cout << "GPU solution computed with tiling :" << endl;
       for(int i=0; i<dim; i++)
          cout << "x[" << i << "] : "
               << xhihi_d[i] << "  " << xlohi_d[i] << endl
               << "       "
               << xhilo_d[i] << "  " << xlolo_d[i] << endl;
+     */
    }
    cout << scientific << setprecision(2);
    cout << "   Sum of CPU errors on solution : "
-        << dbl4_Difference_Sum(dim,solhihi,sollohi,solhilo,sollolo,
-                                     xhihi,  xlohi,  xhilo,  xlolo)
+        << dbl8_Difference_Sum
+              (dim,solhihihi,sollohihi,solhilohi,sollolohi,
+                   solhihilo,sollohilo,solhilolo,sollololo,
+                     xhihihi,  xlohihi,  xhilohi,  xlolohi,
+                     xhihilo,  xlohilo,  xhilolo,  xlololo)
         << endl;
+ /*
    cout << "   Sum of GPU errors on solution : "
         << dbl4_Difference_Sum(dim,solhihi,sollohi,solhilo,sollolo,
                                      xhihi_d,xlohi_d,xhilo_d,xlolo_d)
         << endl;
-
+  */
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
+/*
    cout << "          Time spent to invert diagonal tiles : ";
    cout << invlapsed << " milliseconds." << endl;
    cout << "   Time spent to multiply with inverted tiles : ";
@@ -992,7 +1086,6 @@ void test_real8_upper_tiling ( void )
         << scientific << setprecision(3) << wallflops;
    cout << fixed << setprecision(3)
         << " = " << wallflops/gigacnt << " Gigaflops" << endl;
-
    for(int i=0; i<dim; i++)
    {
       free(Ahihi[i]); free(Alohi[i]); free(Ahilo[i]); free(Alolo[i]);
@@ -1400,6 +1493,8 @@ void test_cmplx8_upper_tiling ( void )
               Aimhihi_d,Aimlohi_d,Aimhilo_d,Aimlolo_d)
         << endl;
 
+ */
+
    if(verbose > 0)
    {
       cout << "CPU solution computed with tiling :" << endl;
@@ -1407,14 +1502,23 @@ void test_cmplx8_upper_tiling ( void )
       for(int i=0; i<dim; i++)
       {
          cout << "x[" << i << "]re : "
-              << xrehihi[i] << "  " << xrelohi[i] << endl
+              << xrehihihi[i] << "  " << xrelohihi[i] << endl
               << "         "
-              << xrehilo[i] << "  " << xrelolo[i] << endl;
+              << xrehilohi[i] << "  " << xrelolohi[i] << endl
+              << "         "
+              << xrehihilo[i] << "  " << xrelohilo[i] << endl
+              << "         "
+              << xrehilolo[i] << "  " << xrelololo[i] << endl;
          cout << "x[" << i << "]im : "
-              << ximhihi[i] << "  " << ximlohi[i] << endl
+              << ximhihihi[i] << "  " << ximlohihi[i] << endl
               << "         "
-              << ximhilo[i] << "  " << ximlolo[i] << endl;
+              << ximhilohi[i] << "  " << ximlolohi[i] << endl
+              << "         "
+              << ximhihilo[i] << "  " << ximlohilo[i] << endl
+              << "         "
+              << ximhilolo[i] << "  " << ximlololo[i] << endl;
       }
+    /*
       cout << "GPU solution computed with tiling :" << endl;
       for(int i=0; i<dim; i++)
       {
@@ -1427,15 +1531,21 @@ void test_cmplx8_upper_tiling ( void )
               << "         "
               << ximhilo_d[i] << "  " << ximlolo_d[i] << endl;
       }
+    */
    }
    cout << scientific << setprecision(2);
    cout << "   Sum of CPU errors on solution : "
-        << cmplx4_Difference_Sum(dim,
-              solrehihi,solrelohi,solrehilo,solrelolo,
-              solimhihi,solimlohi,solimhilo,solimlolo,
-                xrehihi,  xrelohi,  xrehilo,  xrelolo, 
-                ximhihi,  ximlohi,  ximhilo,  ximlolo)
+        << cmplx8_Difference_Sum(dim,
+              solrehihihi,solrelohihi,solrehilohi,solrelolohi,
+              solrehihilo,solrelohilo,solrehilolo,solrelololo,
+              solimhihihi,solimlohihi,solimhilohi,solimlolohi,
+              solimhihilo,solimlohilo,solimhilolo,solimlololo,
+                xrehihihi,  xrelohihi,  xrehilohi,  xrelolohi, 
+                xrehihilo,  xrelohilo,  xrehilolo,  xrelololo, 
+                ximhihihi,  ximlohihi,  ximhilohi,  ximlolohi,
+                ximhihilo,  ximlohilo,  ximhilolo,  ximlololo)
         << endl;
+/*
    cout << "   Sum of GPU errors on solution : "
         << cmplx4_Difference_Sum(dim,
                solrehihi,solrelohi,solrehilo,solrelolo,
@@ -1443,9 +1553,11 @@ void test_cmplx8_upper_tiling ( void )
                  xrehihi_d,xrelohi_d,xrehilo_d,xrelolo_d,
                  ximhihi_d,ximlohi_d,ximhilo_d,ximlolo_d)
         << endl;
+ */
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
+/*
    cout << "          Time spent to invert diagonal tiles : ";
    cout << invlapsed << " milliseconds." << endl;
    cout << "   Time spent to multiply with inverted tiles : ";

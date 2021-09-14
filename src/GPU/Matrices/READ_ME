@@ -47,6 +47,7 @@ dbl4_tabs_kernels         : quad double tabs kernels
 dbl_test_utilities        : test utilities in double precision
 dbl2_test_utilities       : test utilities in double double precision
 dbl4_test_utilities       : test utilities in quad double precision
+dbl8_test_utilities       : test utilities in octo double precision
 dbl_tabs_testers          : tests tiled accelerated back substitution
 dbl2_tabs_testers         : tests on double double tabs
 dbl4_tabs_testers         : tests on quad double tabs
