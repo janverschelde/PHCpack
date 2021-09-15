@@ -1,6 +1,7 @@
 Tue 14 Sep 2021 : new dbl8_test_utilities for better tests on the tiled
   back substitution, applied in dbl8_tabs_testers.cpp.  Updated makefiles.
   Fixed bugs in dbl8_tabs_host.cpp and dbl8_tabs_testers.cpp.
+  New dbl8_tabs_kernels, updated the makefiles.
 
 Mon 13 Sep 2021 : new dbl8_tabs_host with code for a tiled back substitution
   in octo double precision on the host.  Added basic tests in the new

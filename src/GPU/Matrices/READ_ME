@@ -44,6 +44,7 @@ dbl_tabs_flopcounts       : counts the flops for all kernels
 dbl_tabs_kernels          : tiled accelerated back substitution on device
 dbl2_tabs_kernels         : double double tabs kernels
 dbl4_tabs_kernels         : quad double tabs kernels
+dbl8_tabs_kernels         : octo double tabs kernels
 dbl_test_utilities        : test utilities in double precision
 dbl2_test_utilities       : test utilities in double double precision
 dbl4_test_utilities       : test utilities in quad double precision

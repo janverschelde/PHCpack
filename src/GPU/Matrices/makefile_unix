@@ -334,6 +334,12 @@ dbl8_tabs_host.o:
 	@-echo ">>> compiling dbl8_tabs_host ..."
 	$(gpp) -O3 -c -I$(MPD) dbl8_tabs_host.cpp
 
+dbl8_tabs_kernels.o:
+	@-echo ">>> compiling tabs kernels for octo doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+             --define-macro gpufun=1 \
+             -c dbl8_tabs_kernels.cu
+
 dbl8_test_utilities.o:
 	@-echo ">>> compiling dbl8_test_utilities ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl8_test_utilities.cpp
@@ -346,18 +352,19 @@ test_dbl8_tabs.o:
 	@-echo ">>> compiling test_dbl8_tabs ..."
 	$(gpp) -O3 -c test_dbl8_tabs.cpp
 
-test_dbl8_tabs: dbl8_tabs_host.o dbl8_tabs_testers.o \
+test_dbl8_tabs: test_dbl8_tabs.o dbl8_tabs_testers.o \
                 double_double_functions.o quad_double_functions.o \
-                octo_double_functions.o dbl8_tabs_testers.o \
-                dbl8_factorizations.o dbl8_tabs_host.o \
+                octo_double_functions.o \
+                dbl8_tabs_testers.o dbl8_factorizations.o \
+                dbl8_tabs_host.o dbl8_tabs_kernels.o \
                 test_dbl8_tabs.o dbl8_test_utilities.o \
                 random_numbers.o random8_vectors.o random8_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl8_tabs test_dbl8_tabs.o \
                   double_double_functions.o quad_double_functions.o \
-                  octo_double_functions.o \
+                  octo_double_functions.o dbl8_factorizations.o \
                   dbl8_tabs_testers.o dbl8_test_utilities.o \
-                  dbl8_tabs_host.o dbl8_factorizations.o \
+                  dbl8_tabs_host.o dbl8_tabs_kernels.o \
                   random_numbers.o random8_vectors.o random8_matrices.o
 
 dbl_baqr_host.o:
@@ -540,7 +547,7 @@ clean:
 	/bin/rm -f -r dbl4_tabs_host.o dbl4_tabs_kernels.o
 	/bin/rm -f -r dbl4_test_utilities.o dbl4_tabs_testers.o
 	/bin/rm -f -r test_dbl4_tabs.o test_dbl4_tabs
-	/bin/rm -f -r dbl8_tabs_host.o 
+	/bin/rm -f -r dbl8_tabs_host.o dbl8_tabs_kernels.o
 	/bin/rm -f -r dbl8_test_utilities.o dbl8_tabs_testers.o
 	/bin/rm -f -r test_dbl8_tabs.o test_dbl8_tabs
 	/bin/rm -f -r dbl_baqr_host.o dbl_baqr_kernels.o
