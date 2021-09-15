@@ -640,6 +640,27 @@ __device__ __forceinline__ void odg_inc_d
                    a_hihilo,a_lohilo,a_hilolo,a_lololo);
 }
 
+__device__ __forceinline__ void odg_dec
+ ( double *a_hihihi, double *a_lohihi, double *a_hilohi, double *a_lolohi,
+   double *a_hihilo, double *a_lohilo, double *a_hilolo, double *a_lololo,
+   double b_hihihi, double b_lohihi, double b_hilohi, double b_lolohi,
+   double b_hihilo, double b_lohilo, double b_hilolo, double b_lololo )
+{
+   const double mb_hihihi = -b_hihihi;
+   const double mb_lohihi = -b_lohihi;
+   const double mb_hilohi = -b_hilohi;
+   const double mb_lolohi = -b_lolohi;
+   const double mb_hihilo = -b_hihilo;
+   const double mb_lohilo = -b_lohilo;
+   const double mb_hilolo = -b_hilolo;
+   const double mb_lololo = -b_lololo;
+
+   odg_inc(a_hihihi,a_lohihi,a_hilohi,a_lolohi,
+           a_hihilo,a_lohilo,a_hilolo,a_lololo,
+           mb_hihihi,mb_lohihi,mb_hilohi,mb_lolohi,
+           mb_hihilo,mb_lohilo,mb_hilolo,mb_lololo);
+}
+
 __device__ __forceinline__ void odg_minus
  ( double *a_hihihi, double *a_lohihi, double *a_hilohi, double *a_lolohi,
    double *a_hihilo, double *a_lohilo, double *a_hilolo, double *a_lololo )

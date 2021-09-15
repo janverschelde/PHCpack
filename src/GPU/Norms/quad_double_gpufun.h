@@ -182,7 +182,7 @@ __device__ __forceinline__ void qdg_dec
    double b_hihi, double b_lohi, double b_hilo, double b_lolo );
 /*
  * DESCRIPTION : a = a - b.
- *   Adds to the quad double a (a_hihi, a_lohi, a_hilo, a_lolo)
+ *   Subtracts from the quad double a (a_hihi, a_lohi, a_hilo, a_lolo)
  *   the quad double b (b_hihi, b_lohi, b_hilo, b_lolo).
  *
  * ON ENTRY :
