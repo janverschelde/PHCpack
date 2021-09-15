@@ -282,15 +282,18 @@ test_dbl2_tabs.o:
 
 test_dbl2_tabs: test_dbl2_tabs.o dbl2_tabs_testers.o dbl_tabs_flopcounts.o \
                 double_double_functions.o dbl2_tabs_host.o \
-                dbl2_test_utilities.o \
+                dbl_test_utilities.o dbl2_test_utilities.o \
                 dbl2_tabs_kernels.o dbl2_factorizations.o \
-                random_numbers.o random2_vectors.o random2_matrices.o
+                random_numbers.o random2_vectors.o dbl_factorizations.o \
+                random_series.o random_matrices.o random2_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_tabs test_dbl2_tabs.o dbl2_tabs_testers.o \
-                  dbl2_test_utilities.o dbl_tabs_flopcounts.o \
+                  dbl_test_utilities.o dbl2_test_utilities.o \
+                  dbl_tabs_flopcounts.o dbl_factorizations.o \
                   double_double_functions.o dbl2_tabs_host.o \
                   dbl2_tabs_kernels.o dbl2_factorizations.o \
-                  random_numbers.o random2_vectors.o random2_matrices.o \
+                  random_numbers.o random2_vectors.o \
+                  random_series.o random_matrices.o random2_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 dbl4_tabs_host.o:

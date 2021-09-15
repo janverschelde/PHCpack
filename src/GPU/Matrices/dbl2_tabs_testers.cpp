@@ -11,6 +11,7 @@
 #include "dbl2_factorizations.h"
 #include "dbl2_tabs_host.h"
 #include "dbl2_tabs_kernels.h"
+#include "dbl_test_utilities.h"
 #include "dbl2_test_utilities.h"
 
 using namespace std;
@@ -393,10 +394,12 @@ void test_real2_upper_tiling ( void )
    {
       Ahi[i] = new double[dim];
       Alo[i] = new double[dim];
+      for(int j=0; j<dim; j++) Alo[i][j] = 0.0;
    }
 
    // random_dbl_upper_matrix(dim,dim,A);
-   dbl2_random_upper_factor(dim,Ahi,Alo);
+   // dbl2_random_upper_factor(dim,Ahi,Alo);
+   dbl_random_upper_factor(dim,Ahi);
 
    cout << scientific << setprecision(16);
 
@@ -586,12 +589,15 @@ void test_cmplx2_upper_tiling ( void )
    {
       Arehi[i] = new double[dim];
       Arelo[i] = new double[dim];
+      for(int j=0; j<dim; j++) Arelo[i][j] = 0.0;
       Aimhi[i] = new double[dim];
       Aimlo[i] = new double[dim];
+      for(int j=0; j<dim; j++) Aimlo[i][j] = 0.0;
    }
 
    // random_dbl_upper_matrix(dim,dim,Arehi,Arelo,Aimhi,Aimlo);
-   cmplx2_random_upper_factor(dim,Arehi,Arelo,Aimhi,Aimlo);
+   // cmplx2_random_upper_factor(dim,Arehi,Arelo,Aimhi,Aimlo);
+   cmplx_random_upper_factor(dim,Arehi,Aimhi);
 
    cout << scientific << setprecision(16);
 

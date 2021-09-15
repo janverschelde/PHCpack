@@ -431,17 +431,21 @@ test_dbl2_tabs.obj:
 
 test_dbl2_tabs: test_dbl2_tabs.obj dbl2_tabs_testers.obj \
                 dbl_tabs_flopcounts.obj dbl2_test_utilities.obj \
+		dbl_test_utilities.obj dbl_factorizations.obj \
                 double_double_functions.obj dbl2_tabs_host.obj \
 		dbl2_tabs_kernels.obj dbl2_factorizations.obj \
 		gettimeofday4win.obj \
-                random_numbers.obj random2_vectors.obj random2_matrices.obj
+                random_numbers.obj random2_vectors.obj \
+		random_series.obj random_matrices.obj random2_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl2_tabs.exe test_dbl2_tabs.obj \
              dbl2_tabs_testers.obj dbl2_test_utilities.obj \
+	     dbl_test_utilities.obj dbl_factorizations.obj \
 	     gettimeofday4win.obj dbl_tabs_flopcounts.obj \
              dbl2_tabs_host.obj double_double_functions.obj \
 	     dbl2_tabs_kernels.obj dbl2_factorizations.obj \
-             random_numbers.obj random2_vectors.obj random2_matrices.obj
+             random_numbers.obj random2_vectors.obj \
+             random_series.obj random_matrices.obj random2_matrices.obj
 
 dbl4_tabs_host.obj:
 	@-echo ">>> compiling dbl4_tabs_host ..."
