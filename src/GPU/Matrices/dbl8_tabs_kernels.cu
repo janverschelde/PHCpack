@@ -758,245 +758,449 @@ __global__ void dbl8_medium_invert_upper
    }
 }
 
-/*
-
-__global__ void cmplx4_medium_invert_upper
+__global__ void cmplx8_medium_invert_upper
  ( int dim, 
-   double *Urehihi, double *Urelohi, double *Urehilo, double *Urelolo,
-   double *Uimhihi, double *Uimlohi, double *Uimhilo, double *Uimlolo,
-   double *invUrehihi, double *invUrelohi,
-   double *invUrehilo, double *invUrelolo,
-   double *invUimhihi, double *invUimlohi,
-   double *invUimhilo, double *invUimlolo )
+   double *Urehihihi, double *Urelohihi, double *Urehilohi, double *Urelolohi,
+   double *Urehihilo, double *Urelohilo, double *Urehilolo, double *Urelololo,
+   double *Uimhihihi, double *Uimlohihi, double *Uimhilohi, double *Uimlolohi,
+   double *Uimhihilo, double *Uimlohilo, double *Uimhilolo, double *Uimlololo,
+   double *invUrehihihi, double *invUrelohihi,
+   double *invUrehilohi, double *invUrelolohi,
+   double *invUrehihilo, double *invUrelohilo,
+   double *invUrehilolo, double *invUrelololo,
+   double *invUimhihihi, double *invUimlohihi,
+   double *invUimhilohi, double *invUimlolohi,
+   double *invUimhihilo, double *invUimlohilo,
+   double *invUimhilolo, double *invUimlololo )
 {
    const int k = threadIdx.x;  // thread k computes k-th column of inverse
 
-   __shared__ double Ucolrehihi[tabsqd_shmemsize];    // one column of U
-   __shared__ double Ucolrelohi[tabsqd_shmemsize]; 
-   __shared__ double Ucolrehilo[tabsqd_shmemsize];
-   __shared__ double Ucolrelolo[tabsqd_shmemsize]; 
-   __shared__ double Ucolimhihi[tabsqd_shmemsize];
-   __shared__ double Ucolimlohi[tabsqd_shmemsize]; 
-   __shared__ double Ucolimhilo[tabsqd_shmemsize];
-   __shared__ double Ucolimlolo[tabsqd_shmemsize]; 
-   __shared__ double invUrowrehihi[tabsqd_shmemsize]; // one row of invU
-   __shared__ double invUrowrelohi[tabsqd_shmemsize]; 
-   __shared__ double invUrowrehilo[tabsqd_shmemsize];
-   __shared__ double invUrowrelolo[tabsqd_shmemsize]; 
-   __shared__ double invUrowimhihi[tabsqd_shmemsize]; 
-   __shared__ double invUrowimlohi[tabsqd_shmemsize]; 
-   __shared__ double invUrowimhilo[tabsqd_shmemsize]; 
-   __shared__ double invUrowimlolo[tabsqd_shmemsize]; 
+   __shared__ double Ucolrehihihi[tabsod_shmemsize];  // one column of U
+   __shared__ double Ucolrelohihi[tabsod_shmemsize]; 
+   __shared__ double Ucolrehilohi[tabsod_shmemsize];
+   __shared__ double Ucolrelolohi[tabsod_shmemsize]; 
+   __shared__ double Ucolrehihilo[tabsod_shmemsize];
+   __shared__ double Ucolrelohilo[tabsod_shmemsize]; 
+   __shared__ double Ucolrehilolo[tabsod_shmemsize];
+   __shared__ double Ucolrelololo[tabsod_shmemsize]; 
+   __shared__ double Ucolimhihihi[tabsod_shmemsize];
+   __shared__ double Ucolimlohihi[tabsod_shmemsize]; 
+   __shared__ double Ucolimhilohi[tabsod_shmemsize];
+   __shared__ double Ucolimlolohi[tabsod_shmemsize]; 
+   __shared__ double Ucolimhihilo[tabsod_shmemsize];
+   __shared__ double Ucolimlohilo[tabsod_shmemsize]; 
+   __shared__ double Ucolimhilolo[tabsod_shmemsize];
+   __shared__ double Ucolimlololo[tabsod_shmemsize]; 
+   __shared__ double invUrowrehihihi[tabsod_shmemsize]; // one row of invU
+   __shared__ double invUrowrelohihi[tabsod_shmemsize]; 
+   __shared__ double invUrowrehilohi[tabsod_shmemsize];
+   __shared__ double invUrowrelolohi[tabsod_shmemsize]; 
+   __shared__ double invUrowrehihilo[tabsod_shmemsize];
+   __shared__ double invUrowrelohilo[tabsod_shmemsize]; 
+   __shared__ double invUrowrehilolo[tabsod_shmemsize];
+   __shared__ double invUrowrelololo[tabsod_shmemsize]; 
+   __shared__ double invUrowimhihihi[tabsod_shmemsize]; 
+   __shared__ double invUrowimlohihi[tabsod_shmemsize]; 
+   __shared__ double invUrowimhilohi[tabsod_shmemsize]; 
+   __shared__ double invUrowimlolohi[tabsod_shmemsize]; 
+   __shared__ double invUrowimhihilo[tabsod_shmemsize]; 
+   __shared__ double invUrowimlohilo[tabsod_shmemsize]; 
+   __shared__ double invUrowimhilolo[tabsod_shmemsize]; 
+   __shared__ double invUrowimlololo[tabsod_shmemsize]; 
 
-   double rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo;
-   double rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo;
-   double xvalrehihi,xvalrelohi,xvalrehilo,xvalrelolo;
-   double xvalimhihi,xvalimlohi,xvalimhilo,xvalimlolo;
-   double acc1hihi,acc1lohi,acc1hilo,acc1lolo;
-   double acc2hihi,acc2lohi,acc2hilo,acc2lolo;
-   double acc3hihi,acc3lohi,acc3hilo,acc3lolo;
-   double acc4hihi,acc4lohi,acc4hilo,acc4lolo;
-   double invrehihi,invrelohi,invrehilo,invrelolo;
-   double invimhihi,invimlohi,invimhilo,invimlolo;
-   double denhihi,denlohi,denhilo,denlolo;
+   double rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi;
+   double rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo;
+   double rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi;
+   double rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo;
+   double xvalrehihihi,xvalrelohihi,xvalrehilohi,xvalrelolohi;
+   double xvalrehihilo,xvalrelohilo,xvalrehilolo,xvalrelololo;
+   double xvalimhihihi,xvalimlohihi,xvalimhilohi,xvalimlolohi;
+   double xvalimhihilo,xvalimlohilo,xvalimhilolo,xvalimlololo;
+   double acc1hihihi,acc1lohihi,acc1hilohi,acc1lolohi;
+   double acc1hihilo,acc1lohilo,acc1hilolo,acc1lololo;
+   double acc2hihihi,acc2lohihi,acc2hilohi,acc2lolohi;
+   double acc2hihilo,acc2lohilo,acc2hilolo,acc2lololo;
+   double acc3hihihi,acc3lohihi,acc3hilohi,acc3lolohi;
+   double acc3hihilo,acc3lohilo,acc3hilolo,acc3lololo;
+   double acc4hihihi,acc4lohihi,acc4hilohi,acc4lolohi;
+   double acc4hihilo,acc4lohilo,acc4hilolo,acc4lololo;
+   double invrehihihi,invrelohihi,invrehilohi,invrelolohi;
+   double invrehihilo,invrelohilo,invrehilolo,invrelololo;
+   double invimhihihi,invimlohihi,invimhilohi,invimlolohi;
+   double invimhihilo,invimlohilo,invimhilolo,invimlololo;
+   double denhihihi,denlohihi,denhilohi,denlolohi;
+   double denhihilo,denlohilo,denhilolo,denlololo;
 
    int colidx = dim*(dim-1);           // start with the last column
 
-   Ucolrehihi[k] = Urehihi[colidx+k];      // load the last column
-   Ucolrelohi[k] = Urelohi[colidx+k];
-   Ucolrehilo[k] = Urehilo[colidx+k]; 
-   Ucolrelolo[k] = Urelolo[colidx+k];
-   Ucolimhihi[k] = Uimhihi[colidx+k];
-   Ucolimlohi[k] = Uimlohi[colidx+k];
-   Ucolimhilo[k] = Uimhilo[colidx+k];
-   Ucolimlolo[k] = Uimlolo[colidx+k];
-   rhsrehihi = ((double) int(k == dim-1)); // right hand side for each thread
-   rhsrelohi = 0.0;
-   rhsrehilo = 0.0;
-   rhsrelolo = 0.0;
-   rhsimhihi = 0.0;
-   rhsimlohi = 0.0;
-   rhsimhilo = 0.0;
-   rhsimlolo = 0.0;
+   Ucolrehihihi[k] = Urehihihi[colidx+k];  // load the last column
+   Ucolrelohihi[k] = Urelohihi[colidx+k];
+   Ucolrehilohi[k] = Urehilohi[colidx+k]; 
+   Ucolrelolohi[k] = Urelolohi[colidx+k];
+   Ucolrehihilo[k] = Urehihilo[colidx+k];
+   Ucolrelohilo[k] = Urelohilo[colidx+k];
+   Ucolrehilolo[k] = Urehilolo[colidx+k]; 
+   Ucolrelololo[k] = Urelololo[colidx+k];
+   Ucolimhihihi[k] = Uimhihihi[colidx+k];
+   Ucolimlohihi[k] = Uimlohihi[colidx+k];
+   Ucolimhilohi[k] = Uimhilohi[colidx+k];
+   Ucolimlolohi[k] = Uimlolohi[colidx+k];
+   Ucolimhihilo[k] = Uimhihilo[colidx+k];
+   Ucolimlohilo[k] = Uimlohilo[colidx+k];
+   Ucolimhilolo[k] = Uimhilolo[colidx+k];
+   Ucolimlololo[k] = Uimlololo[colidx+k];
+   rhsrehihihi = ((double) int(k == dim-1)); // right hand side for threads
+   rhsrelohihi = 0.0;
+   rhsrehilohi = 0.0;
+   rhsrelolohi = 0.0;
+   rhsrehihilo = 0.0;
+   rhsrelohilo = 0.0;
+   rhsrehilolo = 0.0;
+   rhsrelololo = 0.0;
+   rhsimhihihi = 0.0;
+   rhsimlohihi = 0.0;
+   rhsimhilohi = 0.0;
+   rhsimlolohi = 0.0;
+   rhsimhihilo = 0.0;
+   rhsimlohilo = 0.0;
+   rhsimhilolo = 0.0;
+   rhsimlololo = 0.0;
    int rowidx = (dim - 1)*dim + k;     // the row index in the inverse
 
    __syncthreads();
    // invUrow[k] = rhs/Ucol[k];          // last row of the inverse
-   qdg_mul(Ucolrehihi[k],Ucolrelohi[k],Ucolrehilo[k],Ucolrelolo[k],
-           Ucolrehihi[k],Ucolrelohi[k],Ucolrehilo[k],Ucolrelolo[k],
-             &denhihi,     &denlohi,     &denhilo,     &denlolo);
-   qdg_mul(Ucolimhihi[k],Ucolimlohi[k],Ucolimhilo[k],Ucolimlolo[k],
-           Ucolimhihi[k],Ucolimlohi[k],Ucolimhilo[k],Ucolimlolo[k],
-            &acc1hihi,    &acc1lohi,    &acc1hilo,    &acc1lolo);
-   qdg_inc(&denhihi,&denlohi,&denhilo,&denlolo,
-           acc1hihi,acc1lohi,acc1hilo,acc1lolo);
-   qdg_div(Ucolrehihi[k],Ucolrelohi[k],Ucolrehilo[k],Ucolrelolo[k],
-              denhihi,      denlohi,      denhilo,      denlolo,
-           &invrehihi,   &invrelohi,   &invrehilo,   &invrelolo);
-   qdg_div(Ucolimhihi[k],Ucolimlohi[k],Ucolimhilo[k],Ucolimlolo[k],
-              denhihi,      denlohi,      denhilo,      denlolo,
-           &invimhihi,   &invimlohi,   &invimhilo,   &invimlolo);
-   qdg_minus(&invimhihi,&invimlohi,
-             &invimhilo,&invimlolo);
-   qdg_mul(rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
-           invrehihi,invrelohi,invrehilo,invrelolo,
-           &acc1hihi,&acc1lohi,&acc1hilo,&acc1lolo);
-   qdg_mul(rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
-           invimhihi,invimlohi,invimhilo,invimlolo,
-           &acc2hihi,&acc2lohi,&acc2hilo,&acc2lolo);
-   qdg_mul(rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
-           invrehihi,invrelohi,invrehilo,invrelolo,
-           &acc3hihi,&acc3lohi,&acc3hilo,&acc3lolo);
-   qdg_mul(rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
-           invimhihi,invimlohi,invimhilo,invimlolo,
-           &acc4hihi,&acc4lohi,&acc4hilo,&acc4lolo);
-   qdg_dec(&acc1hihi,&acc1lohi,&acc1hilo,&acc1lolo,
-            acc2hihi, acc2lohi, acc2hilo, acc2lolo);
-   invUrowrehihi[k] = acc1hihi;
-   invUrowrelohi[k] = acc1lohi;
-   invUrowrehilo[k] = acc1hilo;
-   invUrowrelolo[k] = acc1lolo;
-   qdg_inc(&acc3hihi,&acc3lohi,&acc3hilo,&acc3lolo,
-            acc4hihi, acc4lohi, acc4hilo, acc4lolo);
-   invUrowimhihi[k] = acc3hihi;
-   invUrowimlohi[k] = acc3lohi;
-   invUrowimhilo[k] = acc3hilo;
-   invUrowimlolo[k] = acc3lolo;
-   invUrehihi[rowidx] = invUrowrehihi[k];  // store the last row into invU
-   invUrelohi[rowidx] = invUrowrelohi[k]; 
-   invUrehilo[rowidx] = invUrowrehilo[k]; 
-   invUrelolo[rowidx] = invUrowrelolo[k]; 
-   invUimhihi[rowidx] = invUrowimhihi[k];
-   invUimlohi[rowidx] = invUrowimlohi[k]; 
-   invUimhilo[rowidx] = invUrowimhilo[k];
-   invUimlolo[rowidx] = invUrowimlolo[k]; 
+   odg_mul(Ucolrehihihi[k],Ucolrelohihi[k],Ucolrehilohi[k],Ucolrelolohi[k],
+           Ucolrehihilo[k],Ucolrelohilo[k],Ucolrehilolo[k],Ucolrelololo[k],
+           Ucolrehihihi[k],Ucolrelohihi[k],Ucolrehilohi[k],Ucolrelolohi[k],
+           Ucolrehihilo[k],Ucolrelohilo[k],Ucolrehilolo[k],Ucolrelololo[k],
+             &denhihihi,     &denlohihi,     &denhilohi,     &denlolohi,
+             &denhihilo,     &denlohilo,     &denhilolo,     &denlololo);
+   odg_mul(Ucolimhihihi[k],Ucolimlohihi[k],Ucolimhilohi[k],Ucolimlolohi[k],
+           Ucolimhihilo[k],Ucolimlohilo[k],Ucolimhilolo[k],Ucolimlololo[k],
+           Ucolimhihihi[k],Ucolimlohihi[k],Ucolimhilohi[k],Ucolimlolohi[k],
+           Ucolimhihilo[k],Ucolimlohilo[k],Ucolimhilolo[k],Ucolimlololo[k],
+            &acc1hihihi,    &acc1lohihi,    &acc1hilohi,    &acc1lolohi,
+            &acc1hihilo,    &acc1lohilo,    &acc1hilolo,    &acc1lololo);
+   odg_inc(&denhihihi,&denlohihi,&denhilohi,&denlolohi,
+           &denhihilo,&denlohilo,&denhilolo,&denlololo,
+           acc1hihihi,acc1lohihi,acc1hilohi,acc1lolohi,
+           acc1hihilo,acc1lohilo,acc1hilolo,acc1lololo);
+   odg_div(Ucolrehihihi[k],Ucolrelohihi[k],Ucolrehilohi[k],Ucolrelolohi[k],
+           Ucolrehihilo[k],Ucolrelohilo[k],Ucolrehilolo[k],Ucolrelololo[k],
+              denhihihi,      denlohihi,      denhilohi,      denlolohi,
+              denhihilo,      denlohilo,      denhilolo,      denlololo,
+           &invrehihihi,   &invrelohihi,   &invrehilohi,   &invrelolohi,
+           &invrehihilo,   &invrelohilo,   &invrehilolo,   &invrelololo);
+   odg_div(Ucolimhihihi[k],Ucolimlohihi[k],Ucolimhilohi[k],Ucolimlolohi[k],
+           Ucolimhihilo[k],Ucolimlohilo[k],Ucolimhilolo[k],Ucolimlololo[k],
+              denhihihi,      denlohihi,      denhilohi,      denlolohi,
+              denhihilo,      denlohilo,      denhilolo,      denlololo,
+           &invimhihihi,   &invimlohihi,   &invimhilohi,   &invimlolohi,
+           &invimhihilo,   &invimlohilo,   &invimhilolo,   &invimlololo);
+   odg_minus(&invimhihihi,&invimlohihi,
+             &invimhilohi,&invimlolohi,
+             &invimhihilo,&invimlohilo,
+             &invimhilolo,&invimlololo);
+   odg_mul(rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
+           rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
+           invrehihihi,invrelohihi,invrehilohi,invrelolohi,
+           invrehihilo,invrelohilo,invrehilolo,invrelololo,
+           &acc1hihihi,&acc1lohihi,&acc1hilohi,&acc1lolohi,
+           &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo);
+   odg_mul(rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
+           rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
+           invimhihihi,invimlohihi,invimhilohi,invimlolohi,
+           invimhihilo,invimlohilo,invimhilolo,invimlololo,
+           &acc2hihihi,&acc2lohihi,&acc2hilohi,&acc2lolohi,
+           &acc2hihilo,&acc2lohilo,&acc2hilolo,&acc2lololo);
+   odg_mul(rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
+           rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
+           invrehihihi,invrelohihi,invrehilohi,invrelolohi,
+           invrehihilo,invrelohilo,invrehilolo,invrelololo,
+           &acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
+           &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo);
+   odg_mul(rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
+           rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
+           invimhihihi,invimlohihi,invimhilohi,invimlolohi,
+           invimhihilo,invimlohilo,invimhilolo,invimlololo,
+           &acc4hihihi,&acc4lohihi,&acc4hilohi,&acc4lolohi,
+           &acc4hihilo,&acc4lohilo,&acc4hilolo,&acc4lololo);
+   odg_dec(&acc1hihihi,&acc1lohihi,&acc1hilohi,&acc1lolohi,
+           &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo,
+            acc2hihihi, acc2lohihi, acc2hilohi, acc2lolohi,
+            acc2hihilo, acc2lohilo, acc2hilolo, acc2lololo);
+   invUrowrehihihi[k] = acc1hihihi;
+   invUrowrelohihi[k] = acc1lohihi;
+   invUrowrehilohi[k] = acc1hilohi;
+   invUrowrelolohi[k] = acc1lolohi;
+   invUrowrehihilo[k] = acc1hihilo;
+   invUrowrelohilo[k] = acc1lohilo;
+   invUrowrehilolo[k] = acc1hilolo;
+   invUrowrelololo[k] = acc1lololo;
+   odg_inc(&acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
+           &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo,
+            acc4hihihi, acc4lohihi, acc4hilohi, acc4lolohi,
+            acc4hihilo, acc4lohilo, acc4hilolo, acc4lololo);
+   invUrowimhihihi[k] = acc3hihihi;
+   invUrowimlohihi[k] = acc3lohihi;
+   invUrowimhilohi[k] = acc3hilohi;
+   invUrowimlolohi[k] = acc3lolohi;
+   invUrowimhihilo[k] = acc3hihilo;
+   invUrowimlohilo[k] = acc3lohilo;
+   invUrowimhilolo[k] = acc3hilolo;
+   invUrowimlololo[k] = acc3lololo;
+   invUrehihihi[rowidx] = invUrowrehihihi[k];  // store last row into invU
+   invUrelohihi[rowidx] = invUrowrelohihi[k]; 
+   invUrehilohi[rowidx] = invUrowrehilohi[k]; 
+   invUrelolohi[rowidx] = invUrowrelolohi[k]; 
+   invUimhihilo[rowidx] = invUrowimhihilo[k];
+   invUimlohilo[rowidx] = invUrowimlohilo[k]; 
+   invUimhilolo[rowidx] = invUrowimhilolo[k];
+   invUimlololo[rowidx] = invUrowimlololo[k]; 
 
    for(int i=dim-2; i>=0; i--)        // compute row with index i
    {
-      rhsrehihi = ((double) int(k == i)); // set rhs for i-th unit vector
-      rhsrelohi = 0.0;
-      rhsrehilo = 0.0;
-      rhsrelolo = 0.0;
-      rhsimhihi = 0.0;
-      rhsimlohi = 0.0;
-      rhsimhilo = 0.0;
-      rhsimlolo = 0.0;
+      rhsrehihihi = ((double) int(k == i)); // set rhs for i-th unit vector
+      rhsrelohihi = 0.0;
+      rhsrehilohi = 0.0;
+      rhsrelolohi = 0.0;
+      rhsrehihilo = 0.0;
+      rhsrelohilo = 0.0;
+      rhsrehilolo = 0.0;
+      rhsrelololo = 0.0;
+      rhsimhihihi = 0.0;
+      rhsimlohihi = 0.0;
+      rhsimhilohi = 0.0;
+      rhsimlolohi = 0.0;
+      rhsimhihilo = 0.0;
+      rhsimlohilo = 0.0;
+      rhsimhilolo = 0.0;
+      rhsimlololo = 0.0;
 
       for(int j=i+1; j<dim; j++)
       {
          colidx = dim*j;              // need column j of U
-         Ucolrehihi[k] = Urehihi[colidx+k];
-         Ucolrelohi[k] = Urelohi[colidx+k];
-         Ucolrehilo[k] = Urehilo[colidx+k];
-         Ucolrelolo[k] = Urelolo[colidx+k];
-         Ucolimhihi[k] = Uimhihi[colidx+k];
-         Ucolimlohi[k] = Uimlohi[colidx+k];
-         Ucolimhilo[k] = Uimhilo[colidx+k];
-         Ucolimlolo[k] = Uimlolo[colidx+k];
+         Ucolrehihihi[k] = Urehihihi[colidx+k];
+         Ucolrelohihi[k] = Urelohihi[colidx+k];
+         Ucolrehilohi[k] = Urehilohi[colidx+k];
+         Ucolrelolohi[k] = Urelolohi[colidx+k];
+         Ucolrehihilo[k] = Urehihilo[colidx+k];
+         Ucolrelohilo[k] = Urelohilo[colidx+k];
+         Ucolrehilolo[k] = Urehilolo[colidx+k];
+         Ucolrelololo[k] = Urelololo[colidx+k];
+         Ucolimhihihi[k] = Uimhihihi[colidx+k];
+         Ucolimlohihi[k] = Uimlohihi[colidx+k];
+         Ucolimhilohi[k] = Uimhilohi[colidx+k];
+         Ucolimlolohi[k] = Uimlolohi[colidx+k];
+         Ucolimhihilo[k] = Uimhihilo[colidx+k];
+         Ucolimlohilo[k] = Uimlohilo[colidx+k];
+         Ucolimhilolo[k] = Uimhilolo[colidx+k];
+         Ucolimlololo[k] = Uimlololo[colidx+k];
 
-         rowidx = j*dim + k;                // need solution value
-         invUrowrehihi[k] = invUrehihi[rowidx]; // load invU row into invUrow
-         invUrowrelohi[k] = invUrelohi[rowidx];
-         invUrowrehilo[k] = invUrehilo[rowidx]; 
-         invUrowrelolo[k] = invUrelolo[rowidx];
-         invUrowimhihi[k] = invUimhihi[rowidx];
-         invUrowimlohi[k] = invUimlohi[rowidx];
-         invUrowimhilo[k] = invUimhilo[rowidx];
-         invUrowimlolo[k] = invUimlolo[rowidx];
-         xvalrehihi = invUrowrehihi[k];
-         xvalrelohi = invUrowrelohi[k];
-         xvalrehilo = invUrowrehilo[k];
-         xvalrelolo = invUrowrelolo[k];
-         xvalimhihi = invUrowimhihi[k];
-         xvalimlohi = invUrowimlohi[k];
-         xvalimhilo = invUrowimhilo[k];
-         xvalimlolo = invUrowimlolo[k];
+         rowidx = j*dim + k;                      // need solution value
+         invUrowrehihihi[k] = invUrehihihi[rowidx]; // load invU row
+         invUrowrelohihi[k] = invUrelohihi[rowidx];
+         invUrowrehilohi[k] = invUrehilohi[rowidx]; 
+         invUrowrelolohi[k] = invUrelolohi[rowidx];
+         invUrowrehihilo[k] = invUrehihilo[rowidx];
+         invUrowrelohilo[k] = invUrelohilo[rowidx];
+         invUrowrehilolo[k] = invUrehilolo[rowidx]; 
+         invUrowrelololo[k] = invUrelololo[rowidx];
+         invUrowimhihihi[k] = invUimhihihi[rowidx];
+         invUrowimlohihi[k] = invUimlohihi[rowidx];
+         invUrowimhilohi[k] = invUimhilohi[rowidx];
+         invUrowimlolohi[k] = invUimlolohi[rowidx];
+         invUrowimhihilo[k] = invUimhihilo[rowidx];
+         invUrowimlohilo[k] = invUimlohilo[rowidx];
+         invUrowimhilolo[k] = invUimhilolo[rowidx];
+         invUrowimlololo[k] = invUimlololo[rowidx];
+         xvalrehihihi = invUrowrehihihi[k];
+         xvalrelohihi = invUrowrelohihi[k];
+         xvalrehilohi = invUrowrehilohi[k];
+         xvalrelolohi = invUrowrelolohi[k];
+         xvalrehihilo = invUrowrehihilo[k];
+         xvalrelohilo = invUrowrelohilo[k];
+         xvalrehilolo = invUrowrehilolo[k];
+         xvalrelololo = invUrowrelololo[k];
+         xvalimhihihi = invUrowimhihihi[k];
+         xvalimlohihi = invUrowimlohihi[k];
+         xvalimhilohi = invUrowimhilohi[k];
+         xvalimlolohi = invUrowimlolohi[k];
+         xvalimhihilo = invUrowimhihilo[k];
+         xvalimlohilo = invUrowimlohilo[k];
+         xvalimhilolo = invUrowimhilolo[k];
+         xvalimlololo = invUrowimlololo[k];
 
          __syncthreads();
          // rhs = rhs - Ucol[i]*xval;    // update right hand side
-         qdg_mul(Ucolrehihi[i],Ucolrelohi[i],Ucolrehilo[i],Ucolrelolo[i],
-                 xvalrehihi,   xvalrelohi,   xvalrehilo,   xvalrelolo,
-                  &acc1hihi,    &acc1lohi,    &acc1hilo,    &acc1lolo);
-         qdg_mul(Ucolimhihi[i],Ucolimlohi[i],Ucolimhilo[i],Ucolimlolo[i],
-                 xvalimhihi,   xvalimlohi,   xvalimhilo,   xvalimlolo,
-                  &acc2hihi,    &acc2lohi,    &acc2hilo,    &acc2lolo);
-         qdg_mul(Ucolimhihi[i],Ucolimlohi[i],Ucolimhilo[i],Ucolimlolo[i],
-                 xvalrehihi,   xvalrelohi,   xvalrehilo,   xvalrelolo,
-                  &acc3hihi,    &acc3lohi,    &acc3hilo,    &acc3lolo);
-         qdg_mul(Ucolrehihi[i],Ucolrelohi[i],Ucolrehilo[i],Ucolrelolo[i],
-                 xvalimhihi,   xvalimlohi,   xvalimhilo,   xvalimlolo,
-                  &acc4hihi,    &acc4lohi,    &acc4hilo,    &acc4lolo);
-         qdg_dec(&rhsrehihi,&rhsrelohi,&rhsrehilo,&rhsrelolo,
-                   acc1hihi,  acc1lohi,  acc1hilo,  acc1lolo);
-         qdg_inc(&rhsrehihi,&rhsrelohi,&rhsrehilo,&rhsrelolo,
-                   acc2hihi,  acc2lohi,  acc2hilo,  acc2lolo);
-         qdg_dec(&rhsimhihi,&rhsimlohi,&rhsimhilo,&rhsimlolo,
-                   acc3hihi,  acc3lohi,  acc3hilo,  acc3lolo);
-         qdg_dec(&rhsimhihi,&rhsimlohi,&rhsimhilo,&rhsimlolo,
-                   acc4hihi,  acc4lohi,  acc4hilo,  acc4lolo);
+         odg_mul(Ucolrehihihi[i],Ucolrelohihi[i],
+                 Ucolrehilohi[i],Ucolrelolohi[i],
+                 Ucolrehihilo[i],Ucolrelohilo[i],
+                 Ucolrehilolo[i],Ucolrelololo[i],
+                 xvalrehihihi,   xvalrelohihi,   xvalrehilohi,   xvalrelolohi,
+                 xvalrehihilo,   xvalrelohilo,   xvalrehilolo,   xvalrelololo,
+                  &acc1hihihi,    &acc1lohihi,    &acc1hilohi,    &acc1lolohi,
+                  &acc1hihilo,    &acc1lohilo,    &acc1hilolo,    &acc1lololo);
+         odg_mul(Ucolimhihihi[i],Ucolimlohihi[i],
+                 Ucolimhilohi[i],Ucolimlolohi[i],
+                 Ucolimhihilo[i],Ucolimlohilo[i],
+                 Ucolimhilolo[i],Ucolimlololo[i],
+                 xvalimhihihi,   xvalimlohihi,   xvalimhilohi,   xvalimlolohi,
+                 xvalimhihilo,   xvalimlohilo,   xvalimhilolo,   xvalimlololo,
+                  &acc2hihihi,    &acc2lohihi,    &acc2hilohi,    &acc2lolohi,
+                  &acc2hihilo,    &acc2lohilo,    &acc2hilolo,    &acc2lololo);
+         odg_mul(Ucolimhihihi[i],Ucolimlohihi[i],
+                 Ucolimhilohi[i],Ucolimlolohi[i],
+                 Ucolimhihilo[i],Ucolimlohilo[i],
+                 Ucolimhilolo[i],Ucolimlololo[i],
+                 xvalrehihihi,   xvalrelohihi,   xvalrehilohi,   xvalrelolohi,
+                 xvalrehihilo,   xvalrelohilo,   xvalrehilolo,   xvalrelololo,
+                  &acc3hihihi,    &acc3lohihi,    &acc3hilohi,    &acc3lolohi,
+                  &acc3hihilo,    &acc3lohilo,    &acc3hilolo,    &acc3lololo);
+         odg_mul(Ucolrehihihi[i],Ucolrelohihi[i],
+                 Ucolrehilohi[i],Ucolrelolohi[i],
+                 Ucolrehihilo[i],Ucolrelohilo[i],
+                 Ucolrehilolo[i],Ucolrelololo[i],
+                 xvalimhihihi,   xvalimlohihi,   xvalimhilohi,   xvalimlolohi,
+                 xvalimhihilo,   xvalimlohilo,   xvalimhilolo,   xvalimlololo,
+                  &acc4hihihi,    &acc4lohihi,    &acc4hilohi,    &acc4lolohi,
+                  &acc4hihilo,    &acc4lohilo,    &acc4hilolo,    &acc4lololo);
+         odg_dec(&rhsrehihihi,&rhsrelohihi,&rhsrehilohi,&rhsrelolohi,
+                 &rhsrehihilo,&rhsrelohilo,&rhsrehilolo,&rhsrelololo,
+                   acc1hihihi,  acc1lohihi,  acc1hilohi,  acc1lolohi,
+                   acc1hihilo,  acc1lohilo,  acc1hilolo,  acc1lololo);
+         odg_inc(&rhsrehihihi,&rhsrelohihi,&rhsrehilohi,&rhsrelolohi,
+                 &rhsrehihilo,&rhsrelohilo,&rhsrehilolo,&rhsrelololo,
+                   acc2hihihi,  acc2lohihi,  acc2hilohi,  acc2lolohi,
+                   acc2hihilo,  acc2lohilo,  acc2hilolo,  acc2lololo);
+         odg_dec(&rhsimhihihi,&rhsimlohihi,&rhsimhilohi,&rhsimlolohi,
+                 &rhsimhihilo,&rhsimlohilo,&rhsimhilolo,&rhsimlololo,
+                   acc3hihihi,  acc3lohihi,  acc3hilohi,  acc3lolohi,
+                   acc3hihilo,  acc3lohilo,  acc3hilolo,  acc3lololo);
+         odg_dec(&rhsimhihihi,&rhsimlohihi,&rhsimhilohi,&rhsimlolohi,
+                 &rhsimhihilo,&rhsimlohilo,&rhsimhilolo,&rhsimlololo,
+                   acc4hihihi,  acc4lohihi,  acc4hilohi,  acc4lolohi,
+                   acc4hihilo,  acc4lohilo,  acc4hilolo,  acc4lololo);
       }
       colidx = dim*i;                 // need column i of U
-      Ucolrehihi[k] = Urehihi[colidx+k];
-      Ucolrelohi[k] = Urelohi[colidx+k];
-      Ucolrehilo[k] = Urehilo[colidx+k];
-      Ucolrelolo[k] = Urelolo[colidx+k];
-      Ucolimhihi[k] = Uimhihi[colidx+k];
-      Ucolimlohi[k] = Uimlohi[colidx+k];
-      Ucolimhilo[k] = Uimhilo[colidx+k];
-      Ucolimlolo[k] = Uimlolo[colidx+k];
+      Ucolrehihihi[k] = Urehihihi[colidx+k];
+      Ucolrelohihi[k] = Urelohihi[colidx+k];
+      Ucolrehilohi[k] = Urehilohi[colidx+k];
+      Ucolrelolohi[k] = Urelolohi[colidx+k];
+      Ucolrehihilo[k] = Urehihilo[colidx+k];
+      Ucolrelohilo[k] = Urelohilo[colidx+k];
+      Ucolrehilolo[k] = Urehilolo[colidx+k];
+      Ucolrelololo[k] = Urelololo[colidx+k];
+      Ucolimhihihi[k] = Uimhihihi[colidx+k];
+      Ucolimlohihi[k] = Uimlohihi[colidx+k];
+      Ucolimhilohi[k] = Uimhilohi[colidx+k];
+      Ucolimlolohi[k] = Uimlolohi[colidx+k];
+      Ucolimhihilo[k] = Uimhihilo[colidx+k];
+      Ucolimlohilo[k] = Uimlohilo[colidx+k];
+      Ucolimhilolo[k] = Uimhilolo[colidx+k];
+      Ucolimlololo[k] = Uimlololo[colidx+k];
       rowidx = i*dim + k;             // save in i-th row of inverse
 
       __syncthreads();
       // invUrow[k] = rhs/Ucol[i];
-      qdg_mul(Ucolrehihi[i],Ucolrelohi[i],Ucolrehilo[i],Ucolrelolo[i],
-              Ucolrehihi[i],Ucolrelohi[i],Ucolrehilo[i],Ucolrelolo[i],
-                &denhihi,     &denlohi,     &denhilo,     &denlolo);
-      qdg_mul(Ucolimhihi[i],Ucolimlohi[i],Ucolimhilo[i],Ucolimlolo[i],
-              Ucolimhihi[i],Ucolimlohi[i],Ucolimhilo[i],Ucolimlolo[i],
-               &acc1hihi,    &acc1lohi,    &acc1hilo,    &acc1lolo);
-      qdg_inc(&denhihi,&denlohi,&denhilo,&denlolo,
-              acc1hihi,acc1lohi,acc1hilo,acc1lolo);
-      qdg_div(Ucolrehihi[i],Ucolrelohi[i],Ucolrehilo[i],Ucolrelolo[i],
-                 denhihi,      denlohi,      denhilo,      denlolo,
-              &invrehihi,   &invrelohi,   &invrehilo,   &invrelolo);
-      qdg_div(Ucolimhihi[i],Ucolimlohi[i],Ucolimhilo[i],Ucolimlolo[i],
-                 denhihi,      denlohi,      denhilo,      denlolo,
-              &invimhihi,   &invimlohi,   &invimhilo,   &invimlolo);
-      qdg_minus(&invimhihi,&invimlohi,&invimhilo,&invimlolo);
-      qdg_mul(rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
-              invrehihi,invrelohi,invrehilo,invrelolo,
-              &acc1hihi,&acc1lohi,&acc1hilo,&acc1lolo);
-      qdg_mul(rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
-              invimhihi,invimlohi,invimhilo,invimlolo,
-              &acc2hihi,&acc2lohi,&acc2hilo,&acc2lolo);
-      qdg_mul(rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
-              invrehihi,invrelohi,invrehilo,invrelolo,
-              &acc3hihi,&acc3lohi,&acc3hilo,&acc3lolo);
-      qdg_mul(rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
-              invimhihi,invimlohi,invimhilo,invimlolo,
-              &acc4hihi,&acc4lohi,&acc4hilo,&acc4lolo);
-      qdg_dec(&acc1hihi,&acc1lohi,&acc1hilo,&acc1lolo,
-               acc2hihi, acc2lohi, acc2hilo,acc2lolo);
-      invUrowrehihi[k] = acc1hihi;
-      invUrowrelohi[k] = acc1lohi;
-      invUrowrehilo[k] = acc1hilo;
-      invUrowrelolo[k] = acc1lolo;
-      qdg_inc(&acc3hihi,&acc3lohi,&acc3hilo,&acc3lolo,
-               acc4hihi, acc4lohi, acc4hilo, acc4lolo);
-      invUrowimhihi[k] = acc3hihi;
-      invUrowimlohi[k] = acc3lohi;
-      invUrowimhilo[k] = acc3hilo;
-      invUrowimlolo[k] = acc3lolo;
-      invUrehihi[rowidx] = invUrowrehihi[k];
-      invUrelohi[rowidx] = invUrowrelohi[k];
-      invUrehilo[rowidx] = invUrowrehilo[k];
-      invUrelolo[rowidx] = invUrowrelolo[k];
-      invUimhihi[rowidx] = invUrowimhihi[k];
-      invUimlohi[rowidx] = invUrowimlohi[k];
-      invUimhilo[rowidx] = invUrowimhilo[k];
-      invUimlolo[rowidx] = invUrowimlolo[k];
+      odg_mul(Ucolrehihihi[i],Ucolrelohihi[i],Ucolrehilohi[i],Ucolrelolohi[i],
+              Ucolrehihilo[i],Ucolrelohilo[i],Ucolrehilolo[i],Ucolrelololo[i],
+              Ucolrehihihi[i],Ucolrelohihi[i],Ucolrehilohi[i],Ucolrelolohi[i],
+              Ucolrehihilo[i],Ucolrelohilo[i],Ucolrehilolo[i],Ucolrelololo[i],
+                &denhihihi,     &denlohihi,     &denhilohi,     &denlolohi,
+                &denhihilo,     &denlohilo,     &denhilolo,     &denlololo);
+      odg_mul(Ucolimhihihi[i],Ucolimlohihi[i],Ucolimhilohi[i],Ucolimlolohi[i],
+              Ucolimhihilo[i],Ucolimlohilo[i],Ucolimhilolo[i],Ucolimlololo[i],
+              Ucolimhihihi[i],Ucolimlohihi[i],Ucolimhilohi[i],Ucolimlolohi[i],
+              Ucolimhihilo[i],Ucolimlohilo[i],Ucolimhilolo[i],Ucolimlololo[i],
+               &acc1hihihi,    &acc1lohihi,    &acc1hilohi,    &acc1lolohi,
+               &acc1hihilo,    &acc1lohilo,    &acc1hilolo,    &acc1lololo);
+      odg_inc(&denhihihi,&denlohihi,&denhilohi,&denlolohi,
+              &denhihilo,&denlohilo,&denhilolo,&denlololo,
+              acc1hihihi,acc1lohihi,acc1hilohi,acc1lolohi,
+              acc1hihilo,acc1lohilo,acc1hilolo,acc1lololo);
+      odg_div(Ucolrehihihi[i],Ucolrelohihi[i],Ucolrehilohi[i],Ucolrelolohi[i],
+              Ucolrehihilo[i],Ucolrelohilo[i],Ucolrehilolo[i],Ucolrelololo[i],
+                 denhihihi,      denlohihi,      denhilohi,      denlolohi,
+                 denhihilo,      denlohilo,      denhilolo,      denlololo,
+              &invrehihihi,   &invrelohihi,   &invrehilohi,   &invrelolohi,
+              &invrehihilo,   &invrelohilo,   &invrehilolo,   &invrelololo);
+      odg_div(Ucolimhihihi[i],Ucolimlohihi[i],Ucolimhilohi[i],Ucolimlolohi[i],
+              Ucolimhihilo[i],Ucolimlohilo[i],Ucolimhilolo[i],Ucolimlololo[i],
+                 denhihihi,      denlohihi,      denhilohi,      denlolohi,
+                 denhihilo,      denlohilo,      denhilolo,      denlololo,
+              &invimhihihi,   &invimlohihi,   &invimhilohi,   &invimlolohi,
+              &invimhihilo,   &invimlohilo,   &invimhilolo,   &invimlololo);
+      odg_minus(&invimhihihi,&invimlohihi,&invimhilohi,&invimlolohi,
+                &invimhihilo,&invimlohilo,&invimhilolo,&invimlololo);
+      odg_mul(rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
+              rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
+              invrehihihi,invrelohihi,invrehilohi,invrelolohi,
+              invrehihilo,invrelohilo,invrehilolo,invrelololo,
+              &acc1hihihi,&acc1lohihi,&acc1hilohi,&acc1lolohi,
+              &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo);
+      odg_mul(rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
+              rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
+              invimhihihi,invimlohihi,invimhilohi,invimlolohi,
+              invimhihilo,invimlohilo,invimhilolo,invimlololo,
+              &acc2hihihi,&acc2lohihi,&acc2hilohi,&acc2lolohi,
+              &acc2hihilo,&acc2lohilo,&acc2hilolo,&acc2lololo);
+      odg_mul(rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
+              rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
+              invrehihihi,invrelohihi,invrehilohi,invrelolohi,
+              invrehihilo,invrelohilo,invrehilolo,invrelololo,
+              &acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
+              &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo);
+      odg_mul(rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
+              rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
+              invimhihihi,invimlohihi,invimhilohi,invimlolohi,
+              invimhihilo,invimlohilo,invimhilolo,invimlololo,
+              &acc4hihihi,&acc4lohihi,&acc4hilohi,&acc4lolohi,
+              &acc4hihilo,&acc4lohilo,&acc4hilolo,&acc4lololo);
+      odg_dec(&acc1hihihi,&acc1lohihi,&acc1hilohi,&acc1lolohi,
+              &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo,
+               acc2hihihi, acc2lohihi, acc2hilohi, acc2lolohi,
+               acc2hihilo, acc2lohilo, acc2hilolo, acc2lololo);
+      invUrowrehihihi[k] = acc1hihihi;
+      invUrowrelohihi[k] = acc1lohihi;
+      invUrowrehilohi[k] = acc1hilohi;
+      invUrowrelolohi[k] = acc1lolohi;
+      invUrowrehihilo[k] = acc1hihilo;
+      invUrowrelohilo[k] = acc1lohilo;
+      invUrowrehilolo[k] = acc1hilolo;
+      invUrowrelololo[k] = acc1lololo;
+      odg_inc(&acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
+              &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo,
+               acc4hihihi, acc4lohihi, acc4hilohi, acc4lolohi,
+               acc4hihilo, acc4lohilo, acc4hilolo, acc4lololo);
+      invUrowimhihihi[k] = acc3hihihi;
+      invUrowimlohihi[k] = acc3lohihi;
+      invUrowimhilohi[k] = acc3hilohi;
+      invUrowimlolohi[k] = acc3lolohi;
+      invUrowimhihilo[k] = acc3hihilo;
+      invUrowimlohilo[k] = acc3lohilo;
+      invUrowimhilolo[k] = acc3hilolo;
+      invUrowimlololo[k] = acc3lololo;
+      invUrehihihi[rowidx] = invUrowrehihihi[k];
+      invUrelohihi[rowidx] = invUrowrelohihi[k];
+      invUrehilohi[rowidx] = invUrowrehilohi[k];
+      invUrelolohi[rowidx] = invUrowrelolohi[k];
+      invUrehihilo[rowidx] = invUrowrehihilo[k];
+      invUrelohilo[rowidx] = invUrowrelohilo[k];
+      invUrehilolo[rowidx] = invUrowrehilolo[k];
+      invUrelololo[rowidx] = invUrowrelololo[k];
+      invUimhihihi[rowidx] = invUrowimhihihi[k];
+      invUimlohihi[rowidx] = invUrowimlohihi[k];
+      invUimhilohi[rowidx] = invUrowimhilohi[k];
+      invUimlolohi[rowidx] = invUrowimlolohi[k];
+      invUimhihilo[rowidx] = invUrowimhihilo[k];
+      invUimlohilo[rowidx] = invUrowimlohilo[k];
+      invUimhilolo[rowidx] = invUrowimhilolo[k];
+      invUimlololo[rowidx] = invUrowimlololo[k];
    }
 }
+
+/*
 
 __global__ void  dbl4_invert_tiles
  ( int dim, double *Uhihi, double *Ulohi, double *Uhilo, double *Ulolo,
@@ -1774,92 +1978,164 @@ void GPU_dbl8_upper_inverse
    free(invUhilolo_h); free(invUlololo_h);
 }
 
-/*
-
-void GPU_cmplx4_upper_inverse
+void GPU_cmplx8_upper_inverse
  ( int dim,
-   double **Urehihi, double **Urelohi, double **Urehilo, double **Urelolo,
-   double **Uimhihi, double **Uimlohi, double **Uimhilo, double **Uimlolo,
-   double **invUrehihi, double **invUrelohi,
-   double **invUrehilo, double **invUrelolo,
-   double **invUimhihi, double **invUimlohi, 
-   double **invUimhilo, double **invUimlolo, 
+   double **Urehihihi, double **Urelohihi,
+   double **Urehilohi, double **Urelolohi,
+   double **Urehihilo, double **Urelohilo,
+   double **Urehilolo, double **Urelololo,
+   double **Uimhihihi, double **Uimlohihi,
+   double **Uimhilohi, double **Uimlolohi,
+   double **Uimhihilo, double **Uimlohilo,
+   double **Uimhilolo, double **Uimlololo,
+   double **invUrehihihi, double **invUrelohihi,
+   double **invUrehilohi, double **invUrelolohi,
+   double **invUrehihilo, double **invUrelohilo,
+   double **invUrehilolo, double **invUrelololo,
+   double **invUimhihihi, double **invUimlohihi, 
+   double **invUimhilohi, double **invUimlolohi, 
+   double **invUimhihilo, double **invUimlohilo, 
+   double **invUimhilolo, double **invUimlololo, 
    double *lapms, double *walltimesec )
 {
    const int szU = dim*dim;
 
-   double *Urehihi_h = new double[szU];  // real parts of U
-   double *Urelohi_h = new double[szU]; 
-   double *Urehilo_h = new double[szU]; 
-   double *Urelolo_h = new double[szU]; 
-   double *Uimhihi_h = new double[szU];  // imaginary parts of U
-   double *Uimlohi_h = new double[szU]; 
-   double *Uimhilo_h = new double[szU]; 
-   double *Uimlolo_h = new double[szU]; 
-   double *Urehihi_d;                    // real parts on the device
-   double *Urelohi_d;
-   double *Urehilo_d;
-   double *Urelolo_d;
-   double *Uimhihi_d;                    // imaginary parts on the device
-   double *Uimlohi_d;
-   double *Uimhilo_d;
-   double *Uimlolo_d;
-   double *invUrehihi_h = new double[szU]; // real parts of inverse
-   double *invUrelohi_h = new double[szU];
-   double *invUrehilo_h = new double[szU];
-   double *invUrelolo_h = new double[szU];
-   double *invUimhihi_h = new double[szU]; // imaginary parts of inverse
-   double *invUimlohi_h = new double[szU];
-   double *invUimhilo_h = new double[szU];
-   double *invUimlolo_h = new double[szU];
-   double *invUrehihi_d;           // invUrehihi_d ~ invUrehihi_h on device
-   double *invUrelohi_d;           // invUrelohi_d ~ invUrelohi_h on device
-   double *invUrehilo_d;           // invUrehilo_d ~ invUrehilo_h on device
-   double *invUrelolo_d;           // invUrelolo_d ~ invUrelolo_h on device
-   double *invUimhihi_d;           // invUimhihi_d ~ invUimhihi_h on device
-   double *invUimlohi_d;           // invUimlohi_d ~ invUimlohi_h on device
-   double *invUimhilo_d;           // invUimhilo_d ~ invUimhilo_h on device
-   double *invUimlolo_d;           // invUimlolo_d ~ invUimlolo_h on device
+   double *Urehihihi_h = new double[szU];  // real parts of U
+   double *Urelohihi_h = new double[szU]; 
+   double *Urehilohi_h = new double[szU]; 
+   double *Urelolohi_h = new double[szU]; 
+   double *Urehihilo_h = new double[szU];
+   double *Urelohilo_h = new double[szU]; 
+   double *Urehilolo_h = new double[szU]; 
+   double *Urelololo_h = new double[szU]; 
+   double *Uimhihihi_h = new double[szU];  // imaginary parts of U
+   double *Uimlohihi_h = new double[szU]; 
+   double *Uimhilohi_h = new double[szU]; 
+   double *Uimlolohi_h = new double[szU]; 
+   double *Uimhihilo_h = new double[szU];
+   double *Uimlohilo_h = new double[szU]; 
+   double *Uimhilolo_h = new double[szU]; 
+   double *Uimlololo_h = new double[szU]; 
+   double *Urehihihi_d;                    // real parts on the device
+   double *Urelohihi_d;
+   double *Urehilohi_d;
+   double *Urelolohi_d;
+   double *Urehihilo_d;
+   double *Urelohilo_d;
+   double *Urehilolo_d;
+   double *Urelololo_d;
+   double *Uimhihihi_d;                    // imaginary parts on the device
+   double *Uimlohihi_d;
+   double *Uimhilohi_d;
+   double *Uimlolohi_d;
+   double *Uimhihilo_d;
+   double *Uimlohilo_d;
+   double *Uimhilolo_d;
+   double *Uimlololo_d;
+   double *invUrehihihi_h = new double[szU]; // real parts of inverse
+   double *invUrelohihi_h = new double[szU];
+   double *invUrehilohi_h = new double[szU];
+   double *invUrelolohi_h = new double[szU];
+   double *invUrehihilo_h = new double[szU];
+   double *invUrelohilo_h = new double[szU];
+   double *invUrehilolo_h = new double[szU];
+   double *invUrelololo_h = new double[szU];
+   double *invUimhihihi_h = new double[szU]; // imaginary parts of inverse
+   double *invUimlohihi_h = new double[szU];
+   double *invUimhilohi_h = new double[szU];
+   double *invUimlolohi_h = new double[szU];
+   double *invUimhihilo_h = new double[szU];
+   double *invUimlohilo_h = new double[szU];
+   double *invUimhilolo_h = new double[szU];
+   double *invUimlololo_h = new double[szU];
+   double *invUrehihihi_d;           // inverse on device
+   double *invUrelohihi_d;
+   double *invUrehilohi_d;
+   double *invUrelolohi_d;
+   double *invUrehihilo_d;
+   double *invUrelohilo_d;
+   double *invUrehilolo_d;
+   double *invUrelololo_d;
+   double *invUimhihihi_d; 
+   double *invUimlohihi_d;
+   double *invUimhilohi_d;
+   double *invUimlolohi_d;
+   double *invUimhihilo_d; 
+   double *invUimlohilo_d;
+   double *invUimhilolo_d;
+   double *invUimlololo_d;
 
    int ix = 0;
    for(int j=0; j<dim; j++)
       for(int i=0; i<dim; i++)
       {
-         Urehihi_h[ix]   = Urehihi[i][j];
-         Urelohi_h[ix]   = Urelohi[i][j];
-         Urehilo_h[ix]   = Urehilo[i][j];
-         Urelolo_h[ix]   = Urelolo[i][j];
-         Uimhihi_h[ix]   = Uimhihi[i][j];
-         Uimlohi_h[ix]   = Uimlohi[i][j];
-         Uimhilo_h[ix]   = Uimhilo[i][j];
-         Uimlolo_h[ix++] = Uimlolo[i][j];
+         Urehihihi_h[ix]   = Urehihihi[i][j];
+         Urelohihi_h[ix]   = Urelohihi[i][j];
+         Urehilohi_h[ix]   = Urehilohi[i][j];
+         Urelolohi_h[ix]   = Urelolohi[i][j];
+         Urehihilo_h[ix]   = Urehihilo[i][j];
+         Urelohilo_h[ix]   = Urelohilo[i][j];
+         Urehilolo_h[ix]   = Urehilolo[i][j];
+         Urelololo_h[ix]   = Urelololo[i][j];
+         Uimhihihi_h[ix]   = Uimhihihi[i][j];
+         Uimlohihi_h[ix]   = Uimlohihi[i][j];
+         Uimhilohi_h[ix]   = Uimhilohi[i][j];
+         Uimlolohi_h[ix]   = Uimlolohi[i][j];
+         Uimhihilo_h[ix]   = Uimhihilo[i][j];
+         Uimlohilo_h[ix]   = Uimlohilo[i][j];
+         Uimhilolo_h[ix]   = Uimhilolo[i][j];
+         Uimlololo_h[ix++] = Uimlololo[i][j];
       }
 
    size_t szmat = szU*sizeof(double);
-   cudaMalloc((void**)&Urehihi_d,szmat);
-   cudaMalloc((void**)&Urelohi_d,szmat);
-   cudaMalloc((void**)&Urehilo_d,szmat);
-   cudaMalloc((void**)&Urelolo_d,szmat);
-   cudaMalloc((void**)&Uimhihi_d,szmat);
-   cudaMalloc((void**)&Uimlohi_d,szmat);
-   cudaMalloc((void**)&Uimhilo_d,szmat);
-   cudaMalloc((void**)&Uimlolo_d,szmat);
-   cudaMalloc((void**)&invUrehihi_d,szmat);
-   cudaMalloc((void**)&invUrelohi_d,szmat);
-   cudaMalloc((void**)&invUrehilo_d,szmat);
-   cudaMalloc((void**)&invUrelolo_d,szmat);
-   cudaMalloc((void**)&invUimhihi_d,szmat);
-   cudaMalloc((void**)&invUimlohi_d,szmat);
-   cudaMalloc((void**)&invUimhilo_d,szmat);
-   cudaMalloc((void**)&invUimlolo_d,szmat);
-   cudaMemcpy(Urehihi_d,Urehihi_h,szmat,cudaMemcpyHostToDevice);
-   cudaMemcpy(Urelohi_d,Urelohi_h,szmat,cudaMemcpyHostToDevice);
-   cudaMemcpy(Urehilo_d,Urehilo_h,szmat,cudaMemcpyHostToDevice);
-   cudaMemcpy(Urelolo_d,Urelolo_h,szmat,cudaMemcpyHostToDevice);
-   cudaMemcpy(Uimhihi_d,Uimhihi_h,szmat,cudaMemcpyHostToDevice);
-   cudaMemcpy(Uimlohi_d,Uimlohi_h,szmat,cudaMemcpyHostToDevice);
-   cudaMemcpy(Uimhilo_d,Uimhilo_h,szmat,cudaMemcpyHostToDevice);
-   cudaMemcpy(Uimlolo_d,Uimlolo_h,szmat,cudaMemcpyHostToDevice);
+   cudaMalloc((void**)&Urehihihi_d,szmat);
+   cudaMalloc((void**)&Urelohihi_d,szmat);
+   cudaMalloc((void**)&Urehilohi_d,szmat);
+   cudaMalloc((void**)&Urelolohi_d,szmat);
+   cudaMalloc((void**)&Urehihilo_d,szmat);
+   cudaMalloc((void**)&Urelohilo_d,szmat);
+   cudaMalloc((void**)&Urehilolo_d,szmat);
+   cudaMalloc((void**)&Urelololo_d,szmat);
+   cudaMalloc((void**)&Uimhihihi_d,szmat);
+   cudaMalloc((void**)&Uimlohihi_d,szmat);
+   cudaMalloc((void**)&Uimhilohi_d,szmat);
+   cudaMalloc((void**)&Uimlolohi_d,szmat);
+   cudaMalloc((void**)&Uimhihilo_d,szmat);
+   cudaMalloc((void**)&Uimlohilo_d,szmat);
+   cudaMalloc((void**)&Uimhilolo_d,szmat);
+   cudaMalloc((void**)&Uimlololo_d,szmat);
+   cudaMalloc((void**)&invUrehihihi_d,szmat);
+   cudaMalloc((void**)&invUrelohihi_d,szmat);
+   cudaMalloc((void**)&invUrehilohi_d,szmat);
+   cudaMalloc((void**)&invUrelolohi_d,szmat);
+   cudaMalloc((void**)&invUrehihilo_d,szmat);
+   cudaMalloc((void**)&invUrelohilo_d,szmat);
+   cudaMalloc((void**)&invUrehilolo_d,szmat);
+   cudaMalloc((void**)&invUrelololo_d,szmat);
+   cudaMalloc((void**)&invUimhihihi_d,szmat);
+   cudaMalloc((void**)&invUimlohihi_d,szmat);
+   cudaMalloc((void**)&invUimhilohi_d,szmat);
+   cudaMalloc((void**)&invUimlolohi_d,szmat);
+   cudaMalloc((void**)&invUimhihilo_d,szmat);
+   cudaMalloc((void**)&invUimlohilo_d,szmat);
+   cudaMalloc((void**)&invUimhilolo_d,szmat);
+   cudaMalloc((void**)&invUimlololo_d,szmat);
+   cudaMemcpy(Urehihihi_d,Urehihihi_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Urelohihi_d,Urelohihi_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Urehilohi_d,Urehilohi_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Urelolohi_d,Urelolohi_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Urehihilo_d,Urehihilo_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Urelohilo_d,Urelohilo_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Urehilolo_d,Urehilolo_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Urelololo_d,Urelololo_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Uimhihihi_d,Uimhihihi_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Uimlohihi_d,Uimlohihi_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Uimhilohi_d,Uimhilohi_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Uimlolohi_d,Uimlolohi_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Uimhihilo_d,Uimhihilo_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Uimlohilo_d,Uimlohilo_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Uimhilolo_d,Uimhilolo_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(Uimlololo_d,Uimlololo_h,szmat,cudaMemcpyHostToDevice);
 
    cudaEvent_t start,stop;           // to measure time spent by kernels 
    cudaEventCreate(&start);
@@ -1873,17 +2149,25 @@ void GPU_cmplx4_upper_inverse
    cudaEventRecord(start);
 
    if(dim <= 16)
-      cmplx4_small_invert_upper<<<1,dim>>>
-         (dim,   Urehihi_d,   Urelohi_d,   Urehilo_d,   Urelolo_d,
-                 Uimhihi_d,   Uimlohi_d,   Uimhilo_d,   Uimlolo_d,
-              invUrehihi_d,invUrelohi_d,invUrehilo_d,invUrelolo_d,
-              invUimhihi_d,invUimlohi_d,invUimhilo_d,invUimlolo_d);
+      cmplx8_small_invert_upper<<<1,dim>>>
+         (dim,   Urehihihi_d,   Urelohihi_d,   Urehilohi_d,   Urelolohi_d,
+                 Urehihilo_d,   Urelohilo_d,   Urehilolo_d,   Urelololo_d,
+                 Uimhihihi_d,   Uimlohihi_d,   Uimhilohi_d,   Uimlolohi_d,
+                 Uimhihilo_d,   Uimlohilo_d,   Uimhilolo_d,   Uimlololo_d,
+              invUrehihihi_d,invUrelohihi_d,invUrehilohi_d,invUrelolohi_d,
+              invUrehihilo_d,invUrelohilo_d,invUrehilolo_d,invUrelololo_d,
+              invUimhihihi_d,invUimlohihi_d,invUimhilohi_d,invUimlolohi_d,
+              invUimhihilo_d,invUimlohilo_d,invUimhilolo_d,invUimlololo_d);
    else
-      cmplx4_medium_invert_upper<<<1,dim>>>
-         (dim,   Urehihi_d,   Urelohi_d,   Urehilo_d,   Urelolo_d,
-                 Uimhihi_d,   Uimlohi_d,   Uimhilo_d,   Uimlolo_d,
-              invUrehihi_d,invUrelohi_d,invUrehilo_d,invUrelolo_d,
-              invUimhihi_d,invUimlohi_d,invUimhilo_d,invUimlolo_d);
+      cmplx8_medium_invert_upper<<<1,dim>>>
+         (dim,   Urehihihi_d,   Urelohihi_d,   Urehilohi_d,   Urelolohi_d,
+                 Urehihilo_d,   Urelohilo_d,   Urehilolo_d,   Urelololo_d,
+                 Uimhihihi_d,   Uimlohihi_d,   Uimhilohi_d,   Uimlolohi_d,
+                 Uimhihilo_d,   Uimlohilo_d,   Uimhilolo_d,   Uimlololo_d,
+              invUrehihihi_d,invUrelohihi_d,invUrehilohi_d,invUrelolohi_d,
+              invUrehihilo_d,invUrelohilo_d,invUrehilolo_d,invUrelololo_d,
+              invUimhihihi_d,invUimlohihi_d,invUimhilohi_d,invUimlolohi_d,
+              invUimhihilo_d,invUimlohilo_d,invUimhilolo_d,invUimlololo_d);
 
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
@@ -1895,36 +2179,64 @@ void GPU_cmplx4_upper_inverse
    long microseconds = endtime.tv_usec - begintime.tv_usec;
    *walltimesec = seconds + microseconds*1.0e-6;
 
-   cudaMemcpy(invUrehihi_h,invUrehihi_d,szmat,cudaMemcpyDeviceToHost);
-   cudaMemcpy(invUrelohi_h,invUrelohi_d,szmat,cudaMemcpyDeviceToHost);
-   cudaMemcpy(invUrehilo_h,invUrehilo_d,szmat,cudaMemcpyDeviceToHost);
-   cudaMemcpy(invUrelolo_h,invUrelolo_d,szmat,cudaMemcpyDeviceToHost);
-   cudaMemcpy(invUimhihi_h,invUimhihi_d,szmat,cudaMemcpyDeviceToHost);
-   cudaMemcpy(invUimlohi_h,invUimlohi_d,szmat,cudaMemcpyDeviceToHost);
-   cudaMemcpy(invUimhilo_h,invUimhilo_d,szmat,cudaMemcpyDeviceToHost);
-   cudaMemcpy(invUimlolo_h,invUimlolo_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUrehihihi_h,invUrehihihi_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUrelohihi_h,invUrelohihi_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUrehilohi_h,invUrehilohi_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUrelolohi_h,invUrelolohi_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUrehihilo_h,invUrehihilo_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUrelohilo_h,invUrelohilo_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUrehilolo_h,invUrehilolo_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUrelololo_h,invUrelololo_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUimhihihi_h,invUimhihihi_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUimlohihi_h,invUimlohihi_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUimhilohi_h,invUimhilohi_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUimlolohi_h,invUimlolohi_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUimhihilo_h,invUimhihilo_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUimlohilo_h,invUimlohilo_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUimhilolo_h,invUimhilolo_d,szmat,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invUimlololo_h,invUimlololo_d,szmat,cudaMemcpyDeviceToHost);
 
    ix = 0;
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
       {
-         invUrehihi[i][j] = invUrehihi_h[ix];
-         invUrelohi[i][j] = invUrelohi_h[ix];
-         invUrehilo[i][j] = invUrehilo_h[ix];
-         invUrelolo[i][j] = invUrelolo_h[ix];
-         invUimhihi[i][j] = invUimhihi_h[ix];
-         invUimlohi[i][j] = invUimlohi_h[ix];
-         invUimhilo[i][j] = invUimhilo_h[ix];
-         invUimlolo[i][j] = invUimlolo_h[ix++];
+         invUrehihihi[i][j] = invUrehihihi_h[ix];
+         invUrelohihi[i][j] = invUrelohihi_h[ix];
+         invUrehilohi[i][j] = invUrehilohi_h[ix];
+         invUrelolohi[i][j] = invUrelolohi_h[ix];
+         invUrehihilo[i][j] = invUrehihilo_h[ix];
+         invUrelohilo[i][j] = invUrelohilo_h[ix];
+         invUrehilolo[i][j] = invUrehilolo_h[ix];
+         invUrelololo[i][j] = invUrelololo_h[ix];
+         invUimhihihi[i][j] = invUimhihihi_h[ix];
+         invUimlohihi[i][j] = invUimlohihi_h[ix];
+         invUimhilohi[i][j] = invUimhilohi_h[ix];
+         invUimlolohi[i][j] = invUimlolohi_h[ix];
+         invUimhihilo[i][j] = invUimhihilo_h[ix];
+         invUimlohilo[i][j] = invUimlohilo_h[ix];
+         invUimhilolo[i][j] = invUimhilolo_h[ix];
+         invUimlololo[i][j] = invUimlololo_h[ix++];
       }
 
-   free(Urehihi_h); free(Urelohi_h); free(Urehilo_h); free(Urelolo_h);
-   free(Uimhihi_h); free(Uimlohi_h); free(Uimhilo_h); free(Uimlolo_h);
-   free(invUrehihi_h); free(invUrelohi_h);
-   free(invUrehilo_h); free(invUrelolo_h);
-   free(invUimhihi_h); free(invUimlohi_h);
-   free(invUimhilo_h); free(invUimlolo_h);
+   free(Urehihihi_h); free(Urelohihi_h);
+   free(Urehilohi_h); free(Urelolohi_h);
+   free(Urehihilo_h); free(Urelohilo_h);
+   free(Urehilolo_h); free(Urelololo_h);
+   free(Uimhihihi_h); free(Uimlohihi_h);
+   free(Uimhilohi_h); free(Uimlolohi_h);
+   free(Uimhihilo_h); free(Uimlohilo_h);
+   free(Uimhilolo_h); free(Uimlololo_h);
+   free(invUrehihihi_h); free(invUrelohihi_h);
+   free(invUrehilohi_h); free(invUrelolohi_h);
+   free(invUrehihilo_h); free(invUrelohilo_h);
+   free(invUrehilolo_h); free(invUrelololo_h);
+   free(invUimhihihi_h); free(invUimlohihi_h);
+   free(invUimhilohi_h); free(invUimlolohi_h);
+   free(invUimhihilo_h); free(invUimlohilo_h);
+   free(invUimhilolo_h); free(invUimlololo_h);
 }
+
+/*
 
 void GPU_dbl4_upper_tiled_solver
  ( int dim, int szt, int nbt,

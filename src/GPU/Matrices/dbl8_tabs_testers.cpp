@@ -5,12 +5,12 @@
 #include <iomanip>
 #include <cstdlib>
 #include <cmath>
-// #include <vector_types.h>
+#include <vector_types.h>
 #include "octo_double_functions.h"
 #include "random8_matrices.h"
 #include "dbl8_factorizations.h"
 #include "dbl8_tabs_host.h"
-// #include "dbl8_tabs_kernels.h"
+#include "dbl8_tabs_kernels.h"
 #include "dbl8_test_utilities.h"
 
 using namespace std;
@@ -176,24 +176,33 @@ void test_real8_upper_inverse ( void )
                  << "               "
                  << invAhilolo_h[i][j] << "  " << invAlololo_h[i][j] << endl;
    }
-/*
-   double **invAhihi_d = new double*[dim];
-   double **invAlohi_d = new double*[dim];
-   double **invAhilo_d = new double*[dim];
-   double **invAlolo_d = new double*[dim];
+   double **invAhihihi_d = new double*[dim];
+   double **invAlohihi_d = new double*[dim];
+   double **invAhilohi_d = new double*[dim];
+   double **invAlolohi_d = new double*[dim];
+   double **invAhihilo_d = new double*[dim];
+   double **invAlohilo_d = new double*[dim];
+   double **invAhilolo_d = new double*[dim];
+   double **invAlololo_d = new double*[dim];
 
    for(int i=0; i<dim; i++)
    {
-      invAhihi_d[i] = new double[dim];
-      invAlohi_d[i] = new double[dim];
-      invAhilo_d[i] = new double[dim];
-      invAlolo_d[i] = new double[dim];
+      invAhihihi_d[i] = new double[dim];
+      invAlohihi_d[i] = new double[dim];
+      invAhilohi_d[i] = new double[dim];
+      invAlolohi_d[i] = new double[dim];
+      invAhihilo_d[i] = new double[dim];
+      invAlohilo_d[i] = new double[dim];
+      invAhilolo_d[i] = new double[dim];
+      invAlololo_d[i] = new double[dim];
    }
    cout << "-> GPU computes the inverse ..." << endl;
 
-   GPU_dbl4_upper_inverse
-      (dim,Ahihi,     Alohi,     Ahilo,     Alolo,
-        invAhihi_d,invAlohi_d,invAhilo_d,invAlolo_d,
+   GPU_dbl8_upper_inverse
+      (dim,Ahihihi,     Alohihi,     Ahilohi,     Alolohi,
+           Ahihilo,     Alohilo,     Ahilolo,     Alololo,
+        invAhihihi_d,invAlohihi_d,invAhilohi_d,invAlolohi_d,
+        invAhihilo_d,invAlohilo_d,invAhilolo_d,invAlololo_d,
        &elapsedms,&timelapsed_d);
 
    if(verbose > 0)
@@ -202,17 +211,23 @@ void test_real8_upper_inverse ( void )
       for(int i=0; i<dim; i++)
          for(int j=0; j<dim; j++)
             cout << "invA_d[" << i << "][" << j << "] : "
-                 << invAhihi_d[i][j] << "  " << invAlohi_d[i][j] << endl
+                 << invAhihihi_d[i][j] << "  " << invAlohihi_d[i][j] << endl
                  << "               "
-                 << invAhilo_d[i][j] << "  " << invAlolo_d[i][j] << endl;
+                 << invAhilohi_d[i][j] << "  " << invAlolohi_d[i][j] << endl
+                 << "               "
+                 << invAhihilo_d[i][j] << "  " << invAlohilo_d[i][j] << endl
+                 << "               "
+                 << invAhilolo_d[i][j] << "  " << invAlololo_d[i][j] << endl;
    }
    cout << scientific << setprecision(2);
    cout << "   Sum of errors on inverse : "
-        << dbl4_Matrix_Difference_Sum
-              (dim,invAhihi_h,invAlohi_h,invAhilo_h,invAlolo_h,
-                   invAhihi_d,invAlohi_d,invAhilo_d,invAlolo_d)
+        << dbl8_Matrix_Difference_Sum
+              (dim,invAhihihi_h,invAlohihi_h,invAhilohi_h,invAlolohi_h,
+                   invAhihilo_h,invAlohilo_h,invAhilolo_h,invAlololo_h,
+                   invAhihihi_d,invAlohihi_d,invAhilohi_d,invAlolohi_d,
+                   invAhihilo_d,invAlohilo_d,invAhilolo_d,invAlololo_d)
         << endl;
- */
+
    double *xhihihi = new double[dim];
    double *xlohihi = new double[dim];
    double *xhilohi = new double[dim];
@@ -277,12 +292,10 @@ void test_real8_upper_inverse ( void )
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
-/*
    cout << "                     Time spent by the kernel : ";
    cout << elapsedms << " milliseconds." << endl;
    cout << "        Total GPU wall clock computation time : ";
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
- */
 }
 
 void test_cmplx8_upper_inverse ( void )
@@ -602,35 +615,54 @@ void test_cmplx8_upper_inverse ( void )
                  << invAimlololo_h[i][j] << endl;
          }
    }
-/*
-   double **invArehihi_d = new double*[dim];
-   double **invArelohi_d = new double*[dim];
-   double **invArehilo_d = new double*[dim];
-   double **invArelolo_d = new double*[dim];
-   double **invAimhihi_d = new double*[dim];
-   double **invAimlohi_d = new double*[dim];
-   double **invAimhilo_d = new double*[dim];
-   double **invAimlolo_d = new double*[dim];
+   double **invArehihihi_d = new double*[dim];
+   double **invArelohihi_d = new double*[dim];
+   double **invArehilohi_d = new double*[dim];
+   double **invArelolohi_d = new double*[dim];
+   double **invArehihilo_d = new double*[dim];
+   double **invArelohilo_d = new double*[dim];
+   double **invArehilolo_d = new double*[dim];
+   double **invArelololo_d = new double*[dim];
+   double **invAimhihihi_d = new double*[dim];
+   double **invAimlohihi_d = new double*[dim];
+   double **invAimhilohi_d = new double*[dim];
+   double **invAimlolohi_d = new double*[dim];
+   double **invAimhihilo_d = new double*[dim];
+   double **invAimlohilo_d = new double*[dim];
+   double **invAimhilolo_d = new double*[dim];
+   double **invAimlololo_d = new double*[dim];
 
    for(int i=0; i<dim; i++)
    {
-      invArehihi_d[i] = new double[dim];
-      invArelohi_d[i] = new double[dim];
-      invArehilo_d[i] = new double[dim];
-      invArelolo_d[i] = new double[dim];
-      invAimhihi_d[i] = new double[dim];
-      invAimlohi_d[i] = new double[dim];
-      invAimhilo_d[i] = new double[dim];
-      invAimlolo_d[i] = new double[dim];
+      invArehihihi_d[i] = new double[dim];
+      invArelohihi_d[i] = new double[dim];
+      invArehilohi_d[i] = new double[dim];
+      invArelolohi_d[i] = new double[dim];
+      invArehihilo_d[i] = new double[dim];
+      invArelohilo_d[i] = new double[dim];
+      invArehilolo_d[i] = new double[dim];
+      invArelololo_d[i] = new double[dim];
+      invAimhihihi_d[i] = new double[dim];
+      invAimlohihi_d[i] = new double[dim];
+      invAimhilohi_d[i] = new double[dim];
+      invAimlolohi_d[i] = new double[dim];
+      invAimhihilo_d[i] = new double[dim];
+      invAimlohilo_d[i] = new double[dim];
+      invAimhilolo_d[i] = new double[dim];
+      invAimlololo_d[i] = new double[dim];
    }
 
    cout << "-> GPU computes the inverse ..." << endl;
 
-   GPU_cmplx4_upper_inverse
-      (dim,   Arehihi,     Arelohi,     Arehilo,     Arelolo,     
-              Aimhihi,     Aimlohi,     Aimhilo,     Aimlolo,
-           invArehihi_d,invArelohi_d,invArehilo_d,invArelolo_d,
-           invAimhihi_d,invAimlohi_d,invAimhilo_d,invAimlolo_d,
+   GPU_cmplx8_upper_inverse
+      (dim,   Arehihihi,     Arelohihi,     Arehilohi,     Arelolohi,     
+              Arehihilo,     Arelohilo,     Arehilolo,     Arelololo,     
+              Aimhihihi,     Aimlohihi,     Aimhilohi,     Aimlolohi,
+              Aimhihilo,     Aimlohilo,     Aimhilolo,     Aimlololo,
+           invArehihihi_d,invArelohihi_d,invArehilohi_d,invArelolohi_d,
+           invArehihilo_d,invArelohilo_d,invArehilolo_d,invArelololo_d,
+           invAimhihihi_d,invAimlohihi_d,invAimhilohi_d,invAimlolohi_d,
+           invAimhihilo_d,invAimlohilo_d,invAimhilolo_d,invAimlololo_d,
        &elapsedms,&timelapsed_d);
 
    if(verbose > 0)
@@ -640,24 +672,44 @@ void test_cmplx8_upper_inverse ( void )
          for(int j=0; j<dim; j++)
          {
             cout << "invA_d[" << i << "][" << j << "]re : "
-                 << invArehihi_d[i][j] << "  " << invArelohi_d[i][j] << endl
+                 << invArehihihi_d[i][j] << "  "
+                 << invArelohihi_d[i][j] << endl
                  << "                 "
-                 << invArehilo_d[i][j] << "  " << invArelolo_d[i][j] << endl;
+                 << invArehilohi_d[i][j] << "  "
+                 << invArelolohi_d[i][j] << endl
+                 << "                 "
+                 << invArehihilo_d[i][j] << "  "
+                 << invArelohilo_d[i][j] << endl
+                 << "                 "
+                 << invArehilolo_d[i][j] << "  "
+                 << invArelololo_d[i][j] << endl;
             cout << "invA_d[" << i << "][" << j << "]im : "
-                 << invAimhihi_d[i][j] << "  " << invAimlohi_d[i][j] << endl
+                 << invAimhihihi_d[i][j] << "  "
+                 << invAimlohihi_d[i][j] << endl
                  << "                 "
-                 << invAimhilo_d[i][j] << "  " << invAimlolo_d[i][j] << endl;
+                 << invAimhilohi_d[i][j] << "  "
+                 << invAimlolohi_d[i][j] << endl
+                 << "                 "
+                 << invAimhihilo_d[i][j] << "  "
+                 << invAimlohilo_d[i][j] << endl
+                 << "                 "
+                 << invAimhilolo_d[i][j] << "  "
+                 << invAimlololo_d[i][j] << endl;
          }
    }
    cout << scientific << setprecision(2);
    cout << "   Sum of errors on inverse : "
-        << cmplx4_Matrix_Difference_Sum
-              (dim,invArehihi_h,invArelohi_h,invArehilo_h,invArelolo_h,
-                   invAimhihi_h,invAimlohi_h,invAimhilo_h,invAimlolo_h,
-                   invArehihi_d,invArelohi_d,invArehilo_d,invArelolo_d,
-                   invAimhihi_d,invAimlohi_d,invAimhilo_d,invAimlolo_d)
+        << cmplx8_Matrix_Difference_Sum
+              (dim,invArehihihi_h,invArelohihi_h,invArehilohi_h,invArelolohi_h,
+                   invArehihilo_h,invArelohilo_h,invArehilolo_h,invArelololo_h,
+                   invAimhihihi_h,invAimlohihi_h,invAimhilohi_h,invAimlolohi_h,
+                   invAimhihilo_h,invAimlohilo_h,invAimhilolo_h,invAimlololo_h,
+                   invArehihihi_d,invArelohihi_d,invArehilohi_d,invArelolohi_d,
+                   invArehihilo_d,invArelohilo_d,invArehilolo_d,invArelololo_d,
+                   invAimhihihi_d,invAimlohihi_d,invAimhilohi_d,invAimlolohi_d,
+                   invAimhihilo_d,invAimlohilo_d,invAimhilolo_d,invAimlololo_d)
         << endl;
- */
+ 
    double *xrehihihi = new double[dim];
    double *xrelohihi = new double[dim];
    double *xrehilohi = new double[dim];
@@ -789,12 +841,9 @@ void test_cmplx8_upper_inverse ( void )
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
    cout << "                     Time spent by the kernel : ";
- /*
    cout << elapsedms << " milliseconds." << endl;
    cout << "        Total GPU wall clock computation time : ";
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
-
- */
 }
 
 void test_real8_upper_tiling ( void )

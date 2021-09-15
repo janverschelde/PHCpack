@@ -1,3 +1,6 @@
+Wed 15 Sep 2021 : extended dbl8_tabs_kernels with the kernel to invert one
+  tile of complex numbers, extended dbl8_tabs_testers.cpp.
+
 Tue 14 Sep 2021 : new dbl8_test_utilities for better tests on the tiled
   back substitution, applied in dbl8_tabs_testers.cpp.  Updated makefiles.
   Fixed bugs in dbl8_tabs_host.cpp and dbl8_tabs_testers.cpp.

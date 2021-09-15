@@ -209,17 +209,21 @@ __global__ void dbl8_medium_invert_upper
  *   invUlololo are the lowest doubles the inverse of U,
  *            stored row wise. */
 
-/*
-
 __global__ void cmplx8_medium_invert_upper
  ( int dim, 
-   double *Urehihi, double *Urelohi, double *Urehilo, double *Urelolo,
-   double *Uimhihi, double *Uimlohi, double *Uimhilo, double *Uimlolo,
-   double *invUrehihi, double *invUrelohi,
-   double *invUrehilo, double *invUrelolo,
-   double *invUimhihi, double *invUimlohi,
-   double *invUimhilo, double *invUimlolo );
-*
+   double *Urehihihi, double *Urelohihi, double *Urehilohi, double *Urelolohi,
+   double *Urehihilo, double *Urelohilo, double *Urehilolo, double *Urelololo,
+   double *Uimhihihi, double *Uimlohihi, double *Uimhilohi, double *Uimlolohi,
+   double *Uimhihilo, double *Uimlohilo, double *Uimhilolo, double *Uimlololo,
+   double *invUrehihihi, double *invUrelohihi,
+   double *invUrehilohi, double *invUrelolohi,
+   double *invUrehihilo, double *invUrelohilo,
+   double *invUrehilolo, double *invUrelololo,
+   double *invUimhihihi, double *invUimlohihi,
+   double *invUimhilohi, double *invUimlolohi,
+   double *invUimhihilo, double *invUimlohilo,
+   double *invUimhilolo, double *invUimlololo );
+/*
  * DESCRIPTION :
  *   Computes the inverse of an upper triangular matrix.
  *   The U matrix is stored in columnwise fashion,
@@ -230,44 +234,78 @@ __global__ void cmplx8_medium_invert_upper
  *   Because the columns of U are loaded entirely into shared memory
  *   and the rows of the inverses are computed first entirely in
  *   shared memory before storing, the dimension dim is limited 
- *   to 256, the upper limit on the shared memory, dd_shmemsize.
+ *   to 256, the upper limit on the shared memory, od_shmemsize.
  *
  * ON ENTRY :
- *   dim      dimension of the upper triangular matrix U;
- *   Urehihi  highest doubles of the real parts of U stored column wise;
- *   Urelohi  second highest doubles of the real parts of U;
- *   Urehilo  second lowest doubles of the real parts of U;
- *   Urelolo  lowest doubles of the real parts of U stored column wise;
- *   Uimhihi  highest doubles of the imaginary parts of U;
- *   Uimlohi  second highest doubles of the imaginary parts of U;
- *   Uimhilo  second lowest doubles of the imaginary parts of U;
- *   Uimlolo  lowest doubles of the imaginary parts of U;
- *   invUrehihi has space allocated for a matrix of dimension dim;
- *   invUrelohi has space allocated for a matrix of dimension dim;
- *   invUrehilo has space allocated for a matrix of dimension dim;
- *   invUrelolo has space allocated for a matrix of dimension dim;
- *   invUimhihi has space allocated for a matrix of dimension dim;
- *   invUimlohi has space allocated for a matrix of dimension dim;
- *   invUimhilo has space allocated for a matrix of dimension dim;
- *   invUimlolo has space allocated for a matrix of dimension dim.
+ *   dim       dimension of the upper triangular matrix U;
+ *   Urehihihi are the highest doubles of the real parts of U;
+ *   Urelohihi are the second highest doubles of the real parts of U;
+ *   Urehilohi are the third highest doubles of the real parts of U;
+ *   Urelolohi are the fourth highest doubles of the real parts of U;
+ *   Urehihilo are the fourth lowest doubles of the real parts of U;
+ *   Urelohilo are the third lowest doubles of the real parts of U;
+ *   Urehilolo are the second lowest doubles of the real parts of U;
+ *   Urelololo are the lowest doubles of the real parts of U;
+ *   Uimhihihi are the highest doubles of the imaginary parts of U;
+ *   Uimlohihi are the second highest doubles of the imaginary parts of U;
+ *   Uimhilohi are the third highest doubles of the imaginary parts of U;
+ *   Uimlolohi are the fourth highest doubles of the imaginary parts of U;
+ *   Uimhihilo are the fourth lowest doubles of the imaginary parts of U;
+ *   Uimlohilo are the third lowest doubles of the imaginary parts of U;
+ *   Uimhilolo are the second lowest doubles of the imaginary parts of U;
+ *   Uimlololo are the lowest doubles of the imaginary parts of U;
+ *   invUrehihihi has space allocated for a matrix of dimension dim;
+ *   invUrelohihi has space allocated for a matrix of dimension dim;
+ *   invUrehilohi has space allocated for a matrix of dimension dim;
+ *   invUrelolohi has space allocated for a matrix of dimension dim;
+ *   invUrehihilo has space allocated for a matrix of dimension dim;
+ *   invUrelohilo has space allocated for a matrix of dimension dim;
+ *   invUrehilolo has space allocated for a matrix of dimension dim;
+ *   invUrelololo has space allocated for a matrix of dimension dim;
+ *   invUimhihihi has space allocated for a matrix of dimension dim;
+ *   invUimlohihi has space allocated for a matrix of dimension dim;
+ *   invUimhilohi has space allocated for a matrix of dimension dim;
+ *   invUimlolohi has space allocated for a matrix of dimension dim;
+ *   invUimhihilo has space allocated for a matrix of dimension dim;
+ *   invUimlohilo has space allocated for a matrix of dimension dim;
+ *   invUimhilolo has space allocated for a matrix of dimension dim;
+ *   invUimlololo has space allocated for a matrix of dimension dim.
  *
  * ON RETURN :
- *   invUrehihi has the highest doubles of the real parts of the inverse,
+ *   invUrehihihi has the highest doubles of the real parts of the inverse,
  *            stored row wise;
- *   invUrelohi has the second highest doubles of the real parts
+ *   invUrelohihi has the second highest doubles of the real parts
  *            of the inverse, stored row wise;
- *   invUrehilo has the second lowest doubles of the real parts
+ *   invUrehilohi has the third highest doubles of the real parts
  *            of the inverse, stored row wise;
- *   invUrelolo has the lowest doubles of the real parts of the inverse,
+ *   invUrelolohi has the fourth highest doubles of the real parts
+ *            of the inverse, stored row wise;
+ *   invUrehihilo has the fourth lowest doubles of the real parts
+ *            of the inverse, stored row wise;
+ *   invUrelohilo has the third lowest doubles of the real parts
+ *            of the inverse, stored row wise;
+ *   invUrehilolo has the second lowest doubles of the real parts
+ *            of the inverse, stored row wise;
+ *   invUrelololo has the lowest doubles of the real parts of the inverse,
  *            stored row wise;
- *   invUimhihi has the highest doubles of the imaginary parts of the inverse,
- *            also stored row wise;
- *   invUimlohi has the second highest doubles of the imaginary parts
+ *   invUimhihihi has the highest doubles of the imaginary parts of the
+ *            inverse, also stored row wise;
+ *   invUimlohihi has the second highest doubles of the imaginary parts
  *            of the inverse, also stored row wise;
- *   invUimhilo has the second lowest doubles of the imaginary parts
+ *   invUimhilohi has the third highest doubles of the imaginary parts
+ *            of the inverse, also stored row wise;
+ *   invUimlolohi has the fourth highest doubles of the imaginary parts
+ *            of the inverse, also stored row wise;
+ *   invUimhihilo has the fourth lowest doubles of the imaginary parts
  *            of the inverse, also stored row wise.
- *   invUimlolo has the lowest doubles of the imaginary parts of the inverse,
- *            also stored row wise. *
+ *   invUimlohilo has the third lowest doubles of the imaginary parts
+ *            of the inverse, also stored row wise.
+ *   invUimhilolo has the second lowest doubles of the imaginary parts
+ *            of the inverse, also stored row wise.
+ *   invUimlololo has the lowest doubles of the imaginary parts of the
+ *            inverse, also stored row wise. */
+
+/*
 
 __global__ void  dbl8_invert_tiles
  ( int dim, double *Uhihi, double *Ulohi, double *Uhilo, double *Ulolo,
@@ -591,56 +629,100 @@ void GPU_dbl8_upper_inverse
  *   lapms    elapsed time spent by the kernels;
  *   walltimesec is the elapsed wall clock computation time. */
 
-/*
-
 void GPU_cmplx8_upper_inverse
  ( int dim,
-   double **Urehihi, double **Urelohi, double **Urehilo, double **Urelolo,
-   double **Uimhihi, double **Uimlohi, double **Uimhilo, double **Uimlolo,
-   double **invUrehihi, double **invUrelohi,
-   double **invUrehilo, double **invUrelolo,
-   double **invUimhihi, double **invUimlohi, 
-   double **invUimhilo, double **invUimlolo, 
+   double **Urehihihi, double **Urelohihi,
+   double **Urehilohi, double **Urelolohi,
+   double **Urehihilo, double **Urelohilo,
+   double **Urehilolo, double **Urelololo,
+   double **Uimhihihi, double **Uimlohihi,
+   double **Uimhilohi, double **Uimlolohi,
+   double **Uimhihilo, double **Uimlohilo,
+   double **Uimhilolo, double **Uimlololo,
+   double **invUrehihihi, double **invUrelohihi,
+   double **invUrehilohi, double **invUrelolohi,
+   double **invUrehihilo, double **invUrelohilo,
+   double **invUrehilolo, double **invUrelololo,
+   double **invUimhihihi, double **invUimlohihi, 
+   double **invUimhilohi, double **invUimlolohi, 
+   double **invUimhihilo, double **invUimlohilo, 
+   double **invUimhilolo, double **invUimlololo, 
    double *lapms, double *walltimesec );
-*
+/*
  * DESCRIPTION :
  *   Calls the kernel to invert the upper triangular matrix U.
  *   The matrices are stored in the conventional row wise fashion.
  *
  * ON ENTRY :
- *   dim      dimension of the upper triangular matrix U;
- *   Urehihi  highest doubles of the real parts of U;
- *   Urelohi  second highest doubles of the real parts of U;
- *   Urehilo  second lowest doubles of the real parts of U;
- *   Urelolo  lowest doubles of the real parts of U;
- *   Uimhihi  highest doubles of the imaginary parts of U;
- *   Uimlohi  second highest doubles of the imaginary parts of U;
- *   Uimhilo  second lowest doubles of the imaginary parts of U;
- *   Uimlolo  lowest doubles of the imaginary parts of U;
- *   invUrehihi has space allocated for a matrix of dimension dim;
- *   invUrelohi has space allocated for a matrix of dimension dim;
- *   invUrehilo has space allocated for a matrix of dimension dim;
- *   invUrelolo has space allocated for a matrix of dimension dim;
- *   invUimhihi has space allocated for a matrix of dimension dim;
- *   invUimlohi has space allocated for a matrix of dimension dim;
- *   invUimhilo has space allocated for a matrix of dimension dim;
- *   invUimlolo has space allocated for a matrix of dimension dim.
+ *   dim       dimension of the upper triangular matrix U;
+ *   Urehihihi are the highest doubles of the real parts of U;
+ *   Urelohihi are the second highest doubles of the real parts of U;
+ *   Urehilohi are the third highest doubles of the real parts of U;
+ *   Urelolohi are the fourth highest doubles of the real parts of U;
+ *   Urehihilo are the fourth lowest doubles of the real parts of U;
+ *   Urelohilo are the third lowest doubles of the real parts of U;
+ *   Urehilolo are the second lowest doubles of the real parts of U;
+ *   Urelololo are the lowest doubles of the real parts of U;
+ *   Uimhihihi are the highest doubles of the imaginary parts of U;
+ *   Uimlohihi are the second highest doubles of the imaginary parts of U;
+ *   Uimhilohi are the third highest doubles of the imaginary parts of U;
+ *   Uimlolohi are the fourth highest doubles of the imaginary parts of U;
+ *   Uimhihilo are the fourth lowest doubles of the imaginary parts of U;
+ *   Uimlohilo are the third lowest doubles of the imaginary parts of U;
+ *   Uimhilolo are the second lowest doubles of the imaginary parts of U;
+ *   Uimlololo are the lowest doubles of the imaginary parts of U;
+ *   invUrehihihi has space allocated for a matrix of dimension dim;
+ *   invUrelohihi has space allocated for a matrix of dimension dim;
+ *   invUrehilohi has space allocated for a matrix of dimension dim;
+ *   invUrelolohi has space allocated for a matrix of dimension dim;
+ *   invUrehihilo has space allocated for a matrix of dimension dim;
+ *   invUrelohilo has space allocated for a matrix of dimension dim;
+ *   invUrehilolo has space allocated for a matrix of dimension dim;
+ *   invUrelololo has space allocated for a matrix of dimension dim;
+ *   invUimhihihi has space allocated for a matrix of dimension dim;
+ *   invUimlohihi has space allocated for a matrix of dimension dim;
+ *   invUimhilohi has space allocated for a matrix of dimension dim;
+ *   invUimlolohi has space allocated for a matrix of dimension dim;
+ *   invUimhihilo has space allocated for a matrix of dimension dim;
+ *   invUimlohilo has space allocated for a matrix of dimension dim;
+ *   invUimhilolo has space allocated for a matrix of dimension dim;
+ *   invUimlololo has space allocated for a matrix of dimension dim.
  *
  * ON RETURN :
- *   invUrehihi has the highest doubles of the real parts of the inverse;
- *   invUrelohi has the second highest doubles of the real parts
+ *   invUrehihihi has the highest doubles of the real parts of the inverse;
+ *   invUrelohihi has the second highest doubles of the real parts
  *            of the inverse;
- *   invUrehilo has the second lowest doubles of the real partls
+ *   invUrehilohi has the third highest doubles of the real parts
  *            of the inverse;
- *   invUrelolo has the lowest doubles of the real parts of the inverse;
- *   invUimhihi has the highest doubles of the imaginary parts of the inverse;
- *   invUimlohi has the second highest doubles of the imaginary parts
+ *   invUrelolohi has the fourth highest doubles of the real parts
  *            of the inverse;
- *   invUimhilo has the second lowest doubles of the imaginary parts
+ *   invUrehihilo has the fourth lowest doubles of the real partls
  *            of the inverse;
- *   invUimlolo has the lowest doubles of the imaginary parts of the inverse;
+ *   invUrelohilo has the third lowest doubles of the real partls
+ *            of the inverse;
+ *   invUrehilolo has the second lowest doubles of the real partls
+ *            of the inverse;
+ *   invUrelololo has the lowest doubles of the real parts of the inverse;
+ *   invUimhihihi has the highest doubles of the imaginary parts
+ *            of the inverse;
+ *   invUimlohihi has the second highest doubles of the imaginary parts
+ *            of the inverse;
+ *   invUimlohihi has the third highest doubles of the imaginary parts
+ *            of the inverse;
+ *   invUimlolohi has the fourth highest doubles of the imaginary parts
+ *            of the inverse;
+ *   invUimhihilo has the fourth lowest doubles of the imaginary parts
+ *            of the inverse;
+ *   invUimlohilo has the third lowest doubles of the imaginary parts
+ *            of the inverse;
+ *   invUimhilolo has the second lowest doubles of the imaginary parts
+ *            of the inverse;
+ *   invUimlololo has the lowest doubles of the imaginary parts
+ *            of the inverse;
  *   lapms    elapsed time spent by the kernels;
- *   walltimesec is the elapsed wall clock computation time. *
+ *   walltimesec is the elapsed wall clock computation time. */
+
+/*
 
 void GPU_dbl8_upper_tiled_solver
  ( int dim, int szt, int nbt,

@@ -365,7 +365,8 @@ test_dbl8_tabs: test_dbl8_tabs.o dbl8_tabs_testers.o \
                   octo_double_functions.o dbl8_factorizations.o \
                   dbl8_tabs_testers.o dbl8_test_utilities.o \
                   dbl8_tabs_host.o dbl8_tabs_kernels.o \
-                  random_numbers.o random8_vectors.o random8_matrices.o
+                  random_numbers.o random8_vectors.o random8_matrices.o \
+               -lcuda -lcudart -L$(CUDALIB)
 
 dbl_baqr_host.o:
 	@-echo ">>> compiling dbl_baqr_host ..."
