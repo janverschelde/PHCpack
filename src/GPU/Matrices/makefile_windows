@@ -539,11 +539,13 @@ test_dbl8_tabs: test_dbl8_tabs.obj dbl8_tabs_testers.obj \
                 double_double_functions.obj quad_double_functions.obj \
 		octo_double_functions.obj dbl8_tabs_kernels.obj \
                 dbl8_tabs_host.obj dbl8_factorizations.obj \
-		dbl8_test_utilities.obj gettimeofday4win.obj \
+		dbl8_test_utilities.obj dbl_tabs_flopcounts.obj \
+                gettimeofday4win.obj \
                 random_numbers.obj random8_vectors.obj random8_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl8_tabs.exe test_dbl8_tabs.obj \
-             dbl8_tabs_testers.obj gettimeofday4win.obj  \
+             dbl8_tabs_testers.obj dbl_tabs_flopcounts.obj \
+             gettimeofday4win.obj  \
              double_double_functions.obj quad_double_functions.obj \
 	     octo_double_functions.obj dbl8_test_utilities.obj \
 	     dbl8_tabs_host.obj dbl8_tabs_kernels.obj dbl8_factorizations.obj \

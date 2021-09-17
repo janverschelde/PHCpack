@@ -1,3 +1,5 @@
+Thu 16 Sep 2021 : completed dbl8_tabs_kernels, updated makefiles.
+
 Wed 15 Sep 2021 : extended dbl8_tabs_kernels with the kernel to invert one
   tile of complex numbers, extended dbl8_tabs_testers.cpp.
   In dbl2_tabs_testers.cpp, generated the random matrices for the tiling

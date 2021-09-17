@@ -305,12 +305,15 @@ __global__ void cmplx8_medium_invert_upper
  *   invUimlololo has the lowest doubles of the imaginary parts of the
  *            inverse, also stored row wise. */
 
-/*
-
 __global__ void  dbl8_invert_tiles
- ( int dim, double *Uhihi, double *Ulohi, double *Uhilo, double *Ulolo,
-   double *invUhihi, double *invUlohi, double *invUhilo, double *invUlolo);
-*
+ ( int dim,
+   double *Uhihihi, double *Ulohihi, double *Uhilohi, double *Ulolohi,
+   double *Uhihilo, double *Ulohilo, double *Uhilolo, double *Ulololo,
+   double *invUhihihi, double *invUlohihi,
+   double *invUhilohi, double *invUlolohi,
+   double *invUhihilo, double *invUlohilo,
+   double *invUhilolo, double *invUlololo );
+/*
  * DESCRIPTION :
  *   Replaces the columns of the tiles with the rows of the inverses.
  *   The number of blocks equals the number of tiles in U.
@@ -320,34 +323,62 @@ __global__ void  dbl8_invert_tiles
  *
  * ON ENTRY :
  *   dim      the dimension of each tile;
- *   Uhihi    highest doubles of columns of all tiles on the diagonal 
- *            of an upper triangular matrix;
- *   Ulohi    second highest doubles of columns of all tiles on the diagonal 
- *            of an upper triangular matrix;
- *   Uhilo    second lowest doubles of columns of all tiles on the diagonal 
- *            of an upper triangular matrix;
- *   Ulolo    lowest doubles of columns of all tiles on the diagonal 
- *            of an upper triangular matrix;
- *   invUhi   space allocated for the inverse of all tiles in U;
- *   invUhi   space allocated for the inverse of all tiles in U;
- *   invUlo   space allocated for the inverse of all tiles in U;
- *   invUlo   space allocated for the inverse of all tiles in U.
+ *   Uhihihi  are the highest doubles of columns of all tiles on the
+ *            diagonal of an upper triangular matrix;
+ *   Ulohihi  are the second highest doubles of columns of all tiles on the
+ *            diagonal of an upper triangular matrix;
+ *   Uhilohi  are the third highest doubles of columns of all tiles on the
+ *            diagonal of an upper triangular matrix;
+ *   Ulolohi  are the fourth highest doubles of columns of all tiles on the
+ *            diagonal of an upper triangular matrix;
+ *   Uhihilo  are the fourth lowest doubles of columns of all tiles on the
+ *            diagonal of an upper triangular matrix;
+ *   Ulohilo  are the third lowest doubles of columns of all tiles on the
+ *            diagonal of an upper triangular matrix;
+ *   Uhilolo  are the second lowest doubles of columns of all tiles on the
+ *            diagonal of an upper triangular matrix;
+ *   Ulololo  are the lowest doubles of columns of all tiles on the
+ *            diagonal of an upper triangular matrix;
+ *   invUhihihi has space allocated for the inverse of all tiles in U;
+ *   invUlohihi has space allocated for the inverse of all tiles in U;
+ *   invUhilohi has space allocated for the inverse of all tiles in U;
+ *   invUlolohi has space allocated for the inverse of all tiles in U;
+ *   invUhihilo has space allocated for the inverse of all tiles in U;
+ *   invUlohilo has space allocated for the inverse of all tiles in U;
+ *   invUhilolo has space allocated for the inverse of all tiles in U;
+ *   invUlololo has space allocated for the inverse of all tiles in U.
  *
  * ON RETURN :
- *   invUhihi are the highest doubles of the inverse of the tiles in U;
- *   invUlohi are the second highest doubles of the inverse of the tiles in U;
- *   invUhilo are the second lowest doubles of the inverse of the tiles in U;
- *   invUlolo are the lowest doubles of the inverse of the tiles in U. *
+ *   invUhihihi are the highest doubles of the inverse of the tiles in U;
+ *   invUlohihi are the second highest doubles
+ *              of the inverse of the tiles in U;
+ *   invUhilohi are the third highest doubles
+ *              of the inverse of the tiles in U;
+ *   invUlolohi are the fourth highest doubles
+ *              of the inverse of the tiles in U;
+ *   invUhihilo are the fourth lowest doubles
+ *              of the inverse of the tiles in U;
+ *   invUlohilo are the third lowest doubles
+ *              of the inverse of the tiles in U;
+ *   invUhilolo are the second lowest doubles
+ *              of the inverse of the tiles in U;
+ *   invUlololo are the lowest doubles of the inverse of the tiles in U. */
 
 __global__ void cmplx8_invert_tiles
  ( int dim, 
-   double *Urehihi, double *Urelohi, double *Urehilo, double *Urelolo,
-   double *Uimhihi, double *Uimlohi, double *Uimhilo, double *Uimlolo,
-   double *invUrehihi, double *invUrelohi,
-   double *invUrehilo, double *invUrelolo,
-   double *invUimhihi, double *invUimlohi,
-   double *invUimhilo, double *invUimlolo );
-*
+   double *Urehihihi, double *Urelohihi, double *Urehilohi, double *Urelolohi,
+   double *Urehihilo, double *Urelohilo, double *Urehilolo, double *Urelololo,
+   double *Uimhihihi, double *Uimlohihi, double *Uimhilohi, double *Uimlolohi,
+   double *Uimhihilo, double *Uimlohilo, double *Uimhilolo, double *Uimlololo,
+   double *invUrehihihi, double *invUrelohihi,
+   double *invUrehilohi, double *invUrelolohi,
+   double *invUrehihilo, double *invUrelohilo,
+   double *invUrehilolo, double *invUrelololo,
+   double *invUimhihihi, double *invUimlohihi,
+   double *invUimhilohi, double *invUimlolohi,
+   double *invUimhihilo, double *invUimlohilo,
+   double *invUimhilolo, double *invUimlololo );
+/*
  * DESCRIPTION :
  *   Replaces the columns of the tiles with the rows of the inverses.
  *   The number of blocks equals the number of tiles in U.
@@ -356,151 +387,271 @@ __global__ void cmplx8_invert_tiles
  * REQUIRED : dim <= 256 = d_shmemsize.
  *
  * ON ENTRY :
- *   dim      the dimension of each tile;
- *   Urehihi  highest doubles of the real parts of the columns
- *            of all tiles on the diagonal of an upper triangular matrix;
- *   Urelohi  second highest doubles of the real parts of the columns
- *            of all tiles on the diagonal of an upper triangular matrix;
- *   Urehilo  second lowest doubles of the real parts of the columns
- *            of all tiles on the diagonal of an upper triangular matrix;
- *   Urelolo  lowest doubles of the real parts of the columns
- *            of all tiles on the diagonal of an upper triangular matrix;
- *   Uimhihi  highest doubles of the imaginary parts of the columns
- *            of all tiles on the diagonal of an upper triangular matrix;
- *   Uimlohi  second highest doubles of the imaginary parts of the columns
- *            of all tiles on the diagonal of an upper triangular matrix;
- *   Uimhilo  second lowest doubles of the imaginary parts of the columns
- *            of all tiles on the diagonal of an upper triangular matrix;
- *   Uimlolo  lowest doubles of the imaginary parts of the columns
- *            of all tiles on the diagonal of an upper triangular matrix;
- *   invUrehihi has space allocated for the highest doubles of
- *            the real parts of the inverse of all tiles in U;
- *   invUrelohi has space allocated for the second highest doubles of
- *            the real parts of the inverse of all tiles in U;
- *   invUrehilo has space allocated for the second lowest doubles of
- *            the real parts of the inverse of all tiles in U;
- *   invUrelolo has space allocated for the lowest doubles of
- *            the real parts of the inverse of all tiles in U;
- *   invUimhihi has space allocated for the highest doubles of
- *            the imaginary parts of the inverse of all tiles in U;
- *   invUimlohi has space allocated for the second highest doubles of
- *            the imaginary parts of the inverse of all tiles in U;
- *   invUimhilo has space allocated for the second lowest doubles of
+ *   dim       the dimension of each tile;
+ *   Urehihihi are the highest doubles of the real parts of the columns
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   Urelohihi are the second highest doubles of the real parts of the columns
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   Urehilohi are the third highest doubles of the real parts of the columns
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   Urelolohi are the fourth highest doubles of the real parts of the columns
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   Urehihilo are the fourth lowest doubles of the real parts of the columns
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   Urelohilo are the third lowest doubles of the real parts of the columns
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   Urehilolo are the second lowest doubles of the real parts of the columns
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   Urelololo are the lowest doubles of the real parts of the columns
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   Uimhihihi are the highest doubles of the imaginary parts of the columns
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   Uimlohihi are the second highest doubles of the imaginary parts
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   Uimhilohi are the third highest doubles of the imaginary parts
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   Uimlohihi are the fourth highest doubles of the imaginary parts
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   Uimhihilo are the fourth lowest doubles of the imaginary parts
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   Uimlohilo are the third lowest doubles of the imaginary parts
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   Uimhilolo are the second lowest doubles of the imaginary parts
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   Uimlololo are the lowest doubles of the imaginary parts of the columns
+ *             of all tiles on the diagonal of an upper triangular matrix;
+ *   invUrehihihi has space allocated for the highest doubles of
+ *             the real parts of the inverse of all tiles in U;
+ *   invUrelohihi has space allocated for the second highest doubles of
+ *             the real parts of the inverse of all tiles in U;
+ *   invUrehilohi has space allocated for the third highest doubles of
+ *             the real parts of the inverse of all tiles in U;
+ *   invUrelolohi has space allocated for the fourth highest doubles of
+ *             the real parts of the inverse of all tiles in U;
+ *   invUrehihilo has space allocated for the fourth lowest doubles of
+ *             the real parts of the inverse of all tiles in U;
+ *   invUrelohilo has space allocated for the third lowest doubles of
+ *             the real parts of the inverse of all tiles in U;
+ *   invUrehilolo has space allocated for the second lowest doubles of
+ *             the real parts of the inverse of all tiles in U;
+ *   invUrelololo has space allocated for the lowest doubles of
+ *             the real parts of the inverse of all tiles in U;
+ *   invUimhihihi has space allocated for the highest doubles of
+ *             the imaginary parts of the inverse of all tiles in U;
+ *   invUimlohihi has space allocated for the second highest doubles of
+ *             the imaginary parts of the inverse of all tiles in U;
+ *   invUimhilohi has space allocated for the third highest doubles of
  *            the imaginary parts of the inverse of all tiles in U.
- *   invUimlolo has space allocated for the lowest doubles of
+ *   invUimlolohi has space allocated for the fourth highest doubles of
  *            the imaginary parts of the inverse of all tiles in U.
+ *   invUimhihilo has space allocated for the fourth lowest doubles of
+ *             the imaginary parts of the inverse of all tiles in U;
+ *   invUimlohilo has space allocated for the third lowest doubles of
+ *             the imaginary parts of the inverse of all tiles in U;
+ *   invUimhilolo has space allocated for the second lowest doubles of
+ *             the imaginary parts of the inverse of all tiles in U.
+ *   invUimlololo has space allocated for the lowest doubles of
+ *             the imaginary parts of the inverse of all tiles in U.
  *
  * ON RETURN :
- *   invUrehihi has the highest doubles of the real parts
- *            of rows of the inverse tiles;
- *   invUrelohi has the second highest doubles of the real parts
- *            of rows of the inverse tiles;
- *   invUrehilo has the second lowest doubles of the real parts
- *            of rows of the inverse tiles;
- *   invUrelolo has the lowest doubles of the real parts
- *            of rows of the inverse tiles;
- *   invUimhihi has the highest doubles of the imaginary parts
- *            of rows of the inverse tiles;
- *   invUimlohi has the second highest doubles of the imaginary parts
- *            of rows of the inverse tiles;
- *   invUimhilo has the second lowest doubles of the imaginary parts
- *            of rows of the inverse tiles;
- *   invUimlolo has the lowest doubles of the imaginary parts
- *            of rows of the inverse tiles. *
+ *   invUrehihihi has the highest doubles of the real parts
+ *             of rows of the inverse tiles;
+ *   invUrelohihi has the second highest doubles of the real parts
+ *             of rows of the inverse tiles;
+ *   invUrehilohi has the third highest doubles of the real parts
+ *             of rows of the inverse tiles;
+ *   invUrelolohi has the fourth highest doubles of the real parts
+ *             of rows of the inverse tiles;
+ *   invUrehihilo has the fourth lowest doubles of the real parts
+ *             of rows of the inverse tiles;
+ *   invUrelohilo has the third lowest doubles of the real parts
+ *             of rows of the inverse tiles;
+ *   invUrehilolo has the second lowest doubles of the real parts
+ *             of rows of the inverse tiles;
+ *   invUrelololo has the lowest doubles of the real parts
+ *             of rows of the inverse tiles;
+ *   invUimhihihi has the highest doubles of the imaginary parts
+ *             of rows of the inverse tiles;
+ *   invUimlohihi has the second highest doubles of the imaginary parts
+ *             of rows of the inverse tiles;
+ *   invUimhilohi has the third highest doubles of the imaginary parts
+ *             of rows of the inverse tiles;
+ *   invUimlolohi has the fourth highest doubles of the imaginary parts
+ *             of rows of the inverse tiles;
+ *   invUimhihilo has the fourth lowest doubles of the imaginary parts
+ *             of rows of the inverse tiles;
+ *   invUimlohilo has the third lowest doubles of the imaginary parts
+ *             of rows of the inverse tiles;
+ *   invUimhilolo has the second lowest doubles of the imaginary parts
+ *             of rows of the inverse tiles;
+ *   invUimlololo has the lowest doubles of the imaginary parts
+ *             of rows of the inverse tiles. */
 
 __global__ void dbl8_multiply_inverse
  ( int dim, int idx,
-   double *invUhihi, double *invUlohi, double *invUhilo, double *invUlolo,
-   double *whihi, double *wlohi, double *whilo, double *wlolo );
-*
+   double *invUhihihi, double *invUlohihi,
+   double *invUhilohi, double *invUlolohi,
+   double *invUhihilo, double *invUlohilo,
+   double *invUhilolo, double *invUlololo,
+   double *whihihi, double *wlohihi, double *whilohi, double *wlolohi,
+   double *whihilo, double *wlohilo, double *whilolo, double *wlololo );
+/*
  * DESCRIPTION :
  *   Replaces b with the product of the inverse tile in U.
  *
  * ON ENTRY :
  *   dim      the dimension of each tile;
  *   idx      index of the diagonal tile;
- *   invUhihi are the highest doubles of the inverse of the diagonal tiles;
- *   invUlohi are the second highest doubles of the inverse diagonal tiles;
- *   invUhilo are the second lowest doubles of the inverse diagonal tiles;
- *   invUlolo are the  lowest doubles of the inverse of the diagonal tiles;
- *   whihi    highest doubles of the right hand side vector;
- *   wlohi    second highest doubles of the right hand side vector;
- *   whilo    second lowest doubles of the right hand side vector.
- *   wlolo    lowest doubles of the right hand side vector.
+ *   invUhihihi are the highest doubles of the inverse of the diagonal tiles;
+ *   invUlohihi are the second highest doubles of the inverse diagonal tiles;
+ *   invUhilohi are the third highest doubles of the inverse diagonal tiles;
+ *   invUlolohi are the fourth highest doubles of the inverse diagonal tiles;
+ *   invUhihilo are the fourth lowest doubles of the inverse diagonal tiles;
+ *   invUlohilo are the third lowest doubles of the inverse diagonal tiles;
+ *   invUhilolo are the second lowest doubles of the inverse diagonal tiles;
+ *   invUlololo are the  lowest doubles of the inverse of the diagonal tiles;
+ *   whihihi  are the highest doubles of the right hand side vector;
+ *   wlohihi  are the second highest doubles of the right hand side vector;
+ *   whilohi  are the third highest doubles of the right hand side vector;
+ *   wlolohi  are the fourth highest doubles of the right hand side vector;
+ *   whihilo  are the fourth lowest doubles of the right hand side vector.
+ *   wlohilo  are the third lowest doubles of the right hand side vector.
+ *   whilolo  are the second lowest doubles of the right hand side vector.
+ *   wlololo  are the lowest doubles of the right hand side vector.
  *
  * ON RETURN :
- *   whihi    highest doubles of the product of the inverse of the
+ *   whihihi  are the highest doubles of the product of the inverse of the
  *            diagonal tile defined by the index idx with the w on input;
- *   wlohi    second highest doubles of the product of the inverse of the
- *            diagonal tile defined by the index idx with the w on input;
- *   whilo    second lowest doubles of the product of the inverse of the
- *            diagonal tile defined by the index idx with the w on input;
- *   wlolo    lowest doubles of the product of the inverse of the
- *            diagonal tile defined by the index idx with the w on input. *
+ *   wlohihi  are the second highest doubles of the product of the inverse of
+ *            the diagonal tile defined by the index idx with the w on input;
+ *   whilohi  are the third highest doubles of the product of the inverse of
+ *            the diagonal tile defined by the index idx with the w on input;
+ *   wlolohi  are the fourth lowest doubles of the product of the inverse of
+ *            the diagonal tile defined by the index idx with the w on input;
+ *   whihilo  are the fourth lowest doubles of the product of the inverse of
+ *            the diagonal tile defined by the index idx with the w on input;
+ *   wlohilo  are the third lowest doubles of the product of the inverse of
+ *            the diagonal tile defined by the index idx with the w on input;
+ *   whilolo  are the second lowest doubles of the product of the inverse of
+ *            the diagonal tile defined by the index idx with the w on input;
+ *   wlololo  are the lowest doubles of the product of the inverse of the
+ *            diagonal tile defined by the index idx with the w on input. */
 
 __global__ void cmplx8_multiply_inverse
  ( int dim, int idx,
-   double *invUrehihi, double *invUrelohi,
-   double *invUrehilo, double *invUrelolo,
-   double *invUimhihi, double *invUimlohi,
-   double *invUimhilo, double *invUimlolo,
-   double *wrehihi, double *wrelohi, double *wrehilo, double *wrelolo,
-   double *wimhihi, double *wimlohi, double *wimhilo, double *wimlolo );
-*
+   double *invUrehihihi, double *invUrelohihi,
+   double *invUrehilohi, double *invUrelolohi,
+   double *invUrehihilo, double *invUrelohilo,
+   double *invUrehilolo, double *invUrelololo,
+   double *invUimhihihi, double *invUimlohihi,
+   double *invUimhilohi, double *invUimlolohi,
+   double *invUimhihilo, double *invUimlohilo,
+   double *invUimhilolo, double *invUimlololo,
+   double *wrehihihi, double *wrelohihi,
+   double *wrehilohi, double *wrelolohi,
+   double *wrehihilo, double *wrelohilo,
+   double *wrehilolo, double *wrelololo,
+   double *wimhihihi, double *wimlohihi,
+   double *wimhilohi, double *wimlolohi,
+   double *wimhihilo, double *wimlohilo,
+   double *wimhilolo, double *wimlololo );
+/*
  * DESCRIPTION :
  *   Replaces b with the product of the inverse tile in U.
  *
  * ON ENTRY :
  *   dim      the dimension of each tile;
  *   idx      index of the diagonal tile;
- *   invUrehihi are the highest doubles of the real parts of
+ *   invUrehihihi are the highest doubles of the real parts of
  *            the inverse of the diagonal tiles;
- *   invUrelohi are the second highest doubles of the real parts of
+ *   invUrelohihi are the second highest doubles of the real parts of
  *            the inverse of the diagonal tiles;
- *   invUrehilo are the second lowest doubles of the real parts of
+ *   invUrehilohi are the third highest doubles of the real parts of
  *            the inverse of the diagonal tiles;
- *   invUrelolo are the lowest doubles of the real parts of
+ *   invUrelolohi are the fourth highest doubles of the real parts of
  *            the inverse of the diagonal tiles;
- *   invUimhihi are the highest doubles of the imaginary parts of
+ *   invUrehihilo are the fourth lowest doubles of the real parts of
  *            the inverse of the diagonal tiles;
- *   invUimlohi are the second highest doubles of the imaginary parts of
+ *   invUrelohilo are the third lowest doubles of the real parts of
  *            the inverse of the diagonal tiles;
- *   invUimhilo are the second lowest doubles of the imaginary parts of
+ *   invUrehilolo are the second lowest doubles of the real parts of
  *            the inverse of the diagonal tiles;
- *   invUimlolo are the lowest doubles of the imaginary parts of
+ *   invUrelololo are the lowest doubles of the real parts of
  *            the inverse of the diagonal tiles;
- *   wrehihi  highest doubles of the real parts of the right hand side b;
- *   wrelohi  second highest doubles of the real parts of b;
- *   wrehilo  second lowest doubles of the real parts of b;
- *   wrelolo  lowest doubles of the real parts of b;
- *   wimhihi  highest doubles of the imaginary parts of b;
- *   wimlohi  second highest doubles of the imaginary parts of b;
- *   wimhilo  second lowest doubles of the imaginary parts of b.
- *   wimlolo  lowest doubles of the imaginary parts of b.
+ *   invUimhihihi are the highest doubles of the imaginary parts of
+ *            the inverse of the diagonal tiles;
+ *   invUimlohihi are the second highest doubles of the imaginary parts of
+ *            the inverse of the diagonal tiles;
+ *   invUimhilohi are the third highest doubles of the imaginary parts of
+ *            the inverse of the diagonal tiles;
+ *   invUimlolohi are the fourth highest doubles of the imaginary parts of
+ *            the inverse of the diagonal tiles;
+ *   invUimhihilo are the fourth lowest doubles of the imaginary parts of
+ *            the inverse of the diagonal tiles;
+ *   invUimlohilo are the third lowest doubles of the imaginary parts of
+ *            the inverse of the diagonal tiles;
+ *   invUimhilolo are the second lowest doubles of the imaginary parts of
+ *            the inverse of the diagonal tiles;
+ *   invUimlololo are the lowest doubles of the imaginary parts of
+ *            the inverse of the diagonal tiles;
+ *   wrehihihi are the highest doubles of the real parts of b;
+ *   wrelohihi are the second highest doubles of the real parts of b;
+ *   wrehilohi are the third highest doubles of the real parts of b;
+ *   wrelolohi are the fourth highest doubles of the real parts of b;
+ *   wrehihilo are the fourth lowest doubles of the real parts of b;
+ *   wrelohilo are the third lowest doubles of the real parts of b;
+ *   wrehilolo are the second lowest doubles of the real parts of b;
+ *   wrelololo are the lowest doubles of the real parts of b;
+ *   wimhihihi are the highest doubles of the imaginary parts of b;
+ *   wimlohihi are the second highest doubles of the imaginary parts of b;
+ *   wimhilohi are the third highest doubles of the imaginary parts of b;
+ *   wimlolohi are the fourth highest doubles of the imaginary parts of b;
+ *   wimhihilo are the fourth lowest doubles of the imaginary parts of b.
+ *   wimlohilo are the third lowest doubles of the imaginary parts of b.
+ *   wimhilolo are the second lowest doubles of the imaginary parts of b.
+ *   wimlololo are the lowest doubles of the imaginary parts of b.
  *
  * ON RETURN :
- *   wrehi    highest doubles of the real parts of the product of the
- *            inverse of the tile defined by the index idx with the input w;
- *   wrehi    second highest doubles of the real parts of the product
+ *   wrehihihi are the highest doubles of the real parts of the product
  *            of the inverse of the tile defined by the index idx;
- *   wrelo    second lowest doubles of the real parts of the product
+ *   wrelohihi are the second highest doubles of the real parts of the
+ *            product of the inverse of the tile defined by the index idx;
+ *   wrehilohi are the third highest doubles of the real parts of the
+ *            product of the inverse of the tile defined by the index idx;
+ *   wrelolohi are the fourth highest doubles of the real parts of the
+ *            product of the inverse of the tile defined by the index idx;
+ *   wrehihilo are the fourth lowest doubles of the real parts of the
+ *            product of the inverse of the tile defined by the index idx;
+ *   wrelohilo are the third lowest doubles of the real parts of the
+ *            product of the inverse of the tile defined by the index idx;
+ *   wrehilolo are the second lowest doubles of the real parts of the
+ *            product of the inverse of the tile defined by the index idx;
+ *   wrelololo are the lowest doubles of the real parts of the product
  *            of the inverse of the tile defined by the index idx;
- *   wrelo    lowest doubles of the real parts of the product
+ *   wimhihihi are the highest doubles of the imaginary parts of the product
  *            of the inverse of the tile defined by the index idx;
- *   wimhi    highest doubles of the imaginary parts of the product
- *            of the inverse of the tile defined by the index idx;
- *   wimhi    second highest doubles of the imaginary parts of the product
- *            of the inverse of the tile defined by the index idx;
- *   wimlo    second lowest doubles of the imaginary parts of the product
- *            of the inverse of the tile defined by the index idx;
- *   wimlo    lowest doubles of the imaginary parts of the product
- *            of the inverse of the tile defined by the index idx. *
+ *   wimlohihi are the second highest doubles of the imaginary parts of the
+ *            product of the inverse of the tile defined by the index idx;
+ *   wimhilohi are the third highest doubles of the imaginary parts of the
+ *            product of the inverse of the tile defined by the index idx;
+ *   wimlolohi are the fourth highest doubles of the imaginary parts of the
+ *            product of the inverse of the tile defined by the index idx;
+ *   wimhihilo are the fourth lowest doubles of the imaginary parts of the
+ *            product of the inverse of the tile defined by the index idx;
+ *   wimlohilo are the third lowest doubles of the imaginary parts of the
+ *            product of the inverse of the tile defined by the index idx;
+ *   wimhilolo are the second lowest doubles of the imaginary parts of the
+ *            product of the inverse of the tile defined by the index idx;
+ *   wimlololo are the lowest doubles of the imaginary parts of the product
+ *            of the inverse of the tile defined by the index idx. */
 
 __global__ void dbl8_back_substitute
  ( int dim, int idx, 
-   double *Uhihi, double *Ulohi, double *Uhilo, double *Ulolo, 
-   double *whihi, double *wlohi, double *whilo, double *wlolo );
-*
+   double *Uhihihi, double *Ulohihi, double *Uhilohi, double *Ulolohi, 
+   double *Uhihilo, double *Ulohilo, double *Uhilolo, double *Ulololo, 
+   double *whihihi, double *wlohihi, double *whilohi, double *wlolohi,
+   double *whihilo, double *wlohilo, double *whilolo, double *wlololo );
+/*
  * DESCRIPTION :
  *   Updates the right hand side vector subtracting the solution
  *   defined by idx, multiplied with the corresponding rows in U.
@@ -508,28 +659,52 @@ __global__ void dbl8_back_substitute
  * ON ENTRY :
  *   dim      dimension of each tile;
  *   idx      index of the solution tile in the multiplication;
- *   Uhihi    highest doubles of tiles to multiply the solution with;
- *   Ulohi    second highest doubles of tiles to multiply the solution with;
- *   Uhilo    second lowest doubles of tiles to multiply the solution with;
- *   Ulolo    lowest doubles of tiles to multiply the solution with;
- *   whihi    highest doubles of the current right hand side vector;
- *   wlohi    second highest doubles of the current right hand side vector;
- *   whilo    second lowest doubles of the current right hand side vector;
- *   wlolo    lowest doubles of the current right hand side vector.
+ *   Uhihihi  are the highest doubles of tiles to multiply with;
+ *   Ulohihi  are the second highest doubles of tiles to multiply with;
+ *   Uhilohi  are the third highest doubles of tiles to multiply with;
+ *   Ulolohi  are the fourth highest doubles of tiles to multiply with;
+ *   Uhihilo  are the fourth lowest doubles of tiles to multiply with;
+ *   Ulohilo  are the third lowest doubles of tiles to multiply with;
+ *   Uhilolo  are the second lowest doubles of tiles to multiply with;
+ *   Ulololo  are the lowest doubles of tiles to multiply with;
+ *   whihihi  are the highest doubles of w;
+ *   wlohihi  are the second highest doubles of w;
+ *   whilohi  are the third highest doubles of w;
+ *   wlolohi  are the fourth highest doubles of w;
+ *   whihilo  are the fourth lowest doubles of w;
+ *   wlohilo  are the third lowest doubles of w;
+ *   whilolo  are the second lowest doubles of w;
+ *   wlololo  are the lowest doubles of w.
  *
  * ON RETURN :
- *   whihi    highest doubles of the updated right hand side vector;
- *   wlohi    second highest doubles of the updated right hand side vector;
- *   whilo    second lowest doubles of the updated right hand side vector;
- *   wlolo    lowest doubles of the updated right hand side vector. *
+ *   whihihi  are the highest doubles of the updated w;
+ *   wlohihi  are the second highest doubles of the updated w;
+ *   whilohi  are the third highest doubles of the updated w;
+ *   wlolohi  are the fourth highest doubles of the updated w;
+ *   whihilo  are the fourth lowest doubles of the updated w;
+ *   wlohilo  are the third lowest doubles of the updated w;
+ *   whilolo  are the second lowest doubles of the updated w;
+ *   wlololo  are the lowest doubles of the updated w. */
 
 __global__ void cmplx8_back_substitute
  ( int dim, int idx,
-   double *Urehihi, double *Urelohi, double *Urehilo, double *Urelolo,
-   double *Uimhihi, double *Uimlohi, double *Uimhilo, double *Uimlolo,
-   double *wrehihi, double *wrelohi, double *wrehilo, double *wrelolo,
-   double *wimhihi, double *wimlohi, double *wimhilo, double *wimlolo );
-*
+   double *Urehihihi, double *Urelohihi,
+   double *Urehilohi, double *Urelolohi,
+   double *Urehihilo, double *Urelohilo,
+   double *Urehilolo, double *Urelololo,
+   double *Uimhihihi, double *Uimlohihi,
+   double *Uimhilohi, double *Uimlolohi,
+   double *Uimhihilo, double *Uimlohilo,
+   double *Uimhilolo, double *Uimlololo,
+   double *wrehihihi, double *wrelohihi,
+   double *wrehilohi, double *wrelolohi,
+   double *wrehihilo, double *wrelohilo,
+   double *wrehilolo, double *wrelololo,
+   double *wimhihihi, double *wimlohihi,
+   double *wimhilohi, double *wimlolohi,
+   double *wimhihilo, double *wimlohilo,
+   double *wimhilolo, double *wimlololo );
+/*
  * DESCRIPTION :
  *   Updates the right hand side vector subtracting the solution
  *   defined by idx, multiplied with the corresponding rows in U.
@@ -537,55 +712,103 @@ __global__ void cmplx8_back_substitute
  * ON ENTRY :
  *   dim      dimension of each tile;
  *   idx      index of the solution tile in the multiplication;
- *   Urehihi  highest doubles of the real parts of tiles 
+ *   Urehihihi are the highest doubles of the real parts of tiles 
  *            to multiply the solution with;
- *   Urelohi  second highest doubles of the real parts of tiles 
+ *   Urelohihi are the second highest doubles of the real parts of tiles 
  *            to multiply the solution with;
- *   Urehilo  second lowest doubles of the real parts of tiles
+ *   Urehilohi are the third highest doubles of the real parts of tiles 
  *            to multiply the solution with;
- *   Urelolo  lowest doubles of the real parts of tiles
+ *   Urelolohi are the fourth highest doubles of the real parts of tiles 
  *            to multiply the solution with;
- *   Uimhihi  highest doubles of the imaginary parts of tiles
+ *   Urehihilo are the fourth lowest doubles of the real parts of tiles
  *            to multiply the solution with;
- *   Uimlohi  second highest doubles of the imaginary parts of tiles
+ *   Urelohilo are the third lowest doubles of the real parts of tiles
  *            to multiply the solution with;
- *   Uimhilo  second lowest doubles of the imaginary parts of tiles
+ *   Urehilolo are the second lowest doubles of the real parts of tiles
  *            to multiply the solution with;
- *   Uimlolo  lowest doubles of the imaginary parts of tiles
+ *   Urelololo are the lowest doubles of the real parts of tiles
  *            to multiply the solution with;
- *   wrehihi  highest doubles of the real parts of 
+ *   Uimhihihi are the highest doubles of the imaginary parts of tiles
+ *            to multiply the solution with;
+ *   Uimlohihi are the second highest doubles of the imaginary parts of tiles
+ *            to multiply the solution with;
+ *   Uimhilohi are the third highest doubles of the imaginary parts of tiles
+ *            to multiply the solution with;
+ *   Uimlolohi are the fourth highest doubles of the imaginary parts of tiles
+ *            to multiply the solution with;
+ *   Uimhihilo are the fourth lowest doubles of the imaginary parts of tiles
+ *            to multiply the solution with;
+ *   Uimlohilo are the third lowest doubles of the imaginary parts of tiles
+ *            to multiply the solution with;
+ *   Uimhilolo are the second lowest doubles of the imaginary parts of tiles
+ *            to multiply the solution with;
+ *   Uimlololo are the lowest doubles of the imaginary parts of tiles
+ *            to multiply the solution with;
+ *   wrehihihi are the highest doubles of the real parts of 
  *            the current right hand side vector;
- *   wrelohi  second highest doubles of the real parts of 
+ *   wrelohihi are the second highest doubles of the real parts of 
  *            the current right hand side vector;
- *   wrehilo  second lowest doubles of the real parts of 
+ *   wrehilohi are the third highest doubles of the real parts of 
  *            the current right hand side vector;
- *   wrelolo  lowest doubles of the real parts of 
+ *   wrelolohi are the fourth highest doubles of the real parts of 
  *            the current right hand side vector;
- *   wimhihi  highest doubles of the imaginary parts
+ *   wrehihilo are the fourth lowest doubles of the real parts of 
+ *            the current right hand side vector;
+ *   wrelohilo are the third lowest doubles of the real parts of 
+ *            the current right hand side vector;
+ *   wrehilolo are the second lowest doubles of the real parts of 
+ *            the current right hand side vector;
+ *   wrelololo are the lowest doubles of the real parts of 
+ *            the current right hand side vector;
+ *   wimhihihi are the highest doubles of the imaginary parts
  *            of the current right hand side vector;
- *   wimlohi  second highest doubles of the imaginary parts
+ *   wimlohihi are the second highest doubles of the imaginary parts
  *            of the current right hand side vector;
- *   wimhilo  second lowest doubles of the imaginary parts
+ *   wimhilohi are the third highest doubles of the imaginary parts
  *            of the current right hand side vector;
- *   wimlolo  lowest doubles of the imaginary parts
+ *   wimlolohi are the fourth highest doubles of the imaginary parts
+ *            of the current right hand side vector;
+ *   wimhihilo are the fourth lowest doubles of the imaginary parts
+ *            of the current right hand side vector;
+ *   wimlohilo are the third lowest doubles of the imaginary parts
+ *            of the current right hand side vector;
+ *   wimhilolo are the second lowest doubles of the imaginary parts
+ *            of the current right hand side vector;
+ *   wimlololo are the lowest doubles of the imaginary parts
  *            of the current right hand side vector.
  *
  * ON RETURN :
- *   wrehihi  highest doubles of the real parts
+ *   wrehihihi are the highest doubles of the real parts
  *            of the updated right hand side vector;
- *   wrelohi  second highest doubles of the real parts
+ *   wrelohihi are the second highest doubles of the real parts
  *            of the updated right hand side vector;
- *   wrehilo  second lowest doubles of the real parts
+ *   wrehilohi are the third highest doubles of the real parts
  *            of the updated right hand side vector;
- *   wrelolo  lowest doubles of the real parts
+ *   wrelolohi are the fourth highest doubles of the real parts
  *            of the updated right hand side vector;
- *   wimhihi  highest doubles of the imaginary parts
+ *   wrehihilo are the fourth lowest doubles of the real parts
  *            of the updated right hand side vector;
- *   wimlohi  second highest doubles of the imaginary parts
+ *   wrelohilo are the third lowest doubles of the real parts
  *            of the updated right hand side vector;
- *   wimhilo  second lowest doubles of the imaginary parts
+ *   wrehilolo are the second lowest doubles of the real parts
  *            of the updated right hand side vector;
- *   wimlolo  lowest doubles of the imaginary parts
+ *   wrelololo are the lowest doubles of the real parts
+ *            of the updated right hand side vector;
+ *   wimhihihi are the highest doubles of the imaginary parts
+ *            of the updated right hand side vector;
+ *   wimlohihi are the second highest doubles of the imaginary parts
+ *            of the updated right hand side vector;
+ *   wimhilohi are the third highest doubles of the imaginary parts
+ *            of the updated right hand side vector;
+ *   wimlolohi are the fourth highest doubles of the imaginary parts
+ *            of the updated right hand side vector;
+ *   wimhihilo are the fourth lowest doubles of the imaginary parts
+ *            of the updated right hand side vector;
+ *   wimlohilo are the third lowest doubles of the imaginary parts
+ *            of the updated right hand side vector;
+ *   wimhilolo are the second lowest doubles of the imaginary parts
+ *            of the updated right hand side vector;
+ *   wimlololo are the lowest doubles of the imaginary parts
  *            of the updated right hand side vector. */
 
 void GPU_dbl8_upper_inverse
@@ -722,17 +945,18 @@ void GPU_cmplx8_upper_inverse
  *   lapms    elapsed time spent by the kernels;
  *   walltimesec is the elapsed wall clock computation time. */
 
-/*
-
 void GPU_dbl8_upper_tiled_solver
  ( int dim, int szt, int nbt,
-   double **Uhihi, double **Ulohi, double **Uhilo, double **Ulolo,
-   double *bhihi, double *blohi, double *bhilo, double *blolo,
-   double *xhihi, double *xlohi, double *xhilo, double *xlolo,
+   double **Uhihihi, double **Ulohihi, double **Uhilohi, double **Ulolohi,
+   double **Uhihilo, double **Ulohilo, double **Uhilolo, double **Ulololo,
+   double *bhihihi, double *blohihi, double *bhilohi, double *blolohi,
+   double *bhihilo, double *blohilo, double *bhilolo, double *blololo,
+   double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
+   double *xhihilo, double *xlohilo, double *xhilolo, double *xlololo,
    double *invlapms, double *mullapms, double *sublapms, double *totlapms,
    double *walltimesec,
    long long int *addcnt, long long int *mulcnt, long long int *divcnt );
-*
+/*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
  *
@@ -740,24 +964,40 @@ void GPU_dbl8_upper_tiled_solver
  *   dim      dimension of the upper triangular matrix U;
  *   szt      size of each tile;
  *   nbt      number of tiles, dim = szt*nbt;
- *   Uhihi    highest doubles of U;
- *   Ulohi    second highest doubles of U;
- *   Uhilo    second lowest doubles of U;
- *   Ulolo    lowest doubles of U;
- *   bhihi    highest doubles of the right hand side b;
- *   blohi    second highest doubles of the right hand side b;
- *   bhilo    second lowest doubles of the right hand side b;
- *   blolo    lowest doubles of the right hand side b;
- *   xhihi    space allocated for dim doubles;
- *   xlohi    space allocated for dim doubles;
- *   xhilo    space allocated for dim doubles;
- *   xlolo    space allocated for dim doubles.
+ *   Uhihihi  are the highest doubles of U;
+ *   Ulohihi  are the second highest doubles of U;
+ *   Uhilohi  are the third highest doubles of U;
+ *   Ulolohi  are the fourth highest doubles of U;
+ *   Uhihilo  are the fourth lowest doubles of U;
+ *   Ulohilo  are the third lowest doubles of U;
+ *   Uhilolo  are the second lowest doubles of U;
+ *   Ulololo  are the lowest doubles of U;
+ *   bhihihi  are the highest doubles of the right hand side b;
+ *   blohihi  are the second highest doubles of the right hand side b;
+ *   bhilohi  are the third highest doubles of the right hand side b;
+ *   blolohi  are the fourth highest doubles of the right hand side b;
+ *   bhihilo  are the fourth lowest doubles of the right hand side b;
+ *   blohilo  are the third lowest doubles of the right hand side b;
+ *   bhilolo  are the second lowest doubles of the right hand side b;
+ *   blololo  are the lowest doubles of the right hand side b;
+ *   xhihihi  has space allocated for dim doubles;
+ *   xlohihi  has space allocated for dim doubles;
+ *   xhilohi  has space allocated for dim doubles;
+ *   xlolohi  has space allocated for dim doubles;
+ *   xhihilo  has space allocated for dim doubles;
+ *   xlohilo  has space allocated for dim doubles;
+ *   xhilolo  has space allocated for dim doubles;
+ *   xlololo  has space allocated for dim doubles.
  *
  * ON RETURN :
- *   xhihi    highest doubles of the solution to U*x = b;
- *   xlohi    second highest doubles of the solution to U*x = b;
- *   xhilo    second lowest doubles of the solution to U*x = b;
- *   xlolo    lowest doubles of the solution to U*x = b;
+ *   xhihihi  are the highest doubles of the solution to U*x = b;
+ *   xlohihi  are the second highest doubles of the solution to U*x = b;
+ *   xhilohi  are the third highest doubles of the solution to U*x = b;
+ *   xlolohi  are the fourth highest doubles of the solution to U*x = b;
+ *   xhihilo  are the fourth lowest doubles of the solution to U*x = b;
+ *   xlohilo  are the third lowest doubles of the solution to U*x = b;
+ *   xhilolo  are the second lowest doubles of the solution to U*x = b;
+ *   xlololo  are the lowest doubles of the solution to U*x = b;
  *   invlapms is the elapsed time spent by the kernel to invert a tile;
  *   mullapms is the elapsed time spent by the kernel to multiply
  *            with the inversed diagonal tile;
@@ -766,61 +1006,103 @@ void GPU_dbl8_upper_tiled_solver
  *   walltimesec is the elapsed wall clock computation time;
  *   addcnt   counts the number of additions and subtractions;
  *   mulcnt   counts the number of multiplications;
- *   divcnt   counts the number of divisions. *
+ *   divcnt   counts the number of divisions. */
 
 void GPU_cmplx8_upper_tiled_solver
  ( int dim, int szt, int nbt,
-   double **Urehihi, double **Urelohi, double **Urehilo, double **Urelolo,
-   double **Uimhihi, double **Uimlohi, double **Uimhilo, double **Uimlolo,
-   double *brehihi, double *brelohi, double *brehilo, double *brelolo,
-   double *bimhihi, double *bimlohi, double *bimhilo, double *bimlolo,
-   double *xrehihi, double *xrelohi, double *xrehilo, double *xrelolo,
-   double *ximhihi, double *ximlohi, double *ximhilo, double *ximlolo,
+   double **Urehihihi, double **Urelohihi,
+   double **Urehilohi, double **Urelolohi,
+   double **Urehihilo, double **Urelohilo,
+   double **Urehilolo, double **Urelololo,
+   double **Uimhihihi, double **Uimlohihi,
+   double **Uimhilohi, double **Uimlolohi,
+   double **Uimhihilo, double **Uimlohilo,
+   double **Uimhilolo, double **Uimlololo,
+   double *brehihihi, double *brelohihi, double *brehilohi, double *brelolohi,
+   double *brehihilo, double *brelohilo, double *brehilolo, double *brelololo,
+   double *bimhihihi, double *bimlohihi, double *bimhilohi, double *bimlolohi,
+   double *bimhihilo, double *bimlohilo, double *bimhilolo, double *bimlololo,
+   double *xrehihihi, double *xrelohihi, double *xrehilohi, double *xrelolohi,
+   double *xrehihilo, double *xrelohilo, double *xrehilolo, double *xrelololo,
+   double *ximhihihi, double *ximlohihi, double *ximhilohi, double *ximlolohi,
+   double *ximhihilo, double *ximlohilo, double *ximhilolo, double *ximlololo,
    double *invlapms, double *mullapms, double *sublapms, double *totlapms,
    double *walltimesec,
    long long int *addcnt, long long int *mulcnt, long long int *divcnt );
-*
+/*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
  *
  * ON ENTRY :
- *   dim      dimension of the upper triangular matrix U;
- *   szt      size of each tile;
- *   nbt      number of tiles, dim = szt*nbt;
- *   Urehihi  highest doubles of the real parts of U;
- *   Urelohi  second highest doubles of the real parts of U;
- *   Urehilo  second lowest doubles of the real parts of U;
- *   Urelolo  lowest doubles of the real parts of U;
- *   Uimhihi  highest doubles of the imaginary parts of U;
- *   Uimlohi  second highest doubles of the imaginary parts of U;
- *   Uimhilo  second lowest doubles of the imaginary parts of U;
- *   Uimlolo  lowest doubles of the imaginary parts of U;
- *   brehihi  highest doubles of the real parts of the right hand side b;
- *   brelohi  second highest doubles of the real parts of b;
- *   brehilo  second lowest doubles of the real parts of b;
- *   brelolo  lowest doubles of the real parts of b;
- *   bimhihi  highest doubles of the imaginary parts of b;
- *   bimlohi  second highest doubles of the imaginary parts of b;
- *   bimhilo  second lowest doubles of the imaginary parts of b;
- *   bimlolo  lowest doubles of the imaginary parts of b;
- *   xrehihi  has space allocated for dim doubles;
- *   xrelohi  has space allocated for dim doubles;
- *   xrehilo  has space allocated for dim doubles;
- *   xrelolo  has space allocated for dim doubles;
- *   ximhihi  has space allocated for dim doubles;
- *   ximlohi  has space allocated for dim doubles;
- *   ximhilo  has space allocated for dim doubles;
- *   ximlolo  has space allocated for dim doubles.
+ *   dim       dimension of the upper triangular matrix U;
+ *   szt       size of each tile;
+ *   nbt       number of tiles, dim = szt*nbt;
+ *   Urehihihi are the highest doubles of the real parts of U;
+ *   Urelohihi are the second highest doubles of the real parts of U;
+ *   Urehilohi are the third highest doubles of the real parts of U;
+ *   Urelolohi are the fourth highest doubles of the real parts of U;
+ *   Urehihilo are the fourth lowest doubles of the real parts of U;
+ *   Urelohilo are the third lowest doubles of the real parts of U;
+ *   Urehilolo are the second lowest doubles of the real parts of U;
+ *   Urelololo are the lowest doubles of the real parts of U;
+ *   Uimhihihi are the highest doubles of the imaginary parts of U;
+ *   Uimlohihi are the second highest doubles of the imaginary parts of U;
+ *   Uimhilohi are the third highest doubles of the imaginary parts of U;
+ *   Uimlolohi are the fourth highest doubles of the imaginary parts of U;
+ *   Uimhihilo are the fourth lowest doubles of the imaginary parts of U;
+ *   Uimlohilo are the third lowest doubles of the imaginary parts of U;
+ *   Uimhilolo are the second lowest doubles of the imaginary parts of U;
+ *   Uimlololo are the lowest doubles of the imaginary parts of U;
+ *   brehihihi are the highest doubles of the real parts of b;
+ *   brelohihi are the second highest doubles of the real parts of b;
+ *   brehilohi are the third highest doubles of the real parts of b;
+ *   brelolohi are the fourth highest doubles of the real parts of b;
+ *   brehihilo are the fourth lowest doubles of the real parts of b;
+ *   brelohilo are the third lowest doubles of the real parts of b;
+ *   brehilolo are the second lowest doubles of the real parts of b;
+ *   brelololo are the lowest doubles of the real parts of b;
+ *   bimhihihi are the highest doubles of the imaginary parts of b;
+ *   bimlohihi are the second highest doubles of the imaginary parts of b;
+ *   bimhilohi are the third highest doubles of the imaginary parts of b;
+ *   bimlolohi are the fourth highest doubles of the imaginary parts of b;
+ *   bimhihilo are the fourth lowest doubles of the imaginary parts of b;
+ *   bimlohilo are the third lowest doubles of the imaginary parts of b;
+ *   bimhilolo are the second lowest doubles of the imaginary parts of b;
+ *   bimlololo are the lowest doubles of the imaginary parts of b;
+ *   xrehihihi has space allocated for dim doubles;
+ *   xrelohihi has space allocated for dim doubles;
+ *   xrehilohi has space allocated for dim doubles;
+ *   xrelolohi has space allocated for dim doubles;
+ *   ximhihilo has space allocated for dim doubles;
+ *   ximlohilo has space allocated for dim doubles;
+ *   ximhilolo has space allocated for dim doubles;
+ *   ximlololo has space allocated for dim doubles;
+ *   xrehihihi has space allocated for dim doubles;
+ *   xrelohihi has space allocated for dim doubles;
+ *   xrehilohi has space allocated for dim doubles;
+ *   xrelolohi has space allocated for dim doubles;
+ *   ximhihilo has space allocated for dim doubles;
+ *   ximlohilo has space allocated for dim doubles;
+ *   ximhilolo has space allocated for dim doubles;
+ *   ximlololo has space allocated for dim doubles.
  *
  * ON RETURN :
- *   xrehi    highest doubles of the real parts of the solution;
- *   xrehi    second highest doubles of the real parts of the solution;
- *   xrelo    second lowest doubles of the real parts of the solution;
- *   xrelo    lowest doubles of the real parts of the solution;
- *   ximhi    highest doubles of the imaginary parts of the solution;
- *   ximhi    second highest doubles of the imaginary parts of the solution;
- *   ximlo    second lowest doubles of the imaginary parts of the solution;
- *   ximlo    lowest doubles of the imaginary parts of the solution;
+ *   xrehihihi are the highest doubles of the real parts of the solution x;
+ *   xrelohihi are the second highest doubles of the real parts of x;
+ *   xrehilohi are the third highest doubles of the real parts of x;
+ *   xrelolohi are the fourth highest doubles of the real parts of x;
+ *   xrehihilo are the fourth lowest doubles of the real parts of x;
+ *   xrelohilo are the third lowest doubles of the real parts of x;
+ *   xrehilolo are the second lowest doubles of the real parts of x;
+ *   xrelololo are the lowest doubles of the real parts of the x;
+ *   ximhihihi are the highest doubles of the imaginary parts of x;
+ *   ximlohihi are the second highest doubles of the imaginary parts of x;
+ *   ximhilohi are the third highest doubles of the imaginary parts of x;
+ *   ximlolohi are the fourth highest doubles of the imaginary parts of x;
+ *   ximhihilo are the fourth lowest doubles of the imaginary parts of x;
+ *   ximlohilo are the third lowest doubles of the imaginary parts of x;
+ *   ximhilolo are the second lowest doubles of the imaginary parts of x;
+ *   ximlololo are the lowest doubles of the imaginary parts of x; 
  *   invlapms is the elapsed time spent by the kernel to invert a tile;
  *   mullapms is the elapsed time spent by the kernel to multiply
  *            with the inversed diagonal tile;
@@ -829,8 +1111,6 @@ void GPU_cmplx8_upper_tiled_solver
  *   walltimesec is the elapsed wall clock computation time;
  *   addcnt   counts the number of additions and subtractions;
  *   mulcnt   counts the number of multiplications;
- *   divcnt   counts the number of divisions. *
-
-*/
+ *   divcnt   counts the number of divisions. */
 
 #endif
