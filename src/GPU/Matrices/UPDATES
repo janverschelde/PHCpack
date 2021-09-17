@@ -1,3 +1,6 @@
+Fri 17 Sep 2021 : in dbl4_tabs_testers.cpp, generated the upper triangular
+  test matrices in double precision.
+
 Thu 16 Sep 2021 : completed dbl8_tabs_kernels, updated makefiles.
   Updated dbl8_tabs_testers.cpp with the calls to the tiled kernels.
 

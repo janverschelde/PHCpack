@@ -9,8 +9,10 @@
 #include "quad_double_functions.h"
 #include "random4_matrices.h"
 #include "dbl4_factorizations.h"
+#include "dbl4_factorizations.h"
 #include "dbl4_tabs_host.h"
 #include "dbl4_tabs_kernels.h"
+#include "dbl_test_utilities.h"
 #include "dbl4_test_utilities.h"
 
 using namespace std;
@@ -547,9 +549,16 @@ void test_real4_upper_tiling ( void )
       Alohi[i] = new double[dim];
       Ahilo[i] = new double[dim];
       Alolo[i] = new double[dim];
+      for(int j=0; j<dim; j++)
+      {
+         Alohi[i][j] = 0.0;
+         Ahilo[i][j] = 0.0;
+         Alolo[i][j] = 0.0;
+      }
    }
    // random_dbl_upper_matrix(dim,dim,A);
-   dbl4_random_upper_factor(dim,Ahihi,Alohi,Ahilo,Alolo);
+   // dbl4_random_upper_factor(dim,Ahihi,Alohi,Ahilo,Alolo);
+   dbl_random_upper_factor(dim,Ahihi);
 
    cout << scientific << setprecision(16);
 
@@ -802,11 +811,21 @@ void test_cmplx4_upper_tiling ( void )
       Aimlohi[i] = new double[dim];
       Aimhilo[i] = new double[dim];
       Aimlolo[i] = new double[dim];
+      for(int j=0; j<dim; j++)
+      {
+         Arelohi[i][j] = 0.0;
+         Arehilo[i][j] = 0.0;
+         Arelolo[i][j] = 0.0;
+         Aimlohi[i][j] = 0.0;
+         Aimhilo[i][j] = 0.0;
+         Aimlolo[i][j] = 0.0;
+      }
    }
 
    // random_dbl_upper_matrix(dim,dim,Arehi,Arelo,Aimhi,Aimlo);
-   cmplx4_random_upper_factor
-      (dim,Arehihi,Arelohi,Arehilo,Arelolo,Aimhihi,Aimlohi,Aimhilo,Aimlolo);
+   // cmplx4_random_upper_factor
+   //    (dim,Arehihi,Arelohi,Arehilo,Arelolo,Aimhihi,Aimlohi,Aimhilo,Aimlolo);
+   cmplx_random_upper_factor(dim,Arehihi,Aimhihi);
 
    cout << scientific << setprecision(16);
 
