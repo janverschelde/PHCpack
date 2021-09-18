@@ -959,33 +959,6 @@ void test_real8_upper_tiling ( void )
                   acchihilo,    acclohilo,    acchilolo,   acclololo);
       }
    }
-   double timelapsed_h;
-
-   cout << "-> CPU solves an upper triangular system ..." << endl;
-
-   CPU_dbl8_upper_tiled_solver
-      (dim,sizetile,numtiles,
-         Ahihihi,  Alohihi,  Ahilohi,  Alolohi,
-         Ahihilo,  Alohilo,  Ahilolo,  Alololo,
-       rhshihihi,rhslohihi,rhshilohi,rhslolohi,
-       rhshihilo,rhslohilo,rhshilolo,rhslololo,
-         xhihihi,  xlohihi,  xhilohi,  xlolohi,
-         xhihilo,  xlohilo,  xhilolo,  xlololo,&timelapsed_h);
-
-   if(verbose > 0)
-   {
-      cout << "The matrix computed by the host :" << endl;
-      for(int i=0; i<dim; i++)
-         for(int j=0; j<dim; j++)
-            cout << "A[" << i << "][" << j << "] : "
-                 << Ahihihi[i][j] << "  " << Alohihi[i][j] << endl
-                 << "          "
-                 << Ahilohi[i][j] << "  " << Alolohi[i][j] << endl
-                 << "          "
-                 << Ahihilo[i][j] << "  " << Alohilo[i][j] << endl
-                 << "          "
-                 << Ahilolo[i][j] << "  " << Alololo[i][j] << endl;
-   }
    double *xhihihi_d = new double[dim];
    double *xlohihi_d = new double[dim];
    double *xhilohi_d = new double[dim];
@@ -1055,6 +1028,33 @@ void test_real8_upper_tiling ( void )
               << rhshihilo[i] << "  " << rhslohilo[i] << endl
               << "       "
               << rhshilolo[i] << "  " << rhslololo[i] << endl;
+   }
+   double timelapsed_h;
+
+   cout << "-> CPU solves an upper triangular system ..." << endl;
+
+   CPU_dbl8_upper_tiled_solver
+      (dim,sizetile,numtiles,
+         Ahihihi,  Alohihi,  Ahilohi,  Alolohi,
+         Ahihilo,  Alohilo,  Ahilolo,  Alololo,
+       rhshihihi,rhslohihi,rhshilohi,rhslolohi,
+       rhshihilo,rhslohilo,rhshilolo,rhslololo,
+         xhihihi,  xlohihi,  xhilohi,  xlolohi,
+         xhihilo,  xlohilo,  xhilolo,  xlololo,&timelapsed_h);
+
+   if(verbose > 0)
+   {
+      cout << "The matrix computed by the host :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+            cout << "A[" << i << "][" << j << "] : "
+                 << Ahihihi[i][j] << "  " << Alohihi[i][j] << endl
+                 << "          "
+                 << Ahilohi[i][j] << "  " << Alolohi[i][j] << endl
+                 << "          "
+                 << Ahihilo[i][j] << "  " << Alohilo[i][j] << endl
+                 << "          "
+                 << Ahilolo[i][j] << "  " << Alololo[i][j] << endl;
    }
    double timelapsed_d,elapsedms;
    double invlapsed,mullapsed,sublapsed;
@@ -1445,49 +1445,6 @@ void test_cmplx8_upper_tiling ( void )
               << rhsimhilolo[i] << "  " << rhsimlololo[i] << endl;
       }
    }
-   double timelapsed_h;
-
-   cout << "-> CPU solves an upper triangular system ..." << endl;
-
-   CPU_cmplx8_upper_tiled_solver
-      (dim,sizetile,numtiles,
-       Arehihihi,Arelohihi,Arehilohi,Arelolohi,
-       Arehihilo,Arelohilo,Arehilolo,Arelololo,
-       Aimhihihi,Aimlohihi,Aimhilohi,Aimlolohi,
-       Aimhihilo,Aimlohilo,Aimhilolo,Aimlololo,
-       rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
-       rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
-       rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
-       rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
-       xrehihihi,xrelohihi,xrehilohi,xrelolohi,
-       xrehihilo,xrelohilo,xrehilolo,xrelololo,
-       ximhihihi,ximlohihi,ximhilohi,ximlolohi,
-       ximhihilo,ximlohilo,ximhilolo,ximlololo,&timelapsed_h);
-
-   if(verbose > 0)
-   {
-      cout << "The matrix computed by the host :" << endl;
-      for(int i=0; i<dim; i++)
-         for(int j=0; j<dim; j++)
-         {
-            cout << "A[" << i << "][" << j << "]re : "
-                 << Arehihihi[i][j] << "  " << Arelohihi[i][j] << endl
-                 << "            "
-                 << Arehilohi[i][j] << "  " << Arelolohi[i][j] << endl
-                 << "            "
-                 << Arehihilo[i][j] << "  " << Arelohilo[i][j] << endl
-                 << "            "
-                 << Arehilolo[i][j] << "  " << Arelololo[i][j] << endl;
-            cout << "A[" << i << "][" << j << "]im : "
-                 << Aimhihihi[i][j] << "  " << Aimlohihi[i][j] << endl
-                 << "            "
-                 << Aimhilohi[i][j] << "  " << Aimlolohi[i][j] << endl
-                 << "            "
-                 << Aimhihilo[i][j] << "  " << Aimlohilo[i][j] << endl
-                 << "            "
-                 << Aimhilolo[i][j] << "  " << Aimlololo[i][j] << endl;
-         }
-   }
    double *xrehihihi_d = new double[dim];
    double *xrelohihi_d = new double[dim];
    double *xrehilohi_d = new double[dim];
@@ -1591,6 +1548,49 @@ void test_cmplx8_upper_tiling ( void )
          Aimhilolo_d[i][j] = Aimhilolo[i][j];
          Aimlololo_d[i][j] = Aimlololo[i][j];
       }
+   }
+   double timelapsed_h;
+
+   cout << "-> CPU solves an upper triangular system ..." << endl;
+
+   CPU_cmplx8_upper_tiled_solver
+      (dim,sizetile,numtiles,
+       Arehihihi,Arelohihi,Arehilohi,Arelolohi,
+       Arehihilo,Arelohilo,Arehilolo,Arelololo,
+       Aimhihihi,Aimlohihi,Aimhilohi,Aimlolohi,
+       Aimhihilo,Aimlohilo,Aimhilolo,Aimlololo,
+       rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
+       rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
+       rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
+       rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
+       xrehihihi,xrelohihi,xrehilohi,xrelolohi,
+       xrehihilo,xrelohilo,xrehilolo,xrelololo,
+       ximhihihi,ximlohihi,ximhilohi,ximlolohi,
+       ximhihilo,ximlohilo,ximhilolo,ximlololo,&timelapsed_h);
+
+   if(verbose > 0)
+   {
+      cout << "The matrix computed by the host :" << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+            cout << "A[" << i << "][" << j << "]re : "
+                 << Arehihihi[i][j] << "  " << Arelohihi[i][j] << endl
+                 << "            "
+                 << Arehilohi[i][j] << "  " << Arelolohi[i][j] << endl
+                 << "            "
+                 << Arehihilo[i][j] << "  " << Arelohilo[i][j] << endl
+                 << "            "
+                 << Arehilolo[i][j] << "  " << Arelololo[i][j] << endl;
+            cout << "A[" << i << "][" << j << "]im : "
+                 << Aimhihihi[i][j] << "  " << Aimlohihi[i][j] << endl
+                 << "            "
+                 << Aimhilohi[i][j] << "  " << Aimlolohi[i][j] << endl
+                 << "            "
+                 << Aimhihilo[i][j] << "  " << Aimlohilo[i][j] << endl
+                 << "            "
+                 << Aimhilolo[i][j] << "  " << Aimlololo[i][j] << endl;
+         }
    }
    double timelapsed_d,elapsedms;
    double invlapsed,mullapsed,sublapsed;

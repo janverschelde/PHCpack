@@ -1,3 +1,6 @@
+Sat 18 Sep 2021 : fixed dbl8_tabs_testers.cpp by copying A into A_d before 
+  the CPU computes the inverse.
+
 Fri 17 Sep 2021 : in dbl4_tabs_testers.cpp, generated the upper triangular
   test matrices in double precision.  Fixed the bound on the shared memory
   size in dbl8_tabs_kernels.  To dbl8_tabs_kernels.cu, added many
