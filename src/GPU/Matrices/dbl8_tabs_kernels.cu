@@ -341,6 +341,7 @@ __global__ void cmplx8_small_invert_upper
            &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo,
             acc2hihihi, acc2lohihi, acc2hilohi, acc2lolohi,
             acc2hihilo, acc2lohilo, acc2hilolo, acc2lololo);
+   __syncthreads();
    invUrowsrehihihi[rowidx] = acc1hihihi;
    invUrowsrelohihi[rowidx] = acc1lohihi;
    invUrowsrehilohi[rowidx] = acc1hilohi;
@@ -349,10 +350,12 @@ __global__ void cmplx8_small_invert_upper
    invUrowsrelohilo[rowidx] = acc1lohilo;
    invUrowsrehilolo[rowidx] = acc1hilolo;
    invUrowsrelololo[rowidx] = acc1lololo;
+   __syncthreads();
    odg_inc(&acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
            &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo,
             acc4hihihi, acc4lohihi, acc4hilohi, acc4lolohi,
             acc4hihilo, acc4lohilo, acc4hilolo, acc4lololo);
+   __syncthreads();
    invUrowsimhihihi[rowidx] = acc3hihihi;
    invUrowsimlohihi[rowidx] = acc3lohihi;
    invUrowsimhilohi[rowidx] = acc3hilohi;
@@ -384,7 +387,7 @@ __global__ void cmplx8_small_invert_upper
       for(int j=i+1; j<dim; j++)
       {
          colidx = dim*j;              // need column j of U
-
+         __syncthreads();
          Ucolrehihihi[k] = Urehihihi[colidx+k];
          Ucolrelohihi[k] = Urelohihi[colidx+k];
          Ucolrehilohi[k] = Urehilohi[colidx+k];
@@ -403,7 +406,7 @@ __global__ void cmplx8_small_invert_upper
          Ucolimlololo[k] = Uimlololo[colidx+k];
 
          rowidx = j*dim + k;          // need solution value
-
+         __syncthreads();
          xvalrehihihi = invUrowsrehihihi[rowidx];
          xvalrelohihi = invUrowsrelohihi[rowidx];
          xvalrehilohi = invUrowsrehilohi[rowidx];
@@ -475,6 +478,7 @@ __global__ void cmplx8_small_invert_upper
       rowidx = i*dim + k;             // save in i-th row of inverse
 
       colidx = dim*i;                 // need column i of U
+      __syncthreads();
       Ucolrehihihi[k] = Urehihihi[colidx+k];
       Ucolrelohihi[k] = Urelohihi[colidx+k];
       Ucolrehilohi[k] = Urehilohi[colidx+k];
@@ -554,6 +558,7 @@ __global__ void cmplx8_small_invert_upper
               &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo,
                acc2hihihi, acc2lohihi, acc2hilohi, acc2lolohi,
                acc2hihilo, acc2lohilo, acc2hilolo, acc2lololo);
+      __syncthreads();
       invUrowsrehihihi[rowidx] = acc1hihihi;
       invUrowsrelohihi[rowidx] = acc1lohihi;
       invUrowsrehilohi[rowidx] = acc1hilohi;
@@ -562,10 +567,12 @@ __global__ void cmplx8_small_invert_upper
       invUrowsrelohilo[rowidx] = acc1lohilo;
       invUrowsrehilolo[rowidx] = acc1hilolo;
       invUrowsrelololo[rowidx] = acc1lololo;
+      __syncthreads();
       odg_inc(&acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
               &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo,
                acc4hihihi, acc4lohihi, acc4hilohi, acc4lolohi,
                acc4hihilo, acc4lohilo, acc4hilolo, acc4lololo);
+      __syncthreads();
       invUrowsimhihihi[rowidx] = acc3hihihi;
       invUrowsimlohihi[rowidx] = acc3lohihi;
       invUrowsimhilohi[rowidx] = acc3hilohi;
@@ -1258,6 +1265,7 @@ __global__ void  dbl8_invert_tiles
    int rowidx = offset + (dim - 1)*dim + k; // row index in the inverse
 
    // invUrow[k] = rhs/Ucol[k];       // last row of the inverse
+   __syncthreads();
    odg_div(     rhshihihi,        rhslohihi,    rhshilohi,    rhslolohi,
                 rhshihilo,        rhslohilo,    rhshilolo,    rhslololo,
                Ucolhihihi[k],    Ucollohihi[k],Ucolhilohi[k],Ucollolohi[k],
@@ -1267,6 +1275,7 @@ __global__ void  dbl8_invert_tiles
            &invUrowhihilo[k],&invUrowlohilo[k],
            &invUrowhilolo[k],&invUrowlololo[k]);
    // store the last row into invU
+   __syncthreads();
    invUhihihi[rowidx] = invUrowhihihi[k];
    invUlohihi[rowidx] = invUrowlohihi[k];
    invUhilohi[rowidx] = invUrowhilohi[k];
@@ -1290,6 +1299,7 @@ __global__ void  dbl8_invert_tiles
       for(int j=i+1; j<dim; j++)
       {
          colidx = offset + dim*j;     // need column j of U
+         __syncthreads();
          Ucolhihihi[k] = Uhihihi[colidx+k];
          Ucollohihi[k] = Ulohihi[colidx+k];
          Ucolhilohi[k] = Uhilohi[colidx+k];
@@ -1300,6 +1310,7 @@ __global__ void  dbl8_invert_tiles
          Ucollololo[k] = Ulololo[colidx+k];
 
          rowidx = offset + j*dim + k;       // need solution value
+         __syncthreads();
          invUrowhihihi[k] = invUhihihi[rowidx]; // load invU row into invUrow
          invUrowlohihi[k] = invUlohihi[rowidx];
          invUrowhilohi[k] = invUhilohi[rowidx];
@@ -1308,6 +1319,7 @@ __global__ void  dbl8_invert_tiles
          invUrowlohilo[k] = invUlohilo[rowidx];
          invUrowhilolo[k] = invUhilolo[rowidx];
          invUrowlololo[k] = invUlololo[rowidx];
+         __syncthreads();
          xvalhihihi = invUrowhihihi[k];
          xvallohihi = invUrowlohihi[k];
          xvalhilohi = invUrowhilohi[k];
@@ -1331,6 +1343,7 @@ __global__ void  dbl8_invert_tiles
                   acchihilo, acclohilo, acchilolo, acclololo);
       }
       colidx = offset + dim*i;        // need column i of U
+      __syncthreads();
       Ucolhihihi[k] = Uhihihi[colidx+k];
       Ucollohihi[k] = Ulohihi[colidx+k];
       Ucolhilohi[k] = Uhilohi[colidx+k];
@@ -1351,7 +1364,7 @@ __global__ void  dbl8_invert_tiles
               &invUrowhilohi[k],&invUrowlolohi[k],
               &invUrowhihilo[k],&invUrowlohilo[k],
               &invUrowhilolo[k],&invUrowlololo[k]);
-
+      __syncthreads();
       invUhihihi[rowidx] = invUrowhihihi[k];
       invUlohihi[rowidx] = invUrowlohihi[k];
       invUhilohi[rowidx] = invUrowhilohi[k];
@@ -1533,6 +1546,7 @@ __global__ void cmplx8_invert_tiles
            &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo,
             acc2hihihi, acc2lohihi, acc2hilohi, acc2lolohi,
             acc2hihilo, acc2lohilo, acc2hilolo, acc2lololo);
+   __syncthreads();
    invUrowrehihihi[k] = acc1hihihi;
    invUrowrelohihi[k] = acc1lohihi;
    invUrowrehilohi[k] = acc1hilohi;
@@ -1541,10 +1555,12 @@ __global__ void cmplx8_invert_tiles
    invUrowrelohilo[k] = acc1lohilo;
    invUrowrehilolo[k] = acc1hilolo;
    invUrowrelololo[k] = acc1lololo;
+   __syncthreads();
    odg_inc(&acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
            &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo,
             acc4hihihi, acc4lohihi, acc4hilohi, acc4lolohi,
             acc4hihilo, acc4lohilo, acc4hilolo, acc4lololo);
+   __syncthreads();
    invUrowimhihihi[k] = acc3hihihi;
    invUrowimlohihi[k] = acc3lohihi;
    invUrowimhilohi[k] = acc3hilohi;
@@ -1553,6 +1569,7 @@ __global__ void cmplx8_invert_tiles
    invUrowimlohilo[k] = acc3lohilo;
    invUrowimhilolo[k] = acc3hilolo;
    invUrowimlololo[k] = acc3lololo;
+   __syncthreads();
    invUrehihihi[rowidx] = invUrowrehihihi[k];   // store the last row
    invUrelohihi[rowidx] = invUrowrelohihi[k];
    invUrehilohi[rowidx] = invUrowrehilohi[k]; 
@@ -1592,6 +1609,7 @@ __global__ void cmplx8_invert_tiles
       for(int j=i+1; j<dim; j++)
       {
          colidx = offset + dim*j;        // need column j of U
+         __syncthreads();
          Ucolrehihihi[k] = Urehihihi[colidx+k];
          Ucolrelohihi[k] = Urelohihi[colidx+k];
          Ucolrehilohi[k] = Urehilohi[colidx+k];
@@ -1610,6 +1628,7 @@ __global__ void cmplx8_invert_tiles
          Ucolimlololo[k] = Uimlololo[colidx+k];
 
          rowidx = offset + j*dim + k;       // need solution value
+         __syncthreads();
          invUrowrehihihi[k] = invUrehihihi[rowidx]; // load invU row
          invUrowrelohihi[k] = invUrelohihi[rowidx];
          invUrowrehilohi[k] = invUrehilohi[rowidx];
@@ -1626,6 +1645,7 @@ __global__ void cmplx8_invert_tiles
          invUrowimlohilo[k] = invUimlohilo[rowidx];
          invUrowimhilolo[k] = invUimhilolo[rowidx];
          invUrowimlololo[k] = invUimlololo[rowidx];
+         __syncthreads();
          xvalrehihihi = invUrowrehihihi[k];
          xvalrelohihi = invUrowrelohihi[k];
          xvalrehilohi = invUrowrehilohi[k];
@@ -1695,6 +1715,7 @@ __global__ void cmplx8_invert_tiles
                    acc4hihilo,  acc4lohilo,  acc4hilolo,  acc4lololo);
       }
       colidx = offset + dim*i;        // need column i of U
+      __syncthreads();
       Ucolrehihihi[k] = Urehihihi[colidx+k];
       Ucolrelohihi[k] = Urelohihi[colidx+k];
       Ucolrehilohi[k] = Urehilohi[colidx+k];
@@ -1773,6 +1794,7 @@ __global__ void cmplx8_invert_tiles
               &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo,
                acc2hihihi, acc2lohihi, acc2hilohi, acc2lolohi,
                acc2hihilo, acc2lohilo, acc2hilolo, acc2lololo);
+      __syncthreads();
       invUrowrehihihi[k] = acc1hihihi;
       invUrowrelohihi[k] = acc1lohihi;
       invUrowrehilohi[k] = acc1hilohi;
@@ -1781,10 +1803,12 @@ __global__ void cmplx8_invert_tiles
       invUrowrelohilo[k] = acc1lohilo;
       invUrowrehilolo[k] = acc1hilolo;
       invUrowrelololo[k] = acc1lololo;
+      __syncthreads();
       odg_inc(&acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
               &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo,
                acc4hihihi, acc4lohihi, acc4hilohi, acc4lolohi,
                acc4hihilo, acc4lohilo, acc4hilolo, acc4lololo);
+      __syncthreads();
       invUrowimhihihi[k] = acc3hihihi;
       invUrowimlohihi[k] = acc3lohihi;
       invUrowimhilohi[k] = acc3hilohi;
@@ -1793,6 +1817,7 @@ __global__ void cmplx8_invert_tiles
       invUrowimlohilo[k] = acc3lohilo;
       invUrowimhilolo[k] = acc3hilolo;
       invUrowimlololo[k] = acc3lololo;
+      __syncthreads();
       invUrehihihi[rowidx] = invUrowrehihihi[k];
       invUrelohihi[rowidx] = invUrowrelohihi[k];
       invUrehilohi[rowidx] = invUrowrehilohi[k];
@@ -1834,15 +1859,6 @@ __global__ void dbl8_multiply_inverse
    __shared__ double workhilolo[tabsod_shmemsize];
    __shared__ double worklololo[tabsod_shmemsize];
 
-   workhihihi[k] = whihihi[rhsoff+k];
-   worklohihi[k] = wlohihi[rhsoff+k];
-   workhilohi[k] = whilohi[rhsoff+k];
-   worklolohi[k] = wlolohi[rhsoff+k];
-   workhihilo[k] = whihilo[rhsoff+k];
-   worklohilo[k] = wlohilo[rhsoff+k];
-   workhilolo[k] = whilolo[rhsoff+k];
-   worklololo[k] = wlololo[rhsoff+k];
-
    double resulthihihi = 0.0; // each thread stores its product in result
    double resultlohihi = 0.0;
    double resulthilohi = 0.0;
@@ -1856,8 +1872,19 @@ __global__ void dbl8_multiply_inverse
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
 
+   workhihihi[k] = whihihi[rhsoff+k];
+   worklohihi[k] = wlohihi[rhsoff+k];
+   workhilohi[k] = whilohi[rhsoff+k];
+   worklolohi[k] = wlolohi[rhsoff+k];
+   workhihilo[k] = whihilo[rhsoff+k];
+   worklohilo[k] = wlohilo[rhsoff+k];
+   workhilolo[k] = whilolo[rhsoff+k];
+   worklololo[k] = wlololo[rhsoff+k];
+   __syncthreads();
+
    for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
    {
+      __syncthreads();
       coeffhihihi = invUhihihi[offset+k*dim+j]; // thread k does row k
       coefflohihi = invUlohihi[offset+k*dim+j];
       coeffhilohi = invUhilohi[offset+k*dim+j];
@@ -1867,17 +1894,20 @@ __global__ void dbl8_multiply_inverse
       coeffhilolo = invUhilolo[offset+k*dim+j];
       coefflololo = invUlololo[offset+k*dim+j];
       // result = result + coeff*work[j];
+      __syncthreads();
       odg_mul(coeffhihihi,  coefflohihi,  coeffhilohi,  coefflolohi,
               coeffhihilo,  coefflohilo,  coeffhilolo,  coefflololo,
                workhihihi[j],worklohihi[j],workhilohi[j],worklolohi[j],
                workhihilo[j],worklohilo[j],workhilolo[j],worklololo[j],
                &acchihihi,   &acclohihi,   &acchilohi,   &acclolohi,
                &acchihilo,   &acclohilo,   &acchilolo,   &acclololo);
+      __syncthreads();
       odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
               &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
                   acchihihi,    acclohihi,    acchilohi,    acclolohi,
                   acchihilo,    acclohilo,    acchilolo,    acclololo);
    }
+   __syncthreads();
    whihihi[rhsoff+k] = resulthihihi;
    wlohihi[rhsoff+k] = resultlohihi;
    whilohi[rhsoff+k] = resulthilohi;
@@ -1928,23 +1958,6 @@ __global__ void cmplx8_multiply_inverse
    __shared__ double workimhilolo[tabsod_shmemsize];
    __shared__ double workimlololo[tabsod_shmemsize];
 
-   workrehihihi[k] = wrehihihi[rhsoff+k];
-   workrelohihi[k] = wrelohihi[rhsoff+k];
-   workrehilohi[k] = wrehilohi[rhsoff+k];
-   workrelolohi[k] = wrelolohi[rhsoff+k];
-   workrehihilo[k] = wrehihilo[rhsoff+k];
-   workrelohilo[k] = wrelohilo[rhsoff+k];
-   workrehilolo[k] = wrehilolo[rhsoff+k];
-   workrelololo[k] = wrelololo[rhsoff+k];
-   workimhihihi[k] = wimhihihi[rhsoff+k];
-   workimlohihi[k] = wimlohihi[rhsoff+k];
-   workimhilohi[k] = wimhilohi[rhsoff+k];
-   workimlolohi[k] = wimlolohi[rhsoff+k];
-   workimhihilo[k] = wimhihilo[rhsoff+k];
-   workimlohilo[k] = wimlohilo[rhsoff+k];
-   workimhilolo[k] = wimhilolo[rhsoff+k];
-   workimlololo[k] = wimlololo[rhsoff+k];
-
    double resultrehihihi = 0.0; // each thread stores its product in result
    double resultrelohihi = 0.0;
    double resultrehilohi = 0.0;
@@ -1970,8 +1983,27 @@ __global__ void cmplx8_multiply_inverse
    double acc2hihihi,acc2lohihi,acc2hilohi,acc2lolohi;
    double acc2hihilo,acc2lohilo,acc2hilolo,acc2lololo;
 
+   workrehihihi[k] = wrehihihi[rhsoff+k];
+   workrelohihi[k] = wrelohihi[rhsoff+k];
+   workrehilohi[k] = wrehilohi[rhsoff+k];
+   workrelolohi[k] = wrelolohi[rhsoff+k];
+   workrehihilo[k] = wrehihilo[rhsoff+k];
+   workrelohilo[k] = wrelohilo[rhsoff+k];
+   workrehilolo[k] = wrehilolo[rhsoff+k];
+   workrelololo[k] = wrelololo[rhsoff+k];
+   workimhihihi[k] = wimhihihi[rhsoff+k];
+   workimlohihi[k] = wimlohihi[rhsoff+k];
+   workimhilohi[k] = wimhilohi[rhsoff+k];
+   workimlolohi[k] = wimlolohi[rhsoff+k];
+   workimhihilo[k] = wimhihilo[rhsoff+k];
+   workimlohilo[k] = wimlohilo[rhsoff+k];
+   workimhilolo[k] = wimhilolo[rhsoff+k];
+   workimlololo[k] = wimlololo[rhsoff+k];
+   __syncthreads();
+
    for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
    {
+      __syncthreads();
       coeffrehihihi = invUrehihihi[offset+k*dim+j]; // thread k does row k
       coeffrelohihi = invUrelohihi[offset+k*dim+j];
       coeffrehilohi = invUrehilohi[offset+k*dim+j];
@@ -1989,6 +2021,7 @@ __global__ void cmplx8_multiply_inverse
       coeffimhilolo = invUimhilolo[offset+k*dim+j];
       coeffimlololo = invUimlololo[offset+k*dim+j];
       // result = result + coeff*work[j];
+      __syncthreads();
       odg_mul(coeffrehihihi,  coeffrelohihi,  coeffrehilohi,  coeffrelolohi,
               coeffrehihilo,  coeffrelohilo,  coeffrehilolo,  coeffrelololo,
                workrehihihi[j],workrelohihi[j],workrehilohi[j],workrelolohi[j],
@@ -2030,6 +2063,7 @@ __global__ void cmplx8_multiply_inverse
                    acc2hihihi,     acc2lohihi,     acc2hilohi,    acc2lolohi,
                    acc2hihilo,     acc2lohilo,     acc2hilolo,    acc2lololo);
    }
+   __syncthreads();
    wrehihihi[rhsoff+k] = resultrehihihi;
    wrelohihi[rhsoff+k] = resultrelohihi;
    wrehilohi[rhsoff+k] = resultrehilohi;
@@ -2076,6 +2110,19 @@ __global__ void dbl8_back_substitute
    __shared__ double solhilolo[tabsod_shmemsize];
    __shared__ double sollololo[tabsod_shmemsize];
 
+   double resulthihihi = 0.0; // each thread stores its product in result
+   double resultlohihi = 0.0;
+   double resulthilohi = 0.0;
+   double resultlolohi = 0.0;
+   double resulthihilo = 0.0;
+   double resultlohilo = 0.0;
+   double resulthilolo = 0.0;
+   double resultlololo = 0.0;
+   double coeffhihihi,coefflohihi,coeffhilohi,coefflolohi;
+   double coeffhihilo,coefflohilo,coeffhilolo,coefflololo;
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
    wrkhihihi[k] = whihihi[B*dim+k];   // block B updates B-th slice of w
    wrklohihi[k] = wlohihi[B*dim+k];
    wrkhilohi[k] = whilohi[B*dim+k];
@@ -2092,22 +2139,11 @@ __global__ void dbl8_back_substitute
    sollohilo[k] = wlohilo[idx*dim+k];
    solhilolo[k] = whilolo[idx*dim+k];
    sollololo[k] = wlololo[idx*dim+k];
-
-   double resulthihihi = 0.0; // each thread stores its product in result
-   double resultlohihi = 0.0;
-   double resulthilohi = 0.0;
-   double resultlolohi = 0.0;
-   double resulthihilo = 0.0;
-   double resultlohilo = 0.0;
-   double resulthilolo = 0.0;
-   double resultlololo = 0.0;
-   double coeffhihihi,coefflohihi,coeffhilohi,coefflolohi;
-   double coeffhihilo,coefflohilo,coeffhilolo,coefflololo;
-   double acchihihi,acclohihi,acchilohi,acclolohi;
-   double acchihilo,acclohilo,acchilolo,acclololo;
+   __syncthreads();
 
    for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
    {
+      __syncthreads();
       coeffhihihi = Uhihihi[offset+k*dim+j];
       coefflohihi = Ulohihi[offset+k*dim+j];
       coeffhilohi = Uhilohi[offset+k*dim+j];
@@ -2117,6 +2153,7 @@ __global__ void dbl8_back_substitute
       coeffhilolo = Uhilolo[offset+k*dim+j];
       coefflololo = Ulololo[offset+k*dim+j];
       // result = result + coeff*sol[j];
+      __syncthreads();
       odg_mul(coeffhihihi, coefflohihi, coeffhilohi, coefflolohi,
               coeffhihilo, coefflohilo, coeffhilolo, coefflololo,
                 solhihihi[j],sollohihi[j],solhilohi[j],sollolohi[j],
@@ -2129,10 +2166,12 @@ __global__ void dbl8_back_substitute
                   acchihilo,    acclohilo,    acchilolo,    acclololo);
    }
    // wrk[k] = wrk[k] - result; // subtract product
+   __syncthreads();
    odg_dec(  &wrkhihihi[k],&wrklohihi[k],&wrkhilohi[k],&wrklolohi[k],
              &wrkhihilo[k],&wrklohilo[k],&wrkhilolo[k],&wrklololo[k],
            resulthihihi, resultlohihi, resulthilohi, resultlolohi,
            resulthihilo, resultlohilo, resulthilolo, resultlololo);
+   __syncthreads();
    whihihi[B*dim+k] = wrkhihihi[k];
    wlohihi[B*dim+k] = wrklohihi[k];
    whilohi[B*dim+k] = wrkhilohi[k];
@@ -2199,6 +2238,31 @@ __global__ void cmplx8_back_substitute
    __shared__ double solimhilolo[tabsod_shmemsize];
    __shared__ double solimlololo[tabsod_shmemsize];
 
+   double resultrehihihi = 0.0; // each thread stores its product in result
+   double resultrelohihi = 0.0;
+   double resultrehilohi = 0.0;
+   double resultrelolohi = 0.0;
+   double resultrehihilo = 0.0;
+   double resultrelohilo = 0.0;
+   double resultrehilolo = 0.0;
+   double resultrelololo = 0.0;
+   double resultimhihihi = 0.0;
+   double resultimlohihi = 0.0;
+   double resultimhilohi = 0.0;
+   double resultimlolohi = 0.0;
+   double resultimhihilo = 0.0;
+   double resultimlohilo = 0.0;
+   double resultimhilolo = 0.0;
+   double resultimlololo = 0.0;
+   double coeffrehihihi,coeffrelohihi,coeffrehilohi,coeffrelolohi;
+   double coeffrehihilo,coeffrelohilo,coeffrehilolo,coeffrelololo;
+   double coeffimhihihi,coeffimlohihi,coeffimhilohi,coeffimlolohi;
+   double coeffimhihilo,coeffimlohilo,coeffimhilolo,coeffimlololo;
+   double acc1hihihi,acc1lohihi,acc1hilohi,acc1lolohi;
+   double acc1hihilo,acc1lohilo,acc1hilolo,acc1lololo;
+   double acc2hihihi,acc2lohihi,acc2hilohi,acc2lolohi;
+   double acc2hihilo,acc2lohilo,acc2hilolo,acc2lololo;
+
    wrkrehihihi[k] = wrehihihi[B*dim+k];  // block B updates B-th slice of w
    wrkrelohihi[k] = wrelohihi[B*dim+k];
    wrkrehilohi[k] = wrehilohi[B*dim+k];
@@ -2231,34 +2295,11 @@ __global__ void cmplx8_back_substitute
    solimlohilo[k] = wimlohilo[idx*dim+k];
    solimhilolo[k] = wimhilolo[idx*dim+k];
    solimlololo[k] = wimlololo[idx*dim+k];
-
-   double resultrehihihi = 0.0; // each thread stores its product in result
-   double resultrelohihi = 0.0;
-   double resultrehilohi = 0.0;
-   double resultrelolohi = 0.0;
-   double resultrehihilo = 0.0;
-   double resultrelohilo = 0.0;
-   double resultrehilolo = 0.0;
-   double resultrelololo = 0.0;
-   double resultimhihihi = 0.0;
-   double resultimlohihi = 0.0;
-   double resultimhilohi = 0.0;
-   double resultimlolohi = 0.0;
-   double resultimhihilo = 0.0;
-   double resultimlohilo = 0.0;
-   double resultimhilolo = 0.0;
-   double resultimlololo = 0.0;
-   double coeffrehihihi,coeffrelohihi,coeffrehilohi,coeffrelolohi;
-   double coeffrehihilo,coeffrelohilo,coeffrehilolo,coeffrelololo;
-   double coeffimhihihi,coeffimlohihi,coeffimhilohi,coeffimlolohi;
-   double coeffimhihilo,coeffimlohilo,coeffimhilolo,coeffimlololo;
-   double acc1hihihi,acc1lohihi,acc1hilohi,acc1lolohi;
-   double acc1hihilo,acc1lohilo,acc1hilolo,acc1lololo;
-   double acc2hihihi,acc2lohihi,acc2hilohi,acc2lolohi;
-   double acc2hihilo,acc2lohilo,acc2hilolo,acc2lololo;
+   __syncthreads();
 
    for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
    {
+      __syncthreads();
       coeffrehihihi = Urehihihi[offset+k*dim+j];
       coeffrelohihi = Urelohihi[offset+k*dim+j];
       coeffrehilohi = Urehilohi[offset+k*dim+j];
@@ -2276,6 +2317,7 @@ __global__ void cmplx8_back_substitute
       coeffimhilolo = Uimhilolo[offset+k*dim+j];
       coeffimlololo = Uimlololo[offset+k*dim+j];
       // result = result + coeff*sol[j];
+      __syncthreads();
       odg_mul(coeffrehihihi, coeffrelohihi, coeffrehilohi, coeffrelolohi,
               coeffrehihilo, coeffrelohilo, coeffrehilolo, coeffrelololo,
                 solrehihihi[j],solrelohihi[j],solrehilohi[j],solrelolohi[j],
@@ -2318,6 +2360,7 @@ __global__ void cmplx8_back_substitute
                    acc2hihilo,     acc2lohilo,     acc2hilolo,     acc2lololo);
    }
    // wrk[k] = wrk[k] - result; // subtract product
+   __syncthreads();
    odg_dec(  &wrkrehihihi[k],&wrkrelohihi[k],&wrkrehilohi[k],&wrkrelolohi[k],
              &wrkrehihilo[k],&wrkrelohilo[k],&wrkrehilolo[k],&wrkrelololo[k],
            resultrehihihi, resultrelohihi, resultrehilohi, resultrelolohi,
@@ -2326,6 +2369,7 @@ __global__ void cmplx8_back_substitute
              &wrkimhihilo[k],&wrkimlohilo[k],&wrkimhilolo[k],&wrkimlololo[k],
            resultimhihihi, resultimlohihi, resultimhilohi, resultimlolohi,
            resultimhihilo, resultimlohilo, resultimhilolo, resultimlololo);
+   __syncthreads();
    wrehihihi[B*dim+k] = wrkrehihihi[k];
    wrelohihi[B*dim+k] = wrkrelohihi[k];
    wrehilohi[B*dim+k] = wrkrehilohi[k];
