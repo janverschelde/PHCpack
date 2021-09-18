@@ -2440,7 +2440,7 @@ void GPU_dbl8_upper_inverse
 
    cudaEventRecord(start);
 
-   if(dim <= 16)
+   if(dim <= 13)
       dbl8_small_invert_upper<<<1,dim>>>
          (dim,   Uhihihi_d,   Ulohihi_d,   Uhilohi_d,   Ulolohi_d,
                  Uhihilo_d,   Ulohilo_d,   Uhilolo_d,   Ulololo_d,
@@ -2664,7 +2664,7 @@ void GPU_cmplx8_upper_inverse
 
    cudaEventRecord(start);
 
-   if(dim <= 16)
+   if(dim <= 13)
       cmplx8_small_invert_upper<<<1,dim>>>
          (dim,   Urehihihi_d,   Urelohihi_d,   Urehilohi_d,   Urelolohi_d,
                  Urehihilo_d,   Urelohilo_d,   Urehilolo_d,   Urelololo_d,

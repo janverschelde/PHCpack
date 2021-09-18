@@ -4,7 +4,7 @@
 #ifndef __dbl8_tabs_kernels_h__
 #define __dbl8_tabs_kernels_h__
 
-#define tabsod_shmemsize 128
+#define tabsod_shmemsize 169
 
 __global__ void dbl8_small_invert_upper 
 ( int dim,
@@ -21,10 +21,10 @@ __global__ void dbl8_small_invert_upper
  *   as the row-by-row computation of the inverse invU
  *   applies a column-by-column load of U.
  *
- * REQUIRED : dim <= 16.
+ * REQUIRED : dim <= 13
  *   Because the inverse is stored entirely in shared memory,
- *   the dimension dim is limited to 16 = 2^4, as 16^2 = 256,
- *   the upper limit on the shared memory, d_shmemsize.
+ *   the dimension dim is limited to 13, as 13^2 = 169,
+ *   the upper limit on the shared memory, tabsod_shmemsize.
  *
  * ON ENTRY :
  *   dim      dimension of the upper triangular matrix U;
@@ -76,10 +76,10 @@ __global__ void cmplx8_small_invert_upper
  *   as the row-by-row computation of the inverse invU
  *   applies a column-by-column load of U.
  *
- * REQUIRED : dim <= 16.
+ * REQUIRED : dim <= 13.
  *   Because the inverse is stored entirely in shared memory,
- *   the dimension dim is limited to 16 = 2^4, as 16^2 = 256,
- *   the upper limit on the shared memory, d_shmemsize.
+ *   the dimension dim is limited to 13, as 13^2 = 169,
+ *   the upper limit on the shared memory, tabsod_shmemsize.
  *
  * ON ENTRY :
  *   dim       dimension of the upper triangular matrix U,
@@ -166,11 +166,11 @@ __global__ void dbl8_medium_invert_upper
  *   as the row-by-row computation of the inverse invU
  *   applies a column-by-column load of U.
  *
- * REQUIRED : dim <= 256.
+ * REQUIRED : dim <= 169.
  *   Because the columns of U are loaded entirely into shared memory
  *   and the rows of the inverses are computed first entirely in
  *   shared memory before storing, the dimension dim is limited 
- *   to 256, the upper limit on the shared memory, dd_shmemsize.
+ *   to 169, the upper limit on the shared memory, tabsod_shmemsize.
  *
  * ON ENTRY :
  *   dim      dimension of the upper triangular matrix U;
@@ -230,11 +230,11 @@ __global__ void cmplx8_medium_invert_upper
  *   as the row-by-row computation of the inverse invU
  *   applies a column-by-column load of U.
  *
- * REQUIRED : dim <= 256.
+ * REQUIRED : dim <= 169.
  *   Because the columns of U are loaded entirely into shared memory
  *   and the rows of the inverses are computed first entirely in
  *   shared memory before storing, the dimension dim is limited 
- *   to 256, the upper limit on the shared memory, od_shmemsize.
+ *   to 169, the upper limit on the shared memory, tabsod_shmemsize.
  *
  * ON ENTRY :
  *   dim       dimension of the upper triangular matrix U;
@@ -319,7 +319,7 @@ __global__ void  dbl8_invert_tiles
  *   The number of blocks equals the number of tiles in U.
  *   The number of threads per block equals the dimension of each tile.
  *
- * REQUIRED : dim <= 256 = dd_shmemsize.
+ * REQUIRED : dim <= 169 = tabsod_shmemsize.
  *
  * ON ENTRY :
  *   dim      the dimension of each tile;
@@ -384,7 +384,7 @@ __global__ void cmplx8_invert_tiles
  *   The number of blocks equals the number of tiles in U.
  *   The number of threads per block equals the dimension of each tile.
  *
- * REQUIRED : dim <= 256 = d_shmemsize.
+ * REQUIRED : dim <= 169 = tabsod_shmemsize.
  *
  * ON ENTRY :
  *   dim       the dimension of each tile;
