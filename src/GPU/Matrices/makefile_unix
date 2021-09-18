@@ -362,17 +362,21 @@ test_dbl8_tabs.o:
 test_dbl8_tabs: test_dbl8_tabs.o dbl8_tabs_testers.o \
                 double_double_functions.o quad_double_functions.o \
                 octo_double_functions.o dbl_tabs_flopcounts.o \
+                dbl_factorizations.o dbl_test_utilities.o \
                 dbl8_tabs_testers.o dbl8_factorizations.o \
                 dbl8_tabs_host.o dbl8_tabs_kernels.o \
                 test_dbl8_tabs.o dbl8_test_utilities.o \
-                random_numbers.o random8_vectors.o random8_matrices.o
+                random_numbers.o random8_vectors.o \
+                random_series.o random_matrices.o random8_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl8_tabs test_dbl8_tabs.o \
+                  dbl_factorizations.o dbl_test_utilities.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o dbl8_factorizations.o \
                   dbl8_tabs_testers.o dbl8_test_utilities.o \
                   dbl8_tabs_host.o dbl8_tabs_kernels.o dbl_tabs_flopcounts.o \
-                  random_numbers.o random8_vectors.o random8_matrices.o \
+                  random_numbers.o random8_vectors.o \
+                  random_series.o random_matrices.o random8_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 dbl_baqr_host.o:
@@ -475,6 +479,12 @@ test_dbl4_baqr: test_dbl4_baqr.o prompt_baqr_setup.o dbl4_baqr_testers.o \
                   random_numbers.o random4_vectors.o random4_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
+dbl8_baqr_host.o:
+	@-echo ">>> compiling dbl8_baqr_host ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl8_baqr_host.cpp
+
+test_dbl8_baqr: dbl8_baqr_host.o
+
 dbl_qrbs_testers.o:
 	@-echo ">>> compiling dbl_qrbs_testers ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl_qrbs_testers.cpp
@@ -566,6 +576,7 @@ clean:
 	/bin/rm -f -r dbl2_baqr_host.o dbl2_baqr_kernels.o
 	/bin/rm -f -r dbl2_baqr_testers.o dbl4_baqr_testers.o
 	/bin/rm -f -r dbl4_baqr_host.o dbl4_baqr_kernels.o
+	/bin/rm -f -r dbl8_baqr_host.o
 	/bin/rm -f -r test_dbl_qrbs.o test_dbl_qrbs
 	/bin/rm -f -r dbl_qrbs_testers.o
 	/bin/rm -f -r test_dbl2_qrbs.o test_dbl2_qrbs
