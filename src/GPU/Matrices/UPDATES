@@ -1,7 +1,7 @@
 Sat 18 Sep 2021 : fixed dbl8_tabs_testers.cpp by copying A into A_d before 
   the CPU computes the inverse.  Generated the random upper triangular matrix
   to test tiling in double precision in dbl8_tabs_testers.cpp; updated
-  the makefiles.
+  the makefiles.  Adjusted the operation counts in dbl8_tabs_testers.cpp.
 
 Fri 17 Sep 2021 : in dbl4_tabs_testers.cpp, generated the upper triangular
   test matrices in double precision.  Fixed the bound on the shared memory

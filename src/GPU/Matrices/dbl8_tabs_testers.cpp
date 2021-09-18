@@ -1184,12 +1184,12 @@ void test_real8_upper_tiling ( void )
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
    cout << endl;
    cout << "             Number of additions/subtractions : "
-        << addcnt << " x 89 " << endl;
+        << addcnt << " x 270 " << endl;
    cout << "                    Number of multiplications : "
-        << mulcnt << " x 336 " << endl;
+        << mulcnt << " x 1742 " << endl;
    cout << "                          Number of divisions : "
-        << divcnt << " x 893 " << endl;
-   long long int flopcnt = 89*addcnt + 336*mulcnt + 893*divcnt;
+        << divcnt << " x 5126 " << endl;
+   long long int flopcnt = 270*addcnt + 1742*mulcnt + 5126*divcnt;
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
    cout << endl;
@@ -1767,12 +1767,12 @@ void test_cmplx8_upper_tiling ( void )
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
    cout << endl;
    cout << "             Number of additions/subtractions : "
-        << addcnt << " x 89 " << endl;
+        << addcnt << " x 270 " << endl;
    cout << "                    Number of multiplications : "
-        << mulcnt << " x 336 " << endl;
+        << mulcnt << " x 1742 " << endl;
    cout << "                          Number of divisions : "
-        << divcnt << " x 893 " << endl;
-   long long int flopcnt = 89*addcnt + 336*mulcnt + 893*divcnt;
+        << divcnt << " x 5126 " << endl;
+   long long int flopcnt = 270*addcnt + 1742*mulcnt + 5126*divcnt;
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
    cout << endl;
