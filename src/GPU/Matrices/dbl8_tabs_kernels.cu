@@ -489,11 +489,11 @@ __global__ void cmplx8_small_invert_upper
       Ucolrelololo[k] = Urelololo[colidx+k];
       Ucolimhihihi[k] = Uimhihihi[colidx+k];
       Ucolimlohihi[k] = Uimlohihi[colidx+k];
-      Ucolimhihihi[k] = Uimhilohi[colidx+k];
+      Ucolimhilohi[k] = Uimhilohi[colidx+k];
       Ucolimlolohi[k] = Uimlolohi[colidx+k];
       Ucolimhihilo[k] = Uimhihilo[colidx+k];
       Ucolimlohilo[k] = Uimlohilo[colidx+k];
-      Ucolimhihilo[k] = Uimhilolo[colidx+k];
+      Ucolimhilolo[k] = Uimhilolo[colidx+k];
       Ucolimlololo[k] = Uimlololo[colidx+k];
 
       __syncthreads();
