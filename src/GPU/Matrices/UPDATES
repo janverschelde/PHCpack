@@ -1,5 +1,6 @@
 Sun 19 Sep 2021 : fixed two bugs in dbl8_tabs_kernels.cu so inverting small
-  complex matrices is correct.
+  complex matrices is correct.  Fixed another two bugs in dbl8_tabs_kernels.cu
+  so complex matrices of up to dimension 169 are inverted correctly.
 
 Sat 18 Sep 2021 : fixed dbl8_tabs_testers.cpp by copying A into A_d before 
   the CPU computes the inverse.  Generated the random upper triangular matrix
