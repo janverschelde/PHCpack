@@ -355,6 +355,7 @@ void test_cmplx8_upper_inverse ( void )
          Arelohilo[i][j] = 0.0;
          Arehilolo[i][j] = 0.0;
          Arelololo[i][j] = 0.0;
+         Aimhihihi[i][j] = 0.0;
          Aimlohihi[i][j] = 0.0;
          Aimhilohi[i][j] = 0.0;
          Aimlolohi[i][j] = 0.0;
@@ -370,14 +371,18 @@ void test_cmplx8_upper_inverse ( void )
                Arehihilo,Arelohilo,Arehilolo,Arelololo,
                Aimhihihi,Aimlohihi,Aimhilohi,Aimlolohi,
                Aimhihilo,Aimlohilo,Aimhilolo,Aimlololo);
+   */
    cmplx8_random_upper_factor
       (dim,Arehihihi,Arelohihi,Arehilohi,Arelolohi,
            Arehihilo,Arelohilo,Arehilolo,Arelololo,
            Aimhihihi,Aimlohihi,Aimhilohi,Aimlolohi,
            Aimhihilo,Aimlohilo,Aimhilolo,Aimlololo);
+   // cmplx_random_upper_factor(dim,Arehihihi,Aimhihihi);
+  /*
+   dbl8_random_upper_factor
+      (dim,Arehihihi,Arelohihi,Arehilohi,Arelolohi,
+           Arehihilo,Arelohilo,Arehilolo,Arelololo);
    */
-   cmplx_random_upper_factor(dim,Arehihihi,Aimhihihi);
-
    cout << scientific << setprecision(16);
 
    if(verbose > 0)
@@ -1280,15 +1285,32 @@ void test_cmplx8_upper_tiling ( void )
       Aimlohilo[i] = new double[dim];
       Aimhilolo[i] = new double[dim];
       Aimlololo[i] = new double[dim];
+      for(int j=0; j<dim; j++)
+      {
+         Arelohihi[i][j] = 0.0;
+         Arehilohi[i][j] = 0.0;
+         Arelolohi[i][j] = 0.0;
+         Arehihilo[i][j] = 0.0;
+         Arelohilo[i][j] = 0.0;
+         Arehilolo[i][j] = 0.0;
+         Arelololo[i][j] = 0.0;
+         Aimlohihi[i][j] = 0.0;
+         Aimhilohi[i][j] = 0.0;
+         Aimlolohi[i][j] = 0.0;
+         Aimhihilo[i][j] = 0.0;
+         Aimlohilo[i][j] = 0.0;
+         Aimhilolo[i][j] = 0.0;
+         Aimlololo[i][j] = 0.0;
+      }
    }
-
+  /*
    random_cmplx8_upper_matrix
       (dim,dim,Arehihihi,Arelohihi,Arehilohi,Arelolohi,
                Arehihilo,Arelohilo,Arehilolo,Arelololo,
                Aimhihihi,Aimlohihi,Aimhilolo,Aimlolohi,
                Aimhihilo,Aimlohilo,Aimhilolo,Aimlololo);
-   // cmplx4_random_upper_factor
-   //   (dim,Arehihi,Arelohi,Arehilo,Arelolo,Aimhihi,Aimlohi,Aimhilo,Aimlolo);
+   */
+   cmplx_random_upper_factor(dim,Arehihihi,Aimhihihi);
 
    cout << scientific << setprecision(16);
 
