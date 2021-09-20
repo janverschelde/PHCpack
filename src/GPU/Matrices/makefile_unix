@@ -483,7 +483,35 @@ dbl8_baqr_host.o:
 	@-echo ">>> compiling dbl8_baqr_host ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl8_baqr_host.cpp
 
-test_dbl8_baqr: dbl8_baqr_host.o
+dbl8_baqr_kernels.o:
+	@-echo ">>> compiling baqr kernels for octo doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+             --define-macro gpufun=1 \
+             -c dbl8_baqr_kernels.cu
+
+dbl8_baqr_testers.o:
+	@-echo ">>> compiling dbl8_baqr_testers ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl8_baqr_testers.cpp
+
+test_dbl8_baqr.o:
+	@-echo ">>> compiling test_dbl8_baqr ..."
+	$(gpp) -O3 -c test_dbl8_baqr.cpp
+
+test_dbl8_baqr: test_dbl8_baqr.o prompt_baqr_setup.o dbl8_baqr_testers.o \
+                double_double_functions.o quad_double_functions.o \
+                octo_double_functions.o \
+                dbl8_factorizations.o dbl8_factors_testers.o \
+                dbl8_baqr_host.o dbl_baqr_flopcounts.o \
+                random_numbers.o random8_vectors.o random8_matrices.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl8_baqr test_dbl8_baqr.o prompt_baqr_setup.o \
+                  double_double_functions.o quad_double_functions.o \
+                  octo_double_functions.o \
+                  dbl8_factorizations.o dbl8_factors_testers.o \
+                  dbl8_baqr_host.o dbl8_baqr_testers.o \
+                  dbl_baqr_flopcounts.o \
+                  random_numbers.o random8_vectors.o random8_matrices.o \
+               -lcuda -lcudart -L$(CUDALIB)
 
 dbl_qrbs_testers.o:
 	@-echo ">>> compiling dbl_qrbs_testers ..."
@@ -573,10 +601,12 @@ clean:
 	/bin/rm -f -r test_dbl_baqr.o test_dbl_baqr
 	/bin/rm -f -r test_dbl2_baqr.o test_dbl2_baqr
 	/bin/rm -f -r test_dbl4_baqr.o test_dbl4_baqr
+	/bin/rm -f -r test_dbl8_baqr.o test_dbl8_baqr
 	/bin/rm -f -r dbl2_baqr_host.o dbl2_baqr_kernels.o
 	/bin/rm -f -r dbl2_baqr_testers.o dbl4_baqr_testers.o
+	/bin/rm -f -r dbl8_baqr_testers.o
 	/bin/rm -f -r dbl4_baqr_host.o dbl4_baqr_kernels.o
-	/bin/rm -f -r dbl8_baqr_host.o
+	/bin/rm -f -r dbl8_baqr_host.o dbl8_baqr_kernels.o
 	/bin/rm -f -r test_dbl_qrbs.o test_dbl_qrbs
 	/bin/rm -f -r dbl_qrbs_testers.o
 	/bin/rm -f -r test_dbl2_qrbs.o test_dbl2_qrbs
