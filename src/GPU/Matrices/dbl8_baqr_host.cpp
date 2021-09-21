@@ -872,8 +872,8 @@ void CPU_cmplx8_blocked_leftRupdate
                     YWTrehihilo[i][k],YWTrelohilo[i][k],
                     YWTrehilolo[i][k],YWTrelololo[i][k],
                     Crehihihi[rowoff+k][coloff+j],Crelohihi[rowoff+k][coloff+j],
-                    Crehilolo[rowoff+k][coloff+j],Crelololo[rowoff+k][coloff+j],
-                    Crehihihi[rowoff+k][coloff+j],Crelohihi[rowoff+k][coloff+j],
+                    Crehilohi[rowoff+k][coloff+j],Crelolohi[rowoff+k][coloff+j],
+                    Crehihilo[rowoff+k][coloff+j],Crelohilo[rowoff+k][coloff+j],
                     Crehilolo[rowoff+k][coloff+j],Crelololo[rowoff+k][coloff+j],
                     &acchihihi,&acclohihi,&acchilohi,&acclolohi,
                     &acchihilo,&acclohilo,&acchilolo,&acclololo);
