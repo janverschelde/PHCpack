@@ -83,7 +83,6 @@ __global__ void dbl4_small_invert_upper
          qdg_mul(Ucolhihi[i],Ucollohi[i],Ucolhilo[i],Ucollolo[i],
                  xvalhihi,   xvallohi,   xvalhilo,   xvallolo,
                  &acchihi,   &acclohi,   &acchilo,   &acclolo);
-         __syncthreads();
          qdg_dec(&rhshihi,&rhslohi,&rhshilo,&rhslolo,
                   acchihi, acclohi, acchilo, acclolo);
       }
@@ -294,7 +293,6 @@ __global__ void cmplx4_small_invert_upper
       qdg_mul(Ucolimhihi[i],Ucolimlohi[i],Ucolimhilo[i],Ucolimlolo[i],
               Ucolimhihi[i],Ucolimlohi[i],Ucolimhilo[i],Ucolimlolo[i],
                &acc1hihi,    &acc1lohi,    &acc1hilo,    &acc1lolo);
-      __syncthreads();
       qdg_inc(&denhihi,&denlohi,&denhilo,&denlolo,
               acc1hihi,acc1lohi,acc1hilo,acc1lolo);
       qdg_div(Ucolrehihi[i],Ucolrelohi[i],Ucolrehilo[i],Ucolrelolo[i],
@@ -316,7 +314,6 @@ __global__ void cmplx4_small_invert_upper
       qdg_mul(rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
               invimhihi,invimlohi,invimhilo,invimlolo,
               &acc4hihi,&acc4lohi,&acc4hilo,&acc4lolo);
-      __syncthreads();
       qdg_dec(&acc1hihi,&acc1lohi,&acc1hilo,&acc1lolo,
                acc2hihi,acc2lohi,acc2hilo,acc2lolo);
       invUrowsrehihi[rowidx] = acc1hihi;

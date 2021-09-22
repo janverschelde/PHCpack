@@ -19,7 +19,7 @@ __global__ void dbl4_small_invert_upper
  * REQUIRED : dim <= 16.
  *   Because the inverse is stored entirely in shared memory,
  *   the dimension dim is limited to 16 = 2^4, as 16^2 = 256,
- *   the upper limit on the shared memory, d_shmemsize.
+ *   the upper limit on the shared memory, tabsqd_shmemsize.
  *
  * ON ENTRY :
  *   dim      dimension of the upper triangular matrix U;
@@ -60,7 +60,7 @@ __global__ void cmplx4_small_invert_upper
  * REQUIRED : dim <= 16.
  *   Because the inverse is stored entirely in shared memory,
  *   the dimension dim is limited to 16 = 2^4, as 16^2 = 256,
- *   the upper limit on the shared memory, d_shmemsize.
+ *   the upper limit on the shared memory, tabsqd_shmemsize.
  *
  * ON ENTRY :
  *   dim      dimension of the upper triangular matrix U;
@@ -113,7 +113,7 @@ __global__ void dbl4_medium_invert_upper
  *   Because the columns of U are loaded entirely into shared memory
  *   and the rows of the inverses are computed first entirely in
  *   shared memory before storing, the dimension dim is limited 
- *   to 256, the upper limit on the shared memory, dd_shmemsize.
+ *   to 256, the upper limit on the shared memory, tabsqd_shmemsize.
  *
  * ON ENTRY :
  *   dim      dimension of the upper triangular matrix U;
@@ -155,7 +155,7 @@ __global__ void cmplx4_medium_invert_upper
  *   Because the columns of U are loaded entirely into shared memory
  *   and the rows of the inverses are computed first entirely in
  *   shared memory before storing, the dimension dim is limited 
- *   to 256, the upper limit on the shared memory, dd_shmemsize.
+ *   to 256, the upper limit on the shared memory, tabsqd_shmemsize.
  *
  * ON ENTRY :
  *   dim      dimension of the upper triangular matrix U;
@@ -203,7 +203,7 @@ __global__ void  dbl4_invert_tiles
  *   The number of blocks equals the number of tiles in U.
  *   The number of threads per block equals the dimension of each tile.
  *
- * REQUIRED : dim <= 256 = dd_shmemsize.
+ * REQUIRED : dim <= 256 = tabsqd_shmemsize.
  *
  * ON ENTRY :
  *   dim      the dimension of each tile;
@@ -215,10 +215,10 @@ __global__ void  dbl4_invert_tiles
  *            of an upper triangular matrix;
  *   Ulolo    lowest doubles of columns of all tiles on the diagonal 
  *            of an upper triangular matrix;
- *   invUhi   space allocated for the inverse of all tiles in U;
- *   invUhi   space allocated for the inverse of all tiles in U;
- *   invUlo   space allocated for the inverse of all tiles in U;
- *   invUlo   space allocated for the inverse of all tiles in U.
+ *   invUhihi has space allocated for the inverse of all tiles in U;
+ *   invUlohi has space allocated for the inverse of all tiles in U;
+ *   invUhilo has space allocated for the inverse of all tiles in U;
+ *   invUlolo has space allocated for the inverse of all tiles in U.
  *
  * ON RETURN :
  *   invUhihi are the highest doubles of the inverse of the tiles in U;
@@ -240,7 +240,7 @@ __global__ void  cmplx4_invert_tiles
  *   The number of blocks equals the number of tiles in U.
  *   The number of threads per block equals the dimension of each tile.
  *
- * REQUIRED : dim <= 256 = d_shmemsize.
+ * REQUIRED : dim <= 256 = tabsqd_shmemsize.
  *
  * ON ENTRY :
  *   dim      the dimension of each tile;
@@ -366,21 +366,21 @@ __global__ void cmplx4_multiply_inverse
  *   wimlolo  lowest doubles of the imaginary parts of b.
  *
  * ON RETURN :
- *   wrehi    highest doubles of the real parts of the product of the
+ *   wrehihi  highest doubles of the real parts of the product of the
  *            inverse of the tile defined by the index idx with the input w;
- *   wrehi    second highest doubles of the real parts of the product
+ *   wrelohi  second highest doubles of the real parts of the product
  *            of the inverse of the tile defined by the index idx;
- *   wrelo    second lowest doubles of the real parts of the product
+ *   wrehilo  second lowest doubles of the real parts of the product
  *            of the inverse of the tile defined by the index idx;
- *   wrelo    lowest doubles of the real parts of the product
+ *   wrelolo  lowest doubles of the real parts of the product
  *            of the inverse of the tile defined by the index idx;
- *   wimhi    highest doubles of the imaginary parts of the product
+ *   wimhihi  highest doubles of the imaginary parts of the product
  *            of the inverse of the tile defined by the index idx;
- *   wimhi    second highest doubles of the imaginary parts of the product
+ *   wimlohi  second highest doubles of the imaginary parts of the product
  *            of the inverse of the tile defined by the index idx;
- *   wimlo    second lowest doubles of the imaginary parts of the product
+ *   wimhilo  second lowest doubles of the imaginary parts of the product
  *            of the inverse of the tile defined by the index idx;
- *   wimlo    lowest doubles of the imaginary parts of the product
+ *   wimlolo  lowest doubles of the imaginary parts of the product
  *            of the inverse of the tile defined by the index idx. */
 
 __global__ void dbl4_back_substitute
@@ -641,14 +641,14 @@ void GPU_cmplx4_upper_tiled_solver
  *   ximlolo  has space allocated for dim doubles.
  *
  * ON RETURN :
- *   xrehi    highest doubles of the real parts of the solution;
- *   xrehi    second highest doubles of the real parts of the solution;
- *   xrelo    second lowest doubles of the real parts of the solution;
- *   xrelo    lowest doubles of the real parts of the solution;
- *   ximhi    highest doubles of the imaginary parts of the solution;
- *   ximhi    second highest doubles of the imaginary parts of the solution;
- *   ximlo    second lowest doubles of the imaginary parts of the solution;
- *   ximlo    lowest doubles of the imaginary parts of the solution;
+ *   xrehihi  highest doubles of the real parts of the solution;
+ *   xrelohi  second highest doubles of the real parts of the solution;
+ *   xrehilo  second lowest doubles of the real parts of the solution;
+ *   xrelolo  lowest doubles of the real parts of the solution;
+ *   ximhihi  highest doubles of the imaginary parts of the solution;
+ *   ximlohi  second highest doubles of the imaginary parts of the solution;
+ *   ximhilo  second lowest doubles of the imaginary parts of the solution;
+ *   ximlolo  lowest doubles of the imaginary parts of the solution;
  *   invlapms is the elapsed time spent by the kernel to invert a tile;
  *   mullapms is the elapsed time spent by the kernel to multiply
  *            with the inversed diagonal tile;
