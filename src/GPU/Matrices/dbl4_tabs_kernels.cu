@@ -1246,42 +1246,40 @@ __global__ void cmplx4_back_substitute
    double resultimlohi = 0.0;
    double resultimhilo = 0.0;
    double resultimlolo = 0.0;
-   double coeffrehihi,coeffrelohi,coeffrehilo,coeffrelolo;
-   double coeffimhihi,coeffimlohi,coeffimhilo,coeffimlolo;
-   double acc1hihi,acc1lohi,acc1hilo,acc1lolo;
-   double acc2hihi,acc2lohi,acc2hilo,acc2lolo;
+   double coeffhihi,coefflohi,coeffhilo,coefflolo;
+   double acchihi,acclohi,acchilo,acclolo;
 
    for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
    {
-      coeffrehihi = Urehihi[offset+k*dim+j];
-      coeffrelohi = Urelohi[offset+k*dim+j];
-      coeffrehilo = Urehilo[offset+k*dim+j];
-      coeffrelolo = Urelolo[offset+k*dim+j];
-      coeffimhihi = Uimhihi[offset+k*dim+j];
-      coeffimlohi = Uimlohi[offset+k*dim+j];
-      coeffimhilo = Uimhilo[offset+k*dim+j];
-      coeffimlolo = Uimlolo[offset+k*dim+j];
-      // result = result + coeff*sol[j];
-      qdg_mul(coeffrehihi, coeffrelohi, coeffrehilo, coeffrelolo,
+      coeffhihi = Urehihi[offset+k*dim+j];
+      coefflohi = Urelohi[offset+k*dim+j];
+      coeffhilo = Urehilo[offset+k*dim+j];
+      coefflolo = Urelolo[offset+k*dim+j];
+      qdg_mul(coeffhihi, coefflohi, coeffhilo, coefflolo,
                 solrehihi[j],solrelohi[j],solrehilo[j],solrelolo[j],
-                &acc1hihi,   &acc1lohi,   &acc1hilo,   &acc1lolo);
-      qdg_mul(coeffimhihi, coeffimlohi, coeffimhilo, coeffimlolo,
-                solimhihi[j],solimlohi[j],solimhilo[j],solimlolo[j],
-                &acc2hihi,   &acc2lohi,   &acc2hilo,   &acc2lolo);
+                &acchihi,    &acclohi,    &acchilo,    &acclolo);
       qdg_inc(&resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo,
-                   acc1hihi,     acc1lohi,     acc1hilo,     acc1lolo);
-      qdg_dec(&resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo,
-                   acc2hihi,     acc2lohi,     acc2hilo,     acc2lolo);
-      qdg_mul(coeffimhihi, coeffimlohi, coeffimhilo, coeffimlolo,
-                solrehihi[j],solrelohi[j],solrehilo[j],solrelolo[j],
-                &acc1hihi,   &acc1lohi,   &acc1hilo,   &acc1lolo);
-      qdg_mul(coeffrehihi, coeffrelohi, coeffrehilo, coeffrelolo,
+                    acchihi,      acclohi,      acchilo,      acclolo);
+      qdg_mul(coeffhihi, coefflohi, coeffhilo, coefflolo,
                 solimhihi[j],solimlohi[j],solimhilo[j],solimlolo[j],
-                &acc2hihi,   &acc2lohi,   &acc2hilo,   &acc2lolo);
+                 &acchihi,    &acclohi,    &acchilo,    &acclolo);
       qdg_inc(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
-                   acc1hihi,     acc1lohi,     acc1hilo,     acc1lolo);
+                    acchihi,      acclohi,      acchilo,      acclolo);
+      coeffhihi = Uimhihi[offset+k*dim+j];
+      coefflohi = Uimlohi[offset+k*dim+j];
+      coeffhilo = Uimhilo[offset+k*dim+j];
+      coefflolo = Uimlolo[offset+k*dim+j];
+      // result = result + coeff*sol[j];
+      qdg_mul(coeffhihi, coefflohi, coeffhilo, coefflolo,
+                solimhihi[j],solimlohi[j],solimhilo[j],solimlolo[j],
+                 &acchihi,    &acclohi,    &acchilo,    &acclolo);
+      qdg_dec(&resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo,
+                    acchihi,      acclohi,      acchilo,      acclolo);
+      qdg_mul(coeffhihi, coefflohi, coeffhilo, coefflolo,
+                solrehihi[j],solrelohi[j],solrehilo[j],solrelolo[j],
+                 &acchihi,    &acclohi,    &acchilo,    &acclolo);
       qdg_inc(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
-                   acc2hihi,     acc2lohi,     acc2hilo,     acc2lolo);
+                    acchihi,      acclohi,      acchilo,      acclolo);
    }
    // wrk[k] = wrk[k] - result; // subtract product
    qdg_dec(  &wrkrehihi[k],&wrkrelohi[k],&wrkrehilo[k],&wrkrelolo[k],

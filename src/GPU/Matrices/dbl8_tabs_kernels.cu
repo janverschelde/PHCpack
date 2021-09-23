@@ -127,7 +127,6 @@ __global__ void dbl8_small_invert_upper
                  xvalhihilo,   xvallohilo,   xvalhilolo,   xvallololo,
                  &acchihihi,   &acclohihi,   &acchilohi,   &acclolohi,
                  &acchihilo,   &acclohilo,   &acchilolo,   &acclololo);
-         __syncthreads();
          odg_dec(&rhshihihi,&rhslohihi,&rhshilohi,&rhslolohi,
                  &rhshihilo,&rhslohilo,&rhshilolo,&rhslololo,
                   acchihihi, acclohihi, acchilohi, acclolohi,
@@ -510,7 +509,6 @@ __global__ void cmplx8_small_invert_upper
               Ucolimhihilo[i],Ucolimlohilo[i],Ucolimhilolo[i],Ucolimlololo[i],
                &acc1hihihi,    &acc1lohihi,    &acc1hilohi,    &acc1lolohi,
                &acc1hihilo,    &acc1lohilo,    &acc1hilolo,    &acc1lololo);
-      __syncthreads();
       odg_inc(&denhihihi,&denlohihi,&denhilohi,&denlolohi,
               &denhihilo,&denlohilo,&denhilolo,&denlololo,
               acc1hihihi,acc1lohihi,acc1hilohi,acc1lolohi,
@@ -1888,7 +1886,6 @@ __global__ void dbl8_multiply_inverse
    worklohilo[k] = wlohilo[rhsoff+k];
    workhilolo[k] = whilolo[rhsoff+k];
    worklololo[k] = wlololo[rhsoff+k];
-   __syncthreads();
 
    for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
    {
@@ -2007,11 +2004,9 @@ __global__ void cmplx8_multiply_inverse
    workimlohilo[k] = wimlohilo[rhsoff+k];
    workimhilolo[k] = wimhilolo[rhsoff+k];
    workimlololo[k] = wimlololo[rhsoff+k];
-   __syncthreads();
 
    for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
    {
-      __syncthreads();
       coeffrehihihi = invUrehihihi[offset+k*dim+j]; // thread k does row k
       coeffrelohihi = invUrelohihi[offset+k*dim+j];
       coeffrehilohi = invUrehilohi[offset+k*dim+j];
@@ -2029,7 +2024,6 @@ __global__ void cmplx8_multiply_inverse
       coeffimhilolo = invUimhilolo[offset+k*dim+j];
       coeffimlololo = invUimlololo[offset+k*dim+j];
       // result = result + coeff*work[j];
-      __syncthreads();
       odg_mul(coeffrehihihi,  coeffrelohihi,  coeffrehilohi,  coeffrelolohi,
               coeffrehihilo,  coeffrelohilo,  coeffrehilolo,  coeffrelololo,
                workrehihihi[j],workrelohihi[j],workrehilohi[j],workrelolohi[j],
@@ -2071,7 +2065,6 @@ __global__ void cmplx8_multiply_inverse
                    acc2hihihi,     acc2lohihi,     acc2hilohi,    acc2lolohi,
                    acc2hihilo,     acc2lohilo,     acc2hilolo,    acc2lololo);
    }
-   __syncthreads();
    wrehihihi[rhsoff+k] = resultrehihihi;
    wrelohihi[rhsoff+k] = resultrelohihi;
    wrehilohi[rhsoff+k] = resultrehilohi;
@@ -2147,7 +2140,6 @@ __global__ void dbl8_back_substitute
    sollohilo[k] = wlohilo[idx*dim+k];
    solhilolo[k] = whilolo[idx*dim+k];
    sollololo[k] = wlololo[idx*dim+k];
-   __syncthreads();
 
    for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
    {
@@ -2262,14 +2254,10 @@ __global__ void cmplx8_back_substitute
    double resultimlohilo = 0.0;
    double resultimhilolo = 0.0;
    double resultimlololo = 0.0;
-   double coeffrehihihi,coeffrelohihi,coeffrehilohi,coeffrelolohi;
-   double coeffrehihilo,coeffrelohilo,coeffrehilolo,coeffrelololo;
-   double coeffimhihihi,coeffimlohihi,coeffimhilohi,coeffimlolohi;
-   double coeffimhihilo,coeffimlohilo,coeffimhilolo,coeffimlololo;
-   double acc1hihihi,acc1lohihi,acc1hilohi,acc1lolohi;
-   double acc1hihilo,acc1lohilo,acc1hilolo,acc1lololo;
-   double acc2hihihi,acc2lohihi,acc2hilohi,acc2lolohi;
-   double acc2hihilo,acc2lohilo,acc2hilolo,acc2lololo;
+   double coeffhihihi,coefflohihi,coeffhilohi,coefflolohi;
+   double coeffhihilo,coefflohilo,coeffhilolo,coefflololo;
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
 
    wrkrehihihi[k] = wrehihihi[B*dim+k];  // block B updates B-th slice of w
    wrkrelohihi[k] = wrelohihi[B*dim+k];
@@ -2303,72 +2291,68 @@ __global__ void cmplx8_back_substitute
    solimlohilo[k] = wimlohilo[idx*dim+k];
    solimhilolo[k] = wimhilolo[idx*dim+k];
    solimlololo[k] = wimlololo[idx*dim+k];
-   __syncthreads();
 
    for(int j=0; j<dim; j++)  // column j of the inverse diagonal tile
    {
-      __syncthreads();
-      coeffrehihihi = Urehihihi[offset+k*dim+j];
-      coeffrelohihi = Urelohihi[offset+k*dim+j];
-      coeffrehilohi = Urehilohi[offset+k*dim+j];
-      coeffrelolohi = Urelolohi[offset+k*dim+j];
-      coeffrehihilo = Urehihilo[offset+k*dim+j];
-      coeffrelohilo = Urelohilo[offset+k*dim+j];
-      coeffrehilolo = Urehilolo[offset+k*dim+j];
-      coeffrelololo = Urelololo[offset+k*dim+j];
-      coeffimhihihi = Uimhihihi[offset+k*dim+j];
-      coeffimlohihi = Uimlohihi[offset+k*dim+j];
-      coeffimhilohi = Uimhilohi[offset+k*dim+j];
-      coeffimlolohi = Uimlolohi[offset+k*dim+j];
-      coeffimhihilo = Uimhihilo[offset+k*dim+j];
-      coeffimlohilo = Uimlohilo[offset+k*dim+j];
-      coeffimhilolo = Uimhilolo[offset+k*dim+j];
-      coeffimlololo = Uimlololo[offset+k*dim+j];
+      coeffhihihi = Urehihihi[offset+k*dim+j];
+      coefflohihi = Urelohihi[offset+k*dim+j];
+      coeffhilohi = Urehilohi[offset+k*dim+j];
+      coefflolohi = Urelolohi[offset+k*dim+j];
+      coeffhihilo = Urehihilo[offset+k*dim+j];
+      coefflohilo = Urelohilo[offset+k*dim+j];
+      coeffhilolo = Urehilolo[offset+k*dim+j];
+      coefflololo = Urelololo[offset+k*dim+j];
       // result = result + coeff*sol[j];
-      __syncthreads();
-      odg_mul(coeffrehihihi, coeffrelohihi, coeffrehilohi, coeffrelolohi,
-              coeffrehihilo, coeffrelohilo, coeffrehilolo, coeffrelololo,
+      odg_mul(coeffhihihi, coefflohihi, coeffhilohi, coefflolohi,
+              coeffhihilo, coefflohilo, coeffhilolo, coefflololo,
                 solrehihihi[j],solrelohihi[j],solrehilohi[j],solrelolohi[j],
                 solrehihilo[j],solrelohilo[j],solrehilolo[j],solrelololo[j],
-                &acc1hihihi,   &acc1lohihi,   &acc1hilohi,   &acc1lolohi,
-                &acc1hihilo,   &acc1lohilo,   &acc1hilolo,   &acc1lololo);
-      odg_mul(coeffimhihihi, coeffimlohihi, coeffimhilohi, coeffimlolohi,
-              coeffimhihilo, coeffimlohilo, coeffimhilolo, coeffimlololo,
-                solimhihihi[j],solimlohihi[j],solimhilohi[j],solimlolohi[j],
-                solimhihilo[j],solimlohilo[j],solimhilolo[j],solimlololo[j],
-                &acc2hihihi,   &acc2lohihi,   &acc2hilohi,   &acc2lolohi,
-                &acc2hihilo,   &acc2lohilo,   &acc2hilolo,   &acc2lololo);
+                 &acchihihi,    &acclohihi,    &acchilohi,    &acclolohi,
+                 &acchihilo,    &acclohilo,    &acchilolo,    &acclololo);
       odg_inc(&resultrehihihi,&resultrelohihi,&resultrehilohi,&resultrelolohi,
               &resultrehihilo,&resultrelohilo,&resultrehilolo,&resultrelololo,
-                   acc1hihihi,     acc1lohihi,     acc1hilohi,     acc1lolohi,
-                   acc1hihilo,     acc1lohilo,     acc1hilolo,     acc1lololo);
-      odg_dec(&resultrehihihi,&resultrelohihi,&resultrehilohi,&resultrelolohi,
-              &resultrehihilo,&resultrelohilo,&resultrehilolo,&resultrelololo,
-                   acc2hihihi,     acc2lohihi,     acc2hilohi,     acc2lolohi,
-                   acc2hihilo,     acc2lohilo,     acc2hilolo,     acc2lololo);
-      odg_mul(coeffimhihihi, coeffimlohihi, coeffimhilohi, coeffimlolohi,
-              coeffimhihilo, coeffimlohilo, coeffimhilolo, coeffimlololo,
-                solrehihihi[j],solrelohihi[j],solrehilohi[j],solrelolohi[j],
-                solrehihilo[j],solrelohilo[j],solrehilolo[j],solrelololo[j],
-                &acc1hihihi,   &acc1lohihi,   &acc1hilohi,   &acc1lolohi,
-                &acc1hihilo,   &acc1lohilo,   &acc1hilolo,   &acc1lololo);
-      odg_mul(coeffrehihihi, coeffrelohihi, coeffrehilohi, coeffrelolohi,
-              coeffrehihilo, coeffrelohilo, coeffrehilolo, coeffrelololo,
+                    acchihihi,      acclohihi,      acchilohi,      acclolohi,
+                    acchihilo,      acclohilo,      acchilolo,      acclololo);
+      odg_mul(coeffhihihi, coefflohihi, coeffhilohi, coefflolohi,
+              coeffhihilo, coefflohilo, coeffhilolo, coefflololo,
                 solimhihihi[j],solimlohihi[j],solimhilohi[j],solimlolohi[j],
                 solimhihilo[j],solimlohilo[j],solimhilolo[j],solimlololo[j],
-                &acc2hihihi,   &acc2lohihi,   &acc2hilohi,   &acc2lolohi,
-                &acc2hihilo,   &acc2lohilo,   &acc2hilolo,   &acc2lololo);
+                 &acchihihi,    &acclohihi,    &acchilohi,    &acclolohi,
+                 &acchihilo,    &acclohilo,    &acchilolo,    &acclololo);
       odg_inc(&resultimhihihi,&resultimlohihi,&resultimhilohi,&resultimlolohi,
               &resultimhihilo,&resultimlohilo,&resultimhilolo,&resultimlololo,
-                   acc1hihihi,     acc1lohihi,     acc1hilohi,     acc1lolohi,
-                   acc1hihilo,     acc1lohilo,     acc1hilolo,     acc1lololo);
+                    acchihihi,      acclohihi,      acchilohi,      acclolohi,
+                    acchihilo,      acclohilo,      acchilolo,      acclololo);
+      coeffhihihi = Uimhihihi[offset+k*dim+j];
+      coefflohihi = Uimlohihi[offset+k*dim+j];
+      coeffhilohi = Uimhilohi[offset+k*dim+j];
+      coefflolohi = Uimlolohi[offset+k*dim+j];
+      coeffhihilo = Uimhihilo[offset+k*dim+j];
+      coefflohilo = Uimlohilo[offset+k*dim+j];
+      coeffhilolo = Uimhilolo[offset+k*dim+j];
+      coefflololo = Uimlololo[offset+k*dim+j];
+      odg_mul(coeffhihihi, coefflohihi, coeffhilohi, coefflolohi,
+              coeffhihilo, coefflohilo, coeffhilolo, coefflololo,
+                solimhihihi[j],solimlohihi[j],solimhilohi[j],solimlolohi[j],
+                solimhihilo[j],solimlohilo[j],solimhilolo[j],solimlololo[j],
+                 &acchihihi,    &acclohihi,    &acchilohi,    &acclolohi,
+                 &acchihilo,    &acclohilo,    &acchilolo,    &acclololo);
+      odg_dec(&resultrehihihi,&resultrelohihi,&resultrehilohi,&resultrelolohi,
+              &resultrehihilo,&resultrelohilo,&resultrehilolo,&resultrelololo,
+                    acchihihi,      acclohihi,      acchilohi,      acclolohi,
+                    acchihilo,      acclohilo,      acchilolo,      acclololo);
+      odg_mul(coeffhihihi, coefflohihi, coeffhilohi, coefflolohi,
+              coeffhihilo, coefflohilo, coeffhilolo, coefflololo,
+                solrehihihi[j],solrelohihi[j],solrehilohi[j],solrelolohi[j],
+                solrehihilo[j],solrelohilo[j],solrehilolo[j],solrelololo[j],
+                 &acchihihi,    &acclohihi,    &acchilohi,    &acclolohi,
+                 &acchihilo,    &acclohilo,    &acchilolo,    &acclololo);
       odg_inc(&resultimhihihi,&resultimlohihi,&resultimhilohi,&resultimlolohi,
               &resultimhihilo,&resultimlohilo,&resultimhilolo,&resultimlololo,
-                   acc2hihihi,     acc2lohihi,     acc2hilohi,     acc2lolohi,
-                   acc2hihilo,     acc2lohilo,     acc2hilolo,     acc2lololo);
+                    acchihihi,      acclohihi,      acchilohi,      acclolohi,
+                    acchihilo,      acclohilo,      acchilolo,      acclololo);
    }
    // wrk[k] = wrk[k] - result; // subtract product
-   __syncthreads();
    odg_dec(  &wrkrehihihi[k],&wrkrelohihi[k],&wrkrehilohi[k],&wrkrelolohi[k],
              &wrkrehihilo[k],&wrkrelohilo[k],&wrkrehilolo[k],&wrkrelololo[k],
            resultrehihihi, resultrelohihi, resultrehilohi, resultrelolohi,
@@ -2377,7 +2361,6 @@ __global__ void cmplx8_back_substitute
              &wrkimhihilo[k],&wrkimlohilo[k],&wrkimhilolo[k],&wrkimlololo[k],
            resultimhihihi, resultimlohihi, resultimhilohi, resultimlolohi,
            resultimhihilo, resultimlohilo, resultimhilolo, resultimlololo);
-   __syncthreads();
    wrehihihi[B*dim+k] = wrkrehihihi[k];
    wrelohihi[B*dim+k] = wrkrelohihi[k];
    wrehilohi[B*dim+k] = wrkrehilohi[k];
