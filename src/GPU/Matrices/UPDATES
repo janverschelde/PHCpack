@@ -1,3 +1,6 @@
+Thu 23 Sep 2021 : new dbl8_baqr_kernels.h with the prototypes for the
+  kernels to accelerated the blocked Householder QR in octo double precision.
+
 Wed 22 Sep 2021 : removed superfluous __syncthreads() in dbl4_tabs_kernels.cu,
   minor edits in the document of dbl4_tabs_kernels.h.
   Improved dbl4_tabs_kernels.cu and dbl8_tabs_kernels.cu.
