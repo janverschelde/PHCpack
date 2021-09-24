@@ -279,13 +279,6 @@ __global__ void dbl2_large_sum_of_squares
    }
 }
 
-void flopcount_dbl2_large_sum_of_squares
- ( int nblocks, int szt, int sztLog2, long long int *add, long long int *mul )
-{
-   *add += nblocks*szt*sztLog2;
-   *mul += nblocks*szt;
-}
-
 __global__ void cmplx2_large_sum_of_squares
  ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
    double *sumshi, double *sumslo, int dim, int BS, int BSLog2 )
@@ -337,13 +330,6 @@ __global__ void cmplx2_large_sum_of_squares
    }
 }
 
-void flopcount_cmplx2_large_sum_of_squares
- ( int nblocks, int szt, int sztLog2, long long int *add, long long int *mul )
-{
-   *add += nblocks*szt*(1+sztLog2);
-   *mul += 2*nblocks*szt;
-}
-
 __global__ void dbl2_sum_accumulator
  ( double *sumshi, double *sumslo, int nbsums, int nbsumsLog2,
    double *acchi, double *acclo )
@@ -381,12 +367,6 @@ __global__ void dbl2_sum_accumulator
    }
 }
 
-void flopcount_dbl2_sum_accumulator
- ( int nbt, int nbtLog2, long long int *add )
-{
-   *add += nbt*nbtLog2;
-}
-
 __global__ void dbl2_normalize
  ( int dim, int szt, double *xhi, double *xlo, double *v0hi, double *v0lo,
    double *vhi, double *vlo )
@@ -413,11 +393,6 @@ __global__ void dbl2_normalize
       vhi[idx] = resulthi;    
       vlo[idx] = resultlo;    
    }
-}
-
-void flopcount_dbl2_normalize ( int nblocks, int szt, long long int *div )
-{
-   *div += nblocks*szt;
 }
 
 __global__ void cmplx2_normalize
@@ -465,13 +440,6 @@ __global__ void cmplx2_normalize
       vimhi[idx] = resultimhi;    
       vimlo[idx] = resultimlo;    
    }
-}
-
-void flopcount_cmplx2_normalize
- ( int nblocks, int szt, long long int *add, long long int *mul )
-{
-   *add += 2*nblocks*szt;
-   *mul += 4*nblocks*szt;
 }
 
 __global__ void dbl2_small_leftRupdate
@@ -1933,7 +1901,7 @@ void GPU_dbl2_large_house
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
-   flopcount_dbl2_large_sum_of_squares(nblocks,szt,sztLog2,add,mul);
+   flopcount_dbl_large_sum_of_squares(nblocks,szt,sztLog2,add,mul);
 
    if(verbose)
    {
@@ -1947,7 +1915,7 @@ void GPU_dbl2_large_house
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
-   flopcount_dbl2_sum_accumulator(nblocks,nblLog2,add);
+   flopcount_dbl_sum_accumulator(nblocks,nblLog2,add);
 
    cudaMemcpy(sigmahi_h,sigmahi_d,sizeof(double),cudaMemcpyDeviceToHost);
    cudaMemcpy(sigmalo_h,sigmalo_d,sizeof(double),cudaMemcpyDeviceToHost);
@@ -2032,7 +2000,7 @@ void GPU_dbl2_large_house
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
-      flopcount_dbl2_normalize(nblocks,szt,div);
+      flopcount_dbl_normalize(nblocks,szt,div);
    }
    if(verbose)
    {
@@ -2127,7 +2095,7 @@ void GPU_cmplx2_large_house
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
-   flopcount_cmplx2_large_sum_of_squares(nblocks,szt,sztLog2,add,mul);
+   flopcount_cmplx_large_sum_of_squares(nblocks,szt,sztLog2,add,mul);
 
    if(verbose)
    {
@@ -2141,7 +2109,7 @@ void GPU_cmplx2_large_house
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *lapms += milliseconds;
-   flopcount_dbl2_sum_accumulator(nblocks,nblLog2,add);
+   flopcount_dbl_sum_accumulator(nblocks,nblLog2,add);
 
    cudaMemcpy(sigmahi_h,sigmahi_d,sizeof(double),cudaMemcpyDeviceToHost);
    cudaMemcpy(sigmalo_h,sigmalo_d,sizeof(double),cudaMemcpyDeviceToHost);
@@ -2259,7 +2227,7 @@ void GPU_cmplx2_large_house
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
-      flopcount_cmplx2_normalize(nblocks,szt,add,mul);
+      flopcount_cmplx_normalize(nblocks,szt,add,mul);
    }
    if(verbose)
    {

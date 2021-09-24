@@ -1,3 +1,6 @@
+Fri 24 Sep 2021 : moved flopcounts from dbl2_baqr_kernels into
+  dbl_baqr_flopcounts.
+
 Thu 23 Sep 2021 : new dbl8_baqr_kernels.h with the prototypes for the
   kernels to accelerated the blocked Householder QR in octo double precision.
 

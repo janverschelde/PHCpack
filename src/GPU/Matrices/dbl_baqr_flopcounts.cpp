@@ -23,6 +23,38 @@ void flopcount_cmplx_small_house
    *sqrtfun += 3;
 }
 
+void flopcount_dbl_large_sum_of_squares
+ ( int nblocks, int szt, int sztLog2, long long int *add, long long int *mul )
+{
+   *add += nblocks*szt*sztLog2;
+   *mul += nblocks*szt;
+}
+
+void flopcount_cmplx_large_sum_of_squares
+ ( int nblocks, int szt, int sztLog2, long long int *add, long long int *mul )
+{
+   *add += nblocks*szt*(1+sztLog2);
+   *mul += 2*nblocks*szt;
+}
+
+void flopcount_dbl_sum_accumulator
+ ( int nbt, int nbtLog2, long long int *add )
+{
+   *add += nbt*nbtLog2;
+}
+
+void flopcount_dbl_normalize ( int nblocks, int szt, long long int *div )
+{
+   *div += nblocks*szt;
+}
+
+void flopcount_cmplx_normalize
+ ( int nblocks, int szt, long long int *add, long long int *mul )
+{
+   *add += 2*nblocks*szt;
+   *mul += 4*nblocks*szt;
+}
+
 void flopcount_dbl_small_leftRupdate
  ( int nrows, int ncols, int szt, int k,
    long long int *add, long long int *mul )

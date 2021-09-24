@@ -56,6 +56,44 @@ void flopcount_cmplx_small_house
  *   div      accumulated number of divisions;
  *   sqrtfun  accumulated number of calls to sqrt(). */
 
+void flopcount_dbl_large_sum_of_squares
+ ( int nblocks, int szt, int sztLog2,
+   long long int *add, long long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to compute the
+ *   sums of squares, using multiple blocks, on real data.
+ *
+ * ON ENTRY :
+ *   nblocks   number of blocks;
+ *   szt       number of threads in one block;
+ *   sztLog2   the 2-log of the number of threads in one block;
+ *   add       current number of additions and subtractions;
+ *   mul       current number of multiplications.
+ *
+ * ON RETURN :
+ *   add       accumulated number of additions and subtractions;
+ *   mul       accumulated number of multiplications. */
+
+void flopcount_cmplx_large_sum_of_squares
+ ( int nblocks, int szt, int sztLog2,
+   long long int *add, long long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of floating-point operations to compute the
+ *   sums of squares, using multiple blocks, on complex data.
+ *
+ * ON ENTRY :
+ *   nblocks   number of blocks;
+ *   szt       number of threads in one block;
+ *   sztLog2   the 2-log of the number of threads in one block;
+ *   add       current number of additions and subtractions;
+ *   mul       current number of multiplications.
+ *
+ * ON RETURN :
+ *   add       accumulated number of additions and subtractions;
+ *   mul       accumulated number of multiplications. */
+
 void flopcount_dbl_small_leftRupdate
  ( int nrows, int ncols, int szt, int k,
    long long int *add, long long int *mul );
@@ -75,6 +113,52 @@ void flopcount_dbl_small_leftRupdate
  * ON RETURN :
  *   add      accumulated number of additions and subtractions;
  *   mul      accumulated number of multiplications. */
+
+void flopcount_dbl_sum_accumulator
+ ( int nbt, int nbtLog2, long long int *add );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of additions to compute the subsums,
+ *   with one block of threads.
+ *
+ * ON ENTRY :
+ *   nbt       the number of threads;
+ *   nbtLog2   the 2-log of the number of threads;
+ *   add       current number of additions.
+ *
+ * ON RETURN :
+ *   add       accumulated number of additions. */
+
+void flopcount_dbl_normalize ( int nblocks, int szt, long long int *div );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of divisions to divide a vector,
+ *   using multiple blocks of threads, on real data.
+ *
+ * ON ENTRY :
+ *   nblocks   the number of blocks;
+ *   szt       the number of threads in one block;
+ *   div       current number of divisions.
+ *
+ * ON RETURN :
+ *   div       accumulated number of divisions. */
+
+void flopcount_cmplx_normalize
+ ( int nblocks, int szt, long long int *add, long long int *mul );
+/*
+ * DESCRIPTION :
+ *   Accumulates the number of divisions to divide a vector,
+ *   using multiple blocks of threads, on complex data.
+ *
+ * ON ENTRY :
+ *   nblocks   the number of blocks;
+ *   szt       the number of threads in one block;
+ *   add       current number of additions;
+ *   mul       current number of multiplications.
+ *
+ * ON RETURN :
+ *   add       accumulated number of additions;
+ *   mul       accumulated number of multiplications. */
 
 void flopcount_cmplx_small_leftRupdate
  ( int nrows, int ncols, int szt, int k,

@@ -111,25 +111,6 @@ __global__ void dbl2_large_sum_of_squares
  *   sumslo    low doubles of computed sums of squares of vector slices,
  *             the i-th entry is computed by the i-th block of threads. */
 
-void flopcount_dbl2_large_sum_of_squares
- ( int nblocks, int szt, int sztLog2,
-   long long int *add, long long int *mul );
-/*
- * DESCRIPTION :
- *   Accumulates the number of floating-point operations to compute the
- *   sums of squares, using multiple blocks, on real data.
- *
- * ON ENTRY :
- *   nblocks   number of blocks;
- *   szt       number of threads in one block;
- *   sztLog2   the 2-log of the number of threads in one block;
- *   add       current number of additions and subtractions;
- *   mul       current number of multiplications.
- *
- * ON RETURN :
- *   add       accumulated number of additions and subtractions;
- *   mul       accumulated number of multiplications. */
-
 __global__ void cmplx2_large_sum_of_squares
  ( double *vrehi, double *vrelo, double *vimhi, double *vimlo,
    double *sumshi, double *sumslo, int dim, int BS, int BSLog2 );
@@ -160,25 +141,6 @@ __global__ void cmplx2_large_sum_of_squares
  *   sumslo    low doubles of computed sums of squares of vector slices,
  *             the i-th entry is computed by the i-th block of threads. */
 
-void flopcount_cmplx2_large_sum_of_squares
- ( int nblocks, int szt, int sztLog2,
-   long long int *add, long long int *mul );
-/*
- * DESCRIPTION :
- *   Accumulates the number of floating-point operations to compute the
- *   sums of squares, using multiple blocks, on complex data.
- *
- * ON ENTRY :
- *   nblocks   number of blocks;
- *   szt       number of threads in one block;
- *   sztLog2   the 2-log of the number of threads in one block;
- *   add       current number of additions and subtractions;
- *   mul       current number of multiplications.
- *
- * ON RETURN :
- *   add       accumulated number of additions and subtractions;
- *   mul       accumulated number of multiplications. */
-
 __global__ void dbl2_sum_accumulator
  ( double *sumshi, double *sumslo, int nbsums, int nbsumsLog2,
    double *acchi, double *acclo );
@@ -198,21 +160,6 @@ __global__ void dbl2_sum_accumulator
  * ON RETURN :
  *   acchi     the high double of the sum;
  *   acclo     the low double of the sum. */
-
-void flopcount_dbl2_sum_accumulator
- ( int nbt, int nbtLog2, long long int *add );
-/*
- * DESCRIPTION :
- *   Accumulates the number of additions to compute the subsums,
- *   with one block of threads.
- *
- * ON ENTRY :
- *   nbt       the number of threads;
- *   nbtLog2   the 2-log of the number of threads;
- *   add       current number of additions.
- *
- * ON RETURN :
- *   add       accumulated number of additions. */
 
 __global__ void dbl2_normalize
  ( int dim, int szt, double *xhi, double *xlo, double *v0hi, double *v0lo,
@@ -235,20 +182,6 @@ __global__ void dbl2_normalize
  * ON RETURN :
  *   vhi       high doubles of x divided by v0;
  *   vlo       low doubles of x divided by v0. */
-
-void flopcount_dbl2_normalize ( int nblocks, int szt, long long int *div );
-/*
- * DESCRIPTION :
- *   Accumulates the number of divisions to divide a vector,
- *   using multiple blocks of threads, on real data.
- *
- * ON ENTRY :
- *   nblocks   the number of blocks;
- *   szt       the number of threads in one block;
- *   div       current number of divisions.
- *
- * ON RETURN :
- *   div       accumulated number of divisions. */
 
 __global__ void cmplx2_normalize
  ( int dim, int szt,
