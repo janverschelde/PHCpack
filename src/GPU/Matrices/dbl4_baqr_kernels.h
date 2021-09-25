@@ -156,25 +156,6 @@ __global__ void dbl4_large_sum_of_squares
  *   sumshilo  second lowest doubles of computed sums of squares;
  *   sumslolo  lowest doubles of computed sums of squares. */
 
-void flopcount_dbl4_large_sum_of_squares
- ( int nblocks, int szt, int sztLog2,
-   long long int *add, long long int *mul );
-/*
- * DESCRIPTION :
- *   Accumulates the number of floating-point operations to compute the
- *   sums of squares, using multiple blocks, on real data.
- *
- * ON ENTRY :
- *   nblocks   number of blocks;
- *   szt       number of threads in one block;
- *   sztLog2   the 2-log of the number of threads in one block;
- *   add       current number of additions and subtractions;
- *   mul       current number of multiplications.
- *
- * ON RETURN :
- *   add       accumulated number of additions and subtractions;
- *   mul       accumulated number of multiplications. */
-
 __global__ void cmplx4_large_sum_of_squares
  ( double *vrehihi, double *vrelohi, double *vrehilo, double *vrelolo,
    double *vimhihi, double *vimlohi, double *vimhilo, double *vimlolo,
@@ -214,25 +195,6 @@ __global__ void cmplx4_large_sum_of_squares
  *   sumshilo  second lowest doubles of computed sums of squares;
  *   sumslolo  lowest doubles of computed sums of squares. */
 
-void flopcount_cmplx4_large_sum_of_squares
- ( int nblocks, int szt, int sztLog2,
-   long long int *add, long long int *mul );
-/*
- * DESCRIPTION :
- *   Accumulates the number of floating-point operations to compute the
- *   sums of squares, using multiple blocks, on complex data.
- *
- * ON ENTRY :
- *   nblocks   number of blocks;
- *   szt       number of threads in one block;
- *   sztLog2   the 2-log of the number of threads in one block;
- *   add       current number of additions and subtractions;
- *   mul       current number of multiplications.
- *
- * ON RETURN :
- *   add       accumulated number of additions and subtractions;
- *   mul       accumulated number of multiplications. */
-
 __global__ void dbl4_sum_accumulator
  ( double *sumshihi, double *sumslohi, double *sumshilo, double *sumslolo,
    int nbsums, int nbsumsLog2,
@@ -257,21 +219,6 @@ __global__ void dbl4_sum_accumulator
  *   acclohi   the second highest double of the sum;
  *   acchilo   the second lowest double of the sum;
  *   acclolo   the lowest double of the sum. */
-
-void flopcount_dbl4_sum_accumulator
- ( int nbt, int nbtLog2, long long int *add );
-/*
- * DESCRIPTION :
- *   Accumulates the number of additions to compute the subsums,
- *   with one block of threads.
- *
- * ON ENTRY :
- *   nbt       the number of threads;
- *   nbtLog2   the 2-log of the number of threads;
- *   add       current number of additions.
- *
- * ON RETURN :
- *   add       accumulated number of additions. */
 
 __global__ void dbl4_normalize
  ( int dim, int szt,
@@ -304,20 +251,6 @@ __global__ void dbl4_normalize
  *   vlohi     second highest doubles of x divided by v0;
  *   vhilo     second lowest doubles of x divided by v0;
  *   vlolo     lowest doubles of x divided by v0. */
-
-void flopcount_dbl4_normalize ( int nblocks, int szt, long long int *div );
-/*
- * DESCRIPTION :
- *   Accumulates the number of divisions to divide a vector,
- *   using multiple blocks of threads, on real data.
- *
- * ON ENTRY :
- *   nblocks   the number of blocks;
- *   szt       the number of threads in one block;
- *   div       current number of divisions.
- *
- * ON RETURN :
- *   div       accumulated number of divisions. */
 
 __global__ void cmplx4_normalize
  ( int dim, int szt,
@@ -371,23 +304,6 @@ __global__ void cmplx4_normalize
  *   vimlohi   second highest doubles of x multiplied by 1/v0;
  *   vimhilo   second lowest doubles of x multiplied by 1/v0;
  *   vimlolo   lowest doubles of x multiplied by 1/v0. */
-
-void flopcount_cmplx4_normalize
- ( int nblocks, int szt, long long int *add, long long int *mul );
-/*
- * DESCRIPTION :
- *   Accumulates the number of divisions to divide a vector,
- *   using multiple blocks of threads, on complex data.
- *
- * ON ENTRY :
- *   nblocks   the number of blocks;
- *   szt       the number of threads in one block;
- *   add       current number of additions and subtractions;
- *   mul       current number of multiplications.
- *
- * ON RETURN :
- *   add       accumulated number of additions and subtractions;
- *   mul       accumulated number of multiplications. */
 
 __global__ void dbl4_small_leftRupdate
  ( int nrows, int ncols, int szt, int k,
