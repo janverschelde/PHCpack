@@ -277,25 +277,6 @@ __global__ void dbl8_large_sum_of_squares
  *   sumshihilo are the second lowest doubles of the sums of squares;
  *   sumslololo are the lowest doubles of the sums of squares. */
 
-void flopcount_dbl8_large_sum_of_squares
- ( int nblocks, int szt, int sztLog2,
-   long long int *add, long long int *mul );
-/*
- * DESCRIPTION :
- *   Accumulates the number of floating-point operations to compute the
- *   sums of squares, using multiple blocks, on real data.
- *
- * ON ENTRY :
- *   nblocks   number of blocks;
- *   szt       number of threads in one block;
- *   sztLog2   the 2-log of the number of threads in one block;
- *   add       current number of additions and subtractions;
- *   mul       current number of multiplications.
- *
- * ON RETURN :
- *   add       accumulated number of additions and subtractions;
- *   mul       accumulated number of multiplications. */
-
 __global__ void cmplx8_large_sum_of_squares
  ( double *vrehihihi, double *vrelohihi, double *vrehilohi, double *vrelolohi,
    double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
@@ -355,25 +336,6 @@ __global__ void cmplx8_large_sum_of_squares
  *   sumshihilo are the second lowest doubles of the sums of squares;
  *   sumslololo are the lowest doubles of the sums of squares. */
 
-void flopcount_cmplx8_large_sum_of_squares
- ( int nblocks, int szt, int sztLog2,
-   long long int *add, long long int *mul );
-/*
- * DESCRIPTION :
- *   Accumulates the number of floating-point operations to compute the
- *   sums of squares, using multiple blocks, on complex data.
- *
- * ON ENTRY :
- *   nblocks   number of blocks;
- *   szt       number of threads in one block;
- *   sztLog2   the 2-log of the number of threads in one block;
- *   add       current number of additions and subtractions;
- *   mul       current number of multiplications.
- *
- * ON RETURN :
- *   add       accumulated number of additions and subtractions;
- *   mul       accumulated number of multiplications. */
-
 __global__ void dbl8_sum_accumulator
  ( double *sumshihihi, double *sumslohihi,
    double *sumshilohi, double *sumslolohi,
@@ -412,21 +374,6 @@ __global__ void dbl8_sum_accumulator
  *   acclohilo  the third lowest double of the sum;
  *   acchilolo  the second lowest double of the sum;
  *   acclololo  the lowest double of the sum. */
-
-void flopcount_dbl8_sum_accumulator
- ( int nbt, int nbtLog2, long long int *add );
-/*
- * DESCRIPTION :
- *   Accumulates the number of additions to compute the subsums,
- *   with one block of threads.
- *
- * ON ENTRY :
- *   nbt       the number of threads;
- *   nbtLog2   the 2-log of the number of threads;
- *   add       current number of additions.
- *
- * ON RETURN :
- *   add       accumulated number of additions. */
 
 __global__ void dbl8_normalize
  ( int dim, int szt,
@@ -479,21 +426,7 @@ __global__ void dbl8_normalize
  *   vhilolo   second lowest doubles of x divided by v0;
  *   vlololo   lowest doubles of x divided by v0. */
 
-void flopcount_dbl8_normalize ( int nblocks, int szt, long long int *div );
-/*
- * DESCRIPTION :
- *   Accumulates the number of divisions to divide a vector,
- *   using multiple blocks of threads, on real data.
- *
- * ON ENTRY :
- *   nblocks   the number of blocks;
- *   szt       the number of threads in one block;
- *   div       current number of divisions.
- *
- * ON RETURN :
- *   div       accumulated number of divisions. */
-
-__global__ void cmplx4_normalize
+__global__ void cmplx8_normalize
  ( int dim, int szt,
    double *xrehihihi, double *xrelohihi, double *xrehilohi, double *xrelolohi,
    double *xrehihilo, double *xrelohilo, double *xrehilolo, double *xrelololo,
@@ -586,23 +519,6 @@ __global__ void cmplx4_normalize
  *   vimlohilo is the third lowest doubles of x multiplied by 1/v0;
  *   vimhilolo is the second lowest doubles of x multiplied by 1/v0;
  *   vimlololo is the lowest doubles of x multiplied by 1/v0. */
-
-void flopcount_cmplx8_normalize
- ( int nblocks, int szt, long long int *add, long long int *mul );
-/*
- * DESCRIPTION :
- *   Accumulates the number of divisions to divide a vector,
- *   using multiple blocks of threads, on complex data.
- *
- * ON ENTRY :
- *   nblocks   the number of blocks;
- *   szt       the number of threads in one block;
- *   add       current number of additions and subtractions;
- *   mul       current number of multiplications.
- *
- * ON RETURN :
- *   add       accumulated number of additions and subtractions;
- *   mul       accumulated number of multiplications. */
 
 __global__ void dbl8_small_leftRupdate
  ( int nrows, int ncols, int szt, int k,
@@ -1135,7 +1051,7 @@ __global__ void dbl8_beta_times_V
  *   Whilolo  the second lowest doubles of W;
  *   Wlololo  the lowest doubles of W. */
 
-__global__ void cmplx4_beta_times_V
+__global__ void cmplx8_beta_times_V
  ( int nrows, int szt,
    double *Bhihihi, double *Blohihi, double *Bhilohi, double *Blolohi,
    double *Bhihilo, double *Blohilo, double *Bhilolo, double *Blololo,
@@ -1388,12 +1304,12 @@ __global__ void cmplx8_update_WYH
    double *Wimhihihi, double *Wimlohihi, double *Wimhilohi, double *Wimlolohi,
    double *Wimhihilo, double *Wimlohilo, double *Wimhilolo, double *Wimlololo,
    double *WYHrehihihi, double *WYHrelohihi,
-   double *WYHrehilolo, double *WYHrelololo,
-   double *WYHrehihihi, double *WYHrelohihi,
+   double *WYHrehilohi, double *WYHrelolohi,
+   double *WYHrehihilo, double *WYHrelohilo,
    double *WYHrehilolo, double *WYHrelololo,
    double *WYHimhihihi, double *WYHimlohihi,
-   double *WYHimhilolo, double *WYHimlololo,
-   double *WYHimhihihi, double *WYHimlohihi,
+   double *WYHimhilohi, double *WYHimlolohi,
+   double *WYHimhihilo, double *WYHimlohilo,
    double *WYHimhilolo, double *WYHimlololo );
 /*
  * DESCRIPTION :
@@ -1497,12 +1413,12 @@ __global__ void cmplx8_beta_next_W
    double *Wimhihihi, double *Wimlohihi, double *Wimhilohi, double *Wimlolohi,
    double *Wimhihilo, double *Wimlohilo, double *Wimhilolo, double *Wimlololo,
    double *WYHrehihihi, double *WYHrelohihi,
-   double *WYHrehilolo, double *WYHrelololo,
-   double *WYHrehihihi, double *WYHrelohihi,
+   double *WYHrehilohi, double *WYHrelolohi,
+   double *WYHrehihilo, double *WYHrelohilo,
    double *WYHrehilolo, double *WYHrelololo,
    double *WYHimhihihi, double *WYHimlohihi,
-   double *WYHimhilolo, double *WYHimlololo,
-   double *WYHimhihihi, double *WYHimlohihi,
+   double *WYHimhilohi, double *WYHimlolohi,
+   double *WYHimhihilo, double *WYHimlohilo,
    double *WYHimhilolo, double *WYHimlololo );
 /*
  * DECRIPTION :
@@ -4081,8 +3997,10 @@ void GPU_cmplx8_small_QWYH
    double *Qrehilohi_h, double *Qrelolohi_h,
    double *Qrehihilo_h, double *Qrelohilo_h,
    double *Qrehilolo_h, double *Qrelololo_h,
-   double *Qimhihi_h, double *Qimlohi_h, double *Qimhilo_h, double *Qimlolo_h,
-   double *Qimhihi_h, double *Qimlohi_h, double *Qimhilo_h, double *Qimlolo_h,
+   double *Qimhihihi_h, double *Qimlohihi_h,
+   double *Qimhilohi_h, double *Qimlolohi_h,
+   double *Qimhihilo_h, double *Qimlohilo_h,
+   double *Qimhilolo_h, double *Qimlololo_h,
    double *lapms, long long int *add, long long int *mul, bool verbose=true );
 /*
  * DESCRIPTION :
@@ -4363,8 +4281,8 @@ void GPU_dbl8_small_Qupdate
    double *Qhihihi_d, double *Qlohihi_d, double *Qhilohi_d, double *Qlolohi_d,
    double *Qhihilo_d, double *Qlohilo_d, double *Qhilolo_d, double *Qlololo_d,
    double *QWYThihihi_d, double *QWYTlohihi_d,
-   double *QWYThilolo_d, double *QWYTlololo_d,
-   double *QWYThihihi_d, double *QWYTlohihi_d,
+   double *QWYThilohi_d, double *QWYTlolohi_d,
+   double *QWYThihilo_d, double *QWYTlohilo_d,
    double *QWYThilolo_d, double *QWYTlololo_d,
    double *Qhihihi_h, double *Qlohihi_h, double *Qhilohi_h, double *Qlolohi_h,
    double *Qhihilo_h, double *Qlohilo_h, double *Qhilolo_h, double *Qlololo_h,
@@ -4718,7 +4636,7 @@ void GPU_dbl8_blocked_houseqr
  *   divcnt   counts the number of divisions;
  *   sqrtcnt  counts the number of calls to sqrt(). */
 
-void GPU_cmplx4_blocked_houseqr
+void GPU_cmplx8_blocked_houseqr
  ( int nrows, int ncols, int szt, int nbt,
    double **Arehihihi, double **Arelohihi,
    double **Arehilohi, double **Arelolohi,
