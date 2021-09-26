@@ -14,6 +14,7 @@
 #include "dbl4_tabs_kernels.h"
 #include "dbl_test_utilities.h"
 #include "dbl4_test_utilities.h"
+#include "dbl_data_files.h"
 
 using namespace std;
 
@@ -535,9 +536,16 @@ void test_real4_upper_tiling ( void )
 
    const int dim = sizetile*numtiles;
 
-   cout << "-> generating a random upper triangular matrix of dimension "
-        << dim << " ..." << endl;
+   cout << "Generate a random matrix (1 = yes, 0 = read matrix) : ";
+   int rndmat; cin >> rndmat;
 
+   if(rndmat == 1)
+      cout << "-> generating a random upper triangular matrix of dimension "
+           << dim << " ..." << endl;
+   else
+      cout << "-> reading a random upper triangular matrix of dimension "
+           << dim << " ..." << endl;
+      
    double **Ahihi = new double*[dim];
    double **Alohi = new double*[dim];
    double **Ahilo = new double*[dim];
@@ -558,8 +566,16 @@ void test_real4_upper_tiling ( void )
    }
    // random_dbl_upper_matrix(dim,dim,A);
    // dbl4_random_upper_factor(dim,Ahihi,Alohi,Ahilo,Alolo);
-   dbl_random_upper_factor(dim,Ahihi);
-
+   if(rndmat == 1)
+      dbl_random_upper_factor(dim,Ahihi);
+   else
+   {
+      cout << "Give the name of a file : ";
+      string filename; cin >> filename;
+      cout << "-> reading " << dim*dim
+           << " numbers from " << filename << " ..." << endl;
+      dbl_read_matrix(filename,dim,Ahihi);
+   }
    cout << scientific << setprecision(16);
 
    if(verbose > 0)
@@ -653,6 +669,9 @@ void test_real4_upper_tiling ( void )
    long long int addcnt = 0;
    long long int mulcnt = 0;
    long long int divcnt = 0;
+   double addover = 0.0;
+   double mulover = 0.0;
+   double divover = 0.0;
 
    cout << "-> CPU solves an upper triangular system ..." << endl;
 
@@ -679,7 +698,7 @@ void test_real4_upper_tiling ( void )
        rhshihi_d,rhslohi_d,rhshilo_d,rhslolo_d,
          xhihi_d,  xlohi_d,  xhilo_d,  xlolo_d,
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&timelapsed_d,
-       &addcnt,&mulcnt,&divcnt);
+       &addcnt,&addover,&mulcnt,&mulover,&divcnt,&divover);
 
    if(verbose > 0)
    {
@@ -740,18 +759,60 @@ void test_real4_upper_tiling ( void )
    cout << "        Total GPU wall clock computation time : ";
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
    cout << endl;
-   cout << "             Number of additions/subtractions : "
-        << addcnt << " x 89 " << endl;
-   cout << "                    Number of multiplications : "
-        << mulcnt << " x 336 " << endl;
-   cout << "                          Number of divisions : "
-        << divcnt << " x 893 " << endl;
-   long long int flopcnt = 89*addcnt + 336*mulcnt + 893*divcnt;
-   cout << "    Total number of floating-point operations : "
-        << flopcnt << endl;
-   cout << endl;
-   double kernflops = 1000.0*((double) flopcnt)/elapsedms;
-   double wallflops = ((double) flopcnt)/timelapsed_d;
+/*
+   cout << scientific << setprecision(16);
+   cout << "addover : " << addover << endl;
+   cout << "mulover : " << mulover << endl;
+   cout << "divover : " << divover << endl;
+ */
+   cout << "             Number of additions/subtractions : ";
+   if(addover == 0.0)
+      cout << addcnt << " x 89 " << endl;
+   else
+   {
+      cout << scientific << setprecision(16);
+      addover = addover + (double) addcnt;
+      cout << addover << " x 89 " << endl;
+   }
+   cout << "                    Number of multiplications : ";
+   if(mulover == 0.0)
+      cout << mulcnt << " x 336 " << endl;
+   else
+   {
+      cout << scientific << setprecision(16);
+      mulover = mulover + (double) mulcnt;
+      cout << mulover << " x 336 " << endl;
+   }
+   cout << "                          Number of divisions : ";
+   if(divover == 0.0)
+      cout << divcnt << " x 893 " << endl;
+   else
+   {
+      cout << scientific << setprecision(16);
+      divover = divover + (double) divcnt;
+      cout << divover << " x 893 " << endl;
+   }
+   double kernflops,wallflops;
+   cout << "    Total number of floating-point operations : ";
+   if((addover == 0.0) && (mulover == 0.0) && (divover == 0.0))
+   {
+      long long int flopcnt = 89*addcnt + 336*mulcnt + 893*divcnt;
+      cout << flopcnt << endl;
+      cout << endl;
+      kernflops = 1000.0*((double) flopcnt)/elapsedms;
+      wallflops = ((double) flopcnt)/timelapsed_d;
+   }
+   else
+   {
+      double flopcnt = 89*addover + 336*mulover + 893*divover;    
+      if(addover == 0.0) flopcnt += 89*addcnt;
+      if(mulover == 0.0) flopcnt += 336*mulcnt;
+      if(divover == 0.0) flopcnt += 893*divcnt;
+      cout << flopcnt << endl;
+      cout << endl;
+      kernflops = 1000.0*flopcnt/elapsedms;
+      wallflops = flopcnt/timelapsed_d;
+   }
    const int gigacnt = pow(2.0,30);
    cout << "Kernel Time Flops : "
         << scientific << setprecision(3) << kernflops;
@@ -989,6 +1050,9 @@ void test_cmplx4_upper_tiling ( void )
    long long int addcnt = 0;
    long long int mulcnt = 0;
    long long int divcnt = 0;
+   double addover = 0.0;
+   double mulover = 0.0;
+   double divover = 0.0;
 
    cout << "-> CPU solves an upper triangular system ..." << endl;
 
@@ -1027,7 +1091,7 @@ void test_cmplx4_upper_tiling ( void )
          xrehihi_d,  xrelohi_d,  xrehilo_d,  xrelolo_d,
          ximhihi_d,  ximlohi_d,  ximhilo_d,  ximlolo_d,
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&timelapsed_d,
-       &addcnt,&mulcnt,&divcnt);
+       &addcnt,&addover,&mulcnt,&mulover,&divcnt,&divover);
 
    if(verbose > 0)
    {
@@ -1113,18 +1177,58 @@ void test_cmplx4_upper_tiling ( void )
    cout << "        Total GPU wall clock computation time : ";
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
    cout << endl;
-   cout << "             Number of additions/subtractions : "
-        << addcnt << " x 89 " << endl;
-   cout << "                    Number of multiplications : "
-        << mulcnt << " x 336 " << endl;
-   cout << "                          Number of divisions : "
-        << divcnt << " x 893 " << endl;
-   long long int flopcnt = 89*addcnt + 336*mulcnt + 893*divcnt;
-   cout << "    Total number of floating-point operations : "
-        << flopcnt << endl;
-   cout << endl;
-   double kernflops = 1000.0*((double) flopcnt)/elapsedms;
-   double wallflops = ((double) flopcnt)/timelapsed_d;
+   cout << scientific << setprecision(16);
+   cout << "addover : " << addover << endl;
+   cout << "mulover : " << mulover << endl;
+   cout << "divover : " << divover << endl;
+   cout << "             Number of additions/subtractions : ";
+   if(addover == 0.0)
+      cout << addcnt << " x 89 " << endl;
+   else
+   {
+      cout << scientific << setprecision(16);
+      addover = addover + (double) addcnt;
+      cout << addover << " x 89 " << endl;
+   }
+   cout << "                    Number of multiplications : ";
+   if(mulover == 0.0)
+      cout << mulcnt << " x 336 " << endl;
+   else
+   {
+      cout << scientific << setprecision(16);
+      mulover = mulover + (double) mulcnt;
+      cout << mulover << " x 336 " << endl;
+   }
+   cout << "                          Number of divisions : ";
+   if(divover == 0.0)
+      cout << divcnt << " x 893 " << endl;
+   else
+   {
+      cout << scientific << setprecision(16);
+      divover = divover + (double) divcnt;
+      cout << divover << " x 893 " << endl;
+   }
+   double kernflops,wallflops;
+   cout << "    Total number of floating-point operations : ";
+   if((addover == 0.0) && (mulover == 0.0) && (divover == 0.0))
+   {
+      long long int flopcnt = 89*addcnt + 336*mulcnt + 893*divcnt;
+      cout  << flopcnt << endl;
+      cout << endl;
+      kernflops = 1000.0*((double) flopcnt)/elapsedms;
+      wallflops = ((double) flopcnt)/timelapsed_d;
+   }
+   else
+   {
+      double flopcnt = 89*addover + 336*mulover + 893*divover;
+      if(addover == 0.0) flopcnt += 89*addcnt;
+      if(mulover == 0.0) flopcnt += 336*mulcnt;
+      if(divover == 0.0) flopcnt += 893*divcnt;
+      cout  << flopcnt << endl;
+      cout << endl;
+      kernflops = 1000.0*flopcnt/elapsedms;
+      wallflops = flopcnt/timelapsed_d;
+   }
    const int gigacnt = pow(2.0,30);
    cout << "Kernel Time Flops : "
         << scientific << setprecision(3) << kernflops;
