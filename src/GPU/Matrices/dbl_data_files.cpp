@@ -20,6 +20,22 @@ void dbl_write_matrix ( string name, int dim, double **A )
    outs.close();
 }
 
+void cmplx_write_matrix ( string name, int dim, double **Are, double **Aim )
+{
+   ofstream outs(name.c_str());
+
+   outs << scientific << setprecision(16);
+
+   for(int i=0; i<dim; i++)
+   {
+      for(int j=0; j<dim; j++)
+         outs << " " << Are[i][j] << " " << Aim[i][j];
+
+      outs << endl;
+   }
+   outs.close();
+}
+
 void dbl_read_matrix ( string name, int dim, double **A )
 {
    ifstream infs(name.c_str());
@@ -27,6 +43,21 @@ void dbl_read_matrix ( string name, int dim, double **A )
    for(int i=0; i<dim; i++)
    {
       for(int j=0; j<dim; j++) infs >> A[i][j];
+   }
+   infs.close();
+}
+
+void cmplx_read_matrix ( string name, int dim, double **Are, double **Aim )
+{
+   ifstream infs(name.c_str());
+
+   for(int i=0; i<dim; i++)
+   {
+      for(int j=0; j<dim; j++)
+      {
+         infs >> Are[i][j];
+         infs >> Aim[i][j];
+      }
    }
    infs.close();
 }
