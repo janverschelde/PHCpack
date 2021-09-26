@@ -850,8 +850,15 @@ void test_cmplx4_upper_tiling ( void )
 
    const int dim = sizetile*numtiles;
 
-   cout << "-> generating a random upper triangular matrix of dimension "
-        << dim << " ..." << endl;
+   cout << "Generate a random matrix (1 = yes, 0 = read matrix) : ";
+   int rndmat; cin >> rndmat;
+
+   if(rndmat == 1)
+      cout << "-> generating a random upper triangular matrix of dimension "
+           << dim << " ..." << endl;
+   else
+      cout << "-> reading a random upper triangular matrix of dimension "
+           << dim << " ..." << endl;
 
    double **Arehihi = new double*[dim];
    double **Arelohi = new double*[dim];
@@ -882,12 +889,21 @@ void test_cmplx4_upper_tiling ( void )
          Aimlolo[i][j] = 0.0;
       }
    }
-
    // random_dbl_upper_matrix(dim,dim,Arehi,Arelo,Aimhi,Aimlo);
    // cmplx4_random_upper_factor
    //    (dim,Arehihi,Arelohi,Arehilo,Arelolo,Aimhihi,Aimlohi,Aimhilo,Aimlolo);
-   cmplx_random_upper_factor(dim,Arehihi,Aimhihi);
+   // cmplx_random_upper_factor(dim,Arehihi,Aimhihi);
 
+   if(rndmat == 1)
+      cmplx_random_upper_factor(dim,Arehihi,Aimhihi);
+   else
+   {
+      cout << "Give the name of a file : ";
+      string filename; cin >> filename;
+      cout << "-> reading " << dim*dim
+           << " numbers from " << filename << " ..." << endl;
+      cmplx_read_matrix(filename,dim,Arehihi,Aimhihi);
+   }
    cout << scientific << setprecision(16);
 
    if(verbose > 0)
@@ -1177,10 +1193,12 @@ void test_cmplx4_upper_tiling ( void )
    cout << "        Total GPU wall clock computation time : ";
    cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
    cout << endl;
+/*
    cout << scientific << setprecision(16);
    cout << "addover : " << addover << endl;
    cout << "mulover : " << mulover << endl;
    cout << "divover : " << divover << endl;
+ */
    cout << "             Number of additions/subtractions : ";
    if(addover == 0.0)
       cout << addcnt << " x 89 " << endl;
