@@ -42,6 +42,9 @@ test_dbl4_tabs:
 test_dbl8_tabs:
 	make -f $(MAKEFILE) test_dbl8_tabs
 
+make_data_files:
+	make -f $(MAKEFILE) make_data_files
+
 test_dbl_baqr:
 	make -f $(MAKEFILE) test_dbl_baqr
 
