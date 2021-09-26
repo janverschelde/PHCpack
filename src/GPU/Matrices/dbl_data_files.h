@@ -10,7 +10,7 @@ void dbl_write_matrix ( string name, int dim, double **A );
 /*
  * Writes the matrix A of dimension dim to the file with name. */ 
 
-void dbl_reads_matrix ( string name, int dim, double **A );
+void dbl_read_matrix ( string name, int dim, double **A );
 /*
  * Reads dim*dim numbers of the file with name into A. */ 
 

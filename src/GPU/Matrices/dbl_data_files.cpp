@@ -20,7 +20,7 @@ void dbl_write_matrix ( string name, int dim, double **A )
    outs.close();
 }
 
-void dbl_reads_matrix ( string name, int dim, double **A )
+void dbl_read_matrix ( string name, int dim, double **A )
 {
    ifstream infs(name.c_str());
 

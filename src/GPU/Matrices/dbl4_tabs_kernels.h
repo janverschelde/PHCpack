@@ -559,7 +559,9 @@ void GPU_dbl4_upper_tiled_solver
    double *xhihi, double *xlohi, double *xhilo, double *xlolo,
    double *invlapms, double *mullapms, double *sublapms, double *totlapms,
    double *walltimesec,
-   long long int *addcnt, long long int *mulcnt, long long int *divcnt );
+   long long int *addcnt, double *addover,
+   long long int *mulcnt, double *mulover,
+   long long int *divcnt, double *divover );
 /*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
@@ -593,8 +595,11 @@ void GPU_dbl4_upper_tiled_solver
  *   totlapms is the total elapsed time spent by all kernels;
  *   walltimesec is the elapsed wall clock computation time;
  *   addcnt   counts the number of additions and subtractions;
+ *   addover  overflowed number of additions and subtractions;
  *   mulcnt   counts the number of multiplications;
- *   divcnt   counts the number of divisions. */
+ *   mulover  overflowed the number of multiplications;
+ *   divcnt   counts the number of divisions;
+ *   divover  overflowed number of divisions. */
 
 void GPU_cmplx4_upper_tiled_solver
  ( int dim, int szt, int nbt,
@@ -606,7 +611,9 @@ void GPU_cmplx4_upper_tiled_solver
    double *ximhihi, double *ximlohi, double *ximhilo, double *ximlolo,
    double *invlapms, double *mullapms, double *sublapms, double *totlapms,
    double *walltimesec,
-   long long int *addcnt, long long int *mulcnt, long long int *divcnt );
+   long long int *addcnt, double *addover,
+   long long int *mulcnt, double *mulover,
+   long long int *divcnt, double *divover );
 /*
  * DESCRIPTION :
  *   Solves an upper triangular system with a tiled algorithm.
@@ -656,7 +663,10 @@ void GPU_cmplx4_upper_tiled_solver
  *   totlapms is the total elapsed time spent by all kernels;
  *   walltimesec is the elapsed wall clock computation time;
  *   addcnt   counts the number of additions and subtractions;
+ *   addover  overflowed number of additions and subtractions;
  *   mulcnt   counts the number of multiplications;
- *   divcnt   counts the number of divisions. */
+ *   mulover  overflowed the number of multiplications;
+ *   divcnt   counts the number of divisions;
+ *   divover  overflowed the number of divisions. */
 
 #endif

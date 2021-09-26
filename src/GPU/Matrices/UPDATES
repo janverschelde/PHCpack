@@ -2,6 +2,7 @@ Sat 25 Sep 2021 : new dbl_data_files and make_data_files to write random
   upper triangular matrices to file, updated the makefiles.
   Extended dbl_tabs_flopcounts and dbl4_tabs_testers to try to deal with
   the overflow of the flop counts, updated the makefiles again.
+  Fixed name of a function in dbl_data_files.
 
 Fri 24 Sep 2021 : moved flopcounts from dbl2_baqr_kernels into
   dbl_baqr_flopcounts.  Did the same for dbl4_baqr_kernels.

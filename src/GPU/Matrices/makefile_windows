@@ -484,20 +484,23 @@ test_dbl4_tabs.obj:
                  /Fo: test_dbl4_tabs.obj /EHsc
 
 test_dbl4_tabs: test_dbl4_tabs.obj dbl4_tabs_testers.obj \
-                dbl4_test_utilities.obj \
+                dbl4_test_utilities.obj dbl_data_files.obj \
                 double_double_functions.obj quad_double_functions.obj \
                 dbl4_tabs_host.obj dbl4_factorizations.obj \
 		dbl4_tabs_kernels.obj dbl_tabs_flopcounts.obj \
-		gettimeofday4win.obj \
+		dbl_test_utilities.obj dbl_factorizations.obj \
+		gettimeofday4win.obj random_series.obj random_matrices.obj \
                 random_numbers.obj random4_vectors.obj random4_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl4_tabs.exe test_dbl4_tabs.obj \
              dbl4_tabs_testers.obj dbl4_test_utilities.obj \
-	     gettimeofday4win.obj  \
+	     gettimeofday4win.obj dbl_data_files.obj \
              double_double_functions.obj quad_double_functions.obj \
 	     dbl4_tabs_host.obj dbl4_factorizations.obj \
+	     dbl_test_utilities.obj dbl_factorizations.obj \
 	     dbl4_tabs_kernels.obj dbl_tabs_flopcounts.obj \
-             random_numbers.obj random4_vectors.obj random4_matrices.obj
+             random_numbers.obj random_series.obj random_matrices.obj \
+	     random4_vectors.obj random4_matrices.obj
 
 dbl8_tabs_host.obj:
 	@-echo ">>> compiling dbl8_tabs_host ..."
