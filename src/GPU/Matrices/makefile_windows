@@ -555,6 +555,29 @@ test_dbl8_tabs: test_dbl8_tabs.obj dbl8_tabs_testers.obj \
              random_numbers.obj random8_vectors.obj \
 	     random_series.obj random_matrices.obj random8_matrices.obj
 
+dbl_data_files.obj:
+	@-echo ">>> compiling dbl_data_files ..."
+	$(CL)\cl /c dbl_data_files.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_data_files.obj /EHsc
+
+make_data_files.obj:
+	@-echo ">>> compiling make_data_files ..."
+	$(CL)\cl /c make_data_files.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: make_data_files.obj /EHsc
+
+make_data_files: dbl_data_files.obj make_data_files.obj \
+	         dbl_factorizations.obj dbl_test_utilities.obj \
+		 random_numbers.obj random_series.obj random_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o make_data_files.exe \
+             make_data_files.obj dbl_data_files.obj \
+	     dbl_factorizations.obj dbl_test_utilities.obj \
+	     random_numbers.obj random_series.obj random_matrices.obj
+
 dbl_baqr_host.obj:
 	@-echo ">>> compiling dbl_baqr_host ..."
 	$(CL)\cl /c dbl_baqr_host.cpp \
@@ -857,6 +880,9 @@ clean:
 	del dbl8_test_utilities.obj dbl8_tabs_testers.obj
 	del test_dbl8_tabs.obj test_dbl8_tabs_lib
 	del test_dbl8_tabs.exe test_dbl8_tabs.exp
+	del dbl_data_files.obj
+	del make_data_files.obj make_data_files_lib
+	del make_data_files.exe make_data_files.exp
 	del dbl_baqr_host.obj dbl_baqr_kernels.obj dbl_baqr_testers.obj
 	del dbl_baqr_flopcounts.obj
 	del test_dbl_baqr.obj test_dbl_baqr_lib prompt_baqr_setup.obj
