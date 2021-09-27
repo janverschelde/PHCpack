@@ -758,7 +758,7 @@ test_dbl8_baqr: test_dbl8_baqr.obj dbl8_baqr_testers.obj \
                 prompt_baqr_setup.obj octo_double_functions.obj \
                 double_double_functions.obj quad_double_functions.obj \
 	        dbl8_factors_testers.obj dbl8_baqr_host.obj \
-                dbl8_factorizations.obj \
+                dbl8_factorizations.obj dbl8_baqr_kernels.obj \
 		gettimeofday4win.obj dbl_baqr_flopcounts.obj \
                 random_numbers.obj random8_vectors.obj random8_matrices.obj
 	@-echo ">>> linking ..."
@@ -768,6 +768,7 @@ test_dbl8_baqr: test_dbl8_baqr.obj dbl8_baqr_testers.obj \
 	     octo_double_functions.obj gettimeofday4win.obj \
              dbl8_factors_testers.obj dbl_baqr_flopcounts.obj \
              dbl8_factorizations.obj dbl8_baqr_host.obj \
+	     dbl8_baqr_kernels.obj \
              random_numbers.obj random8_vectors.obj random8_matrices.obj
 
 dbl_qrbs_testers.obj:
