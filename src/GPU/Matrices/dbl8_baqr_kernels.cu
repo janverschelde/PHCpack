@@ -595,6 +595,190 @@ void GPU_dbl8_small_house
    double *lapms, long long int *add, long long int *mul, long long int *div,
    long long int *sqrtfun, bool verbose )
 {
+   const int nrLog2 = ceil(log2((double) nrows1));
+   const int rowidx = colidx*(nrows+1);       // start of number in A_h
+   const int nVrows = nrows - k*szt;          // dimension of V matrix
+
+   if(verbose)
+   {
+      cout << "nrows : " << nrows
+           << "  nVrows : " << nVrows
+           << "  ncols : " << ncols
+           << "  szt : " << szt
+           << "  nbt : " << nbt << endl;
+      cout << "k : " << k 
+           << "  L : " << L
+           << "  nrows1 : " << nrows1
+           << "  colidx : " << colidx
+           << "  rowidx : " << rowidx << endl;
+   }
+   if(L > 0)
+   {
+      for(int i=0; i<L; i++)             // insert zeros
+      {
+         vhihihi_h[i] = 0.0;
+         vlohihi_h[i] = 0.0;
+         vhilohi_h[i] = 0.0;
+         vlolohi_h[i] = 0.0;
+         vhihilo_h[i] = 0.0;
+         vlohilo_h[i] = 0.0;
+         vhilolo_h[i] = 0.0;
+         vlololo_h[i] = 0.0;
+      }
+      cudaMemcpy(&Vhihihi_d[L*nVrows],vhihihi_h,L*sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vlohihi_d[L*nVrows],vlohihi_h,L*sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vhilohi_d[L*nVrows],vhilohi_h,L*sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vlolohi_d[L*nVrows],vlolohi_h,L*sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vhihilo_d[L*nVrows],vhihilo_h,L*sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vlohilo_d[L*nVrows],vlohilo_h,L*sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vhilolo_d[L*nVrows],vhilolo_h,L*sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vlololo_d[L*nVrows],vlololo_h,L*sizeof(double),
+                 cudaMemcpyHostToDevice);
+   }
+   if(nrows1 == 0)
+   {
+      betahihihi_h[L] = 0.0;
+      betalohihi_h[L] = 0.0;
+      betahilohi_h[L] = 0.0;
+      betalolohi_h[L] = 0.0;
+      betahihilo_h[L] = 0.0;
+      betalohilo_h[L] = 0.0;
+      betahilolo_h[L] = 0.0;
+      betalololo_h[L] = 0.0;
+      vhihihi_h[0] = 1.0;
+      vlohihi_h[0] = 0.0;
+      vhilohi_h[0] = 0.0;
+      vlolohi_h[0] = 0.0;
+      vhihilo_h[0] = 1.0;
+      vlohilo_h[0] = 0.0;
+      vhilolo_h[0] = 0.0;
+      vlololo_h[0] = 0.0;
+      cudaMemcpy(&betahihihi_d[L],&betahihihi_h[L],sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&betalohihi_d[L],&betalohihi_h[L],sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&betahilohi_d[L],&betahilohi_h[L],sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&betalolohi_d[L],&betalolohi_h[L],sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&betahihilo_d[L],&betahihilo_h[L],sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&betalohilo_d[L],&betalohilo_h[L],sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&betahilolo_d[L],&betahilolo_h[L],sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&betalololo_d[L],&betalololo_h[L],sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vhihihi_d[L*nVrows+L],vhihihi_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vlohihi_d[L*nVrows+L],vlohihi_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vhilohi_d[L*nVrows+L],vhilohi_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vlolohi_d[L*nVrows+L],vlolohi_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vhihilo_d[L*nVrows+L],vhihilo_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vlohilo_d[L*nVrows+L],vlohilo_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vhilolo_d[L*nVrows+L],vhilolo_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(&Vlololo_d[L*nVrows+L],vlololo_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+   }
+   else
+   {
+      cudaEvent_t start,stop;           // to measure time spent by kernels 
+      cudaEventCreate(&start);
+      cudaEventCreate(&stop);
+      float milliseconds;
+
+      cudaEventRecord(start);
+      dbl8_small_house<<<1,nrows1>>>
+         (&Ahihihi_d[rowidx],&Alohihi_d[rowidx],
+          &Ahilohi_d[rowidx],&Alolohi_d[rowidx],
+          &Ahihilo_d[rowidx],&Alohilo_d[rowidx],
+          &Ahilolo_d[rowidx],&Alololo_d[rowidx],
+          &Ahihihi_d[rowidx+1],&Alohihi_d[rowidx+1],
+          &Ahilohi_d[rowidx+1],&Alolohi_d[rowidx+1],
+          &Ahihilo_d[rowidx+1],&Alohilo_d[rowidx+1],
+          &Ahilolo_d[rowidx+1],&Alololo_d[rowidx+1],
+          nrows1,nrLog2,&Vhihihi_d[L*nVrows+L],&Vlohihi_d[L*nVrows+L],
+                        &Vhilohi_d[L*nVrows+L],&Vlolohi_d[L*nVrows+L],
+                        &Vhihilo_d[L*nVrows+L],&Vlohilo_d[L*nVrows+L],
+                        &Vhilolo_d[L*nVrows+L],&Vlololo_d[L*nVrows+L],
+          &betahihihi_d[L],&betalohihi_d[L],&betahilohi_d[L],&betalolohi_d[L],
+          &betahihilo_d[L],&betalohilo_d[L],&betahilolo_d[L],&betalololo_d[L]);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
+      flopcount_dbl_small_house(nrows1,nrLog2,add,mul,div,sqrtfun);
+   }
+   if(verbose)
+   {
+      const size_t szhouse = nVrows*sizeof(double);
+
+      cudaMemcpy(&betahihihi_h[L],&betahihihi_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&betalohihi_h[L],&betalohihi_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&betahilohi_h[L],&betahilohi_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&betalolohi_h[L],&betalolohi_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&betahihilo_h[L],&betahihilo_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&betalohilo_h[L],&betalohilo_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&betahilolo_h[L],&betahilolo_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&betalololo_h[L],&betalololo_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vhihihi_h,&Vhihihi_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vlohihi_h,&Vlohihi_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vhilohi_h,&Vhilohi_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vlolohi_h,&Vlolohi_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vhihilo_h,&Vhihilo_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vlohilo_h,&Vlohilo_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vhilolo_h,&Vhilolo_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vlololo_h,&Vlololo_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+
+      cout << scientific << setprecision(16)
+           << "beta[" << colidx << "] : "
+           << betahihihi_h[L] << "  " << betalohihi_h[L] << endl
+           << "          "
+           << betahilohi_h[L] << "  " << betalolohi_h[L] << endl
+           << "          "
+           << betahihilo_h[L] << "  " << betalohilo_h[L] << endl
+           << "          "
+           << betahilolo_h[L] << "  " << betalololo_h[L] << endl;
+
+      for(int i=0; i<nVrows; i++)
+         cout << "v[" << i << "] : "
+              << vhihihi_h[i] << "  " << vlohihi_h[i] << endl
+              << "       "
+              << vhilohi_h[i] << "  " << vlolohi_h[i] << endl
+              << "       "
+              << vhihilo_h[i] << "  " << vlohilo_h[i] << endl
+              << "       "
+              << vhilolo_h[i] << "  " << vlololo_h[i] << endl;
+   }
 }
 
 void GPU_cmplx8_small_house
@@ -683,6 +867,401 @@ void GPU_dbl8_large_house
    double *lapms, long long int *add, long long int *mul, long long int *div,
    long long int *sqrtfun, bool verbose )
 {
+   // nrows1 = nrows - colidx - 1 = size of Householder vector
+   const int nblocks = ceil(((double) nrows1)/szt); // sufficient threads
+   const int nblLog2 = ceil(log2((double) nblocks));
+   const int sztLog2 = ceil(log2((double) szt));
+   const int rowidx = colidx*(nrows+1);         // start of number in A_h
+   const int nVrows = nrows - k*szt;             // dimension of V matrix
+
+   cudaEvent_t start,stop;            // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+
+   if(L > 0)
+   {
+      for(int i=0; i<L; i++)             // insert zeros
+      {
+         vhihihi_h[i] = 0.0;
+         vlohihi_h[i] = 0.0;
+         vhilohi_h[i] = 0.0;
+         vlolohi_h[i] = 0.0;
+         vhihilo_h[i] = 0.0;
+         vlohilo_h[i] = 0.0;
+         vhilolo_h[i] = 0.0;
+         vlololo_h[i] = 0.0;
+      }
+   }
+   vhihihi_h[L] = 1.0;                    // set one on the diagonal
+
+   cudaMemcpy(&Vhihihi_d[L*nVrows],vhihihi_h,(L+1)*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&Vlohihi_d[L*nVrows],vlohihi_h,(L+1)*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&Vhilohi_d[L*nVrows],vhilohi_h,(L+1)*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&Vlolohi_d[L*nVrows],vlolohi_h,(L+1)*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&Vhihilo_d[L*nVrows],vhihilo_h,(L+1)*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&Vlohilo_d[L*nVrows],vlohilo_h,(L+1)*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&Vhilolo_d[L*nVrows],vhilolo_h,(L+1)*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&Vlololo_d[L*nVrows],vlololo_h,(L+1)*sizeof(double),
+              cudaMemcpyHostToDevice);
+
+   if(verbose)
+   {
+      cout << "-> launching " << nblocks << " blocks of "
+           << szt << " threads to compute the sum of squares ..." << endl;
+      cout << "nrows1 : " << nrows1 << "  rowidx : " << rowidx;
+      cout << "  ceil(log2(#blocks)) : " << nblLog2;
+      cout << "  ceil(log2(szt)) : " << sztLog2 << endl;
+   }
+   for(int i=0; i<nblocks; i++)
+   {
+      sumshihihi_h[i] = 0.0;
+      sumslohihi_h[i] = 0.0;
+      sumshilohi_h[i] = 0.0;
+      sumslolohi_h[i] = 0.0;
+      sumshihilo_h[i] = 0.0;
+      sumslohilo_h[i] = 0.0;
+      sumshilolo_h[i] = 0.0;
+      sumslololo_h[i] = 0.0;
+   }
+   cudaMemcpy(sumshihihi_d,sumshihihi_h,nblocks*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(sumslohihi_d,sumslohihi_h,nblocks*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(sumshilohi_d,sumshilohi_h,nblocks*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(sumslolohi_d,sumslolohi_h,nblocks*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(sumshihilo_d,sumshihilo_h,nblocks*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(sumslohilo_d,sumslohilo_h,nblocks*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(sumshilolo_d,sumshilolo_h,nblocks*sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(sumslololo_d,sumslololo_h,nblocks*sizeof(double),
+              cudaMemcpyHostToDevice);
+
+   cudaEventRecord(start);
+   dbl8_large_sum_of_squares<<<nblocks,szt>>>
+      (&Ahihihi_d[rowidx+1],&Alohihi_d[rowidx+1],
+       &Ahilohi_d[rowidx+1],&Alolohi_d[rowidx+1],
+       &Ahihilo_d[rowidx+1],&Alohilo_d[rowidx+1],
+       &Ahilolo_d[rowidx+1],&Alololo_d[rowidx+1],
+       sumshihihi_d,sumslohihi_d,sumshilohi_d,sumslolohi_d,
+       sumshihilo_d,sumslohilo_d,sumshilolo_d,sumslololo_d,
+       nrows1,szt,sztLog2);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+   flopcount_dbl_large_sum_of_squares(nblocks,szt,sztLog2,add,mul);
+
+   if(verbose)
+   {
+      cout << "-> launching 1 block of " << nblocks
+           << " threads to accumulate the sums ..." << endl;
+   }
+   cudaEventRecord(start);
+   dbl8_sum_accumulator<<<1,nblocks>>>
+      (sumshihihi_d,sumslohihi_d,sumshilohi_d,sumslolohi_d,
+       sumshihilo_d,sumslohilo_d,sumshilolo_d,sumslololo_d,
+       nblocks,nblLog2,
+       sigmahihihi_d,sigmalohihi_d,sigmahilohi_d,sigmalolohi_d,
+       sigmahihilo_d,sigmalohilo_d,sigmahilolo_d,sigmalololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+   flopcount_dbl_sum_accumulator(nblocks,nblLog2,add);
+
+   cudaMemcpy(sigmahihihi_h,sigmahihihi_d,sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(sigmalohihi_h,sigmalohihi_d,sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(sigmahilohi_h,sigmahilohi_d,sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(sigmalolohi_h,sigmalolohi_d,sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(sigmahihilo_h,sigmahihilo_d,sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(sigmalohilo_h,sigmalohilo_d,sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(sigmahilolo_h,sigmahilolo_d,sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(sigmalololo_h,sigmalololo_d,sizeof(double),
+              cudaMemcpyDeviceToHost);
+
+   bool done = false;
+
+   if((sigmahihihi_h[0] == 0.0) && (sigmalohihi_h[0] == 0.0) &&
+      (sigmahilohi_h[0] == 0.0) && (sigmalolohi_h[0] == 0.0) &&
+      (sigmahihilo_h[0] == 0.0) && (sigmalohilo_h[0] == 0.0) &&
+      (sigmahilolo_h[0] == 0.0) && (sigmalololo_h[0] == 0.0))
+   {
+      betahihihi_h[L] = 0.0; betalohihi_h[L] = 0.0;
+      betahilohi_h[L] = 0.0; betalolohi_h[L] = 0.0;
+      betahihilo_h[L] = 0.0; betalohilo_h[L] = 0.0;
+      betahilolo_h[L] = 0.0; betalololo_h[L] = 0.0;
+      done = true;
+
+      if(verbose)
+         cout << "Zero sigma value encountered." << endl;
+   }
+   else // beta is computed on the host instead of by one GPU thread
+   {
+      // const double x0hi = Ahi_h[rowidx];
+      // const double x0lo = Alo_h[rowidx];
+      double acchihihi,acclohihi,acchilohi,acclolohi;
+      double acchihilo,acclohilo,acchilolo,acclololo;
+      double muhihihi,mulohihi,muhilohi,mulolohi;
+      double muhihilo,mulohilo,muhilolo,mulololo;
+      double v0hihihi,v0lohihi,v0hilohi,v0lolohi;
+      double v0hihilo,v0lohilo,v0hilolo,v0lololo;
+      double v0p2hihihi,v0p2lohihi,v0p2hilohi,v0p2lolohi;
+      double v0p2hihilo,v0p2lohilo,v0p2hilolo,v0p2lololo;
+      double x0hihihi,x0lohihi,x0hilohi,x0lolohi;
+      double x0hihilo,x0lohilo,x0hilolo,x0lololo;
+
+      cudaMemcpy(&x0hihihi,&Ahihihi_d[rowidx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&x0lohihi,&Alohihi_d[rowidx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&x0hilohi,&Ahilohi_d[rowidx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&x0lolohi,&Alolohi_d[rowidx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&x0hihilo,&Ahihilo_d[rowidx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&x0lohilo,&Alohilo_d[rowidx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&x0hilolo,&Ahilolo_d[rowidx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&x0lololo,&Alololo_d[rowidx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+
+      // mu = sqrt((*x0)*(*x0) + sigma[0]);
+      odf_sqr(x0hihihi,x0lohihi,x0hilohi,x0lolohi,
+              x0hihilo,x0lohilo,x0hilolo,x0lololo,
+              &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+              &acchihilo,&acclohilo,&acchilolo,&acclololo);
+      odf_inc(&acchihihi,&acclohihi,&acchilohi,&acclolohi,
+              &acchihilo,&acclohilo,&acchilolo,&acclololo,
+              sigmahihihi_h[0],sigmalohihi_h[0],
+              sigmahilohi_h[0],sigmalolohi_h[0],
+              sigmahihilo_h[0],sigmalohilo_h[0],
+              sigmahilolo_h[0],sigmalololo_h[0]);
+      odf_sqrt(acchihihi,acclohihi,acchilohi,acclolohi,
+               acchihilo,acclohilo,acchilolo,acclololo,
+               &muhihihi,&mulohihi,&muhilohi,&mulolohi,
+               &muhihilo,&mulohilo,&muhilolo,&mulololo);
+      if(x0hihihi <= 0.0)
+      {
+         // v0 = *x0 - mu;
+         odf_sub( x0hihihi, x0lohihi, x0hilohi, x0lolohi,
+                  x0hihilo, x0lohilo, x0hilolo, x0lololo,
+                  muhihihi, mulohihi, muhilohi, mulolohi,
+                  muhihilo, mulohilo, muhilolo, mulololo,
+                 &v0hihihi,&v0lohihi,&v0hilohi,&v0lolohi,
+                 &v0hihilo,&v0lohilo,&v0hilolo,&v0lololo);
+      }
+      else
+      {
+         // v0 = -sigma[0]/(*x0 + mu);
+         odf_add(  x0hihihi,  x0lohihi,  x0hilohi,  x0lolohi,
+                   x0hihilo,  x0lohilo,  x0hilolo,  x0lololo,
+                   muhihihi,  mulohihi,  muhilohi,  mulolohi,
+                   muhihilo,  mulohilo,  muhilolo,  mulololo,
+                 &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                 &acchihilo,&acclohilo,&acchilolo,&acclololo);
+         odf_div(sigmahihihi_h[0],sigmalohihi_h[0],
+                 sigmahilohi_h[0],sigmalolohi_h[0],
+                 sigmahihilo_h[0],sigmalohilo_h[0],
+                 sigmahilolo_h[0],sigmalololo_h[0],
+                   acchihihi,       acclohihi,     acchilohi,     acclolohi,
+                   acchihilo,       acclohilo,     acchilolo,     acclololo,
+                   &v0hihihi,       &v0lohihi,     &v0hilohi,     &v0lolohi,
+                   &v0hihilo,       &v0lohilo,     &v0hilolo,     &v0lololo);
+         odf_minus(&v0hihihi,&v0lohihi,&v0hilohi,&v0lolohi,
+                   &v0hihilo,&v0lohilo,&v0hilolo,&v0lololo);
+      }
+      // v0p2 = v0*v0;
+      odf_sqr(   v0hihihi,   v0lohihi,   v0hilohi,   v0lolohi,
+                 v0hihilo,   v0lohilo,   v0hilolo,   v0lololo,
+              &v0p2hihihi,&v0p2lohihi,&v0p2hilohi,&v0p2lolohi,
+              &v0p2hihilo,&v0p2lohilo,&v0p2hilolo,&v0p2lololo);
+      // *beta = 2.0*v0p2/(sigma[0] + v0p2);
+      odf_add(sigmahihihi_h[0],sigmalohihi_h[0],
+              sigmahilohi_h[0],sigmalolohi_h[0],
+              sigmahihilo_h[0],sigmalohilo_h[0],
+              sigmahilolo_h[0],sigmalololo_h[0],
+               v0p2hihihi,      v0p2lohihi,      v0p2hilohi,      v0p2lolohi,
+               v0p2hihilo,      v0p2lohilo,      v0p2hilolo,      v0p2lololo,
+               &acchihihi,      &acclohihi,      &acchilohi,      &acclolohi,
+               &acchihilo,      &acclohilo,      &acchilolo,      &acclololo);
+      odf_div( v0p2hihihi,      v0p2lohihi,      v0p2hilohi,      v0p2lolohi,
+               v0p2hihilo,      v0p2lohilo,      v0p2hilolo,      v0p2lololo,
+                acchihihi,       acclohihi,       acchilohi,       acclolohi,
+                acchihilo,       acclohilo,       acchilolo,       acclololo,
+              &betahihihi_h[L],&betalohihi_h[L],
+              &betahilohi_h[L],&betalolohi_h[L],
+              &betahihilo_h[L],&betalohilo_h[L],
+              &betahilolo_h[L],&betalololo_h[L]);
+      odf_mlt_d(&betahihihi_h[L],&betalohihi_h[L],
+                &betahihihi_h[L],&betalohihi_h[L],
+                &betahilolo_h[L],&betalololo_h[L],
+                &betahilolo_h[L],&betalololo_h[L],2.0);
+      sigmahihihi_h[0] = v0hihihi;
+      sigmalohihi_h[0] = v0lohihi;
+      sigmahilohi_h[0] = v0hilohi;
+      sigmalolohi_h[0] = v0lolohi;
+      sigmahihilo_h[0] = v0hihilo;
+      sigmalohilo_h[0] = v0lohilo;
+      sigmahilolo_h[0] = v0hilolo;
+      sigmalololo_h[0] = v0lololo;           // v0 needed for normalization
+      // update the flop counts
+      *add += 3;
+      *mul += 3;
+      *div += 2;
+      *sqrtfun += 1;
+   }
+   if(verbose)
+   {
+      cout << scientific << setprecision(16)
+           << "beta[" << colidx << "] : "
+           << betahihihi_h[L] << "  " << betalohihi_h[L] << endl
+           << "          "
+           << betahilohi_h[L] << "  " << betalolohi_h[L] << endl
+           << "          "
+           << betahihilo_h[L] << "  " << betalohilo_h[L] << endl
+           << "          "
+           << betahilolo_h[L] << "  " << betalololo_h[L] << endl;
+   }
+   cudaMemcpy(&betahihihi_d[L],&betahihihi_h[L],sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&betalohihi_d[L],&betalohihi_h[L],sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&betahilohi_d[L],&betahilohi_h[L],sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&betalolohi_d[L],&betalolohi_h[L],sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&betahihilo_d[L],&betahihilo_h[L],sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&betalohilo_d[L],&betalohilo_h[L],sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&betahilolo_d[L],&betahilolo_h[L],sizeof(double),
+              cudaMemcpyHostToDevice);
+   cudaMemcpy(&betalololo_d[L],&betalololo_h[L],sizeof(double),
+              cudaMemcpyHostToDevice);
+
+   if(!done)  // normalization needed
+   {
+      // (sigmahi_h, sigmalo_h) has the values for (v0hi, v0lo).
+      cudaMemcpy(sigmahihihi_d,sigmahihihi_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(sigmalohihi_d,sigmalohihi_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(sigmahilohi_d,sigmahilohi_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(sigmalolohi_d,sigmalolohi_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(sigmahihilo_d,sigmahihilo_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(sigmalohilo_d,sigmalohilo_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(sigmahilolo_d,sigmahilolo_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+      cudaMemcpy(sigmalololo_d,sigmalololo_h,sizeof(double),
+                 cudaMemcpyHostToDevice);
+
+      if(verbose)
+      {
+         cout << "-> launching " << nblocks << " blocks of "
+              << szt << " threads to normalize ..." << endl;
+         cout << "   nrows1 : " << nrows1
+              << "  rowidx : " << rowidx << "  nVrows : " << nVrows << endl;
+      }
+      cudaEventRecord(start);
+      dbl8_normalize<<<nblocks,szt>>>
+         (nrows1,szt,
+          &Ahihihi_d[rowidx+1],&Alohihi_d[rowidx+1],
+          &Ahilohi_d[rowidx+1],&Alolohi_d[rowidx+1],
+          &Ahihilo_d[rowidx+1],&Alohilo_d[rowidx+1],
+          &Ahilolo_d[rowidx+1],&Alololo_d[rowidx+1],
+          sigmahihihi_d,sigmalohihi_d,sigmahilohi_d,sigmalolohi_d,
+          sigmahihilo_d,sigmalohilo_d,sigmahilolo_d,sigmalololo_d,
+          &Vhihihi_d[L*nVrows+L+1],&Vlohihi_d[L*nVrows+L+1],
+          &Vhilohi_d[L*nVrows+L+1],&Vlolohi_d[L*nVrows+L+1],
+          &Vhihilo_d[L*nVrows+L+1],&Vlohilo_d[L*nVrows+L+1],
+          &Vhilolo_d[L*nVrows+L+1],&Vlololo_d[L*nVrows+L+1]);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
+      flopcount_dbl_normalize(nblocks,szt,div);
+   }
+   if(verbose)
+   {
+      const size_t szhouse = nVrows*sizeof(double);
+
+      cudaMemcpy(&betahihihi_h[L],&betahihihi_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&betalohihi_h[L],&betalohihi_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&betahilohi_h[L],&betahilohi_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&betalolohi_h[L],&betalolohi_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&betahihilo_h[L],&betahihilo_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&betalohilo_h[L],&betalohilo_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&betahilolo_h[L],&betahilolo_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&betalololo_h[L],&betalololo_d[L],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vhihihi_h,&Vhihihi_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vlohihi_h,&Vlohihi_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vhilohi_h,&Vhilohi_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vlolohi_h,&Vlolohi_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vhihilo_h,&Vhihilo_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vlohilo_h,&Vlohilo_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vhilolo_h,&Vhilolo_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(vlololo_h,&Vlololo_d[L*nVrows],szhouse,
+                 cudaMemcpyDeviceToHost);
+
+      cout << scientific << setprecision(16)
+           << "beta[" << colidx << "] : "
+           << betahihihi_h[L] << "  " << betalohihi_h[L] << endl
+           << "           "
+           << betahilohi_h[L] << "  " << betalolohi_h[L] << endl
+           << "           "
+           << betahihilo_h[L] << "  " << betalohilo_h[L] << endl
+           << "           "
+           << betahilolo_h[L] << "  " << betalololo_h[L] << endl;
+      for(int i=0; i<nVrows; i++)
+         cout << "v[" << i << "] : "
+              << vhihihi_h[i] << "  " << vlohihi_h[i] << endl
+              << "       "
+              << vhilohi_h[i] << "  " << vlolohi_h[i] << endl
+              << "       "
+              << vhihilo_h[i] << "  " << vlohilo_h[i] << endl
+              << "       "
+              << vhilolo_h[i] << "  " << vlololo_h[i] << endl;
+   }
 }
 
 void GPU_cmplx8_large_house
@@ -767,6 +1346,62 @@ void GPU_dbl8_small_leftRupdate
    double *betahilolo_d, double *betalololo_d,
    double *lapms, long long int *add, long long int *mul, bool verbose )
 {
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int endcol = (k+1)*szt;     // 1 + last column index in tile
+   const int nVrows = nrows - k*szt;          // dimension of V matrix
+
+   cudaEventRecord(start);           // 2nd argument: ncols -> szt
+   // changed second argument ncols into szt
+   // to avoid updating the next tile
+   dbl8_small_leftRupdate<<<1,nrows-colidx>>>
+      (nrows,endcol,szt,colidx,
+       Ahihihi_d,Alohihi_d,Ahilohi_d,Alolohi_d,
+       Ahihilo_d,Alohilo_d,Ahilolo_d,Alololo_d,
+       &Vhihihi_d[L*nVrows+L],&Vlohihi_d[L*nVrows+L],
+       &Vhilohi_d[L*nVrows+L],&Vlolohi_d[L*nVrows+L],
+       &Vhihilo_d[L*nVrows+L],&Vlohilo_d[L*nVrows+L],
+       &Vhilolo_d[L*nVrows+L],&Vlololo_d[L*nVrows+L],
+       &betahihihi_d[L],&betalohihi_d[L],&betahilohi_d[L],&betalolohi_d[L],
+       &betahihilo_d[L],&betalohilo_d[L],&betahilolo_d[L],&betalololo_d[L]);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+   flopcount_dbl_small_leftRupdate(nrows,ncols,szt,colidx,add,mul);
+
+   if(verbose)
+   {
+      const int dim = nrows*ncols;
+      const size_t sznum = dim*sizeof(double);
+
+      cudaMemcpy(Ahihihi_h,Ahihihi_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Alohihi_h,Alohihi_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Ahilohi_h,Ahilohi_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Alolohi_h,Alolohi_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Ahihilo_h,Ahihilo_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Alohilo_h,Alohilo_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Ahilolo_h,Ahilolo_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Alololo_h,Alololo_d,sznum,cudaMemcpyDeviceToHost);
+
+      cout << "the matrix after the update :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "A_d[" << i << "][" << j << "] : "
+                 << Ahihihi_h[j*nrows+i] << "  "
+                 << Alohihi_h[j*nrows+i] << endl
+                 << "            "
+                 << Ahilohi_h[j*nrows+i] << "  "
+                 << Alolohi_h[j*nrows+i] << endl
+                 << "            "
+                 << Ahihilo_h[j*nrows+i] << "  "
+                 << Alohilo_h[j*nrows+i] << endl
+                 << "            "
+                 << Ahilolo_h[j*nrows+i] << "  "
+                 << Alololo_h[j*nrows+i] << endl;
+   }
 }
 
 void GPU_cmplx8_small_leftRupdate
@@ -838,6 +1473,186 @@ void GPU_dbl8_medium_leftRupdate
    double *RTvlapms, double *redlapms,
    long long int *add, long long int *mul, bool verbose )
 {
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int endcol = (k+1)*szt;     // 1 + last column index in tile
+   const int nVrows = nrows - k*szt;          // dimension of V matrix
+   const int nhouse = nrows - colidx;  // length of Householder vector
+   // total number of entries in R that will be modified
+   const int RToffset = colidx*nrows;
+   const int dimRTdotv = endcol - colidx;
+   // total number of entries in R that will be modified
+   const int sizenum = (nrows - colidx)*dimRTdotv;
+   const int nbrblocks = (int) ceil(sizenum/((double) szt));
+
+   // changed second argument ncols into endcol
+   // to avoid updating the next tile
+   // dbl_medium_betaRTv<<<nbrblocks,szt>>>
+   //   (nrows,endcol,szt,colidx,A_d,&V_d[L*nVrows+L],&beta_d[L],w_d);
+   // number of threads must be ncols - colidx, not endcol - colidx
+   // dbl2_small_betaRTv<<<1,nrows-colidx>>> // nrows ...
+   //   (nrows,endcol,szt,colidx,Ahi_d,Alo_d,
+   //    &Vhi_d[L*nVrows+L],&Vlo_d[L*nVrows+L],
+   //    &betahi_d[L],&betalo_d[L],whi_d,wlo_d);
+
+   if(verbose)
+   {
+      cout << "-> launching " << nbrblocks << " blocks of " << szt
+           << " threads to compute RTdotv ..." << endl;
+      cout << "   nhouse : " << nhouse << "  RToffset : " << RToffset
+           << "  dimRTdotv : " << dimRTdotv << endl;
+   }
+
+   cudaEventRecord(start);
+   dbl8_RTdotv<<<nbrblocks,szt>>>
+      (nhouse,szt,colidx,RToffset,dimRTdotv,
+       Ahihihi_d,Alohihi_d,Ahilohi_d,Alolohi_d,
+       Ahihilo_d,Alohilo_d,Ahilolo_d,Alololo_d,
+       &Vhihihi_d[L*nVrows+L],&Vlohihi_d[L*nVrows+L],
+       &Vhilohi_d[L*nVrows+L],&Vlolohi_d[L*nVrows+L],
+       &Vhihilo_d[L*nVrows+L],&Vlohilo_d[L*nVrows+L],
+       &Vhilolo_d[L*nVrows+L],&Vlololo_d[L*nVrows+L],
+       RTdotvhihihi_d,RTdotvlohihi_d,RTdotvhilohi_d,RTdotvlolohi_d,
+       RTdotvhihilo_d,RTdotvlohilo_d,RTdotvhilolo_d,RTdotvlololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *RTvlapms += milliseconds;
+   cudaEventRecord(start);
+   dbl8_sum_betaRTdotv<<<1,dimRTdotv>>>
+      (nhouse,&betahihihi_d[L],&betalohihi_d[L],
+              &betahilohi_d[L],&betalolohi_d[L],
+              &betahihilo_d[L],&betalohilo_d[L],
+              &betahilolo_d[L],&betalololo_d[L],
+       RTdotvhihihi_d,RTdotvlohihi_d,RTdotvhilohi_d,RTdotvlolohi_d,
+       RTdotvhihilo_d,RTdotvlohilo_d,RTdotvhilolo_d,RTdotvlololo_d,
+       whihihi_d,wlohihi_d,whilohi_d,wlolohi_d,
+       whihilo_d,wlohilo_d,whilolo_d,wlololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *RTvlapms += milliseconds;
+   flopcount_dbl_RTdotv(nhouse,szt,mul);
+   flopcount_dbl_sum_betaRTdotv(nhouse,dimRTdotv,add,mul);
+
+   if(verbose)
+   {
+      cout << "-> launching " << nbrblocks << " blocks of " << szt
+           << " threads to update " << sizenum << " numbers ..." << endl;
+      cout << "   nrows : " << nrows << "  endcol : " << endcol
+           << "  szt : " << szt << "  colidx : " << colidx << endl;
+   }
+   cudaEventRecord(start);
+   dbl8_medium_subvbetaRTv<<<nbrblocks,szt>>>
+      (nrows,endcol,szt,colidx,
+       Ahihihi_d,Alohihi_d,Ahilohi_d,Alolohi_d,
+       Ahihilo_d,Alohilo_d,Ahilolo_d,Alololo_d,
+       &Vhihihi_d[L*nVrows+L],&Vlohihi_d[L*nVrows+L],
+       &Vhilohi_d[L*nVrows+L],&Vlolohi_d[L*nVrows+L],
+       &Vhihilo_d[L*nVrows+L],&Vlohilo_d[L*nVrows+L],
+       &Vhilolo_d[L*nVrows+L],&Vlololo_d[L*nVrows+L],
+       &betahihihi_d[L],&betalohihi_d[L],&betahilohi_d[L],&betalolohi_d[L],
+       &betahihilo_d[L],&betalohilo_d[L],&betahilolo_d[L],&betalololo_d[L],
+       whihihi_d,wlohihi_d,whilohi_d,wlolohi_d,
+       whihilo_d,wlohilo_d,whilolo_d,wlololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *redlapms += milliseconds;
+   flopcount_dbl_medium_subvbetaRTv(nrows,endcol,szt,colidx,add,mul);
+
+   if(verbose)
+   {
+      const int dim = nrows*ncols;
+      const size_t sznum = dim*sizeof(double);
+      const size_t szbRTv = dimRTdotv*sizeof(double);
+      const size_t szRTdotv = nVrows*szbRTv;
+
+      cudaMemcpy(RTdotvhihihi_h,RTdotvhihihi_d,szRTdotv,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(RTdotvlohihi_h,RTdotvlohihi_d,szRTdotv,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(RTdotvhilohi_h,RTdotvhilohi_d,szRTdotv,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(RTdotvlolohi_h,RTdotvlolohi_d,szRTdotv,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(RTdotvhihilo_h,RTdotvhihilo_d,szRTdotv,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(RTdotvlohilo_h,RTdotvlohilo_d,szRTdotv,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(RTdotvhilolo_h,RTdotvhilolo_d,szRTdotv,
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(RTdotvlololo_h,RTdotvlololo_d,szRTdotv,
+                 cudaMemcpyDeviceToHost);
+
+      cout << "the matrix R^T dot v : " << endl;
+      int ix = 0;
+      for(int i=0; i<endcol-colidx; i++)
+      {
+         for(int j=0; j<nhouse; j++)      // must use nhouse
+         {
+            cout << "RTdotv[" << i << "][" << j << "] : "
+                 << RTdotvhihihi_h[ix] << "  "
+                 << RTdotvlohihi_h[ix] << endl
+                 << "               "
+                 << RTdotvhilohi_h[ix] << "  "
+                 << RTdotvlolohi_h[ix] << endl
+                 << "               "
+                 << RTdotvhihilo_h[ix] << "  "
+                 << RTdotvlohilo_h[ix] << endl
+                 << "               "
+                 << RTdotvhilolo_h[ix] << "  "
+                 << RTdotvlololo_h[ix] << endl;
+            ix = ix + 1;
+         }
+      }
+      cudaMemcpy(whihihi_h,whihihi_d,szbRTv,cudaMemcpyDeviceToHost);
+      cudaMemcpy(wlohihi_h,wlohihi_d,szbRTv,cudaMemcpyDeviceToHost);
+      cudaMemcpy(whilohi_h,whilohi_d,szbRTv,cudaMemcpyDeviceToHost);
+      cudaMemcpy(wlolohi_h,wlolohi_d,szbRTv,cudaMemcpyDeviceToHost);
+      cudaMemcpy(whihilo_h,whihilo_d,szbRTv,cudaMemcpyDeviceToHost);
+      cudaMemcpy(wlohilo_h,wlohilo_d,szbRTv,cudaMemcpyDeviceToHost);
+      cudaMemcpy(whilolo_h,whilolo_d,szbRTv,cudaMemcpyDeviceToHost);
+      cudaMemcpy(wlololo_h,wlololo_d,szbRTv,cudaMemcpyDeviceToHost);
+
+      cout << "the vector w = beta*R^T*v : " << endl;
+      for(int i=0; i<endcol-colidx; i++)
+         cout << "w[" << i << "] : "
+              << whihihi_h[i] << "  " << wlohihi_h[i] << endl
+              << "       "
+              << whilohi_h[i] << "  " << wlolohi_h[i] << endl
+              << "       "
+              << whihilo_h[i] << "  " << wlohilo_h[i] << endl
+              << "       "
+              << whilolo_h[i] << "  " << wlololo_h[i] << endl;
+
+      cudaMemcpy(Ahihihi_h,Ahihihi_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Alohihi_h,Alohihi_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Ahilohi_h,Ahilohi_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Alolohi_h,Alolohi_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Ahihilo_h,Ahihilo_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Alohilo_h,Alohilo_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Ahilolo_h,Ahilolo_d,sznum,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Alololo_h,Alololo_d,sznum,cudaMemcpyDeviceToHost);
+
+      cout << "the matrix after the update :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "A_d[" << i << "][" << j << "] : "
+                 << Ahihihi_h[j*nrows+i] << "  "
+                 << Alohihi_h[j*nrows+i] << endl
+                 << "            "
+                 << Ahilohi_h[j*nrows+i] << "  "
+                 << Alolohi_h[j*nrows+i] << endl
+                 << "            "
+                 << Ahihilo_h[j*nrows+i] << "  "
+                 << Alohilo_h[j*nrows+i] << endl
+                 << "            "
+                 << Ahilolo_h[j*nrows+i] << "  "
+                 << Alololo_h[j*nrows+i] << endl;
+   }
 }
 
 void GPU_cmplx8_medium_leftRupdate
@@ -939,6 +1754,187 @@ void GPU_dbl8_medium_VB_to_W
    double *betahilolo_d, double *betalololo_d,
    double *lapms, long long int *add, long long int *mul, bool verbose )
 {
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int rowdim = nrows - idx*szt;
+   const int nbrblocks1 = (int) ceil(rowdim/((double) szt));
+
+   cudaEventRecord(start);
+   dbl8_beta_times_V<<<nbrblocks1,szt>>>
+      (rowdim,szt,betahihihi_d,betalohihi_d,betahilohi_d,betalolohi_d,
+                  betahihilo_d,betalohilo_d,betahilolo_d,betalololo_d,
+                     Vhihihi_d,   Vlohihi_d,   Vhilohi_d,   Vlolohi_d,
+                     Vhihilo_d,   Vlohilo_d,   Vhilolo_d,   Vlololo_d,
+                     Whihihi_d,   Wlohihi_d,   Whilohi_d,   Wlolohi_d,
+                     Whihilo_d,   Wlohilo_d,   Whilolo_d,   Wlololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+   flopcount_dbl_beta_times_V(rowdim,mul);
+
+   const int nbrblocks2 = (int) ceil(rowdim*rowdim/((double) szt));
+
+   cudaEventRecord(start);
+   dbl8_initialize_WYT<<<nbrblocks2,szt>>>
+      (rowdim,szt,  Vhihihi_d,  Vlohihi_d,  Vhilohi_d,  Vlolohi_d,
+                    Vhihilo_d,  Vlohilo_d,  Vhilolo_d,  Vlololo_d,
+                    Whihihi_d,  Wlohihi_d,  Whilohi_d,  Wlolohi_d,
+                    Whihilo_d,  Wlohilo_d,  Whilolo_d,  Wlololo_d,
+                  WYThihihi_d,WYTlohihi_d,WYThilohi_d,WYTlolohi_d,
+                  WYThihilo_d,WYTlohilo_d,WYThilolo_d,WYTlololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+   flopcount_dbl_initialize_WYT(rowdim,mul);
+
+   for(int j=1; j<szt; j++)
+   {
+      cudaEventRecord(start);
+      dbl8_beta_next_W<<<nbrblocks1,szt>>>
+         (rowdim,szt,
+          &betahihihi_d[j],&betalohihi_d[j],&betahilohi_d[j],&betalolohi_d[j],
+          &betahihilo_d[j],&betalohilo_d[j],&betahilolo_d[j],&betalololo_d[j],
+          &Vhihihi_d[j*rowdim],&Vlohihi_d[j*rowdim],
+          &Vhilohi_d[j*rowdim],&Vlolohi_d[j*rowdim],
+          &Vhihilo_d[j*rowdim],&Vlohilo_d[j*rowdim],
+          &Vhilolo_d[j*rowdim],&Vlololo_d[j*rowdim],
+          &Whihihi_d[j*rowdim],&Wlohihi_d[j*rowdim],
+          &Whilohi_d[j*rowdim],&Wlolohi_d[j*rowdim],
+          &Whihilo_d[j*rowdim],&Wlohilo_d[j*rowdim],
+          &Whilolo_d[j*rowdim],&Wlololo_d[j*rowdim],
+          WYThihihi_d,WYTlohihi_d,WYThilohi_d,WYTlolohi_d,
+          WYThihilo_d,WYTlohilo_d,WYThilolo_d,WYTlololo_d);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
+      flopcount_dbl_beta_next_W(rowdim,add,mul);
+
+      cudaEventRecord(start);
+      dbl8_update_WYT<<<nbrblocks2,szt>>>
+         (rowdim,szt,
+          &Vhihihi_d[j*rowdim],&Vlohihi_d[j*rowdim],
+          &Vhilohi_d[j*rowdim],&Vlolohi_d[j*rowdim],
+          &Vhihilo_d[j*rowdim],&Vlohilo_d[j*rowdim],
+          &Vhilolo_d[j*rowdim],&Vlololo_d[j*rowdim],
+          &Whihihi_d[j*rowdim],&Wlohihi_d[j*rowdim],
+          &Whilohi_d[j*rowdim],&Wlolohi_d[j*rowdim],
+          &Whihilo_d[j*rowdim],&Wlohilo_d[j*rowdim],
+          &Whilolo_d[j*rowdim],&Wlololo_d[j*rowdim],
+          WYThihihi_d,WYTlohihi_d,WYThilohi_d,WYTlolohi_d,
+          WYThihilo_d,WYTlohilo_d,WYThilolo_d,WYTlololo_d);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
+      flopcount_dbl_update_WYT(rowdim,add,mul);
+   }
+   if(verbose)
+   {
+      const size_t szbeta = szt*sizeof(double);
+      const size_t szhouse = rowdim*sizeof(double);
+      const size_t szVandW = szt*szhouse;
+      const size_t szmat = rowdim*rowdim*sizeof(double);
+
+      cudaMemcpy(betahihihi_h,betahihihi_d,szbeta,cudaMemcpyDeviceToHost);
+      cudaMemcpy(betalohihi_h,betalohihi_d,szbeta,cudaMemcpyDeviceToHost);
+      cudaMemcpy(betahilohi_h,betahilohi_d,szbeta,cudaMemcpyDeviceToHost);
+      cudaMemcpy(betalolohi_h,betalolohi_d,szbeta,cudaMemcpyDeviceToHost);
+      cudaMemcpy(betahihilo_h,betahihilo_d,szbeta,cudaMemcpyDeviceToHost);
+      cudaMemcpy(betalohilo_h,betalohilo_d,szbeta,cudaMemcpyDeviceToHost);
+      cudaMemcpy(betahilolo_h,betahilolo_d,szbeta,cudaMemcpyDeviceToHost);
+      cudaMemcpy(betalololo_h,betalololo_d,szbeta,cudaMemcpyDeviceToHost);
+
+      cout << "the betas :" << endl;
+      for(int j=0; j<szt; j++)
+         cout << "beta[" << j << "] : "
+              << betahihihi_h[j] << "  " << betalohihi_h[j] << endl
+              << "          "
+              << betahilohi_h[j] << "  " << betalolohi_h[j] << endl
+              << "          "
+              << betahihilo_h[j] << "  " << betalohilo_h[j] << endl
+              << "          "
+              << betahilolo_h[j] << "  " << betalololo_h[j] << endl;
+
+      cudaMemcpy(Vhihihi_h,Vhihihi_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Vlohihi_h,Vlohihi_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Vhilohi_h,Vhilohi_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Vlolohi_h,Vlolohi_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Vhihilo_h,Vhihilo_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Vlohilo_h,Vlohilo_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Vhilolo_h,Vhilolo_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Vlololo_h,Vlololo_d,szVandW,cudaMemcpyDeviceToHost);
+
+      cout << "the columns of the V matrix :" << endl;
+      int ix = 0;
+      for(int j=0; j<szt; j++) 
+         for(int i=0; i<rowdim; i++) 
+         {
+            cout << "V[" << i << "][" << j << "] : "
+                 << Vhihihi_h[ix] << "  " << Vlohihi_h[ix] << endl
+                 << "          "
+                 << Vhilohi_h[ix] << "  " << Vlolohi_h[ix] << endl
+                 << "          "
+                 << Vhihilo_h[ix] << "  " << Vlohilo_h[ix] << endl
+                 << "          "
+                 << Vhilolo_h[ix] << "  " << Vlololo_h[ix] << endl;
+            ix = ix + 1;
+         }
+
+      cudaMemcpy(Whihihi_h,Whihihi_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Wlohihi_h,Wlohihi_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Whilohi_h,Whilohi_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Wlolohi_h,Wlolohi_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Whihilo_h,Whihilo_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Wlohilo_h,Wlohilo_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Whilolo_h,Whilolo_d,szVandW,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Wlololo_h,Wlololo_d,szVandW,cudaMemcpyDeviceToHost);
+
+      cout << "the columns of the W matrix :" << endl;
+      ix = 0;
+      for(int j=0; j<szt; j++) 
+         for(int i=0; i<rowdim; i++) 
+         {
+            cout << "W[" << i << "][" << j << "] : "
+                 << Whihihi_h[ix] << "  " << Wlohihi_h[ix] << endl
+                 << "          "
+                 << Whilohi_h[ix] << "  " << Wlolohi_h[ix] << endl
+                 << "          "
+                 << Whihilo_h[ix] << "  " << Wlohilo_h[ix] << endl
+                 << "          "
+                 << Whilolo_h[ix] << "  " << Wlololo_h[ix] << endl;
+            ix = ix + 1;
+         }
+
+      cudaMemcpy(WYThihihi_h,WYThihihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYTlohihi_h,WYTlohihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYThilohi_h,WYThilohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYTlolohi_h,WYTlolohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYThihilo_h,WYThihilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYTlohilo_h,WYTlohilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYThilolo_h,WYThilolo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYTlololo_h,WYTlololo_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the WYT matrix :" << endl;
+      ix = 0;
+      for(int i=0; i<rowdim; i++) 
+         for(int j=0; j<rowdim; j++) 
+         {
+            cout << "WYT[" << i << "][" << j << "] : "
+                 << WYThihihi_h[ix] << "  " << WYTlohihi_h[ix] << endl
+                 << "            "
+                 << WYThilohi_h[ix] << "  " << WYTlolohi_h[ix] << endl
+                 << "            "
+                 << WYThihilo_h[ix] << "  " << WYTlohilo_h[ix] << endl
+                 << "            "
+                 << WYThilolo_h[ix] << "  " << WYTlololo_h[ix] << endl;
+            ix = ix + 1;
+         }
+   }
 }
 
 void GPU_cmplx8_medium_VB_to_W
@@ -1023,6 +2019,55 @@ void GPU_dbl8_small_WYT
    double *WYThilolo_h, double *WYTlololo_h,
    double *lapms, bool verbose )
 {
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int nbrblocks = (int) ceil(nrows*nrows/((double) szt));
+
+   cudaEventRecord(start);
+   dbl8_small_WYT<<<nbrblocks,szt>>>
+      (nrows,szt,  Whihihi_d,  Wlohihi_d,  Whilohi_d,  Wlolohi_d,
+                   Whihilo_d,  Wlohilo_d,  Whilolo_d,  Wlololo_d,
+                   Yhihihi_d,  Ylohihi_d,  Yhilohi_d,  Ylolohi_d,
+                   Yhihilo_d,  Ylohilo_d,  Yhilolo_d,  Ylololo_d,
+                 WYThihihi_d,WYTlohihi_d,WYThilohi_d,WYTlolohi_d,
+                 WYThihilo_d,WYTlohilo_d,WYThilolo_d,WYTlololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+   // flopcount_dbl_small_WYT(nrows,szt,add,mul);
+
+   if(verbose)
+   {
+      const size_t szmat = nrows*nrows*sizeof(double);
+
+      cudaMemcpy(WYThihihi_h,WYThihihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYTlohihi_h,WYTlohihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYThilohi_h,WYThilohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYTlolohi_h,WYTlolohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYThihilo_h,WYThihilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYTlohilo_h,WYTlohilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYThilolo_h,WYThilolo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(WYTlololo_h,WYTlololo_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the WYT matrix :" << endl;
+      int ix = 0;
+      for(int i=0; i<nrows; i++) 
+         for(int j=0; j<nrows; j++) 
+         {
+            cout << "WYT[" << i << "][" << j << "] : "
+                 << WYThihihi_h[ix] << "  " << WYTlohihi_h[ix] << endl
+                 << "            "
+                 << WYThilohi_h[ix] << "  " << WYTlolohi_h[ix] << endl
+                 << "            "
+                 << WYThihilo_h[ix] << "  " << WYTlohilo_h[ix] << endl
+                 << "            "
+                 << WYThilolo_h[ix] << "  " << WYTlololo_h[ix] << endl;
+            ix = ix + 1;
+         }
+   }
 }
 
 void GPU_cmplx8_small_WYH
@@ -1079,6 +2124,56 @@ void GPU_dbl8_small_YWT
    double *YWThilolo_h, double *YWTlololo_h,
    double *lapms, long long int *add, long long int *mul, bool verbose )
 {
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int rowdim = nrows - idx*szt;
+   int nbrblocks = (int) ceil(rowdim*rowdim/((double) szt));
+
+   cudaEventRecord(start);
+   dbl8_small_WYT<<<nbrblocks,szt>>>
+      (rowdim,szt,  Yhihihi_d,  Ylohihi_d,  Yhilohi_d,  Ylolohi_d,
+                    Yhihilo_d,  Ylohilo_d,  Yhilolo_d,  Ylololo_d,
+                    Whihihi_d,  Wlohihi_d,  Whilohi_d,  Wlolohi_d,
+                    Whihilo_d,  Wlohilo_d,  Whilolo_d,  Wlololo_d,
+                  YWThihihi_d,YWTlohihi_d,YWThilohi_d,YWTlolohi_d,
+                  YWThihilo_d,YWTlohilo_d,YWThilolo_d,YWTlololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+   flopcount_dbl_small_WYT(rowdim,szt,add,mul);
+
+   if(verbose)
+   {
+      const size_t szmat = rowdim*rowdim*sizeof(double);
+
+      cudaMemcpy(YWThihihi_h,YWThihihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(YWTlohihi_h,YWTlohihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(YWThilohi_h,YWThilohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(YWTlolohi_h,YWTlolohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(YWThihilo_h,YWThihilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(YWTlohilo_h,YWTlohilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(YWThilolo_h,YWThilolo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(YWTlololo_h,YWTlololo_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the YWT matrix :" << endl;
+      int ix = 0;
+      for(int i=0; i<rowdim; i++) 
+         for(int j=0; j<rowdim; j++) 
+         {
+            cout << "YWT[" << i << "][" << j << "] : "
+                 << YWThihihi_h[ix] << "  " << YWTlohihi_h[ix] << endl
+                 << "            "
+                 << YWThilohi_h[ix] << "  " << YWTlolohi_h[ix] << endl
+                 << "            "
+                 << YWThihilo_h[ix] << "  " << YWTlohilo_h[ix] << endl
+                 << "            "
+                 << YWThilolo_h[ix] << "  " << YWTlololo_h[ix] << endl;
+            ix = ix + 1;
+         }
+   }
 }
 
 void GPU_cmplx8_small_YWH
@@ -1139,6 +2234,88 @@ void GPU_dbl8_small_QWYT
    double *Qhihilo_h, double *Qlohilo_h, double *Qhilolo_h, double *Qlololo_h,
    double *lapms, long long int *add, long long int *mul, bool verbose )
 {
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int coloff = idx*szt;
+   const int rowdim = dim - coloff;
+   const int nbrblocks = (int) ceil(dim*rowdim/((double) szt));
+
+   if(verbose)
+   {
+      const size_t szmat = dim*dim*sizeof(double);
+
+      cudaMemcpy(Qhihihi_h,Qhihihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Qlohihi_h,Qlohihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Qhilohi_h,Qhilohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Qlolohi_h,Qlolohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Qhihilo_h,Qhihilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Qlohilo_h,Qlohilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Qhilolo_h,Qhilolo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Qlololo_h,Qlololo_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the Q matrix :" << endl;
+      int ix = 0;
+      for(int i=0; i<dim; i++) 
+         for(int j=0; j<dim; j++) 
+         {
+            cout << "Q[" << i << "][" << j << "] : "
+                 << Qhihihi_h[ix] << "  " << Qlohihi_h[ix] << endl
+                 << "          "
+                 << Qhilohi_h[ix] << "  " << Qlolohi_h[ix] << endl
+                 << "          "
+                 << Qhihilo_h[ix] << "  " << Qlohilo_h[ix] << endl
+                 << "          "
+                 << Qhilolo_h[ix] << "  " << Qlololo_h[ix] << endl;
+            ix = ix + 1;
+         }
+   }
+
+   cudaEventRecord(start);
+   dbl8_small_QWYT<<<nbrblocks,szt>>>
+      (dim,rowdim,szt,coloff,
+          Qhihihi_d,   Qlohihi_d,   Qhilohi_d,   Qlolohi_d,
+          Qhihilo_d,   Qlohilo_d,   Qhilolo_d,   Qlololo_d,
+        WYThihihi_d, WYTlohihi_d, WYThilohi_d, WYTlolohi_d,
+        WYThihilo_d, WYTlohilo_d, WYThilolo_d, WYTlololo_d,
+       QWYThihihi_d,QWYTlohihi_d,QWYThilohi_d,QWYTlolohi_d,
+       QWYThihilo_d,QWYTlohilo_d,QWYThilolo_d,QWYTlololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+   flopcount_dbl_small_QWYT(dim,rowdim,szt,coloff,add,mul);
+
+   if(verbose)
+   {
+      const size_t szmat = dim*rowdim*sizeof(double);
+
+      cudaMemcpy(QWYThihihi_h,QWYThihihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(QWYTlohihi_h,QWYTlohihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(QWYThilohi_h,QWYThilohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(QWYTlolohi_h,QWYTlolohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(QWYThihilo_h,QWYThihilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(QWYTlohilo_h,QWYTlohilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(QWYThilolo_h,QWYThilolo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(QWYTlololo_h,QWYTlololo_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the QWYT matrix :" << endl;
+      int ix = 0;
+      for(int i=0; i<dim; i++) 
+         for(int j=0; j<rowdim; j++) 
+         {
+            cout << "QWYT[" << i << "][" << j << "] : "
+                 << QWYThihihi_h[ix] << "  " << QWYTlohihi_h[ix] << endl
+                 << "             "
+                 << QWYThilohi_h[ix] << "  " << QWYTlolohi_h[ix] << endl
+                 << "             "
+                 << QWYThihilo_h[ix] << "  " << QWYTlohilo_h[ix] << endl
+                 << "             "
+                 << QWYThilolo_h[ix] << "  " << QWYTlololo_h[ix] << endl;
+            ix = ix + 1;
+         }
+   }
 }
 
 void GPU_cmplx8_small_QWYH
@@ -1205,6 +2382,112 @@ void GPU_dbl8_small_YWTC
    double *YWTChilolo_h, double *YWTClololo_h,
    double *lapms, long long int *add, long long int *mul, bool verbose )
 {
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int rowoff = idx*szt;
+   const int rowdim = nrows - rowoff;
+   const int coloff = (idx+1)*szt;
+   const int coldim = ncols - coloff;
+   const int nbrblocks = (int) ceil(rowdim*coldim/((double) szt));
+
+   if(verbose)
+   {
+      cout << "in GPU_dbl2_small_YWTC ..." << endl;
+      cout << "-> nrows : " << nrows
+           << "  ncols : " << ncols
+           << "  szt : " << szt
+           << "  idx : " << idx << endl;
+      cout << "   rowdim : " << rowdim
+           << "  coldim : " << coldim
+           << "  rowoff : " << rowoff
+           << "  coloff : " << coloff
+           << "  nbrblocks : " << nbrblocks << endl;
+
+      double *Chihihi_h = new double[nrows*ncols];
+      double *Clohihi_h = new double[nrows*ncols];
+      double *Chilohi_h = new double[nrows*ncols];
+      double *Clolohi_h = new double[nrows*ncols];
+      double *Chihilo_h = new double[nrows*ncols];
+      double *Clohilo_h = new double[nrows*ncols];
+      double *Chilolo_h = new double[nrows*ncols];
+      double *Clololo_h = new double[nrows*ncols];
+      const size_t szmat = nrows*ncols*sizeof(double);
+
+      cudaMemcpy(Chihihi_h,Chihihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Clohihi_h,Clohihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Chilohi_h,Chilohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Clolohi_h,Clolohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Chihilo_h,Chihilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Clohilo_h,Clohilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Chilolo_h,Chilolo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Clololo_h,Clololo_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the matrix C : " << endl;
+      for(int i=rowoff; i<nrows; i++)
+         for(int j=coloff; j<ncols; j++)
+            cout << "C_h[" << i << "][" << j << "] : "
+                 << Chihihi_h[j*nrows+i] << "  "
+                 << Clohihi_h[j*nrows+i] << endl
+                 << "            "
+                 << Chilohi_h[j*nrows+i] << "  "
+                 << Clolohi_h[j*nrows+i] << endl
+                 << "            "
+                 << Chihilo_h[j*nrows+i] << "  "
+                 << Clohilo_h[j*nrows+i] << endl
+                 << "            "
+                 << Chilolo_h[j*nrows+i] << "  "
+                 << Clololo_h[j*nrows+i] << endl;
+
+      free(Chihihi_h); free(Clohihi_h); free(Chilohi_h); free(Clolohi_h);
+      free(Chihilo_h); free(Clohilo_h); free(Chilolo_h); free(Clololo_h);
+   }
+
+   cudaEventRecord(start);
+   dbl8_small_YWTC<<<nbrblocks,szt>>>
+      (nrows,ncols,rowdim,coldim,szt,rowoff,coloff,
+        YWThihihi_d, YWTlohihi_d, YWThilohi_d, YWTlolohi_d,
+        YWThihilo_d, YWTlohilo_d, YWThilolo_d, YWTlololo_d,
+          Chihihi_d,   Clohihi_d,   Chilohi_d,   Clolohi_d,
+          Chihilo_d,   Clohilo_d,   Chilolo_d,   Clololo_d,
+       YWTChihihi_d,YWTClohihi_d,YWTChilohi_d,YWTClolohi_d,
+       YWTChihilo_d,YWTClohilo_d,YWTChilolo_d,YWTClololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+   flopcount_dbl_small_YWTC(rowdim,coldim,add,mul);
+
+   if(verbose)
+   {
+      const size_t szmat = nrows*ncols*sizeof(double);
+
+      cudaMemcpy(YWTChihihi_h,YWTChihihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(YWTClohihi_h,YWTClohihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(YWTChilohi_h,YWTChilohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(YWTClolohi_h,YWTClolohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(YWTChihilo_h,YWTChihilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(YWTClohilo_h,YWTClohilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(YWTChilolo_h,YWTChilolo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(YWTClololo_h,YWTClololo_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the YWTC matrix :" << endl;
+      for(int i=rowoff; i<nrows; i++) 
+         for(int j=coloff; j<ncols; j++)
+            cout << "YWTC[" << i << "][" << j << "] : "
+                 << YWTChihihi_h[j*nrows + i] << "  "
+                 << YWTClohihi_h[j*nrows + i] << endl
+                 << "             "
+                 << YWTChilohi_h[j*nrows + i] << "  "
+                 << YWTClolohi_h[j*nrows + i] << endl
+                 << "             "
+                 << YWTChihilo_h[j*nrows + i] << "  "
+                 << YWTClohilo_h[j*nrows + i] << endl
+                 << "             "
+                 << YWTChilolo_h[j*nrows + i] << "  "
+                 << YWTClololo_h[j*nrows + i] << endl;
+   }
 }
 
 void GPU_cmplx8_small_YWHC
@@ -1257,6 +2540,56 @@ void GPU_dbl8_small_Qupdate
    double *Qhihilo_h, double *Qlohilo_h, double *Qhilolo_h, double *Qlololo_h,
    double *lapms, long long int *add, bool verbose )
 {
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int coloff = idx*szt;
+   const int rowdim = dim - coloff;
+   const int nbrblocks = (int) ceil(dim*rowdim/((double) szt));
+
+   cudaEventRecord(start);
+   dbl8_small_Qupdate<<<nbrblocks,szt>>>
+      (dim,rowdim,szt,coloff,
+       Qhihihi_d,Qlohihi_d,Qhilohi_d,Qlolohi_d,
+       Qhihilo_d,Qlohilo_d,Qhilolo_d,Qlololo_d,
+       QWYThihihi_d,QWYTlohihi_d,QWYThilohi_d,QWYTlolohi_d,
+       QWYThihilo_d,QWYTlohilo_d,QWYThilolo_d,QWYTlololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+   flopcount_dbl_small_Qupdate(dim,rowdim,add);
+
+   if(verbose)
+   {
+      const size_t szmat = dim*dim*sizeof(double);
+
+      cudaMemcpy(Qhihihi_h,Qhihihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Qlohihi_h,Qlohihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Qhilohi_h,Qhilohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Qlolohi_h,Qlolohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Qhihilo_h,Qhihilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Qlohilo_h,Qlohilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Qhilolo_h,Qhilolo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Qlololo_h,Qlololo_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the Q matrix :" << endl;
+      int ix = 0;
+      for(int i=0; i<dim; i++) 
+         for(int j=0; j<dim; j++) 
+         {
+            cout << "Q[" << i << "][" << j << "] : "
+                 << Qhihihi_h[ix] << "  " << Qlohihi_h[ix] << endl
+                 << "          "
+                 << Qhilohi_h[ix] << "  " << Qlolohi_h[ix] << endl
+                 << "          "
+                 << Qhihilo_h[ix] << "  " << Qlohilo_h[ix] << endl
+                 << "          "
+                 << Qhilolo_h[ix] << "  " << Qlololo_h[ix] << endl;
+            ix = ix + 1;
+         }
+   }
 }
 
 void GPU_cmplx8_small_Qupdate
@@ -1301,6 +2634,58 @@ void GPU_dbl8_small_R_add_YWTC
    double *Rhihilo_h, double *Rlohilo_h, double *Rhilolo_h, double *Rlololo_h,
    double *lapms, long long int *add, bool verbose )
 {
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+   const int rowoff = idx*szt;
+   const int rowdim = nrows - rowoff;
+   const int coloff = (idx+1)*szt;
+   const int coldim = ncols - coloff;
+   const int nbrblocks = (int) ceil(rowdim*coldim/((double) szt));
+
+   cudaEventRecord(start);
+   dbl8_small_R_add_YWTC<<<nbrblocks,szt>>>
+      (nrows,coldim,szt,rowoff,coloff,
+       Rhihihi_d,Rlohihi_d,Rhilohi_d,Rlolohi_d,
+       Rhihilo_d,Rlohilo_d,Rhilolo_d,Rlololo_d,
+       YWTChihihi_d,YWTClohihi_d,YWTChilohi_d,YWTClolohi_d,
+       YWTChihilo_d,YWTClohilo_d,YWTChilolo_d,YWTClololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *lapms += milliseconds;
+   flopcount_dbl_small_R_add_YWTC(nrows,coldim,szt,rowoff,coloff,add);
+
+   if(verbose)
+   {
+      const size_t szmat = nrows*ncols*sizeof(double);
+
+      cudaMemcpy(Rhihihi_h,Rhihihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Rlohihi_h,Rlohihi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Rhilohi_h,Rhilohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Rlolohi_h,Rlolohi_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Rhihilo_h,Rhihilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Rlohilo_h,Rlohilo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Rhilolo_h,Rhilolo_d,szmat,cudaMemcpyDeviceToHost);
+      cudaMemcpy(Rlololo_h,Rlololo_d,szmat,cudaMemcpyDeviceToHost);
+
+      cout << "the R matrix :" << endl;
+      for(int i=rowoff; i<nrows; i++) 
+         for(int j=coloff; j<ncols; j++)
+            cout << "R[" << i << "][" << j << "] : "
+                 << Rhihihi_h[j*nrows + i] << "  "
+                 << Rlohihi_h[j*nrows + i] << endl
+                 << "          "
+                 << Rhilohi_h[j*nrows + i] << "  "
+                 << Rlolohi_h[j*nrows + i] << endl
+                 << "          "
+                 << Rhihilo_h[j*nrows + i] << "  "
+                 << Rlohilo_h[j*nrows + i] << endl
+                 << "          "
+                 << Rhilolo_h[j*nrows + i] << "  "
+                 << Rlololo_h[j*nrows + i] << endl;
+   }
 }
 
 void GPU_cmplx8_small_R_add_YWHC
