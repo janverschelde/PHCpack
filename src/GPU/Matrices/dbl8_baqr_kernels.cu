@@ -4256,7 +4256,7 @@ void GPU_dbl8_blocked_houseqr
             Qlohihi_h[ix]   = 0.0;
             Qhilohi_h[ix]   = 0.0;
             Qlolohi_h[ix]   = 0.0;
-            Qhihilo_h[ix]   = 1.0;
+            Qhihilo_h[ix]   = 0.0;
             Qlohilo_h[ix]   = 0.0;
             Qhilolo_h[ix]   = 0.0;
             Qlololo_h[ix++] = 0.0;
