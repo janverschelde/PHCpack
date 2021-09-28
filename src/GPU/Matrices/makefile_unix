@@ -525,7 +525,7 @@ test_dbl8_baqr: test_dbl8_baqr.o prompt_baqr_setup.o dbl8_baqr_testers.o \
                   octo_double_functions.o \
                   dbl8_factorizations.o dbl8_factors_testers.o \
                   dbl8_baqr_host.o dbl8_baqr_testers.o \
-                  dbl_baqr_flopcounts.o \
+                  dbl_baqr_flopcounts.o dbl8_baqr_kernels.o \
                   random_numbers.o random8_vectors.o random8_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 

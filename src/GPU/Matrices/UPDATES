@@ -1,3 +1,6 @@
+Mon 27 Sep 2021 : completed a first version in dbl8_baqr_kernels.cu, of
+  the kernels on real data.  Update dbl8_baqr_testers.cpp and makefile_unix.
+
 Sun 26 Sep 2021 : added functions for complex data in dbl_data_files
   and to make_data_files.cpp.  Updated dbl4_tabs_testers.cpp so complex
   matrices can be read from file.  To dbl8_baqr_kernels.cu, defined the

@@ -5,12 +5,12 @@
 #include <iomanip>
 #include <cstdlib>
 #include <cmath>
-// #include <vector_types.h>
+#include <vector_types.h>
 #include "random8_matrices.h"
 #include "dbl8_factorizations.h"
 #include "dbl8_factors_testers.h"
 #include "dbl8_baqr_host.h"
-// #include "dbl4_baqr_kernels.h"
+#include "dbl8_baqr_kernels.h"
 
 using namespace std;
 
@@ -167,7 +167,6 @@ void test_real8_blocked_qr
          cout << "The test failed for tol = " << tol << "." << endl;
       }
    }
-/*
    double timelapsed_d;
    double houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
@@ -181,11 +180,14 @@ void test_real8_blocked_qr
    {
       cout << "-> GPU computes the blocked Householder QR ..." << endl;
 
-      GPU_dbl4_blocked_houseqr
+      GPU_dbl8_blocked_houseqr
          (nrows,ncols,sizetile,numtiles,
-          Ahihi,  Alohi,  Ahilo,  Alolo,
-          Qhihi_d,Qlohi_d,Qhilo_d,Qlolo_d,
-          Rhihi_d,Rlohi_d,Rhilo_d,Rlolo_d,
+          Ahihihi,  Alohihi,  Ahilohi,  Alolohi,
+          Ahihilo,  Alohilo,  Ahilolo,  Alololo,
+          Qhihihi_d,Qlohihi_d,Qhilohi_d,Qlolohi_d,
+          Qhihilo_d,Qlohilo_d,Qhilolo_d,Qlololo_d,
+          Rhihihi_d,Rlohihi_d,Rhilohi_d,Rlolohi_d,
+          Rhihilo_d,Rlohilo_d,Rhilolo_d,Rlololo_d,
           &houselapsedms,&RTvlapsedms,&tileRlapsedms,&vb2Wlapsedms,
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
           &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
@@ -193,10 +195,14 @@ void test_real8_blocked_qr
 
       cout << "-> Testing the QR factorization ..." << endl;
 
-      fail = test_real4_qr_factors_probe
-                (nrows,ncols,Ahihi,  Alohi,  Ahilo,  Alolo,
-                             Qhihi_d,Qlohi_d,Qhilo_d,Qlolo_d,
-                             Rhihi_d,Rlohi_d,Rhilo_d,Rlolo_d,tol,2,true);
+      fail = test_real8_qr_factors_probe
+                (nrows,ncols,
+                 Ahihihi,  Alohihi,  Ahilohi,  Alolohi,
+                 Ahihilo,  Alohilo,  Ahilolo,  Alololo,
+                 Qhihihi_d,Qlohihi_d,Qhilohi_d,Qlolohi_d,
+                 Qhihilo_d,Qlohilo_d,Qhilolo_d,Qlololo_d,
+                 Rhihihi_d,Rlohihi_d,Rhilohi_d,Rlolohi_d,
+                 Rhihilo_d,Rlohilo_d,Rhilolo_d,Rlololo_d,tol,2,true);
       if(fail == 0)
          cout << "The test succeeded." << endl;
       else
@@ -205,7 +211,6 @@ void test_real8_blocked_qr
          cout << "The test failed for tol = " << tol << "." << endl;
       }
    }
- */
    cout << endl;
    cout << fixed << setprecision(3);
    if((mode == 1) || (mode == 2))
@@ -213,7 +218,6 @@ void test_real8_blocked_qr
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
            << timelapsed_h << " seconds." << endl;
    }
-/*
    if((mode == 0) || (mode == 2))
    {
       cout << "         Time spent by the Householder kernel : "
@@ -245,15 +249,15 @@ void test_real8_blocked_qr
       cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
       cout << endl;
       cout << "             Number of additions/subtractions : "
-           << addcnt << " x 89 " << endl;
+           << addcnt << " x 270 " << endl;
       cout << "                    Number of multiplications : "
-           << mulcnt << " x 336 " << endl;
+           << mulcnt << " x 1742 " << endl;
       cout << "                          Number of divisions : "
-           << divcnt << " x 893 " << endl;
+           << divcnt << " x 5126 " << endl;
       cout << "                    Number of calls to sqrt() : "
-           << sqrtcnt << " x 1345 " << endl;
-      long long int flopcnt = 89*addcnt + 336*mulcnt
-                            + 893*divcnt + 1345*sqrtcnt;
+           << sqrtcnt << " x ???? " << endl;
+      long long int flopcnt = 270*addcnt + 1742*mulcnt
+                            + 5126*divcnt + 1345*sqrtcnt;
       cout << "    Total number of floating-point operations : "
            << flopcnt << endl;
       cout << endl;
@@ -269,7 +273,6 @@ void test_real8_blocked_qr
       cout << fixed << setprecision(3)
            << " = " << wallflops/gigacnt << " Gigaflops" << endl;
    }
- */
 
    for(int i=0; i<nrows; i++)
    {

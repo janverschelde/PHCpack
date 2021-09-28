@@ -32,6 +32,206 @@ __global__ void dbl8_small_house
    double *betahihilo, double *betalohilo,
    double *betahilolo, double *betalololo )
 {
+   const int j = threadIdx.x;
+
+   __shared__ double shvhihihi[od_shmemsize];
+   __shared__ double shvlohihi[od_shmemsize];
+   __shared__ double shvhilohi[od_shmemsize];
+   __shared__ double shvlolohi[od_shmemsize];
+   __shared__ double shvhihilo[od_shmemsize];
+   __shared__ double shvlohilo[od_shmemsize];
+   __shared__ double shvhilolo[od_shmemsize];
+   __shared__ double shvlololo[od_shmemsize];
+   __shared__ double prdhihihi[od_shmemsize];
+   __shared__ double prdlohihi[od_shmemsize];
+   __shared__ double prdhilohi[od_shmemsize];
+   __shared__ double prdlolohi[od_shmemsize];
+   __shared__ double prdhihilo[od_shmemsize];
+   __shared__ double prdlohilo[od_shmemsize];
+   __shared__ double prdhilolo[od_shmemsize];
+   __shared__ double prdlololo[od_shmemsize];
+
+   bool stopflag = false;
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+   double muhihihi,mulohihi,muhilohi,mulolohi;
+   double muhihilo,mulohilo,muhilolo,mulololo;
+   double v0hihihi,v0lohihi,v0hilohi,v0lolohi;
+   double v0hihilo,v0lohilo,v0hilolo,v0lololo;
+   double v0p2hihihi,v0p2lohihi,v0p2hilohi,v0p2lolohi;
+   double v0p2hihilo,v0p2lohilo,v0p2hilolo,v0p2lololo;
+
+   shvhihihi[j] = x1hihihi[j];    // reading of vector into shared memory
+   shvlohihi[j] = x1lohihi[j];
+   shvhilohi[j] = x1hilohi[j];
+   shvlolohi[j] = x1lolohi[j];
+   shvhihilo[j] = x1hihilo[j];
+   shvlohilo[j] = x1lohilo[j];
+   shvhilolo[j] = x1hilolo[j];
+   shvlololo[j] = x1lololo[j];
+   // prd[j] = shv[j]*shv[j];   // for the 2-norm computation
+   __syncthreads();
+   odg_sqr( shvhihihi[j], shvlohihi[j], shvhilohi[j], shvlolohi[j],
+            shvhihilo[j], shvlohilo[j], shvhilolo[j], shvlololo[j],
+           &prdhihihi[j],&prdlohihi[j],&prdhilohi[j],&prdlolohi[j],
+           &prdhihilo[j],&prdlohilo[j],&prdhilolo[j],&prdlololo[j]);
+
+   __syncthreads();
+   vhihihi[j+1] = shvhihihi[j];   // copies x to v, in case beta is zero
+   vlohihi[j+1] = shvlohihi[j];
+   vhilohi[j+1] = shvhilohi[j];
+   vlolohi[j+1] = shvlolohi[j];
+   vhihilo[j+1] = shvhihilo[j]; 
+   vlohilo[j+1] = shvlohilo[j];
+   vhilolo[j+1] = shvhilolo[j];
+   vlololo[j+1] = shvlololo[j];
+   __syncthreads();
+   if(j == 0)
+   {
+      vhihihi[0] = 1.0;
+      vlohihi[0] = 0.0;
+      vhilohi[0] = 0.0;
+      vlolohi[0] = 0.0;
+      vhihilo[0] = 0.0;
+      vlohilo[0] = 0.0;
+      vhilolo[0] = 0.0;
+      vlololo[0] = 0.0;
+   }
+   __syncthreads();
+   int powTwo = 1;                          // sum reduction
+   for(int k=0; k < dimLog2; k++)
+   {
+      if((j%(powTwo*2)) == 0)
+         if(j+powTwo < dim) // prd[j] = prd[j] + prd[j+powTwo];
+            odg_inc(&prdhihihi[j],&prdlohihi[j],&prdhilohi[j],&prdlolohi[j],
+                    &prdhihilo[j],&prdlohilo[j],&prdhilolo[j],&prdlololo[j],
+                     prdhihihi[j+powTwo],prdlohihi[j+powTwo],
+                     prdhilohi[j+powTwo],prdlolohi[j+powTwo],
+                     prdhihilo[j+powTwo],prdlohilo[j+powTwo],
+                     prdhilolo[j+powTwo],prdlololo[j+powTwo]);
+      powTwo = powTwo*2;
+      __syncthreads();
+   }
+   // thread 0 computes the sqrt of the inner product, others wait
+   if(j == 0)
+   {                                       // prd[0] is sigma of house
+      if((prdhihihi[0] == 0.0) && (prdlohihi[0] == 0.0) &&
+         (prdhilohi[0] == 0.0) && (prdlolohi[0] == 0.0) &&
+         (prdhihilo[0] == 0.0) && (prdlohilo[0] == 0.0) &&
+         (prdhilolo[0] == 0.0) && (prdlololo[0] == 0.0)) 
+      {
+         *betahihihi = 0.0; *betalohihi = 0.0;
+         *betahilohi = 0.0; *betalolohi = 0.0;
+         *betahihilo = 0.0; *betalohilo = 0.0;
+         *betahilolo = 0.0; *betalololo = 0.0;
+         stopflag = true;
+      }
+   }
+   __syncthreads();
+   if(stopflag) return;                    // case when sigma is zero
+   __syncthreads();
+   if(j == 0)                              // thread zero sets beta
+   {
+      // mu = sqrt((*x0)*(*x0) + prd[0]);
+      odg_sqr( *x0hihihi, *x0lohihi, *x0hilohi, *x0lolohi,
+               *x0hihilo, *x0lohilo, *x0hilolo, *x0lololo,
+              &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+              &acchihilo,&acclohilo,&acchilolo,&acclololo);
+      odg_inc(&acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
+              &acchihilo,  &acclohilo,  &acchilolo,  &acclololo,
+               prdhihihi[0],prdlohihi[0],prdhilohi[0],prdlolohi[0],
+               prdhihilo[0],prdlohilo[0],prdhilolo[0],prdlololo[0]);
+      odg_sqrt(acchihihi,acclohihi,acchilohi,acclolohi,
+               acchihilo,acclohilo,acchilolo,acclololo,
+               &muhihihi,&mulohihi,&muhilohi,&mulolohi,
+               &muhihilo,&mulohilo,&muhilolo,&mulololo);
+
+      if(*x0hihihi <= 0.0)
+      {
+         // v0 = *x0 - mu;
+         odg_sub(*x0hihihi,*x0lohihi,*x0hilohi,*x0lolohi,
+                 *x0hihilo,*x0lohilo,*x0hilolo,*x0lololo,
+                  muhihihi, mulohihi, muhilohi, mulolohi,
+                  muhihilo, mulohilo, muhilolo, mulololo,
+                 &v0hihihi,&v0lohihi,&v0hilohi,&v0lolohi,
+                 &v0hihilo,&v0lohilo,&v0hilolo,&v0lololo);
+      }
+      else
+      {
+         // v0 = -prd[0]/(*x0 + mu);
+         odg_add( *x0hihihi, *x0lohihi, *x0hilohi, *x0lolohi,
+                  *x0hihilo, *x0lohilo, *x0hilolo, *x0lololo,
+                   muhihihi,  mulohihi,  muhilohi,  mulolohi,
+                   muhihilo,  mulohilo,  muhilolo,  mulololo,
+                 &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                 &acchihilo,&acclohilo,&acchilolo,&acclololo);
+         odg_div(prdhihihi[0],prdlohihi[0],prdhilohi[0],prdlolohi[0],
+                 prdhihilo[0],prdlohilo[0],prdhilolo[0],prdlololo[0],
+                 acchihihi,   acclohihi,   acchilohi,   acclolohi,
+                 acchihilo,   acclohilo,   acchilolo,   acclololo,
+                 &v0hihihi,   &v0lohihi,   &v0hilohi,   &v0lolohi,
+                 &v0hihilo,   &v0lohilo,   &v0hilolo,   &v0lololo);
+         odg_minus(&v0hihihi,&v0lohihi,&v0hilohi,&v0lolohi,
+                   &v0hihilo,&v0lohilo,&v0hilolo,&v0lololo);
+      }
+      // v0p2 = v0*v0;
+      odg_sqr(   v0hihihi,   v0lohihi,   v0hilohi,   v0lolohi,
+                 v0hihilo,   v0lohilo,   v0hilolo,   v0lololo,
+              &v0p2hihihi,&v0p2lohihi,&v0p2hilohi,&v0p2lolohi,
+              &v0p2hihilo,&v0p2lohilo,&v0p2hilolo,&v0p2lololo);
+      // *beta = 2.0*v0p2/(prd[0] + v0p2);
+      odg_add( prdhihihi[0],prdlohihi[0],prdhilohi[0],prdlolohi[0],
+               prdhihilo[0],prdlohilo[0],prdhilolo[0],prdlololo[0],
+              v0p2hihihi,  v0p2lohihi,  v0p2hilohi,  v0p2lolohi,
+              v0p2hihilo,  v0p2lohilo,  v0p2hilolo,  v0p2lololo,
+              &acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
+              &acchihilo,  &acclohilo,  &acchilolo,  &acclololo);
+      odg_div(v0p2hihihi,v0p2lohihi,v0p2hilohi,v0p2lolohi,
+              v0p2hihilo,v0p2lohilo,v0p2hilolo,v0p2lololo,
+               acchihihi, acclohihi, acchilohi, acclolohi,
+               acchihilo, acclohilo, acchilolo, acclololo,
+              betahihihi,betalohihi,betahilohi,betalolohi,
+              betahihilo,betalohilo,betahilolo,betalololo);
+      odg_mlt_d(betahihihi,betalohihi,betahilohi,betalolohi,
+                betahihilo,betalohilo,betahilolo,betalololo,2.0);
+      prdhihihi[0] = v0hihihi;
+      prdlohihi[0] = v0lohihi;
+      prdhilohi[0] = v0hilohi;
+      prdlolohi[0] = v0lolohi;
+      prdhihilo[0] = v0hihilo;
+      prdlohilo[0] = v0lohilo;
+      prdhilolo[0] = v0hilolo;
+      prdlololo[0] = v0lololo;          // v0 needed for normalization
+   }
+   __syncthreads();
+   // shv[j] = shv[j]/prd[0];
+   odg_div(shvhihihi[j],shvlohihi[j],shvhilohi[j],shvlolohi[j],
+           shvhihilo[j],shvlohilo[j],shvhilolo[j],shvlololo[j],
+           prdhihihi[0],prdlohihi[0],prdhilohi[0],prdlolohi[0],
+           prdhihilo[0],prdlohilo[0],prdhilolo[0],prdlololo[0],
+          &acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
+          &acchihilo,  &acclohilo,  &acchilolo,  &acclololo);
+   __syncthreads();
+   vhihihi[j+1] = acchihihi;
+   vlohihi[j+1] = acclohihi;
+   vhilohi[j+1] = acchilohi;
+   vlolohi[j+1] = acclolohi;
+   vhihilo[j+1] = acchihilo;
+   vlohilo[j+1] = acclohilo;
+   vhilolo[j+1] = acchilolo;
+   vlololo[j+1] = acclololo;
+   __syncthreads();
+   if(j == 0)
+   {
+      vhihihi[0] = 1.0;
+      vlohihi[0] = 0.0;
+      vhilohi[0] = 0.0;
+      vlolohi[0] = 0.0;
+      vhihilo[0] = 0.0;
+      vlohilo[0] = 0.0;
+      vhilolo[0] = 0.0;
+      vlololo[0] = 0.0;
+   }
 }
 
 __global__ void cmplx8_small_house
@@ -71,6 +271,81 @@ __global__ void dbl8_large_sum_of_squares
    double *sumshihilo, double *sumshilolo,
    double *sumslohilo, double *sumslololo, int dim, int BS, int BSLog2 )
 {
+   const int i = blockIdx.x;
+   const int j = threadIdx.x;
+   const int k = i*BS + j;
+
+   __shared__ double shvhihihi[inner_od_shmemsize];
+   __shared__ double shvlohihi[inner_od_shmemsize];
+   __shared__ double shvhilohi[inner_od_shmemsize];
+   __shared__ double shvlolohi[inner_od_shmemsize];
+   __shared__ double shvhihilo[inner_od_shmemsize];
+   __shared__ double shvlohilo[inner_od_shmemsize];
+   __shared__ double shvhilolo[inner_od_shmemsize];
+   __shared__ double shvlololo[inner_od_shmemsize];
+   __shared__ double prdhihihi[inner_od_shmemsize];
+   __shared__ double prdlohihi[inner_od_shmemsize];
+   __shared__ double prdhilohi[inner_od_shmemsize];
+   __shared__ double prdlolohi[inner_od_shmemsize];
+   __shared__ double prdhihilo[inner_od_shmemsize];
+   __shared__ double prdlohilo[inner_od_shmemsize];
+   __shared__ double prdhilolo[inner_od_shmemsize];
+   __shared__ double prdlololo[inner_od_shmemsize];
+
+   shvhihihi[j] = vhihihi[k];
+   shvlohihi[j] = vlohihi[k];
+   shvhilohi[j] = vhilohi[k];
+   shvlolohi[j] = vlolohi[k];
+   shvhihilo[j] = vhihilo[k];
+   shvlohilo[j] = vlohilo[k];
+   shvhilolo[j] = vhilolo[k];
+   shvlololo[j] = vlololo[k];
+   __syncthreads();
+   if(k >= dim)
+   {
+      shvhihihi[j] = 0.0;
+      shvlohihi[j] = 0.0;
+      shvhilohi[j] = 0.0;
+      shvlolohi[j] = 0.0;
+      shvhihilo[j] = 0.0;
+      shvlohilo[j] = 0.0;
+      shvhilolo[j] = 0.0;
+      shvlololo[j] = 0.0;
+   }
+   __syncthreads();
+   odg_sqr( shvhihihi[j], shvlohihi[j], shvhilohi[j], shvlolohi[j],
+            shvhihilo[j], shvlohilo[j], shvhilolo[j], shvlololo[j],
+           &prdhihihi[j],&prdlohihi[j],&prdhilohi[j],&prdlolohi[j],
+           &prdhihilo[j],&prdlohilo[j],&prdhilolo[j],&prdlololo[j]);
+
+   __syncthreads();
+
+   int powTwo = 1;                          // sum reduction
+   for(int L=0; L < BSLog2; L++)
+   {
+      if((j%(powTwo*2)) == 0)
+         if(j+powTwo < BS) 
+            odg_inc(&prdhihihi[j],&prdlohihi[j],&prdhilohi[j],&prdlolohi[j],
+                    &prdhihilo[j],&prdlohilo[j],&prdhilolo[j],&prdlololo[j],
+                     prdhihihi[j+powTwo],prdlohihi[j+powTwo],
+                     prdhilohi[j+powTwo],prdlolohi[j+powTwo],
+                     prdhihilo[j+powTwo],prdlohilo[j+powTwo],
+                     prdhilolo[j+powTwo],prdlololo[j+powTwo]);
+      powTwo = powTwo*2;
+
+      __syncthreads();
+   }
+   if(j == 0)                              // thread 0 writes the sum
+   {
+      sumshihihi[i] = prdhihihi[0];
+      sumslohihi[i] = prdlohihi[0];
+      sumshilohi[i] = prdhilohi[0];
+      sumslolohi[i] = prdlolohi[0];
+      sumshihilo[i] = prdhihilo[0];
+      sumslohilo[i] = prdlohilo[0];
+      sumshilolo[i] = prdhilolo[0];
+      sumslololo[i] = prdlololo[0];
+   }
 }
 
 __global__ void cmplx8_large_sum_of_squares
@@ -96,6 +371,68 @@ __global__ void dbl8_sum_accumulator
    double *acchihilo, double *acclohilo,
    double *acchilolo, double *acclololo )
 {
+   const int j = threadIdx.x;
+
+   __shared__ double shvhihihi[outer_od_shmemsize];
+   __shared__ double shvlohihi[outer_od_shmemsize];
+   __shared__ double shvhilohi[outer_od_shmemsize];
+   __shared__ double shvlolohi[outer_od_shmemsize];
+   __shared__ double shvhihilo[outer_od_shmemsize];
+   __shared__ double shvlohilo[outer_od_shmemsize];
+   __shared__ double shvhilolo[outer_od_shmemsize];
+   __shared__ double shvlololo[outer_od_shmemsize];
+
+   shvhihihi[j] = sumshihihi[j];
+   shvlohihi[j] = sumslohihi[j];
+   shvhilohi[j] = sumshilohi[j];
+   shvlolohi[j] = sumslolohi[j];
+   shvhihilo[j] = sumshihilo[j];
+   shvlohilo[j] = sumslohilo[j];
+   shvhilolo[j] = sumshilolo[j];
+   shvlololo[j] = sumslololo[j];
+
+   __syncthreads();
+
+   if(j >= nbsums)
+   {
+      shvhihihi[j] = 0.0;
+      shvlohihi[j] = 0.0;
+      shvhilohi[j] = 0.0;
+      shvlolohi[j] = 0.0;
+      shvhihilo[j] = 0.0;
+      shvlohilo[j] = 0.0;
+      shvhilolo[j] = 0.0;
+      shvlololo[j] = 0.0;
+   }
+   __syncthreads();
+
+   int powTwo = 1;                          // sum reduction
+   for(int L=0; L < nbsumsLog2; L++)
+   {
+      if((j%(powTwo*2)) == 0)
+         if(j+powTwo < nbsums)
+            odg_inc(&shvhihihi[j],&shvlohihi[j],&shvhilohi[j],&shvlolohi[j],
+                    &shvhihilo[j],&shvlohilo[j],&shvhilolo[j],&shvlololo[j],
+                     shvhihihi[j+powTwo],shvlohihi[j+powTwo],
+                     shvhilohi[j+powTwo],shvlolohi[j+powTwo],
+                     shvhihilo[j+powTwo],shvlohilo[j+powTwo],
+                     shvhilolo[j+powTwo],shvlololo[j+powTwo]);
+      powTwo = powTwo*2;
+
+      __syncthreads();
+   }
+   __syncthreads();
+   if(j == 0)
+   {
+      *acchihihi = shvhihihi[0];
+      *acclohihi = shvlohihi[0];
+      *acchilohi = shvhilohi[0];
+      *acclolohi = shvlolohi[0];
+      *acchihilo = shvhihilo[0];
+      *acclohilo = shvlohilo[0];
+      *acchilolo = shvhilolo[0];
+      *acclololo = shvlololo[0];
+   }
 }
 
 __global__ void dbl8_normalize
@@ -107,6 +444,52 @@ __global__ void dbl8_normalize
    double *vhihihi, double *vlohihi, double *vhilohi, double *vlolohi,
    double *vhihilo, double *vlohilo, double *vhilolo, double *vlololo )
 {
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx;  // thread tdx scales idx
+
+   __shared__ double shvhihihi[inner_od_shmemsize];
+   __shared__ double shvlohihi[inner_od_shmemsize];
+   __shared__ double shvhilohi[inner_od_shmemsize];
+   __shared__ double shvlolohi[inner_od_shmemsize];
+   __shared__ double shvhihilo[inner_od_shmemsize];
+   __shared__ double shvlohilo[inner_od_shmemsize];
+   __shared__ double shvhilolo[inner_od_shmemsize];
+   __shared__ double shvlololo[inner_od_shmemsize];
+
+   shvhihihi[tdx] = xhihihi[idx];
+   shvlohihi[tdx] = xlohihi[idx];
+   shvhilohi[tdx] = xhilohi[idx];
+   shvlolohi[tdx] = xlolohi[idx];
+   shvhihilo[tdx] = xhihilo[idx];
+   shvlohilo[tdx] = xlohilo[idx];
+   shvhilolo[tdx] = xhilolo[idx];
+   shvlololo[tdx] = xlololo[idx];
+   __syncthreads();
+
+   double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
+   double resulthihilo,resultlohilo,resulthilolo,resultlololo;
+
+   // shv[j] = shv[j]/v0;
+   odg_div(    shvhihihi[tdx],shvlohihi[tdx],shvhilohi[tdx],shvlolohi[tdx],
+               shvhihilo[tdx],shvlohilo[tdx],shvhilolo[tdx],shvlololo[tdx],
+                v0hihihi[0],   v0lohihi[0],   v0hilohi[0],   v0lolohi[0],
+                v0hihilo[0],   v0lohilo[0],   v0hilolo[0],   v0lololo[0],
+           &resulthihihi, &resultlohihi, &resulthilohi, &resultlolohi,
+           &resulthihilo, &resultlohilo, &resulthilolo, &resultlololo);
+
+   __syncthreads();
+   if(idx < dim)
+   {
+      vhihihi[idx] = resulthihihi;
+      vlohihi[idx] = resultlohihi;
+      vhilohi[idx] = resulthilohi;
+      vlolohi[idx] = resultlolohi;
+      vhihilo[idx] = resulthihilo;
+      vlohilo[idx] = resultlohilo;
+      vhilolo[idx] = resulthilolo;
+      vlololo[idx] = resultlololo;
+   }
 }
 
 __global__ void cmplx8_normalize
@@ -142,6 +525,125 @@ __global__ void dbl8_small_leftRupdate
    double *betahihilo, double *betalohilo,
    double *betahilolo, double *betalololo )
 {
+   const int tdx = threadIdx.x;          // index of thread in block
+   const int Roffset = k*nrows + k;
+   int Rcolidx;
+   double whihihi,wlohihi,whilohi,wlolohi;
+   double whihilo,wlohilo,whilolo,wlololo;
+   double Rtdxhihihi,Rtdxlohihi,Rtdxhilohi,Rtdxlolohi;
+   double Rtdxhihilo,Rtdxlohilo,Rtdxhilolo,Rtdxlololo;
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   __shared__ double shvhihihi[od_shmemsize]; // slice of v
+   __shared__ double shvlohihi[od_shmemsize]; 
+   __shared__ double shvhilohi[od_shmemsize]; 
+   __shared__ double shvlolohi[od_shmemsize]; 
+   __shared__ double shvhihilo[od_shmemsize];
+   __shared__ double shvlohilo[od_shmemsize]; 
+   __shared__ double shvhilolo[od_shmemsize]; 
+   __shared__ double shvlololo[od_shmemsize]; 
+
+   shvhihihi[tdx] = vhihihi[tdx];
+   shvlohihi[tdx] = vlohihi[tdx];
+   shvhilohi[tdx] = vhilohi[tdx];
+   shvlolohi[tdx] = vlolohi[tdx];
+   shvhihilo[tdx] = vhihilo[tdx];
+   shvlohilo[tdx] = vlohilo[tdx];
+   shvhilolo[tdx] = vhilolo[tdx];
+   shvlololo[tdx] = vlololo[tdx];
+   __syncthreads();
+   whihihi = 0.0;
+   wlohihi = 0.0;
+   whilohi = 0.0;
+   wlolohi = 0.0;
+   whihilo = 0.0;
+   wlohilo = 0.0;
+   whilolo = 0.0;
+   wlololo = 0.0;
+
+   for(int i=0; i<nrows-k; i++)   // loop through rows of R
+   {
+      Rcolidx = Roffset + i + tdx*nrows;
+      __syncthreads();
+      Rtdxhihihi = Rhihihi[Rcolidx];
+      Rtdxlohihi = Rlohihi[Rcolidx];
+      Rtdxhilohi = Rhilohi[Rcolidx];
+      Rtdxlolohi = Rlolohi[Rcolidx];
+      Rtdxhihilo = Rhihilo[Rcolidx];
+      Rtdxlohilo = Rlohilo[Rcolidx];
+      Rtdxhilolo = Rhilolo[Rcolidx];
+      Rtdxlololo = Rlololo[Rcolidx];
+      // w = w + Rtdx*shv[i];
+      __syncthreads();
+      odg_mul(Rtdxhihihi,  Rtdxlohihi,  Rtdxhilohi,  Rtdxlolohi,
+              Rtdxhihilo,  Rtdxlohilo,  Rtdxhilolo,  Rtdxlololo,
+               shvhihihi[i],shvlohihi[i],shvhilohi[i],shvlolohi[i],
+               shvhihilo[i],shvlohilo[i],shvhilolo[i],shvlololo[i],
+              &acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
+              &acchihilo,  &acclohilo,  &acchilolo,  &acclololo);
+      odg_inc( &whihihi, &wlohihi, &whilohi, &wlolohi,
+               &whihilo, &wlohilo, &whilolo, &wlololo,
+              acchihihi,acclohihi,acchilohi,acclolohi,
+              acchihilo,acclohilo,acchilolo,acclololo);
+   }
+   // w = (*beta)*w;
+   // qdg_mlt(&whi,&wlo,*betahi,*betalo); <-- this does not work!
+   __syncthreads();
+   odg_mul(*betahihihi,*betalohihi,*betahilohi,*betalolohi,
+           *betahihilo,*betalohilo,*betahilolo,*betalololo,
+               whihihi,    wlohihi,    whilohi,    wlolohi,
+               whihilo,    wlohilo,    whilolo,    wlololo,
+            &acchihihi, &acclohihi, &acchilohi, &acclolohi,
+            &acchihilo, &acclohilo, &acchilolo, &acclololo);
+   whihihi = acchihihi;
+   wlohihi = acclohihi;
+   whilohi = acchilohi;
+   wlolohi = acclolohi;
+   whihilo = acchihilo;
+   wlohilo = acclohilo;
+   whilolo = acchilolo;
+   wlololo = acclololo;
+   __syncthreads();
+   for(int i=0; i<nrows-k; i++)   // update i-th row of R
+   {
+      Rcolidx = Roffset + i + tdx*nrows;
+      __syncthreads();
+      Rtdxhihihi = Rhihihi[Rcolidx];
+      Rtdxlohihi = Rlohihi[Rcolidx];
+      Rtdxhilohi = Rhilohi[Rcolidx];
+      Rtdxlolohi = Rlolohi[Rcolidx];
+      Rtdxhihilo = Rhihilo[Rcolidx];
+      Rtdxlohilo = Rlohilo[Rcolidx];
+      Rtdxhilolo = Rhilolo[Rcolidx];
+      Rtdxlololo = Rlololo[Rcolidx];
+      // Rtdx = Rtdx - shv[i]*w;
+      __syncthreads();
+      odg_mul(shvhihihi[i],shvlohihi[i],shvhilohi[i],shvlolohi[i],
+              shvhihilo[i],shvlohilo[i],shvhilolo[i],shvlololo[i],
+                whihihi,     wlohihi,     whilohi,     wlolohi,
+                whihilo,     wlohilo,     whilolo,     wlololo,
+             &acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
+             &acchihilo,  &acclohilo,  &acchilolo,  &acclololo);
+      odg_dec(&Rtdxhihihi,&Rtdxlohihi,&Rtdxhilohi,&Rtdxlolohi,
+              &Rtdxhihilo,&Rtdxlohilo,&Rtdxhilolo,&Rtdxlololo,
+                acchihihi,  acclohihi,  acchilohi,  acclolohi,
+                acchihilo,  acclohilo,  acchilolo,  acclololo);
+      __syncthreads();
+      // changed nrows-k into ncols-k, where ncols = szt
+      if(tdx < ncols-k)
+      {
+         Rhihihi[Rcolidx] = Rtdxhihihi;
+         Rlohihi[Rcolidx] = Rtdxlohihi;
+         Rhilohi[Rcolidx] = Rtdxhilohi;
+         Rlolohi[Rcolidx] = Rtdxlolohi;
+         Rhihilo[Rcolidx] = Rtdxhihilo;
+         Rlohilo[Rcolidx] = Rtdxlohilo;
+         Rhilolo[Rcolidx] = Rtdxhilolo;
+         Rlololo[Rcolidx] = Rtdxlololo;
+      }
+      __syncthreads();
+   }
 }
 
 __global__ void cmplx8_small_leftRupdate
@@ -172,6 +674,51 @@ __global__ void dbl8_RTdotv
    double *RTdotvhihilo, double *RTdotvlohilo,
    double *RTdotvhilolo, double *RTdotvlololo )
 {
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx;        // thread tdx computes RTv[idx]
+
+   const int vdx = idx % nrows;          // index in v is column in R^T
+   const int row = idx / nrows;          // R is stored column-by-column
+
+   const int Rdx = Roffset + idx + (row+1)*colidx;
+
+   const double Vvalhihihi = vhihihi[vdx];
+   const double Vvallohihi = vlohihi[vdx];
+   const double Vvalhilohi = vhilohi[vdx];
+   const double Vvallolohi = vlolohi[vdx];
+   const double Vvalhihilo = vhihilo[vdx];
+   const double Vvallohilo = vlohilo[vdx];
+   const double Vvalhilolo = vhilolo[vdx];
+   const double Vvallololo = vlololo[vdx];
+   const double Rvalhihihi = Rhihihi[Rdx];
+   const double Rvallohihi = Rlohihi[Rdx];
+   const double Rvalhilohi = Rhilohi[Rdx];
+   const double Rvallolohi = Rlolohi[Rdx];
+   const double Rvalhihilo = Rhihilo[Rdx];
+   const double Rvallohilo = Rlohilo[Rdx];
+   const double Rvalhilolo = Rhilolo[Rdx];
+   const double Rvallololo = Rlololo[Rdx];
+   // double result = Rval*Vval;
+   double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
+   double resulthihilo,resultlohilo,resulthilolo,resultlololo;
+
+   __syncthreads();
+   odg_mul(   Rvalhihihi,   Rvallohihi,   Rvalhilohi,   Rvallolohi,
+              Rvalhihilo,   Rvallohilo,   Rvalhilolo,   Rvallololo,
+              Vvalhihihi,   Vvallohihi,   Vvalhilohi,   Vvallolohi,
+              Vvalhihilo,   Vvallohilo,   Vvalhilolo,   Vvallololo,
+           &resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo);
+   __syncthreads();
+   RTdotvhihihi[idx] = resulthihihi;
+   RTdotvlohihi[idx] = resultlohihi;
+   RTdotvhilohi[idx] = resulthilohi;
+   RTdotvlolohi[idx] = resultlolohi;
+   RTdotvhihilo[idx] = resulthihilo;
+   RTdotvlohilo[idx] = resultlohilo;
+   RTdotvhilolo[idx] = resulthilolo;
+   RTdotvlololo[idx] = resultlololo;
 }
 
 __global__ void cmplx8_RHdotv
@@ -208,6 +755,57 @@ __global__ void dbl8_sum_betaRTdotv
    double *whihihi, double *wlohihi, double *whilohi, double *wlolohi,
    double *whihilo, double *wlohilo, double *whilolo, double *wlololo )
 {
+   const int tdx = threadIdx.x;  // tdx sums elements on row tdx
+   const int offset = tdx*nrows; // number of rows before current row
+   int idx;
+
+   double resulthihihi = 0.0;
+   double resultlohihi = 0.0;
+   double resulthilohi = 0.0;
+   double resultlolohi = 0.0;
+   double resulthihilo = 0.0;
+   double resultlohilo = 0.0;
+   double resulthilolo = 0.0;
+   double resultlololo = 0.0;
+   double Rvalhihihi,Rvallohihi,Rvalhilohi,Rvallolohi;
+   double Rvalhihilo,Rvallohilo,Rvalhilolo,Rvallololo;
+
+   for(int i=0; i<nrows; i++)
+   {
+      idx = offset + i;
+      __syncthreads();
+      Rvalhihihi = RTdotvhihihi[idx];
+      Rvallohihi = RTdotvlohihi[idx];
+      Rvalhilohi = RTdotvhilohi[idx];
+      Rvallolohi = RTdotvlolohi[idx];
+      Rvalhihilo = RTdotvhihilo[idx];
+      Rvallohilo = RTdotvlohilo[idx];
+      Rvalhilolo = RTdotvhilolo[idx];
+      Rvallololo = RTdotvlololo[idx];
+      // result = result + Rval;
+      __syncthreads();
+      odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+              &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+                 Rvalhihihi,   Rvallohihi,   Rvalhilohi,   Rvallolohi,
+                 Rvalhihilo,   Rvallohilo,   Rvalhilolo,   Rvallololo);
+   }
+   __syncthreads();
+   Rvalhihihi = *betahihihi;
+   Rvallohihi = *betalohihi;
+   Rvalhilohi = *betahilohi;
+   Rvallolohi = *betalolohi;
+   Rvalhihilo = *betahihilo;
+   Rvallohilo = *betalohilo;
+   Rvalhilolo = *betahilolo;
+   Rvallololo = *betalololo;
+   // w[tdx] = Rval*result;
+   __syncthreads();
+   odg_mul(  Rvalhihihi,   Rvallohihi,   Rvalhilohi,   Rvallolohi,
+             Rvalhihilo,   Rvallohilo,   Rvalhilolo,   Rvallololo,
+           resulthihihi, resultlohihi, resulthilohi, resultlolohi,
+           resulthihilo, resultlohilo, resulthilolo, resultlololo,
+               &whihihi[tdx],&wlohihi[tdx],&whilohi[tdx],&wlolohi[tdx],
+               &whihilo[tdx],&wlohilo[tdx],&whilolo[tdx],&wlololo[tdx]);
 }
 
 __global__ void cmplx8_sum_betaRHdotv
@@ -246,6 +844,87 @@ __global__ void dbl8_medium_subvbetaRTv
    double *whihihi, double *wlohihi, double *whilohi, double *wlolohi,
    double *whihilo, double *wlohilo, double *whilolo, double *wlololo )
 {
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int Roffset = k*nrows + k;    // start in R
+   const int widx = bdx*szt + tdx;     // global thread index 
+
+   const int coldim = ncols - k;       // number of columns in R
+   const int bound = coldim*(nrows-k); // bound on Ridx
+   const int rowidx = widx / coldim;   // row index
+   const int colidx = widx % coldim;   // column index
+
+   const int Ridx = Roffset + nrows*colidx + rowidx;
+
+   __shared__ double shwhihihi[od_shmemsize];  // values in beta*R^T*v
+   __shared__ double shwlohihi[od_shmemsize];  // are less in number than szt
+   __shared__ double shwhilohi[od_shmemsize];
+   __shared__ double shwlolohi[od_shmemsize];
+   __shared__ double shwhihilo[od_shmemsize];
+   __shared__ double shwlohilo[od_shmemsize]; 
+   __shared__ double shwhilolo[od_shmemsize];
+   __shared__ double shwlololo[od_shmemsize];
+   shwhihihi[tdx] = whihihi[tdx];
+   shwlohihi[tdx] = wlohihi[tdx];
+   shwhilohi[tdx] = whilohi[tdx];
+   shwlolohi[tdx] = wlolohi[tdx];
+   shwhihilo[tdx] = whihilo[tdx];
+   shwlohilo[tdx] = wlohilo[tdx];
+   shwhilolo[tdx] = whilolo[tdx];
+   shwlololo[tdx] = wlololo[tdx];
+   __syncthreads();
+
+   double Rwidxhihihi = Rhihihi[Ridx];     // number that tdx updates
+   double Rwidxlohihi = Rlohihi[Ridx];
+   double Rwidxhilohi = Rhilohi[Ridx];
+   double Rwidxlolohi = Rlolohi[Ridx];
+   double Rwidxhihilo = Rhihilo[Ridx];
+   double Rwidxlohilo = Rlohilo[Ridx];
+   double Rwidxhilolo = Rhilolo[Ridx];
+   double Rwidxlololo = Rlololo[Ridx];
+   double vValhihihi = vhihihi[rowidx];    // value in Householder vector
+   double vVallohihi = vlohihi[rowidx];
+   double vValhilohi = vhilohi[rowidx];
+   double vVallolohi = vlolohi[rowidx];
+   double vValhihilo = vhihilo[rowidx]; 
+   double vVallohilo = vlohilo[rowidx];
+   double vValhilolo = vhilolo[rowidx];
+   double vVallololo = vlololo[rowidx];
+   double wValhihihi = shwhihihi[colidx];  // value in beta*R^T*v
+   double wVallohihi = shwlohihi[colidx];
+   double wValhilohi = shwhilohi[colidx];
+   double wVallolohi = shwlolohi[colidx];
+   double wValhihilo = shwhihilo[colidx];
+   double wVallohilo = shwlohilo[colidx];
+   double wValhilolo = shwhilolo[colidx];
+   double wVallololo = shwlololo[colidx];
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+ 
+   // Rwidx = Rwidx - vValue*wValue;   // update R[rowidx,colidx]
+   __syncthreads();
+   odg_mul(vValhihihi,vVallohihi,vValhilohi,vVallolohi,
+           vValhihilo,vVallohilo,vValhilolo,vVallololo,
+           wValhihihi,wVallohihi,wValhilohi,wVallolohi,
+           wValhihilo,wVallohilo,wValhilolo,wVallololo,
+           &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+           &acchihilo,&acclohilo,&acchilolo,&acclololo);
+   odg_dec(&Rwidxhihihi,&Rwidxlohihi,&Rwidxhilohi,&Rwidxlolohi,
+           &Rwidxhihilo,&Rwidxlohilo,&Rwidxhilolo,&Rwidxlololo,
+              acchihihi,   acclohihi,   acchilohi,   acclolohi,
+              acchihilo,   acclohilo,   acchilolo,   acclololo);
+   __syncthreads();
+   if(widx < bound)                    // if() takes care of padding
+   {
+      Rhihihi[Ridx] = Rwidxhihihi;
+      Rlohihi[Ridx] = Rwidxlohihi;
+      Rhilohi[Ridx] = Rwidxhilohi;
+      Rlolohi[Ridx] = Rwidxlolohi;
+      Rhihilo[Ridx] = Rwidxhihilo;
+      Rlohilo[Ridx] = Rwidxlohilo;
+      Rhilolo[Ridx] = Rwidxhilolo;
+      Rlololo[Ridx] = Rwidxlololo;
+   }
 }
 
 __global__ void cmplx8_medium_subvbetaRHv
@@ -280,6 +959,51 @@ __global__ void dbl8_beta_times_V
    double *Whihihi, double *Wlohihi, double *Whilohi, double *Wlolohi,
    double *Whihilo, double *Wlohilo, double *Whilolo, double *Wlololo )
 {
+   const int bdx = blockIdx.x;        // index of block
+   const int tdx = threadIdx.x;       // index of thread in block
+   const int idx = bdx*szt + tdx;     // thread tdx computes W[idx]
+   double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
+   double resulthihilo,resultlohilo,resulthilolo,resultlololo;
+
+   __shared__ double shvhihihi[od_shmemsize]; // to store a slice of V
+   __shared__ double shvlohihi[od_shmemsize];
+   __shared__ double shvhilohi[od_shmemsize];
+   __shared__ double shvlolohi[od_shmemsize];
+   __shared__ double shvhihilo[od_shmemsize]; 
+   __shared__ double shvlohilo[od_shmemsize];
+   __shared__ double shvhilolo[od_shmemsize];
+   __shared__ double shvlololo[od_shmemsize];
+
+   shvhihihi[tdx] = Vhihihi[idx]; // thread tdx loads the data 
+   shvlohihi[tdx] = Vlohihi[idx]; // at the global index
+   shvhilohi[tdx] = Vhilohi[idx];
+   shvlolohi[tdx] = Vlolohi[idx];
+   shvhihilo[tdx] = Vhihilo[idx];
+   shvlohilo[tdx] = Vlohilo[idx];
+   shvhilolo[tdx] = Vhilolo[idx];
+   shvlololo[tdx] = Vlololo[idx];
+
+   // result = -B[0]*shv[tdx];
+   __syncthreads();
+   odg_mul(     -Bhihihi[0],   -Blohihi[0],   -Bhilohi[0],   -Blolohi[0],
+                -Bhihilo[0],   -Blohilo[0],   -Bhilolo[0],   -Blololo[0],
+               shvhihihi[tdx],shvlohihi[tdx],shvhilohi[tdx],shvlolohi[tdx],
+               shvhihilo[tdx],shvlohilo[tdx],shvhilolo[tdx],shvlololo[tdx],
+           &resulthihihi, &resultlohihi, &resulthilohi, &resultlolohi,
+           &resulthihilo, &resultlohilo, &resulthilolo, &resultlololo);
+
+   __syncthreads();
+   if(idx < nrows)
+   {
+      Whihihi[idx] = resulthihihi;
+      Wlohihi[idx] = resultlohihi;
+      Whilohi[idx] = resulthilohi;
+      Wlolohi[idx] = resultlolohi;
+      Whihilo[idx] = resulthihilo;
+      Wlohilo[idx] = resultlohilo;
+      Whilolo[idx] = resulthilolo;
+      Wlololo[idx] = resultlololo;
+   }
 }
 
 __global__ void cmplx8_beta_times_V
@@ -310,6 +1034,52 @@ __global__ void dbl8_initialize_WYT
    double *WYThihilo, double *WYTlohilo,
    double *WYThilolo, double *WYTlololo )
 {
+   const int bdx = blockIdx.x;        // index of block
+   const int tdx = threadIdx.x;       // index of thread in block
+   const int idx = bdx*szt + tdx;     // global index of the thread
+   const int row = idx / dim;         // row index in WYT
+   const int col = idx % dim;         // column index in WYT
+
+   const double Vvalhihihi = Vhihihi[col];
+   const double Vvallohihi = Vlohihi[col];
+   const double Vvalhilohi = Vhilohi[col];
+   const double Vvallolohi = Vlolohi[col];
+   const double Vvalhihilo = Vhihilo[col];
+   const double Vvallohilo = Vlohilo[col];
+   const double Vvalhilolo = Vhilolo[col];
+   const double Vvallololo = Vlololo[col];
+   const double Wvalhihihi = Whihihi[row];
+   const double Wvallohihi = Wlohihi[row];
+   const double Wvalhilohi = Whilohi[row];
+   const double Wvallolohi = Wlolohi[row];
+   const double Wvalhihilo = Whihilo[row];
+   const double Wvallohilo = Wlohilo[row];
+   const double Wvalhilolo = Whilolo[row];
+   const double Wvallololo = Wlololo[row];
+   // const double result = Vval*Wval;
+   double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
+   double resulthihilo,resultlohilo,resulthilolo,resultlololo;
+
+   __syncthreads();
+   odg_mul(   Vvalhihihi,   Vvallohihi,   Vvalhilohi,   Vvallolohi,
+              Vvalhihilo,   Vvallohilo,   Vvalhilolo,   Vvallololo,
+              Wvalhihihi,   Wvallohihi,   Wvalhilohi,   Wvallolohi,
+              Wvalhihilo,   Wvallohilo,   Wvalhilolo,   Wvallololo,
+           &resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo);
+
+   __syncthreads();
+   if(idx < dim*dim)
+   {
+      WYThihihi[idx] = resulthihihi;
+      WYTlohihi[idx] = resultlohihi;
+      WYThilohi[idx] = resulthilohi;
+      WYTlolohi[idx] = resultlolohi;
+      WYThihilo[idx] = resulthihilo;
+      WYTlohilo[idx] = resultlohilo;
+      WYThilolo[idx] = resulthilolo;
+      WYTlololo[idx] = resultlololo;
+   }
 }
 
 __global__ void cmplx8_initialize_WYH
@@ -344,6 +1114,67 @@ __global__ void dbl8_update_WYT
    double *WYThihilo, double *WYTlohilo,
    double *WYThilolo, double *WYTlololo )
 {
+   const int bdx = blockIdx.x;        // index of block
+   const int tdx = threadIdx.x;       // index of thread in block
+   const int idx = bdx*szt + tdx;     // global index of the thread
+   const int row = idx / dim;         // row index in WYT
+   const int col = idx % dim;         // column index in WYT
+
+   const double Vvalhihihi = Vhihihi[col];
+   const double Vvallohihi = Vlohihi[col];
+   const double Vvalhilohi = Vhilohi[col];
+   const double Vvallolohi = Vlolohi[col];
+   const double Vvalhihilo = Vhihilo[col];
+   const double Vvallohilo = Vlohilo[col];
+   const double Vvalhilolo = Vhilolo[col];
+   const double Vvallololo = Vlololo[col];
+   __syncthreads();
+   const double Wvalhihihi = Whihihi[row];
+   const double Wvallohihi = Wlohihi[row];
+   const double Wvalhilohi = Whilohi[row];
+   const double Wvallolohi = Wlolohi[row];
+   const double Wvalhihilo = Whihilo[row];
+   const double Wvallohilo = Wlohilo[row];
+   const double Wvalhilolo = Whilolo[row];
+   const double Wvallololo = Wlololo[row];
+   __syncthreads();
+   double resulthihihi = WYThihihi[idx];
+   double resultlohihi = WYTlohihi[idx];
+   double resulthilohi = WYThilohi[idx];
+   double resultlolohi = WYTlolohi[idx];
+   double resulthihilo = WYThihilo[idx];
+   double resultlohilo = WYTlohilo[idx];
+   double resulthilolo = WYThilolo[idx];
+   double resultlololo = WYTlololo[idx];
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   // result = result + Vval*Wval;
+
+   __syncthreads();
+   odg_mul(Vvalhihihi,Vvallohihi,Vvalhilohi,Vvallolohi,
+           Vvalhihilo,Vvallohilo,Vvalhilolo,Vvallololo,
+           Wvalhihihi,Wvallohihi,Wvalhilohi,Wvallolohi,
+           Wvalhihilo,Wvallohilo,Wvalhilolo,Wvallololo,
+           &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+           &acchihilo,&acclohilo,&acchilolo,&acclololo);
+   odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+               acchihihi,    acclohihi,    acchilohi,    acclolohi,
+               acchihilo,    acclohilo,    acchilolo,    acclololo);
+   
+   __syncthreads();
+   if(idx < dim*dim)
+   {
+      WYThihihi[idx] = resulthihihi;
+      WYTlohihi[idx] = resultlohihi;
+      WYThilohi[idx] = resulthilohi;
+      WYTlolohi[idx] = resultlolohi;
+      WYThihilo[idx] = resulthihilo;
+      WYTlohilo[idx] = resultlohilo;
+      WYThilolo[idx] = resulthilolo;
+      WYTlololo[idx] = resultlololo;
+   }
 }
 
 __global__ void cmplx8_update_WYH
@@ -380,6 +1211,175 @@ __global__ void dbl8_beta_next_W
    double *WYThihilo, double *WYTlohilo,
    double *WYThilolo, double *WYTlololo )
 {
+   const int bdx = blockIdx.x;        // index of block
+   const int tdx = threadIdx.x;       // index of thread in block
+   const int idx = bdx*szt + tdx;     // global index of the thread
+   const int WYToff = idx*nrows;      // start of idx row in YWT
+   const double mybetahihihi = Bhihihi[0];
+   const double mybetalohihi = Blohihi[0];
+   const double mybetahilohi = Bhilohi[0];
+   const double mybetalolohi = Blolohi[0];
+   const double mybetahihilo = Bhihilo[0];
+   const double mybetalohilo = Blohilo[0];
+   const double mybetahilolo = Bhilolo[0];
+   const double mybetalololo = Blololo[0];
+   int vdx,ydx;
+   double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
+   double resulthihilo,resultlohilo,resulthilolo,resultlololo;
+   double WYTvalhihihi,WYTvallohihi,WYTvalhilohi,WYTvallolohi;
+   double WYTvalhihilo,WYTvallohilo,WYTvalhilolo,WYTvallololo;
+   double Vvalhihihi,Vvallohihi,Vvalhilohi,Vvallolohi;
+   double Vvalhihilo,Vvallohilo,Vvalhilolo,Vvallololo;
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   __shared__ double shVhihihi[od_shmemsize];   // to store a slice of V
+   __shared__ double shVlohihi[od_shmemsize];
+   __shared__ double shVhilohi[od_shmemsize];
+   __shared__ double shVlolohi[od_shmemsize];
+   __shared__ double shVhihilo[od_shmemsize];
+   __shared__ double shVlohilo[od_shmemsize];
+   __shared__ double shVhilolo[od_shmemsize];
+   __shared__ double shVlololo[od_shmemsize];
+
+   shVhihihi[tdx] = Vhihihi[idx]; // thread tdx loads the data
+   shVlohihi[tdx] = Vlohihi[idx]; // at the global index
+   shVhilohi[tdx] = Vhilohi[idx];
+   shVlolohi[tdx] = Vlolohi[idx];
+   shVhihilo[tdx] = Vhihilo[idx];
+   shVlohilo[tdx] = Vlohilo[idx];
+   shVhilolo[tdx] = Vhilolo[idx];
+   shVlololo[tdx] = Vlololo[idx];
+
+   __syncthreads();
+   resulthihihi = shVhihihi[tdx]; // thread tdx computes the value
+   resultlohihi = shVlohihi[tdx]; // at the index idx
+   resulthilohi = shVhilohi[tdx];
+   resultlolohi = shVlolohi[tdx];
+   resulthihilo = shVhihilo[tdx];
+   resultlohilo = shVlohilo[tdx];
+   resulthilolo = shVhilolo[tdx];
+   resultlololo = shVlololo[tdx];
+
+   for(int i=0; i<nrows/szt; i++)
+   {
+      vdx = i*szt + tdx;                 // index in V and in YWT
+      __syncthreads();
+      shVhihihi[tdx] = Vhihihi[vdx];     // threads load next szt values
+      shVlohihi[tdx] = Vlohihi[vdx];
+      shVhilohi[tdx] = Vhilohi[vdx];
+      shVlolohi[tdx] = Vlolohi[vdx];
+      shVhihilo[tdx] = Vhihilo[vdx];
+      shVlohilo[tdx] = Vlohilo[vdx];
+      shVhilolo[tdx] = Vhilolo[vdx];
+      shVlololo[tdx] = Vlololo[vdx];
+
+      __syncthreads();
+      for(int j=0; j<szt; j++)           // multiply szt values with YWT
+      {
+         ydx = WYToff + i*szt + j;       // WYT is stored row by row
+         __syncthreads();
+         WYTvalhihihi = WYThihihi[ydx];
+         WYTvallohihi = WYTlohihi[ydx];
+         WYTvalhilohi = WYThilohi[ydx];
+         WYTvallolohi = WYTlolohi[ydx];
+         WYTvalhihilo = WYThihilo[ydx];
+         WYTvallohilo = WYTlohilo[ydx];
+         WYTvalhilolo = WYThilolo[ydx];
+         WYTvallololo = WYTlololo[ydx];
+         __syncthreads();
+         Vvalhihihi = shVhihihi[j];
+         Vvallohihi = shVlohihi[j];
+         Vvalhilohi = shVhilohi[j];
+         Vvallolohi = shVlolohi[j];
+         Vvalhihilo = shVhihilo[j];
+         Vvallohilo = shVlohilo[j];
+         Vvalhilolo = shVhilolo[j];
+         Vvallololo = shVlololo[j];
+         // result = result + WYTval*Vvalue;
+         __syncthreads();
+         odg_mul(  Vvalhihihi,  Vvallohihi,  Vvalhilohi,  Vvallolohi,
+                   Vvalhihilo,  Vvallohilo,  Vvalhilolo,  Vvallololo,
+                 WYTvalhihihi,WYTvallohihi,WYTvalhilohi,WYTvallolohi,
+                 WYTvalhihilo,WYTvallohilo,WYTvalhilolo,WYTvallololo,
+                   &acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
+                   &acchihilo,  &acclohilo,  &acchilolo,  &acclololo);
+         odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+                 &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+                     acchihihi,    acclohihi,    acchilohi,    acclolohi,
+                     acchihilo,    acclohilo,    acchilolo,    acclololo);
+      }
+      __syncthreads();
+   }
+   int quot = nrows/szt;
+   int rest = nrows - quot*szt;          // remainder to compute
+
+   vdx = quot*szt + tdx;                 // next index to compute
+   __syncthreads();
+   shVhihihi[tdx] = Vhihihi[vdx];
+   shVlohihi[tdx] = Vlohihi[vdx];
+   shVhilohi[tdx] = Vhilohi[vdx];
+   shVlolohi[tdx] = Vlolohi[vdx];
+   shVhihilo[tdx] = Vhihilo[vdx];
+   shVlohilo[tdx] = Vlohilo[vdx];
+   shVhilolo[tdx] = Vhilolo[vdx];
+   shVlololo[tdx] = Vlololo[vdx];
+
+   for(int j=0; j<rest; j++)            // rest < szt prevents overflow
+   {
+      __syncthreads();
+      ydx = WYToff + quot*szt + j;
+      WYTvalhihihi = WYThihihi[ydx];
+      WYTvallohihi = WYTlohihi[ydx];
+      WYTvalhilohi = WYThilohi[ydx];
+      WYTvallolohi = WYTlolohi[ydx];
+      WYTvalhihilo = WYThihilo[ydx];
+      WYTvallohilo = WYTlohilo[ydx];
+      WYTvalhilolo = WYThilolo[ydx];
+      WYTvallololo = WYTlololo[ydx];
+      __syncthreads();
+      Vvalhihihi = shVhihihi[j];
+      Vvallohihi = shVlohihi[j];
+      Vvalhilohi = shVhilohi[j];
+      Vvallolohi = shVlolohi[j];
+      Vvalhihilo = shVhihilo[j];
+      Vvallohilo = shVlohilo[j];
+      Vvalhilolo = shVhilolo[j];
+      Vvallololo = shVlololo[j];
+      // result = result + WYTval*Vvalue;
+      __syncthreads();
+      odg_mul(  Vvalhihihi,  Vvallohihi,  Vvalhilohi,  Vvallolohi,
+                Vvalhihilo,  Vvallohilo,  Vvalhilolo,  Vvallololo,
+              WYTvalhihihi,WYTvallohihi,WYTvalhilohi,WYTvallolohi,
+              WYTvalhihilo,WYTvallohilo,WYTvalhilolo,WYTvallololo,
+                &acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
+                &acchihilo,  &acclohilo,  &acchilolo,  &acclololo);
+      odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+              &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+                  acchihihi,    acclohihi,    acchilohi,    acclolohi,
+                  acchihilo,    acclohilo,    acchilolo,    acclololo);
+   }
+   // result = -mybeta*result;
+   __syncthreads();
+   odg_mul(-mybetahihihi,-mybetalohihi,-mybetahilohi,-mybetalolohi,
+           -mybetahihilo,-mybetalohilo,-mybetahilolo,-mybetalololo,
+            resulthihihi, resultlohihi, resulthilohi, resultlolohi,
+            resulthihilo, resultlohilo, resulthilolo, resultlololo,
+              &acchihihi,   &acclohihi,   &acchilohi,   &acclolohi,
+              &acchihilo,   &acclohilo,   &acchilolo,   &acclololo);
+
+   __syncthreads();
+   if(idx < nrows) 
+   {
+      Whihihi[idx] = acchihihi;
+      Wlohihi[idx] = acclohihi;
+      Whilohi[idx] = acchilohi;
+      Wlolohi[idx] = acclolohi;
+      Whihilo[idx] = acchihilo;
+      Wlohilo[idx] = acclohilo;
+      Whilolo[idx] = acchilolo;
+      Wlololo[idx] = acclololo;
+   }
 }
 
 __global__ void cmplx8_beta_next_W
@@ -416,6 +1416,69 @@ __global__ void dbl8_small_WYT
    double *WYThihilo, double *WYTlohilo,
    double *WYThilolo, double *WYTlololo )
 {
+   const int bdx = blockIdx.x;           // index of block
+   const int tdx = threadIdx.x;          // index of thread in block
+   const int offset = bdx*szt + tdx;     // offset in result
+   const int row = offset / nrows;
+   const int col = offset % nrows;       // thread 0 computes WYT[row][col]
+
+   double resulthihihi = 0.0;
+   double resultlohihi = 0.0;
+   double resulthilohi = 0.0;
+   double resultlolohi = 0.0;
+   double resulthihilo = 0.0;
+   double resultlohilo = 0.0;
+   double resulthilolo = 0.0;
+   double resultlololo = 0.0;
+   double ahihihi,alohihi,ahilohi,alolohi;
+   double ahihilo,alohilo,ahilolo,alololo;
+   double bhihihi,blohihi,bhilohi,blolohi;
+   double bhihilo,blohilo,bhilolo,blololo;
+   double chihihi,clohihi,chilohi,clolohi;
+   double chihilo,clohilo,chilolo,clololo;
+
+   for(int k=0; k<szt; k++)
+   {
+      __syncthreads();
+      ahihihi = Whihihi[k*nrows + row];   // if(nrows == szt) then row = bdx
+      alohihi = Wlohihi[k*nrows + row];
+      ahilohi = Whilohi[k*nrows + row];
+      alolohi = Wlolohi[k*nrows + row];
+      ahihilo = Whihilo[k*nrows + row];
+      alohilo = Wlohilo[k*nrows + row];
+      ahilolo = Whilolo[k*nrows + row];
+      alololo = Wlololo[k*nrows + row];
+      __syncthreads();
+      bhihihi = Vhihihi[k*nrows + col];   // if(nrows == szt) then col = tdx
+      blohihi = Vlohihi[k*nrows + col]; 
+      bhilohi = Vhilohi[k*nrows + col]; 
+      blolohi = Vlolohi[k*nrows + col]; 
+      bhihilo = Vhihilo[k*nrows + col]; 
+      blohilo = Vlohilo[k*nrows + col]; 
+      bhilolo = Vhilolo[k*nrows + col]; 
+      blololo = Vlololo[k*nrows + col]; 
+      // result = result + a*b;
+      __syncthreads();
+      odg_mul( ahihihi, alohihi, ahilohi, alolohi,
+               ahihilo, alohilo, ahilolo, alololo,
+               bhihihi, blohihi, bhilohi, blolohi,
+               bhihilo, blohilo, bhilolo, blololo,
+              &chihihi,&clohihi,&chilohi,&clolohi,
+              &chihilo,&clohilo,&chilolo,&clololo);
+      odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+              &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+                    chihihi,      clohihi,      chilohi,      clolohi,
+                    chihilo,      clohilo,      chilolo,      clololo);
+   }
+   __syncthreads();
+   WYThihihi[offset] = resulthihihi;
+   WYTlohihi[offset] = resultlohihi;
+   WYThilohi[offset] = resulthilohi;
+   WYTlolohi[offset] = resultlolohi;
+   WYThihilo[offset] = resulthihilo;
+   WYTlohilo[offset] = resultlohilo;
+   WYThilolo[offset] = resulthilolo;
+   WYTlololo[offset] = resultlololo;
 }
 
 __global__ void cmplx8_small_WYH
@@ -450,6 +1513,72 @@ __global__ void dbl8_small_QWYT
    double *QWYThihilo, double *QWYTlohilo,
    double *QWYThilolo, double *QWYTlololo )
 {
+   const int bdx = blockIdx.x;         // index of block
+   const int tdx = threadIdx.x;        // index of thread in block
+   const int offset = bdx*szt + tdx;   // offset in result
+   const int row = offset / rowdim;
+   const int col = offset % rowdim;    // thread 0 computes QWYT[row][col]
+
+   double resulthihihi = 0.0;
+   double resultlohihi = 0.0;
+   double resulthilohi = 0.0;
+   double resultlolohi = 0.0;
+   double resulthihilo = 0.0;
+   double resultlohilo = 0.0;
+   double resulthilolo = 0.0;
+   double resultlololo = 0.0;
+   double ahihihi,alohihi,ahilohi,alolohi;
+   double ahihilo,alohilo,ahilolo,alololo;
+   double bhihihi,blohihi,bhilohi,blolohi;
+   double bhihilo,blohilo,bhilolo,blololo;
+   double chihihi,clohihi,chilohi,clolohi;
+   double chihilo,clohilo,chilolo,clololo;
+   int idx;
+
+   for(int k=0; k<rowdim; k++)       // run over rowdim, not just szt
+   {                                 // coloff shifts by col*row elements
+      idx = row*dim + coloff + k;
+      __syncthreads();
+      ahihihi = Qhihihi[idx];        // row = bdx,
+      alohihi = Qlohihi[idx];
+      ahilohi = Qhilohi[idx];        // if dim == szt, coloff == 0
+      alolohi = Qlolohi[idx];
+      ahihilo = Qhihilo[idx];
+      alohilo = Qlohilo[idx];
+      ahilolo = Qhilolo[idx];
+      alololo = Qlololo[idx];
+      idx = k*rowdim + col;
+      __syncthreads();
+      bhihihi = WYThihihi[idx];      // if(dim == szt) then col = tdx
+      blohihi = WYTlohihi[idx];
+      bhilohi = WYThilohi[idx];
+      blolohi = WYTlolohi[idx]; 
+      bhihilo = WYThihilo[idx];
+      blohilo = WYTlohilo[idx];
+      bhilolo = WYThilolo[idx];
+      blololo = WYTlololo[idx]; 
+      // result = result + a*b;
+      __syncthreads();
+      odg_mul( ahihihi, alohihi, ahilohi, alolohi,
+               ahihilo, alohilo, ahilolo, alololo,
+               bhihihi, blohihi, bhilohi, blolohi,
+               bhihilo, blohilo, bhilolo, blololo,
+              &chihihi,&clohihi,&chilohi,&clolohi,
+              &chihilo,&clohilo,&chilolo,&clololo);
+      odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+              &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+                    chihihi,      clohihi,      chilohi,      clolohi,
+                    chihilo,      clohilo,      chilolo,      clololo);
+   }
+   __syncthreads();
+   QWYThihihi[offset] = resulthihihi;  // no column offset in saving QWYT
+   QWYTlohihi[offset] = resultlohihi;
+   QWYThilohi[offset] = resulthilohi;
+   QWYTlolohi[offset] = resultlolohi;
+   QWYThihilo[offset] = resulthihilo;
+   QWYTlohilo[offset] = resultlohilo;
+   QWYThilolo[offset] = resulthilolo;
+   QWYTlololo[offset] = resultlololo;
 }
 
 __global__ void cmplx8_small_QWYH
@@ -489,6 +1618,74 @@ __global__ void dbl8_small_YWTC
    double *YWTChihilo, double *YWTClohilo,
    double *YWTChilolo, double *YWTClololo )
 {
+   const int bdx = blockIdx.x;         // bdx*szt done by previous blocks
+   const int tdx = threadIdx.x;        // index of thread in block
+   const int offset = bdx*szt + tdx;   // offset in result
+   const int row = offset / coldim;    // 1st thread does YWTC[row][col]
+   const int col = offset % coldim;
+   const int colCoff0 = (coloff+col)*nrows + rowoff; // 1st element in C
+
+   double resulthihihi = 0.0;
+   double resultlohihi = 0.0;
+   double resulthilohi = 0.0;
+   double resultlolohi = 0.0;
+   double resulthihilo = 0.0;
+   double resultlohilo = 0.0;
+   double resulthilolo = 0.0;
+   double resultlololo = 0.0;
+   double ahihihi,alohihi,ahilohi,alolohi;
+   double ahihilo,alohilo,ahilolo,alololo;
+   double bhihihi,blohihi,bhilohi,blolohi;
+   double bhihilo,blohilo,bhilolo,blololo;
+   double chihihi,clohihi,chilohi,clolohi;
+   double chihilo,clohilo,chilolo,clololo;
+   int idx;
+
+   for(int k=0; k<rowdim; k++)         // innermost loop runs over rowdim
+   {
+      idx = row*rowdim + k;
+      __syncthreads();
+      ahihihi = YWThihihi[idx];        // YWT is stored row by row
+      alohihi = YWTlohihi[idx];
+      ahilohi = YWThilohi[idx];
+      alolohi = YWTlolohi[idx];
+      ahihilo = YWThihilo[idx];
+      alohilo = YWTlohilo[idx];
+      ahilolo = YWThilolo[idx];
+      alololo = YWTlololo[idx];
+      idx = colCoff0 + k;
+      __syncthreads();
+      bhihihi = Chihihi[idx];         // but C is stored column by column
+      blohihi = Clohihi[idx];
+      bhilohi = Chilohi[idx];
+      blolohi = Clolohi[idx];
+      bhihilo = Chihilo[idx];
+      blohilo = Clohilo[idx];
+      bhilolo = Chilolo[idx];
+      blololo = Clololo[idx];
+      // result = result + a*b;
+      __syncthreads();
+      odg_mul( ahihihi, alohihi, ahilohi, alolohi,
+               ahihilo, alohilo, ahilolo, alololo,
+               bhihihi, blohihi, bhilohi, blolohi,
+               bhihilo, blohilo, bhilolo, blololo,
+              &chihihi,&clohihi,&chilohi,&clolohi,
+              &chihilo,&clohilo,&chilolo,&clololo);
+      odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+              &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+                    chihihi,      clohihi,      chilohi,      clolohi,
+                    chihilo,      clohilo,      chilolo,      clololo);
+   }
+   idx = (coloff + col)*nrows + (rowoff + row);
+   __syncthreads();
+   YWTChihihi[idx] = resulthihihi;
+   YWTClohihi[idx] = resultlohihi;
+   YWTChilohi[idx] = resulthilohi;
+   YWTClolohi[idx] = resultlolohi;
+   YWTChihilo[idx] = resulthihilo;
+   YWTClohilo[idx] = resultlohilo;
+   YWTChilolo[idx] = resulthilolo;
+   YWTClololo[idx] = resultlololo;
 }
 
 __global__ void cmplx8_small_YWHC
@@ -526,6 +1723,50 @@ __global__ void dbl8_small_Qupdate
    double *QWYThihilo, double *QWYTlohilo,
    double *QWYThilolo, double *QWYTlololo )
 {
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int offset = bdx*szt + tdx;   // offset in result
+   const int row = offset / rowdim;
+   const int col = offset % rowdim;
+   const int idx1 = row*dim + coloff + col;
+
+   double ahihihi,alohihi,ahilohi,alolohi;
+   double ahihilo,alohilo,ahilolo,alololo;
+   double bhihihi,blohihi,bhilohi,blolohi;
+   double bhihilo,blohilo,bhilolo,blololo;
+
+   ahihihi = Qhihihi[idx1];   // row = bdx, if dim == szt, coloff == 0
+   alohihi = Qlohihi[idx1];
+   ahilohi = Qhilohi[idx1];
+   alolohi = Qlolohi[idx1];
+   ahihilo = Qhihilo[idx1];
+   alohilo = Qlohilo[idx1];
+   ahilolo = Qhilolo[idx1];
+   alololo = Qlololo[idx1];
+   __syncthreads();
+   bhihihi = QWYThihihi[offset];  // if(dim == szt) then col = tdx
+   blohihi = QWYTlohihi[offset];
+   bhilohi = QWYThilohi[offset];
+   blolohi = QWYTlolohi[offset];
+   bhihilo = QWYThihilo[offset];
+   blohilo = QWYTlohilo[offset];
+   bhilolo = QWYThilolo[offset];
+   blololo = QWYTlololo[offset];
+   // a = a + b;
+   __syncthreads();
+   odg_inc(&ahihihi,&alohihi,&ahilohi,&alolohi,
+           &ahihilo,&alohilo,&ahilolo,&alololo,
+            bhihihi, blohihi, bhilohi, blolohi,
+            bhihilo, blohilo, bhilolo, blololo);
+   __syncthreads();
+   Qhihihi[idx1] = ahihihi;
+   Qlohihi[idx1] = alohihi;
+   Qhilohi[idx1] = ahilohi;
+   Qlolohi[idx1] = alolohi;
+   Qhihilo[idx1] = ahihilo;
+   Qlohilo[idx1] = alohilo;
+   Qhilolo[idx1] = ahilolo;
+   Qlololo[idx1] = alololo;
 }
 
 __global__ void cmplx8_small_Qupdate
@@ -554,6 +1795,51 @@ __global__ void dbl8_small_R_add_YWTC
    double *YWTChihilo, double *YWTClohilo,
    double *YWTChilolo, double *YWTClololo )
 {
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int offset = bdx*szt + tdx;   // offset in result
+   const int row = offset / coldim;    // thread updates R[row][col]
+   const int col = offset % coldim;
+   const int idx = (coloff + col)*nrows + (rowoff + row);
+ 
+   double ahihihi,alohihi,ahilohi,alolohi;
+   double ahihilo,alohilo,ahilolo,alololo;
+   double bhihihi,blohihi,bhilohi,blolohi;
+   double bhihilo,blohilo,bhilolo,blololo;
+   
+   ahihihi = Rhihihi[idx];
+   alohihi = Rlohihi[idx];
+   ahilohi = Rhilohi[idx];
+   alolohi = Rlolohi[idx];
+   ahihilo = Rhihilo[idx];
+   alohilo = Rlohilo[idx];
+   ahilolo = Rhilolo[idx];
+   alololo = Rlololo[idx];
+   __syncthreads();
+   bhihihi = YWTChihihi[idx];
+   blohihi = YWTClohihi[idx];
+   bhilohi = YWTChilohi[idx];
+   blolohi = YWTClolohi[idx];
+   bhihilo = YWTChihilo[idx];
+   blohilo = YWTClohilo[idx];
+   bhilolo = YWTChilolo[idx];
+   blololo = YWTClololo[idx];
+   // a = a + b;
+   __syncthreads();
+   odg_inc(&ahihihi,&alohihi,&ahilohi,&alolohi,
+           &ahihilo,&alohilo,&ahilolo,&alololo,
+            bhihihi, blohihi, bhilohi, blolohi,
+            bhihilo, blohilo, bhilolo, blololo);
+  
+   __syncthreads();
+   Rhihihi[idx] = ahihihi;
+   Rlohihi[idx] = alohihi;
+   Rhilohi[idx] = ahilohi;
+   Rlolohi[idx] = alolohi;
+   Rhihilo[idx] = ahihilo;
+   Rlohilo[idx] = alohilo;
+   Rhilolo[idx] = ahilolo;
+   Rlololo[idx] = alololo;
 }
 
 __global__ void cmplx8_small_R_add_YWHC
