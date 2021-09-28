@@ -1,3 +1,6 @@
+Mon 27 Sep 2021 : to octo_double_gpufun, adde a function for an inplace
+  multiplication of an octo double with a double.
+
 Tue 14 Sep 2021 : added a decrement function to octo_double_gpufun,
   small edit in quad_double_gpufun.h.
 

@@ -485,6 +485,35 @@ __device__ __forceinline__ void odg_mul_od_d
  *   c_hilolo is the second lowest part of the octo double c = a * b;
  *   c_lololo is the lowest part of the octo double c = a * b. */
 
+__device__  __forceinline__ void odg_mlt_d
+ ( double *a_hihihi, double *a_lohihi, double *a_hilohi, double *a_lolohi,
+   double *a_hihilo, double *a_lohilo, double *a_hilolo, double *a_lololo,
+   double b );
+/*
+ * DESCRIPTION : a = a * b.
+ *   Inplace multiplication of the octo double a with the double b.
+ *
+ * ON ENTRY :
+ *   a_hihihi is the highest double of a;
+ *   a_lohihi is the second highest double of a;
+ *   a_hilohi is the third highest double of a;
+ *   a_lolohi is the fourth highest double of a;
+ *   a_hihilo is the fourth lowest double of a;
+ *   a_lohilo is the third lowest double of a;
+ *   a_hilolo is the second lowest double of a;
+ *   a_lololo is the lowest double of a;
+ *   b        some double.
+ *
+ * ON RETURN :
+ *   a_hihihi is the highest double of a*b;
+ *   a_lohihi is the second highest double of a*b;
+ *   a_hilohi is the third highest double of a*b;
+ *   a_lolohi is the fourth highest double of a*b;
+ *   a_hihilo is the fourth lowest double of a*b;
+ *   a_lohilo is the third lowest double of a*b;
+ *   a_hilolo is the second lowest double of a*b;
+ *   a_lololo is the lowest double of a*b. */
+
 __device__ __forceinline__ void odg_div
  ( double a_hihihi, double a_lohihi, double a_hilohi, double a_lolohi,
    double a_hihilo, double a_lohilo, double a_hilolo, double a_lololo,
