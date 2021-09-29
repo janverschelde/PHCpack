@@ -72,7 +72,7 @@ dbl_matrices_host.o:
 
 dbl_matrices_kernels.o:
 	@-echo ">>> compiling matrices kernels for doubles ..."
-	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -O3 \
              -c dbl_matrices_kernels.cu
 
 dbl_vectors_testers.o:
@@ -227,7 +227,7 @@ dbl_tabs_host.o:
 
 dbl_tabs_kernels.o:
 	@-echo ">>> compiling tabs kernels for doubles ..."
-	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -O3 \
              -c dbl_tabs_kernels.cu
 
 dbl_test_utilities.o:
@@ -264,7 +264,7 @@ dbl2_tabs_host.o:
 
 dbl2_tabs_kernels.o:
 	@-echo ">>> compiling tabs kernels for double doubles ..."
-	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -O3 \
              --define-macro gpufun=1 \
              -c dbl2_tabs_kernels.cu
 
@@ -302,7 +302,7 @@ dbl4_tabs_host.o:
 
 dbl4_tabs_kernels.o:
 	@-echo ">>> compiling tabs kernels for quad doubles ..."
-	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -O3 \
              --define-macro gpufun=1 \
              -c dbl4_tabs_kernels.cu
 
@@ -343,7 +343,7 @@ dbl8_tabs_host.o:
 
 dbl8_tabs_kernels.o:
 	@-echo ">>> compiling tabs kernels for octo doubles ..."
-	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -O3 \
              --define-macro gpufun=1 \
              -c dbl8_tabs_kernels.cu
 
@@ -401,7 +401,7 @@ dbl_baqr_host.o:
 
 dbl_baqr_kernels.o:
 	@-echo ">>> compiling baqr kernels for doubles ..."
-	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -O3 \
              -c dbl_baqr_kernels.cu
 
 dbl_baqr_flopcounts.o:
@@ -438,7 +438,7 @@ dbl2_baqr_host.o:
 
 dbl2_baqr_kernels.o:
 	@-echo ">>> compiling baqr kernels for double doubles ..."
-	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -O3 \
              --define-macro gpufun=1 \
              -c dbl2_baqr_kernels.cu
 
@@ -469,7 +469,7 @@ dbl4_baqr_host.o:
 
 dbl4_baqr_kernels.o:
 	@-echo ">>> compiling baqr kernels for quad doubles ..."
-	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -O3 \
              --define-macro gpufun=1 \
              -c dbl4_baqr_kernels.cu
 
@@ -501,7 +501,7 @@ dbl8_baqr_host.o:
 
 dbl8_baqr_kernels.o:
 	@-echo ">>> compiling baqr kernels for octo doubles ..."
-	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) \
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -O3 \
              --define-macro gpufun=1 \
              -c dbl8_baqr_kernels.cu
 

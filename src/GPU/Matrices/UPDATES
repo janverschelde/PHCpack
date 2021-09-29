@@ -1,3 +1,5 @@
+Wed 29 Sep 2021 : in makefile_unix, added the -O3 flag to all nvcc calls.
+
 Tue 28 Sep 2021 : fixed the initialization of Q in dbl8_baqr_kernels.cu.
 
 Mon 27 Sep 2021 : completed a first version in dbl8_baqr_kernels.cu, of
