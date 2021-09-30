@@ -1,6 +1,7 @@
 Wed 29 Sep 2021 : in makefile_unix, added the -O3 flag to all nvcc calls.
   To dbl8_baqr_kernels.cu, added all functions that call the kernels on
-  complex data.
+  complex data.  Updated the flop counts in dbl8_baqr_testers.cpp and
+  fixed the calls to the GPU version of the blocked QR on complex data.
 
 Tue 28 Sep 2021 : fixed the initialization of Q in dbl8_baqr_kernels.cu.
 

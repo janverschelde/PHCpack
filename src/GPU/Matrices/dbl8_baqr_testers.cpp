@@ -255,9 +255,9 @@ void test_real8_blocked_qr
       cout << "                          Number of divisions : "
            << divcnt << " x 5126 " << endl;
       cout << "                    Number of calls to sqrt() : "
-           << sqrtcnt << " x ???? " << endl;
+           << sqrtcnt << " x 8491 " << endl;
       long long int flopcnt = 270*addcnt + 1742*mulcnt
-                            + 5126*divcnt + 1345*sqrtcnt;
+                            + 5126*divcnt + 8491*sqrtcnt;
       cout << "    Total number of floating-point operations : "
            << flopcnt << endl;
       cout << endl;
@@ -565,7 +565,6 @@ void test_cmplx8_blocked_qr
          cout << "The test failed for tol = " << tol << "." << endl;
       }
    }
-/*
    double timelapsed_d;
    double houselapsedms,RHvlapsedms,tileRlapsedms,vb2Wlapsedms;
    double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
@@ -588,23 +587,37 @@ void test_cmplx8_blocked_qr
             for(int j=0; j<ncols; j++)
             {
                cout << "A[" << i << "][" << j << "]re : "
-                    << Arehihi[i][j] << "  " << Arelohi[i][j] << endl
+                    << Arehihihi[i][j] << "  " << Arelohihi[i][j] << endl
                     << "            "
-                    << Arehilo[i][j] << "  " << Arelolo[i][j] << endl;
+                    << Arehilohi[i][j] << "  " << Arelolohi[i][j] << endl
+                    << "            "
+                    << Arehihilo[i][j] << "  " << Arelohilo[i][j] << endl
+                    << "            "
+                    << Arehilolo[i][j] << "  " << Arelololo[i][j] << endl;
                cout << "A[" << i << "][" << j << "]im : "
-                    << Aimhihi[i][j] << "  " << Aimlohi[i][j] << endl
+                    << Aimhihihi[i][j] << "  " << Aimlohihi[i][j] << endl
                     << "            "
-                    << Aimhilo[i][j] << "  " << Aimlolo[i][j] << endl;
+                    << Aimhilohi[i][j] << "  " << Aimlolohi[i][j] << endl
+                    << "            "
+                    << Aimhihilo[i][j] << "  " << Aimlohilo[i][j] << endl
+                    << "            "
+                    << Aimhilolo[i][j] << "  " << Aimlololo[i][j] << endl;
             }
       }
-      GPU_cmplx4_blocked_houseqr
+      GPU_cmplx8_blocked_houseqr
          (nrows,ncols,sizetile,numtiles,
-          Arehihi,  Arelohi,  Arehilo,  Arelolo, 
-          Aimhihi,  Aimlohi,  Aimhilo,  Aimlolo,
-          Qrehihi_d,Qrelohi_d,Qrehilo_d,Qrelolo_d,
-          Qimhihi_d,Qimlohi_d,Qimhilo_d,Qimlolo_d,
-          Rrehihi_d,Rrelohi_d,Rrehilo_d,Rrelolo_d,
-          Rimhihi_d,Rimlohi_d,Rimhilo_d,Rimlolo_d,
+          Arehihihi,  Arelohihi,  Arehilohi,  Arelolohi,
+          Arehihilo,  Arelohilo,  Arehilolo,  Arelololo,
+          Aimhihihi,  Aimlohihi,  Aimhilohi,  Aimlolohi,
+          Aimhihilo,  Aimlohilo,  Aimhilolo,  Aimlololo,
+          Qrehihihi_d,Qrelohihi_d,Qrehilohi_d,Qrelolohi_d,
+          Qrehihilo_d,Qrelohilo_d,Qrehilolo_d,Qrelololo_d,
+          Qimhihihi_d,Qimlohihi_d,Qimhilohi_d,Qimlolohi_d,
+          Qimhihilo_d,Qimlohilo_d,Qimhilolo_d,Qimlololo_d,
+          Rrehihihi_d,Rrelohihi_d,Rrehilohi_d,Rrelolohi_d,
+          Rrehihilo_d,Rrelohilo_d,Rrehilolo_d,Rrelololo_d,
+          Rimhihihi_d,Rimlohihi_d,Rimhilohi_d,Rimlolohi_d,
+          Rimhihilo_d,Rimlohilo_d,Rimhilolo_d,Rimlololo_d,
           &houselapsedms,&RHvlapsedms,&tileRlapsedms,&vb2Wlapsedms,
           &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
           &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&timelapsed_d,
@@ -612,13 +625,19 @@ void test_cmplx8_blocked_qr
 
       cout << "-> Testing the QR factorization ..." << endl;
 
-      fail = test_cmplx4_qr_factors_probe
-                (nrows,ncols,Arehihi,  Arelohi,  Arehilo,  Arelolo,
-                             Aimhihi,  Aimlohi,  Aimhilo,  Aimlolo,
-                             Qrehihi_d,Qrelohi_d,Qrehilo_d,Qrelolo_d,
-                             Qimhihi_d,Qimlohi_d,Qimhilo_d,Qimlolo_d,
-                             Rrehihi_d,Rrelohi_d,Rrehilo_d,Rrelolo_d,
-                             Rimhihi_d,Rimlohi_d,Rimhilo_d,Rimlolo_d,
+      fail = test_cmplx8_qr_factors_probe
+                (nrows,ncols,Arehihihi,  Arelohihi,  Arehilohi,  Arelolohi,
+                             Arehihilo,  Arelohilo,  Arehilolo,  Arelololo,
+                             Aimhihihi,  Aimlohihi,  Aimhilohi,  Aimlolohi,
+                             Aimhihilo,  Aimlohilo,  Aimhilolo,  Aimlololo,
+                             Qrehihihi_d,Qrelohihi_d,Qrehilohi_d,Qrelolohi_d,
+                             Qrehihilo_d,Qrelohilo_d,Qrehilolo_d,Qrelololo_d,
+                             Qimhihihi_d,Qimlohihi_d,Qimhilohi_d,Qimlolohi_d,
+                             Qimhihilo_d,Qimlohilo_d,Qimhilolo_d,Qimlololo_d,
+                             Rrehihihi_d,Rrelohihi_d,Rrehilohi_d,Rrelolohi_d,
+                             Rrehihilo_d,Rrelohilo_d,Rrehilolo_d,Rrelololo_d,
+                             Rimhihihi_d,Rimlohihi_d,Rimhilohi_d,Rimlolohi_d,
+                             Rimhihilo_d,Rimlohilo_d,Rimhilolo_d,Rimlololo_d,
                  tol,2,true);
 
       if(fail == 0)
@@ -629,7 +648,6 @@ void test_cmplx8_blocked_qr
          cout << "The test failed for tol = " << tol << "." << endl;
       }
    }
- */
    cout << endl;
    cout << fixed << setprecision(3);
 
@@ -638,7 +656,6 @@ void test_cmplx8_blocked_qr
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
            << timelapsed_h << " seconds." << endl;
    }
-/*
    if((mode == 0) || (mode == 2))
    {
       cout << "         Time spent by the Householder kernel : "
@@ -676,9 +693,9 @@ void test_cmplx8_blocked_qr
       cout << "                          Number of divisions : "
            << divcnt << " x 893 " << endl;
       cout << "                    Number of calls to sqrt() : "
-           << sqrtcnt << " x 1345 " << endl;
+           << sqrtcnt << " x 8491 " << endl;
       long long int flopcnt = 89*addcnt + 336*mulcnt
-                            + 893*divcnt + 1345*sqrtcnt;
+                            + 893*divcnt + 8491*sqrtcnt;
       cout << "    Total number of floating-point operations : "
            << flopcnt << endl;
       cout << endl;
@@ -694,7 +711,6 @@ void test_cmplx8_blocked_qr
       cout << fixed << setprecision(3)
            << " = " << wallflops/gigacnt << " Gigaflops" << endl;
    }
- */
    for(int i=0; i<nrows; i++)
    {
       free(Arehihihi[i]); free(Arelohihi[i]);
