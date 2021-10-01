@@ -1,3 +1,6 @@
+Fri 1 Oct 2021 : updated {dbl4,dbl8}_tabs_testers.cpp with the option to
+  read in the test matrix.  Updated the makefiles.
+
 Thu 30 Sep 2021 : completed a first version of the kernels on complex data
   in dbl8_baqr_kernels.cu.
 

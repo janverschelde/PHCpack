@@ -13,6 +13,7 @@
 #include "dbl2_tabs_kernels.h"
 #include "dbl_test_utilities.h"
 #include "dbl2_test_utilities.h"
+#include "dbl_data_files.h"
 
 using namespace std;
 
@@ -385,8 +386,15 @@ void test_real2_upper_tiling ( void )
 
    const int dim = sizetile*numtiles;
 
-   cout << "-> generating a random upper triangular matrix of dimension "
-        << dim << " ..." << endl;
+   cout << "Generate a random matrix (1 = yes, 0 = read matrix) : ";
+   int rndmat; cin >> rndmat;
+
+   if(rndmat == 1)
+      cout << "-> generating a random upper triangular matrix of dimension "
+           << dim << " ..." << endl;
+   else
+      cout << "-> reading a random upper triangular matrix of dimension "
+           << dim << " ..." << endl;
 
    double **Ahi = new double*[dim];
    double **Alo = new double*[dim];
@@ -396,11 +404,18 @@ void test_real2_upper_tiling ( void )
       Alo[i] = new double[dim];
       for(int j=0; j<dim; j++) Alo[i][j] = 0.0;
    }
-
    // random_dbl_upper_matrix(dim,dim,A);
    // dbl2_random_upper_factor(dim,Ahi,Alo);
-   dbl_random_upper_factor(dim,Ahi);
-
+   if(rndmat == 1)
+      dbl_random_upper_factor(dim,Ahi);
+   else
+   {
+      cout << "Give the name of a file : ";
+      string filename; cin >> filename;
+      cout << "-> reading " << dim*dim
+           << " numbers from " << filename << " ..." << endl;
+      dbl_read_matrix(filename,dim,Ahi);
+   }
    cout << scientific << setprecision(16);
 
    if(verbose > 0)
@@ -577,8 +592,15 @@ void test_cmplx2_upper_tiling ( void )
 
    const int dim = sizetile*numtiles;
 
-   cout << "-> generating a random upper triangular matrix of dimension "
+   cout << "Generate a random matrix (1 = yes, 0 = read matrix) : ";
+   int rndmat; cin >> rndmat;
+
+   if(rndmat == 1)
+      cout << "-> generating a random upper triangular matrix of dimension "
         << dim << " ..." << endl;
+   else
+      cout << "-> reading a random upper triangular matrix of dimension "
+           << dim << " ..." << endl;
 
    double **Arehi = new double*[dim];
    double **Arelo = new double*[dim];
@@ -597,8 +619,16 @@ void test_cmplx2_upper_tiling ( void )
 
    // random_dbl_upper_matrix(dim,dim,Arehi,Arelo,Aimhi,Aimlo);
    // cmplx2_random_upper_factor(dim,Arehi,Arelo,Aimhi,Aimlo);
-   cmplx_random_upper_factor(dim,Arehi,Aimhi);
-
+   if(rndmat == 1)
+      cmplx_random_upper_factor(dim,Arehi,Aimhi);
+   else
+   {
+      cout << "Give the name of a file : ";
+      string filename; cin >> filename;
+      cout << "-> reading " << dim*dim
+           << " numbers from " << filename << " ..." << endl;
+      cmplx_read_matrix(filename,dim,Arehi,Aimhi);
+   }
    cout << scientific << setprecision(16);
 
    if(verbose > 0)

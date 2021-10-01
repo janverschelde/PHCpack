@@ -282,13 +282,13 @@ test_dbl2_tabs.o:
 
 test_dbl2_tabs: test_dbl2_tabs.o dbl2_tabs_testers.o dbl_tabs_flopcounts.o \
                 double_double_functions.o dbl2_tabs_host.o \
-                dbl_test_utilities.o dbl2_test_utilities.o \
+                dbl_test_utilities.o dbl2_test_utilities.o dbl_data_files.o \
                 dbl2_tabs_kernels.o dbl2_factorizations.o \
                 random_numbers.o random2_vectors.o dbl_factorizations.o \
                 random_series.o random_matrices.o random2_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_tabs test_dbl2_tabs.o dbl2_tabs_testers.o \
-                  dbl_test_utilities.o dbl2_test_utilities.o \
+                  dbl_test_utilities.o dbl2_test_utilities.o dbl_data_files.o \
                   dbl_tabs_flopcounts.o dbl_factorizations.o \
                   double_double_functions.o dbl2_tabs_host.o \
                   dbl2_tabs_kernels.o dbl2_factorizations.o \
@@ -362,7 +362,7 @@ test_dbl8_tabs.o:
 test_dbl8_tabs: test_dbl8_tabs.o dbl8_tabs_testers.o \
                 double_double_functions.o quad_double_functions.o \
                 octo_double_functions.o dbl_tabs_flopcounts.o \
-                dbl_factorizations.o dbl_test_utilities.o \
+                dbl_factorizations.o dbl_test_utilities.o dbl_data_files.o \
                 dbl8_tabs_testers.o dbl8_factorizations.o \
                 dbl8_tabs_host.o dbl8_tabs_kernels.o \
                 test_dbl8_tabs.o dbl8_test_utilities.o \
@@ -373,7 +373,7 @@ test_dbl8_tabs: test_dbl8_tabs.o dbl8_tabs_testers.o \
                   dbl_factorizations.o dbl_test_utilities.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o dbl8_factorizations.o \
-                  dbl8_tabs_testers.o dbl8_test_utilities.o \
+                  dbl8_tabs_testers.o dbl8_test_utilities.o dbl_data_files.o \
                   dbl8_tabs_host.o dbl8_tabs_kernels.o dbl_tabs_flopcounts.o \
                   random_numbers.o random8_vectors.o \
                   random_series.o random_matrices.o random8_matrices.o \
