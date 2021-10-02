@@ -633,10 +633,10 @@ __global__ void cmplx8_small_house
 __global__ void dbl8_large_sum_of_squares
  ( double *vhihihi, double *vlohihi, double *vhilohi, double *vlolohi,
    double *vhihilo, double *vlohilo, double *vhilolo, double *vlololo,
-   double *sumshihihi, double *sumshilohi,
-   double *sumslohihi, double *sumslolohi,
-   double *sumshihilo, double *sumshilolo,
-   double *sumslohilo, double *sumslololo, int dim, int BS, int BSLog2 )
+   double *sumshihihi, double *sumslohihi,
+   double *sumshilohi, double *sumslolohi,
+   double *sumshihilo, double *sumslohilo,
+   double *sumshilolo, double *sumslololo, int dim, int BS, int BSLog2 )
 {
    const int i = blockIdx.x;
    const int j = threadIdx.x;

@@ -124,7 +124,7 @@ __global__ void cmplx4_small_house
 
 __global__ void dbl4_large_sum_of_squares
  ( double *vhihi, double *vlohi, double *vhilo, double *vlolo,
-   double *sumshihi, double *sumshilo, double *sumslohi, double *sumslolo,
+   double *sumshihi, double *sumslohi, double *sumshilo, double *sumslolo,
    int dim, int BS, int BSLog2 );
 /*
  * DESCRIPTION :
