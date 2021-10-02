@@ -1,5 +1,7 @@
 Fri 1 Oct 2021 : updated {dbl4,dbl8}_tabs_testers.cpp with the option to
   read in the test matrix.  Updated the makefiles.
+  In {dbl4,dbl8}_baqr_kernels.cu, initialized v properly in the function
+  to call the kernels for large Householder vector computations.
 
 Thu 30 Sep 2021 : completed a first version of the kernels on complex data
   in dbl8_baqr_kernels.cu.

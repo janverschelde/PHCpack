@@ -1563,8 +1563,8 @@ __global__ void cmplx4_update_WYH
    const double Vvalimhihi = Vimhihi[col];
    const double Vvalimlohi = Vimlohi[col];
    const double Vvalimhilo = Vimhilo[col];
-   __syncthreads();
    const double Vvalimlolo = Vimlolo[col];
+   __syncthreads();
    const double Wvalrehihi = Wrehihi[row];
    const double Wvalrelohi = Wrelohi[row];
    const double Wvalrehilo = Wrehilo[row];
@@ -2926,6 +2926,9 @@ void GPU_dbl4_large_house
       }
    }
    vhihi_h[L] = 1.0;                    // set one on the diagonal
+   vlohi_h[L] = 0.0;
+   vhilo_h[L] = 0.0;
+   vlolo_h[L] = 0.0;
 
    cudaMemcpy(&Vhihi_d[L*nVrows],vhihi_h,(L+1)*sizeof(double),
               cudaMemcpyHostToDevice);
@@ -3200,6 +3203,13 @@ void GPU_cmplx4_large_house
       }
    }
    vrehihi_h[L] = 1.0;                    // set one on the diagonal
+   vrelohi_h[L] = 0.0;
+   vrehilo_h[L] = 0.0;
+   vrelolo_h[L] = 0.0;
+   vimhihi_h[L] = 0.0;
+   vimlohi_h[L] = 0.0;
+   vimhilo_h[L] = 0.0;
+   vimlolo_h[L] = 0.0;
 
    cudaMemcpy(&Vrehihi_d[L*nVrows],vrehihi_h,(L+1)*sizeof(double),
               cudaMemcpyHostToDevice);

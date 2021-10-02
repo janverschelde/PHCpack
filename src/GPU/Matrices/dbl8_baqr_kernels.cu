@@ -4530,6 +4530,13 @@ void GPU_dbl8_large_house
       }
    }
    vhihihi_h[L] = 1.0;                    // set one on the diagonal
+   vlohihi_h[L] = 0.0;
+   vhilohi_h[L] = 0.0;
+   vlolohi_h[L] = 0.0;
+   vhihilo_h[L] = 0.0;
+   vlohilo_h[L] = 0.0;
+   vhilolo_h[L] = 0.0;
+   vlololo_h[L] = 0.0;
 
    cudaMemcpy(&Vhihihi_d[L*nVrows],vhihihi_h,(L+1)*sizeof(double),
               cudaMemcpyHostToDevice);
@@ -4988,7 +4995,14 @@ void GPU_cmplx8_large_house
          vimhilolo_h[i] = 0.0; vimlololo_h[i] = 0.0;
       }
    }
-   vrehihihi_h[L] = 1.0;                 // set one on the diagonal
+   vrehihihi_h[L] = 1.0; vrelohihi_h[L] = 0.0; // set one on the diagonal
+   vrehilohi_h[L] = 0.0; vrelolohi_h[L] = 0.0;
+   vrehihilo_h[L] = 0.0; vrelohilo_h[L] = 0.0;
+   vrehilolo_h[L] = 0.0; vrelololo_h[L] = 0.0;
+   vimhihihi_h[L] = 0.0; vimlohihi_h[L] = 0.0;
+   vimhilohi_h[L] = 0.0; vimlolohi_h[L] = 0.0;
+   vimhihilo_h[L] = 0.0; vimlohilo_h[L] = 0.0;
+   vimhilolo_h[L] = 0.0; vimlololo_h[L] = 0.0;
 
    cudaMemcpy(&Vrehihihi_d[L*nVrows],vrehihihi_h,(L+1)*sizeof(double),
               cudaMemcpyHostToDevice);
