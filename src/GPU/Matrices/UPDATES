@@ -1,3 +1,5 @@
+Sat 2 Oct 2021 : fixed a bug in dbl8_baqr_kernels.cu.
+
 Fri 1 Oct 2021 : updated {dbl4,dbl8}_tabs_testers.cpp with the option to
   read in the test matrix.  Updated the makefiles.
   In {dbl4,dbl8}_baqr_kernels.cu, initialized v properly in the function

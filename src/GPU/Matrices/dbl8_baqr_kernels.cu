@@ -4757,8 +4757,8 @@ void GPU_dbl8_large_house
               &betahihilo_h[L],&betalohilo_h[L],
               &betahilolo_h[L],&betalololo_h[L]);
       odf_mlt_d(&betahihihi_h[L],&betalohihi_h[L],
-                &betahihihi_h[L],&betalohihi_h[L],
-                &betahilolo_h[L],&betalololo_h[L],
+                &betahilohi_h[L],&betalolohi_h[L],
+                &betahihilo_h[L],&betalohilo_h[L],
                 &betahilolo_h[L],&betalololo_h[L],2.0);
       sigmahihihi_h[0] = v0hihihi;
       sigmalohihi_h[0] = v0lohihi;
