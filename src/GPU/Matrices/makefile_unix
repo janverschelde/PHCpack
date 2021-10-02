@@ -576,6 +576,31 @@ test_dbl2_qrbs: test_dbl2_qrbs.o prompt_baqr_setup.o dbl2_qrbs_testers.o \
                   random_numbers.o random2_vectors.o random2_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
+dbl4_qrbs_testers.o:
+	@-echo ">>> compiling dbl4_qrbs_testers ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) dbl4_qrbs_testers.cpp
+
+test_dbl4_qrbs.o:
+	@-echo ">>> compiling test_dbl4_qrbs ..."
+	$(gpp) -O3 -c test_dbl4_qrbs.cpp
+
+test_dbl4_qrbs: test_dbl4_qrbs.o prompt_baqr_setup.o dbl4_qrbs_testers.o \
+                double_double_functions.o quad_double_functions.o \
+                dbl4_factorizations.o dbl4_factors_testers.o \
+                dbl4_baqr_host.o dbl4_baqr_kernels.o \
+                dbl_baqr_flopcounts.o dbl4_tabs_host.o dbl4_tabs_kernels.o \
+                dbl_tabs_flopcounts.o dbl4_test_utilities.o \
+                random_numbers.o random4_vectors.o random4_matrices.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl4_qrbs prompt_baqr_setup.o test_dbl4_qrbs.o \
+                  dbl4_qrbs_testers.o dbl4_test_utilities.o \
+                  double_double_functions.o quad_double_functions.o \
+                  dbl4_factorizations.o dbl4_factors_testers.o \
+                  dbl4_baqr_host.o dbl4_baqr_kernels.o dbl_baqr_flopcounts.o \
+                  dbl4_tabs_host.o dbl4_tabs_kernels.o dbl_tabs_flopcounts.o \
+                  random_numbers.o random4_vectors.o random4_matrices.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
 clean:
 	/bin/rm -f -r random_matrices.o
 	/bin/rm -f -r dbl_matrices_host.o dbl_matrices_kernels.o
@@ -628,6 +653,8 @@ clean:
 	/bin/rm -f -r dbl_qrbs_testers.o
 	/bin/rm -f -r test_dbl2_qrbs.o test_dbl2_qrbs
 	/bin/rm -f -r dbl2_qrbs_testers.o
+	/bin/rm -f -r test_dbl4_qrbs.o test_dbl4_qrbs
+	/bin/rm -f -r dbl4_qrbs_testers.o
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o

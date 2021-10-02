@@ -1,4 +1,5 @@
 Sat 2 Oct 2021 : fixed a bug in dbl8_baqr_kernels.cu.
+  New dbl4_qrbs_testers and test_dbl4_qrbs, updated the makefiles.
 
 Fri 1 Oct 2021 : updated {dbl4,dbl8}_tabs_testers.cpp with the option to
   read in the test matrix.  Updated the makefiles.
