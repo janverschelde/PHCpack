@@ -66,6 +66,9 @@ test_dbl2_qrbs:
 test_dbl4_qrbs:
 	make -f $(MAKEFILE) test_dbl4_qrbs
 
+test_dbl8_qrbs:
+	make -f $(MAKEFILE) test_dbl8_qrbs
+
 clean:
 	make -f $(MAKEFILE) clean
 

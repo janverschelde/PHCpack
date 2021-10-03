@@ -82,7 +82,9 @@ test_dbl8_baqr            : main test on octo double blocked accelerated qr
 dbl_qrbs_testers          : tests qr + back substitution in double precision
 dbl2_qrbs_testers         : tests qr + back substitution with double doubles
 dbl4_qrbs_testers         : tests qr + back substitution with quad doubles
+dbl8_qrbs_testers         : tests qr + back substitution with octo doubles
 test_dbl_qrbs             : main test on double qr + back substitution
 test_dbl2_qrbs            : main test on double double qr + back substitution
 test_dbl4_qrbs            : main test on quad double qr + back substitution
+test_dbl8_qrbs            : main test on octo double qr + back substitution
 -----------------------------------------------------------------------------
