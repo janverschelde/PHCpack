@@ -869,6 +869,40 @@ test_dbl4_qrbs: test_dbl4_qrbs.obj prompt_baqr_setup.obj \
              dbl4_tabs_host.obj dbl4_tabs_kernels.obj dbl_tabs_flopcounts.obj \
              random_numbers.obj random4_vectors.obj random4_matrices.obj
 
+dbl8_qrbs_testers.obj:
+	@-echo ">>> compiling dbl8_qrbs_testers ..."
+	$(CL)\cl /c dbl8_qrbs_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl8_qrbs_testers.obj /EHsc
+
+test_dbl8_qrbs.obj:
+	@-echo ">>> compiling test_dbl8_qrbs ..."
+	$(CL)\cl /c test_dbl8_qrbs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl8_qrbs.obj /EHsc
+
+test_dbl8_qrbs: test_dbl8_qrbs.obj prompt_baqr_setup.obj \
+                double_double_functions.obj quad_double_functions.obj \
+		octo_double_functions.obj gettimeofday4win.obj \
+                dbl8_qrbs_testers.obj dbl8_factors_testers.obj \
+                dbl8_baqr_host.obj dbl8_baqr_kernels.obj \
+	        dbl8_tabs_host.obj dbl8_tabs_kernels.obj \
+		dbl8_test_utilities.obj dbl8_factorizations.obj \
+		dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+                random_numbers.obj random8_vectors.obj random8_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl8_qrbs.exe test_dbl8_qrbs.obj \
+             double_double_functions.obj quad_double_functions.obj \
+	     octo_double_functions.obj \
+	     prompt_baqr_setup.obj gettimeofday4win.obj \
+	     dbl8_qrbs_testers.obj dbl8_test_utilities.obj \
+             dbl8_factors_testers.obj dbl8_factorizations.obj \
+             dbl8_baqr_host.obj dbl8_baqr_kernels.obj dbl_baqr_flopcounts.obj \
+             dbl8_tabs_host.obj dbl8_tabs_kernels.obj dbl_tabs_flopcounts.obj \
+             random_numbers.obj random8_vectors.obj random8_matrices.obj
+
 clean:
 	del *~
 	del test_dbl_vectors.obj test_dbl_vectors_lib
@@ -942,6 +976,9 @@ clean:
 	del test_dbl4_qrbs.obj test_dbl4_qrbs_lib
 	del test_dbl4_qrbs.exe test_dbl4_qrbs.exp
 	del dbl4_qrbs_testers.obj
+	del test_dbl8_qrbs.obj test_dbl8_qrbs_lib
+	del test_dbl8_qrbs.exe test_dbl8_qrbs.exp
+	del dbl8_qrbs_testers.obj
 
 cleanall: clean
 	del *exe *obj *exp *lib
