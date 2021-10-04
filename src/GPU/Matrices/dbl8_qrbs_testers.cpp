@@ -554,6 +554,21 @@ void test_real8_blocked_qrbs
            << scientific << setprecision(3) << bswallflops;
       cout << fixed << setprecision(3)
            << " = " << bswallflops/gigacnt << " Gigaflops" << endl;
+      cout << endl;
+      long long int totalflopcnt = qrflopcnt + bsflopcnt;
+      double totalelapsedms = totlapsedms + bselapsedms;
+      double totaltimelapsed = qrtimelapsed_d + bstimelapsed_d;
+      double totalkernflops = 1000.0*((double) totalflopcnt)/totalelapsedms;
+      double totalwallflops = ((double) totalflopcnt)/totaltimelapsed;
+      // const int gigacnt = pow(2.0,30);
+      cout << "Total Kernel Time Flops : "
+           << scientific << setprecision(3) << totalkernflops;
+      cout << fixed << setprecision(3)
+           << " = " << totalkernflops/gigacnt << " Gigaflops" << endl;
+      cout << " Total Wall Clock Flops : "
+           << scientific << setprecision(3) << totalwallflops;
+      cout << fixed << setprecision(3)
+           << " = " << totalwallflops/gigacnt << " Gigaflops" << endl;
    }
    for(int i=0; i<nrows; i++)
    {
@@ -1503,6 +1518,21 @@ void test_cmplx8_blocked_qrbs
            << scientific << setprecision(3) << bswallflops;
       cout << fixed << setprecision(3)
            << " = " << bswallflops/gigacnt << " Gigaflops" << endl;
+      cout << endl;
+      long long int totalflopcnt = qrflopcnt + bsflopcnt;
+      double totalelapsedms = totlapsedms + bselapsedms;
+      double totaltimelapsed = qrtimelapsed_d + bstimelapsed_d;
+      double totalkernflops = 1000.0*((double) totalflopcnt)/totalelapsedms;
+      double totalwallflops = ((double) totalflopcnt)/totaltimelapsed;
+      // const int gigacnt = pow(2.0,30);
+      cout << "Total Kernel Time Flops : "
+           << scientific << setprecision(3) << totalkernflops;
+      cout << fixed << setprecision(3)
+           << " = " << totalkernflops/gigacnt << " Gigaflops" << endl;
+      cout << " Total Wall Clock Flops : "
+           << scientific << setprecision(3) << totalwallflops;
+      cout << fixed << setprecision(3)
+           << " = " << totalwallflops/gigacnt << " Gigaflops" << endl;
    }
    for(int i=0; i<nrows; i++)
    {
