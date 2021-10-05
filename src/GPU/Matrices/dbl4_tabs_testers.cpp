@@ -505,7 +505,7 @@ void test_cmplx4_upper_inverse ( void )
               (dim,solrehihi,solrelohi,solrehilo,solrelolo,
                    solimhihi,solimlohi,solimhilo,solimlolo,
                      xrehihi,  xrelohi,  xrehilo,  xrelolo,
-                     ximhihi,  ximlohi, ximhilo,  ximlolo) << endl;
+                     ximhihi,  ximlohi,  ximhilo,  ximlolo) << endl;
    cout << "Condition number : "
         << cmplx4_condition(dim, 
                  Arehihi,     Arelohi,     Arehilo,     Arelolo, 

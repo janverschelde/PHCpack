@@ -282,7 +282,7 @@ __global__ void cmplx4_small_invert_upper
       Ucolrelolo[k] = Urelolo[colidx+k];
       Ucolimhihi[k] = Uimhihi[colidx+k];
       Ucolimlohi[k] = Uimlohi[colidx+k];
-      Ucolimhihi[k] = Uimhilo[colidx+k];
+      Ucolimhilo[k] = Uimhilo[colidx+k];
       Ucolimlolo[k] = Uimlolo[colidx+k];
 
       __syncthreads();
