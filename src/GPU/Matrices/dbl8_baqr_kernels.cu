@@ -2235,7 +2235,7 @@ __global__ void cmplx8_beta_times_V
    shvrehihilo[tdx] = Vrehihilo[idx];
    shvrelohilo[tdx] = Vrelohilo[idx];
    shvrehilolo[tdx] = Vrehilolo[idx];
-   shvrelolohi[tdx] = Vrelololo[idx];
+   shvrelololo[tdx] = Vrelololo[idx];
    shvimhihihi[tdx] = Vimhihihi[idx];
    shvimlohihi[tdx] = Vimlohihi[idx];
    shvimhilohi[tdx] = Vimhilohi[idx];
