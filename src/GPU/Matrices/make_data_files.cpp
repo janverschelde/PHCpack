@@ -63,6 +63,8 @@ int make_real_matrix ( int dim )
    cout << "-> writing to file " << filename << " ..." << endl;
 
    dbl_write_matrix(filename,dim,A);
+
+   return 0;
 }
 
 int make_complex_matrix ( int dim )
@@ -92,4 +94,6 @@ int make_complex_matrix ( int dim )
    cout << "-> writing to file " << filename << " ..." << endl;
 
    cmplx_write_matrix(filename,dim,Are,Aim);
+
+   return 0;
 }

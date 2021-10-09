@@ -1,3 +1,6 @@
+Sat 9 Oct 2021 : added return 0; at the end of the functions in
+  make_data_files.cpp. 
+
 Wed 6 Oct 2021 : bug fix in dbl8_tabs_kernels.cu.
 
 Mon 4 Oct 2021 : bug fixed in dbl4_tabs_kernels.cu, with minor edit in
