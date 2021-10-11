@@ -12,6 +12,7 @@
 #include "dbl_tabs_kernels.h"
 #include "dbl_test_utilities.h"
 #include "dbl_tabs_testers.h"
+#include "dbl_data_files.h"
 
 using namespace std;
 
@@ -278,15 +279,30 @@ void test_real_upper_tiling ( void )
 
    const int dim = sizetile*numtiles;
 
-   cout << "-> generating a random upper triangular matrix of dimension "
-        << dim << " ..." << endl;
+   cout << "Generate a random matrix (1 = yes, 0 = read matrix) : ";
+   int rndmat; cin >> rndmat;
+
+   if(rndmat == 1)
+      cout << "-> generating a random upper triangular matrix of dimension "
+           << dim << " ..." << endl;
+   else
+      cout << "-> reading a random upper triangular matrix of dimension "
+           << dim << " ..." << endl;
 
    double **A = new double*[dim];
    for(int i=0; i<dim; i++) A[i] = new double[dim];
 
    // random_dbl_upper_matrix(dim,dim,A);
-   dbl_random_upper_factor(dim,A);
-
+   if(rndmat == 1)
+      dbl_random_upper_factor(dim,A);
+   else
+   {
+      cout << "Give the name of a file : ";
+      string filename; cin >> filename;
+      cout << "-> reading " << dim*dim
+           << " numbers from " << filename << " ..." << endl;
+      dbl_read_matrix(filename,dim,A);
+   }
    cout << scientific << setprecision(16);
 
    if(verbose > 0)
@@ -399,6 +415,7 @@ void test_real_upper_tiling ( void )
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
    cout << endl;
+   cout << scientific << setprecision(3);
    double kernflops = 1000.0*((double) flopcnt)/elapsedms;
    double wallflops = ((double) flopcnt)/timelapsed_d;
    const int gigacnt = pow(2.0,30);
@@ -432,8 +449,15 @@ void test_cmplx_upper_tiling ( void )
 
    const int dim = sizetile*numtiles;
 
-   cout << "-> generating a random upper triangular matrix of dimension "
-        << dim << " ..." << endl;
+   cout << "Generate a random matrix (1 = yes, 0 = read matrix) : ";
+   int rndmat; cin >> rndmat;
+
+   if(rndmat == 1)
+      cout << "-> generating a random upper triangular matrix of dimension "
+           << dim << " ..." << endl;
+   else
+      cout << "-> reading a random upper triangular matrix of dimension "
+           << dim << " ..." << endl;
 
    double **Are = new double*[dim];
    double **Aim = new double*[dim];
@@ -443,8 +467,16 @@ void test_cmplx_upper_tiling ( void )
       Aim[i] = new double[dim];
    }
    // random_cmplx_upper_matrix(dim,dim,Are,Aim);
-   cmplx_random_upper_factor(dim,Are,Aim);
-
+   if(rndmat == 1)
+      cmplx_random_upper_factor(dim,Are,Aim);
+   else
+   {
+      cout << "Give the name of a file : ";
+      string filename; cin >> filename;
+      cout << "-> reading " << dim*dim
+           << " numbers from " << filename << " ..." << endl;
+      dbl_read_matrix(filename,dim,Are);
+   }
    cout << scientific << setprecision(16);
 
    if(verbose > 0)
@@ -585,6 +617,7 @@ void test_cmplx_upper_tiling ( void )
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
    cout << endl;
+   cout << scientific << setprecision(3);
    double kernflops = 1000.0*((double) flopcnt)/elapsedms;
    double wallflops = ((double) flopcnt)/timelapsed_d;
    const int gigacnt = pow(2.0,30);
