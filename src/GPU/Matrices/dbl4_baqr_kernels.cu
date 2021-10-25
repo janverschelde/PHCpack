@@ -1769,14 +1769,14 @@ __global__ void cmplx4_beta_next_W
    double Vvalimhihi,Vvalimlohi,Vvalimhilo,Vvalimlolo;
    double acchihi,acclohi,acchilo,acclolo;
 
-   __shared__ double shVrehihi[qd_shmemsize];   // to store a slice of V
-   __shared__ double shVrelohi[qd_shmemsize];
-   __shared__ double shVrehilo[qd_shmemsize];
-   __shared__ double shVrelolo[qd_shmemsize];
-   __shared__ double shVimhihi[qd_shmemsize];
-   __shared__ double shVimlohi[qd_shmemsize];
-   __shared__ double shVimhilo[qd_shmemsize];
-   __shared__ double shVimlolo[qd_shmemsize];
+   __shared__ double shVrehihi[cqd_shmemsize];   // to store a slice of V
+   __shared__ double shVrelohi[cqd_shmemsize];
+   __shared__ double shVrehilo[cqd_shmemsize];
+   __shared__ double shVrelolo[cqd_shmemsize];
+   __shared__ double shVimhihi[cqd_shmemsize];
+   __shared__ double shVimlohi[cqd_shmemsize];
+   __shared__ double shVimhilo[cqd_shmemsize];
+   __shared__ double shVimlolo[cqd_shmemsize];
 
    shVrehihi[tdx] = Vrehihi[idx]; // thread tdx loads data at the global index
    shVrelohi[tdx] = Vrelohi[idx];
