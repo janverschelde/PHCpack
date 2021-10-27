@@ -1455,40 +1455,44 @@ __global__ void cmplx4_initialize_WYH
    const double Wvalimhilo = Wimhilo[row];
    const double Wvalimlolo = Wimlolo[row];
    // const double result = Vval*Wval;
-   double resultrehihi,resultrelohi,resultrehilo,resultrelolo;
-   double resultimhihi,resultimlohi,resultimhilo,resultimlolo;
+   double resulthihi,resultlohi,resulthilo,resultlolo;
    double acchihi,acclohi,acchilo,acclolo;
 
    // take the Hermitian transpose of V
    __syncthreads();
-   qdg_mul(   Vvalrehihi,   Vvalrelohi,   Vvalrehilo,   Vvalrelolo,
-              Wvalrehihi,   Wvalrelohi,   Wvalrehilo,   Wvalrelolo,
-           &resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo);
+   qdg_mul( Vvalrehihi, Vvalrelohi, Vvalrehilo, Vvalrelolo,
+            Wvalrehihi, Wvalrelohi, Wvalrehilo, Wvalrelolo,
+           &resulthihi,&resultlohi,&resulthilo,&resultlolo);
    qdg_mul(Vvalimhihi,Vvalimlohi,Vvalimhilo,Vvalimlolo,
            Wvalimhihi,Wvalimlohi,Wvalimhilo,Wvalimlolo,
              &acchihi,  &acclohi,  &acchilo,  &acclolo);
-   qdg_inc(&resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo,
-                 acchihi,      acclohi,      acchilo,      acclolo);
-   qdg_mul(   Vvalrehihi,   Vvalrelohi,   Vvalrehilo,   Vvalrelolo,
-              Wvalimhihi,   Wvalimlohi,   Wvalimhilo,   Wvalimlolo,
-           &resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo);
+   qdg_inc(&resulthihi,&resultlohi,&resulthilo,&resultlolo,
+               acchihi,    acclohi,    acchilo,    acclolo);
+   __syncthreads();
+   if(idx < dim*dim)
+   {
+      WYHrehihi[idx] = resulthihi;
+      WYHrelohi[idx] = resultlohi;
+      WYHrehilo[idx] = resulthilo;
+      WYHrelolo[idx] = resultlolo;
+   }
+   __syncthreads();
+   qdg_mul( Vvalrehihi, Vvalrelohi, Vvalrehilo, Vvalrelolo,
+            Wvalimhihi, Wvalimlohi, Wvalimhilo, Wvalimlolo,
+           &resulthihi,&resultlohi,&resulthilo,&resultlolo);
    qdg_mul(Vvalimhihi,Vvalimlohi,Vvalimhilo,Vvalimlolo,
            Wvalrehihi,Wvalrelohi,Wvalrehilo,Wvalrelolo,
              &acchihi,  &acclohi,  &acchilo,  &acclolo);
-   qdg_dec(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
-                 acchihi,      acclohi,      acchilo,      acclolo);
+   qdg_dec(&resulthihi,&resultlohi,&resulthilo,&resultlolo,
+               acchihi,    acclohi,    acchilo,    acclolo);
 
    __syncthreads();
    if(idx < dim*dim)
    {
-      WYHrehihi[idx] = resultrehihi;
-      WYHrelohi[idx] = resultrelohi;
-      WYHrehilo[idx] = resultrehilo;
-      WYHrelolo[idx] = resultrelolo;
-      WYHimhihi[idx] = resultimhihi;
-      WYHimlohi[idx] = resultimlohi;
-      WYHimhilo[idx] = resultimhilo;
-      WYHimlolo[idx] = resultimlolo;
+      WYHimhihi[idx] = resulthihi;
+      WYHimlohi[idx] = resultlohi;
+      WYHimhilo[idx] = resulthilo;
+      WYHimlolo[idx] = resultlolo;
    }
 }
 
@@ -1575,14 +1579,10 @@ __global__ void cmplx4_update_WYH
    const double Wvalimlolo = Wimlolo[row];
    // const double result = Vval*Wval;
    __syncthreads();
-   double resultrehihi = WYHrehihi[idx];
-   double resultrelohi = WYHrelohi[idx];
-   double resultrehilo = WYHrehilo[idx];
-   double resultrelolo = WYHrelolo[idx];
-   double resultimhihi = WYHimhihi[idx];
-   double resultimlohi = WYHimlohi[idx];
-   double resultimhilo = WYHimhilo[idx];
-   double resultimlolo = WYHimlolo[idx];
+   double resulthihi = WYHrehihi[idx];
+   double resultlohi = WYHrelohi[idx];
+   double resulthilo = WYHrehilo[idx];
+   double resultlolo = WYHrelolo[idx];
    double acchihi,acclohi,acchilo,acclolo;
 
    // take the Hermitian transpose of V
@@ -1590,35 +1590,45 @@ __global__ void cmplx4_update_WYH
    qdg_mul(Vvalrehihi,Vvalrelohi,Vvalrehilo,Vvalrelolo,
            Wvalrehihi,Wvalrelohi,Wvalrehilo,Wvalrelolo,
              &acchihi , &acclohi,  &acchilo,  &acclolo);
-   qdg_inc(&resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo,
-                 acchihi,      acclohi,      acchilo,      acclolo);
+   qdg_inc(&resulthihi,&resultlohi,&resulthilo,&resultlolo,
+               acchihi,    acclohi,    acchilo,    acclolo);
    qdg_mul(Vvalimhihi,Vvalimlohi,Vvalimhilo,Vvalimlolo,
            Wvalimhihi,Wvalimlohi,Wvalimhilo,Wvalimlolo,
              &acchihi,  &acclohi,  &acchilo,  &acclolo);
-   qdg_inc(&resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo,
-                 acchihi,      acclohi,      acchilo,      acclolo);
+   qdg_inc(&resulthihi,&resultlohi,&resulthilo,&resultlolo,
+               acchihi,    acclohi,    acchilo,    acclolo);
+   __syncthreads();
+   if(idx < dim*dim)
+   {
+      WYHrehihi[idx] = resulthihi;
+      WYHrelohi[idx] = resultlohi;
+      WYHrehilo[idx] = resulthilo;
+      WYHrelolo[idx] = resultlolo;
+   }
+   __syncthreads();
+   resulthihi = WYHimhihi[idx];
+   resultlohi = WYHimlohi[idx];
+   resulthilo = WYHimhilo[idx];
+   resultlolo = WYHimlolo[idx];
+
    qdg_mul(Vvalrehihi,Vvalrelohi,Vvalrehilo,Vvalrelolo,
            Wvalimhihi,Wvalimlohi,Wvalimhilo,Wvalimlolo,
              &acchihi,  &acclohi,  &acchilo,  &acclolo);
-   qdg_inc(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
-                 acchihi,      acclohi,      acchilo,      acclolo);
+   qdg_inc(&resulthihi,&resultlohi,&resulthilo,&resultlolo,
+               acchihi,    acclohi,    acchilo,    acclolo);
    qdg_mul(Vvalimhihi,Vvalimlohi,Vvalimhilo,Vvalimlolo,
            Wvalrehihi,Wvalrelohi,Wvalrehilo,Wvalrelolo,
              &acchihi,  &acclohi,  &acchilo,  &acclolo);
-   qdg_dec(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
-                 acchihi,      acclohi,      acchilo,      acclolo);
+   qdg_dec(&resulthihi,&resultlohi,&resulthilo,&resultlolo,
+               acchihi,    acclohi,    acchilo,    acclolo);
 
    __syncthreads();
    if(idx < dim*dim)
    {
-      WYHrehihi[idx] = resultrehihi;
-      WYHrelohi[idx] = resultrelohi;
-      WYHrehilo[idx] = resultrehilo;
-      WYHrelolo[idx] = resultrelolo;
-      WYHimhihi[idx] = resultimhihi;
-      WYHimlohi[idx] = resultimlohi;
-      WYHimhilo[idx] = resultimhilo;
-      WYHimlolo[idx] = resultimlolo;
+      WYHimhihi[idx] = resulthihi;
+      WYHimlohi[idx] = resultlohi;
+      WYHimhilo[idx] = resulthilo;
+      WYHimlolo[idx] = resultlolo;
    }
 }
 
@@ -1759,7 +1769,7 @@ __global__ void cmplx4_beta_next_W
    const double mybetalohi = Blohi[0];
    const double mybetahilo = Bhilo[0];
    const double mybetalolo = Blolo[0];
-   __syncthreads();
+   // __syncthreads();
    int vdx,ydx;
    double resultrehihi,resultrelohi,resultrehilo,resultrelolo;
    double resultimhihi,resultimlohi,resultimhilo,resultimlolo;
@@ -1884,7 +1894,7 @@ __global__ void cmplx4_beta_next_W
       WYHvalimlohi = WYHimlohi[ydx];
       WYHvalimhilo = WYHimhilo[ydx];
       WYHvalimlolo = WYHimlolo[ydx];
-      __syncthreads();
+      //__syncthreads();
       Vvalrehihi = shVrehihi[j];
       Vvalrelohi = shVrelohi[j];
       Vvalrehilo = shVrehilo[j];
@@ -1923,7 +1933,7 @@ __global__ void cmplx4_beta_next_W
            resultrehihi,resultrelohi,resultrehilo,resultrelolo,
                &acchihi,    &acclohi,    &acchilo,    &acclolo);
 
-   __syncthreads();
+   // __syncthreads();
    if(idx < nrows) 
    {
       Wrehihi[idx] = acchihi;
@@ -5915,6 +5925,7 @@ void GPU_cmplx4_blocked_houseqr
 
    const size_t szhouse = nrows*sizeof(double);
    const size_t szpad = szt*sizeof(double);    // padding for nonsquare tiles
+   // const size_t szpad = 0;
    const size_t szVandW = szt*szhouse;
    cudaMalloc((void**)&Vrehihi_d,szVandW + szpad); // padding added
    cudaMalloc((void**)&Vrelohi_d,szVandW + szpad);
