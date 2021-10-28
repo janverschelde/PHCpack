@@ -2400,67 +2400,71 @@ __global__ void cmplx8_initialize_WYH
    const double Wvalimhilolo = Wimhilolo[row];
    const double Wvalimlololo = Wimlololo[row];
    // const double result = Vval*Wval;
-   double resultrehihihi,resultrelohihi,resultrehilohi,resultrelolohi;
-   double resultrehihilo,resultrelohilo,resultrehilolo,resultrelololo;
-   double resultimhihihi,resultimlohihi,resultimhilohi,resultimlolohi;
-   double resultimhihilo,resultimlohilo,resultimhilolo,resultimlololo;
+   double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
+   double resulthihilo,resultlohilo,resulthilolo,resultlololo;
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
 
    // take the Hermitian transpose of V
    __syncthreads();
-   odg_mul(   Vvalrehihihi,   Vvalrelohihi,   Vvalrehilohi,   Vvalrelolohi,
-              Vvalrehihilo,   Vvalrelohilo,   Vvalrehilolo,   Vvalrelololo,
-              Wvalrehihihi,   Wvalrelohihi,   Wvalrehilohi,   Wvalrelolohi,
-              Wvalrehihilo,   Wvalrelohilo,   Wvalrehilolo,   Wvalrelololo,
-           &resultrehihihi,&resultrelohihi,&resultrehilohi,&resultrelolohi,
-           &resultrehihilo,&resultrelohilo,&resultrehilolo,&resultrelololo);
+   odg_mul( Vvalrehihihi, Vvalrelohihi, Vvalrehilohi, Vvalrelolohi,
+            Vvalrehihilo, Vvalrelohilo, Vvalrehilolo, Vvalrelololo,
+            Wvalrehihihi, Wvalrelohihi, Wvalrehilohi, Wvalrelolohi,
+            Wvalrehihilo, Wvalrelohilo, Wvalrehilolo, Wvalrelololo,
+           &resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo);
    odg_mul(Vvalimhihihi,Vvalimlohihi,Vvalimhilohi,Vvalimlolohi,
            Vvalimhihilo,Vvalimlohilo,Vvalimhilolo,Vvalimlololo,
            Wvalimhihihi,Wvalimlohihi,Wvalimhilohi,Wvalimlolohi,
            Wvalimhihilo,Wvalimlohilo,Wvalimhilolo,Wvalimlololo,
              &acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
              &acchihilo,  &acclohilo,  &acchilolo,  &acclololo);
-   odg_inc(&resultrehihihi,&resultrelohihi,&resultrehilohi,&resultrelolohi,
-           &resultrehihilo,&resultrelohilo,&resultrehilolo,&resultrelololo,
-                 acchihihi,      acclohihi,      acchilohi,      acclolohi,
-                 acchihilo,      acclohilo,      acchilolo,      acclololo);
-   odg_mul(   Vvalrehihihi,   Vvalrelohihi,   Vvalrehilohi,   Vvalrelolohi,
-              Vvalrehihilo,   Vvalrelohilo,   Vvalrehilolo,   Vvalrelololo,
-              Wvalimhihihi,   Wvalimlohihi,   Wvalimhilohi,   Wvalimlolohi,
-              Wvalimhihilo,   Wvalimlohilo,   Wvalimhilolo,   Wvalimlololo,
-           &resultimhihihi,&resultimlohihi,&resultimhilohi,&resultimlolohi,
-           &resultimhihilo,&resultimlohilo,&resultimhilolo,&resultimlololo);
+   odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+               acchihihi,    acclohihi,    acchilohi,    acclolohi,
+               acchihilo,    acclohilo,    acchilolo,    acclololo);
+
+   __syncthreads();
+   if(idx < dim*dim)
+   {
+      WYTrehihihi[idx] = resulthihihi;
+      WYTrelohihi[idx] = resultlohihi;
+      WYTrehilohi[idx] = resulthilohi;
+      WYTrelolohi[idx] = resultlolohi;
+      WYTrehihilo[idx] = resulthihilo;
+      WYTrelohilo[idx] = resultlohilo;
+      WYTrehilolo[idx] = resulthilolo;
+      WYTrelololo[idx] = resultlololo;
+   }
+   __syncthreads();
+   odg_mul( Vvalrehihihi, Vvalrelohihi, Vvalrehilohi, Vvalrelolohi,
+            Vvalrehihilo, Vvalrelohilo, Vvalrehilolo, Vvalrelololo,
+            Wvalimhihihi, Wvalimlohihi, Wvalimhilohi, Wvalimlolohi,
+            Wvalimhihilo, Wvalimlohilo, Wvalimhilolo, Wvalimlololo,
+           &resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo);
    odg_mul(Vvalimhihihi,Vvalimlohihi,Vvalimhilohi,Vvalimlolohi,
            Vvalimhihilo,Vvalimlohilo,Vvalimhilolo,Vvalimlololo,
            Wvalrehihihi,Wvalrelohihi,Wvalrehilohi,Wvalrelolohi,
            Wvalrehihilo,Wvalrelohilo,Wvalrehilolo,Wvalrelololo,
              &acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
              &acchihilo,  &acclohilo,  &acchilolo,  &acclololo);
-   odg_dec(&resultimhihihi,&resultimlohihi,&resultimhilohi,&resultimlolohi,
-           &resultimhihilo,&resultimlohilo,&resultimhilolo,&resultimlololo,
-                 acchihihi,      acclohihi,      acchilohi,      acclolohi,
-                 acchihilo,      acclohilo,      acchilolo,      acclololo);
+   odg_dec(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+               acchihihi,    acclohihi,    acchilohi,    acclolohi,
+               acchihilo,    acclohilo,    acchilolo,    acclololo);
 
    __syncthreads();
    if(idx < dim*dim)
    {
-      WYTrehihihi[idx] = resultrehihihi;
-      WYTrelohihi[idx] = resultrelohihi;
-      WYTrehilohi[idx] = resultrehilohi;
-      WYTrelolohi[idx] = resultrelolohi;
-      WYTrehihilo[idx] = resultrehihilo;
-      WYTrelohilo[idx] = resultrelohilo;
-      WYTrehilolo[idx] = resultrehilolo;
-      WYTrelololo[idx] = resultrelololo;
-      WYTimhihihi[idx] = resultimhihihi;
-      WYTimlohihi[idx] = resultimlohihi;
-      WYTimhilohi[idx] = resultimhilohi;
-      WYTimlolohi[idx] = resultimlolohi;
-      WYTimhihilo[idx] = resultimhihilo;
-      WYTimlohilo[idx] = resultimlohilo;
-      WYTimhilolo[idx] = resultimhilolo;
-      WYTimlololo[idx] = resultimlololo;
+      WYTimhihihi[idx] = resulthihihi;
+      WYTimlohihi[idx] = resultlohihi;
+      WYTimhilohi[idx] = resulthilohi;
+      WYTimlolohi[idx] = resultlolohi;
+      WYTimhihilo[idx] = resulthihilo;
+      WYTimlohilo[idx] = resultlohilo;
+      WYTimhilolo[idx] = resulthilolo;
+      WYTimlololo[idx] = resultlololo;
    }
 }
 
@@ -2598,22 +2602,14 @@ __global__ void cmplx8_update_WYH
    const double Wvalimlololo = Wimlololo[row];
    // const double result = Vval*Wval;
    __syncthreads();
-   double resultrehihihi = WYHrehihihi[idx];
-   double resultrelohihi = WYHrelohihi[idx];
-   double resultrehilohi = WYHrehilohi[idx];
-   double resultrelolohi = WYHrelolohi[idx];
-   double resultrehihilo = WYHrehihilo[idx];
-   double resultrelohilo = WYHrelohilo[idx];
-   double resultrehilolo = WYHrehilolo[idx];
-   double resultrelololo = WYHrelololo[idx];
-   double resultimhihihi = WYHimhihihi[idx];
-   double resultimlohihi = WYHimlohihi[idx];
-   double resultimhilohi = WYHimhilohi[idx];
-   double resultimlolohi = WYHimlolohi[idx];
-   double resultimhihilo = WYHimhihilo[idx];
-   double resultimlohilo = WYHimlohilo[idx];
-   double resultimhilolo = WYHimhilolo[idx];
-   double resultimlololo = WYHimlololo[idx];
+   double resulthihihi = WYHrehihihi[idx];
+   double resultlohihi = WYHrelohihi[idx];
+   double resulthilohi = WYHrehilohi[idx];
+   double resultlolohi = WYHrelolohi[idx];
+   double resulthihilo = WYHrehihilo[idx];
+   double resultlohilo = WYHrelohilo[idx];
+   double resulthilolo = WYHrehilolo[idx];
+   double resultlololo = WYHrelololo[idx];
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
 
@@ -2625,60 +2621,74 @@ __global__ void cmplx8_update_WYH
            Wvalrehihilo,Wvalrelohilo,Wvalrehilolo,Wvalrelololo,
              &acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
              &acchihilo,  &acclohilo,  &acchilolo,  &acclololo);
-   odg_inc(&resultrehihihi,&resultrelohihi,&resultrehilohi,&resultrelolohi,
-           &resultrehihilo,&resultrelohilo,&resultrehilolo,&resultrelololo,
-                 acchihihi,      acclohihi,      acchilohi,      acclolohi,
-                 acchihilo,      acclohilo,      acchilolo,      acclololo);
+   odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+               acchihihi,    acclohihi,    acchilohi,    acclolohi,
+               acchihilo,    acclohilo,    acchilolo,    acclololo);
    odg_mul(Vvalimhihihi,Vvalimlohihi,Vvalimhilohi,Vvalimlolohi,
            Vvalimhihilo,Vvalimlohilo,Vvalimhilolo,Vvalimlololo,
            Wvalimhihihi,Wvalimlohihi,Wvalimhilohi,Wvalimlolohi,
            Wvalimhihilo,Wvalimlohilo,Wvalimhilolo,Wvalimlololo,
              &acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
              &acchihilo,  &acclohilo,  &acchilolo,  &acclololo);
-   odg_inc(&resultrehihihi,&resultrelohihi,&resultrehilohi,&resultrelolohi,
-           &resultrehihilo,&resultrelohilo,&resultrehilolo,&resultrelololo,
-                 acchihihi,      acclohihi,      acchilohi,      acclolohi,
-                 acchihilo,      acclohilo,      acchilolo,      acclololo);
+   odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+               acchihihi,    acclohihi,    acchilohi,    acclolohi,
+               acchihilo,    acclohilo,    acchilolo,    acclololo);
+
+   if(idx < dim*dim)
+   {
+      WYHrehihihi[idx] = resulthihihi;
+      WYHrelohihi[idx] = resultlohihi;
+      WYHrehilohi[idx] = resulthilohi;
+      WYHrelolohi[idx] = resultlolohi;
+      WYHrehihilo[idx] = resulthihilo;
+      WYHrelohilo[idx] = resultlohilo;
+      WYHrehilolo[idx] = resulthilolo;
+      WYHrelololo[idx] = resultlololo;
+   }
+   __syncthreads();
+   resulthihihi = WYHimhihihi[idx];
+   resultlohihi = WYHimlohihi[idx];
+   resulthilohi = WYHimhilohi[idx];
+   resultlolohi = WYHimlolohi[idx];
+   resulthihilo = WYHimhihilo[idx];
+   resultlohilo = WYHimlohilo[idx];
+   resulthilolo = WYHimhilolo[idx];
+   resultlololo = WYHimlololo[idx];
+
    odg_mul(Vvalrehihihi,Vvalrelohihi,Vvalrehilohi,Vvalrelolohi,
            Vvalrehihilo,Vvalrelohilo,Vvalrehilolo,Vvalrelololo,
            Wvalimhihihi,Wvalimlohihi,Wvalimhilohi,Wvalimlolohi,
            Wvalimhihilo,Wvalimlohilo,Wvalimhilolo,Wvalimlololo,
              &acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
              &acchihilo,  &acclohilo,  &acchilolo,  &acclololo);
-   odg_inc(&resultimhihihi,&resultimlohihi,&resultimhilohi,&resultimlolohi,
-           &resultimhihilo,&resultimlohilo,&resultimhilolo,&resultimlololo,
-                 acchihihi,      acclohihi,      acchilohi,      acclolohi,
-                 acchihilo,      acclohilo,      acchilolo,      acclololo);
+   odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+               acchihihi,    acclohihi,    acchilohi,    acclolohi,
+               acchihilo,    acclohilo,    acchilolo,    acclololo);
    odg_mul(Vvalimhihihi,Vvalimlohihi,Vvalimhilohi,Vvalimlolohi,
            Vvalimhihilo,Vvalimlohilo,Vvalimhilolo,Vvalimlololo,
            Wvalrehihihi,Wvalrelohihi,Wvalrehilohi,Wvalrelolohi,
            Wvalrehihilo,Wvalrelohilo,Wvalrehilolo,Wvalrelololo,
              &acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
              &acchihilo,  &acclohilo,  &acchilolo,  &acclololo);
-   odg_dec(&resultimhihihi,&resultimlohihi,&resultimhilohi,&resultimlolohi,
-           &resultimhihilo,&resultimlohilo,&resultimhilolo,&resultimlololo,
-                 acchihihi,      acclohihi,      acchilohi,      acclolohi,
-                 acchihilo,      acclohilo,      acchilolo,      acclololo);
+   odg_dec(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+               acchihihi,    acclohihi,    acchilohi,    acclolohi,
+               acchihilo,    acclohilo,    acchilolo,    acclololo);
 
    __syncthreads();
    if(idx < dim*dim)
    {
-      WYHrehihihi[idx] = resultrehihihi;
-      WYHrelohihi[idx] = resultrelohihi;
-      WYHrehilohi[idx] = resultrehilohi;
-      WYHrelolohi[idx] = resultrelolohi;
-      WYHrehihilo[idx] = resultrehihilo;
-      WYHrelohilo[idx] = resultrelohilo;
-      WYHrehilolo[idx] = resultrehilolo;
-      WYHrelololo[idx] = resultrelololo;
-      WYHimhihihi[idx] = resultimhihihi;
-      WYHimlohihi[idx] = resultimlohihi;
-      WYHimhilohi[idx] = resultimhilohi;
-      WYHimlolohi[idx] = resultimlolohi;
-      WYHimhihilo[idx] = resultimhihilo;
-      WYHimlohilo[idx] = resultimlohilo;
-      WYHimhilolo[idx] = resultimhilolo;
-      WYHimlololo[idx] = resultimlololo;
+      WYHimhihihi[idx] = resulthihihi;
+      WYHimlohihi[idx] = resultlohihi;
+      WYHimhilohi[idx] = resulthilohi;
+      WYHimlolohi[idx] = resultlolohi;
+      WYHimhihilo[idx] = resulthihilo;
+      WYHimlohilo[idx] = resultlohilo;
+      WYHimhilolo[idx] = resulthilolo;
+      WYHimlololo[idx] = resultlololo;
    }
 }
 

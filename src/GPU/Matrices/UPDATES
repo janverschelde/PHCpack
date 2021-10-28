@@ -1,5 +1,6 @@
 Wed 27 Oct 2021 : improvements in dbl4_baqr_kernels.cu to use fewer local
-  variables in two functions on complex data.
+  variables in two functions on complex data.  Made similar improvements
+  to dbl8_baqr_kernels.cu.
 
 Mon 25 Oct 2021 : update dbl4_baqr_kernels.cu to use cqd_shmemsize in the
   cmplx4_ kernel functions.
