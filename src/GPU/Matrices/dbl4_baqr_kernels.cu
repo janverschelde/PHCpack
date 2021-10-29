@@ -1773,10 +1773,8 @@ __global__ void cmplx4_beta_next_W
    int vdx,ydx;
    double resultrehihi,resultrelohi,resultrehilo,resultrelolo;
    double resultimhihi,resultimlohi,resultimhilo,resultimlolo;
-   double WYHvalrehihi,WYHvalrelohi,WYHvalrehilo,WYHvalrelolo;
-   double WYHvalimhihi,WYHvalimlohi,WYHvalimhilo,WYHvalimlolo;
-   double Vvalrehihi,Vvalrelohi,Vvalrehilo,Vvalrelolo;
-   double Vvalimhihi,Vvalimlohi,Vvalimhilo,Vvalimlolo;
+   double WYHvalhihi,WYHvallohi,WYHvalhilo,WYHvallolo;
+   double Vvalhihi,Vvallohi,Vvalhilo,Vvallolo;
    double acchihi,acclohi,acchilo,acclolo;
 
    __shared__ double shVrehihi[cqd_shmemsize];   // to store a slice of V
@@ -1824,45 +1822,58 @@ __global__ void cmplx4_beta_next_W
       for(int j=0; j<szt; j++)           // multiply szt values with YWT
       {
          ydx = WYHoff + i*szt + j;       // WYH is stored row by row
-         __syncthreads();
-         WYHvalrehihi = WYHrehihi[ydx];
-         WYHvalrelohi = WYHrelohi[ydx];
-         WYHvalrehilo = WYHrehilo[ydx];
-         WYHvalrelolo = WYHrelolo[ydx];
-         WYHvalimhihi = WYHimhihi[ydx];
-         WYHvalimlohi = WYHimlohi[ydx];
-         WYHvalimhilo = WYHimhilo[ydx];
-         WYHvalimlolo = WYHimlolo[ydx];
-         __syncthreads();
-         Vvalrehihi = shVrehihi[j];
-         Vvalrelohi = shVrelohi[j];
-         Vvalrehilo = shVrehilo[j];
-         Vvalrelolo = shVrelolo[j];
-         Vvalimhihi = shVimhihi[j];
-         Vvalimlohi = shVimlohi[j];
-         Vvalimhilo = shVimhilo[j];
-         Vvalimlolo = shVimlolo[j];
-         // result = result + WYHval*Vvalue;
          // take the Hermitian transpose of V
-         __syncthreads();
-         qdg_mul(  Vvalrehihi,  Vvalrelohi,  Vvalrehilo,  Vvalrelolo,
-                 WYHvalrehihi,WYHvalrelohi,WYHvalrehilo,WYHvalrelolo,
-                     &acchihi,    &acclohi,    &acchilo,    &acclolo);
+
+         Vvalhihi = shVrehihi[j];
+         Vvallohi = shVrelohi[j];
+         Vvalhilo = shVrehilo[j];
+         Vvallolo = shVrelolo[j];
+         WYHvalhihi = WYHrehihi[ydx];
+         WYHvallohi = WYHrelohi[ydx];
+         WYHvalhilo = WYHrehilo[ydx];
+         WYHvallolo = WYHrelolo[ydx];
+         qdg_mul(  Vvalhihi,  Vvallohi,  Vvalhilo,  Vvallolo,
+                 WYHvalhihi,WYHvallohi,WYHvalhilo,WYHvallolo,
+                   &acchihi,  &acclohi,  &acchilo,  &acclolo);
          qdg_inc(&resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo,
                        acchihi,      acclohi,      acchilo,      acclolo);
-         qdg_mul  (Vvalimhihi,  Vvalimlohi,  Vvalimhilo,  Vvalimlolo,
-                 WYHvalimhihi,WYHvalimlohi,WYHvalimhilo,WYHvalimlolo,
-                     &acchihi,    &acclohi,    &acchilo,    &acclolo);
+
+         Vvalhihi = shVimhihi[j];
+         Vvallohi = shVimlohi[j];
+         Vvalhilo = shVimhilo[j];
+         Vvallolo = shVimlolo[j];
+         WYHvalhihi = WYHimhihi[ydx];
+         WYHvallohi = WYHimlohi[ydx];
+         WYHvalhilo = WYHimhilo[ydx];
+         WYHvallolo = WYHimlolo[ydx];
+         qdg_mul  (Vvalhihi,  Vvallohi,  Vvalhilo,  Vvallolo,
+                 WYHvalhihi,WYHvallohi,WYHvalhilo,WYHvallolo,
+                   &acchihi,  &acclohi,  &acchilo,  &acclolo);
          qdg_dec(&resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo,
                        acchihi,      acclohi,      acchilo,      acclolo);
-         qdg_mul(  Vvalimhihi,  Vvalimlohi,  Vvalimhilo,  Vvalimlolo,
-                 WYHvalrehihi,WYHvalrelohi,WYHvalrehilo,WYHvalrelolo,
-                     &acchihi,    &acclohi,    &acchilo,    &acclolo);
+
+         // have already imaginary values for V
+         WYHvalhihi = WYHrehihi[ydx];
+         WYHvallohi = WYHrelohi[ydx];
+         WYHvalhilo = WYHrehilo[ydx];
+         WYHvallolo = WYHrelolo[ydx];
+         qdg_mul(  Vvalhihi,  Vvallohi,  Vvalhilo,  Vvallolo,
+                 WYHvalhihi,WYHvallohi,WYHvalhilo,WYHvallolo,
+                   &acchihi,  &acclohi,  &acchilo,  &acclolo);
          qdg_inc(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
                        acchihi,      acclohi,      acchilo,      acclolo);
-         qdg_mul(  Vvalrehihi,  Vvalrelohi,  Vvalrehilo,  Vvalrelolo,
-                 WYHvalimhihi,WYHvalimlohi,WYHvalimhilo,WYHvalimlolo,
-                     &acchihi,    &acclohi,    &acchilo,    &acclolo);
+
+         Vvalhihi = shVrehihi[j];
+         Vvallohi = shVrelohi[j];
+         Vvalhilo = shVrehilo[j];
+         Vvallolo = shVrelolo[j];
+         WYHvalhihi = WYHimhihi[ydx];
+         WYHvallohi = WYHimlohi[ydx];
+         WYHvalhilo = WYHimhilo[ydx];
+         WYHvallolo = WYHimlolo[ydx];
+         qdg_mul(  Vvalhihi,  Vvallohi,  Vvalhilo,  Vvallolo,
+                 WYHvalhihi,WYHvallohi,WYHvalhilo,WYHvallolo,
+                   &acchihi,  &acclohi,  &acchilo,  &acclolo);
          qdg_inc(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
                        acchihi,      acclohi,      acchilo,      acclolo);
       }
@@ -1884,46 +1895,59 @@ __global__ void cmplx4_beta_next_W
 
    for(int j=0; j<rest; j++)            // rest < szt prevents overflow
    {
-      __syncthreads();
-      ydx = WYHoff + quot*szt + j;
-      WYHvalrehihi = WYHrehihi[ydx];
-      WYHvalrelohi = WYHrelohi[ydx];
-      WYHvalrehilo = WYHrehilo[ydx];
-      WYHvalrelolo = WYHrelolo[ydx];
-      WYHvalimhihi = WYHimhihi[ydx];
-      WYHvalimlohi = WYHimlohi[ydx];
-      WYHvalimhilo = WYHimhilo[ydx];
-      WYHvalimlolo = WYHimlolo[ydx];
-      //__syncthreads();
-      Vvalrehihi = shVrehihi[j];
-      Vvalrelohi = shVrelohi[j];
-      Vvalrehilo = shVrehilo[j];
-      Vvalrelolo = shVrelolo[j];
-      Vvalimhihi = shVimhihi[j];
-      Vvalimlohi = shVimlohi[j];
-      Vvalimhilo = shVimhilo[j];
-      Vvalimlolo = shVimlolo[j];
       // result = result + WYTval*Vvalue;
       // take the Hermitian transpose of V
-      __syncthreads();
-      qdg_mul(  Vvalrehihi,  Vvalrelohi,  Vvalrehilo,  Vvalrelolo,
-              WYHvalrehihi,WYHvalrelohi,WYHvalrehilo,WYHvalrelolo,
-                  &acchihi,    &acclohi,    &acchilo,    &acclolo);
+
+      Vvalhihi = shVrehihi[j];
+      Vvallohi = shVrelohi[j];
+      Vvalhilo = shVrehilo[j];
+      Vvallolo = shVrelolo[j];
+      WYHvalhihi = WYHrehihi[ydx];
+      WYHvallohi = WYHrelohi[ydx];
+      WYHvalhilo = WYHrehilo[ydx];
+      WYHvallolo = WYHrelolo[ydx];
+      qdg_mul(  Vvalhihi,  Vvallohi,  Vvalhilo,  Vvallolo,
+              WYHvalhihi,WYHvallohi,WYHvalhilo,WYHvallolo,
+                &acchihi,  &acclohi,  &acchilo,  &acclolo);
       qdg_inc(&resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo,
                     acchihi,      acclohi,      acchilo,      acclolo);
-      qdg_mul(  Vvalimhihi,  Vvalimlohi,  Vvalimhilo,  Vvalimlolo,
-              WYHvalimhihi,WYHvalimlohi,WYHvalimhilo,WYHvalimlolo,
-                  &acchihi,    &acclohi,    &acchilo,    &acclolo);
+
+      Vvalhihi = shVimhihi[j];
+      Vvallohi = shVimlohi[j];
+      Vvalhilo = shVimhilo[j];
+      Vvallolo = shVimlolo[j];
+      WYHvalhihi = WYHimhihi[ydx];
+      WYHvallohi = WYHimlohi[ydx];
+      WYHvalhilo = WYHimhilo[ydx];
+      WYHvallolo = WYHimlolo[ydx];
+      qdg_mul(  Vvalhihi,  Vvallohi,  Vvalhilo,  Vvallolo,
+              WYHvalhihi,WYHvallohi,WYHvalhilo,WYHvallolo,
+                &acchihi,  &acclohi,  &acchilo,  &acclolo);
       qdg_dec(&resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo,
                     acchihi,      acclohi,      acchilo,      acclolo);
-      qdg_mul(  Vvalimhihi,  Vvalimlohi,  Vvalimhilo,  Vvalimlolo,
-              WYHvalrehihi,WYHvalrelohi,WYHvalrehilo,WYHvalrelolo,
-                  &acchihi,    &acclohi,    &acchilo,    &acclolo);
+
+      // already have the imaginary values for V
+      WYHvalhihi = WYHrehihi[ydx];
+      WYHvallohi = WYHrelohi[ydx];
+      WYHvalhilo = WYHrehilo[ydx];
+      WYHvallolo = WYHrelolo[ydx];
+      qdg_mul(  Vvalhihi,  Vvallohi,  Vvalhilo,  Vvallolo,
+              WYHvalhihi,WYHvallohi,WYHvalhilo,WYHvallolo,
+                &acchihi,  &acclohi,  &acchilo,  &acclolo);
       qdg_inc(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
                     acchihi,      acclohi,      acchilo,      acclolo);
-      qdg_mul(  Vvalrehihi,  Vvalrelohi,  Vvalrehilo,  Vvalrelolo,
-              WYHvalimhihi,WYHvalimlohi,WYHvalimhilo,WYHvalimlolo,
-                  &acchihi,    &acclohi,    &acchilo,    &acclolo);
+
+      Vvalhihi = shVrehihi[j];
+      Vvallohi = shVrelohi[j];
+      Vvalhilo = shVrehilo[j];
+      Vvallolo = shVrelolo[j];
+      WYHvalhihi = WYHimhihi[ydx];
+      WYHvallohi = WYHimlohi[ydx];
+      WYHvalhilo = WYHimhilo[ydx];
+      WYHvallolo = WYHimlolo[ydx];
+      qdg_mul(  Vvalhihi,  Vvallohi,  Vvalhilo,  Vvallolo,
+              WYHvalhihi,WYHvallohi,WYHvalhilo,WYHvallolo,
+                &acchihi,  &acclohi,  &acchilo,  &acclolo);
       qdg_inc(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
                     acchihi,      acclohi,      acchilo,      acclolo);
    }
