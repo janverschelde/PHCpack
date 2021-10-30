@@ -2052,56 +2052,67 @@ __global__ void cmplx4_small_WYH
    double resultimlohi = 0.0;
    double resultimhilo = 0.0;
    double resultimlolo = 0.0;
-   double a_rehihi,a_relohi,a_rehilo,a_relolo;
-   double a_imhihi,a_imlohi,a_imhilo,a_imlolo;
-   double b_rehihi,b_relohi,b_rehilo,b_relolo;
-   double b_imhihi,b_imlohi,b_imhilo,b_imlolo;
+   double a_hihi,a_lohi,a_hilo,a_lolo;
+   double b_hihi,b_lohi,b_hilo,b_lolo;
    double acchihi,acclohi,acchilo,acclolo;
    int Widx,Yidx;
 
    for(int k=0; k<szt; k++)
    {
-      Widx = k*nrows + row;
-      __syncthreads();
-      a_rehihi = Wrehihi[Widx];        // if(nrows == szt) then row = bdx
-      a_relohi = Wrelohi[Widx];
-      a_rehilo = Wrehilo[Widx];
-      a_relolo = Wrelolo[Widx];
-      a_imhihi = Wimhihi[Widx]; 
-      a_imlohi = Wimlohi[Widx]; 
-      a_imhilo = Wimhilo[Widx]; 
-      a_imlolo = Wimlolo[Widx]; 
-      Yidx = k*nrows + col;
-      __syncthreads();
-      b_rehihi = Yrehihi[Yidx];        // if(nrows == szt) then col = tdx
-      b_relohi = Yrelohi[Yidx];
-      b_rehilo = Yrehilo[Yidx];
-      b_relolo = Yrelolo[Yidx];
-      b_imhihi = Yimhihi[Yidx];
-      b_imlohi = Yimlohi[Yidx];
-      b_imhilo = Yimhilo[Yidx];
-      b_imlolo = Yimlolo[Yidx];
+      Widx = k*nrows + row;             // if(nrows == szt) then row = bdx
+      Yidx = k*nrows + col;            // if(nrows == szt) then col = tdx
       // result = result + a*b; with Hermitian transpose of Y
       // resultre = resultre + a_re*b_re + a_im*b_im;
       __syncthreads();
-      qdg_mul(a_rehihi,a_relohi,a_rehilo,a_relolo,
-              b_rehihi,b_relohi,b_rehilo,b_relolo,
+      a_hihi = Wrehihi[Widx];
+      a_lohi = Wrelohi[Widx];
+      a_hilo = Wrehilo[Widx];
+      a_lolo = Wrelolo[Widx];
+      b_hihi = Yrehihi[Yidx];       
+      b_lohi = Yrelohi[Yidx];
+      b_hilo = Yrehilo[Yidx];
+      b_lolo = Yrelolo[Yidx];
+      qdg_mul(  a_hihi,  a_lohi,  a_hilo,  a_lolo,
+                b_hihi,  b_lohi,  b_hilo,  b_lolo,
               &acchihi,&acclohi,&acchilo,&acclolo);
       qdg_inc(&resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo,
                     acchihi,      acclohi,      acchilo,      acclolo);
-      qdg_mul(a_imhihi,a_imlohi,a_imhilo,a_imlolo,
-              b_imhihi,b_imlohi,b_imhilo,b_imlolo,
+
+      a_hihi = Wimhihi[Widx]; 
+      a_lohi = Wimlohi[Widx]; 
+      a_hilo = Wimhilo[Widx]; 
+      a_lolo = Wimlolo[Widx]; 
+      b_hihi = Yimhihi[Yidx];
+      b_lohi = Yimlohi[Yidx];
+      b_hilo = Yimhilo[Yidx];
+      b_lolo = Yimlolo[Yidx];
+      qdg_mul(  a_hihi,  a_lohi,  a_hilo,  a_lolo,
+                b_hihi,  b_lohi,  b_hilo,  b_lolo,
               &acchihi,&acclohi,&acchilo,&acclolo);
       qdg_inc(&resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo,
                     acchihi,      acclohi,      acchilo,      acclolo);
       // resultim = resultim + a_im*b_re - a_re*b_im;
-      qdg_mul(a_imhihi,a_imlohi,a_imhilo,a_imlolo,
-              b_rehihi,b_relohi,b_rehilo,b_relolo,
+      // a_im is already available
+      b_hihi = Yrehihi[Yidx];
+      b_lohi = Yrelohi[Yidx];
+      b_hilo = Yrehilo[Yidx];
+      b_lolo = Yrelolo[Yidx];
+      qdg_mul(  a_hihi,  a_lohi,  a_hilo,  a_lolo,
+                b_hihi,  b_lohi,  b_hilo,  b_lolo,
               &acchihi,&acclohi,&acchilo,&acclolo);
       qdg_inc(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
                     acchihi,      acclohi,      acchilo,      acclolo);
-      qdg_mul(a_rehihi,a_relohi,a_rehilo,a_relolo,
-              b_imhihi,b_imlohi,b_imhilo,b_imlolo,
+
+      a_hihi = Wrehihi[Widx];
+      a_lohi = Wrelohi[Widx];
+      a_hilo = Wrehilo[Widx];
+      a_lolo = Wrelolo[Widx];
+      b_hihi = Yimhihi[Yidx];
+      b_lohi = Yimlohi[Yidx];
+      b_hilo = Yimhilo[Yidx];
+      b_lolo = Yimlolo[Yidx];
+      qdg_mul(  a_hihi,  a_lohi,  a_hilo,  a_lolo,
+                b_hihi,  b_lohi,  b_hilo,  b_lolo,
               &acchihi,&acclohi,&acchilo,&acclolo);
       qdg_dec(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
                     acchihi,      acclohi,      acchilo,      acclolo);
@@ -2338,56 +2349,67 @@ __global__ void cmplx4_small_YWHC
    double resultimlohi = 0.0;
    double resultimhilo = 0.0;
    double resultimlolo = 0.0;
-   double a_rehihi,a_relohi,a_rehilo,a_relolo;
-   double a_imhihi,a_imlohi,a_imhilo,a_imlolo;
-   double b_rehihi,b_relohi,b_rehilo,b_relolo;
-   double b_imhihi,b_imlohi,b_imhilo,b_imlolo;
+   double a_hihi,a_lohi,a_hilo,a_lolo;
+   double b_hihi,b_lohi,b_hilo,b_lolo;
    double acchihi,acclohi,acchilo,acclolo;
    int YWTidx,Cidx;
 
    for(int k=0; k<rowdim; k++)         // innermost loop runs over rowdim
    {
-      YWTidx = row*rowdim + k;
-      __syncthreads();
-      a_rehihi = YWTrehihi[YWTidx];    // YWT is stored row by row
-      a_relohi = YWTrelohi[YWTidx];
-      a_rehilo = YWTrehilo[YWTidx];
-      a_relolo = YWTrelolo[YWTidx];
-      a_imhihi = YWTimhihi[YWTidx];
-      a_imlohi = YWTimlohi[YWTidx];
-      a_imhilo = YWTimhilo[YWTidx];
-      a_imlolo = YWTimlolo[YWTidx];
-      Cidx = colCoff0 + k;
-      __syncthreads();
-      b_rehihi = Crehihi[Cidx];        // but C is stored column by column
-      b_relohi = Crelohi[Cidx];
-      b_rehilo = Crehilo[Cidx];
-      b_relolo = Crelolo[Cidx];
-      b_imhihi = Cimhihi[Cidx];
-      b_imlohi = Cimlohi[Cidx];
-      b_imhilo = Cimhilo[Cidx];
-      b_imlolo = Cimlolo[Cidx];
+      YWTidx = row*rowdim + k;         // YWT is stored row by row
+      Cidx = colCoff0 + k;             // but C is stored column by column
       // result = result + a*b;
       // resultre = resultre + a_re*b_re - a_im*b_im;
       __syncthreads();
-      qdg_mul(a_rehihi,a_relohi,a_rehilo,a_relolo,
-              b_rehihi,b_relohi,b_rehilo,b_relolo,
+      a_hihi = YWTrehihi[YWTidx];    // YWT is stored row by row
+      a_lohi = YWTrelohi[YWTidx];
+      a_hilo = YWTrehilo[YWTidx];
+      a_lolo = YWTrelolo[YWTidx];
+      b_hihi = Crehihi[Cidx];        // but C is stored column by column
+      b_lohi = Crelohi[Cidx];
+      b_hilo = Crehilo[Cidx];
+      b_lolo = Crelolo[Cidx];
+      qdg_mul(  a_hihi,  a_lohi,  a_hilo,  a_lolo,
+                b_hihi,  b_lohi,  b_hilo,  b_lolo,
               &acchihi,&acclohi,&acchilo,&acclolo);
       qdg_inc(&resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo,
                     acchihi,      acclohi,      acchilo,      acclolo);
-      qdg_mul(a_imhihi,a_imlohi,a_imhilo,a_imlolo,
-              b_imhihi,b_imlohi,b_imhilo,b_imlolo,
+
+      a_hihi = YWTimhihi[YWTidx];
+      a_lohi = YWTimlohi[YWTidx];
+      a_hilo = YWTimhilo[YWTidx];
+      a_lolo = YWTimlolo[YWTidx];
+      b_hihi = Cimhihi[Cidx];
+      b_lohi = Cimlohi[Cidx];
+      b_hilo = Cimhilo[Cidx];
+      b_lolo = Cimlolo[Cidx];
+      qdg_mul(  a_hihi,  a_lohi,  a_hilo,  a_lolo,
+                b_hihi,  b_lohi,  b_hilo,  b_lolo,
               &acchihi,&acclohi,&acchilo,&acclolo);
       qdg_dec(&resultrehihi,&resultrelohi,&resultrehilo,&resultrelolo,
                     acchihi,      acclohi,      acchilo,      acclolo);
       // resultim = resultim + a_im*b_re + a_re*b_im;
-      qdg_mul(a_imhihi,a_imlohi,a_imhilo,a_imlolo,
-              b_rehihi,b_relohi,b_rehilo,b_relolo,
+      // a_im is already available
+      b_hihi = Crehihi[Cidx];
+      b_lohi = Crelohi[Cidx];
+      b_hilo = Crehilo[Cidx];
+      b_lolo = Crelolo[Cidx];
+      qdg_mul(  a_hihi,  a_lohi,  a_hilo,  a_lolo,
+                b_hihi,  b_lohi,  b_hilo,  b_lolo,
               &acchihi,&acclohi,&acchilo,&acclolo);
       qdg_inc(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
                     acchihi,      acclohi,      acchilo,      acclolo);
-      qdg_mul(a_rehihi,a_relohi,a_rehilo,a_relolo,
-              b_imhihi,b_imlohi,b_imhilo,b_imlolo,
+
+      a_hihi = YWTrehihi[YWTidx];
+      a_lohi = YWTrelohi[YWTidx];
+      a_hilo = YWTrehilo[YWTidx];
+      a_lolo = YWTrelolo[YWTidx];
+      b_hihi = Cimhihi[Cidx];
+      b_lohi = Cimlohi[Cidx];
+      b_hilo = Cimhilo[Cidx];
+      b_lolo = Cimlolo[Cidx];
+      qdg_mul(  a_hihi,  a_lohi,  a_hilo,  a_lolo,
+                b_hihi,  b_lohi,  b_hilo,  b_lolo,
               &acchihi,&acclohi,&acchilo,&acclolo);
       qdg_inc(&resultimhihi,&resultimlohi,&resultimhilo,&resultimlolo,
                     acchihi,      acclohi,      acchilo,      acclolo);
@@ -2548,45 +2570,44 @@ __global__ void cmplx4_small_R_add_YWHC
    const int col = offset % coldim;
    const int idx = (coloff + col)*nrows + (rowoff + row);
  
-   double a_rehihi,a_relohi,a_rehilo,a_relolo;
-   double a_imhihi,a_imlohi,a_imhilo,a_imlolo;
-   double b_rehihi,b_relohi,b_rehilo,b_relolo;
-   double b_imhihi,b_imlohi,b_imhilo,b_imlolo;
+   double a_hihi,a_lohi,a_hilo,a_lolo;
+   double b_hihi,b_lohi,b_hilo,b_lolo;
    
-   a_rehihi = Rrehihi[idx];
-   a_relohi = Rrelohi[idx];
-   a_rehilo = Rrehilo[idx];
-   a_relolo = Rrelolo[idx];
-   a_imhihi = Rimhihi[idx];
-   a_imlohi = Rimlohi[idx];
-   a_imhilo = Rimhilo[idx];
-   a_imlolo = Rimlolo[idx];
-   __syncthreads();
-   b_rehihi = YWTCrehihi[idx];
-   b_relohi = YWTCrelohi[idx];
-   b_rehilo = YWTCrehilo[idx];
-   b_relolo = YWTCrelolo[idx];
-   b_imhihi = YWTCimhihi[idx];
-   b_imlohi = YWTCimlohi[idx];
-   b_imhilo = YWTCimhilo[idx];
-   b_imlolo = YWTCimlolo[idx];
+   a_hihi = Rrehihi[idx];
+   a_lohi = Rrelohi[idx];
+   a_hilo = Rrehilo[idx];
+   a_lolo = Rrelolo[idx];
+   b_hihi = YWTCrehihi[idx];
+   b_lohi = YWTCrelohi[idx];
+   b_hilo = YWTCrehilo[idx];
+   b_lolo = YWTCrelolo[idx];
    // a_re = a_re + b_re;
    __syncthreads();
-   qdg_inc(&a_rehihi,&a_relohi,&a_rehilo,&a_relolo,
-            b_rehihi, b_relohi, b_rehilo, b_relolo);
-   // a_im = a_im + b_im;
-   qdg_inc(&a_imhihi,&a_imlohi,&a_imhilo,&a_imlolo,
-            b_imhihi, b_imlohi, b_imhilo, b_imlolo);
-  
+   qdg_inc(&a_hihi,&a_lohi,&a_hilo,&a_lolo,
+            b_hihi, b_lohi, b_hilo, b_lolo);
    __syncthreads();
-   Rrehihi[idx] = a_rehihi;
-   Rrelohi[idx] = a_relohi;
-   Rrehilo[idx] = a_rehilo;
-   Rrelolo[idx] = a_relolo;
-   Rimhihi[idx] = a_imhihi;
-   Rimlohi[idx] = a_imlohi;
-   Rimhilo[idx] = a_imhilo;
-   Rimlolo[idx] = a_imlolo;
+   Rrehihi[idx] = a_hihi;
+   Rrelohi[idx] = a_lohi;
+   Rrehilo[idx] = a_hilo;
+   Rrelolo[idx] = a_lolo;
+
+   // a_im = a_im + b_im;
+   a_hihi = Rimhihi[idx];
+   a_lohi = Rimlohi[idx];
+   a_hilo = Rimhilo[idx];
+   a_lolo = Rimlolo[idx];
+   b_hihi = YWTCimhihi[idx];
+   b_lohi = YWTCimlohi[idx];
+   b_hilo = YWTCimhilo[idx];
+   b_lolo = YWTCimlolo[idx];
+   __syncthreads();
+   qdg_inc(&a_hihi,&a_lohi,&a_hilo,&a_lolo,
+            b_hihi, b_lohi, b_hilo, b_lolo);
+   __syncthreads();
+   Rimhihi[idx] = a_hihi;
+   Rimlohi[idx] = a_lohi;
+   Rimhilo[idx] = a_hilo;
+   Rimlolo[idx] = a_lolo;
 }
 
 void GPU_dbl4_small_house
