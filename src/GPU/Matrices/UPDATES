@@ -1,3 +1,5 @@
+Sat 30 Oct 2021 : more improvements in dbl4_baqr_kernels.cu for complex data.
+
 Fri 29 Oct 2021 : improved dbl4_baqr_kernels.cu so one kernel function
   on complex data uses 8 fewer local variables.  Applied the same type
   of improvement to three other kernel functions in dbl4_baqr_kernels.cu.
