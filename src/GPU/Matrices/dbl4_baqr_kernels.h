@@ -1,10 +1,10 @@
 /* The file dbl4_baqr_kernels.h specifies functions for the
- * blocked accelerated QR in double double precision. */
+ * blocked accelerated QR in quad double precision. */
 
 #ifndef __dbl4_baqr_kernels_h__
 #define __dbl4_baqr_kernels_h__
 
-/* The constants dd_shmemsize and cdd_shmemsize,
+/* The constants qd_shmemsize and cqd_shmemsize,
  * respectively for real and complex data, determine the upper bounds
  * on the size of the largest vectors the small kernels can handle.
  * The bounds were set experimentally, based on the available amount
@@ -13,7 +13,7 @@
 #define qd_shmemsize 512
 #define cqd_shmemsize 256
 
-/* The constants inner_dd_shmemsize and outer_dd_shmemsize,
+/* The constants inner_qd_shmemsize and outer_qd_shmemsize,
  * respectively for the many blocks of threads and the accumulating kernel,
  * determine how munch the shared memory is consumed. */
 
@@ -955,7 +955,7 @@ __global__ void dbl4_beta_next_W
  * ON ENTRY :
  *   nrows    number of rows in V, W, and the dimension of WYT;
  *   szt      number of threads in one block;
- *   Bhi      highest double of the beta with the next Householder vector;
+ *   Bhihi    highest double of the beta with the next Householder vector;
  *   Blohi    second highest double of the beta;
  *   Bhilo    second lowest double of the beta;
  *   Blolo    lowest double of the beta;
@@ -1186,24 +1186,42 @@ __global__ void cmplx4_small_QWYH
  *   rowdim   number of rows and columns of the WYT matrix;
  *   szt      the number of threads in a block;
  *   coloff   offset for the column index in QWYT;
- *   Qrehi    high doubles of the real parts of Q;
- *   Qrelo    low double of the real parts of Q;
- *   Qimhi    high doubles of the imaginary parts of Q;
- *   Qimlo    low doubles of the imaginary parts of Q;
- *   WYTrehi  high doubles of the real parts of W*Y^T;
- *   WYTrelo  low doubles of the real parts of W*Y^T;
- *   WYTimhi  high doubles of the imaginary parts of W*Y^T;
- *   WYTimlo  low doubles of the imaginary parts of W*Y^T;
- *   QWYTrehi has space for a dim-by-dim matrix;
- *   QWYTrelo has space for a dim-by-dim matrix;
- *   QWYTimhi has space for a dim-by-dim matrix;
- *   QWYTimlo has space for a dim-by-dim matrix.
+ *   Qrehihi  highest doubles of the real parts of Q;
+ *   Qrelohi  second highest doubles of the real parts of Q;
+ *   Qrehilo  second lowest doubles of the real parts of Q;
+ *   Qrelolo  lowest doubles of the real parts of Q;
+ *   Qimhihi  highest doubles of the imaginary parts of Q;
+ *   Qimlohi  second highest doubles of the imaginary parts of Q;
+ *   Qimhilo  second lowest doubles of the imaginary parts of Q;
+ *   Qimlolo  lowest doubles of the imaginary parts of Q;
+ *   WYTrehihi are the highest doubles of the real parts of W*Y^T;
+ *   WYTrelohi are the second highest doubles of the real parts of W*Y^T;
+ *   WYTrehilo are the second lowest doubles of the real parts of W*Y^T;
+ *   WYTrelolo are the lowest doubles of the real parts of W*Y^T;
+ *   WYTimhihi are the highest doubles of the imaginary parts of W*Y^T;
+ *   WYTimlohi are the second highest doubles of the imaginary parts of W*Y^T;
+ *   WYTimhilo are the second lowest doubles of the imaginary parts of W*Y^T;
+ *   WYTimlolo are the lowest doubles of the imaginary parts of W*Y^T;
+ *   QWYTrehihi has space for a dim-by-dim matrix;
+ *   QWYTrelohi has space for a dim-by-dim matrix;
+ *   QWYTrehilo has space for a dim-by-dim matrix;
+ *   QWYTrelolo has space for a dim-by-dim matrix;
+ *   QWYTimhihi has space for a dim-by-dim matrix;
+ *   QWYTimlohi has space for a dim-by-dim matrix;
+ *   QWYTimhilo has space for a dim-by-dim matrix;
+ *   QWYTimlolo has space for a dim-by-dim matrix.
  *
  * ON RETURN :
- *   QWYTrehi are the high doubles of the real parts of Q*W*Y^T;
- *   QWYTrelo are the low doubles of the real parts of Q*W*Y^T;
- *   QWYTimhi are the high doubles of the imaginary parts of Q*W*Y^T;
- *   QWYTimlo are the low doubles of the imaginary parts of Q*W*Y^T. */
+ *   QWYTrehihi are the highest doubles of the real parts of Q*W*Y^T;
+ *   QWYTrelohi are the second highest doubles of the real parts of Q*W*Y^T;
+ *   QWYTrehilo are the second lowest doubles of the real parts of Q*W*Y^T;
+ *   QWYTrelolo are the lowest doubles of the real parts of Q*W*Y^T;
+ *   QWYTimhihi are the highest doubles of the imaginary parts of Q*W*Y^T;
+ *   QWYTimlohi are the second highest doubles of the imaginary parts
+ *              of Q*W*Y^T;
+ *   QWYTimhilo are the second lowest doubles of the imaginary parts
+ *              of Q*W*Y^T;
+ *   QWYTimlolo are the lowest doubles of the imaginary parts of Q*W*Y^T. */
 
 __global__ void dbl4_small_YWTC
  ( int nrows, int ncols, int rowdim, int coldim, int szt,
@@ -1286,8 +1304,8 @@ __global__ void cmplx4_small_YWHC
  *   YWTCrehilo has space for a rowdim-by-coldim matrix;
  *   YWTCrelolo has space for a rowdim-by-coldim matrix;
  *   YWTCimhihi has space for a rowdim-by-coldim matrix.
- *   YWTCimlohi has space for a rowdim-by-coldim matrix.
- *   YWTCimhilo has space for a rowdim-by-coldim matrix.
+ *   YWTCimlohi has space for a rowdim-by-coldim matrix;
+ *   YWTCimhilo has space for a rowdim-by-coldim matrix;
  *   YWTCimlolo has space for a rowdim-by-coldim matrix.
  *
  * ON RETURN :
@@ -1393,7 +1411,7 @@ __global__ void dbl4_small_R_add_YWTC
  *   Rlolo    lowest doubles of R;
  *   YWTChihi are the highest doubles of YWT*C;
  *   YWTClohi are the second highest doubles of YWT*C;
- *   YWTChilo are the second lowest doubles of YWT*C.
+ *   YWTChilo are the second lowest doubles of YWT*C;
  *   YWTClolo are the lowest doubles of YWT*C.
  *
  * ON RETURN :
@@ -2609,60 +2627,116 @@ void GPU_cmplx4_medium_VB_to_W
  *   If verbose, then the W matrix is returned on the host.
  *
  * ON ENTRY :
- *   nrows    number of rows in the matrices V, Y, and W;
- *   ncols    equals the size of one tile, or equivalently,
- *            is the number of elements in B,
- *            and the number of columns in V, Y, and W;
- *   szt      size of one tile and the number of threads in a block;
- *   idx      index of the current tile;
- *   Vrehi_h  high doubles of the real parts
- *            of the Householder vectors, if verbose;
- *   Vrelo_h  low doubles of the real parts
- *            of the Householder vectors, if verbose;
- *   Vimhi_h  high doubles of the imaginary parts
- *            of the Householder vectors, if verbose;
- *   Vimlo_h  low doubles of the imaginary parts
- *            of the Householder vectors, if verbose;
- *   Vrehi_d  high doubles of the the real parts of V, on the device;
- *   Vrelo_d  low doubles of the real parts of V, on the device;
- *   Vimhi_d  high doubles of the imaginary parts of V, on the device;
- *   Vimlo_d  low doubles of the imaginary parts of V, on the device;
- *   Wrehi_h  has space for the high doubles of the real parts of W,
- *            if verbose;
- *   Wrelo_h  has space for the low doubles of the real parts of W,
- *            if verbose;
- *   Wimhi_h  has space for the high doubles of the imaginary parts of W,
- *            if verbose;
- *   Wimlo_h  has space for the low doubles of the imaginary parts of W,
- *            if verbose;
- *   Wrehi_d  has space for the high doubles of the real parts of W,
+ *   nrows     number of rows in the matrices V, Y, and W;
+ *   ncols     equals the size of one tile, or equivalently,
+ *             is the number of elements in B,
+ *             and the number of columns in V, Y, and W;
+ *   szt       size of one tile and the number of threads in a block;
+ *   idx       index of the current tile;
+ *   Vrehihi_h are the highest doubles of the real parts
+ *             of the Householder vectors, if verbose;
+ *   Vrelohi_h are the second highest doubles of the real parts
+ *             of the Householder vectors, if verbose;
+ *   Vrehilo_h are the second lowest doubles of the real parts
+ *             of the Householder vectors, if verbose;
+ *   Vrelolo_h are the lowest doubles of the real parts
+ *             of the Householder vectors, if verbose;
+ *   Vimhihi_h are the highest doubles of the imaginary parts
+ *             of the Householder vectors, if verbose;
+ *   Vimlohi_h are the second highest doubles of the imaginary parts
+ *             of the Householder vectors, if verbose;
+ *   Vimhilo_h are the second lowest doubles of the imaginary parts
+ *             of the Householder vectors, if verbose;
+ *   Vimlolo_h are the lowest doubles of the imaginary parts
+ *             of the Householder vectors, if verbose;
+ *   Vrehihi_d are the highest doubles of the the real parts of V,
+ *             on the device;
+ *   Vrelohi_d are the second highest doubles of the the real parts of V,
+ *             on the device;
+ *   Vrehilo_d are the second lowest doubles of the real parts of V,
+ *             on the device;
+ *   Vrelolo_d are the lowest doubles of the real parts of V,
+ *             on the device;
+ *   Vimhihi_d are the highest doubles of the imaginary parts of V,
+ *             on the device;
+ *   Vimlohi_d are the second highest doubles of the imaginary parts of V,
+ *             on the device;
+ *   Vimhilo_d are the second lowest doubles of the imaginary parts of V,
+ *             on the device;
+ *   Vimlolo_d are the lowest doubles of the imaginary parts of V,
+ *             on the device;
+ *   Wrehihi_h has space for the highest doubles of the real parts of W,
+ *             if verbose;
+ *   Wrelohi_h has space for the second highest doubles of the real parts
+ *             of W, if verbose;
+ *   Wrehilo_h has space for the second lowest doubles of the real parts of W,
+ *             if verbose;
+ *   Wrelolo_h has space for the lowest doubles of the real parts of W,
+ *             if verbose;
+ *   Wimhihi_h has space for the highest doubles of the imaginary parts of W,
+ *             if verbose;
+ *   Wimlohi_h has space for the second highest doubles of the imaginary parts
+ *             of W, if verbose;
+ *   Wimhilo_h has space for the second lowest doubles of the imaginary parts
+ *             of W, if verbose;
+ *   Wimlolo_h has space for the lowest doubles of the imaginary parts of W,
+ *             if verbose;
+ *   Wrehihi_d has space for the highest doubles of the real parts of W,
+ *             on the device;
+ *   Wrelohi_d has space for the second highest doubles of the real parts
+ *             of W, on the device;
+ *   Wrehilo_d has space for the second lowest doubles of the real parts of W,
+ *             on the device;
+ *   Wrelolo_d has space for the lowest doubles of the real parts of W,
+ *             on the device;
+ *   Wimhihi_d has space for the highest doubles of the imaginary parts of W,
  *            on the device;
- *   Wrelo_d  has space for the low doubles of the real parts of W,
- *            on the device;
- *   Wimhi_d  has space for the high doubles of the imaginary parts of W,
- *            on the device;
- *   Wimlo_d  has space for the low doubles of the imaginary parts of W,
- *            on the device;
- *   WYHrehi_h has space for the high doubles of the real parts of W*Y^H,
- *            if verbose;
- *   WYHrelo_h has space for the low doubles of the real parts of W*Y^H,
- *            if verbose;
- *   WYHimhi_h has space for the high doubles of the imaginary parts of W*Y^H,
- *            if verbose;
- *   WYHimlo_h has space for the low doubles of the imaginary parts of W*Y^H,
- *            if verbose;
- *   WYHrehi_d has space for the high doubles of the real parts of W*Y^H,
- *            on the device;
- *   WYHrelo_d has space for the low doubles of the real parts of W*Y^H,
- *            on the device;
- *   WYHimhi_d has space for the high doubles of the imaginary parts of W*Y^H,
- *            on the device;
- *   WYHimlo_d has space for the low doubles of the imaginary parts of W*Y^H,
- *            on the device;
- *   betahi_h has space for the betas if verbose;
- *   betalo_h has space for the betas if verbose;
- *   betahi_d has space on the device for the betas;
- *   betalo_d has space on the device for the betas;
+ *   Wimlohi_d has space for the second highest doubles of the imaginary parts
+ *             of W, on the device;
+ *   Wimhilo_d has space for the second lowest doubles of the imaginary parts
+ *             of W, on the device;
+ *   Wimlolo_d has space for the lowest doubles of the imaginary parts of W,
+ *             on the device;
+ *   WYHrehihi_h has space for the highest doubles of the real parts
+ *             of W*Y^H, if verbose;
+ *   WYHrelohi_h has space for the second highest doubles of the real parts
+ *             of W*Y^H, if verbose;
+ *   WYHrehilo_h has space for the second lowest doubles of the real parts
+ *             of W*Y^H, if verbose;
+ *   WYHrelolo_h has space for the lowest doubles of the real parts
+ *             of W*Y^H, if verbose;
+ *   WYHimhihi_h has space for the highest doubles of the imaginary parts
+ *             of W*Y^H, if verbose;
+ *   WYHimlohi_h has space for the second highest doubles of the imaginary
+ *             parts of W*Y^H, if verbose;
+ *   WYHimhilo_h has space for the secondlowest doubles of the imaginary parts
+ *             of W*Y^H, if verbose;
+ *   WYHimlolo_h has space for the lowest doubles of the imaginary parts
+ *             of W*Y^H, if verbose;
+ *   WYHrehihi_d has space for the highest doubles of the real parts
+ *             of W*Y^H, on the device;
+ *   WYHrelohi_d has space for the second highest doubles of the real parts
+ *             of W*Y^H, on the device;
+ *   WYHrehilo_d has space for the second lowest doubles of the real parts
+ *             of W*Y^H, on the device;
+ *   WYHrelolo_d has space for the lowest doubles of the real parts
+ *             of W*Y^H, on the device;
+ *   WYHimhihi_d has space for the highest doubles of the imaginary parts
+ *             of W*Y^H, on the device;
+ *   WYHimlohi_d has space for the second highest doubles of the imaginary
+ *             parts of W*Y^H, on the device;
+ *   WYHimhilo_d has space for the second lowest doubles of the imaginary
+ *             parts of W*Y^H, on the device;
+ *   WYHimlolo_d has space for the lowest doubles of the imaginary parts
+ *             of W*Y^H, on the device;
+ *   betahihi_h has space for the betas if verbose;
+ *   betalohi_h has space for the betas if verbose;
+ *   betahilo_h has space for the betas if verbose;
+ *   betalolo_h has space for the betas if verbose;
+ *   betahihi_d has space on the device for the betas;
+ *   betalohi_d has space on the device for the betas;
+ *   betahilo_d has space on the device for the betas;
+ *   betalolo_d has space on the device for the betas;
  *   add      current number of additions and subtractions;
  *   mul      current number of multiplications;
  *   verbose  is the verbose flag.
