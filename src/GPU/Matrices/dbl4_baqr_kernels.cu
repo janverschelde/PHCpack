@@ -4823,7 +4823,7 @@ void GPU_cmplx4_small_QWYH
                  << Qrehihi_h[ix] << "  " << Qrelohi_h[ix] << endl
                  << "          "
                  << Qrehilo_h[ix] << "  " << Qrelolo_h[ix] << endl;
-            cout << "Q[" << i << "][" << j << "] : "
+            cout << "Q[" << i << "][" << j << "]im : "
                  << Qimhihi_h[ix] << "  " << Qimlohi_h[ix] << endl
                  << "          "
                  << Qimhilo_h[ix] << "  " << Qimlolo_h[ix] << endl;

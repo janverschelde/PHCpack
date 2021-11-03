@@ -1,3 +1,5 @@
+Wed 3 Nov 2021 : corrected output of a complex Q in dbl4_baqr_kernels.cu.
+
 Sat 30 Oct 2021 : more improvements in dbl4_baqr_kernels.cu for complex data.
   Improved the documentation in dbl4_baqr_kernels.h.
   Reformatting of code and rewritings in dbl4_baqr_kernels.cu.
