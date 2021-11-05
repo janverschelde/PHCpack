@@ -1,3 +1,6 @@
+Thu 4 Nov 2021 : in dbl4_baqr_kernels, splitted the kernel for RHdotv in two,
+  one for the real and another for the imaginary parts.
+
 Wed 3 Nov 2021 : corrected output of a complex Q in dbl4_baqr_kernels.cu.
   Removed four local variables from the cmplx4_sum_betaRHdotv kernel
   in dbl4_baqr_kernels.cu.

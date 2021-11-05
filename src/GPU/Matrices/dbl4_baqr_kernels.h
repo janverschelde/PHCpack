@@ -487,6 +487,32 @@ __global__ void cmplx4_RHdotv
  *   RHdotvimhilo has the second lowest doubles of the imag parts of RHdotv;
  *   RHdotvimlolo has the lowest doubles of the imag parts of RHdotv. */
 
+__global__ void cmplx4_RHdotvre
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *Rrehihi, double *Rrelohi, double *Rrehilo, double *Rrelolo,
+   double *Rimhihi, double *Rimlohi, double *Rimhilo, double *Rimlolo,
+   double *vrehihi, double *vrelohi, double *vrehilo, double *vrelolo,
+   double *vimhihi, double *vimlohi, double *vimhilo, double *vimlolo,
+   double *RHdotvrehihi, double *RHdotvrelohi,
+   double *RHdotvrehilo, double *RHdotvrelolo,
+   double *RHdotvimhihi, double *RHdotvimlohi,
+   double *RHdotvimhilo, double *RHdotvimlolo );
+/*
+ * DESCRIPTION :
+ *   Computes only the real parts of R^H dotted with v. */
+
+__global__ void cmplx4_RHdotvim
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *Rrehihi, double *Rrelohi, double *Rrehilo, double *Rrelolo,
+   double *Rimhihi, double *Rimlohi, double *Rimhilo, double *Rimlolo,
+   double *vrehihi, double *vrelohi, double *vrehilo, double *vrelolo,
+   double *vimhihi, double *vimlohi, double *vimhilo, double *vimlolo,
+   double *RHdotvimhihi, double *RHdotvimlohi,
+   double *RHdotvimhilo, double *RHdotvimlolo );
+/*
+ * DESCRIPTION :
+ *   Computes only the imaginary parts of R^H dotted with v. */
+
 __global__ void dbl4_sum_betaRTdotv
  ( int nrows,
    double *betahihi, double *betalohi, double *betahilo, double *betalolo,
