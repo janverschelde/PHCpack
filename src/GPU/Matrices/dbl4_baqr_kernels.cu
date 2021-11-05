@@ -1509,6 +1509,190 @@ __global__ void cmplx4_medium_subvbetaRHv
    }
 }
 
+__global__ void cmplx4_medium_subvbetaRHvRe
+ ( int nrows, int ncols, int szt, int k,
+   double *Rrehihi, double *Rrelohi, double *Rrehilo, double *Rrelolo,
+   double *vrehihi, double *vrelohi, double *vrehilo, double *vrelolo,
+   double *vimhihi, double *vimlohi, double *vimhilo, double *vimlolo,
+   double *betahihi, double *betalohi, double *betahilo, double *betalolo,
+   double *wrehihi, double *wrelohi, double *wrehilo, double *wrelolo,
+   double *wimhihi, double *wimlohi, double *wimhilo, double *wimlolo )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int Roffset = k*nrows + k;    // start in R
+   const int widx = bdx*szt + tdx;     // global thread index 
+
+   const int coldim = ncols - k;       // number of columns in R
+   const int bound = coldim*(nrows-k); // bound on Ridx
+   const int rowidx = widx / coldim;   // row index
+   const int colidx = widx % coldim;   // column index
+
+   const int Ridx = Roffset + nrows*colidx + rowidx;
+
+   __shared__ double shwrehihi[cqd_shmemsize];  // values in beta*R^H*v
+   __shared__ double shwrelohi[cqd_shmemsize];  // are less in number than szt
+   __shared__ double shwrehilo[cqd_shmemsize]; 
+   __shared__ double shwrelolo[cqd_shmemsize]; 
+   __shared__ double shwimhihi[cqd_shmemsize]; 
+   __shared__ double shwimlohi[cqd_shmemsize];
+   __shared__ double shwimhilo[cqd_shmemsize]; 
+   __shared__ double shwimlolo[cqd_shmemsize];
+   shwrehihi[tdx] = wrehihi[tdx];
+   shwrelohi[tdx] = wrelohi[tdx];
+   shwrehilo[tdx] = wrehilo[tdx];
+   shwrelolo[tdx] = wrelolo[tdx];
+   shwimhihi[tdx] = wimhihi[tdx];
+   shwimlohi[tdx] = wimlohi[tdx];
+   shwimhilo[tdx] = wimhilo[tdx];
+   shwimlolo[tdx] = wimlolo[tdx];
+   __syncthreads();
+
+   double Rwidxhihi,Rwidxlohi,Rwidxhilo,Rwidxlolo;
+   double vValhihi,vVallohi,vValhilo,vVallolo; // value in Householder vector
+   double wValhihi,wVallohi,wValhilo,wVallolo; // value in beta*R^H*v
+   double acchihi,acclohi,acchilo,acclolo;
+ 
+   // Rwidx = Rwidx - vValue*wValue;   // update R[rowidx,colidx]
+   // take the Hermitian transpose of w
+
+   Rwidxhihi = Rrehihi[Ridx];     // number that tdx updates
+   Rwidxlohi = Rrelohi[Ridx];
+   Rwidxhilo = Rrehilo[Ridx];
+   Rwidxlolo = Rrelolo[Ridx];
+
+   __syncthreads();
+   vValhihi = vrehihi[rowidx];    // value in Householder vector
+   vVallohi = vrelohi[rowidx];
+   vValhilo = vrehilo[rowidx];
+   vVallolo = vrelolo[rowidx];
+   wValhihi = shwrehihi[colidx];  // value in beta*R^H*v
+   wVallohi = shwrelohi[colidx];
+   wValhilo = shwrehilo[colidx];
+   wVallolo = shwrelolo[colidx];
+   __syncthreads();
+   qdg_mul(vValhihi,vVallohi,vValhilo,vVallolo,
+           wValhihi,wVallohi,wValhilo,wVallolo,
+           &acchihi,&acclohi,&acchilo,&acclolo);
+   qdg_dec(&Rwidxhihi,&Rwidxlohi,&Rwidxhilo,&Rwidxlolo,
+              acchihi,   acclohi,   acchilo,   acclolo);
+
+   vValhihi = vimhihi[rowidx];
+   vVallohi = vimlohi[rowidx];
+   vValhilo = vimhilo[rowidx];
+   vVallolo = vimlolo[rowidx];
+   wValhihi = shwimhihi[colidx];
+   wVallohi = shwimlohi[colidx];
+   wValhilo = shwimhilo[colidx];
+   wVallolo = shwimlolo[colidx];
+   __syncthreads();
+   qdg_mul(vValhihi,vVallohi,vValhilo,vVallolo,
+           wValhihi,wVallohi,wValhilo,wVallolo,
+           &acchihi,&acclohi,&acchilo,&acclolo);
+   qdg_dec(&Rwidxhihi,&Rwidxlohi,&Rwidxhilo,&Rwidxlolo,
+              acchihi,   acclohi,   acchilo,   acclolo);
+
+   __syncthreads();
+   if(widx < bound)                    // if() takes care of padding
+   {
+      Rrehihi[Ridx] = Rwidxhihi;
+      Rrelohi[Ridx] = Rwidxlohi;
+      Rrehilo[Ridx] = Rwidxhilo;
+      Rrelolo[Ridx] = Rwidxlolo;
+   }
+}
+
+__global__ void cmplx4_medium_subvbetaRHvIm
+ ( int nrows, int ncols, int szt, int k,
+   double *Rimhihi, double *Rimlohi, double *Rimhilo, double *Rimlolo,
+   double *vrehihi, double *vrelohi, double *vrehilo, double *vrelolo,
+   double *vimhihi, double *vimlohi, double *vimhilo, double *vimlolo,
+   double *betahihi, double *betalohi, double *betahilo, double *betalolo,
+   double *wrehihi, double *wrelohi, double *wrehilo, double *wrelolo,
+   double *wimhihi, double *wimlohi, double *wimhilo, double *wimlolo )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int Roffset = k*nrows + k;    // start in R
+   const int widx = bdx*szt + tdx;     // global thread index 
+
+   const int coldim = ncols - k;       // number of columns in R
+   const int bound = coldim*(nrows-k); // bound on Ridx
+   const int rowidx = widx / coldim;   // row index
+   const int colidx = widx % coldim;   // column index
+
+   const int Ridx = Roffset + nrows*colidx + rowidx;
+
+   __shared__ double shwrehihi[cqd_shmemsize];  // values in beta*R^H*v
+   __shared__ double shwrelohi[cqd_shmemsize];  // are less in number than szt
+   __shared__ double shwrehilo[cqd_shmemsize]; 
+   __shared__ double shwrelolo[cqd_shmemsize]; 
+   __shared__ double shwimhihi[cqd_shmemsize]; 
+   __shared__ double shwimlohi[cqd_shmemsize];
+   __shared__ double shwimhilo[cqd_shmemsize]; 
+   __shared__ double shwimlolo[cqd_shmemsize];
+   shwrehihi[tdx] = wrehihi[tdx];
+   shwrelohi[tdx] = wrelohi[tdx];
+   shwrehilo[tdx] = wrehilo[tdx];
+   shwrelolo[tdx] = wrelolo[tdx];
+   shwimhihi[tdx] = wimhihi[tdx];
+   shwimlohi[tdx] = wimlohi[tdx];
+   shwimhilo[tdx] = wimhilo[tdx];
+   shwimlolo[tdx] = wimlolo[tdx];
+   __syncthreads();
+
+   double Rwidxhihi,Rwidxlohi,Rwidxhilo,Rwidxlolo;
+   double vValhihi,vVallohi,vValhilo,vVallolo; // value in Householder vector
+   double wValhihi,wVallohi,wValhilo,wVallolo; // value in beta*R^H*v
+   double acchihi,acclohi,acchilo,acclolo;
+ 
+   __syncthreads();
+   Rwidxhihi = Rimhihi[Ridx];
+   Rwidxlohi = Rimlohi[Ridx];
+   Rwidxhilo = Rimhilo[Ridx];
+   Rwidxlolo = Rimlolo[Ridx];
+
+   __syncthreads();
+   vValhihi = vimhihi[rowidx];
+   vVallohi = vimlohi[rowidx];
+   vValhilo = vimhilo[rowidx];
+   vVallolo = vimlolo[rowidx];
+   wValhihi = shwrehihi[colidx];  // value in beta*R^H*v
+   wVallohi = shwrelohi[colidx];
+   wValhilo = shwrehilo[colidx];
+   wVallolo = shwrelolo[colidx];
+   __syncthreads();
+   qdg_mul(vValhihi,vVallohi,vValhilo,vVallolo,
+           wValhihi,wVallohi,wValhilo,wVallolo,
+           &acchihi,&acclohi,&acchilo,&acclolo);
+   qdg_dec(&Rwidxhihi,&Rwidxlohi,&Rwidxhilo,&Rwidxlolo,
+              acchihi,   acclohi,   acchilo,   acclolo);
+
+   vValhihi = vrehihi[rowidx];    // value in Householder vector
+   vVallohi = vrelohi[rowidx];
+   vValhilo = vrehilo[rowidx];
+   vVallolo = vrelolo[rowidx];
+   wValhihi = shwimhihi[colidx];
+   wVallohi = shwimlohi[colidx];
+   wValhilo = shwimhilo[colidx];
+   wVallolo = shwimlolo[colidx];
+   __syncthreads();
+   qdg_mul(vValhihi,vVallohi,vValhilo,vVallolo,
+           wValhihi,wVallohi,wValhilo,wVallolo,
+           &acchihi,&acclohi,&acchilo,&acclolo);
+   qdg_inc(&Rwidxhihi,&Rwidxlohi,&Rwidxhilo,&Rwidxlolo,
+              acchihi,   acclohi,   acchilo,   acclolo);
+
+   __syncthreads();
+   if(widx < bound)                    // if() takes care of padding
+   {
+      Rimhihi[Ridx] = Rwidxhihi;
+      Rimlohi[Ridx] = Rwidxlohi;
+      Rimhilo[Ridx] = Rwidxhilo;
+      Rimlolo[Ridx] = Rwidxlolo;
+   }
+}
+
 __global__ void dbl4_beta_times_V
  ( int nrows, int szt,
    double *Bhihi, double *Blohi, double *Bhilo, double *Blolo,
@@ -4188,6 +4372,8 @@ void GPU_cmplx4_medium_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *RHvlapms += milliseconds;
+
+
    flopcount_cmplx_RHdotv(nhouse,szt,add,mul);
    flopcount_cmplx_sum_betaRHdotv(nhouse,dimRHdotv,add,mul);
 
@@ -4198,7 +4384,7 @@ void GPU_cmplx4_medium_leftRupdate
       cout << "   nrows : " << nrows << "  endcol : " << endcol
            << "  szt : " << szt << "  colidx : " << colidx << endl;
    }
-
+/*
    cudaEventRecord(start);
    cmplx4_medium_subvbetaRHv<<<nbrblocks,szt>>>
       (nrows,endcol,szt,colidx,
@@ -4215,6 +4401,39 @@ void GPU_cmplx4_medium_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *redlapms += milliseconds;
+ */
+   cudaEventRecord(start);
+   cmplx4_medium_subvbetaRHvRe<<<nbrblocks,szt>>>
+      (nrows,endcol,szt,colidx,
+       Arehihi_d,Arelohi_d,Arehilo_d,Arelolo_d,
+       &Vrehihi_d[L*nVrows+L],&Vrelohi_d[L*nVrows+L],
+       &Vrehilo_d[L*nVrows+L],&Vrelolo_d[L*nVrows+L],
+       &Vimhihi_d[L*nVrows+L],&Vimlohi_d[L*nVrows+L],
+       &Vimhilo_d[L*nVrows+L],&Vimlolo_d[L*nVrows+L],
+       &betahihi_d[L],&betalohi_d[L],&betahilo_d[L],&betalolo_d[L],
+       wrehihi_d,wrelohi_d,wrehilo_d,wrelolo_d,
+       wimhihi_d,wimlohi_d,wimhilo_d,wimlolo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *redlapms += milliseconds;
+
+   cudaEventRecord(start);
+   cmplx4_medium_subvbetaRHvIm<<<nbrblocks,szt>>>
+      (nrows,endcol,szt,colidx,
+       Aimhihi_d,Aimlohi_d,Aimhilo_d,Aimlolo_d,
+       &Vrehihi_d[L*nVrows+L],&Vrelohi_d[L*nVrows+L],
+       &Vrehilo_d[L*nVrows+L],&Vrelolo_d[L*nVrows+L],
+       &Vimhihi_d[L*nVrows+L],&Vimlohi_d[L*nVrows+L],
+       &Vimhilo_d[L*nVrows+L],&Vimlolo_d[L*nVrows+L],
+       &betahihi_d[L],&betalohi_d[L],&betahilo_d[L],&betalolo_d[L],
+       wrehihi_d,wrelohi_d,wrehilo_d,wrelolo_d,
+       wimhihi_d,wimlohi_d,wimhilo_d,wimlolo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *redlapms += milliseconds;
+
    flopcount_cmplx_medium_subvbetaRHv(nrows,endcol,szt,colidx,add,mul);
 
    if(verbose)

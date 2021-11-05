@@ -329,6 +329,19 @@ void test_cmplx4_blocked_qr
       (nrows,ncols,Arehihi,Arelohi,Arehilo,Arelolo,
                    Aimhihi,Aimlohi,Aimhilo,Aimlolo);
 
+/*
+   for(int i=0; i<nrows; i++)      // simplify input to real data
+      for(int j=0; j<ncols; j++)
+      {
+         Aimhihi[i][j] = 0.0;
+         Aimlohi[i][j] = 0.0;
+         Aimhilo[i][j] = 0.0;
+         Aimlolo[i][j] = 0.0;
+         // Arelohi[i][j] = 0.0;
+         // Arehilo[i][j] = 0.0;
+         // Arelolo[i][j] = 0.0;
+      }
+ */
    if(verbose > 0)
    {
       cout << scientific << setprecision(16);
@@ -366,8 +379,7 @@ void test_cmplx4_blocked_qr
           Rimhihi_h,Rimlohi_h,Rimhilo_h,Rimlolo_h,&timelapsed_h,bvrb);
 
       cout << "-> Testing the QR factorization ..." << endl;
-
-/*
+ /*
       fail = test_cmplx4_qr_factors
          (nrows,ncols,Arehihi,  Arelohi,  Arehilo,  Arelolo,
                       Aimhihi,  Aimlohi,  Aimhilo,  Aimlolo,
@@ -375,7 +387,7 @@ void test_cmplx4_blocked_qr
                       Qimhihi_h,Qimlohi_h,Qimhilo_h,Qimlolo_h,
                       Rrehihi_h,Rrelohi_h,Rrehilo_h,Rrelolo_h,
                       Rimhihi_h,Rimlohi_h,Rimhilo_h,Rimlolo_h,tol,bvrb);
- */
+  */
       fail = test_cmplx4_qr_factors_probe
          (nrows,ncols,Arehihi,  Arelohi,  Arehilo,  Arelolo,
                       Aimhihi,  Aimlohi,  Aimhilo,  Aimlolo,
@@ -437,11 +449,16 @@ void test_cmplx4_blocked_qr
           &addcnt,&mulcnt,&divcnt,&sqrtcnt,bvrb);
 
       cout << "-> Testing the QR factorization ..." << endl;
-
-      // fail = test_cmplx2_qr_factors
-      //           (nrows,ncols,Arehi,  Arelo,  Aimhi,  Aimlo,
-      //                        Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
-      //                        Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,tol,verbose);
+  /*
+      fail = test_cmplx4_qr_factors
+                (nrows,ncols,Arehihi,  Arelohi,  Arehilo,  Arelolo,
+                             Aimhihi,  Aimlohi,  Aimhilo,  Aimlolo,
+                             Qrehihi_d,Qrelohi_d,Qrehilo_d,Qrelolo_d,
+                             Qimhihi_d,Qimlohi_d,Qimhilo_d,Qimlolo_d,
+                             Rrehihi_d,Rrelohi_d,Rrehilo_d,Rrelolo_d,
+                             Rimhihi_d,Rimlohi_d,Rimhilo_d,Rimlolo_d,
+                 tol,bvrb);
+   */
       fail = test_cmplx4_qr_factors_probe
                 (nrows,ncols,Arehihi,  Arelohi,  Arehilo,  Arelolo,
                              Aimhihi,  Aimlohi,  Aimhilo,  Aimlolo,
@@ -450,7 +467,6 @@ void test_cmplx4_blocked_qr
                              Rrehihi_d,Rrelohi_d,Rrehilo_d,Rrelolo_d,
                              Rimhihi_d,Rimlohi_d,Rimhilo_d,Rimlolo_d,
                  tol,2,true);
-
       if(fail == 0)
          cout << "The test succeeded." << endl;
       else

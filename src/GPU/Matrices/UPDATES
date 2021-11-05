@@ -1,5 +1,7 @@
 Thu 4 Nov 2021 : in dbl4_baqr_kernels, splitted the kernel for RHdotv in two,
   one for the real and another for the imaginary parts.
+  Splitted the cmplx4_medium_subvbetaRHv in a real and imaginary parts kernel
+  and updated the test_dbl4_testers.cpp.  It now works on all complex data.
 
 Wed 3 Nov 2021 : corrected output of a complex Q in dbl4_baqr_kernels.cu.
   Removed four local variables from the cmplx4_sum_betaRHdotv kernel

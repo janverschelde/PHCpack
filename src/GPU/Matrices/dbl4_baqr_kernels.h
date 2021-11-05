@@ -697,6 +697,30 @@ __global__ void cmplx4_medium_subvbetaRHv
  *   Rimhilo  second lowest doubles of the imaginary parts of the updated R;
  *   Rimlolo  lowest doubles of the imaginary parts of the updated R. */
 
+__global__ void cmplx4_medium_subvbetaRHvRe
+ ( int nrows, int ncols, int szt, int k,
+   double *Rrehihi, double *Rrelohi, double *Rrehilo, double *Rrelolo,
+   double *vrehihi, double *vrelohi, double *vrehilo, double *vrelolo,
+   double *vimhihi, double *vimlohi, double *vimhilo, double *vimlolo,
+   double *betahihi, double *betalohi, double *betahilo, double *betalolo,
+   double *wrehihi, double *wrelohi, double *wrehilo, double *wrelolo,
+   double *wimhihi, double *wimlohi, double *wimhilo, double *wimlolo );
+/*
+ * DESCRIPTION :
+ *   Updates the real parts of R. */
+
+__global__ void cmplx4_medium_subvbetaRHvIm
+ ( int nrows, int ncols, int szt, int k,
+   double *Rimhihi, double *Rimlohi, double *Rimhilo, double *Rimlolo,
+   double *vrehihi, double *vrelohi, double *vrehilo, double *vrelolo,
+   double *vimhihi, double *vimlohi, double *vimhilo, double *vimlolo,
+   double *betahihi, double *betalohi, double *betahilo, double *betalolo,
+   double *wrehihi, double *wrelohi, double *wrehilo, double *wrelolo,
+   double *wimhihi, double *wimlohi, double *wimhilo, double *wimlolo );
+/*
+ * DESCRIPTION :
+ *    Updates the imaginary parts of R. */
+
 __global__ void dbl4_beta_times_V
  ( int nrows, int szt,
    double *Bhihi, double *Blohi, double *Bhilo, double *Blolo,
