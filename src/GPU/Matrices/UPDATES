@@ -1,5 +1,7 @@
 Mon 8 Nov 2021 : in dbl8_baqr_kernels.cu, improved one kernel and defined 
   another kernels for complex data.  It works now for one tile.
+  Splitted kernels in dbl8_baqr_kernels.h and dbl8_baqr_kernels.cu
+  for real and imaginary parts, for RHdotv and medium_subvbetaRHv.
 
 Sat 6 Nov 2021 : improved cmplx8_small_leftRupdate in dbl8_baqr_kernels.cu.
   Bug fixed in call to cmplx8_small_house kernel in dbl8_baqr_kernels.cu.
