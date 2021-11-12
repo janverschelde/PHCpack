@@ -1036,12 +1036,11 @@ __global__ void cmplx8_normalize
    shvimlololo[tdx] = ximlololo[idx];
    __syncthreads();
 
-   double resultrehihihi,resultrelohihi,resultrehilohi,resultrelolohi;
-   double resultrehihilo,resultrelohilo,resultrehilolo,resultrelololo;
-   double resultimhihihi,resultimlohihi,resultimhilohi,resultimlolohi;
-   double resultimhihilo,resultimlohilo,resultimhilolo,resultimlololo;
-   double acchihihi,acclohihi,acchilohi,acclolohi;
-   double acchihilo,acclohilo,acchilolo,acclololo;
+   double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
+   double resulthihilo,resultlohilo,resulthilolo,resultlololo;
+   // double acchihihi,acclohihi,acchilohi,acclolohi;
+   // double acchihilo,acclohilo,acchilolo,acclololo;
+   __shared__ double acc[8];
 
    // shv[j] = shv[j]/v0;
 
@@ -1050,55 +1049,69 @@ __global__ void cmplx8_normalize
            shvrehihilo[tdx],shvrelohilo[tdx],shvrehilolo[tdx],shvrelololo[tdx],
          *inv0rehihihi,   *inv0relohihi,   *inv0rehilohi,   *inv0relolohi,
          *inv0rehihilo,   *inv0relohilo,   *inv0rehilolo,   *inv0relololo,
-       &resultrehihihi, &resultrelohihi, &resultrehilohi, &resultrelolohi,
-       &resultrehihilo, &resultrelohilo, &resultrehilolo, &resultrelololo);
+         &resulthihihi,   &resultlohihi,   &resulthilohi,   &resultlolohi,
+         &resulthihilo,   &resultlohilo,   &resulthilolo,   &resultlololo);
    odg_mul(shvimhihihi[tdx],shvimlohihi[tdx],shvimhilohi[tdx],shvimlolohi[tdx],
            shvimhihilo[tdx],shvimlohilo[tdx],shvimhilolo[tdx],shvimlololo[tdx],
          *inv0imhihihi,   *inv0imlohihi,   *inv0imhilohi,   *inv0imlolohi,
          *inv0imhihilo,   *inv0imlohilo,   *inv0imhilolo,   *inv0imlololo,
-            &acchihihi,      &acclohihi,      &acchilohi,      &acclolohi,
-            &acchihilo,      &acclohilo,      &acchilolo,      &acclololo);
-   odg_dec(&resultrehihihi,&resultrelohihi,&resultrehilohi,&resultrelolohi,
-           &resultrehihilo,&resultrelohilo,&resultrehilolo,&resultrelololo,
-                 acchihihi,      acclohihi,      acchilohi,      acclolohi,
-                 acchihilo,      acclohilo,      acchilolo,      acclololo);
+               &acc[0],         &acc[1],         &acc[2],         &acc[3],
+               &acc[4],         &acc[5],         &acc[6],         &acc[7]);
+      //    &acchihihi,      &acclohihi,      &acchilohi,      &acclolohi,
+      //    &acchihilo,      &acclohilo,      &acchilolo,      &acclololo);
+   odg_dec(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+                  acc[0],       acc[1],       acc[2],       acc[3],
+                  acc[4],       acc[5],       acc[6],       acc[7]);
+      //       acchihihi,    acclohihi,    acchilohi,    acclolohi,
+      //       acchihilo,    acclohilo,    acchilolo,    acclololo);
+
+   __syncthreads();
+   if(idx < dim)
+   {
+      vrehihihi[idx] = resulthihihi;
+      vrelohihi[idx] = resultlohihi;    
+      vrehilohi[idx] = resulthilohi;
+      vrelolohi[idx] = resultlolohi;    
+      vrehihilo[idx] = resulthihilo;
+      vrelohilo[idx] = resultlohilo;    
+      vrehilolo[idx] = resulthilolo;
+      vrelololo[idx] = resultlololo;    
+   }
+   __syncthreads();
    // zim = vim[i]*inv0re + vre[i]*inv0im;
    odg_mul(shvimhihihi[tdx],shvimlohihi[tdx],shvimhilohi[tdx],shvimlolohi[tdx],
            shvimhihilo[tdx],shvimlohilo[tdx],shvimhilolo[tdx],shvimlololo[tdx],
          *inv0rehihihi,   *inv0relohihi,   *inv0rehilohi,   *inv0relolohi,
          *inv0rehihilo,   *inv0relohilo,   *inv0rehilolo,   *inv0relololo,
-       &resultimhihihi, &resultimlohihi, &resultimhilohi, &resultimlolohi,
-       &resultimhihilo, &resultimlohilo, &resultimhilolo, &resultimlololo);
+         &resulthihihi,   &resultlohihi,   &resulthilohi,   &resultlolohi,
+         &resulthihilo,   &resultlohilo,   &resulthilolo,   &resultlololo);
    odg_mul(shvrehihihi[tdx],shvrelohihi[tdx],shvrehilohi[tdx],shvrelolohi[tdx],
            shvrehihilo[tdx],shvrelohilo[tdx],shvrehilolo[tdx],shvrelololo[tdx],
          *inv0imhihihi,   *inv0imlohihi,   *inv0imhilohi,   *inv0imlolohi,
          *inv0imhihilo,   *inv0imlohilo,   *inv0imhilolo,   *inv0imlololo,
-            &acchihihi,      &acclohihi,      &acchilohi,      &acclolohi,
-            &acchihilo,      &acclohilo,      &acchilolo,      &acclololo);
-   odg_inc(&resultimhihihi,&resultimlohihi,&resultimhilohi,&resultimlolohi,
-           &resultimhihilo,&resultimlohilo,&resultimhilolo,&resultimlololo,
-                 acchihihi,      acclohihi,      acchilohi,      acclolohi,
-                 acchihilo,      acclohilo,      acchilolo,      acclololo);
+               &acc[0],         &acc[1],         &acc[2],         &acc[3],
+               &acc[4],         &acc[5],         &acc[6],         &acc[7]);
+         // &acchihihi,      &acclohihi,      &acchilohi,      &acclolohi,
+         // &acchihilo,      &acclohilo,      &acchilolo,      &acclololo);
+   odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+                  acc[0],       acc[1],       acc[2],       acc[3],
+                  acc[4],       acc[5],       acc[6],       acc[7]);
+           //  acchihihi,    acclohihi,    acchilohi,    acclolohi,
+           //  acchihilo,    acclohilo,    acchilolo,    acclololo);
 
    __syncthreads();
    if(idx < dim)
    {
-      vrehihihi[idx] = resultrehihihi;
-      vrelohihi[idx] = resultrelohihi;    
-      vrehilohi[idx] = resultrehilohi;
-      vrelolohi[idx] = resultrelolohi;    
-      vrehihilo[idx] = resultrehihilo;
-      vrelohilo[idx] = resultrelohilo;    
-      vrehilolo[idx] = resultrehilolo;
-      vrelololo[idx] = resultrelololo;    
-      vimhihihi[idx] = resultimhihihi;    
-      vimlohihi[idx] = resultimlohihi;    
-      vimhilohi[idx] = resultimhilohi;    
-      vimlolohi[idx] = resultimlolohi;
-      vimhihilo[idx] = resultimhihilo;    
-      vimlohilo[idx] = resultimlohilo;    
-      vimhilolo[idx] = resultimhilolo;    
-      vimlololo[idx] = resultimlololo;
+      vimhihihi[idx] = resulthihihi;
+      vimlohihi[idx] = resultlohihi;
+      vimhilohi[idx] = resulthilohi;
+      vimlolohi[idx] = resultlolohi;
+      vimhihilo[idx] = resulthihilo;
+      vimlohilo[idx] = resultlohilo;
+      vimhilolo[idx] = resulthilolo;
+      vimlololo[idx] = resultlololo;
    }
 }
 

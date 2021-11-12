@@ -1,3 +1,6 @@
+Fri 12 Nov 2021 : in cmplx8_normalize of dbl8_baqr_kernels.cu, eliminated
+  many local variables.
+
 Mon 8 Nov 2021 : in dbl8_baqr_kernels.cu, improved one kernel and defined 
   another kernels for complex data.  It works now for one tile.
   Splitted kernels in dbl8_baqr_kernels.h and dbl8_baqr_kernels.cu
