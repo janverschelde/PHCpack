@@ -6290,8 +6290,8 @@ void GPU_cmplx8_large_house
               &betahihilo_h[L],&betalohilo_h[L],
               &betahilolo_h[L],&betalololo_h[L]);
       odf_mlt_d(&betahihihi_h[L],&betalohihi_h[L],
-                &betahihihi_h[L],&betalohihi_h[L],
-                &betahilolo_h[L],&betalololo_h[L],
+                &betahilohi_h[L],&betalolohi_h[L],
+                &betahihilo_h[L],&betalohilo_h[L],
                 &betahilolo_h[L],&betalololo_h[L],2.0);
       // inv0re = vre[0]/sqrv0;  // real part of 1/v[0]
       odf_div(v0rehihihi,v0relohihi,v0rehilohi,v0relolohi,

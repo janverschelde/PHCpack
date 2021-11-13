@@ -1,5 +1,5 @@
 Fri 12 Nov 2021 : in cmplx8_normalize of dbl8_baqr_kernels.cu, eliminated
-  many local variables.
+  many local variables.  Bug fix in call to odf_mlt_d in dbl8_baqr_kernels.cu.
 
 Mon 8 Nov 2021 : in dbl8_baqr_kernels.cu, improved one kernel and defined 
   another kernels for complex data.  It works now for one tile.
