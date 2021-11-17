@@ -1038,33 +1038,50 @@ __global__ void cmplx8_normalize
 
    double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
    double resulthihilo,resultlohilo,resulthilolo,resultlololo;
-   // double acchihihi,acclohihi,acchilohi,acclolohi;
-   // double acchihilo,acclohilo,acchilolo,acclololo;
-   __shared__ double acc[8];
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+   double invhihihi,invlohihi,invhilohi,invlolohi;
+   double invhihilo,invlohilo,invhilolo,invlololo;
 
    // shv[j] = shv[j]/v0;
 
    // resultre = vre[i]*inv0re - vim[i]*inv0im;
+   invhihihi = *inv0rehihihi;
+   invlohihi = *inv0relohihi;
+   invhilohi = *inv0rehilohi;
+   invlolohi = *inv0relolohi;
+   invhihilo = *inv0rehihilo;
+   invlohilo = *inv0relohilo;
+   invhilolo = *inv0rehilolo;
+   invlololo = *inv0relololo;
    odg_mul(shvrehihihi[tdx],shvrelohihi[tdx],shvrehilohi[tdx],shvrelolohi[tdx],
            shvrehihilo[tdx],shvrelohilo[tdx],shvrehilolo[tdx],shvrelololo[tdx],
-         *inv0rehihihi,   *inv0relohihi,   *inv0rehilohi,   *inv0relolohi,
-         *inv0rehihilo,   *inv0relohilo,   *inv0rehilolo,   *inv0relololo,
+        // *inv0rehihihi,   *inv0relohihi,   *inv0rehilohi,   *inv0relolohi,
+        // *inv0rehihilo,   *inv0relohilo,   *inv0rehilolo,   *inv0relololo,
+             invhihihi,       invlohihi,       invhilohi,       invlolohi,
+             invhihilo,       invlohilo,       invhilolo,       invlololo,
          &resulthihihi,   &resultlohihi,   &resulthilohi,   &resultlolohi,
          &resulthihilo,   &resultlohilo,   &resulthilolo,   &resultlololo);
+   invhihihi = *inv0imhihihi;
+   invlohihi = *inv0imlohihi;
+   invhilohi = *inv0imhilohi;
+   invlolohi = *inv0imlolohi;
+   invhihilo = *inv0imhihilo;
+   invlohilo = *inv0imlohilo;
+   invhilolo = *inv0imhilolo;
+   invlololo = *inv0imlololo;
    odg_mul(shvimhihihi[tdx],shvimlohihi[tdx],shvimhilohi[tdx],shvimlolohi[tdx],
            shvimhihilo[tdx],shvimlohilo[tdx],shvimhilolo[tdx],shvimlololo[tdx],
-         *inv0imhihihi,   *inv0imlohihi,   *inv0imhilohi,   *inv0imlolohi,
-         *inv0imhihilo,   *inv0imlohilo,   *inv0imhilolo,   *inv0imlololo,
-               &acc[0],         &acc[1],         &acc[2],         &acc[3],
-               &acc[4],         &acc[5],         &acc[6],         &acc[7]);
-      //    &acchihihi,      &acclohihi,      &acchilohi,      &acclolohi,
-      //    &acchihilo,      &acclohilo,      &acchilolo,      &acclololo);
+      //  *inv0imhihihi,   *inv0imlohihi,   *inv0imhilohi,   *inv0imlolohi,
+      //  *inv0imhihilo,   *inv0imlohilo,   *inv0imhilolo,   *inv0imlololo,
+           invhihihi,       invlohihi,       invhilohi,       invlolohi,
+           invhihilo,       invlohilo,       invhilolo,       invlololo,
+          &acchihihi,      &acclohihi,      &acchilohi,      &acclolohi,
+          &acchihilo,      &acclohilo,      &acchilolo,      &acclololo);
    odg_dec(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
            &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
-                  acc[0],       acc[1],       acc[2],       acc[3],
-                  acc[4],       acc[5],       acc[6],       acc[7]);
-      //       acchihihi,    acclohihi,    acchilohi,    acclolohi,
-      //       acchihilo,    acclohilo,    acchilolo,    acclololo);
+               acchihihi,    acclohihi,    acchilohi,    acclolohi,
+               acchihilo,    acclohilo,    acchilolo,    acclololo);
 
    __syncthreads();
    if(idx < dim)
@@ -1080,26 +1097,42 @@ __global__ void cmplx8_normalize
    }
    __syncthreads();
    // zim = vim[i]*inv0re + vre[i]*inv0im;
+   invhihihi = *inv0rehihihi;
+   invlohihi = *inv0relohihi;
+   invhilohi = *inv0rehilohi;
+   invlolohi = *inv0relolohi;
+   invhihilo = *inv0rehihilo;
+   invlohilo = *inv0relohilo;
+   invhilolo = *inv0rehilolo;
+   invlololo = *inv0relololo;
    odg_mul(shvimhihihi[tdx],shvimlohihi[tdx],shvimhilohi[tdx],shvimlolohi[tdx],
            shvimhihilo[tdx],shvimlohilo[tdx],shvimhilolo[tdx],shvimlololo[tdx],
-         *inv0rehihihi,   *inv0relohihi,   *inv0rehilohi,   *inv0relolohi,
-         *inv0rehihilo,   *inv0relohilo,   *inv0rehilolo,   *inv0relololo,
+        // *inv0rehihihi,   *inv0relohihi,   *inv0rehilohi,   *inv0relolohi,
+        // *inv0rehihilo,   *inv0relohilo,   *inv0rehilolo,   *inv0relololo,
+             invhihihi,       invlohihi,       invhilohi,       invlolohi,
+             invhihilo,       invlohilo,       invhilolo,       invlololo,
          &resulthihihi,   &resultlohihi,   &resulthilohi,   &resultlolohi,
          &resulthihilo,   &resultlohilo,   &resulthilolo,   &resultlololo);
+   invhihihi = *inv0imhihihi;
+   invlohihi = *inv0imlohihi;
+   invhilohi = *inv0imhilohi;
+   invlolohi = *inv0imlolohi;
+   invhihilo = *inv0imhihilo;
+   invlohilo = *inv0imlohilo;
+   invhilolo = *inv0imhilolo;
+   invlololo = *inv0imlololo;
    odg_mul(shvrehihihi[tdx],shvrelohihi[tdx],shvrehilohi[tdx],shvrelolohi[tdx],
            shvrehihilo[tdx],shvrelohilo[tdx],shvrehilolo[tdx],shvrelololo[tdx],
-         *inv0imhihihi,   *inv0imlohihi,   *inv0imhilohi,   *inv0imlolohi,
-         *inv0imhihilo,   *inv0imlohilo,   *inv0imhilolo,   *inv0imlololo,
-               &acc[0],         &acc[1],         &acc[2],         &acc[3],
-               &acc[4],         &acc[5],         &acc[6],         &acc[7]);
-         // &acchihihi,      &acclohihi,      &acchilohi,      &acclolohi,
-         // &acchihilo,      &acclohilo,      &acchilolo,      &acclololo);
+      //  *inv0imhihihi,   *inv0imlohihi,   *inv0imhilohi,   *inv0imlolohi,
+      //  *inv0imhihilo,   *inv0imlohilo,   *inv0imhilolo,   *inv0imlololo,
+           invhihihi,       invlohihi,       invhilohi,       invlolohi,
+           invhihilo,       invlohilo,       invhilolo,       invlololo,
+          &acchihihi,      &acclohihi,      &acchilohi,      &acclolohi,
+          &acchihilo,      &acclohilo,      &acchilolo,      &acclololo);
    odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
            &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
-                  acc[0],       acc[1],       acc[2],       acc[3],
-                  acc[4],       acc[5],       acc[6],       acc[7]);
-           //  acchihihi,    acclohihi,    acchilohi,    acclolohi,
-           //  acchihilo,    acclohilo,    acchilolo,    acclololo);
+             acchihihi,    acclohihi,    acchilohi,    acclolohi,
+             acchihilo,    acclohilo,    acchilolo,    acclololo);
 
    __syncthreads();
    if(idx < dim)

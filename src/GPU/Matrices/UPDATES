@@ -1,3 +1,6 @@
+Tue 16 Nov 2021 : in cmplx8_normalize of dbl8_baqr_kernels.cu, loaded the
+  inverses for the multipliers into new local variables.
+
 Fri 12 Nov 2021 : in cmplx8_normalize of dbl8_baqr_kernels.cu, eliminated
   many local variables.  Bug fix in call to odf_mlt_d in dbl8_baqr_kernels.cu.
 
