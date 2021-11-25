@@ -1017,6 +1017,9 @@ __global__ void cmplx8_normalize
    __shared__ double shvimlohilo[inner_od_shmemsize];
    __shared__ double shvimhilolo[inner_od_shmemsize];
    __shared__ double shvimlololo[inner_od_shmemsize];
+   __shared__ double acc[8];
+   __shared__ double invre[8];
+   __shared__ double invim[8];
 
    shvrehihihi[tdx] = xrehihihi[idx];
    shvrelohihi[tdx] = xrelohihi[idx];
@@ -1038,14 +1041,17 @@ __global__ void cmplx8_normalize
 
    double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
    double resulthihilo,resultlohilo,resulthilolo,resultlololo;
+/*
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
    double invhihihi,invlohihi,invhilohi,invlolohi;
    double invhihilo,invlohilo,invhilolo,invlololo;
-
+ */
+   
    // shv[j] = shv[j]/v0;
 
    // resultre = vre[i]*inv0re - vim[i]*inv0im;
+/*
    invhihihi = *inv0rehihihi;
    invlohihi = *inv0relohihi;
    invhilohi = *inv0rehilohi;
@@ -1054,14 +1060,26 @@ __global__ void cmplx8_normalize
    invlohilo = *inv0relohilo;
    invhilolo = *inv0rehilolo;
    invlololo = *inv0relololo;
+ */
+   invre[0] = *inv0rehihihi;
+   invre[1] = *inv0relohihi;
+   invre[2] = *inv0rehilohi;
+   invre[3] = *inv0relolohi;
+   invre[4] = *inv0rehihilo;
+   invre[5] = *inv0relohilo;
+   invre[6] = *inv0rehilolo;
+   invre[7] = *inv0relololo;
    odg_mul(shvrehihihi[tdx],shvrelohihi[tdx],shvrehilohi[tdx],shvrelolohi[tdx],
            shvrehihilo[tdx],shvrelohilo[tdx],shvrehilolo[tdx],shvrelololo[tdx],
         // *inv0rehihihi,   *inv0relohihi,   *inv0rehilohi,   *inv0relolohi,
         // *inv0rehihilo,   *inv0relohilo,   *inv0rehilolo,   *inv0relololo,
-             invhihihi,       invlohihi,       invhilohi,       invlolohi,
-             invhihilo,       invlohilo,       invhilolo,       invlololo,
+        //     invhihihi,       invlohihi,       invhilohi,       invlolohi,
+        //     invhihilo,       invlohilo,       invhilolo,       invlololo,
+              invre[0],        invre[1],        invre[2],        invre[3],
+              invre[4],        invre[5],        invre[6],        invre[7],
          &resulthihihi,   &resultlohihi,   &resulthilohi,   &resultlolohi,
          &resulthihilo,   &resultlohilo,   &resulthilolo,   &resultlololo);
+/*
    invhihihi = *inv0imhihihi;
    invlohihi = *inv0imlohihi;
    invhilohi = *inv0imhilohi;
@@ -1070,18 +1088,31 @@ __global__ void cmplx8_normalize
    invlohilo = *inv0imlohilo;
    invhilolo = *inv0imhilolo;
    invlololo = *inv0imlololo;
+ */
+   invim[0] = *inv0imhihihi;
+   invim[1] = *inv0imlohihi;
+   invim[2] = *inv0imhilohi;
+   invim[3] = *inv0imlolohi;
+   invim[4] = *inv0imhihilo;
+   invim[5] = *inv0imlohilo;
+   invim[6] = *inv0imhilolo;
+   invim[7] = *inv0imlololo;
    odg_mul(shvimhihihi[tdx],shvimlohihi[tdx],shvimhilohi[tdx],shvimlolohi[tdx],
            shvimhihilo[tdx],shvimlohilo[tdx],shvimhilolo[tdx],shvimlololo[tdx],
       //  *inv0imhihihi,   *inv0imlohihi,   *inv0imhilohi,   *inv0imlolohi,
       //  *inv0imhihilo,   *inv0imlohilo,   *inv0imhilolo,   *inv0imlololo,
-           invhihihi,       invlohihi,       invhilohi,       invlolohi,
-           invhihilo,       invlohilo,       invhilolo,       invlololo,
-          &acchihihi,      &acclohihi,      &acchilohi,      &acclolohi,
-          &acchihilo,      &acclohilo,      &acchilolo,      &acclololo);
+      //     invhihihi,       invlohihi,       invhilohi,       invlolohi,
+      //     invhihilo,       invlohilo,       invhilolo,       invlololo,
+            invim[0],        invim[1],        invim[2],        invim[3],
+            invim[4],        invim[5],        invim[6],        invim[7],
+      //    &acchihihi,      &acclohihi,      &acchilohi,      &acclolohi,
+      //    &acchihilo,      &acclohilo,      &acchilolo,      &acclololo);
+           &acc[0],&acc[1],&acc[2],&acc[3],&acc[4],&acc[5],&acc[6],&acc[7]);
    odg_dec(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
            &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
-               acchihihi,    acclohihi,    acchilohi,    acclolohi,
-               acchihilo,    acclohilo,    acchilolo,    acclololo);
+           acc[0],acc[1],acc[2],acc[3],acc[4],acc[5],acc[6],acc[7]);
+             //  acchihihi,    acclohihi,    acchilohi,    acclolohi,
+             //  acchihilo,    acclohilo,    acchilolo,    acclololo);
 
    __syncthreads();
    if(idx < dim)
@@ -1097,6 +1128,7 @@ __global__ void cmplx8_normalize
    }
    __syncthreads();
    // zim = vim[i]*inv0re + vre[i]*inv0im;
+/*
    invhihihi = *inv0rehihihi;
    invlohihi = *inv0relohihi;
    invhilohi = *inv0rehilohi;
@@ -1105,14 +1137,18 @@ __global__ void cmplx8_normalize
    invlohilo = *inv0relohilo;
    invhilolo = *inv0rehilolo;
    invlololo = *inv0relololo;
+ */
    odg_mul(shvimhihihi[tdx],shvimlohihi[tdx],shvimhilohi[tdx],shvimlolohi[tdx],
            shvimhihilo[tdx],shvimlohilo[tdx],shvimhilolo[tdx],shvimlololo[tdx],
         // *inv0rehihihi,   *inv0relohihi,   *inv0rehilohi,   *inv0relolohi,
         // *inv0rehihilo,   *inv0relohilo,   *inv0rehilolo,   *inv0relololo,
-             invhihihi,       invlohihi,       invhilohi,       invlolohi,
-             invhihilo,       invlohilo,       invhilolo,       invlololo,
+        //     invhihihi,       invlohihi,       invhilohi,       invlolohi,
+        //     invhihilo,       invlohilo,       invhilolo,       invlololo,
+              invre[0],        invre[1],        invre[2],        invre[3],
+              invre[4],        invre[5],        invre[6],        invre[7],
          &resulthihihi,   &resultlohihi,   &resulthilohi,   &resultlolohi,
          &resulthihilo,   &resultlohilo,   &resulthilolo,   &resultlololo);
+/*
    invhihihi = *inv0imhihihi;
    invlohihi = *inv0imlohihi;
    invhilohi = *inv0imhilohi;
@@ -1121,20 +1157,324 @@ __global__ void cmplx8_normalize
    invlohilo = *inv0imlohilo;
    invhilolo = *inv0imhilolo;
    invlololo = *inv0imlololo;
+ */
    odg_mul(shvrehihihi[tdx],shvrelohihi[tdx],shvrehilohi[tdx],shvrelolohi[tdx],
            shvrehihilo[tdx],shvrelohilo[tdx],shvrehilolo[tdx],shvrelololo[tdx],
       //  *inv0imhihihi,   *inv0imlohihi,   *inv0imhilohi,   *inv0imlolohi,
       //  *inv0imhihilo,   *inv0imlohilo,   *inv0imhilolo,   *inv0imlololo,
-           invhihihi,       invlohihi,       invhilohi,       invlolohi,
-           invhihilo,       invlohilo,       invhilolo,       invlololo,
-          &acchihihi,      &acclohihi,      &acchilohi,      &acclolohi,
-          &acchihilo,      &acclohilo,      &acchilolo,      &acclololo);
+      //     invhihihi,       invlohihi,       invhilohi,       invlolohi,
+      //     invhihilo,       invlohilo,       invhilolo,       invlololo,
+            invim[0],        invim[1],        invim[2],        invim[3],
+            invim[4],        invim[5],        invim[6],        invim[7],
+           &acc[0],&acc[1],&acc[2],&acc[3],&acc[4],&acc[5],&acc[6],&acc[7]);
+        //  &acchihihi,      &acclohihi,      &acchilohi,      &acclolohi,
+        //  &acchihilo,      &acclohilo,      &acchilolo,      &acclololo);
    odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
            &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
-             acchihihi,    acclohihi,    acchilohi,    acclolohi,
-             acchihilo,    acclohilo,    acchilolo,    acclololo);
+           acc[0],acc[1],acc[2],acc[3],acc[4],acc[5],acc[6],acc[7]);
+          //   acchihihi,    acclohihi,    acchilohi,    acclolohi,
+          //   acchihilo,    acclohilo,    acchilolo,    acclololo);
 
    __syncthreads();
+   if(idx < dim)
+   {
+      vimhihihi[idx] = resulthihihi;
+      vimlohihi[idx] = resultlohihi;
+      vimhilohi[idx] = resulthilohi;
+      vimlolohi[idx] = resultlolohi;
+      vimhihilo[idx] = resulthihilo;
+      vimlohilo[idx] = resultlohilo;
+      vimhilolo[idx] = resulthilolo;
+      vimlololo[idx] = resultlololo;
+   }
+}
+
+__global__ void cmplx8_normalize_rere
+ ( int dim, int szt,
+   double *xrehihihi, double *xrelohihi, double *xrehilohi, double *xrelolohi,
+   double *xrehihilo, double *xrelohilo, double *xrehilolo, double *xrelololo,
+   double *inv0rehihihi, double *inv0relohihi,
+   double *inv0rehilohi, double *inv0relolohi,
+   double *inv0rehihilo, double *inv0relohilo,
+   double *inv0rehilolo, double *inv0relololo,
+   double *vrehihihi, double *vrelohihi,
+   double *vrehilohi, double *vrelolohi,
+   double *vrehihilo, double *vrelohilo,
+   double *vrehilolo, double *vrelololo )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx;  // thread tdx scales idx
+
+   __shared__ double shvrehihihi[inner_od_shmemsize];
+   __shared__ double shvrelohihi[inner_od_shmemsize];
+   __shared__ double shvrehilohi[inner_od_shmemsize];
+   __shared__ double shvrelolohi[inner_od_shmemsize];
+   __shared__ double shvrehihilo[inner_od_shmemsize];
+   __shared__ double shvrelohilo[inner_od_shmemsize];
+   __shared__ double shvrehilolo[inner_od_shmemsize];
+   __shared__ double shvrelololo[inner_od_shmemsize];
+
+   double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
+   double resulthihilo,resultlohilo,resulthilolo,resultlololo;
+
+   shvrehihihi[tdx] = xrehihihi[idx];
+   shvrelohihi[tdx] = xrelohihi[idx];
+   shvrehilohi[tdx] = xrehilohi[idx];
+   shvrelolohi[tdx] = xrelolohi[idx];
+   shvrehihilo[tdx] = xrehihilo[idx];
+   shvrelohilo[tdx] = xrelohilo[idx];
+   shvrehilolo[tdx] = xrehilolo[idx];
+   shvrelololo[tdx] = xrelololo[idx];
+
+   __syncthreads();
+   
+   // shv[j] = shv[j]/v0;
+
+   // resultre = vre[i]*inv0re - vim[i]*inv0im;
+   // -> do only the first multiplication
+
+   odg_mul(shvrehihihi[tdx],shvrelohihi[tdx],shvrehilohi[tdx],shvrelolohi[tdx],
+           shvrehihilo[tdx],shvrelohilo[tdx],shvrehilolo[tdx],shvrelololo[tdx],
+            inv0rehihihi[0], inv0relohihi[0], inv0rehilohi[0], inv0relolohi[0],
+            inv0rehihilo[0], inv0relohilo[0], inv0rehilolo[0], inv0relololo[0],
+         &resulthihihi,   &resultlohihi,   &resulthilohi,   &resultlolohi,
+         &resulthihilo,   &resultlohilo,   &resulthilolo,   &resultlololo);
+
+   __syncthreads();
+
+   if(idx < dim)
+   {
+      vrehihihi[idx] = resulthihihi;
+      vrelohihi[idx] = resultlohihi;    
+      vrehilohi[idx] = resulthilohi;
+      vrelolohi[idx] = resultlolohi;    
+      vrehihilo[idx] = resulthihilo;
+      vrelohilo[idx] = resultlohilo;    
+      vrehilolo[idx] = resulthilolo;
+      vrelololo[idx] = resultlololo;    
+   }
+}
+
+__global__ void cmplx8_normalize_imim
+ ( int dim, int szt,
+   double *ximhihihi, double *ximlohihi, double *ximhilohi, double *ximlolohi,
+   double *ximhihilo, double *ximlohilo, double *ximhilolo, double *ximlololo,
+   double *inv0imhihihi, double *inv0imlohihi,
+   double *inv0imhilohi, double *inv0imlolohi,
+   double *inv0imhihilo, double *inv0imlohilo,
+   double *inv0imhilolo, double *inv0imlololo,
+   double *vrehihihi, double *vrelohihi,
+   double *vrehilohi, double *vrelolohi,
+   double *vrehihilo, double *vrelohilo,
+   double *vrehilolo, double *vrelololo )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx;  // thread tdx scales idx
+
+   __shared__ double shvimhihihi[inner_od_shmemsize];
+   __shared__ double shvimlohihi[inner_od_shmemsize];
+   __shared__ double shvimhilohi[inner_od_shmemsize];
+   __shared__ double shvimlolohi[inner_od_shmemsize];
+   __shared__ double shvimhihilo[inner_od_shmemsize];
+   __shared__ double shvimlohilo[inner_od_shmemsize];
+   __shared__ double shvimhilolo[inner_od_shmemsize];
+   __shared__ double shvimlololo[inner_od_shmemsize];
+
+   double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
+   double resulthihilo,resultlohilo,resulthilolo,resultlololo;
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   shvimhihihi[tdx] = ximhihihi[idx];
+   shvimlohihi[tdx] = ximlohihi[idx];
+   shvimhilohi[tdx] = ximhilohi[idx];
+   shvimlolohi[tdx] = ximlolohi[idx];
+   shvimhihilo[tdx] = ximhihilo[idx];
+   shvimlohilo[tdx] = ximlohilo[idx];
+   shvimhilolo[tdx] = ximhilolo[idx];
+   shvimlololo[tdx] = ximlololo[idx];
+
+   __syncthreads();
+   
+   // shv[j] = shv[j]/v0;
+
+   // resultre = vre[i]*inv0re - vim[i]*inv0im;
+   // -> update resultre with the subtraction of imaginary parts
+
+   odg_mul(shvimhihihi[tdx],shvimlohihi[tdx],shvimhilohi[tdx],shvimlolohi[tdx],
+           shvimhihilo[tdx],shvimlohilo[tdx],shvimhilolo[tdx],shvimlololo[tdx],
+            inv0imhihihi[0], inv0imlohihi[0], inv0imhilohi[0], inv0imlolohi[0],
+            inv0imhihilo[0], inv0imlohilo[0], inv0imhilolo[0], inv0imlololo[0],
+           &acchihihi,      &acclohihi,      &acchilohi,      &acclolohi,
+           &acchihilo,      &acclohilo,      &acchilolo,      &acclololo);
+
+   resulthihihi = vrehihihi[idx];
+   resultlohihi = vrelohihi[idx];
+   resulthilohi = vrehilohi[idx];
+   resultlolohi = vrelolohi[idx];
+   resulthihilo = vrehihilo[idx];
+   resultlohilo = vrelohilo[idx];
+   resulthilolo = vrehilolo[idx];
+   resultlololo = vrelololo[idx];
+
+   odg_dec(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+               acchihihi,    acclohihi,    acchilohi,    acclolohi,
+               acchihilo,    acclohilo,    acchilolo,    acclololo);
+
+   __syncthreads();
+
+   if(idx < dim)
+   {
+      vrehihihi[idx] = resulthihihi;
+      vrelohihi[idx] = resultlohihi;    
+      vrehilohi[idx] = resulthilohi;
+      vrelolohi[idx] = resultlolohi;    
+      vrehihilo[idx] = resulthihilo;
+      vrelohilo[idx] = resultlohilo;    
+      vrehilolo[idx] = resulthilolo;
+      vrelololo[idx] = resultlololo;    
+   }
+}
+
+__global__ void cmplx8_normalize_imre
+ ( int dim, int szt,
+   double *ximhihihi, double *ximlohihi, double *ximhilohi, double *ximlolohi,
+   double *ximhihilo, double *ximlohilo, double *ximhilolo, double *ximlololo,
+   double *inv0rehihihi, double *inv0relohihi,
+   double *inv0rehilohi, double *inv0relolohi,
+   double *inv0rehihilo, double *inv0relohilo,
+   double *inv0rehilolo, double *inv0relololo,
+   double *vimhihihi, double *vimlohihi,
+   double *vimhilohi, double *vimlolohi,
+   double *vimhihilo, double *vimlohilo,
+   double *vimhilolo, double *vimlololo )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx;  // thread tdx scales idx
+
+   __shared__ double shvimhihihi[inner_od_shmemsize];
+   __shared__ double shvimlohihi[inner_od_shmemsize];
+   __shared__ double shvimhilohi[inner_od_shmemsize];
+   __shared__ double shvimlolohi[inner_od_shmemsize];
+   __shared__ double shvimhihilo[inner_od_shmemsize];
+   __shared__ double shvimlohilo[inner_od_shmemsize];
+   __shared__ double shvimhilolo[inner_od_shmemsize];
+   __shared__ double shvimlololo[inner_od_shmemsize];
+
+   double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
+   double resulthihilo,resultlohilo,resulthilolo,resultlololo;
+
+   shvimhihihi[tdx] = ximhihihi[idx];
+   shvimlohihi[tdx] = ximlohihi[idx];
+   shvimhilohi[tdx] = ximhilohi[idx];
+   shvimlolohi[tdx] = ximlolohi[idx];
+   shvimhihilo[tdx] = ximhihilo[idx];
+   shvimlohilo[tdx] = ximlohilo[idx];
+   shvimhilolo[tdx] = ximhilolo[idx];
+   shvimlololo[tdx] = ximlololo[idx];
+
+   __syncthreads();
+   
+   // shv[j] = shv[j]/v0;
+
+   // resultim = vim[i]*inv0re + vre[i]*inv0im;
+   // -> do only the first multiplication
+
+   odg_mul(shvimhihihi[tdx],shvimlohihi[tdx],shvimhilohi[tdx],shvimlolohi[tdx],
+           shvimhihilo[tdx],shvimlohilo[tdx],shvimhilolo[tdx],shvimlololo[tdx],
+            inv0rehihihi[0], inv0relohihi[0], inv0rehilohi[0], inv0relolohi[0],
+            inv0rehihilo[0], inv0relohilo[0], inv0rehilolo[0], inv0relololo[0],
+           &resulthihihi,   &resultlohihi,   &resulthilohi,   &resultlolohi,
+           &resulthihilo,   &resultlohilo,   &resulthilolo,   &resultlololo);
+
+   __syncthreads();
+
+   if(idx < dim)
+   {
+      vimhihihi[idx] = resulthihihi;
+      vimlohihi[idx] = resultlohihi;
+      vimhilohi[idx] = resulthilohi;
+      vimlolohi[idx] = resultlolohi;
+      vimhihilo[idx] = resulthihilo;
+      vimlohilo[idx] = resultlohilo;
+      vimhilolo[idx] = resulthilolo;
+      vimlololo[idx] = resultlololo;
+   }
+}
+
+__global__ void cmplx8_normalize_reim
+ ( int dim, int szt,
+   double *xrehihihi, double *xrelohihi, double *xrehilohi, double *xrelolohi,
+   double *xrehihilo, double *xrelohilo, double *xrehilolo, double *xrelololo,
+   double *inv0imhihihi, double *inv0imlohihi,
+   double *inv0imhilohi, double *inv0imlolohi,
+   double *inv0imhihilo, double *inv0imlohilo,
+   double *inv0imhilolo, double *inv0imlololo,
+   double *vimhihihi, double *vimlohihi,
+   double *vimhilohi, double *vimlolohi,
+   double *vimhihilo, double *vimlohilo,
+   double *vimhilolo, double *vimlololo )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx;  // thread tdx scales idx
+
+   __shared__ double shvrehihihi[inner_od_shmemsize];
+   __shared__ double shvrelohihi[inner_od_shmemsize];
+   __shared__ double shvrehilohi[inner_od_shmemsize];
+   __shared__ double shvrelolohi[inner_od_shmemsize];
+   __shared__ double shvrehihilo[inner_od_shmemsize];
+   __shared__ double shvrelohilo[inner_od_shmemsize];
+   __shared__ double shvrehilolo[inner_od_shmemsize];
+   __shared__ double shvrelololo[inner_od_shmemsize];
+
+   double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
+   double resulthihilo,resultlohilo,resulthilolo,resultlololo;
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   shvrehihihi[tdx] = xrehihihi[idx];
+   shvrelohihi[tdx] = xrelohihi[idx];
+   shvrehilohi[tdx] = xrehilohi[idx];
+   shvrelolohi[tdx] = xrelolohi[idx];
+   shvrehihilo[tdx] = xrehihilo[idx];
+   shvrelohilo[tdx] = xrelohilo[idx];
+   shvrehilolo[tdx] = xrehilolo[idx];
+   shvrelololo[tdx] = xrelololo[idx];
+   __syncthreads();
+   
+   // shv[j] = shv[j]/v0;
+
+   // resultim = vim[i]*inv0re + vre[i]*inv0im;
+   // -> update resultim with the second term
+
+   odg_mul(shvrehihihi[tdx],shvrelohihi[tdx],shvrehilohi[tdx],shvrelolohi[tdx],
+           shvrehihilo[tdx],shvrelohilo[tdx],shvrehilolo[tdx],shvrelololo[tdx],
+            inv0imhihihi[0], inv0imlohihi[0], inv0imhilohi[0], inv0imlolohi[0],
+            inv0imhihilo[0], inv0imlohilo[0], inv0imhilolo[0], inv0imlololo[0],
+           &acchihihi,      &acclohihi,      &acchilohi,      &acclolohi,
+           &acchihilo,      &acclohilo,      &acchilolo,      &acclololo);
+
+   resulthihihi = vimhihihi[idx];
+   resultlohihi = vimlohihi[idx];
+   resulthilohi = vimhilohi[idx];
+   resultlolohi = vimlolohi[idx];
+   resulthihilo = vimhihilo[idx];
+   resultlohilo = vimlohilo[idx];
+   resulthilolo = vimhilolo[idx];
+   resultlololo = vimlololo[idx];
+
+   odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+               acchihihi,    acclohihi,    acchilohi,    acclolohi,
+               acchihilo,    acclohilo,    acchilolo,    acclololo);
+
+   __syncthreads();
+
    if(idx < dim)
    {
       vimhihihi[idx] = resulthihihi;
@@ -6437,6 +6777,7 @@ void GPU_cmplx8_large_house
          cout << "   nrows1 : " << nrows1
               << "  rowidx : " << rowidx << "  nVrows : " << nVrows << endl;
       }
+/*
       cudaEventRecord(start);
       cmplx8_normalize<<<nblocks,szt>>>
          (nrows1,szt,&Arehihihi_d[rowidx+1],&Arelohihi_d[rowidx+1],
@@ -6465,6 +6806,79 @@ void GPU_cmplx8_large_house
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
       *lapms += milliseconds;
+*/
+      cudaEventRecord(start);
+      cmplx8_normalize_rere<<<nblocks,szt>>>
+         (nrows1,szt,&Arehihihi_d[rowidx+1],&Arelohihi_d[rowidx+1],
+                     &Arehilohi_d[rowidx+1],&Arelolohi_d[rowidx+1],
+                     &Arehihilo_d[rowidx+1],&Arelohilo_d[rowidx+1],
+                     &Arehilolo_d[rowidx+1],&Arelololo_d[rowidx+1],
+          sigmahihihi_d,sigmalohihi_d,sigmahilohi_d,sigmalolohi_d,
+          sigmahihilo_d,sigmalohilo_d,sigmahilolo_d,sigmalololo_d,
+          &Vrehihihi_d[L*nVrows+L+1],&Vrelohihi_d[L*nVrows+L+1],
+          &Vrehilohi_d[L*nVrows+L+1],&Vrelolohi_d[L*nVrows+L+1],
+          &Vrehihilo_d[L*nVrows+L+1],&Vrelohilo_d[L*nVrows+L+1],
+          &Vrehilolo_d[L*nVrows+L+1],&Vrelololo_d[L*nVrows+L+1]);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
+
+      cudaEventRecord(start);
+      cmplx8_normalize_imim<<<nblocks,szt>>>
+         (nrows1,szt, &Aimhihihi_d[rowidx+1],&Aimlohihi_d[rowidx+1],
+                     &Aimhilohi_d[rowidx+1],&Aimlolohi_d[rowidx+1],
+                     &Aimhihilo_d[rowidx+1],&Aimlohilo_d[rowidx+1],
+                     &Aimhilolo_d[rowidx+1],&Aimlololo_d[rowidx+1],
+          &betahihihi_d[szt],&betalohihi_d[szt],
+          &betahilohi_d[szt],&betalolohi_d[szt],
+          &betahihilo_d[szt],&betalohilo_d[szt],
+          &betahilolo_d[szt],&betalololo_d[szt],
+          &Vrehihihi_d[L*nVrows+L+1],&Vrelohihi_d[L*nVrows+L+1],
+          &Vrehilohi_d[L*nVrows+L+1],&Vrelolohi_d[L*nVrows+L+1],
+          &Vrehihilo_d[L*nVrows+L+1],&Vrelohilo_d[L*nVrows+L+1],
+          &Vrehilolo_d[L*nVrows+L+1],&Vrelololo_d[L*nVrows+L+1]);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
+
+      cudaEventRecord(start);
+      cmplx8_normalize_imre<<<nblocks,szt>>>
+         (nrows1,szt,&Aimhihihi_d[rowidx+1],&Aimlohihi_d[rowidx+1],
+                     &Aimhilohi_d[rowidx+1],&Aimlolohi_d[rowidx+1],
+                     &Aimhihilo_d[rowidx+1],&Aimlohilo_d[rowidx+1],
+                     &Aimhilolo_d[rowidx+1],&Aimlololo_d[rowidx+1],
+          sigmahihihi_d,sigmalohihi_d,sigmahilohi_d,sigmalolohi_d,
+          sigmahihilo_d,sigmalohilo_d,sigmahilolo_d,sigmalololo_d,
+          &Vimhihihi_d[L*nVrows+L+1],&Vimlohihi_d[L*nVrows+L+1],
+          &Vimhilohi_d[L*nVrows+L+1],&Vimlolohi_d[L*nVrows+L+1],
+          &Vimhihilo_d[L*nVrows+L+1],&Vimlohilo_d[L*nVrows+L+1],
+          &Vimhilolo_d[L*nVrows+L+1],&Vimlololo_d[L*nVrows+L+1]);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
+
+      cudaEventRecord(start);
+      cmplx8_normalize_reim<<<nblocks,szt>>>
+         (nrows1,szt,&Arehihihi_d[rowidx+1],&Arelohihi_d[rowidx+1],
+                     &Arehilohi_d[rowidx+1],&Arelolohi_d[rowidx+1],
+                     &Arehihilo_d[rowidx+1],&Arelohilo_d[rowidx+1],
+                     &Arehilolo_d[rowidx+1],&Arelololo_d[rowidx+1],
+          &betahihihi_d[szt],&betalohihi_d[szt],
+          &betahilohi_d[szt],&betalolohi_d[szt],
+          &betahihilo_d[szt],&betalohilo_d[szt],
+          &betahilolo_d[szt],&betalololo_d[szt],
+          &Vimhihihi_d[L*nVrows+L+1],&Vimlohihi_d[L*nVrows+L+1],
+          &Vimhilohi_d[L*nVrows+L+1],&Vimlolohi_d[L*nVrows+L+1],
+          &Vimhihilo_d[L*nVrows+L+1],&Vimlohilo_d[L*nVrows+L+1],
+          &Vimhilolo_d[L*nVrows+L+1],&Vimlololo_d[L*nVrows+L+1]);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+      *lapms += milliseconds;
+
       flopcount_cmplx_normalize(nblocks,szt,add,mul);
    }
    if(verbose)
@@ -10466,7 +10880,7 @@ void GPU_cmplx8_blocked_houseqr
    cudaMalloc((void**)&betahilolo_d,szbeta);
    cudaMalloc((void**)&betalololo_d,szbeta);
 
-   for(int i=0; i<szt; i++)
+   for(int i=0; i<=szt; i++)
    {
       betahihihi_h[i] = 0.0;
       betalohihi_h[i] = 0.0;

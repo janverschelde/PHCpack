@@ -520,6 +520,70 @@ __global__ void cmplx8_normalize
  *   vimhilolo is the second lowest doubles of x multiplied by 1/v0;
  *   vimlololo is the lowest doubles of x multiplied by 1/v0. */
 
+__global__ void cmplx8_normalize_rere
+ ( int dim, int szt,
+   double *xrehihihi, double *xrelohihi, double *xrehilohi, double *xrelolohi,
+   double *xrehihilo, double *xrelohilo, double *xrehilolo, double *xrelololo,
+   double *inv0rehihihi, double *inv0relohihi,
+   double *inv0rehilohi, double *inv0relolohi,
+   double *inv0rehihilo, double *inv0relohilo,
+   double *inv0rehilolo, double *inv0relololo,
+   double *vrehihihi, double *vrelohihi,
+   double *vrehilohi, double *vrelolohi,
+   double *vrehihilo, double *vrelohilo,
+   double *vrehilolo, double *vrelololo );
+/*
+ * DESCRIPTION :
+ *   Does the first multiplication in the normalization. */
+
+__global__ void cmplx8_normalize_imim
+ ( int dim, int szt,
+   double *ximhihihi, double *ximlohihi, double *ximhilohi, double *ximlolohi,
+   double *ximhihilo, double *ximlohilo, double *ximhilolo, double *ximlololo,
+   double *inv0imhihihi, double *inv0imlohihi,
+   double *inv0imhilohi, double *inv0imlolohi,
+   double *inv0imhihilo, double *inv0imlohilo,
+   double *inv0imhilolo, double *inv0imlololo,
+   double *vrehihihi, double *vrelohihi,
+   double *vrehilohi, double *vrelolohi,
+   double *vrehihilo, double *vrelohilo,
+   double *vrehilolo, double *vrelololo );
+/*
+ * DESCRIPTION :
+ *   Does the second multiplication in the normalization. */
+
+__global__ void cmplx8_normalize_imre
+ ( int dim, int szt,
+   double *ximhihihi, double *ximlohihi, double *ximhilohi, double *ximlolohi,
+   double *ximhihilo, double *ximlohilo, double *ximhilolo, double *ximlololo,
+   double *inv0rehihihi, double *inv0relohihi,
+   double *inv0rehilohi, double *inv0relolohi,
+   double *inv0rehihilo, double *inv0relohilo,
+   double *inv0rehilolo, double *inv0relololo,
+   double *vimhihihi, double *vimlohihi,
+   double *vimhilohi, double *vimlolohi,
+   double *vimhihilo, double *vimlohilo,
+   double *vimhilolo, double *vimlololo );
+/*
+ * DESCRIPTION :
+ *   Does the third multiplication in the normalization. */
+
+__global__ void cmplx8_normalize_reim
+ ( int dim, int szt,
+   double *xrehihihi, double *xrelohihi, double *xrehilohi, double *xrelolohi,
+   double *xrehihilo, double *xrelohilo, double *xrehilolo, double *xrelololo,
+   double *inv0imhihihi, double *inv0imlohihi,
+   double *inv0imhilohi, double *inv0imlolohi,
+   double *inv0imhihilo, double *inv0imlohilo,
+   double *inv0imhilolo, double *inv0imlololo,
+   double *vimhihihi, double *vimlohihi,
+   double *vimhilohi, double *vimlolohi,
+   double *vimhihilo, double *vimlohilo,
+   double *vimhilolo, double *vimlololo );
+/*
+ * DESCRIPTION :
+ *   Does the fourth multiplication in the normalization. */
+
 __global__ void dbl8_small_leftRupdate
  ( int nrows, int ncols, int szt, int k,
    double *Rhihihi, double *Rlohihi, double *Rhilohi, double *Rlolohi,
