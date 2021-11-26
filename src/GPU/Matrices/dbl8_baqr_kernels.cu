@@ -2119,17 +2119,19 @@ __global__ void cmplx8_RHdotvRe
    const int row = idx / nrows;          // R is stored column-by-column
 
    const int Rdx = Roffset + idx + (row+1)*colidx;
-
+/*
    double Vvalhihihi,Vvallohihi,Vvalhilohi,Vvallolohi;
    double Vvalhihilo,Vvallohilo,Vvalhilolo,Vvallololo;
    double Rvalhihihi,Rvallohihi,Rvalhilohi,Rvallolohi;
    double Rvalhihilo,Rvallohilo,Rvalhilolo,Rvallololo;
+ */
    double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
    double resulthihilo,resultlohilo,resulthilolo,resultlololo;
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
 
    // double result = Rval*Vval;
+ /*
    Vvalhihihi = vrehihihi[vdx];
    Vvallohihi = vrelohihi[vdx];
    Vvalhilohi = vrehilohi[vdx];
@@ -2146,14 +2148,20 @@ __global__ void cmplx8_RHdotvRe
    Rvallohilo = Rrelohilo[Rdx];
    Rvalhilolo = Rrehilolo[Rdx];
    Rvallololo = Rrelololo[Rdx];
+  */
    __syncthreads();
-   odg_mul(   Rvalhihihi,   Rvallohihi,   Rvalhilohi,   Rvallolohi,
+   odg_mul(/* Rvalhihihi,   Rvallohihi,   Rvalhilohi,   Rvallolohi,
               Rvalhihilo,   Rvallohilo,   Rvalhilolo,   Rvallololo,
               Vvalhihihi,   Vvallohihi,   Vvalhilohi,   Vvallolohi,
-              Vvalhihilo,   Vvallohilo,   Vvalhilolo,   Vvallololo,
-           &resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
-           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo);
+              Vvalhihilo,   Vvallohilo,   Vvalhilolo,   Vvallololo, */
+           Rrehihihi[Rdx],Rrelohihi[Rdx],Rrehilohi[Rdx],Rrelolohi[Rdx],
+           Rrehihilo[Rdx],Rrelohilo[Rdx],Rrehilolo[Rdx],Rrelololo[Rdx],
+           vrehihihi[vdx],vrelohihi[vdx],vrehilohi[vdx],vrelolohi[vdx],
+           vrehihilo[vdx],vrelohilo[vdx],vrehilolo[vdx],vrelololo[vdx],
+            &resulthihihi, &resultlohihi, &resulthilohi,&resultlolohi,
+            &resulthihilo, &resultlohilo, &resulthilolo,&resultlololo);
    __syncthreads();
+/*
    Vvalhihihi = vimhihihi[vdx];
    Vvallohihi = vimlohihi[vdx];
    Vvalhilohi = vimhilohi[vdx];
@@ -2170,13 +2178,119 @@ __global__ void cmplx8_RHdotvRe
    Rvallohilo = Rimlohilo[Rdx];
    Rvalhilolo = Rimhilolo[Rdx];
    Rvallololo = Rimlololo[Rdx];
+ */
    __syncthreads();
-   odg_mul(Rvalhihihi,Rvallohihi,Rvalhilohi,Rvallolohi,
-           Rvalhihilo,Rvallohilo,Rvalhilolo,Rvallololo,
-           Vvalhihihi,Vvallohihi,Vvalhilohi,Vvallolohi,
-           Vvalhihilo,Vvallohilo,Vvalhilolo,Vvallololo,
-           &acchihihi,&acclohihi,&acchilohi,&acclolohi,
-           &acchihilo,&acclohilo,&acchilolo,&acclololo);
+   odg_mul(/* Rvalhihihi,Rvallohihi,Rvalhilohi,Rvallolohi,
+              Rvalhihilo,Rvallohilo,Rvalhilolo,Rvallololo,
+              Vvalhihihi,Vvallohihi,Vvalhilohi,Vvallolohi,
+              Vvalhihilo,Vvallohilo,Vvalhilolo,Vvallololo, */
+           Rimhihihi[Rdx],Rimlohihi[Rdx],Rimhilohi[Rdx],Rimlolohi[Rdx],
+           Rimhihilo[Rdx],Rimlohilo[Rdx],Rimhilolo[Rdx],Rimlololo[Rdx],
+           vimhihihi[vdx],vimlohihi[vdx],vimhilohi[vdx],vimlolohi[vdx],
+           vimhihilo[vdx],vimlohilo[vdx],vimhilolo[vdx],vimlololo[vdx],
+               &acchihihi,    &acclohihi,    &acchilohi,    &acclolohi,
+               &acchihilo,    &acclohilo,    &acchilolo,    &acclololo);
+   odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+               acchihihi,    acclohihi,    acchilohi,    acclolohi,
+               acchihilo,    acclohilo,    acchilolo,    acclololo);
+   __syncthreads();
+   RHdotvrehihihi[idx] = resulthihihi;
+   RHdotvrelohihi[idx] = resultlohihi;
+   RHdotvrehilohi[idx] = resulthilohi;
+   RHdotvrelolohi[idx] = resultlolohi;
+   RHdotvrehihilo[idx] = resulthihilo;
+   RHdotvrelohilo[idx] = resultlohilo;
+   RHdotvrehilolo[idx] = resulthilolo;
+   RHdotvrelololo[idx] = resultlololo;
+}
+
+__global__ void cmplx8_RHdotvReRe
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *Rrehihihi, double *Rrelohihi, double *Rrehilohi, double *Rrelolohi,
+   double *Rrehihilo, double *Rrelohilo, double *Rrehilolo, double *Rrelololo,
+   double *vrehihihi, double *vrelohihi, double *vrehilohi, double *vrelolohi,
+   double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
+   double *RHdotvrehihihi, double *RHdotvrelohihi,
+   double *RHdotvrehilohi, double *RHdotvrelolohi,
+   double *RHdotvrehihilo, double *RHdotvrelohilo,
+   double *RHdotvrehilolo, double *RHdotvrelololo )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx;        // thread tdx computes RTv[idx]
+
+   const int vdx = idx % nrows;          // index in v is column in R^T
+   const int row = idx / nrows;          // R is stored column-by-column
+
+   const int Rdx = Roffset + idx + (row+1)*colidx;
+
+   double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
+   double resulthihilo,resultlohilo,resulthilolo,resultlololo;
+
+   // double result = Rval*Vval;
+   __syncthreads();
+   odg_mul(Rrehihihi[Rdx],Rrelohihi[Rdx],Rrehilohi[Rdx],Rrelolohi[Rdx],
+           Rrehihilo[Rdx],Rrelohilo[Rdx],Rrehilolo[Rdx],Rrelololo[Rdx],
+           vrehihihi[vdx],vrelohihi[vdx],vrehilohi[vdx],vrelolohi[vdx],
+           vrehihilo[vdx],vrelohilo[vdx],vrehilolo[vdx],vrelololo[vdx],
+            &resulthihihi, &resultlohihi, &resulthilohi,&resultlolohi,
+            &resulthihilo, &resultlohilo, &resulthilolo,&resultlololo);
+   __syncthreads();
+   RHdotvrehihihi[idx] = resulthihihi;
+   RHdotvrelohihi[idx] = resultlohihi;
+   RHdotvrehilohi[idx] = resulthilohi;
+   RHdotvrelolohi[idx] = resultlolohi;
+   RHdotvrehihilo[idx] = resulthihilo;
+   RHdotvrelohilo[idx] = resultlohilo;
+   RHdotvrehilolo[idx] = resulthilolo;
+   RHdotvrelololo[idx] = resultlololo;
+}
+
+__global__ void cmplx8_RHdotvImIm
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *Rimhihihi, double *Rimlohihi, double *Rimhilohi, double *Rimlolohi,
+   double *Rimhihilo, double *Rimlohilo, double *Rimhilolo, double *Rimlololo,
+   double *vimhihihi, double *vimlohihi, double *vimhilohi, double *vimlolohi,
+   double *vimhihilo, double *vimlohilo, double *vimhilolo, double *vimlololo,
+   double *RHdotvrehihihi, double *RHdotvrelohihi,
+   double *RHdotvrehilohi, double *RHdotvrelolohi,
+   double *RHdotvrehihilo, double *RHdotvrelohilo,
+   double *RHdotvrehilolo, double *RHdotvrelololo )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx;        // thread tdx computes RTv[idx]
+
+   const int vdx = idx % nrows;          // index in v is column in R^T
+   const int row = idx / nrows;          // R is stored column-by-column
+
+   const int Rdx = Roffset + idx + (row+1)*colidx;
+
+   double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
+   double resulthihilo,resultlohilo,resulthilolo,resultlololo;
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   // double result = Rval*Vval;
+
+   __syncthreads();
+   odg_mul(Rimhihihi[Rdx],Rimlohihi[Rdx],Rimhilohi[Rdx],Rimlolohi[Rdx],
+           Rimhihilo[Rdx],Rimlohilo[Rdx],Rimhilolo[Rdx],Rimlololo[Rdx],
+           vimhihihi[vdx],vimlohihi[vdx],vimhilohi[vdx],vimlolohi[vdx],
+           vimhihilo[vdx],vimlohilo[vdx],vimhilolo[vdx],vimlololo[vdx],
+               &acchihihi,    &acclohihi,    &acchilohi,    &acclolohi,
+               &acchihilo,    &acclohilo,    &acchilolo,    &acclololo);
+
+   resulthihihi = RHdotvrehihihi[idx];
+   resultlohihi = RHdotvrelohihi[idx];
+   resulthilohi = RHdotvrehilohi[idx];
+   resultlolohi = RHdotvrelolohi[idx];
+   resulthihilo = RHdotvrehihilo[idx];
+   resultlohilo = RHdotvrelohilo[idx];
+   resulthilolo = RHdotvrehilolo[idx];
+   resultlololo = RHdotvrelololo[idx];
+
    odg_inc(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
            &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
                acchihihi,    acclohihi,    acchilohi,    acclolohi,
@@ -2216,17 +2330,19 @@ __global__ void cmplx8_RHdotvIm
 
    const int Rdx = Roffset + idx + (row+1)*colidx;
 
+/*
    double Vvalhihihi,Vvallohihi,Vvalhilohi,Vvallolohi;
    double Vvalhihilo,Vvallohilo,Vvalhilolo,Vvallololo;
    double Rvalhihihi,Rvallohihi,Rvalhilohi,Rvallolohi;
    double Rvalhihilo,Rvallohilo,Rvalhilolo,Rvallololo;
+ */
    double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
    double resulthihilo,resultlohilo,resulthilolo,resultlololo;
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
 
    // double result = Rval*Vval;
-
+/*
    Vvalhihihi = vimhihihi[vdx];
    Vvallohihi = vimlohihi[vdx];
    Vvalhilohi = vimhilohi[vdx];
@@ -2243,14 +2359,20 @@ __global__ void cmplx8_RHdotvIm
    Rvallohilo = Rrelohilo[Rdx];
    Rvalhilolo = Rrehilolo[Rdx];
    Rvallololo = Rrelololo[Rdx];
+ */
    __syncthreads();
-   odg_mul(   Rvalhihihi,   Rvallohihi,   Rvalhilohi,   Rvallolohi,
+   odg_mul(/* Rvalhihihi,   Rvallohihi,   Rvalhilohi,   Rvallolohi,
               Rvalhihilo,   Rvallohilo,   Rvalhilolo,   Rvallololo,
               Vvalhihihi,   Vvallohihi,   Vvalhilohi,   Vvallolohi,
-              Vvalhihilo,   Vvallohilo,   Vvalhilolo,   Vvallololo,
+              Vvalhihilo,   Vvallohilo,   Vvalhilolo,   Vvallololo, */
+           Rrehihihi[Rdx],Rrelohihi[Rdx],Rrehilohi[Rdx],Rrelolohi[Rdx],
+           Rrehihilo[Rdx],Rrelohilo[Rdx],Rrehilolo[Rdx],Rrelololo[Rdx],
+           vimhihihi[vdx],vimlohihi[vdx],vimhilohi[vdx],vimlolohi[vdx],
+           vimhihilo[vdx],vimlohilo[vdx],vimhilolo[vdx],vimlololo[vdx],
            &resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
            &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo);
    __syncthreads();
+/*
    Vvalhihihi = vrehihihi[vdx];
    Vvallohihi = vrelohihi[vdx];
    Vvalhilohi = vrehilohi[vdx];
@@ -2267,13 +2389,120 @@ __global__ void cmplx8_RHdotvIm
    Rvallohilo = Rimlohilo[Rdx];
    Rvalhilolo = Rimhilolo[Rdx];
    Rvallololo = Rimlololo[Rdx];
+ */
    __syncthreads();
-   odg_mul(Rvalhihihi,Rvallohihi,Rvalhilohi,Rvallolohi,
-           Rvalhihilo,Rvallohilo,Rvalhilolo,Rvallololo,
-           Vvalhihihi,Vvallohihi,Vvalhilohi,Vvallolohi,
-           Vvalhihilo,Vvallohilo,Vvalhilolo,Vvallololo,
+   odg_mul(/* Rvalhihihi,Rvallohihi,Rvalhilohi,Rvallolohi,
+              Rvalhihilo,Rvallohilo,Rvalhilolo,Rvallololo,
+              Vvalhihihi,Vvallohihi,Vvalhilohi,Vvallolohi,
+              Vvalhihilo,Vvallohilo,Vvalhilolo,Vvallololo, */
+           Rimhihihi[Rdx],Rimlohihi[Rdx],Rimhilohi[Rdx],Rimlolohi[Rdx],
+           Rimhihilo[Rdx],Rimlohilo[Rdx],Rimhilolo[Rdx],Rimlololo[Rdx],
+           vrehihihi[vdx],vrelohihi[vdx],vrehilohi[vdx],vrelolohi[vdx],
+           vrehihilo[vdx],vrelohilo[vdx],vrehilolo[vdx],vrelololo[vdx],
            &acchihihi,&acclohihi,&acchilohi,&acclolohi,
            &acchihilo,&acclohilo,&acchilolo,&acclololo);
+   odg_dec(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
+               acchihihi,    acclohihi,    acchilohi,    acclolohi,
+               acchihilo,    acclohilo,    acchilolo,    acclololo);
+
+   __syncthreads();
+   RHdotvimhihihi[idx] = resulthihihi;
+   RHdotvimlohihi[idx] = resultlohihi;
+   RHdotvimhilohi[idx] = resulthilohi;
+   RHdotvimlolohi[idx] = resultlolohi;
+   RHdotvimhihilo[idx] = resulthihilo;
+   RHdotvimlohilo[idx] = resultlohilo;
+   RHdotvimhilolo[idx] = resulthilolo;
+   RHdotvimlololo[idx] = resultlololo;
+}
+
+__global__ void cmplx8_RHdotvReIm
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *Rrehihihi, double *Rrelohihi, double *Rrehilohi, double *Rrelolohi,
+   double *Rrehihilo, double *Rrelohilo, double *Rrehilolo, double *Rrelololo,
+   double *vimhihihi, double *vimlohihi, double *vimhilohi, double *vimlolohi,
+   double *vimhihilo, double *vimlohilo, double *vimhilolo, double *vimlololo,
+   double *RHdotvimhihihi, double *RHdotvimlohihi,
+   double *RHdotvimhilohi, double *RHdotvimlolohi,
+   double *RHdotvimhihilo, double *RHdotvimlohilo,
+   double *RHdotvimhilolo, double *RHdotvimlololo )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx;        // thread tdx computes RTv[idx]
+
+   const int vdx = idx % nrows;          // index in v is column in R^T
+   const int row = idx / nrows;          // R is stored column-by-column
+
+   const int Rdx = Roffset + idx + (row+1)*colidx;
+
+   double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
+   double resulthihilo,resultlohilo,resulthilolo,resultlololo;
+
+   // double result = Rval*Vval;
+   __syncthreads();
+   odg_mul(Rrehihihi[Rdx],Rrelohihi[Rdx],Rrehilohi[Rdx],Rrelolohi[Rdx],
+           Rrehihilo[Rdx],Rrelohilo[Rdx],Rrehilolo[Rdx],Rrelololo[Rdx],
+           vimhihihi[vdx],vimlohihi[vdx],vimhilohi[vdx],vimlolohi[vdx],
+           vimhihilo[vdx],vimlohilo[vdx],vimhilolo[vdx],vimlololo[vdx],
+           &resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
+           &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo);
+
+   __syncthreads();
+   RHdotvimhihihi[idx] = resulthihihi;
+   RHdotvimlohihi[idx] = resultlohihi;
+   RHdotvimhilohi[idx] = resulthilohi;
+   RHdotvimlolohi[idx] = resultlolohi;
+   RHdotvimhihilo[idx] = resulthihilo;
+   RHdotvimlohilo[idx] = resultlohilo;
+   RHdotvimhilolo[idx] = resulthilolo;
+   RHdotvimlololo[idx] = resultlololo;
+}
+
+__global__ void cmplx8_RHdotvImRe
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *Rimhihihi, double *Rimlohihi, double *Rimhilohi, double *Rimlolohi,
+   double *Rimhihilo, double *Rimlohilo, double *Rimhilolo, double *Rimlololo,
+   double *vrehihihi, double *vrelohihi, double *vrehilohi, double *vrelolohi,
+   double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
+   double *RHdotvimhihihi, double *RHdotvimlohihi,
+   double *RHdotvimhilohi, double *RHdotvimlolohi,
+   double *RHdotvimhihilo, double *RHdotvimlohilo,
+   double *RHdotvimhilolo, double *RHdotvimlololo )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx;        // thread tdx computes RTv[idx]
+
+   const int vdx = idx % nrows;          // index in v is column in R^T
+   const int row = idx / nrows;          // R is stored column-by-column
+
+   const int Rdx = Roffset + idx + (row+1)*colidx;
+
+   double resulthihihi,resultlohihi,resulthilohi,resultlolohi;
+   double resulthihilo,resultlohilo,resulthilolo,resultlololo;
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   // double result = Rval*Vval;
+   __syncthreads();
+   odg_mul(Rimhihihi[Rdx],Rimlohihi[Rdx],Rimhilohi[Rdx],Rimlolohi[Rdx],
+           Rimhihilo[Rdx],Rimlohilo[Rdx],Rimhilolo[Rdx],Rimlololo[Rdx],
+           vrehihihi[vdx],vrelohihi[vdx],vrehilohi[vdx],vrelolohi[vdx],
+           vrehihilo[vdx],vrelohilo[vdx],vrehilolo[vdx],vrelololo[vdx],
+           &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+           &acchihilo,&acclohilo,&acchilolo,&acclololo);
+
+   resulthihihi = RHdotvimhihihi[idx];
+   resultlohihi = RHdotvimlohihi[idx];
+   resulthilohi = RHdotvimhilohi[idx];
+   resultlolohi = RHdotvimlolohi[idx];
+   resulthihilo = RHdotvimhihilo[idx];
+   resultlohilo = RHdotvimlohilo[idx];
+   resulthilolo = RHdotvimhilolo[idx];
+   resultlololo = RHdotvimlololo[idx];
+
    odg_dec(&resulthihihi,&resultlohihi,&resulthilohi,&resultlolohi,
            &resulthihilo,&resultlohilo,&resulthilolo,&resultlololo,
                acchihihi,    acclohihi,    acchilohi,    acclolohi,
@@ -2397,15 +2626,17 @@ __global__ void cmplx8_sum_betaRHdotv
    double resultimlohilo = 0.0;
    double resultimhilolo = 0.0;
    double resultimlololo = 0.0;
+/*
    double Rvalrehihihi,Rvalrelohihi,Rvalrehilohi,Rvalrelolohi;
    double Rvalrehihilo,Rvalrelohilo,Rvalrehilolo,Rvalrelololo;
    double Rvalimhihihi,Rvalimlohihi,Rvalimhilohi,Rvalimlolohi;
    double Rvalimhihilo,Rvalimlohilo,Rvalimhilolo,Rvalimlololo;
-
+ */
    for(int i=0; i<nrows; i++)
    {
       idx = offset + i;
       __syncthreads();
+/*
       Rvalrehihihi = RTdotvrehihihi[idx];
       Rvalrelohihi = RTdotvrelohihi[idx];
       Rvalrehilohi = RTdotvrehilohi[idx];
@@ -2422,18 +2653,28 @@ __global__ void cmplx8_sum_betaRHdotv
       Rvalimlohilo = RTdotvimlohilo[idx];
       Rvalimhilolo = RTdotvimhilolo[idx];
       Rvalimlololo = RTdotvimlololo[idx];
+ */
       // result = result + Rval;
       __syncthreads();
       odg_inc(&resultrehihihi,&resultrelohihi,&resultrehilohi,&resultrelolohi,
               &resultrehihilo,&resultrelohilo,&resultrehilolo,&resultrelololo,
-                 Rvalrehihihi,   Rvalrelohihi,   Rvalrehilohi,   Rvalrelolohi,
-                 Rvalrehihilo,   Rvalrelohilo,   Rvalrehilolo,   Rvalrelololo);
+              RTdotvrehihihi[idx],RTdotvrelohihi[idx],
+              RTdotvrehilohi[idx],RTdotvrelolohi[idx],
+              RTdotvrehihilo[idx],RTdotvrelohilo[idx],
+              RTdotvrehilolo[idx],RTdotvrelololo[idx]);
+          //    Rvalrehihihi,   Rvalrelohihi,   Rvalrehilohi,   Rvalrelolohi,
+          //    Rvalrehihilo,   Rvalrelohilo,   Rvalrehilolo,   Rvalrelololo);
       odg_inc(&resultimhihihi,&resultimlohihi,&resultimhilohi,&resultimlolohi,
               &resultimhihilo,&resultimlohilo,&resultimhilolo,&resultimlololo,
-                 Rvalimhihihi,   Rvalimlohihi,   Rvalimhilohi,   Rvalimlolohi,
-                 Rvalimhihilo,   Rvalimlohilo,   Rvalimhilolo,   Rvalimlololo);
+              RTdotvimhihihi[idx],RTdotvimlohihi[idx],
+              RTdotvimhilohi[idx],RTdotvimlolohi[idx],
+              RTdotvimhihilo[idx],RTdotvimlohilo[idx],
+              RTdotvimhilolo[idx],RTdotvimlololo[idx]);
+          //    Rvalimhihihi,   Rvalimlohihi,   Rvalimhilohi,   Rvalimlolohi,
+          //    Rvalimhihilo,   Rvalimlohilo,   Rvalimhilolo,   Rvalimlololo);
    }
    __syncthreads();
+/*
    Rvalrehihihi = *betahihihi;
    Rvalrelohihi = *betalohihi;
    Rvalrehilohi = *betahilohi;
@@ -2442,16 +2683,21 @@ __global__ void cmplx8_sum_betaRHdotv
    Rvalrelohilo = *betalohilo;
    Rvalrehilolo = *betahilolo;
    Rvalrelololo = *betalololo;
+ */
    // w[tdx] = Rval*result;
    __syncthreads();
-   odg_mul(Rvalrehihihi,   Rvalrelohihi,   Rvalrehilohi,   Rvalrelolohi,
-           Rvalrehihilo,   Rvalrelohilo,   Rvalrehilolo,   Rvalrelololo,
+   odg_mul(/* Rvalrehihihi,   Rvalrelohihi,   Rvalrehilohi,   Rvalrelolohi,
+              Rvalrehihilo,   Rvalrelohilo,   Rvalrehilolo,   Rvalrelololo, */
+          betahihihi[0],  betalohihi[0],  betahilohi[0], betalolohi[0],
+          betahihilo[0],  betalohilo[0],  betahilolo[0], betalololo[0],
          resultrehihihi, resultrelohihi, resultrehilohi, resultrelolohi,
          resultrehihilo, resultrelohilo, resultrehilolo, resultrelololo,
              &wrehihihi[tdx],&wrelohihi[tdx],&wrehilohi[tdx],&wrelolohi[tdx],
              &wrehihilo[tdx],&wrelohilo[tdx],&wrehilolo[tdx],&wrelololo[tdx]);
-   odg_mul(Rvalrehihihi,   Rvalrelohihi,   Rvalrehilohi,   Rvalrelolohi,
-           Rvalrehihilo,   Rvalrelohilo,   Rvalrehilolo,   Rvalrelololo,
+   odg_mul(/* Rvalrehihihi,   Rvalrelohihi,   Rvalrehilohi,   Rvalrelolohi,
+              Rvalrehihilo,   Rvalrelohilo,   Rvalrehilolo,   Rvalrelololo, */
+          betahihihi[0],  betalohihi[0],  betahilohi[0], betalolohi[0],
+          betahihilo[0],  betalohilo[0],  betahilolo[0], betalololo[0],
          resultimhihihi, resultimlohihi, resultimhilohi, resultimlolohi,
          resultimhihilo, resultimlohilo, resultimhilolo, resultimlololo,
              &wimhihihi[tdx],&wimlohihi[tdx],&wimhilohi[tdx],&wimlolohi[tdx],
@@ -2747,10 +2993,6 @@ __global__ void cmplx8_medium_subvbetaRHvRe
    double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
    double *vimhihihi, double *vimlohihi, double *vimhilohi, double *vimlolohi,
    double *vimhihilo, double *vimlohilo, double *vimhilolo, double *vimlololo,
-   double *betahihihi, double *betalohihi,
-   double *betahilohi, double *betalolohi,
-   double *betahihilo, double *betalohilo,
-   double *betahilolo, double *betalololo,
    double *wrehihihi, double *wrelohihi, double *wrehilohi, double *wrelolohi,
    double *wrehihilo, double *wrelohilo, double *wrehilolo, double *wrelololo,
    double *wimhihihi, double *wimlohihi,
@@ -2808,11 +3050,11 @@ __global__ void cmplx8_medium_subvbetaRHvRe
    double Rwidxhihihi,Rwidxlohihi,Rwidxhilohi,Rwidxlolohi;
    double Rwidxhihilo,Rwidxlohilo,Rwidxhilolo,Rwidxlololo;
    // value in Householder vector
-   double vValhihihi,vVallohihi,vValhilohi,vVallolohi;
-   double vValhihilo,vVallohilo,vValhilolo,vVallololo;
+   // double vValhihihi,vVallohihi,vValhilohi,vVallolohi;
+   // double vValhihilo,vVallohilo,vValhilolo,vVallololo;
    // value in beta*R^H*v
-   double wValhihihi,wVallohihi,wValhilohi,wVallolohi;
-   double wValhihilo,wVallohilo,wValhilolo,wVallololo;
+   // double wValhihihi,wVallohihi,wValhilohi,wVallolohi;
+   // double wValhihilo,wVallohilo,wValhilolo,wVallololo;
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
 
@@ -2828,6 +3070,7 @@ __global__ void cmplx8_medium_subvbetaRHvRe
    // Rwidx = Rwidx - vValue*wValue;   // update R[rowidx,colidx]
    // take the Hermitian transpose of w
    __syncthreads();
+/*
    vValhihihi = vrehihihi[rowidx];  // value in Householder vector
    vVallohihi = vrelohihi[rowidx];
    vValhilohi = vrehilohi[rowidx];
@@ -2844,18 +3087,27 @@ __global__ void cmplx8_medium_subvbetaRHvRe
    wVallohilo = shwrelohilo[colidx];
    wValhilolo = shwrehilolo[colidx];
    wVallololo = shwrelololo[colidx];
+ */
    __syncthreads();
-   odg_mul(vValhihihi,vVallohihi,vValhilohi,vVallolohi,
-           vValhihilo,vVallohilo,vValhilolo,vVallololo,
-           wValhihihi,wVallohihi,wValhilohi,wVallolohi,
-           wValhihilo,wVallohilo,wValhilolo,wVallololo,
+   odg_mul(/* vValhihihi,vVallohihi,vValhilohi,vVallolohi,
+              vValhihilo,vVallohilo,vValhilolo,vVallololo,
+              wValhihihi,wVallohihi,wValhilohi,wVallolohi,
+              wValhihilo,wVallohilo,wValhilolo,wVallololo, */
+           vrehihihi[rowidx],vrelohihi[rowidx],
+           vrehilohi[rowidx],vrelolohi[rowidx],
+           vrehihilo[rowidx],vrelohilo[rowidx],
+           vrehilolo[rowidx],vrelololo[rowidx],
+           shwrehihihi[colidx],shwrelohihi[colidx],
+           shwrehilohi[colidx],shwrelolohi[colidx],
+           shwrehihilo[colidx],shwrelohilo[colidx],
+           shwrehilolo[colidx],shwrelololo[colidx],
            &acchihihi,&acclohihi,&acchilohi,&acclolohi,
            &acchihilo,&acclohilo,&acchilolo,&acclololo);
    odg_dec(&Rwidxhihihi,&Rwidxlohihi,&Rwidxhilohi,&Rwidxlolohi,
            &Rwidxhihilo,&Rwidxlohilo,&Rwidxhilolo,&Rwidxlololo,
               acchihihi,   acclohihi,   acchilohi,   acclolohi,
               acchihilo,   acclohilo,   acchilolo,   acclololo);
-
+/*
    vValhihihi = vimhihihi[rowidx];
    vVallohihi = vimlohihi[rowidx];
    vValhilohi = vimhilohi[rowidx];
@@ -2872,11 +3124,192 @@ __global__ void cmplx8_medium_subvbetaRHvRe
    wVallohilo = shwimlohilo[colidx];
    wValhilolo = shwimhilolo[colidx];
    wVallololo = shwimlololo[colidx];
+ */
    __syncthreads();
-   odg_mul(vValhihihi,vVallohihi,vValhilohi,vVallolohi,
-           vValhihilo,vVallohilo,vValhilolo,vVallololo,
-           wValhihihi,wVallohihi,wValhilohi,wVallolohi,
-           wValhihilo,wVallohilo,wValhilolo,wVallololo,
+   odg_mul(/* vValhihihi,vVallohihi,vValhilohi,vVallolohi,
+              vValhihilo,vVallohilo,vValhilolo,vVallololo,
+              wValhihihi,wVallohihi,wValhilohi,wVallolohi,
+              wValhihilo,wVallohilo,wValhilolo,wVallololo, */
+           vimhihihi[rowidx],vimlohihi[rowidx],
+           vimhilohi[rowidx],vimlolohi[rowidx],
+           vimhihilo[rowidx],vimlohilo[rowidx],
+           vimhilolo[rowidx],vimlololo[rowidx],
+           shwimhihihi[colidx],shwimlohihi[colidx],
+           shwimhilohi[colidx],shwimlolohi[colidx],
+           shwimhihilo[colidx],shwimlohilo[colidx],
+           shwimhilolo[colidx],shwimlololo[colidx],
+           &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+           &acchihilo,&acclohilo,&acchilolo,&acclololo);
+   odg_dec(&Rwidxhihihi,&Rwidxlohihi,&Rwidxhilohi,&Rwidxlolohi,
+           &Rwidxhihilo,&Rwidxlohilo,&Rwidxhilolo,&Rwidxlololo,
+              acchihihi,   acclohihi,   acchilohi,   acclolohi,
+              acchihilo,   acclohilo,   acchilolo,   acclololo);
+
+   __syncthreads();
+   if(widx < bound)                    // if() takes care of padding
+   {
+      Rrehihihi[Ridx] = Rwidxhihihi;
+      Rrelohihi[Ridx] = Rwidxlohihi;
+      Rrehilohi[Ridx] = Rwidxhilohi;
+      Rrelolohi[Ridx] = Rwidxlolohi;
+      Rrehihilo[Ridx] = Rwidxhihilo;
+      Rrelohilo[Ridx] = Rwidxlohilo;
+      Rrehilolo[Ridx] = Rwidxhilolo;
+      Rrelololo[Ridx] = Rwidxlololo;
+   }
+}
+
+__global__ void cmplx8_medium_subvbetaRHvReRe
+ ( int nrows, int ncols, int szt, int k,
+   double *Rrehihihi, double *Rrelohihi, double *Rrehilohi, double *Rrelolohi,
+   double *Rrehihilo, double *Rrelohilo, double *Rrehilolo, double *Rrelololo,
+   double *vrehihihi, double *vrelohihi, double *vrehilohi, double *vrelolohi,
+   double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
+   double *wrehihihi, double *wrelohihi, double *wrehilohi, double *wrelolohi,
+   double *wrehihilo, double *wrelohilo, double *wrehilolo, double *wrelololo )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int Roffset = k*nrows + k;    // start in R
+   const int widx = bdx*szt + tdx;     // global thread index 
+
+   const int coldim = ncols - k;       // number of columns in R
+   const int bound = coldim*(nrows-k); // bound on Ridx
+   const int rowidx = widx / coldim;   // row index
+   const int colidx = widx % coldim;   // column index
+
+   const int Ridx = Roffset + nrows*colidx + rowidx;
+
+   __shared__ double shwrehihihi[cod_shmemsize];  // values in beta*R^H*v are
+   __shared__ double shwrelohihi[cod_shmemsize];  // less in number than szt
+   __shared__ double shwrehilohi[cod_shmemsize]; 
+   __shared__ double shwrelolohi[cod_shmemsize]; 
+   __shared__ double shwrehihilo[cod_shmemsize]; 
+   __shared__ double shwrelohilo[cod_shmemsize];
+   __shared__ double shwrehilolo[cod_shmemsize]; 
+   __shared__ double shwrelololo[cod_shmemsize]; 
+
+   shwrehihihi[tdx] = wrehihihi[tdx];
+   shwrelohihi[tdx] = wrelohihi[tdx];
+   shwrehilohi[tdx] = wrehilohi[tdx];
+   shwrelolohi[tdx] = wrelolohi[tdx];
+   shwrehihilo[tdx] = wrehihilo[tdx];
+   shwrelohilo[tdx] = wrelohilo[tdx];
+   shwrehilolo[tdx] = wrehilolo[tdx];
+   shwrelololo[tdx] = wrelololo[tdx];
+   __syncthreads();
+
+   double Rwidxhihihi,Rwidxlohihi,Rwidxhilohi,Rwidxlolohi;
+   double Rwidxhihilo,Rwidxlohilo,Rwidxhilolo,Rwidxlololo;
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   Rwidxhihihi = Rrehihihi[Ridx];  // number that tdx updates
+   Rwidxlohihi = Rrelohihi[Ridx];
+   Rwidxhilohi = Rrehilohi[Ridx];
+   Rwidxlolohi = Rrelolohi[Ridx];
+   Rwidxhihilo = Rrehihilo[Ridx];
+   Rwidxlohilo = Rrelohilo[Ridx];
+   Rwidxhilolo = Rrehilolo[Ridx];
+   Rwidxlololo = Rrelololo[Ridx];
+ 
+   // Rwidx = Rwidx - vValue*wValue;   // update R[rowidx,colidx]
+   // take the Hermitian transpose of w
+   __syncthreads();
+   odg_mul(vrehihihi[rowidx],vrelohihi[rowidx],
+           vrehilohi[rowidx],vrelolohi[rowidx],
+           vrehihilo[rowidx],vrelohilo[rowidx],
+           vrehilolo[rowidx],vrelololo[rowidx],
+           shwrehihihi[colidx],shwrelohihi[colidx],
+           shwrehilohi[colidx],shwrelolohi[colidx],
+           shwrehihilo[colidx],shwrelohilo[colidx],
+           shwrehilolo[colidx],shwrelololo[colidx],
+           &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+           &acchihilo,&acclohilo,&acchilolo,&acclololo);
+   odg_dec(&Rwidxhihihi,&Rwidxlohihi,&Rwidxhilohi,&Rwidxlolohi,
+           &Rwidxhihilo,&Rwidxlohilo,&Rwidxhilolo,&Rwidxlololo,
+              acchihihi,   acclohihi,   acchilohi,   acclolohi,
+              acchihilo,   acclohilo,   acchilolo,   acclololo);
+
+   __syncthreads();
+   if(widx < bound)                    // if() takes care of padding
+   {
+      Rrehihihi[Ridx] = Rwidxhihihi;
+      Rrelohihi[Ridx] = Rwidxlohihi;
+      Rrehilohi[Ridx] = Rwidxhilohi;
+      Rrelolohi[Ridx] = Rwidxlolohi;
+      Rrehihilo[Ridx] = Rwidxhihilo;
+      Rrelohilo[Ridx] = Rwidxlohilo;
+      Rrehilolo[Ridx] = Rwidxhilolo;
+      Rrelololo[Ridx] = Rwidxlololo;
+   }
+}
+
+__global__ void cmplx8_medium_subvbetaRHvImIm
+ ( int nrows, int ncols, int szt, int k,
+   double *Rrehihihi, double *Rrelohihi, double *Rrehilohi, double *Rrelolohi,
+   double *Rrehihilo, double *Rrelohilo, double *Rrehilolo, double *Rrelololo,
+   double *vimhihihi, double *vimlohihi, double *vimhilohi, double *vimlolohi,
+   double *vimhihilo, double *vimlohilo, double *vimhilolo, double *vimlololo,
+   double *wimhihihi, double *wimlohihi, double *wimhilohi, double *wimlolohi,
+   double *wimhihilo, double *wimlohilo, double *wimhilolo, double *wimlololo )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int Roffset = k*nrows + k;    // start in R
+   const int widx = bdx*szt + tdx;     // global thread index 
+
+   const int coldim = ncols - k;       // number of columns in R
+   const int bound = coldim*(nrows-k); // bound on Ridx
+   const int rowidx = widx / coldim;   // row index
+   const int colidx = widx % coldim;   // column index
+
+   const int Ridx = Roffset + nrows*colidx + rowidx;
+
+   __shared__ double shwimhihihi[cod_shmemsize];  // values in beta*R^H*v are
+   __shared__ double shwimlohihi[cod_shmemsize];  // less in number than szt
+   __shared__ double shwimhilohi[cod_shmemsize]; 
+   __shared__ double shwimlolohi[cod_shmemsize];
+   __shared__ double shwimhihilo[cod_shmemsize]; 
+   __shared__ double shwimlohilo[cod_shmemsize];
+   __shared__ double shwimhilolo[cod_shmemsize]; 
+   __shared__ double shwimlololo[cod_shmemsize];
+
+   shwimhihihi[tdx] = wimhihihi[tdx];
+   shwimlohihi[tdx] = wimlohihi[tdx];
+   shwimhilohi[tdx] = wimhilohi[tdx];
+   shwimlolohi[tdx] = wimlolohi[tdx];
+   shwimhihilo[tdx] = wimhihilo[tdx];
+   shwimlohilo[tdx] = wimlohilo[tdx];
+   shwimhilolo[tdx] = wimhilolo[tdx];
+   shwimlololo[tdx] = wimlololo[tdx];
+   __syncthreads();
+
+   double Rwidxhihihi,Rwidxlohihi,Rwidxhilohi,Rwidxlolohi;
+   double Rwidxhihilo,Rwidxlohilo,Rwidxhilolo,Rwidxlololo;
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   Rwidxhihihi = Rrehihihi[Ridx];  // number that tdx updates
+   Rwidxlohihi = Rrelohihi[Ridx];
+   Rwidxhilohi = Rrehilohi[Ridx];
+   Rwidxlolohi = Rrelolohi[Ridx];
+   Rwidxhihilo = Rrehihilo[Ridx];
+   Rwidxlohilo = Rrelohilo[Ridx];
+   Rwidxhilolo = Rrehilolo[Ridx];
+   Rwidxlololo = Rrelololo[Ridx];
+ 
+   // Rwidx = Rwidx - vValue*wValue;   // update R[rowidx,colidx]
+   // take the Hermitian transpose of w
+   __syncthreads();
+   odg_mul(vimhihihi[rowidx],vimlohihi[rowidx],
+           vimhilohi[rowidx],vimlolohi[rowidx],
+           vimhihilo[rowidx],vimlohilo[rowidx],
+           vimhilolo[rowidx],vimlololo[rowidx],
+           shwimhihihi[colidx],shwimlohihi[colidx],
+           shwimhilohi[colidx],shwimlolohi[colidx],
+           shwimhihilo[colidx],shwimlohilo[colidx],
+           shwimhilolo[colidx],shwimlololo[colidx],
            &acchihihi,&acclohihi,&acchilohi,&acclolohi,
            &acchihilo,&acclohilo,&acchilolo,&acclololo);
    odg_dec(&Rwidxhihihi,&Rwidxlohihi,&Rwidxhilohi,&Rwidxlolohi,
@@ -2906,10 +3339,6 @@ __global__ void cmplx8_medium_subvbetaRHvIm
    double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
    double *vimhihihi, double *vimlohihi, double *vimhilohi, double *vimlolohi,
    double *vimhihilo, double *vimlohilo, double *vimhilolo, double *vimlololo,
-   double *betahihihi, double *betalohihi,
-   double *betahilohi, double *betalolohi,
-   double *betahihilo, double *betalohilo,
-   double *betahilolo, double *betalololo,
    double *wrehihihi, double *wrelohihi, double *wrehilohi, double *wrelolohi,
    double *wrehihilo, double *wrelohilo, double *wrehilolo, double *wrelololo,
    double *wimhihihi, double *wimlohihi,
@@ -2967,11 +3396,11 @@ __global__ void cmplx8_medium_subvbetaRHvIm
    double Rwidxhihihi,Rwidxlohihi,Rwidxhilohi,Rwidxlolohi;
    double Rwidxhihilo,Rwidxlohilo,Rwidxhilolo,Rwidxlololo;
    // value in Householder vector
-   double vValhihihi,vVallohihi,vValhilohi,vVallolohi;
-   double vValhihilo,vVallohilo,vValhilolo,vVallololo;
+   // double vValhihihi,vVallohihi,vValhilohi,vVallolohi;
+   // double vValhihilo,vVallohilo,vValhilolo,vVallololo;
    // value in beta*R^H*v
-   double wValhihihi,wVallohihi,wValhilohi,wVallolohi;
-   double wValhihilo,wVallohilo,wValhilolo,wVallololo;
+   // double wValhihihi,wVallohihi,wValhilohi,wVallolohi;
+   // double wValhihilo,wVallohilo,wValhilolo,wVallololo;
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
 
@@ -2986,6 +3415,7 @@ __global__ void cmplx8_medium_subvbetaRHvIm
    Rwidxlololo = Rimlololo[Ridx];
 
    __syncthreads();
+/*
    vValhihihi = vimhihihi[rowidx];
    vVallohihi = vimlohihi[rowidx];
    vValhilohi = vimhilohi[rowidx];
@@ -3002,18 +3432,27 @@ __global__ void cmplx8_medium_subvbetaRHvIm
    wVallohilo = shwrelohilo[colidx];
    wValhilolo = shwrehilolo[colidx];
    wVallololo = shwrelololo[colidx];
+ */
    __syncthreads();
-   odg_mul(vValhihihi,vVallohihi,vValhilohi,vVallolohi,
-           vValhihilo,vVallohilo,vValhilolo,vVallololo,
-           wValhihihi,wVallohihi,wValhilohi,wVallolohi,
-           wValhihilo,wVallohilo,wValhilolo,wVallololo,
+   odg_mul(/* vValhihihi,vVallohihi,vValhilohi,vVallolohi,
+              vValhihilo,vVallohilo,vValhilolo,vVallololo,
+              wValhihihi,wVallohihi,wValhilohi,wVallolohi,
+              wValhihilo,wVallohilo,wValhilolo,wVallololo, */
+           vimhihihi[rowidx],vimlohihi[rowidx],
+           vimhilohi[rowidx],vimlolohi[rowidx],
+           vimhihilo[rowidx],vimlohilo[rowidx],
+           vimhilolo[rowidx],vimlololo[rowidx],
+           shwrehihihi[colidx],shwrelohihi[colidx],
+           shwrehilohi[colidx],shwrelolohi[colidx],
+           shwrehihilo[colidx],shwrelohilo[colidx],
+           shwrehilolo[colidx],shwrelololo[colidx],
            &acchihihi,&acclohihi,&acchilohi,&acclolohi,
            &acchihilo,&acclohilo,&acchilolo,&acclololo);
    odg_dec(&Rwidxhihihi,&Rwidxlohihi,&Rwidxhilohi,&Rwidxlolohi,
            &Rwidxhihilo,&Rwidxlohilo,&Rwidxhilolo,&Rwidxlololo,
               acchihihi,   acclohihi,   acchilohi,   acclolohi,
               acchihilo,   acclohilo,   acchilolo,   acclololo);
-
+/*
    vValhihihi = vrehihihi[rowidx];  // value in Householder vector
    vVallohihi = vrelohihi[rowidx];
    vValhilohi = vrehilohi[rowidx];
@@ -3030,11 +3469,189 @@ __global__ void cmplx8_medium_subvbetaRHvIm
    wVallohilo = shwimlohilo[colidx];
    wValhilolo = shwimhilolo[colidx];
    wVallololo = shwimlololo[colidx];
+ */
    __syncthreads();
-   odg_mul(vValhihihi,vVallohihi,vValhilohi,vVallolohi,
-           vValhihilo,vVallohilo,vValhilolo,vVallololo,
-           wValhihihi,wVallohihi,wValhilohi,wVallolohi,
-           wValhihilo,wVallohilo,wValhilolo,wVallololo,
+   odg_mul(/* vValhihihi,vVallohihi,vValhilohi,vVallolohi,
+              vValhihilo,vVallohilo,vValhilolo,vVallololo,
+              wValhihihi,wVallohihi,wValhilohi,wVallolohi,
+              wValhihilo,wVallohilo,wValhilolo,wVallololo, */
+           vrehihihi[rowidx],vrelohihi[rowidx],
+           vrehilohi[rowidx],vrelolohi[rowidx],
+           vrehihilo[rowidx],vrelohilo[rowidx],
+           vrehilolo[rowidx],vrelololo[rowidx],
+           shwimhihihi[colidx],shwimlohihi[colidx],
+           shwimhilohi[colidx],shwimlolohi[colidx],
+           shwimhihilo[colidx],shwimlohilo[colidx],
+           shwimhilolo[colidx],shwimlololo[colidx],
+           &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+           &acchihilo,&acclohilo,&acchilolo,&acclololo);
+   odg_inc(&Rwidxhihihi,&Rwidxlohihi,&Rwidxhilohi,&Rwidxlolohi,
+           &Rwidxhihilo,&Rwidxlohilo,&Rwidxhilolo,&Rwidxlololo,
+              acchihihi,   acclohihi,   acchilohi,   acclolohi,
+              acchihilo,   acclohilo,   acchilolo,   acclololo);
+
+   __syncthreads();
+   if(widx < bound)                    // if() takes care of padding
+   {
+      Rimhihihi[Ridx] = Rwidxhihihi;
+      Rimlohihi[Ridx] = Rwidxlohihi;
+      Rimhilohi[Ridx] = Rwidxhilohi;
+      Rimlolohi[Ridx] = Rwidxlolohi;
+      Rimhihilo[Ridx] = Rwidxhihilo;
+      Rimlohilo[Ridx] = Rwidxlohilo;
+      Rimhilolo[Ridx] = Rwidxhilolo;
+      Rimlololo[Ridx] = Rwidxlololo;
+   }
+}
+
+__global__ void cmplx8_medium_subvbetaRHvImRe
+ ( int nrows, int ncols, int szt, int k,
+   double *Rimhihihi, double *Rimlohihi, double *Rimhilohi, double *Rimlolohi,
+   double *Rimhihilo, double *Rimlohilo, double *Rimhilolo, double *Rimlololo,
+   double *vimhihihi, double *vimlohihi, double *vimhilohi, double *vimlolohi,
+   double *vimhihilo, double *vimlohilo, double *vimhilolo, double *vimlololo,
+   double *wrehihihi, double *wrelohihi, double *wrehilohi, double *wrelolohi,
+   double *wrehihilo, double *wrelohilo, double *wrehilolo, double *wrelololo )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int Roffset = k*nrows + k;    // start in R
+   const int widx = bdx*szt + tdx;     // global thread index 
+
+   const int coldim = ncols - k;       // number of columns in R
+   const int bound = coldim*(nrows-k); // bound on Ridx
+   const int rowidx = widx / coldim;   // row index
+   const int colidx = widx % coldim;   // column index
+
+   const int Ridx = Roffset + nrows*colidx + rowidx;
+
+   __shared__ double shwrehihihi[cod_shmemsize];  // values in beta*R^H*v are
+   __shared__ double shwrelohihi[cod_shmemsize];  // less in number than szt
+   __shared__ double shwrehilohi[cod_shmemsize]; 
+   __shared__ double shwrelolohi[cod_shmemsize]; 
+   __shared__ double shwrehihilo[cod_shmemsize]; 
+   __shared__ double shwrelohilo[cod_shmemsize];
+   __shared__ double shwrehilolo[cod_shmemsize]; 
+   __shared__ double shwrelololo[cod_shmemsize]; 
+
+   shwrehihihi[tdx] = wrehihihi[tdx];
+   shwrelohihi[tdx] = wrelohihi[tdx];
+   shwrehilohi[tdx] = wrehilohi[tdx];
+   shwrelolohi[tdx] = wrelolohi[tdx];
+   shwrehihilo[tdx] = wrehihilo[tdx];
+   shwrelohilo[tdx] = wrelohilo[tdx];
+   shwrehilolo[tdx] = wrehilolo[tdx];
+   shwrelololo[tdx] = wrelololo[tdx];
+   __syncthreads();
+
+   double Rwidxhihihi,Rwidxlohihi,Rwidxhilohi,Rwidxlolohi;
+   double Rwidxhihilo,Rwidxlohilo,Rwidxhilolo,Rwidxlololo;
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   __syncthreads();
+   Rwidxhihihi = Rimhihihi[Ridx];
+   Rwidxlohihi = Rimlohihi[Ridx];
+   Rwidxhilohi = Rimhilohi[Ridx];
+   Rwidxlolohi = Rimlolohi[Ridx];
+   Rwidxhihilo = Rimhihilo[Ridx];
+   Rwidxlohilo = Rimlohilo[Ridx];
+   Rwidxhilolo = Rimhilolo[Ridx];
+   Rwidxlololo = Rimlololo[Ridx];
+
+   __syncthreads();
+   odg_mul(vimhihihi[rowidx],vimlohihi[rowidx],
+           vimhilohi[rowidx],vimlolohi[rowidx],
+           vimhihilo[rowidx],vimlohilo[rowidx],
+           vimhilolo[rowidx],vimlololo[rowidx],
+           shwrehihihi[colidx],shwrelohihi[colidx],
+           shwrehilohi[colidx],shwrelolohi[colidx],
+           shwrehihilo[colidx],shwrelohilo[colidx],
+           shwrehilolo[colidx],shwrelololo[colidx],
+           &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+           &acchihilo,&acclohilo,&acchilolo,&acclololo);
+   odg_dec(&Rwidxhihihi,&Rwidxlohihi,&Rwidxhilohi,&Rwidxlolohi,
+           &Rwidxhihilo,&Rwidxlohilo,&Rwidxhilolo,&Rwidxlololo,
+              acchihihi,   acclohihi,   acchilohi,   acclolohi,
+              acchihilo,   acclohilo,   acchilolo,   acclololo);
+   __syncthreads();
+   if(widx < bound)                    // if() takes care of padding
+   {
+      Rimhihihi[Ridx] = Rwidxhihihi;
+      Rimlohihi[Ridx] = Rwidxlohihi;
+      Rimhilohi[Ridx] = Rwidxhilohi;
+      Rimlolohi[Ridx] = Rwidxlolohi;
+      Rimhihilo[Ridx] = Rwidxhihilo;
+      Rimlohilo[Ridx] = Rwidxlohilo;
+      Rimhilolo[Ridx] = Rwidxhilolo;
+      Rimlololo[Ridx] = Rwidxlololo;
+   }
+}
+
+__global__ void cmplx8_medium_subvbetaRHvReIm
+ ( int nrows, int ncols, int szt, int k,
+   double *Rimhihihi, double *Rimlohihi, double *Rimhilohi, double *Rimlolohi,
+   double *Rimhihilo, double *Rimlohilo, double *Rimhilolo, double *Rimlololo,
+   double *vrehihihi, double *vrelohihi, double *vrehilohi, double *vrelolohi,
+   double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
+   double *wimhihihi, double *wimlohihi, double *wimhilohi, double *wimlolohi,
+   double *wimhihilo, double *wimlohilo, double *wimhilolo, double *wimlololo )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int Roffset = k*nrows + k;    // start in R
+   const int widx = bdx*szt + tdx;     // global thread index 
+
+   const int coldim = ncols - k;       // number of columns in R
+   const int bound = coldim*(nrows-k); // bound on Ridx
+   const int rowidx = widx / coldim;   // row index
+   const int colidx = widx % coldim;   // column index
+
+   const int Ridx = Roffset + nrows*colidx + rowidx;
+
+   __shared__ double shwimhihihi[cod_shmemsize];  // values in beta*R^H*v are
+   __shared__ double shwimlohihi[cod_shmemsize];  // less in number than szt
+   __shared__ double shwimhilohi[cod_shmemsize]; 
+   __shared__ double shwimlolohi[cod_shmemsize];
+   __shared__ double shwimhihilo[cod_shmemsize]; 
+   __shared__ double shwimlohilo[cod_shmemsize];
+   __shared__ double shwimhilolo[cod_shmemsize]; 
+   __shared__ double shwimlololo[cod_shmemsize];
+
+   shwimhihihi[tdx] = wimhihihi[tdx];
+   shwimlohihi[tdx] = wimlohihi[tdx];
+   shwimhilohi[tdx] = wimhilohi[tdx];
+   shwimlolohi[tdx] = wimlolohi[tdx];
+   shwimhihilo[tdx] = wimhihilo[tdx];
+   shwimlohilo[tdx] = wimlohilo[tdx];
+   shwimhilolo[tdx] = wimhilolo[tdx];
+   shwimlololo[tdx] = wimlololo[tdx];
+   __syncthreads();
+
+   double Rwidxhihihi,Rwidxlohihi,Rwidxhilohi,Rwidxlolohi;
+   double Rwidxhihilo,Rwidxlohilo,Rwidxhilolo,Rwidxlololo;
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   __syncthreads();
+   Rwidxhihihi = Rimhihihi[Ridx];
+   Rwidxlohihi = Rimlohihi[Ridx];
+   Rwidxhilohi = Rimhilohi[Ridx];
+   Rwidxlolohi = Rimlolohi[Ridx];
+   Rwidxhihilo = Rimhihilo[Ridx];
+   Rwidxlohilo = Rimlohilo[Ridx];
+   Rwidxhilolo = Rimhilolo[Ridx];
+   Rwidxlololo = Rimlololo[Ridx];
+
+   __syncthreads();
+   odg_mul(vrehihihi[rowidx],vrelohihi[rowidx],
+           vrehilohi[rowidx],vrelolohi[rowidx],
+           vrehihilo[rowidx],vrelohilo[rowidx],
+           vrehilolo[rowidx],vrelololo[rowidx],
+           shwimhihihi[colidx],shwimlohihi[colidx],
+           shwimhilohi[colidx],shwimlolohi[colidx],
+           shwimhihilo[colidx],shwimlohilo[colidx],
+           shwimhilolo[colidx],shwimlololo[colidx],
            &acchihihi,&acclohihi,&acchilohi,&acclolohi,
            &acchihilo,&acclohilo,&acchilolo,&acclololo);
    odg_inc(&Rwidxhihihi,&Rwidxlohihi,&Rwidxhilohi,&Rwidxlolohi,
@@ -7491,6 +8108,7 @@ void GPU_cmplx8_medium_leftRupdate
    *RHvlapms += milliseconds;
  */
 
+/*
    cudaEventRecord(start);
    cmplx8_RHdotvRe<<<nbrblocks,szt>>>
       (nhouse,szt,colidx,RHoffset,dimRHdotv,
@@ -7512,7 +8130,40 @@ void GPU_cmplx8_medium_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *RHvlapms += milliseconds;
+ */
 
+   cudaEventRecord(start);
+   cmplx8_RHdotvReRe<<<nbrblocks,szt>>>
+      (nhouse,szt,colidx,RHoffset,dimRHdotv,
+       Arehihihi_d,Arelohihi_d,Arehilohi_d,Arelolohi_d,
+       Arehihilo_d,Arelohilo_d,Arehilolo_d,Arelololo_d,
+       &Vrehihihi_d[L*nVrows+L],&Vrelohihi_d[L*nVrows+L],
+       &Vrehilohi_d[L*nVrows+L],&Vrelolohi_d[L*nVrows+L],
+       &Vrehihilo_d[L*nVrows+L],&Vrelohilo_d[L*nVrows+L],
+       &Vrehilolo_d[L*nVrows+L],&Vrelololo_d[L*nVrows+L],
+       RHdotvrehihihi_d,RHdotvrelohihi_d,RHdotvrehilohi_d,RHdotvrelolohi_d,
+       RHdotvrehihilo_d,RHdotvrelohilo_d,RHdotvrehilolo_d,RHdotvrelololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *RHvlapms += milliseconds;
+
+   cudaEventRecord(start);
+   cmplx8_RHdotvImIm<<<nbrblocks,szt>>>
+      (nhouse,szt,colidx,RHoffset,dimRHdotv,
+       Aimhihihi_d,Aimlohihi_d,Aimhilohi_d,Aimlolohi_d,
+       Aimhihilo_d,Aimlohilo_d,Aimhilolo_d,Aimlololo_d,
+       &Vimhihihi_d[L*nVrows+L],&Vimlohihi_d[L*nVrows+L],
+       &Vimhilohi_d[L*nVrows+L],&Vimlolohi_d[L*nVrows+L],
+       &Vimhihilo_d[L*nVrows+L],&Vimlohilo_d[L*nVrows+L],
+       &Vimhilolo_d[L*nVrows+L],&Vimlololo_d[L*nVrows+L],
+       RHdotvrehihihi_d,RHdotvrelohihi_d,RHdotvrehilohi_d,RHdotvrelolohi_d,
+       RHdotvrehihilo_d,RHdotvrelohilo_d,RHdotvrehilolo_d,RHdotvrelololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *RHvlapms += milliseconds;
+/*
    cudaEventRecord(start);
    cmplx8_RHdotvIm<<<nbrblocks,szt>>>
       (nhouse,szt,colidx,RHoffset,dimRHdotv,
@@ -7528,6 +8179,39 @@ void GPU_cmplx8_medium_leftRupdate
        &Vimhilohi_d[L*nVrows+L],&Vimlolohi_d[L*nVrows+L],
        &Vimhihilo_d[L*nVrows+L],&Vimlohilo_d[L*nVrows+L],
        &Vimhilolo_d[L*nVrows+L],&Vimlololo_d[L*nVrows+L],
+       RHdotvimhihihi_d,RHdotvimlohihi_d,RHdotvimhilohi_d,RHdotvimlolohi_d,
+       RHdotvimhihilo_d,RHdotvimlohilo_d,RHdotvimhilolo_d,RHdotvimlololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *RHvlapms += milliseconds;
+ */
+
+   cudaEventRecord(start);
+   cmplx8_RHdotvReIm<<<nbrblocks,szt>>>
+      (nhouse,szt,colidx,RHoffset,dimRHdotv,
+       Arehihihi_d,Arelohihi_d,Arehilohi_d,Arelolohi_d,
+       Arehihilo_d,Arelohilo_d,Arehilolo_d,Arelololo_d,
+       &Vimhihihi_d[L*nVrows+L],&Vimlohihi_d[L*nVrows+L],
+       &Vimhilohi_d[L*nVrows+L],&Vimlolohi_d[L*nVrows+L],
+       &Vimhihilo_d[L*nVrows+L],&Vimlohilo_d[L*nVrows+L],
+       &Vimhilolo_d[L*nVrows+L],&Vimlololo_d[L*nVrows+L],
+       RHdotvimhihihi_d,RHdotvimlohihi_d,RHdotvimhilohi_d,RHdotvimlolohi_d,
+       RHdotvimhihilo_d,RHdotvimlohilo_d,RHdotvimhilolo_d,RHdotvimlololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *RHvlapms += milliseconds;
+
+   cudaEventRecord(start);
+   cmplx8_RHdotvImRe<<<nbrblocks,szt>>>
+      (nhouse,szt,colidx,RHoffset,dimRHdotv,
+       Aimhihihi_d,Aimlohihi_d,Aimhilohi_d,Aimlolohi_d,
+       Aimhihilo_d,Aimlohilo_d,Aimhilolo_d,Aimlololo_d,
+       &Vrehihihi_d[L*nVrows+L],&Vrelohihi_d[L*nVrows+L],
+       &Vrehilohi_d[L*nVrows+L],&Vrelolohi_d[L*nVrows+L],
+       &Vrehihilo_d[L*nVrows+L],&Vrelohilo_d[L*nVrows+L],
+       &Vrehilolo_d[L*nVrows+L],&Vrelololo_d[L*nVrows+L],
        RHdotvimhihihi_d,RHdotvimlohihi_d,RHdotvimhilohi_d,RHdotvimlolohi_d,
        RHdotvimhihilo_d,RHdotvimlohilo_d,RHdotvimhilolo_d,RHdotvimlololo_d);
    cudaEventRecord(stop);
@@ -7589,6 +8273,7 @@ void GPU_cmplx8_medium_leftRupdate
    cudaEventElapsedTime(&milliseconds,start,stop);
    *redlapms += milliseconds;
  */
+/*
    cudaEventRecord(start);
    cmplx8_medium_subvbetaRHvRe<<<nbrblocks,szt>>>
       (nrows,endcol,szt,colidx,
@@ -7602,8 +8287,6 @@ void GPU_cmplx8_medium_leftRupdate
        &Vimhilohi_d[L*nVrows+L],&Vimlolohi_d[L*nVrows+L],
        &Vimhihilo_d[L*nVrows+L],&Vimlohilo_d[L*nVrows+L],
        &Vimhilolo_d[L*nVrows+L],&Vimlololo_d[L*nVrows+L],
-       &betahihihi_d[L],&betalohihi_d[L],&betahilohi_d[L],&betalolohi_d[L],
-       &betahihilo_d[L],&betalohilo_d[L],&betahilolo_d[L],&betalololo_d[L],
        wrehihihi_d,wrelohihi_d,wrehilohi_d,wrelolohi_d,
        wrehihilo_d,wrelohilo_d,wrehilolo_d,wrelololo_d,
        wimhihihi_d,wimlohihi_d,wimhilohi_d,wimlolohi_d,
@@ -7612,7 +8295,39 @@ void GPU_cmplx8_medium_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *redlapms += milliseconds;
+ */
+   cudaEventRecord(start);
+   cmplx8_medium_subvbetaRHvReRe<<<nbrblocks,szt>>>
+      (nrows,endcol,szt,colidx,
+       Arehihihi_d,Arelohihi_d,Arehilohi_d,Arelolohi_d,
+       Arehihilo_d,Arelohilo_d,Arehilolo_d,Arelololo_d,
+       &Vrehihihi_d[L*nVrows+L],&Vrelohihi_d[L*nVrows+L],
+       &Vrehilohi_d[L*nVrows+L],&Vrelolohi_d[L*nVrows+L],
+       &Vrehihilo_d[L*nVrows+L],&Vrelohilo_d[L*nVrows+L],
+       &Vrehilolo_d[L*nVrows+L],&Vrelololo_d[L*nVrows+L],
+       wrehihihi_d,wrelohihi_d,wrehilohi_d,wrelolohi_d,
+       wrehihilo_d,wrelohilo_d,wrehilolo_d,wrelololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *redlapms += milliseconds;
 
+   cudaEventRecord(start);
+   cmplx8_medium_subvbetaRHvImIm<<<nbrblocks,szt>>>
+      (nrows,endcol,szt,colidx,
+       Arehihihi_d,Arelohihi_d,Arehilohi_d,Arelolohi_d,
+       Arehihilo_d,Arelohilo_d,Arehilolo_d,Arelololo_d,
+       &Vimhihihi_d[L*nVrows+L],&Vimlohihi_d[L*nVrows+L],
+       &Vimhilohi_d[L*nVrows+L],&Vimlolohi_d[L*nVrows+L],
+       &Vimhihilo_d[L*nVrows+L],&Vimlohilo_d[L*nVrows+L],
+       &Vimhilolo_d[L*nVrows+L],&Vimlololo_d[L*nVrows+L],
+       wimhihihi_d,wimlohihi_d,wimhilohi_d,wimlolohi_d,
+       wimhihilo_d,wimlohilo_d,wimhilolo_d,wimlololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *redlapms += milliseconds;
+/*
    cudaEventRecord(start);
    cmplx8_medium_subvbetaRHvIm<<<nbrblocks,szt>>>
       (nrows,endcol,szt,colidx,
@@ -7626,8 +8341,6 @@ void GPU_cmplx8_medium_leftRupdate
        &Vimhilohi_d[L*nVrows+L],&Vimlolohi_d[L*nVrows+L],
        &Vimhihilo_d[L*nVrows+L],&Vimlohilo_d[L*nVrows+L],
        &Vimhilolo_d[L*nVrows+L],&Vimlololo_d[L*nVrows+L],
-       &betahihihi_d[L],&betalohihi_d[L],&betahilohi_d[L],&betalolohi_d[L],
-       &betahihilo_d[L],&betalohilo_d[L],&betahilolo_d[L],&betalololo_d[L],
        wrehihihi_d,wrelohihi_d,wrehilohi_d,wrelolohi_d,
        wrehihilo_d,wrelohilo_d,wrehilolo_d,wrelololo_d,
        wimhihihi_d,wimlohihi_d,wimhilohi_d,wimlolohi_d,
@@ -7636,8 +8349,39 @@ void GPU_cmplx8_medium_leftRupdate
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
    *redlapms += milliseconds;
-
+ */
+   cudaEventRecord(start);
+   cmplx8_medium_subvbetaRHvImRe<<<nbrblocks,szt>>>
+      (nrows,endcol,szt,colidx,
+       Aimhihihi_d,Aimlohihi_d,Aimhilohi_d,Aimlolohi_d,
+       Aimhihilo_d,Aimlohilo_d,Aimhilolo_d,Aimlololo_d,
+       &Vimhihihi_d[L*nVrows+L],&Vimlohihi_d[L*nVrows+L],
+       &Vimhilohi_d[L*nVrows+L],&Vimlolohi_d[L*nVrows+L],
+       &Vimhihilo_d[L*nVrows+L],&Vimlohilo_d[L*nVrows+L],
+       &Vimhilolo_d[L*nVrows+L],&Vimlololo_d[L*nVrows+L],
+       wrehihihi_d,wrelohihi_d,wrehilohi_d,wrelolohi_d,
+       wrehihilo_d,wrelohilo_d,wrehilolo_d,wrelololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *redlapms += milliseconds;
    flopcount_cmplx_medium_subvbetaRHv(nrows,endcol,szt,colidx,add,mul);
+
+   cudaEventRecord(start);
+   cmplx8_medium_subvbetaRHvReIm<<<nbrblocks,szt>>>
+      (nrows,endcol,szt,colidx,
+       Aimhihihi_d,Aimlohihi_d,Aimhilohi_d,Aimlolohi_d,
+       Aimhihilo_d,Aimlohilo_d,Aimhilolo_d,Aimlololo_d,
+       &Vrehihihi_d[L*nVrows+L],&Vrelohihi_d[L*nVrows+L],
+       &Vrehilohi_d[L*nVrows+L],&Vrelolohi_d[L*nVrows+L],
+       &Vrehihilo_d[L*nVrows+L],&Vrelohilo_d[L*nVrows+L],
+       &Vrehilolo_d[L*nVrows+L],&Vrelololo_d[L*nVrows+L],
+       wimhihihi_d,wimlohihi_d,wimhilohi_d,wimlolohi_d,
+       wimhihilo_d,wimlohilo_d,wimhilolo_d,wimlololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+   *redlapms += milliseconds;
 
    if(verbose)
    {

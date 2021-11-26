@@ -861,6 +861,34 @@ __global__ void cmplx8_RHdotvRe
  * DESCRIPTION :
  *   Computes only the real parts of RHdotv. */
 
+__global__ void cmplx8_RHdotvReRe
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *Rrehihihi, double *Rrelohihi, double *Rrehilohi, double *Rrelolohi,
+   double *Rrehihilo, double *Rrelohilo, double *Rrehilolo, double *Rrelololo,
+   double *vrehihihi, double *vrelohihi, double *vrehilohi, double *vrelolohi,
+   double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
+   double *RHdotvrehihihi, double *RHdotvrelohihi,
+   double *RHdotvrehilohi, double *RHdotvrelolohi,
+   double *RHdotvrehihilo, double *RHdotvrelohilo,
+   double *RHdotvrehilolo, double *RHdotvrelololo );
+/*
+ * DESCRIPTION :
+ *   Does the multiplication of the real parts only to update RHdotvre. */
+
+__global__ void cmplx8_RHdotvImIm
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *Rimhihihi, double *Rimlohihi, double *Rimhilohi, double *Rimlolohi,
+   double *Rimhihilo, double *Rimlohilo, double *Rimhilolo, double *Rimlololo,
+   double *vimhihihi, double *vimlohihi, double *vimhilohi, double *vimlolohi,
+   double *vimhihilo, double *vimlohilo, double *vimhilolo, double *vimlololo,
+   double *RHdotvrehihihi, double *RHdotvrelohihi,
+   double *RHdotvrehilohi, double *RHdotvrelolohi,
+   double *RHdotvrehihilo, double *RHdotvrelohilo,
+   double *RHdotvrehilolo, double *RHdotvrelololo );
+/*
+ * DESCRIPTION :
+ *   Updates RHdotvre with the multiplication of the imaginary parts. */
+
 __global__ void cmplx8_RHdotvIm
  ( int nrows, int szt, int colidx, int Roffset, int dim,
    double *Rrehihihi, double *Rrelohihi, double *Rrehilohi, double *Rrelolohi,
@@ -878,6 +906,35 @@ __global__ void cmplx8_RHdotvIm
 /*
  * DESCRIPTION :
  *   Computes only the imaginary parts of RHdotv. */
+
+__global__ void cmplx8_RHdotvReIm
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *Rrehihihi, double *Rrelohihi, double *Rrehilohi, double *Rrelolohi,
+   double *Rrehihilo, double *Rrelohilo, double *Rrehilolo, double *Rrelololo,
+   double *vimhihihi, double *vimlohihi, double *vimhilohi, double *vimlolohi,
+   double *vimhihilo, double *vimlohilo, double *vimhilolo, double *vimlololo,
+   double *RHdotvimhihihi, double *RHdotvimlohihi,
+   double *RHdotvimhilohi, double *RHdotvimlolohi,
+   double *RHdotvimhihilo, double *RHdotvimlohilo,
+   double *RHdotvimhilolo, double *RHdotvimlololo );
+/*
+ * DESCRIPTION :
+ *   Multiplies only the real parts of R with imaginary parts of v. */
+
+__global__ void cmplx8_RHdotvImRe
+ ( int nrows, int szt, int colidx, int Roffset, int dim,
+   double *Rimhihihi, double *Rimlohihi, double *Rimhilohi, double *Rimlolohi,
+   double *Rimhihilo, double *Rimlohilo, double *Rimhilolo, double *Rimlololo,
+   double *vrehihihi, double *vrelohihi, double *vrehilohi, double *vrelolohi,
+   double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
+   double *RHdotvimhihihi, double *RHdotvimlohihi,
+   double *RHdotvimhilohi, double *RHdotvimlolohi,
+   double *RHdotvimhihilo, double *RHdotvimlohilo,
+   double *RHdotvimhilolo, double *RHdotvimlololo );
+/*
+ * DESCRIPTION :
+ *   Updates RHdotvim with the imaginary parts of R multiplied
+ *   with the real parts of v. */
 
 __global__ void dbl8_sum_betaRTdotv
  ( int nrows,
@@ -1105,10 +1162,6 @@ __global__ void cmplx8_medium_subvbetaRHvRe
    double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
    double *vimhihihi, double *vimlohihi, double *vimhilohi, double *vimlolohi,
    double *vimhihilo, double *vimlohilo, double *vimhilolo, double *vimlololo,
-   double *betahihihi, double *betalohihi,
-   double *betahilohi, double *betalolohi,
-   double *betahihilo, double *betalohilo,
-   double *betahilolo, double *betalololo,
    double *wrehihihi, double *wrelohihi, double *wrehilohi, double *wrelolohi,
    double *wrehihilo, double *wrelohilo, double *wrehilolo, double *wrelololo,
    double *wimhihihi, double *wimlohihi,
@@ -1119,6 +1172,30 @@ __global__ void cmplx8_medium_subvbetaRHvRe
  * DESCRIPTION :
  *   Updates only the real parts of R. */
 
+__global__ void cmplx8_medium_subvbetaRHvReRe
+ ( int nrows, int ncols, int szt, int k,
+   double *Rrehihihi, double *Rrelohihi, double *Rrehilohi, double *Rrelolohi,
+   double *Rrehihilo, double *Rrelohilo, double *Rrehilolo, double *Rrelololo,
+   double *vrehihihi, double *vrelohihi, double *vrehilohi, double *vrelolohi,
+   double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
+   double *wrehihihi, double *wrelohihi, double *wrehilohi, double *wrelolohi,
+   double *wrehihilo, double *wrelohilo, double *wrehilolo, double *wrelololo );
+/*
+ * DESCRIPTION :
+ *   Multiplies only the real parts of R and v to update R. */
+
+__global__ void cmplx8_medium_subvbetaRHvImIm
+ ( int nrows, int ncols, int szt, int k,
+   double *Rrehihihi, double *Rrelohihi, double *Rrehilohi, double *Rrelolohi,
+   double *Rrehihilo, double *Rrelohilo, double *Rrehilolo, double *Rrelololo,
+   double *vimhihihi, double *vimlohihi, double *vimhilohi, double *vimlolohi,
+   double *vimhihilo, double *vimlohilo, double *vimhilolo, double *vimlololo,
+   double *wimhihihi, double *wimlohihi, double *wimhilohi, double *wimlolohi,
+   double *wimhihilo, double *wimlohilo, double *wimhilolo, double *wimlololo );
+/*
+ * DESCRIPTION :
+ *   Multiplies only the imaginary parts of R and v to update R. */
+
 __global__ void cmplx8_medium_subvbetaRHvIm
  ( int nrows, int ncols, int szt, int k,
    double *Rimhihihi, double *Rimlohihi, double *Rimhilohi, double *Rimlolohi,
@@ -1127,10 +1204,6 @@ __global__ void cmplx8_medium_subvbetaRHvIm
    double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
    double *vimhihihi, double *vimlohihi, double *vimhilohi, double *vimlolohi,
    double *vimhihilo, double *vimlohilo, double *vimhilolo, double *vimlololo,
-   double *betahihihi, double *betalohihi,
-   double *betahilohi, double *betalolohi,
-   double *betahihilo, double *betalohilo,
-   double *betahilolo, double *betalololo,
    double *wrehihihi, double *wrelohihi, double *wrehilohi, double *wrelolohi,
    double *wrehihilo, double *wrelohilo, double *wrehilolo, double *wrelololo,
    double *wimhihihi, double *wimlohihi,
@@ -1140,6 +1213,32 @@ __global__ void cmplx8_medium_subvbetaRHvIm
 /*
  * DESCRIPTION :
  *   Updates only the imaginary parts of R. */
+
+__global__ void cmplx8_medium_subvbetaRHvImRe
+ ( int nrows, int ncols, int szt, int k,
+   double *Rimhihihi, double *Rimlohihi, double *Rimhilohi, double *Rimlolohi,
+   double *Rimhihilo, double *Rimlohilo, double *Rimhilolo, double *Rimlololo,
+   double *vimhihihi, double *vimlohihi, double *vimhilohi, double *vimlolohi,
+   double *vimhihilo, double *vimlohilo, double *vimhilolo, double *vimlololo,
+   double *wrehihihi, double *wrelohihi, double *wrehilohi, double *wrelolohi,
+   double *wrehihilo, double *wrelohilo, double *wrehilolo, double *wrelololo );
+/*
+ * DESCRIPTION :
+ *   Updates the imaginary parts of R by the multiplication of imaginary
+ *   parts with real parts. */
+
+__global__ void cmplx8_medium_subvbetaRHvReIm
+ ( int nrows, int ncols, int szt, int k,
+   double *Rimhihihi, double *Rimlohihi, double *Rimhilohi, double *Rimlolohi,
+   double *Rimhihilo, double *Rimlohilo, double *Rimhilolo, double *Rimlololo,
+   double *vrehihihi, double *vrelohihi, double *vrehilohi, double *vrelolohi,
+   double *vrehihilo, double *vrelohilo, double *vrehilolo, double *vrelololo,
+   double *wimhihihi, double *wimlohihi, double *wimhilohi, double *wimlolohi,
+   double *wimhihilo, double *wimlohilo, double *wimhilolo, double *wimlololo );
+/*
+ * DESCRIPTION :
+ *   Updates the imaginary parts of R by the multiplication of the real
+ *   parts with imaginary parts. */
 
 __global__ void dbl8_beta_times_V
  ( int nrows, int szt,

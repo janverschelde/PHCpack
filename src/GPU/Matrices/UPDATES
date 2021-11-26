@@ -1,3 +1,6 @@
+Fri 26 Nov 2021 : fixed bug in dbl8_baqr_kernels and splitted kernels
+  used to update R.  The code on complex octo double data is now correct.
+
 Wed 24 Nov 2021 : in dbl8_baqr_kernels, splitted the cmplx8_normalize
   into four different kernels.
 
