@@ -1,3 +1,6 @@
+Sat 27 Nov 2021 : fixed greeting_banners.adb for incorrect year of
+  the last release.
+
 Tue 13 Jul 2021 : extended greeting_banners with help for phc -z -h,
   updated option_handlers.adb.
 
