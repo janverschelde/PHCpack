@@ -1,3 +1,7 @@
+Sun 28 Nov 2021 : new hexa_double.h, hexa_double.c, hd_test.c with the
+  basic arithmetical operations on hexa double numbers.
+  Updated the makefile and the file qd.gpr.
+
 Sat 26 Jun 2021 : removed double_double.cpp and downgraded dd_funtest.cpp
   to dd_funtest.c.  Added the building of the C tests to qd.gpr.
 

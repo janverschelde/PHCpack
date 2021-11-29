@@ -32,5 +32,11 @@ da_test:
 	gcc -o /tmp/da_test da_test.c \
                /tmp/double_double.o /tmp/deca_double.o -lm
 
+hd_test:
+	gcc -c double_double.c -o /tmp/double_double.o
+	gcc -c hexa_double.c -o /tmp/hexa_double.o
+	gcc -o /tmp/hd_test hd_test.c \
+               /tmp/double_double.o /tmp/hexa_double.o -lm
+
 clean:
 	/bin/rm -f -r *.o

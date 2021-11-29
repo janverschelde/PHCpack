@@ -1,4 +1,4 @@
-Quad double arithmetic for PHCv2.4.85
+Quad double arithmetic for PHCv2.4.86
 
 This directory was added to version 2.3.55 of PHCpack, departing from
 a standalone C version of a part of the QD software library.
@@ -65,6 +65,9 @@ od_test.c                    : test on basic operations in octo_double
 deca_double.h                : prototypes of the deca double functions
 deca_double.c                : definitions of the deca_double.h functions
 da_test.c                    : test on basic operations in deca_double
+hexa_double.h                : prototypes of the hexa double functions
+hexa_double.c                : definitions of the hexa_double.h functions
+hd_test.c                    : test on basic operations in hexa_double
 ------------------------------------------------------------------------------
 double_double_basics         : basic inline functions for double double numbers
 double_double_numbers        : defines double double arithmetic
