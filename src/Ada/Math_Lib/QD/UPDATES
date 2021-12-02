@@ -1,3 +1,5 @@
+Wed 1 Dec 2021 : fixed counts documenting hexa_double.c.
+
 Sun 28 Nov 2021 : new hexa_double.h, hexa_double.c, hd_test.c with the
   basic arithmetical operations on hexa double numbers.
   Updated the makefile and the file qd.gpr.

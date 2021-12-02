@@ -115,7 +115,7 @@ void hd_renorm16
    {
       ptr = ptr + 1;
    }
-   if(ptr == 0)   // fourth test on ptr
+   if(ptr == 0)   // third test on ptr
    {
       *r0 = dd_quick_two_sum(*pr,f5,pr);
    }
@@ -162,7 +162,7 @@ void hd_renorm16
    {
       ptr = ptr + 1;
    }
-   if(ptr == 0)   // fifth test on ptr
+   if(ptr == 0)   // fourth test on ptr
    {
       *r0 = dd_quick_two_sum(*pr,f6,pr);
    }
@@ -217,7 +217,7 @@ void hd_renorm16
    {
       ptr = ptr + 1;
    }
-   if(ptr == 0)  // sixth test on ptr
+   if(ptr == 0)  // fifth test on ptr
    {
       *r0 = dd_quick_two_sum(*pr,f7,pr);
    }
@@ -280,7 +280,7 @@ void hd_renorm16
    {
       ptr = ptr + 1;
    }
-   if(ptr == 0)  // seventh test on ptr
+   if(ptr == 0)  // sixth test on ptr
    {
       *r0 = dd_quick_two_sum(*pr,f8,pr);
    }
@@ -351,7 +351,7 @@ void hd_renorm16
    {
       ptr = ptr + 1;
    }
-   if(ptr == 0)  // eighth test on ptr
+   if(ptr == 0)  // seventh test on ptr
    {
       *r0 = dd_quick_two_sum(*pr,f9,pr);
    }
@@ -430,7 +430,7 @@ void hd_renorm16
    {
       ptr = ptr + 1;
    }
-   if(ptr == 0)  // nineth test on ptr
+   if(ptr == 0)  // eighth test on ptr
    {
       *r0 = dd_quick_two_sum(*pr,f10,pr);
    }
@@ -517,7 +517,7 @@ void hd_renorm16
    {
       ptr = ptr + 1;
    }
-   if(ptr == 0)  // tenth test on ptr
+   if(ptr == 0)  // nineth test on ptr
    {
       *r0 = dd_quick_two_sum(*pr,f11,pr);
    }
@@ -612,7 +612,7 @@ void hd_renorm16
    {
       ptr = ptr + 1;
    }
-   if(ptr == 0)  // eleventh test on ptr
+   if(ptr == 0)  // tenth test on ptr
    {
       *r0 = dd_quick_two_sum(*pr,f12,pr);
    }
@@ -715,7 +715,7 @@ void hd_renorm16
    {
       ptr = ptr + 1;
    }
-   if(ptr == 0)  // twelveth test on ptr
+   if(ptr == 0)  // eleventh test on ptr
    {
       *r0 = dd_quick_two_sum(*pr,f13,pr);
    }
@@ -826,7 +826,7 @@ void hd_renorm16
    {
       ptr = ptr + 1;
    }
-   if(ptr == 0)  // thirteenth test on ptr
+   if(ptr == 0)  // twelveth test on ptr
    {
       *r0 = dd_quick_two_sum(*pr,f14,pr);
    }
@@ -945,7 +945,7 @@ void hd_renorm16
    {
       ptr = ptr + 1;
    }
-   if(ptr == 0)  // forteenth test on ptr
+   if(ptr == 0)  // thirteenth test on ptr
    {
       *r0 = dd_quick_two_sum(*pr,f15,pr);
    }
@@ -1072,7 +1072,7 @@ void hd_renorm16
    {
       ptr = ptr + 1;
    }
-   if(ptr == 0)  // fifteenth test on ptr
+   if(ptr == 0)  // forteenth test on ptr
    {
       *r0 = dd_quick_two_sum(*pr,f16,pr);
    }
