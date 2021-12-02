@@ -1,4 +1,5 @@
-Wed 1 Dec 2021 : fixed counts documenting hexa_double.c.
+Wed 1 Dec 2021 : fixed counts documenting hexa_double.c.  Extended
+  fast_double_renormalizations with three procedures for hexa doubles.
 
 Sun 28 Nov 2021 : new hexa_double.h, hexa_double.c, hd_test.c with the
   basic arithmetical operations on hexa double numbers.
