@@ -1,3 +1,6 @@
+Fri 3 Dec 2021 : first version of hexa_double_numbers, with stubs for
+  the exponential and the logarithm of numbers of 16-double precision.
+
 Wed 1 Dec 2021 : fixed counts documenting hexa_double.c.  Extended
   fast_double_renormalizations with three procedures for hexa doubles.
 

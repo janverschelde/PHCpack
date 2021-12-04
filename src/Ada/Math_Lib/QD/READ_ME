@@ -202,6 +202,8 @@ decadobl_random_numbers         : random numbers in deca double precision
 test_decadobl_complex           : tests deca double complex arithmetic
 ts_dacmplx                      : main test on deca double complex numbers
 ------------------------------------------------------------------------------
+hexa_double_numbers             : defines hexa double numbers and arithmetic
+------------------------------------------------------------------------------
 multprec_dobldobl_convertors    : convert double double <-> multiprec float
 dobldobl_complex_numbers_cv     : convert complex <-> double double complex
 test_multprec_dobldobl_casts    : test casting multprec into dd and back
