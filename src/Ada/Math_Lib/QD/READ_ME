@@ -203,6 +203,7 @@ test_decadobl_complex           : tests deca double complex arithmetic
 ts_dacmplx                      : main test on deca double complex numbers
 ------------------------------------------------------------------------------
 hexa_double_numbers             : defines hexa double numbers and arithmetic
+hexa_double_numbers_io          : input and output of hexa double numbers
 ------------------------------------------------------------------------------
 multprec_dobldobl_convertors    : convert double double <-> multiprec float
 dobldobl_complex_numbers_cv     : convert complex <-> double double complex
