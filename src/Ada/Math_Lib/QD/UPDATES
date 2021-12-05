@@ -1,5 +1,6 @@
 Sat 4 Dec 2021 : defined more operations in hexa_double_numbers.adb.
   New hexa_double_numbers_io for the i/o of hexa double numbers.
+  Added the definition of exp and log10 to hexa_double_numbers.adb.
 
 Fri 3 Dec 2021 : first version of hexa_double_numbers, with stubs for
   the exponential and the logarithm of numbers of 16-double precision.
