@@ -184,7 +184,6 @@ ts_odcmplx                      : main test on octo double complex numbers
 deca_double_numbers             : defines deca double numbers and arithmetic
 deca_double_numbers_io          : input and output of deca double numbers
 test_deca_doubles               : test procedures on deca doubles
-sincostables.py                 : sympy script for deca double constants
 deca_double_constants           : constants in deca double precision
 ts_decadbl                      : main test on deca double arithmetic
 decadobl_mathematical_functions : deca double SQRT and Radius
@@ -204,6 +203,10 @@ ts_dacmplx                      : main test on deca double complex numbers
 ------------------------------------------------------------------------------
 hexa_double_numbers             : defines hexa double numbers and arithmetic
 hexa_double_numbers_io          : input and output of hexa double numbers
+test_hexa_doubles               : test procedures on hexa doubles
+sincostables.py                 : sympy script for hexa double constants
+hexa_double_constants           : constants in hexa double precision
+ts_hexdbl                       : main test on hexa double arithmetic
 ------------------------------------------------------------------------------
 multprec_dobldobl_convertors    : convert double double <-> multiprec float
 dobldobl_complex_numbers_cv     : convert complex <-> double double complex

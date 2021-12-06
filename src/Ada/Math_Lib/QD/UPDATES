@@ -1,4 +1,6 @@
 Sun 5 Dec 2021 : updated sincostables.py for 256 decimal places.
+  Defined hexa_double_constants.ads with the aid of test_hexa_doubles.
+  The main test is called by ts_hexdbl.adb.
 
 Sat 4 Dec 2021 : defined more operations in hexa_double_numbers.adb.
   New hexa_double_numbers_io for the i/o of hexa double numbers.
