@@ -336,6 +336,9 @@ ts_mpcasts:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mpcasts.adb \
               -o $(BIN)/ts_mpcasts
 
+ts_hexdbl:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_hexdbl.adb -o $(BIN)/ts_hexdbl
+
 # Test programs for Math_Lib/Vectors :
 
 ts_natvec:

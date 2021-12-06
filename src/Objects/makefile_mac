@@ -67,13 +67,13 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State \
  -I$(MPILib) -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
-# GNATFLAGS=-gnatv -O3 -gnatp -gnatf
-# GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf
+GNATFLAGS=-gnatv -O3 -gnatp -gnatf
+GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf
 # GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
 GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
-GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
-GNATFLAGS=-gnatv -gnatwa -gnatVa
+# GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
+# GNATFLAGS=-gnatv -gnatwa -gnatVa
 # GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
@@ -323,6 +323,9 @@ ts_pdcmplx:
 ts_dacmplx:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_dacmplx.adb \
               -o $(BIN)/ts_dacmplx
+
+ts_hexdbl:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hexdbl.adb -o $(BIN)/ts_hexdbl
 
 # Test programs for Math_Lib/Vectors :
 
@@ -1447,24 +1450,23 @@ ts_drivsss:
 
 # Test programs for the Root_Counts/MixedVol library :
 
-ts_convsub:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_convsub.adb \
-              -o $(BIN)/ts_convsub
+convsub:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) convsub.adb -o $(BIN)/convsub
 
 ts_mv2c:
-	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/mv1.c
-	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/cell_stack1.c
-	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/form_lp1.c 
-	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/index_tree_lp1.c 
-	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/zero_index_tree1.c
-	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/one_level_lp1.c
-	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/mixed_volume1.c
-	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/relation_table1.c
-	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/prepare_for_mv1.c
+	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/mv.c
+	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/cell_stack.c
+	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/form_lp.c 
+	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/index_tree_lp.c 
+	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/zero_index_tree.c
+	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/one_level_lp.c
+	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/mixed_volume.c
+	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/relation_table.c
+	$(gcc) -c $(PHCAda)/Root_Counts/MixedVol/prepare_for_mv.c
 	gnatmake -o $(BIN)/ts_mv2c $(INCLULIBS) $(GNATOPTFLAGS) ts_mv2c.adb \
-                 -largs mv1.o cell_stack1.o form_lp1.o index_tree_lp1.o \
-                        zero_index_tree1.o one_level_lp1.o mixed_volume1.o \
-                        relation_table1.o prepare_for_mv1.o -lm
+                 -largs mv.o cell_stack.o form_lp.o index_tree_lp.o \
+                        zero_index_tree.o one_level_lp.o mixed_volume.o \
+                        relation_table.o prepare_for_mv.o -lm
 
 ts_mv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mv.adb -o $(BIN)/ts_mv 
@@ -3636,8 +3638,8 @@ phcpy2c3.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/padcon.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 -I$(PHCLib) \
-               -I/opt/miniconda3/include -I$(PYTHON38) $(PHCmod)/phcpy2c3.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 \
+               -I/opt/miniconda3/include -I$(PYTHON38) $(PHCLib)/phcpy2c3.c
 	gnatmake -c -O3 -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n -static use_c2phc -o use_c2phc_binder.adb
 	gnatmake -static -c use_c2phc_binder.adb
