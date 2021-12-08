@@ -313,6 +313,10 @@ ts_hexdbl:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hexdbl.adb \
               -o $(BIN)/ts_hexdbl
 
+ts_hdfun:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hdfun.adb \
+              -o $(BIN)/ts_hdfun
+
 ts_pdcmplx:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_pdcmplx.adb \
               -o $(BIN)/ts_pdcmplx

@@ -247,6 +247,9 @@ ts_mpcasts:
 ts_hexdbl:
 	make -f $(MAKEFILE) ts_hexdbl
 
+ts_hdfun:
+	make -f $(MAKEFILE) ts_hdfun
+
 # Test programs for Math_Lib/Vectors :
 
 test_vectors: ts_natvec ts_intvec ts_fltvec ts_cmpvec ts_ddvec ts_qdvec \
