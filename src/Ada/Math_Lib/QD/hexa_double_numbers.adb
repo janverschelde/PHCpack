@@ -1,7 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Mathematical_Functions;
 with Double_Double_Basics;
-with Double_Double_Numbers;
 with Fast_Double_Renormalizations;       use Fast_Double_Renormalizations;
 
 package body Hexa_Double_Numbers is
@@ -439,6 +438,63 @@ package body Hexa_Double_Numbers is
   begin
     return x.hihihihi;
   end to_double;
+
+  function to_double_double ( x : hexa_double ) return double_double is
+
+    res : constant double_double := create(x.hihihihi,x.lohihihi);
+
+  begin
+    return res;
+  end to_double_double;
+
+  function to_triple_double ( x : hexa_double ) return triple_double is
+
+    res : constant triple_double
+        := create(x.hihihihi,x.lohihihi,x.hilohihi);
+
+  begin
+    return res;
+  end to_triple_double;
+
+  function to_quad_double ( x : hexa_double ) return quad_double is
+
+    res : constant quad_double
+        := create(x.hihihihi,x.lohihihi,x.hilohihi,x.lolohihi);
+
+  begin
+    return res;
+  end to_quad_double;
+
+  function to_penta_double ( x : hexa_double ) return penta_double is
+
+    res : constant penta_double
+        := create(x.hihihihi,x.lohihihi,x.hilohihi,x.lolohihi,
+                  x.hihilohi);
+
+  begin
+    return res;
+  end to_penta_double;
+
+  function to_octo_double ( x : hexa_double ) return octo_double is
+
+    res : constant octo_double
+        := create(x.hihihihi,x.lohihihi,x.hilohihi,x.lolohihi,
+                  x.hihilohi,x.lohilohi,x.hilolohi,x.lololohi);
+
+  begin
+    return res;
+  end to_octo_double;
+
+  function to_deca_double ( x : hexa_double ) return deca_double is
+
+    res : constant deca_double
+        := create(x.hihihihi,x.lohihihi,x.hilohihi,x.lolohihi,
+                  x.hihilohi,x.lohilohi,x.hilolohi,x.lololohi,
+                  x.hihihilo,x.lohihilo);
+
+  begin
+    return res;
+  end to_deca_double;
 
 -- COMPARISON and COPYING :
 

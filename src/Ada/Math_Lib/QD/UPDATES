@@ -1,6 +1,7 @@
 Wed 8 Dec 2021 : new hexadobl_complex_numbers_io, test_hexadobl_complex,
   and hexadobl_complex_numbers_polar, with ts_hdcmplx as the main test.
   Updated the project file qd.gpr for the new test procedure.
+  Added type casts to other multiple double types to hexa_double_numbers.
 
 Tue 7 Dec 2021 : new hexadobl_complex_ring.ads, hexa_double_ring-ffield.ads,
   hexadobl_complex_numbers.ads, hexadobl_complex_ring_io.ads,
