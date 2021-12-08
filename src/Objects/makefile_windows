@@ -325,6 +325,10 @@ ts_dacmplx:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_dacmplx.adb \
               -o $(BIN)/ts_dacmplx
 
+ts_hdcmplx:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hdcmplx.adb \
+              -o $(BIN)/ts_hdcmplx
+
 ts_mpcasts:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mpcasts.adb \
               -o $(BIN)/ts_mpcasts
