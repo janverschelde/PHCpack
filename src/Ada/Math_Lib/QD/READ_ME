@@ -212,11 +212,15 @@ hexa_double_ring                : ring of hexa double numbers
 hexa_double_ring_io             : input/output for the ring of hexa doubles
 hexa_double_ring-ffield         : field of hexa double numbers
 hexadobl_complex_numbers        : complex arithmetic with hexa doubles
+hexadobl_complex_numbers_io     : input/output for hexa double complex
 hexadobl_complex_ring           : ring of hexa double complex numbers
 hexadobl_complex_ring-ffield    : field of hexa double complex numbers
 hexadobl_random_numbers         : random numbers in hexa double precision
 test_hexadobl_functions         : tests hexa double functions
 ts_hdfun                        : main test on hexa double functions
+decadobl_complex_numbers_polar  : polar view of hexa double complex numbers
+test_hexadobl_complex           : tests hexa double complex arithmetic
+ts_hdcmplx                      : main test on hexa double complex numbers
 ------------------------------------------------------------------------------
 multprec_dobldobl_convertors    : convert double double <-> multiprec float
 dobldobl_complex_numbers_cv     : convert complex <-> double double complex

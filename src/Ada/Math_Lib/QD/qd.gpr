@@ -47,6 +47,7 @@ project QD is
         "ts_decadbl.adb",  -- tests deca doubles
         "ts_dacmplx.adb",  -- tests complex deca doubles
         "ts_hexdbl.adb",   -- tests hexa doubles
+        "ts_hdcmplx.adb",  -- tests complex hexa doubles
         "ts_tdfun.adb",    -- tests triple double functions
         "ts_pdfun.adb",    -- tests penta double functions
         "ts_odfun.adb",    -- tests octo double functions
@@ -70,6 +71,7 @@ project QD is
         for Switches ("pd_test.c") use ("-lm");
         for Switches ("od_test.c") use ("-lm");
         for Switches ("da_test.c") use ("-lm");
+        for Switches ("hd_test.c") use ("-lm");
 
     end Linker;
 
