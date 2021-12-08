@@ -1,3 +1,8 @@
+Tue 7 Dec 2021 : new hexadobl_complex_ring.ads, hexa_double_ring-ffield.ads,
+  hexadobl_complex_numbers.ads, hexadobl_complex_ring_io.ads,
+  hexadobl_complex_ring-ffield.ads, hexadobl_random_numbers,
+  hexadobl_mathematical_functions, test_hexadobl_functions, ts_hdfun.adb.
+
 Sun 5 Dec 2021 : updated sincostables.py for 256 decimal places.
   Defined hexa_double_constants.ads with the aid of test_hexa_doubles.
   The main test is called by ts_hexdbl.adb.
