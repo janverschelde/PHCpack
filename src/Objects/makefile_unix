@@ -391,6 +391,9 @@ ts_odvec:
 ts_davec:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_davec.adb -o $(BIN)/ts_davec
 
+ts_hdvec:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_hdvec.adb -o $(BIN)/ts_hdvec
+
 # Test programs for Math_Lib/Matrices :
 
 ts_natmat:
@@ -573,6 +576,10 @@ ts_odnorm:
 
 ts_danorm:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_danorm.adb -o $(BIN)/ts_danorm
+
+ts_errfree:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_errfree.adb \
+              -o $(BIN)/ts_errfree
 
 # Test programs for Math_Lib/Polynomials :
 

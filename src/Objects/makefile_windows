@@ -384,6 +384,9 @@ ts_odvec:
 ts_davec:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_davec.adb -o $(BIN)/ts_davec
 
+ts_hdvec:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hdvec.adb -o $(BIN)/ts_hdvec
+
 # Test programs for Matrices :
 
 ts_natmat:
