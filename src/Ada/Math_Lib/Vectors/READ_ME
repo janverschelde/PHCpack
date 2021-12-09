@@ -1,4 +1,4 @@
-Vectors and vectors of vectors in PHCv2.4.85
+Vectors and vectors of vectors in PHCv2.4.86
 
 Because the directory Matrices became too big, 
 this directory was created new for PHCv2.3.33.
@@ -142,6 +142,12 @@ decadobl_complex_vectors_io        : i/o of complex vectors of deca doubles
 decadobl_complex_vecvecs           : complex vecvecs of deca doubles
 decadobl_complex_vecvecs_io        : i/o of complex vecvecs of deca doubles
 decadobl_complex_vectors_cv        : convert to double and multiprecision
+hexa_double_vectors                : vectors of hexa double numbers
+hexa_double_vectors_io             : input/output of hexa double vectors
+hexadobl_complex_vectors           : complex vectors of hexa doubles
+hexadobl_complex_vectors_io        : i/o of complex vectors of hexa doubles
+hexadobl_complex_vecvecs           : complex vecvecs of hexa doubles
+hexadobl_complex_vecvecs_io        : i/o of complex vecvecs of hexa doubles
 ------------------------------------------------------------------------------
 valid_vector_checks                : valid if no component is NaN
 ------------------------------------------------------------------------------
@@ -157,6 +163,7 @@ tripdobl_random_vectors            : vectors of random triple doubles
 pentdobl_random_vectors            : vectors of random penta doubles
 octodobl_random_vectors            : vectors of random octo doubles
 decadobl_random_vectors            : vectors of random deca doubles
+hexadobl_random_vectors            : vectors of random hexa doubles
 ------------------------------------------------------------------------------
 standard_floating_vecvecvecs       : vectors of vectors of floating vectors
 standard_complex_vecvecvecs        : vectors of vectors of complex vectors
@@ -175,6 +182,7 @@ test_tripdobl_vectors              : tests vectors in triple double precision
 test_pentdobl_vectors              : tests vectors in penta double precision
 test_octodobl_vectors              : tests vectors in octo double precision
 test_decadobl_vectors              : tests vectors in deca double precision
+test_hexadobl_vectors              : tests vectors in hexa double precision
 ------------------------------------------------------------------------------
 ts_natvec                          : main test on natural vectors
 ts_intvec                          : main test on integer vectors
@@ -188,6 +196,7 @@ ts_tdvec                           : main test on vectors of triple doubles
 ts_pdvec                           : main test on vectors of penta doubles
 ts_odvec                           : main test on vectors of octo doubles
 ts_davec                           : main test on vectors of deca doubles
+ts_hdvec                           : main test on vectors of hexa doubles
 ------------------------------------------------------------------------------
 standard_vector_splitters          : split/merge complex vectors for doubles
 dobldobl_vector_splitters          : 4-vector representation of dobldobl vecs

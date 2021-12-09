@@ -32,6 +32,7 @@ project vectors is
         "ts_pdvec.adb",    -- test vectors of penta doubles
         "ts_odvec.adb",    -- test vectors of octo doubles
         "ts_davec.adb",    -- test vectors of deca doubles
+        "ts_hdvec.adb",    -- test vectors of hexa doubles
         "ts_perfddvc.adb", -- test dd vector performance
         "ts_perfqdvc.adb"  -- test qd vector performance
     );

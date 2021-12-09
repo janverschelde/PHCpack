@@ -1,3 +1,9 @@
+Thu 9 Dec 2021 : new packages hexa_double_vectors, hexa_double_vectors_io,
+  hexadobl_complex_vectors, hexadobl_complex_vectors_io,
+  hexadobl_complex_vecvecs, hexadobl_complex_vecvecs_io,
+  hexadobl_random_vectors, test_hexadobl_vectors, with the main test in
+  ts_hdvec.adb.  Updated vectors.gpr for the new ts_hdvec.
+
 Thu 10 Jun 2021 : added the exec_dir attribute to vectors.gpr.
 
 Tue 8 Jun 2021 : defined vectors.gpr to build the test procedures.
