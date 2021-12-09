@@ -8,6 +8,7 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Penta_Double_Numbers;               use Penta_Double_Numbers;
 with Octo_Double_Numbers;                use Octo_Double_Numbers;
 with Deca_Double_Numbers;                use Deca_Double_Numbers;
+with Hexa_Double_Numbers;                use Hexa_Double_Numbers;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Random_Vectors;
 with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
@@ -26,6 +27,9 @@ with OctoDobl_Complex_Vector_Norms;      use OctoDobl_Complex_Vector_Norms;
 with DecaDobl_Complex_Vectors;
 with DecaDobl_Random_Vectors;
 with DecaDobl_Complex_Vector_Norms;      use DecaDobl_Complex_Vector_Norms;
+with HexaDobl_Complex_Vectors;
+with HexaDobl_Random_Vectors;
+with HexaDobl_Complex_Vector_Norms;      use HexaDobl_Complex_Vector_Norms;
 
 procedure ts_errfree is
 
@@ -144,6 +148,22 @@ procedure ts_errfree is
     put("  deca double :"); write(rtb_norm,rix_norm);
   end DecaDobl_Two_Norm;
 
+  procedure HexaDobl_Two_Norm ( dim : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a complex vector of dimension dim 
+  --   in hexa double precision and writes its 2-norm.
+
+    rnv : constant HexaDobl_Complex_Vectors.Vector(1..dim)
+        := HexaDobl_Random_Vectors.Random_Vector(1,dim);
+    nrm : constant hexa_double := Norm2(rnv);
+    hihihihi_norm : constant double_float := hihihihi_part(nrm);
+    lohihihi_norm : constant double_float := lohihihi_part(nrm);
+
+  begin
+    put("  hexa double :"); write(hihihihi_norm,lohihihi_norm);
+  end HexaDobl_Two_Norm;
+
   procedure Main is
 
   begin
@@ -158,6 +178,7 @@ procedure ts_errfree is
     PentDobl_Two_Norm(64);
     OctoDobl_Two_Norm(64);
     DecaDobl_Two_Norm(64);
+    HexaDobl_Two_Norm(64);
   end Main;
 
 begin

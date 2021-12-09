@@ -1,3 +1,6 @@
+Thu 9 Dec 2021 : new hexadobl_complex_vector_norms, extended ts_errfree
+  to demonstrate the computation of the 2-norm with hexa double numbers.
+
 Thu 10 Jun 2021 : added the exec_dir attribute to reduction.gpr.
 
 Tue 8 Jun 2021 : defined reduction.gpr to build the test procedures.
