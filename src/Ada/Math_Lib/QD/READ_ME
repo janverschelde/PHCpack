@@ -242,5 +242,8 @@ test_multprec_octodobl_casts    : tests casting multprec into od and back
 multprec_decadobl_convertors    : convert deca double <-> multiprec float
 decadobl_complex_numbers_cv     : convert complex <-> deca double complex
 test_multprec_decadobl_casts    : tests casting multprec into da and back
+multprec_hexadobl_convertors    : convert hexa double <-> multiprec float
+hexadobl_complex_numbers_cv     : convert complex <-> hexa double complex
+test_multprec_hexadobl_casts    : tests casting multprec into hd and back
 ts_mpcasts                      : main test on multiprecision casts
 ------------------------------------------------------------------------------
