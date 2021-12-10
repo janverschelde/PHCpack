@@ -56,7 +56,10 @@ deca_double_vector_norms           : norms of vectors of deca doubles
 decadobl_complex_vector_norms      : norms of complex deca double vectors
 test_decadobl_vector_norms         : tests on deca double vector norms
 ts_danorm                          : main test on deca double vector norms
+hexa_double_vector_norms           : norms of vectors of hexa doubles
+hexadobl_complex_vector_norms      : norms of complex hexa double vectors
 test_hexadobl_vector_norms         : tests on hexa double vector norms
+ts_hdnorm                          : main test on hexa double vector norms
 ts_errfree                         : illustrates error free transformations
 -------------------------------------------------------------------------------
 generic_norms_equals               : norms and equality routines
@@ -82,6 +85,7 @@ quaddobl_complex_linear_solvers    : linear solvers for quad double complex
 pentdobl_complex_linear_solvers    : linear solvers for penta double complex
 octodobl_complex_linear_solvers    : linear solvers for octo double complex
 decadobl_complex_linear_solvers    : linear solvers for deca double complex
+hexadobl_complex_linear_solvers    : linear solvers for hexa double complex
 multprec_complex_linear_solvers    : linear solvers for multprec complex
 ------------------------------------------------------------------------------
 test_lu_decompositions             : test accuracy of LU factorization
@@ -91,6 +95,7 @@ test_quaddobl_linear_solvers       : test quad double linear solvers
 test_pentdobl_linear_solvers       : test penta double linear solvers
 test_octodobl_linear_solvers       : test octo double linear solvers
 test_decadobl_linear_solvers       : test deca double linear solvers
+test_hexadobl_linear_solvers       : test hexa double linear solvers
 ------------------------------------------------------------------------------
 ts_fltdls                          : test dynamic matrix triangulators
 ts_fltlu                           : test on floating-point LU factorization
@@ -101,6 +106,7 @@ ts_qdlu                            : main test on quad double LU solver
 ts_pdlu                            : main test on penta double LU solver 
 ts_odlu                            : main test on octo double LU solver 
 ts_dalu                            : main test on deca double LU solver 
+ts_hdlu                            : main test on hexa double LU solver 
 ts_backsubs                        : test on accuracy of back substitution
 ts_vvlu                            : test LU factorization on vecvecs
 ts_perflu                          : performance test on lufac

@@ -1,3 +1,8 @@
+Fri 10 December : added hexa_double_vector_norms, ts_hdnorm.adb,
+  new test_hexadobl_vector_norms, hexa_double_linear_solvers.ads,
+  hexadobl_complex_linear_solvers, test_hexadobl_linear_solvers, ts_hdlu.adb.
+  Extended test_lu_decompositions and reduction.gpr.
+
 Thu 9 Dec 2021 : new hexadobl_complex_vector_norms, extended ts_errfree
   to demonstrate the computation of the 2-norm with hexa double numbers.
 

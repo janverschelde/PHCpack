@@ -16,6 +16,8 @@ with Octo_Double_Matrices_io;            use Octo_Double_Matrices_io;
 with Octo_Double_Linear_Solvers;
 with Deca_Double_Matrices_io;            use Deca_Double_Matrices_io;
 with Deca_Double_Linear_Solvers;
+with Hexa_Double_Matrices_io;            use Hexa_Double_Matrices_io;
+with Hexa_Double_Linear_Solvers;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_Polar;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
@@ -40,6 +42,9 @@ with OctoDobl_Complex_Linear_Solvers;
 with DecaDobl_Complex_Numbers;
 with DecaDobl_Complex_Matrices_io;       use DecaDobl_Complex_Matrices_io;
 with DecaDobl_Complex_Linear_Solvers;
+with HexaDobl_Complex_Numbers;
+with HexaDobl_Complex_Matrices_io;       use HexaDobl_Complex_Matrices_io;
+with HexaDobl_Complex_Linear_Solvers;
 
 package body Test_LU_Decompositions is
 
@@ -334,6 +339,51 @@ package body Test_LU_Decompositions is
 
   begin
     Deca_Double_Linear_Solvers.Permute_Lower(L,ipvt);
+    LtimesU := L*U;
+    if output then
+      put("ipvt = "); put(ipvt); new_line;
+      put_line("The permutation matrix P :"); put(P);
+      put_line("The LU decomposition :"); put(LU);
+      put_line("The multipliers L :"); put(L);
+      put_line("The upper triangular U :"); put(U);
+      put_line("L*U : "); put(LtimesU);
+      put_line("P*A : "); put(PA);
+    end if;
+    maxerr := create(-1.0);
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        err := abs(PA(i,j) - LtimesU(i,j));
+        if maxerr < 0.0 then 
+          maxerr := err;
+        elsif err > maxerr then
+          maxerr := err;
+        end if;
+      end loop;
+    end loop;
+    fail := (maxerr > tol);
+  end Test_Decomposition;
+
+  procedure Test_Decomposition
+              ( n : in integer32;
+                A,LU : in Hexa_Double_Matrices.Matrix;
+                ipvt : in Standard_Integer_Vectors.Vector;
+                tol : in hexa_double; output : in boolean;
+                maxerr : out hexa_double; fail : out boolean ) is
+
+    P : constant Standard_Natural_Matrices.Matrix(1..n,1..n)
+      := Hexa_Double_Linear_Solvers.Permutation_Matrix(ipvt);
+    PA : constant Hexa_Double_Matrices.Matrix(1..n,1..n)
+       := Hexa_Double_Linear_Solvers.Permute(P,A);
+    L : Hexa_Double_Matrices.Matrix(1..n,1..n)
+      := Hexa_Double_Linear_Solvers.Lower_Diagonal(LU);
+    U : constant Hexa_Double_Matrices.Matrix(1..n,1..n)
+      := Hexa_Double_Linear_Solvers.Upper_Diagonal(LU);
+    LtimesU : Hexa_Double_Matrices.Matrix(1..n,1..n);
+    err : hexa_double;
+    use Hexa_Double_Matrices;
+
+  begin
+    Hexa_Double_Linear_Solvers.Permute_Lower(L,ipvt);
     LtimesU := L*U;
     if output then
       put("ipvt = "); put(ipvt); new_line;
@@ -676,6 +726,55 @@ package body Test_LU_Decompositions is
 
   begin
     DecaDobl_Complex_Linear_Solvers.Permute_Lower(L,ipvt);
+    LtimesU := L*U;
+    if output then
+      put("ipvt = "); put(ipvt); new_line;
+      put_line("The permutation matrix P :"); put(P);
+      put_line("The LU decomposition :"); put(LU);
+      put_line("The multipliers L :"); put(L);
+      put_line("The upper triangular U :"); put(U);
+      put_line("L*U : "); put(LtimesU);
+      put_line("P*A : "); put(PA);
+    end if;
+    maxerr := create(-1.0);
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        dif := PA(i,j) - LtimesU(i,j);
+        err := AbsVal(dif); -- Radius(dif);
+        if maxerr < 0.0 then 
+          maxerr := err;
+        elsif err > maxerr then
+          maxerr := err;
+        end if;
+      end loop;
+    end loop;
+    fail := (maxerr > tol);
+  end Test_Decomposition;
+
+  procedure Test_Decomposition
+              ( n : in integer32;
+                A,LU : in HexaDobl_Complex_Matrices.Matrix;
+                ipvt : in Standard_Integer_Vectors.Vector;
+                tol : in hexa_double; output : in boolean;
+                maxerr : out hexa_double; fail : out boolean ) is
+
+    P : constant Standard_Natural_Matrices.Matrix(1..n,1..n)
+      := HexaDobl_Complex_Linear_Solvers.Permutation_Matrix(ipvt);
+    PA : constant HexaDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := HexaDobl_Complex_Linear_Solvers.Permute(P,A);
+    L : HexaDobl_Complex_Matrices.Matrix(1..n,1..n)
+      := HexaDobl_Complex_Linear_Solvers.Lower_Diagonal(LU);
+    U : constant HexaDobl_Complex_Matrices.Matrix(1..n,1..n)
+      := HexaDobl_Complex_Linear_Solvers.Upper_Diagonal(LU);
+    LtimesU : HexaDobl_Complex_Matrices.Matrix(1..n,1..n);
+    dif : HexaDobl_Complex_Numbers.Complex_Number;
+    err : hexa_double;
+    use HexaDobl_Complex_Numbers;
+   -- use HexaDobl_Complex_Numbers_Polar;
+    use HexaDobl_Complex_Matrices;
+
+  begin
+    HexaDobl_Complex_Linear_Solvers.Permute_Lower(L,ipvt);
     LtimesU := L*U;
     if output then
       put("ipvt = "); put(ipvt); new_line;

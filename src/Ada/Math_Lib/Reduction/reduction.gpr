@@ -26,6 +26,7 @@ project reduction is
         "ts_pdnorm.adb",   -- tests penta double vector norms
         "ts_odnorm.adb",   -- tests octo double vector norms
         "ts_danorm.adb",   -- tests deca double vector norms
+        "ts_hdnorm.adb",   -- tests hexa double vector norms
         "ts_errfree.adb",  -- illustrates error free transformations
         "ts_fltdls.adb",   -- tests dynamic matrix triangulators
         "ts_fltlu.adb",    -- tests floating-point LU factorization
@@ -36,6 +37,7 @@ project reduction is
         "ts_pdlu.adb",     -- tests penta double LU solver 
         "ts_odlu.adb",     -- tests octo double LU solver 
         "ts_dalu.adb",     -- tests deca double LU solver 
+        "ts_hdlu.adb",     -- tests hexa double LU solver 
         "ts_backsubs.adb", -- tests accuracy of back substitution
         "ts_vvlu.adb",     -- tests LU factorization on vecvecs
         "ts_perflu.adb",   -- performance test on lufac
