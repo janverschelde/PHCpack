@@ -1,3 +1,8 @@
+Fri 10 Dec 2021 : added definitions of matrices of hexa double numbers:
+  new ts_hdmat, hexa_double_matrices, hexa_double_matrices_io,
+  hexadobl_complex_matrices, hexadobl_complex_matrices_io,
+  hexadobl_random_matrices, test_hexadobl_matrices, updated matrices.gpr.
+
 Thu 10 Jun 2021 : added the exec_dir attribute to matrices.gpr.
 
 Tue 8 Jun 2021 : defined matrices.gpr to build the test procedures.

@@ -30,6 +30,7 @@ project matrices is
         "ts_pdmat.adb",   -- tests penta double matrices
         "ts_odmat.adb",   -- tests octo double matrices
         "ts_damat.adb"    -- tests deca double matrices
+        "ts_hdmat.adb"    -- tests hexa double matrices
     );
 
     package Compiler is
