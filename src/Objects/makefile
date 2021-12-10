@@ -307,7 +307,7 @@ ts_hdvec:
 # Test programs for Math_Lib/Matrices :
 
 test_matrices: ts_natmat ts_intmat ts_fltmat ts_fltdls ts_cmpmat \
-               ts_ddmat ts_qdmat ts_tdmat ts_pdmat ts_odmat ts_damat
+               ts_ddmat ts_qdmat ts_tdmat ts_pdmat ts_odmat ts_damat ts_hdmat
 
 ts_natmat:
 	make -f $(MAKEFILE) ts_natmat
@@ -342,6 +342,9 @@ ts_odmat:
 ts_damat:
 	make -f $(MAKEFILE) ts_damat
 
+ts_hdmat:
+	make -f $(MAKEFILE) ts_hdmat
+
 # Test programs for Math_Lib/Divisors :
 
 test_divisors: ts_gcd ts_intlina ts_smith ts_intinv ts_circuit
@@ -369,7 +372,7 @@ test_reduction: ts_fltlu ts_cmplu ts_ddlu ts_qdlu ts_qrd ts_svd ts_eigval \
                 ts_ddnorm ts_tdnorm ts_qdnorm ts_pdnorm ts_odnorm ts_danorm \
                 ts_dqrd ts_ddqrd ts_tdqrd ts_qdqrd ts_pdqrd ts_odqrd ts_daqrd \
                 ts_mpqrd ts_dsvd ts_ddsvd ts_tdsvd ts_qdsvd ts_pdsvd ts_odsvd \
-                ts_dasvd ts_mpsvd ts_errfree
+                ts_dasvd ts_mpsvd ts_errfree ts_hdlu
 
 ts_fltlu:
 	make -f $(MAKEFILE) ts_fltlu
@@ -479,6 +482,9 @@ ts_odlu:
 ts_dalu:
 	make -f $(MAKEFILE) ts_dalu
 
+ts_hdlu:
+	make -f $(MAKEFILE) ts_hdlu
+
 ts_ddnorm:
 	make -f $(MAKEFILE) ts_ddnorm
 
@@ -496,6 +502,9 @@ ts_odnorm:
 
 ts_danorm:
 	make -f $(MAKEFILE) ts_danorm
+
+ts_hdnorm:
+	make -f $(MAKEFILE) ts_hdnorm
 
 ts_errfree:
 	make -f $(MAKEFILE) ts_errfree

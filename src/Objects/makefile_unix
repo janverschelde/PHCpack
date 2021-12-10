@@ -429,6 +429,9 @@ ts_odmat:
 ts_damat:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_damat.adb -o $(BIN)/ts_damat
 
+ts_hdmat:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_hdmat.adb -o $(BIN)/ts_hdmat
+
 # Test programs for Math_Lib/Divisors :
 
 ts_gcd:
@@ -559,6 +562,9 @@ ts_odlu:
 ts_dalu:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_dalu.adb -o $(BIN)/ts_dalu
 
+ts_hdlu:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_hdlu.adb -o $(BIN)/ts_hdlu
+
 ts_ddnorm:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_ddnorm.adb -o $(BIN)/ts_ddnorm
 
@@ -576,6 +582,9 @@ ts_odnorm:
 
 ts_danorm:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_danorm.adb -o $(BIN)/ts_danorm
+
+ts_hdnorm:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_hdnorm.adb -o $(BIN)/ts_hdnorm
 
 ts_errfree:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_errfree.adb \
