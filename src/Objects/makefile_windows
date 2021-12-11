@@ -531,6 +531,9 @@ ts_odsvd:
 ts_dasvd:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_dasvd.adb -o $(BIN)/ts_dasvd
 
+ts_hdsvd:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hdsvd.adb -o $(BIN)/ts_hdsvd
+
 ts_mpsvd:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mpsvd.adb -o $(BIN)/ts_mpsvd
 

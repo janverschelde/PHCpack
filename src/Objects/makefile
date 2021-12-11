@@ -372,7 +372,7 @@ test_reduction: ts_fltlu ts_cmplu ts_ddlu ts_qdlu ts_qrd ts_svd ts_eigval \
                 ts_ddnorm ts_tdnorm ts_qdnorm ts_pdnorm ts_odnorm ts_danorm \
                 ts_dqrd ts_ddqrd ts_tdqrd ts_qdqrd ts_pdqrd ts_odqrd ts_daqrd \
                 ts_mpqrd ts_dsvd ts_ddsvd ts_tdsvd ts_qdsvd ts_pdsvd ts_odsvd \
-                ts_dasvd ts_mpsvd ts_errfree ts_hdlu ts_hdqrd
+                ts_dasvd ts_mpsvd ts_errfree ts_hdlu ts_hdqrd ts_hdsvd
 
 ts_fltlu:
 	make -f $(MAKEFILE) ts_fltlu
@@ -439,6 +439,9 @@ ts_odsvd:
 
 ts_dasvd:
 	make -f $(MAKEFILE) ts_dasvd
+
+ts_hdsvd:
+	make -f $(MAKEFILE) ts_hdsvd
 
 ts_mpsvd:
 	make -f $(MAKEFILE) ts_mpsvd
