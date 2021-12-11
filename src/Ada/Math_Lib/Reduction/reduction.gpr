@@ -50,6 +50,7 @@ project reduction is
         "ts_pdqrd.adb",    -- tests penta double QR and LS
         "ts_odqrd.adb",    -- tests octo double QR and LS
         "ts_daqrd.adb",    -- tests deca double QR and LS
+        "ts_hdqrd.adb",    -- tests hexa double QR and LS
         "ts_mpqrd.adb",    -- tests multiprecision QR and LS
         "ts_qrd.adb",      -- tests QR and least squares
         "ts_mgs.adb",      -- tests modified Gram-Schmidt
