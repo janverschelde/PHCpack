@@ -478,6 +478,9 @@ ts_odqrd:
 ts_daqrd:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_daqrd.adb -o $(BIN)/ts_daqrd
 
+ts_hdqrd:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hdqrd.adb -o $(BIN)/ts_hdqrd
+
 ts_mpqrd:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mpqrd.adb -o $(BIN)/ts_mpqrd
 
