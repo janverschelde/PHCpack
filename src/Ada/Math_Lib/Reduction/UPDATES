@@ -4,6 +4,9 @@ Fri 10 December : added hexa_double_vector_norms, ts_hdnorm.adb,
   Extended test_lu_decompositions and reduction.gpr.
   Added hexa_double_qr_least_squares and hexadobl_complex_qr_least_squares,
   test_hexadobl_qrls_solvers, tested by ts_hdqrd.adb.  Update reduction.gpr.
+  Added hexadobl_complex_singular_values, test_hexadobl_singular_values,
+  and ts_hdsvd.adb.  Corrected a spelling error in test*singular_values.adb.
+  Updated reduction.gpr.
 
 Thu 9 Dec 2021 : new hexadobl_complex_vector_norms, extended ts_errfree
   to demonstrate the computation of the 2-norm with hexa double numbers.

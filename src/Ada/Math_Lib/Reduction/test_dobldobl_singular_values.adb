@@ -170,9 +170,9 @@ package body Test_DoblDobl_Singular_Values is
     put("Inverse of condition number : ");
     put(Inverse_Condition_Number(s),3); new_line;
     if Is_Identity(ai,tol) then
-      put_line("The product a*inv(a) is the indentity matrix.");
+      put_line("The product a*inv(a) is the identity matrix.");
     else
-      put_line("The product a*inv(a) is NOT the indentity matrix!");
+      put_line("The product a*inv(a) is NOT the identity matrix!");
       if a'length(1) > a'length(2) then
         put_line("... okay, inv(a) can only be a left inverse.");
       else
@@ -181,9 +181,9 @@ package body Test_DoblDobl_Singular_Values is
       end if;
     end if;
     if Is_Identity(ia,tol) then
-      put_line("The product inv(a)*a is the indentity matrix.");
+      put_line("The product inv(a)*a is the identity matrix.");
     else
-      put_line("The product inv(a)*a is NOT the indentity matrix!");
+      put_line("The product inv(a)*a is NOT the identity matrix!");
       if a'length(1) < a'length(2) then
         put_line("... okay, inv(a) can only be a right inverse.");
       else

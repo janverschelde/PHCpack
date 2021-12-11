@@ -2,21 +2,21 @@ with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Quad_Double_Numbers;               use Quad_Double_Numbers;
-with Quad_Double_Numbers_io;            use Quad_Double_Numbers_io;
-with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
-with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
-with QuadDobl_Complex_Matrices_io;      use QuadDobl_Complex_Matrices_io;
-with QuadDobl_Random_Vectors;           use QuadDobl_Random_Vectors;
-with QuadDobl_Random_Matrices;          use QuadDobl_Random_Matrices;
-with QuadDobl_Complex_Singular_Values;  use QuadDobl_Complex_Singular_Values;
+with Hexa_Double_Numbers;               use Hexa_Double_Numbers;
+with Hexa_Double_Numbers_io;            use Hexa_Double_Numbers_io;
+with HexaDobl_Complex_Numbers;          use HexaDobl_Complex_Numbers;
+with HexaDobl_Complex_Vectors_io;       use HexaDobl_Complex_Vectors_io;
+with HexaDobl_Complex_Matrices_io;      use HexaDobl_Complex_Matrices_io;
+with HexaDobl_Random_Vectors;           use HexaDobl_Random_Vectors;
+with HexaDobl_Random_Matrices;          use HexaDobl_Random_Matrices;
+with HexaDobl_Complex_Singular_Values;  use HexaDobl_Complex_Singular_Values;
 
-package body Test_QuadDobl_Singular_Values is
+package body Test_HexaDobl_Singular_Values is
 
   function Read_Vector
-             ( n : in integer32 ) return QuadDobl_Complex_Vectors.Vector is
+             ( n : in integer32 ) return HexaDobl_Complex_Vectors.Vector is
 
-    res : QuadDobl_Complex_Vectors.Vector(1..n);
+    res : HexaDobl_Complex_Vectors.Vector(1..n);
 
   begin
     put("Give "); put(n,1);
@@ -26,9 +26,9 @@ package body Test_QuadDobl_Singular_Values is
   end Read_Vector;
 
   function Read_Matrix
-             ( n,m : in integer32 ) return QuadDobl_Complex_Matrices.Matrix is
+             ( n,m : in integer32 ) return HexaDobl_Complex_Matrices.Matrix is
 
-    res : QuadDobl_Complex_Matrices.Matrix(1..n,1..m);
+    res : HexaDobl_Complex_Matrices.Matrix(1..n,1..m);
 
   begin
     put("Give "); put(n*m,1); put(" complex numbers for ");
@@ -36,10 +36,10 @@ package body Test_QuadDobl_Singular_Values is
     return res;
   end Read_Matrix;
 
-  function Is_Identity ( a : QuadDobl_Complex_Matrices.Matrix;
+  function Is_Identity ( a : HexaDobl_Complex_Matrices.Matrix;
                          tol : double_float ) return boolean is
 
-    one : constant quad_double := create(1.0);
+    one : constant hexa_double := create(1.0);
 
   begin
     for i in a'range(1) loop
@@ -58,10 +58,10 @@ package body Test_QuadDobl_Singular_Values is
     return true;
   end Is_Identity;
 
-  function Is_Orthogonal ( a : QuadDobl_Complex_Matrices.Matrix;
+  function Is_Orthogonal ( a : HexaDobl_Complex_Matrices.Matrix;
                            tol : double_float ) return boolean is
 
-    use QuadDobl_Complex_Matrices;
+    use HexaDobl_Complex_Matrices;
 
     atr : constant Matrix(a'range(2),a'range(1)) := Conjugate_Transpose(a);
     ata : constant Matrix(a'range(2),a'range(2)) := atr*a;
@@ -77,11 +77,11 @@ package body Test_QuadDobl_Singular_Values is
     end if;
   end Is_Orthogonal;
 
-  function Is_SVD ( x,u,v : QuadDobl_Complex_Matrices.Matrix;
-                    s : QuadDobl_Complex_Vectors.Vector;
+  function Is_SVD ( x,u,v : HexaDobl_Complex_Matrices.Matrix;
+                    s : HexaDobl_Complex_Vectors.Vector;
                     tol : in double_float ) return boolean is
 
-    use QuadDobl_Complex_Matrices;
+    use HexaDobl_Complex_Matrices;
 
     ut : constant Matrix(u'range(2),u'range(1)) := Conjugate_Transpose(u);
     utx : constant Matrix(u'range(2),x'range(2)) := ut*x;
@@ -111,8 +111,8 @@ package body Test_QuadDobl_Singular_Values is
   end Is_SVD;
 
   procedure Test_SVD_Output
-              ( x,u,v : in QuadDobl_Complex_Matrices.Matrix;
-                s,e : in QuadDobl_Complex_Vectors.Vector;
+              ( x,u,v : in HexaDobl_Complex_Matrices.Matrix;
+                s,e : in HexaDobl_Complex_Vectors.Vector;
                 info : in integer32; output : in boolean := true ) is
 
     ortho,decomp : boolean;
@@ -152,11 +152,11 @@ package body Test_QuadDobl_Singular_Values is
   end Test_SVD_Output;
 
   procedure Test_SVD_Solver
-               ( a,u,v : in QuadDobl_Complex_Matrices.Matrix;
-                 s,b : in QuadDobl_Complex_Vectors.Vector ) is
+               ( a,u,v : in HexaDobl_Complex_Matrices.Matrix;
+                 s,b : in HexaDobl_Complex_Vectors.Vector ) is
 
-    use QuadDobl_Complex_Vectors;
-    use QuadDobl_Complex_Matrices;
+    use HexaDobl_Complex_Vectors;
+    use HexaDobl_Complex_Matrices;
 
     res : Vector(b'range) := b;
     x : Vector(a'range(2));
@@ -198,12 +198,12 @@ package body Test_QuadDobl_Singular_Values is
 
   procedure Test_SVD_on_Given_Matrix ( n,p : in integer32 ) is
 
-    use QuadDobl_Complex_Vectors;
-    use QuadDobl_Complex_Matrices;
+    use HexaDobl_Complex_Vectors;
+    use HexaDobl_Complex_Matrices;
 
     x : Matrix(1..n,1..p) := Read_Matrix(n,p);
     y : constant Matrix(1..n,1..p) := x;
-    mm : constant integer32 := QuadDobl_Complex_Singular_Values.Min0(n+1,p);
+    mm : constant integer32 := HexaDobl_Complex_Singular_Values.Min0(n+1,p);
     s : Vector(1..mm);
     e : Vector(1..p);
     u : Matrix(1..n,1..n);
@@ -218,13 +218,13 @@ package body Test_QuadDobl_Singular_Values is
 
   procedure Test_SVD_on_Given_System ( n,p : in integer32 ) is
 
-    use QuadDobl_Complex_Vectors;
-    use QuadDobl_Complex_Matrices;
+    use HexaDobl_Complex_Vectors;
+    use HexaDobl_Complex_Matrices;
 
     a : Matrix(1..n,1..p) := Read_Matrix(n,p);
     b : constant Vector(1..n) := Read_Vector(n);
     y : constant Matrix(1..n,1..p) := a;
-    mm : constant integer32 := QuadDobl_Complex_Singular_Values.Min0(n+1,p);
+    mm : constant integer32 := HexaDobl_Complex_Singular_Values.Min0(n+1,p);
     s : Vector(1..mm);
     e : Vector(1..p);
     u : Matrix(1..n,1..n);
@@ -240,11 +240,11 @@ package body Test_QuadDobl_Singular_Values is
 
   procedure Test_SVD_on_Random_Matrix ( n,p : in integer32 ) is
 
-    use QuadDobl_Complex_Vectors;
-    use QuadDobl_Complex_Matrices;
+    use HexaDobl_Complex_Vectors;
+    use HexaDobl_Complex_Matrices;
   
     x,y : Matrix(1..n,1..p);
-    mm : constant integer32 := QuadDobl_Complex_Singular_Values.Min0(n+1,p);
+    mm : constant integer32 := HexaDobl_Complex_Singular_Values.Min0(n+1,p);
     s : Vector(1..mm);
     e : Vector(1..p);
     u : Matrix(1..n,1..n);
@@ -271,12 +271,12 @@ package body Test_QuadDobl_Singular_Values is
 
   procedure Test_SVD_on_Random_System ( n,p : in integer32 ) is
 
-    use QuadDobl_Complex_Vectors;
-    use QuadDobl_Complex_Matrices;
+    use HexaDobl_Complex_Vectors;
+    use HexaDobl_Complex_Matrices;
 
     a,y : Matrix(1..n,1..p);
     b : Vector(1..n);
-    mm : constant integer32 := QuadDobl_Complex_Singular_Values.Min0(n+1,p);
+    mm : constant integer32 := HexaDobl_Complex_Singular_Values.Min0(n+1,p);
     s : Vector(1..mm);
     e : Vector(1..p);
     u : Matrix(1..n,1..n);
@@ -298,8 +298,7 @@ package body Test_QuadDobl_Singular_Values is
       Test_SVD_Output(y,u,v,s,e,info,otp);
       Test_SVD_Solver(y,u,v,s,b);
       new_line;
-      put("Test another random problem ? (y/n) ");
-      Ask_Yes_or_No(ans);
+      put("Test another random problem ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
   end Test_SVD_on_Random_System;
@@ -311,7 +310,7 @@ package body Test_QuadDobl_Singular_Values is
 
   begin
     new_line;
-    put_line("Testing the SVD in quad double precision ...");
+    put_line("Testing the SVD in hexa double precision ...");
     new_line;
     put("Give the number of rows : "); get(n);
     put("Give the number of columns : "); get(m);
@@ -332,4 +331,4 @@ package body Test_QuadDobl_Singular_Values is
     end case;
   end Main;
 
-end Test_QuadDobl_Singular_Values;
+end Test_HexaDobl_Singular_Values;

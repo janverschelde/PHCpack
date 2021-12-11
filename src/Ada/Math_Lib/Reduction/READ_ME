@@ -172,10 +172,16 @@ quaddobl_complex_singular_values   : SVD in quad double arithmetic
 pentdobl_complex_singular_values   : SVD in penta double arithmetic
 octodobl_complex_singular_values   : SVD in octo double arithmetic
 decadobl_complex_singular_values   : SVD in deca double arithmetic
+hexadobl_complex_singular_values   : SVD in hexa double arithmetic
 multprec_complex_singular_values   : SVD in multiprecision arithmetic
 test_standard_singular_values      : test SVD in double precision
 test_dobldobl_singular_values      : test SVD in double double precision
+test_tripdobl_singular_values      : test SVD in quad double precision
 test_quaddobl_singular_values      : test SVD in quad double precision
+test_pentdobl_singular_values      : test SVD in penta double precision
+test_octodobl_singular_values      : test SVD in octo double precision
+test_decadobl_singular_values      : test SVD in deca double precision
+test_hexadobl_singular_values      : test SVD in hexa double precision
 test_multprec_singular_values      : test SVD in arbitrary multiprecision
 ts_dsvd                            : main test on double SVD
 ts_ddsvd                           : main test on double double SVD
@@ -184,6 +190,7 @@ ts_qdsvd                           : main test on quad double SVD
 ts_pdsvd                           : main test on penta double SVD
 ts_odsvd                           : main test on octo double SVD
 ts_dasvd                           : main test on deca double SVD
+ts_hdsvd                           : main test on hexa double SVD
 ts_mpsvd                           : main test on multiprecision SVD
 ts_svd                             : main test on the SVD
 ts_perfdsvd                        : develop better performing SVD

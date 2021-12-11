@@ -62,6 +62,7 @@ project reduction is
         "ts_pdsvd.adb",    -- tests penta double SVD
         "ts_odsvd.adb",    -- tests octo double SVD
         "ts_dasvd.adb",    -- tests deca double SVD
+        "ts_hdsvd.adb",    -- tests hexa double SVD
         "ts_mpsvd.adb",    -- tests multiprecision SVD
         "ts_svd.adb",      -- tests the SVD
         "ts_perfdsvd.adb", -- develop better performing SVD
