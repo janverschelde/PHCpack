@@ -1214,17 +1214,25 @@ void test_real8_upper_tiling ( void )
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
    cout << endl;
+   long long int bytecnt = 4*sizetile*numtiles*(numtiles+1)*8
+                         + 8*sizetile*numtiles*8;
+   cout << "    Total number of bytes : " << bytecnt << endl << endl;
+   const int gigacnt = pow(2.0,30);
+   double intensity = ((double) flopcnt)/bytecnt;
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(3) << intensity
+        << " #flops/#bytes" << endl << endl;
    double kernflops = 1000.0*((double) flopcnt)/elapsedms;
    double wallflops = ((double) flopcnt)/timelapsed_d;
-   const int gigacnt = pow(2.0,30);
-   cout << "Kernel Time Flops : "
+   cout << "  Kernel Time Flops : "
         << scientific << setprecision(3) << kernflops;
    cout << fixed << setprecision(3)
         << " = " << kernflops/gigacnt << " Gigaflops" << endl;
-   cout << " Wall Clock Flops : "
+   cout << "   Wall Clock Flops : "
         << scientific << setprecision(3) << wallflops;
    cout << fixed << setprecision(3)
         << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+
    for(int i=0; i<dim; i++)
    {
       free(Ahihihi[i]); free(Alohihi[i]); free(Ahilohi[i]); free(Alolohi[i]);
@@ -1829,14 +1837,21 @@ void test_cmplx8_upper_tiling ( void )
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
    cout << endl;
+   long long int bytecnt = 4*sizetile*numtiles*(numtiles+1)*16
+                         + 8*sizetile*numtiles*16;
+   cout << "    Total number of bytes : " << bytecnt << endl << endl;
+   const int gigacnt = pow(2.0,30);
+   double intensity = ((double) flopcnt)/bytecnt;
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(3) << intensity
+        << " #flops/#bytes" << endl << endl;
    double kernflops = 1000.0*((double) flopcnt)/elapsedms;
    double wallflops = ((double) flopcnt)/timelapsed_d;
-   const int gigacnt = pow(2.0,30);
-   cout << "Kernel Time Flops : "
+   cout << "  Kernel Time Flops : "
         << scientific << setprecision(3) << kernflops;
    cout << fixed << setprecision(3)
         << " = " << kernflops/gigacnt << " Gigaflops" << endl;
-   cout << " Wall Clock Flops : "
+   cout << "   Wall Clock Flops : "
         << scientific << setprecision(3) << wallflops;
    cout << fixed << setprecision(3)
         << " = " << wallflops/gigacnt << " Gigaflops" << endl;

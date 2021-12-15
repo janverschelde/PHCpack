@@ -415,6 +415,13 @@ void test_real_upper_tiling ( void )
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
    cout << endl;
+   long long int bytecnt = 4*sizetile*numtiles*(numtiles+1)
+                         + 8*sizetile*numtiles;
+   cout << "    Total number of bytes : " << bytecnt << endl << endl;
+   double intensity = ((double) flopcnt)/bytecnt;
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(3) << intensity
+        << " #flops/#bytes" << endl << endl;
    cout << scientific << setprecision(3);
    double kernflops = 1000.0*((double) flopcnt)/elapsedms;
    double wallflops = ((double) flopcnt)/timelapsed_d;
@@ -617,6 +624,13 @@ void test_cmplx_upper_tiling ( void )
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
    cout << endl;
+   long long int bytecnt = 4*sizetile*numtiles*(numtiles+1)*2
+                         + 8*sizetile*numtiles*2;
+   cout << "    Total number of bytes : " << bytecnt << endl << endl;
+   double intensity = ((double) flopcnt)/bytecnt;
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(3) << intensity
+        << " #flops/#bytes" << endl << endl;
    cout << scientific << setprecision(3);
    double kernflops = 1000.0*((double) flopcnt)/elapsedms;
    double wallflops = ((double) flopcnt)/timelapsed_d;

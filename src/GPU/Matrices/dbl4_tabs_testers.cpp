@@ -792,7 +792,7 @@ void test_real4_upper_tiling ( void )
       divover = divover + (double) divcnt;
       cout << divover << " x 893 " << endl;
    }
-   double kernflops,wallflops;
+   double kernflops,wallflops,theflopcnt;
    cout << "    Total number of floating-point operations : ";
    if((addover == 0.0) && (mulover == 0.0) && (divover == 0.0))
    {
@@ -801,6 +801,7 @@ void test_real4_upper_tiling ( void )
       cout << endl;
       kernflops = 1000.0*((double) flopcnt)/elapsedms;
       wallflops = ((double) flopcnt)/timelapsed_d;
+      theflopcnt = (double) flopcnt;
    }
    else
    {
@@ -812,13 +813,21 @@ void test_real4_upper_tiling ( void )
       cout << endl;
       kernflops = 1000.0*flopcnt/elapsedms;
       wallflops = flopcnt/timelapsed_d;
+      theflopcnt = flopcnt;
    }
+   long long int bytecnt = 4*sizetile*numtiles*(numtiles+1)*4
+                         + 8*sizetile*numtiles*4;
+   cout << "    Total number of bytes : " << bytecnt << endl << endl;
    const int gigacnt = pow(2.0,30);
-   cout << "Kernel Time Flops : "
+   double intensity = theflopcnt/bytecnt;
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(3) << intensity
+        << " #flops/#bytes" << endl << endl;
+   cout << "  Kernel Time Flops : "
         << scientific << setprecision(3) << kernflops;
    cout << fixed << setprecision(3)
         << " = " << kernflops/gigacnt << " Gigaflops" << endl;
-   cout << " Wall Clock Flops : "
+   cout << "   Wall Clock Flops : "
         << scientific << setprecision(3) << wallflops;
    cout << fixed << setprecision(3)
         << " = " << wallflops/gigacnt << " Gigaflops" << endl;
@@ -1226,7 +1235,7 @@ void test_cmplx4_upper_tiling ( void )
       divover = divover + (double) divcnt;
       cout << divover << " x 893 " << endl;
    }
-   double kernflops,wallflops;
+   double kernflops,wallflops,theflopcnt;
    cout << "    Total number of floating-point operations : ";
    if((addover == 0.0) && (mulover == 0.0) && (divover == 0.0))
    {
@@ -1235,6 +1244,7 @@ void test_cmplx4_upper_tiling ( void )
       cout << endl;
       kernflops = 1000.0*((double) flopcnt)/elapsedms;
       wallflops = ((double) flopcnt)/timelapsed_d;
+      theflopcnt = (double) flopcnt;
    }
    else
    {
@@ -1246,13 +1256,21 @@ void test_cmplx4_upper_tiling ( void )
       cout << endl;
       kernflops = 1000.0*flopcnt/elapsedms;
       wallflops = flopcnt/timelapsed_d;
+      theflopcnt = flopcnt;
    }
+   long long int bytecnt = 4*sizetile*numtiles*(numtiles+1)*8
+                         + 8*sizetile*numtiles*8;
+   cout << "    Total number of bytes : " << bytecnt << endl << endl;
    const int gigacnt = pow(2.0,30);
-   cout << "Kernel Time Flops : "
+   double intensity = theflopcnt/bytecnt;
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(3) << intensity
+        << " #flops/#bytes" << endl << endl;
+   cout << "  Kernel Time Flops : "
         << scientific << setprecision(3) << kernflops;
    cout << fixed << setprecision(3)
         << " = " << kernflops/gigacnt << " Gigaflops" << endl;
-   cout << " Wall Clock Flops : "
+   cout << "   Wall Clock Flops : "
         << scientific << setprecision(3) << wallflops;
    cout << fixed << setprecision(3)
         << " = " << wallflops/gigacnt << " Gigaflops" << endl;
