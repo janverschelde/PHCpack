@@ -172,6 +172,12 @@ void test_real2_blocked_qr
       cout << "    Total number of floating-point operations : "
            << flopcnt << endl;
       cout << endl;
+      long long int bytecnt = 2*nrows*ncols + 2*nrows*nrows;
+      cout << "    Total number of bytes : " << bytecnt << endl << endl;
+      double intensity = ((double) flopcnt)/bytecnt;
+      cout << "     Arithmetic intensity : "
+           << scientific << setprecision(5) << intensity
+           << " #flops/#bytes" << endl << endl;
       double kernflops = 1000.0*((double) flopcnt)/totlapsedms;
       double wallflops = ((double) flopcnt)/timelapsed_d;
       const int gigacnt = pow(2.0,30);
@@ -405,6 +411,12 @@ void test_cmplx2_blocked_qr
       cout << "    Total number of floating-point operations : "
            << flopcnt << endl;
       cout << endl;
+      long long int bytecnt = 4*nrows*ncols + 4*nrows*nrows;
+      cout << "    Total number of bytes : " << bytecnt << endl << endl;
+      double intensity = ((double) flopcnt)/bytecnt;
+      cout << "     Arithmetic intensity : "
+           << scientific << setprecision(5) << intensity
+           << " #flops/#bytes" << endl << endl;
       double kernflops = 1000.0*((double) flopcnt)/totlapsedms;
       double wallflops = ((double) flopcnt)/timelapsed_d;
       const int gigacnt = pow(2.0,30);
