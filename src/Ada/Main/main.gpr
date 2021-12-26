@@ -182,8 +182,6 @@ project main is
 
         for Switches ("main.cpp") use ("-o demics");
 
-        for Switches ("phctop.ada") use ("pieri_sols.o");
-
     end Linker;
 
 end main;
