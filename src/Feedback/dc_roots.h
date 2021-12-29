@@ -78,7 +78,7 @@ int Newton ( int n, dcmplx p[n], dcmplx dp[n-1], dcmplx *z,
         otherwise, the integer on return is the number of iterations
                    that was needed to reach the accuracy requirement. */
 
-dcmplx horner ( int n, dcmplx p[n], dcmplx x );
+dcmplx horner ( int n, dcmplx *p, dcmplx x );
 
 /* DESCRIPTION :
       Horner's method to evaluate a polynomial at a point.

@@ -35,7 +35,7 @@ void Transpose ( int n, int m, POLY a[n][m], POLY b[m][n] );
 void free_matrix ( int n, int m, POLY a[n][m]);
 /* free the memory for each entry in a polynomial matrix */
 
-POLY Inverse_Poly ( int n, POLY M[n][n] );
+POLY Inverse_Poly ( int n, POLY (*M)[n] );
 /* get the inverse matrix of polynomial matrix M, M_Inverse = 1/ds * M, where the ds is the
 least 
   common denominator of the inverse matrix, M is the corresponding polynomial matrix */
