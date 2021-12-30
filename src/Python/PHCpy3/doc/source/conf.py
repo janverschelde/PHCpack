@@ -222,7 +222,7 @@ latex_elements = {
 #'pointsize': '10pt',
 
 # Additional stuff for the LaTeX preamble.
-'preamble': '\usepackage{amssymb}',
+'preamble': '\\usepackage{amssymb}',
 
 # Latex figure (float) alignment
 'figure_align': 'htbp',
