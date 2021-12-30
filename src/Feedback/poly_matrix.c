@@ -185,7 +185,7 @@ void free_matrix ( int n, int m, POLY a[n][m])
               free(a[i][j].p);
 }
 
-POLY Inverse_Poly ( int n, POLY M[n][n] )
+POLY Inverse_Poly ( int n, POLY (*M)[n] )
 { 
    POLY P[n][n], Q[n][n], t_M1[n][n], t_M2[n][n];
    POLY ds;

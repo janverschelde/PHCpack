@@ -236,7 +236,7 @@ void lusolve ( int n, dcmplx a[n][n], int ipvt[n], dcmplx b[n] )
    }
 }
 
-dcmplx determinant( int n, dcmplx a[n][n] )
+dcmplx determinant( int n, dcmplx (*a)[n] )
 {
   dcmplx lu[n][n], result;
   int ipvt[n], info, i, sign;

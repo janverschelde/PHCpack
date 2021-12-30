@@ -1,3 +1,7 @@
+Thu 30 Dec 2021 : updated dc_matrix.c, dc_roots.c, and poly_matrix.c,
+  for functions to match the updated prototypes, altered in the corresponding
+  header files.
+
 Wed 30 Jun 2021 : in poly_gcd.h and poly_gcd.c, renamed the gcd function
   into rootsGCD to resolve a conflict with a gcd in mixed_volume1.c.
   Updated ts_gcd.c as well.  Renamed the function feedback in ts_feedback.c

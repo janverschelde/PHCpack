@@ -81,7 +81,7 @@ void multiple_roots ( int n, dcmplx p[n], double eps, int maxit,
    }
 }
    
-dcmplx horner ( int n, dcmplx p[n], dcmplx x )
+dcmplx horner ( int n, dcmplx *p, dcmplx x )
 {
    dcmplx res = p[n-1];
    int i;
