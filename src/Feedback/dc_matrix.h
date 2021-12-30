@@ -53,7 +53,7 @@ void lusolve ( int n, dcmplx a[n][n], int ipvt[n], dcmplx b[n] );
    the matrix a and array ipvt are the output of lufac, the array
    b contains the solution on return */
 
-dcmplx determinant( int n, dcmplx a[n][n] );
+dcmplx determinant( int n, dcmplx (*a)[n] );
 /* returns the determinant of matrix a */
 
 void I_dcmatrix(int n, dcmplx a[n][n]);
