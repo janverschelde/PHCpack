@@ -24,7 +24,7 @@
 #include "inputData.h"
 #include "iTest.h"
 
-class data
+class theData
 {
    private:
 
@@ -33,10 +33,10 @@ class data
 
    public:
 
-      data();
-      ~data();
+      theData();
+      ~theData();
 
-      data *next;
+      theData *next;
 
       int flag;
       int polyDim;
@@ -155,13 +155,13 @@ class ftData
 
       int elemNum;
 
-      data* cur;
-      data* parent;
+      theData* cur;
+      theData* parent;
 
-      data* limit;
+      theData* limit;
 
-      data* head;
-      data* last;
+      theData* head;
+      theData* last;
 
       void create_elem(int row, int col, int termS, int polyDim);
       void add_elem();
@@ -181,20 +181,20 @@ class ftData
       void make_init_data(int termSumNum, int supN, int termS, int reTermS);
       void next_data(); 
 
-      void copy(int col, data* pre_data);
-      void get_ptr(data* pre_data);
+      void copy(int col, theData* pre_data);
+      void get_ptr(theData* pre_data);
 
       // iCheck -->
       void create_rIdx(int nbN, int repIdx, int* candIdx);
       void init_info();
 
       void get_nbIdx_rIdx ( int preNbN, int repIdx, int* candIdx, 
-                            int reTermS, data* pre_data );
+                            int reTermS, theData* pre_data );
 
       void iCopy ( int nbN, int nfN, int repIdx, 
-                   int termS, int reTermS, int* candIdx, data* pre_data );
+                   int termS, int reTermS, int* candIdx, theData* pre_data );
 
-      void iGetPtr(data* pre_data);
+      void iGetPtr(theData* pre_data);
 
   // <--
 
@@ -202,12 +202,12 @@ class ftData
       void output(int repIdx, int* idx2, int* nbN, int* nfN);
 
       void decrease_nfN();
-      void copy_rIdx(data* pre_data, int termS);
-      void copy_pivOutIdx(data* pre_data);
-      void get_nf_pos(data* pre_data, int nfN, int idx2);
+      void copy_rIdx(theData* pre_data, int termS);
+      void copy_pivOutIdx(theData* pre_data);
+      void get_nf_pos(theData* pre_data, int nfN, int idx2);
 
-      void mCopy(int nbN, int nfN, int idx2, int termS, data* pre_data);
-      void mGetPtr(data* pre_data);
+      void mCopy(int nbN, int nfN, int idx2, int termS, theData* pre_data);
+      void mGetPtr(theData* pre_data);
 
   // <--
 

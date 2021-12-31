@@ -89,21 +89,21 @@ class mvc
 
    void get_candIdx ( inifData& curInif );
 
-   int chooseSup ( int depth, data* curNode, 
+   int chooseSup ( int depth, theData* curNode, 
                    inifData* curInif, inifData* nextInif );
 
    void fUpdateDirRed ( inifData* curInif, inifData* nextInif, 
-                        data* curNode, int* curRsp, int depth );
+                        theData* curNode, int* curRsp, int depth );
 
    void updateDirRed ( inifData* curInif, inifData* nextInif, 
-                       data* curNode, int* curRsp, int depth );
+                       theData* curNode, int* curRsp, int depth );
 
   // flag -- CONTINUE (Go to feasTest or findMixedCell)
   //      -- STOP (Break loop)
-   int findUnbDir ( inifData* nextInif, data* curNode, 
+   int findUnbDir ( inifData* nextInif, theData* curNode, 
                     int* nextRsp, int* curRsp, int depth );
 
-   int findUnbDir_art ( inifData* nextInif, data* curNode, 
+   int findUnbDir_art ( inifData* nextInif, theData* curNode, 
                         int* nextRsp, int*curRsp, int depth );
 
    int checkDir ( uData** corPtr, uData* tarPtr,
@@ -118,12 +118,12 @@ class mvc
   
    void get_tuple_index ( ftData* Node, ftData* Data, int length );
 
-   void dbg_init_transMat ( data* curNode );
+   void dbg_init_transMat ( theData* curNode );
 
-   void dbg_transMat ( data* preNode, data* curNode );
-   void check_transMat ( data* preNode, data* curNode );
+   void dbg_transMat ( theData* preNode, theData* curNode );
+   void check_transMat ( theData* preNode, theData* curNode );
 
-   void check_init_transRed ( data* curNode );
+   void check_init_transRed ( theData* curNode );
 
    int checkSign_red ( double curRed, double tarRed )
    {
@@ -204,19 +204,20 @@ class mvc
 
   // flag  -- STOP (No node)
   //       -- Otherwise (Find a node)
-      int feasTest(int depth, data* parent);
+      int feasTest(int depth, theData* parent);
       int upFeasTest(int& depth);
 
-      void findMixedCell(int depth, data* parent);
+      void findMixedCell(int depth, theData* parent);
       void findAllMixedCells(int depth);
 
-      int iCheck ( int depth, data* parent, ftData& Data, inifData& inifData );
+      int iCheck
+            ( int depth, theData* parent, ftData& Data, inifData& inifData );
 
-      void iLP ( data* parent, ftData& Data, int depth, int idx_one, 
+      void iLP ( theData* parent, ftData& Data, int depth, int idx_one, 
                  int fst_pivInIdx, int sub_fst_pivInIdx, 
                  int preNbN, int& feaNum );
 
-      void iLP_Art ( data* parent, ftData& Data, int depth, int idx_one, 
+      void iLP_Art ( theData* parent, ftData& Data, int depth, int idx_one, 
                      int fst_pivInIdx, int sub_fst_pivInIdx, 
                      int preNbN, int& feaNum );
 
@@ -237,8 +238,8 @@ class mvc
                 int* repIdx, int* feaIdx, int tarIdx, int* mRepN,
                 int totalN, int depth, int& feaNum, int lvl, int length );
 
-      int checkBasis ( data* target, int sub_sIdx );
-      int checkAnotherBasis ( int repIdx, int dist, data** target );
+      int checkBasis ( theData* target, int sub_sIdx );
+      int checkAnotherBasis ( int repIdx, int dist, theData** target );
 
       void get_firIdx ( ftData data_a, ftData data_b, int sn, int lvl );
 

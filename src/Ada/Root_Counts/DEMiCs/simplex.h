@@ -319,15 +319,16 @@ class simplex
       double* lifting; 
  
   //
-      void get_iNbN_nfN ( data** cur, int lNbN, int lNfN ); // initCheck, iCheck
-      void get_mNbN_nfN ( data* parent, data** cur );  // mCheck
+      void get_iNbN_nfN ( theData** cur, int lNbN, int lNfN );
+       // initCheck, iCheck
+      void get_mNbN_nfN ( theData* parent, theData** cur );  // mCheck
 
       void get_repIdx_candIdx ( int* ori_candIdx, int ori_repIdxa ); 
-      void get_parent ( data* parent );
-      void get_cur ( data** cur ); 
+      void get_parent ( theData* parent );
+      void get_cur ( theData** cur ); 
 
       void get_res ( ftData& iData ); // fSolLP, solLP_art
-      void get_pivOutNum ( data** cur ); 
+      void get_pivOutNum ( theData** cur ); 
 
   //
       void get_nbN_nfN ( int ori_nbN, int ori_nfN );
@@ -339,12 +340,12 @@ class simplex
       void get_invB ( double* invB );
       void get_frIdx ( int ori_frIdx );
 
-      void copy_p1_d_sol ( data* cur )
+      void copy_p1_d_sol ( theData* cur )
       {
          memcpy(p1_d_sol, cur->d_sol, sizeof(double) * Dim); 
       };
  
-      void copy_eye(data** cur)
+      void copy_eye(theData** cur)
       {
          memcpy((*cur)->transMat, eye, sizeof(double) * Dim * Dim);
       };
@@ -370,7 +371,8 @@ class simplex
       void fstRed_candIdx ( inifData& curInif, int** mCandIdx, 
                             int& pivInIdx, int& sub_pivInIdx );
 
-      void cal_redVec ( int termS, int reTermS, int fst_pivInIdx, data** cur );
+      void cal_redVec
+             ( int termS, int reTermS, int fst_pivInIdx, theData** cur );
       double put_redCost ( int fst_pivInIdx )
       {
          return (fst_redVec[fst_pivInIdx] - fst_redVec[repIdx]);
@@ -420,8 +422,8 @@ class simplex
       };
 
   //
-      void check_dirRed(data* parent, int depth);
-      void dbg_dirRed(data* parent, inifData* nextInif, int depth);
+      void check_dirRed(theData* parent, int depth);
+      void dbg_dirRed(theData* parent, inifData* nextInif, int depth);
 
   //
       void info_mv();

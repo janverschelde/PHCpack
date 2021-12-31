@@ -3127,7 +3127,7 @@ int simplex::fSolLP( int termS, int reTermS, int& iter )
 }
 
 void simplex::cal_redVec
- ( int termS, int reTermS, int fst_pivInIdx, data** cur )
+ ( int termS, int reTermS, int fst_pivInIdx, theData** cur )
 {
    int i, cnt;
   
@@ -3147,7 +3147,7 @@ void simplex::cal_redVec
    // cout << "\n\n";
 }
 
-void simplex::get_iNbN_nfN ( data** cur, int lNbN, int lNfN )
+void simplex::get_iNbN_nfN ( theData** cur, int lNbN, int lNfN )
 {
    (*cur)->nbN = (nbN = lNbN);
    (*cur)->nfN = (nfN = lNfN);
@@ -3164,7 +3164,7 @@ void simplex::get_res ( ftData& iData )
    // iData.cur->pivOutNum = pivOutNum;
 }
 
-void simplex::get_pivOutNum ( data** cur )
+void simplex::get_pivOutNum ( theData** cur )
 {
    (*cur)->pivOutNum = pivOutNum;
 }
@@ -3674,7 +3674,7 @@ int simplex::initIter
    return (flag); // added because end of control of non-void function ...
 }
 
-void simplex::get_mNbN_nfN ( data* parent, data** cur )
+void simplex::get_mNbN_nfN ( theData* parent, theData** cur )
 {
    (*cur)->nbN = (nbN = parent->nbN);
    (*cur)->nfN = (nfN = parent->nfN);
@@ -3686,7 +3686,7 @@ void simplex::get_repIdx_candIdx ( int* ori_candIdx, int ori_repIdx )
    candIdx = ori_candIdx;
 }
 
-void simplex::get_parent ( data* parent )
+void simplex::get_parent ( theData* parent )
 {
    // cout << "<< get_parent >> \n\n";
   	
@@ -3704,7 +3704,7 @@ void simplex::get_parent ( data* parent )
    pre_transRed = parent->transRed_ptr;
 }
 
-void simplex::get_cur ( data** cur )
+void simplex::get_cur ( theData** cur )
 {
    p_sol = (*cur)->p_sol;
    d_sol = (*cur)->d_sol;
@@ -3892,7 +3892,7 @@ double simplex::matinv ( int n, double* a, double* a_inv )
    return det;
 }
 
-void simplex::check_dirRed ( data* parent, int depth )
+void simplex::check_dirRed ( theData* parent, int depth )
 {
    int i, j, k, ii;
    int nfPos, nfN, cnt = 0;
@@ -3968,7 +3968,7 @@ void simplex::check_dirRed ( data* parent, int depth )
    cout << "\n\n";
 }
 
-void simplex::dbg_dirRed ( data* parent, inifData* nextInif, int depth )
+void simplex::dbg_dirRed ( theData* parent, inifData* nextInif, int depth )
 {
    int i, j, k, ii;
    int nfPos, nfN, cnt = 0;

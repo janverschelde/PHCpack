@@ -76,9 +76,7 @@ project demics is
                 "filter_and_split_solutions.adb",
                 "track_paths.ads", "track_paths.adb", "ts_path_tracker.adb",
                 "phc_solver.ads", "phc_solver.adb",
-                "pieri_solver_trf.adb",
-                "weighted_projective_transfos.ads",
-                "weighted_projective_transfos.adb"
+                "pieri_solver_trf.adb"
             );
         when "windows" =>
             for Source_Dirs use

@@ -172,7 +172,7 @@ void mvc::get_candIdx ( inifData& curInif )
 }
 
 int mvc::chooseSup
- ( int depth, data* curNode, inifData* curInif, inifData* nextInif )
+ ( int depth, theData* curNode, inifData* curInif, inifData* nextInif )
 {
    int flag;
 
@@ -220,7 +220,7 @@ int mvc::chooseSup
 }
 
 void mvc::fUpdateDirRed
- ( inifData* curInif, inifData* nextInif, data* curNode, int* curRsp,
+ ( inifData* curInif, inifData* nextInif, theData* curNode, int* curRsp,
    int depth )
 {
    int i, j, k;
@@ -346,7 +346,7 @@ void mvc::fUpdateDirRed
 
 void mvc::updateDirRed
  ( inifData* curInif, inifData* nextInif, 
-   data* curNode, int* curRsp, int depth )
+   theData* curNode, int* curRsp, int depth )
 {
    int i, j, k;
    int num, nfPos, idx, nfN, flag;
@@ -452,7 +452,8 @@ void mvc::updateDirRed
 }
 
 int mvc::findUnbDir
- ( inifData* nextInif, data* curNode, int* nextRsp, int* curRsp, int depth )
+ ( inifData* nextInif, theData* curNode,
+   int* nextRsp, int* curRsp, int depth )
 {
    int i;
    int nfN, flag, lvl, length, cnt;
@@ -556,7 +557,8 @@ int mvc::findUnbDir
 }
 
 int mvc::findUnbDir_art
- ( inifData* nextInif, data* curNode, int* nextRsp, int* curRsp, int depth )
+ ( inifData* nextInif, theData* curNode,
+   int* nextRsp, int* curRsp, int depth )
 {
    int i;
    int nfN, flag, lvl, length, cnt;
@@ -907,7 +909,7 @@ void mvc::skipPtr ( uData** curr, uData** fHead )
    }
 }
 
-void mvc::dbg_init_transMat ( data* curNode )
+void mvc::dbg_init_transMat ( theData* curNode )
 {
   int i, j;
 
@@ -931,7 +933,7 @@ void mvc::dbg_init_transMat ( data* curNode )
   }
 }
 
-void mvc::dbg_transMat ( data* preNode, data* curNode )
+void mvc::dbg_transMat ( theData* preNode, theData* curNode )
 {
    int i, j, k;
    int nfN, nfPos;
@@ -964,7 +966,7 @@ void mvc::dbg_transMat ( data* preNode, data* curNode )
    }
 }
 
-void mvc::check_transMat ( data* preNode, data* curNode )
+void mvc::check_transMat ( theData* preNode, theData* curNode )
 {
    int i, j, k;
   
@@ -1940,7 +1942,7 @@ int mvc::mLP
 
    double fst_redCost;
 
-   data* target;
+   theData* target;
 
 #if DBG_SUC
    cout << "---< mLP >---\n\n";
@@ -2174,7 +2176,7 @@ int mvc::mLP
    return (CONTINUE);
 }
 
-int mvc::checkBasis ( data* target, int sub_sIdx )
+int mvc::checkBasis ( theData* target, int sub_sIdx )
 {
    if(target->rIdx[sub_sIdx - 1] >= 0)
       return (OPT);
@@ -2182,7 +2184,7 @@ int mvc::checkBasis ( data* target, int sub_sIdx )
       return (CONTINUE);
 }
 
-int mvc::checkAnotherBasis ( int repIdx, int dist, data** target )
+int mvc::checkAnotherBasis ( int repIdx, int dist, theData** target )
 {
    // cout << "===========<< checkAnotherBasis >>===========\n\n";
   
@@ -2273,7 +2275,7 @@ void mvc::initFeasTest ( int depth )
    // dbg_init_transMat(lv[sn].Node->parent);
 }
 
-int mvc::feasTest ( int depth, data* parent )
+int mvc::feasTest ( int depth, theData* parent )
 {
    int lvl, length, feaNum, sn, flag;
 
@@ -2353,7 +2355,7 @@ int mvc::upFeasTest ( int& depth )
    return (flag);
 }
 
-void mvc::findMixedCell ( int depth, data* parent )
+void mvc::findMixedCell ( int depth, theData* parent )
 {
    int lvl, length, feaNum, sn, flag;
 
@@ -2431,7 +2433,8 @@ void mvc::findAllMixedCells ( int depth )
    }
 }
 
-int mvc::iCheck ( int depth, data* parent, ftData& Data, inifData& curInif )
+int mvc::iCheck
+ ( int depth, theData* parent, ftData& Data, inifData& curInif )
 {
    int feaNum = 0;
    int preNbN, sn, flag;
@@ -2553,7 +2556,7 @@ int mvc::iCheck ( int depth, data* parent, ftData& Data, inifData& curInif )
 }
 
 void mvc::iLP
- ( data* parent, ftData& Data, int depth, int idx_one, int fst_pivInIdx,
+ ( theData* parent, ftData& Data, int depth, int idx_one, int fst_pivInIdx,
    int sub_fst_pivInIdx, int preNbN, int& feaNum )
 {
    int flag, fst_pivInIdx2, sub_fst_pivInIdx2, sn, iter;
@@ -2700,7 +2703,7 @@ void mvc::iLP
 }
 
 void mvc::iLP_Art
- ( data* parent, ftData& Data, int depth, int idx_one, 
+ ( theData* parent, ftData& Data, int depth, int idx_one, 
    int fst_pivInIdx, int sub_fst_pivInIdx, int preNbN, int& feaNum )
 {
    int flag, termS, reTermS, repIdx, sn, iter, lNfN;

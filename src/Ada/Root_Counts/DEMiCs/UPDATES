@@ -1,3 +1,7 @@
+Fri 31 Dec 2021 : because of std::data, replace all "data" by "theData"
+  in fTest.h, fTest.cpp, smplex.h, simplex.cpp, mvc.h, mvc.cpp.
+  Update demics.gpr for the removal of weighted_projective_transfos.
+
 Sun 27 Jun 2021 : updated demics.gpr to no longer exclude the C MixedVol.
   Updated demics.gpr for the removal of the obsolete face_structures.
   Updated demics.gpr for the removal of evaluate_schubert_conditions.

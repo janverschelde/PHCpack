@@ -19,7 +19,7 @@
 
 #include "fTest.h"
 
-data::data()
+theData::theData()
 {
    row = 0;
    col = 0;
@@ -79,7 +79,7 @@ data::data()
    nodeLabel = NULL;
 }
 
-data::~data()
+theData::~theData()
 {
    delete [] invB;
    delete [] transMat;
@@ -102,7 +102,8 @@ data::~data()
    delete [] nodeLabel;
 }
 
-void data::create ( int ori_row, int ori_col, int ori_termS, int ori_polyDim )
+void theData::create
+ ( int ori_row, int ori_col, int ori_termS, int ori_polyDim )
 {
    // cout << "<< create >> \n";
   
@@ -164,7 +165,7 @@ void data::create ( int ori_row, int ori_col, int ori_termS, int ori_polyDim )
    assert(nodeLabel);
 }
 
-void data::joint()
+void theData::joint()
 {
    invB_ptr = invB;  
 
@@ -182,7 +183,7 @@ void data::joint()
    nf_pos_ptr = nf_pos; 
 }
 
-void data::iJoint()
+void theData::iJoint()
 {
    transMat_ptr = transMat;
    transRed_ptr = transRed;
@@ -191,12 +192,12 @@ void data::iJoint()
    nbIdx_ptr = nbIdx; 
 }
 
-void data::mJoint()
+void theData::mJoint()
 {
    nf_pos_ptr = nf_pos;
 }
 
-void data::clear()
+void theData::clear()
 {
    nbN = 0;
    nfN = 0;
@@ -213,12 +214,12 @@ void data::clear()
    memset(rIdx, 0, termS * sizeof(int));
 }
 
-void data::clear_transMat()
+void theData::clear_transMat()
 {
    memset(transMat, 0, row * row * sizeof(double));
 }
 
-void data::put_info ( int repIdx, int& idx2, int& lNbN, int& lNfN )
+void theData::put_info ( int repIdx, int& idx2, int& lNbN, int& lNfN )
 {
    idx2 = rIdx[repIdx];
 
@@ -226,7 +227,7 @@ void data::put_info ( int repIdx, int& idx2, int& lNbN, int& lNfN )
    lNfN = nfN;
 }
 
-void data::info_p_sol()
+void theData::info_p_sol()
 {
    int i;
 
@@ -236,7 +237,7 @@ void data::info_p_sol()
    cout << "\n\n";
 }
 
-void data::info_d_sol()
+void theData::info_d_sol()
 {
    int i;
 
@@ -246,7 +247,7 @@ void data::info_d_sol()
    cout << "\n\n";
 }
 
-void data::info_invB()
+void theData::info_invB()
 {
    int i, j;
    double val;
@@ -277,7 +278,7 @@ void data::info_invB()
    cout << "\n\n";
 }
 
-void data::info_transMat()
+void theData::info_transMat()
 {
    int i, j;
 
@@ -312,7 +313,7 @@ void data::info_transMat()
    cout << "\n\n";
 }
 
-void data::info_transRed()
+void theData::info_transRed()
 {
    int i;
    double val;
@@ -339,7 +340,7 @@ void data::info_transRed()
    cout << "\n\n";
 }
 
-void data::info_basisIdx()
+void theData::info_basisIdx()
 {
    int i;
 
@@ -349,7 +350,7 @@ void data::info_basisIdx()
    cout << "\n\n";
 }
 
-void data::info_nf_pos()
+void theData::info_nf_pos()
 {
    int i;
 
@@ -359,7 +360,7 @@ void data::info_nf_pos()
    cout << "\n\n";
 }
 
-void data::info_nbIdx()
+void theData::info_nbIdx()
 {
    int i;
 
@@ -369,7 +370,7 @@ void data::info_nbIdx()
    cout << "\n\n";
 }
 
-void data::info_redVec()
+void theData::info_redVec()
 {
    int i;
 
@@ -383,7 +384,7 @@ void data::info_redVec()
    cout << "\n\n";
 }
 
-void data::info_rIdx()
+void theData::info_rIdx()
 {
    int i;
 
@@ -392,7 +393,7 @@ void data::info_rIdx()
    cout << "\n\n";
 }
 
-void data::info_pivOutIdx()
+void theData::info_pivOutIdx()
 {
    int i;
 
@@ -405,7 +406,7 @@ void data::info_pivOutIdx()
    cout << "\n\n";
 }
 
-void data::info_p_sol_ptr()
+void theData::info_p_sol_ptr()
 {
    int i;
 
@@ -415,7 +416,7 @@ void data::info_p_sol_ptr()
    cout << "\n\n";
 }
 
-void data::info_d_sol_ptr()
+void theData::info_d_sol_ptr()
 {
    int i;
 
@@ -425,7 +426,7 @@ void data::info_d_sol_ptr()
    cout << "\n\n";
 }
 
-void data::info_invB_ptr()
+void theData::info_invB_ptr()
 {
    int i, j;
    double val;
@@ -456,7 +457,7 @@ void data::info_invB_ptr()
    cout << "\n\n";
 }
 
-void data::info_transMat_ptr()
+void theData::info_transMat_ptr()
 {
    int i, j;
 
@@ -491,7 +492,7 @@ void data::info_transMat_ptr()
    cout << "\n\n";
 }
 
-void data::info_transRed_ptr()
+void theData::info_transRed_ptr()
 {
    int i;
    double val;
@@ -518,7 +519,7 @@ void data::info_transRed_ptr()
    cout << "\n\n";
 }
 
-void data::info_basisIdx_ptr()
+void theData::info_basisIdx_ptr()
 {
    int i;
 
@@ -528,7 +529,7 @@ void data::info_basisIdx_ptr()
    cout << "\n\n";
 }
 
-void data::info_nf_pos_ptr()
+void theData::info_nf_pos_ptr()
 {
    int i;
 
@@ -538,7 +539,7 @@ void data::info_nf_pos_ptr()
    cout << "\n\n";
 }
 
-void data::info_nbIdx_ptr()
+void theData::info_nbIdx_ptr()
 {
    int i;
 
@@ -548,7 +549,7 @@ void data::info_nbIdx_ptr()
    cout << "\n\n";
 }
 
-void data::info_redVec_ptr()
+void theData::info_redVec_ptr()
 {
    int i;
 
@@ -562,12 +563,12 @@ void data::info_redVec_ptr()
    cout << "\n\n";
 }
 
-void data::info_fIdx()
+void theData::info_fIdx()
 {
    cout << fIdx + 1 << "\n";
 }
 
-void data::info_node()
+void theData::info_node()
 {
    int i;
 
@@ -601,9 +602,9 @@ ftData::~ftData()
 
 void ftData::create_elem ( int row, int col, int termS, int polyDim )
 {
-   data *newData;
+   theData *newData;
 
-   newData = new data;
+   newData = new theData;
   
    (*newData).create(row, col, termS, polyDim);
 
@@ -632,7 +633,7 @@ void ftData::mark()
 
 void ftData::clear()
 {
-   data *curr;
+   theData *curr;
 
    curr = head;
 
@@ -645,7 +646,7 @@ void ftData::clear()
 
 void ftData::clear_transMat()
 {
-   data *curr;
+   theData *curr;
 
    curr = head;
 
@@ -663,7 +664,7 @@ void ftData::delete_cur()
 
 void ftData::delete_all()
 {
-   data *curr, *tmp;
+   theData *curr, *tmp;
 
    curr = head;
 
@@ -722,7 +723,7 @@ void ftData::delete_all()
 void ftData::delete_addedElem()
 {
    int num = 0;
-   data *curr, *tmp;
+   theData *curr, *tmp;
 
    // cout << "<< delete_addedElem >>\n\n";
 
@@ -820,7 +821,7 @@ void ftData::init_info()
 }
 
 void ftData::get_nbIdx_rIdx ( int preNbN, int repIdx, int* candIdx, 
-                              int reTermS, data* pre_data )
+                              int reTermS, theData* pre_data )
 {
    int i, cnt;
    int idx, sub_idx, candNum, pre_length;
@@ -859,8 +860,8 @@ void ftData::get_nbIdx_rIdx ( int preNbN, int repIdx, int* candIdx,
    }
 }
 
-void ftData::iCopy ( int preNbN, int nfN, int repIdx, 
-                     int termS, int reTermS, int* candIdx, data* pre_data )
+void ftData::iCopy ( int preNbN, int nfN, int repIdx, int termS,
+                     int reTermS, int* candIdx, theData* pre_data )
 {
    int i, j;
    int ii, nfPos, pre_length;
@@ -910,7 +911,7 @@ void ftData::iCopy ( int preNbN, int nfN, int repIdx,
    }
 }
 
-void ftData::iGetPtr(data* pre_data)
+void ftData::iGetPtr(theData* pre_data)
 {
    cur->invB_ptr = pre_data->invB_ptr;
 
@@ -921,14 +922,14 @@ void ftData::iGetPtr(data* pre_data)
    cur->nf_pos_ptr = pre_data->nf_pos_ptr;
 }
 
-void ftData::copy_rIdx(data* pre_data, int termS)
+void ftData::copy_rIdx(theData* pre_data, int termS)
 {
    (*cur).artV = (*pre_data).artV;
 
    memcpy((*cur).rIdx, (*pre_data).rIdx, sizeof(int) * termS);
 }
 
-void ftData::copy_pivOutIdx(data* pre_data)
+void ftData::copy_pivOutIdx(theData* pre_data)
 {
    int i; 
    int pivOutNum, idx;
@@ -946,7 +947,7 @@ void ftData::copy_pivOutIdx(data* pre_data)
    }
 }
 
-void ftData::get_nf_pos ( data* pre_data, int nfN, int idx2 )
+void ftData::get_nf_pos ( theData* pre_data, int nfN, int idx2 )
 {
    int i;
    int nfPos, cnt;
@@ -966,7 +967,8 @@ void ftData::get_nf_pos ( data* pre_data, int nfN, int idx2 )
    (*cur).nfN--;
 }
 
-void ftData::mCopy ( int nbN, int nfN,  int idx2, int termS, data* pre_data )
+void ftData::mCopy
+ ( int nbN, int nfN,  int idx2, int termS, theData* pre_data )
 {
    int i, j;
    int ii, nfPos, cnt;
@@ -1000,7 +1002,7 @@ void ftData::mCopy ( int nbN, int nfN,  int idx2, int termS, data* pre_data )
    (*cur).nfN--;
 }
 
-void ftData::mGetPtr ( data* pre_data )
+void ftData::mGetPtr ( theData* pre_data )
 {
    // cur->artV = pre_data->artV;
 
@@ -1018,7 +1020,7 @@ void ftData::mGetPtr ( data* pre_data )
    cur->nbIdx_ptr = pre_data->nbIdx_ptr;
 }
 
-void ftData::copy ( int col, data* pre_data )
+void ftData::copy ( int col, theData* pre_data )
 {
    // cout << "<< n_copy >> \n\n";
 
@@ -1028,7 +1030,7 @@ void ftData::copy ( int col, data* pre_data )
    memcpy((*cur).nbIdx, (*pre_data).nbIdx_ptr, sizeof(int) * (col - Dim));
 }
 
-void ftData::get_ptr(data* pre_data)
+void ftData::get_ptr(theData* pre_data)
 {
    // cout << "<< n_copy >> \n\n";
 
@@ -1332,7 +1334,7 @@ void ftData::info_all_node()
 {
    int i;
 
-   data *curr;
+   theData *curr;
 
    curr = head;
 
@@ -1355,7 +1357,7 @@ void ftData::info_all_node()
 void ftData::info_all_cur()
 {
    int num;
-   data *curr;
+   theData *curr;
 
    num = 0;
    curr = head;
@@ -1385,7 +1387,7 @@ void ftData::info_all_nodeNum()
 {
    int i;
 
-   data *curr;
+   theData *curr;
 
    curr = head;
 
@@ -1406,7 +1408,7 @@ void ftData::info_all_nodeNum()
 void ftData::info_numElem()
 {
    int num;
-   data *curr;
+   theData *curr;
 
    curr = head;
    num = 0;
