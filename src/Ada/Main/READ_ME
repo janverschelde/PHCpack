@@ -28,6 +28,9 @@ at the PowerShell prompt.
 The "gprclean main.gpr" removes all files created by gprbuild.
 On windows, add the "-Xos=windows" at the end of the gprclean command.
 
+To build the shared object file libPHCpack, run "gprbuild phclib.gpr",
+or "gprbuild phclib.gpr -Xos=windows" on Windows.
+
 -------------------------------------------------------------------------------
 file name                        : short description
 -------------------------------------------------------------------------------
