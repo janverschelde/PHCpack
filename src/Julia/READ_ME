@@ -1,0 +1,15 @@
+interface for Julia based on the shared object libPHCpack in PHCv2.4.86
+
+This folder was added in release 2.4.86, after the definition
+of phclib.gpr which builds libPHCpack with GPRbuild.
+
+For the Julia code to work, the file ../lib/libPHCpack,
+with the extension .so (Linux), .dll (Windows), or .dylib (Mac OS X)
+must be present.
+
+------------------------------------------------------------------------------
+file name              : short description
+------------------------------------------------------------------------------
+version.jl             : prints the version string of PHCpack
+------------------------------------------------------------------------------
+
