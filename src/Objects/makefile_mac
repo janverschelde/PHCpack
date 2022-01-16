@@ -35,7 +35,7 @@ QD_LIB=/usr/local/lib
 
 # Definitions of the PHCpack specific names start here:
 
-PHCLib=../Lib
+PHCLib=../C
 PHCAda=../Ada
 MPILib=../MPI
 PHCgpu=../GPU

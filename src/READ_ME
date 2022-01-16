@@ -7,7 +7,7 @@ The public distribution for PHCpack version 2.4.85 contains
   Feedback   realization of feedback laws, with Yusong Wang
   GPU        code for NVIDIA Graphics Processing Units
              developed in collaboration with Genady Yoffe and Xiangcheng Yu
-  Lib        PHCpack as a C library of algorithms
+  C          the C interface code to PHCpack as a library of algorithms
   Macaulay2  simple Macaulay2 interface to Littlewood-Richardson homotopies
              and PHCpack.m2 with Elizabeth Gross and Sonja Petrovic,
              with contributions of Anton Leykin

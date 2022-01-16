@@ -53,7 +53,7 @@ SDK_HOME=/usr/local/cuda/sdk
 
 # Definitions of PHCpack specific names start here:
 
-PHCLib=../Lib
+PHCLib=../C
 PHCAda=../Ada
 MPILib=../MPI
 PHCgpu=../GPU

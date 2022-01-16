@@ -1,4 +1,4 @@
-PHCpack as a library of C functions with a state machine in PHCv2.4.85
+PHCpack as a library of C functions with a state machine in PHCv2.4.86
 
 This directory collects header files and definitions of C which bind the
 operations of PHCpack as a state machine in a systematic manner.
@@ -9,6 +9,9 @@ having arrays of parameters.
 
 This C library was used for the C extension module for Python and
 to integrate the Path library, moved to the ../Mod folder in v2.4.85.
+
+In v2.4.86, this folder was renamed from Lib into C,
+because the "lib" folder will hold the libPHCpack shared object file.
 
 Support for Laurent systems was added in version 2.3.72.
 New in 2.3.84 are path trackers with generators, available in the files
