@@ -2,12 +2,13 @@ The public distribution for PHCpack version 2.4.85 contains
 
   Ada        Ada sources
   bin        binary versions of phc
-  doc        documentation in restructured text for Sphinx
+  C          the C interface code to PHCpack as a library of algorithms
   cgi        scripts for the web interface, developed by Xiangcheng Yu
+  doc        documentation in restructured text for Sphinx
   Feedback   realization of feedback laws, with Yusong Wang
   GPU        code for NVIDIA Graphics Processing Units
              developed in collaboration with Genady Yoffe and Xiangcheng Yu
-  C          the C interface code to PHCpack as a library of algorithms
+  lib        location of the shared object file libPHCpack
   Macaulay2  simple Macaulay2 interface to Littlewood-Richardson homotopies
              and PHCpack.m2 with Elizabeth Gross and Sonja Petrovic,
              with contributions of Anton Leykin
@@ -15,7 +16,7 @@ The public distribution for PHCpack version 2.4.85 contains
   Mod        defines the code of the extension module for Python
   MPI        parallel PHCpack, bindings to MPI,
              in collaboration with Yusong Wang, Anton Leykin, Yan Zhuang
-  Objects    makefile, .o and .ali files to create phc
+  Objects    makefiles, .o and .ali files to create phc
   Octave     interface with Octave and MATLAB, jointly with Yun Guan
   Python     basic Python interface started with Kathy Piret; is now phcpy
 

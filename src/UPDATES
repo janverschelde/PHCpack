@@ -1,4 +1,4 @@
-Sun 16 Jan 2022 : renamed the directory Lib into C.
+Sun 16 Jan 2022 : renamed the directory Lib into C.  Added lib as a folder.
 
 Tue 22 Jun 2021 : new directory Mod with the code for the extension module
   for Python, to define phcpy.
