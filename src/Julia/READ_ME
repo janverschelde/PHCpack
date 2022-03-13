@@ -7,9 +7,27 @@ For the Julia code to work, the file ../lib/libPHCpack,
 with the extension .so (Linux), .dll (Windows), or .dylib (Mac OS X)
 must be present.
 
-------------------------------------------------------------------------------
-file name              : short description
-------------------------------------------------------------------------------
-version.jl             : prints the version string of PHCpack
-------------------------------------------------------------------------------
+The module JuPHC is defined by the files in this folder.
 
+-----------------------------------------------------------------------------
+file name              : short description
+-----------------------------------------------------------------------------
+hellophc.jl            : calls the main phctop
+JuPHC.jl               : defines the module JuPHC
+-----------------------------------------------------------------------------
+version.jl             : prints the version string of PHCpack
+setDoubleDimension.jl  : sets the number of polynomials in double precision
+getDoubleDimension.jl  : gets the number of polynomials in double precision
+setDoublePolynomial.jl : sets a polynomial in double precision
+getDoublePolynomial.jl : gets a polynomial in double precision
+setDoubleSystem.jl     : sets a system in double precision
+getDoubleSystem.jl     : gets a system in double precision
+solveDoubleSystem.jl   : solves a system in double precision
+getDoubleSolution.jl   : gets a solution in double precision
+-----------------------------------------------------------------------------
+showVersion.jl         : prints the version
+showDimension.jl       : shows set and get of the dimension
+showPolynomial.jl      : shows set and get of a polynomial
+showSystem.jl          : shows set and get of a system
+showSolve.jl           : shows solving of a system
+-----------------------------------------------------------------------------
