@@ -18,6 +18,7 @@ export setDoublePolynomial, getDoublePolynomial
 export setDoubleSystem, getDoubleSystem
 export solveDoubleSystem
 export getDoubleSolution
+export mixedVolume, stableMixedVolume
 
 include("version.jl")
 include("setDoubleDimension.jl")
@@ -28,5 +29,7 @@ include("setDoubleSystem.jl")
 include("getDoubleSystem.jl")
 include("solveDoubleSystem.jl")
 include("getDoubleSolution.jl")
+include("mixedVolume.jl")
+include("stableMixedVolume.jl")
 
 end
