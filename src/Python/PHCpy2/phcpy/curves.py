@@ -177,6 +177,16 @@ def tune_homotopy_continuation_parameters():
                 val = float(raw_input(valprompt))
                 set_homotopy_continuation_parameter(idx, val);
 
+def reset_homotopy_continuation_parameters(precision=0):
+    """
+    Resets the homotopy continuation parameters for the step-by-step
+    path trackers, using the value of the precision, 0 for double,
+    1 for double double, or 2 for quad double.
+    """
+    from phcpy.phcpy2c2 \
+        import py2c_padcon_reset_homotopy_continuation_parameters
+    return py2c_padcon_reset_homotopy_continuation_parameters(precision)
+
 def standard_track\
     (target, start, sols, filename="", verbose=False, mhom=0, partition=None):
     r"""
