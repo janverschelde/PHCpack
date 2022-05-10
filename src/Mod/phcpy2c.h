@@ -6017,6 +6017,15 @@ static PyObject *py2c_padcon_set_homotopy_continuation_parameter
  *   The second parameter is the value of the k-th parameter,
  *   parsed as a floating point number. */
 
+static PyObject *py2c_padcon_reset_homotopy_continuation_parameters
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Resets the value of the homotopy continuation parameters
+ *   for the step-by-step path trackers.
+ *   The first parameter is an integer number, 0, 1, or 2,
+ *   respectively for double, double double, or quad double precision. */
+
 static PyObject *py2c_padcon_standard_track
  ( PyObject *self, PyObject *args );
 /*

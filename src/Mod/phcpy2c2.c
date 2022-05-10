@@ -8428,6 +8428,17 @@ static PyObject *py2c_padcon_set_homotopy_continuation_parameter
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_padcon_reset_homotopy_continuation_parameters
+ ( PyObject *self, PyObject *args )
+{
+   int fail,prc;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&prc)) return NULL;
+   fail = padcon_reset_homotopy_continuation_parameters(prc);
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_padcon_standard_track
  ( PyObject *self, PyObject *args )
 {
@@ -11547,6 +11558,9 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_padcon_set_homotopy_continuation_parameter",
      py2c_padcon_set_homotopy_continuation_parameter, METH_VARARGS,
     "Sets the value of the k-th continuation parameter to the given value.\n The first parameter k is an integer number between 2 and 13.\n The second parameter is the value of the k-th parameter,\n parsed as a floating point number."},
+   {"py2c_padcon_reset_homotopy_continuation_parameters",
+     py2c_padcon_reset_homotopy_continuation_parameters, METH_VARARGS,
+    "Resets the value of the homotopy continuation parameters\n for the step-by-step path trackers.\n The first parameter is an integer number, 0, 1, or 2,\n respectively for double, double double, or quad double precision."},
    {"py2c_padcon_standard_track",
      py2c_padcon_standard_track, METH_VARARGS,
     "For the defined target, start system, and start solutions,\n launches the Pade continuation in standard double precision.\n Seven input parameters are expected:\n 1) the number of characters in the name of the output file;\n 2) a string which defines the name of the output file,\n if the string is empty, then no file is created;\n 3) a flag to indicate whether the output file is the defined output file\n (value 1 of the flag), or whether the file is local (value 0);\n 4) an integer for the verbose flag, if zero, then no extra\n information is written to file or screen;\n 5) an integer for the homogenization, if zero, tracking happens in\n affine space, if one, then tracking happens in 1-projective space,\n if m, for m > 1, then multihomogenization is applied;\n 6) an integer for the number of variables, 0 if the fifth parameter m\n is zero or one;\n 7) a string with the index representation for the partition of the\n set of variables, if the fifth parameter m is larger than one."},

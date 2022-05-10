@@ -8447,6 +8447,17 @@ static PyObject *py2c_padcon_set_homotopy_continuation_parameter
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_padcon_reset_homotopy_continuation_parameters
+ ( PyObject *self, PyObject *args )
+{
+   int fail,prc;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&prc)) return NULL;
+   fail = padcon_reset_homotopy_continuation_parameters(prc);
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_padcon_standard_track
  ( PyObject *self, PyObject *args )
 {
@@ -10481,28 +10492,28 @@ static PyMethodDef phcpy2c3_methods[] =
     "Returns the number of Laurent polynomials with coefficients in\n arbitrary multiprecision as stored in the systems container."},
    {"py2c_syscon_initialize_number_of_standard_polynomials",
      py2c_syscon_initialize_number_of_standard_polynomials, METH_VARARGS,
-    "Initializes the container for polynomials with coefficients in\n standard double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
+    "Initialzes the container for polynomials with coefficients in\n standard double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_initialize_number_of_dobldobl_polynomials",
      py2c_syscon_initialize_number_of_dobldobl_polynomials, METH_VARARGS,
-    "Initializes the container for polynomials with coefficients in\n double double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
+    "Initialzes the container for polynomials with coefficients in\n double double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_initialize_number_of_quaddobl_polynomials",
      py2c_syscon_initialize_number_of_quaddobl_polynomials, METH_VARARGS,
-    "Initializes the container for polynomials with coefficients in\n quad double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
+    "Initialzes the container for polynomials with coefficients in\n quad double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_initialize_number_of_multprec_polynomials",
      py2c_syscon_initialize_number_of_multprec_polynomials, METH_VARARGS,
-    "Initializes the container for polynomials with coefficients in\n arbitrary multiprecision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
+    "Initialzes the container for polynomials with coefficients in\n arbitrary multiprecision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_initialize_number_of_standard_Laurentials",
      py2c_syscon_initialize_number_of_standard_Laurentials, METH_VARARGS,
-    "Initializes the container for Laurent polynomials with coefficients\n in standard double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
+    "Initialzes the container for Laurent polynomials with coefficients\n in standard double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_initialize_number_of_dobldobl_Laurentials",
      py2c_syscon_initialize_number_of_dobldobl_Laurentials, METH_VARARGS,
-    "Initializes the container for Laurent polynomials with coefficients\n in double double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
+    "Initialzes the container for Laurent polynomials with coefficients\n in double double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_initialize_number_of_quaddobl_Laurentials",
      py2c_syscon_initialize_number_of_quaddobl_Laurentials, METH_VARARGS,
-    "Initializes the container for Laurent polynomials with coefficients\n in quad double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
+    "Initialzes the container for Laurent polynomials with coefficients\n in quad double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_initialize_number_of_multprec_Laurentials",
      py2c_syscon_initialize_number_of_multprec_Laurentials, METH_VARARGS,
-    "Initializes the container for Laurent polynomials with coefficients\n in arbitrary multiprecision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
+    "Initialzes the container for Laurent polynomials with coefficients\n in arbitrary multiprecision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_degree_of_standard_polynomial",
      py2c_syscon_degree_of_standard_polynomial, METH_VARARGS,
     "Returns the degree of the k-th polynomial in the container for\n polynomials with coefficients in standard double precision.\n The index k of the polynomial is the one input argument."},
@@ -10576,37 +10587,37 @@ static PyMethodDef phcpy2c3_methods[] =
     "Returns in d the total degree of the system with coefficients in\n standard double precision, as stored in the container."},
    {"py2c_syscon_standard_drop_variable_by_index",
      py2c_syscon_standard_drop_variable_by_index, METH_VARARGS,
-    "Replaces the system in the standard double precision container\n with the same system that has its k-th variable dropped.\n The index k of the variable is given as an input parameter.\n On return is the failure code, which equals zero if all went well."},
+    "Replaces the system in the standard double precision container\n with the same system that has its k-th variable dropped.\n The index k of the vaiable is given as an input parameter.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_syscon_standard_drop_variable_by_name",
      py2c_syscon_standard_drop_variable_by_name, METH_VARARGS,
     "Replaces the system in the standard double precision container\n with the same system that have that variable dropped\n corresponding to the name in the string s of nc characters long.\n The function has two input parameters, an integer and a string:\n 1) nc, the number of characters in the string with the name;\n 2) s, a string that holds the name of the variable.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_syscon_dobldobl_drop_variable_by_index",
      py2c_syscon_dobldobl_drop_variable_by_index, METH_VARARGS,
-    "Replaces the system in the double double precision container\n with the same system that has its k-th variable dropped.\n The index k of the variable is given as an input parameter.\n On return is the failure code, which equals zero if all went well."},
+    "Replaces the system in the double double precision container\n with the same system that has its k-th variable dropped.\n The index k of the vaiable is given as an input parameter.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_syscon_dobldobl_drop_variable_by_name",
      py2c_syscon_dobldobl_drop_variable_by_name, METH_VARARGS,
     "Replaces the system in the double double precision container\n with the same system that have that variable dropped\n corresponding to the name in the string s of nc characters long.\n The function has two input parameters, an integer and a string:\n 1) nc, the number of characters in the string with the name;\n 2) s, a string that holds the name of the variable.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_syscon_quaddobl_drop_variable_by_index",
      py2c_syscon_quaddobl_drop_variable_by_index, METH_VARARGS,
-    "Replaces the system in the quad double precision container\n with the same system that has its k-th variable dropped.\n The index k of the variable is given as an input parameter.\n On return is the failure code, which equals zero if all went well."},
+    "Replaces the system in the quad double precision container\n with the same system that has its k-th variable dropped.\n The index k of the vaiable is given as an input parameter.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_syscon_quaddobl_drop_variable_by_name",
      py2c_syscon_quaddobl_drop_variable_by_name, METH_VARARGS,
     "Replaces the system in the quad double precision container\n with the same system that have that variable dropped\n corresponding to the name in the string s of nc characters long.\n The function has two input parameters, an integer and a string:\n 1) nc, the number of characters in the string with the name;\n 2) s, a string that holds the name of the variable.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_syscon_standard_Laurent_drop_variable_by_index",
      py2c_syscon_standard_Laurent_drop_variable_by_index, METH_VARARGS,
-    "Replaces the Laurent system in the standard double precision container\n with the same Laurent system that has its k-th variable dropped.\n The index k of the variable is given as an input parameter.\n On return is the failure code, which equals zero if all went well."},
+    "Replaces the Laurent system in the standard double precision container\n with the same Laurent system that has its k-th variable dropped.\n The index k of the vaiable is given as an input parameter.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_syscon_standard_Laurent_drop_variable_by_name",
      py2c_syscon_standard_Laurent_drop_variable_by_name, METH_VARARGS,
     "Replaces the Laurent system in the standard double precision container\n with the same Laurent system that have that variable dropped\n corresponding to the name in the string s of nc characters long.\n The function has two input parameters, an integer and a string:\n 1) nc, the number of characters in the string with the name;\n 2) s, a string that holds the name of the variable.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_syscon_dobldobl_Laurent_drop_variable_by_index",
      py2c_syscon_dobldobl_Laurent_drop_variable_by_index, METH_VARARGS,
-    "Replaces the Laurent system in the double double precision container\n with the same Laurent system that has its k-th variable dropped.\n The index k of the variable is given as an input parameter.\n On return is the failure code, which equals zero if all went well."},
+    "Replaces the Laurent system in the double double precision container\n with the same Laurent system that has its k-th variable dropped.\n The index k of the vaiable is given as an input parameter.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_syscon_dobldobl_Laurent_drop_variable_by_name",
      py2c_syscon_dobldobl_Laurent_drop_variable_by_name, METH_VARARGS,
     "Replaces the Laurent system in the double double precision container\n with the same Laurent system that have that variable dropped\n corresponding to the name in the string s of nc characters long.\n The function has two input parameters, an integer and a string:\n 1) nc, the number of characters in the string with the name;\n 2) s, a string that holds the name of the variable.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_syscon_quaddobl_Laurent_drop_variable_by_index",
      py2c_syscon_quaddobl_Laurent_drop_variable_by_index, METH_VARARGS,
-    "Replaces the Laurent system in the quad double precision container\n with the same Laurent system that has its k-th variable dropped.\n The index k of the variable is given as an input parameter.\n On return is the failure code, which equals zero if all went well."},
+    "Replaces the Laurent system in the quad double precision container\n with the same Laurent system that has its k-th variable dropped.\n The index k of the vaiable is given as an input parameter.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_syscon_quaddobl_Laurent_drop_variable_by_name",
      py2c_syscon_quaddobl_Laurent_drop_variable_by_name, METH_VARARGS,
     "Replaces the Laurent system in the quad double precision container\n with the same Laurent system that have that variable dropped\n corresponding to the name in the string s of nc characters long.\n The function has two input parameters, an integer and a string:\n 1) nc, the number of characters in the string with the name;\n 2) s, a string that holds the name of the variable.\n On return is the failure code, which equals zero if all went well."},
@@ -11566,6 +11577,9 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_padcon_set_homotopy_continuation_parameter",
      py2c_padcon_set_homotopy_continuation_parameter, METH_VARARGS,
     "Sets the value of the k-th continuation parameter to the given value.\n The first parameter k is an integer number between 2 and 13.\n The second parameter is the value of the k-th parameter,\n parsed as a floating point number."},
+   {"py2c_padcon_reset_homotopy_continuation_parameters",
+     py2c_padcon_reset_homotopy_continuation_parameters, METH_VARARGS,
+    "Resets the value of the homotopy continuation parameters\n for the step-by-step path trackers.\n The first parameter is an integer number, 0, 1, or 2,\n respectively for double, double double, or quad double precision."},
    {"py2c_padcon_standard_track",
      py2c_padcon_standard_track, METH_VARARGS,
     "For the defined target, start system, and start solutions,\n launches the Pade continuation in standard double precision.\n Seven input parameters are expected:\n 1) the number of characters in the name of the output file;\n 2) a string which defines the name of the output file,\n if the string is empty, then no file is created;\n 3) a flag to indicate whether the output file is the defined output file\n (value 1 of the flag), or whether the file is local (value 0);\n 4) an integer for the verbose flag, if zero, then no extra\n information is written to file or screen;\n 5) an integer for the homogenization, if zero, tracking happens in\n affine space, if one, then tracking happens in 1-projective space,\n if m, for m > 1, then multihomogenization is applied;\n 6) an integer for the number of variables, 0 if the fifth parameter m\n is zero or one;\n 7) a string with the index representation for the partition of the\n set of variables, if the fifth parameter m is larger than one."},
