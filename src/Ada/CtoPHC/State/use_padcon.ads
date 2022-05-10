@@ -142,6 +142,9 @@ function use_padcon ( job : integer32;
 --                 the verbose option is in b[1], before execution,
 --                 the homotopy continuation parameters with job 0 is set
 --                 and target system is defined in PHCpack_Operations.
+--   job   =  23 : resets the homotopy continuation parameters for the
+--                 step-by-step path tracker, using the value for a[0]
+--                 for double (0), double double (1), or quad double (2).
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

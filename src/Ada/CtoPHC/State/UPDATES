@@ -1,3 +1,7 @@
+Tue 10 May 2022 : to pade_continuation_interface, added a function to
+  reset the homotopy continuation parameters, updated use_padcon,
+  and use_c2phc4c, to export the new function to C and Python.
+
 Wed 16 Jun 2021 : moved *fil* packages and test to ../Interface.
   Moved all *sys* containers and pools to ../Interface.
 

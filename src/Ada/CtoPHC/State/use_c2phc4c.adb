@@ -695,6 +695,7 @@ function use_c2phc4c ( job : integer32;
       when 737 => return use_padcon(2,a,b,c,vrblvl-1); -- get a parameter value
       when 738 => return use_padcon(3,a,b,c,vrblvl-1); -- set a parameter value
       when 739 => return use_padcon(4,a,b,c,vrblvl-1); -- track paths
+      when 740 => return use_padcon(23,a,b,c,vrblvl-1); -- reset parameters
      -- integer mixed cell configurations
       when 741..758 => return use_celcon(job-690,a,b,c,vrblvl-1);
      -- reading, writing Laurent start and target systems

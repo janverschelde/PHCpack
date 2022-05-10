@@ -89,6 +89,16 @@ package Pade_Continuation_Interface is
   --   Clears the data to store the values of the parameters.
   --   The vrblvl is the verbose level.
 
+  function Pade_Continuation_Parameters_Reset_Values
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Resets the values of the homotopy continuation parameters
+  --   for the step-by-step path trackers, for the precision
+  --   double if a[0] = 0, double double if a[0] = 1,
+  --   and quad double if a[0] = 2.
+
   function Pade_Continuation_Track_Paths
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;

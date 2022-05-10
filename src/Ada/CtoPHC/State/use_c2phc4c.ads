@@ -1064,6 +1064,9 @@ function use_c2phc4c ( job : integer32;
 --                 in a[3] is the value of the homogeneous coordinates flag,
 --                 on return are the end of the solution paths in the
 --                 double, double double, or quad double solutions container.
+--   job   = 740 : resets the homotopy continuation parameters for the
+--                 step-by-step path tracker, using the value for a[0]
+--                 for double (0), double double (1), or quad double (2).
 --   job   = 860 : initializes homotopy for a step-by-step execution
 --                 in double, double double, or quad double precision,
 --                 depending on whether a[0] is 0, 1, or 2, the verbose option

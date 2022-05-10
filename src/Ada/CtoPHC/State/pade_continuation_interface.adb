@@ -248,6 +248,38 @@ package body Pade_Continuation_Interface is
       return 736;
   end Pade_Continuation_Parameters_Clear;
 
+  function Pade_Continuation_Parameters_Reset_Values
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    prc : constant natural32 := natural32(v_a(v_a'first));
+
+    homconpars : constant Homotopy_Continuation_Parameters.Link_to_Parameters
+               := Homotopy_Continuation_Parameters.Retrieve;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in pade_continuation_interface.");
+      put_line("Pade_Continuation_Parameters_Reset_Values ...");
+    end if;
+    case prc is
+      when 0 => Standard_SeriesPade_Tracker.Init(homconpars.all);
+      when 1 => DoblDobl_SeriesPade_Tracker.Init(homconpars.all);
+      when 2 => QuadDobl_SeriesPade_Tracker.Init(homconpars.all);
+      when others => null;
+    end case;
+    return 0;
+  exception
+    when others =>
+      if vrblvl > 0 then
+        put("Exception raised in pade_continuation_interface.");
+        put_line("Pade_Continuation_Parameters_Reset_Values");
+      end if;
+      return 740;
+  end Pade_Continuation_Parameters_Reset_Values;
+
   procedure Standard_Track
               ( name : in string; localfile,verbose : in boolean;
                 mhom : in natural32;
