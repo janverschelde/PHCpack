@@ -197,6 +197,16 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val )
    return fail;
 }
 
+int padcon_reset_homotopy_continuation_parameters ( int prc )
+{
+   int fail,*b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(740,&prc,b,c,0);
+
+   return fail;
+}
+
 int padcon_prompt_for_homogenization ( void )
 {
    char ans,nlsb;

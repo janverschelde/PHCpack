@@ -1,3 +1,6 @@
+Tue 10 May 2022 : updated padcon.h and padcon.c with the new function to
+  reset the homotopy continuation parameters for the step-by-step trackers.
+
 Fri 25 Jun 2021 : updated lib.gpr and renamed the file to face.gpr.
 
 Thu 24 Jun 2021 : added a preliminary lib.gpr.

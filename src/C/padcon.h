@@ -72,6 +72,14 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val );
  * ON RETURN 
  *   val      the value for the k-th homotopy continuation parameter. */
 
+int padcon_reset_homotopy_continuation_parameters ( int prc );
+/*
+ * DESCRIPTION :
+ *   Resets the values of the homotopy continuation parameters
+ *   in the step-by-step path trackers, using the value of prc,
+ *   for double, double double, or quad double,
+ *   depending whether prc is respectively zero, one, or two. */
+
 int padcon_prompt_for_homogenization ( void );
 /*
  * DESCRIPTION :
