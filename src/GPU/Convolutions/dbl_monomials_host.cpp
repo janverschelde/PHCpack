@@ -173,7 +173,11 @@ void CPU_dbl_evaldiff
       int ix1 = idx[0]; int ix2 = idx[1];
 
       CPU_dbl_product(deg,input[ix1],input[ix2],output[dim]);
-      CPU_dbl_product(deg,output[dim],cff,output[dim]);
+      // CPU_dbl_product(deg,output[dim],cff,output[dim]); // wrong!
+      double *acc = new double[deg+1];
+      CPU_dbl_product(deg,output[dim],cff,acc);
+      for(int i=0; i<=deg; i++) output[dim][i] = acc[i];
+      free(acc);
 
       CPU_dbl_product(deg,cff,input[ix1],output[ix2]);
       CPU_dbl_product(deg,cff,input[ix2],output[ix1]);
@@ -247,8 +251,19 @@ void CPU_cmplx_evaldiff
       CPU_cmplx_product(deg,inputre[ix1],inputim[ix1],
                             inputre[ix2],inputim[ix2],
                             outputre[dim],outputim[dim]);
-      CPU_cmplx_product(deg,outputre[dim],outputim[dim],cffre,cffim,
-                            outputre[dim],outputim[dim]);
+      // CPU_cmplx_product(deg,outputre[dim],outputim[dim],cffre,cffim,
+      //                       outputre[dim],outputim[dim]);
+      double *accre = new double[deg+1];
+      double *accim = new double[deg+1];
+      CPU_cmplx_product
+         (deg,outputre[dim],outputim[dim],cffre,cffim,accre,accim);
+      for(int i=0; i<=deg; i++)
+      {
+         outputre[dim][i] = accre[i];
+         outputim[dim][i] = accim[i];
+      }
+      free(accre);
+      free(accim);
 
       CPU_cmplx_product(deg,cffre,cffim,inputre[ix1],inputim[ix1],
                                         outputre[ix2],outputim[ix2]);
