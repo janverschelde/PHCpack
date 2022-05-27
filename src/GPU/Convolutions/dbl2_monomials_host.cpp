@@ -195,8 +195,19 @@ void CPU_dbl2_evaldiff
 
       CPU_dbl2_product(deg,inputhi[ix1],inputlo[ix1],inputhi[ix2],
                        inputlo[ix2],outputhi[dim],outputlo[dim]);
-      CPU_dbl2_product(deg,outputhi[dim],outputlo[dim],cffhi,cfflo,
-                       outputhi[dim],outputlo[dim]);
+      // CPU_dbl2_product(deg,outputhi[dim],outputlo[dim],cffhi,cfflo,
+      //                  outputhi[dim],outputlo[dim]); // wrong!
+      double *acchi = new double[deg+1];
+      double *acclo = new double[deg+1];
+      CPU_dbl2_product(deg,outputhi[dim],outputlo[dim],
+                       cffhi,cfflo,acchi,acclo); 
+      for(int i=0; i<=deg; i++)
+      {
+         outputhi[dim][i] = acchi[i];
+         outputlo[dim][i] = acclo[i];
+      }
+      free(acchi);
+      free(acclo);
 
       CPU_dbl2_product(deg,cffhi,cfflo,inputhi[ix1],inputlo[ix1],
                        outputhi[ix2],outputlo[ix2]);
@@ -303,10 +314,26 @@ void CPU_cmplx2_evaldiff
          inputrehi[ix1],inputrelo[ix1],inputimhi[ix1],inputimlo[ix1],
          inputrehi[ix2],inputrelo[ix2],inputimhi[ix2],inputimlo[ix2],
          outputrehi[dim],outputrelo[dim],outputimhi[dim],outputimlo[dim]);
+      // CPU_cmplx2_product(deg, // wrong!
+      //    outputrehi[dim],outputrelo[dim],outputimhi[dim],outputimlo[dim],
+      //    cffrehi,cffrelo,cffimhi,cffimlo,
+      //    outputrehi[dim],outputrelo[dim],outputimhi[dim],outputimlo[dim]);
+      double *accrehi = new double[deg+1];
+      double *accrelo = new double[deg+1];
+      double *accimhi = new double[deg+1];
+      double *accimlo = new double[deg+1];
       CPU_cmplx2_product(deg,
          outputrehi[dim],outputrelo[dim],outputimhi[dim],outputimlo[dim],
-         cffrehi,cffrelo,cffimhi,cffimlo,
-         outputrehi[dim],outputrelo[dim],outputimhi[dim],outputimlo[dim]);
+         cffrehi,cffrelo,cffimhi,cffimlo,accrehi,accrelo,accimhi,accimlo);
+      for(int i=0; i<=deg; i++)
+      {
+         outputrehi[dim][i] = accrehi[i];
+         outputrelo[dim][i] = accrelo[i];
+         outputimhi[dim][i] = accimhi[i];
+         outputimlo[dim][i] = accimlo[i];
+      }
+      free(accrehi); free(accrelo);
+      free(accimhi); free(accimlo);
 
       CPU_cmplx2_product(deg,
          cffrehi,cffrelo,cffimhi,cffimlo,

@@ -1,5 +1,6 @@
 Thu 26 May 2022 : bugs fixed in dbl_monomials_host.cpp for the special case
   of two variables in the functions CPU_dbl_evaldiff and CPU_cmplx_evaldiff.
+  Fixed similar bugs in dbl2_monomials_host.cpp.
 
 Mon 28 Jun 2021 : extended random_series with function to generate series
   following the expansion of log(1+x).
