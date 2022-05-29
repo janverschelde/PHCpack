@@ -727,7 +727,7 @@ package body Witness_Interface is
     Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
     Standard_PolySys_Container.Clear;
     Standard_PolySys_Container.Initialize(ep.all);
-    Witness_Sets_io.Add_Embed_Symbols(dim);
+   -- Witness_Sets_io.Add_Embed_Symbols(dim);
     return 0;
   exception
     when others => 
@@ -758,7 +758,7 @@ package body Witness_Interface is
     Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
     DoblDobl_PolySys_Container.Clear;
     DoblDobl_PolySys_Container.Initialize(ep.all);
-    Witness_Sets_io.Add_Embed_Symbols(dim);
+   -- Witness_Sets_io.Add_Embed_Symbols(dim);
     return 0;
   exception
     when others => 
@@ -789,7 +789,7 @@ package body Witness_Interface is
     Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
     QuadDobl_PolySys_Container.Clear;
     QuadDobl_PolySys_Container.Initialize(ep.all);
-    Witness_Sets_io.Add_Embed_Symbols(dim);
+   -- Witness_Sets_io.Add_Embed_Symbols(dim);
     return 0;
   exception
     when others => 
@@ -820,7 +820,7 @@ package body Witness_Interface is
     Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
     Standard_LaurSys_Container.Clear;
     Standard_LaurSys_Container.Initialize(ep.all);
-    Witness_Sets_io.Add_Embed_Symbols(dim);
+   -- Witness_Sets_io.Add_Embed_Symbols(dim);
     return 0;
   exception
     when others => 
@@ -851,7 +851,7 @@ package body Witness_Interface is
     Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
     DoblDobl_LaurSys_Container.Clear;
     DoblDobl_LaurSys_Container.Initialize(ep.all);
-    Witness_Sets_io.Add_Embed_Symbols(dim);
+   -- Witness_Sets_io.Add_Embed_Symbols(dim);
     return 0;
   exception
     when others => 
@@ -882,7 +882,7 @@ package body Witness_Interface is
     Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
     QuadDobl_LaurSys_Container.Clear;
     QuadDobl_LaurSys_Container.Initialize(ep.all);
-    Witness_Sets_io.Add_Embed_Symbols(dim);
+   -- Witness_Sets_io.Add_Embed_Symbols(dim);
     return 0;
   exception
     when others => 

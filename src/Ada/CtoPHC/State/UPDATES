@@ -1,3 +1,6 @@
+Sun 29 May 2022 : fixed bug in witness_interface.adb, as square_and_embed
+  adds already the names of the embed symbols to the symbol table.
+
 Tue 10 May 2022 : to pade_continuation_interface, added a function to
   reset the homotopy continuation parameters, updated use_padcon,
   and use_c2phc4c, to export the new function to C and Python.
