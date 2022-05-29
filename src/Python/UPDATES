@@ -1,3 +1,6 @@
+Sun 29 May 2022 : in the sets module of the python2 and python3 versions,
+  added the verbose_level parameter to the embed functions.
+
 Tue 10 May 2022 : added a reset function to the curves module of the
   python2 and python3 versions of phcpy.
 
