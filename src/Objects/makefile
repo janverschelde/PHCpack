@@ -2111,7 +2111,7 @@ ts_opthand:
 ts_bbsolve:
 	make -f $(MAKEFILE) ts_bbsolve
 
-# Test programs in the library Lib :
+# Test programs in the C folder :
 
 test_lib: lib_syscon lib_syscon_cpp lib_solcon lib_solcon_cpp \
           lib_solrep lib_solrep_cpp lib_tabform lib_tabform_cpp \
@@ -2129,7 +2129,7 @@ test_lib: lib_syscon lib_syscon_cpp lib_solcon lib_solcon_cpp \
           lib_usolve lib_usolve_cpp phc_solve phc_solve_cpp \
           lib_giftwrap lib_giftwrap_cpp ts_list2str \
           lib_adepath_d lib_adepath_dd lib_adepath_qd \
-          lib_witsols lib_witsols_cpp
+          lib_witset lib_witset_cpp lib_witsols lib_witsols_cpp
 
 ts_list2str:
 	make -f $(MAKEFILE) ts_list2str
@@ -2310,6 +2310,12 @@ phc_solve:
 
 phc_solve_cpp:
 	make -f $(MAKEFILE) phc_solve_cpp
+
+lib_witset:
+	make -f $(MAKEFILE) lib_witset
+
+lib_witset_cpp:
+	make -f $(MAKEFILE) lib_witset_cpp
 
 lib_witsols:
 	make -f $(MAKEFILE) lib_witsols

@@ -3285,7 +3285,7 @@ ts_bbsolve: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
                  simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
                  -o $(BIN)/ts_bbsolve --LINK=$(gpp) 
 
-# Test programs for the Library Lib :
+# Test programs for the C folder :
 
 phcpack.o:
 	gcc -c $(PHCLib)/phcpack.c
@@ -3998,15 +3998,30 @@ phc_solve:
 	gnatlink -C use_c2phc4c syscon.o solcon.o phcpack4c.o phc_solve.o \
                  -o $(BIN)/phc_solve -lm
 
-phc_solve_cpp:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
+phc_solve_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+               reltab.o mvc4phc.o demicsrun4phc.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
-	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/phcpack4c.c
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/phc_solve.c
-	gnatbind -n use_c2phc4c
-	gnatlink -C use_c2phc4c syscon.o solcon.o phcpack4c.o phc_solve.o \
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc syscon.o solcon.o phcpack.o phc_solve.o \
+		    inputData.o outputData.o iTest.o fTest.o \
+		    simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
                  -o $(BIN)/phc_solve -lm --LINK=$(gpp)
+
+lib_witset:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
+	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/solcon.c
+	gcc -c $(PHCLib)/phcpack4c.c
+	gcc -c $(PHCLib)/witset.c
+	gcc -c $(PHCLib)/lib_witset.c
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c syscon.o solcon.o phcpack4c.o witset.o \
+		    lib_witset.o \
+                 -o $(BIN)/lib_witset -lm
 
 lib_witsols:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
