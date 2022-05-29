@@ -12,74 +12,74 @@
 
 /* some basic OPERATIONS on witness sets */
 
-int embed_system ( int d, int precision )
+int embed_system ( int d, int precision, int vrblvl )
 {
    int fail;
 
-   if(precision == 0) fail = embed_standard_system(d);
-   if(precision == 1) fail = embed_dobldobl_system(d);
-   if(precision == 2) fail = embed_quaddobl_system(d);
+   if(precision == 0) fail = embed_standard_system(d,vrblvl);
+   if(precision == 1) fail = embed_dobldobl_system(d,vrblvl);
+   if(precision == 2) fail = embed_quaddobl_system(d,vrblvl);
 
    return fail;
 }
 
-int embed_standard_system ( int d )
+int embed_standard_system ( int d, int vrblvl )
 {
    int fail;
    int *b;
    double *c;
 
-   fail = _ada_use_c2phc4c(66,&d,b,c,0);
+   fail = _ada_use_c2phc4c(66,&d,b,c,vrblvl);
    return fail;
 }
 
-int embed_dobldobl_system ( int d )
+int embed_dobldobl_system ( int d, int vrblvl )
 {
    int fail;
    int *b;
    double *c;
 
-   fail = _ada_use_c2phc4c(129,&d,b,c,0);
+   fail = _ada_use_c2phc4c(129,&d,b,c,vrblvl);
    return fail;
 }
 
-int embed_quaddobl_system ( int d )
+int embed_quaddobl_system ( int d, int vrblvl )
 {
    int fail;
    int *b;
    double *c;
 
-   fail = _ada_use_c2phc4c(260,&d,b,c,0);
+   fail = _ada_use_c2phc4c(260,&d,b,c,vrblvl);
    return fail;
 }
 
-int embed_standard_Laurent_system ( int d )
+int embed_standard_Laurent_system ( int d, int vrblvl )
 {
    int fail;
    int *b;
    double *c;
 
-   fail = _ada_use_c2phc4c(625,&d,b,c,0);
+   fail = _ada_use_c2phc4c(625,&d,b,c,vrblvl);
    return fail;
 }
 
-int embed_dobldobl_Laurent_system ( int d )
+int embed_dobldobl_Laurent_system ( int d, int vrblvl )
 {
    int fail;
    int *b;
    double *c;
 
-   fail = _ada_use_c2phc4c(626,&d,b,c,0);
+   fail = _ada_use_c2phc4c(626,&d,b,c,vrblvl);
    return fail;
 }
 
-int embed_quaddobl_Laurent_system ( int d )
+int embed_quaddobl_Laurent_system ( int d, int vrblvl )
 {
    int fail;
    int *b;
    double *c;
 
-   fail = _ada_use_c2phc4c(627,&d,b,c,0);
+   fail = _ada_use_c2phc4c(627,&d,b,c,vrblvl);
    return fail;
 }
 

@@ -29,12 +29,12 @@ int main ( int argc, char *argv[] )
    }
    printf("Your polynomial in %d variables is %s\n",n,p);
 
-   fail = witness_set_of_hypersurface(n,i+1,p);
+   fail = standard_witset_of_hypersurface(n,i+1,p);
 
    printf("\nThe embedded system :\n");
-   syscon_write_system();
+   syscon_write_standard_system();
    printf("\nThe witness points :\n");
-   solcon_write_solutions();
+   solcon_write_standard_solutions();
 
    adafinal();
 

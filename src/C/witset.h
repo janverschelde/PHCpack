@@ -18,48 +18,55 @@ extern void adafinal( void );
 
 /* some basic OPERATIONS on witness sets */
 
-int embed_system ( int d, int precision );
+int embed_system ( int d, int precision, int vrblvl );
 /*
  * DESCRIPTION :
  *   Replaces the system in the container with its embedding of 
  *   dimension d in double, double double, or quad double precision,
- *   depending whether precision equals 0, 1, or 2. */
+ *   depending whether precision equals 0, 1, or 2.
+ *   The last parameter vrblvl is the verbose level. */
 
-int embed_standard_system ( int d );
+int embed_standard_system ( int d, int vrblvl );
 /*
  * DESCRIPTION :
  *   Replaces the system in the container for systems in standard double
- *   precision with its embedding of dimension d. */
+ *   precision with its embedding of dimension d.
+ *   The last parameter is the verbose level. */
 
-int embed_dobldobl_system ( int d );
+int embed_dobldobl_system ( int d, int vrblvl );
 /*
  * DESCRIPTION :
  *   Replaces the system in the container for systems in double double
- *   precision with its embedding of dimension d. */
+ *   precision with its embedding of dimension d.
+ *   The last parameter is the verbose level. */
 
-int embed_quaddobl_system ( int d );
+int embed_quaddobl_system ( int d, int vrblvl );
 /*
  * DESCRIPTION :
  *   Replaces the system in the container for systems in quad double
- *   precision with its embedding of dimension d. */
+ *   precision with its embedding of dimension d.
+ *   The last parameter is the verbose level. */
 
-int embed_standard_Laurent_system ( int d );
+int embed_standard_Laurent_system ( int d, int vrblvl );
 /*
  * DESCRIPTION :
  *   Replaces the system in the container for Laurent systems in standard
- *   double precision with its embedding of dimension d. */
+ *   double precision with its embedding of dimension d.
+ *   The last parameter is the verbose level. */
 
-int embed_dobldobl_Laurent_system ( int d );
+int embed_dobldobl_Laurent_system ( int d, int vrblvl );
 /*
  * DESCRIPTION :
  *   Replaces the system in the container for Laurent systems in double
- *   double precision with its embedding of dimension d. */
+ *   double precision with its embedding of dimension d.
+ *   The last parameter is the verbose level. */
 
-int embed_quaddobl_Laurent_system ( int d );
+int embed_quaddobl_Laurent_system ( int d, int vrblvl );
 /*
  * DESCRIPTION :
  *   Replaces the system in the container for Laurent systems in quad
- *   double precision with its embedding of dimension d. */
+ *   double precision with its embedding of dimension d.
+ *   The last parameter is the verbose level. */
 
 int read_witness_set ( int *n, int *dim, int *deg );
 /*
