@@ -1,5 +1,6 @@
 Sun 29 May 2022 : added verbose level to the embed functions in witset.h
-  and witset.c, fixed lib_witset.c.
+  and witset.c, fixed lib_witset.c.  Added "return 0;" to two functions
+  in phc_solve.c, for compiler complaints.
 
 Tue 10 May 2022 : updated padcon.h and padcon.c with the new function to
   reset the homotopy continuation parameters for the step-by-step trackers.

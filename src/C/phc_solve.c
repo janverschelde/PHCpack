@@ -347,6 +347,8 @@ int interactive_input_output ( int precision )
       dobldobl_interactive_input_output();
    else if(precision == 2)
       quaddobl_interactive_input_output();
+
+   return 0;
 }
 
 int standard_interactive_Laurent_input_output ( void )
@@ -501,6 +503,8 @@ int interactive_Laurent_input_output ( int precision )
       dobldobl_interactive_Laurent_input_output();
    else if(precision == 2)
       quaddobl_interactive_Laurent_input_output();
+
+   return 0;
 }
 
 void read_poly ( int *nc, char p[] )
