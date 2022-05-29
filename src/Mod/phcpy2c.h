@@ -4103,6 +4103,7 @@ static PyObject *py2c_embed_system
  *   The dimension d is given as the first integer parameter on input.
  *   The second integer parameter indicates the precision, either 0, 1, or 2,
  *   respectively for double, double double, or quad double precision.
+ *   The third integer parameter is the verbose level.
  *   On return is the failure code, which equals zero if all went well. */
 
 static PyObject *py2c_embed_standard_system
@@ -4112,6 +4113,7 @@ static PyObject *py2c_embed_standard_system
  *   Replaces the system with coefficients in standard double precision
  *   in the container with its embedding of dimension d.
  *   The dimension d is given as an integer parameter on input.
+ *   The second integer parameter is the verbose level.
  *   On return is the failure code, which equals zero if all went well. */
 
 static PyObject *py2c_embed_dobldobl_system
@@ -4121,6 +4123,7 @@ static PyObject *py2c_embed_dobldobl_system
  *   Replaces the system with coefficients in double double precision
  *   in the container with its embedding of dimension d.
  *   The dimension d is given as an integer parameter on input.
+ *   The second integer parameter is the verbose level.
  *   On return is the failure code, which equals zero if all went well. */
 
 static PyObject *py2c_embed_quaddobl_system
@@ -4130,6 +4133,7 @@ static PyObject *py2c_embed_quaddobl_system
  *   Replaces the system with coefficients in quad double precision
  *   in the container with its embedding of dimension d.
  *   The dimension d is given as an integer parameter on input.
+ *   The second integer parameter is the verbose level.
  *   On return is the failure code, which equals zero if all went well. */
 
 static PyObject *py2c_embed_standard_Laurent_system
@@ -4139,6 +4143,7 @@ static PyObject *py2c_embed_standard_Laurent_system
  *   Replaces the Laurent system with coefficients in standard double
  *   precision in the container with its embedding of dimension d.
  *   The dimension d is given as an integer parameter on input.
+ *   The second integer parameter is the verbose level.
  *   On return is the failure code, which equals zero if all went well. */
 
 static PyObject *py2c_embed_dobldobl_Laurent_system
@@ -4148,6 +4153,7 @@ static PyObject *py2c_embed_dobldobl_Laurent_system
  *   Replaces the Laurent system with coefficients in double double precision
  *   in the container with its embedding of dimension d.
  *   The dimension d is given as an integer parameter on input.
+ *   The second integer parameter is the verbose level.
  *   On return is the failure code, which equals zero if all went well. */
 
 static PyObject *py2c_embed_quaddobl_Laurent_system
@@ -4157,6 +4163,7 @@ static PyObject *py2c_embed_quaddobl_Laurent_system
  *   Replaces the Laurent system with coefficients in quad double precision
  *   in the container with its embedding of dimension d.
  *   The dimension d is given as an integer parameter on input.
+ *   The second integer parameter is the verbose level.
  *   On return is the failure code, which equals zero if all went well. */
 
 static PyObject *py2c_swap_symbols_for_standard_witness_set

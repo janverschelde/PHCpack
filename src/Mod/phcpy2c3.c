@@ -6116,11 +6116,11 @@ static PyObject *py2c_numbtrop_quaddobl_clear
 static PyObject *py2c_embed_system
  ( PyObject *self, PyObject *args )
 {
-   int d,prc,fail;
+   int topdim,prc,vrblvl,fail;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"ii",&d,&prc)) return NULL;
-   fail = embed_system(d,prc);
+   if(!PyArg_ParseTuple(args,"iii",&topdim,&prc,&vrblvl)) return NULL;
+   fail = embed_system(topdim,prc,vrblvl);
 
    return Py_BuildValue("i",fail);
 }
@@ -6128,11 +6128,11 @@ static PyObject *py2c_embed_system
 static PyObject *py2c_embed_standard_system
  ( PyObject *self, PyObject *args )
 {
-   int d,fail;
+   int topdim,vrblvl,fail;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&d)) return NULL;
-   fail = embed_standard_system(d);
+   if(!PyArg_ParseTuple(args,"ii",&topdim,&vrblvl)) return NULL;
+   fail = embed_standard_system(topdim,vrblvl);
 
    return Py_BuildValue("i",fail);
 }
@@ -6140,11 +6140,11 @@ static PyObject *py2c_embed_standard_system
 static PyObject *py2c_embed_dobldobl_system
  ( PyObject *self, PyObject *args )
 {
-   int d,fail;
+   int topdim,vrblvl,fail;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&d)) return NULL;
-   fail = embed_dobldobl_system(d);
+   if(!PyArg_ParseTuple(args,"ii",&topdim,&vrblvl)) return NULL;
+   fail = embed_dobldobl_system(topdim,vrblvl);
 
    return Py_BuildValue("i",fail);
 }
@@ -6152,11 +6152,11 @@ static PyObject *py2c_embed_dobldobl_system
 static PyObject *py2c_embed_quaddobl_system
  ( PyObject *self, PyObject *args )
 {
-   int d,fail;
+   int topdim,vrblvl,fail;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&d)) return NULL;
-   fail = embed_quaddobl_system(d);
+   if(!PyArg_ParseTuple(args,"ii",&topdim,&vrblvl)) return NULL;
+   fail = embed_quaddobl_system(topdim,vrblvl);
 
    return Py_BuildValue("i",fail);
 }
@@ -6164,11 +6164,11 @@ static PyObject *py2c_embed_quaddobl_system
 static PyObject *py2c_embed_standard_Laurent_system
  ( PyObject *self, PyObject *args )
 {
-   int d,fail;
+   int topdim,vrblvl,fail;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&d)) return NULL;
-   fail = embed_standard_Laurent_system(d);
+   if(!PyArg_ParseTuple(args,"ii",&topdim,&vrblvl)) return NULL;
+   fail = embed_standard_Laurent_system(topdim,vrblvl);
 
    return Py_BuildValue("i",fail);
 }
@@ -6176,11 +6176,11 @@ static PyObject *py2c_embed_standard_Laurent_system
 static PyObject *py2c_embed_dobldobl_Laurent_system
  ( PyObject *self, PyObject *args )
 {
-   int d,fail;
+   int topdim,vrblvl,fail;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&d)) return NULL;
-   fail = embed_dobldobl_Laurent_system(d);
+   if(!PyArg_ParseTuple(args,"ii",&topdim,&vrblvl)) return NULL;
+   fail = embed_dobldobl_Laurent_system(topdim,vrblvl);
 
    return Py_BuildValue("i",fail);
 }
@@ -6188,11 +6188,11 @@ static PyObject *py2c_embed_dobldobl_Laurent_system
 static PyObject *py2c_embed_quaddobl_Laurent_system
  ( PyObject *self, PyObject *args )
 {
-   int d,fail;
+   int topdim,vrblvl,fail;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&d)) return NULL;
-   fail = embed_quaddobl_Laurent_system(d);
+   if(!PyArg_ParseTuple(args,"ii",&topdim,&vrblvl)) return NULL;
+   fail = embed_quaddobl_Laurent_system(topdim,vrblvl);
 
    return Py_BuildValue("i",fail);
 }
@@ -11138,22 +11138,22 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_numbtrop_quaddobl_clear", py2c_numbtrop_quaddobl_clear, METH_VARARGS,
     "Deallocates the stored numerically computed tropisms,\n computed in quad double precision."},
    {"py2c_embed_system", py2c_embed_system, METH_VARARGS,
-    "Replaces the system in the container with its embedding of dimension d.\n The dimension d is given as the first integer parameter on input.\n The second integer parameter indicates the precision, either 0, 1, or 2,\n respectively for double, double double, or quad double precision.\n On return is the failure code, which equals zero if all went well."},
+    "Replaces the system in the container with its embedding of dimension d.\n The dimension d is given as the first integer parameter on input.\n The second integer parameter indicates the precision, either 0, 1, or 2,\n respectively for double, double double, or quad double precision.\n The third integer parameter is the verbose level.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_embed_standard_system", py2c_embed_standard_system, METH_VARARGS,
-    "Replaces the system with coefficients in standard double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
+    "Replaces the system with coefficients in standard double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n The second integer parameter is the verbose level.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_embed_dobldobl_system", py2c_embed_dobldobl_system, METH_VARARGS,
-    "Replaces the system with coefficients in double double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
+    "Replaces the system with coefficients in double double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n The second integer parameter is the verbose level.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_embed_quaddobl_system", py2c_embed_quaddobl_system, METH_VARARGS,
-    "Replaces the system with coefficients in quad double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
+    "Replaces the system with coefficients in quad double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n The second integer parameter is the verbose level.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_embed_standard_Laurent_system",
      py2c_embed_standard_Laurent_system, METH_VARARGS,
-    "Replaces the Laurent system with coefficients in standard double\n precision in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
+    "Replaces the Laurent system with coefficients in standard double\n precision in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n The second integer parameter is the verbose level.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_embed_dobldobl_Laurent_system",
      py2c_embed_dobldobl_Laurent_system, METH_VARARGS,
-    "Replaces the Laurent system with coefficients in double double\n precision in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
+    "Replaces the Laurent system with coefficients in double double\n precision in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n The second integer parameter is the verbose level.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_embed_quaddobl_Laurent_system",
      py2c_embed_quaddobl_Laurent_system, METH_VARARGS,
-    "Replaces the Laurent system with coefficients in quad double\n precision in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
+    "Replaces the Laurent system with coefficients in quad double\n precision in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n The second integer parameter is the verbose level.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_swap_symbols_for_standard_witness_set",
      py2c_swap_symbols_for_standard_witness_set, METH_VARARGS,
     "Permutes the slack variables in the polynomial system with standard\n double precision coefficients and its corresponding solutions in the\n containers so the slack variables appear at the end.  On input are\n two integers: the total number of variables; and\n the number of slack variables, or the dimension of the set.\n This permutation is necessary to consider the system and solutions\n stored in containers as a witness set."},

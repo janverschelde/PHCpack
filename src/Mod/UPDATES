@@ -1,2 +1,5 @@
+Sun 29 May 2022 : extended phcpy2c.h, phcpy2c2.c, and phcpy2c3.c with
+  the verbose level to the embed functions.
+
 Tue 10 May 2022 : extended phcpy2c.h, phcpy2c2.c, and phcpy2c3.c with
   code to export the reset of the homotopy continuation parameters.
