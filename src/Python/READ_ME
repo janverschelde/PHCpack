@@ -79,7 +79,8 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
-1.1.1 : 2020-02-26 : fixed type error in factor module
+1.1.2 : 2022-05-30 : bugs fixed for the embed functions of the sets module
+1.1.1 : 2021-02-26 : fixed type error in factor module
 1.1.0 : 2020-12-15 : solve method of Polynomials retrieves gamma constant
 1.0.9 : 2020-11-30 : support_sets() function, extended the Polynomials class
 1.0.8 : 2020-10-31 : improved function support() checks on number of symbols

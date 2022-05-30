@@ -1,3 +1,5 @@
+Mon 30 May 2022 : prepared files for version 1.1.2 of phcpy.
+
 Sun 29 May 2022 : in the sets module of the python2 and python3 versions,
   added the verbose_level parameter to the embed functions.
 
