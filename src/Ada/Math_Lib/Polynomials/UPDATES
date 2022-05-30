@@ -1,3 +1,5 @@
+Mon 30 May 2022 : updated ts_rwspol.adb for a compiler warning.
+
 Tue 15 Jun 2021 : extended multprec_complex_polynomials_io for the
   instantiation of the multprec_complex_poly_ring_io.
   Fixed multprec_laur_poly_convertors.adb.

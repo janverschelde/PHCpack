@@ -79,6 +79,7 @@ procedure ts_rwspol is
       put("string size : "); put(natural32(s'last)); new_line;
       put("size limit : "); put(Size_Limit(p)); new_line;
     end;
+    Standard_Complex_Polynomials.Clear(p);
   end Standard_Test;
 
   procedure DoblDobl_Test is
@@ -97,6 +98,7 @@ procedure ts_rwspol is
       put("string size : "); put(natural32(s'last)); new_line;
       put("size limit : "); put(Size_Limit(p)); new_line;
     end;
+    DoblDobl_Complex_Polynomials.Clear(p);
   end DoblDobl_Test;
 
   procedure QuadDobl_Test is
@@ -115,6 +117,7 @@ procedure ts_rwspol is
       put("string size : "); put(natural32(s'last)); new_line;
       put("size limit : "); put(Size_Limit(p)); new_line;
     end;
+    QuadDobl_Complex_Polynomials.Clear(p);
   end QuadDobl_Test;
 
   procedure Main is
