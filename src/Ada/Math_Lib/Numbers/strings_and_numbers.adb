@@ -493,7 +493,7 @@ package body Strings_and_Numbers is
           elsif i = -1 then
             return " - ";
           else
-            return " - " & Convert(+i);
+            return " - " & Convert(-i);
           end if;
         end;
       elsif re >= 0.0 then

@@ -1,3 +1,6 @@
+Mon 30 May 2022 : in strings_and_numbers.adb, fixed unsigned_coefficient,
+  which added a superfluous minus for negative integers.
+
 Tue 15 Jun 2021 : extended multprec_floating64_numbers with a create function,
   to instantiate the abstract_ring, so multprec_floating64_ring compiles.
   Updates are needed to multprec_floating64_numbers.adb for the new create.
