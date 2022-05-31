@@ -3616,7 +3616,7 @@ sage_phcpy2c2.so: parameter.o lib2path.o inputData.o outputData.o iTest.o \
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/padcon.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 \
+	$(gpp) -Dcompilewgpp=1 -c -O3 -I$(PHCLib) \
             -I$(PYTHON) -I$(PYTHON)/Include $(PHCmod)/phcpy2c2.c
 	gnatmake -c -O3 -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n -static use_c2phc
@@ -3676,7 +3676,7 @@ phcpy2c3.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/padcon.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 \
+	$(gpp) -Dcompilewgpp=1 -c -O3 -I$(PHCLib) \
                -I/opt/miniconda3/include -I$(PYTHON38) $(PHCmod)/phcpy2c3.c
 	gnatmake -c -O3 -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n -static use_c2phc -o use_c2phc_binder.adb
