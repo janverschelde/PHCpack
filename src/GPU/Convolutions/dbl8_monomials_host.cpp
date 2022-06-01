@@ -528,6 +528,27 @@ void CPU_dbl8_evaldiff
          outputhilohi[dim],outputlolohi[dim],
          outputhihilo[dim],outputlohilo[dim],
          outputhilolo[dim],outputlololo[dim]);
+      // CPU_dbl8_product(deg,
+      //    outputhihihi[dim],outputlohihi[dim],
+      //    outputhilohi[dim],outputlolohi[dim],
+      //    outputhihilo[dim],outputlohilo[dim],
+      //    outputhilolo[dim],outputlololo[dim],
+      //    cffhihihi,cfflohihi,cffhilohi,cfflolohi,
+      //    cffhihilo,cfflohilo,cffhilolo,cfflololo,
+      //    outputhihihi[dim],outputlohihi[dim],
+      //    outputhilohi[dim],outputlolohi[dim],
+      //    outputhihilo[dim],outputlohilo[dim],
+      //    outputhilolo[dim],outputlololo[dim]); // wrong!
+
+      double *acchihihi = new double[deg+1];
+      double *acclohihi = new double[deg+1];
+      double *acchilohi = new double[deg+1];
+      double *acclolohi = new double[deg+1];
+      double *acchihilo = new double[deg+1];
+      double *acclohilo = new double[deg+1];
+      double *acchilolo = new double[deg+1];
+      double *acclololo = new double[deg+1];
+
       CPU_dbl8_product(deg,
          outputhihihi[dim],outputlohihi[dim],
          outputhilohi[dim],outputlolohi[dim],
@@ -535,10 +556,24 @@ void CPU_dbl8_evaldiff
          outputhilolo[dim],outputlololo[dim],
          cffhihihi,cfflohihi,cffhilohi,cfflolohi,
          cffhihilo,cfflohilo,cffhilolo,cfflololo,
-         outputhihihi[dim],outputlohihi[dim],
-         outputhilohi[dim],outputlolohi[dim],
-         outputhihilo[dim],outputlohilo[dim],
-         outputhilolo[dim],outputlololo[dim]);
+         acchihihi,acclohihi,acchilohi,acclolohi,
+         acchihilo,acclohilo,acchilolo,acclololo);
+
+      for(int i=0; i<=deg; i++)
+      {
+         outputhihihi[dim][i] = acchihihi[i];
+         outputlohihi[dim][i] = acclohihi[i];
+         outputhilohi[dim][i] = acchilohi[i];
+         outputlolohi[dim][i] = acclolohi[i];
+         outputhihilo[dim][i] = acchihilo[i];
+         outputlohilo[dim][i] = acclohilo[i];
+         outputhilolo[dim][i] = acchilolo[i];
+         outputlololo[dim][i] = acclololo[i];
+      }
+      free(acchihihi); free(acclohihi);
+      free(acchilohi); free(acclolohi);
+      free(acchihilo); free(acclohilo);
+      free(acchilolo); free(acclololo);
 
       CPU_dbl8_product(deg,
          cffhihihi,cfflohihi,cffhilohi,cfflolohi,

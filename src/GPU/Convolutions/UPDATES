@@ -1,5 +1,6 @@
 Wed 1 Jun 2022 : fixed bug in dbl4_monomials_host.cpp for the case of
   two variables in CPU_dbl4_evaldiff and CPU_cmplx4_evaldiff.
+  Applied the same fix in dbl8_monomials_host.cpp.
 
 Thu 26 May 2022 : bugs fixed in dbl_monomials_host.cpp for the special case
   of two variables in the functions CPU_dbl_evaldiff and CPU_cmplx_evaldiff.
