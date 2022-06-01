@@ -294,10 +294,30 @@ void CPU_dbl4_evaldiff
          inputhihi[ix1],inputlohi[ix1],inputhilo[ix1],inputlolo[ix1],
          inputhihi[ix2],inputlohi[ix2],inputhilo[ix2],inputlolo[ix2],
          outputhihi[dim],outputlohi[dim],outputhilo[dim],outputlolo[dim]);
+      // CPU_dbl4_product(deg,
+      //    outputhihi[dim],outputlohi[dim],outputhilo[dim],outputlolo[dim],
+      //    cffhihi,cfflohi,cffhilo,cfflolo,
+      //    outputhihi[dim],outputlohi[dim],outputhilo[dim],outputlolo[dim]);
+      // wrong, cannot use input and output!
+      double *acchihi = new double[deg+1];
+      double *acclohi = new double[deg+1];
+      double *acchilo = new double[deg+1];
+      double *acclolo = new double[deg+1];
+
       CPU_dbl4_product(deg,
          outputhihi[dim],outputlohi[dim],outputhilo[dim],outputlolo[dim],
          cffhihi,cfflohi,cffhilo,cfflolo,
-         outputhihi[dim],outputlohi[dim],outputhilo[dim],outputlolo[dim]);
+         acchihi,acclohi,acchilo,acclolo);
+
+      for(int i=0; i<=deg; i++)
+      {
+         outputhihi[dim][i] = acchihi[i];
+         outputlohi[dim][i] = acclohi[i];
+         outputhilo[dim][i] = acchilo[i];
+         outputlolo[dim][i] = acclolo[i];
+      }
+      free(acchihi); free(acclohi);
+      free(acchilo); free(acclolo);
 
       CPU_dbl4_product(deg,cffhihi,cfflohi,cffhilo,cfflolo,
          inputhihi[ix1],inputlohi[ix1],inputhilo[ix1],inputlolo[ix1],
@@ -465,6 +485,27 @@ void CPU_cmplx4_evaldiff
          outputrehilo[dim],outputrelolo[dim],
          outputimhihi[dim],outputimlohi[dim],
          outputimhilo[dim],outputimlolo[dim]);
+      // CPU_cmplx4_product(deg,
+      //    outputrehihi[dim],outputrelohi[dim],
+      //    outputrehilo[dim],outputrelolo[dim],
+      //    outputimhihi[dim],outputimlohi[dim],
+      //    outputimhilo[dim],outputimlolo[dim],
+      //    cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+      //    cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+      //    outputrehihi[dim],outputrelohi[dim],
+      //    outputrehilo[dim],outputrelolo[dim],
+      //    outputimhihi[dim],outputimlohi[dim],
+      //    outputimhilo[dim],outputimlolo[dim]); // wrong!
+
+      double *accrehihi = new double[deg+1];
+      double *accrelohi = new double[deg+1];
+      double *accrehilo = new double[deg+1];
+      double *accrelolo = new double[deg+1];
+      double *accimhihi = new double[deg+1];
+      double *accimlohi = new double[deg+1];
+      double *accimhilo = new double[deg+1];
+      double *accimlolo = new double[deg+1];
+
       CPU_cmplx4_product(deg,
          outputrehihi[dim],outputrelohi[dim],
          outputrehilo[dim],outputrelolo[dim],
@@ -472,10 +513,22 @@ void CPU_cmplx4_evaldiff
          outputimhilo[dim],outputimlolo[dim],
          cffrehihi,cffrelohi,cffrehilo,cffrelolo,
          cffimhihi,cffimlohi,cffimhilo,cffimlolo,
-         outputrehihi[dim],outputrelohi[dim],
-         outputrehilo[dim],outputrelolo[dim],
-         outputimhihi[dim],outputimlohi[dim],
-         outputimhilo[dim],outputimlolo[dim]);
+         accrehihi,accrelohi,accrehilo,accrelolo,
+         accimhihi,accimlohi,accimhilo,accimlolo);
+
+      for(int i=0; i<=deg; i++)
+      {
+         outputrehihi[dim][i] = accrehihi[i];
+         outputrelohi[dim][i] = accrelohi[i];
+         outputrehilo[dim][i] = accrehilo[i];
+         outputrelolo[dim][i] = accrelolo[i];
+         outputimhihi[dim][i] = accimhihi[i];
+         outputimlohi[dim][i] = accimlohi[i];
+         outputimhilo[dim][i] = accimhilo[i];
+         outputimlolo[dim][i] = accimlolo[i];
+      }
+      free(accrehihi); free(accrelohi); free(accimhilo); free(accimlolo);
+      free(accrehihi); free(accrelohi); free(accimhilo); free(accimlolo);
 
       CPU_cmplx4_product(deg,
          cffrehihi,cffrelohi,cffrehilo,cffrelolo,
