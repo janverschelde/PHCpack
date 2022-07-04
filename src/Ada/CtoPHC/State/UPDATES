@@ -1,3 +1,5 @@
+Sun 3 Jul 2022 : bug fixed in job_handlers.adb by initialization.
+
 Sun 29 May 2022 : fixed bug in witness_interface.adb, as square_and_embed
   adds already the names of the embed symbols to the symbol table.
 

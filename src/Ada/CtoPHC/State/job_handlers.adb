@@ -138,7 +138,7 @@ package body Job_Handlers is
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
-    rc,nr : natural32;
+    rc,nr : natural32 := 0;
     rcnr : Standard_Integer_Vectors.Vector(1..2);
     sols : Solution_List;
     lsroco : Link_to_String;
@@ -250,7 +250,7 @@ package body Job_Handlers is
     lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
-    rc,nr : natural32;
+    rc,nr : natural32 := 0; -- must be added in case silent
     rcnr : Standard_Integer_Vectors.Vector(1..2);
     lsroco : Link_to_String;
     sols : Solution_List;
@@ -410,7 +410,7 @@ package body Job_Handlers is
     lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
-    rc,nr : natural32;
+    rc,nr : natural32 := 0;
     rcnr : Standard_Integer_Vectors.Vector(1..2);
     lsroco : Link_to_String;
     sols : Solution_List;
@@ -498,7 +498,7 @@ package body Job_Handlers is
     lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
-    rc,nr : natural32;
+    rc,nr : natural32 := 0;
     rcnr : Standard_Integer_Vectors.Vector(1..2);
     lsroco : Link_to_String;
     sols : Solution_List;
@@ -632,7 +632,7 @@ package body Job_Handlers is
     lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
-    rc,nr : natural32;
+    rc,nr : natural32 := 0;
     rcnr : Standard_Integer_Vectors.Vector(1..2);
     lsroco : Link_to_String;
     sols : Solution_List;
@@ -720,7 +720,7 @@ package body Job_Handlers is
     lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
-    rc,nr : natural32;
+    rc,nr : natural32 := 0;
     rcnr : Standard_Integer_Vectors.Vector(1..2);
     lsroco : Link_to_String;
     sols : Solution_List;
