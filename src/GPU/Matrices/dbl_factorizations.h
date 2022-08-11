@@ -362,4 +362,27 @@ void CPU_cmplx_factors_houseqr
  *   Rre      real parts of the reduced upper triangular form of A;
  *   Rim      imaginary parts of the reduced upper triangular form of A. */
 
+void CPU_dbl_factors_qrbs
+ ( int nrows, int ncols, double **Q, double **R,
+   double *rhs, double *sol, double *wrkvec ); 
+/*
+ * DESCRIPTION :
+ *   Applies back substitution for the least squares solution
+ *   with the QR factorization.
+ *
+ * REQUIRED : nrows >= ncols;
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R, dimension of Q;
+ *   ncols    number of columns of R;
+ *   Q        the Q of the QR factorization;
+ *   R        the R of the QR factorization;
+ *   rhs      right hand side vector, of size nrows;
+ *   sol      space for the solution, od size ncols;
+ *   wrkvec   work space for nrows elements.
+ *
+ * ON RETURN :
+ *   sol      the least squares solution;
+ *   wrkvec   contains the product of Q transpose with rhs. */
+
 #endif

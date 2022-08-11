@@ -1,4 +1,4 @@
-Data staging algorithms for matrix factorizations at series in PHCv2.4.86.
+Data staging algorithms for matrix factorizations at series in PHCv2.4.87.
 
 Operations on vectors and matrices of power series are staged for
 acceleration on graphics processing units.

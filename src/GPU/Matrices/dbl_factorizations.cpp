@@ -488,3 +488,16 @@ void CPU_cmplx_factors_houseqr
    }
    free(xre); free(xim); free(vre); free(vim);
 }
+
+void CPU_dbl_factors_qrbs
+ ( int nrows, int ncols, double **Q, double **R,
+   double *rhs, double *sol, double *wrkvec )
+{
+   for(int i=0; i<nrows; i++)   // compute Q^T*b, b is rhs
+   {
+      wrkvec[i] = 0.0;
+      for(int j=0; j<nrows; j++)
+         wrkvec[i] = wrkvec[i] + Q[j][i]*rhs[j];
+   }
+   CPU_dbl_factors_backward(ncols,R,wrkvec,sol);
+}
