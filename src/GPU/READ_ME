@@ -1,4 +1,4 @@
-GPU acceleration of polynomial homotopy continuation in PHCv2.4.84
+GPU acceleration of polynomial homotopy continuation in PHCv2.4.85
 
 While the code belongs to code base of PHCpack, it is under development,
 with its own specific makefiles and running modes.
@@ -32,7 +32,13 @@ Norms : multiple double arithmetic tested on vector 2-norms.
 
 Convolutions : evaluation and differentiation of monomials at series.
 
-Polynomials : evaluation and differentiation of polynomials at series.
+Polynomials : evaluation and differentiation of polynomials at series,
+              described in a paper presented at PDSEC 2021 (online).
+
+Matrices : data staging algorithms for matrix factorizations at series,
+           presented at SIAM PP 22, described in a PDSEC 2022 paper.  
+
+Newton : running Newton's algorithm to compute power series expansions.
 
 This code is distributed under the GNU GENERAL PUBLIC LICENSE,
 see the file COPYING.txt for version 3 of this license.

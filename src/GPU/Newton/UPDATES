@@ -1,0 +1,39 @@
+Wed 17 Aug 2022 : renamed {dbl,dbl2,dbl4,dbl8}_linearseries into
+  {dbl,dbl2,dbl4,dbl8}_bals, for block accelerated linearized series,
+  which changed {dbl,dbl2,dbl4,dbl8}_newton_testers.cpp.  Updated makefiles.
+  New dbl_bals_kernels, called in the modified dbl_newton_testers, 
+  with updates in test_dbl_newton.cpp.  Updated makefiles.
+
+Wed 10 Aug 2022 : renamed {dbl,dbl2,dbl4,dbl8}_linearized_solvers into
+  {dbl,dbl2,dbl4,dbl8}_linearseries_host, which changed all 
+  {dbl,dbl2,dbl4,dbl8}_newton_testers.cpp.  Updated makefiles.
+  To dbl_linearseries_host, added qr solver, updated dbl_newton_testers,
+  and test_dbl_newton.cpp.
+
+Tue 9 Aug 2022 : extended unimodular_matrices with the computation of the
+  exponent vector of the solution of equal right hand side elements.
+  Updated test_unimodular.cpp and test_dbl_newton.cpp.
+
+Mon 8 Aug 2022 : added test_unimodular.cpp, after extending the
+  unimodular_matrices with a lower_triangulate function and gcd.
+  Updated makefiles.
+
+Wed 1 Jun 2022 : fixed bug in dbl2_newton_testers.cpp.
+  New dbl4_linearized_solvers, dbl4_newton_testers, test_dbl4_newton
+  for power series in quad double precision.  Updated makefiles.
+  New dbl8_linearized_solvers, dbl8_newton_testers, test_dbl8_newton
+  for power series in octo double precision.  Updated makefiles.
+
+Tue 31 May 2022 : to unimodular_matrices.h and unimodular_matrices.cpp,
+  added function to read an exponent matrix.  Bug fix in test_dbl2_newton.cpp.
+  New dbl_newton_testers.h and dbl_newton_testers.cpp with code extracted
+  from test_dbl_newton.cpp.
+
+Thu 26 May 2022 : after a bug fix in dbl_monomials_host.cpp,
+  the test_dbl_newton.cpp works.  Added double double versions.
+
+Sun 22 May 2022 : new dbl_linearized_solvers, to solve linear systems of
+  power series by lineariziation, extracted from test_dbl_newton.cpp.
+
+Thu 19 May 2022 : new unimodular_matrices, to define the test monomial
+  homotopy, with code taken from test_dbl_newton.cpp.

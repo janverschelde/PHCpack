@@ -1,0 +1,260 @@
+# Tested on four different NVIDIA GPUs.
+
+gpp=/usr/bin/g++
+MPD=../Norms
+CNV=../Convolutions
+MAT=../Matrices
+CUDA=/usr/local/cuda/include
+CUDALIB=/usr/local/cuda/lib64
+# the architecture flag for Tesla C2050
+# smflag=sm_20
+# the architecture flag for Kepler K20C
+# smflag=sm_35
+# the architecture flag for Pascal P100
+# smflag=sm_60
+# the architecture flag for Volta V100
+smflag=sm_70
+
+random_numbers.o:
+	@-echo ">>> compiling random number generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random_numbers.cpp
+
+random_series.o:
+	@-echo ">>> compiling random series generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(CNV)/random_series.cpp
+
+random_monomials.o:
+	@-echo ">>> compiling random_monomials ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random_monomials.cpp
+
+double_double_functions.o:
+	@-echo ">>> compiling double double functions ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
+
+quad_double_functions.o:
+	@-echo ">>> compiling quad double functions ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/quad_double_functions.cpp
+
+octo_double_functions.o:
+	@-echo ">>> compiling octo double functions ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/octo_double_functions.cpp
+
+dbl_convolutions_host.o:
+	@-echo ">>> compiling dbl_convolutions_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl_convolutions_host.cpp
+
+dbl2_convolutions_host.o:
+	@-echo ">>> compiling dbl2_convolutions_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl2_convolutions_host.cpp
+
+dbl4_convolutions_host.o:
+	@-echo ">>> compiling dbl4_convolutions_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl4_convolutions_host.cpp
+
+dbl8_convolutions_host.o:
+	@-echo ">>> compiling dbl8_convolutions_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl8_convolutions_host.cpp
+
+dbl_monomials_host.o:
+	@-echo ">>> compiling dbl_monomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl_monomials_host.cpp
+
+dbl2_monomials_host.o:
+	@-echo ">>> compiling dbl2_monomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl2_monomials_host.cpp
+
+dbl4_monomials_host.o:
+	@-echo ">>> compiling dbl4_monomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl4_monomials_host.cpp
+
+dbl8_monomials_host.o:
+	@-echo ">>> compiling dbl8_monomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl8_monomials_host.cpp
+
+dbl_factorizations.o:
+	@-echo ">>> compiling dbl_factorizations ..."
+	$(gpp) -O3 -c $(MAT)/dbl_factorizations.cpp
+
+dbl2_factorizations.o:
+	@-echo ">>> compiling dbl2_factorizations ..."
+	$(gpp) -O3 -c -I$(MPD) $(MAT)/dbl2_factorizations.cpp
+
+dbl4_factorizations.o:
+	@-echo ">>> compiling dbl4_factorizations ..."
+	$(gpp) -O3 -c -I$(MPD) $(MAT)/dbl4_factorizations.cpp
+
+dbl8_factorizations.o:
+	@-echo ">>> compiling dbl8_factorizations ..."
+	$(gpp) -O3 -c -I$(MPD) $(MAT)/dbl8_factorizations.cpp
+
+unimodular_matrices.o:
+	@-echo ">>> compiling unimodular_matrices ..."
+	$(gpp) -O3 -c -I$(CNV) unimodular_matrices.cpp
+
+dbl_bals_host.o:
+	@-echo ">>> compiling dbl_bals_host ..."
+	$(gpp) -O3 -c -I$(CNV) -I$(MAT) dbl_bals_host.cpp
+
+dbl2_bals_host.o:
+	@-echo ">>> compiling dbl2_bals_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) dbl2_bals_host.cpp
+
+dbl4_bals_host.o:
+	@-echo ">>> compiling dbl4_bals_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) dbl4_bals_host.cpp
+
+dbl8_bals_host.o:
+	@-echo ">>> compiling dbl8_bals_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) dbl8_bals_host.cpp
+
+dbl_baqr_flopcounts.o:
+	@-echo ">>> compling dbl_baqr_flopcounts ..."
+	$(gpp) -O3 -c $(MAT)/dbl_baqr_flopcounts.cpp
+
+dbl_tabs_flopcounts.o:
+	@-echo ">>> compling dbl_tabs_flopcounts ..."
+	$(gpp) -O3 -c $(MAT)/dbl_tabs_flopcounts.cpp
+
+dbl_baqr_kernels.o:
+	@-echo ">>> compiling baqr kernels for doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -O3 \
+             -c $(MAT)/dbl_baqr_kernels.cu
+
+dbl_tabs_kernels.o:
+	@-echo ">>> compiling tabs kernels for doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -O3 \
+             -c $(MAT)/dbl_tabs_kernels.cu
+
+dbl_bals_kernels.o:
+	@-echo ">>> compiling bals kernels for doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MAT) -O3 \
+             -c dbl_bals_kernels.cu
+
+dbl_newton_testers.o:
+	@-echo ">>> compiling dbl_newton_testers ..."
+	$(gpp) -O3 -c -I$(CNV) -I$(MAT) dbl_newton_testers.cpp
+
+dbl2_newton_testers.o:
+	@-echo ">>> compiling dbl2_newton_testers ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) dbl2_newton_testers.cpp
+
+dbl4_newton_testers.o:
+	@-echo ">>> compiling dbl4_newton_testers ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) dbl4_newton_testers.cpp
+
+dbl8_newton_testers.o:
+	@-echo ">>> compiling dbl8_newton_testers ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) dbl8_newton_testers.cpp
+
+test_unimodular.o:
+	@-echo ">>> compiling test_unimodular ..."
+	$(gpp) -O3 -c -I$(CNV) -I$(MAT) test_unimodular.cpp
+
+test_dbl_newton.o:
+	@-echo ">>> compiling test_dbl_newton ..."
+	$(gpp) -O3 -c -I$(CNV) -I$(MAT) test_dbl_newton.cpp
+
+test_dbl2_newton.o:
+	@-echo ">>> compiling test_dbl2_newton ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) test_dbl2_newton.cpp
+
+test_dbl4_newton.o:
+	@-echo ">>> compiling test_dbl4_newton ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) test_dbl4_newton.cpp
+
+test_dbl8_newton.o:
+	@-echo ">>> compiling test_dbl8_newton ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) test_dbl8_newton.cpp
+
+test_unimodular: random_numbers.o random_series.o random_monomials.o \
+                 unimodular_matrices.o test_unimodular.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_unimodular test_unimodular.o unimodular_matrices.o \
+                  random_numbers.o random_series.o random_monomials.o
+
+test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
+                 unimodular_matrices.o dbl_newton_testers.o test_dbl_newton.o \
+                 dbl_convolutions_host.o dbl_monomials_host.o \
+                 dbl_factorizations.o dbl_bals_host.o \
+                 dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
+                 dbl_baqr_kernels.o dbl_tabs_kernels.o dbl_bals_kernels.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl_newton test_dbl_newton.o dbl_newton_testers.o \
+                  unimodular_matrices.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  dbl_convolutions_host.o dbl_monomials_host.o \
+                  dbl_factorizations.o dbl_bals_host.o \
+                  dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
+                  dbl_baqr_kernels.o dbl_tabs_kernels.o dbl_bals_kernels.o \
+                -lcuda -lcudart -L$(CUDALIB)
+
+test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
+                  unimodular_matrices.o double_double_functions.o \
+                  dbl2_convolutions_host.o dbl2_monomials_host.o \
+                  dbl2_factorizations.o dbl2_bals_host.o \
+                  dbl2_newton_testers.o test_dbl2_newton.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl2_newton test_dbl2_newton.o dbl2_newton_testers.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  double_double_functions.o unimodular_matrices.o \
+                  dbl2_convolutions_host.o dbl2_monomials_host.o \
+                  dbl2_factorizations.o dbl2_bals_host.o
+#               -lcuda -lcudart -L$(CUDALIB)
+
+test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
+                  unimodular_matrices.o double_double_functions.o \
+                  quad_double_functions.o \
+                  dbl4_convolutions_host.o dbl4_monomials_host.o \
+                  dbl4_factorizations.o dbl4_bals_host.o \
+                  dbl4_newton_testers.o test_dbl4_newton.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl4_newton test_dbl4_newton.o dbl4_newton_testers.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  double_double_functions.o quad_double_functions.o \
+                  unimodular_matrices.o \
+                  dbl4_convolutions_host.o dbl4_monomials_host.o \
+                  dbl4_factorizations.o dbl4_bals_host.o
+#               -lcuda -lcudart -L$(CUDALIB)
+
+test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
+                  unimodular_matrices.o double_double_functions.o \
+                  quad_double_functions.o octo_double_functions.o \
+                  dbl8_convolutions_host.o dbl8_monomials_host.o \
+                  dbl8_factorizations.o dbl8_bals_host.o \
+                  dbl8_newton_testers.o test_dbl8_newton.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl8_newton test_dbl8_newton.o dbl8_newton_testers.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  double_double_functions.o quad_double_functions.o \
+                  octo_double_functions.o unimodular_matrices.o \
+                  dbl8_convolutions_host.o dbl8_monomials_host.o \
+                  dbl8_factorizations.o dbl8_bals_host.o
+#               -lcuda -lcudart -L$(CUDALIB)
+
+clean:
+	/bin/rm -f -r unimodular_matrices.o
+	/bin/rm -f -r dbl_bals_host.o dbl_bals_kernels.o
+	/bin/rm -f -r dbl2_bals_host.o
+	/bin/rm -f -r dbl4_bals_host.o
+	/bin/rm -f -r dbl8_bals_host.o
+	/bin/rm -f -r dbl_newton_testers.o dbl2_newton_testers.o
+	/bin/rm -f -r dbl4_newton_testers.o dbl8_newton_testers.o
+	/bin/rm -f -r test_unimodular.o test_unimodular
+	/bin/rm -f -r test_dbl_newton.o test_dbl_newton
+	/bin/rm -f -r test_dbl2_newton.o test_dbl2_newton
+	/bin/rm -f -r test_dbl4_newton.o test_dbl4_newton
+	/bin/rm -f -r test_dbl8_newton.o test_dbl8_newton
+
+cleanall: clean
+	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o
+	/bin/rm -f -r dbl_convolutions_host.o dbl_monomials_host.o
+	/bin/rm -f -r dbl2_convolutions_host.o dbl2_monomials_host.o
+	/bin/rm -f -r dbl4_convolutions_host.o dbl4_monomials_host.o
+	/bin/rm -f -r dbl8_convolutions_host.o dbl8_monomials_host.o
+	/bin/rm -f -r double_double_functions.o
+	/bin/rm -f -r quad_double_functions.o
+	/bin/rm -f -r octo_double_functions.o
+	/bin/rm -f -r dbl_factorizations.o dbl2_factorizations.o
+	/bin/rm -f -r dbl4_factorizations.o dbl8_factorizations.o
+	/bin/rm -f -r dbl_baqr_kernels.o dbl_tabs_kernels.o
+	/bin/rm -f -r dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o

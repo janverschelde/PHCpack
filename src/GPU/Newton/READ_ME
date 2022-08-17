@@ -1,0 +1,23 @@
+Accelerated Newton for Power Series in PHCv2.4.87.
+
+------------------------------------------------------------------------------
+file name                : short description
+------------------------------------------------------------------------------
+unimodular_matrices      : code to generate random exponent matrices
+test_unimodular          : test on unimodular triangulation
+------------------------------------------------------------------------------
+dbl_bals_host            : linearization in double precision on host
+dbl_bals_kernels         : linearization in double precision on device
+dbl2_bals_host           : linearization in double double precision on host
+dbl4_bals_host           : linearization in quad double precision on host
+dbl8_bals_host           : linearization in octo double precision on host
+------------------------------------------------------------------------------
+dbl_newton_testers       : test functions on Newton in double precision
+dbl2_newton_testers      : test functions on Newton in double double precision
+dbl4_newton_testers      : test functions on Newton in quad double precision
+dbl8_newton_testers      : test functions on Newton in octo double precision
+test_dbl_newton          : main test Newton in double precision
+test_dbl2_newton         : main test Newton in double double precision
+test_dbl4_newton         : main test Newton in quad double precision
+test_dbl8_newton         : main test Newton in octo double precision
+------------------------------------------------------------------------------
