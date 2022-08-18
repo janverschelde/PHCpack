@@ -32,7 +32,15 @@ void test_real_upper_inverse ( void )
 
    // random_dbl_upper_matrix(dim,dim,A);
    dbl_random_upper_factor(dim,A);
-
+/*
+ * The code below makes an identity matrix for A.
+ *
+  for(int i=0; i<dim; i++)
+  {
+     for(int j=0; j<dim; j++) A[i][j] = 0.0;
+     A[i][i] = 1.0;
+  }
+*/
    cout << scientific << setprecision(16);
 
    if(verbose > 0)
@@ -415,13 +423,6 @@ void test_real_upper_tiling ( void )
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
    cout << endl;
-   long long int bytecnt = 4*sizetile*numtiles*(numtiles+1)
-                         + 8*sizetile*numtiles;
-   cout << "    Total number of bytes : " << bytecnt << endl << endl;
-   double intensity = ((double) flopcnt)/bytecnt;
-   cout << "     Arithmetic intensity : "
-        << scientific << setprecision(3) << intensity
-        << " #flops/#bytes" << endl << endl;
    cout << scientific << setprecision(3);
    double kernflops = 1000.0*((double) flopcnt)/elapsedms;
    double wallflops = ((double) flopcnt)/timelapsed_d;
@@ -624,13 +625,6 @@ void test_cmplx_upper_tiling ( void )
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
    cout << endl;
-   long long int bytecnt = 4*sizetile*numtiles*(numtiles+1)*2
-                         + 8*sizetile*numtiles*2;
-   cout << "    Total number of bytes : " << bytecnt << endl << endl;
-   double intensity = ((double) flopcnt)/bytecnt;
-   cout << "     Arithmetic intensity : "
-        << scientific << setprecision(3) << intensity
-        << " #flops/#bytes" << endl << endl;
    cout << scientific << setprecision(3);
    double kernflops = 1000.0*((double) flopcnt)/elapsedms;
    double wallflops = ((double) flopcnt)/timelapsed_d;

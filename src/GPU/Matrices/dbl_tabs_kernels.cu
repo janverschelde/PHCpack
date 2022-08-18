@@ -28,8 +28,9 @@ __global__ void dbl_small_invert_upper ( int dim, double *U, double *invU )
    int rowidx = (dim - 1)*dim + k;    // the row index in the inverse
 
    __syncthreads();
-   invUrows[rowidx] = rhs/Ucol[k];    // last row of the inverse
-
+   if(Ucol[k] != 0.0)
+      invUrows[rowidx] = rhs/Ucol[k];    // last row of the inverse
+   __syncthreads();
    for(int i=dim-2; i>=0; i--)        // compute row with index i
    {
       rhs = ((double) int(k == i));   // set rhs for i-th unit vector
@@ -53,7 +54,8 @@ __global__ void dbl_small_invert_upper ( int dim, double *U, double *invU )
       Ucol[k] = U[colidx+k];
 
       __syncthreads();
-      invUrows[rowidx] = rhs/Ucol[i];
+      if(Ucol[i] != 0.0) invUrows[rowidx] = rhs/Ucol[i];
+      __syncthreads();
    }
    rowidx = 0;
    for(int i=0; i<dim; i++)
@@ -229,8 +231,12 @@ __global__ void dbl_medium_invert_upper ( int dim, double *U, double *invU )
    rhs = ((double) int(k == dim-1));  // right hand side for each thread
    int rowidx = (dim - 1)*dim + k;    // the row index in the inverse
 
-   invUrow[k] = rhs/Ucol[k];          // last row of the inverse
-   invU[rowidx] = invUrow[k];         // store the last row into invU
+   if(Ucol[k] != 0.0)
+   {
+      invUrow[k] = rhs/Ucol[k];       // last row of the inverse
+      invU[rowidx] = invUrow[k];      // store the last row into invU
+   }
+   __syncthreads();
 
    for(int i=dim-2; i>=0; i--)        // compute row with index i
    {
@@ -253,8 +259,11 @@ __global__ void dbl_medium_invert_upper ( int dim, double *U, double *invU )
       rowidx = i*dim + k;             // save in i-th row of inverse
 
       __syncthreads();
-      invUrow[k] = rhs/Ucol[i];
-      invU[rowidx] = invUrow[k];
+      if(Ucol[i] != 0.0)
+      {
+         invUrow[k] = rhs/Ucol[i];
+         invU[rowidx] = invUrow[k];
+      }
    }
 }
 
@@ -345,8 +354,12 @@ __global__ void  dbl_invert_tiles ( int dim, double *U, double *invU )
    rhs = ((double) int(k == dim-1));  // right hand side for each thread
    int rowidx = offset + (dim - 1)*dim + k; // row index in the inverse
 
-   invUrow[k] = rhs/Ucol[k];          // last row of the inverse
-   invU[rowidx] = invUrow[k];         // store the last row into invU
+   if(Ucol[k] != 0.0)
+   {
+      invUrow[k] = rhs/Ucol[k];          // last row of the inverse
+      invU[rowidx] = invUrow[k];         // store the last row into invU
+   }
+   __syncthreads();
 
    for(int i=dim-2; i>=0; i--)        // compute row with index i
    {
@@ -369,8 +382,11 @@ __global__ void  dbl_invert_tiles ( int dim, double *U, double *invU )
       rowidx = offset + i*dim + k;    // save in i-th row of inverse
 
       __syncthreads();
-      invUrow[k] = rhs/Ucol[i];
-      invU[rowidx] = invUrow[k];
+      if(Ucol[i] != 0.0)
+      {
+         invUrow[k] = rhs/Ucol[i];
+         invU[rowidx] = invUrow[k];
+      }
    }
 }
 
