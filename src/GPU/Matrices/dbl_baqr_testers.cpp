@@ -40,7 +40,15 @@ void test_real_blocked_qr
       R_d[i] = new double[ncols];
    }
    random_dbl_matrix(nrows,ncols,A);
-
+/*
+ * The code below makes an A which leads to zero betas.
+ *
+   for(int i=0; i<nrows; i++)
+   {
+      for(int j=0; j<ncols; j++) A[i][j] = 0.0;
+      A[i][i] = (double) (i+1);
+   }
+ */
    if(verbose > 0)
    {
       cout << scientific << setprecision(16);
@@ -155,12 +163,6 @@ void test_real_blocked_qr
       cout << "    Total number of floating-point operations : "
            << flopcnt << endl;
       cout << endl;
-      long long int bytecnt = nrows*ncols + nrows*nrows;
-      cout << "    Total number of bytes : " << bytecnt << endl << endl;
-      double intensity = ((double) flopcnt)/bytecnt;
-      cout << "     Arithmetic intensity : "
-           << scientific << setprecision(5) << intensity
-           << " #flops/#bytes" << endl << endl;
       double kernflops = 1000.0*((double) flopcnt)/totlapsedms;
       double wallflops = ((double) flopcnt)/timelapsed_d;
       const int gigacnt = pow(2.0,30);
@@ -216,7 +218,20 @@ void test_cmplx_blocked_qr
       Rim_d[i] = new double[ncols];
    }
    random_cmplx_matrix(nrows,ncols,Are,Aim);
-
+/*
+ * The code below makes an A which leads to zero betas.
+ * 
+   for(int i=0; i<nrows; i++)
+   {
+      for(int j=0; j<ncols; j++)
+      {
+         Are[i][j] = 0.0;
+         Aim[i][j] = 0.0;
+      }
+      Are[i][i] = (double) (i+1);
+      Aim[i][i] = 0.0;
+   }
+ */
    if(verbose > 0)
    {
       cout << scientific << setprecision(16);
@@ -337,12 +352,6 @@ void test_cmplx_blocked_qr
       cout << "    Total number of floating-point operations : "
            << flopcnt << endl;
       cout << endl;
-      long long int bytecnt = 2*nrows*ncols + 2*nrows*nrows;
-      cout << "    Total number of bytes : " << bytecnt << endl << endl;
-      double intensity = ((double) flopcnt)/bytecnt;
-      cout << "     Arithmetic intensity : "
-           << scientific << setprecision(5) << intensity
-           << " #flops/#bytes" << endl << endl;
       double kernflops = 1000.0*((double) flopcnt)/totlapsedms;
       double wallflops = ((double) flopcnt)/timelapsed_d;
       const int gigacnt = pow(2.0,30);

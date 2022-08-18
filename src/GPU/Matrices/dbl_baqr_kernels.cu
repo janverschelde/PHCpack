@@ -62,7 +62,8 @@ __global__ void dbl_small_house
       prd[0] = v0;                         // v0 needed for normalization
    }
    __syncthreads();
-   shv[j] = shv[j]/prd[0];
+   if(*beta != 0.0) shv[j] = shv[j]/prd[0];
+   __syncthreads();
    v[j+1] = shv[j];
    if(j == 0) v[0] = 1.0;
 }
@@ -135,12 +136,16 @@ __global__ void cmplx_small_house
       v0parts[1] = v0im;                  // share v0im with all threads
    }
    __syncthreads();
-   inv0re = v0parts[0]/prd[0];               // real part of 1/v[0]
-   inv0im = -v0parts[1]/prd[0];              // imag part of 1/v[0]
-   zre = shvre[j]*inv0re - shvim[j]*inv0im;  // real part of v[j]/v[0]
-   zim = shvim[j]*inv0re + shvre[j]*inv0im;  // imag part of v[j]/v[0]
-   vre[j+1] = zre;
-   vim[j+1] = zim;
+   if(prd[0] != 0.0)
+   {
+      inv0re = v0parts[0]/prd[0];               // real part of 1/v[0]
+      inv0im = -v0parts[1]/prd[0];              // imag part of 1/v[0]
+      zre = shvre[j]*inv0re - shvim[j]*inv0im;  // real part of v[j]/v[0]
+      zim = shvim[j]*inv0re + shvre[j]*inv0im;  // imag part of v[j]/v[0]
+      vre[j+1] = zre;
+      vim[j+1] = zim;
+   }
+   __syncthreads();
    if(j == 0) vre[0] = 1.0;
    if(j == 0) vim[0] = 0.0;
 }
@@ -1163,11 +1168,11 @@ void GPU_dbl_small_house
       *lapms += milliseconds;
       flopcount_dbl_small_house(nrows1,nrLog2,add,mul,div,sqrtfun);
    }
+   cudaMemcpy(&beta_h[L],&beta_d[L],sizeof(double),cudaMemcpyDeviceToHost);
    if(verbose)
    {
       const size_t szhouse = nVrows*sizeof(double);
 
-      cudaMemcpy(&beta_h[L],&beta_d[L],sizeof(double),cudaMemcpyDeviceToHost);
       cudaMemcpy(v_h,&V_d[L*nVrows],szhouse,cudaMemcpyDeviceToHost);
       cout << scientific << setprecision(16)
            << "beta[" << colidx << "] : " << beta_h[L] << endl;
@@ -1240,11 +1245,11 @@ void GPU_cmplx_small_house
       *lapms += milliseconds;
       flopcount_cmplx_small_house(nrows1,nrLog2,add,mul,div,sqrtfun);
    }
+   cudaMemcpy(&beta_h[L],&beta_d[L],sizeof(double),cudaMemcpyDeviceToHost);
    if(verbose)
    {
       const size_t szhouse = nVrows*sizeof(double);
 
-      cudaMemcpy(&beta_h[L],&beta_d[L],sizeof(double),cudaMemcpyDeviceToHost);
       cudaMemcpy(vre_h,&Vre_d[L*nVrows],szhouse,cudaMemcpyDeviceToHost);
       cudaMemcpy(vim_h,&Vim_d[L*nVrows],szhouse,cudaMemcpyDeviceToHost);
       cout << scientific << setprecision(16)
@@ -2522,18 +2527,25 @@ void GPU_dbl_blocked_houseqr
             (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
              A_h,A_d,v_h,V_d,beta_h,beta_d,
              houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
-         if(nrows - colidx <= szt)
+         if(beta_h[L] == 0.0)
          {
-            GPU_dbl_small_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
-                tileRlapms,addcnt,mulcnt,verbose);
+            if(verbose) cout << "Zero beta detected." << endl;
          }
          else
          {
-            GPU_dbl_medium_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
-                RTdotv_h,RTdotv_d,bRTv_h,bRTv_d,
-                RTvlapms,tileRlapms,addcnt,mulcnt,verbose);
+            if(nrows - colidx <= szt)
+            {
+               GPU_dbl_small_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
+                   tileRlapms,addcnt,mulcnt,verbose);
+            }
+            else
+            {
+               GPU_dbl_medium_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,A_h,A_d,V_d,beta_h,beta_d,
+                   RTdotv_h,RTdotv_d,bRTv_h,bRTv_d,
+                   RTvlapms,tileRlapms,addcnt,mulcnt,verbose);
+            }
          }
       }
 /*
@@ -2757,21 +2769,29 @@ void GPU_cmplx_blocked_houseqr
             (nrows,ncols,szt,nbt,colidx,nrows1,k,L,
              Are_h,Aim_h,Are_d,Aim_d,vre_h,vim_h,Vre_d,Vim_d,
              beta_h,beta_d,houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
-         if(nrows - colidx <= szt)
+
+         if(beta_h[L] == 0.0)
          {
-            GPU_cmplx_small_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,Are_h,Aim_h,Are_d,Aim_d,
-                Vre_d,Vim_d,beta_h,beta_d,tileRlapms,
-                addcnt,mulcnt,verbose);
+            if(verbose) cout << "Zero beta detected." << endl;
          }
          else
          {
-            GPU_cmplx_medium_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,Are_h,Aim_h,Are_d,Aim_d,
-                Vre_d,Vim_d,beta_h,beta_d,
-                RHdotvre_h,RHdotvim_h,RHdotvre_d,RHdotvim_d,
-                bRHvre_h,bRHvim_h,bRHvre_d,bRHvim_d,
-                RHvlapms,tileRlapms,addcnt,mulcnt,verbose);
+            if(nrows - colidx <= szt)
+            {
+               GPU_cmplx_small_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,Are_h,Aim_h,Are_d,Aim_d,
+                   Vre_d,Vim_d,beta_h,beta_d,tileRlapms,
+                   addcnt,mulcnt,verbose);
+            }
+            else
+            {
+               GPU_cmplx_medium_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,Are_h,Aim_h,Are_d,Aim_d,
+                   Vre_d,Vim_d,beta_h,beta_d,
+                   RHdotvre_h,RHdotvim_h,RHdotvre_d,RHdotvim_d,
+                   bRHvre_h,bRHvim_h,bRHvre_d,bRHvim_d,
+                   RHvlapms,tileRlapms,addcnt,mulcnt,verbose);
+            }
          }
       }
 /*
