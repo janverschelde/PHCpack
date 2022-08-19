@@ -1,3 +1,7 @@
+Thu 18 Aug 2022 : added intialization of R, printing of R and b to
+  dbl_bals_kernels.cu.  To dbl_bals_kernels.cu added start of code for the
+  update of the right hand side for the stages in the update of the series.
+
 Wed 17 Aug 2022 : renamed {dbl,dbl2,dbl4,dbl8}_linearseries into
   {dbl,dbl2,dbl4,dbl8}_bals, for block accelerated linearized series,
   which changed {dbl,dbl2,dbl4,dbl8}_newton_testers.cpp.  Updated makefiles.
