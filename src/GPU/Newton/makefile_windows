@@ -221,6 +221,7 @@ dbl_newton_testers.obj:
 	@-echo ">>> compiling dbl_newton_testers ..."
 	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(winkitucrt) -I$(includepath) -O2 \
                       dbl_newton_testers.cpp \
+                 /I$(CUDASDK)/include \
                  /Fo: dbl_newton_testers.obj /EHsc
 
 dbl2_newton_testers.obj:

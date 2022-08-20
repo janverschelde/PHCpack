@@ -1,3 +1,10 @@
+Sat 20 Aug 2022 : first complete kernel to compute the tail, with updated
+  prototype in dbl_bals_kernels.h, code in dbl_bals_kernels.cu.
+  Updated makefile_windows to compile test_dbl_newton.
+
+Fri 19 Aug 2022 : extended dbl_bals_kernels.h and dbl_bals_kernels.cu,
+  updated the #include of dbl_newton_testers.cpp and makefile_unix.
+
 Thu 18 Aug 2022 : added intialization of R, printing of R and b to
   dbl_bals_kernels.cu.  To dbl_bals_kernels.cu added start of code for the
   update of the right hand side for the stages in the update of the series.

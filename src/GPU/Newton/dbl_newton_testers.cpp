@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include <cmath>
+#include <vector_types.h>
 #include <time.h>
 #include "unimodular_matrices.h"
 #include "random_monomials.h"

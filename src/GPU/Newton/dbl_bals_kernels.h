@@ -5,13 +5,34 @@
 #ifndef __dbl_bals_kernels_h__
 #define __dbl_bals_kernels_h__
 
-void GPU_dbl_qrbs_solve
+__global__ void dbl_bals_tail
+ ( int ncols, int szt, double *A, double *x, double *b );
+/*
+ * DESCRIPTION :
+ *   Subtracts from the right hand side b the product of A with x.
+ *
+ * REQUIRED : nrows = szt times the number of blocks,
+ *   where nrows in the number of rows in A and the dimension of b.
+ *
+ * ON ENTRY :
+ *   ncols    number of columns in A and the dimension of x;
+ *   szt      size of each block (and tile);
+ *   A        nrows-by-ncols matrix to multiply x with;
+ *   x        vector of dimension ncols;
+ *   b        vector of dimension nrows.
+ *
+ * ON RETURN :
+ *   b        updated right hand side vector. */
+
+void GPU_dbl_bals_head
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R, double *b, double *x, bool verbose );
 /*
  * DESCRIPTION :
- *   Solves the linear system in the least squares sense,
- *   with a QR factorization followed by a back substitution.
+ *   Solves the head linear system in the least squares sense,
+ *   with a QR factorization followed by a back substitution,
+ *   wrapping the kernel launches for the blocked Householder QR
+ *   followed by the tiled back substitution.
  *
  * REQUIRED : ncols = szt*nbt.
  *
@@ -30,6 +51,33 @@ void GPU_dbl_qrbs_solve
  *   Q        the Q in a QR factorization of the Jacobian matrix;
  *   R        the R in a QR factorization of the Jacobian matrix;
  *   x        least squares solution. */
+
+void GPU_dbl_bals_tail
+ ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
+   double ***mat, double **rhs, double **sol, bool verbose );
+/*
+ * DESCRIPTION :
+ *   After each block of coefficients of the series,
+ *   kernels are launched for the multiplication of the tail matrices
+ *   with the solution coefficients to update the right hand sides
+ *   of the linear system of power series.
+ *
+ * REQUIRED : ncols = szt*nbt.
+ *
+ * ON ENTRY :
+ *   nrows    number of rows in A and the dimension of b;
+ *   ncols    number of columns in A and the dimension of x;
+ *   szt      size of each block (and tile);
+ *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   degp1    degree plus one, total number of coefficient blocks;
+ *   stage    coefficient blocks up to stage-1 are computed;
+ *   mat      matrices of the linearized power series;
+ *   rhs      right hand side vectors of the linear system;
+ *   sol      solution coefficients computed up to stage-1;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   rhs      updated right hand sides. */
 
 void GPU_dbl_bals_solve
  ( int dim, int degp1, int szt, int nbt,

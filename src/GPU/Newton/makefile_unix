@@ -132,7 +132,7 @@ dbl_bals_kernels.o:
 
 dbl_newton_testers.o:
 	@-echo ">>> compiling dbl_newton_testers ..."
-	$(gpp) -O3 -c -I$(CNV) -I$(MAT) dbl_newton_testers.cpp
+	$(gpp) -O3 -c -I$(CUDA) -I$(CNV) -I$(MAT) dbl_newton_testers.cpp
 
 dbl2_newton_testers.o:
 	@-echo ">>> compiling dbl2_newton_testers ..."
