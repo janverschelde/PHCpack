@@ -317,5 +317,16 @@ void dbl_newton_qrstep
       if(vrblvl > 0) cout << "maximum residual : " << *resmax << endl;
       dbl_update_series(dim,degp1,input,sol_d,vrblvl);
    }
-
+   if((vrblvl > 0) && (mode == 2))
+   {
+      cout << "comparing CPU with GPU solutions ... " << endl;
+      for(int i=0; i< degp1; i++)
+         for(int j=0; j<dim; j++)
+         {
+             cout << "sol_h[" << i << "][" << j << "] : "
+                  << sol_h[i][j] << endl;
+             cout << "sol_d[" << i << "][" << j << "] : "
+                  << sol_d[i][j] << endl;
+         }
+   }
 }

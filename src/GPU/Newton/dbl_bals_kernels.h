@@ -24,6 +24,27 @@ __global__ void dbl_bals_tail
  * ON RETURN :
  *   b        updated right hand side vector. */
 
+__global__ void dbl_bals_qtb
+ ( int ncols, int szt, double *Qt, double *b, double *r );
+/*
+ * DESCRIPTION :
+ *   Multiplies the transpose of Q with b.
+ *
+ * REQUIRED : ncols = szt times the number of blocks,
+ *   where ncols in the number of rows and columns in Qt 
+ *   and the dimension of b.
+ *
+ * ON ENTRY :
+ *   ncols    number of columns in Qt and the dimension of b;
+ *   szt      size of each block (and tile);
+ *   Qt       ncols-by-ncols matrix to multiply x with,
+ *            the rows of Qt contain the transpose of Q;
+ *   b        vector of dimension ncols;
+ *   r        vector of dimension ncols.
+ *
+ * ON RETURN :
+ *   r        product of Qt with b. */
+
 void GPU_dbl_bals_head
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R, double *b, double *x, bool verbose );
@@ -78,6 +99,25 @@ void GPU_dbl_bals_tail
  *
  * ON RETURN :
  *   rhs      updated right hand sides. */
+
+void GPU_dbl_bals_qtb
+ ( int ncols, int szt, int nbt, double **Q, double *b, bool verbose );
+/*
+ * DESCRIPTION :
+ *   The updated right hand side vector b is multiplied with Q^T.
+ *
+ * REQUIRED : ncols = szt*nbt.
+ *
+ * ON ENTRY :
+ *   ncols    number of columns and rows in Q and the dimension
+ *            of the vectors b and qtb;
+ *   szt      size of each block (and tile);
+ *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   b        right hand side vector of the linear system;
+ *   verbose  is the verbose flag.
+ *
+ * ON RETURN :
+ *   b        the product of Q^T with b. */
 
 void GPU_dbl_bals_solve
  ( int dim, int degp1, int szt, int nbt,

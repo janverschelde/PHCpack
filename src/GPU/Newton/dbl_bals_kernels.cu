@@ -34,6 +34,28 @@ __global__ void dbl_bals_tail
    b[idx] = bi;
 }
 
+__global__ void dbl_bals_qtb
+ ( int ncols, int szt, double *Qt, double *b, double *r )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx; // thread tdx updates b[idx]
+
+   double Qj;           // register for Q^T[idx][j]
+   double bj;           // register for hold b[j]
+   double ri = 0.0;     // register for result, b[idx]
+
+   int offset = idx*ncols;
+
+   for(int j=0; j<ncols; j++)
+   {
+      Qj = Qt[offset+j];
+      bj = b[j];
+      ri = ri + Qj*bj;
+   }
+   r[idx] = ri;
+}
+
 void GPU_dbl_bals_head
  ( int nrows, int ncols, int szt, int nbt,
    double **A, double **Q, double **R, double *b, double *x, bool verbose )
@@ -86,6 +108,16 @@ void GPU_dbl_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***mat, double **rhs, double **sol, bool verbose )
 {
+   if(verbose)
+   {
+      cout << "GPU_dbl_bals_tail input blocks of rhs :" << endl;
+      for(int k=0; k<degp1; k++)
+      {
+         for(int i=0; i<nrows; i++)
+            cout << "rhs[" << k << "][" << i << "] : " << rhs[k][i] << endl;
+      }
+   }
+
    double *b_d;
    const size_t szrhs = nrows*sizeof(double);
    cudaMalloc((void**)&b_d,szrhs);
@@ -111,14 +143,62 @@ void GPU_dbl_bals_tail
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++) A_h[idx++] = mat[k][i][j];
       
-      cudaMemcpy(b_d,&rhs[k],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(b_d,&(rhs[k][0]),szrhs,cudaMemcpyHostToDevice);
       cudaMemcpy(A_d,A_h,szmat,cudaMemcpyHostToDevice);
 
-      dbl_bals_tail<<<nbt,szt>>>(ncols,szt,A_d,x_d,b_d);
+      if(verbose)
+         cout << "nbt = " << nbt << ", szt = " << szt
+              << ", ncols = " << ncols << endl;
 
-      cudaMemcpy(&rhs[k],b_d,szrhs,cudaMemcpyDeviceToHost);
+      dbl_bals_tail<<<nbt,szt>>>(ncols,szt,A_d,x_d,b_d);
+      
+      if(verbose)
+         cout << "copying block " << k << " of right hand side ..." << endl;
+
+      cudaMemcpy(&(rhs[k][0]),b_d,szrhs,cudaMemcpyDeviceToHost);
    }
    free(A_h);
+
+   if(verbose)
+   {
+      cout << "GPU_dbl_bals_tail copied blocks of rhs :" << endl;
+      for(int k=0; k<degp1; k++)
+      {
+         for(int i=0; i<nrows; i++)
+            cout << "rhs[" << k << "][" << i << "] : " << rhs[k][i] << endl;
+      }
+   }
+}
+
+void GPU_dbl_bals_qtb
+ ( int ncols, int szt, int nbt, double **Q, double *b, bool verbose )
+{
+   double *b_d;
+   const size_t szrhs = ncols*sizeof(double);
+   cudaMalloc((void**)&b_d,szrhs);
+
+   double *r_d;
+   const size_t szsol = ncols*sizeof(double);
+   cudaMalloc((void**)&r_d,szsol);
+
+   double *Qt_d;
+   const size_t szmat = ncols*ncols*sizeof(double);
+   cudaMalloc((void**)&Qt_d,szmat);
+
+   double *Qt_h = new double[szmat];
+
+   int idx=0;
+   for(int i=0; i<ncols; i++)
+      for(int j=0; j<ncols; j++) Qt_h[idx++] = Q[j][i];
+
+   cudaMemcpy(b_d,b,szrhs,cudaMemcpyHostToDevice);
+   cudaMemcpy(Qt_d,Qt_h,szmat,cudaMemcpyHostToDevice);
+
+   dbl_bals_qtb<<<nbt,szt>>>(ncols,szt,Qt_d,b_d,r_d);
+
+   cudaMemcpy(b,r_d,szrhs,cudaMemcpyDeviceToHost);
+
+   free(Qt_h);
 }
 
 void GPU_dbl_bals_solve
@@ -136,6 +216,16 @@ void GPU_dbl_bals_solve
    double *b = new double[nrows];
    double *x = new double[ncols];
 
+   if(vrblvl)
+   {
+      cout << "GPU_dbl_bals_solve blocks of rhs :" << endl;
+      for(int k=0; k<degp1; k++)
+      {
+         for(int i=0; i<nrows; i++)
+            cout << "rhs[" << k << "][" << i << "] : " << rhs[k][i] << endl;
+      }
+   }
+
    for(int i=0; i<nrows; i++)
    {
       A[i] = new double[ncols];
@@ -150,20 +240,39 @@ void GPU_dbl_bals_solve
 
    for(int j=0; j<ncols; j++) sol[0][j] = x[j];
 
-   for(int stage=1; stage<nbt; stage++)
+   for(int stage=1; stage<degp1; stage++)
    {
       if(vrblvl > 0)
          cout << "stage " << stage << " in solve tail ..." << endl;
 
       GPU_dbl_bals_tail(nrows,ncols,szt,nbt,degp1,stage,mat,rhs,sol,bvrb);
 
-      for(int i=0; i<nrows; i++) b[i] = rhs[stage][i];
+      if(vrblvl)
+      {
+         cout << "blocks of rhs before assignment :" << endl;
+         for(int k=0; k<degp1; k++)
+         {
+            for(int i=0; i<nrows; i++)
+               cout << "rhs[" << k << "][" << i << "] : " << rhs[k][i] << endl;
+         }
+      }
 
+      for(int i=0; i<nrows; i++) 
+      {
+         cout << "assigning component " << i
+              << ", stage = " << stage << endl;
+         b[i] = rhs[stage][i];
+      }
       double bstimelapsed_d;
       double elapsedms,invlapsed,mullapsed,sublapsed;
       long long int bsaddcnt = 0;
       long long int bsmulcnt = 0;
       long long int bsdivcnt = 0;
+
+      if(bvrb > 0)
+         cout << "-> GPU multiplies rhs with Q^T ..." << endl;
+
+      GPU_dbl_bals_qtb(ncols,szt,nbt,Q,b,bvrb);
 
       if(bvrb > 0)
          cout << "-> GPU solves an upper triangular system ..." << endl;
