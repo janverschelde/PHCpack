@@ -121,7 +121,8 @@ void GPU_dbl_bals_qtb
 
 void GPU_dbl_bals_solve
  ( int dim, int degp1, int szt, int nbt,
-   double ***mat, double **rhs, double **sol, int vrblvl );
+   double ***mat, double **Q, double **R, double **rhs, double **sol,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -135,11 +136,16 @@ void GPU_dbl_bals_solve
  *   szt      size of each block (and tile);
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
  *   mat      degp1 matrices of dimension dim;
+ *   Q        space for the Q of the QR factorization of the Jacobian;
+ *   R        space for the R of the QR factorization of the Jacobian;
  *   rhs      degp1 vectors of dimension dim;
  *   sol      space allocated for degp1 vectors of dimension dim;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
+ *   Q        the Q of the QR factorization of the Jacobian matrix;
+ *   R        the R of the QR factorization of the Jacobian matrix;
+ *   rhs      updated right hand side vectors;
  *   sol      coefficients of the solution series. */
 
 #endif

@@ -267,9 +267,10 @@ void dbl_newton_qrstep
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **cff, double *acc, double **input, double ***output,
    double **funval, double ***jacval, double **rhs,
-   double **sol_h, double **sol_d,
-   double **Q, double **R, double **workmat, double *workvec,
-   double **workrhs, double **resvec, double *resmax, int vrblvl, int mode )
+   double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
+   double **Q_h, double **Q_d, double **R_h, double **R_d,
+   double **workmat, double *workvec, double **resvec, double *resmax,
+   int vrblvl, int mode )
 {
    const int degp1 = deg+1;
 
@@ -291,7 +292,12 @@ void dbl_newton_qrstep
       (dim,degp1,nvr,idx,output,funval,rhs,jacval,vrblvl);
 
    for(int i=0; i<degp1; i++) // save original rhs for residual
-      for(int j=0; j<dim; j++) workrhs[i][j] = rhs[i][j];
+      for(int j=0; j<dim; j++)
+      {
+         urhs_h[i][j] = rhs[i][j];
+         urhs_d[i][j] = rhs[i][j];
+      }
+
    for(int i=0; i<degp1; i++) // initialize the solution to zero
       for(int j=0; j<dim; j++)
       {
@@ -302,7 +308,7 @@ void dbl_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       CPU_dbl_qrbs_solve
-         (dim,degp1,jacval,workrhs,sol_h,workmat,Q,R,workvec,vrblvl);
+         (dim,degp1,jacval,urhs_h,sol_h,workmat,Q_h,R_h,workvec,vrblvl);
 
       CPU_dbl_linear_residue(dim,degp1,jacval,rhs,sol_h,resvec,resmax,vrblvl);
       if(vrblvl > 0) cout << "maximum residual : " << *resmax << endl;
@@ -311,7 +317,7 @@ void dbl_newton_qrstep
    if((mode == 0) || (mode == 2))
    {
       GPU_dbl_bals_solve
-         (dim,degp1,szt,nbt,jacval,workrhs,sol_d,vrblvl);
+         (dim,degp1,szt,nbt,jacval,Q_d,R_d,urhs_d,sol_d,vrblvl);
 
       CPU_dbl_linear_residue(dim,degp1,jacval,rhs,sol_d,resvec,resmax,vrblvl);
       if(vrblvl > 0) cout << "maximum residual : " << *resmax << endl;
@@ -319,6 +325,16 @@ void dbl_newton_qrstep
    }
    if((vrblvl > 0) && (mode == 2))
    {
+      cout << "comparing CPU with GPU updated rhs ... " << endl;
+      for(int i=0; i< degp1; i++)
+         for(int j=0; j<dim; j++)
+         {
+             cout << "urhs_h[" << i << "][" << j << "] : "
+                  << urhs_h[i][j] << endl;
+             cout << "urhs_d[" << i << "][" << j << "] : "
+                  << urhs_d[i][j] << endl;
+         }
+
       cout << "comparing CPU with GPU solutions ... " << endl;
       for(int i=0; i< degp1; i++)
          for(int j=0; j<dim; j++)

@@ -167,9 +167,10 @@ void dbl_newton_qrstep
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **cff, double *acc, double **input, double ***output,
    double **funval, double ***jacval, double **rhs,
-   double **sol_h, double **sol_d,
-   double **Q, double **R, double **workmat, double *workvec,
-   double **workrhs, double **resvec, double *resmax, int vrblvl, int mode );
+   double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
+   double **Q_h, double **Q_d, double **R_h, double **R_d,
+   double **workmat, double *workvec, double **resvec, double *resmax,
+   int vrblvl, int mode );
 /*
  * DESCRIPTION :
  *   Does one step with Newton's method to update a power series,
@@ -197,10 +198,14 @@ void dbl_newton_qrstep
  *   funval    space for the evaluated power series;
  *   jacval    space for deg+1 matrices of dimension dim;
  *   rhs       space for deg+1 vectors of dimension dim;
+ *   urhs_h    space for updated right hand side vectors computed by host;
+ *   urhs_d    space for updated right hand side vectors computed by device; 
  *   sol_h     space for deg+1 vectors of dimension dim;
  *   sol_d     space for deg+1 vectors of dimension dim;
- *   Q         space allocated for the Q of the QR factorization;
- *   R         space allocated for the R of the QR factorization;
+ *   Q_h       space allocated for the Q computed by the host;
+ *   Q_d       space allocated for the Q computed by the device;
+ *   R_h       space allocated for the R computed by the host;
+ *   R_d       space allocated for the R computed by the device;
  *   wrkmat    work space allocated for a matrix of dimension dim;
  *   wrkvec    work space allocated for a vector of dimension dim;
  *   resvec    space for deg+1 vectors of dimension dim;
@@ -213,10 +218,14 @@ void dbl_newton_qrstep
  *             the leading coefficient is the Jacobian matrix.
  *   rhs       the linearized right hand side are the function values
  *             subtracted by 1 and added by t;
+ *   urhs_h    right hand side vector updated by the host;
+ *   urhs_d    right hand side vector updated by the device;
  *   sol_h     solution computed by the host;
  *   sol_d     solution computed by the device;
- *   Q         Q of the QR factorization of the Jacobian matrix;
- *   R         R of the QR factorization of the Jacobian matrix;
+ *   Q_h       Q of the QR factorization computed by the host;
+ *   Q_d       Q of the QR factorization computed by the device;
+ *   R_h       R of the QR factorization computed by the host;
+ *   R_d       R of the QR factorization computed by the device;
  *   wrkmat    has a copy of the Jacobian matrix;
  *   resvec    residual vectors;
  *   resmax    the maximum element of the residual vectors. */

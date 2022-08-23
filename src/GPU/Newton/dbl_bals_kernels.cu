@@ -20,7 +20,7 @@ __global__ void dbl_bals_tail
    const int idx = bdx*szt + tdx; // thread tdx updates b[idx]
 
    double Aj;           // register for A[idx][j]
-   double xj;           // register for hold x[j]
+   double xj;           // register for x[j]
    double bi = b[idx];  // register for b[idx]
 
    int offset = idx*ncols;
@@ -42,7 +42,7 @@ __global__ void dbl_bals_qtb
    const int idx = bdx*szt + tdx; // thread tdx updates b[idx]
 
    double Qj;           // register for Q^T[idx][j]
-   double bj;           // register for hold b[j]
+   double bj;           // register for b[j]
    double ri = 0.0;     // register for result, b[idx]
 
    int offset = idx*ncols;
@@ -176,6 +176,7 @@ void GPU_dbl_bals_qtb
    double *b_d;
    const size_t szrhs = ncols*sizeof(double);
    cudaMalloc((void**)&b_d,szrhs);
+   cudaMemcpy(b_d,b,szrhs,cudaMemcpyHostToDevice);
 
    double *r_d;
    const size_t szsol = ncols*sizeof(double);
@@ -191,7 +192,6 @@ void GPU_dbl_bals_qtb
    for(int i=0; i<ncols; i++)
       for(int j=0; j<ncols; j++) Qt_h[idx++] = Q[j][i];
 
-   cudaMemcpy(b_d,b,szrhs,cudaMemcpyHostToDevice);
    cudaMemcpy(Qt_d,Qt_h,szmat,cudaMemcpyHostToDevice);
 
    dbl_bals_qtb<<<nbt,szt>>>(ncols,szt,Qt_d,b_d,r_d);
@@ -203,15 +203,14 @@ void GPU_dbl_bals_qtb
 
 void GPU_dbl_bals_solve
  ( int dim, int degp1, int szt, int nbt,
-   double ***mat, double **rhs, double **sol, int vrblvl )
+   double ***mat, double **Q, double **R, double **rhs, double **sol,
+   int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
    const bool bvrb = (vrblvl > 0);
 
    double **A = new double*[nrows];
-   double **Q = new double*[nrows];
-   double **R = new double*[nrows];
 
    double *b = new double[nrows];
    double *x = new double[ncols];
@@ -231,8 +230,6 @@ void GPU_dbl_bals_solve
       A[i] = new double[ncols];
       for(int j=0; j<ncols; j++) A[i][j] = mat[0][i][j];
       b[i] = rhs[0][i];
-      Q[i] = new double[nrows];
-      R[i] = new double[ncols];
       for(int j=0; j<ncols; j++) R[i][j] = mat[0][i][j];
    }
 
@@ -247,7 +244,7 @@ void GPU_dbl_bals_solve
 
       GPU_dbl_bals_tail(nrows,ncols,szt,nbt,degp1,stage,mat,rhs,sol,bvrb);
 
-      if(vrblvl)
+      if(vrblvl > 0)
       {
          cout << "blocks of rhs before assignment :" << endl;
          for(int k=0; k<degp1; k++)
@@ -269,12 +266,17 @@ void GPU_dbl_bals_solve
       long long int bsmulcnt = 0;
       long long int bsdivcnt = 0;
 
-      if(bvrb > 0)
+      if(vrblvl > 0)
          cout << "-> GPU multiplies rhs with Q^T ..." << endl;
 
       GPU_dbl_bals_qtb(ncols,szt,nbt,Q,b,bvrb);
 
-      if(bvrb > 0)
+      if(vrblvl > 0)
+      {
+         for(int i=0; i<nrows; i++)
+            cout << "Qtb[" << i << "] : " << b[i] << endl;
+      }
+      if(vrblvl > 0)
          cout << "-> GPU solves an upper triangular system ..." << endl;
 
       GPU_dbl_upper_tiled_solver
@@ -287,7 +289,7 @@ void GPU_dbl_bals_solve
 
    for(int i=0; i<nrows; i++)
    {
-      free(A[i]); free(Q[i]); free(R[i]);
+      free(A[i]);
    }
-   free(A); free(Q); free(R); free(b); free(x);
+   free(A); free(b); free(x);
 }

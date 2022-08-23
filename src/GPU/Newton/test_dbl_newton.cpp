@@ -97,15 +97,30 @@ int main ( void )
    int *ipvt = new int[dim];
    double *workvec = new double[dim];
    // Copy the rhs vector into work space for inplace solver.
-   double **workrhs = new double*[degp1];
-   for(int i=0; i<degp1; i++) workrhs[i] = new double[dim];
+   double **urhs_h = new double*[degp1];
+   double **urhs_d = new double*[degp1];
+   for(int i=0; i<degp1; i++)
+   {
+      urhs_h[i] = new double[dim];
+      urhs_d[i] = new double[dim];
+   }
    double **resvec = new double*[degp1];
    for(int i=0; i<degp1; i++) resvec[i] = new double[dim];
    double resmax;
-   double **Q = new double*[dim];
-   for(int i=0; i<dim; i++) Q[i] = new double[dim];
-   double **R = new double*[dim];
-   for(int i=0; i<dim; i++) R[i] = new double[dim];
+   double **Q_h = new double*[dim];
+   double **Q_d = new double*[dim];
+   for(int i=0; i<dim; i++)
+   {
+      Q_h[i] = new double[dim];
+      Q_d[i] = new double[dim];
+   }
+   double **R_h = new double*[dim];
+   double **R_d = new double*[dim];
+   for(int i=0; i<dim; i++)
+   {
+      R_h[i] = new double[dim];
+      R_d[i] = new double[dim];
+   }
 /*
  * 4. initialize input, coefficient, evaluate, differentiate, and solve
  */
@@ -120,15 +135,12 @@ int main ( void )
    }
    for(int step=0; step<nbsteps; step++)
    {
-      cout << "step " << step << " ..." << endl;
+      cout << "*** running Newton step " << step << " ***" << endl;
 
-      //dbl_newton_lustep
-      //   (dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input,output,funval,
-      //    jacval,rhs,sol,workmat,workvec,workrhs,resvec,&resmax,ipvt,vrblvl);
       dbl_newton_qrstep
          (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input,output,
-          funval,jacval,rhs,sol_h,sol_d,Q,R,workmat,workvec,workrhs,resvec,
-          &resmax,vrblvl,mode);
+          funval,jacval,rhs,urhs_h,urhs_d,sol_h,sol_d,Q_h,Q_d,R_h,R_d,
+          workmat,workvec,resvec,&resmax,vrblvl,mode);
    }
    exponents_check(dim, rowsA);
 
