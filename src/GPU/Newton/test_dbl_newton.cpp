@@ -51,8 +51,13 @@ int main ( void )
  * 2. allocating input and output space for evaluation and differentiation
  */
    const int degp1 = deg+1;
-   double **input = new double*[dim];
-   for(int i=0; i<dim; i++) input[i] = new double[degp1];
+   double **input_h = new double*[dim];
+   double **input_d = new double*[dim];
+   for(int i=0; i<dim; i++)
+   {
+       input_h[i] = new double[degp1];
+       input_d[i] = new double[degp1];
+   }
    // allocate memory for coefficients and the output
    double *acc = new double[degp1]; // accumulated power series
    double **cff = new double*[dim]; // the coefficients of monomials
@@ -125,21 +130,23 @@ int main ( void )
  * 4. initialize input, coefficient, evaluate, differentiate, and solve
  */
    // Define the initial input, a vector of ones.
-   dbl_unit_series_vector(dim,deg,input);
+   dbl_unit_series_vector(dim,deg,input_h);
 
    if(vrblvl > 0)
    {
       cout << scientific << setprecision(16);
       cout << "The leading coefficients of the input series :" << endl;
-      for(int i=0; i<dim; i++) cout << i << " : " << input[i][0] << endl;
+      for(int i=0; i<dim; i++)
+         cout << i << " : " << input_h[i][0] << endl;
    }
    for(int step=0; step<nbsteps; step++)
    {
       cout << "*** running Newton step " << step << " ***" << endl;
 
       dbl_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input,output,
-          funval,jacval,rhs,urhs_h,urhs_d,sol_h,sol_d,Q_h,Q_d,R_h,R_d,
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,
+          input_h,input_d,output,funval,jacval,
+          rhs,urhs_h,urhs_d,sol_h,sol_d,Q_h,Q_d,R_h,R_d,
           workmat,workvec,resvec,&resmax,vrblvl,mode);
    }
    exponents_check(dim, rowsA);

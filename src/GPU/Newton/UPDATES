@@ -1,3 +1,7 @@
+Wed 24 Aug 2022 : improved documentation in dbl_bals_kernels.cu.
+  Separated variables for host and device inputs in dbl_newton_testers,
+  updated test_dbl_newton.cpp.
+
 Tue 23 Aug 2022 : added printing of Qtb in dbl_bals_host.cpp if verbose,
   to dbl_bals_kernels and dbl_newton_testers added separate variables for
   host and device results, updated test_dbl_newton.cpp.

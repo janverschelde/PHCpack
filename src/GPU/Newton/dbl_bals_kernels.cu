@@ -39,11 +39,11 @@ __global__ void dbl_bals_qtb
 {
    const int bdx = blockIdx.x;
    const int tdx = threadIdx.x;
-   const int idx = bdx*szt + tdx; // thread tdx updates b[idx]
+   const int idx = bdx*szt + tdx; // thread tdx computes r[idx]
 
    double Qj;           // register for Q^T[idx][j]
    double bj;           // register for b[j]
-   double ri = 0.0;     // register for result, b[idx]
+   double ri = 0.0;     // register for result, r[idx]
 
    int offset = idx*ncols;
 

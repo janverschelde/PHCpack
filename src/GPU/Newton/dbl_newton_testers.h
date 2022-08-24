@@ -165,7 +165,8 @@ void dbl_newton_lustep
 void dbl_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double **cff, double *acc, double **input, double ***output,
+   double **cff, double *acc,
+   double **input_h, double **input_d, double ***output,
    double **funval, double ***jacval, double **rhs,
    double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
    double **Q_h, double **Q_d, double **R_h, double **R_d,
@@ -192,8 +193,9 @@ void dbl_newton_qrstep
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
  *   cff       coefficients of the monomials;
  *   acc       space to accumulate one power series of degree deg;
- *   input     coefficients of the power series of degree deg,
- *             for dim variables;
+ *   input_h   coefficients of the power series of degree deg,
+ *             for dim variables, computed on host;
+ *   input_d   space for power series computed on device;
  *   output    space for the evaluated and differentiated monomials;
  *   funval    space for the evaluated power series;
  *   jacval    space for deg+1 matrices of dimension dim;
@@ -213,6 +215,8 @@ void dbl_newton_qrstep
  *   mode      execution mode, 0 (GPU only), 1 (CPU only) or 2 (GPU+CPU).
  *
  * ON RETURN :
+ *   input_h   power series computed on host (depending on mode);
+ *   input_d   power series computed on device (depending on mode);
  *   funval    collects the output[i][dim], the evaluated series;
  *   jacval    a series with matrices as coefficients,
  *             the leading coefficient is the Jacobian matrix.

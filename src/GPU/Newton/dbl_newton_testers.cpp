@@ -265,7 +265,8 @@ void dbl_newton_lustep
 void dbl_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double **cff, double *acc, double **input, double ***output,
+   double **cff, double *acc,
+   double **input_h, double **input_d, double ***output,
    double **funval, double ***jacval, double **rhs,
    double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
    double **Q_h, double **Q_d, double **R_h, double **R_d,
@@ -280,9 +281,14 @@ void dbl_newton_qrstep
    {
       cff[i][0] = 1.0;
       for(int j=1; j<degp1; j++) cff[i][j] = 0.0;
+      for(int j=0; j<degp1; j++) input_d[i][j] = input_h[i][j];
    }
-   dbl_evaluate_monomials
-      (dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input,output,vrblvl);
+   if((mode == 1) || (mode == 2))
+      dbl_evaluate_monomials
+         (dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input_h,output,vrblvl);
+   if(mode == 0)
+      dbl_evaluate_monomials
+         (dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input_d,output,vrblvl);
 
    for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
       for(int j=0; j<dim; j++) 
@@ -312,7 +318,7 @@ void dbl_newton_qrstep
 
       CPU_dbl_linear_residue(dim,degp1,jacval,rhs,sol_h,resvec,resmax,vrblvl);
       if(vrblvl > 0) cout << "maximum residual : " << *resmax << endl;
-      dbl_update_series(dim,degp1,input,sol_h,vrblvl);
+      dbl_update_series(dim,degp1,input_h,sol_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
@@ -321,7 +327,7 @@ void dbl_newton_qrstep
 
       CPU_dbl_linear_residue(dim,degp1,jacval,rhs,sol_d,resvec,resmax,vrblvl);
       if(vrblvl > 0) cout << "maximum residual : " << *resmax << endl;
-      dbl_update_series(dim,degp1,input,sol_d,vrblvl);
+      dbl_update_series(dim,degp1,input_d,sol_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))
    {
@@ -335,7 +341,7 @@ void dbl_newton_qrstep
                   << urhs_d[i][j] << endl;
          }
 
-      cout << "comparing CPU with GPU solutions ... " << endl;
+      cout << "comparing CPU with GPU update to solutions ... " << endl;
       for(int i=0; i< degp1; i++)
          for(int j=0; j<dim; j++)
          {
@@ -343,6 +349,16 @@ void dbl_newton_qrstep
                   << sol_h[i][j] << endl;
              cout << "sol_d[" << i << "][" << j << "] : "
                   << sol_d[i][j] << endl;
+         }
+
+      cout << "comparing CPU with GPU series ... " << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<degp1; j++)
+         {
+             cout << "input_h[" << i << "][" << j << "] : "
+                  << input_h[i][j] << endl;
+             cout << "input_d[" << i << "][" << j << "] : "
+                  << input_d[i][j] << endl;
          }
    }
 }
