@@ -62,11 +62,17 @@ int main ( void )
    double *acc = new double[degp1]; // accumulated power series
    double **cff = new double*[dim]; // the coefficients of monomials
    for(int i=0; i<dim; i++) cff[i] = new double[degp1];
-   double ***output = new double**[dim];
+   double ***output_h = new double**[dim];
+   double ***output_d = new double**[dim];
    for(int i=0; i<dim; i++)
    {
-      output[i] = new double*[dim+1];
-      for(int j=0; j<=dim; j++) output[i][j] = new double[degp1];
+      output_h[i] = new double*[dim+1];
+      output_d[i] = new double*[dim+1];
+      for(int j=0; j<=dim; j++)
+      {
+         output_h[i][j] = new double[degp1];
+         output_d[i][j] = new double[degp1];
+      }
    }
    // The function values are power series truncated at degree deg.
    double **funval = new double*[dim];
@@ -145,7 +151,7 @@ int main ( void )
 
       dbl_newton_qrstep
          (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,
-          input_h,input_d,output,funval,jacval,
+          input_h,input_d,output_h,output_d,funval,jacval,
           rhs,urhs_h,urhs_d,sol_h,sol_d,Q_h,Q_d,R_h,R_d,
           workmat,workvec,resvec,&resmax,vrblvl,mode);
    }

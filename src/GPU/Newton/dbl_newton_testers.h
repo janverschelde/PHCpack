@@ -1,4 +1,4 @@
-// The file dbl_newton_testers.h specifies test function for Newton's method
+// The file dbl_newton_testers.h specifies test functions for Newton's method
 // on series in double precision.
 
 #ifndef __dbl_newton_testers_h__
@@ -33,70 +33,6 @@ void dbl_unit_series_vector ( int dim, int deg, double **cff );
  *   of series truncated after degree deg,
  *   initializes the coefficients in cff to one as leading coefficients,
  *   and zero for all other coefficients. */
-
-void dbl_evaluate_monomials
- ( int dim, int deg, int *nvr, int **idx, int **exp, int *nbrfac,
-   int **expfac, double **cff, double *acc, double **input,
-   double ***output, int vrblvl );
-/*
- * DESCRIPTION :
- *   Evaluates monomials at power series.
- *
- * ON ENTRY :
- *   dim       number of monomials;
- *   deg       degree of the power series;
- *   nvr       nvr[i] is the number of variables in the i-th monomial;
- *   idx       idx[i] are the indices of the variables in monomial i;
- *   exp       exp[i] are the exponents of the variables in monomial i;
- *   nbrfac    nbrfac[i] are the number of exponents > 1 in monomial i;
- *   expfac    expfac[i] are the exponents in the i-th polynomial
- *             that are larger than one, minus one in the factor,
- *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
- *   cff       coefficients of the monomials;
- *   acc       space to accumulate one power series of degree deg;
- *   input     coefficients of the power series of degree deg,
- *             for dim variables;
- *   output    space for the output;
- *   vrblvl    is the verbose level.
- *
- * ON RETURN :
- *   cff       contains the evaluated common factors;
- *   output    evaluated and differentiated monomials in the system,
- *             output[i][dim] is the value of the input series
- *             at the i-th monomial, and for k in range 0..nvr[i]-1,
- *             output[i][idx[i]] is the derivative w.r.t. idx[k]. */
-
-void dbl_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx, double ***output,
-   double **funval, double **rhs, double ***jacval, int vrblvl );
-/*
- * DESCRIPTION :
- *   Linearizes the output of the evaluation and differentiation
- *   of the monomials.
- *
- * ON ENTRY :
- *   dim       number of monomials;
- *   degp1     degree plus one;
- *   nvr       number of variables that occur in each monomial;
- *   idx       for each monomials the indices of each variable;
- *   output    output of the evaluation and differentiation
- *             of the monomials in the system, for the i-th monomial:
- *             output[i][dim] is the power series value, 
- *             output[i][idx[k]] is the derivative w.r.t. idx[k],
- *             for k in range 0..nvr[i]-1;
- *   funval    space allocated for dim power series;
- *   rhs       space allocated for linearized power series,
- *             where degp1 is the leading dimension;
- *   jacval    space allocated for the series of degp1 matrices,
- *             all matrices have dimension dim;
- *   vrblvl    is the verbose level.
- *
- * ON RETURN :
- *   funval    collects the output[i][dim], the evaluated series;
- *   rhs       the linearized right hand side are the function values
- *             subtracted by 1 and added by t;
- *   jacval    a series with matrices as coefficients,
- *             the leading coefficient is the Jacobian matrix. */
 
 void dbl_update_series
  ( int dim, int degp1, double **x, double **dx, int vrblvl );
@@ -166,7 +102,7 @@ void dbl_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **cff, double *acc,
-   double **input_h, double **input_d, double ***output,
+   double **input_h, double **input_d, double ***output_h, double ***output_d,
    double **funval, double ***jacval, double **rhs,
    double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
    double **Q_h, double **Q_d, double **R_h, double **R_d,
@@ -196,7 +132,10 @@ void dbl_newton_qrstep
  *   input_h   coefficients of the power series of degree deg,
  *             for dim variables, computed on host;
  *   input_d   space for power series computed on device;
- *   output    space for the evaluated and differentiated monomials;
+ *   output_h  space for the evaluated and differentiated monomials,
+ *             computed on the host;
+ *   output_d  space for the evaluated and differentiated monomials,
+ *             computed on the device;
  *   funval    space for the evaluated power series;
  *   jacval    space for deg+1 matrices of dimension dim;
  *   rhs       space for deg+1 vectors of dimension dim;
@@ -217,6 +156,8 @@ void dbl_newton_qrstep
  * ON RETURN :
  *   input_h   power series computed on host (depending on mode);
  *   input_d   power series computed on device (depending on mode);
+ *   output_h  evaluated power series computed on host (depending on mode);
+ *   output_d  evaluated power series computed on device (depending on mode);
  *   funval    collects the output[i][dim], the evaluated series;
  *   jacval    a series with matrices as coefficients,
  *             the leading coefficient is the Jacobian matrix.

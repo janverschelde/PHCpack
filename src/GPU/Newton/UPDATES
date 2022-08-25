@@ -1,3 +1,7 @@
+Thu 25 Aug 2022 : new dbl_comfacmon_host with code factored out of the
+  dbl_newton_testers.  Splitted output into output_h and output_d, whic
+  then also changed test_dbl_newton.cpp.  Updated makefiles.
+
 Wed 24 Aug 2022 : improved documentation in dbl_bals_kernels.cu.
   Separated variables for host and device inputs in dbl_newton_testers,
   updated test_dbl_newton.cpp.

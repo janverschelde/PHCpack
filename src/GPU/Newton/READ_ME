@@ -6,6 +6,8 @@ file name                : short description
 unimodular_matrices      : code to generate random exponent matrices
 test_unimodular          : test on unimodular triangulation
 ------------------------------------------------------------------------------
+dbl_comfacmon_host       : double monomial evaluation on host
+------------------------------------------------------------------------------
 dbl_bals_host            : linearization in double precision on host
 dbl_bals_kernels         : linearization in double precision on device
 dbl2_bals_host           : linearization in double double precision on host
