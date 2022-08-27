@@ -6,6 +6,7 @@ file name                : short description
 unimodular_matrices      : code to generate random exponent matrices
 test_unimodular          : test on unimodular triangulation
 ------------------------------------------------------------------------------
+test_monomial_jobs       : prepares for the acceleration of the evaluation
 dbl_comfacmon_host       : double monomial evaluation on host
 dbl_comfacmon_kernels    : double monomial evaluation on device
 ------------------------------------------------------------------------------

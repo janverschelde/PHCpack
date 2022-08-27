@@ -1,3 +1,6 @@
+Sat 27 Aug 2022 : new test_monomial_jobs.cpp to prepare for the evaluation
+  and differentation of a monomial system on the GPU.  Updated makefiles.
+
 Fri 26 Aug 2022 : new dbl_comfacmon_kernels with stub implementation.
   Name change in function of dbl_comfacmon_host.  Updated makefiles.  
   Updated dbl_newton_testers.cpp.

@@ -265,6 +265,25 @@ test_unimodular.obj:
                       test_unimodular.cpp \
                  /Fo: test_unimodular.obj /EHsc
 
+convolution_job.obj:
+	@-echo ">>> compiling convolution_job ..."
+	$(CL)\cl /c $(POL)/convolution_job.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: convolution_job.obj /EHsc
+
+convolution_jobs.obj:
+	@-echo ">>> compiling convolution_jobs ..."
+	$(CL)\cl /c $(POL)/convolution_jobs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: convolution_jobs.obj /EHsc
+
+test_monomial_jobs.obj:
+	@-echo ">>> compiling test_monomial_jobs ..."
+	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_monomial_jobs.cpp \
+                 /Fo: test_monomial_jobs.obj /EHsc
+
 test_dbl_newton.obj:
 	@-echo ">>> compiling test_dbl_newton ..."
 	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -297,6 +316,15 @@ test_unimodular: unimodular_matrices.obj test_unimodular.obj \
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_unimodular.exe test_unimodular.obj \
              unimodular_matrices.obj \
+             random_numbers.obj random_series.obj random_monomials.obj
+
+test_monomial_jobs: unimodular_matrices.obj test_monomial_jobs.obj \
+                    convolution_job.obj convolution_jobs.obj \
+                    random_numbers.obj random_series.obj random_monomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_monomial_jobs.exe \
+                             test_monomial_jobs.obj \
+             unimodular_matrices.obj convolution_job.obj convolution_jobs.obj \
              random_numbers.obj random_series.obj random_monomials.obj
 
 test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
@@ -382,6 +410,9 @@ clean:
 	del dbl4_newton_testers.obj dbl8_newton_testers.obj
 	del test_unimodular.exe test_unimodular.exp
 	del test_unimodular.obj test_unimodular.lib
+	del convolution_job.obj convolution_jobs.obj
+	del test_monomial_jobs.exe test_monomial_jobs.exp
+	del test_monomial_jobs.obj test_monomial_jobs.lib
 	del test_dbl_newton.exe test_dbl_newton.exp
 	del test_dbl_newton.obj test_dbl_newton_lib
 	del test_dbl2_newton.exe test_dbl2_newton.exp

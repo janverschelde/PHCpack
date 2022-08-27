@@ -4,6 +4,7 @@ gpp=/usr/bin/g++
 MPD=../Norms
 CNV=../Convolutions
 MAT=../Matrices
+POL=../Polynomials
 CUDA=/usr/local/cuda/include
 CUDALIB=/usr/local/cuda/lib64
 # the architecture flag for Tesla C2050
@@ -159,6 +160,18 @@ test_unimodular.o:
 	@-echo ">>> compiling test_unimodular ..."
 	$(gpp) -O3 -c -I$(CNV) -I$(MAT) test_unimodular.cpp
 
+convolution_job.o:
+	@-echo ">>> compiling convolution_job ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/convolution_job.cpp
+
+convolution_jobs.o:
+	@-echo ">>> compiling convolution_jobs ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/convolution_jobs.cpp
+
+test_monomial_jobs.o:
+	@-echo ">>> compiling test_monomial_jobs ..."
+	$(gpp) -O3 -c -I$(CNV) -I$(MAT) -I$(POL) test_monomial_jobs.cpp
+
 test_dbl_newton.o:
 	@-echo ">>> compiling test_dbl_newton ..."
 	$(gpp) -O3 -c -I$(CNV) -I$(MAT) test_dbl_newton.cpp
@@ -179,6 +192,15 @@ test_unimodular: random_numbers.o random_series.o random_monomials.o \
                  unimodular_matrices.o test_unimodular.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_unimodular test_unimodular.o unimodular_matrices.o \
+                  random_numbers.o random_series.o random_monomials.o
+
+test_monomial_jobs: random_numbers.o random_series.o random_monomials.o \
+                    convolution_job.o convolution_jobs.o \
+                    unimodular_matrices.o test_monomial_jobs.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_monomial_jobs \
+                  test_monomial_jobs.o unimodular_matrices.o \
+                  convolution_job.o convolution_jobs.o \
                   random_numbers.o random_series.o random_monomials.o
 
 test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
@@ -252,6 +274,8 @@ clean:
 	/bin/rm -f -r dbl_newton_testers.o dbl2_newton_testers.o
 	/bin/rm -f -r dbl4_newton_testers.o dbl8_newton_testers.o
 	/bin/rm -f -r test_unimodular.o test_unimodular
+	/bin/rm -f -r convolution_job.o convolution_jobs.o
+	/bin/rm -f -r test_monomial_jobs.o test_monomial_jobs
 	/bin/rm -f -r test_dbl_newton.o test_dbl_newton
 	/bin/rm -f -r test_dbl2_newton.o test_dbl2_newton
 	/bin/rm -f -r test_dbl4_newton.o test_dbl4_newton
