@@ -130,6 +130,15 @@ dbl_bals_kernels.o:
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MAT) -O3 \
              -c dbl_bals_kernels.cu
 
+dbl_comfacmon_host.o:
+	@-echo ">>> compiling dbl_comfacmon_host ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(CNV) -I$(MAT) dbl_comfacmon_host.cpp
+
+dbl_comfacmon_kernels.o:
+	@-echo ">>> compiling dbl_comfacmon_kernels ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(CNV) -I$(MAT) -O3 \
+             -c dbl_comfacmon_kernels.cu
+
 dbl_newton_testers.o:
 	@-echo ">>> compiling dbl_newton_testers ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(CNV) -I$(MAT) dbl_newton_testers.cpp
@@ -175,6 +184,7 @@ test_unimodular: random_numbers.o random_series.o random_monomials.o \
 test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                  unimodular_matrices.o dbl_newton_testers.o test_dbl_newton.o \
                  dbl_convolutions_host.o dbl_monomials_host.o \
+                 dbl_comfacmon_host.o dbl_comfacmon_kernels.o \
                  dbl_factorizations.o dbl_bals_host.o \
                  dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                  dbl_baqr_kernels.o dbl_tabs_kernels.o dbl_bals_kernels.o
@@ -183,6 +193,7 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o \
                   random_numbers.o random_series.o random_monomials.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
+                  dbl_comfacmon_host.o dbl_comfacmon_kernels.o \
                   dbl_factorizations.o dbl_bals_host.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl_baqr_kernels.o dbl_tabs_kernels.o dbl_bals_kernels.o \
@@ -233,6 +244,7 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
 
 clean:
 	/bin/rm -f -r unimodular_matrices.o
+	/bin/rm -f -r dbl_comfacmon_host.o dbl_comfacmon_kernels.o
 	/bin/rm -f -r dbl_bals_host.o dbl_bals_kernels.o
 	/bin/rm -f -r dbl2_bals_host.o
 	/bin/rm -f -r dbl4_bals_host.o

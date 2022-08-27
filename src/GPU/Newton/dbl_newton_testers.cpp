@@ -11,6 +11,7 @@
 #include "random_monomials.h"
 #include "dbl_factorizations.h"
 #include "dbl_comfacmon_host.h"
+#include "dbl_comfacmon_kernels.h"
 #include "dbl_bals_host.h"
 #include "dbl_bals_kernels.h"
 
@@ -98,7 +99,7 @@ void dbl_newton_lustep
       cff[i][0] = 1.0;
       for(int j=1; j<degp1; j++) cff[i][j] = 0.0;
    }
-   dbl_evaluate_monomials
+   CPU_dbl_evaluate_monomials
       (dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input,output,vrblvl);
 
    for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
@@ -145,11 +146,12 @@ void dbl_newton_qrstep
       for(int j=0; j<degp1; j++) input_d[i][j] = input_h[i][j];
    }
    if((mode == 1) || (mode == 2))
-      dbl_evaluate_monomials
+      CPU_dbl_evaluate_monomials
          (dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input_h,output_h,vrblvl);
    if(mode == 0)
-      dbl_evaluate_monomials
-         (dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input_d,output_d,vrblvl);
+      GPU_dbl_evaluate_monomials
+         (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,cff,acc,
+          input_d,output_d,vrblvl);
 
    for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
       for(int j=0; j<dim; j++) 

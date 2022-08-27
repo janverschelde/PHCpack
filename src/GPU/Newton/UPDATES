@@ -1,3 +1,7 @@
+Fri 26 Aug 2022 : new dbl_comfacmon_kernels with stub implementation.
+  Name change in function of dbl_comfacmon_host.  Updated makefiles.  
+  Updated dbl_newton_testers.cpp.
+
 Thu 25 Aug 2022 : new dbl_comfacmon_host with code factored out of the
   dbl_newton_testers.  Splitted output into output_h and output_d, whic
   then also changed test_dbl_newton.cpp.  Updated makefiles.

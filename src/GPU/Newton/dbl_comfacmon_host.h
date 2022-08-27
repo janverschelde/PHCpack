@@ -4,7 +4,7 @@
 #ifndef __dbl_comfacmon_host_h__
 #define __dbl_comfacmon_host_h__
 
-void dbl_evaluate_monomials
+void CPU_dbl_evaluate_monomials
  ( int dim, int deg, int *nvr, int **idx, int **exp, int *nbrfac,
    int **expfac, double **cff, double *acc, double **input,
    double ***output, int vrblvl );
