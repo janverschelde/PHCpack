@@ -126,6 +126,11 @@ dbl_tabs_kernels.o:
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -O3 \
              -c $(MAT)/dbl_tabs_kernels.cu
 
+dbl_polynomials_kernels.o:
+	@-echo ">>> compiling polynomial kernels for doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -c -I$(CNV) \
+             $(POL)/dbl_polynomials_kernels.cu
+
 dbl_bals_kernels.o:
 	@-echo ">>> compiling bals kernels for doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MAT) -O3 \
@@ -137,12 +142,13 @@ dbl_comfacmon_host.o:
 
 dbl_comfacmon_kernels.o:
 	@-echo ">>> compiling dbl_comfacmon_kernels ..."
-	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(CNV) -I$(MAT) -O3 \
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(CNV) -I$(MAT) -I$(POL) -O3 \
              -c dbl_comfacmon_kernels.cu
 
 dbl_newton_testers.o:
 	@-echo ">>> compiling dbl_newton_testers ..."
-	$(gpp) -O3 -c -I$(CUDA) -I$(CNV) -I$(MAT) dbl_newton_testers.cpp
+	$(gpp) -O3 -c -I$(CUDA) -I$(CNV) -I$(MAT) -I$(POL) \
+               dbl_newton_testers.cpp
 
 dbl2_newton_testers.o:
 	@-echo ">>> compiling dbl2_newton_testers ..."
@@ -168,9 +174,25 @@ convolution_jobs.o:
 	@-echo ">>> compiling convolution_jobs ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/convolution_jobs.cpp
 
+addition_job.o:
+	@-echo ">>> compiling addition_job ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/addition_job.cpp
+
+addition_jobs.o:
+	@-echo ">>> compiling addition_jobs ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/addition_jobs.cpp
+
+job_coordinates.o:
+	@-echo ">>> compiling job_coordinates ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/job_coordinates.cpp
+
 test_monomial_jobs.o:
 	@-echo ">>> compiling test_monomial_jobs ..."
 	$(gpp) -O3 -c -I$(CNV) -I$(MAT) -I$(POL) test_monomial_jobs.cpp
+
+write_gpu_timings.o:
+	@-echo ">>> compiling write_gpu_timings ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/write_gpu_timings.cpp
 
 test_dbl_newton.o:
 	@-echo ">>> compiling test_dbl_newton ..."
@@ -206,7 +228,10 @@ test_monomial_jobs: random_numbers.o random_series.o random_monomials.o \
 test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                  unimodular_matrices.o dbl_newton_testers.o test_dbl_newton.o \
                  dbl_convolutions_host.o dbl_monomials_host.o \
-                 dbl_comfacmon_host.o dbl_comfacmon_kernels.o \
+                 convolution_job.o convolution_jobs.o \
+                 addition_job.o addition_jobs.o job_coordinates.o \
+                 dbl_comfacmon_host.o write_gpu_timings.o \
+                 dbl_comfacmon_kernels.o dbl_polynomials_kernels.o \
                  dbl_factorizations.o dbl_bals_host.o \
                  dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                  dbl_baqr_kernels.o dbl_tabs_kernels.o dbl_bals_kernels.o
@@ -215,7 +240,10 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o \
                   random_numbers.o random_series.o random_monomials.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
-                  dbl_comfacmon_host.o dbl_comfacmon_kernels.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o job_coordinates.o \
+                  dbl_comfacmon_host.o write_gpu_timings.o \
+                  dbl_comfacmon_kernels.o dbl_polynomials_kernels.o \
                   dbl_factorizations.o dbl_bals_host.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl_baqr_kernels.o dbl_tabs_kernels.o dbl_bals_kernels.o \
@@ -274,7 +302,6 @@ clean:
 	/bin/rm -f -r dbl_newton_testers.o dbl2_newton_testers.o
 	/bin/rm -f -r dbl4_newton_testers.o dbl8_newton_testers.o
 	/bin/rm -f -r test_unimodular.o test_unimodular
-	/bin/rm -f -r convolution_job.o convolution_jobs.o
 	/bin/rm -f -r test_monomial_jobs.o test_monomial_jobs
 	/bin/rm -f -r test_dbl_newton.o test_dbl_newton
 	/bin/rm -f -r test_dbl2_newton.o test_dbl2_newton
@@ -293,4 +320,7 @@ cleanall: clean
 	/bin/rm -f -r dbl_factorizations.o dbl2_factorizations.o
 	/bin/rm -f -r dbl4_factorizations.o dbl8_factorizations.o
 	/bin/rm -f -r dbl_baqr_kernels.o dbl_tabs_kernels.o
+	/bin/rm -f -r convolution_job.o convolution_jobs.o
+	/bin/rm -f -r addition_job.o addition_jobs.o job_coordinates.o
+	/bin/rm -f -r dbl_polynomials_kernels.o write_gpu_timings.o
 	/bin/rm -f -r dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o

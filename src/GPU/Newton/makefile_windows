@@ -210,6 +210,13 @@ dbl_tabs_kernels.obj:
                 $(MAT)/dbl_tabs_kernels.cu \
              -o dbl_tabs_kernels.obj
 
+dbl_polynomials_kernels.obj:
+	@-echo ">>> compiling dbl_polynomials_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(CNV) \
+             --define-macro winwalltime=1 \
+                $(POL)/dbl_polynomials_kernels.cu \
+             -o dbl_polynomials_kernels.obj
+
 dbl_bals_kernels.obj:
 	@-echo ">>> compiling dbl_bals_kernels ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MAT) \
@@ -226,14 +233,15 @@ dbl_comfacmon_host.obj:
 
 dbl_comfacmon_kernels.obj:
 	@-echo ">>> compiling dbl_comfacmon_kernels ..."
-	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(CNV) -I$(MAT) \
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(CNV) -I$(MAT) -I$(POL) \
              --define-macro winwalltime=1 \
                 dbl_comfacmon_kernels.cu \
              -o dbl_comfacmon_kernels.obj
 
 dbl_newton_testers.obj:
 	@-echo ">>> compiling dbl_newton_testers ..."
-	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(winkitucrt) -I$(includepath) -O2 \
+	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
                       dbl_newton_testers.cpp \
                  /I$(CUDASDK)/include \
                  /Fo: dbl_newton_testers.obj /EHsc
@@ -277,12 +285,36 @@ convolution_jobs.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: convolution_jobs.obj /EHsc
 
+addition_job.obj:
+	@-echo ">>> compiling addition_job ..."
+	$(CL)\cl /c $(POL)/addition_job.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: addition_job.obj /EHsc
+
+addition_jobs.obj:
+	@-echo ">>> compiling addition_jobs ..."
+	$(CL)\cl /c $(POL)/addition_jobs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: addition_jobs.obj /EHsc
+
+job_coordinates.obj:
+	@-echo ">>> compiling job_coordinates ..."
+	$(CL)\cl /c $(POL)/job_coordinates.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: job_coordinates.obj /EHsc
+
 test_monomial_jobs.obj:
 	@-echo ">>> compiling test_monomial_jobs ..."
 	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(POL) \
                     -I$(winkitucrt) -I$(includepath) -O2 \
                       test_monomial_jobs.cpp \
                  /Fo: test_monomial_jobs.obj /EHsc
+
+write_gpu_timings.obj:
+	@-echo ">>> compiling write_gpu_timings ..."
+	$(CL)\cl /c $(POL)/write_gpu_timings.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_gpu_timings.obj /EHsc
 
 test_dbl_newton.obj:
 	@-echo ">>> compiling test_dbl_newton ..."
@@ -331,20 +363,25 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
                  dbl_newton_testers.obj dbl_bals_kernels.obj \
                  random_numbers.obj random_series.obj random_monomials.obj \
                  dbl_convolutions_host.obj dbl_monomials_host.obj \
-                 dbl_comfacmon_host.obj dbl_comfacmon_kernels.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 addition_job.obj addition_jobs.obj job_coordinates.obj \
+                 dbl_comfacmon_host.obj write_gpu_timings.obj \
+                 dbl_comfacmon_kernels.obj dbl_polynomials_kernels.obj \
                  dbl_factorizations.obj dbl_bals_host.obj \
 		 dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
-		 dbl_baqr_kernels.obj dbl_tabs_kernels.obj \
-		 gettimeofday4win.obj
+		 dbl_baqr_kernels.obj dbl_tabs_kernels.obj 
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_newton.exe test_dbl_newton.obj \
              unimodular_matrices.obj dbl_newton_testers.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
 	     dbl_convolutions_host.obj dbl_monomials_host.obj \
-             dbl_comfacmon_host.obj dbl_comfacmon_kernels.obj \
+             convolution_job.obj convolution_jobs.obj \
+             addition_job.obj addition_jobs.obj job_coordinates.obj \
+             dbl_comfacmon_host.obj write_gpu_timings.obj \
+             dbl_comfacmon_kernels.obj dbl_polynomials_kernels.obj \
              dbl_factorizations.obj dbl_bals_host.obj dbl_bals_kernels.obj \
 	     dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
-	     dbl_baqr_kernels.obj dbl_tabs_kernels.obj gettimeofday4win.obj
+	     dbl_baqr_kernels.obj dbl_tabs_kernels.obj
 
 test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
@@ -399,6 +436,7 @@ clean:
 	del dbl4_convolutions_host.obj dbl4_monomials_host.obj
 	del dbl8_convolutions_host.obj dbl8_monomials_host.obj
 	del dbl_baqr_kernels.obj dbl_tabs_kernels.obj
+	del dbl_polynomials_kernels.obj
 	del dbl_factorizations.obj dbl_bals_host.obj dbl_bals_kernels.obj
 	del dbl2_factorizations.obj dbl2_bals_host.obj
 	del dbl4_factorizations.obj dbl4_bals_host.obj
@@ -411,6 +449,7 @@ clean:
 	del test_unimodular.exe test_unimodular.exp
 	del test_unimodular.obj test_unimodular.lib
 	del convolution_job.obj convolution_jobs.obj
+	del addition_job.obj addition_jobs.obj job_coordinates.obj
 	del test_monomial_jobs.exe test_monomial_jobs.exp
 	del test_monomial_jobs.obj test_monomial_jobs.lib
 	del test_dbl_newton.exe test_dbl_newton.exp
