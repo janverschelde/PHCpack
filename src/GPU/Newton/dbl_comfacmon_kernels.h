@@ -7,12 +7,43 @@
 
 #include "convolution_jobs.h"
 
+void dbl_evaldiffdata_to_output
+ ( double *data, double ***output, int dim, int nbr, int deg, int *nvr,
+   int **idx, int *fstart, int *bstart, int *cstart, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Extracts the real data computed on the device to the output.
+ *
+ * ON ENTRY :
+ *   data     coefficients of all monomials and input series, 
+ *            computed forward, backward, and cross products;
+ *   output   space for the value and all derivatives;
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      truncation degree of the series;
+ *   nvr      nvr[k] is the number of variables for monomial k;
+ *   idx      idx[k] has as many indices as the value of nvr[k],
+ *            idx[k][i] defines the place of the i-th variable,
+ *            with input values in input[idx[k][i]];
+ *   fstart   fstart[k] has the start position of the forward products
+ *            for the k-th monomial;
+ *   bstart   fstart[k] has the start position of the backward products
+ *            for the k-th monomial;
+ *   cstart   fstart[k] has the start position of the cross products
+ *            for the k-th monomial;
+ *   verbose  if true, writes extra information.
+ *
+ * ON RETURN :
+ *   output   output[i][dim] contains the power series value
+ *            of the i-th monomial, and
+ *            output[i][k] contains the power series value of
+ *            the k-th derivative of the i-th monomial. */
+
 void GPU_dbl_mon_evaldiff
  ( int szt, int dim, int nbr, int deg, int *nvr, int **idx,
-   double **cff, double **input, double **output,
+   double **cff, double **input, double ***output,
    ConvolutionJobs cnvjobs,
-   double *cnvlapms, double *addlapms, double *elapsedms,
-   double *walltimesec, bool verbose );
+   double *cnvlapms, double *elapsedms, double *walltimesec, bool verbose );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiates a monomial system.

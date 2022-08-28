@@ -16,15 +16,72 @@
 
 using namespace std;
 
+// The code in dbl_evaldiffdata_to_output is an adaptation of the
+// function dbl_convoluted_data_to_output in dbl_polynomials_kernels.cu.
+
+void dbl_evaldiffdata_to_output
+ ( double *data, double ***output, int dim, int nbr, int deg, int *nvr,
+   int **idx, int *fstart, int *bstart, int *cstart, bool verbose )
+{
+   const int deg1 = deg+1;
+   int ix0,ix1,ix2;
+
+   for(int k=0; k<nbr; k++)
+   {
+      ix1 = fstart[k] + (nvr[k]-1)*deg1;
+      
+      if(verbose)
+         cout << "monomial " << k << " update starts at " << ix1 << endl;
+
+      for(int i=0; i<=deg; i++) output[k][dim][i] = data[ix1++];
+
+      ix0 = idx[k][0];
+      if(nvr[k] == 1)
+      {
+         ix1 = (1 + k)*deg1;
+            
+         for(int i=0; i<=deg; i++) output[k][ix0][i] = data[ix1++];
+      }
+      else
+      {                               // first and last derivative
+         ix2 = nvr[k]-3;
+         if(ix2 < 0) ix2 = 0;
+         ix1 = bstart[k] + ix2*deg1;
+
+         for(int i=0; i<=deg; i++) output[k][ix0][i] = data[ix1++];
+
+         ix2 = nvr[k]-2;
+         ix1 = fstart[k] + ix2*deg1;
+         ix0 = idx[k][ix2+1];
+
+         for(int i=0; i<=deg; i++) output[k][ix0][i] = data[ix1++];
+
+         if(nvr[k] > 2)                   // all other derivatives
+         {
+            for(int j=1; j<nvr[k]-1; j++)
+            {
+               ix0 = idx[k][j];            // j-th variable in monomial k
+               ix1 = cstart[k] + (j-1)*deg1;
+
+               if(verbose)
+                  cout << "monomial " << k << " derivative " << ix0
+                       << " update starts at " << ix1 << endl;
+
+               for(int i=0; i<=deg; i++) output[k][ix0][i] = data[ix1++];
+            }
+         }
+      }
+   }
+}
+
 // The code for GPU_dbl_mon_evaldiff is an adaptation of the
 // function GPU_dbl_poly_evaldiff of dbl_polynomials_kernels.cu.
 
 void GPU_dbl_mon_evaldiff
  ( int szt, int dim, int nbr, int deg, int *nvr, int **idx,
-   double **cff, double **input, double **output,
+   double **cff, double **input, double ***output,
    ConvolutionJobs cnvjobs,
-   double *cnvlapms, double *addlapms, double *elapsedms,
-   double *walltimesec, bool verbose )
+   double *cnvlapms, double *elapsedms, double *walltimesec, bool verbose )
 {
    const int deg1 = deg+1;
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
@@ -110,11 +167,11 @@ void GPU_dbl_mon_evaldiff
    long microseconds = endtime.tv_usec - begintime.tv_usec;
    *walltimesec = seconds + microseconds*1.0e-6;
 
-   dbl_convoluted_data_to_output
+   dbl_evaldiffdata_to_output
       (data_h,output,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,verbose);
 
    if(verbose)
-      write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
+      write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
 }
 
 void GPU_dbl_evaluate_monomials
@@ -165,8 +222,40 @@ void GPU_dbl_evaluate_monomials
          for(int j=0; j<=deg; j++) cout << input[i][j] << endl;
       }
    }
-   for(int i=0; i<dim; i++)
-      CPU_dbl_evaldiff(dim,nvr[i],deg,idx[i],cff[i],input,output[i]);
+   // for(int i=0; i<dim; i++)
+   //    CPU_dbl_evaldiff(dim,nvr[i],deg,idx[i],cff[i],input,output[i]);
+
+   bool verbose = (vrblvl > 0);
+   double cnvlapms,elapsedms,walltimesec;
+
+   ConvolutionJobs jobs(dim);
+
+   jobs.make(dim,nvr,idx,verbose);
+
+   if(verbose)
+   {
+      for(int k=0; k<jobs.get_depth(); k++)
+      {
+         cout << "jobs at layer " << k << " :" << endl;
+         for(int i=0; i<jobs.get_layer_count(k); i++)
+            cout << jobs.get_job(k,i) << endl;
+      }
+      cout << "dimension : " << dim << endl;
+      cout << "number of monomials : " << dim << endl;
+      cout << "number of convolution jobs : " << jobs.get_count() << endl;
+      cout << "number of layers : " << jobs.get_depth() << endl;
+      cout << "frequency of layer counts :" << endl;
+      int checksum = 0;
+      for(int i=0; i<jobs.get_depth(); i++)
+      {
+         cout << i << " : " << jobs.get_layer_count(i) << endl;
+         checksum = checksum + jobs.get_layer_count(i); 
+      }
+      cout << "layer count sum : " << checksum << endl;
+   }
+   GPU_dbl_mon_evaldiff
+      (szt,dim,dim,deg,nvr,idx,cff,input,output,jobs,
+       &cnvlapms,&elapsedms,&walltimesec,verbose);
 
    if(vrblvl > 0)
    {

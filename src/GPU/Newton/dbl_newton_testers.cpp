@@ -148,11 +148,24 @@ void dbl_newton_qrstep
    if((mode == 1) || (mode == 2))
       CPU_dbl_evaluate_monomials
          (dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input_h,output_h,vrblvl);
-   if(mode == 0)
+   if((mode == 0) || (mode == 2))
       GPU_dbl_evaluate_monomials
          (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,cff,acc,
           input_d,output_d,vrblvl);
 
+   if((vrblvl > 0) && (mode == 2))
+   {
+      cout << "comparing CPU with GPU evaluations ... " << endl;
+      for(int k=0; k<dim; k++) // monomial k
+         for(int i=0; i<=dim; i++)
+            for(int j=0; j<degp1; j++)
+         {
+             cout << "output_h[" << k << "][" << i << "][" << j << "] : "
+                  << output_h[k][i][j] << endl;
+             cout << "output_d[" << k << "][" << i << "][" << j << "] : "
+                  << output_d[k][i][j] << endl;
+         }
+   }
    for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
       for(int j=0; j<dim; j++) 
          for(int k=0; k<dim; k++) jacval[i][j][k] = 0.0;
