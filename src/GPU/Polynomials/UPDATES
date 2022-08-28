@@ -1,3 +1,6 @@
+Sun 28 Aug 2022 : updated dbl_polynomials_kernels.cu to use the
+  gettimeofday4win in ../Matrices, updated makefile_windows.
+
 Thu 4 Feb 2021 : edited dbl4_polynomials_host.h.
   Extended dbl5_polynomials_host with conv and add complex functions.
 

@@ -3,10 +3,9 @@
 
 #include <iostream>
 #include <iomanip>
-// #ifdef winwalltime
-// #include "wingettimeofday.h"
-// #else
-#ifndef winwalltime
+#ifdef winwalltime
+#include "gettimeofday4win.h"
+#else
 #include <sys/time.h>
 #endif
 #include "write_gpu_timings.h"
@@ -62,9 +61,9 @@ void GPU_dbl_mon_evaldiff
    cudaEventCreate(&stop);
    *cnvlapms = 0.0;
    float milliseconds;
-   // struct timeval begintime,endtime; // wall clock time of computations
+   struct timeval begintime,endtime; // wall clock time of computations
 
-   // gettimeofday(&begintime,0);
+   gettimeofday(&begintime,0);
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
       const int jobnbr = cnvjobs.get_layer_count(k);
@@ -104,18 +103,18 @@ void GPU_dbl_mon_evaldiff
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
-   // gettimeofday(&endtime,0);
+   gettimeofday(&endtime,0);
    cudaMemcpy(data_h,data_d,szdata,cudaMemcpyDeviceToHost);
    *elapsedms = *cnvlapms;
-   // long seconds = endtime.tv_sec - begintime.tv_sec;
-   // long microseconds = endtime.tv_usec - begintime.tv_usec;
-   // *walltimesec = seconds + microseconds*1.0e-6;
+   long seconds = endtime.tv_sec - begintime.tv_sec;
+   long microseconds = endtime.tv_usec - begintime.tv_usec;
+   *walltimesec = seconds + microseconds*1.0e-6;
 
    dbl_convoluted_data_to_output
       (data_h,output,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,verbose);
 
-   // if(verbose)
-   //    write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
+   if(verbose)
+      write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
 }
 
 void GPU_dbl_evaluate_monomials

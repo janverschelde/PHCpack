@@ -212,7 +212,7 @@ dbl_tabs_kernels.obj:
 
 dbl_polynomials_kernels.obj:
 	@-echo ">>> compiling dbl_polynomials_kernels ..."
-	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(CNV) \
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(CNV) -I$(MAT) \
              --define-macro winwalltime=1 \
                 $(POL)/dbl_polynomials_kernels.cu \
              -o dbl_polynomials_kernels.obj
@@ -366,6 +366,7 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
                  convolution_job.obj convolution_jobs.obj \
                  addition_job.obj addition_jobs.obj job_coordinates.obj \
                  dbl_comfacmon_host.obj write_gpu_timings.obj \
+                 gettimeofday4win.obj \
                  dbl_comfacmon_kernels.obj dbl_polynomials_kernels.obj \
                  dbl_factorizations.obj dbl_bals_host.obj \
 		 dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
@@ -378,6 +379,7 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
              convolution_job.obj convolution_jobs.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
              dbl_comfacmon_host.obj write_gpu_timings.obj \
+             gettimeofday4win.obj \
              dbl_comfacmon_kernels.obj dbl_polynomials_kernels.obj \
              dbl_factorizations.obj dbl_bals_host.obj dbl_bals_kernels.obj \
 	     dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \

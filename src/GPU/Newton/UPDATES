@@ -1,3 +1,6 @@
+Sun 28 Aug 2022 : updated dbl_comfacmon_kernels to use the gettimeofday4win
+  and updated makefile_windows.
+
 Sat 27 Aug 2022 : new test_monomial_jobs.cpp to prepare for the evaluation
   and differentation of a monomial system on the GPU.  Updated makefiles.
   Extended dbl_comfacmon_kernels with an adaptation of the function to
