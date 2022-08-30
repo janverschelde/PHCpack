@@ -133,7 +133,7 @@ void GPU_dbl_mon_evaldiff
 
       convjobs_coordinates(cnvjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
                            fstart,bstart,cstart,verbose);
-      if(deg1 == szt)
+      // if(deg1 == szt)
       {
          int *in1ix_d; // first input on device
          int *in2ix_d; // second input on device
@@ -147,11 +147,12 @@ void GPU_dbl_mon_evaldiff
          cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
 
          if(verbose)
-            cout << "launching " << jobnbr << " blocks of " << szt
+            cout << "launching " << jobnbr << " blocks of " << deg1
                  << " threads ..." << endl;
          
          cudaEventRecord(start);
-         dbl_padded_convjobs<<<jobnbr,szt>>>
+         // dbl_padded_convjobs<<<jobnbr,szt>>>
+         dbl_padded_convjobs<<<jobnbr,deg1>>>
             (data_d,in1ix_d,in2ix_d,outix_d,deg1);
          cudaEventRecord(stop);
          cudaEventSynchronize(stop);

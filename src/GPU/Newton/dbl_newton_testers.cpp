@@ -129,7 +129,8 @@ void dbl_newton_qrstep
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **cff, double *acc,
    double **input_h, double **input_d, double ***output_h, double ***output_d,
-   double **funval, double ***jacval, double **rhs,
+   double **funval_h, double **funval_d,
+   double ***jacval_h, double ***jacval_d, double **rhs_h, double **rhs_d,
    double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
    double **Q_h, double **Q_d, double **R_h, double **R_d,
    double **workmat, double *workvec, double **resvec, double *resmax,
@@ -143,7 +144,7 @@ void dbl_newton_qrstep
    {
       cff[i][0] = 1.0;
       for(int j=1; j<degp1; j++) cff[i][j] = 0.0;
-      for(int j=0; j<degp1; j++) input_d[i][j] = input_h[i][j];
+      // for(int j=0; j<degp1; j++) input_d[i][j] = input_h[i][j];
    }
    if((mode == 1) || (mode == 2))
       CPU_dbl_evaluate_monomials
@@ -156,6 +157,7 @@ void dbl_newton_qrstep
    if((vrblvl > 0) && (mode == 2))
    {
       cout << "comparing CPU with GPU evaluations ... " << endl;
+      double errsum = 0.0;
       for(int k=0; k<dim; k++) // monomial k
          for(int i=0; i<=dim; i++)
             for(int j=0; j<degp1; j++)
@@ -164,24 +166,78 @@ void dbl_newton_qrstep
                   << output_h[k][i][j] << endl;
              cout << "output_d[" << k << "][" << i << "][" << j << "] : "
                   << output_d[k][i][j] << endl;
+             errsum += abs(output_h[k][i][j] - output_d[k][i][j]);
          }
+      cout << "sum of errors : " << errsum << endl;
    }
    for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
       for(int j=0; j<dim; j++) 
-         for(int k=0; k<dim; k++) jacval[i][j][k] = 0.0;
+         for(int k=0; k<dim; k++)
+         {
+            jacval_h[i][j][k] = 0.0;
+            jacval_d[i][j][k] = 0.0;
+         }
 
    if((mode == 1) || (mode == 2))
       dbl_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,output_h,funval,rhs,jacval,vrblvl);
-   if(mode == 0)
+         (dim,degp1,nvr,idx,output_h,funval_h,rhs_h,jacval_h,vrblvl);
+   if((mode == 0) || (mode == 2))
       dbl_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,output_d,funval,rhs,jacval,vrblvl);
+         (dim,degp1,nvr,idx,output_d,funval_d,rhs_d,jacval_d,vrblvl);
 
+   if((vrblvl > 0) && (mode == 2))
+   {
+      cout << "comparing CPU with GPU function values ... " << endl;
+      double errsum = 0.0;
+      for(int i=0; i<dim; i++)
+      {
+         for(int j=0; j<degp1; j++)
+         {
+            cout << "funval_h[" << i << "][" << j << "] : "
+                 << funval_h[i][j] << endl;
+            cout << "funval_d[" << i << "][" << j << "] : "
+                 << funval_d[i][j] << endl;
+            errsum += abs(funval_h[i][j] - funval_d[i][j]);
+         }
+      }
+      cout << "sum of errors : " << errsum << endl;
+      cout << "comparing CPU with GPU Jacobians ... " << endl;
+      errsum = 0.0;
+      for(int i=0; i<degp1; i++)
+      {
+         for(int j=0; j<dim; j++)
+         {
+            for(int k=0; k<dim; k++)
+            {
+               cout << "jacval_h[" << i << "][" << j << "][" << k << "] : "
+                    << jacval_h[i][j][k] << endl;
+               cout << "jacval_d[" << i << "][" << j << "][" << k << "] : "
+                    << jacval_d[i][j][k] << endl;
+               errsum += abs(jacval_h[i][j][k] - jacval_d[i][j][k]);
+            }
+         }
+      }
+      cout << "sum of errors : " << errsum << endl;
+      cout << "comparing CPU with GPU right hand sides ... " << endl;
+      errsum = 0.0;
+      for(int i=0; i<degp1; i++)
+      {
+         for(int j=0; j<dim; j++)
+         {
+            cout << "rhs_h[" << i << "][" << j << "] : "
+                 << rhs_h[i][j] << endl;
+            cout << "rhs_d[" << i << "][" << j << "] : "
+                 << rhs_d[i][j] << endl;
+            errsum += abs(rhs_h[i][j] - rhs_d[i][j]);
+         }
+      }
+      cout << "sum of errors : " << errsum << endl;
+   }
    for(int i=0; i<degp1; i++) // save original rhs for residual
       for(int j=0; j<dim; j++)
       {
-         urhs_h[i][j] = rhs[i][j];
-         urhs_d[i][j] = rhs[i][j];
+         urhs_h[i][j] = rhs_h[i][j];
+         urhs_d[i][j] = rhs_d[i][j];
       }
 
    for(int i=0; i<degp1; i++) // initialize the solution to zero
@@ -194,43 +250,79 @@ void dbl_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       CPU_dbl_qrbs_solve
-         (dim,degp1,jacval,urhs_h,sol_h,workmat,Q_h,R_h,workvec,vrblvl);
-
-      CPU_dbl_linear_residue(dim,degp1,jacval,rhs,sol_h,resvec,resmax,vrblvl);
-      if(vrblvl > 0) cout << "maximum residual : " << *resmax << endl;
+         (dim,degp1,jacval_h,urhs_h,sol_h,workmat,Q_h,R_h,workvec,vrblvl);
+ 
+      if(vrblvl > 0)
+      {
+         CPU_dbl_linear_residue
+            (dim,degp1,jacval_h,rhs_h,sol_h,resvec,resmax,vrblvl);
+         cout << "maximum residual : " << *resmax << endl;
+      }
       dbl_update_series(dim,degp1,input_h,sol_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
       GPU_dbl_bals_solve
-         (dim,degp1,szt,nbt,jacval,Q_d,R_d,urhs_d,sol_d,vrblvl);
+         (dim,degp1,szt,nbt,jacval_d,Q_d,R_d,urhs_d,sol_d,vrblvl);
 
-      CPU_dbl_linear_residue(dim,degp1,jacval,rhs,sol_d,resvec,resmax,vrblvl);
-      if(vrblvl > 0) cout << "maximum residual : " << *resmax << endl;
+      if(vrblvl > 0)
+      {
+         CPU_dbl_linear_residue
+            (dim,degp1,jacval_d,rhs_d,sol_d,resvec,resmax,vrblvl);
+         cout << "maximum residual : " << *resmax << endl;
+      }
       dbl_update_series(dim,degp1,input_d,sol_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))
    {
+      double errsum = 0.0;
+      cout << "comparing CPU with GPU matrices Q ... " << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+             cout << "Q_h[" << i << "][" << j << "] : "
+                  << Q_h[i][j] << endl;
+             cout << "Q_d[" << i << "][" << j << "] : "
+                  << Q_d[i][j] << endl;
+             errsum += abs(Q_h[i][j] - Q_d[i][j]);
+         }
+      cout << "sum of errors : " << errsum << endl;
+      cout << "comparing CPU with GPU matrices R ... " << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+             cout << "R_h[" << i << "][" << j << "] : "
+                  << R_h[i][j] << endl;
+             cout << "R_d[" << i << "][" << j << "] : "
+                  << R_d[i][j] << endl;
+             errsum += abs(R_h[i][j] - R_d[i][j]);
+         }
+      cout << "sum of errors : " << errsum << endl;
+      errsum = 0.0;
       cout << "comparing CPU with GPU updated rhs ... " << endl;
-      for(int i=0; i< degp1; i++)
+      for(int i=0; i<degp1; i++)
          for(int j=0; j<dim; j++)
          {
              cout << "urhs_h[" << i << "][" << j << "] : "
                   << urhs_h[i][j] << endl;
              cout << "urhs_d[" << i << "][" << j << "] : "
                   << urhs_d[i][j] << endl;
+             errsum += abs(urhs_h[i][j] - urhs_d[i][j]);
          }
-
+      cout << "sum of errors : " << errsum << endl;
+      errsum = 0.0;
       cout << "comparing CPU with GPU update to solutions ... " << endl;
-      for(int i=0; i< degp1; i++)
+      for(int i=0; i<degp1; i++)
          for(int j=0; j<dim; j++)
          {
              cout << "sol_h[" << i << "][" << j << "] : "
                   << sol_h[i][j] << endl;
              cout << "sol_d[" << i << "][" << j << "] : "
                   << sol_d[i][j] << endl;
+             errsum += abs(sol_h[i][j] - sol_d[i][j]);
          }
-
+      cout << "sum of errors : " << errsum << endl;
+      errsum = 0.0;
       cout << "comparing CPU with GPU series ... " << endl;
       for(int i=0; i<dim; i++)
          for(int j=0; j<degp1; j++)
@@ -239,6 +331,8 @@ void dbl_newton_qrstep
                   << input_h[i][j] << endl;
              cout << "input_d[" << i << "][" << j << "] : "
                   << input_d[i][j] << endl;
+             errsum += abs(input_h[i][j] - input_d[i][j]);
          }
+      cout << "sum of errors : " << errsum << endl;
    }
 }

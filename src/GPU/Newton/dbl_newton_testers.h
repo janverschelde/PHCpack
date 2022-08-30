@@ -103,7 +103,8 @@ void dbl_newton_qrstep
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **cff, double *acc,
    double **input_h, double **input_d, double ***output_h, double ***output_d,
-   double **funval, double ***jacval, double **rhs,
+   double **funval_h, double **funval_d,
+   double ***jacval_h, double ***jacval_d, double **rhs_h, double **rhs_d,
    double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
    double **Q_h, double **Q_d, double **R_h, double **R_d,
    double **workmat, double *workvec, double **resvec, double *resmax,
@@ -136,9 +137,12 @@ void dbl_newton_qrstep
  *             computed on the host;
  *   output_d  space for the evaluated and differentiated monomials,
  *             computed on the device;
- *   funval    space for the evaluated power series;
- *   jacval    space for deg+1 matrices of dimension dim;
- *   rhs       space for deg+1 vectors of dimension dim;
+ *   funval_h  space for the evaluated power series computed by host;
+ *   funval_d  space for the evaluated power series computed by device;
+ *   jacval_h  space for deg+1 matrices of dimension dim on host;
+ *   jacval_d  space for deg+1 matrices of dimension dim on device;
+ *   rhs_h     space for deg+1 vectors of dimension dim on host;
+ *   rhs_d     space for deg+1 vectors of dimension dim on device;
  *   urhs_h    space for updated right hand side vectors computed by host;
  *   urhs_d    space for updated right hand side vectors computed by device; 
  *   sol_h     space for deg+1 vectors of dimension dim;
@@ -158,11 +162,16 @@ void dbl_newton_qrstep
  *   input_d   power series computed on device (depending on mode);
  *   output_h  evaluated power series computed on host (depending on mode);
  *   output_d  evaluated power series computed on device (depending on mode);
- *   funval    collects the output[i][dim], the evaluated series;
- *   jacval    a series with matrices as coefficients,
- *             the leading coefficient is the Jacobian matrix.
- *   rhs       the linearized right hand side are the function values
- *             subtracted by 1 and added by t;
+ *   funval_h  collects the output[i][dim], the evaluated series on host;
+ *   funval_d  collects the output[i][dim], the evaluated series on device;
+ *   jacval_h  a series with matrices as coefficients, computed by host,
+ *             the leading coefficient is the Jacobian matrix;
+ *   jacval_d  a series with matrices as coefficients, computed by device,
+ *             the leading coefficient is the Jacobian matrix;
+ *   rhs_h     the linearized right hand side are the function values
+ *             subtracted by 1 and added by t, computed by host;
+ *   rhs_d     the linearized right hand side are the function values
+ *             subtracted by 1 and added by t, computed by device;
  *   urhs_h    right hand side vector updated by the host;
  *   urhs_d    right hand side vector updated by the device;
  *   sol_h     solution computed by the host;

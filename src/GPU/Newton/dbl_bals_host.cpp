@@ -158,7 +158,7 @@ void CPU_dbl_qrbs_tail
       if(verbose)
       {
          for(int i=0; i<dim; i++)
-            cout << "Qtb[" << i << "] : " << b[i] << endl;
+            cout << "Qtb[" << i << "] : " << wrkvec[i] << endl;
 
          cout << "the solution : " << endl;
          for(int j=0; j<dim; j++) cout << x[j] << endl;

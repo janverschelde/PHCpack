@@ -97,11 +97,29 @@ void GPU_dbl_bals_head
       for(int i=0; i<nrows; i++)
          cout << "b[" << i << "] : " << b[i] << endl;
    }
-
+   double **workR = new double*[nrows]; // work around ...
+   for(int i=0; i<nrows; i++)
+   {
+      workR[i] = new double[ncols];
+      for(int j=0; j<ncols; j++) workR[i][j] = R[i][j];
+   }
    GPU_dbl_upper_tiled_solver
-      (ncols,szt,nbt,R,b,x,
+      (ncols,szt,nbt,workR,b,x,
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
        &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+   if(verbose > 0)
+   {
+      cout << "-> after calling the GPU upper solver ..." << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "R[" << i << "][" << j << "] : " << R[i][j] << endl;
+
+      for(int i=0; i<nrows; i++)
+         cout << "b[" << i << "] : " << b[i] << endl;
+   }
+   for(int i=0; i<nrows; i++) free(workR[i]);
+   free(workR);
 }
 
 void GPU_dbl_bals_tail
@@ -215,6 +233,9 @@ void GPU_dbl_bals_solve
    double *b = new double[nrows];
    double *x = new double[ncols];
 
+   double **workR = new double*[nrows]; // GPU upper solver changes R
+   for(int i=0; i<nrows; i++) workR[i] = new double[ncols];
+
    if(vrblvl)
    {
       cout << "GPU_dbl_bals_solve blocks of rhs :" << endl;
@@ -259,6 +280,7 @@ void GPU_dbl_bals_solve
          cout << "assigning component " << i
               << ", stage = " << stage << endl;
          b[i] = rhs[stage][i];
+         cout << "b[" << i << "] : " << b[i] << endl;
       }
       double bstimelapsed_d;
       double elapsedms,invlapsed,mullapsed,sublapsed;
@@ -277,19 +299,31 @@ void GPU_dbl_bals_solve
             cout << "Qtb[" << i << "] : " << b[i] << endl;
       }
       if(vrblvl > 0)
+      {
          cout << "-> GPU solves an upper triangular system ..." << endl;
+ 
+         for(int i=0; i<nrows; i++)
+            for(int j=0; j<ncols; j++)
+               cout << "R[" << i << "][" << j << "] : " << R[i][j] << endl;
+      }
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++) workR[i][j] = R[i][j];
 
       GPU_dbl_upper_tiled_solver
-         (ncols,szt,nbt,R,b,x,
+         (ncols,szt,nbt,workR,b,x,
           &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
           &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+     if(vrblvl > 0)
+        for(int i=0; i<ncols; i++)
+           cout << "x[" << i << "] : " << x[i] << endl;
 
       for(int j=0; j<ncols; j++) sol[stage][j] = x[j];
    }
 
    for(int i=0; i<nrows; i++)
    {
-      free(A[i]);
+      free(A[i]); free(workR[i]);
    }
-   free(A); free(b); free(x);
+   free(A); free(b); free(x); free(workR);
 }

@@ -1,3 +1,9 @@
+Mon 29 Aug 2022 : in dbl_comfacmon_kernels.cu used deg+1 instead of szt
+  in the kernel launches.  Added more tests to dbl_newton_testers,
+  Separated values for function and Jacobian in dbl_newton_testers,
+  updated test_dbl_newton.cpp.  Fixed output in dbl_bals_host.cpp.
+  In dbl_bals_kernels.cu made a copy of R because the GPU solver changes R.
+
 Sun 28 Aug 2022 : updated dbl_comfacmon_kernels.cu to use gettimeofday4win
   and updated makefile_windows.  Extended dbl_comfacmon_kernels.h with an
   extra function for ***output and dbl_comfacmon_kernels.cu, tested in

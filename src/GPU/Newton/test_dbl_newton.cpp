@@ -75,15 +75,26 @@ int main ( void )
       }
    }
    // The function values are power series truncated at degree deg.
-   double **funval = new double*[dim];
-   for(int i=0; i<dim; i++) funval[i] = new double[degp1];
+   double **funval_h = new double*[dim];
+   double **funval_d = new double*[dim];
+   for(int i=0; i<dim; i++)
+   {
+      funval_h[i] = new double[degp1];
+      funval_d[i] = new double[degp1];
+   }
    // The derivatives in the output are a series truncated at degree deg.
    // The coefficients of the series are matrices of dimension dim.
-   double ***jacval = new double**[degp1];
+   double ***jacval_h = new double**[degp1];
+   double ***jacval_d = new double**[degp1];
    for(int i=0; i<degp1; i++) // jacval[i] is matrix of dimension dim
    {
-      jacval[i] = new double*[dim];
-      for(int j=0; j<dim; j++) jacval[i][j] = new double[dim];
+      jacval_h[i] = new double*[dim];
+      jacval_d[i] = new double*[dim];
+      for(int j=0; j<dim; j++)
+      {
+         jacval_h[i][j] = new double[dim];
+         jacval_d[i][j] = new double[dim];
+      }
    }
 /*
  * 3. allocate space to solve the linearized power series system
@@ -100,8 +111,13 @@ int main ( void )
    }
    // The right hand side -funval(t) in linearized format is a series
    // truncated at degree deg, with arrays of dimension dim as coefficients.
-   double **rhs = new double*[degp1];
-   for(int i=0; i<degp1; i++) rhs[i] = new double[dim];
+   double **rhs_h = new double*[degp1];
+   double **rhs_d = new double*[degp1];
+   for(int i=0; i<degp1; i++)
+   {
+      rhs_h[i] = new double[dim];
+      rhs_d[i] = new double[dim];
+   }
    // Allocate work space for the inplace LU solver.
    double **workmat = new double*[dim];
    for(int i=0; i<dim; i++) workmat[i] = new double[dim];
@@ -137,6 +153,8 @@ int main ( void )
  */
    // Define the initial input, a vector of ones.
    dbl_unit_series_vector(dim,deg,input_h);
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<degp1; j++) input_d[i][j] = input_h[i][j];
 
    if(vrblvl > 0)
    {
@@ -151,9 +169,9 @@ int main ( void )
 
       dbl_newton_qrstep
          (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,
-          input_h,input_d,output_h,output_d,funval,jacval,
-          rhs,urhs_h,urhs_d,sol_h,sol_d,Q_h,Q_d,R_h,R_d,
-          workmat,workvec,resvec,&resmax,vrblvl,mode);
+          input_h,input_d,output_h,output_d,funval_h,funval_d,
+          jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
+          Q_h,Q_d,R_h,R_d,workmat,workvec,resvec,&resmax,vrblvl,mode);
    }
    exponents_check(dim, rowsA);
 
