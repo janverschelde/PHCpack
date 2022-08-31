@@ -143,7 +143,7 @@ void GPU_dbl_bals_tail
    double *x_d;
    const size_t szsol = ncols*sizeof(double);
    cudaMalloc((void**)&x_d,szsol);
-   cudaMemcpy(x_d,&sol[stage-1],szsol,cudaMemcpyHostToDevice);
+   cudaMemcpy(x_d,sol[stage-1],szsol,cudaMemcpyHostToDevice);
 
    double *A_d;
    const size_t szmat = nrows*ncols*sizeof(double);
@@ -159,9 +159,9 @@ void GPU_dbl_bals_tail
 
       int idx=0;
       for(int i=0; i<nrows; i++)
-         for(int j=0; j<ncols; j++) A_h[idx++] = mat[k][i][j];
+         for(int j=0; j<ncols; j++) A_h[idx++] = mat[k-stage+1][i][j];
       
-      cudaMemcpy(b_d,&(rhs[k][0]),szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(b_d,rhs[k],szrhs,cudaMemcpyHostToDevice);
       cudaMemcpy(A_d,A_h,szmat,cudaMemcpyHostToDevice);
 
       if(verbose)
@@ -173,7 +173,7 @@ void GPU_dbl_bals_tail
       if(verbose)
          cout << "copying block " << k << " of right hand side ..." << endl;
 
-      cudaMemcpy(&(rhs[k][0]),b_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(rhs[k],b_d,szrhs,cudaMemcpyDeviceToHost);
    }
    free(A_h);
 

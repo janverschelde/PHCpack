@@ -150,10 +150,16 @@ void dbl_newton_qrstep
       CPU_dbl_evaluate_monomials
          (dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input_h,output_h,vrblvl);
    if((mode == 0) || (mode == 2))
+   {
+      for(int i=0; i<dim; i++)  // reset the coefficients
+      {
+         cff[i][0] = 1.0;
+         for(int j=1; j<degp1; j++) cff[i][j] = 0.0;
+      }
       GPU_dbl_evaluate_monomials
          (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,cff,acc,
           input_d,output_d,vrblvl);
-
+   }
    if((vrblvl > 0) && (mode == 2))
    {
       cout << "comparing CPU with GPU evaluations ... " << endl;
