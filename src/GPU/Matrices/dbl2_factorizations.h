@@ -513,4 +513,36 @@ void CPU_cmplx2_factors_houseqr
  *   Rimhi    high doubles of the imaginary parts of R;
  *   Rimlo    low doubles of the imaginary parts of R. */
 
+void CPU_dbl2_factors_qrbs
+ ( int nrows, int ncols,
+   double **Qhi, double **Qlo, double **Rhi, double **Rlo,
+   double *rhshi, double *rhslo, double *solhi, double *sollo,
+   double *wrkvechi, double *wrkveclo ); 
+/*
+ * DESCRIPTION :
+ *   Applies back substitution for the least squares solution
+ *   with the QR factorization.
+ *
+ * REQUIRED : nrows >= ncols;
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R, dimension of Q;
+ *   ncols    number of columns of R;
+ *   Qhi      high doubles of the Q of the QR factorization;
+ *   Qlo      low doubles of the Q of the QR factorization;
+ *   Rhi      high doubles of the R of the QR factorization;
+ *   Rlo      low doubles of the R of the QR factorization;
+ *   rhshi    high doubles of the right hand side vector, of size nrows;
+ *   rhslo    low doubles of the right hand side vector, of size nrows;
+ *   solhi    space for the high doubles of the solution, of size ncols;
+ *   sollo    space for the low doubles of the solution, of size ncols;
+ *   wrkvechi has work space for nrows elements.
+ *   wrkveclo has work space for nrows elements.
+ *
+ * ON RETURN :
+ *   solhi    high doubles of the least squares solution;
+ *   sollo    low doubles of the least squares solution;
+ *   wrkvechi contains the high doubles of the product of Q^T with rhs;
+ *   wrkveclo contains the low doubles of the product of Q^T with rhs. */
+
 #endif

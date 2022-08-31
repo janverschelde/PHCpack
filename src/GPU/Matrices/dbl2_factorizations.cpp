@@ -819,3 +819,24 @@ void CPU_cmplx2_factors_houseqr
    free(xrehi); free(ximhi); free(vrehi); free(vimhi);
    free(xrelo); free(ximlo); free(vrelo); free(vimlo);
 }
+
+void CPU_dbl2_factors_qrbs
+ ( int nrows, int ncols,
+   double **Qhi, double **Qlo, double **Rhi, double **Rlo,
+   double *rhshi, double *rhslo, double *solhi, double *sollo,
+   double *wrkvechi, double *wrkveclo )
+{
+   double acchi,acclo;
+
+   for(int i=0; i<nrows; i++)   // compute Q^T*b, b is rhs
+   {
+      wrkvechi[i] = 0.0;
+      wrkveclo[i] = 0.0;
+      for(int j=0; j<nrows; j++) // wrkvec[i] = wrkvec[i] + Q[j][i]*rhs[j];
+      {
+         ddf_mul(Qhi[j][i],Qlo[j][i],rhshi[j],rhslo[j],&acchi,&acclo);
+         ddf_inc(&wrkvechi[i],&wrkveclo[i],acchi,acclo);
+      }
+   }
+   CPU_dbl2_factors_backward(ncols,Rhi,Rlo,wrkvechi,wrkveclo,solhi,sollo);
+}

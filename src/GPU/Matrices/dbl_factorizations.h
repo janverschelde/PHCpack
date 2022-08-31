@@ -378,7 +378,7 @@ void CPU_dbl_factors_qrbs
  *   Q        the Q of the QR factorization;
  *   R        the R of the QR factorization;
  *   rhs      right hand side vector, of size nrows;
- *   sol      space for the solution, od size ncols;
+ *   sol      space for the solution, of size ncols;
  *   wrkvec   work space for nrows elements.
  *
  * ON RETURN :
