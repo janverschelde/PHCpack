@@ -252,7 +252,7 @@ void dbl2_update_series
    }
 }
 
-void dbl2_newton_step
+void dbl2_newton_lustep
  ( int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **cffhi, double **cfflo, double *acchi, double *acclo,
@@ -311,7 +311,7 @@ void dbl2_newton_step
          sollo[i][j] = 0.0;
       }
  
-   CPU_dbl2_linear_solve
+   CPU_dbl2_lusb_solve
       (dim,degp1,jacvalhi,jacvallo,workrhshi,workrhslo,solhi,sollo,
        workmathi,workmatlo,workvechi,workveclo,ipvt,0); // vrblvl);
 
@@ -324,4 +324,101 @@ void dbl2_newton_step
            << *resmaxhi << "  " << *resmaxlo << endl;
 
    dbl2_update_series(dim,degp1,inputhi,inputlo,solhi,sollo,vrblvl);
+}
+
+void dbl2_newton_qrstep
+ ( int szt, int nbt, int dim, int deg,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **cffhi, double **cfflo, double *acchi, double *acclo,
+   double **inputhi_h, double **inputlo_h,
+   double **inputhi_d, double **inputlo_d,
+   double ***outputhi_h, double ***outputlo_h,
+   double ***outputhi_d, double ***outputlo_d,
+   double **funvalhi_h, double **funvallo_h,
+   double **funvalhi_d, double **funvallo_d,
+   double ***jacvalhi_h, double ***jacvallo_h,
+   double ***jacvalhi_d, double ***jacvallo_d,
+   double **rhshi_h, double **rhslo_h, double **rhshi_d, double **rhslo_d,
+   double **urhshi_h, double **urhslo_h, double **urhshi_d, double **urhslo_d,
+   double **solhi_h, double **sollo_h, double **solhi_d, double **sollo_d,
+   double **Qhi_h, double **Qlo_h, double **Qhi_d, double **Qlo_d,
+   double **Rhi_h, double **Rlo_h, double **Rhi_d, double **Rlo_d,
+   double **workmathi, double **workmatlo,
+   double *workvechi, double *workveclo,
+   double **resvechi, double **resveclo, double *resmaxhi, double *resmaxlo,
+   int vrblvl, int mode )
+{
+   const int degp1 = deg+1;
+
+   // The series coefficients accumulate common factors,
+   // initially the coefficients are set to one.
+   for(int i=0; i<dim; i++)
+   {
+      cffhi[i][0] = 1.0;
+      cfflo[i][0] = 0.0;
+      for(int j=1; j<degp1; j++)
+      {
+         cffhi[i][j] = 0.0;
+         cfflo[i][j] = 0.0;
+      }
+   }
+   dbl2_evaluate_monomials
+      (dim,deg,nvr,idx,exp,nbrfac,expfac,
+       cffhi,cfflo,acchi,acclo,inputhi_h,inputlo_h,outputhi_h,outputlo_h,
+       vrblvl);
+
+   if(vrblvl > 0) cout << "initializing the Jacobian ..." << endl;
+
+   for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+      for(int j=0; j<dim; j++) 
+         for(int k=0; k<dim; k++)
+         {
+            jacvalhi_h[i][j][k] = 0.0;
+            jacvallo_h[i][j][k] = 0.0;
+            jacvalhi_d[i][j][k] = 0.0;
+            jacvallo_d[i][j][k] = 0.0;
+         }
+
+   if(vrblvl > 0) cout << "linearizing the output ..." << endl;
+
+   dbl2_linearize_evaldiff_output
+      (dim,degp1,nvr,idx,outputhi_h,outputlo_h,funvalhi_h,funvallo_h,
+       rhshi_h,rhslo_h,jacvalhi_h,jacvallo_h,vrblvl);
+
+   if(vrblvl > 0) cout << "saving the original rhs ..." << endl;
+
+   for(int i=0; i<degp1; i++) // save original rhs for residual
+      for(int j=0; j<dim; j++)
+      {
+         urhshi_h[i][j] = rhshi_h[i][j];
+         urhslo_h[i][j] = rhslo_h[i][j];
+      }
+
+   if(vrblvl > 0) cout << "initializing the solution ..." << endl;
+
+   for(int i=0; i<degp1; i++) // initialize the solution to zero
+      for(int j=0; j<dim; j++)
+      {
+         solhi_h[i][j] = 0.0;
+         sollo_h[i][j] = 0.0;
+      }
+ 
+   if(vrblvl > 0) cout << "calling CPU_dbl2_qrbs_solve ..." << endl;
+
+   CPU_dbl2_qrbs_solve
+      (dim,degp1,jacvalhi_h,jacvallo_h,urhshi_h,urhslo_h,solhi_h,sollo_h,
+       workmathi,workmatlo,Qhi_h,Qlo_h,Rhi_h,Rlo_h,workvechi,workveclo,
+       vrblvl);
+
+   if(vrblvl > 0) cout << "calling CPU_dbl2_linear_residue ..." << endl;
+
+   CPU_dbl2_linear_residue
+      (dim,degp1,jacvalhi_h,jacvallo_h,rhshi_h,rhslo_h,solhi_h,sollo_h,
+       resvechi,resveclo,resmaxhi,resmaxlo,vrblvl);
+
+   if(vrblvl > 0)
+      cout << "maximum residual : "
+           << *resmaxhi << "  " << *resmaxlo << endl;
+
+   dbl2_update_series(dim,degp1,inputhi_h,inputlo_h,solhi_h,sollo_h,vrblvl);
 }
