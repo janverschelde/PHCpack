@@ -1229,3 +1229,36 @@ void CPU_cmplx4_factors_houseqr
    free(vrehihi); free(vrelohi); free(vrehilo); free(vrelolo);
    free(vimhihi); free(vimlohi); free(vimhilo); free(vimlolo);
 }
+
+void CPU_dbl4_factors_qrbs
+ ( int nrows, int ncols,
+   double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
+   double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo,
+   double *rhshihi, double *rhslohi, double *rhshilo, double *rhslolo,
+   double *solhihi, double *sollohi, double *solhilo, double *sollolo,
+   double *wrkvechihi, double *wrkveclohi,
+   double *wrkvechilo, double *wrkveclolo )
+{
+   double acchihi,acclohi,acchilo,acclolo;
+
+   for(int i=0; i<nrows; i++)   // compute Q^T*b, b is rhs
+   {
+      wrkvechihi[i] = 0.0;
+      wrkveclohi[i] = 0.0;
+      wrkvechilo[i] = 0.0;
+      wrkveclolo[i] = 0.0;
+
+      for(int j=0; j<nrows; j++) // wrkvec[i] = wrkvec[i] + Q[j][i]*rhs[j];
+      {
+         qdf_mul(Qhihi[j][i],Qlohi[j][i],Qhilo[j][i],Qlolo[j][i],
+                 rhshihi[j],rhslohi[j],rhshilo[j],rhslolo[j],
+                 &acchihi,&acclohi,&acchilo,&acclolo);
+         qdf_inc(&wrkvechihi[i],&wrkveclohi[i],&wrkvechilo[i],&wrkveclolo[i],
+                 acchihi,acclohi,acchilo,acclolo);
+      }
+   }
+   CPU_dbl4_factors_backward
+      (ncols,Rhihi,Rlohi,Rhilo,Rlolo,
+       wrkvechihi,wrkveclohi,wrkvechilo,wrkveclolo,
+       solhihi,sollohi,solhilo,sollolo);
+}

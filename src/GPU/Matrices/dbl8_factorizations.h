@@ -1406,4 +1406,87 @@ void CPU_cmplx8_factors_houseqr
  *   Rimhilolo are the second lowest doubles of the imaginary parts of R;
  *   Rimlololo are the lowest doubles of the imaginary parts of R. */
 
+void CPU_dbl8_factors_qrbs
+ ( int nrows, int ncols,
+   double **Qhihihi, double **Qlohihi, double **Qhilohi, double **Qlolohi,
+   double **Qhihilo, double **Qlohilo, double **Qhilolo, double **Qlololo,
+   double **Rhihihi, double **Rlohihi, double **Rhilohi, double **Rlolohi,
+   double **Rhihilo, double **Rlohilo, double **Rhilolo, double **Rlololo,
+   double *rhshihihi, double *rhslohihi, double *rhshilohi, double *rhslolohi,
+   double *rhshihilo, double *rhslohilo, double *rhshilolo, double *rhslololo,
+   double *solhihihi, double *sollohihi, double *solhilohi, double *sollolohi,
+   double *solhihilo, double *sollohilo, double *solhilolo, double *sollololo,
+   double *wrkvechihihi, double *wrkveclohihi,
+   double *wrkvechilohi, double *wrkveclolohi,
+   double *wrkvechihilo, double *wrkveclohilo,
+   double *wrkvechilolo, double *wrkveclololo ); 
+/*
+ * DESCRIPTION :
+ *   Applies back substitution for the least squares solution
+ *   with the QR factorization.
+ *
+ * REQUIRED : nrows >= ncols;
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R, dimension of Q;
+ *   ncols    number of columns of R;
+ *   Qhihihi  highest doubles of the Q of the QR factorization;
+ *   Qlohihi  second highest doubles of the Q of the QR factorization;
+ *   Qhilohi  third highest doubles of the Q of the QR factorization;
+ *   Qlolohi  fourth highest doubles of the Q of the QR factorization;
+ *   Qhihilo  fourth lowest doubles of the Q of the QR factorization;
+ *   Qlohilo  third lowest doubles of the Q of the QR factorization;
+ *   Qhilolo  second lowest doubles of the Q of the QR factorization;
+ *   Qlololo  lowest doubles of the Q of the QR factorization;
+ *   Rhihihi  highest doubles of the R of the QR factorization;
+ *   Rlohihi  second highest doubles of the R of the QR factorization;
+ *   Rhilohi  third highest doubles of the R of the QR factorization;
+ *   Rlolohi  fourth highest doubles of the R of the QR factorization;
+ *   Rhihilo  fourth lowest doubles of the R of the QR factorization;
+ *   Rlohilo  third lowest doubles of the R of the QR factorization;
+ *   Rhilolo  second lowest doubles of the R of the QR factorization;
+ *   Rlololo  lowest doubles of the R of the QR factorization;
+ *   rhshihihi has the highest doubles of the right hand side, of size nrows;
+ *   rhslohihi has the second highest doubles of the right hand side;
+ *   rhshilohi has the third highest doubles of the right hand side;
+ *   rhslolohi has the fourth highest doubles of the right hand side;
+ *   rhshihilo has the fourth lowest doubles of the right hand side;
+ *   rhslohilo has the third lowest doubles of the right hand side;
+ *   rhshilolo has the second lowest doubles of the right hand side;
+ *   rhslololo has the lowest doubles of the right hand side;
+ *   solhihihi has space for the highest doubles of the solution, of size ncols;
+ *   sollohihi has space for the second highest doubles of the solution;
+ *   solhilohi has space for the third highest doubles of the solution;
+ *   sollolohi has space for the fourth highest doubles of the solution;
+ *   solhihilo has space for the fourth lowest doubles of the solution;
+ *   sollohilo has space for the third lowest doubles of the solution;
+ *   solhilolo has space for the second lowest doubles of the solution;
+ *   sollololo has space for the lowest doubles of the solution;
+ *   wrkvechihihi has work space for nrows elements;
+ *   wrkveclohihi has work space for nrows elements;
+ *   wrkvechilohi has work space for nrows elements;
+ *   wrkveclolohi has work space for nrows elements;
+ *   wrkvechihilo has work space for nrows elements;
+ *   wrkveclohilo has work space for nrows elements;
+ *   wrkvechilolo has work space for nrows elements;
+ *   wrkveclololo has work space for nrows elements.
+ *
+ * ON RETURN :
+ *   solhihihi has the highest doubles of the least squares solution;
+ *   sollohihi has the second highest doubles of the least squares solution;
+ *   solhilohi has the third highest doubles of the least squares solution;
+ *   sollolohi has the fourth highest doubles of the least squares solution;
+ *   solhihilo has the fourth lowest doubles of the least squares solution;
+ *   sollohilo has the third lowest doubles of the least squares solution;
+ *   solhilolo has the second lowest doubles of the least squares solution;
+ *   sollololo has the lowest doubles of the least squares solution;
+ *   wrkvechihihi has the highest doubles of the product of Q^T with rhs;
+ *   wrkveclohihi has the second highest doubles of Q^T*rhs;
+ *   wrkvechilohi has the third highest doubles of Q^T*rhs;
+ *   wrkveclolohi has the fourth highest doubles of Q^T*rhs;
+ *   wrkvechihilo has the fourth lowest doubles of Q^T*rhs;
+ *   wrkveclohilo has the third lowest doubles of Q^T*rhs;
+ *   wrkvechilolo has the second lowest doubles of Q^T*rhs;
+ *   wrkveclololo has the lowest doubles of Q^T*rhs. */
+
 #endif

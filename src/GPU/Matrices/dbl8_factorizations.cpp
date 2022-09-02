@@ -2260,3 +2260,56 @@ void CPU_cmplx8_factors_houseqr
    free(vimhihihi); free(vimlohihi); free(vimhilohi); free(vimlolohi);
    free(vimhihilo); free(vimlohilo); free(vimhilolo); free(vimlololo);
 }
+
+void CPU_dbl8_factors_qrbs
+ ( int nrows, int ncols,
+   double **Qhihihi, double **Qlohihi, double **Qhilohi, double **Qlolohi,
+   double **Qhihilo, double **Qlohilo, double **Qhilolo, double **Qlololo,
+   double **Rhihihi, double **Rlohihi, double **Rhilohi, double **Rlolohi,
+   double **Rhihilo, double **Rlohilo, double **Rhilolo, double **Rlololo,
+   double *rhshihihi, double *rhslohihi, double *rhshilohi, double *rhslolohi,
+   double *rhshihilo, double *rhslohilo, double *rhshilolo, double *rhslololo,
+   double *solhihihi, double *sollohihi, double *solhilohi, double *sollolohi,
+   double *solhihilo, double *sollohilo, double *solhilolo, double *sollololo,
+   double *wrkvechihihi, double *wrkveclohihi,
+   double *wrkvechilohi, double *wrkveclolohi,
+   double *wrkvechihilo, double *wrkveclohilo,
+   double *wrkvechilolo, double *wrkveclololo )
+{
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   for(int i=0; i<nrows; i++)   // compute Q^T*b, b is rhs
+   {
+      wrkvechihihi[i] = 0.0;
+      wrkveclohihi[i] = 0.0;
+      wrkvechilohi[i] = 0.0;
+      wrkveclolohi[i] = 0.0;
+      wrkvechihilo[i] = 0.0;
+      wrkveclohilo[i] = 0.0;
+      wrkvechilolo[i] = 0.0;
+      wrkveclololo[i] = 0.0;
+
+      for(int j=0; j<nrows; j++) // wrkvec[i] = wrkvec[i] + Q[j][i]*rhs[j];
+      {
+         odf_mul(Qhihihi[j][i],Qlohihi[j][i],Qhilohi[j][i],Qlolohi[j][i],
+                 Qhihilo[j][i],Qlohilo[j][i],Qhilolo[j][i],Qlololo[j][i],
+                 rhshihihi[j],rhslohihi[j],rhshilohi[j],rhslolohi[j],
+                 rhshihilo[j],rhslohilo[j],rhshilolo[j],rhslololo[j],
+                 &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                 &acchihilo,&acclohilo,&acchilolo,&acclololo);
+         odf_inc(&wrkvechihihi[i],&wrkveclohihi[i],
+                 &wrkvechilohi[i],&wrkveclolohi[i],
+                 &wrkvechihilo[i],&wrkveclohilo[i],
+                 &wrkvechilolo[i],&wrkveclololo[i],
+                 acchihihi,acclohihi,acchilohi,acclolohi,
+                 acchihilo,acclohilo,acchilolo,acclololo);
+      }
+   }
+   CPU_dbl8_factors_backward
+      (ncols,Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
+       wrkvechihihi,wrkveclohihi,wrkvechilohi,wrkveclolohi,
+       wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo,
+       solhihihi,sollohihi,solhilohi,sollolohi,
+       solhihilo,sollohilo,solhilolo,sollololo);
+}

@@ -769,4 +769,53 @@ void CPU_cmplx4_factors_houseqr
  *   Rimhilo  second lowest doubles of the imaginary parts of R;
  *   Rimlolo  lowest doubles of the imaginary parts of R. */
 
+void CPU_dbl4_factors_qrbs
+ ( int nrows, int ncols,
+   double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
+   double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo,
+   double *rhshihi, double *rhslohi, double *rhshilo, double *rhslolo,
+   double *solhihi, double *sollohi, double *solhilo, double *sollolo,
+   double *wrkvechihi, double *wrkveclohi,
+   double *wrkvechilo, double *wrkveclolo ); 
+/*
+ * DESCRIPTION :
+ *   Applies back substitution for the least squares solution
+ *   with the QR factorization.
+ *
+ * REQUIRED : nrows >= ncols;
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R, dimension of Q;
+ *   ncols    number of columns of R;
+ *   Qhihi    highest doubles of the Q of the QR factorization;
+ *   Qlohi    second highest doubles of the Q of the QR factorization;
+ *   Qhilo    second lowest doubles of the Q of the QR factorization;
+ *   Qlolo    lowest doubles of the Q of the QR factorization;
+ *   Rhihi    highest doubles of the R of the QR factorization;
+ *   Rlohi    second highest doubles of the R of the QR factorization;
+ *   Rhilo    second lowest doubles of the R of the QR factorization;
+ *   Rlolo    lowest doubles of the R of the QR factorization;
+ *   rhshihi  highest doubles of the right hand side vector, of size nrows;
+ *   rhslohi  second highest doubles of the right hand side vector;
+ *   rhshilo  second lowest doubles of the right hand side vector;
+ *   rhslolo  lowest doubles of the right hand side vector;
+ *   solhihi  space for the highest doubles of the solution, of size ncols;
+ *   sollohi  space for the second highest doubles of the solution;
+ *   solhilo  space for the second lowest doubles of the solution;
+ *   sollolo  space for the lowest doubles of the solution;
+ *   wrkvechihi has work space for nrows elements;
+ *   wrkveclohi has work space for nrows elements;
+ *   wrkvechilo has work space for nrows elements;
+ *   wrkveclolo has work space for nrows elements.
+ *
+ * ON RETURN :
+ *   solhihi  highest doubles of the least squares solution;
+ *   sollohi  second highest doubles of the least squares solution;
+ *   solhilo  second lowest doubles of the least squares solution;
+ *   sollolo  lowest doubles of the least squares solution;
+ *   wrkvechihi has the highest doubles of the product of Q^T with rhs;
+ *   wrkveclohi has the second highest doubles of Q^T*rhs;
+ *   wrkvechilo has the second lowest doubles of Q^T*rhs;
+ *   wrkveclolo has the lowest doubles of Q^T*rhs. */
+
 #endif
