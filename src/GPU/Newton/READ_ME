@@ -7,8 +7,8 @@ unimodular_matrices      : code to generate random exponent matrices
 test_unimodular          : test on unimodular triangulation
 ------------------------------------------------------------------------------
 test_monomial_jobs       : prepares for the acceleration of the evaluation
-dbl_comfacmon_host       : double monomial evaluation on host
-dbl_comfacmon_kernels    : double monomial evaluation on device
+dbl_systems_host         : systems evaldiff in double precision on host
+dbl_systems_kernels      : systems evaldiff in double precision on device
 ------------------------------------------------------------------------------
 dbl_bals_host            : linearization in double precision on host
 dbl_bals_kernels         : linearization in double precision on device

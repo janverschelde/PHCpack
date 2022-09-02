@@ -136,14 +136,14 @@ dbl_bals_kernels.o:
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MAT) -O3 \
              -c dbl_bals_kernels.cu
 
-dbl_comfacmon_host.o:
-	@-echo ">>> compiling dbl_comfacmon_host ..."
-	$(gpp) -O3 -c -I$(CUDA) -I$(CNV) -I$(MAT) dbl_comfacmon_host.cpp
+dbl_systems_host.o:
+	@-echo ">>> compiling dbl_systems_host ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(CNV) -I$(MAT) dbl_systems_host.cpp
 
-dbl_comfacmon_kernels.o:
-	@-echo ">>> compiling dbl_comfacmon_kernels ..."
+dbl_systems_kernels.o:
+	@-echo ">>> compiling dbl_systems_kernels ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(CNV) -I$(MAT) -I$(POL) -O3 \
-             -c dbl_comfacmon_kernels.cu
+             -c dbl_systems_kernels.cu
 
 dbl_newton_testers.o:
 	@-echo ">>> compiling dbl_newton_testers ..."
@@ -230,8 +230,8 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                  dbl_convolutions_host.o dbl_monomials_host.o \
                  convolution_job.o convolution_jobs.o \
                  addition_job.o addition_jobs.o job_coordinates.o \
-                 dbl_comfacmon_host.o write_gpu_timings.o \
-                 dbl_comfacmon_kernels.o dbl_polynomials_kernels.o \
+                 dbl_systems_host.o write_gpu_timings.o \
+                 dbl_systems_kernels.o dbl_polynomials_kernels.o \
                  dbl_factorizations.o dbl_bals_host.o \
                  dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                  dbl_baqr_kernels.o dbl_tabs_kernels.o dbl_bals_kernels.o
@@ -242,8 +242,8 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
                   convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
-                  dbl_comfacmon_host.o write_gpu_timings.o \
-                  dbl_comfacmon_kernels.o dbl_polynomials_kernels.o \
+                  dbl_systems_host.o write_gpu_timings.o \
+                  dbl_systems_kernels.o dbl_polynomials_kernels.o \
                   dbl_factorizations.o dbl_bals_host.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl_baqr_kernels.o dbl_tabs_kernels.o dbl_bals_kernels.o \
@@ -294,7 +294,7 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
 
 clean:
 	/bin/rm -f -r unimodular_matrices.o
-	/bin/rm -f -r dbl_comfacmon_host.o dbl_comfacmon_kernels.o
+	/bin/rm -f -r dbl_systems_host.o dbl_systems_kernels.o
 	/bin/rm -f -r dbl_bals_host.o dbl_bals_kernels.o
 	/bin/rm -f -r dbl2_bals_host.o
 	/bin/rm -f -r dbl4_bals_host.o

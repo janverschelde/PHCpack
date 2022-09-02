@@ -1,9 +1,9 @@
-// The file dbl_comfacmon_kernels.h specifies functions to define
+// The file dbl_systems_kernels.h specifies functions to define
 // memory transfers ad kernel launches to evaluate and differentiate
 // monomials with common factors in double precision.
 
-#ifndef __dbl_comfacmon_kernels_h__
-#define __dbl_comfacmon_kernels_h__
+#ifndef __dbl_systems_kernels_h__
+#define __dbl_systems_kernels_h__
 
 #include "convolution_jobs.h"
 

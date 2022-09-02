@@ -1,5 +1,5 @@
-// The file dbl_comfacmon_kernels.cu defines the functions with prototypes in
-// the file dbl_comfacmon_kernels.h.
+// The file dbl_systems_kernels.cu defines the functions with prototypes in
+// the file dbl_systems_kernels.h.
 
 #include <iostream>
 #include <iomanip>

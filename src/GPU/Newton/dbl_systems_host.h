@@ -1,8 +1,8 @@
-// The file dbl_comfacmon_host.h specifies functions to evaluate and
+// The file dbl_systems_host.h specifies functions to evaluate and
 // differentiate monomials with common factors in double precision.
 
-#ifndef __dbl_comfacmon_host_h__
-#define __dbl_comfacmon_host_h__
+#ifndef __dbl_systems_host_h__
+#define __dbl_systems_host_h__
 
 void CPU_dbl_evaluate_monomials
  ( int dim, int deg, int *nvr, int **idx, int **exp, int *nbrfac,

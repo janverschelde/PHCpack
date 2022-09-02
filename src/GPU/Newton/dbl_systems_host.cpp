@@ -1,5 +1,5 @@
-// The file dbl_comfacmon_host.cpp defines the functions with prototypes in
-// the file dbl_comfacmon_host.h.
+// The file dbl_systems_host.cpp defines the functions with prototypes in
+// the file dbl_systems_host.h.
 
 #include <iostream>
 #include "dbl_convolutions_host.h"

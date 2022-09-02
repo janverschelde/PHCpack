@@ -1,3 +1,9 @@
+Thu 1 Sep 2022 : renamed files *dbl_comfacmon_* into dbl_systems_*
+  which changed dbl_newton_testers.cpp.  Adjusted the makefiles.
+
+Wed 31 Aug 2022 : renamed functions in dbl2_bals_host, adding qrbs,
+  which updated dbl2_newton_testers and test_dbl2_newton.cpp.
+
 Tue 30 Aug 2022 : in dbl_newton_testers.cpp, reset cff for GPU evaluation.
   Fixed indexing in the matrix in tail solver in dbl_bals_kernels.cu.
   In dbl_bals_kernels.cu, corrected addressing error with sol[stage-1].

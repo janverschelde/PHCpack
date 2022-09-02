@@ -10,8 +10,8 @@
 #include "unimodular_matrices.h"
 #include "random_monomials.h"
 #include "dbl_factorizations.h"
-#include "dbl_comfacmon_host.h"
-#include "dbl_comfacmon_kernels.h"
+#include "dbl_systems_host.h"
+#include "dbl_systems_kernels.h"
 #include "dbl_bals_host.h"
 #include "dbl_bals_kernels.h"
 
