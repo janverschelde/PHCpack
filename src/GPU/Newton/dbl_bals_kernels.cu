@@ -69,7 +69,7 @@ void GPU_dbl_bals_head
    long long int qrdivcnt = 0;
    long long int sqrtcnt = 0;
 
-   if(verbose > 0) 
+   if(verbose) 
       cout << "-> GPU computes the blocked Householder QR ..." << endl;
 
    GPU_dbl_blocked_houseqr
@@ -85,10 +85,10 @@ void GPU_dbl_bals_head
    long long int bsmulcnt = 0;
    long long int bsdivcnt = 0;
 
-   if(verbose > 0)
+   if(verbose)
       cout << "-> GPU solves an upper triangular system ..." << endl;
 
-   if(verbose > 0)
+   if(verbose)
    {
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)
@@ -108,7 +108,7 @@ void GPU_dbl_bals_head
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
        &bsaddcnt,&bsmulcnt,&bsdivcnt);
 
-   if(verbose > 0)
+   if(verbose)
    {
       cout << "-> after calling the GPU upper solver ..." << endl;
       for(int i=0; i<nrows; i++)
