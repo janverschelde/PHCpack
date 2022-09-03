@@ -2,6 +2,7 @@ Sat 3 Sep 2022 : new {dbl2,dbl4,dbl8}_systems_host with code factored out
   of {dbl2,dbl4,dbl8}_newton_testers.  Updated makefiles.
   For compiler warnings, modified {dbl,dbl2}_bals_kernels.cu.
   New {dbl2,dbl4}_systems_kernels, updated makefiles.
+  New dbl4_bals_kernels, fixed dbl2_bals_kernels, updated makefiles.
 
 Fri 2 Sep 2022 : fixed typos in dbl2_bals_host.h and dbl2_newton_testers.h.
   Extended dbl4_bals_host with qrbs solvers, applied in dbl4_newton_testers,

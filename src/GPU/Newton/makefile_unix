@@ -127,6 +127,12 @@ dbl2_baqr_kernels.o:
              --define-macro gpufun=1 \
              -c $(MAT)/dbl2_baqr_kernels.cu
 
+dbl4_baqr_kernels.o:
+	@-echo ">>> compiling baqr kernels for quad doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -O3 \
+             --define-macro gpufun=1 \
+             -c $(MAT)/dbl4_baqr_kernels.cu
+
 dbl_tabs_kernels.o:
 	@-echo ">>> compiling tabs kernels for doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -O3 \
@@ -137,6 +143,12 @@ dbl2_tabs_kernels.o:
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -O3 \
              --define-macro gpufun=1 \
              -c $(MAT)/dbl2_tabs_kernels.cu
+
+dbl4_tabs_kernels.o:
+	@-echo ">>> compiling tabs kernels for quad doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -O3 \
+             --define-macro gpufun=1 \
+             -c $(MAT)/dbl4_tabs_kernels.cu
 
 dbl_polynomials_kernels.o:
 	@-echo ">>> compiling polynomial kernels for doubles ..."
@@ -165,6 +177,12 @@ dbl2_bals_kernels.o:
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -I$(MAT) -O3 \
              --define-macro gpufun=1 \
              -c dbl2_bals_kernels.cu
+
+dbl4_bals_kernels.o:
+	@-echo ">>> compiling bals kernels for quad doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -I$(MAT) -O3 \
+             --define-macro gpufun=1 \
+             -c dbl4_bals_kernels.cu
 
 dbl_systems_host.o:
 	@-echo ">>> compiling dbl_systems_host ..."
@@ -332,11 +350,14 @@ test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o \
                   double_double_functions.o quad_double_functions.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
-                  dbl4_factorizations.o dbl4_bals_host.o \
+                  dbl4_factorizations.o \
+                  dbl4_bals_host.o dbl4_bals_kernels.o \
                   convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   dbl4_systems_host.o write_gpu_timings.o \
                   dbl4_systems_kernels.o dbl4_polynomials_kernels.o \
+                  dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
+                  dbl4_baqr_kernels.o dbl4_tabs_kernels.o \
                   dbl4_newton_testers.o test_dbl4_newton.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl4_newton test_dbl4_newton.o dbl4_newton_testers.o \
@@ -344,11 +365,14 @@ test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o \
                   double_double_functions.o quad_double_functions.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
-                  dbl4_factorizations.o dbl4_bals_host.o \
+                  dbl4_factorizations.o \
+                  dbl4_bals_host.o dbl4_bals_kernels.o \
                   convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   dbl4_systems_host.o write_gpu_timings.o \
                   dbl4_systems_kernels.o dbl4_polynomials_kernels.o \
+                  dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
+                  dbl4_baqr_kernels.o dbl4_tabs_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
@@ -376,7 +400,7 @@ clean:
 	/bin/rm -f -r dbl_bals_host.o dbl_bals_kernels.o
 	/bin/rm -f -r dbl2_baqr_kernels.o dbl2_tabs_kernels.o
 	/bin/rm -f -r dbl2_bals_host.o dbl2_bals_kernels.o
-	/bin/rm -f -r dbl4_bals_host.o
+	/bin/rm -f -r dbl4_bals_host.o dbl4_bals_kernels.o
 	/bin/rm -f -r dbl8_bals_host.o
 	/bin/rm -f -r dbl_newton_testers.o dbl2_newton_testers.o
 	/bin/rm -f -r dbl4_newton_testers.o dbl8_newton_testers.o
@@ -399,6 +423,8 @@ cleanall: clean
 	/bin/rm -f -r dbl_factorizations.o dbl2_factorizations.o
 	/bin/rm -f -r dbl4_factorizations.o dbl8_factorizations.o
 	/bin/rm -f -r dbl_baqr_kernels.o dbl_tabs_kernels.o
+	/bin/rm -f -r dbl2_baqr_kernels.o dbl2_tabs_kernels.o
+	/bin/rm -f -r dbl4_baqr_kernels.o dbl4_tabs_kernels.o
 	/bin/rm -f -r convolution_job.o convolution_jobs.o
 	/bin/rm -f -r addition_job.o addition_jobs.o job_coordinates.o
 	/bin/rm -f -r dbl_polynomials_kernels.o write_gpu_timings.o

@@ -88,9 +88,9 @@ void GPU_dbl2_bals_head
  * ON RETURN :
  *   Qhi      high doubles of the Q in the QR of the Jacobian matrix;
  *   Qlo      low doubles of the Q in the QR of the Jacobian matrix;
- *   Rhi      high dobles of the  R in the QR f the Jacobian matrix;
- *   Rlo      low dobles of the  R in the QR f the Jacobian matrix;
- *   xhi      high dobles of the least squares solution;
+ *   Rhi      high doubles of the R in the QR of the Jacobian matrix;
+ *   Rlo      low doubles of the R in the QR of the Jacobian matrix;
+ *   xhi      high doubles of the least squares solution;
  *   xlo      low doubles of the least squares solution. */
 
 void GPU_dbl2_bals_tail
@@ -172,7 +172,8 @@ void GPU_dbl2_bals_solve
  *   Qlo      space for the low doubles of the Q of the QR of the Jacobian;
  *   Rhi      space for the high doubles of the R of the QR fof the Jacobian;
  *   Rlo      space for the low doubles of the R of the QR fof the Jacobian;
- *   rhs      degp1 vectors of dimension dim;
+ *   rhshi    degp1 vectors of dimension dim;
+ *   rhslo    degp1 vectors of dimension dim;
  *   solhi    space allocated for degp1 vectors of dimension dim;
  *   sollo    space allocated for degp1 vectors of dimension dim;
  *   vrblvl   the verbose level (0 for silent).

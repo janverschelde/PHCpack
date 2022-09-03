@@ -98,7 +98,7 @@ void GPU_dbl2_bals_head
       cout << "-> GPU computes the blocked Householder QR ..." << endl;
 
    GPU_dbl2_blocked_houseqr
-      (nrows,ncols,szt,nbt,Ahi,Qlo,Qhi,Qlo,Rhi,Rlo,
+      (nrows,ncols,szt,nbt,Ahi,Alo,Qhi,Qlo,Rhi,Rlo,
        &houselapsedms,&RTvlapsedms,&tileRlapsedms,&vb2Wlapsedms,
        &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
@@ -212,7 +212,7 @@ void GPU_dbl2_bals_tail
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)
          {
-            Ahi_h[idx++] = mathi[k-stage+1][i][j];
+            Ahi_h[idx]   = mathi[k-stage+1][i][j];
             Alo_h[idx++] = matlo[k-stage+1][i][j];
          }
 
@@ -279,7 +279,7 @@ void GPU_dbl2_bals_qtb
    for(int i=0; i<ncols; i++)
       for(int j=0; j<ncols; j++)
       {
-         Qthi_h[idx++] = Qhi[j][i];
+         Qthi_h[idx]   = Qhi[j][i];
          Qtlo_h[idx++] = Qlo[j][i];
       }
 
