@@ -10,7 +10,9 @@ test_monomial_jobs       : prepares the acceleration of the evaluation
 dbl_systems_host         : systems evaldiff with doubles on host
 dbl_systems_kernels      : systems evaldiff with doubles on device
 dbl2_systems_host        : systems evaldiff with double doubles on host
+dbl2_systems_kernels     : systems evaldiff with double doubles on device
 dbl4_systems_host        : systems evaldiff with quad doubles on host
+dbl4_systems_kernels     : systems evaldiff with quad doubles on device
 dbl8_systems_host        : systems evaldiff with octo doubles on host
 ------------------------------------------------------------------------------
 dbl_bals_host            : linearization in double precision on host
