@@ -252,7 +252,7 @@ void dbl2_newton_qrstep
  *             differentiated monomials, computed on the host;
  *   outputhi_d has space for the high doubles of the evaluated and
  *             differentiated monomials, computed on the device;
- *   outputlo_d has space for the high doubles of the evaluated and
+ *   outputlo_d has space for the low doubles of the evaluated and
  *             differentiated monomials, computed on the device;
  *   funvalhi_h has space for the evaluated power series computed by host;
  *   funvallo_h has space for the evaluated power series computed by host;

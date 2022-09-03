@@ -77,7 +77,7 @@ void CPU_dbl2_qrbs_head
  *   Qhi      high doubles of the Q of the QR of the Jacobian matrix;
  *   Qlo      low doubles of the Q of the QR of the Jacobian matrix;
  *   Rhi      high doubles of the R in the QR of the Jacobian matrix;
- *   Rhi      low doubles of the R in the QR of the Jacobian matrix;
+ *   Rlo      low doubles of the R in the QR of the Jacobian matrix;
  *   wrkvechi is work space used to solve the linear system;
  *   wrkveclo is work space used to solve the linear system;
  *   solhi    high doubles of the coefficients of the solution series;
@@ -141,8 +141,8 @@ void CPU_dbl2_qrbs_tail
  *   Qlo      low doubles of the Q of the QR factorization;
  *   Rhi      high doubles of the R of the QR factorization;
  *   Rlo      low doubles of the R of the QR factorization;
- *   wrkvec   work space vector of dimension dim for the substitution;
- *   wrkvec   work space vector of dimension dim for the substitution;
+ *   wrkvechi is work space vector of dimension dim for the substitution;
+ *   wrkveclo is work space vector of dimension dim for the substitution;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
@@ -220,7 +220,7 @@ void CPU_dbl2_qrbs_solve
  *   Qhi      high doubles of the Q of the QR of the Jacobian matrix;
  *   Qlo      low doubles of the Q of the QR of the Jacobian matrix;
  *   Rhi      high doubles of the R in the QR of the Jacobian matrix;
- *   Rhi      low doubles of the R in the QR of the Jacobian matrix;
+ *   Rlo      low doubles of the R in the QR of the Jacobian matrix;
  *   wrkvechi is work space used to solve the linear system;
  *   wrkveclo is work space used to solve the linear system;
  *   solhi    high double coefficients of the solution series;

@@ -1,3 +1,7 @@
+Fri 2 Sep 2022 : fixed typos in dbl2_bals_host.h and dbl2_newton_testers.h.
+  Extended dbl4_bals_host with qrbs solvers, applied in dbl4_newton_testers,
+  and called in updated test_dbl4_newton.cpp.
+
 Thu 1 Sep 2022 : renamed files *dbl_comfacmon_* into dbl_systems_*
   which changed dbl_newton_testers.cpp.  Adjusted the makefiles.
 
