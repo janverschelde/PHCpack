@@ -4,7 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #ifdef winwalltime
-#include "wingettimeofday.h"
+#include "gettimeofday4win.h"
 #else
 #include <sys/time.h>
 #endif
