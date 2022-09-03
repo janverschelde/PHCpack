@@ -156,7 +156,19 @@ dbl2_bals_kernels.o:
 
 dbl_systems_host.o:
 	@-echo ">>> compiling dbl_systems_host ..."
-	$(gpp) -O3 -c -I$(CUDA) -I$(CNV) -I$(MAT) dbl_systems_host.cpp
+	$(gpp) -O3 -c -I$(CNV) -I$(MAT) dbl_systems_host.cpp
+
+dbl2_systems_host.o:
+	@-echo ">>> compiling dbl2_systems_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) dbl2_systems_host.cpp
+
+dbl4_systems_host.o:
+	@-echo ">>> compiling dbl4_systems_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) dbl4_systems_host.cpp
+
+dbl8_systems_host.o:
+	@-echo ">>> compiling dbl8_systems_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) dbl8_systems_host.cpp
 
 dbl_systems_kernels.o:
 	@-echo ">>> compiling dbl_systems_kernels ..."
@@ -271,6 +283,7 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o double_double_functions.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
                   dbl2_factorizations.o dbl2_bals_host.o \
+                  dbl2_systems_host.o \
                   dbl2_newton_testers.o test_dbl2_newton.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl2_baqr_kernels.o dbl2_tabs_kernels.o \
@@ -281,6 +294,7 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   double_double_functions.o unimodular_matrices.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
                   dbl2_factorizations.o dbl2_bals_host.o \
+                  dbl2_systems_host.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl2_baqr_kernels.o dbl2_tabs_kernels.o \
                   dbl2_bals_kernels.o \
@@ -288,7 +302,7 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
 
 test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o double_double_functions.o \
-                  quad_double_functions.o \
+                  quad_double_functions.o dbl4_systems_host.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
                   dbl4_factorizations.o dbl4_bals_host.o \
                   dbl4_newton_testers.o test_dbl4_newton.o
@@ -296,7 +310,7 @@ test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
 	$(gpp) -o test_dbl4_newton test_dbl4_newton.o dbl4_newton_testers.o \
                   random_numbers.o random_series.o random_monomials.o \
                   double_double_functions.o quad_double_functions.o \
-                  unimodular_matrices.o \
+                  dbl4_systems_host.o unimodular_matrices.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
                   dbl4_factorizations.o dbl4_bals_host.o
 #               -lcuda -lcudart -L$(CUDALIB)
@@ -305,6 +319,7 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o double_double_functions.o \
                   quad_double_functions.o octo_double_functions.o \
                   dbl8_convolutions_host.o dbl8_monomials_host.o \
+                  dbl8_systems_host.o \
                   dbl8_factorizations.o dbl8_bals_host.o \
                   dbl8_newton_testers.o test_dbl8_newton.o
 	@-echo ">>> linking ..."
@@ -313,12 +328,15 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o unimodular_matrices.o \
                   dbl8_convolutions_host.o dbl8_monomials_host.o \
-                  dbl8_factorizations.o dbl8_bals_host.o
+                  dbl8_systems_host.o dbl8_factorizations.o dbl8_bals_host.o
 #               -lcuda -lcudart -L$(CUDALIB)
 
 clean:
 	/bin/rm -f -r unimodular_matrices.o
 	/bin/rm -f -r dbl_systems_host.o dbl_systems_kernels.o
+	/bin/rm -f -r dbl2_systems_host.o
+	/bin/rm -f -r dbl4_systems_host.o
+	/bin/rm -f -r dbl8_systems_host.o
 	/bin/rm -f -r dbl_bals_host.o dbl_bals_kernels.o
 	/bin/rm -f -r dbl2_baqr_kernels.o dbl2_tabs_kernels.o
 	/bin/rm -f -r dbl2_bals_host.o dbl2_bals_kernels.o

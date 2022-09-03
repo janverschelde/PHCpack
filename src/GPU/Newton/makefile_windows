@@ -252,8 +252,28 @@ dbl_systems_host.obj:
 	@-echo ">>> compiling dbl_systems_host ..."
 	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(winkitucrt) -I$(includepath) -O2 \
                       dbl_systems_host.cpp \
-                 /I$(CUDASDK)/include \
                  /Fo: dbl_systems_host.obj /EHsc
+
+dbl2_systems_host.obj:
+	@-echo ">>> compiling dbl2_systems_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl2_systems_host.cpp \
+                 /Fo: dbl2_systems_host.obj /EHsc
+
+dbl4_systems_host.obj:
+	@-echo ">>> compiling dbl4_systems_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl4_systems_host.cpp \
+                 /Fo: dbl4_systems_host.obj /EHsc
+
+dbl8_systems_host.obj:
+	@-echo ">>> compiling dbl8_systems_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl8_systems_host.cpp \
+                 /Fo: dbl8_systems_host.obj /EHsc
 
 dbl_systems_kernels.obj:
 	@-echo ">>> compiling dbl_systems_kernels ..."
@@ -413,6 +433,7 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
                   double_double_functions.obj dbl2_newton_testers.obj \
                   dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+                  dbl2_systems_host.obj \
                   dbl2_factorizations.obj dbl2_bals_host.obj \
                   write_gpu_timings.obj gettimeofday4win.obj \
 		  dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
@@ -424,6 +445,7 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              double_double_functions.obj dbl2_newton_testers.obj \
 	     dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+             dbl2_systems_host.obj \
              dbl2_factorizations.obj dbl2_bals_host.obj \
              write_gpu_timings.obj gettimeofday4win.obj \
              dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
@@ -433,7 +455,7 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
 test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
                   double_double_functions.obj quad_double_functions.obj \
-		  dbl4_newton_testers.obj \
+		  dbl4_systems_host.obj dbl4_newton_testers.obj \
                   dbl4_convolutions_host.obj dbl4_monomials_host.obj \
                   dbl4_factorizations.obj dbl4_bals_host.obj
 	@-echo ">>> linking ..."
@@ -441,7 +463,7 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
              unimodular_matrices.obj test_dbl4_newton.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              double_double_functions.obj quad_double_functions.obj \
-	     dbl4_newton_testers.obj \
+	     dbl4_systems_host.obj dbl4_newton_testers.obj \
 	     dbl4_convolutions_host.obj dbl4_monomials_host.obj \
              dbl4_factorizations.obj dbl4_bals_host.obj
 
@@ -450,6 +472,7 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
                   double_double_functions.obj quad_double_functions.obj \
 		  octo_double_functions.obj dbl8_newton_testers.obj \
                   dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+                  dbl8_systems_host.obj \
                   dbl8_factorizations.obj dbl8_bals_host.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl8_newton.exe \
@@ -458,6 +481,7 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
              double_double_functions.obj quad_double_functions.obj \
 	     octo_double_functions.obj dbl8_newton_testers.obj \
 	     dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+             dbl8_systems_host.obj \
              dbl8_factorizations.obj dbl8_bals_host.obj
 
 clean:
@@ -479,6 +503,9 @@ clean:
 	del unimodular_matrices.obj gettimeofday4win.obj
 	del dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj
 	del dbl_systems_host.obj dbl_systems_kernels.obj
+	del dbl2_systems_host.obj
+	del dbl4_systems_host.obj
+	del dbl8_systems_host.obj
 	del dbl_newton_testers.obj dbl2_newton_testers.obj
 	del dbl4_newton_testers.obj dbl8_newton_testers.obj
 	del test_unimodular.exe test_unimodular.exp
