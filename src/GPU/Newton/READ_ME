@@ -13,6 +13,7 @@ dbl_systems_kernels      : systems evaldiff in double precision on device
 dbl_bals_host            : linearization in double precision on host
 dbl_bals_kernels         : linearization in double precision on device
 dbl2_bals_host           : linearization in double double precision on host
+dbl2_bals_kernels        : linearization in double double precision on device
 dbl4_bals_host           : linearization in quad double precision on host
 dbl8_bals_host           : linearization in octo double precision on host
 ------------------------------------------------------------------------------

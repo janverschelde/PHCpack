@@ -121,10 +121,22 @@ dbl_baqr_kernels.o:
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -O3 \
              -c $(MAT)/dbl_baqr_kernels.cu
 
+dbl2_baqr_kernels.o:
+	@-echo ">>> compiling baqr kernels for double doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -O3 \
+             --define-macro gpufun=1 \
+             -c $(MAT)/dbl2_baqr_kernels.cu
+
 dbl_tabs_kernels.o:
 	@-echo ">>> compiling tabs kernels for doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -O3 \
              -c $(MAT)/dbl_tabs_kernels.cu
+
+dbl2_tabs_kernels.o:
+	@-echo ">>> compiling tabs kernels for double doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -O3 \
+             --define-macro gpufun=1 \
+             -c $(MAT)/dbl2_tabs_kernels.cu
 
 dbl_polynomials_kernels.o:
 	@-echo ">>> compiling polynomial kernels for doubles ..."
@@ -135,6 +147,12 @@ dbl_bals_kernels.o:
 	@-echo ">>> compiling bals kernels for doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MAT) -O3 \
              -c dbl_bals_kernels.cu
+
+dbl2_bals_kernels.o:
+	@-echo ">>> compiling bals kernels for double doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -I$(MAT) -O3 \
+             --define-macro gpufun=1 \
+             -c dbl2_bals_kernels.cu
 
 dbl_systems_host.o:
 	@-echo ">>> compiling dbl_systems_host ..."
@@ -253,14 +271,20 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o double_double_functions.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
                   dbl2_factorizations.o dbl2_bals_host.o \
-                  dbl2_newton_testers.o test_dbl2_newton.o
+                  dbl2_newton_testers.o test_dbl2_newton.o \
+                  dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
+                  dbl2_baqr_kernels.o dbl2_tabs_kernels.o \
+                  dbl2_bals_kernels.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_newton test_dbl2_newton.o dbl2_newton_testers.o \
                   random_numbers.o random_series.o random_monomials.o \
                   double_double_functions.o unimodular_matrices.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
-                  dbl2_factorizations.o dbl2_bals_host.o
-#               -lcuda -lcudart -L$(CUDALIB)
+                  dbl2_factorizations.o dbl2_bals_host.o \
+                  dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
+                  dbl2_baqr_kernels.o dbl2_tabs_kernels.o \
+                  dbl2_bals_kernels.o \
+               -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o double_double_functions.o \
@@ -296,7 +320,8 @@ clean:
 	/bin/rm -f -r unimodular_matrices.o
 	/bin/rm -f -r dbl_systems_host.o dbl_systems_kernels.o
 	/bin/rm -f -r dbl_bals_host.o dbl_bals_kernels.o
-	/bin/rm -f -r dbl2_bals_host.o
+	/bin/rm -f -r dbl2_baqr_kernels.o dbl2_tabs_kernels.o
+	/bin/rm -f -r dbl2_bals_host.o dbl2_bals_kernels.o
 	/bin/rm -f -r dbl4_bals_host.o
 	/bin/rm -f -r dbl8_bals_host.o
 	/bin/rm -f -r dbl_newton_testers.o dbl2_newton_testers.o

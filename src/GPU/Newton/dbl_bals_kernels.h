@@ -113,6 +113,7 @@ void GPU_dbl_bals_qtb
  *            of the vectors b and qtb;
  *   szt      size of each block (and tile);
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   Q        the Q of the QR factorization;
  *   b        right hand side vector of the linear system;
  *   verbose  is the verbose flag.
  *
