@@ -17,8 +17,6 @@ void exponents_check ( int dim, int **rowsA );
 
 int main ( void )
 {
-   srand(time(NULL));
-
    cout << "testing Newton ..." << endl;
 
    int dim,deg,size,posvals,vrblvl,nbritr,nbsteps;

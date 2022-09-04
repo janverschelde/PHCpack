@@ -12,14 +12,37 @@ using namespace std;
 
 int main ( void )
 {
-   srand(time(NULL));
-
    cout << "testing Newton ..." << endl;
 
-   int dim,deg,size,posvals,vrblvl,nbritr,nbsteps,szt,nbt,mode;
+   int seed,dim,deg,size,posvals,vrblvl,nbritr,nbsteps,szt,nbt,mode;
+
+   cout << "-> give the seed (0 for time) : "; cin >> seed;
+
    prompt_dimensions(&dim,&deg,&size,&posvals,&vrblvl,&nbritr,&nbsteps);
 
-   szt = dim; nbt = 1; mode = 1; // stub values
+   cout << "-> enter 0 (GPU only), 1 (CPU only), or 2 (GPU+CPU) : ";
+   cin >> mode;
+
+   if(mode != 1)
+   {
+      cout << "-> give the number of tiles : "; cin >> nbt;
+      cout << "-> give the size of each tile : "; cin >> szt;
+      int p = szt*nbt;
+
+      while(p != dim)
+      {
+          cout << "Dimension = " << dim << " != " << szt << " * " << nbt
+               << ", retry." << endl;
+          cout << "-> give the size of each tile : "; cin >> szt;
+          cout << "-> give the number of tiles : "; cin >> nbt;
+          p = szt*nbt;
+      }
+   }
+
+   if(seed == 0)
+      srand(time(NULL));
+   else
+      srand(seed);
 
    cout << "generating an integer matrix of dimension " << dim
         << " ..." << endl;

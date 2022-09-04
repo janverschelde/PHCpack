@@ -25,14 +25,13 @@ void prompt_newton_setup
 
    prompt_dimensions(dim,deg,size,posvals,vrblvl,nbritr,nbsteps);
 
-   cout << "-> give the size of each tile : "; cin >> *szt;
-   cout << "-> give the number of tiles : "; cin >> *nbt;
-
    cout << "-> enter 0 (GPU only), 1 (CPU only), or 2 (GPU+CPU) : ";
    cin >> *mode;
 
    if(*mode != 1)
    {
+      cout << "-> give the number of tiles : "; cin >> *nbt;
+      cout << "-> give the size of each tile : "; cin >> *szt;
       int p = (*szt)*(*nbt);
 
       while(p != *dim)

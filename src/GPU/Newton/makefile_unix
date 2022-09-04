@@ -222,11 +222,13 @@ dbl_newton_testers.o:
 
 dbl2_newton_testers.o:
 	@-echo ">>> compiling dbl2_newton_testers ..."
-	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) dbl2_newton_testers.cpp
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+               dbl2_newton_testers.cpp
 
 dbl4_newton_testers.o:
 	@-echo ">>> compiling dbl4_newton_testers ..."
-	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) dbl4_newton_testers.cpp
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+               dbl4_newton_testers.cpp
 
 dbl8_newton_testers.o:
 	@-echo ">>> compiling dbl8_newton_testers ..."

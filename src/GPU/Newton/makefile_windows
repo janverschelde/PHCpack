@@ -350,23 +350,26 @@ dbl_newton_testers.obj:
 
 dbl2_newton_testers.obj:
 	@-echo ">>> compiling dbl2_newton_testers ..."
-	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) \
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
                     -I$(winkitucrt) -I$(includepath) -O2 \
                       dbl2_newton_testers.cpp \
+                 /I$(CUDASDK)/include \
                  /Fo: dbl2_newton_testers.obj /EHsc
 
 dbl4_newton_testers.obj:
 	@-echo ">>> compiling dbl4_newton_testers ..."
-	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) \
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
                     -I$(winkitucrt) -I$(includepath) -O2 \
                       dbl4_newton_testers.cpp \
+                 /I$(CUDASDK)/include \
                  /Fo: dbl4_newton_testers.obj /EHsc
 
 dbl8_newton_testers.obj:
 	@-echo ">>> compiling dbl8_newton_testers ..."
-	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) \
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
                     -I$(winkitucrt) -I$(includepath) -O2 \
                       dbl8_newton_testers.cpp \
+                 /I$(CUDASDK)/include \
                  /Fo: dbl8_newton_testers.obj /EHsc
 
 test_unimodular.obj:
