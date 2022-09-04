@@ -219,6 +219,14 @@ dbl4_baqr_kernels.obj:
                 $(MAT)/dbl4_baqr_kernels.cu \
              -o dbl4_baqr_kernels.obj
 
+dbl8_baqr_kernels.obj:
+	@-echo ">>> compiling dbl8_baqr_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                $(MAT)/dbl8_baqr_kernels.cu \
+             -o dbl8_baqr_kernels.obj
+
 dbl_tabs_kernels.obj:
 	@-echo ">>> compiling dbl_tabs_kernels ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) \
@@ -241,6 +249,14 @@ dbl4_tabs_kernels.obj:
              --define-macro gpufun=1 \
                 $(MAT)/dbl4_tabs_kernels.cu \
              -o dbl4_tabs_kernels.obj
+
+dbl8_tabs_kernels.obj:
+	@-echo ">>> compiling dbl8_tabs_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                $(MAT)/dbl8_tabs_kernels.cu \
+             -o dbl8_tabs_kernels.obj
 
 dbl_polynomials_kernels.obj:
 	@-echo ">>> compiling dbl_polynomials_kernels ..."
@@ -287,6 +303,14 @@ dbl4_bals_kernels.obj:
              --define-macro gpufun=1 \
                 dbl4_bals_kernels.cu \
              -o dbl4_bals_kernels.obj
+
+dbl8_bals_kernels.obj:
+	@-echo ">>> compiling dbl8_bals_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MAT) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl8_bals_kernels.cu \
+             -o dbl8_bals_kernels.obj
 
 dbl_systems_host.obj:
 	@-echo ">>> compiling dbl_systems_host ..."
@@ -556,7 +580,11 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
 		  octo_double_functions.obj dbl8_newton_testers.obj \
                   dbl8_convolutions_host.obj dbl8_monomials_host.obj \
                   dbl8_systems_host.obj \
-                  dbl8_factorizations.obj dbl8_bals_host.obj
+                  dbl8_factorizations.obj dbl8_bals_host.obj \
+                  gettimeofday4win.obj write_gpu_timings.obj \
+		  dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+		  dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj \
+                  dbl8_bals_kernels.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl8_newton.exe \
              unimodular_matrices.obj test_dbl8_newton.obj \
@@ -565,7 +593,11 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
 	     octo_double_functions.obj dbl8_newton_testers.obj \
 	     dbl8_convolutions_host.obj dbl8_monomials_host.obj \
              dbl8_systems_host.obj \
-             dbl8_factorizations.obj dbl8_bals_host.obj
+             dbl8_factorizations.obj dbl8_bals_host.obj \
+             gettimeofday4win.obj write_gpu_timings.obj \
+             dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+             dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj \
+             dbl8_bals_kernels.obj
 
 clean:
 	del *~
@@ -578,13 +610,15 @@ clean:
 	del dbl8_convolutions_host.obj dbl8_monomials_host.obj
 	del dbl_baqr_kernels.obj dbl_tabs_kernels.obj
 	del dbl2_baqr_kernels.obj dbl2_tabs_kernels.obj
+	del dbl4_baqr_kernels.obj dbl4_tabs_kernels.obj
+	del dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj
 	del dbl_polynomials_kernels.obj
 	del dbl2_polynomials_kernels.obj
 	del dbl4_polynomials_kernels.obj
 	del dbl_factorizations.obj dbl_bals_host.obj dbl_bals_kernels.obj
 	del dbl2_factorizations.obj dbl2_bals_host.obj dbl2_bals_kernels.obj
 	del dbl4_factorizations.obj dbl4_bals_host.obj dbl4_bals_kernels.obj
-	del dbl8_factorizations.obj dbl8_bals_host.obj
+	del dbl8_factorizations.obj dbl8_bals_host.obj dbl8_bals_kernels.obj
 	del unimodular_matrices.obj gettimeofday4win.obj
 	del dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj
 	del dbl_systems_host.obj dbl_systems_kernels.obj

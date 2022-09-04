@@ -22,6 +22,7 @@ dbl2_bals_kernels        : linearization in double double precision on device
 dbl4_bals_host           : linearization in quad double precision on host
 dbl4_bals_kernels        : linearization in quad double precision on device
 dbl8_bals_host           : linearization in octo double precision on host
+dbl8_bals_kernels        : linearization in octo double precision on device
 ------------------------------------------------------------------------------
 dbl_newton_testers       : test functions on Newton in double precision
 dbl2_newton_testers      : test functions on Newton in double double precision
