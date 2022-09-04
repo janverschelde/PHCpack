@@ -3689,10 +3689,17 @@ void GPU_dbl2_blocked_houseqr
                 betahi_h,betalo_h,betahi_d,betalo_d,
                 houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
-            GPU_dbl2_small_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,Ahi_h,Alo_h,Ahi_d,Alo_d,
-                Vhi_d,Vlo_d,betahi_h,betalo_h,betahi_d,betalo_d,
-                tileRlapms,addcnt,mulcnt,verbose);
+            if((betahi_h[L] == 0.0) && (betalo_h[L] == 0.0))
+            {
+               if(verbose) cout << "Zero beta detected." << endl;
+            }
+            else
+            {
+               GPU_dbl2_small_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,Ahi_h,Alo_h,Ahi_d,Alo_d,
+                   Vhi_d,Vlo_d,betahi_h,betalo_h,betahi_d,betalo_d,
+                   tileRlapms,addcnt,mulcnt,verbose);
+            }
          }
          else
          {
@@ -3704,12 +3711,19 @@ void GPU_dbl2_blocked_houseqr
                 &sigmahi_h,&sigmalo_h,sigmahi_d,sigmalo_d,
                 houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
-            GPU_dbl2_medium_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,Ahi_h,Alo_h,Ahi_d,Alo_d,
-                Vhi_d,Vlo_d,betahi_h,betalo_h,betahi_d,betalo_d,
-                RTdotvhi_h,RTdotvlo_h,RTdotvhi_d,RTdotvlo_d,
-                bRTvhi_h,bRTvlo_h,bRTvhi_d,bRTvlo_d,
-                RTvlapms,tileRlapms,addcnt,mulcnt,verbose);
+            if((betahi_h[L] == 0.0) && (betalo_h[L] == 0.0))
+            {
+               if(verbose) cout << "Zero beta detected." << endl;
+            }
+            else
+            {
+               GPU_dbl2_medium_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,Ahi_h,Alo_h,Ahi_d,Alo_d,
+                   Vhi_d,Vlo_d,betahi_h,betalo_h,betahi_d,betalo_d,
+                   RTdotvhi_h,RTdotvlo_h,RTdotvhi_d,RTdotvlo_d,
+                   bRTvhi_h,bRTvlo_h,bRTvhi_d,bRTvlo_d,
+                   RTvlapms,tileRlapms,addcnt,mulcnt,verbose);
+            }
          }
       }
       GPU_dbl2_medium_VB_to_W

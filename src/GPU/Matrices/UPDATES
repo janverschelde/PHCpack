@@ -1,3 +1,5 @@
+Sun 4 Sep 2022 : tested on zero beta in dbl2_baqr_kernels.cu.
+
 Fri 2 Sep 2022 : added back substitution to dbl4_factorizations and
   to dbl8_factorizations.
 
