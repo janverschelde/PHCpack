@@ -1,3 +1,6 @@
+Sun 4 Sep 2022 : bug fixed in {dbl2,dbl8}_bals_kernels.cu and in
+  test_{dbl2,dbl4}_newton.cpp.
+
 Sat 3 Sep 2022 : new {dbl2,dbl4,dbl8}_systems_host with code factored out
   of {dbl2,dbl4,dbl8}_newton_testers.  Updated makefiles.
   For compiler warnings, modified {dbl,dbl2}_bals_kernels.cu.

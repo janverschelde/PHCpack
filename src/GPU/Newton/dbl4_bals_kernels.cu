@@ -105,7 +105,7 @@ __global__ void dbl4_bals_qtb
       qdg_mul(Qjhihi,Qjlohi,Qjhilo,Qjlolo,
               bjhihi,bjlohi,bjhilo,bjlolo,
               &acchihi,&acclohi,&acchilo,&acclolo);
-      qdg_dec(&rihihi,&rilohi,&rihilo,&rilolo,
+      qdg_inc(&rihihi,&rilohi,&rihilo,&rilolo,
               acchihi,acclohi,acchilo,acclolo);
    }
    rhihi[idx] = rihihi;

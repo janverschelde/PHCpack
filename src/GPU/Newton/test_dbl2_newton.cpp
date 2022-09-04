@@ -245,6 +245,12 @@ int main ( void )
  */
    // Define the initial input, a vector of ones.
    dbl2_unit_series_vector(dim,deg,inputhi_h,inputlo_h);
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<degp1; j++)
+      {
+         inputhi_d[i][j] = inputhi_h[i][j];
+         inputlo_d[i][j] = inputlo_h[i][j];
+      }
 
    if(vrblvl > 0)
    {

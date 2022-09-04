@@ -340,6 +340,14 @@ int main ( void )
    // Define the initial input, a vector of ones.
    dbl4_unit_series_vector
       (dim,deg,inputhihi_h,inputlohi_h,inputhilo_h,inputlolo_h);
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<degp1; j++)
+      {
+         inputhihi_d[i][j] = inputhihi_h[i][j];
+         inputlohi_d[i][j] = inputlohi_h[i][j];
+         inputhilo_d[i][j] = inputhilo_h[i][j];
+         inputlolo_d[i][j] = inputlolo_h[i][j];
+      }
 
    if(vrblvl > 0)
    {

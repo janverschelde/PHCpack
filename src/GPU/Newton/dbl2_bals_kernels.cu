@@ -73,7 +73,7 @@ __global__ void dbl2_bals_qtb
       bjlo = blo[j];
       // ri = ri + Qj*bj;
       ddg_mul(Qjhi,Qjlo,bjhi,bjlo,&acchi,&acclo);
-      ddg_dec(&rihi,&rilo,acchi,acclo);
+      ddg_inc(&rihi,&rilo,acchi,acclo);
    }
    rhi[idx] = rihi;
    rlo[idx] = rilo;
