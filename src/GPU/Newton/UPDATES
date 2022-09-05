@@ -1,6 +1,7 @@
 Mon 5 Sep 2022 : New dbl8_systems_kernels.  Extended dbl8_bals_host and
   dbl8_newton_testers do run Newton's method with the QR factorization.
   Updated test_dbl8_newton.cpp and the makefiles.
+  Updated test_dbl8_newton.cpp for the qrstep and GPU mode.
 
 Sun 4 Sep 2022 : bug fixed in {dbl2,dbl8}_bals_kernels.cu and in
   test_{dbl2,dbl4}_newton.cpp.  New dbl8_bals_kernels, updated makefiles.
