@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void CPU_dbl8_linear_head
+void CPU_dbl8_lusb_head
  ( int dim, int degp1,
    double ***mathihihi, double ***matlohihi,
    double ***mathilohi, double ***matlolohi,
@@ -150,7 +150,147 @@ void CPU_dbl8_linear_head
    }
 }
 
-void CPU_dbl8_linear_tail
+void CPU_dbl8_qrbs_head
+ ( int dim, int degp1,
+   double ***mathihihi, double ***matlohihi,
+   double ***mathilohi, double ***matlolohi,
+   double ***mathihilo, double ***matlohilo,
+   double ***mathilolo, double ***matlololo,
+   double **rhshihihi, double **rhslohihi,
+   double **rhshilohi, double **rhslolohi,
+   double **rhshihilo, double **rhslohilo,
+   double **rhshilolo, double **rhslololo,
+   double **solhihihi, double **sollohihi,
+   double **solhilohi, double **sollolohi,
+   double **solhihilo, double **sollohilo,
+   double **solhilolo, double **sollololo,
+   double **wrkmathihihi, double **wrkmatlohihi,
+   double **wrkmathilohi, double **wrkmatlolohi,
+   double **wrkmathihilo, double **wrkmatlohilo,
+   double **wrkmathilolo, double **wrkmatlololo,
+   double **Qhihihi, double **Qlohihi, double **Qhilohi, double **Qlolohi,
+   double **Qhihilo, double **Qlohilo, double **Qhilolo, double **Qlololo,
+   double **Rhihihi, double **Rlohihi, double **Rhilohi, double **Rlolohi, 
+   double **Rhihilo, double **Rlohilo, double **Rhilolo, double **Rlololo, 
+   double *wrkvechihihi, double *wrkveclohihi,
+   double *wrkvechilohi, double *wrkveclolohi,
+   double *wrkvechihilo, double *wrkveclohilo,
+   double *wrkvechilolo, double *wrkveclololo, int vrblvl )
+{
+   bool verbose = (vrblvl > 0);
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         wrkmathihihi[i][j] = mathihihi[0][i][j];
+         wrkmatlohihi[i][j] = matlohihi[0][i][j];
+         wrkmathilohi[i][j] = mathilohi[0][i][j];
+         wrkmatlolohi[i][j] = matlolohi[0][i][j];
+         wrkmathihilo[i][j] = mathihilo[0][i][j];
+         wrkmatlohilo[i][j] = matlohilo[0][i][j];
+         wrkmathilolo[i][j] = mathilolo[0][i][j];
+         wrkmatlololo[i][j] = matlololo[0][i][j];
+      }
+
+   if(verbose)
+   {
+      cout << "The matrix : " << endl;
+      cout << setprecision(2);
+      for(int i=0; i<dim; i++)
+      {
+         for(int j=0; j<dim; j++)
+         {
+            cout << "  " << wrkmathihihi[i][j]
+                 << "  " << wrkmatlohihi[i][j]
+                 << "  " << wrkmathilohi[i][j]
+                 << "  " << wrkmatlolohi[i][j]
+                 << "  " << wrkmathihilo[i][j]
+                 << "  " << wrkmatlohilo[i][j]
+                 << "  " << wrkmathilolo[i][j]
+                 << "  " << wrkmatlololo[i][j];
+         }
+         cout << endl;
+      }
+      cout << setprecision(16);
+      cout << "The right hand side vector : " << endl;
+      for(int i=0; i<dim; i++)
+         cout << rhshihihi[0][i] << "  " << rhslohihi[0][i] << "  "
+              << rhshilohi[0][i] << "  " << rhslolohi[0][i] << endl << "  "
+              << rhshihilo[0][i] << "  " << rhslohilo[0][i] << "  "
+              << rhshilolo[0][i] << "  " << rhslololo[0][i] << endl;
+   }
+   if(verbose) cout << "calling CPU_dbl8_factors_houseqr ..." << endl;
+
+   CPU_dbl8_factors_houseqr
+      (dim,dim,
+       wrkmathihihi,wrkmatlohihi,wrkmathilohi,wrkmatlolohi,
+       wrkmathihilo,wrkmatlohilo,wrkmathilolo,wrkmatlololo,
+       Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
+       Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo);
+
+   CPU_dbl8_factors_qrbs
+      (dim,dim,
+       Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
+       Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
+       rhshihihi[0],rhslohihi[0],rhshilohi[0],rhslolohi[0],
+       rhshihilo[0],rhslohilo[0],rhshilolo[0],rhslololo[0],
+       solhihihi[0],sollohihi[0],solhilohi[0],sollolohi[0],
+       solhihilo[0],sollohilo[0],solhilolo[0],sollololo[0],
+       wrkvechihihi,wrkveclohihi,wrkvechilohi,wrkveclolohi,
+       wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo);
+
+   if(verbose)
+   {
+      double acchihihi,acclohihi,acchilohi,acclolohi;
+      double acchihilo,acclohilo,acchilolo,acclololo;
+
+      cout << "The leading coefficients of the solution :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << solhihihi[0][i] << "  " << sollohihi[0][i] << "  "
+              << solhilohi[0][i] << "  " << sollolohi[0][i] << endl << "  "
+              << solhihilo[0][i] << "  " << sollohilo[0][i] << "  "
+              << solhilolo[0][i] << "  " << sollololo[0][i] << endl;
+      for(int i=0; i<dim; i++)
+      {
+         wrkvechihihi[i] = rhshihihi[0][i];
+         wrkveclohihi[i] = rhslohihi[0][i];
+         wrkvechilohi[i] = rhshilohi[0][i];
+         wrkveclolohi[i] = rhslolohi[0][i];
+         wrkvechihilo[i] = rhshihilo[0][i];
+         wrkveclohilo[i] = rhslohilo[0][i];
+         wrkvechilolo[i] = rhshilolo[0][i];
+         wrkveclololo[i] = rhslololo[0][i];
+
+         for(int j=0; j<dim; j++)
+            // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
+         {
+            odf_mul(mathihihi[0][i][j],matlohihi[0][i][j],
+                    mathilohi[0][i][j],matlolohi[0][i][j],
+                    mathihilo[0][i][j],matlohilo[0][i][j],
+                    mathilolo[0][i][j],matlololo[0][i][j],
+                    solhihihi[0][j],sollohihi[0][j],
+                    solhilohi[0][j],sollolohi[0][j],
+                    solhihilo[0][j],sollohilo[0][j],
+                    solhilolo[0][j],sollololo[0][j],
+                    &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                    &acchihilo,&acclohilo,&acchilolo,&acclololo);
+            odf_dec(&wrkvechihihi[i],&wrkveclohihi[i],
+                    &wrkvechilohi[i],&wrkveclolohi[i],
+                    &wrkvechihilo[i],&wrkveclohilo[i],
+                    &wrkvechilolo[i],&wrkveclololo[i],
+                    acchihihi,acclohihi,acchilohi,acclolohi,
+                    acchihilo,acclohilo,acchilolo,acclololo);
+         }
+      }
+      cout << "The residual vector :" << endl;
+      for(int i=0; i<dim; i++)
+        cout << wrkvechihihi[i] << "  " << wrkveclohihi[i] << "  "
+             << wrkvechilohi[i] << "  " << wrkveclolohi[i] << endl << "  "
+             << wrkvechihilo[i] << "  " << wrkveclohilo[i] << "  "
+             << wrkvechilolo[i] << "  " << wrkveclololo[i] << endl;
+   }
+}
+
+void CPU_dbl8_lusb_tail
  ( int dim, int degp1,
    double ***mathihihi, double ***matlohihi,
    double ***mathilohi, double ***matlolohi,
@@ -275,7 +415,128 @@ void CPU_dbl8_linear_tail
    }
 }
 
-void CPU_dbl8_linear_solve
+void CPU_dbl8_qrbs_tail
+ ( int dim, int degp1,
+   double ***mathihihi, double ***matlohihi,
+   double ***mathilohi, double ***matlolohi,
+   double ***mathihilo, double ***matlohilo,
+   double ***mathilolo, double ***matlololo,
+   double **rhshihihi, double **rhslohihi,
+   double **rhshilohi, double **rhslolohi,
+   double **rhshihilo, double **rhslohilo,
+   double **rhshilolo, double **rhslololo,
+   double **solhihihi, double **sollohihi,
+   double **solhilohi, double **sollolohi,
+   double **solhihilo, double **sollohilo,
+   double **solhilolo, double **sollololo,
+   double **Qhihihi, double **Qlohihi, double **Qhilohi, double **Qlolohi,
+   double **Qhihilo, double **Qlohilo, double **Qhilolo, double **Qlololo,
+   double **Rhihihi, double **Rlohihi, double **Rhilohi, double **Rlolohi,
+   double **Rhihilo, double **Rlohilo, double **Rhilolo, double **Rlololo,
+   double *wrkvechihihi, double *wrkveclohihi,
+   double *wrkvechilohi, double *wrkveclolohi,
+   double *wrkvechihilo, double *wrkveclohilo,
+   double *wrkvechilolo, double *wrkveclololo, int vrblvl )
+{
+   bool verbose = (vrblvl > 0);
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   for(int i=1; i<degp1; i++)
+   {
+      if(verbose) cout << "stage " << i << " in solve tail ..." << endl;
+      // use sol[i-1] to update rhs[j] for j in i to degp1
+      for(int j=i; j<degp1; j++)
+      {
+         double **Ajhihihi = mathihihi[j-i+1]; // always start with A[1]
+         double **Ajlohihi = matlohihi[j-i+1]; 
+         double **Ajhilohi = mathilohi[j-i+1];
+         double **Ajlolohi = matlolohi[j-i+1]; 
+         double **Ajhihilo = mathihilo[j-i+1];
+         double **Ajlohilo = matlohilo[j-i+1]; 
+         double **Ajhilolo = mathilolo[j-i+1];
+         double **Ajlololo = matlololo[j-i+1]; 
+         double *xihihihi = solhihihi[i-1]; // solution to do the update with
+         double *xilohihi = sollohihi[i-1];
+         double *xihilohi = solhilohi[i-1];
+         double *xilolohi = sollolohi[i-1];
+         double *xihihilo = solhihilo[i-1];
+         double *xilohilo = sollohilo[i-1];
+         double *xihilolo = solhilolo[i-1];
+         double *xilololo = sollololo[i-1];
+         double *wjhihihi = rhshihihi[j];   // current right hand side vector
+         double *wjlohihi = rhslohihi[j];
+         double *wjhilohi = rhshilohi[j];
+         double *wjlolohi = rhslolohi[j];
+         double *wjhihilo = rhshihilo[j];
+         double *wjlohilo = rhslohilo[j];
+         double *wjhilolo = rhshilolo[j];
+         double *wjlololo = rhslololo[j];
+
+         for(int k=0; k<dim; k++)
+            for(int L=0; L<dim; L++) // wj[k] = wj[k] - Aj[k][L]*xi[L];
+            {
+               odf_mul(Ajhihihi[k][L],Ajlohihi[k][L],
+                       Ajhilohi[k][L],Ajlolohi[k][L],
+                       Ajhihilo[k][L],Ajlohilo[k][L],
+                       Ajhilolo[k][L],Ajlololo[k][L],
+                       xihihihi[L],xilohihi[L],xihilohi[L],xilolohi[L],
+                       xihihilo[L],xilohilo[L],xihilolo[L],xilololo[L],
+                       &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                       &acchihilo,&acclohilo,&acchilolo,&acclololo);
+               odf_dec(&wjhihihi[k],&wjlohihi[k],&wjhilohi[k],&wjlolohi[k],
+                       &wjhihilo[k],&wjlohilo[k],&wjhilolo[k],&wjlololo[k],
+                       acchihihi,acclohihi,acchilohi,acclolohi,
+                       acchihilo,acclohilo,acchilolo,acclololo);
+            }
+      }
+      // compute sol[i] with back substitution
+      double *xhihihi = solhihihi[i];
+      double *xlohihi = sollohihi[i];
+      double *xhilohi = solhilohi[i];
+      double *xlolohi = sollolohi[i];
+      double *xhihilo = solhihilo[i];
+      double *xlohilo = sollohilo[i];
+      double *xhilolo = solhilolo[i];
+      double *xlololo = sollololo[i];
+      double *bhihihi = rhshihihi[i];
+      double *blohihi = rhslohihi[i];
+      double *bhilohi = rhshilohi[i];
+      double *blolohi = rhslolohi[i];
+      double *bhihilo = rhshihilo[i];
+      double *blohilo = rhslohilo[i];
+      double *bhilolo = rhshilolo[i];
+      double *blololo = rhslololo[i];
+
+      CPU_dbl8_factors_qrbs
+         (dim,dim,
+          Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
+          Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
+          bhihihi,blohihi,bhilohi,blolohi,bhihilo,blohilo,bhilolo,blololo,
+          xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
+          wrkvechihihi,wrkveclohihi,wrkvechilohi,wrkveclolohi,
+          wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo);
+
+      if(verbose)
+      {
+         for(int i=0; i<dim; i++)
+            cout << "Qtb[" << i << "] : "
+                 << wrkvechihihi[i] << "  " << wrkveclohihi[i] << "  "
+                 << wrkvechilohi[i] << "  " << wrkveclolohi[i] << endl << "  "
+                 << wrkvechihilo[i] << "  " << wrkveclohilo[i] << "  "
+                 << wrkvechilolo[i] << "  " << wrkveclololo[i] << endl;
+
+         cout << "the solution : " << endl;
+         for(int j=0; j<dim; j++)
+            cout << xhihihi[j] << "  " << xlohihi[j] << "  "
+                 << xhilohi[j] << "  " << xlolohi[j] << endl << "  "
+                 << xhihilo[j] << "  " << xlohilo[j] << "  "
+                 << xhilolo[j] << "  " << xlololo[j] << endl;
+      }
+   }
+}
+
+void CPU_dbl8_lusb_solve
  ( int dim, int degp1,
    double ***mathihihi, double ***matlohihi,
    double ***mathilohi, double ***matlolohi,
@@ -298,9 +559,9 @@ void CPU_dbl8_linear_solve
    double *wrkvechihilo, double *wrkveclohilo,
    double *wrkvechilolo, double *wrkveclololo, int *pivots, int vrblvl )
 {
-   if(vrblvl > 0) cout << "calling CPU_dbl8_linear_head ..." << endl;
+   if(vrblvl > 0) cout << "calling CPU_dbl8_lusb_head ..." << endl;
 
-   CPU_dbl8_linear_head
+   CPU_dbl8_lusb_head
       (dim,degp1,mathihihi,matlohihi,mathilohi,matlolohi,
                  mathihilo,matlohilo,mathilolo,matlololo,
        rhshihihi,rhslohihi,rhshilohi,rhslolohi,
@@ -314,9 +575,9 @@ void CPU_dbl8_linear_solve
 
    if(degp1 > 1)
    {
-      if(vrblvl > 0) cout << "calling CPU_dbl8_linear_tail ..." << endl;
+      if(vrblvl > 0) cout << "calling CPU_dbl8_lusb_tail ..." << endl;
 
-      CPU_dbl8_linear_tail
+      CPU_dbl8_lusb_tail
          (dim,degp1,mathihihi,matlohihi,mathilohi,matlolohi,
                     mathihilo,matlohilo,mathilolo,matlololo,
           rhshihihi,rhslohihi,rhshilohi,rhslolohi,
@@ -325,6 +586,69 @@ void CPU_dbl8_linear_solve
           solhihilo,sollohilo,solhilolo,sollololo,
           wrkmathihihi,wrkmatlohihi,wrkmathilohi,wrkmatlolohi,
           wrkmathihilo,wrkmatlohilo,wrkmathilolo,wrkmatlololo,pivots,vrblvl);
+   }
+}
+
+void CPU_dbl8_qrbs_solve
+ ( int dim, int degp1,
+   double ***mathihihi, double ***matlohihi,
+   double ***mathilohi, double ***matlolohi,
+   double ***mathihilo, double ***matlohilo,
+   double ***mathilolo, double ***matlololo,
+   double **rhshihihi, double **rhslohihi,
+   double **rhshilohi, double **rhslolohi,
+   double **rhshihilo, double **rhslohilo,
+   double **rhshilolo, double **rhslololo,
+   double **solhihihi, double **sollohihi,
+   double **solhilohi, double **sollolohi,
+   double **solhihilo, double **sollohilo,
+   double **solhilolo, double **sollololo,
+   double **wrkmathihihi, double **wrkmatlohihi,
+   double **wrkmathilohi, double **wrkmatlolohi,
+   double **wrkmathihilo, double **wrkmatlohilo,
+   double **wrkmathilolo, double **wrkmatlololo,
+   double **Qhihihi, double **Qlohihi, double **Qhilohi, double **Qlolohi,
+   double **Qhihilo, double **Qlohilo, double **Qhilolo, double **Qlololo,
+   double **Rhihihi, double **Rlohihi, double **Rhilohi, double **Rlolohi,
+   double **Rhihilo, double **Rlohilo, double **Rhilolo, double **Rlololo,
+   double *wrkvechihihi, double *wrkveclohihi,
+   double *wrkvechilohi, double *wrkveclolohi,
+   double *wrkvechihilo, double *wrkveclohilo,
+   double *wrkvechilolo, double *wrkveclololo, int vrblvl )
+{
+   if(vrblvl > 0) cout << "calling CPU_dbl8_qrbs_head ..." << endl;
+
+   CPU_dbl8_qrbs_head
+      (dim,degp1,
+       mathihihi,matlohihi,mathilohi,matlolohi,
+       mathihilo,matlohilo,mathilolo,matlololo,
+       rhshihihi,rhslohihi,rhshilohi,rhslolohi,
+       rhshihilo,rhslohilo,rhshilolo,rhslololo,
+       solhihihi,sollohihi,solhilohi,sollolohi,
+       solhihilo,sollohilo,solhilolo,sollololo,
+       wrkmathihihi,wrkmatlohihi,wrkmathilohi,wrkmatlolohi,
+       wrkmathihilo,wrkmatlohilo,wrkmathilolo,wrkmatlololo,
+       Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
+       Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
+       wrkvechihihi,wrkveclohihi,wrkvechilohi,wrkveclolohi,
+       wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo,vrblvl);
+
+   if(degp1 > 1)
+   {
+      if(vrblvl > 0) cout << "calling CPU_dbl8_qrbs_tail ..." << endl;
+
+      CPU_dbl8_qrbs_tail
+         (dim,degp1,
+          mathihihi,matlohihi,mathilohi,matlolohi,
+          mathihilo,matlohilo,mathilolo,matlololo,
+          rhshihihi,rhslohihi,rhshilohi,rhslolohi,
+          rhshihilo,rhslohilo,rhshilolo,rhslololo,
+          solhihihi,sollohihi,solhilohi,sollolohi,
+          solhihilo,sollohilo,solhilolo,sollololo,
+          Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
+          Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
+          wrkvechihihi,wrkveclohihi,wrkvechilohi,wrkveclolohi,
+          wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo,vrblvl);
    }
 }
 

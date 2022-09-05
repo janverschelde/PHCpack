@@ -324,14 +324,14 @@ int main ( void )
    {
       cout << "step " << step << " ..." << endl;
 
-      dbl8_newton_step
+      dbl8_newton_lustep
          (dim,deg,nvr,idx,exp,nbrfac,expfac,
           cffhihihi,cfflohihi,cffhilohi,cfflolohi,
           cffhihilo,cfflohilo,cffhilolo,cfflololo,
           acchihihi,acclohihi,acchilohi,acclolohi,
           acchihilo,acclohilo,acchilolo,acclololo,
-           inputhihihi, inputlohihi, inputhilohi, inputlolohi,
-           inputhihilo, inputlohilo, inputhilolo, inputlololo,
+          inputhihihi, inputlohihi, inputhilohi, inputlolohi,
+          inputhihilo, inputlohilo, inputhilolo, inputlololo,
           outputhihihi,outputlohihi,outputhilohi,outputlolohi,
           outputhihilo,outputlohilo,outputhilolo,outputlololo,
           funvalhihihi,funvallohihi,funvalhilohi,funvallolohi,

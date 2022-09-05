@@ -179,6 +179,12 @@ dbl4_polynomials_kernels.o:
              --define-macro gpufun=1 \
              $(POL)/dbl4_polynomials_kernels.cu
 
+dbl8_polynomials_kernels.o:
+	@-echo ">>> compiling polynomial kernels for octo doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -c -I$(MPD) -I$(CNV) \
+             --define-macro gpufun=1 \
+             $(POL)/dbl8_polynomials_kernels.cu
+
 dbl_bals_kernels.o:
 	@-echo ">>> compiling bals kernels for doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MAT) -O3 \
@@ -233,6 +239,11 @@ dbl4_systems_kernels.o:
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(CNV) -I$(MAT) -I$(POL) -O3 \
              -c dbl4_systems_kernels.cu
 
+dbl8_systems_kernels.o:
+	@-echo ">>> compiling dbl8_systems_kernels ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(CNV) -I$(MAT) -I$(POL) -O3 \
+             -c dbl8_systems_kernels.cu
+
 dbl_newton_testers.o:
 	@-echo ">>> compiling dbl_newton_testers ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(CNV) -I$(MAT) -I$(POL) \
@@ -250,7 +261,8 @@ dbl4_newton_testers.o:
 
 dbl8_newton_testers.o:
 	@-echo ">>> compiling dbl8_newton_testers ..."
-	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) dbl8_newton_testers.cpp
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+               dbl8_newton_testers.cpp
 
 test_unimodular.o:
 	@-echo ">>> compiling test_unimodular ..."
@@ -399,7 +411,10 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o double_double_functions.o \
                   quad_double_functions.o octo_double_functions.o \
                   dbl8_convolutions_host.o dbl8_monomials_host.o \
-                  dbl8_systems_host.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o job_coordinates.o \
+                  dbl8_systems_host.o write_gpu_timings.o \
+                  dbl8_systems_kernels.o dbl8_polynomials_kernels.o \
                   dbl8_factorizations.o dbl8_bals_host.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl8_baqr_kernels.o dbl8_tabs_kernels.o \
@@ -411,7 +426,11 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o unimodular_matrices.o \
                   dbl8_convolutions_host.o dbl8_monomials_host.o \
-                  dbl8_systems_host.o dbl8_factorizations.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o job_coordinates.o \
+                  dbl8_systems_host.o write_gpu_timings.o \
+                  dbl8_systems_kernels.o dbl8_polynomials_kernels.o \
+                  dbl8_factorizations.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl8_baqr_kernels.o dbl8_tabs_kernels.o \
                   dbl8_bals_host.o dbl8_bals_kernels.o \
@@ -422,7 +441,7 @@ clean:
 	/bin/rm -f -r dbl_systems_host.o dbl_systems_kernels.o
 	/bin/rm -f -r dbl2_systems_host.o dbl2_systems_kernels.o
 	/bin/rm -f -r dbl4_systems_host.o dbl4_systems_kernels.o
-	/bin/rm -f -r dbl8_systems_host.o
+	/bin/rm -f -r dbl8_systems_host.o dbl8_systems_kernels.o
 	/bin/rm -f -r dbl_bals_host.o dbl_bals_kernels.o
 	/bin/rm -f -r dbl2_baqr_kernels.o dbl2_tabs_kernels.o
 	/bin/rm -f -r dbl2_bals_host.o dbl2_bals_kernels.o
@@ -456,4 +475,5 @@ cleanall: clean
 	/bin/rm -f -r addition_job.o addition_jobs.o job_coordinates.o
 	/bin/rm -f -r dbl_polynomials_kernels.o write_gpu_timings.o
 	/bin/rm -f -r dbl2_polynomials_kernels.o dbl4_polynomials_kernels.o
+	/bin/rm -f -r dbl8_polynomials_kernels.o
 	/bin/rm -f -r dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o
