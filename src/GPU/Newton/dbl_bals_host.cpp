@@ -96,6 +96,71 @@ void CPU_dbl_qrbs_head
    }
 }
 
+void CPU_cmplx_qrbs_head
+ ( int dim, int degp1, double ***matre, double ***matim,
+   double **rhsre, double **rhsim, double **solre, double **solim,
+   double **wrkmatre, double **wrkmatim,
+   double **Qre, double **Qim, double **Rre, double **Rim,
+   double *wrkvecre, double *wrkvecim, int vrblvl )
+{
+   bool verbose = (vrblvl > 0);
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         wrkmatre[i][j] = matre[0][i][j];
+         wrkmatim[i][j] = matim[0][i][j];
+      }
+
+   if(verbose)
+   {
+      cout << "The matrix : " << endl;
+      cout << setprecision(2);
+      for(int i=0; i<dim; i++)
+      {
+         for(int j=0; j<dim; j++)
+            cout << "  " << wrkmatre[i][j] << "  " << wrkmatim[i][j];
+         cout << endl;
+      }
+      cout << setprecision(16);
+      cout << "The right hand side vector : " << endl;
+      for(int i=0; i<dim; i++)
+         cout << rhsre[0][i] << "  " << rhsim[0][i] << endl;
+   }
+   if(verbose) cout << "calling CPU_cmplx_factors_houseqr ..." << endl;
+
+   CPU_cmplx_factors_houseqr(dim,dim,wrkmatre,wrkmatim,Qre,Qim,Rre,Rim);
+   CPU_cmplx_factors_qrbs
+      (dim,dim,Qre,Qim,Rre,Rim,rhsre[0],rhsim[0],solre[0],solim[0],
+       wrkvecre,wrkvecim);
+
+   if(verbose)
+   {
+      double zre,zim;
+
+      cout << "The leading coefficients of the solution :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << solre[0][i] << "  " << solim[0][i] << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         wrkvecre[i] = rhsre[0][i];
+         wrkvecim[i] = rhsim[0][i];
+
+         for(int j=0; j<dim; j++)
+         {
+            // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
+            zre = matre[0][i][j]*solre[0][j] - matim[0][i][j]*solim[0][j];
+            zim = matre[0][i][j]*solim[0][j] + matim[0][i][j]*solre[0][j];
+            wrkvecre[i] = wrkvecre[i] + zre;
+            wrkvecim[i] = wrkvecim[i] + zim;
+         }
+      }
+      cout << "The residual vector :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << wrkvecre[i] << "  " << wrkvecim[i] << endl;
+   }
+}
+
 void CPU_dbl_lusb_tail
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
    double **wrkmat, int *pivots, int vrblvl )
@@ -166,6 +231,59 @@ void CPU_dbl_qrbs_tail
    }
 }
 
+void CPU_cmplx_qrbs_tail
+ ( int dim, int degp1, double ***matre, double ***matim,
+   double **rhsre, double **rhsim, double **solre, double **solim,
+   double **Qre, double **Qim, double **Rre, double **Rim,
+   double *wrkvecre, double *wrkvecim, int vrblvl )
+{
+   bool verbose = (vrblvl > 0);
+   double zre,zim;
+
+   for(int i=1; i<degp1; i++)
+   {
+      if(verbose) cout << "stage " << i << " in solve tail ..." << endl;
+      // use sol[i-1] to update rhs[j] for j in i to degp1
+      for(int j=i; j<degp1; j++)
+      {
+         double **Ajre = matre[j-i+1]; // always start with A[1]
+         double **Ajim = matim[j-i+1];
+         double *xire = solre[i-1];    // solution to do the update with
+         double *xiim = solim[i-1]; 
+         double *wjre = rhsre[j];      // current right hand side vector
+         double *wjim = rhsim[j]; 
+
+         for(int k=0; k<dim; k++)
+            for(int L=0; L<dim; L++) // wj[k] = wj[k] - Aj[k][L]*xi[L];
+            {
+               zre = Ajre[k][L]*xire[L] - Ajim[k][L]*xiim[L];
+               zim = Ajre[k][L]*xiim[L] + Ajim[k][L]*xire[L];
+               wjre[k] = wjre[k] - zre;
+               wjim[k] = wjim[k] - zim;
+            }
+      }
+      // compute sol[i] with back substitution
+      double *xre = solre[i];
+      double *xim = solim[i];
+      double *bre = rhsre[i];
+      double *bim = rhsim[i];
+
+      CPU_cmplx_factors_qrbs
+         (dim,dim,Qre,Qim,Rre,Rim,bre,bim,xre,xim,wrkvecre,wrkvecim);
+
+      if(verbose)
+      {
+         for(int i=0; i<dim; i++)
+            cout << "QHb[" << i << "] : "
+                 << wrkvecre[i] << "  " << wrkvecim[i] << endl;
+
+         cout << "the solution : " << endl;
+         for(int j=0; j<dim; j++)
+            cout << xre[j] << "  " << xim[j] << endl;
+      }
+   }
+}
+
 void CPU_dbl_lusb_solve
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
    double **wrkmat, double *wrkvec, int *pivots, int vrblvl )
@@ -200,6 +318,29 @@ void CPU_dbl_qrbs_solve
    }
 }
 
+void CPU_cmplx_qrbs_solve
+ ( int dim, int degp1, double ***matre, double ***matim, 
+   double **rhsre, double **rhsim, double **solre, double **solim,
+   double **wrkmatre, double **wrkmatim,
+   double **Qre, double **Qim, double **Rre, double **Rim,
+   double *wrkvecre, double *wrkvecim, int vrblvl )
+{
+   if(vrblvl > 0) cout << "calling CPU_cmplx_qrbs_head ..." << endl;
+
+   CPU_cmplx_qrbs_head
+      (dim,degp1,matre,matim,rhsre,rhsim,solre,solim,wrkmatre,wrkmatim,
+       Qre,Qim,Rre,Rim,wrkvecre,wrkvecim,vrblvl);
+
+   if(degp1 > 1)
+   {
+      if(vrblvl > 0) cout << "calling CPU_cmplx_qrbs_tail ..." << endl;
+
+      CPU_cmplx_qrbs_tail
+         (dim,degp1,matre,matim,rhsre,rhsim,solre,solim,
+          Qre,Qim,Rre,Rim,wrkvecre,wrkvecim,vrblvl);
+   }
+}
+
 void CPU_dbl_linear_residue
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
    double **resvec, double *resmax, int vrblvl )
@@ -230,5 +371,58 @@ void CPU_dbl_linear_residue
       }
       for(int j=0; j<dim; j++)
          if(abs(ri[j]) > *resmax) *resmax = abs(ri[j]);
+   }
+}
+
+void CPU_cmplx_linear_residue
+ ( int dim, int degp1, double ***matre, double ***matim,
+   double **rhsre, double **rhsim, double **solre, double **solim,
+   double **resvecre, double **resvecim, double *resmax, int vrblvl )
+{
+   *resmax = 0.0;
+   double zre,zim;
+
+   for(int i=0; i<degp1; i++)  // compute the i-th residual vector
+   {
+      double *rire = resvecre[i];
+      double *riim = resvecim[i];
+
+      for(int j=0; j<dim; j++)
+      {
+         rire[j] = rhsre[i][j];
+         riim[j] = rhsim[i][j];
+      }
+      for(int j=0; j<=i; j++)
+      {
+         double **Ajre = matre[j];
+         double **Ajim = matim[j];
+         double *xre = solre[i-j];
+         double *xim = solim[i-j];
+
+         // if(vrblvl > 0)
+         //    cout << "A[" << j << "] and x[" << i-j << "] ..." << endl;
+
+         for(int k=0; k<dim; k++)
+            for(int L=0; L<dim; L++) // ri[L] = ri[L] - Aj[L][k]*x[k];
+            {
+               zre = Ajre[L][k]*xre[k] - Ajim[L][k]*xim[k];
+               zim = Ajre[L][k]*xim[k] + Ajim[L][k]*xre[k];
+               rire[L] = rire[L] - zre;
+               riim[L] = riim[L] - zim;
+            }
+      }
+      if(vrblvl > 0)
+      {
+         cout << "Solution vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+            cout << solre[i][j] << "  " << solim[i][j] << endl;
+
+         cout << "Residual vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+            cout << rire[j] << "  " << riim[j] << endl;
+      }
+      for(int j=0; j<dim; j++)
+         if(abs(rire[j]) + abs(riim[j]) > *resmax)
+            *resmax = abs(rire[j]) + abs(riim[j]);
    }
 }

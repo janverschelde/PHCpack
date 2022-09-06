@@ -378,7 +378,7 @@ int test_dbl_real_newton
  *             2 for CPU and GPU;
  *   vrblvl    is the verbose level. */
 
-int test_cmplx_real_newton
+int test_dbl_complex_newton
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    int nbsteps, int mode, int vrblvl );

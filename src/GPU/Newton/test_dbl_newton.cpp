@@ -48,7 +48,9 @@ int main ( void )
 /*
  * 1. calling the test function
  */
-   test_dbl_real_newton
+ //  test_dbl_real_newton
+ //     (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
+   test_dbl_complex_newton
       (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
 
    exponents_check(dim, rowsA);

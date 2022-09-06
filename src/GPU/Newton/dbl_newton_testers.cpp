@@ -116,7 +116,7 @@ void cmplx_update_series
    for(int j=0; j<degp1; j++) 
       for(int i=0; i<dim; i++)
       {
-         xre[i][j] = xre[i][j] + dxim[j][i];
+         xre[i][j] = xre[i][j] + dxre[j][i];
          xim[i][j] = xim[i][j] + dxim[j][i];
       }
 
@@ -438,6 +438,54 @@ void cmplx_newton_qrstep
           cffre,cffim,accre,accim,inputre_h,inputim_h,
           outputre_h,outputim_h,vrblvl);
    }
+   // skip GPU code for now
+   for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+      for(int j=0; j<dim; j++) 
+         for(int k=0; k<dim; k++)
+         {
+            jacvalre_h[i][j][k] = 0.0; jacvalim_h[i][j][k] = 0.0;
+            jacvalre_d[i][j][k] = 0.0; jacvalim_d[i][j][k] = 0.0;
+         }
+
+   if((mode == 1) || (mode == 2))
+      cmplx_linearize_evaldiff_output
+         (dim,degp1,nvr,idx,outputre_h,outputim_h,funvalre_h,funvalim_h,
+          rhsre_h,rhsim_h,jacvalre_h,jacvalim_h,vrblvl);
+
+   // skip comparisons with GPU code
+
+   for(int i=0; i<degp1; i++) // save original rhs for residual
+      for(int j=0; j<dim; j++)
+      {
+         urhsre_h[i][j] = rhsre_h[i][j]; urhsim_h[i][j] = rhsim_h[i][j];
+         urhsre_d[i][j] = rhsre_d[i][j]; urhsim_d[i][j] = rhsim_d[i][j];
+      }
+
+   for(int i=0; i<degp1; i++) // initialize the solution to zero
+      for(int j=0; j<dim; j++)
+      {
+         solre_h[i][j] = 0.0; solim_h[i][j] = 0.0;
+         solre_d[i][j] = 0.0; solim_d[i][j] = 0.0;
+      }
+
+   if((mode == 1) || (mode == 2))
+   {
+      CPU_cmplx_qrbs_solve
+         (dim,degp1,jacvalre_h,jacvalim_h,urhsre_h,urhsim_h,
+          solre_h,solim_h,workmatre,workmatim,Qre_h,Qim_h,Rre_h,Rim_h,
+          workvecre,workvecim,vrblvl);
+ 
+      if(vrblvl > 0)
+      {
+         CPU_cmplx_linear_residue
+            (dim,degp1,jacvalre_h,jacvalim_h,rhsre_h,rhsim_h,
+             solre_h,solim_h,resvecre,resvecim,resmax,vrblvl);
+         cout << "maximum residual : " << *resmax << endl;
+      }
+      cmplx_update_series
+         (dim,degp1,inputre_h,inputim_h,solre_h,solim_h,vrblvl);
+   }
+   // skip GPU code
 }
 
 int test_dbl_real_newton
@@ -574,7 +622,7 @@ int test_dbl_real_newton
    return 0;
 }
 
-int test_cmplx_real_newton
+int test_dbl_complex_newton
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    int nbsteps, int mode, int vrblvl )
