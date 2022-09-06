@@ -256,4 +256,29 @@ void dbl2_newton_qrstep
  *   resmaxhi  high double of the maximum element of the residual vectors;
  *   resmaxlo  low double of the maximum element of the residual vectors. */
 
+int test_dbl2_real_newton
+ ( int szt, int nbt, int dim, int deg,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int nbsteps, int mode, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Runs Newton on a monomial system with real double double arithmetic.
+ *
+ * ON ENTRY :
+ *   szt       size of each tile and block;
+ *   nbt       number of tiles and number of blocks;
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   nvr       nvr[i] is the number of variables in the i-th monomial;
+ *   idx       idx[i] are the indices of the variables in monomial i;
+ *   exp       exp[i] are the exponents of the variables in monomial i;
+ *   nbrfac    nbrfac[i] are the number of exponents > 1 in monomial i;
+ *   expfac    expfac[i] are the exponents in the i-th polynomial
+ *             that are larger than one, minus one in the factor,
+ *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   nbsteps   the number of Newton steps;
+ *   mode      the mode of execution, 0 for GPU only, 1 for CPU only,
+ *             2 for CPU and GPU;
+ *   vrblvl    is the verbose level. */
+
 #endif

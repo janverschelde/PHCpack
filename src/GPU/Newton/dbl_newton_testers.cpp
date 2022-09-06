@@ -54,6 +54,22 @@ void dbl_unit_series_vector ( int dim, int deg, double **cff )
    }
 }
 
+void cmplx_unit_series_vector
+ ( int dim, int deg, double **cffre, double **cffim )
+{
+   for(int i=0; i<dim; i++)
+   {
+      cffre[i][0] = 1.0;
+      cffim[i][0] = 0.0;
+
+      for(int j=1; j<=deg; j++)
+      {
+         cffre[i][j] = 0.0;
+         cffim[i][j] = 0.0;
+      }
+   }
+}
+
 void dbl_update_series
  ( int dim, int degp1, double **x, double **dx, int vrblvl )
 {
@@ -77,6 +93,41 @@ void dbl_update_series
       {
          cout << "coefficient of degree " << j << " :" << endl;
          for(int i=0; i<dim; i++) cout << x[i][j] << endl;
+      }
+   }
+}
+
+void cmplx_update_series
+ ( int dim, int degp1,
+   double **xre, double **xim, double **dxre, double **dxim,
+   int vrblvl )
+{
+   if(vrblvl > 0)
+   {
+      cout << "The series before the update : " << endl;
+      for(int j=0; j<degp1; j++)
+      {
+         cout << "coefficient of degree " << j << " :" << endl;
+         for(int i=0; i<dim; i++)
+            cout << xre[i][j] << "  " << xim[i][j] << endl;
+      }
+   }
+   // The update dx is linearized, the series x is not.
+   for(int j=0; j<degp1; j++) 
+      for(int i=0; i<dim; i++)
+      {
+         xre[i][j] = xre[i][j] + dxim[j][i];
+         xim[i][j] = xim[i][j] + dxim[j][i];
+      }
+
+   if(vrblvl > 0)
+   {
+      cout << "The series after the update : " << endl;
+      for(int j=0; j<degp1; j++)
+      {
+         cout << "coefficient of degree " << j << " :" << endl;
+         for(int i=0; i<dim; i++)
+            cout << xre[i][j] << "  " << xim[i][j] << endl;
       }
    }
 }
@@ -139,15 +190,16 @@ void dbl_newton_qrstep
 
    // The series coefficients accumulate common factors,
    // initially the coefficients are set to one.
-   for(int i=0; i<dim; i++)
-   {
-      cff[i][0] = 1.0;
-      for(int j=1; j<degp1; j++) cff[i][j] = 0.0;
-      // for(int j=0; j<degp1; j++) input_d[i][j] = input_h[i][j];
-   }
    if((mode == 1) || (mode == 2))
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cff[i][0] = 1.0;
+         for(int j=1; j<degp1; j++) cff[i][j] = 0.0;
+      }
       CPU_dbl_evaluate_monomials
          (dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input_h,output_h,vrblvl);
+   }
    if((mode == 0) || (mode == 2))
    {
       for(int i=0; i<dim; i++)  // reset the coefficients
@@ -340,4 +392,400 @@ void dbl_newton_qrstep
          }
       cout << "sum of errors : " << errsum << endl;
    }
+}
+
+void cmplx_newton_qrstep
+ ( int szt, int nbt, int dim, int deg,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **cffre, double **cffim, double *accre, double *accim,
+   double **inputre_h, double **inputim_h,
+   double **inputre_d, double **inputim_d,
+   double ***outputre_h, double ***outputim_h,
+   double ***outputre_d, double ***outputim_d,
+   double **funvalre_h, double **funvalim_h,
+   double **funvalre_d, double **funvalim_d,
+   double ***jacvalre_h, double ***jacvalim_h,
+   double ***jacvalre_d, double ***jacvalim_d,
+   double **rhsre_h, double **rhsim_h, double **rhsre_d, double **rhsim_d,
+   double **urhsre_h, double **urhsim_h, double **urhsre_d, double **urhsim_d,
+   double **solre_h, double **solim_h, double **solre_d, double **solim_d,
+   double **Qre_h, double **Qim_h, double **Qre_d, double **Qim_d, 
+   double **Rre_h, double **Rim_h, double **Rre_d, double **Rim_d,
+   double **workmatre, double **workmatim,
+   double *workvecre, double *workvecim,
+   double **resvecre, double **resvecim, double *resmax,
+   int vrblvl, int mode )
+{
+   const int degp1 = deg+1;
+
+   // The series coefficients accumulate common factors,
+   // initially the coefficients are set to one.
+   if((mode == 1) || (mode == 2))
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cffre[i][0] = 1.0;
+         cffim[i][0] = 0.0;
+
+         for(int j=1; j<degp1; j++)
+         {
+            cffre[i][j] = 0.0;
+            cffim[i][j] = 0.0;
+         }
+      }
+      CPU_cmplx_evaluate_monomials
+         (dim,deg,nvr,idx,exp,nbrfac,expfac,
+          cffre,cffim,accre,accim,inputre_h,inputim_h,
+          outputre_h,outputim_h,vrblvl);
+   }
+}
+
+int test_dbl_real_newton
+ ( int szt, int nbt, int dim, int deg,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int nbsteps, int mode, int vrblvl )
+{
+/*
+ * 1. allocating input and output space for evaluation and differentiation
+ */
+   const int degp1 = deg+1;
+   double **input_h = new double*[dim];
+   double **input_d = new double*[dim];
+   for(int i=0; i<dim; i++)
+   {
+       input_h[i] = new double[degp1];
+       input_d[i] = new double[degp1];
+   }
+   // allocate memory for coefficients and the output
+   double *acc = new double[degp1]; // accumulated power series
+   double **cff = new double*[dim]; // the coefficients of monomials
+   for(int i=0; i<dim; i++) cff[i] = new double[degp1];
+   double ***output_h = new double**[dim];
+   double ***output_d = new double**[dim];
+   for(int i=0; i<dim; i++)
+   {
+      output_h[i] = new double*[dim+1];
+      output_d[i] = new double*[dim+1];
+      for(int j=0; j<=dim; j++)
+      {
+         output_h[i][j] = new double[degp1];
+         output_d[i][j] = new double[degp1];
+      }
+   }
+   // The function values are power series truncated at degree deg.
+   double **funval_h = new double*[dim];
+   double **funval_d = new double*[dim];
+   for(int i=0; i<dim; i++)
+   {
+      funval_h[i] = new double[degp1];
+      funval_d[i] = new double[degp1];
+   }
+   // The derivatives in the output are a series truncated at degree deg.
+   // The coefficients of the series are matrices of dimension dim.
+   double ***jacval_h = new double**[degp1];
+   double ***jacval_d = new double**[degp1];
+   for(int i=0; i<degp1; i++) // jacval[i] is matrix of dimension dim
+   {
+      jacval_h[i] = new double*[dim];
+      jacval_d[i] = new double*[dim];
+      for(int j=0; j<dim; j++)
+      {
+         jacval_h[i][j] = new double[dim];
+         jacval_d[i][j] = new double[dim];
+      }
+   }
+/*
+ * 2. allocate space to solve the linearized power series system
+ */
+   // The solution x(t) to jacval(t)*x(t) = -funval(t) in linearized
+   // format is a series truncated at degree deg, with as coefficients
+   // arrays of dimension dim.
+   double **sol_h = new double*[degp1];
+   double **sol_d = new double*[degp1];
+   for(int i=0; i<degp1; i++) 
+   {
+      sol_h[i] = new double[dim];
+      sol_d[i] = new double[dim];
+   }
+   // The right hand side -funval(t) in linearized format is a series
+   // truncated at degree deg, with arrays of dimension dim as coefficients.
+   double **rhs_h = new double*[degp1];
+   double **rhs_d = new double*[degp1];
+   for(int i=0; i<degp1; i++)
+   {
+      rhs_h[i] = new double[dim];
+      rhs_d[i] = new double[dim];
+   }
+   // Allocate work space for the inplace LU solver.
+   double **workmat = new double*[dim];
+   for(int i=0; i<dim; i++) workmat[i] = new double[dim];
+   int *ipvt = new int[dim];
+   double *workvec = new double[dim];
+   // Copy the rhs vector into work space for inplace solver.
+   double **urhs_h = new double*[degp1];
+   double **urhs_d = new double*[degp1];
+   for(int i=0; i<degp1; i++)
+   {
+      urhs_h[i] = new double[dim];
+      urhs_d[i] = new double[dim];
+   }
+   double **resvec = new double*[degp1];
+   for(int i=0; i<degp1; i++) resvec[i] = new double[dim];
+   double resmax;
+   double **Q_h = new double*[dim];
+   double **Q_d = new double*[dim];
+   for(int i=0; i<dim; i++)
+   {
+      Q_h[i] = new double[dim];
+      Q_d[i] = new double[dim];
+   }
+   double **R_h = new double*[dim];
+   double **R_d = new double*[dim];
+   for(int i=0; i<dim; i++)
+   {
+      R_h[i] = new double[dim];
+      R_d[i] = new double[dim];
+   }
+/*
+ * 3. initialize input, coefficient, evaluate, differentiate, and solve
+ */
+   // Define the initial input, a vector of ones.
+   dbl_unit_series_vector(dim,deg,input_h);
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<degp1; j++) input_d[i][j] = input_h[i][j];
+
+   if(vrblvl > 0)
+   {
+      cout << scientific << setprecision(16);
+      cout << "The leading coefficients of the input series :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << i << " : " << input_h[i][0] << endl;
+   }
+   for(int step=0; step<nbsteps; step++)
+   {
+      cout << "*** running Newton step " << step << " ***" << endl;
+
+      dbl_newton_qrstep
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,
+          input_h,input_d,output_h,output_d,funval_h,funval_d,
+          jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
+          Q_h,Q_d,R_h,R_d,workmat,workvec,resvec,&resmax,vrblvl,mode);
+   }
+   return 0;
+}
+
+int test_cmplx_real_newton
+ ( int szt, int nbt, int dim, int deg,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int nbsteps, int mode, int vrblvl )
+{
+/*
+ * 1. allocating input and output space for evaluation and differentiation
+ */
+   const int degp1 = deg+1;
+   double **inputre_h = new double*[dim];
+   double **inputim_h = new double*[dim];
+   double **inputre_d = new double*[dim];
+   double **inputim_d = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+       inputre_h[i] = new double[degp1];
+       inputim_h[i] = new double[degp1];
+       inputre_d[i] = new double[degp1];
+       inputim_d[i] = new double[degp1];
+   }
+   // allocate memory for coefficients and the output
+   double *accre = new double[degp1]; // accumulated power series
+   double *accim = new double[degp1];
+   double **cffre = new double*[dim]; // the coefficients of monomials
+   double **cffim = new double*[dim]; 
+   for(int i=0; i<dim; i++)
+   {
+      cffre[i] = new double[degp1];
+      cffim[i] = new double[degp1];
+   }
+   double ***outputre_h = new double**[dim];
+   double ***outputim_h = new double**[dim];
+   double ***outputre_d = new double**[dim];
+   double ***outputim_d = new double**[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      outputre_h[i] = new double*[dim+1];
+      outputim_h[i] = new double*[dim+1];
+      outputre_d[i] = new double*[dim+1];
+      outputim_d[i] = new double*[dim+1];
+
+      for(int j=0; j<=dim; j++)
+      {
+         outputre_h[i][j] = new double[degp1];
+         outputim_h[i][j] = new double[degp1];
+         outputre_d[i][j] = new double[degp1];
+         outputim_d[i][j] = new double[degp1];
+      }
+   }
+   // The function values are power series truncated at degree deg.
+   double **funvalre_h = new double*[dim];
+   double **funvalim_h = new double*[dim];
+   double **funvalre_d = new double*[dim];
+   double **funvalim_d = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      funvalre_h[i] = new double[degp1];
+      funvalim_h[i] = new double[degp1];
+      funvalre_d[i] = new double[degp1];
+      funvalim_d[i] = new double[degp1];
+   }
+   // The derivatives in the output are a series truncated at degree deg.
+   // The coefficients of the series are matrices of dimension dim.
+   double ***jacvalre_h = new double**[degp1];
+   double ***jacvalim_h = new double**[degp1];
+   double ***jacvalre_d = new double**[degp1];
+   double ***jacvalim_d = new double**[degp1];
+
+   for(int i=0; i<degp1; i++) // jacval[i] is matrix of dimension dim
+   {
+      jacvalre_h[i] = new double*[dim];
+      jacvalim_h[i] = new double*[dim];
+      jacvalre_d[i] = new double*[dim];
+      jacvalim_d[i] = new double*[dim];
+
+      for(int j=0; j<dim; j++)
+      {
+         jacvalre_h[i][j] = new double[dim];
+         jacvalim_h[i][j] = new double[dim];
+         jacvalre_d[i][j] = new double[dim];
+         jacvalim_d[i][j] = new double[dim];
+      }
+   }
+/*
+ * 2. allocate space to solve the linearized power series system
+ */
+   // The solution x(t) to jacval(t)*x(t) = -funval(t) in linearized
+   // format is a series truncated at degree deg, with as coefficients
+   // arrays of dimension dim.
+   double **solre_h = new double*[degp1];
+   double **solim_h = new double*[degp1];
+   double **solre_d = new double*[degp1];
+   double **solim_d = new double*[degp1];
+
+   for(int i=0; i<degp1; i++) 
+   {
+      solre_h[i] = new double[dim];
+      solim_h[i] = new double[dim];
+      solre_d[i] = new double[dim];
+      solim_d[i] = new double[dim];
+   }
+   // The right hand side -funval(t) in linearized format is a series
+   // truncated at degree deg, with arrays of dimension dim as coefficients.
+   double **rhsre_h = new double*[degp1];
+   double **rhsim_h = new double*[degp1];
+   double **rhsre_d = new double*[degp1];
+   double **rhsim_d = new double*[degp1];
+
+   for(int i=0; i<degp1; i++)
+   {
+      rhsre_h[i] = new double[dim];
+      rhsim_h[i] = new double[dim];
+      rhsre_d[i] = new double[dim];
+      rhsim_d[i] = new double[dim];
+   }
+   // Allocate work space for the inplace LU solver.
+   double **workmatre = new double*[dim];
+   double **workmatim = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      workmatre[i] = new double[dim];
+      workmatim[i] = new double[dim];
+   }
+   int *ipvt = new int[dim];
+   double *workvecre = new double[dim];
+   double *workvecim = new double[dim];
+   // Copy the rhs vector into work space for inplace solver.
+   double **urhsre_h = new double*[degp1];
+   double **urhsim_h = new double*[degp1];
+   double **urhsre_d = new double*[degp1];
+   double **urhsim_d = new double*[degp1];
+
+   for(int i=0; i<degp1; i++)
+   {
+      urhsre_h[i] = new double[dim];
+      urhsim_h[i] = new double[dim];
+      urhsre_d[i] = new double[dim];
+      urhsim_d[i] = new double[dim];
+   }
+   double **resvecre = new double*[degp1];
+   double **resvecim = new double*[degp1];
+
+   for(int i=0; i<degp1; i++)
+   {
+      resvecre[i] = new double[dim];
+      resvecim[i] = new double[dim];
+   }
+   double resmax;
+   double **Qre_h = new double*[dim];
+   double **Qim_h = new double*[dim];
+   double **Qre_d = new double*[dim];
+   double **Qim_d = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      Qre_h[i] = new double[dim];
+      Qim_h[i] = new double[dim];
+      Qre_d[i] = new double[dim];
+      Qim_d[i] = new double[dim];
+   }
+   double **Rre_h = new double*[dim];
+   double **Rim_h = new double*[dim];
+   double **Rre_d = new double*[dim];
+   double **Rim_d = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      Rre_h[i] = new double[dim];
+      Rim_h[i] = new double[dim];
+      Rre_d[i] = new double[dim];
+      Rim_d[i] = new double[dim];
+   }
+/*
+ * 3. initialize input, coefficient, evaluate, differentiate, and solve
+ */
+   // Define the initial input, a vector of ones.
+   cmplx_unit_series_vector(dim,deg,inputre_h,inputim_h);
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<degp1; j++)
+      {
+         inputre_d[i][j] = inputre_h[i][j];
+         inputim_d[i][j] = inputim_h[i][j];
+      }
+
+   if(vrblvl > 0)
+   {
+      cout << scientific << setprecision(16);
+      cout << "The leading coefficients of the input series :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << i << " : "
+              << inputre_h[i][0] << "  " << inputim_h[i][0] << endl;
+   }
+   for(int step=0; step<nbsteps; step++)
+   {
+      cout << "*** running Newton step " << step << " ***" << endl;
+
+      cmplx_newton_qrstep
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,cffre,cffim,accre,accim,
+          inputre_h,inputim_h,inputre_d,inputim_d,
+          outputre_h,outputim_h,outputre_d,outputim_d,
+          funvalre_h,funvalim_h,funvalre_d,funvalim_d,
+          jacvalre_h,jacvalim_h,jacvalre_d,jacvalim_d,
+          rhsre_h,rhsim_h,rhsre_d,rhsim_d,
+          urhsre_h,urhsim_h,urhsre_d,urhsim_d,
+          solre_h,solim_h,solre_d,solim_d,
+          Qre_h,Qim_h,Qre_d,Qim_d,Rre_h,Rim_h,Rre_d,Rim_d,
+          workmatre,workmatim,workvecre,workvecim,resvecre,resvecim,
+          &resmax,vrblvl,mode);
+   }
+   return 0;
 }
