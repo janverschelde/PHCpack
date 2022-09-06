@@ -501,3 +501,27 @@ void CPU_dbl_factors_qrbs
    }
    CPU_dbl_factors_backward(ncols,R,wrkvec,sol);
 }
+
+void CPU_cmplx_factors_qrbs
+ ( int nrows, int ncols,
+   double **Qre, double **Qim, double **Rre, double **Rim,
+   double *rhsre, double *rhsim, double *solre, double *solim,
+   double *wrkvecre, double *wrkvecim )
+{
+   double accre,accim; // accumulates product of two complex numbers
+
+   for(int i=0; i<nrows; i++)    // compute Q^H*b, b is rhs
+   {
+      wrkvecre[i] = 0.0;
+      wrkvecim[i] = 0.0;
+
+      for(int j=0; j<nrows; j++) // work with Hermitian transpose of Q
+      {
+         accre =  Qre[j][i]*rhsre[j] + Qim[j][i]*rhsim[j];
+         accim = -Qim[j][i]*rhsre[j] + Qre[j][i]*rhsim[j];
+         wrkvecre[i] = wrkvecre[i] + accre;
+         wrkvecim[i] = wrkvecim[i] + accim;
+      }
+   }
+   CPU_cmplx_factors_backward(ncols,Rre,Rim,wrkvecre,wrkvecim,solre,solim);
+}

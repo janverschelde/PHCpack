@@ -368,7 +368,7 @@ void CPU_dbl_factors_qrbs
 /*
  * DESCRIPTION :
  *   Applies back substitution for the least squares solution
- *   with the QR factorization.
+ *   with the QR factorization, on real data.
  *
  * REQUIRED : nrows >= ncols;
  *
@@ -384,5 +384,37 @@ void CPU_dbl_factors_qrbs
  * ON RETURN :
  *   sol      the least squares solution;
  *   wrkvec   contains the product of Q transpose with rhs. */
+
+void CPU_cmplx_factors_qrbs
+ ( int nrows, int ncols,
+   double **Qre, double **Qim, double **Rre, double **Rim,
+   double *rhsre, double *rhsim, double *solre, double *solim,
+   double *wrkvecre, double *wrkvecim );
+/*
+ * DESCRIPTION :
+ *   Applies back substitution for the least squares solution
+ *   with the QR factorization, on complex data.
+ *
+ * REQUIRED : nrows >= ncols;
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R, dimension of Q;
+ *   ncols    number of columns of R;
+ *   Qre      the real parts of Q of the QR factorization;
+ *   Qim      the imaginary parts of Q of the QR factorization;
+ *   Rre      the real parts of R of the QR factorization;
+ *   Rim      the imaginary parts of R of the QR factorization;
+ *   rhsre    real parts of right hand side, of size nrows;
+ *   rhsim    imaginary parts of right hand side, of size nrows;
+ *   solre    space for the real parts of solution, of size ncols;
+ *   solim    space for the imaginary parts of solution, of size ncols;
+ *   wrkvecre is work space for nrows elements;
+ *   wrkvecim is work space for nrows elements.
+ *
+ * ON RETURN :
+ *   solre    real parts of the least squares solution;
+ *   solim    imaginary parts of the least squares solution;
+ *   wrkvecre has the real parts of product of Q^H with rhs;
+ *   wrkvecim has the imaginary parts of product of Q^H with rhs. */
 
 #endif
