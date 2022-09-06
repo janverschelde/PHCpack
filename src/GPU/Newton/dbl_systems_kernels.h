@@ -39,6 +39,42 @@ void dbl_evaldiffdata_to_output
  *            output[i][k] contains the power series value of
  *            the k-th derivative of the i-th monomial. */
 
+void cmplx_evaldiffdata_to_output
+ ( double *datare, double *dataim, double ***outputre, double ***outputim,
+   int dim, int nbr, int deg, int *nvr,
+   int **idx, int *fstart, int *bstart, int *cstart, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Extracts the complex data computed on the device to the output.
+ *
+ * ON ENTRY :
+ *   datare   real parts of coefficients of all monomials and input, 
+ *            computed forward, backward, and cross products;
+ *   dataim   imaginary parts of coefficients of all monomials and input, 
+ *            computed forward, backward, and cross products;
+ *   outputre has space for the value and all derivatives;
+ *   outputim has space for the value and all derivatives;
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      truncation degree of the series;
+ *   nvr      nvr[k] is the number of variables for monomial k;
+ *   idx      idx[k] has as many indices as the value of nvr[k],
+ *            idx[k][i] defines the place of the i-th variable,
+ *            with input values in input[idx[k][i]];
+ *   fstart   fstart[k] has the start position of the forward products
+ *            for the k-th monomial;
+ *   bstart   fstart[k] has the start position of the backward products
+ *            for the k-th monomial;
+ *   cstart   fstart[k] has the start position of the cross products
+ *            for the k-th monomial;
+ *   verbose  if true, writes extra information.
+ *
+ * ON RETURN :
+ *   output   output[i][dim] contains the power series value
+ *            of the i-th monomial, and
+ *            output[i][k] contains the power series value of
+ *            the k-th derivative of the i-th monomial. */
+
 void GPU_dbl_mon_evaldiff
  ( int szt, int dim, int nbr, int deg, int *nvr, int **idx,
    double **cff, double **input, double ***output,
@@ -47,8 +83,7 @@ void GPU_dbl_mon_evaldiff
 /*
  * DESCRIPTION :
  *   Evaluates and differentiates a monomial system.
- *   Computes the convolutions in the order as defined by jobs,
- *   on real data.
+ *   Computes the convolutions in the order as defined by jobs, on real data.
  *
  * ON ENTRY :
  *   szt      number of threads in a block, must equal deg + 1;
@@ -81,11 +116,62 @@ void GPU_dbl_mon_evaldiff
  *   walltimesec is the elapsed wall clock time for all computations
  *            (excluding memory copies) in seconds. */
 
+void GPU_cmplx_mon_evaldiff
+ ( int szt, int dim, int nbr, int deg, int *nvr, int **idx,
+   double **cffre, double **cffim, double **inputre, double **inputim,
+   double ***outputre, double ***outputim, ConvolutionJobs cnvjobs,
+   double *cnvlapms, double *elapsedms, double *walltimesec, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Evaluates and differentiates a monomial system.
+ *   Computes the convolutions in the order as defined by jobs,
+ *   on complex data.
+ *
+ * ON ENTRY :
+ *   szt      number of threads in a block, must equal deg + 1;
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      truncation degree of the series;
+ *   nvr      nvr[k] holds the number of variables in monomial k;
+ *   idx      idx[k] has as many indices as the value of nvr[k],
+ *            idx[k][i] defines the place of the i-th variable,
+ *            with input values in input[idx[k][i]];
+ *   cffre    cffre[k] has deg+1 doubles of the real parts for the
+ *            coefficient series of monomial k;
+ *   cffim    cffim[k] has deg+1 doubles of the imaginary parts for the
+ *            coefficient series of monomial k;
+ *   inputre  real parts of the coefficients of the series
+ *            for all variables in the polynomial;
+ *   inputim  imaginary parts of the coefficients of the series
+ *            for all variables in the polynomial;
+ *   outputre has space for real parts of value and all derivatives;
+ *   outputim has space for imaginary parts of value and all derivatives;
+ *   cnvjobs  convolution jobs organized in layers;
+ *   verbose  if true, then extra output about the setup is written.
+ *
+ * ON RETURN :
+ *   outputre has real parts of derivatives and the value,
+ *            outputre[k], for k from 0 to dim-1, has the real part
+ *            of the derivative with respect to the variable k;
+ *            outputre[dim] contains the real part of the value;
+ *   outputim has imaginary parts of derivatives and the value,
+ *            outputim[k], for k from 0 to dim-1, has the imaginary part
+ *            of the derivative with respect to the variable k;
+ *            outputim[dim] contains the imaginary part of the value;
+ *   cnvlapms is the elapsed time spent by all convolution kernels,
+ *            expressed in milliseconds;
+ *   addlapms is the elapsed time spent by all addition kernels,
+ *            expressed in milliseconds;
+ *   elapsedms is the elapsed time spent by all kernels,
+ *            expressed in milliseconds;
+ *   walltimesec is the elapsed wall clock time for all computations
+ *            (excluding memory copies) in seconds. */
+
 void GPU_dbl_evaluate_monomials
  ( int dim, int deg, int szt, int nbt,
-   int *nvr, int **idx, int **exp, int *nbrfac,
-   int **expfac, double **cff, double *acc, double **input,
-   double ***output, int vrblvl );
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **cff, double *acc, double **input, double ***output,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates monomials at power series.
@@ -113,7 +199,55 @@ void GPU_dbl_evaluate_monomials
  *   cff       contains the evaluated common factors;
  *   output    evaluated and differentiated monomials in the system,
  *             output[i][dim] is the value of the input series
- *             at the i-th monomial, and for k in range 0..nvr[i]-1,
- *             output[i][idx[i]] is the derivative w.r.t. idx[k]. */
+ *             at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             output[i][idx[k]] is the derivative w.r.t. idx[k]. */
+
+void GPU_cmplx_evaluate_monomials
+ ( int dim, int deg, int szt, int nbt,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **cffre, double **cffim, double *accre, double *accim,
+   double **inputre, double **inputim, double ***outputre, double ***outputim,
+   int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates monomials at power series.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   szt       size of each block of threads;
+ *   nbt       number of thread blocks;
+ *   nvr       nvr[i] is the number of variables in the i-th monomial;
+ *   idx       idx[i] are the indices of the variables in monomial i;
+ *   exp       exp[i] are the exponents of the variables in monomial i;
+ *   nbrfac    nbrfac[i] are the number of exponents > 1 in monomial i;
+ *   expfac    expfac[i] are the exponents in the i-th polynomial
+ *             that are larger than one, minus one in the factor,
+ *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   cffre     real parts of coefficients of the monomials;
+ *   cffim     imaginary parts of coefficients of the monomials;
+ *   accre     space to accumulate one power series of degree deg;
+ *   accim     space to accumulate one power series of degree deg;
+ *   inputre   real parts of coefficients of the series
+ *             of degree deg, for dim variables;
+ *   inputim   imaginary parts of coefficients of the series
+ *             of degree deg, for dim variables;
+ *   outputre  has space for the real parts of the output;
+ *   outputim  has space for the imaginary parts of the output;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   cffre     has the real parts of the evaluated common factors;
+ *   cffim     has the imaginary parts of the evaluated common factors;
+ *   outputre  real parts of evaluated and differentiated monomials,
+ *             outputre[i][dim] is the real part of the value of the input
+ *             at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputre[i][idx[k]] is the real part of derivative
+ *             w.r.t. idx[k];
+ *   outputim  imaginary parts of evaluated and differentiated monomials,
+ *             outputim[i][dim] is the imaginary part of the value of the
+ *             input at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputim[i][idx[k]] is the imaginary part of te derivative
+ *             w.r.t. idx[k]. */
 
 #endif

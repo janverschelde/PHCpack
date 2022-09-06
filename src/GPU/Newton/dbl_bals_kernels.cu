@@ -34,6 +34,40 @@ __global__ void dbl_bals_tail
    b[idx] = bi;
 }
 
+__global__ void cmplx_bals_tail
+ ( int ncols, int szt, double *Are, double *Aim,
+   double *xre, double *xim, double *bre, double *bim )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx; // thread tdx updates b[idx]
+
+   double Ajre;             // register for Are[idx][j]
+   double Ajim;             // register for Aim[idx][j]
+   double xjre;             // register for xre[j]
+   double xjim;             // register for xim[j]
+   double bire = bre[idx];  // register for bre[idx]
+   double biim = bim[idx];  // register for bim[idx]
+   double zre,zim;
+
+   int offset = idx*ncols;
+
+   for(int j=0; j<ncols; j++)
+   {
+      Ajre = Are[offset+j];
+      Ajim = Aim[offset+j];
+      xjre = xre[j];
+      xjim = xim[j];
+      // bi = bi - Aj*xj;
+      zre = Ajre*xjre - Ajim*xjim;
+      zim = Ajre*xjim + Ajim*xjre;
+      bire = bire - zre;
+      biim = biim - zim;
+   }
+   bre[idx] = bire;
+   bim[idx] = biim;
+}
+
 __global__ void dbl_bals_qtb
  ( int ncols, int szt, double *Qt, double *b, double *r )
 {
@@ -54,6 +88,40 @@ __global__ void dbl_bals_qtb
       ri = ri + Qj*bj;
    }
    r[idx] = ri;
+}
+
+__global__ void cmplx_bals_qhb
+ ( int ncols, int szt, double *QHre, double *QHim,
+   double *bre, double *bim, double *rre, double *rim )
+{
+   const int bdx = blockIdx.x;
+   const int tdx = threadIdx.x;
+   const int idx = bdx*szt + tdx; // thread tdx computes r[idx]
+
+   double Qjre;           // register for real part of Q^H[idx][j]
+   double Qjim;           // register for imaginary part of Q^H[idx][j]
+   double bjre;           // register for bre[j]
+   double bjim;           // register for bim[j]
+   double rire = 0.0;     // register for result, rre[idx]
+   double riim = 0.0;     // register for result, rim[idx]
+   double zre,zim;
+
+   int offset = idx*ncols;
+
+   for(int j=0; j<ncols; j++)
+   {
+      Qjre = QHre[offset+j];
+      Qjim = QHim[offset+j];
+      bjre = bre[j];
+      bjim = bim[j];
+      // ri = ri + Qj*bj;
+      zre = Qjre*bjre - Qjim*bjim;
+      zim = Qjre*bjim + Qjim*bjre;
+      rire = rire + zre;
+      riim = riim + zim;
+   }
+   rre[idx] = rire;
+   rim[idx] = riim;
 }
 
 void GPU_dbl_bals_head
@@ -122,6 +190,89 @@ void GPU_dbl_bals_head
    free(workR);
 }
 
+void GPU_cmplx_bals_head
+ ( int nrows, int ncols, int szt, int nbt,
+   double **Are, double **Aim, double **Qre, double **Qim,
+   double **Rre, double **Rim, double *bre, double *bim,
+   double *xre, double *xim, bool verbose )
+{
+   double qrtimelapsed_d;
+   double houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms;
+   double WYTlapsedms,QWYTlapsedms,Qaddlapsedms;
+   double YWTlapsedms,YWTClapsedms,Raddlapsedms;
+   long long int qraddcnt = 0;
+   long long int qrmulcnt = 0;
+   long long int qrdivcnt = 0;
+   long long int sqrtcnt = 0;
+
+   if(verbose) 
+      cout << "-> GPU computes the blocked Householder QR ..." << endl;
+
+   GPU_cmplx_blocked_houseqr
+      (nrows,ncols,szt,nbt,Are,Aim,Qre,Qim,Rre,Rim,
+       &houselapsedms,&RTvlapsedms,&tileRlapsedms,&vb2Wlapsedms,
+       &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
+       &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
+       &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
+
+   double bstimelapsed_d;
+   double elapsedms,invlapsed,mullapsed,sublapsed;
+   long long int bsaddcnt = 0;
+   long long int bsmulcnt = 0;
+   long long int bsdivcnt = 0;
+
+   if(verbose)
+      cout << "-> GPU solves an upper triangular system ..." << endl;
+
+   if(verbose)
+   {
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "R[" << i << "][" << j << "] : "
+                 << Rre[i][j] << "  " << Rim[i][j] << endl;
+
+      for(int i=0; i<nrows; i++)
+         cout << "b[" << i << "] : "
+              << bre[i] << "  " << bim[i] << endl;
+   }
+   double **workRre = new double*[nrows]; // work around ...
+   double **workRim = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      workRre[i] = new double[ncols];
+      workRim[i] = new double[ncols];
+
+      for(int j=0; j<ncols; j++)
+      {
+         workRre[i][j] = Rre[i][j];
+         workRim[i][j] = Rim[i][j];
+      }
+   }
+   GPU_cmplx_upper_tiled_solver
+      (ncols,szt,nbt,workRre,workRim,bre,bim,xre,xim,
+       &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
+       &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+   if(verbose)
+   {
+      cout << "-> after calling the GPU upper solver ..." << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "R[" << i << "][" << j << "] : "
+                 << Rre[i][j] << "  " << Rim[i][j] << endl;
+
+      for(int i=0; i<nrows; i++)
+         cout << "b[" << i << "] : "
+              << bre[i] << "  " << bim[i] << endl;
+   }
+   for(int i=0; i<nrows; i++)
+   {
+      free(workRre[i]); free(workRim[i]);
+   }
+   free(workRre); free(workRim);
+}
+
 void GPU_dbl_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***mat, double **rhs, double **sol, bool verbose )
@@ -188,6 +339,90 @@ void GPU_dbl_bals_tail
    }
 }
 
+void GPU_cmplx_bals_tail
+ ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
+   double ***matre, double ***matim, double **rhsre, double **rhsim,
+   double **solre, double **solim, bool verbose )
+{
+   if(verbose)
+   {
+      cout << "GPU_cmplx_bals_tail input blocks of rhs :" << endl;
+      for(int k=0; k<degp1; k++)
+      {
+         for(int i=0; i<nrows; i++)
+            cout << "rhs[" << k << "][" << i << "] : "
+                 << rhsre[k][i] << "  " << rhsim[k][i] << endl;
+      }
+   }
+   double *bre_d;
+   double *bim_d;
+   const size_t szrhs = nrows*sizeof(double);
+   cudaMalloc((void**)&bre_d,szrhs);
+   cudaMalloc((void**)&bim_d,szrhs);
+
+   double *xre_d;
+   double *xim_d;
+   const size_t szsol = ncols*sizeof(double);
+   cudaMalloc((void**)&xre_d,szsol);
+   cudaMalloc((void**)&xim_d,szsol);
+   cudaMemcpy(xre_d,solre[stage-1],szsol,cudaMemcpyHostToDevice);
+   cudaMemcpy(xim_d,solim[stage-1],szsol,cudaMemcpyHostToDevice);
+
+   double *Are_d;
+   double *Aim_d;
+   const size_t szmat = nrows*ncols*sizeof(double);
+   cudaMalloc((void**)&Are_d,szmat);
+   cudaMalloc((void**)&Aim_d,szmat);
+
+   double *Are_h = new double[szmat];
+   double *Aim_h = new double[szmat];
+
+   for(int k=stage; k<degp1; k++)
+   {
+      if(verbose)
+         cout << "GPU_cmplx_bals_tail launches " << nbt
+              << " thread blocks in step " << k-stage << endl;
+
+      int idx=0;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+         {
+            Are_h[idx]   = matre[k-stage+1][i][j];
+            Aim_h[idx++] = matim[k-stage+1][i][j];
+         }
+      
+      cudaMemcpy(bre_d,rhsre[k],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(bim_d,rhsim[k],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(Are_d,Are_h,szmat,cudaMemcpyHostToDevice);
+      cudaMemcpy(Aim_d,Aim_h,szmat,cudaMemcpyHostToDevice);
+
+      if(verbose)
+         cout << "nbt = " << nbt << ", szt = " << szt
+              << ", ncols = " << ncols << endl;
+
+      cmplx_bals_tail<<<nbt,szt>>>
+         (ncols,szt,Are_d,Aim_d,xre_d,xim_d,bre_d,bim_d);
+      
+      if(verbose)
+         cout << "copying block " << k << " of right hand side ..." << endl;
+
+      cudaMemcpy(rhsre[k],bre_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(rhsim[k],bim_d,szrhs,cudaMemcpyDeviceToHost);
+   }
+   free(Are_h); free(Aim_h);
+
+   if(verbose)
+   {
+      cout << "GPU_cmplx_bals_tail copied blocks of rhs :" << endl;
+      for(int k=0; k<degp1; k++)
+      {
+         for(int i=0; i<nrows; i++)
+            cout << "rhs[" << k << "][" << i << "] : "
+                 << rhsre[k][i] << "  " << rhsim[k][i] << endl;
+      }
+   }
+}
+
 void GPU_dbl_bals_qtb
  ( int ncols, int szt, int nbt, double **Q, double *b, bool verbose )
 {
@@ -217,6 +452,53 @@ void GPU_dbl_bals_qtb
    cudaMemcpy(b,r_d,szrhs,cudaMemcpyDeviceToHost);
 
    free(Qt_h);
+}
+
+void GPU_cmplx_bals_qhb
+ ( int ncols, int szt, int nbt, double **Qre, double **Qim,
+   double *bre, double *bim, bool verbose )
+{
+   double *bre_d;
+   double *bim_d;
+   const size_t szrhs = ncols*sizeof(double);
+   cudaMalloc((void**)&bre_d,szrhs);
+   cudaMalloc((void**)&bim_d,szrhs);
+   cudaMemcpy(bre_d,bre,szrhs,cudaMemcpyHostToDevice);
+   cudaMemcpy(bim_d,bim,szrhs,cudaMemcpyHostToDevice);
+
+   double *rre_d;
+   double *rim_d;
+   const size_t szsol = ncols*sizeof(double);
+   cudaMalloc((void**)&rre_d,szsol);
+   cudaMalloc((void**)&rim_d,szsol);
+
+   double *QHre_d;
+   double *QHim_d;
+   const size_t szmat = ncols*ncols*sizeof(double);
+   cudaMalloc((void**)&QHre_d,szmat);
+   cudaMalloc((void**)&QHim_d,szmat);
+
+   double *QHre_h = new double[szmat];
+   double *QHim_h = new double[szmat];
+
+   int idx=0;
+   for(int i=0; i<ncols; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         QHre_h[idx]   = Qre[j][i];
+         QHim_h[idx++] = - Qim[j][i]; // Hermitian transpose !
+      }
+
+   cudaMemcpy(QHre_d,QHre_h,szmat,cudaMemcpyHostToDevice);
+   cudaMemcpy(QHim_d,QHim_h,szmat,cudaMemcpyHostToDevice);
+
+   cmplx_bals_qhb<<<nbt,szt>>>
+      (ncols,szt,QHre_d,QHim_d,bre_d,bim_d,rre_d,rim_d);
+
+   cudaMemcpy(bre,rre_d,szrhs,cudaMemcpyDeviceToHost);
+   cudaMemcpy(bim,rim_d,szrhs,cudaMemcpyDeviceToHost);
+
+   free(QHre_h); free(QHim_h);
 }
 
 void GPU_dbl_bals_solve
@@ -326,4 +608,157 @@ void GPU_dbl_bals_solve
       free(A[i]); free(workR[i]);
    }
    free(A); free(b); free(x); free(workR);
+}
+
+void GPU_cmplx_bals_solve
+ ( int dim, int degp1, int szt, int nbt,
+   double ***matre, double ***matim, double **Qre, double **Qim,
+   double **Rre, double **Rim, double **rhsre, double **rhsim,
+   double **solre, double **solim, int vrblvl )
+{
+   const int nrows = dim;
+   const int ncols = dim;
+   const bool bvrb = (vrblvl > 0);
+
+   double **Are = new double*[nrows];
+   double **Aim = new double*[nrows];
+
+   double *bre = new double[nrows];
+   double *bim = new double[nrows];
+   double *xre = new double[ncols];
+   double *xim = new double[ncols];
+
+   double **workRre = new double*[nrows]; // GPU upper solver changes R
+   double **workRim = new double*[nrows]; 
+
+   for(int i=0; i<nrows; i++)
+   {
+      workRre[i] = new double[ncols];
+      workRim[i] = new double[ncols];
+   }
+   if(vrblvl)
+   {
+      cout << "GPU_cmplx_bals_solve blocks of rhs :" << endl;
+      for(int k=0; k<degp1; k++)
+      {
+         for(int i=0; i<nrows; i++)
+            cout << "rhs[" << k << "][" << i << "] : "
+                 << rhsre[k][i] << "  " << rhsim[k][i] << endl;
+      }
+   }
+
+   for(int i=0; i<nrows; i++)
+   {
+      Are[i] = new double[ncols];
+      Aim[i] = new double[ncols];
+
+      for(int j=0; j<ncols; j++)
+      {
+         Are[i][j] = matre[0][i][j];
+         Aim[i][j] = matim[0][i][j];
+      }
+      bre[i] = rhsre[0][i];
+      bim[i] = rhsim[0][i];
+
+      for(int j=0; j<ncols; j++)
+      {
+         Rre[i][j] = matre[0][i][j];
+         Rim[i][j] = matim[0][i][j];
+      }
+   }
+
+   GPU_cmplx_bals_head
+      (nrows,ncols,szt,nbt,Are,Aim,Qre,Qim,Rre,Rim,bre,bim,xre,xim,bvrb);
+
+   for(int j=0; j<ncols; j++)
+   {
+      solre[0][j] = xre[j];
+      solim[0][j] = xim[j];
+   }
+   for(int stage=1; stage<degp1; stage++)
+   {
+      if(vrblvl > 0)
+         cout << "stage " << stage << " in solve tail ..." << endl;
+
+      GPU_cmplx_bals_tail
+         (nrows,ncols,szt,nbt,degp1,stage,matre,matim,
+          rhsre,rhsim,solre,solim,bvrb);
+
+      if(vrblvl > 0)
+      {
+         cout << "blocks of rhs before assignment :" << endl;
+         for(int k=0; k<degp1; k++)
+         {
+            for(int i=0; i<nrows; i++)
+               cout << "rhs[" << k << "][" << i << "] : "
+                    << rhsre[k][i] << "  " << rhsim[k][i] << endl;
+         }
+      }
+
+      for(int i=0; i<nrows; i++) 
+      {
+         cout << "assigning component " << i
+              << ", stage = " << stage << endl;
+         bre[i] = rhsre[stage][i];
+         bim[i] = rhsim[stage][i];
+         cout << "b[" << i << "] : "
+              << bre[i] << "  " << bim[i] << endl;
+      }
+      double bstimelapsed_d;
+      double elapsedms,invlapsed,mullapsed,sublapsed;
+      long long int bsaddcnt = 0;
+      long long int bsmulcnt = 0;
+      long long int bsdivcnt = 0;
+
+      if(vrblvl > 0)
+         cout << "-> GPU multiplies rhs with Q^H ..." << endl;
+
+      GPU_cmplx_bals_qhb(ncols,szt,nbt,Qre,Qim,bre,bim,bvrb);
+
+      if(vrblvl > 0)
+      {
+         for(int i=0; i<nrows; i++)
+            cout << "QHb[" << i << "] : "
+                 << bre[i] << "  " << bim[i] << endl;
+      }
+      if(vrblvl > 0)
+      {
+         cout << "-> GPU solves an upper triangular system ..." << endl;
+ 
+         for(int i=0; i<nrows; i++)
+            for(int j=0; j<ncols; j++)
+               cout << "R[" << i << "][" << j << "] : "
+                    << Rre[i][j] << "  " << Rim[i][j] << endl;
+      }
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+         {
+            workRre[i][j] = Rre[i][j];
+            workRim[i][j] = Rim[i][j];
+         }
+
+      GPU_cmplx_upper_tiled_solver
+         (ncols,szt,nbt,workRre,workRim,bre,bim,xre,xim,
+          &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
+          &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+     if(vrblvl > 0)
+        for(int i=0; i<ncols; i++)
+           cout << "x[" << i << "] : "
+                << xre[i] << "  " << xim[i] << endl;
+
+      for(int j=0; j<ncols; j++)
+      {
+         solre[stage][j] = xre[j];
+         solim[stage][j] = xim[j];
+      }
+   }
+
+   for(int i=0; i<nrows; i++)
+   {
+      free(Are[i]); free(workRre[i]);
+      free(Aim[i]); free(workRim[i]);
+   }
+   free(Are); free(bre); free(xre); free(workRre);
+   free(Aim); free(bim); free(xim); free(workRim);
 }

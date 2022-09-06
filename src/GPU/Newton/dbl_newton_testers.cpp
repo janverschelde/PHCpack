@@ -438,7 +438,43 @@ void cmplx_newton_qrstep
           cffre,cffim,accre,accim,inputre_h,inputim_h,
           outputre_h,outputim_h,vrblvl);
    }
-   // skip GPU code for now
+   if((mode == 0) || (mode == 2))
+   {
+      for(int i=0; i<dim; i++)  // reset the coefficients
+      {
+         cffre[i][0] = 1.0;
+         cffim[i][0] = 0.0;
+
+         for(int j=1; j<degp1; j++)
+         {
+            cffre[i][j] = 0.0;
+            cffim[i][j] = 0.0;
+         }
+      }
+      GPU_cmplx_evaluate_monomials
+         (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,
+          cffre,cffim,accre,accim,inputre_d,inputim_d,
+          outputre_d,outputim_d,vrblvl);
+   }
+   if((vrblvl > 0) && (mode == 2))
+   {
+      cout << "comparing CPU with GPU evaluations ... " << endl;
+      double errsum = 0.0;
+      for(int k=0; k<dim; k++) // monomial k
+         for(int i=0; i<=dim; i++)
+            for(int j=0; j<degp1; j++)
+         {
+             cout << "output_h[" << k << "][" << i << "][" << j << "] : "
+                  << outputre_h[k][i][j] << "  "
+                  << outputim_h[k][i][j] << endl;
+             cout << "output_d[" << k << "][" << i << "][" << j << "] : "
+                  << outputre_d[k][i][j] << "  "
+                  << outputim_d[k][i][j] << endl;
+             errsum += abs(outputre_h[k][i][j] - outputre_d[k][i][j])
+                     + abs(outputim_h[k][i][j] - outputim_d[k][i][j]);
+         }
+      cout << "sum of errors : " << errsum << endl;
+   }
    for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
       for(int j=0; j<dim; j++) 
          for(int k=0; k<dim; k++)
@@ -452,8 +488,66 @@ void cmplx_newton_qrstep
          (dim,degp1,nvr,idx,outputre_h,outputim_h,funvalre_h,funvalim_h,
           rhsre_h,rhsim_h,jacvalre_h,jacvalim_h,vrblvl);
 
-   // skip comparisons with GPU code
+   if((mode == 0) || (mode == 2))
+      cmplx_linearize_evaldiff_output
+         (dim,degp1,nvr,idx,outputre_d,outputim_d,funvalre_d,funvalim_d,
+          rhsre_d,rhsim_d,jacvalre_d,jacvalim_d,vrblvl);
 
+   if((vrblvl > 0) && (mode == 2))
+   {
+      cout << "comparing CPU with GPU function values ... " << endl;
+      double errsum = 0.0;
+      for(int i=0; i<dim; i++)
+      {
+         for(int j=0; j<degp1; j++)
+         {
+            cout << "funval_h[" << i << "][" << j << "] : "
+                 << funvalre_h[i][j] << "  "
+                 << funvalim_h[i][j] << endl;
+            cout << "funval_d[" << i << "][" << j << "] : "
+                 << funvalre_d[i][j] << "  "
+                 << funvalim_d[i][j] << endl;
+            errsum += abs(funvalre_h[i][j] - funvalre_d[i][j])
+                    + abs(funvalim_h[i][j] - funvalim_d[i][j]);
+         }
+      }
+      cout << "sum of errors : " << errsum << endl;
+      cout << "comparing CPU with GPU Jacobians ... " << endl;
+      errsum = 0.0;
+      for(int i=0; i<degp1; i++)
+      {
+         for(int j=0; j<dim; j++)
+         {
+            for(int k=0; k<dim; k++)
+            {
+               cout << "jacval_h[" << i << "][" << j << "][" << k << "] : "
+                    << jacvalre_h[i][j][k] << "  "
+                    << jacvalim_h[i][j][k] << endl;
+               cout << "jacval_d[" << i << "][" << j << "][" << k << "] : "
+                    << jacvalre_d[i][j][k] << "  "
+                    << jacvalim_d[i][j][k] << endl;
+               errsum += abs(jacvalre_h[i][j][k] - jacvalre_d[i][j][k])
+                       + abs(jacvalim_h[i][j][k] - jacvalim_d[i][j][k]);
+            }
+         }
+      }
+      cout << "sum of errors : " << errsum << endl;
+      cout << "comparing CPU with GPU right hand sides ... " << endl;
+      errsum = 0.0;
+      for(int i=0; i<degp1; i++)
+      {
+         for(int j=0; j<dim; j++)
+         {
+            cout << "rhs_h[" << i << "][" << j << "] : "
+                 << rhsre_h[i][j] << "  " << rhsim_h[i][j] << endl;
+            cout << "rhs_d[" << i << "][" << j << "] : "
+                 << rhsre_d[i][j] << "  " << rhsim_d[i][j] << endl;
+            errsum += abs(rhsre_h[i][j] - rhsre_d[i][j])
+                    + abs(rhsim_h[i][j] - rhsim_d[i][j]);
+         }
+      }
+      cout << "sum of errors : " << errsum << endl;
+   }
    for(int i=0; i<degp1; i++) // save original rhs for residual
       for(int j=0; j<dim; j++)
       {
@@ -485,7 +579,90 @@ void cmplx_newton_qrstep
       cmplx_update_series
          (dim,degp1,inputre_h,inputim_h,solre_h,solim_h,vrblvl);
    }
-   // skip GPU code
+   if((mode == 0) || (mode == 2))
+   {
+      GPU_cmplx_bals_solve
+         (dim,degp1,szt,nbt,jacvalre_d,jacvalim_d,Qre_d,Qim_d,Rre_d,Rim_d,
+          urhsre_d,urhsim_d,solre_d,solim_d,vrblvl);
+
+      if(vrblvl > 0)
+      {
+         CPU_cmplx_linear_residue
+            (dim,degp1,jacvalre_d,jacvalim_d,rhsre_d,rhsim_d,solre_d,solim_d,
+             resvecre,resvecim,resmax,vrblvl);
+         cout << "maximum residual : " << *resmax << endl;
+      }
+      cmplx_update_series
+         (dim,degp1,inputre_d,inputim_d,solre_d,solim_d,vrblvl);
+   }
+   if((vrblvl > 0) && (mode == 2))
+   {
+      double errsum = 0.0;
+      cout << "comparing CPU with GPU matrices Q ... " << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+             cout << "Q_h[" << i << "][" << j << "] : "
+                  << Qre_h[i][j] << "  " << Qim_h[i][j] << endl;
+             cout << "Q_d[" << i << "][" << j << "] : "
+                  << Qre_d[i][j] << "  " << Qim_d[i][j] << endl;
+             errsum += abs(Qre_h[i][j] - Qre_d[i][j])
+                     + abs(Qim_h[i][j] - Qim_d[i][j]);
+         }
+      cout << "sum of errors : " << errsum << endl;
+      cout << "comparing CPU with GPU matrices R ... " << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+             cout << "R_h[" << i << "][" << j << "] : "
+                  << Rre_h[i][j] << "  " << Rim_h[i][j] << endl;
+             cout << "R_d[" << i << "][" << j << "] : "
+                  << Rre_d[i][j] << "  " << Rim_d[i][j] << endl;
+             errsum += abs(Rre_h[i][j] - Rre_d[i][j])
+                     + abs(Rim_h[i][j] - Rim_d[i][j]);
+         }
+      cout << "sum of errors : " << errsum << endl;
+      errsum = 0.0;
+      cout << "comparing CPU with GPU updated rhs ... " << endl;
+      for(int i=0; i<degp1; i++)
+         for(int j=0; j<dim; j++)
+         {
+             cout << "urhs_h[" << i << "][" << j << "] : "
+                  << urhsre_h[i][j] << "  " << urhsim_h[i][j] << endl;
+             cout << "urhs_d[" << i << "][" << j << "] : "
+                  << urhsre_d[i][j] << "  " << urhsim_d[i][j] << endl;
+             errsum += abs(urhsre_h[i][j] - urhsre_d[i][j])
+                     + abs(urhsim_h[i][j] - urhsim_d[i][j]);
+         }
+      cout << "sum of errors : " << errsum << endl;
+      errsum = 0.0;
+      cout << "comparing CPU with GPU update to solutions ... " << endl;
+      for(int i=0; i<degp1; i++)
+         for(int j=0; j<dim; j++)
+         {
+             cout << "sol_h[" << i << "][" << j << "] : "
+                  << solre_h[i][j] << "  " << solim_h[i][j] << endl;
+             cout << "sol_d[" << i << "][" << j << "] : "
+                  << solre_d[i][j] << "  " << solim_d[i][j] << endl;
+             errsum += abs(solre_h[i][j] - solre_d[i][j])
+                     + abs(solim_h[i][j] - solim_d[i][j]);
+         }
+      cout << "sum of errors : " << errsum << endl;
+      errsum = 0.0;
+      cout << "comparing CPU with GPU series ... " << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<degp1; j++)
+         {
+             cout << "input_h[" << i << "][" << j << "] : "
+                  << inputre_h[i][j] << "  " << inputim_h[i][j] << endl;
+             cout << "input_d[" << i << "][" << j << "] : "
+                  << inputre_d[i][j] << "  "
+                  << inputim_d[i][j] << endl;
+             errsum += abs(inputre_h[i][j] - inputre_d[i][j])
+                     + abs(inputim_h[i][j] - inputim_d[i][j]);
+         }
+      cout << "sum of errors : " << errsum << endl;
+   }
 }
 
 int test_dbl_real_newton
