@@ -840,3 +840,40 @@ void CPU_dbl2_factors_qrbs
    }
    CPU_dbl2_factors_backward(ncols,Rhi,Rlo,wrkvechi,wrkveclo,solhi,sollo);
 }
+
+void CPU_cmplx2_factors_qrbs
+ ( int nrows, int ncols,
+   double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo, 
+   double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
+   double *rhsrehi, double *rhsrelo, double *rhsimhi, double *rhsimlo,
+   double *solrehi, double *solrelo, double *solimhi, double *solimlo,
+   double *wrkvecrehi, double *wrkvecrelo,
+   double *wrkvecimhi, double *wrkvecimlo )
+{
+   double acchi,acclo; // accumulates product of two complex numbers
+
+   for(int i=0; i<nrows; i++)    // compute Q^H*b, b is rhs
+   {
+      wrkvecrehi[i] = 0.0; wrkvecrelo[i] = 0.0;
+      wrkvecimhi[i] = 0.0; wrkvecimlo[i] = 0.0;
+
+      for(int j=0; j<nrows; j++) // work with Hermitian transpose of Q
+      {
+         // accre =  Qre[j][i]*rhsre[j] + Qim[j][i]*rhsim[j];
+         // wrkvecre[i] = wrkvecre[i] + accre;
+         ddf_mul(Qrehi[j][i],Qrelo[j][i],rhsrehi[j],rhsrelo[j],&acchi,&acclo);
+         ddf_inc(&wrkvecrehi[i],&wrkvecrelo[i],acchi,acclo);
+         ddf_mul(Qimhi[j][i],Qimlo[j][i],rhsimhi[j],rhsimlo[j],&acchi,&acclo);
+         ddf_inc(&wrkvecrehi[i],&wrkvecrelo[i],acchi,acclo);
+         // accim = -Qim[j][i]*rhsre[j] + Qre[j][i]*rhsim[j];
+         // wrkvecim[i] = wrkvecim[i] + accim;
+         ddf_mul(Qrehi[j][i],Qrelo[j][i],rhsimhi[j],rhsimlo[j],&acchi,&acclo);
+         ddf_inc(&wrkvecimhi[j],&wrkvecimlo[i],acchi,acclo);
+         ddf_mul(Qimhi[j][i],Qimlo[j][i],rhsrehi[j],rhsrelo[j],&acchi,&acclo);
+         ddf_dec(&wrkvecimhi[j],&wrkvecimlo[i],acchi,acclo);
+      }
+   }
+   CPU_cmplx2_factors_backward
+      (ncols,Rrehi,Rrelo,Rimhi,Rimlo,wrkvecrehi,wrkvecrelo,
+       wrkvecimhi,wrkvecimlo,solrehi,solrelo,solimhi,solimlo);
+}

@@ -1,3 +1,6 @@
+Wed 7 Sep 2022 : extended {dbl2,dbl4}_factorizations, with a function for
+  the back substition after qr on complex data.
+
 Tue 6 Sep 2022 : to dbl_factorizations, added function for back substitution
   after qr on complex data.
 

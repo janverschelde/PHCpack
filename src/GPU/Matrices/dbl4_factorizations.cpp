@@ -1262,3 +1262,68 @@ void CPU_dbl4_factors_qrbs
        wrkvechihi,wrkveclohi,wrkvechilo,wrkveclolo,
        solhihi,sollohi,solhilo,sollolo);
 }
+
+void CPU_cmplx4_factors_qrbs
+ ( int nrows, int ncols,
+   double **Qrehihi, double **Qrelohi, double **Qrehilo, double **Qrelolo,
+   double **Qimhihi, double **Qimlohi, double **Qimhilo, double **Qimlolo, 
+   double **Rrehihi, double **Rrelohi, double **Rrehilo, double **Rrelolo,
+   double **Rimhihi, double **Rimlohi, double **Rimhilo, double **Rimlolo,
+   double *rhsrehihi, double *rhsrelohi, double *rhsrehilo, double *rhsrelolo,
+   double *rhsimhihi, double *rhsimlohi, double *rhsimhilo, double *rhsimlolo,
+   double *solrehihi, double *solrelohi, double *solrehilo, double *solrelolo,
+   double *solimhihi, double *solimlohi, double *solimhilo, double *solimlolo,
+   double *wrkvecrehihi, double *wrkvecrelohi,
+   double *wrkvecrehilo, double *wrkvecrelolo,
+   double *wrkvecimhihi, double *wrkvecimlohi,
+   double *wrkvecimhilo, double *wrkvecimlolo )
+{
+   double acchihi,acclohi,acchilo,acclolo; // accumulates product
+
+   for(int i=0; i<nrows; i++)    // compute Q^H*b, b is rhs
+   {
+      wrkvecrehihi[i] = 0.0; wrkvecrelohi[i] = 0.0;
+      wrkvecrehilo[i] = 0.0; wrkvecrelolo[i] = 0.0;
+      wrkvecimhihi[i] = 0.0; wrkvecimlohi[i] = 0.0;
+      wrkvecimhilo[i] = 0.0; wrkvecimlolo[i] = 0.0;
+
+      for(int j=0; j<nrows; j++) // work with Hermitian transpose of Q
+      {
+         // accre =  Qre[j][i]*rhsre[j] + Qim[j][i]*rhsim[j];
+         // wrkvecre[i] = wrkvecre[i] + accre;
+         qdf_mul(Qrehihi[j][i],Qrelohi[j][i],Qrehilo[j][i],Qrelolo[j][i],
+                 rhsrehihi[j],rhsrelohi[j],rhsrehilo[j],rhsrelolo[j],
+                 &acchihi,&acclohi, &acchilo,&acclolo);
+         qdf_inc(&wrkvecrehihi[i],&wrkvecrelohi[i],
+                 &wrkvecrehilo[i],&wrkvecrelolo[i],
+                 acchihi,acclohi,acchilo,acclolo);
+         qdf_mul(Qimhihi[j][i],Qimlohi[j][i],Qimhilo[j][i],Qimlolo[j][i],
+                 rhsimhihi[j],rhsimlohi[j],rhsimhilo[j],rhsimlolo[j],
+                 &acchihi,&acclohi,&acchilo,&acclolo);
+         qdf_inc(&wrkvecrehihi[i],&wrkvecrelohi[i],
+                 &wrkvecrehilo[i],&wrkvecrelolo[i],
+                 acchihi,acclohi,acchilo,acclolo);
+         // accim = -Qim[j][i]*rhsre[j] + Qre[j][i]*rhsim[j];
+         // wrkvecim[i] = wrkvecim[i] + accim;
+         qdf_mul(Qrehihi[j][i],Qrelohi[j][i],Qrehilo[j][i],Qrelolo[j][i],
+                 rhsimhihi[j],rhsimlohi[j],rhsimhilo[j],rhsimlolo[j],
+                 &acchihi,&acclohi,&acchilo,&acclolo);
+         qdf_inc(&wrkvecimhihi[j],&wrkvecimlohi[i],
+                 &wrkvecimhilo[j],&wrkvecimlolo[i],
+                 acchihi,acclohi,acchilo,acclolo);
+         qdf_mul(Qimhihi[j][i],Qimlohi[j][i],Qimhilo[j][i],Qimlolo[j][i],
+                 rhsrehihi[j],rhsrelohi[j],rhsrehilo[j],rhsrelolo[j],
+                 &acchihi,&acclohi,&acchilo,&acclolo);
+         qdf_dec(&wrkvecimhihi[j],&wrkvecimlohi[i],
+                 &wrkvecimhilo[j],&wrkvecimlolo[i],
+                 acchihi,acclohi,acchilo,acclolo);
+      }
+   }
+   CPU_cmplx4_factors_backward
+      (ncols,Rrehihi,Rrelohi,Rrehilo,Rrelolo,
+             Rimhihi,Rimlohi,Rimhilo,Rimlolo,
+       wrkvecrehihi,wrkvecrelohi,wrkvecrehilo,wrkvecrelolo,
+       wrkvecimhihi,wrkvecimlohi,wrkvecimhilo,wrkvecimlolo,
+       solrehihi,solrelohi,solrehilo,solrelolo,
+       solimhihi,solimlohi,solimhilo,solimlolo);
+}

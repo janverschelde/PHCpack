@@ -545,4 +545,54 @@ void CPU_dbl2_factors_qrbs
  *   wrkvechi contains the high doubles of the product of Q^T with rhs;
  *   wrkveclo contains the low doubles of the product of Q^T with rhs. */
 
+void CPU_cmplx2_factors_qrbs
+ ( int nrows, int ncols,
+   double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo, 
+   double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
+   double *rhsrehi, double *rhsrelo, double *rhsimhi, double *rhsimlo,
+   double *solrehi, double *solrelo, double *solimhi, double *solimlo,
+   double *wrkvecrehi, double *wrkvecrelo,
+   double *wrkvecimhi, double *wrkvecimlo );
+/*
+ * DESCRIPTION :
+ *   Applies back substitution for the least squares solution
+ *   with the QR factorization, on complex data.
+ *
+ * REQUIRED : nrows >= ncols;
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R, dimension of Q;
+ *   ncols    number of columns of R;
+ *   Qrehi    high doubles of the real parts of Q of the QR factorization;
+ *   Qrelo    low doubles of the real parts of Q of the QR factorization;
+ *   Qimhi    high doubles of the imaginary parts of Q of the QR;
+ *   Qimlo    low doubles of the imaginary parts of Q of the QR;
+ *   Rrehi    high doubles of the real parts of R of the QR;
+ *   Rrelo    low doubles of the real parts of R of the QR;
+ *   Rimhi    high doubles of the imaginary parts of R of the QR;
+ *   Rimlo    low doubles of the imaginary parts of R of the QR;
+ *   rhsrehi  high doubles of real parts of right hand side, of size nrows;
+ *   rhsrelo  low doubles of real parts of right hand side, of size nrows;
+ *   rhsimhi  high doubles of the imaginary parts of right hand side;
+ *   rhsimlo  low doubles of the imaginary parts of right hand side;
+ *   solrehi  space for the high doubles of the real parts of solution,
+ *            of size ncols;
+ *   solrelo  space for the low doubles of the real parts of solution;
+ *   solimhi  space for the high doubles of the imaginary parts of solution;
+ *   solimlo  space for the low doubles of the imaginary parts of solution;
+ *   wrkvecrehi is work space for nrows elements;
+ *   wrkvecrelo is work space for nrows elements;
+ *   wrkvecimhi is work space for nrows elements;
+ *   wrkvecimlo is work space for nrows elements.
+ *
+ * ON RETURN :
+ *   solrehi  high doubles of the real parts of the least squares solution;
+ *   solrelo  low doubles of the real parts of the least squares solution;
+ *   solimhi  high doubles of the imaginary parts of the solution;
+ *   solimlo  low doubles of the imaginary parts of the solution;
+ *   wrkvecrehi has the high doubles of the real parts of Q^H*rhs;
+ *   wrkvecrelo has the low doubles of the real parts of Q^H*rhs;
+ *   wrkvecimhi has the high doubles of the imaginary parts of Q^H*rhs;
+ *   wrkvecimlo has the low doubles of the imaginary parts of Q^H*rhs. */
+
 #endif
