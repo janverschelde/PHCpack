@@ -142,6 +142,103 @@ void CPU_dbl2_qrbs_head
    }
 }
 
+void CPU_cmplx2_qrbs_head
+ ( int dim, int degp1,
+   double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo,
+   double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
+   double **solrehi, double **solrelo, double **solimhi, double **solimlo,
+   double **wrkmatrehi, double **wrkmatrelo,
+   double **wrkmatimhi, double **wrkmatimlo,
+   double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
+   double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
+   double *wrkvecrehi, double *wrkvecrelo,
+   double *wrkvecimhi, double *wrkvecimlo, int vrblvl )
+{
+   bool verbose = (vrblvl > 0);
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         wrkmatrehi[i][j] = matrehi[0][i][j];
+         wrkmatrelo[i][j] = matrelo[0][i][j];
+         wrkmatimhi[i][j] = matimhi[0][i][j];
+         wrkmatimlo[i][j] = matimlo[0][i][j];
+      }
+
+   if(verbose)
+   {
+      cout << "The matrix : " << endl;
+      cout << setprecision(2);
+      for(int i=0; i<dim; i++)
+      {
+         for(int j=0; j<dim; j++)
+            cout << "  " << wrkmatrehi[i][j]
+                 << "  " << wrkmatrelo[i][j]
+                 << "  " << wrkmatimhi[i][j]
+                 << "  " << wrkmatimlo[i][j];
+         cout << endl;
+      }
+      cout << setprecision(16);
+      cout << "The right hand side vector : " << endl;
+      for(int i=0; i<dim; i++)
+         cout << rhsrehi[0][i] << "  " << rhsrelo[0][i] << endl << "  " 
+              << rhsimhi[0][i] << "  " << rhsimlo[0][i] << endl;
+   }
+   if(verbose) cout << "calling CPU_cmplx_factors_houseqr ..." << endl;
+
+   CPU_cmplx2_factors_houseqr
+      (dim,dim,wrkmatrehi,wrkmatrelo,wrkmatimhi,wrkmatimlo,
+       Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo);
+
+   CPU_cmplx2_factors_qrbs
+      (dim,dim,Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo,
+       rhsrehi[0],rhsrelo[0],rhsimhi[0],rhsimlo[0],
+       solrehi[0],solrelo[0],solimhi[0],solimlo[0],
+       wrkvecrehi,wrkvecrelo,wrkvecimhi,wrkvecimlo);
+
+   if(verbose)
+   {
+      double acchi,acclo;
+
+      cout << "The leading coefficients of the solution :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << solrehi[0][i] << "  " << solrelo[0][i] << endl << "  "
+              << solimhi[0][i] << "  " << solimlo[0][i] << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         wrkvecrehi[i] = rhsrehi[0][i];
+         wrkvecrelo[i] = rhsrelo[0][i];
+         wrkvecimhi[i] = rhsimhi[0][i];
+         wrkvecimlo[i] = rhsimlo[0][i];
+
+         for(int j=0; j<dim; j++)
+         {
+            // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
+            // zre = matre[0][i][j]*solre[0][j] - matim[0][i][j]*solim[0][j];
+            // wrkvecre[i] = wrkvecre[i] + zre;
+            ddf_mul(matrehi[0][i][j],matrelo[0][i][j],
+                    solrehi[0][j],solrelo[0][j],&acchi,&acclo);
+            ddf_inc(&wrkvecrehi[i],&wrkvecrelo[i],acchi,acclo);
+            ddf_mul(matimhi[0][i][j],matimlo[0][i][j],
+                    solimhi[0][j],solimlo[0][j],&acchi,&acclo);
+            ddf_dec(&wrkvecrehi[i],&wrkvecrelo[i],acchi,acclo);
+            // zim = matre[0][i][j]*solim[0][j] + matim[0][i][j]*solre[0][j];
+            // wrkvecim[i] = wrkvecim[i] + zim;
+            ddf_mul(matrehi[0][i][j],matrelo[0][i][j],
+                    solimhi[0][j],solimlo[0][j],&acchi,&acclo);
+            ddf_inc(&wrkvecimhi[i],&wrkvecimlo[i],acchi,acclo);
+            ddf_mul(matimhi[0][i][j],matimlo[0][i][j],
+                    solrehi[0][j],solrelo[0][j],&acchi,&acclo);
+            ddf_inc(&wrkvecimhi[i],&wrkvecimlo[i],acchi,acclo);
+         }
+      }
+      cout << "The residual vector :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << wrkvecrehi[i] << "  " << wrkvecrelo[i] << endl << "  "
+              << wrkvecimhi[i] << "  " << wrkvecimlo[i] << endl;
+   }
+}
+
 void CPU_dbl2_lusb_tail
  ( int dim, int degp1, double ***mathi, double ***matlo,
    double **rhshi, double **rhslo, double **solhi, double **sollo,
@@ -243,6 +340,89 @@ void CPU_dbl2_qrbs_tail
    }
 }
 
+void CPU_cmplx2_qrbs_tail
+ ( int dim, int degp1,
+   double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo,
+   double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
+   double **solrehi, double **solrelo, double **solimhi, double **solimlo,
+   double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
+   double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
+   double *wrkvecrehi, double *wrkvecrelo,
+   double *wrkvecimhi, double *wrkvecimlo, int vrblvl )
+{
+   bool verbose = (vrblvl > 0);
+   double acchi,acclo;
+
+   for(int i=1; i<degp1; i++)
+   {
+      if(verbose) cout << "stage " << i << " in solve tail ..." << endl;
+      // use sol[i-1] to update rhs[j] for j in i to degp1
+      for(int j=i; j<degp1; j++)
+      {
+         double **Ajrehi = matrehi[j-i+1]; // always start with A[1]
+         double **Ajrelo = matrelo[j-i+1];
+         double **Ajimhi = matimhi[j-i+1];
+         double **Ajimlo = matimlo[j-i+1];
+         double *xirehi = solrehi[i-1]; // solution to do the update with
+         double *xirelo = solrelo[i-1]; 
+         double *xiimhi = solimhi[i-1]; 
+         double *xiimlo = solimlo[i-1]; 
+         double *wjrehi = rhsrehi[j]; // current right hand side vector
+         double *wjrelo = rhsrelo[j];
+         double *wjimhi = rhsimhi[j]; 
+         double *wjimlo = rhsimlo[j]; 
+
+         for(int k=0; k<dim; k++)
+            for(int L=0; L<dim; L++) // wj[k] = wj[k] - Aj[k][L]*xi[L];
+            {
+               // zre = Ajre[k][L]*xire[L] - Ajim[k][L]*xiim[L];
+               // wjre[k] = wjre[k] - zre;
+               ddf_mul(Ajrehi[k][L],Ajrelo[k][L],xirehi[L],xirelo[L],
+                       &acchi,&acclo);
+               ddf_dec(&wjrehi[k],&wjrelo[k],acchi,acclo);
+               ddf_mul(Ajimhi[k][L],Ajimlo[k][L],xiimhi[L],xiimlo[L],
+                       &acchi,&acclo);
+               ddf_inc(&wjrehi[k],&wjrelo[k],acchi,acclo);
+               // zim = Ajre[k][L]*xiim[L] + Ajim[k][L]*xire[L];
+               // wjim[k] = wjim[k] - zim;
+               ddf_mul(Ajrehi[k][L],Ajrelo[k][L],xiimhi[L],xiimlo[L],
+                       &acchi,&acclo);
+               ddf_dec(&wjimhi[k],&wjimlo[k],acchi,acclo);
+               ddf_mul(Ajimhi[k][L],Ajimlo[k][L],xirehi[L],xirelo[L],
+                       &acchi,&acclo);
+               ddf_dec(&wjimhi[k],&wjimlo[k],acchi,acclo);
+            }
+      }
+      // compute sol[i] with back substitution
+      double *xrehi = solrehi[i];
+      double *xrelo = solrelo[i];
+      double *ximhi = solimhi[i];
+      double *ximlo = solimlo[i];
+      double *brehi = rhsrehi[i];
+      double *brelo = rhsrelo[i];
+      double *bimhi = rhsimhi[i];
+      double *bimlo = rhsimlo[i];
+
+      CPU_cmplx2_factors_qrbs
+         (dim,dim,Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo,
+          brehi,brelo,bimhi,bimlo,xrehi,xrelo,ximhi,ximlo,
+          wrkvecrehi,wrkvecrelo,wrkvecimhi,wrkvecimlo);
+
+      if(verbose)
+      {
+         for(int i=0; i<dim; i++)
+            cout << "QHb[" << i << "] : "
+                 << wrkvecrehi[i] << "  " << wrkvecrehi[i] << endl << "  "
+                 << wrkvecimhi[i] << "  " << wrkvecimlo[i] << endl;
+
+         cout << "the solution : " << endl;
+         for(int j=0; j<dim; j++)
+            cout << xrehi[j] << "  " << xrelo[j] << endl << "  "
+                 << ximhi[j] << "  " << ximlo[j] << endl;
+      }
+   }
+}
+
 void CPU_dbl2_lusb_solve
  ( int dim, int degp1, double ***mathi, double ***matlo,
    double **rhshi, double **rhslo, double **solhi, double **sollo,
@@ -285,6 +465,39 @@ void CPU_dbl2_qrbs_solve
       CPU_dbl2_qrbs_tail
          (dim,degp1,mathi,matlo,rhshi,rhslo,solhi,sollo,Qhi,Qlo,Rhi,Rlo,
           wrkvechi,wrkveclo,vrblvl);
+   }
+}
+
+void CPU_cmplx2_qrbs_solve
+ ( int dim, int degp1,
+   double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo, 
+   double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
+   double **solrehi, double **solrelo, double **solimhi, double **solimlo,
+   double **wrkmatrehi, double **wrkmatrelo,
+   double **wrkmatimhi, double **wrkmatimlo,
+   double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
+   double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
+   double *wrkvecrehi, double *wrkvecrelo,
+   double *wrkvecimhi, double *wrkvecimlo, int vrblvl )
+{
+   if(vrblvl > 0) cout << "calling CPU_cmplx2_qrbs_head ..." << endl;
+
+   CPU_cmplx2_qrbs_head
+      (dim,degp1,matrehi,matrelo,matimhi,matimlo,
+       rhsrehi,rhsrelo,rhsimhi,rhsimlo,solrehi,solrelo,solimhi,solimlo,
+       wrkmatrehi,wrkmatrelo,wrkmatimhi,wrkmatimlo,
+       Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo,
+       wrkvecrehi,wrkvecrelo,wrkvecimhi,wrkvecimlo,vrblvl);
+
+   if(degp1 > 1)
+   {
+      if(vrblvl > 0) cout << "calling CPU_cmplx2_qrbs_tail ..." << endl;
+
+      CPU_cmplx2_qrbs_tail
+         (dim,degp1,matrehi,matrelo,matimhi,matimlo,
+          rhsrehi,rhsrelo,rhsimhi,rhsimlo,solrehi,solrelo,solimhi,solimlo,
+          Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo,
+          wrkvecrehi,wrkvecrelo,wrkvecimhi,wrkvecimlo,vrblvl);
    }
 }
 
@@ -338,6 +551,87 @@ void CPU_dbl2_linear_residue
          {
             *resmaxhi = abs(rihi[j]);
             *resmaxlo = abs(rilo[j]);
+         }
+   }
+}
+
+void CPU_cmplx2_linear_residue
+ ( int dim, int degp1,
+   double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo,
+   double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo, 
+   double **solrehi, double **solrelo, double **solimhi, double **solimlo,
+   double **resvecrehi, double **resvecrelo,
+   double **resvecimhi, double **resvecimlo,
+   double *resmaxhi, double *resmaxlo, int vrblvl )
+{
+   *resmaxhi = 0.0;
+   *resmaxlo = 0.0;
+   double acchi,acclo;
+
+   for(int i=0; i<degp1; i++)  // compute the i-th residual vector
+   {
+      double *rirehi = resvecrehi[i];
+      double *rirelo = resvecrelo[i];
+      double *riimhi = resvecimhi[i];
+      double *riimlo = resvecimlo[i];
+
+      for(int j=0; j<dim; j++)
+      {
+         rirehi[j] = rhsrehi[i][j]; rirelo[j] = rhsrelo[i][j];
+         riimhi[j] = rhsimhi[i][j]; riimlo[j] = rhsimlo[i][j];
+      }
+      for(int j=0; j<=i; j++)
+      {
+         double **Ajrehi = matrehi[j];
+         double **Ajrelo = matrelo[j];
+         double **Ajimhi = matimhi[j];
+         double **Ajimlo = matimlo[j];
+         double *xrehi = solrehi[i-j];
+         double *xrelo = solrelo[i-j];
+         double *ximhi = solimhi[i-j];
+         double *ximlo = solimlo[i-j];
+
+         // if(vrblvl > 0)
+         //    cout << "A[" << j << "] and x[" << i-j << "] ..." << endl;
+
+         for(int k=0; k<dim; k++)
+            for(int L=0; L<dim; L++) // ri[L] = ri[L] - Aj[L][k]*x[k];
+            {
+               // zre = Ajre[L][k]*xre[k] - Ajim[L][k]*xim[k];
+               // rire[L] = rire[L] - zre;
+               ddf_mul(Ajrehi[L][k],Ajrelo[L][k],xrehi[k],xrelo[k],
+                       &acchi,&acclo);
+               ddf_dec(&rirehi[L],&rirelo[L],acchi,acclo);
+               ddf_mul(Ajimhi[L][k],Ajimlo[L][k],ximhi[k],ximlo[k],
+                       &acchi,&acclo);
+               ddf_inc(&rirehi[L],&rirelo[L],acchi,acclo);
+               // zim = Ajre[L][k]*xim[k] + Ajim[L][k]*xre[k];
+               // riim[L] = riim[L] - zim;
+               ddf_mul(Ajrehi[L][k],Ajrelo[L][k],ximhi[k],ximlo[k],
+                       &acchi,&acclo);
+               ddf_dec(&riimhi[L],&riimlo[L],acchi,acclo);
+               ddf_mul(Ajimhi[L][k],Ajimlo[L][k],xrehi[k],xrelo[k],
+                       &acchi,&acclo);
+               ddf_inc(&riimhi[L],&riimlo[L],acchi,acclo);
+            }
+      }
+      if(vrblvl > 0)
+      {
+         cout << "Solution vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+            cout << solrehi[i][j] << "  " << solrelo[i][j] << endl << "  "
+                 << solimhi[i][j] << "  " << solimlo[i][j] << endl;
+
+         cout << "Residual vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+            cout << rirehi[j] << "  " << rirelo[j] << endl << "  "
+                 << riimhi[j] << "  " << riimlo[j] << endl;
+      }
+      for(int j=0; j<dim; j++)
+         if(abs(rirehi[j]) + abs(riimhi[j]) > *resmaxhi)
+         {
+            *resmaxhi = abs(rirehi[j]) + abs(riimhi[j]);
+            *resmaxlo = abs(rirelo[j]) + abs(riimlo[j]);
          }
    }
 }
