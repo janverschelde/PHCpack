@@ -121,7 +121,7 @@ void cmplx_linearize_evaldiff_output
 /*
  * DESCRIPTION :
  *   Linearizes the output of the evaluation and differentiation
- *   of the monomials, on real data.
+ *   of the monomials, on complex data.
  *
  * ON ENTRY :
  *   dim       number of monomials;
@@ -135,8 +135,8 @@ void cmplx_linearize_evaldiff_output
  *             for k in range 0..nvr[i]-1;
  *   outputim  imaginary parts of the output of evaluated and
  *             differentiated system, for the i-th monomial:
- *             outputre[i][dim] is the power series value, 
- *             outputre[i][idx[k]] is the derivative w.r.t. idx[k],
+ *             outputim[i][dim] is the power series value, 
+ *             outputim[i][idx[k]] is the derivative w.r.t. idx[k],
  *             for k in range 0..nvr[i]-1;
  *   funvalre  space allocated for dim power series;
  *   funvalim  space allocated for dim power series;

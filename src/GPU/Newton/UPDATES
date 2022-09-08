@@ -1,6 +1,8 @@
 Tue 6 Sep 2022 : added cmplx functions to dbl_bals_host, dbl_newton_testers,
   and updated test_dbl_newton.cpp.  Extended dbl_systems_kernels and
   dbl_bals_kernels with cmplx functions, updated dbl_newton_testers.cpp.
+  Extended {dbl2,dbl4}_systems_host with functions on complex data,
+  edited the documentation in dbl_system_host.h.
 
 Mon 5 Sep 2022 : New dbl8_systems_kernels.  Extended dbl8_bals_host and
   dbl8_newton_testers do run Newton's method with the QR factorization.
