@@ -1,3 +1,8 @@
+Fri 9 Sep 2022 : edited dbl_newton_testers.h, dbl_newton_testers.cpp,
+  dbl_systems_kernels.h, and dbl_bals_kernels.h.
+  Extended dbl2_{bals,systems}_kernels, dbl2_newton_testers, and 
+  test_dbl2_newton.cpp with complex versions.  Updated makefiles.
+
 Thu 8 Sep 2022 : extended dbl2_bals_host with functions on complex data.
 
 Wed 7 Sep 2022 : Extended {dbl2,dbl4}_systems_host with functions on

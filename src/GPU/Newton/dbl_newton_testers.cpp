@@ -99,8 +99,7 @@ void dbl_update_series
 
 void cmplx_update_series
  ( int dim, int degp1,
-   double **xre, double **xim, double **dxre, double **dxim,
-   int vrblvl )
+   double **xre, double **xim, double **dxre, double **dxim, int vrblvl )
 {
    if(vrblvl > 0)
    {

@@ -264,8 +264,8 @@ void GPU_cmplx_bals_qhb
  *   verbose  is the verbose flag.
  *
  * ON RETURN :
- *   b        real parts of the product of Q^H with b;
- *   b        imaginary parts of the product of Q^H with b. */
+ *   bre      real parts of the product of Q^H with b;
+ *   bim      imaginary parts of the product of Q^H with b. */
 
 void GPU_dbl_bals_solve
  ( int dim, int degp1, int szt, int nbt,

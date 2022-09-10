@@ -59,8 +59,7 @@ void dbl_update_series
 
 void cmplx_update_series
  ( int dim, int degp1,
-   double **xre, double **xim, double **dxre, double **dxim,
-   int vrblvl );
+   double **xre, double **xim, double **dxre, double **dxim, int vrblvl );
 /*
  * DESCRIPTION :
  *   Adds the series in dx to x.
@@ -348,7 +347,8 @@ void cmplx_newton_qrstep
  *   Rim_h     imaginary R of the QR factorization computed by the host;
  *   Rre_d     real R of the QR factorization computed by the device;
  *   Rim_d     imaginary R of the QR factorization computed by the device;
- *   wrkmat    has a copy of the Jacobian matrix;
+ *   wrkmatre  has a copy of the Jacobian matrix;
+ *   wrkmatim  has a copy of the Jacobian matrix;
  *   resvecre  real parts of the residual vectors;
  *   resvecim  imaginary parts of the residual vectors;
  *   resmax    the maximum element of the residual vectors. */

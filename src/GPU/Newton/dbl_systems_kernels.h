@@ -70,9 +70,13 @@ void cmplx_evaldiffdata_to_output
  *   verbose  if true, writes extra information.
  *
  * ON RETURN :
- *   output   output[i][dim] contains the power series value
+ *   outputre, in outputre[i][dim] are the real parts of the value
  *            of the i-th monomial, and
- *            output[i][k] contains the power series value of
+ *            outputre[i][k] has the real parts of the value of
+ *            the k-th derivative of the i-th monomial;
+ *   outputim, in outputre[i][dim] are the imaginary parts of the value
+ *            of the i-th monomial, and
+ *            outputim[i][k] has the imaginary parts of the value of
  *            the k-th derivative of the i-th monomial. */
 
 void GPU_dbl_mon_evaldiff
