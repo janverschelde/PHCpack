@@ -527,8 +527,8 @@ void CPU_cmplx4_evaldiff
          outputimhilo[dim][i] = accimhilo[i];
          outputimlolo[dim][i] = accimlolo[i];
       }
-      free(accrehihi); free(accrelohi); free(accimhilo); free(accimlolo);
-      free(accrehihi); free(accrelohi); free(accimhilo); free(accimlolo);
+      free(accrehihi); free(accrelohi); free(accimhihi); free(accimlohi);
+      free(accrehilo); free(accrelolo); free(accimhilo); free(accimlolo);
 
       CPU_cmplx4_product(deg,
          cffrehihi,cffrelohi,cffrehilo,cffrelolo,
