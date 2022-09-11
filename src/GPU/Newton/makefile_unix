@@ -237,7 +237,8 @@ dbl2_systems_kernels.o:
 
 dbl4_systems_kernels.o:
 	@-echo ">>> compiling dbl4_systems_kernels ..."
-	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(CNV) -I$(MAT) -I$(POL) -O3 \
+	nvcc -ccbin=$(gpp) -arch=$(smflag) \
+             -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) -O3 \
              -c dbl4_systems_kernels.cu
 
 dbl8_systems_kernels.o:

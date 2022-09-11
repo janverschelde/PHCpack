@@ -135,6 +135,141 @@ void CPU_dbl4_qrbs_head
  *   solhilo  second lowest doubles of the coefficients of the solution;
  *   sollolo  lowest doubles of the coefficients of the solution. */
 
+void CPU_cmplx4_qrbs_head
+ ( int dim, int degp1,
+   double ***matrehihi, double ***matrelohi,
+   double ***matrehilo, double ***matrelolo,
+   double ***matimhihi, double ***matimlohi,
+   double ***matimhilo, double ***matimlolo,
+   double **rhsrehihi, double **rhsrelohi,
+   double **rhsrehilo, double **rhsrelolo,
+   double **rhsimhihi, double **rhsimlohi,
+   double **rhsimhilo, double **rhsimlolo,
+   double **solrehihi, double **solrelohi,
+   double **solrehilo, double **solrelolo,
+   double **solimhihi, double **solimlohi,
+   double **solimhilo, double **solimlolo,
+   double **wrkmatrehihi, double **wrkmatrelohi,
+   double **wrkmatrehilo, double **wrkmatrelolo,
+   double **wrkmatimhihi, double **wrkmatimlohi,
+   double **wrkmatimhilo, double **wrkmatimlolo,
+   double **Qrehihi, double **Qrelohi, double **Qrehilo, double **Qrelolo,
+   double **Qimhihi, double **Qimlohi, double **Qimhilo, double **Qimlolo,
+   double **Rrehihi, double **Rrelohi, double **Rrehilo, double **Rrelolo,
+   double **Rimhihi, double **Rimlohi, double **Rimhilo, double **Rimlolo,
+   double *wrkvecrehihi, double *wrkvecrelohi,
+   double *wrkvecrehilo, double *wrkvecrelolo,
+   double *wrkvecimhihi, double *wrkvecimlohi,
+   double *wrkvecimhilo, double *wrkvecimlolo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Computes the leading terms of the power series solution
+ *   to a linear system of power series, in linearized format,
+ *   using back substitution after a QR factorization, on complex data.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of the matrices and vectors;
+ *   degp1    degree plus one, the size of the matrix system;
+ *   matrehihi are degp1 matrices of dimension dim;
+ *   matrelohi are degp1 matrices of dimension dim;
+ *   matrehilo are degp1 matrices of dimension dim;
+ *   matrelolo are degp1 matrices of dimension dim;
+ *   matimhihi are degp1 matrices of dimension dim;
+ *   matimlohi are degp1 matrices of dimension dim;
+ *   matimhilo are degp1 matrices of dimension dim;
+ *   matimlolo are degp1 matrices of dimension dim;
+ *   rhsrehihi are degp1 vectors of dimension dim;
+ *   rhsrelohi are degp1 vectors of dimension dim;
+ *   rhsrehilo are degp1 vectors of dimension dim;
+ *   rhsrelolo are degp1 vectors of dimension dim;
+ *   rhsimhihi are degp1 vectors of dimension dim;
+ *   rhsimlohi are degp1 vectors of dimension dim;
+ *   rhsimhilo are degp1 vectors of dimension dim;
+ *   rhsimlolo are degp1 vectors of dimension dim;
+ *   solrehihi has space allocated for degp1 vectors of dimension dim;
+ *   solrelohi has space allocated for degp1 vectors of dimension dim;
+ *   solrehilo has space allocated for degp1 vectors of dimension dim;
+ *   solrelolo has space allocated for degp1 vectors of dimension dim;
+ *   solimhihi has space allocated for degp1 vectors of dimension dim;
+ *   solimlohi has space allocated for degp1 vectors of dimension dim;
+ *   solimhilo has space allocated for degp1 vectors of dimension dim;
+ *   solimlolo has space allocated for degp1 vectors of dimension dim;
+ *   wrkmatrehihi is work space allocated for a matrix of dimension dim;
+ *   wrkmatrelohi is work space allocated for a matrix of dimension dim;
+ *   wrkmatrehilo is work space allocated for a matrix of dimension dim;
+ *   wrkmatrelolo is work space allocated for a matrix of dimension dim;
+ *   wrkmatimhihi is work space allocated for a matrix of dimension dim;
+ *   wrkmatimlohi is work space allocated for a matrix of dimension dim;
+ *   wrkmatimhilo is work space allocated for a matrix of dimension dim;
+ *   wrkmatimlolo is work space allocated for a matrix of dimension dim;
+ *   Qrehihi  space allocated for a matrix of dimension dim;
+ *   Qrelohi  space allocated for a matrix of dimension dim;
+ *   Qrehilo  space allocated for a matrix of dimension dim;
+ *   Qrelolo  space allocated for a matrix of dimension dim;
+ *   Qimhihi  space allocated for a matrix of dimension dim;
+ *   Qimlohi  space allocated for a matrix of dimension dim;
+ *   Qimhilo  space allocated for a matrix of dimension dim;
+ *   Qimlolo  space allocated for a matrix of dimension dim;
+ *   Rrehihi  space allocated for a matrix of dimension dim;
+ *   Rrelohi  space allocated for a matrix of dimension dim;
+ *   Rrehilo  space allocated for a matrix of dimension dim;
+ *   Rrelolo  space allocated for a matrix of dimension dim;
+ *   Rimhihi  space allocated for a matrix of dimension dim;
+ *   Rimlohi  space allocated for a matrix of dimension dim;
+ *   Rimhilo  space allocated for a matrix of dimension dim;
+ *   Rimlolo  space allocated for a matrix of dimension dim;
+ *   wrkvecrehihi is work space allocated for a vector of dimension dim;
+ *   wrkvecrelohi is work space allocated for a vector of dimension dim;
+ *   wrkvecrehilo is work space allocated for a vector of dimension dim;
+ *   wrkvecrelolo is work space allocated for a vector of dimension dim;
+ *   wrkvecimhihi is work space allocated for a vector of dimension dim;
+ *   wrkvecimlohi is work space allocated for a vector of dimension dim;
+ *   wrkvecimhilo is work space allocated for a vector of dimension dim;
+ *   wrkvecimlolo is work space allocated for a vector of dimension dim;
+ *   vrblvl   the verbose level (0 for silent).
+ *
+ * ON RETURN :
+ *   wrkmatrehihi is a copy of the Jacobian matrix in matrehihi[0];
+ *   wrkmatrelohi is a copy of the Jacobian matrix in matrelohi[0];
+ *   wrkmatrehilo is a copy of the Jacobian matrix in matrehilo[0];
+ *   wrkmatrelolo is a copy of the Jacobian matrix in matrelolo[0];
+ *   wrkmatimhihi is a copy of the Jacobian matrix in matimhihi[0];
+ *   wrkmatimlohi is a copy of the Jacobian matrix in matimlohi[0];
+ *   wrkmatimhilo is a copy of the Jacobian matrix in matimhilo[0];
+ *   wrkmatimlolo is a copy of the Jacobian matrix in matimlolo[0];
+ *   Qrehihi  highest doubles of the real parts of the Q in the QR;
+ *   Qrelohi  second highest doubles of the real parts of the Q in the QR;
+ *   Qrehilo  second lowest doubles of the real parts of the Q in the QR;
+ *   Qrelolo  lowest doubles of the real parts of the Q in the QR;
+ *   Qimhihi  highest doubles of the imaginary parts of the Q in the QR;
+ *   Qimlohi  second highest doubles of the imaginary parts of the Q in the QR;
+ *   Qimhilo  second lowest doubles of the imaginary parts of the Q in the QR;
+ *   Qimlolo  lowest doubles of the imaginary parts of the Q in the QR;
+ *   Rrehihi  highest doubles of the real parts of the R in the QR;
+ *   Rrelohi  second highest doubles of the real parts of the R in the QR;
+ *   Rrehilo  second lowest doubles of the real parts of the R in the QR;
+ *   Rrelolo  lowest doubles of the real parts of the R in the QR;
+ *   Rimhihi  highest doubles of the imaginary parts of the R in the QR;
+ *   Rimlohi  second highest doubles of the imaginary parts of the R in the QR;
+ *   Rimhilo  second lowest doubles of the imaginary parts of the R in the QR;
+ *   Rimlolo  lowest doubles of the imaginary parts of the R in the QR;
+ *   wrkvecrehihi is work space used to solve the linear system;
+ *   wrkvecrelohi is work space used to solve the linear system;
+ *   wrkvecrehilo is work space used to solve the linear system;
+ *   wrkvecrelolo is work space used to solve the linear system;
+ *   wrkvecimhihi is work space used to solve the linear system;
+ *   wrkvecimlohi is work space used to solve the linear system;
+ *   wrkvecimhilo is work space used to solve the linear system;
+ *   wrkvecimlolo is work space used to solve the linear system;
+ *   solrehihi are the highest doubles of the real parts of the head term;
+ *   solrelohi are the second highest doubles of the real parts of the head;
+ *   solrehilo are the second lowest doubles of the real parts of the head;
+ *   solrelolo are the lowest doubles of the real parts of the head term;
+ *   solimhihi are the highest doubles of the imag parts of the head term;
+ *   solimlohi are the second highest doubles of the imag parts of the head;
+ *   solimhilo are the second lowest doubles of the imag parts of the head;
+ *   solimlolo are the lowest doubles of the imag parts of the head term. */
+
 void CPU_dbl4_lusb_tail
  ( int dim, int degp1,
    double ***mathihi, double ***matlohi, double ***mathilo, double ***matlolo, 
@@ -244,6 +379,113 @@ void CPU_dbl4_qrbs_tail
  *   sollohi  second highest doubles of all coefficients of the solution;
  *   solhilo  second lowest doubles of all coefficients of the solution;
  *   sollolo  lowest doubles of all coefficients of the solution. */
+
+void CPU_cmplx4_qrbs_tail
+ ( int dim, int degp1,
+   double ***matrehihi, double ***matrelohi,
+   double ***matrehilo, double ***matrelolo,
+   double ***matimhihi, double ***matimlohi,
+   double ***matimhilo, double ***matimlolo,
+   double **rhsrehihi, double **rhsrelohi,
+   double **rhsrehilo, double **rhsrelolo,
+   double **rhsimhihi, double **rhsimlohi,
+   double **rhsimhilo, double **rhsimlolo,
+   double **solrehihi, double **solrelohi,
+   double **solrehilo, double **solrelolo,
+   double **solimhihi, double **solimlohi,
+   double **solimhilo, double **solimlolo,
+   double **Qrehihi, double **Qrelohi, double **Qrehilo, double **Qrelolo,
+   double **Qimhihi, double **Qimlohi, double **Qimhilo, double **Qimlolo,
+   double **Rrehihi, double **Rrelohi, double **Rrehilo, double **Rrelolo, 
+   double **Rimhihi, double **Rimlohi, double **Rimhilo, double **Rimlolo,
+   double *wrkvecrehihi, double *wrkvecrelohi,
+   double *wrkvecrehilo, double *wrkvecrelolo,
+   double *wrkvecimhihi, double *wrkvecimlohi,
+   double *wrkvecimhilo, double *wrkvecimlolo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Computes the trailing terms of the power series solution
+ *   to a linear system of power series, in linearized format,
+ *   applying substitution given a QR factorization.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of the matrices and vectors;
+ *   degp1    degree plus one, the size of the matrix system;
+ *   matrehihi are degp1 matrices of dimension dim;
+ *   matrelohi are degp1 matrices of dimension dim;
+ *   matrehilo are degp1 matrices of dimension dim;
+ *   matrelolo are degp1 matrices of dimension dim;
+ *   matimhihi are degp1 matrices of dimension dim;
+ *   matimlohi are degp1 matrices of dimension dim;
+ *   matimhilo are degp1 matrices of dimension dim;
+ *   matimlolo are degp1 matrices of dimension dim;
+ *   rhsrehihi are degp1 vectors of dimension dim;
+ *   rhsrelohi are degp1 vectors of dimension dim;
+ *   rhsrehilo are degp1 vectors of dimension dim;
+ *   rhsrelolo are degp1 vectors of dimension dim;
+ *   rhsimhihi are degp1 vectors of dimension dim;
+ *   rhsimlohi are degp1 vectors of dimension dim;
+ *   rhsimhilo are degp1 vectors of dimension dim;
+ *   rhsimlolo are degp1 vectors of dimension dim;
+ *   solrehihi has space for degp1 vectors of dimension dim, with the
+ *            highest doubles of the real parts of the head;
+ *   solrelohi has space for degp1 vectors of dimension dim, with the
+ *            second highest doubles of the real parts of the head;
+ *   solrehilo has space for degp1 vectors of dimension dim, with the
+ *            second lowest doubles of the real parts of the;
+ *   solrelolo has space for degp1 vectors of dimension dim, with the
+ *            lowest doubles of the real parts of the;
+ *   solimhihi has space for degp1 vectors of dimension dim, with the
+ *            highest doubles of the imaginary parts of the head;
+ *   solimlohi has space for degp1 vectors of dimension dim, with the
+ *            second highest doubles of the imaginary parts of the head;
+ *   solimhilo has space for degp1 vectors of dimension dim, with the
+ *            second lowest doubles of the imaginary parts of the head;
+ *   solimlolo has space for degp1 vectors of dimension dim, with the
+ *            lowest doubles of the imaginary parts of the head;
+ *   Qrehihi  highest doubles of the real parts of the Q of the QR;
+ *   Qrelohi  second highest doubles of the real parts of the Q of the QR;
+ *   Qrehilo  second lowest doubles of the real parts of the Q of the QR;
+ *   Qrelolo  lowest doubles of the real parts of the Q of the QR;
+ *   Qimhihi  highest doubles of the imaginary parts of the Q of the QR;
+ *   Qimlohi  second highest doubles of the imaginary parts of the Q of the QR;
+ *   Qimhilo  second lowest doubles of the imaginary parts of the Q of the QR;
+ *   Qimlolo  lowest doubles of the imaginary parts of the Q of the QR;
+ *   Rrehihi  highest doubles of the real parts of the R of the QR;
+ *   Rrelohi  second highest doubles of the real parts of the R of the QR;
+ *   Rrehilo  second lowest doubles of the real parts of the R of the QR;
+ *   Rrelolo  lowest doubles of the real parts of the R of the QR;
+ *   Rimhihi  highest doubles of the imaginary parts of the R of the QR;
+ *   Rimlohi  second highest doubles of the imaginary parts of the R of the QR;
+ *   Rimhilo  second lowest doubles of the imaginary parts of the R of the QR;
+ *   Rimlolo  lowest doubles of the imaginary parts of the R of the QR;
+ *   wrkvecrehihi is work space of dimension dim for the substitution;
+ *   wrkvecrelohi is work space of dimension dim for the substitution;
+ *   wrkvecrehilo is work space of dimension dim for the substitution;
+ *   wrkvecrelolo is work space of dimension dim for the substitution;
+ *   wrkvecimhihi is work space of dimension dim for the substitution;
+ *   wrkvecimlohi is work space of dimension dim for the substitution;
+ *   wrkvecimhilo is work space of dimension dim for the substitution;
+ *   wrkvecimlolo is work space of dimension dim for the substitution;
+ *   vrblvl   the verbose level (0 for silent).
+ *
+ * ON RETURN :
+ *   rhsrehihi are the highest doubles of the real parts
+ *            of the updated right hand side;
+ *   rhsrelohi are the second highest doubles of the real parts
+ *            of the updated right hand side;
+ *   rhsimhilo are the second lowest doubles of the imaginary parts
+ *            of the updated right hand side;
+ *   rhsimlolo are the lowest doubles of the imaginary parts
+ *            of the updated right hand side;
+ *   solrehihi are the highest doubles of the real parts of the solution;
+ *   solrelohi are the 2nd highest doubles of the real parts of the solution;
+ *   solrehilo are the 2nd lowest doubles of the real parts of the solution;
+ *   solrelolo are the lowest doubles of the real parts of the solution;
+ *   solimhihi are the highest doubles of the imaginary parts of the solution;
+ *   solimlohi are the 2nd highest doubles of the imag parts of the solution;
+ *   solimhilo are the 2nd lowest doubles of the imag parts of the solution;
+ *   solimlolo are the lowest doubles of the imaginary parts of the solution. */
 
 void CPU_dbl4_lusb_solve
  ( int dim, int degp1,
@@ -370,6 +612,140 @@ void CPU_dbl4_qrbs_solve
  *   solhilo  second highest double coefficients of the solution series;
  *   sollolo  lowest double coefficients of the solution series. */
 
+void CPU_cmplx4_qrbs_solve
+ ( int dim, int degp1,
+   double ***matrehihi, double ***matrelohi,
+   double ***matrehilo, double ***matrelolo,
+   double ***matimhihi, double ***matimlohi, 
+   double ***matimhilo, double ***matimlolo, 
+   double **rhsrehihi, double **rhsrelohi,
+   double **rhsrehilo, double **rhsrelolo,
+   double **rhsimhihi, double **rhsimlohi,
+   double **rhsimhilo, double **rhsimlolo,
+   double **solrehihi, double **solrelohi,
+   double **solrehilo, double **solrelolo,
+   double **solimhihi, double **solimlohi,
+   double **solimhilo, double **solimlolo,
+   double **wrkmatrehihi, double **wrkmatrelohi,
+   double **wrkmatrehilo, double **wrkmatrelolo,
+   double **wrkmatimhihi, double **wrkmatimlohi,
+   double **wrkmatimhilo, double **wrkmatimlolo,
+   double **Qrehihi, double **Qrelohi, double **Qrehilo, double **Qrelolo,
+   double **Qimhihi, double **Qimlohi, double **Qimhilo, double **Qimlolo,
+   double **Rrehihi, double **Rrelohi, double **Rrehilo, double **Rrelolo,
+   double **Rimhihi, double **Rimlohi, double **Rimhilo, double **Rimlolo,
+   double *wrkvecrehihi, double *wrkvecrelohi,
+   double *wrkvecrehilo, double *wrkvecrelolo,
+   double *wrkvecimhihi, double *wrkvecimlohi,
+   double *wrkvecimhilo, double *wrkvecimlolo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Solves a linear system of power series, in linearized format,
+ *   using QR factorization and substitutions.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of the matrices and vectors;
+ *   degp1    degree plus one, the size of the matrix system;
+ *   matrehihi are degp1 matrices of dimension dim;
+ *   matrelohi are degp1 matrices of dimension dim;
+ *   matrehilo are degp1 matrices of dimension dim;
+ *   matrelolo are degp1 matrices of dimension dim;
+ *   matimhihi are degp1 matrices of dimension dim;
+ *   matimlohi are degp1 matrices of dimension dim;
+ *   matimhilo are degp1 matrices of dimension dim;
+ *   matimlolo are degp1 matrices of dimension dim;
+ *   rhsrehihi are degp1 vectors of dimension dim;
+ *   rhsrelohi are degp1 vectors of dimension dim;
+ *   rhsrehilo are degp1 vectors of dimension dim;
+ *   rhsrelolo are degp1 vectors of dimension dim;
+ *   rhsimhihi are degp1 vectors of dimension dim;
+ *   rhsimlohi are degp1 vectors of dimension dim;
+ *   rhsimhilo are degp1 vectors of dimension dim;
+ *   rhsimlolo are degp1 vectors of dimension dim;
+ *   solrehihi has space allocated for degp1 vectors of dimension dim;
+ *   solrelohi has space allocated for degp1 vectors of dimension dim;
+ *   solrehilo has space allocated for degp1 vectors of dimension dim;
+ *   solrelolo has space allocated for degp1 vectors of dimension dim;
+ *   solimhihi has space allocated for degp1 vectors of dimension dim;
+ *   solimlohi has space allocated for degp1 vectors of dimension dim;
+ *   solimhilo has space allocated for degp1 vectors of dimension dim;
+ *   solimlolo has space allocated for degp1 vectors of dimension dim;
+ *   wrkmatrehihi is work space allocated for a matrix of dimension dim;
+ *   wrkmatrelohi is work space allocated for a matrix of dimension dim;
+ *   wrkmatrehilo is work space allocated for a matrix of dimension dim;
+ *   wrkmatrelolo is work space allocated for a matrix of dimension dim;
+ *   wrkmatimhihi is work space allocated for a matrix of dimension dim;
+ *   wrkmatimlohi is work space allocated for a matrix of dimension dim;
+ *   wrkmatimhilo is work space allocated for a matrix of dimension dim;
+ *   wrkmatimlolo is work space allocated for a matrix of dimension dim;
+ *   Qrehihi  space allocated for a matrix of dimension dim;
+ *   Qrelohi  space allocated for a matrix of dimension dim;
+ *   Qrehilo  space allocated for a matrix of dimension dim;
+ *   Qrelolo  space allocated for a matrix of dimension dim;
+ *   Qimhihi  space allocated for a matrix of dimension dim;
+ *   Qimlohi  space allocated for a matrix of dimension dim;
+ *   Qimhilo  space allocated for a matrix of dimension dim;
+ *   Qimlolo  space allocated for a matrix of dimension dim;
+ *   Rrehihi  space allocated for a matrix of dimension dim;
+ *   Rrelohi  space allocated for a matrix of dimension dim;
+ *   Rrehilo  space allocated for a matrix of dimension dim;
+ *   Rrelolo  space allocated for a matrix of dimension dim;
+ *   Rimhihi  space allocated for a matrix of dimension dim;
+ *   Rimlohi  space allocated for a matrix of dimension dim;
+ *   Rimhilo  space allocated for a matrix of dimension dim;
+ *   Rimlolo  space allocated for a matrix of dimension dim;
+ *   wrkvecrehihi has work space allocated for a vector of dimension dim;
+ *   wrkvecrelohi has work space allocated for a vector of dimension dim;
+ *   wrkvecrehilo has work space allocated for a vector of dimension dim;
+ *   wrkvecrelolo has work space allocated for a vector of dimension dim;
+ *   wrkvecimhihi has work space allocated for a vector of dimension dim;
+ *   wrkvecimlohi has work space allocated for a vector of dimension dim;
+ *   wrkvecimhilo has work space allocated for a vector of dimension dim;
+ *   wrkvecimlolo has work space allocated for a vector of dimension dim;
+ *   vrblvl   the verbose level (0 for silent).
+ *
+ * ON RETURN :
+ *   wrkmatrehihi has a copy of the Jacobian matrix in matrehihi[0];
+ *   wrkmatrelohi has a copy of the Jacobian matrix in matrelohi[0];
+ *   wrkmatrehilo has a copy of the Jacobian matrix in matrehilo[0];
+ *   wrkmatrelolo has a copy of the Jacobian matrix in matrelolo[0];
+ *   wrkmatimhihi has a copy of the Jacobian matrix in matimhihi[0];
+ *   wrkmatimlohi has a copy of the Jacobian matrix in matimlohi[0];
+ *   wrkmatimhilo has a copy of the Jacobian matrix in matimhilo[0];
+ *   wrkmatimlolo has a copy of the Jacobian matrix in matimlolo[0];
+ *   Qrehihi  highest doubles of the real parts of the Q in the QR;
+ *   Qrelohi  second highest doubles of the real parts of the Q in the QR;
+ *   Qrehilo  second lowest doubles of the real parts of the Q in the QR;
+ *   Qrelolo  lowest doubles of the real parts of the Q in the QR;
+ *   Qimhihi  highest doubles of the imaginary parts of the Q in the QR;
+ *   Qimlohi  second highest doubles of the imaginary parts of the Q in the QR;
+ *   Qimhilo  second lowest doubles of the imaginary parts of the Q in the QR;
+ *   Qimlolo  lowest doubles of the imaginary parts of the Q in the QR;
+ *   Rrehihi  highest doubles of the real parts of the R in the QR;
+ *   Rrelohi  second highest doubles of the real parts of the R in the QR;
+ *   Rrehilo  second lowest doubles of the real parts of the R in the QR;
+ *   Rrelolo  lowest doubles of the real parts of the R in the QR;
+ *   Rimhihi  highest doubles of the imaginary parts of the R in the QR;
+ *   Rimlohi  second highest doubles of the imaginary parts of the R in the QR;
+ *   Rimhilo  second lowest doubles of the imaginary parts of the R in the QR;
+ *   Rimlolo  lowest doubles of the imaginary parts of the R in the QR;
+ *   wrkvecrehihi is work space used to solve the linear systems;
+ *   wrkvecrelohi is work space used to solve the linear systems;
+ *   wrkvecrehilo is work space used to solve the linear systems;
+ *   wrkvecrelolo is work space used to solve the linear systems;
+ *   wrkvecimhihi is work space used to solve the linear systems;
+ *   wrkvecimlohi is work space used to solve the linear systems;
+ *   wrkvecimhilo is work space used to solve the linear systems;
+ *   wrkvecimlolo is work space used to solve the linear systems;
+ *   solrehihi are the highest doubles of the real parts of the solution;
+ *   solrelohi are the second highest doubles of the real parts of the solution;
+ *   solrehilo are the second lowest doubles of the real parts of the solution;
+ *   solrelolo are the lowest doubles of the real parts of the solution;
+ *   solimhihi are the highest doubles of the imag parts of the solution;
+ *   solimlohi are the second highest doubles of the imag parts of the solution;
+ *   solimhilo are the second lowest doubles of the imag parts of the solution;
+ *   solimlolo are the lowest doubles of the imag parts of the solution. */
+
 void CPU_dbl4_linear_residue
  ( int dim, int degp1,
    double ***mathihi, double ***matlohi, double ***mathilo, double ***matlolo, 
@@ -413,5 +789,88 @@ void CPU_dbl4_linear_residue
  *   resmaxlohi is the 2nd highest double of the maximum component in resvec;
  *   resmaxhilo is the 2nd lowest double of the maximum component in resvec;
  *   resmaxlolo is the lowest double of the maximum component in resvec. */
+
+void CPU_cmplx4_linear_residue
+ ( int dim, int degp1,
+   double ***matrehihi, double ***matrelohi,
+   double ***matrehilo, double ***matrelolo,
+   double ***matimhihi, double ***matimlohi,
+   double ***matimhilo, double ***matimlolo,
+   double **rhsrehihi, double **rhsrelohi,
+   double **rhsrehilo, double **rhsrelolo,
+   double **rhsimhihi, double **rhsimlohi, 
+   double **rhsimhilo, double **rhsimlolo, 
+   double **solrehihi, double **solrelohi,
+   double **solrehilo, double **solrelolo,
+   double **solimhihi, double **solimlohi,
+   double **solimhilo, double **solimlolo,
+   double **resvecrehihi, double **resvecrelohi,
+   double **resvecrehilo, double **resvecrelolo,
+   double **resvecimhihi, double **resvecimlohi,
+   double **resvecimhilo, double **resvecimlolo,
+   double *resmaxhihi, double *resmaxlohi,
+   double *resmaxhilo, double *resmaxlolo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Computes the residual of the linear power series system.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of the matrices and vectors;
+ *   degp1    degree plus one, the size of the matrix system;
+ *   matrehihi are degp1 matrices of dimension dim;
+ *   matrelohi are degp1 matrices of dimension dim;
+ *   matrehilo are degp1 matrices of dimension dim;
+ *   matrelolo are degp1 matrices of dimension dim;
+ *   matimhihi are degp1 matrices of dimension dim;
+ *   matimlohi are degp1 matrices of dimension dim;
+ *   matimhilo are degp1 matrices of dimension dim;
+ *   matimlolo are degp1 matrices of dimension dim;
+ *   rhsrehihi are degp1 right hand side vectors of dimension dim;
+ *   rhsrelohi are degp1 right hand side vectors of dimension dim;
+ *   rhsrehilo are degp1 right hand side vectors of dimension dim;
+ *   rhsrelolo are degp1 right hand side vectors of dimension dim;
+ *   rhsimhihi are degp1 right hand side vectors of dimension dim;
+ *   rhsimlohi are degp1 right hand side vectors of dimension dim;
+ *   rhsimhilo are degp1 right hand side vectors of dimension dim;
+ *   rhsimlolo are degp1 right hand side vectors of dimension dim;
+ *   solrehihi are degp1 solution vectors of dimension dim;
+ *   solrelohi are degp1 solution vectors of dimension dim;
+ *   solrehilo are degp1 solution vectors of dimension dim;
+ *   solrelolo are degp1 solution vectors of dimension dim;
+ *   solimhihi are degp1 solution vectors of dimension dim;
+ *   solimlohi are degp1 solution vectors of dimension dim;
+ *   solimhilo are degp1 solution vectors of dimension dim;
+ *   solimlolo are degp1 solution vectors of dimension dim;
+ *   resvecrehihi has space for the residual power series;
+ *   resvecrelohi has space for the residual power series;
+ *   resvecrehilo has space for the residual power series;
+ *   resvecrelolo has space for the residual power series;
+ *   resvecimhihi has space for the residual power series;
+ *   resvecimlohi has space for the residual power series;
+ *   resvecimhilo has space for the residual power series;
+ *   resvecimlolo has space for the residual power series;
+ *   vrblvl   is the verbose level.
+ *
+ * ON RETURN :
+ *   resvecrehihi are the highest doubles of the real parts
+ *            of the residual series;
+ *   resvecrelohi are the second highest doubles of the real parts
+ *            of the residual series;
+ *   resvecrehilo are the second lowest doubles of the real parts
+ *            of the residual series;
+ *   resvecrelolo are the lowest doubles of the real parts
+ *            of the residual series;
+ *   resvecimhihi are the highest doubles of the imaginary parts
+ *            of the residual series;
+ *   resvecimlohi are the second highest doubles of the imaginary parts
+ *            of the residual series;
+ *   resvecimhilo are the second lowest doubles of the imaginary parts
+ *            of the residual series;
+ *   resvecimlolo are the lowest doubles of the imaginary parts
+ *            of the residual series;
+ *   resmaxhihi is the highest double of the max norm of the residual;
+ *   resmaxlohi is the second highest double of the max norm of the residual;
+ *   resmaxhilo is the second lowest double of the max norm of the residual;
+ *   resmaxlolo is the lowest double of the max norm of the residual. */
 
 #endif

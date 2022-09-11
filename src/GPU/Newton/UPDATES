@@ -1,3 +1,6 @@
+Sat 10 Sep 2022 : extended test_dbl4_newton.cpp, dbl4_systems_kernels,
+  dbl4_bals_{host,kernels}, dbl4_newton_testers, and makefile_unix.
+
 Fri 9 Sep 2022 : edited dbl_newton_testers.h, dbl_newton_testers.cpp,
   dbl_systems_kernels.h, and dbl_bals_kernels.h.
   Extended dbl2_{bals,systems}_kernels, dbl2_newton_testers, and 
