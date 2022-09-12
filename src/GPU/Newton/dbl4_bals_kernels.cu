@@ -1489,8 +1489,8 @@ void GPU_cmplx4_bals_solve
    {
       free(Arehihi[i]); free(workRrehihi[i]);
       free(Arelohi[i]); free(workRrelohi[i]);
-      free(Arehilo[i]); free(workRrehihi[i]);
-      free(Arelolo[i]); free(workRrelohi[i]);
+      free(Arehilo[i]); free(workRrehilo[i]);
+      free(Arelolo[i]); free(workRrelolo[i]);
       free(Aimhihi[i]); free(workRimhihi[i]);
       free(Aimlohi[i]); free(workRimlohi[i]);
       free(Aimhilo[i]); free(workRimhilo[i]);

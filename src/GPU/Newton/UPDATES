@@ -1,3 +1,5 @@
+Sun 11 Sep 2022 : fixed deallocation bug in dbl4_bals_kernels.cu.
+
 Sat 10 Sep 2022 : extended test_dbl4_newton.cpp, dbl4_systems_kernels,
   dbl4_bals_{host,kernels}, dbl4_newton_testers, and makefile_unix.
 
