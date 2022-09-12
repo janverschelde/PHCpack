@@ -1,3 +1,6 @@
+Mon 12 Sep 2022 : edited dbl4_systems_host.h, extended dbl8_systems_host
+  with function on complex data.
+
 Sun 11 Sep 2022 : fixed deallocation bug in dbl4_bals_kernels.cu.
 
 Sat 10 Sep 2022 : extended test_dbl4_newton.cpp, dbl4_systems_kernels,

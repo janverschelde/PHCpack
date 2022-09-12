@@ -154,12 +154,12 @@ void CPU_cmplx4_evaluate_monomials
  *             at the i-th monomial, and for k in range 0..nvr[i]-1,
  *             outputrehihi[i][idx[k]] is the derivative w.r.t. idx[k];
  *   outputrelohi are the 2nd highest doubles of the real parts of evaluated
- *             and differentiated monomials, outputrelo[i][dim] is the 2nd 
+ *             and differentiated monomials, outputrelohi[i][dim] is the 2nd 
  *             highest double of the real part of value of the input
  *             at the i-th monomial, and for k in range 0..nvr[i]-1,
  *             outputrelo[i][idx[k]] is the derivative w.r.t. idx[k];
- *   outputrehilo are the highest doubles of the real parts of evaluated
- *             and differentiated monomials, outputrehi[i][dim] is the 2nd
+ *   outputrehilo are the 2nd lowest doubles of the real parts of evaluated
+ *             and differentiated monomials, outputrehilo[i][dim] is the 2nd
  *             lowest double of the real part of value of the input
  *             at the i-th monomial, and for k in range 0..nvr[i]-1,
  *             outputrehilo[i][idx[k]] is the derivative w.r.t. idx[k];
@@ -169,12 +169,12 @@ void CPU_cmplx4_evaluate_monomials
  *             at the i-th monomial, and for k in range 0..nvr[i]-1,
  *             outputrelolo[i][idx[k]] is the derivative w.r.t. idx[k];
  *   outputimhihi are the highest doubles of the imaginary parts of evaluated
- *             and differentiated monomials, outputimhi[i][dim] is the highest
- *             double of the imaginary part of value of the input
+ *             and differentiated monomials, outputimhihi[i][dim] is the
+ *             highest double of the imaginary part of value of the input
  *             at the i-th monomial, and for k in range 0..nvr[i]-1,
  *             outputimhihi[i][idx[k]] is the derivative w.r.t. idx[k];
  *   outputimlohi are the 2nd highest doubles of the imag parts of evaluated
- *             and differentiated monomials, outputimhi[i][dim] is the 2nd
+ *             and differentiated monomials, outputimlohi[i][dim] is the 2nd
  *             highest double of the imaginary part of value of the input
  *             at the i-th monomial, and for k in range 0..nvr[i]-1,
  *             outputimlohi[i][idx[k]] is the derivative w.r.t. idx[k];
@@ -340,7 +340,7 @@ void cmplx4_linearize_evaldiff_output
  *   funvalimlohi has space allocated for dim power series;
  *   funvalimhilo has space allocated for dim power series;
  *   funvalimlolo has space allocated for dim power series;
- *   rhsrehihi has pace allocated for linearized power series,
+ *   rhsrehihi has space allocated for linearized power series,
  *             where degp1 is the leading dimension;
  *   rhsrelohi has space allocated for linearized power series,
  *             where degp1 is the leading dimension;
