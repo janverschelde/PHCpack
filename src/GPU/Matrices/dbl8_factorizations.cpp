@@ -2313,3 +2313,139 @@ void CPU_dbl8_factors_qrbs
        solhihihi,sollohihi,solhilohi,sollolohi,
        solhihilo,sollohilo,solhilolo,sollololo);
 }
+
+void CPU_cmplx8_factors_qrbs
+ ( int nrows, int ncols,
+   double **Qrehihihi, double **Qrelohihi,
+   double **Qrehilohi, double **Qrelolohi,
+   double **Qrehihilo, double **Qrelohilo,
+   double **Qrehilolo, double **Qrelololo,
+   double **Qimhihihi, double **Qimlohihi,
+   double **Qimhilohi, double **Qimlolohi, 
+   double **Qimhihilo, double **Qimlohilo,
+   double **Qimhilolo, double **Qimlololo, 
+   double **Rrehihihi, double **Rrelohihi,
+   double **Rrehilohi, double **Rrelolohi,
+   double **Rrehihilo, double **Rrelohilo,
+   double **Rrehilolo, double **Rrelololo,
+   double **Rimhihihi, double **Rimlohihi,
+   double **Rimhilohi, double **Rimlolohi,
+   double **Rimhihilo, double **Rimlohilo,
+   double **Rimhilolo, double **Rimlololo,
+   double *rhsrehihihi, double *rhsrelohihi,
+   double *rhsrehilohi, double *rhsrelolohi,
+   double *rhsrehihilo, double *rhsrelohilo,
+   double *rhsrehilolo, double *rhsrelololo,
+   double *rhsimhihihi, double *rhsimlohihi,
+   double *rhsimhilohi, double *rhsimlolohi,
+   double *rhsimhihilo, double *rhsimlohilo,
+   double *rhsimhilolo, double *rhsimlololo,
+   double *solrehihihi, double *solrelohihi,
+   double *solrehilohi, double *solrelolohi,
+   double *solrehihilo, double *solrelohilo,
+   double *solrehilolo, double *solrelololo,
+   double *solimhihihi, double *solimlohihi,
+   double *solimhilohi, double *solimlolohi,
+   double *solimhihilo, double *solimlohilo,
+   double *solimhilolo, double *solimlololo,
+   double *wrkvecrehihihi, double *wrkvecrelohihi,
+   double *wrkvecrehilohi, double *wrkvecrelolohi,
+   double *wrkvecrehihilo, double *wrkvecrelohilo,
+   double *wrkvecrehilolo, double *wrkvecrelololo,
+   double *wrkvecimhihihi, double *wrkvecimlohihi,
+   double *wrkvecimhilohi, double *wrkvecimlolohi,
+   double *wrkvecimhihilo, double *wrkvecimlohilo,
+   double *wrkvecimhilolo, double *wrkvecimlololo )
+{
+   double acchihihi,acclohihi,acchilohi,acclolohi; // accumulates product
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   for(int i=0; i<nrows; i++)    // compute Q^H*b, b is rhs
+   {
+      wrkvecrehihihi[i] = 0.0; wrkvecrelohihi[i] = 0.0;
+      wrkvecrehilohi[i] = 0.0; wrkvecrelolohi[i] = 0.0;
+      wrkvecrehihilo[i] = 0.0; wrkvecrelohilo[i] = 0.0;
+      wrkvecrehilolo[i] = 0.0; wrkvecrelololo[i] = 0.0;
+      wrkvecimhihihi[i] = 0.0; wrkvecimlohihi[i] = 0.0;
+      wrkvecimhilohi[i] = 0.0; wrkvecimlolohi[i] = 0.0;
+      wrkvecimhihilo[i] = 0.0; wrkvecimlohilo[i] = 0.0;
+      wrkvecimhilolo[i] = 0.0; wrkvecimlololo[i] = 0.0;
+
+      for(int j=0; j<nrows; j++) // work with Hermitian transpose of Q
+      {
+         // accre =  Qre[j][i]*rhsre[j] + Qim[j][i]*rhsim[j];
+         // wrkvecre[i] = wrkvecre[i] + accre;
+         odf_mul(Qrehihihi[j][i],Qrelohihi[j][i],
+                 Qrehilohi[j][i],Qrelolohi[j][i],
+                 Qrehihilo[j][i],Qrelohilo[j][i],
+                 Qrehilolo[j][i],Qrelololo[j][i],
+                 rhsrehihihi[j],rhsrelohihi[j],rhsrehilohi[j],rhsrelolohi[j],
+                 rhsrehihilo[j],rhsrelohilo[j],rhsrehilolo[j],rhsrelololo[j],
+                 &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                 &acchihilo,&acclohilo,&acchilolo,&acclololo);
+         odf_inc(&wrkvecrehihihi[i],&wrkvecrelohihi[i],
+                 &wrkvecrehilohi[i],&wrkvecrelolohi[i],
+                 &wrkvecrehihilo[i],&wrkvecrelohilo[i],
+                 &wrkvecrehilolo[i],&wrkvecrelololo[i],
+                 acchihihi,acclohihi,acchilohi,acclolohi,
+                 acchihilo,acclohilo,acchilolo,acclololo);
+         odf_mul(Qimhihihi[j][i],Qimlohihi[j][i],
+                 Qimhilohi[j][i],Qimlolohi[j][i],
+                 Qimhihilo[j][i],Qimlohilo[j][i],
+                 Qimhilolo[j][i],Qimlololo[j][i],
+                 rhsimhihihi[j],rhsimlohihi[j],rhsimhilohi[j],rhsimlolohi[j],
+                 rhsimhihilo[j],rhsimlohilo[j],rhsimhilolo[j],rhsimlololo[j],
+                 &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                 &acchihilo,&acclohilo,&acchilolo,&acclololo);
+         odf_inc(&wrkvecrehihihi[i],&wrkvecrelohihi[i],
+                 &wrkvecrehilohi[i],&wrkvecrelolohi[i],
+                 &wrkvecrehihilo[i],&wrkvecrelohilo[i],
+                 &wrkvecrehilolo[i],&wrkvecrelololo[i],
+                 acchihihi,acclohihi,acchilohi,acclolohi,
+                 acchihilo,acclohilo,acchilolo,acclololo);
+         // accim = -Qim[j][i]*rhsre[j] + Qre[j][i]*rhsim[j];
+         // wrkvecim[i] = wrkvecim[i] + accim;
+         odf_mul(Qrehihihi[j][i],Qrelohihi[j][i],
+                 Qrehilohi[j][i],Qrelolohi[j][i],
+                 Qrehihilo[j][i],Qrelohilo[j][i],
+                 Qrehilolo[j][i],Qrelololo[j][i],
+                 rhsimhihihi[j],rhsimlohihi[j],rhsimhilohi[j],rhsimlolohi[j],
+                 rhsimhihilo[j],rhsimlohilo[j],rhsimhilolo[j],rhsimlololo[j],
+                 &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                 &acchihilo,&acclohilo,&acchilolo,&acclololo);
+         odf_inc(&wrkvecimhihihi[j],&wrkvecimlohihi[i],
+                 &wrkvecimhilohi[j],&wrkvecimlolohi[i],
+                 &wrkvecimhihilo[j],&wrkvecimlohilo[i],
+                 &wrkvecimhilolo[j],&wrkvecimlololo[i],
+                 acchihihi,acclohihi,acchilohi,acclolohi,
+                 acchihilo,acclohilo,acchilolo,acclololo);
+         odf_mul(Qimhihihi[j][i],Qimlohihi[j][i],
+                 Qimhilohi[j][i],Qimlolohi[j][i],
+                 Qimhihilo[j][i],Qimlohilo[j][i],
+                 Qimhilolo[j][i],Qimlololo[j][i],
+                 rhsrehihihi[j],rhsrelohihi[j],rhsrehilohi[j],rhsrelolohi[j],
+                 rhsrehihilo[j],rhsrelohilo[j],rhsrehilolo[j],rhsrelololo[j],
+                 &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                 &acchihilo,&acclohilo,&acchilolo,&acclololo);
+         odf_dec(&wrkvecimhihihi[j],&wrkvecimlohihi[i],
+                 &wrkvecimhilohi[j],&wrkvecimlolohi[i],
+                 &wrkvecimhihilo[j],&wrkvecimlohilo[i],
+                 &wrkvecimhilolo[j],&wrkvecimlololo[i],
+                 acchihihi,acclohihi,acchilohi,acclolohi,
+                 acchihilo,acclohilo,acchilolo,acclololo);
+      }
+   }
+   CPU_cmplx8_factors_backward
+      (ncols,Rrehihihi,Rrelohihi,Rrehilohi,Rrelolohi,
+             Rrehihilo,Rrelohilo,Rrehilolo,Rrelololo,
+             Rimhihihi,Rimlohihi,Rimhilohi,Rimlolohi,
+             Rimhihilo,Rimlohilo,Rimhilolo,Rimlololo,
+       wrkvecrehihihi,wrkvecrelohihi,wrkvecrehilohi,wrkvecrelolohi,
+       wrkvecrehihilo,wrkvecrelohilo,wrkvecrehilolo,wrkvecrelololo,
+       wrkvecimhihihi,wrkvecimlohihi,wrkvecimhilohi,wrkvecimlolohi,
+       wrkvecimhihilo,wrkvecimlohilo,wrkvecimhilolo,wrkvecimlololo,
+       solrehihihi,solrelohihi,solrehilohi,solrelolohi,
+       solrehihilo,solrelohilo,solrehilolo,solrelololo,
+       solimhihihi,solimlohihi,solimhilohi,solimlolohi,
+       solimhihilo,solimlohilo,solimhilolo,solimlololo);
+}

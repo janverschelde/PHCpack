@@ -1489,4 +1489,195 @@ void CPU_dbl8_factors_qrbs
  *   wrkvechilolo has the second lowest doubles of Q^T*rhs;
  *   wrkveclololo has the lowest doubles of Q^T*rhs. */
 
+void CPU_cmplx8_factors_qrbs
+ ( int nrows, int ncols,
+   double **Qrehihihi, double **Qrelohihi,
+   double **Qrehilohi, double **Qrelolohi,
+   double **Qrehihilo, double **Qrelohilo,
+   double **Qrehilolo, double **Qrelololo,
+   double **Qimhihihi, double **Qimlohihi,
+   double **Qimhilohi, double **Qimlolohi, 
+   double **Qimhihilo, double **Qimlohilo,
+   double **Qimhilolo, double **Qimlololo, 
+   double **Rrehihihi, double **Rrelohihi,
+   double **Rrehilohi, double **Rrelolohi,
+   double **Rrehihilo, double **Rrelohilo,
+   double **Rrehilolo, double **Rrelololo,
+   double **Rimhihihi, double **Rimlohihi,
+   double **Rimhilohi, double **Rimlolohi,
+   double **Rimhihilo, double **Rimlohilo,
+   double **Rimhilolo, double **Rimlololo,
+   double *rhsrehihihi, double *rhsrelohihi,
+   double *rhsrehilohi, double *rhsrelolohi,
+   double *rhsrehihilo, double *rhsrelohilo,
+   double *rhsrehilolo, double *rhsrelololo,
+   double *rhsimhihihi, double *rhsimlohihi,
+   double *rhsimhilohi, double *rhsimlolohi,
+   double *rhsimhihilo, double *rhsimlohilo,
+   double *rhsimhilolo, double *rhsimlololo,
+   double *solrehihihi, double *solrelohihi,
+   double *solrehilohi, double *solrelolohi,
+   double *solrehihilo, double *solrelohilo,
+   double *solrehilolo, double *solrelololo,
+   double *solimhihihi, double *solimlohihi,
+   double *solimhilohi, double *solimlolohi,
+   double *solimhihilo, double *solimlohilo,
+   double *solimhilolo, double *solimlololo,
+   double *wrkvecrehihihi, double *wrkvecrelohihi,
+   double *wrkvecrehilohi, double *wrkvecrelolohi,
+   double *wrkvecrehihilo, double *wrkvecrelohilo,
+   double *wrkvecrehilolo, double *wrkvecrelololo,
+   double *wrkvecimhihihi, double *wrkvecimlohihi,
+   double *wrkvecimhilohi, double *wrkvecimlolohi,
+   double *wrkvecimhihilo, double *wrkvecimlohilo,
+   double *wrkvecimhilolo, double *wrkvecimlololo );
+/*
+ * DESCRIPTION :
+ *   Applies back substitution for the least squares solution
+ *   with the QR factorization, on complex data.
+ *
+ * REQUIRED : nrows >= ncols;
+ *
+ * ON ENTRY :
+ *   nrows    number of rows of R, dimension of Q;
+ *   ncols    number of columns of R;
+ *   Qrehihihi are the highest doubles of the real parts of Q of the QR;
+ *   Qrelohihi are the 2nd highest doubles of the real parts of Q of the QR;
+ *   Qrehilohi are the 3rd highest doubles of the real parts of Q of the QR;
+ *   Qrelolohi are the 4th highest doubles of the real parts of Q of the QR;
+ *   Qrehihilo are the 4th lowest doubles of the real parts of Q of the QR;
+ *   Qrelohilo are the 3rd lowest doubles of the real parts of Q of the QR;
+ *   Qrehilolo are the 2nd lowest doubles of the real parts of Q of the QR;
+ *   Qrelololo are the lowest doubles of the real parts of Q of the QR;
+ *   Qimhihihi are the highest doubles of the imag parts of Q of the QR;
+ *   Qimlohihi are the 2nd highest doubles of the imag parts of Q of the QR;
+ *   Qimhilohi are the 3rd highest doubles of the imag parts of Q of the QR;
+ *   Qimlolohi are the 4th highest doubles of the imag parts of Q of the QR;
+ *   Qimhihilo are the 4th lowest doubles of the imag parts of Q of the QR;
+ *   Qimlohilo are the 3rd lowest doubles of the imag parts of Q of the QR;
+ *   Qimhilolo are the 2nd lowest doubles of the imag parts of Q of the QR;
+ *   Qimlololo are the lowest doubles of the imag parts of Q of the QR;
+ *   Rrehihihi are the highest doubles of the real parts of R of the QR;
+ *   Rrelohihi are the 2nd highest doubles of the real parts of R of the QR;
+ *   Rrehilohi are the 3rd highest doubles of the real parts of R of the QR;
+ *   Rrelolohi are the 4th highest doubles of the real parts of R of the QR;
+ *   Rrehihilo are the 4th lowest doubles of the real parts of R of the QR;
+ *   Rrelohilo are the 3rd lowest doubles of the real parts of R of the QR;
+ *   Rrehilolo are the 2nd lowest doubles of the real parts of R of the QR;
+ *   Rrelololo are the lowest doubles of the real parts of R of the QR;
+ *   Rimhihihi are the highest doubles of the imag parts of R of the QR;
+ *   Rimlohihi are the 2nd highest doubles of the imag parts of R of the QR;
+ *   Rimhilohi are the 3rd highest doubles of the imag parts of R of the QR;
+ *   Rimlolohi are the 4th highest doubles of the imag parts of R of the QR;
+ *   Rimhihilo are the 4th lowest doubles of the imag parts of R of the QR;
+ *   Rimlohilo are the 3rd lowest doubles of the imag parts of R of the QR;
+ *   Rimhilolo are the 2nd lowest doubles of the imag parts of R of the QR;
+ *   Rimlololo are the lowest doubles of the imag parts of R of the QR;
+ *   rhsrehihihi are the highest doubles of the real parts of right hand side,
+ *            rhs has size nrows;
+ *   rhsrelohihi are the 2nd highest doubles of the real parts of rhs;
+ *   rhsrehilohi are the 3rd highest doubles of the real parts of rhs;
+ *   rhsrelolohi are the 4th highest doubles of the real parts of rhs;
+ *   rhsrehihilo are the 4th lowest doubles of the real parts of rhs;
+ *   rhsrelohilo are the 3rd lowest doubles of the real parts of rhs;
+ *   rhsrehilolo are the 2nd lowest doubles of the real parts of rhs;
+ *   rhsrelololo are the lowest doubles of the real parts of rhs;
+ *   rhsimhihihi are the highest doubles of the imag parts of rhs;
+ *   rhsimlohihi are the 2nd highest doubles of the imag parts of rhs;
+ *   rhsimhilohi are the 3rd highest doubles of the imag parts of rhs;
+ *   rhsimlolohi are the 4th highest doubles of the imag parts of rhs;
+ *   rhsimhihilo are the 4th lowest doubles of the imag parts of rhs;
+ *   rhsimlohilo are the 3rd lowest doubles of the imag parts of rhs;
+ *   rhsimhilolo are the 2nd lowest doubles of the imag parts of rhs;
+ *   rhsimlololo are lowest doubles of the imag parts of rhs;
+ *   solrehihihi has space for the highest doubles of the real parts
+ *            of the solution, of size ncols;
+ *   solrelohihi has space for the second highest doubles of the real parts
+ *            of the solution, of size ncols;
+ *   solrehilohi has space for the third highest doubles of the real parts
+ *            of the solution, of size ncols;
+ *   solrelolohi has space for the fourth highest doubles of the real parts
+ *            of the solution, of size ncols;
+ *   solrehihilo has space for the fourth lowest doubles of the real parts
+ *            of the solution;
+ *   solrelohilo has space for the third lowest doubles of the real parts
+ *            of the solution;
+ *   solrehilolo has space for the second lowest doubles of the real parts
+ *            of the solution;
+ *   solrelololo has space for the lowest doubles of the real parts
+ *            of the solution;
+ *   solimhihihi has space for the highest doubles of the imaginary parts
+ *            of the solution;
+ *   solimlohihi has space for the second highest doubles of the imag parts
+ *            of the solution;
+ *   solimhilohi has space for the third highest doubles of the imag parts
+ *            of the solution;
+ *   solimlolohi has space for the fourth highest doubles of the imag parts
+ *            of the solution;
+ *   solimhihilo has space for the fourth lowest doubles of the imag parts
+ *            of the solution;
+ *   solimlohilo has space for the third lowest doubles of the imag parts
+ *            of the solution;
+ *   solimhilolo has space for the second lowest doubles of the imag parts
+ *            of the solution;
+ *   solimlololo has space for the lowest doubles of the imaginary parts
+ *            of the solution;
+ *   wrkvecrehihihi is work space for nrows elements;
+ *   wrkvecrelohihi is work space for nrows elements;
+ *   wrkvecrehilohi is work space for nrows elements;
+ *   wrkvecrelolohi is work space for nrows elements;
+ *   wrkvecrehihilo is work space for nrows elements;
+ *   wrkvecrelohilo is work space for nrows elements;
+ *   wrkvecrehilolo is work space for nrows elements;
+ *   wrkvecrelololo is work space for nrows elements;
+ *   wrkvecimhihihi is work space for nrows elements;
+ *   wrkvecimlohihi is work space for nrows elements;
+ *   wrkvecimhilohi is work space for nrows elements;
+ *   wrkvecimlolohi is work space for nrows elements.
+ *   wrkvecimhihilo is work space for nrows elements;
+ *   wrkvecimlohilo is work space for nrows elements;
+ *   wrkvecimhilolo is work space for nrows elements;
+ *   wrkvecimlololo is work space for nrows elements.
+ *
+ * ON RETURN :
+ *   solrehihihi are the highest doubles of the real parts of the solution;
+ *   solrelohihi are the 2nd highest doubles of the real parts of the solution;
+ *   solrehilohi are the 2rd highest doubles of the real parts of the solution;
+ *   solrelolohi are the 4th highest doubles of the real parts of the solution;
+ *   solrehihilo are the 4th lowest doubles of the real parts of the solution;
+ *   solrelohilo are the 3rd lowest doubles of the real parts of the solution;
+ *   solrehilolo are the 2nd lowest doubles of the real parts of the solution;
+ *   solrelololo are the lowest doubles of the real parts of the solution;
+ *   solimhihihi are the highest doubles of the imag parts of the solution;
+ *   solimlohihi are the 2nd highest doubles of the imag parts of sol;
+ *   solimhilohi are the 3rd highest doubles of the imag parts of sol;
+ *   solimlolohi are the 4th highest doubles of the imag parts of sol;
+ *   solimhihilo are the 4th lowest doubles of the imag parts of sol;
+ *   solimlohilo are the 3rd lowest doubles of the imag parts of sol;
+ *   solimhilolo are the 2nd lowest doubles of the imag parts of sol;
+ *   solimlololo are the lowest doubles of the imag parts of the solution;
+ *   wrkvecrehihihi has the highest doubles of the real parts of Q^H*rhs;
+ *   wrkvecrelohihi has the 2nd highest doubles of the real parts of Q^H*rhs;
+ *   wrkvecrehilohi has the 3rd highest doubles of the real parts of Q^H*rhs;
+ *   wrkvecrelolohi has the 4th highest doubles of the real parts of Q^H*rhs;
+ *   wrkvecrehihilo has the 4th lowest doubles of the real parts of Q^H*rhs;
+ *   wrkvecrelohilo has the 3rd lowest doubles of the real parts of Q^H*rhs;
+ *   wrkvecrehilolo has the 2nd lowest doubles of the real parts of Q^H*rhs;
+ *   wrkvecrelololo has the lowest doubles of the real parts of Q^H*rhs;
+ *   wrkvecimhihihi has the highest doubles of the imaginary parts of Q^H*rhs;
+ *   wrkvecimlohihi has the second highest doubles of the imaginary parts
+ *            of Q^H*rhs;
+ *   wrkvecimhilohi has the third highest doubles of the imaginary parts
+ *            of Q^H*rhs;
+ *   wrkvecimlolohi has the fourth highest doubles of the imaginary parts
+ *            of Q^H*rhs;
+ *   wrkvecimhihilo has the fourth lowest doubles of the imaginary parts 
+ *            of Q^H*rhs;
+ *   wrkvecimlohilo has the third lowest doubles of the imaginary parts 
+ *            of Q^H*rhs;
+ *   wrkvecimhilolo has the second lowest doubles of the imaginary parts 
+ *            of Q^H*rhs;
+ *   wrkvecimlololo has the lowest doubles of the imaginary parts
+ *            of Q^H*rhs. */
+
 #endif
