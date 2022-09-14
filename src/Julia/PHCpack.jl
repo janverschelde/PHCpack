@@ -1,5 +1,5 @@
 """
-The module JuPHC is a collection of functions to libPHCpack,
+The module PHCpack.jl is a collection of functions to libPHCpack,
 the shared object to the library defined by PHCpack.
 
 To check if the shared object libPHCpack is present, type
@@ -8,7 +8,7 @@ To check if the shared object libPHCpack is present, type
 
 and, if present, the version string of PHCpack will appear.
 """
-module JuPHC
+module PHCpack
 
 LIBPHCPACK = "../lib/libPHCpack"
 

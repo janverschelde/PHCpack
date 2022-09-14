@@ -1,2 +1,4 @@
+Tue 13 Sep 2022 : renamed JuPHC.jl into PHCpack.jl.
+
 Tue 15 Mar 2022 :  mixedVolume.jl, showMixedVolume.jl, stableMixedVolume.jl,
   showStableMixedVolume.jl are added, updated JuPHC.jl.

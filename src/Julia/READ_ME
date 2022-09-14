@@ -1,4 +1,4 @@
-interface for Julia based on the shared object libPHCpack in PHCv2.4.86
+interface for Julia based on the shared object libPHCpack in PHCv2.4.87
 
 This folder was added in release 2.4.86, after the definition
 of phclib.gpr which builds libPHCpack with GPRbuild.
@@ -13,7 +13,7 @@ The module JuPHC is defined by the files in this folder.
 file name              : short description
 -----------------------------------------------------------------------------
 hellophc.jl            : calls the main phctop
-JuPHC.jl               : defines the module JuPHC
+PHCpack.jl             : defines the module PHCpack
 -----------------------------------------------------------------------------
 version.jl             : prints the version string of PHCpack
 setDoubleDimension.jl  : sets the number of polynomials in double precision
