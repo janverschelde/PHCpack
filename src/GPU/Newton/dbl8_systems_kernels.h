@@ -96,6 +96,159 @@ void dbl8_evaldiffdata_to_output
  *            outputlololo[i][k] has the lowest double value of
  *            the k-th derivative of the i-th monomial. */
 
+void cmplx8_evaldiffdata_to_output
+ ( double *datarehihihi, double *datarelohihi,
+   double *datarehilohi, double *datarelolohi,
+   double *datarehihilo, double *datarelohilo,
+   double *datarehilolo, double *datarelololo,
+   double *dataimhihihi, double *dataimlohihi,
+   double *dataimhilohi, double *dataimlolohi,
+   double *dataimhihilo, double *dataimlohilo,
+   double *dataimhilolo, double *dataimlololo,
+   double ***outputrehihihi, double ***outputrelohihi,
+   double ***outputrehilohi, double ***outputrelolohi,
+   double ***outputrehihilo, double ***outputrelohilo,
+   double ***outputrehilolo, double ***outputrelololo,
+   double ***outputimhihihi, double ***outputimlohihi,
+   double ***outputimhilohi, double ***outputimlolohi,
+   double ***outputimhihilo, double ***outputimlohilo,
+   double ***outputimhilolo, double ***outputimlololo,
+   int dim, int nbr, int deg, int *nvr,
+   int **idx, int *fstart, int *bstart, int *cstart, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Extracts the complex data computed on the device to the output.
+ *
+ * ON ENTRY :
+ *   datarehihihi are the highest doubles of the real parts of the input, 
+ *            computed forward, backward, and cross products;
+ *   datarelohihi are the 2nd highest doubles of the real parts of the input, 
+ *            computed forward, backward, and cross products;
+ *   datarehilohi are the 3rd highest doubles of the real parts of the input, 
+ *            computed forward, backward, and cross products;
+ *   datarelolohi are the 4th highest doubles of the real parts of the input, 
+ *            computed forward, backward, and cross products;
+ *   datarehihilo are the 4th lowest doubles of the real parts of the input, 
+ *            computed forward, backward, and cross products;
+ *   datarelohilo are the 3rd lowest doubles of the real parts of the input, 
+ *            computed forward, backward, and cross products;
+ *   datarehilolo are the 2nd lowest doubles of the real parts of the input, 
+ *            computed forward, backward, and cross products;
+ *   datarelololo are the lowest doubles of the real parts of the input, 
+ *            computed forward, backward, and cross products;
+ *   dataimhihihi are the highest doubles of the imaginary parts of the
+ *            input, computed forward, backward, and cross products;
+ *   dataimlohihi are the 2nd highest doubles of the imaginary parts of the
+ *            input, computed forward, backward, and cross products;
+ *   dataimhilohi are the 3rd highest doubles of the imaginary parts of the
+ *            input, computed forward, backward, and cross products;
+ *   dataimlolohi are the 4th highest doubles of the imaginary parts of the
+ *            input, computed forward, backward, and cross products;
+ *   dataimhilhio are the 4th lowest doubles of the imaginary parts of the
+ *            input, computed forward, backward, and cross products;
+ *   dataimlohilo are the 3rd lowest doubles of the imaginary parts of the
+ *            input, computed forward, backward, and cross products;
+ *   dataimhilolo are the 2nd lowest doubles of the imaginary parts of the
+ *            input, computed forward, backward, and cross products;
+ *   dataimlololo are the lowest doubles of the imaginary parts of the 
+ *            input, computed forward, backward, and cross products;
+ *   outputrehihihi has space for the value and all derivatives;
+ *   outputrelohihi has space for the value and all derivatives;
+ *   outputrehilohi has space for the value and all derivatives;
+ *   outputrelolohi has space for the value and all derivatives;
+ *   outputrehihilo has space for the value and all derivatives;
+ *   outputrelohilo has space for the value and all derivatives;
+ *   outputrehilolo has space for the value and all derivatives;
+ *   outputrelololo has space for the value and all derivatives;
+ *   outputimhihihi has space for the value and all derivatives;
+ *   outputimlohihi has space for the value and all derivatives;
+ *   outputimhilohi has space for the value and all derivatives;
+ *   outputimlolohi has space for the value and all derivatives;
+ *   outputimhihilo has space for the value and all derivatives;
+ *   outputimlohilo has space for the value and all derivatives;
+ *   outputimhilolo has space for the value and all derivatives;
+ *   outputimlololo has space for the value and all derivatives;
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      truncation degree of the series;
+ *   nvr      nvr[k] is the number of variables for monomial k;
+ *   idx      idx[k] has as many indices as the value of nvr[k],
+ *            idx[k][i] defines the place of the i-th variable,
+ *            with input values in input[idx[k][i]];
+ *   fstart   fstart[k] has the start position of the forward products
+ *            for the k-th monomial;
+ *   bstart   fstart[k] has the start position of the backward products
+ *            for the k-th monomial;
+ *   cstart   fstart[k] has the start position of the cross products
+ *            for the k-th monomial;
+ *   verbose  if true, writes extra information.
+ *
+ * ON RETURN :
+ *   outputrehihihi, in outputrehihihi[i][dim] are the highest doubles of
+ *            the real parts of the value of the i-th monomial, and
+ *            outputrehihihi[i][k] has the highest doubles of the real parts
+ *            of the value of the k-th derivative of the i-th monomial;
+ *   outputrelohihi, in outputrelohi[i][dim] are the 2nd highest doubles of
+ *            the real parts of the value of the i-th monomial, and
+ *            outputrelohihi[i][k] has the 2nd highest doubles of the real
+ *            parts of the value of the k-th derivative of the i-th monomial;
+ *   outputrehilohi, in outputrelohi[i][dim] are the 3rd highest doubles of
+ *            the real parts of the value of the i-th monomial, and
+ *            outputrehilohi[i][k] has the 3rd highest doubles of the real
+ *            parts of the value of the k-th derivative of the i-th monomial;
+ *   outputrelolohi, in outputrelolohi[i][dim] are the 4th highest doubles of
+ *            the real parts of the value of the i-th monomial, and
+ *            outputrelolohi[i][k] has the 4th highest doubles of the real
+ *            parts of the value of the k-th derivative of the i-th monomial;
+ *   outputrehihilo, in outputrehihilo[i][dim] are the 4th lowest doubles of
+ *            the real parts of the value of the i-th monomial, and 
+ *            outputrehihilo[i][k] has the 4th lowest doubles of the real
+ *            parts of the value of the k-th derivative of the i-th monomial;
+ *   outputrelohilo, in outputrelohilo[i][dim] are the 3rd lowest doubles of
+ *            the real parts of the value of the i-th monomial, and 
+ *            outputrelohilo[i][k] has the 3rd lowest doubles of the real
+ *            parts of the value of the k-th derivative of the i-th monomial;
+ *   outputrehilolo, in outputrehilolo[i][dim] are the 2nd lowest doubles of
+ *            the real parts of the value of the i-th monomial, and 
+ *            outputrehilolo[i][k] has the 2nd lowest doubles of the real
+ *            parts of the value of the k-th derivative of the i-th monomial;
+ *   outputrelololo, in outputrelololo[i][dim] are the lowest doubles of
+ *            the real parts of the value of the i-th monomial, and
+ *            outputrelolo[i][k] has the lowest doubles of the real parts
+ *            of the value of the k-th derivative of the i-th monomial;
+ *   outputimhihihi, in outputimhihihi[i][dim] are the highest doubles of
+ *            the imaginary parts of the value of the i-th monomial, and
+ *            outputimhihihi[i][k] has the highest doubles of the imaginary
+ *            parts of the value of the k-th derivative of the i-th monomial;
+ *   outputimlohihi, in outputrelohihi[i][dim] are the 2nd highest doubles of
+ *            the imaginary parts of the value of the i-th monomial, and
+ *            outputimlohihi[i][k] has the 2nd highest doubles of the imaginary
+ *            parts of the value of the k-th derivative of the i-th monomial;
+ *   outputimhilohi, in outputrehilohi[i][dim] are the 3nd highest doubles of
+ *            the imaginary parts of the value of the i-th monomial, and
+ *            outputimhilohi[i][k] has the 3rd highest doubles of the imaginary
+ *            parts of the value of the k-th derivative of the i-th monomial;
+ *   outputimlolohi, in outputrelolohi[i][dim] are the 4th highest doubles of
+ *            the imaginary parts of the value of the i-th monomial, and
+ *            outputimlolohi[i][k] has the 4th highest doubles of the imaginary
+ *            parts of the value of the k-th derivative of the i-th monomial;
+ *   outputimhihilo, in outputrehihilo[i][dim] are the 4th lowest doubles of
+ *            the imaginary parts of the value of the i-th monomial, and
+ *            outputimlolohi[i][k] has the 4th lowest doubles of the imaginary
+ *            parts of the value of the k-th derivative of the i-th monomial;
+ *   outputimlohilo, in outputrelohilo[i][dim] are the 3rd lowest doubles of
+ *            the imaginary parts of the value of the i-th monomial, and
+ *            outputimlohilo[i][k] has the 3rd lowest doubles of the imaginary
+ *            parts of the value of the k-th derivative of the i-th monomial;
+ *   outputimhilolo, in outputrehilolo[i][dim] are the 2nd lowest doubles of
+ *            the imaginary parts of the value of the i-th monomial, and
+ *            outputimhilohi[i][k] has the 2nd lowest doubles of the imaginary
+ *            parts of the value of the k-th derivative of the i-th monomial;
+ *   outputimlololo, in outputrelololo[i][dim] are the lowest doubles of
+ *            the imaginary parts of the value of the i-th monomial, and
+ *            outputimlololo[i][k] has the lowest doubles of the imaginary
+ *            parts of the value of the k-th derivative of the i-th monomial. */
+
 void GPU_dbl8_mon_evaldiff
  ( int szt, int dim, int nbr, int deg, int *nvr, int **idx,
    double **cffhihihi, double **cfflohihi,
@@ -202,6 +355,238 @@ void GPU_dbl8_mon_evaldiff
  *            outputlololo[k], for k from 0 to dim-1, has the lowest double
  *            of the derivative with respect to the variable k;
  *            outputlololo[dim] has the lowest double value;
+ *   cnvlapms is the elapsed time spent by all convolution kernels,
+ *            expressed in milliseconds;
+ *   addlapms is the elapsed time spent by all addition kernels,
+ *            expressed in milliseconds;
+ *   elapsedms is the elapsed time spent by all kernels,
+ *            expressed in milliseconds;
+ *   walltimesec is the elapsed wall clock time for all computations
+ *            (excluding memory copies) in seconds. */
+
+void GPU_cmplx8_mon_evaldiff
+ ( int szt, int dim, int nbr, int deg, int *nvr, int **idx,
+   double **cffrehihihi, double **cffrelohihi,
+   double **cffrehilohi, double **cffrelolohi,
+   double **cffrehihilo, double **cffrelohilo,
+   double **cffrehilolo, double **cffrelololo,
+   double **cffimhihihi, double **cffimlohihi,
+   double **cffimhilohi, double **cffimlolohi,
+   double **cffimhihilo, double **cffimlohilo,
+   double **cffimhilolo, double **cffimlololo,
+   double **inputrehihihi, double **inputrelohihi,
+   double **inputrehilohi, double **inputrelolohi,
+   double **inputrehihilo, double **inputrelohilo,
+   double **inputrehilolo, double **inputrelololo,
+   double **inputimhihihi, double **inputimlohihi,
+   double **inputimhilohi, double **inputimlolohi,
+   double **inputimhihilo, double **inputimlohilo,
+   double **inputimhilolo, double **inputimlololo,
+   double ***outputrehihihi, double ***outputrelohihi,
+   double ***outputrehilohi, double ***outputrelolohi,
+   double ***outputrehihilo, double ***outputrelohilo,
+   double ***outputrehilolo, double ***outputrelololo,
+   double ***outputimhihihi, double ***outputimlohihi,
+   double ***outputimhilohi, double ***outputimlolohi,
+   double ***outputimhihilo, double ***outputimlohilo,
+   double ***outputimhilolo, double ***outputimlololo,
+   ConvolutionJobs cnvjobs,
+   double *cnvlapms, double *elapsedms, double *walltimesec, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Evaluates and differentiates a monomial system.
+ *   Computes the convolutions in the order as defined by jobs,
+ *   on complex data.
+ *
+ * ON ENTRY :
+ *   szt      number of threads in a block, must equal deg + 1;
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      truncation degree of the series;
+ *   nvr      nvr[k] holds the number of variables in monomial k;
+ *   idx      idx[k] has as many indices as the value of nvr[k],
+ *            idx[k][i] defines the place of the i-th variable,
+ *            with input values in input[idx[k][i]];
+ *   cffrehihihi, cffrehihihi[k] has deg+1 highest doubles of the real parts
+ *            for the coefficient series of monomial k;
+ *   cffrelohihi, cffrelohihi[k] has deg+1 second highest doubles of the real
+ *            parts for the coefficient series of monomial k;
+ *   cffrehilohi, cffrehilohi[k] has deg+1 third highest doubles of the real
+ *            parts for the coefficient series of monomial k;
+ *   cffrelolohi, cffrelolohi[k] has deg+1 fourth highest doubles of the real
+ *            parts for the coefficient series of monomial k;
+ *   cffrehihilo, cffrehihilo[k] has deg+1 fourth lowest doubles of the real
+ *            parts for the coefficient series of monomial k;
+ *   cffrelohilo, cffrelohilo[k] has deg+1 third lowest doubles of the real
+ *            parts for the coefficient series of monomial k;
+ *   cffrehilolo, cffrehilolo[k] has deg+1 second lowest doubles of the real
+ *            parts for the coefficient series of monomial k;
+ *   cffrelololo, cffrelololo[k] has deg+1 lowest doubles of the real parts
+ *            for the coefficient series of monomial k;
+ *   cffimhihihi, cffimhihihi[k] has deg+1 highest doubles of the
+ *            imaginary parts for the coefficient series of monomial k;
+ *   cffimlohihi, cffimlohihi[k] has deg+1 second highest doubles of the
+ *            imaginary parts for the coefficient series of monomial k;
+ *   cffimhilohi, cffimhilohi[k] has deg+1 third highest doubles of the
+ *            imaginary parts for the coefficient series of monomial k;
+ *   cffimlolohi, cffimlolohi[k] has deg+1 fourth highest doubles of the
+ *            imaginary parts for the coefficient series of monomial k;
+ *   cffimhihilo, cffimihihilo[k] has deg+1 fourth lowest doubles of the
+ *            imaginary parts for the coefficient series of monomial k;
+ *   cffimlohilo, cffimilohilo[k] has deg+1 third lowest doubles of the
+ *            imaginary parts for the coefficient series of monomial k;
+ *   cffimhilolo, cffimihilolo[k] has deg+1 second lowest doubles of the
+ *            imaginary parts for the coefficient series of monomial k;
+ *   cffimlololo, cffimlololo[k] has deg+1 lowest doubles of the
+ *            imaginary parts for the coefficient series of monomial k;
+ *   inputrehihihi are the highest doubles of the real parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   inputrelohihi are the second highest doubles of the real parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   inputrehilohi are the third highest doubles of the real parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   inputrelolohi are the fourth highest doubles of the real parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   inputrehihilo are the fourth lowest doubles of the real parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   inputrelohilo are the third lowest doubles of the real parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   inputrehilolo are the second lowest doubles of the real parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   inputrelololo are the lowest doubles of the real parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   inputimhihihi are the highest doubles of the imaginary parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   inputimlohihi are the second highest doubles of the imaginary parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   inputimhilohi are the third highest doubles of the imaginary parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   inputimlolohi are the fourth lowest doubles of the imaginary parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   inputimhihilo are the fourth lowest doubles of the imaginary parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   inputimlohilo are the third lowest doubles of the imaginary parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   inputimhilolo are the second lowest doubles of the imaginary parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   inputimlololo are the lowest doubles of the imaginary parts of the
+ *            coefficients of the series for all variables in the polynomial;
+ *   outputrehihihi has space for the highest doubles of the real parts
+ *            of the value and all derivatives;
+ *   outputrelohihi has space for the second highest doubles of the real parts
+ *            of the value and all derivatives;
+ *   outputrehilohi has space for the third highest doubles of the real parts
+ *            of the value and all derivatives;
+ *   outputrelolohi has space for the fourth highest doubles of the real parts
+ *            of the value and all derivatives;
+ *   outputrehihilo has space for the fourth lowest doubles of the real parts
+ *            of the value and all derivatives;
+ *   outputrelohilo has space for the third lowest doubles of the real parts
+ *            of the value and all derivatives;
+ *   outputrehilolo has space for the second lowest doubles of the real parts
+ *            of the value and all derivatives;
+ *   outputrelololo has space for the lowest doubles of the real parts
+ *            of the value and all derivatives;
+ *   outputimhihihi has space for the highest doubles of the imaginary parts
+ *            of value and all derivatives;
+ *   outputimlohihi has space for the second highest doubles of the imaginary
+ *            parts of value and all derivatives;
+ *   outputimhilohi has space for the third highest doubles of the imaginary
+ *            parts of value and all derivatives;
+ *   outputimlolohi has space for the fourth highest doubles of the imaginary
+ *            parts of value and all derivatives;
+ *   outputimhihilo has space for the fourth lowest doubles of the imaginary
+ *            parts of value and all derivatives;
+ *   outputimlohilo has space for the third lowest doubles of the imaginary
+ *            parts of value and all derivatives;
+ *   outputimhilolo has space for the second lowest doubles of the imaginary
+ *            parts of value and all derivatives;
+ *   outputimlololo has space for the lowest doubles of the imaginary parts
+ *            of value and all derivatives;
+ *   cnvjobs  convolution jobs organized in layers;
+ *   verbose  if true, then extra output about the setup is written.
+ *
+ * ON RETURN :
+ *   outputrehihihi has the highest doubles of the real parts of derivatives
+ *            and the value, outputrehihihi[k], for k from 0 to dim-1,
+ *            has the highest doubles of the real part of the derivative
+ *            with respect to the variable k; outputrehihihi[dim] has the
+ *            highest doubles of the real part of the value;
+ *   outputrelohihi has the 2nd highest doubles of the real parts of derivatives
+ *            and the value, outputrelohihi[k], for k from 0 to dim-1, has the
+ *            second highest doubles of the real part of the derivative
+ *            with respect to the variable k; outputrelohihi[dim] has the
+ *            second highest doubles of the real part of the value;
+ *   outputrehilohi has the 3rd highest doubles of the real parts of derivatives
+ *            and the value, outputrehilohi[k], for k from 0 to dim-1, has the
+ *            third highest doubles of the real part of the derivative
+ *            with respect to the variable k; outputrehilohi[dim] has the
+ *            third highest doubles of the real part of the value;
+ *   outputrelolohi has the 4th highest doubles of the real parts of derivatives
+ *            and the value, outputrelolohi[k], for k from 0 to dim-1, has the
+ *            fourth highest doubles of the real part of the derivative
+ *            with respect to the variable k; outputrelolohi[dim] has the
+ *            fourth highest doubles of the real part of the value;
+ *   outputrehihilo has the 4th lowest doubles of the real parts of derivatives
+ *            and the value, outputrehihilo[k], for k from 0 to dim-1, has the
+ *            fourth lowest doubles of the real part of the derivative
+ *            with respect to the variable k; outputrehihilo[dim] has the
+ *            fourth lowest doubles of the real part of the value;
+ *   outputrelohilo has the 3rd lowest doubles of the real parts of derivatives
+ *            and the value, outputrelohilo[k], for k from 0 to dim-1, has the
+ *            third lowest doubles of the real part of the derivative
+ *            with respect to the variable k; outputrelohilo[dim] has the
+ *            third lowest doubles of the real part of the value;
+ *   outputrehilolo has the 2nd lowest doubles of the real parts of derivatives
+ *            and the value, outputrehilolo[k], for k from 0 to dim-1, has the
+ *            second lowest doubles of the real part of the derivative
+ *            with respect to the variable k; outputrehilolo[dim] has the
+ *            second lowest doubles of the real part of the value;
+ *   outputrelololo has the lowest doubles of the real parts of derivatives
+ *            and the value, outputrelololo[k], for k from 0 to dim-1, has the
+ *            lowest doubles of the real part of the derivative
+ *            with respect to the variable k; outputrelololo[dim] has the
+ *            lowest doubles of the real part of the value;
+ *   outputimhihihi has the highest doubles of the imag parts of derivatives
+ *            and the value, outputimhihihi[k], for k from 0 to dim-1, has the
+ *            highest doubles of the imaginary part of the derivative
+ *            with respect to the variable k; outputimhihihi[dim] has the
+ *            highest doubles of the imaginary part of the value;
+ *   outputimlohihi has the 2nd highest doubles of the imag parts of derivatives
+ *            and the value, outputimlohihi[k], for k from 0 to dim-1, has the
+ *            second highest doubles of the imaginary part of the derivative
+ *            with respect to the variable k; outputimlohihi[dim] has the
+ *            second highest doubles of the imaginary part of the value;
+ *   outputimhilohi has the 3rd highest doubles of the imag parts of derivatives
+ *            and the value, outputimhilohi[k], for k from 0 to dim-1, has the
+ *            third highest doubles of the imaginary part of the derivative
+ *            with respect to the variable k; outputimhilohi[dim] has the
+ *            third highest doubles of the imaginary part of the value;
+ *   outputimlolohi has the 4th highest doubles of the imag parts of derivatives
+ *            and the value, outputimlolohi[k], for k from 0 to dim-1, has the
+ *            fourth highest doubles of the imaginary part of the derivative
+ *            with respect to the variable k; outputimlolohi[dim] has the
+ *            fourth highest doubles of the imaginary part of the value;
+ *   outputimhihilo has the 4th lowest doubles of the imag parts of derivatives
+ *            and the value, outputimhihilo[k], for k from 0 to dim-1, has the
+ *            fourth lowest doubles of the imaginary part of the derivative
+ *            with respect to the variable k; outputimhihilo[dim] has the
+ *            fourth lowest doubles of the imaginary part of the value;
+ *   outputimlohilo has the 3rd lowest doubles of the imag parts of derivatives
+ *            and the value, outputimlohilo[k], for k from 0 to dim-1, has the
+ *            third lowest doubles of the imaginary part of the derivative
+ *            with respect to the variable k; outputimlohilo[dim] has the
+ *            third lowest doubles of the imaginary part of the value;
+ *   outputimhilolo has the 2nd lowest doubles of the imag parts of derivatives
+ *            and the value, outputimhilolo[k], for k from 0 to dim-1, has the
+ *            second lowest doubles of the imaginary part of the derivative
+ *            with respect to the variable k; outputimhilolo[dim] has the
+ *            second lowest doubles of the imaginary part of the value;
+ *   outputimlololo has the lowest doubles of the imaginary parts of derivatives
+ *            and the value, outputimlololo[k], for k from 0 to dim-1, has the
+ *            lowest doubles of the imaginary part of the derivative
+ *            with respect to the variable k; outputimlololo[dim] has the
+ *            lowest doubles of the imaginary part of the value;
  *   cnvlapms is the elapsed time spent by all convolution kernels,
  *            expressed in milliseconds;
  *   addlapms is the elapsed time spent by all addition kernels,
@@ -319,5 +704,299 @@ void GPU_dbl8_evaluate_monomials
  *            outputlololo[k], for k from 0 to dim-1, has the lowest double
  *            of the derivative with respect to the variable k;
  *            outputlololo[dim] has the lowest double value. */
+
+void GPU_cmplx8_evaluate_monomials
+ ( int dim, int deg, int szt, int nbt,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **cffrehihihi, double **cffrelohihi,
+   double **cffrehilohi, double **cffrelolohi,
+   double **cffrehihilo, double **cffrelohilo,
+   double **cffrehilolo, double **cffrelololo,
+   double **cffimhihihi, double **cffimlohihi,
+   double **cffimhilohi, double **cffimlolohi,
+   double **cffimhihilo, double **cffimlohilo,
+   double **cffimhilolo, double **cffimlololo,
+   double *accrehihihi, double *accrelohihi,
+   double *accrehilohi, double *accrelolohi,
+   double *accrehihilo, double *accrelohilo,
+   double *accrehilolo, double *accrelololo,
+   double *accimhihihi, double *accimlohihi,
+   double *accimhilohi, double *accimlolohi,
+   double *accimhihilo, double *accimlohilo,
+   double *accimhilolo, double *accimlololo,
+   double **inputrehihihi, double **inputrelohihi,
+   double **inputrehilohi, double **inputrelolohi,
+   double **inputrehihilo, double **inputrelohilo,
+   double **inputrehilolo, double **inputrelololo,
+   double **inputimhihihi, double **inputimlohihi, 
+   double **inputimhilohi, double **inputimlolohi, 
+   double **inputimhihilo, double **inputimlohilo, 
+   double **inputimhilolo, double **inputimlololo, 
+   double ***outputrehihihi, double ***outputrelohihi, 
+   double ***outputrehilohi, double ***outputrelolohi, 
+   double ***outputrehihilo, double ***outputrelohilo, 
+   double ***outputrehilolo, double ***outputrelololo, 
+   double ***outputimhihihi, double ***outputimlohihi,
+   double ***outputimhilohi, double ***outputimlolohi,
+   double ***outputimhihilo, double ***outputimlohilo,
+   double ***outputimhilolo, double ***outputimlololo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates monomials at power series.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   szt       size of each block of threads;
+ *   nbt       number of thread blocks;
+ *   nvr       nvr[i] is the number of variables in the i-th monomial;
+ *   idx       idx[i] are the indices of the variables in monomial i;
+ *   exp       exp[i] are the exponents of the variables in monomial i;
+ *   nbrfac    nbrfac[i] are the number of exponents > 1 in monomial i;
+ *   expfac    expfac[i] are the exponents in the i-th polynomial
+ *             that are larger than one, minus one in the factor,
+ *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   cffrehihihi are the highest doubles of the real parts
+ *             of the coefficients;
+ *   cffrelohihi are the second highest doubles of the real parts
+ *             of the coefficients;
+ *   cffrehilohi are the third highest doubles of the real parts
+ *             of the coefficients;
+ *   cffrelolohi are the fourth highest doubles of the real parts
+ *             of the coefficients;
+ *   cffrehihilo are the fourth lowest doubles of the real parts
+ *             of the coefficients;
+ *   cffrelohilo are the third lowest doubles of the real parts
+ *             of the coefficients;
+ *   cffrehilolo are the second lowest doubles of the real parts
+ *             of the coefficients;
+ *   cffrelololo are the lowest doubles of the real parts of the coefficients;
+ *   cffimhihihi are the highest doubles of the imaginary parts
+ *             of the coefficients;
+ *   cffimlohihi are the second highest doubles of the imaginary parts
+ *             of the coefficients;
+ *   cffimhilohi are the third highest doubles of the imaginary parts
+ *             of the coefficients;
+ *   cffimlolohi are the fourth highest doubles of the imaginary parts
+ *             of the coefficients;
+ *   cffimhihilo are the fourth lowest doubles of the imaginary parts
+ *             of the coefficients;
+ *   cffimlohilo are the third lowest doubles of the imaginary parts
+ *             of the coefficients;
+ *   cffimhilolo are the second lowest doubles of the imaginary parts
+ *             of the coefficients;
+ *   cffimlololo are the lowest doubles of the imaginary parts
+ *             of the coefficients;
+ *   accrehihihi has space to accumulate one series of degree deg;
+ *   accrelohihi has space to accumulate one series of degree deg;
+ *   accrehilohi has space to accumulate one series of degree deg;
+ *   accrelolohi has space to accumulate one series of degree deg;
+ *   accrehihilo has space to accumulate one series of degree deg;
+ *   accrelohilo has space to accumulate one series of degree deg;
+ *   accrehilolo has space to accumulate one series of degree deg;
+ *   accrelololo has space to accumulate one series of degree deg;
+ *   accimhihihi has space to accumulate one  series of degree deg;
+ *   accimlohihi has space to accumulate one  series of degree deg;
+ *   accimhilohi has space to accumulate one  series of degree deg;
+ *   accimlolohi has space to accumulate one  series of degree deg;
+ *   accimhihilo has space to accumulate one  series of degree deg;
+ *   accimlohilo has space to accumulate one  series of degree deg;
+ *   accimhilolo has space to accumulate one  series of degree deg;
+ *   accimlololo has space to accumulate one  series of degree deg;
+ *   inputrehihihi has the highest doubles of the real parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputrelohihi has the second highest doubles of the real parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputrehilohi has the third highest doubles of the real parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputrelohihi has the fourth highest doubles of the real parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputrehihilo has the fourth lowest doubles of the real parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputrelohilo has the third lowest doubles of the real parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputrehilolo has the second lowest doubles of the real parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputrelololo has the lowest doubles of the real parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputimhihihi has the highest doubles of the imaginary parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputimlohihi has the second highest doubles of the imaginary parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputimhilohi has the third highest doubles of the imaginary parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputimlolohi has the fourth highest doubles of the imaginary parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputimhihilo has the fourth lowest doubles of the imaginary parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputimlohilo has the third lowest doubles of the imaginary parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputimhilolo has the second lowest doubles of the imaginary parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputimlololo has the lowest doubles of the imaginary parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   outputrehihihi has space for the highest doubles of the real parts
+ *             of the output;
+ *   outputrelohihi has space for the second highest doubles of the real parts
+ *             of the output;
+ *   outputrehilohi has space for the third highest doubles of the real parts
+ *             of the output;
+ *   outputrelolohi has space for the fourth highest doubles of the real parts
+ *             of the output;
+ *   outputrehihilo has space for the fourth lowest doubles of the real parts
+ *             of the output;
+ *   outputrelohilo has space for the third lowest doubles of the real parts
+ *             of the output;
+ *   outputrehilolo has space for the second lowest doubles of the real parts
+ *             of the output;
+ *   outputrelololo has space for the lowest doubles of the real parts
+ *             of the output;
+ *   outputimhihihi has space for the highest doubles of the imaginary
+ *             parts of the output;
+ *   outputimlohihi has space for the second highest doubles of the imaginary
+ *             parts of the output;
+ *   outputimhilohi has space for the third highest doubles of the imaginary
+ *             parts of the output;
+ *   outputimlolohi has space for the fourth highest doubles of the imaginary
+ *             parts of the output;
+ *   outputimhihilo has space for the fourth lowest doubles of the imaginary
+ *             parts of the output;
+ *   outputimlohilo has space for the third lowest doubles of the imaginary
+ *             parts of the output;
+ *   outputimhilolo has space for the second lowest doubles of the imaginary
+ *             parts of the output;
+ *   outputimlololo has space for the lowest doubles of the imaginary
+ *             parts of the output;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   cffrehihihi has the highest doubles of the real parts
+ *             of the evaluated common factors;
+ *   cffrelohihi has the second highest doubles of the real parts
+ *             of the evaluated common factors;
+ *   cffrehilohi has the third highest doubles of the real parts
+ *             of the evaluated common factors;
+ *   cffrelolohi has the fourth highest doubles of the real parts
+ *             of the evaluated common factors;
+ *   cffrehihilo has the fourth lowest doubles of the real parts
+ *             of the evaluated common factors;
+ *   cffrelohilo has the third lowest doubles of the real parts
+ *             of the evaluated common factors;
+ *   cffrehilolo has the second lowest doubles of the real parts
+ *             of the evaluated common factors;
+ *   cffrelololo has the lowest doubles of the real parts
+ *             of the evaluated common factors;
+ *   cffimhihihi has the highest doubles of the imaginary parts
+ *             of the evaluated common factors;
+ *   cffimlohihi has the second highest doubles of the imaginary parts
+ *             of the evaluated common factors;
+ *   cffimhilohi has the third highest doubles of the imaginary parts
+ *             of the evaluated common factors;
+ *   cffimlolohi has the fourth highest doubles of the imaginary parts
+ *             of the evaluated common factors;
+ *   cffimhihilo has the fourth lowest doubles of the imaginary parts
+ *             of the evaluated common factors;
+ *   cffimlohilo has the third lowest doubles of the imaginary parts
+ *             of the evaluated common factors;
+ *   cffimhilolo has the second lowest doubles of the imaginary parts
+ *             of the evaluated common factors;
+ *   cffimlololo has the lowest doubles of the imaginary parts
+ *             of the evaluated common factors;
+ *   outputrehihihi has the highest doubles of the real parts of the evaluated
+ *             and differentiated monomials, outputrehihihi[i][dim] has the
+ *             highest doubles of the real parts of the value of the input
+ *             at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputrehihihi[i][idx[k]] has the highest doubles
+ *             of the real parts of the derivative w.r.t. idx[k];
+ *   outputrelohihi has the second highest doubles of the real parts of the
+ *             evaluated and differentiated monomials, outputrelohihi[i][dim]
+ *             has the second highest doubles of the real parts of the value of
+ *             the input at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputrelohihi[i][idx[k]] has the second highest doubles
+ *             of the real parts of the derivative w.r.t. idx[k];
+ *   outputrehilohi has the third highest doubles of the real parts of the
+ *             evaluated and differentiated monomials, outputrehilohi[i][dim]
+ *             has the third highest doubles of the real parts of the value of
+ *             the input at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputrehilohi[i][idx[k]] has the third highest doubles
+ *             of the real parts of the derivative w.r.t. idx[k];
+ *   outputrelolohi has the fourth highest doubles of the real parts of the
+ *             evaluated and differentiated monomials, outputrelolohi[i][dim]
+ *             has the fourth highest doubles of the real parts of the value of
+ *             the input at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputrelolohi[i][idx[k]] has the fourth highest doubles
+ *             of the real parts of the derivative w.r.t. idx[k];
+ *   outputrehihilo has the fourth lowest doubles of the real parts of the
+ *             evaluated and differentiated monomials, outputrehihilo[i][dim]
+ *             has the fourth lowest doubles of the real parts of the value of
+ *             the input at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputrehihilo[i][idx[k]] has the fourth lowest doubles
+ *             of the real parts of the derivative w.r.t. idx[k];
+ *   outputrelohilo has the third lowest doubles of the real parts of the
+ *             evaluated and differentiated monomials, outputrelohilo[i][dim]
+ *             has the third lowest doubles of the real parts of the value of
+ *             the input at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputrelohilo[i][idx[k]] has the third lowest doubles
+ *             of the real parts of the derivative w.r.t. idx[k];
+ *   outputrehilolo has the second lowest doubles of the real parts of the
+ *             evaluated and differentiated monomials, outputrehilolo[i][dim]
+ *             has the second lowest doubles of the real parts of the value of
+ *             the input at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputrehilolo[i][idx[k]] has the second lowest doubles
+ *             of the real parts of the derivative w.r.t. idx[k];
+ *   outputrelololo has the lowest doubles of the real parts of the evaluated
+ *             and differentiated monomials, outputrelololo[i][dim] has the
+ *             lowest doubles of the real parts of the value of the input
+ *             at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputrelololo[i][idx[k]] has the lowest doubles
+ *             of the real parts of the derivative w.r.t. idx[k];
+ *   outputimhihihi has the highest doubles of the imaginary parts of the
+ *             evaluated and differentiated monomials, outputimhihihi[i][dim]
+ *             has the highest doubles of the imaginary part of the value of
+ *             the input at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputimhihi[i][idx[k]] has the highest doubles
+ *             of the imaginary parts of te derivative w.r.t. idx[k];
+ *   outputimlohihi has the second highest doubles of the imag parts of the
+ *             evaluated and differentiated monomials, outputimlohihi[i][dim]
+ *             has the second highest doubles of the imaginary part of the
+ *             value of the input at the i-th monomial, and for k in range
+ *             0..nvr[i]-1: outputimlohihi[i][idx[k]] has the second highest
+ *             doubles of the imaginary parts of te derivative w.r.t. idx[k];
+ *   outputimhilohi has the third highest doubles of the imag parts of the
+ *             evaluated and differentiated monomials, outputimhilohi[i][dim]
+ *             has the third highest doubles of the imaginary part of the
+ *             value of the input at the i-th monomial, and for k in range
+ *             0..nvr[i]-1: outputimhilohi[i][idx[k]] has the third highest
+ *             doubles of the imaginary parts of te derivative w.r.t. idx[k];
+ *   outputimlolohi has the fourth highest doubles of the imag parts of the
+ *             evaluated and differentiated monomials, outputimlolohi[i][dim]
+ *             has the fourth highest doubles of the imaginary part of the
+ *             value of the input at the i-th monomial, and for k in range
+ *             0..nvr[i]-1: outputimlolohi[i][idx[k]] has the fourth highest
+ *             doubles of the imaginary parts of te derivative w.r.t. idx[k];
+ *   outputimhihilo has the fourth lowest doubles of the imag parts of the
+ *             evaluated and differentiated monomials, outputimhihilo[i][dim]
+ *             has the fourth lowest doubles of the imaginary part of the
+ *             value of the input at the i-th monomial, and for k in range
+ *             0..nvr[i]-1: outputimhihilo[i][idx[k]] has the fourth lowest
+ *             doubles of the imaginary parts of te derivative w.r.t. idx[k];
+ *   outputimlohilo has the third lowest doubles of the imag parts of the
+ *             evaluated and differentiated monomials, outputimlohilo[i][dim]
+ *             has the third lowest doubles of the imaginary part of the
+ *             value of the input at the i-th monomial, and for k in range
+ *             0..nvr[i]-1: outputimlohilo[i][idx[k]] has the second lowest
+ *             doubles of the imaginary parts of te derivative w.r.t. idx[k];
+ *   outputimhilolo has the second lowest doubles of the imag parts of the
+ *             evaluated and differentiated monomials, outputimhilolo[i][dim]
+ *             has the second lowest doubles of the imaginary part of the
+ *             value of the input at the i-th monomial, and for k in range
+ *             0..nvr[i]-1: outputimhilolo[i][idx[k]] has the second lowest
+ *             doubles of the imaginary parts of te derivative w.r.t. idx[k];
+ *   outputimlololo has the lowest doubles of the imaginary parts of the
+ *             evaluated and differentiated monomials, outputimlololo[i][dim]
+ *             has the lowest doubles of the imaginary part of the value of
+ *             the input at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputimlololo[i][idx[k]] has the lowest doubles
+ *             of the imaginary parts of te derivative w.r.t. idx[k]. */
 
 #endif
