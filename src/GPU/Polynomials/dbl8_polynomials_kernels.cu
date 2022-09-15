@@ -20,6 +20,9 @@
 // The constant od_shmemsize is the bound on the shared memory size.
 
 #define od_shmemsize 192
+#define odh_shmemsize 96
+
+// odh_shmesize is used on complex data, otherwise too much used ...
 
 using namespace std;
 
@@ -129,6 +132,256 @@ __global__ void dbl8_padded_convjobs
    datalolohi[idx3] = zvlolohi[tdx];
    datalohilo[idx3] = zvlohilo[tdx];
    datalololo[idx3] = zvlololo[tdx];
+}
+
+__global__ void cmplx8_padded_convjobs
+ ( double *datarehihihi, double *datarelohihi,
+   double *datarehilohi, double *datarelolohi,
+   double *datarehihilo, double *datarelohilo,
+   double *datarehilolo, double *datarelololo,
+   double *dataimhihihi, double *dataimlohihi,
+   double *dataimhilohi, double *dataimlolohi,
+   double *dataimhihilo, double *dataimlohilo,
+   double *dataimhilolo, double *dataimlololo,
+   int *in1idx, int *in2idx, int *outidx, int dim )
+{
+   const int bdx = blockIdx.x;           // index to the convolution job
+   const int tdx = threadIdx.x;          // index to the output of the job
+   const int idx1 = in1idx[bdx] + tdx;
+   const int idx2 = in2idx[bdx] + tdx;
+   const int idx3 = outidx[bdx] + tdx;
+
+   __shared__ double xvrehihihi[odh_shmemsize];
+   __shared__ double xvrelohihi[odh_shmemsize];
+   __shared__ double xvrehilohi[odh_shmemsize];
+   __shared__ double xvrelolohi[odh_shmemsize];
+   __shared__ double xvrehihilo[odh_shmemsize];
+   __shared__ double xvrelohilo[odh_shmemsize];
+   __shared__ double xvrehilolo[odh_shmemsize];
+   __shared__ double xvrelololo[odh_shmemsize];
+   __shared__ double xvimhihihi[odh_shmemsize];
+   __shared__ double xvimlohihi[odh_shmemsize];
+   __shared__ double xvimhilohi[odh_shmemsize];
+   __shared__ double xvimlolohi[odh_shmemsize];
+   __shared__ double xvimhihilo[odh_shmemsize];
+   __shared__ double xvimlohilo[odh_shmemsize];
+   __shared__ double xvimhilolo[odh_shmemsize];
+   __shared__ double xvimlololo[odh_shmemsize];
+   __shared__ double yvrehihihi[2*odh_shmemsize];
+   __shared__ double yvrelohihi[2*odh_shmemsize];
+   __shared__ double yvrehilohi[2*odh_shmemsize];
+   __shared__ double yvrelolohi[2*odh_shmemsize];
+   __shared__ double yvrehihilo[2*odh_shmemsize];
+   __shared__ double yvrelohilo[2*odh_shmemsize];
+   __shared__ double yvrehilolo[2*odh_shmemsize];
+   __shared__ double yvrelololo[2*odh_shmemsize];
+   __shared__ double yvimhihihi[2*odh_shmemsize];
+   __shared__ double yvimlohihi[2*odh_shmemsize];
+   __shared__ double yvimhilohi[2*odh_shmemsize];
+   __shared__ double yvimlolohi[2*odh_shmemsize];
+   __shared__ double yvimhihilo[2*odh_shmemsize];
+   __shared__ double yvimlohilo[2*odh_shmemsize];
+   __shared__ double yvimhilolo[2*odh_shmemsize];
+   __shared__ double yvimlololo[2*odh_shmemsize];
+   __shared__ double zvrehihihi[odh_shmemsize];
+   __shared__ double zvrelohihi[odh_shmemsize];
+   __shared__ double zvrehilohi[odh_shmemsize];
+   __shared__ double zvrelolohi[odh_shmemsize];
+   __shared__ double zvrehihilo[odh_shmemsize];
+   __shared__ double zvrelohilo[odh_shmemsize];
+   __shared__ double zvrehilolo[odh_shmemsize];
+   __shared__ double zvrelololo[odh_shmemsize];
+   __shared__ double zvimhihihi[odh_shmemsize];
+   __shared__ double zvimlohihi[odh_shmemsize];
+   __shared__ double zvimhilohi[odh_shmemsize];
+   __shared__ double zvimlolohi[odh_shmemsize];
+   __shared__ double zvimhihilo[odh_shmemsize];
+   __shared__ double zvimlohilo[odh_shmemsize];
+   __shared__ double zvimhilolo[odh_shmemsize];
+   __shared__ double zvimlololo[odh_shmemsize];
+
+   double prodhihihi,prodlohihi,prodhilohi,prodlolohi;
+   double prodhihilo,prodlohilo,prodhilolo,prodlololo;
+   int ydx = dim + tdx;
+
+   xvrehihihi[tdx] = datarehihihi[idx1];  // loading first input
+   xvrelohihi[tdx] = datarelohihi[idx1]; 
+   xvrehilohi[tdx] = datarehilohi[idx1]; 
+   xvrelolohi[tdx] = datarelolohi[idx1]; 
+   xvrehihilo[tdx] = datarehihilo[idx1];
+   xvrelohilo[tdx] = datarelohilo[idx1]; 
+   xvrehilolo[tdx] = datarehilolo[idx1]; 
+   xvrelololo[tdx] = datarelololo[idx1]; 
+   xvimhihihi[tdx] = dataimhihihi[idx1];
+   xvimlohihi[tdx] = dataimlohihi[idx1];
+   xvimhilohi[tdx] = dataimhilohi[idx1]; 
+   xvimlolohi[tdx] = dataimlolohi[idx1]; 
+   xvimhihilo[tdx] = dataimhihilo[idx1];
+   xvimlohilo[tdx] = dataimlohilo[idx1];
+   xvimhilolo[tdx] = dataimhilolo[idx1]; 
+   xvimlololo[tdx] = dataimlololo[idx1]; 
+   yvrehihihi[tdx] = 0.0;                 // padded with zeros
+   yvrelohihi[tdx] = 0.0;
+   yvrehilohi[tdx] = 0.0;
+   yvrelolohi[tdx] = 0.0;
+   yvrehihilo[tdx] = 0.0;
+   yvrelohilo[tdx] = 0.0;
+   yvrehilolo[tdx] = 0.0;
+   yvrelololo[tdx] = 0.0;
+   yvimhihihi[tdx] = 0.0;
+   yvimlohihi[tdx] = 0.0;
+   yvimhilohi[tdx] = 0.0;
+   yvimlolohi[tdx] = 0.0;
+   yvimhihilo[tdx] = 0.0;
+   yvimlohilo[tdx] = 0.0;
+   yvimhilolo[tdx] = 0.0;
+   yvimlololo[tdx] = 0.0;
+   yvrehihihi[ydx] = datarehihihi[idx2]; // loading second input
+   yvrelohihi[ydx] = datarelohihi[idx2];
+   yvrehilohi[ydx] = datarehilohi[idx2];
+   yvrelolohi[ydx] = datarelolohi[idx2];
+   yvrehihilo[ydx] = datarehihilo[idx2];
+   yvrelohilo[ydx] = datarelohilo[idx2];
+   yvrehilolo[ydx] = datarehilolo[idx2];
+   yvrelololo[ydx] = datarelololo[idx2];
+   yvimhihihi[ydx] = dataimhihihi[idx2];
+   yvimlohihi[ydx] = dataimlohihi[idx2];
+   yvimhilohi[ydx] = dataimhilohi[idx2];
+   yvimlolohi[ydx] = dataimlolohi[idx2];
+   yvimhihilo[ydx] = dataimhihilo[idx2];
+   yvimlohilo[ydx] = dataimlohilo[idx2];
+   yvimhilolo[ydx] = dataimhilolo[idx2];
+   yvimlololo[ydx] = dataimlololo[idx2];
+
+   __syncthreads();
+
+   // zv[tdx] = xv[0]*yv[tdx];
+   odg_mul(xvrehihihi[0],xvrelohihi[0],xvrehilohi[0],xvrelolohi[0],
+           xvrehihilo[0],xvrelohilo[0],xvrehilolo[0],xvrelololo[0],
+           yvrehihihi[ydx],yvrelohihi[ydx],yvrehilohi[ydx],yvrelolohi[ydx],
+           yvrehihilo[ydx],yvrelohilo[ydx],yvrehilolo[ydx],yvrelololo[ydx],
+           &zvrehihihi[tdx],&zvrelohihi[tdx],
+           &zvrehilohi[tdx],&zvrelolohi[tdx],
+           &zvrehihilo[tdx],&zvrelohilo[tdx],
+           &zvrehilolo[tdx],&zvrelololo[tdx]);
+   __syncthreads();
+   odg_mul(xvimhihihi[0],xvimlohihi[0],xvimhilohi[0],xvimlolohi[0],
+           xvimhihilo[0],xvimlohilo[0],xvimhilolo[0],xvimlololo[0],
+           yvimhihihi[ydx],yvimlohihi[ydx],yvimhilohi[ydx],yvimlolohi[ydx],
+           yvimhihilo[ydx],yvimlohilo[ydx],yvimhilolo[ydx],yvimlololo[ydx],
+           &prodhihihi,&prodlohihi,&prodhilohi,&prodlolohi,
+           &prodhihilo,&prodlohilo,&prodhilolo,&prodlololo);
+   __syncthreads();
+   odg_minus(&prodhihihi,&prodlohihi,&prodhilohi,&prodlolohi,
+             &prodhihilo,&prodlohilo,&prodhilolo,&prodlololo);
+   odg_inc(&zvrehihihi[tdx],&zvrelohihi[tdx],&zvrehilohi[tdx],&zvrelolohi[tdx],
+           &zvrehihilo[tdx],&zvrelohilo[tdx],&zvrehilolo[tdx],&zvrelololo[tdx],
+           prodhihihi,prodlohihi,prodhilohi,prodlolohi,
+           prodhihilo,prodlohilo,prodhilolo,prodlololo);
+   __syncthreads();
+
+   odg_mul(xvrehihihi[0],xvrelohihi[0],xvrehilohi[0],xvrelolohi[0],
+           xvrehihilo[0],xvrelohilo[0],xvrehilolo[0],xvrelololo[0],
+           yvimhihihi[ydx],yvimlohihi[ydx],yvimhilohi[ydx],yvimlolohi[ydx],
+           yvimhihilo[ydx],yvimlohilo[ydx],yvimhilolo[ydx],yvimlololo[ydx],
+           &zvimhihihi[tdx],&zvimlohihi[tdx],&zvimhilohi[tdx],&zvimlolohi[tdx],
+           &zvimhihilo[tdx],&zvimlohilo[tdx],&zvimhilolo[tdx],&zvimlololo[tdx]);
+   __syncthreads();
+   odg_mul(xvimhihihi[0],xvimlohihi[0],xvimhilohi[0],xvimlolohi[0],
+           xvimhihilo[0],xvimlohilo[0],xvimhilolo[0],xvimlololo[0],
+           yvrehihihi[ydx],yvrelohihi[ydx],yvrehilohi[ydx],yvrelolohi[ydx],
+           yvrehihilo[ydx],yvrelohilo[ydx],yvrehilolo[ydx],yvrelololo[ydx],
+           &prodhihihi,&prodlohihi,&prodhilohi,&prodlolohi,
+           &prodhihilo,&prodlohilo,&prodhilolo,&prodlololo);
+   __syncthreads();
+   odg_inc(&zvimhihihi[tdx],&zvimlohihi[tdx],&zvimhilohi[tdx],&zvimlolohi[tdx],
+           &zvimhihilo[tdx],&zvimlohilo[tdx],&zvimhilolo[tdx],&zvimlololo[tdx],
+           prodhihihi,prodlohihi,prodhilohi,prodlolohi,
+           prodhihilo,prodlohilo,prodhilolo,prodlololo);
+   __syncthreads();
+
+   for(int i=1; i<dim; i++) // zv[tdx] = zv[tdx] + xv[i]*yv[dim+tdx-i];
+   {
+      ydx = dim + tdx - i;
+
+      odg_mul(xvrehihihi[i],xvrelohihi[i],xvrehilohi[i],xvrelolohi[i],
+              xvrehihilo[i],xvrelohilo[i],xvrehilolo[i],xvrelololo[i],
+              yvrehihihi[ydx],yvrelohihi[ydx],yvrehilohi[ydx],yvrelolohi[ydx],
+              yvrehihilo[ydx],yvrelohilo[ydx],yvrehilolo[ydx],yvrelololo[ydx],
+              &prodhihihi,&prodlohihi,&prodhilohi,&prodlolohi,
+              &prodhihilo,&prodlohilo,&prodhilolo,&prodlololo);
+      __syncthreads();
+      odg_inc(&zvrehihihi[tdx],&zvrelohihi[tdx],
+              &zvrehilohi[tdx],&zvrelolohi[tdx],
+              &zvrehihilo[tdx],&zvrelohilo[tdx],
+              &zvrehilolo[tdx],&zvrelololo[tdx],
+              prodhihihi,prodlohihi,prodhilohi,prodlolohi,
+              prodhihilo,prodlohilo,prodhilolo,prodlololo);
+      __syncthreads();
+      odg_mul(xvimhihihi[i],xvimlohihi[i],xvimhilohi[i],xvimlolohi[i],
+              xvimhihilo[i],xvimlohilo[i],xvimhilolo[i],xvimlololo[i],
+              yvimhihihi[ydx],yvimlohihi[ydx],yvimhilohi[ydx],yvimlolohi[ydx],
+              yvimhihilo[ydx],yvimlohilo[ydx],yvimhilolo[ydx],yvimlololo[ydx],
+              &prodhihihi,&prodlohihi,&prodhilohi,&prodlolohi,
+              &prodhihilo,&prodlohilo,&prodhilolo,&prodlololo);
+      __syncthreads();
+      odg_minus(&prodhihihi,&prodlohihi,&prodhilohi,&prodlolohi,
+                &prodhihilo,&prodlohilo,&prodhilolo,&prodlololo);
+      odg_inc(&zvrehihihi[tdx],&zvrelohihi[tdx],
+              &zvrehilohi[tdx],&zvrelolohi[tdx],
+              &zvrehihilo[tdx],&zvrelohilo[tdx],
+              &zvrehilolo[tdx],&zvrelololo[tdx],
+              prodhihihi,prodlohihi,prodhilohi,prodlolohi,
+              prodhihilo,prodlohilo,prodhilolo,prodlololo);
+      __syncthreads();
+
+      odg_mul(xvrehihihi[i],xvrelohihi[i],xvrehilohi[i],xvrelolohi[i],
+              xvrehihilo[i],xvrelohilo[i],xvrehilolo[i],xvrelololo[i],
+              yvimhihihi[ydx],yvimlohihi[ydx],yvimhilohi[ydx],yvimlolohi[ydx],
+              yvimhihilo[ydx],yvimlohilo[ydx],yvimhilolo[ydx],yvimlololo[ydx],
+              &prodhihihi,&prodlohihi,&prodhilohi,&prodlolohi,
+              &prodhihilo,&prodlohilo,&prodhilolo,&prodlololo);
+      __syncthreads();
+      odg_inc(&zvimhihihi[tdx],&zvimlohihi[tdx],
+              &zvimhilohi[tdx],&zvimlolohi[tdx],
+              &zvimhihilo[tdx],&zvimlohilo[tdx],
+              &zvimhilolo[tdx],&zvimlololo[tdx],
+              prodhihihi,prodlohihi,prodhilohi,prodlolohi,
+              prodhihilo,prodlohilo,prodhilolo,prodlololo);
+      __syncthreads();
+      odg_mul(xvimhihihi[i],xvimlohihi[i],xvimhilohi[i],xvimlolohi[i],
+              xvimhihilo[i],xvimlohilo[i],xvimhilolo[i],xvimlololo[i],
+              yvrehihihi[ydx],yvrelohihi[ydx],yvrehilohi[ydx],yvrelolohi[ydx],
+              yvrehihilo[ydx],yvrelohilo[ydx],yvrehilolo[ydx],yvrelololo[ydx],
+              &prodhihihi,&prodlohihi,&prodhilohi,&prodlolohi,
+              &prodhihilo,&prodlohilo,&prodhilolo,&prodlololo);
+      __syncthreads();
+      odg_inc(&zvimhihihi[tdx],&zvimlohihi[tdx],
+              &zvimhilohi[tdx],&zvimlolohi[tdx],
+              &zvimhihilo[tdx],&zvimlohilo[tdx],
+              &zvimhilolo[tdx],&zvimlololo[tdx],
+              prodhihihi,prodlohihi,prodhilohi,prodlolohi,
+              prodhihilo,prodlohilo,prodhilolo,prodlololo);
+      __syncthreads();
+   }
+   __syncthreads();
+
+   datarehihihi[idx3] = zvrehihihi[tdx]; // storing the output
+   datarelohihi[idx3] = zvrelohihi[tdx];
+   datarehilohi[idx3] = zvrehilohi[tdx];
+   datarelolohi[idx3] = zvrelolohi[tdx];
+   datarehihilo[idx3] = zvrehihilo[tdx];
+   datarelohilo[idx3] = zvrelohilo[tdx];
+   datarehilolo[idx3] = zvrehilolo[tdx];
+   datarelololo[idx3] = zvrelololo[tdx];
+   dataimhihihi[idx3] = zvimhihihi[tdx]; 
+   dataimlohihi[idx3] = zvimlohihi[tdx]; 
+   dataimhilohi[idx3] = zvimhilohi[tdx];
+   dataimlolohi[idx3] = zvimlolohi[tdx];
+   dataimhihilo[idx3] = zvimhihilo[tdx]; 
+   dataimlohilo[idx3] = zvimlohilo[tdx]; 
+   dataimhilolo[idx3] = zvimhilolo[tdx];
+   dataimlololo[idx3] = zvimlololo[tdx];
 }
 
 __global__ void dbl8_update_addjobs

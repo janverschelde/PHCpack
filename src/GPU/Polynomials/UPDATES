@@ -1,3 +1,5 @@
+Thu 15 Sep 2022 : added a kernel to dbl8_polynomials_kernels on complex data.
+
 Sat 3 Sep 2022 : updated {dbl2,dbl4,dbl8}_polynomials_kernels.cu to use the
   gettimeofday4win in ../Matrices, updated makefile_windows.
 

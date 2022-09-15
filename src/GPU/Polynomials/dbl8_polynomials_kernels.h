@@ -56,6 +56,114 @@ __global__ void dbl8_padded_convjobs
  *   datalohilo  updated second lowest forward, backward, and cross products;
  *   datalololo  updated lowest forward, backward, and cross products. */
 
+__global__ void cmplx8_padded_convjobs
+ ( double *datarehihihi, double *datarelohihi,
+   double *datarehilohi, double *datarelolohi,
+   double *datarehihilo, double *datarelohilo,
+   double *datarehilolo, double *datarelololo,
+   double *dataimhihihi, double *dataimlohihi,
+   double *dataimhilohi, double *dataimlolohi,
+   double *dataimhihilo, double *dataimlohilo,
+   double *dataimhilolo, double *dataimlololo,
+   int *in1idx, int *in2idx, int *outidx, int dim );
+/*
+ * DESCRIPTION :
+ *   Executes all convolution jobs at the same layer, on complex data.
+ *   The block index defines the convolution job.
+ *
+ * REQUIRED : 
+ *   The number of blocks equals the size of  in1idx, in2idx, outidx,
+ *   and dim equals the number of threads in each block.
+ *
+ * ON ENTRY :
+ *   datarehihihi are the highest doubles of the real parts
+ *                of the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   datarelohihi are the second highest doubles of the real parts
+ *                of the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   datarehilohi are the third highest doubles of the real parts
+ *                of the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   datarelolohi are the fourth highest doubles of the real parts
+ *                of the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   datarehihilo are the fourth lowest doubles of the real parts of
+ *                the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   datarelohilo are the third lowest doubles of the real parts of
+ *                the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   datarehilolo are the second lowest doubles of the real parts of
+ *                the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   datarelololo are the lowest doubles of the real parts of 
+ *                the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   dataimhihihi are the highest doubles of the imaginary parts 
+ *                of the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   dataimlohihi are the second highest doubles of the imaginary parts
+ *                of the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   dataimhilohi are the third highest doubles of the imaginary parts
+ *                of the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   dataimlolohi are the fourth highest doubles of the imaginary parts
+ *                of the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   dataimhihilo are the fourth lowest doubles of the imaginary parts
+ *                of the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   dataimlohilo are the third lowest doubles of the imaginary parts
+ *                of the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   dataimhilolo are the second lowest doubles of the imaginary parts
+ *                of the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   dataimlololo are the lowest doubles of the imaginary parts
+ *                of the coefficients of monomials and input series, with
+ *                space for forward, backward, and cross products;
+ *   in1idx       indices of the first input of the convolution jobs;
+ *   in2idx       indices of the second input of the convolution jobs;
+ *   outidx       indices of the output of the convolution jobs;
+ *   dim          the number of coefficients in each series
+ *                equals the number of threads in each block.
+ *
+ * ON RETURN :
+ *   datarehihihi are the updated highest doubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   datarelohihi are the updated second highest doubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   datarehilohi are the updated third highest doubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   datarelolohi are the updated fourth highest doubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   datarehihilo are the updated fourth lowest fdoubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   datarelohilo are the updated third lowest fdoubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   datarehilolo are the updated second lowest fdoubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   datarelololo are the updated lowest fdoubles of the real parts
+ *                of the forward, backward, and cross products;
+ *   dataimhihihi are the updated highest doubles of the imaginary parts
+ *                of the forward, backward, and cross products;
+ *   dataimlohihi are the updated second highest doubles of the imaginary
+ *                parts of the forward, backward, and cross products;
+ *   dataimhilohi are the updated third highest doubles of the imaginary
+ *                parts of the forward, backward, and cross products;
+ *   dataimlolohi are the updated fourth highest doubles of the imaginary
+ *                parts of the forward, backward, and cross products;
+ *   dataimhihilo are the updated fourth lowest fdoubles of the imaginary
+ *                parts of the forward, backward, and cross products;
+ *   dataimlohilo are the updated third lowest fdoubles of the imaginary
+ *                parts of the forward, backward, and cross products;
+ *   dataimhilolo are the updated second lowest fdoubles of the imaginary
+ *                parts of the forward, backward, and cross products;
+ *   dataimlololo are the updated lowest fdoubles of the imaginary parts
+ *                of the forward, backward, and cross products. */
+
 __global__ void dbl8_update_addjobs
  ( double *datahihihi, double *datahilohi,
    double *datahihilo, double *datahilolo,

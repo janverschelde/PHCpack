@@ -683,14 +683,14 @@ void GPU_cmplx8_mon_evaldiff
                  << " threads ..." << endl;
          
          cudaEventRecord(start);
-/*
+
          cmplx8_padded_convjobs<<<jobnbr,deg1>>>
             (datarehihihi_d,datarelohihi_d,datarehilohi_d,datarelolohi_d,
              datarehihilo_d,datarelohilo_d,datarehilolo_d,datarelololo_d,
              dataimhihihi_d,dataimlohihi_d,dataimhilohi_d,dataimlolohi_d,
              dataimhihilo_d,dataimlohilo_d,dataimhilolo_d,dataimlololo_d,
              in1ix_d,in2ix_d,outix_d,deg1);
- */
+
          cudaEventRecord(stop);
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);

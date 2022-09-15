@@ -1,3 +1,6 @@
+Thu 15 Sep 2022 : updated dbl8_systems_kernels.cu for the new convolution
+  kernel on complex data.
+
 Wed 14 Sep 2022 : edited dbl4_bals_kernels.cu, fixed dbl4_kernels.cu,
   extended dbl8_bals_kernels with functions on complex data.
 
