@@ -1,3 +1,6 @@
+Wed 14 Sep 2022 : edited dbl4_bals_kernels.cu, fixed dbl4_kernels.cu,
+  extended dbl8_bals_kernels with functions on complex data.
+
 Tue 13 Sep 2022 : extended dbl8_bals_host with functions on complex data.
   Extended dbl8_systems_kernels with functions on complex data.
   Updated makefile_unix.

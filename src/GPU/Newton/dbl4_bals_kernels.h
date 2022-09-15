@@ -12,7 +12,8 @@ __global__ void dbl4_bals_tail
    double *bhihi, double *blohi, double *bhilo, double *blolo );
 /*
  * DESCRIPTION :
- *   Subtracts from the right hand side b the product of A with x.
+ *   Subtracts from the right hand side b the product of A with x,
+ *   on real data.
  *
  * REQUIRED : nrows = szt times the number of blocks,
  *   where nrows in the number of rows in A and the dimension of b.
@@ -49,7 +50,8 @@ __global__ void cmplx4_bals_tail
    double *bimhihi, double *bimlohi, double *bimhilo, double *bimlolo );
 /*
  * DESCRIPTION :
- *   Subtracts from the right hand side b the product of A with x.
+ *   Subtracts from the right hand side b the product of A with x,
+ *   on complex data.
  *
  * REQUIRED : nrows = szt times the number of blocks,
  *   where nrows in the number of rows in A and the dimension of b.
@@ -59,28 +61,28 @@ __global__ void cmplx4_bals_tail
  *   szt      size of each block (and tile);
  *   Arehihi  highest doubles of the real parts of nrows-by-ncols matrix;
  *   Arelohi  second highest doubles of the real parts of A;
- *   Arehilo  secondlowest doubles of the real parts of A ;
+ *   Arehilo  second lowest doubles of the real parts of A;
  *   Arelolo  lowest doubles of the real parts of A;
  *   Aimhihi  highest doubles of the imaginary parts of A;
  *   Aimlohi  second highest doubles of the imaginary parts of A;
  *   Aimhilo  second lowest doubles of the imaginary parts of A;
  *   Aimlolo  lowest doubles of the imaginary parts of A;
  *   xrehihi  highest doubles of the real parts of vector of dimension ncols;
- *   xrelohi  second highest doubles of the real parts of vector of x;
- *   xrehilo  second lowest doubles of the real parts of vector of x;
- *   xrelolo  lowest doubles of the real parts of vector of x;
- *   ximhihi  highest doubles of the imaginary parts of vector of x; 
- *   ximlohi  second highest doubles of the imaginary parts of vector of x; 
- *   ximhilo  second lowest doubles of the imaginary parts of vector of x;
- *   ximlolo  lowest doubles of the imaginary parts of vector of x;
+ *   xrelohi  second highest doubles of the real parts of x;
+ *   xrehilo  second lowest doubles of the real parts of x;
+ *   xrelolo  lowest doubles of the real parts of x;
+ *   ximhihi  highest doubles of the imaginary parts of x; 
+ *   ximlohi  second highest doubles of the imaginary parts of x; 
+ *   ximhilo  second lowest doubles of the imaginary parts of x;
+ *   ximlolo  lowest doubles of the imaginary parts of x;
  *   brehihi  highest doubles of the real parts of vector of dimension nrows;
- *   brelohi  second highest doubles of the real parts of vector of b;
- *   brehilo  second lowest doubles of the real parts of vector of b;
- *   brelolo  lowest doubles of the real parts of vector of b;
- *   bimhihi  highest doubles of the imaginary parts of vector of b;
- *   bimlohi  second highest doubles of the imaginary parts of vector of b;
- *   bimhilo  second lowest doubles of the imaginary parts of vector of b;
- *   bimlolo  lowest doubles of the imaginary parts of vector of b.
+ *   brelohi  second highest doubles of the real parts of b;
+ *   brehilo  second lowest doubles of the real parts of b;
+ *   brelolo  lowest doubles of the real parts of b;
+ *   bimhihi  highest doubles of the imaginary parts of b;
+ *   bimlohi  second highest doubles of the imaginary parts of b;
+ *   bimhilo  second lowest doubles of the imaginary parts of b;
+ *   bimlolo  lowest doubles of the imaginary parts of b.
  *
  * ON RETURN :
  *   brehihi  highest doubles of the real parts of updated right hand side;
@@ -99,7 +101,7 @@ __global__ void dbl4_bals_qtb
    double *rhihi, double *rlohi, double *rhilo, double *rlolo );
 /*
  * DESCRIPTION :
- *   Multiplies the transpose of Q with b.
+ *   Multiplies the transpose of Q with b, on real data.
  *
  * REQUIRED : ncols = szt times the number of blocks,
  *   where ncols in the number of rows and columns in Qt 
@@ -138,7 +140,7 @@ __global__ void cmplx4_bals_qhb
    double *rimhihi, double *rimlohi, double *rimhilo, double *rimlolo );
 /*
  * DESCRIPTION :
- *   Multiplies the Hermitian transpose of Q with b.
+ *   Multiplies the Hermitian transpose of Q with b, on complex data.
  *
  * REQUIRED : ncols = szt times the number of blocks,
  *   where ncols in the number of rows and columns in Qt 
@@ -195,7 +197,7 @@ void GPU_dbl4_bals_head
  *   Solves the head linear system in the least squares sense,
  *   with a QR factorization followed by a back substitution,
  *   wrapping the kernel launches for the blocked Householder QR
- *   followed by the tiled back substitution.
+ *   followed by the tiled back substitution, on real data.
  *
  * REQUIRED : ncols = szt*nbt.
  *
@@ -341,7 +343,7 @@ void GPU_dbl4_bals_tail
  *   After each block of coefficients of the series,
  *   kernels are launched for the multiplication of the tail matrices
  *   with the solution coefficients to update the right hand sides
- *   of the linear system of power series.
+ *   of the linear system of power series, on real data.
  *
  * REQUIRED : ncols = szt*nbt.
  *
@@ -391,7 +393,7 @@ void GPU_cmplx4_bals_tail
  *   After each block of coefficients of the series,
  *   kernels are launched for the multiplication of the tail matrices
  *   with the solution coefficients to update the right hand sides
- *   of the linear system of power series.
+ *   of the linear system of power series, on complex data.
  *
  * REQUIRED : ncols = szt*nbt.
  *
@@ -712,9 +714,9 @@ void GPU_cmplx4_bals_solve
  *   rhsimlohi are the 2nd highest doubles of the imag parts of the updated rhs;
  *   rhsimhilo are the 2nd lowest doubles of the imag parts of the updated rhs;
  *   rhsimlolo are the lowest doubles of the imag parts of the updated rhs;
- *   solrehihi are the 2nd highest doubles of the real parts of the solution;
- *   solrelohi are the 2nd lowest doubles of the real parts of the solution;
- *   solrehilo are the lowest doubles of the real parts of the solution;
+ *   solrehihi are the highest doubles of the real parts of the solution;
+ *   solrelohi are the 2nd highest doubles of the real parts of the solution;
+ *   solrehilo are the 2nd lowest doubles of the real parts of the solution;
  *   solrelolo are the lowest doubles of the real parts of the solution;
  *   solimhihi are the highest doubles of the imaginary parts of the solution;
  *   solimlohi are the 2nd highest doubles of the imag parts of the solution;

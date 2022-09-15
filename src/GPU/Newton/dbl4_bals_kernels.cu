@@ -147,7 +147,8 @@ __global__ void cmplx4_bals_tail
       qdg_mul(Ajimhihi,Ajimlohi,Ajimhilo,Ajimlolo,
               xjrehihi,xjrelohi,xjrehilo,xjrelolo,
               &acchihi,&acclohi,&acchilo,&acclolo);
-      ddg_dec(&biimhihi,&biimlohi,acchilo,acclolo);
+      qdg_dec(&biimhihi,&biimlohi,&biimhilo,&biimlolo,
+              acchihi,acclohi,acchilo,acclolo);
    }
    brehihi[idx] = birehihi;
    brelohi[idx] = birelohi;
