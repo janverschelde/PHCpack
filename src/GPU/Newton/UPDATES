@@ -1,5 +1,6 @@
 Thu 15 Sep 2022 : updated dbl8_systems_kernels.cu for the new convolution
-  kernel on complex data.
+  kernel on complex data.  Edited dbl4_newton_testers.h.  Added functions
+  on complex data to dbl8_newton_testers, updated test_dbl8_newton.cpp.
 
 Wed 14 Sep 2022 : edited dbl4_bals_kernels.cu, fixed dbl4_kernels.cu,
   extended dbl8_bals_kernels with functions on complex data.
