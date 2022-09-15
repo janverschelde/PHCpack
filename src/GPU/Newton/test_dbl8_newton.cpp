@@ -53,7 +53,9 @@ int main ( void )
 /*
  * 2. calling the test function
  */
-   test_dbl8_real_newton
+ //  test_dbl8_real_newton
+ //     (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
+   test_dbl8_complex_newton
       (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
 
    return 0;

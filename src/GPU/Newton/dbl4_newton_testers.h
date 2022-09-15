@@ -602,7 +602,7 @@ void cmplx4_newton_qrstep
 /*
  * DESCRIPTION :
  *   Does one step with Newton's method to update a power series,
- *   using QR factorization to solve linear systems, on real data.
+ *   using QR factorization to solve linear systems, on complex data.
  *
  * REQUIRED : szt*nbt = dim for GPU computing.
  *

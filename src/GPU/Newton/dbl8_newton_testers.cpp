@@ -44,6 +44,42 @@ void dbl8_unit_series_vector
    }
 }
 
+void cmplx8_unit_series_vector
+ ( int dim, int deg,
+   double **cffrehihihi, double **cffrelohihi,
+   double **cffrehilohi, double **cffrelolohi,
+   double **cffrehihilo, double **cffrelohilo,
+   double **cffrehilolo, double **cffrelololo,
+   double **cffimhihihi, double **cffimlohihi,
+   double **cffimhilohi, double **cffimlolohi,
+   double **cffimhihilo, double **cffimlohilo,
+   double **cffimhilolo, double **cffimlololo )
+{
+   for(int i=0; i<dim; i++)
+   {
+      cffrehihihi[i][0] = 1.0; cffrelohihi[i][0] = 0.0;
+      cffrehilohi[i][0] = 0.0; cffrelolohi[i][0] = 0.0;
+      cffrehihilo[i][0] = 1.0; cffrelohilo[i][0] = 0.0;
+      cffrehilolo[i][0] = 0.0; cffrelololo[i][0] = 0.0;
+      cffimhihihi[i][0] = 0.0; cffimlohihi[i][0] = 0.0;
+      cffimhilohi[i][0] = 0.0; cffimlolohi[i][0] = 0.0;
+      cffimhihilo[i][0] = 0.0; cffimlohilo[i][0] = 0.0;
+      cffimhilolo[i][0] = 0.0; cffimlololo[i][0] = 0.0;
+
+      for(int j=1; j<=deg; j++)
+      {
+         cffrehihihi[i][j] = 0.0; cffrelohihi[i][j] = 0.0;
+         cffrehilohi[i][j] = 0.0; cffrelolohi[i][j] = 0.0;
+         cffrehihilo[i][j] = 0.0; cffrelohilo[i][j] = 0.0;
+         cffrehilolo[i][j] = 0.0; cffrelololo[i][j] = 0.0;
+         cffimhihihi[i][j] = 0.0; cffimlohihi[i][j] = 0.0;
+         cffimhilohi[i][j] = 0.0; cffimlolohi[i][j] = 0.0;
+         cffimhihilo[i][j] = 0.0; cffimlohilo[i][j] = 0.0;
+         cffimhilolo[i][j] = 0.0; cffimlololo[i][j] = 0.0;
+      }
+   }
+}
+
 void dbl8_update_series
  ( int dim, int degp1,
    double **xhihihi, double **xlohihi, double **xhilohi, double **xlolohi,
@@ -90,6 +126,92 @@ void dbl8_update_series
             cout << xhihilo[i][j] << "  " << xlohilo[i][j] << endl;
             cout << xhilolo[i][j] << "  " << xlololo[i][j] << endl;
          }
+      }
+   }
+}
+
+void cmplx8_update_series
+ ( int dim, int degp1,
+   double **xrehihihi, double **xrelohihi,
+   double **xrehilohi, double **xrelolohi,
+   double **xrehihilo, double **xrelohilo,
+   double **xrehilolo, double **xrelololo,
+   double **ximhihihi, double **ximlohihi,
+   double **ximhilohi, double **ximlolohi,
+   double **ximhihilo, double **ximlohilo,
+   double **ximhilolo, double **ximlololo,
+   double **dxrehihihi, double **dxrelohihi,
+   double **dxrehilohi, double **dxrelolohi,
+   double **dxrehihilo, double **dxrelohilo,
+   double **dxrehilolo, double **dxrelololo,
+   double **dximhihihi, double **dximlohihi,
+   double **dximhilohi, double **dximlolohi,
+   double **dximhihilo, double **dximlohilo,
+   double **dximhilolo, double **dximlololo, int vrblvl )
+{
+   if(vrblvl > 0)
+   {
+      cout << "The series before the update : " << endl;
+      for(int j=0; j<degp1; j++)
+      {
+         cout << "coefficient of degree " << j << " :" << endl;
+         for(int i=0; i<dim; i++)
+            cout << xrehihihi[i][j] << "  " << xrelohihi[i][j] << endl
+                 << "  "
+                 << xrehilohi[i][j] << "  " << xrelolohi[i][j] << endl
+                 << "  "
+                 << xrehihilo[i][j] << "  " << xrelohilo[i][j] << endl
+                 << "  "
+                 << xrehilolo[i][j] << "  " << xrelololo[i][j] << endl
+                 << "  "
+                 << ximhihihi[i][j] << "  " << ximlohihi[i][j] << endl
+                 << "  "
+                 << ximhilohi[i][j] << "  " << ximlolohi[i][j] << endl
+                 << "  "
+                 << ximhihilo[i][j] << "  " << ximlohilo[i][j] << endl
+                 << "  "
+                 << ximhilolo[i][j] << "  " << ximlololo[i][j] << endl;
+      }
+   }
+   // The update dx is linearized, the series x is not.
+   for(int j=0; j<degp1; j++) 
+      for(int i=0; i<dim; i++)
+      {
+         // xre[i][j] = xre[i][j] + dxre[j][i];
+         odf_inc(&xrehihihi[i][j],&xrelohihi[i][j],
+                 &xrehilohi[i][j],&xrelolohi[i][j],
+                 &xrehihilo[i][j],&xrelohilo[i][j],
+                 &xrehilolo[i][j],&xrelololo[i][j],
+                 dxrehihihi[j][i],dxrelohihi[j][i],
+                 dxrehilohi[j][i],dxrelolohi[j][i],
+                 dxrehihilo[j][i],dxrelohilo[j][i],
+                 dxrehilolo[j][i],dxrelololo[j][i]);
+         // xim[i][j] = xim[i][j] + dxim[j][i];
+         odf_inc(&ximhihihi[i][j],&ximlohihi[i][j],
+                 &ximhilohi[i][j],&ximlolohi[i][j],
+                 &ximhihilo[i][j],&ximlohilo[i][j],
+                 &ximhilolo[i][j],&ximlololo[i][j],
+                 dximhihihi[j][i],dximlohihi[j][i],
+                 dximhilohi[j][i],dximlolohi[j][i],
+                 dximhihilo[j][i],dximlohilo[j][i],
+                 dximhilolo[j][i],dximlololo[j][i]);
+      }
+ 
+   if(vrblvl > 0)
+   {
+      cout << "The series after the update : " << endl;
+      for(int j=0; j<degp1; j++)
+      {
+         cout << "coefficient of degree " << j << " :" << endl;
+         for(int i=0; i<dim; i++)
+            cout << xrehihihi[i][j] << "  " << xrelohihi[i][j] << endl << "  "
+                 << xrehilohi[i][j] << "  " << xrelolohi[i][j] << endl << "  "
+                 << xrehihilo[i][j] << "  " << xrelohilo[i][j] << endl << "  "
+                 << xrehilolo[i][j] << "  " << xrelololo[i][j] << endl << "  "
+                 << ximhihihi[i][j] << "  " << ximlohihi[i][j] << endl << "  "
+                 << ximhilohi[i][j] << "  " << ximlolohi[i][j] << endl << "  "
+                 << ximhihilo[i][j] << "  " << ximlohilo[i][j] << endl << "  "
+                 << ximhilolo[i][j] << "  " << ximlololo[i][j] << endl;
       }
    }
 }
@@ -920,6 +1042,1069 @@ void dbl8_newton_qrstep
    }
 }
 
+void cmplx8_newton_qrstep
+ ( int szt, int nbt, int dim, int deg,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **cffrehihihi, double **cffrelohihi,
+   double **cffrehilohi, double **cffrelolohi,
+   double **cffrehihilo, double **cffrelohilo,
+   double **cffrehilolo, double **cffrelololo,
+   double **cffimhihihi, double **cffimlohihi,
+   double **cffimhilohi, double **cffimlolohi,
+   double **cffimhihilo, double **cffimlohilo,
+   double **cffimhilolo, double **cffimlololo,
+   double *accrehihihi, double *accrelohihi,
+   double *accrehilohi, double *accrelolohi,
+   double *accrehihilo, double *accrelohilo,
+   double *accrehilolo, double *accrelololo,
+   double *accimhihihi, double *accimlohihi,
+   double *accimhilohi, double *accimlolohi,
+   double *accimhihilo, double *accimlohilo,
+   double *accimhilolo, double *accimlololo,
+   double **inputrehihihi_h, double **inputrelohihi_h,
+   double **inputrehilohi_h, double **inputrelolohi_h,
+   double **inputrehihilo_h, double **inputrelohilo_h,
+   double **inputrehilolo_h, double **inputrelololo_h,
+   double **inputimhihihi_h, double **inputimlohihi_h,
+   double **inputimhilohi_h, double **inputimlolohi_h,
+   double **inputimhihilo_h, double **inputimlohilo_h,
+   double **inputimhilolo_h, double **inputimlololo_h,
+   double **inputrehihihi_d, double **inputrelohihi_d,
+   double **inputrehilohi_d, double **inputrelolohi_d,
+   double **inputrehihilo_d, double **inputrelohilo_d,
+   double **inputrehilolo_d, double **inputrelololo_d,
+   double **inputimhihihi_d, double **inputimlohihi_d,
+   double **inputimhilohi_d, double **inputimlolohi_d,
+   double **inputimhihilo_d, double **inputimlohilo_d,
+   double **inputimhilolo_d, double **inputimlololo_d,
+   double ***outputrehihihi_h, double ***outputrelohihi_h,
+   double ***outputrehilohi_h, double ***outputrelolohi_h,
+   double ***outputrehihilo_h, double ***outputrelohilo_h,
+   double ***outputrehilolo_h, double ***outputrelololo_h,
+   double ***outputimhihihi_h, double ***outputimlohihi_h,
+   double ***outputimhilohi_h, double ***outputimlolohi_h,
+   double ***outputimhihilo_h, double ***outputimlohilo_h,
+   double ***outputimhilolo_h, double ***outputimlololo_h,
+   double ***outputrehihihi_d, double ***outputrelohihi_d,
+   double ***outputrehilohi_d, double ***outputrelolohi_d,
+   double ***outputrehihilo_d, double ***outputrelohilo_d,
+   double ***outputrehilolo_d, double ***outputrelololo_d,
+   double ***outputimhihihi_d, double ***outputimlohihi_d,
+   double ***outputimhilohi_d, double ***outputimlolohi_d,
+   double ***outputimhihilo_d, double ***outputimlohilo_d,
+   double ***outputimhilolo_d, double ***outputimlololo_d,
+   double **funvalrehihihi_h, double **funvalrelohihi_h,
+   double **funvalrehilohi_h, double **funvalrelolohi_h,
+   double **funvalrehihilo_h, double **funvalrelohilo_h,
+   double **funvalrehilolo_h, double **funvalrelololo_h,
+   double **funvalimhihihi_h, double **funvalimlohihi_h,
+   double **funvalimhilohi_h, double **funvalimlolohi_h,
+   double **funvalimhihilo_h, double **funvalimlohilo_h,
+   double **funvalimhilolo_h, double **funvalimlololo_h,
+   double **funvalrehihihi_d, double **funvalrelohihi_d,
+   double **funvalrehilohi_d, double **funvalrelolohi_d,
+   double **funvalrehihilo_d, double **funvalrelohilo_d,
+   double **funvalrehilolo_d, double **funvalrelololo_d,
+   double **funvalimhihihi_d, double **funvalimlohihi_d,
+   double **funvalimhilohi_d, double **funvalimlolohi_d,
+   double **funvalimhihilo_d, double **funvalimlohilo_d,
+   double **funvalimhilolo_d, double **funvalimlololo_d,
+   double ***jacvalrehihihi_h, double ***jacvalrelohihi_h,
+   double ***jacvalrehilohi_h, double ***jacvalrelolohi_h,
+   double ***jacvalrehihilo_h, double ***jacvalrelohilo_h,
+   double ***jacvalrehilolo_h, double ***jacvalrelololo_h,
+   double ***jacvalimhihihi_h, double ***jacvalimlohihi_h,
+   double ***jacvalimhilohi_h, double ***jacvalimlolohi_h,
+   double ***jacvalimhihilo_h, double ***jacvalimlohilo_h,
+   double ***jacvalimhilolo_h, double ***jacvalimlololo_h,
+   double ***jacvalrehihihi_d, double ***jacvalrelohihi_d,
+   double ***jacvalrehilohi_d, double ***jacvalrelolohi_d,
+   double ***jacvalrehihilo_d, double ***jacvalrelohilo_d,
+   double ***jacvalrehilolo_d, double ***jacvalrelololo_d,
+   double ***jacvalimhihihi_d, double ***jacvalimlohihi_d,
+   double ***jacvalimhilohi_d, double ***jacvalimlolohi_d,
+   double ***jacvalimhihilo_d, double ***jacvalimlohilo_d,
+   double ***jacvalimhilolo_d, double ***jacvalimlololo_d,
+   double **rhsrehihihi_h, double **rhsrelohihi_h,
+   double **rhsrehilohi_h, double **rhsrelolohi_h,
+   double **rhsrehihilo_h, double **rhsrelohilo_h,
+   double **rhsrehilolo_h, double **rhsrelololo_h,
+   double **rhsimhihihi_h, double **rhsimlohihi_h,
+   double **rhsimhilohi_h, double **rhsimlolohi_h,
+   double **rhsimhihilo_h, double **rhsimlohilo_h,
+   double **rhsimhilolo_h, double **rhsimlololo_h,
+   double **rhsrehihihi_d, double **rhsrelohihi_d, 
+   double **rhsrehilohi_d, double **rhsrelolohi_d, 
+   double **rhsrehihilo_d, double **rhsrelohilo_d, 
+   double **rhsrehilolo_d, double **rhsrelololo_d, 
+   double **rhsimhihihi_d, double **rhsimlohihi_d,
+   double **rhsimhilohi_d, double **rhsimlolohi_d,
+   double **rhsimhihilo_d, double **rhsimlohilo_d,
+   double **rhsimhilolo_d, double **rhsimlololo_d,
+   double **urhsrehihihi_h, double **urhsrelohihi_h,
+   double **urhsrehilohi_h, double **urhsrelolohi_h,
+   double **urhsrehihilo_h, double **urhsrelohilo_h,
+   double **urhsrehilolo_h, double **urhsrelololo_h,
+   double **urhsimhihihi_h, double **urhsimlohihi_h,
+   double **urhsimhilohi_h, double **urhsimlolohi_h,
+   double **urhsimhihilo_h, double **urhsimlohilo_h,
+   double **urhsimhilolo_h, double **urhsimlololo_h,
+   double **urhsrehihihi_d, double **urhsrelohihi_d,
+   double **urhsrehilohi_d, double **urhsrelolohi_d,
+   double **urhsrehihilo_d, double **urhsrelohilo_d,
+   double **urhsrehilolo_d, double **urhsrelololo_d,
+   double **urhsimhihihi_d, double **urhsimlohihi_d,
+   double **urhsimhilohi_d, double **urhsimlolohi_d,
+   double **urhsimhihilo_d, double **urhsimlohilo_d,
+   double **urhsimhilolo_d, double **urhsimlololo_d,
+   double **solrehihihi_h, double **solrelohihi_h,
+   double **solrehilohi_h, double **solrelolohi_h,
+   double **solrehihilo_h, double **solrelohilo_h,
+   double **solrehilolo_h, double **solrelololo_h,
+   double **solimhihihi_h, double **solimlohihi_h, 
+   double **solimhilohi_h, double **solimlolohi_h, 
+   double **solimhihilo_h, double **solimlohilo_h, 
+   double **solimhilolo_h, double **solimlololo_h, 
+   double **solrehihihi_d, double **solrelohihi_d, 
+   double **solrehilohi_d, double **solrelolohi_d, 
+   double **solrehihilo_d, double **solrelohilo_d, 
+   double **solrehilolo_d, double **solrelololo_d, 
+   double **solimhihihi_d, double **solimlohihi_d,
+   double **solimhilohi_d, double **solimlolohi_d,
+   double **solimhihilo_d, double **solimlohilo_d,
+   double **solimhilolo_d, double **solimlololo_d,
+   double **Qrehihihi_h, double **Qrelohihi_h,
+   double **Qrehilohi_h, double **Qrelolohi_h,
+   double **Qrehihilo_h, double **Qrelohilo_h,
+   double **Qrehilolo_h, double **Qrelololo_h,
+   double **Qimhihihi_h, double **Qimlohihi_h,
+   double **Qimhilohi_h, double **Qimlolohi_h,
+   double **Qimhihilo_h, double **Qimlohilo_h,
+   double **Qimhilolo_h, double **Qimlololo_h,
+   double **Qrehihihi_d, double **Qrelohihi_d,
+   double **Qrehilohi_d, double **Qrelolohi_d,
+   double **Qrehihilo_d, double **Qrelohilo_d,
+   double **Qrehilolo_d, double **Qrelololo_d,
+   double **Qimhihihi_d, double **Qimlohihi_d, 
+   double **Qimhilohi_d, double **Qimlolohi_d, 
+   double **Qimhihilo_d, double **Qimlohilo_d, 
+   double **Qimhilolo_d, double **Qimlololo_d, 
+   double **Rrehihihi_h, double **Rrelohihi_h,
+   double **Rrehilohi_h, double **Rrelolohi_h,
+   double **Rrehihilo_h, double **Rrelohilo_h,
+   double **Rrehilolo_h, double **Rrelololo_h,
+   double **Rimhihihi_h, double **Rimlohihi_h, 
+   double **Rimhilohi_h, double **Rimlolohi_h, 
+   double **Rimhihilo_h, double **Rimlohilo_h, 
+   double **Rimhilolo_h, double **Rimlololo_h, 
+   double **Rrehihihi_d, double **Rrelohihi_d,
+   double **Rrehilohi_d, double **Rrelolohi_d,
+   double **Rrehihilo_d, double **Rrelohilo_d,
+   double **Rrehilolo_d, double **Rrelololo_d,
+   double **Rimhihihi_d, double **Rimlohihi_d,
+   double **Rimhilohi_d, double **Rimlolohi_d,
+   double **Rimhihilo_d, double **Rimlohilo_d,
+   double **Rimhilolo_d, double **Rimlololo_d,
+   double **workmatrehihihi, double **workmatrelohihi,
+   double **workmatrehilohi, double **workmatrelolohi,
+   double **workmatrehihilo, double **workmatrelohilo,
+   double **workmatrehilolo, double **workmatrelololo,
+   double **workmatimhihihi, double **workmatimlohihi,
+   double **workmatimhilohi, double **workmatimlolohi,
+   double **workmatimhihilo, double **workmatimlohilo,
+   double **workmatimhilolo, double **workmatimlololo,
+   double *workvecrehihihi, double *workvecrelohihi,
+   double *workvecrehilohi, double *workvecrelolohi,
+   double *workvecrehihilo, double *workvecrelohilo,
+   double *workvecrehilolo, double *workvecrelololo,
+   double *workvecimhihihi, double *workvecimlohihi,
+   double *workvecimhilohi, double *workvecimlolohi,
+   double *workvecimhihilo, double *workvecimlohilo,
+   double *workvecimhilolo, double *workvecimlololo,
+   double **resvecrehihihi, double **resvecrelohihi,
+   double **resvecrehilohi, double **resvecrelolohi,
+   double **resvecrehihilo, double **resvecrelohilo,
+   double **resvecrehilolo, double **resvecrelololo,
+   double **resvecimhihihi, double **resvecimlohihi,
+   double **resvecimhilohi, double **resvecimlolohi,
+   double **resvecimhihilo, double **resvecimlohilo,
+   double **resvecimhilolo, double **resvecimlololo,
+   double *resmaxhihihi, double *resmaxlohihi,
+   double *resmaxhilohi, double *resmaxlolohi,
+   double *resmaxhihilo, double *resmaxlohilo,
+   double *resmaxhilolo, double *resmaxlololo, int vrblvl, int mode )
+{
+   const int degp1 = deg+1;
+
+   // The series coefficients accumulate common factors,
+   // initially the coefficients are set to one.
+   if((mode == 1) || (mode == 2))
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cffrehihihi[i][0] = 1.0; cffrelohihi[i][0] = 0.0;
+         cffrehilohi[i][0] = 0.0; cffrelolohi[i][0] = 0.0;
+         cffrehihilo[i][0] = 0.0; cffrelohilo[i][0] = 0.0;
+         cffrehilolo[i][0] = 0.0; cffrelololo[i][0] = 0.0;
+         cffimhihihi[i][0] = 0.0; cffimlohihi[i][0] = 0.0;
+         cffimhilohi[i][0] = 0.0; cffimlolohi[i][0] = 0.0;
+         cffimhihilo[i][0] = 0.0; cffimlohilo[i][0] = 0.0;
+         cffimhilolo[i][0] = 0.0; cffimlololo[i][0] = 0.0;
+
+         for(int j=1; j<degp1; j++)
+         {
+            cffrehihihi[i][j] = 0.0; cffrelohihi[i][j] = 0.0;
+            cffrehilohi[i][j] = 0.0; cffrelolohi[i][j] = 0.0;
+            cffrehihilo[i][j] = 0.0; cffrelohilo[i][j] = 0.0;
+            cffrehilolo[i][j] = 0.0; cffrelololo[i][j] = 0.0;
+            cffimhihihi[i][j] = 0.0; cffimlohihi[i][j] = 0.0;
+            cffimhilohi[i][j] = 0.0; cffimlolohi[i][j] = 0.0;
+            cffimhihilo[i][j] = 0.0; cffimlohilo[i][j] = 0.0;
+            cffimhilolo[i][j] = 0.0; cffimlololo[i][j] = 0.0;
+         }
+      }
+      CPU_cmplx8_evaluate_monomials
+         (dim,deg,nvr,idx,exp,nbrfac,expfac,
+          cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+          cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+          cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+          cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+          accrehihihi,accrelohihi,accrehilohi,accrelolohi,
+          accrehihilo,accrelohilo,accrehilolo,accrelololo,
+          accimhihihi,accimlohihi,accimhilohi,accimlolohi,
+          accimhihilo,accimlohilo,accimhilolo,accimlololo,
+          inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
+          inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
+          inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
+          inputimhihilo_h,inputimlohilo_h,inputimhilolo_h,inputimlololo_h,
+          outputrehihihi_h,outputrelohihi_h,outputrehilohi_h,outputrelolohi_h,
+          outputrehihilo_h,outputrelohilo_h,outputrehilolo_h,outputrelololo_h,
+          outputimhihihi_h,outputimlohihi_h,outputimhilohi_h,outputimlolohi_h,
+          outputimhihilo_h,outputimlohilo_h,outputimhilolo_h,outputimlololo_h,
+          vrblvl);
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      for(int i=0; i<dim; i++)  // reset the coefficients
+      {
+         cffrehihihi[i][0] = 1.0; cffrelohihi[i][0] = 0.0;
+         cffrehilohi[i][0] = 0.0; cffrelolohi[i][0] = 0.0;
+         cffrehihilo[i][0] = 0.0; cffrelohilo[i][0] = 0.0;
+         cffrehilolo[i][0] = 0.0; cffrelololo[i][0] = 0.0;
+         cffimhihihi[i][0] = 0.0; cffimlohihi[i][0] = 0.0;
+         cffimhilohi[i][0] = 0.0; cffimlolohi[i][0] = 0.0;
+         cffimhihilo[i][0] = 0.0; cffimlohilo[i][0] = 0.0;
+         cffimhilolo[i][0] = 0.0; cffimlololo[i][0] = 0.0;
+
+         for(int j=1; j<degp1; j++)
+         {
+            cffrehihihi[i][j] = 0.0; cffrelohihi[i][j] = 0.0;
+            cffrehilohi[i][j] = 0.0; cffrelolohi[i][j] = 0.0;
+            cffrehihilo[i][j] = 0.0; cffrelohilo[i][j] = 0.0;
+            cffrehilolo[i][j] = 0.0; cffrelololo[i][j] = 0.0;
+            cffimhihihi[i][j] = 0.0; cffimlohihi[i][j] = 0.0;
+            cffimhilohi[i][j] = 0.0; cffimlolohi[i][j] = 0.0;
+            cffimhihilo[i][j] = 0.0; cffimlohilo[i][j] = 0.0;
+            cffimhilolo[i][j] = 0.0; cffimlololo[i][j] = 0.0;
+         }
+      }
+      GPU_cmplx8_evaluate_monomials
+         (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,
+          cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+          cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+          cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+          cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+          accrehihihi,accrelohihi,accrehilohi,accrelolohi,
+          accrehihilo,accrelohilo,accrehilolo,accrelololo,
+          accimhihihi,accimlohihi,accimhilohi,accimlolohi,
+          accimhihilo,accimlohilo,accimhilolo,accimlololo,
+          inputrehihihi_d,inputrelohihi_d,inputrehilohi_d,inputrelolohi_d,
+          inputrehihilo_d,inputrelohilo_d,inputrehilolo_d,inputrelololo_d,
+          inputimhihihi_d,inputimlohihi_d,inputimhilohi_d,inputimlolohi_d,
+          inputimhihilo_d,inputimlohilo_d,inputimhilolo_d,inputimlololo_d,
+          outputrehihihi_d,outputrelohihi_d,outputrehilohi_d,outputrelolohi_d,
+          outputrehihilo_d,outputrelohilo_d,outputrehilolo_d,outputrelololo_d,
+          outputimhihihi_d,outputimlohihi_d,outputimhilohi_d,outputimlolohi_d,
+          outputimhihilo_d,outputimlohilo_d,outputimhilolo_d,outputimlololo_d,
+          vrblvl);
+   }
+   if((vrblvl > 0) && (mode == 2))
+   {
+      cout << "comparing CPU with GPU evaluations ... " << endl;
+      double errsum = 0.0;
+      for(int k=0; k<dim; k++) // monomial k
+         for(int i=0; i<=dim; i++)
+            for(int j=0; j<degp1; j++)
+         {
+             cout << "output_h[" << k << "][" << i << "][" << j << "] : "
+                  << outputrehihihi_h[k][i][j] << "  "
+                  << outputrelohihi_h[k][i][j] << endl << "  "
+                  << outputrehilohi_h[k][i][j] << "  "
+                  << outputrelolohi_h[k][i][j] << endl << "  "
+                  << outputrehihilo_h[k][i][j] << "  "
+                  << outputrelohilo_h[k][i][j] << endl << "  "
+                  << outputrehilolo_h[k][i][j] << "  "
+                  << outputrelololo_h[k][i][j] << endl << "  "
+                  << outputimhihihi_h[k][i][j] << "  "
+                  << outputimlohihi_h[k][i][j] << endl << "  "
+                  << outputimhilohi_h[k][i][j] << "  "
+                  << outputimlolohi_h[k][i][j] << endl << "  "
+                  << outputimhihilo_h[k][i][j] << "  "
+                  << outputimlohilo_h[k][i][j] << endl << "  "
+                  << outputimhilolo_h[k][i][j] << "  "
+                  << outputimlololo_h[k][i][j] << endl;
+             cout << "output_d[" << k << "][" << i << "][" << j << "] : "
+                  << outputrehihihi_d[k][i][j] << "  "
+                  << outputrelohihi_d[k][i][j] << endl << "  "
+                  << outputrehilohi_d[k][i][j] << "  "
+                  << outputrelolohi_d[k][i][j] << endl << "  "
+                  << outputrehihilo_d[k][i][j] << "  "
+                  << outputrelohilo_d[k][i][j] << endl << "  "
+                  << outputrehilolo_d[k][i][j] << "  "
+                  << outputrelololo_d[k][i][j] << endl << "  "
+                  << outputimhihihi_d[k][i][j] << "  "
+                  << outputimlohihi_d[k][i][j] << endl << "  "
+                  << outputimhilohi_d[k][i][j] << "  "
+                  << outputimlolohi_d[k][i][j] << endl << "  "
+                  << outputimhihilo_d[k][i][j] << "  "
+                  << outputimlohilo_d[k][i][j] << endl << "  "
+                  << outputimhilolo_d[k][i][j] << "  "
+                  << outputimlololo_d[k][i][j] << endl;
+         errsum += abs(outputrehihihi_h[k][i][j] - outputrehihihi_d[k][i][j])
+                 + abs(outputrelohihi_h[k][i][j] - outputrelohihi_d[k][i][j])
+                 + abs(outputrehilohi_h[k][i][j] - outputrehilohi_d[k][i][j])
+                 + abs(outputrelolohi_h[k][i][j] - outputrelolohi_d[k][i][j])
+                 + abs(outputrehihilo_h[k][i][j] - outputrehihilo_d[k][i][j])
+                 + abs(outputrelohilo_h[k][i][j] - outputrelohilo_d[k][i][j])
+                 + abs(outputrehilolo_h[k][i][j] - outputrehilolo_d[k][i][j])
+                 + abs(outputrelololo_h[k][i][j] - outputrelololo_d[k][i][j])
+                 + abs(outputimhihihi_h[k][i][j] - outputimhihihi_d[k][i][j])
+                 + abs(outputimlohihi_h[k][i][j] - outputimlohihi_d[k][i][j])
+                 + abs(outputimhilohi_h[k][i][j] - outputimhilohi_d[k][i][j])
+                 + abs(outputimlolohi_h[k][i][j] - outputimlolohi_d[k][i][j])
+                 + abs(outputimhihilo_h[k][i][j] - outputimhihilo_d[k][i][j])
+                 + abs(outputimlohilo_h[k][i][j] - outputimlohilo_d[k][i][j])
+                 + abs(outputimhilolo_h[k][i][j] - outputimhilolo_d[k][i][j])
+                 + abs(outputimlololo_h[k][i][j] - outputimlololo_d[k][i][j]);
+         }
+      cout << "sum of errors : " << errsum << endl;
+   }
+   for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+      for(int j=0; j<dim; j++) 
+         for(int k=0; k<dim; k++)
+         {
+            jacvalrehihihi_h[i][j][k] = 0.0;
+            jacvalrelohihi_h[i][j][k] = 0.0;
+            jacvalrehilohi_h[i][j][k] = 0.0;
+            jacvalrelolohi_h[i][j][k] = 0.0;
+            jacvalimhihilo_h[i][j][k] = 0.0;
+            jacvalimlohilo_h[i][j][k] = 0.0;
+            jacvalimhilolo_h[i][j][k] = 0.0;
+            jacvalimlololo_h[i][j][k] = 0.0;
+            jacvalrehihihi_d[i][j][k] = 0.0;
+            jacvalrelohihi_d[i][j][k] = 0.0;
+            jacvalrehilohi_d[i][j][k] = 0.0;
+            jacvalrelolohi_d[i][j][k] = 0.0;
+            jacvalimhihilo_d[i][j][k] = 0.0;
+            jacvalimlohilo_d[i][j][k] = 0.0;
+            jacvalimhilolo_d[i][j][k] = 0.0;
+            jacvalimlololo_d[i][j][k] = 0.0;
+         }
+
+   if((mode == 1) || (mode == 2))
+      cmplx8_linearize_evaldiff_output
+         (dim,degp1,nvr,idx,
+          outputrehihihi_h,outputrelohihi_h,outputrehilohi_h,outputrelolohi_h,
+          outputrehihilo_h,outputrelohilo_h,outputrehilolo_h,outputrelololo_h,
+          outputimhihihi_h,outputimlohihi_h,outputimhilohi_h,outputimlolohi_h,
+          outputimhihilo_h,outputimlohilo_h,outputimhilolo_h,outputimlololo_h,
+          funvalrehihihi_h,funvalrelohihi_h,funvalrehilohi_h,funvalrelolohi_h,
+          funvalrehihilo_h,funvalrelohilo_h,funvalrehilolo_h,funvalrelololo_h,
+          funvalimhihihi_h,funvalimlohihi_h,funvalimhilohi_h,funvalimlolohi_h,
+          funvalimhihilo_h,funvalimlohilo_h,funvalimhilolo_h,funvalimlololo_h,
+          rhsrehihihi_h,rhsrelohihi_h,rhsrehilohi_h,rhsrelolohi_h,
+          rhsrehihilo_h,rhsrelohilo_h,rhsrehilolo_h,rhsrelololo_h,
+          rhsimhihihi_h,rhsimlohihi_h,rhsimhilohi_h,rhsimlolohi_h,
+          rhsimhihilo_h,rhsimlohilo_h,rhsimhilolo_h,rhsimlololo_h,
+          jacvalrehihihi_h,jacvalrelohihi_h,jacvalrehilohi_h,jacvalrelolohi_h,
+          jacvalrehihilo_h,jacvalrelohilo_h,jacvalrehilolo_h,jacvalrelololo_h,
+          jacvalimhihihi_h,jacvalimlohihi_h,jacvalimhilohi_h,jacvalimlolohi_h,
+          jacvalimhihilo_h,jacvalimlohilo_h,jacvalimhilolo_h,jacvalimlololo_h,
+          vrblvl);
+
+   if((mode == 0) || (mode == 2))
+      cmplx8_linearize_evaldiff_output
+         (dim,degp1,nvr,idx,
+          outputrehihihi_d,outputrelohihi_d,outputrehilohi_d,outputrelolohi_d,
+          outputrehihilo_d,outputrelohilo_d,outputrehilolo_d,outputrelololo_d,
+          outputimhihihi_d,outputimlohihi_d,outputimhilohi_d,outputimlolohi_d,
+          outputimhihilo_d,outputimlohilo_d,outputimhilolo_d,outputimlololo_d,
+          funvalrehihihi_d,funvalrelohihi_d,funvalrehilohi_d,funvalrelolohi_d,
+          funvalrehihilo_d,funvalrelohilo_d,funvalrehilolo_d,funvalrelololo_d,
+          funvalimhihihi_d,funvalimlohihi_d,funvalimhilohi_d,funvalimlolohi_d,
+          funvalimhihilo_d,funvalimlohilo_d,funvalimhilolo_d,funvalimlololo_d,
+          rhsrehihihi_d,rhsrelohihi_d,rhsrehilohi_d,rhsrelolohi_d,
+          rhsrehihilo_d,rhsrelohilo_d,rhsrehilolo_d,rhsrelololo_d,
+          rhsimhihihi_d,rhsimlohihi_d,rhsimhilohi_d,rhsimlolohi_d,
+          rhsimhihilo_d,rhsimlohilo_d,rhsimhilolo_d,rhsimlololo_d,
+          jacvalrehihihi_d,jacvalrelohihi_d,jacvalrehilohi_d,jacvalrelolohi_d,
+          jacvalrehihilo_d,jacvalrelohilo_d,jacvalrehilolo_d,jacvalrelololo_d,
+          jacvalimhihihi_d,jacvalimlohihi_d,jacvalimhilohi_d,jacvalimlolohi_d,
+          jacvalimhihilo_d,jacvalimlohilo_d,jacvalimhilolo_d,jacvalimlololo_d,
+          vrblvl);
+
+   if((vrblvl > 0) && (mode == 2))
+   {
+      cout << "comparing CPU with GPU function values ... " << endl;
+      double errsum = 0.0;
+      for(int i=0; i<dim; i++)
+      {
+         for(int j=0; j<degp1; j++)
+         {
+            cout << "funval_h[" << i << "][" << j << "] : "
+                 << funvalrehihihi_h[i][j] << "  "
+                 << funvalrelohihi_h[i][j] << endl << "  "
+                 << funvalrehilohi_h[i][j] << "  "
+                 << funvalrelolohi_h[i][j] << endl << "  "
+                 << funvalrehihilo_h[i][j] << "  "
+                 << funvalrelohilo_h[i][j] << endl << "  "
+                 << funvalrehilolo_h[i][j] << "  "
+                 << funvalrelololo_h[i][j] << endl << "  "
+                 << funvalimhihihi_h[i][j] << "  "
+                 << funvalimlohihi_h[i][j] << endl << "  "
+                 << funvalimhilohi_h[i][j] << "  "
+                 << funvalimlolohi_h[i][j] << endl << "  "
+                 << funvalimhihilo_h[i][j] << "  "
+                 << funvalimlohilo_h[i][j] << endl << "  "
+                 << funvalimhilolo_h[i][j] << "  "
+                 << funvalimlololo_h[i][j] << endl;
+            cout << "funval_d[" << i << "][" << j << "] : "
+                 << funvalrehihihi_d[i][j] << "  "
+                 << funvalrelohihi_d[i][j] << endl << "  "
+                 << funvalrehilohi_d[i][j] << "  "
+                 << funvalrelolohi_d[i][j] << endl << "  "
+                 << funvalrehihilo_d[i][j] << "  "
+                 << funvalrelohilo_d[i][j] << endl << "  "
+                 << funvalrehilolo_d[i][j] << "  "
+                 << funvalrelololo_d[i][j] << endl << "  "
+                 << funvalimhihihi_d[i][j] << "  "
+                 << funvalimlohihi_d[i][j] << endl << "  "
+                 << funvalimhilohi_d[i][j] << "  "
+                 << funvalimlolohi_d[i][j] << endl << "  "
+                 << funvalimhihilo_d[i][j] << "  "
+                 << funvalimlohilo_d[i][j] << endl << "  "
+                 << funvalimhilolo_d[i][j] << "  "
+                 << funvalimlololo_d[i][j] << endl;
+            errsum += abs(funvalrehihihi_h[i][j] - funvalrehihihi_d[i][j])
+                    + abs(funvalrelohihi_h[i][j] - funvalrelohihi_d[i][j])
+                    + abs(funvalrehilohi_h[i][j] - funvalrehilohi_d[i][j])
+                    + abs(funvalrelolohi_h[i][j] - funvalrelolohi_d[i][j])
+                    + abs(funvalrehihilo_h[i][j] - funvalrehihilo_d[i][j])
+                    + abs(funvalrelohilo_h[i][j] - funvalrelohilo_d[i][j])
+                    + abs(funvalrehilolo_h[i][j] - funvalrehilolo_d[i][j])
+                    + abs(funvalrelololo_h[i][j] - funvalrelololo_d[i][j])
+                    + abs(funvalimhihihi_h[i][j] - funvalimhihihi_d[i][j])
+                    + abs(funvalimlohihi_h[i][j] - funvalimlohihi_d[i][j])
+                    + abs(funvalimhilohi_h[i][j] - funvalimhilohi_d[i][j])
+                    + abs(funvalimlolohi_h[i][j] - funvalimlolohi_d[i][j])
+                    + abs(funvalimhihilo_h[i][j] - funvalimhihilo_d[i][j])
+                    + abs(funvalimlohilo_h[i][j] - funvalimlohilo_d[i][j])
+                    + abs(funvalimhilolo_h[i][j] - funvalimhilolo_d[i][j])
+                    + abs(funvalimlololo_h[i][j] - funvalimlololo_d[i][j]);
+         }
+      }
+      cout << "sum of errors : " << errsum << endl;
+      cout << "comparing CPU with GPU Jacobians ... " << endl;
+      errsum = 0.0;
+      for(int i=0; i<degp1; i++)
+      {
+         for(int j=0; j<dim; j++)
+         {
+            for(int k=0; k<dim; k++)
+            {
+               cout << "jacval_h[" << i << "][" << j << "][" << k << "] : "
+                    << jacvalrehihihi_h[i][j][k] << "  "
+                    << jacvalrelohihi_h[i][j][k] << endl << "  "
+                    << jacvalrehilohi_h[i][j][k] << "  "
+                    << jacvalrelolohi_h[i][j][k] << endl << "  "
+                    << jacvalrehihilo_h[i][j][k] << "  "
+                    << jacvalrelohilo_h[i][j][k] << endl << "  "
+                    << jacvalrehilolo_h[i][j][k] << "  "
+                    << jacvalrelololo_h[i][j][k] << endl << "  "
+                    << jacvalimhihihi_h[i][j][k] << "  "
+                    << jacvalimlohihi_h[i][j][k] << endl << "  "
+                    << jacvalimhilohi_h[i][j][k] << "  "
+                    << jacvalimlolohi_h[i][j][k] << endl << "  "
+                    << jacvalimhihilo_h[i][j][k] << "  "
+                    << jacvalimlohilo_h[i][j][k] << endl << "  "
+                    << jacvalimhilolo_h[i][j][k] << "  "
+                    << jacvalimlololo_h[i][j][k] << endl;
+               cout << "jacval_d[" << i << "][" << j << "][" << k << "] : "
+                    << jacvalrehihihi_d[i][j][k] << "  "
+                    << jacvalrelohihi_d[i][j][k] << endl << "  "
+                    << jacvalrehilohi_d[i][j][k] << "  "
+                    << jacvalrelolohi_d[i][j][k] << endl << "  "
+                    << jacvalrehihilo_d[i][j][k] << "  "
+                    << jacvalrelohilo_d[i][j][k] << endl << "  "
+                    << jacvalrehilolo_d[i][j][k] << "  "
+                    << jacvalrelololo_d[i][j][k] << endl << "  "
+                    << jacvalimhihihi_d[i][j][k] << "  "
+                    << jacvalimlohihi_d[i][j][k] << endl << "  "
+                    << jacvalimhilohi_d[i][j][k] << "  "
+                    << jacvalimlolohi_d[i][j][k] << endl << "  "
+                    << jacvalimhihilo_d[i][j][k] << "  "
+                    << jacvalimlohilo_d[i][j][k] << endl << "  "
+                    << jacvalimhilolo_d[i][j][k] << "  "
+                    << jacvalimlololo_d[i][j][k] << endl;
+         errsum += abs(jacvalrehihihi_h[i][j][k] - jacvalrehihihi_d[i][j][k])
+                 + abs(jacvalrelohihi_h[i][j][k] - jacvalrelohihi_d[i][j][k])
+                 + abs(jacvalrehilohi_h[i][j][k] - jacvalrehilohi_d[i][j][k])
+                 + abs(jacvalrelolohi_h[i][j][k] - jacvalrelolohi_d[i][j][k])
+                 + abs(jacvalrehihilo_h[i][j][k] - jacvalrehihilo_d[i][j][k])
+                 + abs(jacvalrelohilo_h[i][j][k] - jacvalrelohilo_d[i][j][k])
+                 + abs(jacvalrehilolo_h[i][j][k] - jacvalrehilolo_d[i][j][k])
+                 + abs(jacvalrelololo_h[i][j][k] - jacvalrelololo_d[i][j][k])
+                 + abs(jacvalimhihihi_h[i][j][k] - jacvalimhihihi_d[i][j][k])
+                 + abs(jacvalimlohihi_h[i][j][k] - jacvalimlohihi_d[i][j][k])
+                 + abs(jacvalimhilohi_h[i][j][k] - jacvalimhilohi_d[i][j][k])
+                 + abs(jacvalimlolohi_h[i][j][k] - jacvalimlolohi_d[i][j][k])
+                 + abs(jacvalimhihilo_h[i][j][k] - jacvalimhihilo_d[i][j][k])
+                 + abs(jacvalimlohilo_h[i][j][k] - jacvalimlohilo_d[i][j][k])
+                 + abs(jacvalimhilolo_h[i][j][k] - jacvalimhilolo_d[i][j][k])
+                 + abs(jacvalimlololo_h[i][j][k] - jacvalimlololo_d[i][j][k]);
+            }
+         }
+      }
+      cout << "sum of errors : " << errsum << endl;
+      cout << "comparing CPU with GPU right hand sides ... " << endl;
+      errsum = 0.0;
+      for(int i=0; i<degp1; i++)
+      {
+         for(int j=0; j<dim; j++)
+         {
+            cout << "rhs_h[" << i << "][" << j << "] : "
+                 << rhsrehihihi_h[i][j] << "  "
+                 << rhsrelohihi_h[i][j] << endl << "  "
+                 << rhsrehilohi_h[i][j] << "  "
+                 << rhsrelolohi_h[i][j] << endl << "  "
+                 << rhsrehihilo_h[i][j] << "  "
+                 << rhsrelohilo_h[i][j] << endl << "  "
+                 << rhsrehilolo_h[i][j] << "  "
+                 << rhsrelololo_h[i][j] << endl << "  "
+                 << rhsimhihihi_h[i][j] << "  "
+                 << rhsimlohihi_h[i][j] << endl << "  "
+                 << rhsimhilohi_h[i][j] << "  "
+                 << rhsimlolohi_h[i][j] << endl << "  "
+                 << rhsimhihilo_h[i][j] << "  "
+                 << rhsimlohilo_h[i][j] << endl << "  "
+                 << rhsimhilolo_h[i][j] << "  "
+                 << rhsimlololo_h[i][j] << endl;
+            cout << "rhs_d[" << i << "][" << j << "] : "
+                 << rhsrehihihi_d[i][j] << "  "
+                 << rhsrelohihi_d[i][j] << endl << "  "
+                 << rhsrehilohi_d[i][j] << "  "
+                 << rhsrelolohi_d[i][j] << endl << "  "
+                 << rhsrehihilo_d[i][j] << "  "
+                 << rhsrelohilo_d[i][j] << endl << "  "
+                 << rhsrehilolo_d[i][j] << "  "
+                 << rhsrelololo_d[i][j] << endl << "  "
+                 << rhsimhihihi_d[i][j] << "  "
+                 << rhsimlohihi_d[i][j] << endl << "  "
+                 << rhsimhilohi_d[i][j] << "  "
+                 << rhsimlolohi_d[i][j] << endl << "  "
+                 << rhsimhihilo_d[i][j] << "  "
+                 << rhsimlohilo_d[i][j] << endl << "  "
+                 << rhsimhilolo_d[i][j] << "  "
+                 << rhsimlololo_d[i][j] << endl;
+            errsum += abs(rhsrehihihi_h[i][j] - rhsrehihihi_d[i][j])
+                    + abs(rhsrelohihi_h[i][j] - rhsrelohihi_d[i][j])
+                    + abs(rhsrehilohi_h[i][j] - rhsrehilohi_d[i][j])
+                    + abs(rhsrelolohi_h[i][j] - rhsrelolohi_d[i][j])
+                    + abs(rhsrehihilo_h[i][j] - rhsrehihilo_d[i][j])
+                    + abs(rhsrelohilo_h[i][j] - rhsrelohilo_d[i][j])
+                    + abs(rhsrehilolo_h[i][j] - rhsrehilolo_d[i][j])
+                    + abs(rhsrelololo_h[i][j] - rhsrelololo_d[i][j])
+                    + abs(rhsimhihihi_h[i][j] - rhsimhihihi_d[i][j])
+                    + abs(rhsimlohihi_h[i][j] - rhsimlohihi_d[i][j])
+                    + abs(rhsimhilohi_h[i][j] - rhsimhilohi_d[i][j])
+                    + abs(rhsimlolohi_h[i][j] - rhsimlolohi_d[i][j])
+                    + abs(rhsimhihilo_h[i][j] - rhsimhihilo_d[i][j])
+                    + abs(rhsimlohilo_h[i][j] - rhsimlohilo_d[i][j])
+                    + abs(rhsimhilolo_h[i][j] - rhsimhilolo_d[i][j])
+                    + abs(rhsimlololo_h[i][j] - rhsimlololo_d[i][j]);
+         }
+      }
+      cout << "sum of errors : " << errsum << endl;
+   }
+   for(int i=0; i<degp1; i++) // save original rhs for residual
+      for(int j=0; j<dim; j++)
+      {
+         urhsrehihihi_h[i][j] = rhsrehihihi_h[i][j];
+         urhsrehilohi_h[i][j] = rhsrehilohi_h[i][j];
+         urhsrelohihi_h[i][j] = rhsrelohihi_h[i][j];
+         urhsrelolohi_h[i][j] = rhsrelolohi_h[i][j];
+         urhsimhihilo_h[i][j] = rhsimhihilo_h[i][j];
+         urhsimhilolo_h[i][j] = rhsimhilolo_h[i][j];
+         urhsimlohilo_h[i][j] = rhsimlohilo_h[i][j];
+         urhsimlololo_h[i][j] = rhsimlololo_h[i][j];
+         urhsrehihihi_d[i][j] = rhsrehihihi_d[i][j];
+         urhsrehilohi_d[i][j] = rhsrehilohi_d[i][j];
+         urhsrelohihi_d[i][j] = rhsrelohihi_d[i][j];
+         urhsrelolohi_d[i][j] = rhsrelolohi_d[i][j];
+         urhsimhilolo_d[i][j] = rhsimhilolo_d[i][j];
+         urhsimhihilo_d[i][j] = rhsimhihilo_d[i][j];
+         urhsimlohilo_d[i][j] = rhsimlohilo_d[i][j];
+         urhsimlololo_d[i][j] = rhsimlololo_d[i][j];
+      }
+
+   for(int i=0; i<degp1; i++) // initialize the solution to zero
+      for(int j=0; j<dim; j++)
+      {
+         solrehihihi_h[i][j] = 0.0; solimhihihi_h[i][j] = 0.0;
+         solrelohihi_h[i][j] = 0.0; solimlohihi_h[i][j] = 0.0;
+         solrehilohi_h[i][j] = 0.0; solimhilohi_h[i][j] = 0.0;
+         solrelolohi_h[i][j] = 0.0; solimlolohi_h[i][j] = 0.0;
+         solrehihilo_h[i][j] = 0.0; solimhihilo_h[i][j] = 0.0;
+         solrelohilo_h[i][j] = 0.0; solimlohilo_h[i][j] = 0.0;
+         solrehilolo_h[i][j] = 0.0; solimhilolo_h[i][j] = 0.0;
+         solrelololo_h[i][j] = 0.0; solimlololo_h[i][j] = 0.0;
+         solrehihihi_d[i][j] = 0.0; solimhihihi_d[i][j] = 0.0;
+         solrelohihi_d[i][j] = 0.0; solimlohihi_d[i][j] = 0.0;
+         solrehilohi_d[i][j] = 0.0; solimhilohi_d[i][j] = 0.0;
+         solrelolohi_d[i][j] = 0.0; solimlolohi_d[i][j] = 0.0;
+         solrehihilo_d[i][j] = 0.0; solimhihilo_d[i][j] = 0.0;
+         solrelohilo_d[i][j] = 0.0; solimlohilo_d[i][j] = 0.0;
+         solrehilolo_d[i][j] = 0.0; solimhilolo_d[i][j] = 0.0;
+         solrelololo_d[i][j] = 0.0; solimlololo_d[i][j] = 0.0;
+      }
+
+   if((mode == 1) || (mode == 2))
+   {
+      CPU_cmplx8_qrbs_solve
+         (dim,degp1,
+          jacvalrehihihi_h,jacvalrelohihi_h,jacvalrehilohi_h,jacvalrelolohi_h,
+          jacvalrehihilo_h,jacvalrelohilo_h,jacvalrehilolo_h,jacvalrelololo_h,
+          jacvalimhihihi_h,jacvalimlohihi_h,jacvalimhilohi_h,jacvalimlolohi_h,
+          jacvalimhihilo_h,jacvalimlohilo_h,jacvalimhilolo_h,jacvalimlololo_h,
+          urhsrehihihi_h,urhsrelohihi_h,urhsrehilohi_h,urhsrelolohi_h,
+          urhsrehihilo_h,urhsrelohilo_h,urhsrehilolo_h,urhsrelololo_h,
+          urhsimhihihi_h,urhsimlohihi_h,urhsimhilohi_h,urhsimlolohi_h,
+          urhsimhihilo_h,urhsimlohilo_h,urhsimhilolo_h,urhsimlololo_h,
+          solrehihihi_h,solrelohihi_h,solrehilohi_h,solrelolohi_h,
+          solrehihilo_h,solrelohilo_h,solrehilolo_h,solrelololo_h,
+          solimhihihi_h,solimlohihi_h,solimhilohi_h,solimlolohi_h,
+          solimhihilo_h,solimlohilo_h,solimhilolo_h,solimlololo_h,
+          workmatrehihihi,workmatrelohihi,workmatrehilohi,workmatrelolohi,
+          workmatrehihilo,workmatrelohilo,workmatrehilolo,workmatrelololo,
+          workmatimhihihi,workmatimlohihi,workmatimhilohi,workmatimlolohi,
+          workmatimhihilo,workmatimlohilo,workmatimhilolo,workmatimlololo,
+          Qrehihihi_h,Qrelohihi_h,Qrehilohi_h,Qrelolohi_h,
+          Qrehihilo_h,Qrelohilo_h,Qrehilolo_h,Qrelololo_h,
+          Qimhihihi_h,Qimlohihi_h,Qimhilohi_h,Qimlolohi_h,
+          Qimhihilo_h,Qimlohilo_h,Qimhilolo_h,Qimlololo_h,
+          Rrehihihi_h,Rrelohihi_h,Rrehilohi_h,Rrelolohi_h,
+          Rrehihilo_h,Rrelohilo_h,Rrehilolo_h,Rrelololo_h,
+          Rimhihihi_h,Rimlohihi_h,Rimhilohi_h,Rimlolohi_h,
+          Rimhihilo_h,Rimlohilo_h,Rimhilolo_h,Rimlololo_h,
+          workvecrehihihi,workvecrelohihi,workvecrehilohi,workvecrelolohi,
+          workvecrehihilo,workvecrelohilo,workvecrehilolo,workvecrelololo,
+          workvecimhihihi,workvecimlohihi,workvecimhilohi,workvecimlolohi,
+          workvecimhihilo,workvecimlohilo,workvecimhilolo,workvecimlololo,
+          vrblvl);
+ 
+      if(vrblvl > 0)
+      {
+         CPU_cmplx8_linear_residue
+            (dim,degp1,
+             jacvalrehihihi_h,jacvalrelohihi_h,
+             jacvalrehilohi_h,jacvalrelolohi_h,
+             jacvalrehihilo_h,jacvalrelohilo_h,
+             jacvalrehilolo_h,jacvalrelololo_h,
+             jacvalimhihihi_h,jacvalimlohihi_h,
+             jacvalimhilohi_h,jacvalimlolohi_h,
+             jacvalimhihilo_h,jacvalimlohilo_h,
+             jacvalimhilolo_h,jacvalimlololo_h,
+             rhsrehihihi_h,rhsrelohihi_h,rhsrehilohi_h,rhsrelolohi_h,
+             rhsrehihilo_h,rhsrelohilo_h,rhsrehilolo_h,rhsrelololo_h,
+             rhsimhihihi_h,rhsimlohihi_h,rhsimhilohi_h,rhsimlolohi_h,
+             rhsimhihilo_h,rhsimlohilo_h,rhsimhilolo_h,rhsimlololo_h,
+             solrehihihi_h,solrelohihi_h,solrehilohi_h,solrelolohi_h,
+             solrehihilo_h,solrelohilo_h,solrehilolo_h,solrelololo_h,
+             solimhihihi_h,solimlohihi_h,solimhilohi_h,solimlolohi_h,
+             solimhihilo_h,solimlohilo_h,solimhilolo_h,solimlololo_h,
+             resvecrehihihi,resvecrelohihi,resvecrehilohi,resvecrelolohi,
+             resvecrehihilo,resvecrelohilo,resvecrehilolo,resvecrelololo,
+             resvecimhihihi,resvecimlohihi,resvecimhilohi,resvecimlolohi,
+             resvecimhihilo,resvecimlohilo,resvecimhilolo,resvecimlololo,
+             resmaxhihihi,resmaxlohihi,resmaxhilohi,resmaxlolohi,
+             resmaxhihilo,resmaxlohilo,resmaxhilolo,resmaxlololo,
+             vrblvl);
+         cout << "maximum residual : " << *resmaxhihihi << endl;
+      }
+      cmplx8_update_series
+         (dim,degp1,
+          inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
+          inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
+          inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
+          inputimhihilo_h,inputimlohilo_h,inputimhilolo_h,inputimlololo_h,
+          solrehihihi_h,solrelohihi_h,solrehilohi_h,solrelolohi_h,
+          solrehihilo_h,solrelohilo_h,solrehilolo_h,solrelololo_h,
+          solimhihihi_h,solimlohihi_h,solimhilohi_h,solimlolohi_h,
+          solimhihilo_h,solimlohilo_h,solimhilolo_h,solimlololo_h,vrblvl);
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      GPU_cmplx8_bals_solve
+         (dim,degp1,szt,nbt,
+          jacvalrehihihi_d,jacvalrelohihi_d,jacvalrehilohi_d,jacvalrelolohi_d,
+          jacvalrehihilo_d,jacvalrelohilo_d,jacvalrehilolo_d,jacvalrelololo_d,
+          jacvalimhihihi_d,jacvalimlohihi_d,jacvalimhilohi_d,jacvalimlolohi_d,
+          jacvalimhihilo_d,jacvalimlohilo_d,jacvalimhilolo_d,jacvalimlololo_d,
+          Qrehihihi_d,Qrelohihi_d,Qrehilohi_d,Qrelolohi_d,
+          Qrehihilo_d,Qrelohilo_d,Qrehilolo_d,Qrelololo_d,
+          Qimhihihi_d,Qimlohihi_d,Qimhilohi_d,Qimlolohi_d,
+          Qimhihilo_d,Qimlohilo_d,Qimhilolo_d,Qimlololo_d,
+          Rrehihihi_d,Rrelohihi_d,Rrehilohi_d,Rrelolohi_d,
+          Rrehihilo_d,Rrelohilo_d,Rrehilolo_d,Rrelololo_d,
+          Rimhihihi_d,Rimlohihi_d,Rimhilohi_d,Rimlolohi_d,
+          Rimhihilo_d,Rimlohilo_d,Rimhilolo_d,Rimlololo_d,
+          urhsrehihihi_d,urhsrelohihi_d,urhsrehilohi_d,urhsrelolohi_d,
+          urhsrehihilo_d,urhsrelohilo_d,urhsrehilolo_d,urhsrelololo_d,
+          urhsimhihihi_d,urhsimlohihi_d,urhsimhilohi_d,urhsimlolohi_d,
+          urhsimhihilo_d,urhsimlohilo_d,urhsimhilolo_d,urhsimlololo_d,
+          solrehihihi_d,solrelohihi_d,solrehilohi_d,solrelolohi_d,
+          solrehihilo_d,solrelohilo_d,solrehilolo_d,solrelololo_d,
+          solimhihihi_d,solimlohihi_d,solimhilohi_d,solimlolohi_d,
+          solimhihilo_d,solimlohilo_d,solimhilolo_d,solimlololo_d,vrblvl);
+
+      if(vrblvl > 0)
+      {
+         CPU_cmplx8_linear_residue
+            (dim,degp1,
+             jacvalrehihihi_d,jacvalrelohihi_d,
+             jacvalrehilohi_d,jacvalrelolohi_d,
+             jacvalrehihilo_d,jacvalrelohilo_d,
+             jacvalrehilolo_d,jacvalrelololo_d,
+             jacvalimhihihi_d,jacvalimlohihi_d,
+             jacvalimhilohi_d,jacvalimlolohi_d,
+             jacvalimhihilo_d,jacvalimlohilo_d,
+             jacvalimhilolo_d,jacvalimlololo_d,
+             rhsrehihihi_d,rhsrelohihi_d,rhsrehilohi_d,rhsrelolohi_d,
+             rhsrehihilo_d,rhsrelohilo_d,rhsrehilolo_d,rhsrelololo_d,
+             rhsimhihihi_d,rhsimlohihi_d,rhsimhilohi_d,rhsimlolohi_d,
+             rhsimhihilo_d,rhsimlohilo_d,rhsimhilolo_d,rhsimlololo_d,
+             solrehihihi_d,solrelohihi_d,solrehilohi_d,solrelolohi_d,
+             solrehihilo_d,solrelohilo_d,solrehilolo_d,solrelololo_d,
+             solimhihihi_d,solimlohihi_d,solimhilohi_d,solimlolohi_d,
+             solimhihilo_d,solimlohilo_d,solimhilolo_d,solimlololo_d,
+             resvecrehihihi,resvecrelohihi,resvecrehilohi,resvecrelolohi,
+             resvecrehihilo,resvecrelohilo,resvecrehilolo,resvecrelololo,
+             resvecimhihihi,resvecimlohihi,resvecimhilohi,resvecimlolohi,
+             resvecimhihilo,resvecimlohilo,resvecimhilolo,resvecimlololo,
+             resmaxhihihi,resmaxlohihi,resmaxhilohi,resmaxlolohi,
+             resmaxhihilo,resmaxlohilo,resmaxhilolo,resmaxlololo,vrblvl);
+         cout << "maximum residual : " << *resmaxhihihi << endl;
+      }
+      cmplx8_update_series
+         (dim,degp1,
+          inputrehihihi_d,inputrelohihi_d,inputrehilohi_d,inputrelolohi_d,
+          inputrehihilo_d,inputrelohilo_d,inputrehilolo_d,inputrelololo_d,
+          inputimhihihi_d,inputimlohihi_d,inputimhilohi_d,inputimlolohi_d,
+          inputimhihilo_d,inputimlohilo_d,inputimhilolo_d,inputimlololo_d,
+          solrehihihi_d,solrelohihi_d,solrehilohi_d,solrelolohi_d,
+          solrehihilo_d,solrelohilo_d,solrehilolo_d,solrelololo_d,
+          solimhihihi_d,solimlohihi_d,solimhilohi_d,solimlolohi_d,
+          solimhihilo_d,solimlohilo_d,solimhilolo_d,solimlololo_d,vrblvl);
+   }
+   if((vrblvl > 0) && (mode == 2))
+   {
+      double errsum = 0.0;
+      cout << "comparing CPU with GPU matrices Q ... " << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+             cout << "Q_h[" << i << "][" << j << "] : "
+                  << Qrehihihi_h[i][j] << "  "
+                  << Qrelohihi_h[i][j] << endl << "  "
+                  << Qrehilohi_h[i][j] << "  "
+                  << Qrelolohi_h[i][j] << endl << "  "
+                  << Qrehihilo_h[i][j] << "  "
+                  << Qrelohilo_h[i][j] << endl << "  "
+                  << Qrehilolo_h[i][j] << "  "
+                  << Qrelololo_h[i][j] << endl << "  "
+                  << Qimhihihi_h[i][j] << "  "
+                  << Qimlohihi_h[i][j] << endl << "  "
+                  << Qimhilohi_h[i][j] << "  "
+                  << Qimlolohi_h[i][j] << endl << "  "
+                  << Qimhihilo_h[i][j] << "  "
+                  << Qimlohilo_h[i][j] << endl << "  "
+                  << Qimhilolo_h[i][j] << "  "
+                  << Qimlololo_h[i][j] << endl;
+             cout << "Q_d[" << i << "][" << j << "] : "
+                  << Qrehihihi_d[i][j] << "  "
+                  << Qrelohihi_d[i][j] << endl << "  "
+                  << Qrehilohi_d[i][j] << "  "
+                  << Qrelolohi_d[i][j] << endl << "  "
+                  << Qrehihilo_d[i][j] << "  "
+                  << Qrelohilo_d[i][j] << endl << "  "
+                  << Qrehilolo_d[i][j] << "  "
+                  << Qrelololo_d[i][j] << endl << "  "
+                  << Qimhihihi_d[i][j] << "  "
+                  << Qimlohihi_d[i][j] << endl << "  "
+                  << Qimhilohi_d[i][j] << "  "
+                  << Qimlolohi_d[i][j] << endl << "  "
+                  << Qimhihilo_d[i][j] << "  "
+                  << Qimlohilo_d[i][j] << endl << "  "
+                  << Qimhilolo_d[i][j] << "  "
+                  << Qimlololo_d[i][j] << endl;
+             errsum += abs(Qrehihihi_h[i][j] - Qrehihihi_d[i][j])
+                     + abs(Qrelohihi_h[i][j] - Qrelohihi_d[i][j])
+                     + abs(Qrehilohi_h[i][j] - Qrehilohi_d[i][j])
+                     + abs(Qrelolohi_h[i][j] - Qrelolohi_d[i][j])
+                     + abs(Qrehihilo_h[i][j] - Qrehihilo_d[i][j])
+                     + abs(Qrelohilo_h[i][j] - Qrelohilo_d[i][j])
+                     + abs(Qrehilolo_h[i][j] - Qrehilolo_d[i][j])
+                     + abs(Qrelololo_h[i][j] - Qrelololo_d[i][j])
+                     + abs(Qimhihihi_h[i][j] - Qimhihihi_d[i][j])
+                     + abs(Qimlohihi_h[i][j] - Qimlohihi_d[i][j])
+                     + abs(Qimhilohi_h[i][j] - Qimhilohi_d[i][j])
+                     + abs(Qimlolohi_h[i][j] - Qimlolohi_d[i][j])
+                     + abs(Qimhihilo_h[i][j] - Qimhihilo_d[i][j])
+                     + abs(Qimlohilo_h[i][j] - Qimlohilo_d[i][j])
+                     + abs(Qimhilolo_h[i][j] - Qimhilolo_d[i][j])
+                     + abs(Qimlololo_h[i][j] - Qimlololo_d[i][j]);
+         }
+      cout << "sum of errors : " << errsum << endl;
+      cout << "comparing CPU with GPU matrices R ... " << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+             cout << "R_h[" << i << "][" << j << "] : "
+                  << Rrehihihi_h[i][j] << "  "
+                  << Rrelohihi_h[i][j] << endl << "  "
+                  << Rrehilohi_h[i][j] << "  "
+                  << Rrelolohi_h[i][j] << endl << "  "
+                  << Rrehihilo_h[i][j] << "  "
+                  << Rrelohilo_h[i][j] << endl << "  "
+                  << Rrehilolo_h[i][j] << "  "
+                  << Rrelololo_h[i][j] << endl << "  "
+                  << Rimhihihi_h[i][j] << "  "
+                  << Rimlohihi_h[i][j] << endl << "  "
+                  << Rimhilohi_h[i][j] << "  "
+                  << Rimlolohi_h[i][j] << endl << "  "
+                  << Rimhihilo_h[i][j] << "  "
+                  << Rimlohilo_h[i][j] << endl << "  "
+                  << Rimhilolo_h[i][j] << "  "
+                  << Rimlololo_h[i][j] << endl;
+             cout << "R_d[" << i << "][" << j << "] : "
+                  << Rrehihihi_d[i][j] << "  "
+                  << Rrelohihi_d[i][j] << endl << "  "
+                  << Rrehilohi_d[i][j] << "  "
+                  << Rrelolohi_d[i][j] << endl << "  "
+                  << Rrehihilo_d[i][j] << "  "
+                  << Rrelohilo_d[i][j] << endl << "  "
+                  << Rrehilolo_d[i][j] << "  "
+                  << Rrelololo_d[i][j] << endl << "  "
+                  << Rimhihihi_d[i][j] << "  "
+                  << Rimlohihi_d[i][j] << endl << "  "
+                  << Rimhilohi_d[i][j] << "  "
+                  << Rimlolohi_d[i][j] << endl << "  "
+                  << Rimhihilo_d[i][j] << "  "
+                  << Rimlohilo_d[i][j] << endl << "  "
+                  << Rimhilolo_d[i][j] << "  "
+                  << Rimlololo_d[i][j] << endl;
+             errsum += abs(Rrehihihi_h[i][j] - Rrehihihi_d[i][j])
+                     + abs(Rrelohihi_h[i][j] - Rrelohihi_d[i][j])
+                     + abs(Rrehilohi_h[i][j] - Rrehilohi_d[i][j])
+                     + abs(Rrelolohi_h[i][j] - Rrelolohi_d[i][j])
+                     + abs(Rrehihilo_h[i][j] - Rrehihilo_d[i][j])
+                     + abs(Rrelohilo_h[i][j] - Rrelohilo_d[i][j])
+                     + abs(Rrehilolo_h[i][j] - Rrehilolo_d[i][j])
+                     + abs(Rrelololo_h[i][j] - Rrelololo_d[i][j])
+                     + abs(Rimhihihi_h[i][j] - Rimhihihi_d[i][j])
+                     + abs(Rimlohihi_h[i][j] - Rimlohihi_d[i][j])
+                     + abs(Rimhilohi_h[i][j] - Rimhilohi_d[i][j])
+                     + abs(Rimlolohi_h[i][j] - Rimlolohi_d[i][j])
+                     + abs(Rimhihilo_h[i][j] - Rimhihilo_d[i][j])
+                     + abs(Rimlohilo_h[i][j] - Rimlohilo_d[i][j])
+                     + abs(Rimhilolo_h[i][j] - Rimhilolo_d[i][j])
+                     + abs(Rimlololo_h[i][j] - Rimlololo_d[i][j]);
+         }
+      cout << "sum of errors : " << errsum << endl;
+      errsum = 0.0;
+      cout << "comparing CPU with GPU updated rhs ... " << endl;
+      for(int i=0; i<degp1; i++)
+         for(int j=0; j<dim; j++)
+         {
+             cout << "urhs_h[" << i << "][" << j << "] : "
+                  << urhsrehihihi_h[i][j] << "  "
+                  << urhsrelohihi_h[i][j] << endl << "  "
+                  << urhsrehilohi_h[i][j] << "  "
+                  << urhsrelolohi_h[i][j] << endl << "  "
+                  << urhsrehihilo_h[i][j] << "  "
+                  << urhsrelohilo_h[i][j] << endl << "  "
+                  << urhsrehilolo_h[i][j] << "  "
+                  << urhsrelololo_h[i][j] << endl << "  "
+                  << urhsimhihihi_h[i][j] << "  "
+                  << urhsimlohihi_h[i][j] << endl << "  "
+                  << urhsimhilohi_h[i][j] << "  "
+                  << urhsimlolohi_h[i][j] << endl << "  "
+                  << urhsimhihilo_h[i][j] << "  "
+                  << urhsimlohilo_h[i][j] << endl << "  "
+                  << urhsimhilolo_h[i][j] << "  "
+                  << urhsimlololo_h[i][j] << endl;
+             cout << "urhs_d[" << i << "][" << j << "] : "
+                  << urhsrehihihi_d[i][j] << "  "
+                  << urhsrelohihi_d[i][j] << endl << "  "
+                  << urhsrehilohi_d[i][j] << "  "
+                  << urhsrelolohi_d[i][j] << endl << "  "
+                  << urhsrehihilo_d[i][j] << "  "
+                  << urhsrelohilo_d[i][j] << endl << "  "
+                  << urhsrehilolo_d[i][j] << "  "
+                  << urhsrelololo_d[i][j] << endl << "  "
+                  << urhsimhihihi_d[i][j] << "  "
+                  << urhsimlohihi_d[i][j] << endl << "  "
+                  << urhsimhilohi_d[i][j] << "  "
+                  << urhsimlolohi_d[i][j] << endl << "  "
+                  << urhsimhihilo_d[i][j] << "  "
+                  << urhsimlohilo_d[i][j] << endl << "  "
+                  << urhsimhilolo_d[i][j] << "  "
+                  << urhsimlololo_d[i][j] << endl;
+             errsum += abs(urhsrehihihi_h[i][j] - urhsrehihihi_d[i][j])
+                     + abs(urhsrelohihi_h[i][j] - urhsrelohihi_d[i][j])
+                     + abs(urhsrehilohi_h[i][j] - urhsrehilohi_d[i][j])
+                     + abs(urhsrelolohi_h[i][j] - urhsrelolohi_d[i][j])
+                     + abs(urhsrehihilo_h[i][j] - urhsrehihilo_d[i][j])
+                     + abs(urhsrelohilo_h[i][j] - urhsrelohilo_d[i][j])
+                     + abs(urhsrehilolo_h[i][j] - urhsrehilolo_d[i][j])
+                     + abs(urhsrelololo_h[i][j] - urhsrelololo_d[i][j])
+                     + abs(urhsimhihihi_h[i][j] - urhsimhihihi_d[i][j])
+                     + abs(urhsimlohihi_h[i][j] - urhsimlohihi_d[i][j])
+                     + abs(urhsimhilohi_h[i][j] - urhsimhilohi_d[i][j])
+                     + abs(urhsimlolohi_h[i][j] - urhsimlolohi_d[i][j])
+                     + abs(urhsimhihilo_h[i][j] - urhsimhihilo_d[i][j])
+                     + abs(urhsimlohilo_h[i][j] - urhsimlohilo_d[i][j])
+                     + abs(urhsimhilolo_h[i][j] - urhsimhilolo_d[i][j])
+                     + abs(urhsimlololo_h[i][j] - urhsimlololo_d[i][j]);
+         }
+      cout << "sum of errors : " << errsum << endl;
+      errsum = 0.0;
+      cout << "comparing CPU with GPU update to solutions ... " << endl;
+      for(int i=0; i<degp1; i++)
+         for(int j=0; j<dim; j++)
+         {
+             cout << "sol_h[" << i << "][" << j << "] : "
+                  << solrehihihi_h[i][j] << "  "
+                  << solrelohihi_h[i][j] << endl << "  "
+                  << solrehilohi_h[i][j] << "  "
+                  << solrelolohi_h[i][j] << endl << "  "
+                  << solrehihilo_h[i][j] << "  "
+                  << solrelohilo_h[i][j] << endl << "  "
+                  << solrehilolo_h[i][j] << "  "
+                  << solrelololo_h[i][j] << endl << "  "
+                  << solimhihihi_h[i][j] << "  "
+                  << solimlohihi_h[i][j] << endl << "  "
+                  << solimhilohi_h[i][j] << "  "
+                  << solimlolohi_h[i][j] << endl << "  "
+                  << solimhihilo_h[i][j] << "  "
+                  << solimlohilo_h[i][j] << endl << "  "
+                  << solimhilolo_h[i][j] << "  "
+                  << solimlololo_h[i][j] << endl;
+             cout << "sol_d[" << i << "][" << j << "] : "
+                  << solrehihihi_d[i][j] << "  "
+                  << solrelohihi_d[i][j] << endl << "  "
+                  << solrehilohi_d[i][j] << "  "
+                  << solrelolohi_d[i][j] << endl << "  "
+                  << solrehihilo_d[i][j] << "  "
+                  << solrelohilo_d[i][j] << endl << "  "
+                  << solrehilolo_d[i][j] << "  "
+                  << solrelololo_d[i][j] << endl << "  "
+                  << solimhihihi_d[i][j] << "  "
+                  << solimlohihi_d[i][j] << endl << "  "
+                  << solimhilohi_d[i][j] << "  "
+                  << solimlolohi_d[i][j] << endl << "  "
+                  << solimhihilo_d[i][j] << "  "
+                  << solimlohilo_d[i][j] << endl << "  "
+                  << solimhilolo_d[i][j] << "  "
+                  << solimlololo_d[i][j] << endl;
+             errsum += abs(solrehihihi_h[i][j] - solrehihihi_d[i][j])
+                     + abs(solrelohihi_h[i][j] - solrelohihi_d[i][j])
+                     + abs(solrehilohi_h[i][j] - solrehilohi_d[i][j])
+                     + abs(solrelolohi_h[i][j] - solrelolohi_d[i][j])
+                     + abs(solrehihilo_h[i][j] - solrehihilo_d[i][j])
+                     + abs(solrelohilo_h[i][j] - solrelohilo_d[i][j])
+                     + abs(solrehilolo_h[i][j] - solrehilolo_d[i][j])
+                     + abs(solrelololo_h[i][j] - solrelololo_d[i][j])
+                     + abs(solimhihihi_h[i][j] - solimhihihi_d[i][j])
+                     + abs(solimlohihi_h[i][j] - solimlohihi_d[i][j])
+                     + abs(solimhilohi_h[i][j] - solimhilohi_d[i][j])
+                     + abs(solimlolohi_h[i][j] - solimlolohi_d[i][j])
+                     + abs(solimhihilo_h[i][j] - solimhihilo_d[i][j])
+                     + abs(solimlohilo_h[i][j] - solimlohilo_d[i][j])
+                     + abs(solimhilolo_h[i][j] - solimhilolo_d[i][j])
+                     + abs(solimlololo_h[i][j] - solimlololo_d[i][j]);
+         }
+      cout << "sum of errors : " << errsum << endl;
+      errsum = 0.0;
+      cout << "comparing CPU with GPU series ... " << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<degp1; j++)
+         {
+             cout << "input_h[" << i << "][" << j << "] : "
+                  << inputrehihihi_h[i][j] << "  "
+                  << inputrelohihi_h[i][j] << endl << "  "
+                  << inputrehilohi_h[i][j] << "  "
+                  << inputrelolohi_h[i][j] << endl << "  "
+                  << inputrehihilo_h[i][j] << "  "
+                  << inputrelohilo_h[i][j] << endl << "  "
+                  << inputrehilolo_h[i][j] << "  "
+                  << inputrelololo_h[i][j] << endl << "  "
+                  << inputimhihihi_h[i][j] << "  "
+                  << inputimlohihi_h[i][j] << endl << "  "
+                  << inputimhilohi_h[i][j] << "  "
+                  << inputimlolohi_h[i][j] << endl << "  "
+                  << inputimhihilo_h[i][j] << "  "
+                  << inputimlohilo_h[i][j] << endl << "  "
+                  << inputimhilolo_h[i][j] << "  "
+                  << inputimlololo_h[i][j] << endl;
+             cout << "input_d[" << i << "][" << j << "] : "
+                  << inputrehihihi_d[i][j] << "  "
+                  << inputrelohihi_d[i][j] << endl << "  "
+                  << inputrehilohi_d[i][j] << "  "
+                  << inputrelolohi_d[i][j] << endl << "  "
+                  << inputrehihilo_d[i][j] << "  "
+                  << inputrelohilo_d[i][j] << endl << "  "
+                  << inputrehilolo_d[i][j] << "  "
+                  << inputrelololo_d[i][j] << endl << "  "
+                  << inputimhihihi_d[i][j] << "  "
+                  << inputimlohihi_d[i][j] << endl << "  "
+                  << inputimhilohi_d[i][j] << "  "
+                  << inputimlolohi_d[i][j] << endl << "  "
+                  << inputimhihilo_d[i][j] << "  "
+                  << inputimlohilo_d[i][j] << endl << "  "
+                  << inputimhilolo_d[i][j] << "  "
+                  << inputimlololo_d[i][j] << endl;
+             errsum += abs(inputrehihihi_h[i][j] - inputrehihihi_d[i][j])
+                     + abs(inputrelohihi_h[i][j] - inputrelohihi_d[i][j])
+                     + abs(inputrehilohi_h[i][j] - inputrehilohi_d[i][j])
+                     + abs(inputrelolohi_h[i][j] - inputrelolohi_d[i][j])
+                     + abs(inputrehihilo_h[i][j] - inputrehihilo_d[i][j])
+                     + abs(inputrelohilo_h[i][j] - inputrelohilo_d[i][j])
+                     + abs(inputrehilolo_h[i][j] - inputrehilolo_d[i][j])
+                     + abs(inputrelololo_h[i][j] - inputrelololo_d[i][j])
+                     + abs(inputimhihihi_h[i][j] - inputimhihihi_d[i][j])
+                     + abs(inputimlohihi_h[i][j] - inputimlohihi_d[i][j])
+                     + abs(inputimhilohi_h[i][j] - inputimhilohi_d[i][j])
+                     + abs(inputimlolohi_h[i][j] - inputimlolohi_d[i][j])
+                     + abs(inputimhihilo_h[i][j] - inputimhihilo_d[i][j])
+                     + abs(inputimlohilo_h[i][j] - inputimlohilo_d[i][j])
+                     + abs(inputimhilolo_h[i][j] - inputimhilolo_d[i][j])
+                     + abs(inputimlololo_h[i][j] - inputimlololo_d[i][j]);
+         }
+      cout << "sum of errors : " << errsum << endl;
+   }
+}
+
 int test_dbl8_real_newton
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
@@ -1529,6 +2714,1015 @@ int test_dbl8_real_newton
           &resmaxhihihi,&resmaxlohihi,&resmaxhilohi,&resmaxlolohi,
           &resmaxhihilo,&resmaxlohilo,&resmaxhilolo,&resmaxlololo,
           vrblvl,mode);
+   }
+   return 0;
+}
+
+int test_dbl8_complex_newton
+ ( int szt, int nbt, int dim, int deg,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int nbsteps, int mode, int vrblvl )
+{
+/*
+ * 1. allocating input and output space for evaluation and differentiation
+ */
+   const int degp1 = deg+1;
+   double **inputrehihihi_h = new double*[dim];
+   double **inputrelohihi_h = new double*[dim];
+   double **inputrehilohi_h = new double*[dim];
+   double **inputrelolohi_h = new double*[dim];
+   double **inputrehihilo_h = new double*[dim];
+   double **inputrelohilo_h = new double*[dim];
+   double **inputrehilolo_h = new double*[dim];
+   double **inputrelololo_h = new double*[dim];
+   double **inputimhihihi_h = new double*[dim];
+   double **inputimlohihi_h = new double*[dim];
+   double **inputimhilohi_h = new double*[dim];
+   double **inputimlolohi_h = new double*[dim];
+   double **inputimhihilo_h = new double*[dim];
+   double **inputimlohilo_h = new double*[dim];
+   double **inputimhilolo_h = new double*[dim];
+   double **inputimlololo_h = new double*[dim];
+   double **inputrehihihi_d = new double*[dim];
+   double **inputrelohihi_d = new double*[dim];
+   double **inputrehilohi_d = new double*[dim];
+   double **inputrelolohi_d = new double*[dim];
+   double **inputrehihilo_d = new double*[dim];
+   double **inputrelohilo_d = new double*[dim];
+   double **inputrehilolo_d = new double*[dim];
+   double **inputrelololo_d = new double*[dim];
+   double **inputimhihihi_d = new double*[dim];
+   double **inputimlohihi_d = new double*[dim];
+   double **inputimhilohi_d = new double*[dim];
+   double **inputimlolohi_d = new double*[dim];
+   double **inputimhihilo_d = new double*[dim];
+   double **inputimlohilo_d = new double*[dim];
+   double **inputimhilolo_d = new double*[dim];
+   double **inputimlololo_d = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+       inputrehihihi_h[i] = new double[degp1];
+       inputrelohihi_h[i] = new double[degp1];
+       inputrehilohi_h[i] = new double[degp1];
+       inputrelolohi_h[i] = new double[degp1];
+       inputrehihilo_h[i] = new double[degp1];
+       inputrelohilo_h[i] = new double[degp1];
+       inputrehilolo_h[i] = new double[degp1];
+       inputrelololo_h[i] = new double[degp1];
+       inputimhihihi_h[i] = new double[degp1];
+       inputimlohihi_h[i] = new double[degp1];
+       inputimhilohi_h[i] = new double[degp1];
+       inputimlolohi_h[i] = new double[degp1];
+       inputimhihilo_h[i] = new double[degp1];
+       inputimlohilo_h[i] = new double[degp1];
+       inputimhilolo_h[i] = new double[degp1];
+       inputimlololo_h[i] = new double[degp1];
+       inputrehihihi_d[i] = new double[degp1];
+       inputrelohihi_d[i] = new double[degp1];
+       inputrehilohi_d[i] = new double[degp1];
+       inputrelolohi_d[i] = new double[degp1];
+       inputrehihilo_d[i] = new double[degp1];
+       inputrelohilo_d[i] = new double[degp1];
+       inputrehilolo_d[i] = new double[degp1];
+       inputrelololo_d[i] = new double[degp1];
+       inputimhihihi_d[i] = new double[degp1];
+       inputimlohihi_d[i] = new double[degp1];
+       inputimhilohi_d[i] = new double[degp1];
+       inputimlolohi_d[i] = new double[degp1];
+       inputimhihilo_d[i] = new double[degp1];
+       inputimlohilo_d[i] = new double[degp1];
+       inputimhilolo_d[i] = new double[degp1];
+       inputimlololo_d[i] = new double[degp1];
+   }
+   // allocate memory for coefficients and the output
+   double *accrehihihi = new double[degp1]; // accumulated power series
+   double *accrelohihi = new double[degp1];
+   double *accrehilohi = new double[degp1];
+   double *accrelolohi = new double[degp1];
+   double *accrehihilo = new double[degp1];
+   double *accrelohilo = new double[degp1];
+   double *accrehilolo = new double[degp1];
+   double *accrelololo = new double[degp1];
+   double *accimhihihi = new double[degp1];
+   double *accimlohihi = new double[degp1];
+   double *accimhilohi = new double[degp1];
+   double *accimlolohi = new double[degp1];
+   double *accimhihilo = new double[degp1];
+   double *accimlohilo = new double[degp1];
+   double *accimhilolo = new double[degp1];
+   double *accimlololo = new double[degp1];
+   double **cffrehihihi = new double*[dim]; // the coefficients of monomials
+   double **cffrelohihi = new double*[dim];
+   double **cffrehilohi = new double*[dim]; 
+   double **cffrelolohi = new double*[dim];
+   double **cffrehihilo = new double*[dim];
+   double **cffrelohilo = new double*[dim];
+   double **cffrehilolo = new double*[dim]; 
+   double **cffrelololo = new double*[dim];
+   double **cffimhihihi = new double*[dim]; 
+   double **cffimlohihi = new double*[dim]; 
+   double **cffimhilohi = new double*[dim]; 
+   double **cffimlolohi = new double*[dim]; 
+   double **cffimhihilo = new double*[dim]; 
+   double **cffimlohilo = new double*[dim]; 
+   double **cffimhilolo = new double*[dim]; 
+   double **cffimlololo = new double*[dim]; 
+
+   for(int i=0; i<dim; i++)
+   {
+      cffrehihihi[i] = new double[degp1];
+      cffrelohihi[i] = new double[degp1];
+      cffrehilohi[i] = new double[degp1];
+      cffrelolohi[i] = new double[degp1];
+      cffrehihilo[i] = new double[degp1];
+      cffrelohilo[i] = new double[degp1];
+      cffrehilolo[i] = new double[degp1];
+      cffrelololo[i] = new double[degp1];
+      cffimhihihi[i] = new double[degp1];
+      cffimlohihi[i] = new double[degp1];
+      cffimhilohi[i] = new double[degp1];
+      cffimlolohi[i] = new double[degp1];
+      cffimhihilo[i] = new double[degp1];
+      cffimlohilo[i] = new double[degp1];
+      cffimhilolo[i] = new double[degp1];
+      cffimlololo[i] = new double[degp1];
+   }
+   double ***outputrehihihi_h = new double**[dim];
+   double ***outputrelohihi_h = new double**[dim];
+   double ***outputrehilohi_h = new double**[dim];
+   double ***outputrelolohi_h = new double**[dim];
+   double ***outputrehihilo_h = new double**[dim];
+   double ***outputrelohilo_h = new double**[dim];
+   double ***outputrehilolo_h = new double**[dim];
+   double ***outputrelololo_h = new double**[dim];
+   double ***outputimhihihi_h = new double**[dim];
+   double ***outputimlohihi_h = new double**[dim];
+   double ***outputimhilohi_h = new double**[dim];
+   double ***outputimlolohi_h = new double**[dim];
+   double ***outputimhihilo_h = new double**[dim];
+   double ***outputimlohilo_h = new double**[dim];
+   double ***outputimhilolo_h = new double**[dim];
+   double ***outputimlololo_h = new double**[dim];
+   double ***outputrehihihi_d = new double**[dim];
+   double ***outputrelohihi_d = new double**[dim];
+   double ***outputrehilohi_d = new double**[dim];
+   double ***outputrelolohi_d = new double**[dim];
+   double ***outputrehihilo_d = new double**[dim];
+   double ***outputrelohilo_d = new double**[dim];
+   double ***outputrehilolo_d = new double**[dim];
+   double ***outputrelololo_d = new double**[dim];
+   double ***outputimhihihi_d = new double**[dim];
+   double ***outputimlohihi_d = new double**[dim];
+   double ***outputimhilohi_d = new double**[dim];
+   double ***outputimlolohi_d = new double**[dim];
+   double ***outputimhihilo_d = new double**[dim];
+   double ***outputimlohilo_d = new double**[dim];
+   double ***outputimhilolo_d = new double**[dim];
+   double ***outputimlololo_d = new double**[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      outputrehihihi_h[i] = new double*[dim+1];
+      outputrelohihi_h[i] = new double*[dim+1];
+      outputrehilohi_h[i] = new double*[dim+1];
+      outputrelolohi_h[i] = new double*[dim+1];
+      outputrehihilo_h[i] = new double*[dim+1];
+      outputrelohilo_h[i] = new double*[dim+1];
+      outputrehilolo_h[i] = new double*[dim+1];
+      outputrelololo_h[i] = new double*[dim+1];
+      outputimhihihi_h[i] = new double*[dim+1];
+      outputimlohihi_h[i] = new double*[dim+1];
+      outputimhilohi_h[i] = new double*[dim+1];
+      outputimlolohi_h[i] = new double*[dim+1];
+      outputimhihilo_h[i] = new double*[dim+1];
+      outputimlohilo_h[i] = new double*[dim+1];
+      outputimhilolo_h[i] = new double*[dim+1];
+      outputimlololo_h[i] = new double*[dim+1];
+      outputrehihihi_d[i] = new double*[dim+1];
+      outputrelohihi_d[i] = new double*[dim+1];
+      outputrehilohi_d[i] = new double*[dim+1];
+      outputrelolohi_d[i] = new double*[dim+1];
+      outputrehihilo_d[i] = new double*[dim+1];
+      outputrelohilo_d[i] = new double*[dim+1];
+      outputrehilolo_d[i] = new double*[dim+1];
+      outputrelololo_d[i] = new double*[dim+1];
+      outputimhihihi_d[i] = new double*[dim+1];
+      outputimlohihi_d[i] = new double*[dim+1];
+      outputimhilohi_d[i] = new double*[dim+1];
+      outputimlolohi_d[i] = new double*[dim+1];
+      outputimhihilo_d[i] = new double*[dim+1];
+      outputimlohilo_d[i] = new double*[dim+1];
+      outputimhilolo_d[i] = new double*[dim+1];
+      outputimlololo_d[i] = new double*[dim+1];
+
+      for(int j=0; j<=dim; j++)
+      {
+         outputrehihihi_h[i][j] = new double[degp1];
+         outputrelohihi_h[i][j] = new double[degp1];
+         outputrehilohi_h[i][j] = new double[degp1];
+         outputrelolohi_h[i][j] = new double[degp1];
+         outputrehihilo_h[i][j] = new double[degp1];
+         outputrelohilo_h[i][j] = new double[degp1];
+         outputrehilolo_h[i][j] = new double[degp1];
+         outputrelololo_h[i][j] = new double[degp1];
+         outputimhihihi_h[i][j] = new double[degp1];
+         outputimlohihi_h[i][j] = new double[degp1];
+         outputimhilohi_h[i][j] = new double[degp1];
+         outputimlolohi_h[i][j] = new double[degp1];
+         outputimhihilo_h[i][j] = new double[degp1];
+         outputimlohilo_h[i][j] = new double[degp1];
+         outputimhilolo_h[i][j] = new double[degp1];
+         outputimlololo_h[i][j] = new double[degp1];
+         outputrehihihi_d[i][j] = new double[degp1];
+         outputrelohihi_d[i][j] = new double[degp1];
+         outputrehilohi_d[i][j] = new double[degp1];
+         outputrelolohi_d[i][j] = new double[degp1];
+         outputrehihilo_d[i][j] = new double[degp1];
+         outputrelohilo_d[i][j] = new double[degp1];
+         outputrehilolo_d[i][j] = new double[degp1];
+         outputrelololo_d[i][j] = new double[degp1];
+         outputimhihihi_d[i][j] = new double[degp1];
+         outputimlohihi_d[i][j] = new double[degp1];
+         outputimhilohi_d[i][j] = new double[degp1];
+         outputimlolohi_d[i][j] = new double[degp1];
+         outputimhihilo_d[i][j] = new double[degp1];
+         outputimlohilo_d[i][j] = new double[degp1];
+         outputimhilolo_d[i][j] = new double[degp1];
+         outputimlololo_d[i][j] = new double[degp1];
+      }
+   }
+   // The function values are power series truncated at degree deg.
+   double **funvalrehihihi_h = new double*[dim];
+   double **funvalrelohihi_h = new double*[dim];
+   double **funvalrehilohi_h = new double*[dim];
+   double **funvalrelolohi_h = new double*[dim];
+   double **funvalrehihilo_h = new double*[dim];
+   double **funvalrelohilo_h = new double*[dim];
+   double **funvalrehilolo_h = new double*[dim];
+   double **funvalrelololo_h = new double*[dim];
+   double **funvalimhihihi_h = new double*[dim];
+   double **funvalimlohihi_h = new double*[dim];
+   double **funvalimhilohi_h = new double*[dim];
+   double **funvalimlolohi_h = new double*[dim];
+   double **funvalimhihilo_h = new double*[dim];
+   double **funvalimlohilo_h = new double*[dim];
+   double **funvalimhilolo_h = new double*[dim];
+   double **funvalimlololo_h = new double*[dim];
+   double **funvalrehihihi_d = new double*[dim];
+   double **funvalrelohihi_d = new double*[dim];
+   double **funvalrehilohi_d = new double*[dim];
+   double **funvalrelolohi_d = new double*[dim];
+   double **funvalrehihilo_d = new double*[dim];
+   double **funvalrelohilo_d = new double*[dim];
+   double **funvalrehilolo_d = new double*[dim];
+   double **funvalrelololo_d = new double*[dim];
+   double **funvalimhihihi_d = new double*[dim];
+   double **funvalimlohihi_d = new double*[dim];
+   double **funvalimhilohi_d = new double*[dim];
+   double **funvalimlolohi_d = new double*[dim];
+   double **funvalimhihilo_d = new double*[dim];
+   double **funvalimlohilo_d = new double*[dim];
+   double **funvalimhilolo_d = new double*[dim];
+   double **funvalimlololo_d = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      funvalrehihihi_h[i] = new double[degp1];
+      funvalrelohihi_h[i] = new double[degp1];
+      funvalrehilohi_h[i] = new double[degp1];
+      funvalrelolohi_h[i] = new double[degp1];
+      funvalrehihilo_h[i] = new double[degp1];
+      funvalrelohilo_h[i] = new double[degp1];
+      funvalrehilolo_h[i] = new double[degp1];
+      funvalrelololo_h[i] = new double[degp1];
+      funvalimhihihi_h[i] = new double[degp1];
+      funvalimlohihi_h[i] = new double[degp1];
+      funvalimhilohi_h[i] = new double[degp1];
+      funvalimlolohi_h[i] = new double[degp1];
+      funvalimhihilo_h[i] = new double[degp1];
+      funvalimlohilo_h[i] = new double[degp1];
+      funvalimhilolo_h[i] = new double[degp1];
+      funvalimlololo_h[i] = new double[degp1];
+      funvalrehihihi_d[i] = new double[degp1];
+      funvalrelohihi_d[i] = new double[degp1];
+      funvalrehilohi_d[i] = new double[degp1];
+      funvalrelolohi_d[i] = new double[degp1];
+      funvalrehihilo_d[i] = new double[degp1];
+      funvalrelohilo_d[i] = new double[degp1];
+      funvalrehilolo_d[i] = new double[degp1];
+      funvalrelololo_d[i] = new double[degp1];
+      funvalimhihihi_d[i] = new double[degp1];
+      funvalimlohihi_d[i] = new double[degp1];
+      funvalimhilohi_d[i] = new double[degp1];
+      funvalimlolohi_d[i] = new double[degp1];
+      funvalimhihilo_d[i] = new double[degp1];
+      funvalimlohilo_d[i] = new double[degp1];
+      funvalimhilolo_d[i] = new double[degp1];
+      funvalimlololo_d[i] = new double[degp1];
+   }
+   // The derivatives in the output are a series truncated at degree deg.
+   // The coefficients of the series are matrices of dimension dim.
+   double ***jacvalrehihihi_h = new double**[degp1];
+   double ***jacvalrelohihi_h = new double**[degp1];
+   double ***jacvalrehilohi_h = new double**[degp1];
+   double ***jacvalrelolohi_h = new double**[degp1];
+   double ***jacvalrehihilo_h = new double**[degp1];
+   double ***jacvalrelohilo_h = new double**[degp1];
+   double ***jacvalrehilolo_h = new double**[degp1];
+   double ***jacvalrelololo_h = new double**[degp1];
+   double ***jacvalimhihihi_h = new double**[degp1];
+   double ***jacvalimlohihi_h = new double**[degp1];
+   double ***jacvalimhilohi_h = new double**[degp1];
+   double ***jacvalimlolohi_h = new double**[degp1];
+   double ***jacvalimhihilo_h = new double**[degp1];
+   double ***jacvalimlohilo_h = new double**[degp1];
+   double ***jacvalimhilolo_h = new double**[degp1];
+   double ***jacvalimlololo_h = new double**[degp1];
+   double ***jacvalrehihihi_d = new double**[degp1];
+   double ***jacvalrelohihi_d = new double**[degp1];
+   double ***jacvalrehilohi_d = new double**[degp1];
+   double ***jacvalrelolohi_d = new double**[degp1];
+   double ***jacvalrehihilo_d = new double**[degp1];
+   double ***jacvalrelohilo_d = new double**[degp1];
+   double ***jacvalrehilolo_d = new double**[degp1];
+   double ***jacvalrelololo_d = new double**[degp1];
+   double ***jacvalimhihihi_d = new double**[degp1];
+   double ***jacvalimlohihi_d = new double**[degp1];
+   double ***jacvalimhilohi_d = new double**[degp1];
+   double ***jacvalimlolohi_d = new double**[degp1];
+   double ***jacvalimhihilo_d = new double**[degp1];
+   double ***jacvalimlohilo_d = new double**[degp1];
+   double ***jacvalimhilolo_d = new double**[degp1];
+   double ***jacvalimlololo_d = new double**[degp1];
+
+   for(int i=0; i<degp1; i++) // jacval[i] is matrix of dimension dim
+   {
+      jacvalrehihihi_h[i] = new double*[dim];
+      jacvalrelohihi_h[i] = new double*[dim];
+      jacvalrehilohi_h[i] = new double*[dim];
+      jacvalrelolohi_h[i] = new double*[dim];
+      jacvalrehihilo_h[i] = new double*[dim];
+      jacvalrelohilo_h[i] = new double*[dim];
+      jacvalrehilolo_h[i] = new double*[dim];
+      jacvalrelololo_h[i] = new double*[dim];
+      jacvalimhihihi_h[i] = new double*[dim];
+      jacvalimlohihi_h[i] = new double*[dim];
+      jacvalimhilohi_h[i] = new double*[dim];
+      jacvalimlolohi_h[i] = new double*[dim];
+      jacvalimhihilo_h[i] = new double*[dim];
+      jacvalimlohilo_h[i] = new double*[dim];
+      jacvalimhilolo_h[i] = new double*[dim];
+      jacvalimlololo_h[i] = new double*[dim];
+      jacvalrehihihi_d[i] = new double*[dim];
+      jacvalrelohihi_d[i] = new double*[dim];
+      jacvalrehilohi_d[i] = new double*[dim];
+      jacvalrelolohi_d[i] = new double*[dim];
+      jacvalrehihilo_d[i] = new double*[dim];
+      jacvalrelohilo_d[i] = new double*[dim];
+      jacvalrehilolo_d[i] = new double*[dim];
+      jacvalrelololo_d[i] = new double*[dim];
+      jacvalimhihihi_d[i] = new double*[dim];
+      jacvalimlohihi_d[i] = new double*[dim];
+      jacvalimhilohi_d[i] = new double*[dim];
+      jacvalimlolohi_d[i] = new double*[dim];
+      jacvalimhihilo_d[i] = new double*[dim];
+      jacvalimlohilo_d[i] = new double*[dim];
+      jacvalimhilolo_d[i] = new double*[dim];
+      jacvalimlololo_d[i] = new double*[dim];
+
+      for(int j=0; j<dim; j++)
+      {
+         jacvalrehihihi_h[i][j] = new double[dim];
+         jacvalrelohihi_h[i][j] = new double[dim];
+         jacvalrehilohi_h[i][j] = new double[dim];
+         jacvalrelolohi_h[i][j] = new double[dim];
+         jacvalrehihilo_h[i][j] = new double[dim];
+         jacvalrelohilo_h[i][j] = new double[dim];
+         jacvalrehilolo_h[i][j] = new double[dim];
+         jacvalrelololo_h[i][j] = new double[dim];
+         jacvalimhihihi_h[i][j] = new double[dim];
+         jacvalimlohihi_h[i][j] = new double[dim];
+         jacvalimhilohi_h[i][j] = new double[dim];
+         jacvalimlolohi_h[i][j] = new double[dim];
+         jacvalimhihilo_h[i][j] = new double[dim];
+         jacvalimlohilo_h[i][j] = new double[dim];
+         jacvalimhilolo_h[i][j] = new double[dim];
+         jacvalimlololo_h[i][j] = new double[dim];
+         jacvalrehihihi_d[i][j] = new double[dim];
+         jacvalrelohihi_d[i][j] = new double[dim];
+         jacvalrehilohi_d[i][j] = new double[dim];
+         jacvalrelolohi_d[i][j] = new double[dim];
+         jacvalrehihilo_d[i][j] = new double[dim];
+         jacvalrelohilo_d[i][j] = new double[dim];
+         jacvalrehilolo_d[i][j] = new double[dim];
+         jacvalrelololo_d[i][j] = new double[dim];
+         jacvalimhihihi_d[i][j] = new double[dim];
+         jacvalimlohihi_d[i][j] = new double[dim];
+         jacvalimhilohi_d[i][j] = new double[dim];
+         jacvalimlolohi_d[i][j] = new double[dim];
+         jacvalimhihilo_d[i][j] = new double[dim];
+         jacvalimlohilo_d[i][j] = new double[dim];
+         jacvalimhilolo_d[i][j] = new double[dim];
+         jacvalimlololo_d[i][j] = new double[dim];
+      }
+   }
+/*
+ * 2. allocate space to solve the linearized power series system
+ */
+   // The solution x(t) to jacval(t)*x(t) = -funval(t) in linearized
+   // format is a series truncated at degree deg, with as coefficients
+   // arrays of dimension dim.
+   double **solrehihihi_h = new double*[degp1];
+   double **solrelohihi_h = new double*[degp1];
+   double **solrehilohi_h = new double*[degp1];
+   double **solrelolohi_h = new double*[degp1];
+   double **solrehihilo_h = new double*[degp1];
+   double **solrelohilo_h = new double*[degp1];
+   double **solrehilolo_h = new double*[degp1];
+   double **solrelololo_h = new double*[degp1];
+   double **solimhihihi_h = new double*[degp1];
+   double **solimlohihi_h = new double*[degp1];
+   double **solimhilohi_h = new double*[degp1];
+   double **solimlolohi_h = new double*[degp1];
+   double **solimhihilo_h = new double*[degp1];
+   double **solimlohilo_h = new double*[degp1];
+   double **solimhilolo_h = new double*[degp1];
+   double **solimlololo_h = new double*[degp1];
+   double **solrehihihi_d = new double*[degp1];
+   double **solrelohihi_d = new double*[degp1];
+   double **solrehilohi_d = new double*[degp1];
+   double **solrelolohi_d = new double*[degp1];
+   double **solrehihilo_d = new double*[degp1];
+   double **solrelohilo_d = new double*[degp1];
+   double **solrehilolo_d = new double*[degp1];
+   double **solrelololo_d = new double*[degp1];
+   double **solimhihihi_d = new double*[degp1];
+   double **solimlohihi_d = new double*[degp1];
+   double **solimhilohi_d = new double*[degp1];
+   double **solimlolohi_d = new double*[degp1];
+   double **solimhihilo_d = new double*[degp1];
+   double **solimlohilo_d = new double*[degp1];
+   double **solimhilolo_d = new double*[degp1];
+   double **solimlololo_d = new double*[degp1];
+
+   for(int i=0; i<degp1; i++) 
+   {
+      solrehihihi_h[i] = new double[dim];
+      solrelohihi_h[i] = new double[dim];
+      solrehilohi_h[i] = new double[dim];
+      solrelolohi_h[i] = new double[dim];
+      solrehihilo_h[i] = new double[dim];
+      solrelohilo_h[i] = new double[dim];
+      solrehilolo_h[i] = new double[dim];
+      solrelololo_h[i] = new double[dim];
+      solimhihihi_h[i] = new double[dim];
+      solimlohihi_h[i] = new double[dim];
+      solimhilohi_h[i] = new double[dim];
+      solimlolohi_h[i] = new double[dim];
+      solimhihilo_h[i] = new double[dim];
+      solimlohilo_h[i] = new double[dim];
+      solimhilolo_h[i] = new double[dim];
+      solimlololo_h[i] = new double[dim];
+      solrehihihi_d[i] = new double[dim];
+      solrelohihi_d[i] = new double[dim];
+      solrehilohi_d[i] = new double[dim];
+      solrelolohi_d[i] = new double[dim];
+      solrehihilo_d[i] = new double[dim];
+      solrelohilo_d[i] = new double[dim];
+      solrehilolo_d[i] = new double[dim];
+      solrelololo_d[i] = new double[dim];
+      solimhihihi_d[i] = new double[dim];
+      solimlohihi_d[i] = new double[dim];
+      solimhilohi_d[i] = new double[dim];
+      solimlolohi_d[i] = new double[dim];
+      solimhihilo_d[i] = new double[dim];
+      solimlohilo_d[i] = new double[dim];
+      solimhilolo_d[i] = new double[dim];
+      solimlololo_d[i] = new double[dim];
+   }
+   // The right hand side -funval(t) in linearized format is a series
+   // truncated at degree deg, with arrays of dimension dim as coefficients.
+   double **rhsrehihihi_h = new double*[degp1];
+   double **rhsrelohihi_h = new double*[degp1];
+   double **rhsrehilohi_h = new double*[degp1];
+   double **rhsrelolohi_h = new double*[degp1];
+   double **rhsrehihilo_h = new double*[degp1];
+   double **rhsrelohilo_h = new double*[degp1];
+   double **rhsrehilolo_h = new double*[degp1];
+   double **rhsrelololo_h = new double*[degp1];
+   double **rhsimhihihi_h = new double*[degp1];
+   double **rhsimlohihi_h = new double*[degp1];
+   double **rhsimhilohi_h = new double*[degp1];
+   double **rhsimlolohi_h = new double*[degp1];
+   double **rhsimhihilo_h = new double*[degp1];
+   double **rhsimlohilo_h = new double*[degp1];
+   double **rhsimhilolo_h = new double*[degp1];
+   double **rhsimlololo_h = new double*[degp1];
+   double **rhsrehihihi_d = new double*[degp1];
+   double **rhsrelohihi_d = new double*[degp1];
+   double **rhsrehilohi_d = new double*[degp1];
+   double **rhsrelolohi_d = new double*[degp1];
+   double **rhsrehihilo_d = new double*[degp1];
+   double **rhsrelohilo_d = new double*[degp1];
+   double **rhsrehilolo_d = new double*[degp1];
+   double **rhsrelololo_d = new double*[degp1];
+   double **rhsimhihihi_d = new double*[degp1];
+   double **rhsimlohihi_d = new double*[degp1];
+   double **rhsimhilohi_d = new double*[degp1];
+   double **rhsimlolohi_d = new double*[degp1];
+   double **rhsimhihilo_d = new double*[degp1];
+   double **rhsimlohilo_d = new double*[degp1];
+   double **rhsimhilolo_d = new double*[degp1];
+   double **rhsimlololo_d = new double*[degp1];
+
+   for(int i=0; i<degp1; i++)
+   {
+      rhsrehihihi_h[i] = new double[dim];
+      rhsrelohihi_h[i] = new double[dim];
+      rhsrehilohi_h[i] = new double[dim];
+      rhsrelolohi_h[i] = new double[dim];
+      rhsrehihilo_h[i] = new double[dim];
+      rhsrelohilo_h[i] = new double[dim];
+      rhsrehilolo_h[i] = new double[dim];
+      rhsrelololo_h[i] = new double[dim];
+      rhsimhihihi_h[i] = new double[dim];
+      rhsimlohihi_h[i] = new double[dim];
+      rhsimhilohi_h[i] = new double[dim];
+      rhsimlolohi_h[i] = new double[dim];
+      rhsimhihilo_h[i] = new double[dim];
+      rhsimlohilo_h[i] = new double[dim];
+      rhsimhilolo_h[i] = new double[dim];
+      rhsimlololo_h[i] = new double[dim];
+      rhsrehihihi_d[i] = new double[dim];
+      rhsrelohihi_d[i] = new double[dim];
+      rhsrehilohi_d[i] = new double[dim];
+      rhsrelolohi_d[i] = new double[dim];
+      rhsrehihilo_d[i] = new double[dim];
+      rhsrelohilo_d[i] = new double[dim];
+      rhsrehilolo_d[i] = new double[dim];
+      rhsrelololo_d[i] = new double[dim];
+      rhsimhihihi_d[i] = new double[dim];
+      rhsimlohihi_d[i] = new double[dim];
+      rhsimhilohi_d[i] = new double[dim];
+      rhsimlolohi_d[i] = new double[dim];
+      rhsimhihilo_d[i] = new double[dim];
+      rhsimlohilo_d[i] = new double[dim];
+      rhsimhilolo_d[i] = new double[dim];
+      rhsimlololo_d[i] = new double[dim];
+   }
+   // Allocate work space for the inplace LU solver.
+   double **workmatrehihihi = new double*[dim];
+   double **workmatrelohihi = new double*[dim];
+   double **workmatrehilohi = new double*[dim];
+   double **workmatrelolohi = new double*[dim];
+   double **workmatrehihilo = new double*[dim];
+   double **workmatrelohilo = new double*[dim];
+   double **workmatrehilolo = new double*[dim];
+   double **workmatrelololo = new double*[dim];
+   double **workmatimhihihi = new double*[dim];
+   double **workmatimlohihi = new double*[dim];
+   double **workmatimhilohi = new double*[dim];
+   double **workmatimlolohi = new double*[dim];
+   double **workmatimhihilo = new double*[dim];
+   double **workmatimlohilo = new double*[dim];
+   double **workmatimhilolo = new double*[dim];
+   double **workmatimlololo = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      workmatrehihihi[i] = new double[dim];
+      workmatrelohihi[i] = new double[dim];
+      workmatrehilohi[i] = new double[dim];
+      workmatrelolohi[i] = new double[dim];
+      workmatrehihilo[i] = new double[dim];
+      workmatrelohilo[i] = new double[dim];
+      workmatrehilolo[i] = new double[dim];
+      workmatrelololo[i] = new double[dim];
+      workmatimhihihi[i] = new double[dim];
+      workmatimlohihi[i] = new double[dim];
+      workmatimhilohi[i] = new double[dim];
+      workmatimlolohi[i] = new double[dim];
+      workmatimhihilo[i] = new double[dim];
+      workmatimlohilo[i] = new double[dim];
+      workmatimhilolo[i] = new double[dim];
+      workmatimlololo[i] = new double[dim];
+   }
+   int *ipvt = new int[dim];
+   double *workvecrehihihi = new double[dim];
+   double *workvecrelohihi = new double[dim];
+   double *workvecrehilohi = new double[dim];
+   double *workvecrelolohi = new double[dim];
+   double *workvecrehihilo = new double[dim];
+   double *workvecrelohilo = new double[dim];
+   double *workvecrehilolo = new double[dim];
+   double *workvecrelololo = new double[dim];
+   double *workvecimhihihi = new double[dim];
+   double *workvecimlohihi = new double[dim];
+   double *workvecimhilohi = new double[dim];
+   double *workvecimlolohi = new double[dim];
+   double *workvecimhihilo = new double[dim];
+   double *workvecimlohilo = new double[dim];
+   double *workvecimhilolo = new double[dim];
+   double *workvecimlololo = new double[dim];
+   // Copy the rhs vector into work space for inplace solver.
+   double **urhsrehihihi_h = new double*[degp1];
+   double **urhsrelohihi_h = new double*[degp1];
+   double **urhsrehilohi_h = new double*[degp1];
+   double **urhsrelolohi_h = new double*[degp1];
+   double **urhsrehihilo_h = new double*[degp1];
+   double **urhsrelohilo_h = new double*[degp1];
+   double **urhsrehilolo_h = new double*[degp1];
+   double **urhsrelololo_h = new double*[degp1];
+   double **urhsimhihihi_h = new double*[degp1];
+   double **urhsimlohihi_h = new double*[degp1];
+   double **urhsimhilohi_h = new double*[degp1];
+   double **urhsimlolohi_h = new double*[degp1];
+   double **urhsimhihilo_h = new double*[degp1];
+   double **urhsimlohilo_h = new double*[degp1];
+   double **urhsimhilolo_h = new double*[degp1];
+   double **urhsimlololo_h = new double*[degp1];
+   double **urhsrehihihi_d = new double*[degp1];
+   double **urhsrelohihi_d = new double*[degp1];
+   double **urhsrehilohi_d = new double*[degp1];
+   double **urhsrelolohi_d = new double*[degp1];
+   double **urhsrehihilo_d = new double*[degp1];
+   double **urhsrelohilo_d = new double*[degp1];
+   double **urhsrehilolo_d = new double*[degp1];
+   double **urhsrelololo_d = new double*[degp1];
+   double **urhsimhihihi_d = new double*[degp1];
+   double **urhsimlohihi_d = new double*[degp1];
+   double **urhsimhilohi_d = new double*[degp1];
+   double **urhsimlolohi_d = new double*[degp1];
+   double **urhsimhihilo_d = new double*[degp1];
+   double **urhsimlohilo_d = new double*[degp1];
+   double **urhsimhilolo_d = new double*[degp1];
+   double **urhsimlololo_d = new double*[degp1];
+
+   for(int i=0; i<degp1; i++)
+   {
+      urhsrehihihi_h[i] = new double[dim];
+      urhsrelohihi_h[i] = new double[dim];
+      urhsrehilohi_h[i] = new double[dim];
+      urhsrelolohi_h[i] = new double[dim];
+      urhsrehihilo_h[i] = new double[dim];
+      urhsrelohilo_h[i] = new double[dim];
+      urhsrehilolo_h[i] = new double[dim];
+      urhsrelololo_h[i] = new double[dim];
+      urhsimhihihi_h[i] = new double[dim];
+      urhsimlohihi_h[i] = new double[dim];
+      urhsimhilohi_h[i] = new double[dim];
+      urhsimlolohi_h[i] = new double[dim];
+      urhsimhihilo_h[i] = new double[dim];
+      urhsimlohilo_h[i] = new double[dim];
+      urhsimhilolo_h[i] = new double[dim];
+      urhsimlololo_h[i] = new double[dim];
+      urhsrehihihi_d[i] = new double[dim];
+      urhsrelohihi_d[i] = new double[dim];
+      urhsrehilohi_d[i] = new double[dim];
+      urhsrelolohi_d[i] = new double[dim];
+      urhsrehihilo_d[i] = new double[dim];
+      urhsrelohilo_d[i] = new double[dim];
+      urhsrehilolo_d[i] = new double[dim];
+      urhsrelololo_d[i] = new double[dim];
+      urhsimhihihi_d[i] = new double[dim];
+      urhsimlohihi_d[i] = new double[dim];
+      urhsimhilohi_d[i] = new double[dim];
+      urhsimlolohi_d[i] = new double[dim];
+      urhsimhihilo_d[i] = new double[dim];
+      urhsimlohilo_d[i] = new double[dim];
+      urhsimhilolo_d[i] = new double[dim];
+      urhsimlololo_d[i] = new double[dim];
+   }
+   double **resvecrehihihi = new double*[degp1];
+   double **resvecrelohihi = new double*[degp1];
+   double **resvecrehilohi = new double*[degp1];
+   double **resvecrelolohi = new double*[degp1];
+   double **resvecrehihilo = new double*[degp1];
+   double **resvecrelohilo = new double*[degp1];
+   double **resvecrehilolo = new double*[degp1];
+   double **resvecrelololo = new double*[degp1];
+   double **resvecimhihihi = new double*[degp1];
+   double **resvecimlohihi = new double*[degp1];
+   double **resvecimhilohi = new double*[degp1];
+   double **resvecimlolohi = new double*[degp1];
+   double **resvecimhihilo = new double*[degp1];
+   double **resvecimlohilo = new double*[degp1];
+   double **resvecimhilolo = new double*[degp1];
+   double **resvecimlololo = new double*[degp1];
+
+   for(int i=0; i<degp1; i++)
+   {
+      resvecrehihihi[i] = new double[dim];
+      resvecrelohihi[i] = new double[dim];
+      resvecrehilohi[i] = new double[dim];
+      resvecrelolohi[i] = new double[dim];
+      resvecrehihilo[i] = new double[dim];
+      resvecrelohilo[i] = new double[dim];
+      resvecrehilolo[i] = new double[dim];
+      resvecrelololo[i] = new double[dim];
+      resvecimhihihi[i] = new double[dim];
+      resvecimlohihi[i] = new double[dim];
+      resvecimhilohi[i] = new double[dim];
+      resvecimlolohi[i] = new double[dim];
+      resvecimhihilo[i] = new double[dim];
+      resvecimlohilo[i] = new double[dim];
+      resvecimhilolo[i] = new double[dim];
+      resvecimlololo[i] = new double[dim];
+   }
+   double resmaxhihihi,resmaxlohihi,resmaxhilohi,resmaxlolohi;
+   double resmaxhihilo,resmaxlohilo,resmaxhilolo,resmaxlololo;
+   double **Qrehihihi_h = new double*[dim];
+   double **Qrelohihi_h = new double*[dim];
+   double **Qrehilohi_h = new double*[dim];
+   double **Qrelolohi_h = new double*[dim];
+   double **Qrehihilo_h = new double*[dim];
+   double **Qrelohilo_h = new double*[dim];
+   double **Qrehilolo_h = new double*[dim];
+   double **Qrelololo_h = new double*[dim];
+   double **Qimhihihi_h = new double*[dim];
+   double **Qimlohihi_h = new double*[dim];
+   double **Qimhilohi_h = new double*[dim];
+   double **Qimlolohi_h = new double*[dim];
+   double **Qimhihilo_h = new double*[dim];
+   double **Qimlohilo_h = new double*[dim];
+   double **Qimhilolo_h = new double*[dim];
+   double **Qimlololo_h = new double*[dim];
+   double **Qrehihihi_d = new double*[dim];
+   double **Qrelohihi_d = new double*[dim];
+   double **Qrehilohi_d = new double*[dim];
+   double **Qrelolohi_d = new double*[dim];
+   double **Qrehihilo_d = new double*[dim];
+   double **Qrelohilo_d = new double*[dim];
+   double **Qrehilolo_d = new double*[dim];
+   double **Qrelololo_d = new double*[dim];
+   double **Qimhihihi_d = new double*[dim];
+   double **Qimlohihi_d = new double*[dim];
+   double **Qimhilohi_d = new double*[dim];
+   double **Qimlolohi_d = new double*[dim];
+   double **Qimhihilo_d = new double*[dim];
+   double **Qimlohilo_d = new double*[dim];
+   double **Qimhilolo_d = new double*[dim];
+   double **Qimlololo_d = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      Qrehihihi_h[i] = new double[dim];
+      Qrelohihi_h[i] = new double[dim];
+      Qrehilohi_h[i] = new double[dim];
+      Qrelolohi_h[i] = new double[dim];
+      Qrehihilo_h[i] = new double[dim];
+      Qrelohilo_h[i] = new double[dim];
+      Qrehilolo_h[i] = new double[dim];
+      Qrelololo_h[i] = new double[dim];
+      Qimhihihi_h[i] = new double[dim];
+      Qimlohihi_h[i] = new double[dim];
+      Qimhilohi_h[i] = new double[dim];
+      Qimlolohi_h[i] = new double[dim];
+      Qimhihilo_h[i] = new double[dim];
+      Qimlohilo_h[i] = new double[dim];
+      Qimhilolo_h[i] = new double[dim];
+      Qimlololo_h[i] = new double[dim];
+      Qrehihihi_d[i] = new double[dim];
+      Qrelohihi_d[i] = new double[dim];
+      Qrehilohi_d[i] = new double[dim];
+      Qrelolohi_d[i] = new double[dim];
+      Qrehihilo_d[i] = new double[dim];
+      Qrelohilo_d[i] = new double[dim];
+      Qrehilolo_d[i] = new double[dim];
+      Qrelololo_d[i] = new double[dim];
+      Qimhihihi_d[i] = new double[dim];
+      Qimlohihi_d[i] = new double[dim];
+      Qimhilohi_d[i] = new double[dim];
+      Qimlolohi_d[i] = new double[dim];
+      Qimhihilo_d[i] = new double[dim];
+      Qimlohilo_d[i] = new double[dim];
+      Qimhilolo_d[i] = new double[dim];
+      Qimlololo_d[i] = new double[dim];
+   }
+   double **Rrehihihi_h = new double*[dim];
+   double **Rrelohihi_h = new double*[dim];
+   double **Rrehilohi_h = new double*[dim];
+   double **Rrelolohi_h = new double*[dim];
+   double **Rrehihilo_h = new double*[dim];
+   double **Rrelohilo_h = new double*[dim];
+   double **Rrehilolo_h = new double*[dim];
+   double **Rrelololo_h = new double*[dim];
+   double **Rimhihihi_h = new double*[dim];
+   double **Rimlohihi_h = new double*[dim];
+   double **Rimhilohi_h = new double*[dim];
+   double **Rimlolohi_h = new double*[dim];
+   double **Rimhihilo_h = new double*[dim];
+   double **Rimlohilo_h = new double*[dim];
+   double **Rimhilolo_h = new double*[dim];
+   double **Rimlololo_h = new double*[dim];
+   double **Rrehihihi_d = new double*[dim];
+   double **Rrelohihi_d = new double*[dim];
+   double **Rrehilohi_d = new double*[dim];
+   double **Rrelolohi_d = new double*[dim];
+   double **Rrehihilo_d = new double*[dim];
+   double **Rrelohilo_d = new double*[dim];
+   double **Rrehilolo_d = new double*[dim];
+   double **Rrelololo_d = new double*[dim];
+   double **Rimhihihi_d = new double*[dim];
+   double **Rimlohihi_d = new double*[dim];
+   double **Rimhilohi_d = new double*[dim];
+   double **Rimlolohi_d = new double*[dim];
+   double **Rimhihilo_d = new double*[dim];
+   double **Rimlohilo_d = new double*[dim];
+   double **Rimhilolo_d = new double*[dim];
+   double **Rimlololo_d = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      Rrehihihi_h[i] = new double[dim];
+      Rrelohihi_h[i] = new double[dim];
+      Rrehilohi_h[i] = new double[dim];
+      Rrelolohi_h[i] = new double[dim];
+      Rrehihilo_h[i] = new double[dim];
+      Rrelohilo_h[i] = new double[dim];
+      Rrehilolo_h[i] = new double[dim];
+      Rrelololo_h[i] = new double[dim];
+      Rimhihihi_h[i] = new double[dim];
+      Rimlohihi_h[i] = new double[dim];
+      Rimhilohi_h[i] = new double[dim];
+      Rimlolohi_h[i] = new double[dim];
+      Rimhihilo_h[i] = new double[dim];
+      Rimlohilo_h[i] = new double[dim];
+      Rimhilolo_h[i] = new double[dim];
+      Rimlololo_h[i] = new double[dim];
+      Rrehihihi_d[i] = new double[dim];
+      Rrelohihi_d[i] = new double[dim];
+      Rrehilohi_d[i] = new double[dim];
+      Rrelolohi_d[i] = new double[dim];
+      Rrehihilo_d[i] = new double[dim];
+      Rrelohilo_d[i] = new double[dim];
+      Rrehilolo_d[i] = new double[dim];
+      Rrelololo_d[i] = new double[dim];
+      Rimhihihi_d[i] = new double[dim];
+      Rimlohihi_d[i] = new double[dim];
+      Rimhilohi_d[i] = new double[dim];
+      Rimlolohi_d[i] = new double[dim];
+      Rimhihilo_d[i] = new double[dim];
+      Rimlohilo_d[i] = new double[dim];
+      Rimhilolo_d[i] = new double[dim];
+      Rimlololo_d[i] = new double[dim];
+   }
+/*
+ * 3. initialize input, coefficient, evaluate, differentiate, and solve
+ */
+   // Define the initial input, a vector of ones.
+   cmplx8_unit_series_vector
+      (dim,deg,
+       inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
+       inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
+       inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
+       inputimhihilo_h,inputimlohilo_h,inputimhilolo_h,inputimlololo_h);
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<degp1; j++)
+      {
+         inputrehihihi_d[i][j] = inputrehihihi_h[i][j];
+         inputrelohihi_d[i][j] = inputrelohihi_h[i][j];
+         inputrehilohi_d[i][j] = inputrehilohi_h[i][j];
+         inputrelolohi_d[i][j] = inputrelolohi_h[i][j];
+         inputrehihilo_d[i][j] = inputrehihilo_h[i][j];
+         inputrelohilo_d[i][j] = inputrelohilo_h[i][j];
+         inputrehilolo_d[i][j] = inputrehilolo_h[i][j];
+         inputrelololo_d[i][j] = inputrelololo_h[i][j];
+         inputimhihihi_d[i][j] = inputimhihihi_h[i][j];
+         inputimlohihi_d[i][j] = inputimlohihi_h[i][j];
+         inputimhilohi_d[i][j] = inputimhilohi_h[i][j];
+         inputimlolohi_d[i][j] = inputimlolohi_h[i][j];
+         inputimhihilo_d[i][j] = inputimhihilo_h[i][j];
+         inputimlohilo_d[i][j] = inputimlohilo_h[i][j];
+         inputimhilolo_d[i][j] = inputimhilolo_h[i][j];
+         inputimlololo_d[i][j] = inputimlololo_h[i][j];
+      }
+
+   if(vrblvl > 0)
+   {
+      cout << scientific << setprecision(16);
+      cout << "The leading coefficients of the input series :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << i << " : "
+              << inputrehihihi_h[i][0] << "  "
+              << inputrelohihi_h[i][0] << endl << "  "
+              << inputrehilohi_h[i][0] << "  "
+              << inputrelolohi_h[i][0] << endl << "  "
+              << inputrehihilo_h[i][0] << "  "
+              << inputrelohilo_h[i][0] << endl << "  "
+              << inputrehilolo_h[i][0] << "  "
+              << inputrelololo_h[i][0] << endl << "  "
+              << inputimhihihi_h[i][0] << "  "
+              << inputimlohihi_h[i][0] << endl << "  "
+              << inputimhilohi_h[i][0] << "  "
+              << inputimlolohi_h[i][0] << endl << "  "
+              << inputimhihilo_h[i][0] << "  "
+              << inputimlohilo_h[i][0] << endl << "  "
+              << inputimhilolo_h[i][0] << "  "
+              << inputimlololo_h[i][0] << endl;
+   }
+   for(int step=0; step<nbsteps; step++)
+   {
+      cout << "*** running Newton step " << step << " ***" << endl;
+
+      cmplx8_newton_qrstep
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,
+          cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+          cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+          cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+          cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+          accrehihihi,accrelohihi,accrehilohi,accrelolohi,
+          accrehihilo,accrelohilo,accrehilolo,accrelololo,
+          accimhihihi,accimlohihi,accimhilohi,accimlolohi,
+          accimhihilo,accimlohilo,accimhilolo,accimlololo,
+          inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
+          inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
+          inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
+          inputimhihilo_h,inputimlohilo_h,inputimhilolo_h,inputimlololo_h,
+          inputrehihihi_d,inputrelohihi_d,inputrehilohi_d,inputrelolohi_d,
+          inputrehihilo_d,inputrelohilo_d,inputrehilolo_d,inputrelololo_d,
+          inputimhihihi_d,inputimlohihi_d,inputimhilohi_d,inputimlolohi_d,
+          inputimhihilo_d,inputimlohilo_d,inputimhilolo_d,inputimlololo_d,
+          outputrehihihi_h,outputrelohihi_h,outputrehilohi_h,outputrelolohi_h,
+          outputrehihilo_h,outputrelohilo_h,outputrehilolo_h,outputrelololo_h,
+          outputimhihihi_h,outputimlohihi_h,outputimhilohi_h,outputimlolohi_h,
+          outputimhihilo_h,outputimlohilo_h,outputimhilolo_h,outputimlololo_h,
+          outputrehihihi_d,outputrelohihi_d,outputrehilohi_d,outputrelolohi_d,
+          outputrehihilo_d,outputrelohilo_d,outputrehilolo_d,outputrelololo_d,
+          outputimhihihi_d,outputimlohihi_d,outputimhilohi_d,outputimlolohi_d,
+          outputimhihilo_d,outputimlohilo_d,outputimhilolo_d,outputimlololo_d,
+          funvalrehihihi_h,funvalrelohihi_h,funvalrehilohi_h,funvalrelolohi_h,
+          funvalrehihilo_h,funvalrelohilo_h,funvalrehilolo_h,funvalrelololo_h,
+          funvalimhihihi_h,funvalimlohihi_h,funvalimhilohi_h,funvalimlolohi_h,
+          funvalimhihilo_h,funvalimlohilo_h,funvalimhilolo_h,funvalimlololo_h,
+          funvalrehihihi_d,funvalrelohihi_d,funvalrehilohi_d,funvalrelolohi_d,
+          funvalrehihilo_d,funvalrelohilo_d,funvalrehilolo_d,funvalrelololo_d,
+          funvalimhihihi_d,funvalimlohihi_d,funvalimhilohi_d,funvalimlolohi_d,
+          funvalimhihilo_d,funvalimlohilo_d,funvalimhilolo_d,funvalimlololo_d,
+          jacvalrehihihi_h,jacvalrelohihi_h,jacvalrehilohi_h,jacvalrelolohi_h,
+          jacvalrehihilo_h,jacvalrelohilo_h,jacvalrehilolo_h,jacvalrelololo_h,
+          jacvalimhihihi_h,jacvalimlohihi_h,jacvalimhilohi_h,jacvalimlolohi_h,
+          jacvalimhihilo_h,jacvalimlohilo_h,jacvalimhilolo_h,jacvalimlololo_h,
+          jacvalrehihihi_d,jacvalrelohihi_d,jacvalrehilohi_d,jacvalrelolohi_d,
+          jacvalrehihilo_d,jacvalrelohilo_d,jacvalrehilolo_d,jacvalrelololo_d,
+          jacvalimhihihi_d,jacvalimlohihi_d,jacvalimhilohi_d,jacvalimlolohi_d,
+          jacvalimhihilo_d,jacvalimlohilo_d,jacvalimhilolo_d,jacvalimlololo_d,
+          rhsrehihihi_h,rhsrelohihi_h,rhsrehilohi_h,rhsrelolohi_h,
+          rhsrehihilo_h,rhsrelohilo_h,rhsrehilolo_h,rhsrelololo_h,
+          rhsimhihihi_h,rhsimlohihi_h,rhsimhilohi_h,rhsimlolohi_h,
+          rhsimhihilo_h,rhsimlohilo_h,rhsimhilolo_h,rhsimlololo_h,
+          rhsrehihihi_d,rhsrelohihi_d,rhsrehilohi_d,rhsrelolohi_d,
+          rhsrehihilo_d,rhsrelohilo_d,rhsrehilolo_d,rhsrelololo_d,
+          rhsimhihihi_d,rhsimlohihi_d,rhsimhilohi_d,rhsimlolohi_d,
+          rhsimhihilo_d,rhsimlohilo_d,rhsimhilolo_d,rhsimlololo_d,
+          urhsrehihihi_h,urhsrelohihi_h,urhsrehilohi_h,urhsrelolohi_h,
+          urhsrehihilo_h,urhsrelohilo_h,urhsrehilolo_h,urhsrelololo_h,
+          urhsimhihihi_h,urhsimlohihi_h,urhsimhilohi_h,urhsimlolohi_h,
+          urhsimhihilo_h,urhsimlohilo_h,urhsimhilolo_h,urhsimlololo_h,
+          urhsrehihihi_d,urhsrelohihi_d,urhsrehilohi_d,urhsrelolohi_d,
+          urhsrehihilo_d,urhsrelohilo_d,urhsrehilolo_d,urhsrelololo_d,
+          urhsimhihihi_d,urhsimlohihi_d,urhsimhilohi_d,urhsimlolohi_d,
+          urhsimhihilo_d,urhsimlohilo_d,urhsimhilolo_d,urhsimlololo_d,
+          solrehihihi_h,solrelohihi_h,solrehilohi_h,solrelolohi_h,
+          solrehihilo_h,solrelohilo_h,solrehilolo_h,solrelololo_h,
+          solimhihihi_h,solimlohihi_h,solimhilohi_h,solimlolohi_h,
+          solimhihilo_h,solimlohilo_h,solimhilolo_h,solimlololo_h,
+          solrehihihi_d,solrelohihi_d,solrehilohi_d,solrelolohi_d,
+          solrehihilo_d,solrelohilo_d,solrehilolo_d,solrelololo_d,
+          solimhihihi_d,solimlohihi_d,solimhilohi_d,solimlolohi_d,
+          solimhihilo_d,solimlohilo_d,solimhilolo_d,solimlololo_d,
+          Qrehihihi_h,Qrelohihi_h,Qrehilohi_h,Qrelolohi_h,
+          Qrehihilo_h,Qrelohilo_h,Qrehilolo_h,Qrelololo_h,
+          Qimhihihi_h,Qimlohihi_h,Qimhilohi_h,Qimlolohi_h,
+          Qimhihilo_h,Qimlohilo_h,Qimhilolo_h,Qimlololo_h,
+          Qrehihihi_d,Qrelohihi_d,Qrehilohi_d,Qrelolohi_d,
+          Qrehihilo_d,Qrelohilo_d,Qrehilolo_d,Qrelololo_d,
+          Qimhihihi_d,Qimlohihi_d,Qimhilohi_d,Qimlolohi_d,
+          Qimhihilo_d,Qimlohilo_d,Qimhilolo_d,Qimlololo_d,
+          Rrehihihi_h,Rrelohihi_h,Rrehilohi_h,Rrelolohi_h,
+          Rrehihilo_h,Rrelohilo_h,Rrehilolo_h,Rrelololo_h,
+          Rimhihihi_h,Rimlohihi_h,Rimhilohi_h,Rimlolohi_h,
+          Rimhihilo_h,Rimlohilo_h,Rimhilolo_h,Rimlololo_h,
+          Rrehihihi_d,Rrelohihi_d,Rrehilohi_d,Rrelolohi_d,
+          Rrehihilo_d,Rrelohilo_d,Rrehilolo_d,Rrelololo_d,
+          Rimhihihi_d,Rimlohihi_d,Rimhilohi_d,Rimlolohi_d,
+          Rimhihilo_d,Rimlohilo_d,Rimhilolo_d,Rimlololo_d,
+          workmatrehihihi,workmatrelohihi,workmatrehilohi,workmatrelolohi,
+          workmatrehihilo,workmatrelohilo,workmatrehilolo,workmatrelololo,
+          workmatimhihihi,workmatimlohihi,workmatimhilohi,workmatimlolohi,
+          workmatimhihilo,workmatimlohilo,workmatimhilolo,workmatimlololo,
+          workvecrehihihi,workvecrelohihi,workvecrehilohi,workvecrelolohi,
+          workvecrehihilo,workvecrelohilo,workvecrehilolo,workvecrelololo,
+          workvecimhihihi,workvecimlohihi,workvecimhilohi,workvecimlolohi,
+          workvecimhihilo,workvecimlohilo,workvecimhilolo,workvecimlololo,
+          resvecrehihihi,resvecrelohihi,resvecrehilohi,resvecrelolohi,
+          resvecrehihilo,resvecrelohilo,resvecrehilolo,resvecrelololo,
+          resvecimhihihi,resvecimlohihi,resvecimhilohi,resvecimlolohi,
+          resvecimhihilo,resvecimlohilo,resvecimhilolo,resvecimlololo,
+          &resmaxhihihi,&resmaxlohihi,&resmaxhilohi,&resmaxlolohi,
+          &resmaxhihilo,&resmaxlohilo,&resmaxhilolo,&resmaxlololo,vrblvl,mode);
    }
    return 0;
 }
