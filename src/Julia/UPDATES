@@ -1,3 +1,7 @@
+Fri 16 Sep 2022 : in the test functions showVersion.jl, showPolynomial.jl,
+  showSystem.jl, showDimension.jl, showMixedVolume.jl, showSolve.jl, and
+  showStableMixedVolume.jl, replace the old module name JuPHC by PHCpack.
+
 Tue 13 Sep 2022 : renamed JuPHC.jl into PHCpack.jl.
 
 Tue 15 Mar 2022 :  mixedVolume.jl, showMixedVolume.jl, stableMixedVolume.jl,

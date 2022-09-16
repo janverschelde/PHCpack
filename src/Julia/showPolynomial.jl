@@ -1,9 +1,9 @@
 # standalone test on setting a polynomial
-include("JuPHC.jl")
+include("PHCpack.jl")
 verbose = 10
-JuPHC.setDoubleDimension(2, verbose)
-dim = JuPHC.getDoubleDimension(verbose)
+PHCpack.setDoubleDimension(2, verbose)
+dim = PHCpack.getDoubleDimension(verbose)
 println("the dimension : ", dim)
-JuPHC.setDoublePolynomial(1, 2, "x*y - 1;", verbose)
-pol = JuPHC.getDoublePolynomial(1, verbose)
+PHCpack.setDoublePolynomial(1, 2, "x*y - 1;", verbose)
+pol = PHCpack.getDoublePolynomial(1, verbose)
 println("the polynomial : ", pol)
