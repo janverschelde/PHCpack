@@ -1,5 +1,6 @@
 Sat 17 Sep 2022 : new prompt_newton_setup, out of dbl_newton_testers.cpp.
-  Updated dbl,dbl2,dbl4,dbl8_newton_testers.cpp and the makefile_*.
+  Updated {dbl,dbl2,dbl4,dbl8}_newton_testers.cpp and the makefile_*.
+  Bug fix in computation of residual in dbl*_bals_host.cpp.
 
 Fri 16 Sep 2022 : bugs fixed in dbl8_bals_host.cpp and dbl8_bals_testers.cpp.
 

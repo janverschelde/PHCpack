@@ -121,6 +121,7 @@ void CPU_dbl8_lusb_head
          wrkveclololo[i] = rhslololo[0][i];
 
          for(int j=0; j<dim; j++)
+         {
             // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
             odf_mul(mathihihi[0][i][j],matlohihi[0][i][j],
                     mathilohi[0][i][j],matlolohi[0][i][j],
@@ -138,6 +139,7 @@ void CPU_dbl8_lusb_head
                     &wrkvechilolo[i],&wrkveclololo[i],
                     acchihihi,acclohihi,acchilohi,acclolohi,
                     acchihilo,acclohilo,acchilolo,acclololo);
+         }
       }
       cout << "The residual vector :" << endl;
       for(int i=0; i<dim; i++)

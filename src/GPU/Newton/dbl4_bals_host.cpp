@@ -86,6 +86,7 @@ void CPU_dbl4_lusb_head
          wrkveclolo[i] = rhslolo[0][i];
 
          for(int j=0; j<dim; j++)
+         {
             // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
             qdf_mul(mathihi[0][i][j],matlohi[0][i][j],
                     mathilo[0][i][j],matlolo[0][i][j],
@@ -94,6 +95,7 @@ void CPU_dbl4_lusb_head
             qdf_dec(&wrkvechihi[i],&wrkveclohi[i],
                     &wrkvechilo[i],&wrkveclolo[i],
                     acchihi,acclohi,acchilo,acclolo);
+         }
       }
       cout << "The residual vector :" << endl;
       for(int i=0; i<dim; i++)

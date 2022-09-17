@@ -151,8 +151,8 @@ void CPU_cmplx_qrbs_head
             // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
             zre = matre[0][i][j]*solre[0][j] - matim[0][i][j]*solim[0][j];
             zim = matre[0][i][j]*solim[0][j] + matim[0][i][j]*solre[0][j];
-            wrkvecre[i] = wrkvecre[i] + zre;
-            wrkvecim[i] = wrkvecim[i] + zim;
+            wrkvecre[i] = wrkvecre[i] - zre;
+            wrkvecim[i] = wrkvecim[i] - zim;
          }
       }
       cout << "The residual vector :" << endl;

@@ -66,10 +66,12 @@ void CPU_dbl2_lusb_head
          wrkveclo[i] = rhslo[0][i];
 
          for(int j=0; j<dim; j++)
+         {
             // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
             ddf_mul(mathi[0][i][j],matlo[0][i][j],
                     solhi[0][j],sollo[0][j],&acchi,&acclo);
             ddf_dec(&wrkvechi[i],&wrkveclo[i],acchi,acclo);
+         }
       }
       cout << "The residual vector :" << endl;
       for(int i=0; i<dim; i++)
