@@ -6,38 +6,29 @@
 #include <cmath>
 #include <time.h>
 #include "unimodular_matrices.h"
+#include "prompt_newton_setup.h"
 #include "dbl8_newton_testers.h"
 
 using namespace std;
 
 int main ( void )
 {
-   cout << "testing Newton ..." << endl;
+   cout << "testing Newton in octo double precision..." << endl;
 
-   int dim,deg,size,posvals,vrblvl,nbritr,nbsteps,szt,nbt,mode;
-   prompt_dimensions(&dim,&deg,&size,&posvals,&vrblvl,&nbritr,&nbsteps);
+   int seed,dim,deg,size,posvals,vrblvl,nbritr,nbsteps,szt,nbt,mode,cdata;
 
-   cout << "-> enter 0 (GPU only), 1 (CPU only), or 2 (GPU+CPU) : ";
-   cin >> mode;
+   prompt_newton_setup
+      (&seed,&szt,&nbt,&dim,&deg,&size,&posvals,&vrblvl,&mode,
+       &nbritr,&nbsteps,&cdata);
 
-   if(mode != 1)
-   {
-      cout << "-> give the number of tiles : "; cin >> nbt;
-      cout << "-> give the size of each tile : "; cin >> szt;
-      int p = szt*nbt;
+   if(seed == 0)
+      srand(time(NULL));
+   else
+      srand(seed);
 
-      while(p != dim)
-      {
-          cout << "Dimension = " << dim << " != " << szt << " * " << nbt
-               << ", retry." << endl;
-          cout << "-> give the size of each tile : "; cin >> szt;
-          cout << "-> give the number of tiles : "; cin >> nbt;
-          p = szt*nbt;
-      }
-   }
-
-   cout << "generating an integer matrix of dimension " << dim
-        << " ..." << endl;
+   if(nbritr > 0)
+      cout << "generating an integer matrix of dimension " << dim
+           << " ..." << endl;
 /*
  * 1. defining the unimodular matrix of monomials
  */
@@ -53,10 +44,12 @@ int main ( void )
 /*
  * 2. calling the test function
  */
- //  test_dbl8_real_newton
- //     (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
-   test_dbl8_complex_newton
-      (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
+   if(cdata == 0)
+      test_dbl8_real_newton
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
+   else
+      test_dbl8_complex_newton
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
 
    return 0;
 }

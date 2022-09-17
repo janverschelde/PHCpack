@@ -6,6 +6,7 @@
 #include <cmath>
 #include <time.h>
 #include "unimodular_matrices.h"
+#include "prompt_newton_setup.h"
 #include "dbl_newton_testers.h"
 
 using namespace std;
@@ -17,24 +18,24 @@ void exponents_check ( int dim, int **rowsA );
 
 int main ( void )
 {
-   cout << "testing Newton ..." << endl;
+   cout << "testing Newton in double precision ..." << endl;
 
-   int dim,deg,size,posvals,vrblvl,nbritr,nbsteps;
-   int seed,szt,nbt,mode;
+   int seed,dim,deg,size,posvals,vrblvl,nbritr,nbsteps,szt,nbt,mode,cdata;
 
    prompt_newton_setup
       (&seed,&szt,&nbt,&dim,&deg,&size,&posvals,&vrblvl,&mode,
-       &nbritr,&nbsteps);
+       &nbritr,&nbsteps,&cdata);
 
    if(seed == 0)
       srand(time(NULL));
    else
       srand(seed);
 
-   cout << "generating an integer matrix of dimension " << dim
-        << " ..." << endl;
+   if(nbritr > 0)
+      cout << "generating an integer matrix of dimension " << dim
+           << " ..." << endl;
 /*
- * 0. defining the unimodular matrix of monomials
+ * 1. defining the unimodular matrix of monomials
  */
    int **rowsA = new int*[dim];  // exponents in the rows
    int *nvr = new int[dim];      // number of variables in each monomial
@@ -46,12 +47,14 @@ int main ( void )
    make_monomial_system
       (dim,size,posvals,nbritr,nvr,idx,exp,nbrfac,expfac,rowsA,vrblvl);
 /*
- * 1. calling the test function
+ * 2. calling the test function
  */
- //  test_dbl_real_newton
- //     (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
-   test_dbl_complex_newton
-      (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
+  if(cdata == 0)
+     test_dbl_real_newton
+        (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
+  else
+     test_dbl_complex_newton
+        (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
 
    exponents_check(dim, rowsA);
 

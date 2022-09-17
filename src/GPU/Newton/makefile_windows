@@ -505,8 +505,15 @@ test_monomial_jobs: unimodular_matrices.obj test_monomial_jobs.obj \
              unimodular_matrices.obj convolution_job.obj convolution_jobs.obj \
              random_numbers.obj random_series.obj random_monomials.obj
 
+prompt_newton_setup.obj:
+	@-echo ">>> compiling prompt_newton_setup ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+                      prompt_newton_setup.cpp \
+                 /Fo: prompt_newton_setup.obj /EHsc
+
 test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
-                 dbl_newton_testers.obj dbl_bals_kernels.obj \
+                 dbl_newton_testers.obj prompt_newton_setup.obj \
+		 dbl_bals_kernels.obj \
                  random_numbers.obj random_series.obj random_monomials.obj \
                  dbl_convolutions_host.obj dbl_monomials_host.obj \
                  convolution_job.obj convolution_jobs.obj \
@@ -519,7 +526,8 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
 		 dbl_baqr_kernels.obj dbl_tabs_kernels.obj 
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_newton.exe test_dbl_newton.obj \
-             unimodular_matrices.obj dbl_newton_testers.obj \
+             unimodular_matrices.obj prompt_newton_setup.obj \
+	     dbl_newton_testers.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
 	     dbl_convolutions_host.obj dbl_monomials_host.obj \
              convolution_job.obj convolution_jobs.obj \
@@ -533,6 +541,7 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
 
 test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
+                  prompt_newton_setup.obj \
                   double_double_functions.obj dbl2_newton_testers.obj \
                   dbl2_convolutions_host.obj dbl2_monomials_host.obj \
                   convolution_job.obj convolution_jobs.obj \
@@ -545,8 +554,8 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
 		  dbl2_baqr_kernels.obj dbl2_tabs_kernels.obj \
                   dbl2_bals_kernels.obj
 	@-echo ">>> linking ..."
-	nvcc -ccbin=$(CL) -o test_dbl2_newton.exe \
-             unimodular_matrices.obj test_dbl2_newton.obj \
+	nvcc -ccbin=$(CL) -o test_dbl2_newton.exe test_dbl2_newton.obj \
+             unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              double_double_functions.obj dbl2_newton_testers.obj \
 	     dbl2_convolutions_host.obj dbl2_monomials_host.obj \
@@ -562,8 +571,8 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
 
 test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
+		  prompt_newton_setup.obj dbl4_newton_testers.obj \
                   double_double_functions.obj quad_double_functions.obj \
-		  dbl4_newton_testers.obj \
                   dbl4_convolutions_host.obj dbl4_monomials_host.obj \
                   convolution_job.obj convolution_jobs.obj \
                   addition_job.obj addition_jobs.obj job_coordinates.obj \
@@ -575,8 +584,8 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
 		  dbl4_baqr_kernels.obj dbl4_tabs_kernels.obj \
                   dbl4_bals_kernels.obj
 	@-echo ">>> linking ..."
-	nvcc -ccbin=$(CL) -o test_dbl4_newton.exe \
-             unimodular_matrices.obj test_dbl4_newton.obj \
+	nvcc -ccbin=$(CL) -o test_dbl4_newton.exe test_dbl4_newton.obj \
+             unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              double_double_functions.obj quad_double_functions.obj \
 	     dbl4_newton_testers.obj \
@@ -593,7 +602,8 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
 
 test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
-                  double_double_functions.obj quad_double_functions.obj \
+                  prompt_newton_setup.obj \
+		  double_double_functions.obj quad_double_functions.obj \
 		  octo_double_functions.obj dbl8_newton_testers.obj \
                   dbl8_convolutions_host.obj dbl8_monomials_host.obj \
                   convolution_job.obj convolution_jobs.obj \
@@ -606,8 +616,8 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
 		  dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj \
                   dbl8_bals_kernels.obj
 	@-echo ">>> linking ..."
-	nvcc -ccbin=$(CL) -o test_dbl8_newton.exe \
-             unimodular_matrices.obj test_dbl8_newton.obj \
+	nvcc -ccbin=$(CL) -o test_dbl8_newton.exe test_dbl8_newton.obj \
+             unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              double_double_functions.obj quad_double_functions.obj \
 	     octo_double_functions.obj dbl8_newton_testers.obj \
@@ -644,6 +654,7 @@ clean:
 	del dbl4_factorizations.obj dbl4_bals_host.obj dbl4_bals_kernels.obj
 	del dbl8_factorizations.obj dbl8_bals_host.obj dbl8_bals_kernels.obj
 	del unimodular_matrices.obj gettimeofday4win.obj
+	del prompt_newton_setup.obj 
 	del dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj
 	del dbl_systems_host.obj dbl_systems_kernels.obj
 	del dbl2_systems_host.obj dbl2_systems_kernels.obj
