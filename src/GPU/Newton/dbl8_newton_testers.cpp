@@ -59,7 +59,7 @@ void cmplx8_unit_series_vector
    {
       cffrehihihi[i][0] = 1.0; cffrelohihi[i][0] = 0.0;
       cffrehilohi[i][0] = 0.0; cffrelolohi[i][0] = 0.0;
-      cffrehihilo[i][0] = 1.0; cffrelohilo[i][0] = 0.0;
+      cffrehihilo[i][0] = 0.0; cffrelohilo[i][0] = 0.0;
       cffrehilolo[i][0] = 0.0; cffrelololo[i][0] = 0.0;
       cffimhihihi[i][0] = 0.0; cffimlohihi[i][0] = 0.0;
       cffimhilohi[i][0] = 0.0; cffimlolohi[i][0] = 0.0;
