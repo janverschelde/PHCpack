@@ -1,3 +1,6 @@
+Fri 16 Sep 2022 : fixed CPU_cmplx8_evaldiff in dbl8_monomials_host.cpp,
+  for the special case of two variables.
+
 Sun 11 Sep 2022 : fixed deallocation in CPU_cmplx4_evaldiff for two variables
   in dbl4_monomials_host.cpp.
 

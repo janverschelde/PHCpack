@@ -877,6 +877,7 @@ void CPU_cmplx8_evaldiff
          outputimhilohi[dim],outputimlolohi[dim],
          outputimhihilo[dim],outputimlohilo[dim],
          outputimhilolo[dim],outputimlololo[dim]);
+ /*
       CPU_cmplx8_product(deg,
          outputrehihihi[dim],outputrelohihi[dim],
          outputrehilohi[dim],outputrelolohi[dim],
@@ -898,6 +899,70 @@ void CPU_cmplx8_evaldiff
          outputimhilohi[dim],outputimlolohi[dim],
          outputimhihilo[dim],outputimlohilo[dim],
          outputimhilolo[dim],outputimlololo[dim]);
+  */
+
+      double *accrehihihi = new double[deg+1];
+      double *accrelohihi = new double[deg+1];
+      double *accrehilohi = new double[deg+1];
+      double *accrelolohi = new double[deg+1];
+      double *accrehihilo = new double[deg+1];
+      double *accrelohilo = new double[deg+1];
+      double *accrehilolo = new double[deg+1];
+      double *accrelololo = new double[deg+1];
+      double *accimhihihi = new double[deg+1];
+      double *accimlohihi = new double[deg+1];
+      double *accimhilohi = new double[deg+1];
+      double *accimlolohi = new double[deg+1];
+      double *accimhihilo = new double[deg+1];
+      double *accimlohilo = new double[deg+1];
+      double *accimhilolo = new double[deg+1];
+      double *accimlololo = new double[deg+1];
+
+      CPU_cmplx8_product(deg,
+         outputrehihihi[dim],outputrelohihi[dim],
+         outputrehilohi[dim],outputrelolohi[dim],
+         outputrehihilo[dim],outputrelohilo[dim],
+         outputrehilolo[dim],outputrelololo[dim],
+         outputimhihihi[dim],outputimlohihi[dim],
+         outputimhilohi[dim],outputimlolohi[dim],
+         outputimhihilo[dim],outputimlohilo[dim],
+         outputimhilolo[dim],outputimlololo[dim],
+         cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+         cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+         cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+         cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+         accrehihihi,accrelohihi,accrehilohi,accrelolohi,
+         accrehihilo,accrelohilo,accrehilolo,accrelololo,
+         accimhihihi,accimlohihi,accimhilohi,accimlolohi,
+         accimhihilo,accimlohilo,accimhilolo,accimlololo);
+
+      for(int i=0; i<=deg; i++)
+      {
+         outputrehihihi[dim][i] = accrehihihi[i];
+         outputrelohihi[dim][i] = accrelohihi[i];
+         outputrehilohi[dim][i] = accrehilohi[i];
+         outputrelolohi[dim][i] = accrelolohi[i];
+         outputrehihilo[dim][i] = accrehihilo[i];
+         outputrelohilo[dim][i] = accrelohilo[i];
+         outputrehilolo[dim][i] = accrehilolo[i];
+         outputrelololo[dim][i] = accrelololo[i];
+         outputimhihihi[dim][i] = accimhihihi[i];
+         outputimlohihi[dim][i] = accimlohihi[i];
+         outputimhilohi[dim][i] = accimhilohi[i];
+         outputimlolohi[dim][i] = accimlolohi[i];
+         outputimhihilo[dim][i] = accimhihilo[i];
+         outputimlohilo[dim][i] = accimlohilo[i];
+         outputimhilolo[dim][i] = accimhilolo[i];
+         outputimlololo[dim][i] = accimlololo[i];
+      }
+      free(accrehihihi); free(accrelohihi); 
+      free(accrehilohi); free(accrelolohi);
+      free(accrehihilo); free(accrelohilo); 
+      free(accrehilolo); free(accrelololo);
+      free(accimhihihi); free(accimlohihi);
+      free(accimhilohi); free(accimlolohi);
+      free(accimhihilo); free(accimlohilo);
+      free(accimhilolo); free(accimlololo);
 
       CPU_cmplx8_product(deg,
          cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
