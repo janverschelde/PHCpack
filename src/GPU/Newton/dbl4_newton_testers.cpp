@@ -26,7 +26,7 @@ void dbl4_unit_series_vector
 {
    for(int i=0; i<dim; i++)
    {
-      cffhihi[i][0] = 1.0;
+      cffhihi[i][0] = 1.000005;
       cfflohi[i][0] = 0.0;
       cffhilo[i][0] = 0.0;
       cfflolo[i][0] = 0.0;
@@ -50,9 +50,9 @@ void cmplx4_unit_series_vector
 {
    for(int i=0; i<dim; i++)
    {
-      cffrehihi[i][0] = 1.0; cffrelohi[i][0] = 0.0;
+      cffrehihi[i][0] = 1.000005; cffrelohi[i][0] = 0.0;
       cffrehilo[i][0] = 0.0; cffrelolo[i][0] = 0.0;
-      cffimhihi[i][0] = 0.0; cffimlohi[i][0] = 0.0;
+      cffimhihi[i][0] = 0.000005; cffimlohi[i][0] = 0.0;
       cffimhilo[i][0] = 0.0; cffimlolo[i][0] = 0.0;
 
       for(int j=1; j<=deg; j++)

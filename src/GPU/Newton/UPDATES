@@ -1,5 +1,6 @@
 Sun 18 Sep 2022 : changed initial values in dbl_newton_testers.cpp to
   test complex arithmetic with nonzero imaginary values.
+  Made similar chages to dbl?_newton_testers.cpp.
 
 Sat 17 Sep 2022 : new prompt_newton_setup, out of dbl_newton_testers.cpp.
   Updated {dbl,dbl2,dbl4,dbl8}_newton_testers.cpp and the makefile_*.

@@ -29,7 +29,7 @@ void dbl8_unit_series_vector
 {
    for(int i=0; i<dim; i++)
    {
-      cffhihihi[i][0] = 1.0; cfflohihi[i][0] = 0.0;
+      cffhihihi[i][0] = 1.000005; cfflohihi[i][0] = 0.0;
       cffhilohi[i][0] = 0.0; cfflolohi[i][0] = 0.0;
       cffhihilo[i][0] = 0.0; cfflohilo[i][0] = 0.0;
       cffhilolo[i][0] = 0.0; cfflololo[i][0] = 0.0;
@@ -57,11 +57,11 @@ void cmplx8_unit_series_vector
 {
    for(int i=0; i<dim; i++)
    {
-      cffrehihihi[i][0] = 1.0; cffrelohihi[i][0] = 0.0;
+      cffrehihihi[i][0] = 1.000005; cffrelohihi[i][0] = 0.0;
       cffrehilohi[i][0] = 0.0; cffrelolohi[i][0] = 0.0;
       cffrehihilo[i][0] = 0.0; cffrelohilo[i][0] = 0.0;
       cffrehilolo[i][0] = 0.0; cffrelololo[i][0] = 0.0;
-      cffimhihihi[i][0] = 0.0; cffimlohihi[i][0] = 0.0;
+      cffimhihihi[i][0] = 0.000005; cffimlohihi[i][0] = 0.0;
       cffimhilohi[i][0] = 0.0; cffimlolohi[i][0] = 0.0;
       cffimhihilo[i][0] = 0.0; cffimlohilo[i][0] = 0.0;
       cffimhilolo[i][0] = 0.0; cffimlololo[i][0] = 0.0;

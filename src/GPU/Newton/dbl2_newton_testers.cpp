@@ -25,7 +25,7 @@ void dbl2_unit_series_vector
 {
    for(int i=0; i<dim; i++)
    {
-      cffhi[i][0] = 1.0;
+      cffhi[i][0] = 1.000005;
       cfflo[i][0] = 0.0;
 
       for(int j=1; j<=deg; j++)
@@ -42,8 +42,8 @@ void cmplx2_unit_series_vector
 {
    for(int i=0; i<dim; i++)
    {
-      cffrehi[i][0] = 1.0; cffrelo[i][0] = 0.0;
-      cffimhi[i][0] = 0.0; cffimlo[i][0] = 0.0;
+      cffrehi[i][0] = 1.000005; cffrelo[i][0] = 0.0;
+      cffimhi[i][0] = 0.000005; cffimlo[i][0] = 0.0;
 
       for(int j=1; j<=deg; j++)
       {
