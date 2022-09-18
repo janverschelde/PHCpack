@@ -8,6 +8,7 @@
 #include <vector_types.h>
 #include <time.h>
 #include "unimodular_matrices.h"
+// #include "random_numbers.h"
 #include "random_monomials.h"
 #include "dbl_factorizations.h"
 #include "dbl_systems_host.h"
@@ -19,9 +20,11 @@ using namespace std;
 
 void dbl_unit_series_vector ( int dim, int deg, double **cff )
 {
+   double angle;
+
    for(int i=0; i<dim; i++)
    {
-      cff[i][0] = 1.0;
+      cff[i][0] = 1.00001; // random_double(); => no convergence ...
       for(int j=1; j<=deg; j++) cff[i][j] = 0.0;
    }
 }
@@ -29,10 +32,13 @@ void dbl_unit_series_vector ( int dim, int deg, double **cff )
 void cmplx_unit_series_vector
  ( int dim, int deg, double **cffre, double **cffim )
 {
+   double angle;
+
    for(int i=0; i<dim; i++)
    {
-      cffre[i][0] = 1.0;
-      cffim[i][0] = 0.0;
+      // angle = random_angle(); 
+      cffre[i][0] = 1.0001; // cos(angle); => no convergence ...
+      cffim[i][0] = 0.0001; // sin(angle);
 
       for(int j=1; j<=deg; j++)
       {
