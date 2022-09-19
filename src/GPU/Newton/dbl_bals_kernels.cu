@@ -147,6 +147,17 @@ void GPU_dbl_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
+   if(verbose > 0)
+      cout << "-> GPU multiplies rhs with Q^T ..." << endl;
+
+   GPU_dbl_bals_qtb(ncols,szt,nbt,Q,b,verbose);
+
+   if(verbose > 0)
+   {
+      for(int i=0; i<nrows; i++)
+         cout << "Qtb[" << i << "] : " << b[i] << endl;
+   }
+
    double bstimelapsed_d;
    double elapsedms,invlapsed,mullapsed,sublapsed;
    long long int bsaddcnt = 0;
@@ -185,6 +196,8 @@ void GPU_dbl_bals_head
 
       for(int i=0; i<nrows; i++)
          cout << "b[" << i << "] : " << b[i] << endl;
+      for(int i=0; i<ncols; i++)
+         cout << "x[" << i << "] : " << x[i] << endl;
    }
    for(int i=0; i<nrows; i++) free(workR[i]);
    free(workR);
@@ -214,6 +227,18 @@ void GPU_cmplx_bals_head
        &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
+
+   if(verbose > 0)
+      cout << "-> GPU multiplies rhs with Q^H ..." << endl;
+
+   GPU_cmplx_bals_qhb(ncols,szt,nbt,Qre,Qim,bre,bim,verbose);
+
+   if(verbose > 0)
+   {
+      for(int i=0; i<nrows; i++)
+         cout << "Qtb[" << i << "] : "
+              << bre[i] << "  " << bim[i] << endl;
+   }
 
    double bstimelapsed_d;
    double elapsedms,invlapsed,mullapsed,sublapsed;
