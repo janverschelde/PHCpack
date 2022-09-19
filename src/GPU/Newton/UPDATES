@@ -1,6 +1,7 @@
 Mon 19 Sep 2022 : in dbl_bals_kernels.cu added the necessary multiplication
   of the transpose of Q with the right hand side before solving the upper
   triangular system in the computation of the head term.
+  Applied the same fix to {dbl2,dbl4,dbl8}_bals_kernels.cu.
 
 Sun 18 Sep 2022 : changed initial values in dbl_newton_testers.cpp to
   test complex arithmetic with nonzero imaginary values.

@@ -553,6 +553,25 @@ void GPU_dbl8_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
+   if(verbose > 0)
+      cout << "-> GPU multiplies rhs with Q^T ..." << endl;
+
+   GPU_dbl8_bals_qtb
+      (ncols,szt,nbt,
+       Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
+       bhihihi,blohihi,bhilohi,blolohi,bhihilo,blohilo,bhilolo,blololo,
+       verbose);
+
+   if(verbose > 0)
+   {
+      for(int i=0; i<nrows; i++)
+         cout << "Qtb[" << i << "] : "
+              << bhihihi[i] << "  " << blohihi[i] << endl << "  "
+              << bhilohi[i] << "  " << blolohi[i] << endl << "  "
+              << bhihilo[i] << "  " << blohilo[i] << endl << "  "
+              << bhilolo[i] << "  " << blololo[i] << endl;
+   }
+
    double bstimelapsed_d;
    double elapsedms,invlapsed,mullapsed,sublapsed;
    long long int bsaddcnt = 0;
@@ -718,6 +737,34 @@ void GPU_cmplx8_bals_head
        &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
+
+   if(verbose > 0)
+      cout << "-> GPU multiplies rhs with Q^H ..." << endl;
+
+   GPU_cmplx8_bals_qhb
+      (ncols,szt,nbt,
+       Qrehihihi,Qrelohihi,Qrehilohi,Qrelolohi,
+       Qrehihilo,Qrelohilo,Qrehilolo,Qrelololo,
+       Qimhihihi,Qimlohihi,Qimhilohi,Qimlolohi,
+       Qimhihilo,Qimlohilo,Qimhilolo,Qimlololo,
+       brehihihi,brelohihi,brehilohi,brelolohi,
+       brehihilo,brelohilo,brehilolo,brelololo,
+       bimhihihi,bimlohihi,bimhilohi,bimlolohi,
+       bimhihilo,bimlohilo,bimhilolo,bimlololo,verbose);
+
+   if(verbose > 0)
+   {
+      for(int i=0; i<nrows; i++)
+         cout << "QHb[" << i << "] : "
+              << brehihihi[i] << "  " << brelohihi[i] << endl << "  "
+              << brehilohi[i] << "  " << brelolohi[i] << endl << "  "
+              << brehihilo[i] << "  " << brelohilo[i] << endl << "  "
+              << brehilolo[i] << "  " << brelololo[i] << endl << "  "
+              << bimhihihi[i] << "  " << bimlohihi[i] << endl << "  "
+              << bimhilohi[i] << "  " << bimlolohi[i] << endl << "  "
+              << bimhihilo[i] << "  " << bimlohilo[i] << endl << "  "
+              << bimhilolo[i] << "  " << bimlololo[i] << endl;
+   }
 
    double bstimelapsed_d;
    double elapsedms,invlapsed,mullapsed,sublapsed;
