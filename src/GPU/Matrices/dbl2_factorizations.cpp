@@ -868,9 +868,9 @@ void CPU_cmplx2_factors_qrbs
          // accim = -Qim[j][i]*rhsre[j] + Qre[j][i]*rhsim[j];
          // wrkvecim[i] = wrkvecim[i] + accim;
          ddf_mul(Qrehi[j][i],Qrelo[j][i],rhsimhi[j],rhsimlo[j],&acchi,&acclo);
-         ddf_inc(&wrkvecimhi[j],&wrkvecimlo[i],acchi,acclo);
+         ddf_inc(&wrkvecimhi[i],&wrkvecimlo[i],acchi,acclo);
          ddf_mul(Qimhi[j][i],Qimlo[j][i],rhsrehi[j],rhsrelo[j],&acchi,&acclo);
-         ddf_dec(&wrkvecimhi[j],&wrkvecimlo[i],acchi,acclo);
+         ddf_dec(&wrkvecimhi[i],&wrkvecimlo[i],acchi,acclo);
       }
    }
    CPU_cmplx2_factors_backward

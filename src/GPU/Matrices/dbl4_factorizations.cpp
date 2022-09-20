@@ -1308,14 +1308,14 @@ void CPU_cmplx4_factors_qrbs
          qdf_mul(Qrehihi[j][i],Qrelohi[j][i],Qrehilo[j][i],Qrelolo[j][i],
                  rhsimhihi[j],rhsimlohi[j],rhsimhilo[j],rhsimlolo[j],
                  &acchihi,&acclohi,&acchilo,&acclolo);
-         qdf_inc(&wrkvecimhihi[j],&wrkvecimlohi[i],
-                 &wrkvecimhilo[j],&wrkvecimlolo[i],
+         qdf_inc(&wrkvecimhihi[i],&wrkvecimlohi[i],
+                 &wrkvecimhilo[i],&wrkvecimlolo[i],
                  acchihi,acclohi,acchilo,acclolo);
          qdf_mul(Qimhihi[j][i],Qimlohi[j][i],Qimhilo[j][i],Qimlolo[j][i],
                  rhsrehihi[j],rhsrelohi[j],rhsrehilo[j],rhsrelolo[j],
                  &acchihi,&acclohi,&acchilo,&acclolo);
-         qdf_dec(&wrkvecimhihi[j],&wrkvecimlohi[i],
-                 &wrkvecimhilo[j],&wrkvecimlolo[i],
+         qdf_dec(&wrkvecimhihi[i],&wrkvecimlohi[i],
+                 &wrkvecimhilo[i],&wrkvecimlolo[i],
                  acchihi,acclohi,acchilo,acclolo);
       }
    }

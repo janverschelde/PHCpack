@@ -2413,10 +2413,10 @@ void CPU_cmplx8_factors_qrbs
                  rhsimhihilo[j],rhsimlohilo[j],rhsimhilolo[j],rhsimlololo[j],
                  &acchihihi,&acclohihi,&acchilohi,&acclolohi,
                  &acchihilo,&acclohilo,&acchilolo,&acclololo);
-         odf_inc(&wrkvecimhihihi[j],&wrkvecimlohihi[i],
-                 &wrkvecimhilohi[j],&wrkvecimlolohi[i],
-                 &wrkvecimhihilo[j],&wrkvecimlohilo[i],
-                 &wrkvecimhilolo[j],&wrkvecimlololo[i],
+         odf_inc(&wrkvecimhihihi[i],&wrkvecimlohihi[i],
+                 &wrkvecimhilohi[i],&wrkvecimlolohi[i],
+                 &wrkvecimhihilo[i],&wrkvecimlohilo[i],
+                 &wrkvecimhilolo[i],&wrkvecimlololo[i],
                  acchihihi,acclohihi,acchilohi,acclolohi,
                  acchihilo,acclohilo,acchilolo,acclololo);
          odf_mul(Qimhihihi[j][i],Qimlohihi[j][i],
@@ -2427,10 +2427,10 @@ void CPU_cmplx8_factors_qrbs
                  rhsrehihilo[j],rhsrelohilo[j],rhsrehilolo[j],rhsrelololo[j],
                  &acchihihi,&acclohihi,&acchilohi,&acclolohi,
                  &acchihilo,&acclohilo,&acchilolo,&acclololo);
-         odf_dec(&wrkvecimhihihi[j],&wrkvecimlohihi[i],
-                 &wrkvecimhilohi[j],&wrkvecimlolohi[i],
-                 &wrkvecimhihilo[j],&wrkvecimlohilo[i],
-                 &wrkvecimhilolo[j],&wrkvecimlololo[i],
+         odf_dec(&wrkvecimhihihi[i],&wrkvecimlohihi[i],
+                 &wrkvecimhilohi[i],&wrkvecimlolohi[i],
+                 &wrkvecimhihilo[i],&wrkvecimlohilo[i],
+                 &wrkvecimhilolo[i],&wrkvecimlololo[i],
                  acchihihi,acclohihi,acchilohi,acclolohi,
                  acchihilo,acclohilo,acchilolo,acclololo);
       }

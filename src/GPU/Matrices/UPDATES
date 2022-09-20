@@ -1,3 +1,6 @@
+Mon 19 Sep 2022 : in {dbl2,dbl4,dbl8}_factorizations.cpp, fixed an index
+  error in the last function.
+
 Mon 12 Sep 2022 : extended dbl8_factorizations with a function on complex data.
 
 Wed 7 Sep 2022 : extended {dbl2,dbl4}_factorizations, with a function for
