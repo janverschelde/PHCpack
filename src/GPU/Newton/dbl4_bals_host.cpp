@@ -238,21 +238,21 @@ void CPU_cmplx4_qrbs_head
    if(verbose)
    {
       cout << "The matrix : " << endl;
-      cout << setprecision(2);
+      // cout << setprecision(2);
       for(int i=0; i<dim; i++)
       {
          for(int j=0; j<dim; j++)
             cout << "  " << wrkmatrehihi[i][j]
-                 << "  " << wrkmatrelohi[i][j]
+                 << "  " << wrkmatrelohi[i][j] << endl
                  << "  " << wrkmatrehilo[i][j]
-                 << "  " << wrkmatrelolo[i][j]
+                 << "  " << wrkmatrelolo[i][j] << endl
                  << "  " << wrkmatimhihi[i][j]
-                 << "  " << wrkmatimlohi[i][j]
+                 << "  " << wrkmatimlohi[i][j] << endl
                  << "  " << wrkmatimhilo[i][j]
-                 << "  " << wrkmatimlolo[i][j];
+                 << "  " << wrkmatimlolo[i][j] << endl;
          cout << endl;
       }
-      cout << setprecision(16);
+      // cout << setprecision(16);
       cout << "The right hand side vector : " << endl;
       for(int i=0; i<dim; i++)
          cout << rhsrehihi[0][i] << "  " << rhsrelohi[0][i] << endl << "  " 

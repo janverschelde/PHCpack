@@ -376,29 +376,29 @@ void CPU_cmplx8_qrbs_head
    if(verbose)
    {
       cout << "The matrix : " << endl;
-      cout << setprecision(2);
+      // cout << setprecision(2);
       for(int i=0; i<dim; i++)
       {
          for(int j=0; j<dim; j++)
             cout << "  " << wrkmatrehihihi[i][j]
-                 << "  " << wrkmatrelohihi[i][j]
+                 << "  " << wrkmatrelohihi[i][j] << endl
                  << "  " << wrkmatrehilohi[i][j]
-                 << "  " << wrkmatrelolohi[i][j]
+                 << "  " << wrkmatrelolohi[i][j] << endl
                  << "  " << wrkmatrehihilo[i][j]
-                 << "  " << wrkmatrelohilo[i][j]
+                 << "  " << wrkmatrelohilo[i][j] << endl
                  << "  " << wrkmatrehilolo[i][j]
-                 << "  " << wrkmatrelololo[i][j]
+                 << "  " << wrkmatrelololo[i][j] << endl
                  << "  " << wrkmatimhihihi[i][j]
-                 << "  " << wrkmatimlohihi[i][j]
+                 << "  " << wrkmatimlohihi[i][j] << endl
                  << "  " << wrkmatimhilohi[i][j]
-                 << "  " << wrkmatimlolohi[i][j]
+                 << "  " << wrkmatimlolohi[i][j] << endl
                  << "  " << wrkmatimhihilo[i][j]
-                 << "  " << wrkmatimlohilo[i][j]
+                 << "  " << wrkmatimlohilo[i][j] << endl
                  << "  " << wrkmatimhilolo[i][j]
-                 << "  " << wrkmatimlololo[i][j];
+                 << "  " << wrkmatimlololo[i][j] << endl;
          cout << endl;
       }
-      cout << setprecision(16);
+      // cout << setprecision(16);
       cout << "The right hand side vector : " << endl;
       for(int i=0; i<dim; i++)
          cout << rhsrehihihi[0][i] << "  " << rhsrelohihi[0][i] << endl

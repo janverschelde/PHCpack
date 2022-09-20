@@ -1,3 +1,6 @@
+Tue 20 Sep 2022 : fixed bug in dbl8_newton_testers.cpp and extended the
+  verbosity in {dbl4,dbl8}_{bals,systems}_host.cpp during the debugging.
+
 Mon 19 Sep 2022 : in dbl_bals_kernels.cu added the necessary multiplication
   of the transpose of Q with the right hand side before solving the upper
   triangular system in the computation of the head term.

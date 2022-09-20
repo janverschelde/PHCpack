@@ -1643,6 +1643,14 @@ void cmplx8_newton_qrstep
          urhsrehilohi_h[i][j] = rhsrehilohi_h[i][j];
          urhsrelohihi_h[i][j] = rhsrelohihi_h[i][j];
          urhsrelolohi_h[i][j] = rhsrelolohi_h[i][j];
+         urhsrehihilo_h[i][j] = rhsrehihilo_h[i][j];
+         urhsrehilolo_h[i][j] = rhsrehilolo_h[i][j];
+         urhsrelohilo_h[i][j] = rhsrelohilo_h[i][j];
+         urhsrelololo_h[i][j] = rhsrelololo_h[i][j];
+         urhsimhihihi_h[i][j] = rhsimhihihi_h[i][j];
+         urhsimhilohi_h[i][j] = rhsimhilohi_h[i][j];
+         urhsimlohihi_h[i][j] = rhsimlohihi_h[i][j];
+         urhsimlolohi_h[i][j] = rhsimlolohi_h[i][j];
          urhsimhihilo_h[i][j] = rhsimhihilo_h[i][j];
          urhsimhilolo_h[i][j] = rhsimhilolo_h[i][j];
          urhsimlohilo_h[i][j] = rhsimlohilo_h[i][j];
@@ -1651,8 +1659,16 @@ void cmplx8_newton_qrstep
          urhsrehilohi_d[i][j] = rhsrehilohi_d[i][j];
          urhsrelohihi_d[i][j] = rhsrelohihi_d[i][j];
          urhsrelolohi_d[i][j] = rhsrelolohi_d[i][j];
-         urhsimhilolo_d[i][j] = rhsimhilolo_d[i][j];
+         urhsrehihilo_d[i][j] = rhsrehihilo_d[i][j];
+         urhsrehilolo_d[i][j] = rhsrehilolo_d[i][j];
+         urhsrelohilo_d[i][j] = rhsrelohilo_d[i][j];
+         urhsrelololo_d[i][j] = rhsrelololo_d[i][j];
+         urhsimhihihi_d[i][j] = rhsimhihihi_d[i][j];
+         urhsimhilohi_d[i][j] = rhsimhilohi_d[i][j];
+         urhsimlohihi_d[i][j] = rhsimlohihi_d[i][j];
+         urhsimlolohi_d[i][j] = rhsimlolohi_d[i][j];
          urhsimhihilo_d[i][j] = rhsimhihilo_d[i][j];
+         urhsimhilolo_d[i][j] = rhsimhilolo_d[i][j];
          urhsimlohilo_d[i][j] = rhsimlohilo_d[i][j];
          urhsimlololo_d[i][j] = rhsimlololo_d[i][j];
       }

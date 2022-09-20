@@ -420,6 +420,31 @@ void CPU_cmplx8_evaluate_monomials
          }
       }
    }
+   if(vrblvl > 0)
+   {
+      cout << "after multiplication with the factors ..." << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "output series for monomial " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << outputrehihihi[i][dim][j] << "  "
+                 << outputrelohihi[i][dim][j] << endl << "  "
+                 << outputrehilohi[i][dim][j] << "  "
+                 << outputrelolohi[i][dim][j] << endl << "  "
+                 << outputrehihilo[i][dim][j] << "  "
+                 << outputrelohilo[i][dim][j] << endl << "  "
+                 << outputrehilolo[i][dim][j] << "  "
+                 << outputrelololo[i][dim][j] << endl << "  "
+                 << outputimhihihi[i][dim][j] << "  "
+                 << outputimlohihi[i][dim][j] << endl << "  "
+                 << outputimhilohi[i][dim][j] << "  "
+                 << outputimlolohi[i][dim][j] << endl << "  "
+                 << outputimhihilo[i][dim][j] << "  "
+                 << outputimlohilo[i][dim][j] << endl << "  "
+                 << outputimhilolo[i][dim][j] << "  "
+                 << outputimlololo[i][dim][j] << endl;
+      }
+   }
 }
 
 void dbl8_linearize_evaldiff_output
