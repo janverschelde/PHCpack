@@ -48,7 +48,7 @@ void CPU_dbl4_evaluate_monomials
          }
       }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
@@ -85,7 +85,7 @@ void CPU_dbl4_evaluate_monomials
            inputhihi,    inputlohi,    inputhilo,    inputlolo,
           outputhihi[i],outputlohi[i],outputhilo[i],outputlolo[i]);
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
@@ -187,7 +187,7 @@ void CPU_cmplx4_evaluate_monomials
          }
       }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
@@ -231,7 +231,7 @@ void CPU_cmplx4_evaluate_monomials
           outputrehihi[i],outputrelohi[i],outputrehilo[i],outputrelolo[i],
           outputimhihi[i],outputimlohi[i],outputimhilo[i],outputimlolo[i]);
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
@@ -247,7 +247,6 @@ void CPU_cmplx4_evaluate_monomials
                  << outputimlolo[i][dim][j] << endl;
       }
    }
-
    for(int i=0; i<dim; i++) // multiply derivatives with the powers
    {
       if(nbrfac[i] > 0) // there are common factors in monomial i
@@ -286,7 +285,7 @@ void CPU_cmplx4_evaluate_monomials
          }
       }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "after multiplication with the factors ..." << endl;
       for(int i=0; i<dim; i++)
@@ -326,7 +325,7 @@ void dbl4_linearize_evaldiff_output
          funvallolo[i][j] = outputlolo[i][dim][j];
       }
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The leading coefficients of the evaluated series :" << endl;
       for(int i=0; i<dim; i++)
@@ -369,7 +368,7 @@ void dbl4_linearize_evaldiff_output
             rhslolo[i][j] = -funvallolo[j][i];
          }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The right hand side series :" << endl;
       for(int i=0; i<degp1; i++)
@@ -401,7 +400,7 @@ void dbl4_linearize_evaldiff_output
          }
       }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The leading coefficients of the Jacobian matrix : " << endl;
       for(int i=0; i<dim; i++)
@@ -454,7 +453,7 @@ void cmplx4_linearize_evaldiff_output
          funvalimlolo[i][j] = outputimlolo[i][dim][j];
       }
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The leading coefficients of the evaluated series :" << endl;
       for(int i=0; i<dim; i++)
@@ -517,7 +516,7 @@ void cmplx4_linearize_evaldiff_output
             rhsimlolo[i][j] = -funvalimlolo[j][i];
          }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The right hand side series :" << endl;
       for(int i=0; i<degp1; i++)
@@ -553,7 +552,7 @@ void cmplx4_linearize_evaldiff_output
          }
       }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The leading coefficients of the Jacobian matrix : " << endl;
       for(int i=0; i<dim; i++)

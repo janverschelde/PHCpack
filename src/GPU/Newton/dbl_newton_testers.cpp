@@ -51,7 +51,7 @@ void cmplx_unit_series_vector
 void dbl_update_series
  ( int dim, int degp1, double **x, double **dx, int vrblvl )
 {
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The series before the update : " << endl;
       for(int j=0; j<degp1; j++)
@@ -79,7 +79,7 @@ void cmplx_update_series
  ( int dim, int degp1,
    double **xre, double **xim, double **dxre, double **dxim, int vrblvl )
 {
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The series before the update : " << endl;
       for(int j=0; j<degp1; j++)
@@ -196,11 +196,14 @@ void dbl_newton_qrstep
          for(int i=0; i<=dim; i++)
             for(int j=0; j<degp1; j++)
          {
-             cout << "output_h[" << k << "][" << i << "][" << j << "] : "
-                  << output_h[k][i][j] << endl;
-             cout << "output_d[" << k << "][" << i << "][" << j << "] : "
-                  << output_d[k][i][j] << endl;
-             errsum += abs(output_h[k][i][j] - output_d[k][i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "output_h[" << k << "][" << i << "][" << j << "] : "
+                    << output_h[k][i][j] << endl;
+               cout << "output_d[" << k << "][" << i << "][" << j << "] : "
+                    << output_d[k][i][j] << endl;
+            }
+            errsum += abs(output_h[k][i][j] - output_d[k][i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
    }
@@ -227,10 +230,13 @@ void dbl_newton_qrstep
       {
          for(int j=0; j<degp1; j++)
          {
-            cout << "funval_h[" << i << "][" << j << "] : "
-                 << funval_h[i][j] << endl;
-            cout << "funval_d[" << i << "][" << j << "] : "
-                 << funval_d[i][j] << endl;
+            if(vrblvl > 1)
+            {
+               cout << "funval_h[" << i << "][" << j << "] : "
+                    << funval_h[i][j] << endl;
+               cout << "funval_d[" << i << "][" << j << "] : "
+                    << funval_d[i][j] << endl;
+            }
             errsum += abs(funval_h[i][j] - funval_d[i][j]);
          }
       }
@@ -243,10 +249,13 @@ void dbl_newton_qrstep
          {
             for(int k=0; k<dim; k++)
             {
-               cout << "jacval_h[" << i << "][" << j << "][" << k << "] : "
-                    << jacval_h[i][j][k] << endl;
-               cout << "jacval_d[" << i << "][" << j << "][" << k << "] : "
-                    << jacval_d[i][j][k] << endl;
+               if(vrblvl > 1)
+               {
+                  cout << "jacval_h[" << i << "][" << j << "][" << k << "] : "
+                       << jacval_h[i][j][k] << endl;
+                  cout << "jacval_d[" << i << "][" << j << "][" << k << "] : "
+                       << jacval_d[i][j][k] << endl;
+               }
                errsum += abs(jacval_h[i][j][k] - jacval_d[i][j][k]);
             }
          }
@@ -258,10 +267,13 @@ void dbl_newton_qrstep
       {
          for(int j=0; j<dim; j++)
          {
-            cout << "rhs_h[" << i << "][" << j << "] : "
-                 << rhs_h[i][j] << endl;
-            cout << "rhs_d[" << i << "][" << j << "] : "
-                 << rhs_d[i][j] << endl;
+            if(vrblvl > 1)
+            {
+               cout << "rhs_h[" << i << "][" << j << "] : "
+                    << rhs_h[i][j] << endl;
+               cout << "rhs_d[" << i << "][" << j << "] : "
+                    << rhs_d[i][j] << endl;
+            }
             errsum += abs(rhs_h[i][j] - rhs_d[i][j]);
          }
       }
@@ -314,10 +326,13 @@ void dbl_newton_qrstep
       for(int i=0; i<dim; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "Q_h[" << i << "][" << j << "] : "
-                  << Q_h[i][j] << endl;
-             cout << "Q_d[" << i << "][" << j << "] : "
-                  << Q_d[i][j] << endl;
+             if(vrblvl > 1)
+             {
+                cout << "Q_h[" << i << "][" << j << "] : "
+                     << Q_h[i][j] << endl;
+                cout << "Q_d[" << i << "][" << j << "] : "
+                     << Q_d[i][j] << endl;
+             }
              errsum += abs(Q_h[i][j] - Q_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
@@ -325,11 +340,14 @@ void dbl_newton_qrstep
       for(int i=0; i<dim; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "R_h[" << i << "][" << j << "] : "
-                  << R_h[i][j] << endl;
-             cout << "R_d[" << i << "][" << j << "] : "
-                  << R_d[i][j] << endl;
-             errsum += abs(R_h[i][j] - R_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "R_h[" << i << "][" << j << "] : "
+                    << R_h[i][j] << endl;
+               cout << "R_d[" << i << "][" << j << "] : "
+                    << R_d[i][j] << endl;
+            }
+            errsum += abs(R_h[i][j] - R_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
       errsum = 0.0;
@@ -337,11 +355,14 @@ void dbl_newton_qrstep
       for(int i=0; i<degp1; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "urhs_h[" << i << "][" << j << "] : "
-                  << urhs_h[i][j] << endl;
-             cout << "urhs_d[" << i << "][" << j << "] : "
-                  << urhs_d[i][j] << endl;
-             errsum += abs(urhs_h[i][j] - urhs_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "urhs_h[" << i << "][" << j << "] : "
+                    << urhs_h[i][j] << endl;
+               cout << "urhs_d[" << i << "][" << j << "] : "
+                    << urhs_d[i][j] << endl;
+            }
+            errsum += abs(urhs_h[i][j] - urhs_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
       errsum = 0.0;
@@ -349,11 +370,14 @@ void dbl_newton_qrstep
       for(int i=0; i<degp1; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "sol_h[" << i << "][" << j << "] : "
-                  << sol_h[i][j] << endl;
-             cout << "sol_d[" << i << "][" << j << "] : "
-                  << sol_d[i][j] << endl;
-             errsum += abs(sol_h[i][j] - sol_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "sol_h[" << i << "][" << j << "] : "
+                    << sol_h[i][j] << endl;
+               cout << "sol_d[" << i << "][" << j << "] : "
+                    << sol_d[i][j] << endl;
+            }
+            errsum += abs(sol_h[i][j] - sol_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
       errsum = 0.0;
@@ -361,11 +385,14 @@ void dbl_newton_qrstep
       for(int i=0; i<dim; i++)
          for(int j=0; j<degp1; j++)
          {
-             cout << "input_h[" << i << "][" << j << "] : "
-                  << input_h[i][j] << endl;
-             cout << "input_d[" << i << "][" << j << "] : "
-                  << input_d[i][j] << endl;
-             errsum += abs(input_h[i][j] - input_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "input_h[" << i << "][" << j << "] : "
+                    << input_h[i][j] << endl;
+               cout << "input_d[" << i << "][" << j << "] : "
+                    << input_d[i][j] << endl;
+            }
+            errsum += abs(input_h[i][j] - input_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
    }
@@ -441,14 +468,17 @@ void cmplx_newton_qrstep
          for(int i=0; i<=dim; i++)
             for(int j=0; j<degp1; j++)
          {
-             cout << "output_h[" << k << "][" << i << "][" << j << "] : "
-                  << outputre_h[k][i][j] << "  "
-                  << outputim_h[k][i][j] << endl;
-             cout << "output_d[" << k << "][" << i << "][" << j << "] : "
-                  << outputre_d[k][i][j] << "  "
-                  << outputim_d[k][i][j] << endl;
-             errsum += abs(outputre_h[k][i][j] - outputre_d[k][i][j])
-                     + abs(outputim_h[k][i][j] - outputim_d[k][i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "output_h[" << k << "][" << i << "][" << j << "] : "
+                    << outputre_h[k][i][j] << "  "
+                    << outputim_h[k][i][j] << endl;
+               cout << "output_d[" << k << "][" << i << "][" << j << "] : "
+                    << outputre_d[k][i][j] << "  "
+                    << outputim_d[k][i][j] << endl;
+            }
+            errsum += abs(outputre_h[k][i][j] - outputre_d[k][i][j])
+                    + abs(outputim_h[k][i][j] - outputim_d[k][i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
    }
@@ -478,12 +508,15 @@ void cmplx_newton_qrstep
       {
          for(int j=0; j<degp1; j++)
          {
-            cout << "funval_h[" << i << "][" << j << "] : "
-                 << funvalre_h[i][j] << "  "
-                 << funvalim_h[i][j] << endl;
-            cout << "funval_d[" << i << "][" << j << "] : "
-                 << funvalre_d[i][j] << "  "
-                 << funvalim_d[i][j] << endl;
+            if(vrblvl > 1)
+            {
+               cout << "funval_h[" << i << "][" << j << "] : "
+                    << funvalre_h[i][j] << "  "
+                    << funvalim_h[i][j] << endl;
+               cout << "funval_d[" << i << "][" << j << "] : "
+                    << funvalre_d[i][j] << "  "
+                    << funvalim_d[i][j] << endl;
+            }
             errsum += abs(funvalre_h[i][j] - funvalre_d[i][j])
                     + abs(funvalim_h[i][j] - funvalim_d[i][j]);
          }
@@ -497,12 +530,15 @@ void cmplx_newton_qrstep
          {
             for(int k=0; k<dim; k++)
             {
-               cout << "jacval_h[" << i << "][" << j << "][" << k << "] : "
-                    << jacvalre_h[i][j][k] << "  "
-                    << jacvalim_h[i][j][k] << endl;
-               cout << "jacval_d[" << i << "][" << j << "][" << k << "] : "
-                    << jacvalre_d[i][j][k] << "  "
-                    << jacvalim_d[i][j][k] << endl;
+               if(vrblvl > 1)
+               {
+                  cout << "jacval_h[" << i << "][" << j << "][" << k << "] : "
+                       << jacvalre_h[i][j][k] << "  "
+                       << jacvalim_h[i][j][k] << endl;
+                  cout << "jacval_d[" << i << "][" << j << "][" << k << "] : "
+                       << jacvalre_d[i][j][k] << "  "
+                       << jacvalim_d[i][j][k] << endl;
+               }
                errsum += abs(jacvalre_h[i][j][k] - jacvalre_d[i][j][k])
                        + abs(jacvalim_h[i][j][k] - jacvalim_d[i][j][k]);
             }
@@ -515,10 +551,13 @@ void cmplx_newton_qrstep
       {
          for(int j=0; j<dim; j++)
          {
-            cout << "rhs_h[" << i << "][" << j << "] : "
-                 << rhsre_h[i][j] << "  " << rhsim_h[i][j] << endl;
-            cout << "rhs_d[" << i << "][" << j << "] : "
-                 << rhsre_d[i][j] << "  " << rhsim_d[i][j] << endl;
+            if(vrblvl > 1)
+            {
+               cout << "rhs_h[" << i << "][" << j << "] : "
+                    << rhsre_h[i][j] << "  " << rhsim_h[i][j] << endl;
+               cout << "rhs_d[" << i << "][" << j << "] : "
+                    << rhsre_d[i][j] << "  " << rhsim_d[i][j] << endl;
+            }
             errsum += abs(rhsre_h[i][j] - rhsre_d[i][j])
                     + abs(rhsim_h[i][j] - rhsim_d[i][j]);
          }
@@ -579,10 +618,13 @@ void cmplx_newton_qrstep
       for(int i=0; i<dim; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "Q_h[" << i << "][" << j << "] : "
-                  << Qre_h[i][j] << "  " << Qim_h[i][j] << endl;
-             cout << "Q_d[" << i << "][" << j << "] : "
-                  << Qre_d[i][j] << "  " << Qim_d[i][j] << endl;
+             if(vrblvl > 1)
+             {
+                cout << "Q_h[" << i << "][" << j << "] : "
+                     << Qre_h[i][j] << "  " << Qim_h[i][j] << endl;
+                cout << "Q_d[" << i << "][" << j << "] : "
+                     << Qre_d[i][j] << "  " << Qim_d[i][j] << endl;
+             }
              errsum += abs(Qre_h[i][j] - Qre_d[i][j])
                      + abs(Qim_h[i][j] - Qim_d[i][j]);
          }
@@ -591,12 +633,15 @@ void cmplx_newton_qrstep
       for(int i=0; i<dim; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "R_h[" << i << "][" << j << "] : "
-                  << Rre_h[i][j] << "  " << Rim_h[i][j] << endl;
-             cout << "R_d[" << i << "][" << j << "] : "
-                  << Rre_d[i][j] << "  " << Rim_d[i][j] << endl;
-             errsum += abs(Rre_h[i][j] - Rre_d[i][j])
-                     + abs(Rim_h[i][j] - Rim_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "R_h[" << i << "][" << j << "] : "
+                    << Rre_h[i][j] << "  " << Rim_h[i][j] << endl;
+               cout << "R_d[" << i << "][" << j << "] : "
+                    << Rre_d[i][j] << "  " << Rim_d[i][j] << endl;
+            }
+            errsum += abs(Rre_h[i][j] - Rre_d[i][j])
+                    + abs(Rim_h[i][j] - Rim_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
       errsum = 0.0;
@@ -604,12 +649,15 @@ void cmplx_newton_qrstep
       for(int i=0; i<degp1; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "urhs_h[" << i << "][" << j << "] : "
-                  << urhsre_h[i][j] << "  " << urhsim_h[i][j] << endl;
-             cout << "urhs_d[" << i << "][" << j << "] : "
-                  << urhsre_d[i][j] << "  " << urhsim_d[i][j] << endl;
-             errsum += abs(urhsre_h[i][j] - urhsre_d[i][j])
-                     + abs(urhsim_h[i][j] - urhsim_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "urhs_h[" << i << "][" << j << "] : "
+                    << urhsre_h[i][j] << "  " << urhsim_h[i][j] << endl;
+               cout << "urhs_d[" << i << "][" << j << "] : "
+                    << urhsre_d[i][j] << "  " << urhsim_d[i][j] << endl;
+            }
+            errsum += abs(urhsre_h[i][j] - urhsre_d[i][j])
+                    + abs(urhsim_h[i][j] - urhsim_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
       errsum = 0.0;
@@ -617,12 +665,15 @@ void cmplx_newton_qrstep
       for(int i=0; i<degp1; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "sol_h[" << i << "][" << j << "] : "
-                  << solre_h[i][j] << "  " << solim_h[i][j] << endl;
-             cout << "sol_d[" << i << "][" << j << "] : "
-                  << solre_d[i][j] << "  " << solim_d[i][j] << endl;
-             errsum += abs(solre_h[i][j] - solre_d[i][j])
-                     + abs(solim_h[i][j] - solim_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "sol_h[" << i << "][" << j << "] : "
+                    << solre_h[i][j] << "  " << solim_h[i][j] << endl;
+               cout << "sol_d[" << i << "][" << j << "] : "
+                    << solre_d[i][j] << "  " << solim_d[i][j] << endl;
+            }
+            errsum += abs(solre_h[i][j] - solre_d[i][j])
+                    + abs(solim_h[i][j] - solim_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
       errsum = 0.0;
@@ -630,13 +681,16 @@ void cmplx_newton_qrstep
       for(int i=0; i<dim; i++)
          for(int j=0; j<degp1; j++)
          {
-             cout << "input_h[" << i << "][" << j << "] : "
-                  << inputre_h[i][j] << "  " << inputim_h[i][j] << endl;
-             cout << "input_d[" << i << "][" << j << "] : "
-                  << inputre_d[i][j] << "  "
-                  << inputim_d[i][j] << endl;
-             errsum += abs(inputre_h[i][j] - inputre_d[i][j])
-                     + abs(inputim_h[i][j] - inputim_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "input_h[" << i << "][" << j << "] : "
+                    << inputre_h[i][j] << "  " << inputim_h[i][j] << endl;
+               cout << "input_d[" << i << "][" << j << "] : "
+                    << inputre_d[i][j] << "  "
+                    << inputim_d[i][j] << endl;
+            }
+            errsum += abs(inputre_h[i][j] - inputre_d[i][j])
+                    + abs(inputim_h[i][j] - inputim_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
    }
@@ -756,7 +810,7 @@ int test_dbl_real_newton
    for(int i=0; i<dim; i++)
       for(int j=0; j<degp1; j++) input_d[i][j] = input_h[i][j];
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << scientific << setprecision(16);
       cout << "The leading coefficients of the input series :" << endl;
@@ -765,7 +819,8 @@ int test_dbl_real_newton
    }
    for(int step=0; step<nbsteps; step++)
    {
-      cout << "*** running Newton step " << step << " ***" << endl;
+      if(vrblvl > 0)
+         cout << "*** running Newton step " << step << " ***" << endl;
 
       dbl_newton_qrstep
          (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,
@@ -964,7 +1019,7 @@ int test_dbl_complex_newton
          inputim_d[i][j] = inputim_h[i][j];
       }
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << scientific << setprecision(16);
       cout << "The leading coefficients of the input series :" << endl;
@@ -974,7 +1029,8 @@ int test_dbl_complex_newton
    }
    for(int step=0; step<nbsteps; step++)
    {
-      cout << "*** running Newton step " << step << " ***" << endl;
+      if(vrblvl > 0)
+         cout << "*** running Newton step " << step << " ***" << endl;
 
       cmplx_newton_qrstep
          (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,cffre,cffim,accre,accim,

@@ -1,3 +1,7 @@
+Wed 21 Sep 2022 : introduced distinction between vrblvl 1 and 2,
+  updated dbl*_{systems,bals}_{host.cpp, kernels.cu}
+  and dbl*_newton_testers.cpp.
+ 
 Tue 20 Sep 2022 : fixed bug in dbl8_newton_testers.cpp and extended the
   verbosity in {dbl4,dbl8}_{bals,systems}_host.cpp during the debugging.
 

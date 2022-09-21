@@ -388,7 +388,7 @@ void GPU_dbl_evaluate_monomials
          }
       }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
@@ -443,7 +443,7 @@ void GPU_dbl_evaluate_monomials
       (szt,dim,dim,deg,nvr,idx,cff,input,output,jobs,
        &cnvlapms,&elapsedms,&walltimesec,verbose);
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
@@ -505,7 +505,7 @@ void GPU_cmplx_evaluate_monomials
          }
       }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
@@ -562,7 +562,7 @@ void GPU_cmplx_evaluate_monomials
       (szt,dim,dim,deg,nvr,idx,cffre,cffim,inputre,inputim,
        outputre,outputim,jobs,&cnvlapms,&elapsedms,&walltimesec,verbose);
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {

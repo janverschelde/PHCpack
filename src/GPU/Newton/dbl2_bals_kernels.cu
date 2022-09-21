@@ -214,12 +214,11 @@ void GPU_dbl2_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
-   if(verbose > 0)
-      cout << "-> GPU multiplies rhs with Q^T ..." << endl;
+   if(verbose) cout << "-> GPU multiplies rhs with Q^T ..." << endl;
 
    GPU_dbl2_bals_qtb(ncols,szt,nbt,Qhi,Qlo,bhi,blo,verbose);
 
-   if(verbose > 0)
+   if(verbose)
    {
       for(int i=0; i<nrows; i++)
          cout << "Qtb[" << i << "] : "
@@ -314,13 +313,12 @@ void GPU_cmplx2_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
-   if(verbose > 0)
-      cout << "-> GPU multiplies rhs with Q^H ..." << endl;
+   if(verbose) cout << "-> GPU multiplies rhs with Q^H ..." << endl;
 
    GPU_cmplx2_bals_qhb
       (ncols,szt,nbt,Qrehi,Qrelo,Qimhi,Qimlo,brehi,brelo,bimhi,bimlo,verbose);
 
-   if(verbose > 0)
+   if(verbose)
    {
       for(int i=0; i<nrows; i++)
          cout << "QHb[" << i << "] : "
@@ -334,8 +332,7 @@ void GPU_cmplx2_bals_head
    long long int bsmulcnt = 0;
    long long int bsdivcnt = 0;
 
-   if(verbose)
-      cout << "-> GPU solves an upper triangular system ..." << endl;
+   if(verbose) cout << "-> GPU solves an upper triangular system ..." << endl;
 
    if(verbose)
    {
@@ -721,7 +718,7 @@ void GPU_dbl2_bals_solve
 {
    const int nrows = dim;
    const int ncols = dim;
-   const bool bvrb = (vrblvl > 0);
+   const bool bvrb = (vrblvl > 1);
 
    double **Ahi = new double*[nrows];
    double **Alo = new double*[nrows];
@@ -737,7 +734,7 @@ void GPU_dbl2_bals_solve
       workRhi[i] = new double[ncols];
       workRlo[i] = new double[ncols];
    }
-   if(vrblvl)
+   if(vrblvl > 1)
    {
       cout << "GPU_dbl2_bals_solve blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)
@@ -785,7 +782,7 @@ void GPU_dbl2_bals_solve
          (nrows,ncols,szt,nbt,degp1,stage,
           mathi,matlo,rhshi,rhslo,solhi,sollo,bvrb);
 
-      if(vrblvl > 0)
+      if(vrblvl > 1)
       {
          cout << "blocks of rhs before assignment :" << endl;
          for(int k=0; k<degp1; k++)
@@ -798,12 +795,12 @@ void GPU_dbl2_bals_solve
 
       for(int i=0; i<nrows; i++) 
       {
-         cout << "assigning component " << i
-              << ", stage = " << stage << endl;
+         // cout << "assigning component " << i
+         //      << ", stage = " << stage << endl;
          bhi[i] = rhshi[stage][i];
          blo[i] = rhslo[stage][i];
-         cout << "b[" << i << "] : "
-              << bhi[i] << "  " << blo[i] << endl;
+         // cout << "b[" << i << "] : "
+         //      << bhi[i] << "  " << blo[i] << endl;
       }
       double bstimelapsed_d;
       double elapsedms,invlapsed,mullapsed,sublapsed;
@@ -816,7 +813,7 @@ void GPU_dbl2_bals_solve
 
       GPU_dbl2_bals_qtb(ncols,szt,nbt,Qhi,Qlo,bhi,blo,bvrb);
 
-      if(vrblvl > 0)
+      if(vrblvl > 1)
       {
          for(int i=0; i<nrows; i++)
             cout << "Qtb[" << i << "] : "
@@ -826,10 +823,11 @@ void GPU_dbl2_bals_solve
       {
          cout << "-> GPU solves an upper triangular system ..." << endl;
  
-         for(int i=0; i<nrows; i++)
-            for(int j=0; j<ncols; j++)
-               cout << "R[" << i << "][" << j << "] : "
-                    << Rhi[i][j] << "  " << Rlo[i][j] << endl;
+         if(vrblvl > 1)
+            for(int i=0; i<nrows; i++)
+               for(int j=0; j<ncols; j++)
+                  cout << "R[" << i << "][" << j << "] : "
+                       << Rhi[i][j] << "  " << Rlo[i][j] << endl;
       }
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)
@@ -843,7 +841,7 @@ void GPU_dbl2_bals_solve
           &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
           &bsaddcnt,&bsmulcnt,&bsdivcnt);
 
-     if(vrblvl > 0)
+     if(vrblvl > 1)
         for(int i=0; i<ncols; i++)
            cout << "x[" << i << "] : "
                 << xhi[i] << "  " << xlo[i] << endl;
@@ -854,7 +852,6 @@ void GPU_dbl2_bals_solve
          sollo[stage][j] = xlo[j];
       }
    }
-
    for(int i=0; i<nrows; i++)
    {
       free(Ahi[i]); free(workRhi[i]);
@@ -875,7 +872,7 @@ void GPU_cmplx2_bals_solve
 {
    const int nrows = dim;
    const int ncols = dim;
-   const bool bvrb = (vrblvl > 0);
+   const bool bvrb = (vrblvl > 1);
 
    double **Arehi = new double*[nrows];
    double **Arelo = new double*[nrows];
@@ -903,7 +900,7 @@ void GPU_cmplx2_bals_solve
       workRimhi[i] = new double[ncols];
       workRimlo[i] = new double[ncols];
    }
-   if(vrblvl)
+   if(vrblvl > 1)
    {
       cout << "GPU_cmplx2_bals_solve blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)
@@ -914,7 +911,6 @@ void GPU_cmplx2_bals_solve
                  << rhsimhi[k][i] << "  " << rhsimlo[k][i] << endl;
       }
    }
-
    for(int i=0; i<nrows; i++)
    {
       Arehi[i] = new double[ncols]; Arelo[i] = new double[ncols];
@@ -958,7 +954,7 @@ void GPU_cmplx2_bals_solve
           rhsrehi,rhsrelo,rhsimhi,rhsimlo,
           solrehi,solrelo,solimhi,solimlo,bvrb);
 
-      if(vrblvl > 0)
+      if(vrblvl > 1)
       {
          cout << "blocks of rhs before assignment :" << endl;
          for(int k=0; k<degp1; k++)
@@ -972,15 +968,15 @@ void GPU_cmplx2_bals_solve
 
       for(int i=0; i<nrows; i++) 
       {
-         cout << "assigning component " << i
-              << ", stage = " << stage << endl;
+         // cout << "assigning component " << i
+         //      << ", stage = " << stage << endl;
          brehi[i] = rhsrehi[stage][i];
          brelo[i] = rhsrelo[stage][i];
          bimhi[i] = rhsimhi[stage][i];
          bimlo[i] = rhsimlo[stage][i];
-         cout << "b[" << i << "] : "
-              << brehi[i] << "  " << brelo[i] << endl << "  "
-              << bimhi[i] << "  " << bimlo[i] << endl;
+         // cout << "b[" << i << "] : "
+         //      << brehi[i] << "  " << brelo[i] << endl << "  "
+         //      << bimhi[i] << "  " << bimlo[i] << endl;
       }
       double bstimelapsed_d;
       double elapsedms,invlapsed,mullapsed,sublapsed;
@@ -994,7 +990,7 @@ void GPU_cmplx2_bals_solve
       GPU_cmplx2_bals_qhb
          (ncols,szt,nbt,Qrehi,Qrelo,Qimhi,Qimlo,brehi,brelo,bimhi,bimlo,bvrb);
 
-      if(vrblvl > 0)
+      if(vrblvl > 1)
       {
          for(int i=0; i<nrows; i++)
             cout << "QHb[" << i << "] : "
@@ -1005,11 +1001,12 @@ void GPU_cmplx2_bals_solve
       {
          cout << "-> GPU solves an upper triangular system ..." << endl;
  
-         for(int i=0; i<nrows; i++)
-            for(int j=0; j<ncols; j++)
-               cout << "R[" << i << "][" << j << "] : "
-                    << Rrehi[i][j] << "  " << Rrelo[i][j] << endl << "  "
-                    << Rimhi[i][j] << "  " << Rimlo[i][j] << endl;
+         if(vrblvl > 1)
+            for(int i=0; i<nrows; i++)
+               for(int j=0; j<ncols; j++)
+                  cout << "R[" << i << "][" << j << "] : "
+                       << Rrehi[i][j] << "  " << Rrelo[i][j] << endl << "  "
+                       << Rimhi[i][j] << "  " << Rimlo[i][j] << endl;
       }
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)
@@ -1024,7 +1021,7 @@ void GPU_cmplx2_bals_solve
           &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
           &bsaddcnt,&bsmulcnt,&bsdivcnt);
 
-     if(vrblvl > 0)
+     if(vrblvl > 1)
         for(int i=0; i<ncols; i++)
            cout << "x[" << i << "] : "
                 << xrehi[i] << "  " << xrelo[i] << endl << "  "
@@ -1036,7 +1033,6 @@ void GPU_cmplx2_bals_solve
          solimhi[stage][j] = ximhi[j]; solimlo[stage][j] = ximlo[j];
       }
    }
-
    for(int i=0; i<nrows; i++)
    {
       free(Arehi[i]); free(workRrehi[i]);

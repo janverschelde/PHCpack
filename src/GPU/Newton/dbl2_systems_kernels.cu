@@ -465,7 +465,7 @@ void GPU_dbl2_evaluate_monomials
          }
       }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
@@ -493,7 +493,7 @@ void GPU_dbl2_evaluate_monomials
    // for(int i=0; i<dim; i++)
    //    CPU_dbl_evaldiff(dim,nvr[i],deg,idx[i],cff[i],input,output[i]);
 
-   bool verbose = (vrblvl > 0);
+   bool verbose = (vrblvl > 1);
    double cnvlapms,elapsedms,walltimesec;
 
    ConvolutionJobs jobs(dim);
@@ -526,7 +526,7 @@ void GPU_dbl2_evaluate_monomials
        cffhi,cfflo,inputhi,inputlo,outputhi,outputlo,jobs,
        &cnvlapms,&elapsedms,&walltimesec,verbose);
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
@@ -536,7 +536,6 @@ void GPU_dbl2_evaluate_monomials
                  << outputlo[i][dim][j] << endl;
       }
    }
-
    for(int i=0; i<dim; i++) // multiply derivatives with the powers
    {
       if(nbrfac[i] > 0) // there are common factors in monomial i
@@ -602,7 +601,7 @@ void GPU_cmplx2_evaluate_monomials
          }
       }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
@@ -629,7 +628,7 @@ void GPU_cmplx2_evaluate_monomials
                  << inputimhi[i][j] << "  " << inputimlo[i][j] << endl;
       }
    }
-   bool verbose = (vrblvl > 0);
+   bool verbose = (vrblvl > 1);
    double cnvlapms,elapsedms,walltimesec;
 
    ConvolutionJobs jobs(dim);
@@ -663,7 +662,7 @@ void GPU_cmplx2_evaluate_monomials
        outputrehi,outputrelo,outputimhi,outputimlo,jobs,
        &cnvlapms,&elapsedms,&walltimesec,verbose);
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
@@ -675,7 +674,6 @@ void GPU_cmplx2_evaluate_monomials
                  << outputimlo[i][dim][j] << endl;
       }
    }
-
    for(int i=0; i<dim; i++) // multiply derivatives with the powers
    {
       if(nbrfac[i] > 0) // there are common factors in monomial i

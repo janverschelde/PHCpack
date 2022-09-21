@@ -88,8 +88,9 @@ void dbl8_update_series
    double **dxhihilo, double **dxlohilo, double **dxhilolo, double **dxlololo,
    int vrblvl )
 {
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
+      cout << scientific << setprecision(16);
       cout << "The series before the update : " << endl;
       for(int j=0; j<degp1; j++)
       {
@@ -115,6 +116,7 @@ void dbl8_update_series
 
    if(vrblvl > 0)
    {
+      cout << scientific << setprecision(16);
       cout << "The series after the update : " << endl;
       for(int j=0; j<degp1; j++)
       {
@@ -149,8 +151,9 @@ void cmplx8_update_series
    double **dximhihilo, double **dximlohilo,
    double **dximhilolo, double **dximlololo, int vrblvl )
 {
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
+      cout << scientific << setprecision(16);
       cout << "The series before the update : " << endl;
       for(int j=0; j<degp1; j++)
       {
@@ -199,6 +202,7 @@ void cmplx8_update_series
  
    if(vrblvl > 0)
    {
+      cout << scientific << setprecision(16);
       cout << "The series after the update : " << endl;
       for(int j=0; j<degp1; j++)
       {
@@ -372,11 +376,7 @@ void dbl8_newton_lustep
        resmaxhihilo,resmaxlohilo,resmaxhilolo,resmaxlololo,vrblvl);
 
    if(vrblvl > 0)
-      cout << "maximum residual : "
-           << *resmaxhihihi << "  " << *resmaxlohihi << endl
-           << *resmaxhilohi << "  " << *resmaxlolohi << endl
-           << *resmaxhihilo << "  " << *resmaxlohilo << endl
-           << *resmaxhilolo << "  " << *resmaxlololo << endl;
+      cout << "maximum residual : " << *resmaxhihihi << endl;
 
    dbl8_update_series
       (dim,degp1,
@@ -554,32 +554,35 @@ void dbl8_newton_qrstep
          for(int i=0; i<=dim; i++)
             for(int j=0; j<degp1; j++)
          {
-             cout << "output_h[" << k << "][" << i << "][" << j << "] : "
-                  << outputhihihi_h[k][i][j] << "  "
-                  << outputlohihi_h[k][i][j] << endl << "  "
-                  << outputhilohi_h[k][i][j] << "  "
-                  << outputlolohi_h[k][i][j] << endl << "  "
-                  << outputhihilo_h[k][i][j] << "  "
-                  << outputlohilo_h[k][i][j] << endl << "  "
-                  << outputhilolo_h[k][i][j] << "  "
-                  << outputlololo_h[k][i][j] << endl;
-             cout << "output_d[" << k << "][" << i << "][" << j << "] : "
-                  << outputhihihi_d[k][i][j] << "  "
-                  << outputlohihi_d[k][i][j] << endl << "  "
-                  << outputhilohi_d[k][i][j] << "  "
-                  << outputlolohi_d[k][i][j] << endl << "  "
-                  << outputhihilo_d[k][i][j] << "  "
-                  << outputlohilo_d[k][i][j] << endl << "  "
-                  << outputhilolo_d[k][i][j] << "  "
-                  << outputlololo_d[k][i][j] << endl;
-             errsum += abs(outputhihihi_h[k][i][j] - outputhihihi_d[k][i][j])
-                     + abs(outputlohihi_h[k][i][j] - outputlohihi_d[k][i][j])
-                     + abs(outputhilohi_h[k][i][j] - outputhilohi_d[k][i][j])
-                     + abs(outputlolohi_h[k][i][j] - outputlolohi_d[k][i][j])
-                     + abs(outputhihilo_h[k][i][j] - outputhihilo_d[k][i][j])
-                     + abs(outputlohilo_h[k][i][j] - outputlohilo_d[k][i][j])
-                     + abs(outputhilolo_h[k][i][j] - outputhilolo_d[k][i][j])
-                     + abs(outputlololo_h[k][i][j] - outputlololo_d[k][i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "output_h[" << k << "][" << i << "][" << j << "] : "
+                    << outputhihihi_h[k][i][j] << "  "
+                    << outputlohihi_h[k][i][j] << endl << "  "
+                    << outputhilohi_h[k][i][j] << "  "
+                    << outputlolohi_h[k][i][j] << endl << "  "
+                    << outputhihilo_h[k][i][j] << "  "
+                    << outputlohilo_h[k][i][j] << endl << "  "
+                    << outputhilolo_h[k][i][j] << "  "
+                    << outputlololo_h[k][i][j] << endl;
+               cout << "output_d[" << k << "][" << i << "][" << j << "] : "
+                    << outputhihihi_d[k][i][j] << "  "
+                    << outputlohihi_d[k][i][j] << endl << "  "
+                    << outputhilohi_d[k][i][j] << "  "
+                    << outputlolohi_d[k][i][j] << endl << "  "
+                    << outputhihilo_d[k][i][j] << "  "
+                    << outputlohilo_d[k][i][j] << endl << "  "
+                    << outputhilolo_d[k][i][j] << "  "
+                    << outputlololo_d[k][i][j] << endl;
+            }
+            errsum += abs(outputhihihi_h[k][i][j] - outputhihihi_d[k][i][j])
+                    + abs(outputlohihi_h[k][i][j] - outputlohihi_d[k][i][j])
+                    + abs(outputhilohi_h[k][i][j] - outputhilohi_d[k][i][j])
+                    + abs(outputlolohi_h[k][i][j] - outputlolohi_d[k][i][j])
+                    + abs(outputhihilo_h[k][i][j] - outputhihilo_d[k][i][j])
+                    + abs(outputlohilo_h[k][i][j] - outputlohilo_d[k][i][j])
+                    + abs(outputhilolo_h[k][i][j] - outputhilolo_d[k][i][j])
+                    + abs(outputlololo_h[k][i][j] - outputlololo_d[k][i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
    }
@@ -634,24 +637,27 @@ void dbl8_newton_qrstep
       {
          for(int j=0; j<degp1; j++)
          {
-            cout << "funval_h[" << i << "][" << j << "] : "
-                 << funvalhihihi_h[i][j] << "  "
-                 << funvallohihi_h[i][j] << endl << "  "
-                 << funvalhilohi_h[i][j] << "  "
-                 << funvallolohi_h[i][j] << endl << "  "
-                 << funvalhihilo_h[i][j] << "  "
-                 << funvallohilo_h[i][j] << endl << "  "
-                 << funvalhilolo_h[i][j] << "  "
-                 << funvallololo_h[i][j] << endl;
-            cout << "funval_d[" << i << "][" << j << "] : "
-                 << funvalhihihi_d[i][j] << "  "
-                 << funvallohihi_d[i][j] << endl << "  "
-                 << funvalhilohi_d[i][j] << "  "
-                 << funvallolohi_d[i][j] << endl << "  "
-                 << funvalhihilo_d[i][j] << "  "
-                 << funvallohilo_d[i][j] << endl << "  "
-                 << funvalhilolo_d[i][j] << "  "
-                 << funvallololo_d[i][j] << endl;
+            if(vrblvl > 1)
+            {
+               cout << "funval_h[" << i << "][" << j << "] : "
+                    << funvalhihihi_h[i][j] << "  "
+                    << funvallohihi_h[i][j] << endl << "  "
+                    << funvalhilohi_h[i][j] << "  "
+                    << funvallolohi_h[i][j] << endl << "  "
+                    << funvalhihilo_h[i][j] << "  "
+                    << funvallohilo_h[i][j] << endl << "  "
+                    << funvalhilolo_h[i][j] << "  "
+                    << funvallololo_h[i][j] << endl;
+               cout << "funval_d[" << i << "][" << j << "] : "
+                    << funvalhihihi_d[i][j] << "  "
+                    << funvallohihi_d[i][j] << endl << "  "
+                    << funvalhilohi_d[i][j] << "  "
+                    << funvallolohi_d[i][j] << endl << "  "
+                    << funvalhihilo_d[i][j] << "  "
+                    << funvallohilo_d[i][j] << endl << "  "
+                    << funvalhilolo_d[i][j] << "  "
+                    << funvallololo_d[i][j] << endl;
+            }
             errsum += abs(funvalhihihi_h[i][j] - funvalhihihi_d[i][j])
                     + abs(funvallohihi_h[i][j] - funvallohihi_d[i][j])
                     + abs(funvalhilohi_h[i][j] - funvalhilohi_d[i][j])
@@ -671,32 +677,35 @@ void dbl8_newton_qrstep
          {
             for(int k=0; k<dim; k++)
             {
-               cout << "jacval_h[" << i << "][" << j << "][" << k << "] : "
-                    << jacvalhihihi_h[i][j][k] << "  "
-                    << jacvallohihi_h[i][j][k] << endl << "  "
-                    << jacvalhilohi_h[i][j][k] << "  "
-                    << jacvallolohi_h[i][j][k] << endl << "  "
-                    << jacvalhihilo_h[i][j][k] << "  "
-                    << jacvallohilo_h[i][j][k] << endl << "  "
-                    << jacvalhilolo_h[i][j][k] << "  "
-                    << jacvallololo_h[i][j][k] << endl;
-               cout << "jacval_d[" << i << "][" << j << "][" << k << "] : "
-                    << jacvalhihihi_d[i][j][k] << "  "
-                    << jacvallohihi_d[i][j][k] << endl << "  "
-                    << jacvalhilohi_d[i][j][k] << "  "
-                    << jacvallolohi_d[i][j][k] << endl << "  "
-                    << jacvalhihilo_d[i][j][k] << "  "
-                    << jacvallohilo_d[i][j][k] << endl << "  "
-                    << jacvalhilolo_d[i][j][k] << "  "
-                    << jacvallololo_d[i][j][k] << endl;
-               errsum += abs(jacvalhihihi_h[i][j][k] - jacvalhihihi_d[i][j][k])
-                       + abs(jacvallohihi_h[i][j][k] - jacvallohihi_d[i][j][k])
-                       + abs(jacvalhilohi_h[i][j][k] - jacvalhilohi_d[i][j][k])
-                       + abs(jacvallolohi_h[i][j][k] - jacvallolohi_d[i][j][k])
-                       + abs(jacvalhihilo_h[i][j][k] - jacvalhihilo_d[i][j][k])
-                       + abs(jacvallohilo_h[i][j][k] - jacvallohilo_d[i][j][k])
-                       + abs(jacvalhilolo_h[i][j][k] - jacvalhilolo_d[i][j][k])
-                       + abs(jacvallololo_h[i][j][k] - jacvallololo_d[i][j][k]);
+               if(vrblvl > 1)
+               {
+                  cout << "jacval_h[" << i << "][" << j << "][" << k << "] : "
+                       << jacvalhihihi_h[i][j][k] << "  "
+                       << jacvallohihi_h[i][j][k] << endl << "  "
+                       << jacvalhilohi_h[i][j][k] << "  "
+                       << jacvallolohi_h[i][j][k] << endl << "  "
+                       << jacvalhihilo_h[i][j][k] << "  "
+                       << jacvallohilo_h[i][j][k] << endl << "  "
+                       << jacvalhilolo_h[i][j][k] << "  "
+                       << jacvallololo_h[i][j][k] << endl;
+                  cout << "jacval_d[" << i << "][" << j << "][" << k << "] : "
+                       << jacvalhihihi_d[i][j][k] << "  "
+                       << jacvallohihi_d[i][j][k] << endl << "  "
+                       << jacvalhilohi_d[i][j][k] << "  "
+                       << jacvallolohi_d[i][j][k] << endl << "  "
+                       << jacvalhihilo_d[i][j][k] << "  "
+                       << jacvallohilo_d[i][j][k] << endl << "  "
+                       << jacvalhilolo_d[i][j][k] << "  "
+                       << jacvallololo_d[i][j][k] << endl;
+               }
+            errsum += abs(jacvalhihihi_h[i][j][k] - jacvalhihihi_d[i][j][k])
+                    + abs(jacvallohihi_h[i][j][k] - jacvallohihi_d[i][j][k])
+                    + abs(jacvalhilohi_h[i][j][k] - jacvalhilohi_d[i][j][k])
+                    + abs(jacvallolohi_h[i][j][k] - jacvallolohi_d[i][j][k])
+                    + abs(jacvalhihilo_h[i][j][k] - jacvalhihilo_d[i][j][k])
+                    + abs(jacvallohilo_h[i][j][k] - jacvallohilo_d[i][j][k])
+                    + abs(jacvalhilolo_h[i][j][k] - jacvalhilolo_d[i][j][k])
+                    + abs(jacvallololo_h[i][j][k] - jacvallololo_d[i][j][k]);
             }
          }
       }
@@ -707,24 +716,27 @@ void dbl8_newton_qrstep
       {
          for(int j=0; j<dim; j++)
          {
-            cout << "rhs_h[" << i << "][" << j << "] : "
-                 << rhshihihi_h[i][j] << "  "
-                 << rhslohihi_h[i][j] << endl << "  "
-                 << rhshilohi_h[i][j] << "  "
-                 << rhslolohi_h[i][j] << endl << "  "
-                 << rhshihilo_h[i][j] << "  "
-                 << rhslohilo_h[i][j] << endl << "  "
-                 << rhshilolo_h[i][j] << "  "
-                 << rhslololo_h[i][j] << endl;
-            cout << "rhs_d[" << i << "][" << j << "] : "
-                 << rhshihihi_d[i][j] << "  "
-                 << rhslohihi_d[i][j] << endl << "  "
-                 << rhshilohi_d[i][j] << "  "
-                 << rhslolohi_d[i][j] << endl << "  "
-                 << rhshihilo_d[i][j] << "  "
-                 << rhslohilo_d[i][j] << endl << "  "
-                 << rhshilolo_d[i][j] << "  "
-                 << rhslololo_d[i][j] << endl;
+            if(vrblvl > 1)
+            {
+               cout << "rhs_h[" << i << "][" << j << "] : "
+                    << rhshihihi_h[i][j] << "  "
+                    << rhslohihi_h[i][j] << endl << "  "
+                    << rhshilohi_h[i][j] << "  "
+                    << rhslolohi_h[i][j] << endl << "  "
+                    << rhshihilo_h[i][j] << "  "
+                    << rhslohilo_h[i][j] << endl << "  "
+                    << rhshilolo_h[i][j] << "  "
+                    << rhslololo_h[i][j] << endl;
+               cout << "rhs_d[" << i << "][" << j << "] : "
+                    << rhshihihi_d[i][j] << "  "
+                    << rhslohihi_d[i][j] << endl << "  "
+                    << rhshilohi_d[i][j] << "  "
+                    << rhslolohi_d[i][j] << endl << "  "
+                    << rhshihilo_d[i][j] << "  "
+                    << rhslohilo_d[i][j] << endl << "  "
+                    << rhshilolo_d[i][j] << "  "
+                    << rhslololo_d[i][j] << endl;
+            }
             errsum += abs(rhshihihi_h[i][j] - rhshihihi_d[i][j])
                     + abs(rhslohihi_h[i][j] - rhslohihi_d[i][j])
                     + abs(rhshilohi_h[i][j] - rhshilohi_d[i][j])
@@ -737,9 +749,6 @@ void dbl8_newton_qrstep
       }
       cout << "sum of errors : " << errsum << endl;
    }
-
-   if(vrblvl > 0) cout << "saving the original rhs ..." << endl;
-
    for(int i=0; i<degp1; i++) // save original rhs for residual
       for(int j=0; j<dim; j++)
       {
@@ -760,8 +769,6 @@ void dbl8_newton_qrstep
          urhshilolo_d[i][j] = rhshilolo_d[i][j];
          urhslololo_d[i][j] = rhslololo_d[i][j];
       }
-
-   if(vrblvl > 0) cout << "initializing the solution ..." << endl;
 
    for(int i=0; i<degp1; i++) // initialize the solution to zero
       for(int j=0; j<dim; j++)
@@ -798,7 +805,7 @@ void dbl8_newton_qrstep
 
       if(vrblvl > 0)
       {
-         cout << "calling CPU_dbl4_linear_residue ..." << endl;
+         cout << "calling CPU_dbl8_linear_residue ..." << endl;
 
          CPU_dbl8_linear_residue
             (dim,degp1,
@@ -813,11 +820,7 @@ void dbl8_newton_qrstep
              resmaxhihihi,resmaxlohihi,resmaxhilohi,resmaxlolohi,
              resmaxhihilo,resmaxlohilo,resmaxhilolo,resmaxlololo,vrblvl);
 
-         cout << "maximum residual : "
-              << *resmaxhihihi << "  " << *resmaxlohihi << "  "
-              << *resmaxhilohi << "  " << *resmaxlolohi << "  "
-              << *resmaxhihilo << "  " << *resmaxlohilo << "  "
-              << *resmaxhilolo << "  " << *resmaxlololo << endl;
+         cout << "maximum residual : " << *resmaxhihihi << endl;
       }
       dbl8_update_series
          (dim,degp1,
@@ -845,7 +848,7 @@ void dbl8_newton_qrstep
 
       if(vrblvl > 0)
       {
-         cout << "calling CPU_dbl4_linear_residue ..." << endl;
+         cout << "calling CPU_dbl8_linear_residue ..." << endl;
 
          CPU_dbl8_linear_residue
             (dim,degp1,
@@ -860,11 +863,7 @@ void dbl8_newton_qrstep
              resmaxhihihi,resmaxlohihi,resmaxhilohi,resmaxlolohi,
              resmaxhihilo,resmaxlohilo,resmaxhilolo,resmaxlololo,vrblvl);
 
-         cout << "maximum residual : "
-              << *resmaxhihihi << "  " << *resmaxlohihi << "  "
-              << *resmaxhilohi << "  " << *resmaxlolohi << "  "
-              << *resmaxhihilo << "  " << *resmaxlohilo << "  "
-              << *resmaxhilolo << "  " << *resmaxlololo << endl;
+         cout << "maximum residual : " << *resmaxhihihi << endl;
       }
       dbl8_update_series
          (dim,degp1,
@@ -880,64 +879,70 @@ void dbl8_newton_qrstep
       for(int i=0; i<dim; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "Q_h[" << i << "][" << j << "] : "
-                  << Qhihihi_h[i][j] << "  "
-                  << Qlohihi_h[i][j] << endl << "  "
-                  << Qhilohi_h[i][j] << "  "
-                  << Qlolohi_h[i][j] << endl << "  "
-                  << Qhihilo_h[i][j] << "  "
-                  << Qlohilo_h[i][j] << endl << "  "
-                  << Qhilolo_h[i][j] << "  "
-                  << Qlololo_h[i][j] << endl;
-             cout << "Q_d[" << i << "][" << j << "] : "
-                  << Qhihihi_d[i][j] << "  "
-                  << Qlohihi_d[i][j] << endl << "  "
-                  << Qhilohi_d[i][j] << "  "
-                  << Qlolohi_d[i][j] << endl << "  "
-                  << Qhihilo_d[i][j] << "  "
-                  << Qlohilo_d[i][j] << endl << "  "
-                  << Qhilolo_d[i][j] << "  "
-                  << Qlololo_d[i][j] << endl;
-             errsum += abs(Qhihihi_h[i][j] - Qhihihi_d[i][j])
-                     + abs(Qlohihi_h[i][j] - Qlohihi_d[i][j])
-                     + abs(Qhilohi_h[i][j] - Qhilohi_d[i][j])
-                     + abs(Qlolohi_h[i][j] - Qlolohi_d[i][j])
-                     + abs(Qhihilo_h[i][j] - Qhihilo_d[i][j])
-                     + abs(Qlohilo_h[i][j] - Qlohilo_d[i][j])
-                     + abs(Qhilolo_h[i][j] - Qhilolo_d[i][j])
-                     + abs(Qlololo_h[i][j] - Qlololo_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "Q_h[" << i << "][" << j << "] : "
+                    << Qhihihi_h[i][j] << "  "
+                    << Qlohihi_h[i][j] << endl << "  "
+                    << Qhilohi_h[i][j] << "  "
+                    << Qlolohi_h[i][j] << endl << "  "
+                    << Qhihilo_h[i][j] << "  "
+                    << Qlohilo_h[i][j] << endl << "  "
+                    << Qhilolo_h[i][j] << "  "
+                    << Qlololo_h[i][j] << endl;
+               cout << "Q_d[" << i << "][" << j << "] : "
+                    << Qhihihi_d[i][j] << "  "
+                    << Qlohihi_d[i][j] << endl << "  "
+                    << Qhilohi_d[i][j] << "  "
+                    << Qlolohi_d[i][j] << endl << "  "
+                    << Qhihilo_d[i][j] << "  "
+                    << Qlohilo_d[i][j] << endl << "  "
+                    << Qhilolo_d[i][j] << "  "
+                    << Qlololo_d[i][j] << endl;
+            }
+            errsum += abs(Qhihihi_h[i][j] - Qhihihi_d[i][j])
+                    + abs(Qlohihi_h[i][j] - Qlohihi_d[i][j])
+                    + abs(Qhilohi_h[i][j] - Qhilohi_d[i][j])
+                    + abs(Qlolohi_h[i][j] - Qlolohi_d[i][j])
+                    + abs(Qhihilo_h[i][j] - Qhihilo_d[i][j])
+                    + abs(Qlohilo_h[i][j] - Qlohilo_d[i][j])
+                    + abs(Qhilolo_h[i][j] - Qhilolo_d[i][j])
+                    + abs(Qlololo_h[i][j] - Qlololo_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
       cout << "comparing CPU with GPU matrices R ... " << endl;
       for(int i=0; i<dim; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "R_h[" << i << "][" << j << "] : "
-                  << Rhihihi_h[i][j] << "  "
-                  << Rlohihi_h[i][j] << endl << "  "
-                  << Rhilohi_h[i][j] << "  "
-                  << Rlolohi_h[i][j] << endl << "  "
-                  << Rhihilo_h[i][j] << "  "
-                  << Rlohilo_h[i][j] << endl << "  "
-                  << Rhilolo_h[i][j] << "  "
-                  << Rlololo_h[i][j] << endl;
-             cout << "R_d[" << i << "][" << j << "] : "
-                  << Rhihihi_d[i][j] << "  "
-                  << Rlohihi_d[i][j] << endl << "  "
-                  << Rhilohi_d[i][j] << "  "
-                  << Rlolohi_d[i][j] << endl << "  "
-                  << Rhihilo_d[i][j] << "  "
-                  << Rlohilo_d[i][j] << endl << "  "
-                  << Rhilolo_d[i][j] << "  "
-                  << Rlololo_d[i][j] << endl;
-             errsum += abs(Rhihihi_h[i][j] - Rhihihi_d[i][j])
-                     + abs(Rlohihi_h[i][j] - Rlohihi_d[i][j])
-                     + abs(Rhilohi_h[i][j] - Rhilohi_d[i][j])
-                     + abs(Rlolohi_h[i][j] - Rlolohi_d[i][j])
-                     + abs(Rhihilo_h[i][j] - Rhihilo_d[i][j])
-                     + abs(Rlohilo_h[i][j] - Rlohilo_d[i][j])
-                     + abs(Rhilolo_h[i][j] - Rhilolo_d[i][j])
-                     + abs(Rlololo_h[i][j] - Rlololo_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "R_h[" << i << "][" << j << "] : "
+                    << Rhihihi_h[i][j] << "  "
+                    << Rlohihi_h[i][j] << endl << "  "
+                    << Rhilohi_h[i][j] << "  "
+                    << Rlolohi_h[i][j] << endl << "  "
+                    << Rhihilo_h[i][j] << "  "
+                    << Rlohilo_h[i][j] << endl << "  "
+                    << Rhilolo_h[i][j] << "  "
+                    << Rlololo_h[i][j] << endl;
+               cout << "R_d[" << i << "][" << j << "] : "
+                    << Rhihihi_d[i][j] << "  "
+                    << Rlohihi_d[i][j] << endl << "  "
+                    << Rhilohi_d[i][j] << "  "
+                    << Rlolohi_d[i][j] << endl << "  "
+                    << Rhihilo_d[i][j] << "  "
+                    << Rlohilo_d[i][j] << endl << "  "
+                    << Rhilolo_d[i][j] << "  "
+                    << Rlololo_d[i][j] << endl;
+            }
+            errsum += abs(Rhihihi_h[i][j] - Rhihihi_d[i][j])
+                    + abs(Rlohihi_h[i][j] - Rlohihi_d[i][j])
+                    + abs(Rhilohi_h[i][j] - Rhilohi_d[i][j])
+                    + abs(Rlolohi_h[i][j] - Rlolohi_d[i][j])
+                    + abs(Rhihilo_h[i][j] - Rhihilo_d[i][j])
+                    + abs(Rlohilo_h[i][j] - Rlohilo_d[i][j])
+                    + abs(Rhilolo_h[i][j] - Rhilolo_d[i][j])
+                    + abs(Rlololo_h[i][j] - Rlololo_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
       errsum = 0.0;
@@ -945,32 +950,35 @@ void dbl8_newton_qrstep
       for(int i=0; i<degp1; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "urhs_h[" << i << "][" << j << "] : "
-                  << urhshihihi_h[i][j] << "  "
-                  << urhslohihi_h[i][j] << endl << "  "
-                  << urhshilohi_h[i][j] << "  "
-                  << urhslolohi_h[i][j] << endl << "  "
-                  << urhshihilo_h[i][j] << "  "
-                  << urhslohilo_h[i][j] << endl << "  "
-                  << urhshilolo_h[i][j] << "  "
-                  << urhslololo_h[i][j] << endl;
-             cout << "urhs_d[" << i << "][" << j << "] : "
-                  << urhshihihi_d[i][j] << "  "
-                  << urhslohihi_d[i][j] << endl << "  "
-                  << urhshilohi_d[i][j] << "  "
-                  << urhslolohi_d[i][j] << endl << "  "
-                  << urhshihilo_d[i][j] << "  "
-                  << urhslohilo_d[i][j] << endl << "  "
-                  << urhshilolo_d[i][j] << "  "
-                  << urhslololo_d[i][j] << endl;
-             errsum += abs(urhshihihi_h[i][j] - urhshihihi_d[i][j])
-                     + abs(urhslohihi_h[i][j] - urhslohihi_d[i][j])
-                     + abs(urhshilohi_h[i][j] - urhshilohi_d[i][j])
-                     + abs(urhslolohi_h[i][j] - urhslolohi_d[i][j])
-                     + abs(urhshihilo_h[i][j] - urhshihilo_d[i][j])
-                     + abs(urhslohilo_h[i][j] - urhslohilo_d[i][j])
-                     + abs(urhshilolo_h[i][j] - urhshilolo_d[i][j])
-                     + abs(urhslololo_h[i][j] - urhslololo_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "urhs_h[" << i << "][" << j << "] : "
+                    << urhshihihi_h[i][j] << "  "
+                    << urhslohihi_h[i][j] << endl << "  "
+                    << urhshilohi_h[i][j] << "  "
+                    << urhslolohi_h[i][j] << endl << "  "
+                    << urhshihilo_h[i][j] << "  "
+                    << urhslohilo_h[i][j] << endl << "  "
+                    << urhshilolo_h[i][j] << "  "
+                    << urhslololo_h[i][j] << endl;
+               cout << "urhs_d[" << i << "][" << j << "] : "
+                    << urhshihihi_d[i][j] << "  "
+                    << urhslohihi_d[i][j] << endl << "  "
+                    << urhshilohi_d[i][j] << "  "
+                    << urhslolohi_d[i][j] << endl << "  "
+                    << urhshihilo_d[i][j] << "  "
+                    << urhslohilo_d[i][j] << endl << "  "
+                    << urhshilolo_d[i][j] << "  "
+                    << urhslololo_d[i][j] << endl;
+            }
+            errsum += abs(urhshihihi_h[i][j] - urhshihihi_d[i][j])
+                    + abs(urhslohihi_h[i][j] - urhslohihi_d[i][j])
+                    + abs(urhshilohi_h[i][j] - urhshilohi_d[i][j])
+                    + abs(urhslolohi_h[i][j] - urhslolohi_d[i][j])
+                    + abs(urhshihilo_h[i][j] - urhshihilo_d[i][j])
+                    + abs(urhslohilo_h[i][j] - urhslohilo_d[i][j])
+                    + abs(urhshilolo_h[i][j] - urhshilolo_d[i][j])
+                    + abs(urhslololo_h[i][j] - urhslololo_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
       errsum = 0.0;
@@ -978,32 +986,35 @@ void dbl8_newton_qrstep
       for(int i=0; i<degp1; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "sol_h[" << i << "][" << j << "] : "
-                  << solhihihi_h[i][j] << "  "
-                  << sollohihi_h[i][j] << endl << "  "
-                  << solhilohi_h[i][j] << "  "
-                  << sollolohi_h[i][j] << endl << "  "
-                  << solhihilo_h[i][j] << "  "
-                  << sollohilo_h[i][j] << endl << "  "
-                  << solhilolo_h[i][j] << "  "
-                  << sollololo_h[i][j] << endl;
-             cout << "sol_d[" << i << "][" << j << "] : "
-                  << solhihihi_d[i][j] << "  "
-                  << sollohihi_d[i][j] << endl << "  "
-                  << solhilohi_d[i][j] << "  "
-                  << sollolohi_d[i][j] << endl << "  "
-                  << solhihilo_d[i][j] << "  "
-                  << sollohilo_d[i][j] << endl << "  "
-                  << solhilolo_d[i][j] << "  "
-                  << sollololo_d[i][j] << endl;
-             errsum += abs(solhihihi_h[i][j] - solhihihi_d[i][j])
-                     + abs(sollohihi_h[i][j] - sollohihi_d[i][j])
-                     + abs(solhilohi_h[i][j] - solhilohi_d[i][j])
-                     + abs(sollolohi_h[i][j] - sollolohi_d[i][j])
-                     + abs(solhihilo_h[i][j] - solhihilo_d[i][j])
-                     + abs(sollohilo_h[i][j] - sollohilo_d[i][j])
-                     + abs(solhilolo_h[i][j] - solhilolo_d[i][j])
-                     + abs(sollololo_h[i][j] - sollololo_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "sol_h[" << i << "][" << j << "] : "
+                    << solhihihi_h[i][j] << "  "
+                    << sollohihi_h[i][j] << endl << "  "
+                    << solhilohi_h[i][j] << "  "
+                    << sollolohi_h[i][j] << endl << "  "
+                    << solhihilo_h[i][j] << "  "
+                    << sollohilo_h[i][j] << endl << "  "
+                    << solhilolo_h[i][j] << "  "
+                    << sollololo_h[i][j] << endl;
+               cout << "sol_d[" << i << "][" << j << "] : "
+                    << solhihihi_d[i][j] << "  "
+                    << sollohihi_d[i][j] << endl << "  "
+                    << solhilohi_d[i][j] << "  "
+                    << sollolohi_d[i][j] << endl << "  "
+                    << solhihilo_d[i][j] << "  "
+                    << sollohilo_d[i][j] << endl << "  "
+                    << solhilolo_d[i][j] << "  "
+                    << sollololo_d[i][j] << endl;
+            }
+            errsum += abs(solhihihi_h[i][j] - solhihihi_d[i][j])
+                    + abs(sollohihi_h[i][j] - sollohihi_d[i][j])
+                    + abs(solhilohi_h[i][j] - solhilohi_d[i][j])
+                    + abs(sollolohi_h[i][j] - sollolohi_d[i][j])
+                    + abs(solhihilo_h[i][j] - solhihilo_d[i][j])
+                    + abs(sollohilo_h[i][j] - sollohilo_d[i][j])
+                    + abs(solhilolo_h[i][j] - solhilolo_d[i][j])
+                    + abs(sollololo_h[i][j] - sollololo_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
       errsum = 0.0;
@@ -1011,32 +1022,35 @@ void dbl8_newton_qrstep
       for(int i=0; i<dim; i++)
          for(int j=0; j<degp1; j++)
          {
-             cout << "input_h[" << i << "][" << j << "] : "
-                  << inputhihihi_h[i][j] << "  "
-                  << inputlohihi_h[i][j] << endl << "  "
-                  << inputhilohi_h[i][j] << "  "
-                  << inputlolohi_h[i][j] << endl << "  "
-                  << inputhihilo_h[i][j] << "  "
-                  << inputlohilo_h[i][j] << endl << "  "
-                  << inputhilolo_h[i][j] << "  "
-                  << inputlololo_h[i][j] << endl;
-             cout << "input_d[" << i << "][" << j << "] : "
-                  << inputhihihi_d[i][j] << "  "
-                  << inputlohihi_d[i][j] << endl << "  "
-                  << inputhilohi_d[i][j] << "  "
-                  << inputlolohi_d[i][j] << endl << "  "
-                  << inputhihilo_d[i][j] << "  "
-                  << inputlohilo_d[i][j] << endl << "  "
-                  << inputhilolo_d[i][j] << "  "
-                  << inputlololo_d[i][j] << endl;
-             errsum += abs(inputhihihi_h[i][j] - inputhihihi_d[i][j])
-                     + abs(inputlohihi_h[i][j] - inputlohihi_d[i][j])
-                     + abs(inputhilohi_h[i][j] - inputhilohi_d[i][j])
-                     + abs(inputlolohi_h[i][j] - inputlolohi_d[i][j])
-                     + abs(inputhihilo_h[i][j] - inputhihilo_d[i][j])
-                     + abs(inputlohilo_h[i][j] - inputlohilo_d[i][j])
-                     + abs(inputhilolo_h[i][j] - inputhilolo_d[i][j])
-                     + abs(inputlololo_h[i][j] - inputlololo_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "input_h[" << i << "][" << j << "] : "
+                    << inputhihihi_h[i][j] << "  "
+                    << inputlohihi_h[i][j] << endl << "  "
+                    << inputhilohi_h[i][j] << "  "
+                    << inputlolohi_h[i][j] << endl << "  "
+                    << inputhihilo_h[i][j] << "  "
+                    << inputlohilo_h[i][j] << endl << "  "
+                    << inputhilolo_h[i][j] << "  "
+                    << inputlololo_h[i][j] << endl;
+               cout << "input_d[" << i << "][" << j << "] : "
+                    << inputhihihi_d[i][j] << "  "
+                    << inputlohihi_d[i][j] << endl << "  "
+                    << inputhilohi_d[i][j] << "  "
+                    << inputlolohi_d[i][j] << endl << "  "
+                    << inputhihilo_d[i][j] << "  "
+                    << inputlohilo_d[i][j] << endl << "  "
+                    << inputhilolo_d[i][j] << "  "
+                    << inputlololo_d[i][j] << endl;
+            }
+            errsum += abs(inputhihihi_h[i][j] - inputhihihi_d[i][j])
+                    + abs(inputlohihi_h[i][j] - inputlohihi_d[i][j])
+                    + abs(inputhilohi_h[i][j] - inputhilohi_d[i][j])
+                    + abs(inputlolohi_h[i][j] - inputlolohi_d[i][j])
+                    + abs(inputhihilo_h[i][j] - inputhihilo_d[i][j])
+                    + abs(inputlohilo_h[i][j] - inputlohilo_d[i][j])
+                    + abs(inputhilolo_h[i][j] - inputhilolo_d[i][j])
+                    + abs(inputlololo_h[i][j] - inputlololo_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
    }
@@ -1336,40 +1350,43 @@ void cmplx8_newton_qrstep
          for(int i=0; i<=dim; i++)
             for(int j=0; j<degp1; j++)
          {
-             cout << "output_h[" << k << "][" << i << "][" << j << "] : "
-                  << outputrehihihi_h[k][i][j] << "  "
-                  << outputrelohihi_h[k][i][j] << endl << "  "
-                  << outputrehilohi_h[k][i][j] << "  "
-                  << outputrelolohi_h[k][i][j] << endl << "  "
-                  << outputrehihilo_h[k][i][j] << "  "
-                  << outputrelohilo_h[k][i][j] << endl << "  "
-                  << outputrehilolo_h[k][i][j] << "  "
-                  << outputrelololo_h[k][i][j] << endl << "  "
-                  << outputimhihihi_h[k][i][j] << "  "
-                  << outputimlohihi_h[k][i][j] << endl << "  "
-                  << outputimhilohi_h[k][i][j] << "  "
-                  << outputimlolohi_h[k][i][j] << endl << "  "
-                  << outputimhihilo_h[k][i][j] << "  "
-                  << outputimlohilo_h[k][i][j] << endl << "  "
-                  << outputimhilolo_h[k][i][j] << "  "
-                  << outputimlololo_h[k][i][j] << endl;
-             cout << "output_d[" << k << "][" << i << "][" << j << "] : "
-                  << outputrehihihi_d[k][i][j] << "  "
-                  << outputrelohihi_d[k][i][j] << endl << "  "
-                  << outputrehilohi_d[k][i][j] << "  "
-                  << outputrelolohi_d[k][i][j] << endl << "  "
-                  << outputrehihilo_d[k][i][j] << "  "
-                  << outputrelohilo_d[k][i][j] << endl << "  "
-                  << outputrehilolo_d[k][i][j] << "  "
-                  << outputrelololo_d[k][i][j] << endl << "  "
-                  << outputimhihihi_d[k][i][j] << "  "
-                  << outputimlohihi_d[k][i][j] << endl << "  "
-                  << outputimhilohi_d[k][i][j] << "  "
-                  << outputimlolohi_d[k][i][j] << endl << "  "
-                  << outputimhihilo_d[k][i][j] << "  "
-                  << outputimlohilo_d[k][i][j] << endl << "  "
-                  << outputimhilolo_d[k][i][j] << "  "
-                  << outputimlololo_d[k][i][j] << endl;
+            if(vrblvl > 1)
+            {
+               cout << "output_h[" << k << "][" << i << "][" << j << "] : "
+                    << outputrehihihi_h[k][i][j] << "  "
+                    << outputrelohihi_h[k][i][j] << endl << "  "
+                    << outputrehilohi_h[k][i][j] << "  "
+                    << outputrelolohi_h[k][i][j] << endl << "  "
+                    << outputrehihilo_h[k][i][j] << "  "
+                    << outputrelohilo_h[k][i][j] << endl << "  "
+                    << outputrehilolo_h[k][i][j] << "  "
+                    << outputrelololo_h[k][i][j] << endl << "  "
+                    << outputimhihihi_h[k][i][j] << "  "
+                    << outputimlohihi_h[k][i][j] << endl << "  "
+                    << outputimhilohi_h[k][i][j] << "  "
+                    << outputimlolohi_h[k][i][j] << endl << "  "
+                    << outputimhihilo_h[k][i][j] << "  "
+                    << outputimlohilo_h[k][i][j] << endl << "  "
+                    << outputimhilolo_h[k][i][j] << "  "
+                    << outputimlololo_h[k][i][j] << endl;
+               cout << "output_d[" << k << "][" << i << "][" << j << "] : "
+                    << outputrehihihi_d[k][i][j] << "  "
+                    << outputrelohihi_d[k][i][j] << endl << "  "
+                    << outputrehilohi_d[k][i][j] << "  "
+                    << outputrelolohi_d[k][i][j] << endl << "  "
+                    << outputrehihilo_d[k][i][j] << "  "
+                    << outputrelohilo_d[k][i][j] << endl << "  "
+                    << outputrehilolo_d[k][i][j] << "  "
+                    << outputrelololo_d[k][i][j] << endl << "  "
+                    << outputimhihihi_d[k][i][j] << "  "
+                    << outputimlohihi_d[k][i][j] << endl << "  "
+                    << outputimhilohi_d[k][i][j] << "  "
+                    << outputimlolohi_d[k][i][j] << endl << "  "
+                    << outputimhihilo_d[k][i][j] << "  "
+                    << outputimlohilo_d[k][i][j] << endl << "  "
+                    << outputimhilolo_d[k][i][j] << "  "
+                    << outputimlololo_d[k][i][j] << endl;
+            }
          errsum += abs(outputrehihihi_h[k][i][j] - outputrehihihi_d[k][i][j])
                  + abs(outputrelohihi_h[k][i][j] - outputrelohihi_d[k][i][j])
                  + abs(outputrehilohi_h[k][i][j] - outputrehilohi_d[k][i][j])
@@ -1461,40 +1478,43 @@ void cmplx8_newton_qrstep
       {
          for(int j=0; j<degp1; j++)
          {
-            cout << "funval_h[" << i << "][" << j << "] : "
-                 << funvalrehihihi_h[i][j] << "  "
-                 << funvalrelohihi_h[i][j] << endl << "  "
-                 << funvalrehilohi_h[i][j] << "  "
-                 << funvalrelolohi_h[i][j] << endl << "  "
-                 << funvalrehihilo_h[i][j] << "  "
-                 << funvalrelohilo_h[i][j] << endl << "  "
-                 << funvalrehilolo_h[i][j] << "  "
-                 << funvalrelololo_h[i][j] << endl << "  "
-                 << funvalimhihihi_h[i][j] << "  "
-                 << funvalimlohihi_h[i][j] << endl << "  "
-                 << funvalimhilohi_h[i][j] << "  "
-                 << funvalimlolohi_h[i][j] << endl << "  "
-                 << funvalimhihilo_h[i][j] << "  "
-                 << funvalimlohilo_h[i][j] << endl << "  "
-                 << funvalimhilolo_h[i][j] << "  "
-                 << funvalimlololo_h[i][j] << endl;
-            cout << "funval_d[" << i << "][" << j << "] : "
-                 << funvalrehihihi_d[i][j] << "  "
-                 << funvalrelohihi_d[i][j] << endl << "  "
-                 << funvalrehilohi_d[i][j] << "  "
-                 << funvalrelolohi_d[i][j] << endl << "  "
-                 << funvalrehihilo_d[i][j] << "  "
-                 << funvalrelohilo_d[i][j] << endl << "  "
-                 << funvalrehilolo_d[i][j] << "  "
-                 << funvalrelololo_d[i][j] << endl << "  "
-                 << funvalimhihihi_d[i][j] << "  "
-                 << funvalimlohihi_d[i][j] << endl << "  "
-                 << funvalimhilohi_d[i][j] << "  "
-                 << funvalimlolohi_d[i][j] << endl << "  "
-                 << funvalimhihilo_d[i][j] << "  "
-                 << funvalimlohilo_d[i][j] << endl << "  "
-                 << funvalimhilolo_d[i][j] << "  "
-                 << funvalimlololo_d[i][j] << endl;
+            if(vrblvl > 1)
+            {
+               cout << "funval_h[" << i << "][" << j << "] : "
+                    << funvalrehihihi_h[i][j] << "  "
+                    << funvalrelohihi_h[i][j] << endl << "  "
+                    << funvalrehilohi_h[i][j] << "  "
+                    << funvalrelolohi_h[i][j] << endl << "  "
+                    << funvalrehihilo_h[i][j] << "  "
+                    << funvalrelohilo_h[i][j] << endl << "  "
+                    << funvalrehilolo_h[i][j] << "  "
+                    << funvalrelololo_h[i][j] << endl << "  "
+                    << funvalimhihihi_h[i][j] << "  "
+                    << funvalimlohihi_h[i][j] << endl << "  "
+                    << funvalimhilohi_h[i][j] << "  "
+                    << funvalimlolohi_h[i][j] << endl << "  "
+                    << funvalimhihilo_h[i][j] << "  "
+                    << funvalimlohilo_h[i][j] << endl << "  "
+                    << funvalimhilolo_h[i][j] << "  "
+                    << funvalimlololo_h[i][j] << endl;
+               cout << "funval_d[" << i << "][" << j << "] : "
+                    << funvalrehihihi_d[i][j] << "  "
+                    << funvalrelohihi_d[i][j] << endl << "  "
+                    << funvalrehilohi_d[i][j] << "  "
+                    << funvalrelolohi_d[i][j] << endl << "  "
+                    << funvalrehihilo_d[i][j] << "  "
+                    << funvalrelohilo_d[i][j] << endl << "  "
+                    << funvalrehilolo_d[i][j] << "  "
+                    << funvalrelololo_d[i][j] << endl << "  "
+                    << funvalimhihihi_d[i][j] << "  "
+                    << funvalimlohihi_d[i][j] << endl << "  "
+                    << funvalimhilohi_d[i][j] << "  "
+                    << funvalimlolohi_d[i][j] << endl << "  "
+                    << funvalimhihilo_d[i][j] << "  "
+                    << funvalimlohilo_d[i][j] << endl << "  "
+                    << funvalimhilolo_d[i][j] << "  "
+                    << funvalimlololo_d[i][j] << endl;
+            }
             errsum += abs(funvalrehihihi_h[i][j] - funvalrehihihi_d[i][j])
                     + abs(funvalrelohihi_h[i][j] - funvalrelohihi_d[i][j])
                     + abs(funvalrehilohi_h[i][j] - funvalrehilohi_d[i][j])
@@ -1522,40 +1542,43 @@ void cmplx8_newton_qrstep
          {
             for(int k=0; k<dim; k++)
             {
-               cout << "jacval_h[" << i << "][" << j << "][" << k << "] : "
-                    << jacvalrehihihi_h[i][j][k] << "  "
-                    << jacvalrelohihi_h[i][j][k] << endl << "  "
-                    << jacvalrehilohi_h[i][j][k] << "  "
-                    << jacvalrelolohi_h[i][j][k] << endl << "  "
-                    << jacvalrehihilo_h[i][j][k] << "  "
-                    << jacvalrelohilo_h[i][j][k] << endl << "  "
-                    << jacvalrehilolo_h[i][j][k] << "  "
-                    << jacvalrelololo_h[i][j][k] << endl << "  "
-                    << jacvalimhihihi_h[i][j][k] << "  "
-                    << jacvalimlohihi_h[i][j][k] << endl << "  "
-                    << jacvalimhilohi_h[i][j][k] << "  "
-                    << jacvalimlolohi_h[i][j][k] << endl << "  "
-                    << jacvalimhihilo_h[i][j][k] << "  "
-                    << jacvalimlohilo_h[i][j][k] << endl << "  "
-                    << jacvalimhilolo_h[i][j][k] << "  "
-                    << jacvalimlololo_h[i][j][k] << endl;
-               cout << "jacval_d[" << i << "][" << j << "][" << k << "] : "
-                    << jacvalrehihihi_d[i][j][k] << "  "
-                    << jacvalrelohihi_d[i][j][k] << endl << "  "
-                    << jacvalrehilohi_d[i][j][k] << "  "
-                    << jacvalrelolohi_d[i][j][k] << endl << "  "
-                    << jacvalrehihilo_d[i][j][k] << "  "
-                    << jacvalrelohilo_d[i][j][k] << endl << "  "
-                    << jacvalrehilolo_d[i][j][k] << "  "
-                    << jacvalrelololo_d[i][j][k] << endl << "  "
-                    << jacvalimhihihi_d[i][j][k] << "  "
-                    << jacvalimlohihi_d[i][j][k] << endl << "  "
-                    << jacvalimhilohi_d[i][j][k] << "  "
-                    << jacvalimlolohi_d[i][j][k] << endl << "  "
-                    << jacvalimhihilo_d[i][j][k] << "  "
-                    << jacvalimlohilo_d[i][j][k] << endl << "  "
-                    << jacvalimhilolo_d[i][j][k] << "  "
-                    << jacvalimlololo_d[i][j][k] << endl;
+               if(vrblvl > 1)
+               {
+                  cout << "jacval_h[" << i << "][" << j << "][" << k << "] : "
+                       << jacvalrehihihi_h[i][j][k] << "  "
+                       << jacvalrelohihi_h[i][j][k] << endl << "  "
+                       << jacvalrehilohi_h[i][j][k] << "  "
+                       << jacvalrelolohi_h[i][j][k] << endl << "  "
+                       << jacvalrehihilo_h[i][j][k] << "  "
+                       << jacvalrelohilo_h[i][j][k] << endl << "  "
+                       << jacvalrehilolo_h[i][j][k] << "  "
+                       << jacvalrelololo_h[i][j][k] << endl << "  "
+                       << jacvalimhihihi_h[i][j][k] << "  "
+                       << jacvalimlohihi_h[i][j][k] << endl << "  "
+                       << jacvalimhilohi_h[i][j][k] << "  "
+                       << jacvalimlolohi_h[i][j][k] << endl << "  "
+                       << jacvalimhihilo_h[i][j][k] << "  "
+                       << jacvalimlohilo_h[i][j][k] << endl << "  "
+                       << jacvalimhilolo_h[i][j][k] << "  "
+                       << jacvalimlololo_h[i][j][k] << endl;
+                  cout << "jacval_d[" << i << "][" << j << "][" << k << "] : "
+                       << jacvalrehihihi_d[i][j][k] << "  "
+                       << jacvalrelohihi_d[i][j][k] << endl << "  "
+                       << jacvalrehilohi_d[i][j][k] << "  "
+                       << jacvalrelolohi_d[i][j][k] << endl << "  "
+                       << jacvalrehihilo_d[i][j][k] << "  "
+                       << jacvalrelohilo_d[i][j][k] << endl << "  "
+                       << jacvalrehilolo_d[i][j][k] << "  "
+                       << jacvalrelololo_d[i][j][k] << endl << "  "
+                       << jacvalimhihihi_d[i][j][k] << "  "
+                       << jacvalimlohihi_d[i][j][k] << endl << "  "
+                       << jacvalimhilohi_d[i][j][k] << "  "
+                       << jacvalimlolohi_d[i][j][k] << endl << "  "
+                       << jacvalimhihilo_d[i][j][k] << "  "
+                       << jacvalimlohilo_d[i][j][k] << endl << "  "
+                       << jacvalimhilolo_d[i][j][k] << "  "
+                       << jacvalimlololo_d[i][j][k] << endl;
+               }
          errsum += abs(jacvalrehihihi_h[i][j][k] - jacvalrehihihi_d[i][j][k])
                  + abs(jacvalrelohihi_h[i][j][k] - jacvalrelohihi_d[i][j][k])
                  + abs(jacvalrehilohi_h[i][j][k] - jacvalrehilohi_d[i][j][k])
@@ -1582,56 +1605,59 @@ void cmplx8_newton_qrstep
       {
          for(int j=0; j<dim; j++)
          {
-            cout << "rhs_h[" << i << "][" << j << "] : "
-                 << rhsrehihihi_h[i][j] << "  "
-                 << rhsrelohihi_h[i][j] << endl << "  "
-                 << rhsrehilohi_h[i][j] << "  "
-                 << rhsrelolohi_h[i][j] << endl << "  "
-                 << rhsrehihilo_h[i][j] << "  "
-                 << rhsrelohilo_h[i][j] << endl << "  "
-                 << rhsrehilolo_h[i][j] << "  "
-                 << rhsrelololo_h[i][j] << endl << "  "
-                 << rhsimhihihi_h[i][j] << "  "
-                 << rhsimlohihi_h[i][j] << endl << "  "
-                 << rhsimhilohi_h[i][j] << "  "
-                 << rhsimlolohi_h[i][j] << endl << "  "
-                 << rhsimhihilo_h[i][j] << "  "
-                 << rhsimlohilo_h[i][j] << endl << "  "
-                 << rhsimhilolo_h[i][j] << "  "
-                 << rhsimlololo_h[i][j] << endl;
-            cout << "rhs_d[" << i << "][" << j << "] : "
-                 << rhsrehihihi_d[i][j] << "  "
-                 << rhsrelohihi_d[i][j] << endl << "  "
-                 << rhsrehilohi_d[i][j] << "  "
-                 << rhsrelolohi_d[i][j] << endl << "  "
-                 << rhsrehihilo_d[i][j] << "  "
-                 << rhsrelohilo_d[i][j] << endl << "  "
-                 << rhsrehilolo_d[i][j] << "  "
-                 << rhsrelololo_d[i][j] << endl << "  "
-                 << rhsimhihihi_d[i][j] << "  "
-                 << rhsimlohihi_d[i][j] << endl << "  "
-                 << rhsimhilohi_d[i][j] << "  "
-                 << rhsimlolohi_d[i][j] << endl << "  "
-                 << rhsimhihilo_d[i][j] << "  "
-                 << rhsimlohilo_d[i][j] << endl << "  "
-                 << rhsimhilolo_d[i][j] << "  "
-                 << rhsimlololo_d[i][j] << endl;
-            errsum += abs(rhsrehihihi_h[i][j] - rhsrehihihi_d[i][j])
-                    + abs(rhsrelohihi_h[i][j] - rhsrelohihi_d[i][j])
-                    + abs(rhsrehilohi_h[i][j] - rhsrehilohi_d[i][j])
-                    + abs(rhsrelolohi_h[i][j] - rhsrelolohi_d[i][j])
-                    + abs(rhsrehihilo_h[i][j] - rhsrehihilo_d[i][j])
-                    + abs(rhsrelohilo_h[i][j] - rhsrelohilo_d[i][j])
-                    + abs(rhsrehilolo_h[i][j] - rhsrehilolo_d[i][j])
-                    + abs(rhsrelololo_h[i][j] - rhsrelololo_d[i][j])
-                    + abs(rhsimhihihi_h[i][j] - rhsimhihihi_d[i][j])
-                    + abs(rhsimlohihi_h[i][j] - rhsimlohihi_d[i][j])
-                    + abs(rhsimhilohi_h[i][j] - rhsimhilohi_d[i][j])
-                    + abs(rhsimlolohi_h[i][j] - rhsimlolohi_d[i][j])
-                    + abs(rhsimhihilo_h[i][j] - rhsimhihilo_d[i][j])
-                    + abs(rhsimlohilo_h[i][j] - rhsimlohilo_d[i][j])
-                    + abs(rhsimhilolo_h[i][j] - rhsimhilolo_d[i][j])
-                    + abs(rhsimlololo_h[i][j] - rhsimlololo_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "rhs_h[" << i << "][" << j << "] : "
+                    << rhsrehihihi_h[i][j] << "  "
+                    << rhsrelohihi_h[i][j] << endl << "  "
+                    << rhsrehilohi_h[i][j] << "  "
+                    << rhsrelolohi_h[i][j] << endl << "  "
+                    << rhsrehihilo_h[i][j] << "  "
+                    << rhsrelohilo_h[i][j] << endl << "  "
+                    << rhsrehilolo_h[i][j] << "  "
+                    << rhsrelololo_h[i][j] << endl << "  "
+                    << rhsimhihihi_h[i][j] << "  "
+                    << rhsimlohihi_h[i][j] << endl << "  "
+                    << rhsimhilohi_h[i][j] << "  "
+                    << rhsimlolohi_h[i][j] << endl << "  "
+                    << rhsimhihilo_h[i][j] << "  "
+                    << rhsimlohilo_h[i][j] << endl << "  "
+                    << rhsimhilolo_h[i][j] << "  "
+                    << rhsimlololo_h[i][j] << endl;
+               cout << "rhs_d[" << i << "][" << j << "] : "
+                    << rhsrehihihi_d[i][j] << "  "
+                    << rhsrelohihi_d[i][j] << endl << "  "
+                    << rhsrehilohi_d[i][j] << "  "
+                    << rhsrelolohi_d[i][j] << endl << "  "
+                    << rhsrehihilo_d[i][j] << "  "
+                    << rhsrelohilo_d[i][j] << endl << "  "
+                    << rhsrehilolo_d[i][j] << "  "
+                    << rhsrelololo_d[i][j] << endl << "  "
+                    << rhsimhihihi_d[i][j] << "  "
+                    << rhsimlohihi_d[i][j] << endl << "  "
+                    << rhsimhilohi_d[i][j] << "  "
+                    << rhsimlolohi_d[i][j] << endl << "  "
+                    << rhsimhihilo_d[i][j] << "  "
+                    << rhsimlohilo_d[i][j] << endl << "  "
+                    << rhsimhilolo_d[i][j] << "  "
+                    << rhsimlololo_d[i][j] << endl;
+           }
+           errsum += abs(rhsrehihihi_h[i][j] - rhsrehihihi_d[i][j])
+                   + abs(rhsrelohihi_h[i][j] - rhsrelohihi_d[i][j])
+                   + abs(rhsrehilohi_h[i][j] - rhsrehilohi_d[i][j])
+                   + abs(rhsrelolohi_h[i][j] - rhsrelolohi_d[i][j])
+                   + abs(rhsrehihilo_h[i][j] - rhsrehihilo_d[i][j])
+                   + abs(rhsrelohilo_h[i][j] - rhsrelohilo_d[i][j])
+                   + abs(rhsrehilolo_h[i][j] - rhsrehilolo_d[i][j])
+                   + abs(rhsrelololo_h[i][j] - rhsrelololo_d[i][j])
+                   + abs(rhsimhihihi_h[i][j] - rhsimhihihi_d[i][j])
+                   + abs(rhsimlohihi_h[i][j] - rhsimlohihi_d[i][j])
+                   + abs(rhsimhilohi_h[i][j] - rhsimhilohi_d[i][j])
+                   + abs(rhsimlolohi_h[i][j] - rhsimlolohi_d[i][j])
+                   + abs(rhsimhihilo_h[i][j] - rhsimhihilo_d[i][j])
+                   + abs(rhsimlohilo_h[i][j] - rhsimlohilo_d[i][j])
+                   + abs(rhsimhilolo_h[i][j] - rhsimhilolo_d[i][j])
+                   + abs(rhsimlololo_h[i][j] - rhsimlololo_d[i][j]);
          }
       }
       cout << "sum of errors : " << errsum << endl;
@@ -1839,112 +1865,118 @@ void cmplx8_newton_qrstep
       for(int i=0; i<dim; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "Q_h[" << i << "][" << j << "] : "
-                  << Qrehihihi_h[i][j] << "  "
-                  << Qrelohihi_h[i][j] << endl << "  "
-                  << Qrehilohi_h[i][j] << "  "
-                  << Qrelolohi_h[i][j] << endl << "  "
-                  << Qrehihilo_h[i][j] << "  "
-                  << Qrelohilo_h[i][j] << endl << "  "
-                  << Qrehilolo_h[i][j] << "  "
-                  << Qrelololo_h[i][j] << endl << "  "
-                  << Qimhihihi_h[i][j] << "  "
-                  << Qimlohihi_h[i][j] << endl << "  "
-                  << Qimhilohi_h[i][j] << "  "
-                  << Qimlolohi_h[i][j] << endl << "  "
-                  << Qimhihilo_h[i][j] << "  "
-                  << Qimlohilo_h[i][j] << endl << "  "
-                  << Qimhilolo_h[i][j] << "  "
-                  << Qimlololo_h[i][j] << endl;
-             cout << "Q_d[" << i << "][" << j << "] : "
-                  << Qrehihihi_d[i][j] << "  "
-                  << Qrelohihi_d[i][j] << endl << "  "
-                  << Qrehilohi_d[i][j] << "  "
-                  << Qrelolohi_d[i][j] << endl << "  "
-                  << Qrehihilo_d[i][j] << "  "
-                  << Qrelohilo_d[i][j] << endl << "  "
-                  << Qrehilolo_d[i][j] << "  "
-                  << Qrelololo_d[i][j] << endl << "  "
-                  << Qimhihihi_d[i][j] << "  "
-                  << Qimlohihi_d[i][j] << endl << "  "
-                  << Qimhilohi_d[i][j] << "  "
-                  << Qimlolohi_d[i][j] << endl << "  "
-                  << Qimhihilo_d[i][j] << "  "
-                  << Qimlohilo_d[i][j] << endl << "  "
-                  << Qimhilolo_d[i][j] << "  "
-                  << Qimlololo_d[i][j] << endl;
-             errsum += abs(Qrehihihi_h[i][j] - Qrehihihi_d[i][j])
-                     + abs(Qrelohihi_h[i][j] - Qrelohihi_d[i][j])
-                     + abs(Qrehilohi_h[i][j] - Qrehilohi_d[i][j])
-                     + abs(Qrelolohi_h[i][j] - Qrelolohi_d[i][j])
-                     + abs(Qrehihilo_h[i][j] - Qrehihilo_d[i][j])
-                     + abs(Qrelohilo_h[i][j] - Qrelohilo_d[i][j])
-                     + abs(Qrehilolo_h[i][j] - Qrehilolo_d[i][j])
-                     + abs(Qrelololo_h[i][j] - Qrelololo_d[i][j])
-                     + abs(Qimhihihi_h[i][j] - Qimhihihi_d[i][j])
-                     + abs(Qimlohihi_h[i][j] - Qimlohihi_d[i][j])
-                     + abs(Qimhilohi_h[i][j] - Qimhilohi_d[i][j])
-                     + abs(Qimlolohi_h[i][j] - Qimlolohi_d[i][j])
-                     + abs(Qimhihilo_h[i][j] - Qimhihilo_d[i][j])
-                     + abs(Qimlohilo_h[i][j] - Qimlohilo_d[i][j])
-                     + abs(Qimhilolo_h[i][j] - Qimhilolo_d[i][j])
-                     + abs(Qimlololo_h[i][j] - Qimlololo_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "Q_h[" << i << "][" << j << "] : "
+                    << Qrehihihi_h[i][j] << "  "
+                    << Qrelohihi_h[i][j] << endl << "  "
+                    << Qrehilohi_h[i][j] << "  "
+                    << Qrelolohi_h[i][j] << endl << "  "
+                    << Qrehihilo_h[i][j] << "  "
+                    << Qrelohilo_h[i][j] << endl << "  "
+                    << Qrehilolo_h[i][j] << "  "
+                    << Qrelololo_h[i][j] << endl << "  "
+                    << Qimhihihi_h[i][j] << "  "
+                    << Qimlohihi_h[i][j] << endl << "  "
+                    << Qimhilohi_h[i][j] << "  "
+                    << Qimlolohi_h[i][j] << endl << "  "
+                    << Qimhihilo_h[i][j] << "  "
+                    << Qimlohilo_h[i][j] << endl << "  "
+                    << Qimhilolo_h[i][j] << "  "
+                    << Qimlololo_h[i][j] << endl;
+               cout << "Q_d[" << i << "][" << j << "] : "
+                    << Qrehihihi_d[i][j] << "  "
+                    << Qrelohihi_d[i][j] << endl << "  "
+                    << Qrehilohi_d[i][j] << "  "
+                    << Qrelolohi_d[i][j] << endl << "  "
+                    << Qrehihilo_d[i][j] << "  "
+                    << Qrelohilo_d[i][j] << endl << "  "
+                    << Qrehilolo_d[i][j] << "  "
+                    << Qrelololo_d[i][j] << endl << "  "
+                    << Qimhihihi_d[i][j] << "  "
+                    << Qimlohihi_d[i][j] << endl << "  "
+                    << Qimhilohi_d[i][j] << "  "
+                    << Qimlolohi_d[i][j] << endl << "  "
+                    << Qimhihilo_d[i][j] << "  "
+                    << Qimlohilo_d[i][j] << endl << "  "
+                    << Qimhilolo_d[i][j] << "  "
+                    << Qimlololo_d[i][j] << endl;
+            }
+            errsum += abs(Qrehihihi_h[i][j] - Qrehihihi_d[i][j])
+                    + abs(Qrelohihi_h[i][j] - Qrelohihi_d[i][j])
+                    + abs(Qrehilohi_h[i][j] - Qrehilohi_d[i][j])
+                    + abs(Qrelolohi_h[i][j] - Qrelolohi_d[i][j])
+                    + abs(Qrehihilo_h[i][j] - Qrehihilo_d[i][j])
+                    + abs(Qrelohilo_h[i][j] - Qrelohilo_d[i][j])
+                    + abs(Qrehilolo_h[i][j] - Qrehilolo_d[i][j])
+                    + abs(Qrelololo_h[i][j] - Qrelololo_d[i][j])
+                    + abs(Qimhihihi_h[i][j] - Qimhihihi_d[i][j])
+                    + abs(Qimlohihi_h[i][j] - Qimlohihi_d[i][j])
+                    + abs(Qimhilohi_h[i][j] - Qimhilohi_d[i][j])
+                    + abs(Qimlolohi_h[i][j] - Qimlolohi_d[i][j])
+                    + abs(Qimhihilo_h[i][j] - Qimhihilo_d[i][j])
+                    + abs(Qimlohilo_h[i][j] - Qimlohilo_d[i][j])
+                    + abs(Qimhilolo_h[i][j] - Qimhilolo_d[i][j])
+                    + abs(Qimlololo_h[i][j] - Qimlololo_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
       cout << "comparing CPU with GPU matrices R ... " << endl;
       for(int i=0; i<dim; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "R_h[" << i << "][" << j << "] : "
-                  << Rrehihihi_h[i][j] << "  "
-                  << Rrelohihi_h[i][j] << endl << "  "
-                  << Rrehilohi_h[i][j] << "  "
-                  << Rrelolohi_h[i][j] << endl << "  "
-                  << Rrehihilo_h[i][j] << "  "
-                  << Rrelohilo_h[i][j] << endl << "  "
-                  << Rrehilolo_h[i][j] << "  "
-                  << Rrelololo_h[i][j] << endl << "  "
-                  << Rimhihihi_h[i][j] << "  "
-                  << Rimlohihi_h[i][j] << endl << "  "
-                  << Rimhilohi_h[i][j] << "  "
-                  << Rimlolohi_h[i][j] << endl << "  "
-                  << Rimhihilo_h[i][j] << "  "
-                  << Rimlohilo_h[i][j] << endl << "  "
-                  << Rimhilolo_h[i][j] << "  "
-                  << Rimlololo_h[i][j] << endl;
-             cout << "R_d[" << i << "][" << j << "] : "
-                  << Rrehihihi_d[i][j] << "  "
-                  << Rrelohihi_d[i][j] << endl << "  "
-                  << Rrehilohi_d[i][j] << "  "
-                  << Rrelolohi_d[i][j] << endl << "  "
-                  << Rrehihilo_d[i][j] << "  "
-                  << Rrelohilo_d[i][j] << endl << "  "
-                  << Rrehilolo_d[i][j] << "  "
-                  << Rrelololo_d[i][j] << endl << "  "
-                  << Rimhihihi_d[i][j] << "  "
-                  << Rimlohihi_d[i][j] << endl << "  "
-                  << Rimhilohi_d[i][j] << "  "
-                  << Rimlolohi_d[i][j] << endl << "  "
-                  << Rimhihilo_d[i][j] << "  "
-                  << Rimlohilo_d[i][j] << endl << "  "
-                  << Rimhilolo_d[i][j] << "  "
-                  << Rimlololo_d[i][j] << endl;
-             errsum += abs(Rrehihihi_h[i][j] - Rrehihihi_d[i][j])
-                     + abs(Rrelohihi_h[i][j] - Rrelohihi_d[i][j])
-                     + abs(Rrehilohi_h[i][j] - Rrehilohi_d[i][j])
-                     + abs(Rrelolohi_h[i][j] - Rrelolohi_d[i][j])
-                     + abs(Rrehihilo_h[i][j] - Rrehihilo_d[i][j])
-                     + abs(Rrelohilo_h[i][j] - Rrelohilo_d[i][j])
-                     + abs(Rrehilolo_h[i][j] - Rrehilolo_d[i][j])
-                     + abs(Rrelololo_h[i][j] - Rrelololo_d[i][j])
-                     + abs(Rimhihihi_h[i][j] - Rimhihihi_d[i][j])
-                     + abs(Rimlohihi_h[i][j] - Rimlohihi_d[i][j])
-                     + abs(Rimhilohi_h[i][j] - Rimhilohi_d[i][j])
-                     + abs(Rimlolohi_h[i][j] - Rimlolohi_d[i][j])
-                     + abs(Rimhihilo_h[i][j] - Rimhihilo_d[i][j])
-                     + abs(Rimlohilo_h[i][j] - Rimlohilo_d[i][j])
-                     + abs(Rimhilolo_h[i][j] - Rimhilolo_d[i][j])
-                     + abs(Rimlololo_h[i][j] - Rimlololo_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "R_h[" << i << "][" << j << "] : "
+                    << Rrehihihi_h[i][j] << "  "
+                    << Rrelohihi_h[i][j] << endl << "  "
+                    << Rrehilohi_h[i][j] << "  "
+                    << Rrelolohi_h[i][j] << endl << "  "
+                    << Rrehihilo_h[i][j] << "  "
+                    << Rrelohilo_h[i][j] << endl << "  "
+                    << Rrehilolo_h[i][j] << "  "
+                    << Rrelololo_h[i][j] << endl << "  "
+                    << Rimhihihi_h[i][j] << "  "
+                    << Rimlohihi_h[i][j] << endl << "  "
+                    << Rimhilohi_h[i][j] << "  "
+                    << Rimlolohi_h[i][j] << endl << "  "
+                    << Rimhihilo_h[i][j] << "  "
+                    << Rimlohilo_h[i][j] << endl << "  "
+                    << Rimhilolo_h[i][j] << "  "
+                    << Rimlololo_h[i][j] << endl;
+               cout << "R_d[" << i << "][" << j << "] : "
+                    << Rrehihihi_d[i][j] << "  "
+                    << Rrelohihi_d[i][j] << endl << "  "
+                    << Rrehilohi_d[i][j] << "  "
+                    << Rrelolohi_d[i][j] << endl << "  "
+                    << Rrehihilo_d[i][j] << "  "
+                    << Rrelohilo_d[i][j] << endl << "  "
+                    << Rrehilolo_d[i][j] << "  "
+                    << Rrelololo_d[i][j] << endl << "  "
+                    << Rimhihihi_d[i][j] << "  "
+                    << Rimlohihi_d[i][j] << endl << "  "
+                    << Rimhilohi_d[i][j] << "  "
+                    << Rimlolohi_d[i][j] << endl << "  "
+                    << Rimhihilo_d[i][j] << "  "
+                    << Rimlohilo_d[i][j] << endl << "  "
+                    << Rimhilolo_d[i][j] << "  "
+                    << Rimlololo_d[i][j] << endl;
+            }
+            errsum += abs(Rrehihihi_h[i][j] - Rrehihihi_d[i][j])
+                    + abs(Rrelohihi_h[i][j] - Rrelohihi_d[i][j])
+                    + abs(Rrehilohi_h[i][j] - Rrehilohi_d[i][j])
+                    + abs(Rrelolohi_h[i][j] - Rrelolohi_d[i][j])
+                    + abs(Rrehihilo_h[i][j] - Rrehihilo_d[i][j])
+                    + abs(Rrelohilo_h[i][j] - Rrelohilo_d[i][j])
+                    + abs(Rrehilolo_h[i][j] - Rrehilolo_d[i][j])
+                    + abs(Rrelololo_h[i][j] - Rrelololo_d[i][j])
+                    + abs(Rimhihihi_h[i][j] - Rimhihihi_d[i][j])
+                    + abs(Rimlohihi_h[i][j] - Rimlohihi_d[i][j])
+                    + abs(Rimhilohi_h[i][j] - Rimhilohi_d[i][j])
+                    + abs(Rimlolohi_h[i][j] - Rimlolohi_d[i][j])
+                    + abs(Rimhihilo_h[i][j] - Rimhihilo_d[i][j])
+                    + abs(Rimlohilo_h[i][j] - Rimlohilo_d[i][j])
+                    + abs(Rimhilolo_h[i][j] - Rimhilolo_d[i][j])
+                    + abs(Rimlololo_h[i][j] - Rimlololo_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
       errsum = 0.0;
@@ -1952,56 +1984,59 @@ void cmplx8_newton_qrstep
       for(int i=0; i<degp1; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "urhs_h[" << i << "][" << j << "] : "
-                  << urhsrehihihi_h[i][j] << "  "
-                  << urhsrelohihi_h[i][j] << endl << "  "
-                  << urhsrehilohi_h[i][j] << "  "
-                  << urhsrelolohi_h[i][j] << endl << "  "
-                  << urhsrehihilo_h[i][j] << "  "
-                  << urhsrelohilo_h[i][j] << endl << "  "
-                  << urhsrehilolo_h[i][j] << "  "
-                  << urhsrelololo_h[i][j] << endl << "  "
-                  << urhsimhihihi_h[i][j] << "  "
-                  << urhsimlohihi_h[i][j] << endl << "  "
-                  << urhsimhilohi_h[i][j] << "  "
-                  << urhsimlolohi_h[i][j] << endl << "  "
-                  << urhsimhihilo_h[i][j] << "  "
-                  << urhsimlohilo_h[i][j] << endl << "  "
-                  << urhsimhilolo_h[i][j] << "  "
-                  << urhsimlololo_h[i][j] << endl;
-             cout << "urhs_d[" << i << "][" << j << "] : "
-                  << urhsrehihihi_d[i][j] << "  "
-                  << urhsrelohihi_d[i][j] << endl << "  "
-                  << urhsrehilohi_d[i][j] << "  "
-                  << urhsrelolohi_d[i][j] << endl << "  "
-                  << urhsrehihilo_d[i][j] << "  "
-                  << urhsrelohilo_d[i][j] << endl << "  "
-                  << urhsrehilolo_d[i][j] << "  "
-                  << urhsrelololo_d[i][j] << endl << "  "
-                  << urhsimhihihi_d[i][j] << "  "
-                  << urhsimlohihi_d[i][j] << endl << "  "
-                  << urhsimhilohi_d[i][j] << "  "
-                  << urhsimlolohi_d[i][j] << endl << "  "
-                  << urhsimhihilo_d[i][j] << "  "
-                  << urhsimlohilo_d[i][j] << endl << "  "
-                  << urhsimhilolo_d[i][j] << "  "
-                  << urhsimlololo_d[i][j] << endl;
-             errsum += abs(urhsrehihihi_h[i][j] - urhsrehihihi_d[i][j])
-                     + abs(urhsrelohihi_h[i][j] - urhsrelohihi_d[i][j])
-                     + abs(urhsrehilohi_h[i][j] - urhsrehilohi_d[i][j])
-                     + abs(urhsrelolohi_h[i][j] - urhsrelolohi_d[i][j])
-                     + abs(urhsrehihilo_h[i][j] - urhsrehihilo_d[i][j])
-                     + abs(urhsrelohilo_h[i][j] - urhsrelohilo_d[i][j])
-                     + abs(urhsrehilolo_h[i][j] - urhsrehilolo_d[i][j])
-                     + abs(urhsrelololo_h[i][j] - urhsrelololo_d[i][j])
-                     + abs(urhsimhihihi_h[i][j] - urhsimhihihi_d[i][j])
-                     + abs(urhsimlohihi_h[i][j] - urhsimlohihi_d[i][j])
-                     + abs(urhsimhilohi_h[i][j] - urhsimhilohi_d[i][j])
-                     + abs(urhsimlolohi_h[i][j] - urhsimlolohi_d[i][j])
-                     + abs(urhsimhihilo_h[i][j] - urhsimhihilo_d[i][j])
-                     + abs(urhsimlohilo_h[i][j] - urhsimlohilo_d[i][j])
-                     + abs(urhsimhilolo_h[i][j] - urhsimhilolo_d[i][j])
-                     + abs(urhsimlololo_h[i][j] - urhsimlololo_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "urhs_h[" << i << "][" << j << "] : "
+                    << urhsrehihihi_h[i][j] << "  "
+                    << urhsrelohihi_h[i][j] << endl << "  "
+                    << urhsrehilohi_h[i][j] << "  "
+                    << urhsrelolohi_h[i][j] << endl << "  "
+                    << urhsrehihilo_h[i][j] << "  "
+                    << urhsrelohilo_h[i][j] << endl << "  "
+                    << urhsrehilolo_h[i][j] << "  "
+                    << urhsrelololo_h[i][j] << endl << "  "
+                    << urhsimhihihi_h[i][j] << "  "
+                    << urhsimlohihi_h[i][j] << endl << "  "
+                    << urhsimhilohi_h[i][j] << "  "
+                    << urhsimlolohi_h[i][j] << endl << "  "
+                    << urhsimhihilo_h[i][j] << "  "
+                    << urhsimlohilo_h[i][j] << endl << "  "
+                    << urhsimhilolo_h[i][j] << "  "
+                    << urhsimlololo_h[i][j] << endl;
+               cout << "urhs_d[" << i << "][" << j << "] : "
+                    << urhsrehihihi_d[i][j] << "  "
+                    << urhsrelohihi_d[i][j] << endl << "  "
+                    << urhsrehilohi_d[i][j] << "  "
+                    << urhsrelolohi_d[i][j] << endl << "  "
+                    << urhsrehihilo_d[i][j] << "  "
+                    << urhsrelohilo_d[i][j] << endl << "  "
+                    << urhsrehilolo_d[i][j] << "  "
+                    << urhsrelololo_d[i][j] << endl << "  "
+                    << urhsimhihihi_d[i][j] << "  "
+                    << urhsimlohihi_d[i][j] << endl << "  "
+                    << urhsimhilohi_d[i][j] << "  "
+                    << urhsimlolohi_d[i][j] << endl << "  "
+                    << urhsimhihilo_d[i][j] << "  "
+                    << urhsimlohilo_d[i][j] << endl << "  "
+                    << urhsimhilolo_d[i][j] << "  "
+                    << urhsimlololo_d[i][j] << endl;
+            }
+            errsum += abs(urhsrehihihi_h[i][j] - urhsrehihihi_d[i][j])
+                    + abs(urhsrelohihi_h[i][j] - urhsrelohihi_d[i][j])
+                    + abs(urhsrehilohi_h[i][j] - urhsrehilohi_d[i][j])
+                    + abs(urhsrelolohi_h[i][j] - urhsrelolohi_d[i][j])
+                    + abs(urhsrehihilo_h[i][j] - urhsrehihilo_d[i][j])
+                    + abs(urhsrelohilo_h[i][j] - urhsrelohilo_d[i][j])
+                    + abs(urhsrehilolo_h[i][j] - urhsrehilolo_d[i][j])
+                    + abs(urhsrelololo_h[i][j] - urhsrelololo_d[i][j])
+                    + abs(urhsimhihihi_h[i][j] - urhsimhihihi_d[i][j])
+                    + abs(urhsimlohihi_h[i][j] - urhsimlohihi_d[i][j])
+                    + abs(urhsimhilohi_h[i][j] - urhsimhilohi_d[i][j])
+                    + abs(urhsimlolohi_h[i][j] - urhsimlolohi_d[i][j])
+                    + abs(urhsimhihilo_h[i][j] - urhsimhihilo_d[i][j])
+                    + abs(urhsimlohilo_h[i][j] - urhsimlohilo_d[i][j])
+                    + abs(urhsimhilolo_h[i][j] - urhsimhilolo_d[i][j])
+                    + abs(urhsimlololo_h[i][j] - urhsimlololo_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
       errsum = 0.0;
@@ -2009,56 +2044,59 @@ void cmplx8_newton_qrstep
       for(int i=0; i<degp1; i++)
          for(int j=0; j<dim; j++)
          {
-             cout << "sol_h[" << i << "][" << j << "] : "
-                  << solrehihihi_h[i][j] << "  "
-                  << solrelohihi_h[i][j] << endl << "  "
-                  << solrehilohi_h[i][j] << "  "
-                  << solrelolohi_h[i][j] << endl << "  "
-                  << solrehihilo_h[i][j] << "  "
-                  << solrelohilo_h[i][j] << endl << "  "
-                  << solrehilolo_h[i][j] << "  "
-                  << solrelololo_h[i][j] << endl << "  "
-                  << solimhihihi_h[i][j] << "  "
-                  << solimlohihi_h[i][j] << endl << "  "
-                  << solimhilohi_h[i][j] << "  "
-                  << solimlolohi_h[i][j] << endl << "  "
-                  << solimhihilo_h[i][j] << "  "
-                  << solimlohilo_h[i][j] << endl << "  "
-                  << solimhilolo_h[i][j] << "  "
-                  << solimlololo_h[i][j] << endl;
-             cout << "sol_d[" << i << "][" << j << "] : "
-                  << solrehihihi_d[i][j] << "  "
-                  << solrelohihi_d[i][j] << endl << "  "
-                  << solrehilohi_d[i][j] << "  "
-                  << solrelolohi_d[i][j] << endl << "  "
-                  << solrehihilo_d[i][j] << "  "
-                  << solrelohilo_d[i][j] << endl << "  "
-                  << solrehilolo_d[i][j] << "  "
-                  << solrelololo_d[i][j] << endl << "  "
-                  << solimhihihi_d[i][j] << "  "
-                  << solimlohihi_d[i][j] << endl << "  "
-                  << solimhilohi_d[i][j] << "  "
-                  << solimlolohi_d[i][j] << endl << "  "
-                  << solimhihilo_d[i][j] << "  "
-                  << solimlohilo_d[i][j] << endl << "  "
-                  << solimhilolo_d[i][j] << "  "
-                  << solimlololo_d[i][j] << endl;
-             errsum += abs(solrehihihi_h[i][j] - solrehihihi_d[i][j])
-                     + abs(solrelohihi_h[i][j] - solrelohihi_d[i][j])
-                     + abs(solrehilohi_h[i][j] - solrehilohi_d[i][j])
-                     + abs(solrelolohi_h[i][j] - solrelolohi_d[i][j])
-                     + abs(solrehihilo_h[i][j] - solrehihilo_d[i][j])
-                     + abs(solrelohilo_h[i][j] - solrelohilo_d[i][j])
-                     + abs(solrehilolo_h[i][j] - solrehilolo_d[i][j])
-                     + abs(solrelololo_h[i][j] - solrelololo_d[i][j])
-                     + abs(solimhihihi_h[i][j] - solimhihihi_d[i][j])
-                     + abs(solimlohihi_h[i][j] - solimlohihi_d[i][j])
-                     + abs(solimhilohi_h[i][j] - solimhilohi_d[i][j])
-                     + abs(solimlolohi_h[i][j] - solimlolohi_d[i][j])
-                     + abs(solimhihilo_h[i][j] - solimhihilo_d[i][j])
-                     + abs(solimlohilo_h[i][j] - solimlohilo_d[i][j])
-                     + abs(solimhilolo_h[i][j] - solimhilolo_d[i][j])
-                     + abs(solimlololo_h[i][j] - solimlololo_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "sol_h[" << i << "][" << j << "] : "
+                    << solrehihihi_h[i][j] << "  "
+                    << solrelohihi_h[i][j] << endl << "  "
+                    << solrehilohi_h[i][j] << "  "
+                    << solrelolohi_h[i][j] << endl << "  "
+                    << solrehihilo_h[i][j] << "  "
+                    << solrelohilo_h[i][j] << endl << "  "
+                    << solrehilolo_h[i][j] << "  "
+                    << solrelololo_h[i][j] << endl << "  "
+                    << solimhihihi_h[i][j] << "  "
+                    << solimlohihi_h[i][j] << endl << "  "
+                    << solimhilohi_h[i][j] << "  "
+                    << solimlolohi_h[i][j] << endl << "  "
+                    << solimhihilo_h[i][j] << "  "
+                    << solimlohilo_h[i][j] << endl << "  "
+                    << solimhilolo_h[i][j] << "  "
+                    << solimlololo_h[i][j] << endl;
+               cout << "sol_d[" << i << "][" << j << "] : "
+                    << solrehihihi_d[i][j] << "  "
+                    << solrelohihi_d[i][j] << endl << "  "
+                    << solrehilohi_d[i][j] << "  "
+                    << solrelolohi_d[i][j] << endl << "  "
+                    << solrehihilo_d[i][j] << "  "
+                    << solrelohilo_d[i][j] << endl << "  "
+                    << solrehilolo_d[i][j] << "  "
+                    << solrelololo_d[i][j] << endl << "  "
+                    << solimhihihi_d[i][j] << "  "
+                    << solimlohihi_d[i][j] << endl << "  "
+                    << solimhilohi_d[i][j] << "  "
+                    << solimlolohi_d[i][j] << endl << "  "
+                    << solimhihilo_d[i][j] << "  "
+                    << solimlohilo_d[i][j] << endl << "  "
+                    << solimhilolo_d[i][j] << "  "
+                    << solimlololo_d[i][j] << endl;
+            }
+            errsum += abs(solrehihihi_h[i][j] - solrehihihi_d[i][j])
+                    + abs(solrelohihi_h[i][j] - solrelohihi_d[i][j])
+                    + abs(solrehilohi_h[i][j] - solrehilohi_d[i][j])
+                    + abs(solrelolohi_h[i][j] - solrelolohi_d[i][j])
+                    + abs(solrehihilo_h[i][j] - solrehihilo_d[i][j])
+                    + abs(solrelohilo_h[i][j] - solrelohilo_d[i][j])
+                    + abs(solrehilolo_h[i][j] - solrehilolo_d[i][j])
+                    + abs(solrelololo_h[i][j] - solrelololo_d[i][j])
+                    + abs(solimhihihi_h[i][j] - solimhihihi_d[i][j])
+                    + abs(solimlohihi_h[i][j] - solimlohihi_d[i][j])
+                    + abs(solimhilohi_h[i][j] - solimhilohi_d[i][j])
+                    + abs(solimlolohi_h[i][j] - solimlolohi_d[i][j])
+                    + abs(solimhihilo_h[i][j] - solimhihilo_d[i][j])
+                    + abs(solimlohilo_h[i][j] - solimlohilo_d[i][j])
+                    + abs(solimhilolo_h[i][j] - solimhilolo_d[i][j])
+                    + abs(solimlololo_h[i][j] - solimlololo_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
       errsum = 0.0;
@@ -2066,56 +2104,59 @@ void cmplx8_newton_qrstep
       for(int i=0; i<dim; i++)
          for(int j=0; j<degp1; j++)
          {
-             cout << "input_h[" << i << "][" << j << "] : "
-                  << inputrehihihi_h[i][j] << "  "
-                  << inputrelohihi_h[i][j] << endl << "  "
-                  << inputrehilohi_h[i][j] << "  "
-                  << inputrelolohi_h[i][j] << endl << "  "
-                  << inputrehihilo_h[i][j] << "  "
-                  << inputrelohilo_h[i][j] << endl << "  "
-                  << inputrehilolo_h[i][j] << "  "
-                  << inputrelololo_h[i][j] << endl << "  "
-                  << inputimhihihi_h[i][j] << "  "
-                  << inputimlohihi_h[i][j] << endl << "  "
-                  << inputimhilohi_h[i][j] << "  "
-                  << inputimlolohi_h[i][j] << endl << "  "
-                  << inputimhihilo_h[i][j] << "  "
-                  << inputimlohilo_h[i][j] << endl << "  "
-                  << inputimhilolo_h[i][j] << "  "
-                  << inputimlololo_h[i][j] << endl;
-             cout << "input_d[" << i << "][" << j << "] : "
-                  << inputrehihihi_d[i][j] << "  "
-                  << inputrelohihi_d[i][j] << endl << "  "
-                  << inputrehilohi_d[i][j] << "  "
-                  << inputrelolohi_d[i][j] << endl << "  "
-                  << inputrehihilo_d[i][j] << "  "
-                  << inputrelohilo_d[i][j] << endl << "  "
-                  << inputrehilolo_d[i][j] << "  "
-                  << inputrelololo_d[i][j] << endl << "  "
-                  << inputimhihihi_d[i][j] << "  "
-                  << inputimlohihi_d[i][j] << endl << "  "
-                  << inputimhilohi_d[i][j] << "  "
-                  << inputimlolohi_d[i][j] << endl << "  "
-                  << inputimhihilo_d[i][j] << "  "
-                  << inputimlohilo_d[i][j] << endl << "  "
-                  << inputimhilolo_d[i][j] << "  "
-                  << inputimlololo_d[i][j] << endl;
-             errsum += abs(inputrehihihi_h[i][j] - inputrehihihi_d[i][j])
-                     + abs(inputrelohihi_h[i][j] - inputrelohihi_d[i][j])
-                     + abs(inputrehilohi_h[i][j] - inputrehilohi_d[i][j])
-                     + abs(inputrelolohi_h[i][j] - inputrelolohi_d[i][j])
-                     + abs(inputrehihilo_h[i][j] - inputrehihilo_d[i][j])
-                     + abs(inputrelohilo_h[i][j] - inputrelohilo_d[i][j])
-                     + abs(inputrehilolo_h[i][j] - inputrehilolo_d[i][j])
-                     + abs(inputrelololo_h[i][j] - inputrelololo_d[i][j])
-                     + abs(inputimhihihi_h[i][j] - inputimhihihi_d[i][j])
-                     + abs(inputimlohihi_h[i][j] - inputimlohihi_d[i][j])
-                     + abs(inputimhilohi_h[i][j] - inputimhilohi_d[i][j])
-                     + abs(inputimlolohi_h[i][j] - inputimlolohi_d[i][j])
-                     + abs(inputimhihilo_h[i][j] - inputimhihilo_d[i][j])
-                     + abs(inputimlohilo_h[i][j] - inputimlohilo_d[i][j])
-                     + abs(inputimhilolo_h[i][j] - inputimhilolo_d[i][j])
-                     + abs(inputimlololo_h[i][j] - inputimlololo_d[i][j]);
+            if(vrblvl > 1)
+            {
+               cout << "input_h[" << i << "][" << j << "] : "
+                    << inputrehihihi_h[i][j] << "  "
+                    << inputrelohihi_h[i][j] << endl << "  "
+                    << inputrehilohi_h[i][j] << "  "
+                    << inputrelolohi_h[i][j] << endl << "  "
+                    << inputrehihilo_h[i][j] << "  "
+                    << inputrelohilo_h[i][j] << endl << "  "
+                    << inputrehilolo_h[i][j] << "  "
+                    << inputrelololo_h[i][j] << endl << "  "
+                    << inputimhihihi_h[i][j] << "  "
+                    << inputimlohihi_h[i][j] << endl << "  "
+                    << inputimhilohi_h[i][j] << "  "
+                    << inputimlolohi_h[i][j] << endl << "  "
+                    << inputimhihilo_h[i][j] << "  "
+                    << inputimlohilo_h[i][j] << endl << "  "
+                    << inputimhilolo_h[i][j] << "  "
+                    << inputimlololo_h[i][j] << endl;
+               cout << "input_d[" << i << "][" << j << "] : "
+                    << inputrehihihi_d[i][j] << "  "
+                    << inputrelohihi_d[i][j] << endl << "  "
+                    << inputrehilohi_d[i][j] << "  "
+                    << inputrelolohi_d[i][j] << endl << "  "
+                    << inputrehihilo_d[i][j] << "  "
+                    << inputrelohilo_d[i][j] << endl << "  "
+                    << inputrehilolo_d[i][j] << "  "
+                    << inputrelololo_d[i][j] << endl << "  "
+                    << inputimhihihi_d[i][j] << "  "
+                    << inputimlohihi_d[i][j] << endl << "  "
+                    << inputimhilohi_d[i][j] << "  "
+                    << inputimlolohi_d[i][j] << endl << "  "
+                    << inputimhihilo_d[i][j] << "  "
+                    << inputimlohilo_d[i][j] << endl << "  "
+                    << inputimhilolo_d[i][j] << "  "
+                    << inputimlololo_d[i][j] << endl;
+            }
+            errsum += abs(inputrehihihi_h[i][j] - inputrehihihi_d[i][j])
+                    + abs(inputrelohihi_h[i][j] - inputrelohihi_d[i][j])
+                    + abs(inputrehilohi_h[i][j] - inputrehilohi_d[i][j])
+                    + abs(inputrelolohi_h[i][j] - inputrelolohi_d[i][j])
+                    + abs(inputrehihilo_h[i][j] - inputrehihilo_d[i][j])
+                    + abs(inputrelohilo_h[i][j] - inputrelohilo_d[i][j])
+                    + abs(inputrehilolo_h[i][j] - inputrehilolo_d[i][j])
+                    + abs(inputrelololo_h[i][j] - inputrelololo_d[i][j])
+                    + abs(inputimhihihi_h[i][j] - inputimhihihi_d[i][j])
+                    + abs(inputimlohihi_h[i][j] - inputimlohihi_d[i][j])
+                    + abs(inputimhilohi_h[i][j] - inputimhilohi_d[i][j])
+                    + abs(inputimlolohi_h[i][j] - inputimlolohi_d[i][j])
+                    + abs(inputimhihilo_h[i][j] - inputimhihilo_d[i][j])
+                    + abs(inputimlohilo_h[i][j] - inputimlohilo_d[i][j])
+                    + abs(inputimhilolo_h[i][j] - inputimhilolo_d[i][j])
+                    + abs(inputimlololo_h[i][j] - inputimlololo_d[i][j]);
          }
       cout << "sum of errors : " << errsum << endl;
    }
@@ -2629,7 +2670,7 @@ int test_dbl8_real_newton
          inputlololo_d[i][j] = inputlololo_h[i][j];
       }
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << scientific << setprecision(16);
       cout << "The leading coefficients of the input series :" << endl;
@@ -2647,7 +2688,8 @@ int test_dbl8_real_newton
    }
    for(int step=0; step<nbsteps; step++)
    {
-      cout << "step " << step << " ..." << endl;
+      if(vrblvl > 0)
+         cout << "*** running Newton step " << step << " ***" << endl;
 /*
       dbl8_newton_lustep
          (dim,deg,nvr,idx,exp,nbrfac,expfac,
@@ -3616,7 +3658,7 @@ int test_dbl8_complex_newton
          inputimlololo_d[i][j] = inputimlololo_h[i][j];
       }
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << scientific << setprecision(16);
       cout << "The leading coefficients of the input series :" << endl;
@@ -3641,7 +3683,8 @@ int test_dbl8_complex_newton
    }
    for(int step=0; step<nbsteps; step++)
    {
-      cout << "*** running Newton step " << step << " ***" << endl;
+      if(vrblvl > 0)
+         cout << "*** running Newton step " << step << " ***" << endl;
 
       cmplx8_newton_qrstep
          (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,

@@ -34,7 +34,7 @@ void CPU_dbl8_lusb_head
    double *wrkvechihilo, double *wrkveclohilo,
    double *wrkvechilolo, double *wrkveclololo, int *pivots, int vrblvl )
 {
-   bool verbose = (vrblvl > 0);
+   bool verbose = (vrblvl > 1);
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
       {
@@ -179,7 +179,7 @@ void CPU_dbl8_qrbs_head
    double *wrkvechihilo, double *wrkveclohilo,
    double *wrkvechilolo, double *wrkveclololo, int vrblvl )
 {
-   bool verbose = (vrblvl > 0);
+   bool verbose = (vrblvl > 1);
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
       {
@@ -351,7 +351,7 @@ void CPU_cmplx8_qrbs_head
    double *wrkvecimhihilo, double *wrkvecimlohilo,
    double *wrkvecimhilolo, double *wrkvecimlololo, int vrblvl )
 {
-   bool verbose = (vrblvl > 0);
+   bool verbose = (vrblvl > 1);
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
       {
@@ -611,13 +611,13 @@ void CPU_dbl8_lusb_tail
    double **wrkmathihilo, double **wrkmatlohilo,
    double **wrkmathilolo, double **wrkmatlololo, int *pivots, int vrblvl )
 {
-   bool verbose = (vrblvl > 0);
+   bool verbose = (vrblvl > 1);
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
 
    for(int i=1; i<degp1; i++)
    {
-      if(verbose) cout << "stage " << i << " in solve tail ..." << endl;
+      if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
       // use sol[i-1] to update rhs[j] for j in i to degp1
       for(int j=i; j<degp1; j++)
       {
@@ -740,13 +740,13 @@ void CPU_dbl8_qrbs_tail
    double *wrkvechihilo, double *wrkveclohilo,
    double *wrkvechilolo, double *wrkveclololo, int vrblvl )
 {
-   bool verbose = (vrblvl > 0);
+   bool verbose = (vrblvl > 1);
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
 
    for(int i=1; i<degp1; i++)
    {
-      if(verbose) cout << "stage " << i << " in solve tail ..." << endl;
+      if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
       // use sol[i-1] to update rhs[j] for j in i to degp1
       for(int j=i; j<degp1; j++)
       {
@@ -889,13 +889,13 @@ void CPU_cmplx8_qrbs_tail
    double *wrkvecimhihilo, double *wrkvecimlohilo,
    double *wrkvecimhilolo, double *wrkvecimlololo, int vrblvl )
 {
-   bool verbose = (vrblvl > 0);
+   bool verbose = (vrblvl > 1);
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
 
    for(int i=1; i<degp1; i++)
    {
-      if(verbose) cout << "stage " << i << " in solve tail ..." << endl;
+      if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
       // use sol[i-1] to update rhs[j] for j in i to degp1
       for(int j=i; j<degp1; j++)
       {
@@ -1433,7 +1433,7 @@ void CPU_dbl8_linear_residue
                        acchihilo,acclohilo,acchilolo,acclololo);
             }
       }
-      if(vrblvl > 0)
+      if(vrblvl > 1)
       {
          cout << "Solution vector " << i << " :" << endl;
          for(int j=0; j<dim; j++)
@@ -1650,7 +1650,7 @@ void CPU_cmplx8_linear_residue
                        acchihilo,acclohilo,acchilolo,acclololo);
             }
       }
-      if(vrblvl > 0)
+      if(vrblvl > 1)
       {
          cout << "Solution vector " << i << " :" << endl;
          for(int j=0; j<dim; j++)

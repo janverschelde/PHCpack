@@ -41,7 +41,7 @@ void CPU_dbl2_evaluate_monomials
          }
       }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
@@ -71,7 +71,7 @@ void CPU_dbl2_evaluate_monomials
          (dim,nvr[i],deg,idx[i],cffhi[i],cfflo[i],
           inputhi,inputlo,outputhi[i],outputlo[i]);
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
@@ -147,7 +147,7 @@ void CPU_cmplx2_evaluate_monomials
          }
       }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
@@ -181,7 +181,7 @@ void CPU_cmplx2_evaluate_monomials
           inputrehi,inputrelo,inputimhi,inputimlo,
           outputrehi[i],outputrelo[i],outputimhi[i],outputimlo[i]);
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
@@ -244,7 +244,7 @@ void dbl2_linearize_evaldiff_output
          funvallo[i][j] = outputlo[i][dim][j];
       }
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The leading coefficients of the evaluated series :" << endl;
       for(int i=0; i<dim; i++)
@@ -275,7 +275,7 @@ void dbl2_linearize_evaldiff_output
             rhslo[i][j] = -funvallo[j][i];
          }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The right hand side series :" << endl;
       for(int i=0; i<degp1; i++)
@@ -302,7 +302,7 @@ void dbl2_linearize_evaldiff_output
          }
       }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The leading coefficients of the Jacobian matrix : " << endl;
       for(int i=0; i<dim; i++)
@@ -337,7 +337,7 @@ void cmplx2_linearize_evaldiff_output
          funvalimlo[i][j] = outputimlo[i][dim][j];
       }
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The leading coefficients of the evaluated series :" << endl;
       for(int i=0; i<dim; i++)
@@ -379,7 +379,7 @@ void cmplx2_linearize_evaldiff_output
             rhsimlo[i][j] = -funvalimlo[j][i];
          }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The right hand side series :" << endl;
       for(int i=0; i<degp1; i++)
@@ -409,7 +409,7 @@ void cmplx2_linearize_evaldiff_output
          }
       }
    }
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The leading coefficients of the Jacobian matrix : " << endl;
       for(int i=0; i<dim; i++)

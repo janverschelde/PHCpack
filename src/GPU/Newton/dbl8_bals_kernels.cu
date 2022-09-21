@@ -553,8 +553,7 @@ void GPU_dbl8_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
-   if(verbose > 0)
-      cout << "-> GPU multiplies rhs with Q^T ..." << endl;
+   if(verbose) cout << "-> GPU multiplies rhs with Q^T ..." << endl;
 
    GPU_dbl8_bals_qtb
       (ncols,szt,nbt,
@@ -562,7 +561,7 @@ void GPU_dbl8_bals_head
        bhihihi,blohihi,bhilohi,blolohi,bhihilo,blohilo,bhilolo,blololo,
        verbose);
 
-   if(verbose > 0)
+   if(verbose)
    {
       for(int i=0; i<nrows; i++)
          cout << "Qtb[" << i << "] : "
@@ -738,8 +737,7 @@ void GPU_cmplx8_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
-   if(verbose > 0)
-      cout << "-> GPU multiplies rhs with Q^H ..." << endl;
+   if(verbose) cout << "-> GPU multiplies rhs with Q^H ..." << endl;
 
    GPU_cmplx8_bals_qhb
       (ncols,szt,nbt,
@@ -752,7 +750,7 @@ void GPU_cmplx8_bals_head
        bimhihihi,bimlohihi,bimhilohi,bimlolohi,
        bimhihilo,bimlohilo,bimhilolo,bimlololo,verbose);
 
-   if(verbose > 0)
+   if(verbose)
    {
       for(int i=0; i<nrows; i++)
          cout << "QHb[" << i << "] : "
@@ -1826,7 +1824,7 @@ void GPU_dbl8_bals_solve
 {
    const int nrows = dim;
    const int ncols = dim;
-   const bool bvrb = (vrblvl > 0);
+   const bool bvrb = (vrblvl > 1);
 
    double **Ahihihi = new double*[nrows];
    double **Alohihi = new double*[nrows];
@@ -1873,7 +1871,7 @@ void GPU_dbl8_bals_solve
       workRhilolo[i] = new double[ncols];
       workRlololo[i] = new double[ncols];
    }
-   if(vrblvl)
+   if(vrblvl > 1)
    {
       cout << "GPU_dbl8_bals_solve blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)
@@ -1887,7 +1885,6 @@ void GPU_dbl8_bals_solve
                  << rhshilolo[k][i] << "  " << rhslololo[k][i] << endl;
       }
    }
-
    for(int i=0; i<nrows; i++)
    {
       Ahihihi[i] = new double[ncols];
@@ -1964,7 +1961,7 @@ void GPU_dbl8_bals_solve
           solhihihi,sollohihi,solhilohi,sollolohi,
           solhihilo,sollohilo,solhilolo,sollololo,bvrb);
 
-      if(vrblvl > 0)
+      if(vrblvl > 1)
       {
          cout << "blocks of rhs before assignment :" << endl;
          for(int k=0; k<degp1; k++)
@@ -1978,11 +1975,10 @@ void GPU_dbl8_bals_solve
                     << rhshilolo[k][i] << "  " << rhslololo[k][i] << endl;
          }
       }
-
       for(int i=0; i<nrows; i++) 
       {
-         cout << "assigning component " << i
-              << ", stage = " << stage << endl;
+         // cout << "assigning component " << i
+         //      << ", stage = " << stage << endl;
 
          bhihihi[i] = rhshihihi[stage][i];
          blohihi[i] = rhslohihi[stage][i];
@@ -1993,11 +1989,11 @@ void GPU_dbl8_bals_solve
          bhilolo[i] = rhshilolo[stage][i];
          blololo[i] = rhslololo[stage][i];
 
-         cout << "b[" << i << "] : "
-              << bhihihi[i] << "  " << blohihi[i] << endl << "  "
-              << bhilohi[i] << "  " << blolohi[i] << endl << "  "
-              << bhihilo[i] << "  " << blohilo[i] << endl << "  "
-              << bhilolo[i] << "  " << blololo[i] << endl;
+         // cout << "b[" << i << "] : "
+         //      << bhihihi[i] << "  " << blohihi[i] << endl << "  "
+         //      << bhilohi[i] << "  " << blolohi[i] << endl << "  "
+         //      << bhihilo[i] << "  " << blohilo[i] << endl << "  "
+         //      << bhilolo[i] << "  " << blololo[i] << endl;
       }
       double bstimelapsed_d;
       double elapsedms,invlapsed,mullapsed,sublapsed;
@@ -2014,7 +2010,7 @@ void GPU_dbl8_bals_solve
           bhihihi,blohihi,bhilohi,blolohi,bhihilo,blohilo,bhilolo,blololo,
           bvrb);
 
-      if(vrblvl > 0)
+      if(vrblvl > 1)
       {
          for(int i=0; i<nrows; i++)
             cout << "Qtb[" << i << "] : "
@@ -2027,13 +2023,15 @@ void GPU_dbl8_bals_solve
       {
          cout << "-> GPU solves an upper triangular system ..." << endl;
  
-         for(int i=0; i<nrows; i++)
-            for(int j=0; j<ncols; j++)
-               cout << "R[" << i << "][" << j << "] : "
-                    << Rhihihi[i][j] << "  " << Rlohihi[i][j] << "  "
-                    << Rhilohi[i][j] << "  " << Rlolohi[i][j] << endl << "  "
-                    << Rhihilo[i][j] << "  " << Rlohilo[i][j] << "  "
-                    << Rhilolo[i][j] << "  " << Rlololo[i][j] << endl;
+         if(vrblvl > 1)
+            for(int i=0; i<nrows; i++)
+               for(int j=0; j<ncols; j++)
+                  cout << "R[" << i << "][" << j << "] : "
+                       << Rhihihi[i][j] << "  " << Rlohihi[i][j] << "  "
+                       << Rhilohi[i][j] << "  " << Rlolohi[i][j] << endl
+                       << "  "
+                       << Rhihilo[i][j] << "  " << Rlohilo[i][j] << "  "
+                       << Rhilolo[i][j] << "  " << Rlololo[i][j] << endl;
       }
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)
@@ -2057,7 +2055,7 @@ void GPU_dbl8_bals_solve
           &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
           &bsaddcnt,&bsmulcnt,&bsdivcnt);
 
-     if(vrblvl > 0)
+     if(vrblvl > 1)
         for(int i=0; i<ncols; i++)
            cout << "x[" << i << "] : "
                 << xhihihi[i] << "  " << xlohihi[i] << "  "
@@ -2077,7 +2075,6 @@ void GPU_dbl8_bals_solve
          sollololo[stage][j] = xlololo[j];
       }
    }
-
    for(int i=0; i<nrows; i++)
    {
       free(Ahihihi[i]); free(Alohihi[i]); free(Ahilohi[i]); free(Alolohi[i]);
@@ -2142,7 +2139,7 @@ void GPU_cmplx8_bals_solve
 {
    const int nrows = dim;
    const int ncols = dim;
-   const bool bvrb = (vrblvl > 0);
+   const bool bvrb = (vrblvl > 1);
 
    double **Arehihihi = new double*[nrows];
    double **Arelohihi = new double*[nrows];
@@ -2230,7 +2227,7 @@ void GPU_cmplx8_bals_solve
       workRimhilolo[i] = new double[ncols];
       workRimlololo[i] = new double[ncols];
    }
-   if(vrblvl)
+   if(vrblvl > 1)
    {
       cout << "GPU_cmplx8_bals_solve blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)
@@ -2254,7 +2251,6 @@ void GPU_cmplx8_bals_solve
                  << rhsimhilolo[k][i] << "  " << rhsimlololo[k][i] << endl;
       }
    }
-
    for(int i=0; i<nrows; i++)
    {
       Arehihihi[i] = new double[ncols];
@@ -2322,7 +2318,6 @@ void GPU_cmplx8_bals_solve
          Rimlololo[i][j] = matimlololo[0][i][j];
       }
    }
-
    GPU_cmplx8_bals_head
       (nrows,ncols,szt,nbt,
        Arehihihi,Arelohihi,Arehilohi,Arelolohi,
@@ -2385,7 +2380,7 @@ void GPU_cmplx8_bals_solve
           solimhihihi,solimlohihi,solimhilohi,solimlolohi,
           solimhihilo,solimlohilo,solimhilolo,solimlololo,bvrb);
 
-      if(vrblvl > 0)
+      if(vrblvl > 1)
       {
          cout << "blocks of rhs before assignment :" << endl;
          for(int k=0; k<degp1; k++)
@@ -2410,11 +2405,10 @@ void GPU_cmplx8_bals_solve
                     << rhsimlololo[k][i] << endl;
          }
       }
-
       for(int i=0; i<nrows; i++) 
       {
-         cout << "assigning component " << i
-              << ", stage = " << stage << endl;
+         // cout << "assigning component " << i
+         //      << ", stage = " << stage << endl;
          brehihihi[i] = rhsrehihihi[stage][i];
          brelohihi[i] = rhsrelohihi[stage][i];
          brehilohi[i] = rhsrehilohi[stage][i];
@@ -2431,6 +2425,7 @@ void GPU_cmplx8_bals_solve
          bimlohilo[i] = rhsimlohilo[stage][i];
          bimhilolo[i] = rhsimhilolo[stage][i];
          bimlololo[i] = rhsimlololo[stage][i];
+/*
          cout << "b[" << i << "] : "
               << brehihihi[i] << "  " << brelohihi[i] << endl << "  "
               << brehilohi[i] << "  " << brelolohi[i] << endl << "  "
@@ -2440,6 +2435,7 @@ void GPU_cmplx8_bals_solve
               << bimhilohi[i] << "  " << bimlolohi[i] << endl << "  "
               << bimhihilo[i] << "  " << bimlohilo[i] << endl << "  "
               << bimhilolo[i] << "  " << bimlololo[i] << endl;
+ */
       }
       double bstimelapsed_d;
       double elapsedms,invlapsed,mullapsed,sublapsed;
@@ -2447,8 +2443,7 @@ void GPU_cmplx8_bals_solve
       long long int bsmulcnt = 0;
       long long int bsdivcnt = 0;
 
-      if(vrblvl > 0)
-         cout << "-> GPU multiplies rhs with Q^H ..." << endl;
+      if(vrblvl > 0) cout << "-> GPU multiplies rhs with Q^H ..." << endl;
 
       GPU_cmplx8_bals_qhb
          (ncols,szt,nbt,
@@ -2461,7 +2456,7 @@ void GPU_cmplx8_bals_solve
           bimhihihi,bimlohihi,bimhilohi,bimlolohi,
           bimhihilo,bimlohilo,bimhilolo,bimlololo,bvrb);
 
-      if(vrblvl > 0)
+      if(vrblvl > 1)
       {
          for(int i=0; i<nrows; i++)
             cout << "QHb[" << i << "] : "
@@ -2478,24 +2473,25 @@ void GPU_cmplx8_bals_solve
       {
          cout << "-> GPU solves an upper triangular system ..." << endl;
  
-         for(int i=0; i<nrows; i++)
-            for(int j=0; j<ncols; j++)
-               cout << "R[" << i << "][" << j << "] : "
-                    << Rrehihihi[i][j] << "  " << Rrelohihi[i][j] << endl
-                    << "  "
-                    << Rrehilohi[i][j] << "  " << Rrelolohi[i][j] << endl
-                    << "  "
-                    << Rrehihilo[i][j] << "  " << Rrelohilo[i][j] << endl
-                    << "  "
-                    << Rrehilolo[i][j] << "  " << Rrelololo[i][j] << endl
-                    << "  "
-                    << Rimhihihi[i][j] << "  " << Rimlohihi[i][j] << endl
-                    << "  "
-                    << Rimhilohi[i][j] << "  " << Rimlolohi[i][j] << endl
-                    << "  "
-                    << Rimhihilo[i][j] << "  " << Rimlohilo[i][j] << endl
-                    << "  "
-                    << Rimhilolo[i][j] << "  " << Rimlololo[i][j] << endl;
+         if(vrblvl > 1)
+            for(int i=0; i<nrows; i++)
+               for(int j=0; j<ncols; j++)
+                  cout << "R[" << i << "][" << j << "] : "
+                       << Rrehihihi[i][j] << "  " << Rrelohihi[i][j] << endl
+                       << "  "
+                       << Rrehilohi[i][j] << "  " << Rrelolohi[i][j] << endl
+                       << "  "
+                       << Rrehihilo[i][j] << "  " << Rrelohilo[i][j] << endl
+                       << "  "
+                       << Rrehilolo[i][j] << "  " << Rrelololo[i][j] << endl
+                       << "  "
+                       << Rimhihihi[i][j] << "  " << Rimlohihi[i][j] << endl
+                       << "  "
+                       << Rimhilohi[i][j] << "  " << Rimlolohi[i][j] << endl
+                       << "  "
+                       << Rimhihilo[i][j] << "  " << Rimlohilo[i][j] << endl
+                       << "  "
+                       << Rimhilolo[i][j] << "  " << Rimlololo[i][j] << endl;
       }
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)
@@ -2535,7 +2531,7 @@ void GPU_cmplx8_bals_solve
           &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
           &bsaddcnt,&bsmulcnt,&bsdivcnt);
 
-     if(vrblvl > 0)
+     if(vrblvl > 1)
         for(int i=0; i<ncols; i++)
            cout << "x[" << i << "] : "
                 << xrehihihi[i] << "  " << xrelohihi[i] << endl << "  "
@@ -2567,7 +2563,6 @@ void GPU_cmplx8_bals_solve
          solimlololo[stage][j] = ximlololo[j];
       }
    }
-
    for(int i=0; i<nrows; i++)
    {
       free(Arehihihi[i]); free(workRrehihihi[i]);
