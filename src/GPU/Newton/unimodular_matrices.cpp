@@ -86,6 +86,18 @@ void read_exponent_matrix ( int dim, int **mat )
       for(int j=0; j<dim; j++) cin >> mat[i][j];
 }
 
+void lower_triangular_unit ( int dim, int **mat )
+{
+   for(int i=0 ; i<dim; i++)
+      for(int j=0; j<dim; j++)
+      {
+         if(i < j)
+            mat[i][j] = 0;  // zeros above the diagonal
+         else
+            mat[i][j] = 1;  // ones on and below the diagonal
+      }
+}
+
 void make_monomial_system
  ( int dim, int size, int posvals, int nbritr,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
@@ -100,7 +112,9 @@ void make_monomial_system
    bool verbose = (vrblvl > 0);
    bool poscff = (posvals > 0);
 
-   if(nbritr > 0)
+   if(nbritr == -1)
+      lower_triangular_unit(dim,rowsA);
+   else if(nbritr > 0)
       make_unimodular_matrix(dim,size,poscff,nbritr,rowsA,0); // verbose);
    else
       read_exponent_matrix(dim,rowsA);
@@ -162,14 +176,19 @@ void prompt_dimensions
    cin >> *deg;
    cout << "-> verbose level (0 for silent) : ";
    cin >> *vrblvl;
-   cout << "-> give the number of unimodular multiplications (0 for input) : ";
+   cout << "MENU for the unimodular matrix :" << endl;
+   cout << " -1 : lower triangular matrix of ones" << endl;
+   cout << "  0 : user input" << endl;
+   cout << "  n : number of unimodular multiplications" << endl;
+   cout << "-> give the the number for the unimodular matrix : ";
    cin >> *nbritr;
    if(*nbritr > 0)
    {
       cout << "-> give the size of the numbers : ";
       cin >> *size;
-      cout << "-> positive exponents ? (1 for yes) : ";
-      cin >> *posvals;
+      // cout << "-> positive exponents ? (1 for yes) : ";
+      // cin >> *posvals;
+      *posvals = 1; // Laurent is not yet supported
    }
    else
    {

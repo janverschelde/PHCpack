@@ -31,6 +31,9 @@ int main ( void )
    else
       srand(seed);
 
+   if(nbritr == -1)
+      cout << "making the lower triangular unit of dimension " << dim
+           << " ..." << endl;
    if(nbritr > 0)
       cout << "generating an integer matrix of dimension " << dim
            << " ..." << endl;

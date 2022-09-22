@@ -49,6 +49,12 @@ void read_exponent_matrix ( int dim, int **mat );
  *   Prompts the user for a matrix of dimension dim,
  *   which is returned in the matrix mat. */
 
+void lower_triangular_unit ( int dim, int **mat );
+/*
+ * DESCRIPTION :
+ *   Fills up the matrix of dim rows and dim colums
+ *   with zeros above the diagonal and ones on and below the diagonal. */
+
 void make_monomial_system
  ( int dim, int size, int posvals, int nbritr,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
