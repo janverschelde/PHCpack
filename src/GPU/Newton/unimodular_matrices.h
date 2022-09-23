@@ -55,6 +55,13 @@ void lower_triangular_unit ( int dim, int **mat );
  *   Fills up the matrix of dim rows and dim colums
  *   with zeros above the diagonal and ones on and below the diagonal. */
 
+void two_variable_monomials ( int dim, int **mat );
+/*
+ * DESCRIPTION :
+ *   The matrix on return corresponds to a decoupled system
+ *   where each monomial has exactly two participating variables,
+ *   except the first one in case the dimension is odd. */
+
 void make_monomial_system
  ( int dim, int size, int posvals, int nbritr,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
