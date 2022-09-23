@@ -51,6 +51,8 @@ void cmplx_unit_series_vector
 void dbl_update_series
  ( int dim, int degp1, double **x, double **dx, int vrblvl )
 {
+   if(vrblvl > 0) cout << scientific << setprecision(16);
+
    if(vrblvl > 1)
    {
       cout << "The series before the update : " << endl;
@@ -79,6 +81,8 @@ void cmplx_update_series
  ( int dim, int degp1,
    double **xre, double **xim, double **dxre, double **dxim, int vrblvl )
 {
+   if(vrblvl > 0) cout << scientific << setprecision(16);
+
    if(vrblvl > 1)
    {
       cout << "The series before the update : " << endl;
@@ -174,6 +178,9 @@ void dbl_newton_qrstep
          cff[i][0] = 1.0;
          for(int j=1; j<degp1; j++) cff[i][j] = 0.0;
       }
+      if(vrblvl > 0)
+         cout << "calling CPU_dbl_evaluate_monomials ..." << endl;
+
       CPU_dbl_evaluate_monomials
          (dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input_h,output_h,vrblvl);
    }
@@ -184,6 +191,9 @@ void dbl_newton_qrstep
          cff[i][0] = 1.0;
          for(int j=1; j<degp1; j++) cff[i][j] = 0.0;
       }
+      if(vrblvl > 0)
+         cout << "calling GPU_dbl_evaluate_monomials ..." << endl;
+
       GPU_dbl_evaluate_monomials
          (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,cff,acc,
           input_d,output_d,vrblvl);
@@ -205,6 +215,7 @@ void dbl_newton_qrstep
             }
             errsum += abs(output_h[k][i][j] - output_d[k][i][j]);
          }
+      cout << scientific << setprecision(16);
       cout << "sum of errors : " << errsum << endl;
    }
    for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
@@ -215,13 +226,18 @@ void dbl_newton_qrstep
             jacval_d[i][j][k] = 0.0;
          }
 
+   if(vrblvl > 0) cout << "linearizing the output ..." << endl;
+
    if((mode == 1) || (mode == 2))
+   {
       dbl_linearize_evaldiff_output
          (dim,degp1,nvr,idx,output_h,funval_h,rhs_h,jacval_h,vrblvl);
+   }
    if((mode == 0) || (mode == 2))
+   {
       dbl_linearize_evaldiff_output
          (dim,degp1,nvr,idx,output_d,funval_d,rhs_d,jacval_d,vrblvl);
-
+   }
    if((vrblvl > 0) && (mode == 2))
    {
       cout << "comparing CPU with GPU function values ... " << endl;
@@ -295,11 +311,16 @@ void dbl_newton_qrstep
 
    if((mode == 1) || (mode == 2))
    {
+      if(vrblvl > 0)
+         cout << "calling CPU_dbl_qrbs_solve ..." << endl;
+
       CPU_dbl_qrbs_solve
          (dim,degp1,jacval_h,urhs_h,sol_h,workmat,Q_h,R_h,workvec,vrblvl);
  
       if(vrblvl > 0)
       {
+         cout << "calling CPU_dbl_linear_residue ..." << endl;
+
          CPU_dbl_linear_residue
             (dim,degp1,jacval_h,rhs_h,sol_h,resvec,resmax,vrblvl);
          cout << "maximum residual : " << *resmax << endl;
@@ -308,11 +329,16 @@ void dbl_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
+      if(vrblvl > 0)
+         cout << "calling GPU_dbl_bals_solve ..." << endl;
+
       GPU_dbl_bals_solve
          (dim,degp1,szt,nbt,jacval_d,Q_d,R_d,urhs_d,sol_d,vrblvl);
 
       if(vrblvl > 0)
       {
+         cout << "calling CPU_dbl_linear_residue ..." << endl;
+
          CPU_dbl_linear_residue
             (dim,degp1,jacval_d,rhs_d,sol_d,resvec,resmax,vrblvl);
          cout << "maximum residual : " << *resmax << endl;
@@ -437,6 +463,9 @@ void cmplx_newton_qrstep
             cffim[i][j] = 0.0;
          }
       }
+      if(vrblvl > 0)
+         cout << "calling CPU_cmplx_evaluate_monomials ..." << endl;
+
       CPU_cmplx_evaluate_monomials
          (dim,deg,nvr,idx,exp,nbrfac,expfac,
           cffre,cffim,accre,accim,inputre_h,inputim_h,
@@ -455,6 +484,9 @@ void cmplx_newton_qrstep
             cffim[i][j] = 0.0;
          }
       }
+      if(vrblvl > 0)
+         cout << "calling GPU_cmplx_evaluate_monomials ..." << endl;
+
       GPU_cmplx_evaluate_monomials
          (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,
           cffre,cffim,accre,accim,inputre_d,inputim_d,
@@ -480,6 +512,7 @@ void cmplx_newton_qrstep
             errsum += abs(outputre_h[k][i][j] - outputre_d[k][i][j])
                     + abs(outputim_h[k][i][j] - outputim_d[k][i][j]);
          }
+      cout << scientific << setprecision(16);
       cout << "sum of errors : " << errsum << endl;
    }
    for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
@@ -490,16 +523,20 @@ void cmplx_newton_qrstep
             jacvalre_d[i][j][k] = 0.0; jacvalim_d[i][j][k] = 0.0;
          }
 
+   if(vrblvl > 0) cout << "linearizing the output ..." << endl;
+
    if((mode == 1) || (mode == 2))
+   {
       cmplx_linearize_evaldiff_output
          (dim,degp1,nvr,idx,outputre_h,outputim_h,funvalre_h,funvalim_h,
           rhsre_h,rhsim_h,jacvalre_h,jacvalim_h,vrblvl);
-
+   }
    if((mode == 0) || (mode == 2))
+   {
       cmplx_linearize_evaldiff_output
          (dim,degp1,nvr,idx,outputre_d,outputim_d,funvalre_d,funvalim_d,
           rhsre_d,rhsim_d,jacvalre_d,jacvalim_d,vrblvl);
-
+   }
    if((vrblvl > 0) && (mode == 2))
    {
       cout << "comparing CPU with GPU function values ... " << endl;
@@ -580,6 +617,9 @@ void cmplx_newton_qrstep
 
    if((mode == 1) || (mode == 2))
    {
+      if(vrblvl > 0)
+         cout << "calling CPU_cmplx_qrbs_solve ..." << endl;
+
       CPU_cmplx_qrbs_solve
          (dim,degp1,jacvalre_h,jacvalim_h,urhsre_h,urhsim_h,
           solre_h,solim_h,workmatre,workmatim,Qre_h,Qim_h,Rre_h,Rim_h,
@@ -587,6 +627,8 @@ void cmplx_newton_qrstep
  
       if(vrblvl > 0)
       {
+         cout << "calling CPU_cmplx_linear_residue ..." << endl;
+
          CPU_cmplx_linear_residue
             (dim,degp1,jacvalre_h,jacvalim_h,rhsre_h,rhsim_h,
              solre_h,solim_h,resvecre,resvecim,resmax,vrblvl);
@@ -597,12 +639,17 @@ void cmplx_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
+      if(vrblvl > 0)
+         cout << "calling GPU_cmplx_bals_solve ..." << endl;
+
       GPU_cmplx_bals_solve
          (dim,degp1,szt,nbt,jacvalre_d,jacvalim_d,Qre_d,Qim_d,Rre_d,Rim_d,
           urhsre_d,urhsim_d,solre_d,solim_d,vrblvl);
 
       if(vrblvl > 0)
       {
+         cout << "calling CPU_cmplx_linear_residue ..." << endl;
+
          CPU_cmplx_linear_residue
             (dim,degp1,jacvalre_d,jacvalim_d,rhsre_d,rhsim_d,solre_d,solim_d,
              resvecre,resvecim,resmax,vrblvl);

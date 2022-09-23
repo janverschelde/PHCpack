@@ -57,6 +57,8 @@ void dbl2_update_series
  ( int dim, int degp1, double **xhi, double **xlo,
    double **dxhi, double **dxlo, int vrblvl )
 {
+   if(vrblvl > 0) cout << scientific << setprecision(16);
+
    if(vrblvl > 1)
    {
       cout << "The series before the update : " << endl;
@@ -92,6 +94,8 @@ void cmplx2_update_series
    double **dxrehi, double **dxrelo, double **dximhi, double **dximlo,
    int vrblvl )
 {
+   if(vrblvl > 0) cout << scientific << setprecision(16);
+
    if(vrblvl > 1)
    {
       cout << "The series before the update : " << endl;
@@ -189,13 +193,16 @@ void dbl2_newton_lustep
       (dim,degp1,jacvalhi,jacvallo,workrhshi,workrhslo,solhi,sollo,
        workmathi,workmatlo,workvechi,workveclo,ipvt,0); // vrblvl);
 
-   CPU_dbl2_linear_residue
-      (dim,degp1,jacvalhi,jacvallo,rhshi,rhslo,solhi,sollo,
-       resvechi,resveclo,resmaxhi,resmaxlo,vrblvl);
-
    if(vrblvl > 0)
-      cout << "maximum residual : " << *resmaxhi << endl;
+   {
+      cout << "calling CPU_dbl2_linear_residue ..." << endl;
 
+      CPU_dbl2_linear_residue
+         (dim,degp1,jacvalhi,jacvallo,rhshi,rhslo,solhi,sollo,
+          resvechi,resveclo,resmaxhi,resmaxlo,vrblvl);
+
+      cout << "maximum residual : " << *resmaxhi << endl;
+   }
    dbl2_update_series(dim,degp1,inputhi,inputlo,solhi,sollo,vrblvl);
 }
 
@@ -237,6 +244,9 @@ void dbl2_newton_qrstep
             cfflo[i][j] = 0.0;
          }
       }
+      if(vrblvl > 0)
+         cout << "calling CPU_dbl2_evaluate_monomials ..." << endl;
+
       CPU_dbl2_evaluate_monomials
          (dim,deg,nvr,idx,exp,nbrfac,expfac,
           cffhi,cfflo,acchi,acclo,inputhi_h,inputlo_h,outputhi_h,outputlo_h,
@@ -254,6 +264,9 @@ void dbl2_newton_qrstep
             cfflo[i][j] = 0.0;
          }
       }
+      if(vrblvl > 0)
+         cout << "calling GPU_dbl2_evaluate_monomials ..." << endl;
+
       GPU_dbl2_evaluate_monomials
          (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,cffhi,cfflo,acchi,acclo,
           inputhi_d,inputlo_d,outputhi_d,outputlo_d,vrblvl);
@@ -278,6 +291,7 @@ void dbl2_newton_qrstep
             errsum += abs(outputhi_h[k][i][j] - outputhi_d[k][i][j])
                     + abs(outputlo_h[k][i][j] - outputlo_d[k][i][j]);
          }
+      cout << scientific << setprecision(16);
       cout << "sum of errors : " << errsum << endl;
    }
 
@@ -296,14 +310,17 @@ void dbl2_newton_qrstep
    if(vrblvl > 0) cout << "linearizing the output ..." << endl;
 
    if((mode == 1) || (mode == 2))
+   {
       dbl2_linearize_evaldiff_output
          (dim,degp1,nvr,idx,outputhi_h,outputlo_h,funvalhi_h,funvallo_h,
           rhshi_h,rhslo_h,jacvalhi_h,jacvallo_h,vrblvl);
+   }
    if((mode == 0) || (mode == 2))
+   {
       dbl2_linearize_evaldiff_output
          (dim,degp1,nvr,idx,outputhi_d,outputlo_d,funvalhi_d,funvallo_d,
           rhshi_d,rhslo_d,jacvalhi_d,jacvallo_d,vrblvl);
-
+   }
    if((vrblvl > 0) && (mode == 2))
    {
       cout << "comparing CPU with GPU function values ... " << endl;
@@ -576,6 +593,9 @@ void cmplx2_newton_qrstep
             cffimhi[i][j] = 0.0; cffimlo[i][j] = 0.0;
          }
       }
+      if(vrblvl > 0)
+         cout << "calling CPU_cmplx2_evaluate_monomials ..." << endl;
+
       CPU_cmplx2_evaluate_monomials
          (dim,deg,nvr,idx,exp,nbrfac,expfac,
           cffrehi,cffrelo,cffimhi,cffimlo,
@@ -596,6 +616,9 @@ void cmplx2_newton_qrstep
             cffimhi[i][j] = 0.0; cffimlo[i][j] = 0.0;
          }
       }
+      if(vrblvl > 0)
+         cout << "calling GPU_cmplx2_evaluate_monomials ..." << endl;
+
       GPU_cmplx2_evaluate_monomials
          (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,
           cffrehi,cffrelo,cffimhi,cffimlo,
@@ -629,6 +652,7 @@ void cmplx2_newton_qrstep
                     + abs(outputimhi_h[k][i][j] - outputimhi_d[k][i][j])
                     + abs(outputimlo_h[k][i][j] - outputimlo_d[k][i][j]);
          }
+      cout << scientific << setprecision(16);
       cout << "sum of errors : " << errsum << endl;
    }
    for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
@@ -641,22 +665,26 @@ void cmplx2_newton_qrstep
             jacvalrelo_d[i][j][k] = 0.0; jacvalimlo_d[i][j][k] = 0.0;
          }
 
+   if(vrblvl > 0) cout << "linearizing the output ..." << endl;
+
    if((mode == 1) || (mode == 2))
+   {
       cmplx2_linearize_evaldiff_output
          (dim,degp1,nvr,idx,
           outputrehi_h,outputrelo_h,outputimhi_h,outputimlo_h,
           funvalrehi_h,funvalrelo_h,funvalimhi_h,funvalimlo_h,
           rhsrehi_h,rhsrelo_h,rhsimhi_h,rhsimlo_h,
           jacvalrehi_h,jacvalrelo_h,jacvalimhi_h,jacvalimlo_h,vrblvl);
-
+   }
    if((mode == 0) || (mode == 2))
+   {
       cmplx2_linearize_evaldiff_output
          (dim,degp1,nvr,idx,
           outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d,
           funvalrehi_d,funvalrelo_d,funvalimhi_d,funvalimlo_d,
           rhsrehi_d,rhsrelo_d,rhsimhi_d,rhsimlo_d,
           jacvalrehi_d,jacvalrelo_d,jacvalimhi_d,jacvalimlo_d,vrblvl);
-
+   }
    if((vrblvl > 0) && (mode == 2))
    {
       cout << "comparing CPU with GPU function values ... " << endl;
@@ -765,6 +793,9 @@ void cmplx2_newton_qrstep
 
    if((mode == 1) || (mode == 2))
    {
+      if(vrblvl > 0)
+         cout << "calling CPU_cmplx2_qrbs_solve ..." << endl;
+
       CPU_cmplx2_qrbs_solve
          (dim,degp1,
           jacvalrehi_h,jacvalrelo_h,jacvalimhi_h,jacvalimlo_h,
@@ -776,6 +807,8 @@ void cmplx2_newton_qrstep
  
       if(vrblvl > 0)
       {
+         cout << "calling CPU_cmplx2_linear_residue ..." << endl;
+
          CPU_cmplx2_linear_residue
             (dim,degp1,
              jacvalrehi_h,jacvalrelo_h,jacvalimhi_h,jacvalimlo_h,
@@ -792,6 +825,9 @@ void cmplx2_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
+      if(vrblvl > 0)
+         cout << "calling GPU_cmplx2_bals_solve ..." << endl;
+
       GPU_cmplx2_bals_solve
          (dim,degp1,szt,nbt,
           jacvalrehi_d,jacvalrelo_d,jacvalimhi_d,jacvalimlo_d,
@@ -801,6 +837,8 @@ void cmplx2_newton_qrstep
 
       if(vrblvl > 0)
       {
+         cout << "calling CPU_cmplx2_linear_residue ..." << endl;
+
          CPU_cmplx2_linear_residue
             (dim,degp1,
              jacvalrehi_d,jacvalrelo_d,jacvalimhi_d,jacvalimlo_d,
@@ -1128,7 +1166,7 @@ int test_dbl2_real_newton
          inputlo_d[i][j] = inputlo_h[i][j];
       }
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << scientific << setprecision(16);
       cout << "The leading coefficients of the input series :" << endl;
@@ -1451,7 +1489,7 @@ int test_dbl2_complex_newton
          inputimlo_d[i][j] = inputimlo_h[i][j];
       }
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << scientific << setprecision(16);
       cout << "The leading coefficients of the input series :" << endl;

@@ -1,5 +1,6 @@
 Thu 22 Sep 2022 : added lower_triangular_unit to unimodular_matrices,
-  updated test_dbl*_newton.cpp.
+  updated test_dbl*_newton.cpp.  Updates in dbl_systems_kernels.cu,
+  dbl*_newton_testers.cpp for better output messages at verbose level 1.
 
 Wed 21 Sep 2022 : introduced distinction between vrblvl 1 and 2,
   updated dbl*_{systems,bals}_{host.cpp, kernels.cu}

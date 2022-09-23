@@ -411,7 +411,7 @@ void GPU_dbl_evaluate_monomials
          for(int j=0; j<=deg; j++) cout << input[i][j] << endl;
       }
    }
-   bool verbose = (vrblvl > 0);
+   bool verbose = (vrblvl > 1);
    double cnvlapms,elapsedms,walltimesec;
 
    ConvolutionJobs jobs(dim);
@@ -530,7 +530,7 @@ void GPU_cmplx_evaluate_monomials
             cout << inputre[i][j] << "  " << inputim[i][j] << endl;
       }
    }
-   bool verbose = (vrblvl > 0);
+   bool verbose = (vrblvl > 1);
    double cnvlapms,elapsedms,walltimesec;
 
    ConvolutionJobs jobs(dim);

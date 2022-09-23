@@ -88,6 +88,8 @@ void dbl8_update_series
    double **dxhihilo, double **dxlohilo, double **dxhilolo, double **dxlololo,
    int vrblvl )
 {
+   if(vrblvl > 0) cout << scientific << setprecision(16);
+
    if(vrblvl > 1)
    {
       cout << scientific << setprecision(16);
@@ -151,6 +153,8 @@ void cmplx8_update_series
    double **dximhihilo, double **dximlohilo,
    double **dximhilolo, double **dximlololo, int vrblvl )
 {
+   if(vrblvl > 0) cout << scientific << setprecision(16);
+
    if(vrblvl > 1)
    {
       cout << scientific << setprecision(16);
@@ -505,6 +509,9 @@ void dbl8_newton_qrstep
             cffhilolo[i][j] = 0.0; cfflololo[i][j] = 0.0;
          }
       }
+      if(vrblvl > 0)
+         cout << "calling CPU_dbl8_evaluate_monomials ..." << endl;
+
       CPU_dbl8_evaluate_monomials
          (dim,deg,nvr,idx,exp,nbrfac,expfac,
           cffhihihi,cfflohihi,cffhilohi,cfflolohi,
@@ -534,6 +541,9 @@ void dbl8_newton_qrstep
             cffhilolo[i][j] = 0.0; cfflololo[i][j] = 0.0;
          }
       }
+      if(vrblvl > 0)
+         cout << "calling GPU_dbl8_evaluate_monomials ..." << endl;
+
       GPU_dbl8_evaluate_monomials
          (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,
           cffhihihi,cfflohihi,cffhilohi,cfflolohi,
@@ -606,6 +616,7 @@ void dbl8_newton_qrstep
    if(vrblvl > 0) cout << "linearizing the output ..." << endl;
 
    if((mode == 1) || (mode == 2))
+   {
       dbl8_linearize_evaldiff_output
          (dim,degp1,nvr,idx,
           outputhihihi_h,outputlohihi_h,outputhilohi_h,outputlolohi_h,
@@ -616,8 +627,9 @@ void dbl8_newton_qrstep
           rhshihilo_h,rhslohilo_h,rhshilolo_h,rhslololo_h,
           jacvalhihihi_h,jacvallohihi_h,jacvalhilohi_h,jacvallolohi_h,
           jacvalhihilo_h,jacvallohilo_h,jacvalhilolo_h,jacvallololo_h,vrblvl);
-
+   }
    if((mode == 1) || (mode == 2))
+   {
       dbl8_linearize_evaldiff_output
          (dim,degp1,nvr,idx,
           outputhihihi_d,outputlohihi_d,outputhilohi_d,outputlolohi_d,
@@ -628,7 +640,7 @@ void dbl8_newton_qrstep
           rhshihilo_d,rhslohilo_d,rhshilolo_d,rhslololo_d,
           jacvalhihihi_d,jacvallohihi_d,jacvalhilohi_d,jacvallolohi_d,
           jacvalhihilo_d,jacvallohilo_d,jacvalhilolo_d,jacvallololo_d,vrblvl);
-
+   }
    if((vrblvl > 0) && (mode == 2))
    {
       cout << "comparing CPU with GPU function values ... " << endl;
@@ -1277,6 +1289,9 @@ void cmplx8_newton_qrstep
             cffimhilolo[i][j] = 0.0; cffimlololo[i][j] = 0.0;
          }
       }
+      if(vrblvl > 0)
+         cout << "calling CPU_cmplx8_evaluate_monomials ..." << endl;
+
       CPU_cmplx8_evaluate_monomials
          (dim,deg,nvr,idx,exp,nbrfac,expfac,
           cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
@@ -1322,6 +1337,9 @@ void cmplx8_newton_qrstep
             cffimhilolo[i][j] = 0.0; cffimlololo[i][j] = 0.0;
          }
       }
+      if(vrblvl > 0)
+         cout << "calling GPU_cmplx8_evaluate_monomials ..." << endl;
+
       GPU_cmplx8_evaluate_monomials
          (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,
           cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
@@ -1428,7 +1446,10 @@ void cmplx8_newton_qrstep
             jacvalimlololo_d[i][j][k] = 0.0;
          }
 
+   if(vrblvl > 0) cout << "linearizing the output ..." << endl;
+
    if((mode == 1) || (mode == 2))
+   {
       cmplx8_linearize_evaldiff_output
          (dim,degp1,nvr,idx,
           outputrehihihi_h,outputrelohihi_h,outputrehilohi_h,outputrelolohi_h,
@@ -1448,8 +1469,9 @@ void cmplx8_newton_qrstep
           jacvalimhihihi_h,jacvalimlohihi_h,jacvalimhilohi_h,jacvalimlolohi_h,
           jacvalimhihilo_h,jacvalimlohilo_h,jacvalimhilolo_h,jacvalimlololo_h,
           vrblvl);
-
+   }
    if((mode == 0) || (mode == 2))
+   {
       cmplx8_linearize_evaldiff_output
          (dim,degp1,nvr,idx,
           outputrehihihi_d,outputrelohihi_d,outputrehilohi_d,outputrelolohi_d,
@@ -1469,7 +1491,7 @@ void cmplx8_newton_qrstep
           jacvalimhihihi_d,jacvalimlohihi_d,jacvalimhilohi_d,jacvalimlolohi_d,
           jacvalimhihilo_d,jacvalimlohilo_d,jacvalimhilolo_d,jacvalimlololo_d,
           vrblvl);
-
+   }
    if((vrblvl > 0) && (mode == 2))
    {
       cout << "comparing CPU with GPU function values ... " << endl;
@@ -1722,6 +1744,9 @@ void cmplx8_newton_qrstep
 
    if((mode == 1) || (mode == 2))
    {
+      if(vrblvl > 0)
+         cout << "calling CPU_cmplx8_qrbs_solve ..." << endl;
+
       CPU_cmplx8_qrbs_solve
          (dim,degp1,
           jacvalrehihihi_h,jacvalrelohihi_h,jacvalrehilohi_h,jacvalrelolohi_h,
@@ -1756,6 +1781,8 @@ void cmplx8_newton_qrstep
  
       if(vrblvl > 0)
       {
+         cout << "calling CPU_cmplx8_linear_residue ..." << endl;
+
          CPU_cmplx8_linear_residue
             (dim,degp1,
              jacvalrehihihi_h,jacvalrelohihi_h,
@@ -1796,6 +1823,9 @@ void cmplx8_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
+      if(vrblvl > 0)
+         cout << "calling GPU_cmplx8_bals_solve ..." << endl;
+
       GPU_cmplx8_bals_solve
          (dim,degp1,szt,nbt,
           jacvalrehihihi_d,jacvalrelohihi_d,jacvalrehilohi_d,jacvalrelolohi_d,
@@ -1821,6 +1851,8 @@ void cmplx8_newton_qrstep
 
       if(vrblvl > 0)
       {
+         cout << "calling CPU_cmplx8_linear_residue ..." << endl;
+
          CPU_cmplx8_linear_residue
             (dim,degp1,
              jacvalrehihihi_d,jacvalrelohihi_d,
