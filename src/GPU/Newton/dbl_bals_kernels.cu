@@ -273,6 +273,17 @@ void GPU_cmplx_bals_head
          workRim[i][j] = Rim[i][j];
       }
    }
+   if(verbose)
+   {
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "workR[" << i << "][" << j << "] : "
+                 << workRre[i][j] << "  " << workRim[i][j] << endl;
+
+      cout << "  ncols = " << ncols
+           << "  szt = " << szt
+           << "  nbt = " << nbt << endl;
+   }
    GPU_cmplx_upper_tiled_solver
       (ncols,szt,nbt,workRre,workRim,bre,bim,xre,xim,
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
@@ -280,7 +291,7 @@ void GPU_cmplx_bals_head
 
    if(verbose)
    {
-      cout << "-> after calling the GPU upper solver ..." << endl;
+      cout << "-> GPU_cmplx_bals_head, after GPU upper solver ..." << endl;
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)
             cout << "R[" << i << "][" << j << "] : "
@@ -289,6 +300,9 @@ void GPU_cmplx_bals_head
       for(int i=0; i<nrows; i++)
          cout << "b[" << i << "] : "
               << bre[i] << "  " << bim[i] << endl;
+      for(int i=0; i<ncols; i++)
+         cout << "x[" << i << "] : "
+              << xre[i] << "  " << xim[i] << endl;
    }
    for(int i=0; i<nrows; i++)
    {
@@ -392,6 +406,12 @@ void GPU_cmplx_bals_tail
    cudaMemcpy(xre_d,solre[stage-1],szsol,cudaMemcpyHostToDevice);
    cudaMemcpy(xim_d,solim[stage-1],szsol,cudaMemcpyHostToDevice);
 
+   if(verbose)
+   {
+      cout << "GPU_cmplx_bals_tail solution x :" << endl;
+      for(int i=0; i<ncols; i++)
+         cout << solre[stage-1][i] << "  " << solim[stage-1][i] << endl;
+   }
    double *Are_d;
    double *Aim_d;
    const size_t szmat = nrows*ncols*sizeof(double);

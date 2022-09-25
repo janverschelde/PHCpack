@@ -1,3 +1,6 @@
+Sat 24 Sep 2022 : more verbosity in dbl_bals_kernels.cu to chase a bug
+  on complex data.
+
 Fri 23 Sep 2022 : extended unimodular_matrices with the test case of
   decoupled two variable monomials.
 
