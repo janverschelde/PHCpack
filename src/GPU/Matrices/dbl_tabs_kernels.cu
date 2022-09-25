@@ -354,6 +354,7 @@ __global__ void  dbl_invert_tiles ( int dim, double *U, double *invU )
    rhs = ((double) int(k == dim-1));  // right hand side for each thread
    int rowidx = offset + (dim - 1)*dim + k; // row index in the inverse
 
+   invU[rowidx] = 0.0;                // initialize in case Ucol[k] == 0.0
    if(Ucol[k] != 0.0)
    {
       invUrow[k] = rhs/Ucol[k];          // last row of the inverse
@@ -381,6 +382,7 @@ __global__ void  dbl_invert_tiles ( int dim, double *U, double *invU )
       Ucol[k] = U[colidx+k];
       rowidx = offset + i*dim + k;    // save in i-th row of inverse
 
+      invU[rowidx] = 0.0;             // initialize in case Ucol[i] == 0.0
       __syncthreads();
       if(Ucol[i] != 0.0)
       {
@@ -414,13 +416,18 @@ __global__ void  cmplx_invert_tiles
 
    // invUrow[k] = rhs/Ucol[k];         // last row of the inverse
    det = Ucolre[k]*Ucolre[k] + Ucolim[k]*Ucolim[k];
-   accre = Ucolre[k]/det;
-   accim = -Ucolim[k]/det;
-   invUrowre[k] = rhsre*accre - rhsim*accim;
-   invUrowim[k] = rhsim*accre + rhsre*accim;
-   invUre[rowidx] = invUrowre[k];       // store the last row into invU
-   invUim[rowidx] = invUrowim[k]; 
-
+   invUre[rowidx] = 0.0;
+   invUim[rowidx] = 0.0;             // initialize in case det == 0.0
+   if(1.0 + det != 1.0)
+   {
+      accre = Ucolre[k]/det;
+      accim = -Ucolim[k]/det;
+      invUrowre[k] = rhsre*accre - rhsim*accim;
+      invUrowim[k] = rhsim*accre + rhsre*accim;
+      invUre[rowidx] = invUrowre[k];       // store the last row into invU
+      invUim[rowidx] = invUrowim[k]; 
+   }
+   __syncthreads();
    for(int i=dim-2; i>=0; i--)          // compute row with index i
    {
       rhsre = ((double) int(k == i));   // set rhs for i-th unit vector
@@ -453,12 +460,17 @@ __global__ void  cmplx_invert_tiles
       __syncthreads();
       // invUrow[k] = rhs/Ucol[i];
       det = Ucolre[i]*Ucolre[i] + Ucolim[i]*Ucolim[i];
-      accre = Ucolre[i]/det;
-      accim = -Ucolim[i]/det;
-      invUrowre[k] = rhsre*accre - rhsim*accim;
-      invUrowim[k] = rhsim*accre + rhsre*accim;
-      invUre[rowidx] = invUrowre[k];
-      invUim[rowidx] = invUrowim[k];
+      invUre[rowidx] = 0.0;
+      invUim[rowidx] = 0.0;          // initialize in case det == 0.0
+      if(1.0 + det != 1.0)
+      {
+         accre = Ucolre[i]/det;
+         accim = -Ucolim[i]/det;
+         invUrowre[k] = rhsre*accre - rhsim*accim;
+         invUrowim[k] = rhsim*accre + rhsre*accim;
+         invUre[rowidx] = invUrowre[k];
+         invUim[rowidx] = invUrowim[k];
+      }
    }
 }
 
@@ -858,6 +870,11 @@ void GPU_cmplx_upper_tiled_solver
             Dim_h[ix++] = Uim[offset+i][offset+j];
          }
    }
+/*
+   cout << "after defining the diagonal tiles ..." << endl;
+   for(int i=0; i<nbr; i++)
+      cout << "D[" << i << "] : " << Dre_h[i] << "  " << Dim_h[i] << endl;
+ */
    const size_t sznum = nbr*sizeof(double);
    cudaMalloc((void**)&Dre_d,sznum);
    cudaMalloc((void**)&Dim_d,sznum);
@@ -888,6 +905,19 @@ void GPU_cmplx_upper_tiled_solver
    *totlapms += milliseconds;
    flopcount_cmplx_invert_tiles(nbt,szt,addcnt,mulcnt,divcnt);
 
+   // testing, add another cudaMemcpy ...
+/*
+   cudaMemcpy(invDre_h,invDre_d,sznum,cudaMemcpyDeviceToHost);
+   cudaMemcpy(invDim_h,invDim_d,sznum,cudaMemcpyDeviceToHost);
+   cout << "after inverting the diagonal tiles ..." << endl;
+   for(int i=0; i<nbr; i++)
+      cout << "invD[" << i << "] : "
+           << invDre_h[i] << "  " << invDim_h[i] << endl;
+
+   cout << "before copying b to rhs ... " << endl;
+   for(int i=0; i<dim; i++)
+      cout << "b[" << i << "] : " << bre[i] << "  " << bim[i] << endl;
+ */
    double *rhsre_d;                    // right hand side on device
    double *rhsim_d;
    const size_t szrhs = dim*sizeof(double);
@@ -895,7 +925,10 @@ void GPU_cmplx_upper_tiled_solver
    cudaMalloc((void**)&rhsim_d,szrhs);
    cudaMemcpy(rhsre_d,bre,szrhs,cudaMemcpyHostToDevice);
    cudaMemcpy(rhsim_d,bim,szrhs,cudaMemcpyHostToDevice);
-
+/*
+   cout << "cmplx_multiply_inverse szt = " << szt
+        << ", nbt-1 = " << nbt-1 << endl;
+ */
    cudaEventRecord(start);
    cmplx_multiply_inverse<<<1,szt>>>
       (szt,nbt-1,invDre_d,invDim_d,rhsre_d,rhsim_d);
@@ -907,6 +940,7 @@ void GPU_cmplx_upper_tiled_solver
    flopcount_cmplx_multiply_inverse(szt,addcnt,mulcnt);
 
    int nbrUcol = (nbt-1)*szt*szt;           // #doubles in column of U
+   // int nbrUcol = dim*szt*szt; looks weird if nbt = 1 (one tile) ...
    double *Ucolre_h = new double[nbrUcol];  // column of U on host
    double *Ucolim_h = new double[nbrUcol];  // imaginary parts of the column
    double *Ucolre_d;
@@ -966,7 +1000,11 @@ void GPU_cmplx_upper_tiled_solver
 
    cudaMemcpy(xre,rhsre_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(xim,rhsim_d,szrhs,cudaMemcpyDeviceToHost);
-
+/*
+   cout << "after copying rhs to x ..." << endl;
+   for(int i=0; i<dim; i++)
+      cout << "x[" << i << "] : " << xre[i] << "  " << xim[i] << endl;
+ */
    // copy of invD_d is needed only for testing purposes
    cudaMemcpy(invDre_h,invDre_d,sznum,cudaMemcpyDeviceToHost);
    cudaMemcpy(invDim_h,invDim_d,sznum,cudaMemcpyDeviceToHost);
