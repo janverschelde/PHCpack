@@ -708,14 +708,20 @@ __global__ void  dbl4_invert_tiles
    int rowidx = offset + (dim - 1)*dim + k; // row index in the inverse
 
    // invUrow[k] = rhs/Ucol[k];       // last row of the inverse
-   qdg_div(     rhshihi,        rhslohi,        rhshilo,        rhslolo,
-               Ucolhihi[k],    Ucollohi[k],    Ucolhilo[k],    Ucollolo[k],
-           &invUrowhihi[k],&invUrowlohi[k],&invUrowhilo[k],&invUrowlolo[k]);
-   invUhihi[rowidx] = invUrowhihi[k];     // store the last row into invU
-   invUlohi[rowidx] = invUrowlohi[k];
-   invUhilo[rowidx] = invUrowhilo[k];
-   invUlolo[rowidx] = invUrowlolo[k];
-
+   invUhihi[rowidx] = 0.0;
+   invUlohi[rowidx] = 0.0;     // initialize in case of zero divisor
+   invUhilo[rowidx] = 0.0;
+   invUlolo[rowidx] = 0.0;
+   if(1.0 + Ucolhihi[k] + Ucollohi[k] + Ucolhilo[k] + Ucollolo[k] != 1.0)
+   {
+      qdg_div(     rhshihi,        rhslohi,        rhshilo,        rhslolo,
+                  Ucolhihi[k],    Ucollohi[k],    Ucolhilo[k],    Ucollolo[k],
+              &invUrowhihi[k],&invUrowlohi[k],&invUrowhilo[k],&invUrowlolo[k]);
+      invUhihi[rowidx] = invUrowhihi[k];     // store the last row into invU
+      invUlohi[rowidx] = invUrowlohi[k];
+      invUhilo[rowidx] = invUrowhilo[k];
+      invUlolo[rowidx] = invUrowlolo[k];
+   }
    for(int i=dim-2; i>=0; i--)        // compute row with index i
    {
       rhshihi = ((double) int(k == i));   // set rhs for i-th unit vector
@@ -758,13 +764,21 @@ __global__ void  dbl4_invert_tiles
 
       __syncthreads();
       // invUrow[k] = rhs/Ucol[i];
-      qdg_div(     rhshihi,        rhslohi,        rhshilo,        rhslolo,
+      invUhihi[rowidx] = 0.0;
+      invUlohi[rowidx] = 0.0;    // initialize in case of zero divisor
+      invUhilo[rowidx] = 0.0;
+      invUlolo[rowidx] = 0.0;
+
+      if(1.0 + Ucolhihi[k] + Ucollohi[k] + Ucolhilo[k] + Ucollolo[k] != 1.0)
+      {
+         qdg_div(     rhshihi,        rhslohi,        rhshilo,        rhslolo,
                   Ucolhihi[i],    Ucollohi[i],    Ucolhilo[i],    Ucollolo[i],
               &invUrowhihi[k],&invUrowlohi[k],&invUrowhilo[k],&invUrowlolo[k]);
-      invUhihi[rowidx] = invUrowhihi[k];
-      invUlohi[rowidx] = invUrowlohi[k];
-      invUhilo[rowidx] = invUrowhilo[k];
-      invUlolo[rowidx] = invUrowlolo[k];
+         invUhihi[rowidx] = invUrowhihi[k];
+         invUlohi[rowidx] = invUrowlohi[k];
+         invUhilo[rowidx] = invUrowhilo[k];
+         invUlolo[rowidx] = invUrowlolo[k];
+      }
    }
 }
 
@@ -839,46 +853,59 @@ __global__ void  cmplx4_invert_tiles
             &acc1hihi,    &acc1lohi,    &acc1hilo,    &acc1lolo);
    qdg_inc(&denhihi,&denlohi,&denhilo,&denlolo,
            acc1hihi,acc1lohi,acc1hilo,acc1lolo);
-   qdg_div(Ucolrehihi[k],Ucolrelohi[k],Ucolrehilo[k],Ucolrelolo[k],
-              denhihi,      denlohi,      denhilo,      denlolo,
-           &invrehihi,   &invrelohi,   &invrehilo,   &invrelolo);
-   qdg_div(Ucolimhihi[k],Ucolimlohi[k],Ucolimhilo[k],Ucolimlolo[k],
-              denhihi,      denlohi,      denhilo,      denlolo,
-           &invimhihi,   &invimlohi,   &invimhilo,   &invimlolo);
-   qdg_minus(&invimhihi,&invimlohi,&invimhilo,&invimlolo);
-   qdg_mul(rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
-           invrehihi,invrelohi,invrehilo,invrelolo,
-           &acc1hihi,&acc1lohi,&acc1hilo,&acc1lolo);
-   qdg_mul(rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
-           invimhihi,invimlohi,invimhilo,invimlolo,
-           &acc2hihi,&acc2lohi,&acc2hilo,&acc2lolo);
-   qdg_mul(rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
-           invrehihi,invrelohi,invrehilo,invrelolo,
-           &acc3hihi,&acc3lohi,&acc3hilo,&acc3lolo);
-   qdg_mul(rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
-           invimhihi,invimlohi,invimhilo,invimlolo,
-           &acc4hihi,&acc4lohi,&acc4hilo,&acc4lolo);
-   qdg_dec(&acc1hihi,&acc1lohi,&acc1hilo,&acc1lolo,
-            acc2hihi, acc2lohi, acc2hilo, acc2lolo);
-   invUrowrehihi[k] = acc1hihi;
-   invUrowrelohi[k] = acc1lohi;
-   invUrowrehilo[k] = acc1hilo;
-   invUrowrelolo[k] = acc1lolo;
-   qdg_inc(&acc3hihi,&acc3lohi,&acc3hilo,&acc3lolo,
-            acc4hihi, acc4lohi, acc4hilo, acc4lolo);
-   invUrowimhihi[k] = acc3hihi;
-   invUrowimlohi[k] = acc3lohi;
-   invUrowimhilo[k] = acc3hilo;
-   invUrowimlolo[k] = acc3lolo;
-   invUrehihi[rowidx] = invUrowrehihi[k];   // store the last row into invU
-   invUrelohi[rowidx] = invUrowrelohi[k];
-   invUrehilo[rowidx] = invUrowrehilo[k]; 
-   invUrelolo[rowidx] = invUrowrelolo[k];
-   invUimhihi[rowidx] = invUrowimhihi[k];
-   invUimlohi[rowidx] = invUrowimlohi[k];
-   invUimhilo[rowidx] = invUrowimhilo[k];
-   invUimlolo[rowidx] = invUrowimlolo[k];
 
+   invUrehihi[rowidx] = 0.0;  // initialize in case of zero denominator
+   invUrelohi[rowidx] = 0.0;
+   invUrehilo[rowidx] = 0.0; 
+   invUrelolo[rowidx] = 0.0;
+   invUimhihi[rowidx] = 0.0;
+   invUimlohi[rowidx] = 0.0;
+   invUimhilo[rowidx] = 0.0;
+   invUimlolo[rowidx] = 0.0;
+
+   if(1.0 + denhihi + denlohi + denhilo + denlolo != 1.0)
+   {
+      qdg_div(Ucolrehihi[k],Ucolrelohi[k],Ucolrehilo[k],Ucolrelolo[k],
+                 denhihi,      denlohi,      denhilo,      denlolo,
+              &invrehihi,   &invrelohi,   &invrehilo,   &invrelolo);
+      qdg_div(Ucolimhihi[k],Ucolimlohi[k],Ucolimhilo[k],Ucolimlolo[k],
+                 denhihi,      denlohi,      denhilo,      denlolo,
+              &invimhihi,   &invimlohi,   &invimhilo,   &invimlolo);
+      qdg_minus(&invimhihi,&invimlohi,&invimhilo,&invimlolo);
+      qdg_mul(rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
+              invrehihi,invrelohi,invrehilo,invrelolo,
+              &acc1hihi,&acc1lohi,&acc1hilo,&acc1lolo);
+      qdg_mul(rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
+              invimhihi,invimlohi,invimhilo,invimlolo,
+              &acc2hihi,&acc2lohi,&acc2hilo,&acc2lolo);
+      qdg_mul(rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
+              invrehihi,invrelohi,invrehilo,invrelolo,
+              &acc3hihi,&acc3lohi,&acc3hilo,&acc3lolo);
+      qdg_mul(rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
+              invimhihi,invimlohi,invimhilo,invimlolo,
+              &acc4hihi,&acc4lohi,&acc4hilo,&acc4lolo);
+      qdg_dec(&acc1hihi,&acc1lohi,&acc1hilo,&acc1lolo,
+               acc2hihi, acc2lohi, acc2hilo, acc2lolo);
+      invUrowrehihi[k] = acc1hihi;
+      invUrowrelohi[k] = acc1lohi;
+      invUrowrehilo[k] = acc1hilo;
+      invUrowrelolo[k] = acc1lolo;
+      qdg_inc(&acc3hihi,&acc3lohi,&acc3hilo,&acc3lolo,
+               acc4hihi, acc4lohi, acc4hilo, acc4lolo);
+      invUrowimhihi[k] = acc3hihi;
+      invUrowimlohi[k] = acc3lohi;
+      invUrowimhilo[k] = acc3hilo;
+      invUrowimlolo[k] = acc3lolo;
+      invUrehihi[rowidx] = invUrowrehihi[k];  // store the last row into invU
+      invUrelohi[rowidx] = invUrowrelohi[k];
+      invUrehilo[rowidx] = invUrowrehilo[k]; 
+      invUrelolo[rowidx] = invUrowrelolo[k];
+      invUimhihi[rowidx] = invUrowimhihi[k];
+      invUimlohi[rowidx] = invUrowimlohi[k];
+      invUimhilo[rowidx] = invUrowimhilo[k];
+      invUimlolo[rowidx] = invUrowimlolo[k];
+   }
+   __syncthreads();
    for(int i=dim-2; i>=0; i--)        // compute row with index i
    {
       rhsrehihi = ((double) int(k == i));   // set rhs for i-th unit vector
@@ -964,45 +991,58 @@ __global__ void  cmplx4_invert_tiles
                &acc1hihi,    &acc1lohi,    &acc1hilo,    &acc1lolo);
       qdg_inc(&denhihi,&denlohi,&denhilo,&denlolo,
               acc1hihi,acc1lohi,acc1hilo,acc1lolo);
-      qdg_div(Ucolrehihi[i],Ucolrelohi[i],Ucolrehilo[i],Ucolrelolo[i],
-                 denhihi,      denlohi,      denhilo,      denlolo,
-              &invrehihi,   &invrelohi,   &invrehilo,   &invrelolo);
-      qdg_div(Ucolimhihi[i],Ucolimlohi[i],Ucolimhilo[i],Ucolimlolo[i],
-                 denhihi,      denlohi,      denhilo,      denlolo,
-              &invimhihi,   &invimlohi,   &invimhilo,   &invimlolo);
-      qdg_minus(&invimhihi,&invimlohi,&invimhilo,&invimlolo);
-      qdg_mul(rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
-              invrehihi,invrelohi,invrehilo,invrelolo,
-              &acc1hihi,&acc1lohi,&acc1hilo,&acc1lolo);
-      qdg_mul(rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
-              invimhihi,invimlohi,invimhilo,invimlolo,
-              &acc2hihi,&acc2lohi,&acc2hilo,&acc2lolo);
-      qdg_mul(rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
-              invrehihi,invrelohi,invrehilo,invrelolo,
-              &acc3hihi,&acc3lohi,&acc3hilo,&acc3lolo);
-      qdg_mul(rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
-              invimhihi,invimlohi,invimhilo,invimlolo,
-              &acc4hihi,&acc4lohi,&acc4hilo,&acc4lolo);
-      qdg_dec(&acc1hihi,&acc1lohi,&acc1hilo,&acc1lolo,
-               acc2hihi, acc2lohi, acc2hilo, acc2lolo);
-      invUrowrehihi[k] = acc1hihi;
-      invUrowrelohi[k] = acc1lohi;
-      invUrowrehilo[k] = acc1hilo;
-      invUrowrelolo[k] = acc1lolo;
-      qdg_inc(&acc3hihi,&acc3lohi,&acc3hilo,&acc3lolo,
-               acc4hihi, acc4lohi, acc4hilo, acc4lolo);
-      invUrowimhihi[k] = acc3hihi;
-      invUrowimlohi[k] = acc3lohi;
-      invUrowimhilo[k] = acc3hilo;
-      invUrowimlolo[k] = acc3lolo;
-      invUrehihi[rowidx] = invUrowrehihi[k];
-      invUrelohi[rowidx] = invUrowrelohi[k];
-      invUrehilo[rowidx] = invUrowrehilo[k];
-      invUrelolo[rowidx] = invUrowrelolo[k];
-      invUimhihi[rowidx] = invUrowimhihi[k];
-      invUimlohi[rowidx] = invUrowimlohi[k];
-      invUimhilo[rowidx] = invUrowimhilo[k];
-      invUimlolo[rowidx] = invUrowimlolo[k];
+
+      invUrehihi[rowidx] = 0.0; // initialize in case of zero denominator
+      invUrelohi[rowidx] = 0.0;
+      invUrehilo[rowidx] = 0.0;
+      invUrelolo[rowidx] = 0.0;
+      invUimhihi[rowidx] = 0.0;
+      invUimlohi[rowidx] = 0.0;
+      invUimhilo[rowidx] = 0.0;
+      invUimlolo[rowidx] = 0.0;
+
+      if(1.0 + denhihi + denlohi + denhilo + denlolo != 1.0)
+      {
+         qdg_div(Ucolrehihi[i],Ucolrelohi[i],Ucolrehilo[i],Ucolrelolo[i],
+                    denhihi,      denlohi,      denhilo,      denlolo,
+                 &invrehihi,   &invrelohi,   &invrehilo,   &invrelolo);
+         qdg_div(Ucolimhihi[i],Ucolimlohi[i],Ucolimhilo[i],Ucolimlolo[i],
+                    denhihi,      denlohi,      denhilo,      denlolo,
+                 &invimhihi,   &invimlohi,   &invimhilo,   &invimlolo);
+         qdg_minus(&invimhihi,&invimlohi,&invimhilo,&invimlolo);
+         qdg_mul(rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
+                 invrehihi,invrelohi,invrehilo,invrelolo,
+                 &acc1hihi,&acc1lohi,&acc1hilo,&acc1lolo);
+         qdg_mul(rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
+                 invimhihi,invimlohi,invimhilo,invimlolo,
+                 &acc2hihi,&acc2lohi,&acc2hilo,&acc2lolo);
+         qdg_mul(rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
+                 invrehihi,invrelohi,invrehilo,invrelolo,
+                 &acc3hihi,&acc3lohi,&acc3hilo,&acc3lolo);
+         qdg_mul(rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
+                 invimhihi,invimlohi,invimhilo,invimlolo,
+                 &acc4hihi,&acc4lohi,&acc4hilo,&acc4lolo);
+         qdg_dec(&acc1hihi,&acc1lohi,&acc1hilo,&acc1lolo,
+                  acc2hihi, acc2lohi, acc2hilo, acc2lolo);
+         invUrowrehihi[k] = acc1hihi;
+         invUrowrelohi[k] = acc1lohi;
+         invUrowrehilo[k] = acc1hilo;
+         invUrowrelolo[k] = acc1lolo;
+         qdg_inc(&acc3hihi,&acc3lohi,&acc3hilo,&acc3lolo,
+                  acc4hihi, acc4lohi, acc4hilo, acc4lolo);
+         invUrowimhihi[k] = acc3hihi;
+         invUrowimlohi[k] = acc3lohi;
+         invUrowimhilo[k] = acc3hilo;
+         invUrowimlolo[k] = acc3lolo;
+         invUrehihi[rowidx] = invUrowrehihi[k];
+         invUrelohi[rowidx] = invUrowrelohi[k];
+         invUrehilo[rowidx] = invUrowrehilo[k];
+         invUrelolo[rowidx] = invUrowrelolo[k];
+         invUimhihi[rowidx] = invUrowimhihi[k];
+         invUimlohi[rowidx] = invUrowimlohi[k];
+         invUimhilo[rowidx] = invUrowimhilo[k];
+         invUimlolo[rowidx] = invUrowimlolo[k];
+      }
    }
 }
 

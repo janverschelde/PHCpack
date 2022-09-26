@@ -1272,25 +1272,42 @@ __global__ void  dbl8_invert_tiles
 
    // invUrow[k] = rhs/Ucol[k];       // last row of the inverse
    __syncthreads();
-   odg_div(     rhshihihi,        rhslohihi,    rhshilohi,    rhslolohi,
-                rhshihilo,        rhslohilo,    rhshilolo,    rhslololo,
-               Ucolhihihi[k],    Ucollohihi[k],Ucolhilohi[k],Ucollolohi[k],
-               Ucolhihilo[k],    Ucollohilo[k],Ucolhilolo[k],Ucollololo[k],
-           &invUrowhihihi[k],&invUrowlohihi[k],
-           &invUrowhilohi[k],&invUrowlolohi[k],
-           &invUrowhihilo[k],&invUrowlohilo[k],
-           &invUrowhilolo[k],&invUrowlololo[k]);
-   // store the last row into invU
-   __syncthreads();
-   invUhihihi[rowidx] = invUrowhihihi[k];
-   invUlohihi[rowidx] = invUrowlohihi[k];
-   invUhilohi[rowidx] = invUrowhilohi[k];
-   invUlolohi[rowidx] = invUrowlolohi[k];
-   invUhihilo[rowidx] = invUrowhihilo[k];
-   invUlohilo[rowidx] = invUrowlohilo[k];
-   invUhilolo[rowidx] = invUrowhilolo[k];
-   invUlololo[rowidx] = invUrowlololo[k];
 
+   double checksum
+      = Ucolhihihi[k] + Ucollohihi[k] + Ucolhilohi[k] + Ucollolohi[k] 
+      + Ucolhihilo[k] + Ucollohilo[k] + Ucolhilolo[k] + Ucollololo[k];
+
+   invUhihihi[rowidx] = 0.0; // initialize in case of zero divisor
+   invUlohihi[rowidx] = 0.0;
+   invUhilohi[rowidx] = 0.0;
+   invUlolohi[rowidx] = 0.0;
+   invUhihilo[rowidx] = 0.0;
+   invUlohilo[rowidx] = 0.0;
+   invUhilolo[rowidx] = 0.0;
+   invUlololo[rowidx] = 0.0;
+
+   if(1.0 + checksum != 1.0)
+   {
+      odg_div(     rhshihihi,        rhslohihi,    rhshilohi,    rhslolohi,
+                   rhshihilo,        rhslohilo,    rhshilolo,    rhslololo,
+                  Ucolhihihi[k],    Ucollohihi[k],Ucolhilohi[k],Ucollolohi[k],
+                  Ucolhihilo[k],    Ucollohilo[k],Ucolhilolo[k],Ucollololo[k],
+              &invUrowhihihi[k],&invUrowlohihi[k],
+              &invUrowhilohi[k],&invUrowlolohi[k],
+              &invUrowhihilo[k],&invUrowlohilo[k],
+              &invUrowhilolo[k],&invUrowlololo[k]);
+      // store the last row into invU
+      __syncthreads();
+      invUhihihi[rowidx] = invUrowhihihi[k];
+      invUlohihi[rowidx] = invUrowlohihi[k];
+      invUhilohi[rowidx] = invUrowhilohi[k];
+      invUlolohi[rowidx] = invUrowlolohi[k];
+      invUhihilo[rowidx] = invUrowhihilo[k];
+      invUlohilo[rowidx] = invUrowlohilo[k];
+      invUhilolo[rowidx] = invUrowhilolo[k];
+      invUlololo[rowidx] = invUrowlololo[k];
+   }
+   __syncthreads();
    for(int i=dim-2; i>=0; i--)        // compute row with index i
    {
       rhshihihi = ((double) int(k == i));   // set rhs for i-th unit vector
@@ -1362,7 +1379,22 @@ __global__ void  dbl8_invert_tiles
 
       __syncthreads();
       // invUrow[k] = rhs/Ucol[i];
-      odg_div(     rhshihihi,        rhslohihi,    rhshilohi,    rhslolohi,
+      invUhihihi[rowidx] = 0.0;    // initialize in case of zero divisor
+      invUlohihi[rowidx] = 0.0;
+      invUhilohi[rowidx] = 0.0;
+      invUlolohi[rowidx] = 0.0;
+      invUhihilo[rowidx] = 0.0;
+      invUlohilo[rowidx] = 0.0;
+      invUhilolo[rowidx] = 0.0;
+      invUlololo[rowidx] = 0.0;
+
+      checksum
+         = Ucolhihihi[k] + Ucollohihi[k] + Ucolhilohi[k] + Ucollolohi[k] 
+         + Ucolhihilo[k] + Ucollohilo[k] + Ucolhilolo[k] + Ucollololo[k];
+
+      if(1.0 + checksum != 1.0)
+      {
+         odg_div(  rhshihihi,        rhslohihi,    rhshilohi,    rhslolohi,
                    rhshihilo,        rhslohilo,    rhshilolo,    rhslololo,
                   Ucolhihihi[i],    Ucollohihi[i],Ucolhilohi[i],Ucollolohi[i],
                   Ucolhihilo[i],    Ucollohilo[i],Ucolhilolo[i],Ucollololo[i],
@@ -1370,15 +1402,16 @@ __global__ void  dbl8_invert_tiles
               &invUrowhilohi[k],&invUrowlolohi[k],
               &invUrowhihilo[k],&invUrowlohilo[k],
               &invUrowhilolo[k],&invUrowlololo[k]);
-      __syncthreads();
-      invUhihihi[rowidx] = invUrowhihihi[k];
-      invUlohihi[rowidx] = invUrowlohihi[k];
-      invUhilohi[rowidx] = invUrowhilohi[k];
-      invUlolohi[rowidx] = invUrowlolohi[k];
-      invUhihilo[rowidx] = invUrowhihilo[k];
-      invUlohilo[rowidx] = invUrowlohilo[k];
-      invUhilolo[rowidx] = invUrowhilolo[k];
-      invUlololo[rowidx] = invUrowlololo[k];
+         __syncthreads();
+         invUhihihi[rowidx] = invUrowhihihi[k];
+         invUlohihi[rowidx] = invUrowlohihi[k];
+         invUhilohi[rowidx] = invUrowhilohi[k];
+         invUlolohi[rowidx] = invUrowlolohi[k];
+         invUhihilo[rowidx] = invUrowhihilo[k];
+         invUlohilo[rowidx] = invUrowlohilo[k];
+         invUhilolo[rowidx] = invUrowhilolo[k];
+         invUlololo[rowidx] = invUrowlololo[k];
+      }
    }
 }
 
@@ -1510,89 +1543,114 @@ __global__ void cmplx8_invert_tiles
            &denhihilo,&denlohilo,&denhilolo,&denlololo,
            acc1hihihi,acc1lohihi,acc1hilohi,acc1lolohi,
            acc1hihilo,acc1lohilo,acc1hilolo,acc1lololo);
-   odg_div(Ucolrehihihi[k],Ucolrelohihi[k],Ucolrehilohi[k],Ucolrelolohi[k],
-           Ucolrehihilo[k],Ucolrelohilo[k],Ucolrehilolo[k],Ucolrelololo[k],
-              denhihihi,      denlohihi,      denhilohi,      denlolohi,
-              denhihilo,      denlohilo,      denhilolo,      denlololo,
-           &invrehihihi,   &invrelohihi,   &invrehilohi,   &invrelolohi,
-           &invrehihilo,   &invrelohilo,   &invrehilolo,   &invrelololo);
-   odg_div(Ucolimhihihi[k],Ucolimlohihi[k],Ucolimhilohi[k],Ucolimlolohi[k],
-           Ucolimhihilo[k],Ucolimlohilo[k],Ucolimhilolo[k],Ucolimlololo[k],
-              denhihihi,      denlohihi,      denhilohi,      denlolohi,
-              denhihilo,      denlohilo,      denhilolo,      denlololo,
-           &invimhihihi,   &invimlohihi,   &invimhilohi,   &invimlolohi,
-           &invimhihilo,   &invimlohilo,   &invimhilolo,   &invimlololo);
-   odg_minus(&invimhihihi,&invimlohihi,&invimhilohi,&invimlolohi,
-             &invimhihilo,&invimlohilo,&invimhilolo,&invimlololo);
-   odg_mul(rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
-           rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
-           invrehihihi,invrelohihi,invrehilohi,invrelolohi,
-           invrehihilo,invrelohilo,invrehilolo,invrelololo,
-           &acc1hihihi,&acc1lohihi,&acc1hilohi,&acc1lolohi,
-           &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo);
-   odg_mul(rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
-           rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
-           invimhihihi,invimlohihi,invimhilohi,invimlolohi,
-           invimhihilo,invimlohilo,invimhilolo,invimlololo,
-           &acc2hihihi,&acc2lohihi,&acc2hilohi,&acc2lolohi,
-           &acc2hihilo,&acc2lohilo,&acc2hilolo,&acc2lololo);
-   odg_mul(rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
-           rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
-           invrehihihi,invrelohihi,invrehilohi,invrelolohi,
-           invrehihilo,invrelohilo,invrehilolo,invrelololo,
-           &acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
-           &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo);
-   odg_mul(rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
-           rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
-           invimhihihi,invimlohihi,invimhilohi,invimlolohi,
-           invimhihilo,invimlohilo,invimhilolo,invimlololo,
-           &acc4hihihi,&acc4lohihi,&acc4hilohi,&acc4lolohi,
-           &acc4hihilo,&acc4lohilo,&acc4hilolo,&acc4lololo);
-   odg_dec(&acc1hihihi,&acc1lohihi,&acc1hilohi,&acc1lolohi,
-           &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo,
-            acc2hihihi, acc2lohihi, acc2hilohi, acc2lolohi,
-            acc2hihilo, acc2lohilo, acc2hilolo, acc2lololo);
-   __syncthreads();
-   invUrowrehihihi[k] = acc1hihihi;
-   invUrowrelohihi[k] = acc1lohihi;
-   invUrowrehilohi[k] = acc1hilohi;
-   invUrowrelolohi[k] = acc1lolohi;
-   invUrowrehihilo[k] = acc1hihilo;
-   invUrowrelohilo[k] = acc1lohilo;
-   invUrowrehilolo[k] = acc1hilolo;
-   invUrowrelololo[k] = acc1lololo;
-   __syncthreads();
-   odg_inc(&acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
-           &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo,
-            acc4hihihi, acc4lohihi, acc4hilohi, acc4lolohi,
-            acc4hihilo, acc4lohilo, acc4hilolo, acc4lololo);
-   __syncthreads();
-   invUrowimhihihi[k] = acc3hihihi;
-   invUrowimlohihi[k] = acc3lohihi;
-   invUrowimhilohi[k] = acc3hilohi;
-   invUrowimlolohi[k] = acc3lolohi;
-   invUrowimhihilo[k] = acc3hihilo;
-   invUrowimlohilo[k] = acc3lohilo;
-   invUrowimhilolo[k] = acc3hilolo;
-   invUrowimlololo[k] = acc3lololo;
-   __syncthreads();
-   invUrehihihi[rowidx] = invUrowrehihihi[k];   // store the last row
-   invUrelohihi[rowidx] = invUrowrelohihi[k];
-   invUrehilohi[rowidx] = invUrowrehilohi[k]; 
-   invUrelolohi[rowidx] = invUrowrelolohi[k];
-   invUrehihilo[rowidx] = invUrowrehihilo[k];
-   invUrelohilo[rowidx] = invUrowrelohilo[k];
-   invUrehilolo[rowidx] = invUrowrehilolo[k]; 
-   invUrelololo[rowidx] = invUrowrelololo[k];
-   invUimhihihi[rowidx] = invUrowimhihihi[k];
-   invUimlohihi[rowidx] = invUrowimlohihi[k];
-   invUimhilohi[rowidx] = invUrowimhilohi[k];
-   invUimlolohi[rowidx] = invUrowimlolohi[k];
-   invUimhihilo[rowidx] = invUrowimhihilo[k];
-   invUimlohilo[rowidx] = invUrowimlohilo[k];
-   invUimhilolo[rowidx] = invUrowimhilolo[k];
-   invUimlololo[rowidx] = invUrowimlololo[k];
 
+   double checksum
+      = denhihihi + denlohihi + denhilohi + denlolohi 
+      + denhihilo + denlohilo + denhilolo + denlololo;
+
+   invUrehihihi[rowidx] = 0.0;   // initialize in case of zero denominator
+   invUrelohihi[rowidx] = 0.0;
+   invUrehilohi[rowidx] = 0.0; 
+   invUrelolohi[rowidx] = 0.0;
+   invUrehihilo[rowidx] = 0.0;
+   invUrelohilo[rowidx] = 0.0;
+   invUrehilolo[rowidx] = 0.0; 
+   invUrelololo[rowidx] = 0.0;
+   invUimhihihi[rowidx] = 0.0;
+   invUimlohihi[rowidx] = 0.0;
+   invUimhilohi[rowidx] = 0.0;
+   invUimlolohi[rowidx] = 0.0; 
+   invUimhihilo[rowidx] = 0.0;
+   invUimlohilo[rowidx] = 0.0;
+   invUimhilolo[rowidx] = 0.0;
+   invUimlololo[rowidx] = 0.0;
+
+   if(1.0 + checksum != 1.0)
+   {
+      odg_div(Ucolrehihihi[k],Ucolrelohihi[k],Ucolrehilohi[k],Ucolrelolohi[k],
+              Ucolrehihilo[k],Ucolrelohilo[k],Ucolrehilolo[k],Ucolrelololo[k],
+                 denhihihi,      denlohihi,      denhilohi,      denlolohi,
+                 denhihilo,      denlohilo,      denhilolo,      denlololo,
+              &invrehihihi,   &invrelohihi,   &invrehilohi,   &invrelolohi,
+              &invrehihilo,   &invrelohilo,   &invrehilolo,   &invrelololo);
+      odg_div(Ucolimhihihi[k],Ucolimlohihi[k],Ucolimhilohi[k],Ucolimlolohi[k],
+              Ucolimhihilo[k],Ucolimlohilo[k],Ucolimhilolo[k],Ucolimlololo[k],
+                 denhihihi,      denlohihi,      denhilohi,      denlolohi,
+                 denhihilo,      denlohilo,      denhilolo,      denlololo,
+              &invimhihihi,   &invimlohihi,   &invimhilohi,   &invimlolohi,
+              &invimhihilo,   &invimlohilo,   &invimhilolo,   &invimlololo);
+      odg_minus(&invimhihihi,&invimlohihi,&invimhilohi,&invimlolohi,
+                &invimhihilo,&invimlohilo,&invimhilolo,&invimlololo);
+      odg_mul(rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
+              rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
+              invrehihihi,invrelohihi,invrehilohi,invrelolohi,
+              invrehihilo,invrelohilo,invrehilolo,invrelololo,
+              &acc1hihihi,&acc1lohihi,&acc1hilohi,&acc1lolohi,
+              &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo);
+      odg_mul(rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
+              rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
+              invimhihihi,invimlohihi,invimhilohi,invimlolohi,
+              invimhihilo,invimlohilo,invimhilolo,invimlololo,
+              &acc2hihihi,&acc2lohihi,&acc2hilohi,&acc2lolohi,
+              &acc2hihilo,&acc2lohilo,&acc2hilolo,&acc2lololo);
+      odg_mul(rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
+              rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
+              invrehihihi,invrelohihi,invrehilohi,invrelolohi,
+              invrehihilo,invrelohilo,invrehilolo,invrelololo,
+              &acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
+              &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo);
+      odg_mul(rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
+              rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
+              invimhihihi,invimlohihi,invimhilohi,invimlolohi,
+              invimhihilo,invimlohilo,invimhilolo,invimlololo,
+              &acc4hihihi,&acc4lohihi,&acc4hilohi,&acc4lolohi,
+              &acc4hihilo,&acc4lohilo,&acc4hilolo,&acc4lololo);
+      odg_dec(&acc1hihihi,&acc1lohihi,&acc1hilohi,&acc1lolohi,
+              &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo,
+               acc2hihihi, acc2lohihi, acc2hilohi, acc2lolohi,
+               acc2hihilo, acc2lohilo, acc2hilolo, acc2lololo);
+      __syncthreads();
+      invUrowrehihihi[k] = acc1hihihi;
+      invUrowrelohihi[k] = acc1lohihi;
+      invUrowrehilohi[k] = acc1hilohi;
+      invUrowrelolohi[k] = acc1lolohi;
+      invUrowrehihilo[k] = acc1hihilo;
+      invUrowrelohilo[k] = acc1lohilo;
+      invUrowrehilolo[k] = acc1hilolo;
+      invUrowrelololo[k] = acc1lololo;
+      __syncthreads();
+      odg_inc(&acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
+              &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo,
+               acc4hihihi, acc4lohihi, acc4hilohi, acc4lolohi,
+               acc4hihilo, acc4lohilo, acc4hilolo, acc4lololo);
+      __syncthreads();
+      invUrowimhihihi[k] = acc3hihihi;
+      invUrowimlohihi[k] = acc3lohihi;
+      invUrowimhilohi[k] = acc3hilohi;
+      invUrowimlolohi[k] = acc3lolohi;
+      invUrowimhihilo[k] = acc3hihilo;
+      invUrowimlohilo[k] = acc3lohilo;
+      invUrowimhilolo[k] = acc3hilolo;
+      invUrowimlololo[k] = acc3lololo;
+      __syncthreads();
+      invUrehihihi[rowidx] = invUrowrehihihi[k];   // store the last row
+      invUrelohihi[rowidx] = invUrowrelohihi[k];
+      invUrehilohi[rowidx] = invUrowrehilohi[k]; 
+      invUrelolohi[rowidx] = invUrowrelolohi[k];
+      invUrehihilo[rowidx] = invUrowrehihilo[k];
+      invUrelohilo[rowidx] = invUrowrelohilo[k];
+      invUrehilolo[rowidx] = invUrowrehilolo[k]; 
+      invUrelololo[rowidx] = invUrowrelololo[k];
+      invUimhihihi[rowidx] = invUrowimhihihi[k];
+      invUimlohihi[rowidx] = invUrowimlohihi[k];
+      invUimhilohi[rowidx] = invUrowimhilohi[k];
+      invUimlolohi[rowidx] = invUrowimlolohi[k];
+      invUimhihilo[rowidx] = invUrowimhihilo[k];
+      invUimlohilo[rowidx] = invUrowimlohilo[k];
+      invUimhilolo[rowidx] = invUrowimhilolo[k];
+      invUimlololo[rowidx] = invUrowimlololo[k];
+   }
+   __syncthreads();
    for(int i=dim-2; i>=0; i--)        // compute row with index i
    {
       rhsrehihihi = ((double) int(k == i));   // set rhs for i-th unit vector
@@ -1758,88 +1816,117 @@ __global__ void cmplx8_invert_tiles
               &denhihilo,&denlohilo,&denhilolo,&denlololo,
               acc1hihihi,acc1lohihi,acc1hilohi,acc1lolohi,
               acc1hihilo,acc1lohilo,acc1hilolo,acc1lololo);
-      odg_div(Ucolrehihihi[i],Ucolrelohihi[i],Ucolrehilohi[i],Ucolrelolohi[i],
-              Ucolrehihilo[i],Ucolrelohilo[i],Ucolrehilolo[i],Ucolrelololo[i],
-                 denhihihi,      denlohihi,      denhilohi,      denlolohi,
-                 denhihilo,      denlohilo,      denhilolo,      denlololo,
-              &invrehihihi,   &invrelohihi,   &invrehilohi,   &invrelolohi,
-              &invrehihilo,   &invrelohilo,   &invrehilolo,   &invrelololo);
-      odg_div(Ucolimhihihi[i],Ucolimlohihi[i],Ucolimhilohi[i],Ucolimlolohi[i],
-              Ucolimhihilo[i],Ucolimlohilo[i],Ucolimhilolo[i],Ucolimlololo[i],
-                 denhihihi,      denlohihi,      denhilohi,      denlolohi,
-                 denhihilo,      denlohilo,      denhilolo,      denlololo,
-              &invimhihihi,   &invimlohihi,   &invimhilohi,   &invimlolohi,
-              &invimhihilo,   &invimlohilo,   &invimhilolo,   &invimlololo);
-      odg_minus(&invimhihihi,&invimlohihi,&invimhilohi,&invimlolohi,
-                &invimhihilo,&invimlohilo,&invimhilolo,&invimlololo);
-      odg_mul(rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
-              rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
-              invrehihihi,invrelohihi,invrehilohi,invrelolohi,
-              invrehihilo,invrelohilo,invrehilolo,invrelololo,
-              &acc1hihihi,&acc1lohihi,&acc1hilohi,&acc1lolohi,
-              &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo);
-      odg_mul(rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
-              rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
-              invimhihihi,invimlohihi,invimhilohi,invimlolohi,
-              invimhihilo,invimlohilo,invimhilolo,invimlololo,
-              &acc2hihihi,&acc2lohihi,&acc2hilohi,&acc2lolohi,
-              &acc2hihilo,&acc2lohilo,&acc2hilolo,&acc2lololo);
-      odg_mul(rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
-              rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
-              invrehihihi,invrelohihi,invrehilohi,invrelolohi,
-              invrehihilo,invrelohilo,invrehilolo,invrelololo,
-              &acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
-              &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo);
-      odg_mul(rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
-              rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
-              invimhihihi,invimlohihi,invimhilohi,invimlolohi,
-              invimhihilo,invimlohilo,invimhilolo,invimlololo,
-              &acc4hihihi,&acc4lohihi,&acc4hilohi,&acc4lolohi,
-              &acc4hihilo,&acc4lohilo,&acc4hilolo,&acc4lololo);
-      odg_dec(&acc1hihihi,&acc1lohihi,&acc1hilohi,&acc1lolohi,
-              &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo,
-               acc2hihihi, acc2lohihi, acc2hilohi, acc2lolohi,
-               acc2hihilo, acc2lohilo, acc2hilolo, acc2lololo);
-      __syncthreads();
-      invUrowrehihihi[k] = acc1hihihi;
-      invUrowrelohihi[k] = acc1lohihi;
-      invUrowrehilohi[k] = acc1hilohi;
-      invUrowrelolohi[k] = acc1lolohi;
-      invUrowrehihilo[k] = acc1hihilo;
-      invUrowrelohilo[k] = acc1lohilo;
-      invUrowrehilolo[k] = acc1hilolo;
-      invUrowrelololo[k] = acc1lololo;
-      __syncthreads();
-      odg_inc(&acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
-              &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo,
-               acc4hihihi, acc4lohihi, acc4hilohi, acc4lolohi,
-               acc4hihilo, acc4lohilo, acc4hilolo, acc4lololo);
-      __syncthreads();
-      invUrowimhihihi[k] = acc3hihihi;
-      invUrowimlohihi[k] = acc3lohihi;
-      invUrowimhilohi[k] = acc3hilohi;
-      invUrowimlolohi[k] = acc3lolohi;
-      invUrowimhihilo[k] = acc3hihilo;
-      invUrowimlohilo[k] = acc3lohilo;
-      invUrowimhilolo[k] = acc3hilolo;
-      invUrowimlololo[k] = acc3lololo;
-      __syncthreads();
-      invUrehihihi[rowidx] = invUrowrehihihi[k];
-      invUrelohihi[rowidx] = invUrowrelohihi[k];
-      invUrehilohi[rowidx] = invUrowrehilohi[k];
-      invUrelolohi[rowidx] = invUrowrelolohi[k];
-      invUrehihilo[rowidx] = invUrowrehihilo[k];
-      invUrelohilo[rowidx] = invUrowrelohilo[k];
-      invUrehilolo[rowidx] = invUrowrehilolo[k];
-      invUrelololo[rowidx] = invUrowrelololo[k];
-      invUimhihihi[rowidx] = invUrowimhihihi[k];
-      invUimlohihi[rowidx] = invUrowimlohihi[k];
-      invUimhilohi[rowidx] = invUrowimhilohi[k];
-      invUimlolohi[rowidx] = invUrowimlolohi[k];
-      invUimhihilo[rowidx] = invUrowimhihilo[k];
-      invUimlohilo[rowidx] = invUrowimlohilo[k];
-      invUimhilolo[rowidx] = invUrowimhilolo[k];
-      invUimlololo[rowidx] = invUrowimlololo[k];
+
+      checksum
+         = denhihihi + denlohihi + denhilohi + denlolohi 
+         + denhihilo + denlohilo + denhilolo + denlololo;
+
+      invUrehihihi[rowidx] = 0.0; // initialize in case
+      invUrelohihi[rowidx] = 0.0; // of zero denominator
+      invUrehilohi[rowidx] = 0.0;
+      invUrelolohi[rowidx] = 0.0;
+      invUrehihilo[rowidx] = 0.0;
+      invUrelohilo[rowidx] = 0.0;
+      invUrehilolo[rowidx] = 0.0;
+      invUrelololo[rowidx] = 0.0;
+      invUimhihihi[rowidx] = 0.0;
+      invUimlohihi[rowidx] = 0.0;
+      invUimhilohi[rowidx] = 0.0;
+      invUimlolohi[rowidx] = 0.0;
+      invUimhihilo[rowidx] = 0.0;
+      invUimlohilo[rowidx] = 0.0;
+      invUimhilolo[rowidx] = 0.0;
+      invUimlololo[rowidx] = 0.0;
+
+      if(1.0 + checksum != 1.0)
+      {
+         odg_div(Ucolrehihihi[i],Ucolrelohihi[i],
+                 Ucolrehilohi[i],Ucolrelolohi[i],
+                 Ucolrehihilo[i],Ucolrelohilo[i],
+                 Ucolrehilolo[i],Ucolrelololo[i],
+                    denhihihi,      denlohihi,      denhilohi,      denlolohi,
+                    denhihilo,      denlohilo,      denhilolo,      denlololo,
+                 &invrehihihi,   &invrelohihi,   &invrehilohi,   &invrelolohi,
+                 &invrehihilo,   &invrelohilo,   &invrehilolo,   &invrelololo);
+         odg_div(Ucolimhihihi[i],Ucolimlohihi[i],
+                 Ucolimhilohi[i],Ucolimlolohi[i],
+                 Ucolimhihilo[i],Ucolimlohilo[i],
+                 Ucolimhilolo[i],Ucolimlololo[i],
+                    denhihihi,      denlohihi,      denhilohi,      denlolohi,
+                    denhihilo,      denlohilo,      denhilolo,      denlololo,
+                 &invimhihihi,   &invimlohihi,   &invimhilohi,   &invimlolohi,
+                 &invimhihilo,   &invimlohilo,   &invimhilolo,   &invimlololo);
+         odg_minus(&invimhihihi,&invimlohihi,&invimhilohi,&invimlolohi,
+                   &invimhihilo,&invimlohilo,&invimhilolo,&invimlololo);
+         odg_mul(rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
+                 rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
+                 invrehihihi,invrelohihi,invrehilohi,invrelolohi,
+                 invrehihilo,invrelohilo,invrehilolo,invrelololo,
+                 &acc1hihihi,&acc1lohihi,&acc1hilohi,&acc1lolohi,
+                 &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo);
+         odg_mul(rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
+                 rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
+                 invimhihihi,invimlohihi,invimhilohi,invimlolohi,
+                 invimhihilo,invimlohilo,invimhilolo,invimlololo,
+                 &acc2hihihi,&acc2lohihi,&acc2hilohi,&acc2lolohi,
+                 &acc2hihilo,&acc2lohilo,&acc2hilolo,&acc2lololo);
+         odg_mul(rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
+                 rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
+                 invrehihihi,invrelohihi,invrehilohi,invrelolohi,
+                 invrehihilo,invrelohilo,invrehilolo,invrelololo,
+                 &acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
+                 &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo);
+         odg_mul(rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
+                 rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
+                 invimhihihi,invimlohihi,invimhilohi,invimlolohi,
+                 invimhihilo,invimlohilo,invimhilolo,invimlololo,
+                 &acc4hihihi,&acc4lohihi,&acc4hilohi,&acc4lolohi,
+                 &acc4hihilo,&acc4lohilo,&acc4hilolo,&acc4lololo);
+         odg_dec(&acc1hihihi,&acc1lohihi,&acc1hilohi,&acc1lolohi,
+                 &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo,
+                  acc2hihihi, acc2lohihi, acc2hilohi, acc2lolohi,
+                  acc2hihilo, acc2lohilo, acc2hilolo, acc2lololo);
+         __syncthreads();
+         invUrowrehihihi[k] = acc1hihihi;
+         invUrowrelohihi[k] = acc1lohihi;
+         invUrowrehilohi[k] = acc1hilohi;
+         invUrowrelolohi[k] = acc1lolohi;
+         invUrowrehihilo[k] = acc1hihilo;
+         invUrowrelohilo[k] = acc1lohilo;
+         invUrowrehilolo[k] = acc1hilolo;
+         invUrowrelololo[k] = acc1lololo;
+         __syncthreads();
+         odg_inc(&acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
+                 &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo,
+                  acc4hihihi, acc4lohihi, acc4hilohi, acc4lolohi,
+                  acc4hihilo, acc4lohilo, acc4hilolo, acc4lololo);
+         __syncthreads();
+         invUrowimhihihi[k] = acc3hihihi;
+         invUrowimlohihi[k] = acc3lohihi;
+         invUrowimhilohi[k] = acc3hilohi;
+         invUrowimlolohi[k] = acc3lolohi;
+         invUrowimhihilo[k] = acc3hihilo;
+         invUrowimlohilo[k] = acc3lohilo;
+         invUrowimhilolo[k] = acc3hilolo;
+         invUrowimlololo[k] = acc3lololo;
+         __syncthreads();
+         invUrehihihi[rowidx] = invUrowrehihihi[k];
+         invUrelohihi[rowidx] = invUrowrelohihi[k];
+         invUrehilohi[rowidx] = invUrowrehilohi[k];
+         invUrelolohi[rowidx] = invUrowrelolohi[k];
+         invUrehihilo[rowidx] = invUrowrehihilo[k];
+         invUrelohilo[rowidx] = invUrowrelohilo[k];
+         invUrehilolo[rowidx] = invUrowrehilolo[k];
+         invUrelololo[rowidx] = invUrowrelololo[k];
+         invUimhihihi[rowidx] = invUrowimhihihi[k];
+         invUimlohihi[rowidx] = invUrowimlohihi[k];
+         invUimhilohi[rowidx] = invUrowimhilohi[k];
+         invUimlolohi[rowidx] = invUrowimlolohi[k];
+         invUimhihilo[rowidx] = invUrowimhihilo[k];
+         invUimlohilo[rowidx] = invUrowimlohilo[k];
+         invUimhilolo[rowidx] = invUrowimhilolo[k];
+         invUimlololo[rowidx] = invUrowimlololo[k];
+      }
    }
 }
 

@@ -1,6 +1,7 @@
 Sun 25 sep 2022 : bug fix in dbl_tabs_kernels.cu for sparse matrices,
   added extra tests and initializations to deal with zero entries.
-  Applied the same modifications to dbl2_tabs_kernels.cu.
+  Applied the same modifications to dbl2_tabs_kernels.cu,
+  also for complex data and in {dbl4,dbl8}_tabs_kernels.cu as well.
 
 Mon 19 Sep 2022 : in {dbl2,dbl4,dbl8}_factorizations.cpp, fixed an index
   error in the last function.

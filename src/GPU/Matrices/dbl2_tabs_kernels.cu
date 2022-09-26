@@ -504,24 +504,34 @@ __global__ void  cmplx2_invert_tiles
    ddg_mul(Ucolrehi[k],Ucolrelo[k],Ucolrehi[k],Ucolrelo[k],&denhi,&denlo);
    ddg_mul(Ucolimhi[k],Ucolimlo[k],Ucolimhi[k],Ucolimlo[k],&acc1hi,&acc1lo);
    ddg_inc(&denhi,&denlo,acc1hi,acc1lo);
-   ddg_div(Ucolrehi[k],Ucolrelo[k],denhi,denlo,&invrehi,&invrelo);
-   ddg_div(Ucolimhi[k],Ucolimlo[k],denhi,denlo,&invimhi,&invimlo);
-   ddg_minus(&invimhi,&invimlo);
-   ddg_mul(rhsrehi,rhsrelo,invrehi,invrelo,&acc1hi,&acc1lo);
-   ddg_mul(rhsimhi,rhsimlo,invimhi,invimlo,&acc2hi,&acc2lo);
-   ddg_mul(rhsimhi,rhsimlo,invrehi,invrelo,&acc3hi,&acc3lo);
-   ddg_mul(rhsrehi,rhsrelo,invimhi,invimlo,&acc4hi,&acc4lo);
-   ddg_dec(&acc1hi,&acc1lo,acc2hi,acc2lo);
-   invUrowrehi[k] = acc1hi;
-   invUrowrelo[k] = acc1lo;
-   ddg_inc(&acc3hi,&acc3lo,acc4hi,acc4lo);
-   invUrowimhi[k] = acc3hi;
-   invUrowimlo[k] = acc3lo;
-   invUrehi[rowidx] = invUrowrehi[k];     // store the last row into invU
-   invUrelo[rowidx] = invUrowrelo[k];
-   invUimhi[rowidx] = invUrowimhi[k];
-   invUimlo[rowidx] = invUrowimlo[k];
 
+   invUrehi[rowidx] = 0.0;  // initialize in case of zero denominator
+   invUrelo[rowidx] = 0.0;
+   invUimhi[rowidx] = 0.0;
+   invUimlo[rowidx] = 0.0;
+   
+   if(1.0 + denhi + denlo != 1.0)
+   {
+      ddg_div(Ucolrehi[k],Ucolrelo[k],denhi,denlo,&invrehi,&invrelo);
+      ddg_div(Ucolimhi[k],Ucolimlo[k],denhi,denlo,&invimhi,&invimlo);
+
+      ddg_minus(&invimhi,&invimlo);
+      ddg_mul(rhsrehi,rhsrelo,invrehi,invrelo,&acc1hi,&acc1lo);
+      ddg_mul(rhsimhi,rhsimlo,invimhi,invimlo,&acc2hi,&acc2lo);
+      ddg_mul(rhsimhi,rhsimlo,invrehi,invrelo,&acc3hi,&acc3lo);
+      ddg_mul(rhsrehi,rhsrelo,invimhi,invimlo,&acc4hi,&acc4lo);
+      ddg_dec(&acc1hi,&acc1lo,acc2hi,acc2lo);
+      invUrowrehi[k] = acc1hi;
+      invUrowrelo[k] = acc1lo;
+      ddg_inc(&acc3hi,&acc3lo,acc4hi,acc4lo);
+      invUrowimhi[k] = acc3hi;
+      invUrowimlo[k] = acc3lo;
+      invUrehi[rowidx] = invUrowrehi[k];     // store the last row into invU
+      invUrelo[rowidx] = invUrowrelo[k];
+      invUimhi[rowidx] = invUrowimhi[k];
+      invUimlo[rowidx] = invUrowimlo[k];
+   }
+   __syncthreads();
    for(int i=dim-2; i>=0; i--)        // compute row with index i
    {
       rhsrehi = ((double) int(k == i));   // set rhs for i-th unit vector
@@ -570,23 +580,32 @@ __global__ void  cmplx2_invert_tiles
       ddg_mul(Ucolrehi[i],Ucolrelo[i],Ucolrehi[i],Ucolrelo[i],&denhi,&denlo);
       ddg_mul(Ucolimhi[i],Ucolimlo[i],Ucolimhi[i],Ucolimlo[i],&acc1hi,&acc1lo);
       ddg_inc(&denhi,&denlo,acc1hi,acc1lo);
-      ddg_div(Ucolrehi[i],Ucolrelo[i],denhi,denlo,&invrehi,&invrelo);
-      ddg_div(Ucolimhi[i],Ucolimlo[i],denhi,denlo,&invimhi,&invimlo);
-      ddg_minus(&invimhi,&invimlo);
-      ddg_mul(rhsrehi,rhsrelo,invrehi,invrelo,&acc1hi,&acc1lo);
-      ddg_mul(rhsimhi,rhsimlo,invimhi,invimlo,&acc2hi,&acc2lo);
-      ddg_mul(rhsimhi,rhsimlo,invrehi,invrelo,&acc3hi,&acc3lo);
-      ddg_mul(rhsrehi,rhsrelo,invimhi,invimlo,&acc4hi,&acc4lo);
-      ddg_dec(&acc1hi,&acc1lo,acc2hi,acc2lo);
-      invUrowrehi[k] = acc1hi;
-      invUrowrelo[k] = acc1lo;
-      ddg_inc(&acc3hi,&acc3lo,acc4hi,acc4lo);
-      invUrowimhi[k] = acc3hi;
-      invUrowimlo[k] = acc3lo;
-      invUrehi[rowidx] = invUrowrehi[k];
-      invUrelo[rowidx] = invUrowrelo[k];
-      invUimhi[rowidx] = invUrowimhi[k];
-      invUimlo[rowidx] = invUrowimlo[k];
+
+      invUrehi[rowidx] = 0.0; // initialize in case of zero denominator
+      invUrelo[rowidx] = 0.0;
+      invUimhi[rowidx] = 0.0;
+      invUimlo[rowidx] = 0.0;
+
+      if(1.0 + denhi + denlo != 1.0)
+      {
+         ddg_div(Ucolrehi[i],Ucolrelo[i],denhi,denlo,&invrehi,&invrelo);
+         ddg_div(Ucolimhi[i],Ucolimlo[i],denhi,denlo,&invimhi,&invimlo);
+         ddg_minus(&invimhi,&invimlo);
+         ddg_mul(rhsrehi,rhsrelo,invrehi,invrelo,&acc1hi,&acc1lo);
+         ddg_mul(rhsimhi,rhsimlo,invimhi,invimlo,&acc2hi,&acc2lo);
+         ddg_mul(rhsimhi,rhsimlo,invrehi,invrelo,&acc3hi,&acc3lo);
+         ddg_mul(rhsrehi,rhsrelo,invimhi,invimlo,&acc4hi,&acc4lo);
+         ddg_dec(&acc1hi,&acc1lo,acc2hi,acc2lo);
+         invUrowrehi[k] = acc1hi;
+         invUrowrelo[k] = acc1lo;
+         ddg_inc(&acc3hi,&acc3lo,acc4hi,acc4lo);
+         invUrowimhi[k] = acc3hi;
+         invUrowimlo[k] = acc3lo;
+         invUrehi[rowidx] = invUrowrehi[k];
+         invUrelo[rowidx] = invUrowrelo[k];
+         invUimhi[rowidx] = invUrowimhi[k];
+         invUimlo[rowidx] = invUrowimlo[k];
+      }
    }
 }
 
