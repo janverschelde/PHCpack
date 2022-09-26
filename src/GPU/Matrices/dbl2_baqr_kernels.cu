@@ -4059,13 +4059,20 @@ void GPU_cmplx2_blocked_houseqr
                 betahi_h,betalo_h,betahi_d,betalo_d,
                 houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
-            GPU_cmplx2_small_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,
-                Arehi_h,Arelo_h,Aimhi_h,Aimlo_h,
-                Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
-                Vrehi_d,Vrelo_d,Vimhi_d,Vimlo_d,
-                betahi_h,betalo_h,betahi_d,betalo_d,
-                tileRlapms,addcnt,mulcnt,verbose);
+            if((betahi_h[L] == 0.0) && (betalo_h[L] == 0.0))
+            {
+               if(verbose) cout << "Zero beta detected." << endl;
+            }
+            else
+            {
+               GPU_cmplx2_small_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,
+                   Arehi_h,Arelo_h,Aimhi_h,Aimlo_h,
+                   Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
+                   Vrehi_d,Vrelo_d,Vimhi_d,Vimlo_d,
+                   betahi_h,betalo_h,betahi_d,betalo_d,
+                   tileRlapms,addcnt,mulcnt,verbose);
+            }
          }
          else
          {
@@ -4080,17 +4087,24 @@ void GPU_cmplx2_blocked_houseqr
                 &sigmahi_h,&sigmalo_h,sigmahi_d,sigmalo_d,
                 houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
-            GPU_cmplx2_medium_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,
-                Arehi_h,Arelo_h,Aimhi_h,Aimlo_h,
-                Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
-                Vrehi_d,Vrelo_d,Vimhi_d,Vimlo_d,
-                betahi_h,betalo_h,betahi_d,betalo_d,
-                RHdotvrehi_h,RHdotvrelo_h,RHdotvimhi_h,RHdotvimlo_h,
-                RHdotvrehi_d,RHdotvrelo_d,RHdotvimhi_d,RHdotvimlo_d,
-                bRHvrehi_h,bRHvrelo_h,bRHvimhi_h,bRHvimlo_h,
-                bRHvrehi_d,bRHvrelo_d,bRHvimhi_d,bRHvimlo_d,
-                RHvlapms,tileRlapms,addcnt,mulcnt,verbose);
+            if((betahi_h[L] == 0.0) && (betalo_h[L] == 0.0))
+            {
+               if(verbose) cout << "Zero beta detected." << endl;
+            }
+            else
+            {
+               GPU_cmplx2_medium_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,
+                   Arehi_h,Arelo_h,Aimhi_h,Aimlo_h,
+                   Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
+                   Vrehi_d,Vrelo_d,Vimhi_d,Vimlo_d,
+                   betahi_h,betalo_h,betahi_d,betalo_d,
+                   RHdotvrehi_h,RHdotvrelo_h,RHdotvimhi_h,RHdotvimlo_h,
+                   RHdotvrehi_d,RHdotvrelo_d,RHdotvimhi_d,RHdotvimlo_d,
+                   bRHvrehi_h,bRHvrelo_h,bRHvimhi_h,bRHvimlo_h,
+                   bRHvrehi_d,bRHvrelo_d,bRHvimhi_d,bRHvimlo_d,
+                   RHvlapms,tileRlapms,addcnt,mulcnt,verbose);
+            }
          }
       }
       GPU_cmplx2_medium_VB_to_W

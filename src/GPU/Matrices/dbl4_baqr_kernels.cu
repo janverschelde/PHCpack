@@ -135,14 +135,21 @@ __global__ void dbl4_small_house
    }
    __syncthreads();
    // shv[j] = shv[j]/prd[0];
-   qdg_div(shvhihi[j],shvlohi[j],shvhilo[j],shvlolo[j],
-           prdhihi[0],prdlohi[0],prdhilo[0],prdlolo[0],
-          &acchihi,  &acclohi,  &acchilo  ,&acclolo);
-   __syncthreads();
-   vhihi[j+1] = acchihi;
-   vlohi[j+1] = acclohi;
-   vhilo[j+1] = acchilo;
-   vlolo[j+1] = acclolo;
+   vhihi[j+1] = 0.0;
+   vlohi[j+1] = 0.0;  // initialize in case of zero beta ...
+   vhilo[j+1] = 0.0;
+   vlolo[j+1] = 0.0;
+   if(1.0 + *betahihi + *betalohi + *betahilo + *betalolo != 1.0)
+   {
+      qdg_div(shvhihi[j],shvlohi[j],shvhilo[j],shvlolo[j],
+              prdhihi[0],prdlohi[0],prdhilo[0],prdlolo[0],
+             &acchihi,  &acclohi,  &acchilo  ,&acclolo);
+      __syncthreads();
+      vhihi[j+1] = acchihi;
+      vlohi[j+1] = acclohi;
+      vhilo[j+1] = acchilo;
+      vlolo[j+1] = acclolo;
+   }
    __syncthreads();
    if(j == 0)
    {
@@ -334,42 +341,53 @@ __global__ void cmplx4_small_house
    }
    __syncthreads(); // important synchronization!
    // inv0re = v0parts[0]/prd[0];               // real part of 1/v[0]
-   qdg_div(v0parts[0],v0parts[1],v0parts[2],v0parts[3],
-               prdhihi[0], prdlohi[0], prdhilo[0], prdlolo[0],
-           &inv0rehihi,&inv0relohi,&inv0rehilo,&inv0relolo);
-   // inv0im = -v0parts[1]/prd[0];              // imag part of 1/v[0]
-   qdg_div(v0parts[4],v0parts[5],v0parts[6],v0parts[7],
-               prdhihi[0], prdlohi[0], prdhilo[0], prdlolo[0],
-           &inv0imhihi,&inv0imlohi,&inv0imhilo,&inv0imlolo);
-   qdg_minus(&inv0imhihi,&inv0imlohi,&inv0imhilo,&inv0imlolo);
-   // zre = shvre[j]*inv0re - shvim[j]*inv0im;  // real part of v[j]/v[0]
-   __syncthreads();
-   qdg_mul( shvrehihi[j],shvrelohi[j],shvrehilo[j],shvrelolo[j],
-           inv0rehihi,  inv0relohi,  inv0rehilo,  inv0relolo,
-             &zrehihi,    &zrelohi,    &zrehilo,    &zrelolo);
-   qdg_mul( shvimhihi[j],shvimlohi[j],shvimhilo[j],shvimlolo[j],
-           inv0imhihi,  inv0imlohi,  inv0imhilo,  inv0imlolo,
-             &acchihi,    &acclohi,    &acchilo,    &acclolo);
-   qdg_dec(&zrehihi,&zrelohi,&zrehilo,&zrelolo,
-            acchihi, acclohi, acchilo, acclolo);
-   // zim = shvim[j]*inv0re + shvre[j]*inv0im;  // imag part of v[j]/v[0]
-   qdg_mul( shvimhihi[j],shvimlohi[j],shvimhilo[j],shvimlolo[j],
-           inv0rehihi,  inv0relohi,  inv0rehilo,  inv0relolo,
-             &zimhihi,    &zimlohi,    &zimhilo,    &zimlolo);
-   qdg_mul( shvrehihi[j],shvrelohi[j],shvrehilo[j],shvrelolo[j],
-           inv0imhihi,  inv0imlohi,  inv0imhilo,  inv0imlolo,
-             &acchihi,    &acclohi,    &acchilo,    &acclolo);
-   qdg_inc(&zimhihi,&zimlohi,&zimhilo,&zimlolo,
-            acchihi, acclohi, acchilo, acclolo);
-   __syncthreads();
-   vrehihi[j+1] = zrehihi;
-   vrelohi[j+1] = zrelohi;
-   vrehilo[j+1] = zrehilo;
-   vrelolo[j+1] = zrelolo;
-   vimhihi[j+1] = zimhihi;
-   vimlohi[j+1] = zimlohi;
-   vimhilo[j+1] = zimhilo;
-   vimlolo[j+1] = zimlolo;
+   vrehihi[j+1] = 0.0;
+   vrelohi[j+1] = 0.0;
+   vrehilo[j+1] = 0.0;
+   vrelolo[j+1] = 0.0;
+   vimhihi[j+1] = 0.0;
+   vimlohi[j+1] = 0.0;
+   vimhilo[j+1] = 0.0;
+   vimlolo[j+1] = 0.0;
+   if(1.0 + prdhihi[0] + prdlohi[0] + prdhilo[0] + prdlolo[0] != 1.0)
+   {
+      qdg_div(v0parts[0],v0parts[1],v0parts[2],v0parts[3],
+                  prdhihi[0], prdlohi[0], prdhilo[0], prdlolo[0],
+              &inv0rehihi,&inv0relohi,&inv0rehilo,&inv0relolo);
+      // inv0im = -v0parts[1]/prd[0];              // imag part of 1/v[0]
+      qdg_div(v0parts[4],v0parts[5],v0parts[6],v0parts[7],
+                  prdhihi[0], prdlohi[0], prdhilo[0], prdlolo[0],
+              &inv0imhihi,&inv0imlohi,&inv0imhilo,&inv0imlolo);
+      qdg_minus(&inv0imhihi,&inv0imlohi,&inv0imhilo,&inv0imlolo);
+      // zre = shvre[j]*inv0re - shvim[j]*inv0im;  // real part of v[j]/v[0]
+      __syncthreads();
+      qdg_mul( shvrehihi[j],shvrelohi[j],shvrehilo[j],shvrelolo[j],
+              inv0rehihi,  inv0relohi,  inv0rehilo,  inv0relolo,
+                &zrehihi,    &zrelohi,    &zrehilo,    &zrelolo);
+      qdg_mul( shvimhihi[j],shvimlohi[j],shvimhilo[j],shvimlolo[j],
+              inv0imhihi,  inv0imlohi,  inv0imhilo,  inv0imlolo,
+                &acchihi,    &acclohi,    &acchilo,    &acclolo);
+      qdg_dec(&zrehihi,&zrelohi,&zrehilo,&zrelolo,
+               acchihi, acclohi, acchilo, acclolo);
+      // zim = shvim[j]*inv0re + shvre[j]*inv0im;  // imag part of v[j]/v[0]
+      qdg_mul( shvimhihi[j],shvimlohi[j],shvimhilo[j],shvimlolo[j],
+              inv0rehihi,  inv0relohi,  inv0rehilo,  inv0relolo,
+                &zimhihi,    &zimlohi,    &zimhilo,    &zimlolo);
+      qdg_mul( shvrehihi[j],shvrelohi[j],shvrehilo[j],shvrelolo[j],
+              inv0imhihi,  inv0imlohi,  inv0imhilo,  inv0imlolo,
+                &acchihi,    &acclohi,    &acchilo,    &acclolo);
+      qdg_inc(&zimhihi,&zimlohi,&zimhilo,&zimlolo,
+               acchihi, acclohi, acchilo, acclolo);
+      __syncthreads();
+      vrehihi[j+1] = zrehihi;
+      vrelohi[j+1] = zrelohi;
+      vrehilo[j+1] = zrehilo;
+      vrelolo[j+1] = zrelolo;
+      vimhihi[j+1] = zimhihi;
+      vimlohi[j+1] = zimlohi;
+      vimhilo[j+1] = zimhilo;
+      vimlolo[j+1] = zimlolo;
+   }
    __syncthreads();
    if(j == 0)
    {
@@ -3120,18 +3138,18 @@ void GPU_dbl4_small_house
       *lapms += milliseconds;
       flopcount_dbl_small_house(nrows1,nrLog2,add,mul,div,sqrtfun);
    }
+   cudaMemcpy(&betahihi_h[L],&betahihi_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betalohi_h[L],&betalohi_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betahilo_h[L],&betahilo_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betalolo_h[L],&betalolo_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
    if(verbose)
    {
       const size_t szhouse = nVrows*sizeof(double);
 
-      cudaMemcpy(&betahihi_h[L],&betahihi_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betalohi_h[L],&betalohi_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betahilo_h[L],&betahilo_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betalolo_h[L],&betalolo_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
       cudaMemcpy(vhihi_h,&Vhihi_d[L*nVrows],szhouse,cudaMemcpyDeviceToHost);
       cudaMemcpy(vlohi_h,&Vlohi_d[L*nVrows],szhouse,cudaMemcpyDeviceToHost);
       cudaMemcpy(vhilo_h,&Vhilo_d[L*nVrows],szhouse,cudaMemcpyDeviceToHost);
@@ -3302,18 +3320,18 @@ void GPU_cmplx4_small_house
       *lapms += milliseconds;
       flopcount_cmplx_small_house(nrows1,nrLog2,add,mul,div,sqrtfun);
    }
+   cudaMemcpy(&betahihi_h[L],&betahihi_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betalohi_h[L],&betalohi_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betahilo_h[L],&betahilo_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betalolo_h[L],&betalolo_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
    if(verbose)
    {
       const size_t szhouse = nVrows*sizeof(double);
 
-      cudaMemcpy(&betahihi_h[L],&betahihi_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betalohi_h[L],&betalohi_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betahilo_h[L],&betahilo_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betalolo_h[L],&betalolo_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
       cudaMemcpy(vrehihi_h,&Vrehihi_d[L*nVrows],szhouse,
                  cudaMemcpyDeviceToHost);
       cudaMemcpy(vrelohi_h,&Vrelohi_d[L*nVrows],szhouse,
@@ -6013,14 +6031,22 @@ void GPU_dbl4_blocked_houseqr
                 betahihi_d,betalohi_d,betahilo_d,betalolo_d,
                 houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
-            GPU_dbl4_small_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,
-                   Ahihi_h,   Alohi_h,   Ahilo_h,   Alolo_h,
-                   Ahihi_d,   Alohi_d,   Ahilo_d,   Alolo_d,
-                   Vhihi_d,   Vlohi_d,   Vhilo_d,   Vlolo_d,
-                betahihi_h,betalohi_h,betahilo_h,betalolo_h,
-                betahihi_d,betalohi_d,betahilo_d,betalolo_d,
-                tileRlapms,addcnt,mulcnt,verbose);
+            if((betahihi_h[L] == 0.0) && (betalohi_h[L] == 0.0) &&
+               (betahilo_h[L] == 0.0) && (betalolo_h[L] == 0.0))
+            {
+               if(verbose) cout << "Zero beta detected." << endl;
+            }
+            else
+            {
+               GPU_dbl4_small_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,
+                      Ahihi_h,   Alohi_h,   Ahilo_h,   Alolo_h,
+                      Ahihi_d,   Alohi_d,   Ahilo_d,   Alolo_d,
+                      Vhihi_d,   Vlohi_d,   Vhilo_d,   Vlolo_d,
+                   betahihi_h,betalohi_h,betahilo_h,betalolo_h,
+                   betahihi_d,betalohi_d,betahilo_d,betalolo_d,
+                   tileRlapms,addcnt,mulcnt,verbose);
+            }
          }
          else
          {
@@ -6038,18 +6064,26 @@ void GPU_dbl4_blocked_houseqr
                  sigmahihi_d, sigmalohi_d, sigmahilo_d, sigmalolo_d,
                 houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
-            GPU_dbl4_medium_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,
-                     Ahihi_h,     Alohi_h,     Ahilo_h,     Alolo_h,
-                     Ahihi_d,     Alohi_d,     Ahilo_d,     Alolo_d,
-                     Vhihi_d,     Vlohi_d,     Vhilo_d,     Vlolo_d,
-                  betahihi_h,  betalohi_h,  betahilo_h,  betalolo_h,
-                  betahihi_d,  betalohi_d,  betahilo_d,  betalolo_d,
-                RTdotvhihi_h,RTdotvlohi_h,RTdotvhilo_h,RTdotvlolo_h,
-                RTdotvhihi_d,RTdotvlohi_d,RTdotvhilo_d,RTdotvlolo_d,
-                  bRTvhihi_h,  bRTvlohi_h,  bRTvhilo_h,  bRTvlolo_h,
-                  bRTvhihi_d,  bRTvlohi_d,  bRTvhilo_d,  bRTvlolo_d,
-                RTvlapms,tileRlapms,addcnt,mulcnt,verbose);
+            if((betahihi_h[L] == 0.0) && (betalohi_h[L] == 0.0) &&
+               (betahilo_h[L] == 0.0) && (betalolo_h[L] == 0.0))
+            {
+               if(verbose) cout << "Zero beta detected." << endl;
+            }
+            else
+            {
+               GPU_dbl4_medium_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,
+                        Ahihi_h,     Alohi_h,     Ahilo_h,     Alolo_h,
+                        Ahihi_d,     Alohi_d,     Ahilo_d,     Alolo_d,
+                        Vhihi_d,     Vlohi_d,     Vhilo_d,     Vlolo_d,
+                     betahihi_h,  betalohi_h,  betahilo_h,  betalolo_h,
+                     betahihi_d,  betalohi_d,  betahilo_d,  betalolo_d,
+                   RTdotvhihi_h,RTdotvlohi_h,RTdotvhilo_h,RTdotvlolo_h,
+                   RTdotvhihi_d,RTdotvlohi_d,RTdotvhilo_d,RTdotvlolo_d,
+                     bRTvhihi_h,  bRTvlohi_h,  bRTvhilo_h,  bRTvlolo_h,
+                     bRTvhihi_d,  bRTvlohi_d,  bRTvhilo_d,  bRTvlolo_d,
+                   RTvlapms,tileRlapms,addcnt,mulcnt,verbose);
+            }
          }
       }
       GPU_dbl4_medium_VB_to_W
@@ -6604,17 +6638,25 @@ void GPU_cmplx4_blocked_houseqr
                 betahihi_d,betalohi_d,betahilo_d,betalolo_d,
                 houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
-            GPU_cmplx4_small_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,
-                 Arehihi_h, Arelohi_h, Arehilo_h, Arelolo_h,
-                 Aimhihi_h, Aimlohi_h, Aimhilo_h, Aimlolo_h,
-                 Arehihi_d, Arelohi_d, Arehilo_d, Arelolo_d,
-                 Aimhihi_d, Aimlohi_d, Aimhilo_d, Aimlolo_d,
-                 Vrehihi_d, Vrelohi_d, Vrehilo_d, Vrelolo_d,
-                 Vimhihi_d, Vimlohi_d, Vimhilo_d, Vimlolo_d,
-                betahihi_h,betalohi_h,betahilo_h,betalolo_h,
-                betahihi_d,betalohi_d,betahilo_d,betalolo_d,
-                tileRlapms,addcnt,mulcnt,verbose);
+            if((betahihi_h[L] == 0.0) && (betalohi_h[L] == 0.0) &&
+               (betahilo_h[L] == 0.0) && (betalolo_h[L] == 0.0))
+            {
+               if(verbose) cout << "Zero beta detected." << endl;
+            }
+            else
+            {
+               GPU_cmplx4_small_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,
+                    Arehihi_h, Arelohi_h, Arehilo_h, Arelolo_h,
+                    Aimhihi_h, Aimlohi_h, Aimhilo_h, Aimlolo_h,
+                    Arehihi_d, Arelohi_d, Arehilo_d, Arelolo_d,
+                    Aimhihi_d, Aimlohi_d, Aimhilo_d, Aimlolo_d,
+                    Vrehihi_d, Vrelohi_d, Vrehilo_d, Vrelolo_d,
+                    Vimhihi_d, Vimlohi_d, Vimhilo_d, Vimlolo_d,
+                   betahihi_h,betalohi_h,betahilo_h,betalolo_h,
+                   betahihi_d,betalohi_d,betahilo_d,betalolo_d,
+                   tileRlapms,addcnt,mulcnt,verbose);
+            }
          }
          else
          {
@@ -6636,25 +6678,33 @@ void GPU_cmplx4_blocked_houseqr
                  sigmahihi_d, sigmalohi_d, sigmahilo_d, sigmalolo_d,
                 houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
-            GPU_cmplx4_medium_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,
-                     Arehihi_h,     Arelohi_h,     Arehilo_h,     Arelolo_h,
-                     Aimhihi_h,     Aimlohi_h,     Aimhilo_h,     Aimlolo_h,
-                     Arehihi_d,     Arelohi_d,     Arehilo_d,     Arelolo_d,
-                     Aimhihi_d,     Aimlohi_d,     Aimhilo_d,     Aimlolo_d,
-                     Vrehihi_d,     Vrelohi_d,     Vrehilo_d,     Vrelolo_d,
-                     Vimhihi_d,     Vimlohi_d,     Vimhilo_d,     Vimlolo_d,
-                    betahihi_h,    betalohi_h,    betahilo_h,    betalolo_h,
-                    betahihi_d,    betalohi_d,    betahilo_d,    betalolo_d,
-                RHdotvrehihi_h,RHdotvrelohi_h,RHdotvrehilo_h,RHdotvrelolo_h,
-                RHdotvimhihi_h,RHdotvimlohi_h,RHdotvimhilo_h,RHdotvimlolo_h,
-                RHdotvrehihi_d,RHdotvrelohi_d,RHdotvrehilo_d,RHdotvrelolo_d,
-                RHdotvimhihi_d,RHdotvimlohi_d,RHdotvimhilo_d,RHdotvimlolo_d,
-                  bRHvrehihi_h,  bRHvrelohi_h,  bRHvrehilo_h,  bRHvrelolo_h,
-                  bRHvimhihi_h,  bRHvimlohi_h,  bRHvimhilo_h,  bRHvimlolo_h,
-                  bRHvrehihi_d,  bRHvrelohi_d,  bRHvrehilo_d,  bRHvrelolo_d,
-                  bRHvimhihi_d,  bRHvimlohi_d,  bRHvimhilo_d,  bRHvimlolo_d,
-                RHvlapms,tileRlapms,addcnt,mulcnt,verbose);
+            if((betahihi_h[L] == 0.0) && (betalohi_h[L] == 0.0) &&
+               (betahilo_h[L] == 0.0) && (betalolo_h[L] == 0.0))
+            {
+               if(verbose) cout << "Zero beta detected." << endl;
+            }
+            else
+            {
+               GPU_cmplx4_medium_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,
+                      Arehihi_h,     Arelohi_h,     Arehilo_h,     Arelolo_h,
+                      Aimhihi_h,     Aimlohi_h,     Aimhilo_h,     Aimlolo_h,
+                      Arehihi_d,     Arelohi_d,     Arehilo_d,     Arelolo_d,
+                      Aimhihi_d,     Aimlohi_d,     Aimhilo_d,     Aimlolo_d,
+                      Vrehihi_d,     Vrelohi_d,     Vrehilo_d,     Vrelolo_d,
+                      Vimhihi_d,     Vimlohi_d,     Vimhilo_d,     Vimlolo_d,
+                     betahihi_h,    betalohi_h,    betahilo_h,    betalolo_h,
+                     betahihi_d,    betalohi_d,    betahilo_d,    betalolo_d,
+                 RHdotvrehihi_h,RHdotvrelohi_h,RHdotvrehilo_h,RHdotvrelolo_h,
+                 RHdotvimhihi_h,RHdotvimlohi_h,RHdotvimhilo_h,RHdotvimlolo_h,
+                 RHdotvrehihi_d,RHdotvrelohi_d,RHdotvrehilo_d,RHdotvrelolo_d,
+                 RHdotvimhihi_d,RHdotvimlohi_d,RHdotvimhilo_d,RHdotvimlolo_d,
+                   bRHvrehihi_h,  bRHvrelohi_h,  bRHvrehilo_h,  bRHvrelolo_h,
+                   bRHvimhihi_h,  bRHvimlohi_h,  bRHvimhilo_h,  bRHvimlolo_h,
+                   bRHvrehihi_d,  bRHvrelohi_d,  bRHvrehilo_d,  bRHvrelolo_d,
+                   bRHvimhihi_d,  bRHvimlohi_d,  bRHvimhilo_d,  bRHvimlolo_d,
+                 RHvlapms,tileRlapms,addcnt,mulcnt,verbose);
+            }
          }
       }
       GPU_cmplx4_medium_VB_to_W

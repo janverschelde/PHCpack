@@ -205,21 +205,36 @@ __global__ void dbl8_small_house
    }
    __syncthreads();
    // shv[j] = shv[j]/prd[0];
-   odg_div(shvhihihi[j],shvlohihi[j],shvhilohi[j],shvlolohi[j],
-           shvhihilo[j],shvlohilo[j],shvhilolo[j],shvlololo[j],
-           prdhihihi[0],prdlohihi[0],prdhilohi[0],prdlolohi[0],
-           prdhihilo[0],prdlohilo[0],prdhilolo[0],prdlololo[0],
-          &acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
-          &acchihilo,  &acclohilo,  &acchilolo,  &acclololo);
+   vhihihi[j+1] = 0.0;
+   vlohihi[j+1] = 0.0;
+   vhilohi[j+1] = 0.0;
+   vlolohi[j+1] = 0.0;
+   vhihilo[j+1] = 0.0;
+   vlohilo[j+1] = 0.0;
+   vhilolo[j+1] = 0.0;
+   vlololo[j+1] = 0.0;
+   double checksum
+      = *betahihihi + *betalohihi + *betahilohi + *betalolohi
+      + *betahihilo + *betalohilo + *betahilolo + *betalololo;
    __syncthreads();
-   vhihihi[j+1] = acchihihi;
-   vlohihi[j+1] = acclohihi;
-   vhilohi[j+1] = acchilohi;
-   vlolohi[j+1] = acclolohi;
-   vhihilo[j+1] = acchihilo;
-   vlohilo[j+1] = acclohilo;
-   vhilolo[j+1] = acchilolo;
-   vlololo[j+1] = acclololo;
+   if(1.0 + checksum != 1.0)
+   {
+      odg_div(shvhihihi[j],shvlohihi[j],shvhilohi[j],shvlolohi[j],
+              shvhihilo[j],shvlohilo[j],shvhilolo[j],shvlololo[j],
+              prdhihihi[0],prdlohihi[0],prdhilohi[0],prdlolohi[0],
+              prdhihilo[0],prdlohilo[0],prdhilolo[0],prdlololo[0],
+             &acchihihi,  &acclohihi,  &acchilohi,  &acclolohi,
+             &acchihilo,  &acclohilo,  &acchilolo,  &acclololo);
+      __syncthreads();
+      vhihihi[j+1] = acchihihi;
+      vlohihi[j+1] = acclohihi;
+      vhilohi[j+1] = acchilohi;
+      vlolohi[j+1] = acclolohi;
+      vhihilo[j+1] = acchihilo;
+      vlohilo[j+1] = acclohilo;
+      vhilolo[j+1] = acchilolo;
+      vlololo[j+1] = acclololo;
+   }
    __syncthreads();
    if(j == 0)
    {
@@ -553,73 +568,97 @@ __global__ void cmplx8_small_house
    }
    __syncthreads(); // important synchronization!
    // inv0re = v0parts[0]/prd[0];               // real part of 1/v[0]
-   odg_div(v0parts[0],v0parts[1],v0parts[2],v0parts[3],
-           v0parts[4],v0parts[5],v0parts[6],v0parts[7],
-               prdhihihi[0], prdlohihi[0], prdhilohi[0], prdlolohi[0],
-               prdhihilo[0], prdlohilo[0], prdhilolo[0], prdlololo[0],
-           &inv0rehihihi,&inv0relohihi,&inv0rehilohi,&inv0relolohi,
-           &inv0rehihilo,&inv0relohilo,&inv0rehilolo,&inv0relololo);
-   // inv0im = -v0parts[1]/prd[0];              // imag part of 1/v[0]
-   odg_div(v0parts[8],v0parts[9],v0parts[10],v0parts[11],
-           v0parts[12],v0parts[13],v0parts[14],v0parts[15],
-               prdhihihi[0], prdlohihi[0], prdhilohi[0], prdlolohi[0],
-               prdhihilo[0], prdlohilo[0], prdhilolo[0], prdlololo[0],
-           &inv0imhihihi,&inv0imlohihi,&inv0imhilohi,&inv0imlolohi,
-           &inv0imhihilo,&inv0imlohilo,&inv0imhilolo,&inv0imlololo);
-   odg_minus(&inv0imhihihi,&inv0imlohihi,&inv0imhilohi,&inv0imlolohi,
-             &inv0imhihilo,&inv0imlohilo,&inv0imhilolo,&inv0imlololo);
-   // zre = shvre[j]*inv0re - shvim[j]*inv0im;  // real part of v[j]/v[0]
+   vrehihihi[j+1] = 0.0;
+   vrelohihi[j+1] = 0.0;
+   vrehilohi[j+1] = 0.0;
+   vrelolohi[j+1] = 0.0;
+   vrehihilo[j+1] = 0.0;
+   vrelohilo[j+1] = 0.0;
+   vrehilolo[j+1] = 0.0;
+   vrelololo[j+1] = 0.0;
+   vimhihihi[j+1] = 0.0;
+   vimlohihi[j+1] = 0.0;
+   vimhilohi[j+1] = 0.0;
+   vimlolohi[j+1] = 0.0;
+   vimhihilo[j+1] = 0.0;
+   vimlohilo[j+1] = 0.0;
+   vimhilolo[j+1] = 0.0;
+   vimlololo[j+1] = 0.0;
+
+   double checksum 
+      = prdhihihi[0] + prdlohihi[0] + prdhilohi[0] + prdlolohi[0]
+      + prdhihilo[0] + prdlohilo[0] + prdhilolo[0] + prdlololo[0];
    __syncthreads();
-   odg_mul( shvrehihihi[j],shvrelohihi[j],shvrehilohi[j],shvrelolohi[j],
-            shvrehihilo[j],shvrelohilo[j],shvrehilolo[j],shvrelololo[j],
-           inv0rehihihi,  inv0relohihi,  inv0rehilohi,  inv0relolohi,
-           inv0rehihilo,  inv0relohilo,  inv0rehilolo,  inv0relololo,
-             &zrehihihi,    &zrelohihi,    &zrehilohi,    &zrelolohi,
-             &zrehihilo,    &zrelohilo,    &zrehilolo,    &zrelololo);
-   odg_mul( shvimhihihi[j],shvimlohihi[j],shvimhilohi[j],shvimlolohi[j],
-            shvimhihilo[j],shvimlohilo[j],shvimhilolo[j],shvimlololo[j],
-           inv0imhihihi,  inv0imlohihi,  inv0imhilohi,  inv0imlolohi,
-           inv0imhihilo,  inv0imlohilo,  inv0imhilolo,  inv0imlololo,
-             &acchihihi,    &acclohihi,    &acchilohi,    &acclolohi,
-             &acchihilo,    &acclohilo,    &acchilolo,    &acclololo);
-   odg_dec(&zrehihihi,&zrelohihi,&zrehilohi,&zrelolohi,
-           &zrehihilo,&zrelohilo,&zrehilolo,&zrelololo,
-            acchihihi, acclohihi, acchilohi, acclolohi,
-            acchihilo, acclohilo, acchilolo, acclololo);
-   // zim = shvim[j]*inv0re + shvre[j]*inv0im;  // imag part of v[j]/v[0]
-   odg_mul( shvimhihihi[j],shvimlohihi[j],shvimhilohi[j],shvimlolohi[j],
-            shvimhihilo[j],shvimlohilo[j],shvimhilolo[j],shvimlololo[j],
-           inv0rehihihi,  inv0relohihi,  inv0rehilohi,  inv0relolohi,
-           inv0rehihilo,  inv0relohilo,  inv0rehilolo,  inv0relololo,
-             &zimhihihi,    &zimlohihi,    &zimhilohi,    &zimlolohi,
-             &zimhihilo,    &zimlohilo,    &zimhilolo,    &zimlololo);
-   odg_mul( shvrehihihi[j],shvrelohihi[j],shvrehilohi[j],shvrelolohi[j],
-            shvrehihilo[j],shvrelohilo[j],shvrehilolo[j],shvrelololo[j],
-           inv0imhihihi,  inv0imlohihi,  inv0imhilohi,  inv0imlolohi,
-           inv0imhihilo,  inv0imlohilo,  inv0imhilolo,  inv0imlololo,
-             &acchihihi,    &acclohihi,    &acchilohi,    &acclolohi,
-             &acchihilo,    &acclohilo,    &acchilolo,    &acclololo);
-   odg_inc(&zimhihihi,&zimlohihi,&zimhilohi,&zimlolohi,
-           &zimhihilo,&zimlohilo,&zimhilolo,&zimlololo,
-            acchihihi, acclohihi, acchilohi, acclolohi,
-            acchihilo, acclohilo, acchilolo, acclololo);
-   __syncthreads();
-   vrehihihi[j+1] = zrehihihi;
-   vrelohihi[j+1] = zrelohihi;
-   vrehilohi[j+1] = zrehilohi;
-   vrelolohi[j+1] = zrelolohi;
-   vrehihilo[j+1] = zrehihilo;
-   vrelohilo[j+1] = zrelohilo;
-   vrehilolo[j+1] = zrehilolo;
-   vrelololo[j+1] = zrelololo;
-   vimhihihi[j+1] = zimhihihi;
-   vimlohihi[j+1] = zimlohihi;
-   vimhilohi[j+1] = zimhilohi;
-   vimlolohi[j+1] = zimlolohi;
-   vimhihilo[j+1] = zimhihilo;
-   vimlohilo[j+1] = zimlohilo;
-   vimhilolo[j+1] = zimhilolo;
-   vimlololo[j+1] = zimlololo;
+   if(1.0 + checksum != 1.0)
+   {
+      odg_div(v0parts[0],v0parts[1],v0parts[2],v0parts[3],
+              v0parts[4],v0parts[5],v0parts[6],v0parts[7],
+                  prdhihihi[0], prdlohihi[0], prdhilohi[0], prdlolohi[0],
+                  prdhihilo[0], prdlohilo[0], prdhilolo[0], prdlololo[0],
+              &inv0rehihihi,&inv0relohihi,&inv0rehilohi,&inv0relolohi,
+              &inv0rehihilo,&inv0relohilo,&inv0rehilolo,&inv0relololo);
+      // inv0im = -v0parts[1]/prd[0];              // imag part of 1/v[0]
+      odg_div(v0parts[8],v0parts[9],v0parts[10],v0parts[11],
+              v0parts[12],v0parts[13],v0parts[14],v0parts[15],
+                  prdhihihi[0], prdlohihi[0], prdhilohi[0], prdlolohi[0],
+                  prdhihilo[0], prdlohilo[0], prdhilolo[0], prdlololo[0],
+              &inv0imhihihi,&inv0imlohihi,&inv0imhilohi,&inv0imlolohi,
+              &inv0imhihilo,&inv0imlohilo,&inv0imhilolo,&inv0imlololo);
+      odg_minus(&inv0imhihihi,&inv0imlohihi,&inv0imhilohi,&inv0imlolohi,
+                &inv0imhihilo,&inv0imlohilo,&inv0imhilolo,&inv0imlololo);
+      // zre = shvre[j]*inv0re - shvim[j]*inv0im;  // real part of v[j]/v[0]
+      __syncthreads();
+      odg_mul( shvrehihihi[j],shvrelohihi[j],shvrehilohi[j],shvrelolohi[j],
+               shvrehihilo[j],shvrelohilo[j],shvrehilolo[j],shvrelololo[j],
+              inv0rehihihi,  inv0relohihi,  inv0rehilohi,  inv0relolohi,
+              inv0rehihilo,  inv0relohilo,  inv0rehilolo,  inv0relololo,
+                &zrehihihi,    &zrelohihi,    &zrehilohi,    &zrelolohi,
+                &zrehihilo,    &zrelohilo,    &zrehilolo,    &zrelololo);
+      odg_mul( shvimhihihi[j],shvimlohihi[j],shvimhilohi[j],shvimlolohi[j],
+               shvimhihilo[j],shvimlohilo[j],shvimhilolo[j],shvimlololo[j],
+              inv0imhihihi,  inv0imlohihi,  inv0imhilohi,  inv0imlolohi,
+              inv0imhihilo,  inv0imlohilo,  inv0imhilolo,  inv0imlololo,
+                &acchihihi,    &acclohihi,    &acchilohi,    &acclolohi,
+                &acchihilo,    &acclohilo,    &acchilolo,    &acclololo);
+      odg_dec(&zrehihihi,&zrelohihi,&zrehilohi,&zrelolohi,
+              &zrehihilo,&zrelohilo,&zrehilolo,&zrelololo,
+               acchihihi, acclohihi, acchilohi, acclolohi,
+               acchihilo, acclohilo, acchilolo, acclololo);
+      // zim = shvim[j]*inv0re + shvre[j]*inv0im;  // imag part of v[j]/v[0]
+      odg_mul( shvimhihihi[j],shvimlohihi[j],shvimhilohi[j],shvimlolohi[j],
+               shvimhihilo[j],shvimlohilo[j],shvimhilolo[j],shvimlololo[j],
+              inv0rehihihi,  inv0relohihi,  inv0rehilohi,  inv0relolohi,
+              inv0rehihilo,  inv0relohilo,  inv0rehilolo,  inv0relololo,
+                &zimhihihi,    &zimlohihi,    &zimhilohi,    &zimlolohi,
+                &zimhihilo,    &zimlohilo,    &zimhilolo,    &zimlololo);
+      odg_mul( shvrehihihi[j],shvrelohihi[j],shvrehilohi[j],shvrelolohi[j],
+               shvrehihilo[j],shvrelohilo[j],shvrehilolo[j],shvrelololo[j],
+              inv0imhihihi,  inv0imlohihi,  inv0imhilohi,  inv0imlolohi,
+              inv0imhihilo,  inv0imlohilo,  inv0imhilolo,  inv0imlololo,
+                &acchihihi,    &acclohihi,    &acchilohi,    &acclolohi,
+                &acchihilo,    &acclohilo,    &acchilolo,    &acclololo);
+      odg_inc(&zimhihihi,&zimlohihi,&zimhilohi,&zimlolohi,
+              &zimhihilo,&zimlohilo,&zimhilolo,&zimlololo,
+               acchihihi, acclohihi, acchilohi, acclolohi,
+               acchihilo, acclohilo, acchilolo, acclololo);
+      __syncthreads();
+      vrehihihi[j+1] = zrehihihi;
+      vrelohihi[j+1] = zrelohihi;
+      vrehilohi[j+1] = zrehilohi;
+      vrelolohi[j+1] = zrelolohi;
+      vrehihilo[j+1] = zrehihilo;
+      vrelohilo[j+1] = zrelohilo;
+      vrehilolo[j+1] = zrehilolo;
+      vrelololo[j+1] = zrelololo;
+      vimhihihi[j+1] = zimhihihi;
+      vimlohihi[j+1] = zimlohihi;
+      vimhilohi[j+1] = zimhilohi;
+      vimlolohi[j+1] = zimlolohi;
+      vimhihilo[j+1] = zimhihilo;
+      vimlohilo[j+1] = zimlohilo;
+      vimhilolo[j+1] = zimhilolo;
+      vimlololo[j+1] = zimlololo;
+   }
    __syncthreads();
    if(j == 0)
    {
@@ -6021,26 +6060,26 @@ void GPU_dbl8_small_house
       *lapms += milliseconds;
       flopcount_dbl_small_house(nrows1,nrLog2,add,mul,div,sqrtfun);
    }
+   cudaMemcpy(&betahihihi_h[L],&betahihihi_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betalohihi_h[L],&betalohihi_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betahilohi_h[L],&betahilohi_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betalolohi_h[L],&betalolohi_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betahihilo_h[L],&betahihilo_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betalohilo_h[L],&betalohilo_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betahilolo_h[L],&betahilolo_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betalololo_h[L],&betalololo_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
    if(verbose)
    {
       const size_t szhouse = nVrows*sizeof(double);
 
-      cudaMemcpy(&betahihihi_h[L],&betahihihi_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betalohihi_h[L],&betalohihi_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betahilohi_h[L],&betahilohi_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betalolohi_h[L],&betalolohi_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betahihilo_h[L],&betahihilo_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betalohilo_h[L],&betalohilo_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betahilolo_h[L],&betahilolo_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betalololo_h[L],&betalololo_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
       cudaMemcpy(vhihihi_h,&Vhihihi_d[L*nVrows],szhouse,
                  cudaMemcpyDeviceToHost);
       cudaMemcpy(vlohihi_h,&Vlohihi_d[L*nVrows],szhouse,
@@ -6349,26 +6388,26 @@ void GPU_cmplx8_small_house
       *lapms += milliseconds;
       flopcount_cmplx_small_house(nrows1,nrLog2,add,mul,div,sqrtfun);
    }
+   cudaMemcpy(&betahihihi_h[L],&betahihihi_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betalohihi_h[L],&betalohihi_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betahilohi_h[L],&betahilohi_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betalolohi_h[L],&betalolohi_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betahihilo_h[L],&betahihilo_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betalohilo_h[L],&betalohilo_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betahilolo_h[L],&betahilolo_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betalololo_h[L],&betalololo_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
    if(verbose)
    {
       const size_t szhouse = nVrows*sizeof(double);
 
-      cudaMemcpy(&betahihihi_h[L],&betahihihi_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betalohihi_h[L],&betalohihi_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betahilohi_h[L],&betahilohi_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betalolohi_h[L],&betalolohi_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betahihilo_h[L],&betahihilo_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betalohilo_h[L],&betalohilo_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betahilolo_h[L],&betahilolo_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betalololo_h[L],&betalololo_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
       cudaMemcpy(vrehihihi_h,&Vrehihihi_d[L*nVrows],szhouse,
                  cudaMemcpyDeviceToHost);
       cudaMemcpy(vrelohihi_h,&Vrelohihi_d[L*nVrows],szhouse,
@@ -10862,19 +10901,29 @@ void GPU_dbl8_blocked_houseqr
                 betahihilo_d,betalohilo_d,betahilolo_d,betalololo_d,
                 houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
-            GPU_dbl8_small_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,
-                   Ahihihi_h,   Alohihi_h,   Ahilohi_h,   Alolohi_h,
-                   Ahihilo_h,   Alohilo_h,   Ahilolo_h,   Alololo_h,
-                   Ahihihi_d,   Alohihi_d,   Ahilohi_d,   Alolohi_d,
-                   Ahihilo_d,   Alohilo_d,   Ahilolo_d,   Alololo_d,
-                   Vhihihi_d,   Vlohihi_d,   Vhilohi_d,   Vlolohi_d,
-                   Vhihilo_d,   Vlohilo_d,   Vhilolo_d,   Vlololo_d,
-                betahihihi_h,betalohihi_h,betahilohi_h,betalolohi_h,
-                betahihilo_h,betalohilo_h,betahilolo_h,betalololo_h,
-                betahihihi_d,betalohihi_d,betahilohi_d,betalolohi_d,
-                betahihilo_d,betalohilo_d,betahilolo_d,betalololo_d,
-                tileRlapms,addcnt,mulcnt,verbose);
+            if((betahihihi_h[L] == 0.0) && (betalohihi_h[L] == 0.0) &&
+               (betahilohi_h[L] == 0.0) && (betalolohi_h[L] == 0.0) &&
+               (betahihilo_h[L] == 0.0) && (betalohilo_h[L] == 0.0) &&
+               (betahilolo_h[L] == 0.0) && (betalololo_h[L] == 0.0))
+            {
+               if(verbose) cout << "Zero beta detected." << endl;
+            }
+            else
+            {
+               GPU_dbl8_small_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,
+                      Ahihihi_h,   Alohihi_h,   Ahilohi_h,   Alolohi_h,
+                      Ahihilo_h,   Alohilo_h,   Ahilolo_h,   Alololo_h,
+                      Ahihihi_d,   Alohihi_d,   Ahilohi_d,   Alolohi_d,
+                      Ahihilo_d,   Alohilo_d,   Ahilolo_d,   Alololo_d,
+                      Vhihihi_d,   Vlohihi_d,   Vhilohi_d,   Vlolohi_d,
+                      Vhihilo_d,   Vlohilo_d,   Vhilolo_d,   Vlololo_d,
+                   betahihihi_h,betalohihi_h,betahilohi_h,betalolohi_h,
+                   betahihilo_h,betalohilo_h,betahilolo_h,betalololo_h,
+                   betahihihi_d,betalohihi_d,betahilohi_d,betalolohi_d,
+                   betahihilo_d,betalohilo_d,betahilolo_d,betalololo_d,
+                   tileRlapms,addcnt,mulcnt,verbose);
+            }
          }
          else
          {
@@ -10902,27 +10951,37 @@ void GPU_dbl8_blocked_houseqr
                  sigmahihilo_d, sigmalohilo_d, sigmahilolo_d, sigmalololo_d,
                 houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
-            GPU_dbl8_medium_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,
-                     Ahihihi_h,     Alohihi_h,     Ahilohi_h,     Alolohi_h,
-                     Ahihilo_h,     Alohilo_h,     Ahilolo_h,     Alololo_h,
-                     Ahihihi_d,     Alohihi_d,     Ahilohi_d,     Alolohi_d,
-                     Ahihilo_d,     Alohilo_d,     Ahilolo_d,     Alololo_d,
-                     Vhihihi_d,     Vlohihi_d,     Vhilohi_d,     Vlolohi_d,
-                     Vhihilo_d,     Vlohilo_d,     Vhilolo_d,     Vlololo_d,
-                  betahihihi_h,  betalohihi_h,  betahilohi_h,  betalolohi_h,
-                  betahihilo_h,  betalohilo_h,  betahilolo_h,  betalololo_h,
-                  betahihihi_d,  betalohihi_d,  betahilohi_d,  betalolohi_d,
-                  betahihilo_d,  betalohilo_d,  betahilolo_d,  betalololo_d,
-                RTdotvhihihi_h,RTdotvlohihi_h,RTdotvhilohi_h,RTdotvlolohi_h,
-                RTdotvhihilo_h,RTdotvlohilo_h,RTdotvhilolo_h,RTdotvlololo_h,
-                RTdotvhihihi_d,RTdotvlohihi_d,RTdotvhilohi_d,RTdotvlolohi_d,
-                RTdotvhihilo_d,RTdotvlohilo_d,RTdotvhilolo_d,RTdotvlololo_d,
-                  bRTvhihihi_h,  bRTvlohihi_h,  bRTvhilohi_h,  bRTvlolohi_h,
-                  bRTvhihilo_h,  bRTvlohilo_h,  bRTvhilolo_h,  bRTvlololo_h,
-                  bRTvhihihi_d,  bRTvlohihi_d,  bRTvhilohi_d,  bRTvlolohi_d,
-                  bRTvhihilo_d,  bRTvlohilo_d,  bRTvhilolo_d,  bRTvlololo_d,
-                RTvlapms,tileRlapms,addcnt,mulcnt,verbose);
+            if((betahihihi_h[L] == 0.0) && (betalohihi_h[L] == 0.0) &&
+               (betahilohi_h[L] == 0.0) && (betalolohi_h[L] == 0.0) &&
+               (betahihilo_h[L] == 0.0) && (betalohilo_h[L] == 0.0) &&
+               (betahilolo_h[L] == 0.0) && (betalololo_h[L] == 0.0))
+            {
+               if(verbose) cout << "Zero beta detected." << endl;
+            }
+            else
+            {
+               GPU_dbl8_medium_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,
+                      Ahihihi_h,     Alohihi_h,     Ahilohi_h,     Alolohi_h,
+                      Ahihilo_h,     Alohilo_h,     Ahilolo_h,     Alololo_h,
+                      Ahihihi_d,     Alohihi_d,     Ahilohi_d,     Alolohi_d,
+                      Ahihilo_d,     Alohilo_d,     Ahilolo_d,     Alololo_d,
+                      Vhihihi_d,     Vlohihi_d,     Vhilohi_d,     Vlolohi_d,
+                      Vhihilo_d,     Vlohilo_d,     Vhilolo_d,     Vlololo_d,
+                   betahihihi_h,  betalohihi_h,  betahilohi_h,  betalolohi_h,
+                   betahihilo_h,  betalohilo_h,  betahilolo_h,  betalololo_h,
+                   betahihihi_d,  betalohihi_d,  betahilohi_d,  betalolohi_d,
+                   betahihilo_d,  betalohilo_d,  betahilolo_d,  betalololo_d,
+                 RTdotvhihihi_h,RTdotvlohihi_h,RTdotvhilohi_h,RTdotvlolohi_h,
+                 RTdotvhihilo_h,RTdotvlohilo_h,RTdotvhilolo_h,RTdotvlololo_h,
+                 RTdotvhihihi_d,RTdotvlohihi_d,RTdotvhilohi_d,RTdotvlolohi_d,
+                 RTdotvhihilo_d,RTdotvlohilo_d,RTdotvhilolo_d,RTdotvlololo_d,
+                   bRTvhihihi_h,  bRTvlohihi_h,  bRTvhilohi_h,  bRTvlolohi_h,
+                   bRTvhihilo_h,  bRTvlohilo_h,  bRTvhilolo_h,  bRTvlololo_h,
+                   bRTvhihihi_d,  bRTvlohihi_d,  bRTvhilohi_d,  bRTvlolohi_d,
+                   bRTvhihilo_d,  bRTvlohilo_d,  bRTvhilolo_d,  bRTvlololo_d,
+                 RTvlapms,tileRlapms,addcnt,mulcnt,verbose);
+            }
          }
       }
       GPU_dbl8_medium_VB_to_W
@@ -11915,25 +11974,35 @@ void GPU_cmplx8_blocked_houseqr
                 betahihilo_d,betalohilo_d,betahilolo_d,betalololo_d,
                 houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
-            GPU_cmplx8_small_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,
-                 Arehihihi_h, Arelohihi_h, Arehilohi_h, Arelolohi_h,
-                 Arehihilo_h, Arelohilo_h, Arehilolo_h, Arelololo_h,
-                 Aimhihihi_h, Aimlohihi_h, Aimhilohi_h, Aimlolohi_h,
-                 Aimhihilo_h, Aimlohilo_h, Aimhilolo_h, Aimlololo_h,
-                 Arehihihi_d, Arelohihi_d, Arehilohi_d, Arelolohi_d,
-                 Arehihilo_d, Arelohilo_d, Arehilolo_d, Arelololo_d,
-                 Aimhihihi_d, Aimlohihi_d, Aimhilohi_d, Aimlolohi_d,
-                 Aimhihilo_d, Aimlohilo_d, Aimhilolo_d, Aimlololo_d,
-                 Vrehihihi_d, Vrelohihi_d, Vrehilohi_d, Vrelolohi_d,
-                 Vrehihilo_d, Vrelohilo_d, Vrehilolo_d, Vrelololo_d,
-                 Vimhihihi_d, Vimlohihi_d, Vimhilohi_d, Vimlolohi_d,
-                 Vimhihilo_d, Vimlohilo_d, Vimhilolo_d, Vimlololo_d,
-                betahihihi_h,betalohihi_h,betahilohi_h,betalolohi_h,
-                betahihilo_h,betalohilo_h,betahilolo_h,betalololo_h,
-                betahihihi_d,betalohihi_d,betahilohi_d,betalolohi_d,
-                betahihilo_d,betalohilo_d,betahilolo_d,betalololo_d,
-                tileRlapms,addcnt,mulcnt,verbose);
+            if((betahihihi_h[L] == 0.0) && (betalohihi_h[L] == 0.0) &&
+               (betahilohi_h[L] == 0.0) && (betalolohi_h[L] == 0.0) &&
+               (betahihilo_h[L] == 0.0) && (betalohilo_h[L] == 0.0) &&
+               (betahilolo_h[L] == 0.0) && (betalololo_h[L] == 0.0))
+            {
+               if(verbose) cout << "Zero beta detected." << endl;
+            }
+            else
+            {
+               GPU_cmplx8_small_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,
+                    Arehihihi_h, Arelohihi_h, Arehilohi_h, Arelolohi_h,
+                    Arehihilo_h, Arelohilo_h, Arehilolo_h, Arelololo_h,
+                    Aimhihihi_h, Aimlohihi_h, Aimhilohi_h, Aimlolohi_h,
+                    Aimhihilo_h, Aimlohilo_h, Aimhilolo_h, Aimlololo_h,
+                    Arehihihi_d, Arelohihi_d, Arehilohi_d, Arelolohi_d,
+                    Arehihilo_d, Arelohilo_d, Arehilolo_d, Arelololo_d,
+                    Aimhihihi_d, Aimlohihi_d, Aimhilohi_d, Aimlolohi_d,
+                    Aimhihilo_d, Aimlohilo_d, Aimhilolo_d, Aimlololo_d,
+                    Vrehihihi_d, Vrelohihi_d, Vrehilohi_d, Vrelolohi_d,
+                    Vrehihilo_d, Vrelohilo_d, Vrehilolo_d, Vrelololo_d,
+                    Vimhihihi_d, Vimlohihi_d, Vimhilohi_d, Vimlolohi_d,
+                    Vimhihilo_d, Vimlohilo_d, Vimhilolo_d, Vimlololo_d,
+                   betahihihi_h,betalohihi_h,betahilohi_h,betalolohi_h,
+                   betahihilo_h,betalohilo_h,betahilolo_h,betalololo_h,
+                   betahihihi_d,betalohihi_d,betahilohi_d,betalolohi_d,
+                   betahihilo_d,betalohilo_d,betahilolo_d,betalololo_d,
+                   tileRlapms,addcnt,mulcnt,verbose);
+            }
          }
          else
          {
@@ -11969,8 +12038,17 @@ void GPU_cmplx8_blocked_houseqr
                  sigmahihilo_d, sigmalohilo_d, sigmahilolo_d, sigmalololo_d,
                 houselapms,addcnt,mulcnt,divcnt,sqrtcnt,verbose);
 
-            GPU_cmplx8_medium_leftRupdate
-               (nrows,ncols,szt,colidx,k,L,
+            if((betahihihi_h[L] == 0.0) && (betalohihi_h[L] == 0.0) &&
+               (betahilohi_h[L] == 0.0) && (betalolohi_h[L] == 0.0) &&
+               (betahihilo_h[L] == 0.0) && (betalohilo_h[L] == 0.0) &&
+               (betahilolo_h[L] == 0.0) && (betalololo_h[L] == 0.0))
+            {
+               if(verbose) cout << "Zero beta detected." << endl;
+            }
+            else
+            {
+               GPU_cmplx8_medium_leftRupdate
+                  (nrows,ncols,szt,colidx,k,L,
                      Arehihihi_h, Arelohihi_h, Arehilohi_h, Arelolohi_h,
                      Arehihilo_h, Arelohilo_h, Arehilolo_h, Arelololo_h,
                      Aimhihihi_h, Aimlohihi_h, Aimhilohi_h, Aimlolohi_h,
@@ -12012,6 +12090,7 @@ void GPU_cmplx8_blocked_houseqr
                   bRHvimhihihi_d,bRHvimlohihi_d,bRHvimhilohi_d,bRHvimlolohi_d,
                   bRHvimhihilo_d,bRHvimlohilo_d,bRHvimhilolo_d,bRHvimlololo_d,
                 RHvlapms,tileRlapms,addcnt,mulcnt,verbose);
+            }
          }
       }
       GPU_cmplx8_medium_VB_to_W
