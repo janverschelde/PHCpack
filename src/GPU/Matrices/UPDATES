@@ -1,3 +1,6 @@
+Mon 26 Sep 2022 : fixed bugs in dbl2_baqr_kernels.cu in case beta is zero,
+  for the small_house kernels.
+
 Sun 25 sep 2022 : bug fix in dbl_tabs_kernels.cu for sparse matrices,
   added extra tests and initializations to deal with zero entries.
   Applied the same modifications to dbl2_tabs_kernels.cu,

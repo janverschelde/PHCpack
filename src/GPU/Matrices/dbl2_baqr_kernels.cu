@@ -91,9 +91,14 @@ __global__ void dbl2_small_house
    }
    __syncthreads();
    // shv[j] = shv[j]/prd[0];
-   ddg_div(shvhi[j],shvlo[j],prdhi[0],prdlo[0],&acchi,&acclo);
-   vhi[j+1] = acchi;
-   vlo[j+1] = acclo;
+   vhi[j+1] = 0.0;
+   vlo[j+1] = 0.0;
+   if(1.0 + *betahi + *betalo != 1.0)
+   {
+      ddg_div(shvhi[j],shvlo[j],prdhi[0],prdlo[0],&acchi,&acclo);
+      vhi[j+1] = acchi;
+      vlo[j+1] = acclo;
+   }
    if(j == 0) vhi[0] = 1.0;
    if(j == 0) vlo[0] = 0.0;
 }
@@ -213,22 +218,29 @@ __global__ void cmplx2_small_house
    }
    __syncthreads(); // important synchronization!
    // inv0re = v0parts[0]/prd[0];               // real part of 1/v[0]
-   ddg_div(v0parts[0],v0parts[1],prdhi[0],prdlo[0],&inv0rehi,&inv0relo);
-   // inv0im = -v0parts[1]/prd[0];              // imag part of 1/v[0]
-   ddg_div(v0parts[2],v0parts[3],prdhi[0],prdlo[0],&inv0imhi,&inv0imlo);
-   ddg_minus(&inv0imhi,&inv0imlo);
-   // zre = shvre[j]*inv0re - shvim[j]*inv0im;  // real part of v[j]/v[0]
-   ddg_mul(shvrehi[j],shvrelo[j],inv0rehi,inv0relo,&zrehi,&zrelo);
-   ddg_mul(shvimhi[j],shvimlo[j],inv0imhi,inv0imlo,&acchi,&acclo);
-   ddg_dec(&zrehi,&zrelo,acchi,acclo);
-   // zim = shvim[j]*inv0re + shvre[j]*inv0im;  // imag part of v[j]/v[0]
-   ddg_mul(shvimhi[j],shvimlo[j],inv0rehi,inv0relo,&zimhi,&zimlo);
-   ddg_mul(shvrehi[j],shvrelo[j],inv0imhi,inv0imlo,&acchi,&acclo);
-   ddg_inc(&zimhi,&zimlo,acchi,acclo);
-   vrehi[j+1] = zrehi;
-   vrelo[j+1] = zrelo;
-   vimhi[j+1] = zimhi;
-   vimlo[j+1] = zimlo;
+   vrehi[j+1] = 0.0;
+   vrelo[j+1] = 0.0; // assign just in case of a zero beta ...
+   vimhi[j+1] = 0.0;
+   vimlo[j+1] = 0.0;
+   if(1.0 + prdhi[0] + prdlo[0] != 1.0)
+   {
+      ddg_div(v0parts[0],v0parts[1],prdhi[0],prdlo[0],&inv0rehi,&inv0relo);
+      // inv0im = -v0parts[1]/prd[0];              // imag part of 1/v[0]
+      ddg_div(v0parts[2],v0parts[3],prdhi[0],prdlo[0],&inv0imhi,&inv0imlo);
+      ddg_minus(&inv0imhi,&inv0imlo);
+      // zre = shvre[j]*inv0re - shvim[j]*inv0im;  // real part of v[j]/v[0]
+      ddg_mul(shvrehi[j],shvrelo[j],inv0rehi,inv0relo,&zrehi,&zrelo);
+      ddg_mul(shvimhi[j],shvimlo[j],inv0imhi,inv0imlo,&acchi,&acclo);
+      ddg_dec(&zrehi,&zrelo,acchi,acclo);
+      // zim = shvim[j]*inv0re + shvre[j]*inv0im;  // imag part of v[j]/v[0]
+      ddg_mul(shvimhi[j],shvimlo[j],inv0rehi,inv0relo,&zimhi,&zimlo);
+      ddg_mul(shvrehi[j],shvrelo[j],inv0imhi,inv0imlo,&acchi,&acclo);
+      ddg_inc(&zimhi,&zimlo,acchi,acclo);
+      vrehi[j+1] = zrehi;
+      vrelo[j+1] = zrelo;
+      vimhi[j+1] = zimhi;
+      vimlo[j+1] = zimlo;
+   }
    if(j == 0)
    {
       vrehi[0] = 1.0;
@@ -1687,14 +1699,14 @@ void GPU_dbl2_small_house
       *lapms += milliseconds;
       flopcount_dbl_small_house(nrows1,nrLog2,add,mul,div,sqrtfun);
    }
+   cudaMemcpy(&betahi_h[L],&betahi_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betalo_h[L],&betalo_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
    if(verbose)
    {
       const size_t szhouse = nVrows*sizeof(double);
 
-      cudaMemcpy(&betahi_h[L],&betahi_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betalo_h[L],&betalo_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
       cudaMemcpy(vhi_h,&Vhi_d[L*nVrows],szhouse,cudaMemcpyDeviceToHost);
       cudaMemcpy(vlo_h,&Vlo_d[L*nVrows],szhouse,cudaMemcpyDeviceToHost);
       cout << scientific << setprecision(16)
@@ -1808,14 +1820,14 @@ void GPU_cmplx2_small_house
       *lapms += milliseconds;
       flopcount_cmplx_small_house(nrows1,nrLog2,add,mul,div,sqrtfun);
    }
+   cudaMemcpy(&betahi_h[L],&betahi_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
+   cudaMemcpy(&betalo_h[L],&betalo_d[L],sizeof(double),
+              cudaMemcpyDeviceToHost);
    if(verbose)
    {
       const size_t szhouse = nVrows*sizeof(double);
 
-      cudaMemcpy(&betahi_h[L],&betahi_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
-      cudaMemcpy(&betalo_h[L],&betalo_d[L],sizeof(double),
-                 cudaMemcpyDeviceToHost);
       cudaMemcpy(vrehi_h,&Vrehi_d[L*nVrows],szhouse,
                  cudaMemcpyDeviceToHost);
       cudaMemcpy(vrelo_h,&Vrelo_d[L*nVrows],szhouse,
