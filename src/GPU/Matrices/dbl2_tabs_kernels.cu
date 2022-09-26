@@ -417,10 +417,14 @@ __global__ void  dbl2_invert_tiles
    int rowidx = offset + (dim - 1)*dim + k; // row index in the inverse
 
    // invUrow[k] = rhs/Ucol[k];       // last row of the inverse
-   ddg_div(rhshi,rhslo,Ucolhi[k],Ucollo[k],&invUrowhi[k],&invUrowlo[k]);
-   invUhi[rowidx] = invUrowhi[k];     // store the last row into invU
-   invUlo[rowidx] = invUrowlo[k];
-
+   invUhi[rowidx] = 0.0;      // initialize in case of zero divisor
+   invUlo[rowidx] = 0.0;
+   if(1.0 + Ucolhi[k] + Ucollo[k] != 1.0)
+   {
+      ddg_div(rhshi,rhslo,Ucolhi[k],Ucollo[k],&invUrowhi[k],&invUrowlo[k]);
+      invUhi[rowidx] = invUrowhi[k];     // store the last row into invU
+      invUlo[rowidx] = invUrowlo[k];
+   }
    for(int i=dim-2; i>=0; i--)        // compute row with index i
    {
       rhshi = ((double) int(k == i));   // set rhs for i-th unit vector
@@ -450,9 +454,14 @@ __global__ void  dbl2_invert_tiles
 
       __syncthreads();
       // invUrow[k] = rhs/Ucol[i];
-      ddg_div(rhshi,rhslo,Ucolhi[i],Ucollo[i],&invUrowhi[k],&invUrowlo[k]);
-      invUhi[rowidx] = invUrowhi[k];
-      invUlo[rowidx] = invUrowlo[k];
+      invUhi[rowidx] = 0.0;
+      invUlo[rowidx] = 0.0;
+      if(1.0 + Ucolhi[k] + Ucollo[k] != 0.0)
+      {
+         ddg_div(rhshi,rhslo,Ucolhi[i],Ucollo[i],&invUrowhi[k],&invUrowlo[k]);
+         invUhi[rowidx] = invUrowhi[k];
+         invUlo[rowidx] = invUrowlo[k];
+      }
    }
 }
 
