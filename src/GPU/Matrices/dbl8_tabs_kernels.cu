@@ -1392,8 +1392,8 @@ __global__ void  dbl8_invert_tiles
          = Ucolhihihi[k] + Ucollohihi[k] + Ucolhilohi[k] + Ucollolohi[k] 
          + Ucolhihilo[k] + Ucollohilo[k] + Ucolhilolo[k] + Ucollololo[k];
 
-      if(1.0 + checksum != 1.0)
-      {
+      //if(1.0 + checksum != 1.0)
+      //{
          odg_div(  rhshihihi,        rhslohihi,    rhshilohi,    rhslolohi,
                    rhshihilo,        rhslohilo,    rhshilolo,    rhslololo,
                   Ucolhihihi[i],    Ucollohihi[i],Ucolhilohi[i],Ucollolohi[i],
@@ -1411,7 +1411,7 @@ __global__ void  dbl8_invert_tiles
          invUlohilo[rowidx] = invUrowlohilo[k];
          invUhilolo[rowidx] = invUrowhilolo[k];
          invUlololo[rowidx] = invUrowlololo[k];
-      }
+      //}
    }
 }
 

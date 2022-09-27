@@ -456,12 +456,12 @@ __global__ void  dbl2_invert_tiles
       // invUrow[k] = rhs/Ucol[i];
       invUhi[rowidx] = 0.0;
       invUlo[rowidx] = 0.0;
-      if(1.0 + Ucolhi[k] + Ucollo[k] != 0.0)
-      {
+      // if(1.0 + Ucolhi[k] + Ucollo[k] != 1.0)
+      // {
          ddg_div(rhshi,rhslo,Ucolhi[i],Ucollo[i],&invUrowhi[k],&invUrowlo[k]);
          invUhi[rowidx] = invUrowhi[k];
          invUlo[rowidx] = invUrowlo[k];
-      }
+      //}
    }
 }
 

@@ -769,8 +769,8 @@ __global__ void  dbl4_invert_tiles
       invUhilo[rowidx] = 0.0;
       invUlolo[rowidx] = 0.0;
 
-      if(1.0 + Ucolhihi[k] + Ucollohi[k] + Ucolhilo[k] + Ucollolo[k] != 1.0)
-      {
+      //if(1.0 + Ucolhihi[k] + Ucollohi[k] + Ucolhilo[k] + Ucollolo[k] != 1.0)
+      //{
          qdg_div(     rhshihi,        rhslohi,        rhshilo,        rhslolo,
                   Ucolhihi[i],    Ucollohi[i],    Ucolhilo[i],    Ucollolo[i],
               &invUrowhihi[k],&invUrowlohi[k],&invUrowhilo[k],&invUrowlolo[k]);
@@ -778,7 +778,7 @@ __global__ void  dbl4_invert_tiles
          invUlohi[rowidx] = invUrowlohi[k];
          invUhilo[rowidx] = invUrowhilo[k];
          invUlolo[rowidx] = invUrowlolo[k];
-      }
+      //}
    }
 }
 
