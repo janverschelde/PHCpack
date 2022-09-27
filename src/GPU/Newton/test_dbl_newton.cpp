@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void exponents_check ( int dim, int **rowsA );
+void exponents_check ( int dim, int **rowsA, int vrblvl );
 /*
  * DESCRIPTION :
  *   Writes the exponents of the solution for checking ... */
@@ -59,16 +59,18 @@ int main ( void )
      test_dbl_complex_newton
         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
 
-   exponents_check(dim, rowsA);
+   exponents_check(dim,rowsA,vrblvl);
 
    return 0;
 }
 
-void exponents_check ( int dim, int **rowsA )
+void exponents_check ( int dim, int **rowsA, int vrblvl )
 {
-   cout << "The matrix :" << endl;
-   write_exponent_matrix(dim, rowsA);
-
+   if(vrblvl > 1)
+   {
+      cout << "The matrix :" << endl;
+      write_exponent_matrix(dim, rowsA);
+   }
    int *expsol = new int[dim];
    int **copyA = new int*[dim];  // copy of A
    int **unimd = new int*[dim];  // unimodular transformation

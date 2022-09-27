@@ -843,7 +843,7 @@ void dbl8_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      if(vrblvl > 0) cout << "calling GPU_dbl4_bals_solve ..." << endl;
+      if(vrblvl > 0) cout << "calling GPU_dbl8_bals_solve ..." << endl;
 
       GPU_dbl8_bals_solve
          (dim,degp1,szt,nbt,
