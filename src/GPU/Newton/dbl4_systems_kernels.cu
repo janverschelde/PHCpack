@@ -667,14 +667,20 @@ void GPU_dbl4_evaluate_monomials
             {
                int idxvar = idx[i][j];
                double factor = (double) exp[i][j];
+               double acchihi,acclohi,acchilo,acclolo;
 
                // multiply derivative w.r.t. idxvar with factor
                for(int k=0; k<=deg; k++)
                {
-                  outputhihi[i][idxvar][k] = factor*outputhihi[i][idxvar][k];
-                  outputlohi[i][idxvar][k] = factor*outputlohi[i][idxvar][k];
-                  outputhilo[i][idxvar][k] = factor*outputhilo[i][idxvar][k];
-                  outputlolo[i][idxvar][k] = factor*outputlolo[i][idxvar][k];
+                  // output[i][idxvar][k] = factor*output[i][idxvar][k];
+                  qdf_mul(outputhihi[i][idxvar][k],outputlohi[i][idxvar][k],
+                          outputhilo[i][idxvar][k],outputlolo[i][idxvar][k],
+                          factor,0.0,0.0,0.0,
+                          &acchihi,&acclohi,&acchilo,&acclolo);
+                  outputhihi[i][idxvar][k] = acchihi;
+                  outputlohi[i][idxvar][k] = acclohi;
+                  outputhilo[i][idxvar][k] = acchilo;
+                  outputlolo[i][idxvar][k] = acclolo;
                }
             }
          }

@@ -895,18 +895,32 @@ void GPU_dbl8_evaluate_monomials
             {
                int idxvar = idx[i][j];
                double fac = (double) exp[i][j];
+               double acchihihi,acclohihi,acchilohi,acclolohi;
+               double acchihilo,acclohilo,acchilolo,acclololo;
 
                // multiply derivative w.r.t. idxvar with factor
                for(int k=0; k<=deg; k++)
                {
-                  outputhihihi[i][idxvar][k] = fac*outputhihihi[i][idxvar][k];
-                  outputlohihi[i][idxvar][k] = fac*outputlohihi[i][idxvar][k];
-                  outputhilohi[i][idxvar][k] = fac*outputhilohi[i][idxvar][k];
-                  outputlolohi[i][idxvar][k] = fac*outputlolohi[i][idxvar][k];
-                  outputhihilo[i][idxvar][k] = fac*outputhihilo[i][idxvar][k];
-                  outputlohilo[i][idxvar][k] = fac*outputlohilo[i][idxvar][k];
-                  outputhilolo[i][idxvar][k] = fac*outputhilolo[i][idxvar][k];
-                  outputlololo[i][idxvar][k] = fac*outputlololo[i][idxvar][k];
+                  // output[i][idxvar][k] = factor*output[i][idxvar][k];
+                  odf_mul(outputhihihi[i][idxvar][k],
+                          outputlohihi[i][idxvar][k],
+                          outputhilohi[i][idxvar][k],
+                          outputlolohi[i][idxvar][k],
+                          outputhihilo[i][idxvar][k],
+                          outputlohilo[i][idxvar][k],
+                          outputhilolo[i][idxvar][k],
+                          outputlololo[i][idxvar][k],
+                          fac,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                          &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                          &acchihilo,&acclohilo,&acchilolo,&acclololo);
+                  outputhihihi[i][idxvar][k] = acchihihi;
+                  outputlohihi[i][idxvar][k] = acclohihi;
+                  outputhilohi[i][idxvar][k] = acchilohi;
+                  outputlolohi[i][idxvar][k] = acclolohi;
+                  outputhihilo[i][idxvar][k] = acchihilo;
+                  outputlohilo[i][idxvar][k] = acclohilo;
+                  outputhilolo[i][idxvar][k] = acchilolo;
+                  outputlololo[i][idxvar][k] = acclololo;
                }
             }
          }

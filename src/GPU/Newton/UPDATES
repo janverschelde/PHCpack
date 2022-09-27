@@ -1,3 +1,6 @@
+Mon 26 Sep 2022 : in {dbl4,dbl8}_systems_kernels.cu fixed multiplication 
+  with factor to properly apply multiple double arithmetic.
+
 Sat 24 Sep 2022 : more verbosity in dbl_bals_kernels.cu to chase a bug
   on complex data.
 
