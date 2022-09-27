@@ -1,3 +1,6 @@
+Tue 27 Sep 2022 : fixed prototypes in dbl8_bals_host.h and its .cpp file
+  for the wrong order of arrays in the function CPU_cmplx8_qrbs_head.
+
 Mon 26 Sep 2022 : in {dbl4,dbl8}_systems_kernels.cu fixed multiplication 
   with factor to properly apply multiple double arithmetic.
 
