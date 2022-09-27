@@ -1273,10 +1273,6 @@ __global__ void  dbl8_invert_tiles
    // invUrow[k] = rhs/Ucol[k];       // last row of the inverse
    __syncthreads();
 
-   double checksum
-      = Ucolhihihi[k] + Ucollohihi[k] + Ucolhilohi[k] + Ucollolohi[k] 
-      + Ucolhihilo[k] + Ucollohilo[k] + Ucolhilolo[k] + Ucollololo[k];
-
    invUhihihi[rowidx] = 0.0; // initialize in case of zero divisor
    invUlohihi[rowidx] = 0.0;
    invUhilohi[rowidx] = 0.0;
@@ -1286,7 +1282,7 @@ __global__ void  dbl8_invert_tiles
    invUhilolo[rowidx] = 0.0;
    invUlololo[rowidx] = 0.0;
 
-   if(1.0 + checksum != 1.0)
+   if(1.0 + Ucolhihihi[k] != 1.0)
    {
       odg_div(     rhshihihi,        rhslohihi,    rhshilohi,    rhslolohi,
                    rhshihilo,        rhslohilo,    rhshilolo,    rhslololo,
@@ -1297,7 +1293,6 @@ __global__ void  dbl8_invert_tiles
               &invUrowhihilo[k],&invUrowlohilo[k],
               &invUrowhilolo[k],&invUrowlololo[k]);
       // store the last row into invU
-      __syncthreads();
       invUhihihi[rowidx] = invUrowhihihi[k];
       invUlohihi[rowidx] = invUrowlohihi[k];
       invUhilohi[rowidx] = invUrowhilohi[k];
@@ -1388,12 +1383,8 @@ __global__ void  dbl8_invert_tiles
       invUhilolo[rowidx] = 0.0;
       invUlololo[rowidx] = 0.0;
 
-      checksum
-         = Ucolhihihi[k] + Ucollohihi[k] + Ucolhilohi[k] + Ucollolohi[k] 
-         + Ucolhihilo[k] + Ucollohilo[k] + Ucolhilolo[k] + Ucollololo[k];
-
-      //if(1.0 + checksum != 1.0)
-      //{
+      if(1.0 + Ucolhihihi[i] != 1.0)
+      {
          odg_div(  rhshihihi,        rhslohihi,    rhshilohi,    rhslolohi,
                    rhshihilo,        rhslohilo,    rhshilolo,    rhslololo,
                   Ucolhihihi[i],    Ucollohihi[i],Ucolhilohi[i],Ucollolohi[i],
@@ -1402,7 +1393,6 @@ __global__ void  dbl8_invert_tiles
               &invUrowhilohi[k],&invUrowlolohi[k],
               &invUrowhihilo[k],&invUrowlohilo[k],
               &invUrowhilolo[k],&invUrowlololo[k]);
-         __syncthreads();
          invUhihihi[rowidx] = invUrowhihihi[k];
          invUlohihi[rowidx] = invUrowlohihi[k];
          invUhilohi[rowidx] = invUrowhilohi[k];
@@ -1411,7 +1401,7 @@ __global__ void  dbl8_invert_tiles
          invUlohilo[rowidx] = invUrowlohilo[k];
          invUhilolo[rowidx] = invUrowhilolo[k];
          invUlololo[rowidx] = invUrowlololo[k];
-      //}
+      }
    }
 }
 
@@ -1544,10 +1534,6 @@ __global__ void cmplx8_invert_tiles
            acc1hihihi,acc1lohihi,acc1hilohi,acc1lolohi,
            acc1hihilo,acc1lohilo,acc1hilolo,acc1lololo);
 
-   double checksum
-      = denhihihi + denlohihi + denhilohi + denlolohi 
-      + denhihilo + denlohilo + denhilolo + denlololo;
-
    invUrehihihi[rowidx] = 0.0;   // initialize in case of zero denominator
    invUrelohihi[rowidx] = 0.0;
    invUrehilohi[rowidx] = 0.0; 
@@ -1565,7 +1551,7 @@ __global__ void cmplx8_invert_tiles
    invUimhilolo[rowidx] = 0.0;
    invUimlololo[rowidx] = 0.0;
 
-   if(1.0 + checksum != 1.0)
+   if(1.0 + denhihihi != 1.0)
    {
       odg_div(Ucolrehihihi[k],Ucolrelohihi[k],Ucolrehilohi[k],Ucolrelolohi[k],
               Ucolrehihilo[k],Ucolrelohilo[k],Ucolrehilolo[k],Ucolrelololo[k],
@@ -1817,10 +1803,6 @@ __global__ void cmplx8_invert_tiles
               acc1hihihi,acc1lohihi,acc1hilohi,acc1lolohi,
               acc1hihilo,acc1lohilo,acc1hilolo,acc1lololo);
 
-      checksum
-         = denhihihi + denlohihi + denhilohi + denlolohi 
-         + denhihilo + denlohilo + denhilolo + denlololo;
-
       invUrehihihi[rowidx] = 0.0; // initialize in case
       invUrelohihi[rowidx] = 0.0; // of zero denominator
       invUrehilohi[rowidx] = 0.0;
@@ -1838,7 +1820,7 @@ __global__ void cmplx8_invert_tiles
       invUimhilolo[rowidx] = 0.0;
       invUimlololo[rowidx] = 0.0;
 
-      if(1.0 + checksum != 1.0)
+      if(1.0 + denhihihi != 1.0)
       {
          odg_div(Ucolrehihihi[i],Ucolrelohihi[i],
                  Ucolrehilohi[i],Ucolrelolohi[i],

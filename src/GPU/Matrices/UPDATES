@@ -1,3 +1,6 @@
+Tue 27 Sep 2022 : in {dbl2,dbl4,dbl8}_tabs_kernels.cu fixed the zero tests
+  in the invert_tiles kernels, fixing the wrong last test on real data.
+
 Mon 26 Sep 2022 : fixed bugs in dbl2_baqr_kernels.cu in case beta is zero,
   for the small_house kernels.  Applied similar updates to the analogue
   kernels in dbl4_baqr_kernels.cu and dbl8_baqr_kernels.cu.

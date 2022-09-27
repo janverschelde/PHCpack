@@ -712,7 +712,7 @@ __global__ void  dbl4_invert_tiles
    invUlohi[rowidx] = 0.0;     // initialize in case of zero divisor
    invUhilo[rowidx] = 0.0;
    invUlolo[rowidx] = 0.0;
-   if(1.0 + Ucolhihi[k] + Ucollohi[k] + Ucolhilo[k] + Ucollolo[k] != 1.0)
+   if(1.0 + Ucolhihi[k] != 1.0)
    {
       qdg_div(     rhshihi,        rhslohi,        rhshilo,        rhslolo,
                   Ucolhihi[k],    Ucollohi[k],    Ucolhilo[k],    Ucollolo[k],
@@ -769,8 +769,8 @@ __global__ void  dbl4_invert_tiles
       invUhilo[rowidx] = 0.0;
       invUlolo[rowidx] = 0.0;
 
-      //if(1.0 + Ucolhihi[k] + Ucollohi[k] + Ucolhilo[k] + Ucollolo[k] != 1.0)
-      //{
+      if(1.0 + Ucolhihi[i] != 1.0)
+      {
          qdg_div(     rhshihi,        rhslohi,        rhshilo,        rhslolo,
                   Ucolhihi[i],    Ucollohi[i],    Ucolhilo[i],    Ucollolo[i],
               &invUrowhihi[k],&invUrowlohi[k],&invUrowhilo[k],&invUrowlolo[k]);
@@ -778,7 +778,7 @@ __global__ void  dbl4_invert_tiles
          invUlohi[rowidx] = invUrowlohi[k];
          invUhilo[rowidx] = invUrowhilo[k];
          invUlolo[rowidx] = invUrowlolo[k];
-      //}
+      }
    }
 }
 
@@ -863,7 +863,7 @@ __global__ void  cmplx4_invert_tiles
    invUimhilo[rowidx] = 0.0;
    invUimlolo[rowidx] = 0.0;
 
-   if(1.0 + denhihi + denlohi + denhilo + denlolo != 1.0)
+   if(1.0 + denhihi != 1.0)
    {
       qdg_div(Ucolrehihi[k],Ucolrelohi[k],Ucolrehilo[k],Ucolrelolo[k],
                  denhihi,      denlohi,      denhilo,      denlolo,
@@ -1001,7 +1001,7 @@ __global__ void  cmplx4_invert_tiles
       invUimhilo[rowidx] = 0.0;
       invUimlolo[rowidx] = 0.0;
 
-      if(1.0 + denhihi + denlohi + denhilo + denlolo != 1.0)
+      if(1.0 + denhihi != 1.0)
       {
          qdg_div(Ucolrehihi[i],Ucolrelohi[i],Ucolrehilo[i],Ucolrelolo[i],
                     denhihi,      denlohi,      denhilo,      denlolo,

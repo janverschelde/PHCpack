@@ -419,7 +419,7 @@ __global__ void  dbl2_invert_tiles
    // invUrow[k] = rhs/Ucol[k];       // last row of the inverse
    invUhi[rowidx] = 0.0;      // initialize in case of zero divisor
    invUlo[rowidx] = 0.0;
-   if(1.0 + Ucolhi[k] + Ucollo[k] != 1.0)
+   if(1.0 + Ucolhi[k] != 1.0)
    {
       ddg_div(rhshi,rhslo,Ucolhi[k],Ucollo[k],&invUrowhi[k],&invUrowlo[k]);
       invUhi[rowidx] = invUrowhi[k];     // store the last row into invU
@@ -456,12 +456,12 @@ __global__ void  dbl2_invert_tiles
       // invUrow[k] = rhs/Ucol[i];
       invUhi[rowidx] = 0.0;
       invUlo[rowidx] = 0.0;
-      // if(1.0 + Ucolhi[k] + Ucollo[k] != 1.0)
-      // {
+      if(1.0 + Ucolhi[i] != 1.0)
+      {
          ddg_div(rhshi,rhslo,Ucolhi[i],Ucollo[i],&invUrowhi[k],&invUrowlo[k]);
          invUhi[rowidx] = invUrowhi[k];
          invUlo[rowidx] = invUrowlo[k];
-      //}
+      }
    }
 }
 
@@ -510,7 +510,7 @@ __global__ void  cmplx2_invert_tiles
    invUimhi[rowidx] = 0.0;
    invUimlo[rowidx] = 0.0;
    
-   if(1.0 + denhi + denlo != 1.0)
+   if(1.0 + denhi != 1.0)
    {
       ddg_div(Ucolrehi[k],Ucolrelo[k],denhi,denlo,&invrehi,&invrelo);
       ddg_div(Ucolimhi[k],Ucolimlo[k],denhi,denlo,&invimhi,&invimlo);
@@ -586,7 +586,7 @@ __global__ void  cmplx2_invert_tiles
       invUimhi[rowidx] = 0.0;
       invUimlo[rowidx] = 0.0;
 
-      if(1.0 + denhi + denlo != 1.0)
+      if(1.0 + denhi != 1.0)
       {
          ddg_div(Ucolrehi[i],Ucolrelo[i],denhi,denlo,&invrehi,&invrelo);
          ddg_div(Ucolimhi[i],Ucolimlo[i],denhi,denlo,&invimhi,&invimlo);
