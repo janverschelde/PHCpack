@@ -1595,7 +1595,7 @@ __global__ void cmplx8_invert_tiles
               &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo,
                acc2hihihi, acc2lohihi, acc2hilohi, acc2lolohi,
                acc2hihilo, acc2lohilo, acc2hilolo, acc2lololo);
-      __syncthreads();
+      // __syncthreads();
       invUrowrehihihi[k] = acc1hihihi;
       invUrowrelohihi[k] = acc1lohihi;
       invUrowrehilohi[k] = acc1hilohi;
@@ -1604,12 +1604,12 @@ __global__ void cmplx8_invert_tiles
       invUrowrelohilo[k] = acc1lohilo;
       invUrowrehilolo[k] = acc1hilolo;
       invUrowrelololo[k] = acc1lololo;
-      __syncthreads();
+      // __syncthreads();
       odg_inc(&acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
               &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo,
                acc4hihihi, acc4lohihi, acc4hilohi, acc4lolohi,
                acc4hihilo, acc4lohilo, acc4hilolo, acc4lololo);
-      __syncthreads();
+      // __syncthreads();
       invUrowimhihihi[k] = acc3hihihi;
       invUrowimlohihi[k] = acc3lohihi;
       invUrowimhilohi[k] = acc3hilohi;
@@ -1618,7 +1618,7 @@ __global__ void cmplx8_invert_tiles
       invUrowimlohilo[k] = acc3lohilo;
       invUrowimhilolo[k] = acc3hilolo;
       invUrowimlololo[k] = acc3lololo;
-      __syncthreads();
+      // __syncthreads();
       invUrehihihi[rowidx] = invUrowrehihihi[k];   // store the last row
       invUrelohihi[rowidx] = invUrowrelohihi[k];
       invUrehilohi[rowidx] = invUrowrehilohi[k]; 
@@ -1868,7 +1868,10 @@ __global__ void cmplx8_invert_tiles
                  &acc1hihilo,&acc1lohilo,&acc1hilolo,&acc1lololo,
                   acc2hihihi, acc2lohihi, acc2hilohi, acc2lolohi,
                   acc2hihilo, acc2lohilo, acc2hilolo, acc2lololo);
-         __syncthreads();
+      }
+      __syncthreads(); // moved synchronization outside if statements
+      if(1.0 + denhihihi != 1.0)
+      {
          invUrowrehihihi[k] = acc1hihihi;
          invUrowrelohihi[k] = acc1lohihi;
          invUrowrehilohi[k] = acc1hilohi;
@@ -1877,12 +1880,18 @@ __global__ void cmplx8_invert_tiles
          invUrowrelohilo[k] = acc1lohilo;
          invUrowrehilolo[k] = acc1hilolo;
          invUrowrelololo[k] = acc1lololo;
-         __syncthreads();
+      }
+      __syncthreads();
+      if(1.0 + denhihihi != 1.0)
+      {
          odg_inc(&acc3hihihi,&acc3lohihi,&acc3hilohi,&acc3lolohi,
                  &acc3hihilo,&acc3lohilo,&acc3hilolo,&acc3lololo,
                   acc4hihihi, acc4lohihi, acc4hilohi, acc4lolohi,
                   acc4hihilo, acc4lohilo, acc4hilolo, acc4lololo);
-         __syncthreads();
+      }
+      __syncthreads();
+      if(1.0 + denhihihi != 1.0)
+      {
          invUrowimhihihi[k] = acc3hihihi;
          invUrowimlohihi[k] = acc3lohihi;
          invUrowimhilohi[k] = acc3hilohi;
@@ -1891,7 +1900,10 @@ __global__ void cmplx8_invert_tiles
          invUrowimlohilo[k] = acc3lohilo;
          invUrowimhilolo[k] = acc3hilolo;
          invUrowimlololo[k] = acc3lololo;
-         __syncthreads();
+      }
+      __syncthreads();
+      if(1.0 + denhihihi != 1.0)
+      {
          invUrehihihi[rowidx] = invUrowrehihihi[k];
          invUrelohihi[rowidx] = invUrowrelohihi[k];
          invUrehilohi[rowidx] = invUrowrehilohi[k];
