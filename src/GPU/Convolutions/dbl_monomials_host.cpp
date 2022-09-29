@@ -267,7 +267,7 @@ void CPU_cmplx_evaldiff
 
       CPU_cmplx_product(deg,cffre,cffim,inputre[ix1],inputim[ix1],
                                         outputre[ix2],outputim[ix2]);
-      CPU_cmplx_product(deg,cffre,cffim,inputre[ix2],inputim[ix1],
+      CPU_cmplx_product(deg,cffre,cffim,inputre[ix2],inputim[ix2],
                                         outputre[ix1],outputim[ix1]);
    }
    else

@@ -341,7 +341,7 @@ void CPU_cmplx2_evaldiff
          outputrehi[ix2],outputrelo[ix2],outputimhi[ix2],outputimlo[ix2]);
       CPU_cmplx2_product(deg,
          cffrehi,cffrelo,cffimhi,cffimlo,
-         inputrehi[ix2],inputrelo[ix2],inputimhi[ix1],inputimlo[ix1],
+         inputrehi[ix2],inputrelo[ix2],inputimhi[ix2],inputimlo[ix2],
          outputrehi[ix1],outputrelo[ix1],outputimhi[ix1],outputimlo[ix1]);
    }
    else

@@ -543,7 +543,7 @@ void CPU_cmplx4_evaldiff
          cffrehihi,cffrelohi,cffrehilo,cffrelolo,
          cffimhihi,cffimlohi,cffimhilo,cffimlolo,
          inputrehihi[ix2],inputrelohi[ix2],inputrehilo[ix2],inputrelolo[ix2],
-         inputimhihi[ix1],inputimlohi[ix1],inputimhilo[ix1],inputimlolo[ix1],
+         inputimhihi[ix2],inputimlohi[ix2],inputimhilo[ix2],inputimlolo[ix2],
          outputrehihi[ix1],outputrelohi[ix1],
          outputrehilo[ix1],outputrelolo[ix1],
          outputimhihi[ix1],outputimlohi[ix1],

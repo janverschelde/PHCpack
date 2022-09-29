@@ -1,3 +1,6 @@
+Thu 29 Sep 2022 : in {dbl,dbl2,dbl4,dbl8}_monomials_host.cpp fixed index
+  error for the special case of two variables.
+
 Fri 16 Sep 2022 : fixed CPU_cmplx8_evaldiff in dbl8_monomials_host.cpp,
   for the special case of two variables.
 
