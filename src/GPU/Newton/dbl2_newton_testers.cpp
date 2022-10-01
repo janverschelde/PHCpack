@@ -130,6 +130,136 @@ void cmplx2_update_series
    }
 }
 
+double dbl2_error3sum
+ ( int dim1, int dim2, int dim3,
+   double ***datahi_h, double ***datalo_h,
+   double ***datahi_d, double ***datalo_d,
+   std::string banner, int vrblvl )
+{
+   double errsum = 0.0;
+
+   for(int k=0; k<dim1; k++) // monomial k
+      for(int i=0; i<dim2; i++)
+         for(int j=0; j<dim3; j++)
+         {
+            if(vrblvl > 1)
+            {
+               cout << banner << "_h[" // "output_h["
+                    << k << "][" << i << "][" << j << "] : "
+                    << datahi_h[k][i][j] << "  "
+                    << datalo_h[k][i][j] << endl;
+               cout << banner << "_d[" // "output_d["
+                    << k << "][" << i << "][" << j << "] : "
+                    << datahi_d[k][i][j] << "  "
+                    << datalo_d[k][i][j] << endl;
+            }
+            errsum += abs(datahi_h[k][i][j] - datahi_d[k][i][j])
+                    + abs(datalo_h[k][i][j] - datalo_d[k][i][j]);
+         }
+
+   return errsum;
+}
+
+double cmplx2_error3sum
+ ( int dim1, int dim2, int dim3,
+   double ***datarehi_h, double ***datarelo_h,
+   double ***dataimhi_h, double ***dataimlo_h,
+   double ***datarehi_d, double ***datarelo_d,
+   double ***dataimhi_d, double ***dataimlo_d,
+   std::string banner, int vrblvl )
+{
+   double errsum = 0.0;
+
+   for(int k=0; k<dim1; k++) // monomial k
+      for(int i=0; i<dim2; i++)
+         for(int j=0; j<dim3; j++)
+         {
+            if(vrblvl > 1)
+            {
+               cout << banner << "_h[" // "output_h["
+                    << k << "][" << i << "][" << j << "] : "
+                    << datarehi_h[k][i][j] << "  "
+                    << datarelo_h[k][i][j] << endl << "  "
+                    << dataimhi_h[k][i][j] << "  "
+                    << dataimlo_h[k][i][j] << endl;
+               cout << banner << "_d[" // "output_d["
+                    << k << "][" << i << "][" << j << "] : "
+                    << datarehi_d[k][i][j] << "  "
+                    << datarelo_d[k][i][j] << endl << "  "
+                    << dataimhi_d[k][i][j] << "  "
+                    << dataimlo_d[k][i][j] << endl;
+            }
+            errsum += abs(datarehi_h[k][i][j] - datarehi_d[k][i][j])
+                    + abs(datarelo_h[k][i][j] - datarelo_d[k][i][j])
+                    + abs(dataimhi_h[k][i][j] - dataimhi_d[k][i][j])
+                    + abs(dataimlo_h[k][i][j] - dataimlo_d[k][i][j]);
+         }
+
+   return errsum;
+}
+
+double dbl2_error2sum
+ ( int nrows, int ncols,
+   double **datahi_h, double **datalo_h,
+   double **datahi_d, double **datalo_d,
+   std::string banner, int vrblvl )
+{
+   double errsum = 0.0;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         if(vrblvl > 1)
+         {
+            cout << banner << "_h[" << i << "][" << j << "] : "
+                 << datahi_h[i][j] << "  "
+                 << datalo_h[i][j] << endl;
+            cout << banner << "_d[" << i << "][" << j << "] : "
+                 << datahi_d[i][j] << "  "
+                 << datalo_d[i][j] << endl;
+         }
+         errsum += abs(datahi_h[i][j] - datahi_d[i][j])
+                 + abs(datalo_h[i][j] - datalo_d[i][j]);
+      }
+
+   return errsum;
+}
+
+double cmplx2_error2sum
+ ( int nrows, int ncols,
+   double **datarehi_h, double **datarelo_h,
+   double **dataimhi_h, double **dataimlo_h,
+   double **datarehi_d, double **datarelo_d,
+   double **dataimhi_d, double **dataimlo_d,
+   std::string banner, int vrblvl )
+{
+   double errsum = 0.0;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         if(vrblvl > 1)
+         {
+            cout << banner << "_h[" << i << "][" << j << "] : "
+                 << datarehi_h[i][j] << "  "
+                 << datarelo_h[i][j] << endl << "  "
+                 << dataimhi_h[i][j] << "  "
+                 << dataimlo_h[i][j] << endl;
+            cout << banner << "_d[" << i << "][" << j << "] : "
+                 << datarehi_d[i][j] << "  "
+                 << datarelo_d[i][j] << endl << "  "
+                 << dataimhi_d[i][j] << "  "
+                 << dataimlo_d[i][j] << endl;
+         }
+         errsum += abs(datarehi_h[i][j] - datarehi_d[i][j])
+                 + abs(datarelo_h[i][j] - datarelo_d[i][j])
+                 + abs(dataimhi_h[i][j] - dataimhi_d[i][j])
+                 + abs(dataimlo_h[i][j] - dataimlo_d[i][j]);
+      }
+
+   return errsum;
+}
+
 void dbl2_newton_lustep
  ( int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
@@ -275,22 +405,14 @@ void dbl2_newton_qrstep
    {
       cout << "comparing CPU with GPU evaluations ... " << endl;
       double errsum = 0.0;
-      for(int k=0; k<dim; k++) // monomial k
-         for(int i=0; i<=dim; i++)
-            for(int j=0; j<degp1; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "output_h[" << k << "][" << i << "][" << j << "] : "
-                    << outputhi_h[k][i][j] << "  "
-                    << outputlo_h[k][i][j] << endl;
-               cout << "output_d[" << k << "][" << i << "][" << j << "] : "
-                    << outputhi_d[k][i][j] << "  "
-                    << outputlo_d[k][i][j] << endl;
-            }
-            errsum += abs(outputhi_h[k][i][j] - outputhi_d[k][i][j])
-                    + abs(outputlo_h[k][i][j] - outputlo_d[k][i][j]);
-         }
+
+      errsum = dbl2_error3sum
+                  (dim,dim+1,degp1,outputhi_h,outputlo_h,
+                                   outputhi_d,outputlo_d,"output",vrblvl);
+      // first dim is the number of monomials,
+      // dim+1 is number of variables for each derivative,
+      // plus the last component with the function value
+
       cout << scientific << setprecision(16);
       cout << "sum of errors : " << errsum << endl;
    }
@@ -301,10 +423,8 @@ void dbl2_newton_qrstep
       for(int j=0; j<dim; j++) 
          for(int k=0; k<dim; k++)
          {
-            jacvalhi_h[i][j][k] = 0.0;
-            jacvallo_h[i][j][k] = 0.0;
-            jacvalhi_d[i][j][k] = 0.0;
-            jacvallo_d[i][j][k] = 0.0;
+            jacvalhi_h[i][j][k] = 0.0; jacvallo_h[i][j][k] = 0.0;
+            jacvalhi_d[i][j][k] = 0.0; jacvallo_d[i][j][k] = 0.0;
          }
 
    if(vrblvl > 0) cout << "linearizing the output ..." << endl;
@@ -325,62 +445,18 @@ void dbl2_newton_qrstep
    {
       cout << "comparing CPU with GPU function values ... " << endl;
       double errsum = 0.0;
-      for(int i=0; i<dim; i++)
-      {
-         for(int j=0; j<degp1; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "funval_h[" << i << "][" << j << "] : "
-                    << funvalhi_h[i][j] << "  " << funvallo_h[i][j] << endl;
-               cout << "funval_d[" << i << "][" << j << "] : "
-                    << funvalhi_d[i][j] << "  " << funvallo_d[i][j] << endl;
-            }
-            errsum += abs(funvalhi_h[i][j] - funvalhi_d[i][j])
-                    + abs(funvallo_h[i][j] - funvallo_d[i][j]);
-         }
-      }
+      errsum = dbl2_error2sum
+                  (dim,degp1,funvalhi_h,funvallo_h,
+                             funvalhi_d,funvallo_d,"funval",vrblvl);
       cout << "sum of errors : " << errsum << endl;
       cout << "comparing CPU with GPU Jacobians ... " << endl;
-      errsum = 0.0;
-      for(int i=0; i<degp1; i++)
-      {
-         for(int j=0; j<dim; j++)
-         {
-            for(int k=0; k<dim; k++)
-            {
-               if(vrblvl > 1)
-               {
-                  cout << "jacval_h[" << i << "][" << j << "][" << k << "] : "
-                       << jacvalhi_h[i][j][k] << "  "
-                       << jacvallo_h[i][j][k] << endl;
-                  cout << "jacval_d[" << i << "][" << j << "][" << k << "] : "
-                       << jacvalhi_d[i][j][k] << "  "
-                       << jacvallo_d[i][j][k] << endl;
-               }
-               errsum += abs(jacvalhi_h[i][j][k] - jacvalhi_d[i][j][k])
-                       + abs(jacvallo_h[i][j][k] - jacvallo_d[i][j][k]);
-            }
-         }
-      }
+      errsum = dbl2_error3sum
+                  (degp1,dim,dim,jacvalhi_h,jacvallo_d,
+                                 jacvalhi_h,jacvallo_d,"jacval",vrblvl);
       cout << "sum of errors : " << errsum << endl;
       cout << "comparing CPU with GPU right hand sides ... " << endl;
-      errsum = 0.0;
-      for(int i=0; i<degp1; i++)
-      {
-         for(int j=0; j<dim; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "rhs_h[" << i << "][" << j << "] : "
-                    << rhshi_h[i][j] << "  " << rhslo_h[i][j] << endl;
-               cout << "rhs_d[" << i << "][" << j << "] : "
-                    << rhshi_d[i][j] << "  " << rhslo_d[i][j] << endl;
-            }
-            errsum += abs(rhshi_h[i][j] - rhshi_d[i][j])
-                    + abs(rhslo_h[i][j] - rhslo_d[i][j]);
-         }
-      }
+      errsum = dbl2_error2sum
+                  (degp1,dim,rhshi_h,rhslo_h,rhshi_d,rhslo_d,"rhs",vrblvl);
       cout << "sum of errors : " << errsum << endl;
    }
 
@@ -389,10 +465,8 @@ void dbl2_newton_qrstep
    for(int i=0; i<degp1; i++) // save original rhs for residual
       for(int j=0; j<dim; j++)
       {
-         urhshi_h[i][j] = rhshi_h[i][j];
-         urhslo_h[i][j] = rhslo_h[i][j];
-         urhshi_d[i][j] = rhshi_d[i][j];
-         urhslo_d[i][j] = rhslo_d[i][j];
+         urhshi_h[i][j] = rhshi_h[i][j]; urhslo_h[i][j] = rhslo_h[i][j];
+         urhshi_d[i][j] = rhshi_d[i][j]; urhslo_d[i][j] = rhslo_d[i][j];
       }
 
    if(vrblvl > 0) cout << "initializing the solution ..." << endl;
@@ -448,85 +522,24 @@ void dbl2_newton_qrstep
    if((vrblvl > 0) && (mode == 2))
    {
       double errsum = 0.0;
+
       cout << "comparing CPU with GPU matrices Q ... " << endl;
-      for(int i=0; i<dim; i++)
-         for(int j=0; j<dim; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "Q_h[" << i << "][" << j << "] : "
-                    << Qhi_h[i][j] << "  " << Qlo_h[i][j] << endl;
-               cout << "Q_d[" << i << "][" << j << "] : "
-                    << Qhi_d[i][j] << "  " << Qlo_d[i][j] << endl;
-            }
-            errsum += abs(Qhi_h[i][j] - Qhi_d[i][j])
-                    + abs(Qlo_h[i][j] - Qlo_d[i][j]);
-         }
+      errsum = dbl2_error2sum(dim,dim,Qhi_h,Qlo_h,Qhi_d,Qlo_d,"Q",vrblvl);
       cout << "sum of errors : " << errsum << endl;
       cout << "comparing CPU with GPU matrices R ... " << endl;
-      for(int i=0; i<dim; i++)
-         for(int j=0; j<dim; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "R_h[" << i << "][" << j << "] : "
-                    << Rhi_h[i][j] << "  " << Rlo_h[i][j] << endl;
-               cout << "R_d[" << i << "][" << j << "] : "
-                    << Rhi_d[i][j] << "  " << Rlo_d[i][j] << endl;
-            }
-            errsum += abs(Rhi_h[i][j] - Rhi_d[i][j])
-                    + abs(Rlo_h[i][j] - Rlo_d[i][j]);
-         }
+      errsum = dbl2_error2sum(dim,dim,Rhi_h,Rlo_h,Rhi_d,Rlo_d,"R",vrblvl);
       cout << "sum of errors : " << errsum << endl;
-      errsum = 0.0;
       cout << "comparing CPU with GPU updated rhs ... " << endl;
-      for(int i=0; i<degp1; i++)
-         for(int j=0; j<dim; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "urhs_h[" << i << "][" << j << "] : "
-                    << urhshi_h[i][j] << "  " << urhslo_h[i][j] << endl;
-               cout << "urhs_d[" << i << "][" << j << "] : "
-                    << urhshi_d[i][j] << "  " << urhslo_d[i][j] << endl;
-            }
-            errsum += abs(urhshi_h[i][j] - urhshi_d[i][j])
-                    + abs(urhslo_h[i][j] - urhslo_d[i][j]);
-         }
+      errsum = dbl2_error2sum(degp1,dim,urhshi_h,urhslo_h,
+                                        urhshi_d,urhslo_d,"urhs",vrblvl);
       cout << "sum of errors : " << errsum << endl;
-      errsum = 0.0;
       cout << "comparing CPU with GPU update to solutions ... " << endl;
-      for(int i=0; i<degp1; i++)
-         for(int j=0; j<dim; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "sol_h[" << i << "][" << j << "] : "
-                    << solhi_h[i][j] << "  " << sollo_h[i][j] << endl;
-               cout << "sol_d[" << i << "][" << j << "] : "
-                    << solhi_d[i][j] << "  " << sollo_d[i][j] << endl;
-            }
-            errsum += abs(solhi_h[i][j] - solhi_d[i][j])
-                    + abs(sollo_h[i][j] - sollo_d[i][j]);
-         }
+      errsum = dbl2_error2sum(degp1,dim,solhi_h,sollo_h,
+                                        solhi_d,sollo_d,"sol",vrblvl);
       cout << "sum of errors : " << errsum << endl;
-      errsum = 0.0;
       cout << "comparing CPU with GPU series ... " << endl;
-      for(int i=0; i<dim; i++)
-         for(int j=0; j<degp1; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "input_h[" << i << "][" << j << "] : "
-                    << inputhi_h[i][j] << "  "
-                    << inputlo_h[i][j] << endl;
-               cout << "input_d[" << i << "][" << j << "] : "
-                    << inputhi_d[i][j] << "  "
-                    << inputlo_d[i][j] << endl;
-            }
-            errsum += abs(inputhi_h[i][j] - inputhi_d[i][j])
-                    + abs(inputlo_h[i][j] - inputlo_d[i][j]);
-         }
+      errsum = dbl2_error2sum(dim,degp1,inputhi_h,inputlo_h,
+                                        inputhi_d,inputlo_d,"input",vrblvl);
       cout << "sum of errors : " << errsum << endl;
    }
 }
@@ -629,29 +642,16 @@ void cmplx2_newton_qrstep
    if((vrblvl > 0) && (mode == 2))
    {
       cout << "comparing CPU with GPU evaluations ... " << endl;
-      double errsum = 0.0;
-      for(int k=0; k<dim; k++) // monomial k
-         for(int i=0; i<=dim; i++)
-            for(int j=0; j<degp1; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "output_h[" << k << "][" << i << "][" << j << "] : "
-                    << outputrehi_h[k][i][j] << "  "
-                    << outputrelo_h[k][i][j] << endl << "  "
-                    << outputimhi_h[k][i][j] << "  "
-                    << outputimlo_h[k][i][j] << endl;
-               cout << "output_d[" << k << "][" << i << "][" << j << "] : "
-                    << outputrehi_d[k][i][j] << "  "
-                    << outputrelo_d[k][i][j] << endl << "  "
-                    << outputimhi_d[k][i][j] << "  "
-                    << outputimlo_d[k][i][j] << endl;
-            }
-            errsum += abs(outputrehi_h[k][i][j] - outputrehi_d[k][i][j])
-                    + abs(outputrelo_h[k][i][j] - outputrelo_d[k][i][j])
-                    + abs(outputimhi_h[k][i][j] - outputimhi_d[k][i][j])
-                    + abs(outputimlo_h[k][i][j] - outputimlo_d[k][i][j]);
-         }
+
+      double errsum = cmplx2_error3sum
+                         (dim,dim+1,degp1,
+                          outputrehi_h,outputrelo_h,outputimhi_h,outputimlo_h,
+                          outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d,
+                          "output",vrblvl);
+      // first dim is the number of monomials,
+      // dim+1 is number of variables for each derivative,
+      // plus the last component with the function value
+
       cout << scientific << setprecision(16);
       cout << "sum of errors : " << errsum << endl;
    }
@@ -687,86 +687,23 @@ void cmplx2_newton_qrstep
    }
    if((vrblvl > 0) && (mode == 2))
    {
-      cout << "comparing CPU with GPU function values ... " << endl;
       double errsum = 0.0;
-      for(int i=0; i<dim; i++)
-      {
-         for(int j=0; j<degp1; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "funval_h[" << i << "][" << j << "] : "
-                    << funvalrehi_h[i][j] << "  "
-                    << funvalrelo_h[i][j] << endl << "  "
-                    << funvalimhi_h[i][j] << "  "
-                    << funvalimlo_h[i][j] << endl;
-               cout << "funval_d[" << i << "][" << j << "] : "
-                    << funvalrehi_d[i][j] << "  "
-                    << funvalrelo_d[i][j] << endl << "  "
-                    << funvalimhi_d[i][j] << "  "
-                    << funvalimlo_d[i][j] << endl;
-            }
-            errsum += abs(funvalrehi_h[i][j] - funvalrehi_d[i][j])
-                    + abs(funvalrelo_h[i][j] - funvalrelo_d[i][j])
-                    + abs(funvalimhi_h[i][j] - funvalimhi_d[i][j])
-                    + abs(funvalimlo_h[i][j] - funvalimlo_d[i][j]);
-         }
-      }
+      cout << "comparing CPU with GPU function values ... " << endl;
+      errsum = cmplx2_error2sum(dim,degp1,
+                  funvalrehi_h,funvalrelo_h,funvalimhi_h,funvalimlo_h,
+                  funvalrehi_d,funvalrelo_d,funvalimhi_d,funvalimlo_d,
+                  "funval",vrblvl);
       cout << "sum of errors : " << errsum << endl;
       cout << "comparing CPU with GPU Jacobians ... " << endl;
-      errsum = 0.0;
-      for(int i=0; i<degp1; i++)
-      {
-         for(int j=0; j<dim; j++)
-         {
-            for(int k=0; k<dim; k++)
-            {
-               if(vrblvl > 1)
-               {
-                  cout << "jacval_h[" << i << "][" << j << "][" << k << "] : "
-                       << jacvalrehi_h[i][j][k] << "  "
-                       << jacvalrelo_h[i][j][k] << endl << "  "
-                       << jacvalimhi_h[i][j][k] << "  "
-                       << jacvalimlo_h[i][j][k] << endl;
-                  cout << "jacval_d[" << i << "][" << j << "][" << k << "] : "
-                       << jacvalrehi_d[i][j][k] << "  "
-                       << jacvalrelo_d[i][j][k] << endl << "  "
-                       << jacvalimhi_d[i][j][k] << "  "
-                       << jacvalimlo_d[i][j][k] << endl;
-               }
-               errsum += abs(jacvalrehi_h[i][j][k] - jacvalrehi_d[i][j][k])
-                       + abs(jacvalrelo_h[i][j][k] - jacvalrelo_d[i][j][k])
-                       + abs(jacvalimhi_h[i][j][k] - jacvalimhi_d[i][j][k])
-                       + abs(jacvalimlo_h[i][j][k] - jacvalimlo_d[i][j][k]);
-            }
-         }
-      }
+      errsum = cmplx2_error3sum(degp1,dim,dim,
+                  jacvalrehi_h,jacvalrelo_h,jacvalimhi_h,jacvalimlo_h,
+                  jacvalrehi_d,jacvalrelo_d,jacvalimhi_d,jacvalimlo_d,
+                  "jacval",vrblvl);
       cout << "sum of errors : " << errsum << endl;
       cout << "comparing CPU with GPU right hand sides ... " << endl;
-      errsum = 0.0;
-      for(int i=0; i<degp1; i++)
-      {
-         for(int j=0; j<dim; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "rhs_h[" << i << "][" << j << "] : "
-                    << rhsrehi_h[i][j] << "  "
-                    << rhsrelo_h[i][j] << endl << "  "
-                    << rhsimhi_h[i][j] << "  "
-                    << rhsimlo_h[i][j] << endl;
-               cout << "rhs_d[" << i << "][" << j << "] : "
-                    << rhsrehi_d[i][j] << "  "
-                    << rhsrelo_d[i][j] << endl << "  "
-                    << rhsimhi_d[i][j] << "  "
-                    << rhsimlo_d[i][j] << endl;
-            }
-            errsum += abs(rhsrehi_h[i][j] - rhsrehi_d[i][j])
-                    + abs(rhsrelo_h[i][j] - rhsrelo_d[i][j])
-                    + abs(rhsimhi_h[i][j] - rhsimhi_d[i][j])
-                    + abs(rhsimlo_h[i][j] - rhsimlo_d[i][j]);
-         }
-      }
+      errsum = cmplx2_error2sum(degp1,dim,
+                  rhsrehi_h,rhsrelo_h,rhsimhi_h,rhsimlo_h,
+                  rhsrehi_d,rhsrelo_d,rhsimhi_d,rhsimlo_d,"rhs",vrblvl);
       cout << "sum of errors : " << errsum << endl;
    }
    for(int i=0; i<degp1; i++) // save original rhs for residual
@@ -856,114 +793,30 @@ void cmplx2_newton_qrstep
    {
       double errsum = 0.0;
       cout << "comparing CPU with GPU matrices Q ... " << endl;
-      for(int i=0; i<dim; i++)
-         for(int j=0; j<dim; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "Q_h[" << i << "][" << j << "] : "
-                    << Qrehi_h[i][j] << "  " << Qrelo_h[i][j] << endl << "  "
-                    << Qimhi_h[i][j] << "  " << Qimlo_h[i][j] << endl;
-               cout << "Q_d[" << i << "][" << j << "] : "
-                    << Qrehi_d[i][j] << "  " << Qrelo_d[i][j] << endl << "  "
-                    << Qimhi_d[i][j] << "  " << Qimlo_d[i][j] << endl;
-            }
-            errsum += abs(Qrehi_h[i][j] - Qrehi_d[i][j])
-                    + abs(Qrelo_h[i][j] - Qrelo_d[i][j])
-                    + abs(Qimhi_h[i][j] - Qimhi_d[i][j])
-                    + abs(Qimlo_h[i][j] - Qimlo_d[i][j]);
-         }
+      errsum = cmplx2_error2sum(dim,dim,
+                  Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,
+                  Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,"Q",vrblvl);
       cout << "sum of errors : " << errsum << endl;
       cout << "comparing CPU with GPU matrices R ... " << endl;
-      for(int i=0; i<dim; i++)
-         for(int j=0; j<dim; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "R_h[" << i << "][" << j << "] : "
-                    << Rrehi_h[i][j] << "  " << Rrelo_h[i][j] << endl << "  "
-                    << Rimhi_h[i][j] << "  " << Rimlo_h[i][j] << endl;
-               cout << "R_d[" << i << "][" << j << "] : "
-                    << Rrehi_d[i][j] << "  " << Rrelo_d[i][j] << endl << "  "
-                    << Rimhi_d[i][j] << "  " << Rimlo_d[i][j] << endl;
-            }
-            errsum += abs(Rrehi_h[i][j] - Rrehi_d[i][j])
-                    + abs(Rrelo_h[i][j] - Rrelo_d[i][j])
-                    + abs(Rimhi_h[i][j] - Rimhi_d[i][j])
-                    + abs(Rimlo_h[i][j] - Rimlo_d[i][j]);
-         }
+      errsum = cmplx2_error2sum(dim,dim,
+                  Rrehi_h,Rrelo_h,Rimhi_h,Rimlo_h,
+                  Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,"R",vrblvl);
       cout << "sum of errors : " << errsum << endl;
-      errsum = 0.0;
       cout << "comparing CPU with GPU updated rhs ... " << endl;
-      for(int i=0; i<degp1; i++)
-         for(int j=0; j<dim; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "urhs_h[" << i << "][" << j << "] : "
-                    << urhsrehi_h[i][j] << "  "
-                    << urhsrelo_h[i][j] << endl << "  "
-                    << urhsimhi_h[i][j] << "  "
-                    << urhsimlo_h[i][j] << endl;
-               cout << "urhs_d[" << i << "][" << j << "] : "
-                    << urhsrehi_d[i][j] << "  "
-                    << urhsrelo_d[i][j] << endl << "  "
-                    << urhsimhi_d[i][j] << "  "
-                    << urhsimlo_d[i][j] << endl;
-            }
-            errsum += abs(urhsrehi_h[i][j] - urhsrehi_d[i][j])
-                    + abs(urhsrelo_h[i][j] - urhsrelo_d[i][j])
-                    + abs(urhsimhi_h[i][j] - urhsimhi_d[i][j])
-                    + abs(urhsimlo_h[i][j] - urhsimlo_d[i][j]);
-         }
+      errsum = cmplx2_error2sum(degp1,dim,
+                  urhsrehi_h,urhsrelo_h,urhsimhi_h,urhsimlo_h,
+                  urhsrehi_d,urhsrelo_d,urhsimhi_d,urhsimlo_d,"urhs",vrblvl);
       cout << "sum of errors : " << errsum << endl;
-      errsum = 0.0;
       cout << "comparing CPU with GPU update to solutions ... " << endl;
-      for(int i=0; i<degp1; i++)
-         for(int j=0; j<dim; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "sol_h[" << i << "][" << j << "] : "
-                    << solrehi_h[i][j] << "  "
-                    << solrelo_h[i][j] << endl << "  "
-                    << solimhi_h[i][j] << "  "
-                    << solimlo_h[i][j] << endl;
-               cout << "sol_d[" << i << "][" << j << "] : "
-                    << solrehi_d[i][j] << "  "
-                    << solrelo_d[i][j] << endl << "  "
-                    << solimhi_d[i][j] << "  "
-                    << solimlo_d[i][j] << endl;
-            }
-            errsum += abs(solrehi_h[i][j] - solrehi_d[i][j])
-                    + abs(solrelo_h[i][j] - solrelo_d[i][j])
-                    + abs(solimhi_h[i][j] - solimhi_d[i][j])
-                    + abs(solimlo_h[i][j] - solimlo_d[i][j]);
-         }
+      errsum = cmplx2_error2sum(degp1,dim,
+                  solrehi_h,solrelo_h,solimhi_h,solimlo_h,
+                  solrehi_d,solrelo_d,solimhi_d,solimlo_d,"sol",vrblvl);
       cout << "sum of errors : " << errsum << endl;
-      errsum = 0.0;
       cout << "comparing CPU with GPU series ... " << endl;
-      for(int i=0; i<dim; i++)
-         for(int j=0; j<degp1; j++)
-         {
-            if(vrblvl > 1)
-            {
-               cout << "input_h[" << i << "][" << j << "] : "
-                    << inputrehi_h[i][j] << "  "
-                    << inputrelo_h[i][j] << endl << "  "
-                    << inputimhi_h[i][j] << "  "
-                    << inputimlo_h[i][j] << endl;
-               cout << "input_d[" << i << "][" << j << "] : "
-                    << inputrehi_d[i][j] << "  "
-                    << inputrelo_d[i][j] << endl << "  "
-                    << inputimhi_d[i][j] << "  "
-                    << inputimlo_d[i][j] << endl;
-            }
-            errsum += abs(inputrehi_h[i][j] - inputrehi_d[i][j])
-                    + abs(inputrelo_h[i][j] - inputrelo_d[i][j])
-                    + abs(inputimhi_h[i][j] - inputimhi_d[i][j])
-                    + abs(inputimlo_h[i][j] - inputimlo_d[i][j]);
-         }
+      errsum = cmplx2_error2sum(dim,degp1,
+                  inputrehi_h,inputrelo_h,inputimhi_h,inputimlo_h,
+                  inputrehi_d,inputrelo_d,inputimhi_d,inputimlo_d,
+                  "input",vrblvl);
       cout << "sum of errors : " << errsum << endl;
    }
 }

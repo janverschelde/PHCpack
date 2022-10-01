@@ -70,6 +70,100 @@ void cmplx2_update_series
  *   ximhi     high doubles fo the imaginary parts of the updated series;
  *   ximlo     low doubles fo the imaginary parts of the updated series. */
 
+double dbl2_error3sum
+ ( int dim1, int dim2, int dim3,
+   double ***datahi_h, double ***datalo_h,
+   double ***datahi_d, double ***datalo_d,
+   std::string banner, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute values of the differences
+ *   between host and device real data, in three dimensions.
+ *
+ * ON ENTRY :
+ *   dim1      first dimension;
+ *   dim2      second dimension;
+ *   dim3      third dimension;
+ *   datahi_h  high doubles of data computed on the host;
+ *   datalo_h  low doubles of data computed on the host;
+ *   datahi_d  high doubles of data computed on the device;
+ *   datalo_d  low doubles of data computed on the device;
+ *   banner    string for printing if verbose level vrblvl > 1;
+ *   vrblvl    is the verbose level. */
+
+double cmplx2_error3sum
+ ( int dim1, int dim2, int dim3,
+   double ***datarehi_h, double ***datarelo_h,
+   double ***dataimhi_h, double ***dataimlo_h,
+   double ***datarehi_d, double ***datarelo_d,
+   double ***dataimhi_d, double ***dataimlo_d,
+   std::string banner, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute values of the differences
+ *   between host and device complex data, in three dimensions.
+ *
+ * ON ENTRY :
+ *   dim1      first dimension;
+ *   dim2      second dimension;
+ *   dim3      third dimension;
+ *   datarehi_h are high doubles of real parts of data, on host;
+ *   datarelo_h are low doubles of real parts of data, on host;
+ *   dataimhi_h are high doubles of imaginary parts of data, on host;
+ *   dataimlo_h are low doubles of imaginary parts of data, on host;
+ *   datarehi_d are high doubles of real parts of data, on device;
+ *   datarelo_d are low doubles of real parts of data, on device;
+ *   dataimhi_d are high doubles of imaginary parts of data, on device;
+ *   dataimlo_d are low doubles of imaginary parts of data, on device;
+ *   banner    string for printing if verbose level vrblvl > 1;
+ *   vrblvl    is the verbose level. */
+
+double dbl2_error2sum
+ ( int nrows, int ncols,
+   double **datahi_h, double **datalo_h,
+   double **datahi_d, double **datalo_d,
+   std::string banner, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute values of the differences
+ *   between host and device real data, in two dimensions.
+ *
+ * ON ENTRY :
+ *   nrows     number of rows of the matrices;
+ *   ncols     number of columns of the matrices;
+ *   datahi_h  high doubles of data computed on the host;
+ *   datalo_h  low doubles of data computed on the host;
+ *   datahi_d  high doubles of data computed on the device;
+ *   datalo_d  low doubles of data computed on the device;
+ *   banner    string for printing if verbose level vrblvl > 1;
+ *   vrblvl    is the verbose level. */
+
+double cmplx2_error2sum
+ ( int nrows, int ncols,
+   double **datarehi_h, double **datarelo_h,
+   double **dataimhi_h, double **dataimlo_h,
+   double **datarehi_d, double **datarelo_d,
+   double **dataimhi_d, double **dataimlo_d,
+   std::string banner, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute values of the differences
+ *   between host and device complex data, in two dimensions.
+ *
+ * ON ENTRY :
+ *   nrows     number of rows of the matrices;
+ *   ncols     number of columns of the matrices;
+ *   datarehi_h are high doubles of real parts of data, on host;
+ *   datarelo_h are low doubles of real parts of data, on host;
+ *   dataimhi_h are high doubles of imaginary parts of data, on host;
+ *   dataimlo_h are low doubles of imaginary parts of data, on host;
+ *   datarehi_d are high doubles of real parts of data, on device;
+ *   datarelo_d are low doubles of real parts of data, on device;
+ *   dataimhi_d are high doubles of imaginary parts of data, on device;
+ *   dataimlo_d are low doubles of imaginary parts of data, on device;
+ *   banner    string for printing if verbose level vrblvl > 1;
+ *   vrblvl    is the verbose level. */
+
 void dbl2_newton_lustep
  ( int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
