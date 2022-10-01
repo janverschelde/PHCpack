@@ -4,6 +4,23 @@
 #ifndef __dbl2_newton_testers_h__
 #define __dbl2_newton_testers_h__
 
+void dbl2_start_series_vector
+ ( int dim, int deg, double **cffhi, double **cfflo );
+/*
+ * DESCRIPTION :
+ *   Given space in cffhi, cfflo for the high and low doubles
+ *   for the vector of dim power series,
+ *   of series truncated after degree deg,
+ *   sets the coefficients of the start series. */
+
+void cmplx2_start_series_vector
+ ( int dim, int deg,
+   double **cffrehi, double **cffrelo, double **cffimhi, double **cffimlo );
+/*
+ * DESCRIPTION :
+ *   Given space allocated in the coefficient arrays,
+ *   sets the coefficients of the start series. */
+
 void dbl2_unit_series_vector
  ( int dim, int deg, double **cffhi, double **cfflo );
 /*

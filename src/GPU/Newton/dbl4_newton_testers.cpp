@@ -20,13 +20,58 @@
 
 using namespace std;
 
-void dbl4_unit_series_vector
+void dbl4_start_series_vector
  ( int dim, int deg,
    double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo )
 {
    for(int i=0; i<dim; i++)
    {
       cffhihi[i][0] = 1.000005;
+      cfflohi[i][0] = 0.0;
+      cffhilo[i][0] = 0.0;
+      cfflolo[i][0] = 0.0;
+
+      for(int j=1; j<=deg; j++)
+      {
+         cffhihi[i][j] = 0.0;
+         cfflohi[i][j] = 0.0;
+         cffhilo[i][j] = 0.0;
+         cfflolo[i][j] = 0.0;
+      }
+   }
+}
+
+void cmplx4_start_series_vector
+ ( int dim, int deg,
+   double **cffrehihi, double **cffrelohi,
+   double **cffrehilo, double **cffrelolo,
+   double **cffimhihi, double **cffimlohi,
+   double **cffimhilo, double **cffimlolo )
+{
+   for(int i=0; i<dim; i++)
+   {
+      cffrehihi[i][0] = 1.000005; cffrelohi[i][0] = 0.0;
+      cffrehilo[i][0] = 0.0; cffrelolo[i][0] = 0.0;
+      cffimhihi[i][0] = 0.000005; cffimlohi[i][0] = 0.0;
+      cffimhilo[i][0] = 0.0; cffimlolo[i][0] = 0.0;
+
+      for(int j=1; j<=deg; j++)
+      {
+         cffrehihi[i][j] = 0.0; cffrelohi[i][j] = 0.0;
+         cffrehilo[i][j] = 0.0; cffrelolo[i][j] = 0.0;
+         cffimhihi[i][j] = 0.0; cffimlohi[i][j] = 0.0;
+         cffimhilo[i][j] = 0.0; cffimlolo[i][j] = 0.0;
+      }
+   }
+}
+
+void dbl4_unit_series_vector
+ ( int dim, int deg,
+   double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo )
+{
+   for(int i=0; i<dim; i++)
+   {
+      cffhihi[i][0] = 1.0;
       cfflohi[i][0] = 0.0;
       cffhilo[i][0] = 0.0;
       cfflolo[i][0] = 0.0;
@@ -50,9 +95,9 @@ void cmplx4_unit_series_vector
 {
    for(int i=0; i<dim; i++)
    {
-      cffrehihi[i][0] = 1.000005; cffrelohi[i][0] = 0.0;
+      cffrehihi[i][0] = 1.0; cffrelohi[i][0] = 0.0;
       cffrehilo[i][0] = 0.0; cffrelolo[i][0] = 0.0;
-      cffimhihi[i][0] = 0.000005; cffimlohi[i][0] = 0.0;
+      cffimhihi[i][0] = 0.0; cffimlohi[i][0] = 0.0;
       cffimhilo[i][0] = 0.0; cffimlolo[i][0] = 0.0;
 
       for(int j=1; j<=deg; j++)
@@ -371,21 +416,8 @@ void dbl4_newton_lustep
 
    // The series coefficients accumulate common factors,
    // initially the coefficients are set to one.
-   for(int i=0; i<dim; i++)
-   {
-      cffhihi[i][0] = 1.0;
-      cfflohi[i][0] = 0.0;
-      cffhilo[i][0] = 0.0;
-      cfflolo[i][0] = 0.0;
+   dbl4_unit_series_vector(dim,deg,cffhihi,cfflohi,cffhilo,cfflolo);
 
-      for(int j=1; j<degp1; j++)
-      {
-         cffhihi[i][j] = 0.0;
-         cfflohi[i][j] = 0.0;
-         cffhilo[i][j] = 0.0;
-         cfflolo[i][j] = 0.0;
-      }
-   }
    CPU_dbl4_evaluate_monomials
       (dim,deg,nvr,idx,exp,nbrfac,expfac,
        cffhihi,cfflohi,cffhilo,cfflolo,acchihi,acclohi,acchilo,acclolo,
@@ -493,25 +525,12 @@ void dbl4_newton_qrstep
 {
    const int degp1 = deg+1;
 
-   // The series coefficients accumulate common factors,
-   // initially the coefficients are set to one.
    if((mode == 1) || (mode == 2))
    {
-      for(int i=0; i<dim; i++)
-      {
-         cffhihi[i][0] = 1.0;
-         cfflohi[i][0] = 0.0;
-         cffhilo[i][0] = 0.0;
-         cfflolo[i][0] = 0.0;
+      // The series coefficients accumulate common factors,
+      // initially the coefficients are set to one.
+      dbl4_unit_series_vector(dim,deg,cffhihi,cfflohi,cffhilo,cfflolo);
 
-         for(int j=1; j<degp1; j++)
-         {
-            cffhihi[i][j] = 0.0;
-            cfflohi[i][j] = 0.0;
-            cffhilo[i][j] = 0.0;
-            cfflolo[i][j] = 0.0;
-         }
-      }
       if(vrblvl > 0)
          cout << "calling CPU_dbl4_evaluate_monomials ..." << endl;
 
@@ -523,21 +542,9 @@ void dbl4_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      for(int i=0; i<dim; i++)
-      {
-         cffhihi[i][0] = 1.0;
-         cfflohi[i][0] = 0.0;
-         cffhilo[i][0] = 0.0;
-         cfflolo[i][0] = 0.0;
+      // reset the coefficients
+      dbl4_unit_series_vector(dim,deg,cffhihi,cfflohi,cffhilo,cfflolo);
 
-         for(int j=1; j<degp1; j++)
-         {
-            cffhihi[i][j] = 0.0;
-            cfflohi[i][j] = 0.0;
-            cffhilo[i][j] = 0.0;
-            cfflolo[i][j] = 0.0;
-         }
-      }
       if(vrblvl > 0)
          cout << "calling GPU_dbl4_evaluate_monomials ..." << endl;
 
@@ -825,25 +832,14 @@ void cmplx4_newton_qrstep
 {
    const int degp1 = deg+1;
 
-   // The series coefficients accumulate common factors,
-   // initially the coefficients are set to one.
    if((mode == 1) || (mode == 2))
    {
-      for(int i=0; i<dim; i++)
-      {
-         cffrehihi[i][0] = 1.0; cffrelohi[i][0] = 0.0;
-         cffrehilo[i][0] = 0.0; cffrelolo[i][0] = 0.0;
-         cffimhihi[i][0] = 0.0; cffimlohi[i][0] = 0.0;
-         cffimhilo[i][0] = 0.0; cffimlolo[i][0] = 0.0;
+      // The series coefficients accumulate common factors,
+      // initially the coefficients are set to one.
+      cmplx4_unit_series_vector
+         (dim,deg,cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+                  cffimhihi,cffimlohi,cffimhilo,cffimlolo);
 
-         for(int j=1; j<degp1; j++)
-         {
-            cffrehihi[i][j] = 0.0; cffrelohi[i][j] = 0.0;
-            cffrehilo[i][j] = 0.0; cffrelolo[i][j] = 0.0;
-            cffimhihi[i][j] = 0.0; cffimlohi[i][j] = 0.0;
-            cffimhilo[i][j] = 0.0; cffimlolo[i][j] = 0.0;
-         }
-      }
       if(vrblvl > 0)
          cout << "calling CPU_cmplx4_evaluate_monomials ..." << endl;
 
@@ -861,21 +857,11 @@ void cmplx4_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      for(int i=0; i<dim; i++)  // reset the coefficients
-      {
-         cffrehihi[i][0] = 1.0; cffrelohi[i][0] = 0.0;
-         cffrehilo[i][0] = 0.0; cffrelolo[i][0] = 0.0;
-         cffimhihi[i][0] = 0.0; cffimlohi[i][0] = 0.0;
-         cffimhilo[i][0] = 0.0; cffimlolo[i][0] = 0.0;
+      // reset the coefficients
+      cmplx4_unit_series_vector
+         (dim,deg,cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+                  cffimhihi,cffimlohi,cffimhilo,cffimlolo);
 
-         for(int j=1; j<degp1; j++)
-         {
-            cffrehihi[i][j] = 0.0; cffrelohi[i][j] = 0.0;
-            cffrehilo[i][j] = 0.0; cffrelolo[i][j] = 0.0;
-            cffimhihi[i][j] = 0.0; cffimlohi[i][j] = 0.0;
-            cffimhilo[i][j] = 0.0; cffimlolo[i][j] = 0.0;
-         }
-      }
       if(vrblvl > 0)
          cout << "calling GPU_cmplx4_evaluate_monomials ..." << endl;
 
@@ -1438,7 +1424,7 @@ int test_dbl4_real_newton
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
    // Define the initial input, a vector of ones.
-   dbl4_unit_series_vector
+   dbl4_start_series_vector
       (dim,deg,inputhihi_h,inputlohi_h,inputhilo_h,inputlolo_h);
    for(int i=0; i<dim; i++)
       for(int j=0; j<degp1; j++)
@@ -1976,7 +1962,7 @@ int test_dbl4_complex_newton
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
    // Define the initial input, a vector of ones.
-   cmplx4_unit_series_vector
+   cmplx4_start_series_vector
       (dim,deg,inputrehihi_h,inputrelohi_h,inputrehilo_h,inputrelolo_h,
                inputimhihi_h,inputimlohi_h,inputimhilo_h,inputimlolo_h);
 

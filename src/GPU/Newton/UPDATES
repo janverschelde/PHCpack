@@ -1,6 +1,7 @@
 Sat 1 Oct 2022 : in dbl2_newton_testers, factored out the comparisons
   between host and device computed data, in the error sum computation.
   Did the same in {dbl4,dbl8}_newton_testers.
+  In all newton_testers, separated unit series from start series.
 
 Fri 30 Sep 2022 : added new functions to dbl_newton_testers, to factor out
   the comparisons in the computation of the error sums.

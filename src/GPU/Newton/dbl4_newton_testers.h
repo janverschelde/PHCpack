@@ -4,6 +4,27 @@
 #ifndef __dbl4_newton_testers_h__
 #define __dbl4_newton_testers_h__
 
+void dbl4_start_series_vector
+ ( int dim, int deg,
+   double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo );
+/*
+ * DESCRIPTION :
+ *   Given space in cffhihi, cfflohi, cffhilo, cfflolo for the doubles
+ *   for the vector of dim power series in quad double precision,
+ *   of series truncated after degree deg,
+ *   sets the coefficients of the start series. */
+
+void cmplx4_start_series_vector
+ ( int dim, int deg,
+   double **cffrehihi, double **cffrelohi,
+   double **cffrehilo, double **cffrelolo,
+   double **cffimhihi, double **cffimlohi,
+   double **cffimhilo, double **cffimlolo );
+/*
+ * DESCRIPTION :
+ *   Given space allocated in the coefficient arrays,
+ *   sets the coefficients of the start series. */
+
 void dbl4_unit_series_vector
  ( int dim, int deg,
    double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo );

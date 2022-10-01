@@ -4,6 +4,34 @@
 #ifndef __dbl8_newton_testers_h__
 #define __dbl8_newton_testers_h__
 
+void dbl8_start_series_vector
+ ( int dim, int deg,
+   double **cffhihihi, double **cfflohihi,
+   double **cffhilohi, double **cfflolohi,
+   double **cffhihilo, double **cfflohilo,
+   double **cffhilolo, double **cfflololo );
+/*
+ * DESCRIPTION :
+ *   Given space in cff* for the doubles
+ *   for the vector of dim power series in octo double precision,
+ *   of series truncated after degree deg,
+ *   sets the coefficients of the start series. */
+
+void cmplx8_unit_series_vector
+ ( int dim, int deg,
+   double **cffrehihihi, double **cffrelohihi,
+   double **cffrehilohi, double **cffrelolohi,
+   double **cffrehihilo, double **cffrelohilo,
+   double **cffrehilolo, double **cffrelololo,
+   double **cffimhihihi, double **cffimlohihi,
+   double **cffimhilohi, double **cffimlolohi,
+   double **cffimhihilo, double **cffimlohilo,
+   double **cffimhilolo, double **cffimlololo );
+/*
+ * DESCRIPTION :
+ *   Given space allocated in the coefficient arrays,
+ *   sets the coefficients of the star series. */
+
 void dbl8_unit_series_vector
  ( int dim, int deg,
    double **cffhihihi, double **cfflohihi,

@@ -8,7 +8,6 @@
 #include <vector_types.h>
 #include <time.h>
 #include "unimodular_matrices.h"
-// #include "random_numbers.h"
 #include "random_monomials.h"
 #include "dbl_factorizations.h"
 #include "dbl_systems_host.h"
@@ -18,7 +17,7 @@
 
 using namespace std;
 
-void dbl_unit_series_vector ( int dim, int deg, double **cff )
+void dbl_start_series_vector ( int dim, int deg, double **cff )
 {
    double angle;
 
@@ -29,7 +28,7 @@ void dbl_unit_series_vector ( int dim, int deg, double **cff )
    }
 }
 
-void cmplx_unit_series_vector
+void cmplx_start_series_vector
  ( int dim, int deg, double **cffre, double **cffim )
 {
    double angle;
@@ -44,6 +43,33 @@ void cmplx_unit_series_vector
       {
          cffre[i][j] = 0.4567;
          cffim[i][j] = 0.7654;
+      }
+   }
+}
+
+void dbl_unit_series_vector ( int dim, int deg, double **cff )
+{
+   double angle;
+
+   for(int i=0; i<dim; i++)
+   {
+      cff[i][0] = 1.0;
+      for(int j=1; j<=deg; j++) cff[i][j] = 0.0;
+   }
+}
+
+void cmplx_unit_series_vector
+ ( int dim, int deg, double **cffre, double **cffim )
+{
+   for(int i=0; i<dim; i++)
+   {
+      cffre[i][0] = 1.0;
+      cffim[i][0] = 0.0;
+
+      for(int j=1; j<=deg; j++)
+      {
+         cffre[i][j] = 0.0;
+         cffim[i][j] = 0.0;
       }
    }
 }
@@ -230,11 +256,8 @@ void dbl_newton_lustep
 
    // The series coefficients accumulate common factors,
    // initially the coefficients are set to one.
-   for(int i=0; i<dim; i++)
-   {
-      cff[i][0] = 1.0;
-      for(int j=1; j<degp1; j++) cff[i][j] = 0.0;
-   }
+   dbl_unit_series_vector(dim,deg,cff);
+
    CPU_dbl_evaluate_monomials
       (dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input,output,vrblvl);
 
@@ -274,15 +297,12 @@ void dbl_newton_qrstep
 {
    const int degp1 = deg+1;
 
-   // The series coefficients accumulate common factors,
-   // initially the coefficients are set to one.
    if((mode == 1) || (mode == 2))
    {
-      for(int i=0; i<dim; i++)
-      {
-         cff[i][0] = 1.0;
-         for(int j=1; j<degp1; j++) cff[i][j] = 0.0;
-      }
+      // The series coefficients accumulate common factors,
+      // initially the coefficients are set to one.
+      dbl_unit_series_vector(dim,deg,cff);
+
       if(vrblvl > 0)
          cout << "calling CPU_dbl_evaluate_monomials ..." << endl;
 
@@ -291,11 +311,8 @@ void dbl_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      for(int i=0; i<dim; i++)  // reset the coefficients
-      {
-         cff[i][0] = 1.0;
-         for(int j=1; j<degp1; j++) cff[i][j] = 0.0;
-      }
+      dbl_unit_series_vector(dim,deg,cff); // reset coefficients
+
       if(vrblvl > 0)
          cout << "calling GPU_dbl_evaluate_monomials ..." << endl;
 
@@ -445,21 +462,12 @@ void cmplx_newton_qrstep
 {
    const int degp1 = deg+1;
 
-   // The series coefficients accumulate common factors,
-   // initially the coefficients are set to one.
    if((mode == 1) || (mode == 2))
    {
-      for(int i=0; i<dim; i++)
-      {
-         cffre[i][0] = 1.0;
-         cffim[i][0] = 0.0;
+      // The series coefficients accumulate common factors,
+      // initially the coefficients are set to one.
+      cmplx_unit_series_vector(dim,deg,cffre,cffim);
 
-         for(int j=1; j<degp1; j++)
-         {
-            cffre[i][j] = 0.0;
-            cffim[i][j] = 0.0;
-         }
-      }
       if(vrblvl > 0)
          cout << "calling CPU_cmplx_evaluate_monomials ..." << endl;
 
@@ -470,17 +478,8 @@ void cmplx_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      for(int i=0; i<dim; i++)  // reset the coefficients
-      {
-         cffre[i][0] = 1.0;
-         cffim[i][0] = 0.0;
+      cmplx_unit_series_vector(dim,deg,cffre,cffim); // reset coefficients
 
-         for(int j=1; j<degp1; j++)
-         {
-            cffre[i][j] = 0.0;
-            cffim[i][j] = 0.0;
-         }
-      }
       if(vrblvl > 0)
          cout << "calling GPU_cmplx_evaluate_monomials ..." << endl;
 
@@ -734,7 +733,7 @@ int test_dbl_real_newton
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
    // Define the initial input, a vector of ones.
-   dbl_unit_series_vector(dim,deg,input_h);
+   dbl_start_series_vector(dim,deg,input_h);
    for(int i=0; i<dim; i++)
       for(int j=0; j<degp1; j++) input_d[i][j] = input_h[i][j];
 
@@ -939,7 +938,7 @@ int test_dbl_complex_newton
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
    // Define the initial input, a vector of ones.
-   cmplx_unit_series_vector(dim,deg,inputre_h,inputim_h);
+   cmplx_start_series_vector(dim,deg,inputre_h,inputim_h);
    for(int i=0; i<dim; i++)
       for(int j=0; j<degp1; j++)
       {

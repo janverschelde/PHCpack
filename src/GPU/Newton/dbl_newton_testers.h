@@ -26,6 +26,20 @@ void prompt_newton_setup
  *             the exponent matrix;
  *   nbsteps   the number of Newton steps. */
 
+void dbl_start_series_vector ( int dim, int deg, double **cff );
+/*
+ * DESCRIPTION :
+ *   Given space in cff for the vector of dim power series,
+ *   of series truncated after degree deg,
+ *   sets the coefficients cff of the start series. */
+
+void cmplx_start_series_vector
+ ( int dim, int deg, double **cffre, double **cffim );
+/*
+ * DESCRIPTION :
+ *   Given space allocated in cffre and cffim,
+ *   sets the coefficients of the start series. */
+
 void dbl_unit_series_vector ( int dim, int deg, double **cff );
 /*
  * DESCRIPTION :
