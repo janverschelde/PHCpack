@@ -77,6 +77,81 @@ void cmplx_update_series
  *   xre       real parts of the series x updated with dx;
  *   xim       imaginary parts of the series x updated with dx. */
 
+double dbl_error3sum
+ ( int dim1, int dim2, int dim3,
+   double ***data_h, double ***data_d,
+   std::string banner, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute values of the differences
+ *   between host and device real data, in three dimensions.
+ *
+ * ON ENTRY :
+ *   dim1      first dimension;
+ *   dim2      second dimension;
+ *   dim3      third dimension;
+ *   data_h    data computed on the host;
+ *   data_d    data computed on the device;
+ *   banner    string for printing if verbose level vrblvl > 1;
+ *   vrblvl    is the verbose level. */
+
+double cmplx_error3sum
+ ( int dim1, int dim2, int dim3,
+   double ***datare_h, double ***dataim_h,
+   double ***datare_d, double ***dataim_d,
+   std::string banner, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute values of the differences
+ *   between host and device complex data, in three dimensions.
+ *
+ * ON ENTRY :
+ *   dim1      first dimension;
+ *   dim2      second dimension;
+ *   dim3      third dimension;
+ *   datare_h  real parts of data computed on the host;
+ *   dataim_h  imaginary parts of data computed on the host;
+ *   datare_d  real parts of data computed on the device;
+ *   dataim_d  imaginary parts of data computed on the device;
+ *   banner    string for printing if verbose level vrblvl > 1;
+ *   vrblvl    is the verbose level. */
+
+double dbl_error2sum
+ ( int nrows, int ncols, double **data_h, double **data_d,
+   std::string banner, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute values of the differences
+ *   between host and device real data, in two dimensions.
+ *
+ * ON ENTRY :
+ *   nrows     number of rows of the matrices;
+ *   ncols     number of columns of the matrices;
+ *   data_h    data computed on the host;
+ *   data_d    data computed on the device;
+ *   banner    string for printing if verbose level vrblvl > 1;
+ *   vrblvl    is the verbose level. */
+
+double cmplx_error2sum
+ ( int nrows, int ncols,
+   double **datare_h, double **dataim_h,
+   double **datare_d, double **dataim_d,
+   std::string banner, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute values of the differences
+ *   between host and device complex data, in two dimensions.
+ *
+ * ON ENTRY :
+ *   nrows     number of rows of the matrices;
+ *   ncols     number of columns of the matrices;
+ *   datare_h  real parts of data computed on the host;
+ *   dataim_h  imaginary parts of data computed on the host;
+ *   datare_d  real parts of data computed on the device;
+ *   dataim_d  imaginary parts of data computed on the device;
+ *   banner    string for printing if verbose level vrblvl > 1;
+ *   vrblvl    is the verbose level. */
+
 void dbl_newton_lustep
  ( int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,

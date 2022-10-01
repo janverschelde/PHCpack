@@ -1,3 +1,6 @@
+Fri 30 Sep 2022 : added new functions to dbl_newton_testers, to factor out
+  the comparisons in the computation of the error sums.
+
 Tue 27 Sep 2022 : fixed prototypes in dbl8_bals_host.h and its .cpp file
   for the wrong order of arrays in the function CPU_cmplx8_qrbs_head.
   Restored a verbose flag in dbl2_bals_kernels.cu, improved verbose level
