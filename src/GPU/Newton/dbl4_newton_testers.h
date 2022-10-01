@@ -96,6 +96,136 @@ void cmplx4_update_series
  *   ximhilo   second lowest doubles fo the imaginary parts of x;
  *   ximlolo   lowest doubles fo the imaginary parts of x. */
 
+double dbl4_error3sum
+ ( int dim1, int dim2, int dim3,
+   double ***datahihi_h, double ***datalohi_h,
+   double ***datahilo_h, double ***datalolo_h,
+   double ***datahihi_d, double ***datalohi_d,
+   double ***datahilo_d, double ***datalolo_d,
+   std::string banner, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute values of the differences
+ *   between host and device real data, in three dimensions.
+ *
+ * ON ENTRY :
+ *   dim1      first dimension;
+ *   dim2      second dimension;
+ *   dim3      third dimension;
+ *   datahihi_h are highest doubles of data computed on the host;
+ *   datalohi_h are 2nd highest doubles of data computed on the host;
+ *   datahilo_h are 2nd lowest doubles of data computed on the host;
+ *   datalolo_h are lowest doubles of data computed on the host;
+ *   datahihi_d are highest doubles of data computed on the device;
+ *   datalohi_d are 2nd highest doubles of data computed on the device;
+ *   datahilo_d are 2nd lowest doubles of data computed on the device;
+ *   datalolo_d are lowest doubles of data computed on the device;
+ *   banner    string for printing if verbose level vrblvl > 1;
+ *   vrblvl    is the verbose level. */
+
+double cmplx4_error3sum
+ ( int dim1, int dim2, int dim3,
+   double ***datarehihi_h, double ***datarelohi_h,
+   double ***datarehilo_h, double ***datarelolo_h,
+   double ***dataimhihi_h, double ***dataimlohi_h,
+   double ***dataimhilo_h, double ***dataimlolo_h,
+   double ***datarehihi_d, double ***datarelohi_d,
+   double ***datarehilo_d, double ***datarelolo_d,
+   double ***dataimhihi_d, double ***dataimlohi_d,
+   double ***dataimhilo_d, double ***dataimlolo_d,
+   std::string banner, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute values of the differences
+ *   between host and device complex data, in three dimensions.
+ *
+ * ON ENTRY :
+ *   dim1      first dimension;
+ *   dim2      second dimension;
+ *   dim3      third dimension;
+ *   datarehihi_h are highest doubles of real parts of data, on host;
+ *   datarelohi_h are 2nd highest doubles of real parts of data, on host;
+ *   datarehilo_h are 2nd lowest doubles of real parts of data, on host;
+ *   datarelolo_h are lowest doubles of real parts of data, on host;
+ *   dataimhihi_h are highest doubles of imaginary parts of data, on host;
+ *   dataimlohi_h are 2nd highest doubles of imaginary parts of data, on host;
+ *   dataimhilo_h are 2nd lowest doubles of imaginary parts of data, on host;
+ *   dataimlolo_h are lowest doubles of imaginary parts of data, on host;
+ *   datarehihi_d are highest doubles of real parts of data, on device;
+ *   datarelohi_d are 2nd highest doubles of real parts of data, on device;
+ *   datarehilo_d are 2nd lowest doubles of real parts of data, on device;
+ *   datarelolo_d are lowest doubles of real parts of data, on device;
+ *   dataimhihi_d are highest doubles of imaginary parts of data, on device;
+ *   dataimlohi_d are 2nd highest doubles of imag parts of data, on device;
+ *   dataimhilo_d are 2nd lowest doubles of imag parts of data, on device;
+ *   dataimlolo_d are lowest doubles of imaginary parts of data, on device;
+ *   banner    string for printing if verbose level vrblvl > 1;
+ *   vrblvl    is the verbose level. */
+
+double dbl4_error2sum
+ ( int nrows, int ncols,
+   double **datahihi_h, double **datalohi_h,
+   double **datahilo_h, double **datalolo_h,
+   double **datahihi_d, double **datalohi_d,
+   double **datahilo_d, double **datalolo_d,
+   std::string banner, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute values of the differences
+ *   between host and device real data, in two dimensions.
+ *
+ * ON ENTRY :
+ *   nrows     number of rows of the matrices;
+ *   ncols     number of columns of the matrices;
+ *   datahihi_h are highest doubles of data computed on the host;
+ *   datalohi_h are 2nd highest doubles of data computed on the host;
+ *   datahilo_h are 2nd lowest doubles of data computed on the host;
+ *   datalolo_h are lowest doubles of data computed on the host;
+ *   datahihi_d are highest doubles of data computed on the device;
+ *   datalohi_d are 2nd highest doubles of data computed on the device;
+ *   datahilo_d are 2nd lowest doubles of data computed on the device;
+ *   datalolo_d are lowest doubles of data computed on the device;
+ *   banner    string for printing if verbose level vrblvl > 1;
+ *   vrblvl    is the verbose level. */
+
+double cmplx4_error2sum
+ ( int nrows, int ncols,
+   double **datarehihi_h, double **datarelohi_h,
+   double **datarehilo_h, double **datarelolo_h,
+   double **dataimhihi_h, double **dataimlohi_h,
+   double **dataimhilo_h, double **dataimlolo_h,
+   double **datarehihi_d, double **datarelohi_d,
+   double **datarehilo_d, double **datarelolo_d,
+   double **dataimhihi_d, double **dataimlohi_d,
+   double **dataimhilo_d, double **dataimlolo_d,
+   std::string banner, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of the absolute values of the differences
+ *   between host and device complex data, in two dimensions.
+ *
+ * ON ENTRY :
+ *   nrows     number of rows of the matrices;
+ *   ncols     number of columns of the matrices;
+ *   datarehihi_h are highest doubles of real parts of data, on host;
+ *   datarelohi_h are 2nd highest doubles of real parts of data, on host;
+ *   datarehilo_h are 2nd lowest doubles of real parts of data, on host;
+ *   datarelolo_h are lowest doubles of real parts of data, on host;
+ *   dataimhihi_h are highest doubles of imaginary parts of data, on host;
+ *   dataimlohi_h are 2nd highest doubles of imaginary parts of data, on host;
+ *   dataimhilo_h are 2nd lowest doubles of imaginary parts of data, on host;
+ *   dataimlolo_h are lowest doubles of imaginary parts of data, on host;
+ *   datarehihi_d are highest doubles of real parts of data, on device;
+ *   datarelohi_d are 2nd highest doubles of real parts of data, on device;
+ *   datarehilo_d are 2nd lowest doubles of real parts of data, on device;
+ *   datarelolo_d are lowest doubles of real parts of data, on device;
+ *   dataimhihi_d are highest doubles of imaginary parts of data, on device;
+ *   dataimlohi_d are 2nd highest doubles of imag parts of data, on device;
+ *   dataimhilo_d are 2nd lowest doubles of imag parts of data, on device;
+ *   dataimlolo_d are lowest doubles of imaginary parts of data, on device;
+ *   banner    string for printing if verbose level vrblvl > 1;
+ *   vrblvl    is the verbose level. */
+
 void dbl4_newton_lustep
  ( int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,

@@ -451,8 +451,8 @@ void dbl2_newton_qrstep
       cout << "sum of errors : " << errsum << endl;
       cout << "comparing CPU with GPU Jacobians ... " << endl;
       errsum = dbl2_error3sum
-                  (degp1,dim,dim,jacvalhi_h,jacvallo_d,
-                                 jacvalhi_h,jacvallo_d,"jacval",vrblvl);
+                  (degp1,dim,dim,jacvalhi_h,jacvallo_h,
+                                 jacvalhi_d,jacvallo_d,"jacval",vrblvl);
       cout << "sum of errors : " << errsum << endl;
       cout << "comparing CPU with GPU right hand sides ... " << endl;
       errsum = dbl2_error2sum
