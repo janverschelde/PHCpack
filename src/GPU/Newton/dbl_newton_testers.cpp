@@ -410,10 +410,10 @@ void dbl_newton_qrstep
 
       if(vrblvl > 0)
       {
-         cout << "calling CPU_dbl_linear_residue ..." << endl;
+         cout << "calling GPU_dbl_linear_residue ..." << endl;
 
-         CPU_dbl_linear_residue
-            (dim,degp1,jacval_d,rhs_d,sol_d,resvec,resmax,vrblvl);
+         GPU_dbl_linear_residue
+            (dim,degp1,szt,nbt,jacval_d,rhs_d,sol_d,resvec,resmax,vrblvl);
          cout << "maximum residual : " << *resmax << endl;
       }
       dbl_update_series(dim,degp1,input_d,sol_d,vrblvl);
@@ -589,11 +589,11 @@ void cmplx_newton_qrstep
 
       if(vrblvl > 0)
       {
-         cout << "calling CPU_cmplx_linear_residue ..." << endl;
+         cout << "calling GPU_cmplx_linear_residue ..." << endl;
 
-         CPU_cmplx_linear_residue
-            (dim,degp1,jacvalre_d,jacvalim_d,rhsre_d,rhsim_d,solre_d,solim_d,
-             resvecre,resvecim,resmax,vrblvl);
+         GPU_cmplx_linear_residue
+            (dim,degp1,szt,nbt,jacvalre_d,jacvalim_d,rhsre_d,rhsim_d,
+             solre_d,solim_d,resvecre,resvecim,resmax,vrblvl);
          cout << "maximum residual : " << *resmax << endl;
       }
       cmplx_update_series

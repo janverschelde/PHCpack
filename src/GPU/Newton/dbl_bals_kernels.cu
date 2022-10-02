@@ -804,3 +804,148 @@ void GPU_cmplx_bals_solve
    free(Are); free(bre); free(xre); free(workRre);
    free(Aim); free(bim); free(xim); free(workRim);
 }
+
+void GPU_dbl_linear_residue
+ ( int dim, int degp1, int szt, int nbt,
+   double ***mat, double **rhs, double **sol,
+   double **resvec, double *resmax, int vrblvl )
+{
+   double *r_d;
+   const size_t szrhs = dim*sizeof(double);
+   cudaMalloc((void**)&r_d,szrhs);
+
+   double *x_d;
+   const size_t szsol = dim*sizeof(double);
+   cudaMalloc((void**)&x_d,szsol);
+
+   double *A_d;
+   const size_t szmat = dim*dim*sizeof(double);
+   cudaMalloc((void**)&A_d,szmat);
+
+   double *A_h = new double[dim*dim];
+
+   for(int i=0; i<degp1; i++)  // compute i-th residual vector
+   {
+      cudaMemcpy(r_d,rhs[i],szrhs,cudaMemcpyHostToDevice);
+
+      for(int j=0; j<=i; j++)  // multiply mat[j] with sol[i-j]
+      {
+         int idx=0;
+         for(int i1=0; i1<dim; i1++)
+            for(int j1=0; j1<dim; j1++) A_h[idx++] = mat[j][i1][j1];
+      
+         cudaMemcpy(A_d,A_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(x_d,sol[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(A_d,A_h,szmat,cudaMemcpyHostToDevice);
+
+         if(vrblvl > 0)
+            cout << "GPU_dbl_linear_residue launches " << nbt
+                 << " thread blocks in step " << i << ", " << j << endl;
+
+         dbl_bals_tail<<<nbt,szt>>>(dim,szt,A_d,x_d,r_d);
+      }
+      cudaMemcpy(resvec[i],r_d,szrhs,cudaMemcpyDeviceToHost);
+   }
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<degp1; i++) 
+      {
+         cout << "Solution vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++) cout << sol[i][j] << endl;
+         cout << "Residual vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++) cout << resvec[i][j] << endl;
+      }
+   }
+   *resmax = 0.0;
+   for(int i=0; i<degp1; i++)
+   {
+      double *ri = resvec[i];
+      for(int j=0; j<dim; j++)
+         if(abs(ri[j]) > *resmax) *resmax = abs(ri[j]);
+   }
+   free(A_h);
+}
+
+void GPU_cmplx_linear_residue
+ ( int dim, int degp1, int szt, int nbt,
+   double ***matre, double ***matim, double **rhsre, double **rhsim,
+   double **solre, double **solim,
+   double **resvecre, double **resvecim, double *resmax, int vrblvl )
+{
+   double *rre_d;
+   double *rim_d;
+   const size_t szrhs = dim*sizeof(double);
+   cudaMalloc((void**)&rre_d,szrhs);
+   cudaMalloc((void**)&rim_d,szrhs);
+
+   double *xre_d;
+   double *xim_d;
+   const size_t szsol = dim*sizeof(double);
+   cudaMalloc((void**)&xre_d,szsol);
+   cudaMalloc((void**)&xim_d,szsol);
+
+   double *Are_d;
+   double *Aim_d;
+   const size_t szmat = dim*dim*sizeof(double);
+   cudaMalloc((void**)&Are_d,szmat);
+   cudaMalloc((void**)&Aim_d,szmat);
+
+   double *Are_h = new double[dim*dim];
+   double *Aim_h = new double[dim*dim];
+
+   for(int i=0; i<degp1; i++)  // compute i-th residual vector
+   {
+      cudaMemcpy(rre_d,rhsre[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rim_d,rhsim[i],szrhs,cudaMemcpyHostToDevice);
+
+      for(int j=0; j<=i; j++)  // multiply mat[j] with sol[i-j]
+      {
+         int idx=0;
+         for(int i1=0; i1<dim; i1++)
+            for(int j1=0; j1<dim; j1++)
+            {
+               Are_h[idx]   = matre[j][i1][j1];
+               Aim_h[idx++] = matim[j][i1][j1];
+            }
+      
+         cudaMemcpy(Are_d,Are_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aim_d,Aim_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(xre_d,solre[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xim_d,solim[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(Are_d,Are_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aim_d,Aim_h,szmat,cudaMemcpyHostToDevice);
+
+         if(vrblvl > 0)
+            cout << "GPU_cmplx_linear_residue launches " << nbt
+                 << " thread blocks in step " << i << ", " << j << endl;
+
+         cmplx_bals_tail<<<nbt,szt>>>
+            (dim,szt,Are_d,Aim_d,xre_d,xim_d,rre_d,rim_d);
+      }
+      cudaMemcpy(resvecre[i],rre_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecim[i],rim_d,szrhs,cudaMemcpyDeviceToHost);
+   }
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<degp1; i++) 
+      {
+         cout << "Solution vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+            cout << solre[i][j] << "  " << solim[i][j] << endl;
+
+         cout << "Residual vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+            cout << resvecre[i][j] << "  " << resvecim[i][j] << endl;
+      }
+   }
+   *resmax = 0.0;
+   for(int i=0; i<degp1; i++)
+   {
+      double *rire = resvecre[i];
+      double *riim = resvecim[i];
+
+      for(int j=0; j<dim; j++)
+         if(abs(rire[j]) + abs(riim[j]) > *resmax)
+            *resmax = abs(rire[j]) + abs(riim[j]);
+   }
+}

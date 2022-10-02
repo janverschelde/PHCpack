@@ -335,4 +335,56 @@ void GPU_cmplx_bals_solve
  *   solre    real parts of the solution series;
  *   solim    imaginary parts of the solution series. */
 
+void GPU_dbl_linear_residue
+ ( int dim, int degp1, int szt, int nbt,
+   double ***mat, double **rhs, double **sol,
+   double **resvec, double *resmax, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Computes the residual of the linear power series system.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of the matrices and vectors;
+ *   degp1    degree plus one, the size of the matrix system;
+ *   szt      size of each block (and tile);
+ *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   mat      degp1 matrices of dimension dim;
+ *   rhs      degp1 right hand side vectors of dimension dim;
+ *   sol      degp1 solution vectors of dimension dim;
+ *   resvec   space for the residual power series;
+ *   vrblvl   is the verbose level.
+ *
+ * ON RETURN :
+ *   resvec   the residual power series;
+ *   resmax   maximum component of the residual power series. */
+
+void GPU_cmplx_linear_residue
+ ( int dim, int degp1, int szt, int nbt,
+   double ***matre, double ***matim, double **rhsre, double **rhsim,
+   double **solre, double **solim,
+   double **resvecre, double **resvecim, double *resmax, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Computes the residual of the linear power series system.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of the matrices and vectors;
+ *   degp1    degree plus one, the size of the matrix system;
+ *   szt      size of each block (and tile);
+ *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   matre    degp1 matrices of dimension dim;
+ *   matim    degp1 matrices of dimension dim;
+ *   rhsre    degp1 right hand side vectors of dimension dim;
+ *   rhsim    degp1 right hand side vectors of dimension dim;
+ *   solre    degp1 solution vectors of dimension dim;
+ *   solim    degp1 solution vectors of dimension dim;
+ *   resvecre has space for the residual power series;
+ *   resvecim has space for the residual power series;
+ *   vrblvl   is the verbose level.
+ *
+ * ON RETURN :
+ *   resvecre are the real parts of the residual power series;
+ *   resvecim are the imaginary parts the residual power series;
+ *   resmax   max norm of the residual power series. */
+
 #endif
