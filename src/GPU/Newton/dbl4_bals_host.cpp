@@ -941,7 +941,7 @@ void CPU_cmplx4_linear_residue
                        Ajimhilo[L][k],Ajimlolo[L][k],
                        xrehihi[k],xrelohi[k],xrehilo[k],xrelolo[k],
                        &acchihi,&acclohi,&acchilo,&acclolo);
-               qdf_inc(&riimhihi[L],&riimlohi[L],
+               qdf_dec(&riimhihi[L],&riimlohi[L],
                        &riimhilo[L],&riimlolo[L],
                        acchihi,acclohi,acchilo,acclolo);
             }

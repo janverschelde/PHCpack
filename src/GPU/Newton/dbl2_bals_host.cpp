@@ -614,7 +614,7 @@ void CPU_cmplx2_linear_residue
                ddf_dec(&riimhi[L],&riimlo[L],acchi,acclo);
                ddf_mul(Ajimhi[L][k],Ajimlo[L][k],xrehi[k],xrelo[k],
                        &acchi,&acclo);
-               ddf_inc(&riimhi[L],&riimlo[L],acchi,acclo);
+               ddf_dec(&riimhi[L],&riimlo[L],acchi,acclo);
             }
       }
       if(vrblvl > 1)

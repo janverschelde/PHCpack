@@ -1540,10 +1540,10 @@ void CPU_cmplx8_linear_residue
       {
          rirehihihi[j] = rhsrehihihi[i][j]; rirelohihi[j] = rhsrelohihi[i][j];
          rirehilohi[j] = rhsrehilohi[i][j]; rirelolohi[j] = rhsrelolohi[i][j];
-         rirehihihi[j] = rhsrehihihi[i][j]; rirelohihi[j] = rhsrelohihi[i][j];
-         rirehilohi[j] = rhsrehilohi[i][j]; rirelolohi[j] = rhsrelolohi[i][j];
-         riimhihilo[j] = rhsimhihilo[i][j]; riimlohilo[j] = rhsimlohilo[i][j];
-         riimhilolo[j] = rhsimhilolo[i][j]; riimlololo[j] = rhsimlololo[i][j];
+         rirehihilo[j] = rhsrehihilo[i][j]; rirelohilo[j] = rhsrelohilo[i][j];
+         rirehilolo[j] = rhsrehilolo[i][j]; rirelololo[j] = rhsrelololo[i][j];
+         riimhihihi[j] = rhsimhihihi[i][j]; riimlohihi[j] = rhsimlohihi[i][j];
+         riimhilohi[j] = rhsimhilohi[i][j]; riimlolohi[j] = rhsimlolohi[i][j];
          riimhihilo[j] = rhsimhihilo[i][j]; riimlohilo[j] = rhsimlohilo[i][j];
          riimhilolo[j] = rhsimhilolo[i][j]; riimlololo[j] = rhsimlololo[i][j];
       }
@@ -1642,7 +1642,7 @@ void CPU_cmplx8_linear_residue
                        xrehihilo[k],xrelohilo[k],xrehilolo[k],xrelololo[k],
                        &acchihihi,&acclohihi,&acchilohi,&acclolohi,
                        &acchihilo,&acclohilo,&acchilolo,&acclololo);
-               odf_inc(&riimhihihi[L],&riimlohihi[L],
+               odf_dec(&riimhihihi[L],&riimlohihi[L],
                        &riimhilohi[L],&riimlolohi[L],
                        &riimhihilo[L],&riimlohilo[L],
                        &riimhilolo[L],&riimlololo[L],
