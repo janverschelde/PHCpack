@@ -684,10 +684,11 @@ void dbl4_newton_qrstep
 
       if(vrblvl > 0)
       {
-         cout << "calling CPU_dbl4_linear_residue ..." << endl;
+         cout << "calling GPU_dbl4_linear_residue ..." << endl;
 
-         CPU_dbl4_linear_residue
-            (dim,degp1,jacvalhihi_d,jacvallohi_d,jacvalhilo_d,jacvallolo_d,
+         GPU_dbl4_linear_residue
+            (dim,degp1,szt,nbt,
+             jacvalhihi_d,jacvallohi_d,jacvalhilo_d,jacvallolo_d,
              rhshihi_d,rhslohi_d,rhshilo_d,rhslolo_d,
              solhihi_d,sollohi_d,solhilo_d,sollolo_d,
              resvechihi,resveclohi,resvechilo,resveclolo,
@@ -1067,10 +1068,10 @@ void cmplx4_newton_qrstep
 
       if(vrblvl > 0)
       {
-         cout << "calling CPU_cmplx4_linear_residue ..." << endl;
+         cout << "calling GPU_cmplx4_linear_residue ..." << endl;
 
-         CPU_cmplx4_linear_residue
-            (dim,degp1,
+         GPU_cmplx4_linear_residue
+            (dim,degp1,szt,nbt,
              jacvalrehihi_d,jacvalrelohi_d,jacvalrehilo_d,jacvalrelolo_d,
              jacvalimhihi_d,jacvalimlohi_d,jacvalimhilo_d,jacvalimlolo_d,
              rhsrehihi_d,rhsrelohi_d,rhsrehilo_d,rhsrelolo_d,

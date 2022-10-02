@@ -517,11 +517,11 @@ void dbl2_newton_qrstep
 
       if(vrblvl > 0)
       {
-         cout << "calling CPU_dbl2_linear_residue ..." << endl;
+         cout << "calling GPU_dbl2_linear_residue ..." << endl;
 
-         CPU_dbl2_linear_residue
-            (dim,degp1,jacvalhi_d,jacvallo_d,rhshi_d,rhslo_d,solhi_d,sollo_d,
-             resvechi,resveclo,resmaxhi,resmaxlo,vrblvl);
+         GPU_dbl2_linear_residue
+            (dim,degp1,szt,nbt,jacvalhi_d,jacvallo_d,rhshi_d,rhslo_d,
+             solhi_d,sollo_d,resvechi,resveclo,resmaxhi,resmaxlo,vrblvl);
    
          cout << "maximum residual : " << *resmaxhi << endl;
       }
@@ -765,10 +765,10 @@ void cmplx2_newton_qrstep
 
       if(vrblvl > 0)
       {
-         cout << "calling CPU_cmplx2_linear_residue ..." << endl;
+         cout << "calling GPU_cmplx2_linear_residue ..." << endl;
 
-         CPU_cmplx2_linear_residue
-            (dim,degp1,
+         GPU_cmplx2_linear_residue
+            (dim,degp1,szt,nbt,
              jacvalrehi_d,jacvalrelo_d,jacvalimhi_d,jacvalimlo_d,
              rhsrehi_d,rhsrelo_d,rhsimhi_d,rhsimlo_d,
              solrehi_d,solrelo_d,solimhi_d,solimlo_d,

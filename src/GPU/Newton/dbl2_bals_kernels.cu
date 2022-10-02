@@ -1045,3 +1045,217 @@ void GPU_cmplx2_bals_solve
    free(Aimhi); free(bimhi); free(ximhi); free(workRimhi);
    free(Aimlo); free(bimlo); free(ximlo); free(workRimlo);
 }
+
+void GPU_dbl2_linear_residue
+ ( int dim, int degp1, int szt, int nbt,
+   double ***mathi, double ***matlo,
+   double **rhshi, double **rhslo, double **solhi, double **sollo,
+   double **resvechi, double **resveclo, double *resmaxhi, double *resmaxlo,
+   int vrblvl )
+{
+   double *rhi_d;
+   double *rlo_d;
+   const size_t szrhs = dim*sizeof(double);
+   cudaMalloc((void**)&rhi_d,szrhs);
+   cudaMalloc((void**)&rlo_d,szrhs);
+
+   double *xhi_d;
+   double *xlo_d;
+   const size_t szsol = dim*sizeof(double);
+   cudaMalloc((void**)&xhi_d,szsol);
+   cudaMalloc((void**)&xlo_d,szsol);
+
+   double *Ahi_d;
+   double *Alo_d;
+   const size_t szmat = dim*dim*sizeof(double);
+   cudaMalloc((void**)&Ahi_d,szmat);
+   cudaMalloc((void**)&Alo_d,szmat);
+
+   double *Ahi_h = new double[dim*dim];
+   double *Alo_h = new double[dim*dim];
+
+   for(int i=0; i<degp1; i++)  // compute i-th residual vector
+   {
+      cudaMemcpy(rhi_d,rhshi[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rlo_d,rhslo[i],szrhs,cudaMemcpyHostToDevice);
+
+      for(int j=0; j<=i; j++)  // multiply mat[j] with sol[i-j]
+      {
+         int idx=0;
+         for(int i1=0; i1<dim; i1++)
+            for(int j1=0; j1<dim; j1++)
+            {
+               Ahi_h[idx]   = mathi[j][i1][j1];
+               Alo_h[idx++] = matlo[j][i1][j1];
+            }
+      
+         cudaMemcpy(Ahi_d,Ahi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Alo_d,Alo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(xhi_d,solhi[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xlo_d,sollo[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(Ahi_d,Ahi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Alo_d,Alo_h,szmat,cudaMemcpyHostToDevice);
+
+         if(vrblvl > 0)
+            cout << "GPU_dbl_linear_residue launches " << nbt
+                 << " thread blocks in step " << i << ", " << j << endl;
+
+         dbl2_bals_tail<<<nbt,szt>>>
+            (dim,szt,Ahi_d,Alo_d,xhi_d,xlo_d,rhi_d,rlo_d);
+      }
+      cudaMemcpy(resvechi[i],rhi_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resveclo[i],rlo_d,szrhs,cudaMemcpyDeviceToHost);
+   }
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<degp1; i++) 
+      {
+         cout << "Solution vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+            cout << solhi[i][j] << "  " << sollo[i][j] << endl;
+         cout << "Residual vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+            cout << resvechi[i][j] << "  " << resveclo[i][j] << endl;
+      }
+   }
+   *resmaxhi = 0.0; *resmaxlo = 0.0;
+
+   for(int i=0; i<degp1; i++)
+   {
+      double *rihi = resvechi[i];
+      double *rilo = resveclo[i];
+
+      for(int j=0; j<dim; j++)
+         if(abs(rihi[j]) > *resmaxhi)
+         {
+            *resmaxhi = abs(rihi[j]);
+            *resmaxlo = abs(rilo[j]);
+         }
+   }
+   free(Ahi_h); free(Alo_h);
+}
+
+void GPU_cmplx2_linear_residue
+ ( int dim, int degp1, int szt, int nbt,
+   double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo,
+   double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo, 
+   double **solrehi, double **solrelo, double **solimhi, double **solimlo,
+   double **resvecrehi, double **resvecrelo,
+   double **resvecimhi, double **resvecimlo,
+   double *resmaxhi, double *resmaxlo, int vrblvl )
+{
+   double *rrehi_d;
+   double *rrelo_d;
+   double *rimhi_d;
+   double *rimlo_d;
+   const size_t szrhs = dim*sizeof(double);
+   cudaMalloc((void**)&rrehi_d,szrhs);
+   cudaMalloc((void**)&rrelo_d,szrhs);
+   cudaMalloc((void**)&rimhi_d,szrhs);
+   cudaMalloc((void**)&rimlo_d,szrhs);
+
+   double *xrehi_d;
+   double *xrelo_d;
+   double *ximhi_d;
+   double *ximlo_d;
+   const size_t szsol = dim*sizeof(double);
+   cudaMalloc((void**)&xrehi_d,szsol);
+   cudaMalloc((void**)&xrelo_d,szsol);
+   cudaMalloc((void**)&ximhi_d,szsol);
+   cudaMalloc((void**)&ximlo_d,szsol);
+
+   double *Arehi_d;
+   double *Arelo_d;
+   double *Aimhi_d;
+   double *Aimlo_d;
+   const size_t szmat = dim*dim*sizeof(double);
+   cudaMalloc((void**)&Arehi_d,szmat);
+   cudaMalloc((void**)&Arelo_d,szmat);
+   cudaMalloc((void**)&Aimhi_d,szmat);
+   cudaMalloc((void**)&Aimlo_d,szmat);
+
+   double *Arehi_h = new double[dim*dim];
+   double *Arelo_h = new double[dim*dim];
+   double *Aimhi_h = new double[dim*dim];
+   double *Aimlo_h = new double[dim*dim];
+
+   for(int i=0; i<degp1; i++)  // compute i-th residual vector
+   {
+      cudaMemcpy(rrehi_d,rhsrehi[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rrelo_d,rhsrelo[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rimhi_d,rhsimhi[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rimlo_d,rhsimlo[i],szrhs,cudaMemcpyHostToDevice);
+
+      for(int j=0; j<=i; j++)  // multiply mat[j] with sol[i-j]
+      {
+         int idx=0;
+         for(int i1=0; i1<dim; i1++)
+            for(int j1=0; j1<dim; j1++)
+            {
+               Arehi_h[idx]   = matrehi[j][i1][j1];
+               Arelo_h[idx]   = matrelo[j][i1][j1];
+               Aimhi_h[idx]   = matimhi[j][i1][j1];
+               Aimlo_h[idx++] = matimlo[j][i1][j1];
+            }
+      
+         cudaMemcpy(Arehi_d,Arehi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arelo_d,Arelo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimhi_d,Aimhi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimlo_d,Aimlo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(xrehi_d,solrehi[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xrelo_d,solrelo[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(ximhi_d,solimhi[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(ximlo_d,solimlo[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arehi_d,Arehi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arelo_d,Arelo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimhi_d,Aimhi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimlo_d,Aimlo_h,szmat,cudaMemcpyHostToDevice);
+
+         if(vrblvl > 0)
+            cout << "GPU_cmplx_linear_residue launches " << nbt
+                 << " thread blocks in step " << i << ", " << j << endl;
+
+         cmplx2_bals_tail<<<nbt,szt>>>
+            (dim,szt,Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
+                     xrehi_d,xrelo_d,ximhi_d,ximlo_d,
+                     rrehi_d,rrelo_d,rimhi_d,rimlo_d);
+      }
+      cudaMemcpy(resvecrehi[i],rrehi_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecrelo[i],rrelo_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecimhi[i],rimhi_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecimlo[i],rimlo_d,szrhs,cudaMemcpyDeviceToHost);
+   }
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<degp1; i++)
+      {
+         cout << "Solution vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+            cout << solrehi[i][j] << "  " << solrelo[i][j] << endl << "  "
+                 << solimhi[i][j] << "  " << solimlo[i][j] << endl;
+
+         cout << "Residual vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+            cout << resvecrehi[i][j] << "  "
+                 << resvecrelo[i][j] << endl << "  "
+                 << resvecimhi[i][j] << "  "
+                 << resvecimlo[i][j] << endl;
+      }
+   }
+   *resmaxhi = 0.0; *resmaxlo = 0.0;
+
+   for(int i=0; i<degp1; i++)
+   {
+      double *rirehi = resvecrehi[i];
+      double *rirelo = resvecrelo[i];
+      double *riimhi = resvecimhi[i];
+      double *riimlo = resvecimlo[i];
+
+      for(int j=0; j<dim; j++)
+         if(abs(rirehi[j]) + abs(riimhi[j]) > *resmaxhi)
+         {
+            *resmaxhi = abs(rirehi[j]) + abs(riimhi[j]);
+            *resmaxlo = abs(rirelo[j]) + abs(riimlo[j]);
+         }
+   }
+}

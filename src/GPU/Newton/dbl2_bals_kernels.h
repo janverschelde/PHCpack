@@ -462,4 +462,78 @@ void GPU_cmplx2_bals_solve
  *   solimhi  high doubles of the imaginary parts of the solution series;
  *   solimlo  low doubles of the imaginary parts of the solution series. */
 
+void GPU_dbl2_linear_residue
+ ( int dim, int degp1, int szt, int nbt,
+   double ***mathi, double ***matlo,
+   double **rhshi, double **rhslo, double **solhi, double **sollo,
+   double **resvechi, double **resveclo, double *resmaxhi, double *resmaxlo,
+   int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Computes the residual of the linear power series system.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of the matrices and vectors;
+ *   degp1    degree plus one, the size of the matrix system;
+ *   szt      size of each block (and tile);
+ *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   mathi    degp1 matrices of dimension dim;
+ *   matlo    degp1 matrices of dimension dim;
+ *   rhshi    degp1 right hand side vectors of dimension dim;
+ *   rhslo    degp1 right hand side vectors of dimension dim;
+ *   solhi    degp1 solution vectors of dimension dim;
+ *   sollo    degp1 solution vectors of dimension dim;
+ *   resvechi has space for the residual power series;
+ *   resveclo has space for the residual power series;
+ *   vrblvl   is the verbose level.
+ *
+ * ON RETURN :
+ *   resvechi are the high doubles of the residual power series;
+ *   resveclo are the low doubles of the residual power series;
+ *   resmaxhi is the high double of the maximum component in resvec;
+ *   resmaxlo is the low double of the maximum component in resvec. */
+
+void GPU_cmplx2_linear_residue
+ ( int dim, int degp1, int szt, int nbt,
+   double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo,
+   double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo, 
+   double **solrehi, double **solrelo, double **solimhi, double **solimlo,
+   double **resvecrehi, double **resvecrelo,
+   double **resvecimhi, double **resvecimlo,
+   double *resmaxhi, double *resmaxlo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Computes the residual of the linear power series system.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of the matrices and vectors;
+ *   degp1    degree plus one, the size of the matrix system;
+ *   szt      size of each block (and tile);
+ *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   matrehi  degp1 matrices of dimension dim;
+ *   matrelo  degp1 matrices of dimension dim;
+ *   matimhi  degp1 matrices of dimension dim;
+ *   matimlo  degp1 matrices of dimension dim;
+ *   rhsrehi  degp1 right hand side vectors of dimension dim;
+ *   rhsrelo  degp1 right hand side vectors of dimension dim;
+ *   rhsimhi  degp1 right hand side vectors of dimension dim;
+ *   rhsimlo  degp1 right hand side vectors of dimension dim;
+ *   solrehi  degp1 solution vectors of dimension dim;
+ *   solrelo  degp1 solution vectors of dimension dim;
+ *   solimhi  degp1 solution vectors of dimension dim;
+ *   solimlo  degp1 solution vectors of dimension dim;
+ *   resvecrehi has space for the residual power series;
+ *   resvecrelo has space for the residual power series;
+ *   resvecimhi has space for the residual power series;
+ *   resvecimlo has space for the residual power series;
+ *   vrblvl   is the verbose level.
+ *
+ * ON RETURN :
+ *   resvecrehi are the high doubles of the real parts of the residual series;
+ *   resvecrelo are the low doubles of the real parts of the residual series;
+ *   resvecimhi are the high doubles of the imag parts the residual series;
+ *   resvecimlo are the low doubles of the imag parts the residual series;
+ *   resmaxhi is the high double of the max norm of the residual series;
+ *   resmaxlo is the low double of the max norm of the residual series. */
+
 #endif

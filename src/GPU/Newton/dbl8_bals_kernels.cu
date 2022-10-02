@@ -2599,3 +2599,581 @@ void GPU_cmplx8_bals_solve
    free(Aimhilolo); free(bimhilolo); free(ximhilolo); free(workRimhilolo);
    free(Aimlololo); free(bimlololo); free(ximlololo); free(workRimlololo);
 }
+
+void GPU_dbl8_linear_residue
+ ( int dim, int degp1, int szt, int nbt,
+   double ***mathihihi, double ***matlohihi,
+   double ***mathilohi, double ***matlolohi,
+   double ***mathihilo, double ***matlohilo,
+   double ***mathilolo, double ***matlololo,
+   double **rhshihihi, double **rhslohihi,
+   double **rhshilohi, double **rhslolohi,
+   double **rhshihilo, double **rhslohilo,
+   double **rhshilolo, double **rhslololo,
+   double **solhihihi, double **sollohihi,
+   double **solhilohi, double **sollolohi,
+   double **solhihilo, double **sollohilo,
+   double **solhilolo, double **sollololo,
+   double **resvechihihi, double **resveclohihi,
+   double **resvechilohi, double **resveclolohi,
+   double **resvechihilo, double **resveclohilo,
+   double **resvechilolo, double **resveclololo,
+   double *resmaxhihihi, double *resmaxlohihi,
+   double *resmaxhilohi, double *resmaxlolohi,
+   double *resmaxhihilo, double *resmaxlohilo,
+   double *resmaxhilolo, double *resmaxlololo, int vrblvl )
+{
+   double *rhihihi_d;
+   double *rlohihi_d;
+   double *rhilohi_d;
+   double *rlolohi_d;
+   double *rhihilo_d;
+   double *rlohilo_d;
+   double *rhilolo_d;
+   double *rlololo_d;
+   const size_t szrhs = dim*sizeof(double);
+   cudaMalloc((void**)&rhihihi_d,szrhs);
+   cudaMalloc((void**)&rlohihi_d,szrhs);
+   cudaMalloc((void**)&rhilohi_d,szrhs);
+   cudaMalloc((void**)&rlolohi_d,szrhs);
+   cudaMalloc((void**)&rhihilo_d,szrhs);
+   cudaMalloc((void**)&rlohilo_d,szrhs);
+   cudaMalloc((void**)&rhilolo_d,szrhs);
+   cudaMalloc((void**)&rlololo_d,szrhs);
+
+   double *xhihihi_d;
+   double *xlohihi_d;
+   double *xhilohi_d;
+   double *xlolohi_d;
+   double *xhihilo_d;
+   double *xlohilo_d;
+   double *xhilolo_d;
+   double *xlololo_d;
+   const size_t szsol = dim*sizeof(double);
+   cudaMalloc((void**)&xhihihi_d,szsol);
+   cudaMalloc((void**)&xlohihi_d,szsol);
+   cudaMalloc((void**)&xhilohi_d,szsol);
+   cudaMalloc((void**)&xlolohi_d,szsol);
+   cudaMalloc((void**)&xhihilo_d,szsol);
+   cudaMalloc((void**)&xlohilo_d,szsol);
+   cudaMalloc((void**)&xhilolo_d,szsol);
+   cudaMalloc((void**)&xlololo_d,szsol);
+
+   double *Ahihihi_d;
+   double *Alohihi_d;
+   double *Ahilohi_d;
+   double *Alolohi_d;
+   double *Ahihilo_d;
+   double *Alohilo_d;
+   double *Ahilolo_d;
+   double *Alololo_d;
+   const size_t szmat = dim*dim*sizeof(double);
+   cudaMalloc((void**)&Ahihihi_d,szmat);
+   cudaMalloc((void**)&Alohihi_d,szmat);
+   cudaMalloc((void**)&Ahilohi_d,szmat);
+   cudaMalloc((void**)&Alolohi_d,szmat);
+   cudaMalloc((void**)&Ahihilo_d,szmat);
+   cudaMalloc((void**)&Alohilo_d,szmat);
+   cudaMalloc((void**)&Ahilolo_d,szmat);
+   cudaMalloc((void**)&Alololo_d,szmat);
+
+   double *Ahihihi_h = new double[dim*dim];
+   double *Alohihi_h = new double[dim*dim];
+   double *Ahilohi_h = new double[dim*dim];
+   double *Alolohi_h = new double[dim*dim];
+   double *Ahihilo_h = new double[dim*dim];
+   double *Alohilo_h = new double[dim*dim];
+   double *Ahilolo_h = new double[dim*dim];
+   double *Alololo_h = new double[dim*dim];
+
+   for(int i=0; i<degp1; i++)  // compute i-th residual vector
+   {
+      cudaMemcpy(rhihihi_d,rhshihihi[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rlohihi_d,rhslohihi[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rhilohi_d,rhshilohi[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rlolohi_d,rhslolohi[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rhihilo_d,rhshihilo[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rlohilo_d,rhslohilo[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rhilolo_d,rhshilolo[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rlololo_d,rhslololo[i],szrhs,cudaMemcpyHostToDevice);
+
+      for(int j=0; j<=i; j++)  // multiply mat[j] with sol[i-j]
+      {
+         int idx=0;
+         for(int i1=0; i1<dim; i1++)
+            for(int j1=0; j1<dim; j1++)
+            {
+               Ahihihi_h[idx]   = mathihihi[j][i1][j1];
+               Alohihi_h[idx]   = matlohihi[j][i1][j1];
+               Ahilohi_h[idx]   = mathilohi[j][i1][j1];
+               Alolohi_h[idx]   = matlolohi[j][i1][j1];
+               Ahihilo_h[idx]   = mathihilo[j][i1][j1];
+               Alohilo_h[idx]   = matlohilo[j][i1][j1];
+               Ahilolo_h[idx]   = mathilolo[j][i1][j1];
+               Alololo_h[idx++] = matlololo[j][i1][j1];
+            }
+      
+         cudaMemcpy(Ahihihi_d,Ahihihi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Alohihi_d,Alohihi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Ahilohi_d,Ahilohi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Alolohi_d,Alolohi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Ahihilo_d,Ahihilo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Alohilo_d,Alohilo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Ahilolo_d,Ahilolo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Alololo_d,Alololo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(xhihihi_d,solhihihi[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xlohihi_d,sollohihi[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xhilohi_d,solhilohi[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xlolohi_d,sollolohi[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xhihilo_d,solhihilo[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xlohilo_d,sollohilo[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xhilolo_d,solhilolo[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xlololo_d,sollololo[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(Ahihihi_d,Ahihihi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Alohihi_d,Alohihi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Ahilohi_d,Ahilohi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Alolohi_d,Alolohi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Ahihilo_d,Ahihilo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Alohilo_d,Alohilo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Ahilolo_d,Ahilolo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Alololo_d,Alololo_h,szmat,cudaMemcpyHostToDevice);
+
+         if(vrblvl > 0)
+            cout << "GPU_dbl_linear_residue launches " << nbt
+                 << " thread blocks in step " << i << ", " << j << endl;
+
+         dbl8_bals_tail<<<nbt,szt>>>
+            (dim,szt,Ahihihi_d,Alohihi_d,Ahilohi_d,Alolohi_d,
+                     Ahihilo_d,Alohilo_d,Ahilolo_d,Alololo_d,
+                     xhihihi_d,xlohihi_d,xhilohi_d,xlolohi_d,
+                     xhihilo_d,xlohilo_d,xhilolo_d,xlololo_d,
+                     rhihihi_d,rlohihi_d,rhilohi_d,rlolohi_d,
+                     rhihilo_d,rlohilo_d,rhilolo_d,rlololo_d);
+      }
+      cudaMemcpy(resvechihihi[i],rhihihi_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resveclohihi[i],rlohihi_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvechilohi[i],rhilohi_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resveclolohi[i],rlolohi_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvechihilo[i],rhihilo_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resveclohilo[i],rlohilo_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvechilolo[i],rhilolo_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resveclololo[i],rlololo_d,szrhs,cudaMemcpyDeviceToHost);
+   }
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<degp1; i++)
+      {
+         cout << "Solution vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+         {
+            cout << solhihihi[i][j] << "  " << sollohihi[i][j] << endl;
+            cout << solhilohi[i][j] << "  " << sollolohi[i][j] << endl;
+            cout << solhihilo[i][j] << "  " << sollohilo[i][j] << endl;
+            cout << solhilolo[i][j] << "  " << sollololo[i][j] << endl;
+         }
+         cout << "Residual vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+         {
+            cout << resvechihihi[i][j] << "  " << resveclohihi[i][j] << endl;
+            cout << resvechilohi[i][j] << "  " << resveclolohi[i][j] << endl;
+            cout << resvechihilo[i][j] << "  " << resveclohilo[i][j] << endl;
+            cout << resvechilolo[i][j] << "  " << resveclololo[i][j] << endl;
+         }
+      }
+   }
+   *resmaxhihihi = 0.0; *resmaxlohihi = 0.0;
+   *resmaxhilohi = 0.0; *resmaxlolohi = 0.0;
+   *resmaxhihilo = 0.0; *resmaxlohilo = 0.0;
+   *resmaxhilolo = 0.0; *resmaxlololo = 0.0;
+   
+   for(int i=0; i<degp1; i++)
+   {
+      double *rihihihi = resvechihihi[i];
+      double *rilohihi = resveclohihi[i];
+      double *rihilohi = resvechilohi[i];
+      double *rilolohi = resveclolohi[i];
+      double *rihihilo = resvechihilo[i];
+      double *rilohilo = resveclohilo[i];
+      double *rihilolo = resvechilolo[i];
+      double *rilololo = resveclololo[i];
+
+      for(int j=0; j<dim; j++)
+         if(abs(rihihihi[j]) > *resmaxhihihi)
+         {
+            *resmaxhihihi = abs(rihihihi[j]);
+            *resmaxlohihi = abs(rilohihi[j]);
+            *resmaxhilohi = abs(rihilohi[j]);
+            *resmaxlolohi = abs(rilolohi[j]);
+            *resmaxhihilo = abs(rihihilo[j]);
+            *resmaxlohilo = abs(rilohilo[j]);
+            *resmaxhilolo = abs(rihilolo[j]);
+            *resmaxlololo = abs(rilololo[j]);
+         }
+   }
+}
+
+void GPU_cmplx8_linear_residue
+ ( int dim, int degp1, int szt, int nbt,
+   double ***matrehihihi, double ***matrelohihi,
+   double ***matrehilohi, double ***matrelolohi,
+   double ***matrehihilo, double ***matrelohilo,
+   double ***matrehilolo, double ***matrelololo,
+   double ***matimhihihi, double ***matimlohihi,
+   double ***matimhilohi, double ***matimlolohi,
+   double ***matimhihilo, double ***matimlohilo,
+   double ***matimhilolo, double ***matimlololo,
+   double **rhsrehihihi, double **rhsrelohihi,
+   double **rhsrehilohi, double **rhsrelolohi,
+   double **rhsrehihilo, double **rhsrelohilo,
+   double **rhsrehilolo, double **rhsrelololo,
+   double **rhsimhihihi, double **rhsimlohihi, 
+   double **rhsimhilohi, double **rhsimlolohi, 
+   double **rhsimhihilo, double **rhsimlohilo, 
+   double **rhsimhilolo, double **rhsimlololo, 
+   double **solrehihihi, double **solrelohihi,
+   double **solrehilohi, double **solrelolohi,
+   double **solrehihilo, double **solrelohilo,
+   double **solrehilolo, double **solrelololo,
+   double **solimhihihi, double **solimlohihi,
+   double **solimhilohi, double **solimlolohi,
+   double **solimhihilo, double **solimlohilo,
+   double **solimhilolo, double **solimlololo,
+   double **resvecrehihihi, double **resvecrelohihi,
+   double **resvecrehilohi, double **resvecrelolohi,
+   double **resvecrehihilo, double **resvecrelohilo,
+   double **resvecrehilolo, double **resvecrelololo,
+   double **resvecimhihihi, double **resvecimlohihi,
+   double **resvecimhilohi, double **resvecimlolohi,
+   double **resvecimhihilo, double **resvecimlohilo,
+   double **resvecimhilolo, double **resvecimlololo,
+   double *resmaxhihihi, double *resmaxlohihi,
+   double *resmaxhilohi, double *resmaxlolohi,
+   double *resmaxhihilo, double *resmaxlohilo,
+   double *resmaxhilolo, double *resmaxlololo, int vrblvl )
+{
+   double *rrehihihi_d;
+   double *rrelohihi_d;
+   double *rrehilohi_d;
+   double *rrelolohi_d;
+   double *rrehihilo_d;
+   double *rrelohilo_d;
+   double *rrehilolo_d;
+   double *rrelololo_d;
+   double *rimhihihi_d;
+   double *rimlohihi_d;
+   double *rimhilohi_d;
+   double *rimlolohi_d;
+   double *rimhihilo_d;
+   double *rimlohilo_d;
+   double *rimhilolo_d;
+   double *rimlololo_d;
+   const size_t szrhs = dim*sizeof(double);
+   cudaMalloc((void**)&rrehihihi_d,szrhs);
+   cudaMalloc((void**)&rrelohihi_d,szrhs);
+   cudaMalloc((void**)&rrehilohi_d,szrhs);
+   cudaMalloc((void**)&rrelolohi_d,szrhs);
+   cudaMalloc((void**)&rrehihilo_d,szrhs);
+   cudaMalloc((void**)&rrelohilo_d,szrhs);
+   cudaMalloc((void**)&rrehilolo_d,szrhs);
+   cudaMalloc((void**)&rrelololo_d,szrhs);
+   cudaMalloc((void**)&rimhihihi_d,szrhs);
+   cudaMalloc((void**)&rimlohihi_d,szrhs);
+   cudaMalloc((void**)&rimhilohi_d,szrhs);
+   cudaMalloc((void**)&rimlolohi_d,szrhs);
+   cudaMalloc((void**)&rimhihilo_d,szrhs);
+   cudaMalloc((void**)&rimlohilo_d,szrhs);
+   cudaMalloc((void**)&rimhilolo_d,szrhs);
+   cudaMalloc((void**)&rimlololo_d,szrhs);
+
+   double *xrehihihi_d;
+   double *xrelohihi_d;
+   double *xrehilohi_d;
+   double *xrelolohi_d;
+   double *xrehihilo_d;
+   double *xrelohilo_d;
+   double *xrehilolo_d;
+   double *xrelololo_d;
+   double *ximhihihi_d;
+   double *ximlohihi_d;
+   double *ximhilohi_d;
+   double *ximlolohi_d;
+   double *ximhihilo_d;
+   double *ximlohilo_d;
+   double *ximhilolo_d;
+   double *ximlololo_d;
+   const size_t szsol = dim*sizeof(double);
+   cudaMalloc((void**)&xrehihihi_d,szsol);
+   cudaMalloc((void**)&xrelohihi_d,szsol);
+   cudaMalloc((void**)&xrehilohi_d,szsol);
+   cudaMalloc((void**)&xrelolohi_d,szsol);
+   cudaMalloc((void**)&xrehihilo_d,szsol);
+   cudaMalloc((void**)&xrelohilo_d,szsol);
+   cudaMalloc((void**)&xrehilolo_d,szsol);
+   cudaMalloc((void**)&xrelololo_d,szsol);
+   cudaMalloc((void**)&ximhihihi_d,szsol);
+   cudaMalloc((void**)&ximlohihi_d,szsol);
+   cudaMalloc((void**)&ximhilohi_d,szsol);
+   cudaMalloc((void**)&ximlolohi_d,szsol);
+   cudaMalloc((void**)&ximhihilo_d,szsol);
+   cudaMalloc((void**)&ximlohilo_d,szsol);
+   cudaMalloc((void**)&ximhilolo_d,szsol);
+   cudaMalloc((void**)&ximlololo_d,szsol);
+
+   double *Arehihihi_d;
+   double *Arelohihi_d;
+   double *Arehilohi_d;
+   double *Arelolohi_d;
+   double *Arehihilo_d;
+   double *Arelohilo_d;
+   double *Arehilolo_d;
+   double *Arelololo_d;
+   double *Aimhihihi_d;
+   double *Aimlohihi_d;
+   double *Aimhilohi_d;
+   double *Aimlolohi_d;
+   double *Aimhihilo_d;
+   double *Aimlohilo_d;
+   double *Aimhilolo_d;
+   double *Aimlololo_d;
+   const size_t szmat = dim*dim*sizeof(double);
+   cudaMalloc((void**)&Arehihihi_d,szmat);
+   cudaMalloc((void**)&Arelohihi_d,szmat);
+   cudaMalloc((void**)&Arehilohi_d,szmat);
+   cudaMalloc((void**)&Arelolohi_d,szmat);
+   cudaMalloc((void**)&Arehihilo_d,szmat);
+   cudaMalloc((void**)&Arelohilo_d,szmat);
+   cudaMalloc((void**)&Arehilolo_d,szmat);
+   cudaMalloc((void**)&Arelololo_d,szmat);
+   cudaMalloc((void**)&Aimhihihi_d,szmat);
+   cudaMalloc((void**)&Aimlohihi_d,szmat);
+   cudaMalloc((void**)&Aimhilohi_d,szmat);
+   cudaMalloc((void**)&Aimlolohi_d,szmat);
+   cudaMalloc((void**)&Aimhihilo_d,szmat);
+   cudaMalloc((void**)&Aimlohilo_d,szmat);
+   cudaMalloc((void**)&Aimhilolo_d,szmat);
+   cudaMalloc((void**)&Aimlololo_d,szmat);
+
+   double *Arehihihi_h = new double[dim*dim];
+   double *Arelohihi_h = new double[dim*dim];
+   double *Arehilohi_h = new double[dim*dim];
+   double *Arelolohi_h = new double[dim*dim];
+   double *Arehihilo_h = new double[dim*dim];
+   double *Arelohilo_h = new double[dim*dim];
+   double *Arehilolo_h = new double[dim*dim];
+   double *Arelololo_h = new double[dim*dim];
+   double *Aimhihihi_h = new double[dim*dim];
+   double *Aimlohihi_h = new double[dim*dim];
+   double *Aimhilohi_h = new double[dim*dim];
+   double *Aimlolohi_h = new double[dim*dim];
+   double *Aimhihilo_h = new double[dim*dim];
+   double *Aimlohilo_h = new double[dim*dim];
+   double *Aimhilolo_h = new double[dim*dim];
+   double *Aimlololo_h = new double[dim*dim];
+
+   for(int i=0; i<degp1; i++)  // compute i-th residual vector
+   {
+      cudaMemcpy(rrehihihi_d,rhsrehihihi[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rrelohihi_d,rhsrelohihi[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rrehilohi_d,rhsrehilohi[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rrelolohi_d,rhsrelolohi[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rrehihilo_d,rhsrehihilo[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rrelohilo_d,rhsrelohilo[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rrehilolo_d,rhsrehilolo[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rrelololo_d,rhsrelololo[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rimhihihi_d,rhsimhihihi[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rimlohihi_d,rhsimlohihi[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rimhilohi_d,rhsimhilohi[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rimlolohi_d,rhsimlolohi[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rimhihilo_d,rhsimhihilo[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rimlohilo_d,rhsimlohilo[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rimhilolo_d,rhsimhilolo[i],szrhs,cudaMemcpyHostToDevice);
+      cudaMemcpy(rimlololo_d,rhsimlololo[i],szrhs,cudaMemcpyHostToDevice);
+
+      for(int j=0; j<=i; j++)  // multiply mat[j] with sol[i-j]
+      {
+         int idx=0;
+         for(int i1=0; i1<dim; i1++)
+            for(int j1=0; j1<dim; j1++)
+            {
+               Arehihihi_h[idx]   = matrehihihi[j][i1][j1];
+               Arelohihi_h[idx]   = matrelohihi[j][i1][j1];
+               Arehilohi_h[idx]   = matrehilohi[j][i1][j1];
+               Arelolohi_h[idx]   = matrelolohi[j][i1][j1];
+               Arehihilo_h[idx]   = matrehihilo[j][i1][j1];
+               Arelohilo_h[idx]   = matrelohilo[j][i1][j1];
+               Arehilolo_h[idx]   = matrehilolo[j][i1][j1];
+               Arelololo_h[idx]   = matrelololo[j][i1][j1];
+               Aimhihihi_h[idx]   = matimhihihi[j][i1][j1];
+               Aimlohihi_h[idx]   = matimlohihi[j][i1][j1];
+               Aimhilohi_h[idx]   = matimhilohi[j][i1][j1];
+               Aimlolohi_h[idx]   = matimlolohi[j][i1][j1];
+               Aimhihilo_h[idx]   = matimhihilo[j][i1][j1];
+               Aimlohilo_h[idx]   = matimlohilo[j][i1][j1];
+               Aimhilolo_h[idx]   = matimhilolo[j][i1][j1];
+               Aimlololo_h[idx++] = matimlololo[j][i1][j1];
+            }
+      
+         cudaMemcpy(Arehihihi_d,Arehihihi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arelohihi_d,Arelohihi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arehilohi_d,Arehilohi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arelolohi_d,Arelolohi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arehihilo_d,Arehihilo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arelohilo_d,Arelohilo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arehilolo_d,Arehilolo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arelololo_d,Arelololo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimhihihi_d,Aimhihihi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimlohihi_d,Aimlohihi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimhilohi_d,Aimhilohi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimlolohi_d,Aimlolohi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimhihilo_d,Aimhihilo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimlohilo_d,Aimlohilo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimhilolo_d,Aimhilolo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimlololo_d,Aimlololo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(xrehihihi_d,solrehihihi[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xrelohihi_d,solrelohihi[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xrehilohi_d,solrehilohi[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xrelolohi_d,solrelolohi[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xrehihilo_d,solrehihilo[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xrelohilo_d,solrelohilo[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xrehilolo_d,solrehilolo[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(xrelololo_d,solrelololo[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(ximhihihi_d,solimhihihi[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(ximlohihi_d,solimlohihi[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(ximhilohi_d,solimhilohi[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(ximlolohi_d,solimlolohi[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(ximhihilo_d,solimhihilo[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(ximlohilo_d,solimlohilo[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(ximhilolo_d,solimhilolo[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(ximlololo_d,solimlololo[i-j],szsol,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arehihihi_d,Arehihihi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arelohihi_d,Arelohihi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arehilohi_d,Arehilohi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arelolohi_d,Arelolohi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arehihilo_d,Arehihilo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arelohilo_d,Arelohilo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arehilolo_d,Arehilolo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Arelololo_d,Arelololo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimhihihi_d,Aimhihihi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimlohihi_d,Aimlohihi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimhilohi_d,Aimhilohi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimlolohi_d,Aimlolohi_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimhihilo_d,Aimhihilo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimlohilo_d,Aimlohilo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimhilolo_d,Aimhilolo_h,szmat,cudaMemcpyHostToDevice);
+         cudaMemcpy(Aimlololo_d,Aimlololo_h,szmat,cudaMemcpyHostToDevice);
+
+         if(vrblvl > 0)
+            cout << "GPU_cmplx_linear_residue launches " << nbt
+                 << " thread blocks in step " << i << ", " << j << endl;
+
+         cmplx8_bals_tail<<<nbt,szt>>>
+            (dim,szt,Arehihihi_d,Arelohihi_d,Arehilohi_d,Arelolohi_d,
+                     Arehihilo_d,Arelohilo_d,Arehilolo_d,Arelololo_d,
+                     Aimhihihi_d,Aimlohihi_d,Aimhilohi_d,Aimlolohi_d,
+                     Aimhihilo_d,Aimlohilo_d,Aimhilolo_d,Aimlololo_d,
+                     xrehihihi_d,xrelohihi_d,xrehilohi_d,xrelolohi_d,
+                     xrehihilo_d,xrelohilo_d,xrehilolo_d,xrelololo_d,
+                     ximhihihi_d,ximlohihi_d,ximhilohi_d,ximlolohi_d,
+                     ximhihilo_d,ximlohilo_d,ximhilolo_d,ximlololo_d,
+                     rrehihihi_d,rrelohihi_d,rrehilohi_d,rrelolohi_d,
+                     rrehihilo_d,rrelohilo_d,rrehilolo_d,rrelololo_d,
+                     rimhihihi_d,rimlohihi_d,rimhilohi_d,rimlolohi_d,
+                     rimhihilo_d,rimlohilo_d,rimhilolo_d,rimlololo_d);
+      }
+      cudaMemcpy(resvecrehihihi[i],rrehihihi_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecrelohihi[i],rrelohihi_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecrehilohi[i],rrehilohi_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecrelolohi[i],rrelolohi_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecrehihilo[i],rrehihilo_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecrelohilo[i],rrelohilo_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecrehilolo[i],rrehilolo_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecrelololo[i],rrelololo_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecimhihihi[i],rimhihihi_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecimlohihi[i],rimlohihi_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecimhilohi[i],rimhilohi_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecimlolohi[i],rimlolohi_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecimhihilo[i],rimhihilo_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecimlohilo[i],rimlohilo_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecimhilolo[i],rimhilolo_d,szrhs,cudaMemcpyDeviceToHost);
+      cudaMemcpy(resvecimlololo[i],rimlololo_d,szrhs,cudaMemcpyDeviceToHost);
+   }
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<degp1; i++)
+      {
+         cout << "Solution vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+            cout << solrehihihi[i][j] << "  " << solrelohihi[i][j] << endl
+                 << "  "
+                 << solrehilohi[i][j] << "  " << solrelolohi[i][j] << endl
+                 << "  "
+                 << solrehihilo[i][j] << "  " << solrelohilo[i][j] << endl
+                 << "  "
+                 << solrehilolo[i][j] << "  " << solrelololo[i][j] << endl
+                 << "  "
+                 << solimhihihi[i][j] << "  " << solimlohihi[i][j] << endl
+                 << "  "
+                 << solimhilohi[i][j] << "  " << solimlolohi[i][j] << endl
+                 << "  "
+                 << solimhihilo[i][j] << "  " << solimlohilo[i][j] << endl
+                 << "  "
+                 << solimhilolo[i][j] << "  " << solimlololo[i][j] << endl;
+
+         cout << "Residual vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+            cout << resvecrehihihi[i][j] << "  "
+                 << resvecrelohihi[i][j] << endl << "  "
+                 << resvecrehilohi[i][j] << "  "
+                 << resvecrelolohi[i][j] << endl << "  "
+                 << resvecrehihilo[i][j] << "  "
+                 << resvecrelohilo[i][j] << endl << "  "
+                 << resvecrehilolo[i][j] << "  "
+                 << resvecrelololo[i][j] << endl << "  "
+                 << resvecimhihihi[i][j] << "  "
+                 << resvecimlohihi[i][j] << endl << "  "
+                 << resvecimhilohi[i][j] << "  "
+                 << resvecimlolohi[i][j] << endl << "  "
+                 << resvecimhihilo[i][j] << "  "
+                 << resvecimlohilo[i][j] << endl << "  "
+                 << resvecimhilolo[i][j] << "  "
+                 << resvecimlololo[i][j] << endl;
+      }
+   }
+   *resmaxhihihi = 0.0; *resmaxlohihi = 0.0;
+   *resmaxhilohi = 0.0; *resmaxlolohi = 0.0;
+   *resmaxhihilo = 0.0; *resmaxlohilo = 0.0;
+   *resmaxhilolo = 0.0; *resmaxlololo = 0.0;
+
+   for(int i=0; i<degp1; i++)
+   {
+      double *rirehihihi = resvecrehihihi[i];
+      double *rirelohihi = resvecrelohihi[i];
+      double *rirehilohi = resvecrehilohi[i];
+      double *rirelolohi = resvecrelolohi[i];
+      double *rirehihilo = resvecrehihilo[i];
+      double *rirelohilo = resvecrelohilo[i];
+      double *rirehilolo = resvecrehilolo[i];
+      double *rirelololo = resvecrelololo[i];
+      double *riimhihihi = resvecimhihihi[i];
+      double *riimlohihi = resvecimlohihi[i];
+      double *riimhilohi = resvecimhilohi[i];
+      double *riimlolohi = resvecimlolohi[i];
+      double *riimhihilo = resvecimhihilo[i];
+      double *riimlohilo = resvecimlohilo[i];
+      double *riimhilolo = resvecimhilolo[i];
+      double *riimlololo = resvecimlololo[i];
+
+      for(int j=0; j<dim; j++)
+         if(abs(rirehihihi[j]) + abs(riimhihihi[j]) > *resmaxhihihi)
+         {
+            *resmaxhihihi = abs(rirehihihi[j]) + abs(riimhihihi[j]);
+            *resmaxlohihi = abs(rirelohihi[j]) + abs(riimlohihi[j]);
+            *resmaxhilohi = abs(rirehilohi[j]) + abs(riimhilohi[j]);
+            *resmaxlolohi = abs(rirelolohi[j]) + abs(riimlolohi[j]);
+            *resmaxhihilo = abs(rirehihilo[j]) + abs(riimhihilo[j]);
+            *resmaxlohilo = abs(rirelohilo[j]) + abs(riimlohilo[j]);
+            *resmaxhilolo = abs(rirehilolo[j]) + abs(riimhilolo[j]);
+            *resmaxlololo = abs(rirelololo[j]) + abs(riimlololo[j]);
+         }
+   }
+}

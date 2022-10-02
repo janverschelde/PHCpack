@@ -723,4 +723,135 @@ void GPU_cmplx4_bals_solve
  *   solimhilo are the 2nd lowest doubles of the imag parts of the solution;
  *   solimlolo are the lowest doubles of the imag parts of the solution. */
 
+void GPU_dbl4_linear_residue
+ ( int dim, int degp1, int szt, int nbt,
+   double ***mathihi, double ***matlohi, double ***mathilo, double ***matlolo, 
+   double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
+   double **solhihi, double **sollohi, double **solhilo, double **sollolo,
+   double **resvechihi, double **resveclohi,
+   double **resvechilo, double **resveclolo,
+   double *resmaxhihi, double *resmaxlohi,
+   double *resmaxhilo, double *resmaxlolo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Computes the residual of the linear power series system.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of the matrices and vectors;
+ *   degp1    degree plus one, the size of the matrix system;
+ *   szt      size of each block (and tile);
+ *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   mathihi  degp1 matrices of dimension dim;
+ *   matlohi  degp1 matrices of dimension dim;
+ *   mathilo  degp1 matrices of dimension dim;
+ *   matlolo  degp1 matrices of dimension dim;
+ *   rhshihi  degp1 right hand side vectors of dimension dim;
+ *   rhslohi  degp1 right hand side vectors of dimension dim;
+ *   rhshilo  degp1 right hand side vectors of dimension dim;
+ *   rhslolo  degp1 right hand side vectors of dimension dim;
+ *   solhihi  degp1 solution vectors of dimension dim;
+ *   sollohi  degp1 solution vectors of dimension dim;
+ *   solhilo  degp1 solution vectors of dimension dim;
+ *   sollolo  degp1 solution vectors of dimension dim;
+ *   resvechihi has space for the residual power series;
+ *   resveclohi has space for the residual power series;
+ *   resvechilo has space for the residual power series;
+ *   resveclolo has space for the residual power series;
+ *   vrblvl   is the verbose level.
+ *
+ * ON RETURN :
+ *   resvechihi are the highest doubles of the residual power series;
+ *   resveclohi are the 2nd highest doubles of the residual power series;
+ *   resvechilo are the 2nd lowest doubles of the residual power series;
+ *   resveclolo are the lowest doubles of the residual power series;
+ *   resmaxhihi is the highest double of the maximum component in resvec;
+ *   resmaxlohi is the 2nd highest double of the maximum component in resvec;
+ *   resmaxhilo is the 2nd lowest double of the maximum component in resvec;
+ *   resmaxlolo is the lowest double of the maximum component in resvec. */
+
+void GPU_cmplx4_linear_residue
+ ( int dim, int degp1, int szt, int nbt,
+   double ***matrehihi, double ***matrelohi,
+   double ***matrehilo, double ***matrelolo,
+   double ***matimhihi, double ***matimlohi,
+   double ***matimhilo, double ***matimlolo,
+   double **rhsrehihi, double **rhsrelohi,
+   double **rhsrehilo, double **rhsrelolo,
+   double **rhsimhihi, double **rhsimlohi, 
+   double **rhsimhilo, double **rhsimlolo, 
+   double **solrehihi, double **solrelohi,
+   double **solrehilo, double **solrelolo,
+   double **solimhihi, double **solimlohi,
+   double **solimhilo, double **solimlolo,
+   double **resvecrehihi, double **resvecrelohi,
+   double **resvecrehilo, double **resvecrelolo,
+   double **resvecimhihi, double **resvecimlohi,
+   double **resvecimhilo, double **resvecimlolo,
+   double *resmaxhihi, double *resmaxlohi,
+   double *resmaxhilo, double *resmaxlolo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Computes the residual of the linear power series system.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of the matrices and vectors;
+ *   degp1    degree plus one, the size of the matrix system;
+ *   szt      size of each block (and tile);
+ *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   matrehihi are degp1 matrices of dimension dim;
+ *   matrelohi are degp1 matrices of dimension dim;
+ *   matrehilo are degp1 matrices of dimension dim;
+ *   matrelolo are degp1 matrices of dimension dim;
+ *   matimhihi are degp1 matrices of dimension dim;
+ *   matimlohi are degp1 matrices of dimension dim;
+ *   matimhilo are degp1 matrices of dimension dim;
+ *   matimlolo are degp1 matrices of dimension dim;
+ *   rhsrehihi are degp1 right hand side vectors of dimension dim;
+ *   rhsrelohi are degp1 right hand side vectors of dimension dim;
+ *   rhsrehilo are degp1 right hand side vectors of dimension dim;
+ *   rhsrelolo are degp1 right hand side vectors of dimension dim;
+ *   rhsimhihi are degp1 right hand side vectors of dimension dim;
+ *   rhsimlohi are degp1 right hand side vectors of dimension dim;
+ *   rhsimhilo are degp1 right hand side vectors of dimension dim;
+ *   rhsimlolo are degp1 right hand side vectors of dimension dim;
+ *   solrehihi are degp1 solution vectors of dimension dim;
+ *   solrelohi are degp1 solution vectors of dimension dim;
+ *   solrehilo are degp1 solution vectors of dimension dim;
+ *   solrelolo are degp1 solution vectors of dimension dim;
+ *   solimhihi are degp1 solution vectors of dimension dim;
+ *   solimlohi are degp1 solution vectors of dimension dim;
+ *   solimhilo are degp1 solution vectors of dimension dim;
+ *   solimlolo are degp1 solution vectors of dimension dim;
+ *   resvecrehihi has space for the residual power series;
+ *   resvecrelohi has space for the residual power series;
+ *   resvecrehilo has space for the residual power series;
+ *   resvecrelolo has space for the residual power series;
+ *   resvecimhihi has space for the residual power series;
+ *   resvecimlohi has space for the residual power series;
+ *   resvecimhilo has space for the residual power series;
+ *   resvecimlolo has space for the residual power series;
+ *   vrblvl   is the verbose level.
+ *
+ * ON RETURN :
+ *   resvecrehihi are the highest doubles of the real parts
+ *            of the residual series;
+ *   resvecrelohi are the second highest doubles of the real parts
+ *            of the residual series;
+ *   resvecrehilo are the second lowest doubles of the real parts
+ *            of the residual series;
+ *   resvecrelolo are the lowest doubles of the real parts
+ *            of the residual series;
+ *   resvecimhihi are the highest doubles of the imaginary parts
+ *            of the residual series;
+ *   resvecimlohi are the second highest doubles of the imaginary parts
+ *            of the residual series;
+ *   resvecimhilo are the second lowest doubles of the imaginary parts
+ *            of the residual series;
+ *   resvecimlolo are the lowest doubles of the imaginary parts
+ *            of the residual series;
+ *   resmaxhihi is the highest double of the max norm of the residual;
+ *   resmaxlohi is the second highest double of the max norm of the residual;
+ *   resmaxhilo is the second lowest double of the max norm of the residual;
+ *   resmaxlolo is the lowest double of the max norm of the residual. */
+
 #endif
