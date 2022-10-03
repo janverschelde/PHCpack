@@ -15,6 +15,7 @@
 #include "dbl2_factorizations.h"
 #include "dbl2_bals_host.h"
 #include "dbl2_bals_kernels.h"
+#include "dbl2_tail_kernels.h"
 #include "dbl2_systems_host.h"
 #include "dbl2_systems_kernels.h"
 

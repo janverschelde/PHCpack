@@ -15,6 +15,9 @@ test_monomial_jobs:
 test_dbl_flopbals:
 	make -f $(MAKEFILE) test_dbl_flopbals
 
+test_dbl2_flopbals:
+	make -f $(MAKEFILE) test_dbl2_flopbals
+
 test_dbl_newton:
 	make -f $(MAKEFILE) test_dbl_newton
 

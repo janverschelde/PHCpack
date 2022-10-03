@@ -1,5 +1,7 @@
 Mon 3 Oct 2022 : new dbl_tail_kernels, with code from dbl_bals_kernels,
   for use in test_dbl_flopbals, updated dbl_newton_testers and makefiles.
+  Did the same for dbl2: new dbl2_tail_kernels, from dbl2_bals_kernels,
+  new test_dbl2_flopbals, updated dbl2_newton_testers and makefiles.
 
 Sun 2 Oct 2022 : to dbl_bals_kernels, added residual computation,
   added accelerated residual computation to dbl_newton_testers.cpp.

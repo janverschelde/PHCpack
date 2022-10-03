@@ -28,6 +28,10 @@ random_monomials.o:
 	@-echo ">>> compiling random_monomials ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random_monomials.cpp
 
+random2_vectors.o:
+	@-echo ">>> compiling double double random vector generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random2_vectors.cpp
+
 double_double_functions.o:
 	@-echo ">>> compiling double double functions ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
@@ -190,6 +194,12 @@ dbl_tail_kernels.o:
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MAT) -O3 \
              -c dbl_tail_kernels.cu
 
+dbl2_tail_kernels.o:
+	@-echo ">>> compiling tail kernels for double doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -I$(MAT) -O3 \
+             --define-macro gpufun=1 \
+             -c dbl2_tail_kernels.cu
+
 dbl_bals_kernels.o:
 	@-echo ">>> compiling bals kernels for doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MAT) -O3 \
@@ -308,6 +318,10 @@ test_dbl_flopbals.o:
 	@-echo ">>> compiling test_dbl_flopbals ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl_flopbals.cpp
 
+test_dbl2_flopbals.o:
+	@-echo ">>> compiling test_dbl2_flopbals ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl2_flopbals.cpp
+
 prompt_newton_setup.o:
 	@-echo ">>> compiling prompt_newton_setup ..."
 	$(gpp) -O3 -c prompt_newton_setup.cpp
@@ -349,6 +363,15 @@ test_dbl_flopbals: random_numbers.o test_dbl_flopbals.o dbl_tail_kernels.o
                   dbl_tail_kernels.o \
                 -lcuda -lcudart -L$(CUDALIB)
 
+test_dbl2_flopbals: random_numbers.o random2_vectors.o \
+                    double_double_functions.o \
+                    test_dbl2_flopbals.o dbl2_tail_kernels.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl2_flopbals test_dbl2_flopbals.o \
+                  random_numbers.o random2_vectors.o \
+                  double_double_functions.o dbl2_tail_kernels.o \
+                -lcuda -lcudart -L$(CUDALIB)
+
 test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                  unimodular_matrices.o prompt_newton_setup.o \
                  dbl_newton_testers.o test_dbl_newton.o \
@@ -388,7 +411,7 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl2_newton_testers.o test_dbl2_newton.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl2_baqr_kernels.o dbl2_tabs_kernels.o \
-                  dbl2_bals_kernels.o
+                  dbl2_tail_kernels.o dbl2_bals_kernels.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_newton test_dbl2_newton.o dbl2_newton_testers.o \
                   random_numbers.o random_series.o random_monomials.o \
@@ -402,7 +425,7 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl2_systems_kernels.o dbl2_polynomials_kernels.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl2_baqr_kernels.o dbl2_tabs_kernels.o \
-                  dbl2_bals_kernels.o \
+                  dbl2_tail_kernels.o dbl2_bals_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
@@ -474,7 +497,8 @@ clean:
 	/bin/rm -f -r dbl_bals_host.o
 	/bin/rm -f -r dbl_bals_kernels.o dbl_tail_kernels.o
 	/bin/rm -f -r dbl2_baqr_kernels.o dbl2_tabs_kernels.o
-	/bin/rm -f -r dbl2_bals_host.o dbl2_bals_kernels.o
+	/bin/rm -f -r dbl2_bals_host.o
+	/bin/rm -f -r dbl2_bals_kernels.o dbl2_tail_kernels.o
 	/bin/rm -f -r dbl4_bals_host.o dbl4_bals_kernels.o
 	/bin/rm -f -r dbl8_bals_host.o dbl8_bals_kernels.o
 	/bin/rm -f -r dbl_newton_testers.o dbl2_newton_testers.o
@@ -482,6 +506,7 @@ clean:
 	/bin/rm -f -r test_unimodular.o test_unimodular
 	/bin/rm -f -r test_monomial_jobs.o test_monomial_jobs
 	/bin/rm -f -r test_dbl_flopbals.o test_dbl_flopbals
+	/bin/rm -f -r test_dbl2_flopbals.o test_dbl2_flopbals
 	/bin/rm -f -r test_dbl_newton.o test_dbl_newton
 	/bin/rm -f -r test_dbl2_newton.o test_dbl2_newton
 	/bin/rm -f -r test_dbl4_newton.o test_dbl4_newton
@@ -489,6 +514,7 @@ clean:
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o
+	/bin/rm -f -r random2_vectors.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_monomials_host.o
 	/bin/rm -f -r dbl2_convolutions_host.o dbl2_monomials_host.o
 	/bin/rm -f -r dbl4_convolutions_host.o dbl4_monomials_host.o
