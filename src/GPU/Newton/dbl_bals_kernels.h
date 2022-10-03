@@ -5,49 +5,6 @@
 #ifndef __dbl_bals_kernels_h__
 #define __dbl_bals_kernels_h__
 
-__global__ void dbl_bals_tail
- ( int ncols, int szt, double *A, double *x, double *b );
-/*
- * DESCRIPTION :
- *   Subtracts from the right hand side b the product of A with x.
- *
- * REQUIRED : nrows = szt times the number of blocks,
- *   where nrows in the number of rows in A and the dimension of b.
- *
- * ON ENTRY :
- *   ncols    number of columns in A and the dimension of x;
- *   szt      size of each block (and tile);
- *   A        nrows-by-ncols matrix to multiply x with;
- *   x        vector of dimension ncols;
- *   b        vector of dimension nrows.
- *
- * ON RETURN :
- *   b        updated right hand side vector. */
-
-__global__ void cmplx_bals_tail
- ( int ncols, int szt, double *Are, double *Aim,
-   double *xre, double *xim, double *bre, double *bim );
-/*
- * DESCRIPTION :
- *   Subtracts from the right hand side b the product of A with x.
- *
- * REQUIRED : nrows = szt times the number of blocks,
- *   where nrows in the number of rows in A and the dimension of b.
- *
- * ON ENTRY :
- *   ncols    number of columns in A and the dimension of x;
- *   szt      size of each block (and tile);
- *   Are      real parts of nrows-by-ncols matrix;
- *   Aim      imaginary parts of nrows-by-ncols matrix;
- *   xre      real parts of vector of dimension ncols;
- *   xim      imaginary parts of vector of dimension ncols;
- *   bre      real parts of vector of dimension nrows;
- *   bim      imaginary parts of vector of dimension nrows.
- *
- * ON RETURN :
- *   bre      real parts of updated right hand side vector;
- *   bim      imaginary parts of updated right hand side vector. */
-
 __global__ void dbl_bals_qtb
  ( int ncols, int szt, double *Qt, double *b, double *r );
 /*
@@ -164,65 +121,6 @@ void GPU_cmplx_bals_head
  *   xre      real parts of the least squares solution;
  *   xim      imaginary parts of the least squares solution. */
 
-void GPU_dbl_bals_tail
- ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
-   double ***mat, double **rhs, double **sol, bool verbose );
-/*
- * DESCRIPTION :
- *   After each block of coefficients of the series,
- *   kernels are launched for the multiplication of the tail matrices
- *   with the solution coefficients to update the right hand sides
- *   of the linear system of power series.
- *
- * REQUIRED : ncols = szt*nbt.
- *
- * ON ENTRY :
- *   nrows    number of rows in A and the dimension of b;
- *   ncols    number of columns in A and the dimension of x;
- *   szt      size of each block (and tile);
- *   nbt      number of blocks (and tiles) dim = szt*nbt; 
- *   degp1    degree plus one, total number of coefficient blocks;
- *   stage    coefficient blocks up to stage-1 are computed;
- *   mat      matrices of the linearized power series;
- *   rhs      right hand side vectors of the linear system;
- *   sol      solution coefficients computed up to stage-1;
- *   verbose  is the verbose flag.
- *
- * ON RETURN :
- *   rhs      updated right hand sides. */
-
-void GPU_cmplx_bals_tail
- ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
-   double ***matre, double ***matim, double **rhsre, double **rhsim,
-   double **solre, double **solim, bool verbose );
-/*
- * DESCRIPTION :
- *   After each block of coefficients of the series,
- *   kernels are launched for the multiplication of the tail matrices
- *   with the solution coefficients to update the right hand sides
- *   of the linear system of power series.
- *
- * REQUIRED : ncols = szt*nbt.
- *
- * ON ENTRY :
- *   nrows    number of rows in A and the dimension of b;
- *   ncols    number of columns in A and the dimension of x;
- *   szt      size of each block (and tile);
- *   nbt      number of blocks (and tiles) dim = szt*nbt; 
- *   degp1    degree plus one, total number of coefficient blocks;
- *   stage    coefficient blocks up to stage-1 are computed;
- *   matre    real parts of the matrices of the linearized series;
- *   matim    imaginary parts of the matrices of the linearized series;
- *   rhsre    real part of the right hand sides;
- *   rhsim    imaginary parts of the right hand sides;
- *   solre    real parts of the solution computed up to stage-1;
- *   solim    imaginary parts of the solution computed up to stage-1;
- *   verbose  is the verbose flag.
- *
- * ON RETURN :
- *   rhsre    real parts of the updated right hand sides;
- *   rhsim    imaginary parts of the updated right hand sides. */
-
 void GPU_dbl_bals_qtb
  ( int ncols, int szt, int nbt, double **Q, double *b, bool verbose );
 /*
@@ -334,57 +232,5 @@ void GPU_cmplx_bals_solve
  *   rhsim    imaginary parts of the updated right hand side vectors;
  *   solre    real parts of the solution series;
  *   solim    imaginary parts of the solution series. */
-
-void GPU_dbl_linear_residue
- ( int dim, int degp1, int szt, int nbt,
-   double ***mat, double **rhs, double **sol,
-   double **resvec, double *resmax, int vrblvl );
-/*
- * DESCRIPTION :
- *   Computes the residual of the linear power series system.
- *
- * ON ENTRY :
- *   dim      the dimension of the matrices and vectors;
- *   degp1    degree plus one, the size of the matrix system;
- *   szt      size of each block (and tile);
- *   nbt      number of blocks (and tiles) dim = szt*nbt; 
- *   mat      degp1 matrices of dimension dim;
- *   rhs      degp1 right hand side vectors of dimension dim;
- *   sol      degp1 solution vectors of dimension dim;
- *   resvec   space for the residual power series;
- *   vrblvl   is the verbose level.
- *
- * ON RETURN :
- *   resvec   the residual power series;
- *   resmax   maximum component of the residual power series. */
-
-void GPU_cmplx_linear_residue
- ( int dim, int degp1, int szt, int nbt,
-   double ***matre, double ***matim, double **rhsre, double **rhsim,
-   double **solre, double **solim,
-   double **resvecre, double **resvecim, double *resmax, int vrblvl );
-/*
- * DESCRIPTION :
- *   Computes the residual of the linear power series system.
- *
- * ON ENTRY :
- *   dim      the dimension of the matrices and vectors;
- *   degp1    degree plus one, the size of the matrix system;
- *   szt      size of each block (and tile);
- *   nbt      number of blocks (and tiles) dim = szt*nbt; 
- *   matre    degp1 matrices of dimension dim;
- *   matim    degp1 matrices of dimension dim;
- *   rhsre    degp1 right hand side vectors of dimension dim;
- *   rhsim    degp1 right hand side vectors of dimension dim;
- *   solre    degp1 solution vectors of dimension dim;
- *   solim    degp1 solution vectors of dimension dim;
- *   resvecre has space for the residual power series;
- *   resvecim has space for the residual power series;
- *   vrblvl   is the verbose level.
- *
- * ON RETURN :
- *   resvecre are the real parts of the residual power series;
- *   resvecim are the imaginary parts the residual power series;
- *   resmax   max norm of the residual power series. */
 
 #endif

@@ -16,15 +16,18 @@ smflag=sm_75
 
 # location of the command line Microsoft Visual Studio Compiler
 CL="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
+# CL="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\bin\Hostx64\x64"
 
 # include path for the Microsoft Visual Studio Compiler
 includepath="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\include"
+# includepath="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include"
 
 # include path for the Windows Kit
 winkitucrt="C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt"
 
 # libaries of the Microsoft Visual Studio compiler
 libdirvs="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\lib\x64"
+# libdirvs="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\lib\x64"
 
 # libraries of the Windows Kits
 libdirkitum="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\um\x64"
@@ -289,6 +292,13 @@ dbl8_polynomials_kernels.obj:
                 $(POL)/dbl8_polynomials_kernels.cu \
              -o dbl8_polynomials_kernels.obj
 
+dbl_tail_kernels.obj:
+	@-echo ">>> compiling dbl_tail_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MAT) \
+             --define-macro winwalltime=1 \
+                dbl_tail_kernels.cu \
+             -o dbl_tail_kernels.obj
+
 dbl_bals_kernels.obj:
 	@-echo ">>> compiling dbl_bals_kernels ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MAT) \
@@ -462,6 +472,13 @@ write_gpu_timings.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: write_gpu_timings.obj /EHsc
 
+test_dbl_flopbals.obj:
+	@-echo ">>> compiling test_dbl_flopbals ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O2 -I$(MPD) -I$(MAT) \
+             --define-macro winwalltime=1 \
+                      test_dbl_flopbals.cpp \
+                   -o test_dbl_flopbals.obj
+
 test_dbl_newton.obj:
 	@-echo ">>> compiling test_dbl_newton ..."
 	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -511,9 +528,15 @@ prompt_newton_setup.obj:
                       prompt_newton_setup.cpp \
                  /Fo: prompt_newton_setup.obj /EHsc
 
+test_dbl_flopbals: random_numbers.obj test_dbl_flopbals.obj \
+                   dbl_tail_kernels.obj gettimeofday4win.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_flopbals.exe test_dbl_flopbals.obj \
+	     random_numbers.obj dbl_tail_kernels.obj gettimeofday4win.obj
+
 test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
                  dbl_newton_testers.obj prompt_newton_setup.obj \
-		 dbl_bals_kernels.obj \
+		 dbl_bals_kernels.obj dbl_tail_kernels.obj \
                  random_numbers.obj random_series.obj random_monomials.obj \
                  dbl_convolutions_host.obj dbl_monomials_host.obj \
                  convolution_job.obj convolution_jobs.obj \
@@ -535,7 +558,8 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
              dbl_systems_host.obj write_gpu_timings.obj \
              gettimeofday4win.obj \
              dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
-             dbl_factorizations.obj dbl_bals_host.obj dbl_bals_kernels.obj \
+             dbl_factorizations.obj dbl_bals_host.obj \
+	     dbl_tail_kernels.obj dbl_bals_kernels.obj \
 	     dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
 	     dbl_baqr_kernels.obj dbl_tabs_kernels.obj
 
@@ -649,7 +673,8 @@ clean:
 	del dbl2_polynomials_kernels.obj
 	del dbl4_polynomials_kernels.obj
 	del dbl8_polynomials_kernels.obj
-	del dbl_factorizations.obj dbl_bals_host.obj dbl_bals_kernels.obj
+	del dbl_factorizations.obj dbl_bals_host.obj 
+	del dbl_tail_kernels.obj dbl_bals_kernels.obj
 	del dbl2_factorizations.obj dbl2_bals_host.obj dbl2_bals_kernels.obj
 	del dbl4_factorizations.obj dbl4_bals_host.obj dbl4_bals_kernels.obj
 	del dbl8_factorizations.obj dbl8_bals_host.obj dbl8_bals_kernels.obj

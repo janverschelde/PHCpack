@@ -13,6 +13,7 @@
 #include "dbl_systems_host.h"
 #include "dbl_systems_kernels.h"
 #include "dbl_bals_host.h"
+#include "dbl_tail_kernels.h"
 #include "dbl_bals_kernels.h"
 
 using namespace std;

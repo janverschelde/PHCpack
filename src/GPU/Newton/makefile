@@ -12,6 +12,9 @@ test_unimodular:
 test_monomial_jobs:
 	make -f $(MAKEFILE) test_monomial_jobs
 
+test_dbl_flopbals:
+	make -f $(MAKEFILE) test_dbl_flopbals
+
 test_dbl_newton:
 	make -f $(MAKEFILE) test_dbl_newton
 

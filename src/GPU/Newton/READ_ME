@@ -17,6 +17,9 @@ dbl4_systems_kernels     : systems evaldiff with quad doubles on device
 dbl8_systems_host        : systems evaldiff with octo doubles on host
 dbl8_systems_kernels     : systems evaldiff with octo doubles on device
 ------------------------------------------------------------------------------
+dbl_tail_kernels         : kernels for tail operations in double precision
+test_dbl_flopbals        : performance test on double tail kernels
+------------------------------------------------------------------------------
 dbl_bals_host            : linearization in double precision on host
 dbl_bals_kernels         : linearization in double precision on device
 dbl2_bals_host           : linearization in double double precision on host
