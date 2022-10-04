@@ -418,11 +418,11 @@ test_dbl4_flopbals: random_numbers.o random4_vectors.o \
 
 test_dbl8_flopbals: random_numbers.o random8_vectors.o \
                     double_double_functions.o quad_double_functions.o \
-                    octo_double_functions.o \
+                    octo_double_functions.o dbl_bals_flopcounts.o \
                     test_dbl8_flopbals.o dbl8_tail_kernels.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl8_flopbals test_dbl8_flopbals.o \
-                  random_numbers.o random8_vectors.o \
+                  random_numbers.o random8_vectors.o dbl_bals_flopcounts.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o dbl8_tail_kernels.o \
                 -lcuda -lcudart -L$(CUDALIB)
@@ -528,6 +528,7 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl8_systems_host.o write_gpu_timings.o \
                   dbl8_systems_kernels.o dbl8_polynomials_kernels.o \
                   dbl8_factorizations.o dbl8_bals_host.o \
+                  dbl_bals_flopcounts.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl8_baqr_kernels.o dbl8_tabs_kernels.o \
                   dbl8_tail_kernels.o dbl8_bals_kernels.o \
@@ -544,6 +545,7 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl8_systems_host.o write_gpu_timings.o \
                   dbl8_systems_kernels.o dbl8_polynomials_kernels.o \
                   dbl8_factorizations.o dbl8_bals_host.o \
+                  dbl_bals_flopcounts.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl8_baqr_kernels.o dbl8_tabs_kernels.o \
                   dbl8_tail_kernels.o dbl8_bals_kernels.o \

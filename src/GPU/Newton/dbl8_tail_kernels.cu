@@ -12,6 +12,7 @@
 #include "octo_double_gpufun.cu"
 #endif
 #include "dbl8_tail_kernels.h"
+#include "dbl_bals_flopcounts.h"
 
 using namespace std;
 
@@ -790,7 +791,9 @@ void GPU_dbl8_linear_residue
    double *resmaxhihihi, double *resmaxlohihi,
    double *resmaxhilohi, double *resmaxlolohi,
    double *resmaxhihilo, double *resmaxlohilo,
-   double *resmaxhilolo, double *resmaxlololo, int vrblvl )
+   double *resmaxhilolo, double *resmaxlololo,
+   double *lapms, long long int *add, long long int *mul,
+   int vrblvl )
 {
    double *rhihihi_d;
    double *rlohihi_d;
@@ -855,6 +858,9 @@ void GPU_dbl8_linear_residue
    double *Ahilolo_h = new double[dim*dim];
    double *Alololo_h = new double[dim*dim];
 
+   *add = 0; // initialize number of additions
+   *mul = 0; // initialize number of multiplications
+
    for(int i=0; i<degp1; i++)  // compute i-th residual vector
    {
       cudaMemcpy(rhihihi_d,rhshihihi[i],szrhs,cudaMemcpyHostToDevice);
@@ -911,6 +917,12 @@ void GPU_dbl8_linear_residue
             cout << "GPU_dbl_linear_residue launches " << nbt
                  << " thread blocks in step " << i << ", " << j << endl;
 
+         cudaEvent_t start,stop;       // to measure time spent by kernels 
+         cudaEventCreate(&start);
+         cudaEventCreate(&stop);
+         float milliseconds;
+
+         cudaEventRecord(start);
          dbl8_bals_tail<<<nbt,szt>>>
             (dim,szt,Ahihihi_d,Alohihi_d,Ahilohi_d,Alolohi_d,
                      Ahihilo_d,Alohilo_d,Ahilolo_d,Alololo_d,
@@ -918,6 +930,12 @@ void GPU_dbl8_linear_residue
                      xhihilo_d,xlohilo_d,xhilolo_d,xlololo_d,
                      rhihihi_d,rlohihi_d,rhilohi_d,rlolohi_d,
                      rhihilo_d,rlohilo_d,rhilolo_d,rlololo_d);
+
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *lapms += milliseconds;
+         flopcount_dbl_bals_tail(dim,add,mul);
       }
       cudaMemcpy(resvechihihi[i],rhihihi_d,szrhs,cudaMemcpyDeviceToHost);
       cudaMemcpy(resveclohihi[i],rlohihi_d,szrhs,cudaMemcpyDeviceToHost);
@@ -1018,7 +1036,9 @@ void GPU_cmplx8_linear_residue
    double *resmaxhihihi, double *resmaxlohihi,
    double *resmaxhilohi, double *resmaxlolohi,
    double *resmaxhihilo, double *resmaxlohilo,
-   double *resmaxhilolo, double *resmaxlololo, int vrblvl )
+   double *resmaxhilolo, double *resmaxlololo,
+   double *lapms, long long int *add, long long int *mul,
+   int vrblvl )
 {
    double *rrehihihi_d;
    double *rrelohihi_d;
@@ -1139,6 +1159,9 @@ void GPU_cmplx8_linear_residue
    double *Aimhilolo_h = new double[dim*dim];
    double *Aimlololo_h = new double[dim*dim];
 
+   *add = 0; // initialize number of additions
+   *mul = 0; // initialize number of multiplications
+
    for(int i=0; i<degp1; i++)  // compute i-th residual vector
    {
       cudaMemcpy(rrehihihi_d,rhsrehihihi[i],szrhs,cudaMemcpyHostToDevice);
@@ -1235,6 +1258,12 @@ void GPU_cmplx8_linear_residue
             cout << "GPU_cmplx_linear_residue launches " << nbt
                  << " thread blocks in step " << i << ", " << j << endl;
 
+         cudaEvent_t start,stop;       // to measure time spent by kernels 
+         cudaEventCreate(&start);
+         cudaEventCreate(&stop);
+         float milliseconds;
+
+         cudaEventRecord(start);
          cmplx8_bals_tail<<<nbt,szt>>>
             (dim,szt,Arehihihi_d,Arelohihi_d,Arehilohi_d,Arelolohi_d,
                      Arehihilo_d,Arelohilo_d,Arehilolo_d,Arelololo_d,
@@ -1248,6 +1277,12 @@ void GPU_cmplx8_linear_residue
                      rrehihilo_d,rrelohilo_d,rrehilolo_d,rrelololo_d,
                      rimhihihi_d,rimlohihi_d,rimhilohi_d,rimlolohi_d,
                      rimhihilo_d,rimlohilo_d,rimhilolo_d,rimlololo_d);
+
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *lapms += milliseconds;
+         flopcount_cmplx_bals_tail(dim,add,mul);
       }
       cudaMemcpy(resvecrehihihi[i],rrehihihi_d,szrhs,cudaMemcpyDeviceToHost);
       cudaMemcpy(resvecrelohihi[i],rrelohihi_d,szrhs,cudaMemcpyDeviceToHost);

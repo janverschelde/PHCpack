@@ -628,14 +628,15 @@ test_dbl4_flopbals: random_numbers.obj random4_vectors.obj \
 
 test_dbl8_flopbals: random_numbers.obj random8_vectors.obj \
                     double_double_functions.obj quad_double_functions.obj \
-                    octo_double_functions.obj test_dbl8_flopbals.obj \
-                    dbl8_tail_kernels.obj gettimeofday4win.obj
+                    octo_double_functions.obj dbl_bals_flopcounts.obj \
+		    test_dbl8_flopbals.obj dbl8_tail_kernels.obj \
+		    gettimeofday4win.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl8_flopbals.exe test_dbl8_flopbals.obj \
 	     random_numbers.obj random8_vectors.obj \
 	     double_double_functions.obj quad_double_functions.obj \
-	     octo_double_functions.obj dbl8_tail_kernels.obj \
-             gettimeofday4win.obj
+	     octo_double_functions.obj dbl_bals_flopcounts.obj \
+	     dbl8_tail_kernels.obj gettimeofday4win.obj
 
 test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
                  dbl_newton_testers.obj prompt_newton_setup.obj \
@@ -745,6 +746,7 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
                   dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
                   dbl8_factorizations.obj dbl8_bals_host.obj \
                   gettimeofday4win.obj write_gpu_timings.obj \
+                  dbl_bals_flopcounts.obj \
 		  dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
 		  dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj \
                   dbl8_tail_kernels.obj dbl8_bals_kernels.obj
@@ -761,6 +763,7 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
              dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
              dbl8_factorizations.obj dbl8_bals_host.obj \
              gettimeofday4win.obj write_gpu_timings.obj \
+             dbl_bals_flopcounts.obj \
              dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
              dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj \
              dbl8_tail_kernels.obj dbl8_bals_kernels.obj
