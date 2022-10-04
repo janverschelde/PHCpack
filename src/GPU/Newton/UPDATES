@@ -1,3 +1,6 @@
+Tue 4 Oct 2022 : new test_{dbl4,dbl8}_flopbals.cpp, updated makefiles,
+   some edits in test_dbl2_flopbals.cpp.
+
 Mon 3 Oct 2022 : new dbl_tail_kernels, with code from dbl_bals_kernels,
   for use in test_dbl_flopbals, updated dbl_newton_testers and makefiles.
   Did the same for dbl2: new dbl2_tail_kernels, from dbl2_bals_kernels,

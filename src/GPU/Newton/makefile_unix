@@ -32,6 +32,14 @@ random2_vectors.o:
 	@-echo ">>> compiling double double random vector generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/random2_vectors.cpp
 
+random4_vectors.o:
+	@-echo ">>> compiling quad double random vector generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random4_vectors.cpp
+
+random8_vectors.o:
+	@-echo ">>> compiling octo double random vector generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random8_vectors.cpp
+
 double_double_functions.o:
 	@-echo ">>> compiling double double functions ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
@@ -334,6 +342,14 @@ test_dbl2_flopbals.o:
 	@-echo ">>> compiling test_dbl2_flopbals ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl2_flopbals.cpp
 
+test_dbl4_flopbals.o:
+	@-echo ">>> compiling test_dbl4_flopbals ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl4_flopbals.cpp
+
+test_dbl8_flopbals.o:
+	@-echo ">>> compiling test_dbl8_flopbals ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl8_flopbals.cpp
+
 prompt_newton_setup.o:
 	@-echo ">>> compiling prompt_newton_setup ..."
 	$(gpp) -O3 -c prompt_newton_setup.cpp
@@ -382,6 +398,27 @@ test_dbl2_flopbals: random_numbers.o random2_vectors.o \
 	$(gpp) -o test_dbl2_flopbals test_dbl2_flopbals.o \
                   random_numbers.o random2_vectors.o \
                   double_double_functions.o dbl2_tail_kernels.o \
+                -lcuda -lcudart -L$(CUDALIB)
+
+test_dbl4_flopbals: random_numbers.o random4_vectors.o \
+                    double_double_functions.o quad_double_functions.o \
+                    test_dbl4_flopbals.o dbl4_tail_kernels.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl4_flopbals test_dbl4_flopbals.o \
+                  random_numbers.o random4_vectors.o \
+                  double_double_functions.o quad_double_functions.o \
+                  dbl4_tail_kernels.o \
+                -lcuda -lcudart -L$(CUDALIB)
+
+test_dbl8_flopbals: random_numbers.o random8_vectors.o \
+                    double_double_functions.o quad_double_functions.o \
+                    octo_double_functions.o \
+                    test_dbl8_flopbals.o dbl8_tail_kernels.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl8_flopbals test_dbl8_flopbals.o \
+                  random_numbers.o random8_vectors.o \
+                  double_double_functions.o quad_double_functions.o \
+                  octo_double_functions.o dbl8_tail_kernels.o \
                 -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
@@ -521,6 +558,8 @@ clean:
 	/bin/rm -f -r test_monomial_jobs.o test_monomial_jobs
 	/bin/rm -f -r test_dbl_flopbals.o test_dbl_flopbals
 	/bin/rm -f -r test_dbl2_flopbals.o test_dbl2_flopbals
+	/bin/rm -f -r test_dbl4_flopbals.o test_dbl4_flopbals
+	/bin/rm -f -r test_dbl8_flopbals.o test_dbl8_flopbals
 	/bin/rm -f -r test_dbl_newton.o test_dbl_newton
 	/bin/rm -f -r test_dbl2_newton.o test_dbl2_newton
 	/bin/rm -f -r test_dbl4_newton.o test_dbl4_newton
@@ -528,7 +567,7 @@ clean:
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o
-	/bin/rm -f -r random2_vectors.o
+	/bin/rm -f -r random2_vectors.o random4_vectors.o random8_vectors.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_monomials_host.o
 	/bin/rm -f -r dbl2_convolutions_host.o dbl2_monomials_host.o
 	/bin/rm -f -r dbl4_convolutions_host.o dbl4_monomials_host.o

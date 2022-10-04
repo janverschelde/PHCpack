@@ -56,7 +56,7 @@ int test_cmplx2_flopbals ( int dim, int deg, int szt, int nbt );
 int main ( void )
 {
    cout << "Testing flops of blocked accelerated linear series"
-        << " in double precision ..." << endl;
+        << " with double doubles ..." << endl;
 
    int seed,dim,deg,szt,nbt,cdata;
 
@@ -145,7 +145,6 @@ int test_dbl2_flopbals ( int dim, int deg, int szt, int nbt )
          for(int k=0; k<dim; k++)
          {
             random_double_double(&rndhi,&rndlo);
-
             mathi[i][j][k] = rndhi;
             matlo[i][j][k] = rndlo;
          }
@@ -216,7 +215,6 @@ int test_cmplx2_flopbals ( int dim, int deg, int szt, int nbt )
 
       for(int j=0; j<dim; j++)
       {
-
          double rndhi,rndlo;
 
          random_double_double(&rndhi,&rndlo);

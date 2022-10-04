@@ -18,6 +18,12 @@ test_dbl_flopbals:
 test_dbl2_flopbals:
 	make -f $(MAKEFILE) test_dbl2_flopbals
 
+test_dbl4_flopbals:
+	make -f $(MAKEFILE) test_dbl4_flopbals
+
+test_dbl8_flopbals:
+	make -f $(MAKEFILE) test_dbl8_flopbals
+
 test_dbl_newton:
 	make -f $(MAKEFILE) test_dbl_newton
 

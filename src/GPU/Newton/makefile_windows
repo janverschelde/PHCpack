@@ -80,6 +80,18 @@ random2_vectors.obj:
                       $(MPD)/random2_vectors.cpp \
                  /Fo: random2_vectors.obj /EHsc
 
+random4_vectors.obj:
+	@-echo ">>> compiling quad double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random4_vectors.cpp \
+                 /Fo: random4_vectors.obj /EHsc
+
+random8_vectors.obj:
+	@-echo ">>> compiling octo double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random8_vectors.cpp \
+                 /Fo: random8_vectors.obj /EHsc
+
 dbl_convolutions_host.obj:
 	@-echo ">>> compiling dbl_convolutions_host ..."
 	$(CL)\cl /c -I$(CNV) $(CNV)/dbl_convolutions_host.cpp \
@@ -516,6 +528,20 @@ test_dbl2_flopbals.obj:
                       test_dbl2_flopbals.cpp \
                    -o test_dbl2_flopbals.obj
 
+test_dbl4_flopbals.obj:
+	@-echo ">>> compiling test_dbl4_flopbals ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O2 -I$(MPD) -I$(MAT) \
+             --define-macro winwalltime=1 \
+                      test_dbl4_flopbals.cpp \
+                   -o test_dbl4_flopbals.obj
+
+test_dbl8_flopbals.obj:
+	@-echo ">>> compiling test_dbl8_flopbals ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O2 -I$(MPD) -I$(MAT) \
+             --define-macro winwalltime=1 \
+                      test_dbl8_flopbals.cpp \
+                   -o test_dbl8_flopbals.obj
+
 test_dbl_newton.obj:
 	@-echo ">>> compiling test_dbl_newton ..."
 	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -579,6 +605,27 @@ test_dbl2_flopbals: random_numbers.obj random2_vectors.obj \
 	     random_numbers.obj random2_vectors.obj \
 	     double_double_functions.obj dbl2_tail_kernels.obj \
 	     gettimeofday4win.obj
+
+test_dbl4_flopbals: random_numbers.obj random4_vectors.obj \
+                    double_double_functions.obj quad_double_functions.obj \
+		    test_dbl4_flopbals.obj dbl4_tail_kernels.obj \
+		    gettimeofday4win.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl4_flopbals.exe test_dbl4_flopbals.obj \
+	     random_numbers.obj random4_vectors.obj \
+	     double_double_functions.obj quad_double_functions.obj \
+	     dbl4_tail_kernels.obj gettimeofday4win.obj
+
+test_dbl8_flopbals: random_numbers.obj random8_vectors.obj \
+                    double_double_functions.obj quad_double_functions.obj \
+                    octo_double_functions.obj test_dbl8_flopbals.obj \
+                    dbl8_tail_kernels.obj gettimeofday4win.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl8_flopbals.exe test_dbl8_flopbals.obj \
+	     random_numbers.obj random8_vectors.obj \
+	     double_double_functions.obj quad_double_functions.obj \
+	     octo_double_functions.obj dbl8_tail_kernels.obj \
+             gettimeofday4win.obj
 
 test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
                  dbl_newton_testers.obj prompt_newton_setup.obj \
@@ -703,41 +750,22 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
              dbl8_tail_kernels.obj dbl8_bals_kernels.obj
 
 clean:
-	del *~
-	del random_numbers.obj random_series.obj random_monomials.obj
-	del double_double_functions.obj quad_double_functions.obj
-	del octo_double_functions.obj
-	del dbl_convolutions_host.obj dbl_monomials_host.obj
-	del dbl2_convolutions_host.obj dbl2_monomials_host.obj
-	del dbl4_convolutions_host.obj dbl4_monomials_host.obj
-	del dbl8_convolutions_host.obj dbl8_monomials_host.obj
-	del dbl_baqr_kernels.obj dbl_tabs_kernels.obj
-	del dbl2_baqr_kernels.obj dbl2_tabs_kernels.obj
-	del dbl4_baqr_kernels.obj dbl4_tabs_kernels.obj
-	del dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj
-	del dbl_polynomials_kernels.obj
-	del dbl2_polynomials_kernels.obj
-	del dbl4_polynomials_kernels.obj
-	del dbl8_polynomials_kernels.obj
-	del dbl_factorizations.obj dbl_bals_host.obj 
+	del dbl_bals_host.obj dbl2_bals_host.obj
+	del dbl4_bals_host.obj dbl8_bals_host.obj
 	del dbl_tail_kernels.obj dbl_bals_kernels.obj
-	del dbl2_factorizations.obj dbl2_bals_host.obj
 	del dbl2_tail_kernels.obj dbl2_bals_kernels.obj
-	del dbl4_factorizations.obj dbl4_bals_host.obj
 	del dbl4_tail_kernels.obj dbl4_bals_kernels.obj
-	del dbl8_factorizations.obj dbl8_bals_host.obj
 	del dbl8_tail_kernels.obj dbl8_bals_kernels.obj
-	del unimodular_matrices.obj gettimeofday4win.obj
+	del unimodular_matrices.obj 
+	del test_unimodular.exe test_unimodular.exp
+	del test_unimodular.obj test_unimodular.lib
 	del prompt_newton_setup.obj 
-	del dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj
 	del dbl_systems_host.obj dbl_systems_kernels.obj
 	del dbl2_systems_host.obj dbl2_systems_kernels.obj
 	del dbl4_systems_host.obj dbl4_systems_kernels.obj
 	del dbl8_systems_host.obj dbl8_systems_kernels.obj
 	del dbl_newton_testers.obj dbl2_newton_testers.obj
 	del dbl4_newton_testers.obj dbl8_newton_testers.obj
-	del test_unimodular.exe test_unimodular.exp
-	del test_unimodular.obj test_unimodular.lib
 	del convolution_job.obj convolution_jobs.obj
 	del addition_job.obj addition_jobs.obj job_coordinates.obj
 	del test_monomial_jobs.exe test_monomial_jobs.exp
@@ -746,6 +774,10 @@ clean:
 	del test_dbl_flopbals.obj test_dbl_flopbals_lib
 	del test_dbl2_flopbals.exe test_dbl2_flopbals.exp
 	del test_dbl2_flopbals.obj test_dbl2_flopbals_lib
+	del test_dbl4_flopbals.exe test_dbl4_flopbals.exp
+	del test_dbl4_flopbals.obj test_dbl4_flopbals_lib
+	del test_dbl8_flopbals.exe test_dbl8_flopbals.exp
+	del test_dbl8_flopbals.obj test_dbl8_flopbals_lib
 	del test_dbl_newton.exe test_dbl_newton.exp
 	del test_dbl_newton.obj test_dbl_newton_lib
 	del test_dbl2_newton.exe test_dbl2_newton.exp
@@ -755,5 +787,26 @@ clean:
 	del test_dbl8_newton.exe test_dbl8_newton.exp
 	del test_dbl8_newton.obj test_dbl8_newton_lib
 
-cleanall: clean
+cleanall:
+	del random_numbers.obj random_series.obj random_monomials.obj
+	del double_double_functions.obj quad_double_functions.obj
+	del octo_double_functions.obj
+	del random2_vectors.obj random4_vectors.obj random8_vectors.obj
+	del dbl_convolutions_host.obj dbl_monomials_host.obj
+	del dbl2_convolutions_host.obj dbl2_monomials_host.obj
+	del dbl4_convolutions_host.obj dbl4_monomials_host.obj
+	del dbl8_convolutions_host.obj dbl8_monomials_host.obj
+	del dbl_factorizations.obj dbl2_factorizations.obj
+	del dbl4_factorizations.obj dbl8_factorizations.obj
+	del dbl_baqr_kernels.obj dbl_tabs_kernels.obj
+	del dbl2_baqr_kernels.obj dbl2_tabs_kernels.obj
+	del dbl4_baqr_kernels.obj dbl4_tabs_kernels.obj
+	del dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj
+	del convolution_job.obj convolution_jobs.obj
+	del addition_job.obj addition_jobs.obj job_coordinates.obj
+	del dbl_polynomials_kernels.obj dbl2_polynomials_kernels.obj
+	del dbl4_polynomials_kernels.obj dbl8_polynomials_kernels.obj
+	del gettimeofday4win.obj
+	del dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj
 	del *exe *obj *exp *lib
+	del *~
