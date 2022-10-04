@@ -234,7 +234,9 @@ void GPU_dbl4_linear_residue
    double **resvechihi, double **resveclohi,
    double **resvechilo, double **resveclolo,
    double *resmaxhihi, double *resmaxlohi,
-   double *resmaxhilo, double *resmaxlolo, int vrblvl );
+   double *resmaxhilo, double *resmaxlolo,
+   double *lapms, long long int *add, long long int *mul,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear power series system.
@@ -270,7 +272,10 @@ void GPU_dbl4_linear_residue
  *   resmaxhihi is the highest double of the maximum component in resvec;
  *   resmaxlohi is the 2nd highest double of the maximum component in resvec;
  *   resmaxhilo is the 2nd lowest double of the maximum component in resvec;
- *   resmaxlolo is the lowest double of the maximum component in resvec. */
+ *   resmaxlolo is the lowest double of the maximum component in resvec;
+ *   lapms    elapsed time spent by all kernels, in milliseconds;
+ *   add      accumulated number of additions;
+ *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx4_linear_residue
  ( int dim, int degp1, int szt, int nbt,
@@ -291,7 +296,9 @@ void GPU_cmplx4_linear_residue
    double **resvecimhihi, double **resvecimlohi,
    double **resvecimhilo, double **resvecimlolo,
    double *resmaxhihi, double *resmaxlohi,
-   double *resmaxhilo, double *resmaxlolo, int vrblvl );
+   double *resmaxhilo, double *resmaxlolo,
+   double *lapms, long long int *add, long long int *mul,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear power series system.
@@ -355,6 +362,9 @@ void GPU_cmplx4_linear_residue
  *   resmaxhihi is the highest double of the max norm of the residual;
  *   resmaxlohi is the second highest double of the max norm of the residual;
  *   resmaxhilo is the second lowest double of the max norm of the residual;
- *   resmaxlolo is the lowest double of the max norm of the residual. */
+ *   resmaxlolo is the lowest double of the max norm of the residual;
+ *   lapms    elapsed time spent by all kernels, in milliseconds;
+ *   add      accumulated number of additions;
+ *   mul      accumulated number of multiplications. */
 
 #endif

@@ -14,22 +14,9 @@
 #endif
 #include "random4_vectors.h"
 #include "dbl4_tail_kernels.h"
+#include "dbl_bals_flopcounts.h"
 
 using namespace std;
-
-void prompt_flopbals_setup
- ( int *seed, int *dim, int *deg, int *szt, int *nbt, int *cdata );
-/*
- * DESCRIPTION :
- *   Prompts for the parameters in the testing of the flops. 
- *
- * ON RETURN :
- *   seed     if 0, then random seed, otherwise fixed seed;
- *   dim      dimension of the linear system;
- *   deg      degree of truncation;
- *   szt      number of threads in a block;
- *   nbt      number of blocks, szt*nbt must equal dim;
- *   cdata    if 0 for real data, 1 for complex data. */
 
 int test_dbl4_flopbals ( int dim, int deg, int szt, int nbt );
 /*
@@ -75,28 +62,6 @@ int main ( void )
       test_cmplx4_flopbals(dim,deg,szt,nbt);
 
    return 0;
-}
-
-void prompt_flopbals_setup
- ( int *seed, int *dim, int *deg, int *szt, int *nbt, int *cdata )
-{
-   cout << "-> give the seed (0 for time) : "; cin >> *seed;
-   cout << "-> on complex data ? (0 is no, 1 is yes) : "; cin >> *cdata;
-   cout << "-> give the dimension : "; cin >> *dim;
-   cout << "-> give the degree of the series : "; cin >> *deg;
-   cout << "-> give the number of tiles : "; cin >> *nbt;
-   cout << "-> give the size of each tile : "; cin >> *szt;
-
-   int p = (*szt)*(*nbt);
-
-   while(p != *dim)
-   {
-       cout << "Dimension = " << *dim << " != " << *szt << " * " << *nbt
-            << ", retry." << endl;
-       cout << "-> give the size of each tile : "; cin >> *szt;
-       cout << "-> give the number of tiles : "; cin >> *nbt;
-       p = (*szt)*(*nbt);
-   }
 }
 
 int test_dbl4_flopbals ( int dim, int deg, int szt, int nbt )
@@ -175,12 +140,16 @@ int test_dbl4_flopbals ( int dim, int deg, int szt, int nbt )
       }
    }
    struct timeval begintime,endtime; // wall clock time of computations
+   double elapsedms;
+   long long int addcnt = 0;
+   long long int mulcnt = 0;
 
    gettimeofday(&begintime,0);
    GPU_dbl4_linear_residue(dim,degp1,szt,nbt,
       mathihi,matlohi,mathilo,matlolo,rhshihi,rhslohi,rhshilo,rhslolo,
       solhihi,sollohi,solhilo,sollolo,reshihi,reslohi,reshilo,reslolo,
-      &resmaxhihi,&resmaxlohi,&resmaxhilo,&resmaxlolo,0);
+      &resmaxhihi,&resmaxlohi,&resmaxhilo,&resmaxlolo,
+      &elapsedms,&addcnt,&mulcnt,0);
    gettimeofday(&endtime,0);
    long seconds = endtime.tv_sec - begintime.tv_sec;
    long microseconds = endtime.tv_usec - begintime.tv_usec;
@@ -190,6 +159,32 @@ int test_dbl4_flopbals ( int dim, int deg, int szt, int nbt )
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << walltimesec << " seconds." << endl;
+
+   cout << fixed << setprecision(3);
+   cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+        << walltimesec << " seconds." << endl;
+
+   cout << "                        Time spent by kernels : "
+        << elapsedms << " milliseconds." << endl;
+
+   cout << "        Number of additions/substractions : "
+        << addcnt << " x 89 " << endl;
+   cout << "                Number of multiplications : "
+        << mulcnt << " x 336" << endl;
+   long long int flopcnt = 89*addcnt + 336*mulcnt;
+   cout << "Total number of floating-point operations : " << flopcnt << endl;
+
+   double kernflops = 1000.0*((double) flopcnt)/elapsedms;
+   double wallflops = ((double) flopcnt)/walltimesec;
+   const int gigacnt = pow(2.0,30);
+   cout << "Kernel Time Flops : "
+        << scientific << setprecision(3) << kernflops;
+   cout << fixed << setprecision(3)
+        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+   cout << " Wall Clock Flops : "
+        << scientific << setprecision(3) << wallflops;
+   cout << fixed << setprecision(3)
+        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
 
    return 0;
 }
@@ -320,6 +315,9 @@ int test_cmplx4_flopbals ( int dim, int deg, int szt, int nbt )
       }
    }
    struct timeval begintime,endtime; // wall clock time of computations
+   double elapsedms;
+   long long int addcnt = 0;
+   long long int mulcnt = 0;
 
    gettimeofday(&begintime,0);
    GPU_cmplx4_linear_residue(dim,degp1,szt,nbt,
@@ -331,7 +329,8 @@ int test_cmplx4_flopbals ( int dim, int deg, int szt, int nbt )
       solimhihi,solimlohi,solimhilo,solimlolo,
       resrehihi,resrelohi,resrehilo,resrelolo,
       resimhihi,resimlohi,resimhilo,resimlolo,
-      &resmaxhihi,&resmaxlohi,&resmaxhilo,&resmaxlolo,0);
+      &resmaxhihi,&resmaxlohi,&resmaxhilo,&resmaxlolo,
+      &elapsedms,&addcnt,&mulcnt,0);
    gettimeofday(&endtime,0);
    long seconds = endtime.tv_sec - begintime.tv_sec;
    long microseconds = endtime.tv_usec - begintime.tv_usec;
@@ -341,6 +340,28 @@ int test_cmplx4_flopbals ( int dim, int deg, int szt, int nbt )
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << walltimesec << " seconds." << endl;
+
+   cout << "                        Time spent by kernels : "
+        << elapsedms << " milliseconds." << endl;
+
+   cout << "        Number of additions/substractions : "
+        << addcnt << " x 89 " << endl;
+   cout << "                Number of multiplications : "
+        << mulcnt << " x 336" << endl;
+   long long int flopcnt = 89*addcnt + 336*mulcnt;
+   cout << "Total number of floating-point operations : " << flopcnt << endl;
+
+   double kernflops = 1000.0*((double) flopcnt)/elapsedms;
+   double wallflops = ((double) flopcnt)/walltimesec;
+   const int gigacnt = pow(2.0,30);
+   cout << "Kernel Time Flops : "
+        << scientific << setprecision(3) << kernflops;
+   cout << fixed << setprecision(3)
+        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+   cout << " Wall Clock Flops : "
+        << scientific << setprecision(3) << wallflops;
+   cout << fixed << setprecision(3)
+        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
  
    return 0;
 }

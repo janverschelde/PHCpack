@@ -407,12 +407,13 @@ test_dbl2_flopbals: random_numbers.o random2_vectors.o \
 
 test_dbl4_flopbals: random_numbers.o random4_vectors.o \
                     double_double_functions.o quad_double_functions.o \
-                    test_dbl4_flopbals.o dbl4_tail_kernels.o
+                    test_dbl4_flopbals.o dbl_bals_flopcounts.o \
+                    dbl4_tail_kernels.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl4_flopbals test_dbl4_flopbals.o \
                   random_numbers.o random4_vectors.o \
                   double_double_functions.o quad_double_functions.o \
-                  dbl4_tail_kernels.o \
+                  dbl_bals_flopcounts.o dbl4_tail_kernels.o \
                 -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl8_flopbals: random_numbers.o random8_vectors.o \
@@ -496,6 +497,7 @@ test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   dbl4_systems_host.o write_gpu_timings.o \
                   dbl4_systems_kernels.o dbl4_polynomials_kernels.o \
+                  dbl_bals_flopcounts.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl4_baqr_kernels.o dbl4_tabs_kernels.o \
                   dbl4_newton_testers.o test_dbl4_newton.o
@@ -511,6 +513,7 @@ test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   dbl4_systems_host.o write_gpu_timings.o \
                   dbl4_systems_kernels.o dbl4_polynomials_kernels.o \
+                  dbl_bals_flopcounts.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl4_baqr_kernels.o dbl4_tabs_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)

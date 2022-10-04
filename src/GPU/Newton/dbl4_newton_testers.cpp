@@ -687,13 +687,18 @@ void dbl4_newton_qrstep
       {
          cout << "calling GPU_dbl4_linear_residue ..." << endl;
 
+         double elapsedms;
+         long long int addcnt = 0;
+         long long int mulcnt = 0;
+
          GPU_dbl4_linear_residue
             (dim,degp1,szt,nbt,
              jacvalhihi_d,jacvallohi_d,jacvalhilo_d,jacvallolo_d,
              rhshihi_d,rhslohi_d,rhshilo_d,rhslolo_d,
              solhihi_d,sollohi_d,solhilo_d,sollolo_d,
              resvechihi,resveclohi,resvechilo,resveclolo,
-             resmaxhihi,resmaxlohi,resmaxhilo,resmaxlolo,vrblvl);
+             resmaxhihi,resmaxlohi,resmaxhilo,resmaxlolo,
+             &elapsedms,&addcnt,&mulcnt,vrblvl);
 
          cout << "maximum residual : " << *resmaxhihi << "  " << endl;
       }
@@ -1071,6 +1076,10 @@ void cmplx4_newton_qrstep
       {
          cout << "calling GPU_cmplx4_linear_residue ..." << endl;
 
+         double elapsedms;
+         long long int addcnt = 0;
+         long long int mulcnt = 0;
+
          GPU_cmplx4_linear_residue
             (dim,degp1,szt,nbt,
              jacvalrehihi_d,jacvalrelohi_d,jacvalrehilo_d,jacvalrelolo_d,
@@ -1081,7 +1090,9 @@ void cmplx4_newton_qrstep
              solimhihi_d,solimlohi_d,solimhilo_d,solimlolo_d,
              resvecrehihi,resvecrelohi,resvecrehilo,resvecrelolo,
              resvecimhihi,resvecimlohi,resvecimhilo,resvecimlolo,
-             resmaxhihi,resmaxlohi,resmaxhilo,resmaxlolo,vrblvl);
+             resmaxhihi,resmaxlohi,resmaxhilo,resmaxlolo,
+             &elapsedms,&addcnt,&mulcnt,vrblvl);
+
          cout << "maximum residual : " << *resmaxhihi << endl;
       }
       cmplx4_update_series

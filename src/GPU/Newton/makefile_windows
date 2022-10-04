@@ -617,13 +617,14 @@ test_dbl2_flopbals: random_numbers.obj random2_vectors.obj \
 
 test_dbl4_flopbals: random_numbers.obj random4_vectors.obj \
                     double_double_functions.obj quad_double_functions.obj \
-		    test_dbl4_flopbals.obj dbl4_tail_kernels.obj \
-		    gettimeofday4win.obj
+		    test_dbl4_flopbals.obj dbl_bals_flopcounts.obj \
+                    dbl4_tail_kernels.obj gettimeofday4win.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl4_flopbals.exe test_dbl4_flopbals.obj \
 	     random_numbers.obj random4_vectors.obj \
 	     double_double_functions.obj quad_double_functions.obj \
-	     dbl4_tail_kernels.obj gettimeofday4win.obj
+	     dbl4_tail_kernels.obj dbl_bals_flopcounts.obj \
+             gettimeofday4win.obj
 
 test_dbl8_flopbals: random_numbers.obj random8_vectors.obj \
                     double_double_functions.obj quad_double_functions.obj \
@@ -710,6 +711,7 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
                   dbl4_systems_host.obj \
                   dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
                   dbl4_factorizations.obj dbl4_bals_host.obj \
+		  dbl_bals_flopcounts.obj \
 		  dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
 		  dbl4_baqr_kernels.obj dbl4_tabs_kernels.obj \
                   dbl4_tail_kernels.obj dbl4_bals_kernels.obj
@@ -726,6 +728,7 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
              dbl4_systems_host.obj \
              dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
              dbl4_factorizations.obj dbl4_bals_host.obj \
+             dbl_bals_flopcounts.obj \
              dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
              dbl4_baqr_kernels.obj dbl4_tabs_kernels.obj \
              dbl4_tail_kernels.obj dbl4_bals_kernels.obj

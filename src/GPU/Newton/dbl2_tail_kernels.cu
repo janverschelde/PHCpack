@@ -506,7 +506,7 @@ void GPU_cmplx2_linear_residue
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *lapms += milliseconds;
-         flopcount_dbl_bals_tail(dim,add,mul);
+         flopcount_cmplx_bals_tail(dim,add,mul);
       }
       cudaMemcpy(resvecrehi[i],rrehi_d,szrhs,cudaMemcpyDeviceToHost);
       cudaMemcpy(resvecrelo[i],rrelo_d,szrhs,cudaMemcpyDeviceToHost);
