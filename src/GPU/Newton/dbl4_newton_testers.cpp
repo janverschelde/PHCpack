@@ -15,6 +15,7 @@
 #include "dbl4_factorizations.h"
 #include "dbl4_bals_host.h"
 #include "dbl4_bals_kernels.h"
+#include "dbl4_tail_kernels.h"
 #include "dbl4_systems_host.h"
 #include "dbl4_systems_kernels.h"
 

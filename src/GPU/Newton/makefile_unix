@@ -200,6 +200,18 @@ dbl2_tail_kernels.o:
              --define-macro gpufun=1 \
              -c dbl2_tail_kernels.cu
 
+dbl4_tail_kernels.o:
+	@-echo ">>> compiling tail kernels for quad doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -I$(MAT) -O3 \
+             --define-macro gpufun=1 \
+             -c dbl4_tail_kernels.cu
+
+dbl8_tail_kernels.o:
+	@-echo ">>> compiling tail kernels for octo doubles ..."
+	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MPD) -I$(MAT) -O3 \
+             --define-macro gpufun=1 \
+             -c dbl8_tail_kernels.cu
+
 dbl_bals_kernels.o:
 	@-echo ">>> compiling bals kernels for doubles ..."
 	nvcc -ccbin=$(gpp) -arch=$(smflag) -I$(MAT) -O3 \
@@ -432,8 +444,8 @@ test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o quad_double_functions.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
-                  dbl4_factorizations.o \
-                  dbl4_bals_host.o dbl4_bals_kernels.o \
+                  dbl4_factorizations.o dbl4_bals_host.o \
+                  dbl4_tail_kernels.o dbl4_bals_kernels.o \
                   convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   dbl4_systems_host.o write_gpu_timings.o \
@@ -447,8 +459,8 @@ test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o quad_double_functions.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
-                  dbl4_factorizations.o \
-                  dbl4_bals_host.o dbl4_bals_kernels.o \
+                  dbl4_factorizations.o dbl4_bals_host.o \
+                  dbl4_tail_kernels.o dbl4_bals_kernels.o \
                   convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   dbl4_systems_host.o write_gpu_timings.o \
@@ -469,7 +481,7 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl8_factorizations.o dbl8_bals_host.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl8_baqr_kernels.o dbl8_tabs_kernels.o \
-                  dbl8_bals_kernels.o \
+                  dbl8_tail_kernels.o dbl8_bals_kernels.o \
                   dbl8_newton_testers.o test_dbl8_newton.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl8_newton test_dbl8_newton.o dbl8_newton_testers.o \
@@ -482,10 +494,10 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   dbl8_systems_host.o write_gpu_timings.o \
                   dbl8_systems_kernels.o dbl8_polynomials_kernels.o \
-                  dbl8_factorizations.o \
+                  dbl8_factorizations.o dbl8_bals_host.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl8_baqr_kernels.o dbl8_tabs_kernels.o \
-                  dbl8_bals_host.o dbl8_bals_kernels.o \
+                  dbl8_tail_kernels.o dbl8_bals_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 clean:
@@ -499,8 +511,10 @@ clean:
 	/bin/rm -f -r dbl2_baqr_kernels.o dbl2_tabs_kernels.o
 	/bin/rm -f -r dbl2_bals_host.o
 	/bin/rm -f -r dbl2_bals_kernels.o dbl2_tail_kernels.o
-	/bin/rm -f -r dbl4_bals_host.o dbl4_bals_kernels.o
-	/bin/rm -f -r dbl8_bals_host.o dbl8_bals_kernels.o
+	/bin/rm -f -r dbl4_bals_host.o
+	/bin/rm -f -r dbl4_bals_kernels.o dbl4_tail_kernels.o
+	/bin/rm -f -r dbl8_bals_host.o
+	/bin/rm -f -r dbl8_bals_kernels.o dbl8_tail_kernels.o
 	/bin/rm -f -r dbl_newton_testers.o dbl2_newton_testers.o
 	/bin/rm -f -r dbl4_newton_testers.o dbl8_newton_testers.o
 	/bin/rm -f -r test_unimodular.o test_unimodular

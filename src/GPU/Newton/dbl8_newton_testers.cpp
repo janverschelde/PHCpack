@@ -15,6 +15,7 @@
 #include "dbl8_factorizations.h"
 #include "dbl8_bals_host.h"
 #include "dbl8_bals_kernels.h"
+#include "dbl8_tail_kernels.h"
 #include "dbl8_systems_host.h"
 #include "dbl8_systems_kernels.h"
 
