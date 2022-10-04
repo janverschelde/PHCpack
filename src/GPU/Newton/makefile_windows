@@ -514,6 +514,12 @@ write_gpu_timings.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: write_gpu_timings.obj /EHsc
 
+dbl_bals_flopcounts.obj:
+	@-echo ">>> compiling dbl_bals_flopcounts ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O2 \
+                      dbl_bals_flopcounts.cpp \
+                   -o dbl_bals_flopcounts.obj
+
 test_dbl_flopbals.obj:
 	@-echo ">>> compiling test_dbl_flopbals ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O2 -I$(MPD) -I$(MAT) \
@@ -592,17 +598,20 @@ prompt_newton_setup.obj:
                  /Fo: prompt_newton_setup.obj /EHsc
 
 test_dbl_flopbals: random_numbers.obj test_dbl_flopbals.obj \
-                   dbl_tail_kernels.obj gettimeofday4win.obj
+                   dbl_tail_kernels.obj dbl_bals_flopcounts.obj \
+                   gettimeofday4win.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_flopbals.exe test_dbl_flopbals.obj \
-	     random_numbers.obj dbl_tail_kernels.obj gettimeofday4win.obj
+	     random_numbers.obj dbl_tail_kernels.obj dbl_bals_flopcounts.obj \
+             gettimeofday4win.obj
 
 test_dbl2_flopbals: random_numbers.obj random2_vectors.obj \
                     double_double_functions.obj test_dbl2_flopbals.obj \
-                    dbl2_tail_kernels.obj gettimeofday4win.obj
+                    dbl2_tail_kernels.obj dbl_bals_flopcounts.obj \
+                    gettimeofday4win.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl2_flopbals.exe test_dbl2_flopbals.obj \
-	     random_numbers.obj random2_vectors.obj \
+	     random_numbers.obj random2_vectors.obj dbl_bals_flopcounts.obj \
 	     double_double_functions.obj dbl2_tail_kernels.obj \
 	     gettimeofday4win.obj
 
@@ -638,6 +647,7 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
                  dbl_systems_host.obj \
                  dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
                  dbl_factorizations.obj dbl_bals_host.obj \
+                 dbl_bals_flopcounts.obj \
 		 dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
 		 dbl_baqr_kernels.obj dbl_tabs_kernels.obj 
 	@-echo ">>> linking ..."
@@ -653,6 +663,7 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
              dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
              dbl_factorizations.obj dbl_bals_host.obj \
 	     dbl_tail_kernels.obj dbl_bals_kernels.obj \
+             dbl_bals_flopcounts.obj \
 	     dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
 	     dbl_baqr_kernels.obj dbl_tabs_kernels.obj
 
@@ -667,6 +678,7 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
                   dbl2_systems_host.obj \
                   dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
                   dbl2_factorizations.obj dbl2_bals_host.obj \
+                  dbl_bals_flopcounts.obj \
 		  dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
 		  dbl2_baqr_kernels.obj dbl2_tabs_kernels.obj \
                   dbl2_tail_kernels.obj dbl2_bals_kernels.obj
@@ -682,6 +694,7 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
              dbl2_systems_host.obj \
              dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
              dbl2_factorizations.obj dbl2_bals_host.obj \
+             dbl_bals_flopcounts.obj \
              dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
              dbl2_baqr_kernels.obj dbl2_tabs_kernels.obj \
              dbl2_tail_kernels.obj dbl2_bals_kernels.obj
@@ -770,6 +783,7 @@ clean:
 	del addition_job.obj addition_jobs.obj job_coordinates.obj
 	del test_monomial_jobs.exe test_monomial_jobs.exp
 	del test_monomial_jobs.obj test_monomial_jobs.lib
+	del dbl_bals_flopcounts.obj
 	del test_dbl_flopbals.exe test_dbl_flopbals.exp
 	del test_dbl_flopbals.obj test_dbl_flopbals_lib
 	del test_dbl2_flopbals.exe test_dbl2_flopbals.exp

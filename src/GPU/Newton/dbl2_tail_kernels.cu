@@ -12,6 +12,7 @@
 #include "dbl2_baqr_kernels.h"
 #include "dbl2_tabs_kernels.h"
 #include "dbl2_bals_kernels.h"
+#include "dbl_bals_flopcounts.h"
 
 using namespace std;
 
@@ -307,6 +308,7 @@ void GPU_dbl2_linear_residue
    double ***mathi, double ***matlo,
    double **rhshi, double **rhslo, double **solhi, double **sollo,
    double **resvechi, double **resveclo, double *resmaxhi, double *resmaxlo,
+   double *lapms, long long int *add, long long int *mul,
    int vrblvl )
 {
    double *rhi_d;
@@ -329,6 +331,9 @@ void GPU_dbl2_linear_residue
 
    double *Ahi_h = new double[dim*dim];
    double *Alo_h = new double[dim*dim];
+
+   *add = 0; // initialize number of additions
+   *mul = 0; // initialize number of multiplications
 
    for(int i=0; i<degp1; i++)  // compute i-th residual vector
    {
@@ -356,8 +361,19 @@ void GPU_dbl2_linear_residue
             cout << "GPU_dbl_linear_residue launches " << nbt
                  << " thread blocks in step " << i << ", " << j << endl;
 
+         cudaEvent_t start,stop;       // to measure time spent by kernels 
+         cudaEventCreate(&start);
+         cudaEventCreate(&stop);
+         float milliseconds;
+
+         cudaEventRecord(start);
          dbl2_bals_tail<<<nbt,szt>>>
             (dim,szt,Ahi_d,Alo_d,xhi_d,xlo_d,rhi_d,rlo_d);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *lapms += milliseconds;
+         flopcount_dbl_bals_tail(dim,add,mul);
       }
       cudaMemcpy(resvechi[i],rhi_d,szrhs,cudaMemcpyDeviceToHost);
       cudaMemcpy(resveclo[i],rlo_d,szrhs,cudaMemcpyDeviceToHost);
@@ -398,7 +414,9 @@ void GPU_cmplx2_linear_residue
    double **solrehi, double **solrelo, double **solimhi, double **solimlo,
    double **resvecrehi, double **resvecrelo,
    double **resvecimhi, double **resvecimlo,
-   double *resmaxhi, double *resmaxlo, int vrblvl )
+   double *resmaxhi, double *resmaxlo,
+   double *lapms, long long int *add, long long int *mul,
+   int vrblvl )
 {
    double *rrehi_d;
    double *rrelo_d;
@@ -434,6 +452,9 @@ void GPU_cmplx2_linear_residue
    double *Arelo_h = new double[dim*dim];
    double *Aimhi_h = new double[dim*dim];
    double *Aimlo_h = new double[dim*dim];
+
+   *add = 0; // initialize number of additions
+   *mul = 0; // initialize number of multiplications
 
    for(int i=0; i<degp1; i++)  // compute i-th residual vector
    {
@@ -471,10 +492,21 @@ void GPU_cmplx2_linear_residue
             cout << "GPU_cmplx_linear_residue launches " << nbt
                  << " thread blocks in step " << i << ", " << j << endl;
 
+         cudaEvent_t start,stop;       // to measure time spent by kernels 
+         cudaEventCreate(&start);
+         cudaEventCreate(&stop);
+         float milliseconds;
+
+         cudaEventRecord(start);
          cmplx2_bals_tail<<<nbt,szt>>>
             (dim,szt,Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
                      xrehi_d,xrelo_d,ximhi_d,ximlo_d,
                      rrehi_d,rrelo_d,rimhi_d,rimlo_d);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *lapms += milliseconds;
+         flopcount_dbl_bals_tail(dim,add,mul);
       }
       cudaMemcpy(resvecrehi[i],rrehi_d,szrhs,cudaMemcpyDeviceToHost);
       cudaMemcpy(resvecrelo[i],rrelo_d,szrhs,cudaMemcpyDeviceToHost);

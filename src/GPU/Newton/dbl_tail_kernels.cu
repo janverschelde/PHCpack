@@ -7,6 +7,7 @@
 #include <cmath>
 #include <vector_types.h>
 #include "dbl_tail_kernels.h"
+#include "dbl_bals_flopcounts.h"
 
 using namespace std;
 
@@ -225,7 +226,9 @@ void GPU_cmplx_bals_tail
 void GPU_dbl_linear_residue
  ( int dim, int degp1, int szt, int nbt,
    double ***mat, double **rhs, double **sol,
-   double **resvec, double *resmax, int vrblvl )
+   double **resvec, double *resmax,
+   double *lapms, long long int *add, long long int *mul,
+   int vrblvl )
 {
    double *r_d;
    const size_t szrhs = dim*sizeof(double);
@@ -240,6 +243,9 @@ void GPU_dbl_linear_residue
    cudaMalloc((void**)&A_d,szmat);
 
    double *A_h = new double[dim*dim];
+
+   *add = 0; // initialize number of additions
+   *mul = 0; // initialize number of multiplications
 
    for(int i=0; i<degp1; i++)  // compute i-th residual vector
    {
@@ -259,7 +265,18 @@ void GPU_dbl_linear_residue
             cout << "GPU_dbl_linear_residue launches " << nbt
                  << " thread blocks in step " << i << ", " << j << endl;
 
+         cudaEvent_t start,stop;       // to measure time spent by kernels 
+         cudaEventCreate(&start);
+         cudaEventCreate(&stop);
+         float milliseconds;
+
+         cudaEventRecord(start);
          dbl_bals_tail<<<nbt,szt>>>(dim,szt,A_d,x_d,r_d);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *lapms += milliseconds;
+         flopcount_dbl_bals_tail(dim,add,mul);
       }
       cudaMemcpy(resvec[i],r_d,szrhs,cudaMemcpyDeviceToHost);
    }
@@ -287,7 +304,9 @@ void GPU_cmplx_linear_residue
  ( int dim, int degp1, int szt, int nbt,
    double ***matre, double ***matim, double **rhsre, double **rhsim,
    double **solre, double **solim,
-   double **resvecre, double **resvecim, double *resmax, int vrblvl )
+   double **resvecre, double **resvecim, double *resmax,
+   double *lapms, long long int *add, long long int *mul,
+   int vrblvl )
 {
    double *rre_d;
    double *rim_d;
@@ -309,6 +328,9 @@ void GPU_cmplx_linear_residue
 
    double *Are_h = new double[dim*dim];
    double *Aim_h = new double[dim*dim];
+
+   *add = 0; // initialize number of additions
+   *mul = 0; // initialize number of multiplications
 
    for(int i=0; i<degp1; i++)  // compute i-th residual vector
    {
@@ -336,8 +358,19 @@ void GPU_cmplx_linear_residue
             cout << "GPU_cmplx_linear_residue launches " << nbt
                  << " thread blocks in step " << i << ", " << j << endl;
 
+         cudaEvent_t start,stop;       // to measure time spent by kernels 
+         cudaEventCreate(&start);
+         cudaEventCreate(&stop);
+         float milliseconds;
+
+         cudaEventRecord(start);
          cmplx_bals_tail<<<nbt,szt>>>
             (dim,szt,Are_d,Aim_d,xre_d,xim_d,rre_d,rim_d);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *lapms += milliseconds;
+         flopcount_cmplx_bals_tail(dim,add,mul);
       }
       cudaMemcpy(resvecre[i],rre_d,szrhs,cudaMemcpyDeviceToHost);
       cudaMemcpy(resvecim[i],rim_d,szrhs,cudaMemcpyDeviceToHost);

@@ -110,7 +110,9 @@ void GPU_cmplx_bals_tail
 void GPU_dbl_linear_residue
  ( int dim, int degp1, int szt, int nbt,
    double ***mat, double **rhs, double **sol,
-   double **resvec, double *resmax, int vrblvl );
+   double **resvec, double *resmax,
+   double *lapms, long long int *add, long long int *mul,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear power series system.
@@ -128,13 +130,18 @@ void GPU_dbl_linear_residue
  *
  * ON RETURN :
  *   resvec   the residual power series;
- *   resmax   maximum component of the residual power series. */
+ *   resmax   maximum component of the residual power series;
+ *   lapms    elapsed time spent by all kernels, in milliseconds;
+ *   add      accumulated number of additions;
+ *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx_linear_residue
  ( int dim, int degp1, int szt, int nbt,
    double ***matre, double ***matim, double **rhsre, double **rhsim,
    double **solre, double **solim,
-   double **resvecre, double **resvecim, double *resmax, int vrblvl );
+   double **resvecre, double **resvecim, double *resmax,
+   double *lapms, long long int *add, long long int *mul,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear power series system.
@@ -157,6 +164,9 @@ void GPU_cmplx_linear_residue
  * ON RETURN :
  *   resvecre are the real parts of the residual power series;
  *   resvecim are the imaginary parts the residual power series;
- *   resmax   max norm of the residual power series. */
+ *   resmax   max norm of the residual power series;
+ *   lapms    elapsed time spent by all kernels, in milliseconds;
+ *   add      accumulated number of additions;
+ *   mul      accumulated number of multiplications. */
 
 #endif

@@ -152,6 +152,7 @@ void GPU_dbl2_linear_residue
    double ***mathi, double ***matlo,
    double **rhshi, double **rhslo, double **solhi, double **sollo,
    double **resvechi, double **resveclo, double *resmaxhi, double *resmaxlo,
+   double *lapms, long long int *add, long long int *mul,
    int vrblvl );
 /*
  * DESCRIPTION :
@@ -176,7 +177,10 @@ void GPU_dbl2_linear_residue
  *   resvechi are the high doubles of the residual power series;
  *   resveclo are the low doubles of the residual power series;
  *   resmaxhi is the high double of the maximum component in resvec;
- *   resmaxlo is the low double of the maximum component in resvec. */
+ *   resmaxlo is the low double of the maximum component in resvec;
+ *   lapms    elapsed time spent by all kernels, in milliseconds;
+ *   add      accumulated number of additions;
+ *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx2_linear_residue
  ( int dim, int degp1, int szt, int nbt,
@@ -185,7 +189,9 @@ void GPU_cmplx2_linear_residue
    double **solrehi, double **solrelo, double **solimhi, double **solimlo,
    double **resvecrehi, double **resvecrelo,
    double **resvecimhi, double **resvecimlo,
-   double *resmaxhi, double *resmaxlo, int vrblvl );
+   double *resmaxhi, double *resmaxlo,
+   double *lapms, long long int *add, long long int *mul,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear power series system.
@@ -219,6 +225,9 @@ void GPU_cmplx2_linear_residue
  *   resvecimhi are the high doubles of the imag parts the residual series;
  *   resvecimlo are the low doubles of the imag parts the residual series;
  *   resmaxhi is the high double of the max norm of the residual series;
- *   resmaxlo is the low double of the max norm of the residual series. */
+ *   resmaxlo is the low double of the max norm of the residual series;
+ *   lapms    elapsed time spent by all kernels, in milliseconds;
+ *   add      accumulated number of additions;
+ *   mul      accumulated number of multiplications. */
 
 #endif

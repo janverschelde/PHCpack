@@ -18,6 +18,7 @@
 #include "dbl2_tail_kernels.h"
 #include "dbl2_systems_host.h"
 #include "dbl2_systems_kernels.h"
+#include "dbl_bals_flopcounts.h"
 
 using namespace std;
 
@@ -520,9 +521,14 @@ void dbl2_newton_qrstep
       {
          cout << "calling GPU_dbl2_linear_residue ..." << endl;
 
+         double elapsedms;
+         long long int addcnt = 0;
+         long long int mulcnt = 0;
+
          GPU_dbl2_linear_residue
             (dim,degp1,szt,nbt,jacvalhi_d,jacvallo_d,rhshi_d,rhslo_d,
-             solhi_d,sollo_d,resvechi,resveclo,resmaxhi,resmaxlo,vrblvl);
+             solhi_d,sollo_d,resvechi,resveclo,resmaxhi,resmaxlo,
+             &elapsedms,&addcnt,&mulcnt,vrblvl);
    
          cout << "maximum residual : " << *resmaxhi << endl;
       }
@@ -768,13 +774,17 @@ void cmplx2_newton_qrstep
       {
          cout << "calling GPU_cmplx2_linear_residue ..." << endl;
 
+         double elapsedms;
+         long long int addcnt = 0;
+         long long int mulcnt = 0;
+
          GPU_cmplx2_linear_residue
             (dim,degp1,szt,nbt,
              jacvalrehi_d,jacvalrelo_d,jacvalimhi_d,jacvalimlo_d,
              rhsrehi_d,rhsrelo_d,rhsimhi_d,rhsimlo_d,
              solrehi_d,solrelo_d,solimhi_d,solimlo_d,
              resvecrehi,resvecrelo,resvecimhi,resvecimlo,
-             resmaxhi,resmaxlo,vrblvl);
+             resmaxhi,resmaxlo,&elapsedms,&addcnt,&mulcnt,vrblvl);
          cout << "maximum residual : " << *resmaxhi << endl;
       }
       cmplx2_update_series

@@ -334,6 +334,10 @@ write_gpu_timings.o:
 	@-echo ">>> compiling write_gpu_timings ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/write_gpu_timings.cpp
 
+dbl_bals_flopcounts.o:
+	@-echo ">>> compiling dbl_bals_flopcounts ..."
+	$(gpp) -O3 -c dbl_bals_flopcounts.cpp
+
 test_dbl_flopbals.o:
 	@-echo ">>> compiling test_dbl_flopbals ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) test_dbl_flopbals.cpp
@@ -385,18 +389,19 @@ test_monomial_jobs: random_numbers.o random_series.o random_monomials.o \
                   convolution_job.o convolution_jobs.o \
                   random_numbers.o random_series.o random_monomials.o
 
-test_dbl_flopbals: random_numbers.o test_dbl_flopbals.o dbl_tail_kernels.o
+test_dbl_flopbals: random_numbers.o dbl_tail_kernels.o \
+                   dbl_bals_flopcounts.o test_dbl_flopbals.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_flopbals test_dbl_flopbals.o random_numbers.o \
-                  dbl_tail_kernels.o \
+                  dbl_bals_flopcounts.o dbl_tail_kernels.o \
                 -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl2_flopbals: random_numbers.o random2_vectors.o \
-                    double_double_functions.o \
+                    double_double_functions.o dbl_bals_flopcounts.o \
                     test_dbl2_flopbals.o dbl2_tail_kernels.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_flopbals test_dbl2_flopbals.o \
-                  random_numbers.o random2_vectors.o \
+                  random_numbers.o random2_vectors.o dbl_bals_flopcounts.o \
                   double_double_functions.o dbl2_tail_kernels.o \
                 -lcuda -lcudart -L$(CUDALIB)
 
@@ -431,6 +436,7 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                  dbl_systems_kernels.o dbl_polynomials_kernels.o \
                  dbl_factorizations.o dbl_bals_host.o \
                  dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
+                 dbl_bals_flopcounts.o \
                  dbl_baqr_kernels.o dbl_tabs_kernels.o \
                  dbl_tail_kernels.o dbl_bals_kernels.o
 	@-echo ">>> linking ..."
@@ -444,6 +450,7 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl_systems_kernels.o dbl_polynomials_kernels.o \
                   dbl_factorizations.o dbl_bals_host.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
+                  dbl_bals_flopcounts.o \
                   dbl_baqr_kernels.o dbl_tabs_kernels.o \
                   dbl_tail_kernels.o dbl_bals_kernels.o \
                 -lcuda -lcudart -L$(CUDALIB)
@@ -459,6 +466,7 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl2_systems_kernels.o dbl2_polynomials_kernels.o \
                   dbl2_newton_testers.o test_dbl2_newton.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
+                  dbl_bals_flopcounts.o \
                   dbl2_baqr_kernels.o dbl2_tabs_kernels.o \
                   dbl2_tail_kernels.o dbl2_bals_kernels.o
 	@-echo ">>> linking ..."
@@ -473,6 +481,7 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl2_systems_host.o write_gpu_timings.o \
                   dbl2_systems_kernels.o dbl2_polynomials_kernels.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
+                  dbl_bals_flopcounts.o \
                   dbl2_baqr_kernels.o dbl2_tabs_kernels.o \
                   dbl2_tail_kernels.o dbl2_bals_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
@@ -556,6 +565,7 @@ clean:
 	/bin/rm -f -r dbl4_newton_testers.o dbl8_newton_testers.o
 	/bin/rm -f -r test_unimodular.o test_unimodular
 	/bin/rm -f -r test_monomial_jobs.o test_monomial_jobs
+	/bin/rm -f -r dbl_bals_flopcounts.o
 	/bin/rm -f -r test_dbl_flopbals.o test_dbl_flopbals
 	/bin/rm -f -r test_dbl2_flopbals.o test_dbl2_flopbals
 	/bin/rm -f -r test_dbl4_flopbals.o test_dbl4_flopbals
