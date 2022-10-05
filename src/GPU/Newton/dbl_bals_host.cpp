@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cmath>
 #include "dbl_factorizations.h"
+#include "dbl_onenorms_host.h"
 #include "dbl_bals_host.h"
 
 using namespace std;
@@ -59,11 +60,10 @@ void CPU_dbl_qrbs_head
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
    double **wrkmat, double **Q, double **R, double *wrkvec, int vrblvl )
 {
-   bool verbose = (vrblvl > 1);
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++) wrkmat[i][j] = mat[0][i][j];
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "The matrix : " << endl;
       cout << setprecision(2);
@@ -76,23 +76,44 @@ void CPU_dbl_qrbs_head
       cout << "The right hand side vector : " << endl;
       for(int i=0; i<dim; i++) cout << rhs[0][i] << endl;
    }
-   if(verbose) cout << "calling CPU_dbl_factors_houseqr ..." << endl;
+   double nrm;
+   CPU_dbl_onenorm(dim,rhs[0],&nrm);
+   if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-   CPU_dbl_factors_houseqr(dim,dim,wrkmat,Q,R);
-   CPU_dbl_factors_qrbs(dim,dim,Q,R,rhs[0],sol[0],wrkvec);
-
-   if(verbose)
+   if(nrm + 1.0 == 1.0)
    {
-      cout << "The leading coefficients of the solution :" << endl;
-      for(int i=0; i<dim; i++) cout << sol[0][i] << endl;
-      for(int i=0; i<dim; i++)
+      if(vrblvl > 0)
+         cout << "skip call to CPU_dbl_factors_houseqr ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_dbl_factors_houseqr ..." << endl;
+
+      CPU_dbl_factors_houseqr(dim,dim,wrkmat,Q,R);
+      CPU_dbl_factors_qrbs(dim,dim,Q,R,rhs[0],sol[0],wrkvec);
+
+      if(vrblvl > 0)
       {
-         wrkvec[i] = rhs[0][i];
-         for(int j=0; j<dim; j++)
-            wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
+         double nrm;
+
+         CPU_dbl_onenorm(dim,wrkvec,&nrm);
+         cout << "1-norm of Q^T*b : " << nrm << endl;
+         CPU_dbl_onenorm(dim,sol[0],&nrm);
+         cout << "1-norm of x : " << nrm << endl;
       }
-      cout << "The residual vector :" << endl;
-      for(int i=0; i<dim; i++) cout << wrkvec[i] << endl;
+      if(vrblvl > 1)
+      {
+         cout << "The leading coefficients of the solution :" << endl;
+         for(int i=0; i<dim; i++) cout << sol[0][i] << endl;
+         for(int i=0; i<dim; i++)
+         {
+            wrkvec[i] = rhs[0][i];
+            for(int j=0; j<dim; j++)
+               wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
+         }
+         cout << "The residual vector :" << endl;
+         for(int i=0; i<dim; i++) cout << wrkvec[i] << endl;
+      }
    }
 }
 
@@ -111,7 +132,7 @@ void CPU_cmplx_qrbs_head
          wrkmatim[i][j] = matim[0][i][j];
       }
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "The matrix : " << endl;
       cout << setprecision(2);
@@ -126,38 +147,60 @@ void CPU_cmplx_qrbs_head
       for(int i=0; i<dim; i++)
          cout << rhsre[0][i] << "  " << rhsim[0][i] << endl;
    }
-   if(verbose) cout << "calling CPU_cmplx_factors_houseqr ..." << endl;
+   double nrm;
+   CPU_cmplx_onenorm(dim,rhsre[0],rhsim[0],&nrm);
 
-   CPU_cmplx_factors_houseqr(dim,dim,wrkmatre,wrkmatim,Qre,Qim,Rre,Rim);
-   CPU_cmplx_factors_qrbs
-      (dim,dim,Qre,Qim,Rre,Rim,rhsre[0],rhsim[0],solre[0],solim[0],
-       wrkvecre,wrkvecim);
+   if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-   if(verbose)
+   if(nrm + 1.0 == 1.0)
    {
-      double zre,zim;
+      if(vrblvl > 0)
+         cout << "skip call to CPU_cmplx_factors_houseqr ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_cmplx_factors_houseqr ..." << endl;
 
-      cout << "The leading coefficients of the solution :" << endl;
-      for(int i=0; i<dim; i++)
-         cout << solre[0][i] << "  " << solim[0][i] << endl;
+      CPU_cmplx_factors_houseqr(dim,dim,wrkmatre,wrkmatim,Qre,Qim,Rre,Rim);
+      CPU_cmplx_factors_qrbs
+         (dim,dim,Qre,Qim,Rre,Rim,rhsre[0],rhsim[0],solre[0],solim[0],
+          wrkvecre,wrkvecim);
 
-      for(int i=0; i<dim; i++)
+      if(vrblvl > 0)
       {
-         wrkvecre[i] = rhsre[0][i];
-         wrkvecim[i] = rhsim[0][i];
+         double nrm;
 
-         for(int j=0; j<dim; j++)
-         {
-            // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
-            zre = matre[0][i][j]*solre[0][j] - matim[0][i][j]*solim[0][j];
-            zim = matre[0][i][j]*solim[0][j] + matim[0][i][j]*solre[0][j];
-            wrkvecre[i] = wrkvecre[i] - zre;
-            wrkvecim[i] = wrkvecim[i] - zim;
-         }
+         CPU_cmplx_onenorm(dim,wrkvecre,wrkvecim,&nrm);
+         cout << "1-norm of Q^H*b : " << nrm << endl;
+         CPU_cmplx_onenorm(dim,solre[0],solim[0],&nrm);
+         cout << "1-norm of x : " << nrm << endl;
       }
-      cout << "The residual vector :" << endl;
-      for(int i=0; i<dim; i++)
-         cout << wrkvecre[i] << "  " << wrkvecim[i] << endl;
+      if(vrblvl > 1)
+      {
+         double zre,zim;
+
+         cout << "The leading coefficients of the solution :" << endl;
+         for(int i=0; i<dim; i++)
+            cout << solre[0][i] << "  " << solim[0][i] << endl;
+
+         for(int i=0; i<dim; i++)
+         {
+            wrkvecre[i] = rhsre[0][i];
+            wrkvecim[i] = rhsim[0][i];
+
+            for(int j=0; j<dim; j++)
+            {
+               // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
+               zre = matre[0][i][j]*solre[0][j] - matim[0][i][j]*solim[0][j];
+               zim = matre[0][i][j]*solim[0][j] + matim[0][i][j]*solre[0][j];
+               wrkvecre[i] = wrkvecre[i] - zre;
+               wrkvecim[i] = wrkvecim[i] - zim;
+            }
+         }
+         cout << "The residual vector :" << endl;
+         for(int i=0; i<dim; i++)
+            cout << wrkvecre[i] << "  " << wrkvecim[i] << endl;
+      }
    }
 }
 

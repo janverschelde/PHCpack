@@ -104,6 +104,10 @@ unimodular_matrices.o:
 	@-echo ">>> compiling unimodular_matrices ..."
 	$(gpp) -O3 -c -I$(CNV) unimodular_matrices.cpp
 
+dbl_onenorms_host.o:
+	@-echo ">>> compiling dbl_onenorms_host ..."
+	$(gpp) -O3 -c -I$(CNV) -I$(MAT) dbl_onenorms_host.cpp
+
 dbl_bals_host.o:
 	@-echo ">>> compiling dbl_bals_host ..."
 	$(gpp) -O3 -c -I$(CNV) -I$(MAT) dbl_bals_host.cpp
@@ -435,7 +439,7 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                  addition_job.o addition_jobs.o job_coordinates.o \
                  dbl_systems_host.o write_gpu_timings.o \
                  dbl_systems_kernels.o dbl_polynomials_kernels.o \
-                 dbl_factorizations.o dbl_bals_host.o \
+                 dbl_factorizations.o dbl_onenorms_host.o dbl_bals_host.o \
                  dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                  dbl_bals_flopcounts.o \
                  dbl_baqr_kernels.o dbl_tabs_kernels.o \
@@ -449,7 +453,7 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   dbl_systems_host.o write_gpu_timings.o \
                   dbl_systems_kernels.o dbl_polynomials_kernels.o \
-                  dbl_factorizations.o dbl_bals_host.o \
+                  dbl_factorizations.o dbl_onenorms_host.o dbl_bals_host.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl_bals_flopcounts.o \
                   dbl_baqr_kernels.o dbl_tabs_kernels.o \
@@ -557,7 +561,7 @@ clean:
 	/bin/rm -f -r dbl2_systems_host.o dbl2_systems_kernels.o
 	/bin/rm -f -r dbl4_systems_host.o dbl4_systems_kernels.o
 	/bin/rm -f -r dbl8_systems_host.o dbl8_systems_kernels.o
-	/bin/rm -f -r dbl_bals_host.o
+	/bin/rm -f -r dbl_onenorms_host.o dbl_bals_host.o
 	/bin/rm -f -r dbl_bals_kernels.o dbl_tail_kernels.o
 	/bin/rm -f -r dbl2_baqr_kernels.o dbl2_tabs_kernels.o
 	/bin/rm -f -r dbl2_bals_host.o

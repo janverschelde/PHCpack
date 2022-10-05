@@ -37,13 +37,13 @@ void cmplx_start_series_vector
    for(int i=0; i<dim; i++)
    {
       // angle = random_angle(); 
-      cffre[i][0] = 1.0001; // cos(angle); => no convergence ...
-      cffim[i][0] = 0.1234; // sin(angle);
+      cffre[i][0] = 1.00001; // cos(angle); => no convergence ...
+      cffim[i][0] = 0.00001; // sin(angle);
 
       for(int j=1; j<=deg; j++)
       {
-         cffre[i][j] = 0.4567;
-         cffim[i][j] = 0.7654;
+         cffre[i][j] = 0.0;
+         cffim[i][j] = 0.0;
       }
    }
 }
@@ -93,7 +93,7 @@ void dbl_update_series
    for(int j=0; j<degp1; j++) 
       for(int i=0; i<dim; i++) x[i][j] = x[i][j] + dx[j][i];
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The series after the update : " << endl;
       for(int j=0; j<degp1; j++)
@@ -128,7 +128,7 @@ void cmplx_update_series
          xim[i][j] = xim[i][j] + dxim[j][i];
       }
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << "The series after the update : " << endl;
       for(int j=0; j<degp1; j++)
@@ -766,6 +766,23 @@ int test_dbl_real_newton
           jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
           Q_h,Q_d,R_h,R_d,workmat,workvec,resvec,&resmax,vrblvl,mode);
    }
+   if(vrblvl < 2)
+   {
+      cout << "The solution series : " << endl;
+      for(int j=0; j<degp1; j++)
+      {
+         cout << "coefficient of degree " << j << " :" << endl;
+         for(int i=0; i<dim; i++)
+         {
+            if((mode == 0) || (mode == 2))
+              cout << "x_d[" << i << "][" << j << "] : "
+                             << input_d[i][j] << endl;
+            if((mode == 1) || (mode == 2))
+              cout << "x_h[" << i << "][" << j << "] : "
+                             << input_h[i][j] << endl;
+         }
+      }
+   }
    return 0;
 }
 
@@ -982,6 +999,25 @@ int test_dbl_complex_newton
           Qre_h,Qim_h,Qre_d,Qim_d,Rre_h,Rim_h,Rre_d,Rim_d,
           workmatre,workmatim,workvecre,workvecim,resvecre,resvecim,
           &resmax,vrblvl,mode);
+   }
+   if(vrblvl < 2)
+   {
+      cout << "The solution series : " << endl;
+      for(int j=0; j<degp1; j++)
+      {
+         cout << "coefficient of degree " << j << " :" << endl;
+         for(int i=0; i<dim; i++)
+         {
+            if((mode == 0) || (mode == 2))
+              cout << "x_d[" << i << "][" << j << "] : "
+                             << inputre_d[i][j] << "  "
+                             << inputim_d[i][j] << endl;
+            if((mode == 1) || (mode == 2))
+              cout << "x_h[" << i << "][" << j << "] : "
+                             << inputre_h[i][j] << "  "
+                             << inputim_h[i][j] << endl;
+         }
+      }
    }
    return 0;
 }

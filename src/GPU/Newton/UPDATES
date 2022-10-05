@@ -1,12 +1,17 @@
+Wed 5 Oct 2022 : new dbl_onenorms_host applied in dbl_bals_host.cpp
+  and dbl_bals_kernels.cu to skip the QR if the rhs is zero.
+  In dbl_newton_testers.cpp reset the complex start series, for convergence.
+  Updates makefile_unix and makefile_windows.
+
 Tue 4 Oct 2022 : new test_{dbl4,dbl8}_flopbals.cpp, updated makefiles,
-   some edits in test_dbl2_flopbals.cpp.  New dbl_bals_flopcounts.h
-   and dbl_bals_flopcounts.cpp, modified {dbl,dbl2}_tail_kernels,
-   {dbl,dbl2}_newton_testers.cpp and test_{dbl,dbl2}_flopbals.cpp.
-   Updated makefiles.  Fixed mistake in dbl2_tail_kernels.cu.
-   Extended dbl4_tail_kernels with timers and flop counts,
-   updated dbl4_newton_testers.cpp, test_dbl4_flopbals.cpp, and makefiles.
-   Extended dbl8_tail_kernels with timers and flop counts,
-   updated dbl8_newton_testers.cpp, test_dbl8_flopbals.cpp, and makefiles.
+  some edits in test_dbl2_flopbals.cpp.  New dbl_bals_flopcounts.h
+  and dbl_bals_flopcounts.cpp, modified {dbl,dbl2}_tail_kernels,
+  {dbl,dbl2}_newton_testers.cpp and test_{dbl,dbl2}_flopbals.cpp.
+  Updated makefiles.  Fixed mistake in dbl2_tail_kernels.cu.
+  Extended dbl4_tail_kernels with timers and flop counts,
+  updated dbl4_newton_testers.cpp, test_dbl4_flopbals.cpp, and makefiles.
+  Extended dbl8_tail_kernels with timers and flop counts,
+  updated dbl8_newton_testers.cpp, test_dbl8_flopbals.cpp, and makefiles.
 
 Mon 3 Oct 2022 : new dbl_tail_kernels, with code from dbl_bals_kernels,
   for use in test_dbl_flopbals, updated dbl_newton_testers and makefiles.

@@ -170,6 +170,12 @@ unimodular_matrices.obj:
                       unimodular_matrices.cpp \
                  /Fo: unimodular_matrices.obj /EHsc
 
+dbl_onenorms_host.obj:
+	@-echo ">>> compiling dbl_onenorms_host ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl_onenorms_host.cpp \
+                 /Fo: dbl_onenorms_host.obj /EHsc
+
 dbl_bals_host.obj:
 	@-echo ">>> compiling dbl_bals_host ..."
 	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -648,8 +654,8 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
                  gettimeofday4win.obj write_gpu_timings.obj \
                  dbl_systems_host.obj \
                  dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
-                 dbl_factorizations.obj dbl_bals_host.obj \
-                 dbl_bals_flopcounts.obj \
+                 dbl_factorizations.obj dbl_onenorms_host.obj \
+		 dbl_bals_host.obj dbl_bals_flopcounts.obj \
 		 dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
 		 dbl_baqr_kernels.obj dbl_tabs_kernels.obj 
 	@-echo ">>> linking ..."
@@ -663,8 +669,8 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
              dbl_systems_host.obj write_gpu_timings.obj \
              gettimeofday4win.obj \
              dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
-             dbl_factorizations.obj dbl_bals_host.obj \
-	     dbl_tail_kernels.obj dbl_bals_kernels.obj \
+             dbl_factorizations.obj dbl_onenorms_host.obj \
+             dbl_bals_host.obj dbl_tail_kernels.obj dbl_bals_kernels.obj \
              dbl_bals_flopcounts.obj \
 	     dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
 	     dbl_baqr_kernels.obj dbl_tabs_kernels.obj
@@ -769,7 +775,7 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
              dbl8_tail_kernels.obj dbl8_bals_kernels.obj
 
 clean:
-	del dbl_bals_host.obj dbl2_bals_host.obj
+	del dbl_onenorms_host.obj dbl_bals_host.obj dbl2_bals_host.obj
 	del dbl4_bals_host.obj dbl8_bals_host.obj
 	del dbl_tail_kernels.obj dbl_bals_kernels.obj
 	del dbl2_tail_kernels.obj dbl2_bals_kernels.obj
