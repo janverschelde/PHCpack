@@ -7,6 +7,7 @@
 #include <cmath>
 #include "double_double_functions.h"
 #include "dbl2_factorizations.h"
+#include "dbl_onenorms_host.h"
 #include "dbl2_bals_host.h"
 
 using namespace std;
@@ -86,7 +87,6 @@ void CPU_dbl2_qrbs_head
    double **Rhi, double **Rlo, double *wrkvechi, double *wrkveclo,
    int vrblvl )
 {
-   bool verbose = (vrblvl > 1);
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
       {
@@ -94,7 +94,7 @@ void CPU_dbl2_qrbs_head
          wrkmatlo[i][j] = matlo[0][i][j];
       }
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "The matrix : " << endl;
       cout << setprecision(2);
@@ -112,35 +112,56 @@ void CPU_dbl2_qrbs_head
       for(int i=0; i<dim; i++)
          cout << rhshi[0][i] << "  " << rhslo[0][i] << endl;
    }
-   if(verbose) cout << "calling CPU_dbl2_factors_houseqr ..." << endl;
+   double nrm;
+   CPU_dbl_onenorm(dim,rhshi[0],&nrm);
+   if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-   CPU_dbl2_factors_houseqr(dim,dim,wrkmathi,wrkmatlo,Qhi,Qlo,Rhi,Rlo);
-   CPU_dbl2_factors_qrbs
-      (dim,dim,Qhi,Qlo,Rhi,Rlo,rhshi[0],rhslo[0],solhi[0],sollo[0],
-       wrkvechi,wrkveclo);
-
-   if(verbose)
+   if(nrm < 1.0e-28)
    {
-      double acchi,acclo;
+      if(vrblvl > 0)
+         cout << "skip call to CPU_dbl2_factors_houseqr ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_dbl2_factors_houseqr ..." << endl;
 
-      cout << "The leading coefficients of the solution :" << endl;
-      for(int i=0; i<dim; i++)
-         cout << solhi[0][i] << "  " << sollo[0][i] << endl;
-      for(int i=0; i<dim; i++)
+      CPU_dbl2_factors_houseqr(dim,dim,wrkmathi,wrkmatlo,Qhi,Qlo,Rhi,Rlo);
+      CPU_dbl2_factors_qrbs
+         (dim,dim,Qhi,Qlo,Rhi,Rlo,rhshi[0],rhslo[0],solhi[0],sollo[0],
+          wrkvechi,wrkveclo);
+
+      if(vrblvl > 0)
       {
-         wrkvechi[i] = rhshi[0][i];
-         wrkveclo[i] = rhslo[0][i];
-         for(int j=0; j<dim; j++)
-            // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
-         {
-            ddf_mul(mathi[0][i][j],matlo[0][i][j],solhi[0][j],sollo[0][j],
-                    &acchi,&acclo);
-            ddf_dec(&wrkvechi[i],&wrkveclo[i],acchi,acclo);
-         }
+         double nrm;
+
+         CPU_dbl_onenorm(dim,wrkvechi,&nrm);
+         cout << "1-norm of Q^T*b : " << nrm << endl;
+         CPU_dbl_onenorm(dim,solhi[0],&nrm);
+         cout << "1-norm of x : " << nrm << endl;
       }
-      cout << "The residual vector :" << endl;
-      for(int i=0; i<dim; i++)
-        cout << wrkvechi[i] << "  " << wrkveclo[i] << endl;
+      if(vrblvl > 1)
+      {
+         double acchi,acclo;
+
+         cout << "The leading coefficients of the solution :" << endl;
+         for(int i=0; i<dim; i++)
+            cout << solhi[0][i] << "  " << sollo[0][i] << endl;
+         for(int i=0; i<dim; i++)
+         {
+            wrkvechi[i] = rhshi[0][i];
+            wrkveclo[i] = rhslo[0][i];
+            for(int j=0; j<dim; j++)
+               // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
+            {
+               ddf_mul(mathi[0][i][j],matlo[0][i][j],solhi[0][j],sollo[0][j],
+                       &acchi,&acclo);
+               ddf_dec(&wrkvechi[i],&wrkveclo[i],acchi,acclo);
+            }
+         }
+         cout << "The residual vector :" << endl;
+         for(int i=0; i<dim; i++)
+           cout << wrkvechi[i] << "  " << wrkveclo[i] << endl;
+      }
    }
 }
 
@@ -156,7 +177,6 @@ void CPU_cmplx2_qrbs_head
    double *wrkvecrehi, double *wrkvecrelo,
    double *wrkvecimhi, double *wrkvecimlo, int vrblvl )
 {
-   bool verbose = (vrblvl > 1);
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
       {
@@ -166,7 +186,7 @@ void CPU_cmplx2_qrbs_head
          wrkmatimlo[i][j] = matimlo[0][i][j];
       }
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "The matrix : " << endl;
       cout << setprecision(2);
@@ -185,59 +205,78 @@ void CPU_cmplx2_qrbs_head
          cout << rhsrehi[0][i] << "  " << rhsrelo[0][i] << endl << "  " 
               << rhsimhi[0][i] << "  " << rhsimlo[0][i] << endl;
    }
-   if(verbose) cout << "calling CPU_cmplx_factors_houseqr ..." << endl;
+   double nrm;
+   CPU_cmplx_onenorm(dim,rhsrehi[0],rhsimhi[0],&nrm);
+   if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-   CPU_cmplx2_factors_houseqr
-      (dim,dim,wrkmatrehi,wrkmatrelo,wrkmatimhi,wrkmatimlo,
-       Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo);
-
-   CPU_cmplx2_factors_qrbs
-      (dim,dim,Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo,
-       rhsrehi[0],rhsrelo[0],rhsimhi[0],rhsimlo[0],
-       solrehi[0],solrelo[0],solimhi[0],solimlo[0],
-       wrkvecrehi,wrkvecrelo,wrkvecimhi,wrkvecimlo);
-
-   if(verbose)
+   if(nrm < 1.0e-28)
    {
-      double acchi,acclo;
+      if(vrblvl > 0)
+         cout << "skip call to CPU_cmplx2_factors_houseqr ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_cmplx2_factors_houseqr ..." << endl;
 
-      cout << "The leading coefficients of the solution :" << endl;
-      for(int i=0; i<dim; i++)
-         cout << solrehi[0][i] << "  " << solrelo[0][i] << endl << "  "
-              << solimhi[0][i] << "  " << solimlo[0][i] << endl;
+      CPU_cmplx2_factors_houseqr
+         (dim,dim,wrkmatrehi,wrkmatrelo,wrkmatimhi,wrkmatimlo,
+          Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo);
 
-      for(int i=0; i<dim; i++)
+      CPU_cmplx2_factors_qrbs
+         (dim,dim,Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo,
+          rhsrehi[0],rhsrelo[0],rhsimhi[0],rhsimlo[0],
+          solrehi[0],solrelo[0],solimhi[0],solimlo[0],
+          wrkvecrehi,wrkvecrelo,wrkvecimhi,wrkvecimlo);
+
+      if(vrblvl > 0)
       {
-         wrkvecrehi[i] = rhsrehi[0][i];
-         wrkvecrelo[i] = rhsrelo[0][i];
-         wrkvecimhi[i] = rhsimhi[0][i];
-         wrkvecimlo[i] = rhsimlo[0][i];
+         double nrm;
 
-         for(int j=0; j<dim; j++)
-         {
-            // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
-            // zre = matre[0][i][j]*solre[0][j] - matim[0][i][j]*solim[0][j];
-            // wrkvecre[i] = wrkvecre[i] + zre;
-            ddf_mul(matrehi[0][i][j],matrelo[0][i][j],
-                    solrehi[0][j],solrelo[0][j],&acchi,&acclo);
-            ddf_inc(&wrkvecrehi[i],&wrkvecrelo[i],acchi,acclo);
-            ddf_mul(matimhi[0][i][j],matimlo[0][i][j],
-                    solimhi[0][j],solimlo[0][j],&acchi,&acclo);
-            ddf_dec(&wrkvecrehi[i],&wrkvecrelo[i],acchi,acclo);
-            // zim = matre[0][i][j]*solim[0][j] + matim[0][i][j]*solre[0][j];
-            // wrkvecim[i] = wrkvecim[i] + zim;
-            ddf_mul(matrehi[0][i][j],matrelo[0][i][j],
-                    solimhi[0][j],solimlo[0][j],&acchi,&acclo);
-            ddf_inc(&wrkvecimhi[i],&wrkvecimlo[i],acchi,acclo);
-            ddf_mul(matimhi[0][i][j],matimlo[0][i][j],
-                    solrehi[0][j],solrelo[0][j],&acchi,&acclo);
-            ddf_inc(&wrkvecimhi[i],&wrkvecimlo[i],acchi,acclo);
-         }
+         CPU_cmplx_onenorm(dim,wrkvecrehi,wrkvecimhi,&nrm);
+         cout << "1-norm of Q^T*b : " << nrm << endl;
+         CPU_cmplx_onenorm(dim,solrehi[0],solimhi[0],&nrm);
+         cout << "1-norm of x : " << nrm << endl;
       }
-      cout << "The residual vector :" << endl;
-      for(int i=0; i<dim; i++)
-         cout << wrkvecrehi[i] << "  " << wrkvecrelo[i] << endl << "  "
-              << wrkvecimhi[i] << "  " << wrkvecimlo[i] << endl;
+      if(vrblvl > 1)
+      {
+         double acchi,acclo;
+
+         cout << "The leading coefficients of the solution :" << endl;
+         for(int i=0; i<dim; i++)
+            cout << solrehi[0][i] << "  " << solrelo[0][i] << endl << "  "
+                 << solimhi[0][i] << "  " << solimlo[0][i] << endl;
+
+         for(int i=0; i<dim; i++)
+         {
+            wrkvecrehi[i] = rhsrehi[0][i]; wrkvecrelo[i] = rhsrelo[0][i];
+            wrkvecimhi[i] = rhsimhi[0][i]; wrkvecimlo[i] = rhsimlo[0][i];
+
+            for(int j=0; j<dim; j++)
+            {
+               // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
+               // zre = matre[0][i][j]*solre[0][j] - matim[0][i][j]*solim[0][j];
+               // wrkvecre[i] = wrkvecre[i] + zre;
+               ddf_mul(matrehi[0][i][j],matrelo[0][i][j],
+                       solrehi[0][j],solrelo[0][j],&acchi,&acclo);
+               ddf_inc(&wrkvecrehi[i],&wrkvecrelo[i],acchi,acclo);
+               ddf_mul(matimhi[0][i][j],matimlo[0][i][j],
+                       solimhi[0][j],solimlo[0][j],&acchi,&acclo);
+               ddf_dec(&wrkvecrehi[i],&wrkvecrelo[i],acchi,acclo);
+               // zim = matre[0][i][j]*solim[0][j] + matim[0][i][j]*solre[0][j];
+               // wrkvecim[i] = wrkvecim[i] + zim;
+               ddf_mul(matrehi[0][i][j],matrelo[0][i][j],
+                       solimhi[0][j],solimlo[0][j],&acchi,&acclo);
+               ddf_inc(&wrkvecimhi[i],&wrkvecimlo[i],acchi,acclo);
+               ddf_mul(matimhi[0][i][j],matimlo[0][i][j],
+                       solrehi[0][j],solrelo[0][j],&acchi,&acclo);
+               ddf_inc(&wrkvecimhi[i],&wrkvecimlo[i],acchi,acclo);
+            }
+         }
+         cout << "The residual vector :" << endl;
+         for(int i=0; i<dim; i++)
+            cout << wrkvecrehi[i] << "  " << wrkvecrelo[i] << endl << "  "
+                 << wrkvecimhi[i] << "  " << wrkvecimlo[i] << endl;
+      }
    }
 }
 

@@ -366,13 +366,13 @@ void GPU_dbl_bals_solve
    if(nrm + 1.0 == 1.0)
    {
       if(vrblvl > 0)
-         cout << "skip call to CPU_dbl_bals_head ..." << endl;
+         cout << "skip call to GPU_dbl_bals_head ..." << endl;
 
       for(int j=0; j<ncols; j++) sol[0][j] = 0.0;
    }
    else
    {
-      if(vrblvl > 0) cout << "calling CPU_dbl_bals_head ..." << endl;
+      if(vrblvl > 0) cout << "calling GPU_dbl_bals_head ..." << endl;
 
       double **A = new double*[nrows];
 
@@ -503,7 +503,7 @@ void GPU_cmplx_bals_solve
    if(nrm + 1.0 == 1.0)
    {
       if(vrblvl > 0)
-         cout << "skip call to CPU_cmplx_bals_head ..." << endl;
+         cout << "skip call to GPU_cmplx_bals_head ..." << endl;
 
       for(int j=0; j<ncols; j++)
       {
@@ -512,7 +512,7 @@ void GPU_cmplx_bals_solve
    }
    else
    {
-      if(vrblvl > 0) cout << "calling CPU_cmplx_bals_head ..." << endl;
+      if(vrblvl > 0) cout << "calling GPU_cmplx_bals_head ..." << endl;
 
       double **Are = new double*[nrows];
       double **Aim = new double*[nrows];

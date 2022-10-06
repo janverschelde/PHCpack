@@ -464,7 +464,7 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
-                  dbl2_factorizations.o dbl2_bals_host.o \
+                  dbl2_factorizations.o dbl_onenorms_host.o dbl2_bals_host.o \
                   convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   dbl2_systems_host.o write_gpu_timings.o \
@@ -480,7 +480,7 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
-                  dbl2_factorizations.o dbl2_bals_host.o \
+                  dbl2_factorizations.o dbl_onenorms_host.o dbl2_bals_host.o \
                   convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   dbl2_systems_host.o write_gpu_timings.o \

@@ -2,6 +2,9 @@ Wed 5 Oct 2022 : new dbl_onenorms_host applied in dbl_bals_host.cpp
   and dbl_bals_kernels.cu to skip the QR if the rhs is zero.
   In dbl_newton_testers.cpp reset the complex start series, for convergence.
   Updates makefile_unix and makefile_windows.
+  Applied similar changes to dbl2_bals_host.cpp, dbl2_bals_kernels.cu,
+  dbl2_newton_testers.cpp, with edits in the corresponding dbl_ versions,
+  and updated makefile_unix and makefile_windows.
 
 Tue 4 Oct 2022 : new test_{dbl4,dbl8}_flopbals.cpp, updated makefiles,
   some edits in test_dbl2_flopbals.cpp.  New dbl_bals_flopcounts.h

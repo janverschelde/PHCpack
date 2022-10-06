@@ -685,8 +685,8 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
                   gettimeofday4win.obj write_gpu_timings.obj \
                   dbl2_systems_host.obj \
                   dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
-                  dbl2_factorizations.obj dbl2_bals_host.obj \
-                  dbl_bals_flopcounts.obj \
+                  dbl2_factorizations.obj dbl_onenorms_host.obj \
+                  dbl2_bals_host.obj dbl_bals_flopcounts.obj \
 		  dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
 		  dbl2_baqr_kernels.obj dbl2_tabs_kernels.obj \
                   dbl2_tail_kernels.obj dbl2_bals_kernels.obj
@@ -701,8 +701,8 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
              gettimeofday4win.obj write_gpu_timings.obj \
              dbl2_systems_host.obj \
              dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
-             dbl2_factorizations.obj dbl2_bals_host.obj \
-             dbl_bals_flopcounts.obj \
+             dbl2_factorizations.obj dbl_onenorms_host.obj \
+             dbl2_bals_host.obj dbl_bals_flopcounts.obj \
              dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
              dbl2_baqr_kernels.obj dbl2_tabs_kernels.obj \
              dbl2_tail_kernels.obj dbl2_bals_kernels.obj

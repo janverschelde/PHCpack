@@ -78,7 +78,7 @@ void cmplx_unit_series_vector
 void dbl_update_series
  ( int dim, int degp1, double **x, double **dx, int vrblvl )
 {
-   if(vrblvl > 0) cout << scientific << setprecision(16);
+   if(vrblvl > 1) cout << scientific << setprecision(16);
 
    if(vrblvl > 1)
    {
@@ -108,7 +108,7 @@ void cmplx_update_series
  ( int dim, int degp1,
    double **xre, double **xim, double **dxre, double **dxim, int vrblvl )
 {
-   if(vrblvl > 0) cout << scientific << setprecision(16);
+   if(vrblvl > 1) cout << scientific << setprecision(16);
 
    if(vrblvl > 1)
    {
@@ -755,6 +755,8 @@ int test_dbl_real_newton
       for(int i=0; i<dim; i++)
          cout << i << " : " << input_h[i][0] << endl;
    }
+   if(vrblvl > 0) cout << scientific << setprecision(16);
+
    for(int step=0; step<nbsteps; step++)
    {
       if(vrblvl > 0)
@@ -982,6 +984,8 @@ int test_dbl_complex_newton
          cout << i << " : "
               << inputre_h[i][0] << "  " << inputim_h[i][0] << endl;
    }
+   if(vrblvl > 0) cout << scientific << setprecision(16);
+
    for(int step=0; step<nbsteps; step++)
    {
       if(vrblvl > 0)
