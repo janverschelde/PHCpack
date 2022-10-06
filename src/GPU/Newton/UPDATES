@@ -5,6 +5,8 @@ Wed 5 Oct 2022 : new dbl_onenorms_host applied in dbl_bals_host.cpp
   Applied similar changes to dbl2_bals_host.cpp, dbl2_bals_kernels.cu,
   dbl2_newton_testers.cpp, with edits in the corresponding dbl_ versions,
   and updated makefile_unix and makefile_windows.
+  And did likewise for dbl4, dbl8 on bals_{host.cpp,kernels.cu},
+  updating {dbl4,dbl8}_newton_testers.cpp.   Updated makefiles.
 
 Tue 4 Oct 2022 : new test_{dbl4,dbl8}_flopbals.cpp, updated makefiles,
   some edits in test_dbl2_flopbals.cpp.  New dbl_bals_flopcounts.h

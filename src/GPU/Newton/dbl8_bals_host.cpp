@@ -7,6 +7,7 @@
 #include <cmath>
 #include "octo_double_functions.h"
 #include "dbl8_factorizations.h"
+#include "dbl_onenorms_host.h"
 #include "dbl8_bals_host.h"
 
 using namespace std;
@@ -179,7 +180,6 @@ void CPU_dbl8_qrbs_head
    double *wrkvechihilo, double *wrkveclohilo,
    double *wrkvechilolo, double *wrkveclololo, int vrblvl )
 {
-   bool verbose = (vrblvl > 1);
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
       {
@@ -193,7 +193,7 @@ void CPU_dbl8_qrbs_head
          wrkmatlololo[i][j] = matlololo[0][i][j];
       }
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "The matrix : " << endl;
       cout << setprecision(2);
@@ -220,75 +220,97 @@ void CPU_dbl8_qrbs_head
               << rhshihilo[0][i] << "  " << rhslohilo[0][i] << "  "
               << rhshilolo[0][i] << "  " << rhslololo[0][i] << endl;
    }
-   if(verbose) cout << "calling CPU_dbl8_factors_houseqr ..." << endl;
+   double nrm;
+   CPU_dbl_onenorm(dim,rhshihihi[0],&nrm);
+   if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-   CPU_dbl8_factors_houseqr
-      (dim,dim,
-       wrkmathihihi,wrkmatlohihi,wrkmathilohi,wrkmatlolohi,
-       wrkmathihilo,wrkmatlohilo,wrkmathilolo,wrkmatlololo,
-       Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
-       Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo);
-
-   CPU_dbl8_factors_qrbs
-      (dim,dim,
-       Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
-       Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
-       rhshihihi[0],rhslohihi[0],rhshilohi[0],rhslolohi[0],
-       rhshihilo[0],rhslohilo[0],rhshilolo[0],rhslololo[0],
-       solhihihi[0],sollohihi[0],solhilohi[0],sollolohi[0],
-       solhihilo[0],sollohilo[0],solhilolo[0],sollololo[0],
-       wrkvechihihi,wrkveclohihi,wrkvechilohi,wrkveclolohi,
-       wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo);
-
-   if(verbose)
+   if(nrm < 1.0e-120)
    {
-      double acchihihi,acclohihi,acchilohi,acclolohi;
-      double acchihilo,acclohilo,acchilolo,acclololo;
+      if(vrblvl > 0)
+         cout << "skip call to CPU_dbl8_factors_houseqr ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_dbl8_factors_houseqr ..." << endl;
 
-      cout << "The leading coefficients of the solution :" << endl;
-      for(int i=0; i<dim; i++)
-         cout << solhihihi[0][i] << "  " << sollohihi[0][i] << "  "
-              << solhilohi[0][i] << "  " << sollolohi[0][i] << endl << "  "
-              << solhihilo[0][i] << "  " << sollohilo[0][i] << "  "
-              << solhilolo[0][i] << "  " << sollololo[0][i] << endl;
-      for(int i=0; i<dim; i++)
+      CPU_dbl8_factors_houseqr
+         (dim,dim,
+          wrkmathihihi,wrkmatlohihi,wrkmathilohi,wrkmatlolohi,
+          wrkmathihilo,wrkmatlohilo,wrkmathilolo,wrkmatlololo,
+          Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
+          Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo);
+
+      CPU_dbl8_factors_qrbs
+         (dim,dim,
+          Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
+          Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
+          rhshihihi[0],rhslohihi[0],rhshilohi[0],rhslolohi[0],
+          rhshihilo[0],rhslohilo[0],rhshilolo[0],rhslololo[0],
+          solhihihi[0],sollohihi[0],solhilohi[0],sollolohi[0],
+          solhihilo[0],sollohilo[0],solhilolo[0],sollololo[0],
+          wrkvechihihi,wrkveclohihi,wrkvechilohi,wrkveclolohi,
+          wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo);
+
+      if(vrblvl > 0)
       {
-         wrkvechihihi[i] = rhshihihi[0][i];
-         wrkveclohihi[i] = rhslohihi[0][i];
-         wrkvechilohi[i] = rhshilohi[0][i];
-         wrkveclolohi[i] = rhslolohi[0][i];
-         wrkvechihilo[i] = rhshihilo[0][i];
-         wrkveclohilo[i] = rhslohilo[0][i];
-         wrkvechilolo[i] = rhshilolo[0][i];
-         wrkveclololo[i] = rhslololo[0][i];
+         double nrm;
 
-         for(int j=0; j<dim; j++)
-            // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
-         {
-            odf_mul(mathihihi[0][i][j],matlohihi[0][i][j],
-                    mathilohi[0][i][j],matlolohi[0][i][j],
-                    mathihilo[0][i][j],matlohilo[0][i][j],
-                    mathilolo[0][i][j],matlololo[0][i][j],
-                    solhihihi[0][j],sollohihi[0][j],
-                    solhilohi[0][j],sollolohi[0][j],
-                    solhihilo[0][j],sollohilo[0][j],
-                    solhilolo[0][j],sollololo[0][j],
-                    &acchihihi,&acclohihi,&acchilohi,&acclolohi,
-                    &acchihilo,&acclohilo,&acchilolo,&acclololo);
-            odf_dec(&wrkvechihihi[i],&wrkveclohihi[i],
-                    &wrkvechilohi[i],&wrkveclolohi[i],
-                    &wrkvechihilo[i],&wrkveclohilo[i],
-                    &wrkvechilolo[i],&wrkveclololo[i],
-                    acchihihi,acclohihi,acchilohi,acclolohi,
-                    acchihilo,acclohilo,acchilolo,acclololo);
-         }
+         CPU_dbl_onenorm(dim,wrkvechihihi,&nrm);
+         cout << "1-norm of Q^T*b : " << nrm << endl;
+         CPU_dbl_onenorm(dim,solhihihi[0],&nrm);
+         cout << "1-norm of x : " << nrm << endl;
       }
-      cout << "The residual vector :" << endl;
-      for(int i=0; i<dim; i++)
-        cout << wrkvechihihi[i] << "  " << wrkveclohihi[i] << "  "
-             << wrkvechilohi[i] << "  " << wrkveclolohi[i] << endl << "  "
-             << wrkvechihilo[i] << "  " << wrkveclohilo[i] << "  "
-             << wrkvechilolo[i] << "  " << wrkveclololo[i] << endl;
+      if(vrblvl > 1)
+      {
+         double acchihihi,acclohihi,acchilohi,acclolohi;
+         double acchihilo,acclohilo,acchilolo,acclololo;
+
+         cout << "The leading coefficients of the solution :" << endl;
+         for(int i=0; i<dim; i++)
+            cout << solhihihi[0][i] << "  " << sollohihi[0][i] << "  "
+                 << solhilohi[0][i] << "  " << sollolohi[0][i] << endl << "  "
+                 << solhihilo[0][i] << "  " << sollohilo[0][i] << "  "
+                 << solhilolo[0][i] << "  " << sollololo[0][i] << endl;
+
+         for(int i=0; i<dim; i++)
+         {
+            wrkvechihihi[i] = rhshihihi[0][i];
+            wrkveclohihi[i] = rhslohihi[0][i];
+            wrkvechilohi[i] = rhshilohi[0][i];
+            wrkveclolohi[i] = rhslolohi[0][i];
+            wrkvechihilo[i] = rhshihilo[0][i];
+            wrkveclohilo[i] = rhslohilo[0][i];
+            wrkvechilolo[i] = rhshilolo[0][i];
+            wrkveclololo[i] = rhslololo[0][i];
+
+            for(int j=0; j<dim; j++)
+               // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
+            {
+               odf_mul(mathihihi[0][i][j],matlohihi[0][i][j],
+                       mathilohi[0][i][j],matlolohi[0][i][j],
+                       mathihilo[0][i][j],matlohilo[0][i][j],
+                       mathilolo[0][i][j],matlololo[0][i][j],
+                       solhihihi[0][j],sollohihi[0][j],
+                       solhilohi[0][j],sollolohi[0][j],
+                       solhihilo[0][j],sollohilo[0][j],
+                       solhilolo[0][j],sollololo[0][j],
+                       &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                       &acchihilo,&acclohilo,&acchilolo,&acclololo);
+               odf_dec(&wrkvechihihi[i],&wrkveclohihi[i],
+                       &wrkvechilohi[i],&wrkveclolohi[i],
+                       &wrkvechihilo[i],&wrkveclohilo[i],
+                       &wrkvechilolo[i],&wrkveclololo[i],
+                       acchihihi,acclohihi,acchilohi,acclolohi,
+                       acchihilo,acclohilo,acchilolo,acclololo);
+            }
+         }
+         cout << "The residual vector :" << endl;
+         for(int i=0; i<dim; i++)
+           cout << wrkvechihihi[i] << "  " << wrkveclohihi[i] << "  "
+                << wrkvechilohi[i] << "  " << wrkveclolohi[i] << endl << "  "
+                << wrkvechihilo[i] << "  " << wrkveclohilo[i] << "  "
+                << wrkvechilolo[i] << "  " << wrkveclololo[i] << endl;
+      }
    }
 }
 
@@ -351,7 +373,6 @@ void CPU_cmplx8_qrbs_head
    double *wrkvecimhihilo, double *wrkvecimlohilo,
    double *wrkvecimhilolo, double *wrkvecimlololo, int vrblvl )
 {
-   bool verbose = (vrblvl > 1);
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
       {
@@ -373,7 +394,7 @@ void CPU_cmplx8_qrbs_head
          wrkmatimlololo[i][j] = matimlololo[0][i][j];
       }
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "The matrix : " << endl;
       // cout << setprecision(2);
@@ -417,178 +438,199 @@ void CPU_cmplx8_qrbs_head
               << "  "
               << rhsimhilolo[0][i] << "  " << rhsimlololo[0][i] << endl;
    }
-   if(verbose) cout << "calling CPU_cmplx_factors_houseqr ..." << endl;
+   double nrm;
+   CPU_cmplx_onenorm(dim,rhsrehihihi[0],rhsimhihihi[0],&nrm);
+   if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-   CPU_cmplx8_factors_houseqr
-      (dim,dim,
-       wrkmatrehihihi,wrkmatrelohihi,wrkmatrehilohi,wrkmatrelolohi,
-       wrkmatrehihilo,wrkmatrelohilo,wrkmatrehilolo,wrkmatrelololo,
-       wrkmatimhihihi,wrkmatimlohihi,wrkmatimhilohi,wrkmatimlolohi,
-       wrkmatimhihilo,wrkmatimlohilo,wrkmatimhilolo,wrkmatimlololo,
-       Qrehihihi,Qrelohihi,Qrehilohi,Qrelolohi,
-       Qrehihilo,Qrelohilo,Qrehilolo,Qrelololo,
-       Qimhihihi,Qimlohihi,Qimhilohi,Qimlolohi,
-       Qimhihilo,Qimlohilo,Qimhilolo,Qimlololo,
-       Rrehihihi,Rrelohihi,Rrehilohi,Rrelolohi,
-       Rrehihilo,Rrelohilo,Rrehilolo,Rrelololo,
-       Rimhihihi,Rimlohihi,Rimhilohi,Rimlolohi,
-       Rimhihilo,Rimlohilo,Rimhilolo,Rimlololo);
-
-   CPU_cmplx8_factors_qrbs
-      (dim,dim,
-       Qrehihihi,Qrelohihi,Qrehilohi,Qrelolohi,
-       Qrehihilo,Qrelohilo,Qrehilolo,Qrelololo,
-       Qimhihihi,Qimlohihi,Qimhilohi,Qimlolohi,
-       Qimhihilo,Qimlohilo,Qimhilolo,Qimlololo,
-       Rrehihihi,Rrelohihi,Rrehilohi,Rrelolohi,
-       Rrehihilo,Rrelohilo,Rrehilolo,Rrelololo,
-       Rimhihihi,Rimlohihi,Rimhilohi,Rimlolohi,
-       Rimhihilo,Rimlohilo,Rimhilolo,Rimlololo,
-       rhsrehihihi[0],rhsrelohihi[0],rhsrehilohi[0],rhsrelolohi[0],
-       rhsrehihilo[0],rhsrelohilo[0],rhsrehilolo[0],rhsrelololo[0],
-       rhsimhihihi[0],rhsimlohihi[0],rhsimhilohi[0],rhsimlolohi[0],
-       rhsimhihilo[0],rhsimlohilo[0],rhsimhilolo[0],rhsimlololo[0],
-       solrehihihi[0],solrelohihi[0],solrehilohi[0],solrelolohi[0],
-       solrehihilo[0],solrelohilo[0],solrehilolo[0],solrelololo[0],
-       solimhihihi[0],solimlohihi[0],solimhilohi[0],solimlolohi[0],
-       solimhihilo[0],solimlohilo[0],solimhilolo[0],solimlololo[0],
-       wrkvecrehihihi,wrkvecrelohihi,wrkvecrehilohi,wrkvecrelolohi,
-       wrkvecrehihilo,wrkvecrelohilo,wrkvecrehilolo,wrkvecrelololo,
-       wrkvecimhihihi,wrkvecimlohihi,wrkvecimhilohi,wrkvecimlolohi,
-       wrkvecimhihilo,wrkvecimlohilo,wrkvecimhilolo,wrkvecimlololo);
-
-   if(verbose)
+   if(nrm < 1.0e-120)
    {
-      double acchihihi,acclohihi,acchilohi,acclolohi;
-      double acchihilo,acclohilo,acchilolo,acclololo;
+      if(vrblvl > 0)
+         cout << "skip call to CPU_cmplx8_factors_houseqr ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_cmplx8_factors_houseqr ..." << endl;
 
-      cout << "The leading coefficients of the solution :" << endl;
-      for(int i=0; i<dim; i++)
-         cout << solrehihihi[0][i] << "  " << solrelohihi[0][i] << endl
-              << "  "
-              << solrehilohi[0][i] << "  " << solrelolohi[0][i] << endl
-              << "  "
-              << solrehihilo[0][i] << "  " << solrelohilo[0][i] << endl
-              << "  "
-              << solrehilolo[0][i] << "  " << solrelololo[0][i] << endl
-              << "  "
-              << solimhihihi[0][i] << "  " << solimlohihi[0][i] << endl
-              << "  "
-              << solimhilohi[0][i] << "  " << solimlolohi[0][i] << endl
-              << "  "
-              << solimhihilo[0][i] << "  " << solimlohilo[0][i] << endl
-              << "  "
-              << solimhilolo[0][i] << "  " << solimlololo[0][i] << endl;
+      CPU_cmplx8_factors_houseqr
+         (dim,dim,
+          wrkmatrehihihi,wrkmatrelohihi,wrkmatrehilohi,wrkmatrelolohi,
+          wrkmatrehihilo,wrkmatrelohilo,wrkmatrehilolo,wrkmatrelololo,
+          wrkmatimhihihi,wrkmatimlohihi,wrkmatimhilohi,wrkmatimlolohi,
+          wrkmatimhihilo,wrkmatimlohilo,wrkmatimhilolo,wrkmatimlololo,
+          Qrehihihi,Qrelohihi,Qrehilohi,Qrelolohi,
+          Qrehihilo,Qrelohilo,Qrehilolo,Qrelololo,
+          Qimhihihi,Qimlohihi,Qimhilohi,Qimlolohi,
+          Qimhihilo,Qimlohilo,Qimhilolo,Qimlololo,
+          Rrehihihi,Rrelohihi,Rrehilohi,Rrelolohi,
+          Rrehihilo,Rrelohilo,Rrehilolo,Rrelololo,
+          Rimhihihi,Rimlohihi,Rimhilohi,Rimlolohi,
+          Rimhihilo,Rimlohilo,Rimhilolo,Rimlololo);
 
-      for(int i=0; i<dim; i++)
+      CPU_cmplx8_factors_qrbs
+         (dim,dim,
+          Qrehihihi,Qrelohihi,Qrehilohi,Qrelolohi,
+          Qrehihilo,Qrelohilo,Qrehilolo,Qrelololo,
+          Qimhihihi,Qimlohihi,Qimhilohi,Qimlolohi,
+          Qimhihilo,Qimlohilo,Qimhilolo,Qimlololo,
+          Rrehihihi,Rrelohihi,Rrehilohi,Rrelolohi,
+          Rrehihilo,Rrelohilo,Rrehilolo,Rrelololo,
+          Rimhihihi,Rimlohihi,Rimhilohi,Rimlolohi,
+          Rimhihilo,Rimlohilo,Rimhilolo,Rimlololo,
+          rhsrehihihi[0],rhsrelohihi[0],rhsrehilohi[0],rhsrelolohi[0],
+          rhsrehihilo[0],rhsrelohilo[0],rhsrehilolo[0],rhsrelololo[0],
+          rhsimhihihi[0],rhsimlohihi[0],rhsimhilohi[0],rhsimlolohi[0],
+          rhsimhihilo[0],rhsimlohilo[0],rhsimhilolo[0],rhsimlololo[0],
+          solrehihihi[0],solrelohihi[0],solrehilohi[0],solrelolohi[0],
+          solrehihilo[0],solrelohilo[0],solrehilolo[0],solrelololo[0],
+          solimhihihi[0],solimlohihi[0],solimhilohi[0],solimlolohi[0],
+          solimhihilo[0],solimlohilo[0],solimhilolo[0],solimlololo[0],
+          wrkvecrehihihi,wrkvecrelohihi,wrkvecrehilohi,wrkvecrelolohi,
+          wrkvecrehihilo,wrkvecrelohilo,wrkvecrehilolo,wrkvecrelololo,
+          wrkvecimhihihi,wrkvecimlohihi,wrkvecimhilohi,wrkvecimlolohi,
+          wrkvecimhihilo,wrkvecimlohilo,wrkvecimhilolo,wrkvecimlololo);
+
+      if(vrblvl > 0)
       {
-         wrkvecrehihihi[i] = rhsrehihihi[0][i];
-         wrkvecrelohihi[i] = rhsrelohihi[0][i];
-         wrkvecrehilohi[i] = rhsrehilohi[0][i];
-         wrkvecrelolohi[i] = rhsrelolohi[0][i];
-         wrkvecrehihilo[i] = rhsrehihilo[0][i];
-         wrkvecrelohilo[i] = rhsrelohilo[0][i];
-         wrkvecrehilolo[i] = rhsrehilolo[0][i];
-         wrkvecrelololo[i] = rhsrelololo[0][i];
-         wrkvecimhihihi[i] = rhsimhihihi[0][i];
-         wrkvecimlohihi[i] = rhsimlohihi[0][i];
-         wrkvecimhilohi[i] = rhsimhilohi[0][i];
-         wrkvecimlolohi[i] = rhsimlolohi[0][i];
-         wrkvecimhihilo[i] = rhsimhihilo[0][i];
-         wrkvecimlohilo[i] = rhsimlohilo[0][i];
-         wrkvecimhilolo[i] = rhsimhilolo[0][i];
-         wrkvecimlololo[i] = rhsimlololo[0][i];
+         double nrm;
 
-         for(int j=0; j<dim; j++)
-         {
-            // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
-            // zre = matre[0][i][j]*solre[0][j] - matim[0][i][j]*solim[0][j];
-            // wrkvecre[i] = wrkvecre[i] + zre;
-            odf_mul(matrehihihi[0][i][j],matrelohihi[0][i][j],
-                    matrehilohi[0][i][j],matrelolohi[0][i][j],
-                    matrehihilo[0][i][j],matrelohilo[0][i][j],
-                    matrehilolo[0][i][j],matrelololo[0][i][j],
-                    solrehihihi[0][j],solrelohihi[0][j],
-                    solrehilohi[0][j],solrelolohi[0][j],
-                    solrehihilo[0][j],solrelohilo[0][j],
-                    solrehilolo[0][j],solrelololo[0][j],
-                    &acchihihi,&acclohihi,&acchilohi,&acclolohi,
-                    &acchihilo,&acclohilo,&acchilolo,&acclololo);
-            odf_inc(&wrkvecrehihihi[i],&wrkvecrelohihi[i],
-                    &wrkvecrehilohi[i],&wrkvecrelolohi[i],
-                    &wrkvecrehihilo[i],&wrkvecrelohilo[i],
-                    &wrkvecrehilolo[i],&wrkvecrelololo[i],
-                    acchihihi,acclohihi,acchilohi,acclolohi,
-                    acchihilo,acclohilo,acchilolo,acclololo);
-            odf_mul(matimhihihi[0][i][j],matimlohihi[0][i][j],
-                    matimhilohi[0][i][j],matimlolohi[0][i][j],
-                    matimhihilo[0][i][j],matimlohilo[0][i][j],
-                    matimhilolo[0][i][j],matimlololo[0][i][j],
-                    solimhihihi[0][j],solimlohihi[0][j],
-                    solimhilohi[0][j],solimlolohi[0][j],
-                    solimhihilo[0][j],solimlohilo[0][j],
-                    solimhilolo[0][j],solimlololo[0][j],
-                    &acchihihi,&acclohihi,&acchilohi,&acclolohi,
-                    &acchihilo,&acclohilo,&acchilolo,&acclololo);
-            odf_dec(&wrkvecrehihihi[i],&wrkvecrelohihi[i],
-                    &wrkvecrehilohi[i],&wrkvecrelolohi[i],
-                    &wrkvecrehihilo[i],&wrkvecrelohilo[i],
-                    &wrkvecrehilolo[i],&wrkvecrelololo[i],
-                    acchihihi,acclohihi,acchilohi,acclolohi,
-                    acchihilo,acclohilo,acchilolo,acclololo);
-            // zim = matre[0][i][j]*solim[0][j] + matim[0][i][j]*solre[0][j];
-            // wrkvecim[i] = wrkvecim[i] + zim;
-            odf_mul(matrehihihi[0][i][j],matrelohihi[0][i][j],
-                    matrehilohi[0][i][j],matrelolohi[0][i][j],
-                    matrehihilo[0][i][j],matrelohilo[0][i][j],
-                    matrehilolo[0][i][j],matrelololo[0][i][j],
-                    solimhihihi[0][j],solimlohihi[0][j],
-                    solimhilohi[0][j],solimlolohi[0][j],
-                    solimhihilo[0][j],solimlohilo[0][j],
-                    solimhilolo[0][j],solimlololo[0][j],
-                    &acchihihi,&acclohihi,&acchilohi,&acclolohi,
-                    &acchihilo,&acclohilo,&acchilolo,&acclololo);
-            odf_inc(&wrkvecimhihihi[i],&wrkvecimlohihi[i],
-                    &wrkvecimhilohi[i],&wrkvecimlolohi[i],
-                    &wrkvecimhihilo[i],&wrkvecimlohilo[i],
-                    &wrkvecimhilolo[i],&wrkvecimlololo[i],
-                    acchihihi,acclohihi,acchilohi,acclolohi,
-                    acchihilo,acclohilo,acchilolo,acclololo);
-            odf_mul(matimhihihi[0][i][j],matimlohihi[0][i][j],
-                    matimhilohi[0][i][j],matimlolohi[0][i][j],
-                    matimhihilo[0][i][j],matimlohilo[0][i][j],
-                    matimhilolo[0][i][j],matimlololo[0][i][j],
-                    solrehihihi[0][j],solrelohihi[0][j],
-                    solrehilohi[0][j],solrelolohi[0][j],
-                    solrehihilo[0][j],solrelohilo[0][j],
-                    solrehilolo[0][j],solrelololo[0][j],
-                    &acchihihi,&acclohihi,&acchilohi,&acclolohi,
-                    &acchihilo,&acclohilo,&acchilolo,&acclololo);
-            odf_inc(&wrkvecimhihihi[i],&wrkvecimlohihi[i],
-                    &wrkvecimhilohi[i],&wrkvecimlolohi[i],
-                    &wrkvecimhihilo[i],&wrkvecimlohilo[i],
-                    &wrkvecimhilolo[i],&wrkvecimlololo[i],
-                    acchihihi,acclohihi,acchilohi,acclolohi,
-                    acchihilo,acclohilo,acchilolo,acclololo);
-         }
+         CPU_cmplx_onenorm(dim,wrkvecrehihihi,wrkvecimhihihi,&nrm);
+         cout << "1-norm of Q^T*b : " << nrm << endl;
+         CPU_cmplx_onenorm(dim,solrehihihi[0],solimhihihi[0],&nrm);
+         cout << "1-norm of x : " << nrm << endl;
       }
-      cout << "The residual vector :" << endl;
-      for(int i=0; i<dim; i++)
-         cout << wrkvecrehihihi[i] << "  " << wrkvecrelohihi[i] << endl
-              << "  "
-              << wrkvecrehilohi[i] << "  " << wrkvecrelolohi[i] << endl
-              << "  "
-              << wrkvecrehihilo[i] << "  " << wrkvecrelohilo[i] << endl
-              << "  "
-              << wrkvecrehilolo[i] << "  " << wrkvecrelololo[i] << endl
-              << "  "
-              << wrkvecimhihihi[i] << "  " << wrkvecimlohihi[i] << endl
-              << "  "
-              << wrkvecimhilohi[i] << "  " << wrkvecimlolohi[i] << endl
-              << "  "
-              << wrkvecimhihilo[i] << "  " << wrkvecimlohilo[i] << endl
-              << "  "
-              << wrkvecimhilolo[i] << "  " << wrkvecimlololo[i] << endl;
+      if(vrblvl > 1)
+      {
+         double acchihihi,acclohihi,acchilohi,acclolohi;
+         double acchihilo,acclohilo,acchilolo,acclololo;
+
+         cout << "The leading coefficients of the solution :" << endl;
+         for(int i=0; i<dim; i++)
+            cout << solrehihihi[0][i] << "  " << solrelohihi[0][i] << endl
+                 << "  "
+                 << solrehilohi[0][i] << "  " << solrelolohi[0][i] << endl
+                 << "  "
+                 << solrehihilo[0][i] << "  " << solrelohilo[0][i] << endl
+                 << "  "
+                 << solrehilolo[0][i] << "  " << solrelololo[0][i] << endl
+                 << "  "
+                 << solimhihihi[0][i] << "  " << solimlohihi[0][i] << endl
+                 << "  "
+                 << solimhilohi[0][i] << "  " << solimlolohi[0][i] << endl
+                 << "  "
+                 << solimhihilo[0][i] << "  " << solimlohilo[0][i] << endl
+                 << "  "
+                 << solimhilolo[0][i] << "  " << solimlololo[0][i] << endl;
+
+         for(int i=0; i<dim; i++)
+         {
+            wrkvecrehihihi[i] = rhsrehihihi[0][i];
+            wrkvecrelohihi[i] = rhsrelohihi[0][i];
+            wrkvecrehilohi[i] = rhsrehilohi[0][i];
+            wrkvecrelolohi[i] = rhsrelolohi[0][i];
+            wrkvecrehihilo[i] = rhsrehihilo[0][i];
+            wrkvecrelohilo[i] = rhsrelohilo[0][i];
+            wrkvecrehilolo[i] = rhsrehilolo[0][i];
+            wrkvecrelololo[i] = rhsrelololo[0][i];
+            wrkvecimhihihi[i] = rhsimhihihi[0][i];
+            wrkvecimlohihi[i] = rhsimlohihi[0][i];
+            wrkvecimhilohi[i] = rhsimhilohi[0][i];
+            wrkvecimlolohi[i] = rhsimlolohi[0][i];
+            wrkvecimhihilo[i] = rhsimhihilo[0][i];
+            wrkvecimlohilo[i] = rhsimlohilo[0][i];
+            wrkvecimhilolo[i] = rhsimhilolo[0][i];
+            wrkvecimlololo[i] = rhsimlololo[0][i];
+   
+            for(int j=0; j<dim; j++)
+            {
+               // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
+               // zre = matre[0][i][j]*solre[0][j] - matim[0][i][j]*solim[0][j];
+               // wrkvecre[i] = wrkvecre[i] + zre;
+               odf_mul(matrehihihi[0][i][j],matrelohihi[0][i][j],
+                       matrehilohi[0][i][j],matrelolohi[0][i][j],
+                       matrehihilo[0][i][j],matrelohilo[0][i][j],
+                       matrehilolo[0][i][j],matrelololo[0][i][j],
+                       solrehihihi[0][j],solrelohihi[0][j],
+                       solrehilohi[0][j],solrelolohi[0][j],
+                       solrehihilo[0][j],solrelohilo[0][j],
+                       solrehilolo[0][j],solrelololo[0][j],
+                       &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                       &acchihilo,&acclohilo,&acchilolo,&acclololo);
+               odf_inc(&wrkvecrehihihi[i],&wrkvecrelohihi[i],
+                       &wrkvecrehilohi[i],&wrkvecrelolohi[i],
+                       &wrkvecrehihilo[i],&wrkvecrelohilo[i],
+                       &wrkvecrehilolo[i],&wrkvecrelololo[i],
+                       acchihihi,acclohihi,acchilohi,acclolohi,
+                       acchihilo,acclohilo,acchilolo,acclololo);
+               odf_mul(matimhihihi[0][i][j],matimlohihi[0][i][j],
+                       matimhilohi[0][i][j],matimlolohi[0][i][j],
+                       matimhihilo[0][i][j],matimlohilo[0][i][j],
+                       matimhilolo[0][i][j],matimlololo[0][i][j],
+                       solimhihihi[0][j],solimlohihi[0][j],
+                       solimhilohi[0][j],solimlolohi[0][j],
+                       solimhihilo[0][j],solimlohilo[0][j],
+                       solimhilolo[0][j],solimlololo[0][j],
+                       &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                       &acchihilo,&acclohilo,&acchilolo,&acclololo);
+               odf_dec(&wrkvecrehihihi[i],&wrkvecrelohihi[i],
+                       &wrkvecrehilohi[i],&wrkvecrelolohi[i],
+                       &wrkvecrehihilo[i],&wrkvecrelohilo[i],
+                       &wrkvecrehilolo[i],&wrkvecrelololo[i],
+                       acchihihi,acclohihi,acchilohi,acclolohi,
+                       acchihilo,acclohilo,acchilolo,acclololo);
+               // zim = matre[0][i][j]*solim[0][j] + matim[0][i][j]*solre[0][j];
+               // wrkvecim[i] = wrkvecim[i] + zim;
+               odf_mul(matrehihihi[0][i][j],matrelohihi[0][i][j],
+                       matrehilohi[0][i][j],matrelolohi[0][i][j],
+                       matrehihilo[0][i][j],matrelohilo[0][i][j],
+                       matrehilolo[0][i][j],matrelololo[0][i][j],
+                       solimhihihi[0][j],solimlohihi[0][j],
+                       solimhilohi[0][j],solimlolohi[0][j],
+                       solimhihilo[0][j],solimlohilo[0][j],
+                       solimhilolo[0][j],solimlololo[0][j],
+                       &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                       &acchihilo,&acclohilo,&acchilolo,&acclololo);
+               odf_inc(&wrkvecimhihihi[i],&wrkvecimlohihi[i],
+                       &wrkvecimhilohi[i],&wrkvecimlolohi[i],
+                       &wrkvecimhihilo[i],&wrkvecimlohilo[i],
+                       &wrkvecimhilolo[i],&wrkvecimlololo[i],
+                       acchihihi,acclohihi,acchilohi,acclolohi,
+                       acchihilo,acclohilo,acchilolo,acclololo);
+               odf_mul(matimhihihi[0][i][j],matimlohihi[0][i][j],
+                       matimhilohi[0][i][j],matimlolohi[0][i][j],
+                       matimhihilo[0][i][j],matimlohilo[0][i][j],
+                       matimhilolo[0][i][j],matimlololo[0][i][j],
+                       solrehihihi[0][j],solrelohihi[0][j],
+                       solrehilohi[0][j],solrelolohi[0][j],
+                       solrehihilo[0][j],solrelohilo[0][j],
+                       solrehilolo[0][j],solrelololo[0][j],
+                       &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                       &acchihilo,&acclohilo,&acchilolo,&acclololo);
+               odf_inc(&wrkvecimhihihi[i],&wrkvecimlohihi[i],
+                       &wrkvecimhilohi[i],&wrkvecimlolohi[i],
+                       &wrkvecimhihilo[i],&wrkvecimlohilo[i],
+                       &wrkvecimhilolo[i],&wrkvecimlololo[i],
+                       acchihihi,acclohihi,acchilohi,acclolohi,
+                       acchihilo,acclohilo,acchilolo,acclololo);
+            }
+         }
+         cout << "The residual vector :" << endl;
+         for(int i=0; i<dim; i++)
+            cout << wrkvecrehihihi[i] << "  " << wrkvecrelohihi[i] << endl
+                 << "  "
+                 << wrkvecrehilohi[i] << "  " << wrkvecrelolohi[i] << endl
+                 << "  "
+                 << wrkvecrehihilo[i] << "  " << wrkvecrelohilo[i] << endl
+                 << "  "
+                 << wrkvecrehilolo[i] << "  " << wrkvecrelololo[i] << endl
+                 << "  "
+                 << wrkvecimhihihi[i] << "  " << wrkvecimlohihi[i] << endl
+                 << "  "
+                 << wrkvecimhilohi[i] << "  " << wrkvecimlolohi[i] << endl
+                 << "  "
+                 << wrkvecimhihilo[i] << "  " << wrkvecimlohilo[i] << endl
+                 << "  "
+                 << wrkvecimhilolo[i] << "  " << wrkvecimlololo[i] << endl;
+      }
    }
 }
 

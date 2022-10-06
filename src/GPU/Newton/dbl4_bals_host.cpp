@@ -7,6 +7,7 @@
 #include <cmath>
 #include "quad_double_functions.h"
 #include "dbl4_factorizations.h"
+#include "dbl_onenorms_host.h"
 #include "dbl4_bals_host.h"
 
 using namespace std;
@@ -118,7 +119,6 @@ void CPU_dbl4_qrbs_head
    double *wrkvechihi, double *wrkveclohi,
    double *wrkvechilo, double *wrkveclolo, int vrblvl )
 {
-   bool verbose = (vrblvl > 1);
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
       {
@@ -128,7 +128,7 @@ void CPU_dbl4_qrbs_head
          wrkmatlolo[i][j] = matlolo[0][i][j];
       }
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "The matrix : " << endl;
       cout << setprecision(2);
@@ -149,48 +149,69 @@ void CPU_dbl4_qrbs_head
          cout << rhshihi[0][i] << "  " << rhslohi[0][i] << "  "
               << rhshilo[0][i] << "  " << rhslolo[0][i] << endl;
    }
-   if(verbose) cout << "calling CPU_dbl4_factors_houseqr ..." << endl;
+   double nrm;
+   CPU_dbl_onenorm(dim,rhshihi[0],&nrm);
+   if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-   CPU_dbl4_factors_houseqr
-      (dim,dim,wrkmathihi,wrkmatlohi,wrkmathilo,wrkmatlolo,
-       Qhihi,Qlohi,Qhilo,Qlolo,Rhihi,Rlohi,Rhilo,Rlolo);
-   CPU_dbl4_factors_qrbs
-      (dim,dim,Qhihi,Qlohi,Qhilo,Qlolo,Rhihi,Rlohi,Rhilo,Rlolo,
-       rhshihi[0],rhslohi[0],rhshilo[0],rhslolo[0],
-       solhihi[0],sollohi[0],solhilo[0],sollolo[0],
-       wrkvechihi,wrkveclohi,wrkvechilo,wrkveclolo);
-
-   if(verbose)
+   if(nrm < 1.0e-56)
    {
-      double acchihi,acclohi,acchilo,acclolo;
+      if(vrblvl > 0)
+         cout << "skip call to CPU_dbl4_factors_houseqr ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_dbl4_factors_houseqr ..." << endl;
 
-      cout << "The leading coefficients of the solution :" << endl;
-      for(int i=0; i<dim; i++)
-         cout << solhihi[0][i] << "  " << sollohi[0][i] << "  "
-              << solhilo[0][i] << "  " << sollolo[0][i] << endl;
-      for(int i=0; i<dim; i++)
+      CPU_dbl4_factors_houseqr
+         (dim,dim,wrkmathihi,wrkmatlohi,wrkmathilo,wrkmatlolo,
+          Qhihi,Qlohi,Qhilo,Qlolo,Rhihi,Rlohi,Rhilo,Rlolo);
+      CPU_dbl4_factors_qrbs
+         (dim,dim,Qhihi,Qlohi,Qhilo,Qlolo,Rhihi,Rlohi,Rhilo,Rlolo,
+          rhshihi[0],rhslohi[0],rhshilo[0],rhslolo[0],
+          solhihi[0],sollohi[0],solhilo[0],sollolo[0],
+          wrkvechihi,wrkveclohi,wrkvechilo,wrkveclolo);
+
+      if(vrblvl > 0)
       {
-         wrkvechihi[i] = rhshihi[0][i];
-         wrkveclohi[i] = rhslohi[0][i];
-         wrkvechilo[i] = rhshilo[0][i];
-         wrkveclolo[i] = rhslolo[0][i];
+         double nrm;
 
-         for(int j=0; j<dim; j++)
-            // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
-         {
-            qdf_mul(mathihi[0][i][j],matlohi[0][i][j],
-                    mathilo[0][i][j],matlolo[0][i][j],
-                    solhihi[0][j],sollohi[0][j],solhilo[0][j],sollolo[0][j],
-                    &acchihi,&acclohi,&acchilo,&acclolo);
-            qdf_dec(&wrkvechihi[i],&wrkveclohi[i],
-                    &wrkvechilo[i],&wrkveclolo[i],
-                    acchihi,acclohi,acchilo,acclolo);
-         }
+         CPU_dbl_onenorm(dim,wrkvechihi,&nrm);
+         cout << "1-norm of Q^T*b : " << nrm << endl;
+         CPU_dbl_onenorm(dim,solhihi[0],&nrm);
+         cout << "1-norm of x : " << nrm << endl;
       }
-      cout << "The residual vector :" << endl;
-      for(int i=0; i<dim; i++)
-        cout << wrkvechihi[i] << "  " << wrkveclohi[i] << "  "
-             << wrkvechilo[i] << "  " << wrkveclolo[i] << endl;
+      if(vrblvl > 1)
+      {
+         double acchihi,acclohi,acchilo,acclolo;
+   
+         cout << "The leading coefficients of the solution :" << endl;
+         for(int i=0; i<dim; i++)
+            cout << solhihi[0][i] << "  " << sollohi[0][i] << "  "
+                 << solhilo[0][i] << "  " << sollolo[0][i] << endl;
+
+         for(int i=0; i<dim; i++)
+         {
+            wrkvechihi[i] = rhshihi[0][i]; wrkveclohi[i] = rhslohi[0][i];
+            wrkvechilo[i] = rhshilo[0][i]; wrkveclolo[i] = rhslolo[0][i];
+   
+            for(int j=0; j<dim; j++)
+               // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
+            {
+               qdf_mul(mathihi[0][i][j],matlohi[0][i][j],
+                       mathilo[0][i][j],matlolo[0][i][j],
+                       solhihi[0][j],sollohi[0][j],
+                       solhilo[0][j],sollolo[0][j],
+                       &acchihi,&acclohi,&acchilo,&acclolo);
+               qdf_dec(&wrkvechihi[i],&wrkveclohi[i],
+                       &wrkvechilo[i],&wrkveclolo[i],
+                       acchihi,acclohi,acchilo,acclolo);
+            }
+         }
+         cout << "The residual vector :" << endl;
+         for(int i=0; i<dim; i++)
+           cout << wrkvechihi[i] << "  " << wrkveclohi[i] << "  "
+                << wrkvechilo[i] << "  " << wrkveclolo[i] << endl;
+      }
    }
 }
 
@@ -221,7 +242,6 @@ void CPU_cmplx4_qrbs_head
    double *wrkvecimhihi, double *wrkvecimlohi,
    double *wrkvecimhilo, double *wrkvecimlolo, int vrblvl )
 {
-   bool verbose = (vrblvl > 1);
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
       {
@@ -235,7 +255,7 @@ void CPU_cmplx4_qrbs_head
          wrkmatimlolo[i][j] = matimlolo[0][i][j];
       }
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "The matrix : " << endl;
       // cout << setprecision(2);
@@ -260,94 +280,115 @@ void CPU_cmplx4_qrbs_head
               << rhsimhihi[0][i] << "  " << rhsimlohi[0][i] << endl << "  "
               << rhsimhilo[0][i] << "  " << rhsimlolo[0][i] << endl;
    }
-   if(verbose) cout << "calling CPU_cmplx_factors_houseqr ..." << endl;
+   double nrm;
+   CPU_cmplx_onenorm(dim,rhsrehihi[0],rhsimhihi[0],&nrm);
+   if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-   CPU_cmplx4_factors_houseqr
-      (dim,dim,wrkmatrehihi,wrkmatrelohi,wrkmatrehilo,wrkmatrelolo,
-               wrkmatimhihi,wrkmatimlohi,wrkmatimhilo,wrkmatimlolo,
-       Qrehihi,Qrelohi,Qrehilo,Qrelolo,Qimhihi,Qimlohi,Qimhilo,Qimlolo,
-       Rrehihi,Rrelohi,Rrehilo,Rrelolo,Rimhihi,Rimlohi,Rimhilo,Rimlolo);
-
-   CPU_cmplx4_factors_qrbs
-      (dim,dim,Qrehihi,Qrelohi,Qrehilo,Qrelolo,
-               Qimhihi,Qimlohi,Qimhilo,Qimlolo,
-       Rrehihi,Rrelohi,Rrehilo,Rrelolo,Rimhihi,Rimlohi,Rimhilo,Rimlolo,
-       rhsrehihi[0],rhsrelohi[0],rhsrehilo[0],rhsrelolo[0],
-       rhsimhihi[0],rhsimlohi[0],rhsimhilo[0],rhsimlolo[0],
-       solrehihi[0],solrelohi[0],solrehilo[0],solrelolo[0],
-       solimhihi[0],solimlohi[0],solimhilo[0],solimlolo[0],
-       wrkvecrehihi,wrkvecrelohi,wrkvecrehilo,wrkvecrelolo,
-       wrkvecimhihi,wrkvecimlohi,wrkvecimhilo,wrkvecimlolo);
-
-   if(verbose)
+   if(nrm < 1.0e-56)
    {
-      double acchihi,acclohi,acchilo,acclolo;
+      if(vrblvl > 0)
+         cout << "skip call to CPU_cmplx4_factors_houseqr ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_cmplx4_factors_houseqr ..." << endl;
 
-      cout << "The leading coefficients of the solution :" << endl;
-      for(int i=0; i<dim; i++)
-         cout << solrehihi[0][i] << "  " << solrelohi[0][i] << endl << "  "
-              << solrehilo[0][i] << "  " << solrelolo[0][i] << endl << "  "
-              << solimhihi[0][i] << "  " << solimlohi[0][i] << endl << "  "
-              << solimhilo[0][i] << "  " << solimlolo[0][i] << endl;
+      CPU_cmplx4_factors_houseqr
+         (dim,dim,wrkmatrehihi,wrkmatrelohi,wrkmatrehilo,wrkmatrelolo,
+                  wrkmatimhihi,wrkmatimlohi,wrkmatimhilo,wrkmatimlolo,
+          Qrehihi,Qrelohi,Qrehilo,Qrelolo,Qimhihi,Qimlohi,Qimhilo,Qimlolo,
+          Rrehihi,Rrelohi,Rrehilo,Rrelolo,Rimhihi,Rimlohi,Rimhilo,Rimlolo);
 
-      for(int i=0; i<dim; i++)
+      CPU_cmplx4_factors_qrbs
+         (dim,dim,Qrehihi,Qrelohi,Qrehilo,Qrelolo,
+                  Qimhihi,Qimlohi,Qimhilo,Qimlolo,
+          Rrehihi,Rrelohi,Rrehilo,Rrelolo,Rimhihi,Rimlohi,Rimhilo,Rimlolo,
+          rhsrehihi[0],rhsrelohi[0],rhsrehilo[0],rhsrelolo[0],
+          rhsimhihi[0],rhsimlohi[0],rhsimhilo[0],rhsimlolo[0],
+          solrehihi[0],solrelohi[0],solrehilo[0],solrelolo[0],
+          solimhihi[0],solimlohi[0],solimhilo[0],solimlolo[0],
+          wrkvecrehihi,wrkvecrelohi,wrkvecrehilo,wrkvecrelolo,
+          wrkvecimhihi,wrkvecimlohi,wrkvecimhilo,wrkvecimlolo);
+
+      if(vrblvl > 0)
       {
-         wrkvecrehihi[i] = rhsrehihi[0][i];
-         wrkvecrelohi[i] = rhsrelohi[0][i];
-         wrkvecrehilo[i] = rhsrehilo[0][i];
-         wrkvecrelolo[i] = rhsrelolo[0][i];
-         wrkvecimhihi[i] = rhsimhihi[0][i];
-         wrkvecimlohi[i] = rhsimlohi[0][i];
-         wrkvecimhilo[i] = rhsimhilo[0][i];
-         wrkvecimlolo[i] = rhsimlolo[0][i];
+         double nrm;
 
-         for(int j=0; j<dim; j++)
-         {
-            // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
-            // zre = matre[0][i][j]*solre[0][j] - matim[0][i][j]*solim[0][j];
-            // wrkvecre[i] = wrkvecre[i] + zre;
-            qdf_mul(matrehihi[0][i][j],matrelohi[0][i][j],
-                    matrehilo[0][i][j],matrelolo[0][i][j],
-                    solrehihi[0][j],solrelohi[0][j],
-                    solrehilo[0][j],solrelolo[0][j],
-                    &acchihi,&acclohi,&acchilo,&acclolo);
-            qdf_inc(&wrkvecrehihi[i],&wrkvecrelohi[i],
-                    &wrkvecrehilo[i],&wrkvecrelolo[i],
-                    acchihi,acclohi,acchilo,acclolo);
-            qdf_mul(matimhihi[0][i][j],matimlohi[0][i][j],
-                    matimhilo[0][i][j],matimlolo[0][i][j],
-                    solimhihi[0][j],solimlohi[0][j],
-                    solimhilo[0][j],solimlolo[0][j],
-                    &acchihi,&acclohi,&acchilo,&acclolo);
-            qdf_dec(&wrkvecrehihi[i],&wrkvecrelohi[i],
-                    &wrkvecrehilo[i],&wrkvecrelolo[i],
-                    acchihi,acclohi,acchilo,acclolo);
-            // zim = matre[0][i][j]*solim[0][j] + matim[0][i][j]*solre[0][j];
-            // wrkvecim[i] = wrkvecim[i] + zim;
-            qdf_mul(matrehihi[0][i][j],matrelohi[0][i][j],
-                    matrehilo[0][i][j],matrelolo[0][i][j],
-                    solimhihi[0][j],solimlohi[0][j],
-                    solimhilo[0][j],solimlolo[0][j],
-                    &acchihi,&acclohi,&acchilo,&acclolo);
-            qdf_inc(&wrkvecimhihi[i],&wrkvecimlohi[i],
-                    &wrkvecimhilo[i],&wrkvecimlolo[i],
-                    acchihi,acclohi,acchilo,acclolo);
-            qdf_mul(matimhihi[0][i][j],matimlohi[0][i][j],
-                    matimhilo[0][i][j],matimlolo[0][i][j],
-                    solrehihi[0][j],solrelohi[0][j],
-                    solrehilo[0][j],solrelolo[0][j],
-                    &acchihi,&acclohi,&acchilo,&acclolo);
-            qdf_inc(&wrkvecimhihi[i],&wrkvecimlohi[i],
-                    &wrkvecimhilo[i],&wrkvecimlolo[i],
-                    acchihi,acclohi,acchilo,acclolo);
-         }
+         CPU_cmplx_onenorm(dim,wrkvecrehihi,wrkvecimhihi,&nrm);
+         cout << "1-norm of Q^T*b : " << nrm << endl;
+         CPU_cmplx_onenorm(dim,solrehihi[0],solimhihi[0],&nrm);
+         cout << "1-norm of x : " << nrm << endl;
       }
-      cout << "The residual vector :" << endl;
-      for(int i=0; i<dim; i++)
-         cout << wrkvecrehihi[i] << "  " << wrkvecrelohi[i] << endl << "  "
-              << wrkvecrehilo[i] << "  " << wrkvecrelolo[i] << endl << "  "
-              << wrkvecimhihi[i] << "  " << wrkvecimlohi[i] << endl << "  "
-              << wrkvecimhilo[i] << "  " << wrkvecimlolo[i] << endl;
+      if(vrblvl > 1)
+      {
+         double acchihi,acclohi,acchilo,acclolo;
+
+         cout << "The leading coefficients of the solution :" << endl;
+         for(int i=0; i<dim; i++)
+            cout << solrehihi[0][i] << "  " << solrelohi[0][i] << endl << "  "
+                 << solrehilo[0][i] << "  " << solrelolo[0][i] << endl << "  "
+                 << solimhihi[0][i] << "  " << solimlohi[0][i] << endl << "  "
+                 << solimhilo[0][i] << "  " << solimlolo[0][i] << endl;
+
+         for(int i=0; i<dim; i++)
+         {
+            wrkvecrehihi[i] = rhsrehihi[0][i];
+            wrkvecrelohi[i] = rhsrelohi[0][i];
+            wrkvecrehilo[i] = rhsrehilo[0][i];
+            wrkvecrelolo[i] = rhsrelolo[0][i];
+            wrkvecimhihi[i] = rhsimhihi[0][i];
+            wrkvecimlohi[i] = rhsimlohi[0][i];
+            wrkvecimhilo[i] = rhsimhilo[0][i];
+            wrkvecimlolo[i] = rhsimlolo[0][i];
+
+            for(int j=0; j<dim; j++)
+            {
+               // wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
+               // zre = matre[0][i][j]*solre[0][j] - matim[0][i][j]*solim[0][j];
+               // wrkvecre[i] = wrkvecre[i] + zre;
+               qdf_mul(matrehihi[0][i][j],matrelohi[0][i][j],
+                       matrehilo[0][i][j],matrelolo[0][i][j],
+                       solrehihi[0][j],solrelohi[0][j],
+                       solrehilo[0][j],solrelolo[0][j],
+                       &acchihi,&acclohi,&acchilo,&acclolo);
+               qdf_inc(&wrkvecrehihi[i],&wrkvecrelohi[i],
+                       &wrkvecrehilo[i],&wrkvecrelolo[i],
+                       acchihi,acclohi,acchilo,acclolo);
+               qdf_mul(matimhihi[0][i][j],matimlohi[0][i][j],
+                       matimhilo[0][i][j],matimlolo[0][i][j],
+                       solimhihi[0][j],solimlohi[0][j],
+                       solimhilo[0][j],solimlolo[0][j],
+                       &acchihi,&acclohi,&acchilo,&acclolo);
+               qdf_dec(&wrkvecrehihi[i],&wrkvecrelohi[i],
+                       &wrkvecrehilo[i],&wrkvecrelolo[i],
+                       acchihi,acclohi,acchilo,acclolo);
+               // zim = matre[0][i][j]*solim[0][j] + matim[0][i][j]*solre[0][j];
+               // wrkvecim[i] = wrkvecim[i] + zim;
+               qdf_mul(matrehihi[0][i][j],matrelohi[0][i][j],
+                       matrehilo[0][i][j],matrelolo[0][i][j],
+                       solimhihi[0][j],solimlohi[0][j],
+                       solimhilo[0][j],solimlolo[0][j],
+                       &acchihi,&acclohi,&acchilo,&acclolo);
+               qdf_inc(&wrkvecimhihi[i],&wrkvecimlohi[i],
+                       &wrkvecimhilo[i],&wrkvecimlolo[i],
+                       acchihi,acclohi,acchilo,acclolo);
+               qdf_mul(matimhihi[0][i][j],matimlohi[0][i][j],
+                       matimhilo[0][i][j],matimlolo[0][i][j],
+                       solrehihi[0][j],solrelohi[0][j],
+                       solrehilo[0][j],solrelolo[0][j],
+                       &acchihi,&acclohi,&acchilo,&acclolo);
+               qdf_inc(&wrkvecimhihi[i],&wrkvecimlohi[i],
+                       &wrkvecimhilo[i],&wrkvecimlolo[i],
+                       acchihi,acclohi,acchilo,acclolo);
+            }
+         }
+         cout << "The residual vector :" << endl;
+         for(int i=0; i<dim; i++)
+            cout << wrkvecrehihi[i] << "  " << wrkvecrelohi[i] << endl << "  "
+                 << wrkvecrehilo[i] << "  " << wrkvecrelolo[i] << endl << "  "
+                 << wrkvecimhihi[i] << "  " << wrkvecimlohi[i] << endl << "  "
+                 << wrkvecimhilo[i] << "  " << wrkvecimlolo[i] << endl;
+      }
    }
 }
 

@@ -15,6 +15,7 @@
 #include "dbl8_tabs_kernels.h"
 #include "dbl8_tail_kernels.h"
 #include "dbl8_bals_kernels.h"
+#include "dbl_onenorms_host.h"
 
 using namespace std;
 
@@ -1073,14 +1074,6 @@ void GPU_dbl8_bals_solve
    const int ncols = dim;
    const bool bvrb = (vrblvl > 1);
 
-   double **Ahihihi = new double*[nrows];
-   double **Alohihi = new double*[nrows];
-   double **Ahilohi = new double*[nrows];
-   double **Alolohi = new double*[nrows];
-   double **Ahihilo = new double*[nrows];
-   double **Alohilo = new double*[nrows];
-   double **Ahilolo = new double*[nrows];
-   double **Alololo = new double*[nrows];
    double *bhihihi = new double[nrows];
    double *blohihi = new double[nrows];
    double *bhilohi = new double[nrows];
@@ -1132,67 +1125,104 @@ void GPU_dbl8_bals_solve
                  << rhshilolo[k][i] << "  " << rhslololo[k][i] << endl;
       }
    }
-   for(int i=0; i<nrows; i++)
+   double nrm;
+   CPU_dbl_onenorm(nrows,rhshihihi[0],&nrm);
+   if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
+
+   if(nrm < 1.0e-120)
    {
-      Ahihihi[i] = new double[ncols];
-      Alohihi[i] = new double[ncols];
-      Ahilohi[i] = new double[ncols];
-      Alolohi[i] = new double[ncols];
-      Ahihilo[i] = new double[ncols];
-      Alohilo[i] = new double[ncols];
-      Ahilolo[i] = new double[ncols];
-      Alololo[i] = new double[ncols];
+      if(vrblvl > 0)
+         cout << "skip call to GPU_dbl8_bals_head ..." << endl;
 
       for(int j=0; j<ncols; j++)
       {
-         Ahihihi[i][j] = mathihihi[0][i][j];
-         Alohihi[i][j] = matlohihi[0][i][j];
-         Ahilohi[i][j] = mathilohi[0][i][j];
-         Alolohi[i][j] = matlolohi[0][i][j];
-         Ahihilo[i][j] = mathihilo[0][i][j];
-         Alohilo[i][j] = matlohilo[0][i][j];
-         Ahilolo[i][j] = mathilolo[0][i][j];
-         Alololo[i][j] = matlololo[0][i][j];
-      }
-      bhihihi[i] = rhshihihi[0][i];
-      blohihi[i] = rhslohihi[0][i];
-      bhilohi[i] = rhshilohi[0][i];
-      blolohi[i] = rhslolohi[0][i];
-      bhihilo[i] = rhshihilo[0][i];
-      blohilo[i] = rhslohilo[0][i];
-      bhilolo[i] = rhshilolo[0][i];
-      blololo[i] = rhslololo[0][i];
-
-      for(int j=0; j<ncols; j++)
-      {
-         Rhihihi[i][j] = mathihihi[0][i][j];
-         Rlohihi[i][j] = matlohihi[0][i][j];
-         Rhilohi[i][j] = mathilohi[0][i][j];
-         Rlolohi[i][j] = matlolohi[0][i][j];
-         Rhihilo[i][j] = mathihilo[0][i][j];
-         Rlohilo[i][j] = matlohilo[0][i][j];
-         Rhilolo[i][j] = mathilolo[0][i][j];
-         Rlololo[i][j] = matlololo[0][i][j];
+         solhihihi[0][j] = 0.0; sollohihi[0][j] = 0.0;
+         solhilohi[0][j] = 0.0; sollolohi[0][j] = 0.0;
+         solhihilo[0][j] = 0.0; sollohilo[0][j] = 0.0;
+         solhilolo[0][j] = 0.0; sollololo[0][j] = 0.0;
       }
    }
-   GPU_dbl8_bals_head
-      (nrows,ncols,szt,nbt,
-       Ahihihi,Alohihi,Ahilohi,Alolohi,Ahihilo,Alohilo,Ahilolo,Alololo,
-       Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
-       Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
-       bhihihi,blohihi,bhilohi,blolohi,bhihilo,blohilo,bhilolo,blololo,
-       xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,bvrb);
-
-   for(int j=0; j<ncols; j++)
+   else
    {
-      solhihihi[0][j] = xhihihi[j];
-      sollohihi[0][j] = xlohihi[j];
-      solhilohi[0][j] = xhilohi[j];
-      sollolohi[0][j] = xlolohi[j];
-      solhihilo[0][j] = xhihilo[j];
-      sollohilo[0][j] = xlohilo[j];
-      solhilolo[0][j] = xhilolo[j];
-      sollololo[0][j] = xlololo[j];
+      if(vrblvl > 0) cout << "calling GPU_dbl8_bals_head ..." << endl;
+
+      double **Ahihihi = new double*[nrows];
+      double **Alohihi = new double*[nrows];
+      double **Ahilohi = new double*[nrows];
+      double **Alolohi = new double*[nrows];
+      double **Ahihilo = new double*[nrows];
+      double **Alohilo = new double*[nrows];
+      double **Ahilolo = new double*[nrows];
+      double **Alololo = new double*[nrows];
+
+      for(int i=0; i<nrows; i++)
+      {
+         Ahihihi[i] = new double[ncols];
+         Alohihi[i] = new double[ncols];
+         Ahilohi[i] = new double[ncols];
+         Alolohi[i] = new double[ncols];
+         Ahihilo[i] = new double[ncols];
+         Alohilo[i] = new double[ncols];
+         Ahilolo[i] = new double[ncols];
+         Alololo[i] = new double[ncols];
+
+         for(int j=0; j<ncols; j++)
+         {
+            Ahihihi[i][j] = mathihihi[0][i][j];
+            Alohihi[i][j] = matlohihi[0][i][j];
+            Ahilohi[i][j] = mathilohi[0][i][j];
+            Alolohi[i][j] = matlolohi[0][i][j];
+            Ahihilo[i][j] = mathihilo[0][i][j];
+            Alohilo[i][j] = matlohilo[0][i][j];
+            Ahilolo[i][j] = mathilolo[0][i][j];
+            Alololo[i][j] = matlololo[0][i][j];
+         }
+         bhihihi[i] = rhshihihi[0][i];
+         blohihi[i] = rhslohihi[0][i];
+         bhilohi[i] = rhshilohi[0][i];
+         blolohi[i] = rhslolohi[0][i];
+         bhihilo[i] = rhshihilo[0][i];
+         blohilo[i] = rhslohilo[0][i];
+         bhilolo[i] = rhshilolo[0][i];
+         blololo[i] = rhslololo[0][i];
+
+         for(int j=0; j<ncols; j++)
+         {
+            Rhihihi[i][j] = mathihihi[0][i][j];
+            Rlohihi[i][j] = matlohihi[0][i][j];
+            Rhilohi[i][j] = mathilohi[0][i][j];
+            Rlolohi[i][j] = matlolohi[0][i][j];
+            Rhihilo[i][j] = mathihilo[0][i][j];
+            Rlohilo[i][j] = matlohilo[0][i][j];
+            Rhilolo[i][j] = mathilolo[0][i][j];
+            Rlololo[i][j] = matlololo[0][i][j];
+         }
+      }
+      GPU_dbl8_bals_head
+         (nrows,ncols,szt,nbt,
+          Ahihihi,Alohihi,Ahilohi,Alolohi,Ahihilo,Alohilo,Ahilolo,Alololo,
+          Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
+          Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
+          bhihihi,blohihi,bhilohi,blolohi,bhihilo,blohilo,bhilolo,blololo,
+          xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
+          bvrb);
+
+      for(int j=0; j<ncols; j++)
+      {
+         solhihihi[0][j] = xhihihi[j]; sollohihi[0][j] = xlohihi[j];
+         solhilohi[0][j] = xhilohi[j]; sollolohi[0][j] = xlolohi[j];
+         solhihilo[0][j] = xhihilo[j]; sollohilo[0][j] = xlohilo[j];
+         solhilolo[0][j] = xhilolo[j]; sollololo[0][j] = xlololo[j];
+      }
+      for(int i=0; i<nrows; i++)
+      {
+         free(Ahihihi[i]); free(Alohihi[i]);
+         free(Ahilohi[i]); free(Alolohi[i]);
+         free(Ahihilo[i]); free(Alohilo[i]);
+         free(Ahilolo[i]); free(Alololo[i]);
+      }
+      free(Ahihihi); free(Alohihi); free(Ahilohi); free(Alolohi);
+      free(Ahihilo); free(Alohilo); free(Ahilolo); free(Alololo);
    }
    for(int stage=1; stage<degp1; stage++)
    {
@@ -1227,14 +1257,10 @@ void GPU_dbl8_bals_solve
          // cout << "assigning component " << i
          //      << ", stage = " << stage << endl;
 
-         bhihihi[i] = rhshihihi[stage][i];
-         blohihi[i] = rhslohihi[stage][i];
-         bhilohi[i] = rhshilohi[stage][i];
-         blolohi[i] = rhslolohi[stage][i];
-         bhihilo[i] = rhshihilo[stage][i];
-         blohilo[i] = rhslohilo[stage][i];
-         bhilolo[i] = rhshilolo[stage][i];
-         blololo[i] = rhslololo[stage][i];
+         bhihihi[i] = rhshihihi[stage][i]; blohihi[i] = rhslohihi[stage][i];
+         bhilohi[i] = rhshilohi[stage][i]; blolohi[i] = rhslolohi[stage][i];
+         bhihilo[i] = rhshihilo[stage][i]; blohilo[i] = rhslohilo[stage][i];
+         bhilolo[i] = rhshilolo[stage][i]; blololo[i] = rhslololo[stage][i];
 
          // cout << "b[" << i << "] : "
          //      << bhihihi[i] << "  " << blohihi[i] << endl << "  "
@@ -1312,33 +1338,27 @@ void GPU_dbl8_bals_solve
 
       for(int j=0; j<ncols; j++)
       {
-         solhihihi[stage][j] = xhihihi[j];
-         sollohihi[stage][j] = xlohihi[j];
-         solhilohi[stage][j] = xhilohi[j];
-         sollolohi[stage][j] = xlolohi[j];
-         solhihilo[stage][j] = xhihilo[j];
-         sollohilo[stage][j] = xlohilo[j];
-         solhilolo[stage][j] = xhilolo[j];
-         sollololo[stage][j] = xlololo[j];
+         solhihihi[stage][j] = xhihihi[j]; sollohihi[stage][j] = xlohihi[j];
+         solhilohi[stage][j] = xhilohi[j]; sollolohi[stage][j] = xlolohi[j];
+         solhihilo[stage][j] = xhihilo[j]; sollohilo[stage][j] = xlohilo[j];
+         solhilolo[stage][j] = xhilolo[j]; sollololo[stage][j] = xlololo[j];
       }
    }
    for(int i=0; i<nrows; i++)
    {
-      free(Ahihihi[i]); free(Alohihi[i]); free(Ahilohi[i]); free(Alolohi[i]);
-      free(Ahihilo[i]); free(Alohilo[i]); free(Ahilolo[i]); free(Alololo[i]);
       free(workRhihihi[i]); free(workRlohihi[i]);
       free(workRhilohi[i]); free(workRlolohi[i]);
       free(workRhihilo[i]); free(workRlohilo[i]);
       free(workRhilolo[i]); free(workRlololo[i]);
    }
-   free(Ahihihi); free(bhihihi); free(xhihihi); free(workRhihihi);
-   free(Alohihi); free(blohihi); free(xlohihi); free(workRlohihi);
-   free(Ahilohi); free(bhilohi); free(xhilohi); free(workRhilohi);
-   free(Alolohi); free(blolohi); free(xlolohi); free(workRlolohi);
-   free(Ahihilo); free(bhihilo); free(xhihilo); free(workRhihilo);
-   free(Alohilo); free(blohilo); free(xlohilo); free(workRlohilo);
-   free(Ahilolo); free(bhilolo); free(xhilolo); free(workRhilolo);
-   free(Alololo); free(blololo); free(xlololo); free(workRlololo);
+   free(bhihihi); free(xhihihi); free(workRhihihi);
+   free(blohihi); free(xlohihi); free(workRlohihi);
+   free(bhilohi); free(xhilohi); free(workRhilohi);
+   free(blolohi); free(xlolohi); free(workRlolohi);
+   free(bhihilo); free(xhihilo); free(workRhihilo);
+   free(blohilo); free(xlohilo); free(workRlohilo);
+   free(bhilolo); free(xhilolo); free(workRhilolo);
+   free(blololo); free(xlololo); free(workRlololo);
 }
 
 void GPU_cmplx8_bals_solve
@@ -1387,23 +1407,6 @@ void GPU_cmplx8_bals_solve
    const int nrows = dim;
    const int ncols = dim;
    const bool bvrb = (vrblvl > 1);
-
-   double **Arehihihi = new double*[nrows];
-   double **Arelohihi = new double*[nrows];
-   double **Arehilohi = new double*[nrows];
-   double **Arelolohi = new double*[nrows];
-   double **Arehihilo = new double*[nrows];
-   double **Arelohilo = new double*[nrows];
-   double **Arehilolo = new double*[nrows];
-   double **Arelololo = new double*[nrows];
-   double **Aimhihihi = new double*[nrows];
-   double **Aimlohihi = new double*[nrows];
-   double **Aimhilohi = new double*[nrows];
-   double **Aimlolohi = new double*[nrows];
-   double **Aimhihilo = new double*[nrows];
-   double **Aimlohilo = new double*[nrows];
-   double **Aimhilolo = new double*[nrows];
-   double **Aimlololo = new double*[nrows];
 
    double *brehihihi = new double[nrows];
    double *brelohihi = new double[nrows];
@@ -1498,114 +1501,172 @@ void GPU_cmplx8_bals_solve
                  << rhsimhilolo[k][i] << "  " << rhsimlololo[k][i] << endl;
       }
    }
-   for(int i=0; i<nrows; i++)
+   double nrm;
+   CPU_cmplx_onenorm(nrows,rhsrehihihi[0],rhsimhihihi[0],&nrm);
+   if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
+
+   if(nrm < 1.0e-120)
    {
-      Arehihihi[i] = new double[ncols];
-      Arelohihi[i] = new double[ncols];
-      Arehilohi[i] = new double[ncols];
-      Arelolohi[i] = new double[ncols];
-      Arehihilo[i] = new double[ncols];
-      Arelohilo[i] = new double[ncols];
-      Arehilolo[i] = new double[ncols];
-      Arelololo[i] = new double[ncols];
-      Aimhihihi[i] = new double[ncols];
-      Aimlohihi[i] = new double[ncols];
-      Aimhilohi[i] = new double[ncols];
-      Aimlolohi[i] = new double[ncols];
-      Aimhihilo[i] = new double[ncols];
-      Aimlohilo[i] = new double[ncols];
-      Aimhilolo[i] = new double[ncols];
-      Aimlololo[i] = new double[ncols];
+      if(vrblvl > 0)
+         cout << "skip call to GPU_cmplx8_bals_head ..." << endl;
 
       for(int j=0; j<ncols; j++)
       {
-         Arehihihi[i][j] = matrehihihi[0][i][j];
-         Arelohihi[i][j] = matrelohihi[0][i][j];
-         Arehilohi[i][j] = matrehilohi[0][i][j];
-         Arelolohi[i][j] = matrelolohi[0][i][j];
-         Arehihilo[i][j] = matrehihilo[0][i][j];
-         Arelohilo[i][j] = matrelohilo[0][i][j];
-         Arehilolo[i][j] = matrehilolo[0][i][j];
-         Arelololo[i][j] = matrelololo[0][i][j];
-         Aimhihihi[i][j] = matimhihihi[0][i][j];
-         Aimlohihi[i][j] = matimlohihi[0][i][j];
-         Aimhilohi[i][j] = matimhilohi[0][i][j];
-         Aimlolohi[i][j] = matimlolohi[0][i][j];
-         Aimhihilo[i][j] = matimhihilo[0][i][j];
-         Aimlohilo[i][j] = matimlohilo[0][i][j];
-         Aimhilolo[i][j] = matimhilolo[0][i][j];
-         Aimlololo[i][j] = matimlololo[0][i][j];
-      }
-      brehihihi[i] = rhsrehihihi[0][i]; brelohihi[i] = rhsrelohihi[0][i];
-      brehilohi[i] = rhsrehilohi[0][i]; brelolohi[i] = rhsrelolohi[0][i];
-      brehihilo[i] = rhsrehihilo[0][i]; brelohilo[i] = rhsrelohilo[0][i];
-      brehilolo[i] = rhsrehilolo[0][i]; brelololo[i] = rhsrelololo[0][i];
-      bimhihihi[i] = rhsimhihihi[0][i]; bimlohihi[i] = rhsimlohihi[0][i];
-      bimhilohi[i] = rhsimhilohi[0][i]; bimlolohi[i] = rhsimlolohi[0][i];
-      bimhihilo[i] = rhsimhihilo[0][i]; bimlohilo[i] = rhsimlohilo[0][i];
-      bimhilolo[i] = rhsimhilolo[0][i]; bimlololo[i] = rhsimlololo[0][i];
-
-      for(int j=0; j<ncols; j++)
-      {
-         Rrehihihi[i][j] = matrehihihi[0][i][j];
-         Rrelohihi[i][j] = matrelohihi[0][i][j];
-         Rrehilohi[i][j] = matrehilohi[0][i][j];
-         Rrelolohi[i][j] = matrelolohi[0][i][j];
-         Rrehihilo[i][j] = matrehihilo[0][i][j];
-         Rrelohilo[i][j] = matrelohilo[0][i][j];
-         Rrehilolo[i][j] = matrehilolo[0][i][j];
-         Rrelololo[i][j] = matrelololo[0][i][j];
-         Rimhihihi[i][j] = matimhihihi[0][i][j];
-         Rimlohihi[i][j] = matimlohihi[0][i][j];
-         Rimhilohi[i][j] = matimhilohi[0][i][j];
-         Rimlolohi[i][j] = matimlolohi[0][i][j];
-         Rimhihilo[i][j] = matimhihilo[0][i][j];
-         Rimlohilo[i][j] = matimlohilo[0][i][j];
-         Rimhilolo[i][j] = matimhilolo[0][i][j];
-         Rimlololo[i][j] = matimlololo[0][i][j];
+         solrehihihi[0][j] = 0.0; solrelohihi[0][j] = 0.0;
+         solrehilohi[0][j] = 0.0; solrelolohi[0][j] = 0.0;
+         solrehihilo[0][j] = 0.0; solrelohilo[0][j] = 0.0;
+         solrehilolo[0][j] = 0.0; solrelololo[0][j] = 0.0;
+         solimhihihi[0][j] = 0.0; solimlohihi[0][j] = 0.0;
+         solimhilohi[0][j] = 0.0; solimlolohi[0][j] = 0.0;
+         solimhihilo[0][j] = 0.0; solimlohilo[0][j] = 0.0;
+         solimhilolo[0][j] = 0.0; solimlololo[0][j] = 0.0;
       }
    }
-   GPU_cmplx8_bals_head
-      (nrows,ncols,szt,nbt,
-       Arehihihi,Arelohihi,Arehilohi,Arelolohi,
-       Arehihilo,Arelohilo,Arehilolo,Arelololo,
-       Aimhihihi,Aimlohihi,Aimhilohi,Aimlolohi,
-       Aimhihilo,Aimlohilo,Aimhilolo,Aimlololo,
-       Qrehihihi,Qrelohihi,Qrehilohi,Qrelolohi,
-       Qrehihilo,Qrelohilo,Qrehilolo,Qrelololo,
-       Qimhihihi,Qimlohihi,Qimhilohi,Qimlolohi,
-       Qimhihilo,Qimlohilo,Qimhilolo,Qimlololo,
-       Rrehihihi,Rrelohihi,Rrehilohi,Rrelolohi,
-       Rrehihilo,Rrelohilo,Rrehilolo,Rrelololo,
-       Rimhihihi,Rimlohihi,Rimhilohi,Rimlolohi,
-       Rimhihilo,Rimlohilo,Rimhilolo,Rimlololo,
-       brehihihi,brelohihi,brehilohi,brelolohi,
-       brehihilo,brelohilo,brehilolo,brelololo,
-       bimhihihi,bimlohihi,bimhilohi,bimlolohi,
-       bimhihilo,bimlohilo,bimhilolo,bimlololo,
-       xrehihihi,xrelohihi,xrehilohi,xrelolohi,
-       xrehihilo,xrelohilo,xrehilolo,xrelololo,
-       ximhihihi,ximlohihi,ximhilohi,ximlolohi,
-       ximhihilo,ximlohilo,ximhilolo,ximlololo,bvrb);
-
-   for(int j=0; j<ncols; j++)
+   else
    {
-      solrehihihi[0][j] = xrehihihi[j];
-      solrelohihi[0][j] = xrelohihi[j];
-      solrehilohi[0][j] = xrehilohi[j];
-      solrelolohi[0][j] = xrelolohi[j];
-      solrehihilo[0][j] = xrehihilo[j];
-      solrelohilo[0][j] = xrelohilo[j];
-      solrehilolo[0][j] = xrehilolo[j];
-      solrelololo[0][j] = xrelololo[j];
-      solimhihihi[0][j] = ximhihihi[j];
-      solimlohihi[0][j] = ximlohihi[j];
-      solimhilohi[0][j] = ximhilohi[j];
-      solimlolohi[0][j] = ximlolohi[j];
-      solimhihilo[0][j] = ximhihilo[j];
-      solimlohilo[0][j] = ximlohilo[j];
-      solimhilolo[0][j] = ximhilolo[j];
-      solimlololo[0][j] = ximlololo[j];
+      if(vrblvl > 0) cout << "calling GPU_cmplx8_bals_head ..." << endl;
+
+      double **Arehihihi = new double*[nrows];
+      double **Arelohihi = new double*[nrows];
+      double **Arehilohi = new double*[nrows];
+      double **Arelolohi = new double*[nrows];
+      double **Arehihilo = new double*[nrows];
+      double **Arelohilo = new double*[nrows];
+      double **Arehilolo = new double*[nrows];
+      double **Arelololo = new double*[nrows];
+      double **Aimhihihi = new double*[nrows];
+      double **Aimlohihi = new double*[nrows];
+      double **Aimhilohi = new double*[nrows];
+      double **Aimlolohi = new double*[nrows];
+      double **Aimhihilo = new double*[nrows];
+      double **Aimlohilo = new double*[nrows];
+      double **Aimhilolo = new double*[nrows];
+      double **Aimlololo = new double*[nrows];
+
+      for(int i=0; i<nrows; i++)
+      {
+         Arehihihi[i] = new double[ncols];
+         Arelohihi[i] = new double[ncols];
+         Arehilohi[i] = new double[ncols];
+         Arelolohi[i] = new double[ncols];
+         Arehihilo[i] = new double[ncols];
+         Arelohilo[i] = new double[ncols];
+         Arehilolo[i] = new double[ncols];
+         Arelololo[i] = new double[ncols];
+         Aimhihihi[i] = new double[ncols];
+         Aimlohihi[i] = new double[ncols];
+         Aimhilohi[i] = new double[ncols];
+         Aimlolohi[i] = new double[ncols];
+         Aimhihilo[i] = new double[ncols];
+         Aimlohilo[i] = new double[ncols];
+         Aimhilolo[i] = new double[ncols];
+         Aimlololo[i] = new double[ncols];
+
+         for(int j=0; j<ncols; j++)
+         {
+            Arehihihi[i][j] = matrehihihi[0][i][j];
+            Arelohihi[i][j] = matrelohihi[0][i][j];
+            Arehilohi[i][j] = matrehilohi[0][i][j];
+            Arelolohi[i][j] = matrelolohi[0][i][j];
+            Arehihilo[i][j] = matrehihilo[0][i][j];
+            Arelohilo[i][j] = matrelohilo[0][i][j];
+            Arehilolo[i][j] = matrehilolo[0][i][j];
+            Arelololo[i][j] = matrelololo[0][i][j];
+            Aimhihihi[i][j] = matimhihihi[0][i][j];
+            Aimlohihi[i][j] = matimlohihi[0][i][j];
+            Aimhilohi[i][j] = matimhilohi[0][i][j];
+            Aimlolohi[i][j] = matimlolohi[0][i][j];
+            Aimhihilo[i][j] = matimhihilo[0][i][j];
+            Aimlohilo[i][j] = matimlohilo[0][i][j];
+            Aimhilolo[i][j] = matimhilolo[0][i][j];
+            Aimlololo[i][j] = matimlololo[0][i][j];
+         }
+         brehihihi[i] = rhsrehihihi[0][i]; brelohihi[i] = rhsrelohihi[0][i];
+         brehilohi[i] = rhsrehilohi[0][i]; brelolohi[i] = rhsrelolohi[0][i];
+         brehihilo[i] = rhsrehihilo[0][i]; brelohilo[i] = rhsrelohilo[0][i];
+         brehilolo[i] = rhsrehilolo[0][i]; brelololo[i] = rhsrelololo[0][i];
+         bimhihihi[i] = rhsimhihihi[0][i]; bimlohihi[i] = rhsimlohihi[0][i];
+         bimhilohi[i] = rhsimhilohi[0][i]; bimlolohi[i] = rhsimlolohi[0][i];
+         bimhihilo[i] = rhsimhihilo[0][i]; bimlohilo[i] = rhsimlohilo[0][i];
+         bimhilolo[i] = rhsimhilolo[0][i]; bimlololo[i] = rhsimlololo[0][i];
+
+         for(int j=0; j<ncols; j++)
+         {
+            Rrehihihi[i][j] = matrehihihi[0][i][j];
+            Rrelohihi[i][j] = matrelohihi[0][i][j];
+            Rrehilohi[i][j] = matrehilohi[0][i][j];
+            Rrelolohi[i][j] = matrelolohi[0][i][j];
+            Rrehihilo[i][j] = matrehihilo[0][i][j];
+            Rrelohilo[i][j] = matrelohilo[0][i][j];
+            Rrehilolo[i][j] = matrehilolo[0][i][j];
+            Rrelololo[i][j] = matrelololo[0][i][j];
+            Rimhihihi[i][j] = matimhihihi[0][i][j];
+            Rimlohihi[i][j] = matimlohihi[0][i][j];
+            Rimhilohi[i][j] = matimhilohi[0][i][j];
+            Rimlolohi[i][j] = matimlolohi[0][i][j];
+            Rimhihilo[i][j] = matimhihilo[0][i][j];
+            Rimlohilo[i][j] = matimlohilo[0][i][j];
+            Rimhilolo[i][j] = matimhilolo[0][i][j];
+            Rimlololo[i][j] = matimlololo[0][i][j];
+         }
+      }
+      GPU_cmplx8_bals_head
+         (nrows,ncols,szt,nbt,
+          Arehihihi,Arelohihi,Arehilohi,Arelolohi,
+          Arehihilo,Arelohilo,Arehilolo,Arelololo,
+          Aimhihihi,Aimlohihi,Aimhilohi,Aimlolohi,
+          Aimhihilo,Aimlohilo,Aimhilolo,Aimlololo,
+          Qrehihihi,Qrelohihi,Qrehilohi,Qrelolohi,
+          Qrehihilo,Qrelohilo,Qrehilolo,Qrelololo,
+          Qimhihihi,Qimlohihi,Qimhilohi,Qimlolohi,
+          Qimhihilo,Qimlohilo,Qimhilolo,Qimlololo,
+          Rrehihihi,Rrelohihi,Rrehilohi,Rrelolohi,
+          Rrehihilo,Rrelohilo,Rrehilolo,Rrelololo,
+          Rimhihihi,Rimlohihi,Rimhilohi,Rimlolohi,
+          Rimhihilo,Rimlohilo,Rimhilolo,Rimlololo,
+          brehihihi,brelohihi,brehilohi,brelolohi,
+          brehihilo,brelohilo,brehilolo,brelololo,
+          bimhihihi,bimlohihi,bimhilohi,bimlolohi,
+          bimhihilo,bimlohilo,bimhilolo,bimlololo,
+          xrehihihi,xrelohihi,xrehilohi,xrelolohi,
+          xrehihilo,xrelohilo,xrehilolo,xrelololo,
+          ximhihihi,ximlohihi,ximhilohi,ximlolohi,
+          ximhihilo,ximlohilo,ximhilolo,ximlololo,bvrb);
+
+      for(int j=0; j<ncols; j++)
+      {
+         solrehihihi[0][j] = xrehihihi[j];
+         solrelohihi[0][j] = xrelohihi[j];
+         solrehilohi[0][j] = xrehilohi[j];
+         solrelolohi[0][j] = xrelolohi[j];
+         solrehihilo[0][j] = xrehihilo[j];
+         solrelohilo[0][j] = xrelohilo[j];
+         solrehilolo[0][j] = xrehilolo[j];
+         solrelololo[0][j] = xrelololo[j];
+         solimhihihi[0][j] = ximhihihi[j];
+         solimlohihi[0][j] = ximlohihi[j];
+         solimhilohi[0][j] = ximhilohi[j];
+         solimlolohi[0][j] = ximlolohi[j];
+         solimhihilo[0][j] = ximhihilo[j];
+         solimlohilo[0][j] = ximlohilo[j];
+         solimhilolo[0][j] = ximhilolo[j];
+         solimlololo[0][j] = ximlololo[j];
+      }
+      for(int i=0; i<nrows; i++)
+      {
+         free(Arehihihi[i]); free(Arelohihi[i]);
+         free(Arehilohi[i]); free(Arelolohi[i]);
+         free(Arehihilo[i]); free(Arelohilo[i]);
+         free(Arehilolo[i]); free(Arelololo[i]);
+         free(Aimhihihi[i]); free(Aimlohihi[i]);
+         free(Aimhilohi[i]); free(Aimlolohi[i]);
+         free(Aimhihilo[i]); free(Aimlohilo[i]);
+         free(Aimhilolo[i]); free(Aimlololo[i]);
+      }
+      free(Arehihihi); free(Arelohihi); free(Arehilohi); free(Arelolohi);
+      free(Arehihilo); free(Arelohilo); free(Arehilolo); free(Arelololo);
+      free(Aimhihihi); free(Aimlohihi); free(Aimhilohi); free(Aimlolohi);
+      free(Aimhihilo); free(Aimlohilo); free(Aimhilolo); free(Aimlololo);
    }
    for(int stage=1; stage<degp1; stage++)
    {
@@ -1812,37 +1873,29 @@ void GPU_cmplx8_bals_solve
    }
    for(int i=0; i<nrows; i++)
    {
-      free(Arehihihi[i]); free(workRrehihihi[i]);
-      free(Arelohihi[i]); free(workRrelohihi[i]);
-      free(Arehilohi[i]); free(workRrehilohi[i]);
-      free(Arelolohi[i]); free(workRrelolohi[i]);
-      free(Arehihilo[i]); free(workRrehihilo[i]);
-      free(Arelohilo[i]); free(workRrelohilo[i]);
-      free(Arehilolo[i]); free(workRrehilolo[i]);
-      free(Arelololo[i]); free(workRrelololo[i]);
-      free(Aimhihihi[i]); free(workRimhihihi[i]);
-      free(Aimlohihi[i]); free(workRimlohihi[i]);
-      free(Aimhilohi[i]); free(workRimhilohi[i]);
-      free(Aimlolohi[i]); free(workRimlolohi[i]);
-      free(Aimhihilo[i]); free(workRimhihilo[i]);
-      free(Aimlohilo[i]); free(workRimlohilo[i]);
-      free(Aimhilolo[i]); free(workRimhilolo[i]);
-      free(Aimlololo[i]); free(workRimlololo[i]);
+      free(workRrehihihi[i]); free(workRrelohihi[i]);
+      free(workRrehilohi[i]); free(workRrelolohi[i]);
+      free(workRrehihilo[i]); free(workRrelohilo[i]);
+      free(workRrehilolo[i]); free(workRrelololo[i]);
+      free(workRimhihihi[i]); free(workRimlohihi[i]);
+      free(workRimhilohi[i]); free(workRimlolohi[i]);
+      free(workRimhihilo[i]); free(workRimlohilo[i]);
+      free(workRimhilolo[i]); free(workRimlololo[i]);
    }
-   free(Arehihihi); free(brehihihi); free(xrehihihi); free(workRrehihihi);
-   free(Arelohihi); free(brelohihi); free(xrelohihi); free(workRrelohihi);
-   free(Arehilohi); free(brehilohi); free(xrehilohi); free(workRrehilohi);
-   free(Arelolohi); free(brelolohi); free(xrelolohi); free(workRrelolohi);
-   free(Arehihilo); free(brehihilo); free(xrehihilo); free(workRrehihilo);
-   free(Arelohilo); free(brelohilo); free(xrelohilo); free(workRrelohilo);
-   free(Arehilolo); free(brehilolo); free(xrehilolo); free(workRrehilolo);
-   free(Arelololo); free(brelololo); free(xrelololo); free(workRrelololo);
-   free(Aimhihihi); free(bimhihihi); free(ximhihihi); free(workRimhihihi);
-   free(Aimlohihi); free(bimlohihi); free(ximlohihi); free(workRimlohihi);
-   free(Aimhilohi); free(bimhilohi); free(ximhilohi); free(workRimhilohi);
-   free(Aimlolohi); free(bimlolohi); free(ximlolohi); free(workRimlolohi);
-   free(Aimhihilo); free(bimhihilo); free(ximhihilo); free(workRimhihilo);
-   free(Aimlohilo); free(bimlohilo); free(ximlohilo); free(workRimlohilo);
-   free(Aimhilolo); free(bimhilolo); free(ximhilolo); free(workRimhilolo);
-   free(Aimlololo); free(bimlololo); free(ximlololo); free(workRimlololo);
+   free(brehihihi); free(xrehihihi); free(workRrehihihi);
+   free(brelohihi); free(xrelohihi); free(workRrelohihi);
+   free(brehilohi); free(xrehilohi); free(workRrehilohi);
+   free(brelolohi); free(xrelolohi); free(workRrelolohi);
+   free(brehihilo); free(xrehihilo); free(workRrehihilo);
+   free(brelohilo); free(xrelohilo); free(workRrelohilo);
+   free(brehilolo); free(xrehilolo); free(workRrehilolo);
+   free(brelololo); free(xrelololo); free(workRrelololo);
+   free(bimhihihi); free(ximhihihi); free(workRimhihihi);
+   free(bimlohihi); free(ximlohihi); free(workRimlohihi);
+   free(bimhilohi); free(ximhilohi); free(workRimhilohi);
+   free(bimlolohi); free(ximlolohi); free(workRimlolohi);
+   free(bimhihilo); free(ximhihilo); free(workRimhihilo);
+   free(bimlohilo); free(ximlohilo); free(workRimlohilo);
+   free(bimhilolo); free(ximhilolo); free(workRimhilolo);
+   free(bimlololo); free(ximlololo); free(workRimlololo);
 }

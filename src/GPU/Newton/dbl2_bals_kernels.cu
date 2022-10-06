@@ -473,7 +473,7 @@ void GPU_dbl2_bals_solve
    }
    else
    {
-      if(vrblvl > 0) cout << "calling GPU2_dbl_bals_head ..." << endl;
+      if(vrblvl > 0) cout << "calling GPU_dbl2_bals_head ..." << endl;
 
       double **Ahi = new double*[nrows];
       double **Alo = new double*[nrows];

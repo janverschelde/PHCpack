@@ -27,7 +27,7 @@ void dbl4_start_series_vector
 {
    for(int i=0; i<dim; i++)
    {
-      cffhihi[i][0] = 1.000005;
+      cffhihi[i][0] = 1.00001;
       cfflohi[i][0] = 0.0;
       cffhilo[i][0] = 0.0;
       cfflolo[i][0] = 0.0;
@@ -51,9 +51,9 @@ void cmplx4_start_series_vector
 {
    for(int i=0; i<dim; i++)
    {
-      cffrehihi[i][0] = 1.000005; cffrelohi[i][0] = 0.0;
+      cffrehihi[i][0] = 1.00001; cffrelohi[i][0] = 0.0;
       cffrehilo[i][0] = 0.0; cffrelolo[i][0] = 0.0;
-      cffimhihi[i][0] = 0.000005; cffimlohi[i][0] = 0.0;
+      cffimhihi[i][0] = 0.00001; cffimlohi[i][0] = 0.0;
       cffimhilo[i][0] = 0.0; cffimlolo[i][0] = 0.0;
 
       for(int j=1; j<=deg; j++)
@@ -117,7 +117,7 @@ void dbl4_update_series
    double **dxhihi, double **dxlohi, double **dxhilo, double **dxlolo,
    int vrblvl )
 {
-   if(vrblvl > 0) cout << scientific << setprecision(16);
+   if(vrblvl > 1) cout << scientific << setprecision(16);
 
    if(vrblvl > 1)
    {
@@ -141,7 +141,7 @@ void dbl4_update_series
                  dxhihi[j][i],dxlohi[j][i],dxhilo[j][i],dxlolo[j][i]);
       }
 
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << scientific << setprecision(16);
       cout << "The series after the update : " << endl;
@@ -165,7 +165,7 @@ void cmplx4_update_series
    double **dximhihi, double **dximlohi, double **dximhilo, double **dximlolo,
    int vrblvl )
 {
-   if(vrblvl > 0) cout << scientific << setprecision(16);
+   if(vrblvl > 1) cout << scientific << setprecision(16);
 
    if(vrblvl > 1)
    {
@@ -193,7 +193,7 @@ void cmplx4_update_series
                  dximhihi[j][i],dximlohi[j][i],dximhilo[j][i],dximlolo[j][i]);
       }
  
-   if(vrblvl > 0)
+   if(vrblvl > 1)
    {
       cout << scientific << setprecision(16);
       cout << "The series after the update : " << endl;
@@ -1460,6 +1460,8 @@ int test_dbl4_real_newton
                          << inputlolo_h[i][0] << endl;
       }
    }
+   if(vrblvl > 0) cout << scientific << setprecision(16);
+
    for(int step=0; step<nbsteps; step++)
    {
       if(vrblvl > 0)
@@ -1502,6 +1504,29 @@ int test_dbl4_real_newton
           workvechihi,workveclohi,workvechilo,workveclolo,
           resvechihi,resveclohi,resvechilo,resveclolo,
           &resmaxhihi,&resmaxlohi,&resmaxhilo,&resmaxlolo,vrblvl,mode);
+   }
+   if(vrblvl < 2)
+   {
+      cout << "The solution series : " << endl;
+      for(int j=0; j<degp1; j++)
+      {
+         cout << "coefficient of degree " << j << " :" << endl;
+         for(int i=0; i<dim; i++)
+         {
+            if((mode == 0) || (mode == 2))
+              cout << "x_d[" << i << "][" << j << "] : "
+                             << inputhihi_d[i][j] << "  "
+                             << inputlohi_d[i][j] << endl << "  "
+                             << inputhilo_d[i][j] << "  "
+                             << inputlolo_d[i][j] << endl;
+            if((mode == 1) || (mode == 2))
+              cout << "x_h[" << i << "][" << j << "] : "
+                             << inputhihi_h[i][j] << "  "
+                             << inputlohi_h[i][j] << endl << "  "
+                             << inputhilo_h[i][j] << "  "
+                             << inputlolo_h[i][j] << endl;
+         }
+      }
    }
    return 0;
 }
@@ -2007,6 +2032,8 @@ int test_dbl4_complex_newton
               << inputimhilo_h[i][0] << "  "
               << inputimlolo_h[i][0] << endl;
    }
+   if(vrblvl > 0) cout << scientific << setprecision(16);
+
    for(int step=0; step<nbsteps; step++)
    {
       if(vrblvl > 0)
@@ -2061,6 +2088,37 @@ int test_dbl4_complex_newton
           resvecrehihi,resvecrelohi,resvecrehilo,resvecrelolo,
           resvecimhihi,resvecimlohi,resvecimhilo,resvecimlolo,
           &resmaxhihi,&resmaxlohi,&resmaxhilo,&resmaxlolo,vrblvl,mode);
+   }
+   if(vrblvl < 2)
+   {
+      cout << "The solution series : " << endl;
+      for(int j=0; j<degp1; j++)
+      {
+         cout << "coefficient of degree " << j << " :" << endl;
+         for(int i=0; i<dim; i++)
+         {
+            if((mode == 0) || (mode == 2))
+              cout << "x_d[" << i << "][" << j << "] : "
+                             << inputrehihi_d[i][j] << "  "
+                             << inputrelohi_d[i][j] << endl << "  "
+                             << inputrehilo_d[i][j] << "  "
+                             << inputrelolo_d[i][j] << endl << "  "
+                             << inputimhihi_d[i][j] << "  "
+                             << inputimlohi_d[i][j] << endl << "  "
+                             << inputimhilo_d[i][j] << "  "
+                             << inputimlolo_d[i][j] << endl;
+            if((mode == 1) || (mode == 2))
+              cout << "x_h[" << i << "][" << j << "] : "
+                             << inputrehihi_h[i][j] << "  "
+                             << inputrelohi_h[i][j] << endl << "  "
+                             << inputrehilo_h[i][j] << "  "
+                             << inputrelolo_h[i][j] << endl << "  "
+                             << inputimhihi_h[i][j] << "  "
+                             << inputimlohi_h[i][j] << endl << "  "
+                             << inputimhilo_h[i][j] << "  "
+                             << inputimlolo_h[i][j] << endl;
+         }
+      }
    }
    return 0;
 }

@@ -717,8 +717,8 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
                   gettimeofday4win.obj write_gpu_timings.obj \
                   dbl4_systems_host.obj \
                   dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
-                  dbl4_factorizations.obj dbl4_bals_host.obj \
-		  dbl_bals_flopcounts.obj \
+                  dbl4_factorizations.obj dbl_onenorms_host.obj \
+                  dbl4_bals_host.obj dbl_bals_flopcounts.obj \
 		  dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
 		  dbl4_baqr_kernels.obj dbl4_tabs_kernels.obj \
                   dbl4_tail_kernels.obj dbl4_bals_kernels.obj
@@ -734,8 +734,8 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
              gettimeofday4win.obj write_gpu_timings.obj \
              dbl4_systems_host.obj \
              dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
-             dbl4_factorizations.obj dbl4_bals_host.obj \
-             dbl_bals_flopcounts.obj \
+             dbl4_factorizations.obj dbl_onenorms_host.obj \
+             dbl4_bals_host.obj dbl_bals_flopcounts.obj \
              dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
              dbl4_baqr_kernels.obj dbl4_tabs_kernels.obj \
              dbl4_tail_kernels.obj dbl4_bals_kernels.obj
@@ -750,7 +750,8 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
                   addition_job.obj addition_jobs.obj job_coordinates.obj \
                   dbl8_systems_host.obj \
                   dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
-                  dbl8_factorizations.obj dbl8_bals_host.obj \
+                  dbl8_factorizations.obj dbl_onenorms_host.obj \
+                  dbl8_bals_host.obj \
                   gettimeofday4win.obj write_gpu_timings.obj \
                   dbl_bals_flopcounts.obj \
 		  dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
@@ -767,7 +768,8 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
              dbl8_systems_host.obj \
              dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
-             dbl8_factorizations.obj dbl8_bals_host.obj \
+             dbl8_factorizations.obj dbl_onenorms_host.obj \
+             dbl8_bals_host.obj \
              gettimeofday4win.obj write_gpu_timings.obj \
              dbl_bals_flopcounts.obj \
              dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
