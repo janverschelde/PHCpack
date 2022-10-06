@@ -1,5 +1,6 @@
 Thu 6 Oct 2022 : updated dbl*_bals_host.cpp to skip the update of the
-  right hand sides for tiny solution vectors.
+  right hand sides for tiny solution vectors.  Applies the same changes
+  in dbl*_bals_kernels.cu.
 
 Wed 5 Oct 2022 : new dbl_onenorms_host applied in dbl_bals_host.cpp
   and dbl_bals_kernels.cu to skip the QR if the rhs is zero.

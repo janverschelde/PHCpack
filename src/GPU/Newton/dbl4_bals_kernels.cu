@@ -631,6 +631,7 @@ void GPU_dbl4_bals_solve
    const int nrows = dim;
    const int ncols = dim;
    const bool bvrb = (vrblvl > 1);
+   int skipcnt = 0;
 
    double *bhihi = new double[nrows];
    double *blohi = new double[nrows];
@@ -733,23 +734,40 @@ void GPU_dbl4_bals_solve
       if(vrblvl > 0)
          cout << "stage " << stage << " in solve tail ..." << endl;
 
-      GPU_dbl4_bals_tail
-         (nrows,ncols,szt,nbt,degp1,stage,
-          mathihi,matlohi,mathilo,matlolo,rhshihi,rhslohi,rhshilo,rhslolo,
-          solhihi,sollohi,solhilo,sollolo,bvrb);
+      double *xshihi = solhihi[stage-1];   // solution to do the update with
+      CPU_dbl_onenorm(dim,xshihi,&nrm);
+      if(vrblvl > 0)
+         cout << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
 
-      if(vrblvl > 1)
+      if(nrm < 1.0e-56)
       {
-         cout << "blocks of rhs before assignment :" << endl;
-         for(int k=0; k<degp1; k++)
+         skipcnt = skipcnt + 1;
+
+         if(vrblvl > 0)
+            cout << "skip update with x[" << stage-1 << "] ..." << endl;
+      }
+      else
+      {
+         if(vrblvl > 0)
+            cout << "updating with x[" << stage-1 << "] ..." << endl;
+
+         GPU_dbl4_bals_tail
+            (nrows,ncols,szt,nbt,degp1,stage,
+             mathihi,matlohi,mathilo,matlolo,rhshihi,rhslohi,rhshilo,rhslolo,
+             solhihi,sollohi,solhilo,sollolo,bvrb);
+
+         if(vrblvl > 1)
          {
-            for(int i=0; i<nrows; i++)
-               cout << "rhs[" << k << "][" << i << "] : "
-                    << rhshihi[k][i] << "  " << rhslohi[k][i] << "  "
-                    << rhshilo[k][i] << "  " << rhslolo[k][i] << endl;
+            cout << "blocks of rhs before assignment :" << endl;
+            for(int k=0; k<degp1; k++)
+            {
+               for(int i=0; i<nrows; i++)
+                  cout << "rhs[" << k << "][" << i << "] : "
+                       << rhshihi[k][i] << "  " << rhslohi[k][i] << "  "
+                       << rhshilo[k][i] << "  " << rhslolo[k][i] << endl;
+            }
          }
       }
-
       for(int i=0; i<nrows; i++) 
       {
          // cout << "assigning component " << i
@@ -825,6 +843,9 @@ void GPU_dbl4_bals_solve
          sollolo[stage][j] = xlolo[j];
       }
    }
+   if(vrblvl > 0)
+      cout << "*** solve tail skipped " << skipcnt << " times ***" << endl;
+
    for(int i=0; i<nrows; i++)
    {
       free(workRhihi[i]); free(workRlohi[i]);
@@ -858,6 +879,7 @@ void GPU_cmplx4_bals_solve
    const int nrows = dim;
    const int ncols = dim;
    const bool bvrb = (vrblvl > 1);
+   int skipcnt = 0;
 
    double *brehihi = new double[nrows];
    double *brelohi = new double[nrows];
@@ -1011,30 +1033,50 @@ void GPU_cmplx4_bals_solve
       if(vrblvl > 0)
          cout << "stage " << stage << " in solve tail ..." << endl;
 
-      GPU_cmplx4_bals_tail
-         (nrows,ncols,szt,nbt,degp1,stage,
-          matrehihi,matrelohi,matrehilo,matrelolo,
-          matimhihi,matimlohi,matimhilo,matimlolo,
-          rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
-          rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
-          solrehihi,solrelohi,solrehilo,solrelolo,
-          solimhihi,solimlohi,solimhilo,solimlolo,bvrb);
+      double *xrs = solrehihi[stage-1];  // solution to do the update with
+      double *xis = solimhihi[stage-1];
 
-      if(vrblvl > 1)
+      CPU_cmplx_onenorm(dim,xrs,xis,&nrm);
+      if(vrblvl > 0)
+         cout << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
+
+      if(nrm < 1.0e-56)
       {
-         cout << "blocks of rhs before assignment :" << endl;
-         for(int k=0; k<degp1; k++)
+         skipcnt = skipcnt + 1;
+
+         if(vrblvl > 0)
+            cout << "skip update with x[" << stage-1 << "] ..." << endl;
+      }
+      else
+      {
+         if(vrblvl > 0)
+            cout << "updating with x[" << stage-1 << "] ..." << endl;
+
+         GPU_cmplx4_bals_tail
+            (nrows,ncols,szt,nbt,degp1,stage,
+             matrehihi,matrelohi,matrehilo,matrelolo,
+             matimhihi,matimlohi,matimhilo,matimlolo,
+             rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
+             rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
+             solrehihi,solrelohi,solrehilo,solrelolo,
+             solimhihi,solimlohi,solimhilo,solimlolo,bvrb);
+
+         if(vrblvl > 1)
          {
-            for(int i=0; i<nrows; i++)
-               cout << "rhs[" << k << "][" << i << "] : "
-                    << rhsrehihi[k][i] << "  "
-                    << rhsrelohi[k][i] << endl << "  " 
-                    << rhsrehilo[k][i] << "  "
-                    << rhsrelolo[k][i] << endl << "  " 
-                    << rhsimhihi[k][i] << "  "
-                    << rhsimlohi[k][i] << endl << "  "
-                    << rhsimhilo[k][i] << "  "
-                    << rhsimlolo[k][i] << endl;
+            cout << "blocks of rhs before assignment :" << endl;
+            for(int k=0; k<degp1; k++)
+            {
+               for(int i=0; i<nrows; i++)
+                  cout << "rhs[" << k << "][" << i << "] : "
+                       << rhsrehihi[k][i] << "  "
+                       << rhsrelohi[k][i] << endl << "  " 
+                       << rhsrehilo[k][i] << "  "
+                       << rhsrelolo[k][i] << endl << "  " 
+                       << rhsimhihi[k][i] << "  "
+                       << rhsimlohi[k][i] << endl << "  "
+                       << rhsimhilo[k][i] << "  "
+                       << rhsimlolo[k][i] << endl;
+            }
          }
       }
       for(int i=0; i<nrows; i++) 
@@ -1136,6 +1178,9 @@ void GPU_cmplx4_bals_solve
          solimhilo[stage][j] = ximhilo[j]; solimlolo[stage][j] = ximlolo[j];
       }
    }
+   if(vrblvl > 0)
+      cout << "*** solve tail skipped " << skipcnt << " times ***" << endl;
+
    for(int i=0; i<nrows; i++)
    {
       free(workRrehihi[i]); free(workRrelohi[i]);

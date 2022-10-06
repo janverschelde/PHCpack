@@ -343,6 +343,7 @@ void GPU_dbl_bals_solve
    const int nrows = dim;
    const int ncols = dim;
    const bool bvrb = (vrblvl > 1);
+   int skipcnt = 0;
 
    double *b = new double[nrows];
    double *x = new double[ncols];
@@ -387,7 +388,6 @@ void GPU_dbl_bals_solve
 
       if(vrblvl > 0)
       {
-         double nrm;
          CPU_dbl_onenorm(ncols,x,&nrm);
          cout << "1-norm of x : " << nrm << endl;
       }
@@ -401,15 +401,34 @@ void GPU_dbl_bals_solve
       if(vrblvl > 0)
          cout << "stage " << stage << " in solve tail ..." << endl;
 
-      GPU_dbl_bals_tail(nrows,ncols,szt,nbt,degp1,stage,mat,rhs,sol,bvrb);
+      double *xs = sol[stage-1];       // solution to do the update with
+      CPU_dbl_onenorm(dim,xs,&nrm);
+      if(vrblvl > 0)
+         cout << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
 
-      if(vrblvl > 1)
+      if(nrm < 1.0e-15)
       {
-         cout << "blocks of rhs before assignment :" << endl;
-         for(int k=0; k<degp1; k++)
+         skipcnt = skipcnt + 1;
+
+         if(vrblvl > 0)
+            cout << "skip update with x[" << stage-1 << "] ..." << endl;
+      }
+      else
+      {
+         if(vrblvl > 0)
+            cout << "updating with x[" << stage-1 << "] ..." << endl;
+
+         GPU_dbl_bals_tail(nrows,ncols,szt,nbt,degp1,stage,mat,rhs,sol,bvrb);
+
+         if(vrblvl > 1)
          {
-            for(int i=0; i<nrows; i++)
-               cout << "rhs[" << k << "][" << i << "] : " << rhs[k][i] << endl;
+            cout << "blocks of rhs before assignment :" << endl;
+            for(int k=0; k<degp1; k++)
+            {
+               for(int i=0; i<nrows; i++)
+                  cout << "rhs[" << k << "][" << i << "] : "
+                       << rhs[k][i] << endl;
+            }
          }
       }
       for(int i=0; i<nrows; i++) 
@@ -458,6 +477,9 @@ void GPU_dbl_bals_solve
 
       for(int j=0; j<ncols; j++) sol[stage][j] = x[j];
    }
+   if(vrblvl > 0)
+      cout << "*** solve tail skipped " << skipcnt << " times ***" << endl;
+
    for(int i=0; i<nrows; i++) free(workR[i]);
 
    free(b); free(x); free(workR);
@@ -472,6 +494,7 @@ void GPU_cmplx_bals_solve
    const int nrows = dim;
    const int ncols = dim;
    const bool bvrb = (vrblvl > 1);
+   int skipcnt = 0;
 
    double *bre = new double[nrows];
    double *bim = new double[nrows];
@@ -551,18 +574,38 @@ void GPU_cmplx_bals_solve
       if(vrblvl > 0)
          cout << "stage " << stage << " in solve tail ..." << endl;
 
-      GPU_cmplx_bals_tail
-         (nrows,ncols,szt,nbt,degp1,stage,matre,matim,
-          rhsre,rhsim,solre,solim,bvrb);
+      double *xrs = solre[stage-1];       // solution to do the update with
+      double *xis = solim[stage-1];
 
-      if(vrblvl > 1)
+      CPU_cmplx_onenorm(dim,xrs,xis,&nrm);
+      if(vrblvl > 0)
+         cout << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
+
+      if(nrm < 1.0e-15)
       {
-         cout << "blocks of rhs before assignment :" << endl;
-         for(int k=0; k<degp1; k++)
+         skipcnt = skipcnt + 1;
+
+         if(vrblvl > 0)
+            cout << "skip update with x[" << stage-1 << "] ..." << endl;
+      }
+      else
+      {
+         if(vrblvl > 0)
+            cout << "updating with x[" << stage-1 << "] ..." << endl;
+
+         GPU_cmplx_bals_tail
+            (nrows,ncols,szt,nbt,degp1,stage,matre,matim,
+             rhsre,rhsim,solre,solim,bvrb);
+
+         if(vrblvl > 1)
          {
-            for(int i=0; i<nrows; i++)
-               cout << "rhs[" << k << "][" << i << "] : "
-                    << rhsre[k][i] << "  " << rhsim[k][i] << endl;
+            cout << "blocks of rhs before assignment :" << endl;
+            for(int k=0; k<degp1; k++)
+            {
+               for(int i=0; i<nrows; i++)
+                  cout << "rhs[" << k << "][" << i << "] : "
+                       << rhsre[k][i] << "  " << rhsim[k][i] << endl;
+            }
          }
       }
       for(int i=0; i<nrows; i++) 
@@ -621,6 +664,9 @@ void GPU_cmplx_bals_solve
          solim[stage][j] = xim[j];
       }
    }
+   if(vrblvl > 0)
+      cout << "*** solve tail skipped " << skipcnt << " times ***" << endl;
+
    for(int i=0; i<nrows; i++)
    {
       free(workRre[i]); free(workRim[i]);
