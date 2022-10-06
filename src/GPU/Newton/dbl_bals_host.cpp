@@ -242,20 +242,36 @@ void CPU_dbl_qrbs_tail
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
    double **Q, double **R, double *wrkvec, int vrblvl )
 {
-   bool verbose = (vrblvl > 1);
+   double nrm;
+   int skipcnt = 0;
 
    for(int i=1; i<degp1; i++)
    {
       if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
       // use sol[i-1] to update rhs[j] for j in i to degp1
-      for(int j=i; j<degp1; j++)
-      {
-         double **Aj = mat[j-i+1]; // always start with A[1]
-         double *xi = sol[i-1];    // solution to do the update with
-         double *wj = rhs[j];      // current right hand side vector
+      double *xi = sol[i-1];       // solution to do the update with
+      CPU_dbl_onenorm(dim,xi,&nrm);
+      if(vrblvl > 0) cout << "1-norm of x[" << i-1 << "] : " << nrm << endl;
 
-         for(int k=0; k<dim; k++)
-            for(int L=0; L<dim; L++) wj[k] = wj[k] - Aj[k][L]*xi[L];
+      if(nrm < 1.0e-15)
+      {
+         skipcnt = skipcnt + 1;
+
+         if(vrblvl > 0)
+            cout << "skip update with x[" << i-1 << "] ..." << endl;
+      }
+      else
+      {
+         if(vrblvl > 0) cout << "updating with x[" << i-1 << "] ..." << endl;
+
+         for(int j=i; j<degp1; j++)
+         {
+            double **Aj = mat[j-i+1]; // always start with A[1]
+            double *wj = rhs[j];      // current right hand side vector
+
+            for(int k=0; k<dim; k++)
+               for(int L=0; L<dim; L++) wj[k] = wj[k] - Aj[k][L]*xi[L];
+         }
       }
       // compute sol[i] with back substitution
       double *x = sol[i];
@@ -263,7 +279,7 @@ void CPU_dbl_qrbs_tail
 
       CPU_dbl_factors_qrbs(dim,dim,Q,R,b,x,wrkvec);
 
-      if(verbose)
+      if(vrblvl > 1)
       {
          for(int i=0; i<dim; i++)
             cout << "Qtb[" << i << "] : " << wrkvec[i] << endl;
@@ -272,6 +288,8 @@ void CPU_dbl_qrbs_tail
          for(int j=0; j<dim; j++) cout << x[j] << endl;
       }
    }
+   if(vrblvl > 0)
+      cout << "*** solve tail skipped " << skipcnt << " times ***" << endl;
 }
 
 void CPU_cmplx_qrbs_tail
@@ -280,30 +298,47 @@ void CPU_cmplx_qrbs_tail
    double **Qre, double **Qim, double **Rre, double **Rim,
    double *wrkvecre, double *wrkvecim, int vrblvl )
 {
-   bool verbose = (vrblvl > 1);
-   double zre,zim;
+   double nrm,zre,zim;
+   int skipcnt = 0;
 
    for(int i=1; i<degp1; i++)
    {
       if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
       // use sol[i-1] to update rhs[j] for j in i to degp1
-      for(int j=i; j<degp1; j++)
-      {
-         double **Ajre = matre[j-i+1]; // always start with A[1]
-         double **Ajim = matim[j-i+1];
-         double *xire = solre[i-1];    // solution to do the update with
-         double *xiim = solim[i-1]; 
-         double *wjre = rhsre[j];      // current right hand side vector
-         double *wjim = rhsim[j]; 
 
-         for(int k=0; k<dim; k++)
-            for(int L=0; L<dim; L++) // wj[k] = wj[k] - Aj[k][L]*xi[L];
-            {
-               zre = Ajre[k][L]*xire[L] - Ajim[k][L]*xiim[L];
-               zim = Ajre[k][L]*xiim[L] + Ajim[k][L]*xire[L];
-               wjre[k] = wjre[k] - zre;
-               wjim[k] = wjim[k] - zim;
-            }
+      double *xire = solre[i-1];    // solution to do the update with
+      double *xiim = solim[i-1]; 
+
+      CPU_cmplx_onenorm(dim,xire,xiim,&nrm);
+      if(vrblvl > 0) cout << "1-norm of x[" << i-1 << "] : " << nrm << endl;
+
+      if(nrm < 1.0e-15)
+      {
+         skipcnt = skipcnt + 1;
+
+         if(vrblvl > 0)
+            cout << "skip update with x[" << i-1 << "] ..." << endl;
+      }
+      else
+      {
+         if(vrblvl > 0) cout << "updating with x[" << i-1 << "] ..." << endl;
+
+         for(int j=i; j<degp1; j++)
+         {
+            double **Ajre = matre[j-i+1]; // always start with A[1]
+            double **Ajim = matim[j-i+1];
+            double *wjre = rhsre[j];      // current right hand side vector
+            double *wjim = rhsim[j]; 
+
+            for(int k=0; k<dim; k++)
+               for(int L=0; L<dim; L++) // wj[k] = wj[k] - Aj[k][L]*xi[L];
+               {
+                  zre = Ajre[k][L]*xire[L] - Ajim[k][L]*xiim[L];
+                  zim = Ajre[k][L]*xiim[L] + Ajim[k][L]*xire[L];
+                  wjre[k] = wjre[k] - zre;
+                  wjim[k] = wjim[k] - zim;
+               }
+         }
       }
       // compute sol[i] with back substitution
       double *xre = solre[i];
@@ -314,7 +349,7 @@ void CPU_cmplx_qrbs_tail
       CPU_cmplx_factors_qrbs
          (dim,dim,Qre,Qim,Rre,Rim,bre,bim,xre,xim,wrkvecre,wrkvecim);
 
-      if(verbose)
+      if(vrblvl > 1)
       {
          for(int i=0; i<dim; i++)
             cout << "QHb[" << i << "] : "
@@ -325,6 +360,8 @@ void CPU_cmplx_qrbs_tail
             cout << xre[j] << "  " << xim[j] << endl;
       }
    }
+   if(vrblvl > 0)
+      cout << "*** solve tail skipped " << skipcnt << " times ***" << endl;
 }
 
 void CPU_dbl_lusb_solve

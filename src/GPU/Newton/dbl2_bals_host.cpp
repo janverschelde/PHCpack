@@ -336,28 +336,44 @@ void CPU_dbl2_qrbs_tail
    double **Qhi, double **Qlo, double **Rhi, double **Rlo,
    double *wrkvechi, double *wrkveclo, int vrblvl )
 {
-   bool verbose = (vrblvl > 1);
-   double acchi,acclo;
+   double nrm,acchi,acclo;
+   int skipcnt = 0;
 
    for(int i=1; i<degp1; i++)
    {
       if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
       // use sol[i-1] to update rhs[j] for j in i to degp1
-      for(int j=i; j<degp1; j++)
-      {
-         double **Ajhi = mathi[j-i+1]; // always start with A[1]
-         double **Ajlo = matlo[j-i+1]; 
-         double *xihi = solhi[i-1];    // solution to do the update with
-         double *xilo = sollo[i-1];
-         double *wjhi = rhshi[j];      // current right hand side vector
-         double *wjlo = rhslo[j];
+      double *xihi = solhi[i-1];    // solution to do the update with
+      double *xilo = sollo[i-1];
 
-         for(int k=0; k<dim; k++)
-            for(int L=0; L<dim; L++) // wj[k] = wj[k] - Aj[k][L]*xi[L];
-            {
-               ddf_mul(Ajhi[k][L],Ajlo[k][L],xihi[L],xilo[L],&acchi,&acclo);
-               ddf_dec(&wjhi[k],&wjlo[k],acchi,acclo);
-            }
+      CPU_dbl_onenorm(dim,xihi,&nrm);
+      if(vrblvl > 0) cout << "1-norm of x[" << i-1 << "] : " << nrm << endl;
+
+      if(nrm < 1.0e-28)
+      {
+         skipcnt = skipcnt + 1;
+
+         if(vrblvl > 0)
+            cout << "skip update with x[" << i-1 << "] ..." << endl;
+      }
+      else
+      {
+         if(vrblvl > 0) cout << "updating with x[" << i-1 << "] ..." << endl;
+
+         for(int j=i; j<degp1; j++)
+         {
+            double **Ajhi = mathi[j-i+1]; // always start with A[1]
+            double **Ajlo = matlo[j-i+1]; 
+            double *wjhi = rhshi[j];      // current right hand side vector
+            double *wjlo = rhslo[j];
+
+            for(int k=0; k<dim; k++)
+               for(int L=0; L<dim; L++) // wj[k] = wj[k] - Aj[k][L]*xi[L];
+               {
+                  ddf_mul(Ajhi[k][L],Ajlo[k][L],xihi[L],xilo[L],&acchi,&acclo);
+                  ddf_dec(&wjhi[k],&wjlo[k],acchi,acclo);
+               }
+         }
       }
       // compute sol[i] with back substitution
       double *xhi = solhi[i];
@@ -368,7 +384,7 @@ void CPU_dbl2_qrbs_tail
       CPU_dbl2_factors_qrbs
          (dim,dim,Qhi,Qlo,Rhi,Rlo,bhi,blo,xhi,xlo,wrkvechi,wrkveclo);
 
-      if(verbose)
+      if(vrblvl > 1)
       {
          for(int i=0; i<dim; i++)
             cout << "Qtb[" << i << "] : "
@@ -379,6 +395,8 @@ void CPU_dbl2_qrbs_tail
             cout << xhi[j] << "  " << xlo[j] << endl;
       }
    }
+   if(vrblvl > 0)
+      cout << "*** solve tail skipped " << skipcnt << " times ***" << endl;
 }
 
 void CPU_cmplx2_qrbs_tail
@@ -391,48 +409,65 @@ void CPU_cmplx2_qrbs_tail
    double *wrkvecrehi, double *wrkvecrelo,
    double *wrkvecimhi, double *wrkvecimlo, int vrblvl )
 {
-   bool verbose = (vrblvl > 1);
-   double acchi,acclo;
+   double nrm,acchi,acclo;
+   int skipcnt = 0;
 
    for(int i=1; i<degp1; i++)
    {
       if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
       // use sol[i-1] to update rhs[j] for j in i to degp1
-      for(int j=i; j<degp1; j++)
-      {
-         double **Ajrehi = matrehi[j-i+1]; // always start with A[1]
-         double **Ajrelo = matrelo[j-i+1];
-         double **Ajimhi = matimhi[j-i+1];
-         double **Ajimlo = matimlo[j-i+1];
-         double *xirehi = solrehi[i-1]; // solution to do the update with
-         double *xirelo = solrelo[i-1]; 
-         double *xiimhi = solimhi[i-1]; 
-         double *xiimlo = solimlo[i-1]; 
-         double *wjrehi = rhsrehi[j]; // current right hand side vector
-         double *wjrelo = rhsrelo[j];
-         double *wjimhi = rhsimhi[j]; 
-         double *wjimlo = rhsimlo[j]; 
 
-         for(int k=0; k<dim; k++)
-            for(int L=0; L<dim; L++) // wj[k] = wj[k] - Aj[k][L]*xi[L];
-            {
-               // zre = Ajre[k][L]*xire[L] - Ajim[k][L]*xiim[L];
-               // wjre[k] = wjre[k] - zre;
-               ddf_mul(Ajrehi[k][L],Ajrelo[k][L],xirehi[L],xirelo[L],
-                       &acchi,&acclo);
-               ddf_dec(&wjrehi[k],&wjrelo[k],acchi,acclo);
-               ddf_mul(Ajimhi[k][L],Ajimlo[k][L],xiimhi[L],xiimlo[L],
-                       &acchi,&acclo);
-               ddf_inc(&wjrehi[k],&wjrelo[k],acchi,acclo);
-               // zim = Ajre[k][L]*xiim[L] + Ajim[k][L]*xire[L];
-               // wjim[k] = wjim[k] - zim;
-               ddf_mul(Ajrehi[k][L],Ajrelo[k][L],xiimhi[L],xiimlo[L],
-                       &acchi,&acclo);
-               ddf_dec(&wjimhi[k],&wjimlo[k],acchi,acclo);
-               ddf_mul(Ajimhi[k][L],Ajimlo[k][L],xirehi[L],xirelo[L],
-                       &acchi,&acclo);
-               ddf_dec(&wjimhi[k],&wjimlo[k],acchi,acclo);
-            }
+      double *xirehi = solrehi[i-1]; // solution to do the update with
+      double *xirelo = solrelo[i-1]; 
+      double *xiimhi = solimhi[i-1]; 
+      double *xiimlo = solimlo[i-1]; 
+
+      CPU_cmplx_onenorm(dim,xirehi,xiimhi,&nrm);
+      if(vrblvl > 0) cout << "1-norm of x[" << i-1 << "] : " << nrm << endl;
+
+      if(nrm < 1.0e-28)
+      {
+         skipcnt = skipcnt + 1;
+
+         if(vrblvl > 0)
+            cout << "skip update with x[" << i-1 << "] ..." << endl;
+      }
+      else
+      {
+         if(vrblvl > 0) cout << "updating with x[" << i-1 << "] ..." << endl;
+
+         for(int j=i; j<degp1; j++)
+         {
+            double **Ajrehi = matrehi[j-i+1]; // always start with A[1]
+            double **Ajrelo = matrelo[j-i+1];
+            double **Ajimhi = matimhi[j-i+1];
+            double **Ajimlo = matimlo[j-i+1];
+            double *wjrehi = rhsrehi[j]; // current right hand side vector
+            double *wjrelo = rhsrelo[j];
+            double *wjimhi = rhsimhi[j]; 
+            double *wjimlo = rhsimlo[j]; 
+
+            for(int k=0; k<dim; k++)
+               for(int L=0; L<dim; L++) // wj[k] = wj[k] - Aj[k][L]*xi[L];
+               {
+                  // zre = Ajre[k][L]*xire[L] - Ajim[k][L]*xiim[L];
+                  // wjre[k] = wjre[k] - zre;
+                  ddf_mul(Ajrehi[k][L],Ajrelo[k][L],xirehi[L],xirelo[L],
+                          &acchi,&acclo);
+                  ddf_dec(&wjrehi[k],&wjrelo[k],acchi,acclo);
+                  ddf_mul(Ajimhi[k][L],Ajimlo[k][L],xiimhi[L],xiimlo[L],
+                          &acchi,&acclo);
+                  ddf_inc(&wjrehi[k],&wjrelo[k],acchi,acclo);
+                  // zim = Ajre[k][L]*xiim[L] + Ajim[k][L]*xire[L];
+                  // wjim[k] = wjim[k] - zim;
+                  ddf_mul(Ajrehi[k][L],Ajrelo[k][L],xiimhi[L],xiimlo[L],
+                          &acchi,&acclo);
+                  ddf_dec(&wjimhi[k],&wjimlo[k],acchi,acclo);
+                  ddf_mul(Ajimhi[k][L],Ajimlo[k][L],xirehi[L],xirelo[L],
+                          &acchi,&acclo);
+                  ddf_dec(&wjimhi[k],&wjimlo[k],acchi,acclo);
+               }
+         }
       }
       // compute sol[i] with back substitution
       double *xrehi = solrehi[i];
@@ -449,7 +484,7 @@ void CPU_cmplx2_qrbs_tail
           brehi,brelo,bimhi,bimlo,xrehi,xrelo,ximhi,ximlo,
           wrkvecrehi,wrkvecrelo,wrkvecimhi,wrkvecimlo);
 
-      if(verbose)
+      if(vrblvl > 1)
       {
          for(int i=0; i<dim; i++)
             cout << "QHb[" << i << "] : "
@@ -462,6 +497,8 @@ void CPU_cmplx2_qrbs_tail
                  << ximhi[j] << "  " << ximlo[j] << endl;
       }
    }
+   if(vrblvl > 0)
+      cout << "*** solve tail skipped " << skipcnt << " times ***" << endl;
 }
 
 void CPU_dbl2_lusb_solve

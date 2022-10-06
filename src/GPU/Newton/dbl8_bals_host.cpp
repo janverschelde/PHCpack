@@ -782,57 +782,75 @@ void CPU_dbl8_qrbs_tail
    double *wrkvechihilo, double *wrkveclohilo,
    double *wrkvechilolo, double *wrkveclololo, int vrblvl )
 {
-   bool verbose = (vrblvl > 1);
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
+   double nrm;
+   int skipcnt = 0;
 
    for(int i=1; i<degp1; i++)
    {
       if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
       // use sol[i-1] to update rhs[j] for j in i to degp1
-      for(int j=i; j<degp1; j++)
-      {
-         double **Ajhihihi = mathihihi[j-i+1]; // always start with A[1]
-         double **Ajlohihi = matlohihi[j-i+1]; 
-         double **Ajhilohi = mathilohi[j-i+1];
-         double **Ajlolohi = matlolohi[j-i+1]; 
-         double **Ajhihilo = mathihilo[j-i+1];
-         double **Ajlohilo = matlohilo[j-i+1]; 
-         double **Ajhilolo = mathilolo[j-i+1];
-         double **Ajlololo = matlololo[j-i+1]; 
-         double *xihihihi = solhihihi[i-1]; // solution to do the update with
-         double *xilohihi = sollohihi[i-1];
-         double *xihilohi = solhilohi[i-1];
-         double *xilolohi = sollolohi[i-1];
-         double *xihihilo = solhihilo[i-1];
-         double *xilohilo = sollohilo[i-1];
-         double *xihilolo = solhilolo[i-1];
-         double *xilololo = sollololo[i-1];
-         double *wjhihihi = rhshihihi[j];   // current right hand side vector
-         double *wjlohihi = rhslohihi[j];
-         double *wjhilohi = rhshilohi[j];
-         double *wjlolohi = rhslolohi[j];
-         double *wjhihilo = rhshihilo[j];
-         double *wjlohilo = rhslohilo[j];
-         double *wjhilolo = rhshilolo[j];
-         double *wjlololo = rhslololo[j];
 
-         for(int k=0; k<dim; k++)
-            for(int L=0; L<dim; L++) // wj[k] = wj[k] - Aj[k][L]*xi[L];
-            {
-               odf_mul(Ajhihihi[k][L],Ajlohihi[k][L],
-                       Ajhilohi[k][L],Ajlolohi[k][L],
-                       Ajhihilo[k][L],Ajlohilo[k][L],
-                       Ajhilolo[k][L],Ajlololo[k][L],
-                       xihihihi[L],xilohihi[L],xihilohi[L],xilolohi[L],
-                       xihihilo[L],xilohilo[L],xihilolo[L],xilololo[L],
-                       &acchihihi,&acclohihi,&acchilohi,&acclolohi,
-                       &acchihilo,&acclohilo,&acchilolo,&acclololo);
-               odf_dec(&wjhihihi[k],&wjlohihi[k],&wjhilohi[k],&wjlolohi[k],
-                       &wjhihilo[k],&wjlohilo[k],&wjhilolo[k],&wjlololo[k],
-                       acchihihi,acclohihi,acchilohi,acclolohi,
-                       acchihilo,acclohilo,acchilolo,acclololo);
-            }
+      double *xihihihi = solhihihi[i-1]; // solution to do the update with
+      double *xilohihi = sollohihi[i-1];
+      double *xihilohi = solhilohi[i-1];
+      double *xilolohi = sollolohi[i-1];
+      double *xihihilo = solhihilo[i-1];
+      double *xilohilo = sollohilo[i-1];
+      double *xihilolo = solhilolo[i-1];
+      double *xilololo = sollololo[i-1];
+
+      CPU_dbl_onenorm(dim,xihihihi,&nrm);
+      if(vrblvl > 0) cout << "1-norm of x[" << i-1 << "] : " << nrm << endl;
+
+      if(nrm < 1.0e-120)
+      {
+         skipcnt = skipcnt + 1;
+
+         if(vrblvl > 0)
+            cout << "skip update with x[" << i-1 << "] ..." << endl;
+      }
+      else
+      {
+         if(vrblvl > 0) cout << "updating with x[" << i-1 << "] ..." << endl;
+
+         for(int j=i; j<degp1; j++)
+         {
+            double **Ajhihihi = mathihihi[j-i+1]; // always start with A[1]
+            double **Ajlohihi = matlohihi[j-i+1]; 
+            double **Ajhilohi = mathilohi[j-i+1];
+            double **Ajlolohi = matlolohi[j-i+1]; 
+            double **Ajhihilo = mathihilo[j-i+1];
+            double **Ajlohilo = matlohilo[j-i+1]; 
+            double **Ajhilolo = mathilolo[j-i+1];
+            double **Ajlololo = matlololo[j-i+1]; 
+            double *wjhihihi = rhshihihi[j]; // current right hand side vector
+            double *wjlohihi = rhslohihi[j];
+            double *wjhilohi = rhshilohi[j];
+            double *wjlolohi = rhslolohi[j];
+            double *wjhihilo = rhshihilo[j];
+            double *wjlohilo = rhslohilo[j];
+            double *wjhilolo = rhshilolo[j];
+            double *wjlololo = rhslololo[j];
+
+            for(int k=0; k<dim; k++)
+               for(int L=0; L<dim; L++) // wj[k] = wj[k] - Aj[k][L]*xi[L];
+               {
+                  odf_mul(Ajhihihi[k][L],Ajlohihi[k][L],
+                          Ajhilohi[k][L],Ajlolohi[k][L],
+                          Ajhihilo[k][L],Ajlohilo[k][L],
+                          Ajhilolo[k][L],Ajlololo[k][L],
+                          xihihihi[L],xilohihi[L],xihilohi[L],xilolohi[L],
+                          xihihilo[L],xilohilo[L],xihilolo[L],xilololo[L],
+                          &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                          &acchihilo,&acclohilo,&acchilolo,&acclololo);
+                  odf_dec(&wjhihihi[k],&wjlohihi[k],&wjhilohi[k],&wjlolohi[k],
+                          &wjhihilo[k],&wjlohilo[k],&wjhilolo[k],&wjlololo[k],
+                          acchihihi,acclohihi,acchilohi,acclolohi,
+                          acchihilo,acclohilo,acchilolo,acclololo);
+               }
+         }
       }
       // compute sol[i] with back substitution
       double *xhihihi = solhihihi[i];
@@ -861,7 +879,7 @@ void CPU_dbl8_qrbs_tail
           wrkvechihihi,wrkveclohihi,wrkvechilohi,wrkveclolohi,
           wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo);
 
-      if(verbose)
+      if(vrblvl > 1)
       {
          for(int i=0; i<dim; i++)
             cout << "Qtb[" << i << "] : "
@@ -878,6 +896,8 @@ void CPU_dbl8_qrbs_tail
                  << xhilolo[j] << "  " << xlololo[j] << endl;
       }
    }
+   if(vrblvl > 0)
+      cout << "*** solve tail skipped " << skipcnt << " times ***" << endl;
 }
 
 void CPU_cmplx8_qrbs_tail
@@ -931,129 +951,155 @@ void CPU_cmplx8_qrbs_tail
    double *wrkvecimhihilo, double *wrkvecimlohilo,
    double *wrkvecimhilolo, double *wrkvecimlololo, int vrblvl )
 {
-   bool verbose = (vrblvl > 1);
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
+   double nrm;
+   int skipcnt = 0;
 
    for(int i=1; i<degp1; i++)
    {
       if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
       // use sol[i-1] to update rhs[j] for j in i to degp1
-      for(int j=i; j<degp1; j++)
-      {
-         double **Ajrehihihi = matrehihihi[j-i+1]; // always start with A[1]
-         double **Ajrelohihi = matrelohihi[j-i+1];
-         double **Ajrehilohi = matrehilohi[j-i+1];
-         double **Ajrelolohi = matrelolohi[j-i+1];
-         double **Ajrehihilo = matrehihilo[j-i+1];
-         double **Ajrelohilo = matrelohilo[j-i+1];
-         double **Ajrehilolo = matrehilolo[j-i+1];
-         double **Ajrelololo = matrelololo[j-i+1];
-         double **Ajimhihihi = matimhihihi[j-i+1];
-         double **Ajimlohihi = matimlohihi[j-i+1];
-         double **Ajimhilohi = matimhilohi[j-i+1];
-         double **Ajimlolohi = matimlolohi[j-i+1];
-         double **Ajimhihilo = matimhihilo[j-i+1];
-         double **Ajimlohilo = matimlohilo[j-i+1];
-         double **Ajimhilolo = matimhilolo[j-i+1];
-         double **Ajimlololo = matimlololo[j-i+1];
-         double *xirehihihi = solrehihihi[i-1]; // solution in the update
-         double *xirelohihi = solrelohihi[i-1]; 
-         double *xirehilohi = solrehilohi[i-1];
-         double *xirelolohi = solrelolohi[i-1]; 
-         double *xirehihilo = solrehihilo[i-1];
-         double *xirelohilo = solrelohilo[i-1]; 
-         double *xirehilolo = solrehilolo[i-1];
-         double *xirelololo = solrelololo[i-1]; 
-         double *xiimhihihi = solimhihihi[i-1]; 
-         double *xiimlohihi = solimlohihi[i-1]; 
-         double *xiimhilohi = solimhilohi[i-1]; 
-         double *xiimlolohi = solimlolohi[i-1]; 
-         double *xiimhihilo = solimhihilo[i-1]; 
-         double *xiimlohilo = solimlohilo[i-1]; 
-         double *xiimhilolo = solimhilolo[i-1]; 
-         double *xiimlololo = solimlololo[i-1]; 
-         double *wjrehihihi = rhsrehihihi[j]; // current right hand side
-         double *wjrelohihi = rhsrelohihi[j];
-         double *wjrehilohi = rhsrehilohi[j];
-         double *wjrelolohi = rhsrelolohi[j];
-         double *wjrehihilo = rhsrehihilo[j];
-         double *wjrelohilo = rhsrelohilo[j];
-         double *wjrehilolo = rhsrehilolo[j];
-         double *wjrelololo = rhsrelololo[j];
-         double *wjimhihihi = rhsimhihihi[j]; 
-         double *wjimlohihi = rhsimlohihi[j]; 
-         double *wjimhilohi = rhsimhilohi[j]; 
-         double *wjimlolohi = rhsimlolohi[j]; 
-         double *wjimhihilo = rhsimhihilo[j]; 
-         double *wjimlohilo = rhsimlohilo[j]; 
-         double *wjimhilolo = rhsimhilolo[j]; 
-         double *wjimlololo = rhsimlololo[j]; 
 
-         for(int k=0; k<dim; k++)
-            for(int L=0; L<dim; L++) // wj[k] = wj[k] - Aj[k][L]*xi[L];
-            {
-               // zre = Ajre[k][L]*xire[L] - Ajim[k][L]*xiim[L];
-               // wjre[k] = wjre[k] - zre;
-               odf_mul(Ajrehihihi[k][L],Ajrelohihi[k][L],
-                       Ajrehilohi[k][L],Ajrelolohi[k][L],
-                       Ajrehihilo[k][L],Ajrelohilo[k][L],
-                       Ajrehilolo[k][L],Ajrelololo[k][L],
-                       xirehihihi[L],xirelohihi[L],xirehilohi[L],xirelolohi[L],
-                       xirehihilo[L],xirelohilo[L],xirehilolo[L],xirelololo[L],
-                       &acchihihi,&acclohihi,&acchilohi,&acclolohi,
-                       &acchihilo,&acclohilo,&acchilolo,&acclololo);
-               odf_dec(&wjrehihihi[k],&wjrelohihi[k],
-                       &wjrehilohi[k],&wjrelolohi[k],
-                       &wjrehihilo[k],&wjrelohilo[k],
-                       &wjrehilolo[k],&wjrelololo[k],
-                       acchihihi,acclohihi,acchilohi,acclolohi,
-                       acchihilo,acclohilo,acchilolo,acclololo);
-               odf_mul(Ajimhihihi[k][L],Ajimlohihi[k][L],
-                       Ajimhilohi[k][L],Ajimlolohi[k][L],
-                       Ajimhihilo[k][L],Ajimlohilo[k][L],
-                       Ajimhilolo[k][L],Ajimlololo[k][L],
-                       xiimhihihi[L],xiimlohihi[L],xiimhilohi[L],xiimlolohi[L],
-                       xiimhihilo[L],xiimlohilo[L],xiimhilolo[L],xiimlololo[L],
-                       &acchihihi,&acclohihi,&acchilohi,&acclolohi,
-                       &acchihilo,&acclohilo,&acchilolo,&acclololo);
-               odf_inc(&wjrehihihi[k],&wjrelohihi[k],
-                       &wjrehilohi[k],&wjrelolohi[k],
-                       &wjrehihilo[k],&wjrelohilo[k],
-                       &wjrehilolo[k],&wjrelololo[k],
-                       acchihihi,acclohihi,acchilohi,acclolohi,
-                       acchihilo,acclohilo,acchilolo,acclololo);
-               // zim = Ajre[k][L]*xiim[L] + Ajim[k][L]*xire[L];
-               // wjim[k] = wjim[k] - zim;
-               odf_mul(Ajrehihihi[k][L],Ajrelohihi[k][L],
-                       Ajrehilohi[k][L],Ajrelolohi[k][L],
-                       Ajrehihilo[k][L],Ajrelohilo[k][L],
-                       Ajrehilolo[k][L],Ajrelololo[k][L],
-                       xiimhihihi[L],xiimlohihi[L],xiimhilohi[L],xiimlolohi[L],
-                       xiimhihilo[L],xiimlohilo[L],xiimhilolo[L],xiimlololo[L],
-                       &acchihihi,&acclohihi,&acchilohi,&acclolohi,
-                       &acchihilo,&acclohilo,&acchilolo,&acclololo);
-               odf_dec(&wjimhihihi[k],&wjimlohihi[k],
-                       &wjimhilohi[k],&wjimlolohi[k],
-                       &wjimhihilo[k],&wjimlohilo[k],
-                       &wjimhilolo[k],&wjimlololo[k],
-                       acchihihi,acclohihi,acchilohi,acclolohi,
-                       acchihilo,acclohilo,acchilolo,acclololo);
-               odf_mul(Ajimhihihi[k][L],Ajimlohihi[k][L],
-                       Ajimhilohi[k][L],Ajimlolohi[k][L],
-                       Ajimhihilo[k][L],Ajimlohilo[k][L],
-                       Ajimhilolo[k][L],Ajimlololo[k][L],
-                       xirehihihi[L],xirelohihi[L],xirehilohi[L],xirelolohi[L],
-                       xirehihilo[L],xirelohilo[L],xirehilolo[L],xirelololo[L],
-                       &acchihihi,&acclohihi,&acchilohi,&acclolohi,
-                       &acchihilo,&acclohilo,&acchilolo,&acclololo);
-               odf_dec(&wjimhihihi[k],&wjimlohihi[k],
-                       &wjimhilohi[k],&wjimlolohi[k],
-                       &wjimhihilo[k],&wjimlohilo[k],
-                       &wjimhilolo[k],&wjimlololo[k],
-                       acchihihi,acclohihi,acchilohi,acclolohi,
-                       acchihilo,acclohilo,acchilolo,acclololo);
-            }
+      double *xirehihihi = solrehihihi[i-1]; // solution in the update
+      double *xirelohihi = solrelohihi[i-1]; 
+      double *xirehilohi = solrehilohi[i-1];
+      double *xirelolohi = solrelolohi[i-1]; 
+      double *xirehihilo = solrehihilo[i-1];
+      double *xirelohilo = solrelohilo[i-1]; 
+      double *xirehilolo = solrehilolo[i-1];
+      double *xirelololo = solrelololo[i-1]; 
+      double *xiimhihihi = solimhihihi[i-1]; 
+      double *xiimlohihi = solimlohihi[i-1]; 
+      double *xiimhilohi = solimhilohi[i-1]; 
+      double *xiimlolohi = solimlolohi[i-1]; 
+      double *xiimhihilo = solimhihilo[i-1]; 
+      double *xiimlohilo = solimlohilo[i-1]; 
+      double *xiimhilolo = solimhilolo[i-1]; 
+      double *xiimlololo = solimlololo[i-1]; 
+
+      CPU_cmplx_onenorm(dim,xirehihihi,xiimhihihi,&nrm);
+      if(vrblvl > 0) cout << "1-norm of x[" << i-1 << "] : " << nrm << endl;
+
+      if(nrm < 1.0e-120)
+      {
+         skipcnt = skipcnt + 1;
+
+         if(vrblvl > 0)
+            cout << "skip update with x[" << i-1 << "] ..." << endl;
+      }
+      else
+      {
+         if(vrblvl > 0) cout << "updating with x[" << i-1 << "] ..." << endl;
+
+         for(int j=i; j<degp1; j++)
+         {
+            double **Ajrehihihi = matrehihihi[j-i+1]; // always start with A[1]
+            double **Ajrelohihi = matrelohihi[j-i+1];
+            double **Ajrehilohi = matrehilohi[j-i+1];
+            double **Ajrelolohi = matrelolohi[j-i+1];
+            double **Ajrehihilo = matrehihilo[j-i+1];
+            double **Ajrelohilo = matrelohilo[j-i+1];
+            double **Ajrehilolo = matrehilolo[j-i+1];
+            double **Ajrelololo = matrelololo[j-i+1];
+            double **Ajimhihihi = matimhihihi[j-i+1];
+            double **Ajimlohihi = matimlohihi[j-i+1];
+            double **Ajimhilohi = matimhilohi[j-i+1];
+            double **Ajimlolohi = matimlolohi[j-i+1];
+            double **Ajimhihilo = matimhihilo[j-i+1];
+            double **Ajimlohilo = matimlohilo[j-i+1];
+            double **Ajimhilolo = matimhilolo[j-i+1];
+            double **Ajimlololo = matimlololo[j-i+1];
+            double *wjrehihihi = rhsrehihihi[j]; // current right hand side
+            double *wjrelohihi = rhsrelohihi[j];
+            double *wjrehilohi = rhsrehilohi[j];
+            double *wjrelolohi = rhsrelolohi[j];
+            double *wjrehihilo = rhsrehihilo[j];
+            double *wjrelohilo = rhsrelohilo[j];
+            double *wjrehilolo = rhsrehilolo[j];
+            double *wjrelololo = rhsrelololo[j];
+            double *wjimhihihi = rhsimhihihi[j]; 
+            double *wjimlohihi = rhsimlohihi[j]; 
+            double *wjimhilohi = rhsimhilohi[j]; 
+            double *wjimlolohi = rhsimlolohi[j]; 
+            double *wjimhihilo = rhsimhihilo[j]; 
+            double *wjimlohilo = rhsimlohilo[j]; 
+            double *wjimhilolo = rhsimhilolo[j]; 
+            double *wjimlololo = rhsimlololo[j]; 
+
+            for(int k=0; k<dim; k++)
+               for(int L=0; L<dim; L++) // wj[k] = wj[k] - Aj[k][L]*xi[L];
+               {
+                  // zre = Ajre[k][L]*xire[L] - Ajim[k][L]*xiim[L];
+                  // wjre[k] = wjre[k] - zre;
+                  odf_mul(Ajrehihihi[k][L],Ajrelohihi[k][L],
+                          Ajrehilohi[k][L],Ajrelolohi[k][L],
+                          Ajrehihilo[k][L],Ajrelohilo[k][L],
+                          Ajrehilolo[k][L],Ajrelololo[k][L],
+                          xirehihihi[L],xirelohihi[L],
+                          xirehilohi[L],xirelolohi[L],
+                          xirehihilo[L],xirelohilo[L],
+                          xirehilolo[L],xirelololo[L],
+                          &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                          &acchihilo,&acclohilo,&acchilolo,&acclololo);
+                  odf_dec(&wjrehihihi[k],&wjrelohihi[k],
+                          &wjrehilohi[k],&wjrelolohi[k],
+                          &wjrehihilo[k],&wjrelohilo[k],
+                          &wjrehilolo[k],&wjrelololo[k],
+                          acchihihi,acclohihi,acchilohi,acclolohi,
+                          acchihilo,acclohilo,acchilolo,acclololo);
+                  odf_mul(Ajimhihihi[k][L],Ajimlohihi[k][L],
+                          Ajimhilohi[k][L],Ajimlolohi[k][L],
+                          Ajimhihilo[k][L],Ajimlohilo[k][L],
+                          Ajimhilolo[k][L],Ajimlololo[k][L],
+                          xiimhihihi[L],xiimlohihi[L],
+                          xiimhilohi[L],xiimlolohi[L],
+                          xiimhihilo[L],xiimlohilo[L],
+                          xiimhilolo[L],xiimlololo[L],
+                          &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                          &acchihilo,&acclohilo,&acchilolo,&acclololo);
+                  odf_inc(&wjrehihihi[k],&wjrelohihi[k],
+                          &wjrehilohi[k],&wjrelolohi[k],
+                          &wjrehihilo[k],&wjrelohilo[k],
+                          &wjrehilolo[k],&wjrelololo[k],
+                          acchihihi,acclohihi,acchilohi,acclolohi,
+                          acchihilo,acclohilo,acchilolo,acclololo);
+                  // zim = Ajre[k][L]*xiim[L] + Ajim[k][L]*xire[L];
+                  // wjim[k] = wjim[k] - zim;
+                  odf_mul(Ajrehihihi[k][L],Ajrelohihi[k][L],
+                          Ajrehilohi[k][L],Ajrelolohi[k][L],
+                          Ajrehihilo[k][L],Ajrelohilo[k][L],
+                          Ajrehilolo[k][L],Ajrelololo[k][L],
+                          xiimhihihi[L],xiimlohihi[L],
+                          xiimhilohi[L],xiimlolohi[L],
+                          xiimhihilo[L],xiimlohilo[L],
+                          xiimhilolo[L],xiimlololo[L],
+                          &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                          &acchihilo,&acclohilo,&acchilolo,&acclololo);
+                  odf_dec(&wjimhihihi[k],&wjimlohihi[k],
+                          &wjimhilohi[k],&wjimlolohi[k],
+                          &wjimhihilo[k],&wjimlohilo[k],
+                          &wjimhilolo[k],&wjimlololo[k],
+                          acchihihi,acclohihi,acchilohi,acclolohi,
+                          acchihilo,acclohilo,acchilolo,acclololo);
+                  odf_mul(Ajimhihihi[k][L],Ajimlohihi[k][L],
+                          Ajimhilohi[k][L],Ajimlolohi[k][L],
+                          Ajimhihilo[k][L],Ajimlohilo[k][L],
+                          Ajimhilolo[k][L],Ajimlololo[k][L],
+                          xirehihihi[L],xirelohihi[L],
+                          xirehilohi[L],xirelolohi[L],
+                          xirehihilo[L],xirelohilo[L],
+                          xirehilolo[L],xirelololo[L],
+                          &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                          &acchihilo,&acclohilo,&acchilolo,&acclololo);
+                  odf_dec(&wjimhihihi[k],&wjimlohihi[k],
+                          &wjimhilohi[k],&wjimlolohi[k],
+                          &wjimhihilo[k],&wjimlohilo[k],
+                          &wjimhilolo[k],&wjimlololo[k],
+                          acchihihi,acclohihi,acchilohi,acclolohi,
+                          acchihilo,acclohilo,acchilolo,acclololo);
+               }
+         }
       }
       // compute sol[i] with back substitution
       double *xrehihihi = solrehihihi[i];
@@ -1111,7 +1157,7 @@ void CPU_cmplx8_qrbs_tail
           wrkvecimhihihi,wrkvecimlohihi,wrkvecimhilohi,wrkvecimlolohi,
           wrkvecimhihilo,wrkvecimlohilo,wrkvecimhilolo,wrkvecimlololo);
 
-      if(verbose)
+      if(vrblvl > 1)
       {
          for(int i=0; i<dim; i++)
             cout << "QHb[" << i << "] : "
@@ -1143,6 +1189,8 @@ void CPU_cmplx8_qrbs_tail
                  << ximhilolo[j] << "  " << ximlololo[j] << endl;
       }
    }
+   if(vrblvl > 0)
+      cout << "*** solve tail skipped " << skipcnt << " times ***" << endl;
 }
 
 void CPU_dbl8_lusb_solve
