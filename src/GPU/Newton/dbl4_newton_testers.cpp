@@ -587,20 +587,23 @@ void dbl4_newton_qrstep
    if(vrblvl > 0) cout << "linearizing the output ..." << endl;
 
    if((mode == 1) || (mode == 2))
+   {
       dbl4_linearize_evaldiff_output
          (dim,degp1,nvr,idx,
           outputhihi_h,outputlohi_h,outputhilo_h,outputlolo_h,
           funvalhihi_h,funvallohi_h,funvalhilo_h,funvallolo_h,
           rhshihi_h,rhslohi_h,rhshilo_h,rhslolo_h,
           jacvalhihi_h,jacvallohi_h,jacvalhilo_h,jacvallolo_h,vrblvl);
-   if((mode == 1) || (mode == 2))
+   }
+   if((mode == 0) || (mode == 2))
+   {
       dbl4_linearize_evaldiff_output
          (dim,degp1,nvr,idx,
           outputhihi_d,outputlohi_d,outputhilo_d,outputlolo_d,
           funvalhihi_d,funvallohi_d,funvalhilo_d,funvallolo_d,
           rhshihi_d,rhslohi_d,rhshilo_d,rhslolo_d,
           jacvalhihi_d,jacvallohi_d,jacvalhilo_d,jacvallolo_d,vrblvl);
-
+   }
    if((vrblvl > 0) && (mode == 2))
    {
       cout << "comparing CPU with GPU function values ... " << endl;

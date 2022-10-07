@@ -909,7 +909,7 @@ void dbl8_newton_qrstep
           jacvalhihihi_h,jacvallohihi_h,jacvalhilohi_h,jacvallolohi_h,
           jacvalhihilo_h,jacvallohilo_h,jacvalhilolo_h,jacvallololo_h,vrblvl);
    }
-   if((mode == 1) || (mode == 2))
+   if((mode == 0) || (mode == 2))
    {
       dbl8_linearize_evaldiff_output
          (dim,degp1,nvr,idx,
