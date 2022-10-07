@@ -243,7 +243,8 @@ void CPU_dbl_qrbs_tail
    double **Q, double **R, double *wrkvec, int vrblvl )
 {
    double nrm;
-   int skipcnt = 0;
+   int skipupcnt = 0; // counts updates skipped
+   int skipbscnt = 0; // counts backsubstitutions skipped
 
    for(int i=1; i<degp1; i++)
    {
@@ -255,14 +256,15 @@ void CPU_dbl_qrbs_tail
 
       if(nrm < 1.0e-15)
       {
-         skipcnt = skipcnt + 1;
+         skipupcnt = skipupcnt + 1;
 
          if(vrblvl > 0)
-            cout << "skip update with x[" << i-1 << "] ..." << endl;
+            cout << "-> skip update with x[" << i-1 << "] ..." << endl;
       }
       else
       {
-         if(vrblvl > 0) cout << "updating with x[" << i-1 << "] ..." << endl;
+         if(vrblvl > 0)
+           cout << "-> updating with x[" << i-1 << "] ..." << endl;
 
          for(int j=i; j<degp1; j++)
          {
@@ -277,19 +279,41 @@ void CPU_dbl_qrbs_tail
       double *x = sol[i];
       double *b = rhs[i];
 
-      CPU_dbl_factors_qrbs(dim,dim,Q,R,b,x,wrkvec);
+      CPU_dbl_onenorm(dim,b,&nrm);
+      if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-      if(vrblvl > 1)
+      if(nrm < 1.0e-15)
       {
-         for(int i=0; i<dim; i++)
-            cout << "Qtb[" << i << "] : " << wrkvec[i] << endl;
+         skipbscnt = skipbscnt + 1;
 
-         cout << "the solution : " << endl;
-         for(int j=0; j<dim; j++) cout << x[j] << endl;
+         if(vrblvl > 0)
+            cout << "-> skip backsubstitution for x[" << i << "] ..."
+                 << endl;
+
+         for(int j=0; j<dim; j++) x[j] = 0.0;
+      }
+      else
+      {
+         if(vrblvl > 0)
+            cout << "-> run backsubstitution for x[" << i << "] ..."
+                 << endl;
+
+         CPU_dbl_factors_qrbs(dim,dim,Q,R,b,x,wrkvec);
+
+         if(vrblvl > 1)
+         {
+            for(int i=0; i<dim; i++)
+               cout << "Qtb[" << i << "] : " << wrkvec[i] << endl;
+
+            cout << "the solution : " << endl;
+            for(int j=0; j<dim; j++) cout << x[j] << endl;
+         }
       }
    }
    if(vrblvl > 0)
-      cout << "*** solve tail skipped " << skipcnt << " times ***" << endl;
+      cout << "*** solve tail skipped " << skipupcnt
+           << " updates and " << skipbscnt
+           << " backsubstitutions ***" << endl;
 }
 
 void CPU_cmplx_qrbs_tail
@@ -299,7 +323,8 @@ void CPU_cmplx_qrbs_tail
    double *wrkvecre, double *wrkvecim, int vrblvl )
 {
    double nrm,zre,zim;
-   int skipcnt = 0;
+   int skipupcnt = 0; // counts skipped updates
+   int skipbscnt = 0; // counts skipped backsubstitutions
 
    for(int i=1; i<degp1; i++)
    {
@@ -314,14 +339,15 @@ void CPU_cmplx_qrbs_tail
 
       if(nrm < 1.0e-15)
       {
-         skipcnt = skipcnt + 1;
+         skipupcnt = skipupcnt + 1;
 
          if(vrblvl > 0)
-            cout << "skip update with x[" << i-1 << "] ..." << endl;
+            cout << "-> skip update with x[" << i-1 << "] ..." << endl;
       }
       else
       {
-         if(vrblvl > 0) cout << "updating with x[" << i-1 << "] ..." << endl;
+         if(vrblvl > 0)
+            cout << "-> updating with x[" << i-1 << "] ..." << endl;
 
          for(int j=i; j<degp1; j++)
          {
@@ -346,22 +372,48 @@ void CPU_cmplx_qrbs_tail
       double *bre = rhsre[i];
       double *bim = rhsim[i];
 
-      CPU_cmplx_factors_qrbs
-         (dim,dim,Qre,Qim,Rre,Rim,bre,bim,xre,xim,wrkvecre,wrkvecim);
+      CPU_cmplx_onenorm(dim,bre,bim,&nrm);
+      if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-      if(vrblvl > 1)
+      if(nrm < 1.0e-15)
       {
-         for(int i=0; i<dim; i++)
-            cout << "QHb[" << i << "] : "
-                 << wrkvecre[i] << "  " << wrkvecim[i] << endl;
+         skipbscnt = skipbscnt + 1;
 
-         cout << "the solution : " << endl;
+         if(vrblvl > 0)
+            cout << "-> skip backsubstitution for x[" << i << "] ..."
+                 << endl;
+
          for(int j=0; j<dim; j++)
-            cout << xre[j] << "  " << xim[j] << endl;
+         {
+            xre[j] = 0.0;
+            xim[j] = 0.0;
+         }
+      }
+      else
+      {
+         if(vrblvl > 0)
+            cout << "-> run backsubstitution for x[" << i << "] ..."
+                 << endl;
+
+         CPU_cmplx_factors_qrbs
+            (dim,dim,Qre,Qim,Rre,Rim,bre,bim,xre,xim,wrkvecre,wrkvecim);
+
+         if(vrblvl > 1)
+         {
+            for(int i=0; i<dim; i++)
+               cout << "QHb[" << i << "] : "
+                    << wrkvecre[i] << "  " << wrkvecim[i] << endl;
+
+            cout << "the solution : " << endl;
+            for(int j=0; j<dim; j++)
+               cout << xre[j] << "  " << xim[j] << endl;
+         }
       }
    }
    if(vrblvl > 0)
-      cout << "*** solve tail skipped " << skipcnt << " times ***" << endl;
+      cout << "*** solve tail skipped " << skipupcnt
+           << " updates and " << skipbscnt
+           << " backsubstitutions ***" << endl;
 }
 
 void CPU_dbl_lusb_solve

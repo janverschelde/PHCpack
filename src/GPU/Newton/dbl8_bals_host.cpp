@@ -785,7 +785,8 @@ void CPU_dbl8_qrbs_tail
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
    double nrm;
-   int skipcnt = 0;
+   int skipupcnt = 0; // counts the skipped updates
+   int skipbscnt = 0; // counts the skipped backsubstitutions
 
    for(int i=1; i<degp1; i++)
    {
@@ -806,14 +807,15 @@ void CPU_dbl8_qrbs_tail
 
       if(nrm < 1.0e-120)
       {
-         skipcnt = skipcnt + 1;
+         skipupcnt = skipupcnt + 1;
 
          if(vrblvl > 0)
-            cout << "skip update with x[" << i-1 << "] ..." << endl;
+            cout << "-> skip update with x[" << i-1 << "] ..." << endl;
       }
       else
       {
-         if(vrblvl > 0) cout << "updating with x[" << i-1 << "] ..." << endl;
+         if(vrblvl > 0)
+            cout << "-> updating with x[" << i-1 << "] ..." << endl;
 
          for(int j=i; j<degp1; j++)
          {
@@ -870,34 +872,63 @@ void CPU_dbl8_qrbs_tail
       double *bhilolo = rhshilolo[i];
       double *blololo = rhslololo[i];
 
-      CPU_dbl8_factors_qrbs
-         (dim,dim,
-          Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
-          Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
-          bhihihi,blohihi,bhilohi,blolohi,bhihilo,blohilo,bhilolo,blololo,
-          xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
-          wrkvechihihi,wrkveclohihi,wrkvechilohi,wrkveclolohi,
-          wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo);
+      CPU_dbl_onenorm(dim,bhihihi,&nrm);
+      if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-      if(vrblvl > 1)
+      if(nrm < 1.0e-120)
       {
-         for(int i=0; i<dim; i++)
-            cout << "Qtb[" << i << "] : "
-                 << wrkvechihihi[i] << "  " << wrkveclohihi[i] << "  "
-                 << wrkvechilohi[i] << "  " << wrkveclolohi[i] << endl << "  "
-                 << wrkvechihilo[i] << "  " << wrkveclohilo[i] << "  "
-                 << wrkvechilolo[i] << "  " << wrkveclololo[i] << endl;
+         skipbscnt = skipbscnt + 1;
 
-         cout << "the solution : " << endl;
+         if(vrblvl > 0)
+            cout << "-> skip backsubstitution for x[" << i << "] ..."
+                 << endl;
+
          for(int j=0; j<dim; j++)
-            cout << xhihihi[j] << "  " << xlohihi[j] << "  "
-                 << xhilohi[j] << "  " << xlolohi[j] << endl << "  "
-                 << xhihilo[j] << "  " << xlohilo[j] << "  "
-                 << xhilolo[j] << "  " << xlololo[j] << endl;
+         {
+            xhihihi[j] = 0.0; xlohihi[j] = 0.0;
+            xhilohi[j] = 0.0; xlolohi[j] = 0.0;
+            xhihilo[j] = 0.0; xlohilo[j] = 0.0;
+            xhilolo[j] = 0.0; xlololo[j] = 0.0;
+         }
+      }
+      else
+      {
+         if(vrblvl > 0)
+            cout << "-> run backsubstitution for x[" << i << "] ..."
+                 << endl;
+
+         CPU_dbl8_factors_qrbs
+            (dim,dim,
+             Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
+             Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
+             bhihihi,blohihi,bhilohi,blolohi,bhihilo,blohilo,bhilolo,blololo,
+             xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
+             wrkvechihihi,wrkveclohihi,wrkvechilohi,wrkveclolohi,
+             wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo);
+
+         if(vrblvl > 1)
+         {
+            for(int i=0; i<dim; i++)
+               cout << "Qtb[" << i << "] : "
+                    << wrkvechihihi[i] << "  " << wrkveclohihi[i] << "  "
+                    << wrkvechilohi[i] << "  " << wrkveclolohi[i] << endl
+                    << "  "
+                    << wrkvechihilo[i] << "  " << wrkveclohilo[i] << "  "
+                    << wrkvechilolo[i] << "  " << wrkveclololo[i] << endl;
+
+            cout << "the solution : " << endl;
+            for(int j=0; j<dim; j++)
+               cout << xhihihi[j] << "  " << xlohihi[j] << "  "
+                    << xhilohi[j] << "  " << xlolohi[j] << endl << "  "
+                    << xhihilo[j] << "  " << xlohilo[j] << "  "
+                    << xhilolo[j] << "  " << xlololo[j] << endl;
+         }
       }
    }
    if(vrblvl > 0)
-      cout << "*** solve tail skipped " << skipcnt << " times ***" << endl;
+      cout << "*** solve tail skipped " << skipupcnt
+           << " updates and " << skipbscnt
+           << " backsubstitutions ***" << endl;
 }
 
 void CPU_cmplx8_qrbs_tail
@@ -954,7 +985,8 @@ void CPU_cmplx8_qrbs_tail
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
    double nrm;
-   int skipcnt = 0;
+   int skipupcnt = 0; // counts the skipped updates
+   int skipbscnt = 0; // counts the skipped backsubstitutions
 
    for(int i=1; i<degp1; i++)
    {
@@ -983,14 +1015,15 @@ void CPU_cmplx8_qrbs_tail
 
       if(nrm < 1.0e-120)
       {
-         skipcnt = skipcnt + 1;
+         skipupcnt = skipupcnt + 1;
 
          if(vrblvl > 0)
-            cout << "skip update with x[" << i-1 << "] ..." << endl;
+            cout << "-> skip update with x[" << i-1 << "] ..." << endl;
       }
       else
       {
-         if(vrblvl > 0) cout << "updating with x[" << i-1 << "] ..." << endl;
+         if(vrblvl > 0)
+            cout << "-> updating with x[" << i-1 << "] ..." << endl;
 
          for(int j=i; j<degp1; j++)
          {
@@ -1135,62 +1168,94 @@ void CPU_cmplx8_qrbs_tail
       double *bimhilolo = rhsimhilolo[i];
       double *bimlololo = rhsimlololo[i];
 
-      CPU_cmplx8_factors_qrbs
-         (dim,dim,Qrehihihi,Qrelohihi,Qrehilohi,Qrelolohi,
-                  Qrehihilo,Qrelohilo,Qrehilolo,Qrelololo,
-                  Qimhihihi,Qimlohihi,Qimhilohi,Qimlolohi,
-                  Qimhihilo,Qimlohilo,Qimhilolo,Qimlololo,
-          Rrehihihi,Rrelohihi,Rrehilohi,Rrelolohi,
-          Rrehihilo,Rrelohilo,Rrehilolo,Rrelololo,
-          Rimhihihi,Rimlohihi,Rimhilohi,Rimlolohi,
-          Rimhihilo,Rimlohilo,Rimhilolo,Rimlololo,
-          brehihihi,brelohihi,brehilohi,brelolohi,
-          brehihilo,brelohilo,brehilolo,brelololo,
-          bimhihihi,bimlohihi,bimhilohi,bimlolohi,
-          bimhihilo,bimlohilo,bimhilolo,bimlololo,
-          xrehihihi,xrelohihi,xrehilohi,xrelolohi,
-          xrehihilo,xrelohilo,xrehilolo,xrelololo,
-          ximhihihi,ximlohihi,ximhilohi,ximlolohi,
-          ximhihilo,ximlohilo,ximhilolo,ximlololo,
-          wrkvecrehihihi,wrkvecrelohihi,wrkvecrehilohi,wrkvecrelolohi,
-          wrkvecrehihilo,wrkvecrelohilo,wrkvecrehilolo,wrkvecrelololo,
-          wrkvecimhihihi,wrkvecimlohihi,wrkvecimhilohi,wrkvecimlolohi,
-          wrkvecimhihilo,wrkvecimlohilo,wrkvecimhilolo,wrkvecimlololo);
+      CPU_cmplx_onenorm(dim,brehihihi,bimhihihi,&nrm);
+      if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-      if(vrblvl > 1)
+      if(nrm < 1.0e-120)
       {
-         for(int i=0; i<dim; i++)
-            cout << "QHb[" << i << "] : "
-                 << wrkvecrehihihi[i] << "  " << wrkvecrehihihi[i] << endl
-                 << "  "
-                 << wrkvecrehilohi[i] << "  " << wrkvecrehilohi[i] << endl
-                 << "  "
-                 << wrkvecrehihilo[i] << "  " << wrkvecrehihilo[i] << endl
-                 << "  "
-                 << wrkvecrehilolo[i] << "  " << wrkvecrehilolo[i] << endl
-                 << "  "
-                 << wrkvecimhihihi[i] << "  " << wrkvecimlohihi[i] << endl
-                 << "  "
-                 << wrkvecimhilohi[i] << "  " << wrkvecimlolohi[i] << endl
-                 << "  "
-                 << wrkvecimhihilo[i] << "  " << wrkvecimlohilo[i] << endl
-                 << "  "
-                 << wrkvecimhilolo[i] << "  " << wrkvecimlololo[i] << endl;
+         skipbscnt = skipbscnt + 1;
 
-         cout << "the solution : " << endl;
+         if(vrblvl > 0)
+            cout << "-> skip backsubstitution for x[" << i << "] ..."
+                 << endl;
+
          for(int j=0; j<dim; j++)
-            cout << xrehihihi[j] << "  " << xrelohihi[j] << endl << "  "
-                 << xrehilohi[j] << "  " << xrelolohi[j] << endl << "  "
-                 << xrehihilo[j] << "  " << xrelohilo[j] << endl << "  "
-                 << xrehilolo[j] << "  " << xrelololo[j] << endl << "  "
-                 << ximhihihi[j] << "  " << ximlohihi[j] << endl << "  "
-                 << ximhilohi[j] << "  " << ximlolohi[j] << endl << "  "
-                 << ximhihilo[j] << "  " << ximlohilo[j] << endl << "  "
-                 << ximhilolo[j] << "  " << ximlololo[j] << endl;
+         {
+            xrehihihi[j] = 0.0; xrelohihi[j] = 0.0;
+            xrehilohi[j] = 0.0; xrelolohi[j] = 0.0;
+            xrehihilo[j] = 0.0; xrelohilo[j] = 0.0;
+            xrehilolo[j] = 0.0; xrelololo[j] = 0.0;
+            ximhihihi[j] = 0.0; ximlohihi[j] = 0.0;
+            ximhilohi[j] = 0.0; ximlolohi[j] = 0.0;
+            ximhihilo[j] = 0.0; ximlohilo[j] = 0.0;
+            ximhilolo[j] = 0.0; ximlololo[j] = 0.0;
+         }
+      }
+      else
+      {
+         if(vrblvl > 0)
+            cout << "-> run backsubstitution for x[" << i << "] ..."
+                 << endl;
+
+         CPU_cmplx8_factors_qrbs
+            (dim,dim,Qrehihihi,Qrelohihi,Qrehilohi,Qrelolohi,
+                     Qrehihilo,Qrelohilo,Qrehilolo,Qrelololo,
+                     Qimhihihi,Qimlohihi,Qimhilohi,Qimlolohi,
+                     Qimhihilo,Qimlohilo,Qimhilolo,Qimlololo,
+             Rrehihihi,Rrelohihi,Rrehilohi,Rrelolohi,
+             Rrehihilo,Rrelohilo,Rrehilolo,Rrelololo,
+             Rimhihihi,Rimlohihi,Rimhilohi,Rimlolohi,
+             Rimhihilo,Rimlohilo,Rimhilolo,Rimlololo,
+             brehihihi,brelohihi,brehilohi,brelolohi,
+             brehihilo,brelohilo,brehilolo,brelololo,
+             bimhihihi,bimlohihi,bimhilohi,bimlolohi,
+             bimhihilo,bimlohilo,bimhilolo,bimlololo,
+             xrehihihi,xrelohihi,xrehilohi,xrelolohi,
+             xrehihilo,xrelohilo,xrehilolo,xrelololo,
+             ximhihihi,ximlohihi,ximhilohi,ximlolohi,
+             ximhihilo,ximlohilo,ximhilolo,ximlololo,
+             wrkvecrehihihi,wrkvecrelohihi,wrkvecrehilohi,wrkvecrelolohi,
+             wrkvecrehihilo,wrkvecrelohilo,wrkvecrehilolo,wrkvecrelololo,
+             wrkvecimhihihi,wrkvecimlohihi,wrkvecimhilohi,wrkvecimlolohi,
+             wrkvecimhihilo,wrkvecimlohilo,wrkvecimhilolo,wrkvecimlololo);
+
+         if(vrblvl > 1)
+         {
+            for(int i=0; i<dim; i++)
+               cout << "QHb[" << i << "] : "
+                    << wrkvecrehihihi[i] << "  " << wrkvecrehihihi[i] << endl
+                    << "  "
+                    << wrkvecrehilohi[i] << "  " << wrkvecrehilohi[i] << endl
+                    << "  "
+                    << wrkvecrehihilo[i] << "  " << wrkvecrehihilo[i] << endl
+                    << "  "
+                    << wrkvecrehilolo[i] << "  " << wrkvecrehilolo[i] << endl
+                    << "  "
+                    << wrkvecimhihihi[i] << "  " << wrkvecimlohihi[i] << endl
+                    << "  "
+                    << wrkvecimhilohi[i] << "  " << wrkvecimlolohi[i] << endl
+                    << "  "
+                    << wrkvecimhihilo[i] << "  " << wrkvecimlohilo[i] << endl
+                    << "  "
+                    << wrkvecimhilolo[i] << "  " << wrkvecimlololo[i] << endl;
+
+            cout << "the solution : " << endl;
+            for(int j=0; j<dim; j++)
+               cout << xrehihihi[j] << "  " << xrelohihi[j] << endl << "  "
+                    << xrehilohi[j] << "  " << xrelolohi[j] << endl << "  "
+                    << xrehihilo[j] << "  " << xrelohilo[j] << endl << "  "
+                    << xrehilolo[j] << "  " << xrelololo[j] << endl << "  "
+                    << ximhihihi[j] << "  " << ximlohihi[j] << endl << "  "
+                    << ximhilohi[j] << "  " << ximlolohi[j] << endl << "  "
+                    << ximhihilo[j] << "  " << ximlohilo[j] << endl << "  "
+                    << ximhilolo[j] << "  " << ximlololo[j] << endl;
+         }
       }
    }
    if(vrblvl > 0)
-      cout << "*** solve tail skipped " << skipcnt << " times ***" << endl;
+      cout << "*** solve tail skipped " << skipupcnt
+           << " updates and " << skipbscnt
+           << " backsubstitutions ***" << endl;
 }
 
 void CPU_dbl8_lusb_solve
