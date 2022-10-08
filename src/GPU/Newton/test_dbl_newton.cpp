@@ -11,11 +11,6 @@
 
 using namespace std;
 
-void exponents_check ( int dim, int **rowsA, int vrblvl );
-/*
- * DESCRIPTION :
- *   Writes the exponents of the solution for checking ... */
-
 int main ( void )
 {
    cout << "testing Newton in double precision ..." << endl;
@@ -62,39 +57,4 @@ int main ( void )
    exponents_check(dim,rowsA,vrblvl);
 
    return 0;
-}
-
-void exponents_check ( int dim, int **rowsA, int vrblvl )
-{
-   if(vrblvl > 1)
-   {
-      cout << "The matrix :" << endl;
-      write_exponent_matrix(dim, rowsA);
-   }
-   int *expsol = new int[dim];
-   int **copyA = new int*[dim];  // copy of A
-   int **unimd = new int*[dim];  // unimodular transformation
-
-   for(int i=0; i<dim; i++)      // initialize the data
-   {
-      unimd[i] = new int[dim];
-      copyA[i] = new int[dim];
-   }
-   copy_integer_matrix(dim, rowsA, copyA);
-   int sing = lower_triangulate(dim, copyA, unimd, 0);
-   exponent_forward_substitution(dim, copyA, expsol);
-   cout << "exponents after forward substitution :" << endl;
-   for(int i=0; i<dim; i++) cout << " " << expsol[i];
-   cout << endl;
-   exponent_unimodular_transformation(dim, unimd, expsol);
-   cout << "exponents after unimodular transformation :" << endl;
-   for(int i=0; i<dim; i++) cout << " " << expsol[i];
-   cout << endl;
-
-   for(int i=0; i<dim; i++)
-   {
-      free(unimd[i]);
-      free(copyA[i]);
-   }
-   free(unimd); free(copyA); free(expsol);
 }

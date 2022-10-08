@@ -215,4 +215,11 @@ int exponent_unimodular_transformation ( int dim, int **uni, int *expsol );
  *             of a binomial system, to define the solution,
  *             obtained via multiplying uni by expsol. */
 
+void exponents_check ( int dim, int **rowsA, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Writes the exponents of the solution for checking,
+ *   for the matrix A stored in rowsA of dimension dim.
+ *   If vrblvl > 1, then the matrix is written as well. */
+
 #endif

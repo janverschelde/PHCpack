@@ -1,3 +1,6 @@
+Sat 8 Oct 2022 : moved the exponents_check from test_dbl_newton.cpp
+  into unimodular matrices, updated test_{dbl2,dbl4,dbl8}_newton.cpp.
+
 Fri 7 Oct 2022 : fixed bug in {dbl4,dbl8}_newton_testers.cpp.
   Checked for zero rhs in dbl*_bals_kernels.cu.
   Added upper bound on norm check in dbl*_bals_{host.cpp, kernels.cu}.

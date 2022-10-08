@@ -54,5 +54,7 @@ int main ( void )
       test_dbl2_complex_newton
          (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
 
+   exponents_check(dim,rowsA,vrblvl);
+
    return 0;
 }
