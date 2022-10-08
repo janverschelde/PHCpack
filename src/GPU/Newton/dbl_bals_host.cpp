@@ -245,6 +245,7 @@ void CPU_dbl_qrbs_tail
    double nrm;
    int skipupcnt = 0; // counts updates skipped
    int skipbscnt = 0; // counts backsubstitutions skipped
+   double prevnorm = 1.0e+99; // previous norm
 
    for(int i=1; i<degp1; i++)
    {
@@ -282,7 +283,7 @@ void CPU_dbl_qrbs_tail
       CPU_dbl_onenorm(dim,b,&nrm);
       if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-      if((nrm < 1.0e-15) || (nrm > 100.0))
+      if((nrm < 1.0e-15) || (nrm > prevnorm))
       {
          skipbscnt = skipbscnt + 1;
 
@@ -294,6 +295,8 @@ void CPU_dbl_qrbs_tail
       }
       else
       {
+         prevnorm = nrm*1.0e+8;
+
          if(vrblvl > 0)
             cout << "-> run backsubstitution for x[" << i << "] ..."
                  << endl;
@@ -325,6 +328,7 @@ void CPU_cmplx_qrbs_tail
    double nrm,zre,zim;
    int skipupcnt = 0; // counts skipped updates
    int skipbscnt = 0; // counts skipped backsubstitutions
+   double prevnorm = 1.0e+99;
 
    for(int i=1; i<degp1; i++)
    {
@@ -375,7 +379,7 @@ void CPU_cmplx_qrbs_tail
       CPU_cmplx_onenorm(dim,bre,bim,&nrm);
       if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-      if((nrm < 1.0e-15) || (nrm > 100.0))
+      if((nrm < 1.0e-15) || (nrm > prevnorm))
       {
          skipbscnt = skipbscnt + 1;
 
@@ -391,6 +395,8 @@ void CPU_cmplx_qrbs_tail
       }
       else
       {
+         prevnorm = nrm*1.0e+8;;
+
          if(vrblvl > 0)
             cout << "-> run backsubstitution for x[" << i << "] ..."
                  << endl;
