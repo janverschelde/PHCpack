@@ -1,5 +1,6 @@
 Fri 7 Oct 2022 : fixed bug in {dbl4,dbl8}_newton_testers.cpp.
   Checked for zero rhs in dbl*_bals_kernels.cu.
+  Added upper bound on norm check in dbl*_bals_{host.cpp, kernels.cu}.
 
 Thu 6 Oct 2022 : updated dbl*_bals_host.cpp to skip the update of the
   right hand sides for tiny solution vectors.  Applied the same changes

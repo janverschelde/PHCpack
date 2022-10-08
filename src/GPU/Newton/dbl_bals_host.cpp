@@ -282,7 +282,7 @@ void CPU_dbl_qrbs_tail
       CPU_dbl_onenorm(dim,b,&nrm);
       if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-      if(nrm < 1.0e-15)
+      if((nrm < 1.0e-15) || (nrm > 100.0))
       {
          skipbscnt = skipbscnt + 1;
 
@@ -375,7 +375,7 @@ void CPU_cmplx_qrbs_tail
       CPU_cmplx_onenorm(dim,bre,bim,&nrm);
       if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-      if(nrm < 1.0e-15)
+      if((nrm < 1.0e-15) || (nrm > 100.0))
       {
          skipbscnt = skipbscnt + 1;
 

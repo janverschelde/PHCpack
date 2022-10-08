@@ -540,7 +540,7 @@ void CPU_dbl4_qrbs_tail
       CPU_dbl_onenorm(dim,bhihi,&nrm);
       if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-      if(nrm < 1.0e-56)
+      if((nrm < 1.0e-56) || (nrm > 100.0))
       {
          skipbscnt = skipbscnt + 1;
 
@@ -718,7 +718,7 @@ void CPU_cmplx4_qrbs_tail
       CPU_cmplx_onenorm(dim,brehihi,bimhihi,&nrm);
       if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-      if(nrm < 1.0e-56)
+      if((nrm < 1.0e-56) || (nrm > 100.0))
       {
          skipbscnt = skipbscnt + 1;
 
