@@ -81,8 +81,9 @@ void CPU_cmplx_evaluate_monomials
  *             outputim[i][idx[i]] is the derivative w.r.t. idx[k]. */
 
 void dbl_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx, double ***output,
-   double **funval, double **rhs, double ***jacval, int vrblvl );
+ ( int dim, int degp1, int *nvr, int **idx, double damper,
+   double ***output, double **funval, double **rhs, double ***jacval,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Linearizes the output of the evaluation and differentiation
@@ -93,6 +94,8 @@ void dbl_linearize_evaldiff_output
  *   degp1     degree plus one;
  *   nvr       number of variables that occur in each monomial;
  *   idx       for each monomials the indices of each variable;
+ *   damper    the positive damping coefficient for t,
+ *             if 1.0, then no damping, if > 1.0, then overdamping;
  *   output    output of the evaluation and differentiation
  *             of the monomials in the system, for the i-th monomial:
  *             output[i][dim] is the power series value, 
@@ -113,7 +116,7 @@ void dbl_linearize_evaldiff_output
  *             the leading coefficient is the Jacobian matrix. */
 
 void cmplx_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx,
+ ( int dim, int degp1, int *nvr, int **idx, double damper,
    double ***outputre, double ***outputim,
    double **funvalre, double **funvalim,
    double **rhsre, double **rhsim, double ***jacvalre, double ***jacvalim,
@@ -128,6 +131,8 @@ void cmplx_linearize_evaldiff_output
  *   degp1     degree plus one;
  *   nvr       number of variables that occur in each monomial;
  *   idx       for each monomials the indices of each variable;
+ *   damper    the positive damping coefficient for t,
+ *             if 1.0, then no damping, if > 1.0, then overdamping;
  *   outputre  real parts of the output of evaluated and differentiated
  *             system, for the i-th monomial:
  *             outputre[i][dim] is the power series value, 

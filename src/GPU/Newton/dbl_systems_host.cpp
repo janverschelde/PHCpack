@@ -184,8 +184,9 @@ void CPU_cmplx_evaluate_monomials
 }
 
 void dbl_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx, double ***output,
-   double **funval, double **rhs, double ***jacval, int vrblvl )
+ ( int dim, int degp1, int *nvr, int **idx, double damper,
+   double ***output, double **funval, double **rhs, double ***jacval,
+   int vrblvl )
 {
    // The coefficients of the series for the function values
    // at the input are in output[i][dim].
@@ -199,11 +200,11 @@ void dbl_linearize_evaldiff_output
    }
    // Linearize the function values in the rhs and swap sign,
    // but keep in mind that the right hand side is 1 - t,
-   // so we subtract 1 and add t to the rhs.
+   // so we subtract 1 and add damper*t to the rhs.
    for(int j=0; j<dim; j++) rhs[0][j] = -(funval[j][0] - 1.0);
    if(degp1 > 1)
    {
-      for(int j=0; j<dim; j++) rhs[1][j] = -(funval[j][1] + 1.0);
+      for(int j=0; j<dim; j++) rhs[1][j] = -(funval[j][1] + damper);
       for(int i=2; i<degp1; i++)
          for(int j=0; j<dim; j++) rhs[i][j] = -funval[j][i];
    }
@@ -243,7 +244,7 @@ void dbl_linearize_evaldiff_output
 }
 
 void cmplx_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx,
+ ( int dim, int degp1, int *nvr, int **idx, double damper,
    double ***outputre, double ***outputim,
    double **funvalre, double **funvalim,
    double **rhsre, double **rhsim, double ***jacvalre, double ***jacvalim,
@@ -277,7 +278,7 @@ void cmplx_linearize_evaldiff_output
    {
       for(int j=0; j<dim; j++)
       {
-         rhsre[1][j] = -(funvalre[j][1] + 1.0);
+         rhsre[1][j] = -(funvalre[j][1] + damper);
          rhsim[1][j] = -(funvalim[j][1] + 0.0);
       }
       for(int i=2; i<degp1; i++)

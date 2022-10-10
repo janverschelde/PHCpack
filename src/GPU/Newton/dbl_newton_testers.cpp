@@ -267,7 +267,7 @@ void dbl_newton_lustep
          for(int k=0; k<dim; k++) jacval[i][j][k] = 0.0;
 
    dbl_linearize_evaldiff_output
-      (dim,degp1,nvr,idx,output,funval,rhs,jacval,vrblvl);
+      (dim,degp1,nvr,idx,1.0,output,funval,rhs,jacval,vrblvl);
 
    for(int i=0; i<degp1; i++) // save original rhs for residual
       for(int j=0; j<dim; j++) workrhs[i][j] = rhs[i][j];
@@ -287,7 +287,7 @@ void dbl_newton_lustep
 void dbl_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double **cff, double *acc,
+   double dpr, double **cff, double *acc,
    double **input_h, double **input_d, double ***output_h, double ***output_d,
    double **funval_h, double **funval_d,
    double ***jacval_h, double ***jacval_d, double **rhs_h, double **rhs_d,
@@ -348,12 +348,12 @@ void dbl_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       dbl_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,output_h,funval_h,rhs_h,jacval_h,vrblvl);
+         (dim,degp1,nvr,idx,dpr,output_h,funval_h,rhs_h,jacval_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
       dbl_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,output_d,funval_d,rhs_d,jacval_d,vrblvl);
+         (dim,degp1,nvr,idx,dpr,output_d,funval_d,rhs_d,jacval_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))
    {
@@ -447,7 +447,7 @@ void dbl_newton_qrstep
 void cmplx_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double **cffre, double **cffim, double *accre, double *accim,
+   double dpr, double **cffre, double **cffim, double *accre, double *accim,
    double **inputre_h, double **inputim_h,
    double **inputre_d, double **inputim_d,
    double ***outputre_h, double ***outputim_h,
@@ -522,13 +522,13 @@ void cmplx_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       cmplx_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,outputre_h,outputim_h,funvalre_h,funvalim_h,
+         (dim,degp1,nvr,idx,dpr,outputre_h,outputim_h,funvalre_h,funvalim_h,
           rhsre_h,rhsim_h,jacvalre_h,jacvalim_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
       cmplx_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,outputre_d,outputim_d,funvalre_d,funvalim_d,
+         (dim,degp1,nvr,idx,dpr,outputre_d,outputim_d,funvalre_d,funvalim_d,
           rhsre_d,rhsim_d,jacvalre_d,jacvalim_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))
@@ -637,7 +637,7 @@ void cmplx_newton_qrstep
 int test_dbl_real_newton
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   int nbsteps, int mode, int vrblvl )
+   double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
  * 1. allocating input and output space for evaluation and differentiation
@@ -763,7 +763,7 @@ int test_dbl_real_newton
          cout << "*** running Newton step " << step << " ***" << endl;
 
       dbl_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,cff,acc,
           input_h,input_d,output_h,output_d,funval_h,funval_d,
           jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
           Q_h,Q_d,R_h,R_d,workmat,workvec,resvec,&resmax,vrblvl,mode);
@@ -792,7 +792,7 @@ int test_dbl_real_newton
 int test_dbl_complex_newton
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   int nbsteps, int mode, int vrblvl )
+   double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
  * 1. allocating input and output space for evaluation and differentiation
@@ -993,7 +993,8 @@ int test_dbl_complex_newton
          cout << "*** running Newton step " << step << " ***" << endl;
 
       cmplx_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,cffre,cffim,accre,accim,
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,
+          cffre,cffim,accre,accim,
           inputre_h,inputim_h,inputre_d,inputim_d,
           outputre_h,outputim_h,outputre_d,outputim_d,
           funvalre_h,funvalim_h,funvalre_d,funvalim_d,
