@@ -2423,6 +2423,7 @@ int test_dbl8_real_newton
    }
    if(vrblvl < 2)
    {
+      cout << scientific << setprecision(16); // just in case vrblvl == 0
       cout << "The solution series : " << endl;
       for(int j=0; j<degp1; j++)
       {
@@ -3466,6 +3467,7 @@ int test_dbl8_complex_newton
    }
    if(vrblvl < 2)
    {
+      cout << scientific << setprecision(16); // just in case vrblvl == 0
       cout << "The solution series : " << endl;
       for(int j=0; j<degp1; j++)
       {
