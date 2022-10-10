@@ -1,5 +1,7 @@
 Sun 9 Oct 2022 : to dbl*_newton_testers.cpp added the setting of the
   precision in the last output statements in case vrblvl equals zero.
+  In dbl*_bals_kernels.cu, fixed the too restrictive norm bounds on
+  the back substitutions.
 
 Sat 8 Oct 2022 : moved the exponents_check from test_dbl_newton.cpp
   into unimodular matrices, updated test_{dbl2,dbl4,dbl8}_newton.cpp.

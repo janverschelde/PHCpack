@@ -345,6 +345,7 @@ void GPU_dbl_bals_solve
    const bool bvrb = (vrblvl > 1);
    int skipupcnt = 0; // counts skipped updates
    int skipbscnt = 0; // counts skipped back substitutions
+   double prevnorm = 1.0e+99;
 
    double *b = new double[nrows];
    double *x = new double[ncols];
@@ -443,7 +444,7 @@ void GPU_dbl_bals_solve
       if(vrblvl > 0)
          cout << "1-norm of b[" << stage << "] : " << nrm << endl;
 
-      if((nrm < 1.0e-15) || (nrm > 100.0))
+      if((nrm < 1.0e-15) || (nrm > prevnorm))
       {
          skipbscnt = skipbscnt + 1;
 
@@ -455,6 +456,8 @@ void GPU_dbl_bals_solve
       }
       else
       {
+         prevnorm = nrm*1.0e+8;
+
          double bstimelapsed_d;
          double elapsedms,invlapsed,mullapsed,sublapsed;
          long long int bsaddcnt = 0;
@@ -516,6 +519,7 @@ void GPU_cmplx_bals_solve
    const bool bvrb = (vrblvl > 1);
    int skipupcnt = 0; // counts skipped updates
    int skipbscnt = 0; // counts skipped backsubstitutions
+   double prevnorm = 1.0e+99;
 
    double *bre = new double[nrows];
    double *bim = new double[nrows];
@@ -642,7 +646,7 @@ void GPU_cmplx_bals_solve
       if(vrblvl > 0)
          cout << "1-norm of b[" << stage << "] : " << nrm << endl;
 
-      if((nrm < 1.0e-15) || (nrm > 100.0))
+      if((nrm < 1.0e-15) || (nrm < prevnorm))
       {
          skipbscnt = skipbscnt + 1;
 
@@ -658,6 +662,8 @@ void GPU_cmplx_bals_solve
       }
       else
       {
+         prevnorm = nrm*1.0e+8;
+
          double bstimelapsed_d;
          double elapsedms,invlapsed,mullapsed,sublapsed;
          long long int bsaddcnt = 0;
