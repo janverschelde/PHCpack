@@ -305,7 +305,7 @@ void CPU_cmplx4_evaluate_monomials
 }
 
 void dbl4_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx,
+ ( int dim, int degp1, int *nvr, int **idx, double damper,
    double ***outputhihi, double ***outputlohi,
    double ***outputhilo, double ***outputlolo,
    double **funvalhihi, double **funvallohi, 
@@ -357,7 +357,7 @@ void dbl4_linearize_evaldiff_output
          rhshilo[1][j] = -funvalhilo[j][1];
          rhslolo[1][j] = -funvallolo[j][1];
          qdf_dec(&rhshihi[1][j],&rhslohi[1][j],&rhshilo[1][j],&rhslolo[1][j],
-                 1.0,0.0,0.0,0.0);
+                 damper,0.0,0.0,0.0);
       }
       for(int i=2; i<degp1; i++)
          for(int j=0; j<dim; j++)
@@ -418,7 +418,7 @@ void dbl4_linearize_evaldiff_output
 }
 
 void cmplx4_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx,
+ ( int dim, int degp1, int *nvr, int **idx, double damper,
    double ***outputrehihi, double ***outputrelohi,
    double ***outputrehilo, double ***outputrelolo,
    double ***outputimhihi, double ***outputimlohi,
@@ -491,7 +491,7 @@ void cmplx4_linearize_evaldiff_output
       {
          // rhsre[1][j] = -(funvalre[j][1] + 1.0);
          qdf_add(funvalrehihi[j][1],funvalrelohi[j][1],
-                 funvalrehilo[j][1],funvalrelolo[j][1],1.0,0.0,0.0,0.0,
+                 funvalrehilo[j][1],funvalrelolo[j][1],damper,0.0,0.0,0.0,
                  &acchihi,&acclohi,&acchilo,&acclolo);
          rhsrehihi[1][j] = -acchihi;
          rhsrelohi[1][j] = -acclohi;

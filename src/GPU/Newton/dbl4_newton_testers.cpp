@@ -436,7 +436,7 @@ void dbl4_newton_lustep
          }
 
    dbl4_linearize_evaldiff_output
-      (dim,degp1,nvr,idx,outputhihi,outputlohi,outputhilo,outputlolo,
+      (dim,degp1,nvr,idx,1.0,outputhihi,outputlohi,outputhilo,outputlolo,
        funvalhihi,funvallohi,funvalhilo,funvallolo,
        rhshihi,rhslohi,rhshilo,rhslolo,
        jacvalhihi,jacvallohi,jacvalhilo,jacvallolo,vrblvl);
@@ -480,7 +480,7 @@ void dbl4_newton_lustep
 
 void dbl4_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, double dpr,
    double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo,
    double *acchihi, double *acclohi, double *acchilo, double *acclolo,
    double **inputhihi_h, double **inputlohi_h,
@@ -589,7 +589,7 @@ void dbl4_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       dbl4_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
+         (dim,degp1,nvr,idx,dpr,
           outputhihi_h,outputlohi_h,outputhilo_h,outputlolo_h,
           funvalhihi_h,funvallohi_h,funvalhilo_h,funvallolo_h,
           rhshihi_h,rhslohi_h,rhshilo_h,rhslolo_h,
@@ -598,7 +598,7 @@ void dbl4_newton_qrstep
    if((mode == 0) || (mode == 2))
    {
       dbl4_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
+         (dim,degp1,nvr,idx,dpr,
           outputhihi_d,outputlohi_d,outputhilo_d,outputlolo_d,
           funvalhihi_d,funvallohi_d,funvalhilo_d,funvallolo_d,
           rhshihi_d,rhslohi_d,rhshilo_d,rhslolo_d,
@@ -744,7 +744,7 @@ void dbl4_newton_qrstep
 
 void cmplx4_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, double dpr,
    double **cffrehihi, double **cffrelohi,
    double **cffrehilo, double **cffrelolo,
    double **cffimhihi, double **cffimlohi,
@@ -924,7 +924,7 @@ void cmplx4_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       cmplx4_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
+         (dim,degp1,nvr,idx,dpr,
           outputrehihi_h,outputrelohi_h,outputrehilo_h,outputrelolo_h,
           outputimhihi_h,outputimlohi_h,outputimhilo_h,outputimlolo_h,
           funvalrehihi_h,funvalrelohi_h,funvalrehilo_h,funvalrelolo_h,
@@ -938,7 +938,7 @@ void cmplx4_newton_qrstep
    if((mode == 0) || (mode == 2))
    {
       cmplx4_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
+         (dim,degp1,nvr,idx,dpr,
           outputrehihi_d,outputrelohi_d,outputrehilo_d,outputrelolo_d,
           outputimhihi_d,outputimlohi_d,outputimhilo_d,outputimlolo_d,
           funvalrehihi_d,funvalrelohi_d,funvalrehilo_d,funvalrelolo_d,
@@ -1153,7 +1153,7 @@ void cmplx4_newton_qrstep
 int test_dbl4_real_newton
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   int nbsteps, int mode, int vrblvl )
+   double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
  * 1. allocating input and output space for evaluation and differentiation
@@ -1485,7 +1485,7 @@ int test_dbl4_real_newton
           &resmaxhihi,&resmaxlohi,&resmaxhilo,&resmaxlolo,ipvt,vrblvl);
  */
       dbl4_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,
           cffhihi,cfflohi,cffhilo,cfflolo,acchihi,acclohi,acchilo,acclolo,
           inputhihi_h,inputlohi_h,inputhilo_h,inputlolo_h,
           inputhihi_d,inputlohi_d,inputhilo_d,inputlolo_d,
@@ -1538,7 +1538,7 @@ int test_dbl4_real_newton
 int test_dbl4_complex_newton
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   int nbsteps, int mode, int vrblvl )
+   double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
  * 1. allocating input and output space for evaluation and differentiation
@@ -2044,7 +2044,7 @@ int test_dbl4_complex_newton
          cout << "*** running Newton step " << step << " ***" << endl;
 
       cmplx4_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,
           cffrehihi,cffrelohi,cffrehilo,cffrelolo,
           cffimhihi,cffimlohi,cffimhilo,cffimlolo,
           accrehihi,accrelohi,accrehilo,accrelolo,

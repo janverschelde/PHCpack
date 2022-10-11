@@ -446,7 +446,7 @@ void CPU_cmplx8_evaluate_monomials
 }
 
 void dbl8_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx,
+ ( int dim, int degp1, int *nvr, int **idx, double damper,
    double ***outputhihihi, double ***outputlohihi,
    double ***outputhilohi, double ***outputlolohi,
    double ***outputhihilo, double ***outputlohilo,
@@ -528,7 +528,7 @@ void dbl8_linearize_evaldiff_output
                  &rhshilohi[1][j],&rhslolohi[1][j],
                  &rhshihilo[1][j],&rhslohilo[1][j],
                  &rhshilolo[1][j],&rhslololo[1][j],
-                 1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+                 damper,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
       }
       for(int i=2; i<degp1; i++)
          for(int j=0; j<dim; j++)
@@ -603,7 +603,7 @@ void dbl8_linearize_evaldiff_output
 }
 
 void cmplx8_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx,
+ ( int dim, int degp1, int *nvr, int **idx, double damper,
    double ***outputrehihihi, double ***outputrelohihi,
    double ***outputrehilohi, double ***outputrelolohi,
    double ***outputrehihilo, double ***outputrelohilo,
@@ -724,7 +724,7 @@ void cmplx8_linearize_evaldiff_output
                  funvalrehilohi[j][1],funvalrelolohi[j][1],
                  funvalrehihilo[j][1],funvalrelohilo[j][1],
                  funvalrehilolo[j][1],funvalrelololo[j][1],
-                 1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                 damper,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
                  &acchihihi,&acclohihi,&acchilohi,&acclolohi,
                  &acchihilo,&acclohilo,&acchilolo,&acclololo);
          rhsrehihihi[1][j] = -acchihihi;

@@ -645,7 +645,7 @@ void dbl8_newton_lustep
          }
 
    dbl8_linearize_evaldiff_output
-      (dim,degp1,nvr,idx,
+      (dim,degp1,nvr,idx,1.0,
        outputhihihi,outputlohihi,outputhilohi,outputlolohi,
        outputhihilo,outputlohilo,outputhilolo,outputlololo,
        funvalhihihi,funvallohihi,funvalhilohi,funvallolohi,
@@ -716,7 +716,7 @@ void dbl8_newton_lustep
 
 void dbl8_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, double dpr,
    double **cffhihihi, double **cfflohihi,
    double **cffhilohi, double **cfflolohi,
    double **cffhihilo, double **cfflohilo,
@@ -899,7 +899,7 @@ void dbl8_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       dbl8_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
+         (dim,degp1,nvr,idx,dpr,
           outputhihihi_h,outputlohihi_h,outputhilohi_h,outputlolohi_h,
           outputhihilo_h,outputlohilo_h,outputhilolo_h,outputlololo_h,
           funvalhihihi_h,funvallohihi_h,funvalhilohi_h,funvallolohi_h,
@@ -912,7 +912,7 @@ void dbl8_newton_qrstep
    if((mode == 0) || (mode == 2))
    {
       dbl8_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
+         (dim,degp1,nvr,idx,dpr,
           outputhihihi_d,outputlohihi_d,outputhilohi_d,outputlolohi_d,
           outputhihilo_d,outputlohilo_d,outputhilolo_d,outputlololo_d,
           funvalhihihi_d,funvallohihi_d,funvalhilohi_d,funvallolohi_d,
@@ -1125,7 +1125,7 @@ void dbl8_newton_qrstep
 
 void cmplx8_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, double dpr,
    double **cffrehihihi, double **cffrelohihi,
    double **cffrehilohi, double **cffrelolohi,
    double **cffrehihilo, double **cffrelohilo,
@@ -1430,7 +1430,7 @@ void cmplx8_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       cmplx8_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
+         (dim,degp1,nvr,idx,dpr,
           outputrehihihi_h,outputrelohihi_h,outputrehilohi_h,outputrelolohi_h,
           outputrehihilo_h,outputrelohilo_h,outputrehilolo_h,outputrelololo_h,
           outputimhihihi_h,outputimlohihi_h,outputimhilohi_h,outputimlolohi_h,
@@ -1452,7 +1452,7 @@ void cmplx8_newton_qrstep
    if((mode == 0) || (mode == 2))
    {
       cmplx8_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
+         (dim,degp1,nvr,idx,dpr,
           outputrehihihi_d,outputrelohihi_d,outputrehilohi_d,outputrelolohi_d,
           outputrehihilo_d,outputrelohilo_d,outputrehilolo_d,outputrelololo_d,
           outputimhihihi_d,outputimlohihi_d,outputimhilohi_d,outputimlolohi_d,
@@ -1811,7 +1811,7 @@ void cmplx8_newton_qrstep
 int test_dbl8_real_newton
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   int nbsteps, int mode, int vrblvl )
+   double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
  * 1. allocating input and output space for evaluation and differentiation
@@ -2370,7 +2370,7 @@ int test_dbl8_real_newton
           ipvt,vrblvl);
  */
       dbl8_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,
           cffhihihi,cfflohihi,cffhilohi,cfflolohi,
           cffhihilo,cfflohilo,cffhilolo,cfflololo,
           acchihihi,acclohihi,acchilohi,acclolohi,
@@ -2459,7 +2459,7 @@ int test_dbl8_real_newton
 int test_dbl8_complex_newton
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   int nbsteps, int mode, int vrblvl )
+   double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
  * 1. allocating input and output space for evaluation and differentiation
@@ -3369,7 +3369,7 @@ int test_dbl8_complex_newton
          cout << "*** running Newton step " << step << " ***" << endl;
 
       cmplx8_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,
           cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
           cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
           cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,

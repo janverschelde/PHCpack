@@ -258,7 +258,7 @@ void dbl2_newton_lustep
 
 void dbl2_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, double dpr,
    double **cffhi, double **cfflo, double *acchi, double *acclo,
    double **inputhi_h, double **inputlo_h,
    double **inputhi_d, double **inputlo_d,
@@ -296,6 +296,7 @@ void dbl2_newton_qrstep
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   cffhi     high doubles of the coefficients of the monomials;
  *   cfflo     low doubles of the coefficients of the monomials;
  *   acchi     space for high doubles of one power series of degree deg;
@@ -405,7 +406,7 @@ void dbl2_newton_qrstep
 
 void cmplx2_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, double dpr,
    double **cffrehi, double **cffrelo, double **cffimhi, double **cffimlo,
    double *accrehi, double *accrelo, double *accimhi, double *accimlo,
    double **inputrehi_h, double **inputrelo_h,
@@ -466,6 +467,7 @@ void cmplx2_newton_qrstep
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   cffrehi   high doubles of the real parts of the coefficients
  *             of the monomials;
  *   cffrelo   low doubles of the real parts of the coefficients
@@ -685,7 +687,7 @@ void cmplx2_newton_qrstep
 int test_dbl2_real_newton
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   int nbsteps, int mode, int vrblvl );
+   double dpr, int nbsteps, int mode, int vrblvl );
 /*
  * DESCRIPTION :
  *   Runs Newton on a monomial system with real double double arithmetic.
@@ -702,6 +704,7 @@ int test_dbl2_real_newton
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   nbsteps   the number of Newton steps;
  *   mode      the mode of execution, 0 for GPU only, 1 for CPU only,
  *             2 for CPU and GPU;
@@ -710,7 +713,7 @@ int test_dbl2_real_newton
 int test_dbl2_complex_newton
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   int nbsteps, int mode, int vrblvl );
+   double dpr, int nbsteps, int mode, int vrblvl );
 /*
  * DESCRIPTION :
  *   Runs Newton on a monomial system with complex double double arithmetic.
@@ -727,6 +730,7 @@ int test_dbl2_complex_newton
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   nbsteps   the number of Newton steps;
  *   mode      the mode of execution, 0 for GPU only, 1 for CPU only,
  *             2 for CPU and GPU;

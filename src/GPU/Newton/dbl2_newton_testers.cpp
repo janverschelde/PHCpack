@@ -329,7 +329,7 @@ void dbl2_newton_lustep
          }
 
    dbl2_linearize_evaldiff_output
-      (dim,degp1,nvr,idx,outputhi,outputlo,funvalhi,funvallo,
+      (dim,degp1,nvr,idx,1.0,outputhi,outputlo,funvalhi,funvallo,
        rhshi,rhslo,jacvalhi,jacvallo,vrblvl);
 
    for(int i=0; i<degp1; i++) // save original rhs for residual
@@ -364,7 +364,7 @@ void dbl2_newton_lustep
 
 void dbl2_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, double dpr,
    double **cffhi, double **cfflo, double *acchi, double *acclo,
    double **inputhi_h, double **inputlo_h,
    double **inputhi_d, double **inputlo_d,
@@ -442,13 +442,13 @@ void dbl2_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       dbl2_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,outputhi_h,outputlo_h,funvalhi_h,funvallo_h,
+         (dim,degp1,nvr,idx,dpr,outputhi_h,outputlo_h,funvalhi_h,funvallo_h,
           rhshi_h,rhslo_h,jacvalhi_h,jacvallo_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
       dbl2_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,outputhi_d,outputlo_d,funvalhi_d,funvallo_d,
+         (dim,degp1,nvr,idx,dpr,outputhi_d,outputlo_d,funvalhi_d,funvallo_d,
           rhshi_d,rhslo_d,jacvalhi_d,jacvallo_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))
@@ -561,7 +561,7 @@ void dbl2_newton_qrstep
 
 void cmplx2_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, double dpr,
    double **cffrehi, double **cffrelo, double **cffimhi, double **cffimlo,
    double *accrehi, double *accrelo, double *accimhi, double *accimlo,
    double **inputrehi_h, double **inputrelo_h,
@@ -668,7 +668,7 @@ void cmplx2_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       cmplx2_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
+         (dim,degp1,nvr,idx,dpr,
           outputrehi_h,outputrelo_h,outputimhi_h,outputimlo_h,
           funvalrehi_h,funvalrelo_h,funvalimhi_h,funvalimlo_h,
           rhsrehi_h,rhsrelo_h,rhsimhi_h,rhsimlo_h,
@@ -677,7 +677,7 @@ void cmplx2_newton_qrstep
    if((mode == 0) || (mode == 2))
    {
       cmplx2_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
+         (dim,degp1,nvr,idx,dpr,
           outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d,
           funvalrehi_d,funvalrelo_d,funvalimhi_d,funvalimlo_d,
           rhsrehi_d,rhsrelo_d,rhsimhi_d,rhsimlo_d,
@@ -826,7 +826,7 @@ void cmplx2_newton_qrstep
 int test_dbl2_real_newton
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   int nbsteps, int mode, int vrblvl )
+   double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
  * 1. allocating input and output space for evaluation and differentiation
@@ -1044,7 +1044,8 @@ int test_dbl2_real_newton
           &resmaxhi,&resmaxlo,ipvt,vrblvl);
  */
       dbl2_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,cffhi,cfflo,acchi,acclo,
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,
+          cffhi,cfflo,acchi,acclo,
           inputhi_h,inputlo_h,inputhi_d,inputlo_d,
           outputhi_h,outputlo_h,outputhi_d,outputlo_d,
           funvalhi_h,funvallo_h,funvalhi_d,funvallo_d,
@@ -1081,7 +1082,7 @@ int test_dbl2_real_newton
 int test_dbl2_complex_newton
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   int nbsteps, int mode, int vrblvl )
+   double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
  * 1. allocating input and output space for evaluation and differentiation
@@ -1385,7 +1386,7 @@ int test_dbl2_complex_newton
          cout << "*** running Newton step " << step << " ***" << endl;
 
       cmplx2_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,
           cffrehi,cffrelo,cffimhi,cffimlo,accrehi,accrelo,accimhi,accimlo,
           inputrehi_h,inputrelo_h,inputimhi_h,inputimlo_h,
           inputrehi_d,inputrelo_d,inputimhi_d,inputimlo_d,

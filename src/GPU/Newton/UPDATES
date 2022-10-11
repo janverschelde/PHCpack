@@ -1,5 +1,7 @@
 Mon 10 Oct 2022 : introduced a damper multiplier coefficient in
   dbl_systems_host, dbl_newton_testers, prompted for in test_dbl_newton.cpp.
+  Made similar updates to dbl?_systems_host, dbl?_newton_testers,
+  and test_dbl?_newton.cpp, for double, quad, and octo doubles.
 
 Sun 9 Oct 2022 : to dbl*_newton_testers.cpp added the setting of the
   precision in the last output statements in case vrblvl equals zero.

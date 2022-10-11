@@ -229,7 +229,7 @@ void CPU_cmplx2_evaluate_monomials
 }
 
 void dbl2_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx,
+ ( int dim, int degp1, int *nvr, int **idx, double damper,
    double ***outputhi, double ***outputlo,
    double **funvalhi, double **funvallo, 
    double **rhshi, double **rhslo, double ***jacvalhi, double ***jacvallo,
@@ -266,7 +266,7 @@ void dbl2_linearize_evaldiff_output
       {
          rhshi[1][j] = -funvalhi[j][1];
          rhslo[1][j] = -funvallo[j][1];
-         ddf_dec(&rhshi[1][j],&rhslo[1][j],1.0,0.0);
+         ddf_dec(&rhshi[1][j],&rhslo[1][j],damper,0.0);
       }
       for(int i=2; i<degp1; i++)
          for(int j=0; j<dim; j++)
@@ -315,7 +315,7 @@ void dbl2_linearize_evaldiff_output
 }
 
 void cmplx2_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx,
+ ( int dim, int degp1, int *nvr, int **idx, double damper,
    double ***outputrehi, double ***outputrelo,
    double ***outputimhi, double ***outputimlo,
    double **funvalrehi, double **funvalrelo,
@@ -363,7 +363,7 @@ void cmplx2_linearize_evaldiff_output
       for(int j=0; j<dim; j++)
       {
          // rhsre[1][j] = -(funvalre[j][1] + 1.0);
-         ddf_add(funvalrehi[j][1],funvalrelo[j][1],1.0,0.0,&acchi,&acclo);
+         ddf_add(funvalrehi[j][1],funvalrelo[j][1],damper,0.0,&acchi,&acclo);
          rhsrehi[1][j] = -acchi;
          rhsrelo[1][j] = -acclo;
          // rhsim[1][j] = -(funvalim[j][1] + 0.0);

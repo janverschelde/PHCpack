@@ -16,6 +16,7 @@ int main ( void )
    cout << "testing Newton in quad double precision..." << endl;
 
    int seed,dim,deg,size,posvals,vrblvl,nbritr,nbsteps,szt,nbt,mode,cdata;
+   double dpr = 1.0;
 
    prompt_newton_setup
       (&seed,&szt,&nbt,&dim,&deg,&size,&posvals,&vrblvl,&mode,
@@ -44,15 +45,18 @@ int main ( void )
 
    make_monomial_system
       (dim,size,posvals,nbritr,nvr,idx,exp,nbrfac,expfac,rowsA,vrblvl);
+
+   exponents_check(dim,rowsA,vrblvl);
+   cout << "-> give the damper (1.0 is the default) : "; cin >> dpr;
 /*
  * 2. calling the test function
  */
    if(cdata == 0)
       test_dbl4_real_newton
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,nbsteps,mode,vrblvl);
    else
       test_dbl4_complex_newton
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,nbsteps,mode,vrblvl);
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,nbsteps,mode,vrblvl);
 
    exponents_check(dim,rowsA,vrblvl);
 
