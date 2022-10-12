@@ -498,14 +498,14 @@ int exponent_unimodular_transformation ( int dim, int **uni, int *expsol )
    return 0;
 }
 
-void exponents_check ( int dim, int **rowsA, int vrblvl )
+int exponents_check
+ ( int dim, int **rowsA, int *expsol, int vrblvl )
 {
    if(vrblvl > 1)
    {
       cout << "The matrix :" << endl;
       write_exponent_matrix(dim, rowsA);
    }
-   int *expsol = new int[dim];
    int **copyA = new int*[dim];  // copy of A
    int **unimd = new int*[dim];  // unimodular transformation
 
@@ -515,20 +515,32 @@ void exponents_check ( int dim, int **rowsA, int vrblvl )
       copyA[i] = new int[dim];
    }
    copy_integer_matrix(dim, rowsA, copyA);
-   int sing = lower_triangulate(dim, copyA, unimd, 0);
-   exponent_forward_substitution(dim, copyA, expsol);
-   cout << "exponents after forward substitution :" << endl;
-   for(int i=0; i<dim; i++) cout << " " << expsol[i];
-   cout << endl;
-   exponent_unimodular_transformation(dim, unimd, expsol);
-   cout << "exponents after unimodular transformation :" << endl;
-   for(int i=0; i<dim; i++) cout << " " << expsol[i];
-   cout << endl;
 
+   int sing = lower_triangulate(dim, copyA, unimd, 0);
+   if(sing != 0) return sing;
+
+   exponent_forward_substitution(dim, copyA, expsol);
+
+   if(vrblvl > 0)
+   {
+      cout << "exponents after forward substitution :" << endl;
+      for(int i=0; i<dim; i++) cout << " " << expsol[i];
+      cout << endl;
+   }
+   exponent_unimodular_transformation(dim, unimd, expsol);
+
+   if(vrblvl > 0)
+   {
+      cout << "exponents after unimodular transformation :" << endl;
+      for(int i=0; i<dim; i++) cout << " " << expsol[i];
+      cout << endl;
+   }
    for(int i=0; i<dim; i++)
    {
       free(unimd[i]);
       free(copyA[i]);
    }
-   free(unimd); free(copyA); free(expsol);
+   free(unimd); free(copyA);
+
+   return sing;
 }
