@@ -244,7 +244,8 @@ void dbl_linearize_evaldiff_output
 }
 
 void cmplx_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx, double damper,
+ ( int dim, int degp1, int *nvr, int **idx,
+   double rhs0re, double rhs0im, double damper,
    double ***outputre, double ***outputim,
    double **funvalre, double **funvalim,
    double **rhsre, double **rhsim, double ***jacvalre, double ***jacvalim,
@@ -267,12 +268,12 @@ void cmplx_linearize_evaldiff_output
               << funvalre[i][0] << "  " << funvalim[i][0] << endl;
    }
    // Linearize the function values in the rhs and swap sign,
-   // but keep in mind that the right hand side is 1 - t,
-   // so we subtract 1 and add t to the rhs.
+   // but keep in mind that the right hand side is rhs0re + i*rhs0im - t,
+   // so we subtract rhs0re + i*rhs0im and add damper*t to the rhs.
    for(int j=0; j<dim; j++)
    {
-      rhsre[0][j] = -(funvalre[j][0] - 1.0);
-      rhsim[0][j] = -(funvalim[j][0] - 0.0);
+      rhsre[0][j] = -(funvalre[j][0] - rhs0re);
+      rhsim[0][j] = -(funvalim[j][0] - rhs0im);
    }
    if(degp1 > 1)
    {

@@ -441,7 +441,7 @@ dbl8_systems_kernels.obj:
 
 dbl_newton_testers.obj:
 	@-echo ">>> compiling dbl_newton_testers ..."
-	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(POL) \
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
                     -I$(winkitucrt) -I$(includepath) -O2 \
                       dbl_newton_testers.cpp \
                  /I$(CUDASDK)/include \

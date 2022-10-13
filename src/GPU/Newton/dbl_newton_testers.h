@@ -34,11 +34,13 @@ void dbl_start_series_vector ( int dim, int deg, double **cff );
  *   sets the coefficients cff of the start series. */
 
 void cmplx_start_series_vector
- ( int dim, int deg, double **cffre, double **cffim );
+ ( int dim, int deg, double r0re, double r0im,
+   double **cffre, double **cffim );
 /*
  * DESCRIPTION :
  *   Given space allocated in cffre and cffim,
- *   sets the coefficients of the start series. */
+ *   sets the coefficients of the start series.
+ *   The constant term equals r0re + i*r0im with a small error. */
 
 void dbl_unit_series_vector ( int dim, int deg, double **cff );
 /*
@@ -304,7 +306,8 @@ void dbl_newton_qrstep
 void cmplx_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double dpr, double **cffre, double **cffim, double *accre, double *accim,
+   double r0re, double r0im, double dpr,
+   double **cffre, double **cffim, double *accre, double *accim,
    double **inputre_h, double **inputim_h,
    double **inputre_d, double **inputim_d,
    double ***outputre_h, double ***outputim_h,
@@ -341,6 +344,8 @@ void cmplx_newton_qrstep
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   r0re      real part of the constant of the right hand side;
+ *   r0im      imaginary part of the constant of the right hand side;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   cffre     real parts of the coefficients of the monomials;
  *   cffim     imaginary parts of the coefficients of the monomials;

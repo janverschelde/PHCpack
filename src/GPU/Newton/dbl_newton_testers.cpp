@@ -7,9 +7,10 @@
 #include <cmath>
 #include <vector_types.h>
 #include <time.h>
-#include "unimodular_matrices.h"
+#include "random_numbers.h"
 #include "random_monomials.h"
 #include "dbl_factorizations.h"
+#include "unimodular_matrices.h"
 #include "dbl_systems_host.h"
 #include "dbl_systems_kernels.h"
 #include "dbl_bals_host.h"
@@ -30,15 +31,16 @@ void dbl_start_series_vector ( int dim, int deg, double **cff )
 }
 
 void cmplx_start_series_vector
- ( int dim, int deg, double **cffre, double **cffim )
+ ( int dim, int deg, double r0re, double r0im,
+   double **cffre, double **cffim )
 {
    double angle;
 
    for(int i=0; i<dim; i++)
    {
       // angle = random_angle(); 
-      cffre[i][0] = 1.00001; // cos(angle); => no convergence ...
-      cffim[i][0] = 0.00001; // sin(angle);
+      cffre[i][0] = r0re + 0.00001; // cos(angle); => no convergence ...
+      cffim[i][0] = r0im + 0.00001; // sin(angle);
 
       for(int j=1; j<=deg; j++)
       {
@@ -447,7 +449,8 @@ void dbl_newton_qrstep
 void cmplx_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double dpr, double **cffre, double **cffim, double *accre, double *accim,
+   double r0re, double r0im, double dpr,
+   double **cffre, double **cffim, double *accre, double *accim,
    double **inputre_h, double **inputim_h,
    double **inputre_d, double **inputim_d,
    double ***outputre_h, double ***outputim_h,
@@ -522,13 +525,15 @@ void cmplx_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       cmplx_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,dpr,outputre_h,outputim_h,funvalre_h,funvalim_h,
+         (dim,degp1,nvr,idx,r0re,r0im,dpr,
+          outputre_h,outputim_h,funvalre_h,funvalim_h,
           rhsre_h,rhsim_h,jacvalre_h,jacvalim_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
       cmplx_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,dpr,outputre_d,outputim_d,funvalre_d,funvalim_d,
+         (dim,degp1,nvr,idx,r0re,r0im,dpr,
+          outputre_d,outputim_d,funvalre_d,funvalim_d,
           rhsre_d,rhsim_d,jacvalre_d,jacvalim_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))
@@ -969,7 +974,18 @@ int test_dbl_complex_newton
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
    // Define the initial input, a vector of ones.
-   cmplx_start_series_vector(dim,deg,inputre_h,inputim_h);
+   
+   double angle = random_angle(); 
+   double rhs0re = cos(angle);
+   double rhs0im = sin(angle);
+
+   if(vrblvl > 0)
+   {
+      cout << scientific << setprecision(16);
+      cout << "rhs0 : " << rhs0re << "  " << rhs0im << endl;
+   }
+   cmplx_start_series_vector(dim,deg,rhs0re,rhs0im,inputre_h,inputim_h);
+
    for(int i=0; i<dim; i++)
       for(int j=0; j<degp1; j++)
       {
@@ -993,8 +1009,8 @@ int test_dbl_complex_newton
          cout << "*** running Newton step " << step << " ***" << endl;
 
       cmplx_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,
-          cffre,cffim,accre,accim,
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,
+          rhs0re,rhs0im,dpr,cffre,cffim,accre,accim,
           inputre_h,inputim_h,inputre_d,inputim_d,
           outputre_h,outputim_h,outputre_d,outputim_d,
           funvalre_h,funvalim_h,funvalre_d,funvalim_d,

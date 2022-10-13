@@ -116,7 +116,8 @@ void dbl_linearize_evaldiff_output
  *             the leading coefficient is the Jacobian matrix. */
 
 void cmplx_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx, double damper,
+ ( int dim, int degp1, int *nvr, int **idx,
+   double rhs0re, double rhs0im, double damper,
    double ***outputre, double ***outputim,
    double **funvalre, double **funvalim,
    double **rhsre, double **rhsim, double ***jacvalre, double ***jacvalim,
@@ -131,6 +132,8 @@ void cmplx_linearize_evaldiff_output
  *   degp1     degree plus one;
  *   nvr       number of variables that occur in each monomial;
  *   idx       for each monomials the indices of each variable;
+ *   rhs0re    real part of the constant of the right hand side;
+ *   rhs0im    imaginary part of the constant of the right hand side;
  *   damper    the positive damping coefficient for t,
  *             if 1.0, then no damping, if > 1.0, then overdamping;
  *   outputre  real parts of the output of evaluated and differentiated
