@@ -449,7 +449,7 @@ void dbl_newton_qrstep
 void cmplx_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double r0re, double r0im, double dpr,
+   double *r0re, double *r0im, double dpr,
    double **cffre, double **cffim, double *accre, double *accim,
    double **inputre_h, double **inputim_h,
    double **inputre_d, double **inputim_d,
@@ -796,7 +796,7 @@ int test_dbl_real_newton
 
 int test_dbl_complex_newton
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
@@ -978,11 +978,27 @@ int test_dbl_complex_newton
    double angle = random_angle(); 
    double rhs0re = cos(angle);
    double rhs0im = sin(angle);
+   int *rowsums = new int[dim];
+
+   row_sums(dim,rowsA,rowsums);
 
    if(vrblvl > 0)
    {
       cout << scientific << setprecision(16);
       cout << "rhs0 : " << rhs0re << "  " << rhs0im << endl;
+      cout << "row sums :";
+      for(int i=0; i<dim; i++) cout << " " << rowsums[i];
+      cout << endl;
+   }
+   double *rhsvec0re = new double[dim];
+   double *rhsvec0im = new double[dim];
+
+   for(int i=0; i<dim; i++)  // compute right hand side vector
+   {
+      double rowsumangle = rowsums[i]*angle;
+
+      rhsvec0re[i] = cos(rowsumangle);
+      rhsvec0im[i] = sin(rowsumangle);
    }
    cmplx_start_series_vector(dim,deg,rhs0re,rhs0im,inputre_h,inputim_h);
 
@@ -1010,7 +1026,7 @@ int test_dbl_complex_newton
 
       cmplx_newton_qrstep
          (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,
-          rhs0re,rhs0im,dpr,cffre,cffim,accre,accim,
+          rhsvec0re,rhsvec0im,dpr,cffre,cffim,accre,accim,
           inputre_h,inputim_h,inputre_d,inputim_d,
           outputre_h,outputim_h,outputre_d,outputim_d,
           funvalre_h,funvalim_h,funvalre_d,funvalim_d,

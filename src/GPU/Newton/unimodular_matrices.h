@@ -226,4 +226,17 @@ int exponents_check
  *   otherwise the return value is -1.
  *   If vrblvl > 1, then the matrix is written as well. */
 
+int row_sums ( int dim, int **rowsA, int *sums );
+/*
+ * DESCRIPTION :
+ *   Computes the sums of the rows in the matrix.
+ *
+ * ON ENTRY :
+ *   dim      number of rows in the matrix and length of sums;
+ *   rowsA    matrix of dimension dim stored row wise;
+ *   sums     space for dim integers.
+ *
+ * ON RETURN :
+ *   sums     sums[k] has the sum of the k-th row of rowsA. */
+
 #endif

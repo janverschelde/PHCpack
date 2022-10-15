@@ -58,7 +58,8 @@ int main ( void )
         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,nbsteps,mode,vrblvl);
   else
      test_dbl_complex_newton
-        (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,nbsteps,mode,vrblvl);
+        (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,rowsA,
+         dpr,nbsteps,mode,vrblvl);
 
    sing = exponents_check(dim,rowsA,expsol,vrblvl);
 

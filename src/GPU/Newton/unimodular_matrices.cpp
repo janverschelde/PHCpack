@@ -200,7 +200,7 @@ void prompt_dimensions
    cout << " -1 : lower triangular matrix of ones" << endl;
    cout << "  0 : user input" << endl;
    cout << "  n : number of unimodular multiplications" << endl;
-   cout << "-> give the the number for the unimodular matrix : ";
+   cout << "-> give the number for the unimodular matrix : ";
    cin >> *nbritr;
    if(*nbritr > 0)
    {
@@ -543,4 +543,14 @@ int exponents_check
    free(unimd); free(copyA);
 
    return sing;
+}
+
+int row_sums ( int dim, int **rowsA, int *sums )
+{
+   for(int i=0; i<dim; i++)
+   {
+      sums[i] = 0;
+
+      for(int j=0; j<dim; j++) sums[i] = sums[i] + rowsA[i][j];
+   }
 }

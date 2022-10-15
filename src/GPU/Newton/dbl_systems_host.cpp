@@ -245,7 +245,7 @@ void dbl_linearize_evaldiff_output
 
 void cmplx_linearize_evaldiff_output
  ( int dim, int degp1, int *nvr, int **idx,
-   double rhs0re, double rhs0im, double damper,
+   double *rhs0re, double *rhs0im, double damper,
    double ***outputre, double ***outputim,
    double **funvalre, double **funvalim,
    double **rhsre, double **rhsim, double ***jacvalre, double ***jacvalim,
@@ -272,8 +272,8 @@ void cmplx_linearize_evaldiff_output
    // so we subtract rhs0re + i*rhs0im and add damper*t to the rhs.
    for(int j=0; j<dim; j++)
    {
-      rhsre[0][j] = -(funvalre[j][0] - rhs0re);
-      rhsim[0][j] = -(funvalim[j][0] - rhs0im);
+      rhsre[0][j] = -(funvalre[j][0] - rhs0re[j]);
+      rhsim[0][j] = -(funvalim[j][0] - rhs0im[j]);
    }
    if(degp1 > 1)
    {

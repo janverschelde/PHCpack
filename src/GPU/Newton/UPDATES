@@ -1,3 +1,7 @@
+Fri 14 Oct 2022 : added row_sums function to unimodular_matrices,
+  updated dbl_newton_testers, dbl_systems_host, and test_dbl_newton.cpp
+  to work with a vector of complex constants in the right hand side.
+
 Wed 12 Oct 2022 : modifications in dbl_systems_host and dbl_newton_testers
   to work with random complex numbers in the right hand side.
 

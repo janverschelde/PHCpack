@@ -306,7 +306,7 @@ void dbl_newton_qrstep
 void cmplx_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double r0re, double r0im, double dpr,
+   double *r0re, double *r0im, double dpr,
    double **cffre, double **cffim, double *accre, double *accim,
    double **inputre_h, double **inputim_h,
    double **inputre_d, double **inputim_d,
@@ -328,7 +328,7 @@ void cmplx_newton_qrstep
 /*
  * DESCRIPTION :
  *   Does one step with Newton's method to update a power series,
- *   using QR factorization to solve linear systems, on real data.
+ *   using QR factorization to solve linear systems, on complex data.
  *
  * REQUIRED : szt*nbt = dim for GPU computing.
  *
@@ -344,8 +344,8 @@ void cmplx_newton_qrstep
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
- *   r0re      real part of the constant of the right hand side;
- *   r0im      imaginary part of the constant of the right hand side;
+ *   r0re      real parts of the constants of the right hand side vector;
+ *   r0im      imaginary parts of the constants of the right hand side vector;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   cffre     real parts of the coefficients of the monomials;
  *   cffim     imaginary parts of the coefficients of the monomials;
@@ -477,7 +477,7 @@ int test_dbl_real_newton
 
 int test_dbl_complex_newton
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl );
 /*
  * DESCRIPTION :
@@ -495,6 +495,7 @@ int test_dbl_complex_newton
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   rowsA     rows of the exponents of the dim monomials;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   nbsteps   the number of Newton steps;
  *   mode      the mode of execution, 0 for GPU only, 1 for CPU only,
