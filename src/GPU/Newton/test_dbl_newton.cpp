@@ -8,6 +8,8 @@
 #include "unimodular_matrices.h"
 #include "prompt_newton_setup.h"
 #include "dbl_newton_testers.h"
+#include "dbl_newton_method.h"
+#include "cmplx_newton_method.h"
 
 using namespace std;
 

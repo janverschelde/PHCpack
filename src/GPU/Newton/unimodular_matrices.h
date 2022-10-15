@@ -226,7 +226,7 @@ int exponents_check
  *   otherwise the return value is -1.
  *   If vrblvl > 1, then the matrix is written as well. */
 
-int row_sums ( int dim, int **rowsA, int *sums );
+void row_sums ( int dim, int **rowsA, int *sums );
 /*
  * DESCRIPTION :
  *   Computes the sums of the rows in the matrix.

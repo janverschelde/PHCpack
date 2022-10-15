@@ -545,7 +545,7 @@ int exponents_check
    return sing;
 }
 
-int row_sums ( int dim, int **rowsA, int *sums )
+void row_sums ( int dim, int **rowsA, int *sums )
 {
    for(int i=0; i<dim; i++)
    {
