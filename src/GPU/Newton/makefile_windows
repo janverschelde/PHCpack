@@ -492,6 +492,18 @@ test_unimodular.obj:
                       test_unimodular.cpp \
                  /Fo: test_unimodular.obj /EHsc
 
+dbl_monomial_systems.obj:
+	@-echo ">>> compiling dbl_monomial_systems ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl_monomial_systems.cpp \
+                 /Fo: dbl_monomial_systems.obj /EHsc
+
+test_monomial_systems.obj:
+	@-echo ">>> compiling test_monomial_systems ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_monomial_systems.cpp \
+                 /Fo: test_monomial_systems.obj /EHsc
+
 convolution_job.obj:
 	@-echo ">>> compiling convolution_job ..."
 	$(CL)\cl /c $(POL)/convolution_job.cpp \
@@ -601,6 +613,15 @@ test_unimodular: unimodular_matrices.obj test_unimodular.obj \
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_unimodular.exe test_unimodular.obj \
              unimodular_matrices.obj \
+             random_numbers.obj random_series.obj random_monomials.obj
+
+test_monomial_systems: test_monomial_systems.obj unimodular_matrices.obj \
+                 random_numbers.obj random_series.obj random_monomials.obj \
+                 dbl_monomial_systems.obj dbl_convolutions_host.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_monomial_systems.exe \
+             test_monomial_systems.obj dbl_monomial_systems.obj \
+             unimodular_matrices.obj dbl_convolutions_host.obj \
              random_numbers.obj random_series.obj random_monomials.obj
 
 test_monomial_jobs: unimodular_matrices.obj test_monomial_jobs.obj \
@@ -803,6 +824,9 @@ clean:
 	del unimodular_matrices.obj 
 	del test_unimodular.exe test_unimodular.exp
 	del test_unimodular.obj test_unimodular.lib
+	del dbl_monomial_systems.obj test_monomial_systems.obj
+	del test_monomial_systems.exe test_monomial_systems.exp
+	del test_monomial_systems.obj test_monomial_systems.lib
 	del prompt_newton_setup.obj 
 	del dbl_systems_host.obj dbl_systems_kernels.obj
 	del dbl2_systems_host.obj dbl2_systems_kernels.obj

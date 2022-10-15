@@ -9,6 +9,9 @@ MAKEFILE = makefile_unix
 test_unimodular:
 	make -f $(MAKEFILE) test_unimodular
 
+test_monomial_systems:
+	make -f $(MAKEFILE) test_monomial_systems
+
 test_monomial_jobs:
 	make -f $(MAKEFILE) test_monomial_jobs
 

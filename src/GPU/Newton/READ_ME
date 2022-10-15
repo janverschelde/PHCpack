@@ -6,6 +6,8 @@ file name                : short description
 unimodular_matrices      : code to generate random exponent matrices
 test_unimodular          : test on unimodular triangulation
 prompt_newton_setup      : prompts for the test parameters
+dbl_monomial_systems     : makes monomial systems
+test_monomial_systems    : tests on making monomial systems
 ------------------------------------------------------------------------------
 test_monomial_jobs       : prepares the acceleration of the evaluation
 dbl_systems_host         : systems evaldiff with doubles on host
