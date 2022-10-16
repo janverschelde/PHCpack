@@ -295,10 +295,20 @@ dbl_newton_method.o:
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
                dbl_newton_method.cpp
 
+dbl2_newton_method.o:
+	@-echo ">>> compiling dbl2_newton_method ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+               dbl2_newton_method.cpp
+
 cmplx_newton_method.o:
 	@-echo ">>> compiling cmplx_newton_method ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
                cmplx_newton_method.cpp
+
+cmplx2_newton_method.o:
+	@-echo ">>> compiling cmplx2_newton_method ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+               cmplx2_newton_method.cpp
 
 dbl_newton_testers.o:
 	@-echo ">>> compiling dbl_newton_testers ..."
@@ -517,6 +527,7 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
 test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o \
+                  random2_vectors.o random2_series.o dbl2_monomial_systems.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
                   dbl2_factorizations.o dbl_onenorms_host.o dbl2_bals_host.o \
                   convolution_job.o convolution_jobs.o \
@@ -524,15 +535,18 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl2_systems_host.o write_gpu_timings.o \
                   dbl2_systems_kernels.o dbl2_polynomials_kernels.o \
                   dbl2_newton_testers.o test_dbl2_newton.o \
+                  dbl2_newton_method.o cmplx2_newton_method.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl_bals_flopcounts.o \
                   dbl2_baqr_kernels.o dbl2_tabs_kernels.o \
                   dbl2_tail_kernels.o dbl2_bals_kernels.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_newton test_dbl2_newton.o dbl2_newton_testers.o \
+                  dbl2_newton_method.o cmplx2_newton_method.o \
                   random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o \
+                  random2_vectors.o random2_series.o dbl2_monomial_systems.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
                   dbl2_factorizations.o dbl_onenorms_host.o dbl2_bals_host.o \
                   convolution_job.o convolution_jobs.o \
@@ -625,6 +639,7 @@ clean:
 	/bin/rm -f -r dbl8_bals_host.o
 	/bin/rm -f -r dbl8_bals_kernels.o dbl8_tail_kernels.o
 	/bin/rm -f -r dbl_newton_method.o cmplx_newton_method.o
+	/bin/rm -f -r dbl2_newton_method.o cmplx2_newton_method.o
 	/bin/rm -f -r dbl_newton_testers.o dbl2_newton_testers.o
 	/bin/rm -f -r dbl4_newton_testers.o dbl8_newton_testers.o
 	/bin/rm -f -r test_unimodular.o test_unimodular

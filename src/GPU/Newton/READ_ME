@@ -48,7 +48,9 @@ dbl4_newton_testers      : test functions on Newton in quad double precision
 dbl8_newton_testers      : test functions on Newton in octo double precision
 ------------------------------------------------------------------------------
 dbl_newton_method        : Newton on real numbers in double precision
+dbl2_newton_method       : Newton on real numbers in double double precision
 cmplx_newton_method      : Newton on complex numbers in double precision
+cmplx2_newton_method     : Newton on double double complex numbers
 ------------------------------------------------------------------------------
 test_dbl_newton          : main test Newton in double precision
 test_dbl2_newton         : main test Newton in double double precision

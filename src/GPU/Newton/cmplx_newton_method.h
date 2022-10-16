@@ -1,4 +1,4 @@
-// The file dbl_newton_method.h specifies Newton's method
+// The file cmplx_newton_method.h specifies Newton's method
 // on series in double precision on complex numbers.
 
 #ifndef __cmplx_newton_method_h__

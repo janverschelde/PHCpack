@@ -453,6 +453,14 @@ dbl_newton_method.obj:
                  /I$(CUDASDK)/include \
                  /Fo: dbl_newton_method.obj /EHsc
 
+dbl2_newton_method.obj:
+	@-echo ">>> compiling dbl2_newton_method ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl2_newton_method.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl2_newton_method.obj /EHsc
+
 cmplx_newton_method.obj:
 	@-echo ">>> compiling cmplx_newton_method ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
@@ -460,6 +468,14 @@ cmplx_newton_method.obj:
                       cmplx_newton_method.cpp \
                  /I$(CUDASDK)/include \
                  /Fo: cmplx_newton_method.obj /EHsc
+
+cmplx2_newton_method.obj:
+	@-echo ">>> compiling cmplx2_newton_method ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      cmplx2_newton_method.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: cmplx2_newton_method.obj /EHsc
 
 dbl_newton_testers.obj:
 	@-echo ">>> compiling dbl_newton_testers ..."
@@ -747,8 +763,10 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
 
 test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
-                  prompt_newton_setup.obj \
+		  random2_vectors.obj random2_series.obj \
+                  dbl2_monomial_systems.obj prompt_newton_setup.obj \
                   double_double_functions.obj dbl2_newton_testers.obj \
+		  dbl2_newton_method.obj cmplx2_newton_method.obj \
                   dbl2_convolutions_host.obj dbl2_monomials_host.obj \
                   convolution_job.obj convolution_jobs.obj \
                   addition_job.obj addition_jobs.obj job_coordinates.obj \
@@ -764,12 +782,14 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
 	nvcc -ccbin=$(CL) -o test_dbl2_newton.exe test_dbl2_newton.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
+             random2_vectors.obj random2_series.obj \
              double_double_functions.obj dbl2_newton_testers.obj \
+	     dbl2_newton_method.obj cmplx2_newton_method.obj \
 	     dbl2_convolutions_host.obj dbl2_monomials_host.obj \
              convolution_job.obj convolution_jobs.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
              gettimeofday4win.obj write_gpu_timings.obj \
-             dbl2_systems_host.obj \
+             dbl2_systems_host.obj dbl2_monomial_systems.obj \
              dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
              dbl2_factorizations.obj dbl_onenorms_host.obj \
              dbl2_bals_host.obj dbl_bals_flopcounts.obj \
@@ -868,6 +888,7 @@ clean:
 	del dbl4_systems_host.obj dbl4_systems_kernels.obj
 	del dbl8_systems_host.obj dbl8_systems_kernels.obj
 	del dbl_newton_method.obj cmplx_newton_method.obj
+	del dbl2_newton_method.obj cmplx2_newton_method.obj
 	del dbl_newton_testers.obj dbl2_newton_testers.obj
 	del dbl4_newton_testers.obj dbl8_newton_testers.obj
 	del convolution_job.obj convolution_jobs.obj
