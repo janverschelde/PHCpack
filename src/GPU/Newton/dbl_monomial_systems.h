@@ -24,4 +24,25 @@ void make_complex_exponentials
  *   sre      real parts of the coefficients of the dim power series;
  *   sim      imaginary parts of the coefficients of the dim power series. */
 
+void evaluate_complex_monomials
+ ( int dim, int deg, int **rowsA,
+   double **sre, double **sim, double **rhsre, double **rhsim );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials defined in the rows of a matrix at
+ *   complex series to make the right hand side of a monomial system.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the monomial system;
+ *   deg      truncation degree of the series;
+ *   rowsA    the rows of A have the exponents of the monomials;
+ *   sre      real parts of the series;
+ *   sim      imaginary parts of the series;
+ *   rhsre    space for dim arrays of size deg+1;
+ *   rhsim    space for dim arrays of size deg+1.
+ *
+ * ON RETURN :
+ *   rhsre    real parts of the evaluated monomials;
+ *   rhsim    imaginary parts of the evaluated monomials. */
+
 #endif

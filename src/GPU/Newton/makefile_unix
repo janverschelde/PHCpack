@@ -460,6 +460,7 @@ test_dbl8_flopbals: random_numbers.o random8_vectors.o \
 test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                  unimodular_matrices.o prompt_newton_setup.o \
                  dbl_newton_testers.o test_dbl_newton.o \
+                 dbl_monomial_systems.o \
                  dbl_newton_method.o cmplx_newton_method.o \
                  dbl_convolutions_host.o dbl_monomials_host.o \
                  convolution_job.o convolution_jobs.o \
@@ -473,6 +474,7 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                  dbl_tail_kernels.o dbl_bals_kernels.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_newton test_dbl_newton.o dbl_newton_testers.o \
+                  dbl_monomial_systems.o \
                   dbl_newton_method.o cmplx_newton_method.o \
                   prompt_newton_setup.o unimodular_matrices.o \
                   random_numbers.o random_series.o random_monomials.o \

@@ -11,6 +11,7 @@
 #include "random_monomials.h"
 #include "dbl_factorizations.h"
 #include "unimodular_matrices.h"
+#include "dbl_monomial_systems.h"
 #include "dbl_systems_host.h"
 #include "dbl_systems_kernels.h"
 #include "dbl_bals_host.h"
@@ -23,7 +24,7 @@ using namespace std;
 void cmplx_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double *r0re, double *r0im, double dpr,
+   double **mbre, double **mbim, double dpr,
    double **cffre, double **cffim, double *accre, double *accim,
    double **inputre_h, double **inputim_h,
    double **inputre_d, double **inputim_d,
@@ -99,14 +100,14 @@ void cmplx_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       cmplx_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,r0re,r0im,dpr,
+         (dim,degp1,nvr,idx,mbre,mbim,dpr,
           outputre_h,outputim_h,funvalre_h,funvalim_h,
           rhsre_h,rhsim_h,jacvalre_h,jacvalim_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
       cmplx_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,r0re,r0im,dpr,
+         (dim,degp1,nvr,idx,mbre,mbim,dpr,
           outputre_d,outputim_d,funvalre_d,funvalim_d,
           rhsre_d,rhsim_d,jacvalre_d,jacvalim_d,vrblvl);
    }
@@ -393,33 +394,48 @@ int test_dbl_complex_newton
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
    // Define the initial input, a vector of ones.
+
+   double *angles = new double[dim];
+   double **solre = new double*[dim];
+   double **solim = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      solre[i] = new double[degp1];
+      solim[i] = new double[degp1];
+   }
+   make_complex_exponentials(dim,deg,angles,solre,solim);
+
+   // compute the right hand sides via evaluation
+
+   double **mbrhsre = new double*[dim];
+   double **mbrhsim = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      mbrhsre[i] = new double[degp1];
+      mbrhsim[i] = new double[degp1];
+
+      mbrhsre[i][0] = 1.0;     // initialize product to one
+      mbrhsim[i][0] = 0.0;
+
+      for(int k=1; k<degp1; k++)
+      {
+         mbrhsre[i][k] = 0.0;
+         mbrhsim[i][k] = 0.0;
+      }
+   }
+   evaluate_complex_monomials(dim,deg,rowsA,solre,solim,mbrhsre,mbrhsim);
    
-   double angle = random_angle(); 
-   double rhs0re = cos(angle);
-   double rhs0im = sin(angle);
-   int *rowsums = new int[dim];
+   double *start0re = new double[dim];
+   double *start0im = new double[dim];
 
-   row_sums(dim,rowsA,rowsums);
-
-   if(vrblvl > 0)
+   for(int i=0; i<dim; i++)  // compute start vector
    {
-      cout << scientific << setprecision(16);
-      cout << "rhs0 : " << rhs0re << "  " << rhs0im << endl;
-      cout << "row sums :";
-      for(int i=0; i<dim; i++) cout << " " << rowsums[i];
-      cout << endl;
+      start0re[i] = solre[i][0];
+      start0im[i] = solim[i][0]; 
    }
-   double *rhsvec0re = new double[dim];
-   double *rhsvec0im = new double[dim];
-
-   for(int i=0; i<dim; i++)  // compute right hand side vector
-   {
-      double rowsumangle = rowsums[i]*angle;
-
-      rhsvec0re[i] = cos(rowsumangle);
-      rhsvec0im[i] = sin(rowsumangle);
-   }
-   cmplx_start_series_vector(dim,deg,rhs0re,rhs0im,inputre_h,inputim_h);
+   cmplx_start_series_vector(dim,deg,start0re,start0im,inputre_h,inputim_h);
 
    for(int i=0; i<dim; i++)
       for(int j=0; j<degp1; j++)
@@ -445,7 +461,7 @@ int test_dbl_complex_newton
 
       cmplx_newton_qrstep
          (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,
-          rhsvec0re,rhsvec0im,dpr,cffre,cffim,accre,accim,
+          mbrhsre,mbrhsim,dpr,cffre,cffim,accre,accim,
           inputre_h,inputim_h,inputre_d,inputim_d,
           outputre_h,outputim_h,outputre_d,outputim_d,
           funvalre_h,funvalim_h,funvalre_d,funvalim_d,
@@ -459,6 +475,8 @@ int test_dbl_complex_newton
    }
    if(vrblvl < 2)
    {
+      double errsum = 0.0;
+ 
       cout << scientific << setprecision(16); // just in case vrblvl == 0
       cout << "The solution series : " << endl;
       for(int j=0; j<degp1; j++)
@@ -466,16 +484,28 @@ int test_dbl_complex_newton
          cout << "coefficient of degree " << j << " :" << endl;
          for(int i=0; i<dim; i++)
          {
+            cout << "sol[" << i << "][" << j << "] : "
+                           << solre[i][j] << "  "
+                           << solim[i][j] << endl;
             if((mode == 0) || (mode == 2))
-              cout << "x_d[" << i << "][" << j << "] : "
-                             << inputre_d[i][j] << "  "
-                             << inputim_d[i][j] << endl;
+            {
+               cout << "x_d[" << i << "][" << j << "] : "
+                              << inputre_d[i][j] << "  "
+                              << inputim_d[i][j] << endl;
+               errsum += abs(solre[i][j] - inputre_d[i][j])
+                       + abs(solim[i][j] - inputim_d[i][j]);
+            }
             if((mode == 1) || (mode == 2))
-              cout << "x_h[" << i << "][" << j << "] : "
-                             << inputre_h[i][j] << "  "
-                             << inputim_h[i][j] << endl;
+            {
+               cout << "x_h[" << i << "][" << j << "] : "
+                              << inputre_h[i][j] << "  "
+                              << inputim_h[i][j] << endl;
+               errsum += abs(solre[i][j] - inputre_h[i][j])
+                       + abs(solim[i][j] - inputim_h[i][j]);
+            }
          }
       }
+      cout << "error : " << errsum << endl;
    }
    return 0;
 }

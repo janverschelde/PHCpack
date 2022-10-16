@@ -19,7 +19,7 @@ void dbl_start_series_vector ( int dim, int deg, double **cff )
 }
 
 void cmplx_start_series_vector
- ( int dim, int deg, double r0re, double r0im,
+ ( int dim, int deg, double *r0re, double *r0im,
    double **cffre, double **cffim )
 {
    double angle;
@@ -27,8 +27,8 @@ void cmplx_start_series_vector
    for(int i=0; i<dim; i++)
    {
       // angle = random_angle(); 
-      cffre[i][0] = r0re + 0.00001; // cos(angle); => no convergence ...
-      cffim[i][0] = r0im + 0.00001; // sin(angle);
+      cffre[i][0] = r0re[i] + 0.00001; // cos(angle); => no convergence ...
+      cffim[i][0] = r0im[i] + 0.00001; // sin(angle);
 
       for(int j=1; j<=deg; j++)
       {

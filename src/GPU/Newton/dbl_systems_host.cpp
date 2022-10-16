@@ -245,7 +245,7 @@ void dbl_linearize_evaldiff_output
 
 void cmplx_linearize_evaldiff_output
  ( int dim, int degp1, int *nvr, int **idx,
-   double *rhs0re, double *rhs0im, double damper,
+   double **mbre, double **mbim, double damper,
    double ***outputre, double ***outputim,
    double **funvalre, double **funvalim,
    double **rhsre, double **rhsim, double ***jacvalre, double ***jacvalim,
@@ -267,26 +267,26 @@ void cmplx_linearize_evaldiff_output
          cout << i << " : "
               << funvalre[i][0] << "  " << funvalim[i][0] << endl;
    }
-   // Linearize the function values in the rhs and swap sign,
-   // but keep in mind that the right hand side is rhs0re + i*rhs0im - t,
-   // so we subtract rhs0re + i*rhs0im and add damper*t to the rhs.
+   /*
+    * Linearize the function values in the rhs and swap sign,
+    * but keep in mind that the right hand side is mbre + I*mbim,
+    * as the monomial system is x^U = rhs, or x^U - rhs = 0,
+    * so from the funval we substract rhs and then flip sign
+    * in the computation of the rhs of the linear system.
+    */
+
    for(int j=0; j<dim; j++)
    {
-      rhsre[0][j] = -(funvalre[j][0] - rhs0re[j]);
-      rhsim[0][j] = -(funvalim[j][0] - rhs0im[j]);
+      rhsre[0][j] = -(funvalre[j][0] - mbre[j][0]);
+      rhsim[0][j] = -(funvalim[j][0] - mbim[j][0]);
    }
    if(degp1 > 1)
    {
-      for(int j=0; j<dim; j++)
-      {
-         rhsre[1][j] = -(funvalre[j][1] + damper);
-         rhsim[1][j] = -(funvalim[j][1] + 0.0);
-      }
-      for(int i=2; i<degp1; i++)
+      for(int i=1; i<degp1; i++)
          for(int j=0; j<dim; j++)
          {
-            rhsre[i][j] = -funvalre[j][i];
-            rhsim[i][j] = -funvalim[j][i];
+            rhsre[i][j] = -(funvalre[j][i] - mbre[j][i]);
+            rhsim[i][j] = -(funvalim[j][i] - mbim[j][i]);
          }
    }
    if(vrblvl > 1)

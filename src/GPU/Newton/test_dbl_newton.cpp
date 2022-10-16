@@ -50,8 +50,11 @@ int main ( void )
 
    int *expsol = new int[dim];
    int sing = exponents_check(dim,rowsA,expsol,vrblvl);
-   cout << "-> give the damper (1.0 is the default) : "; cin >> dpr;
 
+   if(cdata == 0)
+   {
+      cout << "-> give the damper (1.0 is the default) : "; cin >> dpr;
+   }
 /*
  * 2. calling the test function
  */

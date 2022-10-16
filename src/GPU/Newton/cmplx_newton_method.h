@@ -7,7 +7,7 @@
 void cmplx_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double *r0re, double *r0im, double dpr,
+   double **mbre, double **mbim, double dpr,
    double **cffre, double **cffim, double *accre, double *accim,
    double **inputre_h, double **inputim_h,
    double **inputre_d, double **inputim_d,
@@ -45,8 +45,8 @@ void cmplx_newton_qrstep
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
- *   r0re      real parts of the constants of the right hand side vector;
- *   r0im      imaginary parts of the constants of the right hand side vector;
+ *   mbre      real parts of the right hand side vector of series
+ *   mbim      imaginary parts of the right hand side vector of series;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   cffre     real parts of the coefficients of the monomials;
  *   cffim     imaginary parts of the coefficients of the monomials;

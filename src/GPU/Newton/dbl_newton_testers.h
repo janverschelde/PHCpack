@@ -12,13 +12,14 @@ void dbl_start_series_vector ( int dim, int deg, double **cff );
  *   sets the coefficients cff of the start series. */
 
 void cmplx_start_series_vector
- ( int dim, int deg, double r0re, double r0im,
+ ( int dim, int deg, double *r0re, double *r0im,
    double **cffre, double **cffim );
 /*
  * DESCRIPTION :
  *   Given space allocated in cffre and cffim,
  *   sets the coefficients of the start series.
- *   The constant term equals r0re + i*r0im with a small error. */
+ *   The constant term equals r0re[j] + i*r0im[j] with a small error,
+ *   for j ranging from 0 to dim-1. */
 
 void dbl_unit_series_vector ( int dim, int deg, double **cff );
 /*

@@ -6,7 +6,6 @@
 #include <cmath>
 #include <time.h>
 #include "random_series.h"
-#include "dbl_convolutions_host.h"
 #include "unimodular_matrices.h"
 #include "dbl_monomial_systems.h"
 
@@ -103,29 +102,7 @@ int main ( void )
          rhsim[i][k] = 0.0;
       }
    }
-   double *accre = new double[degp1]; // accumulates product
-   double *accim = new double[degp1];
-
-   for(int i=0; i<dim; i++)    // run over all monomials
-   {
-      for(int j=0; j<dim; j++) // run over all variables
-      {
-         if(rowsA[i][j] > 0)   // only multiply if positive exponent
-         {
-            for(int k=0; k<rowsA[i][j]; k++)
-            {
-               CPU_cmplx_product
-                  (deg,solre[j],solim[j],rhsre[i],rhsim[i],accre,accim);
-
-               for(int L=0; L<degp1; L++)
-               {
-                  rhsre[i][L] = accre[L];
-                  rhsim[i][L] = accim[L];
-               }
-            }
-         }
-      }
-   }
+   evaluate_complex_monomials(dim,deg,rowsA,solre,solim,rhsre,rhsim);
 
    cout << "the evaluated right hand sides :" << endl;
 
