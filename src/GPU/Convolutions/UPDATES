@@ -1,3 +1,5 @@
+Sun 16 Oct 2022 : extended random2_series with cmplx2_exponentials function.
+
 Thu 29 Sep 2022 : in {dbl,dbl2,dbl4,dbl8}_monomials_host.cpp fixed index
   error for the special case of two variables.
 

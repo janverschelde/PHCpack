@@ -1,3 +1,6 @@
+Sun 16 Oct 2022 : new dbl2_monomial_systems and test2_monomial_systems,
+  updated makefiles.
+
 Sat 15 Oct 2022 : new dbl_newton_method and cmplx_newton_method with code
   taken from dbl_newton_testers, updated test_dbl_newton.cpp and makefiles.
   Fixed return type of row_sums in unimodular_matrices.

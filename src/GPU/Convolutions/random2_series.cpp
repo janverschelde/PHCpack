@@ -33,6 +33,35 @@ void random_dbl2_exponentials
    dbl2_exponentials(deg,*xhi,*xlo,pluxhi,pluxlo,minxhi,minxlo);
 }
 
+void cmplx2_exponential
+ ( int deg, double xrehi, double xrelo, double ximhi, double ximlo,
+   double *srehi, double *srelo, double *simhi, double *simlo )
+{
+   double acchi,acclo;
+
+   srehi[0] = 1.0; srelo[0] = 0.0;
+   simhi[0] = 0.0; simlo[0] = 0.0;
+   srehi[1] = xrehi; srelo[1] = xrelo;
+   simhi[1] = ximhi; simlo[1] = ximlo;
+
+   for(int k=2; k<=deg; k++)
+   {
+      // sre[k] = (sre[k-1]*xre - sim[k-1]*xim)/k;
+      ddf_mul(srehi[k-1],srelo[k-1],xrehi,xrelo,&srehi[k],&srelo[k]);
+      ddf_mul(simhi[k-1],simlo[k-1],ximhi,ximlo,&acchi,&acclo);
+      ddf_minus(&acchi,&acclo);
+      ddf_inc(&srehi[k],&srelo[k],acchi,acclo);
+      acchi = (double) k; acclo = 0.0;
+      ddf_div(srehi[k],srelo[k],acchi,acclo,&srehi[k],&srelo[k]);
+      // sim[k] = (sre[k-1]*xim + sim[k-1]*xre)/k;
+      ddf_mul(srehi[k-1],srelo[k-1],ximhi,ximlo,&simhi[k],&simlo[k]);
+      ddf_mul(simhi[k-1],simlo[k-1],xrehi,xrelo,&acchi,&acclo);
+      ddf_inc(&simhi[k],&simlo[k],acchi,acclo);
+      acchi = (double) k; acclo = 0.0;
+      ddf_div(simhi[k],simlo[k],acchi,acclo,&simhi[k],&simlo[k]);
+   }
+}
+
 void cmplx2_exponentials
  ( int deg, double xrehi, double xrelo, double ximhi, double ximlo,
    double *pluxrehi, double *pluxrelo, double *pluximhi, double *pluximlo,

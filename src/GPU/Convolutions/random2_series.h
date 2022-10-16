@@ -37,6 +37,35 @@ void random_dbl2_exponentials
  *   Parameters are the same as dbl2_exponentials,
  *   except that xhi and xlo are return parameters. */
 
+void cmplx2_exponential
+ ( int deg, double xrehi, double xrelo, double ximhi, double ximlo,
+   double *srehi, double *srelo, double *simhi, double *simlo );
+/*
+ * DESCRIPTION :
+ *   Returns power series truncated at degree deg,
+ *   following the expansion of exp(x).
+ *
+ * ON ENTRY :
+ *   deg      degree to truncate the series;
+ *   xrehi    high double of the real part of x;
+ *   xrelo    low double of the real part of x;
+ *   ximhi    high double of the imaginary part of x;
+ *   ximlo    low double of the imaginary part of x;
+ *   srehi    space for deg+1 doubles;
+ *   srelo    space for deg+1 doubles;
+ *   simhi    space for deg+1 doubles;
+ *   simlo    space for deg+1 doubles.
+ *
+ * ON RETURN :
+ *   srehi    high doubles of the real parts of series following exp(x),
+ *            truncated to degree deg;
+ *   srelo    low doubles of the real parts of series following exp(x),
+ *            truncated to degree deg;
+ *   simhi    high doubles of the imaginary parts of series following exp(x),
+ *            truncated to degree deg;
+ *   simlo    low doubles of the imaginary parts of series following exp(x),
+ *            truncated to degree deg. */
+
 void cmplx2_exponentials
  ( int deg, double xrehi, double xrelo, double ximhi, double ximlo,
    double *pluxrehi, double *pluxrelo, double *pluximhi, double *pluximlo,

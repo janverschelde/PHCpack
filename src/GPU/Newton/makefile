@@ -12,6 +12,9 @@ test_unimodular:
 test_monomial_systems:
 	make -f $(MAKEFILE) test_monomial_systems
 
+test2_monomial_systems:
+	make -f $(MAKEFILE) test2_monomial_systems
+
 test_monomial_jobs:
 	make -f $(MAKEFILE) test_monomial_jobs
 
