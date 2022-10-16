@@ -646,7 +646,7 @@ void GPU_cmplx_bals_solve
       if(vrblvl > 0)
          cout << "1-norm of b[" << stage << "] : " << nrm << endl;
 
-      if((nrm < 1.0e-15) || (nrm < prevnorm))
+      if((nrm < 1.0e-15) || (nrm > prevnorm))
       {
          skipbscnt = skipbscnt + 1;
 
