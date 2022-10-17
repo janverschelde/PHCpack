@@ -1,3 +1,6 @@
+Mon 17 Oct 2022 : extended random4_series with cmplx4_exponentials function
+  and random8_series with cmplx8_exponentials function.
+
 Sun 16 Oct 2022 : extended random2_series with cmplx2_exponentials function.
 
 Thu 29 Sep 2022 : in {dbl,dbl2,dbl4,dbl8}_monomials_host.cpp fixed index

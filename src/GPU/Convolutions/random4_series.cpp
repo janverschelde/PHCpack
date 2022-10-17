@@ -51,6 +51,55 @@ void random_dbl4_exponentials
        minxhihi,minxlohi,minxhilo,minxlolo);
 }
 
+void cmplx4_exponential
+ ( int deg, double xrehihi, double xrelohi, double xrehilo, double xrelolo, 
+            double ximhihi, double ximlohi, double ximhilo, double ximlolo,
+   double *srehihi, double *srelohi, double *srehilo, double *srelolo,
+   double *simhihi, double *simlohi, double *simhilo, double *simlolo )
+{
+   double acchihi,acclohi,acchilo,acclolo;
+
+   srehihi[0] = 1.0; srelohi[0] = 0.0;
+   srehilo[0] = 0.0; srelolo[0] = 0.0;
+   simhihi[0] = 0.0; simlohi[0] = 0.0;
+   simhilo[0] = 0.0; simlolo[0] = 0.0;
+   srehihi[1] = xrehihi; srelohi[1] = xrelohi;
+   srehilo[1] = xrehilo; srelolo[1] = xrelolo;
+   simhihi[1] = ximhihi; simlohi[1] = ximlohi;
+   simhilo[1] = ximhilo; simlolo[1] = ximlolo;
+
+   for(int k=2; k<=deg; k++)
+   {
+      // sre[k] = (sre[k-1]*xre - sim[k-1]*xim)/k;
+      qdf_mul(srehihi[k-1],srelohi[k-1],srehilo[k-1],srelolo[k-1],
+              xrehihi,     xrelohi,     xrehilo,     xrelolo,
+             &srehihi[k], &srelohi[k], &srehilo[k], &srelolo[k]);
+      qdf_mul(simhihi[k-1],simlohi[k-1],simhilo[k-1],simlolo[k-1],
+              ximhihi,     ximlohi,     ximhilo,     ximlolo,
+             &acchihi,    &acclohi,    &acchilo,    &acclolo);
+      qdf_minus(&acchihi,&acclohi,&acchilo,&acclolo);
+      qdf_inc(&srehihi[k],&srelohi[k],&srehilo[k],&srelolo[k],
+               acchihi,    acclohi,    acchilo,    acclolo);
+      acchihi = (double) k; acclohi = 0.0; acchilo = 0.0; acclolo = 0.0;
+      qdf_div(srehihi[k], srelohi[k], srehilo[k], srelolo[k],
+              acchihi,    acclohi,    acchilo,    acclolo,
+             &srehihi[k],&srelohi[k],&srehilo[k],&srelolo[k]);
+      // sim[k] = (sre[k-1]*xim + sim[k-1]*xre)/k;
+      qdf_mul(srehihi[k-1],srelohi[k-1],srehilo[k-1],srelolo[k-1],
+              ximhihi,     ximlohi,     ximhilo,     ximlolo,
+             &simhihi[k], &simlohi[k], &simhilo[k], &simlolo[k]);
+      qdf_mul(simhihi[k-1],simlohi[k-1],simhilo[k-1],simlolo[k-1],
+              xrehihi,     xrelohi,     xrehilo,     xrelolo,
+             &acchihi,    &acclohi,    &acchilo,    &acclolo);
+      qdf_inc(&simhihi[k],&simlohi[k],&simhilo[k],&simlolo[k],
+               acchihi,    acclohi,    acchilo,    acclolo);
+      acchihi = (double) k; acclohi = 0.0; acchilo = 0.0; acclolo = 0.0;
+      qdf_div(simhihi[k], simlohi[k], simhilo[k], simlolo[k],
+              acchihi,    acclohi,    acchilo,    acclolo,
+             &simhihi[k],&simlohi[k],&simhilo[k],&simlolo[k]);
+   }
+}
+
 void cmplx4_exponentials
  ( int deg, double xrehihi, double xrelohi, double xrehilo, double xrelolo,
             double ximhihi, double ximlohi, double ximhilo, double ximlolo,

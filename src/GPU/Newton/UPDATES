@@ -1,3 +1,7 @@
+Mon 17 Oct 2022 : new {dbl4,dbl8}_monomial_systems and corresponding
+  {test4,test8}_monomial_systems, updated makefiles.
+  Made some edits in dbl2_monomial_systems.
+
 Sun 16 Oct 2022 : new dbl2_monomial_systems and test2_monomial_systems,
   updated makefiles.  Updated the cmplx linearize in dbl2_systems_host.
   New {dbl2,cmplx2}_newton_method with code from dbl2_newton_testers,

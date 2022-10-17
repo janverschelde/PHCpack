@@ -57,6 +57,53 @@ void random_dbl4_exponentials
  *   Parameters are the same as dbl4_exponentials,
  *   except that xhihi, xlohi, xhilo, and xlolo are return parameters. */
 
+void cmplx4_exponential
+ ( int deg, double xrehihi, double xrelohi, double xrehilo, double xrelolo, 
+            double ximhihi, double ximlohi, double ximhilo, double ximlolo,
+   double *srehihi, double *srelohi, double *srehilo, double *srelolo,
+   double *simhihi, double *simlohi, double *simhilo, double *simlolo );
+/*
+ * DESCRIPTION :
+ *   Returns power series truncated at degree deg,
+ *   following the expansion of exp(x).
+ *
+ * ON ENTRY :
+ *   deg      degree to truncate the series;
+ *   xrehihi  highest double of the real part of x;
+ *   xrelohi  second highest double of the real part of x;
+ *   xrehilo  second lowest double of the real part of x;
+ *   xrelolo  lowest double of the real part of x;
+ *   ximhihi  highest double of the imaginary part of x;
+ *   ximlohi  second highest double of the imaginary part of x;
+ *   ximhilo  second lowest double of the imaginary part of x;
+ *   ximlolo  lowest double of the imaginary part of x;
+ *   srehihi  space for deg+1 doubles;
+ *   srelohi  space for deg+1 doubles;
+ *   srehilo  space for deg+1 doubles;
+ *   srelolo  space for deg+1 doubles;
+ *   simhihi  space for deg+1 doubles;
+ *   simlohi  space for deg+1 doubles;
+ *   simhilo  space for deg+1 doubles;
+ *   simlolo  space for deg+1 doubles.
+ *
+ * ON RETURN :
+ *   srehihi  highest doubles of the real parts of series
+ *            following exp(x), truncated to degree deg;
+ *   srelohi  second highest doubles of the real parts of series
+ *            following exp(x), truncated to degree deg;
+ *   srehilo  second lowest doubles of the real parts of series
+ *            following exp(x), truncated to degree deg;
+ *   srelolo  lowest doubles of the real parts of series
+ *            following exp(x), truncated to degree deg;
+ *   simhihi  highest doubles of the imaginary parts of series
+ *            following exp(x), truncated to degree deg;
+ *   simlohi  second highest doubles of the imaginary parts of series
+ *            following exp(x), truncated to degree deg;
+ *   simhilo  second lowest doubles of the imaginary parts of series
+ *            following exp(x), truncated to degree deg;
+ *   simlolo  lowest doubles of the imaginary parts of series
+ *            following exp(x), truncated to degree deg. */
+
 void cmplx4_exponentials
  ( int deg, double xrehihi, double xrelohi, double xrehilo, double xrelolo,
             double ximhihi, double ximlohi, double ximhilo, double ximlolo,

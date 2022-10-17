@@ -21,9 +21,6 @@ void make_complex2_exponentials
  *   simlo    space for dim arrays of size deg+1.
  *
  * ON RETURN :
- *   angles   contains the angles of the random complex numbers,
- *            cos(angles[i]) is sre[i][1] and sin(angles[i]) is sim[i][1],
- *            angleshi are the high doubles, angleslo are the low doubles;
  *   srehi    high doubles of the real parts of the dim power series;
  *   srelo    low doubles of the real parts of the dim power series;
  *   simhi    high doubles of the imaginary parts of the dim power series;

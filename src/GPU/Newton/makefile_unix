@@ -28,6 +28,14 @@ random2_series.o:
 	@-echo ">>> compiling double double random series generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(CNV)/random2_series.cpp
 
+random4_series.o:
+	@-echo ">>> compiling quad double random series generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(CNV)/random4_series.cpp
+
+random8_series.o:
+	@-echo ">>> compiling octo double random series generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(CNV)/random8_series.cpp
+
 random_monomials.o:
 	@-echo ">>> compiling random_monomials ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random_monomials.cpp
@@ -341,6 +349,14 @@ dbl2_monomial_systems.o:
 	@-echo ">>> compiling dbl2_monomial_systems ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) dbl2_monomial_systems.cpp
 
+dbl4_monomial_systems.o:
+	@-echo ">>> compiling dbl4_monomial_systems ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) dbl4_monomial_systems.cpp
+
+dbl8_monomial_systems.o:
+	@-echo ">>> compiling dbl8_monomial_systems ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) dbl8_monomial_systems.cpp
+
 test_monomial_systems.o:
 	@-echo ">>> compiling test_monomial_systems ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test_monomial_systems.cpp
@@ -348,6 +364,14 @@ test_monomial_systems.o:
 test2_monomial_systems.o:
 	@-echo ">>> compiling test2_monomial_systems ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test2_monomial_systems.cpp
+
+test4_monomial_systems.o:
+	@-echo ">>> compiling test4_monomial_systems ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test4_monomial_systems.cpp
+
+test8_monomial_systems.o:
+	@-echo ">>> compiling test8_monomial_systems ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test8_monomial_systems.cpp
 
 convolution_job.o:
 	@-echo ">>> compiling convolution_job ..."
@@ -443,6 +467,33 @@ test2_monomial_systems: random_numbers.o random_series.o random_monomials.o \
                   random_numbers.o random_series.o random_monomials.o \
                   random2_vectors.o random2_series.o \
                   double_double_functions.o dbl2_convolutions_host.o 
+
+test4_monomial_systems: random_numbers.o random_series.o random_monomials.o \
+                        random4_vectors.o random4_series.o \
+                        unimodular_matrices.o double_double_functions.o \
+                        quad_double_functions.o dbl4_monomial_systems.o \
+                        dbl4_convolutions_host.o test4_monomial_systems.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test4_monomial_systems test4_monomial_systems.o \
+                  dbl4_monomial_systems.o unimodular_matrices.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random4_vectors.o random4_series.o \
+                  double_double_functions.o quad_double_functions.o \
+                  dbl4_convolutions_host.o 
+
+test8_monomial_systems: random_numbers.o random_series.o random_monomials.o \
+                        random8_vectors.o random8_series.o \
+                        unimodular_matrices.o double_double_functions.o \
+                        quad_double_functions.o octo_double_functions.o \
+                        dbl8_monomial_systems.o dbl8_convolutions_host.o \
+                        test8_monomial_systems.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test8_monomial_systems test8_monomial_systems.o \
+                  dbl8_monomial_systems.o unimodular_matrices.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random8_vectors.o random8_series.o \
+                  double_double_functions.o quad_double_functions.o \
+                  octo_double_functions.o dbl8_convolutions_host.o 
 
 test_monomial_jobs: random_numbers.o random_series.o random_monomials.o \
                     convolution_job.o convolution_jobs.o \
@@ -645,8 +696,12 @@ clean:
 	/bin/rm -f -r test_unimodular.o test_unimodular
 	/bin/rm -f -r dbl_monomial_systems.o
 	/bin/rm -f -r dbl2_monomial_systems.o
+	/bin/rm -f -r dbl4_monomial_systems.o
+	/bin/rm -f -r dbl8_monomial_systems.o
 	/bin/rm -f -r test_monomial_systems.o test_monomial_systems
 	/bin/rm -f -r test2_monomial_systems.o test2_monomial_systems
+	/bin/rm -f -r test4_monomial_systems.o test4_monomial_systems
+	/bin/rm -f -r test8_monomial_systems.o test8_monomial_systems
 	/bin/rm -f -r test_monomial_jobs.o test_monomial_jobs
 	/bin/rm -f -r dbl_bals_flopcounts.o
 	/bin/rm -f -r test_dbl_flopbals.o test_dbl_flopbals
@@ -660,7 +715,7 @@ clean:
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o
-	/bin/rm -f -r random2_series.o
+	/bin/rm -f -r random2_series.o random4_series.o random8_series.o
 	/bin/rm -f -r random2_vectors.o random4_vectors.o random8_vectors.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_monomials_host.o
 	/bin/rm -f -r dbl2_convolutions_host.o dbl2_monomials_host.o

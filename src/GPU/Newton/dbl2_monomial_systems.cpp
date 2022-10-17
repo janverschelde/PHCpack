@@ -2,7 +2,6 @@
 // the file dbl2_monomial_systems.h.
 
 #include <iostream>
-#include <iomanip>
 #include <cstdlib>
 #include <cmath>
 #include "double_double_functions.h"
@@ -19,26 +18,14 @@ void make_complex2_exponentials
 {
    double xrehi,xrelo,ximhi,ximlo,yhi,ylo;
 
-   cout << scientific << setprecision(16);
-
    for(int i=0; i<dim; i++)
    {
       random_double_double(&xrehi,&xrelo); // cosine of some angle
  
-      cout << "  xre[" << i << "] : " << xrehi << "  " << xrelo << endl;
-
       ddf_sqr(xrehi,xrelo,&yhi,&ylo);        // y = cos^2
-
-      cout << "xre^2[" << i << "] : " << yhi << "  " << ylo << endl;
-
       ddf_minus(&yhi,&ylo);                  // y = -cos^2
       ddf_inc_d(&yhi,&ylo,1.0);              // y = 1 - cos^2
-
-      cout << "    y[" << i << "] : " << yhi << "  " << ylo << endl;
-
       ddf_sqrt(yhi,ylo,&ximhi,&ximlo);       // sin is sqrt(1-cos^2)
-
-      cout << "  xim[" << i << "] : " << ximhi << "  " << ximlo << endl;
 
       cmplx2_exponential
          (deg,xrehi,xrelo,ximhi,ximlo,srehi[i],srelo[i],simhi[i],simlo[i]);

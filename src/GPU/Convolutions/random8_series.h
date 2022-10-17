@@ -97,6 +97,90 @@ void random_dbl8_exponentials
  *   except that xhihihi, xlohihi, xhilohi, xlolohi,
  *   xhihilo, xlohilo, xhilolo, and xlololo are return parameters. */
 
+void cmplx8_exponential
+ ( int deg,
+   double xrehihihi, double xrelohihi, double xrehilohi, double xrelolohi, 
+   double xrehihilo, double xrelohilo, double xrehilolo, double xrelololo, 
+   double ximhihihi, double ximlohihi, double ximhilohi, double ximlolohi,
+   double ximhihilo, double ximlohilo, double ximhilolo, double ximlololo,
+   double *srehihihi, double *srelohihi, double *srehilohi, double *srelolohi,
+   double *srehihilo, double *srelohilo, double *srehilolo, double *srelololo,
+   double *simhihihi, double *simlohihi, double *simhilohi, double *simlolohi,
+   double *simhihilo, double *simlohilo, double *simhilolo, double *simlololo );
+/*
+ * DESCRIPTION :
+ *   Returns power series truncated at degree deg,
+ *   following the expansion of exp(x).
+ *
+ * ON ENTRY :
+ *   deg      degree to truncate the series;
+ *   xrehihihi is the highest double of the real part of x;
+ *   xrelohihi is the second highest double of the real part of x;
+ *   xrehilohi is the third highest double of the real part of x;
+ *   xrelolohi is the fourth highest double of the real part of x;
+ *   xrehihilo is the fourth lowest double of the real part of x;
+ *   xrelohilo is the third lowest double of the real part of x;
+ *   xrehilolo is the second lowest double of the real part of x;
+ *   xrelololo is the lowest double of the real part of x;
+ *   ximhihihi is the highest double of the imaginary part of x;
+ *   ximlohihi is the second highest double of the imaginary part of x;
+ *   ximhilohi is the third highest double of the imaginary part of x;
+ *   ximlolohi is the fourth highest double of the imaginary part of x;
+ *   ximhihilo is the fourth lowest double of the imaginary part of x;
+ *   ximlohilo is the third lowest double of the imaginary part of x;
+ *   ximhilolo is the second lowest double of the imaginary part of x;
+ *   ximlololo is the lowest double of the imaginary part of x;
+ *   srehihihi has space for deg+1 doubles;
+ *   srelohihi has space for deg+1 doubles;
+ *   srehilohi has space for deg+1 doubles;
+ *   srelolohi has space for deg+1 doubles;
+ *   srehihilo has space for deg+1 doubles;
+ *   srelohilo has space for deg+1 doubles;
+ *   srehilolo has space for deg+1 doubles;
+ *   srelololo has space for deg+1 doubles;
+ *   simhihihi has space for deg+1 doubles;
+ *   simlohihi has space for deg+1 doubles;
+ *   simhilohi has space for deg+1 doubles;
+ *   simlolohi has space for deg+1 doubles.
+ *   simhihilo has space for deg+1 doubles;
+ *   simlohilo has space for deg+1 doubles;
+ *   simhilolo has space for deg+1 doubles;
+ *   simlololo has space for deg+1 doubles.
+ *
+ * ON RETURN :
+ *   srehihihi are the highest doubles of the real parts of series
+ *            following exp(x), truncated to degree deg;
+ *   srelohihi are the second highest doubles of the real parts of series
+ *            following exp(x), truncated to degree deg;
+ *   srehilohi are the third highest doubles of the real parts of series
+ *            following exp(x), truncated to degree deg;
+ *   srelolohi are the fourth highest doubles of the real parts of series
+ *            following exp(x), truncated to degree deg;
+ *   srehihilo are the fourth lowest doubles of the real parts of series
+ *            following exp(x), truncated to degree deg;
+ *   srelohilo are the third lowest doubles of the real parts of series
+ *            following exp(x), truncated to degree deg;
+ *   srehilolo are the second lowest doubles of the real parts of series
+ *            following exp(x), truncated to degree deg;
+ *   srelololo are the lowest doubles of the real parts of series
+ *            following exp(x), truncated to degree deg;
+ *   simhihihi are the highest doubles of the imaginary parts of series
+ *            following exp(x), truncated to degree deg;
+ *   simlohihi are the second highest doubles of the imaginary parts of series
+ *            following exp(x), truncated to degree deg;
+ *   simhilohi are the third highest doubles of the imaginary parts of series
+ *            following exp(x), truncated to degree deg;
+ *   simlolohi are the fourth highest doubles of the imaginary parts of series
+ *            following exp(x), truncated to degree deg;
+ *   simhihilo are the fourth lowest doubles of the imaginary parts of series
+ *            following exp(x), truncated to degree deg;
+ *   simlohilo are the third lowest doubles of the imaginary parts of series
+ *            following exp(x), truncated to degree deg;
+ *   simhilolo are the second lowest doubles of the imaginary parts of series
+ *            following exp(x), truncated to degree deg;
+ *   simlololo are the lowest doubles of the imaginary parts of series
+ *            following exp(x), truncated to degree deg. */
+
 void cmplx8_exponentials
  ( int deg,
    double xrehihihi, double xrelohihi, double xrehilohi, double xrelolohi,

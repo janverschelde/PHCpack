@@ -74,6 +74,18 @@ random2_series.obj:
                  -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: random2_series.obj /EHsc
 
+random4_series.obj:
+	@-echo ">>> compiling quad double random_series ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/random4_series.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random4_series.obj /EHsc
+
+random8_series.obj:
+	@-echo ">>> compiling octo double random_series ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/random8_series.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random8_series.obj /EHsc
+
 random_monomials.obj:
 	@-echo ">>> compiling random_monomials ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/random_monomials.cpp \
@@ -526,6 +538,18 @@ dbl2_monomial_systems.obj:
                       dbl2_monomial_systems.cpp \
                  /Fo: dbl2_monomial_systems.obj /EHsc
 
+dbl4_monomial_systems.obj:
+	@-echo ">>> compiling dbl4_monomial_systems ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl4_monomial_systems.cpp \
+                 /Fo: dbl4_monomial_systems.obj /EHsc
+
+dbl8_monomial_systems.obj:
+	@-echo ">>> compiling dbl8_monomial_systems ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl8_monomial_systems.cpp \
+                 /Fo: dbl8_monomial_systems.obj /EHsc
+
 test_monomial_systems.obj:
 	@-echo ">>> compiling test_monomial_systems ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -537,6 +561,18 @@ test2_monomial_systems.obj:
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
                       test2_monomial_systems.cpp \
                  /Fo: test2_monomial_systems.obj /EHsc
+
+test4_monomial_systems.obj:
+	@-echo ">>> compiling test4_monomial_systems ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      test4_monomial_systems.cpp \
+                 /Fo: test4_monomial_systems.obj /EHsc
+
+test8_monomial_systems.obj:
+	@-echo ">>> compiling test8_monomial_systems ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      test8_monomial_systems.cpp \
+                 /Fo: test8_monomial_systems.obj /EHsc
 
 convolution_job.obj:
 	@-echo ">>> compiling convolution_job ..."
@@ -670,6 +706,33 @@ test2_monomial_systems: test2_monomial_systems.obj unimodular_matrices.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              double_double_functions.obj \
 	     random2_vectors.obj random2_series.obj
+
+test4_monomial_systems: test4_monomial_systems.obj unimodular_matrices.obj \
+                 random_numbers.obj random_series.obj random_monomials.obj \
+                 double_double_functions.obj quad_double_functions.obj \
+		 random4_vectors.obj random4_series.obj \
+                 dbl4_monomial_systems.obj dbl4_convolutions_host.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test4_monomial_systems.exe \
+             test4_monomial_systems.obj dbl4_monomial_systems.obj \
+             unimodular_matrices.obj dbl4_convolutions_host.obj \
+             random_numbers.obj random_series.obj random_monomials.obj \
+             double_double_functions.obj quad_double_functions.obj \
+	     random4_vectors.obj random4_series.obj
+
+test8_monomial_systems: test8_monomial_systems.obj unimodular_matrices.obj \
+                 random_numbers.obj random_series.obj random_monomials.obj \
+                 double_double_functions.obj quad_double_functions.obj \
+		 octo_double_functions.obj \
+		 random8_vectors.obj random8_series.obj \
+                 dbl8_monomial_systems.obj dbl8_convolutions_host.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test8_monomial_systems.exe \
+             test8_monomial_systems.obj dbl8_monomial_systems.obj \
+             unimodular_matrices.obj dbl8_convolutions_host.obj \
+             random_numbers.obj random_series.obj random_monomials.obj \
+             double_double_functions.obj quad_double_functions.obj \
+	     octo_double_functions.obj random8_vectors.obj random8_series.obj
 
 test_monomial_jobs: unimodular_matrices.obj test_monomial_jobs.obj \
                     convolution_job.obj convolution_jobs.obj \
@@ -878,10 +941,16 @@ clean:
 	del test_unimodular.obj test_unimodular.lib
 	del dbl_monomial_systems.obj test_monomial_systems.obj
 	del dbl2_monomial_systems.obj test2_monomial_systems.obj
+	del dbl4_monomial_systems.obj test4_monomial_systems.obj
+	del dbl8_monomial_systems.obj test8_monomial_systems.obj
 	del test_monomial_systems.exe test_monomial_systems.exp
 	del test_monomial_systems.obj test_monomial_systems.lib
 	del test2_monomial_systems.exe test2_monomial_systems.exp
 	del test2_monomial_systems.obj test2_monomial_systems.lib
+	del test4_monomial_systems.exe test4_monomial_systems.exp
+	del test4_monomial_systems.obj test4_monomial_systems.lib
+	del test8_monomial_systems.exe test8_monomial_systems.exp
+	del test8_monomial_systems.obj test8_monomial_systems.lib
 	del prompt_newton_setup.obj 
 	del dbl_systems_host.obj dbl_systems_kernels.obj
 	del dbl2_systems_host.obj dbl2_systems_kernels.obj
@@ -917,7 +986,7 @@ cleanall:
 	del random_numbers.obj random_series.obj random_monomials.obj
 	del double_double_functions.obj quad_double_functions.obj
 	del octo_double_functions.obj
-	del random2_series.obj
+	del random2_series.obj random4_series.obj random8_series.obj
 	del random2_vectors.obj random4_vectors.obj random8_vectors.obj
 	del dbl_convolutions_host.obj dbl_monomials_host.obj
 	del dbl2_convolutions_host.obj dbl2_monomials_host.obj

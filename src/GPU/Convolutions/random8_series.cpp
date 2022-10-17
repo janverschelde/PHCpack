@@ -91,6 +91,96 @@ void random_dbl8_exponentials
            minxhihilo,minxlohilo,minxhilolo,minxlololo);
 }
 
+void cmplx8_exponential
+ ( int deg,
+   double xrehihihi, double xrelohihi, double xrehilohi, double xrelolohi, 
+   double xrehihilo, double xrelohilo, double xrehilolo, double xrelololo, 
+   double ximhihihi, double ximlohihi, double ximhilohi, double ximlolohi,
+   double ximhihilo, double ximlohilo, double ximhilolo, double ximlololo,
+   double *srehihihi, double *srelohihi, double *srehilohi, double *srelolohi,
+   double *srehihilo, double *srelohilo, double *srehilolo, double *srelololo,
+   double *simhihihi, double *simlohihi, double *simhilohi, double *simlolohi,
+   double *simhihilo, double *simlohilo, double *simhilolo, double *simlololo )
+{
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   srehihihi[0] = 1.0; srelohihi[0] = 0.0;
+   srehilohi[0] = 0.0; srelolohi[0] = 0.0;
+   srehihilo[0] = 0.0; srelohilo[0] = 0.0;
+   srehilolo[0] = 0.0; srelololo[0] = 0.0;
+   simhihihi[0] = 0.0; simlohihi[0] = 0.0;
+   simhilohi[0] = 0.0; simlolohi[0] = 0.0;
+   simhihilo[0] = 0.0; simlohilo[0] = 0.0;
+   simhilolo[0] = 0.0; simlololo[0] = 0.0;
+   srehihihi[1] = xrehihihi; srelohihi[1] = xrelohihi;
+   srehilohi[1] = xrehilohi; srelolohi[1] = xrelolohi;
+   srehihilo[1] = xrehihilo; srelohilo[1] = xrelohilo;
+   srehilolo[1] = xrehilolo; srelololo[1] = xrelololo;
+   simhihihi[1] = ximhihihi; simlohihi[1] = ximlohihi;
+   simhilohi[1] = ximhilohi; simlolohi[1] = ximlolohi;
+   simhihilo[1] = ximhihilo; simlohilo[1] = ximlohilo;
+   simhilolo[1] = ximhilolo; simlololo[1] = ximlololo;
+
+   for(int k=2; k<=deg; k++)
+   {
+      // sre[k] = (sre[k-1]*xre - sim[k-1]*xim)/k;
+      odf_mul(srehihihi[k-1],srelohihi[k-1],srehilohi[k-1],srelolohi[k-1],
+              srehihilo[k-1],srelohilo[k-1],srehilolo[k-1],srelololo[k-1],
+              xrehihihi,     xrelohihi,     xrehilohi,     xrelolohi,
+              xrehihilo,     xrelohilo,     xrehilolo,     xrelololo,
+             &srehihihi[k], &srelohihi[k], &srehilohi[k], &srelolohi[k],
+             &srehihilo[k], &srelohilo[k], &srehilolo[k], &srelololo[k]);
+      odf_mul(simhihihi[k-1],simlohihi[k-1],simhilohi[k-1],simlolohi[k-1],
+              simhihilo[k-1],simlohilo[k-1],simhilolo[k-1],simlololo[k-1],
+              ximhihihi,     ximlohihi,     ximhilohi,     ximlolohi,
+              ximhihilo,     ximlohilo,     ximhilolo,     ximlololo,
+             &acchihihi,    &acclohihi,    &acchilohi,    &acclolohi,
+             &acchihilo,    &acclohilo,    &acchilolo,    &acclololo);
+      odf_minus(&acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                &acchihilo,&acclohilo,&acchilolo,&acclololo);
+      odf_inc(&srehihihi[k],&srelohihi[k],&srehilohi[k],&srelolohi[k],
+              &srehihilo[k],&srelohilo[k],&srehilolo[k],&srelololo[k],
+               acchihihi,    acclohihi,    acchilohi,    acclolohi,
+               acchihilo,    acclohilo,    acchilolo,    acclololo);
+      acchihihi = (double) k;
+                       acclohihi = 0.0; acchilohi = 0.0; acclolohi = 0.0;
+      acchihilo = 0.0; acclohilo = 0.0; acchilolo = 0.0; acclololo = 0.0;
+      odf_div(srehihihi[k], srelohihi[k], srehilohi[k], srelolohi[k],
+              srehihilo[k], srelohilo[k], srehilolo[k], srelololo[k],
+              acchihihi,    acclohihi,    acchilohi,    acclolohi,
+              acchihilo,    acclohilo,    acchilolo,    acclololo,
+             &srehihihi[k],&srelohihi[k],&srehilohi[k],&srelolohi[k],
+             &srehihilo[k],&srelohilo[k],&srehilolo[k],&srelololo[k]);
+      // sim[k] = (sre[k-1]*xim + sim[k-1]*xre)/k;
+      odf_mul(srehihihi[k-1],srelohihi[k-1],srehilohi[k-1],srelolohi[k-1],
+              srehihilo[k-1],srelohilo[k-1],srehilolo[k-1],srelololo[k-1],
+              ximhihihi,     ximlohihi,     ximhilohi,     ximlolohi,
+              ximhihilo,     ximlohilo,     ximhilolo,     ximlololo,
+             &simhihihi[k], &simlohihi[k], &simhilohi[k], &simlolohi[k],
+             &simhihilo[k], &simlohilo[k], &simhilolo[k], &simlololo[k]);
+      odf_mul(simhihihi[k-1],simlohihi[k-1],simhilohi[k-1],simlolohi[k-1],
+              simhihilo[k-1],simlohilo[k-1],simhilolo[k-1],simlololo[k-1],
+              xrehihihi,     xrelohihi,     xrehilohi,     xrelolohi,
+              xrehihilo,     xrelohilo,     xrehilolo,     xrelololo,
+             &acchihihi,    &acclohihi,    &acchilohi,    &acclolohi,
+             &acchihilo,    &acclohilo,    &acchilolo,    &acclololo);
+      odf_inc(&simhihihi[k],&simlohihi[k],&simhilohi[k],&simlolohi[k],
+              &simhihilo[k],&simlohilo[k],&simhilolo[k],&simlololo[k],
+               acchihihi,    acclohihi,    acchilohi,    acclolohi,
+               acchihilo,    acclohilo,    acchilolo,    acclololo);
+      acchihihi = (double) k;
+                       acclohihi = 0.0; acchilohi = 0.0; acclolohi = 0.0;
+      acchihilo = 0.0; acclohilo = 0.0; acchilolo = 0.0; acclololo = 0.0;
+      odf_div(simhihihi[k], simlohihi[k], simhilohi[k], simlolohi[k],
+              simhihilo[k], simlohilo[k], simhilolo[k], simlololo[k],
+              acchihihi,    acclohihi,    acchilohi,    acclolohi,
+              acchihilo,    acclohilo,    acchilolo,    acclololo,
+             &simhihihi[k],&simlohihi[k],&simhilohi[k],&simlolohi[k],
+             &simhihilo[k],&simlohilo[k],&simhilolo[k],&simlololo[k]);
+   }
+}
+
 void cmplx8_exponentials
  ( int deg,
    double xrehihihi, double xrelohihi, double xrehilohi, double xrelolohi,
