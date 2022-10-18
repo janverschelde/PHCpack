@@ -308,6 +308,16 @@ dbl2_newton_method.o:
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
                dbl2_newton_method.cpp
 
+dbl4_newton_method.o:
+	@-echo ">>> compiling dbl4_newton_method ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+               dbl4_newton_method.cpp
+
+dbl8_newton_method.o:
+	@-echo ">>> compiling dbl8_newton_method ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+               dbl8_newton_method.cpp
+
 cmplx_newton_method.o:
 	@-echo ">>> compiling cmplx_newton_method ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
@@ -317,6 +327,16 @@ cmplx2_newton_method.o:
 	@-echo ">>> compiling cmplx2_newton_method ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
                cmplx2_newton_method.cpp
+
+cmplx4_newton_method.o:
+	@-echo ">>> compiling cmplx4_newton_method ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+               cmplx4_newton_method.cpp
+
+cmplx8_newton_method.o:
+	@-echo ">>> compiling cmplx8_newton_method ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+               cmplx8_newton_method.cpp
 
 dbl_newton_testers.o:
 	@-echo ">>> compiling dbl_newton_testers ..."
@@ -623,9 +643,11 @@ test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl_bals_flopcounts.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl4_baqr_kernels.o dbl4_tabs_kernels.o \
+                  dbl4_newton_method.o cmplx4_newton_method.o \
                   dbl4_newton_testers.o test_dbl4_newton.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl4_newton test_dbl4_newton.o dbl4_newton_testers.o \
+                  dbl4_newton_method.o cmplx4_newton_method.o \
                   random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o quad_double_functions.o \
@@ -655,9 +677,11 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl8_baqr_kernels.o dbl8_tabs_kernels.o \
                   dbl8_tail_kernels.o dbl8_bals_kernels.o \
+                  dbl8_newton_method.o cmplx8_newton_method.o \
                   dbl8_newton_testers.o test_dbl8_newton.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl8_newton test_dbl8_newton.o dbl8_newton_testers.o \
+                  dbl8_newton_method.o cmplx8_newton_method.o \
                   random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o quad_double_functions.o \
@@ -691,6 +715,8 @@ clean:
 	/bin/rm -f -r dbl8_bals_kernels.o dbl8_tail_kernels.o
 	/bin/rm -f -r dbl_newton_method.o cmplx_newton_method.o
 	/bin/rm -f -r dbl2_newton_method.o cmplx2_newton_method.o
+	/bin/rm -f -r dbl4_newton_method.o cmplx4_newton_method.o
+	/bin/rm -f -r dbl8_newton_method.o cmplx8_newton_method.o
 	/bin/rm -f -r dbl_newton_testers.o dbl2_newton_testers.o
 	/bin/rm -f -r dbl4_newton_testers.o dbl8_newton_testers.o
 	/bin/rm -f -r test_unimodular.o test_unimodular

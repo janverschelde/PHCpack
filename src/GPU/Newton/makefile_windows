@@ -473,6 +473,22 @@ dbl2_newton_method.obj:
                  /I$(CUDASDK)/include \
                  /Fo: dbl2_newton_method.obj /EHsc
 
+dbl4_newton_method.obj:
+	@-echo ">>> compiling dbl4_newton_method ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl4_newton_method.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_newton_method.obj /EHsc
+
+dbl8_newton_method.obj:
+	@-echo ">>> compiling dbl8_newton_method ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl8_newton_method.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl8_newton_method.obj /EHsc
+
 cmplx_newton_method.obj:
 	@-echo ">>> compiling cmplx_newton_method ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
@@ -488,6 +504,22 @@ cmplx2_newton_method.obj:
                       cmplx2_newton_method.cpp \
                  /I$(CUDASDK)/include \
                  /Fo: cmplx2_newton_method.obj /EHsc
+
+cmplx4_newton_method.obj:
+	@-echo ">>> compiling cmplx4_newton_method ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      cmplx4_newton_method.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: cmplx4_newton_method.obj /EHsc
+
+cmplx8_newton_method.obj:
+	@-echo ">>> compiling cmplx8_newton_method ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      cmplx8_newton_method.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: cmplx8_newton_method.obj /EHsc
 
 dbl_newton_testers.obj:
 	@-echo ">>> compiling dbl_newton_testers ..."
@@ -861,6 +893,7 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
              dbl2_tail_kernels.obj dbl2_bals_kernels.obj
 
 test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
+                  dbl4_newton_method.obj cmplx4_newton_method.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
 		  prompt_newton_setup.obj dbl4_newton_testers.obj \
                   double_double_functions.obj quad_double_functions.obj \
@@ -877,6 +910,7 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
                   dbl4_tail_kernels.obj dbl4_bals_kernels.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl4_newton.exe test_dbl4_newton.obj \
+             dbl4_newton_method.obj cmplx4_newton_method.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              double_double_functions.obj quad_double_functions.obj \
@@ -894,6 +928,7 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
              dbl4_tail_kernels.obj dbl4_bals_kernels.obj
 
 test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
+                  dbl8_newton_method.obj cmplx8_newton_method.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
                   prompt_newton_setup.obj \
 		  double_double_functions.obj quad_double_functions.obj \
@@ -912,6 +947,7 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
                   dbl8_tail_kernels.obj dbl8_bals_kernels.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl8_newton.exe test_dbl8_newton.obj \
+             dbl8_newton_method.obj cmplx8_newton_method.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              double_double_functions.obj quad_double_functions.obj \
@@ -958,6 +994,8 @@ clean:
 	del dbl8_systems_host.obj dbl8_systems_kernels.obj
 	del dbl_newton_method.obj cmplx_newton_method.obj
 	del dbl2_newton_method.obj cmplx2_newton_method.obj
+	del dbl4_newton_method.obj cmplx4_newton_method.obj
+	del dbl8_newton_method.obj cmplx8_newton_method.obj
 	del dbl_newton_testers.obj dbl2_newton_testers.obj
 	del dbl4_newton_testers.obj dbl8_newton_testers.obj
 	del convolution_job.obj convolution_jobs.obj
