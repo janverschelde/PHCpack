@@ -470,7 +470,15 @@ void dbl8_linearize_evaldiff_output
  *             doubles, the leading coefficient is the Jacobian matrix. */
 
 void cmplx8_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx, double damper,
+ ( int dim, int degp1, int *nvr, int **idx,
+   double **mbrehihihi, double **mbrelohihi,
+   double **mbrehilohi, double **mbrelolohi,
+   double **mbrehihilo, double **mbrelohilo,
+   double **mbrehilolo, double **mbrelololo,
+   double **mbimhihihi, double **mbimlohihi,
+   double **mbimhilohi, double **mbimlolohi,
+   double **mbimhihilo, double **mbimlohilo,
+   double **mbimhilolo, double **mbimlololo, double damper,
    double ***outputrehihihi, double ***outputrelohihi,
    double ***outputrehilohi, double ***outputrelolohi,
    double ***outputrehihilo, double ***outputrelohilo,
@@ -513,6 +521,22 @@ void cmplx8_linearize_evaldiff_output
  *   degp1     degree plus one;
  *   nvr       number of variables that occur in each monomial;
  *   idx       for each monomials the indices of each variable;
+ *   mbrehihihi are the highest real parts of the right hand side series;
+ *   mbrelohihi are the 2nd highest real parts of the right hand side series;
+ *   mbrehilohi are the 3rd highest real parts of the right hand side series;
+ *   mbrelolohi are the 4th highest real parts of the right hand side series;
+ *   mbrehihilo are the 4th lowest real parts of the right hand side series;
+ *   mbrelohilo are the 3rd lowest real parts of the right hand side series;
+ *   mbrehilolo are the 2nd lowest real parts of the right hand side series;
+ *   mbrelololo are the lowest real parts of the right hand side series;
+ *   mbimhihihi are the highest imaginary parts of the right hand side series;
+ *   mbimlohihi are the 2nd highest imag parts of the right hand side series;
+ *   mbimhilohi are the 3rd highest imag parts of the right hand side series;
+ *   mbimlolohi are the 4th highest imag parts of the right hand side series;
+ *   mbimhihilo are the 4th lowest imag parts of the right hand side series;
+ *   mbimlohilo are the 3rd lowest imag parts of the right hand side series;
+ *   mbimhilolo are the 2nd lowest imag parts of the right hand side series;
+ *   mbimlololo are the lowest imaginary parts of the right hand side series;
  *   damper    the positive damping coefficient for t,
  *             if 1.0, then no damping, if > 1.0, then overdamping;
  *   outputrehihihi are the highest doubles of the real parts of the output

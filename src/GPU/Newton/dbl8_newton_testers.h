@@ -19,6 +19,14 @@ void dbl8_start_series_vector
 
 void cmplx8_start_series_vector
  ( int dim, int deg,
+   double *r0rehihihi, double *r0relohihi,
+   double *r0rehilohi, double *r0relolohi,
+   double *r0rehihilo, double *r0relohilo,
+   double *r0rehilolo, double *r0relololo,
+   double *r0imhihihi, double *r0imlohihi,
+   double *r0imhilohi, double *r0imlolohi,
+   double *r0imhihilo, double *r0imlohilo,
+   double *r0imhilolo, double *r0imlololo,
    double **cffrehihihi, double **cffrelohihi,
    double **cffrehilohi, double **cffrelolohi,
    double **cffrehihilo, double **cffrelohilo,
@@ -30,7 +38,9 @@ void cmplx8_start_series_vector
 /*
  * DESCRIPTION :
  *   Given space allocated in the coefficient arrays,
- *   sets the coefficients of the start series. */
+ *   sets the coefficients of the start series.
+ *   The constant term of each series is set the (r0re, r0im),
+ *   with some small error. */
 
 void cmplx8_unit_series_vector
  ( int dim, int deg,

@@ -16,6 +16,8 @@ void dbl4_start_series_vector
 
 void cmplx4_start_series_vector
  ( int dim, int deg,
+   double *r0rehihi, double *r0relohi, double *r0rehilo, double *r0relolo,
+   double *r0imhihi, double *r0imlohi, double *r0imhilo, double *r0imlolo,
    double **cffrehihi, double **cffrelohi,
    double **cffrehilo, double **cffrelolo,
    double **cffimhihi, double **cffimlohi,
@@ -23,7 +25,9 @@ void cmplx4_start_series_vector
 /*
  * DESCRIPTION :
  *   Given space allocated in the coefficient arrays,
- *   sets the coefficients of the start series. */
+ *   sets the coefficients of the start series.
+ *   The constant term of each series is set the (r0re, r0im),
+ *   with some small error. */
 
 void dbl4_unit_series_vector
  ( int dim, int deg,

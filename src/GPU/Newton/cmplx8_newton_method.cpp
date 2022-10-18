@@ -13,6 +13,7 @@
 #include "dbl8_convolutions_host.h"
 #include "dbl8_monomials_host.h"
 #include "dbl8_factorizations.h"
+#include "dbl8_monomial_systems.h"
 #include "dbl8_bals_host.h"
 #include "dbl8_bals_kernels.h"
 #include "dbl8_tail_kernels.h"
@@ -24,7 +25,15 @@ using namespace std;
 
 void cmplx8_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, double dpr,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **mbrehihihi, double **mbrelohihi,
+   double **mbrehilohi, double **mbrelolohi,
+   double **mbrehihilo, double **mbrelohilo,
+   double **mbrehilolo, double **mbrelololo,
+   double **mbimhihihi, double **mbimlohihi,
+   double **mbimhilohi, double **mbimlolohi,
+   double **mbimhihilo, double **mbimlohilo,
+   double **mbimhilolo, double **mbimlololo, double dpr,
    double **cffrehihihi, double **cffrelohihi,
    double **cffrehilohi, double **cffrelolohi,
    double **cffrehihilo, double **cffrelohilo,
@@ -329,7 +338,11 @@ void cmplx8_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       cmplx8_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,dpr,
+         (dim,degp1,nvr,idx,
+          mbrehihihi,mbrelohihi,mbrehilohi,mbrelolohi,
+          mbrehihilo,mbrelohilo,mbrehilolo,mbrelololo,
+          mbimhihihi,mbimlohihi,mbimhilohi,mbimlolohi,
+          mbimhihilo,mbimlohilo,mbimhilolo,mbimlololo,dpr,
           outputrehihihi_h,outputrelohihi_h,outputrehilohi_h,outputrelolohi_h,
           outputrehihilo_h,outputrelohilo_h,outputrehilolo_h,outputrelololo_h,
           outputimhihihi_h,outputimlohihi_h,outputimhilohi_h,outputimlolohi_h,
@@ -351,7 +364,11 @@ void cmplx8_newton_qrstep
    if((mode == 0) || (mode == 2))
    {
       cmplx8_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,dpr,
+         (dim,degp1,nvr,idx,
+          mbrehihihi,mbrelohihi,mbrehilohi,mbrelolohi,
+          mbrehihilo,mbrelohilo,mbrehilolo,mbrelololo,
+          mbimhihihi,mbimlohihi,mbimhilohi,mbimlolohi,
+          mbimhihilo,mbimlohilo,mbimhilolo,mbimlololo,dpr,
           outputrehihihi_d,outputrelohihi_d,outputrehilohi_d,outputrelolohi_d,
           outputrehihilo_d,outputrelohilo_d,outputrehilolo_d,outputrelololo_d,
           outputimhihihi_d,outputimlohihi_d,outputimhilohi_d,outputimlolohi_d,
@@ -709,7 +726,7 @@ void cmplx8_newton_qrstep
 
 int test_dbl8_complex_newton
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
@@ -1560,9 +1577,170 @@ int test_dbl8_complex_newton
 /*
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
-   // Define the initial input, a vector of ones.
+   // Define the test solution and the start series.
+
+   double **solrehihihi = new double*[dim];
+   double **solrelohihi = new double*[dim];
+   double **solrehilohi = new double*[dim];
+   double **solrelolohi = new double*[dim];
+   double **solrehihilo = new double*[dim];
+   double **solrelohilo = new double*[dim];
+   double **solrehilolo = new double*[dim];
+   double **solrelololo = new double*[dim];
+   double **solimhihihi = new double*[dim];
+   double **solimlohihi = new double*[dim];
+   double **solimhilohi = new double*[dim];
+   double **solimlolohi = new double*[dim];
+   double **solimhihilo = new double*[dim];
+   double **solimlohilo = new double*[dim];
+   double **solimhilolo = new double*[dim];
+   double **solimlololo = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      solrehihihi[i] = new double[degp1];
+      solrelohihi[i] = new double[degp1];
+      solrehilohi[i] = new double[degp1];
+      solrelolohi[i] = new double[degp1];
+      solrehihilo[i] = new double[degp1];
+      solrelohilo[i] = new double[degp1];
+      solrehilolo[i] = new double[degp1];
+      solrelololo[i] = new double[degp1];
+      solimhihihi[i] = new double[degp1];
+      solimlohihi[i] = new double[degp1];
+      solimhilohi[i] = new double[degp1];
+      solimlolohi[i] = new double[degp1];
+      solimhihilo[i] = new double[degp1];
+      solimlohilo[i] = new double[degp1];
+      solimhilolo[i] = new double[degp1];
+      solimlololo[i] = new double[degp1];
+   }
+   make_complex8_exponentials
+      (dim,deg,solrehihihi,solrelohihi,solrehilohi,solrelolohi,
+               solrehihilo,solrelohilo,solrehilolo,solrelololo,
+               solimhihihi,solimlohihi,solimhilohi,solimlolohi,
+               solimhihilo,solimlohilo,solimhilolo,solimlololo);
+
+   // compute the right hand sides via evaluation
+
+   double **mbrhsrehihihi = new double*[dim];
+   double **mbrhsrelohihi = new double*[dim];
+   double **mbrhsrehilohi = new double*[dim];
+   double **mbrhsrelolohi = new double*[dim];
+   double **mbrhsrehihilo = new double*[dim];
+   double **mbrhsrelohilo = new double*[dim];
+   double **mbrhsrehilolo = new double*[dim];
+   double **mbrhsrelololo = new double*[dim];
+   double **mbrhsimhihihi = new double*[dim];
+   double **mbrhsimlohihi = new double*[dim];
+   double **mbrhsimhilohi = new double*[dim];
+   double **mbrhsimlolohi = new double*[dim];
+   double **mbrhsimhihilo = new double*[dim];
+   double **mbrhsimlohilo = new double*[dim];
+   double **mbrhsimhilolo = new double*[dim];
+   double **mbrhsimlololo = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      mbrhsrehihihi[i] = new double[degp1];
+      mbrhsrelohihi[i] = new double[degp1];
+      mbrhsrehilohi[i] = new double[degp1];
+      mbrhsrelolohi[i] = new double[degp1];
+      mbrhsrehihilo[i] = new double[degp1];
+      mbrhsrelohilo[i] = new double[degp1];
+      mbrhsrehilolo[i] = new double[degp1];
+      mbrhsrelololo[i] = new double[degp1];
+      mbrhsimhihihi[i] = new double[degp1];
+      mbrhsimlohihi[i] = new double[degp1];
+      mbrhsimhilohi[i] = new double[degp1];
+      mbrhsimlolohi[i] = new double[degp1];
+      mbrhsimhihilo[i] = new double[degp1];
+      mbrhsimlohilo[i] = new double[degp1];
+      mbrhsimhilolo[i] = new double[degp1];
+      mbrhsimlololo[i] = new double[degp1];
+
+      mbrhsrehihihi[i][0] = 1.0;     // initialize product to one
+      mbrhsrelohihi[i][0] = 0.0;
+      mbrhsrehilohi[i][0] = 0.0; 
+      mbrhsrelolohi[i][0] = 0.0;
+      mbrhsrehihilo[i][0] = 0.0; 
+      mbrhsrelohilo[i][0] = 0.0;
+      mbrhsrehilolo[i][0] = 0.0; 
+      mbrhsrelololo[i][0] = 0.0;
+      mbrhsimhihihi[i][0] = 0.0;
+      mbrhsimlohihi[i][0] = 0.0;
+      mbrhsimhilohi[i][0] = 0.0;
+      mbrhsimlolohi[i][0] = 0.0;
+      mbrhsimhihilo[i][0] = 0.0;
+      mbrhsimlohilo[i][0] = 0.0;
+      mbrhsimhilolo[i][0] = 0.0;
+      mbrhsimlololo[i][0] = 0.0;
+
+      for(int k=1; k<degp1; k++)
+      {
+         mbrhsrehihihi[i][k] = 0.0; mbrhsrelohihi[i][k] = 0.0;
+         mbrhsrehilohi[i][k] = 0.0; mbrhsrelolohi[i][k] = 0.0;
+         mbrhsrehihilo[i][k] = 0.0; mbrhsrelohilo[i][k] = 0.0;
+         mbrhsrehilolo[i][k] = 0.0; mbrhsrelololo[i][k] = 0.0;
+         mbrhsimhihihi[i][k] = 0.0; mbrhsimlohihi[i][k] = 0.0;
+         mbrhsimhilohi[i][k] = 0.0; mbrhsimlolohi[i][k] = 0.0;
+         mbrhsimhihilo[i][k] = 0.0; mbrhsimlohilo[i][k] = 0.0;
+         mbrhsimhilolo[i][k] = 0.0; mbrhsimlololo[i][k] = 0.0;
+      }
+   }
+   evaluate_complex8_monomials
+      (dim,deg,rowsA,
+       solrehihihi,solrelohihi,solrehilohi,solrelolohi,
+       solrehihilo,solrelohilo,solrehilolo,solrelololo,
+       solimhihihi,solimlohihi,solimhilohi,solimlolohi,
+       solimhihilo,solimlohilo,solimhilolo,solimlololo,
+       mbrhsrehihihi,mbrhsrelohihi,mbrhsrehilohi,mbrhsrelolohi,
+       mbrhsrehihilo,mbrhsrelohilo,mbrhsrehilolo,mbrhsrelololo,
+       mbrhsimhihihi,mbrhsimlohihi,mbrhsimhilohi,mbrhsimlolohi,
+       mbrhsimhihilo,mbrhsimlohilo,mbrhsimhilolo,mbrhsimlololo);
+   
+   double *start0rehihihi = new double[dim];
+   double *start0relohihi = new double[dim];
+   double *start0rehilohi = new double[dim];
+   double *start0relolohi = new double[dim];
+   double *start0rehihilo = new double[dim];
+   double *start0relohilo = new double[dim];
+   double *start0rehilolo = new double[dim];
+   double *start0relololo = new double[dim];
+   double *start0imhihihi = new double[dim];
+   double *start0imlohihi = new double[dim];
+   double *start0imhilohi = new double[dim];
+   double *start0imlolohi = new double[dim];
+   double *start0imhihilo = new double[dim];
+   double *start0imlohilo = new double[dim];
+   double *start0imhilolo = new double[dim];
+   double *start0imlololo = new double[dim];
+
+   for(int i=0; i<dim; i++)  // compute start vector
+   {
+      start0rehihihi[i] = solrehihihi[i][0];
+      start0relohihi[i] = solrelohihi[i][0];
+      start0rehilohi[i] = solrehilohi[i][0];
+      start0relolohi[i] = solrelolohi[i][0];
+      start0rehihilo[i] = solrehihilo[i][0];
+      start0relohilo[i] = solrelohilo[i][0];
+      start0rehilolo[i] = solrehilolo[i][0];
+      start0relololo[i] = solrelololo[i][0];
+      start0imhihihi[i] = solimhihihi[i][0]; 
+      start0imlohihi[i] = solimlohihi[i][0]; 
+      start0imhilohi[i] = solimhilohi[i][0]; 
+      start0imlolohi[i] = solimlolohi[i][0]; 
+      start0imhihilo[i] = solimhihilo[i][0]; 
+      start0imlohilo[i] = solimlohilo[i][0]; 
+      start0imhilolo[i] = solimhilolo[i][0]; 
+      start0imlololo[i] = solimlololo[i][0]; 
+   }
    cmplx8_start_series_vector
       (dim,deg,
+       start0rehihihi,start0relohihi,start0rehilohi,start0relolohi,
+       start0rehihilo,start0relohilo,start0rehilolo,start0relololo,
+       start0imhihihi,start0imlohihi,start0imhilohi,start0imlolohi,
+       start0imhihilo,start0imlohilo,start0imhilolo,start0imlololo,
        inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
        inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
        inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
@@ -1620,7 +1798,11 @@ int test_dbl8_complex_newton
          cout << "*** running Newton step " << step << " ***" << endl;
 
       cmplx8_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,
+          mbrhsrehihihi,mbrhsrelohihi,mbrhsrehilohi,mbrhsrelolohi,
+          mbrhsrehihilo,mbrhsrelohilo,mbrhsrehilolo,mbrhsrelololo,
+          mbrhsimhihihi,mbrhsimlohihi,mbrhsimhilohi,mbrhsimlolohi,
+          mbrhsimhihilo,mbrhsimlohilo,mbrhsimhilolo,mbrhsimlololo,dpr,
           cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
           cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
           cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
@@ -1718,6 +1900,8 @@ int test_dbl8_complex_newton
    }
    if(vrblvl < 2)
    {
+      double errsum = 0.0;
+
       cout << scientific << setprecision(16); // just in case vrblvl == 0
       cout << "The solution series : " << endl;
       for(int j=0; j<degp1; j++)
@@ -1725,44 +1909,98 @@ int test_dbl8_complex_newton
          cout << "coefficient of degree " << j << " :" << endl;
          for(int i=0; i<dim; i++)
          {
+            cout << "sol[" << i << "][" << j << "] : "
+                           << solrehihihi[i][j] << "  "
+                           << solrelohihi[i][j] << endl << "  "
+                           << solrehilohi[i][j] << "  "
+                           << solrelolohi[i][j] << endl << "  "
+                           << solrehihilo[i][j] << "  "
+                           << solrelohilo[i][j] << endl << "  "
+                           << solrehilolo[i][j] << "  "
+                           << solrelololo[i][j] << endl << "  "
+                           << solimhihihi[i][j] << "  "
+                           << solimlohihi[i][j] << endl << "  "
+                           << solimhilohi[i][j] << "  "
+                           << solimlolohi[i][j] << endl << "  "
+                           << solimhihilo[i][j] << "  "
+                           << solimlohilo[i][j] << endl << "  "
+                           << solimhilolo[i][j] << "  "
+                           << solimlololo[i][j] << endl;
             if((mode == 0) || (mode == 2))
-              cout << "x_d[" << i << "][" << j << "] : "
-                             << inputrehihihi_d[i][j] << "  "
-                             << inputrelohihi_d[i][j] << endl << "  "
-                             << inputrehilohi_d[i][j] << "  "
-                             << inputrelolohi_d[i][j] << endl << "  "
-                             << inputrehihilo_d[i][j] << "  "
-                             << inputrelohilo_d[i][j] << endl << "  "
-                             << inputrehilolo_d[i][j] << "  "
-                             << inputrelololo_d[i][j] << endl << "  "
-                             << inputimhihihi_d[i][j] << "  "
-                             << inputimlohihi_d[i][j] << endl << "  "
-                             << inputimhilohi_d[i][j] << "  "
-                             << inputimlolohi_d[i][j] << endl << "  "
-                             << inputimhihilo_d[i][j] << "  "
-                             << inputimlohilo_d[i][j] << endl << "  "
-                             << inputimhilolo_d[i][j] << "  "
-                             << inputimlololo_d[i][j] << endl;
+            {
+               cout << "x_d[" << i << "][" << j << "] : "
+                              << inputrehihihi_d[i][j] << "  "
+                              << inputrelohihi_d[i][j] << endl << "  "
+                              << inputrehilohi_d[i][j] << "  "
+                              << inputrelolohi_d[i][j] << endl << "  "
+                              << inputrehihilo_d[i][j] << "  "
+                              << inputrelohilo_d[i][j] << endl << "  "
+                              << inputrehilolo_d[i][j] << "  "
+                              << inputrelololo_d[i][j] << endl << "  "
+                              << inputimhihihi_d[i][j] << "  "
+                              << inputimlohihi_d[i][j] << endl << "  "
+                              << inputimhilohi_d[i][j] << "  "
+                              << inputimlolohi_d[i][j] << endl << "  "
+                              << inputimhihilo_d[i][j] << "  "
+                              << inputimlohilo_d[i][j] << endl << "  "
+                              << inputimhilolo_d[i][j] << "  "
+                              << inputimlololo_d[i][j] << endl;
+               errsum += abs(solrehihihi[i][j] - inputrehihihi_d[i][j])
+                       + abs(solrelohihi[i][j] - inputrelohihi_d[i][j])
+                       + abs(solrehilohi[i][j] - inputrehilohi_d[i][j])
+                       + abs(solrelolohi[i][j] - inputrelolohi_d[i][j])
+                       + abs(solrehihilo[i][j] - inputrehihilo_d[i][j])
+                       + abs(solrelohilo[i][j] - inputrelohilo_d[i][j])
+                       + abs(solrehilolo[i][j] - inputrehilolo_d[i][j])
+                       + abs(solrelololo[i][j] - inputrelololo_d[i][j])
+                       + abs(solimhihihi[i][j] - inputimhihihi_d[i][j])
+                       + abs(solimlohihi[i][j] - inputimlohihi_d[i][j])
+                       + abs(solimhilohi[i][j] - inputimhilohi_d[i][j])
+                       + abs(solimlolohi[i][j] - inputimlolohi_d[i][j])
+                       + abs(solimhihilo[i][j] - inputimhihilo_d[i][j])
+                       + abs(solimlohilo[i][j] - inputimlohilo_d[i][j])
+                       + abs(solimhilolo[i][j] - inputimhilolo_d[i][j])
+                       + abs(solimlololo[i][j] - inputimlololo_d[i][j]);
+            }
             if((mode == 1) || (mode == 2))
-              cout << "x_h[" << i << "][" << j << "] : "
-                             << inputrehihihi_h[i][j] << "  "
-                             << inputrelohihi_h[i][j] << endl << "  "
-                             << inputrehilohi_h[i][j] << "  "
-                             << inputrelolohi_h[i][j] << endl << "  "
-                             << inputrehihilo_h[i][j] << "  "
-                             << inputrelohilo_h[i][j] << endl << "  "
-                             << inputrehilolo_h[i][j] << "  "
-                             << inputrelololo_h[i][j] << endl << "  "
-                             << inputimhihihi_h[i][j] << "  "
-                             << inputimlohihi_h[i][j] << endl << "  "
-                             << inputimhilohi_h[i][j] << "  "
-                             << inputimlolohi_h[i][j] << endl << "  "
-                             << inputimhihilo_h[i][j] << "  "
-                             << inputimlohilo_h[i][j] << endl << "  "
-                             << inputimhilolo_h[i][j] << "  "
-                             << inputimlololo_h[i][j] << endl;
+            {
+               cout << "x_h[" << i << "][" << j << "] : "
+                              << inputrehihihi_h[i][j] << "  "
+                              << inputrelohihi_h[i][j] << endl << "  "
+                              << inputrehilohi_h[i][j] << "  "
+                              << inputrelolohi_h[i][j] << endl << "  "
+                              << inputrehihilo_h[i][j] << "  "
+                              << inputrelohilo_h[i][j] << endl << "  "
+                              << inputrehilolo_h[i][j] << "  "
+                              << inputrelololo_h[i][j] << endl << "  "
+                              << inputimhihihi_h[i][j] << "  "
+                              << inputimlohihi_h[i][j] << endl << "  "
+                              << inputimhilohi_h[i][j] << "  "
+                              << inputimlolohi_h[i][j] << endl << "  "
+                              << inputimhihilo_h[i][j] << "  "
+                              << inputimlohilo_h[i][j] << endl << "  "
+                              << inputimhilolo_h[i][j] << "  "
+                              << inputimlololo_h[i][j] << endl;
+               errsum += abs(solrehihihi[i][j] - inputrehihihi_h[i][j])
+                       + abs(solrelohihi[i][j] - inputrelohihi_h[i][j])
+                       + abs(solrehilohi[i][j] - inputrehilohi_h[i][j])
+                       + abs(solrelolohi[i][j] - inputrelolohi_h[i][j])
+                       + abs(solrehihilo[i][j] - inputrehihilo_h[i][j])
+                       + abs(solrelohilo[i][j] - inputrelohilo_h[i][j])
+                       + abs(solrehilolo[i][j] - inputrehilolo_h[i][j])
+                       + abs(solrelololo[i][j] - inputrelololo_h[i][j])
+                       + abs(solimhihihi[i][j] - inputimhihihi_h[i][j])
+                       + abs(solimlohihi[i][j] - inputimlohihi_h[i][j])
+                       + abs(solimhilohi[i][j] - inputimhilohi_h[i][j])
+                       + abs(solimlolohi[i][j] - inputimlolohi_h[i][j])
+                       + abs(solimhihilo[i][j] - inputimhihilo_h[i][j])
+                       + abs(solimlohilo[i][j] - inputimlohilo_h[i][j])
+                       + abs(solimhilolo[i][j] - inputimhilolo_h[i][j])
+                       + abs(solimlololo[i][j] - inputimlololo_h[i][j]);
+            }
          }
       }
+      cout << "error : " << errsum << endl;
    }
    return 0;
 }

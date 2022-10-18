@@ -895,6 +895,8 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
 test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
                   dbl4_newton_method.obj cmplx4_newton_method.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
+		  random4_vectors.obj random4_series.obj \
+                  dbl4_monomial_systems.obj \
 		  prompt_newton_setup.obj dbl4_newton_testers.obj \
                   double_double_functions.obj quad_double_functions.obj \
                   dbl4_convolutions_host.obj dbl4_monomials_host.obj \
@@ -913,6 +915,7 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
              dbl4_newton_method.obj cmplx4_newton_method.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
+             random4_vectors.obj random4_series.obj dbl4_monomial_systems.obj \
              double_double_functions.obj quad_double_functions.obj \
 	     dbl4_newton_testers.obj \
 	     dbl4_convolutions_host.obj dbl4_monomials_host.obj \
@@ -930,7 +933,8 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
 test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
                   dbl8_newton_method.obj cmplx8_newton_method.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
-                  prompt_newton_setup.obj \
+                  random8_vectors.obj random8_series.obj \
+                  dbl8_monomial_systems.obj prompt_newton_setup.obj \
 		  double_double_functions.obj quad_double_functions.obj \
 		  octo_double_functions.obj dbl8_newton_testers.obj \
                   dbl8_convolutions_host.obj dbl8_monomials_host.obj \
@@ -950,6 +954,8 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
              dbl8_newton_method.obj cmplx8_newton_method.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
+             random8_vectors.obj random8_series.obj \
+             dbl8_monomial_systems.obj \
              double_double_functions.obj quad_double_functions.obj \
 	     octo_double_functions.obj dbl8_newton_testers.obj \
 	     dbl8_convolutions_host.obj dbl8_monomials_host.obj \

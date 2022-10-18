@@ -69,8 +69,8 @@ void cmplx2_newton_qrstep
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
- *   mbrehi    high real parts of the right hand side vector of series
- *   mbrelo    low real parts of the right hand side vector of series
+ *   mbrehi    high real parts of the right hand side vector of series;
+ *   mbrelo    low real parts of the right hand side vector of series;
  *   mbimhi    high imaginary parts of the right hand side vector of series;
  *   mbimlo    low imaginary parts of the right hand side vector of series;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];

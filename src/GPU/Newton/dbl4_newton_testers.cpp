@@ -44,6 +44,8 @@ void dbl4_start_series_vector
 
 void cmplx4_start_series_vector
  ( int dim, int deg,
+   double *r0rehihi, double *r0relohi, double *r0rehilo, double *r0relolo,
+   double *r0imhihi, double *r0imlohi, double *r0imhilo, double *r0imlolo,
    double **cffrehihi, double **cffrelohi,
    double **cffrehilo, double **cffrelolo,
    double **cffimhihi, double **cffimlohi,
@@ -51,10 +53,19 @@ void cmplx4_start_series_vector
 {
    for(int i=0; i<dim; i++)
    {
-      cffrehihi[i][0] = 1.00001; cffrelohi[i][0] = 0.0;
-      cffrehilo[i][0] = 0.0; cffrelolo[i][0] = 0.0;
-      cffimhihi[i][0] = 0.00001; cffimlohi[i][0] = 0.0;
-      cffimhilo[i][0] = 0.0; cffimlolo[i][0] = 0.0;
+      cffrehihi[i][0] = r0rehihi[i];
+      cffrelohi[i][0] = r0relohi[i];
+      cffrehilo[i][0] = r0rehilo[i];
+      cffrelolo[i][0] = r0relolo[i];
+      qdf_inc(&cffrehihi[i][0],&cffrelohi[i][0],
+              &cffrehilo[i][0],&cffrelolo[i][0],0.00001,0.0,0.0,0.0);
+
+      cffimhihi[i][0] = r0imhihi[i];
+      cffimlohi[i][0] = r0imlohi[i];
+      cffimhilo[i][0] = r0imhilo[i];
+      cffimlolo[i][0] = r0imlolo[i];
+      qdf_inc(&cffimhihi[i][0],&cffimlohi[i][0],
+              &cffimhilo[i][0],&cffimlolo[i][0],0.00001,0.0,0.0,0.0);
 
       for(int j=1; j<=deg; j++)
       {

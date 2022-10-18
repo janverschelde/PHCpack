@@ -565,7 +565,7 @@ int test_dbl2_complex_newton
 /*
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
-   // Define the initial input, a vector of ones.
+   // Define the test solution and the start series.
 
    double **solrehi = new double*[dim];
    double **solrelo = new double*[dim];
@@ -627,15 +627,6 @@ int test_dbl2_complex_newton
    cmplx2_start_series_vector
       (dim,deg,start0rehi,start0relo,start0imhi,start0imlo,
        inputrehi_h,inputrelo_h,inputimhi_h,inputimlo_h);
-
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<degp1; j++)
-      {
-         inputrehi_d[i][j] = inputrehi_h[i][j];
-         inputrelo_d[i][j] = inputrelo_h[i][j];
-         inputimhi_d[i][j] = inputimhi_h[i][j];
-         inputimlo_d[i][j] = inputimlo_h[i][j];
-      }
 
    for(int i=0; i<dim; i++)
       for(int j=0; j<degp1; j++)

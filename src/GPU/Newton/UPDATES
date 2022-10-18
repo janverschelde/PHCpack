@@ -1,3 +1,10 @@
+Tue 18 Oct 2022 : edits in cmplx2_newton_method, dbl2_systems_host.cpp
+  and dbl_systems_host.cpp have improved complex linearizers.
+  Applied prescribed solution tester in {cmplx4, cmplx8}_newton_method,
+  using rhs in linearization in {dbl4, dbl8}_systems_host, updated
+  {dbl4, dbl8}_newton_testers, test_{dbl4, dbl8}_newton.cpp,
+  and the makefile_{unix, windows}.
+
 Mon 17 Oct 2022 : new {dbl4,dbl8}_monomial_systems and corresponding
   {test4,test8}_monomial_systems, updated makefiles.
   Made some edits in dbl2_monomial_systems.

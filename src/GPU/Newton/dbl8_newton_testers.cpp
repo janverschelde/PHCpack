@@ -47,6 +47,14 @@ void dbl8_start_series_vector
 
 void cmplx8_start_series_vector
  ( int dim, int deg,
+   double *r0rehihihi, double *r0relohihi,
+   double *r0rehilohi, double *r0relolohi,
+   double *r0rehihilo, double *r0relohilo,
+   double *r0rehilolo, double *r0relololo,
+   double *r0imhihihi, double *r0imlohihi,
+   double *r0imhilohi, double *r0imlolohi,
+   double *r0imhihilo, double *r0imlohilo,
+   double *r0imhilolo, double *r0imlololo,
    double **cffrehihihi, double **cffrelohihi,
    double **cffrehilohi, double **cffrelolohi,
    double **cffrehihilo, double **cffrelohilo,
@@ -58,14 +66,33 @@ void cmplx8_start_series_vector
 {
    for(int i=0; i<dim; i++)
    {
-      cffrehihihi[i][0] = 1.00001; cffrelohihi[i][0] = 0.0;
-      cffrehilohi[i][0] = 0.0; cffrelolohi[i][0] = 0.0;
-      cffrehihilo[i][0] = 0.0; cffrelohilo[i][0] = 0.0;
-      cffrehilolo[i][0] = 0.0; cffrelololo[i][0] = 0.0;
-      cffimhihihi[i][0] = 0.00001; cffimlohihi[i][0] = 0.0;
-      cffimhilohi[i][0] = 0.0; cffimlolohi[i][0] = 0.0;
-      cffimhihilo[i][0] = 0.0; cffimlohilo[i][0] = 0.0;
-      cffimhilolo[i][0] = 0.0; cffimlololo[i][0] = 0.0;
+      cffrehihihi[i][0] = r0rehihihi[i];
+      cffrelohihi[i][0] = r0relohihi[i];
+      cffrehilohi[i][0] = r0rehilohi[i];
+      cffrelolohi[i][0] = r0relolohi[i];
+      cffrehihilo[i][0] = r0rehihilo[i];
+      cffrelohilo[i][0] = r0relohilo[i];
+      cffrehilolo[i][0] = r0rehilolo[i];
+      cffrelololo[i][0] = r0relololo[i];
+      odf_inc(&cffrehihihi[i][0],&cffrelohihi[i][0],
+              &cffrehilohi[i][0],&cffrelolohi[i][0],
+              &cffrehihilo[i][0],&cffrelohilo[i][0],
+              &cffrehilolo[i][0],&cffrelololo[i][0],
+              0.00001,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+
+      cffimhihihi[i][0] = r0imhihihi[i];
+      cffimlohihi[i][0] = r0imlohihi[i];
+      cffimhilohi[i][0] = r0imhilohi[i];
+      cffimlolohi[i][0] = r0imlolohi[i];
+      cffimhihilo[i][0] = r0imhihilo[i];
+      cffimlohilo[i][0] = r0imlohilo[i];
+      cffimhilolo[i][0] = r0imhilolo[i];
+      cffimlololo[i][0] = r0imlololo[i];
+      odf_inc(&cffimhihihi[i][0],&cffimlohihi[i][0],
+              &cffimhilohi[i][0],&cffimlolohi[i][0],
+              &cffimhihilo[i][0],&cffimlohilo[i][0],
+              &cffimhilolo[i][0],&cffimlololo[i][0],
+              0.00001,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
 
       for(int j=1; j<=deg; j++)
       {

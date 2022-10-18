@@ -275,20 +275,13 @@ void cmplx_linearize_evaldiff_output
     * in the computation of the rhs of the linear system.
     */
 
-   for(int j=0; j<dim; j++)
-   {
-      rhsre[0][j] = -(funvalre[j][0] - mbre[j][0]);
-      rhsim[0][j] = -(funvalim[j][0] - mbim[j][0]);
-   }
-   if(degp1 > 1)
-   {
-      for(int i=1; i<degp1; i++)
-         for(int j=0; j<dim; j++)
-         {
-            rhsre[i][j] = -(funvalre[j][i] - mbre[j][i]);
-            rhsim[i][j] = -(funvalim[j][i] - mbim[j][i]);
-         }
-   }
+   for(int i=0; i<degp1; i++)
+      for(int j=0; j<dim; j++)
+      {
+         rhsre[i][j] = -(funvalre[j][i] - mbre[j][i]);
+         rhsim[i][j] = -(funvalim[j][i] - mbim[j][i]);
+      }
+
    if(vrblvl > 1)
    {
       cout << "The right hand side series :" << endl;

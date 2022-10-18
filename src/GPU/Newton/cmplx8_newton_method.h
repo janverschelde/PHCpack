@@ -6,7 +6,15 @@
 
 void cmplx8_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, double dpr,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **mbrehihihi, double **mbrelohihi,
+   double **mbrehilohi, double **mbrelolohi,
+   double **mbrehihilo, double **mbrelohilo,
+   double **mbrehilolo, double **mbrelololo,
+   double **mbimhihihi, double **mbimlohihi,
+   double **mbimhilohi, double **mbimlolohi,
+   double **mbimhihilo, double **mbimlohilo,
+   double **mbimhilolo, double **mbimlololo, double dpr,
    double **cffrehihihi, double **cffrelohihi,
    double **cffrehilohi, double **cffrelolohi,
    double **cffrehihilo, double **cffrelohilo,
@@ -214,6 +222,22 @@ void cmplx8_newton_qrstep
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   mbrehihihi are the highest real parts of the right hand side series;
+ *   mbrelohihi are the 2nd highest real parts of the right hand side series;
+ *   mbrehilohi are the 3rd highest real parts of the right hand side series;
+ *   mbrelolohi are the 4th highest real parts of the right hand side series;
+ *   mbrehihilo are the 4th lowest real parts of the right hand side series;
+ *   mbrelohilo are the 3rd lowest real parts of the right hand side series;
+ *   mbrehilolo are the 2nd lowest real parts of the right hand side series;
+ *   mbrelololo are the lowest real parts of the right hand side series;
+ *   mbimhihihi are the highest imaginary parts of the right hand side series;
+ *   mbimlohihi are the 2nd highest imag parts of the right hand side series;
+ *   mbimhilohi are the 3rd highest imag parts of the right hand side series;
+ *   mbimlolohi are the 4th highest imag parts of the right hand side series;
+ *   mbimhihilo are the 4th lowest imag parts of the right hand side series;
+ *   mbimlohilo are the 3rd lowest imag parts of the right hand side series;
+ *   mbimhilolo are the 2nd lowest imag parts of the right hand side series;
+ *   mbimlololo are the lowest imaginary parts of the right hand side series;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   cffrehihihi are the highest doubles of the real parts of
  *             the coefficients of the monomials;
@@ -1128,7 +1152,7 @@ void cmplx8_newton_qrstep
 
 int test_dbl8_complex_newton
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl );
 /*
  * DESCRIPTION :
@@ -1146,6 +1170,7 @@ int test_dbl8_complex_newton
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   rowsA     rows of exponents of the dim monomials;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   nbsteps   the number of Newton steps;
  *   mode      the mode of execution, 0 for GPU only, 1 for CPU only,

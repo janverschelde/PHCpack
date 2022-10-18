@@ -418,7 +418,10 @@ void dbl4_linearize_evaldiff_output
 }
 
 void cmplx4_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx, double damper,
+ ( int dim, int degp1, int *nvr, int **idx,
+   double **mbrehihi, double **mbrelohi, double **mbrehilo, double **mbrelolo,
+   double **mbimhihi, double **mbimlohi, double **mbimhilo, double **mbimlolo,
+   double damper,
    double ***outputrehihi, double ***outputrelohi,
    double ***outputrehilo, double ***outputrelolo,
    double ***outputimhihi, double ***outputimlohi,
@@ -466,56 +469,39 @@ void cmplx4_linearize_evaldiff_output
               << "  "
               << funvalimhilo[i][0] << "  " << funvalimlolo[i][0] << endl;
    }
-   // Linearize the function values in the rhs and swap sign,
-   // but keep in mind that the right hand side is 1 - t,
-   // so we subtract 1 and add t to the rhs.
-   for(int j=0; j<dim; j++)
-   {
-      // rhsre[0][j] = -(funvalre[j][0] - 1.0);
-      qdf_sub(funvalrehihi[j][0],funvalrelohi[j][0],
-              funvalrehilo[j][0],funvalrelolo[j][0],1.0,0.0,0.0,0.0,
-              &acchihi,&acclohi,&acchilo,&acclolo);
-      rhsrehihi[0][j] = -acchihi;
-      rhsrelohi[0][j] = -acclohi;
-      rhsrehilo[0][j] = -acchilo;
-      rhsrelolo[0][j] = -acclolo;
-      // rhsim[0][j] = -(funvalim[j][0] - 0.0);
-      rhsimhihi[0][j] = -funvalimhihi[j][0];
-      rhsimlohi[0][j] = -funvalimlohi[j][0];
-      rhsimhilo[0][j] = -funvalimhilo[j][0];
-      rhsimlolo[0][j] = -funvalimlolo[j][0];
-   }
-   if(degp1 > 1)
-   {
+   /*
+    * Linearize the function values in the rhs and swap sign,
+    * but keep in mind that the right hand side is mbre + I*mbim,
+    * as the monomial system is x^U = rhs, or x^U - rhs = 0,
+    * so from the funval we substract rhs and then flip sign
+    * in the computation of the rhs of the linear system.
+    */
+
+   for(int i=0; i<degp1; i++)
       for(int j=0; j<dim; j++)
       {
-         // rhsre[1][j] = -(funvalre[j][1] + 1.0);
-         qdf_add(funvalrehihi[j][1],funvalrelohi[j][1],
-                 funvalrehilo[j][1],funvalrelolo[j][1],damper,0.0,0.0,0.0,
+         // rhsre[i][j] = -(funvalre[j][i] - mbre[j][i]);
+         qdf_sub(funvalrehihi[j][i],funvalrelohi[j][i],
+                 funvalrehilo[j][i],funvalrelolo[j][i],
+                 mbrehihi[j][i],mbrelohi[j][i],
+                 mbrehilo[j][i],mbrelolo[j][i],
                  &acchihi,&acclohi,&acchilo,&acclolo);
-         rhsrehihi[1][j] = -acchihi;
-         rhsrelohi[1][j] = -acclohi;
-         rhsrehilo[1][j] = -acchilo;
-         rhsrelolo[1][j] = -acclolo;
-         // rhsim[1][j] = -(funvalim[j][1] + 0.0);
-         rhsimhihi[1][j] = -funvalimhihi[j][1];
-         rhsimlohi[1][j] = -funvalimlohi[j][1];
-         rhsimhilo[1][j] = -funvalimhilo[j][1];
-         rhsimlolo[1][j] = -funvalimlolo[j][1];
+         rhsrehihi[i][j] = -acchihi;
+         rhsrelohi[i][j] = -acclohi;
+         rhsrehilo[i][j] = -acchilo;
+         rhsrelolo[i][j] = -acclolo;
+         // rhsim[i][j] = -(funvalim[j][i] - mbim[j][i]);
+         qdf_sub(funvalimhihi[j][i],funvalimlohi[j][i],
+                 funvalimhilo[j][i],funvalimlolo[j][i],
+                 mbimhihi[j][i],mbimlohi[j][i],
+                 mbimhilo[j][i],mbimlolo[j][i],
+                 &acchihi,&acclohi,&acchilo,&acclolo);
+         rhsimhihi[i][j] = -acchihi;
+         rhsimlohi[i][j] = -acclohi;
+         rhsimhilo[i][j] = -acchilo;
+         rhsimlolo[i][j] = -acclolo;
       }
-      for(int i=2; i<degp1; i++)
-         for(int j=0; j<dim; j++)
-         {
-            rhsrehihi[i][j] = -funvalrehihi[j][i];
-            rhsrelohi[i][j] = -funvalrelohi[j][i];
-            rhsrehilo[i][j] = -funvalrehilo[j][i];
-            rhsrelolo[i][j] = -funvalrelolo[j][i];
-            rhsimhihi[i][j] = -funvalimhihi[j][i];
-            rhsimlohi[i][j] = -funvalimlohi[j][i];
-            rhsimhilo[i][j] = -funvalimhilo[j][i];
-            rhsimlolo[i][j] = -funvalimlolo[j][i];
-         }
-   }
+
    if(vrblvl > 1)
    {
       cout << "The right hand side series :" << endl;

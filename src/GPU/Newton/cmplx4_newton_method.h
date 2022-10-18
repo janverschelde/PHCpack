@@ -6,7 +6,10 @@
 
 void cmplx4_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, double dpr,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **mbrehihi, double **mbrelohi, double **mbrehilo, double **mbrelolo,
+   double **mbimhihi, double **mbimlohi, double **mbimhilo, double **mbimlolo,
+   double dpr,
    double **cffrehihi, double **cffrelohi,
    double **cffrehilo, double **cffrelolo,
    double **cffimhihi, double **cffimlohi,
@@ -120,6 +123,14 @@ void cmplx4_newton_qrstep
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   mbrehihi  highest real parts of the right hand side series;
+ *   mbrelohi  second highest real parts of the right hand side series;
+ *   mbrehilo  second lowest real parts of the right hand side series;
+ *   mbrelolo  lowest real parts of the right hand side series;
+ *   mbimhihi  highest imaginary parts of the right hand side series;
+ *   mbimlohi  second highest imaginary parts of the right hand side series;
+ *   mbimhilo  second lowest imaginary parts of the right hand side series;
+ *   mbimlolo  lowest imaginary parts of the right hand side series;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   cffrehihi are the highest doubles of the real parts of
  *             the coefficients of the monomials;
@@ -581,7 +592,7 @@ void cmplx4_newton_qrstep
 
 int test_dbl4_complex_newton
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl );
 /*
  * DESCRIPTION :
@@ -599,6 +610,7 @@ int test_dbl4_complex_newton
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   rowsA     rows of exponents of the dim monomials;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   nbsteps   the number of Newton steps;
  *   mode      the mode of execution, 0 for GPU only, 1 for CPU only,
