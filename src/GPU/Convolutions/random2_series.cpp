@@ -4,6 +4,24 @@
 #include "random2_vectors.h"
 #include "double_double_functions.h"
 
+void dbl2_exponential
+ ( int deg, double xhi, double xlo, double *shi, double *slo )
+{
+   double fhi,flo;
+
+   shi[0] = 1.0; slo[0] = 0.0;
+   shi[1] = xhi; slo[1] = xlo;
+
+   for(int k=2; k<=deg; k++)
+   {
+      // x[k] = x[k-1]*r
+      ddf_mul(shi[k-1],slo[k-1],xhi,xlo,&shi[k],&slo[k]);
+      // x[k] = x[k]/k
+      fhi = (double) k; flo = 0.0;
+      ddf_div(shi[k],slo[k],fhi,flo,&shi[k],&slo[k]);
+   }
+}
+
 void dbl2_exponentials
  ( int deg, double xhi, double xlo, 
    double *pluxhi, double *pluxlo, double *minxhi, double *minxlo )

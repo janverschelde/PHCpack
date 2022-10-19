@@ -4,12 +4,27 @@
 #ifndef __dbl_monomial_systems_h__
 #define __dbl_monomial_systems_h__
 
+void make_real_exponentials ( int dim, int  deg, double **s );
+/*
+ * DESCRIPTION :
+ *   Returns the expansions of exp(c*x) for random coefficients c,
+ *   for c in the union of the intervals [-2, -1] and [1, 2].
+ *
+ * ON ENTRY :
+ *   dim      number of power series;
+ *   deg      truncation degree;
+ *   s        space for dim arrays of size deg+1.
+ *
+ * ON RETURN :
+ *   s         coefficients of the power series expansions. */
+
 void make_complex_exponentials
  ( int dim, int deg, double *angles, double **sre, double **sim );
 /*
  * DESCRIPTION :
- *   Returns dim expansions of exp(x) truncated at degree deg,
- *   for random complex values of x on the complex unit circle.
+ *   Returns dim expansions of exp(c*x) truncated at degree deg,
+ *   for random complex values of c on the complex unit circle,
+ *   where the i-th c is the defined as cos(angle[i]) + I*sin(angle[i]).
  *
  * ON ENTRY :
  *   dim      number of power series;
@@ -23,6 +38,23 @@ void make_complex_exponentials
  *            cos(angles[i]) is sre[i][1] and sin(angles[i]) is sim[i][1];
  *   sre      real parts of the coefficients of the dim power series;
  *   sim      imaginary parts of the coefficients of the dim power series. */
+
+void evaluate_real_monomials
+ ( int dim, int deg, int **rowsA, double **x, double **rhs );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials defined in the rows of a matrix at
+ *   real series to make the right hand side of a monomial system.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the monomial system;
+ *   deg      truncation degree of the series;
+ *   rowsA    the rows of A have the exponents of the monomials;
+ *   s        coefficients of the series;
+ *   rhs      space for dim arrays of size deg+1.
+ *
+ * ON RETURN :
+ *   rhs      the evaluated monomials. */
 
 void evaluate_complex_monomials
  ( int dim, int deg, int **rowsA,

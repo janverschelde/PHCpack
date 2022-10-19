@@ -11,6 +11,23 @@
 
 using namespace std;
 
+void make_real_exponentials ( int dim, int  deg, double **s )
+{
+   double rnd;
+
+   for(int i=0; i<dim; i++)
+   {
+      rnd = random_double()/2.0;     // rnd is in [-0.5, +0.5]
+      
+      if(rnd < 0)
+         rnd = rnd - 1.5; // if -0.5 <= rnd < 0, rnd - 1.5 is in [-2, -1.5]
+      else
+         rnd = rnd + 1.5; // if  0 < rnd <= 0.5, rnd + 1.5 is in [+1.5, +2]
+
+      dbl_exponential(deg,rnd,s[i]);
+   }
+}
+
 void make_complex_exponentials
  ( int dim, int deg, double *angles, double **sre, double **sim )
 {
@@ -24,6 +41,31 @@ void make_complex_exponentials
 
       cmplx_exponential(deg,xre,xim,sre[i],sim[i]);
    }
+}
+
+void evaluate_real_monomials
+ ( int dim, int deg, int **rowsA, double **x, double **rhs )
+{
+   const int degp1 = deg+1;
+
+   double *acc = new double[degp1]; // accumulates product
+
+   for(int i=0; i<dim; i++)    // run over all monomials
+   {
+      for(int j=0; j<dim; j++) // run over all variables
+      {
+         if(rowsA[i][j] > 0)   // only multiply if positive exponent
+         {
+            for(int k=0; k<rowsA[i][j]; k++)
+            {
+               CPU_dbl_product(deg,x[j],rhs[i],acc);
+
+               for(int L=0; L<degp1; L++) rhs[i][L] = acc[L];
+            }
+         }
+      }
+   }
+   free(acc);
 }
 
 void evaluate_complex_monomials

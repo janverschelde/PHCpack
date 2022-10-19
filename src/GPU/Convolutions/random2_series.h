@@ -4,6 +4,26 @@
 #ifndef __random2_series_h__
 #define __random2_series_h__
 
+void dbl2_exponential
+ ( int deg, double xhi, double xlo, double *shi, double *slo );
+/*
+ * DESCRIPTION :
+ *   Returns power series truncated at degree deg,
+ *   following the expansion of exp(x).
+ *
+ * ON ENTRY :
+ *   deg      degree to truncate the series;
+ *   xhi      high double of x;
+ *   xlo      low double of x;
+ *   shi      space for deg+1 doubles;
+ *   slo      space for deg+1 doubles.
+ *
+ * ON RETURN :
+ *   shi      high doubles of the coefficients of series following exp(x),
+ *            truncated to degree deg;
+ *   slo      low doubles of the coefficients of series following exp(x),
+ *            truncated to degree deg. */
+
 void dbl2_exponentials
  ( int deg, double xhi, double xlo, 
    double *pluxhi, double *pluxlo, double *minxhi, double *minxlo );
