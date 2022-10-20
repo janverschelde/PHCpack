@@ -21,8 +21,10 @@
 
 using namespace std;
 
-void dbl8_start_series_vector
+void real8_start_series_vector
  ( int dim, int deg,
+   double *r0hihihi, double *r0lohihi, double *r0hilohi, double *r0lolohi,
+   double *r0hihilo, double *r0lohilo, double *r0hilolo, double *r0lololo,
    double **cffhihihi, double **cfflohihi,
    double **cffhilohi, double **cfflolohi,
    double **cffhihilo, double **cfflohilo,
@@ -30,10 +32,16 @@ void dbl8_start_series_vector
 {
    for(int i=0; i<dim; i++)
    {
-      cffhihihi[i][0] = 1.00001; cfflohihi[i][0] = 0.0;
-      cffhilohi[i][0] = 0.0; cfflolohi[i][0] = 0.0;
-      cffhihilo[i][0] = 0.0; cfflohilo[i][0] = 0.0;
-      cffhilolo[i][0] = 0.0; cfflololo[i][0] = 0.0;
+      cffhihihi[i][0] = r0hihihi[i]; cfflohihi[i][0] = r0lohihi[i];
+      cffhilohi[i][0] = r0hilohi[i]; cfflolohi[i][0] = r0lolohi[i];
+      cffhihilo[i][0] = r0hihilo[i]; cfflohilo[i][0] = r0lohilo[i];
+      cffhilolo[i][0] = r0hilolo[i]; cfflololo[i][0] = r0lololo[i];
+
+      odf_inc(&cffhihihi[i][0],&cfflohihi[i][0],
+              &cffhilohi[i][0],&cfflolohi[i][0],
+              &cffhihilo[i][0],&cfflohilo[i][0],
+              &cffhilolo[i][0],&cfflololo[i][0],
+              0.00001,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
 
       for(int j=1; j<=deg; j++)
       {

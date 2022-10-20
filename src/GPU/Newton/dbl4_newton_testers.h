@@ -4,15 +4,17 @@
 #ifndef __dbl4_newton_testers_h__
 #define __dbl4_newton_testers_h__
 
-void dbl4_start_series_vector
+void real4_start_series_vector
  ( int dim, int deg,
+   double *r0hihi, double *r0lohi, double *r0hilo, double *r0lolo,
    double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo );
 /*
  * DESCRIPTION :
  *   Given space in cffhihi, cfflohi, cffhilo, cfflolo for the doubles
  *   for the vector of dim power series in quad double precision,
  *   of series truncated after degree deg,
- *   sets the coefficients of the start series. */
+ *   sets the coefficients of the start series.
+ *   The constant terms equals r0[j] with a small error. */
 
 void cmplx4_start_series_vector
  ( int dim, int deg,

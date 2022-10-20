@@ -4,8 +4,10 @@
 #ifndef __dbl8_newton_testers_h__
 #define __dbl8_newton_testers_h__
 
-void dbl8_start_series_vector
+void real8_start_series_vector
  ( int dim, int deg,
+   double *r0hihihi, double *r0lohihi, double *r0hilohi, double *r0lolohi,
+   double *r0hihilo, double *r0lohilo, double *r0hilolo, double *r0lololo,
    double **cffhihihi, double **cfflohihi,
    double **cffhilohi, double **cfflolohi,
    double **cffhihilo, double **cfflohilo,
@@ -15,7 +17,8 @@ void dbl8_start_series_vector
  *   Given space in cff* for the doubles
  *   for the vector of dim power series in octo double precision,
  *   of series truncated after degree deg,
- *   sets the coefficients of the start series. */
+ *   sets the coefficients of the start series.
+ *   The constant term equals r0[j] with a small error. */
 
 void cmplx8_start_series_vector
  ( int dim, int deg,

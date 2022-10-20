@@ -336,7 +336,10 @@ void CPU_cmplx8_evaluate_monomials
  *             outputimlololo[i][idx[k]] is the derivative w.r.t. idx[k]. */
 
 void dbl8_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx, double damper,
+ ( int dim, int degp1, int *nvr, int **idx,
+   double **mbhihihi, double **mblohihi, double **mbhilohi, double **mblolohi,
+   double **mbhihilo, double **mblohilo, double **mbhilolo, double **mblololo,
+   double damper,
    double ***outputhihihi, double ***outputlohihi,
    double ***outputhilohi, double ***outputlolohi,
    double ***outputhihilo, double ***outputlohilo,
@@ -363,6 +366,14 @@ void dbl8_linearize_evaldiff_output
  *   degp1     degree plus one;
  *   nvr       number of variables that occur in each monomial;
  *   idx       for each monomials the indices of each variable;
+ *   mbhihihi  highest doubles of the right hand side of monomial system;
+ *   mblohihi  second highest doubles of the right hand side;
+ *   mbhilohi  third highest doubles of the right hand side;
+ *   mblolohi  fourth highest doubles of the right hand side;
+ *   mbhihilo  fourth lowest doubles of the right hand side;
+ *   mblohilo  third lowest doubles of the right hand side;
+ *   mbhilolo  second lowest doubles of the right hand side;
+ *   mblololo  lowest doubles of the right hand side;
  *   damper    the positive damping coefficient for t,
  *             if 1.0, then no damping, if > 1.0, then overdamping;
  *   outputhihihi are the highest doubles of the output

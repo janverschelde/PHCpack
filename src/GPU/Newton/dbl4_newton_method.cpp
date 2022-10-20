@@ -13,6 +13,7 @@
 #include "dbl4_convolutions_host.h"
 #include "dbl4_monomials_host.h"
 #include "dbl4_factorizations.h"
+#include "dbl4_monomial_systems.h"
 #include "dbl4_bals_host.h"
 #include "dbl4_bals_kernels.h"
 #include "dbl4_tail_kernels.h"
@@ -22,100 +23,11 @@
 
 using namespace std;
 
-void dbl4_newton_lustep
- ( int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo,
-   double *acchihi, double *acclohi, double *acchilo, double *acclolo,
-   double **inputhihi, double **inputlohi,
-   double **inputhilo, double **inputlolo,
-   double ***outputhihi, double ***outputlohi,
-   double ***outputhilo, double ***outputlolo,
-   double **funvalhihi, double **funvallohi,
-   double **funvalhilo, double **funvallolo,
-   double ***jacvalhihi, double ***jacvallohi,
-   double ***jacvalhilo, double ***jacvallolo,
-   double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
-   double **solhihi, double **sollohi, double **solhilo, double **sollolo,
-   double **workmathihi, double **workmatlohi,
-   double **workmathilo, double **workmatlolo,
-   double *workvechihi, double *workveclohi,
-   double *workvechilo, double *workveclolo,
-   double **workrhshihi, double **workrhslohi,
-   double **workrhshilo, double **workrhslolo,
-   double **resvechihi, double **resveclohi,
-   double **resvechilo, double **resveclolo,
-   double *resmaxhihi, double *resmaxlohi,
-   double *resmaxhilo, double *resmaxlolo, int *ipvt, int vrblvl )
-{
-   const int degp1 = deg+1;
-
-   // The series coefficients accumulate common factors,
-   // initially the coefficients are set to one.
-   dbl4_unit_series_vector(dim,deg,cffhihi,cfflohi,cffhilo,cfflolo);
-
-   CPU_dbl4_evaluate_monomials
-      (dim,deg,nvr,idx,exp,nbrfac,expfac,
-       cffhihi,cfflohi,cffhilo,cfflolo,acchihi,acclohi,acchilo,acclolo,
-        inputhihi, inputlohi, inputhilo, inputlolo,
-       outputhihi,outputlohi,outputhilo,outputlolo,vrblvl);
-
-   for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-      for(int j=0; j<dim; j++) 
-         for(int k=0; k<dim; k++)
-         {
-            jacvalhihi[i][j][k] = 0.0;
-            jacvallohi[i][j][k] = 0.0;
-            jacvalhilo[i][j][k] = 0.0;
-            jacvallolo[i][j][k] = 0.0;
-         }
-
-   dbl4_linearize_evaldiff_output
-      (dim,degp1,nvr,idx,1.0,outputhihi,outputlohi,outputhilo,outputlolo,
-       funvalhihi,funvallohi,funvalhilo,funvallolo,
-       rhshihi,rhslohi,rhshilo,rhslolo,
-       jacvalhihi,jacvallohi,jacvalhilo,jacvallolo,vrblvl);
-
-   for(int i=0; i<degp1; i++) // save original rhs for residual
-      for(int j=0; j<dim; j++)
-      {
-         workrhshihi[i][j] = rhshihi[i][j];
-         workrhslohi[i][j] = rhslohi[i][j];
-         workrhshilo[i][j] = rhshilo[i][j];
-         workrhslolo[i][j] = rhslolo[i][j];
-      }
-   for(int i=0; i<degp1; i++) // initialize the solution to zero
-      for(int j=0; j<dim; j++)
-      {
-         solhihi[i][j] = 0.0;
-         sollohi[i][j] = 0.0;
-         solhilo[i][j] = 0.0;
-         sollolo[i][j] = 0.0;
-      }
- 
-   CPU_dbl4_lusb_solve
-      (dim,degp1,jacvalhihi,jacvallohi,jacvalhilo,jacvallolo,
-       workrhshihi,workrhslohi,workrhshilo,workrhslolo,
-       solhihi,sollohi,solhilo,sollolo,
-       workmathihi,workmatlohi,workmathilo,workmatlolo,
-       workvechihi,workveclohi,workvechilo,workveclolo,ipvt,0); // vrblvl);
-
-   CPU_dbl4_linear_residue
-      (dim,degp1,jacvalhihi,jacvallohi,jacvalhilo,jacvallolo,
-       rhshihi,rhslohi,rhshilo,rhslolo,solhihi,sollohi,solhilo,sollolo,
-       resvechihi,resveclohi,resvechilo,resveclolo,
-       resmaxhihi,resmaxlohi,resmaxhilo,resmaxlolo,vrblvl);
-
-   if(vrblvl > 0) cout << "maximum residual : " << *resmaxhihi << endl;
-
-   dbl4_update_series
-      (dim,degp1,inputhihi,inputlohi,inputhilo,inputlolo,
-       solhihi,sollohi,solhilo,sollolo,vrblvl);
-}
-
 void dbl4_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, double dpr,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **mbhihi, double **mblohi, double **mbhilo, double **mblolo,
+   double dpr,
    double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo,
    double *acchihi, double *acclohi, double *acchilo, double *acclolo,
    double **inputhihi_h, double **inputlohi_h,
@@ -224,7 +136,7 @@ void dbl4_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       dbl4_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,dpr,
+         (dim,degp1,nvr,idx,mbhihi,mblohi,mbhilo,mblolo,dpr,
           outputhihi_h,outputlohi_h,outputhilo_h,outputlolo_h,
           funvalhihi_h,funvallohi_h,funvalhilo_h,funvallolo_h,
           rhshihi_h,rhslohi_h,rhshilo_h,rhslolo_h,
@@ -233,7 +145,7 @@ void dbl4_newton_qrstep
    if((mode == 0) || (mode == 2))
    {
       dbl4_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,dpr,
+         (dim,degp1,nvr,idx,mbhihi,mblohi,mbhilo,mblolo,dpr,
           outputhihi_d,outputlohi_d,outputhilo_d,outputlolo_d,
           funvalhihi_d,funvallohi_d,funvalhilo_d,funvallolo_d,
           rhshihi_d,rhslohi_d,rhshilo_d,rhslolo_d,
@@ -379,7 +291,7 @@ void dbl4_newton_qrstep
 
 int test_dbl4_real_newton
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
@@ -667,8 +579,68 @@ int test_dbl4_real_newton
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
    // Define the initial input, a vector of ones.
-   dbl4_start_series_vector
-      (dim,deg,inputhihi_h,inputlohi_h,inputhilo_h,inputlolo_h);
+
+   double **solhihi = new double*[dim];
+   double **sollohi = new double*[dim];
+   double **solhilo = new double*[dim];
+   double **sollolo = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      solhihi[i] = new double[degp1];
+      sollohi[i] = new double[degp1];
+      solhilo[i] = new double[degp1];
+      sollolo[i] = new double[degp1];
+   }
+   make_real4_exponentials(dim,deg,solhihi,sollohi,solhilo,sollolo);
+
+   // compute the right hand sides via evaluation
+
+   double **mbrhshihi = new double*[dim];
+   double **mbrhslohi = new double*[dim];
+   double **mbrhshilo = new double*[dim];
+   double **mbrhslolo = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      mbrhshihi[i] = new double[degp1];
+      mbrhslohi[i] = new double[degp1];
+      mbrhshilo[i] = new double[degp1];
+      mbrhslolo[i] = new double[degp1];
+
+      mbrhshihi[i][0] = 1.0;     // initialize product to one
+      mbrhslohi[i][0] = 0.0;
+      mbrhshilo[i][0] = 0.0;
+      mbrhslolo[i][0] = 0.0;
+
+      for(int k=1; k<degp1; k++)
+      {
+         mbrhshihi[i][k] = 0.0;
+         mbrhslohi[i][k] = 0.0;
+         mbrhshilo[i][k] = 0.0;
+         mbrhslolo[i][k] = 0.0;
+      }
+   }
+   evaluate_real4_monomials
+      (dim,deg,rowsA,solhihi,sollohi,solhilo,sollolo,
+       mbrhshihi,mbrhslohi,mbrhshilo,mbrhslolo);
+   
+   double *start0hihi = new double[dim];
+   double *start0lohi = new double[dim];
+   double *start0hilo = new double[dim];
+   double *start0lolo = new double[dim];
+
+   for(int i=0; i<dim; i++)  // compute start vector
+   {
+      start0hihi[i] = solhihi[i][0];
+      start0lohi[i] = sollohi[i][0];
+      start0hilo[i] = solhilo[i][0];
+      start0lolo[i] = sollolo[i][0];
+   }
+   real4_start_series_vector
+      (dim,deg,start0hihi,start0lohi,start0hilo,start0lolo,
+       inputhihi_h,inputlohi_h,inputhilo_h,inputlolo_h);
+
    for(int i=0; i<dim; i++)
       for(int j=0; j<degp1; j++)
       {
@@ -696,23 +668,10 @@ int test_dbl4_real_newton
    {
       if(vrblvl > 0)
          cout << "*** running Newton step " << step << " ***" << endl;
-/*
-      dbl4_newton_lustep
-         (dim,deg,nvr,idx,exp,nbrfac,expfac,
-          cffhihi,cfflohi,cffhilo,cfflolo,acchihi,acclohi,acchilo,acclolo,
-           inputhihi, inputlohi, inputhilo, inputlolo,
-          outputhihi,outputlohi,outputhilo,outputlolo,
-          funvalhihi,funvallohi,funvalhilo,funvallolo,
-          jacvalhihi,jacvallohi,jacvalhilo,jacvallolo,
-          rhshihi,rhslohi,rhshilo,rhslolo,solhihi,sollohi,solhilo,sollolo,
-          workmathihi,workmatlohi,workmathilo,workmatlolo,
-          workvechihi,workveclohi,workvechilo,workveclolo,
-          workrhshihi,workrhslohi,workrhshilo,workrhslolo,
-          resvechihi,resveclohi,resvechilo,resveclolo,
-          &resmaxhihi,&resmaxlohi,&resmaxhilo,&resmaxlolo,ipvt,vrblvl);
- */
+
       dbl4_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,
+          mbrhshihi,mbrhslohi,mbrhshilo,mbrhslolo,dpr,
           cffhihi,cfflohi,cffhilo,cfflolo,acchihi,acclohi,acchilo,acclolo,
           inputhihi_h,inputlohi_h,inputhilo_h,inputlolo_h,
           inputhihi_d,inputlohi_d,inputhilo_d,inputlolo_d,
@@ -737,6 +696,8 @@ int test_dbl4_real_newton
    }
    if(vrblvl < 2)
    {
+      double errsum = 0.0;
+
       cout << scientific << setprecision(16); // just in case vrblvl == 0
       cout << "The solution series : " << endl;
       for(int j=0; j<degp1; j++)
@@ -744,20 +705,38 @@ int test_dbl4_real_newton
          cout << "coefficient of degree " << j << " :" << endl;
          for(int i=0; i<dim; i++)
          {
+            cout << "sol[" << i << "][" << j << "] : "
+                           << solhihi[i][j] << "  "
+                           << sollohi[i][j] << endl << "  "
+                           << solhilo[i][j] << "  "
+                           << sollolo[i][j] << endl;
             if((mode == 0) || (mode == 2))
-              cout << "x_d[" << i << "][" << j << "] : "
-                             << inputhihi_d[i][j] << "  "
-                             << inputlohi_d[i][j] << endl << "  "
-                             << inputhilo_d[i][j] << "  "
-                             << inputlolo_d[i][j] << endl;
+            {
+               cout << "x_d[" << i << "][" << j << "] : "
+                              << inputhihi_d[i][j] << "  "
+                              << inputlohi_d[i][j] << endl << "  "
+                              << inputhilo_d[i][j] << "  "
+                              << inputlolo_d[i][j] << endl;
+               errsum += abs(solhihi[i][j] - inputhihi_d[i][j])
+                       + abs(sollohi[i][j] - inputlohi_d[i][j])
+                       + abs(solhilo[i][j] - inputhilo_d[i][j])
+                       + abs(sollolo[i][j] - inputlolo_d[i][j]);
+            }
             if((mode == 1) || (mode == 2))
-              cout << "x_h[" << i << "][" << j << "] : "
-                             << inputhihi_h[i][j] << "  "
-                             << inputlohi_h[i][j] << endl << "  "
-                             << inputhilo_h[i][j] << "  "
-                             << inputlolo_h[i][j] << endl;
+            {
+               cout << "x_h[" << i << "][" << j << "] : "
+                              << inputhihi_h[i][j] << "  "
+                              << inputlohi_h[i][j] << endl << "  "
+                              << inputhilo_h[i][j] << "  "
+                              << inputlolo_h[i][j] << endl;
+               errsum += abs(solhihi[i][j] - inputhihi_h[i][j])
+                       + abs(sollohi[i][j] - inputlohi_h[i][j])
+                       + abs(solhilo[i][j] - inputhilo_h[i][j])
+                       + abs(sollolo[i][j] - inputlolo_h[i][j]);
+            }
          }
       }
+      cout << "error : " << errsum << endl;
    }
    return 0;
 }

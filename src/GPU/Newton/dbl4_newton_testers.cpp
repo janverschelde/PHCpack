@@ -21,23 +21,24 @@
 
 using namespace std;
 
-void dbl4_start_series_vector
+void real4_start_series_vector
  ( int dim, int deg,
+   double *r0hihi, double *r0lohi, double *r0hilo, double *r0lolo,
    double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo )
 {
    for(int i=0; i<dim; i++)
    {
-      cffhihi[i][0] = 1.00001;
-      cfflohi[i][0] = 0.0;
-      cffhilo[i][0] = 0.0;
-      cfflolo[i][0] = 0.0;
+      cffhihi[i][0] = r0hihi[i];
+      cfflohi[i][0] = r0lohi[i];
+      cffhilo[i][0] = r0hilo[i];
+      cfflolo[i][0] = r0lolo[i];
+      qdf_inc(&cffhihi[i][0],&cfflohi[i][0],&cffhilo[i][0],&cfflolo[i][0],
+              0.00001,0.0,0.0,0.0);
 
       for(int j=1; j<=deg; j++)
       {
-         cffhihi[i][j] = 0.0;
-         cfflohi[i][j] = 0.0;
-         cffhilo[i][j] = 0.0;
-         cfflolo[i][j] = 0.0;
+         cffhihi[i][j] = 0.0; cfflohi[i][j] = 0.0;
+         cffhilo[i][j] = 0.0; cfflolo[i][j] = 0.0;
       }
    }
 }

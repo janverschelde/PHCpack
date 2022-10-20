@@ -446,7 +446,10 @@ void CPU_cmplx8_evaluate_monomials
 }
 
 void dbl8_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx, double damper,
+ ( int dim, int degp1, int *nvr, int **idx,
+   double **mbhihihi, double **mblohihi, double **mbhilohi, double **mblolohi,
+   double **mbhihilo, double **mblohilo, double **mbhilolo, double **mblololo,
+   double damper,
    double ***outputhihihi, double ***outputlohihi,
    double ***outputhilohi, double ***outputlolohi,
    double ***outputhihilo, double ***outputlohilo,
@@ -464,6 +467,9 @@ void dbl8_linearize_evaldiff_output
    double ***jacvalhihilo, double ***jacvallohilo,
    double ***jacvalhilolo, double ***jacvallololo, int vrblvl )
 {
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
    // The coefficients of the series for the function values
    // at the input are in output[i][dim].
    for(int i=0; i<dim; i++)
@@ -494,55 +500,35 @@ void dbl8_linearize_evaldiff_output
                          << funvallololo[i][0] << endl;
       }
    }
-   // Linearize the function values in the rhs and swap sign,
-   // but keep in mind that the right hand side is 1 - t,
-   // so we subtract 1 and add t to the rhs.
-   for(int j=0; j<dim; j++) 
-   {                                 // rhs[0][j] = -(funval[j][0] - 1.0);
-      rhshihihi[0][j] = -funvalhihihi[j][0];
-      rhslohihi[0][j] = -funvallohihi[j][0];
-      rhshilohi[0][j] = -funvalhilohi[j][0];
-      rhslolohi[0][j] = -funvallolohi[j][0];
-      rhshihilo[0][j] = -funvalhihilo[j][0];
-      rhslohilo[0][j] = -funvallohilo[j][0];
-      rhshilolo[0][j] = -funvalhilolo[j][0];
-      rhslololo[0][j] = -funvallololo[j][0];
-      odf_inc_d(&rhshihihi[0][j],&rhslohihi[0][j],
-                &rhshilohi[0][j],&rhslolohi[0][j],
-                &rhshihilo[0][j],&rhslohilo[0][j],
-                &rhshilolo[0][j],&rhslololo[0][j],1.0);
-   }
-   if(degp1 > 1)
-   {
-      for(int j=0; j<dim; j++)       // rhs[1][j] = -(funval[j][1] + 1.0);
+   /*
+    * Linearize the function values in the rhs and swap sign,
+    * but keep in mind that the right hand side is mbre + I*mbim,
+    * as the monomial system is x^U = rhs, or x^U - rhs = 0,
+    * so from the funval we substract rhs and then flip sign
+    * in the computation of the rhs of the linear system.
+    */
+   for(int i=0; i<degp1; i++)
+      for(int j=0; j<dim; j++)
       {
-         rhshihihi[1][j] = -funvalhihihi[j][1];
-         rhslohihi[1][j] = -funvallohihi[j][1];
-         rhshilohi[1][j] = -funvalhilohi[j][1];
-         rhslolohi[1][j] = -funvallolohi[j][1];
-         rhshihilo[1][j] = -funvalhihilo[j][1];
-         rhslohilo[1][j] = -funvallohilo[j][1];
-         rhshilolo[1][j] = -funvalhilolo[j][1];
-         rhslololo[1][j] = -funvallololo[j][1];
-         odf_dec(&rhshihihi[1][j],&rhslohihi[1][j],
-                 &rhshilohi[1][j],&rhslolohi[1][j],
-                 &rhshihilo[1][j],&rhslohilo[1][j],
-                 &rhshilolo[1][j],&rhslololo[1][j],
-                 damper,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+         // rhs[i][j] = -(funval[j][i] - mb[j][i]);
+         odf_sub(funvalhihihi[j][i],funvallohihi[j][i],
+                 funvalhilohi[j][i],funvallolohi[j][i],
+                 funvalhihilo[j][i],funvallohilo[j][i],
+                 funvalhilolo[j][i],funvallololo[j][i],
+                 mbhihihi[j][i],mblohihi[j][i],mbhilohi[j][i],mblolohi[j][i],
+                 mbhihilo[j][i],mblohilo[j][i],mbhilolo[j][i],mblololo[j][i],
+                 &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                 &acchihilo,&acclohilo,&acchilolo,&acclololo);
+         rhshihihi[i][j] = -acchihihi;
+         rhslohihi[i][j] = -acclohihi;
+         rhshilohi[i][j] = -acchilohi;
+         rhslolohi[i][j] = -acclolohi;
+         rhshihilo[i][j] = -acchihilo;
+         rhslohilo[i][j] = -acclohilo;
+         rhshilolo[i][j] = -acchilolo;
+         rhslololo[i][j] = -acclololo;
       }
-      for(int i=2; i<degp1; i++)
-         for(int j=0; j<dim; j++)
-         {
-            rhshihihi[i][j] = -funvalhihihi[j][i];
-            rhslohihi[i][j] = -funvallohihi[j][i];
-            rhshilohi[i][j] = -funvalhilohi[j][i];
-            rhslolohi[i][j] = -funvallolohi[j][i];
-            rhshihilo[i][j] = -funvalhihilo[j][i];
-            rhslohilo[i][j] = -funvallohilo[j][i];
-            rhshilolo[i][j] = -funvalhilolo[j][i];
-            rhslololo[i][j] = -funvallololo[j][i];
-         }
-   }
+
    if(vrblvl > 1)
    {
       cout << "The right hand side series :" << endl;

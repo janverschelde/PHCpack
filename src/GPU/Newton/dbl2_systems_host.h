@@ -133,7 +133,7 @@ void dbl2_linearize_evaldiff_output
  *   degp1     degree plus one;
  *   nvr       number of variables that occur in each monomial;
  *   idx       for each monomials the indices of each variable;
- *   mbhi      hight doubles of the right hand side of monomial system;
+ *   mbhi      high doubles of the right hand side of monomial system;
  *   mblo      low doubles of the right hand side of monomial system;
  *   damper    the positive damping coefficient for t,
  *             if 1.0, then no damping, if > 1.0, then overdamping;

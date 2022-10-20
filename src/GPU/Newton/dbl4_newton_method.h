@@ -4,142 +4,11 @@
 #ifndef __dbl4_newton_method_h__
 #define __dbl4_newton_method_h__
 
-void dbl4_newton_lustep
- ( int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo,
-   double *acchihi, double *acclohi, double *acchilo, double *acclolo,
-   double **inputhihi, double **inputlohi,
-   double **inputhilo, double **inputlolo,
-   double ***outputhihi, double ***outputlohi,
-   double ***outputhilo, double ***outputlolo,
-   double **funvalhihi, double **funvallohi,
-   double **funvalhilo, double **funvallolo,
-   double ***jacvalhihi, double ***jacvallohi,
-   double ***jacvalhilo, double ***jacvallolo,
-   double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
-   double **solhihi, double **sollohi, double **solhilo, double **sollolo,
-   double **workmathihi, double **workmatlohi,
-   double **workmathilo, double **workmatlolo,
-   double *workvechihi, double *workveclohi,
-   double *workvechilo, double *workveclolo,
-   double **workrhshihi, double **workrhslohi,
-   double **workrhshilo, double **workrhslolo,
-   double **resvechihi, double **resveclohi,
-   double **resvechilo, double **resveclolo,
-   double *resmaxhihi, double *resmaxlohi,
-   double *resmaxhilo, double *resmaxlolo, int *ipvt, int vrblvl );
-/*
- * DESCRIPTION :
- *   Does one step with Newton's method to update a power series.
- *
- * ON ENTRY :
- *   dim       number of monomials;
- *   deg       degree of the power series;
- *   nvr       nvr[i] is the number of variables in the i-th monomial;
- *   idx       idx[i] are the indices of the variables in monomial i;
- *   exp       exp[i] are the exponents of the variables in monomial i;
- *   nbrfac    nbrfac[i] are the number of exponents > 1 in monomial i;
- *   expfac    expfac[i] are the exponents in the i-th polynomial
- *             that are larger than one, minus one in the factor,
- *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
- *   cffhihi   highest doubles of the coefficients of the monomials;
- *   cfflohi   2nd highest doubles of the coefficients of the monomials;
- *   cffhilo   2nd lowest doubles of the coefficients of the monomials;
- *   cfflolo   lowest doubles of the coefficients of the monomials;
- *   acchihi   space to accumulate one power series of degree deg;
- *   acclohi   space to accumulate one power series of degree deg;
- *   acchilo   space to accumulate one power series of degree deg;
- *   acclolo   space to accumulate one power series of degree deg;
- *   inputhihi are the highest doubles of the coefficients of the power
- *             series of degree deg, for dim variables;
- *   inputlohi are the second highest doubles of the coefficients of the
- *             power series of degree deg, for dim variables;
- *   inputhilo are the second lowest doubles of the coefficients of the
- *             power series of degree deg, for dim variables;
- *   inputlolo are the lowest doubles of the coefficients of the power
- *             series of degree deg, for dim variables;
- *   outputhihi has space for the evaluated and differentiated monomials;
- *   outputlohi has space for the evaluated and differentiated monomials;
- *   outputhilo has space for the evaluated and differentiated monomials;
- *   outputlolo has space for the evaluated and differentiated monomials;
- *   funvalhihi has space for the evaluated power series;
- *   funvallohi has space for the evaluated power series;
- *   funvalhilo has space for the evaluated power series;
- *   funvallolo has space for the evaluated power series;
- *   jacvalhihi has space for deg+1 matrices of dimension dim;
- *   jacvallohi has space for deg+1 matrices of dimension dim;
- *   jacvalhilo has space for deg+1 matrices of dimension dim;
- *   jacvallolo has space for deg+1 matrices of dimension dim;
- *   rhshihi   space for deg+1 vectors of dimension dim;
- *   rhslohi   space for deg+1 vectors of dimension dim;
- *   rhshilo   space for deg+1 vectors of dimension dim;
- *   rhslolo   space for deg+1 vectors of dimension dim;
- *   solhihi   space for deg+1 vectors of dimension dim;
- *   sollohi   space for deg+1 vectors of dimension dim;
- *   solhilo   space for deg+1 vectors of dimension dim;
- *   sollolo   space for deg+1 vectors of dimension dim;
- *   wrkmathihi has work space allocated for a matrix of dimension dim;
- *   wrkmatlohi has work space allocated for a matrix of dimension dim;
- *   wrkmathilo has work space allocated for a matrix of dimension dim;
- *   wrkmatlolo has work space allocated for a matrix of dimension dim;
- *   wrkvechihi has work space allocated for a vector of dimension dim;
- *   wrkveclohi has work space allocated for a vector of dimension dim;
- *   wrkvechilo has work space allocated for a vector of dimension dim;
- *   wrkveclolo has work space allocated for a vector of dimension dim;
- *   resvechihi has space for deg+1 vectors of dimension dim;
- *   resveclohi has space for deg+1 vectors of dimension dim;
- *   resvechilo has space for deg+1 vectors of dimension dim;
- *   resveclolo has space for deg+1 vectors of dimension dim;
- *   ipvt      space allocated for dim pivots;
- *   vrblvl    is the verbose level.
- *
- * ON RETURN :
- *   funvalhihi is the highest doubles of the output[i][dim];
- *   funvallohi is the second highest doubles of the output[i][dim];
- *   funvalhilo is the second lowest doubles of the output[i][dim];
- *   funvallolo is the lowest doubles of the output[i][dim];
- *   jacvalhihi are the highest doubles of a matrix series,
- *             the leading coefficient is the Jacobian matrix.
- *   jacvallohi are the second highest doubles of a matrix series,
- *             the leading coefficient is the Jacobian matrix.
- *   jacvalhilo are the second lowest doubles of a matrix series,
- *             the leading coefficient is the Jacobian matrix.
- *   jacvallolo are the lowest doubles of a matrix series,
- *             the leading coefficient is the Jacobian matrix.
- *   rhshihi   highest doubles of the linearized right hand side
- *             are the function values subtracted by 1 and added by t;
- *   rhslohi   second highest doubles of the linearized right hand side
- *             are the function values subtracted by 1 and added by t;
- *   rhshilo   second lowest doubles of the linearized right hand side
- *             are the function values subtracted by 1 and added by t;
- *   rhslolo   lowest doubles ofthe linearized right hand side
- *             are the function values subtracted by 1 and added by t;
- *   wrkmathihi are the highest doubles of the LU factorization
- *             of the Jacobian matrix;
- *   wrkmatlohi are the second highest doubles of the LU factorization
- *             of the Jacobian matrix;
- *   wrkmathilo are the second lowest doubles of the LU factorization
- *             of the Jacobian matrix;
- *   wrkmatlolo are the lowest doubles of the LU factorization
- *             of the Jacobian matrix;
- *   resvechihi are the highest doubles of the residual vectors;
- *   resveclohi are the second highest doubles of the residual vectors;
- *   resvechilo are the second lowest doubles of the residual vectors;
- *   resveclolo are the lowest doubles of the residual vectors;
- *   resmaxhihi is the highest double of the maximum element
- *             of the residual vectors;
- *   resmaxlohi is the second highest double of the maximum element
- *             of the residual vectors;
- *   resmaxhilo is the second lowest double of the maximum element
- *             of the residual vectors;
- *   resmaxlolo is the lowest double of the maximum element
- *             of the residual vectors;
- *   ipvt      pivots used on the LU factorization of the lead matrix. */
-
 void dbl4_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, double dpr,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, 
+   double **mbhihi, double **mblohi, double **mbhilo, double **mblolo,
+   double dpr,
    double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo,
    double *acchihi, double *acclohi, double *acchilo, double *acclolo,
    double **inputhihi_h, double **inputlohi_h,
@@ -201,6 +70,10 @@ void dbl4_newton_qrstep
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   mbhihi    highest doubles of the right hand side of monomial system;
+ *   mblohi    second highest doubles of the right hand side;
+ *   mbhilo    second lowest doubles of the right hand side;
+ *   mblolo    lowest doubles of the right hand side;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   cffhihi   highest doubles of the coefficients of the monomials;
  *   cfflohi   second highest doubles of the coefficients of the monomials;
@@ -413,7 +286,7 @@ void dbl4_newton_qrstep
 
 int test_dbl4_real_newton
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl );
 /*
  * DESCRIPTION :
@@ -431,6 +304,7 @@ int test_dbl4_real_newton
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   rowsA     rows of the exponents of the dim monomials;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   nbsteps   the number of Newton steps;
  *   mode      the mode of execution, 0 for GPU only, 1 for CPU only,

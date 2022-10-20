@@ -1,3 +1,7 @@
+Thu 18 Oct 2022 : small edit in dbl2_systems_host.h.  Updated
+  {dbl4, dbl8}_{systems_host, newton_method, newton_testers},
+  and test_{dbl4, dbl8}_newton_method.cpp to test on the exponentials.
+
 Wed 19 Oct 2022 : extended {dbl,test,dbl2,test2}_monomial_systems with
   definitions of a real monomial system using the exponential expansion.
   Used the new monomial test systems in {dbl, dbl2}_newton_method,
