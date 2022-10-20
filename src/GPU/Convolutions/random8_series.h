@@ -4,6 +4,53 @@
 #ifndef __random8_series_h__
 #define __random8_series_h__
 
+void dbl8_exponential
+ ( int deg, double xhihihi, double xlohihi, double xhilohi, double xlolohi,
+            double xhihilo, double xlohilo, double xhilolo, double xlololo,
+   double *shihihi, double *slohihi, double *shilohi, double *slolohi,
+   double *shihilo, double *slohilo, double *shilolo, double *slololo );
+/*
+ * DESCRIPTION :
+ *   Returns power series truncated at degree deg,
+ *   following the expansion of exp(x).
+ *
+ * ON ENTRY :
+ *   deg      degree to truncate the series;
+ *   xhihihi  highest double of x;
+ *   xlohihi  second highest double of x;
+ *   xhilohi  third highest double of x;
+ *   xlolohi  fourth highest double of x;
+ *   xhihilo  fourth lowest double of x;
+ *   xlohilo  third lowest double of x;
+ *   xhilolo  second lowest double of x;
+ *   xlololo  lowest double of x;
+ *   shihihi  space for deg+1 doubles;
+ *   slohihi  space for deg+1 doubles;
+ *   shilohi  space for deg+1 doubles;
+ *   slolohi  space for deg+1 doubles;
+ *   shihilo  space for deg+1 doubles;
+ *   slohilo  space for deg+1 doubles;
+ *   shilolo  space for deg+1 doubles;
+ *   slololo  space for deg+1 doubles.
+ *
+ * ON RETURN :
+ *   shihihi  highest doubles of the coefficients of series
+ *            following exp(x), truncated to degree deg;
+ *   slohihi  second highest doubles of the coefficients of series
+ *            following exp(x), truncated to degree deg;
+ *   shilohi  third highest doubles of the coefficients of series
+ *            following exp(x), truncated to degree deg;
+ *   slolohi  fourth highest doubles of the coefficients of series
+ *            following exp(x), truncated to degree deg;
+ *   shihilo  fourth lowest doubles of the coefficients of series
+ *            following exp(x), truncated to degree deg;
+ *   slohilo  third lowest doubles of the coefficients of series
+ *            following exp(x), truncated to degree deg;
+ *   shilolo  second lowest doubles of the coefficients of series
+ *            following exp(x), truncated to degree deg;
+ *   slololo  lowest doubles of the coefficients of series
+ *            following exp(x), truncated to degree deg. */
+
 void dbl8_exponentials
  ( int deg, double xhihihi, double xlohihi, double xhilohi, double xlolohi, 
             double xhihilo, double xlohilo, double xhilolo, double xlololo, 

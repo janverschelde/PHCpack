@@ -13,6 +13,37 @@
 
 using namespace std;
 
+void make_real4_exponentials
+ ( int dim, int  deg,
+   double **shihi, double **slohi, double **shilo, double **slolo )
+{
+   double rndhihi,rndlohi,rndhilo,rndlolo;
+   double acchihi,acclohi,acchilo,acclolo;
+
+   for(int i=0; i<dim; i++)
+   {
+      // rnd is in [-1, +1]
+      random_quad_double(&rndhihi,&rndlohi,&rndhilo,&rndlolo); 
+      qdf_div(rndhihi,rndlohi,rndhilo,rndlolo,2.0,0.0,0.0,0.0,
+              &acchihi,&acclohi,&acchilo,&acclolo); // acc is in [-0.5, +0.5]
+      
+      if(rndhihi < 0)
+      {
+         // rnd = rnd - 1.5; if -0.5 <= rnd < 0, rnd - 1.5 is in [-2, -1.5]
+         qdf_sub(acchihi,acclohi,acchilo,acclolo,1.5,0.0,0.0,0.0,
+                 &rndhihi,&rndlohi,&rndhilo,&rndlolo);
+      }
+      else
+      {
+         // rnd = rnd + 1.5; if  0 < rnd <= 0.5, rnd + 1.5 is in [+1.5, +2]
+         qdf_add(acchihi,acclohi,acchilo,acclolo,1.5,0.0,0.0,0.0,
+                 &rndhihi,&rndlohi,&rndhilo,&rndlolo);
+      }
+      dbl4_exponential(deg,rndhihi,rndlohi,rndhilo,rndlolo,
+                       shihi[i],slohi[i],shilo[i],slolo[i]);
+   }
+}
+
 void make_complex4_exponentials
  ( int dim, int deg,
    double **srehihi, double **srelohi, double **srehilo, double **srelolo,
@@ -40,6 +71,46 @@ void make_complex4_exponentials
           simhihi[i],simlohi[i],simhilo[i],simlolo[i]);
    }
 }
+
+void evaluate_real4_monomials
+ ( int dim, int deg, int **rowsA,
+   double **shihi, double **slohi, double **shilo, double **slolo,
+   double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo )
+{
+   const int degp1 = deg+1;
+
+   double *acchihi = new double[degp1]; // accumulates product
+   double *acclohi = new double[degp1];
+   double *acchilo = new double[degp1];
+   double *acclolo = new double[degp1];
+
+   for(int i=0; i<dim; i++)    // run over all monomials
+   {
+      for(int j=0; j<dim; j++) // run over all variables
+      {
+         if(rowsA[i][j] > 0)   // only multiply if positive exponent
+         {
+            for(int k=0; k<rowsA[i][j]; k++)
+            {
+               CPU_dbl4_product
+                  (deg,shihi[j],slohi[j],shilo[j],slolo[j],
+                   rhshihi[i],rhslohi[i],rhshilo[i],rhslolo[i],
+                   acchihi,acclohi,acchilo,acclolo);
+
+               for(int L=0; L<degp1; L++)
+               {
+                  rhshihi[i][L] = acchihi[L];
+                  rhslohi[i][L] = acclohi[L];
+                  rhshilo[i][L] = acchilo[L];
+                  rhslolo[i][L] = acclolo[L];
+               }
+            }
+         }
+      }
+   }
+   free(acchihi); free(acclohi); free(acchilo); free(acclolo);
+}
+
 
 void evaluate_complex4_monomials
  ( int dim, int deg, int **rowsA,

@@ -4,6 +4,28 @@
 #ifndef __dbl4_monomial_systems_h__
 #define __dbl4_monomial_systems_h__
 
+void make_real4_exponentials
+ ( int dim, int  deg,
+   double **shihi, double **slohi, double **shilo, double **slolo );
+/*
+ * DESCRIPTION :
+ *   Returns the expansions of exp(c*x) for random coefficients c,
+ *   for c in the union of the intervals [-2, -1] and [1, 2].
+ *
+ * ON ENTRY :
+ *   dim      number of power series;
+ *   deg      truncation degree;
+ *   shihi    space for dim arrays of size deg+1;
+ *   slohi    space for dim arrays of size deg+1;
+ *   shilo    space for dim arrays of size deg+1;
+ *   slolo    space for dim arrays of size deg+1.
+ *
+ * ON RETURN :
+ *   shihi    highest doubles of the series expansions;
+ *   slohi    second highest doubles of the series expansions;
+ *   shilo    second lowest doubles of the series expansions;
+ *   slolo    lowest doubles of the series expansions. */
+
 void make_complex4_exponentials
  ( int dim, int deg,
    double **srehihi, double **srelohi, double **srehilo, double **srelolo,
@@ -34,6 +56,34 @@ void make_complex4_exponentials
  *   simlohi  second highest doubles of the imaginary parts of the series;
  *   simhilo  second lowest doubles of the imaginary parts of the series;
  *   simlolo  lowest doubles of the imaginary parts of the series. */
+
+void evaluate_real4_monomials
+ ( int dim, int deg, int **rowsA,
+   double **shihi, double **slohi, double **shilo, double **slolo,
+   double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials defined in the rows of a matrix at
+ *   complex series to make the right hand side of a monomial system.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the monomial system;
+ *   deg      truncation degree of the series;
+ *   rowsA    the rows of A have the exponents of the monomials;
+ *   shihi    highest doubles of the series;
+ *   slohi    second highest doubles of the series;
+ *   shilo    second lowest doubles of the series;
+ *   slolo    lowest doubles of the series;
+ *   rhshihi  has space for dim arrays of size deg+1;
+ *   rhslohi  has space for dim arrays of size deg+1;
+ *   rhshilo  has space for dim arrays of size deg+1;
+ *   rhslolo  has space for dim arrays of size deg+1.
+ *
+ * ON RETURN :
+ *   rhshihi  are the highest doubles of the real parts of the evaluations;
+ *   rhslohi  are the 2nd highest doubles of the real parts of rhs;
+ *   rhshilo  are the 2nd lowest doubles of the real parts of rhs;
+ *   rhslolo  are the lowest doubles of the real parts of rhs. */
 
 void evaluate_complex4_monomials
  ( int dim, int deg, int **rowsA,

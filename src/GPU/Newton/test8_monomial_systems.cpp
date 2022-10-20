@@ -11,12 +11,26 @@
 
 using namespace std;
 
+int make_real_system ( int dim, int deg, int **rowsA );
+/*
+ * DESCRIPTION :
+ *   Sets up a monomial system of dim equations,
+ *   of series with real coefficients truncated to degree deg,
+ *   using the exponents in the rows of rowsA. */
+
+int make_complex_system ( int dim, int deg, int **rowsA );
+/*
+ * DESCRIPTION :
+ *   Sets up a monomial system of dim equations,
+ *   of series with complex coefficients truncated to degree deg,
+ *   using the exponents in the rows of rowsA. */
+
 int main ( void )
 {
    cout << "testing the making of a monomial system ..." << endl;
 
    const int vrblvl = 2;
-   int seed,dim,deg,size,nbritr;
+   int seed,dim,deg,size,nbritr,cdata;
 
    cout << "-> give the seed (0 for time) : "; cin >> seed;
    cout << "-> give the number of series : "; cin >> dim;
@@ -28,6 +42,7 @@ int main ( void )
    }
    cout << "-> give the size of the numbers : "; cin >> size;
    cout << "-> give the number of iterations : "; cin >> nbritr;
+   cout << "-> on complex data (1 is yes, 0 is no) : "; cin >> cdata;
 
    if(seed == 0)
       srand(time(NULL));
@@ -51,6 +66,121 @@ int main ( void )
 
 // generate the solution series
 
+   if(cdata == 1)
+      return make_complex_system(dim,deg,rowsA);
+   else
+      return make_real_system(dim,deg,rowsA);
+}
+
+int make_real_system ( int dim, int deg, int **rowsA )
+{
+   double **solhihihi = new double*[dim];
+   double **sollohihi = new double*[dim];
+   double **solhilohi = new double*[dim];
+   double **sollolohi = new double*[dim];
+   double **solhihilo = new double*[dim];
+   double **sollohilo = new double*[dim];
+   double **solhilolo = new double*[dim];
+   double **sollololo = new double*[dim];
+
+   const int degp1 = deg+1;
+
+   for(int i=0; i<dim; i++)
+   {
+      solhihihi[i] = new double[degp1];
+      sollohihi[i] = new double[degp1];
+      solhilohi[i] = new double[degp1];
+      sollolohi[i] = new double[degp1];
+      solhihilo[i] = new double[degp1];
+      sollohilo[i] = new double[degp1];
+      solhilolo[i] = new double[degp1];
+      sollololo[i] = new double[degp1];
+   }
+   make_real8_exponentials
+      (dim,deg,solhihihi,sollohihi,solhilohi,sollolohi,
+               solhihilo,sollohilo,solhilolo,sollololo);
+
+   cout << scientific << setprecision(16);
+
+   for(int j=0; j<degp1; j++)
+   {
+      cout << "coefficients of degree " << j << " :" << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         cout << "c[" << i << "][" << j << "] : ";     
+         cout << solhihihi[i][j] << "  " << sollohihi[i][j] << endl << "  "
+              << solhilohi[i][j] << "  " << sollolohi[i][j] << endl << "  "
+              << solhihilo[i][j] << "  " << sollohilo[i][j] << endl << "  "
+              << solhilolo[i][j] << "  " << sollololo[i][j] << endl;
+      }
+   }
+
+// compute the right hand sides via evaluation
+
+   double **rhshihihi = new double*[dim];
+   double **rhslohihi = new double*[dim];
+   double **rhshilohi = new double*[dim];
+   double **rhslolohi = new double*[dim];
+   double **rhshihilo = new double*[dim];
+   double **rhslohilo = new double*[dim];
+   double **rhshilolo = new double*[dim];
+   double **rhslololo = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      rhshihihi[i] = new double[degp1];
+      rhslohihi[i] = new double[degp1];
+      rhshilohi[i] = new double[degp1];
+      rhslolohi[i] = new double[degp1];
+      rhshihilo[i] = new double[degp1];
+      rhslohilo[i] = new double[degp1];
+      rhshilolo[i] = new double[degp1];
+      rhslololo[i] = new double[degp1];
+
+      rhshihihi[i][0] = 1.0;     // initialize product to one
+      rhslohihi[i][0] = 0.0;
+      rhshilohi[i][0] = 0.0; 
+      rhslolohi[i][0] = 0.0;
+      rhshihilo[i][0] = 0.0; 
+      rhslohilo[i][0] = 0.0;
+      rhshilolo[i][0] = 0.0; 
+      rhslololo[i][0] = 0.0;
+
+      for(int k=1; k<degp1; k++)
+      {
+         rhshihihi[i][k] = 0.0; rhslohihi[i][k] = 0.0;
+         rhshilohi[i][k] = 0.0; rhslolohi[i][k] = 0.0;
+         rhshihilo[i][k] = 0.0; rhslohilo[i][k] = 0.0;
+         rhshilolo[i][k] = 0.0; rhslololo[i][k] = 0.0;
+      }
+   }
+   evaluate_real8_monomials
+      (dim,deg,rowsA,solhihihi,sollohihi,solhilohi,sollolohi,
+                     solhihilo,sollohilo,solhilolo,sollololo,
+                     rhshihihi,rhslohihi,rhshilohi,rhslolohi,
+                     rhshihilo,rhslohilo,rhshilolo,rhslololo);
+
+   cout << "the evaluated right hand sides :" << endl;
+
+   for(int j=0; j<degp1; j++)
+   {
+      cout << "coefficients of degree " << j << " :" << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         cout << "r[" << i << "][" << j << "] : ";     
+         cout << rhshihihi[i][j] << "  " << rhslohihi[i][j] << endl << "  "
+              << rhshilohi[i][j] << "  " << rhslolohi[i][j] << endl << "  "
+              << rhshihilo[i][j] << "  " << rhslohilo[i][j] << endl << "  "
+              << rhshilolo[i][j] << "  " << rhslololo[i][j] << endl;
+      }
+   }
+   return 0;
+}
+
+int make_complex_system ( int dim, int deg, int **rowsA )
+{
    double **solrehihihi = new double*[dim];
    double **solrelohihi = new double*[dim];
    double **solrehilohi = new double*[dim];

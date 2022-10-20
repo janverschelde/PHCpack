@@ -5,6 +5,44 @@
 #include "random8_vectors.h"
 #include "random8_series.h"
 
+void dbl8_exponential
+ ( int deg, double xhihihi, double xlohihi, double xhilohi, double xlolohi,
+            double xhihilo, double xlohilo, double xhilolo, double xlololo,
+   double *shihihi, double *slohihi, double *shilohi, double *slolohi,
+   double *shihilo, double *slohilo, double *shilolo, double *slololo )
+{
+   double fhihihi,flohihi,fhilohi,flolohi;
+   double fhihilo,flohilo,fhilolo,flololo;
+
+   shihihi[0] = 1.0; slohihi[0] = 0.0;
+   shilohi[0] = 0.0; slolohi[0] = 0.0;
+   shihilo[0] = 0.0; slohilo[0] = 0.0;
+   shilolo[0] = 0.0; slololo[0] = 0.0;
+   shihihi[1] = xhihihi; slohihi[1] = xlohihi;
+   shilohi[1] = xhilohi; slolohi[1] = xlolohi;
+   shihilo[1] = xhihilo; slohilo[1] = xlohilo;
+   shilolo[1] = xhilolo; slololo[1] = xlololo;
+
+   for(int k=2; k<=deg; k++)
+   {
+      odf_mul(shihihi[k-1],slohihi[k-1],shilohi[k-1],slolohi[k-1],
+              shihilo[k-1],slohilo[k-1],shilolo[k-1],slololo[k-1],
+              xhihihi,xlohihi,xhilohi,xlolohi,
+              xhihilo,xlohilo,xhilolo,xlololo,
+              &shihihi[k],&slohihi[k],&shilohi[k],&slolohi[k],
+              &shihilo[k],&slohilo[k],&shilolo[k],&slololo[k]);
+      // x[k] = x[k-1]*r
+      fhihihi = (double) k; flohihi = 0.0; fhilohi = 0.0; flolohi = 0.0;
+      fhihilo = 0.0; flohilo = 0.0; fhilolo = 0.0; flololo = 0.0;
+      odf_div(shihihi[k],slohihi[k],shilohi[k],slolohi[k],
+              shihilo[k],slohilo[k],shilolo[k],slololo[k],
+              fhihihi,flohihi,fhilohi,flolohi,
+              fhihilo,flohilo,fhilolo,flololo,
+              &shihihi[k],&slohihi[k],&shilohi[k],&slolohi[k],
+              &shihilo[k],&slohilo[k],&shilolo[k],&slololo[k]);
+   }
+}
+
 void dbl8_exponentials
  ( int deg, double xhihihi, double xlohihi, double xhilohi, double xlolohi, 
             double xhihilo, double xlohilo, double xhilolo, double xlololo, 

@@ -4,6 +4,37 @@
 #ifndef __dbl8_monomial_systems_h__
 #define __dbl8_monomial_systems_h__
 
+void make_real8_exponentials
+ ( int dim, int  deg,
+   double **shihihi, double **slohihi, double **shilohi, double **slolohi,
+   double **shihilo, double **slohilo, double **shilolo, double **slololo );
+/*
+ * DESCRIPTION :
+ *   Returns the expansions of exp(c*x) for random coefficients c,
+ *   for c in the union of the intervals [-2, -1] and [1, 2].
+ *
+ * ON ENTRY :
+ *   dim      number of power series;
+ *   deg      truncation degree;
+ *   shihihi  space for dim arrays of size deg+1;
+ *   slohihi  space for dim arrays of size deg+1;
+ *   shilohi  space for dim arrays of size deg+1;
+ *   slolohi  space for dim arrays of size deg+1;
+ *   shihilo  space for dim arrays of size deg+1;
+ *   slohilo  space for dim arrays of size deg+1;
+ *   shilolo  space for dim arrays of size deg+1;
+ *   slololo  space for dim arrays of size deg+1.
+ *
+ * ON RETURN :
+ *   shihihi  highest doubles of the series expansions;
+ *   slohihi  second highest doubles of the series expansions;
+ *   shilohi  third highest doubles of the series expansions;
+ *   slolohi  fourth highest doubles of the series expansions;
+ *   shihilo  fourth lowest doubles of the series expansions;
+ *   slohilo  third lowest doubles of the series expansions;
+ *   shilolo  second lowest doubles of the series expansions;
+ *   slololo  lowest doubles of the series expansions. */
+
 void make_complex8_exponentials
  ( int dim, int deg,
    double **srehihihi, double **srelohihi,
@@ -56,6 +87,50 @@ void make_complex8_exponentials
  *   simlohilo are the 3rd lowest doubles of the imag parts of the series;
  *   simhilolo are the 2nd lowest doubles of the imag parts of the series;
  *   simlololo are the lowest doubles of the imag parts of the series. */
+
+void evaluate_real8_monomials
+ ( int dim, int deg, int **rowsA,
+   double **shihihi, double **slohihi, double **shilohi, double **slolohi,
+   double **shihilo, double **slohilo, double **shilolo, double **slololo,
+   double **rhshihihi, double **rhslohihi,
+   double **rhshilohi, double **rhslolohi,
+   double **rhshihilo, double **rhslohilo,
+   double **rhshilolo, double **rhslololo );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials defined in the rows of a matrix at
+ *   complex series to make the right hand side of a monomial system.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the monomial system;
+ *   deg      truncation degree of the series;
+ *   rowsA    the rows of A have the exponents of the monomials;
+ *   shihihi  are the highest doubles of the real parts of the series;
+ *   slohihi  are the 2nd highest doubles of the series;
+ *   shilohi  are the 3rd highest doubles of the series;
+ *   slolohi  are the 4th highest doubles of the series;
+ *   shihilo  are the 4th lowest doubles of the series;
+ *   slohilo  are the 3rd lowest doubles of the series;
+ *   shilolo  are the 2nd lowest doubles of the series;
+ *   slololo  are the lowest doubles of the series;
+ *   rhshihihi has space for dim arrays of size deg+1;
+ *   rhslohihi has space for dim arrays of size deg+1;
+ *   rhshilohi has space for dim arrays of size deg+1;
+ *   rhslolohi has space for dim arrays of size deg+1;
+ *   rhshihilo has space for dim arrays of size deg+1;
+ *   rhslohilo has space for dim arrays of size deg+1;
+ *   rhshilolo has space for dim arrays of size deg+1;
+ *   rhslololo has space for dim arrays of size deg+1.
+ *
+ * ON RETURN :
+ *   rhshihihi are the highest doubles of the real parts of the evaluations;
+ *   rhslohihi are the 2nd highest doubles of the real parts of rhs;
+ *   rhshilohi are the 3rd highest doubles of the real parts of rhs;
+ *   rhslolohi are the 4th highest doubles of the real parts of rhs;
+ *   rhshihilo are the 4th lowest doubles of the real parts of rhs;
+ *   rhslohilo are the 3rd lowest doubles of the real parts of rhs;
+ *   rhshilolo are the 2nd lowest doubles of the real parts of rhs;
+ *   rhslololo are the lowest doubles of the real parts of rhs. */
 
 void evaluate_complex8_monomials
  ( int dim, int deg, int **rowsA,

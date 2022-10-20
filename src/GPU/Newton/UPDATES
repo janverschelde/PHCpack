@@ -3,6 +3,8 @@ Wed 19 Oct 2022 : extended {dbl,test,dbl2,test2}_monomial_systems with
   Used the new monomial test systems in {dbl, dbl2}_newton_method,
   updated {dbl, dbl2}_systems_host, {dbl, dbl2}_newton_testers}, and 
   test_{dbl, dbl2}_newton.cpp.
+  Extended {dbl4,test4,dbl8,test8}_monomial_systems with definitions
+  of a real monomial system using the exponential expansion.
 
 Tue 18 Oct 2022 : edits in cmplx2_newton_method, dbl2_systems_host.cpp
   and dbl_systems_host.cpp have improved complex linearizers.

@@ -1,4 +1,5 @@
-Wed 19 Oct 2022 : extended random2_series with a dbl2_exponential function.
+Wed 19 Oct 2022 : extended random2_series with a dbl2_exponential function;
+  also extended {random4, random8}_series likewise.
 
 Mon 17 Oct 2022 : extended random4_series with cmplx4_exponentials function
   and random8_series with cmplx8_exponentials function.

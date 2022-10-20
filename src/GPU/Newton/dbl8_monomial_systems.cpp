@@ -13,6 +13,53 @@
 
 using namespace std;
 
+void make_real8_exponentials
+ ( int dim, int  deg,
+   double **shihihi, double **slohihi, double **shilohi, double **slolohi,
+   double **shihilo, double **slohilo, double **shilolo, double **slololo )
+{
+   double rndhihihi,rndlohihi,rndhilohi,rndlolohi;
+   double rndhihilo,rndlohilo,rndhilolo,rndlololo;
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   for(int i=0; i<dim; i++)
+   {
+      // rnd is in [-1, +1]
+      random_octo_double(&rndhihihi,&rndlohihi,&rndhilohi,&rndlolohi,
+                         &rndhihilo,&rndlohilo,&rndhilolo,&rndlololo); 
+      odf_div(rndhihihi,rndlohihi,rndhilohi,rndlolohi,
+              rndhihilo,rndlohilo,rndhilolo,rndlololo,
+              2.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+              &acchihihi,&acclohihi,&acchilohi,&acclolohi,  // acc is in
+              &acchihilo,&acclohilo,&acchilolo,&acclololo); // in [-0.5, +0.5]
+      
+      if(rndhihihi < 0)
+      {
+         // rnd = rnd - 1.5; if -0.5 <= rnd < 0, rnd - 1.5 is in [-2, -1.5]
+         odf_sub(acchihihi,acclohihi,acchilohi,acclolohi,
+                 acchihilo,acclohilo,acchilolo,acclololo,
+                 1.5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                 &rndhihihi,&rndlohihi,&rndhilohi,&rndlolohi,
+                 &rndhihilo,&rndlohilo,&rndhilolo,&rndlololo);
+      }
+      else
+      {
+         // rnd = rnd + 1.5; if  0 < rnd <= 0.5, rnd + 1.5 is in [+1.5, +2]
+         odf_add(acchihihi,acclohihi,acchilohi,acclolohi,
+                 acchihilo,acclohilo,acchilolo,acclololo,
+                 1.5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                 &rndhihihi,&rndlohihi,&rndhilohi,&rndlolohi,
+                 &rndhihilo,&rndlohilo,&rndhilolo,&rndlololo);
+      }
+      dbl8_exponential
+         (deg,rndhihihi,rndlohihi,rndhilohi,rndlolohi,
+              rndhihilo,rndlohilo,rndhilolo,rndlololo,
+              shihihi[i],slohihi[i],shilohi[i],slolohi[i],
+              shihilo[i],slohilo[i],shilolo[i],slololo[i]);
+   }
+}
+
 void make_complex8_exponentials
  ( int dim, int deg,
    double **srehihihi, double **srelohihi,
@@ -61,6 +108,61 @@ void make_complex8_exponentials
           simhihihi[i],simlohihi[i],simhilohi[i],simlolohi[i],
           simhihilo[i],simlohilo[i],simhilolo[i],simlololo[i]);
    }
+}
+
+void evaluate_real8_monomials
+ ( int dim, int deg, int **rowsA,
+   double **shihihi, double **slohihi, double **shilohi, double **slolohi,
+   double **shihilo, double **slohilo, double **shilolo, double **slololo,
+   double **rhshihihi, double **rhslohihi,
+   double **rhshilohi, double **rhslolohi,
+   double **rhshihilo, double **rhslohilo,
+   double **rhshilolo, double **rhslololo )
+{
+   const int degp1 = deg+1;
+
+   double *acchihihi = new double[degp1]; // accumulates product
+   double *acclohihi = new double[degp1];
+   double *acchilohi = new double[degp1];
+   double *acclolohi = new double[degp1];
+   double *acchihilo = new double[degp1];
+   double *acclohilo = new double[degp1];
+   double *acchilolo = new double[degp1];
+   double *acclololo = new double[degp1];
+
+   for(int i=0; i<dim; i++)    // run over all monomials
+   {
+      for(int j=0; j<dim; j++) // run over all variables
+      {
+         if(rowsA[i][j] > 0)   // only multiply if positive exponent
+         {
+            for(int k=0; k<rowsA[i][j]; k++)
+            {
+               CPU_dbl8_product
+                  (deg,shihihi[j],slohihi[j],shilohi[j],slolohi[j],
+                       shihilo[j],slohilo[j],shilolo[j],slololo[j],
+                   rhshihihi[i],rhslohihi[i],rhshilohi[i],rhslolohi[i],
+                   rhshihilo[i],rhslohilo[i],rhshilolo[i],rhslololo[i],
+                   acchihihi,acclohihi,acchilohi,acclolohi,
+                   acchihilo,acclohilo,acchilolo,acclololo);
+
+               for(int L=0; L<degp1; L++)
+               {
+                  rhshihihi[i][L] = acchihihi[L];
+                  rhslohihi[i][L] = acclohihi[L];
+                  rhshilohi[i][L] = acchilohi[L];
+                  rhslolohi[i][L] = acclolohi[L];
+                  rhshihilo[i][L] = acchihilo[L];
+                  rhslohilo[i][L] = acclohilo[L];
+                  rhshilolo[i][L] = acchilolo[L];
+                  rhslololo[i][L] = acclololo[L];
+               }
+            }
+         }
+      }
+   }
+   free(acchihihi); free(acclohihi); free(acchilohi); free(acclolohi);
+   free(acchihilo); free(acclohilo); free(acchilolo); free(acclololo);
 }
 
 void evaluate_complex8_monomials

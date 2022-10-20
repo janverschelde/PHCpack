@@ -4,6 +4,29 @@
 #include "random4_vectors.h"
 #include "quad_double_functions.h"
 
+void dbl4_exponential
+ ( int deg, double xhihi, double xlohi, double xhilo, double xlolo,
+   double *shihi, double *slohi, double *shilo, double *slolo )
+{
+   double fhihi,flohi,fhilo,flolo;
+
+   shihi[0] = 1.0; slohi[0] = 0.0; shilo[0] = 0.0; slolo[0] = 0.0;
+   shihi[1] = xhihi; slohi[1] = xlohi;
+   shilo[1] = xhilo; slolo[1] = xlolo;
+
+   for(int k=2; k<=deg; k++)
+   {
+      qdf_mul(shihi[k-1],slohi[k-1],shilo[k-1],slolo[k-1],
+              xhihi,xlohi,xhilo,xlolo,
+              &shihi[k],&slohi[k],&shilo[k],&slolo[k]); 
+      // x[k] = x[k-1]*r;
+      fhihi = (double) k; flohi = 0.0; fhilo = 0.0; flolo = 0.0;
+      qdf_div(shihi[k],slohi[k],shilo[k],slolo[k],
+              fhihi,flohi,fhilo,flolo,
+              &shihi[k],&slohi[k],&shilo[k],&slolo[k]);
+   }
+}
+
 void dbl4_exponentials
  ( int deg, double xhihi, double xlohi, double xhilo, double xlolo, 
    double *pluxhihi, double *pluxlohi, double *pluxhilo, double *pluxlolo,

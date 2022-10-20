@@ -4,6 +4,35 @@
 #ifndef __random4_series_h__
 #define __random4_series_h__
 
+void dbl4_exponential
+ ( int deg, double xhihi, double xlohi, double xhilo, double xlolo,
+   double *shihi, double *slohi, double *shilo, double *slolo );
+/*
+ * DESCRIPTION :
+ *   Returns power series truncated at degree deg,
+ *   following the expansion of exp(x).
+ *
+ * ON ENTRY :
+ *   deg      degree to truncate the series;
+ *   xhihi    highest double of x;
+ *   xlohi    second highest double of x;
+ *   xhilo    second lowest double of x;
+ *   xlolo    lowest double of x;
+ *   shihi    space for deg+1 doubles;
+ *   slohi    space for deg+1 doubles;
+ *   shilo    space for deg+1 doubles;
+ *   slolo    space for deg+1 doubles.
+ *
+ * ON RETURN :
+ *   shihi    highest doubles of the coefficients of series
+ *            following exp(x), truncated to degree deg;
+ *   slohi    second highest doubles of the coefficients of series
+ *            following exp(x), truncated to degree deg;
+ *   shilo    second lowest doubles of the coefficients of series
+ *            following exp(x), truncated to degree deg;
+ *   slolo    lowest doubles of the coefficients of series
+ *            following exp(x), truncated to degree deg. */
+
 void dbl4_exponentials
  ( int deg, double xhihi, double xlohi, double xhilo, double xlolo, 
    double *pluxhihi, double *pluxlohi, double *pluxhilo, double *pluxlolo,
