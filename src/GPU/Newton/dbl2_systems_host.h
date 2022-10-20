@@ -117,7 +117,8 @@ void CPU_cmplx2_evaluate_monomials
  *             outputimlo[i][idx[k]] is the derivative w.r.t. idx[k]. */
 
 void dbl2_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx, double damper,
+ ( int dim, int degp1, int *nvr, int **idx,
+   double **mbhi, double **mblo, double damper,
    double ***outputhi, double ***outputlo,
    double **funvalhi, double **funvallo, 
    double **rhshi, double **rhslo, double ***jacvalhi, double ***jacvallo,
@@ -132,6 +133,8 @@ void dbl2_linearize_evaldiff_output
  *   degp1     degree plus one;
  *   nvr       number of variables that occur in each monomial;
  *   idx       for each monomials the indices of each variable;
+ *   mbhi      hight doubles of the right hand side of monomial system;
+ *   mblo      low doubles of the right hand side of monomial system;
  *   damper    the positive damping coefficient for t,
  *             if 1.0, then no damping, if > 1.0, then overdamping;
  *   outputhi  high part of the output of the evaluation and differentiation
@@ -165,7 +168,9 @@ void dbl2_linearize_evaldiff_output
  *             the leading coefficient is the Jacobian matrix. */
 
 void cmplx2_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx, double damper,
+ ( int dim, int degp1, int *nvr, int **idx,
+   double **mbrehi, double **mbrelo, double **mbimhi, double **mbimlo,
+   double damper,
    double ***outputrehi, double ***outputrelo,
    double ***outputimhi, double ***outputimlo,
    double **funvalrehi, double **funvalrelo,
@@ -183,6 +188,10 @@ void cmplx2_linearize_evaldiff_output
  *   degp1     degree plus one;
  *   nvr       number of variables that occur in each monomial;
  *   idx       for each monomials the indices of each variable;
+ *   mbrehi    high real parts of the right hand side of monomial system;
+ *   mbrelo    low real parts of the right hand side of monomial system;
+ *   mbimhi    high imaginary parts of the right hand side series;
+ *   mbimlo    low imaginary parts of the right hand side series;
  *   damper    the positive damping coefficient for t,
  *             if 1.0, then no damping, if > 1.0, then overdamping;
  *   outputrehi are the high doubles of the real parts of the output

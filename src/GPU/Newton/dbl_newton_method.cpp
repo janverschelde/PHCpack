@@ -10,6 +10,7 @@
 #include "random_numbers.h"
 #include "random_monomials.h"
 #include "dbl_factorizations.h"
+#include "dbl_monomial_systems.h"
 #include "unimodular_matrices.h"
 #include "dbl_systems_host.h"
 #include "dbl_systems_kernels.h"
@@ -20,49 +21,10 @@
 
 using namespace std;
 
-void dbl_newton_lustep
- ( int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double **cff, double *acc, double **input, double ***output,
-   double **funval, double ***jacval, double **rhs, double **sol,
-   double **workmat, double *workvec, double **workrhs, double **resvec,
-   double *resmax, int *ipvt, int vrblvl )
-{
-   const int degp1 = deg+1;
-
-   // The series coefficients accumulate common factors,
-   // initially the coefficients are set to one.
-   dbl_unit_series_vector(dim,deg,cff);
-
-   CPU_dbl_evaluate_monomials
-      (dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input,output,vrblvl);
-
-   for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-      for(int j=0; j<dim; j++) 
-         for(int k=0; k<dim; k++) jacval[i][j][k] = 0.0;
-
-   dbl_linearize_evaldiff_output
-      (dim,degp1,nvr,idx,1.0,output,funval,rhs,jacval,vrblvl);
-
-   for(int i=0; i<degp1; i++) // save original rhs for residual
-      for(int j=0; j<dim; j++) workrhs[i][j] = rhs[i][j];
-   for(int i=0; i<degp1; i++) // initialize the solution to zero
-      for(int j=0; j<dim; j++) sol[i][j] = 0.0;
-
-   CPU_dbl_lusb_solve
-      (dim,degp1,jacval,workrhs,sol,workmat,workvec,ipvt,0); // vrblvl);
-
-   CPU_dbl_linear_residue(dim,degp1,jacval,rhs,sol,resvec,resmax,vrblvl);
-
-   if(vrblvl > 0) cout << "maximum residual : " << *resmax << endl;
-
-   dbl_update_series(dim,degp1,input,sol,vrblvl);
-}
-
 void dbl_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double dpr, double **cff, double *acc,
+   double **mb, double dpr, double **cff, double *acc,
    double **input_h, double **input_d, double ***output_h, double ***output_d,
    double **funval_h, double **funval_d,
    double ***jacval_h, double ***jacval_d, double **rhs_h, double **rhs_d,
@@ -123,12 +85,12 @@ void dbl_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       dbl_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,dpr,output_h,funval_h,rhs_h,jacval_h,vrblvl);
+         (dim,degp1,nvr,idx,mb,dpr,output_h,funval_h,rhs_h,jacval_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
       dbl_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,dpr,output_d,funval_d,rhs_d,jacval_d,vrblvl);
+         (dim,degp1,nvr,idx,mb,dpr,output_d,funval_d,rhs_d,jacval_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))
    {
@@ -221,7 +183,7 @@ void dbl_newton_qrstep
 
 int test_dbl_real_newton
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
@@ -329,9 +291,40 @@ int test_dbl_real_newton
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
    // Define the initial input, a vector of ones.
-   dbl_start_series_vector(dim,deg,input_h);
+
+   double **sol = new double*[dim];
+
+   for(int i=0; i<dim; i++) sol[i] = new double[degp1];
+
+   make_real_exponentials(dim,deg,sol);
+
+   // compute the right hand sides via evaluation
+
+   double **mbrhs = new double*[dim];
+
    for(int i=0; i<dim; i++)
-      for(int j=0; j<degp1; j++) input_d[i][j] = input_h[i][j];
+   {
+      mbrhs[i] = new double[degp1];
+
+      mbrhs[i][0] = 1.0;     // initialize product to one
+
+      for(int k=1; k<degp1; k++) mbrhs[i][k] = 0.0;
+   }
+   evaluate_real_monomials(dim,deg,rowsA,sol,mbrhs);
+   
+   double *start0 = new double[dim];
+
+   for(int i=0; i<dim; i++)  // compute start vector
+   {
+      start0[i] = sol[i][0];
+   }
+   real_start_series_vector(dim,deg,start0,input_h);
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<degp1; j++)
+      {
+         input_d[i][j] = input_h[i][j];
+      }
 
    if(vrblvl > 1)
    {
@@ -348,13 +341,15 @@ int test_dbl_real_newton
          cout << "*** running Newton step " << step << " ***" << endl;
 
       dbl_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,cff,acc,
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,mbrhs,dpr,cff,acc,
           input_h,input_d,output_h,output_d,funval_h,funval_d,
           jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
           Q_h,Q_d,R_h,R_d,workmat,workvec,resvec,&resmax,vrblvl,mode);
    }
    if(vrblvl < 2)
    {
+      double errsum = 0.0;
+
       cout << scientific << setprecision(16); // just in case vrblvl == 0
       cout << "The solution series : " << endl;
       for(int j=0; j<degp1; j++)
@@ -362,14 +357,22 @@ int test_dbl_real_newton
          cout << "coefficient of degree " << j << " :" << endl;
          for(int i=0; i<dim; i++)
          {
+            cout << "sol[" << i << "][" << j << "] : " << sol[i][j] << endl;
             if((mode == 0) || (mode == 2))
-              cout << "x_d[" << i << "][" << j << "] : "
-                             << input_d[i][j] << endl;
+            {
+               cout << "x_d[" << i << "][" << j << "] : "
+                              << input_d[i][j] << endl;
+               errsum += abs(sol[i][j] - input_d[i][j]);
+            }
             if((mode == 1) || (mode == 2))
-              cout << "x_h[" << i << "][" << j << "] : "
-                             << input_h[i][j] << endl;
+            {
+               cout << "x_h[" << i << "][" << j << "] : "
+                              << input_h[i][j] << endl;
+               errsum += abs(sol[i][j] - input_h[i][j]);
+            }
          }
       }
+      cout << "error : " << errsum << endl;
    }
    return 0;
 }

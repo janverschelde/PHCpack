@@ -51,16 +51,15 @@ int main ( void )
    int *expsol = new int[dim];
    int sing = exponents_check(dim,rowsA,expsol,vrblvl);
 
-   if(cdata == 0)
-   {
-      cout << "-> give the damper (1.0 is the default) : "; cin >> dpr;
-   }
+   // cout << "-> give the damper (1.0 is the default) : "; cin >> dpr;
+
 /*
  * 2. calling the test function
  */
   if(cdata == 0)
      test_dbl_real_newton
-        (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,nbsteps,mode,vrblvl);
+        (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,rowsA,
+         dpr,nbsteps,mode,vrblvl);
   else
      test_dbl_complex_newton
         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,rowsA,

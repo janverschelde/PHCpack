@@ -4,84 +4,10 @@
 #ifndef __dbl2_newton_method_h__
 #define __dbl2_newton_method_h__
 
-void dbl2_newton_lustep
- ( int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double **cffhi, double **cfflo, double *acchi, double *acclo,
-   double **inputhi, double **inputlo,
-   double ***outputhi, double ***outputlo,
-   double **funvalhi, double **funvallo,
-   double ***jacvalhi, double ***jacvallo,
-   double **rhshi, double **rhslo, double **solhi, double **sollo,
-   double **workmathi, double **workmatlo,
-   double *workvechi, double *workveclo,
-   double **workrhshi, double **workrhslo,
-   double **resvechi, double **resveclo,
-   double *resmaxhi, double *resmaxlo, int *ipvt, int vrblvl );
-/*
- * DESCRIPTION :
- *   Does one step with Newton's method to update a power series,
- *   using LU factorization to solve linear systems.
- *
- * ON ENTRY :
- *   dim       number of monomials;
- *   deg       degree of the power series;
- *   nvr       nvr[i] is the number of variables in the i-th monomial;
- *   idx       idx[i] are the indices of the variables in monomial i;
- *   exp       exp[i] are the exponents of the variables in monomial i;
- *   nbrfac    nbrfac[i] are the number of exponents > 1 in monomial i;
- *   expfac    expfac[i] are the exponents in the i-th polynomial
- *             that are larger than one, minus one in the factor,
- *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
- *   cffhi     high doubles of the coefficients of the monomials;
- *   cfflo     low doubles of the coefficients of the monomials;
- *   acchi     space to accumulate one power series of degree deg;
- *   acclo     space to accumulate one power series of degree deg;
- *   inputhi   high doubles of the coefficients of the power series
- *             of degree deg, for dim variables;
- *   input     low doubles of the coefficients of the power series
- *             of degree deg, for dim variables;
- *   outputhi  space for the evaluated and differentiated monomials;
- *   outputlo  space for the evaluated and differentiated monomials;
- *   funvalhi  space for the evaluated power series;
- *   funvallo  space for the evaluated power series;
- *   jacvalhi  space for deg+1 matrices of dimension dim;
- *   jacvallo  space for deg+1 matrices of dimension dim;
- *   rhshi     space for deg+1 vectors of dimension dim;
- *   rhslo     space for deg+1 vectors of dimension dim;
- *   solhi     space for deg+1 vectors of dimension dim;
- *   sollo     space for deg+1 vectors of dimension dim;
- *   wrkmathi  work space allocated for a matrix of dimension dim;
- *   wrkmatlo  work space allocated for a matrix of dimension dim;
- *   wrkvechi  work space allocated for a vector of dimension dim;
- *   wrkveclo  work space allocated for a vector of dimension dim;
- *   resvechi  space for deg+1 vectors of dimension dim;
- *   resveclo  space for deg+1 vectors of dimension dim;
- *   ipvt      space allocated for dim pivots;
- *   vrblvl    is the verbose level.
- *
- * ON RETURN :
- *   funvalhi  high doubles of the output[i][dim], the evaluated series;
- *   funvallo  low doubles of the output[i][dim], the evaluated series;
- *   jacvalhi  high doubles of a series with matrices as coefficients,
- *             the leading coefficient is the Jacobian matrix.
- *   jacvallo  low doubles of a series with matrices as coefficients,
- *             the leading coefficient is the Jacobian matrix.
- *   rhshi     high doubles of the linearized right hand side are the 
- *             function values subtracted by 1 and added by t;
- *   rhslo     low doubles of the linearized right hand side are the 
- *             function values subtracted by 1 and added by t;
- *   wrkmathi  high doubles of the LU factorization of the Jacobian matrix;
- *   wrkmatlo  low doubles of the LU factorization of the Jacobian matrix;
- *   resvechi  high doubles of the residual vectors;
- *   resveclo  low doubles of the residual vectors;
- *   resmaxhi  high double of the maximum element of the residual vectors;
- *   resmaxlo  low double of the maximum element of the residual vectors;
- *   ipvt      pivots used on the LU factorization of the lead matrix. */
-
 void dbl2_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, double dpr,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **mbhi, double **mblo, double dpr,
    double **cffhi, double **cfflo, double *acchi, double *acclo,
    double **inputhi_h, double **inputlo_h,
    double **inputhi_d, double **inputlo_d,
@@ -119,6 +45,8 @@ void dbl2_newton_qrstep
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   mbhi      high doubles of the right hand side vector of series;
+ *   mblo      low doubles of the right hand side vector of series;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   cffhi     high doubles of the coefficients of the monomials;
  *   cfflo     low doubles of the coefficients of the monomials;
@@ -229,7 +157,7 @@ void dbl2_newton_qrstep
 
 int test_dbl2_real_newton
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl );
 /*
  * DESCRIPTION :
@@ -247,6 +175,7 @@ int test_dbl2_real_newton
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   rowsA     rows of the exponents of the dim monomials;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   nbsteps   the number of Newton steps;
  *   mode      the mode of execution, 0 for GPU only, 1 for CPU only,

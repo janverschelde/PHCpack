@@ -184,7 +184,7 @@ void CPU_cmplx_evaluate_monomials
 }
 
 void dbl_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx, double damper,
+ ( int dim, int degp1, int *nvr, int **idx, double **mb, double damper,
    double ***output, double **funval, double **rhs, double ***jacval,
    int vrblvl )
 {
@@ -198,16 +198,20 @@ void dbl_linearize_evaldiff_output
       cout << "The leading coefficients of the evaluated series :" << endl;
       for(int i=0; i<dim; i++) cout << i << " : " << funval[i][0] << endl;
    }
-   // Linearize the function values in the rhs and swap sign,
-   // but keep in mind that the right hand side is 1 - t,
-   // so we subtract 1 and add damper*t to the rhs.
-   for(int j=0; j<dim; j++) rhs[0][j] = -(funval[j][0] - 1.0);
-   if(degp1 > 1)
-   {
-      for(int j=0; j<dim; j++) rhs[1][j] = -(funval[j][1] + damper);
-      for(int i=2; i<degp1; i++)
-         for(int j=0; j<dim; j++) rhs[i][j] = -funval[j][i];
-   }
+   /*
+    * Linearize the function values in the rhs and swap sign,
+    * but keep in mind that the right hand side is mbre + I*mbim,
+    * as the monomial system is x^U = rhs, or x^U - rhs = 0,
+    * so from the funval we substract rhs and then flip sign
+    * in the computation of the rhs of the linear system.
+    */
+
+   for(int i=0; i<degp1; i++)
+      for(int j=0; j<dim; j++)
+      {
+         rhs[i][j] = -(funval[j][i] - mb[j][i]);
+      }
+
    if(vrblvl > 1)
    {
       cout << "The right hand side series :" << endl;

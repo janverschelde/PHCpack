@@ -7,13 +7,14 @@
 
 using namespace std;
 
-void dbl_start_series_vector ( int dim, int deg, double **cff )
+void real_start_series_vector ( int dim, int deg, double *r0, double **cff )
 {
    double angle;
 
    for(int i=0; i<dim; i++)
    {
-      cff[i][0] = 1.00001; // random_double(); => no convergence ...
+      cff[i][0] = r0[i] + 0.00001; // random_double(); => no convergence ...
+
       for(int j=1; j<=deg; j++) cff[i][j] = 0.0;
    }
 }

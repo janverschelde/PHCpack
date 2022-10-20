@@ -22,13 +22,15 @@
 
 using namespace std;
 
-void dbl2_start_series_vector
- ( int dim, int deg, double **cffhi, double **cfflo )
+void real2_start_series_vector
+ ( int dim, int deg, double *r0hi, double *r0lo,
+   double **cffhi, double **cfflo )
 {
    for(int i=0; i<dim; i++)
    {
-      cffhi[i][0] = 1.00001;
-      cfflo[i][0] = 0.0;
+      cffhi[i][0] = r0hi[i];
+      cfflo[i][0] = r0lo[i];
+      ddf_inc(&cffhi[i][0],&cfflo[i][0],0.00001,0.0);
 
       for(int j=1; j<=deg; j++)
       {

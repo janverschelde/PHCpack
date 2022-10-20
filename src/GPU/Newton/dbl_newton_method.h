@@ -4,58 +4,10 @@
 #ifndef __dbl_newton_method_h__
 #define __dbl_newton_method_h__
 
-void dbl_newton_lustep
- ( int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double **cff, double *acc, double **input, double ***output,
-   double **funval, double ***jacval, double **rhs, double **sol,
-   double **workmat, double *workvec, double **workrhs, double **resvec,
-   double *resmax, int *ipvt, int vrblvl );
-/*
- * DESCRIPTION :
- *   Does one step with Newton's method to update a power series,
- *   using LU factorization to solve linear systems.
- *
- * ON ENTRY :
- *   dim       number of monomials;
- *   deg       degree of the power series;
- *   nvr       nvr[i] is the number of variables in the i-th monomial;
- *   idx       idx[i] are the indices of the variables in monomial i;
- *   exp       exp[i] are the exponents of the variables in monomial i;
- *   nbrfac    nbrfac[i] are the number of exponents > 1 in monomial i;
- *   expfac    expfac[i] are the exponents in the i-th polynomial
- *             that are larger than one, minus one in the factor,
- *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
- *   cff       coefficients of the monomials;
- *   acc       space to accumulate one power series of degree deg;
- *   input     coefficients of the power series of degree deg,
- *             for dim variables;
- *   output    space for the evaluated and differentiated monomials;
- *   funval    space for the evaluated power series;
- *   jacval    space for deg+1 matrices of dimension dim;
- *   rhs       space for deg+1 vectors of dimension dim;
- *   sol       space for deg+1 vectors of dimension dim;
- *   wrkmat    work space allocated for a matrix of dimension dim;
- *   wrkvec    work space allocated for a vector of dimension dim;
- *   resvec    space for deg+1 vectors of dimension dim;
- *   ipvt      space allocated for dim pivots;
- *   vrblvl    is the verbose level.
- *
- * ON RETURN :
- *   funval    collects the output[i][dim], the evaluated series;
- *   jacval    a series with matrices as coefficients,
- *             the leading coefficient is the Jacobian matrix.
- *   rhs       the linearized right hand side are the function values
- *             subtracted by 1 and added by t;
- *   wrkmat    has the LU factorization of the Jacobian matrix;
- *   resvec    residual vectors;
- *   resmax    the maximum element of the residual vectors;
- *   ipvt      pivots used on the LU factorization of the lead matrix. */
-
 void dbl_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double dpr, double **cff, double *acc,
+   double **mb, double dpr, double **cff, double *acc,
    double **input_h, double **input_d, double ***output_h, double ***output_d,
    double **funval_h, double **funval_d,
    double ***jacval_h, double ***jacval_d, double **rhs_h, double **rhs_d,
@@ -82,6 +34,7 @@ void dbl_newton_qrstep
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   mb        right hand side vector of series;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   cff       coefficients of the monomials;
  *   acc       space to accumulate one power series of degree deg;
@@ -141,7 +94,7 @@ void dbl_newton_qrstep
 
 int test_dbl_real_newton
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl );
 /*
  * DESCRIPTION :
@@ -159,6 +112,7 @@ int test_dbl_real_newton
  *   expfac    expfac[i] are the exponents in the i-th polynomial
  *             that are larger than one, minus one in the factor,
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   rowsA     rows of the exponents of the dim monomials;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   nbsteps   the number of Newton steps;
  *   mode      the mode of execution, 0 for GPU only, 1 for CPU only,

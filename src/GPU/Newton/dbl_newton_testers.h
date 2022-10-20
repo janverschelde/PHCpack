@@ -4,12 +4,13 @@
 #ifndef __dbl_newton_testers_h__
 #define __dbl_newton_testers_h__
 
-void dbl_start_series_vector ( int dim, int deg, double **cff );
+void real_start_series_vector ( int dim, int deg, double *r0, double **cff );
 /*
  * DESCRIPTION :
  *   Given space in cff for the vector of dim power series,
  *   of series truncated after degree deg,
- *   sets the coefficients cff of the start series. */
+ *   sets the coefficients cff of the start series.
+ *   The constant term equals r0[j] with a small error. */
 
 void cmplx_start_series_vector
  ( int dim, int deg, double *r0re, double *r0im,

@@ -13,6 +13,7 @@
 #include "dbl2_convolutions_host.h"
 #include "dbl2_monomials_host.h"
 #include "dbl2_factorizations.h"
+#include "dbl2_monomial_systems.h"
 #include "dbl2_bals_host.h"
 #include "dbl2_bals_kernels.h"
 #include "dbl2_tail_kernels.h"
@@ -23,76 +24,10 @@
 
 using namespace std;
 
-void dbl2_newton_lustep
- ( int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double **cffhi, double **cfflo, double *acchi, double *acclo,
-   double **inputhi, double **inputlo,
-   double ***outputhi, double ***outputlo,
-   double **funvalhi, double **funvallo,
-   double ***jacvalhi, double ***jacvallo,
-   double **rhshi, double **rhslo, double **solhi, double **sollo,
-   double **workmathi, double **workmatlo,
-   double *workvechi, double *workveclo,
-   double **workrhshi, double **workrhslo,
-   double **resvechi, double **resveclo,
-   double *resmaxhi, double *resmaxlo, int *ipvt, int vrblvl )
-{
-   const int degp1 = deg+1;
-
-   // The series coefficients accumulate common factors,
-   // initially the coefficients are set to one.
-   dbl2_unit_series_vector(dim,deg,cffhi,cfflo);
-
-   CPU_dbl2_evaluate_monomials
-      (dim,deg,nvr,idx,exp,nbrfac,expfac,
-       cffhi,cfflo,acchi,acclo,inputhi,inputlo,outputhi,outputlo,vrblvl);
-
-   for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-      for(int j=0; j<dim; j++) 
-         for(int k=0; k<dim; k++)
-         {
-            jacvalhi[i][j][k] = 0.0;
-            jacvallo[i][j][k] = 0.0;
-         }
-
-   dbl2_linearize_evaldiff_output
-      (dim,degp1,nvr,idx,1.0,outputhi,outputlo,funvalhi,funvallo,
-       rhshi,rhslo,jacvalhi,jacvallo,vrblvl);
-
-   for(int i=0; i<degp1; i++) // save original rhs for residual
-      for(int j=0; j<dim; j++)
-      {
-         workrhshi[i][j] = rhshi[i][j];
-         workrhslo[i][j] = rhslo[i][j];
-      }
-   for(int i=0; i<degp1; i++) // initialize the solution to zero
-      for(int j=0; j<dim; j++)
-      {
-         solhi[i][j] = 0.0;
-         sollo[i][j] = 0.0;
-      }
- 
-   CPU_dbl2_lusb_solve
-      (dim,degp1,jacvalhi,jacvallo,workrhshi,workrhslo,solhi,sollo,
-       workmathi,workmatlo,workvechi,workveclo,ipvt,0); // vrblvl);
-
-   if(vrblvl > 0)
-   {
-      cout << "calling CPU_dbl2_linear_residue ..." << endl;
-
-      CPU_dbl2_linear_residue
-         (dim,degp1,jacvalhi,jacvallo,rhshi,rhslo,solhi,sollo,
-          resvechi,resveclo,resmaxhi,resmaxlo,vrblvl);
-
-      cout << "maximum residual : " << *resmaxhi << endl;
-   }
-   dbl2_update_series(dim,degp1,inputhi,inputlo,solhi,sollo,vrblvl);
-}
-
 void dbl2_newton_qrstep
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, double dpr,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **mbhi, double **mblo, double dpr,
    double **cffhi, double **cfflo, double *acchi, double *acclo,
    double **inputhi_h, double **inputlo_h,
    double **inputhi_d, double **inputlo_d,
@@ -170,14 +105,14 @@ void dbl2_newton_qrstep
    if((mode == 1) || (mode == 2))
    {
       dbl2_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,dpr,outputhi_h,outputlo_h,funvalhi_h,funvallo_h,
-          rhshi_h,rhslo_h,jacvalhi_h,jacvallo_h,vrblvl);
+         (dim,degp1,nvr,idx,mbhi,mblo,dpr,outputhi_h,outputlo_h,
+          funvalhi_h,funvallo_h,rhshi_h,rhslo_h,jacvalhi_h,jacvallo_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
       dbl2_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,dpr,outputhi_d,outputlo_d,funvalhi_d,funvallo_d,
-          rhshi_d,rhslo_d,jacvalhi_d,jacvallo_d,vrblvl);
+         (dim,degp1,nvr,idx,mbhi,mblo,dpr,outputhi_d,outputlo_d,
+          funvalhi_d,funvallo_d,rhshi_d,rhslo_d,jacvalhi_d,jacvallo_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))
    {
@@ -289,7 +224,7 @@ void dbl2_newton_qrstep
 
 int test_dbl2_real_newton
  ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
@@ -477,7 +412,48 @@ int test_dbl2_real_newton
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
    // Define the initial input, a vector of ones.
-   dbl2_start_series_vector(dim,deg,inputhi_h,inputlo_h);
+
+   double **solhi = new double*[dim];
+   double **sollo = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      solhi[i] = new double[degp1];
+      sollo[i] = new double[degp1];
+   }
+   make_real2_exponentials(dim,deg,solhi,sollo);
+
+   // compute the right hand sides via evaluation
+
+   double **mbrhshi = new double*[dim];
+   double **mbrhslo = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      mbrhshi[i] = new double[degp1];
+      mbrhslo[i] = new double[degp1];
+
+      mbrhshi[i][0] = 1.0;     // initialize product to one
+      mbrhslo[i][0] = 0.0;
+
+      for(int k=1; k<degp1; k++)
+      {
+         mbrhshi[i][k] = 0.0;
+         mbrhslo[i][k] = 0.0;
+      }
+   }
+   evaluate_real2_monomials(dim,deg,rowsA,solhi,sollo,mbrhshi,mbrhslo);
+   
+   double *start0hi = new double[dim];
+   double *start0lo = new double[dim];
+
+   for(int i=0; i<dim; i++)  // compute start vector
+   {
+      start0hi[i] = solhi[i][0];
+      start0lo[i] = sollo[i][0];
+   }
+   real2_start_series_vector(dim,deg,start0hi,start0lo,inputhi_h,inputlo_h);
+
    for(int i=0; i<dim; i++)
       for(int j=0; j<degp1; j++)
       {
@@ -499,17 +475,10 @@ int test_dbl2_real_newton
    {
       if(vrblvl > 0)
          cout << "*** running Newton step " << step << " ***" << endl;
-/*
-      dbl2_newton_lustep
-         (dim,deg,nvr,idx,exp,nbrfac,expfac,cffhi,cfflo,acchi,acclo,
-          inputhi,inputlo,outputhi,outputlo,funvalhi,funvallo,
-          jacvalhi,jacvallo,rhshi,rhslo,solhi,sollo,workmathi,workmatlo,
-          workvechi,workveclo,workrhshi,workrhslo,resvechi,resveclo,
-          &resmaxhi,&resmaxlo,ipvt,vrblvl);
- */
+
       dbl2_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,dpr,
-          cffhi,cfflo,acchi,acclo,
+         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,
+          mbrhshi,mbrhslo,dpr,cffhi,cfflo,acchi,acclo,
           inputhi_h,inputlo_h,inputhi_d,inputlo_d,
           outputhi_h,outputlo_h,outputhi_d,outputlo_d,
           funvalhi_h,funvallo_h,funvalhi_d,funvallo_d,
@@ -522,6 +491,8 @@ int test_dbl2_real_newton
    }
    if(vrblvl < 2)
    {
+      double errsum = 0.0;
+
       cout << scientific << setprecision(16); // just in case vrblvl == 0
       cout << "The solution series : " << endl;
       for(int j=0; j<degp1; j++)
@@ -529,16 +500,28 @@ int test_dbl2_real_newton
          cout << "coefficient of degree " << j << " :" << endl;
          for(int i=0; i<dim; i++)
          {
+            cout << "sol[" << i << "][" << j << "] : "
+                           << solhi[i][j] << "  "
+                           << sollo[i][j] << endl;
             if((mode == 0) || (mode == 2))
-              cout << "x_d[" << i << "][" << j << "] : "
-                             << inputhi_d[i][j] << "  "
-                             << inputlo_d[i][j] << endl;
+            {
+               cout << "x_d[" << i << "][" << j << "] : "
+                              << inputhi_d[i][j] << "  "
+                              << inputlo_d[i][j] << endl;
+               errsum += abs(solhi[i][j] - inputhi_d[i][j])
+                       + abs(sollo[i][j] - inputlo_d[i][j]);
+            }
             if((mode == 1) || (mode == 2))
-              cout << "x_h[" << i << "][" << j << "] : "
-                             << inputhi_h[i][j] << "  "
-                             << inputlo_h[i][j] << endl;
+            {
+               cout << "x_h[" << i << "][" << j << "] : "
+                              << inputhi_h[i][j] << "  "
+                              << inputlo_h[i][j] << endl;
+               errsum += abs(solhi[i][j] - inputhi_h[i][j])
+                       + abs(sollo[i][j] - inputlo_h[i][j]);
+            }
          }
       }
+      cout << "error : " << errsum << endl;
    }
    return 0;
 }

@@ -229,12 +229,15 @@ void CPU_cmplx2_evaluate_monomials
 }
 
 void dbl2_linearize_evaldiff_output
- ( int dim, int degp1, int *nvr, int **idx, double damper,
+ ( int dim, int degp1, int *nvr, int **idx,
+   double **mbhi, double **mblo, double damper,
    double ***outputhi, double ***outputlo,
    double **funvalhi, double **funvallo, 
    double **rhshi, double **rhslo, double ***jacvalhi, double ***jacvallo,
    int vrblvl )
 {
+   double acchi,acclo;
+
    // The coefficients of the series for the function values
    // at the input are in output[i][dim].
    for(int i=0; i<dim; i++)
@@ -251,30 +254,23 @@ void dbl2_linearize_evaldiff_output
          cout << i << " : " << funvalhi[i][0] << "  "
                             << funvallo[i][0] << endl;
    }
-   // Linearize the function values in the rhs and swap sign,
-   // but keep in mind that the right hand side is 1 - t,
-   // so we subtract 1 and add t to the rhs.
-   for(int j=0; j<dim; j++) 
-   {                                 // rhs[0][j] = -(funval[j][0] - 1.0);
-      rhshi[0][j] = -funvalhi[j][0];
-      rhslo[0][j] = -funvallo[j][0];
-      ddf_inc(&rhshi[0][j],&rhslo[0][j],1.0,0.0);
-   }
-   if(degp1 > 1)
-   {
-      for(int j=0; j<dim; j++)       // rhs[1][j] = -(funval[j][1] + 1.0);
+   /*
+    * Linearize the function values in the rhs and swap sign,
+    * but keep in mind that the right hand side is mbre + I*mbim,
+    * as the monomial system is x^U = rhs, or x^U - rhs = 0,
+    * so from the funval we substract rhs and then flip sign
+    * in the computation of the rhs of the linear system.
+    */
+   for(int i=0; i<degp1; i++)
+      for(int j=0; j<dim; j++)
       {
-         rhshi[1][j] = -funvalhi[j][1];
-         rhslo[1][j] = -funvallo[j][1];
-         ddf_dec(&rhshi[1][j],&rhslo[1][j],damper,0.0);
+         // rhs[i][j] = -(funval[j][i] - mb[j][i]);
+         ddf_sub(funvalhi[j][i],funvallo[j][i],
+                 mbhi[j][i],mblo[j][i],&acchi,&acclo);
+         rhshi[i][j] = -acchi;
+         rhslo[i][j] = -acclo;
       }
-      for(int i=2; i<degp1; i++)
-         for(int j=0; j<dim; j++)
-         {
-            rhshi[i][j] = -funvalhi[j][i];
-            rhslo[i][j] = -funvallo[j][i];
-         }
-   }
+
    if(vrblvl > 1)
    {
       cout << "The right hand side series :" << endl;
