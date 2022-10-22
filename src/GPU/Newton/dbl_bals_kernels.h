@@ -168,7 +168,7 @@ void GPU_cmplx_bals_qhb
 void GPU_dbl_bals_solve
  ( int dim, int degp1, int szt, int nbt,
    double ***mat, double **Q, double **R, double **rhs, double **sol,
-   int vrblvl );
+   int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -192,13 +192,15 @@ void GPU_dbl_bals_solve
  *   Q        the Q of the QR factorization of the Jacobian matrix;
  *   R        the R of the QR factorization of the Jacobian matrix;
  *   rhs      updated right hand side vectors;
- *   sol      coefficients of the solution series. */
+ *   sol      coefficients of the solution series;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 void GPU_cmplx_bals_solve
  ( int dim, int degp1, int szt, int nbt,
    double ***matre, double ***matim, double **Qre, double **Qim,
    double **Rre, double **Rim, double **rhsre, double **rhsim,
-   double **solre, double **solim, int vrblvl );
+   double **solre, double **solim, int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -231,6 +233,8 @@ void GPU_cmplx_bals_solve
  *   rhsre    real parts of the updated right hand side vectors;
  *   rhsim    imaginary parts of the updated right hand side vectors;
  *   solre    real parts of the solution series;
- *   solim    imaginary parts of the solution series. */
+ *   solim    imaginary parts of the solution series;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 #endif

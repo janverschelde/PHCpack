@@ -240,7 +240,8 @@ void CPU_dbl_lusb_tail
 
 void CPU_dbl_qrbs_tail
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **Q, double **R, double *wrkvec, int vrblvl )
+   double **Q, double **R, double *wrkvec, int *upidx, int *bsidx,
+   int vrblvl )
 {
    double nrm;
    int skipupcnt = 0; // counts updates skipped
@@ -317,13 +318,16 @@ void CPU_dbl_qrbs_tail
       cout << "*** solve tail skipped " << skipupcnt
            << " updates and " << skipbscnt
            << " backsubstitutions ***" << endl;
+
+   *upidx = skipupcnt;
+   *bsidx = skipbscnt;
 }
 
 void CPU_cmplx_qrbs_tail
  ( int dim, int degp1, double ***matre, double ***matim,
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **Qre, double **Qim, double **Rre, double **Rim,
-   double *wrkvecre, double *wrkvecim, int vrblvl )
+   double *wrkvecre, double *wrkvecim, int *upidx, int *bsidx, int vrblvl )
 {
    double nrm,zre,zim;
    int skipupcnt = 0; // counts skipped updates
@@ -420,6 +424,9 @@ void CPU_cmplx_qrbs_tail
       cout << "*** solve tail skipped " << skipupcnt
            << " updates and " << skipbscnt
            << " backsubstitutions ***" << endl;
+
+   *upidx = skipupcnt;
+   *bsidx = skipbscnt;
 }
 
 void CPU_dbl_lusb_solve
@@ -441,18 +448,25 @@ void CPU_dbl_lusb_solve
 
 void CPU_dbl_qrbs_solve
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **wrkmat, double **Q, double **R, double *wrkvec, int vrblvl )
+   double **wrkmat, double **Q, double **R, double *wrkvec,
+   int *upidx, int *bsidx, int vrblvl )
 {
-   if(vrblvl > 0) cout << "calling CPU_dbl_qrbs_head ..." << endl;
+   if(*bsidx > 0)
+   {
+      if(vrblvl > 0) cout << "skipping CPU_dbl_qrbs_head ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_dbl_qrbs_head ..." << endl;
 
-   CPU_dbl_qrbs_head
-      (dim,degp1,mat,rhs,sol,wrkmat,Q,R,wrkvec,vrblvl);
-
+      CPU_dbl_qrbs_head
+         (dim,degp1,mat,rhs,sol,wrkmat,Q,R,wrkvec,vrblvl);
+   }
    if(degp1 > 1)
    {
       if(vrblvl > 0) cout << "calling CPU_dbl_qrbs_tail ..." << endl;
 
-      CPU_dbl_qrbs_tail(dim,degp1,mat,rhs,sol,Q,R,wrkvec,vrblvl);
+      CPU_dbl_qrbs_tail(dim,degp1,mat,rhs,sol,Q,R,wrkvec,upidx,bsidx,vrblvl);
    }
 }
 
@@ -461,21 +475,27 @@ void CPU_cmplx_qrbs_solve
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **wrkmatre, double **wrkmatim,
    double **Qre, double **Qim, double **Rre, double **Rim,
-   double *wrkvecre, double *wrkvecim, int vrblvl )
+   double *wrkvecre, double *wrkvecim, int *upidx, int *bsidx, int vrblvl )
 {
-   if(vrblvl > 0) cout << "calling CPU_cmplx_qrbs_head ..." << endl;
+   if(*bsidx > 0)
+   {
+      if(vrblvl > 0) cout << "skipping CPU_cmplx_qrbs_head ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_cmplx_qrbs_head ..." << endl;
 
-   CPU_cmplx_qrbs_head
-      (dim,degp1,matre,matim,rhsre,rhsim,solre,solim,wrkmatre,wrkmatim,
-       Qre,Qim,Rre,Rim,wrkvecre,wrkvecim,vrblvl);
-
+      CPU_cmplx_qrbs_head
+         (dim,degp1,matre,matim,rhsre,rhsim,solre,solim,wrkmatre,wrkmatim,
+          Qre,Qim,Rre,Rim,wrkvecre,wrkvecim,vrblvl);
+   }
    if(degp1 > 1)
    {
       if(vrblvl > 0) cout << "calling CPU_cmplx_qrbs_tail ..." << endl;
 
       CPU_cmplx_qrbs_tail
          (dim,degp1,matre,matim,rhsre,rhsim,solre,solim,
-          Qre,Qim,Rre,Rim,wrkvecre,wrkvecim,vrblvl);
+          Qre,Qim,Rre,Rim,wrkvecre,wrkvecim,upidx,bsidx,vrblvl);
    }
 }
 

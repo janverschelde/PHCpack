@@ -31,6 +31,7 @@ void dbl_newton_qrstep
    double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
    double **Q_h, double **Q_d, double **R_h, double **R_d,
    double **workmat, double *workvec, double **resvec, double *resmax,
+   int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    int vrblvl, int mode )
 {
    const int degp1 = deg+1;
@@ -126,7 +127,8 @@ void dbl_newton_qrstep
          cout << "calling CPU_dbl_qrbs_solve ..." << endl;
 
       CPU_dbl_qrbs_solve
-         (dim,degp1,jacval_h,urhs_h,sol_h,workmat,Q_h,R_h,workvec,vrblvl);
+         (dim,degp1,jacval_h,urhs_h,sol_h,workmat,Q_h,R_h,workvec,
+          upidx_h,bsidx_h,vrblvl);
  
       if(vrblvl > 0)
       {
@@ -144,7 +146,8 @@ void dbl_newton_qrstep
          cout << "calling GPU_dbl_bals_solve ..." << endl;
 
       GPU_dbl_bals_solve
-         (dim,degp1,szt,nbt,jacval_d,Q_d,R_d,urhs_d,sol_d,vrblvl);
+         (dim,degp1,szt,nbt,jacval_d,Q_d,R_d,urhs_d,sol_d,
+          upidx_d,bsidx_d,vrblvl);
 
       if(vrblvl > 0)
       {
@@ -335,6 +338,11 @@ int test_dbl_real_newton
    }
    if(vrblvl > 0) cout << scientific << setprecision(16);
 
+   int upidx_h = 0;
+   int bsidx_h = 0;
+   int upidx_d = 0;
+   int bsidx_d = 0;
+
    for(int step=0; step<nbsteps; step++)
    {
       if(vrblvl > 0)
@@ -344,7 +352,16 @@ int test_dbl_real_newton
          (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,mbrhs,dpr,cff,acc,
           input_h,input_d,output_h,output_d,funval_h,funval_d,
           jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
-          Q_h,Q_d,R_h,R_d,workmat,workvec,resvec,&resmax,vrblvl,mode);
+          Q_h,Q_d,R_h,R_d,workmat,workvec,resvec,&resmax,
+          &upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
+
+      if(vrblvl > 0)
+         cout << "upidx_h : " << upidx_h << "  bsidx_h : " << bsidx_h
+              << "  upidx_d : " << upidx_d << "  bsidx_d : " << bsidx_d
+              << "  deg : " << deg << endl;
+
+      if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
+      if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;
    }
    if(vrblvl < 2)
    {

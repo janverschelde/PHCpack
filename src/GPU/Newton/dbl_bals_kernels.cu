@@ -338,7 +338,7 @@ void GPU_cmplx_bals_qhb
 void GPU_dbl_bals_solve
  ( int dim, int degp1, int szt, int nbt,
    double ***mat, double **Q, double **R, double **rhs, double **sol,
-   int vrblvl )
+   int *upidx, int *bsidx, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -363,40 +363,48 @@ void GPU_dbl_bals_solve
       }
    }
    double nrm;
-   CPU_dbl_onenorm(nrows,rhs[0],&nrm);
-   if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-   if(nrm + 1.0 == 1.0)
+   if(*bsidx > 0)
    {
-      if(vrblvl > 0)
-         cout << "-> skip call to GPU_dbl_bals_head ..." << endl;
-
-      for(int j=0; j<ncols; j++) sol[0][j] = 0.0;
+      if(vrblvl > 0) cout << "-> skipping GPU_dbl_bals_head ..." << endl;
    }
    else
    {
-      if(vrblvl > 0) cout << "-> calling GPU_dbl_bals_head ..." << endl;
+      CPU_dbl_onenorm(nrows,rhs[0],&nrm);
+      if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-      double **A = new double*[nrows];
-
-      for(int i=0; i<nrows; i++)
+      if(nrm + 1.0 == 1.0)
       {
-         A[i] = new double[ncols];
-         for(int j=0; j<ncols; j++) A[i][j] = mat[0][i][j];
-         b[i] = rhs[0][i];
-         for(int j=0; j<ncols; j++) R[i][j] = mat[0][i][j];
-      }
-      GPU_dbl_bals_head(nrows,ncols,szt,nbt,A,Q,R,b,x,bvrb);
+         if(vrblvl > 0)
+            cout << "-> skip call to GPU_dbl_bals_head ..." << endl;
 
-      if(vrblvl > 0)
+         for(int j=0; j<ncols; j++) sol[0][j] = 0.0;
+      }
+      else
       {
-         CPU_dbl_onenorm(ncols,x,&nrm);
-         cout << "1-norm of x : " << nrm << endl;
-      }
-      for(int j=0; j<ncols; j++) sol[0][j] = x[j];
+         if(vrblvl > 0) cout << "-> calling GPU_dbl_bals_head ..." << endl;
 
-      for(int i=0; i<nrows; i++) free(A[i]);
-      free(A);
+         double **A = new double*[nrows];
+
+         for(int i=0; i<nrows; i++)
+         {
+            A[i] = new double[ncols];
+            for(int j=0; j<ncols; j++) A[i][j] = mat[0][i][j];
+            b[i] = rhs[0][i];
+            for(int j=0; j<ncols; j++) R[i][j] = mat[0][i][j];
+         }
+         GPU_dbl_bals_head(nrows,ncols,szt,nbt,A,Q,R,b,x,bvrb);
+
+         if(vrblvl > 0)
+         {
+            CPU_dbl_onenorm(ncols,x,&nrm);
+            cout << "1-norm of x : " << nrm << endl;
+         }
+         for(int j=0; j<ncols; j++) sol[0][j] = x[j];
+
+         for(int i=0; i<nrows; i++) free(A[i]);
+         free(A);
+      }
    }
    for(int stage=1; stage<degp1; stage++)
    {
@@ -503,6 +511,9 @@ void GPU_dbl_bals_solve
            << " updates and " << skipbscnt
            << " backsubstitutions ***" << endl;
 
+   *upidx = skipupcnt;
+   *bsidx = skipbscnt;
+
    for(int i=0; i<nrows; i++) free(workR[i]);
 
    free(b); free(x); free(workR);
@@ -512,7 +523,7 @@ void GPU_cmplx_bals_solve
  ( int dim, int degp1, int szt, int nbt,
    double ***matre, double ***matim, double **Qre, double **Qim,
    double **Rre, double **Rim, double **rhsre, double **rhsim,
-   double **solre, double **solim, int vrblvl )
+   double **solre, double **solim, int *upidx, int *bsidx, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -545,54 +556,62 @@ void GPU_cmplx_bals_solve
       }
    }
    double nrm;
-   CPU_cmplx_onenorm(nrows,rhsre[0],rhsim[0],&nrm);
-   if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-   if(nrm + 1.0 == 1.0)
+   if(*bsidx > 0)
    {
-      if(vrblvl > 0)
-         cout << "skip call to GPU_cmplx_bals_head ..." << endl;
-
-      for(int j=0; j<ncols; j++)
-      {
-         solre[0][j] = 0.0; solim[0][j] = 0.0;
-      }
+      if(vrblvl > 0) cout << "skipping GPU_cmplx_bals_head ..." << endl;
    }
    else
    {
-      if(vrblvl > 0) cout << "calling GPU_cmplx_bals_head ..." << endl;
+      CPU_cmplx_onenorm(nrows,rhsre[0],rhsim[0],&nrm);
+      if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-      double **Are = new double*[nrows];
-      double **Aim = new double*[nrows];
-
-      for(int i=0; i<nrows; i++)
+      if(nrm + 1.0 == 1.0)
       {
-         Are[i] = new double[ncols]; Aim[i] = new double[ncols];
+         if(vrblvl > 0)
+            cout << "skip call to GPU_cmplx_bals_head ..." << endl;
 
          for(int j=0; j<ncols; j++)
          {
-            Are[i][j] = matre[0][i][j]; Aim[i][j] = matim[0][i][j];
+            solre[0][j] = 0.0; solim[0][j] = 0.0;
          }
-         bre[i] = rhsre[0][i]; bim[i] = rhsim[0][i];
+      }
+      else
+      {
+         if(vrblvl > 0) cout << "calling GPU_cmplx_bals_head ..." << endl;
+
+         double **Are = new double*[nrows];
+         double **Aim = new double*[nrows];
+
+         for(int i=0; i<nrows; i++)
+         {
+            Are[i] = new double[ncols]; Aim[i] = new double[ncols];
+   
+            for(int j=0; j<ncols; j++)
+            {
+               Are[i][j] = matre[0][i][j]; Aim[i][j] = matim[0][i][j];
+            }
+            bre[i] = rhsre[0][i]; bim[i] = rhsim[0][i];
+
+            for(int j=0; j<ncols; j++)
+            {
+               Rre[i][j] = matre[0][i][j]; Rim[i][j] = matim[0][i][j];
+            }
+         }
+         GPU_cmplx_bals_head
+            (nrows,ncols,szt,nbt,Are,Aim,Qre,Qim,Rre,Rim,bre,bim,xre,xim,bvrb);
 
          for(int j=0; j<ncols; j++)
          {
-            Rre[i][j] = matre[0][i][j]; Rim[i][j] = matim[0][i][j];
+            solre[0][j] = xre[j];
+            solim[0][j] = xim[j];
          }
+         for(int i=0; i<nrows; i++)
+         {
+            free(Are[i]); free(Aim[i]);
+         }
+         free(Are); free(Aim);
       }
-      GPU_cmplx_bals_head
-         (nrows,ncols,szt,nbt,Are,Aim,Qre,Qim,Rre,Rim,bre,bim,xre,xim,bvrb);
-
-      for(int j=0; j<ncols; j++)
-      {
-         solre[0][j] = xre[j];
-         solim[0][j] = xim[j];
-      }
-      for(int i=0; i<nrows; i++)
-      {
-         free(Are[i]); free(Aim[i]);
-      }
-      free(Are); free(Aim);
    }
    for(int stage=1; stage<degp1; stage++)
    {
@@ -716,6 +735,9 @@ void GPU_cmplx_bals_solve
       cout << "*** solve tail skipped " << skipupcnt
            << " updates and " << skipbscnt
            << " backsubstitutions ***" << endl;
+
+   *upidx = skipupcnt;
+   *bsidx = skipbscnt;
 
    for(int i=0; i<nrows; i++)
    {

@@ -42,6 +42,7 @@ void cmplx_newton_qrstep
    double **workmatre, double **workmatim,
    double *workvecre, double *workvecim,
    double **resvecre, double **resvecim, double *resmax,
+   int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    int vrblvl, int mode )
 {
    const int degp1 = deg+1;
@@ -150,7 +151,7 @@ void cmplx_newton_qrstep
       CPU_cmplx_qrbs_solve
          (dim,degp1,jacvalre_h,jacvalim_h,urhsre_h,urhsim_h,
           solre_h,solim_h,workmatre,workmatim,Qre_h,Qim_h,Rre_h,Rim_h,
-          workvecre,workvecim,vrblvl);
+          workvecre,workvecim,upidx_h,bsidx_h,vrblvl);
  
       if(vrblvl > 0)
       {
@@ -171,7 +172,7 @@ void cmplx_newton_qrstep
 
       GPU_cmplx_bals_solve
          (dim,degp1,szt,nbt,jacvalre_d,jacvalim_d,Qre_d,Qim_d,Rre_d,Rim_d,
-          urhsre_d,urhsim_d,solre_d,solim_d,vrblvl);
+          urhsre_d,urhsim_d,solre_d,solim_d,upidx_d,bsidx_d,vrblvl);
 
       if(vrblvl > 0)
       {
@@ -454,6 +455,11 @@ int test_dbl_complex_newton
    }
    if(vrblvl > 0) cout << scientific << setprecision(16);
 
+   int upidx_h = 0;
+   int bsidx_h = 0;
+   int upidx_d = 0;
+   int bsidx_d = 0;
+
    for(int step=0; step<nbsteps; step++)
    {
       if(vrblvl > 0)
@@ -471,7 +477,15 @@ int test_dbl_complex_newton
           solre_h,solim_h,solre_d,solim_d,
           Qre_h,Qim_h,Qre_d,Qim_d,Rre_h,Rim_h,Rre_d,Rim_d,
           workmatre,workmatim,workvecre,workvecim,resvecre,resvecim,
-          &resmax,vrblvl,mode);
+          &resmax,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
+
+      if(vrblvl > 0)
+         cout << "upidx_h : " << upidx_h << "  bsidx_h : " << bsidx_h
+              << "  upidx_d : " << upidx_d << "  bsidx_d : " << bsidx_d
+              << "  deg : " << deg << endl;
+
+      if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
+      if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;
    }
    if(vrblvl < 2)
    {

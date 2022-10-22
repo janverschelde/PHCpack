@@ -25,6 +25,7 @@ void cmplx_newton_qrstep
    double **workmatre, double **workmatim,
    double *workvecre, double *workvecim,
    double **resvecre, double **resvecim, double *resmax,
+   int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    int vrblvl, int mode );
 /*
  * DESCRIPTION :
@@ -148,7 +149,11 @@ void cmplx_newton_qrstep
  *   wrkmatim  has a copy of the Jacobian matrix;
  *   resvecre  real parts of the residual vectors;
  *   resvecim  imaginary parts of the residual vectors;
- *   resmax    the maximum element of the residual vectors. */
+ *   resmax    the maximum element of the residual vectors;
+ *   upidx_h   counts the number of updates skipped by host;
+ *   bsidx_h   counts the number of backsubstitutions skipped by host;
+ *   upidx_d   counts the number of updates skipped by device;
+ *   bsidx_d   counts the number of backsubstitutions skipped by device. */
 
 int test_dbl_complex_newton
  ( int szt, int nbt, int dim, int deg,

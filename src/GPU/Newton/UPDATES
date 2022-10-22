@@ -1,8 +1,9 @@
-Fri 21 Oct 2022 : added definition of 'all' to the makefile.
-
-Thu 20 Oct 2022 : small edit in dbl2_systems_host.h.  Updated
+Thu 18 Oct 2022 : small edit in dbl2_systems_host.h.  Updated
   {dbl4, dbl8}_{systems_host, newton_method, newton_testers},
   and test_{dbl4, dbl8}_newton_method.cpp to test on the exponentials.
+  Passed skipped counters from tail methods up to the Newton method,
+  updating dbl_bals_{host, kernels} and {dbl, cmplx}_newton_method,
+  to avoid redundant QR decompositions.
 
 Wed 19 Oct 2022 : extended {dbl,test,dbl2,test2}_monomial_systems with
   definitions of a real monomial system using the exponential expansion.

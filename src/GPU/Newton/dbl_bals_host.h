@@ -126,7 +126,8 @@ void CPU_dbl_lusb_tail
 
 void CPU_dbl_qrbs_tail
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **Q, double **R, double *wrkvec, int vrblvl );
+   double **Q, double **R, double *wrkvec, int *upidx, int *bsidx,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the trailing terms of the power series solution
@@ -147,13 +148,15 @@ void CPU_dbl_qrbs_tail
  *
  * ON RETURN :
  *   rhs      updated right hand side used as work space;
- *   sol      all coefficients of the solution series. */
+ *   sol      all coefficients of the solution series;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_cmplx_qrbs_tail
  ( int dim, int degp1, double ***matre, double ***matim,
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **Qre, double **Qim, double **Rre, double **Rim,
-   double *wrkvecre, double *wrkvecim, int vrblvl );
+   double *wrkvecre, double *wrkvecim, int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the trailing terms of the power series solution
@@ -183,7 +186,9 @@ void CPU_cmplx_qrbs_tail
  *   rhsre    real parts of updated right hand side;
  *   rhsim    imaginary parts of updated right hand side;
  *   solre    real parts of all coefficients of the solution;
- *   solim    imaginary parts of all coefficients of the solution. */
+ *   solim    imaginary parts of all coefficients of the solution;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_dbl_lusb_solve
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
@@ -211,7 +216,8 @@ void CPU_dbl_lusb_solve
 
 void CPU_dbl_qrbs_solve
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **wrkmat, double **Q, double **R, double *wrkvec, int vrblvl );
+   double **wrkmat, double **Q, double **R, double *wrkvec,
+   int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -234,14 +240,16 @@ void CPU_dbl_qrbs_solve
  *   Q        the Q in a QR factorization of the Jacobian matrix;
  *   R        the R in a QR factorization of the Jacobian matrix;
  *   wrkvec   work space used to solve the linear system;
- *   sol      the coefficients of the solution series. */
+ *   sol      the coefficients of the solution series;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_cmplx_qrbs_solve
  ( int dim, int degp1, double ***matre, double ***matim, 
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **wrkmatre, double **wrkmatim,
    double **Qre, double **Qim, double **Rre, double **Rim,
-   double *wrkvecre, double *wrkvecim, int vrblvl );
+   double *wrkvecre, double *wrkvecim, int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -276,7 +284,9 @@ void CPU_cmplx_qrbs_solve
  *   wrkvecre is work space used to solve the linear systems;
  *   wrkvecim is work space used to solve the linear systems;
  *   solre    real parts of the coefficients of the solution;
- *   solim    imaginary parts of the coefficients of the solution. */
+ *   solim    imaginary parts of the coefficients of the solution;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_dbl_linear_residue
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
