@@ -476,7 +476,8 @@ void CPU_dbl4_qrbs_tail
    double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo,
    double *wrkvechihi, double *wrkveclohi,
-   double *wrkvechilo, double *wrkveclolo, int vrblvl )
+   double *wrkvechilo, double *wrkveclolo,
+   int *upidx, int *bsidx, int vrblvl )
 {
    double nrm,acchihi,acclohi,acchilo,acclolo;
    int skipupcnt = 0; // counts the skipped updates
@@ -586,6 +587,9 @@ void CPU_dbl4_qrbs_tail
       cout << "*** solve tail skipped " << skipupcnt
            << " updates and " << skipbscnt
            << " backsubstitutions ***" << endl;
+
+   *upidx = skipupcnt;
+   *bsidx = skipbscnt;
 }
 
 void CPU_cmplx4_qrbs_tail
@@ -609,7 +613,8 @@ void CPU_cmplx4_qrbs_tail
    double *wrkvecrehihi, double *wrkvecrelohi,
    double *wrkvecrehilo, double *wrkvecrelolo,
    double *wrkvecimhihi, double *wrkvecimlohi,
-   double *wrkvecimhilo, double *wrkvecimlolo, int vrblvl )
+   double *wrkvecimhilo, double *wrkvecimlolo,
+   int *upidx, int *bsidx, int vrblvl )
 {
    double nrm,acchihi,acclohi,acchilo,acclolo;
    int skipupcnt = 0; // counts the skipped updates
@@ -780,6 +785,9 @@ void CPU_cmplx4_qrbs_tail
       cout << "*** solve tail skipped " << skipupcnt
            << " updates and " << skipbscnt
            << " backsubstitutions ***" << endl;
+
+   *upidx = skipupcnt;
+   *bsidx = skipbscnt;
 }
 
 void CPU_dbl4_lusb_solve
@@ -821,17 +829,24 @@ void CPU_dbl4_qrbs_solve
    double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo,
    double *wrkvechihi, double *wrkveclohi,
-   double *wrkvechilo, double *wrkveclolo, int vrblvl )
+   double *wrkvechilo, double *wrkveclolo,
+   int *upidx, int *bsidx, int vrblvl )
 {
-   if(vrblvl > 0) cout << "calling CPU_dbl4_qrbs_head ..." << endl;
+   if(*bsidx > 0)
+   {
+      if(vrblvl > 0) cout << "calling CPU_dbl4_qrbs_head ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_dbl4_qrbs_head ..." << endl;
 
-   CPU_dbl4_qrbs_head
-      (dim,degp1,mathihi,matlohi,mathilo,matlolo,
-       rhshihi,rhslohi,rhshilo,rhslolo,solhihi,sollohi,solhilo,sollolo,
-       wrkmathihi,wrkmatlohi,wrkmathilo,wrkmatlolo,
-       Qhihi,Qlohi,Qhilo,Qlolo,Rhihi,Rlohi,Rhilo,Rlolo,
-       wrkvechihi,wrkveclohi,wrkvechilo,wrkveclolo,vrblvl);
-
+      CPU_dbl4_qrbs_head
+         (dim,degp1,mathihi,matlohi,mathilo,matlolo,
+          rhshihi,rhslohi,rhshilo,rhslolo,solhihi,sollohi,solhilo,sollolo,
+          wrkmathihi,wrkmatlohi,wrkmathilo,wrkmatlolo,
+          Qhihi,Qlohi,Qhilo,Qlolo,Rhihi,Rlohi,Rhilo,Rlolo,
+          wrkvechihi,wrkveclohi,wrkvechilo,wrkveclolo,vrblvl);
+   }
    if(degp1 > 1)
    {
       if(vrblvl > 0) cout << "calling CPU_dbl4_qrbs_tail ..." << endl;
@@ -840,7 +855,7 @@ void CPU_dbl4_qrbs_solve
          (dim,degp1,mathihi,matlohi,mathilo,matlolo,
           rhshihi,rhslohi,rhshilo,rhslolo,solhihi,sollohi,solhilo,sollolo,
           Qhihi,Qlohi,Qhilo,Qlolo,Rhihi,Rlohi,Rhilo,Rlolo,
-          wrkvechihi,wrkveclohi,wrkvechilo,wrkveclolo,vrblvl);
+          wrkvechihi,wrkveclohi,wrkvechilo,wrkveclolo,upidx,bsidx,vrblvl);
    }
 }
 
@@ -869,24 +884,31 @@ void CPU_cmplx4_qrbs_solve
    double *wrkvecrehihi, double *wrkvecrelohi,
    double *wrkvecrehilo, double *wrkvecrelolo,
    double *wrkvecimhihi, double *wrkvecimlohi,
-   double *wrkvecimhilo, double *wrkvecimlolo, int vrblvl )
+   double *wrkvecimhilo, double *wrkvecimlolo,
+   int *upidx, int *bsidx, int vrblvl )
 {
-   if(vrblvl > 0) cout << "calling CPU_cmplx4_qrbs_head ..." << endl;
+   if(*bsidx > 0)
+   {
+      if(vrblvl > 0) cout << "skipping CPU_cmplx4_qrbs_head ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_cmplx4_qrbs_head ..." << endl;
 
-   CPU_cmplx4_qrbs_head
-      (dim,degp1,matrehihi,matrelohi,matrehilo,matrelolo,
-                 matimhihi,matimlohi,matimhilo,matimlolo,
-       rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
-       rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
-       solrehihi,solrelohi,solrehilo,solrelolo,
-       solimhihi,solimlohi,solimhilo,solimlolo,
-       wrkmatrehihi,wrkmatrelohi,wrkmatrehilo,wrkmatrelolo,
-       wrkmatimhihi,wrkmatimlohi,wrkmatimhilo,wrkmatimlolo,
-       Qrehihi,Qrelohi,Qrehilo,Qrelolo,Qimhihi,Qimlohi,Qimhilo,Qimlolo,
-       Rrehihi,Rrelohi,Rrehilo,Rrelolo,Rimhihi,Rimlohi,Rimhilo,Rimlolo,
-       wrkvecrehihi,wrkvecrelohi,wrkvecrehilo,wrkvecrelolo,
-       wrkvecimhihi,wrkvecimlohi,wrkvecimhilo,wrkvecimlolo,vrblvl);
-
+      CPU_cmplx4_qrbs_head
+         (dim,degp1,matrehihi,matrelohi,matrehilo,matrelolo,
+                    matimhihi,matimlohi,matimhilo,matimlolo,
+          rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
+          rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
+          solrehihi,solrelohi,solrehilo,solrelolo,
+          solimhihi,solimlohi,solimhilo,solimlolo,
+          wrkmatrehihi,wrkmatrelohi,wrkmatrehilo,wrkmatrelolo,
+          wrkmatimhihi,wrkmatimlohi,wrkmatimhilo,wrkmatimlolo,
+          Qrehihi,Qrelohi,Qrehilo,Qrelolo,Qimhihi,Qimlohi,Qimhilo,Qimlolo,
+          Rrehihi,Rrelohi,Rrehilo,Rrelolo,Rimhihi,Rimlohi,Rimhilo,Rimlolo,
+          wrkvecrehihi,wrkvecrelohi,wrkvecrehilo,wrkvecrelolo,
+          wrkvecimhihi,wrkvecimlohi,wrkvecimhilo,wrkvecimlolo,vrblvl);
+   }
    if(degp1 > 1)
    {
       if(vrblvl > 0) cout << "calling CPU_cmplx4_qrbs_tail ..." << endl;
@@ -901,7 +923,8 @@ void CPU_cmplx4_qrbs_solve
           Qrehihi,Qrelohi,Qrehilo,Qrelolo,Qimhihi,Qimlohi,Qimhilo,Qimlolo,
           Rrehihi,Rrelohi,Rrehilo,Rrelolo,Rimhihi,Rimlohi,Rimhilo,Rimlolo,
           wrkvecrehihi,wrkvecrelohi,wrkvecrehilo,wrkvecrelolo,
-          wrkvecimhihi,wrkvecimlohi,wrkvecimhilo,wrkvecimlolo,vrblvl);
+          wrkvecimhihi,wrkvecimlohi,wrkvecimhilo,wrkvecimlolo,
+          upidx,bsidx,vrblvl);
    }
 }
 

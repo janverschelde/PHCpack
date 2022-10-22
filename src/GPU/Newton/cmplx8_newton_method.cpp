@@ -221,7 +221,9 @@ void cmplx8_newton_qrstep
    double *resmaxhihihi, double *resmaxlohihi,
    double *resmaxhilohi, double *resmaxlolohi,
    double *resmaxhihilo, double *resmaxlohilo,
-   double *resmaxhilolo, double *resmaxlololo, int vrblvl, int mode )
+   double *resmaxhilolo, double *resmaxlololo,
+   int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
+   int vrblvl, int mode )
 {
    const int degp1 = deg+1;
 
@@ -534,7 +536,7 @@ void cmplx8_newton_qrstep
           workvecrehihilo,workvecrelohilo,workvecrehilolo,workvecrelololo,
           workvecimhihihi,workvecimlohihi,workvecimhilohi,workvecimlolohi,
           workvecimhihilo,workvecimlohilo,workvecimhilolo,workvecimlololo,
-          vrblvl);
+          upidx_h,bsidx_h,vrblvl);
  
       if(vrblvl > 0)
       {
@@ -604,7 +606,8 @@ void cmplx8_newton_qrstep
           solrehihihi_d,solrelohihi_d,solrehilohi_d,solrelolohi_d,
           solrehihilo_d,solrelohilo_d,solrehilolo_d,solrelololo_d,
           solimhihihi_d,solimlohihi_d,solimhilohi_d,solimlolohi_d,
-          solimhihilo_d,solimlohilo_d,solimhilolo_d,solimlololo_d,vrblvl);
+          solimhihilo_d,solimlohilo_d,solimhilolo_d,solimlololo_d,
+          upidx_d,bsidx_d,vrblvl);
 
       if(vrblvl > 0)
       {
@@ -1792,6 +1795,11 @@ int test_dbl8_complex_newton
    }
    if(vrblvl > 0) cout << scientific << setprecision(16);
 
+   int upidx_h = 0;
+   int bsidx_h = 0;
+   int upidx_d = 0;
+   int bsidx_d = 0;
+
    for(int step=0; step<nbsteps; step++)
    {
       if(vrblvl > 0)
@@ -1896,7 +1904,16 @@ int test_dbl8_complex_newton
           resvecimhihihi,resvecimlohihi,resvecimhilohi,resvecimlolohi,
           resvecimhihilo,resvecimlohilo,resvecimhilolo,resvecimlololo,
           &resmaxhihihi,&resmaxlohihi,&resmaxhilohi,&resmaxlolohi,
-          &resmaxhihilo,&resmaxlohilo,&resmaxhilolo,&resmaxlololo,vrblvl,mode);
+          &resmaxhihilo,&resmaxlohilo,&resmaxhilolo,&resmaxlololo,
+          &upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
+
+      if(vrblvl > 0)
+         cout << "upidx_h : " << upidx_h << "  bsidx_h : " << bsidx_h
+              << "  upidx_d : " << upidx_d << "  bsidx_d : " << bsidx_d
+              << "  deg : " << deg << endl;
+
+      if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
+      if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;
    }
    if(vrblvl < 2)
    {

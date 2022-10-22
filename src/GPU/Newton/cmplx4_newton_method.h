@@ -103,7 +103,9 @@ void cmplx4_newton_qrstep
    double **resvecimhihi, double **resvecimlohi,
    double **resvecimhilo, double **resvecimlolo,
    double *resmaxhihi, double *resmaxlohi,
-   double *resmaxhilo, double *resmaxlolo, int vrblvl, int mode );
+   double *resmaxhilo, double *resmaxlolo,
+   int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
+   int vrblvl, int mode );
 /*
  * DESCRIPTION :
  *   Does one step with Newton's method to update a power series,
@@ -588,7 +590,11 @@ void cmplx4_newton_qrstep
  *   resmaxhihi is the highest double of the max norm of the residual;
  *   resmaxlohi is the second highest double of the max norm of the residual;
  *   resmaxhilo is the second lowest double of the max norm of the residual;
- *   resmaxlolo is the lowest double of the max norm of the residual. */
+ *   resmaxlolo is the lowest double of the max norm of the residual;
+ *   upidx_h   counts the number of updates skipped by host;
+ *   bsidx_h   counts the number of backsubstitutions skipped by host;
+ *   upidx_d   counts the number of updates skipped by device;
+ *   bsidx_d   counts the number of backsubstitutions skipped by device. */
 
 int test_dbl4_complex_newton
  ( int szt, int nbt, int dim, int deg,

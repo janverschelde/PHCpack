@@ -49,7 +49,9 @@ void cmplx2_newton_qrstep
    double *workvecimhi, double *workvecimlo,
    double **resvecrehi, double **resvecrelo,
    double **resvecimhi, double **resvecimlo,
-   double *resmaxhi, double *resmaxlo, int vrblvl, int mode );
+   double *resmaxhi, double *resmaxlo,
+   int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
+   int vrblvl, int mode );
 /*
  * DESCRIPTION :
  *   Does one step with Newton's method to update a power series,
@@ -288,7 +290,11 @@ void cmplx2_newton_qrstep
  *   resvecimhi are high doubles of the imag parts of the residual vectors;
  *   resvecimlo are high doubles of the imag parts of the residual vectors;
  *   resmaxhi  high double of the maximum element of the residual vectors;
- *   resmaxlo  low double of the maximum element of the residual vectors. */
+ *   resmaxlo  low double of the maximum element of the residual vectors;
+ *   upidx_h   counts the number of updates skipped by host;
+ *   bsidx_h   counts the number of backsubstitutions skipped by host;
+ *   upidx_d   counts the number of updates skipped by device;
+ *   bsidx_d   counts the number of backsubstitutions skipped by device. */
 
 int test_dbl2_complex_newton
  ( int szt, int nbt, int dim, int deg,

@@ -334,7 +334,7 @@ void CPU_dbl2_qrbs_tail
  ( int dim, int degp1, double ***mathi, double ***matlo,
    double **rhshi, double **rhslo, double **solhi, double **sollo,
    double **Qhi, double **Qlo, double **Rhi, double **Rlo,
-   double *wrkvechi, double *wrkveclo, int vrblvl )
+   double *wrkvechi, double *wrkveclo, int *upidx, int *bsidx, int vrblvl )
 {
    double nrm,acchi,acclo;
    int skipupcnt = 0; // counts the skipped updates
@@ -428,6 +428,9 @@ void CPU_dbl2_qrbs_tail
       cout << "*** solve tail skipped " << skipupcnt
            << " updates and " << skipbscnt
            << " backsubstitutions ***" << endl;
+
+   *upidx = skipupcnt;
+   *bsidx = skipbscnt;
 }
 
 void CPU_cmplx2_qrbs_tail
@@ -438,7 +441,8 @@ void CPU_cmplx2_qrbs_tail
    double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
    double *wrkvecrehi, double *wrkvecrelo,
-   double *wrkvecimhi, double *wrkvecimlo, int vrblvl )
+   double *wrkvecimhi, double *wrkvecimlo,
+   int *upidx, int *bsidx, int vrblvl )
 {
    double nrm,acchi,acclo;
    int skipupcnt = 0;
@@ -561,6 +565,9 @@ void CPU_cmplx2_qrbs_tail
       cout << "*** solve tail skipped " << skipupcnt
            << " updates and " << skipbscnt
            << " backsubstitutions ***" << endl;
+
+   *upidx = skipupcnt;
+   *bsidx = skipbscnt;
 }
 
 void CPU_dbl2_lusb_solve
@@ -590,21 +597,27 @@ void CPU_dbl2_qrbs_solve
    double **rhshi, double **rhslo, double **solhi, double **sollo,
    double **wrkmathi, double **wrkmatlo,
    double **Qhi, double **Qlo, double **Rhi, double **Rlo,
-   double *wrkvechi, double *wrkveclo, int vrblvl )
+   double *wrkvechi, double *wrkveclo, int *upidx, int *bsidx, int vrblvl )
 {
-   if(vrblvl > 0) cout << "calling CPU_dbl2_qrbs_head ..." << endl;
+   if(*bsidx > 0)
+   {
+      if(vrblvl > 0) cout << "calling CPU_dbl2_qrbs_head ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_dbl2_qrbs_head ..." << endl;
 
-   CPU_dbl2_qrbs_head
-      (dim,degp1,mathi,matlo,rhshi,rhslo,solhi,sollo,wrkmathi,wrkmatlo,
-       Qhi,Qlo,Rhi,Rlo,wrkvechi,wrkveclo,vrblvl);
-
+      CPU_dbl2_qrbs_head
+         (dim,degp1,mathi,matlo,rhshi,rhslo,solhi,sollo,wrkmathi,wrkmatlo,
+          Qhi,Qlo,Rhi,Rlo,wrkvechi,wrkveclo,vrblvl);
+   }
    if(degp1 > 1)
    {
       if(vrblvl > 0) cout << "calling CPU_dbl2_qrbs_tail ..." << endl;
 
       CPU_dbl2_qrbs_tail
          (dim,degp1,mathi,matlo,rhshi,rhslo,solhi,sollo,Qhi,Qlo,Rhi,Rlo,
-          wrkvechi,wrkveclo,vrblvl);
+          wrkvechi,wrkveclo,upidx,bsidx,vrblvl);
    }
 }
 
@@ -618,17 +631,24 @@ void CPU_cmplx2_qrbs_solve
    double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
    double *wrkvecrehi, double *wrkvecrelo,
-   double *wrkvecimhi, double *wrkvecimlo, int vrblvl )
+   double *wrkvecimhi, double *wrkvecimlo,
+   int *upidx, int *bsidx, int vrblvl )
 {
-   if(vrblvl > 0) cout << "calling CPU_cmplx2_qrbs_head ..." << endl;
+   if(*bsidx > 0)
+   {
+      if(vrblvl > 0) cout << "skipping CPU_cmplx2_qrbs_head ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_cmplx2_qrbs_head ..." << endl;
 
-   CPU_cmplx2_qrbs_head
-      (dim,degp1,matrehi,matrelo,matimhi,matimlo,
-       rhsrehi,rhsrelo,rhsimhi,rhsimlo,solrehi,solrelo,solimhi,solimlo,
-       wrkmatrehi,wrkmatrelo,wrkmatimhi,wrkmatimlo,
-       Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo,
-       wrkvecrehi,wrkvecrelo,wrkvecimhi,wrkvecimlo,vrblvl);
-
+      CPU_cmplx2_qrbs_head
+         (dim,degp1,matrehi,matrelo,matimhi,matimlo,
+          rhsrehi,rhsrelo,rhsimhi,rhsimlo,solrehi,solrelo,solimhi,solimlo,
+          wrkmatrehi,wrkmatrelo,wrkmatimhi,wrkmatimlo,
+          Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo,
+          wrkvecrehi,wrkvecrelo,wrkvecimhi,wrkvecimlo,vrblvl);
+   }
    if(degp1 > 1)
    {
       if(vrblvl > 0) cout << "calling CPU_cmplx2_qrbs_tail ..." << endl;
@@ -637,7 +657,7 @@ void CPU_cmplx2_qrbs_solve
          (dim,degp1,matrehi,matrelo,matimhi,matimlo,
           rhsrehi,rhsrelo,rhsimhi,rhsimlo,solrehi,solrelo,solimhi,solimlo,
           Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo,
-          wrkvecrehi,wrkvecrelo,wrkvecimhi,wrkvecimlo,vrblvl);
+          wrkvecrehi,wrkvecrelo,wrkvecimhi,wrkvecimlo,upidx,bsidx,vrblvl);
    }
 }
 

@@ -45,6 +45,7 @@ void dbl2_newton_qrstep
    double **workmathi, double **workmatlo,
    double *workvechi, double *workveclo,
    double **resvechi, double **resveclo, double *resmaxhi, double *resmaxlo,
+   int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    int vrblvl, int mode )
 {
    const int degp1 = deg+1;
@@ -158,7 +159,7 @@ void dbl2_newton_qrstep
       CPU_dbl2_qrbs_solve
          (dim,degp1,jacvalhi_h,jacvallo_h,urhshi_h,urhslo_h,solhi_h,sollo_h,
           workmathi,workmatlo,Qhi_h,Qlo_h,Rhi_h,Rlo_h,workvechi,workveclo,
-          vrblvl);
+          upidx_h,bsidx_h,vrblvl);
 
       if(vrblvl > 0)
       {
@@ -178,7 +179,7 @@ void dbl2_newton_qrstep
 
       GPU_dbl2_bals_solve
          (dim,degp1,szt,nbt,jacvalhi_d,jacvallo_d,Qhi_d,Qlo_d,Rhi_d,Rlo_d,
-          urhshi_d,urhslo_d,solhi_d,sollo_d,vrblvl);
+          urhshi_d,urhslo_d,solhi_d,sollo_d,upidx_d,bsidx_d,vrblvl);
 
       if(vrblvl > 0)
       {
@@ -471,6 +472,11 @@ int test_dbl2_real_newton
    }
    if(vrblvl > 0) cout << scientific << setprecision(16);
 
+   int upidx_h = 0;
+   int bsidx_h = 0;
+   int upidx_d = 0;
+   int bsidx_d = 0;
+
    for(int step=0; step<nbsteps; step++)
    {
       if(vrblvl > 0)
@@ -487,7 +493,16 @@ int test_dbl2_real_newton
           solhi_h,sollo_h,solhi_d,sollo_d,
           Qhi_h,Qlo_h,Qhi_d,Qlo_d,Rhi_h,Rlo_h,Rhi_d,Rlo_d,
           workmathi,workmatlo,workvechi,workveclo,
-          resvechi,resveclo,&resmaxhi,&resmaxlo,vrblvl,mode);
+          resvechi,resveclo,&resmaxhi,&resmaxlo,
+          &upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
+
+      if(vrblvl > 0)
+         cout << "upidx_h : " << upidx_h << "  bsidx_h : " << bsidx_h
+              << "  upidx_d : " << upidx_d << "  bsidx_d : " << bsidx_d
+              << "  deg : " << deg << endl;
+
+      if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
+      if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;
    }
    if(vrblvl < 2)
    {

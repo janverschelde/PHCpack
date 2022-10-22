@@ -125,7 +125,8 @@ void CPU_dbl8_qrbs_tail
    double *wrkvechihihi, double *wrkveclohihi,
    double *wrkvechilohi, double *wrkveclolohi,
    double *wrkvechihilo, double *wrkveclohilo,
-   double *wrkvechilolo, double *wrkveclololo, int vrblvl );
+   double *wrkvechilolo, double *wrkveclololo,
+   int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the trailing terms of the power series solution
@@ -710,7 +711,9 @@ void CPU_dbl8_lusb_tail
  *   solhihilo are the fourth lowest doubles of the solution series;
  *   sollohilo are the third lowest doubles of the solution series;
  *   solhilolo are the second lowest doubles of the solution series;
- *   sollololo are the lowest doubles of the solution series. */
+ *   sollololo are the lowest doubles of the solution series;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_cmplx8_qrbs_tail
  ( int dim, int degp1,
@@ -761,7 +764,8 @@ void CPU_cmplx8_qrbs_tail
    double *wrkvecimhihihi, double *wrkvecimlohihi,
    double *wrkvecimhilohi, double *wrkvecimlolohi,
    double *wrkvecimhihilo, double *wrkvecimlohilo,
-   double *wrkvecimhilolo, double *wrkvecimlololo, int vrblvl );
+   double *wrkvecimhilolo, double *wrkvecimlololo,
+   int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the trailing terms of the power series solution
@@ -917,7 +921,9 @@ void CPU_cmplx8_qrbs_tail
  *   solimhihilo are the 4th lowest doubles of the imaginary parts of sol;
  *   solimlohilo are the 3rd lowest doubles of the imaginary parts of sol;
  *   solimhilolo are the 2nd lowest doubles of the imaginary parts of sol;
- *   solimlololo are the lowest doubles of the imaginary parts of sol. */
+ *   solimlololo are the lowest doubles of the imaginary parts of sol;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_dbl8_lusb_solve
  ( int dim, int degp1,
@@ -1043,7 +1049,8 @@ void CPU_dbl8_qrbs_solve
    double *wrkvechihihi, double *wrkveclohihi,
    double *wrkvechilohi, double *wrkveclolohi,
    double *wrkvechihilo, double *wrkveclohilo,
-   double *wrkvechilolo, double *wrkveclololo, int vrblvl );
+   double *wrkvechilolo, double *wrkveclololo,
+   int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -1150,7 +1157,9 @@ void CPU_dbl8_qrbs_solve
  *   solhihilo are the fourth lowest double coefficients of the solution;
  *   sollohilo are the third lowest double coefficients of the solution;
  *   solhilolo are the second lowest double coefficients of the solution;
- *   sollololo are the lowest double coefficients of the solution. */
+ *   sollololo are the lowest double coefficients of the solution;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_cmplx8_qrbs_solve
  ( int dim, int degp1,
@@ -1209,7 +1218,8 @@ void CPU_cmplx8_qrbs_solve
    double *wrkvecimhihihi, double *wrkvecimlohihi,
    double *wrkvecimhilohi, double *wrkvecimlolohi,
    double *wrkvecimhihilo, double *wrkvecimlohilo,
-   double *wrkvecimhilolo, double *wrkvecimlololo, int vrblvl );
+   double *wrkvecimhilolo, double *wrkvecimlololo,
+   int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -1412,7 +1422,9 @@ void CPU_cmplx8_qrbs_solve
  *   solimhihilo are the 4th lowest doubles of the imag parts of sol;
  *   solimlohilo are the 3rd lowest doubles of the imag parts of sol;
  *   solimhilolo are the 2nd lowest doubles of the imag parts of sol;
- *   solimlololo are the lowest doubles of the imaginary parts of sol. */
+ *   solimlololo are the lowest doubles of the imaginary parts of sol;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_dbl8_linear_residue
  ( int dim, int degp1,

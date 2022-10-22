@@ -50,7 +50,9 @@ void dbl4_newton_qrstep
    double **resvechihi, double **resveclohi, 
    double **resvechilo, double **resveclolo, 
    double *resmaxhihi, double *resmaxlohi,
-   double *resmaxhilo, double *resmaxlolo, int vrblvl, int mode );
+   double *resmaxhilo, double *resmaxlolo,
+   int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
+   int vrblvl, int mode );
 /*
  * DESCRIPTION :
  *   Does one step with Newton's method to update a power series,
@@ -282,7 +284,11 @@ void dbl4_newton_qrstep
  *   resmaxhihi is highest double of the maximum of residual vectors;
  *   resmaxlohi is second highest double of the maximum of residual vectors;
  *   resmaxhilo is second lowest double of the maximum of residual vectors;
- *   resmaxlolo is lowest double of the maximum of residual vectors. */
+ *   resmaxlolo is lowest double of the maximum of residual vectors;
+ *   upidx_h   counts the number of updates skipped by host;
+ *   bsidx_h   counts the number of backsubstitutions skipped by host;
+ *   upidx_d   counts the number of updates skipped by device;
+ *   bsidx_d   counts the number of backsubstitutions skipped by device. */
 
 int test_dbl4_real_newton
  ( int szt, int nbt, int dim, int deg,

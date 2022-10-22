@@ -626,7 +626,7 @@ void GPU_dbl4_bals_solve
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo, 
    double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
    double **solhihi, double **sollohi, double **solhilo, double **sollolo,
-   int vrblvl )
+   int *upidx, int *bsidx, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -668,68 +668,76 @@ void GPU_dbl4_bals_solve
       }
    }
    double nrm;
-   CPU_dbl_onenorm(nrows,rhshihi[0],&nrm);
-   if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-   if(nrm < 1.0e-56)
+   if(*bsidx > 0)
    {
-      if(vrblvl > 0)
-         cout << "-> skip call to GPU_dbl4_bals_head ..." << endl;
-
-      for(int j=0; j<ncols; j++)
-      {
-         solhihi[0][j] = 0.0; sollohi[0][j] = 0.0;
-         solhilo[0][j] = 0.0; sollolo[0][j] = 0.0;
-      }
+      if(vrblvl > 0) cout << "-> skipping GPU_dbl4_bals_head ..." << endl;
    }
    else
    {
-      if(vrblvl > 0) cout << "-> calling GPU_dbl4_bals_head ..." << endl;
+      CPU_dbl_onenorm(nrows,rhshihi[0],&nrm);
+      if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-      double **Ahihi = new double*[nrows];
-      double **Alohi = new double*[nrows];
-      double **Ahilo = new double*[nrows];
-      double **Alolo = new double*[nrows];
-
-      for(int i=0; i<nrows; i++)
+      if(nrm < 1.0e-56)
       {
-         Ahihi[i] = new double[ncols];
-         Alohi[i] = new double[ncols];
-         Ahilo[i] = new double[ncols];
-         Alolo[i] = new double[ncols];
+         if(vrblvl > 0)
+            cout << "-> skip call to GPU_dbl4_bals_head ..." << endl;
 
          for(int j=0; j<ncols; j++)
          {
-            Ahihi[i][j] = mathihi[0][i][j]; Alohi[i][j] = matlohi[0][i][j];
-            Ahilo[i][j] = mathilo[0][i][j]; Alolo[i][j] = matlolo[0][i][j];
-         }
-         bhihi[i] = rhshihi[0][i]; blohi[i] = rhslohi[0][i];
-         bhilo[i] = rhshilo[0][i]; blolo[i] = rhslolo[0][i];
-
-         for(int j=0; j<ncols; j++)
-         {
-            Rhihi[i][j] = mathihi[0][i][j]; Rlohi[i][j] = matlohi[0][i][j];
-            Rhilo[i][j] = mathilo[0][i][j]; Rlolo[i][j] = matlolo[0][i][j];
+            solhihi[0][j] = 0.0; sollohi[0][j] = 0.0;
+            solhilo[0][j] = 0.0; sollolo[0][j] = 0.0;
          }
       }
-      GPU_dbl4_bals_head
-         (nrows,ncols,szt,nbt,Ahihi,Alohi,Ahilo,Alolo,
-          Qhihi,Qlohi,Qhilo,Qlolo,Rhihi,Rlohi,Rhilo,Rlolo,
-          bhihi,blohi,bhilo,blolo,xhihi,xlohi,xhilo,xlolo,bvrb);
+      else
+      {
+         if(vrblvl > 0) cout << "-> calling GPU_dbl4_bals_head ..." << endl;
+
+         double **Ahihi = new double*[nrows];
+         double **Alohi = new double*[nrows];
+         double **Ahilo = new double*[nrows];
+         double **Alolo = new double*[nrows];
+
+         for(int i=0; i<nrows; i++)
+         {
+            Ahihi[i] = new double[ncols];
+            Alohi[i] = new double[ncols];
+            Ahilo[i] = new double[ncols];
+            Alolo[i] = new double[ncols];
+
+            for(int j=0; j<ncols; j++)
+            {
+               Ahihi[i][j] = mathihi[0][i][j]; Alohi[i][j] = matlohi[0][i][j];
+               Ahilo[i][j] = mathilo[0][i][j]; Alolo[i][j] = matlolo[0][i][j];
+            }
+            bhihi[i] = rhshihi[0][i]; blohi[i] = rhslohi[0][i];
+            bhilo[i] = rhshilo[0][i]; blolo[i] = rhslolo[0][i];
+
+            for(int j=0; j<ncols; j++)
+            {
+               Rhihi[i][j] = mathihi[0][i][j]; Rlohi[i][j] = matlohi[0][i][j];
+               Rhilo[i][j] = mathilo[0][i][j]; Rlolo[i][j] = matlolo[0][i][j];
+            }
+         }
+         GPU_dbl4_bals_head
+            (nrows,ncols,szt,nbt,Ahihi,Alohi,Ahilo,Alolo,
+             Qhihi,Qlohi,Qhilo,Qlolo,Rhihi,Rlohi,Rhilo,Rlolo,
+             bhihi,blohi,bhilo,blolo,xhihi,xlohi,xhilo,xlolo,bvrb);
    
-      for(int j=0; j<ncols; j++)
-      {
-         solhihi[0][j] = xhihi[j];
-         sollohi[0][j] = xlohi[j];
-         solhilo[0][j] = xhilo[j];
-         sollolo[0][j] = xlolo[j];
-      }
+         for(int j=0; j<ncols; j++)
+         {
+            solhihi[0][j] = xhihi[j];
+            sollohi[0][j] = xlohi[j];
+            solhilo[0][j] = xhilo[j];
+            sollolo[0][j] = xlolo[j];
+         }
 
-      for(int i=0; i<nrows; i++)
-      {
-         free(Ahihi[i]); free(Alohi[i]); free(Ahilo[i]); free(Alolo[i]);
+         for(int i=0; i<nrows; i++)
+         {
+            free(Ahihi[i]); free(Alohi[i]); free(Ahilo[i]); free(Alolo[i]);
+         }
+         free(Ahihi); free(Alohi); free(Ahilo); free(Alolo);
       }
-      free(Ahihi); free(Alohi); free(Ahilo); free(Alolo);
    }
    for(int stage=1; stage<degp1; stage++)
    {
@@ -872,6 +880,9 @@ void GPU_dbl4_bals_solve
            << " updates and " << skipbscnt
            << " backsubstitutions ***" << endl;
 
+   *upidx = skipupcnt;
+   *bsidx = skipbscnt;
+
    for(int i=0; i<nrows; i++)
    {
       free(workRhihi[i]); free(workRlohi[i]);
@@ -900,7 +911,8 @@ void GPU_cmplx4_bals_solve
    double **solrehihi, double **solrelohi,
    double **solrehilo, double **solrelolo,
    double **solimhihi, double **solimlohi, 
-   double **solimhilo, double **solimlolo, int vrblvl )
+   double **solimhilo, double **solimlolo,
+   int *upidx, int *bsidx, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -963,98 +975,107 @@ void GPU_cmplx4_bals_solve
          }
    }
    double nrm;
-   CPU_cmplx_onenorm(nrows,rhsrehihi[0],rhsimhihi[0],&nrm);
-   if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-   if(nrm < 1.0e-56)
+   if(*bsidx > 0)
    {
-      if(vrblvl > 0)
-         cout << "-> skip call to GPU_cmplx4_bals_head ..." << endl;
-
-      for(int j=0; j<ncols; j++)
-      {
-         solrehihi[0][j] = 0.0; solrelohi[0][j] = 0.0;
-         solrehilo[0][j] = 0.0; solrelolo[0][j] = 0.0;
-         solimhihi[0][j] = 0.0; solimlohi[0][j] = 0.0;
-         solimhilo[0][j] = 0.0; solimlolo[0][j] = 0.0;
-      }
+      if(vrblvl > 0) cout << "-> skipping GPU_cmplx4_bals_head ..." << endl;
    }
    else
    {
-      if(vrblvl > 0) cout << "-> calling GPU_cmplx4_bals_head ..." << endl;
+      CPU_cmplx_onenorm(nrows,rhsrehihi[0],rhsimhihi[0],&nrm);
+      if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
 
-      double **Arehihi = new double*[nrows];
-      double **Arelohi = new double*[nrows];
-      double **Arehilo = new double*[nrows];
-      double **Arelolo = new double*[nrows];
-      double **Aimhihi = new double*[nrows];
-      double **Aimlohi = new double*[nrows];
-      double **Aimhilo = new double*[nrows];
-      double **Aimlolo = new double*[nrows];
-
-      for(int i=0; i<nrows; i++)
+      if(nrm < 1.0e-56)
       {
-         Arehihi[i] = new double[ncols]; Arelohi[i] = new double[ncols];
-         Arehilo[i] = new double[ncols]; Arelolo[i] = new double[ncols];
-         Aimhihi[i] = new double[ncols]; Aimlohi[i] = new double[ncols];
-         Aimhilo[i] = new double[ncols]; Aimlolo[i] = new double[ncols];
+         if(vrblvl > 0)
+            cout << "-> skip call to GPU_cmplx4_bals_head ..." << endl;
 
          for(int j=0; j<ncols; j++)
          {
-            Arehihi[i][j] = matrehihi[0][i][j];
-            Arelohi[i][j] = matrelohi[0][i][j];
-            Arehilo[i][j] = matrehilo[0][i][j];
-            Arelolo[i][j] = matrelolo[0][i][j];
-            Aimhihi[i][j] = matimhihi[0][i][j];
-            Aimlohi[i][j] = matimlohi[0][i][j];
-            Aimhilo[i][j] = matimhilo[0][i][j];
-            Aimlolo[i][j] = matimlolo[0][i][j];
+            solrehihi[0][j] = 0.0; solrelohi[0][j] = 0.0;
+            solrehilo[0][j] = 0.0; solrelolo[0][j] = 0.0;
+            solimhihi[0][j] = 0.0; solimlohi[0][j] = 0.0;
+            solimhilo[0][j] = 0.0; solimlolo[0][j] = 0.0;
          }
-         brehihi[i] = rhsrehihi[0][i]; brelohi[i] = rhsrelohi[0][i];
-         brehilo[i] = rhsrehilo[0][i]; brelolo[i] = rhsrelolo[0][i];
-         bimhihi[i] = rhsimhihi[0][i]; bimlohi[i] = rhsimlohi[0][i];
-         bimhilo[i] = rhsimhilo[0][i]; bimlolo[i] = rhsimlolo[0][i];
+      }
+      else
+      {
+         if(vrblvl > 0) cout << "-> calling GPU_cmplx4_bals_head ..." << endl;
+
+         double **Arehihi = new double*[nrows];
+         double **Arelohi = new double*[nrows];
+         double **Arehilo = new double*[nrows];
+         double **Arelolo = new double*[nrows];
+         double **Aimhihi = new double*[nrows];
+         double **Aimlohi = new double*[nrows];
+         double **Aimhilo = new double*[nrows];
+         double **Aimlolo = new double*[nrows];
+
+         for(int i=0; i<nrows; i++)
+         {
+            Arehihi[i] = new double[ncols]; Arelohi[i] = new double[ncols];
+            Arehilo[i] = new double[ncols]; Arelolo[i] = new double[ncols];
+            Aimhihi[i] = new double[ncols]; Aimlohi[i] = new double[ncols];
+            Aimhilo[i] = new double[ncols]; Aimlolo[i] = new double[ncols];
+
+            for(int j=0; j<ncols; j++)
+            {
+               Arehihi[i][j] = matrehihi[0][i][j];
+               Arelohi[i][j] = matrelohi[0][i][j];
+               Arehilo[i][j] = matrehilo[0][i][j];
+               Arelolo[i][j] = matrelolo[0][i][j];
+               Aimhihi[i][j] = matimhihi[0][i][j];
+               Aimlohi[i][j] = matimlohi[0][i][j];
+               Aimhilo[i][j] = matimhilo[0][i][j];
+               Aimlolo[i][j] = matimlolo[0][i][j];
+            }
+            brehihi[i] = rhsrehihi[0][i]; brelohi[i] = rhsrelohi[0][i];
+            brehilo[i] = rhsrehilo[0][i]; brelolo[i] = rhsrelolo[0][i];
+            bimhihi[i] = rhsimhihi[0][i]; bimlohi[i] = rhsimlohi[0][i];
+            bimhilo[i] = rhsimhilo[0][i]; bimlolo[i] = rhsimlolo[0][i];
+
+            for(int j=0; j<ncols; j++)
+            {
+               Rrehihi[i][j] = matrehihi[0][i][j];
+               Rrelohi[i][j] = matrelohi[0][i][j];
+               Rrehilo[i][j] = matrehilo[0][i][j];
+               Rrelolo[i][j] = matrelolo[0][i][j];
+               Rimhihi[i][j] = matimhihi[0][i][j];
+               Rimlohi[i][j] = matimlohi[0][i][j];
+               Rimhilo[i][j] = matimhilo[0][i][j];
+               Rimlolo[i][j] = matimlolo[0][i][j];
+            }
+         }
+         GPU_cmplx4_bals_head
+            (nrows,ncols,szt,nbt,
+             Arehihi,Arelohi,Arehilo,Arelolo,Aimhihi,Aimlohi,Aimhilo,Aimlolo,
+             Qrehihi,Qrelohi,Qrehilo,Qrelolo,Qimhihi,Qimlohi,Qimhilo,Qimlolo,
+             Rrehihi,Rrelohi,Rrehilo,Rrelolo,Rimhihi,Rimlohi,Rimhilo,Rimlolo,
+             brehihi,brelohi,brehilo,brelolo,bimhihi,bimlohi,bimhilo,bimlolo,
+             xrehihi,xrelohi,xrehilo,xrelolo,ximhihi,ximlohi,ximhilo,ximlolo,
+             bvrb);
 
          for(int j=0; j<ncols; j++)
          {
-            Rrehihi[i][j] = matrehihi[0][i][j];
-            Rrelohi[i][j] = matrelohi[0][i][j];
-            Rrehilo[i][j] = matrehilo[0][i][j];
-            Rrelolo[i][j] = matrelolo[0][i][j];
-            Rimhihi[i][j] = matimhihi[0][i][j];
-            Rimlohi[i][j] = matimlohi[0][i][j];
-            Rimhilo[i][j] = matimhilo[0][i][j];
-            Rimlolo[i][j] = matimlolo[0][i][j];
+            solrehihi[0][j] = xrehihi[j];
+            solrelohi[0][j] = xrelohi[j];
+            solrehilo[0][j] = xrehilo[j];
+            solrelolo[0][j] = xrelolo[j];
+            solimhihi[0][j] = ximhihi[j];
+            solimlohi[0][j] = ximlohi[j];
+            solimhilo[0][j] = ximhilo[j];
+            solimlolo[0][j] = ximlolo[j];
          }
+         for(int i=0; i<nrows; i++)
+         {
+            free(Arehihi[i]); free(Arelohi[i]);
+            free(Arehilo[i]); free(Arelolo[i]);
+            free(Aimhihi[i]); free(Aimlohi[i]);
+            free(Aimhilo[i]); free(Aimlolo[i]);
+         }
+         free(Arehihi); free(Arelohi); free(Arehilo); free(Arelolo);
+         free(Aimhihi); free(Aimlohi); free(Aimhilo); free(Aimlolo);
       }
-      GPU_cmplx4_bals_head
-         (nrows,ncols,szt,nbt,
-          Arehihi,Arelohi,Arehilo,Arelolo,Aimhihi,Aimlohi,Aimhilo,Aimlolo,
-          Qrehihi,Qrelohi,Qrehilo,Qrelolo,Qimhihi,Qimlohi,Qimhilo,Qimlolo,
-          Rrehihi,Rrelohi,Rrehilo,Rrelolo,Rimhihi,Rimlohi,Rimhilo,Rimlolo,
-          brehihi,brelohi,brehilo,brelolo,bimhihi,bimlohi,bimhilo,bimlolo,
-          xrehihi,xrelohi,xrehilo,xrelolo,ximhihi,ximlohi,ximhilo,ximlolo,bvrb);
-
-      for(int j=0; j<ncols; j++)
-      {
-         solrehihi[0][j] = xrehihi[j];
-         solrelohi[0][j] = xrelohi[j];
-         solrehilo[0][j] = xrehilo[j];
-         solrelolo[0][j] = xrelolo[j];
-         solimhihi[0][j] = ximhihi[j];
-         solimlohi[0][j] = ximlohi[j];
-         solimhilo[0][j] = ximhilo[j];
-         solimlolo[0][j] = ximlolo[j];
-      }
-      for(int i=0; i<nrows; i++)
-      {
-         free(Arehihi[i]); free(Arelohi[i]);
-         free(Arehilo[i]); free(Arelolo[i]);
-         free(Aimhihi[i]); free(Aimlohi[i]);
-         free(Aimhilo[i]); free(Aimlolo[i]);
-      }
-      free(Arehihi); free(Arelohi); free(Arehilo); free(Arelolo);
-      free(Aimhihi); free(Aimlohi); free(Aimhilo); free(Aimlolo);
    }
    for(int stage=1; stage<degp1; stage++)
    {
@@ -1234,6 +1255,9 @@ void GPU_cmplx4_bals_solve
       cout << "*** solve tail skipped " << skipupcnt
            << " updates and " << skipbscnt
            << " backsubstitutions ***" << endl;
+
+   *upidx = skipupcnt;
+   *bsidx = skipbscnt;
 
    for(int i=0; i<nrows; i++)
    {

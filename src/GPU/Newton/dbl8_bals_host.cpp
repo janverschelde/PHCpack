@@ -780,7 +780,8 @@ void CPU_dbl8_qrbs_tail
    double *wrkvechihihi, double *wrkveclohihi,
    double *wrkvechilohi, double *wrkveclolohi,
    double *wrkvechihilo, double *wrkveclohilo,
-   double *wrkvechilolo, double *wrkveclololo, int vrblvl )
+   double *wrkvechilolo, double *wrkveclololo,
+   int *upidx, int *bsidx, int vrblvl )
 {
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
@@ -932,6 +933,9 @@ void CPU_dbl8_qrbs_tail
       cout << "*** solve tail skipped " << skipupcnt
            << " updates and " << skipbscnt
            << " backsubstitutions ***" << endl;
+
+   *upidx = skipupcnt;
+   *bsidx = skipbscnt;
 }
 
 void CPU_cmplx8_qrbs_tail
@@ -983,7 +987,8 @@ void CPU_cmplx8_qrbs_tail
    double *wrkvecimhihihi, double *wrkvecimlohihi,
    double *wrkvecimhilohi, double *wrkvecimlolohi,
    double *wrkvecimhihilo, double *wrkvecimlohilo,
-   double *wrkvecimhilolo, double *wrkvecimlololo, int vrblvl )
+   double *wrkvecimhilolo, double *wrkvecimlololo,
+   int *upidx, int *bsidx, int vrblvl )
 {
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
@@ -1262,6 +1267,9 @@ void CPU_cmplx8_qrbs_tail
       cout << "*** solve tail skipped " << skipupcnt
            << " updates and " << skipbscnt
            << " backsubstitutions ***" << endl;
+
+   *upidx = skipupcnt;
+   *bsidx = skipbscnt;
 }
 
 void CPU_dbl8_lusb_solve
@@ -1342,25 +1350,32 @@ void CPU_dbl8_qrbs_solve
    double *wrkvechihihi, double *wrkveclohihi,
    double *wrkvechilohi, double *wrkveclolohi,
    double *wrkvechihilo, double *wrkveclohilo,
-   double *wrkvechilolo, double *wrkveclololo, int vrblvl )
+   double *wrkvechilolo, double *wrkveclololo,
+   int *upidx, int *bsidx, int vrblvl )
 {
-   if(vrblvl > 0) cout << "calling CPU_dbl8_qrbs_head ..." << endl;
+   if(*bsidx > 0)
+   {
+      if(vrblvl > 0) cout << "calling CPU_dbl8_qrbs_head ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_dbl8_qrbs_head ..." << endl;
 
-   CPU_dbl8_qrbs_head
-      (dim,degp1,
-       mathihihi,matlohihi,mathilohi,matlolohi,
-       mathihilo,matlohilo,mathilolo,matlololo,
-       rhshihihi,rhslohihi,rhshilohi,rhslolohi,
-       rhshihilo,rhslohilo,rhshilolo,rhslololo,
-       solhihihi,sollohihi,solhilohi,sollolohi,
-       solhihilo,sollohilo,solhilolo,sollololo,
-       wrkmathihihi,wrkmatlohihi,wrkmathilohi,wrkmatlolohi,
-       wrkmathihilo,wrkmatlohilo,wrkmathilolo,wrkmatlololo,
-       Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
-       Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
-       wrkvechihihi,wrkveclohihi,wrkvechilohi,wrkveclolohi,
-       wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo,vrblvl);
-
+      CPU_dbl8_qrbs_head
+         (dim,degp1,
+          mathihihi,matlohihi,mathilohi,matlolohi,
+          mathihilo,matlohilo,mathilolo,matlololo,
+          rhshihihi,rhslohihi,rhshilohi,rhslolohi,
+          rhshihilo,rhslohilo,rhshilolo,rhslololo,
+          solhihihi,sollohihi,solhilohi,sollolohi,
+          solhihilo,sollohilo,solhilolo,sollololo,
+          wrkmathihihi,wrkmatlohihi,wrkmathilohi,wrkmatlolohi,
+          wrkmathihilo,wrkmatlohilo,wrkmathilolo,wrkmatlololo,
+          Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
+          Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
+          wrkvechihihi,wrkveclohihi,wrkvechilohi,wrkveclolohi,
+          wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo,vrblvl);
+   }
    if(degp1 > 1)
    {
       if(vrblvl > 0) cout << "calling CPU_dbl8_qrbs_tail ..." << endl;
@@ -1376,7 +1391,8 @@ void CPU_dbl8_qrbs_solve
           Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
           Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
           wrkvechihihi,wrkveclohihi,wrkvechilohi,wrkveclolohi,
-          wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo,vrblvl);
+          wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo,
+          upidx,bsidx,vrblvl);
    }
 }
 
@@ -1437,40 +1453,47 @@ void CPU_cmplx8_qrbs_solve
    double *wrkvecimhihihi, double *wrkvecimlohihi,
    double *wrkvecimhilohi, double *wrkvecimlolohi,
    double *wrkvecimhihilo, double *wrkvecimlohilo,
-   double *wrkvecimhilolo, double *wrkvecimlololo, int vrblvl )
+   double *wrkvecimhilolo, double *wrkvecimlololo,
+   int *upidx, int *bsidx, int vrblvl )
 {
-   if(vrblvl > 0) cout << "calling CPU_cmplx8_qrbs_head ..." << endl;
+   if(*bsidx > 0)
+   {
+      if(vrblvl > 0) cout << "skipping CPU_cmplx8_qrbs_head ..." << endl;
+   }
+   else
+   {
+      if(vrblvl > 0) cout << "calling CPU_cmplx8_qrbs_head ..." << endl;
 
-   CPU_cmplx8_qrbs_head
-      (dim,degp1,matrehihihi,matrelohihi,matrehilohi,matrelolohi,
-                 matrehihilo,matrelohilo,matrehilolo,matrelololo,
-                 matimhihihi,matimlohihi,matimhilohi,matimlolohi,
-                 matimhihilo,matimlohilo,matimhilolo,matimlololo,
-       rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
-       rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
-       rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
-       rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
-       solrehihihi,solrelohihi,solrehilohi,solrelolohi,
-       solrehihilo,solrelohilo,solrehilolo,solrelololo,
-       solimhihihi,solimlohihi,solimhilohi,solimlolohi,
-       solimhihilo,solimlohilo,solimhilolo,solimlololo,
-       wrkmatrehihihi,wrkmatrelohihi,wrkmatrehilohi,wrkmatrelolohi,
-       wrkmatrehihilo,wrkmatrelohilo,wrkmatrehilolo,wrkmatrelololo,
-       wrkmatimhihihi,wrkmatimlohihi,wrkmatimhilohi,wrkmatimlolohi,
-       wrkmatimhihilo,wrkmatimlohilo,wrkmatimhilolo,wrkmatimlololo,
-       Qrehihihi,Qrelohihi,Qrehilohi,Qrelolohi,
-       Qrehihilo,Qrelohilo,Qrehilolo,Qrelololo,
-       Qimhihihi,Qimlohihi,Qimhilohi,Qimlolohi,
-       Qimhihilo,Qimlohilo,Qimhilolo,Qimlololo,
-       Rrehihihi,Rrelohihi,Rrehilohi,Rrelolohi,
-       Rrehihilo,Rrelohilo,Rrehilolo,Rrelololo,
-       Rimhihihi,Rimlohihi,Rimhilohi,Rimlolohi,
-       Rimhihilo,Rimlohilo,Rimhilolo,Rimlololo,
-       wrkvecrehihihi,wrkvecrelohihi,wrkvecrehilohi,wrkvecrelolohi,
-       wrkvecrehihilo,wrkvecrelohilo,wrkvecrehilolo,wrkvecrelololo,
-       wrkvecimhihihi,wrkvecimlohihi,wrkvecimhilohi,wrkvecimlolohi,
-       wrkvecimhihilo,wrkvecimlohilo,wrkvecimhilolo,wrkvecimlololo,vrblvl);
-
+      CPU_cmplx8_qrbs_head
+         (dim,degp1,matrehihihi,matrelohihi,matrehilohi,matrelolohi,
+                    matrehihilo,matrelohilo,matrehilolo,matrelololo,
+                    matimhihihi,matimlohihi,matimhilohi,matimlolohi,
+                    matimhihilo,matimlohilo,matimhilolo,matimlololo,
+          rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
+          rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
+          rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,
+          rhsimhihilo,rhsimlohilo,rhsimhilolo,rhsimlololo,
+          solrehihihi,solrelohihi,solrehilohi,solrelolohi,
+          solrehihilo,solrelohilo,solrehilolo,solrelololo,
+          solimhihihi,solimlohihi,solimhilohi,solimlolohi,
+          solimhihilo,solimlohilo,solimhilolo,solimlololo,
+          wrkmatrehihihi,wrkmatrelohihi,wrkmatrehilohi,wrkmatrelolohi,
+          wrkmatrehihilo,wrkmatrelohilo,wrkmatrehilolo,wrkmatrelololo,
+          wrkmatimhihihi,wrkmatimlohihi,wrkmatimhilohi,wrkmatimlolohi,
+          wrkmatimhihilo,wrkmatimlohilo,wrkmatimhilolo,wrkmatimlololo,
+          Qrehihihi,Qrelohihi,Qrehilohi,Qrelolohi,
+          Qrehihilo,Qrelohilo,Qrehilolo,Qrelololo,
+          Qimhihihi,Qimlohihi,Qimhilohi,Qimlolohi,
+          Qimhihilo,Qimlohilo,Qimhilolo,Qimlololo,
+          Rrehihihi,Rrelohihi,Rrehilohi,Rrelolohi,
+          Rrehihilo,Rrelohilo,Rrehilolo,Rrelololo,
+          Rimhihihi,Rimlohihi,Rimhilohi,Rimlolohi,
+          Rimhihilo,Rimlohilo,Rimhilolo,Rimlololo,
+          wrkvecrehihihi,wrkvecrelohihi,wrkvecrehilohi,wrkvecrelolohi,
+          wrkvecrehihilo,wrkvecrelohilo,wrkvecrehilolo,wrkvecrelololo,
+          wrkvecimhihihi,wrkvecimlohihi,wrkvecimhilohi,wrkvecimlolohi,
+          wrkvecimhihilo,wrkvecimlohilo,wrkvecimhilolo,wrkvecimlololo,vrblvl);
+   }
    if(degp1 > 1)
    {
       if(vrblvl > 0) cout << "calling CPU_cmplx8_qrbs_tail ..." << endl;
@@ -1499,7 +1522,8 @@ void CPU_cmplx8_qrbs_solve
           wrkvecrehihihi,wrkvecrelohihi,wrkvecrehilohi,wrkvecrelolohi,
           wrkvecrehihilo,wrkvecrelohilo,wrkvecrehilolo,wrkvecrelololo,
           wrkvecimhihihi,wrkvecimlohihi,wrkvecimhilohi,wrkvecimlolohi,
-          wrkvecimhihilo,wrkvecimlohilo,wrkvecimhilolo,wrkvecimlololo,vrblvl);
+          wrkvecimhihilo,wrkvecimlohilo,wrkvecimhilolo,wrkvecimlololo,
+          upidx,bsidx,vrblvl);
    }
 }
 

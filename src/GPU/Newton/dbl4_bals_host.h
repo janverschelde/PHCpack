@@ -330,7 +330,8 @@ void CPU_dbl4_qrbs_tail
    double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo,
    double *wrkvechihi, double *wrkveclohi,
-   double *wrkvechilo, double *wrkveclolo, int vrblvl );
+   double *wrkvechilo, double *wrkveclolo,
+   int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the trailing terms of the power series solution
@@ -378,7 +379,9 @@ void CPU_dbl4_qrbs_tail
  *   solhihi  highest doubles of all coefficients of the solution;
  *   sollohi  second highest doubles of all coefficients of the solution;
  *   solhilo  second lowest doubles of all coefficients of the solution;
- *   sollolo  lowest doubles of all coefficients of the solution. */
+ *   sollolo  lowest doubles of all coefficients of the solution;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_cmplx4_qrbs_tail
  ( int dim, int degp1,
@@ -401,7 +404,8 @@ void CPU_cmplx4_qrbs_tail
    double *wrkvecrehihi, double *wrkvecrelohi,
    double *wrkvecrehilo, double *wrkvecrelolo,
    double *wrkvecimhihi, double *wrkvecimlohi,
-   double *wrkvecimhilo, double *wrkvecimlolo, int vrblvl );
+   double *wrkvecimhilo, double *wrkvecimlolo,
+   int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the trailing terms of the power series solution
@@ -485,7 +489,9 @@ void CPU_cmplx4_qrbs_tail
  *   solimhihi are the highest doubles of the imaginary parts of the solution;
  *   solimlohi are the 2nd highest doubles of the imag parts of the solution;
  *   solimhilo are the 2nd lowest doubles of the imag parts of the solution;
- *   solimlolo are the lowest doubles of the imaginary parts of the solution. */
+ *   solimlolo are the lowest doubles of the imaginary parts of the solution;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_dbl4_lusb_solve
  ( int dim, int degp1,
@@ -551,7 +557,8 @@ void CPU_dbl4_qrbs_solve
    double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo,
    double *wrkvechihi, double *wrkveclohi,
-   double *wrkvechilo, double *wrkveclolo, int vrblvl );
+   double *wrkvechilo, double *wrkveclolo,
+   int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -610,7 +617,9 @@ void CPU_dbl4_qrbs_solve
  *   solhihi  highest double coefficients of the solution series;
  *   sollohi  second lowest double coefficients of the solution series;
  *   solhilo  second highest double coefficients of the solution series;
- *   sollolo  lowest double coefficients of the solution series. */
+ *   sollolo  lowest double coefficients of the solution series;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_cmplx4_qrbs_solve
  ( int dim, int degp1,
@@ -637,7 +646,8 @@ void CPU_cmplx4_qrbs_solve
    double *wrkvecrehihi, double *wrkvecrelohi,
    double *wrkvecrehilo, double *wrkvecrelolo,
    double *wrkvecimhihi, double *wrkvecimlohi,
-   double *wrkvecimhilo, double *wrkvecimlolo, int vrblvl );
+   double *wrkvecimhilo, double *wrkvecimlolo,
+   int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -744,7 +754,9 @@ void CPU_cmplx4_qrbs_solve
  *   solimhihi are the highest doubles of the imag parts of the solution;
  *   solimlohi are the second highest doubles of the imag parts of the solution;
  *   solimhilo are the second lowest doubles of the imag parts of the solution;
- *   solimlolo are the lowest doubles of the imag parts of the solution. */
+ *   solimlolo are the lowest doubles of the imag parts of the solution;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_dbl4_linear_residue
  ( int dim, int degp1,

@@ -225,7 +225,7 @@ void GPU_dbl2_bals_solve
  ( int dim, int degp1, int szt, int nbt,
    double ***mathi, double ***matlo, double **Qhi, double **Qlo,
    double **Rhi, double **Rlo, double **rhshi, double **rhslo,
-   double **solhi, double **sollo, int vrblvl );
+   double **solhi, double **sollo, int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -258,7 +258,9 @@ void GPU_dbl2_bals_solve
  *   rhshi    high doubles of updated right hand side vectors;
  *   rhslo    low doubles of updated right hand side vectors;
  *   solhi    high doubles of the solution series;
- *   sollo    low doubles of the solution series. */
+ *   sollo    low doubles of the solution series;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 void GPU_cmplx2_bals_solve
  ( int dim, int degp1, int szt, int nbt,
@@ -267,7 +269,7 @@ void GPU_cmplx2_bals_solve
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
    double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
    double **solrehi, double **solrelo, double **solimhi, double **solimlo, 
-   int vrblvl );
+   int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -318,6 +320,8 @@ void GPU_cmplx2_bals_solve
  *   solrehi  high doubles of the real parts of the solution series;
  *   solrelo  low doubles of the real parts of the solution series;
  *   solimhi  high doubles of the imaginary parts of the solution series;
- *   solimlo  low doubles of the imaginary parts of the solution series. */
+ *   solimlo  low doubles of the imaginary parts of the solution series;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 #endif

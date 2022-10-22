@@ -25,6 +25,7 @@ void dbl2_newton_qrstep
    double **workmathi, double **workmatlo,
    double *workvechi, double *workveclo,
    double **resvechi, double **resveclo, double *resmaxhi, double *resmaxlo,
+   int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    int vrblvl, int mode );
 /*
  * DESCRIPTION :
@@ -153,7 +154,11 @@ void dbl2_newton_qrstep
  *   resvechi  high doubles of the residual vectors;
  *   resveclo  low doubles of the residual vectors;
  *   resmaxhi  high double of the maximum element of the residual vectors;
- *   resmaxlo  low double of the maximum element of the residual vectors. */
+ *   resmaxlo  low double of the maximum element of the residual vectors;
+ *   upidx_h   counts the number of updates skipped by host;
+ *   bsidx_h   counts the number of backsubstitutions skipped by host;
+ *   upidx_d   counts the number of updates skipped by device;
+ *   bsidx_d   counts the number of backsubstitutions skipped by device. */
 
 int test_dbl2_real_newton
  ( int szt, int nbt, int dim, int deg,

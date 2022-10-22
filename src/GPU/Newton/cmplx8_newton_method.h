@@ -202,7 +202,9 @@ void cmplx8_newton_qrstep
    double *resmaxhihihi, double *resmaxlohihi,
    double *resmaxhilohi, double *resmaxlolohi,
    double *resmaxhihilo, double *resmaxlohilo,
-   double *resmaxhilolo, double *resmaxlololo, int vrblvl, int mode );
+   double *resmaxhilolo, double *resmaxlololo,
+   int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
+   int vrblvl, int mode );
 /*
  * DESCRIPTION :
  *   Does one step with Newton's method to update a power series,
@@ -1148,7 +1150,11 @@ void cmplx8_newton_qrstep
  *   resmaxhihilo is the fourth lowest double of the residual max norm;
  *   resmaxlohilo is the third lowest double of the residual max norm;
  *   resmaxhilolo is the second lowest double of the residual max norm;
- *   resmaxlololo is the lowest double of the residual max norm. */
+ *   resmaxlololo is the lowest double of the residual max norm;
+ *   upidx_h   counts the number of updates skipped by host;
+ *   bsidx_h   counts the number of backsubstitutions skipped by host;
+ *   upidx_d   counts the number of updates skipped by device;
+ *   bsidx_d   counts the number of backsubstitutions skipped by device. */
 
 int test_dbl8_complex_newton
  ( int szt, int nbt, int dim, int deg,

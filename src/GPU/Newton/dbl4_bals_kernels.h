@@ -327,7 +327,7 @@ void GPU_dbl4_bals_solve
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo, 
    double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
    double **solhihi, double **sollohi, double **solhilo, double **sollolo,
-   int vrblvl );
+   int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -378,7 +378,9 @@ void GPU_dbl4_bals_solve
  *   solhihi  highest doubles of the solution series;
  *   sollohi  second highest doubles of the solution series.
  *   solhilo  second lowest doubles of the solution series;
- *   sollolo  lowest doubles of the solution series. */
+ *   sollolo  lowest doubles of the solution series;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 void GPU_cmplx4_bals_solve
  ( int dim, int degp1, int szt, int nbt,
@@ -397,7 +399,8 @@ void GPU_cmplx4_bals_solve
    double **solrehihi, double **solrelohi,
    double **solrehilo, double **solrelolo,
    double **solimhihi, double **solimlohi, 
-   double **solimhilo, double **solimlolo, int vrblvl );
+   double **solimhilo, double **solimlolo,
+   int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -500,6 +503,8 @@ void GPU_cmplx4_bals_solve
  *   solimhihi are the highest doubles of the imaginary parts of the solution;
  *   solimlohi are the 2nd highest doubles of the imag parts of the solution;
  *   solimhilo are the 2nd lowest doubles of the imag parts of the solution;
- *   solimlolo are the lowest doubles of the imag parts of the solution. */
+ *   solimlolo are the lowest doubles of the imag parts of the solution;
+ *   upidx    counts the number of updates skipped;
+ *   bsidx    counts the number of backsubstitutions skipped. */
 
 #endif
