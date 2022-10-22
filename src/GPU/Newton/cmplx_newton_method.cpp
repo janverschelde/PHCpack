@@ -42,6 +42,7 @@ void cmplx_newton_qrstep
    double **workmatre, double **workmatim,
    double *workvecre, double *workvecim,
    double **resvecre, double **resvecim, double *resmax,
+   bool *noqr_h, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    int vrblvl, int mode )
 {
@@ -151,7 +152,7 @@ void cmplx_newton_qrstep
       CPU_cmplx_qrbs_solve
          (dim,degp1,jacvalre_h,jacvalim_h,urhsre_h,urhsim_h,
           solre_h,solim_h,workmatre,workmatim,Qre_h,Qim_h,Rre_h,Rim_h,
-          workvecre,workvecim,upidx_h,bsidx_h,vrblvl);
+          workvecre,workvecim,noqr_h,upidx_h,bsidx_h,vrblvl);
  
       if(vrblvl > 0)
       {
@@ -172,7 +173,7 @@ void cmplx_newton_qrstep
 
       GPU_cmplx_bals_solve
          (dim,degp1,szt,nbt,jacvalre_d,jacvalim_d,Qre_d,Qim_d,Rre_d,Rim_d,
-          urhsre_d,urhsim_d,solre_d,solim_d,upidx_d,bsidx_d,vrblvl);
+          urhsre_d,urhsim_d,solre_d,solim_d,noqr_d,upidx_d,bsidx_d,vrblvl);
 
       if(vrblvl > 0)
       {
@@ -459,6 +460,8 @@ int test_dbl_complex_newton
    int bsidx_h = 0;
    int upidx_d = 0;
    int bsidx_d = 0;
+   bool noqr_h = false;
+   bool noqr_d = false;
 
    for(int step=0; step<nbsteps; step++)
    {
@@ -476,8 +479,8 @@ int test_dbl_complex_newton
           urhsre_h,urhsim_h,urhsre_d,urhsim_d,
           solre_h,solim_h,solre_d,solim_d,
           Qre_h,Qim_h,Qre_d,Qim_d,Rre_h,Rim_h,Rre_d,Rim_d,
-          workmatre,workmatim,workvecre,workvecim,resvecre,resvecim,
-          &resmax,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
+          workmatre,workmatim,workvecre,workvecim,resvecre,resvecim,&resmax,
+          &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
 
       if(vrblvl > 0)
          cout << "upidx_h : " << upidx_h << "  bsidx_h : " << bsidx_h

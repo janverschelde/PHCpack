@@ -569,7 +569,7 @@ void GPU_dbl8_bals_solve
    double **solhilohi, double **sollolohi,
    double **solhihilo, double **sollohilo,
    double **solhilolo, double **sollololo,
-   int *upidx, int *bsidx, int vrblvl );
+   bool *noqr, int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -622,6 +622,7 @@ void GPU_dbl8_bals_solve
  *   sollohilo has space allocated for degp1 vectors of dimension dim;
  *   solhilolo has space allocated for degp1 vectors of dimension dim;
  *   sollololo has space allocated for degp1 vectors of dimension dim;
+ *   noqr     flag if true, then no qr;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
@@ -657,6 +658,7 @@ void GPU_dbl8_bals_solve
  *   sollohilo are the third lowest doubles of the solution series;
  *   solhilolo are the second lowest doubles of the solution series;
  *   sollololo are the lowest doubles of the solution series;
+ *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped. */
 
@@ -702,7 +704,7 @@ void GPU_cmplx8_bals_solve
    double **solimhilohi, double **solimlolohi,
    double **solimhihilo, double **solimlohilo, 
    double **solimhilolo, double **solimlololo,
-   int *upidx, int *bsidx, int vrblvl );
+   bool *noqr, int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -827,6 +829,7 @@ void GPU_cmplx8_bals_solve
  *   solimlohilo has space allocated for degp1 vectors of dimension dim;
  *   solimhilolo has space allocated for degp1 vectors of dimension dim;
  *   solimlololo has space allocated for degp1 vectors of dimension dim;
+ *   noqr     flag if true, then no qr;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
@@ -893,6 +896,7 @@ void GPU_cmplx8_bals_solve
  *   solimlohilo are the 3rd lowest doubles of the imag parts of the solution;
  *   solimhilolo are the 2nd lowest doubles of the imag parts of the solution;
  *   solimlololo are the lowest doubles of the imag parts of the solution;
+ *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped. */
 

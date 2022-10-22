@@ -31,6 +31,7 @@ void dbl_newton_qrstep
    double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
    double **Q_h, double **Q_d, double **R_h, double **R_d,
    double **workmat, double *workvec, double **resvec, double *resmax,
+   bool *noqr_h, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    int vrblvl, int mode )
 {
@@ -128,7 +129,7 @@ void dbl_newton_qrstep
 
       CPU_dbl_qrbs_solve
          (dim,degp1,jacval_h,urhs_h,sol_h,workmat,Q_h,R_h,workvec,
-          upidx_h,bsidx_h,vrblvl);
+          noqr_h,upidx_h,bsidx_h,vrblvl);
  
       if(vrblvl > 0)
       {
@@ -147,7 +148,7 @@ void dbl_newton_qrstep
 
       GPU_dbl_bals_solve
          (dim,degp1,szt,nbt,jacval_d,Q_d,R_d,urhs_d,sol_d,
-          upidx_d,bsidx_d,vrblvl);
+          noqr_d,upidx_d,bsidx_d,vrblvl);
 
       if(vrblvl > 0)
       {
@@ -342,6 +343,8 @@ int test_dbl_real_newton
    int bsidx_h = 0;
    int upidx_d = 0;
    int bsidx_d = 0;
+   bool noqr_h = false;
+   bool noqr_d = false;
 
    for(int step=0; step<nbsteps; step++)
    {
@@ -353,7 +356,7 @@ int test_dbl_real_newton
           input_h,input_d,output_h,output_d,funval_h,funval_d,
           jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
           Q_h,Q_d,R_h,R_d,workmat,workvec,resvec,&resmax,
-          &upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
+          &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
 
       if(vrblvl > 0)
          cout << "upidx_h : " << upidx_h << "  bsidx_h : " << bsidx_h

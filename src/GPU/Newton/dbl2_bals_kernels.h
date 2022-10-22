@@ -225,7 +225,8 @@ void GPU_dbl2_bals_solve
  ( int dim, int degp1, int szt, int nbt,
    double ***mathi, double ***matlo, double **Qhi, double **Qlo,
    double **Rhi, double **Rlo, double **rhshi, double **rhslo,
-   double **solhi, double **sollo, int *upidx, int *bsidx, int vrblvl );
+   double **solhi, double **sollo,
+   bool *noqr, int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -248,6 +249,7 @@ void GPU_dbl2_bals_solve
  *   rhslo    degp1 vectors of dimension dim;
  *   solhi    space allocated for degp1 vectors of dimension dim;
  *   sollo    space allocated for degp1 vectors of dimension dim;
+ *   noqr     flag if true, then no qr;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
@@ -259,6 +261,7 @@ void GPU_dbl2_bals_solve
  *   rhslo    low doubles of updated right hand side vectors;
  *   solhi    high doubles of the solution series;
  *   sollo    low doubles of the solution series;
+ *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped. */
 
@@ -269,7 +272,7 @@ void GPU_cmplx2_bals_solve
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
    double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
    double **solrehi, double **solrelo, double **solimhi, double **solimlo, 
-   int *upidx, int *bsidx, int vrblvl );
+   bool *noqr, int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -302,6 +305,7 @@ void GPU_cmplx2_bals_solve
  *   solrelo  space allocated for degp1 vectors of dimension dim;
  *   solimhi  space allocated for degp1 vectors of dimension dim;
  *   solimlo  space allocated for degp1 vectors of dimension dim;
+ *   noqr     flag if true, then no qr;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
@@ -321,6 +325,7 @@ void GPU_cmplx2_bals_solve
  *   solrelo  low doubles of the real parts of the solution series;
  *   solimhi  high doubles of the imaginary parts of the solution series;
  *   solimlo  low doubles of the imaginary parts of the solution series;
+ *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped. */
 

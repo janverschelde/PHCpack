@@ -14,6 +14,7 @@ void dbl_newton_qrstep
    double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
    double **Q_h, double **Q_d, double **R_h, double **R_d,
    double **workmat, double *workvec, double **resvec, double *resmax,
+   bool *noqr_h, bool *noqr_d, 
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    int vrblvl, int mode );
 /*
@@ -63,6 +64,8 @@ void dbl_newton_qrstep
  *   wrkmat    work space allocated for a matrix of dimension dim;
  *   wrkvec    work space allocated for a vector of dimension dim;
  *   resvec    space for deg+1 vectors of dimension dim;
+ *   noqr_h    flag if true, then no qr on host;
+ *   noqr_d    flag if true, then no qr on device;
  *   vrblvl    is the verbose level;
  *   mode      execution mode, 0 (GPU only), 1 (CPU only) or 2 (GPU+CPU).
  *
@@ -92,6 +95,8 @@ void dbl_newton_qrstep
  *   wrkmat    has a copy of the Jacobian matrix;
  *   resvec    residual vectors;
  *   resmax    the maximum element of the residual vectors;
+ *   noqr_h    updated flag if ||dx_0|| is zero for the first time on host;
+ *   noqr_d    updated flag if ||dx_0|| is zero for the first time on device;
  *   upidx_h   counts the number of updates skipped by host;
  *   bsidx_h   counts the number of backsubstitutions skipped by host;
  *   upidx_d   counts the number of updates skipped by device;

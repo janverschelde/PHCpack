@@ -70,6 +70,7 @@ void cmplx2_newton_qrstep
    double **resvecrehi, double **resvecrelo,
    double **resvecimhi, double **resvecimlo,
    double *resmaxhi, double *resmaxlo,
+   bool *noqr_h, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    int vrblvl, int mode )
 {
@@ -208,7 +209,7 @@ void cmplx2_newton_qrstep
           workmatrehi,workmatrelo,workmatimhi,workmatimlo,
           Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,Rrehi_h,Rrelo_h,Rimhi_h,Rimlo_h,
           workvecrehi,workvecrelo,workvecimhi,workvecimlo,
-          upidx_h,bsidx_h,vrblvl);
+          noqr_h,upidx_h,bsidx_h,vrblvl);
  
       if(vrblvl > 0)
       {
@@ -238,7 +239,8 @@ void cmplx2_newton_qrstep
           jacvalrehi_d,jacvalrelo_d,jacvalimhi_d,jacvalimlo_d,
           Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,
           urhsrehi_d,urhsrelo_d,urhsimhi_d,urhsimlo_d,
-          solrehi_d,solrelo_d,solimhi_d,solimlo_d,upidx_d,bsidx_d,vrblvl);
+          solrehi_d,solrelo_d,solimhi_d,solimlo_d,
+          noqr_d,upidx_d,bsidx_d,vrblvl);
 
       if(vrblvl > 0)
       {
@@ -657,6 +659,8 @@ int test_dbl2_complex_newton
    int bsidx_h = 0;
    int upidx_d = 0;
    int bsidx_d = 0;
+   bool noqr_h = false;
+   bool noqr_d = false;
 
    for(int step=0; step<nbsteps; step++)
    {
@@ -686,7 +690,7 @@ int test_dbl2_complex_newton
           workmatrehi,workmatrelo,workmatimhi,workmatimlo,
           workvecrehi,workvecrelo,workvecimhi,workvecimlo,
           resvecrehi,resvecrelo,resvecimhi,resvecimlo,&resmaxhi,&resmaxlo,
-          &upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
+          &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
 
       if(vrblvl > 0)
          cout << "upidx_h : " << upidx_h << "  bsidx_h : " << bsidx_h

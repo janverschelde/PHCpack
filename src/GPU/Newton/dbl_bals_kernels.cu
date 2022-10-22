@@ -338,7 +338,7 @@ void GPU_cmplx_bals_qhb
 void GPU_dbl_bals_solve
  ( int dim, int degp1, int szt, int nbt,
    double ***mat, double **Q, double **R, double **rhs, double **sol,
-   int *upidx, int *bsidx, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -364,7 +364,7 @@ void GPU_dbl_bals_solve
    }
    double nrm;
 
-   if(*bsidx > 0)
+   if(*noqr)
    {
       if(vrblvl > 0) cout << "-> skipping GPU_dbl_bals_head ..." << endl;
    }
@@ -377,6 +377,8 @@ void GPU_dbl_bals_solve
       {
          if(vrblvl > 0)
             cout << "-> skip call to GPU_dbl_bals_head ..." << endl;
+
+         *noqr = true;
 
          for(int j=0; j<ncols; j++) sol[0][j] = 0.0;
       }
@@ -523,7 +525,8 @@ void GPU_cmplx_bals_solve
  ( int dim, int degp1, int szt, int nbt,
    double ***matre, double ***matim, double **Qre, double **Qim,
    double **Rre, double **Rim, double **rhsre, double **rhsim,
-   double **solre, double **solim, int *upidx, int *bsidx, int vrblvl )
+   double **solre, double **solim,
+   bool *noqr, int *upidx, int *bsidx, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -557,7 +560,7 @@ void GPU_cmplx_bals_solve
    }
    double nrm;
 
-   if(*bsidx > 0)
+   if(*noqr)
    {
       if(vrblvl > 0) cout << "skipping GPU_cmplx_bals_head ..." << endl;
    }
@@ -570,6 +573,8 @@ void GPU_cmplx_bals_solve
       {
          if(vrblvl > 0)
             cout << "skip call to GPU_cmplx_bals_head ..." << endl;
+
+         *noqr = true;
 
          for(int j=0; j<ncols; j++)
          {

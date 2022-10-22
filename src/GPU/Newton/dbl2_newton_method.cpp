@@ -45,6 +45,7 @@ void dbl2_newton_qrstep
    double **workmathi, double **workmatlo,
    double *workvechi, double *workveclo,
    double **resvechi, double **resveclo, double *resmaxhi, double *resmaxlo,
+   bool *noqr_h, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    int vrblvl, int mode )
 {
@@ -159,7 +160,7 @@ void dbl2_newton_qrstep
       CPU_dbl2_qrbs_solve
          (dim,degp1,jacvalhi_h,jacvallo_h,urhshi_h,urhslo_h,solhi_h,sollo_h,
           workmathi,workmatlo,Qhi_h,Qlo_h,Rhi_h,Rlo_h,workvechi,workveclo,
-          upidx_h,bsidx_h,vrblvl);
+          noqr_h,upidx_h,bsidx_h,vrblvl);
 
       if(vrblvl > 0)
       {
@@ -179,7 +180,7 @@ void dbl2_newton_qrstep
 
       GPU_dbl2_bals_solve
          (dim,degp1,szt,nbt,jacvalhi_d,jacvallo_d,Qhi_d,Qlo_d,Rhi_d,Rlo_d,
-          urhshi_d,urhslo_d,solhi_d,sollo_d,upidx_d,bsidx_d,vrblvl);
+          urhshi_d,urhslo_d,solhi_d,sollo_d,noqr_d,upidx_d,bsidx_d,vrblvl);
 
       if(vrblvl > 0)
       {
@@ -476,6 +477,8 @@ int test_dbl2_real_newton
    int bsidx_h = 0;
    int upidx_d = 0;
    int bsidx_d = 0;
+   bool noqr_h = false;
+   bool noqr_d = false;
 
    for(int step=0; step<nbsteps; step++)
    {
@@ -494,7 +497,7 @@ int test_dbl2_real_newton
           Qhi_h,Qlo_h,Qhi_d,Qlo_d,Rhi_h,Rlo_h,Rhi_d,Rlo_d,
           workmathi,workmatlo,workvechi,workveclo,
           resvechi,resveclo,&resmaxhi,&resmaxlo,
-          &upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
+          &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
 
       if(vrblvl > 0)
          cout << "upidx_h : " << upidx_h << "  bsidx_h : " << bsidx_h

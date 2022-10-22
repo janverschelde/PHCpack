@@ -25,6 +25,7 @@ void cmplx_newton_qrstep
    double **workmatre, double **workmatim,
    double *workvecre, double *workvecim,
    double **resvecre, double **resvecim, double *resmax,
+   bool *noqr_h, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    int vrblvl, int mode );
 /*
@@ -101,6 +102,8 @@ void cmplx_newton_qrstep
  *   wrkvecim  work space allocated for a vector of dimension dim;
  *   resvecre  space for deg+1 vectors of dimension dim;
  *   resvecim  space for deg+1 vectors of dimension dim;
+ *   noqr_h    flag if true, then no qr on host;
+ *   noqr_d    flag if true, then no qr on device;
  *   vrblvl    is the verbose level;
  *   mode      execution mode, 0 (GPU only), 1 (CPU only) or 2 (GPU+CPU).
  *
@@ -150,6 +153,8 @@ void cmplx_newton_qrstep
  *   resvecre  real parts of the residual vectors;
  *   resvecim  imaginary parts of the residual vectors;
  *   resmax    the maximum element of the residual vectors;
+ *   noqr_h    updated flag if ||dx_0|| is zero for the first time on host;
+ *   noqr_d    updated flag if ||dx_0|| is zero for the first time on device;
  *   upidx_h   counts the number of updates skipped by host;
  *   bsidx_h   counts the number of backsubstitutions skipped by host;
  *   upidx_d   counts the number of updates skipped by device;

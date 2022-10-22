@@ -1,6 +1,8 @@
 Sat 20 Oct 2022 : to avoid redundant QR decompositions,
   updated dbl?_bals_{host, kernels} and {dbl?, cmplx?}_newton_method,
   for ? equal to 2, 4, 8, for double doubles, quad doubles, and octo doubles.
+  Added flag for no qr, separate on host and on device, modifying all
+  *newton_method*, *bals_host* and *bals_kernels* for all precisions.
 
 Fri 19 Oct 2022 : passed skipped counters from tail methods up to the 
   Newton method, updating dbl_bals_{host, kernels} 

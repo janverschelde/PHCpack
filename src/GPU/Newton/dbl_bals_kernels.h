@@ -168,7 +168,7 @@ void GPU_cmplx_bals_qhb
 void GPU_dbl_bals_solve
  ( int dim, int degp1, int szt, int nbt,
    double ***mat, double **Q, double **R, double **rhs, double **sol,
-   int *upidx, int *bsidx, int vrblvl );
+   bool *noqr, int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -186,6 +186,7 @@ void GPU_dbl_bals_solve
  *   R        space for the R of the QR factorization of the Jacobian;
  *   rhs      degp1 vectors of dimension dim;
  *   sol      space allocated for degp1 vectors of dimension dim;
+ *   noqr     flag if true, then no qr;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
@@ -193,6 +194,7 @@ void GPU_dbl_bals_solve
  *   R        the R of the QR factorization of the Jacobian matrix;
  *   rhs      updated right hand side vectors;
  *   sol      coefficients of the solution series;
+ *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped. */
 
@@ -200,7 +202,8 @@ void GPU_cmplx_bals_solve
  ( int dim, int degp1, int szt, int nbt,
    double ***matre, double ***matim, double **Qre, double **Qim,
    double **Rre, double **Rim, double **rhsre, double **rhsim,
-   double **solre, double **solim, int *upidx, int *bsidx, int vrblvl );
+   double **solre, double **solim,
+   bool *noqr, int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -223,6 +226,7 @@ void GPU_cmplx_bals_solve
  *   rhsim    degp1 vectors of dimension dim;
  *   solre    space allocated for degp1 vectors of dimension dim;
  *   solim    space allocated for degp1 vectors of dimension dim;
+ *   noqr     flag if true, then no qr;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
@@ -234,6 +238,7 @@ void GPU_cmplx_bals_solve
  *   rhsim    imaginary parts of the updated right hand side vectors;
  *   solre    real parts of the solution series;
  *   solim    imaginary parts of the solution series;
+ *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped. */
 

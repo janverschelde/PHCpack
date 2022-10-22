@@ -58,7 +58,8 @@ void CPU_dbl_lusb_head
 
 void CPU_dbl_qrbs_head
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **wrkmat, double **Q, double **R, double *wrkvec, int vrblvl )
+   double **wrkmat, double **Q, double **R, double *wrkvec,
+   bool *noqr, int vrblvl )
 {
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++) wrkmat[i][j] = mat[0][i][j];
@@ -84,6 +85,8 @@ void CPU_dbl_qrbs_head
    {
       if(vrblvl > 0)
          cout << "skip call to CPU_dbl_factors_houseqr ..." << endl;
+
+      *noqr = true;
    }
    else
    {
@@ -122,7 +125,7 @@ void CPU_cmplx_qrbs_head
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **wrkmatre, double **wrkmatim,
    double **Qre, double **Qim, double **Rre, double **Rim,
-   double *wrkvecre, double *wrkvecim, int vrblvl )
+   double *wrkvecre, double *wrkvecim, bool *noqr, int vrblvl )
 {
    bool verbose = (vrblvl > 1);
    for(int i=0; i<dim; i++)
@@ -156,6 +159,8 @@ void CPU_cmplx_qrbs_head
    {
       if(vrblvl > 0)
          cout << "skip call to CPU_cmplx_factors_houseqr ..." << endl;
+
+      *noqr = true;
    }
    else
    {
@@ -449,9 +454,9 @@ void CPU_dbl_lusb_solve
 void CPU_dbl_qrbs_solve
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
    double **wrkmat, double **Q, double **R, double *wrkvec,
-   int *upidx, int *bsidx, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int vrblvl )
 {
-   if(*bsidx > 0)
+   if(*noqr)
    {
       if(vrblvl > 0) cout << "skipping CPU_dbl_qrbs_head ..." << endl;
    }
@@ -460,7 +465,7 @@ void CPU_dbl_qrbs_solve
       if(vrblvl > 0) cout << "calling CPU_dbl_qrbs_head ..." << endl;
 
       CPU_dbl_qrbs_head
-         (dim,degp1,mat,rhs,sol,wrkmat,Q,R,wrkvec,vrblvl);
+         (dim,degp1,mat,rhs,sol,wrkmat,Q,R,wrkvec,noqr,vrblvl);
    }
    if(degp1 > 1)
    {
@@ -475,9 +480,10 @@ void CPU_cmplx_qrbs_solve
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **wrkmatre, double **wrkmatim,
    double **Qre, double **Qim, double **Rre, double **Rim,
-   double *wrkvecre, double *wrkvecim, int *upidx, int *bsidx, int vrblvl )
+   double *wrkvecre, double *wrkvecim,
+   bool *noqr, int *upidx, int *bsidx, int vrblvl )
 {
-   if(*bsidx > 0)
+   if(*noqr)
    {
       if(vrblvl > 0) cout << "skipping CPU_cmplx_qrbs_head ..." << endl;
    }
@@ -487,7 +493,7 @@ void CPU_cmplx_qrbs_solve
 
       CPU_cmplx_qrbs_head
          (dim,degp1,matre,matim,rhsre,rhsim,solre,solim,wrkmatre,wrkmatim,
-          Qre,Qim,Rre,Rim,wrkvecre,wrkvecim,vrblvl);
+          Qre,Qim,Rre,Rim,wrkvecre,wrkvecim,noqr,vrblvl);
    }
    if(degp1 > 1)
    {

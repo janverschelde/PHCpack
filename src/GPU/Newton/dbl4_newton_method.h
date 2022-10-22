@@ -51,6 +51,7 @@ void dbl4_newton_qrstep
    double **resvechilo, double **resveclolo, 
    double *resmaxhihi, double *resmaxlohi,
    double *resmaxhilo, double *resmaxlolo,
+   bool *noqr_h, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    int vrblvl, int mode );
 /*
@@ -181,6 +182,8 @@ void dbl4_newton_qrstep
  *   resveclohi  has space for deg+1 vectors of dimension dim;
  *   resvechilo  has space for deg+1 vectors of dimension dim;
  *   resveclolo  has space for deg+1 vectors of dimension dim;
+ *   noqr_h    flag if true, then qr is skipped on host;
+ *   noqr_d    flag if true, then qr is skipped on device;
  *   vrblvl    is the verbose level;
  *   mode      execution mode, 0 (GPU only), 1 (CPU only) or 2 (GPU+CPU).
  *
@@ -285,6 +288,8 @@ void dbl4_newton_qrstep
  *   resmaxlohi is second highest double of the maximum of residual vectors;
  *   resmaxhilo is second lowest double of the maximum of residual vectors;
  *   resmaxlolo is lowest double of the maximum of residual vectors;
+ *   noqr_h    updated flag if ||dx_0|| is zero for the first time on host;
+ *   noqr_d    updated flag if ||dx_0|| is zero for the first time on device;
  *   upidx_h   counts the number of updates skipped by host;
  *   bsidx_h   counts the number of backsubstitutions skipped by host;
  *   upidx_d   counts the number of updates skipped by device;

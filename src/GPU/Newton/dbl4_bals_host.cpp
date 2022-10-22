@@ -117,7 +117,7 @@ void CPU_dbl4_qrbs_head
    double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo, 
    double *wrkvechihi, double *wrkveclohi,
-   double *wrkvechilo, double *wrkveclolo, int vrblvl )
+   double *wrkvechilo, double *wrkveclolo, bool *noqr, int vrblvl )
 {
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
@@ -157,6 +157,7 @@ void CPU_dbl4_qrbs_head
    {
       if(vrblvl > 0)
          cout << "skip call to CPU_dbl4_factors_houseqr ..." << endl;
+      *noqr = true;
    }
    else
    {
@@ -240,7 +241,7 @@ void CPU_cmplx4_qrbs_head
    double *wrkvecrehihi, double *wrkvecrelohi,
    double *wrkvecrehilo, double *wrkvecrelolo,
    double *wrkvecimhihi, double *wrkvecimlohi,
-   double *wrkvecimhilo, double *wrkvecimlolo, int vrblvl )
+   double *wrkvecimhilo, double *wrkvecimlolo, bool *noqr, int vrblvl )
 {
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
@@ -288,6 +289,7 @@ void CPU_cmplx4_qrbs_head
    {
       if(vrblvl > 0)
          cout << "skip call to CPU_cmplx4_factors_houseqr ..." << endl;
+      *noqr = false;
    }
    else
    {
@@ -830,9 +832,9 @@ void CPU_dbl4_qrbs_solve
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo,
    double *wrkvechihi, double *wrkveclohi,
    double *wrkvechilo, double *wrkveclolo,
-   int *upidx, int *bsidx, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int vrblvl )
 {
-   if(*bsidx > 0)
+   if(*noqr)
    {
       if(vrblvl > 0) cout << "calling CPU_dbl4_qrbs_head ..." << endl;
    }
@@ -845,7 +847,7 @@ void CPU_dbl4_qrbs_solve
           rhshihi,rhslohi,rhshilo,rhslolo,solhihi,sollohi,solhilo,sollolo,
           wrkmathihi,wrkmatlohi,wrkmathilo,wrkmatlolo,
           Qhihi,Qlohi,Qhilo,Qlolo,Rhihi,Rlohi,Rhilo,Rlolo,
-          wrkvechihi,wrkveclohi,wrkvechilo,wrkveclolo,vrblvl);
+          wrkvechihi,wrkveclohi,wrkvechilo,wrkveclolo,noqr,vrblvl);
    }
    if(degp1 > 1)
    {
@@ -885,9 +887,9 @@ void CPU_cmplx4_qrbs_solve
    double *wrkvecrehilo, double *wrkvecrelolo,
    double *wrkvecimhihi, double *wrkvecimlohi,
    double *wrkvecimhilo, double *wrkvecimlolo,
-   int *upidx, int *bsidx, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int vrblvl )
 {
-   if(*bsidx > 0)
+   if(*noqr)
    {
       if(vrblvl > 0) cout << "skipping CPU_cmplx4_qrbs_head ..." << endl;
    }
@@ -907,7 +909,7 @@ void CPU_cmplx4_qrbs_solve
           Qrehihi,Qrelohi,Qrehilo,Qrelolo,Qimhihi,Qimlohi,Qimhilo,Qimlolo,
           Rrehihi,Rrelohi,Rrehilo,Rrelolo,Rimhihi,Rimlohi,Rimhilo,Rimlolo,
           wrkvecrehihi,wrkvecrelohi,wrkvecrehilo,wrkvecrelolo,
-          wrkvecimhihi,wrkvecimlohi,wrkvecimhilo,wrkvecimlolo,vrblvl);
+          wrkvecimhihi,wrkvecimlohi,wrkvecimhilo,wrkvecimlolo,noqr,vrblvl);
    }
    if(degp1 > 1)
    {
