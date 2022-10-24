@@ -187,6 +187,9 @@ void GPU_dbl2_bals_tail
                  << rhshi[k][i] << "  " << rhslo[k][i] << endl;
       }
    }
+   cudaFree(bhi_d); cudaFree(blo_d);
+   cudaFree(xhi_d); cudaFree(xlo_d);
+   cudaFree(Ahi_d); cudaFree(Alo_d);
 }
 
 void GPU_cmplx2_bals_tail
@@ -287,8 +290,7 @@ void GPU_cmplx2_bals_tail
       cudaMemcpy(rhsimhi[k],bimhi_d,szrhs,cudaMemcpyDeviceToHost);
       cudaMemcpy(rhsimlo[k],bimlo_d,szrhs,cudaMemcpyDeviceToHost);
    }
-   free(Arehi_h); free(Aimhi_h);
-   free(Arelo_h); free(Aimlo_h);
+   free(Arehi_h); free(Aimhi_h); free(Arelo_h); free(Aimlo_h);
 
    if(verbose)
    {
@@ -301,6 +303,9 @@ void GPU_cmplx2_bals_tail
                  << rhsimhi[k][i] << "  " << rhsimlo[k][i] << endl;
       }
    }
+   cudaFree(brehi_d); cudaFree(brelo_d); cudaFree(bimhi_d); cudaFree(bimlo_d);
+   cudaFree(xrehi_d); cudaFree(xrelo_d); cudaFree(ximhi_d); cudaFree(ximlo_d);
+   cudaFree(Arehi_d); cudaFree(Arelo_d); cudaFree(Aimhi_d); cudaFree(Aimlo_d);
 }
 
 void GPU_dbl2_linear_residue
