@@ -1,5 +1,5 @@
-Mon 24 Oct 2022 : to dbl2_{bals, systems, tail}_kernels.cu, added cudaFree()
-  statements to free memory on the device.
+Mon 24 Oct 2022 : to {dbl2, dbl4}_{bals, systems, tail}_kernels.cu,
+  added cudaFree() statements to free memory on the device.
 
 Sat 22 Oct 2022 : to avoid redundant QR decompositions,
   updated dbl?_bals_{host, kernels} and {dbl?, cmplx?}_newton_method,

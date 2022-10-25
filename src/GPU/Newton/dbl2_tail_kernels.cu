@@ -410,6 +410,10 @@ void GPU_dbl2_linear_residue
          }
    }
    free(Ahi_h); free(Alo_h);
+
+   cudaFree(rhi_d); cudaFree(rlo_d);
+   cudaFree(xhi_d); cudaFree(xlo_d);
+   cudaFree(Ahi_d); cudaFree(Alo_d);
 }
 
 void GPU_cmplx2_linear_residue
@@ -551,4 +555,12 @@ void GPU_cmplx2_linear_residue
             *resmaxlo = abs(rirelo[j]) + abs(riimlo[j]);
          }
    }
+   free(Arehi_h); free(Arelo_h); free(Aimhi_h); free(Aimlo_h);
+
+   cudaFree(rrehi_d); cudaFree(rrelo_d);
+   cudaFree(rimhi_d); cudaFree(rimlo_d);
+   cudaFree(xrehi_d); cudaFree(xrelo_d);
+   cudaFree(ximhi_d); cudaFree(ximlo_d);
+   cudaFree(Arehi_d); cudaFree(Arelo_d);
+   cudaFree(Aimhi_d); cudaFree(Aimlo_d);
 }

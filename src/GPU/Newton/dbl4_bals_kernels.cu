@@ -492,6 +492,11 @@ void GPU_dbl4_bals_qtb
    cudaMemcpy(blolo,rlolo_d,szrhs,cudaMemcpyDeviceToHost);
 
    free(Qthihi_h); free(Qtlohi_h); free(Qthilo_h); free(Qtlolo_h);
+
+   cudaFree(bhihi_d); cudaFree(blohi_d); cudaFree(bhilo_d); cudaFree(blolo_d);
+   cudaFree(rhihi_d); cudaFree(rlohi_d); cudaFree(rhilo_d); cudaFree(rlolo_d);
+   cudaFree(Qthihi_d); cudaFree(Qtlohi_d);
+   cudaFree(Qthilo_d); cudaFree(Qtlolo_d);
 }
 
 void GPU_cmplx4_bals_qhb
@@ -612,6 +617,19 @@ void GPU_cmplx4_bals_qhb
    cudaMemcpy(bimlohi,rimlohi_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(bimhilo,rimhilo_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(bimlolo,rimlolo_d,szrhs,cudaMemcpyDeviceToHost);
+
+   cudaFree(brehihi_d); cudaFree(brelohi_d);
+   cudaFree(brehilo_d); cudaFree(brelolo_d);
+   cudaFree(bimhihi_d); cudaFree(bimlohi_d);
+   cudaFree(bimhilo_d); cudaFree(bimlolo_d);
+   cudaFree(rrehihi_d); cudaFree(rrelohi_d);
+   cudaFree(rrehilo_d); cudaFree(rrelolo_d);
+   cudaFree(rimhihi_d); cudaFree(rimlohi_d);
+   cudaFree(rimhilo_d); cudaFree(rimlolo_d);
+   cudaFree(QHrehihi_d); cudaFree(QHrelohi_d);
+   cudaFree(QHrehilo_d); cudaFree(QHrelolo_d);
+   cudaFree(QHimhihi_d); cudaFree(QHimlohi_d);
+   cudaFree(QHimhilo_d); cudaFree(QHimlolo_d);
 
    free(QHrehihi_h); free(QHimhihi_h);
    free(QHrelohi_h); free(QHimlohi_h);

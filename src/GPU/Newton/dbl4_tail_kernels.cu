@@ -270,6 +270,12 @@ void GPU_dbl4_bals_tail
                  << rhshilo[k][i] << "  " << rhslolo[k][i] << endl;
       }
    }
+   cudaFree(bhihi_d); cudaFree(blohi_d);
+   cudaFree(bhilo_d); cudaFree(blolo_d);
+   cudaFree(xhihi_d); cudaFree(xlohi_d);
+   cudaFree(xhilo_d); cudaFree(xlolo_d);
+   cudaFree(Ahihi_d); cudaFree(Alohi_d);
+   cudaFree(Ahilo_d); cudaFree(Alolo_d);
 }
 
 void GPU_cmplx4_bals_tail
@@ -450,6 +456,18 @@ void GPU_cmplx4_bals_tail
                  << rhsimhilo[k][i] << "  " << rhsimlolo[k][i] << endl;
       }
    }
+   cudaFree(brehihi_d); cudaFree(brelohi_d);
+   cudaFree(brehilo_d); cudaFree(brelolo_d);
+   cudaFree(bimhihi_d); cudaFree(bimlohi_d);
+   cudaFree(bimhilo_d); cudaFree(bimlolo_d);
+   cudaFree(xrehihi_d); cudaFree(xrelohi_d);
+   cudaFree(xrehilo_d); cudaFree(xrelolo_d);
+   cudaFree(ximhihi_d); cudaFree(ximlohi_d);
+   cudaFree(ximhilo_d); cudaFree(ximlolo_d);
+   cudaFree(Arehihi_d); cudaFree(Arelohi_d);
+   cudaFree(Arehilo_d); cudaFree(Arelolo_d);
+   cudaFree(Aimhihi_d); cudaFree(Aimlohi_d);
+   cudaFree(Aimhilo_d); cudaFree(Aimlolo_d);
 }
 
 void GPU_dbl4_linear_residue
@@ -598,6 +616,14 @@ void GPU_dbl4_linear_residue
             *resmaxlolo = abs(rilolo[j]);
          }
    }
+   free(Ahihi_h); free(Alohi_h); free(Ahilo_h); free(Alolo_h);
+
+   cudaFree(rhihi_d); cudaFree(rlohi_d);
+   cudaFree(rhilo_d); cudaFree(rlolo_d);
+   cudaFree(xhihi_d); cudaFree(xlohi_d);
+   cudaFree(xhilo_d); cudaFree(xlolo_d);
+   cudaFree(Ahihi_d); cudaFree(Alohi_d);
+   cudaFree(Ahilo_d); cudaFree(Alolo_d);
 }
 
 void GPU_cmplx4_linear_residue
@@ -819,4 +845,19 @@ void GPU_cmplx4_linear_residue
             *resmaxlolo = abs(rirelolo[j]) + abs(riimlolo[j]);
          }
    }
+   free(Arehihi_h); free(Arelohi_h); free(Arehilo_h); free(Arelolo_h);
+   free(Aimhihi_h); free(Aimlohi_h); free(Aimhilo_h); free(Aimlolo_h);
+
+   cudaFree(rrehihi_d); cudaFree(rrelohi_d);
+   cudaFree(rrehilo_d); cudaFree(rrelolo_d);
+   cudaFree(rimhihi_d); cudaFree(rimlohi_d);
+   cudaFree(rimhilo_d); cudaFree(rimlolo_d);
+   cudaFree(xrehihi_d); cudaFree(xrelohi_d);
+   cudaFree(xrehilo_d); cudaFree(xrelolo_d);
+   cudaFree(ximhihi_d); cudaFree(ximlohi_d);
+   cudaFree(ximhilo_d); cudaFree(ximlolo_d);
+   cudaFree(Arehihi_d); cudaFree(Arelohi_d);
+   cudaFree(Arehilo_d); cudaFree(Arelolo_d);
+   cudaFree(Aimhihi_d); cudaFree(Aimlohi_d);
+   cudaFree(Aimhilo_d); cudaFree(Aimlolo_d);
 }
