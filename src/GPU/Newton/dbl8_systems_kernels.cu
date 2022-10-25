@@ -443,6 +443,8 @@ void GPU_dbl8_mon_evaldiff
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *cnvlapms += milliseconds;
+
+         cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
@@ -469,6 +471,19 @@ void GPU_dbl8_mon_evaldiff
 
    if(verbose)
       write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
+
+   cudaFree(datahihihi_d); cudaFree(datalohihi_d);
+   cudaFree(datahilohi_d); cudaFree(datalolohi_d);
+   cudaFree(datahihilo_d); cudaFree(datalohilo_d);
+   cudaFree(datahilolo_d); cudaFree(datalololo_d);
+
+   free(datahihihi_h); free(datalohihi_h);
+   free(datahilohi_h); free(datalolohi_h);
+   free(datahihilo_h); free(datalohilo_h);
+   free(datahilolo_h); free(datalololo_h);
+
+   free(fstart); free(bstart); free(cstart);
+   free(fsums); free(bsums); free(csums);
 }
 
 void GPU_cmplx8_mon_evaldiff
@@ -695,6 +710,8 @@ void GPU_cmplx8_mon_evaldiff
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *cnvlapms += milliseconds;
+
+         cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
@@ -733,6 +750,27 @@ void GPU_cmplx8_mon_evaldiff
 
    if(verbose)
       write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
+
+   cudaFree(datarehihihi_d); cudaFree(datarelohihi_d);
+   cudaFree(datarehilohi_d); cudaFree(datarelolohi_d);
+   cudaFree(datarehihilo_d); cudaFree(datarelohilo_d);
+   cudaFree(datarehilolo_d); cudaFree(datarelololo_d);
+   cudaFree(dataimhihihi_d); cudaFree(dataimlohihi_d);
+   cudaFree(dataimhilohi_d); cudaFree(dataimlolohi_d);
+   cudaFree(dataimhihilo_d); cudaFree(dataimlohilo_d);
+   cudaFree(dataimhilolo_d); cudaFree(dataimlololo_d);
+
+   free(datarehihihi_h); free(datarelohihi_h);
+   free(datarehilohi_h); free(datarelolohi_h);
+   free(datarehihilo_h); free(datarelohilo_h);
+   free(datarehilolo_h); free(datarelololo_h);
+   free(dataimhihihi_h); free(dataimlohihi_h);
+   free(dataimhilohi_h); free(dataimlolohi_h);
+   free(dataimhihilo_h); free(dataimlohilo_h);
+   free(dataimhilolo_h); free(dataimlololo_h);
+
+   free(fstart); free(bstart); free(cstart);
+   free(fsums); free(bsums); free(csums);
 }
 
 void GPU_dbl8_evaluate_monomials

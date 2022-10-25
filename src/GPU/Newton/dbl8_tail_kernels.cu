@@ -448,6 +448,18 @@ void GPU_dbl8_bals_tail
                  << rhshilolo[k][i] << "  " << rhslololo[k][i] << endl;
       }
    }
+   cudaFree(bhihihi_d); cudaFree(blohihi_d);
+   cudaFree(bhilohi_d); cudaFree(blolohi_d);
+   cudaFree(bhihilo_d); cudaFree(blohilo_d);
+   cudaFree(bhilolo_d); cudaFree(blololo_d);
+   cudaFree(xhihihi_d); cudaFree(xlohihi_d);
+   cudaFree(xhilohi_d); cudaFree(xlolohi_d);
+   cudaFree(xhihilo_d); cudaFree(xlohilo_d);
+   cudaFree(xhilolo_d); cudaFree(xlololo_d);
+   cudaFree(Ahihihi_d); cudaFree(Alohihi_d);
+   cudaFree(Ahilohi_d); cudaFree(Alolohi_d);
+   cudaFree(Ahihilo_d); cudaFree(Alohilo_d);
+   cudaFree(Ahilolo_d); cudaFree(Alololo_d);
 }
 
 void GPU_cmplx8_bals_tail
@@ -768,6 +780,30 @@ void GPU_cmplx8_bals_tail
                  << rhsimhilolo[k][i] << "  " << rhsimlololo[k][i] << endl;
       }
    }
+   cudaFree(brehihihi_d); cudaFree(brelohihi_d);
+   cudaFree(brehilohi_d); cudaFree(brelolohi_d);
+   cudaFree(brehihilo_d); cudaFree(brelohilo_d);
+   cudaFree(brehilolo_d); cudaFree(brelololo_d);
+   cudaFree(bimhihihi_d); cudaFree(bimlohihi_d);
+   cudaFree(bimhilohi_d); cudaFree(bimlolohi_d);
+   cudaFree(bimhihilo_d); cudaFree(bimlohilo_d);
+   cudaFree(bimhilolo_d); cudaFree(bimlololo_d);
+   cudaFree(xrehihihi_d); cudaFree(xrelohihi_d);
+   cudaFree(xrehilohi_d); cudaFree(xrelolohi_d);
+   cudaFree(xrehihilo_d); cudaFree(xrelohilo_d);
+   cudaFree(xrehilolo_d); cudaFree(xrelololo_d);
+   cudaFree(ximhihihi_d); cudaFree(ximlohihi_d);
+   cudaFree(ximhilohi_d); cudaFree(ximlolohi_d);
+   cudaFree(ximhihilo_d); cudaFree(ximlohilo_d);
+   cudaFree(ximhilolo_d); cudaFree(ximlololo_d);
+   cudaFree(Arehihihi_d); cudaFree(Arelohihi_d);
+   cudaFree(Arehilohi_d); cudaFree(Arelolohi_d);
+   cudaFree(Arehihilo_d); cudaFree(Arelohilo_d);
+   cudaFree(Arehilolo_d); cudaFree(Arelololo_d);
+   cudaFree(Aimhihihi_d); cudaFree(Aimlohihi_d);
+   cudaFree(Aimhilohi_d); cudaFree(Aimlolohi_d);
+   cudaFree(Aimhihilo_d); cudaFree(Aimlohilo_d);
+   cudaFree(Aimhilolo_d); cudaFree(Aimlololo_d);
 }
 
 void GPU_dbl8_linear_residue
@@ -997,6 +1033,21 @@ void GPU_dbl8_linear_residue
             *resmaxlololo = abs(rilololo[j]);
          }
    }
+   free(Ahihihi_h); free(Alohihi_h); free(Ahilohi_h); free(Alolohi_h);
+   free(Ahihilo_h); free(Alohilo_h); free(Ahilolo_h); free(Alololo_h);
+
+   cudaFree(rhihihi_d); cudaFree(rlohihi_d);
+   cudaFree(rhilohi_d); cudaFree(rlolohi_d);
+   cudaFree(rhihilo_d); cudaFree(rlohilo_d);
+   cudaFree(rhilolo_d); cudaFree(rlololo_d);
+   cudaFree(xhihihi_d); cudaFree(xlohihi_d);
+   cudaFree(xhilohi_d); cudaFree(xlolohi_d);
+   cudaFree(xhihilo_d); cudaFree(xlohilo_d);
+   cudaFree(xhilolo_d); cudaFree(xlololo_d);
+   cudaFree(Ahihihi_d); cudaFree(Alohihi_d);
+   cudaFree(Ahilohi_d); cudaFree(Alolohi_d);
+   cudaFree(Ahihilo_d); cudaFree(Alohilo_d);
+   cudaFree(Ahilolo_d); cudaFree(Alololo_d);
 }
 
 void GPU_cmplx8_linear_residue
@@ -1380,4 +1431,33 @@ void GPU_cmplx8_linear_residue
             *resmaxlololo = abs(rirelololo[j]) + abs(riimlololo[j]);
          }
    }
+   free(Arehihihi_h); free(Arelohihi_h); free(Arehilohi_h); free(Arelolohi_h);
+   free(Arehihilo_h); free(Arelohilo_h); free(Arehilolo_h); free(Arelololo_h);
+   free(Aimhihihi_h); free(Aimlohihi_h); free(Aimhilohi_h); free(Aimlolohi_h);
+   free(Aimhihilo_h); free(Aimlohilo_h); free(Aimhilolo_h); free(Aimlololo_h);
+
+   cudaFree(rrehihihi_d); cudaFree(rrelohihi_d);
+   cudaFree(rrehilohi_d); cudaFree(rrelolohi_d);
+   cudaFree(rrehihilo_d); cudaFree(rrelohilo_d);
+   cudaFree(rrehilolo_d); cudaFree(rrelololo_d);
+   cudaFree(rimhihihi_d); cudaFree(rimlohihi_d);
+   cudaFree(rimhilohi_d); cudaFree(rimlolohi_d);
+   cudaFree(rimhihilo_d); cudaFree(rimlohilo_d);
+   cudaFree(rimhilolo_d); cudaFree(rimlololo_d);
+   cudaFree(xrehihihi_d); cudaFree(xrelohihi_d);
+   cudaFree(xrehilohi_d); cudaFree(xrelolohi_d);
+   cudaFree(xrehihilo_d); cudaFree(xrelohilo_d);
+   cudaFree(xrehilolo_d); cudaFree(xrelololo_d);
+   cudaFree(ximhihihi_d); cudaFree(ximlohihi_d);
+   cudaFree(ximhilohi_d); cudaFree(ximlolohi_d);
+   cudaFree(ximhihilo_d); cudaFree(ximlohilo_d);
+   cudaFree(ximhilolo_d); cudaFree(ximlololo_d);
+   cudaFree(Arehihihi_d); cudaFree(Arelohihi_d);
+   cudaFree(Arehilohi_d); cudaFree(Arelolohi_d);
+   cudaFree(Arehihilo_d); cudaFree(Arelohilo_d);
+   cudaFree(Arehilolo_d); cudaFree(Arelololo_d);
+   cudaFree(Aimhihihi_d); cudaFree(Aimlohihi_d);
+   cudaFree(Aimhilohi_d); cudaFree(Aimlolohi_d);
+   cudaFree(Aimhihilo_d); cudaFree(Aimlohilo_d);
+   cudaFree(Aimhilolo_d); cudaFree(Aimlololo_d);
 }

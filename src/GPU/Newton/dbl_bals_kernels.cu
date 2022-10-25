@@ -285,6 +285,8 @@ void GPU_dbl_bals_qtb
 
    cudaMemcpy(b,r_d,szrhs,cudaMemcpyDeviceToHost);
 
+   cudaFree(b_d); cudaFree(r_d); cudaFree(Qt_d);
+
    free(Qt_h);
 }
 
@@ -331,6 +333,9 @@ void GPU_cmplx_bals_qhb
 
    cudaMemcpy(bre,rre_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(bim,rim_d,szrhs,cudaMemcpyDeviceToHost);
+
+   cudaFree(bre_d); cudaFree(bim_d); cudaFree(rre_d); cudaFree(rim_d);
+   cudaFree(QHre_d); cudaFree(QHim_d);
 
    free(QHre_h); free(QHim_h);
 }

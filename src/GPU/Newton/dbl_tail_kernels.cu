@@ -131,6 +131,7 @@ void GPU_dbl_bals_tail
             cout << "rhs[" << k << "][" << i << "] : " << rhs[k][i] << endl;
       }
    }
+   cudaFree(b_d); cudaFree(x_d); cudaFree(A_d);
 }
 
 void GPU_cmplx_bals_tail
@@ -221,6 +222,9 @@ void GPU_cmplx_bals_tail
                  << rhsre[k][i] << "  " << rhsim[k][i] << endl;
       }
    }
+   cudaFree(bre_d); cudaFree(bim_d);
+   cudaFree(xre_d); cudaFree(xim_d);
+   cudaFree(Are_d); cudaFree(Aim_d);
 }
 
 void GPU_dbl_linear_residue
@@ -298,6 +302,8 @@ void GPU_dbl_linear_residue
          if(abs(ri[j]) > *resmax) *resmax = abs(ri[j]);
    }
    free(A_h);
+
+   cudaFree(r_d); cudaFree(x_d); cudaFree(A_d);
 }
 
 void GPU_cmplx_linear_residue
@@ -398,4 +404,9 @@ void GPU_cmplx_linear_residue
          if(abs(rire[j]) + abs(riim[j]) > *resmax)
             *resmax = abs(rire[j]) + abs(riim[j]);
    }
+   free(Are_h); free(Aim_h);
+
+   cudaFree(rre_d); cudaFree(rim_d);
+   cudaFree(xre_d); cudaFree(xim_d);
+   cudaFree(Are_d); cudaFree(Aim_d);
 }

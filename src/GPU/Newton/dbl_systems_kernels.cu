@@ -231,6 +231,8 @@ void GPU_dbl_mon_evaldiff
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *cnvlapms += milliseconds;
+
+         cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
@@ -246,6 +248,12 @@ void GPU_dbl_mon_evaldiff
 
    if(verbose)
       write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
+
+   cudaFree(data_d);
+   free(data_h);
+
+   free(fstart); free(bstart); free(cstart);
+   free(fsums); free(bsums); free(csums);
 }
 
 void GPU_cmplx_mon_evaldiff
@@ -344,6 +352,8 @@ void GPU_cmplx_mon_evaldiff
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *cnvlapms += milliseconds;
+
+         cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
@@ -361,6 +371,12 @@ void GPU_cmplx_mon_evaldiff
 
    if(verbose)
       write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
+
+   cudaFree(datare_d); cudaFree(dataim_d);
+   free(datare_h); free(dataim_h);
+
+   free(fstart); free(bstart); free(cstart);
+   free(fsums); free(bsums); free(csums);
 }
 
 void GPU_dbl_evaluate_monomials
