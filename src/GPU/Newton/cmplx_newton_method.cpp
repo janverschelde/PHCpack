@@ -89,18 +89,17 @@ void cmplx_newton_qrstep
       cout << scientific << setprecision(16);
       cout << "sum of errors : " << errsum << endl;
    }
-   for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-      for(int j=0; j<dim; j++) 
-         for(int k=0; k<dim; k++)
-         {
-            jacvalre_h[i][j][k] = 0.0; jacvalim_h[i][j][k] = 0.0;
-            jacvalre_d[i][j][k] = 0.0; jacvalim_d[i][j][k] = 0.0;
-         }
-
    if(vrblvl > 0) cout << "linearizing the output ..." << endl;
 
    if((mode == 1) || (mode == 2))
    {
+      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+         for(int j=0; j<dim; j++) 
+            for(int k=0; k<dim; k++)
+            {
+               jacvalre_h[i][j][k] = 0.0; jacvalim_h[i][j][k] = 0.0;
+            }
+
       cmplx_linearize_evaldiff_output
          (dim,degp1,nvr,idx,mbre,mbim,dpr,
           outputre_h,outputim_h,funvalre_h,funvalim_h,
@@ -108,6 +107,12 @@ void cmplx_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
+      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+         for(int j=0; j<dim; j++) 
+            for(int k=0; k<dim; k++)
+            {
+               jacvalre_d[i][j][k] = 0.0; jacvalim_d[i][j][k] = 0.0;
+            }
       cmplx_linearize_evaldiff_output
          (dim,degp1,nvr,idx,mbre,mbim,dpr,
           outputre_d,outputim_d,funvalre_d,funvalim_d,
@@ -130,22 +135,20 @@ void cmplx_newton_qrstep
                                          rhsre_d,rhsim_d,"rhs",vrblvl);
       cout << "sum of errors : " << errsum << endl;
    }
-   for(int i=0; i<degp1; i++) // save original rhs for residual
-      for(int j=0; j<dim; j++)
-      {
-         urhsre_h[i][j] = rhsre_h[i][j]; urhsim_h[i][j] = rhsim_h[i][j];
-         urhsre_d[i][j] = rhsre_d[i][j]; urhsim_d[i][j] = rhsim_d[i][j];
-      }
-
-   for(int i=0; i<degp1; i++) // initialize the solution to zero
-      for(int j=0; j<dim; j++)
-      {
-         solre_h[i][j] = 0.0; solim_h[i][j] = 0.0;
-         solre_d[i][j] = 0.0; solim_d[i][j] = 0.0;
-      }
-
    if((mode == 1) || (mode == 2))
    {
+      for(int i=0; i<degp1; i++) // save original rhs for residual
+         for(int j=0; j<dim; j++)
+         {
+            urhsre_h[i][j] = rhsre_h[i][j]; urhsim_h[i][j] = rhsim_h[i][j];
+         }
+
+      for(int i=0; i<degp1; i++) // initialize the solution to zero
+         for(int j=0; j<dim; j++)
+         {
+            solre_h[i][j] = 0.0; solim_h[i][j] = 0.0;
+         }
+
       if(vrblvl > 0)
          cout << "calling CPU_cmplx_qrbs_solve ..." << endl;
 
@@ -168,6 +171,18 @@ void cmplx_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
+      for(int i=0; i<degp1; i++) // save original rhs for residual
+         for(int j=0; j<dim; j++)
+         {
+            urhsre_d[i][j] = rhsre_d[i][j]; urhsim_d[i][j] = rhsim_d[i][j];
+         }
+
+      for(int i=0; i<degp1; i++) // initialize the solution to zero
+         for(int j=0; j<dim; j++)
+         {
+            solre_d[i][j] = 0.0; solim_d[i][j] = 0.0;
+         }
+
       if(vrblvl > 0)
          cout << "calling GPU_cmplx_bals_solve ..." << endl;
 
@@ -247,59 +262,112 @@ int test_dbl_complex_newton
       cffre[i] = new double[degp1];
       cffim[i] = new double[degp1];
    }
-   double ***outputre_h = new double**[dim];
-   double ***outputim_h = new double**[dim];
-   double ***outputre_d = new double**[dim];
-   double ***outputim_d = new double**[dim];
+   double ***outputre_h;
+   double ***outputim_h;
+   double ***outputre_d;
+   double ***outputim_d;
 
-   for(int i=0; i<dim; i++)
+   if((mode == 1) || (mode == 2))
    {
-      outputre_h[i] = new double*[dim+1];
-      outputim_h[i] = new double*[dim+1];
-      outputre_d[i] = new double*[dim+1];
-      outputim_d[i] = new double*[dim+1];
+      outputre_h = new double**[dim];
+      outputim_h = new double**[dim];
 
-      for(int j=0; j<=dim; j++)
+      for(int i=0; i<dim; i++)
       {
-         outputre_h[i][j] = new double[degp1];
-         outputim_h[i][j] = new double[degp1];
-         outputre_d[i][j] = new double[degp1];
-         outputim_d[i][j] = new double[degp1];
+         outputre_h[i] = new double*[dim+1];
+         outputim_h[i] = new double*[dim+1];
+
+         for(int j=0; j<=dim; j++)
+         {
+            outputre_h[i][j] = new double[degp1];
+            outputim_h[i][j] = new double[degp1];
+         }
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      outputre_d = new double**[dim];
+      outputim_d = new double**[dim];
+
+      for(int i=0; i<dim; i++)
+      {
+         outputre_d[i] = new double*[dim+1];
+         outputim_d[i] = new double*[dim+1];
+
+         for(int j=0; j<=dim; j++)
+         {
+            outputre_d[i][j] = new double[degp1];
+            outputim_d[i][j] = new double[degp1];
+         }
       }
    }
    // The function values are power series truncated at degree deg.
-   double **funvalre_h = new double*[dim];
-   double **funvalim_h = new double*[dim];
-   double **funvalre_d = new double*[dim];
-   double **funvalim_d = new double*[dim];
+   double **funvalre_h;
+   double **funvalim_h;
+   double **funvalre_d;
+   double **funvalim_d;
 
-   for(int i=0; i<dim; i++)
+   if((mode == 1) || (mode == 2))
    {
-      funvalre_h[i] = new double[degp1];
-      funvalim_h[i] = new double[degp1];
-      funvalre_d[i] = new double[degp1];
-      funvalim_d[i] = new double[degp1];
+      funvalre_h = new double*[dim];
+      funvalim_h = new double*[dim];
+
+      for(int i=0; i<dim; i++)
+      {
+         funvalre_h[i] = new double[degp1];
+         funvalim_h[i] = new double[degp1];
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      funvalre_d = new double*[dim];
+      funvalim_d = new double*[dim];
+
+      for(int i=0; i<dim; i++)
+      {
+         funvalre_d[i] = new double[degp1];
+         funvalim_d[i] = new double[degp1];
+      }
    }
    // The derivatives in the output are a series truncated at degree deg.
    // The coefficients of the series are matrices of dimension dim.
-   double ***jacvalre_h = new double**[degp1];
-   double ***jacvalim_h = new double**[degp1];
-   double ***jacvalre_d = new double**[degp1];
-   double ***jacvalim_d = new double**[degp1];
+   double ***jacvalre_h;
+   double ***jacvalim_h;
+   double ***jacvalre_d;
+   double ***jacvalim_d;
 
-   for(int i=0; i<degp1; i++) // jacval[i] is matrix of dimension dim
+   if((mode == 1) || (mode == 2))
    {
-      jacvalre_h[i] = new double*[dim];
-      jacvalim_h[i] = new double*[dim];
-      jacvalre_d[i] = new double*[dim];
-      jacvalim_d[i] = new double*[dim];
+      jacvalre_h = new double**[degp1];
+      jacvalim_h = new double**[degp1];
 
-      for(int j=0; j<dim; j++)
+      for(int i=0; i<degp1; i++) // jacval[i] is matrix of dimension dim
       {
-         jacvalre_h[i][j] = new double[dim];
-         jacvalim_h[i][j] = new double[dim];
-         jacvalre_d[i][j] = new double[dim];
-         jacvalim_d[i][j] = new double[dim];
+         jacvalre_h[i] = new double*[dim];
+         jacvalim_h[i] = new double*[dim];
+
+         for(int j=0; j<dim; j++)
+         {
+            jacvalre_h[i][j] = new double[dim];
+            jacvalim_h[i][j] = new double[dim];
+         }
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      jacvalre_d = new double**[degp1];
+      jacvalim_d = new double**[degp1];
+
+      for(int i=0; i<degp1; i++) // jacval[i] is matrix of dimension dim
+      {
+         jacvalre_d[i] = new double*[dim];
+         jacvalim_d[i] = new double*[dim];
+
+         for(int j=0; j<dim; j++)
+         {
+            jacvalre_d[i][j] = new double[dim];
+            jacvalim_d[i][j] = new double[dim];
+         }
       }
    }
 /*
@@ -308,31 +376,61 @@ int test_dbl_complex_newton
    // The solution x(t) to jacval(t)*x(t) = -funval(t) in linearized
    // format is a series truncated at degree deg, with as coefficients
    // arrays of dimension dim.
-   double **solre_h = new double*[degp1];
-   double **solim_h = new double*[degp1];
-   double **solre_d = new double*[degp1];
-   double **solim_d = new double*[degp1];
+   double **solre_h;
+   double **solim_h;
+   double **solre_d;
+   double **solim_d;
 
-   for(int i=0; i<degp1; i++) 
+   if((mode == 1) || (mode == 2))
    {
-      solre_h[i] = new double[dim];
-      solim_h[i] = new double[dim];
-      solre_d[i] = new double[dim];
-      solim_d[i] = new double[dim];
+      solre_h = new double*[degp1];
+      solim_h = new double*[degp1];
+
+      for(int i=0; i<degp1; i++) 
+      {
+         solre_h[i] = new double[dim];
+         solim_h[i] = new double[dim];
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      solre_d = new double*[degp1];
+      solim_d = new double*[degp1];
+
+      for(int i=0; i<degp1; i++) 
+      {
+         solre_d[i] = new double[dim];
+         solim_d[i] = new double[dim];
+      }
    }
    // The right hand side -funval(t) in linearized format is a series
    // truncated at degree deg, with arrays of dimension dim as coefficients.
-   double **rhsre_h = new double*[degp1];
-   double **rhsim_h = new double*[degp1];
-   double **rhsre_d = new double*[degp1];
-   double **rhsim_d = new double*[degp1];
+   double **rhsre_h;
+   double **rhsim_h;
+   double **rhsre_d;
+   double **rhsim_d;
 
-   for(int i=0; i<degp1; i++)
+   if((mode == 1) || (mode == 2))
    {
-      rhsre_h[i] = new double[dim];
-      rhsim_h[i] = new double[dim];
-      rhsre_d[i] = new double[dim];
-      rhsim_d[i] = new double[dim];
+      rhsre_h = new double*[degp1];
+      rhsim_h = new double*[degp1];
+
+      for(int i=0; i<degp1; i++)
+      {
+         rhsre_h[i] = new double[dim];
+         rhsim_h[i] = new double[dim];
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      rhsre_d = new double*[degp1];
+      rhsim_d = new double*[degp1];
+
+      for(int i=0; i<degp1; i++)
+      {
+         rhsre_d[i] = new double[dim];
+         rhsim_d[i] = new double[dim];
+      }
    }
    // Allocate work space for the inplace LU solver.
    double **workmatre = new double*[dim];
@@ -347,17 +445,32 @@ int test_dbl_complex_newton
    double *workvecre = new double[dim];
    double *workvecim = new double[dim];
    // Copy the rhs vector into work space for inplace solver.
-   double **urhsre_h = new double*[degp1];
-   double **urhsim_h = new double*[degp1];
-   double **urhsre_d = new double*[degp1];
-   double **urhsim_d = new double*[degp1];
+   double **urhsre_h;
+   double **urhsim_h;
+   double **urhsre_d;
+   double **urhsim_d;
 
-   for(int i=0; i<degp1; i++)
+   if((mode == 1) || (mode == 2))
    {
-      urhsre_h[i] = new double[dim];
-      urhsim_h[i] = new double[dim];
-      urhsre_d[i] = new double[dim];
-      urhsim_d[i] = new double[dim];
+      urhsre_h = new double*[degp1];
+      urhsim_h = new double*[degp1];
+
+      for(int i=0; i<degp1; i++)
+      {
+         urhsre_h[i] = new double[dim];
+         urhsim_h[i] = new double[dim];
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      urhsre_d = new double*[degp1];
+      urhsim_d = new double*[degp1];
+
+      for(int i=0; i<degp1; i++)
+      {
+         urhsre_d[i] = new double[dim];
+         urhsim_d[i] = new double[dim];
+      }
    }
    double **resvecre = new double*[degp1];
    double **resvecim = new double*[degp1];
@@ -368,29 +481,59 @@ int test_dbl_complex_newton
       resvecim[i] = new double[dim];
    }
    double resmax;
-   double **Qre_h = new double*[dim];
-   double **Qim_h = new double*[dim];
-   double **Qre_d = new double*[dim];
-   double **Qim_d = new double*[dim];
+   double **Qre_h;
+   double **Qim_h;
+   double **Qre_d;
+   double **Qim_d;
 
-   for(int i=0; i<dim; i++)
+   if((mode == 1) || (mode == 2))
    {
-      Qre_h[i] = new double[dim];
-      Qim_h[i] = new double[dim];
-      Qre_d[i] = new double[dim];
-      Qim_d[i] = new double[dim];
+      Qre_h = new double*[dim];
+      Qim_h = new double*[dim];
+
+      for(int i=0; i<dim; i++)
+      {
+         Qre_h[i] = new double[dim];
+         Qim_h[i] = new double[dim];
+      }
    }
-   double **Rre_h = new double*[dim];
-   double **Rim_h = new double*[dim];
-   double **Rre_d = new double*[dim];
-   double **Rim_d = new double*[dim];
-
-   for(int i=0; i<dim; i++)
+   if((mode == 0) || (mode == 2))
    {
-      Rre_h[i] = new double[dim];
-      Rim_h[i] = new double[dim];
-      Rre_d[i] = new double[dim];
-      Rim_d[i] = new double[dim];
+      Qre_d = new double*[dim];
+      Qim_d = new double*[dim];
+
+      for(int i=0; i<dim; i++)
+      {
+         Qre_d[i] = new double[dim];
+         Qim_d[i] = new double[dim];
+      }
+   }
+   double **Rre_h;
+   double **Rim_h;
+   double **Rre_d;
+   double **Rim_d;
+
+   if((mode == 1) || (mode == 2))
+   {
+      Rre_h = new double*[dim];
+      Rim_h = new double*[dim];
+
+      for(int i=0; i<dim; i++)
+      {
+         Rre_h[i] = new double[dim];
+         Rim_h[i] = new double[dim];
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      Rre_d = new double*[dim];
+      Rim_d = new double*[dim];
+
+      for(int i=0; i<dim; i++)
+      {
+         Rre_d[i] = new double[dim];
+         Rim_d[i] = new double[dim];
+      }
    }
 /*
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
