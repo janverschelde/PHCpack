@@ -1,4 +1,5 @@
-Wed 26 Oct 2022 : Separated allocations in cmplx8_newton_method.cpp.
+Wed 26 Oct 2022 : Separated allocations in cmplx8_newton_method.cpp,
+  for data on host and device, also in {dbl2, cmplx2}_newton_method.cpp.
 
 Tue 25 Oct 2022 : in {dbl, cmplx}_newton_method.cpp separated the allocations
   of memory on host and on device to save space on larger problems.

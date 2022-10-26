@@ -123,20 +123,17 @@ void cmplx2_newton_qrstep
       cout << scientific << setprecision(16);
       cout << "sum of errors : " << errsum << endl;
    }
-   for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-      for(int j=0; j<dim; j++) 
-         for(int k=0; k<dim; k++)
-         {
-            jacvalrehi_h[i][j][k] = 0.0; jacvalimhi_h[i][j][k] = 0.0;
-            jacvalrelo_h[i][j][k] = 0.0; jacvalimlo_h[i][j][k] = 0.0;
-            jacvalrehi_d[i][j][k] = 0.0; jacvalimhi_d[i][j][k] = 0.0;
-            jacvalrelo_d[i][j][k] = 0.0; jacvalimlo_d[i][j][k] = 0.0;
-         }
-
-   if(vrblvl > 0) cout << "linearizing the output ..." << endl;
-
    if((mode == 1) || (mode == 2))
    {
+      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+         for(int j=0; j<dim; j++) 
+            for(int k=0; k<dim; k++)
+            {
+               jacvalrehi_h[i][j][k] = 0.0; jacvalimhi_h[i][j][k] = 0.0;
+               jacvalrelo_h[i][j][k] = 0.0; jacvalimlo_h[i][j][k] = 0.0;
+            }
+
+      if(vrblvl > 0) cout << "linearizing the output ..." << endl;
       cmplx2_linearize_evaldiff_output
          (dim,degp1,nvr,idx,mbrehi,mbrelo,mbimhi,mbimlo,dpr,
           outputrehi_h,outputrelo_h,outputimhi_h,outputimlo_h,
@@ -146,6 +143,15 @@ void cmplx2_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
+      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+         for(int j=0; j<dim; j++) 
+            for(int k=0; k<dim; k++)
+            {
+               jacvalrehi_d[i][j][k] = 0.0; jacvalimhi_d[i][j][k] = 0.0;
+               jacvalrelo_d[i][j][k] = 0.0; jacvalimlo_d[i][j][k] = 0.0;
+            }
+
+      if(vrblvl > 0) cout << "linearizing the output ..." << endl;
       cmplx2_linearize_evaldiff_output
          (dim,degp1,nvr,idx,mbrehi,mbrelo,mbimhi,mbimlo,dpr,
           outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d,
@@ -174,30 +180,25 @@ void cmplx2_newton_qrstep
                   rhsrehi_d,rhsrelo_d,rhsimhi_d,rhsimlo_d,"rhs",vrblvl);
       cout << "sum of errors : " << errsum << endl;
    }
-   for(int i=0; i<degp1; i++) // save original rhs for residual
-      for(int j=0; j<dim; j++)
-      {
-         urhsrehi_h[i][j] = rhsrehi_h[i][j];
-         urhsimhi_h[i][j] = rhsimhi_h[i][j];
-         urhsrelo_h[i][j] = rhsrelo_h[i][j];
-         urhsimlo_h[i][j] = rhsimlo_h[i][j];
-         urhsrehi_d[i][j] = rhsrehi_d[i][j];
-         urhsimhi_d[i][j] = rhsimhi_d[i][j];
-         urhsrelo_d[i][j] = rhsrelo_d[i][j];
-         urhsimlo_d[i][j] = rhsimlo_d[i][j];
-      }
-
-   for(int i=0; i<degp1; i++) // initialize the solution to zero
-      for(int j=0; j<dim; j++)
-      {
-         solrehi_h[i][j] = 0.0; solimhi_h[i][j] = 0.0;
-         solrelo_h[i][j] = 0.0; solimlo_h[i][j] = 0.0;
-         solrehi_d[i][j] = 0.0; solimhi_d[i][j] = 0.0;
-         solrelo_d[i][j] = 0.0; solimlo_d[i][j] = 0.0;
-      }
 
    if((mode == 1) || (mode == 2))
    {
+      for(int i=0; i<degp1; i++) // save original rhs for residual
+         for(int j=0; j<dim; j++)
+         {
+            urhsrehi_h[i][j] = rhsrehi_h[i][j];
+            urhsimhi_h[i][j] = rhsimhi_h[i][j];
+            urhsrelo_h[i][j] = rhsrelo_h[i][j];
+            urhsimlo_h[i][j] = rhsimlo_h[i][j];
+         }
+
+      for(int i=0; i<degp1; i++) // initialize the solution to zero
+         for(int j=0; j<dim; j++)
+         {
+            solrehi_h[i][j] = 0.0; solimhi_h[i][j] = 0.0;
+            solrelo_h[i][j] = 0.0; solimlo_h[i][j] = 0.0;
+         }
+
       if(vrblvl > 0)
          cout << "calling CPU_cmplx2_qrbs_solve ..." << endl;
 
@@ -231,6 +232,22 @@ void cmplx2_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
+      for(int i=0; i<degp1; i++) // save original rhs for residual
+         for(int j=0; j<dim; j++)
+         {
+            urhsrehi_d[i][j] = rhsrehi_d[i][j];
+            urhsimhi_d[i][j] = rhsimhi_d[i][j];
+            urhsrelo_d[i][j] = rhsrelo_d[i][j];
+            urhsimlo_d[i][j] = rhsimlo_d[i][j];
+         }
+
+      for(int i=0; i<degp1; i++) // initialize the solution to zero
+         for(int j=0; j<dim; j++)
+         {
+            solrehi_d[i][j] = 0.0; solimhi_d[i][j] = 0.0;
+            solrelo_d[i][j] = 0.0; solimlo_d[i][j] = 0.0;
+         }
+
       if(vrblvl > 0)
          cout << "calling GPU_cmplx2_bals_solve ..." << endl;
 
@@ -340,91 +357,156 @@ int test_dbl2_complex_newton
       cffimhi[i] = new double[degp1];
       cffimlo[i] = new double[degp1];
    }
-   double ***outputrehi_h = new double**[dim];
-   double ***outputrelo_h = new double**[dim];
-   double ***outputimhi_h = new double**[dim];
-   double ***outputimlo_h = new double**[dim];
-   double ***outputrehi_d = new double**[dim];
-   double ***outputrelo_d = new double**[dim];
-   double ***outputimhi_d = new double**[dim];
-   double ***outputimlo_d = new double**[dim];
+   double ***outputrehi_h;
+   double ***outputrelo_h;
+   double ***outputimhi_h;
+   double ***outputimlo_h;
+   double ***outputrehi_d;
+   double ***outputrelo_d;
+   double ***outputimhi_d;
+   double ***outputimlo_d;
 
-   for(int i=0; i<dim; i++)
+   if((mode == 1) || (mode == 2))
    {
-      outputrehi_h[i] = new double*[dim+1];
-      outputrelo_h[i] = new double*[dim+1];
-      outputimhi_h[i] = new double*[dim+1];
-      outputimlo_h[i] = new double*[dim+1];
-      outputrehi_d[i] = new double*[dim+1];
-      outputrelo_d[i] = new double*[dim+1];
-      outputimhi_d[i] = new double*[dim+1];
-      outputimlo_d[i] = new double*[dim+1];
+      outputrehi_h = new double**[dim];
+      outputrelo_h = new double**[dim];
+      outputimhi_h = new double**[dim];
+      outputimlo_h = new double**[dim];
 
-      for(int j=0; j<=dim; j++)
+      for(int i=0; i<dim; i++)
       {
-         outputrehi_h[i][j] = new double[degp1];
-         outputrelo_h[i][j] = new double[degp1];
-         outputimhi_h[i][j] = new double[degp1];
-         outputimlo_h[i][j] = new double[degp1];
-         outputrehi_d[i][j] = new double[degp1];
-         outputrelo_d[i][j] = new double[degp1];
-         outputimhi_d[i][j] = new double[degp1];
-         outputimlo_d[i][j] = new double[degp1];
+         outputrehi_h[i] = new double*[dim+1];
+         outputrelo_h[i] = new double*[dim+1];
+         outputimhi_h[i] = new double*[dim+1];
+         outputimlo_h[i] = new double*[dim+1];
+
+         for(int j=0; j<=dim; j++)
+         {
+            outputrehi_h[i][j] = new double[degp1];
+            outputrelo_h[i][j] = new double[degp1];
+            outputimhi_h[i][j] = new double[degp1];
+            outputimlo_h[i][j] = new double[degp1];
+         }
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      outputrehi_d = new double**[dim];
+      outputrelo_d = new double**[dim];
+      outputimhi_d = new double**[dim];
+      outputimlo_d = new double**[dim];
+
+      for(int i=0; i<dim; i++)
+      {
+         outputrehi_d[i] = new double*[dim+1];
+         outputrelo_d[i] = new double*[dim+1];
+         outputimhi_d[i] = new double*[dim+1];
+         outputimlo_d[i] = new double*[dim+1];
+
+         for(int j=0; j<=dim; j++)
+         {
+            outputrehi_d[i][j] = new double[degp1];
+            outputrelo_d[i][j] = new double[degp1];
+            outputimhi_d[i][j] = new double[degp1];
+            outputimlo_d[i][j] = new double[degp1];
+         }
       }
    }
    // The function values are power series truncated at degree deg.
-   double **funvalrehi_h = new double*[dim];
-   double **funvalrelo_h = new double*[dim];
-   double **funvalimhi_h = new double*[dim];
-   double **funvalimlo_h = new double*[dim];
-   double **funvalrehi_d = new double*[dim];
-   double **funvalrelo_d = new double*[dim];
-   double **funvalimhi_d = new double*[dim];
-   double **funvalimlo_d = new double*[dim];
+   double **funvalrehi_h;
+   double **funvalrelo_h;
+   double **funvalimhi_h;
+   double **funvalimlo_h;
+   double **funvalrehi_d;
+   double **funvalrelo_d;
+   double **funvalimhi_d;
+   double **funvalimlo_d;
 
-   for(int i=0; i<dim; i++)
+   if((mode == 1) || (mode == 2))
    {
-      funvalrehi_h[i] = new double[degp1];
-      funvalrelo_h[i] = new double[degp1];
-      funvalimhi_h[i] = new double[degp1];
-      funvalimlo_h[i] = new double[degp1];
-      funvalrehi_d[i] = new double[degp1];
-      funvalrelo_d[i] = new double[degp1];
-      funvalimhi_d[i] = new double[degp1];
-      funvalimlo_d[i] = new double[degp1];
+      funvalrehi_h = new double*[dim];
+      funvalrelo_h = new double*[dim];
+      funvalimhi_h = new double*[dim];
+      funvalimlo_h = new double*[dim];
+
+      for(int i=0; i<dim; i++)
+      {
+         funvalrehi_h[i] = new double[degp1];
+         funvalrelo_h[i] = new double[degp1];
+         funvalimhi_h[i] = new double[degp1];
+         funvalimlo_h[i] = new double[degp1];
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      funvalrehi_d = new double*[dim];
+      funvalrelo_d = new double*[dim];
+      funvalimhi_d = new double*[dim];
+      funvalimlo_d = new double*[dim];
+
+      for(int i=0; i<dim; i++)
+      {
+         funvalrehi_d[i] = new double[degp1];
+         funvalrelo_d[i] = new double[degp1];
+         funvalimhi_d[i] = new double[degp1];
+         funvalimlo_d[i] = new double[degp1];
+      }
    }
    // The derivatives in the output are a series truncated at degree deg.
    // The coefficients of the series are matrices of dimension dim.
-   double ***jacvalrehi_h = new double**[degp1];
-   double ***jacvalrelo_h = new double**[degp1];
-   double ***jacvalimhi_h = new double**[degp1];
-   double ***jacvalimlo_h = new double**[degp1];
-   double ***jacvalrehi_d = new double**[degp1];
-   double ***jacvalrelo_d = new double**[degp1];
-   double ***jacvalimhi_d = new double**[degp1];
-   double ***jacvalimlo_d = new double**[degp1];
+   double ***jacvalrehi_h;
+   double ***jacvalrelo_h;
+   double ***jacvalimhi_h;
+   double ***jacvalimlo_h;
+   double ***jacvalrehi_d;
+   double ***jacvalrelo_d;
+   double ***jacvalimhi_d;
+   double ***jacvalimlo_d;
 
-   for(int i=0; i<degp1; i++) // jacval[i] is matrix of dimension dim
+   if((mode == 1) || (mode == 2))
    {
-      jacvalrehi_h[i] = new double*[dim];
-      jacvalrelo_h[i] = new double*[dim];
-      jacvalimhi_h[i] = new double*[dim];
-      jacvalimlo_h[i] = new double*[dim];
-      jacvalrehi_d[i] = new double*[dim];
-      jacvalrelo_d[i] = new double*[dim];
-      jacvalimhi_d[i] = new double*[dim];
-      jacvalimlo_d[i] = new double*[dim];
+      jacvalrehi_h = new double**[degp1];
+      jacvalrelo_h = new double**[degp1];
+      jacvalimhi_h = new double**[degp1];
+      jacvalimlo_h = new double**[degp1];
 
-      for(int j=0; j<dim; j++)
+      for(int i=0; i<degp1; i++) // jacval[i] is matrix of dimension dim
       {
-         jacvalrehi_h[i][j] = new double[dim];
-         jacvalrelo_h[i][j] = new double[dim];
-         jacvalimhi_h[i][j] = new double[dim];
-         jacvalimlo_h[i][j] = new double[dim];
-         jacvalrehi_d[i][j] = new double[dim];
-         jacvalrelo_d[i][j] = new double[dim];
-         jacvalimhi_d[i][j] = new double[dim];
-         jacvalimlo_d[i][j] = new double[dim];
+         jacvalrehi_h[i] = new double*[dim];
+         jacvalrelo_h[i] = new double*[dim];
+         jacvalimhi_h[i] = new double*[dim];
+         jacvalimlo_h[i] = new double*[dim];
+
+         for(int j=0; j<dim; j++)
+         {
+            jacvalrehi_h[i][j] = new double[dim];
+            jacvalrelo_h[i][j] = new double[dim];
+            jacvalimhi_h[i][j] = new double[dim];
+            jacvalimlo_h[i][j] = new double[dim];
+         }
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      jacvalrehi_d = new double**[degp1];
+      jacvalrelo_d = new double**[degp1];
+      jacvalimhi_d = new double**[degp1];
+      jacvalimlo_d = new double**[degp1];
+
+      for(int i=0; i<degp1; i++) // jacval[i] is matrix of dimension dim
+      {
+         jacvalrehi_d[i] = new double*[dim];
+         jacvalrelo_d[i] = new double*[dim];
+         jacvalimhi_d[i] = new double*[dim];
+         jacvalimlo_d[i] = new double*[dim];
+
+         for(int j=0; j<dim; j++)
+         {
+            jacvalrehi_d[i][j] = new double[dim];
+            jacvalrelo_d[i][j] = new double[dim];
+            jacvalimhi_d[i][j] = new double[dim];
+            jacvalimlo_d[i][j] = new double[dim];
+         }
       }
    }
 /*
@@ -433,47 +515,85 @@ int test_dbl2_complex_newton
    // The solution x(t) to jacval(t)*x(t) = -funval(t) in linearized
    // format is a series truncated at degree deg, with as coefficients
    // arrays of dimension dim.
-   double **solrehi_h = new double*[degp1];
-   double **solrelo_h = new double*[degp1];
-   double **solimhi_h = new double*[degp1];
-   double **solimlo_h = new double*[degp1];
-   double **solrehi_d = new double*[degp1];
-   double **solrelo_d = new double*[degp1];
-   double **solimhi_d = new double*[degp1];
-   double **solimlo_d = new double*[degp1];
+   double **solrehi_h;
+   double **solrelo_h;
+   double **solimhi_h;
+   double **solimlo_h;
+   double **solrehi_d;
+   double **solrelo_d;
+   double **solimhi_d;
+   double **solimlo_d;
 
-   for(int i=0; i<degp1; i++) 
+   if((mode == 1) || (mode == 2))
    {
-      solrehi_h[i] = new double[dim];
-      solrelo_h[i] = new double[dim];
-      solimhi_h[i] = new double[dim];
-      solimlo_h[i] = new double[dim];
-      solrehi_d[i] = new double[dim];
-      solrelo_d[i] = new double[dim];
-      solimhi_d[i] = new double[dim];
-      solimlo_d[i] = new double[dim];
+      solrehi_h = new double*[degp1];
+      solrelo_h = new double*[degp1];
+      solimhi_h = new double*[degp1];
+      solimlo_h = new double*[degp1];
+
+      for(int i=0; i<degp1; i++) 
+      {
+         solrehi_h[i] = new double[dim];
+         solrelo_h[i] = new double[dim];
+         solimhi_h[i] = new double[dim];
+         solimlo_h[i] = new double[dim];
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      solrehi_d = new double*[degp1];
+      solrelo_d = new double*[degp1];
+      solimhi_d = new double*[degp1];
+      solimlo_d = new double*[degp1];
+
+      for(int i=0; i<degp1; i++) 
+      {
+         solrehi_d[i] = new double[dim];
+         solrelo_d[i] = new double[dim];
+         solimhi_d[i] = new double[dim];
+         solimlo_d[i] = new double[dim];
+      }
    }
    // The right hand side -funval(t) in linearized format is a series
    // truncated at degree deg, with arrays of dimension dim as coefficients.
-   double **rhsrehi_h = new double*[degp1];
-   double **rhsrelo_h = new double*[degp1];
-   double **rhsimhi_h = new double*[degp1];
-   double **rhsimlo_h = new double*[degp1];
-   double **rhsrehi_d = new double*[degp1];
-   double **rhsrelo_d = new double*[degp1];
-   double **rhsimhi_d = new double*[degp1];
-   double **rhsimlo_d = new double*[degp1];
+   double **rhsrehi_h;
+   double **rhsrelo_h;
+   double **rhsimhi_h;
+   double **rhsimlo_h;
+   double **rhsrehi_d;
+   double **rhsrelo_d;
+   double **rhsimhi_d;
+   double **rhsimlo_d;
 
-   for(int i=0; i<degp1; i++)
+   if((mode == 1) || (mode == 2))
    {
-      rhsrehi_h[i] = new double[dim];
-      rhsrelo_h[i] = new double[dim];
-      rhsimhi_h[i] = new double[dim];
-      rhsimlo_h[i] = new double[dim];
-      rhsrehi_d[i] = new double[dim];
-      rhsrelo_d[i] = new double[dim];
-      rhsimhi_d[i] = new double[dim];
-      rhsimlo_d[i] = new double[dim];
+      rhsrehi_h = new double*[degp1];
+      rhsrelo_h = new double*[degp1];
+      rhsimhi_h = new double*[degp1];
+      rhsimlo_h = new double*[degp1];
+
+      for(int i=0; i<degp1; i++)
+      {
+         rhsrehi_h[i] = new double[dim];
+         rhsrelo_h[i] = new double[dim];
+         rhsimhi_h[i] = new double[dim];
+         rhsimlo_h[i] = new double[dim];
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      rhsrehi_d = new double*[degp1];
+      rhsrelo_d = new double*[degp1];
+      rhsimhi_d = new double*[degp1];
+      rhsimlo_d = new double*[degp1];
+
+      for(int i=0; i<degp1; i++)
+      {
+         rhsrehi_d[i] = new double[dim];
+         rhsrelo_d[i] = new double[dim];
+         rhsimhi_d[i] = new double[dim];
+         rhsimlo_d[i] = new double[dim];
+      }
    }
    // Allocate work space for the inplace LU solver.
    double **workmatrehi = new double*[dim];
@@ -494,25 +614,44 @@ int test_dbl2_complex_newton
    double *workvecimhi = new double[dim];
    double *workvecimlo = new double[dim];
    // Copy the rhs vector into work space for inplace solver.
-   double **urhsrehi_h = new double*[degp1];
-   double **urhsrelo_h = new double*[degp1];
-   double **urhsimhi_h = new double*[degp1];
-   double **urhsimlo_h = new double*[degp1];
-   double **urhsrehi_d = new double*[degp1];
-   double **urhsrelo_d = new double*[degp1];
-   double **urhsimhi_d = new double*[degp1];
-   double **urhsimlo_d = new double*[degp1];
+   double **urhsrehi_h;
+   double **urhsrelo_h;
+   double **urhsimhi_h;
+   double **urhsimlo_h;
+   double **urhsrehi_d;
+   double **urhsrelo_d;
+   double **urhsimhi_d;
+   double **urhsimlo_d;
 
-   for(int i=0; i<degp1; i++)
+   if((mode == 1) || (mode == 2))
    {
-      urhsrehi_h[i] = new double[dim];
-      urhsrelo_h[i] = new double[dim];
-      urhsimhi_h[i] = new double[dim];
-      urhsimlo_h[i] = new double[dim];
-      urhsrehi_d[i] = new double[dim];
-      urhsrelo_d[i] = new double[dim];
-      urhsimhi_d[i] = new double[dim];
-      urhsimlo_d[i] = new double[dim];
+      urhsrehi_h = new double*[degp1];
+      urhsrelo_h = new double*[degp1];
+      urhsimhi_h = new double*[degp1];
+      urhsimlo_h = new double*[degp1];
+
+      for(int i=0; i<degp1; i++)
+      {
+         urhsrehi_h[i] = new double[dim];
+         urhsrelo_h[i] = new double[dim];
+         urhsimhi_h[i] = new double[dim];
+         urhsimlo_h[i] = new double[dim];
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      urhsrehi_d = new double*[degp1];
+      urhsrelo_d = new double*[degp1];
+      urhsimhi_d = new double*[degp1];
+      urhsimlo_d = new double*[degp1];
+
+      for(int i=0; i<degp1; i++)
+      {
+         urhsrehi_d[i] = new double[dim];
+         urhsrelo_d[i] = new double[dim];
+         urhsimhi_d[i] = new double[dim];
+         urhsimlo_d[i] = new double[dim];
+      }
    }
    double **resvecrehi = new double*[degp1];
    double **resvecrelo = new double*[degp1];
@@ -527,45 +666,84 @@ int test_dbl2_complex_newton
       resvecimlo[i] = new double[dim];
    }
    double resmaxhi,resmaxlo;
-   double **Qrehi_h = new double*[dim];
-   double **Qrelo_h = new double*[dim];
-   double **Qimhi_h = new double*[dim];
-   double **Qimlo_h = new double*[dim];
-   double **Qrehi_d = new double*[dim];
-   double **Qrelo_d = new double*[dim];
-   double **Qimhi_d = new double*[dim];
-   double **Qimlo_d = new double*[dim];
 
-   for(int i=0; i<dim; i++)
+   double **Qrehi_h;
+   double **Qrelo_h;
+   double **Qimhi_h;
+   double **Qimlo_h;
+   double **Qrehi_d;
+   double **Qrelo_d;
+   double **Qimhi_d;
+   double **Qimlo_d;
+
+   if((mode == 1) || (mode == 2))
    {
-      Qrehi_h[i] = new double[dim];
-      Qrelo_h[i] = new double[dim];
-      Qimhi_h[i] = new double[dim];
-      Qimlo_h[i] = new double[dim];
-      Qrehi_d[i] = new double[dim];
-      Qrelo_d[i] = new double[dim];
-      Qimhi_d[i] = new double[dim];
-      Qimlo_d[i] = new double[dim];
+      Qrehi_h = new double*[dim];
+      Qrelo_h = new double*[dim];
+      Qimhi_h = new double*[dim];
+      Qimlo_h = new double*[dim];
+
+      for(int i=0; i<dim; i++)
+      {
+         Qrehi_h[i] = new double[dim];
+         Qrelo_h[i] = new double[dim];
+         Qimhi_h[i] = new double[dim];
+         Qimlo_h[i] = new double[dim];
+      }
    }
-   double **Rrehi_h = new double*[dim];
-   double **Rrelo_h = new double*[dim];
-   double **Rimhi_h = new double*[dim];
-   double **Rimlo_h = new double*[dim];
-   double **Rrehi_d = new double*[dim];
-   double **Rrelo_d = new double*[dim];
-   double **Rimhi_d = new double*[dim];
-   double **Rimlo_d = new double*[dim];
-
-   for(int i=0; i<dim; i++)
+   if((mode == 0) || (mode == 2))
    {
-      Rrehi_h[i] = new double[dim];
-      Rrelo_h[i] = new double[dim];
-      Rimhi_h[i] = new double[dim];
-      Rimlo_h[i] = new double[dim];
-      Rrehi_d[i] = new double[dim];
-      Rrelo_d[i] = new double[dim];
-      Rimhi_d[i] = new double[dim];
-      Rimlo_d[i] = new double[dim];
+      Qrehi_d = new double*[dim];
+      Qrelo_d = new double*[dim];
+      Qimhi_d = new double*[dim];
+      Qimlo_d = new double*[dim];
+
+      for(int i=0; i<dim; i++)
+      {
+         Qrehi_d[i] = new double[dim];
+         Qrelo_d[i] = new double[dim];
+         Qimhi_d[i] = new double[dim];
+         Qimlo_d[i] = new double[dim];
+      }
+   }
+   double **Rrehi_h;
+   double **Rrelo_h;
+   double **Rimhi_h;
+   double **Rimlo_h;
+   double **Rrehi_d;
+   double **Rrelo_d;
+   double **Rimhi_d;
+   double **Rimlo_d;
+
+   if((mode == 1) || (mode == 2))
+   {
+      Rrehi_h = new double*[dim];
+      Rrelo_h = new double*[dim];
+      Rimhi_h = new double*[dim];
+      Rimlo_h = new double*[dim];
+
+      for(int i=0; i<dim; i++)
+      {
+         Rrehi_h[i] = new double[dim];
+         Rrelo_h[i] = new double[dim];
+         Rimhi_h[i] = new double[dim];
+         Rimlo_h[i] = new double[dim];
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      Rrehi_d = new double*[dim];
+      Rrelo_d = new double*[dim];
+      Rimhi_d = new double*[dim];
+      Rimlo_d = new double*[dim];
+
+      for(int i=0; i<dim; i++)
+      {
+         Rrehi_d[i] = new double[dim];
+         Rrelo_d[i] = new double[dim];
+         Rimhi_d[i] = new double[dim];
+         Rimlo_d[i] = new double[dim];
+      }
    }
 /*
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
