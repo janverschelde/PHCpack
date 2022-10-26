@@ -1,5 +1,6 @@
 Tue 25 Oct 2022 : in {dbl, cmplx}_newton_method.cpp separated the allocations
   of memory on host and on device to save space on larger problems.
+  Separated allocations in dbl8_newton_method.cpp.
 
 Mon 24 Oct 2022 : to {dbl, dbl2, dbl4, dbl8}_{bals, systems, tail}_kernels.cu,
   added cudaFree() statements to free memory on the device.
