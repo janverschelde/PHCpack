@@ -400,13 +400,16 @@ int test_dbl_real_newton
    bool noqr_h = false;
    bool noqr_d = false;
 
+   int wrkdeg = 0; // working degree of precision
+
    for(int step=0; step<nbsteps; step++)
    {
       if(vrblvl > 0)
-         cout << "*** running Newton step " << step << " ***" << endl;
+         cout << "*** running Newton step " << step
+              << " at degree " << wrkdeg << " ***" << endl;
 
       dbl_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,mbrhs,dpr,cff,acc,
+         (szt,nbt,dim,wrkdeg,nvr,idx,exp,nbrfac,expfac,mbrhs,dpr,cff,acc,
           input_h,input_d,output_h,output_d,funval_h,funval_d,
           jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
           Q_h,Q_d,R_h,R_d,workmat,workvec,resvec,&resmax,
@@ -415,10 +418,14 @@ int test_dbl_real_newton
       if(vrblvl > 0)
          cout << "upidx_h : " << upidx_h << "  bsidx_h : " << bsidx_h
               << "  upidx_d : " << upidx_d << "  bsidx_d : " << bsidx_d
-              << "  deg : " << deg << endl;
+              << "  deg : " << deg
+              << "  wrkdeg : " << wrkdeg << endl;
 
       if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
       if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;
+
+      wrkdeg = wrkdeg + 1 + wrkdeg/2;
+      if(wrkdeg > deg) wrkdeg = deg;
    }
    if(vrblvl < 2)
    {

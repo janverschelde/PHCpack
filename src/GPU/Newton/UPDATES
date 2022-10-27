@@ -1,3 +1,7 @@
+Thu 27 Oct 2022 : updated {dbl, dbl2, dbl4, dbl8}_newton_testers.cpp
+  to start at staggered precision.  Introduced working degree of precision
+  in {dbl*, cmplx*}_newton_method.cpp.
+
 Wed 26 Oct 2022 : Separated allocations in cmplx8_newton_method.cpp,
   for data on host and device, also in {dbl2, cmplx2}_newton_method.cpp
   and in {dbl4, cmplx4}_newton_method.cpp.

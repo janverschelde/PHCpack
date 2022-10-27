@@ -33,7 +33,7 @@ void real4_start_series_vector
       cffhilo[i][0] = r0hilo[i];
       cfflolo[i][0] = r0lolo[i];
       qdf_inc(&cffhihi[i][0],&cfflohi[i][0],&cffhilo[i][0],&cfflolo[i][0],
-              0.00001,0.0,0.0,0.0);
+              1.0e-32,0.0,0.0,0.0);
 
       for(int j=1; j<=deg; j++)
       {
@@ -59,14 +59,14 @@ void cmplx4_start_series_vector
       cffrehilo[i][0] = r0rehilo[i];
       cffrelolo[i][0] = r0relolo[i];
       qdf_inc(&cffrehihi[i][0],&cffrelohi[i][0],
-              &cffrehilo[i][0],&cffrelolo[i][0],0.00001,0.0,0.0,0.0);
+              &cffrehilo[i][0],&cffrelolo[i][0],1.0e-32,0.0,0.0,0.0);
 
       cffimhihi[i][0] = r0imhihi[i];
       cffimlohi[i][0] = r0imlohi[i];
       cffimhilo[i][0] = r0imhilo[i];
       cffimlolo[i][0] = r0imlolo[i];
       qdf_inc(&cffimhihi[i][0],&cffimlohi[i][0],
-              &cffimhilo[i][0],&cffimlolo[i][0],0.00001,0.0,0.0,0.0);
+              &cffimhilo[i][0],&cffimlolo[i][0],1.0e-32,0.0,0.0,0.0);
 
       for(int j=1; j<=deg; j++)
       {

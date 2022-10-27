@@ -41,7 +41,7 @@ void real8_start_series_vector
               &cffhilohi[i][0],&cfflolohi[i][0],
               &cffhihilo[i][0],&cfflohilo[i][0],
               &cffhilolo[i][0],&cfflololo[i][0],
-              0.00001,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+              1.0e-64,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
 
       for(int j=1; j<=deg; j++)
       {
@@ -86,7 +86,7 @@ void cmplx8_start_series_vector
               &cffrehilohi[i][0],&cffrelolohi[i][0],
               &cffrehihilo[i][0],&cffrelohilo[i][0],
               &cffrehilolo[i][0],&cffrelololo[i][0],
-              0.00001,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+              1.0e-64,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
 
       cffimhihihi[i][0] = r0imhihihi[i];
       cffimlohihi[i][0] = r0imlohihi[i];
@@ -100,7 +100,7 @@ void cmplx8_start_series_vector
               &cffimhilohi[i][0],&cffimlolohi[i][0],
               &cffimhihilo[i][0],&cffimlohilo[i][0],
               &cffimhilolo[i][0],&cffimlololo[i][0],
-              0.00001,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+              1.0e-64,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
 
       for(int j=1; j<=deg; j++)
       {

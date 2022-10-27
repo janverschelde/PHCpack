@@ -606,13 +606,16 @@ int test_dbl_complex_newton
    bool noqr_h = false;
    bool noqr_d = false;
 
+   int wrkdeg = 0; // working degree of precision
+
    for(int step=0; step<nbsteps; step++)
    {
       if(vrblvl > 0)
-         cout << "*** running Newton step " << step << " ***" << endl;
+         cout << "*** running Newton step " << step
+              << " at degree " << wrkdeg << " ***" << endl;
 
       cmplx_newton_qrstep
-         (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,nvr,idx,exp,nbrfac,expfac,
           mbrhsre,mbrhsim,dpr,cffre,cffim,accre,accim,
           inputre_h,inputim_h,inputre_d,inputim_d,
           outputre_h,outputim_h,outputre_d,outputim_d,
@@ -628,10 +631,14 @@ int test_dbl_complex_newton
       if(vrblvl > 0)
          cout << "upidx_h : " << upidx_h << "  bsidx_h : " << bsidx_h
               << "  upidx_d : " << upidx_d << "  bsidx_d : " << bsidx_d
-              << "  deg : " << deg << endl;
+              << "  deg : " << deg
+              << "  wrkdeg : " << wrkdeg << endl;
 
       if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
       if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;
+
+      wrkdeg = wrkdeg + 1 + wrkdeg/2;
+      if(wrkdeg > deg) wrkdeg = deg;
    }
    if(vrblvl < 2)
    {

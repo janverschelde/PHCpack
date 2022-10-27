@@ -30,7 +30,7 @@ void real2_start_series_vector
    {
       cffhi[i][0] = r0hi[i];
       cfflo[i][0] = r0lo[i];
-      ddf_inc(&cffhi[i][0],&cfflo[i][0],0.00001,0.0);
+      ddf_inc(&cffhi[i][0],&cfflo[i][0],1.0e-16,0.0);
 
       for(int j=1; j<=deg; j++)
       {
@@ -49,11 +49,11 @@ void cmplx2_start_series_vector
    {
       cffrehi[i][0] = r0rehi[i];
       cffrelo[i][0] = r0relo[i];
-      ddf_inc(&cffrehi[i][0],&cffrelo[i][0],0.00001,0.0);
+      ddf_inc(&cffrehi[i][0],&cffrelo[i][0],1.0e-16,0.0);
 
       cffimhi[i][0] = r0imhi[i];
       cffimlo[i][0] = r0imlo[i];
-      ddf_inc(&cffimhi[i][0],&cffimlo[i][0],0.00001,0.0);
+      ddf_inc(&cffimhi[i][0],&cffimlo[i][0],1.0e-16,0.0);
 
       for(int j=1; j<=deg; j++)
       {

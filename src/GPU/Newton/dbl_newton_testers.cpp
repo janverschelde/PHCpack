@@ -13,7 +13,7 @@ void real_start_series_vector ( int dim, int deg, double *r0, double **cff )
 
    for(int i=0; i<dim; i++)
    {
-      cff[i][0] = r0[i] + 0.00001; // random_double(); => no convergence ...
+      cff[i][0] = r0[i] + 1.0e-8; // random_double(); => no convergence ...
 
       for(int j=1; j<=deg; j++) cff[i][j] = 0.0;
    }
@@ -28,8 +28,8 @@ void cmplx_start_series_vector
    for(int i=0; i<dim; i++)
    {
       // angle = random_angle(); 
-      cffre[i][0] = r0re[i] + 0.00001; // cos(angle); => no convergence ...
-      cffim[i][0] = r0im[i] + 0.00001; // sin(angle);
+      cffre[i][0] = r0re[i] + 1.0e-8; // cos(angle); => no convergence ...
+      cffim[i][0] = r0im[i] + 1.0e-8; // sin(angle);
 
       for(int j=1; j<=deg; j++)
       {
