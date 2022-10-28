@@ -22,7 +22,6 @@ void dbl2_newton_qrstep
    double **solhi_h, double **sollo_h, double **solhi_d, double **sollo_d,
    double **Qhi_h, double **Qlo_h, double **Qhi_d, double **Qlo_d,
    double **Rhi_h, double **Rlo_h, double **Rhi_d, double **Rlo_d,
-   double **workmathi, double **workmatlo,
    double *workvechi, double *workveclo,
    double **resvechi, double **resveclo, double *resmaxhi, double *resmaxlo,
    bool *noqr_h, bool *noqr_d,
@@ -96,8 +95,6 @@ void dbl2_newton_qrstep
  *   Rlo_h     space allocated for the R computed by the host;
  *   Rhi_d     space allocated for the R computed by the device;
  *   Rlo_d     space allocated for the R computed by the device;
- *   wrkmathi  has work space allocated for a matrix of dimension dim;
- *   wrkmatlo  has work space allocated for a matrix of dimension dim;
  *   wrkvechi  has work space allocated for a vector of dimension dim;
  *   wrkveclo  has work space allocated for a vector of dimension dim;
  *   resvechi  has space for deg+1 vectors of dimension dim;
@@ -152,8 +149,6 @@ void dbl2_newton_qrstep
  *   Rlo_h     low doubles of R of the QR computed by the host;
  *   Rhi_d     high doubles of R of the QR computed by the device;
  *   Rlo_d     low doubles of R of the QR computed by the device;
- *   wrkmathi  has a copy of the high doubles of the Jacobian matrix;
- *   wrkmatlo  has a copy of the low doubles of the Jacobian matrix;
  *   resvechi  high doubles of the residual vectors;
  *   resveclo  low doubles of the residual vectors;
  *   resmaxhi  high double of the maximum element of the residual vectors;

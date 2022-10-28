@@ -203,7 +203,6 @@ void dbl4_newton_qrstep
          (dim,degp1,jacvalhihi_h,jacvallohi_h,jacvalhilo_h,jacvallolo_h,
           urhshihi_h,urhslohi_h,urhshilo_h,urhslolo_h,
           solhihi_h,sollohi_h,solhilo_h,sollolo_h,
-          workmathihi,workmatlohi,workmathilo,workmatlolo,
           Qhihi_h,Qlohi_h,Qhilo_h,Qlolo_h,Rhihi_h,Rlohi_h,Rhilo_h,Rlolo_h,
           workvechihi,workveclohi,workvechilo,workveclolo,
           noqr_h,upidx_h,bsidx_h,vrblvl);

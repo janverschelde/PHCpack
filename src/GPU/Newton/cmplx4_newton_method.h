@@ -90,10 +90,6 @@ void cmplx4_newton_qrstep
    double **Rrehilo_d, double **Rrelolo_d,
    double **Rimhihi_d, double **Rimlohi_d,
    double **Rimhilo_d, double **Rimlolo_d,
-   double **workmatrehihi, double **workmatrelohi,
-   double **workmatrehilo, double **workmatrelolo,
-   double **workmatimhihi, double **workmatimlohi,
-   double **workmatimhilo, double **workmatimlolo,
    double *workvecrehihi, double *workvecrelohi,
    double *workvecrehilo, double *workvecrelolo,
    double *workvecimhihi, double *workvecimlohi,
@@ -327,14 +323,6 @@ void cmplx4_newton_qrstep
  *   Rimlohi_d has space for the R computed by the device;
  *   Rimhilo_d has space for the R computed by the device;
  *   Rimlolo_d has space for the R computed by the device;
- *   wrkmatrehihi is work space allocated for a matrix of dimension dim;
- *   wrkmatrelohi is work space allocated for a matrix of dimension dim;
- *   wrkmatrehilo is work space allocated for a matrix of dimension dim;
- *   wrkmatrelolo is work space allocated for a matrix of dimension dim;
- *   wrkmatimhihi is work space allocated for a matrix of dimension dim;
- *   wrkmatimlohi is work space allocated for a matrix of dimension dim;
- *   wrkmatimhilo is work space allocated for a matrix of dimension dim;
- *   wrkmatimlolo is work space allocated for a matrix of dimension dim;
  *   wrkvecrehihi is work space allocated for a vector of dimension dim;
  *   wrkvecrelohi is work space allocated for a vector of dimension dim;
  *   wrkvecrehilo is work space allocated for a vector of dimension dim;
@@ -581,7 +569,6 @@ void cmplx4_newton_qrstep
  *   Rimlohi_d are the second highest doubles of imag R of the QR on device;
  *   Rimhilo_d are the second lowest doubles of imag R of the QR on device;
  *   Rimlolo_d are the lowest doubles of imaginary R of the QR on device;
- *   wrkmat    has a copy of the Jacobian matrix;
  *   resvecrehi are highest doubles of the real parts of the residual vectors;
  *   resvecrelo are second highest doubles of the real parts of resvec;
  *   resvecrelo are second lowest doubles of the real parts of resvec;

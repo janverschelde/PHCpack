@@ -43,8 +43,6 @@ void cmplx2_newton_qrstep
    double **Qrehi_d, double **Qrelo_d, double **Qimhi_d, double **Qimlo_d, 
    double **Rrehi_h, double **Rrelo_h, double **Rimhi_h, double **Rimlo_h, 
    double **Rrehi_d, double **Rrelo_d, double **Rimhi_d, double **Rimlo_d,
-   double **workmatrehi, double **workmatrelo,
-   double **workmatimhi, double **workmatimlo,
    double *workvecrehi, double *workvecrelo,
    double *workvecimhi, double *workvecimlo,
    double **resvecrehi, double **resvecrelo,
@@ -173,14 +171,10 @@ void cmplx2_newton_qrstep
  *   Rrelo_d   space allocated for the R computed by the device;
  *   Rimhi_d   space allocated for the R computed by the device;
  *   Rimlo_d   space allocated for the R computed by the device;
- *   wrkmatrehi is work space allocated for a matrix of dimension dim;
- *   wrkmatrelo is work space allocated for a matrix of dimension dim;
- *   wrkmatimhi is work space allocated for a matrix of dimension dim;
- *   wrkmatimlo is work space allocated for a matrix of dimension dim;
- *   wrkvecrehi is work space allocated for a vector of dimension dim;
- *   wrkvecrelo is work space allocated for a vector of dimension dim;
- *   wrkvecimhi is work space allocated for a vector of dimension dim;
- *   wrkvecimlo is work space allocated for a vector of dimension dim;
+ *   workvecrehi is work space allocated for a vector of dimension dim;
+ *   workvecrelo is work space allocated for a vector of dimension dim;
+ *   workvecimhi is work space allocated for a vector of dimension dim;
+ *   workvecimlo is work space allocated for a vector of dimension dim;
  *   resvecrehi has space for deg+1 vectors of dimension dim;
  *   resvecrelo has space for deg+1 vectors of dimension dim;
  *   resvecimhi has space for deg+1 vectors of dimension dim;
@@ -287,7 +281,6 @@ void cmplx2_newton_qrstep
  *   Rrelo_d   low doubles of real R of the QR on device;
  *   Rimhi_d   high doubles of imaginary R of the QR on device;
  *   Rimlo_d   low doubles of imaginary R of the QR on device;
- *   wrkmat    has a copy of the Jacobian matrix;
  *   resvecrehi are high doubles of the real parts of the residual vectors;
  *   resvecrelo are high doubles of the real parts of the residual vectors;
  *   resvecimhi are high doubles of the imag parts of the residual vectors;

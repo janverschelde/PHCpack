@@ -63,8 +63,6 @@ void cmplx2_newton_qrstep
    double **Qrehi_d, double **Qrelo_d, double **Qimhi_d, double **Qimlo_d, 
    double **Rrehi_h, double **Rrelo_h, double **Rimhi_h, double **Rimlo_h, 
    double **Rrehi_d, double **Rrelo_d, double **Rimhi_d, double **Rimlo_d,
-   double **workmatrehi, double **workmatrelo,
-   double **workmatimhi, double **workmatimlo,
    double *workvecrehi, double *workvecrelo,
    double *workvecimhi, double *workvecimlo,
    double **resvecrehi, double **resvecrelo,
@@ -207,7 +205,6 @@ void cmplx2_newton_qrstep
           jacvalrehi_h,jacvalrelo_h,jacvalimhi_h,jacvalimlo_h,
           urhsrehi_h,urhsrelo_h,urhsimhi_h,urhsimlo_h,
           solrehi_h,solrelo_h,solimhi_h,solimlo_h,
-          workmatrehi,workmatrelo,workmatimhi,workmatimlo,
           Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,Rrehi_h,Rrelo_h,Rimhi_h,Rimlo_h,
           workvecrehi,workvecrelo,workvecimhi,workvecimlo,
           noqr_h,upidx_h,bsidx_h,vrblvl);
@@ -595,20 +592,6 @@ int test_dbl2_complex_newton
          rhsimlo_d[i] = new double[dim];
       }
    }
-   // Allocate work space for the inplace LU solver.
-   double **workmatrehi = new double*[dim];
-   double **workmatrelo = new double*[dim];
-   double **workmatimhi = new double*[dim];
-   double **workmatimlo = new double*[dim];
-
-   for(int i=0; i<dim; i++)
-   {
-      workmatrehi[i] = new double[dim];
-      workmatrelo[i] = new double[dim];
-      workmatimhi[i] = new double[dim];
-      workmatimlo[i] = new double[dim];
-   }
-   int *ipvt = new int[dim];
    double *workvecrehi = new double[dim];
    double *workvecrelo = new double[dim];
    double *workvecimhi = new double[dim];
@@ -868,7 +851,6 @@ int test_dbl2_complex_newton
           solrehi_d,solrelo_d,solimhi_d,solimlo_d,
           Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,
           Rrehi_h,Rrelo_h,Rimhi_h,Rimlo_h,Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,
-          workmatrehi,workmatrelo,workmatimhi,workmatimlo,
           workvecrehi,workvecrelo,workvecimhi,workvecimlo,
           resvecrehi,resvecrelo,resvecimhi,resvecimlo,&resmaxhi,&resmaxlo,
           &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);

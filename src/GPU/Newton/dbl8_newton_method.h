@@ -88,10 +88,6 @@ void dbl8_newton_qrstep
    double **Rhilohi_d, double **Rlolohi_d,
    double **Rhihilo_d, double **Rlohilo_d,
    double **Rhilolo_d, double **Rlololo_d,
-   double **workmathihihi, double **workmatlohihi,
-   double **workmathilohi, double **workmatlolohi,
-   double **workmathihilo, double **workmatlohilo,
-   double **workmathilolo, double **workmatlololo,
    double *workvechihihi, double *workveclohihi,
    double *workvechilohi, double *workveclolohi,
    double *workvechihilo, double *workveclohilo,
@@ -311,14 +307,6 @@ void dbl8_newton_qrstep
  *   Rlohilo_d has space allocated for the R computed by the device;
  *   Rhilolo_d has space allocated for the R computed by the device;
  *   Rlololo_d has space allocated for the R computed by the device;
- *   wrkmathihihi has work space allocated for a matrix of dimension dim;
- *   wrkmatlohihi has work space allocated for a matrix of dimension dim;
- *   wrkmathilohi has work space allocated for a matrix of dimension dim;
- *   wrkmatlolohi has work space allocated for a matrix of dimension dim;
- *   wrkmathihilo has work space allocated for a matrix of dimension dim;
- *   wrkmatlohilo has work space allocated for a matrix of dimension dim;
- *   wrkmathilolo has work space allocated for a matrix of dimension dim;
- *   wrkmatlololo has work space allocated for a matrix of dimension dim;
  *   wrkvechihihi has work space allocated for a vector of dimension dim;
  *   wrkveclohihi has work space allocated for a vector of dimension dim;
  *   wrkvechilohi has work space allocated for a vector of dimension dim;
@@ -489,14 +477,6 @@ void dbl8_newton_qrstep
  *   Rlohilo_d are the third lowhest doubles of R of the QR, on the device;
  *   Rhilolo_d are the second lowest doubles of R of the QR, on the device;
  *   Rlololo_d are the lowest doubles of R of the QR, on the device;
- *   wrkmathihihi has a copy of the highest doubles of the Jacobian;
- *   wrkmatlohihi has a copy of the second highest doubles of the Jacobian;
- *   wrkmathilohi has a copy of the third highest doubles of the Jacobian;
- *   wrkmatlolohi has a copy of the fourth highest doubles of the Jacobian;
- *   wrkmathihilo has a copy of the fourth lowest doubles of the Jacobian;
- *   wrkmatlohilo has a copy of the third lowest doubles of the Jacobian;
- *   wrkmathilolo has a copy of the second lowest doubles of the Jacobian;
- *   wrkmatlololo has a copy of the lowest doubles of the Jacobian matrix;
  *   resvechihihi has the highest doubles of the residual vectors;
  *   resveclohihi has the second highest doubles of the residual vectors;
  *   resvechilohi has the third highest doubles of the residual vectors;

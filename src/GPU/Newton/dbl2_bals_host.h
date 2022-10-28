@@ -4,46 +4,11 @@
 #ifndef __dbl2_bals_h__
 #define __dbl2_bals_h__
 
-void CPU_dbl2_lusb_head
- ( int dim, int degp1, double ***mathi, double ***matlo, 
-   double **rhshi, double **rhslo, double **solhi, double **sollo,
-   double **wrkmathi, double **wrkmatlo, double *wrkvechi, double *wrkveclo,
-   int *pivots, int vrblvl );
-/*
- * DESCRIPTION :
- *   Computes the leading terms of the power series solution
- *   to a linear system of power series, in linearized format,
- *   using substitution after a LU factorization, on real data.
- *
- * ON ENTRY :
- *   dim      the dimension of the matrices and vectors;
- *   degp1    degree plus one, the size of the matrix system;
- *   mathi    degp1 matrices of dimension dim;
- *   matlo    degp1 matrices of dimension dim;
- *   rhshi    degp1 vectors of dimension dim;
- *   rhslo    degp1 vectors of dimension dim;
- *   solhi    space allocated for degp1 vectors of dimension dim;
- *   sollo    space allocated for degp1 vectors of dimension dim;
- *   wrkmathi is work space allocated for a matrix of dimension dim;
- *   wrkmatlo is work space allocated for a matrix of dimension dim;
- *   wrkvechi is work space allocated for a vector of dimension dim;
- *   wrkveclo is work space allocated for a vector of dimension dim;
- *   pivots   space for dim integers to store the pivots;
- *   vrblvl   the verbose level (0 for silent).
- *
- * ON RETURN :
- *   wrkmathi are high doubles of the LU factorization of the Jacobian matrix;
- *   wrkmatlo are low doubles of the LU factorization of the Jacobian matrix;
- *   pivots   pivots used in the LU factorization of the Jacobian;
- *   solhi    the high doubles of the solution series;
- *   sollo    the low doubles of the solution series. */
-
 void CPU_dbl2_qrbs_head
  ( int dim, int degp1, double ***mathi, double ***matlo,
    double **rhshi, double **rhslo, double **solhi, double **sollo,
-   double **wrkmathi, double **wrkmatlo, double **Qhi, double **Qlo,
-   double **Rhi, double **Rlo, double *wrkvechi, double *wrkveclo,
-   bool *noqr, int vrblvl );
+   double **Qhi, double **Qlo, double **Rhi, double **Rlo,
+   double *wrkvechi, double *wrkveclo, bool *noqr, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the leading terms of the power series solution
@@ -59,10 +24,6 @@ void CPU_dbl2_qrbs_head
  *   rhslo    degp1 vectors of dimension dim;
  *   solhi    space allocated for degp1 vectors of dimension dim;
  *   sollo    space allocated for degp1 vectors of dimension dim;
- *   wrkmathi is work space allocated for a matrix of dimension dim;
- *   wrkmatlo is work space allocated for a matrix of dimension dim;
- *   wrkvechi is work space allocated for a vector of dimension dim;
- *   wrkveclo is work space allocated for a vector of dimension dim;
  *   Qhi      space allocated for a matrix of dimension dim;
  *   Qlo      space allocated for a matrix of dimension dim;
  *   Rhi      space allocated for a matrix of dimension dim;
@@ -73,8 +34,6 @@ void CPU_dbl2_qrbs_head
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
- *   wrkmathi contains a copy of the Jacobian matrix in mathi[0];
- *   wrkmatlo contains a copy of the Jacobian matrix in matlo[0];
  *   Qhi      high doubles of the Q of the QR of the Jacobian matrix;
  *   Qlo      low doubles of the Q of the QR of the Jacobian matrix;
  *   Rhi      high doubles of the R in the QR of the Jacobian matrix;
@@ -90,8 +49,6 @@ void CPU_cmplx2_qrbs_head
    double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo,
    double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
    double **solrehi, double **solrelo, double **solimhi, double **solimlo,
-   double **wrkmatrehi, double **wrkmatrelo,
-   double **wrkmatimhi, double **wrkmatimlo,
    double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
    double *wrkvecrehi, double *wrkvecrelo,
@@ -117,10 +74,6 @@ void CPU_cmplx2_qrbs_head
  *   solrelo  space allocated for degp1 vectors of dimension dim;
  *   solimhi  space allocated for degp1 vectors of dimension dim;
  *   solimlo  space allocated for degp1 vectors of dimension dim;
- *   wrkmatrehi is work space allocated for a matrix of dimension dim;
- *   wrkmatrelo is work space allocated for a matrix of dimension dim;
- *   wrkmatimhi is work space allocated for a matrix of dimension dim;
- *   wrkmatimlo is work space allocated for a matrix of dimension dim;
  *   Qrehi    space allocated for a matrix of dimension dim;
  *   Qrelo    space allocated for a matrix of dimension dim;
  *   Qimhi    space allocated for a matrix of dimension dim;
@@ -137,10 +90,6 @@ void CPU_cmplx2_qrbs_head
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
- *   wrkmatrehi is a copy of the Jacobian matrix in matrehi[0];
- *   wrkmatrelo is a copy of the Jacobian matrix in matrelo[0];
- *   wrkmatimhi is a copy of the Jacobian matrix in matimhi[0];
- *   wrkmatimlo is a copy of the Jacobian matrix in matimlo[0];
  *   Qrehi    high doubles of the real parts of the Q in the QR;
  *   Qrelo    low doubles of the real parts of the Q in the QR;
  *   Qimhi    high doubles of the imaginary parts of the Q in the QR;
@@ -158,38 +107,6 @@ void CPU_cmplx2_qrbs_head
  *   solimhi  high doubles of the imag parts of the head of the solution;
  *   solimlo  low doubles of the imag parts of the head of the solution;
  *   noqr      updated flag if ||dx_0|| is zero for the first time. */
-
-void CPU_dbl2_lusb_tail
- ( int dim, int degp1, double ***mathi, double ***matlo,
-   double **rhshi, double **rhslo, double **solhi, double **sollo,
-   double **wrkmathi, double **wrkmatlo, int *pivots, int vrblvl );
-/*
- * DESCRIPTION :
- *   Computes the trailing terms of the power series solution
- *   to a linear system of power series, in linearized format,
- *   applying substitution given a LU factorization.
- *
- * ON ENTRY :
- *   dim      the dimension of the matrices and vectors;
- *   degp1    degree plus one, the size of the matrix system;
- *   mathi    degp1 matrices of dimension dim;
- *   matlo    degp1 matrices of dimension dim;
- *   rhshi    degp1 vectors of dimension dim;
- *   rhslo    degp1 vectors of dimension dim;
- *   solhi    space allocated for degp1 vectors of dimension dim,
- *            with the high doubles of the leading coefficients defined;
- *   sollo    space allocated for degp1 vectors of dimension dim,
- *            with the low doubles of the leading coefficients defined;
- *   wrkmathi has the high part of the LU factorization of the Jacobian matrix;
- *   wrkmatlo has the low part of the LU factorization of the Jacobian matrix;
- *   pivots   dim integers store the pivots of the LU factorization;
- *   vrblvl   the verbose level (0 for silent).
- *
- * ON RETURN :
- *   rhshi    updated right hand side used as work space;
- *   rhslo    updated right hand side used as work space;
- *   solhi    all high double coefficients of the solution series;
- *   sollo    all low double coefficients of the solution series. */
 
 void CPU_dbl2_qrbs_tail
  ( int dim, int degp1, double ***mathi, double ***matlo,
@@ -290,43 +207,9 @@ void CPU_cmplx2_qrbs_tail
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped. */
 
-void CPU_dbl2_lusb_solve
- ( int dim, int degp1, double ***mathi, double ***matlo,
-   double **rhshi, double **rhslo, double **solhi, double **sollo,
-   double **wrkmathi, double **wrkmatlo, double *wrkvechi, double *wrkveclo,
-   int *pivots, int vrblvl );
-/*
- * DESCRIPTION :
- *   Solves a linear system of power series, in linearized format,
- *   using LU factorization and substitutions.
- *
- * ON ENTRY :
- *   dim      the dimension of the matrices and vectors;
- *   degp1    degree plus one, the size of the matrix system;
- *   mathi    degp1 matrices of dimension dim;
- *   matlo    degp1 matrices of dimension dim;
- *   rhshi    degp1 vectors of dimension dim;
- *   rhslo    degp1 vectors of dimension dim;
- *   solhi    space allocated for degp1 vectors of dimension dim;
- *   sollo    space allocated for degp1 vectors of dimension dim;
- *   wrkmathi has work space allocated for a matrix of dimension dim;
- *   wrkmatlo has work space allocated for a matrix of dimension dim;
- *   wrkvechi has work space allocated for a vector of dimension dim;
- *   wrkveclo has work space allocated for a vector of dimension dim;
- *   pivots   space for dim integers to store the pivots;
- *   vrblvl   the verbose level (0 for silent).
- *
- * ON RETURN :
- *   wrkmathi has the high part of the LU factorization of the Jacobian matrix;
- *   wrkmatlo has the low part of the LU factorization of the Jacobian matrix;
- *   pivots   pivots used in the LU factorization of the Jacobian;
- *   solhi    the high double coefficients of the solution series;
- *   sollo    the low double coefficients of the solution series. */
-
 void CPU_dbl2_qrbs_solve
  ( int dim, int degp1, double ***mathi, double ***matlo,
    double **rhshi, double **rhslo, double **solhi, double **sollo,
-   double **wrkmathi, double **wrkmatlo,
    double **Qhi, double **Qlo, double **Rhi, double **Rlo,
    double *wrkvechi, double *wrkveclo,
    bool *noqr, int *upidx, int *bsidx, int vrblvl );
@@ -344,8 +227,6 @@ void CPU_dbl2_qrbs_solve
  *   rhslo    degp1 vectors of dimension dim;
  *   solhi    space allocated for degp1 vectors of dimension dim;
  *   sollo    space allocated for degp1 vectors of dimension dim;
- *   wrkmathi has work space allocated for a matrix of dimension dim;
- *   wrkmatlo has work space allocated for a matrix of dimension dim;
  *   Qhi      space allocated for a matrix of dimension dim;
  *   Qlo      space allocated for a matrix of dimension dim;
  *   Rhi      space allocated for a matrix of dimension dim;
@@ -356,8 +237,6 @@ void CPU_dbl2_qrbs_solve
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
- *   wrkmathi contains a copy of the Jacobian matrix in mathi[0];
- *   wrkmatlo contains a copy of the Jacobian matrix in matlo[0];
  *   Qhi      high doubles of the Q of the QR of the Jacobian matrix;
  *   Qlo      low doubles of the Q of the QR of the Jacobian matrix;
  *   Rhi      high doubles of the R in the QR of the Jacobian matrix;
@@ -375,8 +254,6 @@ void CPU_cmplx2_qrbs_solve
    double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo, 
    double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
    double **solrehi, double **solrelo, double **solimhi, double **solimlo,
-   double **wrkmatrehi, double **wrkmatrelo,
-   double **wrkmatimhi, double **wrkmatimlo,
    double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
    double *wrkvecrehi, double *wrkvecrelo,
@@ -402,10 +279,6 @@ void CPU_cmplx2_qrbs_solve
  *   solrelo  space allocated for degp1 vectors of dimension dim;
  *   solimhi  space allocated for degp1 vectors of dimension dim;
  *   solimlo  space allocated for degp1 vectors of dimension dim;
- *   wrkmatrehi is work space allocated for a matrix of dimension dim;
- *   wrkmatrelo is work space allocated for a matrix of dimension dim;
- *   wrkmatimhi is work space allocated for a matrix of dimension dim;
- *   wrkmatimlo is work space allocated for a matrix of dimension dim;
  *   Qrehi    space allocated for a matrix of dimension dim;
  *   Qrelo    space allocated for a matrix of dimension dim;
  *   Qimhi    space allocated for a matrix of dimension dim;
@@ -422,10 +295,6 @@ void CPU_cmplx2_qrbs_solve
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
- *   wrkmatrehi has a copy of the Jacobian matrix in matrehi[0];
- *   wrkmatrelo has a copy of the Jacobian matrix in matrelo[0];
- *   wrkmatimhi has a copy of the Jacobian matrix in matimhi[0];
- *   wrkmatimlo has a copy of the Jacobian matrix in matimlo[0];
  *   Qrehi    high doubles of the real parts of the Q in the QR;
  *   Qrelo    low doubles of the real parts of the Q in the QR;
  *   Qimhi    high doubles of the imaginary parts of the Q in the QR;

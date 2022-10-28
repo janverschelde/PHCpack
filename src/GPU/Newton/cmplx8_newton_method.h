@@ -175,14 +175,6 @@ void cmplx8_newton_qrstep
    double **Rimhilohi_d, double **Rimlolohi_d,
    double **Rimhihilo_d, double **Rimlohilo_d,
    double **Rimhilolo_d, double **Rimlololo_d,
-   double **workmatrehihihi, double **workmatrelohihi,
-   double **workmatrehilohi, double **workmatrelolohi,
-   double **workmatrehihilo, double **workmatrelohilo,
-   double **workmatrehilolo, double **workmatrelololo,
-   double **workmatimhihihi, double **workmatimlohihi,
-   double **workmatimhilohi, double **workmatimlolohi,
-   double **workmatimhihilo, double **workmatimlohilo,
-   double **workmatimhilolo, double **workmatimlololo,
    double *workvecrehihihi, double *workvecrelohihi,
    double *workvecrehilohi, double *workvecrelolohi,
    double *workvecrehihilo, double *workvecrelohilo,
@@ -626,38 +618,22 @@ void cmplx8_newton_qrstep
  *   Rimlohilo_d has space for the R computed by the device;
  *   Rimhilolo_d has space for the R computed by the device;
  *   Rimlololo_d has space for the R computed by the device;
- *   wrkmatrehihihi is work space allocated for a matrix of dimension dim;
- *   wrkmatrelohihi is work space allocated for a matrix of dimension dim;
- *   wrkmatrehilohi is work space allocated for a matrix of dimension dim;
- *   wrkmatrelolohi is work space allocated for a matrix of dimension dim;
- *   wrkmatrehihilo is work space allocated for a matrix of dimension dim;
- *   wrkmatrelohilo is work space allocated for a matrix of dimension dim;
- *   wrkmatrehilolo is work space allocated for a matrix of dimension dim;
- *   wrkmatrelololo is work space allocated for a matrix of dimension dim;
- *   wrkmatimhihihi is work space allocated for a matrix of dimension dim;
- *   wrkmatimlohihi is work space allocated for a matrix of dimension dim;
- *   wrkmatimhilohi is work space allocated for a matrix of dimension dim;
- *   wrkmatimlolohi is work space allocated for a matrix of dimension dim;
- *   wrkmatimhihilo is work space allocated for a matrix of dimension dim;
- *   wrkmatimlohilo is work space allocated for a matrix of dimension dim;
- *   wrkmatimhilolo is work space allocated for a matrix of dimension dim;
- *   wrkmatimlololo is work space allocated for a matrix of dimension dim;
- *   wrkvecrehihihi is work space allocated for a vector of dimension dim;
- *   wrkvecrelohihi is work space allocated for a vector of dimension dim;
- *   wrkvecrehilohi is work space allocated for a vector of dimension dim;
- *   wrkvecrelolohi is work space allocated for a vector of dimension dim;
- *   wrkvecrehihilo is work space allocated for a vector of dimension dim;
- *   wrkvecrelohilo is work space allocated for a vector of dimension dim;
- *   wrkvecrehilolo is work space allocated for a vector of dimension dim;
- *   wrkvecrelololo is work space allocated for a vector of dimension dim;
- *   wrkvecimhihihi is work space allocated for a vector of dimension dim;
- *   wrkvecimlohihi is work space allocated for a vector of dimension dim;
- *   wrkvecimhilohi is work space allocated for a vector of dimension dim;
- *   wrkvecimlolohi is work space allocated for a vector of dimension dim;
- *   wrkvecimhihilo is work space allocated for a vector of dimension dim;
- *   wrkvecimlohilo is work space allocated for a vector of dimension dim;
- *   wrkvecimhilolo is work space allocated for a vector of dimension dim;
- *   wrkvecimlololo is work space allocated for a vector of dimension dim;
+ *   workvecrehihihi is work space allocated for a vector of dimension dim;
+ *   workvecrelohihi is work space allocated for a vector of dimension dim;
+ *   workvecrehilohi is work space allocated for a vector of dimension dim;
+ *   workvecrelolohi is work space allocated for a vector of dimension dim;
+ *   workvecrehihilo is work space allocated for a vector of dimension dim;
+ *   workvecrelohilo is work space allocated for a vector of dimension dim;
+ *   workvecrehilolo is work space allocated for a vector of dimension dim;
+ *   workvecrelololo is work space allocated for a vector of dimension dim;
+ *   workvecimhihihi is work space allocated for a vector of dimension dim;
+ *   workvecimlohihi is work space allocated for a vector of dimension dim;
+ *   workvecimhilohi is work space allocated for a vector of dimension dim;
+ *   workvecimlolohi is work space allocated for a vector of dimension dim;
+ *   workvecimhihilo is work space allocated for a vector of dimension dim;
+ *   workvecimlohilo is work space allocated for a vector of dimension dim;
+ *   workvecimhilolo is work space allocated for a vector of dimension dim;
+ *   workvecimlololo is work space allocated for a vector of dimension dim;
  *   resvecrehihihi has space for deg+1 vectors of dimension dim;
  *   resvecrelohihi has space for deg+1 vectors of dimension dim;
  *   resvecrehilohi has space for deg+1 vectors of dimension dim;
@@ -1128,7 +1104,6 @@ void cmplx8_newton_qrstep
  *   Rimlohilo_d are the third lowest doubles of imag R of the QR on device;
  *   Rimhilolo_d are the second lowest doubles of imag R of the QR on device;
  *   Rimlololo_d are the lowest doubles of imaginary R of the QR on device;
- *   wrkmat    has a copy of the Jacobian matrix;
  *   resvecrehihihi are the highest doubles of the real parts of resvec,
  *             which are the residual vectors;
  *   resvecrelohihi are second highest doubles of the real parts of resvec;

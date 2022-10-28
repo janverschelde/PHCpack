@@ -1,5 +1,6 @@
 Fri 28 Oct 2022 : removed the superfluous work matrices needed for the 
   deprecated LU in {dbl, cmplx}_newton_method and dbl_bals_host.
+  Did the same in the corresponding files for the other precisions.
 
 Thu 27 Oct 2022 : updated {dbl, dbl2, dbl4, dbl8}_newton_testers.cpp
   to start at staggered precision.  Introduced working degree of precision

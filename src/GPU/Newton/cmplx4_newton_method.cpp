@@ -109,10 +109,6 @@ void cmplx4_newton_qrstep
    double **Rrehilo_d, double **Rrelolo_d,
    double **Rimhihi_d, double **Rimlohi_d,
    double **Rimhilo_d, double **Rimlolo_d,
-   double **workmatrehihi, double **workmatrelohi,
-   double **workmatrehilo, double **workmatrelolo,
-   double **workmatimhihi, double **workmatimlohi,
-   double **workmatimhilo, double **workmatimlolo,
    double *workvecrehihi, double *workvecrelohi,
    double *workvecrehilo, double *workvecrelolo,
    double *workvecimhihi, double *workvecimlohi,
@@ -309,8 +305,6 @@ void cmplx4_newton_qrstep
           urhsimhihi_h,urhsimlohi_h,urhsimhilo_h,urhsimlolo_h,
           solrehihi_h,solrelohi_h,solrehilo_h,solrelolo_h,
           solimhihi_h,solimlohi_h,solimhilo_h,solimlolo_h,
-          workmatrehihi,workmatrelohi,workmatrehilo,workmatrelolo,
-          workmatimhihi,workmatimlohi,workmatimhilo,workmatimlolo,
           Qrehihi_h,Qrelohi_h,Qrehilo_h,Qrelolo_h,
           Qimhihi_h,Qimlohi_h,Qimhilo_h,Qimlolo_h,
           Rrehihi_h,Rrelohi_h,Rrehilo_h,Rrelolo_h,
@@ -907,28 +901,6 @@ int test_dbl4_complex_newton
          rhsimlolo_d[i] = new double[dim];
       }
    }
-   // Allocate work space for the inplace LU solver.
-   double **workmatrehihi = new double*[dim];
-   double **workmatrelohi = new double*[dim];
-   double **workmatrehilo = new double*[dim];
-   double **workmatrelolo = new double*[dim];
-   double **workmatimhihi = new double*[dim];
-   double **workmatimlohi = new double*[dim];
-   double **workmatimhilo = new double*[dim];
-   double **workmatimlolo = new double*[dim];
-
-   for(int i=0; i<dim; i++)
-   {
-      workmatrehihi[i] = new double[dim];
-      workmatrelohi[i] = new double[dim];
-      workmatrehilo[i] = new double[dim];
-      workmatrelolo[i] = new double[dim];
-      workmatimhihi[i] = new double[dim];
-      workmatimlohi[i] = new double[dim];
-      workmatimhilo[i] = new double[dim];
-      workmatimlolo[i] = new double[dim];
-   }
-   int *ipvt = new int[dim];
    double *workvecrehihi = new double[dim];
    double *workvecrelohi = new double[dim];
    double *workvecrehilo = new double[dim];
@@ -1339,8 +1311,6 @@ int test_dbl4_complex_newton
           Rimhihi_h,Rimlohi_h,Rimhilo_h,Rimlolo_h,
           Rrehihi_d,Rrelohi_d,Rrehilo_d,Rrelolo_d,
           Rimhihi_d,Rimlohi_d,Rimhilo_d,Rimlolo_d,
-          workmatrehihi,workmatrelohi,workmatrehilo,workmatrelolo,
-          workmatimhihi,workmatimlohi,workmatimhilo,workmatimlolo,
           workvecrehihi,workvecrelohi,workvecrehilo,workvecrelolo,
           workvecimhihi,workvecimlohi,workvecimhilo,workvecimlolo,
           resvecrehihi,resvecrelohi,resvecrehilo,resvecrelolo,

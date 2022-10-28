@@ -107,10 +107,6 @@ void dbl8_newton_qrstep
    double **Rhilohi_d, double **Rlolohi_d,
    double **Rhihilo_d, double **Rlohilo_d,
    double **Rhilolo_d, double **Rlololo_d,
-   double **workmathihihi, double **workmatlohihi,
-   double **workmathilohi, double **workmatlolohi,
-   double **workmathihilo, double **workmatlohilo,
-   double **workmathilolo, double **workmatlololo,
    double *workvechihihi, double *workveclohihi,
    double *workvechilohi, double *workveclolohi,
    double *workvechihilo, double *workveclohilo,
@@ -307,8 +303,6 @@ void dbl8_newton_qrstep
           urhshihilo_h,urhslohilo_h,urhshilolo_h,urhslololo_h,
           solhihihi_h,sollohihi_h,solhilohi_h,sollolohi_h,
           solhihilo_h,sollohilo_h,solhilolo_h,sollololo_h,
-          workmathihihi,workmatlohihi,workmathilohi,workmatlolohi,
-          workmathihilo,workmatlohilo,workmathilolo,workmatlololo,
           Qhihihi_h,Qlohihi_h,Qhilohi_h,Qlolohi_h,
           Qhihilo_h,Qlohilo_h,Qhilolo_h,Qlololo_h,
           Rhihihi_h,Rlohihi_h,Rhilohi_h,Rlolohi_h,
@@ -968,28 +962,6 @@ int test_dbl8_real_newton
          urhslololo_d[i] = new double[dim];
       }
    }
-   // Allocate work space for the inplace LU solver.
-   double **workmathihihi = new double*[dim];
-   double **workmatlohihi = new double*[dim];
-   double **workmathilohi = new double*[dim];
-   double **workmatlolohi = new double*[dim];
-   double **workmathihilo = new double*[dim];
-   double **workmatlohilo = new double*[dim];
-   double **workmathilolo = new double*[dim];
-   double **workmatlololo = new double*[dim];
-
-   for(int i=0; i<dim; i++)
-   {
-      workmathihihi[i] = new double[dim];
-      workmatlohihi[i] = new double[dim];
-      workmathilohi[i] = new double[dim];
-      workmatlolohi[i] = new double[dim];
-      workmathihilo[i] = new double[dim];
-      workmatlohilo[i] = new double[dim];
-      workmathilolo[i] = new double[dim];
-      workmatlololo[i] = new double[dim];
-   }
-   int *ipvt = new int[dim];
    double *workvechihihi = new double[dim];
    double *workveclohihi = new double[dim];
    double *workvechilohi = new double[dim];
@@ -1359,8 +1331,6 @@ int test_dbl8_real_newton
           Rhihilo_h,Rlohilo_h,Rhilolo_h,Rlololo_h,
           Rhihihi_d,Rlohihi_d,Rhilohi_d,Rlolohi_d,
           Rhihilo_d,Rlohilo_d,Rhilolo_d,Rlololo_d,
-          workmathihihi,workmatlohihi,workmathilohi,workmatlolohi,
-          workmathihilo,workmatlohilo,workmathilolo,workmatlololo,
           workvechihihi,workveclohihi,workvechilohi,workveclolohi,
           workvechihilo,workveclohilo,workvechilolo,workveclololo,
           resvechihihi,resveclohihi,resvechilohi,resveclolohi,

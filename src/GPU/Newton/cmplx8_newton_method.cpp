@@ -194,14 +194,6 @@ void cmplx8_newton_qrstep
    double **Rimhilohi_d, double **Rimlolohi_d,
    double **Rimhihilo_d, double **Rimlohilo_d,
    double **Rimhilolo_d, double **Rimlololo_d,
-   double **workmatrehihihi, double **workmatrelohihi,
-   double **workmatrehilohi, double **workmatrelolohi,
-   double **workmatrehihilo, double **workmatrelohilo,
-   double **workmatrehilolo, double **workmatrelololo,
-   double **workmatimhihihi, double **workmatimlohihi,
-   double **workmatimhilohi, double **workmatimlolohi,
-   double **workmatimhihilo, double **workmatimlohilo,
-   double **workmatimhilolo, double **workmatimlololo,
    double *workvecrehihihi, double *workvecrelohihi,
    double *workvecrehilohi, double *workvecrelolohi,
    double *workvecrehihilo, double *workvecrelohilo,
@@ -508,10 +500,6 @@ void cmplx8_newton_qrstep
           solrehihilo_h,solrelohilo_h,solrehilolo_h,solrelololo_h,
           solimhihihi_h,solimlohihi_h,solimhilohi_h,solimlolohi_h,
           solimhihilo_h,solimlohilo_h,solimhilolo_h,solimlololo_h,
-          workmatrehihihi,workmatrelohihi,workmatrehilohi,workmatrelolohi,
-          workmatrehihilo,workmatrelohilo,workmatrehilolo,workmatrelololo,
-          workmatimhihihi,workmatimlohihi,workmatimhilohi,workmatimlolohi,
-          workmatimhihilo,workmatimlohilo,workmatimhilolo,workmatimlololo,
           Qrehihihi_h,Qrelohihi_h,Qrehilohi_h,Qrelolohi_h,
           Qrehihilo_h,Qrelohilo_h,Qrehilolo_h,Qrelololo_h,
           Qimhihihi_h,Qimlohihi_h,Qimhilohi_h,Qimlolohi_h,
@@ -1520,44 +1508,6 @@ int test_dbl8_complex_newton
          rhsimlololo_d[i] = new double[dim];
       }
    }
-   // Allocate work space for the inplace LU solver.
-   double **workmatrehihihi = new double*[dim];
-   double **workmatrelohihi = new double*[dim];
-   double **workmatrehilohi = new double*[dim];
-   double **workmatrelolohi = new double*[dim];
-   double **workmatrehihilo = new double*[dim];
-   double **workmatrelohilo = new double*[dim];
-   double **workmatrehilolo = new double*[dim];
-   double **workmatrelololo = new double*[dim];
-   double **workmatimhihihi = new double*[dim];
-   double **workmatimlohihi = new double*[dim];
-   double **workmatimhilohi = new double*[dim];
-   double **workmatimlolohi = new double*[dim];
-   double **workmatimhihilo = new double*[dim];
-   double **workmatimlohilo = new double*[dim];
-   double **workmatimhilolo = new double*[dim];
-   double **workmatimlololo = new double*[dim];
-
-   for(int i=0; i<dim; i++)
-   {
-      workmatrehihihi[i] = new double[dim];
-      workmatrelohihi[i] = new double[dim];
-      workmatrehilohi[i] = new double[dim];
-      workmatrelolohi[i] = new double[dim];
-      workmatrehihilo[i] = new double[dim];
-      workmatrelohilo[i] = new double[dim];
-      workmatrehilolo[i] = new double[dim];
-      workmatrelololo[i] = new double[dim];
-      workmatimhihihi[i] = new double[dim];
-      workmatimlohihi[i] = new double[dim];
-      workmatimhilohi[i] = new double[dim];
-      workmatimlolohi[i] = new double[dim];
-      workmatimhihilo[i] = new double[dim];
-      workmatimlohilo[i] = new double[dim];
-      workmatimhilolo[i] = new double[dim];
-      workmatimlololo[i] = new double[dim];
-   }
-   int *ipvt = new int[dim];
    double *workvecrehihihi = new double[dim];
    double *workvecrelohihi = new double[dim];
    double *workvecrehilohi = new double[dim];
@@ -2266,10 +2216,6 @@ int test_dbl8_complex_newton
           Rrehihilo_d,Rrelohilo_d,Rrehilolo_d,Rrelololo_d,
           Rimhihihi_d,Rimlohihi_d,Rimhilohi_d,Rimlolohi_d,
           Rimhihilo_d,Rimlohilo_d,Rimhilolo_d,Rimlololo_d,
-          workmatrehihihi,workmatrelohihi,workmatrehilohi,workmatrelolohi,
-          workmatrehihilo,workmatrelohilo,workmatrehilolo,workmatrelololo,
-          workmatimhihihi,workmatimlohihi,workmatimhilohi,workmatimlolohi,
-          workmatimhihilo,workmatimlohilo,workmatimhilolo,workmatimlololo,
           workvecrehihihi,workvecrelohihi,workvecrehilohi,workvecrelolohi,
           workvecrehihilo,workvecrelohilo,workvecrehilolo,workvecrelololo,
           workvecimhihihi,workvecimlohihi,workvecimhilohi,workvecimlolohi,

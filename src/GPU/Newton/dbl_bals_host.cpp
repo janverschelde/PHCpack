@@ -21,7 +21,7 @@ void CPU_dbl_qrbs_head
       cout << setprecision(2);
       for(int i=0; i<dim; i++)
       {
-         for(int j=0; j<dim; j++) cout << " " << mat[i][j];
+         for(int j=0; j<dim; j++) cout << " " << mat[0][i][j];
          cout << endl;
       }
       cout << setprecision(16);
@@ -84,7 +84,7 @@ void CPU_cmplx_qrbs_head
       for(int i=0; i<dim; i++)
       {
          for(int j=0; j<dim; j++)
-            cout << "  " << matre[i][j] << "  " << matim[i][j];
+            cout << "  " << matre[0][i][j] << "  " << matim[0][i][j];
          cout << endl;
       }
       cout << setprecision(16);
