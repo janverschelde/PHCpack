@@ -30,7 +30,7 @@ void dbl_newton_qrstep
    double ***jacval_h, double ***jacval_d, double **rhs_h, double **rhs_d,
    double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
    double **Q_h, double **Q_d, double **R_h, double **R_d,
-   double **workmat, double *workvec, double **resvec, double *resmax,
+   double *workvec, double **resvec, double *resmax,
    bool *noqr_h, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    int vrblvl, int mode )
@@ -120,7 +120,7 @@ void dbl_newton_qrstep
          cout << "calling CPU_dbl_qrbs_solve ..." << endl;
 
       CPU_dbl_qrbs_solve
-         (dim,degp1,jacval_h,urhs_h,sol_h,workmat,Q_h,R_h,workvec,
+         (dim,degp1,jacval_h,urhs_h,sol_h,Q_h,R_h,workvec,
           noqr_h,upidx_h,bsidx_h,vrblvl);
  
       if(vrblvl > 0)
@@ -295,10 +295,6 @@ int test_dbl_real_newton
       rhs_d = new double*[degp1];
       for(int i=0; i<degp1; i++) rhs_d[i] = new double[dim];
    }
-   // Allocate work space for the inplace LU solver.
-   double **workmat = new double*[dim];
-   for(int i=0; i<dim; i++) workmat[i] = new double[dim];
-   int *ipvt = new int[dim];
    double *workvec = new double[dim];
    // Copy the rhs vector into work space for inplace solver.
 
@@ -412,7 +408,7 @@ int test_dbl_real_newton
          (szt,nbt,dim,wrkdeg,nvr,idx,exp,nbrfac,expfac,mbrhs,dpr,cff,acc,
           input_h,input_d,output_h,output_d,funval_h,funval_d,
           jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
-          Q_h,Q_d,R_h,R_d,workmat,workvec,resvec,&resmax,
+          Q_h,Q_d,R_h,R_d,workvec,resvec,&resmax,
           &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
 
       if(vrblvl > 0)

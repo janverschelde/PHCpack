@@ -39,7 +39,6 @@ void cmplx_newton_qrstep
    double **solre_h, double **solim_h, double **solre_d, double **solim_d,
    double **Qre_h, double **Qim_h, double **Qre_d, double **Qim_d, 
    double **Rre_h, double **Rim_h, double **Rre_d, double **Rim_d,
-   double **workmatre, double **workmatim,
    double *workvecre, double *workvecim,
    double **resvecre, double **resvecim, double *resmax,
    bool *noqr_h, bool *noqr_d,
@@ -154,7 +153,7 @@ void cmplx_newton_qrstep
 
       CPU_cmplx_qrbs_solve
          (dim,degp1,jacvalre_h,jacvalim_h,urhsre_h,urhsim_h,
-          solre_h,solim_h,workmatre,workmatim,Qre_h,Qim_h,Rre_h,Rim_h,
+          solre_h,solim_h,Qre_h,Qim_h,Rre_h,Rim_h,
           workvecre,workvecim,noqr_h,upidx_h,bsidx_h,vrblvl);
  
       if(vrblvl > 0)
@@ -432,16 +431,6 @@ int test_dbl_complex_newton
          rhsim_d[i] = new double[dim];
       }
    }
-   // Allocate work space for the inplace LU solver.
-   double **workmatre = new double*[dim];
-   double **workmatim = new double*[dim];
-
-   for(int i=0; i<dim; i++)
-   {
-      workmatre[i] = new double[dim];
-      workmatim[i] = new double[dim];
-   }
-   int *ipvt = new int[dim];
    double *workvecre = new double[dim];
    double *workvecim = new double[dim];
    // Copy the rhs vector into work space for inplace solver.
@@ -625,7 +614,7 @@ int test_dbl_complex_newton
           urhsre_h,urhsim_h,urhsre_d,urhsim_d,
           solre_h,solim_h,solre_d,solim_d,
           Qre_h,Qim_h,Qre_d,Qim_d,Rre_h,Rim_h,Rre_d,Rim_d,
-          workmatre,workmatim,workvecre,workvecim,resvecre,resvecim,&resmax,
+          workvecre,workvecim,resvecre,resvecim,&resmax,
           &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
 
       if(vrblvl > 0)

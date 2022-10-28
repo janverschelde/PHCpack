@@ -11,66 +11,17 @@
 
 using namespace std;
 
-void CPU_dbl_lusb_head
- ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **wrkmat, double *wrkvec, int *pivots, int vrblvl )
-{
-   bool verbose = (vrblvl > 1);
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<dim; j++) wrkmat[i][j] = mat[0][i][j];
-
-   for(int i=0; i<dim; i++) wrkvec[i] = rhs[0][i];
-
-   if(verbose)
-   {
-      cout << "The matrix : " << endl;
-      cout << setprecision(2);
-      for(int i=0; i<dim; i++)
-      {
-         for(int j=0; j<dim; j++) cout << " " << wrkmat[i][j];
-         cout << endl;
-      }
-      cout << setprecision(16);
-      cout << "The right hand side vector : " << endl;
-      for(int i=0; i<dim; i++) cout << wrkvec[i] << endl;
-   }
-   if(verbose) cout << "calling CPU_dbl_factors_lusolve ..." << endl;
-
-   CPU_dbl_factors_lusolve(dim,wrkmat,pivots,wrkvec,sol[0]);
-
-   if(verbose)
-   {
-      cout << "The pivots :";
-      for(int i=0; i<dim; i++) cout << " " << pivots[i];
-      cout << endl;
-      cout << "The leading coefficients of the solution :" << endl;
-      for(int i=0; i<dim; i++) cout << sol[0][i] << endl;
-      for(int i=0; i<dim; i++)
-      {
-         wrkvec[i] = rhs[0][i];
-         for(int j=0; j<dim; j++)
-            wrkvec[i] = wrkvec[i] - mat[0][i][j]*sol[0][j];
-      }
-      cout << "The residual vector :" << endl;
-      for(int i=0; i<dim; i++) cout << wrkvec[i] << endl;
-   }
-}
-
 void CPU_dbl_qrbs_head
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **wrkmat, double **Q, double **R, double *wrkvec,
-   bool *noqr, int vrblvl )
+   double **Q, double **R, double *wrkvec, bool *noqr, int vrblvl )
 {
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<dim; j++) wrkmat[i][j] = mat[0][i][j];
-
    if(vrblvl > 1)
    {
       cout << "The matrix : " << endl;
       cout << setprecision(2);
       for(int i=0; i<dim; i++)
       {
-         for(int j=0; j<dim; j++) cout << " " << wrkmat[i][j];
+         for(int j=0; j<dim; j++) cout << " " << mat[i][j];
          cout << endl;
       }
       cout << setprecision(16);
@@ -92,7 +43,7 @@ void CPU_dbl_qrbs_head
    {
       if(vrblvl > 0) cout << "calling CPU_dbl_factors_houseqr ..." << endl;
 
-      CPU_dbl_factors_houseqr(dim,dim,wrkmat,Q,R);
+      CPU_dbl_factors_houseqr(dim,dim,mat[0],Q,R);
       CPU_dbl_factors_qrbs(dim,dim,Q,R,rhs[0],sol[0],wrkvec);
 
       if(vrblvl > 0)
@@ -123,18 +74,9 @@ void CPU_dbl_qrbs_head
 void CPU_cmplx_qrbs_head
  ( int dim, int degp1, double ***matre, double ***matim,
    double **rhsre, double **rhsim, double **solre, double **solim,
-   double **wrkmatre, double **wrkmatim,
    double **Qre, double **Qim, double **Rre, double **Rim,
    double *wrkvecre, double *wrkvecim, bool *noqr, int vrblvl )
 {
-   bool verbose = (vrblvl > 1);
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<dim; j++)
-      {
-         wrkmatre[i][j] = matre[0][i][j];
-         wrkmatim[i][j] = matim[0][i][j];
-      }
-
    if(vrblvl > 1)
    {
       cout << "The matrix : " << endl;
@@ -142,7 +84,7 @@ void CPU_cmplx_qrbs_head
       for(int i=0; i<dim; i++)
       {
          for(int j=0; j<dim; j++)
-            cout << "  " << wrkmatre[i][j] << "  " << wrkmatim[i][j];
+            cout << "  " << matre[i][j] << "  " << matim[i][j];
          cout << endl;
       }
       cout << setprecision(16);
@@ -166,7 +108,7 @@ void CPU_cmplx_qrbs_head
    {
       if(vrblvl > 0) cout << "calling CPU_cmplx_factors_houseqr ..." << endl;
 
-      CPU_cmplx_factors_houseqr(dim,dim,wrkmatre,wrkmatim,Qre,Qim,Rre,Rim);
+      CPU_cmplx_factors_houseqr(dim,dim,matre[0],matim[0],Qre,Qim,Rre,Rim);
       CPU_cmplx_factors_qrbs
          (dim,dim,Qre,Qim,Rre,Rim,rhsre[0],rhsim[0],solre[0],solim[0],
           wrkvecre,wrkvecim);
@@ -205,40 +147,6 @@ void CPU_cmplx_qrbs_head
          cout << "The residual vector :" << endl;
          for(int i=0; i<dim; i++)
             cout << wrkvecre[i] << "  " << wrkvecim[i] << endl;
-      }
-   }
-}
-
-void CPU_dbl_lusb_tail
- ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **wrkmat, int *pivots, int vrblvl )
-{
-   bool verbose = (vrblvl > 1);
-
-   for(int i=1; i<degp1; i++)
-   {
-      if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
-      // use sol[i-1] to update rhs[j] for j in i to degp1
-      for(int j=i; j<degp1; j++)
-      {
-         double **Aj = mat[j-i+1]; // always start with A[1]
-         double *xi = sol[i-1];    // solution to do the update with
-         double *wj = rhs[j];      // current right hand side vector
-
-         for(int k=0; k<dim; k++)
-            for(int L=0; L<dim; L++) wj[k] = wj[k] - Aj[k][L]*xi[L];
-      }
-      // compute sol[i] with back substitution
-      double *x = sol[i];
-      double *b = rhs[i];
-      // the rhs[i] is used as work space
-      for(int j=0; j<dim; j++) x[j] = b[pivots[j]];
-      CPU_dbl_factors_forward(dim,wrkmat,x,b);
-      CPU_dbl_factors_backward(dim,wrkmat,b,x);
-      if(verbose)
-      {
-         cout << "the solution : " << endl;
-         for(int j=0; j<dim; j++) cout << x[j] << endl;
       }
    }
 }
@@ -434,26 +342,9 @@ void CPU_cmplx_qrbs_tail
    *bsidx = skipbscnt;
 }
 
-void CPU_dbl_lusb_solve
- ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **wrkmat, double *wrkvec, int *pivots, int vrblvl )
-{
-   if(vrblvl > 0) cout << "calling CPU_dbl_lusb_head ..." << endl;
-
-   CPU_dbl_lusb_head
-      (dim,degp1,mat,rhs,sol,wrkmat,wrkvec,pivots,vrblvl);
-
-   if(degp1 > 1)
-   {
-      if(vrblvl > 0) cout << "calling CPU_dbl_lusb_tail ..." << endl;
-
-      CPU_dbl_lusb_tail(dim,degp1,mat,rhs,sol,wrkmat,pivots,vrblvl);
-   }
-}
-
 void CPU_dbl_qrbs_solve
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **wrkmat, double **Q, double **R, double *wrkvec,
+   double **Q, double **R, double *wrkvec,
    bool *noqr, int *upidx, int *bsidx, int vrblvl )
 {
    if(*noqr)
@@ -465,7 +356,7 @@ void CPU_dbl_qrbs_solve
       if(vrblvl > 0) cout << "calling CPU_dbl_qrbs_head ..." << endl;
 
       CPU_dbl_qrbs_head
-         (dim,degp1,mat,rhs,sol,wrkmat,Q,R,wrkvec,noqr,vrblvl);
+         (dim,degp1,mat,rhs,sol,Q,R,wrkvec,noqr,vrblvl);
    }
    if(degp1 > 1)
    {
@@ -478,7 +369,6 @@ void CPU_dbl_qrbs_solve
 void CPU_cmplx_qrbs_solve
  ( int dim, int degp1, double ***matre, double ***matim, 
    double **rhsre, double **rhsim, double **solre, double **solim,
-   double **wrkmatre, double **wrkmatim,
    double **Qre, double **Qim, double **Rre, double **Rim,
    double *wrkvecre, double *wrkvecim,
    bool *noqr, int *upidx, int *bsidx, int vrblvl )
@@ -492,7 +382,7 @@ void CPU_cmplx_qrbs_solve
       if(vrblvl > 0) cout << "calling CPU_cmplx_qrbs_head ..." << endl;
 
       CPU_cmplx_qrbs_head
-         (dim,degp1,matre,matim,rhsre,rhsim,solre,solim,wrkmatre,wrkmatim,
+         (dim,degp1,matre,matim,rhsre,rhsim,solre,solim,
           Qre,Qim,Rre,Rim,wrkvecre,wrkvecim,noqr,vrblvl);
    }
    if(degp1 > 1)

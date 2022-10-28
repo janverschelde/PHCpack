@@ -13,7 +13,7 @@ void dbl_newton_qrstep
    double ***jacval_h, double ***jacval_d, double **rhs_h, double **rhs_d,
    double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
    double **Q_h, double **Q_d, double **R_h, double **R_d,
-   double **workmat, double *workvec, double **resvec, double *resmax,
+   double *workvec, double **resvec, double *resmax,
    bool *noqr_h, bool *noqr_d, 
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    int vrblvl, int mode );
@@ -61,7 +61,6 @@ void dbl_newton_qrstep
  *   Q_d       space allocated for the Q computed by the device;
  *   R_h       space allocated for the R computed by the host;
  *   R_d       space allocated for the R computed by the device;
- *   wrkmat    work space allocated for a matrix of dimension dim;
  *   wrkvec    work space allocated for a vector of dimension dim;
  *   resvec    space for deg+1 vectors of dimension dim;
  *   noqr_h    flag if true, then no qr on host;

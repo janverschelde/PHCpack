@@ -4,34 +4,9 @@
 #ifndef __dbl_bals_host_h__
 #define __dbl_bals_host_h__
 
-void CPU_dbl_lusb_head
- ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **wrkmat, double *wrkvec, int *pivots, int vrblvl );
-/*
- * DESCRIPTION :
- *   Computes the leading terms of the power series solution
- *   to a linear system of power series, in linearized format,
- *   using substitution after a LU factorization.
- *
- * ON ENTRY :
- *   dim      the dimension of the matrices and vectors;
- *   degp1    degree plus one, the size of the matrix system;
- *   mat      degp1 matrices of dimension dim;
- *   rhs      degp1 vectors of dimension dim;
- *   sol      space allocated for degp1 vectors of dimension dim;
- *   wrkmat   work space allocated for a matrix of dimension dim;
- *   wrkvec   work space allocated for a vector of dimension dim;
- *   pivots   space for dim integers to store the pivots;
- *   vrblvl   the verbose level (0 for silent).
- *
- * ON RETURN :
- *   wrkmat   LU factorization of the Jacobian matrix;
- *   pivots   pivots used in the LU factorization of the Jacobian;
- *   sol      the coefficients of the solution series. */
-
 void CPU_dbl_qrbs_head
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **wrkmat, double **Q, double **R, double *wrkvec,
+   double **Q, double **R, double *wrkvec,
    bool *noqr, int vrblvl );
 /*
  * DESCRIPTION :
@@ -45,7 +20,6 @@ void CPU_dbl_qrbs_head
  *   mat      degp1 matrices of dimension dim;
  *   rhs      degp1 vectors of dimension dim;
  *   sol      space allocated for degp1 vectors of dimension dim;
- *   wrkmat   work space allocated for a matrix of dimension dim;
  *   Q        space allocated for a matrix of dimension dim;
  *   R        space allocated for a matrix of dimension dim;
  *   wrkvec   work space allocated for a vector of dimension dim;
@@ -53,7 +27,6 @@ void CPU_dbl_qrbs_head
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
- *   wrkmat   contains a copy of the Jacobian matrix in mat[0];
  *   Q        the Q in a QR factorization of the Jacobian matrix;
  *   R        the R in a QR factorization of the Jacobian matrix;
  *   wrkvec   work space used to solve the linear system;
@@ -63,7 +36,6 @@ void CPU_dbl_qrbs_head
 void CPU_cmplx_qrbs_head
  ( int dim, int degp1, double ***matre, double ***matim,
    double **rhsre, double **rhsim, double **solre, double **solim,
-   double **wrkmatre, double **wrkmatim,
    double **Qre, double **Qim, double **Rre, double **Rim,
    double *wrkvecre, double *wrkvecim, bool *noqr, int vrblvl );
 /*
@@ -81,8 +53,6 @@ void CPU_cmplx_qrbs_head
  *   rhsim    degp1 vectors of dimension dim;
  *   solre    space allocated for degp1 vectors of dimension dim;
  *   solim    space allocated for degp1 vectors of dimension dim;
- *   wrkmatre is work space allocated for a matrix of dimension dim;
- *   wrkmatim is work space allocated for a matrix of dimension dim;
  *   Qre      space allocated for a matrix of dimension dim;
  *   Qim      space allocated for a matrix of dimension dim;
  *   Rre      space allocated for a matrix of dimension dim;
@@ -93,8 +63,6 @@ void CPU_cmplx_qrbs_head
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
- *   wrkmatre is a copy of the Jacobian matrix in matre[0];
- *   wrkmatim is a copy of the Jacobian matrix in matim[0];
  *   Qre      real parts of the Q in the QR of the Jacobian;
  *   Qim      imaginary parts of the Q in the QR of the Jacobian;
  *   Rre      real parts of the R in the QR of the Jacobian;
@@ -104,30 +72,6 @@ void CPU_cmplx_qrbs_head
  *   solre    real parts of the head term of the solution series;
  *   solim    imaginary parts of the head term of the solution series;
  *   noqr     updated flag if ||dx_0|| is zero for the first time. */
-
-void CPU_dbl_lusb_tail
- ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **wrkmat, int *pivots, int vrblvl );
-/*
- * DESCRIPTION :
- *   Computes the trailing terms of the power series solution
- *   to a linear system of power series, in linearized format,
- *   applying substitution given a LU factorization.
- *
- * ON ENTRY :
- *   dim      the dimension of the matrices and vectors;
- *   degp1    degree plus one, the size of the matrix system;
- *   mat      degp1 matrices of dimension dim;
- *   rhs      degp1 vectors of dimension dim;
- *   sol      space allocated for degp1 vectors of dimension dim,
- *            with the leading coefficients defined;
- *   wrkmat   has the LU factorization of the Jacobian matrix;
- *   pivots   dim integers store the pivots of the LU factorization;
- *   vrblvl   the verbose level (0 for silent).
- *
- * ON RETURN :
- *   rhs      updated right hand side used as work space;
- *   sol      all coefficients of the solution series. */
 
 void CPU_dbl_qrbs_tail
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
@@ -195,33 +139,9 @@ void CPU_cmplx_qrbs_tail
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped. */
 
-void CPU_dbl_lusb_solve
- ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **wrkmat, double *wrkvec, int *pivots, int vrblvl );
-/*
- * DESCRIPTION :
- *   Solves a linear system of power series, in linearized format,
- *   using LU factorization and substitutions.
- *
- * ON ENTRY :
- *   dim      the dimension of the matrices and vectors;
- *   degp1    degree plus one, the size of the matrix system;
- *   mat      degp1 matrices of dimension dim;
- *   rhs      degp1 vectors of dimension dim;
- *   sol      space allocated for degp1 vectors of dimension dim;
- *   wrkmat   work space allocated for a matrix of dimension dim;
- *   wrkvec   work space allocated for a vector of dimension dim;
- *   pivots   space for dim integers to store the pivots;
- *   vrblvl   the verbose level (0 for silent).
- *
- * ON RETURN :
- *   wrkmat   LU factorization of the Jacobian matrix;
- *   pivots   pivots used in the LU factorization of the Jacobian;
- *   sol      the coefficients of the solution series. */
-
 void CPU_dbl_qrbs_solve
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **wrkmat, double **Q, double **R, double *wrkvec,
+   double **Q, double **R, double *wrkvec,
    bool *noqr, int *upidx, int *bsidx, int vrblvl );
 /*
  * DESCRIPTION :
@@ -234,7 +154,6 @@ void CPU_dbl_qrbs_solve
  *   mat      degp1 matrices of dimension dim;
  *   rhs      degp1 vectors of dimension dim;
  *   sol      space allocated for degp1 vectors of dimension dim;
- *   wrkmat   work space allocated for a matrix of dimension dim;
  *   Q        space allocated for a matrix of dimension dim;
  *   R        space allocated for a matrix of dimension dim;
  *   wrkvec   work space allocated for a vector of dimension dim;
@@ -242,7 +161,6 @@ void CPU_dbl_qrbs_solve
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
- *   wrkmat   contains a copy of the Jacobian matrix in mat[0];
  *   Q        the Q in a QR factorization of the Jacobian matrix;
  *   R        the R in a QR factorization of the Jacobian matrix;
  *   wrkvec   work space used to solve the linear system;
@@ -254,7 +172,6 @@ void CPU_dbl_qrbs_solve
 void CPU_cmplx_qrbs_solve
  ( int dim, int degp1, double ***matre, double ***matim, 
    double **rhsre, double **rhsim, double **solre, double **solim,
-   double **wrkmatre, double **wrkmatim,
    double **Qre, double **Qim, double **Rre, double **Rim,
    double *wrkvecre, double *wrkvecim,
    bool *noqr, int *upidx, int *bsidx, int vrblvl );
@@ -272,8 +189,6 @@ void CPU_cmplx_qrbs_solve
  *   rhsim    degp1 vectors of dimension dim;
  *   solre    space allocated for degp1 vectors of dimension dim;
  *   solim    space allocated for degp1 vectors of dimension dim;
- *   wrkmatre is work space allocated for a matrix of dimension dim;
- *   wrkmatim is work space allocated for a matrix of dimension dim;
  *   Qre      space allocated for a matrix of dimension dim;
  *   Qim      space allocated for a matrix of dimension dim;
  *   Rre      space allocated for a matrix of dimension dim;
@@ -284,8 +199,6 @@ void CPU_cmplx_qrbs_solve
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
- *   wrkmatre has a copy of the Jacobian matrix in matre[0];
- *   wrkmatim has a copy of the Jacobian matrix in matim[0];
  *   Qre      real parts of the Q in the QR of the Jacobian;
  *   Qim      imaginary parts of the Q in the QR of the Jacobian;
  *   Rre      real parts of the R in the QR of the Jacobian;

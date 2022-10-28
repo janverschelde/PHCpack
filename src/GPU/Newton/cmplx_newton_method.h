@@ -22,7 +22,6 @@ void cmplx_newton_qrstep
    double **solre_h, double **solim_h, double **solre_d, double **solim_d,
    double **Qre_h, double **Qim_h, double **Qre_d, double **Qim_d, 
    double **Rre_h, double **Rim_h, double **Rre_d, double **Rim_d,
-   double **workmatre, double **workmatim,
    double *workvecre, double *workvecim,
    double **resvecre, double **resvecim, double *resmax,
    bool *noqr_h, bool *noqr_d,
@@ -96,8 +95,6 @@ void cmplx_newton_qrstep
  *   Rim_h     space allocated for the R computed by the host;
  *   Rre_d     space allocated for the R computed by the device;
  *   Rim_d     space allocated for the R computed by the device;
- *   wrkmatre  work space allocated for a matrix of dimension dim;
- *   wrkmatim  work space allocated for a matrix of dimension dim;
  *   wrkvecre  work space allocated for a vector of dimension dim;
  *   wrkvecim  work space allocated for a vector of dimension dim;
  *   resvecre  space for deg+1 vectors of dimension dim;
@@ -148,8 +145,6 @@ void cmplx_newton_qrstep
  *   Rim_h     imaginary R of the QR factorization computed by the host;
  *   Rre_d     real R of the QR factorization computed by the device;
  *   Rim_d     imaginary R of the QR factorization computed by the device;
- *   wrkmatre  has a copy of the Jacobian matrix;
- *   wrkmatim  has a copy of the Jacobian matrix;
  *   resvecre  real parts of the residual vectors;
  *   resvecim  imaginary parts of the residual vectors;
  *   resmax    the maximum element of the residual vectors;
