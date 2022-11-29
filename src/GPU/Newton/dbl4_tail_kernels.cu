@@ -520,6 +520,9 @@ void GPU_dbl4_linear_residue
    *add = 0; // initialize number of additions
    *mul = 0; // initialize number of multiplications
 
+   if(vrblvl > 0)
+      cout << "GPU_dbl4_linear_residue for deg+1 : " << degp1 << endl;
+
    for(int i=0; i<degp1; i++)  // compute i-th residual vector
    {
       cudaMemcpy(rhihi_d,rhshihi[i],szrhs,cudaMemcpyHostToDevice);
@@ -552,8 +555,8 @@ void GPU_dbl4_linear_residue
          cudaMemcpy(Ahilo_d,Ahilo_h,szmat,cudaMemcpyHostToDevice);
          cudaMemcpy(Alolo_d,Alolo_h,szmat,cudaMemcpyHostToDevice);
 
-         if(vrblvl > 0)
-            cout << "GPU_dbl_linear_residue launches " << nbt
+         if(vrblvl > 1)
+            cout << "GPU_dbl4_linear_residue launches " << nbt
                  << " thread blocks in step " << i << ", " << j << endl;
 
          cudaEvent_t start,stop;       // to measure time spent by kernels 
@@ -715,6 +718,9 @@ void GPU_cmplx4_linear_residue
    *add = 0; // initialize number of additions
    *mul = 0; // initialize number of multiplications
 
+   if(vrblvl > 0)
+      cout << "GPU_cmplx4_linear_residue for deg+1 : " << degp1 << endl;
+
    for(int i=0; i<degp1; i++)  // compute i-th residual vector
    {
       cudaMemcpy(rrehihi_d,rhsrehihi[i],szrhs,cudaMemcpyHostToDevice);
@@ -767,8 +773,8 @@ void GPU_cmplx4_linear_residue
          cudaMemcpy(Aimhilo_d,Aimhilo_h,szmat,cudaMemcpyHostToDevice);
          cudaMemcpy(Aimlolo_d,Aimlolo_h,szmat,cudaMemcpyHostToDevice);
 
-         if(vrblvl > 0)
-            cout << "GPU_cmplx_linear_residue launches " << nbt
+         if(vrblvl > 1)
+            cout << "GPU_cmplx4_linear_residue launches " << nbt
                  << " thread blocks in step " << i << ", " << j << endl;
 
          cudaEvent_t start,stop;       // to measure time spent by kernels 
