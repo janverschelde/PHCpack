@@ -166,7 +166,7 @@ void GPU_cmplx_bals_qhb
  *   bim      imaginary parts of the product of Q^H with b. */
 
 void GPU_dbl_bals_solve
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***mat, double **Q, double **R, double **rhs, double **sol,
    bool *noqr, int *upidx, int *bsidx, int vrblvl );
 /*
@@ -181,6 +181,7 @@ void GPU_dbl_bals_solve
  *   degp1    degree plus one, the size of the matrix system;
  *   szt      size of each block (and tile);
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   tailidx  the index of the start of the update in the tail;
  *   mat      degp1 matrices of dimension dim;
  *   Q        space for the Q of the QR factorization of the Jacobian;
  *   R        space for the R of the QR factorization of the Jacobian;
@@ -199,7 +200,7 @@ void GPU_dbl_bals_solve
  *   bsidx    counts the number of backsubstitutions skipped. */
 
 void GPU_cmplx_bals_solve
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***matre, double ***matim, double **Qre, double **Qim,
    double **Rre, double **Rim, double **rhsre, double **rhsim,
    double **solre, double **solim,
@@ -216,6 +217,7 @@ void GPU_cmplx_bals_solve
  *   degp1    degree plus one, the size of the matrix system;
  *   szt      size of each block (and tile);
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   tailidx  the index of the start of the update in the tail;
  *   matre    degp1 matrices of dimension dim;
  *   matim    degp1 matrices of dimension dim;
  *   Qre      space for the real parts of the Q of the QR;

@@ -74,7 +74,7 @@ void CPU_cmplx_qrbs_head
  *   noqr     updated flag if ||dx_0|| is zero for the first time. */
 
 void CPU_dbl_qrbs_tail
- ( int dim, int degp1, double ***mat, double **rhs, double **sol,
+ ( int dim, int degp1, int tailidx, double ***mat, double **rhs, double **sol,
    double **Q, double **R, double *wrkvec, int *upidx, int *bsidx,
    int vrblvl );
 /*
@@ -86,6 +86,7 @@ void CPU_dbl_qrbs_tail
  * ON ENTRY :
  *   dim      the dimension of the matrices and vectors;
  *   degp1    degree plus one, the size of the matrix system;
+ *   tailidx  the index of the start of the update in the tail;
  *   mat      degp1 matrices of dimension dim;
  *   rhs      degp1 vectors of dimension dim;
  *   sol      space allocated for degp1 vectors of dimension dim,
@@ -102,7 +103,7 @@ void CPU_dbl_qrbs_tail
  *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_cmplx_qrbs_tail
- ( int dim, int degp1, double ***matre, double ***matim,
+ ( int dim, int degp1, int tailidx, double ***matre, double ***matim,
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **Qre, double **Qim, double **Rre, double **Rim,
    double *wrkvecre, double *wrkvecim, int *upidx, int *bsidx, int vrblvl );
@@ -115,6 +116,7 @@ void CPU_cmplx_qrbs_tail
  * ON ENTRY :
  *   dim      the dimension of the matrices and vectors;
  *   degp1    degree plus one, the size of the matrix system;
+ *   tailidx  the index of the start of the update in the tail;
  *   matre    degp1 matrices of dimension dim;
  *   matim    degp1 matrices of dimension dim;
  *   rhsre    degp1 vectors of dimension dim;
@@ -140,7 +142,7 @@ void CPU_cmplx_qrbs_tail
  *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_dbl_qrbs_solve
- ( int dim, int degp1, double ***mat, double **rhs, double **sol,
+ ( int dim, int degp1, int tailidx, double ***mat, double **rhs, double **sol,
    double **Q, double **R, double *wrkvec,
    bool *noqr, int *upidx, int *bsidx, int vrblvl );
 /*
@@ -151,6 +153,7 @@ void CPU_dbl_qrbs_solve
  * ON ENTRY :
  *   dim      the dimension of the matrices and vectors;
  *   degp1    degree plus one, the size of the matrix system;
+ *   tailidx  the index of the start of the update in the tail;
  *   mat      degp1 matrices of dimension dim;
  *   rhs      degp1 vectors of dimension dim;
  *   sol      space allocated for degp1 vectors of dimension dim;
@@ -170,7 +173,7 @@ void CPU_dbl_qrbs_solve
  *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_cmplx_qrbs_solve
- ( int dim, int degp1, double ***matre, double ***matim, 
+ ( int dim, int degp1, int tailidx, double ***matre, double ***matim, 
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **Qre, double **Qim, double **Rre, double **Rim,
    double *wrkvecre, double *wrkvecim,
@@ -183,6 +186,7 @@ void CPU_cmplx_qrbs_solve
  * ON ENTRY :
  *   dim      the dimension of the matrices and vectors;
  *   degp1    degree plus one, the size of the matrix system;
+ *   tailidx  the index of the start of the update in the tail;
  *   matre    degp1 matrices of dimension dim;
  *   matim    degp1 matrices of dimension dim;
  *   rhsre    degp1 vectors of dimension dim;

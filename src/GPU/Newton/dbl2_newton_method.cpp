@@ -25,7 +25,7 @@
 using namespace std;
 
 void dbl2_newton_qrstep
- ( int szt, int nbt, int dim, int deg,
+ ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbhi, double **mblo, double dpr,
    double **cffhi, double **cfflo, double *acchi, double *acclo,
@@ -163,7 +163,8 @@ void dbl2_newton_qrstep
       if(vrblvl > 0) cout << "calling CPU_dbl2_qrbs_solve ..." << endl;
 
       CPU_dbl2_qrbs_solve
-         (dim,degp1,jacvalhi_h,jacvallo_h,urhshi_h,urhslo_h,solhi_h,sollo_h,
+         (dim,degp1,tailidx_h,jacvalhi_h,jacvallo_h,
+          urhshi_h,urhslo_h,solhi_h,sollo_h,
           Qhi_h,Qlo_h,Rhi_h,Rlo_h,workvechi,workveclo,
           noqr_h,upidx_h,bsidx_h,vrblvl);
 
@@ -200,8 +201,9 @@ void dbl2_newton_qrstep
       if(vrblvl > 0) cout << "calling GPU_dbl2_bals_solve ..." << endl;
 
       GPU_dbl2_bals_solve
-         (dim,degp1,szt,nbt,jacvalhi_d,jacvallo_d,Qhi_d,Qlo_d,Rhi_d,Rlo_d,
-          urhshi_d,urhslo_d,solhi_d,sollo_d,noqr_d,upidx_d,bsidx_d,vrblvl);
+         (dim,degp1,szt,nbt,tailidx_d,jacvalhi_d,jacvallo_d,
+          Qhi_d,Qlo_d,Rhi_d,Rlo_d,urhshi_d,urhslo_d,solhi_d,sollo_d,
+          noqr_d,upidx_d,bsidx_d,vrblvl);
 
       if(vrblvl > 0)
       {
@@ -620,6 +622,8 @@ int test_dbl2_real_newton
    int bsidx_d = 0;
    bool noqr_h = false;
    bool noqr_d = false;
+   int tailidx_h = 1;
+   int tailidx_d = 1;
 
    int wrkdeg = 0; // working degree of precision
 
@@ -630,7 +634,7 @@ int test_dbl2_real_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       dbl2_newton_qrstep
-         (szt,nbt,dim,wrkdeg,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhshi,mbrhslo,dpr,cffhi,cfflo,acchi,acclo,
           inputhi_h,inputlo_h,inputhi_d,inputlo_d,
           outputhi_h,outputlo_h,outputhi_d,outputlo_d,

@@ -152,7 +152,7 @@ void CPU_cmplx_qrbs_head
 }
 
 void CPU_dbl_qrbs_tail
- ( int dim, int degp1, double ***mat, double **rhs, double **sol,
+ ( int dim, int degp1, int tailidx, double ***mat, double **rhs, double **sol,
    double **Q, double **R, double *wrkvec, int *upidx, int *bsidx,
    int vrblvl )
 {
@@ -161,7 +161,7 @@ void CPU_dbl_qrbs_tail
    int skipbscnt = 0; // counts backsubstitutions skipped
    double prevnorm = 1.0e+99; // previous norm
 
-   for(int i=1; i<degp1; i++)
+   for(int i=tailidx; i<degp1; i++)
    {
       if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
       // use sol[i-1] to update rhs[j] for j in i to degp1
@@ -237,7 +237,7 @@ void CPU_dbl_qrbs_tail
 }
 
 void CPU_cmplx_qrbs_tail
- ( int dim, int degp1, double ***matre, double ***matim,
+ ( int dim, int degp1, int tailidx, double ***matre, double ***matim,
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **Qre, double **Qim, double **Rre, double **Rim,
    double *wrkvecre, double *wrkvecim, int *upidx, int *bsidx, int vrblvl )
@@ -247,7 +247,7 @@ void CPU_cmplx_qrbs_tail
    int skipbscnt = 0; // counts skipped backsubstitutions
    double prevnorm = 1.0e+99;
 
-   for(int i=1; i<degp1; i++)
+   for(int i=tailidx; i<degp1; i++)
    {
       if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
       // use sol[i-1] to update rhs[j] for j in i to degp1
@@ -343,7 +343,7 @@ void CPU_cmplx_qrbs_tail
 }
 
 void CPU_dbl_qrbs_solve
- ( int dim, int degp1, double ***mat, double **rhs, double **sol,
+ ( int dim, int degp1, int tailidx, double ***mat, double **rhs, double **sol,
    double **Q, double **R, double *wrkvec,
    bool *noqr, int *upidx, int *bsidx, int vrblvl )
 {
@@ -362,12 +362,13 @@ void CPU_dbl_qrbs_solve
    {
       if(vrblvl > 0) cout << "calling CPU_dbl_qrbs_tail ..." << endl;
 
-      CPU_dbl_qrbs_tail(dim,degp1,mat,rhs,sol,Q,R,wrkvec,upidx,bsidx,vrblvl);
+      CPU_dbl_qrbs_tail
+         (dim,degp1,tailidx,mat,rhs,sol,Q,R,wrkvec,upidx,bsidx,vrblvl);
    }
 }
 
 void CPU_cmplx_qrbs_solve
- ( int dim, int degp1, double ***matre, double ***matim, 
+ ( int dim, int degp1, int tailidx, double ***matre, double ***matim, 
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **Qre, double **Qim, double **Rre, double **Rim,
    double *wrkvecre, double *wrkvecim,
@@ -390,7 +391,7 @@ void CPU_cmplx_qrbs_solve
       if(vrblvl > 0) cout << "calling CPU_cmplx_qrbs_tail ..." << endl;
 
       CPU_cmplx_qrbs_tail
-         (dim,degp1,matre,matim,rhsre,rhsim,solre,solim,
+         (dim,degp1,tailidx,matre,matim,rhsre,rhsim,solre,solim,
           Qre,Qim,Rre,Rim,wrkvecre,wrkvecim,upidx,bsidx,vrblvl);
    }
 }

@@ -4,114 +4,6 @@
 #ifndef __dbl8_bals_host_h__
 #define __dbl8_bals_host_h__
 
-void CPU_dbl8_qrbs_tail
- ( int dim, int degp1,
-   double ***mathihihi, double ***matlohihi,
-   double ***mathilohi, double ***matlolohi,
-   double ***mathihilo, double ***matlohilo,
-   double ***mathilolo, double ***matlololo,
-   double **rhshihihi, double **rhslohihi,
-   double **rhshilohi, double **rhslolohi,
-   double **rhshihilo, double **rhslohilo,
-   double **rhshilolo, double **rhslololo,
-   double **solhihihi, double **sollohihi,
-   double **solhilohi, double **sollolohi,
-   double **solhihilo, double **sollohilo,
-   double **solhilolo, double **sollololo,
-   double **Qhihihi, double **Qlohihi, double **Qhilohi, double **Qlolohi,
-   double **Qhihilo, double **Qlohilo, double **Qhilolo, double **Qlololo,
-   double **Rhihihi, double **Rlohihi, double **Rhilohi, double **Rlolohi,
-   double **Rhihilo, double **Rlohilo, double **Rhilolo, double **Rlololo,
-   double *wrkvechihihi, double *wrkveclohihi,
-   double *wrkvechilohi, double *wrkveclolohi,
-   double *wrkvechihilo, double *wrkveclohilo,
-   double *wrkvechilolo, double *wrkveclololo,
-   int *upidx, int *bsidx, int vrblvl );
-/*
- * DESCRIPTION :
- *   Computes the trailing terms of the power series solution
- *   to a linear system of power series, in linearized format,
- *   applying substitution given a QR factorization.
- *
- * ON ENTRY :
- *   dim      the dimension of the matrices and vectors;
- *   degp1    degree plus one, the size of the matrix system;
- *   mathihihi are degp1 matrices of dimension dim;
- *   matlohihi are degp1 matrices of dimension dim;
- *   mathilohi are degp1 matrices of dimension dim;
- *   matlolohi are degp1 matrices of dimension dim;
- *   mathihilo are degp1 matrices of dimension dim;
- *   matlohilo are degp1 matrices of dimension dim;
- *   mathilolo are degp1 matrices of dimension dim;
- *   matlololo are degp1 matrices of dimension dim;
- *   rhshihihi are degp1 vectors of dimension dim;
- *   rhslohihi are degp1 vectors of dimension dim;
- *   rhshilohi are degp1 vectors of dimension dim;
- *   rhslolohi are degp1 vectors of dimension dim;
- *   rhshihilo are degp1 vectors of dimension dim;
- *   rhslohilo are degp1 vectors of dimension dim;
- *   rhshilolo are degp1 vectors of dimension dim;
- *   rhslololo are degp1 vectors of dimension dim;
- *   solhihihi has space allocated for degp1 vectors of dimension dim,
- *            with the leading highest doubles defined;
- *   sollohihi  space allocated for degp1 vectors of dimension dim,
- *            with the leading second highest doubles defined;
- *   solhilohi  space allocated for degp1 vectors of dimension dim,
- *            with the leading third highest doubles defined;
- *   sollolohi  space allocated for degp1 vectors of dimension dim,
- *            with the leading fourth highest doubles defined;
- *   solhihilo  space allocated for degp1 vectors of dimension dim,
- *            with the leading fourth lowest doubles defined;
- *   sollohilo  space allocated for degp1 vectors of dimension dim,
- *            with the leading third lowest doubles defined;
- *   solhilolo  space allocated for degp1 vectors of dimension dim,
- *            with the leading second lowest doubles defined;
- *   sollololo  space allocated for degp1 vectors of dimension dim,
- *            with the leading lowest doubles defined;
- *   Qhihihi  highest doubles of the Q of the QR factorization;
- *   Qlohihi  second highest doubles of the Q of the QR factorization;
- *   Qhilohi  third highest doubles of the Q of the QR factorization;
- *   Qlolohi  fourth highest doubles of the Q of the QR factorization;
- *   Qhihilo  fourth lowest doubles of the Q of the QR factorization;
- *   Qlohilo  third lowest doubles of the Q of the QR factorization;
- *   Qhilolo  second lowest doubles of the Q of the QR factorization;
- *   Qlololo  lowest doubles of the Q of the QR factorization;
- *   Rhihihi  highest doubles of the R of the QR factorization;
- *   Rlohihi  second highest doubles of the R of the QR factorization;
- *   Rhilohi  third highest doubles of the R of the QR factorization;
- *   Rlolohi  fourth highest doubles of the R of the QR factorization;
- *   Rhihilo  fourth lowhest doubles of the R of the QR factorization;
- *   Rlohilo  third lowest doubles of the R of the QR factorization;
- *   Rhilolo  second lowest doubles of the R of the QR factorization;
- *   Rlololo  lowest doubles of the R of the QR factorization;
- *   wrkvechihihi is work space vector of dimension dim for the substitution;
- *   wrkveclohihi is work space vector of dimension dim for the substitution;
- *   wrkvechilohi is work space vector of dimension dim for the substitution;
- *   wrkveclolohi is work space vector of dimension dim for the substitution;
- *   wrkvechihilo is work space vector of dimension dim for the substitution;
- *   wrkveclohilo is work space vector of dimension dim for the substitution;
- *   wrkvechilolo is work space vector of dimension dim for the substitution;
- *   wrkveclololo is work space vector of dimension dim for the substitution;
- *   vrblvl   the verbose level (0 for silent).
- *
- * ON RETURN :
- *   rhshihihi are the updated highest doubles of right hand side;
- *   rhslohihi are the updated second highest doubles of right hand side;
- *   rhshilohi are the updated third highest doubles of right hand side;
- *   rhslolohi are the updated fourth highest doubles of right hand side;
- *   rhshihilo are the updated fourth lowest doubles of right hand side;
- *   rhslohilo are the updated third lowest doubles of right hand side;
- *   rhshilolo are the updated second lowest doubles of right hand side;
- *   rhslololo are the updated lowest doubles of right hand side;
- *   solhihihi are the highest doubles of the solution;
- *   sollohihi are the second highest doubles of the solution;
- *   solhilohi are the third highest doubles of the solution;
- *   sollolohi are the fourth highest doubles of the solution;
- *   solhihilo are the fourth lowest doubles of the solution;
- *   sollohilo are the third lowhest doubles of the solution;
- *   solhilolo are the second lowest doubles of the solution;
- *   sollololo are the lowest doubles of the solution. */
-
 void CPU_dbl8_qrbs_head
  ( int dim, int degp1,
    double ***mathihihi, double ***matlohihi,
@@ -462,8 +354,117 @@ void CPU_cmplx8_qrbs_head
  *   solimlololo are the lowest doubles of the imag parts of the head;
  *   noqr      updated flag if ||dx_0|| is zero for the first time. */
 
+void CPU_dbl8_qrbs_tail
+ ( int dim, int degp1, int tailidx,
+   double ***mathihihi, double ***matlohihi,
+   double ***mathilohi, double ***matlolohi,
+   double ***mathihilo, double ***matlohilo,
+   double ***mathilolo, double ***matlololo,
+   double **rhshihihi, double **rhslohihi,
+   double **rhshilohi, double **rhslolohi,
+   double **rhshihilo, double **rhslohilo,
+   double **rhshilolo, double **rhslololo,
+   double **solhihihi, double **sollohihi,
+   double **solhilohi, double **sollolohi,
+   double **solhihilo, double **sollohilo,
+   double **solhilolo, double **sollololo,
+   double **Qhihihi, double **Qlohihi, double **Qhilohi, double **Qlolohi,
+   double **Qhihilo, double **Qlohilo, double **Qhilolo, double **Qlololo,
+   double **Rhihihi, double **Rlohihi, double **Rhilohi, double **Rlolohi,
+   double **Rhihilo, double **Rlohilo, double **Rhilolo, double **Rlololo,
+   double *wrkvechihihi, double *wrkveclohihi,
+   double *wrkvechilohi, double *wrkveclolohi,
+   double *wrkvechihilo, double *wrkveclohilo,
+   double *wrkvechilolo, double *wrkveclololo,
+   int *upidx, int *bsidx, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Computes the trailing terms of the power series solution
+ *   to a linear system of power series, in linearized format,
+ *   applying substitution given a QR factorization.
+ *
+ * ON ENTRY :
+ *   dim      the dimension of the matrices and vectors;
+ *   degp1    degree plus one, the size of the matrix system;
+ *   tailidx  the index of the start of the update in the tail;
+ *   mathihihi are degp1 matrices of dimension dim;
+ *   matlohihi are degp1 matrices of dimension dim;
+ *   mathilohi are degp1 matrices of dimension dim;
+ *   matlolohi are degp1 matrices of dimension dim;
+ *   mathihilo are degp1 matrices of dimension dim;
+ *   matlohilo are degp1 matrices of dimension dim;
+ *   mathilolo are degp1 matrices of dimension dim;
+ *   matlololo are degp1 matrices of dimension dim;
+ *   rhshihihi are degp1 vectors of dimension dim;
+ *   rhslohihi are degp1 vectors of dimension dim;
+ *   rhshilohi are degp1 vectors of dimension dim;
+ *   rhslolohi are degp1 vectors of dimension dim;
+ *   rhshihilo are degp1 vectors of dimension dim;
+ *   rhslohilo are degp1 vectors of dimension dim;
+ *   rhshilolo are degp1 vectors of dimension dim;
+ *   rhslololo are degp1 vectors of dimension dim;
+ *   solhihihi has space allocated for degp1 vectors of dimension dim,
+ *            with the leading highest doubles defined;
+ *   sollohihi  space allocated for degp1 vectors of dimension dim,
+ *            with the leading second highest doubles defined;
+ *   solhilohi  space allocated for degp1 vectors of dimension dim,
+ *            with the leading third highest doubles defined;
+ *   sollolohi  space allocated for degp1 vectors of dimension dim,
+ *            with the leading fourth highest doubles defined;
+ *   solhihilo  space allocated for degp1 vectors of dimension dim,
+ *            with the leading fourth lowest doubles defined;
+ *   sollohilo  space allocated for degp1 vectors of dimension dim,
+ *            with the leading third lowest doubles defined;
+ *   solhilolo  space allocated for degp1 vectors of dimension dim,
+ *            with the leading second lowest doubles defined;
+ *   sollololo  space allocated for degp1 vectors of dimension dim,
+ *            with the leading lowest doubles defined;
+ *   Qhihihi  highest doubles of the Q of the QR factorization;
+ *   Qlohihi  second highest doubles of the Q of the QR factorization;
+ *   Qhilohi  third highest doubles of the Q of the QR factorization;
+ *   Qlolohi  fourth highest doubles of the Q of the QR factorization;
+ *   Qhihilo  fourth lowest doubles of the Q of the QR factorization;
+ *   Qlohilo  third lowest doubles of the Q of the QR factorization;
+ *   Qhilolo  second lowest doubles of the Q of the QR factorization;
+ *   Qlololo  lowest doubles of the Q of the QR factorization;
+ *   Rhihihi  highest doubles of the R of the QR factorization;
+ *   Rlohihi  second highest doubles of the R of the QR factorization;
+ *   Rhilohi  third highest doubles of the R of the QR factorization;
+ *   Rlolohi  fourth highest doubles of the R of the QR factorization;
+ *   Rhihilo  fourth lowhest doubles of the R of the QR factorization;
+ *   Rlohilo  third lowest doubles of the R of the QR factorization;
+ *   Rhilolo  second lowest doubles of the R of the QR factorization;
+ *   Rlololo  lowest doubles of the R of the QR factorization;
+ *   wrkvechihihi is work space vector of dimension dim for the substitution;
+ *   wrkveclohihi is work space vector of dimension dim for the substitution;
+ *   wrkvechilohi is work space vector of dimension dim for the substitution;
+ *   wrkveclolohi is work space vector of dimension dim for the substitution;
+ *   wrkvechihilo is work space vector of dimension dim for the substitution;
+ *   wrkveclohilo is work space vector of dimension dim for the substitution;
+ *   wrkvechilolo is work space vector of dimension dim for the substitution;
+ *   wrkveclololo is work space vector of dimension dim for the substitution;
+ *   vrblvl   the verbose level (0 for silent).
+ *
+ * ON RETURN :
+ *   rhshihihi are the updated highest doubles of right hand side;
+ *   rhslohihi are the updated second highest doubles of right hand side;
+ *   rhshilohi are the updated third highest doubles of right hand side;
+ *   rhslolohi are the updated fourth highest doubles of right hand side;
+ *   rhshihilo are the updated fourth lowest doubles of right hand side;
+ *   rhslohilo are the updated third lowest doubles of right hand side;
+ *   rhshilolo are the updated second lowest doubles of right hand side;
+ *   rhslololo are the updated lowest doubles of right hand side;
+ *   solhihihi are the highest doubles of the solution;
+ *   sollohihi are the second highest doubles of the solution;
+ *   solhilohi are the third highest doubles of the solution;
+ *   sollolohi are the fourth highest doubles of the solution;
+ *   solhihilo are the fourth lowest doubles of the solution;
+ *   sollohilo are the third lowhest doubles of the solution;
+ *   solhilolo are the second lowest doubles of the solution;
+ *   sollololo are the lowest doubles of the solution. */
+
 void CPU_cmplx8_qrbs_tail
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***matrehihihi, double ***matrelohihi,
    double ***matrehilohi, double ***matrelolohi,
    double ***matrehihilo, double ***matrelohilo,
@@ -522,6 +523,7 @@ void CPU_cmplx8_qrbs_tail
  * ON ENTRY :
  *   dim      the dimension of the matrices and vectors;
  *   degp1    degree plus one, the size of the matrix system;
+ *   tailidx  the index of the start of the update in the tail;
  *   matrehihihi are degp1 matrices of dimension dim;
  *   matrelohihi are degp1 matrices of dimension dim;
  *   matrehilohi are degp1 matrices of dimension dim;
@@ -673,7 +675,7 @@ void CPU_cmplx8_qrbs_tail
  *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_dbl8_qrbs_solve
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***mathihihi, double ***matlohihi,
    double ***mathilohi, double ***matlolohi,
    double ***mathihilo, double ***matlohilo,
@@ -703,6 +705,7 @@ void CPU_dbl8_qrbs_solve
  * ON ENTRY :
  *   dim      the dimension of the matrices and vectors;
  *   degp1    degree plus one, the size of the matrix system;
+ *   tailidx  the index of the start of the update in the tail;
  *   mathihihi are degp1 matrices of dimension dim;
  *   matlohihi are degp1 matrices of dimension dim;
  *   mathilohi are degp1 matrices of dimension dim;
@@ -792,7 +795,7 @@ void CPU_dbl8_qrbs_solve
  *   bsidx    counts the number of backsubstitutions skipped. */
 
 void CPU_cmplx8_qrbs_solve
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***matrehihihi, double ***matrelohihi,
    double ***matrehilohi, double ***matrelolohi,
    double ***matrehihilo, double ***matrelohilo,
@@ -850,6 +853,7 @@ void CPU_cmplx8_qrbs_solve
  * ON ENTRY :
  *   dim      the dimension of the matrices and vectors;
  *   degp1    degree plus one, the size of the matrix system;
+ *   tailidx  the index of the start of the update in the tail;
  *   matrehihihi are degp1 matrices of dimension dim;
  *   matrelohihi are degp1 matrices of dimension dim;
  *   matrehilohi are degp1 matrices of dimension dim;

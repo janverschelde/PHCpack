@@ -450,7 +450,7 @@ void CPU_cmplx8_qrbs_head
 }
 
 void CPU_dbl8_qrbs_tail
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***mathihihi, double ***matlohihi,
    double ***mathilohi, double ***matlolohi,
    double ***mathihilo, double ***matlohilo,
@@ -480,7 +480,7 @@ void CPU_dbl8_qrbs_tail
    int skipbscnt = 0; // counts the skipped backsubstitutions
    double prevnorm = 1.0e+99;
 
-   for(int i=1; i<degp1; i++)
+   for(int i=tailidx; i<degp1; i++)
    {
       if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
       // use sol[i-1] to update rhs[j] for j in i to degp1
@@ -629,7 +629,7 @@ void CPU_dbl8_qrbs_tail
 }
 
 void CPU_cmplx8_qrbs_tail
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***matrehihihi, double ***matrelohihi,
    double ***matrehilohi, double ***matrelolohi,
    double ***matrehihilo, double ***matrelohilo,
@@ -687,7 +687,7 @@ void CPU_cmplx8_qrbs_tail
    int skipbscnt = 0; // counts the skipped backsubstitutions
    double prevnorm = 1.0e+99;
 
-   for(int i=1; i<degp1; i++)
+   for(int i=tailidx; i<degp1; i++)
    {
       if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
       // use sol[i-1] to update rhs[j] for j in i to degp1
@@ -963,7 +963,7 @@ void CPU_cmplx8_qrbs_tail
 }
 
 void CPU_dbl8_qrbs_solve
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***mathihihi, double ***matlohihi,
    double ***mathilohi, double ***matlolohi,
    double ***mathihilo, double ***matlohilo,
@@ -1012,7 +1012,7 @@ void CPU_dbl8_qrbs_solve
       if(vrblvl > 0) cout << "calling CPU_dbl8_qrbs_tail ..." << endl;
 
       CPU_dbl8_qrbs_tail
-         (dim,degp1,
+         (dim,degp1,tailidx,
           mathihihi,matlohihi,mathilohi,matlolohi,
           mathihilo,matlohilo,mathilolo,matlololo,
           rhshihihi,rhslohihi,rhshilohi,rhslolohi,
@@ -1028,7 +1028,7 @@ void CPU_dbl8_qrbs_solve
 }
 
 void CPU_cmplx8_qrbs_solve
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***matrehihihi, double ***matrelohihi,
    double ***matrehilohi, double ***matrelolohi,
    double ***matrehihilo, double ***matrelohilo,
@@ -1119,10 +1119,11 @@ void CPU_cmplx8_qrbs_solve
       if(vrblvl > 0) cout << "calling CPU_cmplx8_qrbs_tail ..." << endl;
 
       CPU_cmplx8_qrbs_tail
-         (dim,degp1,matrehihihi,matrelohihi,matrehilohi,matrelolohi,
-                    matrehihilo,matrelohilo,matrehilolo,matrelololo,
-                    matimhihihi,matimlohihi,matimhilohi,matimlolohi,
-                    matimhihilo,matimlohilo,matimhilolo,matimlololo,
+         (dim,degp1,tailidx,
+          matrehihihi,matrelohihi,matrehilohi,matrelolohi,
+          matrehihilo,matrelohilo,matrehilolo,matrelololo,
+          matimhihihi,matimlohihi,matimhilohi,matimlolohi,
+          matimhihilo,matimlohilo,matimhilolo,matimlololo,
           rhsrehihihi,rhsrelohihi,rhsrehilohi,rhsrelolohi,
           rhsrehihilo,rhsrelohilo,rhsrehilolo,rhsrelololo,
           rhsimhihihi,rhsimlohihi,rhsimhilohi,rhsimlolohi,

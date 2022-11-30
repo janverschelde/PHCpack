@@ -24,7 +24,7 @@
 using namespace std;
 
 void cmplx8_newton_qrstep
- ( int szt, int nbt, int dim, int deg,
+ ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbrehihihi, double **mbrelohihi,
    double **mbrehilohi, double **mbrelolohi,
@@ -487,7 +487,7 @@ void cmplx8_newton_qrstep
 
       if(vrblvl > 0) cout << "calling CPU_cmplx8_qrbs_solve ..." << endl;
       CPU_cmplx8_qrbs_solve
-         (dim,degp1,
+         (dim,degp1,tailidx_h,
           jacvalrehihihi_h,jacvalrelohihi_h,jacvalrehilohi_h,jacvalrelolohi_h,
           jacvalrehihilo_h,jacvalrelohilo_h,jacvalrehilolo_h,jacvalrelololo_h,
           jacvalimhihihi_h,jacvalimlohihi_h,jacvalimhilohi_h,jacvalimlolohi_h,
@@ -593,7 +593,7 @@ void cmplx8_newton_qrstep
 
       if(vrblvl > 0) cout << "calling GPU_cmplx8_bals_solve ..." << endl;
       GPU_cmplx8_bals_solve
-         (dim,degp1,szt,nbt,
+         (dim,degp1,szt,nbt,tailidx_d,
           jacvalrehihihi_d,jacvalrelohihi_d,jacvalrehilohi_d,jacvalrelolohi_d,
           jacvalrehihilo_d,jacvalrelohilo_d,jacvalrehilolo_d,jacvalrelololo_d,
           jacvalimhihihi_d,jacvalimlohihi_d,jacvalimhilohi_d,jacvalimlolohi_d,
@@ -2121,6 +2121,8 @@ int test_dbl8_complex_newton
    int bsidx_d = 0;
    bool noqr_h = false;
    bool noqr_d = false;
+   int tailidx_h = 1;
+   int tailidx_d = 1;
 
    int wrkdeg = 0; // working degree of precision
 
@@ -2131,7 +2133,7 @@ int test_dbl8_complex_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       cmplx8_newton_qrstep
-         (szt,nbt,dim,wrkdeg,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhsrehihihi,mbrhsrelohihi,mbrhsrehilohi,mbrhsrelolohi,
           mbrhsrehihilo,mbrhsrelohilo,mbrhsrehilolo,mbrhsrelololo,
           mbrhsimhihihi,mbrhsimlohihi,mbrhsimhilohi,mbrhsimlolohi,

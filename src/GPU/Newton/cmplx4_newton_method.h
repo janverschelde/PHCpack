@@ -5,7 +5,7 @@
 #define __cmplx4_newton_method_h__
 
 void cmplx4_newton_qrstep
- ( int szt, int nbt, int dim, int deg,
+ ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbrehihi, double **mbrelohi, double **mbrehilo, double **mbrelolo,
    double **mbimhihi, double **mbimlohi, double **mbimhilo, double **mbimlolo,
@@ -115,6 +115,8 @@ void cmplx4_newton_qrstep
  *   nbt       number of tiles and number of blocks;
  *   dim       number of monomials;
  *   deg       degree of the power series;
+ *   tailidx_h is the start index of the update of the tail on the host;
+ *   tailidx_d is the start index of the update of the tail on the device;
  *   nvr       nvr[i] is the number of variables in the i-th monomial;
  *   idx       idx[i] are the indices of the variables in monomial i;
  *   exp       exp[i] are the exponents of the variables in monomial i;

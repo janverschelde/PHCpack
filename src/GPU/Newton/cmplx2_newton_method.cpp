@@ -25,7 +25,7 @@
 using namespace std;
 
 void cmplx2_newton_qrstep
- ( int szt, int nbt, int dim, int deg,
+ ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbrehi, double **mbrelo, double **mbimhi, double **mbimlo,
    double dpr,
@@ -201,7 +201,7 @@ void cmplx2_newton_qrstep
          cout << "calling CPU_cmplx2_qrbs_solve ..." << endl;
 
       CPU_cmplx2_qrbs_solve
-         (dim,degp1,
+         (dim,degp1,tailidx_h,
           jacvalrehi_h,jacvalrelo_h,jacvalimhi_h,jacvalimlo_h,
           urhsrehi_h,urhsrelo_h,urhsimhi_h,urhsimlo_h,
           solrehi_h,solrelo_h,solimhi_h,solimlo_h,
@@ -249,7 +249,7 @@ void cmplx2_newton_qrstep
          cout << "calling GPU_cmplx2_bals_solve ..." << endl;
 
       GPU_cmplx2_bals_solve
-         (dim,degp1,szt,nbt,
+         (dim,degp1,szt,nbt,tailidx_d,
           jacvalrehi_d,jacvalrelo_d,jacvalimhi_d,jacvalimlo_d,
           Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,
           urhsrehi_d,urhsrelo_d,urhsimhi_d,urhsimlo_d,
@@ -822,6 +822,8 @@ int test_dbl2_complex_newton
    int bsidx_d = 0;
    bool noqr_h = false;
    bool noqr_d = false;
+   int tailidx_h = 1;
+   int tailidx_d = 1;
 
    int wrkdeg = 0; // working degree of precision
 
@@ -832,7 +834,7 @@ int test_dbl2_complex_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       cmplx2_newton_qrstep
-         (szt,nbt,dim,wrkdeg,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhsrehi,mbrhsrelo,mbrhsimhi,mbrhsimlo,dpr,
           cffrehi,cffrelo,cffimhi,cffimlo,accrehi,accrelo,accimhi,accimlo,
           inputrehi_h,inputrelo_h,inputimhi_h,inputimlo_h,

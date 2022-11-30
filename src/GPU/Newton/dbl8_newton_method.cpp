@@ -24,7 +24,7 @@
 using namespace std;
 
 void dbl8_newton_qrstep
- ( int szt, int nbt, int dim, int deg,
+ ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbhihihi, double **mblohihi, double **mbhilohi, double **mblolohi,
    double **mbhihilo, double **mblohilo, double **mbhilolo, double **mblololo,
@@ -296,7 +296,7 @@ void dbl8_newton_qrstep
  
       if(vrblvl > 0) cout << "calling CPU_dbl8_qrbs_solve ..." << endl;
       CPU_dbl8_qrbs_solve
-         (dim,degp1,
+         (dim,degp1,tailidx_h,
           jacvalhihihi_h,jacvallohihi_h,jacvalhilohi_h,jacvallolohi_h,
           jacvalhihilo_h,jacvallohilo_h,jacvalhilolo_h,jacvallololo_h,
           urhshihihi_h,urhslohihi_h,urhshilohi_h,urhslolohi_h,
@@ -362,7 +362,7 @@ void dbl8_newton_qrstep
  
       if(vrblvl > 0) cout << "calling GPU_dbl8_bals_solve ..." << endl;
       GPU_dbl8_bals_solve
-         (dim,degp1,szt,nbt,
+         (dim,degp1,szt,nbt,tailidx_d,
           jacvalhihihi_d,jacvallohihi_d,jacvalhilohi_d,jacvallolohi_d,
           jacvalhihilo_d,jacvallohilo_d,jacvalhilolo_d,jacvallololo_d,
           Qhihihi_d,Qlohihi_d,Qhilohi_d,Qlolohi_d,
@@ -1278,6 +1278,8 @@ int test_dbl8_real_newton
    int bsidx_d = 0;
    bool noqr_h = false;
    bool noqr_d = false;
+   int tailidx_h = 1;
+   int tailidx_d = 1;
 
    int wrkdeg = 0;
 
@@ -1288,7 +1290,7 @@ int test_dbl8_real_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       dbl8_newton_qrstep
-         (szt,nbt,dim,wrkdeg,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhshihihi,mbrhslohihi,mbrhshilohi,mbrhslolohi,
           mbrhshihilo,mbrhslohilo,mbrhshilolo,mbrhslololo,dpr,
           cffhihihi,cfflohihi,cffhilohi,cfflolohi,

@@ -22,7 +22,7 @@
 using namespace std;
 
 void dbl_newton_qrstep
- ( int szt, int nbt, int dim, int deg,
+ ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mb, double dpr, double **cff, double *acc,
    double **input_h, double **input_d, double ***output_h, double ***output_d,
@@ -120,7 +120,7 @@ void dbl_newton_qrstep
          cout << "calling CPU_dbl_qrbs_solve ..." << endl;
 
       CPU_dbl_qrbs_solve
-         (dim,degp1,jacval_h,urhs_h,sol_h,Q_h,R_h,workvec,
+         (dim,degp1,tailidx_h,jacval_h,urhs_h,sol_h,Q_h,R_h,workvec,
           noqr_h,upidx_h,bsidx_h,vrblvl);
  
       if(vrblvl > 0)
@@ -145,7 +145,7 @@ void dbl_newton_qrstep
          cout << "calling GPU_dbl_bals_solve ..." << endl;
 
       GPU_dbl_bals_solve
-         (dim,degp1,szt,nbt,jacval_d,Q_d,R_d,urhs_d,sol_d,
+         (dim,degp1,szt,nbt,tailidx_d,jacval_d,Q_d,R_d,urhs_d,sol_d,
           noqr_d,upidx_d,bsidx_d,vrblvl);
 
       if(vrblvl > 0)
@@ -395,6 +395,8 @@ int test_dbl_real_newton
    int bsidx_d = 0;
    bool noqr_h = false;
    bool noqr_d = false;
+   int tailidx_h = 1;
+   int tailidx_d = 1;
 
    int wrkdeg = 0; // working degree of precision
 
@@ -405,7 +407,8 @@ int test_dbl_real_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       dbl_newton_qrstep
-         (szt,nbt,dim,wrkdeg,nvr,idx,exp,nbrfac,expfac,mbrhs,dpr,cff,acc,
+         (szt,nbt,dim,wrkdeg,tailidx_h,tailidx_d,
+          nvr,idx,exp,nbrfac,expfac,mbrhs,dpr,cff,acc,
           input_h,input_d,output_h,output_d,funval_h,funval_d,
           jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
           Q_h,Q_d,R_h,R_d,workvec,resvec,&resmax,

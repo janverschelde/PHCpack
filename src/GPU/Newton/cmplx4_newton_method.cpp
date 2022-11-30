@@ -24,7 +24,7 @@
 using namespace std;
 
 void cmplx4_newton_qrstep
- ( int szt, int nbt, int dim, int deg,
+ ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbrehihi, double **mbrelohi, double **mbrehilo, double **mbrelolo,
    double **mbimhihi, double **mbimlohi, double **mbimhilo, double **mbimlolo,
@@ -298,7 +298,7 @@ void cmplx4_newton_qrstep
          cout << "calling CPU_cmplx4_qrbs_solve ..." << endl;
 
       CPU_cmplx4_qrbs_solve
-         (dim,degp1,
+         (dim,degp1,tailidx_h,
           jacvalrehihi_h,jacvalrelohi_h,jacvalrehilo_h,jacvalrelolo_h,
           jacvalimhihi_h,jacvalimlohi_h,jacvalimhilo_h,jacvalimlolo_h,
           urhsrehihi_h,urhsrelohi_h,urhsrehilo_h,urhsrelolo_h,
@@ -365,7 +365,7 @@ void cmplx4_newton_qrstep
          cout << "calling GPU_cmplx4_bals_solve ..." << endl;
 
       GPU_cmplx4_bals_solve
-         (dim,degp1,szt,nbt,
+         (dim,degp1,szt,nbt,tailidx_d,
           jacvalrehihi_d,jacvalrelohi_d,jacvalrehilo_d,jacvalrelolo_d,
           jacvalimhihi_d,jacvalimlohi_d,jacvalimhilo_d,jacvalimlolo_d,
           Qrehihi_d,Qrelohi_d,Qrehilo_d,Qrelolo_d,
@@ -1258,6 +1258,8 @@ int test_dbl4_complex_newton
    int bsidx_d = 0;
    bool noqr_h = false;
    bool noqr_d = false;
+   int tailidx_h = 1;
+   int tailidx_d = 1;
 
    int wrkdeg = 0; // working degree of precision
 
@@ -1268,7 +1270,7 @@ int test_dbl4_complex_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       cmplx4_newton_qrstep
-         (szt,nbt,dim,wrkdeg,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhsrehihi,mbrhsrelohi,mbrhsrehilo,mbrhsrelolo,
           mbrhsimhihi,mbrhsimlohi,mbrhsimhilo,mbrhsimlolo,dpr,
           cffrehihi,cffrelohi,cffrehilo,cffrelolo,

@@ -1,5 +1,6 @@
 Tue 29 Nov 2022 : in {dbl,dbl2,dbl4,dbl8}_tail_kernels.cu, limited the
   output at level 1 in the residue cmoputation.
+  Added tailidx to all *_newton_method, *_bals_{host, kernels} files.
 
 Fri 28 Oct 2022 : removed the superfluous work matrices needed for the 
   deprecated LU in {dbl, cmplx}_newton_method and dbl_bals_host.

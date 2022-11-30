@@ -222,7 +222,7 @@ void GPU_cmplx2_bals_qhb
  *   bimlo    low doubles of the imaginary parts of Q^H*b. */
 
 void GPU_dbl2_bals_solve
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***mathi, double ***matlo, double **Qhi, double **Qlo,
    double **Rhi, double **Rlo, double **rhshi, double **rhslo,
    double **solhi, double **sollo,
@@ -239,6 +239,7 @@ void GPU_dbl2_bals_solve
  *   degp1    degree plus one, the size of the matrix system;
  *   szt      size of each block (and tile);
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   tailidx  the index of the start of the update in the tail;
  *   mathi    degp1 matrices of dimension dim;
  *   matlo    degp1 matrices of dimension dim;
  *   Qhi      space for the high doubles of the Q of the QR of the Jacobian;
@@ -266,7 +267,7 @@ void GPU_dbl2_bals_solve
  *   bsidx    counts the number of backsubstitutions skipped. */
 
 void GPU_cmplx2_bals_solve
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo,
    double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
@@ -285,6 +286,7 @@ void GPU_cmplx2_bals_solve
  *   degp1    degree plus one, the size of the matrix system;
  *   szt      size of each block (and tile);
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   tailidx  the index of the start of the update in the tail;
  *   matrehi  degp1 matrices of dimension dim;
  *   matrelo  degp1 matrices of dimension dim;
  *   matimhi  degp1 matrices of dimension dim;

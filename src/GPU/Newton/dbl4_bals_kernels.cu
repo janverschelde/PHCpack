@@ -638,7 +638,7 @@ void GPU_cmplx4_bals_qhb
 }
 
 void GPU_dbl4_bals_solve
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***mathihi, double ***matlohi, double ***mathilo, double ***matlolo,
    double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo, 
@@ -759,7 +759,7 @@ void GPU_dbl4_bals_solve
          free(Ahihi); free(Alohi); free(Ahilo); free(Alolo);
       }
    }
-   for(int stage=1; stage<degp1; stage++)
+   for(int stage=tailidx; stage<degp1; stage++)
    {
       if(vrblvl > 0)
          cout << "stage " << stage << " in solve tail ..." << endl;
@@ -915,7 +915,7 @@ void GPU_dbl4_bals_solve
 }
 
 void GPU_cmplx4_bals_solve
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***matrehihi, double ***matrelohi,
    double ***matrehilo, double ***matrelolo,
    double ***matimhihi, double ***matimlohi,
@@ -1099,7 +1099,7 @@ void GPU_cmplx4_bals_solve
          free(Aimhihi); free(Aimlohi); free(Aimhilo); free(Aimlolo);
       }
    }
-   for(int stage=1; stage<degp1; stage++)
+   for(int stage=tailidx; stage<degp1; stage++)
    {
       if(vrblvl > 0)
          cout << "stage " << stage << " in solve tail ..." << endl;

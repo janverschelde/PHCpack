@@ -197,7 +197,7 @@ void CPU_cmplx2_qrbs_head
 }
 
 void CPU_dbl2_qrbs_tail
- ( int dim, int degp1, double ***mathi, double ***matlo,
+ ( int dim, int degp1, int tailidx, double ***mathi, double ***matlo,
    double **rhshi, double **rhslo, double **solhi, double **sollo,
    double **Qhi, double **Qlo, double **Rhi, double **Rlo,
    double *wrkvechi, double *wrkveclo, int *upidx, int *bsidx, int vrblvl )
@@ -207,7 +207,7 @@ void CPU_dbl2_qrbs_tail
    int skipbscnt = 0; // counts the skipped backsubstitutions
    double prevnorm = 1.0e+99;
 
-   for(int i=1; i<degp1; i++)
+   for(int i=tailidx; i<degp1; i++)
    {
       if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
       // use sol[i-1] to update rhs[j] for j in i to degp1
@@ -300,7 +300,7 @@ void CPU_dbl2_qrbs_tail
 }
 
 void CPU_cmplx2_qrbs_tail
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo,
    double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
    double **solrehi, double **solrelo, double **solimhi, double **solimlo,
@@ -315,7 +315,7 @@ void CPU_cmplx2_qrbs_tail
    int skipbscnt = 0;
    double prevnorm = 1.0e+99;
 
-   for(int i=1; i<degp1; i++)
+   for(int i=tailidx; i<degp1; i++)
    {
       if(vrblvl > 0) cout << "stage " << i << " in solve tail ..." << endl;
       // use sol[i-1] to update rhs[j] for j in i to degp1
@@ -437,7 +437,7 @@ void CPU_cmplx2_qrbs_tail
 }
 
 void CPU_dbl2_qrbs_solve
- ( int dim, int degp1, double ***mathi, double ***matlo,
+ ( int dim, int degp1, int tailidx, double ***mathi, double ***matlo,
    double **rhshi, double **rhslo, double **solhi, double **sollo,
    double **Qhi, double **Qlo, double **Rhi, double **Rlo,
    double *wrkvechi, double *wrkveclo,
@@ -460,13 +460,13 @@ void CPU_dbl2_qrbs_solve
       if(vrblvl > 0) cout << "calling CPU_dbl2_qrbs_tail ..." << endl;
 
       CPU_dbl2_qrbs_tail
-         (dim,degp1,mathi,matlo,rhshi,rhslo,solhi,sollo,Qhi,Qlo,Rhi,Rlo,
-          wrkvechi,wrkveclo,upidx,bsidx,vrblvl);
+         (dim,degp1,tailidx,mathi,matlo,rhshi,rhslo,solhi,sollo,
+          Qhi,Qlo,Rhi,Rlo,wrkvechi,wrkveclo,upidx,bsidx,vrblvl);
    }
 }
 
 void CPU_cmplx2_qrbs_solve
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo, 
    double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
    double **solrehi, double **solrelo, double **solimhi, double **solimlo,
@@ -495,7 +495,7 @@ void CPU_cmplx2_qrbs_solve
       if(vrblvl > 0) cout << "calling CPU_cmplx2_qrbs_tail ..." << endl;
 
       CPU_cmplx2_qrbs_tail
-         (dim,degp1,matrehi,matrelo,matimhi,matimlo,
+         (dim,degp1,tailidx,matrehi,matrelo,matimhi,matimlo,
           rhsrehi,rhsrelo,rhsimhi,rhsimlo,solrehi,solrelo,solimhi,solimlo,
           Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo,
           wrkvecrehi,wrkvecrelo,wrkvecimhi,wrkvecimlo,upidx,bsidx,vrblvl);

@@ -22,7 +22,7 @@
 using namespace std;
 
 void cmplx_newton_qrstep
- ( int szt, int nbt, int dim, int deg,
+ ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbre, double **mbim, double dpr,
    double **cffre, double **cffim, double *accre, double *accim,
@@ -152,7 +152,7 @@ void cmplx_newton_qrstep
          cout << "calling CPU_cmplx_qrbs_solve ..." << endl;
 
       CPU_cmplx_qrbs_solve
-         (dim,degp1,jacvalre_h,jacvalim_h,urhsre_h,urhsim_h,
+         (dim,degp1,tailidx_h,jacvalre_h,jacvalim_h,urhsre_h,urhsim_h,
           solre_h,solim_h,Qre_h,Qim_h,Rre_h,Rim_h,
           workvecre,workvecim,noqr_h,upidx_h,bsidx_h,vrblvl);
  
@@ -186,8 +186,9 @@ void cmplx_newton_qrstep
          cout << "calling GPU_cmplx_bals_solve ..." << endl;
 
       GPU_cmplx_bals_solve
-         (dim,degp1,szt,nbt,jacvalre_d,jacvalim_d,Qre_d,Qim_d,Rre_d,Rim_d,
-          urhsre_d,urhsim_d,solre_d,solim_d,noqr_d,upidx_d,bsidx_d,vrblvl);
+         (dim,degp1,szt,nbt,tailidx_d,jacvalre_d,jacvalim_d,
+          Qre_d,Qim_d,Rre_d,Rim_d,urhsre_d,urhsim_d,solre_d,solim_d,
+          noqr_d,upidx_d,bsidx_d,vrblvl);
 
       if(vrblvl > 0)
       {
@@ -594,6 +595,8 @@ int test_dbl_complex_newton
    int bsidx_d = 0;
    bool noqr_h = false;
    bool noqr_d = false;
+   int tailidx_h = 1;
+   int tailidx_d = 1;
 
    int wrkdeg = 0; // working degree of precision
 
@@ -604,7 +607,8 @@ int test_dbl_complex_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       cmplx_newton_qrstep
-         (szt,nbt,dim,wrkdeg,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,tailidx_h,tailidx_d,
+          nvr,idx,exp,nbrfac,expfac,
           mbrhsre,mbrhsim,dpr,cffre,cffim,accre,accim,
           inputre_h,inputim_h,inputre_d,inputim_d,
           outputre_h,outputim_h,outputre_d,outputim_d,
