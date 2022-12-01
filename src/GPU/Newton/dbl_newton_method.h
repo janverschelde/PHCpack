@@ -5,7 +5,7 @@
 #define __dbl_newton_method_h__
 
 void dbl_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int tailidx_d,
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mb, double dpr, double **cff, double *acc,
    double **input_h, double **input_d, double ***output_h, double ***output_d,
@@ -72,6 +72,7 @@ void dbl_newton_qrstep
  *
  * ON RETURN :
  *   tailidx_h is the updated value for tailidx_h;
+ *   tailidx_d is the updated value for tailidx_d;
  *   input_h   power series computed on host (depending on mode);
  *   input_d   power series computed on device (depending on mode);
  *   output_h  evaluated power series computed on host (depending on mode);

@@ -5,7 +5,7 @@
 #define __cmplx4_newton_method_h__
 
 void cmplx4_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int tailidx_d,
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbrehihi, double **mbrelohi, double **mbrehilo, double **mbrelolo,
    double **mbimhihi, double **mbimlohi, double **mbimhilo, double **mbimlolo,
@@ -348,6 +348,7 @@ void cmplx4_newton_qrstep
  *
  * ON RETURN :
  *   tailidx_h is the new value for tailidx_h;
+ *   tailidx_d is the new value for tailidx_d;
  *   inputrehihi_h has the highest doubles of the real parts of series,
  *             computed on host;
  *   inputrelohi_h has the second highest doubles of the real parts of series,

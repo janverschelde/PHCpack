@@ -327,7 +327,7 @@ void GPU_dbl4_bals_solve
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo, 
    double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
    double **solhihi, double **sollohi, double **solhilo, double **sollolo,
-   bool *noqr, int *upidx, int *bsidx, int vrblvl );
+   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -383,7 +383,8 @@ void GPU_dbl4_bals_solve
  *   sollolo  lowest doubles of the solution series;
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
- *   bsidx    counts the number of backsubstitutions skipped. */
+ *   bsidx    counts the number of backsubstitutions skipped;
+ *   newtail  the new value for tailidx. */
 
 void GPU_cmplx4_bals_solve
  ( int dim, int degp1, int szt, int nbt, int tailidx,
@@ -403,7 +404,7 @@ void GPU_cmplx4_bals_solve
    double **solrehilo, double **solrelolo,
    double **solimhihi, double **solimlohi, 
    double **solimhilo, double **solimlolo,
-   bool *noqr, int *upidx, int *bsidx, int vrblvl );
+   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -511,6 +512,7 @@ void GPU_cmplx4_bals_solve
  *   solimlolo are the lowest doubles of the imag parts of the solution;
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
- *   bsidx    counts the number of backsubstitutions skipped. */
+ *   bsidx    counts the number of backsubstitutions skipped;
+ *   newtail  the new value for tailidx. */
 
 #endif

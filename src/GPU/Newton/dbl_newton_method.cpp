@@ -22,7 +22,7 @@
 using namespace std;
 
 void dbl_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int tailidx_d,
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mb, double dpr, double **cff, double *acc,
    double **input_h, double **input_d, double ***output_h, double ***output_d,
@@ -149,9 +149,14 @@ void dbl_newton_qrstep
       if(vrblvl > 0)
          cout << "calling GPU_dbl_bals_solve ..." << endl;
 
+      int oldtail = *tailidx_d;
+      int newtail = oldtail;
+
       GPU_dbl_bals_solve
-         (dim,degp1,szt,nbt,tailidx_d,jacval_d,Q_d,R_d,urhs_d,sol_d,
-          noqr_d,upidx_d,bsidx_d,vrblvl);
+         (dim,degp1,szt,nbt,oldtail,jacval_d,Q_d,R_d,urhs_d,sol_d,
+          noqr_d,upidx_d,bsidx_d,&newtail,vrblvl);
+
+      *tailidx_d = newtail;
 
       if(vrblvl > 0)
       {
@@ -166,7 +171,7 @@ void dbl_newton_qrstep
              &elapsedms,&addcnt,&mulcnt,vrblvl);
          cout << "maximum residual : " << *resmax << endl;
       }
-      dbl_update_series(dim,degp1,tailidx_d-1,input_d,sol_d,vrblvl);
+      dbl_update_series(dim,degp1,*tailidx_d-1,input_d,sol_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))
    {
@@ -412,7 +417,7 @@ int test_dbl_real_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       dbl_newton_qrstep
-         (szt,nbt,dim,wrkdeg,&tailidx_h,tailidx_d,
+         (szt,nbt,dim,wrkdeg,&tailidx_h,&tailidx_d,
           nvr,idx,exp,nbrfac,expfac,mbrhs,dpr,cff,acc,
           input_h,input_d,output_h,output_d,funval_h,funval_d,
           jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,

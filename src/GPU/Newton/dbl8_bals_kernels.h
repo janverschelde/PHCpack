@@ -569,7 +569,7 @@ void GPU_dbl8_bals_solve
    double **solhilohi, double **sollolohi,
    double **solhihilo, double **sollohilo,
    double **solhilolo, double **sollololo,
-   bool *noqr, int *upidx, int *bsidx, int vrblvl );
+   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -661,7 +661,8 @@ void GPU_dbl8_bals_solve
  *   sollololo are the lowest doubles of the solution series;
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
- *   bsidx    counts the number of backsubstitutions skipped. */
+ *   bsidx    counts the number of backsubstitutions skipped;
+ *   newtail  the new value for tailidx. */
 
 void GPU_cmplx8_bals_solve
  ( int dim, int degp1, int szt, int nbt, int tailidx,
@@ -705,7 +706,7 @@ void GPU_cmplx8_bals_solve
    double **solimhilohi, double **solimlolohi,
    double **solimhihilo, double **solimlohilo, 
    double **solimhilolo, double **solimlololo,
-   bool *noqr, int *upidx, int *bsidx, int vrblvl );
+   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -900,6 +901,7 @@ void GPU_cmplx8_bals_solve
  *   solimlololo are the lowest doubles of the imag parts of the solution;
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
- *   bsidx    counts the number of backsubstitutions skipped. */
+ *   bsidx    counts the number of backsubstitutions skipped;
+ *   newtail  the new value for tailidx. */
 
 #endif

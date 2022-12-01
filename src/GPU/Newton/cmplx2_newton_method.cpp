@@ -25,7 +25,7 @@
 using namespace std;
 
 void cmplx2_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int tailidx_d,
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbrehi, double **mbrelo, double **mbimhi, double **mbimlo,
    double dpr,
@@ -253,13 +253,18 @@ void cmplx2_newton_qrstep
       if(vrblvl > 0)
          cout << "calling GPU_cmplx2_bals_solve ..." << endl;
 
+      int oldtail = *tailidx_d;
+      int newtail = oldtail;
+
       GPU_cmplx2_bals_solve
-         (dim,degp1,szt,nbt,tailidx_d,
+         (dim,degp1,szt,nbt,oldtail,
           jacvalrehi_d,jacvalrelo_d,jacvalimhi_d,jacvalimlo_d,
           Qrehi_d,Qrelo_d,Qimhi_d,Qimlo_d,Rrehi_d,Rrelo_d,Rimhi_d,Rimlo_d,
           urhsrehi_d,urhsrelo_d,urhsimhi_d,urhsimlo_d,
           solrehi_d,solrelo_d,solimhi_d,solimlo_d,
-          noqr_d,upidx_d,bsidx_d,vrblvl);
+          noqr_d,upidx_d,bsidx_d,&newtail,vrblvl);
+
+      *tailidx_d = newtail;
 
       if(vrblvl > 0)
       {
@@ -279,7 +284,7 @@ void cmplx2_newton_qrstep
          cout << "maximum residual : " << *resmaxhi << endl;
       }
       cmplx2_update_series
-         (dim,degp1,tailidx_d-1,
+         (dim,degp1,*tailidx_d-1,
           inputrehi_d,inputrelo_d,inputimhi_d,inputimlo_d,
           solrehi_d,solrelo_d,solimhi_d,solimlo_d,vrblvl);
    }
@@ -840,7 +845,7 @@ int test_dbl2_complex_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       cmplx2_newton_qrstep
-         (szt,nbt,dim,wrkdeg,&tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,&tailidx_h,&tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhsrehi,mbrhsrelo,mbrhsimhi,mbrhsimlo,dpr,
           cffrehi,cffrelo,cffimhi,cffimlo,accrehi,accrelo,accimhi,accimlo,
           inputrehi_h,inputrelo_h,inputimhi_h,inputimlo_h,

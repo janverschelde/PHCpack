@@ -1107,7 +1107,7 @@ void GPU_dbl8_bals_solve
    double **solhilohi, double **sollolohi,
    double **solhihilo, double **sollohilo,
    double **solhilolo, double **sollololo,
-   bool *noqr, int *upidx, int *bsidx, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -1115,6 +1115,8 @@ void GPU_dbl8_bals_solve
    int skipupcnt = 0; // counts the skipped updates
    int skipbscnt = 0; // counts the skipped substitutions
    double prevnorm = 1.0e+99;
+   bool firstbs = true; // at the first back substitution
+   *newtail = degp1; // in case no back substitution happens
 
    double *bhihihi = new double[nrows];
    double *blohihi = new double[nrows];
@@ -1362,6 +1364,16 @@ void GPU_dbl8_bals_solve
       {
          prevnorm = 1.0e+8; // nrm*1.0e+8;
 
+         if(vrblvl > 0)
+            cout << "-> run backsubstitution for x[" << stage << "] ..."
+                 << endl;
+
+         if(firstbs)
+         {
+            *newtail = stage;
+            firstbs = false;
+         }
+
          double bstimelapsed_d;
          double elapsedms,invlapsed,mullapsed,sublapsed;
          long long int bsaddcnt = 0;
@@ -1505,7 +1517,7 @@ void GPU_cmplx8_bals_solve
    double **solimhilohi, double **solimlolohi,
    double **solimhihilo, double **solimlohilo, 
    double **solimhilolo, double **solimlololo,
-   bool *noqr, int *upidx, int *bsidx, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -1513,6 +1525,8 @@ void GPU_cmplx8_bals_solve
    int skipupcnt = 0; // counts the skipped updates
    int skipbscnt = 0; // counts the skipped substitutions
    double prevnorm = 1.0e+99;
+   bool firstbs = true; // at the first back substitution
+   *newtail = degp1; // in case no back substitution happens
 
    double *brehihihi = new double[nrows];
    double *brelohihi = new double[nrows];
@@ -1907,6 +1921,16 @@ void GPU_cmplx8_bals_solve
       else
       {
          prevnorm = 1.0e+8; // nrm*1.0e+8;
+
+         if(vrblvl > 0)
+            cout << "-> run backsubstitutions for x[" << stage << "] ..."
+                 << endl;
+
+         if(firstbs)
+         {
+            *newtail = stage;
+            firstbs = false;
+         }
 
          double bstimelapsed_d;
          double elapsedms,invlapsed,mullapsed,sublapsed;

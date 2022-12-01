@@ -24,7 +24,7 @@
 using namespace std;
 
 void dbl8_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int tailidx_d,
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbhihihi, double **mblohihi, double **mbhilohi, double **mblolohi,
    double **mbhihilo, double **mblohilo, double **mbhilolo, double **mblololo,
@@ -367,8 +367,12 @@ void dbl8_newton_qrstep
          }
  
       if(vrblvl > 0) cout << "calling GPU_dbl8_bals_solve ..." << endl;
+
+      int oldtail = *tailidx_d;
+      int newtail = oldtail;
+
       GPU_dbl8_bals_solve
-         (dim,degp1,szt,nbt,tailidx_d,
+         (dim,degp1,szt,nbt,oldtail,
           jacvalhihihi_d,jacvallohihi_d,jacvalhilohi_d,jacvallolohi_d,
           jacvalhihilo_d,jacvallohilo_d,jacvalhilolo_d,jacvallololo_d,
           Qhihihi_d,Qlohihi_d,Qhilohi_d,Qlolohi_d,
@@ -379,7 +383,9 @@ void dbl8_newton_qrstep
           urhshihilo_d,urhslohilo_d,urhshilolo_d,urhslololo_d,
           solhihihi_d,sollohihi_d,solhilohi_d,sollolohi_d,
           solhihilo_d,sollohilo_d,solhilolo_d,sollololo_d,
-          noqr_d,upidx_d,bsidx_d,vrblvl);
+          noqr_d,upidx_d,bsidx_d,&newtail,vrblvl);
+
+      *tailidx_d = newtail;
 
       if(vrblvl > 0)
       {
@@ -405,7 +411,7 @@ void dbl8_newton_qrstep
          cout << "maximum residual : " << *resmaxhihihi << endl;
       }
       dbl8_update_series
-         (dim,degp1,tailidx_d-1,
+         (dim,degp1,*tailidx_d-1,
           inputhihihi_d,inputlohihi_d,inputhilohi_d,inputlolohi_d,
           inputhihilo_d,inputlohilo_d,inputhilolo_d,inputlololo_d,
           solhihihi_d,sollohihi_d,solhilohi_d,sollolohi_d,
@@ -1296,7 +1302,7 @@ int test_dbl8_real_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       dbl8_newton_qrstep
-         (szt,nbt,dim,wrkdeg,&tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,&tailidx_h,&tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhshihihi,mbrhslohihi,mbrhshilohi,mbrhslolohi,
           mbrhshihilo,mbrhslohilo,mbrhshilolo,mbrhslololo,dpr,
           cffhihihi,cfflohihi,cffhilohi,cfflolohi,

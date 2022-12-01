@@ -343,7 +343,7 @@ void GPU_cmplx_bals_qhb
 void GPU_dbl_bals_solve
  ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***mat, double **Q, double **R, double **rhs, double **sol,
-   bool *noqr, int *upidx, int *bsidx, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -351,6 +351,8 @@ void GPU_dbl_bals_solve
    int skipupcnt = 0; // counts skipped updates
    int skipbscnt = 0; // counts skipped back substitutions
    double prevnorm = 1.0e+99;
+   bool firstbs = true; // at the first back substitution
+   *newtail = degp1; // in case no back substitution happens
 
    double *b = new double[nrows];
    double *x = new double[ncols];
@@ -464,14 +466,22 @@ void GPU_dbl_bals_solve
          skipbscnt = skipbscnt + 1;
 
          if(vrblvl > 0)
-            cout << "skip backsubstitution for x[" << stage << "] ..."
-                 << endl;
+            cout << "skip backsubstitution for x[" << stage << "] ..." << endl;
 
          for(int i=0; i<ncols; i++) x[i] = 0.0;
       }
       else
       {
          prevnorm = 1.0e+8; // nrm*1.0e+8;
+
+         if(vrblvl > 0)
+            cout << "run backsubstitution for x[" << stage << "] ..." << endl;
+
+         if(firstbs)
+         {
+            *newtail = stage;
+            firstbs = false;
+         }
 
          double bstimelapsed_d;
          double elapsedms,invlapsed,mullapsed,sublapsed;
@@ -531,7 +541,7 @@ void GPU_cmplx_bals_solve
    double ***matre, double ***matim, double **Qre, double **Qim,
    double **Rre, double **Rim, double **rhsre, double **rhsim,
    double **solre, double **solim,
-   bool *noqr, int *upidx, int *bsidx, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -539,6 +549,8 @@ void GPU_cmplx_bals_solve
    int skipupcnt = 0; // counts skipped updates
    int skipbscnt = 0; // counts skipped backsubstitutions
    double prevnorm = 1.0e+99;
+   bool firstbs = true; // at the first back substitution
+   *newtail = degp1; // in case no back substitution happens
 
    double *bre = new double[nrows];
    double *bim = new double[nrows];
@@ -692,6 +704,16 @@ void GPU_cmplx_bals_solve
       else
       {
          prevnorm = 1.0e+8; // nrm*1.0e+8;
+
+         if(vrblvl > 0)
+            cout << "-> run backsubstitutions for x[" << stage << "] ..."
+                 << endl;
+
+         if(firstbs)
+         {
+            *newtail = stage;
+            firstbs = false;
+         }
 
          double bstimelapsed_d;
          double elapsedms,invlapsed,mullapsed,sublapsed;

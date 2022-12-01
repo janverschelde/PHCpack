@@ -24,7 +24,7 @@
 using namespace std;
 
 void dbl4_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int tailidx_d,
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbhihi, double **mblohi, double **mbhilo, double **mblolo,
    double dpr,
@@ -252,13 +252,18 @@ void dbl4_newton_qrstep
  
       if(vrblvl > 0) cout << "calling GPU_dbl4_bals_solve ..." << endl;
 
+      int oldtail = *tailidx_d;
+      int newtail = oldtail;
+
       GPU_dbl4_bals_solve
-         (dim,degp1,szt,nbt,tailidx_d,
+         (dim,degp1,szt,nbt,oldtail,
           jacvalhihi_d,jacvallohi_d,jacvalhilo_d,jacvallolo_d,
           Qhihi_d,Qlohi_d,Qhilo_d,Qlolo_d,Rhihi_d,Rlohi_d,Rhilo_d,Rlolo_d,
           urhshihi_d,urhslohi_d,urhshilo_d,urhslolo_d,
           solhihi_d,sollohi_d,solhilo_d,sollolo_d,
-          noqr_d,upidx_d,bsidx_d,vrblvl);
+          noqr_d,upidx_d,bsidx_d,&newtail,vrblvl);
+
+      *tailidx_d = newtail;
 
       if(vrblvl > 0)
       {
@@ -280,7 +285,7 @@ void dbl4_newton_qrstep
          cout << "maximum residual : " << *resmaxhihi << "  " << endl;
       }
       dbl4_update_series
-         (dim,degp1,tailidx_d-1,
+         (dim,degp1,*tailidx_d-1,
           inputhihi_d,inputlohi_d,inputhilo_d,inputlolo_d,
           solhihi_d,sollohi_d,solhilo_d,sollolo_d,vrblvl);
    }
@@ -871,7 +876,7 @@ int test_dbl4_real_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       dbl4_newton_qrstep
-         (szt,nbt,dim,wrkdeg,&tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,&tailidx_h,&tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhshihi,mbrhslohi,mbrhshilo,mbrhslolo,dpr,
           cffhihi,cfflohi,cffhilo,cfflolo,acchihi,acclohi,acchilo,acclolo,
           inputhihi_h,inputlohi_h,inputhilo_h,inputlolo_h,
