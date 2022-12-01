@@ -24,7 +24,7 @@
 using namespace std;
 
 void dbl8_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbhihihi, double **mblohihi, double **mbhilohi, double **mblolohi,
    double **mbhihilo, double **mblohilo, double **mbhilolo, double **mblololo,
@@ -295,8 +295,12 @@ void dbl8_newton_qrstep
          }
  
       if(vrblvl > 0) cout << "calling CPU_dbl8_qrbs_solve ..." << endl;
+
+      int oldtail = *tailidx_h;
+      int newtail = oldtail;
+
       CPU_dbl8_qrbs_solve
-         (dim,degp1,tailidx_h,
+         (dim,degp1,oldtail,
           jacvalhihihi_h,jacvallohihi_h,jacvalhilohi_h,jacvallolohi_h,
           jacvalhihilo_h,jacvallohilo_h,jacvalhilolo_h,jacvallololo_h,
           urhshihihi_h,urhslohihi_h,urhshilohi_h,urhslolohi_h,
@@ -309,7 +313,9 @@ void dbl8_newton_qrstep
           Rhihilo_h,Rlohilo_h,Rhilolo_h,Rlololo_h,
           workvechihihi,workveclohihi,workvechilohi,workveclolohi,
           workvechihilo,workveclohilo,workvechilolo,workveclololo,
-          noqr_h,upidx_h,bsidx_h,vrblvl);
+          noqr_h,upidx_h,bsidx_h,&newtail,vrblvl);
+
+      *tailidx_h = newtail;
 
       if(vrblvl > 0)
       {
@@ -330,7 +336,7 @@ void dbl8_newton_qrstep
          cout << "maximum residual : " << *resmaxhihihi << endl;
       }
       dbl8_update_series
-         (dim,degp1,tailidx_h-1,
+         (dim,degp1,*tailidx_h-1,
           inputhihihi_h,inputlohihi_h,inputhilohi_h,inputlolohi_h,
           inputhihilo_h,inputlohilo_h,inputhilolo_h,inputlololo_h,
           solhihihi_h,sollohihi_h,solhilohi_h,sollolohi_h,
@@ -1290,7 +1296,7 @@ int test_dbl8_real_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       dbl8_newton_qrstep
-         (szt,nbt,dim,wrkdeg,tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,&tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhshihihi,mbrhslohihi,mbrhshilohi,mbrhslolohi,
           mbrhshihilo,mbrhslohilo,mbrhshilolo,mbrhslololo,dpr,
           cffhihihi,cfflohihi,cffhilohi,cfflolohi,
@@ -1342,10 +1348,11 @@ int test_dbl8_real_newton
           &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
 
       if(vrblvl > 0)
-         cout << "upidx_h : " << upidx_h << "  bsidx_h : " << bsidx_h
-              << "  upidx_d : " << upidx_d << "  bsidx_d : " << bsidx_d
-              << "  deg : " << deg
-              << "  wrkdeg : " << wrkdeg << endl;
+         cout << "up_h : " << upidx_h << "  bs_h : " << bsidx_h
+              << "  tail_h : " << tailidx_h
+              << "  up_d : " << upidx_d << "  bs_d : " << bsidx_d
+              << "  tail_d : " << tailidx_d
+              << "  wdeg : " << wrkdeg << endl;
 
       if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
       if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;

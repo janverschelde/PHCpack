@@ -5,7 +5,7 @@
 #define __cmplx_newton_method_h__
 
 void cmplx_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbre, double **mbim, double dpr,
    double **cffre, double **cffim, double *accre, double *accim,
@@ -107,6 +107,7 @@ void cmplx_newton_qrstep
  *   mode      execution mode, 0 (GPU only), 1 (CPU only) or 2 (GPU+CPU).
  *
  * ON RETURN :
+ *   tailidx_h is the new value for tailidx_h;
  *   inputre_h has real parts of series, on host (depending on mode);
  *   inputim_h has imaginary parts of series, on host (depending on mode);
  *   inputre_d has real parts of series, on device (depending on mode);

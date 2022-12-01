@@ -154,12 +154,14 @@ void CPU_cmplx_qrbs_head
 void CPU_dbl_qrbs_tail
  ( int dim, int degp1, int tailidx, double ***mat, double **rhs, double **sol,
    double **Q, double **R, double *wrkvec, int *upidx, int *bsidx,
-   int vrblvl )
+   int *newtail, int vrblvl )
 {
    double nrm;
    int skipupcnt = 0; // counts updates skipped
    int skipbscnt = 0; // counts backsubstitutions skipped
    double prevnorm = 1.0e+99; // previous norm
+   bool firstbs = true; // at the first back substitution
+   *newtail = degp1; // in case no back substitution happens
 
    for(int i=tailidx; i<degp1; i++)
    {
@@ -202,8 +204,7 @@ void CPU_dbl_qrbs_tail
          skipbscnt = skipbscnt + 1;
 
          if(vrblvl > 0)
-            cout << "-> skip backsubstitution for x[" << i << "] ..."
-                 << endl;
+            cout << "-> skip backsubstitution for x[" << i << "] ..." << endl;
 
          for(int j=0; j<dim; j++) x[j] = 0.0;
       }
@@ -212,9 +213,13 @@ void CPU_dbl_qrbs_tail
          prevnorm = 1.0e+8; // nrm*1.0e+8;
 
          if(vrblvl > 0)
-            cout << "-> run backsubstitution for x[" << i << "] ..."
-                 << endl;
+            cout << "-> run backsubstitution for x[" << i << "] ..." << endl;
 
+         if(firstbs)
+         {
+            *newtail = i;
+            firstbs = false;
+         }
          CPU_dbl_factors_qrbs(dim,dim,Q,R,b,x,wrkvec);
 
          if(vrblvl > 1)
@@ -240,12 +245,15 @@ void CPU_cmplx_qrbs_tail
  ( int dim, int degp1, int tailidx, double ***matre, double ***matim,
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **Qre, double **Qim, double **Rre, double **Rim,
-   double *wrkvecre, double *wrkvecim, int *upidx, int *bsidx, int vrblvl )
+   double *wrkvecre, double *wrkvecim, int *upidx, int *bsidx, int *newtail,
+   int vrblvl )
 {
    double nrm,zre,zim;
    int skipupcnt = 0; // counts skipped updates
    int skipbscnt = 0; // counts skipped backsubstitutions
    double prevnorm = 1.0e+99;
+   bool firstbs = true; // at the first back substitution
+   *newtail = degp1; // in case no back substitution happens
 
    for(int i=tailidx; i<degp1; i++)
    {
@@ -315,9 +323,13 @@ void CPU_cmplx_qrbs_tail
          prevnorm = 1.0e+8; // nrm*1.0e+8;;
 
          if(vrblvl > 0)
-            cout << "-> run backsubstitution for x[" << i << "] ..."
-                 << endl;
+            cout << "-> run backsubstitution for x[" << i << "] ..." << endl;
 
+         if(firstbs)
+         {
+            *newtail = i;
+            firstbs = false;
+         }
          CPU_cmplx_factors_qrbs
             (dim,dim,Qre,Qim,Rre,Rim,bre,bim,xre,xim,wrkvecre,wrkvecim);
 
@@ -345,7 +357,7 @@ void CPU_cmplx_qrbs_tail
 void CPU_dbl_qrbs_solve
  ( int dim, int degp1, int tailidx, double ***mat, double **rhs, double **sol,
    double **Q, double **R, double *wrkvec,
-   bool *noqr, int *upidx, int *bsidx, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
 {
    if(*noqr)
    {
@@ -363,7 +375,7 @@ void CPU_dbl_qrbs_solve
       if(vrblvl > 0) cout << "calling CPU_dbl_qrbs_tail ..." << endl;
 
       CPU_dbl_qrbs_tail
-         (dim,degp1,tailidx,mat,rhs,sol,Q,R,wrkvec,upidx,bsidx,vrblvl);
+         (dim,degp1,tailidx,mat,rhs,sol,Q,R,wrkvec,upidx,bsidx,newtail,vrblvl);
    }
 }
 
@@ -372,7 +384,7 @@ void CPU_cmplx_qrbs_solve
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **Qre, double **Qim, double **Rre, double **Rim,
    double *wrkvecre, double *wrkvecim,
-   bool *noqr, int *upidx, int *bsidx, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
 {
    if(*noqr)
    {
@@ -392,7 +404,7 @@ void CPU_cmplx_qrbs_solve
 
       CPU_cmplx_qrbs_tail
          (dim,degp1,tailidx,matre,matim,rhsre,rhsim,solre,solim,
-          Qre,Qim,Rre,Rim,wrkvecre,wrkvecim,upidx,bsidx,vrblvl);
+          Qre,Qim,Rre,Rim,wrkvecre,wrkvecim,upidx,bsidx,newtail,vrblvl);
    }
 }
 

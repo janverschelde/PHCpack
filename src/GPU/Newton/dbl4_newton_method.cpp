@@ -24,7 +24,7 @@
 using namespace std;
 
 void dbl4_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbhihi, double **mblohi, double **mbhilo, double **mblolo,
    double dpr,
@@ -199,14 +199,20 @@ void dbl4_newton_qrstep
          }
  
       if(vrblvl > 0) cout << "calling CPU_dbl4_qrbs_solve ..." << endl;
+
+      int oldtail = *tailidx_h;
+      int newtail = oldtail;
+
       CPU_dbl4_qrbs_solve
-         (dim,degp1,tailidx_h,
+         (dim,degp1,oldtail,
           jacvalhihi_h,jacvallohi_h,jacvalhilo_h,jacvallolo_h,
           urhshihi_h,urhslohi_h,urhshilo_h,urhslolo_h,
           solhihi_h,sollohi_h,solhilo_h,sollolo_h,
           Qhihi_h,Qlohi_h,Qhilo_h,Qlolo_h,Rhihi_h,Rlohi_h,Rhilo_h,Rlolo_h,
           workvechihi,workveclohi,workvechilo,workveclolo,
-          noqr_h,upidx_h,bsidx_h,vrblvl);
+          noqr_h,upidx_h,bsidx_h,&newtail,vrblvl);
+
+      *tailidx_h = newtail;
 
       if(vrblvl > 0)
       {
@@ -222,7 +228,7 @@ void dbl4_newton_qrstep
          cout << "maximum residual : " << *resmaxhihi << endl;
       }
       dbl4_update_series
-         (dim,degp1,tailidx_h-1,
+         (dim,degp1,*tailidx_h-1,
           inputhihi_h,inputlohi_h,inputhilo_h,inputlolo_h,
           solhihi_h,sollohi_h,solhilo_h,sollolo_h,vrblvl);
    }
@@ -865,7 +871,7 @@ int test_dbl4_real_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       dbl4_newton_qrstep
-         (szt,nbt,dim,wrkdeg,tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,&tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhshihi,mbrhslohi,mbrhshilo,mbrhslolo,dpr,
           cffhihi,cfflohi,cffhilo,cfflolo,acchihi,acclohi,acchilo,acclolo,
           inputhihi_h,inputlohi_h,inputhilo_h,inputlolo_h,
@@ -891,10 +897,11 @@ int test_dbl4_real_newton
           &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
 
       if(vrblvl > 0)
-         cout << "upidx_h : " << upidx_h << "  bsidx_h : " << bsidx_h
-              << "  upidx_d : " << upidx_d << "  bsidx_d : " << bsidx_d
-              << "  deg : " << deg
-              << "  wrkdeg : " << wrkdeg << endl;
+         cout << "up_h : " << upidx_h << "  bs_h : " << bsidx_h
+              << "  tail_h : " << tailidx_h
+              << "  up_d : " << upidx_d << "  bs_d : " << bsidx_d
+              << "  tail_d : " << tailidx_d
+              << "  wdeg : " << wrkdeg << endl;
 
       if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
       if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;

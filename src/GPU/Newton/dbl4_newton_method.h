@@ -5,7 +5,7 @@
 #define __dbl4_newton_method_h__
 
 void dbl4_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, 
    double **mbhihi, double **mblohi, double **mbhilo, double **mblolo,
    double dpr,
@@ -190,6 +190,7 @@ void dbl4_newton_qrstep
  *   mode      execution mode, 0 (GPU only), 1 (CPU only) or 2 (GPU+CPU).
  *
  * ON RETURN :
+ *   tailidx_h is the new value for tailidx_h;
  *   inputhihi_h has highest doubles of series computed on host (mode 1, 2);
  *   inputlohi_h has second highest doubles of series computed on host;
  *   inputhilo_h has second lowest doubles of series computed on host;

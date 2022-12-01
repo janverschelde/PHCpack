@@ -5,7 +5,7 @@
 #define __dbl2_newton_method_h__
 
 void dbl2_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbhi, double **mblo, double dpr,
    double **cffhi, double **cfflo, double *acchi, double *acclo,
@@ -107,6 +107,7 @@ void dbl2_newton_qrstep
  *   mode      execution mode, 0 (GPU only), 1 (CPU only) or 2 (GPU+CPU).
  *
  * ON RETURN :
+ *   tailidx_h is the updated value for tailidx_h;
  *   inputhi_h has high doubles of series computed on host (mode 1 or 2);
  *   inputlo_h has low doubles of series computed on host (mode 1 or 2);
  *   inputhi_d has high doubles of series, computed by device (mode 0 or 2);

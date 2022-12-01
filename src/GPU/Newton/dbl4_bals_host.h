@@ -198,7 +198,7 @@ void CPU_dbl4_qrbs_tail
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo,
    double *wrkvechihi, double *wrkveclohi,
    double *wrkvechilo, double *wrkveclolo,
-   int *upidx, int *bsidx, int vrblvl );
+   int *upidx, int *bsidx, int *newtail, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the trailing terms of the power series solution
@@ -249,7 +249,8 @@ void CPU_dbl4_qrbs_tail
  *   solhilo  second lowest doubles of all coefficients of the solution;
  *   sollolo  lowest doubles of all coefficients of the solution;
  *   upidx    counts the number of updates skipped;
- *   bsidx    counts the number of backsubstitutions skipped. */
+ *   bsidx    counts the number of backsubstitutions skipped;
+ *   newtail  the new value for tailidx. */
 
 void CPU_cmplx4_qrbs_tail
  ( int dim, int degp1, int tailidx,
@@ -273,7 +274,7 @@ void CPU_cmplx4_qrbs_tail
    double *wrkvecrehilo, double *wrkvecrelolo,
    double *wrkvecimhihi, double *wrkvecimlohi,
    double *wrkvecimhilo, double *wrkvecimlolo,
-   int *upidx, int *bsidx, int vrblvl );
+   int *upidx, int *bsidx, int *newtail, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the trailing terms of the power series solution
@@ -360,7 +361,8 @@ void CPU_cmplx4_qrbs_tail
  *   solimhilo are the 2nd lowest doubles of the imag parts of the solution;
  *   solimlolo are the lowest doubles of the imaginary parts of the solution;
  *   upidx    counts the number of updates skipped;
- *   bsidx    counts the number of backsubstitutions skipped. */
+ *   bsidx    counts the number of backsubstitutions skipped;
+ *   newtail  the new value for tailidx. */
 
 void CPU_dbl4_qrbs_solve
  ( int dim, int degp1, int tailidx,
@@ -371,7 +373,7 @@ void CPU_dbl4_qrbs_solve
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo,
    double *wrkvechihi, double *wrkveclohi,
    double *wrkvechilo, double *wrkveclolo,
-   bool *noqr, int *upidx, int *bsidx, int vrblvl );
+   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -427,7 +429,8 @@ void CPU_dbl4_qrbs_solve
  *   sollolo  lowest double coefficients of the solution series;
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
- *   bsidx    counts the number of backsubstitutions skipped. */
+ *   bsidx    counts the number of backsubstitutions skipped;
+ *   newtail  the new value for tailidx. */
 
 void CPU_cmplx4_qrbs_solve
  ( int dim, int degp1, int tailidx,
@@ -451,7 +454,7 @@ void CPU_cmplx4_qrbs_solve
    double *wrkvecrehilo, double *wrkvecrelolo,
    double *wrkvecimhihi, double *wrkvecimlohi,
    double *wrkvecimhilo, double *wrkvecimlolo,
-   bool *noqr, int *upidx, int *bsidx, int vrblvl );
+   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -547,7 +550,8 @@ void CPU_cmplx4_qrbs_solve
  *   solimlolo are the lowest doubles of the imag parts of the solution;
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
- *   bsidx    counts the number of backsubstitutions skipped. */
+ *   bsidx    counts the number of backsubstitutions skipped;
+ *   newtail  the new value for tailidx. */
 
 void CPU_dbl4_linear_residue
  ( int dim, int degp1,

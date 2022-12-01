@@ -22,7 +22,7 @@
 using namespace std;
 
 void cmplx_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbre, double **mbim, double dpr,
    double **cffre, double **cffim, double *accre, double *accim,
@@ -151,10 +151,15 @@ void cmplx_newton_qrstep
       if(vrblvl > 0)
          cout << "calling CPU_cmplx_qrbs_solve ..." << endl;
 
+      int oldtail = *tailidx_h;
+      int newtail = oldtail;
+
       CPU_cmplx_qrbs_solve
-         (dim,degp1,tailidx_h,jacvalre_h,jacvalim_h,urhsre_h,urhsim_h,
+         (dim,degp1,oldtail,jacvalre_h,jacvalim_h,urhsre_h,urhsim_h,
           solre_h,solim_h,Qre_h,Qim_h,Rre_h,Rim_h,
-          workvecre,workvecim,noqr_h,upidx_h,bsidx_h,vrblvl);
+          workvecre,workvecim,noqr_h,upidx_h,bsidx_h,&newtail,vrblvl);
+
+      *tailidx_h = newtail;
  
       if(vrblvl > 0)
       {
@@ -166,7 +171,7 @@ void cmplx_newton_qrstep
          cout << "maximum residual : " << *resmax << endl;
       }
       cmplx_update_series
-         (dim,degp1,tailidx_h-1,inputre_h,inputim_h,solre_h,solim_h,vrblvl);
+         (dim,degp1,*tailidx_h-1,inputre_h,inputim_h,solre_h,solim_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
@@ -607,7 +612,7 @@ int test_dbl_complex_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       cmplx_newton_qrstep
-         (szt,nbt,dim,wrkdeg,tailidx_h,tailidx_d,
+         (szt,nbt,dim,wrkdeg,&tailidx_h,tailidx_d,
           nvr,idx,exp,nbrfac,expfac,
           mbrhsre,mbrhsim,dpr,cffre,cffim,accre,accim,
           inputre_h,inputim_h,inputre_d,inputim_d,
@@ -622,10 +627,11 @@ int test_dbl_complex_newton
           &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
 
       if(vrblvl > 0)
-         cout << "upidx_h : " << upidx_h << "  bsidx_h : " << bsidx_h
-              << "  upidx_d : " << upidx_d << "  bsidx_d : " << bsidx_d
-              << "  deg : " << deg
-              << "  wrkdeg : " << wrkdeg << endl;
+         cout << "up_h : " << upidx_h << "  bs_h : " << bsidx_h
+              << "  tail_h : " << tailidx_h
+              << "  up_d : " << upidx_d << "  bs_d : " << bsidx_d
+              << "  tail_d : " << tailidx_d
+              << "  wdeg : " << wrkdeg << endl;
 
       if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
       if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;

@@ -24,7 +24,7 @@
 using namespace std;
 
 void cmplx8_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbrehihihi, double **mbrelohihi,
    double **mbrehilohi, double **mbrelolohi,
@@ -486,8 +486,12 @@ void cmplx8_newton_qrstep
          }
 
       if(vrblvl > 0) cout << "calling CPU_cmplx8_qrbs_solve ..." << endl;
+
+      int oldtail = *tailidx_h;
+      int newtail = oldtail;
+
       CPU_cmplx8_qrbs_solve
-         (dim,degp1,tailidx_h,
+         (dim,degp1,oldtail,
           jacvalrehihihi_h,jacvalrelohihi_h,jacvalrehilohi_h,jacvalrelolohi_h,
           jacvalrehihilo_h,jacvalrelohilo_h,jacvalrehilolo_h,jacvalrelololo_h,
           jacvalimhihihi_h,jacvalimlohihi_h,jacvalimhilohi_h,jacvalimlolohi_h,
@@ -512,7 +516,9 @@ void cmplx8_newton_qrstep
           workvecrehihilo,workvecrelohilo,workvecrehilolo,workvecrelololo,
           workvecimhihihi,workvecimlohihi,workvecimhilohi,workvecimlolohi,
           workvecimhihilo,workvecimlohilo,workvecimhilolo,workvecimlololo,
-          noqr_h,upidx_h,bsidx_h,vrblvl);
+          noqr_h,upidx_h,bsidx_h,&newtail,vrblvl);
+
+      *tailidx_h = newtail;
  
       if(vrblvl > 0)
       {
@@ -546,7 +552,7 @@ void cmplx8_newton_qrstep
          cout << "maximum residual : " << *resmaxhihihi << endl;
       }
       cmplx8_update_series
-         (dim,degp1,tailidx_h-1,
+         (dim,degp1,*tailidx_h-1,
           inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
           inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
           inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
@@ -2133,7 +2139,7 @@ int test_dbl8_complex_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       cmplx8_newton_qrstep
-         (szt,nbt,dim,wrkdeg,tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,&tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhsrehihihi,mbrhsrelohihi,mbrhsrehilohi,mbrhsrelolohi,
           mbrhsrehihilo,mbrhsrelohilo,mbrhsrehilolo,mbrhsrelololo,
           mbrhsimhihihi,mbrhsimlohihi,mbrhsimhilohi,mbrhsimlolohi,
@@ -2231,10 +2237,11 @@ int test_dbl8_complex_newton
           &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
 
       if(vrblvl > 0)
-         cout << "upidx_h : " << upidx_h << "  bsidx_h : " << bsidx_h
-              << "  upidx_d : " << upidx_d << "  bsidx_d : " << bsidx_d
-              << "  deg : " << deg
-              << "  wrkdeg : " << wrkdeg << endl;
+         cout << "up_h : " << upidx_h << "  bs_h : " << bsidx_h
+              << "  tail_h : " << tailidx_h
+              << "  up_d : " << upidx_d << "  bs_d : " << bsidx_d
+              << "  tail_d : " << tailidx_d
+              << "  wdeg : " << wrkdeg << endl;
 
       if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
       if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;

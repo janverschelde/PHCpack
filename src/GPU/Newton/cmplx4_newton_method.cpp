@@ -24,7 +24,7 @@
 using namespace std;
 
 void cmplx4_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int tailidx_h, int tailidx_d,
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int tailidx_d,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **mbrehihi, double **mbrelohi, double **mbrehilo, double **mbrelolo,
    double **mbimhihi, double **mbimlohi, double **mbimhilo, double **mbimlolo,
@@ -297,8 +297,11 @@ void cmplx4_newton_qrstep
       if(vrblvl > 0)
          cout << "calling CPU_cmplx4_qrbs_solve ..." << endl;
 
+      int oldtail = *tailidx_h;
+      int newtail = oldtail;
+
       CPU_cmplx4_qrbs_solve
-         (dim,degp1,tailidx_h,
+         (dim,degp1,oldtail,
           jacvalrehihi_h,jacvalrelohi_h,jacvalrehilo_h,jacvalrelolo_h,
           jacvalimhihi_h,jacvalimlohi_h,jacvalimhilo_h,jacvalimlolo_h,
           urhsrehihi_h,urhsrelohi_h,urhsrehilo_h,urhsrelolo_h,
@@ -311,7 +314,9 @@ void cmplx4_newton_qrstep
           Rimhihi_h,Rimlohi_h,Rimhilo_h,Rimlolo_h,
           workvecrehihi,workvecrelohi,workvecrehilo,workvecrelolo,
           workvecimhihi,workvecimlohi,workvecimhilo,workvecimlolo,
-          noqr_h,upidx_h,bsidx_h,vrblvl);
+          noqr_h,upidx_h,bsidx_h,&newtail,vrblvl);
+
+      *tailidx_h = newtail;
  
       if(vrblvl > 0)
       {
@@ -331,7 +336,7 @@ void cmplx4_newton_qrstep
          cout << "maximum residual : " << *resmaxhihi << endl;
       }
       cmplx4_update_series
-         (dim,degp1,tailidx_h-1,
+         (dim,degp1,*tailidx_h-1,
           inputrehihi_h,inputrelohi_h,inputrehilo_h,inputrelolo_h,
           inputimhihi_h,inputimlohi_h,inputimhilo_h,inputimlolo_h,
           solrehihi_h,solrelohi_h,solrehilo_h,solrelolo_h,
@@ -1270,7 +1275,7 @@ int test_dbl4_complex_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       cmplx4_newton_qrstep
-         (szt,nbt,dim,wrkdeg,tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,&tailidx_h,tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhsrehihi,mbrhsrelohi,mbrhsrehilo,mbrhsrelolo,
           mbrhsimhihi,mbrhsimlohi,mbrhsimhilo,mbrhsimlolo,dpr,
           cffrehihi,cffrelohi,cffrehilo,cffrelolo,
@@ -1321,10 +1326,11 @@ int test_dbl4_complex_newton
           &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
 
       if(vrblvl > 0)
-         cout << "upidx_h : " << upidx_h << "  bsidx_h : " << bsidx_h
-              << "  upidx_d : " << upidx_d << "  bsidx_d : " << bsidx_d
-              << "  deg : " << deg
-              << "  wrkdeg : " << wrkdeg << endl;
+         cout << "up_h : " << upidx_h << "  bs_h : " << bsidx_h
+              << "  tail_h : " << tailidx_h
+              << "  up_d : " << upidx_d << "  bs_d : " << bsidx_d
+              << "  tail_d : " << tailidx_d
+              << "  wdeg : " << wrkdeg << endl;
 
       if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
       if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;

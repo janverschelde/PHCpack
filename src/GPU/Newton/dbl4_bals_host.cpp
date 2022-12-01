@@ -280,12 +280,14 @@ void CPU_dbl4_qrbs_tail
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo,
    double *wrkvechihi, double *wrkveclohi,
    double *wrkvechilo, double *wrkveclolo,
-   int *upidx, int *bsidx, int vrblvl )
+   int *upidx, int *bsidx, int *newtail, int vrblvl )
 {
    double nrm,acchihi,acclohi,acchilo,acclolo;
    int skipupcnt = 0; // counts the skipped updates
    int skipbscnt = 0; // counts the skipped backsubstitutions
    double prevnorm = 1.0e+99;
+   bool firstbs = true; // at the first back substitution
+   *newtail = degp1; // in case no back substitution happens
 
    for(int i=tailidx; i<degp1; i++)
    {
@@ -350,8 +352,7 @@ void CPU_dbl4_qrbs_tail
          skipbscnt = skipbscnt + 1;
 
          if(vrblvl > 0)
-            cout << "-> skip backsubstitution for x[" << i << "] ..."
-                 << endl;
+            cout << "-> skip backsubstitution for x[" << i << "] ..." << endl;
 
          for(int j=0; j<dim; j++)
          {
@@ -364,9 +365,13 @@ void CPU_dbl4_qrbs_tail
          prevnorm = 1.0e+8; // nrm*1.0e+8;
 
          if(vrblvl > 0)
-            cout << "-> run backsubstitution for x[" << i << "] ..."
-                 << endl;
+            cout << "-> run backsubstitution for x[" << i << "] ..." << endl;
 
+         if(firstbs)
+         {
+            *newtail = i;
+            firstbs = false;
+         }
          CPU_dbl4_factors_qrbs
             (dim,dim,Qhihi,Qlohi,Qhilo,Qlolo,Rhihi,Rlohi,Rhilo,Rlolo,
              bhihi,blohi,bhilo,blolo,xhihi,xlohi,xhilo,xlolo,
@@ -417,12 +422,14 @@ void CPU_cmplx4_qrbs_tail
    double *wrkvecrehilo, double *wrkvecrelolo,
    double *wrkvecimhihi, double *wrkvecimlohi,
    double *wrkvecimhilo, double *wrkvecimlolo,
-   int *upidx, int *bsidx, int vrblvl )
+   int *upidx, int *bsidx, int *newtail, int vrblvl )
 {
    double nrm,acchihi,acclohi,acchilo,acclolo;
    int skipupcnt = 0; // counts the skipped updates
    int skipbscnt = 0; // counts the skipped backsubstitutions
    double prevnorm = 1.0e+99;
+   bool firstbs = true; // at the first back substitution
+   *newtail = degp1; // in case no back substitution happens
 
    for(int i=tailidx; i<degp1; i++)
    {
@@ -535,8 +542,7 @@ void CPU_cmplx4_qrbs_tail
          skipbscnt = skipbscnt + 1;
 
          if(vrblvl > 0)
-            cout << "-> skip backsubstitution for x[" << i << "] ..."
-                 << endl;
+            cout << "-> skip backsubstitution for x[" << i << "] ..." << endl;
 
          for(int j=0; j<dim; j++)
          {
@@ -551,9 +557,13 @@ void CPU_cmplx4_qrbs_tail
          prevnorm = 1.0e+8; // nrm*1.0e+8;
 
          if(vrblvl > 0)
-            cout << "-> run backsubstitution for x[" << i << "] ..."
-                 << endl;
+            cout << "-> run backsubstitution for x[" << i << "] ..." << endl;
 
+         if(firstbs)
+         {
+            *newtail = i;
+            firstbs = false;
+         }
          CPU_cmplx4_factors_qrbs
             (dim,dim,Qrehihi,Qrelohi,Qrehilo,Qrelolo,
                      Qimhihi,Qimlohi,Qimhilo,Qimlolo,
@@ -602,7 +612,7 @@ void CPU_dbl4_qrbs_solve
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo,
    double *wrkvechihi, double *wrkveclohi,
    double *wrkvechilo, double *wrkveclolo,
-   bool *noqr, int *upidx, int *bsidx, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
 {
    if(*noqr)
    {
@@ -626,7 +636,8 @@ void CPU_dbl4_qrbs_solve
          (dim,degp1,tailidx,mathihi,matlohi,mathilo,matlolo,
           rhshihi,rhslohi,rhshilo,rhslolo,solhihi,sollohi,solhilo,sollolo,
           Qhihi,Qlohi,Qhilo,Qlolo,Rhihi,Rlohi,Rhilo,Rlolo,
-          wrkvechihi,wrkveclohi,wrkvechilo,wrkveclolo,upidx,bsidx,vrblvl);
+          wrkvechihi,wrkveclohi,wrkvechilo,wrkveclolo,
+          upidx,bsidx,newtail,vrblvl);
    }
 }
 
@@ -652,7 +663,7 @@ void CPU_cmplx4_qrbs_solve
    double *wrkvecrehilo, double *wrkvecrelolo,
    double *wrkvecimhihi, double *wrkvecimlohi,
    double *wrkvecimhilo, double *wrkvecimlolo,
-   bool *noqr, int *upidx, int *bsidx, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
 {
    if(*noqr)
    {
@@ -690,7 +701,7 @@ void CPU_cmplx4_qrbs_solve
           Rrehihi,Rrelohi,Rrehilo,Rrelolo,Rimhihi,Rimlohi,Rimhilo,Rimlolo,
           wrkvecrehihi,wrkvecrelohi,wrkvecrehilo,wrkvecrelolo,
           wrkvecimhihi,wrkvecimlohi,wrkvecimhilo,wrkvecimlolo,
-          upidx,bsidx,vrblvl);
+          upidx,bsidx,newtail,vrblvl);
    }
 }
 
