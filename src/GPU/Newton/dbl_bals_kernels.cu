@@ -471,7 +471,7 @@ void GPU_dbl_bals_solve
       }
       else
       {
-         prevnorm = nrm*1.0e+8;
+         prevnorm = 1.0e+8; // nrm*1.0e+8;
 
          double bstimelapsed_d;
          double elapsedms,invlapsed,mullapsed,sublapsed;
@@ -691,7 +691,7 @@ void GPU_cmplx_bals_solve
       }
       else
       {
-         prevnorm = nrm*1.0e+8;
+         prevnorm = 1.0e+8; // nrm*1.0e+8;
 
          double bstimelapsed_d;
          double elapsedms,invlapsed,mullapsed,sublapsed;
