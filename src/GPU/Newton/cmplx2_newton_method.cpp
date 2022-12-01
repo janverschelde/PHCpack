@@ -223,7 +223,7 @@ void cmplx2_newton_qrstep
          cout << "maximum residual : " << *resmaxhi << endl;
       }
       cmplx2_update_series
-         (dim,degp1,
+         (dim,degp1,tailidx_h-1,
           inputrehi_h,inputrelo_h,inputimhi_h,inputimlo_h,
           solrehi_h,solrelo_h,solimhi_h,solimlo_h,vrblvl);
    }
@@ -274,7 +274,8 @@ void cmplx2_newton_qrstep
          cout << "maximum residual : " << *resmaxhi << endl;
       }
       cmplx2_update_series
-         (dim,degp1,inputrehi_d,inputrelo_d,inputimhi_d,inputimlo_d,
+         (dim,degp1,tailidx_d-1,
+          inputrehi_d,inputrelo_d,inputimhi_d,inputimlo_d,
           solrehi_d,solrelo_d,solimhi_d,solimlo_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))

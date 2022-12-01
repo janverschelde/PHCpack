@@ -166,7 +166,7 @@ void cmplx_newton_qrstep
          cout << "maximum residual : " << *resmax << endl;
       }
       cmplx_update_series
-         (dim,degp1,inputre_h,inputim_h,solre_h,solim_h,vrblvl);
+         (dim,degp1,tailidx_h-1,inputre_h,inputim_h,solre_h,solim_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
@@ -205,7 +205,7 @@ void cmplx_newton_qrstep
          cout << "maximum residual : " << *resmax << endl;
       }
       cmplx_update_series
-         (dim,degp1,inputre_d,inputim_d,solre_d,solim_d,vrblvl);
+         (dim,degp1,tailidx_d-1,inputre_d,inputim_d,solre_d,solim_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))
    {

@@ -124,7 +124,7 @@ void cmplx4_unit_series_vector
 }
 
 void dbl4_update_series
- ( int dim, int degp1,
+ ( int dim, int degp1, int startidx,
    double **xhihi, double **xlohi, double **xhilo, double **xlolo,
    double **dxhihi, double **dxlohi, double **dxhilo, double **dxlolo,
    int vrblvl )
@@ -146,7 +146,7 @@ void dbl4_update_series
       }
    }
    // The update dx is linearized, the series x is not.
-   for(int j=0; j<degp1; j++) 
+   for(int j=startidx; j<degp1; j++) 
       for(int i=0; i<dim; i++) // x[i][j] = x[i][j] + dx[j][i];
       {
          qdf_inc(&xhihi[i][j],&xlohi[i][j],&xhilo[i][j],&xlolo[i][j],
@@ -170,7 +170,7 @@ void dbl4_update_series
 }
 
 void cmplx4_update_series
- ( int dim, int degp1,
+ ( int dim, int degp1, int startidx,
    double **xrehihi, double **xrelohi, double **xrehilo, double **xrelolo,
    double **ximhihi, double **ximlohi, double **ximhilo, double **ximlolo,
    double **dxrehihi, double **dxrelohi, double **dxrehilo, double **dxrelolo,
@@ -194,7 +194,7 @@ void cmplx4_update_series
       }
    }
    // The update dx is linearized, the series x is not.
-   for(int j=0; j<degp1; j++) 
+   for(int j=startidx; j<degp1; j++) 
       for(int i=0; i<dim; i++)
       {
          // xre[i][j] = xre[i][j] + dxre[j][i];

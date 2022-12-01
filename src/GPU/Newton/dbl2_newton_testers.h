@@ -45,7 +45,7 @@ void cmplx2_unit_series_vector
  *   returns the values for a complex unit series. */
 
 void dbl2_update_series
- ( int dim, int degp1, double **xhi, double **xlo,
+ ( int dim, int degp1, int startidx, double **xhi, double **xlo,
    double **dxhi, double **dxlo, int vrblvl );
 /*
  * DESCRIPTION :
@@ -54,6 +54,7 @@ void dbl2_update_series
  * ON ENTRY :
  *   dim       number of series in x and dx;
  *   degp1     degree plus one of the series;
+ *   startidx  index of the start of the update;
  *   xhi       high doubles of the series to updated, not linearized;
  *   xlo       low doubles of the series to updated, not linearized;
  *   dxhi      linearized high doubles of the update of the series;
@@ -65,7 +66,7 @@ void dbl2_update_series
  *   xlo       low doubles of the series x updated with dx. */
 
 void cmplx2_update_series
- ( int dim, int degp1,
+ ( int dim, int degp1, int startidx,
    double **xrehi, double **xrelo, double **ximhi, double **ximlo,
    double **dxrehi, double **dxrelo, double **dximhi, double **dximlo,
    int vrblvl );
@@ -76,6 +77,7 @@ void cmplx2_update_series
  * ON ENTRY :
  *   dim       number of series in x and dx;
  *   degp1     degree plus one of the series;
+ *   startidx  index of the start of the update;
  *   xrehi     high doubles of the real parts of series, not linearized;
  *   xrelo     low doubles of the real parts of series, not linearized;
  *   ximhi     high doubles of the imaginary parts of series, not linearized;

@@ -90,7 +90,7 @@ void cmplx8_unit_series_vector
  *   returns the values for a complex unit series. */
 
 void dbl8_update_series
- ( int dim, int degp1,
+ ( int dim, int degp1, int startidx,
    double **xhihihi, double **xlohihi, double **xhilohi, double **xlolohi,
    double **xhihilo, double **xlohilo, double **xhilolo, double **xlololo,
    double **dxhihihi, double **dxlohihi, double **dxhilohi, double **dxlolohi,
@@ -103,6 +103,7 @@ void dbl8_update_series
  * ON ENTRY :
  *   dim       number of series in x and dx;
  *   degp1     degree plus one of the series;
+ *   startidx  index of the start of the update;
  *   xhihihi   highest doubles of the series to updated, not linearized;
  *   xlohihi   2nd highest doubles of the series to updated, not linearized;
  *   xlohihi   3rd highest doubles of the series to updated, not linearized;
@@ -132,7 +133,7 @@ void dbl8_update_series
  *   xlololo   lowest doubles of the series x updated with dx. */
 
 void cmplx8_update_series
- ( int dim, int degp1,
+ ( int dim, int degp1, int startidx,
    double **xrehihihi, double **xrelohihi,
    double **xrehilohi, double **xrelolohi,
    double **xrehihilo, double **xrelohilo,
@@ -156,6 +157,7 @@ void cmplx8_update_series
  * ON ENTRY :
  *   dim       number of series in x and dx;
  *   degp1     degree plus one of the series;
+ *   startidx  index of the start of the update;
  *   xrehihihi are the highest doubles of the real parts of the series x,
  *             x is not linearized;
  *   xrelohihi are the second highest doubles of the real parts of x;

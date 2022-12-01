@@ -177,7 +177,7 @@ void cmplx8_unit_series_vector
 }
 
 void dbl8_update_series
- ( int dim, int degp1,
+ ( int dim, int degp1, int startidx,
    double **xhihihi, double **xlohihi, double **xhilohi, double **xlolohi,
    double **xhihilo, double **xlohilo, double **xhilolo, double **xlololo,
    double **dxhihihi, double **dxlohihi, double **dxhilohi, double **dxlolohi,
@@ -203,7 +203,7 @@ void dbl8_update_series
       }
    }
    // The update dx is linearized, the series x is not.
-   for(int j=0; j<degp1; j++) 
+   for(int j=startidx; j<degp1; j++) 
       for(int i=0; i<dim; i++) // x[i][j] = x[i][j] + dx[j][i];
       {
          odf_inc(&xhihihi[i][j],&xlohihi[i][j],&xhilohi[i][j],&xlolohi[i][j],
@@ -231,7 +231,7 @@ void dbl8_update_series
 }
 
 void cmplx8_update_series
- ( int dim, int degp1,
+ ( int dim, int degp1, int startidx,
    double **xrehihihi, double **xrelohihi,
    double **xrehilohi, double **xrelolohi,
    double **xrehihilo, double **xrelohilo,
@@ -277,7 +277,7 @@ void cmplx8_update_series
       }
    }
    // The update dx is linearized, the series x is not.
-   for(int j=0; j<degp1; j++) 
+   for(int j=startidx; j<degp1; j++) 
       for(int i=0; i<dim; i++)
       {
          // xre[i][j] = xre[i][j] + dxre[j][i];

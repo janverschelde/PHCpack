@@ -131,7 +131,7 @@ void dbl_newton_qrstep
             (dim,degp1,jacval_h,rhs_h,sol_h,resvec,resmax,vrblvl);
          cout << "maximum residual : " << *resmax << endl;
       }
-      dbl_update_series(dim,degp1,input_h,sol_h,vrblvl);
+      dbl_update_series(dim,degp1,tailidx_h-1,input_h,sol_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
@@ -161,7 +161,7 @@ void dbl_newton_qrstep
              &elapsedms,&addcnt,&mulcnt,vrblvl);
          cout << "maximum residual : " << *resmax << endl;
       }
-      dbl_update_series(dim,degp1,input_d,sol_d,vrblvl);
+      dbl_update_series(dim,degp1,tailidx_d-1,input_d,sol_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))
    {

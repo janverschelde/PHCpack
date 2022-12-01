@@ -331,7 +331,7 @@ void cmplx4_newton_qrstep
          cout << "maximum residual : " << *resmaxhihi << endl;
       }
       cmplx4_update_series
-         (dim,degp1,
+         (dim,degp1,tailidx_h-1,
           inputrehihi_h,inputrelohi_h,inputrehilo_h,inputrelolo_h,
           inputimhihi_h,inputimlohi_h,inputimhilo_h,inputimlolo_h,
           solrehihi_h,solrelohi_h,solrehilo_h,solrelolo_h,
@@ -402,7 +402,7 @@ void cmplx4_newton_qrstep
          cout << "maximum residual : " << *resmaxhihi << endl;
       }
       cmplx4_update_series
-         (dim,degp1,
+         (dim,degp1,tailidx_d-1,
           inputrehihi_d,inputrelohi_d,inputrehilo_d,inputrelolo_d,
           inputimhihi_d,inputimlohi_d,inputimhilo_d,inputimlolo_d,
           solrehihi_d,solrelohi_d,solrehilo_d,solrelolo_d,

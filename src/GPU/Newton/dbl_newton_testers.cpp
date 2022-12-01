@@ -67,7 +67,7 @@ void cmplx_unit_series_vector
 }
 
 void dbl_update_series
- ( int dim, int degp1, double **x, double **dx, int vrblvl )
+ ( int dim, int degp1, int startidx, double **x, double **dx, int vrblvl )
 {
    if(vrblvl > 1) cout << scientific << setprecision(16);
 
@@ -81,7 +81,7 @@ void dbl_update_series
       }
    }
    // The update dx is linearized, the series x is not.
-   for(int j=0; j<degp1; j++) 
+   for(int j=startidx; j<degp1; j++) 
       for(int i=0; i<dim; i++) x[i][j] = x[i][j] + dx[j][i];
 
    if(vrblvl > 1)
@@ -96,7 +96,7 @@ void dbl_update_series
 }
 
 void cmplx_update_series
- ( int dim, int degp1,
+ ( int dim, int degp1, int startidx,
    double **xre, double **xim, double **dxre, double **dxim, int vrblvl )
 {
    if(vrblvl > 1) cout << scientific << setprecision(16);
@@ -112,7 +112,7 @@ void cmplx_update_series
       }
    }
    // The update dx is linearized, the series x is not.
-   for(int j=0; j<degp1; j++) 
+   for(int j=startidx; j<degp1; j++) 
       for(int i=0; i<dim; i++)
       {
          xre[i][j] = xre[i][j] + dxre[j][i];

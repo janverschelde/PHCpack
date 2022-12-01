@@ -1,5 +1,7 @@
 Wed 30 Nov 2022 : in dbl*_bals_{host.cpp, kernels.cu} reset the prevnorm
   to the fixed constant 1.0e+8 instead of multiplying with the norm of b.
+  Updated *newton_testers* for the update of the series to have a start index
+  and updated *newton_method.cpp.
 
 Tue 29 Nov 2022 : in {dbl,dbl2,dbl4,dbl8}_tail_kernels.cu, limited the
   output at level 1 in the residue cmoputation.

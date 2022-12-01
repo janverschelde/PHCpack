@@ -38,7 +38,7 @@ void cmplx_unit_series_vector
  *   returns the values for a complex unit series. */
 
 void dbl_update_series
- ( int dim, int degp1, double **x, double **dx, int vrblvl );
+ ( int dim, int degp1, int startidx, double **x, double **dx, int vrblvl );
 /*
  * DESCRIPTION :
  *   Adds the series in dx to x.
@@ -46,6 +46,7 @@ void dbl_update_series
  * ON ENTRY :
  *   dim       number of series in x and dx;
  *   degp1     degree plus one of the series;
+ *   startidx  index of the start of the update;
  *   x         series to updated, not linearized;
  *   dx        linearized update of the series;
  *   vrblvl    is the verbose level.
@@ -54,7 +55,7 @@ void dbl_update_series
  *   x         the series x updated with dx. */
 
 void cmplx_update_series
- ( int dim, int degp1,
+ ( int dim, int degp1, int startidx,
    double **xre, double **xim, double **dxre, double **dxim, int vrblvl );
 /*
  * DESCRIPTION :
@@ -63,6 +64,7 @@ void cmplx_update_series
  * ON ENTRY :
  *   dim       number of series in x and dx;
  *   degp1     degree plus one of the series;
+ *   startidx  index of the start of the update;
  *   xre       real parts of series to updated, not linearized;
  *   xim       imaginary parts of series to updated, not linearized;
  *   dxre      real parts of the linearized update of the series;
