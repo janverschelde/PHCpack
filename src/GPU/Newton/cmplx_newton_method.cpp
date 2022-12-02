@@ -166,7 +166,7 @@ void cmplx_newton_qrstep
          cout << "calling CPU_cmplx_linear_residue ..." << endl;
 
          CPU_cmplx_linear_residue
-            (dim,degp1,jacvalre_h,jacvalim_h,rhsre_h,rhsim_h,
+            (dim,degp1,*tailidx_h-1,jacvalre_h,jacvalim_h,rhsre_h,rhsim_h,
              solre_h,solim_h,resvecre,resvecim,resmax,vrblvl);
          cout << "maximum residual : " << *resmax << endl;
       }
@@ -209,8 +209,8 @@ void cmplx_newton_qrstep
          long long int mulcnt = 0;
 
          GPU_cmplx_linear_residue
-            (dim,degp1,szt,nbt,jacvalre_d,jacvalim_d,rhsre_d,rhsim_d,
-             solre_d,solim_d,resvecre,resvecim,resmax,
+            (dim,degp1,szt,nbt,*tailidx_d-1,jacvalre_d,jacvalim_d,
+             rhsre_d,rhsim_d,solre_d,solim_d,resvecre,resvecim,resmax,
              &elapsedms,&addcnt,&mulcnt,vrblvl);
          cout << "maximum residual : " << *resmax << endl;
       }
@@ -638,8 +638,8 @@ int test_dbl_complex_newton
               << "  tail_d : " << tailidx_d
               << "  wdeg : " << wrkdeg << endl;
 
-      if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
-      if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;
+      if((mode == 1) || (mode == 2)) if(tailidx_h >= deg) break;
+      if((mode == 0) || (mode == 2)) if(tailidx_d >= deg) break;
 
       wrkdeg = wrkdeg + 1 + wrkdeg/2;
       if(wrkdeg > deg) wrkdeg = deg;

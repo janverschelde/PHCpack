@@ -1,6 +1,9 @@
 Thu 1 Dec 2022 : determined the tail index on the host, for all precisions,
   modifying all *bals_host* and *newton_method* files.  Computed the tail
   index in kernels, updating *bals_kernels* and *newton_method* files.
+  Used tail index in residue computations, updating *newton_method.cpp files,
+  and all *bals_host* and *tail_kernels* files and also applied the tail
+  index in the stop criterion for Newton's method in all precisions.
 
 Wed 30 Nov 2022 : in dbl*_bals_{host.cpp, kernels.cu} reset the prevnorm
   to the fixed constant 1.0e+8 instead of multiplying with the norm of b.

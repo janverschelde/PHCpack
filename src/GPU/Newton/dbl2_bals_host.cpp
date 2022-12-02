@@ -515,7 +515,7 @@ void CPU_cmplx2_qrbs_solve
 }
 
 void CPU_dbl2_linear_residue
- ( int dim, int degp1, double ***mathi, double ***matlo,
+ ( int dim, int degp1, int tailidx, double ***mathi, double ***matlo,
    double **rhshi, double **rhslo, double **solhi, double **sollo,
    double **resvechi, double **resveclo, double *resmaxhi, double *resmaxlo,
    int vrblvl )
@@ -524,7 +524,7 @@ void CPU_dbl2_linear_residue
    *resmaxlo = 0.0;
    double acchi,acclo;
 
-   for(int i=0; i<degp1; i++)  // compute the i-th residual vector
+   for(int i=tailidx; i<degp1; i++)  // compute the i-th residual vector
    {
       double *rihi = resvechi[i];
       double *rilo = resveclo[i];
@@ -533,7 +533,7 @@ void CPU_dbl2_linear_residue
          rihi[j] = rhshi[i][j];
          rilo[j] = rhslo[i][j];
       }
-      for(int j=0; j<=i; j++)
+      for(int j=0; j<=(i-tailidx); j++)
       {
          double **Ajhi = mathi[j];
          double **Ajlo = matlo[j];
@@ -569,7 +569,7 @@ void CPU_dbl2_linear_residue
 }
 
 void CPU_cmplx2_linear_residue
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo,
    double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo, 
    double **solrehi, double **solrelo, double **solimhi, double **solimlo,
@@ -581,7 +581,7 @@ void CPU_cmplx2_linear_residue
    *resmaxlo = 0.0;
    double acchi,acclo;
 
-   for(int i=0; i<degp1; i++)  // compute the i-th residual vector
+   for(int i=tailidx; i<degp1; i++)  // compute the i-th residual vector
    {
       double *rirehi = resvecrehi[i];
       double *rirelo = resvecrelo[i];
@@ -593,7 +593,7 @@ void CPU_cmplx2_linear_residue
          rirehi[j] = rhsrehi[i][j]; rirelo[j] = rhsrelo[i][j];
          riimhi[j] = rhsimhi[i][j]; riimlo[j] = rhsimlo[i][j];
       }
-      for(int j=0; j<=i; j++)
+      for(int j=0; j<=(i-tailidx); j++)
       {
          double **Ajrehi = matrehi[j];
          double **Ajrelo = matrelo[j];

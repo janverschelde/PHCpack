@@ -554,7 +554,7 @@ void CPU_cmplx4_qrbs_solve
  *   newtail  the new value for tailidx. */
 
 void CPU_dbl4_linear_residue
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***mathihi, double ***matlohi, double ***mathilo, double ***matlolo, 
    double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
    double **solhihi, double **sollohi, double **solhilo, double **sollolo,
@@ -569,6 +569,7 @@ void CPU_dbl4_linear_residue
  * ON ENTRY :
  *   dim      the dimension of the matrices and vectors;
  *   degp1    degree plus one, the size of the matrix system;
+ *   tailidx  the index of the start of the update in the tail;
  *   mathihi  degp1 matrices of dimension dim;
  *   matlohi  degp1 matrices of dimension dim;
  *   mathilo  degp1 matrices of dimension dim;
@@ -598,7 +599,7 @@ void CPU_dbl4_linear_residue
  *   resmaxlolo is the lowest double of the maximum component in resvec. */
 
 void CPU_cmplx4_linear_residue
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***matrehihi, double ***matrelohi,
    double ***matrehilo, double ***matrelolo,
    double ***matimhihi, double ***matimlohi,
@@ -624,6 +625,7 @@ void CPU_cmplx4_linear_residue
  * ON ENTRY :
  *   dim      the dimension of the matrices and vectors;
  *   degp1    degree plus one, the size of the matrix system;
+ *   tailidx  the index of the start of the update in the tail;
  *   matrehihi are degp1 matrices of dimension dim;
  *   matrelohi are degp1 matrices of dimension dim;
  *   matrehilo are degp1 matrices of dimension dim;

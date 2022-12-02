@@ -1159,7 +1159,7 @@ void CPU_cmplx8_qrbs_solve
 }
 
 void CPU_dbl8_linear_residue
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***mathihihi, double ***matlohihi,
    double ***mathilohi, double ***matlolohi,
    double ***mathihilo, double ***matlohilo,
@@ -1192,7 +1192,7 @@ void CPU_dbl8_linear_residue
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
 
-   for(int i=0; i<degp1; i++)  // compute the i-th residual vector
+   for(int i=tailidx; i<degp1; i++)  // compute the i-th residual vector
    {
       double *rihihihi = resvechihihi[i];
       double *rilohihi = resveclohihi[i];
@@ -1210,7 +1210,7 @@ void CPU_dbl8_linear_residue
          rihihilo[j] = rhshihilo[i][j]; rilohilo[j] = rhslohilo[i][j];
          rihilolo[j] = rhshilolo[i][j]; rilololo[j] = rhslololo[i][j];
       }
-      for(int j=0; j<=i; j++)
+      for(int j=0; j<=(i-tailidx); j++)
       {
          double **Ajhihihi = mathihihi[j];
          double **Ajlohihi = matlohihi[j];
@@ -1284,7 +1284,7 @@ void CPU_dbl8_linear_residue
 }
 
 void CPU_cmplx8_linear_residue
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***matrehihihi, double ***matrelohihi,
    double ***matrehilohi, double ***matrelolohi,
    double ***matrehihilo, double ***matrelohilo,
@@ -1333,7 +1333,7 @@ void CPU_cmplx8_linear_residue
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
 
-   for(int i=0; i<degp1; i++)  // compute the i-th residual vector
+   for(int i=tailidx; i<degp1; i++)  // compute the i-th residual vector
    {
       double *rirehihihi = resvecrehihihi[i];
       double *rirelohihi = resvecrelohihi[i];
@@ -1363,7 +1363,7 @@ void CPU_cmplx8_linear_residue
          riimhihilo[j] = rhsimhihilo[i][j]; riimlohilo[j] = rhsimlohilo[i][j];
          riimhilolo[j] = rhsimhilolo[i][j]; riimlololo[j] = rhsimlololo[i][j];
       }
-      for(int j=0; j<=i; j++)
+      for(int j=0; j<=(i-tailidx); j++)
       {
          double **Ajrehihihi = matrehihihi[j];
          double **Ajrelohihi = matrelohihi[j];

@@ -323,7 +323,7 @@ void cmplx4_newton_qrstep
          cout << "calling CPU_cmplx4_linear_residue ..." << endl;
 
          CPU_cmplx4_linear_residue
-            (dim,degp1,
+            (dim,degp1,*tailidx_h-1,
              jacvalrehihi_h,jacvalrelohi_h,jacvalrehilo_h,jacvalrelolo_h,
              jacvalimhihi_h,jacvalimlohi_h,jacvalimhilo_h,jacvalimlolo_h,
              rhsrehihi_h,rhsrelohi_h,rhsrehilo_h,rhsrelolo_h,
@@ -397,7 +397,7 @@ void cmplx4_newton_qrstep
          long long int mulcnt = 0;
 
          GPU_cmplx4_linear_residue
-            (dim,degp1,szt,nbt,
+            (dim,degp1,szt,nbt,*tailidx_d-1,
              jacvalrehihi_d,jacvalrelohi_d,jacvalrehilo_d,jacvalrelolo_d,
              jacvalimhihi_d,jacvalimlohi_d,jacvalimhilo_d,jacvalimlolo_d,
              rhsrehihi_d,rhsrelohi_d,rhsrehilo_d,rhsrelolo_d,
@@ -1337,8 +1337,8 @@ int test_dbl4_complex_newton
               << "  tail_d : " << tailidx_d
               << "  wdeg : " << wrkdeg << endl;
 
-      if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
-      if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;
+      if((mode == 1) || (mode == 2)) if(tailidx_h >= deg) break;
+      if((mode == 0) || (mode == 2)) if(tailidx_d >= deg) break;
 
       wrkdeg = wrkdeg + 1 + wrkdeg/2;
       if(wrkdeg > deg) wrkdeg = deg;

@@ -807,7 +807,7 @@ void GPU_cmplx8_bals_tail
 }
 
 void GPU_dbl8_linear_residue
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***mathihihi, double ***matlohihi,
    double ***mathilohi, double ***matlolohi,
    double ***mathihilo, double ***matlohilo,
@@ -828,8 +828,7 @@ void GPU_dbl8_linear_residue
    double *resmaxhilohi, double *resmaxlolohi,
    double *resmaxhihilo, double *resmaxlohilo,
    double *resmaxhilolo, double *resmaxlololo,
-   double *lapms, long long int *add, long long int *mul,
-   int vrblvl )
+   double *lapms, long long int *add, long long int *mul, int vrblvl )
 {
    double *rhihihi_d;
    double *rlohihi_d;
@@ -900,7 +899,7 @@ void GPU_dbl8_linear_residue
    if(vrblvl > 0)
       cout << "GPU_dbl8_linear_residue for deg+1 : " << degp1 << endl;
 
-   for(int i=0; i<degp1; i++)  // compute i-th residual vector
+   for(int i=tailidx; i<degp1; i++)  // compute i-th residual vector
    {
       cudaMemcpy(rhihihi_d,rhshihihi[i],szrhs,cudaMemcpyHostToDevice);
       cudaMemcpy(rlohihi_d,rhslohihi[i],szrhs,cudaMemcpyHostToDevice);
@@ -911,7 +910,7 @@ void GPU_dbl8_linear_residue
       cudaMemcpy(rhilolo_d,rhshilolo[i],szrhs,cudaMemcpyHostToDevice);
       cudaMemcpy(rlololo_d,rhslololo[i],szrhs,cudaMemcpyHostToDevice);
 
-      for(int j=0; j<=i; j++)  // multiply mat[j] with sol[i-j]
+      for(int j=0; j<=(i-tailidx); j++)  // multiply mat[j] with sol[i-j]
       {
          int idx=0;
          for(int i1=0; i1<dim; i1++)
@@ -987,7 +986,7 @@ void GPU_dbl8_linear_residue
    }
    if(vrblvl > 1)
    {
-      for(int i=0; i<degp1; i++)
+      for(int i=tailidx; i<degp1; i++)
       {
          cout << "Solution vector " << i << " :" << endl;
          for(int j=0; j<dim; j++)
@@ -1012,7 +1011,7 @@ void GPU_dbl8_linear_residue
    *resmaxhihilo = 0.0; *resmaxlohilo = 0.0;
    *resmaxhilolo = 0.0; *resmaxlololo = 0.0;
    
-   for(int i=0; i<degp1; i++)
+   for(int i=tailidx; i<degp1; i++)
    {
       double *rihihihi = resvechihihi[i];
       double *rilohihi = resveclohihi[i];
@@ -1054,7 +1053,7 @@ void GPU_dbl8_linear_residue
 }
 
 void GPU_cmplx8_linear_residue
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***matrehihihi, double ***matrelohihi,
    double ***matrehilohi, double ***matrelolohi,
    double ***matrehihilo, double ***matrelohilo,
@@ -1091,8 +1090,7 @@ void GPU_cmplx8_linear_residue
    double *resmaxhilohi, double *resmaxlolohi,
    double *resmaxhihilo, double *resmaxlohilo,
    double *resmaxhilolo, double *resmaxlololo,
-   double *lapms, long long int *add, long long int *mul,
-   int vrblvl )
+   double *lapms, long long int *add, long long int *mul, int vrblvl )
 {
    double *rrehihihi_d;
    double *rrelohihi_d;
@@ -1219,7 +1217,7 @@ void GPU_cmplx8_linear_residue
    if(vrblvl > 0)
       cout << "GPU_cmplx8_linear_residue for deg+1 : " << degp1 << endl;
 
-   for(int i=0; i<degp1; i++)  // compute i-th residual vector
+   for(int i=tailidx; i<degp1; i++)  // compute i-th residual vector
    {
       cudaMemcpy(rrehihihi_d,rhsrehihihi[i],szrhs,cudaMemcpyHostToDevice);
       cudaMemcpy(rrelohihi_d,rhsrelohihi[i],szrhs,cudaMemcpyHostToDevice);
@@ -1238,7 +1236,7 @@ void GPU_cmplx8_linear_residue
       cudaMemcpy(rimhilolo_d,rhsimhilolo[i],szrhs,cudaMemcpyHostToDevice);
       cudaMemcpy(rimlololo_d,rhsimlololo[i],szrhs,cudaMemcpyHostToDevice);
 
-      for(int j=0; j<=i; j++)  // multiply mat[j] with sol[i-j]
+      for(int j=0; j<=(i-tailidx); j++)  // multiply mat[j] with sol[i-j]
       {
          int idx=0;
          for(int i1=0; i1<dim; i1++)
@@ -1360,7 +1358,7 @@ void GPU_cmplx8_linear_residue
    }
    if(vrblvl > 1)
    {
-      for(int i=0; i<degp1; i++)
+      for(int i=tailidx; i<degp1; i++)
       {
          cout << "Solution vector " << i << " :" << endl;
          for(int j=0; j<dim; j++)
@@ -1405,7 +1403,7 @@ void GPU_cmplx8_linear_residue
    *resmaxhihilo = 0.0; *resmaxlohilo = 0.0;
    *resmaxhilolo = 0.0; *resmaxlololo = 0.0;
 
-   for(int i=0; i<degp1; i++)
+   for(int i=tailidx; i<degp1; i++)
    {
       double *rirehihihi = resvecrehihihi[i];
       double *rirelohihi = resvecrelohihi[i];

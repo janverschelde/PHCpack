@@ -360,7 +360,7 @@ void GPU_cmplx8_bals_tail
  *            of the updated right hand sides. */
 
 void GPU_dbl8_linear_residue
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***mathihihi, double ***matlohihi,
    double ***mathilohi, double ***matlolohi,
    double ***mathihilo, double ***matlohilo,
@@ -381,8 +381,7 @@ void GPU_dbl8_linear_residue
    double *resmaxhilohi, double *resmaxlolohi,
    double *resmaxhihilo, double *resmaxlohilo,
    double *resmaxhilolo, double *resmaxlololo,
-   double *lapms, long long int *add, long long int *mul,
-   int vrblvl );
+   double *lapms, long long int *add, long long int *mul, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear series system, on real data.
@@ -392,6 +391,7 @@ void GPU_dbl8_linear_residue
  *   degp1    degree plus one, the size of the matrix system;
  *   szt      size of each block (and tile);
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   tailidx  the index of the start of the update in the tail;
  *   mathihihi are degp1 matrices of dimension dim;
  *   matlohihi are degp1 matrices of dimension dim;
  *   mathilohi are degp1 matrices of dimension dim;
@@ -448,7 +448,7 @@ void GPU_dbl8_linear_residue
  *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx8_linear_residue
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***matrehihihi, double ***matrelohihi,
    double ***matrehilohi, double ***matrelolohi,
    double ***matrehihilo, double ***matrelohilo,
@@ -485,8 +485,7 @@ void GPU_cmplx8_linear_residue
    double *resmaxhilohi, double *resmaxlolohi,
    double *resmaxhihilo, double *resmaxlohilo,
    double *resmaxhilolo, double *resmaxlololo,
-   double *lapms, long long int *add, long long int *mul,
-   int vrblvl );
+   double *lapms, long long int *add, long long int *mul, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear series system, on complex data.
@@ -496,6 +495,7 @@ void GPU_cmplx8_linear_residue
  *   degp1    degree plus one, the size of the matrix system;
  *   szt      size of each block (and tile);
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   tailidx  the index of the start of the update in the tail;
  *   matrehihihi are degp1 matrices of dimension dim;
  *   matrelohihi are degp1 matrices of dimension dim;
  *   matrehilohi are degp1 matrices of dimension dim;

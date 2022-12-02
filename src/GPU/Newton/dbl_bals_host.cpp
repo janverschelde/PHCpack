@@ -409,16 +409,16 @@ void CPU_cmplx_qrbs_solve
 }
 
 void CPU_dbl_linear_residue
- ( int dim, int degp1, double ***mat, double **rhs, double **sol,
+ ( int dim, int degp1, int tailidx, double ***mat, double **rhs, double **sol,
    double **resvec, double *resmax, int vrblvl )
 {
    *resmax = 0.0;
 
-   for(int i=0; i<degp1; i++)  // compute the i-th residual vector
+   for(int i=tailidx; i<degp1; i++)  // compute the i-th residual vector
    {
       double *ri = resvec[i];
       for(int j=0; j<dim; j++) ri[j] = rhs[i][j];
-      for(int j=0; j<=i; j++)
+      for(int j=0; j<=(i-tailidx); j++)
       {
          double **Aj = mat[j];
          double *x = sol[i-j];
@@ -442,14 +442,14 @@ void CPU_dbl_linear_residue
 }
 
 void CPU_cmplx_linear_residue
- ( int dim, int degp1, double ***matre, double ***matim,
+ ( int dim, int degp1, int tailidx, double ***matre, double ***matim,
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **resvecre, double **resvecim, double *resmax, int vrblvl )
 {
    *resmax = 0.0;
    double zre,zim;
 
-   for(int i=0; i<degp1; i++)  // compute the i-th residual vector
+   for(int i=tailidx; i<degp1; i++)  // compute the i-th residual vector
    {
       double *rire = resvecre[i];
       double *riim = resvecim[i];
@@ -459,7 +459,7 @@ void CPU_cmplx_linear_residue
          rire[j] = rhsre[i][j];
          riim[j] = rhsim[i][j];
       }
-      for(int j=0; j<=i; j++)
+      for(int j=0; j<=(i-tailidx); j++)
       {
          double **Ajre = matre[j];
          double **Ajim = matim[j];

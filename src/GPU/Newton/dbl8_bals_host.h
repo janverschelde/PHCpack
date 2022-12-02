@@ -1029,7 +1029,7 @@ void CPU_cmplx8_qrbs_solve
  *   newtail  is the new value for tailidx. */
 
 void CPU_dbl8_linear_residue
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***mathihihi, double ***matlohihi,
    double ***mathilohi, double ***matlolohi,
    double ***mathihilo, double ***matlohilo,
@@ -1057,6 +1057,7 @@ void CPU_dbl8_linear_residue
  * ON ENTRY :
  *   dim      the dimension of the matrices and vectors;
  *   degp1    degree plus one, the size of the matrix system;
+ *   tailidx  the index of the start of the update in the tail;
  *   mathihihi are degp1 matrices of dimension dim;
  *   matlohihi are degp1 matrices of dimension dim;
  *   mathilohi are degp1 matrices of dimension dim;
@@ -1110,7 +1111,7 @@ void CPU_dbl8_linear_residue
  *   resmaxlololo is the lowest double of the maximum in resvec. */
 
 void CPU_cmplx8_linear_residue
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***matrehihihi, double ***matrelohihi,
    double ***matrehilohi, double ***matrelolohi,
    double ***matrehihilo, double ***matrelohilo,
@@ -1154,6 +1155,7 @@ void CPU_cmplx8_linear_residue
  * ON ENTRY :
  *   dim      the dimension of the matrices and vectors;
  *   degp1    degree plus one, the size of the matrix system;
+ *   tailidx  the index of the start of the update in the tail;
  *   matrehihihi are degp1 matrices of dimension dim;
  *   matrelohihi are degp1 matrices of dimension dim;
  *   matrehilohi are degp1 matrices of dimension dim;

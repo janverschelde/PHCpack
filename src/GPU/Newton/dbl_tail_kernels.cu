@@ -228,11 +228,10 @@ void GPU_cmplx_bals_tail
 }
 
 void GPU_dbl_linear_residue
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***mat, double **rhs, double **sol,
    double **resvec, double *resmax,
-   double *lapms, long long int *add, long long int *mul,
-   int vrblvl )
+   double *lapms, long long int *add, long long int *mul, int vrblvl )
 {
    double *r_d;
    const size_t szrhs = dim*sizeof(double);
@@ -254,11 +253,11 @@ void GPU_dbl_linear_residue
    if(vrblvl > 0)
       cout << "GPU_deg_linear_residue for deg+1 : " << degp1 << endl;
 
-   for(int i=0; i<degp1; i++)  // compute i-th residual vector
+   for(int i=tailidx; i<degp1; i++)  // compute i-th residual vector
    {
       cudaMemcpy(r_d,rhs[i],szrhs,cudaMemcpyHostToDevice);
 
-      for(int j=0; j<=i; j++)  // multiply mat[j] with sol[i-j]
+      for(int j=0; j<=(i-tailidx); j++)  // multiply mat[j] with sol[i-j]
       {
          int idx=0;
          for(int i1=0; i1<dim; i1++)
@@ -289,7 +288,7 @@ void GPU_dbl_linear_residue
    }
    if(vrblvl > 1)
    {
-      for(int i=0; i<degp1; i++) 
+      for(int i=tailidx; i<degp1; i++) 
       {
          cout << "Solution vector " << i << " :" << endl;
          for(int j=0; j<dim; j++) cout << sol[i][j] << endl;
@@ -298,7 +297,7 @@ void GPU_dbl_linear_residue
       }
    }
    *resmax = 0.0;
-   for(int i=0; i<degp1; i++)
+   for(int i=tailidx; i<degp1; i++)
    {
       double *ri = resvec[i];
       for(int j=0; j<dim; j++)
@@ -310,12 +309,11 @@ void GPU_dbl_linear_residue
 }
 
 void GPU_cmplx_linear_residue
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***matre, double ***matim, double **rhsre, double **rhsim,
    double **solre, double **solim,
    double **resvecre, double **resvecim, double *resmax,
-   double *lapms, long long int *add, long long int *mul,
-   int vrblvl )
+   double *lapms, long long int *add, long long int *mul, int vrblvl )
 {
    double *rre_d;
    double *rim_d;
@@ -344,12 +342,12 @@ void GPU_cmplx_linear_residue
    if(vrblvl > 0)
       cout << "GPU_cmplx_linear_residue for deg+1 : " << degp1 << endl;
 
-   for(int i=0; i<degp1; i++)  // compute i-th residual vector
+   for(int i=tailidx; i<degp1; i++)  // compute i-th residual vector
    {
       cudaMemcpy(rre_d,rhsre[i],szrhs,cudaMemcpyHostToDevice);
       cudaMemcpy(rim_d,rhsim[i],szrhs,cudaMemcpyHostToDevice);
 
-      for(int j=0; j<=i; j++)  // multiply mat[j] with sol[i-j]
+      for(int j=0; j<=(i-tailidx); j++)  // multiply mat[j] with sol[i-j]
       {
          int idx=0;
          for(int i1=0; i1<dim; i1++)
@@ -389,7 +387,7 @@ void GPU_cmplx_linear_residue
    }
    if(vrblvl > 1)
    {
-      for(int i=0; i<degp1; i++) 
+      for(int i=tailidx; i<degp1; i++) 
       {
          cout << "Solution vector " << i << " :" << endl;
          for(int j=0; j<dim; j++)
@@ -401,7 +399,7 @@ void GPU_cmplx_linear_residue
       }
    }
    *resmax = 0.0;
-   for(int i=0; i<degp1; i++)
+   for(int i=tailidx; i<degp1; i++)
    {
       double *rire = resvecre[i];
       double *riim = resvecim[i];

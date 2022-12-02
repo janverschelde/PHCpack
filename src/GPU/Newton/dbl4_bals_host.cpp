@@ -706,7 +706,7 @@ void CPU_cmplx4_qrbs_solve
 }
 
 void CPU_dbl4_linear_residue
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***mathihi, double ***matlohi, double ***mathilo, double ***matlolo, 
    double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
    double **solhihi, double **sollohi, double **solhilo, double **sollolo,
@@ -721,7 +721,7 @@ void CPU_dbl4_linear_residue
    *resmaxlolo = 0.0;
    double acchihi,acclohi,acchilo,acclolo;
 
-   for(int i=0; i<degp1; i++)  // compute the i-th residual vector
+   for(int i=tailidx; i<degp1; i++)  // compute the i-th residual vector
    {
       double *rihihi = resvechihi[i];
       double *rilohi = resveclohi[i];
@@ -735,7 +735,7 @@ void CPU_dbl4_linear_residue
          rihilo[j] = rhshilo[i][j];
          rilolo[j] = rhslolo[i][j];
       }
-      for(int j=0; j<=i; j++)
+      for(int j=0; j<=(i-tailidx); j++)
       {
          double **Ajhihi = mathihi[j];
          double **Ajlohi = matlohi[j];
@@ -786,7 +786,7 @@ void CPU_dbl4_linear_residue
 }
 
 void CPU_cmplx4_linear_residue
- ( int dim, int degp1,
+ ( int dim, int degp1, int tailidx,
    double ***matrehihi, double ***matrelohi,
    double ***matrehilo, double ***matrelolo,
    double ***matimhihi, double ***matimlohi,
@@ -812,7 +812,7 @@ void CPU_cmplx4_linear_residue
    *resmaxlolo = 0.0;
    double acchihi,acclohi,acchilo,acclolo;
 
-   for(int i=0; i<degp1; i++)  // compute the i-th residual vector
+   for(int i=tailidx; i<degp1; i++)  // compute the i-th residual vector
    {
       double *rirehihi = resvecrehihi[i];
       double *rirelohi = resvecrelohi[i];
@@ -830,7 +830,7 @@ void CPU_cmplx4_linear_residue
          riimhihi[j] = rhsimhihi[i][j]; riimlohi[j] = rhsimlohi[i][j];
          riimhilo[j] = rhsimhilo[i][j]; riimlolo[j] = rhsimlolo[i][j];
       }
-      for(int j=0; j<=i; j++)
+      for(int j=0; j<=(i-tailidx); j++)
       {
          double **Ajrehihi = matrehihi[j];
          double **Ajrelohi = matrelohi[j];

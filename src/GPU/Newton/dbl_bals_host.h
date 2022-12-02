@@ -221,7 +221,7 @@ void CPU_cmplx_qrbs_solve
  *   newtail  the new value for tailidx. */
 
 void CPU_dbl_linear_residue
- ( int dim, int degp1, double ***mat, double **rhs, double **sol,
+ ( int dim, int degp1, int tailidx, double ***mat, double **rhs, double **sol,
    double **resvec, double *resmax, int vrblvl );
 /*
  * DESCRIPTION :
@@ -230,6 +230,7 @@ void CPU_dbl_linear_residue
  * ON ENTRY :
  *   dim      the dimension of the matrices and vectors;
  *   degp1    degree plus one, the size of the matrix system;
+ *   tailidx  the index of the start of the update in the tail;
  *   mat      degp1 matrices of dimension dim;
  *   rhs      degp1 right hand side vectors of dimension dim;
  *   sol      degp1 solution vectors of dimension dim;
@@ -241,7 +242,7 @@ void CPU_dbl_linear_residue
  *   resmax   maximum component of the residual power series. */
 
 void CPU_cmplx_linear_residue
- ( int dim, int degp1, double ***matre, double ***matim,
+ ( int dim, int degp1, int tailidx, double ***matre, double ***matim,
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **resvecre, double **resvecim, double *resmax, int vrblvl );
 /*
@@ -251,6 +252,7 @@ void CPU_cmplx_linear_residue
  * ON ENTRY :
  *   dim      the dimension of the matrices and vectors;
  *   degp1    degree plus one, the size of the matrix system;
+ *   tailidx  the index of the start of the update in the tail;
  *   matre    degp1 matrices of dimension dim;
  *   matim    degp1 matrices of dimension dim;
  *   rhsre    degp1 right hand side vectors of dimension dim;

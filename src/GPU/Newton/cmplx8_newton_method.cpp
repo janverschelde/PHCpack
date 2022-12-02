@@ -525,7 +525,7 @@ void cmplx8_newton_qrstep
          cout << "calling CPU_cmplx8_linear_residue ..." << endl;
 
          CPU_cmplx8_linear_residue
-            (dim,degp1,
+            (dim,degp1,*tailidx_h-1,
              jacvalrehihihi_h,jacvalrelohihi_h,
              jacvalrehilohi_h,jacvalrelolohi_h,
              jacvalrehihilo_h,jacvalrelohilo_h,
@@ -637,7 +637,7 @@ void cmplx8_newton_qrstep
          long long int mulcnt = 0;
 
          GPU_cmplx8_linear_residue
-            (dim,degp1,szt,nbt,
+            (dim,degp1,szt,nbt,*tailidx_d-1,
              jacvalrehihihi_d,jacvalrelohihi_d,
              jacvalrehilohi_d,jacvalrelolohi_d,
              jacvalrehihilo_d,jacvalrelohilo_d,
@@ -2249,8 +2249,8 @@ int test_dbl8_complex_newton
               << "  tail_d : " << tailidx_d
               << "  wdeg : " << wrkdeg << endl;
 
-      if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
-      if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;
+      if((mode == 1) || (mode == 2)) if(tailidx_h >= deg) break;
+      if((mode == 0) || (mode == 2)) if(tailidx_d >= deg) break;
 
       wrkdeg = wrkdeg + 1 + wrkdeg/2;
       if(wrkdeg > deg) wrkdeg = deg;

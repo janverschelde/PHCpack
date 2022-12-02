@@ -148,12 +148,11 @@ void GPU_cmplx2_bals_tail
  *            of the updated right hand sides. */
 
 void GPU_dbl2_linear_residue
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***mathi, double ***matlo,
    double **rhshi, double **rhslo, double **solhi, double **sollo,
    double **resvechi, double **resveclo, double *resmaxhi, double *resmaxlo,
-   double *lapms, long long int *add, long long int *mul,
-   int vrblvl );
+   double *lapms, long long int *add, long long int *mul, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear power series system.
@@ -163,6 +162,7 @@ void GPU_dbl2_linear_residue
  *   degp1    degree plus one, the size of the matrix system;
  *   szt      size of each block (and tile);
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   tailidx  the index of the start of the update in the tail;
  *   mathi    degp1 matrices of dimension dim;
  *   matlo    degp1 matrices of dimension dim;
  *   rhshi    degp1 right hand side vectors of dimension dim;
@@ -183,15 +183,14 @@ void GPU_dbl2_linear_residue
  *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx2_linear_residue
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo,
    double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo, 
    double **solrehi, double **solrelo, double **solimhi, double **solimlo,
    double **resvecrehi, double **resvecrelo,
    double **resvecimhi, double **resvecimlo,
    double *resmaxhi, double *resmaxlo,
-   double *lapms, long long int *add, long long int *mul,
-   int vrblvl );
+   double *lapms, long long int *add, long long int *mul, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear power series system.
@@ -201,6 +200,7 @@ void GPU_cmplx2_linear_residue
  *   degp1    degree plus one, the size of the matrix system;
  *   szt      size of each block (and tile);
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   tailidx  the index of the start of the update in the tail;
  *   matrehi  degp1 matrices of dimension dim;
  *   matrelo  degp1 matrices of dimension dim;
  *   matimhi  degp1 matrices of dimension dim;

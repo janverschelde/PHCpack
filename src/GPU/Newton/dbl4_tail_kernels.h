@@ -227,7 +227,7 @@ void GPU_cmplx4_bals_tail
  *            of the updated right hand sides. */
 
 void GPU_dbl4_linear_residue
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***mathihi, double ***matlohi, double ***mathilo, double ***matlolo, 
    double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
    double **solhihi, double **sollohi, double **solhilo, double **sollolo,
@@ -235,8 +235,7 @@ void GPU_dbl4_linear_residue
    double **resvechilo, double **resveclolo,
    double *resmaxhihi, double *resmaxlohi,
    double *resmaxhilo, double *resmaxlolo,
-   double *lapms, long long int *add, long long int *mul,
-   int vrblvl );
+   double *lapms, long long int *add, long long int *mul, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear power series system.
@@ -246,6 +245,7 @@ void GPU_dbl4_linear_residue
  *   degp1    degree plus one, the size of the matrix system;
  *   szt      size of each block (and tile);
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   tailidx  the index of the start of the update in the tail;
  *   mathihi  degp1 matrices of dimension dim;
  *   matlohi  degp1 matrices of dimension dim;
  *   mathilo  degp1 matrices of dimension dim;
@@ -278,7 +278,7 @@ void GPU_dbl4_linear_residue
  *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx4_linear_residue
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***matrehihi, double ***matrelohi,
    double ***matrehilo, double ***matrelolo,
    double ***matimhihi, double ***matimlohi,
@@ -297,8 +297,7 @@ void GPU_cmplx4_linear_residue
    double **resvecimhilo, double **resvecimlolo,
    double *resmaxhihi, double *resmaxlohi,
    double *resmaxhilo, double *resmaxlolo,
-   double *lapms, long long int *add, long long int *mul,
-   int vrblvl );
+   double *lapms, long long int *add, long long int *mul, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear power series system.
@@ -308,6 +307,7 @@ void GPU_cmplx4_linear_residue
  *   degp1    degree plus one, the size of the matrix system;
  *   szt      size of each block (and tile);
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   tailidx  the index of the start of the update in the tail;
  *   matrehihi are degp1 matrices of dimension dim;
  *   matrelohi are degp1 matrices of dimension dim;
  *   matrehilo are degp1 matrices of dimension dim;

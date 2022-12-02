@@ -108,11 +108,9 @@ void GPU_cmplx_bals_tail
  *   rhsim    imaginary parts of the updated right hand sides. */
 
 void GPU_dbl_linear_residue
- ( int dim, int degp1, int szt, int nbt,
-   double ***mat, double **rhs, double **sol,
-   double **resvec, double *resmax,
-   double *lapms, long long int *add, long long int *mul,
-   int vrblvl );
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
+   double ***mat, double **rhs, double **sol, double **resvec, double *resmax,
+   double *lapms, long long int *add, long long int *mul, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear power series system.
@@ -122,6 +120,7 @@ void GPU_dbl_linear_residue
  *   degp1    degree plus one, the size of the matrix system;
  *   szt      size of each block (and tile);
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   tailidx  the index of the start of the update in the tail;
  *   mat      degp1 matrices of dimension dim;
  *   rhs      degp1 right hand side vectors of dimension dim;
  *   sol      degp1 solution vectors of dimension dim;
@@ -136,12 +135,11 @@ void GPU_dbl_linear_residue
  *   mul      accumulated number of multiplications. */
 
 void GPU_cmplx_linear_residue
- ( int dim, int degp1, int szt, int nbt,
+ ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***matre, double ***matim, double **rhsre, double **rhsim,
    double **solre, double **solim,
    double **resvecre, double **resvecim, double *resmax,
-   double *lapms, long long int *add, long long int *mul,
-   int vrblvl );
+   double *lapms, long long int *add, long long int *mul, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear power series system.
@@ -151,6 +149,7 @@ void GPU_cmplx_linear_residue
  *   degp1    degree plus one, the size of the matrix system;
  *   szt      size of each block (and tile);
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
+ *   tailidx  the index of the start of the update in the tail;
  *   matre    degp1 matrices of dimension dim;
  *   matim    degp1 matrices of dimension dim;
  *   rhsre    degp1 right hand side vectors of dimension dim;

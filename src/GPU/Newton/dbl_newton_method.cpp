@@ -133,7 +133,8 @@ void dbl_newton_qrstep
          cout << "calling CPU_dbl_linear_residue ..." << endl;
 
          CPU_dbl_linear_residue
-            (dim,degp1,jacval_h,rhs_h,sol_h,resvec,resmax,vrblvl);
+            (dim,degp1,*tailidx_h-1,jacval_h,rhs_h,sol_h,
+             resvec,resmax,vrblvl);
          cout << "maximum residual : " << *resmax << endl;
       }
       dbl_update_series(dim,degp1,*tailidx_h-1,input_h,sol_h,vrblvl);
@@ -167,8 +168,8 @@ void dbl_newton_qrstep
          long long int mulcnt = 0;
 
          GPU_dbl_linear_residue
-            (dim,degp1,szt,nbt,jacval_d,rhs_d,sol_d,resvec,resmax,
-             &elapsedms,&addcnt,&mulcnt,vrblvl);
+            (dim,degp1,szt,nbt,*tailidx_d-1,jacval_d,rhs_d,sol_d,
+             resvec,resmax,&elapsedms,&addcnt,&mulcnt,vrblvl);
          cout << "maximum residual : " << *resmax << endl;
       }
       dbl_update_series(dim,degp1,*tailidx_d-1,input_d,sol_d,vrblvl);
@@ -431,8 +432,8 @@ int test_dbl_real_newton
               << "  tail_d : " << tailidx_d
               << "  wdeg : " << wrkdeg << endl;
 
-      if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
-      if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;
+      if((mode == 1) || (mode == 2)) if(tailidx_h >= deg) break;
+      if((mode == 0) || (mode == 2)) if(tailidx_d >= deg) break;
 
       wrkdeg = wrkdeg + 1 + wrkdeg/2;
       if(wrkdeg > deg) wrkdeg = deg;

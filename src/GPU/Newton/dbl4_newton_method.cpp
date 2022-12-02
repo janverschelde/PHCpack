@@ -219,7 +219,8 @@ void dbl4_newton_qrstep
          cout << "calling CPU_dbl4_linear_residue ..." << endl;
 
          CPU_dbl4_linear_residue
-            (dim,degp1,jacvalhihi_h,jacvallohi_h,jacvalhilo_h,jacvallolo_h,
+            (dim,degp1,*tailidx_h-1,
+             jacvalhihi_h,jacvallohi_h,jacvalhilo_h,jacvallolo_h,
              rhshihi_h,rhslohi_h,rhshilo_h,rhslolo_h,
              solhihi_h,sollohi_h,solhilo_h,sollolo_h,
              resvechihi,resveclohi,resvechilo,resveclolo,
@@ -274,7 +275,7 @@ void dbl4_newton_qrstep
          long long int mulcnt = 0;
 
          GPU_dbl4_linear_residue
-            (dim,degp1,szt,nbt,
+            (dim,degp1,szt,nbt,*tailidx_d-1,
              jacvalhihi_d,jacvallohi_d,jacvalhilo_d,jacvallolo_d,
              rhshihi_d,rhslohi_d,rhshilo_d,rhslolo_d,
              solhihi_d,sollohi_d,solhilo_d,sollolo_d,
@@ -908,8 +909,8 @@ int test_dbl4_real_newton
               << "  tail_d : " << tailidx_d
               << "  wdeg : " << wrkdeg << endl;
 
-      if((mode == 1) || (mode == 2)) if(bsidx_h >= deg) break;
-      if((mode == 0) || (mode == 2)) if(bsidx_d >= deg) break;
+      if((mode == 1) || (mode == 2)) if(tailidx_h >= deg) break;
+      if((mode == 0) || (mode == 2)) if(tailidx_d >= deg) break;
 
       wrkdeg = wrkdeg + 1 + wrkdeg/2;
       if(wrkdeg > deg) wrkdeg = deg;
