@@ -361,6 +361,10 @@ test_unimodular.o:
 	@-echo ">>> compiling test_unimodular ..."
 	$(gpp) -O3 -c -I$(CNV) -I$(MAT) test_unimodular.cpp
 
+test_columns.o:
+	@-echo ">>> compiling test_columns ..."
+	$(gpp) -O3 -c test_columns.cpp
+
 dbl_monomial_systems.o:
 	@-echo ">>> compiling dbl_monomial_systems ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) dbl_monomial_systems.cpp
@@ -466,6 +470,10 @@ test_unimodular: random_numbers.o random_series.o random_monomials.o \
 	@-echo ">>> linking ..."
 	$(gpp) -o test_unimodular test_unimodular.o unimodular_matrices.o \
                   random_numbers.o random_series.o random_monomials.o
+
+test_columns: test_columns.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_columns test_columns.o
 
 test_monomial_systems: random_numbers.o random_series.o random_monomials.o \
                        unimodular_matrices.o dbl_monomial_systems.o \
@@ -724,6 +732,7 @@ clean:
 	/bin/rm -f -r dbl_newton_testers.o dbl2_newton_testers.o
 	/bin/rm -f -r dbl4_newton_testers.o dbl8_newton_testers.o
 	/bin/rm -f -r test_unimodular.o test_unimodular
+	/bin/rm -f -r test_columns.o test_columns
 	/bin/rm -f -r dbl_monomial_systems.o
 	/bin/rm -f -r dbl2_monomial_systems.o
 	/bin/rm -f -r dbl4_monomial_systems.o

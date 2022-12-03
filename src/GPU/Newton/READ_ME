@@ -5,6 +5,7 @@ file name                : short description
 ------------------------------------------------------------------------------
 unimodular_matrices      : code to generate random exponent matrices
 test_unimodular          : test on unimodular triangulation
+test_columns             : defines column representation for cyclic n-roots
 prompt_newton_setup      : prompts for the test parameters
 dbl_monomial_systems     : makes monomial systems in double precision
 dbl2_monomial_systems    : makes monomial systems in double double precision

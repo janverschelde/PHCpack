@@ -11,6 +11,9 @@ all: test_dbl_newton test_dbl2_newton test_dbl4_newton test_dbl8_newton
 test_unimodular:
 	make -f $(MAKEFILE) test_unimodular
 
+test_columns:
+	make -f $(MAKEFILE) test_columns
+
 test_monomial_systems:
 	make -f $(MAKEFILE) test_monomial_systems
 
