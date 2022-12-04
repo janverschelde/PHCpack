@@ -1,5 +1,7 @@
 Sat 3 Dec 2022 : added test_columns.cpp to define the column representation
   of the monomials in the cyclic n-roots system.  Updated makefiles.
+  New cyclic_columns.h and cyclic_columns.cpp out of test_columns.cpp,
+  for use in test_monomial_systems.cpp.  Updated makefiles.
 
 Thu 1 Dec 2022 : determined the tail index on the host, for all precisions,
   modifying all *bals_host* and *newton_method* files.  Computed the tail

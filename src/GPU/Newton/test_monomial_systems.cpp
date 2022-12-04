@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <time.h>
+#include "cyclic_columns.h"
 #include "random_series.h"
 #include "unimodular_matrices.h"
 #include "dbl_monomial_systems.h"
@@ -25,29 +26,89 @@ int make_complex_system ( int dim, int deg, int **rowsA );
  *   of series with complex coefficients truncated to degree deg,
  *   using the exponents in the rows of rowsA. */
 
+int make_monomial_system ( int dim, int deg );
+/*
+ * DESCRIPTION :
+ *   Sets up a monomial system of dim equations of series
+ *   truncated to degree deg, after prompting for the the
+ *   exponent matrix and the type of the coefficients. */
+
+int make_real_cyclic ( int dim, int deg, int **nvr, int ***idx );
+/*
+ * DESCRIPTION :
+ *   Makes the column representation of the cyclic dim-roots system,
+ *   or series truncated at degree deg, with real coefficients.
+ *
+ * ON ENTRY :
+ *   dim     number of equations and total number of variables;
+ *   deg     degree of the power series;
+ *   nvr     nvr[[i][j] is the number of variables of the j-th monomial
+ *           in the i-th column.
+ *   idx     idx[i][j][k] is the index of the k-th variable which appears
+ *           in the j-th monomial of the i-th column. */
+
+int make_complex_cyclic ( int dim, int deg, int **nvr, int ***idx );
+/*
+ * DESCRIPTION :
+ *   Makes the column representation of the cyclic dim-roots system,
+ *   for series truncated at degree deg, with complex coefficients.
+ *
+ * ON ENTRY :
+ *   dim     number of equations and total number of variables;
+ *   deg     degree of the power series;
+ *   nvr     nvr[[i][j] is the number of variables of the j-th monomial
+ *           in the i-th column.
+ *   idx     idx[i][j][k] is the index of the k-th variable which appears
+ *           in the j-th monomial of the i-th column. */
+
+int make_cyclic_columns ( int dim, int deg );
+/*
+ * DESCRIPTION :
+ *   Makes the column representation of the cyclic n-roots system,
+ *   where n = dim for series truncated at degree deg. */
+
 int main ( void )
 {
    cout << "testing the making of a monomial system ..." << endl;
 
-   const int vrblvl = 2;
-   int seed,dim,deg,size,nbritr,cdata;
+   int seed,dim,deg,systype;
 
    cout << "-> give the seed (0 for time) : "; cin >> seed;
+
+   if(seed == 0)
+      srand(time(NULL));
+   else
+      srand(seed);
+
    cout << "-> give the number of series : "; cin >> dim;
+
    while(true)
    {
       cout << "-> give the truncation degree : "; cin >> deg;
       if(deg > 0) break;
       cout << "The degree must be one or larger.  Retry" << endl;
    }
+   cout << endl;
+   cout << "MENU for the type of system :" << endl;
+   cout << "  1. monomial system x^A = c " << endl;
+   cout << "  2. cyclic " << dim << "-roots system " << endl;
+   cout << "-> Type 1 or 2 to select the type : "; cin >> systype;
+   cout << endl;
+
+   if(systype == 1)
+      return make_monomial_system(dim,deg);
+   else
+      return make_cyclic_columns(dim,deg);
+}
+
+int make_monomial_system ( int dim, int deg )
+{ 
+   const int vrblvl = 2;
+   int size,nbritr,cdata;
+
    cout << "-> give the size of the numbers : "; cin >> size;
    cout << "-> give the number of iterations : "; cin >> nbritr;
    cout << "-> on complex data (1 is yes, 0 is no) : "; cin >> cdata;
-
-   if(seed == 0)
-      srand(time(NULL));
-   else
-      srand(seed);
 
 // make the unimodular matrix of the system
 
@@ -189,6 +250,221 @@ int make_complex_system ( int dim, int deg, int **rowsA )
       {
          cout << "r[" << i << "][" << j << "] : ";     
          cout << rhsre[i][j] << "  " << rhsim[i][j] << endl;
+      }
+   }
+   return 0;
+}
+
+int make_cyclic_columns ( int dim, int deg )
+{
+   int **nvr = new int*[dim];
+   for(int i=0; i<dim; i++) nvr[i] = new int[dim];
+
+   make_cyclic_variables(dim,nvr);
+
+   int ***idx = new int**[dim]; // we have dim columns and
+   for(int i=0; i<dim; i++)     // dim monomials in each column
+   {
+      idx[i] = new int*[dim];
+      for(int j=0; j<dim; j++) idx[i][j] = new int[nvr[i][j]];
+   }
+   make_cyclic_columns(dim,nvr,idx);
+   write_cyclic_columns(dim,nvr,idx);
+
+   cout << endl;
+   cout << "-> on complex data (1 is yes, 0 is no) : ";
+   int cdata; cin >> cdata;
+
+   cout << endl;
+
+   if(cdata == 0)
+      return make_real_cyclic(dim,deg,nvr,idx);
+   else
+      return make_complex_cyclic(dim,deg,nvr,idx);
+}
+
+int make_real_cyclic ( int dim, int deg, int **nvr, int ***idx )
+{
+   double **sol = new double*[dim];
+
+   const int degp1 = deg+1;
+
+   for(int i=0; i<dim; i++) sol[i] = new double[degp1];
+
+   make_real_exponentials(dim,deg,sol);
+
+   cout << scientific << setprecision(16);
+
+   for(int j=0; j<degp1; j++)
+   {
+      cout << "coefficients of degree " << j << " :" << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         cout << "c[" << i << "][" << j << "] : ";     
+         cout << sol[i][j] << endl;
+      }
+   }
+
+// compute the right hand sides via evaluation
+
+   double **sumrhs = new double*[dim];
+   double **prdrhs = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      sumrhs[i] = new double[degp1];
+      prdrhs[i] = new double[degp1];
+
+      sumrhs[i][0] = 0.0;     // initialize sum to zero
+      prdrhs[i][0] = 1.0;     // initialize product to one
+
+      for(int k=1; k<degp1; k++)
+      {
+         sumrhs[i][k] = 0.0;
+         prdrhs[i][k] = 0.0;
+      }
+   }
+   sumrhs[dim-1][0] = -1.0; // last coefficient of cyclic n-roots is -1
+
+   int **rowsA = new int*[dim];  // exponents in the rows
+   for(int i=0; i<dim; i++) rowsA[i] = new int[dim];
+
+   for(int col=0; col<dim; col++)
+   {
+      for(int i=0; i<dim; i++)   // initialize product to one
+      {
+         prdrhs[i][0] = 1.0;
+         for(int k=1; k<degp1; k++) prdrhs[i][k] = 0.0;
+      }
+      cout << "Evaluating at column " << col << " :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         for(int k=0; k<dim; k++) rowsA[i][k] = 0;
+         for(int k=0; k<nvr[col][i]; k++) rowsA[i][idx[col][i][k]] = 1;
+         for(int k=0; k<dim; k++) cout << " " << rowsA[i][k];
+         cout << endl;
+      }
+      evaluate_real_monomials(dim,deg,rowsA,sol,prdrhs);
+      for(int i=0; i<dim; i++)
+         for(int k=0; k<degp1; k++) sumrhs[i][k] += prdrhs[i][k];
+   }
+   cout << "the evaluated right hand sides :" << endl;
+
+   for(int j=0; j<degp1; j++)
+   {
+      cout << "coefficients of degree " << j << " :" << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         cout << "r[" << i << "][" << j << "] : ";     
+         cout << sumrhs[i][j] << endl;
+      }
+   }
+   return 0;
+}
+
+int make_complex_cyclic ( int dim, int deg, int **nvr, int ***idx )
+{
+   double *angles = new double[dim];
+   double **solre = new double*[dim];
+   double **solim = new double*[dim];
+
+   const int degp1 = deg+1;
+
+   for(int i=0; i<dim; i++)
+   {
+      solre[i] = new double[degp1];
+      solim[i] = new double[degp1];
+   }
+   make_complex_exponentials(dim,deg,angles,solre,solim);
+
+   cout << scientific << setprecision(16);
+
+   for(int j=0; j<degp1; j++)
+   {
+      cout << "coefficients of degree " << j << " :" << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         cout << "c[" << i << "][" << j << "] : ";     
+         cout << solre[i][j] << "  " << solim[i][j] << endl;
+         if(j == 1)
+         {
+            cout << "angle[" << i << "] : " << angles[i] << endl;
+            cout << "c[" << i << "][" << j << "] : ";     
+            cout << cos(angles[i]) << "  " << sin(angles[i]) << endl;
+         }
+      }
+   }
+
+// compute the right hand sides via evaluation
+
+   double **sumrhsre = new double*[dim];
+   double **sumrhsim = new double*[dim];
+   double **prdrhsre = new double*[dim];
+   double **prdrhsim = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      sumrhsre[i] = new double[degp1];
+      sumrhsim[i] = new double[degp1];
+      prdrhsre[i] = new double[degp1];
+      prdrhsim[i] = new double[degp1];
+
+      sumrhsre[i][0] = 0.0;     // initialize sum to zero
+      sumrhsim[i][0] = 0.0;
+
+      for(int k=1; k<degp1; k++)
+      {
+         sumrhsre[i][k] = 0.0; sumrhsim[i][k] = 0.0;
+      }
+   }
+   sumrhsre[dim-1][0] = -1.0; // last coefficient of cyclic n-roots is -1
+
+   int **rowsA = new int*[dim];  // exponents in the rows
+   for(int i=0; i<dim; i++) rowsA[i] = new int[dim];
+
+   for(int col=0; col<dim; col++)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         prdrhsre[i][0] = 1.0;     // initialize product to one
+         prdrhsim[i][0] = 0.0;
+
+         for(int k=1; k<degp1; k++)
+         {
+            prdrhsre[i][k] = 0.0; prdrhsim[i][k] = 0.0;
+         }
+      }
+      cout << "Evaluating at column " << col << " :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         for(int k=0; k<dim; k++) rowsA[i][k] = 0;
+         for(int k=0; k<nvr[col][i]; k++) rowsA[i][idx[col][i][k]] = 1;
+         for(int k=0; k<dim; k++) cout << " " << rowsA[i][k];
+         cout << endl;
+      }
+      evaluate_complex_monomials
+         (dim,deg,rowsA,solre,solim,prdrhsre,prdrhsim);
+
+      for(int i=0; i<dim; i++)
+         for(int k=0; k<degp1; k++)
+         {
+            sumrhsre[i][k] += prdrhsre[i][k];
+            sumrhsim[i][k] += prdrhsim[i][k];
+         }
+   }
+   cout << "the evaluated right hand sides :" << endl;
+
+   for(int j=0; j<degp1; j++)
+   {
+      cout << "coefficients of degree " << j << " :" << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         cout << "r[" << i << "][" << j << "] : ";     
+         cout << sumrhsre[i][j] << "  " << sumrhsim[i][j] << endl;
       }
    }
    return 0;
