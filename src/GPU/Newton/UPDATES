@@ -1,3 +1,6 @@
+Sun 4 Dec 2022 : extended dbl_systems_host.h and dbl_systems_host.cpp to
+  evaluate and differentiate systems defined by the column representation.
+
 Sat 3 Dec 2022 : added test_columns.cpp to define the column representation
   of the monomials in the cyclic n-roots system.  Updated makefiles.
   New cyclic_columns.h and cyclic_columns.cpp out of test_columns.cpp,

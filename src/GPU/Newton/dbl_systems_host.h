@@ -80,6 +80,76 @@ void CPU_cmplx_evaluate_monomials
  *             at the i-th monomial, and for k in range 0..nvr[i]-1,
  *             outputim[i][idx[i]] is the derivative w.r.t. idx[k]. */
 
+void CPU_dbl_evaluate_columns
+ ( int dim, int deg, int **nvr, int ***idx, double ***cff,
+   double **acc, double **input, double ***output, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials in the column representation of a system,
+ *   at power series, on real data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   nvr       nvr[[i][j] is the number of variables of the j-th monomial
+ *             in the i-th column;
+ *   idx       idx[i][j][k] is the index of the k-th variable which appears
+ *             in the j-th monomial of the i-th column;
+ *   cff       coefficients of the monomials, cff[i][j] are the coefficients
+ *             of the j-th monomial in the i-th column;
+ *   acc       space to accumulate dim+1 power series of degree deg;
+ *   input     coefficients of the power series of degree deg,
+ *             for dim variables;
+ *   output    space for the output;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   output    evaluated and differentiated monomials in the system,
+ *             output[i][dim] is the value of the input series
+ *             at the i-th monomial, and for k in range 0..nvr[i]-1,
+ *             output[i][idx[i]] is the derivative w.r.t. idx[k]. */
+
+void CPU_cmplx_evaluate_columns
+ ( int dim, int deg, int **nvr, int ***idx,
+   double ***cffre, double ***cffim, double **accre, double **accim,
+   double **inputre, double **inputim, double ***outputre, double ***outputim,
+   int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials in the column representation of a system,
+ *   at power series, on complex data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   nvr       nvr[[i][j] is the number of variables of the j-th monomial
+ *             in the i-th column;
+ *   idx       idx[i][j][k] is the index of the k-th variable which appears
+ *             in the j-th monomial of the i-th column;
+ *   cffre     real parts of the coefficients of the monomials,
+ *             cffre[i][j] of the j-th mononmial in the i-th column;
+ *   cffim     imaginary parts of the coefficients of the monomials;
+ *             cffre[i][j] of the j-th mononmial in the i-th column;
+ *   accre     space to accumulate dim+1 power series of degree deg;
+ *   accim     space to accumulate dim+1 power series of degree deg;
+ *   inputre   real parts of coefficients of the series of degree deg,
+ *             for dim variables;
+ *   inputim   imaginary parts of coefficients of the series of degree deg,
+ *             for dim variables;
+ *   outputre  space for the output;
+ *   outputim  space for the output;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   outputre  real parts of evaluated and differentiated monomials,
+ *             outputre[i][dim] is the real part of value of the input
+ *             at the i-th monomial, and for k in range 0..nvr[i]-1,
+ *             outputre[i][idx[i]] is the derivative w.r.t. idx[k];
+ *   outputim  imaginary parts of evaluated and differentiated monomials,
+ *             outputim[i][dim] is the real part of value of the input
+ *             at the i-th monomial, and for k in range 0..nvr[i]-1,
+ *             outputim[i][idx[i]] is the derivative w.r.t. idx[k]. */
+
 void dbl_linearize_evaldiff_output
  ( int dim, int degp1, int *nvr, int **idx, double **mb, double damper,
    double ***output, double **funval, double **rhs, double ***jacval,

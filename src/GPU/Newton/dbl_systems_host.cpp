@@ -183,6 +183,125 @@ void CPU_cmplx_evaluate_monomials
    }
 }
 
+void CPU_dbl_evaluate_columns
+ ( int dim, int deg, int **nvr, int ***idx, double ***cff,
+   double **acc, double **input, double ***output, int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cout << "coefficients for column " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+         {
+            cout << "coefficients for monomial " << j << " :" << endl;
+            for(int k=0; k<=deg; k++) cout << cff[i][j][k] << endl;
+         }
+      }
+      cout << "dim : " << dim << "  nvr :";
+      for(int i=0; i<dim; i++)
+      {
+         for(int j=0; j<dim; j++)
+         {
+            cout << "nvr[" << i << "][" << j << "] : " << nvr[i][j] << " :";
+            cout << "  idx[" << i << "][" << j << "] :";
+            for(int k=0; k<nvr[i][j]; k++) cout << " " << idx[i][j][k];
+            cout << endl;
+         }
+      }
+      for(int i=0; i<dim; i++)
+      {
+         cout << "input series for variable " << i << " :" << endl;
+         for(int j=0; j<=deg; j++) cout << input[i][j] << endl;
+      }
+   }
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+         if(nvr[i][j] > 0)       // evaluate j-th monomial in column i
+         {
+            CPU_dbl_evaldiff(dim,nvr[i][j],deg,idx[i][j],cff[i][j],input,acc);
+            for(int k=0; k<dim; k++)
+               for(int L=0; L<degp1; L++) output[j][k][L] += acc[k][L];
+         }
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cout << "output series for monomial " << i << " :" << endl;
+         for(int j=0; j<=deg; j++) cout << output[i][dim][j] << endl;
+      }
+   }
+}
+
+void CPU_cmplx_evaluate_columns
+ ( int dim, int deg, int **nvr, int ***idx,
+   double ***cffre, double ***cffim, double **accre, double **accim,
+   double **inputre, double **inputim, double ***outputre, double ***outputim,
+   int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cout << "coefficients for column " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+         {
+            cout << "coefficients for monomial " << j << " :" << endl;
+            for(int k=0; k<=deg; k++)
+               cout << cffre[i][j][k] << "  " << cffim[i][j][k] << endl;
+         }
+      }
+      cout << "dim : " << dim << "  nvr :";
+      for(int i=0; i<dim; i++)
+      {
+         for(int j=0; j<dim; j++)
+         {
+            cout << "nvr[" << i << "][" << j << "] : " << nvr[i][j] << " :";
+            cout << "  idx[" << i << "][" << j << "] :";
+            for(int k=0; k<nvr[i][j]; k++) cout << " " << idx[i][j][k];
+            cout << endl;
+         }
+      }
+      for(int i=0; i<dim; i++)
+      {
+         cout << "input series for variable " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << inputre[i][j] << "  " << inputim[i][j] << endl;
+      }
+   }
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+         if(nvr[i][j] > 0)       // evaluate j-th monomial in column i
+         {
+            CPU_cmplx_evaldiff
+               (dim,nvr[i][j],deg,idx[i][j],cffre[i][j],cffim[i][j],
+                inputre,inputim,accre,accim);
+
+            for(int k=0; k<dim; k++)
+               for(int L=0; L<degp1; L++)
+               {
+                  outputre[j][k][L] += accre[k][L];
+                  outputim[j][k][L] += accim[k][L];
+               }
+         }
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cout << "output series for monomial " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << outputre[i][dim][j] << "  "
+                 << outputim[i][dim][j] << endl;
+      }
+   }
+}
+
 void dbl_linearize_evaldiff_output
  ( int dim, int degp1, int *nvr, int **idx, double **mb, double damper,
    double ***output, double **funval, double **rhs, double ***jacval,
