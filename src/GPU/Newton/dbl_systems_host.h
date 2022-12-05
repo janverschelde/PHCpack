@@ -81,8 +81,9 @@ void CPU_cmplx_evaluate_monomials
  *             outputim[i][idx[i]] is the derivative w.r.t. idx[k]. */
 
 void CPU_dbl_evaluate_columns
- ( int dim, int deg, int **nvr, int ***idx, double ***cff,
-   double **acc, double **input, double ***output, int vrblvl );
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx,
+   double ***cff, double **acc, double **input,
+   double **funval, double ***jacval, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates the monomials in the column representation of a system,
@@ -91,6 +92,7 @@ void CPU_dbl_evaluate_columns
  * ON ENTRY :
  *   dim       number of monomials;
  *   deg       degree of the power series;
+ *   nbrcol    number of columns;
  *   nvr       nvr[[i][j] is the number of variables of the j-th monomial
  *             in the i-th column;
  *   idx       idx[i][j][k] is the index of the k-th variable which appears
@@ -104,16 +106,14 @@ void CPU_dbl_evaluate_columns
  *   vrblvl    is the verbose level.
  *
  * ON RETURN :
- *   output    evaluated and differentiated monomials in the system,
- *             output[i][dim] is the value of the input series
- *             at the i-th monomial, and for k in range 0..nvr[i]-1,
- *             output[i][idx[i]] is the derivative w.r.t. idx[k]. */
+ *   funval    the evaluated series for each polynomial;
+ *   jacval    matrix series of all derivatives. */
 
 void CPU_cmplx_evaluate_columns
- ( int dim, int deg, int **nvr, int ***idx,
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx,
    double ***cffre, double ***cffim, double **accre, double **accim,
-   double **inputre, double **inputim, double ***outputre, double ***outputim,
-   int vrblvl );
+   double **inputre, double **inputim, double **funvalre, double **funvalim,
+   double ***jacvalre, double ***jacvalim, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates the monomials in the column representation of a system,
@@ -122,6 +122,7 @@ void CPU_cmplx_evaluate_columns
  * ON ENTRY :
  *   dim       number of monomials;
  *   deg       degree of the power series;
+ *   nbrcol    number of columns;
  *   nvr       nvr[[i][j] is the number of variables of the j-th monomial
  *             in the i-th column;
  *   idx       idx[i][j][k] is the index of the k-th variable which appears
@@ -141,14 +142,10 @@ void CPU_cmplx_evaluate_columns
  *   vrblvl    is the verbose level.
  *
  * ON RETURN :
- *   outputre  real parts of evaluated and differentiated monomials,
- *             outputre[i][dim] is the real part of value of the input
- *             at the i-th monomial, and for k in range 0..nvr[i]-1,
- *             outputre[i][idx[i]] is the derivative w.r.t. idx[k];
- *   outputim  imaginary parts of evaluated and differentiated monomials,
- *             outputim[i][dim] is the real part of value of the input
- *             at the i-th monomial, and for k in range 0..nvr[i]-1,
- *             outputim[i][idx[i]] is the derivative w.r.t. idx[k]. */
+ *   funvalre  real parts of the evaluated series for each polynomial;
+ *   funvalim  imaginary parts of the evaluated series for each polynomial;
+ *   jacvalre  real parts of the matrix series of all derivatives;
+ *   jacvalim  imaginary parts of the matrix series of all derivatives. */
 
 void dbl_linearize_evaldiff_output
  ( int dim, int degp1, int *nvr, int **idx, double **mb, double damper,
@@ -181,8 +178,8 @@ void dbl_linearize_evaldiff_output
  *
  * ON RETURN :
  *   funval    collects the output[i][dim], the evaluated series;
- *   rhs       the linearized right hand side are the function values
- *             subtracted by 1 and added by t;
+ *   rhs       the linearized right hand sides are the function values
+ *             subtracted by the series defined by mb;
  *   jacval    a series with matrices as coefficients,
  *             the leading coefficient is the Jacobian matrix. */
 
@@ -236,7 +233,48 @@ void cmplx_linearize_evaldiff_output
  *             subtracted by 1 and added by t;
  *   rhsim     imaginary parts of the linearized right hand side,
  *             subtracted by 1 and added by t;
- *   jacvalre  are the real parts of the matrix series;
- *   jacvalim  are the imaginary parts of the matrix series. */
+ *   jacvalre  real parts of the matrix series;
+ *   jacvalim  imaginary parts of the matrix series. */
+
+void dbl_define_rhs
+ ( int dim, int degp1, double **mb, double **funval, double **rhs,
+   int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Defines the right hand side for the test with the column representation
+ *   of the cyclic n-roots system, on real data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   degp1     degree plus one;
+ *   mb        coefficients of the right hand side series;
+ *   funval    collects the evaluated series;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   rhs       the linearized right hand sides are the function values
+ *             subtracted by the series defined by mb. */
+
+void cmplx_define_rhs
+ ( int dim, int degp1, double **mbre, double **mbim,
+   double **funvalre, double **funvalim,
+   double **rhsre, double **rhsim, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Defines the right hand side for the test with the column representation
+ *   of the cyclic n-roots system, on real data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   degp1     degree plus one;
+ *   mbre      real parts of the coefficients of the right hand side series;
+ *   mbim      imaginary parts of the coefficients of the right hand side;
+ *   funval    real parts of the evaluated series;
+ *   funval    imaginary parts of the evaluated series;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   rhsre     real parts of the linearized right hand sides;
+ *   rhsim     imaginary parts of the linearized right hand sides. */
 
 #endif

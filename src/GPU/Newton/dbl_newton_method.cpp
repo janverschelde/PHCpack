@@ -25,7 +25,7 @@ void dbl_newton_qrstep
  ( int szt, int nbt, int dim, int deg, int nbrcol,
    int *tailidx_h, int *tailidx_d,
    int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
-   double **mb, double dpr, double **cff, double *acc,
+   double **mb, double dpr, double ***cff, double **acc,
    double **input_h, double **input_d, double ***output_h, double ***output_d,
    double **funval_h, double **funval_d,
    double ***jacval_h, double ***jacval_d, double **rhs_h, double **rhs_d,
@@ -40,29 +40,34 @@ void dbl_newton_qrstep
 
    if((mode == 1) || (mode == 2))
    {
-      // The series coefficients accumulate common factors,
-      // initially the coefficients are set to one.
-      dbl_unit_series_vector(dim,deg,cff);
-
       if(vrblvl > 0)
          cout << "calling CPU_dbl_evaluate_monomials ..." << endl;
 
-      CPU_dbl_evaluate_monomials
-         (dim,deg,nvr[0],idx[0],exp,nbrfac,expfac,cff,acc,
-          input_h,output_h,vrblvl);
+      if(nbrcol == 1)
+      {
+         dbl_unit_series_vector(dim,deg,cff[0]);
+         // The series coefficients accumulate common factors,
+         // initially the coefficients are set to one.
+         CPU_dbl_evaluate_monomials
+            (dim,deg,nvr[0],idx[0],exp,nbrfac,expfac,cff[0],acc[0],
+             input_h,output_h,vrblvl);
+      }
+      else
+         CPU_dbl_evaluate_columns
+            (dim,deg,nbrcol,nvr,idx,cff,acc,input_h,funval_h,jacval_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
-      dbl_unit_series_vector(dim,deg,cff); // reset coefficients
+      dbl_unit_series_vector(dim,deg,cff[0]); // reset coefficients
 
       if(vrblvl > 0)
          cout << "calling GPU_dbl_evaluate_monomials ..." << endl;
 
       GPU_dbl_evaluate_monomials
-         (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,cff,acc,
+         (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,cff[0],acc[0],
           input_d,output_d,vrblvl);
    }
-   if((vrblvl > 0) && (mode == 2))
+   if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
       cout << "comparing CPU with GPU evaluations ... " << endl;
       double errsum = 0.0;
@@ -80,13 +85,18 @@ void dbl_newton_qrstep
 
    if((mode == 1) || (mode == 2))
    {
-      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-         for(int j=0; j<dim; j++) 
-            for(int k=0; k<dim; k++) jacval_h[i][j][k] = 0.0;
+      if(nbrcol != 1)
+         dbl_define_rhs(dim,degp1,mb,funval_h,rhs_h,vrblvl);
+      else
+      {
+         for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+            for(int j=0; j<dim; j++) 
+               for(int k=0; k<dim; k++) jacval_h[i][j][k] = 0.0;
 
-      dbl_linearize_evaldiff_output
-         (dim,degp1,nvr[0],idx[0],mb,dpr,output_h,funval_h,rhs_h,
-          jacval_h,vrblvl);
+         dbl_linearize_evaldiff_output
+            (dim,degp1,nvr[0],idx[0],mb,dpr,output_h,funval_h,rhs_h,
+             jacval_h,vrblvl);
+      }
    }
    if((mode == 0) || (mode == 2))
    {
@@ -214,10 +224,19 @@ int test_dbl_real_newton
        input_h[i] = new double[degp1];
        input_d[i] = new double[degp1];
    }
+   if(vrblvl > 1) cout << "allocating for acc and cff ..." << endl;
+
    // allocate memory for coefficients and the output
-   double *acc = new double[degp1]; // accumulated power series
-   double **cff = new double*[dim]; // the coefficients of monomials
-   for(int i=0; i<dim; i++) cff[i] = new double[degp1];
+   double **acc = new double*[dim+1]; // accumulate series in one column
+   for(int i=0; i<=dim; i++) acc[i] = new double[degp1];
+   double ***cff = new double**[nbrcol];
+   if(vrblvl > 0) cout << "nbrcol = " << nbrcol << endl;
+   for(int i=0; i<nbrcol; i++)
+   {
+      cff[i] = new double*[dim]; // the coefficients of monomials
+      for(int j=0; j<dim; j++) cff[i][j] = new double[degp1];
+   }
+   if(vrblvl > 1) cout << "... done allocating for acc and cff" << endl;
 
    double ***output_h;
    double ***output_d;
@@ -379,7 +398,13 @@ int test_dbl_real_newton
 
       for(int k=1; k<degp1; k++) mbrhs[i][k] = 0.0;
    }
-   evaluate_real_monomials(dim,deg,rowsA,sol,mbrhs);
+   if(nbrcol == 1)
+      evaluate_real_monomials(dim,deg,rowsA,sol,mbrhs);
+   else
+   {
+      evaluate_real_columns(dim,deg,nbrcol,nvr,idx,rowsA,sol,mbrhs,vrblvl);
+      dbl_unit_series_vectors(nbrcol,dim,deg,cff);
+   }
    
    double *start0 = new double[dim];
 

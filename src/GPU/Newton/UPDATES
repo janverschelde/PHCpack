@@ -1,5 +1,9 @@
 Mon 5 Dec 2022 : added functions to dbl_monomial_systems to evaluate the
   column representation of cyclic n-roots, tested by test_monomial_systems.
+  Added the '-3' options when prompting dimensions in unimodular_matrices,
+  updated test_dbl_newton.cpp, {dbl, cmplx}_newton_method (.h and .cpp).
+  Added the definition of the right hand side to dbl_systems_host,
+  added functions to dbl_newton_testers.
 
 Sun 4 Dec 2022 : extended dbl_systems_host.h and dbl_systems_host.cpp to
   evaluate and differentiate systems defined by the column representation.

@@ -9,7 +9,7 @@ void cmplx_newton_qrstep
    int *tailidx_h, int *tailidx_d,
    int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
    double **mbre, double **mbim, double dpr,
-   double **cffre, double **cffim, double *accre, double *accim,
+   double ***cffre, double ***cffim, double **accre, double **accim,
    double **inputre_h, double **inputim_h,
    double **inputre_d, double **inputim_d,
    double ***outputre_h, double ***outputim_h,
@@ -55,10 +55,10 @@ void cmplx_newton_qrstep
  *   mbre      real parts of the right hand side vector of series
  *   mbim      imaginary parts of the right hand side vector of series;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
- *   cffre     real parts of the coefficients of the monomials;
+ *   cffre     real parts of the coefficients of the monomials in each column;
  *   cffim     imaginary parts of the coefficients of the monomials;
- *   accre     space to accumulate one power series of degree deg;
- *   accim     space to accumulate one power series of degree deg;
+ *   accre     space to accumulate dim power series of degree deg;
+ *   accim     space to accumulate dim power series of degree deg;
  *   inputre_h are the real parts coefficients of the series of degree deg,
  *             for dim variables, computed on host;
  *   inputim_h are the imaginary parts coefficients of the series

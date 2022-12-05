@@ -842,7 +842,7 @@ test_dbl8_flopbals: random_numbers.obj random8_vectors.obj \
 
 test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
                  dbl_newton_testers.obj prompt_newton_setup.obj \
-		 dbl_monomial_systems.obj \
+		 dbl_monomial_systems.obj cyclic_columns.obj \
 		 dbl_newton_method.obj cmplx_newton_method.obj \
 		 dbl_bals_kernels.obj dbl_tail_kernels.obj \
                  random_numbers.obj random_series.obj random_monomials.obj \
@@ -863,7 +863,7 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
              dbl_newton_method.obj cmplx_newton_method.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
 	     dbl_convolutions_host.obj dbl_monomials_host.obj \
-             convolution_job.obj convolution_jobs.obj \
+             cyclic_columns.obj convolution_job.obj convolution_jobs.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
              dbl_systems_host.obj write_gpu_timings.obj \
              gettimeofday4win.obj \

@@ -196,6 +196,7 @@ void prompt_dimensions
    cout << "-> verbose level (0 for silent) : ";
    cin >> *vrblvl;
    cout << "MENU for the unimodular matrix :" << endl;
+   cout << " -3 : cyclic n-roots system" << endl;
    cout << " -2 : decoupled two variable monomials" << endl;
    cout << " -1 : lower triangular matrix of ones" << endl;
    cout << "  0 : user input" << endl;

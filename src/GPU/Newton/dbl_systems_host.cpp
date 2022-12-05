@@ -184,14 +184,15 @@ void CPU_cmplx_evaluate_monomials
 }
 
 void CPU_dbl_evaluate_columns
- ( int dim, int deg, int **nvr, int ***idx, double ***cff,
-   double **acc, double **input, double ***output, int vrblvl )
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx,
+   double ***cff, double **acc, double **input,
+   double **funval, double ***jacval, int vrblvl )
 {
    const int degp1 = deg+1;
 
    if(vrblvl > 1)
    {
-      for(int i=0; i<dim; i++)
+      for(int i=0; i<nbrcol; i++)
       {
          cout << "coefficients for column " << i << " :" << endl;
          for(int j=0; j<dim; j++)
@@ -201,7 +202,7 @@ void CPU_dbl_evaluate_columns
          }
       }
       cout << "dim : " << dim << "  nvr :";
-      for(int i=0; i<dim; i++)
+      for(int i=0; i<nbrcol; i++)
       {
          for(int j=0; j<dim; j++)
          {
@@ -217,36 +218,45 @@ void CPU_dbl_evaluate_columns
          for(int j=0; j<=deg; j++) cout << input[i][j] << endl;
       }
    }
-   for(int i=0; i<dim; i++)
+   for(int i=0; i<nbrcol; i++)
       for(int j=0; j<dim; j++)
          if(nvr[i][j] > 0)       // evaluate j-th monomial in column i
          {
             CPU_dbl_evaldiff(dim,nvr[i][j],deg,idx[i][j],cff[i][j],input,acc);
+
             for(int k=0; k<dim; k++)
-               for(int L=0; L<degp1; L++) output[j][k][L] += acc[k][L];
+               for(int L=0; L<degp1; L++) funval[k][L] += acc[dim][j];
+
+            int *indexes = idx[i][j];      // indices of the variables
+            for(int k=0; k<nvr[i][j]; k++) // derivative w.r.t. idx[i][j][k]
+            {                              // has j-th coefficient
+               int idxval = indexes[k];
+               for(int L=0; L<degp1; L++) 
+                  jacval[L][j][idxval] += acc[idxval][L];
+            }
          }
 
    if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
-         cout << "output series for monomial " << i << " :" << endl;
-         for(int j=0; j<=deg; j++) cout << output[i][dim][j] << endl;
+         cout << "output series for polynomial " << i << " :" << endl;
+         for(int j=0; j<degp1; j++) cout << funval[i][j] << endl;
       }
    }
 }
 
 void CPU_cmplx_evaluate_columns
- ( int dim, int deg, int **nvr, int ***idx,
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx,
    double ***cffre, double ***cffim, double **accre, double **accim,
-   double **inputre, double **inputim, double ***outputre, double ***outputim,
-   int vrblvl )
+   double **inputre, double **inputim, double **funvalre, double **funvalim,
+   double ***jacvalre, double ***jacvalim, int vrblvl )
 {
    const int degp1 = deg+1;
 
    if(vrblvl > 1)
    {
-      for(int i=0; i<dim; i++)
+      for(int i=0; i<nbrcol; i++)
       {
          cout << "coefficients for column " << i << " :" << endl;
          for(int j=0; j<dim; j++)
@@ -257,7 +267,7 @@ void CPU_cmplx_evaluate_columns
          }
       }
       cout << "dim : " << dim << "  nvr :";
-      for(int i=0; i<dim; i++)
+      for(int i=0; i<nbrcol; i++)
       {
          for(int j=0; j<dim; j++)
          {
@@ -274,7 +284,7 @@ void CPU_cmplx_evaluate_columns
             cout << inputre[i][j] << "  " << inputim[i][j] << endl;
       }
    }
-   for(int i=0; i<dim; i++)
+   for(int i=0; i<nbrcol; i++)
       for(int j=0; j<dim; j++)
          if(nvr[i][j] > 0)       // evaluate j-th monomial in column i
          {
@@ -285,19 +295,30 @@ void CPU_cmplx_evaluate_columns
             for(int k=0; k<dim; k++)
                for(int L=0; L<degp1; L++)
                {
-                  outputre[j][k][L] += accre[k][L];
-                  outputim[j][k][L] += accim[k][L];
+                  funvalre[k][L] += accre[dim][j];
+                  funvalim[k][L] += accim[dim][j];
                }
+
+            int *indexes = idx[i][j];      // indices of the variables
+            for(int k=0; k<nvr[i][j]; k++) // derivative w.r.t. idx[i][j][k]
+            {                              // has j-th coefficient
+               int idxval = indexes[k];
+               for(int L=0; L<degp1; L++) 
+               {
+                  jacvalre[L][j][idxval] += accre[idxval][L];
+                  jacvalim[L][j][idxval] += accim[idxval][L];
+               }
+            }
          }
 
    if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
       {
-         cout << "output series for monomial " << i << " :" << endl;
+         cout << "output series for polynomial " << i << " :" << endl;
          for(int j=0; j<=deg; j++)
-            cout << outputre[i][dim][j] << "  "
-                 << outputim[i][dim][j] << endl;
+            cout << funvalre[i][j] << "  "
+                 << funvalim[i][j] << endl;
       }
    }
 }
@@ -440,6 +461,60 @@ void cmplx_linearize_evaldiff_output
          cout << "row " << i << " : " << endl;
          for(int j=0; j<dim; j++)
             cout << jacvalre[0][i][j] << "  " << jacvalim[0][i][j] << endl;
+      }
+   }
+}
+
+void dbl_define_rhs
+ ( int dim, int degp1, double **mb, double **funval, double **rhs,
+   int vrblvl )
+{
+   if(vrblvl > 1)
+   {
+      cout << "The leading coefficients of the evaluated series :" << endl;
+      for(int i=0; i<dim; i++) cout << i << " : " << funval[i][0] << endl;
+   }
+   for(int i=0; i<degp1; i++)
+      for(int j=0; j<dim; j++) rhs[i][j] = -(funval[j][i] - mb[j][i]);
+
+   if(vrblvl > 1)
+   {
+      cout << "The right hand side series :" << endl;
+      for(int i=0; i<degp1; i++)
+      {
+         cout << "coefficient vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++) cout << rhs[i][j] << endl;
+      }
+   }
+}
+
+void cmplx_define_rhs
+ ( int dim, int degp1, double **mbre, double **mbim,
+   double **funvalre, double **funvalim,
+   double **rhsre, double **rhsim, int vrblvl )
+{
+   if(vrblvl > 1)
+   {
+      cout << "The leading coefficients of the evaluated series :" << endl;
+      for(int i=0; i<dim; i++)
+         cout << i << " : " 
+              << funvalre[i][0] << "  " << funvalim[i][0] << endl;
+   }
+   for(int i=0; i<degp1; i++)
+      for(int j=0; j<dim; j++)
+      {
+         rhsre[i][j] = -(funvalre[j][i] - mbre[j][i]);
+         rhsim[i][j] = -(funvalim[j][i] - mbim[j][i]);
+      }
+ 
+   if(vrblvl > 1)
+   {
+      cout << "The right hand side series :" << endl;
+      for(int i=0; i<degp1; i++)
+      {
+         cout << "coefficient vector " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+            cout << rhsre[i][j] << "  " << rhsim[i][j] << endl;
       }
    }
 }

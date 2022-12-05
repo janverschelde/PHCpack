@@ -8,7 +8,7 @@ void dbl_newton_qrstep
  ( int szt, int nbt, int dim, int deg, int nbrcol,
    int *tailidx_h, int *tailidx_d,
    int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
-   double **mb, double dpr, double **cff, double *acc,
+   double **mb, double dpr, double ***cff, double **acc,
    double **input_h, double **input_d, double ***output_h, double ***output_d,
    double **funval_h, double **funval_d,
    double ***jacval_h, double ***jacval_d, double **rhs_h, double **rhs_d,
@@ -45,8 +45,8 @@ void dbl_newton_qrstep
  *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
  *   mb        right hand side vector of series;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
- *   cff       coefficients of the monomials;
- *   acc       space to accumulate one power series of degree deg;
+ *   cff       coefficients of the monomials in each column;
+ *   acc       space to accumulate dim power series of degree deg;
  *   input_h   coefficients of the power series of degree deg,
  *             for dim variables, computed on host;
  *   input_d   space for power series computed on device;

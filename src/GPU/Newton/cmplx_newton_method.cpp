@@ -26,7 +26,7 @@ void cmplx_newton_qrstep
    int *tailidx_h, int *tailidx_d,
    int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
    double **mbre, double **mbim, double dpr,
-   double **cffre, double **cffim, double *accre, double *accim,
+   double ***cffre, double ***cffim, double **accre, double **accim,
    double **inputre_h, double **inputim_h,
    double **inputre_d, double **inputim_d,
    double ***outputre_h, double ***outputim_h,
@@ -50,31 +50,39 @@ void cmplx_newton_qrstep
 
    if((mode == 1) || (mode == 2))
    {
-      // The series coefficients accumulate common factors,
-      // initially the coefficients are set to one.
-      cmplx_unit_series_vector(dim,deg,cffre,cffim);
-
       if(vrblvl > 0)
          cout << "calling CPU_cmplx_evaluate_monomials ..." << endl;
 
-      CPU_cmplx_evaluate_monomials
-         (dim,deg,nvr[0],idx[0],exp,nbrfac,expfac,
-          cffre,cffim,accre,accim,inputre_h,inputim_h,
-          outputre_h,outputim_h,vrblvl);
+      if(nbrcol == 1)
+      {
+         cmplx_unit_series_vector(dim,deg,cffre[0],cffim[0]);
+         // The series coefficients accumulate common factors,
+         // initially the coefficients are set to one.
+         CPU_cmplx_evaluate_monomials
+            (dim,deg,nvr[0],idx[0],exp,nbrfac,expfac,
+             cffre[0],cffim[0],accre[0],accim[0],inputre_h,inputim_h,
+             outputre_h,outputim_h,vrblvl);
+      }
+      else
+         CPU_cmplx_evaluate_columns
+            (dim,deg,nbrcol,nvr,idx,cffre,cffim,accre,accim,
+             inputre_h,inputim_h,funvalre_h,funvalim_h,
+             jacvalre_h,jacvalim_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
-      cmplx_unit_series_vector(dim,deg,cffre,cffim); // reset coefficients
+      cmplx_unit_series_vector(dim,deg,cffre[0],cffim[0]);
+      // reset coefficients
 
       if(vrblvl > 0)
          cout << "calling GPU_cmplx_evaluate_monomials ..." << endl;
 
       GPU_cmplx_evaluate_monomials
          (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
-          cffre,cffim,accre,accim,inputre_d,inputim_d,
+          cffre[0],cffim[0],accre[0],accim[0],inputre_d,inputim_d,
           outputre_d,outputim_d,vrblvl);
    }
-   if((vrblvl > 0) && (mode == 2))
+   if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
       cout << "comparing CPU with GPU evaluations ... " << endl;
 
@@ -93,17 +101,23 @@ void cmplx_newton_qrstep
 
    if((mode == 1) || (mode == 2))
    {
-      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-         for(int j=0; j<dim; j++) 
-            for(int k=0; k<dim; k++)
-            {
-               jacvalre_h[i][j][k] = 0.0; jacvalim_h[i][j][k] = 0.0;
-            }
+      if(nbrcol != 1)
+         cmplx_define_rhs
+            (dim,degp1,mbre,mbim,funvalre_h,funvalim_h,rhsre_h,rhsim_h,vrblvl);
+      else
+      {
+         for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+            for(int j=0; j<dim; j++) 
+               for(int k=0; k<dim; k++)
+               {
+                  jacvalre_h[i][j][k] = 0.0; jacvalim_h[i][j][k] = 0.0;
+               }
 
-      cmplx_linearize_evaldiff_output
-         (dim,degp1,nvr[0],idx[0],mbre,mbim,dpr,
-          outputre_h,outputim_h,funvalre_h,funvalim_h,
-          rhsre_h,rhsim_h,jacvalre_h,jacvalim_h,vrblvl);
+         cmplx_linearize_evaldiff_output
+            (dim,degp1,nvr[0],idx[0],mbre,mbim,dpr,
+             outputre_h,outputim_h,funvalre_h,funvalim_h,
+             rhsre_h,rhsim_h,jacvalre_h,jacvalim_h,vrblvl);
+      }
    }
    if((mode == 0) || (mode == 2))
    {
@@ -264,14 +278,25 @@ int test_dbl_complex_newton
        inputim_d[i] = new double[degp1];
    }
    // allocate memory for coefficients and the output
-   double *accre = new double[degp1]; // accumulated power series
-   double *accim = new double[degp1];
-   double **cffre = new double*[dim]; // the coefficients of monomials
-   double **cffim = new double*[dim]; 
-   for(int i=0; i<dim; i++)
+   double **accre = new double*[dim+1]; // accumulate series in one column
+   double **accim = new double*[dim+1];
+   for(int i=0; i<=dim; i++)
    {
-      cffre[i] = new double[degp1];
-      cffim[i] = new double[degp1];
+      accre[i] = new double[degp1];
+      accim[i] = new double[degp1];
+   }
+   double ***cffre = new double**[nbrcol]; // the coefficients of monomials
+   double ***cffim = new double**[nbrcol]; 
+   for(int i=0; i<nbrcol; i++)
+   {
+      cffre[i] = new double*[dim];
+      cffim[i] = new double*[dim];
+
+      for(int j=0; j<dim; j++)
+      {
+         cffre[i][j] = new double[degp1];
+         cffim[i][j] = new double[degp1];
+      }
    }
    double ***outputre_h;
    double ***outputim_h;
@@ -571,8 +596,14 @@ int test_dbl_complex_newton
          mbrhsim[i][k] = 0.0;
       }
    }
-   evaluate_complex_monomials(dim,deg,rowsA,solre,solim,mbrhsre,mbrhsim);
-   
+   if(nbrcol == 1)
+      evaluate_complex_monomials(dim,deg,rowsA,solre,solim,mbrhsre,mbrhsim);
+   else
+   {
+      evaluate_complex_columns
+         (dim,deg,nbrcol,nvr,idx,rowsA,solre,solim,mbrhsre,mbrhsim,vrblvl);
+      cmplx_unit_series_vectors(nbrcol,dim,deg,cffre,cffim);
+   }
    double *start0re = new double[dim];
    double *start0im = new double[dim];
 

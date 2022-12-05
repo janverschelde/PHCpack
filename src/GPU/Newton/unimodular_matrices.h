@@ -112,7 +112,11 @@ void prompt_dimensions
  *   posvals   positive exponents (1 if yes);
  *   vrblvl    verbose level (0 if silent);
  *   nbritr    number of unimodular multiplications in the making of
- *             the exponent matrix;
+ *             the exponent matrix, otherwise, for nonpositive values:
+ *             if -3, then cyclic n-roots,
+ *             if -2, then decoupled two variable monomials,
+ *             if -1, then lower triangular matrix of ones,
+ *             if 0, then user input;
  *   nbsteps   the number of Newton steps. */
 
 void copy_integer_matrix ( int dim, int **matfrom, int **matinto );

@@ -66,6 +66,19 @@ void cmplx_unit_series_vector
    }
 }
 
+void dbl_unit_series_vectors ( int nbr, int dim, int deg, double ***cff )
+{
+   for(int i=0; i<nbr; i++)
+      dbl_unit_series_vector(dim,deg,cff[i]);
+}
+
+void cmplx_unit_series_vectors
+ ( int nbr, int dim, int deg, double ***cffre, double ***cffim )
+{
+   for(int i=0; i<nbr; i++)
+      cmplx_unit_series_vector(dim,deg,cffre[i],cffim[i]);
+}
+
 void dbl_update_series
  ( int dim, int degp1, int startidx, double **x, double **dx, int vrblvl )
 {
