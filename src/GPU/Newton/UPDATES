@@ -1,5 +1,7 @@
 Sun 4 Dec 2022 : extended dbl_systems_host.h and dbl_systems_host.cpp to
   evaluate and differentiate systems defined by the column representation.
+  To {dbl, cmplx}_newt_method, added the number of columns, and updated
+  test_dbl_newton.cpp.
 
 Sat 3 Dec 2022 : added test_columns.cpp to define the column representation
   of the monomials in the cyclic n-roots system.  Updated makefiles.

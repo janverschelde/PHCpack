@@ -22,8 +22,9 @@
 using namespace std;
 
 void dbl_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int *tailidx_h, int *tailidx_d,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
    double **mb, double dpr, double **cff, double *acc,
    double **input_h, double **input_d, double ***output_h, double ***output_d,
    double **funval_h, double **funval_d,
@@ -47,7 +48,8 @@ void dbl_newton_qrstep
          cout << "calling CPU_dbl_evaluate_monomials ..." << endl;
 
       CPU_dbl_evaluate_monomials
-         (dim,deg,nvr,idx,exp,nbrfac,expfac,cff,acc,input_h,output_h,vrblvl);
+         (dim,deg,nvr[0],idx[0],exp,nbrfac,expfac,cff,acc,
+          input_h,output_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
@@ -57,7 +59,7 @@ void dbl_newton_qrstep
          cout << "calling GPU_dbl_evaluate_monomials ..." << endl;
 
       GPU_dbl_evaluate_monomials
-         (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,cff,acc,
+         (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,cff,acc,
           input_d,output_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))
@@ -83,7 +85,8 @@ void dbl_newton_qrstep
             for(int k=0; k<dim; k++) jacval_h[i][j][k] = 0.0;
 
       dbl_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,mb,dpr,output_h,funval_h,rhs_h,jacval_h,vrblvl);
+         (dim,degp1,nvr[0],idx[0],mb,dpr,output_h,funval_h,rhs_h,
+          jacval_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
@@ -92,7 +95,8 @@ void dbl_newton_qrstep
             for(int k=0; k<dim; k++) jacval_d[i][j][k] = 0.0;
 
       dbl_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,mb,dpr,output_d,funval_d,rhs_d,jacval_d,vrblvl);
+         (dim,degp1,nvr[0],idx[0],mb,dpr,output_d,funval_d,rhs_d,
+          jacval_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))
    {
@@ -195,8 +199,8 @@ void dbl_newton_qrstep
 }
 
 int test_dbl_real_newton
- ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
@@ -418,7 +422,7 @@ int test_dbl_real_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       dbl_newton_qrstep
-         (szt,nbt,dim,wrkdeg,&tailidx_h,&tailidx_d,
+         (szt,nbt,dim,wrkdeg,nbrcol,&tailidx_h,&tailidx_d,
           nvr,idx,exp,nbrfac,expfac,mbrhs,dpr,cff,acc,
           input_h,input_d,output_h,output_d,funval_h,funval_d,
           jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,

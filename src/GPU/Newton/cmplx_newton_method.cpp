@@ -22,8 +22,9 @@
 using namespace std;
 
 void cmplx_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int *tailidx_h, int *tailidx_d,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
    double **mbre, double **mbim, double dpr,
    double **cffre, double **cffim, double *accre, double *accim,
    double **inputre_h, double **inputim_h,
@@ -57,7 +58,7 @@ void cmplx_newton_qrstep
          cout << "calling CPU_cmplx_evaluate_monomials ..." << endl;
 
       CPU_cmplx_evaluate_monomials
-         (dim,deg,nvr,idx,exp,nbrfac,expfac,
+         (dim,deg,nvr[0],idx[0],exp,nbrfac,expfac,
           cffre,cffim,accre,accim,inputre_h,inputim_h,
           outputre_h,outputim_h,vrblvl);
    }
@@ -69,7 +70,7 @@ void cmplx_newton_qrstep
          cout << "calling GPU_cmplx_evaluate_monomials ..." << endl;
 
       GPU_cmplx_evaluate_monomials
-         (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,
+         (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
           cffre,cffim,accre,accim,inputre_d,inputim_d,
           outputre_d,outputim_d,vrblvl);
    }
@@ -100,7 +101,7 @@ void cmplx_newton_qrstep
             }
 
       cmplx_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,mbre,mbim,dpr,
+         (dim,degp1,nvr[0],idx[0],mbre,mbim,dpr,
           outputre_h,outputim_h,funvalre_h,funvalim_h,
           rhsre_h,rhsim_h,jacvalre_h,jacvalim_h,vrblvl);
    }
@@ -113,7 +114,7 @@ void cmplx_newton_qrstep
                jacvalre_d[i][j][k] = 0.0; jacvalim_d[i][j][k] = 0.0;
             }
       cmplx_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,mbre,mbim,dpr,
+         (dim,degp1,nvr[0],idx[0],mbre,mbim,dpr,
           outputre_d,outputim_d,funvalre_d,funvalim_d,
           rhsre_d,rhsim_d,jacvalre_d,jacvalim_d,vrblvl);
    }
@@ -242,8 +243,8 @@ void cmplx_newton_qrstep
 }
 
 int test_dbl_complex_newton
- ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
@@ -617,7 +618,7 @@ int test_dbl_complex_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       cmplx_newton_qrstep
-         (szt,nbt,dim,wrkdeg,&tailidx_h,&tailidx_d,
+         (szt,nbt,dim,wrkdeg,nbrcol,&tailidx_h,&tailidx_d,
           nvr,idx,exp,nbrfac,expfac,
           mbrhsre,mbrhsim,dpr,cffre,cffim,accre,accim,
           inputre_h,inputim_h,inputre_d,inputim_d,

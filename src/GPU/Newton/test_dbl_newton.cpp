@@ -56,13 +56,29 @@ int main ( void )
 /*
  * 2. calling the test function
  */
+
+  int nbrcol = 1;
+  int **colnvr = new int*[nbrcol];
+  int ***colidx = new int**[nbrcol];
+  for(int i=0; i<nbrcol; i++)
+  {
+     colnvr[i] = new int[dim];
+     colidx[i] = new int*[dim];
+  }
+  // only for nbcol == 1
+  for(int i=0; i<dim; i++)
+  {
+     colnvr[0][i] = nvr[i];
+     colidx[0][i] = new int[nvr[i]];
+     for(int j=0; j<nvr[i]; j++) colidx[0][i][j] = idx[i][j];
+  }
   if(cdata == 0)
      test_dbl_real_newton
-        (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,rowsA,
+        (szt,nbt,dim,deg,nbrcol,colnvr,colidx,exp,nbrfac,expfac,rowsA,
          dpr,nbsteps,mode,vrblvl);
   else
      test_dbl_complex_newton
-        (szt,nbt,dim,deg,nvr,idx,exp,nbrfac,expfac,rowsA,
+        (szt,nbt,dim,deg,nbrcol,colnvr,colidx,exp,nbrfac,expfac,rowsA,
          dpr,nbsteps,mode,vrblvl);
 
    sing = exponents_check(dim,rowsA,expsol,vrblvl);
