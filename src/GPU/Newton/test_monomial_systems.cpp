@@ -308,58 +308,21 @@ int make_real_cyclic ( int dim, int deg, int **nvr, int ***idx )
 
 // compute the right hand sides via evaluation
 
-   double **sumrhs = new double*[dim];
-   double **prdrhs = new double*[dim];
-
-   for(int i=0; i<dim; i++)
-   {
-      sumrhs[i] = new double[degp1];
-      prdrhs[i] = new double[degp1];
-
-      sumrhs[i][0] = 0.0;     // initialize sum to zero
-      prdrhs[i][0] = 1.0;     // initialize product to one
-
-      for(int k=1; k<degp1; k++)
-      {
-         sumrhs[i][k] = 0.0;
-         prdrhs[i][k] = 0.0;
-      }
-   }
-   sumrhs[dim-1][0] = -1.0; // last coefficient of cyclic n-roots is -1
+   double **rhs = new double*[dim];
+   for(int i=0; i<dim; i++) rhs[i] = new double[degp1];
 
    int **rowsA = new int*[dim];  // exponents in the rows
    for(int i=0; i<dim; i++) rowsA[i] = new int[dim];
 
-   for(int col=0; col<dim; col++)
-   {
-      for(int i=0; i<dim; i++)   // initialize product to one
-      {
-         prdrhs[i][0] = 1.0;
-         for(int k=1; k<degp1; k++) prdrhs[i][k] = 0.0;
-      }
-      cout << "Evaluating at column " << col << " :" << endl;
-      for(int i=0; i<dim; i++)
-      {
-         for(int k=0; k<dim; k++) rowsA[i][k] = 0;
-         for(int k=0; k<nvr[col][i]; k++) rowsA[i][idx[col][i][k]] = 1;
-         for(int k=0; k<dim; k++) cout << " " << rowsA[i][k];
-         cout << endl;
-      }
-      evaluate_real_monomials(dim,deg,rowsA,sol,prdrhs);
-      for(int i=0; i<dim; i++)
-         for(int k=0; k<degp1; k++) sumrhs[i][k] += prdrhs[i][k];
-   }
+   evaluate_real_columns(dim,deg,dim,nvr,idx,rowsA,sol,rhs,2);
+
    cout << "the evaluated right hand sides :" << endl;
 
    for(int j=0; j<degp1; j++)
    {
       cout << "coefficients of degree " << j << " :" << endl;
-
       for(int i=0; i<dim; i++)
-      {
-         cout << "r[" << i << "][" << j << "] : ";     
-         cout << sumrhs[i][j] << endl;
-      }
+         cout << "r[" << i << "][" << j << "] : " << rhs[i][j] << endl;
    }
    return 0;
 }
@@ -400,61 +363,21 @@ int make_complex_cyclic ( int dim, int deg, int **nvr, int ***idx )
 
 // compute the right hand sides via evaluation
 
-   double **sumrhsre = new double*[dim];
-   double **sumrhsim = new double*[dim];
-   double **prdrhsre = new double*[dim];
-   double **prdrhsim = new double*[dim];
+   double **rhsre = new double*[dim];
+   double **rhsim = new double*[dim];
 
    for(int i=0; i<dim; i++)
    {
-      sumrhsre[i] = new double[degp1];
-      sumrhsim[i] = new double[degp1];
-      prdrhsre[i] = new double[degp1];
-      prdrhsim[i] = new double[degp1];
-
-      sumrhsre[i][0] = 0.0;     // initialize sum to zero
-      sumrhsim[i][0] = 0.0;
-
-      for(int k=1; k<degp1; k++)
-      {
-         sumrhsre[i][k] = 0.0; sumrhsim[i][k] = 0.0;
-      }
+      rhsre[i] = new double[degp1];
+      rhsim[i] = new double[degp1];
    }
-   sumrhsre[dim-1][0] = -1.0; // last coefficient of cyclic n-roots is -1
 
    int **rowsA = new int*[dim];  // exponents in the rows
    for(int i=0; i<dim; i++) rowsA[i] = new int[dim];
 
-   for(int col=0; col<dim; col++)
-   {
-      for(int i=0; i<dim; i++)
-      {
-         prdrhsre[i][0] = 1.0;     // initialize product to one
-         prdrhsim[i][0] = 0.0;
+   evaluate_complex_columns
+      (dim,deg,dim,nvr,idx,rowsA,solre,solim,rhsre,rhsim,2);
 
-         for(int k=1; k<degp1; k++)
-         {
-            prdrhsre[i][k] = 0.0; prdrhsim[i][k] = 0.0;
-         }
-      }
-      cout << "Evaluating at column " << col << " :" << endl;
-      for(int i=0; i<dim; i++)
-      {
-         for(int k=0; k<dim; k++) rowsA[i][k] = 0;
-         for(int k=0; k<nvr[col][i]; k++) rowsA[i][idx[col][i][k]] = 1;
-         for(int k=0; k<dim; k++) cout << " " << rowsA[i][k];
-         cout << endl;
-      }
-      evaluate_complex_monomials
-         (dim,deg,rowsA,solre,solim,prdrhsre,prdrhsim);
-
-      for(int i=0; i<dim; i++)
-         for(int k=0; k<degp1; k++)
-         {
-            sumrhsre[i][k] += prdrhsre[i][k];
-            sumrhsim[i][k] += prdrhsim[i][k];
-         }
-   }
    cout << "the evaluated right hand sides :" << endl;
 
    for(int j=0; j<degp1; j++)
@@ -464,7 +387,7 @@ int make_complex_cyclic ( int dim, int deg, int **nvr, int ***idx )
       for(int i=0; i<dim; i++)
       {
          cout << "r[" << i << "][" << j << "] : ";     
-         cout << sumrhsre[i][j] << "  " << sumrhsim[i][j] << endl;
+         cout << rhsre[i][j] << "  " << rhsim[i][j] << endl;
       }
    }
    return 0;

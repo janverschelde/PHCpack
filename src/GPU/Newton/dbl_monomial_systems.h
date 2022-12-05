@@ -50,7 +50,7 @@ void evaluate_real_monomials
  *   dim      dimension of the monomial system;
  *   deg      truncation degree of the series;
  *   rowsA    the rows of A have the exponents of the monomials;
- *   s        coefficients of the series;
+ *   x        coefficients of the series;
  *   rhs      space for dim arrays of size deg+1.
  *
  * ON RETURN :
@@ -72,6 +72,59 @@ void evaluate_complex_monomials
  *   sim      imaginary parts of the series;
  *   rhsre    space for dim arrays of size deg+1;
  *   rhsim    space for dim arrays of size deg+1.
+ *
+ * ON RETURN :
+ *   rhsre    real parts of the evaluated monomials;
+ *   rhsim    imaginary parts of the evaluated monomials. */
+
+void evaluate_real_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double **x, double **rhs, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the polynomials defined by the column representation
+ *   at real series to make the right hand side of a system.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the monomial system;
+ *   deg      truncation degree of the series;
+ *   nbrcol   is the number of columns;
+ *   nvr      nvr[[i][j] is the number of variables of the j-th monomial
+ *            in the i-th column.
+ *   idx      idx[i][j][k] is the index of the k-th variable which appears
+ *            in the j-th monomial of the i-th column;
+ *   rowsA    matrix of dimension dim where the rows of A 
+ *            are used as work space during the evaluation;
+ *   x        coefficients of the series;
+ *   rhs      space for dim arrays of size deg+1;
+ *   vrblvl   is the verbose level, if > 1, then exponents are written.
+ *
+ * ON RETURN :
+ *   rhs      the evaluated monomials. */
+
+void evaluate_complex_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double **xre, double **xim, double **rhsre, double **rhsim, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the polynomials defined by the column representation
+ *   at real series to make the right hand side of a system.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the monomial system;
+ *   deg      truncation degree of the series;
+ *   nbrcol   is the number of columns;
+ *   nvr      nvr[[i][j] is the number of variables of the j-th monomial
+ *            in the i-th column.
+ *   idx      idx[i][j][k] is the index of the k-th variable which appears
+ *            in the j-th monomial of the i-th column;
+ *   rowsA    matrix of dimension dim where the rows of A 
+ *            are used as work space during the evaluation;
+ *   xre      real parts of the coefficients of the series;
+ *   xim      imaginary parts of the coefficients of the series;
+ *   rhsre    space for dim arrays of size deg+1;
+ *   rhsim    space for dim arrays of size deg+1;
+ *   vrblvl   is the verbose level, if > 1, then exponents are written.
  *
  * ON RETURN :
  *   rhsre    real parts of the evaluated monomials;

@@ -99,3 +99,120 @@ void evaluate_complex_monomials
    }
    free(accre); free(accim);
 }
+
+void evaluate_real_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double **x, double **rhs, int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   double **prdrhs = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      prdrhs[i] = new double[degp1];
+
+      rhs[i][0] = 0.0;        // initialize sum to zero
+      prdrhs[i][0] = 1.0;     // initialize product to one
+
+      for(int k=1; k<degp1; k++)
+      {
+         rhs[i][k] = 0.0;
+         prdrhs[i][k] = 0.0;
+      }
+   }
+   rhs[dim-1][0] = -1.0; // last coefficient of cyclic n-roots is -1
+
+   for(int col=0; col<nbrcol; col++)
+   {
+      for(int i=0; i<dim; i++)   // initialize product to one
+      {
+         prdrhs[i][0] = 1.0;
+         for(int k=1; k<degp1; k++) prdrhs[i][k] = 0.0;
+      }
+      if(vrblvl > 1)
+         cout << "Evaluating at column " << col << " :" << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         for(int k=0; k<dim; k++) rowsA[i][k] = 0;
+         for(int k=0; k<nvr[col][i]; k++) rowsA[i][idx[col][i][k]] = 1;
+         if(vrblvl > 1)
+         {
+            for(int k=0; k<dim; k++) cout << " " << rowsA[i][k];
+            cout << endl;
+         }
+      }
+      evaluate_real_monomials(dim,deg,rowsA,x,prdrhs);
+      for(int i=0; i<dim; i++)
+         for(int k=0; k<degp1; k++) rhs[i][k] += prdrhs[i][k];
+   }
+   for(int i=0; i<dim; i++) free(prdrhs[i]);
+   free(prdrhs);
+}
+
+void evaluate_complex_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double **xre, double **xim, double **rhsre, double **rhsim, int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   double **prdrhsre = new double*[dim];
+   double **prdrhsim = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      prdrhsre[i] = new double[degp1];
+      prdrhsim[i] = new double[degp1];
+
+      rhsre[i][0] = 0.0;     // initialize sum to zero
+      rhsim[i][0] = 0.0;
+
+      for(int k=1; k<degp1; k++)
+      {
+         rhsre[i][k] = 0.0; rhsim[i][k] = 0.0;
+      }
+   }
+   rhsre[dim-1][0] = -1.0; // last coefficient of cyclic n-roots is -1
+
+   for(int col=0; col<nbrcol; col++)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         prdrhsre[i][0] = 1.0;     // initialize product to one
+         prdrhsim[i][0] = 0.0;
+
+         for(int k=1; k<degp1; k++)
+         {
+            prdrhsre[i][k] = 0.0; prdrhsim[i][k] = 0.0;
+         }
+      }
+      if(vrblvl > 1)
+         cout << "Evaluating at column " << col << " :" << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         for(int k=0; k<dim; k++) rowsA[i][k] = 0;
+         for(int k=0; k<nvr[col][i]; k++) rowsA[i][idx[col][i][k]] = 1;
+         if(vrblvl > 1)
+         {
+            for(int k=0; k<dim; k++) cout << " " << rowsA[i][k];
+            cout << endl;
+         }
+      }
+      evaluate_complex_monomials
+         (dim,deg,rowsA,xre,xim,prdrhsre,prdrhsim);
+
+      for(int i=0; i<dim; i++)
+         for(int k=0; k<degp1; k++)
+         {
+            rhsre[i][k] += prdrhsre[i][k];
+            rhsim[i][k] += prdrhsim[i][k];
+         }
+   }
+   for(int i=0; i<dim; i++)
+   {
+      free(prdrhsre[i]); free(prdrhsim[i]);
+   }
+   free(prdrhsre); free(prdrhsim);
+}
