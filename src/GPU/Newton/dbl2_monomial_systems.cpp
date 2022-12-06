@@ -2,6 +2,7 @@
 // the file dbl2_monomial_systems.h.
 
 #include <iostream>
+#include <iomanip>
 #include <cstdlib>
 #include <cmath>
 #include "double_double_functions.h"
@@ -126,4 +127,186 @@ void evaluate_complex2_monomials
    }
    free(accrehi); free(accimhi);
    free(accrelo); free(accimlo);
+}
+
+void evaluate_real2_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double **xhi, double **xlo, double **rhshi, double **rhslo, int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
+      cout << "evaluating at the series x ..." << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<degp1; j++)
+            cout << "x[" << i << "][" << j << "] : "
+                 << xhi[i][j] << "  " << xlo[i][j] << endl;
+   }
+   double **prdrhshi = new double*[dim];
+   double **prdrhslo = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      prdrhshi[i] = new double[degp1];
+      prdrhslo[i] = new double[degp1];
+
+      for(int k=0; k<degp1; k++) // initialize sum to 0
+      {
+         rhshi[i][k] = 0.0; rhslo[i][k] = 0.0;
+      }
+   }
+   rhshi[dim-1][0] = -1.0; // last coefficient of cyclic n-roots is -1
+
+   for(int col=0; col<nbrcol; col++)
+   {
+      for(int i=0; i<dim; i++)   // initialize product to one
+      {
+         prdrhshi[i][0] = 1.0;
+         prdrhslo[i][0] = 0.0;
+         for(int k=1; k<degp1; k++)
+         {
+            prdrhshi[i][k] = 0.0; prdrhslo[i][k] = 0.0;
+         }
+      }
+      if(vrblvl > 1)
+         cout << "Evaluating at column " << col << " :" << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         for(int k=0; k<dim; k++) rowsA[i][k] = 0;
+         for(int k=0; k<nvr[col][i]; k++) rowsA[i][idx[col][i][k]] = 1;
+         if(vrblvl > 1)
+         {
+            for(int k=0; k<dim; k++) cout << " " << rowsA[i][k];
+            cout << endl;
+         }
+      }
+      evaluate_real2_monomials(dim,deg,rowsA,xhi,xlo,prdrhshi,prdrhslo);
+      if(vrblvl > 1)
+      {
+         cout << scientific << setprecision(16);
+         for(int i=0; i<dim; i++)
+         {
+            cout << "value at dimension " << i << " :" << endl;
+            for(int j=0; j<degp1; j++)
+               cout << "prdrhs[" << i << "][" << j << "] : "
+                    << prdrhshi[i][j] << "  "
+                    << prdrhslo[i][j] << endl;
+         }
+      }
+      for(int i=0; i<dim; i++)
+      {
+         int rowsum = 0;  // check on row sum is a patch ...
+         for(int j=0; j<dim; j++) rowsum += rowsA[i][j];
+         if(rowsum != 0)
+            for(int k=0; k<degp1; k++)
+            {
+               // rhs[i][k] += prdrhs[i][k];
+               ddf_inc(&rhshi[i][k],&rhslo[i][k],
+                       prdrhshi[i][k],prdrhslo[i][k]);
+            }
+      }
+   }
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
+      cout << "the evaluated series ..." << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<degp1; j++)
+            cout << "rhs[" << i << "][" << j << "] : "
+                 << rhshi[i][j] << "  " << rhslo[i][j] << endl;
+   }
+   for(int i=0; i<dim; i++)
+   {
+      free(prdrhshi[i]);
+      free(prdrhslo[i]);
+   }
+   free(prdrhshi); free(prdrhslo);
+}
+
+void evaluate_complex2_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double **xrehi, double **xrelo, double **ximhi, double **ximlo,
+   double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
+   int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   double **prdrhsrehi = new double*[dim];
+   double **prdrhsrelo = new double*[dim];
+   double **prdrhsimhi = new double*[dim];
+   double **prdrhsimlo = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      prdrhsrehi[i] = new double[degp1];
+      prdrhsrelo[i] = new double[degp1];
+      prdrhsimhi[i] = new double[degp1];
+      prdrhsimlo[i] = new double[degp1];
+
+      for(int k=0; k<degp1; k++)  // initialize sum to zero
+      {
+         rhsrehi[i][k] = 0.0; rhsimhi[i][k] = 0.0;
+         rhsrelo[i][k] = 0.0; rhsimlo[i][k] = 0.0;
+      }
+   }
+   rhsrehi[dim-1][0] = -1.0; // last coefficient of cyclic n-roots is -1
+
+   for(int col=0; col<nbrcol; col++)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         prdrhsrehi[i][0] = 1.0;     // initialize product to one
+         prdrhsrelo[i][0] = 0.0;
+         prdrhsimhi[i][0] = 0.0;
+         prdrhsimlo[i][0] = 0.0;
+
+         for(int k=1; k<degp1; k++)
+         {
+            prdrhsrehi[i][k] = 0.0; prdrhsimhi[i][k] = 0.0;
+            prdrhsrelo[i][k] = 0.0; prdrhsimlo[i][k] = 0.0;
+         }
+      }
+      if(vrblvl > 1)
+         cout << "Evaluating at column " << col << " :" << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         for(int k=0; k<dim; k++) rowsA[i][k] = 0;
+         for(int k=0; k<nvr[col][i]; k++) rowsA[i][idx[col][i][k]] = 1;
+         if(vrblvl > 1)
+         {
+            for(int k=0; k<dim; k++) cout << " " << rowsA[i][k];
+            cout << endl;
+         }
+      }
+      evaluate_complex2_monomials
+         (dim,deg,rowsA,xrehi,xrelo,ximhi,ximlo,
+          prdrhsrehi,prdrhsrelo,prdrhsimhi,prdrhsimlo);
+
+      for(int i=0; i<dim; i++)
+      {
+         int rowsum = 0;  // check on row sum is a patch ...
+         for(int j=0; j<dim; j++) rowsum += rowsA[i][j];
+         if(rowsum != 0)
+            for(int k=0; k<degp1; k++)
+            {
+               // rhsre[i][k] += prdrhsre[i][k];
+               ddf_inc(&rhsrehi[i][k],&rhsrelo[i][k],
+                       prdrhsrehi[i][k],prdrhsrelo[i][k]);
+               // rhsim[i][k] += prdrhsim[i][k];
+               ddf_inc(&rhsimhi[i][k],&rhsimlo[i][k],
+                       prdrhsimhi[i][k],prdrhsimlo[i][k]);
+            }
+      }
+   }
+   for(int i=0; i<dim; i++)
+   {
+      free(prdrhsrehi[i]); free(prdrhsimhi[i]);
+      free(prdrhsrelo[i]); free(prdrhsimlo[i]);
+   }
+   free(prdrhsrehi); free(prdrhsimhi);
+   free(prdrhsrelo); free(prdrhsimlo);
 }

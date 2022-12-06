@@ -92,4 +92,68 @@ void evaluate_complex2_monomials
  *   rhsimhi  high doubles of the imaginary parts of the evaluated monomials;
  *   rhsimlo  low doubles of the imaginary parts of the evaluated monomials. */
 
+void evaluate_real2_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double **xhi, double **xlo, double **rhshi, double **rhslo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the polynomials defined by the column representation
+ *   at real series to make the right hand side of a system.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the monomial system;
+ *   deg      truncation degree of the series;
+ *   nbrcol   is the number of columns;
+ *   nvr      nvr[[i][j] is the number of variables of the j-th monomial
+ *            in the i-th column.
+ *   idx      idx[i][j][k] is the index of the k-th variable which appears
+ *            in the j-th monomial of the i-th column;
+ *   rowsA    matrix of dimension dim where the rows of A 
+ *            are used as work space during the evaluation;
+ *   xhi      high double coefficients of the series;
+ *   xlo      low double coefficients of the series;
+ *   rhshi    space for dim arrays of size deg+1;
+ *   rhslo    space for dim arrays of size deg+1;
+ *   vrblvl   is the verbose level, if > 1, then exponents are written.
+ *
+ * ON RETURN :
+ *   rhshi    high doubles of the evaluated monomials;
+ *   rhslo    low doubles of the evaluated monomials. */
+
+void evaluate_complex2_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double **xrehi, double **xrelo, double **ximhi, double **ximlo,
+   double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
+   int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the polynomials defined by the column representation
+ *   at real series to make the right hand side of a system.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the monomial system;
+ *   deg      truncation degree of the series;
+ *   nbrcol   is the number of columns;
+ *   nvr      nvr[[i][j] is the number of variables of the j-th monomial
+ *            in the i-th column.
+ *   idx      idx[i][j][k] is the index of the k-th variable which appears
+ *            in the j-th monomial of the i-th column;
+ *   rowsA    matrix of dimension dim where the rows of A 
+ *            are used as work space during the evaluation;
+ *   xrehi    high double real parts of the coefficients of the series;
+ *   xrelo    low double real parts of the coefficients of the series;
+ *   ximhi    high double imaginary parts of the coefficients of the series;
+ *   ximlo    low double imaginary parts of the coefficients of the series;
+ *   rhsrehi  space for dim arrays of size deg+1;
+ *   rhsrelo  space for dim arrays of size deg+1;
+ *   rhsimhi  space for dim arrays of size deg+1;
+ *   rhsimlo  space for dim arrays of size deg+1;
+ *   vrblvl   is the verbose level, if > 1, then exponents are written.
+ *
+ * ON RETURN :
+ *   rhsrehi  high doubles of the real parts of the evaluated monomials;
+ *   rhsrelo  low doubles of the real parts of the evaluated monomials;
+ *   rhsimhi  high doubles of the imaginary parts of the evaluated monomials;
+ *   rhsimlo  low doubles of the imaginary parts of the evaluated monomials. */
+
 #endif

@@ -111,7 +111,6 @@ void evaluate_real4_monomials
    free(acchihi); free(acclohi); free(acchilo); free(acclolo);
 }
 
-
 void evaluate_complex4_monomials
  ( int dim, int deg, int **rowsA,
    double **srehihi, double **srelohi, double **srehilo, double **srelolo,
@@ -165,4 +164,236 @@ void evaluate_complex4_monomials
    }
    free(accrehihi); free(accrelohi); free(accrehilo); free(accrelolo);
    free(accimhihi); free(accimlohi); free(accimhilo); free(accimlolo);
+}
+
+void evaluate_real4_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double **xhihi, double **xlohi, double **xhilo, double **xlolo,
+   double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
+   int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
+      cout << "evaluating at the series x ..." << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<degp1; j++)
+            cout << "x[" << i << "][" << j << "] : "
+                 << xhihi[i][j] << "  " << xlohi[i][j] << endl << "  "
+                 << xhilo[i][j] << "  " << xlolo[i][j] << endl;
+   }
+   double **prdrhshihi = new double*[dim];
+   double **prdrhslohi = new double*[dim];
+   double **prdrhshilo = new double*[dim];
+   double **prdrhslolo = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      prdrhshihi[i] = new double[degp1];
+      prdrhslohi[i] = new double[degp1];
+      prdrhshilo[i] = new double[degp1];
+      prdrhslolo[i] = new double[degp1];
+
+      for(int k=0; k<degp1; k++) // initialize sum to 0
+      {
+         rhshihi[i][k] = 0.0; rhslohi[i][k] = 0.0;
+         rhshilo[i][k] = 0.0; rhslolo[i][k] = 0.0;
+      }
+   }
+   rhshihi[dim-1][0] = -1.0; // last coefficient of cyclic n-roots is -1
+
+   for(int col=0; col<nbrcol; col++)
+   {
+      for(int i=0; i<dim; i++)   // initialize product to one
+      {
+         prdrhshihi[i][0] = 1.0;
+         prdrhslohi[i][0] = 0.0;
+         prdrhshilo[i][0] = 0.0;
+         prdrhslolo[i][0] = 0.0;
+
+         for(int k=1; k<degp1; k++)
+         {
+            prdrhshihi[i][k] = 0.0; prdrhslohi[i][k] = 0.0;
+            prdrhshilo[i][k] = 0.0; prdrhslolo[i][k] = 0.0;
+         }
+      }
+      if(vrblvl > 1)
+         cout << "Evaluating at column " << col << " :" << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         for(int k=0; k<dim; k++) rowsA[i][k] = 0;
+         for(int k=0; k<nvr[col][i]; k++) rowsA[i][idx[col][i][k]] = 1;
+         if(vrblvl > 1)
+         {
+            for(int k=0; k<dim; k++) cout << " " << rowsA[i][k];
+            cout << endl;
+         }
+      }
+      evaluate_real4_monomials
+         (dim,deg,rowsA,xhihi,xlohi,xhilo,xlolo,
+          prdrhshihi,prdrhslohi,prdrhshilo,prdrhslolo);
+
+      if(vrblvl > 1)
+      {
+         cout << scientific << setprecision(16);
+         for(int i=0; i<dim; i++)
+         {
+            cout << "value at dimension " << i << " :" << endl;
+            for(int j=0; j<degp1; j++)
+               cout << "prdrhs[" << i << "][" << j << "] : "
+                    << prdrhshihi[i][j] << "  "
+                    << prdrhslohi[i][j] << endl << "  "
+                    << prdrhshilo[i][j] << "  "
+                    << prdrhslolo[i][j] << endl;
+         }
+      }
+      for(int i=0; i<dim; i++)
+      {
+         int rowsum = 0;  // check on row sum is a patch ...
+         for(int j=0; j<dim; j++) rowsum += rowsA[i][j];
+         if(rowsum != 0)
+            for(int k=0; k<degp1; k++)
+            {
+               // rhs[i][k] += prdrhs[i][k];
+               qdf_inc(&rhshihi[i][k],&rhslohi[i][k],
+                       &rhshilo[i][k],&rhslolo[i][k],
+                       prdrhshihi[i][k],prdrhslohi[i][k],
+                       prdrhshilo[i][k],prdrhslolo[i][k]);
+            }
+      }
+   }
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
+      cout << "the evaluated series ..." << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<degp1; j++)
+            cout << "rhs[" << i << "][" << j << "] : "
+                 << rhshihi[i][j] << "  " << rhslohi[i][j] << endl << "  "
+                 << rhshilo[i][j] << "  " << rhslolo[i][j] << endl;
+   }
+   for(int i=0; i<dim; i++)
+   {
+      free(prdrhshihi[i]); free(prdrhslohi[i]);
+      free(prdrhshilo[i]); free(prdrhslolo[i]);
+   }
+   free(prdrhshihi); free(prdrhslohi);
+   free(prdrhshilo); free(prdrhslolo);
+}
+
+void evaluate_complex4_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double **xrehihi, double **xrelohi, double **xrehilo, double **xrelolo,
+   double **ximhihi, double **ximlohi, double **ximhilo, double **ximlolo,
+   double **rhsrehihi, double **rhsrelohi,
+   double **rhsrehilo, double **rhsrelolo,
+   double **rhsimhihi, double **rhsimlohi,
+   double **rhsimhilo, double **rhsimlolo, int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   double **prdrhsrehihi = new double*[dim];
+   double **prdrhsrelohi = new double*[dim];
+   double **prdrhsrehilo = new double*[dim];
+   double **prdrhsrelolo = new double*[dim];
+   double **prdrhsimhihi = new double*[dim];
+   double **prdrhsimlohi = new double*[dim];
+   double **prdrhsimhilo = new double*[dim];
+   double **prdrhsimlolo = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      prdrhsrehihi[i] = new double[degp1];
+      prdrhsrelohi[i] = new double[degp1];
+      prdrhsrehilo[i] = new double[degp1];
+      prdrhsrelolo[i] = new double[degp1];
+      prdrhsimhihi[i] = new double[degp1];
+      prdrhsimlohi[i] = new double[degp1];
+      prdrhsimhilo[i] = new double[degp1];
+      prdrhsimlolo[i] = new double[degp1];
+
+      for(int k=0; k<degp1; k++)  // initialize sum to zero
+      {
+         rhsrehihi[i][k] = 0.0; rhsimhihi[i][k] = 0.0;
+         rhsrelohi[i][k] = 0.0; rhsimlohi[i][k] = 0.0;
+         rhsrehilo[i][k] = 0.0; rhsimhilo[i][k] = 0.0;
+         rhsrelolo[i][k] = 0.0; rhsimlolo[i][k] = 0.0;
+      }
+   }
+   rhsrehihi[dim-1][0] = -1.0; // last coefficient of cyclic n-roots is -1
+
+   for(int col=0; col<nbrcol; col++)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         prdrhsrehihi[i][0] = 1.0;     // initialize product to one
+         prdrhsrelohi[i][0] = 0.0;
+         prdrhsrehilo[i][0] = 0.0; 
+         prdrhsrelolo[i][0] = 0.0;
+         prdrhsimhihi[i][0] = 0.0;
+         prdrhsimlohi[i][0] = 0.0;
+         prdrhsimhilo[i][0] = 0.0;
+         prdrhsimlolo[i][0] = 0.0;
+
+         for(int k=1; k<degp1; k++)
+         {
+            prdrhsrehihi[i][k] = 0.0; prdrhsimhihi[i][k] = 0.0;
+            prdrhsrelohi[i][k] = 0.0; prdrhsimlohi[i][k] = 0.0;
+            prdrhsrehilo[i][k] = 0.0; prdrhsimhilo[i][k] = 0.0;
+            prdrhsrelolo[i][k] = 0.0; prdrhsimlolo[i][k] = 0.0;
+         }
+      }
+      if(vrblvl > 1)
+         cout << "Evaluating at column " << col << " :" << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         for(int k=0; k<dim; k++) rowsA[i][k] = 0;
+         for(int k=0; k<nvr[col][i]; k++) rowsA[i][idx[col][i][k]] = 1;
+         if(vrblvl > 1)
+         {
+            for(int k=0; k<dim; k++) cout << " " << rowsA[i][k];
+            cout << endl;
+         }
+      }
+      evaluate_complex4_monomials
+         (dim,deg,rowsA,
+          xrehihi,xrelohi,xrehilo,xrelolo,ximhihi,ximlohi,ximhilo,ximlolo,
+          prdrhsrehihi,prdrhsrelohi,prdrhsrehilo,prdrhsrelolo,
+          prdrhsimhihi,prdrhsimlohi,prdrhsimhilo,prdrhsimlolo);
+
+      for(int i=0; i<dim; i++)
+      {
+         int rowsum = 0;  // check on row sum is a patch ...
+         for(int j=0; j<dim; j++) rowsum += rowsA[i][j];
+         if(rowsum != 0)
+            for(int k=0; k<degp1; k++)
+            {
+               // rhsre[i][k] += prdrhsre[i][k];
+               qdf_inc(&rhsrehihi[i][k],&rhsrelohi[i][k],
+                       &rhsrehilo[i][k],&rhsrelolo[i][k],
+                       prdrhsrehihi[i][k],prdrhsrelohi[i][k],
+                       prdrhsrehilo[i][k],prdrhsrelolo[i][k]);
+               // rhsim[i][k] += prdrhsim[i][k];
+               qdf_inc(&rhsimhihi[i][k],&rhsimlohi[i][k],
+                       &rhsimhilo[i][k],&rhsimlolo[i][k],
+                       prdrhsimhihi[i][k],prdrhsimlohi[i][k],
+                       prdrhsimhilo[i][k],prdrhsimlolo[i][k]);
+            }
+      }
+   }
+   for(int i=0; i<dim; i++)
+   {
+      free(prdrhsrehihi[i]); free(prdrhsimhihi[i]);
+      free(prdrhsrelohi[i]); free(prdrhsimlohi[i]);
+      free(prdrhsrehilo[i]); free(prdrhsimhilo[i]);
+      free(prdrhsrelolo[i]); free(prdrhsimlolo[i]);
+   }
+   free(prdrhsrehihi); free(prdrhsimhihi);
+   free(prdrhsrelohi); free(prdrhsimlohi);
+   free(prdrhsrehilo); free(prdrhsimhilo);
+   free(prdrhsrelolo); free(prdrhsimlolo);
 }

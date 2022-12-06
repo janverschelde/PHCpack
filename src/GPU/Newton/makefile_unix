@@ -491,18 +491,18 @@ test_monomial_systems: cyclic_columns.o \
 
 test2_monomial_systems: random_numbers.o random_series.o random_monomials.o \
                         random2_vectors.o random2_series.o \
-                        unimodular_matrices.o \
+                        unimodular_matrices.o cyclic_columns.o \
                         double_double_functions.o dbl2_monomial_systems.o \
                         dbl2_convolutions_host.o test2_monomial_systems.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test2_monomial_systems test2_monomial_systems.o \
                   dbl2_monomial_systems.o unimodular_matrices.o \
                   random_numbers.o random_series.o random_monomials.o \
-                  random2_vectors.o random2_series.o \
+                  random2_vectors.o random2_series.o cyclic_columns.o \
                   double_double_functions.o dbl2_convolutions_host.o 
 
 test4_monomial_systems: random_numbers.o random_series.o random_monomials.o \
-                        random4_vectors.o random4_series.o \
+                        random4_vectors.o random4_series.o cyclic_columns.o \
                         unimodular_matrices.o double_double_functions.o \
                         quad_double_functions.o dbl4_monomial_systems.o \
                         dbl4_convolutions_host.o test4_monomial_systems.o
@@ -510,12 +510,12 @@ test4_monomial_systems: random_numbers.o random_series.o random_monomials.o \
 	$(gpp) -o test4_monomial_systems test4_monomial_systems.o \
                   dbl4_monomial_systems.o unimodular_matrices.o \
                   random_numbers.o random_series.o random_monomials.o \
-                  random4_vectors.o random4_series.o \
+                  random4_vectors.o random4_series.o cyclic_columns.o \
                   double_double_functions.o quad_double_functions.o \
                   dbl4_convolutions_host.o 
 
 test8_monomial_systems: random_numbers.o random_series.o random_monomials.o \
-                        random8_vectors.o random8_series.o \
+                        random8_vectors.o random8_series.o cyclic_columns.o \
                         unimodular_matrices.o double_double_functions.o \
                         quad_double_functions.o octo_double_functions.o \
                         dbl8_monomial_systems.o dbl8_convolutions_host.o \
@@ -524,7 +524,7 @@ test8_monomial_systems: random_numbers.o random_series.o random_monomials.o \
 	$(gpp) -o test8_monomial_systems test8_monomial_systems.o \
                   dbl8_monomial_systems.o unimodular_matrices.o \
                   random_numbers.o random_series.o random_monomials.o \
-                  random8_vectors.o random8_series.o \
+                  random8_vectors.o random8_series.o cyclic_columns.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o dbl8_convolutions_host.o 
 

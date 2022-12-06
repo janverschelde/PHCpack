@@ -210,4 +210,140 @@ void evaluate_complex8_monomials
  *   rhsimhilolo are the 2nd lowest doubles of the imag parts of the rhs;
  *   rhsimlololo are the lowest doubles of the imag parts of the rhs. */
 
+void evaluate_real8_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double **xhihihi, double **xlohihi, double **xhilohi, double **xlolohi,
+   double **xhihilo, double **xlohilo, double **xhilolo, double **xlololo,
+   double **rhshihihi, double **rhslohihi,
+   double **rhshilohi, double **rhslolohi,
+   double **rhshihilo, double **rhslohilo,
+   double **rhshilolo, double **rhslololo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the polynomials defined by the column representation
+ *   at real series to make the right hand side of a system.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the monomial system;
+ *   deg      truncation degree of the series;
+ *   nbrcol   is the number of columns;
+ *   nvr      nvr[[i][j] is the number of variables of the j-th monomial
+ *            in the i-th column.
+ *   idx      idx[i][j][k] is the index of the k-th variable which appears
+ *            in the j-th monomial of the i-th column;
+ *   rowsA    matrix of dimension dim where the rows of A 
+ *            are used as work space during the evaluation;
+ *   xhihihi  highest double coefficients of the series;
+ *   xlohihi  second highest double coefficients of the series;
+ *   xhilohi  third highest double coefficients of the series;
+ *   xlolohi  fourth highest double coefficients of the series;
+ *   xhihilo  fourth lowest double coefficients of the series;
+ *   xlohilo  third lowest double coefficients of the series;
+ *   xhilolo  second lowest double coefficients of the series;
+ *   xlololo  lowest double coefficients of the series;
+ *   rhshihihi has space for dim arrays of size deg+1;
+ *   rhslohihi has space for dim arrays of size deg+1;
+ *   rhshilohi has space for dim arrays of size deg+1;
+ *   rhslolohi has space for dim arrays of size deg+1;
+ *   rhshihilo has space for dim arrays of size deg+1;
+ *   rhslohilo has space for dim arrays of size deg+1;
+ *   rhshilolo has space for dim arrays of size deg+1;
+ *   rhslololo has space for dim arrays of size deg+1;
+ *   vrblvl   is the verbose level, if > 1, then exponents are written.
+ *
+ * ON RETURN :
+ *   rhshihihi are the highest doubles of the real parts of the evaluations;
+ *   rhslohihi are the 2nd highest doubles of the real parts of rhs;
+ *   rhshilohi are the 3rd highest doubles of the real parts of rhs;
+ *   rhslolohi are the 4th highest doubles of the real parts of rhs;
+ *   rhshihilo are the 4th lowest doubles of the real parts of rhs;
+ *   rhslohilo are the 3rd lowest doubles of the real parts of rhs;
+ *   rhshilolo are the 2nd lowest doubles of the real parts of rhs;
+ *   rhslololo are the lowest doubles of the real parts of rhs. */
+
+void evaluate_complex8_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double **xrehihihi, double **xrelohihi,
+   double **xrehilohi, double **xrelolohi,
+   double **xrehihilo, double **xrelohilo,
+   double **xrehilolo, double **xrelololo,
+   double **ximhihihi, double **ximlohihi,
+   double **ximhilohi, double **ximlolohi,
+   double **ximhihilo, double **ximlohilo,
+   double **ximhilolo, double **ximlololo,
+   double **rhsrehihihi, double **rhsrelohihi,
+   double **rhsrehilohi, double **rhsrelolohi,
+   double **rhsrehihilo, double **rhsrelohilo,
+   double **rhsrehilolo, double **rhsrelololo,
+   double **rhsimhihihi, double **rhsimlohihi,
+   double **rhsimhilohi, double **rhsimlolohi,
+   double **rhsimhihilo, double **rhsimlohilo,
+   double **rhsimhilolo, double **rhsimlololo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the polynomials defined by the column representation
+ *   at real series to make the right hand side of a system.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the monomial system;
+ *   deg      truncation degree of the series;
+ *   nbrcol   is the number of columns;
+ *   nvr      nvr[[i][j] is the number of variables of the j-th monomial
+ *            in the i-th column.
+ *   idx      idx[i][j][k] is the index of the k-th variable which appears
+ *            in the j-th monomial of the i-th column;
+ *   rowsA    matrix of dimension dim where the rows of A 
+ *            are used as work space during the evaluation;
+ *   xrehihihi has the highest double real parts of the coefficients;
+ *   xrelohihi has the 2nd highest double real parts of the coefficients;
+ *   xrehilohi has the 3rd highest double real parts of the coefficients;
+ *   xrelolohi has the 4th highest double real parts of the coefficients;
+ *   xrehihilo has the 4th lowest double real parts of the coefficients;
+ *   xrelohilo has the 3rd lowest double real parts of the coefficients;
+ *   xrehilolo has the 2nd lowest double real parts of the coefficients;
+ *   xrelololo has the lowest double real parts of the coefficients;
+ *   ximhihihi has the highest double imag parts of the coefficients;
+ *   ximlohihi has the 2nd highest double imag parts of the coefficients;
+ *   ximhilohi has the 3rd highest double imag parts of the coefficients;
+ *   ximlolohi has the 4th highest double imag parts of the coefficients;
+ *   ximhihilo has the 4th lowest double imag parts of the coefficients;
+ *   ximlohilo has the 3rd lowest double imag parts of the coefficients;
+ *   ximhilolo has the 2nd lowest double imag parts of the coefficients;
+ *   ximlololo has the lowest double imag parts of the coefficients;
+ *   rhsrehihihi has space for dim arrays of size deg+1;
+ *   rhsrelohihi has space for dim arrays of size deg+1;
+ *   rhsrehilohi has space for dim arrays of size deg+1;
+ *   rhsrelolohi has space for dim arrays of size deg+1;
+ *   rhsrehihilo has space for dim arrays of size deg+1;
+ *   rhsrelohilo has space for dim arrays of size deg+1;
+ *   rhsrehilolo has space for dim arrays of size deg+1;
+ *   rhsrelololo has space for dim arrays of size deg+1;
+ *   rhsimhihihi has space for dim arrays of size deg+1;
+ *   rhsimlohihi has space for dim arrays of size deg+1;
+ *   rhsimhilohi has space for dim arrays of size deg+1;
+ *   rhsimlolohi has space for dim arrays of size deg+1;
+ *   rhsimhihilo has space for dim arrays of size deg+1;
+ *   rhsimlohilo has space for dim arrays of size deg+1;
+ *   rhsimhilolo has space for dim arrays of size deg+1;
+ *   rhsimlololo has space for dim arrays of size deg+1;
+ *   vrblvl   is the verbose level, if > 1, then exponents are written.
+ *
+ * ON RETURN :
+ *   rhsrehihihi are the highest doubles of the real parts of the evaluations;
+ *   rhsrelohihi are the 2nd highest doubles of the real parts of rhs;
+ *   rhsrehilohi are the 3rd highest doubles of the real parts of rhs;
+ *   rhsrelolohi are the 4th highest doubles of the real parts of rhs;
+ *   rhsrehihilo are the 4th lowest doubles of the real parts of rhs;
+ *   rhsrelohilo are the 3rd lowest doubles of the real parts of rhs;
+ *   rhsrehilolo are the 2nd lowest doubles of the real parts of rhs;
+ *   rhsrelololo are the lowest doubles of the real parts of rhs;
+ *   rhsimhihihi are the highest doubles of the imag parts of the rhs;
+ *   rhsimlohihi are the 2nd highest doubles of the imag parts of the rhs;
+ *   rhsimhilohi are the 3rd highest doubles of the imag parts of the rhs;
+ *   rhsimlolohi are the 4th highest doubles of the imag parts of the rhs;
+ *   rhsimhihilo are the 4th lowest doubles of the imag parts of the rhs;
+ *   rhsimlohilo are the 3rd lowest doubles of the imag parts of the rhs;
+ *   rhsimhilolo are the 2nd lowest doubles of the imag parts of the rhs;
+ *   rhsimlololo are the lowest doubles of the imag parts of the rhs. */
+
 #endif

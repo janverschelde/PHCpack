@@ -746,7 +746,7 @@ test_monomial_systems: cyclic_columns.obj \
 
 test2_monomial_systems: test2_monomial_systems.obj unimodular_matrices.obj \
                  random_numbers.obj random_series.obj random_monomials.obj \
-                 double_double_functions.obj \
+                 double_double_functions.obj cyclic_columns.obj \
 		 random2_vectors.obj random2_series.obj \
                  dbl2_monomial_systems.obj dbl2_convolutions_host.obj
 	@-echo ">>> linking ..."
@@ -755,12 +755,12 @@ test2_monomial_systems: test2_monomial_systems.obj unimodular_matrices.obj \
              unimodular_matrices.obj dbl2_convolutions_host.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              double_double_functions.obj \
-	     random2_vectors.obj random2_series.obj
+	     random2_vectors.obj random2_series.obj cyclic_columns.obj
 
 test4_monomial_systems: test4_monomial_systems.obj unimodular_matrices.obj \
                  random_numbers.obj random_series.obj random_monomials.obj \
                  double_double_functions.obj quad_double_functions.obj \
-		 random4_vectors.obj random4_series.obj \
+		 random4_vectors.obj random4_series.obj cyclic_columns.obj \
                  dbl4_monomial_systems.obj dbl4_convolutions_host.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test4_monomial_systems.exe \
@@ -768,12 +768,12 @@ test4_monomial_systems: test4_monomial_systems.obj unimodular_matrices.obj \
              unimodular_matrices.obj dbl4_convolutions_host.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              double_double_functions.obj quad_double_functions.obj \
-	     random4_vectors.obj random4_series.obj
+	     random4_vectors.obj random4_series.obj cyclic_columns.obj
 
 test8_monomial_systems: test8_monomial_systems.obj unimodular_matrices.obj \
                  random_numbers.obj random_series.obj random_monomials.obj \
                  double_double_functions.obj quad_double_functions.obj \
-		 octo_double_functions.obj \
+		 octo_double_functions.obj cyclic_columns.obj \
 		 random8_vectors.obj random8_series.obj \
                  dbl8_monomial_systems.obj dbl8_convolutions_host.obj
 	@-echo ">>> linking ..."
@@ -782,7 +782,8 @@ test8_monomial_systems: test8_monomial_systems.obj unimodular_matrices.obj \
              unimodular_matrices.obj dbl8_convolutions_host.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              double_double_functions.obj quad_double_functions.obj \
-	     octo_double_functions.obj random8_vectors.obj random8_series.obj
+	     octo_double_functions.obj random8_vectors.obj random8_series.obj \
+	     cyclic_columns.obj
 
 test_monomial_jobs: unimodular_matrices.obj test_monomial_jobs.obj \
                     convolution_job.obj convolution_jobs.obj \
@@ -876,7 +877,7 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
 
 test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
-		  random2_vectors.obj random2_series.obj \
+		  random2_vectors.obj random2_series.obj cyclic_columns.obj \
                   dbl2_monomial_systems.obj prompt_newton_setup.obj \
                   double_double_functions.obj dbl2_newton_testers.obj \
 		  dbl2_newton_method.obj cmplx2_newton_method.obj \
@@ -895,7 +896,7 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
 	nvcc -ccbin=$(CL) -o test_dbl2_newton.exe test_dbl2_newton.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
-             random2_vectors.obj random2_series.obj \
+             random2_vectors.obj random2_series.obj cyclic_columns.obj \
              double_double_functions.obj dbl2_newton_testers.obj \
 	     dbl2_newton_method.obj cmplx2_newton_method.obj \
 	     dbl2_convolutions_host.obj dbl2_monomials_host.obj \
@@ -913,7 +914,7 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
 test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
                   dbl4_newton_method.obj cmplx4_newton_method.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
-		  random4_vectors.obj random4_series.obj \
+		  random4_vectors.obj random4_series.obj cyclic_columns.obj \
                   dbl4_monomial_systems.obj \
 		  prompt_newton_setup.obj dbl4_newton_testers.obj \
                   double_double_functions.obj quad_double_functions.obj \
@@ -935,7 +936,7 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              random4_vectors.obj random4_series.obj dbl4_monomial_systems.obj \
              double_double_functions.obj quad_double_functions.obj \
-	     dbl4_newton_testers.obj \
+	     dbl4_newton_testers.obj cyclic_columns.obj \
 	     dbl4_convolutions_host.obj dbl4_monomials_host.obj \
              convolution_job.obj convolution_jobs.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
@@ -951,7 +952,7 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
 test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
                   dbl8_newton_method.obj cmplx8_newton_method.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
-                  random8_vectors.obj random8_series.obj \
+                  random8_vectors.obj random8_series.obj cyclic_columns.obj \
                   dbl8_monomial_systems.obj prompt_newton_setup.obj \
 		  double_double_functions.obj quad_double_functions.obj \
 		  octo_double_functions.obj dbl8_newton_testers.obj \
@@ -972,7 +973,7 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
              dbl8_newton_method.obj cmplx8_newton_method.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
-             random8_vectors.obj random8_series.obj \
+             random8_vectors.obj random8_series.obj cyclic_columns.obj \
              dbl8_monomial_systems.obj \
              double_double_functions.obj quad_double_functions.obj \
 	     octo_double_functions.obj dbl8_newton_testers.obj \
