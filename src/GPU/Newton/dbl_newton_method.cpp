@@ -224,20 +224,15 @@ int test_dbl_real_newton
        input_h[i] = new double[degp1];
        input_d[i] = new double[degp1];
    }
-   if(vrblvl > 1) cout << "allocating for acc and cff ..." << endl;
-
    // allocate memory for coefficients and the output
    double **acc = new double*[dim+1]; // accumulate series in one column
    for(int i=0; i<=dim; i++) acc[i] = new double[degp1];
    double ***cff = new double**[nbrcol];
-   if(vrblvl > 0) cout << "nbrcol = " << nbrcol << endl;
    for(int i=0; i<nbrcol; i++)
    {
       cff[i] = new double*[dim]; // the coefficients of monomials
       for(int j=0; j<dim; j++) cff[i][j] = new double[degp1];
    }
-   if(vrblvl > 1) cout << "... done allocating for acc and cff" << endl;
-
    double ***output_h;
    double ***output_d;
 
@@ -385,6 +380,9 @@ int test_dbl_real_newton
    for(int i=0; i<dim; i++) sol[i] = new double[degp1];
 
    make_real_exponentials(dim,deg,sol);
+   if(nbrcol != 1) // randomize the leading term
+      for(int i=0; i<dim; i++)
+         sol[i][0] = sol[i][0] + random_double()/10.0;
 
    // compute the right hand sides via evaluation
 

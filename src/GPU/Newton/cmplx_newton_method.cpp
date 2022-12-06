@@ -576,6 +576,12 @@ int test_dbl_complex_newton
       solim[i] = new double[degp1];
    }
    make_complex_exponentials(dim,deg,angles,solre,solim);
+   if(nbrcol != 1) // randomize the leading term
+      for(int i=0; i<dim; i++)
+      {
+          solre[i][0] = solre[i][0] + random_double()/10.0;
+          solim[i][0] = solim[i][0] + random_double()/10.0;
+      }
 
    // compute the right hand sides via evaluation
 

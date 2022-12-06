@@ -47,7 +47,7 @@ int main ( void )
    int **expfac = new int*[dim]; // exponents of the common factors
    int nbrcol = 1;
 
-   if(nbritr = -3)
+   if(nbritr == -3)
    {
       nbrcol = dim;
       for(int i=0; i<dim; i++) rowsA[i] = new int[dim];
