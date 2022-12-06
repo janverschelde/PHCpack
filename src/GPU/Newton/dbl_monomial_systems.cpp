@@ -2,6 +2,7 @@
 // the file dbl_monomial_systems.h.
 
 #include <iostream>
+#include <iomanip>
 #include <cstdlib>
 #include <cmath>
 #include "random_numbers.h"
@@ -106,20 +107,21 @@ void evaluate_real_columns
 {
    const int degp1 = deg+1;
 
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
+      cout << "evaluating at the series x ..." << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<degp1; j++)
+            cout << "x[" << i << "][" << j << "] : " << x[i][j] << endl;
+   }
    double **prdrhs = new double*[dim];
 
    for(int i=0; i<dim; i++)
    {
       prdrhs[i] = new double[degp1];
 
-      rhs[i][0] = 0.0;        // initialize sum to zero
-      prdrhs[i][0] = 1.0;     // initialize product to one
-
-      for(int k=1; k<degp1; k++)
-      {
-         rhs[i][k] = 0.0;
-         prdrhs[i][k] = 0.0;
-      }
+      for(int k=0; k<degp1; k++) rhs[i][k] = 0.0; // initialize sum to 0
    }
    rhs[dim-1][0] = -1.0; // last coefficient of cyclic n-roots is -1
 
@@ -144,8 +146,32 @@ void evaluate_real_columns
          }
       }
       evaluate_real_monomials(dim,deg,rowsA,x,prdrhs);
+      if(vrblvl > 1)
+      {
+         cout << scientific << setprecision(16);
+         for(int i=0; i<dim; i++)
+         {
+            cout << "value at dimension " << i << " :" << endl;
+            for(int j=0; j<degp1; j++)
+               cout << "prdrhs[" << i << "][" << j << "] : "
+                    << prdrhs[i][j] << endl;
+         }
+      }
       for(int i=0; i<dim; i++)
-         for(int k=0; k<degp1; k++) rhs[i][k] += prdrhs[i][k];
+      {
+         int rowsum = 0;  // check on row sum is a patch ...
+         for(int j=0; j<dim; j++) rowsum += rowsA[i][j];
+         if(rowsum != 0)
+            for(int k=0; k<degp1; k++) rhs[i][k] += prdrhs[i][k];
+      }
+   }
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
+      cout << "the evaluated series ..." << endl;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<degp1; j++)
+            cout << "rhs[" << i << "][" << j << "] : " << rhs[i][j] << endl;
    }
    for(int i=0; i<dim; i++) free(prdrhs[i]);
    free(prdrhs);
@@ -165,10 +191,7 @@ void evaluate_complex_columns
       prdrhsre[i] = new double[degp1];
       prdrhsim[i] = new double[degp1];
 
-      rhsre[i][0] = 0.0;     // initialize sum to zero
-      rhsim[i][0] = 0.0;
-
-      for(int k=1; k<degp1; k++)
+      for(int k=0; k<degp1; k++)  // initialize sum to zero
       {
          rhsre[i][k] = 0.0; rhsim[i][k] = 0.0;
       }
@@ -204,11 +227,16 @@ void evaluate_complex_columns
          (dim,deg,rowsA,xre,xim,prdrhsre,prdrhsim);
 
       for(int i=0; i<dim; i++)
-         for(int k=0; k<degp1; k++)
-         {
-            rhsre[i][k] += prdrhsre[i][k];
-            rhsim[i][k] += prdrhsim[i][k];
-         }
+      {
+         int rowsum = 0;  // check on row sum is a patch ...
+         for(int j=0; j<dim; j++) rowsum += rowsA[i][j];
+         if(rowsum != 0)
+            for(int k=0; k<degp1; k++)
+            {
+               rhsre[i][k] += prdrhsre[i][k];
+               rhsim[i][k] += prdrhsim[i][k];
+            }
+      }
    }
    for(int i=0; i<dim; i++)
    {

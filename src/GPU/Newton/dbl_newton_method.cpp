@@ -382,7 +382,8 @@ int test_dbl_real_newton
    make_real_exponentials(dim,deg,sol);
    if(nbrcol != 1) // randomize the leading term
       for(int i=0; i<dim; i++)
-         sol[i][0] = sol[i][0] + random_double()/10.0;
+         // sol[i][0] = sol[i][0] + random_double()/2.0;
+         sol[i][0] = random_double();
 
    // compute the right hand sides via evaluation
 
@@ -415,6 +416,7 @@ int test_dbl_real_newton
    for(int i=0; i<dim; i++)
       for(int j=0; j<degp1; j++)
       {
+         // input_h[i][j] = sol[i][j]; // check if evaluation is done right
          input_d[i][j] = input_h[i][j];
       }
 

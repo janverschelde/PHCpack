@@ -190,6 +190,14 @@ void CPU_dbl_evaluate_columns
 {
    const int degp1 = deg+1;
 
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<degp1; j++) funval[i][j] = 0.0;
+   funval[dim-1][0] = -1.0; // constant of last eq in cyclic dim-roots
+
+   for(int k=0; k<degp1; k++)  // the Jacobian is linearized
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++) jacval[k][i][j] = 0.0;
+
    if(vrblvl > 1)
    {
       for(int i=0; i<nbrcol; i++)
@@ -201,7 +209,7 @@ void CPU_dbl_evaluate_columns
             for(int k=0; k<=deg; k++) cout << cff[i][j][k] << endl;
          }
       }
-      cout << "dim : " << dim << "  nvr :";
+      cout << "dim : " << dim << endl;
       for(int i=0; i<nbrcol; i++)
       {
          for(int j=0; j<dim; j++)
@@ -222,10 +230,12 @@ void CPU_dbl_evaluate_columns
       for(int j=0; j<dim; j++)
          if(nvr[i][j] > 0)       // evaluate j-th monomial in column i
          {
+            for(int k=0; k<=dim; k++)
+               for(int L=0; L<degp1; L++) acc[k][L] = 0.0;
+
             CPU_dbl_evaldiff(dim,nvr[i][j],deg,idx[i][j],cff[i][j],input,acc);
 
-            for(int k=0; k<dim; k++)
-               for(int L=0; L<degp1; L++) funval[k][L] += acc[dim][j];
+            for(int L=0; L<degp1; L++) funval[j][L] += acc[dim][L];
 
             int *indexes = idx[i][j];      // indices of the variables
             for(int k=0; k<nvr[i][j]; k++) // derivative w.r.t. idx[i][j][k]
@@ -254,6 +264,22 @@ void CPU_cmplx_evaluate_columns
 {
    const int degp1 = deg+1;
 
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<degp1; j++)
+      {
+         funvalre[i][j] = 0.0;
+         funvalim[i][j] = 0.0;
+      }
+   funvalre[dim-1][0] = -1.0; // constant of last eq in cyclic dim-roots
+
+   for(int k=0; k<degp1; k++)  // the Jacobian is linearized
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+            jacvalre[k][i][j] = 0.0;
+            jacvalim[k][i][j] = 0.0;
+         }
+
    if(vrblvl > 1)
    {
       for(int i=0; i<nbrcol; i++)
@@ -266,7 +292,7 @@ void CPU_cmplx_evaluate_columns
                cout << cffre[i][j][k] << "  " << cffim[i][j][k] << endl;
          }
       }
-      cout << "dim : " << dim << "  nvr :";
+      cout << "dim : " << dim << endl;
       for(int i=0; i<nbrcol; i++)
       {
          for(int j=0; j<dim; j++)
@@ -292,12 +318,11 @@ void CPU_cmplx_evaluate_columns
                (dim,nvr[i][j],deg,idx[i][j],cffre[i][j],cffim[i][j],
                 inputre,inputim,accre,accim);
 
-            for(int k=0; k<dim; k++)
-               for(int L=0; L<degp1; L++)
-               {
-                  funvalre[k][L] += accre[dim][j];
-                  funvalim[k][L] += accim[dim][j];
-               }
+            for(int L=0; L<degp1; L++)
+            {
+               funvalre[j][L] += accre[dim][L];
+               funvalim[j][L] += accim[dim][L];
+            }
 
             int *indexes = idx[i][j];      // indices of the variables
             for(int k=0; k<nvr[i][j]; k++) // derivative w.r.t. idx[i][j][k]

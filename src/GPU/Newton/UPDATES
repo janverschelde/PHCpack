@@ -1,3 +1,7 @@
+Tue 6 Dec 2022 : fixed bugs in dbl_{monomial_systems, systems_host}.cpp
+  and set the leading coefficients of the solution to random doubles in
+  {dbl, cmplx}_newton_method.cpp.
+
 Mon 5 Dec 2022 : added functions to dbl_monomial_systems to evaluate the
   column representation of cyclic n-roots, tested by test_monomial_systems.
   Added the '-3' options when prompting dimensions in unimodular_matrices,

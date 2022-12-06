@@ -579,8 +579,10 @@ int test_dbl_complex_newton
    if(nbrcol != 1) // randomize the leading term
       for(int i=0; i<dim; i++)
       {
-          solre[i][0] = solre[i][0] + random_double()/10.0;
-          solim[i][0] = solim[i][0] + random_double()/10.0;
+          // solre[i][0] = solre[i][0] + random_double()/10.0;
+          // solim[i][0] = solim[i][0] + random_double()/10.0;
+          solre[i][0] = random_double();
+          solim[i][0] = random_double();
       }
 
    // compute the right hand sides via evaluation
