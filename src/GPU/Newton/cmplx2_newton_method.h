@@ -5,12 +5,13 @@
 #define __cmplx2_newton_method_h__
 
 void cmplx2_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int *tailidx_h, int *tailidx_d,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
    double **mbrehi, double **mbrelo, double **mbimhi, double **mbimlo,
    double dpr,
-   double **cffrehi, double **cffrelo, double **cffimhi, double **cffimlo,
-   double *accrehi, double *accrelo, double *accimhi, double *accimlo,
+   double ***cffrehi, double ***cffrelo, double ***cffimhi, double ***cffimlo,
+   double **accrehi, double **accrelo, double **accimhi, double **accimlo,
    double **inputrehi_h, double **inputrelo_h,
    double **inputimhi_h, double **inputimlo_h,
    double **inputrehi_d, double **inputrelo_d,
@@ -63,10 +64,13 @@ void cmplx2_newton_qrstep
  *   nbt       number of tiles and number of blocks;
  *   dim       number of monomials;
  *   deg       degree of the power series;
+ *   nbrcol    is the number of columns;
  *   tailidx_h is the start index of the update of the tail on the host;
  *   tailidx_d is the start index of the update of the tail on the device;
- *   nvr       nvr[i] is the number of variables in the i-th monomial;
- *   idx       idx[i] are the indices of the variables in monomial i;
+ *   nvr       nvr[i][j] is the number of variables in the j-th monomial
+ *             of the i-th column;
+ *   idx       idx[i][j] are the indices of the variables in monomial j
+ *             of the i-th column;
  *   exp       exp[i] are the exponents of the variables in monomial i;
  *   nbrfac    nbrfac[i] are the number of exponents > 1 in monomial i;
  *   expfac    expfac[i] are the exponents in the i-th polynomial
@@ -299,8 +303,8 @@ void cmplx2_newton_qrstep
  *   bsidx_d   counts the number of backsubstitutions skipped by device. */
 
 int test_dbl2_complex_newton
- ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl );
 /*
  * DESCRIPTION :
@@ -311,8 +315,11 @@ int test_dbl2_complex_newton
  *   nbt       number of tiles and number of blocks;
  *   dim       number of monomials;
  *   deg       degree of the power series;
- *   nvr       nvr[i] is the number of variables in the i-th monomial;
- *   idx       idx[i] are the indices of the variables in monomial i;
+ *   nbrcol    is the number of columns;
+ *   nvr       nvr[i][j] is the number of variables in the j-th monomial
+ *             of the i-th column;
+ *   idx       idx[i][j] are the indices of the variables in monomial j
+ *             of the i-th column;
  *   exp       exp[i] are the exponents of the variables in monomial i;
  *   nbrfac    nbrfac[i] are the number of exponents > 1 in monomial i;
  *   expfac    expfac[i] are the exponents in the i-th polynomial

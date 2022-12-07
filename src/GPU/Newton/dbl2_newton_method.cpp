@@ -8,6 +8,7 @@
 #include <vector_types.h>
 #include <time.h>
 #include "unimodular_matrices.h"
+#include "random_numbers.h"
 #include "random_monomials.h"
 #include "double_double_functions.h"
 #include "dbl2_convolutions_host.h"
@@ -25,10 +26,11 @@
 using namespace std;
 
 void dbl2_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int *tailidx_h, int *tailidx_d,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
    double **mbhi, double **mblo, double dpr,
-   double **cffhi, double **cfflo, double *acchi, double *acclo,
+   double ***cffhi, double ***cfflo, double **acchi, double **acclo,
    double **inputhi_h, double **inputlo_h,
    double **inputhi_d, double **inputlo_d,
    double ***outputhi_h, double ***outputlo_h,
@@ -52,30 +54,39 @@ void dbl2_newton_qrstep
 
    if((mode == 1) || (mode == 2))
    {
-      // The series coefficients accumulate common factors,
-      // initially the coefficients are set to one.
-      dbl2_unit_series_vector(dim,deg,cffhi,cfflo);
-
       if(vrblvl > 0)
          cout << "calling CPU_dbl2_evaluate_monomials ..." << endl;
+ 
+      if(nbrcol == 1)
+      {
+         dbl2_unit_series_vector(dim,deg,cffhi[0],cfflo[0]);
+         // The series coefficients accumulate common factors,
+         // initially the coefficients are set to one.
 
-      CPU_dbl2_evaluate_monomials
-         (dim,deg,nvr,idx,exp,nbrfac,expfac,
-          cffhi,cfflo,acchi,acclo,inputhi_h,inputlo_h,outputhi_h,outputlo_h,
-          vrblvl);
+         CPU_dbl2_evaluate_monomials
+            (dim,deg,nvr[0],idx[0],exp,nbrfac,expfac,
+             cffhi[0],cfflo[0],acchi[0],acclo[0],
+             inputhi_h,inputlo_h,outputhi_h,outputlo_h,vrblvl);
+      }
+      else
+         CPU_dbl2_evaluate_columns
+            (dim,deg,nbrcol,nvr,idx,cffhi,cfflo,acchi,acclo,
+             inputhi_h,inputlo_h,funvalhi_h,funvallo_h,
+             jacvalhi_h,jacvallo_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
-      dbl2_unit_series_vector(dim,deg,cffhi,cfflo); // reset coefficients
+      dbl2_unit_series_vector(dim,deg,cffhi[0],cfflo[0]); // reset coefficients
 
       if(vrblvl > 0)
          cout << "calling GPU_dbl2_evaluate_monomials ..." << endl;
 
       GPU_dbl2_evaluate_monomials
-         (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,cffhi,cfflo,acchi,acclo,
+         (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
+          cffhi[0],cfflo[0],acchi[0],acclo[0],
           inputhi_d,inputlo_d,outputhi_d,outputlo_d,vrblvl);
    }
-   if((vrblvl > 0) && (mode == 2))
+   if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
       cout << "comparing CPU with GPU evaluations ... " << endl;
       double errsum = 0.0;
@@ -95,21 +106,29 @@ void dbl2_newton_qrstep
 
    if((mode == 1) || (mode == 2))
    {
-      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-         for(int j=0; j<dim; j++) 
-            for(int k=0; k<dim; k++)
-            {
-               cout << "  i = " << i
-                    << "  j = " << j
-                    << "  k = " << k << endl << flush;
+      if(nbrcol != 1)
+         dbl2_define_rhs
+            (dim,degp1,mbhi,mblo,funvalhi_h,funvallo_h,
+             rhshi_h,rhslo_h,vrblvl);
+      else
+      {
+         for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+            for(int j=0; j<dim; j++) 
+               for(int k=0; k<dim; k++)
+               {
+                  cout << "  i = " << i
+                       << "  j = " << j
+                       << "  k = " << k << endl << flush;
 
-               jacvalhi_h[i][j][k] = 0.0; jacvallo_h[i][j][k] = 0.0;
-            }
+                  jacvalhi_h[i][j][k] = 0.0; jacvallo_h[i][j][k] = 0.0;
+               }
 
-      if(vrblvl > 0) cout << "linearizing the output ..." << endl;
-      dbl2_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,mbhi,mblo,dpr,outputhi_h,outputlo_h,
-          funvalhi_h,funvallo_h,rhshi_h,rhslo_h,jacvalhi_h,jacvallo_h,vrblvl);
+         if(vrblvl > 0) cout << "linearizing the output ..." << endl;
+         dbl2_linearize_evaldiff_output
+            (dim,degp1,nvr[0],idx[0],mbhi,mblo,dpr,outputhi_h,outputlo_h,
+             funvalhi_h,funvallo_h,rhshi_h,rhslo_h,
+             jacvalhi_h,jacvallo_h,vrblvl);
+      }
    }
    if((mode == 0) || (mode == 2))
    {
@@ -122,7 +141,7 @@ void dbl2_newton_qrstep
 
       if(vrblvl > 0) cout << "linearizing the output ..." << endl;
       dbl2_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,mbhi,mblo,dpr,outputhi_d,outputlo_d,
+         (dim,degp1,nvr[0],idx[0],mbhi,mblo,dpr,outputhi_d,outputlo_d,
           funvalhi_d,funvallo_d,rhshi_d,rhslo_d,jacvalhi_d,jacvallo_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))
@@ -260,8 +279,8 @@ void dbl2_newton_qrstep
 }
 
 int test_dbl2_real_newton
- ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
@@ -281,15 +300,24 @@ int test_dbl2_real_newton
       inputlo_d[i] = new double[degp1];
    }
    // allocate memory for coefficients and the output
-   double *acchi = new double[degp1]; // accumulated power series
-   double *acclo = new double[degp1];
-   double **cffhi = new double*[dim]; // the coefficients of monomials
-   double **cfflo = new double*[dim];
-
-   for(int i=0; i<dim; i++)
+   double **acchi = new double*[dim+1]; // accumulated power series
+   double **acclo = new double*[dim+1]; // in one column
+   for(int i=0; i<=dim; i++)
    {
-      cffhi[i] = new double[degp1];
-      cfflo[i] = new double[degp1];
+      acchi[i] = new double[degp1];
+      acclo[i] = new double[degp1];
+   }
+   double ***cffhi = new double**[nbrcol]; // coefficients of monomials
+   double ***cfflo = new double**[nbrcol];
+   for(int i=0; i<nbrcol; i++)
+   {
+      cffhi[i] = new double*[dim];
+      cfflo[i] = new double*[dim];
+      for(int j=0; j<dim; j++)
+      {
+         cffhi[i][j] = new double[degp1];
+         cfflo[i][j] = new double[degp1];
+      }
    }
    double ***outputhi_h;
    double ***outputlo_h;
@@ -579,6 +607,13 @@ int test_dbl2_real_newton
       sollo[i] = new double[degp1];
    }
    make_real2_exponentials(dim,deg,solhi,sollo);
+   if(nbrcol != 1) // randomize the leading term
+      for(int i=0; i<dim; i++)
+         // sol[i][0] = sol[i][0] + random_double()/2.0;
+      {
+         solhi[i][0] = random_double();
+         sollo[i][0] = 0.0;
+      }
 
    // compute the right hand sides via evaluation
 
@@ -599,7 +634,15 @@ int test_dbl2_real_newton
          mbrhslo[i][k] = 0.0;
       }
    }
-   evaluate_real2_monomials(dim,deg,rowsA,solhi,sollo,mbrhshi,mbrhslo);
+   if(nbrcol == 1)
+      evaluate_real2_monomials(dim,deg,rowsA,solhi,sollo,mbrhshi,mbrhslo);
+   else
+   {
+      evaluate_real2_columns
+         (dim,deg,nbrcol,nvr,idx,rowsA,solhi,sollo,mbrhshi,mbrhslo,vrblvl);
+
+      dbl2_unit_series_vectors(nbrcol,dim,deg,cffhi,cfflo);
+   }
    
    double *start0hi = new double[dim];
    double *start0lo = new double[dim];
@@ -646,7 +689,8 @@ int test_dbl2_real_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       dbl2_newton_qrstep
-         (szt,nbt,dim,wrkdeg,&tailidx_h,&tailidx_d,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,nbrcol,&tailidx_h,&tailidx_d,
+          nvr,idx,exp,nbrfac,expfac,
           mbrhshi,mbrhslo,dpr,cffhi,cfflo,acchi,acclo,
           inputhi_h,inputlo_h,inputhi_d,inputlo_d,
           outputhi_h,outputlo_h,outputhi_d,outputlo_d,

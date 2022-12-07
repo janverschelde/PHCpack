@@ -176,6 +176,39 @@ void cmplx8_unit_series_vector
    }
 }
 
+void dbl8_unit_series_vectors
+ ( int nbr, int dim, int deg,
+   double ***cffhihihi, double ***cfflohihi,
+   double ***cffhilohi, double ***cfflolohi,
+   double ***cffhihilo, double ***cfflohilo,
+   double ***cffhilolo, double ***cfflololo )
+{
+   for(int i=0; i<nbr; i++)
+      dbl8_unit_series_vector
+         (dim,deg,cffhihihi[i],cfflohihi[i],cffhilohi[i],cfflolohi[i],
+                  cffhihilo[i],cfflohilo[i],cffhilolo[i],cfflololo[i]);
+}
+
+void cmplx8_unit_series_vectors
+ ( int nbr, int dim, int deg,
+   double ***cffrehihihi, double ***cffrelohihi,
+   double ***cffrehilohi, double ***cffrelolohi,
+   double ***cffrehihilo, double ***cffrelohilo,
+   double ***cffrehilolo, double ***cffrelololo,
+   double ***cffimhihihi, double ***cffimlohihi,
+   double ***cffimhilohi, double ***cffimlolohi,
+   double ***cffimhihilo, double ***cffimlohilo,
+   double ***cffimhilolo, double ***cffimlololo )
+{
+   for(int i=0; i<nbr; i++)
+      cmplx8_unit_series_vector
+         (dim,deg,
+          cffrehihihi[i],cffrelohihi[i],cffrehilohi[i],cffrelolohi[i],
+          cffrehihilo[i],cffrelohilo[i],cffrehilolo[i],cffrelololo[i],
+          cffimhihihi[i],cffimlohihi[i],cffimhilohi[i],cffimlolohi[i],
+          cffimhihilo[i],cffimlohilo[i],cffimhilolo[i],cffimlololo[i]);
+}
+
 void dbl8_update_series
  ( int dim, int degp1, int startidx,
    double **xhihihi, double **xlohihi, double **xhilohi, double **xlolohi,

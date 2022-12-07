@@ -96,6 +96,23 @@ void cmplx2_unit_series_vector
    }
 }
 
+void dbl2_unit_series_vectors
+ ( int nbr, int dim, int deg, double ***cffhi, double ***cfflo )
+{
+   for(int i=0; i<nbr; i++)
+      dbl2_unit_series_vector(dim,deg,cffhi[i],cfflo[i]);
+}
+
+void cmplx2_unit_series_vectors
+ ( int nbr, int dim, int deg,
+   double ***cffrehi, double ***cffrelo,
+   double ***cffimhi, double ***cffimlo )
+{
+   for(int i=0; i<nbr; i++)
+      cmplx2_unit_series_vector
+         (dim,deg,cffrehi[i],cffrelo[i],cffimhi[i],cffimlo[i]);
+}
+
 void dbl2_update_series
  ( int dim, int degp1, int startidx, double **xhi, double **xlo,
    double **dxhi, double **dxlo, int vrblvl )

@@ -8,6 +8,7 @@
 #include <vector_types.h>
 #include <time.h>
 #include "unimodular_matrices.h"
+#include "random_numbers.h"
 #include "random_monomials.h"
 #include "octo_double_functions.h"
 #include "dbl8_convolutions_host.h"
@@ -24,17 +25,20 @@
 using namespace std;
 
 void dbl8_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int *tailidx_h, int *tailidx_d,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
    double **mbhihihi, double **mblohihi, double **mbhilohi, double **mblolohi,
    double **mbhihilo, double **mblohilo, double **mbhilolo, double **mblololo,
    double dpr,
-   double **cffhihihi, double **cfflohihi,
-   double **cffhilohi, double **cfflolohi,
-   double **cffhihilo, double **cfflohilo,
-   double **cffhilolo, double **cfflololo,
-   double *acchihihi, double *acclohihi, double *acchilohi, double *acclolohi,
-   double *acchihilo, double *acclohilo, double *acchilolo, double *acclololo,
+   double ***cffhihihi, double ***cfflohihi,
+   double ***cffhilohi, double ***cfflolohi,
+   double ***cffhihilo, double ***cfflohilo,
+   double ***cffhilolo, double ***cfflololo,
+   double **acchihihi, double **acclohihi,
+   double **acchilohi, double **acclolohi,
+   double **acchihilo, double **acclohilo,
+   double **acchilolo, double **acclololo,
    double **inputhihihi_h, double **inputlohihi_h,
    double **inputhilohi_h, double **inputlolohi_h,
    double **inputhihilo_h, double **inputlohilo_h,
@@ -127,50 +131,67 @@ void dbl8_newton_qrstep
 
    if((mode == 1) || (mode == 2))
    {
-      // The series coefficients accumulate common factors,
-      // initially the coefficients are set to one.
-      dbl8_unit_series_vector
-         (dim,deg,cffhihihi,cfflohihi,cffhilohi,cfflolohi,
-                  cffhihilo,cfflohilo,cffhilolo,cfflololo);
-
       if(vrblvl > 0)
          cout << "calling CPU_dbl8_evaluate_monomials ..." << endl;
 
-      CPU_dbl8_evaluate_monomials
-         (dim,deg,nvr,idx,exp,nbrfac,expfac,
-          cffhihihi,cfflohihi,cffhilohi,cfflolohi,
-          cffhihilo,cfflohilo,cffhilolo,cfflololo,
-          acchihihi,acclohihi,acchilohi,acclolohi,
-          acchihilo,acclohilo,acchilolo,acclololo,
-          inputhihihi_h,inputlohihi_h,inputhilohi_h,inputlolohi_h,
-          inputhihilo_h,inputlohilo_h,inputhilolo_h,inputlololo_h,
-          outputhihihi_h,outputlohihi_h,outputhilohi_h,outputlolohi_h,
-          outputhihilo_h,outputlohilo_h,outputhilolo_h,outputlololo_h,
-          vrblvl);
+      if(nbrcol == 1)
+      {
+         dbl8_unit_series_vector
+            (dim,deg,cffhihihi[0],cfflohihi[0],cffhilohi[0],cfflolohi[0],
+                     cffhihilo[0],cfflohilo[0],cffhilolo[0],cfflololo[0]);
+         // The series coefficients accumulate common factors,
+         // initially the coefficients are set to one.
+
+         CPU_dbl8_evaluate_monomials
+            (dim,deg,nvr[0],idx[0],exp,nbrfac,expfac,
+             cffhihihi[0],cfflohihi[0],cffhilohi[0],cfflolohi[0],
+             cffhihilo[0],cfflohilo[0],cffhilolo[0],cfflololo[0],
+             acchihihi[0],acclohihi[0],acchilohi[0],acclolohi[0],
+             acchihilo[0],acclohilo[0],acchilolo[0],acclololo[0],
+             inputhihihi_h,inputlohihi_h,inputhilohi_h,inputlolohi_h,
+             inputhihilo_h,inputlohilo_h,inputhilolo_h,inputlololo_h,
+             outputhihihi_h,outputlohihi_h,outputhilohi_h,outputlolohi_h,
+             outputhihilo_h,outputlohilo_h,outputhilolo_h,outputlololo_h,
+             vrblvl);
+      }
+      else
+         CPU_dbl8_evaluate_columns
+            (dim,deg,nbrcol,nvr,idx,
+             cffhihihi,cfflohihi,cffhilohi,cfflolohi,
+             cffhihilo,cfflohilo,cffhilolo,cfflololo,
+             acchihihi,acclohihi,acchilohi,acclolohi,
+             acchihilo,acclohilo,acchilolo,acclololo,
+             inputhihihi_h,inputlohihi_h,inputhilohi_h,inputlolohi_h,
+             inputhihilo_h,inputlohilo_h,inputhilolo_h,inputlololo_h,
+             funvalhihihi_h,funvallohihi_h,funvalhilohi_h,funvallolohi_h,
+             funvalhihilo_h,funvallohilo_h,funvalhilolo_h,funvallololo_h,
+             jacvalhihihi_h,jacvallohihi_h,jacvalhilohi_h,jacvallolohi_h,
+             jacvalhihilo_h,jacvallohilo_h,jacvalhilolo_h,jacvallololo_h,
+             vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
       // reset the coefficients
       dbl8_unit_series_vector
-         (dim,deg,cffhihihi,cfflohihi,cffhilohi,cfflolohi,
-                  cffhihilo,cfflohilo,cffhilolo,cfflololo);
+         (dim,deg,cffhihihi[0],cfflohihi[0],cffhilohi[0],cfflolohi[0],
+                  cffhihilo[0],cfflohilo[0],cffhilolo[0],cfflololo[0]);
 
       if(vrblvl > 0)
          cout << "calling GPU_dbl8_evaluate_monomials ..." << endl;
 
       GPU_dbl8_evaluate_monomials
-         (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,
-          cffhihihi,cfflohihi,cffhilohi,cfflolohi,
-          cffhihilo,cfflohilo,cffhilolo,cfflololo,
-          acchihihi,acclohihi,acchilohi,acclolohi,
-          acchihilo,acclohilo,acchilolo,acclololo,
+         (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
+          cffhihihi[0],cfflohihi[0],cffhilohi[0],cfflolohi[0],
+          cffhihilo[0],cfflohilo[0],cffhilolo[0],cfflololo[0],
+          acchihihi[0],acclohihi[0],acchilohi[0],acclolohi[0],
+          acchihilo[0],acclohilo[0],acchilolo[0],acclololo[0],
           inputhihihi_d,inputlohihi_d,inputhilohi_d,inputlolohi_d,
           inputhihilo_d,inputlohilo_d,inputhilolo_d,inputlololo_d,
           outputhihihi_d,outputlohihi_d,outputhilohi_d,outputlolohi_d,
           outputhihilo_d,outputlohilo_d,outputhilolo_d,outputlololo_d,
           vrblvl);
    }
-   if((vrblvl > 0) && (mode == 2))
+   if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
       cout << "comparing CPU with GPU evaluations ... " << endl;
 
@@ -192,29 +213,46 @@ void dbl8_newton_qrstep
 
    if((mode == 1) || (mode == 2))
    {
-      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-         for(int j=0; j<dim; j++) 
-            for(int k=0; k<dim; k++)
-            {
-               jacvalhihihi_h[i][j][k] = 0.0; jacvallohihi_h[i][j][k] = 0.0;
-               jacvalhilohi_h[i][j][k] = 0.0; jacvallolohi_h[i][j][k] = 0.0;
-               jacvalhihilo_h[i][j][k] = 0.0; jacvallohilo_h[i][j][k] = 0.0;
-               jacvalhilolo_h[i][j][k] = 0.0; jacvallololo_h[i][j][k] = 0.0;
-            }
+      if(nbrcol != 1)
+         dbl8_define_rhs
+            (dim,degp1,
+             mbhihihi,mblohihi,mbhilohi,mblolohi,
+             mbhihilo,mblohilo,mbhilolo,mblololo,
+             funvalhihihi_h,funvallohihi_h,funvalhilohi_h,funvallolohi_h,
+             funvalhihilo_h,funvallohilo_h,funvalhilolo_h,funvallololo_h,
+             rhshihihi_h,rhslohihi_h,rhshilohi_h,rhslolohi_h,
+             rhshihilo_h,rhslohilo_h,rhshilolo_h,rhslololo_h,vrblvl);
+      else
+      {
+         for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+            for(int j=0; j<dim; j++) 
+               for(int k=0; k<dim; k++)
+               {
+                  jacvalhihihi_h[i][j][k] = 0.0;
+                  jacvallohihi_h[i][j][k] = 0.0;
+                  jacvalhilohi_h[i][j][k] = 0.0;
+                  jacvallolohi_h[i][j][k] = 0.0;
+                  jacvalhihilo_h[i][j][k] = 0.0;
+                  jacvallohilo_h[i][j][k] = 0.0;
+                  jacvalhilolo_h[i][j][k] = 0.0;
+                  jacvallololo_h[i][j][k] = 0.0;
+               }
 
-      if(vrblvl > 0) cout << "linearizing the output ..." << endl;
-      dbl8_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
-          mbhihihi,mblohihi,mbhilohi,mblolohi,
-          mbhihilo,mblohilo,mbhilolo,mblololo,dpr,
-          outputhihihi_h,outputlohihi_h,outputhilohi_h,outputlolohi_h,
-          outputhihilo_h,outputlohilo_h,outputhilolo_h,outputlololo_h,
-          funvalhihihi_h,funvallohihi_h,funvalhilohi_h,funvallolohi_h,
-          funvalhihilo_h,funvallohilo_h,funvalhilolo_h,funvallololo_h,
-          rhshihihi_h,rhslohihi_h,rhshilohi_h,rhslolohi_h,
-          rhshihilo_h,rhslohilo_h,rhshilolo_h,rhslololo_h,
-          jacvalhihihi_h,jacvallohihi_h,jacvalhilohi_h,jacvallolohi_h,
-          jacvalhihilo_h,jacvallohilo_h,jacvalhilolo_h,jacvallololo_h,vrblvl);
+         if(vrblvl > 0) cout << "linearizing the output ..." << endl;
+         dbl8_linearize_evaldiff_output
+            (dim,degp1,nvr[0],idx[0],
+             mbhihihi,mblohihi,mbhilohi,mblolohi,
+             mbhihilo,mblohilo,mbhilolo,mblololo,dpr,
+             outputhihihi_h,outputlohihi_h,outputhilohi_h,outputlolohi_h,
+             outputhihilo_h,outputlohilo_h,outputhilolo_h,outputlololo_h,
+             funvalhihihi_h,funvallohihi_h,funvalhilohi_h,funvallolohi_h,
+             funvalhihilo_h,funvallohilo_h,funvalhilolo_h,funvallololo_h,
+             rhshihihi_h,rhslohihi_h,rhshilohi_h,rhslolohi_h,
+             rhshihilo_h,rhslohilo_h,rhshilolo_h,rhslololo_h,
+             jacvalhihihi_h,jacvallohihi_h,jacvalhilohi_h,jacvallolohi_h,
+             jacvalhihilo_h,jacvallohilo_h,jacvalhilolo_h,jacvallololo_h,
+             vrblvl);
+      }
    }
    if((mode == 0) || (mode == 2))
    {
@@ -230,7 +268,7 @@ void dbl8_newton_qrstep
 
       if(vrblvl > 0) cout << "linearizing the output ..." << endl;
       dbl8_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
+         (dim,degp1,nvr[0],idx[0],
           mbhihihi,mblohihi,mbhilohi,mblolohi,
           mbhihilo,mblohilo,mbhilolo,mblololo,dpr,
           outputhihihi_d,outputlohihi_d,outputhilohi_d,outputlolohi_d,
@@ -463,8 +501,8 @@ void dbl8_newton_qrstep
 }
 
 int test_dbl8_real_newton
- ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
@@ -508,33 +546,58 @@ int test_dbl8_real_newton
       inputlololo_d[i] = new double[degp1];
    }
    // allocate memory for coefficients and the output
-   double *acchihihi = new double[degp1]; // accumulated power series
-   double *acclohihi = new double[degp1];
-   double *acchilohi = new double[degp1];
-   double *acclolohi = new double[degp1];
-   double *acchihilo = new double[degp1];
-   double *acclohilo = new double[degp1];
-   double *acchilolo = new double[degp1];
-   double *acclololo = new double[degp1];
-   double **cffhihihi = new double*[dim]; // the coefficients of monomials
-   double **cfflohihi = new double*[dim];
-   double **cffhilohi = new double*[dim];
-   double **cfflolohi = new double*[dim];
-   double **cffhihilo = new double*[dim];
-   double **cfflohilo = new double*[dim];
-   double **cffhilolo = new double*[dim];
-   double **cfflololo = new double*[dim];
+   double **acchihihi = new double*[dim+1]; // accumulated power series
+   double **acclohihi = new double*[dim+1];
+   double **acchilohi = new double*[dim+1];
+   double **acclolohi = new double*[dim+1];
+   double **acchihilo = new double*[dim+1];
+   double **acclohilo = new double*[dim+1];
+   double **acchilolo = new double*[dim+1];
+   double **acclololo = new double*[dim+1];
 
-   for(int i=0; i<dim; i++)
+   for(int i=0; i<=dim; i++)
    {
-      cffhihihi[i] = new double[degp1];
-      cfflohihi[i] = new double[degp1];
-      cffhilohi[i] = new double[degp1];
-      cfflolohi[i] = new double[degp1];
-      cffhihilo[i] = new double[degp1];
-      cfflohilo[i] = new double[degp1];
-      cffhilolo[i] = new double[degp1];
-      cfflololo[i] = new double[degp1];
+      acchihihi[i] = new double[degp1];
+      acclohihi[i] = new double[degp1];
+      acchilohi[i] = new double[degp1];
+      acclolohi[i] = new double[degp1];
+      acchihilo[i] = new double[degp1];
+      acclohilo[i] = new double[degp1];
+      acchilolo[i] = new double[degp1];
+      acclololo[i] = new double[degp1];
+   }
+
+   double ***cffhihihi = new double**[nbrcol]; // coefficients of monomials
+   double ***cfflohihi = new double**[nbrcol];
+   double ***cffhilohi = new double**[nbrcol];
+   double ***cfflolohi = new double**[nbrcol];
+   double ***cffhihilo = new double**[nbrcol];
+   double ***cfflohilo = new double**[nbrcol];
+   double ***cffhilolo = new double**[nbrcol];
+   double ***cfflololo = new double**[nbrcol];
+
+   for(int i=0; i<nbrcol; i++)
+   {
+      cffhihihi[i] = new double*[dim];
+      cfflohihi[i] = new double*[dim];
+      cffhilohi[i] = new double*[dim];
+      cfflolohi[i] = new double*[dim];
+      cffhihilo[i] = new double*[dim];
+      cfflohilo[i] = new double*[dim];
+      cffhilolo[i] = new double*[dim];
+      cfflololo[i] = new double*[dim];
+
+      for(int j=0; j<dim; j++)
+      {
+         cffhihihi[i][j] = new double[degp1];
+         cfflohihi[i][j] = new double[degp1];
+         cffhilohi[i][j] = new double[degp1];
+         cfflolohi[i][j] = new double[degp1];
+         cffhihilo[i][j] = new double[degp1];
+         cfflohilo[i][j] = new double[degp1];
+         cffhilolo[i][j] = new double[degp1];
+         cfflololo[i][j] = new double[degp1];
+      }
    }
    double ***outputhihihi_h;
    double ***outputlohihi_h;
@@ -1180,6 +1243,19 @@ int test_dbl8_real_newton
    make_real8_exponentials
       (dim,deg,solhihihi,sollohihi,solhilohi,sollolohi,
                solhihilo,sollohilo,solhilolo,sollololo);
+   if(nbrcol != 1) // randomize the leading term
+      for(int i=0; i<dim; i++)
+         // sol[i][0] = sol[i][0] + random_double()/2.0;
+      {
+         solhihihi[i][0] = random_double();
+         sollohihi[i][0] = 0.0;
+         solhilohi[i][0] = 0.0;
+         sollolohi[i][0] = 0.0;
+         solhihilo[i][0] = 0.0;
+         sollohilo[i][0] = 0.0;
+         solhilolo[i][0] = 0.0;
+         sollololo[i][0] = 0.0;
+      }
 
    // compute the right hand sides via evaluation
 
@@ -1220,13 +1296,27 @@ int test_dbl8_real_newton
          mbrhshilolo[i][k] = 0.0; mbrhslololo[i][k] = 0.0;
       }
    }
-   evaluate_real8_monomials
-      (dim,deg,rowsA,
-       solhihihi,sollohihi,solhilohi,sollolohi,
-       solhihilo,sollohilo,solhilolo,sollololo,
-       mbrhshihihi,mbrhslohihi,mbrhshilohi,mbrhslolohi,
-       mbrhshihilo,mbrhslohilo,mbrhshilolo,mbrhslololo);
-   
+   if(nbrcol == 1)
+      evaluate_real8_monomials
+         (dim,deg,rowsA,
+          solhihihi,sollohihi,solhilohi,sollolohi,
+          solhihilo,sollohilo,solhilolo,sollololo,
+          mbrhshihihi,mbrhslohihi,mbrhshilohi,mbrhslolohi,
+          mbrhshihilo,mbrhslohilo,mbrhshilolo,mbrhslololo);
+   else
+   {
+      evaluate_real8_columns
+         (dim,deg,nbrcol,nvr,idx,rowsA,
+          solhihihi,sollohihi,solhilohi,sollolohi,
+          solhihilo,sollohilo,solhilolo,sollololo,
+          mbrhshihihi,mbrhslohihi,mbrhshilohi,mbrhslolohi,
+          mbrhshihilo,mbrhslohilo,mbrhshilolo,mbrhslololo,vrblvl);
+
+      dbl8_unit_series_vectors
+         (nbrcol,dim,deg,
+          cffhihihi,cfflohihi,cffhilohi,cfflolohi,
+          cffhihilo,cfflohilo,cffhilolo,cfflololo);
+   }
    double *start0hihihi = new double[dim];
    double *start0lohihi = new double[dim];
    double *start0hilohi = new double[dim];
@@ -1302,7 +1392,8 @@ int test_dbl8_real_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       dbl8_newton_qrstep
-         (szt,nbt,dim,wrkdeg,&tailidx_h,&tailidx_d,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,nbrcol,
+          &tailidx_h,&tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhshihihi,mbrhslohihi,mbrhshilohi,mbrhslolohi,
           mbrhshihilo,mbrhslohilo,mbrhshilolo,mbrhslololo,dpr,
           cffhihihi,cfflohihi,cffhilohi,cfflolohi,

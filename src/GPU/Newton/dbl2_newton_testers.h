@@ -44,6 +44,24 @@ void cmplx2_unit_series_vector
  *   Given space allocated in the coefficient arrays,
  *   returns the values for a complex unit series. */
 
+void dbl2_unit_series_vectors
+ ( int nbr, int dim, int deg, double ***cffhi, double ***cfflo );
+/*
+ * DESCRIPTION :
+ *   Given space in cffhi, cfflo for nbr vectors of dim power series,
+ *   of series truncated after degree deg,
+ *   initializes the coefficients in cff to one as leading coefficients,
+ *   and zero for all other coefficients. */
+
+void cmplx2_unit_series_vectors
+ ( int nbr, int dim, int deg,
+   double ***cffrehi, double ***cffrelo,
+   double ***cffimhi, double ***cffimlo );
+/*
+ * DESCRIPTION :
+ *   Given space allocated in cffre and cffim for nbr series,
+ *   returns the values for a complex unit series. */
+
 void dbl2_update_series
  ( int dim, int degp1, int startidx, double **xhi, double **xlo,
    double **dxhi, double **dxlo, int vrblvl );

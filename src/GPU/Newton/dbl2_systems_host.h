@@ -116,6 +116,93 @@ void CPU_cmplx2_evaluate_monomials
  *             at the i-th monomial, and for k in range 0..nvr[i]-1,
  *             outputimlo[i][idx[k]] is the derivative w.r.t. idx[k]. */
 
+void CPU_dbl2_evaluate_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx,
+   double ***cffhi, double ***cfflo, double **acchi, double **acclo,
+   double **inputhi, double **inputlo, double **funvalhi, double **funvallo,
+   double ***jacvalhi, double ***jacvallo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials in the column representation of a system,
+ *   at power series, on real data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   nbrcol    number of columns;
+ *   nvr       nvr[[i][j] is the number of variables of the j-th monomial
+ *             in the i-th column;
+ *   idx       idx[i][j][k] is the index of the k-th variable which appears
+ *             in the j-th monomial of the i-th column;
+ *   cffhi     high double coefficients of the monomials, cffhi[i][j] are 
+ *             the coefficients of the j-th monomial in the i-th column;
+ *   cfflo     low double coefficients of the monomials, cfflo[i][j] are 
+ *             the coefficients of the j-th monomial in the i-th column;
+ *   acchi     space to accumulate dim+1 power series of degree deg;
+ *   acclo     space to accumulate dim+1 power series of degree deg;
+ *   inputhi   high double coefficients of the power series of degree deg,
+ *             for dim variables;
+ *   inputlo   low double coefficients of the power series of degree deg,
+ *             for dim variables;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   funvalhi  high doubles of evaluated series for each polynomial;
+ *   funvallo  low doubles of evaluated series for each polynomial;
+ *   jacvalhi  matrix series of the high doubles of all derivatives;
+ *   jacvallo  matrix series of the low doubles of all derivatives. */
+
+void CPU_cmplx2_evaluate_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx,
+   double ***cffrehi, double ***cffrelo, double ***cffimhi, double ***cffimlo,
+   double **accrehi, double **accrelo, double **accimhi, double **accimlo,
+   double **inputrehi, double **inputrelo,
+   double **inputimhi, double **inputimlo,
+   double **funvalrehi, double **funvalrelo,
+   double **funvalimhi, double **funvalimlo,
+   double ***jacvalrehi, double ***jacvalrelo,
+   double ***jacvalimhi, double ***jacvalimlo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials in the column representation of a system,
+ *   at power series, on complex data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   nbrcol    number of columns;
+ *   nvr       nvr[[i][j] is the number of variables of the j-th monomial
+ *             in the i-th column;
+ *   idx       idx[i][j][k] is the index of the k-th variable which appears
+ *             in the j-th monomial of the i-th column;
+ *   cffrehi   high double real parts of the coefficients of the monomials,
+ *             cffrehi[i][j] of the j-th mononmial in the i-th column;
+ *   cffrelo   low double real parts of the coefficients of the monomials,
+ *             cffrelo[i][j] of the j-th mononmial in the i-th column;
+ *   cffimhi   high double imag parts of the coefficients of the monomials,
+ *             cffimhi[i][j] of the j-th mononmial in the i-th column;
+ *   cffimlo   low double imag parts of the coefficients of the monomials,
+ *             cffimlo[i][j] of the j-th mononmial in the i-th column;
+ *   accrehi   space to accumulate dim+1 power series of degree deg;
+ *   accrelo   space to accumulate dim+1 power series of degree deg;
+ *   accimhi   space to accumulate dim+1 power series of degree deg;
+ *   accimlo   space to accumulate dim+1 power series of degree deg;
+ *   inputrehi are the high double real parts of the input;
+ *   inputrelo are the low double real parts of the input;
+ *   inputimhi are the high double imaginary parts of the input;
+ *   inputimlo are the low double imaginary parts of the input;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   funvalrehi are the high doubles of the real parts of the evaluations;
+ *   funvalrelo are the low doubles of the real parts of the evaluations;
+ *   funvalimhi are the high doubles of the imag parts of the evaluations;
+ *   funvalimlo are the low doubles of the imag parts of the evaluations;
+ *   jacvalrehi are the high doubles of the real parts of all derivatives;
+ *   jacvalrelo are the low doubles of the real parts of all derivatives;
+ *   jacvalimhi are the high doubles of the imag parts of all derivatives;
+ *   jacvalimlo are the low doubles of the imag parts of all derivatives. */
+
 void dbl2_linearize_evaldiff_output
  ( int dim, int degp1, int *nvr, int **idx,
    double **mbhi, double **mblo, double damper,
@@ -255,5 +342,58 @@ void cmplx2_linearize_evaldiff_output
  *   jacvalrelo are the low doubles of the real parts of the matrix series;
  *   jacvalimhi are the high doubles of imaginary parts of the matrix series;
  *   jacvalimlo are the low doubles imaginary parts of the matrix series. */
+
+void dbl2_define_rhs
+ ( int dim, int degp1, double **mbhi, double **mblo,
+   double **funvalhi, double **funvallo, double **rhshi, double **rhslo,
+   int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Defines the right hand side for the test with the column representation
+ *   of the cyclic n-roots system, on real data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   degp1     degree plus one;
+ *   mbhi      high doubles of the right hand side series;
+ *   mblo      low doubles of the right hand side series;
+ *   funvalhi  high doubles of the evaluated series;
+ *   funvallo  low doubles of the evaluated series;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   rhshi     high doubles of the linearized right hand sides;
+ *   rhslo     low doubles of the linearized right hand sides. */
+
+void cmplx2_define_rhs
+ ( int dim, int degp1,
+   double **mbrehi, double **mbrelo, double **mbimhi, double **mbimlo,
+   double **funvalrehi, double **funvalrelo,
+   double **funvalimhi, double **funvalimlo,
+   double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
+   int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Defines the right hand side for the test with the column representation
+ *   of the cyclic n-roots system, on real data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   degp1     degree plus one;
+ *   mbrehi    high doubles of the real parts of the right hand side;
+ *   mbrelo    low doubles of the real parts of the right hand side;
+ *   mbimhi    high doubles of the imaginary parts of the right hand side;
+ *   mbimlo    low doubles of the imaginary parts of the right hand side;
+ *   funvalrehi are the high doubles of the real parts of the evaluations;
+ *   funvalrelo are the low doubles of the real parts of the evaluations;
+ *   funvalimhi are the high doubles of the imaginary parts of the evaluations;
+ *   funvalimlo are the low doubles of the imaginary parts of the evaluations;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   rhsrehi   high doubles of the real parts of the linearized rhs;
+ *   rhsrelo   low doubles of the real parts of the linearized rhs;
+ *   rhsimhi   high doubles of the imaginary parts of the linearized rhs;
+ *   rhsimlo   low doubles of the imaginary parts of the linearized rhs. */
 
 #endif

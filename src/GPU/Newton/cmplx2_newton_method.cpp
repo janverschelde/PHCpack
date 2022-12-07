@@ -8,6 +8,7 @@
 #include <vector_types.h>
 #include <time.h>
 #include "unimodular_matrices.h"
+#include "random_numbers.h"
 #include "random_monomials.h"
 #include "double_double_functions.h"
 #include "dbl2_convolutions_host.h"
@@ -25,12 +26,13 @@
 using namespace std;
 
 void cmplx2_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int *tailidx_h, int *tailidx_d,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
    double **mbrehi, double **mbrelo, double **mbimhi, double **mbimlo,
    double dpr,
-   double **cffrehi, double **cffrelo, double **cffimhi, double **cffimlo,
-   double *accrehi, double *accrelo, double *accimhi, double *accimlo,
+   double ***cffrehi, double ***cffrelo, double ***cffimhi, double ***cffimlo,
+   double **accrehi, double **accrelo, double **accimhi, double **accimlo,
    double **inputrehi_h, double **inputrelo_h,
    double **inputimhi_h, double **inputimlo_h,
    double **inputrehi_d, double **inputrelo_d,
@@ -76,36 +78,50 @@ void cmplx2_newton_qrstep
 
    if((mode == 1) || (mode == 2))
    {
-      // The series coefficients accumulate common factors,
-      // initially the coefficients are set to one.
-      cmplx2_unit_series_vector(dim,deg,cffrehi,cffrelo,cffimhi,cffimlo);
 
       if(vrblvl > 0)
          cout << "calling CPU_cmplx2_evaluate_monomials ..." << endl;
 
-      CPU_cmplx2_evaluate_monomials
-         (dim,deg,nvr,idx,exp,nbrfac,expfac,
-          cffrehi,cffrelo,cffimhi,cffimlo,
-          accrehi,accrelo,accimhi,accimlo,
-          inputrehi_h,inputrelo_h,inputimhi_h,inputimlo_h,
-          outputrehi_h,outputrelo_h,outputimhi_h,outputimlo_h,vrblvl);
+      if(nbrcol == 1)
+      {
+         cmplx2_unit_series_vector
+            (dim,deg,cffrehi[0],cffrelo[0],cffimhi[0],cffimlo[0]);
+         // The series coefficients accumulate common factors,
+         // initially the coefficients are set to one.
+
+         CPU_cmplx2_evaluate_monomials
+            (dim,deg,nvr[0],idx[0],exp,nbrfac,expfac,
+             cffrehi[0],cffrelo[0],cffimhi[0],cffimlo[0],
+             accrehi[0],accrelo[0],accimhi[0],accimlo[0],
+             inputrehi_h,inputrelo_h,inputimhi_h,inputimlo_h,
+             outputrehi_h,outputrelo_h,outputimhi_h,outputimlo_h,vrblvl);
+      }
+      else
+         CPU_cmplx2_evaluate_columns
+            (dim,deg,nbrcol,nvr,idx,
+             cffrehi,cffrelo,cffimhi,cffimlo,
+             accrehi,accrelo,accimhi,accimlo,
+             inputrehi_h,inputrelo_h,inputimhi_h,inputimlo_h,
+             funvalrehi_h,funvalrelo_h,funvalimhi_h,funvalimlo_h,
+             jacvalrehi_h,jacvalrelo_h,jacvalimhi_h,jacvalimlo_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
       // reset the coefficients
-      cmplx2_unit_series_vector(dim,deg,cffrehi,cffrelo,cffimhi,cffimlo);
+      cmplx2_unit_series_vector
+         (dim,deg,cffrehi[0],cffrelo[0],cffimhi[0],cffimlo[0]);
 
       if(vrblvl > 0)
          cout << "calling GPU_cmplx2_evaluate_monomials ..." << endl;
 
       GPU_cmplx2_evaluate_monomials
-         (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,
-          cffrehi,cffrelo,cffimhi,cffimlo,
-          accrehi,accrelo,accimhi,accimlo,
+         (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
+          cffrehi[0],cffrelo[0],cffimhi[0],cffimlo[0],
+          accrehi[0],accrelo[0],accimhi[0],accimlo[0],
           inputrehi_d,inputrelo_d,inputimhi_d,inputimlo_d,
           outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d,vrblvl);
    }
-   if((vrblvl > 0) && (mode == 2))
+   if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
       cout << "comparing CPU with GPU evaluations ... " << endl;
 
@@ -123,21 +139,29 @@ void cmplx2_newton_qrstep
    }
    if((mode == 1) || (mode == 2))
    {
-      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-         for(int j=0; j<dim; j++) 
-            for(int k=0; k<dim; k++)
-            {
-               jacvalrehi_h[i][j][k] = 0.0; jacvalimhi_h[i][j][k] = 0.0;
-               jacvalrelo_h[i][j][k] = 0.0; jacvalimlo_h[i][j][k] = 0.0;
-            }
+      if(nbrcol != 1)
+         cmplx2_define_rhs
+            (dim,degp1,mbrehi,mbrelo,mbimhi,mbimlo,
+             funvalrehi_h,funvalrelo_h,funvalimhi_h,funvalimlo_h,
+             rhsrehi_h,rhsrelo_h,rhsimhi_h,rhsimlo_h,vrblvl);
+      else
+      {
+         for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+            for(int j=0; j<dim; j++) 
+               for(int k=0; k<dim; k++)
+               {
+                  jacvalrehi_h[i][j][k] = 0.0; jacvalimhi_h[i][j][k] = 0.0;
+                  jacvalrelo_h[i][j][k] = 0.0; jacvalimlo_h[i][j][k] = 0.0;
+               }
 
-      if(vrblvl > 0) cout << "linearizing the output ..." << endl;
-      cmplx2_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,mbrehi,mbrelo,mbimhi,mbimlo,dpr,
-          outputrehi_h,outputrelo_h,outputimhi_h,outputimlo_h,
-          funvalrehi_h,funvalrelo_h,funvalimhi_h,funvalimlo_h,
-          rhsrehi_h,rhsrelo_h,rhsimhi_h,rhsimlo_h,
-          jacvalrehi_h,jacvalrelo_h,jacvalimhi_h,jacvalimlo_h,vrblvl);
+         if(vrblvl > 0) cout << "linearizing the output ..." << endl;
+         cmplx2_linearize_evaldiff_output
+            (dim,degp1,nvr[0],idx[0],mbrehi,mbrelo,mbimhi,mbimlo,dpr,
+             outputrehi_h,outputrelo_h,outputimhi_h,outputimlo_h,
+             funvalrehi_h,funvalrelo_h,funvalimhi_h,funvalimlo_h,
+             rhsrehi_h,rhsrelo_h,rhsimhi_h,rhsimlo_h,
+             jacvalrehi_h,jacvalrelo_h,jacvalimhi_h,jacvalimlo_h,vrblvl);
+      }
    }
    if((mode == 0) || (mode == 2))
    {
@@ -151,7 +175,7 @@ void cmplx2_newton_qrstep
 
       if(vrblvl > 0) cout << "linearizing the output ..." << endl;
       cmplx2_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,mbrehi,mbrelo,mbimhi,mbimlo,dpr,
+         (dim,degp1,nvr[0],idx[0],mbrehi,mbrelo,mbimhi,mbimlo,dpr,
           outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d,
           funvalrehi_d,funvalrelo_d,funvalimhi_d,funvalimlo_d,
           rhsrehi_d,rhsrelo_d,rhsimhi_d,rhsimlo_d,
@@ -321,8 +345,8 @@ void cmplx2_newton_qrstep
 }
 
 int test_dbl2_complex_newton
- ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
@@ -350,20 +374,37 @@ int test_dbl2_complex_newton
        inputimlo_d[i] = new double[degp1];
    }
    // allocate memory for coefficients and the output
-   double *accrehi = new double[degp1]; // accumulated power series
-   double *accrelo = new double[degp1];
-   double *accimhi = new double[degp1];
-   double *accimlo = new double[degp1];
-   double **cffrehi = new double*[dim]; // the coefficients of monomials
-   double **cffrelo = new double*[dim];
-   double **cffimhi = new double*[dim]; 
-   double **cffimlo = new double*[dim]; 
-   for(int i=0; i<dim; i++)
+   double **accrehi = new double*[dim+1]; // accumulated power series
+   double **accrelo = new double*[dim+1]; // in one column
+   double **accimhi = new double*[dim+1];
+   double **accimlo = new double*[dim+1];
+
+   for(int i=0; i<=dim; i++)
    {
-      cffrehi[i] = new double[degp1];
-      cffrelo[i] = new double[degp1];
-      cffimhi[i] = new double[degp1];
-      cffimlo[i] = new double[degp1];
+      accrehi[i] = new double[degp1];
+      accrelo[i] = new double[degp1];
+      accimhi[i] = new double[degp1];
+      accimlo[i] = new double[degp1];
+   }
+   double ***cffrehi = new double**[nbrcol]; // coefficients of monomials
+   double ***cffrelo = new double**[nbrcol];
+   double ***cffimhi = new double**[nbrcol]; 
+   double ***cffimlo = new double**[nbrcol]; 
+
+   for(int i=0; i<nbrcol; i++)
+   {
+      cffrehi[i] = new double*[dim];
+      cffrelo[i] = new double*[dim];
+      cffimhi[i] = new double*[dim];
+      cffimlo[i] = new double*[dim];
+
+      for(int j=0; j<dim; j++)
+      {
+         cffrehi[i][j] = new double[degp1];
+         cffrelo[i][j] = new double[degp1];
+         cffimhi[i][j] = new double[degp1];
+         cffimlo[i][j] = new double[degp1];
+      }
    }
    double ***outputrehi_h;
    double ***outputrelo_h;
@@ -757,6 +798,14 @@ int test_dbl2_complex_newton
       solimlo[i] = new double[degp1];
    }
    make_complex2_exponentials(dim,deg,solrehi,solrelo,solimhi,solimlo);
+   if(nbrcol != 1) // randomize the leading term
+      for(int i=0; i<dim; i++)
+      {
+          // solre[i][0] = solre[i][0] + random_double()/10.0;
+          // solim[i][0] = solim[i][0] + random_double()/10.0;
+          solrehi[i][0] = random_double(); solrelo[i][0] = 0.0;
+          solimhi[i][0] = random_double(); solimlo[i][0] = 0.0;
+      }
 
    // compute the right hand sides via evaluation
 
@@ -785,10 +834,19 @@ int test_dbl2_complex_newton
          mbrhsimlo[i][k] = 0.0;
       }
    }
-   evaluate_complex2_monomials
-      (dim,deg,rowsA,solrehi,solrelo,solimhi,solimlo,
-       mbrhsrehi,mbrhsrelo,mbrhsimhi,mbrhsimlo);
-   
+   if(nbrcol == 1)
+      evaluate_complex2_monomials
+         (dim,deg,rowsA,solrehi,solrelo,solimhi,solimlo,
+          mbrhsrehi,mbrhsrelo,mbrhsimhi,mbrhsimlo);
+   else
+   {
+      evaluate_complex2_columns
+         (dim,deg,nbrcol,nvr,idx,rowsA,
+          solrehi,solrelo,solimhi,solimlo,
+          mbrhsrehi,mbrhsrelo,mbrhsimhi,mbrhsimlo,vrblvl);
+      cmplx2_unit_series_vectors
+         (nbrcol,dim,deg,cffrehi,cffrelo,cffimhi,cffimlo);
+   }
    double *start0rehi = new double[dim];
    double *start0relo = new double[dim];
    double *start0imhi = new double[dim];
@@ -845,7 +903,8 @@ int test_dbl2_complex_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       cmplx2_newton_qrstep
-         (szt,nbt,dim,wrkdeg,&tailidx_h,&tailidx_d,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,nbrcol,&tailidx_h,&tailidx_d,
+          nvr,idx,exp,nbrfac,expfac,
           mbrhsrehi,mbrhsrelo,mbrhsimhi,mbrhsimlo,dpr,
           cffrehi,cffrelo,cffimhi,cffimlo,accrehi,accrelo,accimhi,accimlo,
           inputrehi_h,inputrelo_h,inputimhi_h,inputimlo_h,

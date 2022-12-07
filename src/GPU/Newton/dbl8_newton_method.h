@@ -5,17 +5,20 @@
 #define __dbl8_newton_method_h__
 
 void dbl8_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int *tailidx_h, int *tailidx_d,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
    double **mbhihihi, double **mblohihi, double **mbhilohi, double **mblolohi,
    double **mbhihilo, double **mblohilo, double **mbhilolo, double **mblololo,
    double dpr,
-   double **cffhihihi, double **cfflohihi,
-   double **cffhilohi, double **cfflolohi,
-   double **cffhihilo, double **cfflohilo,
-   double **cffhilolo, double **cfflololo,
-   double *acchihihi, double *acclohihi, double *acchilohi, double *acclolohi,
-   double *acchihilo, double *acclohilo, double *acchilolo, double *acclololo,
+   double ***cffhihihi, double ***cfflohihi,
+   double ***cffhilohi, double ***cfflolohi,
+   double ***cffhihilo, double ***cfflohilo,
+   double ***cffhilolo, double ***cfflololo,
+   double **acchihihi, double **acclohihi,
+   double **acchilohi, double **acclolohi,
+   double **acchihilo, double **acclohilo,
+   double **acchilolo, double **acclololo,
    double **inputhihihi_h, double **inputlohihi_h,
    double **inputhilohi_h, double **inputlolohi_h,
    double **inputhihilo_h, double **inputlohilo_h,
@@ -115,10 +118,14 @@ void dbl8_newton_qrstep
  *   nbt       number of tiles and number of blocks;
  *   dim       number of monomials;
  *   deg       degree of the power series;
+ *   nbrcol    number of columns, if 1, then the system is monomial,
+ *             otherwise nbrcol columns are expected;
  *   tailidx_h is the start index of the update of the tail on the host;
  *   tailidx_d is the start index of the update of the tail on the device;
- *   nvr       nvr[i] is the number of variables in the i-th monomial;
- *   idx       idx[i] are the indices of the variables in monomial i;
+ *   nvr       nvr[i][j] is the number of variables in the j-th monomial
+ *             of the i-th column;
+ *   idx       idx[i][j] are the indices of the variables in monomial j
+ *             of the i-th column;
  *   exp       exp[i] are the exponents of the variables in monomial i;
  *   nbrfac    nbrfac[i] are the number of exponents > 1 in monomial i;
  *   expfac    expfac[i] are the exponents in the i-th polynomial
@@ -505,8 +512,8 @@ void dbl8_newton_qrstep
  *   bsidx_d   counts the number of backsubstitutions skipped by device. */
 
 int test_dbl8_real_newton
- ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl );
 /*
  * DESCRIPTION :
@@ -517,8 +524,12 @@ int test_dbl8_real_newton
  *   nbt       number of tiles and number of blocks;
  *   dim       number of monomials;
  *   deg       degree of the power series;
- *   nvr       nvr[i] is the number of variables in the i-th monomial;
- *   idx       idx[i] are the indices of the variables in monomial i;
+ *   nbrcol    number of columns, if 1, then the system is monomial,
+ *             otherwise nbrcol columns are expected;
+ *   nvr       nvr[i][j] is the number of variables in the j-th monomial
+ *             of the i-th column;
+ *   idx       idx[i][j] are the indices of the variables in monomial j
+ *             of the i-th column;
  *   exp       exp[i] are the exponents of the variables in monomial i;
  *   nbrfac    nbrfac[i] are the number of exponents > 1 in monomial i;
  *   expfac    expfac[i] are the exponents in the i-th polynomial

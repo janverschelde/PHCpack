@@ -89,6 +89,34 @@ void cmplx8_unit_series_vector
  *   Given space allocated in the coefficient arrays,
  *   returns the values for a complex unit series. */
 
+void dbl8_unit_series_vectors
+ ( int nbr, int dim, int deg,
+   double ***cffhihihi, double ***cfflohihi,
+   double ***cffhilohi, double ***cfflolohi,
+   double ***cffhihilo, double ***cfflohilo,
+   double ***cffhilolo, double ***cfflololo );
+/*
+ * DESCRIPTION :
+ *   Given space for nbr vectors of dim power series,
+ *   of series truncated after degree deg,
+ *   initializes the coefficients in cff to one as leading coefficients,
+ *   and zero for all other coefficients. */
+
+void cmplx8_unit_series_vectors
+ ( int nbr, int dim, int deg,
+   double ***cffrehihihi, double ***cffrelohihi,
+   double ***cffrehilohi, double ***cffrelolohi,
+   double ***cffrehihilo, double ***cffrelohilo,
+   double ***cffrehilolo, double ***cffrelololo,
+   double ***cffimhihihi, double ***cffimlohihi,
+   double ***cffimhilohi, double ***cffimlolohi,
+   double ***cffimhihilo, double ***cffimlohilo,
+   double ***cffimhilolo, double ***cffimlololo );
+/*
+ * DESCRIPTION :
+ *   Given space allocated in cffre and cffim for nbr series,
+ *   returns the values for a complex unit series. */
+
 void dbl8_update_series
  ( int dim, int degp1, int startidx,
    double **xhihihi, double **xlohihi, double **xhilohi, double **xlolohi,

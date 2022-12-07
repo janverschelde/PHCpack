@@ -8,6 +8,7 @@
 #include <vector_types.h>
 #include <time.h>
 #include "unimodular_matrices.h"
+#include "random_numbers.h"
 #include "random_monomials.h"
 #include "quad_double_functions.h"
 #include "dbl4_convolutions_host.h"
@@ -24,19 +25,20 @@
 using namespace std;
 
 void cmplx4_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int *tailidx_h, int *tailidx_d,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
    double **mbrehihi, double **mbrelohi, double **mbrehilo, double **mbrelolo,
    double **mbimhihi, double **mbimlohi, double **mbimhilo, double **mbimlolo,
    double dpr,
-   double **cffrehihi, double **cffrelohi,
-   double **cffrehilo, double **cffrelolo,
-   double **cffimhihi, double **cffimlohi,
-   double **cffimhilo, double **cffimlolo,
-   double *accrehihi, double *accrelohi,
-   double *accrehilo, double *accrelolo,
-   double *accimhihi, double *accimlohi,
-   double *accimhilo, double *accimlolo,
+   double ***cffrehihi, double ***cffrelohi,
+   double ***cffrehilo, double ***cffrelolo,
+   double ***cffimhihi, double ***cffimlohi,
+   double ***cffimhilo, double ***cffimlolo,
+   double **accrehihi, double **accrelohi,
+   double **accrehilo, double **accrelolo,
+   double **accimhihi, double **accimlohi,
+   double **accimhilo, double **accimlolo,
    double **inputrehihi_h, double **inputrelohi_h,
    double **inputrehilo_h, double **inputrelolo_h,
    double **inputimhihi_h, double **inputimlohi_h,
@@ -127,50 +129,67 @@ void cmplx4_newton_qrstep
 
    if((mode == 1) || (mode == 2))
    {
-      // The series coefficients accumulate common factors,
-      // initially the coefficients are set to one.
-      cmplx4_unit_series_vector
-         (dim,deg,cffrehihi,cffrelohi,cffrehilo,cffrelolo,
-                  cffimhihi,cffimlohi,cffimhilo,cffimlolo);
-
       if(vrblvl > 0)
          cout << "calling CPU_cmplx4_evaluate_monomials ..." << endl;
 
-      CPU_cmplx4_evaluate_monomials
-         (dim,deg,nvr,idx,exp,nbrfac,expfac,
-          cffrehihi,cffrelohi,cffrehilo,cffrelolo,
-          cffimhihi,cffimlohi,cffimhilo,cffimlolo,
-          accrehihi,accrelohi,accrehilo,accrelolo,
-          accimhihi,accimlohi,accimhilo,accimlolo,
-          inputrehihi_h,inputrelohi_h,inputrehilo_h,inputrelolo_h,
-          inputimhihi_h,inputimlohi_h,inputimhilo_h,inputimlolo_h,
-          outputrehihi_h,outputrelohi_h,outputrehilo_h,outputrelolo_h,
-          outputimhihi_h,outputimlohi_h,outputimhilo_h,outputimlolo_h,
-          vrblvl);
+      if(nbrcol == 1)
+      {
+         cmplx4_unit_series_vector
+            (dim,deg,cffrehihi[0],cffrelohi[0],cffrehilo[0],cffrelolo[0],
+                     cffimhihi[0],cffimlohi[0],cffimhilo[0],cffimlolo[0]);
+         // The series coefficients accumulate common factors,
+         // initially the coefficients are set to one.
+
+         CPU_cmplx4_evaluate_monomials
+            (dim,deg,nvr[0],idx[0],exp,nbrfac,expfac,
+             cffrehihi[0],cffrelohi[0],cffrehilo[0],cffrelolo[0],
+             cffimhihi[0],cffimlohi[0],cffimhilo[0],cffimlolo[0],
+             accrehihi[0],accrelohi[0],accrehilo[0],accrelolo[0],
+             accimhihi[0],accimlohi[0],accimhilo[0],accimlolo[0],
+             inputrehihi_h,inputrelohi_h,inputrehilo_h,inputrelolo_h,
+             inputimhihi_h,inputimlohi_h,inputimhilo_h,inputimlolo_h,
+             outputrehihi_h,outputrelohi_h,outputrehilo_h,outputrelolo_h,
+             outputimhihi_h,outputimlohi_h,outputimhilo_h,outputimlolo_h,
+             vrblvl);
+      }
+      else
+         CPU_cmplx4_evaluate_columns
+            (dim,deg,nbrcol,nvr,idx,
+             cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+             cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+             accrehihi,accrelohi,accrehilo,accrelolo,
+             accimhihi,accimlohi,accimhilo,accimlolo,
+             inputrehihi_h,inputrelohi_h,inputrehilo_h,inputrelolo_h,
+             inputimhihi_h,inputimlohi_h,inputimhilo_h,inputimlolo_h,
+             funvalrehihi_h,funvalrelohi_h,funvalrehilo_h,funvalrelolo_h,
+             funvalimhihi_h,funvalimlohi_h,funvalimhilo_h,funvalimlolo_h,
+             jacvalrehihi_h,jacvalrelohi_h,jacvalrehilo_h,jacvalrelolo_h,
+             jacvalimhihi_h,jacvalimlohi_h,jacvalimhilo_h,jacvalimlolo_h,
+             vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
       // reset the coefficients
       cmplx4_unit_series_vector
-         (dim,deg,cffrehihi,cffrelohi,cffrehilo,cffrelolo,
-                  cffimhihi,cffimlohi,cffimhilo,cffimlolo);
+         (dim,deg,cffrehihi[0],cffrelohi[0],cffrehilo[0],cffrelolo[0],
+                  cffimhihi[0],cffimlohi[0],cffimhilo[0],cffimlolo[0]);
 
       if(vrblvl > 0)
          cout << "calling GPU_cmplx4_evaluate_monomials ..." << endl;
 
       GPU_cmplx4_evaluate_monomials
-         (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,
-          cffrehihi,cffrelohi,cffrehilo,cffrelolo,
-          cffimhihi,cffimlohi,cffimhilo,cffimlolo,
-          accrehihi,accrelohi,accrehilo,accrelolo,
-          accimhihi,accimlohi,accimhilo,accimlolo,
+         (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
+          cffrehihi[0],cffrelohi[0],cffrehilo[0],cffrelolo[0],
+          cffimhihi[0],cffimlohi[0],cffimhilo[0],cffimlolo[0],
+          accrehihi[0],accrelohi[0],accrehilo[0],accrelolo[0],
+          accimhihi[0],accimlohi[0],accimhilo[0],accimlolo[0],
           inputrehihi_d,inputrelohi_d,inputrehilo_d,inputrelolo_d,
           inputimhihi_d,inputimlohi_d,inputimhilo_d,inputimlolo_d,
           outputrehihi_d,outputrelohi_d,outputrehilo_d,outputrelolo_d,
           outputimhihi_d,outputimlohi_d,outputimhilo_d,outputimlolo_d,
           vrblvl);
    }
-   if((vrblvl > 0) && (mode == 2))
+   if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
       double errsum = 0.0;
 
@@ -190,30 +209,46 @@ void cmplx4_newton_qrstep
    }
    if((mode == 1) || (mode == 2))
    {
-      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-         for(int j=0; j<dim; j++) 
-            for(int k=0; k<dim; k++)
-            {
-               jacvalrehihi_h[i][j][k] = 0.0; jacvalimhihi_h[i][j][k] = 0.0;
-               jacvalrelohi_h[i][j][k] = 0.0; jacvalimlohi_h[i][j][k] = 0.0;
-               jacvalrehilo_h[i][j][k] = 0.0; jacvalimhilo_h[i][j][k] = 0.0;
-               jacvalrelolo_h[i][j][k] = 0.0; jacvalimlolo_h[i][j][k] = 0.0;
-            }
+      if(nbrcol != 1)
+         cmplx4_define_rhs
+            (dim,degp1,
+             mbrehihi,mbrelohi,mbrehilo,mbrelolo,
+             mbimhihi,mbimlohi,mbimhilo,mbimlolo,
+             funvalrehihi_h,funvalrelohi_h,funvalrehilo_h,funvalrelolo_h,
+             funvalimhihi_h,funvalimlohi_h,funvalimhilo_h,funvalimlolo_h,
+             rhsrehihi_h,rhsrelohi_h,rhsrehilo_h,rhsrelolo_h,
+             rhsimhihi_h,rhsimlohi_h,rhsimhilo_h,rhsimlolo_h,vrblvl);
+      else
+      {
+         for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+            for(int j=0; j<dim; j++) 
+               for(int k=0; k<dim; k++)
+               {
+                  jacvalrehihi_h[i][j][k] = 0.0;
+                  jacvalrelohi_h[i][j][k] = 0.0;
+                  jacvalrehilo_h[i][j][k] = 0.0;
+                  jacvalrelolo_h[i][j][k] = 0.0;
+                  jacvalimhihi_h[i][j][k] = 0.0;
+                  jacvalimlohi_h[i][j][k] = 0.0;
+                  jacvalimhilo_h[i][j][k] = 0.0;
+                  jacvalimlolo_h[i][j][k] = 0.0;
+               }
 
-      if(vrblvl > 0) cout << "linearizing the output ..." << endl;
-      cmplx4_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
-          mbrehihi,mbrelohi,mbrehilo,mbrelolo,
-          mbimhihi,mbimlohi,mbimhilo,mbimlolo,dpr,
-          outputrehihi_h,outputrelohi_h,outputrehilo_h,outputrelolo_h,
-          outputimhihi_h,outputimlohi_h,outputimhilo_h,outputimlolo_h,
-          funvalrehihi_h,funvalrelohi_h,funvalrehilo_h,funvalrelolo_h,
-          funvalimhihi_h,funvalimlohi_h,funvalimhilo_h,funvalimlolo_h,
-          rhsrehihi_h,rhsrelohi_h,rhsrehilo_h,rhsrelolo_h,
-          rhsimhihi_h,rhsimlohi_h,rhsimhilo_h,rhsimlolo_h,
-          jacvalrehihi_h,jacvalrelohi_h,jacvalrehilo_h,jacvalrelolo_h,
-          jacvalimhihi_h,jacvalimlohi_h,jacvalimhilo_h,jacvalimlolo_h,
-          vrblvl);
+         if(vrblvl > 0) cout << "linearizing the output ..." << endl;
+         cmplx4_linearize_evaldiff_output
+            (dim,degp1,nvr[0],idx[0],
+             mbrehihi,mbrelohi,mbrehilo,mbrelolo,
+             mbimhihi,mbimlohi,mbimhilo,mbimlolo,dpr,
+             outputrehihi_h,outputrelohi_h,outputrehilo_h,outputrelolo_h,
+             outputimhihi_h,outputimlohi_h,outputimhilo_h,outputimlolo_h,
+             funvalrehihi_h,funvalrelohi_h,funvalrehilo_h,funvalrelolo_h,
+             funvalimhihi_h,funvalimlohi_h,funvalimhilo_h,funvalimlolo_h,
+             rhsrehihi_h,rhsrelohi_h,rhsrehilo_h,rhsrelolo_h,
+             rhsimhihi_h,rhsimlohi_h,rhsimhilo_h,rhsimlolo_h,
+             jacvalrehihi_h,jacvalrelohi_h,jacvalrehilo_h,jacvalrelolo_h,
+             jacvalimhihi_h,jacvalimlohi_h,jacvalimhilo_h,jacvalimlolo_h,
+             vrblvl);
+      }
    }
    if((mode == 0) || (mode == 2))
    {
@@ -229,7 +264,7 @@ void cmplx4_newton_qrstep
 
       if(vrblvl > 0) cout << "linearizing the output ..." << endl;
       cmplx4_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
+         (dim,degp1,nvr[0],idx[0],
           mbrehihi,mbrelohi,mbrehilo,mbrelolo,
           mbimhihi,mbimlohi,mbimhilo,mbimlolo,dpr,
           outputrehihi_d,outputrelohi_d,outputrehilo_d,outputrelolo_d,
@@ -464,8 +499,8 @@ void cmplx4_newton_qrstep
 }
 
 int test_dbl4_complex_newton
- ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
@@ -509,33 +544,57 @@ int test_dbl4_complex_newton
        inputimlolo_d[i] = new double[degp1];
    }
    // allocate memory for coefficients and the output
-   double *accrehihi = new double[degp1]; // accumulated power series
-   double *accrelohi = new double[degp1];
-   double *accrehilo = new double[degp1];
-   double *accrelolo = new double[degp1];
-   double *accimhihi = new double[degp1];
-   double *accimlohi = new double[degp1];
-   double *accimhilo = new double[degp1];
-   double *accimlolo = new double[degp1];
-   double **cffrehihi = new double*[dim]; // the coefficients of monomials
-   double **cffrelohi = new double*[dim];
-   double **cffrehilo = new double*[dim]; 
-   double **cffrelolo = new double*[dim];
-   double **cffimhihi = new double*[dim]; 
-   double **cffimlohi = new double*[dim]; 
-   double **cffimhilo = new double*[dim]; 
-   double **cffimlolo = new double*[dim]; 
+   double **accrehihi = new double*[dim+1]; // accumulated series
+   double **accrelohi = new double*[dim+1]; // in one column
+   double **accrehilo = new double*[dim+1];
+   double **accrelolo = new double*[dim+1];
+   double **accimhihi = new double*[dim+1];
+   double **accimlohi = new double*[dim+1];
+   double **accimhilo = new double*[dim+1];
+   double **accimlolo = new double*[dim+1];
 
-   for(int i=0; i<dim; i++)
+   for(int i=0; i<=dim; i++)
    {
-      cffrehihi[i] = new double[degp1];
-      cffrelohi[i] = new double[degp1];
-      cffrehilo[i] = new double[degp1];
-      cffrelolo[i] = new double[degp1];
-      cffimhihi[i] = new double[degp1];
-      cffimlohi[i] = new double[degp1];
-      cffimhilo[i] = new double[degp1];
-      cffimlolo[i] = new double[degp1];
+      accrehihi[i] = new double[degp1];
+      accrelohi[i] = new double[degp1];
+      accrehilo[i] = new double[degp1];
+      accrelolo[i] = new double[degp1];
+      accimhihi[i] = new double[degp1];
+      accimlohi[i] = new double[degp1];
+      accimhilo[i] = new double[degp1];
+      accimlolo[i] = new double[degp1];
+   }
+   double ***cffrehihi = new double**[nbrcol]; // coefficients of monomials
+   double ***cffrelohi = new double**[nbrcol];
+   double ***cffrehilo = new double**[nbrcol]; 
+   double ***cffrelolo = new double**[nbrcol];
+   double ***cffimhihi = new double**[nbrcol]; 
+   double ***cffimlohi = new double**[nbrcol]; 
+   double ***cffimhilo = new double**[nbrcol]; 
+   double ***cffimlolo = new double**[nbrcol]; 
+
+   for(int i=0; i<nbrcol; i++)
+   {
+      cffrehihi[i] = new double*[dim];
+      cffrelohi[i] = new double*[dim];
+      cffrehilo[i] = new double*[dim];
+      cffrelolo[i] = new double*[dim];
+      cffimhihi[i] = new double*[dim];
+      cffimlohi[i] = new double*[dim];
+      cffimhilo[i] = new double*[dim];
+      cffimlolo[i] = new double*[dim];
+
+      for(int j=0; j<dim; j++)
+      {
+         cffrehihi[i][j] = new double[degp1];
+         cffrelohi[i][j] = new double[degp1];
+         cffrehilo[i][j] = new double[degp1];
+         cffrelolo[i][j] = new double[degp1];
+         cffimhihi[i][j] = new double[degp1];
+         cffimlohi[i][j] = new double[degp1];
+         cffimhilo[i][j] = new double[degp1];
+         cffimlolo[i][j] = new double[degp1];
+      }
    }
    double ***outputrehihi_h;
    double ***outputrelohi_h;
@@ -1159,6 +1218,20 @@ int test_dbl4_complex_newton
    make_complex4_exponentials
       (dim,deg,solrehihi,solrelohi,solrehilo,solrelolo,
                solimhihi,solimlohi,solimhilo,solimlolo);
+   if(nbrcol != 1) // randomize the leading term
+      for(int i=0; i<dim; i++)
+      {
+          // solre[i][0] = solre[i][0] + random_double()/10.0;
+          // solim[i][0] = solim[i][0] + random_double()/10.0;
+          solrehihi[i][0] = random_double();
+          solrelohi[i][0] = 0.0;
+          solrehilo[i][0] = 0.0;
+          solrelolo[i][0] = 0.0;
+          solimhihi[i][0] = random_double();
+          solimlohi[i][0] = 0.0;
+          solimhilo[i][0] = 0.0;
+          solimlolo[i][0] = 0.0;
+      }
 
    // compute the right hand sides via evaluation
 
@@ -1199,13 +1272,27 @@ int test_dbl4_complex_newton
          mbrhsimhilo[i][k] = 0.0; mbrhsimlolo[i][k] = 0.0;
       }
    }
-   evaluate_complex4_monomials
-      (dim,deg,rowsA,
-       solrehihi,solrelohi,solrehilo,solrelolo,
-       solimhihi,solimlohi,solimhilo,solimlolo,
-       mbrhsrehihi,mbrhsrelohi,mbrhsrehilo,mbrhsrelolo,
-       mbrhsimhihi,mbrhsimlohi,mbrhsimhilo,mbrhsimlolo);
-   
+   if(nbrcol == 1)
+      evaluate_complex4_monomials
+         (dim,deg,rowsA,
+          solrehihi,solrelohi,solrehilo,solrelolo,
+          solimhihi,solimlohi,solimhilo,solimlolo,
+          mbrhsrehihi,mbrhsrelohi,mbrhsrehilo,mbrhsrelolo,
+          mbrhsimhihi,mbrhsimlohi,mbrhsimhilo,mbrhsimlolo);
+   else
+   {
+      evaluate_complex4_columns
+         (dim,deg,nbrcol,nvr,idx,rowsA,
+          solrehihi,solrelohi,solrehilo,solrelolo,
+          solimhihi,solimlohi,solimhilo,solimlolo,
+          mbrhsrehihi,mbrhsrelohi,mbrhsrehilo,mbrhsrelolo,
+          mbrhsimhihi,mbrhsimlohi,mbrhsimhilo,mbrhsimlolo,vrblvl);
+
+      cmplx4_unit_series_vectors
+         (nbrcol,dim,deg,
+          cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+          cffimhihi,cffimlohi,cffimhilo,cffimlolo);
+   }
    double *start0rehihi = new double[dim];
    double *start0relohi = new double[dim];
    double *start0rehilo = new double[dim];
@@ -1280,7 +1367,8 @@ int test_dbl4_complex_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       cmplx4_newton_qrstep
-         (szt,nbt,dim,wrkdeg,&tailidx_h,&tailidx_d,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,nbrcol,
+          &tailidx_h,&tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhsrehihi,mbrhsrelohi,mbrhsrehilo,mbrhsrelolo,
           mbrhsimhihi,mbrhsimlohi,mbrhsimhilo,mbrhsimlolo,dpr,
           cffrehihi,cffrelohi,cffrehilo,cffrelolo,

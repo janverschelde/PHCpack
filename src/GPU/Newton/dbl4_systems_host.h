@@ -189,6 +189,144 @@ void CPU_cmplx4_evaluate_monomials
  *             at the i-th monomial, and for k in range 0..nvr[i]-1,
  *             outputimlolo[i][idx[k]] is the derivative w.r.t. idx[k]. */
 
+void CPU_dbl4_evaluate_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx,
+   double ***cffhihi, double ***cfflohi, double ***cffhilo, double ***cfflolo,
+   double **acchihi, double **acclohi, double **acchilo, double **acclolo,
+   double **inputhihi, double **inputlohi,
+   double **inputhilo, double **inputlolo,
+   double **funvalhihi, double **funvallohi,
+   double **funvalhilo, double **funvallolo,
+   double ***jacvalhihi, double ***jacvallohi,
+   double ***jacvalhilo, double ***jacvallolo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials in the column representation of a system,
+ *   at power series, on real data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   nbrcol    number of columns;
+ *   nvr       nvr[[i][j] is the number of variables of the j-th monomial
+ *             in the i-th column;
+ *   idx       idx[i][j][k] is the index of the k-th variable which appears
+ *             in the j-th monomial of the i-th column;
+ *   cffhihi   highest double coefficients of the monomials, cffhihi[i][j]
+ *             are the coefficients of the j-th monomial in the i-th column;
+ *   cfflohi   2nd highest double coefficients of the monomials, cfflohi[i][j]
+ *             are the coefficients of the j-th monomial in the i-th column;
+ *   cffhilo   2nd lowest double coefficients of the monomials, cffhilo[i][j]
+ *             are the coefficients of the j-th monomial in the i-th column;
+ *   cfflolo   lowest double coefficients of the monomials, cfflolo[i][j]
+ *             are the coefficients of the j-th monomial in the i-th column;
+ *   acchihi   space to accumulate dim+1 power series of degree deg;
+ *   acclohi   space to accumulate dim+1 power series of degree deg;
+ *   acchilo   space to accumulate dim+1 power series of degree deg;
+ *   acclolo   space to accumulate dim+1 power series of degree deg;
+ *   inputhihi are the highest double coefficients of the input;
+ *   inputlohi are the second highest double coefficients of the input;
+ *   inputhilo are the second lowest double coefficients of the input;
+ *   inputlolo are the lowest double coefficients of the input;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   funvalhihi are the highest doubles of evaluations;
+ *   funvallohi are the second highest doubles of evaluations;
+ *   funvalhilo are the second lowest doubles of evaluations;
+ *   funvallolo are the lowest doubles of evaluations;
+ *   jacvalhihi are the highest doubles of all derivatives;
+ *   jacvallohi are the second highest doubles of all derivatives;
+ *   jacvalhilo are the second lowest doubles of all derivatives;
+ *   jacvallolo are the lowest doubles of all derivatives. */
+
+void CPU_cmplx4_evaluate_columns
+ ( int dim, int deg, int nbrcol, int **nvr, int ***idx,
+   double ***cffrehihi, double ***cffrelohi,
+   double ***cffrehilo, double ***cffrelolo,
+   double ***cffimhihi, double ***cffimlohi,
+   double ***cffimhilo, double ***cffimlolo,
+   double **accrehihi, double **accrelohi,
+   double **accrehilo, double **accrelolo,
+   double **accimhihi, double **accimlohi,
+   double **accimhilo, double **accimlolo,
+   double **inputrehihi, double **inputrelohi,
+   double **inputrehilo, double **inputrelolo,
+   double **inputimhihi, double **inputimlohi,
+   double **inputimhilo, double **inputimlolo,
+   double **funvalrehihi, double **funvalrelohi,
+   double **funvalrehilo, double **funvalrelolo,
+   double **funvalimhihi, double **funvalimlohi,
+   double **funvalimhilo, double **funvalimlolo,
+   double ***jacvalrehihi, double ***jacvalrelohi,
+   double ***jacvalrehilo, double ***jacvalrelolo,
+   double ***jacvalimhihi, double ***jacvalimlohi,
+   double ***jacvalimhilo, double ***jacvalimlolo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials in the column representation of a system,
+ *   at power series, on complex data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   nbrcol    number of columns;
+ *   nvr       nvr[[i][j] is the number of variables of the j-th monomial
+ *             in the i-th column;
+ *   idx       idx[i][j][k] is the index of the k-th variable which appears
+ *             in the j-th monomial of the i-th column;
+ *   cffrehihi are the highest double real parts of the coefficients,
+ *             cffrehihi[i][j] of the j-th mononmial in the i-th column;
+ *   cffrelohi are the 2nd highest double real parts of the coefficients,
+ *             cffrelohi[i][j] of the j-th mononmial in the i-th column;
+ *   cffrehilo are the 2nd lowest double real parts of the coefficients,
+ *             cffrehilo[i][j] of the j-th mononmial in the i-th column;
+ *   cffrelolo are the lowest double real parts of the coefficients,
+ *             cffrelolo[i][j] of the j-th mononmial in the i-th column;
+ *   cffimhihi are the highest double imaginary parts of the coefficients,
+ *             cffimhihi[i][j] of the j-th mononmial in the i-th column;
+ *   cffimlohi are the 2nd highest double imaginary parts of the coefficients,
+ *             cffimlohi[i][j] of the j-th mononmial in the i-th column;
+ *   cffimhilo are the 2nd lowest double imaginary parts of the coefficients,
+ *             cffimhilo[i][j] of the j-th mononmial in the i-th column;
+ *   cffimlolo are the lowest double imaginary parts of the coefficients,
+ *             cffimlolo[i][j] of the j-th mononmial in the i-th column;
+ *   accrehihi has space to accumulate dim+1 power series of degree deg;
+ *   accrelohi has space to accumulate dim+1 power series of degree deg;
+ *   accrelohi has space to accumulate dim+1 power series of degree deg;
+ *   accrelolo has space to accumulate dim+1 power series of degree deg;
+ *   accimhihi has space to accumulate dim+1 power series of degree deg;
+ *   accimlohi has space to accumulate dim+1 power series of degree deg;
+ *   accimlohi has space to accumulate dim+1 power series of degree deg;
+ *   accimlolo has space to accumulate dim+1 power series of degree deg;
+ *   inputrehihi are the highest double real parts of the input;
+ *   inputrelohi are the second highest double real parts of the input;
+ *   inputrehilo are the second lowest double real parts of the input;
+ *   inputrelolo are the lowest double real parts of the input;
+ *   inputimhihi are the highest double imaginary parts of the input;
+ *   inputimlohi are the second highest double imaginary parts of the input;
+ *   inputimhilo are the second lowest double imaginary parts of the input;
+ *   inputimlolo are the lowest double imaginary parts of the input;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   funvalrehihi are highest doubles of real parts of the evaluations;
+ *   funvalrelohi are 2nd highest doubles of real parts of the evaluations;
+ *   funvalrehilo are 2nd lowest doubles of real parts of the evaluations;
+ *   funvalrelolo are lowest doubles of real parts of the evaluations;
+ *   funvalimhihi are highest doubles of imag parts of the evaluations;
+ *   funvalimlohi are 2nd highest doubles of imag parts of the evaluations;
+ *   funvalimhilo are 2nd lowest doubles of imag parts of the evaluations;
+ *   funvalimlolo are lowest doubles of imag parts of the evaluations;
+ *   jacvalrehihi are highest doubles of real parts of all derivatives;
+ *   jacvalrelohi are 2nd highest doubles of real parts of all derivatives;
+ *   jacvalrehilo are 2nd lowest doubles of real parts of all derivatives;
+ *   jacvalrelolo are lowest doubles of real parts of all derivatives;
+ *   jacvalimhihi are highest doubles of imag parts of all derivatives;
+ *   jacvalimlohi are 2nd highest doubles of imag parts of all derivatives;
+ *   jacvalimhilo are 2nd lowest doubles of imag parts of all derivatives;
+ *   jacvalimlolo are lowest doubles of imag parts of all derivatives. */
+
 void dbl4_linearize_evaldiff_output
  ( int dim, int degp1, int *nvr, int **idx,
    double **mbhihi, double **mblohi, double **mbhilo, double **mblolo,
@@ -442,5 +580,84 @@ void cmplx4_linearize_evaldiff_output
  *             of the matrix series;
  *   jacvalimlolo are the lowest doubles imaginary parts
  *             of the matrix series. */
+
+void dbl4_define_rhs
+ ( int dim, int degp1,
+   double **mbhihi, double **mblohi, double **mbhilo, double **mblolo,
+   double **funvalhihi, double **funvallohi,
+   double **funvalhilo, double **funvallolo,
+   double **rhshihi, double **rhslohi,
+   double **rhshilo, double **rhslolo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Defines the right hand side for the test with the column representation
+ *   of the cyclic n-roots system, on real data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   degp1     degree plus one;
+ *   mbhihi    highest doubles of the right hand side series;
+ *   mblohi    second highest doubles of the right hand side series;
+ *   mbhilo    second lowest doubles of the right hand side series;
+ *   mblolo    lowest doubles of the right hand side series;
+ *   funvalhihi are the highest doubles of the evaluated series;
+ *   funvallohi are the second highest doubles of the evaluated series;
+ *   funvalhilo are the second lowest doubles of the evaluated series;
+ *   funvallolo are the lowest doubles of the evaluated series;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   rhshihi   highest doubles of the linearized right hand sides;
+ *   rhslohi   second highest doubles of the linearized right hand sides;
+ *   rhshilo   second lowest doubles of the linearized right hand sides;
+ *   rhslolo   lowest doubles of the linearized right hand sides. */
+
+void cmplx4_define_rhs
+ ( int dim, int degp1,
+   double **mbrehihi, double **mbrelohi, double **mbrehilo, double **mbrelolo,
+   double **mbimhihi, double **mbimlohi, double **mbimhilo, double **mbimlolo,
+   double **funvalrehihi, double **funvalrelohi,
+   double **funvalrehilo, double **funvalrelolo,
+   double **funvalimhihi, double **funvalimlohi,
+   double **funvalimhilo, double **funvalimlolo,
+   double **rhsrehihi, double **rhsrelohi,
+   double **rhsrehilo, double **rhsrelolo,
+   double **rhsimhihi, double **rhsimlohi,
+   double **rhsimhilo, double **rhsimlolo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Defines the right hand side for the test with the column representation
+ *   of the cyclic n-roots system, on real data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   degp1     degree plus one;
+ *   mbrehihi  highest doubles of the real parts of the right hand side;
+ *   mbrelohi  2nd highest doubles of the real parts of the right hand side;
+ *   mbrehilo  2nd lowest doubles of the real parts of the right hand side;
+ *   mbrelolo  lowest doubles of the real parts of the right hand side;
+ *   mbimhihi  highest doubles of the imag parts of the right hand side;
+ *   mbimlohi  2nd highest doubles of the imag parts of the right hand side;
+ *   mbimhilo  2nd lowest doubles of the imag parts of the right hand side;
+ *   mbimlolo  lowest doubles of the imag parts of the right hand side;
+ *   funvalrehihi are highest doubles of the real parts of the evaluations;
+ *   funvalrelohi are 2nd highest doubles of the real parts of the evaluations;
+ *   funvalrehilo are 2nd lowest doubles of the real parts of the evaluations;
+ *   funvalrelolo are lowest doubles of the real parts of the evaluations;
+ *   funvalimhihi are highest doubles of the imag parts of the evaluations;
+ *   funvalimlohi are 2nd highest doubles of the imag parts of the evaluations;
+ *   funvalimhilo are 2nd lowest doubles of the imag parts of the evaluations;
+ *   funvalimlolo are lowest doubles of the imag parts of the evaluations;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   rhsrehihi are highest doubles of real parts of the linearized rhs;
+ *   rhsrelohi are 2nd highest doubles of real parts of the linearized rhs;
+ *   rhsrehilo are 2nd lowest doubles of real parts of the linearized rhs;
+ *   rhsrelolo are lowest doubles of real parts of the linearized rhs;
+ *   rhsimhihi are highest doubles of imag parts of the linearized rhs;
+ *   rhsimlohi are 2nd highest doubles of imag parts of the linearized rhs;
+ *   rhsimhilo are 2nd lowest doubles of imag parts of the linearized rhs;
+ *   rhsimlolo are lowest doubles of imag parts of the linearized rhs. */
 
 #endif

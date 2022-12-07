@@ -5,19 +5,20 @@
 #define __cmplx4_newton_method_h__
 
 void cmplx4_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int *tailidx_h, int *tailidx_d,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
    double **mbrehihi, double **mbrelohi, double **mbrehilo, double **mbrelolo,
    double **mbimhihi, double **mbimlohi, double **mbimhilo, double **mbimlolo,
    double dpr,
-   double **cffrehihi, double **cffrelohi,
-   double **cffrehilo, double **cffrelolo,
-   double **cffimhihi, double **cffimlohi,
-   double **cffimhilo, double **cffimlolo,
-   double *accrehihi, double *accrelohi,
-   double *accrehilo, double *accrelolo,
-   double *accimhihi, double *accimlohi,
-   double *accimhilo, double *accimlolo,
+   double ***cffrehihi, double ***cffrelohi,
+   double ***cffrehilo, double ***cffrelolo,
+   double ***cffimhihi, double ***cffimlohi,
+   double ***cffimhilo, double ***cffimlolo,
+   double **accrehihi, double **accrelohi,
+   double **accrehilo, double **accrelolo,
+   double **accimhihi, double **accimlohi,
+   double **accimhilo, double **accimlolo,
    double **inputrehihi_h, double **inputrelohi_h,
    double **inputrehilo_h, double **inputrelolo_h,
    double **inputimhihi_h, double **inputimlohi_h,
@@ -115,10 +116,14 @@ void cmplx4_newton_qrstep
  *   nbt       number of tiles and number of blocks;
  *   dim       number of monomials;
  *   deg       degree of the power series;
+ *   nbrcol    number of columns, if 1, then the system is monomial,
+ *             otherwise nbrcol columns are expected;
  *   tailidx_h is the start index of the update of the tail on the host;
  *   tailidx_d is the start index of the update of the tail on the device;
- *   nvr       nvr[i] is the number of variables in the i-th monomial;
- *   idx       idx[i] are the indices of the variables in monomial i;
+ *   nvr       nvr[i][j] is the number of variables in the j-th monomial
+ *             of the i-th column;
+ *   idx       idx[i][j] are the indices of the variables in monomial j
+ *             of the i-th column;
  *   exp       exp[i] are the exponents of the variables in monomial i;
  *   nbrfac    nbrfac[i] are the number of exponents > 1 in monomial i;
  *   expfac    expfac[i] are the exponents in the i-th polynomial
@@ -593,8 +598,8 @@ void cmplx4_newton_qrstep
  *   bsidx_d   counts the number of backsubstitutions skipped by device. */
 
 int test_dbl4_complex_newton
- ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl );
 /*
  * DESCRIPTION :
@@ -605,8 +610,12 @@ int test_dbl4_complex_newton
  *   nbt       number of tiles and number of blocks;
  *   dim       number of monomials;
  *   deg       degree of the power series;
- *   nvr       nvr[i] is the number of variables in the i-th monomial;
- *   idx       idx[i] are the indices of the variables in monomial i;
+ *   nbrcol    number of columns, if 1, then the system is monomial,
+ *             otherwise nbrcol columns are expected;
+ *   nvr       nvr[i][j] is the number of variables in the j-th monomial
+ *             of the i-th column;
+ *   idx       idx[i][j] are the indices of the variables in monomial j
+ *             of the i-th column;
  *   exp       exp[i] are the exponents of the variables in monomial i;
  *   nbrfac    nbrfac[i] are the number of exponents > 1 in monomial i;
  *   expfac    expfac[i] are the exponents in the i-th polynomial

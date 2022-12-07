@@ -123,6 +123,29 @@ void cmplx4_unit_series_vector
    }
 }
 
+void dbl4_unit_series_vectors
+ ( int nbr, int dim, int deg,
+   double ***cffhihi, double ***cfflohi,
+   double ***cffhilo, double ***cfflolo )
+{
+   for(int i=0; i<nbr; i++)
+      dbl4_unit_series_vector
+         (dim,deg,cffhihi[i],cfflohi[i],cffhilo[i],cfflolo[i]);
+}
+
+void cmplx4_unit_series_vectors
+ ( int nbr, int dim, int deg,
+   double ***cffrehihi, double ***cffrelohi,
+   double ***cffrehilo, double ***cffrelolo,
+   double ***cffimhihi, double ***cffimlohi,
+   double ***cffimhilo, double ***cffimlolo )
+{
+   for(int i=0; i<nbr; i++)
+      cmplx4_unit_series_vector
+         (dim,deg,cffrehihi[i],cffrelohi[i],cffrehilo[i],cffrelolo[i],
+                  cffimhihi[i],cffimlohi[i],cffimhilo[i],cffimlolo[i]);
+}
+
 void dbl4_update_series
  ( int dim, int degp1, int startidx,
    double **xhihi, double **xlohi, double **xhilo, double **xlolo,

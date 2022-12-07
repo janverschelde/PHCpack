@@ -8,6 +8,7 @@
 #include <vector_types.h>
 #include <time.h>
 #include "unimodular_matrices.h"
+#include "random_numbers.h"
 #include "random_monomials.h"
 #include "octo_double_functions.h"
 #include "dbl8_convolutions_host.h"
@@ -24,8 +25,9 @@
 using namespace std;
 
 void cmplx8_newton_qrstep
- ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int *tailidx_h, int *tailidx_d,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
    double **mbrehihihi, double **mbrelohihi,
    double **mbrehilohi, double **mbrelolohi,
    double **mbrehihilo, double **mbrelohilo,
@@ -34,22 +36,22 @@ void cmplx8_newton_qrstep
    double **mbimhilohi, double **mbimlolohi,
    double **mbimhihilo, double **mbimlohilo,
    double **mbimhilolo, double **mbimlololo, double dpr,
-   double **cffrehihihi, double **cffrelohihi,
-   double **cffrehilohi, double **cffrelolohi,
-   double **cffrehihilo, double **cffrelohilo,
-   double **cffrehilolo, double **cffrelololo,
-   double **cffimhihihi, double **cffimlohihi,
-   double **cffimhilohi, double **cffimlolohi,
-   double **cffimhihilo, double **cffimlohilo,
-   double **cffimhilolo, double **cffimlololo,
-   double *accrehihihi, double *accrelohihi,
-   double *accrehilohi, double *accrelolohi,
-   double *accrehihilo, double *accrelohilo,
-   double *accrehilolo, double *accrelololo,
-   double *accimhihihi, double *accimlohihi,
-   double *accimhilohi, double *accimlolohi,
-   double *accimhihilo, double *accimlohilo,
-   double *accimhilolo, double *accimlololo,
+   double ***cffrehihihi, double ***cffrelohihi,
+   double ***cffrehilohi, double ***cffrelolohi,
+   double ***cffrehihilo, double ***cffrelohilo,
+   double ***cffrehilolo, double ***cffrelololo,
+   double ***cffimhihihi, double ***cffimlohihi,
+   double ***cffimhilohi, double ***cffimlolohi,
+   double ***cffimhihilo, double ***cffimlohilo,
+   double ***cffimhilolo, double ***cffimlololo,
+   double **accrehihihi, double **accrelohihi,
+   double **accrehilohi, double **accrelolohi,
+   double **accrehihilo, double **accrelohilo,
+   double **accrehilolo, double **accrelololo,
+   double **accimhihihi, double **accimlohihi,
+   double **accimhilohi, double **accimlolohi,
+   double **accimhihilo, double **accimlohilo,
+   double **accimhilolo, double **accimlololo,
    double **inputrehihihi_h, double **inputrelohihi_h,
    double **inputrehilohi_h, double **inputrelolohi_h,
    double **inputrehihilo_h, double **inputrelohilo_h,
@@ -222,59 +224,98 @@ void cmplx8_newton_qrstep
 
    if((mode == 1) || (mode == 2))
    {
-      // The series coefficients accumulate common factors,
-      // initially the coefficients are set to one.
-      cmplx8_unit_series_vector
-         (dim,deg,cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
-                  cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
-                  cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
-                  cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo);
-
       if(vrblvl > 0)
          cout << "calling CPU_cmplx8_evaluate_monomials ..." << endl;
 
-      CPU_cmplx8_evaluate_monomials
-         (dim,deg,nvr,idx,exp,nbrfac,expfac,
-          cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
-          cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
-          cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
-          cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
-          accrehihihi,accrelohihi,accrehilohi,accrelolohi,
-          accrehihilo,accrelohilo,accrehilolo,accrelololo,
-          accimhihihi,accimlohihi,accimhilohi,accimlolohi,
-          accimhihilo,accimlohilo,accimhilolo,accimlololo,
-          inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
-          inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
-          inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
-          inputimhihilo_h,inputimlohilo_h,inputimhilolo_h,inputimlololo_h,
-          outputrehihihi_h,outputrelohihi_h,outputrehilohi_h,outputrelolohi_h,
-          outputrehihilo_h,outputrelohilo_h,outputrehilolo_h,outputrelololo_h,
-          outputimhihihi_h,outputimlohihi_h,outputimhilohi_h,outputimlolohi_h,
-          outputimhihilo_h,outputimlohilo_h,outputimhilolo_h,outputimlololo_h,
-          vrblvl);
+      if(nbrcol == 1)
+      {
+         cmplx8_unit_series_vector
+            (dim,deg,
+             cffrehihihi[0],cffrelohihi[0],cffrehilohi[0],cffrelolohi[0],
+             cffrehihilo[0],cffrelohilo[0],cffrehilolo[0],cffrelololo[0],
+             cffimhihihi[0],cffimlohihi[0],cffimhilohi[0],cffimlolohi[0],
+             cffimhihilo[0],cffimlohilo[0],cffimhilolo[0],cffimlololo[0]);
+         // The series coefficients accumulate common factors,
+         // initially the coefficients are set to one.
+
+         CPU_cmplx8_evaluate_monomials
+            (dim,deg,nvr[0],idx[0],exp,nbrfac,expfac,
+             cffrehihihi[0],cffrelohihi[0],cffrehilohi[0],cffrelolohi[0],
+             cffrehihilo[0],cffrelohilo[0],cffrehilolo[0],cffrelololo[0],
+             cffimhihihi[0],cffimlohihi[0],cffimhilohi[0],cffimlolohi[0],
+             cffimhihilo[0],cffimlohilo[0],cffimhilolo[0],cffimlololo[0],
+             accrehihihi[0],accrelohihi[0],accrehilohi[0],accrelolohi[0],
+             accrehihilo[0],accrelohilo[0],accrehilolo[0],accrelololo[0],
+             accimhihihi[0],accimlohihi[0],accimhilohi[0],accimlolohi[0],
+             accimhihilo[0],accimlohilo[0],accimhilolo[0],accimlololo[0],
+             inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
+             inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
+             inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
+             inputimhihilo_h,inputimlohilo_h,inputimhilolo_h,inputimlololo_h,
+             outputrehihihi_h,outputrelohihi_h,
+             outputrehilohi_h,outputrelolohi_h,
+             outputrehihilo_h,outputrelohilo_h,
+             outputrehilolo_h,outputrelololo_h,
+             outputimhihihi_h,outputimlohihi_h,
+             outputimhilohi_h,outputimlolohi_h,
+             outputimhihilo_h,outputimlohilo_h,
+             outputimhilolo_h,outputimlololo_h,vrblvl);
+      }
+      else
+         CPU_cmplx8_evaluate_columns
+            (dim,deg,nbrcol,nvr,idx,
+             cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+             cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+             cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+             cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+             accrehihihi,accrelohihi,accrehilohi,accrelolohi,
+             accrehihilo,accrelohilo,accrehilolo,accrelololo,
+             accimhihihi,accimlohihi,accimhilohi,accimlolohi,
+             accimhihilo,accimlohilo,accimhilolo,accimlololo,
+             inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
+             inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
+             inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
+             inputimhihilo_h,inputimlohilo_h,inputimhilolo_h,inputimlololo_h,
+             funvalrehihihi_h,funvalrelohihi_h,
+             funvalrehilohi_h,funvalrelolohi_h,
+             funvalrehihilo_h,funvalrelohilo_h,
+             funvalrehilolo_h,funvalrelololo_h,
+             funvalimhihihi_h,funvalimlohihi_h,
+             funvalimhilohi_h,funvalimlolohi_h,
+             funvalimhihilo_h,funvalimlohilo_h,
+             funvalimhilolo_h,funvalimlololo_h,
+             jacvalrehihihi_h,jacvalrelohihi_h,
+             jacvalrehilohi_h,jacvalrelolohi_h,
+             jacvalrehihilo_h,jacvalrelohilo_h,
+             jacvalrehilolo_h,jacvalrelololo_h,
+             jacvalimhihihi_h,jacvalimlohihi_h,
+             jacvalimhilohi_h,jacvalimlolohi_h,
+             jacvalimhihilo_h,jacvalimlohilo_h,
+             jacvalimhilolo_h,jacvalimlololo_h,vrblvl);
    }
    if((mode == 0) || (mode == 2))
    {
       // reset the coefficients
       cmplx8_unit_series_vector
-         (dim,deg,cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
-                  cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
-                  cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
-                  cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo);
+         (dim,deg,
+          cffrehihihi[0],cffrelohihi[0],cffrehilohi[0],cffrelolohi[0],
+          cffrehihilo[0],cffrelohilo[0],cffrehilolo[0],cffrelololo[0],
+          cffimhihihi[0],cffimlohihi[0],cffimhilohi[0],cffimlolohi[0],
+          cffimhihilo[0],cffimlohilo[0],cffimhilolo[0],cffimlololo[0]);
 
       if(vrblvl > 0)
          cout << "calling GPU_cmplx8_evaluate_monomials ..." << endl;
 
       GPU_cmplx8_evaluate_monomials
-         (dim,deg,szt,nbt,nvr,idx,exp,nbrfac,expfac,
-          cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
-          cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
-          cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
-          cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
-          accrehihihi,accrelohihi,accrehilohi,accrelolohi,
-          accrehihilo,accrelohilo,accrehilolo,accrelololo,
-          accimhihihi,accimlohihi,accimhilohi,accimlolohi,
-          accimhihilo,accimlohilo,accimhilolo,accimlololo,
+         (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
+          cffrehihihi[0],cffrelohihi[0],cffrehilohi[0],cffrelolohi[0],
+          cffrehihilo[0],cffrelohilo[0],cffrehilolo[0],cffrelololo[0],
+          cffimhihihi[0],cffimlohihi[0],cffimhilohi[0],cffimlolohi[0],
+          cffimhihilo[0],cffimlohilo[0],cffimhilolo[0],cffimlololo[0],
+          accrehihihi[0],accrelohihi[0],accrehilohi[0],accrelolohi[0],
+          accrehihilo[0],accrelohilo[0],accrehilolo[0],accrelololo[0],
+          accimhihihi[0],accimlohihi[0],accimhilohi[0],accimlolohi[0],
+          accimhihilo[0],accimlohilo[0],accimhilolo[0],accimlololo[0],
           inputrehihihi_d,inputrelohihi_d,inputrehilohi_d,inputrelolohi_d,
           inputrehihilo_d,inputrelohilo_d,inputrehilolo_d,inputrelololo_d,
           inputimhihihi_d,inputimlohihi_d,inputimhilohi_d,inputimlolohi_d,
@@ -285,7 +326,7 @@ void cmplx8_newton_qrstep
           outputimhihilo_d,outputimlohilo_d,outputimhilolo_d,outputimlololo_d,
           vrblvl);
    }
-   if((vrblvl > 0) && (mode == 2))
+   if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
       double errsum = 0.0;
 
@@ -316,44 +357,77 @@ void cmplx8_newton_qrstep
    }
    if((mode == 1) || (mode == 2))
    {
-      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-         for(int j=0; j<dim; j++) 
-            for(int k=0; k<dim; k++)
-            {
-               jacvalrehihihi_h[i][j][k] = 0.0;
-               jacvalrelohihi_h[i][j][k] = 0.0;
-               jacvalrehilohi_h[i][j][k] = 0.0;
-               jacvalrelolohi_h[i][j][k] = 0.0;
-               jacvalimhihilo_h[i][j][k] = 0.0;
-               jacvalimlohilo_h[i][j][k] = 0.0;
-               jacvalimhilolo_h[i][j][k] = 0.0;
-               jacvalimlololo_h[i][j][k] = 0.0;
-            }
+      if(nbrcol != 1)
+         cmplx8_define_rhs
+            (dim,degp1,
+             mbrehihihi,mbrelohihi,mbrehilohi,mbrelolohi,
+             mbrehihilo,mbrelohilo,mbrehilolo,mbrelololo,
+             mbimhihihi,mbimlohihi,mbimhilohi,mbimlolohi,
+             mbimhihilo,mbimlohilo,mbimhilolo,mbimlololo,
+             funvalrehihihi_h,funvalrelohihi_h,
+             funvalrehilohi_h,funvalrelolohi_h,
+             funvalrehihilo_h,funvalrelohilo_h,
+             funvalrehilolo_h,funvalrelololo_h,
+             funvalimhihihi_h,funvalimlohihi_h,
+             funvalimhilohi_h,funvalimlolohi_h,
+             funvalimhihilo_h,funvalimlohilo_h,
+             funvalimhilolo_h,funvalimlololo_h,
+             rhsrehihihi_h,rhsrelohihi_h,rhsrehilohi_h,rhsrelolohi_h,
+             rhsrehihilo_h,rhsrelohilo_h,rhsrehilolo_h,rhsrelololo_h,
+             rhsimhihihi_h,rhsimlohihi_h,rhsimhilohi_h,rhsimlolohi_h,
+             rhsimhihilo_h,rhsimlohilo_h,rhsimhilolo_h,rhsimlololo_h,vrblvl);
+      else
+      {
+         for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+            for(int j=0; j<dim; j++) 
+               for(int k=0; k<dim; k++)
+               {
+                  jacvalrehihihi_h[i][j][k] = 0.0;
+                  jacvalrelohihi_h[i][j][k] = 0.0;
+                  jacvalrehilohi_h[i][j][k] = 0.0;
+                  jacvalrelolohi_h[i][j][k] = 0.0;
+                  jacvalimhihilo_h[i][j][k] = 0.0;
+                  jacvalimlohilo_h[i][j][k] = 0.0;
+                  jacvalimhilolo_h[i][j][k] = 0.0;
+                  jacvalimlololo_h[i][j][k] = 0.0;
+               }
 
-      if(vrblvl > 0) cout << "linearizing the output ..." << endl;
-      cmplx8_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
-          mbrehihihi,mbrelohihi,mbrehilohi,mbrelolohi,
-          mbrehihilo,mbrelohilo,mbrehilolo,mbrelololo,
-          mbimhihihi,mbimlohihi,mbimhilohi,mbimlolohi,
-          mbimhihilo,mbimlohilo,mbimhilolo,mbimlololo,dpr,
-          outputrehihihi_h,outputrelohihi_h,outputrehilohi_h,outputrelolohi_h,
-          outputrehihilo_h,outputrelohilo_h,outputrehilolo_h,outputrelololo_h,
-          outputimhihihi_h,outputimlohihi_h,outputimhilohi_h,outputimlolohi_h,
-          outputimhihilo_h,outputimlohilo_h,outputimhilolo_h,outputimlololo_h,
-          funvalrehihihi_h,funvalrelohihi_h,funvalrehilohi_h,funvalrelolohi_h,
-          funvalrehihilo_h,funvalrelohilo_h,funvalrehilolo_h,funvalrelololo_h,
-          funvalimhihihi_h,funvalimlohihi_h,funvalimhilohi_h,funvalimlolohi_h,
-          funvalimhihilo_h,funvalimlohilo_h,funvalimhilolo_h,funvalimlololo_h,
-          rhsrehihihi_h,rhsrelohihi_h,rhsrehilohi_h,rhsrelolohi_h,
-          rhsrehihilo_h,rhsrelohilo_h,rhsrehilolo_h,rhsrelololo_h,
-          rhsimhihihi_h,rhsimlohihi_h,rhsimhilohi_h,rhsimlolohi_h,
-          rhsimhihilo_h,rhsimlohilo_h,rhsimhilolo_h,rhsimlololo_h,
-          jacvalrehihihi_h,jacvalrelohihi_h,jacvalrehilohi_h,jacvalrelolohi_h,
-          jacvalrehihilo_h,jacvalrelohilo_h,jacvalrehilolo_h,jacvalrelololo_h,
-          jacvalimhihihi_h,jacvalimlohihi_h,jacvalimhilohi_h,jacvalimlolohi_h,
-          jacvalimhihilo_h,jacvalimlohilo_h,jacvalimhilolo_h,jacvalimlololo_h,
-          vrblvl);
+         if(vrblvl > 0) cout << "linearizing the output ..." << endl;
+         cmplx8_linearize_evaldiff_output
+            (dim,degp1,nvr[0],idx[0],
+             mbrehihihi,mbrelohihi,mbrehilohi,mbrelolohi,
+             mbrehihilo,mbrelohilo,mbrehilolo,mbrelololo,
+             mbimhihihi,mbimlohihi,mbimhilohi,mbimlolohi,
+             mbimhihilo,mbimlohilo,mbimhilolo,mbimlololo,dpr,
+             outputrehihihi_h,outputrelohihi_h,
+             outputrehilohi_h,outputrelolohi_h,
+             outputrehihilo_h,outputrelohilo_h,
+             outputrehilolo_h,outputrelololo_h,
+             outputimhihihi_h,outputimlohihi_h,
+             outputimhilohi_h,outputimlolohi_h,
+             outputimhihilo_h,outputimlohilo_h,
+             outputimhilolo_h,outputimlololo_h,
+             funvalrehihihi_h,funvalrelohihi_h,
+             funvalrehilohi_h,funvalrelolohi_h,
+             funvalrehihilo_h,funvalrelohilo_h,
+             funvalrehilolo_h,funvalrelololo_h,
+             funvalimhihihi_h,funvalimlohihi_h,
+             funvalimhilohi_h,funvalimlolohi_h,
+             funvalimhihilo_h,funvalimlohilo_h,
+             funvalimhilolo_h,funvalimlololo_h,
+             rhsrehihihi_h,rhsrelohihi_h,rhsrehilohi_h,rhsrelolohi_h,
+             rhsrehihilo_h,rhsrelohilo_h,rhsrehilolo_h,rhsrelololo_h,
+             rhsimhihihi_h,rhsimlohihi_h,rhsimhilohi_h,rhsimlolohi_h,
+             rhsimhihilo_h,rhsimlohilo_h,rhsimhilolo_h,rhsimlololo_h,
+             jacvalrehihihi_h,jacvalrelohihi_h,
+             jacvalrehilohi_h,jacvalrelolohi_h,
+             jacvalrehihilo_h,jacvalrelohilo_h,
+             jacvalrehilolo_h,jacvalrelololo_h,
+             jacvalimhihihi_h,jacvalimlohihi_h,
+             jacvalimhilohi_h,jacvalimlolohi_h,
+             jacvalimhihilo_h,jacvalimlohilo_h,
+             jacvalimhilolo_h,jacvalimlololo_h,vrblvl);
+      }
    }
    if((mode == 0) || (mode == 2))
    {
@@ -373,7 +447,7 @@ void cmplx8_newton_qrstep
 
       if(vrblvl > 0) cout << "linearizing the output ..." << endl;
       cmplx8_linearize_evaldiff_output
-         (dim,degp1,nvr,idx,
+         (dim,degp1,nvr[0],idx[0],
           mbrehihihi,mbrelohihi,mbrehilohi,mbrelolohi,
           mbrehihilo,mbrelohilo,mbrehilolo,mbrelololo,
           mbimhihihi,mbimlohihi,mbimhilohi,mbimlolohi,
@@ -747,8 +821,8 @@ void cmplx8_newton_qrstep
 }
 
 int test_dbl8_complex_newton
- ( int szt, int nbt, int dim, int deg,
-   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
+ ( int szt, int nbt, int dim, int deg, int nbrcol,
+   int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl )
 {
 /*
@@ -824,57 +898,97 @@ int test_dbl8_complex_newton
        inputimlololo_d[i] = new double[degp1];
    }
    // allocate memory for coefficients and the output
-   double *accrehihihi = new double[degp1]; // accumulated power series
-   double *accrelohihi = new double[degp1];
-   double *accrehilohi = new double[degp1];
-   double *accrelolohi = new double[degp1];
-   double *accrehihilo = new double[degp1];
-   double *accrelohilo = new double[degp1];
-   double *accrehilolo = new double[degp1];
-   double *accrelololo = new double[degp1];
-   double *accimhihihi = new double[degp1];
-   double *accimlohihi = new double[degp1];
-   double *accimhilohi = new double[degp1];
-   double *accimlolohi = new double[degp1];
-   double *accimhihilo = new double[degp1];
-   double *accimlohilo = new double[degp1];
-   double *accimhilolo = new double[degp1];
-   double *accimlololo = new double[degp1];
-   double **cffrehihihi = new double*[dim]; // the coefficients of monomials
-   double **cffrelohihi = new double*[dim];
-   double **cffrehilohi = new double*[dim]; 
-   double **cffrelolohi = new double*[dim];
-   double **cffrehihilo = new double*[dim];
-   double **cffrelohilo = new double*[dim];
-   double **cffrehilolo = new double*[dim]; 
-   double **cffrelololo = new double*[dim];
-   double **cffimhihihi = new double*[dim]; 
-   double **cffimlohihi = new double*[dim]; 
-   double **cffimhilohi = new double*[dim]; 
-   double **cffimlolohi = new double*[dim]; 
-   double **cffimhihilo = new double*[dim]; 
-   double **cffimlohilo = new double*[dim]; 
-   double **cffimhilolo = new double*[dim]; 
-   double **cffimlololo = new double*[dim]; 
+   double **accrehihihi = new double*[dim+1]; // accumulated power series
+   double **accrelohihi = new double*[dim+1];
+   double **accrehilohi = new double*[dim+1];
+   double **accrelolohi = new double*[dim+1];
+   double **accrehihilo = new double*[dim+1];
+   double **accrelohilo = new double*[dim+1];
+   double **accrehilolo = new double*[dim+1];
+   double **accrelololo = new double*[dim+1];
+   double **accimhihihi = new double*[dim+1];
+   double **accimlohihi = new double*[dim+1];
+   double **accimhilohi = new double*[dim+1];
+   double **accimlolohi = new double*[dim+1];
+   double **accimhihilo = new double*[dim+1];
+   double **accimlohilo = new double*[dim+1];
+   double **accimhilolo = new double*[dim+1];
+   double **accimlololo = new double*[dim+1];
 
-   for(int i=0; i<dim; i++)
+   for(int i=0; i<=dim; i++)
    {
-      cffrehihihi[i] = new double[degp1];
-      cffrelohihi[i] = new double[degp1];
-      cffrehilohi[i] = new double[degp1];
-      cffrelolohi[i] = new double[degp1];
-      cffrehihilo[i] = new double[degp1];
-      cffrelohilo[i] = new double[degp1];
-      cffrehilolo[i] = new double[degp1];
-      cffrelololo[i] = new double[degp1];
-      cffimhihihi[i] = new double[degp1];
-      cffimlohihi[i] = new double[degp1];
-      cffimhilohi[i] = new double[degp1];
-      cffimlolohi[i] = new double[degp1];
-      cffimhihilo[i] = new double[degp1];
-      cffimlohilo[i] = new double[degp1];
-      cffimhilolo[i] = new double[degp1];
-      cffimlololo[i] = new double[degp1];
+      accrehihihi[i] = new double[degp1];
+      accrelohihi[i] = new double[degp1];
+      accrehilohi[i] = new double[degp1];
+      accrelolohi[i] = new double[degp1];
+      accrehihilo[i] = new double[degp1];
+      accrelohilo[i] = new double[degp1];
+      accrehilolo[i] = new double[degp1];
+      accrelololo[i] = new double[degp1];
+      accimhihihi[i] = new double[degp1];
+      accimlohihi[i] = new double[degp1];
+      accimhilohi[i] = new double[degp1];
+      accimlolohi[i] = new double[degp1];
+      accimhihilo[i] = new double[degp1];
+      accimlohilo[i] = new double[degp1];
+      accimhilolo[i] = new double[degp1];
+      accimlololo[i] = new double[degp1];
+   }
+   double ***cffrehihihi = new double**[nbrcol]; // coefficients of monomials
+   double ***cffrelohihi = new double**[nbrcol];
+   double ***cffrehilohi = new double**[nbrcol]; 
+   double ***cffrelolohi = new double**[nbrcol];
+   double ***cffrehihilo = new double**[nbrcol];
+   double ***cffrelohilo = new double**[nbrcol];
+   double ***cffrehilolo = new double**[nbrcol]; 
+   double ***cffrelololo = new double**[nbrcol];
+   double ***cffimhihihi = new double**[nbrcol]; 
+   double ***cffimlohihi = new double**[nbrcol]; 
+   double ***cffimhilohi = new double**[nbrcol]; 
+   double ***cffimlolohi = new double**[nbrcol]; 
+   double ***cffimhihilo = new double**[nbrcol]; 
+   double ***cffimlohilo = new double**[nbrcol]; 
+   double ***cffimhilolo = new double**[nbrcol]; 
+   double ***cffimlololo = new double**[nbrcol]; 
+
+   for(int i=0; i<nbrcol; i++)
+   {
+      cffrehihihi[i] = new double*[dim];
+      cffrelohihi[i] = new double*[dim];
+      cffrehilohi[i] = new double*[dim];
+      cffrelolohi[i] = new double*[dim];
+      cffrehihilo[i] = new double*[dim];
+      cffrelohilo[i] = new double*[dim];
+      cffrehilolo[i] = new double*[dim];
+      cffrelololo[i] = new double*[dim];
+      cffimhihihi[i] = new double*[dim];
+      cffimlohihi[i] = new double*[dim];
+      cffimhilohi[i] = new double*[dim];
+      cffimlolohi[i] = new double*[dim];
+      cffimhihilo[i] = new double*[dim];
+      cffimlohilo[i] = new double*[dim];
+      cffimhilolo[i] = new double*[dim];
+      cffimlololo[i] = new double*[dim];
+
+      for(int j=0; j<dim; j++)
+      {
+         cffrehihihi[i][j] = new double[degp1];
+         cffrelohihi[i][j] = new double[degp1];
+         cffrehilohi[i][j] = new double[degp1];
+         cffrelolohi[i][j] = new double[degp1];
+         cffrehihilo[i][j] = new double[degp1];
+         cffrelohilo[i][j] = new double[degp1];
+         cffrehilolo[i][j] = new double[degp1];
+         cffrelololo[i][j] = new double[degp1];
+         cffimhihihi[i][j] = new double[degp1];
+         cffimlohihi[i][j] = new double[degp1];
+         cffimhilohi[i][j] = new double[degp1];
+         cffimlolohi[i][j] = new double[degp1];
+         cffimhihilo[i][j] = new double[degp1];
+         cffimlohilo[i][j] = new double[degp1];
+         cffimhilolo[i][j] = new double[degp1];
+         cffimlololo[i][j] = new double[degp1];
+      }
    }
    double ***outputrehihihi_h;
    double ***outputrelohihi_h;
@@ -1955,6 +2069,28 @@ int test_dbl8_complex_newton
                solrehihilo,solrelohilo,solrehilolo,solrelololo,
                solimhihihi,solimlohihi,solimhilohi,solimlolohi,
                solimhihilo,solimlohilo,solimhilolo,solimlololo);
+   if(nbrcol != 1) // randomize the leading term
+      for(int i=0; i<dim; i++)
+      {
+          // solre[i][0] = solre[i][0] + random_double()/10.0;
+          // solim[i][0] = solim[i][0] + random_double()/10.0;
+          solrehihihi[i][0] = random_double();
+          solrelohihi[i][0] = 0.0;
+          solrehilohi[i][0] = 0.0;
+          solrelolohi[i][0] = 0.0;
+          solrehihilo[i][0] = 0.0;
+          solrelohilo[i][0] = 0.0;
+          solrehilolo[i][0] = 0.0;
+          solrelololo[i][0] = 0.0;
+          solimhihihi[i][0] = random_double();
+          solimlohihi[i][0] = 0.0;
+          solimhilohi[i][0] = 0.0;
+          solimlolohi[i][0] = 0.0;
+          solimhihilo[i][0] = 0.0;
+          solimlohilo[i][0] = 0.0;
+          solimhilolo[i][0] = 0.0;
+          solimlololo[i][0] = 0.0;
+      }
 
    // compute the right hand sides via evaluation
 
@@ -2023,17 +2159,37 @@ int test_dbl8_complex_newton
          mbrhsimhilolo[i][k] = 0.0; mbrhsimlololo[i][k] = 0.0;
       }
    }
-   evaluate_complex8_monomials
-      (dim,deg,rowsA,
-       solrehihihi,solrelohihi,solrehilohi,solrelolohi,
-       solrehihilo,solrelohilo,solrehilolo,solrelololo,
-       solimhihihi,solimlohihi,solimhilohi,solimlolohi,
-       solimhihilo,solimlohilo,solimhilolo,solimlololo,
-       mbrhsrehihihi,mbrhsrelohihi,mbrhsrehilohi,mbrhsrelolohi,
-       mbrhsrehihilo,mbrhsrelohilo,mbrhsrehilolo,mbrhsrelololo,
-       mbrhsimhihihi,mbrhsimlohihi,mbrhsimhilohi,mbrhsimlolohi,
-       mbrhsimhihilo,mbrhsimlohilo,mbrhsimhilolo,mbrhsimlololo);
-   
+   if(nbrcol == 1)
+      evaluate_complex8_monomials
+         (dim,deg,rowsA,
+          solrehihihi,solrelohihi,solrehilohi,solrelolohi,
+          solrehihilo,solrelohilo,solrehilolo,solrelololo,
+          solimhihihi,solimlohihi,solimhilohi,solimlolohi,
+          solimhihilo,solimlohilo,solimhilolo,solimlololo,
+          mbrhsrehihihi,mbrhsrelohihi,mbrhsrehilohi,mbrhsrelolohi,
+          mbrhsrehihilo,mbrhsrelohilo,mbrhsrehilolo,mbrhsrelololo,
+          mbrhsimhihihi,mbrhsimlohihi,mbrhsimhilohi,mbrhsimlolohi,
+          mbrhsimhihilo,mbrhsimlohilo,mbrhsimhilolo,mbrhsimlololo);
+   else
+   {
+      evaluate_complex8_columns
+         (dim,deg,nbrcol,nvr,idx,rowsA,
+          solrehihihi,solrelohihi,solrehilohi,solrelolohi,
+          solrehihilo,solrelohilo,solrehilolo,solrelololo,
+          solimhihihi,solimlohihi,solimhilohi,solimlolohi,
+          solimhihilo,solimlohilo,solimhilolo,solimlololo,
+          mbrhsrehihihi,mbrhsrelohihi,mbrhsrehilohi,mbrhsrelolohi,
+          mbrhsrehihilo,mbrhsrelohilo,mbrhsrehilolo,mbrhsrelololo,
+          mbrhsimhihihi,mbrhsimlohihi,mbrhsimhilohi,mbrhsimlolohi,
+          mbrhsimhihilo,mbrhsimlohilo,mbrhsimhilolo,mbrhsimlololo,vrblvl);
+
+      cmplx8_unit_series_vectors
+         (nbrcol,dim,deg,
+          cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+          cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+          cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+          cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo);
+   }
    double *start0rehihihi = new double[dim];
    double *start0relohihi = new double[dim];
    double *start0rehilohi = new double[dim];
@@ -2145,7 +2301,8 @@ int test_dbl8_complex_newton
               << " at degree " << wrkdeg << " ***" << endl;
 
       cmplx8_newton_qrstep
-         (szt,nbt,dim,wrkdeg,&tailidx_h,&tailidx_d,nvr,idx,exp,nbrfac,expfac,
+         (szt,nbt,dim,wrkdeg,nbrcol,
+          &tailidx_h,&tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhsrehihihi,mbrhsrelohihi,mbrhsrehilohi,mbrhsrelolohi,
           mbrhsrehihilo,mbrhsrelohilo,mbrhsrehilolo,mbrhsrelololo,
           mbrhsimhihihi,mbrhsimlohihi,mbrhsimhilohi,mbrhsimlolohi,

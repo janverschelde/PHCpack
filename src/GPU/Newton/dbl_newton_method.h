@@ -46,7 +46,7 @@ void dbl_newton_qrstep
  *   mb        right hand side vector of series;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   cff       coefficients of the monomials in each column;
- *   acc       space to accumulate dim power series of degree deg;
+ *   acc       space to accumulate dim+1 power series of degree deg;
  *   input_h   coefficients of the power series of degree deg,
  *             for dim variables, computed on host;
  *   input_d   space for power series computed on device;

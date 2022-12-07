@@ -102,7 +102,6 @@ void CPU_dbl_evaluate_columns
  *   acc       space to accumulate dim+1 power series of degree deg;
  *   input     coefficients of the power series of degree deg,
  *             for dim variables;
- *   output    space for the output;
  *   vrblvl    is the verbose level.
  *
  * ON RETURN :
@@ -130,15 +129,13 @@ void CPU_cmplx_evaluate_columns
  *   cffre     real parts of the coefficients of the monomials,
  *             cffre[i][j] of the j-th mononmial in the i-th column;
  *   cffim     imaginary parts of the coefficients of the monomials;
- *             cffre[i][j] of the j-th mononmial in the i-th column;
+ *             cffim[i][j] of the j-th mononmial in the i-th column;
  *   accre     space to accumulate dim+1 power series of degree deg;
  *   accim     space to accumulate dim+1 power series of degree deg;
  *   inputre   real parts of coefficients of the series of degree deg,
  *             for dim variables;
  *   inputim   imaginary parts of coefficients of the series of degree deg,
  *             for dim variables;
- *   outputre  space for the output;
- *   outputim  space for the output;
  *   vrblvl    is the verbose level.
  *
  * ON RETURN :
@@ -269,8 +266,8 @@ void cmplx_define_rhs
  *   degp1     degree plus one;
  *   mbre      real parts of the coefficients of the right hand side series;
  *   mbim      imaginary parts of the coefficients of the right hand side;
- *   funval    real parts of the evaluated series;
- *   funval    imaginary parts of the evaluated series;
+ *   funvalre  real parts of the evaluated series;
+ *   funvalim  imaginary parts of the evaluated series;
  *   vrblvl    is the verbose level.
  *
  * ON RETURN :
