@@ -58,14 +58,21 @@ void dbl_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      dbl_unit_series_vector(dim,deg,cff[0]); // reset coefficients
-
       if(vrblvl > 0)
          cout << "calling GPU_dbl_evaluate_monomials ..." << endl;
 
-      GPU_dbl_evaluate_monomials
-         (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,cff[0],acc[0],
-          input_d,output_d,vrblvl);
+      if(nbrcol == 1)
+      {
+         dbl_unit_series_vector(dim,deg,cff[0]); // reset coefficients
+
+         GPU_dbl_evaluate_monomials
+            (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,cff[0],acc[0],
+             input_d,output_d,vrblvl);
+      }
+      else
+         GPU_dbl_evaluate_columns
+            (dim,deg,nbrcol,szt,nbt,nvr,idx,cff,input_d,output_d,
+             funval_d,jacval_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
@@ -100,13 +107,18 @@ void dbl_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-         for(int j=0; j<dim; j++) 
-            for(int k=0; k<dim; k++) jacval_d[i][j][k] = 0.0;
+      if(nbrcol != 1)
+         dbl_define_rhs(dim,degp1,mb,funval_d,rhs_d,vrblvl);
+      else
+      {
+         for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+            for(int j=0; j<dim; j++) 
+               for(int k=0; k<dim; k++) jacval_d[i][j][k] = 0.0;
 
-      dbl_linearize_evaldiff_output
-         (dim,degp1,nvr[0],idx[0],mb,dpr,output_d,funval_d,rhs_d,
-          jacval_d,vrblvl);
+         dbl_linearize_evaldiff_output
+            (dim,degp1,nvr[0],idx[0],mb,dpr,output_d,funval_d,rhs_d,
+             jacval_d,vrblvl);
+      }
    }
    if((vrblvl > 0) && (mode == 2))
    {

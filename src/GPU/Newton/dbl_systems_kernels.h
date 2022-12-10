@@ -174,8 +174,7 @@ void GPU_cmplx_mon_evaldiff
 void GPU_dbl_evaluate_monomials
  ( int dim, int deg, int szt, int nbt,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double **cff, double *acc, double **input, double ***output,
-   int vrblvl );
+   double **cff, double *acc, double **input, double ***output, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates monomials at power series.
@@ -253,5 +252,79 @@ void GPU_cmplx_evaluate_monomials
  *             input at the i-th monomial, and for k in range 0..nvr[i]-1:
  *             outputim[i][idx[k]] is the imaginary part of te derivative
  *             w.r.t. idx[k]. */
+
+void GPU_dbl_evaluate_columns
+ ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx,
+   double ***cff, double **input, double ***output,
+   double **funval, double ***jacval, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials in the column representation of a system,
+ *   at power series, on real data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   nbrcol    number of columns;
+ *   szt       size of each block of threads;
+ *   nbt       number of thread blocks;
+ *   nvr       nvr[[i][j] is the number of variables of the j-th monomial
+ *             in the i-th column;
+ *   idx       idx[i][j][k] is the index of the k-th variable which appears
+ *             in the j-th monomial of the i-th column;
+ *   cff       cff[i][j] is the coefficient of the j-th monomial
+ *             in the i-th column;
+ *   input     coefficients of the power series of degree deg,
+ *             for dim variables;
+ *   output    space for the output;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   output    used as work space for one column;
+ *   funval    the evaluated series for each polynomial;
+ *   jacval    matrix series of all derivatives. */
+
+void GPU_cmplx_evaluate_columns
+ ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx, 
+   double ***cffre, double ***cffim, double **inputre, double **inputim,
+   double ***outputre, double ***outputim, 
+   double **funvalre, double **funvalim,
+   double ***jacvalre, double ***jacvalim, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials in the column representation of a system,
+ *   at power series, on complex data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   nbrcol    number of columns;
+ *   szt       size of each block of threads;
+ *   nbt       number of thread blocks;
+ *   nvr       nvr[[i][j] is the number of variables of the j-th monomial
+ *             in the i-th column;
+ *   idx       idx[i][j][k] is the index of the k-th variable which appears
+ *             in the j-th monomial of the i-th column;
+ *   cffre     cffre[i][j] are the real parts of the coefficients
+ *             of the j-th monomial in the i-th column;
+ *   cffim     cffim[i][j] are the imaginary parts of the coefficients
+ *             of the j-th monomial in the i-th column;
+ *   inputre   real parts of coefficients of the series
+ *             of degree deg, for dim variables;
+ *   inputim   imaginary parts of coefficients of the series
+ *             of degree deg, for dim variables;
+ *   outputre  has space for the real parts of the output;
+ *   outputim  has space for the imaginary parts of the output;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   outputre  real parts of evaluated and differentiated monomials,
+ *             used as work space for one column;
+ *   outputim  imaginary parts of evaluated and differentiated monomials,
+ *             used as work space for one column;
+ *   funvalre  real parts of the evaluated series for each polynomial;
+ *   funvalim  imaginary parts of the evaluated series for each polynomial;
+ *   jacvalre  real parts of the matrix series of all derivatives;
+ *   jacvalim  imaginary parts of the matrix series of all derivatives. */
 
 #endif

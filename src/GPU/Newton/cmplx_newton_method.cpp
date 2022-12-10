@@ -71,16 +71,24 @@ void cmplx_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      cmplx_unit_series_vector(dim,deg,cffre[0],cffim[0]);
-      // reset coefficients
-
       if(vrblvl > 0)
          cout << "calling GPU_cmplx_evaluate_monomials ..." << endl;
 
-      GPU_cmplx_evaluate_monomials
-         (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
-          cffre[0],cffim[0],accre[0],accim[0],inputre_d,inputim_d,
-          outputre_d,outputim_d,vrblvl);
+      if(nbrcol == 1)
+      {
+         cmplx_unit_series_vector(dim,deg,cffre[0],cffim[0]);
+         // reset coefficients
+
+         GPU_cmplx_evaluate_monomials
+            (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
+             cffre[0],cffim[0],accre[0],accim[0],inputre_d,inputim_d,
+             outputre_d,outputim_d,vrblvl);
+      }
+      else
+         GPU_cmplx_evaluate_columns
+            (dim,deg,nbrcol,szt,nbt,nvr,idx,cffre,cffim,
+             inputre_d,inputim_d,outputre_d,outputim_d,
+             funvalre_d,funvalim_d,jacvalre_d,jacvalim_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
@@ -121,16 +129,22 @@ void cmplx_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-         for(int j=0; j<dim; j++) 
-            for(int k=0; k<dim; k++)
-            {
-               jacvalre_d[i][j][k] = 0.0; jacvalim_d[i][j][k] = 0.0;
-            }
-      cmplx_linearize_evaldiff_output
-         (dim,degp1,nvr[0],idx[0],mbre,mbim,dpr,
-          outputre_d,outputim_d,funvalre_d,funvalim_d,
-          rhsre_d,rhsim_d,jacvalre_d,jacvalim_d,vrblvl);
+      if(nbrcol != 1)
+         cmplx_define_rhs
+            (dim,degp1,mbre,mbim,funvalre_d,funvalim_d,rhsre_d,rhsim_d,vrblvl);
+      else
+      {
+         for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+            for(int j=0; j<dim; j++) 
+               for(int k=0; k<dim; k++)
+               {
+                  jacvalre_d[i][j][k] = 0.0; jacvalim_d[i][j][k] = 0.0;
+               }
+         cmplx_linearize_evaldiff_output
+            (dim,degp1,nvr[0],idx[0],mbre,mbim,dpr,
+             outputre_d,outputim_d,funvalre_d,funvalim_d,
+             rhsre_d,rhsim_d,jacvalre_d,jacvalim_d,vrblvl);
+      }
    }
    if((vrblvl > 0) && (mode == 2))
    {
