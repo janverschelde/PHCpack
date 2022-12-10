@@ -273,7 +273,7 @@ void ConvolutionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
          }
          if(laydepth < 2) laydepth = 2; // we have two layers
       }
-      else
+      else if(nvr[i] > 2)
       {
          make_monomial(nvr[i],idx[i],i,verbose);
       }

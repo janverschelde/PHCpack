@@ -163,7 +163,7 @@ void dbl_convoluted_data_to_output
             
          for(int i=0; i<=deg; i++) output[ix0][i] += data[ix1++];
       }
-      else
+      else if(nvr[k] > 1)
       {                               // update first and last derivative
          ix2 = nvr[k]-3;
          if(ix2 < 0) ix2 = 0;
@@ -236,7 +236,7 @@ void cmplx_convoluted_data_to_output
             outputim[ix0][i] += dataim[ix1++];
          }
       }
-      else
+      else if(nvr[k] > 1)
       {                               // update first and last derivative
          ix2 = nvr[k]-3;
          if(ix2 < 0) ix2 = 0;

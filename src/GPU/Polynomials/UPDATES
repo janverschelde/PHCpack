@@ -1,3 +1,6 @@
+Sat 10 Dec 2022 : to convolution_jobs.cpp and dbl_polynomial_kernels.cu
+  added if tests from empty jobs and monomials.
+
 Thu 15 Sep 2022 : added a kernel to dbl8_polynomials_kernels on complex data.
 
 Sat 3 Sep 2022 : updated {dbl2,dbl4,dbl8}_polynomials_kernels.cu to use the
