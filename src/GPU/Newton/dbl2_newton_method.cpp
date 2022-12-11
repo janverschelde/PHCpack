@@ -76,15 +76,24 @@ void dbl2_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      dbl2_unit_series_vector(dim,deg,cffhi[0],cfflo[0]); // reset coefficients
-
       if(vrblvl > 0)
          cout << "calling GPU_dbl2_evaluate_monomials ..." << endl;
 
-      GPU_dbl2_evaluate_monomials
-         (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
-          cffhi[0],cfflo[0],acchi[0],acclo[0],
-          inputhi_d,inputlo_d,outputhi_d,outputlo_d,vrblvl);
+      if(nbrcol == 1)
+      {
+         dbl2_unit_series_vector(dim,deg,cffhi[0],cfflo[0]);
+         // reset coefficients
+
+         GPU_dbl2_evaluate_monomials
+            (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
+             cffhi[0],cfflo[0],acchi[0],acclo[0],
+             inputhi_d,inputlo_d,outputhi_d,outputlo_d,vrblvl);
+      }
+      else
+         GPU_dbl2_evaluate_columns
+            (dim,deg,nbrcol,szt,nbt,nvr,idx,cffhi,cfflo,
+             inputhi_d,inputlo_d,outputhi_d,outputlo_d,
+             funvalhi_d,funvallo_d,jacvalhi_d,jacvallo_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
@@ -132,17 +141,25 @@ void dbl2_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-         for(int j=0; j<dim; j++) 
-            for(int k=0; k<dim; k++)
-            {
-               jacvalhi_d[i][j][k] = 0.0; jacvallo_d[i][j][k] = 0.0;
-            }
+      if(nbrcol != 1)
+         dbl2_define_rhs
+            (dim,degp1,mbhi,mblo,funvalhi_d,funvallo_d,
+             rhshi_d,rhslo_d,vrblvl);
+      else
+      {
+         for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+            for(int j=0; j<dim; j++) 
+               for(int k=0; k<dim; k++)
+               {
+                  jacvalhi_d[i][j][k] = 0.0; jacvallo_d[i][j][k] = 0.0;
+               }
 
-      if(vrblvl > 0) cout << "linearizing the output ..." << endl;
-      dbl2_linearize_evaldiff_output
-         (dim,degp1,nvr[0],idx[0],mbhi,mblo,dpr,outputhi_d,outputlo_d,
-          funvalhi_d,funvallo_d,rhshi_d,rhslo_d,jacvalhi_d,jacvallo_d,vrblvl);
+         if(vrblvl > 0) cout << "linearizing the output ..." << endl;
+         dbl2_linearize_evaldiff_output
+            (dim,degp1,nvr[0],idx[0],mbhi,mblo,dpr,outputhi_d,outputlo_d,
+             funvalhi_d,funvallo_d,rhshi_d,rhslo_d,jacvalhi_d,jacvallo_d,
+             vrblvl);
+      }
    }
    if((vrblvl > 0) && (mode == 2))
    {

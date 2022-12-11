@@ -1,6 +1,7 @@
 Sat 10 Dec 2022 : added accelerated column evaluation and differentiation
   to dbl_systems_kernels, updated {dbl, cmplx}_newton_method.cpp
   To dbl_systems_kernels.cu, added if test for empty monomial.
+  Extended dbl2_system_kernels, updated {dbl2, cmplx2}_newton_method.cpp.
 
 Tue 6 Dec 2022 : fixed bugs in dbl_{monomial_systems, systems_host}.cpp
   and set the leading coefficients of the solution to random doubles in

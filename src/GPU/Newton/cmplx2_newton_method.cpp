@@ -107,19 +107,30 @@ void cmplx2_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      // reset the coefficients
-      cmplx2_unit_series_vector
-         (dim,deg,cffrehi[0],cffrelo[0],cffimhi[0],cffimlo[0]);
-
       if(vrblvl > 0)
          cout << "calling GPU_cmplx2_evaluate_monomials ..." << endl;
 
-      GPU_cmplx2_evaluate_monomials
-         (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
-          cffrehi[0],cffrelo[0],cffimhi[0],cffimlo[0],
-          accrehi[0],accrelo[0],accimhi[0],accimlo[0],
-          inputrehi_d,inputrelo_d,inputimhi_d,inputimlo_d,
-          outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d,vrblvl);
+      if(nbrcol == 1)
+      {
+         cmplx2_unit_series_vector
+            (dim,deg,cffrehi[0],cffrelo[0],cffimhi[0],cffimlo[0]);
+         // reset the coefficients
+
+         GPU_cmplx2_evaluate_monomials
+            (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
+             cffrehi[0],cffrelo[0],cffimhi[0],cffimlo[0],
+             accrehi[0],accrelo[0],accimhi[0],accimlo[0],
+             inputrehi_d,inputrelo_d,inputimhi_d,inputimlo_d,
+             outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d,vrblvl);
+      }
+      else
+         GPU_cmplx2_evaluate_columns
+            (dim,deg,nbrcol,szt,nbt,nvr,idx,cffrehi,cffrelo,cffimhi,cffimlo,
+             inputrehi_d,inputrelo_d,inputimhi_d,inputimlo_d,
+             outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d,
+             funvalrehi_d,funvalrelo_d,funvalimhi_d,funvalimlo_d,
+             jacvalrehi_d,jacvalrelo_d,jacvalimhi_d,jacvalimlo_d,vrblvl);
+
    }
    if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
@@ -165,21 +176,29 @@ void cmplx2_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-         for(int j=0; j<dim; j++) 
-            for(int k=0; k<dim; k++)
-            {
-               jacvalrehi_d[i][j][k] = 0.0; jacvalimhi_d[i][j][k] = 0.0;
-               jacvalrelo_d[i][j][k] = 0.0; jacvalimlo_d[i][j][k] = 0.0;
-            }
+      if(nbrcol != 1)
+         cmplx2_define_rhs
+            (dim,degp1,mbrehi,mbrelo,mbimhi,mbimlo,
+             funvalrehi_d,funvalrelo_d,funvalimhi_d,funvalimlo_d,
+             rhsrehi_d,rhsrelo_d,rhsimhi_d,rhsimlo_d,vrblvl);
+      else
+      {
+         for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+            for(int j=0; j<dim; j++) 
+               for(int k=0; k<dim; k++)
+               {
+                  jacvalrehi_d[i][j][k] = 0.0; jacvalimhi_d[i][j][k] = 0.0;
+                  jacvalrelo_d[i][j][k] = 0.0; jacvalimlo_d[i][j][k] = 0.0;
+               }
 
-      if(vrblvl > 0) cout << "linearizing the output ..." << endl;
-      cmplx2_linearize_evaldiff_output
-         (dim,degp1,nvr[0],idx[0],mbrehi,mbrelo,mbimhi,mbimlo,dpr,
-          outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d,
-          funvalrehi_d,funvalrelo_d,funvalimhi_d,funvalimlo_d,
-          rhsrehi_d,rhsrelo_d,rhsimhi_d,rhsimlo_d,
-          jacvalrehi_d,jacvalrelo_d,jacvalimhi_d,jacvalimlo_d,vrblvl);
+         if(vrblvl > 0) cout << "linearizing the output ..." << endl;
+         cmplx2_linearize_evaldiff_output
+            (dim,degp1,nvr[0],idx[0],mbrehi,mbrelo,mbimhi,mbimlo,dpr,
+             outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d,
+             funvalrehi_d,funvalrelo_d,funvalimhi_d,funvalimlo_d,
+             rhsrehi_d,rhsrelo_d,rhsimhi_d,rhsimlo_d,
+             jacvalrehi_d,jacvalrelo_d,jacvalimhi_d,jacvalimlo_d,vrblvl);
+      }
    }
    if((vrblvl > 0) && (mode == 2))
    {

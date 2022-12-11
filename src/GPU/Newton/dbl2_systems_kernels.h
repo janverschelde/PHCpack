@@ -361,4 +361,114 @@ void GPU_cmplx2_evaluate_monomials
  *             outputimlo[i][idx[k]] has the low doubles of the imaginary
  *             parts of te derivative w.r.t. idx[k]. */
 
+void GPU_dbl2_evaluate_columns
+ ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx,
+   double ***cffhi, double ***cfflo, double **inputhi, double **inputlo, 
+   double ***outputhi, double ***outputlo,
+   double **funvalhi, double **funvallo,
+   double ***jacvalhi, double ***jacvallo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials in the column representation of a system,
+ *   at power series, on real data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   nbrcol    number of columns;
+ *   szt       size of each block of threads;
+ *   nbt       number of thread blocks;
+ *   nvr       nvr[[i][j] is the number of variables of the j-th monomial
+ *             in the i-th column;
+ *   idx       idx[i][j][k] is the index of the k-th variable which appears
+ *             in the j-th monomial of the i-th column;
+ *   cffhi     cffhi[i][j] is the high double of the coefficient
+ *             of the j-th monomial in the i-th column;
+ *   cfflo     cfflo[i][j] is the low double of the coefficient
+ *             of the j-th monomial in the i-th column;
+ *   inputhi   high double coefficients of the power series of degree deg,
+ *             for dim variables;
+ *   inputlo   low double coefficients of the power series of degree deg,
+ *             for dim variables;
+ *   output    space for the output;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   outputhi  used as work space for one column;
+ *   outputlo  used as work space for one column;
+ *   funvalhi  high doubles of the evaluated series for each polynomial;
+ *   funvallo  low doubles of the evaluated series for each polynomial;
+ *   jacvalhi  high doubles of the matrix series of all derivatives;
+ *   jacvallo  low doubles of the matrix series of all derivatives. */
+
+void GPU_cmplx2_evaluate_columns
+ ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx, 
+   double ***cffrehi, double ***cffrelo, double ***cffimhi, double ***cffimlo, 
+   double **inputrehi, double **inputrelo,
+   double **inputimhi, double **inputimlo,
+   double ***outputrehi, double ***outputrelo,
+   double ***outputimhi, double ***outputimlo, 
+   double **funvalrehi, double **funvalrelo,
+   double **funvalimhi, double **funvalimlo,
+   double ***jacvalrehi, double ***jacvalrelo,
+   double ***jacvalimhi, double ***jacvalimlo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials in the column representation of a system,
+ *   at power series, on complex data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   nbrcol    number of columns;
+ *   szt       size of each block of threads;
+ *   nbt       number of thread blocks;
+ *   nvr       nvr[[i][j] is the number of variables of the j-th monomial
+ *             in the i-th column;
+ *   idx       idx[i][j][k] is the index of the k-th variable which appears
+ *             in the j-th monomial of the i-th column;
+ *   cffrehi   cffrehi[i][j] are the high doubles of the real parts
+ *             of the coefficients of the j-th monomial in the i-th column;
+ *   cffrelo   cffrelo[i][j] are the low doubles of the real parts
+ *             of the coefficients of the j-th monomial in the i-th column;
+ *   cffimhi   cffimhi[i][j] are the high doubles of the imaginary parts
+ *             of the coefficients of the j-th monomial in the i-th column;
+ *   cffimlo   cffimlo[i][j] are the high doubles of the imaginary parts
+ *             of the coefficients of the j-th monomial in the i-th column;
+ *   inputrehi are the high doubles of the real parts of coefficients
+ *             of the series of degree deg, for dim variables;
+ *   inputrelo are the low doubles of the real parts of coefficients
+ *             of the series of degree deg, for dim variables;
+ *   inputimhi are the high doubles of the imaginary parts of coefficients
+ *             of the series of degree deg, for dim variables;
+ *   inputimlo are the low doubles of the imaginary parts of coefficients
+ *             of the series of degree deg, for dim variables;
+ *   outputrehi has space for the high double real parts of the output;
+ *   outputrelo has space for the low double real parts of the output;
+ *   outputimhi has space for the high double imaginary parts of the output;
+ *   outputimlo has space for the lowh double imaginary parts of the output;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   outputrehi are high double real parts of evaluated and differentiated
+ *             monomials used as work space for one column;
+ *   outputrelo are low double real parts of evaluated and differentiated
+ *             monomials used as work space for one column;
+ *   outputimhi are high double imaginary parts of evaluated and
+ *             differentiated monomials, used as work space for one column;
+ *   outputimlo are low double imaginary parts of evaluated and
+ *             differentiated monomials, used as work space for one column;
+ *   funvalrehi are the high double real parts of the evaluated series;
+ *   funvalrelo are the low double real parts of the evaluated series;
+ *   funvalimhi are the high double imaginary parts of the evaluated series;
+ *   funvalimlo are the low double imaginary parts of the evaluated series;
+ *   jacvalrehi are the high double real parts of the matrix series
+ *             of all derivatives;
+ *   jacvalrelo are the low double real parts of the matrix series
+ *             of all derivatives;
+ *   jacvalimhi are the high double imaginary parts of the matrix series
+ *             of all derivatives;
+ *   jacvalimlo are the low double imaginary parts of the matrix series
+ *             of all derivatives. */
+
 #endif

@@ -51,7 +51,7 @@ void dbl2_evaldiffdata_to_output
             outputlo[k][ix0][i] = datalo[ix1++];
          }
       }
-      else
+      else if(nvr[k] > 1)
       {                               // first and last derivative
          ix2 = nvr[k]-3;
          if(ix2 < 0) ix2 = 0;
@@ -130,7 +130,7 @@ void cmplx2_evaldiffdata_to_output
             outputimlo[k][ix0][i] = dataimlo[ix1++];
          }
       }
-      else
+      else if(nvr[k] > 1)
       {                               // first and last derivative
          ix2 = nvr[k]-3;
          if(ix2 < 0) ix2 = 0;
@@ -720,6 +720,274 @@ void GPU_cmplx2_evaluate_monomials
                }
             }
          }
+      }
+   }
+}
+
+void GPU_dbl2_evaluate_columns
+ ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx,
+   double ***cffhi, double ***cfflo, double **inputhi, double **inputlo, 
+   double ***outputhi, double ***outputlo,
+   double **funvalhi, double **funvallo,
+   double ***jacvalhi, double ***jacvallo, int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<degp1; j++)
+      {
+         funvalhi[i][j] = 0.0;
+         funvallo[i][j] = 0.0;
+      }
+   funvalhi[dim-1][0] = -1.0; // constant of last eq in cyclic dim-roots
+
+   for(int k=0; k<degp1; k++)  // the Jacobian is linearized
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+            jacvalhi[k][i][j] = 0.0;
+            jacvallo[k][i][j] = 0.0;
+         }
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<nbrcol; i++)
+      {
+         cout << "coefficients for column " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+         {
+            cout << "coefficients for monomial " << j << " :" << endl;
+            for(int k=0; k<=deg; k++)
+               cout << cffhi[i][j][k] << "  " << cfflo[i][j][k] << endl;
+         }
+      }
+      cout << "dim : " << dim << endl;
+      for(int i=0; i<nbrcol; i++)
+      {
+         for(int j=0; j<dim; j++)
+         {
+            cout << "nvr[" << i << "][" << j << "] : " << nvr[i][j] << " :";
+            cout << "  idx[" << i << "][" << j << "] :";
+            for(int k=0; k<nvr[i][j]; k++) cout << " " << idx[i][j][k];
+            cout << endl;
+         }
+      }
+      for(int i=0; i<dim; i++)
+      {
+         cout << "input series for variable " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << inputhi[i][j] << "  " << inputlo[i][j] << endl;
+      }
+   }
+   bool verbose = (vrblvl > 1);
+
+   double cnvlapms,elapsedms,walltimesec;
+
+   for(int i=0; i<nbrcol; i++)
+   {
+      ConvolutionJobs jobs(dim);
+
+      jobs.make(dim,nvr[i],idx[i],verbose);
+
+      if(verbose)
+      {
+         for(int k=0; k<jobs.get_depth(); k++)
+         {
+            cout << "jobs at layer " << k << " :" << endl;
+            for(int j=0; j<jobs.get_layer_count(k); j++)
+               cout << jobs.get_job(k,j) << endl;
+         }
+         cout << "dimension : " << dim << endl;
+         cout << "number of monomials : " << dim << endl;
+         cout << "number of convolution jobs : " << jobs.get_count() << endl;
+         cout << "number of layers : " << jobs.get_depth() << endl;
+         cout << "frequency of layer counts :" << endl;
+         int checksum = 0;
+         for(int j=0; j<jobs.get_depth(); j++)
+         {
+            cout << j << " : " << jobs.get_layer_count(j) << endl;
+            checksum = checksum + jobs.get_layer_count(j); 
+         }
+         cout << "layer count sum : " << checksum << endl;
+      }
+      GPU_dbl2_mon_evaldiff
+         (szt,dim,dim,deg,nvr[i],idx[i],cffhi[i],cfflo[i],
+          inputhi,inputlo,outputhi,outputlo,jobs,
+          &cnvlapms,&elapsedms,&walltimesec,verbose);
+
+      for(int j=0; j<dim; j++)
+         if(nvr[i][j] > 0)       // update values
+         {
+            for(int L=0; L<degp1; L++) // funval[j][L] += output[j][dim][L];
+            {
+               ddf_inc(&funvalhi[j][L],&funvallo[j][L],
+                       outputhi[j][dim][L],outputlo[j][dim][L]);
+            }
+
+            int *indexes = idx[i][j];      // indices of the variables
+            for(int k=0; k<nvr[i][j]; k++) // derivative w.r.t. idx[i][j][k]
+            {                              // has j-th coefficient
+               int idxval = indexes[k];
+               for(int L=0; L<degp1; L++) 
+               {
+                  // jacval[L][j][idxval] += output[j][idxval][L];
+                  ddf_inc(&jacvalhi[L][j][idxval],&jacvallo[L][j][idxval],
+                          outputhi[j][idxval][L],outputlo[j][idxval][L]);
+               }
+            }
+         }
+   }
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cout << "output series for monomial " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << funvalhi[i][j] << "  " << funvallo[i][j] << endl;
+      }
+   }
+}
+
+void GPU_cmplx2_evaluate_columns
+ ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx, 
+   double ***cffrehi, double ***cffrelo, double ***cffimhi, double ***cffimlo, 
+   double **inputrehi, double **inputrelo,
+   double **inputimhi, double **inputimlo,
+   double ***outputrehi, double ***outputrelo,
+   double ***outputimhi, double ***outputimlo, 
+   double **funvalrehi, double **funvalrelo,
+   double **funvalimhi, double **funvalimlo,
+   double ***jacvalrehi, double ***jacvalrelo,
+   double ***jacvalimhi, double ***jacvalimlo, int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<degp1; j++)
+      {
+         funvalrehi[i][j] = 0.0; funvalrelo[i][j] = 0.0;
+         funvalimhi[i][j] = 0.0; funvalimlo[i][j] = 0.0;
+      }
+   funvalrehi[dim-1][0] = -1.0; // constant of last eq in cyclic dim-roots
+
+   for(int k=0; k<degp1; k++)  // the Jacobian is linearized
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+            jacvalrehi[k][i][j] = 0.0; jacvalrelo[k][i][j] = 0.0;
+            jacvalimhi[k][i][j] = 0.0; jacvalimlo[k][i][j] = 0.0;
+         }
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<nbrcol; i++)
+      {
+         cout << "coefficients for column " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+         {
+            cout << "coefficients for monomial " << j << " :" << endl;
+            for(int k=0; k<=deg; k++)
+               cout << cffrehi[i][j][k] << "  " << cffrelo[i][j][k] << endl
+                    << "  "
+                    << cffimhi[i][j][k] << "  " << cffimlo[i][j][k] << endl;
+         }
+      }
+      cout << "dim : " << dim << endl;
+      for(int i=0; i<nbrcol; i++)
+      {
+         for(int j=0; j<dim; j++)
+         {
+            cout << "nvr[" << i << "][" << j << "] : " << nvr[i][j] << " :";
+            cout << "  idx[" << i << "][" << j << "] :";
+            for(int k=0; k<nvr[i][j]; k++) cout << " " << idx[i][j][k];
+            cout << endl;
+         }
+      }
+      for(int i=0; i<dim; i++)
+      {
+         cout << "input series for variable " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << inputrehi[i][j] << "  " << inputrelo[i][j] << endl
+                 << "  "
+                 << inputimhi[i][j] << "  " << inputimlo[i][j] << endl;
+      }
+   }
+   bool verbose = (vrblvl > 1);
+
+   double cnvlapms,elapsedms,walltimesec;
+
+   for(int i=0; i<nbrcol; i++)
+   {
+      ConvolutionJobs jobs(dim);
+
+      jobs.make(dim,nvr[i],idx[i],verbose);
+
+      if(verbose)
+      {
+         for(int k=0; k<jobs.get_depth(); k++)
+         {
+            cout << "jobs at layer " << k << " :" << endl;
+            for(int j=0; j<jobs.get_layer_count(k); j++)
+               cout << jobs.get_job(k,j) << endl;
+         }
+         cout << "dimension : " << dim << endl;
+         cout << "number of monomials : " << dim << endl;
+         cout << "number of convolution jobs : " << jobs.get_count() << endl;
+         cout << "number of layers : " << jobs.get_depth() << endl;
+         cout << "frequency of layer counts :" << endl;
+         int checksum = 0;
+         for(int j=0; j<jobs.get_depth(); j++)
+         {
+            cout << j << " : " << jobs.get_layer_count(j) << endl;
+            checksum = checksum + jobs.get_layer_count(j); 
+         }
+         cout << "layer count sum : " << checksum << endl;
+      }
+      GPU_cmplx2_mon_evaldiff
+         (szt,dim,dim,deg,nvr[i],idx[i],
+          cffrehi[i],cffrelo[i],cffimhi[i],cffimlo[i],
+          inputrehi,inputrelo,inputimhi,inputimlo,
+          outputrehi,outputrelo,outputimhi,outputimlo,jobs,
+          &cnvlapms,&elapsedms,&walltimesec,verbose);
+
+      for(int j=0; j<dim; j++)
+         if(nvr[i][j] > 0)       // update values
+         {
+            for(int L=0; L<degp1; L++)
+            {
+               // funvalre[j][L] += outputre[j][dim][L];
+               // funvalim[j][L] += outputim[j][dim][L];
+               ddf_inc(&funvalrehi[j][L],&funvalrelo[j][L],
+                       outputrehi[j][dim][L],outputrelo[j][dim][L]);
+               ddf_inc(&funvalimhi[j][L],&funvalimlo[j][L],
+                       outputimhi[j][dim][L],outputimlo[j][dim][L]);
+            }
+
+            int *indexes = idx[i][j];      // indices of the variables
+            for(int k=0; k<nvr[i][j]; k++) // derivative w.r.t. idx[i][j][k]
+            {                              // has j-th coefficient
+               int idxval = indexes[k];
+               for(int L=0; L<degp1; L++) 
+               {
+                  // jacvalre[L][j][idxval] += outputre[j][idxval][L];
+                  // jacvalim[L][j][idxval] += outputim[j][idxval][L];
+                  ddf_inc(&jacvalrehi[L][j][idxval],&jacvalrelo[L][j][idxval],
+                          outputrehi[j][idxval][L],outputrelo[j][idxval][L]);
+                  ddf_inc(&jacvalimhi[L][j][idxval],&jacvalimlo[L][j][idxval],
+                          outputimhi[j][idxval][L],outputimlo[j][idxval][L]);
+               }
+            }
+         }
+   }
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cout << "output series for polynomial " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << funvalrehi[i][j] << "  " << funvalrelo[i][j] << endl
+                 << "  "
+                 << funvalimhi[i][j] << "  " << funvalimlo[i][j] << endl;
       }
    }
 }
