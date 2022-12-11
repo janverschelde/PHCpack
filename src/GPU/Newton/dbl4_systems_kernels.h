@@ -581,4 +581,176 @@ void GPU_cmplx4_evaluate_monomials
  *             outputimlolo[i][idx[k]] has the lowest doubles
  *             of the imaginary parts of te derivative w.r.t. idx[k]. */
 
+void GPU_dbl4_evaluate_columns
+ ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx,
+   double ***cffhihi, double ***cfflohi,
+   double ***cffhilo, double ***cfflolo,
+   double **inputhihi, double **inputlohi, 
+   double **inputhilo, double **inputlolo, 
+   double ***outputhihi, double ***outputlohi,
+   double ***outputhilo, double ***outputlolo,
+   double **funvalhihi, double **funvallohi,
+   double **funvalhilo, double **funvallolo,
+   double ***jacvalhihi, double ***jacvallohi,
+   double ***jacvalhilo, double ***jacvallolo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials in the column representation of a system,
+ *   at power series, on real data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   nbrcol    number of columns;
+ *   szt       size of each block of threads;
+ *   nbt       number of thread blocks;
+ *   nvr       nvr[[i][j] is the number of variables of the j-th monomial
+ *             in the i-th column;
+ *   idx       idx[i][j][k] is the index of the k-th variable which appears
+ *             in the j-th monomial of the i-th column;
+ *   cffhihi   cffhihi[i][j] is the highest double of the coefficient
+ *             of the j-th monomial in the i-th column;
+ *   cfflohi   cfflohi[i][j] is the second highest double of the coefficient
+ *             of the j-th monomial in the i-th column;
+ *   cffhilo   cffhilo[i][j] is the second lowest double of the coefficient
+ *             of the j-th monomial in the i-th column;
+ *   cfflolo   cfflolo[i][j] is the lowest double of the coefficient
+ *             of the j-th monomial in the i-th column;
+ *   inputhihi are the highest double coefficients of the input;
+ *   inputlohi are the second highest double coefficients of the input;
+ *   inputhilo are the second lowest double coefficients of the input;
+ *   inputlolo are the lowest double coefficients of the input;
+ *   outputhihi has space for the output;
+ *   outputlohi has space for the output;
+ *   outputhilo has space for the output;
+ *   outputlolo has space for the output;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   outputhihi is used as work space for one column;
+ *   outputlohi is used as work space for one column;
+ *   outputhilo is used as work space for one column;
+ *   outputlolo is used as work space for one column;
+ *   funvalhihi has the highest doubles of the evaluated series;
+ *   funvallohi has the second highest doubles of the evaluated series;
+ *   funvalhilo has the second lowest doubles of the evaluated series;
+ *   funvallolo has the lowest doubles of the evaluated series;
+ *   jacvalhihi has the highest doubles of all derivatives;
+ *   jacvallohi has the second highest doubles of all derivatives;
+ *   jacvalhilo has the second lowest doubles of all derivatives;
+ *   jacvallolo has the lowest doubles of all derivatives. */
+
+void GPU_cmplx4_evaluate_columns
+ ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx, 
+   double ***cffrehihi, double ***cffrelohi,
+   double ***cffrehilo, double ***cffrelolo,
+   double ***cffimhihi, double ***cffimlohi, 
+   double ***cffimhilo, double ***cffimlolo, 
+   double **inputrehihi, double **inputrelohi,
+   double **inputrehilo, double **inputrelolo,
+   double **inputimhihi, double **inputimlohi,
+   double **inputimhilo, double **inputimlolo,
+   double ***outputrehihi, double ***outputrelohi,
+   double ***outputrehilo, double ***outputrelolo,
+   double ***outputimhihi, double ***outputimlohi, 
+   double ***outputimhilo, double ***outputimlolo, 
+   double **funvalrehihi, double **funvalrelohi,
+   double **funvalrehilo, double **funvalrelolo,
+   double **funvalimhihi, double **funvalimlohi,
+   double **funvalimhilo, double **funvalimlolo,
+   double ***jacvalrehihi, double ***jacvalrelohi,
+   double ***jacvalrehilo, double ***jacvalrelolo,
+   double ***jacvalimhihi, double ***jacvalimlohi,
+   double ***jacvalimhilo, double ***jacvalimlolo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates the monomials in the column representation of a system,
+ *   at power series, on complex data.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   nbrcol    number of columns;
+ *   szt       size of each block of threads;
+ *   nbt       number of thread blocks;
+ *   nvr       nvr[[i][j] is the number of variables of the j-th monomial
+ *             in the i-th column;
+ *   idx       idx[i][j][k] is the index of the k-th variable which appears
+ *             in the j-th monomial of the i-th column;
+ *   cffrehihi cffrehihi[i][j] are the highest doubles of the real parts
+ *             of the coefficients of the j-th monomial in the i-th column;
+ *   cffrelohi cffrelohi[i][j] are the 2nd highest doubles of the real parts
+ *             of the coefficients of the j-th monomial in the i-th column;
+ *   cffrehilo cffrehilo[i][j] are the 2nd lowest doubles of the real parts
+ *             of the coefficients of the j-th monomial in the i-th column;
+ *   cffrelolo cffrelolo[i][j] are the lowest doubles of the real parts
+ *             of the coefficients of the j-th monomial in the i-th column;
+ *   cffimhihi cffimhihi[i][j] are the highest doubles of the imaginary parts
+ *             of the coefficients of the j-th monomial in the i-th column;
+ *   cffimlohi cffimlohi[i][j] are the 2nd highest doubles of the imag parts
+ *             of the coefficients of the j-th monomial in the i-th column;
+ *   cffimhilo cffimhilo[i][j] are the 2nd lowest doubles of the imag parts
+ *             of the coefficients of the j-th monomial in the i-th column;
+ *   cffimlolo cffimlolo[i][j] are the lowest doubles of the imaginary parts
+ *             of the coefficients of the j-th monomial in the i-th column;
+ *   inputrehihi are the highest doubles of the real parts of coefficients
+ *             of the series of degree deg, for dim variables;
+ *   inputrelohi are the 2nd highest doubles of the real parts of coefficients
+ *             of the series of degree deg, for dim variables;
+ *   inputrehilo are the 2nd lowest doubles of the real parts of coefficients
+ *             of the series of degree deg, for dim variables;
+ *   inputrelolo are the lowest doubles of the real parts of coefficients
+ *             of the series of degree deg, for dim variables;
+ *   inputimhihi are the highest doubles of the imag parts of coefficients
+ *             of the series of degree deg, for dim variables;
+ *   inputimlohi are the 2nd highest doubles of the imag parts of coefficients
+ *             of the series of degree deg, for dim variables;
+ *   inputimhilo are the 2nd lowest doubles of the imag parts of coefficients
+ *             of the series of degree deg, for dim variables;
+ *   inputimlolo are the lowest doubles of the imag parts of coefficients
+ *             of the series of degree deg, for dim variables;
+ *   outputrehihi has space for the highest double real parts of the output;
+ *   outputrelohi has space for the 2nd highest double real parts of output;
+ *   outputrehilo has space for the 2nd lowest double real parts of output;
+ *   outputrelolo has space for the lowest double real parts of the output;
+ *   outputimhihi has space for the highest double imag parts of the output;
+ *   outputimlohi has space for the 2nd highest double imag parts of output;
+ *   outputimhilo has space for the 2nd lowest double imag parts of output;
+ *   outputimlolo has space for the lowest double imag parts of the output;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   outputrehihi are the highiest double real parts of evaluated and
+ *             differentiated monomials used as work space for one column;
+ *   outputrelohi are the 2nd highest double real parts of evaluated and
+ *             differentiated monomials used as work space for one column;
+ *   outputrehilo are the 2nd lowest double real parts of evaluated and
+ *             differentiated monomials used as work space for one column;
+ *   outputrelolo are lowest double real parts of evaluated and
+ *             differentiated monomials used as work space for one column;
+ *   outputimhihi are the highest double imaginary parts of evaluated and
+ *             differentiated monomials used as work space for one column;
+ *   outputimlohi are the 2nd highest double imaginary parts of evaluated and
+ *             differentiated monomials used as work space for one column;
+ *   outputimhilo are the 2nd lowest double imaginary parts of evaluated and
+ *             differentiated monomials used as work space for one column;
+ *   outputimlolo are the lowest double imaginary parts of evaluated and
+ *             differentiated monomials used as work space for one column;
+ *   funvalrehihi are the highest double real parts of evaluated series;
+ *   funvalrelohi are the 2nd highest double real parts of evaluated series;
+ *   funvalrehilo are the 2nd lowest double real parts of evaluated series;
+ *   funvalrelolo are the lowest double real parts of evaluated series;
+ *   funvalimhihi are the highest double imag parts of evaluated series;
+ *   funvalimlohi are the 2nd highest double imag parts of evaluated series;
+ *   funvalimhilo are the 2nd lowest double imag parts of evaluated series;
+ *   funvalimlolo are the lowest double imag parts of evaluated series;
+ *   jacvalrehihi are the highest double real parts of all derivatives;
+ *   jacvalrelohi are the 2nd highest double real parts of all derivatives;
+ *   jacvalrehilo are the 2nd lowest double real parts of all derivatives;
+ *   jacvalrelolo are the lowest double real parts of all derivatives;
+ *   jacvalimhihi are the highest double imag parts of all derivatives;
+ *   jacvalimlohi are the 2nd highest double imag parts of all derivatives;
+ *   jacvalimhilo are the 2nd lowest double imag parts of all derivatives;
+ *   jacvalimlolo are the lowest double imag parts of all derivatives. */
+
 #endif
