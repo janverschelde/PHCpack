@@ -57,7 +57,7 @@ void dbl4_evaldiffdata_to_output
             outputlolo[k][ix0][i] = datalolo[ix1++];
          }
       }
-      else
+      else if(nvr[k] > 1)
       {                               // first and last derivative
          ix2 = nvr[k]-3;
          if(ix2 < 0) ix2 = 0;
@@ -155,7 +155,7 @@ void cmplx4_evaldiffdata_to_output
             outputimlolo[k][ix0][i] = dataimlolo[ix1++];
          }
       }
-      else
+      else if(nvr[k] > 1)
       {                               // first and last derivative
          ix2 = nvr[k]-3;
          if(ix2 < 0) ix2 = 0;

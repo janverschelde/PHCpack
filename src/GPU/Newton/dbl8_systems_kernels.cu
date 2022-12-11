@@ -70,7 +70,7 @@ void dbl8_evaldiffdata_to_output
             outputlololo[k][ix0][i] = datalololo[ix1++];
          }
       }
-      else
+      else if(nvr[k] > 1)
       {                               // first and last derivative
          ix2 = nvr[k]-3;
          if(ix2 < 0) ix2 = 0;
@@ -204,7 +204,7 @@ void cmplx8_evaldiffdata_to_output
             outputimlololo[k][ix0][i] = dataimlololo[ix1++];
          }
       }
-      else
+      else if(nvr[k] > 1)
       {                               // first and last derivative
          ix2 = nvr[k]-3;
          if(ix2 < 0) ix2 = 0;
@@ -1241,6 +1241,468 @@ void GPU_cmplx8_evaluate_monomials
                }
             }
          }
+      }
+   }
+}
+
+void GPU_dbl8_evaluate_columns
+ ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx,
+   double ***cffhihihi, double ***cfflohihi,
+   double ***cffhilohi, double ***cfflolohi,
+   double ***cffhihilo, double ***cfflohilo,
+   double ***cffhilolo, double ***cfflololo,
+   double **inputhihihi, double **inputlohihi, 
+   double **inputhilohi, double **inputlolohi, 
+   double **inputhihilo, double **inputlohilo, 
+   double **inputhilolo, double **inputlololo, 
+   double ***outputhihihi, double ***outputlohihi,
+   double ***outputhilohi, double ***outputlolohi,
+   double ***outputhihilo, double ***outputlohilo,
+   double ***outputhilolo, double ***outputlololo,
+   double **funvalhihihi, double **funvallohihi,
+   double **funvalhilohi, double **funvallolohi,
+   double **funvalhihilo, double **funvallohilo,
+   double **funvalhilolo, double **funvallololo,
+   double ***jacvalhihihi, double ***jacvallohihi,
+   double ***jacvalhilohi, double ***jacvallolohi,
+   double ***jacvalhihilo, double ***jacvallohilo,
+   double ***jacvalhilolo, double ***jacvallololo, int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<degp1; j++)
+      {
+         funvalhihihi[i][j] = 0.0; funvallohihi[i][j] = 0.0;
+         funvalhilohi[i][j] = 0.0; funvallolohi[i][j] = 0.0;
+         funvalhihilo[i][j] = 0.0; funvallohilo[i][j] = 0.0;
+         funvalhilolo[i][j] = 0.0; funvallololo[i][j] = 0.0;
+      }
+   funvalhihihi[dim-1][0] = -1.0; // constant of last eq in cyclic dim-roots
+
+   for(int k=0; k<degp1; k++)  // the Jacobian is linearized
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+            jacvalhihihi[k][i][j] = 0.0; jacvallohihi[k][i][j] = 0.0;
+            jacvalhilohi[k][i][j] = 0.0; jacvallolohi[k][i][j] = 0.0;
+            jacvalhihilo[k][i][j] = 0.0; jacvallohilo[k][i][j] = 0.0;
+            jacvalhilolo[k][i][j] = 0.0; jacvallololo[k][i][j] = 0.0;
+         }
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<nbrcol; i++)
+      {
+         cout << "coefficients for column " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+         {
+            cout << "coefficients for monomial " << j << " :" << endl;
+            for(int k=0; k<=deg; k++)
+               cout << cffhihihi[i][j][k] << "  "
+                    << cfflohihi[i][j][k] << endl << "  "
+                    << cffhilohi[i][j][k] << "  "
+                    << cfflolohi[i][j][k] << endl << "  "
+                    << cffhihilo[i][j][k] << "  "
+                    << cfflohilo[i][j][k] << endl << "  "
+                    << cffhilolo[i][j][k] << "  "
+                    << cfflololo[i][j][k] << endl;
+         }
+      }
+      cout << "dim : " << dim << endl;
+      for(int i=0; i<nbrcol; i++)
+      {
+         for(int j=0; j<dim; j++)
+         {
+            cout << "nvr[" << i << "][" << j << "] : " << nvr[i][j] << " :";
+            cout << "  idx[" << i << "][" << j << "] :";
+            for(int k=0; k<nvr[i][j]; k++) cout << " " << idx[i][j][k];
+            cout << endl;
+         }
+      }
+      for(int i=0; i<dim; i++)
+      {
+         cout << "input series for variable " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << inputhihihi[i][j] << "  " << inputlohihi[i][j] << endl
+                 << "  "
+                 << inputhilohi[i][j] << "  " << inputlolohi[i][j] << endl
+                 << "  "
+                 << inputhihilo[i][j] << "  " << inputlohilo[i][j] << endl
+                 << "  "
+                 << inputhilolo[i][j] << "  " << inputlololo[i][j] << endl;
+      }
+   }
+   bool verbose = (vrblvl > 1);
+
+   double cnvlapms,elapsedms,walltimesec;
+
+   for(int i=0; i<nbrcol; i++)
+   {
+      ConvolutionJobs jobs(dim);
+
+      jobs.make(dim,nvr[i],idx[i],verbose);
+
+      if(verbose)
+      {
+         for(int k=0; k<jobs.get_depth(); k++)
+         {
+            cout << "jobs at layer " << k << " :" << endl;
+            for(int j=0; j<jobs.get_layer_count(k); j++)
+               cout << jobs.get_job(k,j) << endl;
+         }
+         cout << "dimension : " << dim << endl;
+         cout << "number of monomials : " << dim << endl;
+         cout << "number of convolution jobs : " << jobs.get_count() << endl;
+         cout << "number of layers : " << jobs.get_depth() << endl;
+         cout << "frequency of layer counts :" << endl;
+         int checksum = 0;
+         for(int j=0; j<jobs.get_depth(); j++)
+         {
+            cout << j << " : " << jobs.get_layer_count(j) << endl;
+            checksum = checksum + jobs.get_layer_count(j); 
+         }
+         cout << "layer count sum : " << checksum << endl;
+      }
+      GPU_dbl8_mon_evaldiff
+         (szt,dim,dim,deg,nvr[i],idx[i],
+          cffhihihi[i],cfflohihi[i],cffhilohi[i],cfflolohi[i],
+          cffhihilo[i],cfflohilo[i],cffhilolo[i],cfflololo[i],
+          inputhihihi,inputlohihi,inputhilohi,inputlolohi,
+          inputhihilo,inputlohilo,inputhilolo,inputlololo,
+          outputhihihi,outputlohihi,outputhilohi,outputlolohi,
+          outputhihilo,outputlohilo,outputhilolo,outputlololo,jobs,
+          &cnvlapms,&elapsedms,&walltimesec,verbose);
+
+      for(int j=0; j<dim; j++)
+         if(nvr[i][j] > 0)       // update values
+         {
+            for(int L=0; L<degp1; L++) // funval[j][L] += output[j][dim][L];
+            {
+               odf_inc(&funvalhihihi[j][L],&funvallohihi[j][L],
+                       &funvalhilohi[j][L],&funvallolohi[j][L],
+                       &funvalhihilo[j][L],&funvallohilo[j][L],
+                       &funvalhilolo[j][L],&funvallololo[j][L],
+                       outputhihihi[j][dim][L],outputlohihi[j][dim][L],
+                       outputhilohi[j][dim][L],outputlolohi[j][dim][L],
+                       outputhihilo[j][dim][L],outputlohilo[j][dim][L],
+                       outputhilolo[j][dim][L],outputlololo[j][dim][L]);
+            }
+
+            int *indexes = idx[i][j];      // indices of the variables
+            for(int k=0; k<nvr[i][j]; k++) // derivative w.r.t. idx[i][j][k]
+            {                              // has j-th coefficient
+               int idxval = indexes[k];
+               for(int L=0; L<degp1; L++) 
+               {
+                  // jacval[L][j][idxval] += output[j][idxval][L];
+                  odf_inc(&jacvalhihihi[L][j][idxval],
+                          &jacvallohihi[L][j][idxval],
+                          &jacvalhilohi[L][j][idxval],
+                          &jacvallolohi[L][j][idxval],
+                          &jacvalhihilo[L][j][idxval],
+                          &jacvallohilo[L][j][idxval],
+                          &jacvalhilolo[L][j][idxval],
+                          &jacvallololo[L][j][idxval],
+                          outputhihihi[j][idxval][L],
+                          outputlohihi[j][idxval][L],
+                          outputhilohi[j][idxval][L],
+                          outputlolohi[j][idxval][L],
+                          outputhihilo[j][idxval][L],
+                          outputlohilo[j][idxval][L],
+                          outputhilolo[j][idxval][L],
+                          outputlololo[j][idxval][L]);
+               }
+            }
+         }
+   }
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cout << "output series for monomial " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << funvalhihihi[i][j] << "  " << funvallohihi[i][j] << endl
+                 << "  "
+                 << funvalhilohi[i][j] << "  " << funvallololo[i][j] << endl
+                 << "  "
+                 << funvalhihilo[i][j] << "  " << funvallohihi[i][j] << endl
+                 << "  "
+                 << funvalhilolo[i][j] << "  " << funvallololo[i][j] << endl;
+      }
+   }
+}
+
+void GPU_cmplx8_evaluate_columns
+ ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx, 
+   double ***cffrehihihi, double ***cffrelohihi,
+   double ***cffrehilohi, double ***cffrelolohi,
+   double ***cffrehihilo, double ***cffrelohilo,
+   double ***cffrehilolo, double ***cffrelololo,
+   double ***cffimhihihi, double ***cffimlohihi, 
+   double ***cffimhilohi, double ***cffimlolohi, 
+   double ***cffimhihilo, double ***cffimlohilo, 
+   double ***cffimhilolo, double ***cffimlololo, 
+   double **inputrehihihi, double **inputrelohihi,
+   double **inputrehilohi, double **inputrelolohi,
+   double **inputrehihilo, double **inputrelohilo,
+   double **inputrehilolo, double **inputrelololo,
+   double **inputimhihihi, double **inputimlohihi,
+   double **inputimhilohi, double **inputimlolohi,
+   double **inputimhihilo, double **inputimlohilo,
+   double **inputimhilolo, double **inputimlololo,
+   double ***outputrehihihi, double ***outputrelohihi,
+   double ***outputrehilohi, double ***outputrelolohi,
+   double ***outputrehihilo, double ***outputrelohilo,
+   double ***outputrehilolo, double ***outputrelololo,
+   double ***outputimhihihi, double ***outputimlohihi,
+   double ***outputimhilohi, double ***outputimlolohi, 
+   double ***outputimhihilo, double ***outputimlohilo, 
+   double ***outputimhilolo, double ***outputimlololo, 
+   double **funvalrehihihi, double **funvalrelohihi,
+   double **funvalrehilohi, double **funvalrelolohi,
+   double **funvalrehihilo, double **funvalrelohilo,
+   double **funvalrehilolo, double **funvalrelololo,
+   double **funvalimhihihi, double **funvalimlohihi,
+   double **funvalimhilohi, double **funvalimlolohi,
+   double **funvalimhihilo, double **funvalimlohilo,
+   double **funvalimhilolo, double **funvalimlololo,
+   double ***jacvalrehihihi, double ***jacvalrelohihi,
+   double ***jacvalrehilohi, double ***jacvalrelolohi,
+   double ***jacvalrehihilo, double ***jacvalrelohilo,
+   double ***jacvalrehilolo, double ***jacvalrelololo,
+   double ***jacvalimhihihi, double ***jacvalimlohihi,
+   double ***jacvalimhilohi, double ***jacvalimlolohi,
+   double ***jacvalimhihilo, double ***jacvalimlohilo,
+   double ***jacvalimhilolo, double ***jacvalimlololo, int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<degp1; j++)
+      {
+         funvalrehihihi[i][j] = 0.0; funvalrelohihi[i][j] = 0.0;
+         funvalrehilohi[i][j] = 0.0; funvalrelolohi[i][j] = 0.0;
+         funvalrehihilo[i][j] = 0.0; funvalrelohilo[i][j] = 0.0;
+         funvalrehilolo[i][j] = 0.0; funvalrelololo[i][j] = 0.0;
+         funvalimhihihi[i][j] = 0.0; funvalimlohihi[i][j] = 0.0;
+         funvalimhilohi[i][j] = 0.0; funvalimlolohi[i][j] = 0.0;
+         funvalimhihilo[i][j] = 0.0; funvalimlohilo[i][j] = 0.0;
+         funvalimhilolo[i][j] = 0.0; funvalimlololo[i][j] = 0.0;
+      }
+   funvalrehihihi[dim-1][0] = -1.0; // constant of last eq in cyclic dim-roots
+
+   for(int k=0; k<degp1; k++)  // the Jacobian is linearized
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+            jacvalrehihihi[k][i][j] = 0.0; jacvalrelohihi[k][i][j] = 0.0;
+            jacvalrehilohi[k][i][j] = 0.0; jacvalrelolohi[k][i][j] = 0.0;
+            jacvalrehihilo[k][i][j] = 0.0; jacvalrelohilo[k][i][j] = 0.0;
+            jacvalrehilolo[k][i][j] = 0.0; jacvalrelololo[k][i][j] = 0.0;
+            jacvalimhihihi[k][i][j] = 0.0; jacvalimlohihi[k][i][j] = 0.0;
+            jacvalimhilohi[k][i][j] = 0.0; jacvalimlolohi[k][i][j] = 0.0;
+            jacvalimhihilo[k][i][j] = 0.0; jacvalimlohilo[k][i][j] = 0.0;
+            jacvalimhilolo[k][i][j] = 0.0; jacvalimlololo[k][i][j] = 0.0;
+         }
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<nbrcol; i++)
+      {
+         cout << "coefficients for column " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+         {
+            cout << "coefficients for monomial " << j << " :" << endl;
+            for(int k=0; k<=deg; k++)
+               cout << cffrehihihi[i][j][k] << "  "
+                    << cffrelohihi[i][j][k] << endl << "  "
+                    << cffrehilohi[i][j][k] << "  "
+                    << cffrelolohi[i][j][k] << endl << "  "
+                    << cffrehihilo[i][j][k] << "  "
+                    << cffrelohilo[i][j][k] << endl << "  "
+                    << cffrehilolo[i][j][k] << "  "
+                    << cffrelololo[i][j][k] << endl << "  "
+                    << cffimhihihi[i][j][k] << "  "
+                    << cffimlohihi[i][j][k] << endl << "  "
+                    << cffimhilohi[i][j][k] << "  "
+                    << cffimlolohi[i][j][k] << endl << "  "
+                    << cffimhihilo[i][j][k] << "  "
+                    << cffimlohilo[i][j][k] << endl << "  "
+                    << cffimhilolo[i][j][k] << "  "
+                    << cffimlololo[i][j][k] << endl;
+         }
+      }
+      cout << "dim : " << dim << endl;
+      for(int i=0; i<nbrcol; i++)
+      {
+         for(int j=0; j<dim; j++)
+         {
+            cout << "nvr[" << i << "][" << j << "] : " << nvr[i][j] << " :";
+            cout << "  idx[" << i << "][" << j << "] :";
+            for(int k=0; k<nvr[i][j]; k++) cout << " " << idx[i][j][k];
+            cout << endl;
+         }
+      }
+      for(int i=0; i<dim; i++)
+      {
+         cout << "input series for variable " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << inputrehihihi[i][j] << "  " << inputrelohihi[i][j] << endl
+                 << "  "
+                 << inputrehilohi[i][j] << "  " << inputrelolohi[i][j] << endl
+                 << "  "
+                 << inputrehihilo[i][j] << "  " << inputrelohilo[i][j] << endl
+                 << "  "
+                 << inputrehilolo[i][j] << "  " << inputrelololo[i][j] << endl
+                 << "  "
+                 << inputimhihihi[i][j] << "  " << inputimlohihi[i][j] << endl
+                 << "  "
+                 << inputimhilohi[i][j] << "  " << inputimlolohi[i][j] << endl
+                 << "  "
+                 << inputimhihilo[i][j] << "  " << inputimlohilo[i][j] << endl
+                 << "  "
+                 << inputimhilolo[i][j] << "  " << inputimlololo[i][j] << endl;
+      }
+   }
+   bool verbose = (vrblvl > 1);
+
+   double cnvlapms,elapsedms,walltimesec;
+
+   for(int i=0; i<nbrcol; i++)
+   {
+      ConvolutionJobs jobs(dim);
+
+      jobs.make(dim,nvr[i],idx[i],verbose);
+
+      if(verbose)
+      {
+         for(int k=0; k<jobs.get_depth(); k++)
+         {
+            cout << "jobs at layer " << k << " :" << endl;
+            for(int j=0; j<jobs.get_layer_count(k); j++)
+               cout << jobs.get_job(k,j) << endl;
+         }
+         cout << "dimension : " << dim << endl;
+         cout << "number of monomials : " << dim << endl;
+         cout << "number of convolution jobs : " << jobs.get_count() << endl;
+         cout << "number of layers : " << jobs.get_depth() << endl;
+         cout << "frequency of layer counts :" << endl;
+         int checksum = 0;
+         for(int j=0; j<jobs.get_depth(); j++)
+         {
+            cout << j << " : " << jobs.get_layer_count(j) << endl;
+            checksum = checksum + jobs.get_layer_count(j); 
+         }
+         cout << "layer count sum : " << checksum << endl;
+      }
+      GPU_cmplx8_mon_evaldiff
+         (szt,dim,dim,deg,nvr[i],idx[i],
+          cffrehihihi[i],cffrelohihi[i],cffrehilohi[i],cffrelolohi[i],
+          cffrehihilo[i],cffrelohilo[i],cffrehilolo[i],cffrelololo[i],
+          cffimhihihi[i],cffimlohihi[i],cffimhilohi[i],cffimlolohi[i],
+          cffimhihilo[i],cffimlohilo[i],cffimhilolo[i],cffimlololo[i],
+          inputrehihihi,inputrelohihi,inputrehilohi,inputrelolohi,
+          inputrehihilo,inputrelohilo,inputrehilolo,inputrelololo,
+          inputimhihihi,inputimlohihi,inputimhilohi,inputimlolohi,
+          inputimhihilo,inputimlohilo,inputimhilolo,inputimlololo,
+          outputrehihihi,outputrelohihi,outputrehilohi,outputrelolohi,
+          outputrehihilo,outputrelohilo,outputrehilolo,outputrelololo,
+          outputimhihihi,outputimlohihi,outputimhilohi,outputimlolohi,
+          outputimhihilo,outputimlohilo,outputimhilolo,outputimlololo,jobs,
+          &cnvlapms,&elapsedms,&walltimesec,verbose);
+
+      for(int j=0; j<dim; j++)
+         if(nvr[i][j] > 0)       // update values
+         {
+            for(int L=0; L<degp1; L++)
+            {
+               // funvalre[j][L] += outputre[j][dim][L];
+               // funvalim[j][L] += outputim[j][dim][L];
+               odf_inc(&funvalrehihihi[j][L],&funvalrelohihi[j][L],
+                       &funvalrehilohi[j][L],&funvalrelolohi[j][L],
+                       &funvalrehihilo[j][L],&funvalrelohilo[j][L],
+                       &funvalrehilolo[j][L],&funvalrelololo[j][L],
+                       outputrehihihi[j][dim][L],outputrelohihi[j][dim][L],
+                       outputrehihihi[j][dim][L],outputrelohihi[j][dim][L],
+                       outputrehilolo[j][dim][L],outputrelololo[j][dim][L],
+                       outputrehilolo[j][dim][L],outputrelololo[j][dim][L]);
+               odf_inc(&funvalimhihihi[j][L],&funvalimlohihi[j][L],
+                       &funvalimhilohi[j][L],&funvalimlolohi[j][L],
+                       &funvalimhihilo[j][L],&funvalimlohilo[j][L],
+                       &funvalimhilolo[j][L],&funvalimlololo[j][L],
+                       outputimhihihi[j][dim][L],outputimlohihi[j][dim][L],
+                       outputimhilohi[j][dim][L],outputimlolohi[j][dim][L],
+                       outputimhihilo[j][dim][L],outputimlohilo[j][dim][L],
+                       outputimhilolo[j][dim][L],outputimlololo[j][dim][L]);
+            }
+
+            int *indexes = idx[i][j];      // indices of the variables
+            for(int k=0; k<nvr[i][j]; k++) // derivative w.r.t. idx[i][j][k]
+            {                              // has j-th coefficient
+               int idxval = indexes[k];
+               for(int L=0; L<degp1; L++) 
+               {
+                  // jacvalre[L][j][idxval] += outputre[j][idxval][L];
+                  // jacvalim[L][j][idxval] += outputim[j][idxval][L];
+                  odf_inc(&jacvalrehihihi[L][j][idxval],
+                          &jacvalrelohihi[L][j][idxval],
+                          &jacvalrehilohi[L][j][idxval],
+                          &jacvalrelolohi[L][j][idxval],
+                          &jacvalrehihilo[L][j][idxval],
+                          &jacvalrelohilo[L][j][idxval],
+                          &jacvalrehilolo[L][j][idxval],
+                          &jacvalrelololo[L][j][idxval],
+                          outputrehihihi[j][idxval][L],
+                          outputrelohihi[j][idxval][L],
+                          outputrehilohi[j][idxval][L],
+                          outputrelolohi[j][idxval][L],
+                          outputrehihilo[j][idxval][L],
+                          outputrelohilo[j][idxval][L],
+                          outputrehilolo[j][idxval][L],
+                          outputrelololo[j][idxval][L]);
+                  odf_inc(&jacvalimhihihi[L][j][idxval],
+                          &jacvalimlohihi[L][j][idxval],
+                          &jacvalimhilohi[L][j][idxval],
+                          &jacvalimlolohi[L][j][idxval],
+                          &jacvalimhihilo[L][j][idxval],
+                          &jacvalimlohilo[L][j][idxval],
+                          &jacvalimhilolo[L][j][idxval],
+                          &jacvalimlololo[L][j][idxval],
+                          outputimhihihi[j][idxval][L],
+                          outputimlohihi[j][idxval][L],
+                          outputimhilohi[j][idxval][L],
+                          outputimlolohi[j][idxval][L],
+                          outputimhihilo[j][idxval][L],
+                          outputimlohilo[j][idxval][L],
+                          outputimhilolo[j][idxval][L],
+                          outputimlololo[j][idxval][L]);
+               }
+            }
+         }
+   }
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cout << "output series for polynomial " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << funvalrehihihi[i][j] << "  "
+                 << funvalrelohihi[i][j] << endl << "  "
+                 << funvalrehilohi[i][j] << "  "
+                 << funvalrelolohi[i][j] << endl << "  "
+                 << funvalrehihilo[i][j] << "  "
+                 << funvalrelohilo[i][j] << endl << "  "
+                 << funvalrehilolo[i][j] << "  "
+                 << funvalrelololo[i][j] << endl << "  "
+                 << funvalimhihihi[i][j] << "  "
+                 << funvalimlohihi[i][j] << endl << "  "
+                 << funvalimhilohi[i][j] << "  "
+                 << funvalimlolohi[i][j] << endl << "  "
+                 << funvalimhihilo[i][j] << "  "
+                 << funvalimlohilo[i][j] << endl << "  "
+                 << funvalimhilolo[i][j] << "  "
+                 << funvalimlololo[i][j] << endl;
       }
    }
 }

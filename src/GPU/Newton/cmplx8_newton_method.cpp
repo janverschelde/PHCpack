@@ -295,36 +295,73 @@ void cmplx8_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      // reset the coefficients
-      cmplx8_unit_series_vector
-         (dim,deg,
-          cffrehihihi[0],cffrelohihi[0],cffrehilohi[0],cffrelolohi[0],
-          cffrehihilo[0],cffrelohilo[0],cffrehilolo[0],cffrelololo[0],
-          cffimhihihi[0],cffimlohihi[0],cffimhilohi[0],cffimlolohi[0],
-          cffimhihilo[0],cffimlohilo[0],cffimhilolo[0],cffimlololo[0]);
-
       if(vrblvl > 0)
          cout << "calling GPU_cmplx8_evaluate_monomials ..." << endl;
 
-      GPU_cmplx8_evaluate_monomials
-         (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
-          cffrehihihi[0],cffrelohihi[0],cffrehilohi[0],cffrelolohi[0],
-          cffrehihilo[0],cffrelohilo[0],cffrehilolo[0],cffrelololo[0],
-          cffimhihihi[0],cffimlohihi[0],cffimhilohi[0],cffimlolohi[0],
-          cffimhihilo[0],cffimlohilo[0],cffimhilolo[0],cffimlololo[0],
-          accrehihihi[0],accrelohihi[0],accrehilohi[0],accrelolohi[0],
-          accrehihilo[0],accrelohilo[0],accrehilolo[0],accrelololo[0],
-          accimhihihi[0],accimlohihi[0],accimhilohi[0],accimlolohi[0],
-          accimhihilo[0],accimlohilo[0],accimhilolo[0],accimlololo[0],
-          inputrehihihi_d,inputrelohihi_d,inputrehilohi_d,inputrelolohi_d,
-          inputrehihilo_d,inputrelohilo_d,inputrehilolo_d,inputrelololo_d,
-          inputimhihihi_d,inputimlohihi_d,inputimhilohi_d,inputimlolohi_d,
-          inputimhihilo_d,inputimlohilo_d,inputimhilolo_d,inputimlololo_d,
-          outputrehihihi_d,outputrelohihi_d,outputrehilohi_d,outputrelolohi_d,
-          outputrehihilo_d,outputrelohilo_d,outputrehilolo_d,outputrelololo_d,
-          outputimhihihi_d,outputimlohihi_d,outputimhilohi_d,outputimlolohi_d,
-          outputimhihilo_d,outputimlohilo_d,outputimhilolo_d,outputimlololo_d,
-          vrblvl);
+      if(nbrcol == 1)
+      {
+         cmplx8_unit_series_vector
+            (dim,deg,
+             cffrehihihi[0],cffrelohihi[0],cffrehilohi[0],cffrelolohi[0],
+             cffrehihilo[0],cffrelohilo[0],cffrehilolo[0],cffrelololo[0],
+             cffimhihihi[0],cffimlohihi[0],cffimhilohi[0],cffimlolohi[0],
+             cffimhihilo[0],cffimlohilo[0],cffimhilolo[0],cffimlololo[0]);
+         // reset the coefficients
+
+         GPU_cmplx8_evaluate_monomials
+            (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
+             cffrehihihi[0],cffrelohihi[0],cffrehilohi[0],cffrelolohi[0],
+             cffrehihilo[0],cffrelohilo[0],cffrehilolo[0],cffrelololo[0],
+             cffimhihihi[0],cffimlohihi[0],cffimhilohi[0],cffimlolohi[0],
+             cffimhihilo[0],cffimlohilo[0],cffimhilolo[0],cffimlololo[0],
+             accrehihihi[0],accrelohihi[0],accrehilohi[0],accrelolohi[0],
+             accrehihilo[0],accrelohilo[0],accrehilolo[0],accrelololo[0],
+             accimhihihi[0],accimlohihi[0],accimhilohi[0],accimlolohi[0],
+             accimhihilo[0],accimlohilo[0],accimhilolo[0],accimlololo[0],
+             inputrehihihi_d,inputrelohihi_d,inputrehilohi_d,inputrelolohi_d,
+             inputrehihilo_d,inputrelohilo_d,inputrehilolo_d,inputrelololo_d,
+             inputimhihihi_d,inputimlohihi_d,inputimhilohi_d,inputimlolohi_d,
+             inputimhihilo_d,inputimlohilo_d,inputimhilolo_d,inputimlololo_d,
+             outputrehihihi_d,outputrelohihi_d,
+             outputrehilohi_d,outputrelolohi_d,
+             outputrehihilo_d,outputrelohilo_d,
+             outputrehilolo_d,outputrelololo_d,
+             outputimhihihi_d,outputimlohihi_d,
+             outputimhilohi_d,outputimlolohi_d,
+             outputimhihilo_d,outputimlohilo_d,
+             outputimhilolo_d,outputimlololo_d,vrblvl);
+      }
+      else
+         GPU_cmplx8_evaluate_columns
+            (dim,deg,nbrcol,szt,nbt,nvr,idx,
+             cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+             cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+             cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+             cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+             inputrehihihi_d,inputrelohihi_d,inputrehilohi_d,inputrelolohi_d,
+             inputrehihilo_d,inputrelohilo_d,inputrehilolo_d,inputrelololo_d,
+             inputimhihihi_d,inputimlohihi_d,inputimhilohi_d,inputimlolohi_d,
+             inputimhihilo_d,inputimlohilo_d,inputimhilolo_d,inputimlololo_d,
+             outputrehihihi_d,outputrelohihi_d,outputrehilohi_d,outputrelolohi_d,
+             outputrehihilo_d,outputrelohilo_d,outputrehilolo_d,outputrelololo_d,
+             outputimhihihi_d,outputimlohihi_d,outputimhilohi_d,outputimlolohi_d,
+             outputimhihilo_d,outputimlohilo_d,outputimhilolo_d,outputimlololo_d,
+             funvalrehihihi_d,funvalrelohihi_d,
+             funvalrehilohi_d,funvalrelolohi_d,
+             funvalrehihilo_d,funvalrelohilo_d,
+             funvalrehilolo_d,funvalrelololo_d,
+             funvalimhihihi_d,funvalimlohihi_d,
+             funvalimhilohi_d,funvalimlolohi_d,
+             funvalimhihilo_d,funvalimlohilo_d,
+             funvalimhilolo_d,funvalimlololo_d,
+             jacvalrehihihi_d,jacvalrelohihi_d,
+             jacvalrehilohi_d,jacvalrelolohi_d,
+             jacvalrehihilo_d,jacvalrelohilo_d,
+             jacvalrehilolo_d,jacvalrelololo_d,
+             jacvalimhihihi_d,jacvalimlohihi_d,
+             jacvalimhilohi_d,jacvalimlolohi_d,
+             jacvalimhihilo_d,jacvalimlohilo_d,
+             jacvalimhilolo_d,jacvalimlololo_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
@@ -431,44 +468,77 @@ void cmplx8_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-         for(int j=0; j<dim; j++) 
-            for(int k=0; k<dim; k++)
-            {
-               jacvalrehihihi_d[i][j][k] = 0.0;
-               jacvalrelohihi_d[i][j][k] = 0.0;
-               jacvalrehilohi_d[i][j][k] = 0.0;
-               jacvalrelolohi_d[i][j][k] = 0.0;
-               jacvalimhihilo_d[i][j][k] = 0.0;
-               jacvalimlohilo_d[i][j][k] = 0.0;
-               jacvalimhilolo_d[i][j][k] = 0.0;
-               jacvalimlololo_d[i][j][k] = 0.0;
-            }
+      if(nbrcol != 1)
+         cmplx8_define_rhs
+            (dim,degp1,
+             mbrehihihi,mbrelohihi,mbrehilohi,mbrelolohi,
+             mbrehihilo,mbrelohilo,mbrehilolo,mbrelololo,
+             mbimhihihi,mbimlohihi,mbimhilohi,mbimlolohi,
+             mbimhihilo,mbimlohilo,mbimhilolo,mbimlololo,
+             funvalrehihihi_d,funvalrelohihi_d,
+             funvalrehilohi_d,funvalrelolohi_d,
+             funvalrehihilo_d,funvalrelohilo_d,
+             funvalrehilolo_d,funvalrelololo_d,
+             funvalimhihihi_d,funvalimlohihi_d,
+             funvalimhilohi_d,funvalimlolohi_d,
+             funvalimhihilo_d,funvalimlohilo_d,
+             funvalimhilolo_d,funvalimlololo_d,
+             rhsrehihihi_d,rhsrelohihi_d,rhsrehilohi_d,rhsrelolohi_d,
+             rhsrehihilo_d,rhsrelohilo_d,rhsrehilolo_d,rhsrelololo_d,
+             rhsimhihihi_d,rhsimlohihi_d,rhsimhilohi_d,rhsimlolohi_d,
+             rhsimhihilo_d,rhsimlohilo_d,rhsimhilolo_d,rhsimlololo_d,vrblvl);
+      else
+      {
+         for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+            for(int j=0; j<dim; j++) 
+               for(int k=0; k<dim; k++)
+               {
+                  jacvalrehihihi_d[i][j][k] = 0.0;
+                  jacvalrelohihi_d[i][j][k] = 0.0;
+                  jacvalrehilohi_d[i][j][k] = 0.0;
+                  jacvalrelolohi_d[i][j][k] = 0.0;
+                  jacvalimhihilo_d[i][j][k] = 0.0;
+                  jacvalimlohilo_d[i][j][k] = 0.0;
+                  jacvalimhilolo_d[i][j][k] = 0.0;
+                  jacvalimlololo_d[i][j][k] = 0.0;
+               }
 
-      if(vrblvl > 0) cout << "linearizing the output ..." << endl;
-      cmplx8_linearize_evaldiff_output
-         (dim,degp1,nvr[0],idx[0],
-          mbrehihihi,mbrelohihi,mbrehilohi,mbrelolohi,
-          mbrehihilo,mbrelohilo,mbrehilolo,mbrelololo,
-          mbimhihihi,mbimlohihi,mbimhilohi,mbimlolohi,
-          mbimhihilo,mbimlohilo,mbimhilolo,mbimlololo,dpr,
-          outputrehihihi_d,outputrelohihi_d,outputrehilohi_d,outputrelolohi_d,
-          outputrehihilo_d,outputrelohilo_d,outputrehilolo_d,outputrelololo_d,
-          outputimhihihi_d,outputimlohihi_d,outputimhilohi_d,outputimlolohi_d,
-          outputimhihilo_d,outputimlohilo_d,outputimhilolo_d,outputimlololo_d,
-          funvalrehihihi_d,funvalrelohihi_d,funvalrehilohi_d,funvalrelolohi_d,
-          funvalrehihilo_d,funvalrelohilo_d,funvalrehilolo_d,funvalrelololo_d,
-          funvalimhihihi_d,funvalimlohihi_d,funvalimhilohi_d,funvalimlolohi_d,
-          funvalimhihilo_d,funvalimlohilo_d,funvalimhilolo_d,funvalimlololo_d,
-          rhsrehihihi_d,rhsrelohihi_d,rhsrehilohi_d,rhsrelolohi_d,
-          rhsrehihilo_d,rhsrelohilo_d,rhsrehilolo_d,rhsrelololo_d,
-          rhsimhihihi_d,rhsimlohihi_d,rhsimhilohi_d,rhsimlolohi_d,
-          rhsimhihilo_d,rhsimlohilo_d,rhsimhilolo_d,rhsimlololo_d,
-          jacvalrehihihi_d,jacvalrelohihi_d,jacvalrehilohi_d,jacvalrelolohi_d,
-          jacvalrehihilo_d,jacvalrelohilo_d,jacvalrehilolo_d,jacvalrelololo_d,
-          jacvalimhihihi_d,jacvalimlohihi_d,jacvalimhilohi_d,jacvalimlolohi_d,
-          jacvalimhihilo_d,jacvalimlohilo_d,jacvalimhilolo_d,jacvalimlololo_d,
-          vrblvl);
+         if(vrblvl > 0) cout << "linearizing the output ..." << endl;
+         cmplx8_linearize_evaldiff_output
+            (dim,degp1,nvr[0],idx[0],
+             mbrehihihi,mbrelohihi,mbrehilohi,mbrelolohi,
+             mbrehihilo,mbrelohilo,mbrehilolo,mbrelololo,
+             mbimhihihi,mbimlohihi,mbimhilohi,mbimlolohi,
+             mbimhihilo,mbimlohilo,mbimhilolo,mbimlololo,dpr,
+             outputrehihihi_d,outputrelohihi_d,
+             outputrehilohi_d,outputrelolohi_d,
+             outputrehihilo_d,outputrelohilo_d,
+             outputrehilolo_d,outputrelololo_d,
+             outputimhihihi_d,outputimlohihi_d,
+             outputimhilohi_d,outputimlolohi_d,
+             outputimhihilo_d,outputimlohilo_d,
+             outputimhilolo_d,outputimlololo_d,
+             funvalrehihihi_d,funvalrelohihi_d,
+             funvalrehilohi_d,funvalrelolohi_d,
+             funvalrehihilo_d,funvalrelohilo_d,
+             funvalrehilolo_d,funvalrelololo_d,
+             funvalimhihihi_d,funvalimlohihi_d,
+             funvalimhilohi_d,funvalimlolohi_d,
+             funvalimhihilo_d,funvalimlohilo_d,
+             funvalimhilolo_d,funvalimlololo_d,
+             rhsrehihihi_d,rhsrelohihi_d,rhsrehilohi_d,rhsrelolohi_d,
+             rhsrehihilo_d,rhsrelohilo_d,rhsrehilolo_d,rhsrelololo_d,
+             rhsimhihihi_d,rhsimlohihi_d,rhsimhilohi_d,rhsimlolohi_d,
+             rhsimhihilo_d,rhsimlohilo_d,rhsimhilolo_d,rhsimlololo_d,
+             jacvalrehihihi_d,jacvalrelohihi_d,
+             jacvalrehilohi_d,jacvalrelolohi_d,
+             jacvalrehihilo_d,jacvalrelohilo_d,
+             jacvalrehilolo_d,jacvalrelololo_d,
+             jacvalimhihihi_d,jacvalimlohihi_d,
+             jacvalimhilohi_d,jacvalimlolohi_d,
+             jacvalimhihilo_d,jacvalimlohilo_d,
+             jacvalimhilolo_d,jacvalimlololo_d,vrblvl);
+      }
    }
    if((vrblvl > 0) && (mode == 2))
    {

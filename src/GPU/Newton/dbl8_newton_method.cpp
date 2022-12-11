@@ -171,25 +171,42 @@ void dbl8_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      // reset the coefficients
-      dbl8_unit_series_vector
-         (dim,deg,cffhihihi[0],cfflohihi[0],cffhilohi[0],cfflolohi[0],
-                  cffhihilo[0],cfflohilo[0],cffhilolo[0],cfflololo[0]);
-
       if(vrblvl > 0)
          cout << "calling GPU_dbl8_evaluate_monomials ..." << endl;
 
-      GPU_dbl8_evaluate_monomials
-         (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
-          cffhihihi[0],cfflohihi[0],cffhilohi[0],cfflolohi[0],
-          cffhihilo[0],cfflohilo[0],cffhilolo[0],cfflololo[0],
-          acchihihi[0],acclohihi[0],acchilohi[0],acclolohi[0],
-          acchihilo[0],acclohilo[0],acchilolo[0],acclololo[0],
-          inputhihihi_d,inputlohihi_d,inputhilohi_d,inputlolohi_d,
-          inputhihilo_d,inputlohilo_d,inputhilolo_d,inputlololo_d,
-          outputhihihi_d,outputlohihi_d,outputhilohi_d,outputlolohi_d,
-          outputhihilo_d,outputlohilo_d,outputhilolo_d,outputlololo_d,
-          vrblvl);
+      if(nbrcol == 1)
+      {
+         dbl8_unit_series_vector
+            (dim,deg,cffhihihi[0],cfflohihi[0],cffhilohi[0],cfflolohi[0],
+                     cffhihilo[0],cfflohilo[0],cffhilolo[0],cfflololo[0]);
+         // reset the coefficients
+
+         GPU_dbl8_evaluate_monomials
+            (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
+             cffhihihi[0],cfflohihi[0],cffhilohi[0],cfflolohi[0],
+             cffhihilo[0],cfflohilo[0],cffhilolo[0],cfflololo[0],
+             acchihihi[0],acclohihi[0],acchilohi[0],acclolohi[0],
+             acchihilo[0],acclohilo[0],acchilolo[0],acclololo[0],
+             inputhihihi_d,inputlohihi_d,inputhilohi_d,inputlolohi_d,
+             inputhihilo_d,inputlohilo_d,inputhilolo_d,inputlololo_d,
+             outputhihihi_d,outputlohihi_d,outputhilohi_d,outputlolohi_d,
+             outputhihilo_d,outputlohilo_d,outputhilolo_d,outputlololo_d,
+             vrblvl);
+      }
+      else
+         GPU_dbl8_evaluate_columns
+            (dim,deg,nbrcol,szt,nbt,nvr,idx,
+             cffhihihi,cfflohihi,cffhilohi,cfflolohi,
+             cffhihilo,cfflohilo,cffhilolo,cfflololo,
+             inputhihihi_d,inputlohihi_d,inputhilohi_d,inputlolohi_d,
+             inputhihilo_d,inputlohilo_d,inputhilolo_d,inputlololo_d,
+             outputhihihi_d,outputlohihi_d,outputhilohi_d,outputlolohi_d,
+             outputhihilo_d,outputlohilo_d,outputhilolo_d,outputlololo_d,
+             funvalhihihi_d,funvallohihi_d,funvalhilohi_d,funvallolohi_d,
+             funvalhihilo_d,funvallohilo_d,funvalhilolo_d,funvallololo_d,
+             jacvalhihihi_d,jacvallohihi_d,jacvalhilohi_d,jacvallolohi_d,
+             jacvalhihilo_d,jacvallohilo_d,jacvalhilolo_d,jacvallololo_d,
+             vrblvl);
    }
    if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
@@ -256,29 +273,46 @@ void dbl8_newton_qrstep
    }
    if((mode == 0) || (mode == 2))
    {
-      for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
-         for(int j=0; j<dim; j++) 
-            for(int k=0; k<dim; k++)
-            {
-               jacvalhihihi_d[i][j][k] = 0.0; jacvallohihi_d[i][j][k] = 0.0;
-               jacvalhilohi_d[i][j][k] = 0.0; jacvallolohi_d[i][j][k] = 0.0;
-               jacvalhihilo_d[i][j][k] = 0.0; jacvallohilo_d[i][j][k] = 0.0;
-               jacvalhilolo_d[i][j][k] = 0.0; jacvallololo_d[i][j][k] = 0.0;
-            }
+      if(nbrcol != 1)
+         dbl8_define_rhs
+            (dim,degp1,
+             mbhihihi,mblohihi,mbhilohi,mblolohi,
+             mbhihilo,mblohilo,mbhilolo,mblololo,
+             funvalhihihi_d,funvallohihi_d,funvalhilohi_d,funvallolohi_d,
+             funvalhihilo_d,funvallohilo_d,funvalhilolo_d,funvallololo_d,
+             rhshihihi_d,rhslohihi_d,rhshilohi_d,rhslolohi_d,
+             rhshihilo_d,rhslohilo_d,rhshilolo_d,rhslololo_d,vrblvl);
+      else
+      {
+         for(int i=0; i<degp1; i++) // initialize the Jacobian to zero
+            for(int j=0; j<dim; j++) 
+               for(int k=0; k<dim; k++)
+               {
+                  jacvalhihihi_d[i][j][k] = 0.0;
+                  jacvallohihi_d[i][j][k] = 0.0;
+                  jacvalhilohi_d[i][j][k] = 0.0;
+                  jacvallolohi_d[i][j][k] = 0.0;
+                  jacvalhihilo_d[i][j][k] = 0.0;
+                  jacvallohilo_d[i][j][k] = 0.0;
+                  jacvalhilolo_d[i][j][k] = 0.0;
+                  jacvallololo_d[i][j][k] = 0.0;
+               }
 
-      if(vrblvl > 0) cout << "linearizing the output ..." << endl;
-      dbl8_linearize_evaldiff_output
-         (dim,degp1,nvr[0],idx[0],
-          mbhihihi,mblohihi,mbhilohi,mblolohi,
-          mbhihilo,mblohilo,mbhilolo,mblololo,dpr,
-          outputhihihi_d,outputlohihi_d,outputhilohi_d,outputlolohi_d,
-          outputhihilo_d,outputlohilo_d,outputhilolo_d,outputlololo_d,
-          funvalhihihi_d,funvallohihi_d,funvalhilohi_d,funvallolohi_d,
-          funvalhihilo_d,funvallohilo_d,funvalhilolo_d,funvallololo_d,
-          rhshihihi_d,rhslohihi_d,rhshilohi_d,rhslolohi_d,
-          rhshihilo_d,rhslohilo_d,rhshilolo_d,rhslololo_d,
-          jacvalhihihi_d,jacvallohihi_d,jacvalhilohi_d,jacvallolohi_d,
-          jacvalhihilo_d,jacvallohilo_d,jacvalhilolo_d,jacvallololo_d,vrblvl);
+         if(vrblvl > 0) cout << "linearizing the output ..." << endl;
+         dbl8_linearize_evaldiff_output
+            (dim,degp1,nvr[0],idx[0],
+             mbhihihi,mblohihi,mbhilohi,mblolohi,
+             mbhihilo,mblohilo,mbhilolo,mblololo,dpr,
+             outputhihihi_d,outputlohihi_d,outputhilohi_d,outputlolohi_d,
+             outputhihilo_d,outputlohilo_d,outputhilolo_d,outputlololo_d,
+             funvalhihihi_d,funvallohihi_d,funvalhilohi_d,funvallolohi_d,
+             funvalhihilo_d,funvallohilo_d,funvalhilolo_d,funvallololo_d,
+             rhshihihi_d,rhslohihi_d,rhshilohi_d,rhslolohi_d,
+             rhshihilo_d,rhslohilo_d,rhshilolo_d,rhslololo_d,
+             jacvalhihihi_d,jacvallohihi_d,jacvalhilohi_d,jacvallolohi_d,
+             jacvalhihilo_d,jacvallohilo_d,jacvalhilolo_d,jacvallololo_d,
+             vrblvl);
+      }
    }
    if((vrblvl > 0) && (mode == 2))
    {
