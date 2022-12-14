@@ -13,7 +13,9 @@
 #include "dbl8_tabs_kernels.h"
 #include "dbl_test_utilities.h"
 #include "dbl8_test_utilities.h"
+#include "write_dbl8_bstimeflops.h"
 #include "dbl_data_files.h"
+#include "dbl_tabs_testers.h"
 
 using namespace std;
 
@@ -1193,45 +1195,10 @@ void test_real8_upper_tiling ( void )
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
-   cout << "          Time spent to invert diagonal tiles : ";
-   cout << invlapsed << " milliseconds." << endl;
-   cout << "   Time spent to multiply with inverted tiles : ";
-   cout << mullapsed << " milliseconds." << endl;
-   cout << "             Time spent for back substitution : ";
-   cout << sublapsed << " milliseconds." << endl;
-   cout << "                    Time spent by all kernels : ";
-   cout << elapsedms << " milliseconds." << endl;
-   cout << "        Total GPU wall clock computation time : ";
-   cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
-   cout << endl;
-   cout << "             Number of additions/subtractions : "
-        << addcnt << " x 270 " << endl;
-   cout << "                    Number of multiplications : "
-        << mulcnt << " x 1742 " << endl;
-   cout << "                          Number of divisions : "
-        << divcnt << " x 5126 " << endl;
-   long long int flopcnt = 270*addcnt + 1742*mulcnt + 5126*divcnt;
-   cout << "    Total number of floating-point operations : "
-        << flopcnt << endl;
-   cout << endl;
-   long long int bytecnt = 4*sizetile*numtiles*(numtiles+1)*8
-                         + 8*sizetile*numtiles*8;
-   cout << "    Total number of bytes : " << bytecnt << endl << endl;
-   const int gigacnt = pow(2.0,30);
-   double intensity = ((double) flopcnt)/bytecnt;
-   cout << "     Arithmetic intensity : "
-        << scientific << setprecision(3) << intensity
-        << " #flops/#bytes" << endl << endl;
-   double kernflops = 1000.0*((double) flopcnt)/elapsedms;
-   double wallflops = ((double) flopcnt)/timelapsed_d;
-   cout << "  Kernel Time Flops : "
-        << scientific << setprecision(3) << kernflops;
-   cout << fixed << setprecision(3)
-        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
-   cout << "   Wall Clock Flops : "
-        << scientific << setprecision(3) << wallflops;
-   cout << fixed << setprecision(3)
-        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+
+   write_dbl8_bstimeflops
+     (sizetile,numtiles,0,invlapsed,mullapsed,sublapsed,elapsedms,
+      timelapsed_d,addcnt,mulcnt,divcnt);
 
    for(int i=0; i<dim; i++)
    {
@@ -1816,45 +1783,10 @@ void test_cmplx8_upper_tiling ( void )
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
-   cout << "          Time spent to invert diagonal tiles : ";
-   cout << invlapsed << " milliseconds." << endl;
-   cout << "   Time spent to multiply with inverted tiles : ";
-   cout << mullapsed << " milliseconds." << endl;
-   cout << "             Time spent for back substitution : ";
-   cout << sublapsed << " milliseconds." << endl;
-   cout << "                    Time spent by all kernels : ";
-   cout << elapsedms << " milliseconds." << endl;
-   cout << "        Total GPU wall clock computation time : ";
-   cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
-   cout << endl;
-   cout << "             Number of additions/subtractions : "
-        << addcnt << " x 270 " << endl;
-   cout << "                    Number of multiplications : "
-        << mulcnt << " x 1742 " << endl;
-   cout << "                          Number of divisions : "
-        << divcnt << " x 5126 " << endl;
-   long long int flopcnt = 270*addcnt + 1742*mulcnt + 5126*divcnt;
-   cout << "    Total number of floating-point operations : "
-        << flopcnt << endl;
-   cout << endl;
-   long long int bytecnt = 4*sizetile*numtiles*(numtiles+1)*16
-                         + 8*sizetile*numtiles*16;
-   cout << "    Total number of bytes : " << bytecnt << endl << endl;
-   const int gigacnt = pow(2.0,30);
-   double intensity = ((double) flopcnt)/bytecnt;
-   cout << "     Arithmetic intensity : "
-        << scientific << setprecision(3) << intensity
-        << " #flops/#bytes" << endl << endl;
-   double kernflops = 1000.0*((double) flopcnt)/elapsedms;
-   double wallflops = ((double) flopcnt)/timelapsed_d;
-   cout << "  Kernel Time Flops : "
-        << scientific << setprecision(3) << kernflops;
-   cout << fixed << setprecision(3)
-        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
-   cout << "   Wall Clock Flops : "
-        << scientific << setprecision(3) << wallflops;
-   cout << fixed << setprecision(3)
-        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+
+   write_dbl8_bstimeflops
+     (sizetile,numtiles,1,invlapsed,mullapsed,sublapsed,elapsedms,
+      timelapsed_d,addcnt,mulcnt,divcnt);
 
    for(int i=0; i<dim; i++)
    {

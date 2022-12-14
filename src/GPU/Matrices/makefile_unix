@@ -238,6 +238,22 @@ dbl_tabs_flopcounts.o:
 	@-echo ">>> compling dbl_tabs_flopcounts ..."
 	$(gpp) -O3 -c dbl_tabs_flopcounts.cpp
 
+write_dbl_bstimeflops.o:
+	@-echo ">>> compling write_dbl_bstimeflops ..."
+	$(gpp) -O3 -c write_dbl_bstimeflops.cpp
+
+write_dbl2_bstimeflops.o:
+	@-echo ">>> compling write_dbl2_bstimeflops ..."
+	$(gpp) -O3 -c write_dbl2_bstimeflops.cpp
+
+write_dbl4_bstimeflops.o:
+	@-echo ">>> compling write_dbl4_bstimeflops ..."
+	$(gpp) -O3 -c write_dbl4_bstimeflops.cpp
+
+write_dbl8_bstimeflops.o:
+	@-echo ">>> compling write_dbl8_bstimeflops ..."
+	$(gpp) -O3 -c write_dbl8_bstimeflops.cpp
+
 dbl_tabs_testers.o:
 	@-echo ">>> compiling dbl_tabs_testers ..."
 	$(gpp) -O3 -c -I$(CUDA) dbl_tabs_testers.cpp
@@ -246,16 +262,19 @@ test_dbl_tabs.o:
 	@-echo ">>> compiling test_dbl_tabs ..."
 	$(gpp) -O3 -c test_dbl_tabs.cpp
 
-test_dbl_tabs: test_dbl_tabs.o dbl_tabs_testers.o dbl_tabs_host.o \
-               dbl_tabs_kernels.o dbl_factorizations.o dbl_tabs_flopcounts.o \
-               dbl_data_files.o dbl_convolutions_host.o dbl_test_utilities.o \
-               random_numbers.o random_series.o random_matrices.o
+test_dbl_tabs: test_dbl_tabs.o dbl_tabs_testers.o \
+               dbl_tabs_host.o dbl_tabs_kernels.o dbl_factorizations.o \
+               dbl_tabs_flopcounts.o write_dbl_bstimeflops.o \
+               dbl_data_files.o dbl_test_utilities.o \
+               random_numbers.o random_series.o random_matrices.o \
+               dbl_convolutions_host.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_tabs test_dbl_tabs.o dbl_tabs_testers.o \
-                  dbl_tabs_flopcounts.o dbl_data_files.o \
+                  dbl_tabs_host.o dbl_tabs_kernels.o dbl_factorizations.o \
+                  dbl_tabs_flopcounts.o write_dbl_bstimeflops.o \
+                  dbl_data_files.o dbl_test_utilities.o \
                   random_numbers.o random_series.o random_matrices.o \
-                  dbl_factorizations.o dbl_convolutions_host.o \
-                  dbl_tabs_host.o dbl_tabs_kernels.o dbl_test_utilities.o \
+                  dbl_convolutions_host.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 dbl2_tabs_host.o:
@@ -280,7 +299,8 @@ test_dbl2_tabs.o:
 	@-echo ">>> compiling test_dbl2_tabs ..."
 	$(gpp) -O3 -c test_dbl2_tabs.cpp
 
-test_dbl2_tabs: test_dbl2_tabs.o dbl2_tabs_testers.o dbl_tabs_flopcounts.o \
+test_dbl2_tabs: test_dbl2_tabs.o dbl2_tabs_testers.o \
+                dbl_tabs_flopcounts.o write_dbl2_bstimeflops.o \
                 double_double_functions.o dbl2_tabs_host.o \
                 dbl_test_utilities.o dbl2_test_utilities.o dbl_data_files.o \
                 dbl2_tabs_kernels.o dbl2_factorizations.o \
@@ -290,8 +310,8 @@ test_dbl2_tabs: test_dbl2_tabs.o dbl2_tabs_testers.o dbl_tabs_flopcounts.o \
 	$(gpp) -o test_dbl2_tabs test_dbl2_tabs.o dbl2_tabs_testers.o \
                   dbl_test_utilities.o dbl2_test_utilities.o dbl_data_files.o \
                   dbl_tabs_flopcounts.o dbl_factorizations.o \
-                  double_double_functions.o dbl2_tabs_host.o \
-                  dbl2_tabs_kernels.o dbl2_factorizations.o \
+                  write_dbl2_bstimeflops.o double_double_functions.o \
+                  dbl2_tabs_host.o dbl2_tabs_kernels.o dbl2_factorizations.o \
                   random_numbers.o random2_vectors.o \
                   random_series.o random_matrices.o random2_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
@@ -322,8 +342,8 @@ test_dbl4_tabs: test_dbl4_tabs.o \
                 double_double_functions.o quad_double_functions.o \
                 dbl_test_utilities.o dbl_factorizations.o \
                 dbl4_test_utilities.o dbl4_tabs_testers.o \
-                dbl4_factorizations.o dbl4_tabs_host.o \
-                dbl4_tabs_kernels.o dbl_tabs_flopcounts.o \
+                dbl4_factorizations.o dbl4_tabs_host.o dbl4_tabs_kernels.o \
+                dbl_tabs_flopcounts.o write_dbl4_bstimeflops.o \
                 dbl_data_files.o random_numbers.o random4_vectors.o \
                 random_series.o random_matrices.o random4_matrices.o
 	@-echo ">>> linking ..."
@@ -331,8 +351,8 @@ test_dbl4_tabs: test_dbl4_tabs.o \
                   double_double_functions.o quad_double_functions.o \
                   dbl_test_utilities.o dbl_factorizations.o \
                   dbl4_test_utilities.o dbl4_tabs_testers.o \
-                  dbl4_tabs_host.o dbl4_factorizations.o \
-                  dbl4_tabs_kernels.o dbl_tabs_flopcounts.o \
+                  dbl4_factorizations.o dbl4_tabs_host.o dbl4_tabs_kernels.o \
+                  dbl_tabs_flopcounts.o write_dbl4_bstimeflops.o \
                   dbl_data_files.o random_numbers.o random4_vectors.o \
                   random_series.o random_matrices.o random4_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
@@ -361,7 +381,8 @@ test_dbl8_tabs.o:
 
 test_dbl8_tabs: test_dbl8_tabs.o dbl8_tabs_testers.o \
                 double_double_functions.o quad_double_functions.o \
-                octo_double_functions.o dbl_tabs_flopcounts.o \
+                octo_double_functions.o \
+                dbl_tabs_flopcounts.o write_dbl8_bstimeflops.o \
                 dbl_factorizations.o dbl_test_utilities.o dbl_data_files.o \
                 dbl8_tabs_testers.o dbl8_factorizations.o \
                 dbl8_tabs_host.o dbl8_tabs_kernels.o \
@@ -374,7 +395,8 @@ test_dbl8_tabs: test_dbl8_tabs.o dbl8_tabs_testers.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o dbl8_factorizations.o \
                   dbl8_tabs_testers.o dbl8_test_utilities.o dbl_data_files.o \
-                  dbl8_tabs_host.o dbl8_tabs_kernels.o dbl_tabs_flopcounts.o \
+                  dbl8_tabs_host.o dbl8_tabs_kernels.o \
+                  dbl_tabs_flopcounts.o write_dbl8_bstimeflops.o \
                   random_numbers.o random8_vectors.o \
                   random_series.o random_matrices.o random8_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
@@ -650,7 +672,10 @@ clean:
 	/bin/rm -f -r test_dbl8_factors.o test_dbl8_factors
 	/bin/rm -f -r dbl_tabs_host.o dbl_tabs_kernels.o
 	/bin/rm -f -r dbl_test_utilities.o dbl_tabs_testers.o
-	/bin/rm -f -r dbl_tabs_flopcounts.o
+	/bin/rm -f -r dbl_tabs_flopcounts.o write_dbl_bstimeflops.o
+	/bin/rm -f -r write_dbl2_bstimeflops.o
+	/bin/rm -f -r write_dbl4_bstimeflops.o
+	/bin/rm -f -r write_dbl8_bstimeflops.o
 	/bin/rm -f -r test_dbl_tabs.o test_dbl_tabs prompt_baqr_setup.o
 	/bin/rm -f -r random2_vectors.o random2_matrices.o
 	/bin/rm -f -r random4_vectors.o random4_matrices.o

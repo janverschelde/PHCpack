@@ -347,6 +347,34 @@ dbl_tabs_flopcounts.obj:
                  /I$(CUDASDK)/include \
                  /Fo: dbl_tabs_flopcounts.obj /EHsc
 
+write_dbl_bstimeflops.obj:
+	@-echo ">>> compiling write_dbl_bstimeflops ..."
+	$(CL)\cl /c write_dbl_bstimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl_bstimeflops.obj /EHsc
+
+write_dbl2_bstimeflops.obj:
+	@-echo ">>> compiling write_dbl2_bstimeflops ..."
+	$(CL)\cl /c write_dbl2_bstimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl2_bstimeflops.obj /EHsc
+
+write_dbl4_bstimeflops.obj:
+	@-echo ">>> compiling write_dbl4_bstimeflops ..."
+	$(CL)\cl /c write_dbl4_bstimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl4_bstimeflops.obj /EHsc
+
+write_dbl8_bstimeflops.obj:
+	@-echo ">>> compiling write_dbl8_bstimeflops ..."
+	$(CL)\cl /c write_dbl8_bstimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl8_bstimeflops.obj /EHsc
+
 gettimeofday4win.obj:
 	@-echo ">>> compiling gettimeofday4win ..."
 	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 \
@@ -380,14 +408,16 @@ test_dbl_tabs.obj:
                  /I$(CUDASDK)/include \
                  /Fo: test_dbl_tabs.obj /EHsc
 
-test_dbl_tabs: test_dbl_tabs.obj dbl_tabs_testers.obj dbl_tabs_flopcounts.obj \
+test_dbl_tabs: test_dbl_tabs.obj dbl_tabs_testers.obj \
+               dbl_tabs_flopcounts.obj write_dbl_bstimeflops.obj \
 	       dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_test_utilities.obj \
                dbl_convolutions_host.obj dbl_factorizations.obj \
                gettimeofday4win.obj dbl_data_files.obj \
                random_numbers.obj random_series.obj random_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_tabs.exe \
-             test_dbl_tabs.obj dbl_tabs_testers.obj dbl_tabs_flopcounts.obj \
+             test_dbl_tabs.obj dbl_tabs_testers.obj \
+             dbl_tabs_flopcounts.obj write_dbl_bstimeflops.obj \
              dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_test_utilities.obj \
              dbl_convolutions_host.obj dbl_factorizations.obj \
              gettimeofday4win.obj dbl_data_files.obj \
@@ -430,7 +460,8 @@ test_dbl2_tabs.obj:
                  /Fo: test_dbl2_tabs.obj /EHsc
 
 test_dbl2_tabs: test_dbl2_tabs.obj dbl2_tabs_testers.obj \
-                dbl_tabs_flopcounts.obj dbl2_test_utilities.obj \
+                dbl_tabs_flopcounts.obj write_dbl2_bstimeflops.obj \
+                dbl2_test_utilities.obj \
 		dbl_test_utilities.obj dbl_factorizations.obj \
                 double_double_functions.obj dbl2_tabs_host.obj \
 		dbl2_tabs_kernels.obj dbl2_factorizations.obj \
@@ -442,6 +473,7 @@ test_dbl2_tabs: test_dbl2_tabs.obj dbl2_tabs_testers.obj \
              dbl2_tabs_testers.obj dbl2_test_utilities.obj \
 	     dbl_test_utilities.obj dbl_factorizations.obj \
 	     gettimeofday4win.obj dbl_tabs_flopcounts.obj \
+	     write_dbl2_bstimeflops.obj \
              dbl2_tabs_host.obj double_double_functions.obj \
 	     dbl2_tabs_kernels.obj dbl2_factorizations.obj \
              random_numbers.obj random2_vectors.obj dbl_data_files.obj \
@@ -488,6 +520,7 @@ test_dbl4_tabs: test_dbl4_tabs.obj dbl4_tabs_testers.obj \
                 double_double_functions.obj quad_double_functions.obj \
                 dbl4_tabs_host.obj dbl4_factorizations.obj \
 		dbl4_tabs_kernels.obj dbl_tabs_flopcounts.obj \
+                write_dbl4_bstimeflops.obj \
 		dbl_test_utilities.obj dbl_factorizations.obj \
 		gettimeofday4win.obj random_series.obj random_matrices.obj \
                 random_numbers.obj random4_vectors.obj random4_matrices.obj
@@ -499,6 +532,7 @@ test_dbl4_tabs: test_dbl4_tabs.obj dbl4_tabs_testers.obj \
 	     dbl4_tabs_host.obj dbl4_factorizations.obj \
 	     dbl_test_utilities.obj dbl_factorizations.obj \
 	     dbl4_tabs_kernels.obj dbl_tabs_flopcounts.obj \
+             write_dbl4_bstimeflops.obj \
              random_numbers.obj random_series.obj random_matrices.obj \
 	     random4_vectors.obj random4_matrices.obj
 
@@ -543,6 +577,7 @@ test_dbl8_tabs: test_dbl8_tabs.obj dbl8_tabs_testers.obj \
 		octo_double_functions.obj dbl8_tabs_kernels.obj \
                 dbl8_tabs_host.obj dbl8_factorizations.obj \
 		dbl8_test_utilities.obj dbl_tabs_flopcounts.obj \
+                write_dbl8_bstimeflops.obj \
 		dbl_factorizations.obj dbl_test_utilities.obj \
                 gettimeofday4win.obj dbl_data_files.obj \
                 random_numbers.obj random8_vectors.obj \
@@ -550,6 +585,7 @@ test_dbl8_tabs: test_dbl8_tabs.obj dbl8_tabs_testers.obj \
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl8_tabs.exe test_dbl8_tabs.obj \
              dbl8_tabs_testers.obj dbl_tabs_flopcounts.obj \
+             write_dbl8_bstimeflops.obj \
              gettimeofday4win.obj dbl_data_files.obj \
 	     dbl_factorizations.obj dbl_test_utilities.obj \
              double_double_functions.obj quad_double_functions.obj \
@@ -931,6 +967,8 @@ clean:
 	del dbl_matrices_testers.obj dbl_vectors_testers.obj
 	del dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_test_utilities.obj
 	del dbl_tabs_testers.obj test_dbl_tabs.obj dbl_tabs_flopcounts.obj
+	del write_dbl_bstimeflops.obj write_dbl2_bstimeflops.obj
+	del write_dbl4_bstimeflops.obj write_dbl8_bstimeflops.obj
 	del test_dbl_tabs.obj test_dbl_tabs_lib
 	del test_dbl_tabs.exe test_dbl_tabs.exp
 	del double_double_functions.obj

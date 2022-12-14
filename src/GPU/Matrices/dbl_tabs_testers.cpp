@@ -11,6 +11,7 @@
 #include "dbl_tabs_host.h"
 #include "dbl_tabs_kernels.h"
 #include "dbl_test_utilities.h"
+#include "write_dbl_bstimeflops.h"
 #include "dbl_tabs_testers.h"
 #include "dbl_data_files.h"
 
@@ -402,39 +403,10 @@ void test_real_upper_tiling ( void )
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
-   cout << "          Time spent to invert diagonal tiles : ";
-   cout << invlapsed << " milliseconds." << endl;
-   cout << "   Time spent to multiply with inverted tiles : ";
-   cout << mullapsed << " milliseconds." << endl;
-   cout << "             Time spent for back substitution : ";
-   cout << sublapsed << " milliseconds." << endl;
-   cout << "                    Time spent by all kernels : ";
-   cout << elapsedms << " milliseconds." << endl;
-   cout << "        Total GPU wall clock computation time : ";
-   cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
-   cout << endl;
-   cout << "             Number of additions/subtractions : "
-        << addcnt << endl;
-   cout << "                    Number of multiplications : "
-        << mulcnt << endl;
-   cout << "                          Number of divisions : "
-        << divcnt << endl;
-   long long int flopcnt = addcnt + mulcnt + divcnt;
-   cout << "    Total number of floating-point operations : "
-        << flopcnt << endl;
-   cout << endl;
-   cout << scientific << setprecision(3);
-   double kernflops = 1000.0*((double) flopcnt)/elapsedms;
-   double wallflops = ((double) flopcnt)/timelapsed_d;
-   const int gigacnt = pow(2.0,30);
-   cout << "Kernel Time Flops : "
-        << scientific << setprecision(3) << kernflops;
-   cout << fixed << setprecision(3)
-        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
-   cout << " Wall Clock Flops : "
-        << scientific << setprecision(3) << wallflops;
-   cout << fixed << setprecision(3)
-        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+
+   write_dbl_bstimeflops
+     (invlapsed,mullapsed,sublapsed,elapsedms,timelapsed_d,
+      addcnt,mulcnt,divcnt);
 
    for(int i=0; i<dim; i++)
    {
@@ -604,39 +576,10 @@ void test_cmplx_upper_tiling ( void )
    cout << fixed << setprecision(3);
    cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
         << timelapsed_h << " seconds." << endl;
-   cout << "          Time spent to invert diagonal tiles : ";
-   cout << invlapsed << " milliseconds." << endl;
-   cout << "   Time spent to multiply with inverted tiles : ";
-   cout << mullapsed << " milliseconds." << endl;
-   cout << "             Time spent for back substitution : ";
-   cout << sublapsed << " milliseconds." << endl;
-   cout << "                    Time spent by all kernels : ";
-   cout << elapsedms << " milliseconds." << endl;
-   cout << "        Total GPU wall clock computation time : ";
-   cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
-   cout << endl;
-   cout << "             Number of additions/subtractions : "
-        << addcnt << endl;
-   cout << "                    Number of multiplications : "
-        << mulcnt << endl;
-   cout << "                          Number of divisions : "
-        << divcnt << endl;
-   long long int flopcnt = addcnt + mulcnt + divcnt;
-   cout << "    Total number of floating-point operations : "
-        << flopcnt << endl;
-   cout << endl;
-   cout << scientific << setprecision(3);
-   double kernflops = 1000.0*((double) flopcnt)/elapsedms;
-   double wallflops = ((double) flopcnt)/timelapsed_d;
-   const int gigacnt = pow(2.0,30);
-   cout << "Kernel Time Flops : "
-        << scientific << setprecision(3) << kernflops;
-   cout << fixed << setprecision(3)
-        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
-   cout << " Wall Clock Flops : "
-        << scientific << setprecision(3) << wallflops;
-   cout << fixed << setprecision(3)
-        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+
+   write_dbl_bstimeflops
+     (invlapsed,mullapsed,sublapsed,elapsedms,timelapsed_d,
+      addcnt,mulcnt,divcnt);
 
    for(int i=0; i<dim; i++)
    {
