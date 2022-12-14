@@ -30,7 +30,7 @@ void dbl8_evaldiffdata_to_output
    double ***outputhihilo, double ***outputlohilo,
    double ***outputhilolo, double ***outputlololo,
    int dim, int nbr, int deg, int *nvr,
-   int **idx, int *fstart, int *bstart, int *cstart, bool verbose )
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl )
 {
    const int deg1 = deg+1;
    int ix0,ix1,ix2;
@@ -39,7 +39,7 @@ void dbl8_evaldiffdata_to_output
    {
       ix1 = fstart[k] + (nvr[k]-1)*deg1;
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "monomial " << k << " update starts at " << ix1 << endl;
 
       for(int i=0; i<=deg; i++)
@@ -109,7 +109,7 @@ void dbl8_evaldiffdata_to_output
                ix0 = idx[k][j];            // j-th variable in monomial k
                ix1 = cstart[k] + (j-1)*deg1;
 
-               if(verbose)
+               if(vrblvl > 1)
                   cout << "monomial " << k << " derivative " << ix0
                        << " update starts at " << ix1 << endl;
 
@@ -148,7 +148,7 @@ void cmplx8_evaldiffdata_to_output
    double ***outputimhihilo, double ***outputimlohilo,
    double ***outputimhilolo, double ***outputimlololo,
    int dim, int nbr, int deg, int *nvr,
-   int **idx, int *fstart, int *bstart, int *cstart, bool verbose )
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl )
 {
    const int deg1 = deg+1;
    int ix0,ix1,ix2;
@@ -157,7 +157,7 @@ void cmplx8_evaldiffdata_to_output
    {
       ix1 = fstart[k] + (nvr[k]-1)*deg1;
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "monomial " << k << " update starts at " << ix1 << endl;
 
       for(int i=0; i<=deg; i++)
@@ -259,7 +259,7 @@ void cmplx8_evaldiffdata_to_output
                ix0 = idx[k][j];            // j-th variable in monomial k
                ix1 = cstart[k] + (j-1)*deg1;
 
-               if(verbose)
+               if(vrblvl > 1)
                   cout << "monomial " << k << " derivative " << ix0
                        << " update starts at " << ix1 << endl;
 
@@ -305,7 +305,7 @@ void GPU_dbl8_mon_evaldiff
    double ***outputhilohi, double ***outputlolohi,
    double ***outputhihilo, double ***outputlohilo,
    double ***outputhilolo, double ***outputlololo, ConvolutionJobs cnvjobs,
-   double *cnvlapms, double *elapsedms, double *walltimesec, bool verbose )
+   double *cnvlapms, double *elapsedms, double *walltimesec, int vrblvl )
 {
    const int deg1 = deg+1;
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
@@ -320,7 +320,7 @@ void GPU_dbl8_mon_evaldiff
    coefficient_indices
       (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
 
-   if(verbose)
+   if(vrblvl > 1)
       write_coefficient_indices
          (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
 
@@ -403,6 +403,7 @@ void GPU_dbl8_mon_evaldiff
    *cnvlapms = 0.0;
    float milliseconds;
    struct timeval begintime,endtime; // wall clock time of computations
+   bool verbose = (vrblvl > 1);
 
    gettimeofday(&begintime,0);
    for(int k=0; k<cnvjobs.get_depth(); k++)
@@ -467,9 +468,9 @@ void GPU_dbl8_mon_evaldiff
        datahihilo_h,datalohilo_h,datahilolo_h,datalololo_h,
        outputhihihi,outputlohihi,outputhilohi,outputlolohi,
        outputhihilo,outputlohilo,outputhilolo,outputlololo,
-       dim,nbr,deg,nvr,idx,fstart,bstart,cstart,verbose);
+       dim,nbr,deg,nvr,idx,fstart,bstart,cstart,vrblvl);
 
-   if(verbose)
+   if(vrblvl > 0)
       write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
 
    cudaFree(datahihihi_d); cudaFree(datalohihi_d);
@@ -513,7 +514,7 @@ void GPU_cmplx8_mon_evaldiff
    double ***outputimhihilo, double ***outputimlohilo,
    double ***outputimhilolo, double ***outputimlololo,
    ConvolutionJobs cnvjobs,
-   double *cnvlapms, double *elapsedms, double *walltimesec, bool verbose )
+   double *cnvlapms, double *elapsedms, double *walltimesec, int vrblvl )
 {
    const int deg1 = deg+1;
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
@@ -528,7 +529,7 @@ void GPU_cmplx8_mon_evaldiff
    coefficient_indices
       (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
 
-   if(verbose)
+   if(vrblvl > 1)
       write_coefficient_indices
          (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
 
@@ -666,6 +667,7 @@ void GPU_cmplx8_mon_evaldiff
    *cnvlapms = 0.0;
    float milliseconds;
    struct timeval begintime,endtime; // wall clock time of computations
+   bool verbose = (vrblvl > 1);
 
    gettimeofday(&begintime,0);
    for(int k=0; k<cnvjobs.get_depth(); k++)
@@ -746,9 +748,9 @@ void GPU_cmplx8_mon_evaldiff
        outputrehihilo,outputrelohilo,outputrehilolo,outputrelololo,
        outputimhihihi,outputimlohihi,outputimhilohi,outputimlolohi,
        outputimhihilo,outputimlohilo,outputimhilolo,outputimlololo,
-       dim,nbr,deg,nvr,idx,fstart,bstart,cstart,verbose);
+       dim,nbr,deg,nvr,idx,fstart,bstart,cstart,vrblvl);
 
-   if(verbose)
+   if(vrblvl > 0)
       write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
 
    cudaFree(datarehihihi_d); cudaFree(datarelohihi_d);
@@ -903,7 +905,7 @@ void GPU_dbl8_evaluate_monomials
        inputhihilo,inputlohilo,inputhilolo,inputlololo,
        outputhihihi,outputlohihi,outputhilohi,outputlolohi,
        outputhihilo,outputlohilo,outputhilolo,outputlololo,jobs,
-       &cnvlapms,&elapsedms,&walltimesec,verbose);
+       &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
    if(vrblvl > 1)
    {
@@ -1155,7 +1157,7 @@ void GPU_cmplx8_evaluate_monomials
        outputrehihilo,outputrelohilo,outputrehilolo,outputrelololo,
        outputimhihihi,outputimlohihi,outputimhilohi,outputimlolohi,
        outputimhihilo,outputimlohilo,outputimhilolo,outputimlololo,jobs,
-       &cnvlapms,&elapsedms,&walltimesec,verbose);
+       &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
    if(vrblvl > 1)
    {
@@ -1334,7 +1336,6 @@ void GPU_dbl8_evaluate_columns
       }
    }
    bool verbose = (vrblvl > 1);
-
    double cnvlapms,elapsedms,walltimesec;
 
    for(int i=0; i<nbrcol; i++)
@@ -1372,7 +1373,7 @@ void GPU_dbl8_evaluate_columns
           inputhihilo,inputlohilo,inputhilolo,inputlololo,
           outputhihihi,outputlohihi,outputhilohi,outputlolohi,
           outputhihilo,outputlohilo,outputhilolo,outputlololo,jobs,
-          &cnvlapms,&elapsedms,&walltimesec,verbose);
+          &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
       for(int j=0; j<dim; j++)
          if(nvr[i][j] > 0)       // update values
@@ -1566,7 +1567,6 @@ void GPU_cmplx8_evaluate_columns
       }
    }
    bool verbose = (vrblvl > 1);
-
    double cnvlapms,elapsedms,walltimesec;
 
    for(int i=0; i<nbrcol; i++)
@@ -1610,7 +1610,7 @@ void GPU_cmplx8_evaluate_columns
           outputrehihilo,outputrelohilo,outputrehilolo,outputrelololo,
           outputimhihihi,outputimlohihi,outputimhilohi,outputimlolohi,
           outputimhihilo,outputimlohilo,outputimhilolo,outputimlololo,jobs,
-          &cnvlapms,&elapsedms,&walltimesec,verbose);
+          &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
       for(int j=0; j<dim; j++)
          if(nvr[i][j] > 0)       // update values

@@ -9,7 +9,7 @@
 
 void dbl_evaldiffdata_to_output
  ( double *data, double ***output, int dim, int nbr, int deg, int *nvr,
-   int **idx, int *fstart, int *bstart, int *cstart, bool verbose );
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl );
 /*
  * DESCRIPTION :
  *   Extracts the real data computed on the device to the output.
@@ -31,7 +31,7 @@ void dbl_evaldiffdata_to_output
  *            for the k-th monomial;
  *   cstart   fstart[k] has the start position of the cross products
  *            for the k-th monomial;
- *   verbose  if true, writes extra information.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   output   output[i][dim] contains the power series value
@@ -42,7 +42,7 @@ void dbl_evaldiffdata_to_output
 void cmplx_evaldiffdata_to_output
  ( double *datare, double *dataim, double ***outputre, double ***outputim,
    int dim, int nbr, int deg, int *nvr,
-   int **idx, int *fstart, int *bstart, int *cstart, bool verbose );
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl );
 /*
  * DESCRIPTION :
  *   Extracts the complex data computed on the device to the output.
@@ -67,7 +67,7 @@ void cmplx_evaldiffdata_to_output
  *            for the k-th monomial;
  *   cstart   fstart[k] has the start position of the cross products
  *            for the k-th monomial;
- *   verbose  if true, writes extra information.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   outputre, in outputre[i][dim] are the real parts of the value
@@ -83,7 +83,7 @@ void GPU_dbl_mon_evaldiff
  ( int szt, int dim, int nbr, int deg, int *nvr, int **idx,
    double **cff, double **input, double ***output,
    ConvolutionJobs cnvjobs,
-   double *cnvlapms, double *elapsedms, double *walltimesec, bool verbose );
+   double *cnvlapms, double *elapsedms, double *walltimesec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiates a monomial system.
@@ -104,7 +104,7 @@ void GPU_dbl_mon_evaldiff
  *            for all variables in the polynomial;
  *   output   space allocated for the value and all derivatives;
  *   cnvjobs  convolution jobs organized in layers;
- *   verbose  if true, then extra output about the setup is written.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   output   contains derivatives and the value of the polynomial,
@@ -124,7 +124,7 @@ void GPU_cmplx_mon_evaldiff
  ( int szt, int dim, int nbr, int deg, int *nvr, int **idx,
    double **cffre, double **cffim, double **inputre, double **inputim,
    double ***outputre, double ***outputim, ConvolutionJobs cnvjobs,
-   double *cnvlapms, double *elapsedms, double *walltimesec, bool verbose );
+   double *cnvlapms, double *elapsedms, double *walltimesec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiates a monomial system.
@@ -151,7 +151,7 @@ void GPU_cmplx_mon_evaldiff
  *   outputre has space for real parts of value and all derivatives;
  *   outputim has space for imaginary parts of value and all derivatives;
  *   cnvjobs  convolution jobs organized in layers;
- *   verbose  if true, then extra output about the setup is written.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   outputre has real parts of derivatives and the value,
@@ -196,7 +196,7 @@ void GPU_dbl_evaluate_monomials
  *   input     coefficients of the power series of degree deg,
  *             for dim variables;
  *   output    space for the output;
- *   vrblvl    is the verbose level.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   cff       contains the evaluated common factors;

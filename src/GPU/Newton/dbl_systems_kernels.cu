@@ -21,7 +21,7 @@ using namespace std;
 
 void dbl_evaldiffdata_to_output
  ( double *data, double ***output, int dim, int nbr, int deg, int *nvr,
-   int **idx, int *fstart, int *bstart, int *cstart, bool verbose )
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl )
 {
    const int deg1 = deg+1;
    int ix0,ix1,ix2;
@@ -30,7 +30,7 @@ void dbl_evaldiffdata_to_output
    {
       ix1 = fstart[k] + (nvr[k]-1)*deg1;
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "monomial " << k << " update starts at " << ix1 << endl;
 
       for(int i=0; i<=deg; i++) output[k][dim][i] = data[ix1++];
@@ -63,7 +63,7 @@ void dbl_evaldiffdata_to_output
                ix0 = idx[k][j];            // j-th variable in monomial k
                ix1 = cstart[k] + (j-1)*deg1;
 
-               if(verbose)
+               if(vrblvl > 1)
                   cout << "monomial " << k << " derivative " << ix0
                        << " update starts at " << ix1 << endl;
 
@@ -77,7 +77,7 @@ void dbl_evaldiffdata_to_output
 void cmplx_evaldiffdata_to_output
  ( double *datare, double *dataim, double ***outputre, double ***outputim,
    int dim, int nbr, int deg, int *nvr,
-   int **idx, int *fstart, int *bstart, int *cstart, bool verbose )
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl )
 {
    const int deg1 = deg+1;
    int ix0,ix1,ix2;
@@ -86,7 +86,7 @@ void cmplx_evaldiffdata_to_output
    {
       ix1 = fstart[k] + (nvr[k]-1)*deg1;
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "monomial " << k << " update starts at " << ix1 << endl;
 
       for(int i=0; i<=deg; i++)
@@ -132,7 +132,7 @@ void cmplx_evaldiffdata_to_output
                ix0 = idx[k][j];            // j-th variable in monomial k
                ix1 = cstart[k] + (j-1)*deg1;
 
-               if(verbose)
+               if(vrblvl > 1)
                   cout << "monomial " << k << " derivative " << ix0
                        << " update starts at " << ix1 << endl;
 
@@ -154,7 +154,7 @@ void GPU_dbl_mon_evaldiff
  ( int szt, int dim, int nbr, int deg, int *nvr, int **idx,
    double **cff, double **input, double ***output,
    ConvolutionJobs cnvjobs,
-   double *cnvlapms, double *elapsedms, double *walltimesec, bool verbose )
+   double *cnvlapms, double *elapsedms, double *walltimesec, int vrblvl )
 {
    const int deg1 = deg+1;
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
@@ -169,7 +169,7 @@ void GPU_dbl_mon_evaldiff
    coefficient_indices
       (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
 
-   if(verbose)
+   if(vrblvl > 1)
       write_coefficient_indices
          (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
 
@@ -192,6 +192,7 @@ void GPU_dbl_mon_evaldiff
    *cnvlapms = 0.0;
    float milliseconds;
    struct timeval begintime,endtime; // wall clock time of computations
+   bool verbose = (vrblvl > 1);
 
    gettimeofday(&begintime,0);
    for(int k=0; k<cnvjobs.get_depth(); k++)
@@ -244,9 +245,9 @@ void GPU_dbl_mon_evaldiff
    *walltimesec = seconds + microseconds*1.0e-6;
 
    dbl_evaldiffdata_to_output
-      (data_h,output,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,verbose);
+      (data_h,output,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,vrblvl);
 
-   if(verbose)
+   if(vrblvl > 0)
       write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
 
    cudaFree(data_d);
@@ -260,7 +261,7 @@ void GPU_cmplx_mon_evaldiff
  ( int szt, int dim, int nbr, int deg, int *nvr, int **idx,
    double **cffre, double **cffim, double **inputre, double **inputim,
    double ***outputre, double ***outputim, ConvolutionJobs cnvjobs,
-   double *cnvlapms, double *elapsedms, double *walltimesec, bool verbose )
+   double *cnvlapms, double *elapsedms, double *walltimesec, int vrblvl )
 {
    const int deg1 = deg+1;
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
@@ -275,7 +276,7 @@ void GPU_cmplx_mon_evaldiff
    coefficient_indices
       (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
 
-   if(verbose)
+   if(vrblvl > 1)
       write_coefficient_indices
          (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
 
@@ -314,6 +315,7 @@ void GPU_cmplx_mon_evaldiff
    *cnvlapms = 0.0;
    float milliseconds;
    struct timeval begintime,endtime; // wall clock time of computations
+   bool verbose = (vrblvl > 1);
 
    gettimeofday(&begintime,0);
    for(int k=0; k<cnvjobs.get_depth(); k++)
@@ -367,9 +369,9 @@ void GPU_cmplx_mon_evaldiff
 
    cmplx_evaldiffdata_to_output
       (datare_h,dataim_h,outputre,outputim,
-       dim,nbr,deg,nvr,idx,fstart,bstart,cstart,verbose);
+       dim,nbr,deg,nvr,idx,fstart,bstart,cstart,vrblvl);
 
-   if(verbose)
+   if(vrblvl > 0)
       write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
 
    cudaFree(datare_d); cudaFree(dataim_d);
@@ -457,7 +459,7 @@ void GPU_dbl_evaluate_monomials
    }
    GPU_dbl_mon_evaldiff
       (szt,dim,dim,deg,nvr,idx,cff,input,output,jobs,
-       &cnvlapms,&elapsedms,&walltimesec,verbose);
+       &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
    if(vrblvl > 1)
    {
@@ -576,7 +578,7 @@ void GPU_cmplx_evaluate_monomials
    }
    GPU_cmplx_mon_evaldiff
       (szt,dim,dim,deg,nvr,idx,cffre,cffim,inputre,inputim,
-       outputre,outputim,jobs,&cnvlapms,&elapsedms,&walltimesec,verbose);
+       outputre,outputim,jobs,&cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
    if(vrblvl > 1)
    {
@@ -657,7 +659,6 @@ void GPU_dbl_evaluate_columns
       }
    }
    bool verbose = (vrblvl > 1);
-
    double cnvlapms,elapsedms,walltimesec;
 
    for(int i=0; i<nbrcol; i++)
@@ -689,7 +690,7 @@ void GPU_dbl_evaluate_columns
       }
       GPU_dbl_mon_evaldiff
          (szt,dim,dim,deg,nvr[i],idx[i],cff[i],input,output,jobs,
-          &cnvlapms,&elapsedms,&walltimesec,verbose);
+          &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
       for(int j=0; j<dim; j++)
          if(nvr[i][j] > 0)       // update values
@@ -771,7 +772,6 @@ void GPU_cmplx_evaluate_columns
       }
    }
    bool verbose = (vrblvl > 1);
-
    double cnvlapms,elapsedms,walltimesec;
 
    for(int i=0; i<nbrcol; i++)
@@ -803,7 +803,7 @@ void GPU_cmplx_evaluate_columns
       }
       GPU_cmplx_mon_evaldiff
          (szt,dim,dim,deg,nvr[i],idx[i],cffre[i],cffim[i],inputre,inputim,
-          outputre,outputim,jobs,&cnvlapms,&elapsedms,&walltimesec,verbose);
+          outputre,outputim,jobs,&cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
       for(int j=0; j<dim; j++)
          if(nvr[i][j] > 0)       // update values

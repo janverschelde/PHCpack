@@ -12,7 +12,7 @@ void dbl4_evaldiffdata_to_output
    double ***outputhihi, double ***outputlohi,
    double ***outputhilo, double ***outputlolo,
    int dim, int nbr, int deg, int *nvr,
-   int **idx, int *fstart, int *bstart, int *cstart, bool verbose );
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl );
 /*
  * DESCRIPTION :
  *   Extracts the real data computed on the device to the output.
@@ -43,7 +43,7 @@ void dbl4_evaldiffdata_to_output
  *            for the k-th monomial;
  *   cstart   fstart[k] has the start position of the cross products
  *            for the k-th monomial;
- *   verbose  if true, writes extra information.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   outputhihi has in outputhihi[i][dim] the highest double value
@@ -73,7 +73,7 @@ void cmplx4_evaldiffdata_to_output
    double ***outputimhihi, double ***outputimlohi,
    double ***outputimhilo, double ***outputimlolo,
    int dim, int nbr, int deg, int *nvr,
-   int **idx, int *fstart, int *bstart, int *cstart, bool verbose );
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl );
 /*
  * DESCRIPTION :
  *   Extracts the complex data computed on the device to the output.
@@ -116,7 +116,7 @@ void cmplx4_evaldiffdata_to_output
  *            for the k-th monomial;
  *   cstart   fstart[k] has the start position of the cross products
  *            for the k-th monomial;
- *   verbose  if true, writes extra information.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   outputrehihi, in outputrehihi[i][dim] are the highest doubles of the real
@@ -159,7 +159,7 @@ void GPU_dbl4_mon_evaldiff
    double **inputhilo, double **inputlolo,
    double ***outputhihi, double ***outputlohi,
    double ***outputhilo, double ***outputlolo, ConvolutionJobs cnvjobs,
-   double *cnvlapms, double *elapsedms, double *walltimesec, bool verbose );
+   double *cnvlapms, double *elapsedms, double *walltimesec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiates a monomial system.
@@ -196,7 +196,7 @@ void GPU_dbl4_mon_evaldiff
  *   outputhilo has space allocated for the second lowest double output;
  *   outputlolo has space allocated for the lowest double output;
  *   cnvjobs  convolution jobs organized in layers;
- *   verbose  if true, then extra output about the setup is written.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   outputhihi has the highest doubles of the output,
@@ -238,7 +238,7 @@ void GPU_cmplx4_mon_evaldiff
    double ***outputrehilo, double ***outputrelolo,
    double ***outputimhihi, double ***outputimlohi,
    double ***outputimhilo, double ***outputimlolo, ConvolutionJobs cnvjobs,
-   double *cnvlapms, double *elapsedms, double *walltimesec, bool verbose );
+   double *cnvlapms, double *elapsedms, double *walltimesec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiates a monomial system.
@@ -303,7 +303,7 @@ void GPU_cmplx4_mon_evaldiff
  *   outputimlolo has space for the lowest doubles of the imaginary parts
  *            of value and all derivatives;
  *   cnvjobs  convolution jobs organized in layers;
- *   verbose  if true, then extra output about the setup is written.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   outputrehihi has the highest doubles of the real parts of derivatives
@@ -400,7 +400,7 @@ void GPU_dbl4_evaluate_monomials
  *   outputlohi has space for the second highest doubles of the output;
  *   outputhilo has space for the second lowest doubles of the output;
  *   outputlolo has space for the lowest doubles of the output;
- *   vrblvl    is the verbose level.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   cffhihi  highest doubles of the evaluated common factors;
@@ -513,7 +513,7 @@ void GPU_cmplx4_evaluate_monomials
  *             parts of the output;
  *   outputimlolo has space for the lowest doubles of the imaginary
  *             parts of the output;
- *   vrblvl    is the verbose level.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   cffrehihi has the highest doubles of the real parts
@@ -624,7 +624,7 @@ void GPU_dbl4_evaluate_columns
  *   outputlohi has space for the output;
  *   outputhilo has space for the output;
  *   outputlolo has space for the output;
- *   vrblvl    is the verbose level.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   outputhihi is used as work space for one column;
@@ -717,7 +717,7 @@ void GPU_cmplx4_evaluate_columns
  *   outputimlohi has space for the 2nd highest double imag parts of output;
  *   outputimhilo has space for the 2nd lowest double imag parts of output;
  *   outputimlolo has space for the lowest double imag parts of the output;
- *   vrblvl    is the verbose level.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   outputrehihi are the highiest double real parts of evaluated and

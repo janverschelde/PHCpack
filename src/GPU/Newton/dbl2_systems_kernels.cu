@@ -23,7 +23,7 @@ using namespace std;
 void dbl2_evaldiffdata_to_output
  ( double *datahi, double *datalo, double ***outputhi, double ***outputlo,
    int dim, int nbr, int deg, int *nvr,
-   int **idx, int *fstart, int *bstart, int *cstart, bool verbose )
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl )
 {
    const int deg1 = deg+1;
    int ix0,ix1,ix2;
@@ -32,7 +32,7 @@ void dbl2_evaldiffdata_to_output
    {
       ix1 = fstart[k] + (nvr[k]-1)*deg1;
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "monomial " << k << " update starts at " << ix1 << endl;
 
       for(int i=0; i<=deg; i++)
@@ -78,7 +78,7 @@ void dbl2_evaldiffdata_to_output
                ix0 = idx[k][j];            // j-th variable in monomial k
                ix1 = cstart[k] + (j-1)*deg1;
 
-               if(verbose)
+               if(vrblvl > 1)
                   cout << "monomial " << k << " derivative " << ix0
                        << " update starts at " << ix1 << endl;
 
@@ -98,7 +98,7 @@ void cmplx2_evaldiffdata_to_output
    double ***outputrehi, double ***outputrelo,
    double ***outputimhi, double ***outputimlo,
    int dim, int nbr, int deg, int *nvr,
-   int **idx, int *fstart, int *bstart, int *cstart, bool verbose )
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl )
 {
    const int deg1 = deg+1;
    int ix0,ix1,ix2;
@@ -107,7 +107,7 @@ void cmplx2_evaldiffdata_to_output
    {
       ix1 = fstart[k] + (nvr[k]-1)*deg1;
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "monomial " << k << " update starts at " << ix1 << endl;
 
       for(int i=0; i<=deg; i++)
@@ -161,7 +161,7 @@ void cmplx2_evaldiffdata_to_output
                ix0 = idx[k][j];            // j-th variable in monomial k
                ix1 = cstart[k] + (j-1)*deg1;
 
-               if(verbose)
+               if(vrblvl > 1)
                   cout << "monomial " << k << " derivative " << ix0
                        << " update starts at " << ix1 << endl;
 
@@ -185,7 +185,7 @@ void GPU_dbl2_mon_evaldiff
  ( int szt, int dim, int nbr, int deg, int *nvr, int **idx,
    double **cffhi, double **cfflo, double **inputhi, double **inputlo,
    double ***outputhi, double ***outputlo, ConvolutionJobs cnvjobs,
-   double *cnvlapms, double *elapsedms, double *walltimesec, bool verbose )
+   double *cnvlapms, double *elapsedms, double *walltimesec, int vrblvl )
 {
    const int deg1 = deg+1;
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
@@ -200,7 +200,7 @@ void GPU_dbl2_mon_evaldiff
    coefficient_indices
       (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
 
-   if(verbose)
+   if(vrblvl > 1)
       write_coefficient_indices
          (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
 
@@ -241,6 +241,7 @@ void GPU_dbl2_mon_evaldiff
    *cnvlapms = 0.0;
    float milliseconds;
    struct timeval begintime,endtime; // wall clock time of computations
+   bool verbose = (vrblvl > 1);
 
    gettimeofday(&begintime,0);
    for(int k=0; k<cnvjobs.get_depth(); k++)
@@ -294,9 +295,9 @@ void GPU_dbl2_mon_evaldiff
 
    dbl2_evaldiffdata_to_output
       (datahi_h,datalo_h,outputhi,outputlo,dim,nbr,deg,nvr,idx,
-       fstart,bstart,cstart,verbose);
+       fstart,bstart,cstart,vrblvl);
 
-   if(verbose)
+   if(vrblvl > 0)
       write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
 
    cudaFree(datahi_d); cudaFree(datalo_d);
@@ -313,7 +314,7 @@ void GPU_cmplx2_mon_evaldiff
    double **inputimhi, double **inputimlo,
    double ***outputrehi, double ***outputrelo,
    double ***outputimhi, double ***outputimlo, ConvolutionJobs cnvjobs,
-   double *cnvlapms, double *elapsedms, double *walltimesec, bool verbose )
+   double *cnvlapms, double *elapsedms, double *walltimesec, int vrblvl )
 {
    const int deg1 = deg+1;
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
@@ -328,7 +329,7 @@ void GPU_cmplx2_mon_evaldiff
    coefficient_indices
       (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
 
-   if(verbose)
+   if(vrblvl > 1)
       write_coefficient_indices
          (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
 
@@ -381,6 +382,7 @@ void GPU_cmplx2_mon_evaldiff
    *cnvlapms = 0.0;
    float milliseconds;
    struct timeval begintime,endtime; // wall clock time of computations
+   bool verbose = (vrblvl > 1);
 
    gettimeofday(&begintime,0);
    for(int k=0; k<cnvjobs.get_depth(); k++)
@@ -438,9 +440,9 @@ void GPU_cmplx2_mon_evaldiff
    cmplx2_evaldiffdata_to_output
       (datarehi_h,datarelo_h,dataimhi_h,dataimlo_h,
        outputrehi,outputrelo,outputimhi,outputimlo,
-       dim,nbr,deg,nvr,idx,fstart,bstart,cstart,verbose);
+       dim,nbr,deg,nvr,idx,fstart,bstart,cstart,vrblvl);
 
-   if(verbose)
+   if(vrblvl > 0)
       write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
 
    cudaFree(datarehi_d); cudaFree(datarelo_d);
@@ -542,7 +544,7 @@ void GPU_dbl2_evaluate_monomials
    GPU_dbl2_mon_evaldiff
       (szt,dim,dim,deg,nvr,idx,
        cffhi,cfflo,inputhi,inputlo,outputhi,outputlo,jobs,
-       &cnvlapms,&elapsedms,&walltimesec,verbose);
+       &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
    if(vrblvl > 1)
    {
@@ -678,7 +680,7 @@ void GPU_cmplx2_evaluate_monomials
       (szt,dim,dim,deg,nvr,idx,cffrehi,cffrelo,cffimhi,cffimlo,
        inputrehi,inputrelo,inputimhi,inputimlo,
        outputrehi,outputrelo,outputimhi,outputimlo,jobs,
-       &cnvlapms,&elapsedms,&walltimesec,verbose);
+       &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
    if(vrblvl > 1)
    {
@@ -813,7 +815,7 @@ void GPU_dbl2_evaluate_columns
       GPU_dbl2_mon_evaldiff
          (szt,dim,dim,deg,nvr[i],idx[i],cffhi[i],cfflo[i],
           inputhi,inputlo,outputhi,outputlo,jobs,
-          &cnvlapms,&elapsedms,&walltimesec,verbose);
+          &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
       for(int j=0; j<dim; j++)
          if(nvr[i][j] > 0)       // update values
@@ -948,7 +950,7 @@ void GPU_cmplx2_evaluate_columns
           cffrehi[i],cffrelo[i],cffimhi[i],cffimlo[i],
           inputrehi,inputrelo,inputimhi,inputimlo,
           outputrehi,outputrelo,outputimhi,outputimlo,jobs,
-          &cnvlapms,&elapsedms,&walltimesec,verbose);
+          &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
       for(int j=0; j<dim; j++)
          if(nvr[i][j] > 0)       // update values
