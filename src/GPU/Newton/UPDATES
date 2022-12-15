@@ -1,7 +1,8 @@
 Wed 14 Dec 2022 : replaced "bool verbose" by "int vrblvl" in *systems_kernels*
   function prototypes.  In *{bals, tail}_kernels.* did the same replacements
   and called the writing of times and flops for the back substitutions.
-  Updates the makefiles.
+  Updates the makefiles.  To *bals_kernels.cu, added the function calls
+  to write times and flops of the Householder QR.  Updated makefiles.
 
 Sat 10 Dec 2022 : added accelerated column evaluation and differentiation
   to dbl_systems_kernels, updated {dbl, cmplx}_newton_method.cpp

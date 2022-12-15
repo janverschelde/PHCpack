@@ -16,6 +16,7 @@
 #include "dbl8_tail_kernels.h"
 #include "dbl8_bals_kernels.h"
 #include "write_dbl8_bstimeflops.h"
+#include "write_dbl8_qrtimeflops.h"
 #include "dbl_onenorms_host.h"
 
 using namespace std;
@@ -305,6 +306,12 @@ void GPU_dbl8_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
+   if(vrblvl > 0)
+      write_dbl8_qrtimeflops
+         (0,nrows,ncols,houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms,
+          WYTlapsedms,QWYTlapsedms,Qaddlapsedms,YWTlapsedms,YWTClapsedms,
+          Raddlapsedms,qrtimelapsed_d,qraddcnt,qrmulcnt,qrdivcnt,sqrtcnt);
+
    if(vrblvl > 0) cout << "-> GPU multiplies rhs with Q^T ..." << endl;
 
    GPU_dbl8_bals_qtb
@@ -494,6 +501,12 @@ void GPU_cmplx8_bals_head
        &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
+
+   if(vrblvl > 0)
+      write_dbl8_qrtimeflops
+         (1,nrows,ncols,houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms,
+          WYTlapsedms,QWYTlapsedms,Qaddlapsedms,YWTlapsedms,YWTClapsedms,
+          Raddlapsedms,qrtimelapsed_d,qraddcnt,qrmulcnt,qrdivcnt,sqrtcnt);
 
    if(vrblvl > 0) cout << "-> GPU multiplies rhs with Q^H ..." << endl;
 

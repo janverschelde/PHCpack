@@ -673,11 +673,23 @@ write_dbl_bstimeflops.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: write_dbl_bstimeflops.obj /EHsc
 
+write_dbl_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl_qrtimeflops ..."
+	$(CL)\cl /c $(MAT)/write_dbl_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_dbl_qrtimeflops.obj /EHsc
+
 write_dbl2_bstimeflops.obj:
 	@-echo ">>> compiling write_dbl2_bstimeflops ..."
 	$(CL)\cl /c $(MAT)/write_dbl2_bstimeflops.cpp \
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: write_dbl2_bstimeflops.obj /EHsc
+
+write_dbl2_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl2_qrtimeflops ..."
+	$(CL)\cl /c $(MAT)/write_dbl2_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_dbl2_qrtimeflops.obj /EHsc
 
 write_dbl4_bstimeflops.obj:
 	@-echo ">>> compiling write_dbl4_bstimeflops ..."
@@ -685,11 +697,23 @@ write_dbl4_bstimeflops.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: write_dbl4_bstimeflops.obj /EHsc
 
+write_dbl4_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl4_qrtimeflops ..."
+	$(CL)\cl /c $(MAT)/write_dbl4_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_dbl4_qrtimeflops.obj /EHsc
+
 write_dbl8_bstimeflops.obj:
 	@-echo ">>> compiling write_dbl8_bstimeflops ..."
 	$(CL)\cl /c $(MAT)/write_dbl8_bstimeflops.cpp \
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: write_dbl8_bstimeflops.obj /EHsc
+
+write_dbl8_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl8_qrtimeflops ..."
+	$(CL)\cl /c $(MAT)/write_dbl8_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_dbl8_qrtimeflops.obj /EHsc
 
 test_dbl_flopbals.obj:
 	@-echo ">>> compiling test_dbl_flopbals ..."
@@ -876,6 +900,7 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
                  addition_job.obj addition_jobs.obj job_coordinates.obj \
                  gettimeofday4win.obj write_gpu_timings.obj \
                  dbl_systems_host.obj write_dbl_bstimeflops.obj \
+		 write_dbl_qrtimeflops.obj \
                  dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
                  dbl_factorizations.obj dbl_onenorms_host.obj \
 		 dbl_bals_host.obj dbl_bals_flopcounts.obj \
@@ -891,7 +916,7 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
              cyclic_columns.obj convolution_job.obj convolution_jobs.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
              dbl_systems_host.obj write_gpu_timings.obj \
-             gettimeofday4win.obj \
+             gettimeofday4win.obj write_dbl_qrtimeflops.obj \
              dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
              dbl_factorizations.obj dbl_onenorms_host.obj \
              dbl_bals_host.obj dbl_tail_kernels.obj dbl_bals_kernels.obj \
@@ -910,6 +935,7 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
                   addition_job.obj addition_jobs.obj job_coordinates.obj \
                   gettimeofday4win.obj write_gpu_timings.obj \
                   dbl2_systems_host.obj write_dbl2_bstimeflops.obj \
+		  write_dbl2_qrtimeflops.obj \
                   dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
                   dbl2_factorizations.obj dbl_onenorms_host.obj \
                   dbl2_bals_host.obj dbl_bals_flopcounts.obj \
@@ -931,7 +957,7 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
              dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
              dbl2_factorizations.obj dbl_onenorms_host.obj \
              dbl2_bals_host.obj dbl_bals_flopcounts.obj \
-             write_dbl2_bstimeflops.obj \
+             write_dbl2_bstimeflops.obj write_dbl2_qrtimeflops.obj \
              dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
              dbl2_baqr_kernels.obj dbl2_tabs_kernels.obj \
              dbl2_tail_kernels.obj dbl2_bals_kernels.obj
@@ -948,6 +974,7 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
                   addition_job.obj addition_jobs.obj job_coordinates.obj \
                   gettimeofday4win.obj write_gpu_timings.obj \
                   dbl4_systems_host.obj write_dbl4_bstimeflops.obj \
+		  write_dbl4_qrtimeflops.obj \
                   dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
                   dbl4_factorizations.obj dbl_onenorms_host.obj \
                   dbl4_bals_host.obj dbl_bals_flopcounts.obj \
@@ -967,6 +994,7 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
              gettimeofday4win.obj write_gpu_timings.obj \
              dbl4_systems_host.obj write_dbl4_bstimeflops.obj \
+	     write_dbl4_qrtimeflops.obj \
              dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
              dbl4_factorizations.obj dbl_onenorms_host.obj \
              dbl4_bals_host.obj dbl_bals_flopcounts.obj \
@@ -987,7 +1015,7 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
                   dbl8_systems_host.obj \
                   dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
                   dbl8_factorizations.obj dbl_onenorms_host.obj \
-                  dbl8_bals_host.obj \
+                  dbl8_bals_host.obj write_dbl8_qrtimeflops.obj \
                   gettimeofday4win.obj write_gpu_timings.obj \
                   dbl_bals_flopcounts.obj write_dbl8_bstimeflops.obj \
 		  dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
@@ -1008,7 +1036,7 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
              dbl8_systems_host.obj \
              dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
              dbl8_factorizations.obj dbl_onenorms_host.obj \
-             dbl8_bals_host.obj \
+             dbl8_bals_host.obj write_dbl8_qrtimeflops.obj \
              gettimeofday4win.obj write_gpu_timings.obj \
              dbl_bals_flopcounts.obj write_dbl8_bstimeflops.obj \
              dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
@@ -1096,5 +1124,7 @@ cleanall:
 	del dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj
 	del write_dbl_bstimeflops.obj write_dbl2_bstimeflops.obj
 	del write_dbl4_bstimeflops.obj write_dbl8_bstimeflops.obj
+	del write_dbl_qrtimeflops.obj write_dbl2_qrtimeflops.obj
+	del write_dbl4_qrtimeflops.obj write_dbl8_qrtimeflops.obj
 	del *exe *obj *exp *lib
 	del *~

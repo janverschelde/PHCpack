@@ -148,17 +148,33 @@ write_dbl_bstimeflops.o:
 	@-echo ">>> compling write_dbl_bstimeflops ..."
 	$(gpp) -O3 -c $(MAT)/write_dbl_bstimeflops.cpp
 
+write_dbl_qrtimeflops.o:
+	@-echo ">>> compling write_dbl_qrtimeflops ..."
+	$(gpp) -O3 -c $(MAT)/write_dbl_qrtimeflops.cpp
+
 write_dbl2_bstimeflops.o:
 	@-echo ">>> compling write_dbl2_bstimeflops ..."
 	$(gpp) -O3 -c $(MAT)/write_dbl2_bstimeflops.cpp
+
+write_dbl2_qrtimeflops.o:
+	@-echo ">>> compling write_dbl2_qrtimeflops ..."
+	$(gpp) -O3 -c $(MAT)/write_dbl2_qrtimeflops.cpp
 
 write_dbl4_bstimeflops.o:
 	@-echo ">>> compling write_dbl4_bstimeflops ..."
 	$(gpp) -O3 -c $(MAT)/write_dbl4_bstimeflops.cpp
 
+write_dbl4_qrtimeflops.o:
+	@-echo ">>> compling write_dbl4_qrtimeflops ..."
+	$(gpp) -O3 -c $(MAT)/write_dbl4_qrtimeflops.cpp
+
 write_dbl8_bstimeflops.o:
 	@-echo ">>> compling write_dbl8_bstimeflops ..."
 	$(gpp) -O3 -c $(MAT)/write_dbl8_bstimeflops.cpp
+
+write_dbl8_qrtimeflops.o:
+	@-echo ">>> compling write_dbl8_qrtimeflops ..."
+	$(gpp) -O3 -c $(MAT)/write_dbl8_qrtimeflops.cpp
 
 dbl_baqr_kernels.o:
 	@-echo ">>> compiling baqr kernels for doubles ..."
@@ -604,6 +620,7 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                  dbl_factorizations.o dbl_onenorms_host.o dbl_bals_host.o \
                  dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                  dbl_bals_flopcounts.o write_dbl_bstimeflops.o \
+                 write_dbl_qrtimeflops.o \
                  dbl_baqr_kernels.o dbl_tabs_kernels.o \
                  dbl_tail_kernels.o dbl_bals_kernels.o
 	@-echo ">>> linking ..."
@@ -620,6 +637,7 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl_factorizations.o dbl_onenorms_host.o dbl_bals_host.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl_bals_flopcounts.o write_dbl_bstimeflops.o \
+                  write_dbl_qrtimeflops.o \
                   dbl_baqr_kernels.o dbl_tabs_kernels.o \
                   dbl_tail_kernels.o dbl_bals_kernels.o \
                 -lcuda -lcudart -L$(CUDALIB)
@@ -638,6 +656,7 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl2_newton_method.o cmplx2_newton_method.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl_bals_flopcounts.o write_dbl2_bstimeflops.o \
+                  write_dbl2_qrtimeflops.o \
                   dbl2_baqr_kernels.o dbl2_tabs_kernels.o \
                   dbl2_tail_kernels.o dbl2_bals_kernels.o
 	@-echo ">>> linking ..."
@@ -655,6 +674,7 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl2_systems_kernels.o dbl2_polynomials_kernels.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl_bals_flopcounts.o write_dbl2_bstimeflops.o \
+                  write_dbl2_qrtimeflops.o \
                   dbl2_baqr_kernels.o dbl2_tabs_kernels.o \
                   dbl2_tail_kernels.o dbl2_bals_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
@@ -671,6 +691,7 @@ test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl4_systems_host.o write_gpu_timings.o \
                   dbl4_systems_kernels.o dbl4_polynomials_kernels.o \
                   dbl_bals_flopcounts.o write_dbl4_bstimeflops.o \
+                  write_dbl4_qrtimeflops.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl4_baqr_kernels.o dbl4_tabs_kernels.o \
                   dbl4_newton_method.o cmplx4_newton_method.o \
@@ -690,6 +711,7 @@ test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl4_systems_host.o write_gpu_timings.o \
                   dbl4_systems_kernels.o dbl4_polynomials_kernels.o \
                   dbl_bals_flopcounts.o write_dbl4_bstimeflops.o \
+                  write_dbl4_qrtimeflops.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl4_baqr_kernels.o dbl4_tabs_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
@@ -706,6 +728,7 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl8_systems_kernels.o dbl8_polynomials_kernels.o \
                   dbl8_factorizations.o dbl_onenorms_host.o dbl8_bals_host.o \
                   dbl_bals_flopcounts.o write_dbl8_bstimeflops.o \
+                  write_dbl8_qrtimeflops.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl8_baqr_kernels.o dbl8_tabs_kernels.o \
                   dbl8_tail_kernels.o dbl8_bals_kernels.o \
@@ -726,6 +749,7 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl8_systems_kernels.o dbl8_polynomials_kernels.o \
                   dbl8_factorizations.o dbl_onenorms_host.o dbl8_bals_host.o \
                   dbl_bals_flopcounts.o write_dbl8_bstimeflops.o \
+                  write_dbl8_qrtimeflops.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl8_baqr_kernels.o dbl8_tabs_kernels.o \
                   dbl8_tail_kernels.o dbl8_bals_kernels.o \
@@ -798,3 +822,5 @@ cleanall: clean
 	/bin/rm -f -r dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o
 	/bin/rm -f -r write_dbl_bstimeflops.o write_dbl2_bstimeflops.o
 	/bin/rm -f -r write_dbl4_bstimeflops.o write_dbl8_bstimeflops.o
+	/bin/rm -f -r write_dbl_qrtimeflops.o write_dbl2_qrtimeflops.o
+	/bin/rm -f -r write_dbl4_qrtimeflops.o write_dbl8_qrtimeflops.o

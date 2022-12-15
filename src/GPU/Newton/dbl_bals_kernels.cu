@@ -10,6 +10,7 @@
 #include "dbl_tabs_kernels.h"
 #include "dbl_tail_kernels.h"
 #include "dbl_bals_kernels.h"
+#include "write_dbl_qrtimeflops.h"
 #include "write_dbl_bstimeflops.h"
 #include "dbl_onenorms_host.h"
 
@@ -94,6 +95,12 @@ void GPU_dbl_bals_head
        &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
+
+   if(vrblvl > 0)
+      write_dbl_qrtimeflops
+         (houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms,WYTlapsedms,
+          QWYTlapsedms,Qaddlapsedms,YWTlapsedms,YWTClapsedms,Raddlapsedms,
+          qrtimelapsed_d,qraddcnt,qrmulcnt,qrdivcnt,sqrtcnt);
 
    if(vrblvl > 0) cout << "-> GPU multiplies rhs with Q^T ..." << endl;
 
@@ -180,6 +187,12 @@ void GPU_cmplx_bals_head
        &WYTlapsedms,&QWYTlapsedms,&Qaddlapsedms,
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
+
+   if(vrblvl > 0)
+      write_dbl_qrtimeflops
+         (houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms,WYTlapsedms,
+          QWYTlapsedms,Qaddlapsedms,YWTlapsedms,YWTClapsedms,Raddlapsedms,
+          qrtimelapsed_d,qraddcnt,qrmulcnt,qrdivcnt,sqrtcnt);
 
    if(vrblvl > 0)
       cout << "-> GPU multiplies rhs with Q^H ..." << endl;
