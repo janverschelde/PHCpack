@@ -5,7 +5,8 @@
 #define __write_dbl_qrtimeflops_h__
 
 void write_dbl_qrtimeflops
- ( double houselapsedms, double RTvlapsedms, double tileRlapsedms,
+ ( int ctype, int nrows, int ncols,
+   double houselapsedms, double RTvlapsedms, double tileRlapsedms,
    double vb2Wlapsedms, double WYTlapsedms, double QWYTlapsedms,
    double Qaddlapsedms, double YWTlapsedms, double YWTClapsedms,
    double Raddlapsedms, double timelapsed,
@@ -16,6 +17,9 @@ void write_dbl_qrtimeflops
  *   Writes the timings, operational counts and computes the flops.
  *
  * ON ENTRY :
+ *   ctype          0 if real, otherwise complex;
+ *   nrows          number of rows in the matrix;
+ *   ncols          number of columns in the matrix;
  *   houselapsedms  time in milliseconds by the Householder kernel;
  *   RTvlapsedms    time in milliseconds for beta*R^T*v;
  *   tileRlapsedms  time in milliseconds to reduce on tile;

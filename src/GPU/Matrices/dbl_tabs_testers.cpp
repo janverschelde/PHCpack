@@ -405,8 +405,8 @@ void test_real_upper_tiling ( void )
         << timelapsed_h << " seconds." << endl;
 
    write_dbl_bstimeflops
-     (invlapsed,mullapsed,sublapsed,elapsedms,timelapsed_d,
-      addcnt,mulcnt,divcnt);
+      (sizetile,numtiles,0,invlapsed,mullapsed,sublapsed,elapsedms,
+       timelapsed_d,addcnt,mulcnt,divcnt);
 
    for(int i=0; i<dim; i++)
    {
@@ -578,8 +578,8 @@ void test_cmplx_upper_tiling ( void )
         << timelapsed_h << " seconds." << endl;
 
    write_dbl_bstimeflops
-     (invlapsed,mullapsed,sublapsed,elapsedms,timelapsed_d,
-      addcnt,mulcnt,divcnt);
+      (sizetile,numtiles,1,invlapsed,mullapsed,sublapsed,elapsedms,
+       timelapsed_d,addcnt,mulcnt,divcnt);
 
    for(int i=0; i<dim; i++)
    {

@@ -98,7 +98,8 @@ void GPU_dbl_bals_head
 
    if(vrblvl > 0)
       write_dbl_qrtimeflops
-         (houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms,WYTlapsedms,
+         (0,nrows,ncols,
+          houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms,WYTlapsedms,
           QWYTlapsedms,Qaddlapsedms,YWTlapsedms,YWTClapsedms,Raddlapsedms,
           qrtimelapsed_d,qraddcnt,qrmulcnt,qrdivcnt,sqrtcnt);
 
@@ -143,7 +144,7 @@ void GPU_dbl_bals_head
 
    if(vrblvl > 0)
       write_dbl_bstimeflops
-         (invlapsed,mullapsed,sublapsed,elapsedms,bstimelapsed_d,
+         (szt,nbt,0,invlapsed,mullapsed,sublapsed,elapsedms,bstimelapsed_d,
           bsaddcnt,bsmulcnt,bsdivcnt);
 
    if(vrblvl > 1)
@@ -190,7 +191,8 @@ void GPU_cmplx_bals_head
 
    if(vrblvl > 0)
       write_dbl_qrtimeflops
-         (houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms,WYTlapsedms,
+         (1,nrows,ncols,
+          houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms,WYTlapsedms,
           QWYTlapsedms,Qaddlapsedms,YWTlapsedms,YWTClapsedms,Raddlapsedms,
           qrtimelapsed_d,qraddcnt,qrmulcnt,qrdivcnt,sqrtcnt);
 
@@ -258,7 +260,7 @@ void GPU_cmplx_bals_head
 
    if(vrblvl > 0)
       write_dbl_bstimeflops
-         (invlapsed,mullapsed,sublapsed,elapsedms,bstimelapsed_d,
+         (szt,nbt,1,invlapsed,mullapsed,sublapsed,elapsedms,bstimelapsed_d,
           bsaddcnt,bsmulcnt,bsdivcnt);
 
    if(vrblvl > 1)
@@ -545,8 +547,8 @@ void GPU_dbl_bals_solve
 
          if(vrblvl > 0)
             write_dbl_bstimeflops
-               (invlapsed,mullapsed,sublapsed,elapsedms,bstimelapsed_d,
-                bsaddcnt,bsmulcnt,bsdivcnt);
+               (szt,nbt,0,invlapsed,mullapsed,sublapsed,elapsedms,
+                bstimelapsed_d,bsaddcnt,bsmulcnt,bsdivcnt);
 
          if(vrblvl > 1)
             for(int i=0; i<ncols; i++)
@@ -786,8 +788,8 @@ void GPU_cmplx_bals_solve
 
          if(vrblvl > 0)
             write_dbl_bstimeflops
-               (invlapsed,mullapsed,sublapsed,elapsedms,bstimelapsed_d,
-                bsaddcnt,bsmulcnt,bsdivcnt);
+               (szt,nbt,1,invlapsed,mullapsed,sublapsed,elapsedms,
+                bstimelapsed_d,bsaddcnt,bsmulcnt,bsdivcnt);
 
          if(vrblvl > 1)
             for(int i=0; i<ncols; i++)

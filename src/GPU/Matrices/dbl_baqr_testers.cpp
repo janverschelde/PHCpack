@@ -126,9 +126,9 @@ void test_real_blocked_qr
    if((mode == 0) || (mode == 2))
    {
       write_dbl_qrtimeflops
-         (houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms,WYTlapsedms,
-          QWYTlapsedms,Qaddlapsedms,YWTlapsedms,YWTClapsedms,Raddlapsedms,
-          timelapsed_d,addcnt,mulcnt,divcnt,sqrtcnt);
+         (0,nrows,ncols,houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms,
+          WYTlapsedms,QWYTlapsedms,Qaddlapsedms,YWTlapsedms,YWTClapsedms,
+          Raddlapsedms,timelapsed_d,addcnt,mulcnt,divcnt,sqrtcnt);
    }
    for(int i=0; i<nrows; i++)
    {
@@ -268,9 +268,9 @@ void test_cmplx_blocked_qr
    if((mode == 0) || (mode == 2))
    {
       write_dbl_qrtimeflops
-         (houselapsedms,RHvlapsedms,tileRlapsedms,vb2Wlapsedms,WYTlapsedms,
-          QWYTlapsedms,Qaddlapsedms,YWTlapsedms,YWTClapsedms,Raddlapsedms,
-          timelapsed_d,addcnt,mulcnt,divcnt,sqrtcnt);
+         (1,nrows,ncols,houselapsedms,RHvlapsedms,tileRlapsedms,vb2Wlapsedms,
+          WYTlapsedms,QWYTlapsedms,Qaddlapsedms,YWTlapsedms,YWTClapsedms,
+          Raddlapsedms,timelapsed_d,addcnt,mulcnt,divcnt,sqrtcnt);
    }
    for(int i=0; i<nrows; i++)
    {

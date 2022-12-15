@@ -1,3 +1,6 @@
+Thu 15 Dec 2022 : updated dbl_bals_kernels.cu for the computation of the
+  arithmetic intensities of the QR and back substitutions.
+
 Wed 14 Dec 2022 : replaced "bool verbose" by "int vrblvl" in *systems_kernels*
   function prototypes.  In *{bals, tail}_kernels.* did the same replacements
   and called the writing of times and flops for the back substitutions.

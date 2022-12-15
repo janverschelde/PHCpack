@@ -6,7 +6,8 @@
 #include "write_dbl_qrtimeflops.h"
 
 void write_dbl_qrtimeflops
- ( double houselapsedms, double RTvlapsedms, double tileRlapsedms,
+ ( int ctype, int nrows, int ncols,
+   double houselapsedms, double RTvlapsedms, double tileRlapsedms,
    double vb2Wlapsedms, double WYTlapsedms, double QWYTlapsedms,
    double Qaddlapsedms, double YWTlapsedms, double YWTClapsedms,
    double Raddlapsedms, double timelapsed,
@@ -60,6 +61,21 @@ void write_dbl_qrtimeflops
    cout << "    Total number of floating-point operations : "
         << flopcnt << endl;
    cout << endl;
+
+   long long int bytecnt;
+   if(ctype == 0)
+      bytecnt = nrows*ncols + nrows*nrows;
+   else
+      bytecnt = 2*nrows*ncols + 2*nrows*nrows;
+
+   cout << "    Total number of bytes : " << bytecnt << endl << endl;
+
+   double intensity = ((double) flopcnt)/bytecnt;
+
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(5) << intensity
+        << " #flops/#bytes" << endl << endl;
+
 
    double kernflops = 1000.0*((double) flopcnt)/totlapsedms;
    double wallflops = ((double) flopcnt)/timelapsed;

@@ -6,7 +6,8 @@
 #include "write_dbl_bstimeflops.h"
 
 void write_dbl_bstimeflops
- ( double invlapsed, double mullapsed, double sublapsed, double elapsedms,
+ ( int sizetile, int numtiles, int ctype,
+   double invlapsed, double mullapsed, double sublapsed, double elapsedms,
    double timelapsed, long int addcnt, long int mulcnt, long int divcnt )
 {
    using namespace std;
@@ -37,6 +38,20 @@ void write_dbl_bstimeflops
         << flopcnt << endl;
    cout << endl;
    cout << scientific << setprecision(3);
+
+   long long int bytecnt;
+
+   if(ctype == 0)
+      bytecnt = 4*sizetile*numtiles*(numtiles+1) + 8*sizetile*numtiles;
+   else
+      bytecnt = 4*sizetile*numtiles*(numtiles+1)*2 + 8*sizetile*numtiles*2;
+
+   cout << "    Total number of bytes : " << bytecnt << endl << endl;
+
+   double intensity = ((double) flopcnt)/bytecnt;
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(3) << intensity
+        << " #flops/#bytes" << endl << endl;
 
    double kernflops = 1000.0*((double) flopcnt)/elapsedms;
    double wallflops = ((double) flopcnt)/timelapsed;

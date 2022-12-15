@@ -1,3 +1,6 @@
+Thu 15 Dec 2022 : to write_dbl_bstimeflops and write_dbl_qrtimeflops added
+  the arithmetic intensity, updated dbl_{tabs, baqr}_testers.cpp.
+
 Wed 14 Dec 2022 : new write_{dbl, dbl2, dbl4, dbl8}_bstimeflops, with code
   extracted from {dbl, dbl2, dbl4, dbl8}_tabs_testers.cpp.  Updated makefiles.
   New write_{dbl, dbl2, dbl4, dbl8}_qrtimeflops, with code extracted 
