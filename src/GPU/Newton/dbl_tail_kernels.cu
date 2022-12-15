@@ -69,9 +69,9 @@ __global__ void cmplx_bals_tail
 
 void GPU_dbl_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
-   double ***mat, double **rhs, double **sol, bool verbose )
+   double ***mat, double **rhs, double **sol, int vrblvl )
 {
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "GPU_dbl_bals_tail input blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)
@@ -80,7 +80,6 @@ void GPU_dbl_bals_tail
             cout << "rhs[" << k << "][" << i << "] : " << rhs[k][i] << endl;
       }
    }
-
    double *b_d;
    const size_t szrhs = nrows*sizeof(double);
    cudaMalloc((void**)&b_d,szrhs);
@@ -98,7 +97,7 @@ void GPU_dbl_bals_tail
 
    for(int k=stage; k<degp1; k++)
    {
-      if(verbose)
+      if(vrblvl > 1)
          cout << "GPU_dbl_bals_tail launches " << nbt
               << " thread blocks in step " << k-stage << endl;
 
@@ -109,20 +108,20 @@ void GPU_dbl_bals_tail
       cudaMemcpy(b_d,rhs[k],szrhs,cudaMemcpyHostToDevice);
       cudaMemcpy(A_d,A_h,szmat,cudaMemcpyHostToDevice);
 
-      if(verbose)
+      if(vrblvl > 1)
          cout << "nbt = " << nbt << ", szt = " << szt
               << ", ncols = " << ncols << endl;
 
       dbl_bals_tail<<<nbt,szt>>>(ncols,szt,A_d,x_d,b_d);
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "copying block " << k << " of right hand side ..." << endl;
 
       cudaMemcpy(rhs[k],b_d,szrhs,cudaMemcpyDeviceToHost);
    }
    free(A_h);
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "GPU_dbl_bals_tail copied blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)
@@ -137,9 +136,9 @@ void GPU_dbl_bals_tail
 void GPU_cmplx_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***matre, double ***matim, double **rhsre, double **rhsim,
-   double **solre, double **solim, bool verbose )
+   double **solre, double **solim, int vrblvl )
 {
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "GPU_cmplx_bals_tail input blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)
@@ -163,7 +162,7 @@ void GPU_cmplx_bals_tail
    cudaMemcpy(xre_d,solre[stage-1],szsol,cudaMemcpyHostToDevice);
    cudaMemcpy(xim_d,solim[stage-1],szsol,cudaMemcpyHostToDevice);
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "GPU_cmplx_bals_tail solution x :" << endl;
       for(int i=0; i<ncols; i++)
@@ -180,7 +179,7 @@ void GPU_cmplx_bals_tail
 
    for(int k=stage; k<degp1; k++)
    {
-      if(verbose)
+      if(vrblvl > 1)
          cout << "GPU_cmplx_bals_tail launches " << nbt
               << " thread blocks in step " << k-stage << endl;
 
@@ -197,14 +196,14 @@ void GPU_cmplx_bals_tail
       cudaMemcpy(Are_d,Are_h,szmat,cudaMemcpyHostToDevice);
       cudaMemcpy(Aim_d,Aim_h,szmat,cudaMemcpyHostToDevice);
 
-      if(verbose)
+      if(vrblvl > 1)
          cout << "nbt = " << nbt << ", szt = " << szt
               << ", ncols = " << ncols << endl;
 
       cmplx_bals_tail<<<nbt,szt>>>
          (ncols,szt,Are_d,Aim_d,xre_d,xim_d,bre_d,bim_d);
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "copying block " << k << " of right hand side ..." << endl;
 
       cudaMemcpy(rhsre[k],bre_d,szrhs,cudaMemcpyDeviceToHost);
@@ -212,7 +211,7 @@ void GPU_cmplx_bals_tail
    }
    free(Are_h); free(Aim_h);
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "GPU_cmplx_bals_tail copied blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)

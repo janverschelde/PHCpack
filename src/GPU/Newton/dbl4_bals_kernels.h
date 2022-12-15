@@ -102,7 +102,7 @@ void GPU_dbl4_bals_head
    double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo,
    double *bhihi, double *blohi, double *bhilo, double *blolo, 
-   double *xhihi, double *xlohi, double *xhilo, double *xlolo, bool verbose );
+   double *xhihi, double *xlohi, double *xhilo, double *xlolo, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves the head linear system in the least squares sense,
@@ -133,7 +133,7 @@ void GPU_dbl4_bals_head
  *   xlohi    space for ncols numbers;
  *   xhilo    space for ncols numbers;
  *   xlolo    space for ncols numbers;
- *   verbose  is the verbose flag.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   Qhihi    highest doubles of the Q in the QR of the Jacobian matrix;
@@ -161,7 +161,7 @@ void GPU_cmplx4_bals_head
    double *bimhihi, double *bimlohi, double *bimhilo, double *bimlolo,
    double *xrehihi, double *xrelohi, double *xrehilo, double *xrelolo,
    double *ximhihi, double *ximlohi, double *ximhilo, double *ximlolo,
-   bool verbose );
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves the head linear system in the least squares sense,
@@ -215,7 +215,7 @@ void GPU_cmplx4_bals_head
  *   ximlohi  space for ncols numbers;
  *   ximhilo  space for ncols numbers;
  *   ximlolo  space for ncols numbers;
- *   verbose  is the verbose flag.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   Qrehihi  highest doubles of the real parts of the Q of the QR;
@@ -246,7 +246,7 @@ void GPU_cmplx4_bals_head
 void GPU_dbl4_bals_qtb
  ( int ncols, int szt, int nbt,
    double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
-   double *bhihi, double *blohi, double *bhilo, double *blolo, bool verbose );
+   double *bhihi, double *blohi, double *bhilo, double *blolo, int vrblvl );
 /*
  * DESCRIPTION :
  *   The updated right hand side vector b is multiplied with Q^T.
@@ -266,7 +266,7 @@ void GPU_dbl4_bals_qtb
  *   blohi    second highest doubles of the right hand side vector;
  *   bhilo    second lowest doubles of the right hand side vector;
  *   blolo    lowest doubles of the right hand side vector;
- *   verbose  is the verbose flag.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   bhihi    highest doubles of the product of Q^T with b;
@@ -280,7 +280,7 @@ void GPU_cmplx4_bals_qhb
    double **Qimhihi, double **Qimlohi, double **Qimhilo, double **Qimlolo,
    double *brehihi, double *brelohi, double *brehilo, double *brelolo,
    double *bimhihi, double *bimlohi, double *bimhilo, double *bimlolo,
-   bool verbose );
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   The updated right hand side vector b is multiplied with Q^H.
@@ -308,7 +308,7 @@ void GPU_cmplx4_bals_qhb
  *   bimlohi  second highest doubles of the imaginary parts of b;
  *   bimhilo  second lowest doubles of the imaginary parts of b; 
  *   bimlolo  lowest doubles of the imaginary parts of b;
- *   verbose  is the verbose flag.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   brehihi  highest doubles of the real parts of Q^H*b;
@@ -362,7 +362,7 @@ void GPU_dbl4_bals_solve
  *   solhilo  space allocated for degp1 vectors of dimension dim;
  *   sollolo  space allocated for degp1 vectors of dimension dim;
  *   noqr     flag if true, then no qr;
- *   vrblvl   the verbose level (0 for silent).
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   Qhihi    highest doubles of the Q of the QR of the Jacobian;
@@ -475,7 +475,7 @@ void GPU_cmplx4_bals_solve
  *   solimhilo has space allocated for degp1 vectors of dimension dim;
  *   solimlolo has space allocated for degp1 vectors of dimension dim;
  *   noqr     flag if true, then no qr;
- *   vrblvl   the verbose level (0 for silent).
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   Qrehihi  highest doubles of the real parts of the Q of the QR;

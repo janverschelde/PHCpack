@@ -107,9 +107,9 @@ __global__ void cmplx2_bals_tail
 void GPU_dbl2_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***mathi, double ***matlo, double **rhshi, double **rhslo,
-   double **solhi, double **sollo, bool verbose )
+   double **solhi, double **sollo, int vrblvl )
 {
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "GPU_dbl2_bals_tail input blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)
@@ -119,7 +119,6 @@ void GPU_dbl2_bals_tail
                  << rhshi[k][i] << "  " << rhslo[k][i] << endl;
       }
    }
-
    double *bhi_d;
    double *blo_d;
    const size_t szrhs = nrows*sizeof(double);
@@ -145,7 +144,7 @@ void GPU_dbl2_bals_tail
 
    for(int k=stage; k<degp1; k++)
    {
-      if(verbose)
+      if(vrblvl > 1)
          cout << "GPU_dbl2_bals_tail launches " << nbt
               << " thread blocks in step " << k-stage << endl;
 
@@ -162,14 +161,14 @@ void GPU_dbl2_bals_tail
       cudaMemcpy(Ahi_d,Ahi_h,szmat,cudaMemcpyHostToDevice);
       cudaMemcpy(Alo_d,Alo_h,szmat,cudaMemcpyHostToDevice);
 
-      if(verbose)
+      if(vrblvl > 1)
          cout << "nbt = " << nbt << ", szt = " << szt
               << ", ncols = " << ncols << endl;
 
       dbl2_bals_tail<<<nbt,szt>>>
           (ncols,szt,Ahi_d,Alo_d,xhi_d,xlo_d,bhi_d,blo_d);
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "copying block " << k << " of right hand side ..." << endl;
 
       cudaMemcpy(rhshi[k],bhi_d,szrhs,cudaMemcpyDeviceToHost);
@@ -177,7 +176,7 @@ void GPU_dbl2_bals_tail
    }
    free(Ahi_h); free(Alo_h);
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "GPU_dbl2_bals_tail copied blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)
@@ -197,9 +196,9 @@ void GPU_cmplx2_bals_tail
    double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo,
    double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
    double **solrehi, double **solrelo, double **solimhi, double **solimlo,
-   bool verbose )
+   int vrblvl )
 {
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "GPU_cmplx2_bals_tail input blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)
@@ -251,7 +250,7 @@ void GPU_cmplx2_bals_tail
 
    for(int k=stage; k<degp1; k++)
    {
-      if(verbose)
+      if(vrblvl > 1)
          cout << "GPU_cmplx2_bals_tail launches " << nbt
               << " thread blocks in step " << k-stage << endl;
 
@@ -274,7 +273,7 @@ void GPU_cmplx2_bals_tail
       cudaMemcpy(Aimhi_d,Aimhi_h,szmat,cudaMemcpyHostToDevice);
       cudaMemcpy(Aimlo_d,Aimlo_h,szmat,cudaMemcpyHostToDevice);
 
-      if(verbose)
+      if(vrblvl > 1)
          cout << "nbt = " << nbt << ", szt = " << szt
               << ", ncols = " << ncols << endl;
 
@@ -282,7 +281,7 @@ void GPU_cmplx2_bals_tail
          (ncols,szt,Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
           xrehi_d,xrelo_d,ximhi_d,ximlo_d,brehi_d,brelo_d,bimhi_d,bimlo_d);
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "copying block " << k << " of right hand side ..." << endl;
 
       cudaMemcpy(rhsrehi[k],brehi_d,szrhs,cudaMemcpyDeviceToHost);
@@ -292,7 +291,7 @@ void GPU_cmplx2_bals_tail
    }
    free(Arehi_h); free(Aimhi_h); free(Arelo_h); free(Aimlo_h);
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "GPU_cmplx2_bals_tail copied blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)

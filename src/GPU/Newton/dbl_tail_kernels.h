@@ -50,7 +50,7 @@ __global__ void cmplx_bals_tail
 
 void GPU_dbl_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
-   double ***mat, double **rhs, double **sol, bool verbose );
+   double ***mat, double **rhs, double **sol, int vrblvl );
 /*
  * DESCRIPTION :
  *   After each block of coefficients of the series,
@@ -70,7 +70,7 @@ void GPU_dbl_bals_tail
  *   mat      matrices of the linearized power series;
  *   rhs      right hand side vectors of the linear system;
  *   sol      solution coefficients computed up to stage-1;
- *   verbose  is the verbose flag.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   rhs      updated right hand sides. */
@@ -78,7 +78,7 @@ void GPU_dbl_bals_tail
 void GPU_cmplx_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***matre, double ***matim, double **rhsre, double **rhsim,
-   double **solre, double **solim, bool verbose );
+   double **solre, double **solim, int vrblvl );
 /*
  * DESCRIPTION :
  *   After each block of coefficients of the series,
@@ -101,7 +101,7 @@ void GPU_cmplx_bals_tail
  *   rhsim    imaginary parts of the right hand sides;
  *   solre    real parts of the solution computed up to stage-1;
  *   solim    imaginary parts of the solution computed up to stage-1;
- *   verbose  is the verbose flag.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   rhsre    real parts of the updated right hand sides;
@@ -125,7 +125,7 @@ void GPU_dbl_linear_residue
  *   rhs      degp1 right hand side vectors of dimension dim;
  *   sol      degp1 solution vectors of dimension dim;
  *   resvec   space for the residual power series;
- *   vrblvl   is the verbose level.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   resvec   the residual power series;
@@ -158,7 +158,7 @@ void GPU_cmplx_linear_residue
  *   solim    degp1 solution vectors of dimension dim;
  *   resvecre has space for the residual power series;
  *   resvecim has space for the residual power series;
- *   vrblvl   is the verbose level.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   resvecre are the real parts of the residual power series;

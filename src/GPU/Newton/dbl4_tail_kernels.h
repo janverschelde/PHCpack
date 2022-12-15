@@ -99,7 +99,7 @@ void GPU_dbl4_bals_tail
    double ***mathihi, double ***matlohi, double ***mathilo, double ***matlolo,
    double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
    double **solhihi, double **sollohi, double **solhilo, double **sollolo,
-   bool verbose );
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   After each block of coefficients of the series,
@@ -128,7 +128,7 @@ void GPU_dbl4_bals_tail
  *   sollohi  second highest doubles of solution computed up to stage-1;
  *   solhilo  second lowest doubles of solution computed up to stage-1;
  *   sollolo  lowest doubles of solution computed up to stage-1;
- *   verbose  is the verbose flag.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   rhshihi  highest doubles of updated right hand sides;
@@ -149,7 +149,7 @@ void GPU_cmplx4_bals_tail
    double **solrehihi, double **solrelohi,
    double **solrehilo, double **solrelolo,
    double **solimhihi, double **solimlohi,
-   double **solimhilo, double **solimlolo, bool verbose );
+   double **solimhilo, double **solimlolo, int vrblvl );
 /*
  * DESCRIPTION :
  *   After each block of coefficients of the series,
@@ -206,7 +206,7 @@ void GPU_cmplx4_bals_tail
  *            solution, computed up to stage-1;
  *   solimlolo are the lowest doubles of the imaginary parts of the solution,
  *            computed up to stage-1;
- *   verbose  is the verbose flag.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   rhsrehihi are the highest doubles of the real parts
@@ -262,7 +262,7 @@ void GPU_dbl4_linear_residue
  *   resveclohi has space for the residual power series;
  *   resvechilo has space for the residual power series;
  *   resveclolo has space for the residual power series;
- *   vrblvl   is the verbose level.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   resvechihi are the highest doubles of the residual power series;
@@ -340,7 +340,7 @@ void GPU_cmplx4_linear_residue
  *   resvecimlohi has space for the residual power series;
  *   resvecimhilo has space for the residual power series;
  *   resvecimlolo has space for the residual power series;
- *   vrblvl   is the verbose level.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   resvecrehihi are the highest doubles of the real parts

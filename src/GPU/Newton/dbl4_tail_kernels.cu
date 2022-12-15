@@ -164,9 +164,9 @@ void GPU_dbl4_bals_tail
    double ***mathihi, double ***matlohi, double ***mathilo, double ***matlolo,
    double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
    double **solhihi, double **sollohi, double **solhilo, double **sollolo,
-   bool verbose )
+   int vrblvl )
 {
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "GPU_dbl4_bals_tail input blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)
@@ -218,7 +218,7 @@ void GPU_dbl4_bals_tail
 
    for(int k=stage; k<degp1; k++)
    {
-      if(verbose)
+      if(vrblvl > 1)
          cout << "GPU_dbl4_bals_tail launches " << nbt
               << " thread blocks in step " << k-stage << endl;
 
@@ -241,7 +241,7 @@ void GPU_dbl4_bals_tail
       cudaMemcpy(Ahilo_d,Ahilo_h,szmat,cudaMemcpyHostToDevice);
       cudaMemcpy(Alolo_d,Alolo_h,szmat,cudaMemcpyHostToDevice);
 
-      if(verbose)
+      if(vrblvl > 1)
          cout << "nbt = " << nbt << ", szt = " << szt
               << ", ncols = " << ncols << endl;
 
@@ -249,7 +249,7 @@ void GPU_dbl4_bals_tail
           (ncols,szt,Ahihi_d,Alohi_d,Ahilo_d,Alolo_d,
            xhihi_d,xlohi_d,xhilo_d,xlolo_d,bhihi_d,blohi_d,bhilo_d,blolo_d);
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "copying block " << k << " of right hand side ..." << endl;
 
       cudaMemcpy(rhshihi[k],bhihi_d,szrhs,cudaMemcpyDeviceToHost);
@@ -259,7 +259,7 @@ void GPU_dbl4_bals_tail
    }
    free(Ahihi_h); free(Alohi_h); free(Ahilo_h); free(Alolo_h);
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "GPU_dbl4_bals_tail copied blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)
@@ -291,9 +291,9 @@ void GPU_cmplx4_bals_tail
    double **solrehihi, double **solrelohi,
    double **solrehilo, double **solrelolo,
    double **solimhihi, double **solimlohi,
-   double **solimhilo, double **solimlolo, bool verbose )
+   double **solimhilo, double **solimlolo, int vrblvl )
 {
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "GPU_cmplx4_bals_tail input blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)
@@ -379,7 +379,7 @@ void GPU_cmplx4_bals_tail
 
    for(int k=stage; k<degp1; k++)
    {
-      if(verbose)
+      if(vrblvl > 1)
          cout << "GPU_cmplx4_bals_tail launches " << nbt
               << " thread blocks in step " << k-stage << endl;
 
@@ -414,7 +414,7 @@ void GPU_cmplx4_bals_tail
       cudaMemcpy(Aimhilo_d,Aimhilo_h,szmat,cudaMemcpyHostToDevice);
       cudaMemcpy(Aimlolo_d,Aimlolo_h,szmat,cudaMemcpyHostToDevice);
 
-      if(verbose)
+      if(vrblvl > 1)
          cout << "nbt = " << nbt << ", szt = " << szt
               << ", ncols = " << ncols << endl;
 
@@ -426,7 +426,7 @@ void GPU_cmplx4_bals_tail
           brehihi_d,brelohi_d,brehilo_d,brelolo_d,
           bimhihi_d,bimlohi_d,bimhilo_d,bimlolo_d);
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "copying block " << k << " of right hand side ..." << endl;
 
       cudaMemcpy(rhsrehihi[k],brehihi_d,szrhs,cudaMemcpyDeviceToHost);
@@ -443,7 +443,7 @@ void GPU_cmplx4_bals_tail
    free(Arehilo_h); free(Aimhilo_h);
    free(Arelolo_h); free(Aimlolo_h);
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "GPU_cmplx4_bals_tail copied blocks of rhs :" << endl;
       for(int k=0; k<degp1; k++)
@@ -648,8 +648,7 @@ void GPU_cmplx4_linear_residue
    double **resvecimhilo, double **resvecimlolo,
    double *resmaxhihi, double *resmaxlohi,
    double *resmaxhilo, double *resmaxlolo,
-   double *lapms, long long int *add, long long int *mul,
-   int vrblvl )
+   double *lapms, long long int *add, long long int *mul, int vrblvl )
 {
    double *rrehihi_d;
    double *rrelohi_d;

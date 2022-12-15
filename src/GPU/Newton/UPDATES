@@ -1,3 +1,8 @@
+Wed 14 Dec 2022 : replaced "bool verbose" by "int vrblvl" in *systems_kernels*
+  function prototypes.  In *{bals, tail}_kernels.* did the same replacements
+  and called the writing of times and flops for the back substitutions.
+  Updates the makefiles.
+
 Sat 10 Dec 2022 : added accelerated column evaluation and differentiation
   to dbl_systems_kernels, updated {dbl, cmplx}_newton_method.cpp
   To dbl_systems_kernels.cu, added if test for empty monomial.

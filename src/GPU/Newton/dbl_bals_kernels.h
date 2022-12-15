@@ -55,7 +55,7 @@ __global__ void cmplx_bals_qhb
 
 void GPU_dbl_bals_head
  ( int nrows, int ncols, int szt, int nbt,
-   double **A, double **Q, double **R, double *b, double *x, bool verbose );
+   double **A, double **Q, double **R, double *b, double *x, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves the head linear system in the least squares sense,
@@ -75,7 +75,7 @@ void GPU_dbl_bals_head
  *   R        space allocated for a nrows-by-ncols matrix;
  *   b        defines the right hand side of the linear system;
  *   x        space for ncols numbers;
- *   verbose  is the verbose flag.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   Q        the Q of the QR factorization of the Jacobian matrix;
@@ -86,7 +86,7 @@ void GPU_cmplx_bals_head
  ( int nrows, int ncols, int szt, int nbt,
    double **Are, double **Aim, double **Qre, double **Qim,
    double **Rre, double **Rim, double *bre, double *bim,
-   double *xre, double *xim, bool verbose );
+   double *xre, double *xim, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves the head linear system in the least squares sense,
@@ -111,7 +111,7 @@ void GPU_cmplx_bals_head
  *   bim      imaginary parts of the right hand side;
  *   xre      space for ncols numbers;
  *   xim      space for ncols numbers;
- *   verbose  is the verbose flag.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   Qre      real parts of the Q of the QR of the Jacobian;
@@ -122,7 +122,7 @@ void GPU_cmplx_bals_head
  *   xim      imaginary parts of the least squares solution. */
 
 void GPU_dbl_bals_qtb
- ( int ncols, int szt, int nbt, double **Q, double *b, bool verbose );
+ ( int ncols, int szt, int nbt, double **Q, double *b, int vrblvl );
 /*
  * DESCRIPTION :
  *   The updated right hand side vector b is multiplied with Q^T.
@@ -136,14 +136,14 @@ void GPU_dbl_bals_qtb
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
  *   Q        the Q of the QR factorization;
  *   b        right hand side vector of the linear system;
- *   verbose  is the verbose flag.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   b        the product of Q^T with b. */
 
 void GPU_cmplx_bals_qhb
  ( int ncols, int szt, int nbt, double **Qre, double **Qim,
-   double *bre, double *bim, bool verbose );
+   double *bre, double *bim, int vrblvl );
 /*
  * DESCRIPTION :
  *   The updated right hand side vector b is multiplied with Q^H.
@@ -159,7 +159,7 @@ void GPU_cmplx_bals_qhb
  *   Qim      imaginary parts the Q of the QR factorization;
  *   bre      real parts of the right hand side vector;
  *   bim      imaginary parts of the right hand side vector;
- *   verbose  is the verbose flag.
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   bre      real parts of the product of Q^H with b;
@@ -188,7 +188,7 @@ void GPU_dbl_bals_solve
  *   rhs      degp1 vectors of dimension dim;
  *   sol      space allocated for degp1 vectors of dimension dim;
  *   noqr     flag if true, then no qr;
- *   vrblvl   the verbose level (0 for silent).
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   Q        the Q of the QR factorization of the Jacobian matrix;
@@ -230,7 +230,7 @@ void GPU_cmplx_bals_solve
  *   solre    space allocated for degp1 vectors of dimension dim;
  *   solim    space allocated for degp1 vectors of dimension dim;
  *   noqr     flag if true, then no qr;
- *   vrblvl   the verbose level (0 for silent).
+ *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   Qre      real parts of the Q of the QR of the Jacobian matrix;

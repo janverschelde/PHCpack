@@ -10,6 +10,7 @@
 #include "dbl_tabs_kernels.h"
 #include "dbl_tail_kernels.h"
 #include "dbl_bals_kernels.h"
+#include "write_dbl_bstimeflops.h"
 #include "dbl_onenorms_host.h"
 
 using namespace std;
@@ -72,7 +73,7 @@ __global__ void cmplx_bals_qhb
 
 void GPU_dbl_bals_head
  ( int nrows, int ncols, int szt, int nbt,
-   double **A, double **Q, double **R, double *b, double *x, bool verbose )
+   double **A, double **Q, double **R, double *b, double *x, int vrblvl )
 {
    double qrtimelapsed_d;
    double houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms;
@@ -82,8 +83,9 @@ void GPU_dbl_bals_head
    long long int qrmulcnt = 0;
    long long int qrdivcnt = 0;
    long long int sqrtcnt = 0;
+   bool verbose = (vrblvl > 1);
 
-   if(verbose) 
+   if(vrblvl > 0) 
       cout << "-> GPU computes the blocked Householder QR ..." << endl;
 
    GPU_dbl_blocked_houseqr
@@ -93,11 +95,11 @@ void GPU_dbl_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
-   if(verbose) cout << "-> GPU multiplies rhs with Q^T ..." << endl;
+   if(vrblvl > 0) cout << "-> GPU multiplies rhs with Q^T ..." << endl;
 
-   GPU_dbl_bals_qtb(ncols,szt,nbt,Q,b,verbose);
+   GPU_dbl_bals_qtb(ncols,szt,nbt,Q,b,vrblvl);
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       for(int i=0; i<nrows; i++)
          cout << "Qtb[" << i << "] : " << b[i] << endl;
@@ -109,10 +111,10 @@ void GPU_dbl_bals_head
    long long int bsmulcnt = 0;
    long long int bsdivcnt = 0;
 
-   if(verbose)
+   if(vrblvl > 0)
       cout << "-> GPU solves an upper triangular system ..." << endl;
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)
@@ -132,7 +134,12 @@ void GPU_dbl_bals_head
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
        &bsaddcnt,&bsmulcnt,&bsdivcnt);
 
-   if(verbose)
+   if(vrblvl > 0)
+      write_dbl_bstimeflops
+         (invlapsed,mullapsed,sublapsed,elapsedms,bstimelapsed_d,
+          bsaddcnt,bsmulcnt,bsdivcnt);
+
+   if(vrblvl > 1)
    {
       cout << "-> after calling the GPU upper solver ..." << endl;
       for(int i=0; i<nrows; i++)
@@ -152,7 +159,7 @@ void GPU_cmplx_bals_head
  ( int nrows, int ncols, int szt, int nbt,
    double **Are, double **Aim, double **Qre, double **Qim,
    double **Rre, double **Rim, double *bre, double *bim,
-   double *xre, double *xim, bool verbose )
+   double *xre, double *xim, int vrblvl )
 {
    double qrtimelapsed_d;
    double houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms;
@@ -162,8 +169,9 @@ void GPU_cmplx_bals_head
    long long int qrmulcnt = 0;
    long long int qrdivcnt = 0;
    long long int sqrtcnt = 0;
+   bool verbose = (vrblvl > 1);
 
-   if(verbose) 
+   if(vrblvl > 0) 
       cout << "-> GPU computes the blocked Householder QR ..." << endl;
 
    GPU_cmplx_blocked_houseqr
@@ -173,12 +181,12 @@ void GPU_cmplx_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
-   if(verbose)
+   if(vrblvl > 0)
       cout << "-> GPU multiplies rhs with Q^H ..." << endl;
 
-   GPU_cmplx_bals_qhb(ncols,szt,nbt,Qre,Qim,bre,bim,verbose);
+   GPU_cmplx_bals_qhb(ncols,szt,nbt,Qre,Qim,bre,bim,vrblvl);
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       for(int i=0; i<nrows; i++)
          cout << "Qtb[" << i << "] : "
@@ -191,10 +199,10 @@ void GPU_cmplx_bals_head
    long long int bsmulcnt = 0;
    long long int bsdivcnt = 0;
 
-   if(verbose)
+   if(vrblvl > 0)
       cout << "-> GPU solves an upper triangular system ..." << endl;
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)
@@ -219,7 +227,7 @@ void GPU_cmplx_bals_head
          workRim[i][j] = Rim[i][j];
       }
    }
-   if(verbose)
+   if(vrblvl > 1)
    {
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)
@@ -235,7 +243,12 @@ void GPU_cmplx_bals_head
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
        &bsaddcnt,&bsmulcnt,&bsdivcnt);
 
-   if(verbose)
+   if(vrblvl > 0)
+      write_dbl_bstimeflops
+         (invlapsed,mullapsed,sublapsed,elapsedms,bstimelapsed_d,
+          bsaddcnt,bsmulcnt,bsdivcnt);
+
+   if(vrblvl > 1)
    {
       cout << "-> GPU_cmplx_bals_head, after GPU upper solver ..." << endl;
       for(int i=0; i<nrows; i++)
@@ -258,7 +271,7 @@ void GPU_cmplx_bals_head
 }
 
 void GPU_dbl_bals_qtb
- ( int ncols, int szt, int nbt, double **Q, double *b, bool verbose )
+ ( int ncols, int szt, int nbt, double **Q, double *b, int vrblvl )
 {
    double *b_d;
    const size_t szrhs = ncols*sizeof(double);
@@ -292,7 +305,7 @@ void GPU_dbl_bals_qtb
 
 void GPU_cmplx_bals_qhb
  ( int ncols, int szt, int nbt, double **Qre, double **Qim,
-   double *bre, double *bim, bool verbose )
+   double *bre, double *bim, int vrblvl )
 {
    double *bre_d;
    double *bim_d;
@@ -347,7 +360,6 @@ void GPU_dbl_bals_solve
 {
    const int nrows = dim;
    const int ncols = dim;
-   const bool bvrb = (vrblvl > 1);
    int skipupcnt = 0; // counts skipped updates
    int skipbscnt = 0; // counts skipped back substitutions
    double prevnorm = 1.0e+99;
@@ -402,7 +414,7 @@ void GPU_dbl_bals_solve
             b[i] = rhs[0][i];
             for(int j=0; j<ncols; j++) R[i][j] = mat[0][i][j];
          }
-         GPU_dbl_bals_head(nrows,ncols,szt,nbt,A,Q,R,b,x,bvrb);
+         GPU_dbl_bals_head(nrows,ncols,szt,nbt,A,Q,R,b,x,vrblvl);
 
          if(vrblvl > 0)
          {
@@ -437,7 +449,8 @@ void GPU_dbl_bals_solve
          if(vrblvl > 0)
             cout << "-> updating with x[" << stage-1 << "] ..." << endl;
 
-         GPU_dbl_bals_tail(nrows,ncols,szt,nbt,degp1,stage,mat,rhs,sol,bvrb);
+         GPU_dbl_bals_tail
+            (nrows,ncols,szt,nbt,degp1,stage,mat,rhs,sol,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -492,7 +505,7 @@ void GPU_dbl_bals_solve
          if(vrblvl > 0)
             cout << "-> GPU multiplies rhs with Q^T ..." << endl;
 
-         GPU_dbl_bals_qtb(ncols,szt,nbt,Q,b,bvrb);
+         GPU_dbl_bals_qtb(ncols,szt,nbt,Q,b,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -516,6 +529,11 @@ void GPU_dbl_bals_solve
             (ncols,szt,nbt,workR,b,x,
              &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
              &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+         if(vrblvl > 0)
+            write_dbl_bstimeflops
+               (invlapsed,mullapsed,sublapsed,elapsedms,bstimelapsed_d,
+                bsaddcnt,bsmulcnt,bsdivcnt);
 
          if(vrblvl > 1)
             for(int i=0; i<ncols; i++)
@@ -545,7 +563,6 @@ void GPU_cmplx_bals_solve
 {
    const int nrows = dim;
    const int ncols = dim;
-   const bool bvrb = (vrblvl > 1);
    int skipupcnt = 0; // counts skipped updates
    int skipbscnt = 0; // counts skipped backsubstitutions
    double prevnorm = 1.0e+99;
@@ -621,7 +638,8 @@ void GPU_cmplx_bals_solve
             }
          }
          GPU_cmplx_bals_head
-            (nrows,ncols,szt,nbt,Are,Aim,Qre,Qim,Rre,Rim,bre,bim,xre,xim,bvrb);
+            (nrows,ncols,szt,nbt,Are,Aim,Qre,Qim,Rre,Rim,bre,bim,
+             xre,xim,vrblvl);
 
          for(int j=0; j<ncols; j++)
          {
@@ -661,7 +679,7 @@ void GPU_cmplx_bals_solve
 
          GPU_cmplx_bals_tail
             (nrows,ncols,szt,nbt,degp1,stage,matre,matim,
-             rhsre,rhsim,solre,solim,bvrb);
+             rhsre,rhsim,solre,solim,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -724,7 +742,7 @@ void GPU_cmplx_bals_solve
          if(vrblvl > 0)
             cout << "-> GPU multiplies rhs with Q^H ..." << endl;
 
-         GPU_cmplx_bals_qhb(ncols,szt,nbt,Qre,Qim,bre,bim,bvrb);
+         GPU_cmplx_bals_qhb(ncols,szt,nbt,Qre,Qim,bre,bim,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -753,9 +771,14 @@ void GPU_cmplx_bals_solve
              &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
              &bsaddcnt,&bsmulcnt,&bsdivcnt);
 
-        if(vrblvl > 1)
-           for(int i=0; i<ncols; i++)
-              cout << "x[" << i << "] : " << xre[i] << "  " << xim[i] << endl;
+         if(vrblvl > 0)
+            write_dbl_bstimeflops
+               (invlapsed,mullapsed,sublapsed,elapsedms,bstimelapsed_d,
+                bsaddcnt,bsmulcnt,bsdivcnt);
+
+         if(vrblvl > 1)
+            for(int i=0; i<ncols; i++)
+               cout << "x[" << i << "] : " << xre[i] << "  " << xim[i] << endl;
       }
       for(int j=0; j<ncols; j++)
       {

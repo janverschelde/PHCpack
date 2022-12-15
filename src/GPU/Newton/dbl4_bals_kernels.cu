@@ -14,6 +14,7 @@
 #include "dbl4_tabs_kernels.h"
 #include "dbl4_tail_kernels.h"
 #include "dbl4_bals_kernels.h"
+#include "write_dbl4_bstimeflops.h"
 #include "dbl_onenorms_host.h"
 
 using namespace std;
@@ -164,7 +165,7 @@ void GPU_dbl4_bals_head
    double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo,
    double *bhihi, double *blohi, double *bhilo, double *blolo, 
-   double *xhihi, double *xlohi, double *xhilo, double *xlolo, bool verbose )
+   double *xhihi, double *xlohi, double *xhilo, double *xlolo, int vrblvl )
 {
    double qrtimelapsed_d;
    double houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms;
@@ -174,8 +175,9 @@ void GPU_dbl4_bals_head
    long long int qrmulcnt = 0;
    long long int qrdivcnt = 0;
    long long int sqrtcnt = 0;
+   bool verbose = (vrblvl > 1);
 
-   if(verbose) 
+   if(vrblvl > 0) 
       cout << "-> GPU computes the blocked Householder QR ..." << endl;
 
    GPU_dbl4_blocked_houseqr
@@ -186,30 +188,29 @@ void GPU_dbl4_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
-   if(verbose) cout << "-> GPU multiplies rhs with Q^T ..." << endl;
+   if(vrblvl > 0) cout << "-> GPU multiplies rhs with Q^T ..." << endl;
 
    GPU_dbl4_bals_qtb
       (ncols,szt,nbt,Qhihi,Qlohi,Qhilo,Qlolo,
-                     bhihi,blohi,bhilo,blolo,verbose);
+                     bhihi,blohi,bhilo,blolo,vrblvl);
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       for(int i=0; i<nrows; i++)
          cout << "Qtb[" << i << "] : "
               << bhihi[i] << "  " << blohi[i] << endl << "  "
               << bhilo[i] << "  " << blolo[i] << endl;
    }
-
    double bstimelapsed_d;
    double elapsedms,invlapsed,mullapsed,sublapsed;
    long long int bsaddcnt = 0;
    long long int bsmulcnt = 0;
    long long int bsdivcnt = 0;
 
-   if(verbose)
+   if(vrblvl > 0)
       cout << "-> GPU solves an upper triangular system ..." << endl;
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)
@@ -252,7 +253,12 @@ void GPU_dbl4_bals_head
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
        &bsaddcnt,&addover,&bsmulcnt,&mulover,&bsdivcnt,&divover);
 
-   if(verbose)
+   if(vrblvl > 0)
+      write_dbl4_bstimeflops
+         (szt,nbt,0,invlapsed,mullapsed,sublapsed,elapsedms,bstimelapsed_d,
+          bsaddcnt,addover,bsmulcnt,mulover,bsdivcnt,divover);
+
+   if(vrblvl > 1)
    {
       cout << "-> after calling the GPU upper solver ..." << endl;
       for(int i=0; i<nrows; i++)
@@ -287,7 +293,7 @@ void GPU_cmplx4_bals_head
    double *bimhihi, double *bimlohi, double *bimhilo, double *bimlolo,
    double *xrehihi, double *xrelohi, double *xrehilo, double *xrelolo,
    double *ximhihi, double *ximlohi, double *ximhilo, double *ximlolo,
-   bool verbose )
+   int vrblvl )
 {
    double qrtimelapsed_d;
    double houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms;
@@ -297,8 +303,9 @@ void GPU_cmplx4_bals_head
    long long int qrmulcnt = 0;
    long long int qrdivcnt = 0;
    long long int sqrtcnt = 0;
+   bool verbose = (vrblvl > 1);
 
-   if(verbose) 
+   if(vrblvl > 0) 
       cout << "-> GPU computes the blocked Householder QR ..." << endl;
 
    GPU_cmplx4_blocked_houseqr
@@ -311,16 +318,15 @@ void GPU_cmplx4_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
-   if(verbose)
+   if(vrblvl > 0)
       cout << "-> GPU multiplies rhs with Q^H ..." << endl;
 
    GPU_cmplx4_bals_qhb
       (ncols,szt,nbt,
        Qrehihi,Qrelohi,Qrehilo,Qrelolo,Qimhihi,Qimlohi,Qimhilo,Qimlolo,
-       brehihi,brelohi,brehilo,brelolo,bimhihi,bimlohi,bimhilo,bimlolo,
-       verbose);
+       brehihi,brelohi,brehilo,brelolo,bimhihi,bimlohi,bimhilo,bimlolo,vrblvl);
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       for(int i=0; i<nrows; i++)
          cout << "QHb[" << i << "] : "
@@ -329,7 +335,6 @@ void GPU_cmplx4_bals_head
               << bimhihi[i] << "  " << bimlohi[i] << endl << "  "
               << bimhilo[i] << "  " << bimlolo[i] << endl;
    }
-
    double bstimelapsed_d;
    double elapsedms,invlapsed,mullapsed,sublapsed;
    long long int bsaddcnt = 0;
@@ -339,10 +344,10 @@ void GPU_cmplx4_bals_head
    double mulover = 0.0;
    double divover = 0.0;
 
-   if(verbose)
+   if(vrblvl > 0)
       cout << "-> GPU solves an upper triangular system ..." << endl;
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)
@@ -392,7 +397,12 @@ void GPU_cmplx4_bals_head
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
        &bsaddcnt,&addover,&bsmulcnt,&mulover,&bsdivcnt,&divover);
 
-   if(verbose)
+   if(vrblvl > 0)
+      write_dbl4_bstimeflops
+         (szt,nbt,1,invlapsed,mullapsed,sublapsed,elapsedms,bstimelapsed_d,
+          bsaddcnt,addover,bsmulcnt,mulover,bsdivcnt,divover);
+
+   if(vrblvl > 1)
    {
       cout << "-> after calling the GPU upper solver ..." << endl;
       for(int i=0; i<nrows; i++)
@@ -426,7 +436,7 @@ void GPU_cmplx4_bals_head
 void GPU_dbl4_bals_qtb
  ( int ncols, int szt, int nbt,
    double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
-   double *bhihi, double *blohi, double *bhilo, double *blolo, bool verbose )
+   double *bhihi, double *blohi, double *bhilo, double *blolo, int vrblvl )
 {
    double *bhihi_d;
    double *blohi_d;
@@ -505,7 +515,7 @@ void GPU_cmplx4_bals_qhb
    double **Qimhihi, double **Qimlohi, double **Qimhilo, double **Qimlolo,
    double *brehihi, double *brelohi, double *brehilo, double *brelolo,
    double *bimhihi, double *bimlohi, double *bimhilo, double *bimlolo,
-   bool verbose )
+   int vrblvl )
 {
    double *brehihi_d;
    double *brelohi_d;
@@ -648,7 +658,6 @@ void GPU_dbl4_bals_solve
 {
    const int nrows = dim;
    const int ncols = dim;
-   const bool bvrb = (vrblvl > 1);
    int skipupcnt = 0; // counts the skipped updates
    int skipbscnt = 0; // counts the skipped substitutions
    double prevnorm = 1.0e+99;
@@ -744,7 +753,7 @@ void GPU_dbl4_bals_solve
          GPU_dbl4_bals_head
             (nrows,ncols,szt,nbt,Ahihi,Alohi,Ahilo,Alolo,
              Qhihi,Qlohi,Qhilo,Qlolo,Rhihi,Rlohi,Rhilo,Rlolo,
-             bhihi,blohi,bhilo,blolo,xhihi,xlohi,xhilo,xlolo,bvrb);
+             bhihi,blohi,bhilo,blolo,xhihi,xlohi,xhilo,xlolo,vrblvl);
    
          for(int j=0; j<ncols; j++)
          {
@@ -786,7 +795,7 @@ void GPU_dbl4_bals_solve
          GPU_dbl4_bals_tail
             (nrows,ncols,szt,nbt,degp1,stage,
              mathihi,matlohi,mathilo,matlolo,rhshihi,rhslohi,rhshilo,rhslolo,
-             solhihi,sollohi,solhilo,sollolo,bvrb);
+             solhihi,sollohi,solhilo,sollolo,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -854,7 +863,7 @@ void GPU_dbl4_bals_solve
 
          GPU_dbl4_bals_qtb
             (ncols,szt,nbt,Qhihi,Qlohi,Qhilo,Qlolo,
-                           bhihi,blohi,bhilo,blolo,bvrb);
+                           bhihi,blohi,bhilo,blolo,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -892,6 +901,12 @@ void GPU_dbl4_bals_solve
              bhihi,blohi,bhilo,blolo,xhihi,xlohi,xhilo,xlolo,
              &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
              &bsaddcnt,&addover,&bsmulcnt,&mulover,&bsdivcnt,&divover);
+
+         if(vrblvl > 0)
+            write_dbl4_bstimeflops
+               (szt,nbt,0,invlapsed,mullapsed,sublapsed,elapsedms,
+                bstimelapsed_d,bsaddcnt,addover,bsmulcnt,mulover,
+                bsdivcnt,divover);
 
          if(vrblvl > 1)
             for(int i=0; i<ncols; i++)
@@ -948,7 +963,6 @@ void GPU_cmplx4_bals_solve
 {
    const int nrows = dim;
    const int ncols = dim;
-   const bool bvrb = (vrblvl > 1);
    int skipupcnt = 0; // counts the skipped updates
    int skipbscnt = 0; // counts the skipped backsubstitutions
    double prevnorm = 1.0e+99;
@@ -1089,7 +1103,7 @@ void GPU_cmplx4_bals_solve
              Rrehihi,Rrelohi,Rrehilo,Rrelolo,Rimhihi,Rimlohi,Rimhilo,Rimlolo,
              brehihi,brelohi,brehilo,brelolo,bimhihi,bimlohi,bimhilo,bimlolo,
              xrehihi,xrelohi,xrehilo,xrelolo,ximhihi,ximlohi,ximhilo,ximlolo,
-             bvrb);
+             vrblvl);
 
          for(int j=0; j<ncols; j++)
          {
@@ -1144,7 +1158,7 @@ void GPU_cmplx4_bals_solve
              rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
              rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
              solrehihi,solrelohi,solrehilo,solrelolo,
-             solimhihi,solimlohi,solimhilo,solimlolo,bvrb);
+             solimhihi,solimlohi,solimhilo,solimlolo,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -1232,7 +1246,7 @@ void GPU_cmplx4_bals_solve
             (ncols,szt,nbt,
              Qrehihi,Qrelohi,Qrehilo,Qrelolo,Qimhihi,Qimlohi,Qimhilo,Qimlolo,
              brehihi,brelohi,brehilo,brelolo,bimhihi,bimlohi,bimhilo,bimlolo,
-             bvrb);
+             vrblvl);
 
          if(vrblvl > 1)
          {
@@ -1280,6 +1294,12 @@ void GPU_cmplx4_bals_solve
              xrehihi,xrelohi,xrehilo,xrelolo,ximhihi,ximlohi,ximhilo,ximlolo,
              &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
              &bsaddcnt,&addover,&bsmulcnt,&mulover,&bsdivcnt,&divover);
+
+         if(vrblvl > 0)
+             write_dbl4_bstimeflops
+                (szt,nbt,1,invlapsed,mullapsed,sublapsed,elapsedms,
+                 bstimelapsed_d,bsaddcnt,addover,bsmulcnt,mulover,
+                 bsdivcnt,divover);
 
          if(vrblvl > 1)
             for(int i=0; i<ncols; i++)
