@@ -1,0 +1,76 @@
+/* Defines the function with prototype in write_dbl_qrtimeflops. */
+
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+#include "write_dbl_qrtimeflops.h"
+
+void write_dbl_qrtimeflops
+ ( double houselapsedms, double RTvlapsedms, double tileRlapsedms,
+   double vb2Wlapsedms, double WYTlapsedms, double QWYTlapsedms,
+   double Qaddlapsedms, double YWTlapsedms, double YWTClapsedms,
+   double Raddlapsedms, double timelapsed,
+   long long int addcnt, long long int mulcnt,
+   long long int divcnt, long long int sqrtcnt )
+{
+   using namespace std;
+
+   cout << fixed << setprecision(3);
+
+   cout << "         Time spent by the Householder kernel : "
+        << houselapsedms << " milliseconds." << endl;
+   cout << "      Time spent by the kernel for beta*R^T*v : "
+        << RTvlapsedms << " milliseconds." << endl;
+   cout << "  Time spent by the kernel to reduce one tile : "
+        << tileRlapsedms << " milliseconds." << endl;
+   cout << "    Time spent by the kernel for the W matrix : "
+        << vb2Wlapsedms << " milliseconds." << endl;
+   cout << " Time spent by the kernel for computing Y*W^T : "
+        << YWTlapsedms << " milliseconds." << endl;
+   cout << " Time spent by the kernel for computing Q*WYT : "
+        << QWYTlapsedms << " milliseconds." << endl;
+   cout << " Time spent by the kernel for computing YWT*C : "
+        << YWTClapsedms << " milliseconds." << endl;
+   cout << "Time spent by the kernel for adding QWYT to Q : "
+        << Qaddlapsedms << " milliseconds." << endl;
+   cout << "Time spent by the kernel for adding R to YWTC : "
+        << Raddlapsedms << " milliseconds." << endl;
+
+   const double totlapsedms = houselapsedms + RTvlapsedms
+       + tileRlapsedms + vb2Wlapsedms + YWTlapsedms + QWYTlapsedms
+       + YWTClapsedms + Qaddlapsedms + Raddlapsedms;
+
+   cout << "                    Time spent by all kernels : "
+        << totlapsedms << " milliseconds." << endl;
+   cout << "        Total GPU wall clock computation time : ";
+   cout << fixed << setprecision(3) << timelapsed << " seconds." << endl;
+   cout << endl;
+
+   cout << "             Number of additions/subtractions : "
+        << addcnt << endl;
+   cout << "                    Number of multiplications : "
+        << mulcnt << endl;
+   cout << "                          Number of divisions : "
+        << divcnt << endl;
+   cout << "                    Number of calls to sqrt() : "
+        << sqrtcnt << endl;
+
+   long long int flopcnt = addcnt + mulcnt + divcnt + sqrtcnt;
+
+   cout << "    Total number of floating-point operations : "
+        << flopcnt << endl;
+   cout << endl;
+
+   double kernflops = 1000.0*((double) flopcnt)/totlapsedms;
+   double wallflops = ((double) flopcnt)/timelapsed;
+   const int gigacnt = pow(2.0,30);
+
+   cout << "Kernel Time Flops : "
+        << scientific << setprecision(3) << kernflops;
+   cout << fixed << setprecision(3)
+        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+   cout << " Wall Clock Flops : "
+        << scientific << setprecision(3) << wallflops;
+   cout << fixed << setprecision(3)
+        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+}

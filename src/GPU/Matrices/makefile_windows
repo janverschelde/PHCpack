@@ -354,12 +354,26 @@ write_dbl_bstimeflops.obj:
                  /I$(CUDASDK)/include \
                  /Fo: write_dbl_bstimeflops.obj /EHsc
 
+write_dbl_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl_qrtimeflops ..."
+	$(CL)\cl /c write_dbl_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl_qrtimeflops.obj /EHsc
+
 write_dbl2_bstimeflops.obj:
 	@-echo ">>> compiling write_dbl2_bstimeflops ..."
 	$(CL)\cl /c write_dbl2_bstimeflops.cpp \
                  -I$(winkitucrt) -I$(includepath) -O2 \
                  /I$(CUDASDK)/include \
                  /Fo: write_dbl2_bstimeflops.obj /EHsc
+
+write_dbl2_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl2_qrtimeflops ..."
+	$(CL)\cl /c write_dbl2_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl2_qrtimeflops.obj /EHsc
 
 write_dbl4_bstimeflops.obj:
 	@-echo ">>> compiling write_dbl4_bstimeflops ..."
@@ -368,12 +382,26 @@ write_dbl4_bstimeflops.obj:
                  /I$(CUDASDK)/include \
                  /Fo: write_dbl4_bstimeflops.obj /EHsc
 
+write_dbl4_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl4_qrtimeflops ..."
+	$(CL)\cl /c write_dbl4_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl4_qrtimeflops.obj /EHsc
+
 write_dbl8_bstimeflops.obj:
 	@-echo ">>> compiling write_dbl8_bstimeflops ..."
 	$(CL)\cl /c write_dbl8_bstimeflops.cpp \
                  -I$(winkitucrt) -I$(includepath) -O2 \
                  /I$(CUDASDK)/include \
                  /Fo: write_dbl8_bstimeflops.obj /EHsc
+
+write_dbl8_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl8_qrtimeflops ..."
+	$(CL)\cl /c write_dbl8_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl8_qrtimeflops.obj /EHsc
 
 gettimeofday4win.obj:
 	@-echo ">>> compiling gettimeofday4win ..."
@@ -663,14 +691,14 @@ test_dbl_baqr: test_dbl_baqr.obj prompt_baqr_setup.obj \
                dbl_baqr_testers.obj dbl_factors_testers.obj \
                dbl_baqr_host.obj dbl_baqr_kernels.obj \
                dbl_factorizations.obj dbl_baqr_flopcounts.obj \
-	       gettimeofday4win.obj \
+	       gettimeofday4win.obj write_dbl_qrtimeflops.obj \
                random_numbers.obj random_series.obj random_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_baqr.exe test_dbl_baqr.obj \
              prompt_baqr_setup.obj dbl_baqr_testers.obj \
              dbl_factors_testers.obj dbl_factorizations.obj \
              dbl_baqr_host.obj dbl_baqr_kernels.obj dbl_baqr_flopcounts.obj \
-             gettimeofday4win.obj \
+             gettimeofday4win.obj write_dbl_qrtimeflops.obj \
              random_numbers.obj random_series.obj random_matrices.obj
 
 dbl2_baqr_host.obj:
@@ -707,6 +735,7 @@ test_dbl2_baqr: test_dbl2_baqr.obj dbl2_baqr_testers.obj \
 	        dbl2_factors_testers.obj dbl2_baqr_host.obj \
                 dbl2_factorizations.obj dbl2_baqr_kernels.obj \
 		dbl_baqr_flopcounts.obj gettimeofday4win.obj \
+		write_dbl2_qrtimeflops.obj \
                 random_numbers.obj random2_vectors.obj random2_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl2_baqr.exe test_dbl2_baqr.obj \
@@ -714,6 +743,7 @@ test_dbl2_baqr: test_dbl2_baqr.obj dbl2_baqr_testers.obj \
              double_double_functions.obj dbl2_factors_testers.obj \
              dbl2_factorizations.obj dbl2_baqr_host.obj dbl2_baqr_kernels.obj \
 	     dbl_baqr_flopcounts.obj gettimeofday4win.obj \
+	     write_dbl2_qrtimeflops.obj \
              random_numbers.obj random2_vectors.obj random2_matrices.obj
 
 dbl4_baqr_host.obj:
@@ -751,6 +781,7 @@ test_dbl4_baqr: test_dbl4_baqr.obj dbl4_baqr_testers.obj \
 	        dbl4_factors_testers.obj dbl4_baqr_host.obj \
                 dbl4_factorizations.obj dbl4_baqr_kernels.obj \
 		gettimeofday4win.obj dbl_baqr_flopcounts.obj \
+		write_dbl4_qrtimeflops.obj \
                 random_numbers.obj random4_vectors.obj random4_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl4_baqr.exe test_dbl4_baqr.obj \
@@ -759,6 +790,7 @@ test_dbl4_baqr: test_dbl4_baqr.obj dbl4_baqr_testers.obj \
              dbl4_factors_testers.obj dbl_baqr_flopcounts.obj \
              dbl4_factorizations.obj dbl4_baqr_host.obj \
 	     gettimeofday4win.obj dbl4_baqr_kernels.obj \
+	     write_dbl4_qrtimeflops.obj \
              random_numbers.obj random4_vectors.obj random4_matrices.obj
 
 dbl8_baqr_host.obj:
@@ -796,6 +828,7 @@ test_dbl8_baqr: test_dbl8_baqr.obj dbl8_baqr_testers.obj \
 	        dbl8_factors_testers.obj dbl8_baqr_host.obj \
                 dbl8_factorizations.obj dbl8_baqr_kernels.obj \
 		gettimeofday4win.obj dbl_baqr_flopcounts.obj \
+		write_dbl8_qrtimeflops.obj \
                 random_numbers.obj random8_vectors.obj random8_matrices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl8_baqr.exe test_dbl8_baqr.obj \
@@ -804,7 +837,7 @@ test_dbl8_baqr: test_dbl8_baqr.obj dbl8_baqr_testers.obj \
 	     octo_double_functions.obj gettimeofday4win.obj \
              dbl8_factors_testers.obj dbl_baqr_flopcounts.obj \
              dbl8_factorizations.obj dbl8_baqr_host.obj \
-	     dbl8_baqr_kernels.obj \
+	     dbl8_baqr_kernels.obj write_dbl8_qrtimeflops.obj \
              random_numbers.obj random8_vectors.obj random8_matrices.obj
 
 dbl_qrbs_testers.obj:
@@ -1005,6 +1038,8 @@ clean:
 	del dbl8_baqr_host.obj dbl8_baqr_kernels.obj dbl8_baqr_testers.obj
 	del test_dbl8_baqr.obj test_dbl8_baqr_lib
 	del test_dbl8_baqr.exe test_dbl8_baqr.exp
+	del write_dbl_qrtimeflops.obj write_dbl2_qrtimeflops.obj
+	del write_dbl4_qrtimeflops.obj write_dbl8_qrtimeflops.obj
 	del test_dbl_qrbs.obj test_dbl_qrbs_lib
 	del test_dbl_qrbs.exe test_dbl_qrbs.exp
 	del dbl_qrbs_testers.obj

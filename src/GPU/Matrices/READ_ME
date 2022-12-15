@@ -51,10 +51,10 @@ dbl4_test_utilities       : test utilities in quad double precision
 dbl8_test_utilities       : test utilities in octo double precision
 dbl_data_files            : file reading and writing matrices
 make_data_files           : writes random upper triangular matrices to file
-write_dbl_bstimeflops     : writes times/flops for double back substitution
-write_dbl2_bstimeflops    : writes times/flops for double double back subs
-write_dbl4_bstimeflops    : writes times/flops for quad double back subs
-write_dbl8_bstimeflops    : writes times/flops for octo double back subs
+write_dbl_bstimeflops     : writes times/flops of double back substitution
+write_dbl2_bstimeflops    : writes times/flops of double double back subs
+write_dbl4_bstimeflops    : writes times/flops of quad double back subs
+write_dbl8_bstimeflops    : writes times/flops of octo double back subs
 dbl_tabs_testers          : tests tiled accelerated back substitution
 dbl2_tabs_testers         : tests on double double tabs
 dbl4_tabs_testers         : tests on quad double tabs
@@ -73,6 +73,10 @@ dbl_baqr_kernels          : kernels for baqr in double precision
 dbl2_baqr_kernels         : kernels for baqr in double double precision
 dbl4_baqr_kernels         : kernels for baqr in quad double precision
 dbl8_baqr_kernels         : kernels for baqr in octo double precision
+write_dbl_qrtimeflops     : writes times/flops of double Householder QR
+write_dbl2_qrtimeflops    : writes times/flops of double double Householder QR
+write_dbl4_qrtimeflops    : writes times/flops of quad double Householder QR
+write_dbl8_qrtimeflops    : writes times/flops of octo double Householder QR
 dbl_baqr_testers          : tests blocked accelerated qr in double precision
 dbl2_baqr_testers         : tests baqr in double double precision
 dbl4_baqr_testers         : tests baqr in quad double precision

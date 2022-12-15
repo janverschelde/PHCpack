@@ -242,17 +242,33 @@ write_dbl_bstimeflops.o:
 	@-echo ">>> compling write_dbl_bstimeflops ..."
 	$(gpp) -O3 -c write_dbl_bstimeflops.cpp
 
+write_dbl_qrtimeflops.o:
+	@-echo ">>> compling write_dbl_qrtimeflops ..."
+	$(gpp) -O3 -c write_dbl_qrtimeflops.cpp
+
 write_dbl2_bstimeflops.o:
 	@-echo ">>> compling write_dbl2_bstimeflops ..."
 	$(gpp) -O3 -c write_dbl2_bstimeflops.cpp
+
+write_dbl2_qrtimeflops.o:
+	@-echo ">>> compling write_dbl2_qrtimeflops ..."
+	$(gpp) -O3 -c write_dbl2_qrtimeflops.cpp
 
 write_dbl4_bstimeflops.o:
 	@-echo ">>> compling write_dbl4_bstimeflops ..."
 	$(gpp) -O3 -c write_dbl4_bstimeflops.cpp
 
+write_dbl4_qrtimeflops.o:
+	@-echo ">>> compling write_dbl4_qrtimeflops ..."
+	$(gpp) -O3 -c write_dbl4_qrtimeflops.cpp
+
 write_dbl8_bstimeflops.o:
 	@-echo ">>> compling write_dbl8_bstimeflops ..."
 	$(gpp) -O3 -c write_dbl8_bstimeflops.cpp
+
+write_dbl8_qrtimeflops.o:
+	@-echo ">>> compling write_dbl8_qrtimeflops ..."
+	$(gpp) -O3 -c write_dbl8_qrtimeflops.cpp
 
 dbl_tabs_testers.o:
 	@-echo ">>> compiling dbl_tabs_testers ..."
@@ -445,12 +461,13 @@ test_dbl_baqr.o:
 test_dbl_baqr: test_dbl_baqr.o prompt_baqr_setup.o dbl_baqr_testers.o \
                dbl_factorizations.o dbl_factors_testers.o \
                dbl_baqr_host.o dbl_baqr_kernels.o dbl_baqr_flopcounts.o \
+               write_dbl_qrtimeflops.o \
                random_numbers.o random_series.o random_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_baqr prompt_baqr_setup.o test_dbl_baqr.o \
                   dbl_baqr_testers.o dbl_factorizations.o \
                   dbl_factors_testers.o dbl_baqr_host.o dbl_baqr_kernels.o \
-                  dbl_baqr_flopcounts.o \
+                  dbl_baqr_flopcounts.o write_dbl_qrtimeflops.o \
                   random_numbers.o random_series.o random_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
@@ -476,12 +493,14 @@ test_dbl2_baqr: test_dbl2_baqr.o prompt_baqr_setup.o dbl2_baqr_testers.o \
                 double_double_functions.o dbl2_factorizations.o \
                 dbl2_factors_testers.o dbl2_baqr_host.o \
                 dbl2_baqr_kernels.o dbl_baqr_flopcounts.o \
+                write_dbl2_qrtimeflops.o \
                 random_numbers.o random2_vectors.o random2_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_baqr test_dbl2_baqr.o prompt_baqr_setup.o \
                   dbl2_baqr_testers.o dbl_baqr_flopcounts.o \
-                  double_double_functions.o dbl2_factorizations.o \
-                  dbl2_factors_testers.o dbl2_baqr_host.o dbl2_baqr_kernels.o \
+                  write_dbl2_qrtimeflops.o double_double_functions.o \
+                  dbl2_factorizations.o dbl2_factors_testers.o \
+                  dbl2_baqr_host.o dbl2_baqr_kernels.o \
                   random_numbers.o random2_vectors.o random2_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
@@ -507,6 +526,7 @@ test_dbl4_baqr: test_dbl4_baqr.o prompt_baqr_setup.o dbl4_baqr_testers.o \
                 double_double_functions.o quad_double_functions.o \
                 dbl4_factorizations.o dbl4_factors_testers.o \
                 dbl4_baqr_host.o dbl4_baqr_kernels.o dbl_baqr_flopcounts.o \
+                write_dbl4_qrtimeflops.o \
                 random_numbers.o random4_vectors.o random4_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl4_baqr test_dbl4_baqr.o prompt_baqr_setup.o \
@@ -514,6 +534,7 @@ test_dbl4_baqr: test_dbl4_baqr.o prompt_baqr_setup.o dbl4_baqr_testers.o \
                   dbl4_factorizations.o dbl4_factors_testers.o \
                   dbl4_baqr_host.o dbl4_baqr_testers.o \
                   dbl4_baqr_kernels.o dbl_baqr_flopcounts.o \
+                  write_dbl4_qrtimeflops.o \
                   random_numbers.o random4_vectors.o random4_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
@@ -540,6 +561,7 @@ test_dbl8_baqr: test_dbl8_baqr.o prompt_baqr_setup.o dbl8_baqr_testers.o \
                 octo_double_functions.o \
                 dbl8_factorizations.o dbl8_factors_testers.o \
                 dbl8_baqr_host.o dbl8_baqr_kernels.o dbl_baqr_flopcounts.o \
+                write_dbl8_qrtimeflops.o \
                 random_numbers.o random8_vectors.o random8_matrices.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl8_baqr test_dbl8_baqr.o prompt_baqr_setup.o \
@@ -548,6 +570,7 @@ test_dbl8_baqr: test_dbl8_baqr.o prompt_baqr_setup.o dbl8_baqr_testers.o \
                   dbl8_factorizations.o dbl8_factors_testers.o \
                   dbl8_baqr_host.o dbl8_baqr_testers.o \
                   dbl_baqr_flopcounts.o dbl8_baqr_kernels.o \
+                  write_dbl8_qrtimeflops.o \
                   random_numbers.o random8_vectors.o random8_matrices.o \
                -lcuda -lcudart -L$(CUDALIB)
 
@@ -672,10 +695,11 @@ clean:
 	/bin/rm -f -r test_dbl8_factors.o test_dbl8_factors
 	/bin/rm -f -r dbl_tabs_host.o dbl_tabs_kernels.o
 	/bin/rm -f -r dbl_test_utilities.o dbl_tabs_testers.o
-	/bin/rm -f -r dbl_tabs_flopcounts.o write_dbl_bstimeflops.o
-	/bin/rm -f -r write_dbl2_bstimeflops.o
-	/bin/rm -f -r write_dbl4_bstimeflops.o
-	/bin/rm -f -r write_dbl8_bstimeflops.o
+	/bin/rm -f -r dbl_tabs_flopcounts.o 
+	/bin/rm -f -r write_dbl_bstimeflops.o write_dbl_qrtimeflops.o
+	/bin/rm -f -r write_dbl2_bstimeflops.o write_dbl2_qrtimeflops.o
+	/bin/rm -f -r write_dbl4_bstimeflops.o write_dbl4_qrtimeflops.o
+	/bin/rm -f -r write_dbl8_bstimeflops.o write_dbl8_qrtimeflops.o
 	/bin/rm -f -r test_dbl_tabs.o test_dbl_tabs prompt_baqr_setup.o
 	/bin/rm -f -r random2_vectors.o random2_matrices.o
 	/bin/rm -f -r random4_vectors.o random4_matrices.o

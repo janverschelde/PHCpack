@@ -11,6 +11,8 @@
 #include "dbl8_factors_testers.h"
 #include "dbl8_baqr_host.h"
 #include "dbl8_baqr_kernels.h"
+#include "write_dbl8_qrtimeflops.h"
+#include "dbl8_baqr_testers.h"
 
 using namespace std;
 
@@ -220,66 +222,11 @@ void test_real8_blocked_qr
    }
    if((mode == 0) || (mode == 2))
    {
-      cout << "         Time spent by the Householder kernel : "
-           << houselapsedms << " milliseconds." << endl;
-      cout << "      Time spent by the kernel for beta*R^T*v : "
-           << RTvlapsedms << " milliseconds." << endl;
-      cout << "  Time spent by the kernel to reduce one tile : "
-           << tileRlapsedms << " milliseconds." << endl;
-      cout << "    Time spent by the kernel for the W matrix : "
-           << vb2Wlapsedms << " milliseconds." << endl;
-      // cout << " Time spent by the kernel for computing W*Y^T : ";
-      // cout << WYTlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing Y*W^T : "
-           << YWTlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing Q*WYT : "
-           << QWYTlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing YWT*C : "
-           << YWTClapsedms << " milliseconds." << endl;
-      cout << "Time spent by the kernel for adding QWYT to Q : "
-           << Qaddlapsedms << " milliseconds." << endl;
-      cout << "Time spent by the kernel for adding R to YWTC : "
-           << Raddlapsedms << " milliseconds." << endl;
-      const double totlapsedms = houselapsedms + RTvlapsedms
-         + tileRlapsedms + vb2Wlapsedms + YWTlapsedms + QWYTlapsedms
-         + YWTClapsedms + Qaddlapsedms + Raddlapsedms;
-      cout << "                    Time spent by all kernels : "
-           << totlapsedms << " milliseconds." << endl;
-      cout << "        Total GPU wall clock computation time : ";
-      cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
-      cout << endl;
-      cout << "             Number of additions/subtractions : "
-           << addcnt << " x 270 " << endl;
-      cout << "                    Number of multiplications : "
-           << mulcnt << " x 1742 " << endl;
-      cout << "                          Number of divisions : "
-           << divcnt << " x 5126 " << endl;
-      cout << "                    Number of calls to sqrt() : "
-           << sqrtcnt << " x 8491 " << endl;
-      long long int flopcnt = 270*addcnt + 1742*mulcnt
-                            + 5126*divcnt + 8491*sqrtcnt;
-      cout << "    Total number of floating-point operations : "
-           << flopcnt << endl;
-      cout << endl;
-      long long int bytecnt = 8*nrows*ncols + 8*nrows*nrows;
-      cout << "    Total number of bytes : " << bytecnt << endl << endl;
-      double intensity = ((double) flopcnt)/bytecnt;
-      cout << "     Arithmetic intensity : "
-           << scientific << setprecision(5) << intensity
-           << " #flops/#bytes" << endl << endl;
-      double kernflops = 1000.0*((double) flopcnt)/totlapsedms;
-      double wallflops = ((double) flopcnt)/timelapsed_d;
-      const int gigacnt = pow(2.0,30);
-      cout << "Kernel Time Flops : "
-           << scientific << setprecision(3) << kernflops;
-      cout << fixed << setprecision(3)
-           << " = " << kernflops/gigacnt << " Gigaflops" << endl;
-      cout << " Wall Clock Flops : "
-           << scientific << setprecision(3) << wallflops;
-      cout << fixed << setprecision(3)
-           << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+      write_dbl8_qrtimeflops
+         (0,nrows,ncols,houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms,
+          WYTlapsedms,QWYTlapsedms,Qaddlapsedms,YWTlapsedms,YWTClapsedms,
+          Raddlapsedms,timelapsed_d,addcnt,mulcnt,divcnt,sqrtcnt);
    }
-
    for(int i=0; i<nrows; i++)
    {
       free(Ahihihi[i]);   free(Alohihi[i]);
@@ -664,64 +611,10 @@ void test_cmplx8_blocked_qr
    }
    if((mode == 0) || (mode == 2))
    {
-      cout << "         Time spent by the Householder kernel : "
-           << houselapsedms << " milliseconds." << endl;
-      cout << "      Time spent by the kernel for beta*R^H*v : "
-           << RHvlapsedms << " milliseconds." << endl;
-      cout << "  Time spent by the kernel to reduce one tile : "
-           << tileRlapsedms << " milliseconds." << endl;
-      cout << "    Time spent by the kernel for the W matrix : "
-           << vb2Wlapsedms << " milliseconds." << endl;
-      // cout << " Time spent by the kernel for computing W*Y^H : ";
-      // cout << WYTlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing Y*W^H : "
-           << YWTlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing Q*WYH : "
-           << QWYTlapsedms << " milliseconds." << endl;
-      cout << " Time spent by the kernel for computing YWH*C : "
-           << YWTClapsedms << " milliseconds." << endl;
-      cout << "Time spent by the kernel for adding QWYH to Q : "
-           << Qaddlapsedms << " milliseconds." << endl;
-      cout << "Time spent by the kernel for adding R to YWHC : "
-           << Raddlapsedms << " milliseconds." << endl;
-      const double totlapsedms = houselapsedms + RHvlapsedms
-         + tileRlapsedms + vb2Wlapsedms + YWTlapsedms + QWYTlapsedms
-         + YWTClapsedms + Qaddlapsedms + Raddlapsedms;
-      cout << "                    Time spent by all kernels : "
-           << totlapsedms << " milliseconds." << endl;
-      cout << "        Total GPU wall clock computation time : ";
-      cout << fixed << setprecision(3) << timelapsed_d << " seconds." << endl;
-      cout << endl;
-      cout << "             Number of additions/subtractions : "
-           << addcnt << " x 89 " << endl;
-      cout << "                    Number of multiplications : "
-           << mulcnt << " x 336 " << endl;
-      cout << "                          Number of divisions : "
-           << divcnt << " x 893 " << endl;
-      cout << "                    Number of calls to sqrt() : "
-           << sqrtcnt << " x 8491 " << endl;
-      long long int flopcnt = 89*addcnt + 336*mulcnt
-                            + 893*divcnt + 8491*sqrtcnt;
-      cout << "    Total number of floating-point operations : "
-           << flopcnt << endl;
-      cout << endl;
-      long long int bytecnt = 16*nrows*ncols + 16*nrows*nrows;
-      cout << "    Total number of bytes : " << bytecnt << endl << endl;
-      double intensity = ((double) flopcnt)/bytecnt;
-      cout << "     Arithmetic intensity : "
-           << scientific << setprecision(5) << intensity
-           << " #flops/#bytes" << endl << endl;
-      double kernflops = 1000.0*((double) flopcnt)/totlapsedms;
-      double wallflops = ((double) flopcnt)/timelapsed_d;
-      const int gigacnt = pow(2.0,30);
-      cout << "Kernel Time Flops : "
-           << scientific << setprecision(3) << kernflops;
-      cout << fixed << setprecision(3)
-           << " = " << kernflops/gigacnt << " Gigaflops" << endl;
-      cout << " Wall Clock Flops : "
-           << scientific << setprecision(3) << wallflops;
-      cout << fixed << setprecision(3)
-           << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+      write_dbl8_qrtimeflops
+         (1,nrows,ncols,houselapsedms,RHvlapsedms,tileRlapsedms,vb2Wlapsedms,
+          WYTlapsedms,QWYTlapsedms,Qaddlapsedms,YWTlapsedms,YWTClapsedms,
+          Raddlapsedms,timelapsed_d,addcnt,mulcnt,divcnt,sqrtcnt);
    }
    for(int i=0; i<nrows; i++)
    {

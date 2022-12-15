@@ -1,5 +1,7 @@
 Wed 14 Dec 2022 : new write_{dbl, dbl2, dbl4, dbl8}_bstimeflops, with code
   extracted from {dbl, dbl2, dbl4, dbl8}_tabs_testers.cpp.  Updated makefiles.
+  New write_{dbl, dbl2, dbl4, dbl8}_qrtimeflops, with code extracted 
+  from {dbl, dbl2, dbl4, dbl8}_baqr_testers.cpp.  Updated makefiles.
 
 Tue 27 Sep 2022 : in {dbl2,dbl4,dbl8}_tabs_kernels.cu fixed the zero tests
   in the invert_tiles kernels, fixing the wrong last test on real data.
