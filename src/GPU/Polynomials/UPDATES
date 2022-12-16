@@ -1,3 +1,6 @@
+Fri 16 Dec 2022 : extended write_job_counts with a function to write only
+  the operations for the convolution jobs.
+
 Sat 10 Dec 2022 : to convolution_jobs.cpp and dbl_polynomial_kernels.cu
   added if tests from empty jobs and monomials.
 

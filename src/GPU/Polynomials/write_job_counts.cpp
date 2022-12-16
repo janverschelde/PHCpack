@@ -38,6 +38,30 @@ void write_addition_counts ( AdditionJobs jobs )
    cout << "layer count sum : " << checksum << endl;
 }
 
+void convolution_operation_counts
+ ( int deg, ConvolutionJobs cnvjobs, long int *addcnt, long int *mulcnt,
+   int vrblvl )
+{
+   const int nbrcnv = cnvjobs.get_count();
+
+   const long int cnvaddcnt = (deg+1)*deg*nbrcnv;
+   const long int cnvmulcnt = (deg+1)*(deg+1)*nbrcnv;
+
+   if(vrblvl > 0)
+   {
+      const long int totalcnt = cnvaddcnt + cnvmulcnt;
+
+      cout << "truncation degree : " << deg << endl;
+      cout << "number of operations in " << nbrcnv
+           << " convolution jobs : " << endl;
+      cout << "  #additions : " << cnvaddcnt;
+      cout << ", #multiplications : " << cnvmulcnt << endl;
+      cout << "total #operations : " << totalcnt << endl;
+   }
+   *addcnt = cnvaddcnt;
+   *mulcnt = cnvmulcnt;
+}
+
 void write_operation_counts
  ( int deg, ConvolutionJobs cnvjobs, AdditionJobs addjobs )
 {
