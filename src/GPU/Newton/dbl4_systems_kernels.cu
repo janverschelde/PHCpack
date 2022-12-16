@@ -8,14 +8,61 @@
 #else
 #include <sys/time.h>
 #endif
-#include "write_gpu_timings.h"
 #include "job_coordinates.h"
+#include "write_job_counts.h"
+#include "write_gpu_timings.h"
 #include "quad_double_functions.h"
 #include "dbl4_convolutions_host.h"
 #include "dbl4_monomials_host.h"
 #include "dbl4_polynomials_kernels.h"
 
 using namespace std;
+
+void write_dbl4_cnvflops
+ ( int dim, int deg, int ctype,
+   ConvolutionJobs cnvjobs, double kernms, double wallsec )
+{
+   long int addcnt,mulcnt;
+   long long int flopcnt;
+
+   convolution_operation_counts(deg,cnvjobs,&addcnt,&mulcnt,1);
+
+   if(ctype == 0)
+      flopcnt = 89*addcnt + 336*mulcnt;
+   else
+      flopcnt = 4*89*addcnt + 4*336*mulcnt;
+   /*
+      1 complex addition takes 2 floating-point (fp) additions
+      1 complex multiplication takes 2 fp additions and 4 fp multiplications
+   => quadruple the number of fp additions and multiplications */
+
+   long long int bytecnt;
+
+   if(ctype == 0)
+      bytecnt = 4*dim*(deg+1);
+   else
+      bytecnt = 8*dim*(deg+1);
+
+   cout << "    Total number of bytes : " << bytecnt << endl;
+
+   double intensity = ((double) flopcnt)/bytecnt;
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(3) << intensity
+        << " #flops/#bytes" << endl;
+
+   double kernflops = 1000.0*((double) flopcnt)/kernms;
+   double wallflops = ((double) flopcnt)/wallsec;
+   const int gigacnt = pow(2.0,30);
+
+   cout << "Kernel Time Flops : "
+        << scientific << setprecision(3) << kernflops;
+   cout << fixed << setprecision(3)
+        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+   cout << " Wall Clock Flops : "
+        << scientific << setprecision(3) << wallflops;
+   cout << fixed << setprecision(3)
+        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+}
 
 // The code in dbl4_evaldiffdata_to_output is an adaptation of the
 // function dbl4_convoluted_data_to_output in dbl2_polynomials_kernels.cu.
@@ -356,8 +403,10 @@ void GPU_dbl4_mon_evaldiff
        dim,nbr,deg,nvr,idx,fstart,bstart,cstart,vrblvl);
 
    if(vrblvl > 0)
+   {
       write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
-
+      write_dbl4_cnvflops(dim,deg,0,cnvjobs,*elapsedms,*walltimesec);
+   }
    cudaFree(datahihi_d); cudaFree(datalohi_d);
    cudaFree(datahilo_d); cudaFree(datalolo_d);
 
@@ -547,8 +596,10 @@ void GPU_cmplx4_mon_evaldiff
        dim,nbr,deg,nvr,idx,fstart,bstart,cstart,vrblvl);
 
    if(vrblvl > 0)
+   {
       write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
-
+      write_dbl4_cnvflops(dim,deg,1,cnvjobs,*elapsedms,*walltimesec);
+   }
    cudaFree(datarehihi_d); cudaFree(datarelohi_d);
    cudaFree(datarehilo_d); cudaFree(datarelolo_d);
    cudaFree(dataimhihi_d); cudaFree(dataimlohi_d);

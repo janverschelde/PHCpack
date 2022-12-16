@@ -7,6 +7,19 @@
 
 #include "convolution_jobs.h"
 
+void write_dbl2_cnvflops
+ ( int dim, int deg, ConvolutionJobs cnvjobs, double kernms, double wallsec );
+/*
+ * DESCRIPTION :
+ *   Writes the kernel and wall time flops for the convolution jobs.
+ *
+ * ON ENTRY :
+ *   dim      number of series;
+ *   deg      order of the series, truncation degree;
+ *   cnvjobs  defines the convolution jobs;
+ *   kernms   kernel time elapsed in milliseconds; 
+ *   wallsec  wall clock time elapsed in seconds. */
+
 void dbl2_evaldiffdata_to_output
  ( double *datahi, double *datalo, double ***outputhi, double ***outputlo,
    int dim, int nbr, int deg, int *nvr,
