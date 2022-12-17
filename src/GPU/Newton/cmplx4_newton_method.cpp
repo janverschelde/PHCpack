@@ -397,7 +397,9 @@ void cmplx4_newton_qrstep
              resvecrehihi,resvecrelohi,resvecrehilo,resvecrelolo,
              resvecimhihi,resvecimlohi,resvecimhilo,resvecimlolo,
              resmaxhihi,resmaxlohi,resmaxhilo,resmaxlolo,vrblvl);
-         cout << "maximum residual : " << *resmaxhihi << endl;
+
+         cout << scientific << setprecision(3)
+              << "maximum residual : " << *resmaxhihi << endl;
       }
       cmplx4_update_series
          (dim,degp1,*tailidx_h-1,
@@ -473,7 +475,8 @@ void cmplx4_newton_qrstep
              resmaxhihi,resmaxlohi,resmaxhilo,resmaxlolo,
              &elapsedms,&addcnt,&mulcnt,vrblvl);
 
-         cout << "maximum residual : " << *resmaxhihi << endl;
+         cout << scientific << setprecision(3) 
+              << "maximum residual : " << *resmaxhihi << endl;
       }
       cmplx4_update_series
          (dim,degp1,*tailidx_d-1,

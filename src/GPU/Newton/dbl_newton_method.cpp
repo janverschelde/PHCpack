@@ -161,7 +161,8 @@ void dbl_newton_qrstep
          CPU_dbl_linear_residue
             (dim,degp1,*tailidx_h-1,jacval_h,rhs_h,sol_h,
              resvec,resmax,vrblvl);
-         cout << "maximum residual : " << *resmax << endl;
+         cout << scientific << setprecision(3)
+              << "maximum residual : " << *resmax << endl;
       }
       dbl_update_series(dim,degp1,*tailidx_h-1,input_h,sol_h,vrblvl);
    }
@@ -196,7 +197,8 @@ void dbl_newton_qrstep
          GPU_dbl_linear_residue
             (dim,degp1,szt,nbt,*tailidx_d-1,jacval_d,rhs_d,sol_d,
              resvec,resmax,&elapsedms,&addcnt,&mulcnt,vrblvl);
-         cout << "maximum residual : " << *resmax << endl;
+         cout << scientific << setprecision(3)
+              << "maximum residual : " << *resmax << endl;
       }
       dbl_update_series(dim,degp1,*tailidx_d-1,input_d,sol_d,vrblvl);
    }

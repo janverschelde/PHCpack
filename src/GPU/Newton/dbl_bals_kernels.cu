@@ -291,7 +291,7 @@ void write_dbl_qtbflops ( int ctype, int ncols, float lapsms )
    cout << "Time spent for Q^T*b : " << lapsms << " milliseconds." << endl;
 
    long long int flopcnt;
-   if(ctype = 0)
+   if(ctype == 0)
       flopcnt = 2*ncols*ncols; // as many + as * in one inner product
    else
       flopcnt = 16*ncols*ncols;
@@ -472,7 +472,9 @@ void GPU_dbl_bals_solve
    else
    {
       CPU_dbl_onenorm(nrows,rhs[0],&nrm);
-      if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
+      if(vrblvl > 0)
+         cout << scientific << setprecision(3)
+              << "1-norm of b : " << nrm << endl;
 
       if(nrm + 1.0 == 1.0)
       {
@@ -501,7 +503,8 @@ void GPU_dbl_bals_solve
          if(vrblvl > 0)
          {
             CPU_dbl_onenorm(ncols,x,&nrm);
-            cout << "1-norm of x : " << nrm << endl;
+            cout << scientific << setprecision(3)
+                 << "1-norm of x : " << nrm << endl;
          }
          for(int j=0; j<ncols; j++) sol[0][j] = x[j];
 
@@ -517,7 +520,8 @@ void GPU_dbl_bals_solve
       double *xs = sol[stage-1];       // solution to do the update with
       CPU_dbl_onenorm(dim,xs,&nrm);
       if(vrblvl > 0)
-         cout << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
+         cout << scientific << setprecision(3)
+              << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
 
       if(nrm < 1.0e-15)
       {
@@ -554,7 +558,8 @@ void GPU_dbl_bals_solve
       }
       CPU_dbl_onenorm(nrows,b,&nrm);
       if(vrblvl > 0)
-         cout << "1-norm of b[" << stage << "] : " << nrm << endl;
+         cout << scientific << setprecision(3)
+              << "1-norm of b[" << stage << "] : " << nrm << endl;
 
       if((nrm < 1.0e-15) || (nrm > prevnorm))
       {
@@ -683,7 +688,9 @@ void GPU_cmplx_bals_solve
    else
    {
       CPU_cmplx_onenorm(nrows,rhsre[0],rhsim[0],&nrm);
-      if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
+      if(vrblvl > 0)
+         cout << scientific << setprecision(3)
+              << "1-norm of b : " << nrm << endl;
 
       if(nrm + 1.0 == 1.0)
       {
@@ -745,7 +752,8 @@ void GPU_cmplx_bals_solve
 
       CPU_cmplx_onenorm(dim,xrs,xis,&nrm);
       if(vrblvl > 0)
-         cout << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
+         cout << scientific << setprecision(3)
+              << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
 
       if(nrm < 1.0e-15)
       {
@@ -785,7 +793,8 @@ void GPU_cmplx_bals_solve
       }
       CPU_cmplx_onenorm(dim,bre,bim,&nrm);
       if(vrblvl > 0)
-         cout << "1-norm of b[" << stage << "] : " << nrm << endl;
+         cout << scientific << setprecision(3)
+              << "1-norm of b[" << stage << "] : " << nrm << endl;
 
       if((nrm < 1.0e-15) || (nrm > prevnorm))
       {

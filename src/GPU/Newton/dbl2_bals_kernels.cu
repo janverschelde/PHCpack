@@ -574,7 +574,9 @@ void GPU_dbl2_bals_solve
    else
    {
       CPU_dbl_onenorm(nrows,rhshi[0],&nrm);
-      if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
+      if(vrblvl > 0)
+         cout << scientific << setprecision(3)
+              << "1-norm of b : " << nrm << endl;
 
       if(nrm < 1.0e-28)
       {
@@ -638,7 +640,8 @@ void GPU_dbl2_bals_solve
       double *xshi = solhi[stage-1];       // solution to do the update with
       CPU_dbl_onenorm(dim,xshi,&nrm);
       if(vrblvl > 0)
-         cout << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
+         cout << scientific << setprecision(3)
+              << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
 
       if(nrm < 1.0e-28)
       {
@@ -678,7 +681,8 @@ void GPU_dbl2_bals_solve
       }
       CPU_dbl_onenorm(nrows,bhi,&nrm);
       if(vrblvl > 0)
-         cout << "1-norm of b[" << stage << "] : " << nrm << endl;
+         cout << scientific << setprecision(3)
+              << "1-norm of b[" << stage << "] : " << nrm << endl;
 
       if((nrm < 1.0e-28) || (nrm > prevnorm))
       {
@@ -835,7 +839,9 @@ void GPU_cmplx2_bals_solve
    else
    {
       CPU_cmplx_onenorm(nrows,rhsrehi[0],rhsimhi[0],&nrm);
-      if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
+      if(vrblvl > 0)
+         cout << scientific << setprecision(3)
+              << "1-norm of b : " << nrm << endl;
 
       if(nrm < 1.0e-28)
       {
@@ -907,7 +913,8 @@ void GPU_cmplx2_bals_solve
 
       CPU_cmplx_onenorm(dim,xrs,xis,&nrm);
       if(vrblvl > 0)
-         cout << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
+         cout << scientific << setprecision(3)
+              << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
 
       if(nrm < 1.0e-28)
       {
@@ -954,7 +961,8 @@ void GPU_cmplx2_bals_solve
       }
       CPU_cmplx_onenorm(dim,brehi,bimhi,&nrm);
       if(vrblvl > 0)
-         cout << "1-norm of b[" << stage << "] : " << nrm << endl;
+         cout << scientific << setprecision(3)
+              << "1-norm of b[" << stage << "] : " << nrm << endl;
 
       if((nrm < 1.0e-28) || (nrm > prevnorm))
       {

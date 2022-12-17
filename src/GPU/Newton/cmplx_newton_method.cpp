@@ -197,7 +197,8 @@ void cmplx_newton_qrstep
          CPU_cmplx_linear_residue
             (dim,degp1,*tailidx_h-1,jacvalre_h,jacvalim_h,rhsre_h,rhsim_h,
              solre_h,solim_h,resvecre,resvecim,resmax,vrblvl);
-         cout << "maximum residual : " << *resmax << endl;
+         cout << scientific << setprecision(3)
+              << "maximum residual : " << *resmax << endl;
       }
       cmplx_update_series
          (dim,degp1,*tailidx_h-1,inputre_h,inputim_h,solre_h,solim_h,vrblvl);
@@ -241,7 +242,8 @@ void cmplx_newton_qrstep
             (dim,degp1,szt,nbt,*tailidx_d-1,jacvalre_d,jacvalim_d,
              rhsre_d,rhsim_d,solre_d,solim_d,resvecre,resvecim,resmax,
              &elapsedms,&addcnt,&mulcnt,vrblvl);
-         cout << "maximum residual : " << *resmax << endl;
+         cout << scientific << setprecision(3)
+              << "maximum residual : " << *resmax << endl;
       }
       cmplx_update_series
          (dim,degp1,*tailidx_d-1,inputre_d,inputim_d,solre_d,solim_d,vrblvl);

@@ -268,7 +268,9 @@ void cmplx2_newton_qrstep
              solrelo_h,solimhi_h,solimlo_h,
              resvecrehi,resvecrelo,resvecimhi,resvecimlo,
              resmaxhi,resmaxlo,vrblvl);
-         cout << "maximum residual : " << *resmaxhi << endl;
+
+         cout << scientific << setprecision(3)
+              << "maximum residual : " << *resmaxhi << endl;
       }
       cmplx2_update_series
          (dim,degp1,*tailidx_h-1,
@@ -324,7 +326,9 @@ void cmplx2_newton_qrstep
              solrehi_d,solrelo_d,solimhi_d,solimlo_d,
              resvecrehi,resvecrelo,resvecimhi,resvecimlo,
              resmaxhi,resmaxlo,&elapsedms,&addcnt,&mulcnt,vrblvl);
-         cout << "maximum residual : " << *resmaxhi << endl;
+
+         cout << scientific << setprecision(3)
+              << "maximum residual : " << *resmaxhi << endl;
       }
       cmplx2_update_series
          (dim,degp1,*tailidx_d-1,

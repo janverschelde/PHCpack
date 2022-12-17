@@ -693,7 +693,9 @@ void cmplx8_newton_qrstep
              resmaxhihihi,resmaxlohihi,resmaxhilohi,resmaxlolohi,
              resmaxhihilo,resmaxlohilo,resmaxhilolo,resmaxlololo,
              vrblvl);
-         cout << "maximum residual : " << *resmaxhihihi << endl;
+
+         cout << scientific << setprecision(3)
+              << "maximum residual : " << *resmaxhihihi << endl;
       }
       cmplx8_update_series
          (dim,degp1,*tailidx_h-1,
@@ -805,7 +807,9 @@ void cmplx8_newton_qrstep
              resmaxhihihi,resmaxlohihi,resmaxhilohi,resmaxlolohi,
              resmaxhihilo,resmaxlohilo,resmaxhilolo,resmaxlololo,
              &elapsedms,&addcnt,&mulcnt,vrblvl);
-         cout << "maximum residual : " << *resmaxhihihi << endl;
+
+         cout << scientific << setprecision(3)
+              << "maximum residual : " << *resmaxhihihi << endl;
       }
       cmplx8_update_series
          (dim,degp1,*tailidx_d-1,

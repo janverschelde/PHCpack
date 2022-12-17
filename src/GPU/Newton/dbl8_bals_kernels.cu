@@ -1270,7 +1270,9 @@ void GPU_dbl8_bals_solve
    else
    {
       CPU_dbl_onenorm(nrows,rhshihihi[0],&nrm);
-      if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
+      if(vrblvl > 0)
+         cout << scientific << setprecision(3)
+              << "1-norm of b : " << nrm << endl;
 
       if(nrm < 1.0e-120)
       {
@@ -1378,7 +1380,8 @@ void GPU_dbl8_bals_solve
       double *xshihihi = solhihihi[stage-1]; // solution used in update
       CPU_dbl_onenorm(dim,xshihihi,&nrm);
       if(vrblvl > 0)
-         cout << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
+         cout << scientific << setprecision(3)
+              << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
 
       if(nrm < 1.0e-120)
       {
@@ -1434,7 +1437,8 @@ void GPU_dbl8_bals_solve
       }
       CPU_dbl_onenorm(nrows,bhihihi,&nrm);
       if(vrblvl > 0)
-         cout << "1-norm of b[" << stage << "] : " << nrm << endl;
+         cout << scientific << setprecision(3)
+              << "1-norm of b[" << stage << "] : " << nrm << endl;
 
       if((nrm < 1.0e-120) || (nrm > prevnorm))
       {
@@ -1726,7 +1730,9 @@ void GPU_cmplx8_bals_solve
    else
    {
       CPU_cmplx_onenorm(nrows,rhsrehihihi[0],rhsimhihihi[0],&nrm);
-      if(vrblvl > 0) cout << "1-norm of b : " << nrm << endl;
+      if(vrblvl > 0)
+         cout << scientific << setprecision(3)
+              << "1-norm of b : " << nrm << endl;
 
       if(nrm < 1.0e-120)
       {
@@ -1903,7 +1909,8 @@ void GPU_cmplx8_bals_solve
       double *xishihihi = solimhihihi[stage-1];
       CPU_cmplx_onenorm(dim,xrshihihi,xishihihi,&nrm);
       if(vrblvl > 0)
-         cout << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
+         cout << scientific << setprecision(3)
+              << "1-norm of x[" << stage-1 << "] : " << nrm << endl;
 
       if(nrm < 1.0e-120)
       {
@@ -1992,7 +1999,8 @@ void GPU_cmplx8_bals_solve
       }
       CPU_cmplx_onenorm(dim,brehihihi,bimhihihi,&nrm);
       if(vrblvl > 0)
-         cout << "1-norm of b[" << stage << "] : " << nrm << endl;
+         cout << scientific << setprecision(3)
+              << "1-norm of b[" << stage << "] : " << nrm << endl;
 
       if((nrm < 1.0e-120) || (nrm > prevnorm))
       {
