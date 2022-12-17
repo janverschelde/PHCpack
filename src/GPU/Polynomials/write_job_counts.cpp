@@ -39,17 +39,17 @@ void write_addition_counts ( AdditionJobs jobs )
 }
 
 void convolution_operation_counts
- ( int deg, ConvolutionJobs cnvjobs, long int *addcnt, long int *mulcnt,
-   int vrblvl )
+ ( int deg, ConvolutionJobs cnvjobs,
+   long long int *addcnt, long long int *mulcnt, int vrblvl )
 {
-   const int nbrcnv = cnvjobs.get_count();
-
-   const long int cnvaddcnt = (deg+1)*deg*nbrcnv;
-   const long int cnvmulcnt = (deg+1)*(deg+1)*nbrcnv;
+   const long long int nbrcnv = cnvjobs.get_count();
+   const long long int degp1 = deg+1;
+   const long long int cnvaddcnt = degp1*deg*nbrcnv;
+   const long long int cnvmulcnt = degp1*degp1*nbrcnv;
 
    if(vrblvl > 0)
    {
-      const long int totalcnt = cnvaddcnt + cnvmulcnt;
+      const long long int totalcnt = cnvaddcnt + cnvmulcnt;
 
       cout << "truncation degree : " << deg << endl;
       cout << "number of operations in " << nbrcnv

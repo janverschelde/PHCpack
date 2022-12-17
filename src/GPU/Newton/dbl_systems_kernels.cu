@@ -21,8 +21,7 @@ void write_dbl_cnvflops
  ( int dim, int deg, int ctype,
    ConvolutionJobs cnvjobs, double kernms, double wallsec )
 {
-   long int addcnt,mulcnt;
-   long long int flopcnt;
+   long long int addcnt,mulcnt,flopcnt;
 
    convolution_operation_counts(deg,cnvjobs,&addcnt,&mulcnt,1);
 

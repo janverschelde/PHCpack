@@ -17,8 +17,8 @@ void write_addition_counts ( AdditionJobs jobs );
  *   Writes the counts of addition jobs in each layer. */
 
 void convolution_operation_counts
- ( int deg, ConvolutionJobs cnvjobs, long int *addcnt, long int *mulcnt,
-   int vrblvl );
+ ( int deg, ConvolutionJobs cnvjobs,
+   long long int *addcnt, long long int *mulcnt, int vrblvl );
 /*
  * DESCRIPTION :
  *   Returns the total number of arithmetical operations defined
