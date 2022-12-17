@@ -165,6 +165,16 @@ void GPU_cmplx2_bals_head
  *   ximhi    high doubles of the imaginary parts of the solution;
  *   ximlo    low doubles of the imaginary parts of the solution. */
 
+void write_dbl2_qtbflops ( int ctype, int ncols, float lapsms );
+/*
+ * DESCRIPTION :
+ *   Writes the number of flops and arithmetic intensity for Q^T*b.
+ *
+ * ON ENTRY :
+ *   ctype    0 if real, 1 if complex;
+ *   ncols    number of columns in the matrix;
+ *   lapsms   time elapsed in milliseconds. */ 
+
 void GPU_dbl2_bals_qtb
  ( int ncols, int szt, int nbt,
    double **Qhi, double **Qlo, double *bhi, double *blo, int vrblvl );

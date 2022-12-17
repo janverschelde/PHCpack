@@ -2,6 +2,7 @@ Fri 16 Dec 2022 : extended {dbl, dbl2, dbl4, dbl8_systems_kernels with
   functions to write the arithmetic intensity and the flop counts.
   Updates the makefiles for the compilation of write_job_counts.
   Modified dbl*_systems_kernels.cu for the long long int in the counts.
+  To dbl*_bals_kernels, added flops computation for Q^T*b kernels.
 
 Thu 15 Dec 2022 : updated dbl_bals_kernels.cu for the computation of the
   arithmetic intensities of the QR and back substitutions.

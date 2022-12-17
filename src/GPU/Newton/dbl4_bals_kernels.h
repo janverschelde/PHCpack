@@ -243,6 +243,16 @@ void GPU_cmplx4_bals_head
  *   ximhilo  second lowest doubles of the imaginary parts of the solution;
  *   ximlolo  lowest doubles of the imaginary parts of the solution. */
 
+void write_dbl4_qtbflops ( int ctype, int ncols, float lapsms );
+/*
+ * DESCRIPTION :
+ *   Writes the number of flops and arithmetic intensity for Q^T*b.
+ *
+ * ON ENTRY :
+ *   ctype    0 if real, 1 if complex;
+ *   ncols    number of columns in the matrix;
+ *   lapsms   time elapsed in milliseconds. */ 
+
 void GPU_dbl4_bals_qtb
  ( int ncols, int szt, int nbt,
    double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,

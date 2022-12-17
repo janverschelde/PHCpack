@@ -121,6 +121,16 @@ void GPU_cmplx_bals_head
  *   xre      real parts of the least squares solution;
  *   xim      imaginary parts of the least squares solution. */
 
+void write_dbl_qtbflops ( int ctype, int ncols, float lapsms );
+/*
+ * DESCRIPTION :
+ *   Writes the number of flops and arithmetic intensity for Q^T*b.
+ *
+ * ON ENTRY :
+ *   ctype    0 if real, 1 if complex;
+ *   ncols    number of columns in the matrix;
+ *   lapsms   time elapsed in milliseconds. */ 
+
 void GPU_dbl_bals_qtb
  ( int ncols, int szt, int nbt, double **Q, double *b, int vrblvl );
 /*

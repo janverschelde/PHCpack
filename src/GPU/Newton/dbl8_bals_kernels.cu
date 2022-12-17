@@ -721,6 +721,52 @@ void GPU_cmplx8_bals_head
    free(workRrelololo); free(workRimlololo);
 }
 
+void write_dbl8_qtbflops ( int ctype, int ncols, float lapsms )
+{
+   cout << fixed << setprecision(3);
+   cout << "Time spent for Q^T*b : " << lapsms << " milliseconds." << endl;
+
+   long long int flopcnt;
+   if(ctype == 0)
+      flopcnt = 270*ncols*ncols + 1742*ncols*ncols;
+      // as many + as * in one inner product
+   else
+      flopcnt = 4*270*ncols*ncols + 4*1742*ncols*ncols;
+      // for complex *: 2 ops for +, 6 for *, which is 8 in total
+
+   cout << "    Total number of floating-point operations : "
+        << flopcnt << endl;
+
+   long long int bytecnt;
+
+   if(ctype == 0)
+      bytecnt = 8*ncols*ncols;
+   else
+      bytecnt = 16*ncols*ncols;
+
+   cout << "    Total number of bytes : " << bytecnt << endl;
+
+   double intensity = ((double) flopcnt)/bytecnt;
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(3) << intensity
+        << " #flops/#bytes" << endl;
+
+   double kernflops = 1000.0*((double) flopcnt)/lapsms;
+   // double wallflops = ((double) flopcnt)/timelapsed;
+   const int gigacnt = pow(2.0,30);
+
+   cout << "Kernel Time Flops : "
+        << scientific << setprecision(3) << kernflops;
+   cout << fixed << setprecision(3)
+        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+/*
+   cout << " Wall Clock Flops : "
+        << scientific << setprecision(3) << wallflops;
+   cout << fixed << setprecision(3)
+        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+ */
+}
+
 void GPU_dbl8_bals_qtb
  ( int ncols, int szt, int nbt,
    double **Qhihihi, double **Qlohihi, double **Qhilohi, double **Qlolohi,
@@ -823,6 +869,12 @@ void GPU_dbl8_bals_qtb
    cudaMemcpy(Qthilolo_d,Qthilolo_h,szmat,cudaMemcpyHostToDevice);
    cudaMemcpy(Qtlololo_d,Qtlololo_h,szmat,cudaMemcpyHostToDevice);
 
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+
+   cudaEventRecord(start);
    dbl8_bals_qtb<<<nbt,szt>>>
       (ncols,szt,
        Qthihihi_d,Qtlohihi_d,Qthilohi_d,Qtlolohi_d,
@@ -831,6 +883,9 @@ void GPU_dbl8_bals_qtb
        bhihilo_d,blohilo_d,bhilolo_d,blololo_d,
        rhihihi_d,rlohihi_d,rhilohi_d,rlolohi_d,
        rhihilo_d,rlohilo_d,rhilolo_d,rlololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
 
    cudaMemcpy(bhihihi,rhihihi_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(blohihi,rlohihi_d,szrhs,cudaMemcpyDeviceToHost);
@@ -840,6 +895,8 @@ void GPU_dbl8_bals_qtb
    cudaMemcpy(blohilo,rlohilo_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(bhilolo,rhilolo_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(blololo,rlololo_d,szrhs,cudaMemcpyDeviceToHost);
+
+   if(vrblvl > 0) write_dbl8_qtbflops(0,ncols,milliseconds);
 
    free(Qthihihi_h); free(Qtlohihi_h); free(Qthilohi_h); free(Qtlolohi_h);
    free(Qthihilo_h); free(Qtlohilo_h); free(Qthilolo_h); free(Qtlololo_h);
@@ -1048,6 +1105,12 @@ void GPU_cmplx8_bals_qhb
    cudaMemcpy(QHimhilolo_d,QHimhilolo_h,szmat,cudaMemcpyHostToDevice);
    cudaMemcpy(QHimlololo_d,QHimlololo_h,szmat,cudaMemcpyHostToDevice);
 
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+
+   cudaEventRecord(start);
    cmplx8_bals_qhb<<<nbt,szt>>>
       (ncols,szt,QHrehihihi_d,QHrelohihi_d,QHrehilohi_d,QHrelolohi_d,
                  QHrehihilo_d,QHrelohilo_d,QHrehilolo_d,QHrelololo_d,
@@ -1061,6 +1124,9 @@ void GPU_cmplx8_bals_qhb
        rrehihilo_d,rrelohilo_d,rrehilolo_d,rrelololo_d,
        rimhihihi_d,rimlohihi_d,rimhilohi_d,rimlolohi_d,
        rimhihilo_d,rimlohilo_d,rimhilolo_d,rimlololo_d);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
 
    cudaMemcpy(brehihihi,rrehihihi_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(brelohihi,rrelohihi_d,szrhs,cudaMemcpyDeviceToHost);
@@ -1078,6 +1144,8 @@ void GPU_cmplx8_bals_qhb
    cudaMemcpy(bimlohilo,rimlohilo_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(bimhilolo,rimhilolo_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(bimlololo,rimlololo_d,szrhs,cudaMemcpyDeviceToHost);
+
+   if(vrblvl > 0) write_dbl8_qtbflops(1,ncols,milliseconds);
 
    cudaFree(brehihihi_d); cudaFree(brelohihi_d);
    cudaFree(brehilohi_d); cudaFree(brelolohi_d);

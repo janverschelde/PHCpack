@@ -425,6 +425,16 @@ void GPU_cmplx8_bals_head
  *   ximhilolo are the second lowest doubles of the imaginary parts of x;
  *   ximlololo are the lowest doubles of the imaginary parts of x. */
 
+void write_dbl8_qtbflops ( int ctype, int ncols, float lapsms );
+/*
+ * DESCRIPTION :
+ *   Writes the number of flops and arithmetic intensity for Q^T*b.
+ *
+ * ON ENTRY :
+ *   ctype    0 if real, 1 if complex;
+ *   ncols    number of columns in the matrix;
+ *   lapsms   time elapsed in milliseconds. */ 
+
 void GPU_dbl8_bals_qtb
  ( int ncols, int szt, int nbt,
    double **Qhihihi, double **Qlohihi, double **Qhilohi, double **Qlolohi,
