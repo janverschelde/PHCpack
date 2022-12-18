@@ -7,6 +7,11 @@
 #include <cmath>
 #include <vector_types.h>
 #include <time.h>
+#ifdef winwalltime
+#include "gettimeofday4win.h"
+#else
+#include <sys/time.h>
+#endif
 #include "random_numbers.h"
 #include "random_monomials.h"
 #include "dbl_factorizations.h"
@@ -392,6 +397,8 @@ int test_dbl_real_newton
  */
    // Define the initial input, a vector of ones.
 
+   if(vrblvl > 0) cout << "setting up the test system ..." << endl;
+
    double **sol = new double*[dim];
 
    for(int i=0; i<dim; i++) sol[i] = new double[degp1];
@@ -454,8 +461,10 @@ int test_dbl_real_newton
    bool noqr_d = false;
    int tailidx_h = 1;
    int tailidx_d = 1;
-
    int wrkdeg = 0; // working degree of precision
+
+   struct timeval begintime,endtime; // wall clock time of computations
+   gettimeofday(&begintime,0);
 
    for(int step=0; step<nbsteps; step++)
    {
@@ -484,6 +493,11 @@ int test_dbl_real_newton
       wrkdeg = wrkdeg + 1 + wrkdeg/2;
       if(wrkdeg > deg) wrkdeg = deg;
    }
+   gettimeofday(&endtime,0);
+   long seconds = endtime.tv_sec - begintime.tv_sec;
+   long microseconds = endtime.tv_usec - begintime.tv_usec;
+   double walltimesec = seconds + microseconds*1.0e-6;
+
    if(vrblvl < 2)
    {
       double errsum = 0.0;
@@ -512,5 +526,9 @@ int test_dbl_real_newton
       }
       cout << "error : " << errsum << endl;
    }
+   cout << "Wall clock time on all Newton steps : ";
+   cout << fixed << setprecision(3) 
+        << walltimesec << " seconds." << endl;
+
    return 0;
 }

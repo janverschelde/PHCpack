@@ -24,6 +24,10 @@ includepath="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\To
 
 # include path for the Windows Kit
 winkitucrt="C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt"
+# include path for the Windows.h file
+winkitum="C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um"
+# include path for the winapifamily.h
+winkitshared="C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\shared"
 
 # libaries of the Microsoft Visual Studio compiler
 libdirvs="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\lib\x64"
@@ -460,7 +464,9 @@ dbl8_systems_kernels.obj:
 dbl_newton_method.obj:
 	@-echo ">>> compiling dbl_newton_method ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
-                    -I$(winkitucrt) -I$(includepath) -O2 \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
                       dbl_newton_method.cpp \
                  /I$(CUDASDK)/include \
                  /Fo: dbl_newton_method.obj /EHsc
@@ -468,7 +474,9 @@ dbl_newton_method.obj:
 dbl2_newton_method.obj:
 	@-echo ">>> compiling dbl2_newton_method ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
-                    -I$(winkitucrt) -I$(includepath) -O2 \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
                       dbl2_newton_method.cpp \
                  /I$(CUDASDK)/include \
                  /Fo: dbl2_newton_method.obj /EHsc
@@ -476,7 +484,9 @@ dbl2_newton_method.obj:
 dbl4_newton_method.obj:
 	@-echo ">>> compiling dbl4_newton_method ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
-                    -I$(winkitucrt) -I$(includepath) -O2 \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
                       dbl4_newton_method.cpp \
                  /I$(CUDASDK)/include \
                  /Fo: dbl4_newton_method.obj /EHsc
@@ -484,7 +494,9 @@ dbl4_newton_method.obj:
 dbl8_newton_method.obj:
 	@-echo ">>> compiling dbl8_newton_method ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
-                    -I$(winkitucrt) -I$(includepath) -O2 \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
                       dbl8_newton_method.cpp \
                  /I$(CUDASDK)/include \
                  /Fo: dbl8_newton_method.obj /EHsc
@@ -492,7 +504,9 @@ dbl8_newton_method.obj:
 cmplx_newton_method.obj:
 	@-echo ">>> compiling cmplx_newton_method ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
-                    -I$(winkitucrt) -I$(includepath) -O2 \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
                       cmplx_newton_method.cpp \
                  /I$(CUDASDK)/include \
                  /Fo: cmplx_newton_method.obj /EHsc
@@ -500,7 +514,9 @@ cmplx_newton_method.obj:
 cmplx2_newton_method.obj:
 	@-echo ">>> compiling cmplx2_newton_method ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
-                    -I$(winkitucrt) -I$(includepath) -O2 \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
                       cmplx2_newton_method.cpp \
                  /I$(CUDASDK)/include \
                  /Fo: cmplx2_newton_method.obj /EHsc
@@ -508,7 +524,9 @@ cmplx2_newton_method.obj:
 cmplx4_newton_method.obj:
 	@-echo ">>> compiling cmplx4_newton_method ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
-                    -I$(winkitucrt) -I$(includepath) -O2 \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
                       cmplx4_newton_method.cpp \
                  /I$(CUDASDK)/include \
                  /Fo: cmplx4_newton_method.obj /EHsc
@@ -516,7 +534,9 @@ cmplx4_newton_method.obj:
 cmplx8_newton_method.obj:
 	@-echo ">>> compiling cmplx8_newton_method ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
-                    -I$(winkitucrt) -I$(includepath) -O2 \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
                       cmplx8_newton_method.cpp \
                  /I$(CUDASDK)/include \
                  /Fo: cmplx8_newton_method.obj /EHsc
