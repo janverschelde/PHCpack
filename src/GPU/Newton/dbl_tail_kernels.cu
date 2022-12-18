@@ -67,6 +67,52 @@ __global__ void cmplx_bals_tail
    bim[idx] = biim;
 }
 
+void write_dbl_balsflops ( int ctype, int ncols, float lapsms )
+{
+   cout << fixed << setprecision(3);
+   cout << "Time spent for b = b - A*x : " << lapsms
+        << " milliseconds." << endl;
+
+   long long int flopcnt;
+   if(ctype == 0)
+      flopcnt = 2*ncols*ncols; // as many + as * in one inner product
+   else
+      flopcnt = 16*ncols*ncols;
+   // for complex: 2 ops for +, 6 for *, which is 8 in total
+
+   cout << "    Total number of floating-point operations : "
+        << flopcnt << endl;
+
+   long long int bytecnt;
+
+   if(ctype == 0)
+      bytecnt = ncols*ncols;
+   else
+      bytecnt = 2*ncols*ncols;
+
+   cout << "    Total number of bytes : " << bytecnt << endl;
+
+   double intensity = ((double) flopcnt)/bytecnt;
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(3) << intensity
+        << " #flops/#bytes" << endl;
+
+   double kernflops = 1000.0*((double) flopcnt)/lapsms;
+   // double wallflops = ((double) flopcnt)/timelapsed;
+   const int gigacnt = pow(2.0,30);
+
+   cout << "Kernel Time Flops : "
+        << scientific << setprecision(3) << kernflops;
+   cout << fixed << setprecision(3)
+        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+/*
+   cout << " Wall Clock Flops : "
+        << scientific << setprecision(3) << wallflops;
+   cout << fixed << setprecision(3)
+        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+ */
+}
+
 void GPU_dbl_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***mat, double **rhs, double **sol, int vrblvl )
@@ -112,7 +158,18 @@ void GPU_dbl_bals_tail
          cout << "nbt = " << nbt << ", szt = " << szt
               << ", ncols = " << ncols << endl;
 
+      cudaEvent_t start,stop;       // to measure time spent by kernels 
+      cudaEventCreate(&start);
+      cudaEventCreate(&stop);
+      float milliseconds;
+
+      cudaEventRecord(start);
       dbl_bals_tail<<<nbt,szt>>>(ncols,szt,A_d,x_d,b_d);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+
+      if(vrblvl > 0) write_dbl_balsflops(0,ncols,milliseconds);
       
       if(vrblvl > 1)
          cout << "copying block " << k << " of right hand side ..." << endl;
@@ -200,8 +257,19 @@ void GPU_cmplx_bals_tail
          cout << "nbt = " << nbt << ", szt = " << szt
               << ", ncols = " << ncols << endl;
 
+      cudaEvent_t start,stop;       // to measure time spent by kernels 
+      cudaEventCreate(&start);
+      cudaEventCreate(&stop);
+      float milliseconds;
+
+      cudaEventRecord(start);
       cmplx_bals_tail<<<nbt,szt>>>
          (ncols,szt,Are_d,Aim_d,xre_d,xim_d,bre_d,bim_d);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+
+      if(vrblvl > 0) write_dbl_balsflops(1,ncols,milliseconds);
       
       if(vrblvl > 1)
          cout << "copying block " << k << " of right hand side ..." << endl;
@@ -282,6 +350,8 @@ void GPU_dbl_linear_residue
          cudaEventElapsedTime(&milliseconds,start,stop);
          *lapms += milliseconds;
          flopcount_dbl_bals_tail(dim,add,mul);
+
+         if(vrblvl > 0) write_dbl_balsflops(0,dim,milliseconds);
       }
       cudaMemcpy(resvec[i],r_d,szrhs,cudaMemcpyDeviceToHost);
    }
@@ -380,6 +450,8 @@ void GPU_cmplx_linear_residue
          cudaEventElapsedTime(&milliseconds,start,stop);
          *lapms += milliseconds;
          flopcount_cmplx_bals_tail(dim,add,mul);
+
+         if(vrblvl > 0) write_dbl_balsflops(1,dim,milliseconds);
       }
       cudaMemcpy(resvecre[i],rre_d,szrhs,cudaMemcpyDeviceToHost);
       cudaMemcpy(resvecim[i],rim_d,szrhs,cudaMemcpyDeviceToHost);

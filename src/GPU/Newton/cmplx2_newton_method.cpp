@@ -328,7 +328,10 @@ void cmplx2_newton_qrstep
              resmaxhi,resmaxlo,&elapsedms,&addcnt,&mulcnt,vrblvl);
 
          cout << scientific << setprecision(3)
-              << "maximum residual : " << *resmaxhi << endl;
+              << "maximum residual : " << *resmaxhi;
+         cout << fixed << setprecision(3)
+              << "  total kernel time : " << elapsedms
+              << " milliseconds" << endl;
       }
       cmplx2_update_series
          (dim,degp1,*tailidx_d-1,

@@ -104,6 +104,53 @@ __global__ void cmplx2_bals_tail
    bimlo[idx] = biimlo;
 }
 
+void write_dbl2_balsflops ( int ctype, int ncols, float lapsms )
+{
+   cout << fixed << setprecision(3);
+   cout << "Time spent for b = b - A*x: " << lapsms
+        << " milliseconds." << endl;
+
+   long long int flopcnt;
+   if(ctype == 0)
+      flopcnt = 20*ncols*ncols + 23*ncols*ncols;
+      // as many + as * in one inner product
+   else
+      flopcnt = 4*20*ncols*ncols + 4*23*ncols*ncols;
+      // for complex *: 2 ops for +, 6 for *, which is 8 in total
+
+   cout << "    Total number of floating-point operations : "
+        << flopcnt << endl;
+
+   long long int bytecnt;
+
+   if(ctype == 0)
+      bytecnt = 2*ncols*ncols;
+   else
+      bytecnt = 4*ncols*ncols;
+
+   cout << "    Total number of bytes : " << bytecnt << endl;
+
+   double intensity = ((double) flopcnt)/bytecnt;
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(3) << intensity
+        << " #flops/#bytes" << endl;
+
+   double kernflops = 1000.0*((double) flopcnt)/lapsms;
+   // double wallflops = ((double) flopcnt)/timelapsed;
+   const int gigacnt = pow(2.0,30);
+
+   cout << "Kernel Time Flops : "
+        << scientific << setprecision(3) << kernflops;
+   cout << fixed << setprecision(3)
+        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+/*
+   cout << " Wall Clock Flops : "
+        << scientific << setprecision(3) << wallflops;
+   cout << fixed << setprecision(3)
+        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+ */
+}
+
 void GPU_dbl2_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***mathi, double ***matlo, double **rhshi, double **rhslo,
@@ -165,8 +212,19 @@ void GPU_dbl2_bals_tail
          cout << "nbt = " << nbt << ", szt = " << szt
               << ", ncols = " << ncols << endl;
 
+      cudaEvent_t start,stop;       // to measure time spent by kernels 
+      cudaEventCreate(&start);
+      cudaEventCreate(&stop);
+      float milliseconds;
+
+      cudaEventRecord(start);
       dbl2_bals_tail<<<nbt,szt>>>
           (ncols,szt,Ahi_d,Alo_d,xhi_d,xlo_d,bhi_d,blo_d);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+
+      if(vrblvl > 0) write_dbl2_balsflops(0,ncols,milliseconds);
       
       if(vrblvl > 1)
          cout << "copying block " << k << " of right hand side ..." << endl;
@@ -277,9 +335,20 @@ void GPU_cmplx2_bals_tail
          cout << "nbt = " << nbt << ", szt = " << szt
               << ", ncols = " << ncols << endl;
 
+      cudaEvent_t start,stop;       // to measure time spent by kernels 
+      cudaEventCreate(&start);
+      cudaEventCreate(&stop);
+      float milliseconds;
+
+      cudaEventRecord(start);
       cmplx2_bals_tail<<<nbt,szt>>>
          (ncols,szt,Arehi_d,Arelo_d,Aimhi_d,Aimlo_d,
           xrehi_d,xrelo_d,ximhi_d,ximlo_d,brehi_d,brelo_d,bimhi_d,bimlo_d);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+
+      if(vrblvl > 0) write_dbl2_balsflops(1,ncols,milliseconds);
       
       if(vrblvl > 1)
          cout << "copying block " << k << " of right hand side ..." << endl;
@@ -380,6 +449,8 @@ void GPU_dbl2_linear_residue
          cudaEventElapsedTime(&milliseconds,start,stop);
          *lapms += milliseconds;
          flopcount_dbl_bals_tail(dim,add,mul);
+
+         if(vrblvl > 0) write_dbl2_balsflops(0,dim,milliseconds);
       }
       cudaMemcpy(resvechi[i],rhi_d,szrhs,cudaMemcpyDeviceToHost);
       cudaMemcpy(resveclo[i],rlo_d,szrhs,cudaMemcpyDeviceToHost);
@@ -519,6 +590,8 @@ void GPU_cmplx2_linear_residue
          cudaEventElapsedTime(&milliseconds,start,stop);
          *lapms += milliseconds;
          flopcount_cmplx_bals_tail(dim,add,mul);
+
+         if(vrblvl > 0) write_dbl2_balsflops(1,dim,milliseconds);
       }
       cudaMemcpy(resvecrehi[i],rrehi_d,szrhs,cudaMemcpyDeviceToHost);
       cudaMemcpy(resvecrelo[i],rrelo_d,szrhs,cudaMemcpyDeviceToHost);

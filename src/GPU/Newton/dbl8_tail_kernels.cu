@@ -268,6 +268,53 @@ __global__ void cmplx8_bals_tail
    bimlololo[idx] = biimlololo;
 }
 
+void write_dbl8_balsflops ( int ctype, int ncols, float lapsms )
+{
+   cout << fixed << setprecision(3);
+   cout << "Time spent for b = b - A*x : " << lapsms
+        << " milliseconds." << endl;
+
+   long long int flopcnt;
+   if(ctype == 0)
+      flopcnt = 270*ncols*ncols + 1742*ncols*ncols;
+      // as many + as * in one inner product
+   else
+      flopcnt = 4*270*ncols*ncols + 4*1742*ncols*ncols;
+      // for complex *: 2 ops for +, 6 for *, which is 8 in total
+
+   cout << "    Total number of floating-point operations : "
+        << flopcnt << endl;
+
+   long long int bytecnt;
+
+   if(ctype == 0)
+      bytecnt = 8*ncols*ncols;
+   else
+      bytecnt = 16*ncols*ncols;
+
+   cout << "    Total number of bytes : " << bytecnt << endl;
+
+   double intensity = ((double) flopcnt)/bytecnt;
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(3) << intensity
+        << " #flops/#bytes" << endl;
+
+   double kernflops = 1000.0*((double) flopcnt)/lapsms;
+   // double wallflops = ((double) flopcnt)/timelapsed;
+   const int gigacnt = pow(2.0,30);
+
+   cout << "Kernel Time Flops : "
+        << scientific << setprecision(3) << kernflops;
+   cout << fixed << setprecision(3)
+        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+/*
+   cout << " Wall Clock Flops : "
+        << scientific << setprecision(3) << wallflops;
+   cout << fixed << setprecision(3)
+        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+ */
+}
+
 void GPU_dbl8_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***mathihihi, double ***matlohihi,
@@ -409,6 +456,12 @@ void GPU_dbl8_bals_tail
          cout << "nbt = " << nbt << ", szt = " << szt
               << ", ncols = " << ncols << endl;
 
+      cudaEvent_t start,stop;       // to measure time spent by kernels 
+      cudaEventCreate(&start);
+      cudaEventCreate(&stop);
+      float milliseconds;
+
+      cudaEventRecord(start);
       dbl8_bals_tail<<<nbt,szt>>>
           (ncols,szt,
            Ahihihi_d,Alohihi_d,Ahilohi_d,Alolohi_d,
@@ -417,6 +470,11 @@ void GPU_dbl8_bals_tail
            xhihilo_d,xlohilo_d,xhilolo_d,xlololo_d,
            bhihihi_d,blohihi_d,bhilohi_d,blolohi_d,
            bhihilo_d,blohilo_d,bhilolo_d,blololo_d);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+
+      if(vrblvl > 0) write_dbl8_balsflops(0,ncols,milliseconds);
       
       if(vrblvl > 1)
          cout << "copying block " << k << " of right hand side ..." << endl;
@@ -713,6 +771,12 @@ void GPU_cmplx8_bals_tail
          cout << "nbt = " << nbt << ", szt = " << szt
               << ", ncols = " << ncols << endl;
 
+      cudaEvent_t start,stop;       // to measure time spent by kernels 
+      cudaEventCreate(&start);
+      cudaEventCreate(&stop);
+      float milliseconds;
+
+      cudaEventRecord(start);
       cmplx8_bals_tail<<<nbt,szt>>>
          (ncols,szt,Arehihihi_d,Arelohihi_d,Arehilohi_d,Arelolohi_d,
                     Arehihilo_d,Arelohilo_d,Arehilolo_d,Arelololo_d,
@@ -726,6 +790,11 @@ void GPU_cmplx8_bals_tail
           brehihilo_d,brelohilo_d,brehilolo_d,brelololo_d,
           bimhihihi_d,bimlohihi_d,bimhilohi_d,bimlolohi_d,
           bimhihilo_d,bimlohilo_d,bimhilolo_d,bimlololo_d);
+      cudaEventRecord(stop);
+      cudaEventSynchronize(stop);
+      cudaEventElapsedTime(&milliseconds,start,stop);
+
+      if(vrblvl > 0) write_dbl8_balsflops(1,ncols,milliseconds);
       
       if(vrblvl > 1)
          cout << "copying block " << k << " of right hand side ..." << endl;
@@ -968,12 +1037,13 @@ void GPU_dbl8_linear_residue
                      xhihilo_d,xlohilo_d,xhilolo_d,xlololo_d,
                      rhihihi_d,rlohihi_d,rhilohi_d,rlolohi_d,
                      rhihilo_d,rlohilo_d,rhilolo_d,rlololo_d);
-
          cudaEventRecord(stop);
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *lapms += milliseconds;
          flopcount_dbl_bals_tail(dim,add,mul);
+
+         if(vrblvl > 0) write_dbl8_balsflops(0,dim,milliseconds);
       }
       cudaMemcpy(resvechihihi[i],rhihihi_d,szrhs,cudaMemcpyDeviceToHost);
       cudaMemcpy(resveclohihi[i],rlohihi_d,szrhs,cudaMemcpyDeviceToHost);
@@ -1332,12 +1402,13 @@ void GPU_cmplx8_linear_residue
                      rrehihilo_d,rrelohilo_d,rrehilolo_d,rrelololo_d,
                      rimhihihi_d,rimlohihi_d,rimhilohi_d,rimlolohi_d,
                      rimhihilo_d,rimlohilo_d,rimhilolo_d,rimlololo_d);
-
          cudaEventRecord(stop);
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *lapms += milliseconds;
          flopcount_cmplx_bals_tail(dim,add,mul);
+
+         if(vrblvl > 0) write_dbl8_balsflops(1,dim,milliseconds);
       }
       cudaMemcpy(resvecrehihihi[i],rrehihihi_d,szrhs,cudaMemcpyDeviceToHost);
       cudaMemcpy(resvecrelohihi[i],rrelohihi_d,szrhs,cudaMemcpyDeviceToHost);

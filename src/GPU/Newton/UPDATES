@@ -1,3 +1,6 @@
+Sun 18 Dec 2022 : added reporting of times and flops in dbl*_bals_kernels,
+  updated *newton_method.cpp.
+
 Sat 17 Dec 2022 : in dbl*_bals_kernels.cu, *newton_method.cpp, used the
   proper scientific formatting for residuals and 1-norms.
 

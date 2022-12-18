@@ -48,6 +48,16 @@ __global__ void cmplx_bals_tail
  *   bre      real parts of updated right hand side vector;
  *   bim      imaginary parts of updated right hand side vector. */
 
+void write_dbl_balsflops ( int ctype, int ncols, float lapsms );
+/*
+ * DESCRIPTION :
+ *   Writes the number of flops and arithmetic intensity for b = b - A*x.
+ *
+ * ON ENTRY :
+ *   ctype    0 if real, 1 if complex;
+ *   ncols    number of columns in the matrix;
+ *   lapsms   time elapsed in milliseconds. */ 
+
 void GPU_dbl_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***mat, double **rhs, double **sol, int vrblvl );

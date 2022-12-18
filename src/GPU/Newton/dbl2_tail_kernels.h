@@ -63,6 +63,16 @@ __global__ void cmplx2_bals_tail
  *   bimhi    high doubles of the imag parts of updated right hand side;
  *   bimlo    low doubles of the imag parts of updated right hand side. */
 
+void write_dbl2_balsflops ( int ctype, int ncols, float lapsms );
+/*
+ * DESCRIPTION :
+ *   Writes the number of flops and arithmetic intensity for b = b - A*x.
+ *
+ * ON ENTRY :
+ *   ctype    0 if real, 1 if complex;
+ *   ncols    number of columns in the matrix;
+ *   lapsms   time elapsed in milliseconds. */ 
+
 void GPU_dbl2_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***mathi, double ***matlo, double **rhshi, double **rhslo,

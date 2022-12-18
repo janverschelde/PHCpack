@@ -328,7 +328,10 @@ void dbl4_newton_qrstep
              &elapsedms,&addcnt,&mulcnt,vrblvl);
 
          cout << scientific << setprecision(3)
-              << "maximum residual : " << *resmaxhihi << "  " << endl;
+              << "maximum residual : " << *resmaxhihi;
+         cout << fixed << setprecision(3)
+              << "  total kernel time : " << elapsedms
+              << " milliseconds" << endl;
       }
       dbl4_update_series
          (dim,degp1,*tailidx_d-1,

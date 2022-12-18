@@ -151,6 +151,16 @@ __global__ void cmplx8_bals_tail
  *   bimhilolo are the second lowest doubles of the imag parts of b;
  *   bimlololo are the lowest doubles of the imag parts of b. */
 
+void write_dbl8_balsflops ( int ctype, int ncols, float lapsms );
+/*
+ * DESCRIPTION :
+ *   Writes the number of flops and arithmetic intensity for b = b - A*x.
+ *
+ * ON ENTRY :
+ *   ctype    0 if real, 1 if complex;
+ *   ncols    number of columns in the matrix;
+ *   lapsms   time elapsed in milliseconds. */ 
+
 void GPU_dbl8_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***mathihihi, double ***matlohihi,

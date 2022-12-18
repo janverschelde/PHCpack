@@ -198,7 +198,10 @@ void dbl_newton_qrstep
             (dim,degp1,szt,nbt,*tailidx_d-1,jacval_d,rhs_d,sol_d,
              resvec,resmax,&elapsedms,&addcnt,&mulcnt,vrblvl);
          cout << scientific << setprecision(3)
-              << "maximum residual : " << *resmax << endl;
+              << "maximum residual : " << *resmax;
+         cout << fixed << setprecision(3)
+              << "  total kernel time : " << elapsedms
+              << " milliseconds" << endl;
       }
       dbl_update_series(dim,degp1,*tailidx_d-1,input_d,sol_d,vrblvl);
    }
