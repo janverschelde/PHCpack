@@ -55,7 +55,9 @@ __global__ void cmplx_bals_qhb
 
 void GPU_dbl_bals_head
  ( int nrows, int ncols, int szt, int nbt,
-   double **A, double **Q, double **R, double *b, double *x, int vrblvl );
+   double **A, double **Q, double **R, double *b, double *x,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves the head linear system in the least squares sense,
@@ -75,18 +77,26 @@ void GPU_dbl_bals_head
  *   R        space allocated for a nrows-by-ncols matrix;
  *   b        defines the right hand side of the linear system;
  *   x        space for ncols numbers;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   Q        the Q of the QR factorization of the Jacobian matrix;
  *   R        the R of the QR factorization of the Jacobian matrix;
- *   x        least squares solution. */
+ *   x        least squares solution;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions. */
 
 void GPU_cmplx_bals_head
  ( int nrows, int ncols, int szt, int nbt,
    double **Are, double **Aim, double **Qre, double **Qim,
    double **Rre, double **Rim, double *bre, double *bim,
-   double *xre, double *xim, int vrblvl );
+   double *xre, double *xim,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves the head linear system in the least squares sense,
@@ -111,6 +121,9 @@ void GPU_cmplx_bals_head
  *   bim      imaginary parts of the right hand side;
  *   xre      space for ncols numbers;
  *   xim      space for ncols numbers;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -119,7 +132,10 @@ void GPU_cmplx_bals_head
  *   Rre      real parts of the R of the QR of the Jacobian;
  *   Rim      imaginary parts of the R of the QR of the Jacobian;
  *   xre      real parts of the least squares solution;
- *   xim      imaginary parts of the least squares solution. */
+ *   xim      imaginary parts of the least squares solution;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions. */
 
 void write_dbl_qtbflops ( int ctype, int ncols, float lapsms );
 /*
@@ -132,7 +148,8 @@ void write_dbl_qtbflops ( int ctype, int ncols, float lapsms );
  *   lapsms   time elapsed in milliseconds. */ 
 
 void GPU_dbl_bals_qtb
- ( int ncols, int szt, int nbt, double **Q, double *b, int vrblvl );
+ ( int ncols, int szt, int nbt, double **Q, double *b,
+   double *totqtblapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   The updated right hand side vector b is multiplied with Q^T.
@@ -146,14 +163,16 @@ void GPU_dbl_bals_qtb
  *   nbt      number of blocks (and tiles) dim = szt*nbt; 
  *   Q        the Q of the QR factorization;
  *   b        right hand side vector of the linear system;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
- *   b        the product of Q^T with b. */
+ *   b        the product of Q^T with b;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs. */
 
 void GPU_cmplx_bals_qhb
  ( int ncols, int szt, int nbt, double **Qre, double **Qim,
-   double *bre, double *bim, int vrblvl );
+   double *bre, double *bim, double *totqtblapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   The updated right hand side vector b is multiplied with Q^H.
@@ -169,16 +188,20 @@ void GPU_cmplx_bals_qhb
  *   Qim      imaginary parts the Q of the QR factorization;
  *   bre      real parts of the right hand side vector;
  *   bim      imaginary parts of the right hand side vector;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   bre      real parts of the product of Q^H with b;
- *   bim      imaginary parts of the product of Q^H with b. */
+ *   bim      imaginary parts of the product of Q^H with b;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs. */
 
 void GPU_dbl_bals_solve
  ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***mat, double **Q, double **R, double **rhs, double **sol,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl );
+   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   double *totupdlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -198,6 +221,10 @@ void GPU_dbl_bals_solve
  *   rhs      degp1 vectors of dimension dim;
  *   sol      space allocated for degp1 vectors of dimension dim;
  *   noqr     flag if true, then no qr;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
+ *   totupdlapsedms accumulates the milliseconds spent on updates;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -208,14 +235,20 @@ void GPU_dbl_bals_solve
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped;
- *   newtail  the new value for tailidx. */
+ *   newtail  the new value for tailidx;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
+ *   totupdlapsedms accumulates the milliseconds spent on updates. */
 
 void GPU_cmplx_bals_solve
  ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***matre, double ***matim, double **Qre, double **Qim,
    double **Rre, double **Rim, double **rhsre, double **rhsim,
    double **solre, double **solim,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl );
+   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   double *totupdlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -240,6 +273,10 @@ void GPU_cmplx_bals_solve
  *   solre    space allocated for degp1 vectors of dimension dim;
  *   solim    space allocated for degp1 vectors of dimension dim;
  *   noqr     flag if true, then no qr;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
+ *   totbslapsedms accumulates the milliseconds spent on updates;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -254,6 +291,10 @@ void GPU_cmplx_bals_solve
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped;
- *   newtail  the new value for tailidx. */
+ *   newtail  the new value for tailidx;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
+ *   totupdlapsedms accumulates the milliseconds spent on updates. */
 
 #endif

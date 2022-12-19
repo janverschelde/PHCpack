@@ -39,6 +39,8 @@ void dbl_newton_qrstep
    double *workvec, double **resvec, double *resmax,
    bool *noqr_h, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
+   double *totcnvlapsedms, double *totqrlapsedms, double *totqtblapsedms,
+   double *totbslapsedms, double *totupdlapsedms, double *totreslapsedms,
    int vrblvl, int mode )
 {
    const int degp1 = deg+1;
@@ -72,12 +74,12 @@ void dbl_newton_qrstep
 
          GPU_dbl_evaluate_monomials
             (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,cff[0],acc[0],
-             input_d,output_d,vrblvl);
+             input_d,output_d,totcnvlapsedms,vrblvl);
       }
       else
          GPU_dbl_evaluate_columns
             (dim,deg,nbrcol,szt,nbt,nvr,idx,cff,input_d,output_d,
-             funval_d,jacval_d,vrblvl);
+             funval_d,jacval_d,totcnvlapsedms,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
@@ -186,8 +188,9 @@ void dbl_newton_qrstep
       int newtail = oldtail;
 
       GPU_dbl_bals_solve
-         (dim,degp1,szt,nbt,oldtail,jacval_d,Q_d,R_d,urhs_d,sol_d,
-          noqr_d,upidx_d,bsidx_d,&newtail,vrblvl);
+         (dim,degp1,szt,nbt,oldtail,jacval_d,Q_d,R_d,urhs_d,sol_d,noqr_d,
+          upidx_d,bsidx_d,&newtail,totqrlapsedms,totqtblapsedms,
+          totbslapsedms,totupdlapsedms,vrblvl);
 
       *tailidx_d = newtail;
 
@@ -195,7 +198,7 @@ void dbl_newton_qrstep
       {
          cout << "calling GPU_dbl_linear_residue ..." << endl;
 
-         double elapsedms;
+         double elapsedms = 0.0;
          long long int addcnt = 0;
          long long int mulcnt = 0;
 
@@ -207,6 +210,7 @@ void dbl_newton_qrstep
          cout << fixed << setprecision(3)
               << "  total kernel time : " << elapsedms
               << " milliseconds" << endl;
+         *totreslapsedms += elapsedms;
       }
       dbl_update_series(dim,degp1,*tailidx_d-1,input_d,sol_d,vrblvl);
    }
@@ -463,6 +467,13 @@ int test_dbl_real_newton
    int tailidx_d = 1;
    int wrkdeg = 0; // working degree of precision
 
+   double totcnvlapsedms = 0.0;
+   double totqrlapsedms = 0.0;
+   double totqtblapsedms = 0.0;
+   double totbslapsedms = 0.0;
+   double totupdlapsedms = 0.0;
+   double totreslapsedms = 0.0;
+
    struct timeval begintime,endtime; // wall clock time of computations
    gettimeofday(&begintime,0);
 
@@ -478,7 +489,9 @@ int test_dbl_real_newton
           input_h,input_d,output_h,output_d,funval_h,funval_d,
           jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
           Q_h,Q_d,R_h,R_d,workvec,resvec,&resmax,
-          &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
+          &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,
+          &totcnvlapsedms,&totqrlapsedms,&totqtblapsedms,&totbslapsedms,
+          &totupdlapsedms,&totreslapsedms,vrblvl,mode);
 
       if(vrblvl > 0)
          cout << "up_h : " << upidx_h << "  bs_h : " << bsidx_h
@@ -529,6 +542,24 @@ int test_dbl_real_newton
    cout << "Wall clock time on all Newton steps : ";
    cout << fixed << setprecision(3) 
         << walltimesec << " seconds." << endl;
+   cout << "     Time spent by all convolution kernels : "
+        << totcnvlapsedms << " milliseconds." << endl;
+   cout << "  Time spent by all Householder QR kernels : "
+        << totqrlapsedms << " milliseconds." << endl;
+   cout << "     Time spent by all Q times rhs kernels : "
+        << totqtblapsedms << " milliseconds." << endl;
+   cout << "Time spent by all backsubstitution kernels : "
+        << totbslapsedms << " milliseconds." << endl;
+   cout << "          Time spent by all update kernels : "
+        << totupdlapsedms << " milliseconds." << endl;
+   cout << "        Time spent by all residual kernels : "
+        << totreslapsedms << " milliseconds." << endl;
+
+   double totkerneltime = totcnvlapsedms + totqrlapsedms + totqtblapsedms
+                        + totbslapsedms + totupdlapsedms + totreslapsedms;
+
+   cout << "           Total time spent by all kernels : "
+        << totkerneltime << " milliseconds." << endl;
 
    return 0;
 }

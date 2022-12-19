@@ -74,7 +74,9 @@ __global__ void cmplx_bals_qhb
 
 void GPU_dbl_bals_head
  ( int nrows, int ncols, int szt, int nbt,
-   double **A, double **Q, double **R, double *b, double *x, int vrblvl )
+   double **A, double **Q, double **R, double *b, double *x,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   int vrblvl )
 {
    double qrtimelapsed_d;
    double houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms;
@@ -96,6 +98,10 @@ void GPU_dbl_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
+   *totqrlapsedms = *totqrlapsedms + houselapsedms + RTvlapsedms
+      + tileRlapsedms + vb2Wlapsedms + WYTlapsedms + QWYTlapsedms
+      + Qaddlapsedms + YWTlapsedms + YWTClapsedms + Raddlapsedms;
+
    if(vrblvl > 0)
       write_dbl_qrtimeflops
          (0,nrows,ncols,
@@ -105,7 +111,7 @@ void GPU_dbl_bals_head
 
    if(vrblvl > 0) cout << "-> GPU multiplies rhs with Q^T ..." << endl;
 
-   GPU_dbl_bals_qtb(ncols,szt,nbt,Q,b,vrblvl);
+   GPU_dbl_bals_qtb(ncols,szt,nbt,Q,b,totqtblapsedms,vrblvl);
 
    if(vrblvl > 1)
    {
@@ -142,6 +148,8 @@ void GPU_dbl_bals_head
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
        &bsaddcnt,&bsmulcnt,&bsdivcnt);
 
+   *totbslapsedms += elapsedms;
+
    if(vrblvl > 0)
       write_dbl_bstimeflops
          (szt,nbt,0,invlapsed,mullapsed,sublapsed,elapsedms,bstimelapsed_d,
@@ -167,7 +175,9 @@ void GPU_cmplx_bals_head
  ( int nrows, int ncols, int szt, int nbt,
    double **Are, double **Aim, double **Qre, double **Qim,
    double **Rre, double **Rim, double *bre, double *bim,
-   double *xre, double *xim, int vrblvl )
+   double *xre, double *xim,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   int vrblvl )
 {
    double qrtimelapsed_d;
    double houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms;
@@ -189,6 +199,10 @@ void GPU_cmplx_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
+   *totqrlapsedms = *totqrlapsedms + houselapsedms + RTvlapsedms
+      + tileRlapsedms + vb2Wlapsedms + WYTlapsedms + QWYTlapsedms
+      + Qaddlapsedms + YWTlapsedms + YWTClapsedms + Raddlapsedms;
+
    if(vrblvl > 0)
       write_dbl_qrtimeflops
          (1,nrows,ncols,
@@ -199,7 +213,8 @@ void GPU_cmplx_bals_head
    if(vrblvl > 0)
       cout << "-> GPU multiplies rhs with Q^H ..." << endl;
 
-   GPU_cmplx_bals_qhb(ncols,szt,nbt,Qre,Qim,bre,bim,vrblvl);
+   GPU_cmplx_bals_qhb
+      (ncols,szt,nbt,Qre,Qim,bre,bim,totqtblapsedms,vrblvl);
 
    if(vrblvl > 1)
    {
@@ -257,6 +272,8 @@ void GPU_cmplx_bals_head
       (ncols,szt,nbt,workRre,workRim,bre,bim,xre,xim,
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
        &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+   *totbslapsedms += elapsedms;
 
    if(vrblvl > 0)
       write_dbl_bstimeflops
@@ -331,7 +348,8 @@ void write_dbl_qtbflops ( int ctype, int ncols, float lapsms )
 }
 
 void GPU_dbl_bals_qtb
- ( int ncols, int szt, int nbt, double **Q, double *b, int vrblvl )
+ ( int ncols, int szt, int nbt, double **Q, double *b,
+   double *totqtblapsedms, int vrblvl )
 {
    double *b_d;
    const size_t szrhs = ncols*sizeof(double);
@@ -365,6 +383,8 @@ void GPU_dbl_bals_qtb
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
 
+   *totqtblapsedms += milliseconds;
+
    cudaMemcpy(b,r_d,szrhs,cudaMemcpyDeviceToHost);
 
    if(vrblvl > 0) write_dbl_qtbflops(0,ncols,milliseconds);
@@ -376,7 +396,7 @@ void GPU_dbl_bals_qtb
 
 void GPU_cmplx_bals_qhb
  ( int ncols, int szt, int nbt, double **Qre, double **Qim,
-   double *bre, double *bim, int vrblvl )
+   double *bre, double *bim, double *totqtblapsedms, int vrblvl )
 {
    double *bre_d;
    double *bim_d;
@@ -424,6 +444,8 @@ void GPU_cmplx_bals_qhb
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
 
+   *totqtblapsedms += milliseconds;
+
    cudaMemcpy(bre,rre_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(bim,rim_d,szrhs,cudaMemcpyDeviceToHost);
 
@@ -438,7 +460,9 @@ void GPU_cmplx_bals_qhb
 void GPU_dbl_bals_solve
  ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***mat, double **Q, double **R, double **rhs, double **sol,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   double *totupdlapsedms, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -498,7 +522,9 @@ void GPU_dbl_bals_solve
             b[i] = rhs[0][i];
             for(int j=0; j<ncols; j++) R[i][j] = mat[0][i][j];
          }
-         GPU_dbl_bals_head(nrows,ncols,szt,nbt,A,Q,R,b,x,vrblvl);
+         GPU_dbl_bals_head
+            (nrows,ncols,szt,nbt,A,Q,R,b,x,
+             totqrlapsedms,totqtblapsedms,totbslapsedms,vrblvl);
 
          if(vrblvl > 0)
          {
@@ -536,7 +562,8 @@ void GPU_dbl_bals_solve
             cout << "-> updating with x[" << stage-1 << "] ..." << endl;
 
          GPU_dbl_bals_tail
-            (nrows,ncols,szt,nbt,degp1,stage,mat,rhs,sol,vrblvl);
+            (nrows,ncols,szt,nbt,degp1,stage,mat,rhs,sol,
+             totupdlapsedms,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -582,7 +609,6 @@ void GPU_dbl_bals_solve
             *newtail = stage;
             firstbs = false;
          }
-
          double bstimelapsed_d;
          double elapsedms,invlapsed,mullapsed,sublapsed;
          long long int bsaddcnt = 0;
@@ -592,7 +618,7 @@ void GPU_dbl_bals_solve
          if(vrblvl > 0)
             cout << "-> GPU multiplies rhs with Q^T ..." << endl;
 
-         GPU_dbl_bals_qtb(ncols,szt,nbt,Q,b,vrblvl);
+         GPU_dbl_bals_qtb(ncols,szt,nbt,Q,b,totqtblapsedms,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -616,6 +642,8 @@ void GPU_dbl_bals_solve
             (ncols,szt,nbt,workR,b,x,
              &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
              &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+         *totbslapsedms += elapsedms;
 
          if(vrblvl > 0)
             write_dbl_bstimeflops
@@ -646,7 +674,9 @@ void GPU_cmplx_bals_solve
    double ***matre, double ***matim, double **Qre, double **Qim,
    double **Rre, double **Rim, double **rhsre, double **rhsim,
    double **solre, double **solim,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   double *totupdlapsedms, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -728,7 +758,7 @@ void GPU_cmplx_bals_solve
          }
          GPU_cmplx_bals_head
             (nrows,ncols,szt,nbt,Are,Aim,Qre,Qim,Rre,Rim,bre,bim,
-             xre,xim,vrblvl);
+             xre,xim,totqrlapsedms,totqtblapsedms,totbslapsedms,vrblvl);
 
          for(int j=0; j<ncols; j++)
          {
@@ -769,7 +799,7 @@ void GPU_cmplx_bals_solve
 
          GPU_cmplx_bals_tail
             (nrows,ncols,szt,nbt,degp1,stage,matre,matim,
-             rhsre,rhsim,solre,solim,vrblvl);
+             rhsre,rhsim,solre,solim,totupdlapsedms,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -823,7 +853,6 @@ void GPU_cmplx_bals_solve
             *newtail = stage;
             firstbs = false;
          }
-
          double bstimelapsed_d;
          double elapsedms,invlapsed,mullapsed,sublapsed;
          long long int bsaddcnt = 0;
@@ -833,7 +862,8 @@ void GPU_cmplx_bals_solve
          if(vrblvl > 0)
             cout << "-> GPU multiplies rhs with Q^H ..." << endl;
 
-         GPU_cmplx_bals_qhb(ncols,szt,nbt,Qre,Qim,bre,bim,vrblvl);
+         GPU_cmplx_bals_qhb
+            (ncols,szt,nbt,Qre,Qim,bre,bim,totqtblapsedms,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -861,6 +891,8 @@ void GPU_cmplx_bals_solve
             (ncols,szt,nbt,workRre,workRim,bre,bim,xre,xim,
              &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
              &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+         *totbslapsedms += elapsedms;
 
          if(vrblvl > 0)
             write_dbl_bstimeflops

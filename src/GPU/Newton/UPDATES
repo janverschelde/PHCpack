@@ -1,3 +1,6 @@
+Mon 19 Dec 2022 : accumulated all kernel times, updated all *kernels*
+  and *newton_method* files.
+
 Sun 18 Dec 2022 : added reporting of times and flops in dbl*_bals_kernels,
   updated *newton_method.cpp.  Added the computation of wall time for all 
   Newton steps in *newton_method.cpp.  Updated makefile_windows.

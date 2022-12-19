@@ -60,7 +60,8 @@ void write_dbl_balsflops ( int ctype, int ncols, float lapsms );
 
 void GPU_dbl_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
-   double ***mat, double **rhs, double **sol, int vrblvl );
+   double ***mat, double **rhs, double **sol,
+   double *totupdlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   After each block of coefficients of the series,
@@ -80,15 +81,17 @@ void GPU_dbl_bals_tail
  *   mat      matrices of the linearized power series;
  *   rhs      right hand side vectors of the linear system;
  *   sol      solution coefficients computed up to stage-1;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
- *   rhs      updated right hand sides. */
+ *   rhs      updated right hand sides;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds. */
 
 void GPU_cmplx_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***matre, double ***matim, double **rhsre, double **rhsim,
-   double **solre, double **solim, int vrblvl );
+   double **solre, double **solim, double *totupdlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   After each block of coefficients of the series,
@@ -111,16 +114,19 @@ void GPU_cmplx_bals_tail
  *   rhsim    imaginary parts of the right hand sides;
  *   solre    real parts of the solution computed up to stage-1;
  *   solim    imaginary parts of the solution computed up to stage-1;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   rhsre    real parts of the updated right hand sides;
- *   rhsim    imaginary parts of the updated right hand sides. */
+ *   rhsim    imaginary parts of the updated right hand sides;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds. */
 
 void GPU_dbl_linear_residue
  ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***mat, double **rhs, double **sol, double **resvec, double *resmax,
-   double *lapms, long long int *add, long long int *mul, int vrblvl );
+   double *totreslapsedms, long long int *add, long long int *mul,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear power series system.
@@ -135,12 +141,13 @@ void GPU_dbl_linear_residue
  *   rhs      degp1 right hand side vectors of dimension dim;
  *   sol      degp1 solution vectors of dimension dim;
  *   resvec   space for the residual power series;
+ *   totreslapsedms acculumates time spent by all kernels in milliseconds;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   resvec   the residual power series;
  *   resmax   maximum component of the residual power series;
- *   lapms    elapsed time spent by all kernels, in milliseconds;
+ *   totreslapsedms acculumates time spent by all kernels in milliseconds;
  *   add      accumulated number of additions;
  *   mul      accumulated number of multiplications. */
 
@@ -149,7 +156,8 @@ void GPU_cmplx_linear_residue
    double ***matre, double ***matim, double **rhsre, double **rhsim,
    double **solre, double **solim,
    double **resvecre, double **resvecim, double *resmax,
-   double *lapms, long long int *add, long long int *mul, int vrblvl );
+   double *totreslapsedms, long long int *add, long long int *mul,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear power series system.
@@ -168,13 +176,14 @@ void GPU_cmplx_linear_residue
  *   solim    degp1 solution vectors of dimension dim;
  *   resvecre has space for the residual power series;
  *   resvecim has space for the residual power series;
+ *   totreslapsedms acculumates time spent by all kernels in milliseconds;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   resvecre are the real parts of the residual power series;
  *   resvecim are the imaginary parts the residual power series;
  *   resmax   max norm of the residual power series;
- *   lapms    elapsed time spent by all kernels, in milliseconds;
+ *   totreslapsedms acculumates time spent by all kernels in milliseconds;
  *   add      accumulated number of additions;
  *   mul      accumulated number of multiplications. */
 

@@ -281,6 +281,7 @@ void GPU_dbl8_bals_head
    double *bhihilo, double *blohilo, double *bhilolo, double *blololo,
    double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
    double *xhihilo, double *xlohilo, double *xhilolo, double *xlololo,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
    int vrblvl )
 {
    double qrtimelapsed_d;
@@ -306,6 +307,10 @@ void GPU_dbl8_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
+   *totqrlapsedms = *totqrlapsedms + houselapsedms + RTvlapsedms
+      + tileRlapsedms + vb2Wlapsedms + WYTlapsedms + QWYTlapsedms
+      + Qaddlapsedms + YWTlapsedms + YWTClapsedms + Raddlapsedms;
+
    if(vrblvl > 0)
       write_dbl8_qrtimeflops
          (0,nrows,ncols,houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms,
@@ -318,7 +323,7 @@ void GPU_dbl8_bals_head
       (ncols,szt,nbt,
        Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
        bhihihi,blohihi,bhilohi,blolohi,bhihilo,blohilo,bhilolo,blololo,
-       vrblvl);
+       totqtblapsedms,vrblvl);
 
    if(vrblvl > 1)
    {
@@ -329,7 +334,6 @@ void GPU_dbl8_bals_head
               << bhihilo[i] << "  " << blohilo[i] << endl << "  "
               << bhilolo[i] << "  " << blololo[i] << endl;
    }
-
    double bstimelapsed_d;
    double elapsedms,invlapsed,mullapsed,sublapsed;
    long long int bsaddcnt = 0;
@@ -396,6 +400,8 @@ void GPU_dbl8_bals_head
        xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
        &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+   *totbslapsedms += elapsedms;
 
    if(vrblvl > 0)
       write_dbl8_bstimeflops
@@ -468,6 +474,7 @@ void GPU_cmplx8_bals_head
    double *xrehihilo, double *xrelohilo, double *xrehilolo, double *xrelololo,
    double *ximhihihi, double *ximlohihi, double *ximhilohi, double *ximlolohi,
    double *ximhihilo, double *ximlohilo, double *ximhilolo, double *ximlololo,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
    int vrblvl )
 {
    double qrtimelapsed_d;
@@ -502,6 +509,10 @@ void GPU_cmplx8_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
+   *totqrlapsedms = *totqrlapsedms + houselapsedms + RTvlapsedms
+      + tileRlapsedms + vb2Wlapsedms + WYTlapsedms + QWYTlapsedms
+      + Qaddlapsedms + YWTlapsedms + YWTClapsedms + Raddlapsedms;
+
    if(vrblvl > 0)
       write_dbl8_qrtimeflops
          (1,nrows,ncols,houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms,
@@ -519,7 +530,7 @@ void GPU_cmplx8_bals_head
        brehihihi,brelohihi,brehilohi,brelolohi,
        brehihilo,brelohilo,brehilolo,brelololo,
        bimhihihi,bimlohihi,bimhilohi,bimlolohi,
-       bimhihilo,bimlohilo,bimhilolo,bimlololo,vrblvl);
+       bimhihilo,bimlohilo,bimhilolo,bimlololo,totqtblapsedms,vrblvl);
 
    if(vrblvl > 1)
    {
@@ -655,6 +666,8 @@ void GPU_cmplx8_bals_head
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
        &bsaddcnt,&bsmulcnt,&bsdivcnt);
 
+   *totbslapsedms += elapsedms;
+
    if(vrblvl > 0)
       write_dbl8_bstimeflops
          (szt,nbt,1,invlapsed,mullapsed,sublapsed,elapsedms,bstimelapsed_d,
@@ -773,7 +786,7 @@ void GPU_dbl8_bals_qtb
    double **Qhihilo, double **Qlohilo, double **Qhilolo, double **Qlololo,
    double *bhihihi, double *blohihi, double *bhilohi, double *blolohi,
    double *bhihilo, double *blohilo, double *bhilolo, double *blololo,
-   int vrblvl )
+   double *totqtblapsedms, int vrblvl )
 {
    double *bhihihi_d;
    double *blohihi_d;
@@ -887,6 +900,8 @@ void GPU_dbl8_bals_qtb
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
 
+   *totqtblapsedms += milliseconds;
+
    cudaMemcpy(bhihihi,rhihihi_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(blohihi,rlohihi_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(bhilohi,rhilohi_d,szrhs,cudaMemcpyDeviceToHost);
@@ -929,7 +944,7 @@ void GPU_cmplx8_bals_qhb
    double *brehihilo, double *brelohilo, double *brehilolo, double *brelololo,
    double *bimhihihi, double *bimlohihi, double *bimhilohi, double *bimlolohi,
    double *bimhihilo, double *bimlohilo, double *bimhilolo, double *bimlololo,
-   int vrblvl )
+   double *totqtblapsedms, int vrblvl )
 {
    double *brehihihi_d;
    double *brelohihi_d;
@@ -1128,6 +1143,8 @@ void GPU_cmplx8_bals_qhb
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
 
+   *totqtblapsedms += milliseconds;
+
    cudaMemcpy(brehihihi,rrehihihi_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(brelohihi,rrelohihi_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(brehilohi,rrehilohi_d,szrhs,cudaMemcpyDeviceToHost);
@@ -1200,7 +1217,9 @@ void GPU_dbl8_bals_solve
    double **solhilohi, double **sollolohi,
    double **solhihilo, double **sollohilo,
    double **solhilolo, double **sollololo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   double *totupdlapsedms, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -1352,7 +1371,7 @@ void GPU_dbl8_bals_solve
              Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
              bhihihi,blohihi,bhilohi,blolohi,bhihilo,blohilo,bhilolo,blololo,
              xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
-             vrblvl);
+             totqrlapsedms,totqtblapsedms,totbslapsedms,vrblvl);
 
          for(int j=0; j<ncols; j++)
          {
@@ -1402,7 +1421,7 @@ void GPU_dbl8_bals_solve
              rhshihihi,rhslohihi,rhshilohi,rhslolohi,
              rhshihilo,rhslohilo,rhshilolo,rhslololo,
              solhihihi,sollohihi,solhilohi,sollolohi,
-             solhihilo,sollohilo,solhilolo,sollololo,vrblvl);
+             solhihilo,sollohilo,solhilolo,sollololo,totupdlapsedms,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -1469,7 +1488,6 @@ void GPU_dbl8_bals_solve
             *newtail = stage;
             firstbs = false;
          }
-
          double bstimelapsed_d;
          double elapsedms,invlapsed,mullapsed,sublapsed;
          long long int bsaddcnt = 0;
@@ -1483,7 +1501,7 @@ void GPU_dbl8_bals_solve
             (ncols,szt,nbt,
              Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
              bhihihi,blohihi,bhilohi,blolohi,bhihilo,blohilo,bhilolo,blololo,
-             vrblvl);
+             totqtblapsedms,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -1529,6 +1547,8 @@ void GPU_dbl8_bals_solve
              xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
              &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
              &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+         *totbslapsedms += elapsedms;
 
          if(vrblvl > 0)
             write_dbl8_bstimeflops
@@ -1618,7 +1638,9 @@ void GPU_cmplx8_bals_solve
    double **solimhilohi, double **solimlolohi,
    double **solimhihilo, double **solimlohilo, 
    double **solimhilolo, double **solimlololo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   double *totupdlapsedms, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -1862,7 +1884,8 @@ void GPU_cmplx8_bals_solve
              xrehihihi,xrelohihi,xrehilohi,xrelolohi,
              xrehihilo,xrelohilo,xrehilolo,xrelololo,
              ximhihihi,ximlohihi,ximhilohi,ximlolohi,
-             ximhihilo,ximlohilo,ximhilolo,ximlololo,vrblvl);
+             ximhihilo,ximlohilo,ximhilolo,ximlololo,
+             totqrlapsedms,totqtblapsedms,totbslapsedms,vrblvl);
 
          for(int j=0; j<ncols; j++)
          {
@@ -1937,7 +1960,8 @@ void GPU_cmplx8_bals_solve
              solrehihihi,solrelohihi,solrehilohi,solrelolohi,
              solrehihilo,solrelohilo,solrehilolo,solrelololo,
              solimhihihi,solimlohihi,solimhilohi,solimlolohi,
-             solimhihilo,solimlohilo,solimhilolo,solimlololo,vrblvl);
+             solimhihilo,solimlohilo,solimhilolo,solimlololo,
+             totupdlapsedms,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -2053,7 +2077,7 @@ void GPU_cmplx8_bals_solve
              brehihihi,brelohihi,brehilohi,brelolohi,
              brehihilo,brelohilo,brehilolo,brelololo,
              bimhihihi,bimlohihi,bimhilohi,bimlolohi,
-             bimhihilo,bimlohilo,bimhilolo,bimlololo,vrblvl);
+             bimhihilo,bimlohilo,bimhilolo,bimlololo,totqtblapsedms,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -2130,6 +2154,8 @@ void GPU_cmplx8_bals_solve
              ximhihilo,ximlohilo,ximhilolo,ximlololo,
              &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
              &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+         *totbslapsedms += elapsedms;
 
          if(vrblvl > 0)
             write_dbl8_bstimeflops

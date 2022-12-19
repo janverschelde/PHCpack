@@ -154,7 +154,7 @@ void write_dbl2_balsflops ( int ctype, int ncols, float lapsms )
 void GPU_dbl2_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***mathi, double ***matlo, double **rhshi, double **rhslo,
-   double **solhi, double **sollo, int vrblvl )
+   double **solhi, double **sollo, double *totupdlapsedms, int vrblvl )
 {
    if(vrblvl > 1)
    {
@@ -224,6 +224,8 @@ void GPU_dbl2_bals_tail
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
 
+      *totupdlapsedms += milliseconds;
+
       if(vrblvl > 0) write_dbl2_balsflops(0,ncols,milliseconds);
       
       if(vrblvl > 1)
@@ -254,7 +256,7 @@ void GPU_cmplx2_bals_tail
    double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo,
    double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
    double **solrehi, double **solrelo, double **solimhi, double **solimlo,
-   int vrblvl )
+   double *totupdlapsedms, int vrblvl )
 {
    if(vrblvl > 1)
    {
@@ -347,6 +349,8 @@ void GPU_cmplx2_bals_tail
       cudaEventRecord(stop);
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
+
+      *totupdlapsedms += milliseconds;
 
       if(vrblvl > 0) write_dbl2_balsflops(1,ncols,milliseconds);
       

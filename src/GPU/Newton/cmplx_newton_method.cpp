@@ -49,6 +49,8 @@ void cmplx_newton_qrstep
    double **resvecre, double **resvecim, double *resmax,
    bool *noqr_h, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
+   double *totcnvlapsedms, double *totqrlapsedms, double *totqtblapsedms,
+   double *totbslapsedms, double *totupdlapsedms, double *totreslapsedms,
    int vrblvl, int mode )
 {
    const int degp1 = deg+1;
@@ -87,13 +89,14 @@ void cmplx_newton_qrstep
          GPU_cmplx_evaluate_monomials
             (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
              cffre[0],cffim[0],accre[0],accim[0],inputre_d,inputim_d,
-             outputre_d,outputim_d,vrblvl);
+             outputre_d,outputim_d,totcnvlapsedms,vrblvl);
       }
       else
          GPU_cmplx_evaluate_columns
             (dim,deg,nbrcol,szt,nbt,nvr,idx,cffre,cffim,
              inputre_d,inputim_d,outputre_d,outputim_d,
-             funvalre_d,funvalim_d,jacvalre_d,jacvalim_d,vrblvl);
+             funvalre_d,funvalim_d,jacvalre_d,jacvalim_d,
+             totcnvlapsedms,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
@@ -230,8 +233,9 @@ void cmplx_newton_qrstep
 
       GPU_cmplx_bals_solve
          (dim,degp1,szt,nbt,oldtail,jacvalre_d,jacvalim_d,
-          Qre_d,Qim_d,Rre_d,Rim_d,urhsre_d,urhsim_d,solre_d,solim_d,
-          noqr_d,upidx_d,bsidx_d,&newtail,vrblvl);
+          Qre_d,Qim_d,Rre_d,Rim_d,urhsre_d,urhsim_d,solre_d,solim_d,noqr_d,
+          upidx_d,bsidx_d,&newtail,totqrlapsedms,totqtblapsedms,
+          totbslapsedms,totupdlapsedms,vrblvl);
 
       *tailidx_d = newtail;
 
@@ -239,7 +243,7 @@ void cmplx_newton_qrstep
       {
          cout << "calling GPU_cmplx_linear_residue ..." << endl;
 
-         double elapsedms;
+         double elapsedms = 0.0;
          long long int addcnt = 0;
          long long int mulcnt = 0;
 
@@ -252,6 +256,7 @@ void cmplx_newton_qrstep
          cout << fixed << setprecision(3)
               << "  total kernel time : " << elapsedms
               << " milliseconds" << endl;
+         *totreslapsedms += elapsedms;
       }
       cmplx_update_series
          (dim,degp1,*tailidx_d-1,inputre_d,inputim_d,solre_d,solim_d,vrblvl);
@@ -675,6 +680,13 @@ int test_dbl_complex_newton
    int tailidx_d = 1;
    int wrkdeg = 0; // working degree of precision
 
+   double totcnvlapsedms = 0.0;
+   double totqrlapsedms = 0.0;
+   double totqtblapsedms = 0.0;
+   double totbslapsedms = 0.0;
+   double totupdlapsedms = 0.0;
+   double totreslapsedms = 0.0;
+
    struct timeval begintime,endtime; // wall clock time of computations
    gettimeofday(&begintime,0);
 
@@ -697,7 +709,9 @@ int test_dbl_complex_newton
           solre_h,solim_h,solre_d,solim_d,
           Qre_h,Qim_h,Qre_d,Qim_d,Rre_h,Rim_h,Rre_d,Rim_d,
           workvecre,workvecim,resvecre,resvecim,&resmax,
-          &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,vrblvl,mode);
+          &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,
+          &totcnvlapsedms,&totqrlapsedms,&totqtblapsedms,&totbslapsedms,
+          &totupdlapsedms,&totreslapsedms,vrblvl,mode);
 
       if(vrblvl > 0)
          cout << "up_h : " << upidx_h << "  bs_h : " << bsidx_h
@@ -754,6 +768,24 @@ int test_dbl_complex_newton
    cout << "Wall clock time on all Newton steps : ";
    cout << fixed << setprecision(3) 
         << walltimesec << " seconds." << endl;
+   cout << "     Time spent by all convolution kernels : "
+        << totcnvlapsedms << " milliseconds." << endl;
+   cout << "  Time spent by all Householder QR kernels : "
+        << totqrlapsedms << " milliseconds." << endl;
+   cout << "     Time spent by all Q times rhs kernels : "
+        << totqtblapsedms << " milliseconds." << endl;
+   cout << "Time spent by all backsubstitution kernels : "
+        << totbslapsedms << " milliseconds." << endl;
+   cout << "          Time spent by all update kernels : "
+        << totupdlapsedms << " milliseconds." << endl;
+   cout << "        Time spent by all residual kernels : "
+        << totreslapsedms << " milliseconds." << endl;
+
+   double totkerneltime = totcnvlapsedms + totqrlapsedms + totqtblapsedms
+                        + totbslapsedms + totupdlapsedms + totreslapsedms;
+
+   cout << "           Total time spent by all kernels : "
+        << totkerneltime << " milliseconds." << endl;
 
    return 0;
 }

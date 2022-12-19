@@ -328,7 +328,8 @@ void GPU_dbl8_bals_tail
    double **solhihihi, double **sollohihi,
    double **solhilohi, double **sollolohi,
    double **solhihilo, double **sollohilo,
-   double **solhilolo, double **sollololo, int vrblvl )
+   double **solhilolo, double **sollololo,
+   double *totupdlapsedms, int vrblvl )
 {
    if(vrblvl > 1)
    {
@@ -474,6 +475,8 @@ void GPU_dbl8_bals_tail
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
 
+      *totupdlapsedms += milliseconds;
+
       if(vrblvl > 0) write_dbl8_balsflops(0,ncols,milliseconds);
       
       if(vrblvl > 1)
@@ -545,7 +548,8 @@ void GPU_cmplx8_bals_tail
    double **solimhihihi, double **solimlohihi,
    double **solimhilohi, double **solimlolohi,
    double **solimhihilo, double **solimlohilo,
-   double **solimhilolo, double **solimlololo, int vrblvl )
+   double **solimhilolo, double **solimlololo,
+   double *totupdlapsedms, int vrblvl )
 {
    if(vrblvl > 1)
    {
@@ -794,6 +798,8 @@ void GPU_cmplx8_bals_tail
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
 
+      *totupdlapsedms += milliseconds;
+
       if(vrblvl > 0) write_dbl8_balsflops(1,ncols,milliseconds);
       
       if(vrblvl > 1)
@@ -897,7 +903,8 @@ void GPU_dbl8_linear_residue
    double *resmaxhilohi, double *resmaxlolohi,
    double *resmaxhihilo, double *resmaxlohilo,
    double *resmaxhilolo, double *resmaxlololo,
-   double *lapms, long long int *add, long long int *mul, int vrblvl )
+   double *totreslapsedms, long long int *add, long long int *mul,
+   int vrblvl )
 {
    double *rhihihi_d;
    double *rlohihi_d;
@@ -1040,7 +1047,7 @@ void GPU_dbl8_linear_residue
          cudaEventRecord(stop);
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
-         *lapms += milliseconds;
+         *totreslapsedms += milliseconds;
          flopcount_dbl_bals_tail(dim,add,mul);
 
          if(vrblvl > 0) write_dbl8_balsflops(0,dim,milliseconds);
@@ -1160,7 +1167,8 @@ void GPU_cmplx8_linear_residue
    double *resmaxhilohi, double *resmaxlolohi,
    double *resmaxhihilo, double *resmaxlohilo,
    double *resmaxhilolo, double *resmaxlololo,
-   double *lapms, long long int *add, long long int *mul, int vrblvl )
+   double *totreslapsedms, long long int *add, long long int *mul,
+   int vrblvl )
 {
    double *rrehihihi_d;
    double *rrelohihi_d;
@@ -1405,7 +1413,7 @@ void GPU_cmplx8_linear_residue
          cudaEventRecord(stop);
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
-         *lapms += milliseconds;
+         *totreslapsedms += milliseconds;
          flopcount_cmplx_bals_tail(dim,add,mul);
 
          if(vrblvl > 0) write_dbl8_balsflops(1,dim,milliseconds);

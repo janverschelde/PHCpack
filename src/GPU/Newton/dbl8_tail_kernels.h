@@ -174,7 +174,8 @@ void GPU_dbl8_bals_tail
    double **solhihihi, double **sollohihi,
    double **solhilohi, double **sollolohi,
    double **solhihilo, double **sollohilo,
-   double **solhilolo, double **sollololo, int vrblvl );
+   double **solhilolo, double **sollololo,
+   double *totupdlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   After each block of coefficients of the series,
@@ -203,13 +204,15 @@ void GPU_dbl8_bals_tail
  *   sollohi  second highest doubles of solution computed up to stage-1;
  *   solhilo  second lowest doubles of solution computed up to stage-1;
  *   sollolo  lowest doubles of solution computed up to stage-1;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   rhshihi  highest doubles of updated right hand sides;
  *   rhslohi  second highest doubles of updated right hand sides;
  *   rhshilo  second lowest doubles of updated right hand sides;
- *   rhslolo  lowest doubles of updated right hand sides. */
+ *   rhslolo  lowest doubles of updated right hand sides;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds.*/
 
 void GPU_cmplx8_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
@@ -236,7 +239,8 @@ void GPU_cmplx8_bals_tail
    double **solimhihihi, double **solimlohihi,
    double **solimhilohi, double **solimlolohi,
    double **solimhihilo, double **solimlohilo,
-   double **solimhilolo, double **solimlololo, int vrblvl );
+   double **solimhilolo, double **solimlololo,
+   double *totupdlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   After each block of coefficients of the series,
@@ -333,6 +337,7 @@ void GPU_cmplx8_bals_tail
  *            solution, computed up to stage-1;
  *   solimlololo are the lowest doubles of the imaginary parts of the
  *            solution, computed up to stage-1;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -367,7 +372,8 @@ void GPU_cmplx8_bals_tail
  *   rhsimhilolo are the second lowest doubles of the imaginary parts
  *            of the updated right hand sides;
  *   rhsimlololo are the lowest doubles of the imaginary parts
- *            of the updated right hand sides. */
+ *            of the updated right hand sides;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds. */
 
 void GPU_dbl8_linear_residue
  ( int dim, int degp1, int szt, int nbt, int tailidx,
@@ -391,7 +397,8 @@ void GPU_dbl8_linear_residue
    double *resmaxhilohi, double *resmaxlolohi,
    double *resmaxhihilo, double *resmaxlohilo,
    double *resmaxhilolo, double *resmaxlololo,
-   double *lapms, long long int *add, long long int *mul, int vrblvl );
+   double *totreslapsedms, long long int *add, long long int *mul,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear series system, on real data.
@@ -434,6 +441,7 @@ void GPU_dbl8_linear_residue
  *   resveclohilo has space for the residual power series;
  *   resvechilolo has space for the residual power series;
  *   resveclololo has space for the residual power series;
+ *   totreslapsedms acculumates time spent by all kernels in milliseconds;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -453,7 +461,7 @@ void GPU_dbl8_linear_residue
  *   resmaxlohilo is the 3rd lowest double of the maximum in resvec;
  *   resmaxhilolo is the 2nd lowest double of the maximum in resvec;
  *   resmaxlololo is the lowest double of the maximum in resvec;
- *   lapms    elapsed time spent by all kernels, in milliseconds;
+ *   totreslapsedms acculumates time spent by all kernels in milliseconds;
  *   add      accumulated number of additions;
  *   mul      accumulated number of multiplications. */
 
@@ -495,7 +503,8 @@ void GPU_cmplx8_linear_residue
    double *resmaxhilohi, double *resmaxlolohi,
    double *resmaxhihilo, double *resmaxlohilo,
    double *resmaxhilolo, double *resmaxlololo,
-   double *lapms, long long int *add, long long int *mul, int vrblvl );
+   double *totreslapsedms, long long int *add, long long int *mul,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the residual of the linear series system, on complex data.
@@ -570,6 +579,7 @@ void GPU_cmplx8_linear_residue
  *   resvecimlohilo has space for the residual power series;
  *   resvecimhilolo has space for the residual power series;
  *   resvecimlololo has space for the residual power series;
+ *   totreslapsedms acculumates time spent by all kernels in milliseconds;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -613,7 +623,7 @@ void GPU_cmplx8_linear_residue
  *   resmaxlohilo is the third lowest double of the max norm of the residual;
  *   resmaxhilolo is the second lowest double of the max norm of the residual;
  *   resmaxlololo is the lowest double of the max norm of the residual;
- *   lapms    elapsed time spent by all kernels, in milliseconds;
+ *   totreslapsedms acculumates time spent by all kernels in milliseconds;
  *   add      accumulated number of additions;
  *   mul      accumulated number of multiplications. */
 

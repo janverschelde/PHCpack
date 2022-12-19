@@ -76,7 +76,7 @@ void write_dbl2_balsflops ( int ctype, int ncols, float lapsms );
 void GPU_dbl2_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***mathi, double ***matlo, double **rhshi, double **rhslo,
-   double **solhi, double **sollo, int vrblvl );
+   double **solhi, double **sollo, double *totupdlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   After each block of coefficients of the series,
@@ -99,18 +99,20 @@ void GPU_dbl2_bals_tail
  *   rhslo    low doubles of the right hand sides of the system;
  *   solhi    high doubles of solution computed up to stage-1;
  *   sollo    low doubles of solution computed up to stage-1;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   rhshi    high doubles of updated right hand sides;
- *   rhslo    low doubles of updated right hand sides. */
+ *   rhslo    low doubles of updated right hand sides;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds. */
 
 void GPU_cmplx2_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***matrehi, double ***matrelo, double ***matimhi, double ***matimlo,
    double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
    double **solrehi, double **solrelo, double **solimhi, double **solimlo,
-   int vrblvl );
+   double *totupdlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   After each block of coefficients of the series,
@@ -147,6 +149,7 @@ void GPU_cmplx2_bals_tail
  *            computed up to stage-1;
  *   solimlo  low doubles of the imaginary parts of the solution,
  *            computed up to stage-1;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -155,7 +158,8 @@ void GPU_cmplx2_bals_tail
  *   rhsimhi  high doubles of the imaginary parts
  *            of the updated right hand sides;
  *   rhsimlo  low doubles of the imaginary parts
- *            of the updated right hand sides. */
+ *            of the updated right hand sides;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds. */
 
 void GPU_dbl2_linear_residue
  ( int dim, int degp1, int szt, int nbt, int tailidx,

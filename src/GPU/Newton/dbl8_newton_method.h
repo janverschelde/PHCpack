@@ -105,6 +105,8 @@ void dbl8_newton_qrstep
    double *resmaxhilolo, double *resmaxlololo,
    bool *noqr_h, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
+   double *totcnvlapsedms, double *totqrlapsedms, double *totqtblapsedms,
+   double *totbslapsedms, double *totupdlapsedms, double *totreslapsedms,
    int vrblvl, int mode );
 /*
  * DESCRIPTION :
@@ -334,6 +336,12 @@ void dbl8_newton_qrstep
  *   resveclololo has space for deg+1 vectors of dimension dim;
  *   noqr_h    flag if true, then qr is skipped on host;
  *   noqr_d    flag if true, then qr is skipped on device;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
+ *   totupdlapsedms accumulates the milliseconds spent on updates;
+ *   totreslapsedms accumulates the milliseconds spent on residuals;
  *   vrblvl    is the verbose level;
  *   mode      execution mode, 0 (GPU only), 1 (CPU only) or 2 (GPU+CPU).
  *
@@ -509,7 +517,13 @@ void dbl8_newton_qrstep
  *   upidx_h   counts the number of updates skipped by host;
  *   bsidx_h   counts the number of backsubstitutions skipped by host;
  *   upidx_d   counts the number of updates skipped by device;
- *   bsidx_d   counts the number of backsubstitutions skipped by device. */
+ *   bsidx_d   counts the number of backsubstitutions skipped by device;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
+ *   totupdlapsedms accumulates the milliseconds spent on updates;
+ *   totreslapsedms accumulates the milliseconds spent on residuals. */
 
 int test_dbl8_real_newton
  ( int szt, int nbt, int dim, int deg, int nbrcol,

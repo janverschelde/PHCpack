@@ -109,7 +109,7 @@ void GPU_dbl4_bals_tail
    double ***mathihi, double ***matlohi, double ***mathilo, double ***matlolo,
    double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
    double **solhihi, double **sollohi, double **solhilo, double **sollolo,
-   int vrblvl );
+   double *totupdlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   After each block of coefficients of the series,
@@ -138,13 +138,15 @@ void GPU_dbl4_bals_tail
  *   sollohi  second highest doubles of solution computed up to stage-1;
  *   solhilo  second lowest doubles of solution computed up to stage-1;
  *   sollolo  lowest doubles of solution computed up to stage-1;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   rhshihi  highest doubles of updated right hand sides;
  *   rhslohi  second highest doubles of updated right hand sides;
  *   rhshilo  second lowest doubles of updated right hand sides;
- *   rhslolo  lowest doubles of updated right hand sides. */
+ *   rhslolo  lowest doubles of updated right hand sides;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds. */
 
 void GPU_cmplx4_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
@@ -159,7 +161,8 @@ void GPU_cmplx4_bals_tail
    double **solrehihi, double **solrelohi,
    double **solrehilo, double **solrelolo,
    double **solimhihi, double **solimlohi,
-   double **solimhilo, double **solimlolo, int vrblvl );
+   double **solimhilo, double **solimlolo,
+   double *totupdlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   After each block of coefficients of the series,
@@ -216,6 +219,7 @@ void GPU_cmplx4_bals_tail
  *            solution, computed up to stage-1;
  *   solimlolo are the lowest doubles of the imaginary parts of the solution,
  *            computed up to stage-1;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -234,7 +238,8 @@ void GPU_cmplx4_bals_tail
  *   rhsimhilo are the second lowest doubles of the imaginary parts
  *            of the updated right hand sides;
  *   rhsimlolo are the lowest doubles of the imaginary parts
- *            of the updated right hand sides. */
+ *            of the updated right hand sides;
+ *   totupdlapsedms acculumates time spent by all kernels in milliseconds. */
 
 void GPU_dbl4_linear_residue
  ( int dim, int degp1, int szt, int nbt, int tailidx,

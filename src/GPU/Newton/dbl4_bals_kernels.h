@@ -102,7 +102,9 @@ void GPU_dbl4_bals_head
    double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo,
    double *bhihi, double *blohi, double *bhilo, double *blolo, 
-   double *xhihi, double *xlohi, double *xhilo, double *xlolo, int vrblvl );
+   double *xhihi, double *xlohi, double *xhilo, double *xlolo,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves the head linear system in the least squares sense,
@@ -133,6 +135,9 @@ void GPU_dbl4_bals_head
  *   xlohi    space for ncols numbers;
  *   xhilo    space for ncols numbers;
  *   xlolo    space for ncols numbers;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -147,7 +152,10 @@ void GPU_dbl4_bals_head
  *   xhihi    highest doubles of the least squares solution;
  *   xlohi    second highest doubles of the least squares solution;
  *   xhilo    second lowest doubles of the least squares solution;
- *   xlolo    lowest doubles of the least squares solution. */
+ *   xlolo    lowest doubles of the least squares solution;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions. */
 
 void GPU_cmplx4_bals_head
  ( int nrows, int ncols, int szt, int nbt,
@@ -161,6 +169,7 @@ void GPU_cmplx4_bals_head
    double *bimhihi, double *bimlohi, double *bimhilo, double *bimlolo,
    double *xrehihi, double *xrelohi, double *xrehilo, double *xrelolo,
    double *ximhihi, double *ximlohi, double *ximhilo, double *ximlolo,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
    int vrblvl );
 /*
  * DESCRIPTION :
@@ -215,6 +224,9 @@ void GPU_cmplx4_bals_head
  *   ximlohi  space for ncols numbers;
  *   ximhilo  space for ncols numbers;
  *   ximlolo  space for ncols numbers;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -241,7 +253,10 @@ void GPU_cmplx4_bals_head
  *   ximhihi  highest doubles of the imaginary parts of the solution;
  *   ximlohi  second highest doubles of the imaginary parts of the solution;
  *   ximhilo  second lowest doubles of the imaginary parts of the solution;
- *   ximlolo  lowest doubles of the imaginary parts of the solution. */
+ *   ximlolo  lowest doubles of the imaginary parts of the solution;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions. */
 
 void write_dbl4_qtbflops ( int ctype, int ncols, float lapsms );
 /*
@@ -256,7 +271,8 @@ void write_dbl4_qtbflops ( int ctype, int ncols, float lapsms );
 void GPU_dbl4_bals_qtb
  ( int ncols, int szt, int nbt,
    double **Qhihi, double **Qlohi, double **Qhilo, double **Qlolo,
-   double *bhihi, double *blohi, double *bhilo, double *blolo, int vrblvl );
+   double *bhihi, double *blohi, double *bhilo, double *blolo,
+   double *totqtblapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   The updated right hand side vector b is multiplied with Q^T.
@@ -276,13 +292,15 @@ void GPU_dbl4_bals_qtb
  *   blohi    second highest doubles of the right hand side vector;
  *   bhilo    second lowest doubles of the right hand side vector;
  *   blolo    lowest doubles of the right hand side vector;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
  *   bhihi    highest doubles of the product of Q^T with b;
  *   blohi    second highest doubles of the product of Q^T with b;
  *   bhilo    second lowest doubles of the product of Q^T with b;
- *   blolo    lowest doubles of the product of Q^T with b. */
+ *   blolo    lowest doubles of the product of Q^T with b;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs. */
 
 void GPU_cmplx4_bals_qhb
  ( int ncols, int szt, int nbt,
@@ -290,7 +308,7 @@ void GPU_cmplx4_bals_qhb
    double **Qimhihi, double **Qimlohi, double **Qimhilo, double **Qimlolo,
    double *brehihi, double *brelohi, double *brehilo, double *brelolo,
    double *bimhihi, double *bimlohi, double *bimhilo, double *bimlolo,
-   int vrblvl );
+   double *totqtblapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   The updated right hand side vector b is multiplied with Q^H.
@@ -318,6 +336,7 @@ void GPU_cmplx4_bals_qhb
  *   bimlohi  second highest doubles of the imaginary parts of b;
  *   bimhilo  second lowest doubles of the imaginary parts of b; 
  *   bimlolo  lowest doubles of the imaginary parts of b;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -328,7 +347,8 @@ void GPU_cmplx4_bals_qhb
  *   bimhihi  highest doubles of the imaginary parts of Q^H*b;
  *   bimlohi  second highest doubles of the imaginary parts of Q^H*b;
  *   bimhilo  second lowest doubles of the imaginary parts of Q^H*b;
- *   bimlolo  lowest doubles of the imaginary parts of Q^H*b. */
+ *   bimlolo  lowest doubles of the imaginary parts of Q^H*b;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs. */
 
 void GPU_dbl4_bals_solve
  ( int dim, int degp1, int szt, int nbt, int tailidx,
@@ -337,7 +357,9 @@ void GPU_dbl4_bals_solve
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo, 
    double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
    double **solhihi, double **sollohi, double **solhilo, double **sollolo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl );
+   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   double *totupdlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -372,6 +394,10 @@ void GPU_dbl4_bals_solve
  *   solhilo  space allocated for degp1 vectors of dimension dim;
  *   sollolo  space allocated for degp1 vectors of dimension dim;
  *   noqr     flag if true, then no qr;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
+ *   totupdlapsedms accumulates the milliseconds spent on updates;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -394,7 +420,11 @@ void GPU_dbl4_bals_solve
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped;
- *   newtail  the new value for tailidx. */
+ *   newtail  the new value for tailidx;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
+ *   totupdlapsedms accumulates the milliseconds spent updates. */
 
 void GPU_cmplx4_bals_solve
  ( int dim, int degp1, int szt, int nbt, int tailidx,
@@ -414,7 +444,9 @@ void GPU_cmplx4_bals_solve
    double **solrehilo, double **solrelolo,
    double **solimhihi, double **solimlohi, 
    double **solimhilo, double **solimlolo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl );
+   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   double *totupdlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -485,6 +517,10 @@ void GPU_cmplx4_bals_solve
  *   solimhilo has space allocated for degp1 vectors of dimension dim;
  *   solimlolo has space allocated for degp1 vectors of dimension dim;
  *   noqr     flag if true, then no qr;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
+ *   totupdlapsedms accumulates the milliseconds spent on updates;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -523,6 +559,10 @@ void GPU_cmplx4_bals_solve
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped;
- *   newtail  the new value for tailidx. */
+ *   newtail  the new value for tailidx;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
+ *   totupdlapsedms accumulates the milliseconds spent on updates. */
 
 #endif

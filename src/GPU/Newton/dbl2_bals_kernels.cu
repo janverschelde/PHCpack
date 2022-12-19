@@ -109,7 +109,9 @@ void GPU_dbl2_bals_head
  ( int nrows, int ncols, int szt, int nbt,
    double **Ahi, double **Alo, double **Qhi, double **Qlo,
    double **Rhi, double **Rlo, double *bhi, double *blo, 
-   double *xhi, double *xlo, int vrblvl )
+   double *xhi, double *xlo,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   int vrblvl )
 {
    double qrtimelapsed_d;
    double houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms;
@@ -131,6 +133,10 @@ void GPU_dbl2_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
+   *totqrlapsedms = *totqrlapsedms + houselapsedms + RTvlapsedms
+      + tileRlapsedms + vb2Wlapsedms + WYTlapsedms + QWYTlapsedms
+      + Qaddlapsedms + YWTlapsedms + YWTClapsedms + Raddlapsedms;
+
    if(vrblvl > 0)
       write_dbl2_qrtimeflops
          (0,nrows,ncols,houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms,
@@ -139,7 +145,7 @@ void GPU_dbl2_bals_head
 
    if(vrblvl > 0) cout << "-> GPU multiplies rhs with Q^T ..." << endl;
 
-   GPU_dbl2_bals_qtb(ncols,szt,nbt,Qhi,Qlo,bhi,blo,vrblvl);
+   GPU_dbl2_bals_qtb(ncols,szt,nbt,Qhi,Qlo,bhi,blo,totqtblapsedms,vrblvl);
 
    if(vrblvl > 1)
    {
@@ -186,6 +192,8 @@ void GPU_dbl2_bals_head
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
        &bsaddcnt,&bsmulcnt,&bsdivcnt);
 
+   *totbslapsedms += elapsedms;
+
    if(vrblvl > 0)
       write_dbl2_bstimeflops
          (szt,nbt,0,invlapsed,mullapsed,sublapsed,elapsedms,bstimelapsed_d,
@@ -217,7 +225,9 @@ void GPU_cmplx2_bals_head
    double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo, 
    double *brehi, double *brelo, double *bimhi, double *bimlo,
-   double *xrehi, double *xrelo, double *ximhi, double *ximlo, int vrblvl )
+   double *xrehi, double *xrelo, double *ximhi, double *ximlo,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   int vrblvl )
 {
    double qrtimelapsed_d;
    double houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms;
@@ -240,6 +250,10 @@ void GPU_cmplx2_bals_head
        &YWTlapsedms,&YWTClapsedms,&Raddlapsedms,&qrtimelapsed_d,
        &qraddcnt,&qrmulcnt,&qrdivcnt,&sqrtcnt,verbose);
 
+   *totqrlapsedms = *totqrlapsedms + houselapsedms + RTvlapsedms
+      + tileRlapsedms + vb2Wlapsedms + WYTlapsedms + QWYTlapsedms
+      + Qaddlapsedms + YWTlapsedms + YWTClapsedms + Raddlapsedms;
+
    if(vrblvl > 0)
       write_dbl2_qrtimeflops
          (1,nrows,ncols,houselapsedms,RTvlapsedms,tileRlapsedms,vb2Wlapsedms,
@@ -249,7 +263,8 @@ void GPU_cmplx2_bals_head
    if(vrblvl > 0) cout << "-> GPU multiplies rhs with Q^H ..." << endl;
 
    GPU_cmplx2_bals_qhb
-      (ncols,szt,nbt,Qrehi,Qrelo,Qimhi,Qimlo,brehi,brelo,bimhi,bimlo,vrblvl);
+      (ncols,szt,nbt,Qrehi,Qrelo,Qimhi,Qimlo,brehi,brelo,bimhi,bimlo,
+       totqtblapsedms,vrblvl);
 
    if(vrblvl > 1)
    {
@@ -302,6 +317,8 @@ void GPU_cmplx2_bals_head
        brehi,brelo,bimhi,bimlo,xrehi,xrelo,ximhi,ximlo,
        &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
        &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+   *totbslapsedms += elapsedms;
 
    if(vrblvl > 0)
       write_dbl2_bstimeflops
@@ -379,7 +396,8 @@ void write_dbl2_qtbflops ( int ctype, int ncols, float lapsms )
 
 void GPU_dbl2_bals_qtb
  ( int ncols, int szt, int nbt,
-   double **Qhi, double **Qlo, double *bhi, double *blo, int vrblvl )
+   double **Qhi, double **Qlo, double *bhi, double *blo,
+   double *totqtblapsedms, int vrblvl )
 {
    double *bhi_d;
    double *blo_d;
@@ -427,6 +445,8 @@ void GPU_dbl2_bals_qtb
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
 
+   *totqtblapsedms += milliseconds;
+
    cudaMemcpy(bhi,rhi_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(blo,rlo_d,szrhs,cudaMemcpyDeviceToHost);
 
@@ -442,7 +462,8 @@ void GPU_dbl2_bals_qtb
 void GPU_cmplx2_bals_qhb
  ( int ncols, int szt, int nbt,
    double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
-   double *brehi, double *brelo, double *bimhi, double *bimlo, int vrblvl )
+   double *brehi, double *brelo, double *bimhi, double *bimlo,
+   double *totqtblapsedms, int vrblvl )
 {
    double *brehi_d;
    double *brelo_d;
@@ -511,6 +532,8 @@ void GPU_cmplx2_bals_qhb
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
 
+   *totqtblapsedms += milliseconds;
+
    cudaMemcpy(brehi,rrehi_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(brelo,rrelo_d,szrhs,cudaMemcpyDeviceToHost);
    cudaMemcpy(bimhi,rimhi_d,szrhs,cudaMemcpyDeviceToHost);
@@ -532,7 +555,9 @@ void GPU_dbl2_bals_solve
    double ***mathi, double ***matlo, double **Qhi, double **Qlo,
    double **Rhi, double **Rlo, double **rhshi, double **rhslo,
    double **solhi, double **sollo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   double *totupdlapsedms, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -618,7 +643,7 @@ void GPU_dbl2_bals_solve
          }
          GPU_dbl2_bals_head
             (nrows,ncols,szt,nbt,Ahi,Alo,Qhi,Qlo,Rhi,Rlo,bhi,blo,
-             xhi,xlo,vrblvl);
+             xhi,xlo,totqrlapsedms,totqtblapsedms,totbslapsedms,vrblvl);
 
          for(int j=0; j<ncols; j++)
          {
@@ -657,7 +682,7 @@ void GPU_dbl2_bals_solve
 
          GPU_dbl2_bals_tail
             (nrows,ncols,szt,nbt,degp1,stage,
-             mathi,matlo,rhshi,rhslo,solhi,sollo,vrblvl);
+             mathi,matlo,rhshi,rhslo,solhi,sollo,totupdlapsedms,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -711,7 +736,6 @@ void GPU_dbl2_bals_solve
             *newtail = stage;
             firstbs = false;
          }
-
          double bstimelapsed_d;
          double elapsedms,invlapsed,mullapsed,sublapsed;
          long long int bsaddcnt = 0;
@@ -721,7 +745,8 @@ void GPU_dbl2_bals_solve
          if(vrblvl > 0)
             cout << "-> GPU multiplies rhs with Q^T ..." << endl;
 
-         GPU_dbl2_bals_qtb(ncols,szt,nbt,Qhi,Qlo,bhi,blo,vrblvl);
+         GPU_dbl2_bals_qtb
+            (ncols,szt,nbt,Qhi,Qlo,bhi,blo,totqtblapsedms,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -750,6 +775,8 @@ void GPU_dbl2_bals_solve
             (ncols,szt,nbt,workRhi,workRlo,bhi,blo,xhi,xlo,
              &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
              &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+         *totbslapsedms += elapsedms;
 
          if(vrblvl > 0)
             write_dbl2_bstimeflops
@@ -790,7 +817,9 @@ void GPU_cmplx2_bals_solve
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
    double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
    double **solrehi, double **solrelo, double **solimhi, double **solimlo, 
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
+   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
+   double *totupdlapsedms, int vrblvl )
 {
    const int nrows = dim;
    const int ncols = dim;
@@ -887,7 +916,8 @@ void GPU_cmplx2_bals_solve
          GPU_cmplx2_bals_head
             (nrows,ncols,szt,nbt,Arehi,Arelo,Aimhi,Aimlo,
              Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo,
-             brehi,brelo,bimhi,bimlo,xrehi,xrelo,ximhi,ximlo,vrblvl);
+             brehi,brelo,bimhi,bimlo,xrehi,xrelo,ximhi,ximlo,
+             totqrlapsedms,totqtblapsedms,totbslapsedms,vrblvl);
 
          for(int j=0; j<ncols; j++)
          {
@@ -932,7 +962,7 @@ void GPU_cmplx2_bals_solve
             (nrows,ncols,szt,nbt,degp1,stage,
              matrehi,matrelo,matimhi,matimlo,
              rhsrehi,rhsrelo,rhsimhi,rhsimlo,
-             solrehi,solrelo,solimhi,solimlo,vrblvl);
+             solrehi,solrelo,solimhi,solimlo,totupdlapsedms,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -1003,7 +1033,7 @@ void GPU_cmplx2_bals_solve
 
          GPU_cmplx2_bals_qhb
             (ncols,szt,nbt,Qrehi,Qrelo,Qimhi,Qimlo,
-                           brehi,brelo,bimhi,bimlo,vrblvl);
+                           brehi,brelo,bimhi,bimlo,totqtblapsedms,vrblvl);
 
          if(vrblvl > 1)
          {
@@ -1036,6 +1066,8 @@ void GPU_cmplx2_bals_solve
              brehi,brelo,bimhi,bimlo,xrehi,xrelo,ximhi,ximlo,
              &invlapsed,&mullapsed,&sublapsed,&elapsedms,&bstimelapsed_d,
              &bsaddcnt,&bsmulcnt,&bsdivcnt);
+
+         *totbslapsedms += elapsedms;
 
          if(vrblvl > 0)
             write_dbl2_bstimeflops

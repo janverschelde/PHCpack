@@ -841,7 +841,8 @@ void GPU_dbl8_evaluate_monomials
    double ***outputhihihi, double ***outputlohihi,
    double ***outputhilohi, double ***outputlolohi,
    double ***outputhihilo, double ***outputlohilo,
-   double ***outputhilolo, double ***outputlololo, int vrblvl )
+   double ***outputhilolo, double ***outputlololo,
+   double *totcnvlapsedms, int vrblvl )
 {
    for(int i=0; i<dim; i++) // common factors in the coefficients
    {
@@ -957,6 +958,8 @@ void GPU_dbl8_evaluate_monomials
        outputhihilo,outputlohilo,outputhilolo,outputlololo,jobs,
        &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
+   *totcnvlapsedms += elapsedms;
+
    if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
@@ -1052,7 +1055,8 @@ void GPU_cmplx8_evaluate_monomials
    double ***outputimhihihi, double ***outputimlohihi,
    double ***outputimhilohi, double ***outputimlolohi,
    double ***outputimhihilo, double ***outputimlohilo,
-   double ***outputimhilolo, double ***outputimlololo, int vrblvl )
+   double ***outputimhilolo, double ***outputimlololo,
+   double *totcnvlapsedms, int vrblvl )
 {
    for(int i=0; i<dim; i++) // common factors in the coefficients
    {
@@ -1209,6 +1213,8 @@ void GPU_cmplx8_evaluate_monomials
        outputimhihilo,outputimlohilo,outputimhilolo,outputimlololo,jobs,
        &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
+   *totcnvlapsedms += elapsedms;
+
    if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
@@ -1233,7 +1239,6 @@ void GPU_cmplx8_evaluate_monomials
                  << outputimlololo[i][dim][j] << endl;
       }
    }
-
    for(int i=0; i<dim; i++) // multiply derivatives with the powers
    {
       if(nbrfac[i] > 0) // there are common factors in monomial i
@@ -1318,7 +1323,8 @@ void GPU_dbl8_evaluate_columns
    double ***jacvalhihihi, double ***jacvallohihi,
    double ***jacvalhilohi, double ***jacvallolohi,
    double ***jacvalhihilo, double ***jacvallohilo,
-   double ***jacvalhilolo, double ***jacvallololo, int vrblvl )
+   double ***jacvalhilolo, double ***jacvallololo,
+   double *totcnvlapsedms, int vrblvl )
 {
    const int degp1 = deg+1;
 
@@ -1425,6 +1431,8 @@ void GPU_dbl8_evaluate_columns
           outputhihilo,outputlohilo,outputhilolo,outputlololo,jobs,
           &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
+      *totcnvlapsedms += elapsedms;
+
       for(int j=0; j<dim; j++)
          if(nvr[i][j] > 0)       // update values
          {
@@ -1439,8 +1447,8 @@ void GPU_dbl8_evaluate_columns
                        outputhihilo[j][dim][L],outputlohilo[j][dim][L],
                        outputhilolo[j][dim][L],outputlololo[j][dim][L]);
             }
-
             int *indexes = idx[i][j];      // indices of the variables
+
             for(int k=0; k<nvr[i][j]; k++) // derivative w.r.t. idx[i][j][k]
             {                              // has j-th coefficient
                int idxval = indexes[k];
@@ -1525,7 +1533,8 @@ void GPU_cmplx8_evaluate_columns
    double ***jacvalimhihihi, double ***jacvalimlohihi,
    double ***jacvalimhilohi, double ***jacvalimlolohi,
    double ***jacvalimhihilo, double ***jacvalimlohilo,
-   double ***jacvalimhilolo, double ***jacvalimlololo, int vrblvl )
+   double ***jacvalimhilolo, double ***jacvalimlololo,
+   double *totcnvlapsedms, int vrblvl )
 {
    const int degp1 = deg+1;
 
@@ -1661,6 +1670,8 @@ void GPU_cmplx8_evaluate_columns
           outputimhihihi,outputimlohihi,outputimhilohi,outputimlolohi,
           outputimhihilo,outputimlohilo,outputimhilolo,outputimlololo,jobs,
           &cnvlapms,&elapsedms,&walltimesec,vrblvl);
+
+      *totcnvlapsedms += elapsedms;
 
       for(int j=0; j<dim; j++)
          if(nvr[i][j] > 0)       // update values

@@ -621,7 +621,8 @@ void GPU_dbl4_evaluate_monomials
    double **inputhihi, double **inputlohi,
    double **inputhilo, double **inputlolo,
    double ***outputhihi, double ***outputlohi,
-   double ***outputhilo, double ***outputlolo, int vrblvl )
+   double ***outputhilo, double ***outputlolo,
+   double *totcnvlapsedms, int vrblvl )
 {
    for(int i=0; i<dim; i++) // common factors in the coefficients
    {
@@ -721,6 +722,8 @@ void GPU_dbl4_evaluate_monomials
        outputhihi,outputlohi,outputhilo,outputlolo,jobs,
        &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
+   *totcnvlapsedms += elapsedms;
+
    if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
@@ -784,7 +787,8 @@ void GPU_cmplx4_evaluate_monomials
    double ***outputrehihi, double ***outputrelohi, 
    double ***outputrehilo, double ***outputrelolo, 
    double ***outputimhihi, double ***outputimlohi,
-   double ***outputimhilo, double ***outputimlolo, int vrblvl )
+   double ***outputimhilo, double ***outputimlolo,
+   double *totcnvlapsedms, int vrblvl )
 {
    for(int i=0; i<dim; i++) // common factors in the coefficients
    {
@@ -896,6 +900,8 @@ void GPU_cmplx4_evaluate_monomials
        outputimhihi,outputimlohi,outputimhilo,outputimlolo,jobs,
        &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
+   *totcnvlapsedms += elapsedms;
+
    if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
@@ -965,7 +971,8 @@ void GPU_dbl4_evaluate_columns
    double **funvalhihi, double **funvallohi,
    double **funvalhilo, double **funvallolo,
    double ***jacvalhihi, double ***jacvallohi,
-   double ***jacvalhilo, double ***jacvallolo, int vrblvl )
+   double ***jacvalhilo, double ***jacvallolo,
+   double *totcnvlapsedms, int vrblvl )
 {
    const int degp1 = deg+1;
 
@@ -1056,6 +1063,8 @@ void GPU_dbl4_evaluate_columns
           outputhihi,outputlohi,outputhilo,outputlolo,jobs,
           &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
+      *totcnvlapsedms += elapsedms;
+
       for(int j=0; j<dim; j++)
          if(nvr[i][j] > 0)       // update values
          {
@@ -1116,7 +1125,8 @@ void GPU_cmplx4_evaluate_columns
    double ***jacvalrehihi, double ***jacvalrelohi,
    double ***jacvalrehilo, double ***jacvalrelolo,
    double ***jacvalimhihi, double ***jacvalimlohi,
-   double ***jacvalimhilo, double ***jacvalimlolo, int vrblvl )
+   double ***jacvalimhilo, double ***jacvalimlolo,
+   double *totcnvlapsedms, int vrblvl )
 {
    const int degp1 = deg+1;
 
@@ -1222,6 +1232,8 @@ void GPU_cmplx4_evaluate_columns
           outputrehihi,outputrelohi,outputrehilo,outputrelolo,
           outputimhihi,outputimlohi,outputimhilo,outputimlolo,jobs,
           &cnvlapms,&elapsedms,&walltimesec,vrblvl);
+
+      *totcnvlapsedms += elapsedms;
 
       for(int j=0; j<dim; j++)
          if(nvr[i][j] > 0)       // update values

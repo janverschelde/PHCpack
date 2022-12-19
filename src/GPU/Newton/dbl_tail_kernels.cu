@@ -115,7 +115,8 @@ void write_dbl_balsflops ( int ctype, int ncols, float lapsms )
 
 void GPU_dbl_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
-   double ***mat, double **rhs, double **sol, int vrblvl )
+   double ***mat, double **rhs, double **sol,
+   double *totupdlapsedms, int vrblvl )
 {
    if(vrblvl > 1)
    {
@@ -169,6 +170,8 @@ void GPU_dbl_bals_tail
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
 
+      *totupdlapsedms += milliseconds;
+
       if(vrblvl > 0) write_dbl_balsflops(0,ncols,milliseconds);
       
       if(vrblvl > 1)
@@ -193,7 +196,7 @@ void GPU_dbl_bals_tail
 void GPU_cmplx_bals_tail
  ( int nrows, int ncols, int szt, int nbt, int degp1, int stage,
    double ***matre, double ***matim, double **rhsre, double **rhsim,
-   double **solre, double **solim, int vrblvl )
+   double **solre, double **solim, double *totupdlapsedms, int vrblvl )
 {
    if(vrblvl > 1)
    {
@@ -269,6 +272,8 @@ void GPU_cmplx_bals_tail
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
 
+      *totupdlapsedms += milliseconds;
+
       if(vrblvl > 0) write_dbl_balsflops(1,ncols,milliseconds);
       
       if(vrblvl > 1)
@@ -298,7 +303,8 @@ void GPU_dbl_linear_residue
  ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***mat, double **rhs, double **sol,
    double **resvec, double *resmax,
-   double *lapms, long long int *add, long long int *mul, int vrblvl )
+   double *totreslapsedms, long long int *add, long long int *mul,
+   int vrblvl )
 {
    double *r_d;
    const size_t szrhs = dim*sizeof(double);
@@ -348,7 +354,7 @@ void GPU_dbl_linear_residue
          cudaEventRecord(stop);
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
-         *lapms += milliseconds;
+         *totreslapsedms += milliseconds;
          flopcount_dbl_bals_tail(dim,add,mul);
 
          if(vrblvl > 0) write_dbl_balsflops(0,dim,milliseconds);
@@ -382,7 +388,8 @@ void GPU_cmplx_linear_residue
    double ***matre, double ***matim, double **rhsre, double **rhsim,
    double **solre, double **solim,
    double **resvecre, double **resvecim, double *resmax,
-   double *lapms, long long int *add, long long int *mul, int vrblvl )
+   double *totreslapsedms, long long int *add, long long int *mul,
+   int vrblvl )
 {
    double *rre_d;
    double *rim_d;
@@ -448,7 +455,7 @@ void GPU_cmplx_linear_residue
          cudaEventRecord(stop);
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
-         *lapms += milliseconds;
+         *totreslapsedms += milliseconds;
          flopcount_cmplx_bals_tail(dim,add,mul);
 
          if(vrblvl > 0) write_dbl_balsflops(1,dim,milliseconds);

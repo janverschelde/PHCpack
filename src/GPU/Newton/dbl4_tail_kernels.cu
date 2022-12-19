@@ -211,7 +211,7 @@ void GPU_dbl4_bals_tail
    double ***mathihi, double ***matlohi, double ***mathilo, double ***matlolo,
    double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
    double **solhihi, double **sollohi, double **solhilo, double **sollolo,
-   int vrblvl )
+   double *totupdlapsedms, int vrblvl )
 {
    if(vrblvl > 1)
    {
@@ -305,6 +305,8 @@ void GPU_dbl4_bals_tail
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
 
+      *totupdlapsedms += milliseconds;
+
       if(vrblvl > 0) write_dbl4_balsflops(0,ncols,milliseconds);
       
       if(vrblvl > 1)
@@ -349,7 +351,8 @@ void GPU_cmplx4_bals_tail
    double **solrehihi, double **solrelohi,
    double **solrehilo, double **solrelolo,
    double **solimhihi, double **solimlohi,
-   double **solimhilo, double **solimlolo, int vrblvl )
+   double **solimhilo, double **solimlolo,
+   double *totupdlapsedms, int vrblvl )
 {
    if(vrblvl > 1)
    {
@@ -492,6 +495,8 @@ void GPU_cmplx4_bals_tail
       cudaEventRecord(stop);
       cudaEventSynchronize(stop);
       cudaEventElapsedTime(&milliseconds,start,stop);
+
+      *totupdlapsedms += milliseconds;
 
       if(vrblvl > 0) write_dbl4_balsflops(1,ncols,milliseconds);
       

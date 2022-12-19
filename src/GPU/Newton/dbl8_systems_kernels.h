@@ -625,7 +625,8 @@ void GPU_dbl8_evaluate_monomials
    double ***outputhihihi, double ***outputlohihi,
    double ***outputhilohi, double ***outputlolohi,
    double ***outputhihilo, double ***outputlohilo,
-   double ***outputhilolo, double ***outputlololo, int vrblvl );
+   double ***outputhilolo, double ***outputlololo,
+   double *totcnvlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates monomials at power series.
@@ -674,6 +675,7 @@ void GPU_dbl8_evaluate_monomials
  *   outputlohilo has space for the third lowest doubles of the output;
  *   outputhilolo has space for the second lowest doubles of the output;
  *   outputlololo has space for the lowest doubles of the output;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -716,7 +718,8 @@ void GPU_dbl8_evaluate_monomials
  *   outputlololo has the lowest doubles of the output,
  *            outputlololo[k], for k from 0 to dim-1, has the lowest double
  *            of the derivative with respect to the variable k;
- *            outputlololo[dim] has the lowest double value. */
+ *            outputlololo[dim] has the lowest double value;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions. */
 
 void GPU_cmplx8_evaluate_monomials
  ( int dim, int deg, int szt, int nbt,
@@ -752,7 +755,8 @@ void GPU_cmplx8_evaluate_monomials
    double ***outputimhihihi, double ***outputimlohihi,
    double ***outputimhilohi, double ***outputimlolohi,
    double ***outputimhihilo, double ***outputimlohilo,
-   double ***outputimhilolo, double ***outputimlololo, int vrblvl );
+   double ***outputimhilolo, double ***outputimlololo,
+   double *totcnvlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates monomials at power series.
@@ -880,6 +884,7 @@ void GPU_cmplx8_evaluate_monomials
  *             parts of the output;
  *   outputimlololo has space for the lowest doubles of the imaginary
  *             parts of the output;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -1010,7 +1015,8 @@ void GPU_cmplx8_evaluate_monomials
  *             has the lowest doubles of the imaginary part of the value of
  *             the input at the i-th monomial, and for k in range 0..nvr[i]-1:
  *             outputimlololo[i][idx[k]] has the lowest doubles
- *             of the imaginary parts of te derivative w.r.t. idx[k]. */
+ *             of the imaginary parts of te derivative w.r.t. idx[k];
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions. */
 
 void GPU_dbl8_evaluate_columns
  ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx,
@@ -1033,7 +1039,8 @@ void GPU_dbl8_evaluate_columns
    double ***jacvalhihihi, double ***jacvallohihi,
    double ***jacvalhilohi, double ***jacvallolohi,
    double ***jacvalhihilo, double ***jacvallohilo,
-   double ***jacvalhilolo, double ***jacvallololo, int vrblvl );
+   double ***jacvalhilolo, double ***jacvallololo,
+   double *totcnvlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates the monomials in the column representation of a system,
@@ -1081,6 +1088,7 @@ void GPU_dbl8_evaluate_columns
  *   outputlohilo has space for the output;
  *   outputhilolo has space for the output;
  *   outputlololo has space for the output;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -1107,7 +1115,8 @@ void GPU_dbl8_evaluate_columns
  *   jacvalhihilo has the fourth lowest doubles of all derivatives;
  *   jacvallohilo has the third lowest doubles of all derivatives;
  *   jacvalhilolo has the second lowest doubles of all derivatives;
- *   jacvallololo has the lowest doubles of all derivatives. */
+ *   jacvallololo has the lowest doubles of all derivatives;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions. */
 
 void GPU_cmplx8_evaluate_columns
  ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx, 
@@ -1150,7 +1159,8 @@ void GPU_cmplx8_evaluate_columns
    double ***jacvalimhihihi, double ***jacvalimlohihi,
    double ***jacvalimhilohi, double ***jacvalimlolohi,
    double ***jacvalimhihilo, double ***jacvalimlohilo,
-   double ***jacvalimhilolo, double ***jacvalimlololo, int vrblvl );
+   double ***jacvalimhilolo, double ***jacvalimlololo,
+   double *totcnvlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates the monomials in the column representation of a system,
@@ -1246,6 +1256,7 @@ void GPU_cmplx8_evaluate_columns
  *   outputimlohilo has space for the 3rd lowest double imag parts of output;
  *   outputimhilolo has space for the 2nd lowest double imag parts of output;
  *   outputimlololo has space for the lowest double imag parts of the output;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -1312,6 +1323,7 @@ void GPU_cmplx8_evaluate_columns
  *   jacvalimhihilo are the 4th lowest double imag parts of all derivatives;
  *   jacvalimlohilo are the 3rd lowest double imag parts of all derivatives;
  *   jacvalimhilolo are the 2nd lowest double imag parts of all derivatives;
- *   jacvalimlololo are the lowest double imag parts of all derivatives. */
+ *   jacvalimlololo are the lowest double imag parts of all derivatives;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions. */
 
 #endif

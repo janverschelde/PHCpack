@@ -187,7 +187,8 @@ void GPU_cmplx_mon_evaldiff
 void GPU_dbl_evaluate_monomials
  ( int dim, int deg, int szt, int nbt,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
-   double **cff, double *acc, double **input, double ***output, int vrblvl );
+   double **cff, double *acc, double **input, double ***output,
+   double *totcnvlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates monomials at power series.
@@ -209,6 +210,7 @@ void GPU_dbl_evaluate_monomials
  *   input     coefficients of the power series of degree deg,
  *             for dim variables;
  *   output    space for the output;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions;
  *   vrblvl   is the verbose level, if zero, then no output.
  *
  * ON RETURN :
@@ -216,14 +218,15 @@ void GPU_dbl_evaluate_monomials
  *   output    evaluated and differentiated monomials in the system,
  *             output[i][dim] is the value of the input series
  *             at the i-th monomial, and for k in range 0..nvr[i]-1:
- *             output[i][idx[k]] is the derivative w.r.t. idx[k]. */
+ *             output[i][idx[k]] is the derivative w.r.t. idx[k];
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions. */
 
 void GPU_cmplx_evaluate_monomials
  ( int dim, int deg, int szt, int nbt,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **cffre, double **cffim, double *accre, double *accim,
    double **inputre, double **inputim, double ***outputre, double ***outputim,
-   int vrblvl );
+   double *totcnvlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates monomials at power series.
@@ -250,6 +253,7 @@ void GPU_cmplx_evaluate_monomials
  *             of degree deg, for dim variables;
  *   outputre  has space for the real parts of the output;
  *   outputim  has space for the imaginary parts of the output;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions;
  *   vrblvl    is the verbose level.
  *
  * ON RETURN :
@@ -264,12 +268,13 @@ void GPU_cmplx_evaluate_monomials
  *             outputim[i][dim] is the imaginary part of the value of the
  *             input at the i-th monomial, and for k in range 0..nvr[i]-1:
  *             outputim[i][idx[k]] is the imaginary part of te derivative
- *             w.r.t. idx[k]. */
+ *             w.r.t. idx[k];
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions. */
 
 void GPU_dbl_evaluate_columns
  ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx,
    double ***cff, double **input, double ***output,
-   double **funval, double ***jacval, int vrblvl );
+   double **funval, double ***jacval, double *totcnvlapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates the monomials in the column representation of a system,
@@ -290,19 +295,22 @@ void GPU_dbl_evaluate_columns
  *   input     coefficients of the power series of degree deg,
  *             for dim variables;
  *   output    space for the output;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions;
  *   vrblvl    is the verbose level.
  *
  * ON RETURN :
  *   output    used as work space for one column;
  *   funval    the evaluated series for each polynomial;
- *   jacval    matrix series of all derivatives. */
+ *   jacval    matrix series of all derivatives;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions. */
 
 void GPU_cmplx_evaluate_columns
  ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx, 
    double ***cffre, double ***cffim, double **inputre, double **inputim,
    double ***outputre, double ***outputim, 
    double **funvalre, double **funvalim,
-   double ***jacvalre, double ***jacvalim, int vrblvl );
+   double ***jacvalre, double ***jacvalim, double *totcnvlapsedms,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates the monomials in the column representation of a system,
@@ -328,6 +336,7 @@ void GPU_cmplx_evaluate_columns
  *             of degree deg, for dim variables;
  *   outputre  has space for the real parts of the output;
  *   outputim  has space for the imaginary parts of the output;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions;
  *   vrblvl    is the verbose level.
  *
  * ON RETURN :
@@ -338,6 +347,7 @@ void GPU_cmplx_evaluate_columns
  *   funvalre  real parts of the evaluated series for each polynomial;
  *   funvalim  imaginary parts of the evaluated series for each polynomial;
  *   jacvalre  real parts of the matrix series of all derivatives;
- *   jacvalim  imaginary parts of the matrix series of all derivatives. */
+ *   jacvalim  imaginary parts of the matrix series of all derivatives;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions. */
 
 #endif

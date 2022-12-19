@@ -435,7 +435,7 @@ void GPU_dbl_evaluate_monomials
  ( int dim, int deg, int szt, int nbt,
    int *nvr, int **idx, int **exp, int *nbrfac,
    int **expfac, double **cff, double *acc, double **input,
-   double ***output, int vrblvl )
+   double ***output, double *totcnvlapsedms, int vrblvl )
 {
    for(int i=0; i<dim; i++) // common factors in the coefficients
    {
@@ -511,6 +511,8 @@ void GPU_dbl_evaluate_monomials
       (szt,dim,dim,deg,nvr,idx,cff,input,output,jobs,
        &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
+   *totcnvlapsedms += elapsedms;
+
    if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
@@ -545,7 +547,7 @@ void GPU_cmplx_evaluate_monomials
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
    double **cffre, double **cffim, double *accre, double *accim,
    double **inputre, double **inputim, double ***outputre, double ***outputim,
-   int vrblvl )
+   double *totcnvlapsedms, int vrblvl )
 {
    for(int i=0; i<dim; i++) // common factors in the coefficients
    {
@@ -630,6 +632,8 @@ void GPU_cmplx_evaluate_monomials
       (szt,dim,dim,deg,nvr,idx,cffre,cffim,inputre,inputim,
        outputre,outputim,jobs,&cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
+   *totcnvlapsedms += elapsedms;
+
    if(vrblvl > 1)
    {
       for(int i=0; i<dim; i++)
@@ -640,7 +644,6 @@ void GPU_cmplx_evaluate_monomials
                  << outputim[i][dim][j] << endl;
       }
    }
-
    for(int i=0; i<dim; i++) // multiply derivatives with the powers
    {
       if(nbrfac[i] > 0) // there are common factors in monomial i
@@ -667,7 +670,7 @@ void GPU_cmplx_evaluate_monomials
 void GPU_dbl_evaluate_columns
  ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx,
    double ***cff, double **input, double ***output,
-   double **funval, double ***jacval, int vrblvl )
+   double **funval, double ***jacval, double *totcnvlapsedms, int vrblvl )
 {
    const int degp1 = deg+1;
 
@@ -742,6 +745,8 @@ void GPU_dbl_evaluate_columns
          (szt,dim,dim,deg,nvr[i],idx[i],cff[i],input,output,jobs,
           &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
+      *totcnvlapsedms += elapsedms;
+
       for(int j=0; j<dim; j++)
          if(nvr[i][j] > 0)       // update values
          {
@@ -771,7 +776,8 @@ void GPU_cmplx_evaluate_columns
    double ***cffre, double ***cffim, double **inputre, double **inputim,
    double ***outputre, double ***outputim, 
    double **funvalre, double **funvalim,
-   double ***jacvalre, double ***jacvalim, int vrblvl )
+   double ***jacvalre, double ***jacvalim, double *totcnvlapsedms,
+   int vrblvl )
 {
    const int degp1 = deg+1;
 
@@ -854,6 +860,8 @@ void GPU_cmplx_evaluate_columns
       GPU_cmplx_mon_evaldiff
          (szt,dim,dim,deg,nvr[i],idx[i],cffre[i],cffim[i],inputre,inputim,
           outputre,outputim,jobs,&cnvlapms,&elapsedms,&walltimesec,vrblvl);
+
+      *totcnvlapsedms += elapsedms;
 
       for(int j=0; j<dim; j++)
          if(nvr[i][j] > 0)       // update values
