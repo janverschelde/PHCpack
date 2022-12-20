@@ -1,5 +1,6 @@
 Mon 19 Dec 2022 : accumulated all kernel times, updated all *kernels*
-  and *newton_method* files.
+  and *newton_method* files.  In dbl8_bals_kernels.cu, used long long int
+  in the expression to compute the flops for the Q^H*b computation.
 
 Sun 18 Dec 2022 : added reporting of times and flops in dbl*_bals_kernels,
   updated *newton_method.cpp.  Added the computation of wall time for all 

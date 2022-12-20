@@ -740,11 +740,12 @@ void write_dbl8_qtbflops ( int ctype, int ncols, float lapsms )
    cout << "Time spent for Q^T*b : " << lapsms << " milliseconds." << endl;
 
    long long int flopcnt;
+   const long long int longncols2 = ncols*ncols; // to avoid overflow
    if(ctype == 0)
-      flopcnt = 270*ncols*ncols + 1742*ncols*ncols;
+      flopcnt = 270*longncols2 + 1742*longncols2;
       // as many + as * in one inner product
    else
-      flopcnt = 4*270*ncols*ncols + 4*1742*ncols*ncols;
+      flopcnt = 4*270*longncols2 + 4*1742*longncols2;
       // for complex *: 2 ops for +, 6 for *, which is 8 in total
 
    cout << "    Total number of floating-point operations : "
