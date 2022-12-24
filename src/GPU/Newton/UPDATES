@@ -1,3 +1,6 @@
+Sat 24 Dec 2022 : added output of the right hand side series of the test
+  system in all precisions, in all *newton_method.cpp files.
+
 Mon 19 Dec 2022 : accumulated all kernel times, updated all *kernels*
   and *newton_method* files.  In dbl8_bals_kernels.cu, used long long int
   in the expression to compute the flops for the Q^H*b computation.

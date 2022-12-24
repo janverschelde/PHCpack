@@ -1240,6 +1240,8 @@ int test_dbl4_complex_newton
  */
    // Define the test solution and the start series.
 
+   if(vrblvl > 0) cout << "setting up the test system ..." << endl;
+
    double **solrehihi = new double*[dim];
    double **solrelohi = new double*[dim];
    double **solrehilo = new double*[dim];
@@ -1338,6 +1340,21 @@ int test_dbl4_complex_newton
           cffrehihi,cffrelohi,cffrehilo,cffrelolo,
           cffimhihi,cffimlohi,cffimhilo,cffimlolo);
    }
+   if(vrblvl > 1)
+   {
+      cout << "the right hand side series :" << endl;
+      cout << scientific << setprecision(16);
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<degp1; j++)
+            cout << "rhs[" << i << "][" << j << "] : "
+                 << mbrhsrehihi[i][j] << "  " << mbrhsrelohi[i][j] << endl
+                 << "  "
+                 << mbrhsrehilo[i][j] << "  " << mbrhsrelolo[i][j] << endl
+                 << "  "
+                 << mbrhsimhihi[i][j] << "  " << mbrhsimlohi[i][j] << endl
+                 << "  "
+                 << mbrhsimhilo[i][j] << "  " << mbrhsimlolo[i][j] << endl;
+   }
    double *start0rehihi = new double[dim];
    double *start0relohi = new double[dim];
    double *start0rehilo = new double[dim];
@@ -1403,6 +1420,7 @@ int test_dbl4_complex_newton
    int tailidx_h = 1;
    int tailidx_d = 1;
    int wrkdeg = 0; // working degree of precision
+   int stepcnt = 0;
 
    double totcnvlapsedms = 0.0;
    double totqrlapsedms = 0.0;
@@ -1473,6 +1491,8 @@ int test_dbl4_complex_newton
           &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,
           &totcnvlapsedms,&totqrlapsedms,&totqtblapsedms,&totbslapsedms,
           &totupdlapsedms,&totreslapsedms,vrblvl,mode);
+
+      stepcnt = stepcnt + 1;
 
       if(vrblvl > 0)
          cout << "up_h : " << upidx_h << "  bs_h : " << bsidx_h
@@ -1556,7 +1576,7 @@ int test_dbl4_complex_newton
       }
       cout << "error : " << errsum << endl;
    }
-   cout << "Wall clock time on all Newton steps : ";
+   cout << "Wall clock time on all " << stepcnt << " Newton steps : ";
    cout << fixed << setprecision(3) 
         << walltimesec << " seconds." << endl;
    cout << "     Time spent by all convolution kernels : "
