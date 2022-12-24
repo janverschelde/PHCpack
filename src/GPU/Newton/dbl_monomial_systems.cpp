@@ -101,9 +101,29 @@ void evaluate_complex_monomials
    free(accre); free(accim);
 }
 
+void make_real_coefficients ( int nbrcol, int dim, double ***cff )
+{
+   for(int i=0; i<nbrcol; i++)
+      for(int j=0; j<dim; j++) cff[i][j][0] = random_double();
+}
+
+void make_complex_coefficients
+ ( int nbrcol, int dim, double ***cffre, double ***cffim )
+{
+   double rnd;
+
+   for(int i=0; i<nbrcol; i++)
+      for(int j=0; j<dim; j++) 
+      {
+         rnd = random_angle();
+         cffre[i][j][0] = cos(rnd);
+         cffim[i][j][0] = sin(rnd);
+      }
+}
+
 void evaluate_real_columns
  ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
-   double **x, double **rhs, int vrblvl )
+   double ***cff, double **x, double **rhs, int vrblvl )
 {
    const int degp1 = deg+1;
 
@@ -127,9 +147,9 @@ void evaluate_real_columns
 
    for(int col=0; col<nbrcol; col++)
    {
-      for(int i=0; i<dim; i++)   // initialize product to one
+      for(int i=0; i<dim; i++)   // initialize product to the coefficient
       {
-         prdrhs[i][0] = 1.0;
+         prdrhs[i][0] = cff[col][i][0];
          for(int k=1; k<degp1; k++) prdrhs[i][k] = 0.0;
       }
       if(vrblvl > 1)
@@ -161,6 +181,7 @@ void evaluate_real_columns
       {
          int rowsum = 0;  // check on row sum is a patch ...
          for(int j=0; j<dim; j++) rowsum += rowsA[i][j];
+         cout << "rowsum[" << i << "] : " << rowsum << endl;
          if(rowsum != 0)
             for(int k=0; k<degp1; k++) rhs[i][k] += prdrhs[i][k];
       }
@@ -179,7 +200,8 @@ void evaluate_real_columns
 
 void evaluate_complex_columns
  ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
-   double **xre, double **xim, double **rhsre, double **rhsim, int vrblvl )
+   double ***cffre, double ***cffim, double **xre, double **xim,
+   double **rhsre, double **rhsim, int vrblvl )
 {
    const int degp1 = deg+1;
 
@@ -200,10 +222,10 @@ void evaluate_complex_columns
 
    for(int col=0; col<nbrcol; col++)
    {
-      for(int i=0; i<dim; i++)
+      for(int i=0; i<dim; i++)    // initialize product to coefficient
       {
-         prdrhsre[i][0] = 1.0;     // initialize product to one
-         prdrhsim[i][0] = 0.0;
+         prdrhsre[i][0] = cffre[col][i][0]; 
+         prdrhsim[i][0] = cffim[col][i][0];
 
          for(int k=1; k<degp1; k++)
          {

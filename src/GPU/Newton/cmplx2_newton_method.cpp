@@ -838,14 +838,8 @@ int test_dbl2_complex_newton
       solimlo[i] = new double[degp1];
    }
    make_complex2_exponentials(dim,deg,solrehi,solrelo,solimhi,solimlo);
-   if(nbrcol != 1) // randomize the leading term
-      for(int i=0; i<dim; i++)
-      {
-          // solre[i][0] = solre[i][0] + random_double()/10.0;
-          // solim[i][0] = solim[i][0] + random_double()/10.0;
-          solrehi[i][0] = random_double(); solrelo[i][0] = 0.0;
-          solimhi[i][0] = random_double(); solimlo[i][0] = 0.0;
-      }
+   if(nbrcol != 1) // generate coefficients for the columns
+      make_complex2_coefficients(nbrcol,dim,cffrehi,cffrelo,cffimhi,cffimlo);
 
    // compute the right hand sides via evaluation
 
@@ -879,14 +873,11 @@ int test_dbl2_complex_newton
          (dim,deg,rowsA,solrehi,solrelo,solimhi,solimlo,
           mbrhsrehi,mbrhsrelo,mbrhsimhi,mbrhsimlo);
    else
-   {
       evaluate_complex2_columns
-         (dim,deg,nbrcol,nvr,idx,rowsA,
+         (dim,deg,nbrcol,nvr,idx,rowsA,cffrehi,cffrelo,cffimhi,cffimlo,
           solrehi,solrelo,solimhi,solimlo,
           mbrhsrehi,mbrhsrelo,mbrhsimhi,mbrhsimlo,vrblvl);
-      cmplx2_unit_series_vectors
-         (nbrcol,dim,deg,cffrehi,cffrelo,cffimhi,cffimlo);
-   }
+
    if(vrblvl > 1)
    {
       cout << "the right hand side series :" << endl;

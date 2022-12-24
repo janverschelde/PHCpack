@@ -92,9 +92,66 @@ void evaluate_complex2_monomials
  *   rhsimhi  high doubles of the imaginary parts of the evaluated monomials;
  *   rhsimlo  low doubles of the imaginary parts of the evaluated monomials. */
 
+void make_real2_coefficients
+ ( int nbrcol, int dim, double ***cffhi, double ***cfflo );
+/*
+ * DESCRIPTION :
+ *   Generates random double coefficients for a column system.
+ *   Assigns only the leading coefficient of each coefficient series.
+ *
+ * ON ENTRY :
+ *   nbrcol   number of columns is the leading dimension;
+ *   dim      number of equations, the dimension of the system;
+ *   cffhi    space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cfflo    space for nbrcol columns with at least dim doubles
+ *            in each column.
+ *
+ * ON RETURN :
+ *   cffhi    cffhi[i] has the high double coefficients for the i-th column,
+ *            cffhi[i][j] is the high double coefficient of the j-th monomial
+ *            in the i-th column;
+ *   cfflo    cffhi[i] has the low double coefficients for the i-th column,
+ *            cffhi[i][j] is the low double coefficient of the j-th monomial
+ *            in the i-th column. */
+
+void make_complex2_coefficients
+ ( int nbrcol, int dim,
+   double ***cffrehi, double ***cffrelo,
+   double ***cffimhi, double ***cffimlo );
+/*
+ * DESCRIPTION :
+ *   Generates complex random double coefficients for a column system.
+ *   Assigns only the leading coefficient of each coefficient series.
+ *
+ * ON ENTRY :
+ *   nbrcol   number of columns is the leading dimension;
+ *   dim      number of equations, the dimension of the system;
+ *   cffrehi  space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffrelo  space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffimhi  space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffimlo  space for nbrcol columns with at least dim doubles
+ *            in each column.
+ *
+ * ON RETURN :
+ *   cffrehi  high doubles of the real parts of the coefficients;    
+ *   cffrelo  low doubles of the real parts of the coefficients,
+ *            cffre[i] has the real coefficient part for the i-th column,
+ *            cffre[i][j] is the real part of the coefficient
+ *            of the j-th monomial in the i-th column;
+ *   cffimhi  high doubles of the imaginary parts of the coefficients;
+ *   cffimlo  low doubles of the imaginary parts of the coefficients,
+ *            cffim[i] has the imag coefficient part for the i-th column,
+ *            cffim[i][j] is the imaginary part of the coefficient
+ *            of the j-th monomial in the i-th column. */
+
 void evaluate_real2_columns
  ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
-   double **xhi, double **xlo, double **rhshi, double **rhslo, int vrblvl );
+   double ***cffhi, double ***cfflo, double **xhi, double **xlo,
+   double **rhshi, double **rhslo, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates the polynomials defined by the column representation
@@ -110,6 +167,10 @@ void evaluate_real2_columns
  *            in the j-th monomial of the i-th column;
  *   rowsA    matrix of dimension dim where the rows of A 
  *            are used as work space during the evaluation;
+ *   cffhi    high double coefficients of the column system,
+ *            cffhi[i] has the high double coefficients for the i-th column;
+ *   cfflo    low double coefficients of the column system,
+ *            cfflo[i] has the low double coefficients for the i-th column;
  *   xhi      high double coefficients of the series;
  *   xlo      low double coefficients of the series;
  *   rhshi    space for dim arrays of size deg+1;
@@ -122,6 +183,8 @@ void evaluate_real2_columns
 
 void evaluate_complex2_columns
  ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double ***cffrehi, double ***cffrelo,
+   double ***cffimhi, double ***cffimlo,
    double **xrehi, double **xrelo, double **ximhi, double **ximlo,
    double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
    int vrblvl );
@@ -140,6 +203,10 @@ void evaluate_complex2_columns
  *            in the j-th monomial of the i-th column;
  *   rowsA    matrix of dimension dim where the rows of A 
  *            are used as work space during the evaluation;
+ *   cffrehi  high double real parts of the coefficients of the system;
+ *   cffrelo  low double real parts of the coefficients of the system;
+ *   cffimhi  high double imaginary parts of the coefficients of the system;
+ *   cffimlo  low double imaginary parts of the coefficients of the system;
  *   xrehi    high double real parts of the coefficients of the series;
  *   xrelo    low double real parts of the coefficients of the series;
  *   ximhi    high double imaginary parts of the coefficients of the series;

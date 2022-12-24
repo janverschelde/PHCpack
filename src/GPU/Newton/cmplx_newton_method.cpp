@@ -607,14 +607,8 @@ int test_dbl_complex_newton
       solim[i] = new double[degp1];
    }
    make_complex_exponentials(dim,deg,angles,solre,solim);
-   if(nbrcol != 1) // randomize the leading term
-      for(int i=0; i<dim; i++)
-      {
-          // solre[i][0] = solre[i][0] + random_double()/10.0;
-          // solim[i][0] = solim[i][0] + random_double()/10.0;
-          solre[i][0] = random_double();
-          solim[i][0] = random_double();
-      }
+   if(nbrcol != 1) // generate coefficients for the columns
+      make_complex_coefficients(nbrcol,dim,cffre,cffim);
 
    // compute the right hand sides via evaluation
 
@@ -638,11 +632,10 @@ int test_dbl_complex_newton
    if(nbrcol == 1)
       evaluate_complex_monomials(dim,deg,rowsA,solre,solim,mbrhsre,mbrhsim);
    else
-   {
       evaluate_complex_columns
-         (dim,deg,nbrcol,nvr,idx,rowsA,solre,solim,mbrhsre,mbrhsim,vrblvl);
-      cmplx_unit_series_vectors(nbrcol,dim,deg,cffre,cffim);
-   }
+         (dim,deg,nbrcol,nvr,idx,rowsA,cffre,cffim,
+          solre,solim,mbrhsre,mbrhsim,vrblvl);
+ 
    if(vrblvl > 1)
    {
       cout << "the right hand side series :" << endl;

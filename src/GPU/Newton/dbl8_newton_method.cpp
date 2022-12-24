@@ -1294,19 +1294,10 @@ int test_dbl8_real_newton
    make_real8_exponentials
       (dim,deg,solhihihi,sollohihi,solhilohi,sollolohi,
                solhihilo,sollohilo,solhilolo,sollololo);
-   if(nbrcol != 1) // randomize the leading term
-      for(int i=0; i<dim; i++)
-         // sol[i][0] = sol[i][0] + random_double()/2.0;
-      {
-         solhihihi[i][0] = random_double();
-         sollohihi[i][0] = 0.0;
-         solhilohi[i][0] = 0.0;
-         sollolohi[i][0] = 0.0;
-         solhihilo[i][0] = 0.0;
-         sollohilo[i][0] = 0.0;
-         solhilolo[i][0] = 0.0;
-         sollololo[i][0] = 0.0;
-      }
+   if(nbrcol != 1) // generate coefficients for the columns
+      make_real8_coefficients
+         (nbrcol,dim,cffhihihi,cfflohihi,cffhilohi,cfflolohi,
+                     cffhihilo,cfflohilo,cffhilolo,cfflololo);
 
    // compute the right hand sides via evaluation
 
@@ -1355,19 +1346,15 @@ int test_dbl8_real_newton
           mbrhshihihi,mbrhslohihi,mbrhshilohi,mbrhslolohi,
           mbrhshihilo,mbrhslohilo,mbrhshilolo,mbrhslololo);
    else
-   {
       evaluate_real8_columns
          (dim,deg,nbrcol,nvr,idx,rowsA,
+          cffhihihi,cfflohihi,cffhilohi,cfflolohi,
+          cffhihilo,cfflohilo,cffhilolo,cfflololo,
           solhihihi,sollohihi,solhilohi,sollolohi,
           solhihilo,sollohilo,solhilolo,sollololo,
           mbrhshihihi,mbrhslohihi,mbrhshilohi,mbrhslolohi,
           mbrhshihilo,mbrhslohilo,mbrhshilolo,mbrhslololo,vrblvl);
 
-      dbl8_unit_series_vectors
-         (nbrcol,dim,deg,
-          cffhihihi,cfflohihi,cffhilohi,cfflolohi,
-          cffhihilo,cfflohilo,cffhilolo,cfflololo);
-   }
    if(vrblvl > 1)
    {
       cout << "the right hand side series :" << endl;

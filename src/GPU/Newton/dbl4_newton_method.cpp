@@ -867,15 +867,8 @@ int test_dbl4_real_newton
       sollolo[i] = new double[degp1];
    }
    make_real4_exponentials(dim,deg,solhihi,sollohi,solhilo,sollolo);
-   if(nbrcol != 1) // randomize the leading term
-      for(int i=0; i<dim; i++)
-         // sol[i][0] = sol[i][0] + random_double()/2.0;
-      {
-         solhihi[i][0] = random_double();
-         sollohi[i][0] = 0.0;
-         solhilo[i][0] = 0.0;
-         sollolo[i][0] = 0.0;
-      }
+   if(nbrcol != 1) // generate coefficients for the columns
+      make_real4_coefficients(nbrcol,dim,cffhihi,cfflohi,cffhilo,cfflolo);
 
    // compute the right hand sides via evaluation
 
@@ -909,15 +902,12 @@ int test_dbl4_real_newton
          (dim,deg,rowsA,solhihi,sollohi,solhilo,sollolo,
           mbrhshihi,mbrhslohi,mbrhshilo,mbrhslolo);
    else
-   {
       evaluate_real4_columns
          (dim,deg,nbrcol,nvr,idx,rowsA,
+          cffhihi,cfflohi,cffhilo,cfflolo,
           solhihi,sollohi,solhilo,sollolo,
           mbrhshihi,mbrhslohi,mbrhshilo,mbrhslolo,vrblvl);
 
-      dbl4_unit_series_vectors
-         (nbrcol,dim,deg,cffhihi,cfflohi,cffhilo,cfflolo);
-   }
    if(vrblvl > 1)
    {
       cout << "the right hand side series :" << endl;

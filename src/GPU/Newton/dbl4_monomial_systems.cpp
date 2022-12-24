@@ -166,8 +166,56 @@ void evaluate_complex4_monomials
    free(accimhihi); free(accimlohi); free(accimhilo); free(accimlolo);
 }
 
+void make_real4_coefficients
+ ( int nbrcol, int dim,
+   double ***cffhihi, double ***cfflohi,
+   double ***cffhilo, double ***cfflolo )
+{
+   for(int i=0; i<nbrcol; i++)
+      for(int j=0; j<dim; j++)
+         random_quad_double
+            (&cffhihi[i][j][0],&cfflohi[i][j][0],
+             &cffhilo[i][j][0],&cfflolo[i][j][0]);
+}
+
+void make_complex4_coefficients
+ ( int nbrcol, int dim,
+   double ***cffrehihi, double ***cffrelohi,
+   double ***cffrehilo, double ***cffrelolo,
+   double ***cffimhihi, double ***cffimlohi,
+   double ***cffimhilo, double ***cffimlolo )
+{
+   double xrehihi,xrelohi,ximhihi,ximlohi,yhihi,ylohi;
+   double xrehilo,xrelolo,ximhilo,ximlolo,yhilo,ylolo;
+
+   for(int i=0; i<nbrcol; i++)
+      for(int j=0; j<dim; j++)
+      {
+         random_quad_double(&xrehihi,&xrelohi,&xrehilo,&xrelolo);
+         // cosine of some angle
+
+         qdf_sqr(xrehihi,xrelohi,xrehilo,xrelolo,
+                 &yhihi,&ylohi,&yhilo,&ylolo);        // y = cos^2
+         qdf_minus(&yhihi,&ylohi,&yhilo,&ylolo);      // y = -cos^2
+         qdf_inc_d(&yhihi,&ylohi,&yhilo,&ylolo,1.0);  // y = 1 - cos^2
+         qdf_sqrt(yhihi,ylohi,yhilo,ylolo,
+                  &ximhihi,&ximlohi,&ximhilo,&ximlolo); // sin is sqrt(1-cos^2)
+
+         cffrehihi[i][j][0] = xrehihi;
+         cffrelohi[i][j][0] = xrelohi;
+         cffrehilo[i][j][0] = xrehilo;
+         cffrelolo[i][j][0] = xrelolo;
+         cffimhihi[i][j][0] = ximhihi;
+         cffimlohi[i][j][0] = ximlohi;
+         cffimhilo[i][j][0] = ximhilo;
+         cffimlolo[i][j][0] = ximlolo;
+      }
+}
+
 void evaluate_real4_columns
  ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double ***cffhihi, double ***cfflohi,
+   double ***cffhilo, double ***cfflolo,
    double **xhihi, double **xlohi, double **xhilo, double **xlolo,
    double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
    int vrblvl )
@@ -206,12 +254,12 @@ void evaluate_real4_columns
 
    for(int col=0; col<nbrcol; col++)
    {
-      for(int i=0; i<dim; i++)   // initialize product to one
+      for(int i=0; i<dim; i++)   // initialize product to coefficient
       {
-         prdrhshihi[i][0] = 1.0;
-         prdrhslohi[i][0] = 0.0;
-         prdrhshilo[i][0] = 0.0;
-         prdrhslolo[i][0] = 0.0;
+         prdrhshihi[i][0] = cffhihi[col][i][0];
+         prdrhslohi[i][0] = cfflohi[col][i][0];
+         prdrhshilo[i][0] = cffhilo[col][i][0];
+         prdrhslolo[i][0] = cfflolo[col][i][0];
 
          for(int k=1; k<degp1; k++)
          {
@@ -286,6 +334,10 @@ void evaluate_real4_columns
 
 void evaluate_complex4_columns
  ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double ***cffrehihi, double ***cffrelohi,
+   double ***cffrehilo, double ***cffrelolo,
+   double ***cffimhihi, double ***cffimlohi,
+   double ***cffimhilo, double ***cffimlolo,
    double **xrehihi, double **xrelohi, double **xrehilo, double **xrelolo,
    double **ximhihi, double **ximlohi, double **ximhilo, double **ximlolo,
    double **rhsrehihi, double **rhsrelohi,
@@ -327,16 +379,16 @@ void evaluate_complex4_columns
 
    for(int col=0; col<nbrcol; col++)
    {
-      for(int i=0; i<dim; i++)
+      for(int i=0; i<dim; i++)     // initialize product to coefficient
       {
-         prdrhsrehihi[i][0] = 1.0;     // initialize product to one
-         prdrhsrelohi[i][0] = 0.0;
-         prdrhsrehilo[i][0] = 0.0; 
-         prdrhsrelolo[i][0] = 0.0;
-         prdrhsimhihi[i][0] = 0.0;
-         prdrhsimlohi[i][0] = 0.0;
-         prdrhsimhilo[i][0] = 0.0;
-         prdrhsimlolo[i][0] = 0.0;
+         prdrhsrehihi[i][0] = cffrehihi[col][i][0];
+         prdrhsrelohi[i][0] = cffrelohi[col][i][0];
+         prdrhsrehilo[i][0] = cffrehilo[col][i][0];
+         prdrhsrelolo[i][0] = cffrelolo[col][i][0];
+         prdrhsimhihi[i][0] = cffimhihi[col][i][0];
+         prdrhsimlohi[i][0] = cffimlohi[col][i][0];
+         prdrhsimhilo[i][0] = cffimhilo[col][i][0];
+         prdrhsimlolo[i][0] = cffimlolo[col][i][0];
 
          for(int k=1; k<degp1; k++)
          {

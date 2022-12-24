@@ -254,8 +254,84 @@ void evaluate_complex8_monomials
    free(accimhihilo); free(accimlohilo); free(accimhilolo); free(accimlololo);
 }
 
+void make_real8_coefficients
+ ( int nbrcol, int dim,
+   double ***cffhihihi, double ***cfflohihi,
+   double ***cffhilohi, double ***cfflolohi,
+   double ***cffhihilo, double ***cfflohilo,
+   double ***cffhilolo, double ***cfflololo )
+{
+   for(int i=0; i<nbrcol; i++)
+      for(int j=0; j<dim; j++)
+         random_octo_double
+            (&cffhihihi[i][j][0],&cfflohihi[i][j][0],
+             &cffhilohi[i][j][0],&cfflolohi[i][j][0],
+             &cffhihilo[i][j][0],&cfflohilo[i][j][0],
+             &cffhilolo[i][j][0],&cfflololo[i][j][0]);
+}
+
+void make_complex8_coefficients
+ ( int nbrcol, int dim,
+   double ***cffrehihihi, double ***cffrelohihi,
+   double ***cffrehilohi, double ***cffrelolohi,
+   double ***cffrehihilo, double ***cffrelohilo,
+   double ***cffrehilolo, double ***cffrelololo,
+   double ***cffimhihihi, double ***cffimlohihi,
+   double ***cffimhilohi, double ***cffimlolohi,
+   double ***cffimhihilo, double ***cffimlohilo,
+   double ***cffimhilolo, double ***cffimlololo )
+{
+   double xrehihihi,xrelohihi,ximhihihi,ximlohihi,yhihihi,ylohihi;
+   double xrehilohi,xrelolohi,ximhilohi,ximlolohi,yhilohi,ylolohi;
+   double xrehihilo,xrelohilo,ximhihilo,ximlohilo,yhihilo,ylohilo;
+   double xrehilolo,xrelololo,ximhilolo,ximlololo,yhilolo,ylololo;
+
+   for(int i=0; i<nbrcol; i++)
+      for(int j=0; j<dim; j++)
+      {
+         random_octo_double
+            (&xrehihihi,&xrelohihi,&xrehilohi,&xrelolohi,
+             &xrehihilo,&xrelohilo,&xrehilolo,&xrelololo);
+ 
+         odf_sqr(xrehihihi,xrelohihi,xrehilohi,xrelolohi,
+                 xrehihilo,xrelohilo,xrehilolo,xrelololo,
+                 &yhihihi,&ylohihi,&yhilohi,&ylolohi,
+                 &yhihilo,&ylohilo,&yhilolo,&ylololo);        // y = cos^2
+         odf_minus(&yhihihi,&ylohihi,&yhilohi,&ylolohi,
+                   &yhihilo,&ylohilo,&yhilolo,&ylololo);      // y = -cos^2
+         odf_inc_d(&yhihihi,&ylohihi,&yhilohi,&ylolohi,
+                   &yhihilo,&ylohilo,&yhilolo,&ylololo,1.0);  // y = 1 - cos^2
+         odf_sqrt(yhihihi,ylohihi,yhilohi,ylolohi,
+                  yhihilo,ylohilo,yhilolo,ylololo,
+                  &ximhihihi,&ximlohihi,&ximhilohi,&ximlolohi,
+                  &ximhihilo,&ximlohilo,&ximhilolo,&ximlololo);
+         // sin is sqrt(1-cos^2)
+
+         cffrehihihi[i][j][0] = xrehihihi;
+         cffrelohihi[i][j][0] = xrelohihi;
+         cffrehilohi[i][j][0] = xrehilohi;
+         cffrelolohi[i][j][0] = xrelolohi;
+         cffrehihilo[i][j][0] = xrehihilo;
+         cffrelohilo[i][j][0] = xrelohilo;
+         cffrehilolo[i][j][0] = xrehilolo;
+         cffrelololo[i][j][0] = xrelololo;
+         cffimhihihi[i][j][0] = ximhihihi;
+         cffimlohihi[i][j][0] = ximlohihi;
+         cffimhilohi[i][j][0] = ximhilohi;
+         cffimlolohi[i][j][0] = ximlolohi;
+         cffimhihilo[i][j][0] = ximhihilo;
+         cffimlohilo[i][j][0] = ximlohilo;
+         cffimhilolo[i][j][0] = ximhilolo;
+         cffimlololo[i][j][0] = ximlololo;
+      }
+}
+
 void evaluate_real8_columns
  ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double ***cffhihihi, double ***cfflohihi,
+   double ***cffhilohi, double ***cfflolohi,
+   double ***cffhihilo, double ***cfflohilo,
+   double ***cffhilolo, double ***cfflololo,
    double **xhihihi, double **xlohihi, double **xhilohi, double **xlolohi,
    double **xhihilo, double **xlohilo, double **xhilolo, double **xlololo,
    double **rhshihihi, double **rhslohihi,
@@ -309,16 +385,16 @@ void evaluate_real8_columns
 
    for(int col=0; col<nbrcol; col++)
    {
-      for(int i=0; i<dim; i++)   // initialize product to one
+      for(int i=0; i<dim; i++)   // initialize product to coefficient
       {
-         prdrhshihihi[i][0] = 1.0;
-         prdrhslohihi[i][0] = 0.0;
-         prdrhshilohi[i][0] = 0.0;
-         prdrhslolohi[i][0] = 0.0;
-         prdrhshihilo[i][0] = 0.0;
-         prdrhslohilo[i][0] = 0.0;
-         prdrhshilolo[i][0] = 0.0;
-         prdrhslololo[i][0] = 0.0;
+         prdrhshihihi[i][0] = cffhihihi[col][i][0];
+         prdrhslohihi[i][0] = cfflohihi[col][i][0];
+         prdrhshilohi[i][0] = cffhilohi[col][i][0];
+         prdrhslolohi[i][0] = cfflolohi[col][i][0];
+         prdrhshihilo[i][0] = cffhihilo[col][i][0];
+         prdrhslohilo[i][0] = cfflohilo[col][i][0];
+         prdrhshilolo[i][0] = cffhilolo[col][i][0];
+         prdrhslololo[i][0] = cfflololo[col][i][0];
 
          for(int k=1; k<degp1; k++)
          {
@@ -411,6 +487,14 @@ void evaluate_real8_columns
 
 void evaluate_complex8_columns
  ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double ***cffrehihihi, double ***cffrelohihi,
+   double ***cffrehilohi, double ***cffrelolohi,
+   double ***cffrehihilo, double ***cffrelohilo,
+   double ***cffrehilolo, double ***cffrelololo,
+   double ***cffimhihihi, double ***cffimlohihi,
+   double ***cffimhilohi, double ***cffimlolohi,
+   double ***cffimhihilo, double ***cffimlohilo,
+   double ***cffimhilolo, double ***cffimlololo,
    double **xrehihihi, double **xrelohihi,
    double **xrehilohi, double **xrelolohi,
    double **xrehihilo, double **xrelohilo,
@@ -482,24 +566,24 @@ void evaluate_complex8_columns
 
    for(int col=0; col<nbrcol; col++)
    {
-      for(int i=0; i<dim; i++)
+      for(int i=0; i<dim; i++) // initialize product to coefficient
       {
-         prdrhsrehihihi[i][0] = 1.0;     // initialize product to one
-         prdrhsrelohihi[i][0] = 0.0;
-         prdrhsrehilohi[i][0] = 0.0; 
-         prdrhsrelolohi[i][0] = 0.0;
-         prdrhsrehihilo[i][0] = 0.0;
-         prdrhsrelohilo[i][0] = 0.0;
-         prdrhsrehilolo[i][0] = 0.0; 
-         prdrhsrelololo[i][0] = 0.0;
-         prdrhsimhihihi[i][0] = 0.0;
-         prdrhsimlohihi[i][0] = 0.0;
-         prdrhsimhilohi[i][0] = 0.0;
-         prdrhsimlolohi[i][0] = 0.0;
-         prdrhsimhihilo[i][0] = 0.0;
-         prdrhsimlohilo[i][0] = 0.0;
-         prdrhsimhilolo[i][0] = 0.0;
-         prdrhsimlololo[i][0] = 0.0;
+         prdrhsrehihihi[i][0] = cffrehihihi[col][i][0];
+         prdrhsrelohihi[i][0] = cffrelohihi[col][i][0];
+         prdrhsrehilohi[i][0] = cffrehilohi[col][i][0];
+         prdrhsrelolohi[i][0] = cffrelolohi[col][i][0];
+         prdrhsrehihilo[i][0] = cffrehihilo[col][i][0];
+         prdrhsrelohilo[i][0] = cffrelohilo[col][i][0];
+         prdrhsrehilolo[i][0] = cffrehilolo[col][i][0];
+         prdrhsrelololo[i][0] = cffrelololo[col][i][0];
+         prdrhsimhihihi[i][0] = cffimhihihi[col][i][0];
+         prdrhsimlohihi[i][0] = cffimlohihi[col][i][0];
+         prdrhsimhilohi[i][0] = cffimhilohi[col][i][0];
+         prdrhsimlolohi[i][0] = cffimlolohi[col][i][0];
+         prdrhsimhihilo[i][0] = cffimhihilo[col][i][0];
+         prdrhsimlohilo[i][0] = cffimlohilo[col][i][0];
+         prdrhsimhilolo[i][0] = cffimhilolo[col][i][0];
+         prdrhsimlololo[i][0] = cffimlololo[col][i][0];
 
          for(int k=1; k<degp1; k++)
          {

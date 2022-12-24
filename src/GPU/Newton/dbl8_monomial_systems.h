@@ -210,8 +210,133 @@ void evaluate_complex8_monomials
  *   rhsimhilolo are the 2nd lowest doubles of the imag parts of the rhs;
  *   rhsimlololo are the lowest doubles of the imag parts of the rhs. */
 
+void make_real8_coefficients
+ ( int nbrcol, int dim,
+   double ***cffhihihi, double ***cfflohihi,
+   double ***cffhilohi, double ***cfflolohi,
+   double ***cffhihilo, double ***cfflohilo,
+   double ***cffhilolo, double ***cfflololo );
+/*
+ * DESCRIPTION :
+ *   Generates random double coefficients for a column system.
+ *   Assigns only the leading coefficient of each coefficient series.
+ *
+ * ON ENTRY :
+ *   nbrcol   number of columns is the leading dimension;
+ *   dim      number of equations, the dimension of the system;
+ *   cffhihihi has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cfflohihi has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffhilohi has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cfflolohi has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffhihilo has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cfflohilo has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffhilolo has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cfflololo has space for nbrcol columns with at least dim doubles
+ *            in each column.
+ *
+ * ON RETURN :
+ *   cffhihihi are the highest doubles of the coefficients;
+ *   cfflohihi are the second highest doubles of the coefficients;
+ *   cfflohihi are the third highest doubles of the coefficients;
+ *   cfflolohi are the fourth highest doubles of the coefficients;
+ *   cffhihilo are the fourth lowest doubles of the coefficients;
+ *   cfflohilo are the third lowest doubles of the coefficients,
+ *   cffhilolo are the second lowest doubles of the coefficients;
+ *   cfflololo are the lowest doubles of the coefficients,
+ *   cff      cff[i] has the coefficients for the i-th column,
+ *            cff[i][j] is the coefficient of the j-th monomial
+ *            in the i-th column. */
+
+void make_complex8_coefficients
+ ( int nbrcol, int dim,
+   double ***cffrehihihi, double ***cffrelohihi,
+   double ***cffrehilohi, double ***cffrelolohi,
+   double ***cffrehihilo, double ***cffrelohilo,
+   double ***cffrehilolo, double ***cffrelololo,
+   double ***cffimhihihi, double ***cffimlohihi,
+   double ***cffimhilohi, double ***cffimlolohi,
+   double ***cffimhihilo, double ***cffimlohilo,
+   double ***cffimhilolo, double ***cffimlololo );
+/*
+ * DESCRIPTION :
+ *   Generates complex random double coefficients for a column system.
+ *   Assigns only the leading coefficient of each coefficient series.
+ *
+ * ON ENTRY :
+ *   nbrcol   number of columns is the leading dimension;
+ *   dim      number of equations, the dimension of the system;
+ *   cffrehihihi has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffrelohihi has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffrehilohi has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffrelolohi has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffrehihilo has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffrelohilo has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffrehilolo has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffrelololo has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffimhihihi has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffimlohihi has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffimhilohi has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffimlolohi has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffimhihilo has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffimlohilo has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffimhilolo has space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffimlololo has space for nbrcol columns with at least dim doubles
+ *            in each column.
+ *
+ * ON RETURN :
+ *   cffrehihihi are the highest doubles of the real parts of the coeffs;
+ *   cffrelohihi are 2nd highest doubles of the real parts of the coeffs;
+ *   cffrehilohi are 3rd highest doubles of the real parts of the coeffs;
+ *   cffrelolohi are 4th highest doubles of the real parts of the coeffs;
+ *   cffrehihilo are 4th lowest doubles of the real parts of the coeffs;
+ *   cffrelohilo are 3rd lowest doubles of the real parts of the coeffs;
+ *   cffrehilolo are 2nd lowest doubles of the real parts of the coeffs;
+ *   cffrelololo are the lowest doubles of the real parts of the coeffs;
+ *   cffre    doubles of the real parts of the coefficients,
+ *            cff[i] has the real coefficient part for the i-th column,
+ *            cff[i][j] is the real part of the coefficient
+ *            of the j-th monomial in the i-th column;
+ *   cffimhihihi are the highest doubles of the imag parts of the coeffs;
+ *   cffimlohihi are 2nd highest doubles of the imag parts of the coeffs;
+ *   cffimhilohi are 3rd highest doubles of the imag parts of the coeffs;
+ *   cffimlolohi are 4th highest doubles of the imag parts of the coeffs,
+ *   cffimhihilo are 4th lowest doubles of the imag parts of the coeffs;
+ *   cffimlohilo are 3rd lowest doubles of the imag parts of the coeffs;
+ *   cffimhilolo are 2nd lowest doubles of the imag parts of the coeffs;
+ *   cffimlololo are the lowest doubles of the imag parts of the coeffs,
+ *   cffim    low doubles of the imaginary parts of the coefficients,
+ *            cff[i] has the imag coefficient part for the i-th column,
+ *            cff[i][j] is the imaginary part of the coefficient
+ *            of the j-th monomial in the i-th column. */
+
 void evaluate_real8_columns
  ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double ***cffhihihi, double ***cfflohihi,
+   double ***cffhilohi, double ***cfflolohi,
+   double ***cffhihilo, double ***cfflohilo,
+   double ***cffhilolo, double ***cfflololo,
    double **xhihihi, double **xlohihi, double **xhilohi, double **xlolohi,
    double **xhihilo, double **xlohilo, double **xhilolo, double **xlololo,
    double **rhshihihi, double **rhslohihi,
@@ -233,6 +358,14 @@ void evaluate_real8_columns
  *            in the j-th monomial of the i-th column;
  *   rowsA    matrix of dimension dim where the rows of A 
  *            are used as work space during the evaluation;
+ *   cffhihihi are the highest double coefficients of the system;
+ *   cfflohihi are the second highest double coefficients of the system;
+ *   cffhilohi are the third highest double coefficients of the system;
+ *   cfflolohi are the fourth highest double coefficients of the system;
+ *   cffhihilo are the fourth lowest double coefficients of the system;
+ *   cfflohilo are the third lowest double coefficients of the system;
+ *   cffhilolo are the second lowest double coefficients of the system;
+ *   cfflololo are the lowest double coefficients of the system;
  *   xhihihi  highest double coefficients of the series;
  *   xlohihi  second highest double coefficients of the series;
  *   xhilohi  third highest double coefficients of the series;
@@ -263,6 +396,14 @@ void evaluate_real8_columns
 
 void evaluate_complex8_columns
  ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double ***cffrehihihi, double ***cffrelohihi,
+   double ***cffrehilohi, double ***cffrelolohi,
+   double ***cffrehihilo, double ***cffrelohilo,
+   double ***cffrehilolo, double ***cffrelololo,
+   double ***cffimhihihi, double ***cffimlohihi,
+   double ***cffimhilohi, double ***cffimlolohi,
+   double ***cffimhihilo, double ***cffimlohilo,
+   double ***cffimhilolo, double ***cffimlololo,
    double **xrehihihi, double **xrelohihi,
    double **xrehilohi, double **xrelolohi,
    double **xrehihilo, double **xrelohilo,
@@ -294,6 +435,22 @@ void evaluate_complex8_columns
  *            in the j-th monomial of the i-th column;
  *   rowsA    matrix of dimension dim where the rows of A 
  *            are used as work space during the evaluation;
+ *   cffrehihihi has the highest double real parts of the sys coeffs;
+ *   cffrelohihi has the 2nd highest double real parts of the sys coeffs;
+ *   cffrehilohi has the 3rd highest double real parts of the sys coeffs;
+ *   cffrelolohi has the 4th highest double real parts of the sys coeffs;
+ *   cffrehihilo has the 4th lowest double real parts of the sys coeffs;
+ *   cffrelohilo has the 3rd lowest double real parts of the sys coeffs;
+ *   cffrehilolo has the 2nd lowest double real parts of the sys coeffs;
+ *   cffrelololo has the lowest double real parts of the sys coeffs;
+ *   cffimhihihi has the highest double imag parts of the sys coeffs;
+ *   cffimlohihi has the 2nd highest double imag parts of the sys coeffs;
+ *   cffimhilohi has the 3rd highest double imag parts of the sys coeffs;
+ *   cffimlolohi has the 4th highest double imag parts of the sys coeffs;
+ *   cffimhihilo has the 4th lowest double imag parts of the sys coeffs;
+ *   cffimlohilo has the 3rd lowest double imag parts of the sys coeffs;
+ *   cffimhilolo has the 2nd lowest double imag parts of the sys coeffs;
+ *   cffimlololo has the lowest double imag parts of the sys coeffs;
  *   xrehihihi has the highest double real parts of the coefficients;
  *   xrelohihi has the 2nd highest double real parts of the coefficients;
  *   xrehilohi has the 3rd highest double real parts of the coefficients;

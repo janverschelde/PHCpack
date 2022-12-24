@@ -58,7 +58,7 @@ void evaluate_real_monomials
 
 void evaluate_complex_monomials
  ( int dim, int deg, int **rowsA,
-   double **sre, double **sim, double **rhsre, double **rhsim );
+   double **xre, double **xim, double **rhsre, double **rhsim );
 /*
  * DESCRIPTION :
  *   Evaluates the monomials defined in the rows of a matrix at
@@ -68,8 +68,8 @@ void evaluate_complex_monomials
  *   dim      dimension of the monomial system;
  *   deg      truncation degree of the series;
  *   rowsA    the rows of A have the exponents of the monomials;
- *   sre      real parts of the series;
- *   sim      imaginary parts of the series;
+ *   xre      real parts of the series;
+ *   xim      imaginary parts of the series;
  *   rhsre    space for dim arrays of size deg+1;
  *   rhsim    space for dim arrays of size deg+1.
  *
@@ -77,9 +77,49 @@ void evaluate_complex_monomials
  *   rhsre    real parts of the evaluated monomials;
  *   rhsim    imaginary parts of the evaluated monomials. */
 
+void make_real_coefficients ( int nbrcol, int dim, double ***cff );
+/*
+ * DESCRIPTION :
+ *   Generates random double coefficients for a column system.
+ *   Assigns only the leading coefficient of each coefficient series.
+ *
+ * ON ENTRY :
+ *   nbrcol   number of columns is the leading dimension;
+ *   dim      number of equations, the dimension of the system;
+ *   cff      space for nbrcol columns with at least dim doubles
+ *            in each column.
+ *
+ * ON RETURN :
+ *   cff      cff[i] has the coefficients for the i-th column,
+ *            cff[i][j] is the coefficient of the j-th monomial
+ *            in the i-th column. */
+
+void make_complex_coefficients
+ ( int nbrcol, int dim, double ***cffre, double ***cffim );
+/*
+ * DESCRIPTION :
+ *   Generates complex random double coefficients for a column system.
+ *   Assigns only the leading coefficient of each coefficient series.
+ *
+ * ON ENTRY :
+ *   nbrcol   number of columns is the leading dimension;
+ *   dim      number of equations, the dimension of the system;
+ *   cffre    space for nbrcol columns with at least dim doubles
+ *            in each column;
+ *   cffim    space for nbrcol columns with at least dim doubles
+ *            in each column.
+ *
+ * ON RETURN :
+ *   cffre    cffre[i] has the real coefficient part for the i-th column,
+ *            cffre[i][j] is the real part of the coefficient
+ *            of the j-th monomial in the i-th column;
+ *   cffim    cffim[i] has the imag coefficient part for the i-th column,
+ *            cffim[i][j] is the imaginary part of the coefficient
+ *            of the j-th monomial in the i-th column. */
+
 void evaluate_real_columns
  ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
-   double **x, double **rhs, int vrblvl );
+   double ***cff, double **x, double **rhs, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates the polynomials defined by the column representation
@@ -95,6 +135,8 @@ void evaluate_real_columns
  *            in the j-th monomial of the i-th column;
  *   rowsA    matrix of dimension dim where the rows of A 
  *            are used as work space during the evaluation;
+ *   cff      coefficients of the column system,
+ *            cff[i] has the coefficients for the i-th column;
  *   x        coefficients of the series;
  *   rhs      space for dim arrays of size deg+1;
  *   vrblvl   is the verbose level, if > 1, then exponents are written.
@@ -104,7 +146,8 @@ void evaluate_real_columns
 
 void evaluate_complex_columns
  ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
-   double **xre, double **xim, double **rhsre, double **rhsim, int vrblvl );
+   double ***cffre, double ***cffim, double **xre, double **xim,
+   double **rhsre, double **rhsim, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates the polynomials defined by the column representation
@@ -120,6 +163,10 @@ void evaluate_complex_columns
  *            in the j-th monomial of the i-th column;
  *   rowsA    matrix of dimension dim where the rows of A 
  *            are used as work space during the evaluation;
+ *   cffre    real parts of the coefficients of the column system,
+ *            cffre[i] has the coefficients for the i-th column;
+ *   cffim    imaginary parts of the coefficients of the column system,
+ *            cffim[i] has the coefficients for the i-th column;
  *   xre      real parts of the coefficients of the series;
  *   xim      imaginary parts of the coefficients of the series;
  *   rhsre    space for dim arrays of size deg+1;

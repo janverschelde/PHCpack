@@ -642,13 +642,8 @@ int test_dbl2_real_newton
       sollo[i] = new double[degp1];
    }
    make_real2_exponentials(dim,deg,solhi,sollo);
-   if(nbrcol != 1) // randomize the leading term
-      for(int i=0; i<dim; i++)
-         // sol[i][0] = sol[i][0] + random_double()/2.0;
-      {
-         solhi[i][0] = random_double();
-         sollo[i][0] = 0.0;
-      }
+   if(nbrcol != 1) // generate coefficients for the columns
+      make_real2_coefficients(nbrcol,dim,cffhi,cfflo);
 
    // compute the right hand sides via evaluation
 
@@ -672,12 +667,10 @@ int test_dbl2_real_newton
    if(nbrcol == 1)
       evaluate_real2_monomials(dim,deg,rowsA,solhi,sollo,mbrhshi,mbrhslo);
    else
-   {
       evaluate_real2_columns
-         (dim,deg,nbrcol,nvr,idx,rowsA,solhi,sollo,mbrhshi,mbrhslo,vrblvl);
+         (dim,deg,nbrcol,nvr,idx,rowsA,cffhi,cfflo,solhi,sollo,
+          mbrhshi,mbrhslo,vrblvl);
 
-      dbl2_unit_series_vectors(nbrcol,dim,deg,cffhi,cfflo);
-   }
    if(vrblvl > 1)
    {
       cout << "the right hand side series :" << endl;

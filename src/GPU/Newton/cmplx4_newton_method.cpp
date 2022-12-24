@@ -1265,20 +1265,10 @@ int test_dbl4_complex_newton
    make_complex4_exponentials
       (dim,deg,solrehihi,solrelohi,solrehilo,solrelolo,
                solimhihi,solimlohi,solimhilo,solimlolo);
-   if(nbrcol != 1) // randomize the leading term
-      for(int i=0; i<dim; i++)
-      {
-          // solre[i][0] = solre[i][0] + random_double()/10.0;
-          // solim[i][0] = solim[i][0] + random_double()/10.0;
-          solrehihi[i][0] = random_double();
-          solrelohi[i][0] = 0.0;
-          solrehilo[i][0] = 0.0;
-          solrelolo[i][0] = 0.0;
-          solimhihi[i][0] = random_double();
-          solimlohi[i][0] = 0.0;
-          solimhilo[i][0] = 0.0;
-          solimlolo[i][0] = 0.0;
-      }
+   if(nbrcol != 1) // generate coefficients for the columns
+      make_complex4_coefficients
+         (nbrcol,dim,cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+                     cffimhihi,cffimlohi,cffimhilo,cffimlolo);
 
    // compute the right hand sides via evaluation
 
@@ -1327,19 +1317,15 @@ int test_dbl4_complex_newton
           mbrhsrehihi,mbrhsrelohi,mbrhsrehilo,mbrhsrelolo,
           mbrhsimhihi,mbrhsimlohi,mbrhsimhilo,mbrhsimlolo);
    else
-   {
       evaluate_complex4_columns
          (dim,deg,nbrcol,nvr,idx,rowsA,
+          cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+          cffimhihi,cffimlohi,cffimhilo,cffimlolo,
           solrehihi,solrelohi,solrehilo,solrelolo,
           solimhihi,solimlohi,solimhilo,solimlolo,
           mbrhsrehihi,mbrhsrelohi,mbrhsrehilo,mbrhsrelolo,
           mbrhsimhihi,mbrhsimlohi,mbrhsimhilo,mbrhsimlolo,vrblvl);
 
-      cmplx4_unit_series_vectors
-         (nbrcol,dim,deg,
-          cffrehihi,cffrelohi,cffrehilo,cffrelolo,
-          cffimhihi,cffimlohi,cffimhilo,cffimlolo);
-   }
    if(vrblvl > 1)
    {
       cout << "the right hand side series :" << endl;

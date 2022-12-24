@@ -2158,28 +2158,12 @@ int test_dbl8_complex_newton
                solrehihilo,solrelohilo,solrehilolo,solrelololo,
                solimhihihi,solimlohihi,solimhilohi,solimlolohi,
                solimhihilo,solimlohilo,solimhilolo,solimlololo);
-   if(nbrcol != 1) // randomize the leading term
-      for(int i=0; i<dim; i++)
-      {
-          // solre[i][0] = solre[i][0] + random_double()/10.0;
-          // solim[i][0] = solim[i][0] + random_double()/10.0;
-          solrehihihi[i][0] = random_double();
-          solrelohihi[i][0] = 0.0;
-          solrehilohi[i][0] = 0.0;
-          solrelolohi[i][0] = 0.0;
-          solrehihilo[i][0] = 0.0;
-          solrelohilo[i][0] = 0.0;
-          solrehilolo[i][0] = 0.0;
-          solrelololo[i][0] = 0.0;
-          solimhihihi[i][0] = random_double();
-          solimlohihi[i][0] = 0.0;
-          solimhilohi[i][0] = 0.0;
-          solimlolohi[i][0] = 0.0;
-          solimhihilo[i][0] = 0.0;
-          solimlohilo[i][0] = 0.0;
-          solimhilolo[i][0] = 0.0;
-          solimlololo[i][0] = 0.0;
-      }
+   if(nbrcol != 1) // generate coefficients for the columns
+      make_complex8_coefficients
+         (nbrcol,dim,cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+                     cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+                     cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+                     cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo);
 
    // compute the right hand sides via evaluation
 
@@ -2260,9 +2244,12 @@ int test_dbl8_complex_newton
           mbrhsimhihihi,mbrhsimlohihi,mbrhsimhilohi,mbrhsimlolohi,
           mbrhsimhihilo,mbrhsimlohilo,mbrhsimhilolo,mbrhsimlololo);
    else
-   {
       evaluate_complex8_columns
          (dim,deg,nbrcol,nvr,idx,rowsA,
+          cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+          cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+          cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+          cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
           solrehihihi,solrelohihi,solrehilohi,solrelolohi,
           solrehihilo,solrelohilo,solrehilolo,solrelololo,
           solimhihihi,solimlohihi,solimhilohi,solimlolohi,
@@ -2272,13 +2259,6 @@ int test_dbl8_complex_newton
           mbrhsimhihihi,mbrhsimlohihi,mbrhsimhilohi,mbrhsimlolohi,
           mbrhsimhihilo,mbrhsimlohilo,mbrhsimhilolo,mbrhsimlololo,vrblvl);
 
-      cmplx8_unit_series_vectors
-         (nbrcol,dim,deg,
-          cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
-          cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
-          cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
-          cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo);
-   }
    if(vrblvl > 1)
    {
       cout << "the right hand side series :" << endl;

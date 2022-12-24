@@ -129,9 +129,42 @@ void evaluate_complex2_monomials
    free(accrelo); free(accimlo);
 }
 
+void make_real2_coefficients
+ ( int nbrcol, int dim, double ***cffhi, double ***cfflo )
+{
+   for(int i=0; i<nbrcol; i++)
+      for(int j=0; j<dim; j++)
+         random_double_double(&cffhi[i][j][0],&cfflo[i][j][0]);
+}
+
+void make_complex2_coefficients
+ ( int nbrcol, int dim,
+   double ***cffrehi, double ***cffrelo,
+   double ***cffimhi, double ***cffimlo )
+{
+   double xrehi,xrelo,ximhi,ximlo,yhi,ylo;
+
+   for(int i=0; i<nbrcol; i++)
+      for(int j=0; j<dim; j++)
+      {
+         random_double_double(&xrehi,&xrelo); // cosine of some angle
+ 
+         ddf_sqr(xrehi,xrelo,&yhi,&ylo);        // y = cos^2
+         ddf_minus(&yhi,&ylo);                  // y = -cos^2
+         ddf_inc_d(&yhi,&ylo,1.0);              // y = 1 - cos^2
+         ddf_sqrt(yhi,ylo,&ximhi,&ximlo);       // sin is sqrt(1-cos^2)
+
+         cffrehi[i][j][0] = xrehi;
+         cffrelo[i][j][0] = xrelo;
+         cffimhi[i][j][0] = ximhi;
+         cffimlo[i][j][0] = ximlo;
+      }
+}
+
 void evaluate_real2_columns
  ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
-   double **xhi, double **xlo, double **rhshi, double **rhslo, int vrblvl )
+   double ***cffhi, double ***cfflo, double **xhi, double **xlo,
+   double **rhshi, double **rhslo, int vrblvl )
 {
    const int degp1 = deg+1;
 
@@ -161,10 +194,11 @@ void evaluate_real2_columns
 
    for(int col=0; col<nbrcol; col++)
    {
-      for(int i=0; i<dim; i++)   // initialize product to one
+      for(int i=0; i<dim; i++) // initialize product to coefficient
       {
-         prdrhshi[i][0] = 1.0;
-         prdrhslo[i][0] = 0.0;
+         prdrhshi[i][0] = cffhi[col][i][0];
+         prdrhslo[i][0] = cfflo[col][i][0];
+
          for(int k=1; k<degp1; k++)
          {
             prdrhshi[i][k] = 0.0; prdrhslo[i][k] = 0.0;
@@ -228,6 +262,8 @@ void evaluate_real2_columns
 
 void evaluate_complex2_columns
  ( int dim, int deg, int nbrcol, int **nvr, int ***idx, int **rowsA,
+   double ***cffrehi, double ***cffrelo,
+   double ***cffimhi, double ***cffimlo,
    double **xrehi, double **xrelo, double **ximhi, double **ximlo,
    double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
    int vrblvl )
@@ -256,12 +292,12 @@ void evaluate_complex2_columns
 
    for(int col=0; col<nbrcol; col++)
    {
-      for(int i=0; i<dim; i++)
+      for(int i=0; i<dim; i++) // initialize product to coefficient
       {
-         prdrhsrehi[i][0] = 1.0;     // initialize product to one
-         prdrhsrelo[i][0] = 0.0;
-         prdrhsimhi[i][0] = 0.0;
-         prdrhsimlo[i][0] = 0.0;
+         prdrhsrehi[i][0] = cffrehi[col][i][0];
+         prdrhsrelo[i][0] = cffrelo[col][i][0];
+         prdrhsimhi[i][0] = cffimhi[col][i][0];
+         prdrhsimlo[i][0] = cffrelo[col][i][0];
 
          for(int k=1; k<degp1; k++)
          {
