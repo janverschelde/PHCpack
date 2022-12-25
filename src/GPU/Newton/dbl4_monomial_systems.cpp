@@ -20,23 +20,24 @@ void make_real4_exponentials
    double rndhihi,rndlohi,rndhilo,rndlolo;
    double acchihi,acclohi,acchilo,acclolo;
 
+   const double fac = 64.0;      // 1024.0;
+   const double inc = 63.0/64.0; // 1023.0/1024.0;
+
    for(int i=0; i<dim; i++)
    {
       // rnd is in [-1, +1]
       random_quad_double(&rndhihi,&rndlohi,&rndhilo,&rndlolo); 
-      qdf_div(rndhihi,rndlohi,rndhilo,rndlolo,2.0,0.0,0.0,0.0,
-              &acchihi,&acclohi,&acchilo,&acclolo); // acc is in [-0.5, +0.5]
+      qdf_div(rndhihi,rndlohi,rndhilo,rndlolo,fac,0.0,0.0,0.0,
+              &acchihi,&acclohi,&acchilo,&acclolo); // acc in [-1/fac, +1/fac]
       
-      if(rndhihi < 0)
-      {
-         // rnd = rnd - 1.5; if -0.5 <= rnd < 0, rnd - 1.5 is in [-2, -1.5]
-         qdf_sub(acchihi,acclohi,acchilo,acclolo,1.5,0.0,0.0,0.0,
+      if(rndhihi < 0) // if -1/fac <= rnd       < 0
+      {               // then   -1 <= rnd - inc < -inc
+         qdf_sub(acchihi,acclohi,acchilo,acclolo,inc,0.0,0.0,0.0,
                  &rndhihi,&rndlohi,&rndhilo,&rndlolo);
       }
-      else
-      {
-         // rnd = rnd + 1.5; if  0 < rnd <= 0.5, rnd + 1.5 is in [+1.5, +2]
-         qdf_add(acchihi,acclohi,acchilo,acclolo,1.5,0.0,0.0,0.0,
+      else            // if    0  <= rnd       <= 1/fac
+      {               // then inc <= rnd + inc <= 1
+         qdf_add(acchihi,acclohi,acchilo,acclolo,inc,0.0,0.0,0.0,
                  &rndhihi,&rndlohi,&rndhilo,&rndlolo);
       }
       dbl4_exponential(deg,rndhihi,rndlohi,rndhilo,rndlolo,

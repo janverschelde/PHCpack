@@ -16,14 +16,17 @@ void make_real_exponentials ( int dim, int  deg, double **s )
 {
    double rnd;
 
+   const double fac = 64.0;      // 1024.0;
+   const double inc = 63.0/64.0; // 1023.0/1024.0;
+
    for(int i=0; i<dim; i++)
    {
-      rnd = random_double()/2.0;     // rnd is in [-0.5, +0.5]
+      rnd = random_double()/fac;     // rnd in [-1/fac, +1/fac]
       
-      if(rnd < 0)
-         rnd = rnd - 1.5; // if -0.5 <= rnd < 0, rnd - 1.5 is in [-2, -1.5]
-      else
-         rnd = rnd + 1.5; // if  0 < rnd <= 0.5, rnd + 1.5 is in [+1.5, +2]
+      if(rnd < 0)         // if -1/fac <= rnd       < 0 
+         rnd = rnd - inc; // then   -1 <= rnd - inc < -inc
+      else                // if     0  <= rnd       <= 1/fac
+         rnd = rnd + inc; // then  inc <= rnd + inc <= 1
 
       dbl_exponential(deg,rnd,s[i]);
    }

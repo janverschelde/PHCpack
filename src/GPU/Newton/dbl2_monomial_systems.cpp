@@ -18,20 +18,21 @@ void make_real2_exponentials
 {
    double rndhi,rndlo,acchi,acclo;
 
+   const double fac = 64.0;      // 1024.0;
+   const double inc = 63.0/64.0; // 1023.0/1024.0;
+
    for(int i=0; i<dim; i++)
    {
-      random_double_double(&rndhi,&rndlo);        // rnd is in [-1, +1]
-      ddf_div(rndhi,rndlo,2.0,0.0,&acchi,&acclo); // acc is in [-0.5, +0.5]
+      random_double_double(&rndhi,&rndlo);        // rnd in [-1, +1]
+      ddf_div(rndhi,rndlo,fac,0.0,&acchi,&acclo); // acc in [-1/fac, +1/fac]
       
-      if(rndhi < 0)
-      {
-         // rnd = rnd - 1.5; if -0.5 <= rnd < 0, rnd - 1.5 is in [-2, -1.5]
-         ddf_sub(acchi,acclo,1.5,0.0,&rndhi,&rndlo);
+      if(rndhi < 0) // if -1/fac <= rnd       < 0
+      {             // then   -1 <= rnd - inc < -inc
+         ddf_sub(acchi,acclo,inc,0.0,&rndhi,&rndlo);
       }
-      else
-      {
-         // rnd = rnd + 1.5; if  0 < rnd <= 0.5, rnd + 1.5 is in [+1.5, +2]
-         ddf_add(acchi,acclo,1.5,0.0,&rndhi,&rndlo);
+      else          // if    0  <= rnd       <= 1/fac
+      {             // then inc <= rnd + inc <= 1
+         ddf_add(acchi,acclo,inc,0.0,&rndhi,&rndlo);
       }
       dbl2_exponential(deg,rndhi,rndlo,shi[i],slo[i]);
    }

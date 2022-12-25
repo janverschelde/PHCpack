@@ -1,5 +1,7 @@
 Sun 25 Dec 2022 : in *newton_method.cpp, formatted output of error sum
   properly and removed printing of rowsum from dbl_monomial_systems.cpp.
+  In dbl*monomial_systems.cpp refined the range for the alpha parameter
+  of the test solutions.
 
 Sat 24 Dec 2022 : added output of the right hand side series of the test
   system in all precisions, in all *newton_method.cpp files.

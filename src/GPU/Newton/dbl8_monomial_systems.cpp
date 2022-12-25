@@ -23,6 +23,9 @@ void make_real8_exponentials
    double acchihihi,acclohihi,acchilohi,acclolohi;
    double acchihilo,acclohilo,acchilolo,acclololo;
 
+   const double fac = 64.0;      // 1024.0;
+   const double inc = 63.0/64.0; // 1023.0/1024.0;
+
    for(int i=0; i<dim; i++)
    {
       // rnd is in [-1, +1]
@@ -30,25 +33,23 @@ void make_real8_exponentials
                          &rndhihilo,&rndlohilo,&rndhilolo,&rndlololo); 
       odf_div(rndhihihi,rndlohihi,rndhilohi,rndlolohi,
               rndhihilo,rndlohilo,rndhilolo,rndlololo,
-              2.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+              fac,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
               &acchihihi,&acclohihi,&acchilohi,&acclolohi,  // acc is in
-              &acchihilo,&acclohilo,&acchilolo,&acclololo); // in [-0.5, +0.5]
+              &acchihilo,&acclohilo,&acchilolo,&acclololo); // [-1/fac, +1/fac]
       
-      if(rndhihihi < 0)
-      {
-         // rnd = rnd - 1.5; if -0.5 <= rnd < 0, rnd - 1.5 is in [-2, -1.5]
+      if(rndhihihi < 0) // if -1/fac <= rnd       < 0
+      {                 // then   -1 <= rnd - inc < -inc
          odf_sub(acchihihi,acclohihi,acchilohi,acclolohi,
                  acchihilo,acclohilo,acchilolo,acclololo,
-                 1.5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                 inc,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
                  &rndhihihi,&rndlohihi,&rndhilohi,&rndlolohi,
                  &rndhihilo,&rndlohilo,&rndhilolo,&rndlololo);
       }
-      else
-      {
-         // rnd = rnd + 1.5; if  0 < rnd <= 0.5, rnd + 1.5 is in [+1.5, +2]
+      else              // if    0  <= rnd       <= 1/fac
+      {                 // then inc <= rnd + inc <= 1
          odf_add(acchihihi,acclohihi,acchilohi,acclolohi,
                  acchihilo,acclohilo,acchilolo,acclololo,
-                 1.5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                 inc,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
                  &rndhihihi,&rndlohihi,&rndhilohi,&rndlolohi,
                  &rndhihilo,&rndlohilo,&rndhilolo,&rndlololo);
       }
