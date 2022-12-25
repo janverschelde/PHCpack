@@ -154,7 +154,7 @@ void cmplx2_newton_qrstep
       // dim+1 is number of variables for each derivative,
       // plus the last component with the function value
 
-      cout << scientific << setprecision(16);
+      cout << scientific << setprecision(3);
       cout << "sum of errors : " << errsum << endl;
    }
    if((mode == 1) || (mode == 2))
@@ -212,6 +212,7 @@ void cmplx2_newton_qrstep
    if((vrblvl > 0) && (mode == 2))
    {
       double errsum = 0.0;
+      cout << scientific << setprecision(3);
       cout << "comparing CPU with GPU function values ... " << endl;
       errsum = cmplx2_error2sum(dim,degp1,
                   funvalrehi_h,funvalrelo_h,funvalimhi_h,funvalimlo_h,
@@ -353,6 +354,7 @@ void cmplx2_newton_qrstep
    if((vrblvl > 0) && (mode == 2))
    {
       double errsum = 0.0;
+      cout << scientific << setprecision(3);
       cout << "comparing CPU with GPU matrices Q ... " << endl;
       errsum = cmplx2_error2sum(dim,dim,
                   Qrehi_h,Qrelo_h,Qimhi_h,Qimlo_h,

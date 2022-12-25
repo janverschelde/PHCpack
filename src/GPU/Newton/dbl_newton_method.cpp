@@ -92,7 +92,7 @@ void dbl_newton_qrstep
       // dim+1 is number of variables for each derivative,
       // plus the last component with the function value
 
-      cout << scientific << setprecision(16);
+      cout << scientific << setprecision(3);
       cout << "sum of errors : " << errsum << endl;
    }
    if(vrblvl > 0) cout << "linearizing the output ..." << endl;
@@ -129,6 +129,7 @@ void dbl_newton_qrstep
    }
    if((vrblvl > 0) && (mode == 2))
    {
+      cout << scientific << setprecision(3);
       cout << "comparing CPU with GPU function values ... " << endl;
       double errsum = 0.0;
       errsum = dbl_error2sum(dim,degp1,funval_h,funval_d,"funval",vrblvl);
@@ -216,6 +217,7 @@ void dbl_newton_qrstep
    }
    if((vrblvl > 0) && (mode == 2))
    {
+      cout << scientific << setprecision(3);
       cout << "comparing CPU with GPU matrices Q ... " << endl;
       double errsum = dbl_error2sum(dim,dim,Q_h,Q_d,"Q",vrblvl);
       cout << "sum of errors : " << errsum << endl;

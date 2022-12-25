@@ -373,7 +373,7 @@ void cmplx8_newton_qrstep
    if((vrblvl > 0) && (mode == 2) && (nbrcol == 1))
    {
       double errsum = 0.0;
-
+      cout << scientific << setprecision(3);
       cout << "comparing CPU with GPU evaluations ... " << endl;
 
       errsum = cmplx8_error3sum(dim,dim+1,degp1,
@@ -550,6 +550,7 @@ void cmplx8_newton_qrstep
    if((vrblvl > 0) && (mode == 2))
    {
       double errsum = 0.0;
+      cout << scientific << setprecision(3);
       cout << "comparing CPU with GPU function values ... " << endl;
       errsum = cmplx8_error2sum(dim,degp1,
                   funvalrehihihi_h,funvalrelohihi_h,
@@ -838,7 +839,7 @@ void cmplx8_newton_qrstep
    if((vrblvl > 0) && (mode == 2))
    {
       double errsum = 0.0;
-
+      cout << scientific << setprecision(3);
       cout << "comparing CPU with GPU matrices Q ... " << endl;
       errsum = cmplx8_error2sum(dim,dim,
                   Qrehihihi_h,Qrelohihi_h,Qrehilohi_h,Qrelolohi_h,

@@ -1,3 +1,6 @@
+Sun 25 Dec 2022 : in *newton_method.cpp, formatted output of error sum
+  properly and removed printing of rowsum from dbl_monomial_systems.cpp.
+
 Sat 24 Dec 2022 : added output of the right hand side series of the test
   system in all precisions, in all *newton_method.cpp files.
   To d*monomial_systems* added functions to evaluate columns with given

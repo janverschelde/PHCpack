@@ -115,7 +115,7 @@ void dbl2_newton_qrstep
       // dim+1 is number of variables for each derivative,
       // plus the last component with the function value
 
-      cout << scientific << setprecision(16);
+      cout << scientific << setprecision(3);
       cout << "sum of errors : " << errsum << endl;
    }
    if(vrblvl > 0) cout << "initializing the Jacobian ..." << endl;
@@ -171,6 +171,7 @@ void dbl2_newton_qrstep
    }
    if((vrblvl > 0) && (mode == 2))
    {
+      cout << scientific << setprecision(3);
       cout << "comparing CPU with GPU function values ... " << endl;
       double errsum = 0.0;
       errsum = dbl2_error2sum
@@ -289,7 +290,7 @@ void dbl2_newton_qrstep
    if((vrblvl > 0) && (mode == 2))
    {
       double errsum = 0.0;
-
+      cout << scientific << setprecision(3);
       cout << "comparing CPU with GPU matrices Q ... " << endl;
       errsum = dbl2_error2sum(dim,dim,Qhi_h,Qlo_h,Qhi_d,Qlo_d,"Q",vrblvl);
       cout << "sum of errors : " << errsum << endl;

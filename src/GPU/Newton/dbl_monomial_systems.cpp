@@ -181,7 +181,7 @@ void evaluate_real_columns
       {
          int rowsum = 0;  // check on row sum is a patch ...
          for(int j=0; j<dim; j++) rowsum += rowsA[i][j];
-         cout << "rowsum[" << i << "] : " << rowsum << endl;
+         // cout << "rowsum[" << i << "] : " << rowsum << endl;
          if(rowsum != 0)
             for(int k=0; k<degp1; k++) rhs[i][k] += prdrhs[i][k];
       }
