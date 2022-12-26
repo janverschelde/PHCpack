@@ -18,6 +18,8 @@ void prompt_newton_setup
 
    prompt_dimensions(dim,deg,size,&posvals,vrblvl,nbritr,nbsteps);
 
+   *nbrcol = 1;
+
    if(*nbritr == -3)
    {
       *nbrcol = 0;
