@@ -1003,50 +1003,48 @@ int test_dbl2_complex_newton
    long microseconds = endtime.tv_usec - begintime.tv_usec;
    double walltimesec = seconds + microseconds*1.0e-6;
 
-   if(vrblvl < 2)
-   {
-      double errsum = 0.0;
+   double errsum = 0.0;
 
-      cout << scientific << setprecision(16); // just in case vrblvl == 0
-      cout << "The solution series : " << endl;
-      for(int j=0; j<degp1; j++)
+   cout << scientific << setprecision(16); // just in case vrblvl == 0
+   cout << "The solution series : " << endl;
+   for(int j=0; j<degp1; j++)
+   {
+      cout << "coefficient of degree " << j << " :" << endl;
+      for(int i=0; i<dim; i++)
       {
-         cout << "coefficient of degree " << j << " :" << endl;
-         for(int i=0; i<dim; i++)
+         cout << "sol[" << i << "][" << j << "] : "
+                        << solrehi[i][j] << "  "
+                        << solrelo[i][j] << endl << "  "
+                        << solimhi[i][j] << "  "
+                        << solimlo[i][j] << endl;
+         if((mode == 0) || (mode == 2))
          {
-            cout << "sol[" << i << "][" << j << "] : "
-                           << solrehi[i][j] << "  "
-                           << solrelo[i][j] << endl << "  "
-                           << solimhi[i][j] << "  "
-                           << solimlo[i][j] << endl;
-            if((mode == 0) || (mode == 2))
-            {
-               cout << "x_d[" << i << "][" << j << "] : "
-                              << inputrehi_d[i][j] << "  "
-                              << inputrelo_d[i][j] << endl << "  "
-                              << inputimhi_d[i][j] << "  "
-                              << inputimlo_d[i][j] << endl;
-               errsum += abs(solrehi[i][j] - inputrehi_d[i][j])
-                       + abs(solrelo[i][j] - inputrelo_d[i][j])
-                       + abs(solimhi[i][j] - inputimhi_d[i][j])
-                       + abs(solimlo[i][j] - inputimlo_d[i][j]);
-            }
-            if((mode == 1) || (mode == 2))
-            {
-               cout << "x_h[" << i << "][" << j << "] : "
-                              << inputrehi_h[i][j] << "  "
-                              << inputrelo_h[i][j] << endl << "  "
-                              << inputimhi_h[i][j] << "  "
-                              << inputimlo_h[i][j] << endl;
-               errsum += abs(solrehi[i][j] - inputrehi_h[i][j])
-                       + abs(solrelo[i][j] - inputrelo_h[i][j])
-                       + abs(solimhi[i][j] - inputimhi_h[i][j])
-                       + abs(solimlo[i][j] - inputimlo_h[i][j]);
-            }
+            cout << "x_d[" << i << "][" << j << "] : "
+                           << inputrehi_d[i][j] << "  "
+                           << inputrelo_d[i][j] << endl << "  "
+                           << inputimhi_d[i][j] << "  "
+                           << inputimlo_d[i][j] << endl;
+            errsum += abs(solrehi[i][j] - inputrehi_d[i][j])
+                    + abs(solrelo[i][j] - inputrelo_d[i][j])
+                    + abs(solimhi[i][j] - inputimhi_d[i][j])
+                    + abs(solimlo[i][j] - inputimlo_d[i][j]);
+         }
+         if((mode == 1) || (mode == 2))
+         {
+            cout << "x_h[" << i << "][" << j << "] : "
+                           << inputrehi_h[i][j] << "  "
+                           << inputrelo_h[i][j] << endl << "  "
+                           << inputimhi_h[i][j] << "  "
+                           << inputimlo_h[i][j] << endl;
+            errsum += abs(solrehi[i][j] - inputrehi_h[i][j])
+                    + abs(solrelo[i][j] - inputrelo_h[i][j])
+                    + abs(solimhi[i][j] - inputimhi_h[i][j])
+                    + abs(solimlo[i][j] - inputimlo_h[i][j]);
          }
       }
-      cout << "error : " << errsum << endl;
    }
+   cout << "error : " << errsum << endl;
+
    cout << "Wall clock time on all " << stepcnt << " Newton steps : ";
    cout << fixed << setprecision(3) 
         << walltimesec << " seconds." << endl;

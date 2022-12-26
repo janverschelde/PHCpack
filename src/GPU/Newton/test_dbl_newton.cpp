@@ -18,12 +18,12 @@ int main ( void )
 {
    cout << "testing Newton in double precision ..." << endl;
 
-   int seed,dim,deg,size,posvals,vrblvl,nbritr,nbsteps,szt,nbt,mode,cdata;
+   int seed,dim,deg,size,vrblvl,nbritr,nbrcol,nbsteps,szt,nbt,mode,cdata;
    double dpr = 1.0;
 
    prompt_newton_setup
-      (&seed,&szt,&nbt,&dim,&deg,&size,&posvals,&vrblvl,&mode,
-       &nbritr,&nbsteps,&cdata);
+      (&seed,&szt,&nbt,&dim,&deg,&size,&vrblvl,&mode,
+       &nbritr,&nbrcol,&nbsteps,&cdata);
 
    if(seed == 0)
       srand(time(NULL));
@@ -45,17 +45,15 @@ int main ( void )
    int **exp = new int*[dim];    // exponents of the variables
    int *nbrfac = new int[dim];   // number of exponents > 1 in each monomial
    int **expfac = new int*[dim]; // exponents of the common factors
-   int nbrcol = 1;
 
    if(nbritr == -3)
    {
-      nbrcol = dim;
       for(int i=0; i<dim; i++) rowsA[i] = new int[dim];
    }
    else
    {
       make_monomial_system
-         (dim,size,posvals,nbritr,nvr,idx,exp,nbrfac,expfac,rowsA,vrblvl);
+         (dim,size,1,nbritr,nvr,idx,exp,nbrfac,expfac,rowsA,vrblvl);
 
       int *expsol = new int[dim];
       int sing = exponents_check(dim,rowsA,expsol,vrblvl);
@@ -87,17 +85,17 @@ int main ( void )
    }
    else
    {
-      make_cyclic_variables(dim,colnvr);
+      make_cyclic_variables(nbrcol,dim,colnvr);
 
       for(int i=0; i<nbrcol; i++)
          for(int j=0; j<dim; j++) colidx[i][j] = new int[colnvr[i][j]];
      
-      make_cyclic_columns(dim,colnvr,colidx);
+      make_cyclic_columns(nbrcol,dim,colnvr,colidx);
       if(vrblvl > 1)
       {
           cout << "column representation of cyclic "
                << dim << "-roots :" << endl;
-          write_cyclic_columns(dim,colnvr,colidx);
+          write_cyclic_columns(nbrcol,dim,colnvr,colidx);
       }
    }
    if(cdata == 0)

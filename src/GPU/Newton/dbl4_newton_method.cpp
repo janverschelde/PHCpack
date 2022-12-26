@@ -1036,50 +1036,48 @@ int test_dbl4_real_newton
    long microseconds = endtime.tv_usec - begintime.tv_usec;
    double walltimesec = seconds + microseconds*1.0e-6;
 
-   if(vrblvl < 2)
-   {
-      double errsum = 0.0;
+   double errsum = 0.0;
 
-      cout << scientific << setprecision(16); // just in case vrblvl == 0
-      cout << "The solution series : " << endl;
-      for(int j=0; j<degp1; j++)
+   cout << scientific << setprecision(16); // just in case vrblvl == 0
+   cout << "The solution series : " << endl;
+   for(int j=0; j<degp1; j++)
+   {
+      cout << "coefficient of degree " << j << " :" << endl;
+      for(int i=0; i<dim; i++)
       {
-         cout << "coefficient of degree " << j << " :" << endl;
-         for(int i=0; i<dim; i++)
+         cout << "sol[" << i << "][" << j << "] : "
+                        << solhihi[i][j] << "  "
+                        << sollohi[i][j] << endl << "  "
+                        << solhilo[i][j] << "  "
+                        << sollolo[i][j] << endl;
+         if((mode == 0) || (mode == 2))
          {
-            cout << "sol[" << i << "][" << j << "] : "
-                           << solhihi[i][j] << "  "
-                           << sollohi[i][j] << endl << "  "
-                           << solhilo[i][j] << "  "
-                           << sollolo[i][j] << endl;
-            if((mode == 0) || (mode == 2))
-            {
-               cout << "x_d[" << i << "][" << j << "] : "
-                              << inputhihi_d[i][j] << "  "
-                              << inputlohi_d[i][j] << endl << "  "
-                              << inputhilo_d[i][j] << "  "
-                              << inputlolo_d[i][j] << endl;
-               errsum += abs(solhihi[i][j] - inputhihi_d[i][j])
-                       + abs(sollohi[i][j] - inputlohi_d[i][j])
-                       + abs(solhilo[i][j] - inputhilo_d[i][j])
-                       + abs(sollolo[i][j] - inputlolo_d[i][j]);
-            }
-            if((mode == 1) || (mode == 2))
-            {
-               cout << "x_h[" << i << "][" << j << "] : "
-                              << inputhihi_h[i][j] << "  "
-                              << inputlohi_h[i][j] << endl << "  "
-                              << inputhilo_h[i][j] << "  "
-                              << inputlolo_h[i][j] << endl;
-               errsum += abs(solhihi[i][j] - inputhihi_h[i][j])
-                       + abs(sollohi[i][j] - inputlohi_h[i][j])
-                       + abs(solhilo[i][j] - inputhilo_h[i][j])
-                       + abs(sollolo[i][j] - inputlolo_h[i][j]);
-            }
+            cout << "x_d[" << i << "][" << j << "] : "
+                           << inputhihi_d[i][j] << "  "
+                           << inputlohi_d[i][j] << endl << "  "
+                           << inputhilo_d[i][j] << "  "
+                           << inputlolo_d[i][j] << endl;
+            errsum += abs(solhihi[i][j] - inputhihi_d[i][j])
+                    + abs(sollohi[i][j] - inputlohi_d[i][j])
+                    + abs(solhilo[i][j] - inputhilo_d[i][j])
+                    + abs(sollolo[i][j] - inputlolo_d[i][j]);
+         }
+         if((mode == 1) || (mode == 2))
+         {
+            cout << "x_h[" << i << "][" << j << "] : "
+                           << inputhihi_h[i][j] << "  "
+                           << inputlohi_h[i][j] << endl << "  "
+                           << inputhilo_h[i][j] << "  "
+                           << inputlolo_h[i][j] << endl;
+            errsum += abs(solhihi[i][j] - inputhihi_h[i][j])
+                    + abs(sollohi[i][j] - inputlohi_h[i][j])
+                    + abs(solhilo[i][j] - inputhilo_h[i][j])
+                    + abs(sollolo[i][j] - inputlolo_h[i][j]);
          }
       }
-      cout << "error : " << errsum << endl;
    }
+   cout << "error : " << errsum << endl;
+
    cout << "Wall clock time on all " << stepcnt << " Newton steps : ";
    cout << fixed << setprecision(3) 
         << walltimesec << " seconds." << endl;
