@@ -195,13 +195,14 @@ void prompt_dimensions
    cin >> *deg;
    cout << "-> verbose level (0 for silent) : ";
    cin >> *vrblvl;
-   cout << "MENU for the unimodular matrix :" << endl;
+   cout << "MENU for the test problem :" << endl;
+   cout << " -4 : 2-column lower/upper triangular matrix" << endl;
    cout << " -3 : cyclic n-roots system" << endl;
    cout << " -2 : decoupled two variable monomials" << endl;
    cout << " -1 : lower triangular matrix of ones" << endl;
    cout << "  0 : user input" << endl;
    cout << "  n : number of unimodular multiplications" << endl;
-   cout << "-> give the number for the unimodular matrix : ";
+   cout << "-> give the number for the test problem : ";
    cin >> *nbritr;
    if(*nbritr > 0)
    {

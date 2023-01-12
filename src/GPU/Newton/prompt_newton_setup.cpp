@@ -20,6 +20,8 @@ void prompt_newton_setup
 
    *nbrcol = 1;
 
+   if(*nbritr == -4) *nbrcol = 2; // 2-column lower/upper triangle
+
    if(*nbritr == -3)
    {
       *nbrcol = 0;

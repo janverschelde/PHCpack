@@ -52,8 +52,12 @@ int main ( void )
    }
    else
    {
-      make_monomial_system
-         (dim,size,1,nbritr,nvr,idx,exp,nbrfac,expfac,rowsA,vrblvl);
+      if(nbritr == -4)           // the 1st column is lower triangular
+         make_monomial_system
+            (dim,size,1,-1,nvr,idx,exp,nbrfac,expfac,rowsA,vrblvl);
+      else
+         make_monomial_system
+            (dim,size,1,nbritr,nvr,idx,exp,nbrfac,expfac,rowsA,vrblvl);
 
       int *expsol = new int[dim];
       int sing = exponents_check(dim,rowsA,expsol,vrblvl);
@@ -81,6 +85,22 @@ int main ( void )
          colnvr[0][i] = nvr[i];
          colidx[0][i] = new int[nvr[i]];
          for(int j=0; j<nvr[i]; j++) colidx[0][i][j] = idx[i][j];
+      }
+   }
+   else if(nbrcol == 2) // a 2-column system
+   {
+      for(int i=0; i<dim; i++)  // first column is lower triangular
+      {
+         colnvr[0][i] = nvr[i];
+         colidx[0][i] = new int[nvr[i]];
+         for(int j=0; j<nvr[i]; j++) colidx[0][i][j] = idx[i][j];
+      }
+      for(int i=0; i<dim; i++)  // second column is upper triangular
+      {
+         int i2 = dim-i-1;
+         colnvr[1][i2] = nvr[i];
+         colidx[1][i2] = new int[nvr[i]];
+         for(int j=0; j<nvr[i]; j++) colidx[1][i2][j] = idx[i][j];
       }
    }
    else

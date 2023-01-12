@@ -1,3 +1,6 @@
+Wed 11 Jan 2023 : updated unimodular_matrices.cpp, prompt_newton_setup.cpp,
+  and test_{dbl,dbl2,dbl4,dbl8}_newton.cpp for 2-column lower/upper tests.
+
 Mon 26 Dec 2022 : in prompt_newton_setup.cpp, set nbrcol to 1 by default.
 
 Sun 25 Dec 2022 : in *newton_method.cpp, formatted output of error sum
