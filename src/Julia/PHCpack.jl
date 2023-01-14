@@ -4,7 +4,7 @@ the shared object to the library defined by PHCpack.
 
 To check if the shared object libPHCpack is present, type
 
-    JuPHC.version()
+    PHCpack.version()
 
 and, if present, the version string of PHCpack will appear.
 """
