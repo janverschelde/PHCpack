@@ -1,2 +1,4 @@
 Sun 15 Jan 2023 : made version.py platform independent, as it works for
   windows, macos X (both Intel and M1), and linux (of course).
+  Extended version.py with the function getPHCmod() to give access to
+  the shared object or dynamic library in a platform independent manner.
