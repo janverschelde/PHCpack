@@ -7,7 +7,7 @@ For the Julia code to work, the file ../lib/libPHCpack,
 with the extension .so (Linux), .dll (Windows), or .dylib (Mac OS X)
 must be present.
 
-The module JuPHC is defined by the files in this folder.
+The module PHCpack.jl is defined by the files in this folder.
 
 -----------------------------------------------------------------------------
 file name              : short description
