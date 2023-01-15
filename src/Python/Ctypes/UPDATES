@@ -1,0 +1,2 @@
+Sun 15 Jan 2023 : made version.py platform independent, as it works for
+  windows, macos X (both Intel and M1), and linux (of course).
