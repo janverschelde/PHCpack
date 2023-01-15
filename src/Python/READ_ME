@@ -48,6 +48,9 @@ Version 1.0.1 of phcpy started to provide an object oriented interface,
 with classes Solution and Polynomials, to respectively represent a
 solution and a system of polynomials.
 
+The folder Ctypes was added in v2.4.87, mainly to extend phcpy to Windows
+via a more portable interface.
+
 ------------------------------------------------------------------------------
 file name              : short description
 ------------------------------------------------------------------------------

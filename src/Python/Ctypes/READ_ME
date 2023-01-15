@@ -1,0 +1,10 @@
+Ctypes allows to import dynamically linked libraries into a Python session.
+
+For the Python scripts to work, the file ../lib/libPHCpack,
+with the extension .dll for Windows must be present.
+
+---------------------------------------------------------------------------
+file name               : description
+---------------------------------------------------------------------------
+version.py              : writes the retrieved PHCpack version string
+---------------------------------------------------------------------------
