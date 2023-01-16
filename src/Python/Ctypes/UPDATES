@@ -1,3 +1,5 @@
+Mon 16 Jan 2023 : extended version.py with int4a2str and str2int4a functions.
+
 Sun 15 Jan 2023 : made version.py platform independent, as it works for
   windows, macos X (both Intel and M1), and linux (of course).
   Extended version.py with the function getPHCmod() to give access to
