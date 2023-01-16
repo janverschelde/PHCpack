@@ -7,4 +7,5 @@ with the extension .dll for Windows must be present.
 file name               : description
 ---------------------------------------------------------------------------
 version.py              : writes the retrieved PHCpack version string
+dimension.py            : number of polynomials in double precision
 ---------------------------------------------------------------------------
