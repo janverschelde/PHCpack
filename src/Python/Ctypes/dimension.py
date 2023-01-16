@@ -1,17 +1,15 @@
 """
-Exports the dimmension of the system of polynomials.
+Exports the dimension of the system of polynomials.
+Needs the version module.
 """
-
-import ctypes
-from ctypes import c_int, c_double, pointer
-from ctypes import create_string_buffer, sizeof
-from version import getPHCmod
 
 def setDoubleDimension(dim, vrblvl=0):
     """
     Sets the number of polynomials in double precision
     to the value of the first parameter dim.
     """
+    from ctypes import c_int, c_double, pointer
+    from version import getPHCmod
     if(vrblvl > 0):
         print("in setDoubleDimension, dim = ", dim)
     modPHCpack = getPHCmod()
@@ -29,6 +27,8 @@ def getDoubleDimension(vrblvl=0):
     """
     Returns the number of polynomials in double precision.
     """
+    from ctypes import c_int, c_double, pointer
+    from version import getPHCmod
     if(vrblvl > 0):
         print("in getDoubleDimension ...")
     modPHCpack = getPHCmod()

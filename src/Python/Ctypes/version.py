@@ -5,19 +5,18 @@ The function getPHCmod() returns the library module for the three
 supported platforms.  The functions int4a2str() and str2int4a()
 convert integer arrays to strings and string to integer arrays,
 using the ctypes string buffer type.
+The function int4a2nbr() converts a list of integers to the
+string buffer representation of the 32-bit integer array version.
 """
 # relative location of the PHCpack library
 LOCATION = "../../lib"
-
-import ctypes
-from ctypes import c_int, c_double, pointer
-from ctypes import create_string_buffer, sizeof
 
 def getPHCmod():
     """
     Returns the proper module according to the platform.
     For the correct 
     """
+    import ctypes
     import sys
     if 'linux' in sys.platform:
         LIBPHCPACK = LOCATION + "/libPHCpack.so"
@@ -81,12 +80,36 @@ def str2int4a(data, verbose=False):
         print('-> str2int4a returns', result)
     return result
 
+def int4a2nbr(data, verbose=False):
+    """
+    Given in data is a Python list of integers,
+    returns the encoding in a ctypes string buffer,
+    for conversion into an 32-bit integer array.
+    If verbose, then results of intermediate steps are shown,
+    otherwise the function remains silent.
+    """
+    from ctypes import create_string_buffer
+    if verbose:
+        print('-> int4a2nbr, data :', data)
+    dim = len(data)
+    szd = 4*dim
+    if verbose:
+        print('-> int4a2nbr size of result :', szd)
+    result = create_string_buffer(szd)
+    for k in range(dim):
+        result[4*k] = data[k] # no encode() because plain integer
+    if verbose:
+        print('-> int4anbr returns', result)
+    return result
+
 def version(verbose=True):
     """
     Returns the version string of PHCpack.
     If verbose, then the conversions between strings and integer arrays
     are verified via the ctypes string buffer types.
     """
+    from ctypes import c_int, c_double, pointer, sizeof
+    from ctypes import create_string_buffer
     modPHCpack = getPHCmod()
     f = modPHCpack._ada_use_c2phc
     a = pointer(c_int(0))
