@@ -133,7 +133,7 @@ package body Standard_PolySys_Interface is
   begin
     if vrblvl > 0 then
       put("-> in standard_polysys_interface.");
-      put_line("-> Standard_PolySys_Get_Dimension ...");
+      put_line("Standard_PolySys_Get_Dimension ...");
     end if;
     Assign(integer32(Standard_PolySys_Container.Dimension),a);
     return 0;
