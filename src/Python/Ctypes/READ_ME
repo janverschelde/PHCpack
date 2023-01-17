@@ -10,4 +10,5 @@ version                 : writes the retrieved PHCpack version string
 dimension               : number of polynomials in double precision
 polynomials             : set and get of polynomials
 volumes                 : compute mixed volumes and stable mixed volumes
+solver                  : exports the blackbox solver
 ---------------------------------------------------------------------------
