@@ -1,3 +1,6 @@
+Tue 17 Jan 2023 : in solver.py, used int.from_bytes() on a[0] to get the
+  number of solutions returned as an integer.
+
 Mon 16 Jan 2023 : extended version.py with int4a2str and str2int4a functions.
   Extended version.py with int4a2nbr function, improved dimension.py,
   and added a new module polynomials.  New volumes.py to export functions

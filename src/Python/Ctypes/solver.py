@@ -38,15 +38,13 @@ def solveDoubleSystem(nbtasks=0, mvfocus=0, vrblvl=0):
     f = modPHCpack._ada_use_c2phc
     vrb = (vrblvl > 0)
     a = int4a2nbr([1, nbtasks, mvfocus], vrb)
-    print('a[0] :', a[0])
     b = create_string_buffer(1024)
     c = pointer(c_double(0.0))
     v = c_int(vrblvl)
     r = f(77, a, b, c, v)
     if(vrblvl > 0):
         print('-> solveDoubleSystem return value :', r)
-    print('a[0] :', a[0])
-    roco = a[0].decode()
+    roco = int.from_bytes(a[0], "big")
     result = int4a2str(b, vrb)
     return (roco, result)
 
@@ -59,7 +57,7 @@ def showSolve():
     polynomials = ["x^3 + 2*x*y - x^2;", "x + y - x^3;"]
     r = setDoubleSystem(2, polynomials, lvl)
     nbr, roco = solveDoubleSystem(lvl)
-    print("number of solutions : ", nbr)
+    print("number of solutions :", nbr)
     print("root counts :\n", roco)
     writeDoubleSolutions(lvl)
 
