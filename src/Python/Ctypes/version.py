@@ -8,31 +8,35 @@ using the ctypes string buffer type.
 The function int4a2nbr() converts a list of integers to the
 string buffer representation of the 32-bit integer array version.
 """
+
+import ctypes
+import sys
+from ctypes import create_string_buffer
+from ctypes import c_int, c_double, pointer, sizeof
+
 # relative location of the PHCpack library
 LOCATION = "../../lib"
 
 def getPHCmod():
     """
     Returns the proper module according to the platform.
-    For the correct 
+    For the correct execution, the file libPHCpack,
+    with the extension .so, .dylib, or .dll must be present.
     """
-    import ctypes
-    import sys
     if 'linux' in sys.platform:
         LIBPHCPACK = LOCATION + "/libPHCpack.so"
         modPHCpack = ctypes.CDLL(LIBPHCPACK)
         return modPHCpack
-    elif 'darwin' in sys.platform:
+    if 'darwin' in sys.platform:
         LIBPHCPACK = LOCATION + "/libPHCpack.dylib"
         modPHCpack = ctypes.CDLL(LIBPHCPACK)
         return modPHCpack
-    elif 'win' in sys.platform:
+    if 'win' in sys.platform:
         LIBPHCPACK = LOCATION + "/libPHCpack.dll"
         modPHCpack = ctypes.WinDLL(LIBPHCPACK, winmode=0)
         return modPHCpack
-    else:
-        print('The platform', sys.platform, 'is not supported.')
-        return None
+    print('The platform', sys.platform, 'is not supported.')
+    return None
 
 def int4a2str(data, verbose=False):
     """
@@ -42,7 +46,6 @@ def int4a2str(data, verbose=False):
     If verbose, then results of intermediate steps are printed,
     otherwise, the function remains silent.
     """
-    from ctypes import sizeof
     if verbose:
         print('-> int4a2str, data is', data)
     szd = sizeof(data)
@@ -66,7 +69,6 @@ def str2int4a(data, verbose=False):
     If verbose, then results of intermediate steps are printed,
     otherwise, the function remains silent.
     """
-    from ctypes import create_string_buffer
     if verbose:
         print('-> str2int4a, data is', data)
     dim = len(data)
@@ -88,7 +90,6 @@ def int4a2nbr(data, verbose=False):
     If verbose, then results of intermediate steps are shown,
     otherwise the function remains silent.
     """
-    from ctypes import create_string_buffer
     if verbose:
         print('-> int4a2nbr, data :', data)
     dim = len(data)
@@ -108,29 +109,26 @@ def version(verbose=True):
     If verbose, then the conversions between strings and integer arrays
     are verified via the ctypes string buffer types.
     """
-    from ctypes import c_int, c_double, pointer, sizeof
-    from ctypes import create_string_buffer
     modPHCpack = getPHCmod()
-    f = modPHCpack._ada_use_c2phc
-    a = pointer(c_int(0))
-    b = create_string_buffer(30*4)
-    c = pointer(c_double(0.0))
+    phc = modPHCpack._ada_use_c2phc
+    aaa = pointer(c_int(0))
+    name = create_string_buffer(30*4)
+    ccc = pointer(c_double(0.0))
     if verbose:
-        r = f(999, a, b, c, 2)
+        retval = phc(999, aaa, name, ccc, 2)
     else:
-        r = f(999, a, b, c, 0)
+        retval = phc(999, aaa, name, ccc, 0)
     if verbose:
-        print('return value :', r)
-        print('a :', a[0])
-        print('sizeof(b) :', sizeof(b))
-    result = int4a2str(b, True)
+        print('return value :', retval)
+        print('a :', aaa[0])
+        print('sizeof(name) :', sizeof(name))
+    result = int4a2str(name, True)
     if verbose:
-         print(result)
-    if verbose:
-         print('version checks conversions ...')
-         bb = str2int4a(result, True)
-         sb = int4a2str(bb)
-         print(sb)
+        print(result)
+        print('version checks conversions ...')
+        int4aresult = str2int4a(result, True)
+        strres = int4a2str(int4aresult)
+        print(strres)
     return result
 
 if __name__=="__main__":

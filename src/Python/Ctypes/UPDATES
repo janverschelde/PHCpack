@@ -1,3 +1,6 @@
+Wed 18 Jan 2023 : edits to version.py, dimension.py, polynomials.py,
+  volumes.py and solver.py for pylint warnings, for improved ratings.
+
 Tue 17 Jan 2023 : in solver.py, used int.from_bytes() on a[0] to get the
   number of solutions returned as an integer.
 

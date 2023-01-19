@@ -1,26 +1,26 @@
 """
 Exports the blackbox solver.
 """
+from ctypes import c_int, c_double, pointer, create_string_buffer
+from version import getPHCmod, int4a2nbr, int4a2str
+from polynomials import setDoubleSystem
 
 def writeDoubleSolutions(vrblvl=0):
     """
     Writes the solutions stored in double precision.
     """
-    from ctypes import c_int, c_double, pointer, create_string_buffer
-    from version import getPHCmod, int4a2nbr, int4a2str
-    if(vrblvl > 0):
+    if vrblvl > 0:
         print("-> solveDoubleSystem, vrblvl =", vrblvl)
     modPHCpack = getPHCmod()
-    f = modPHCpack._ada_use_c2phc
-    vrb = (vrblvl > 0)
-    a = pointer(c_int(0))
-    b = pointer(c_int(0))
-    c = pointer(c_double(0.0))
-    v = c_int(vrblvl)
-    r = f(31, a, b, c, v)
-    if(vrblvl > 0):
-        print('-> writeDoubleSolutions return value :', r)
-    return r
+    phc = modPHCpack._ada_use_c2phc
+    aaa = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(31, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print('-> writeDoubleSolutions return value :', retval)
+    return retval
 
 def solveDoubleSystem(nbtasks=0, mvfocus=0, vrblvl=0):
     """
@@ -30,32 +30,29 @@ def solveDoubleSystem(nbtasks=0, mvfocus=0, vrblvl=0):
     otherwise, the focus is on mixed volumes and polyhedral homotopies,
     and vrblvl is the verbose level.
     """
-    from ctypes import c_int, c_double, pointer, create_string_buffer
-    from version import getPHCmod, int4a2nbr, int4a2str
-    if(vrblvl > 0):
+    if vrblvl > 0:
         print("-> solveDoubleSystem, nbtasks =", nbtasks)
     modPHCpack = getPHCmod()
-    f = modPHCpack._ada_use_c2phc
+    phc = modPHCpack._ada_use_c2phc
     vrb = (vrblvl > 0)
-    a = int4a2nbr([1, nbtasks, mvfocus], vrb)
-    b = create_string_buffer(1024)
-    c = pointer(c_double(0.0))
-    v = c_int(vrblvl)
-    r = f(77, a, b, c, v)
-    if(vrblvl > 0):
-        print('-> solveDoubleSystem return value :', r)
-    roco = int.from_bytes(a[0], "big")
-    result = int4a2str(b, vrb)
+    apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
+    broco = create_string_buffer(1024)
+    ccc = pointer(c_double(0.0))
+    vlvl = c_int(vrblvl)
+    retval = phc(77, apars, broco, ccc, vlvl)
+    if vrblvl > 0:
+        print('-> solveDoubleSystem return value :', retval)
+    roco = int.from_bytes(apars[0], "big")
+    result = int4a2str(broco, vrb)
     return (roco, result)
 
 def showSolve():
     """
     Solves a simple system.
     """
-    from polynomials import setDoubleSystem
     lvl = 10
     polynomials = ["x^3 + 2*x*y - x^2;", "x + y - x^3;"]
-    r = setDoubleSystem(2, polynomials, lvl)
+    setDoubleSystem(2, polynomials, lvl)
     nbr, roco = solveDoubleSystem(lvl)
     print("number of solutions :", nbr)
     print("root counts :\n", roco)
