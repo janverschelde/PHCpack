@@ -1,4 +1,5 @@
-Thu 19 Jan 2023 : started solutions.py ...
+Thu 19 Jan 2023 : started solutions.py ...  Ran pylint on all .py files
+  and convert camel case to snake case of function names.
 
 Wed 18 Jan 2023 : edits to version.py, dimension.py, polynomials.py,
   volumes.py and solver.py for pylint warnings, for improved ratings.

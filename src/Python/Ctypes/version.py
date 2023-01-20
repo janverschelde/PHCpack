@@ -24,17 +24,17 @@ def getPHCmod():
     with the extension .so, .dylib, or .dll must be present.
     """
     if 'linux' in sys.platform:
-        LIBPHCPACK = LOCATION + "/libPHCpack.so"
-        modPHCpack = ctypes.CDLL(LIBPHCPACK)
-        return modPHCpack
+        libphcpack = LOCATION + "/libPHCpack.so"
+        phcpack = ctypes.CDLL(libphcpack)
+        return phcpack
     if 'darwin' in sys.platform:
-        LIBPHCPACK = LOCATION + "/libPHCpack.dylib"
-        modPHCpack = ctypes.CDLL(LIBPHCPACK)
-        return modPHCpack
+        libphcpack = LOCATION + "/libPHCpack.dylib"
+        phcpack = ctypes.CDLL(libphcpack)
+        return phcpack
     if 'win' in sys.platform:
-        LIBPHCPACK = LOCATION + "/libPHCpack.dll"
-        modPHCpack = ctypes.WinDLL(LIBPHCPACK, winmode=0)
-        return modPHCpack
+        libphcpack = LOCATION + "/libPHCpack.dll"
+        phcpack = ctypes.WinDLL(libphcpack, winmode=0)
+        return phcpack
     print('The platform', sys.platform, 'is not supported.')
     return None
 
@@ -109,8 +109,8 @@ def version(verbose=True):
     If verbose, then the conversions between strings and integer arrays
     are verified via the ctypes string buffer types.
     """
-    modPHCpack = getPHCmod()
-    phc = modPHCpack._ada_use_c2phc
+    phcpack = getPHCmod()
+    phc = phcpack._ada_use_c2phc
     aaa = pointer(c_int(0))
     name = create_string_buffer(30*4)
     ccc = pointer(c_double(0.0))

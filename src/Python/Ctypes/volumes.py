@@ -3,9 +3,9 @@ Exports functions to compute mixed volumes and stable mixed volumes.
 """
 from ctypes import c_int, c_double, pointer
 from version import getPHCmod
-from polynomials import setDoubleSystem
+from polynomials import set_double_system
 
-def mixedVolume(demics=True, vrblvl=0):
+def mixed_volume(demics=True, vrblvl=0):
     """
     Returns the mixed volume of the polynomial system in double precision.
     The demics flag indicates if dynamic enumeration as implemented by
@@ -13,9 +13,9 @@ def mixedVolume(demics=True, vrblvl=0):
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
-        print('-> mixedVolume, demics flag :', demics)
-    modPHCpack = getPHCmod()
-    phc = modPHCpack._ada_use_c2phc
+        print('-> mixed_volume, demics flag :', demics)
+    phcpack = getPHCmod()
+    phc = phcpack._ada_use_c2phc
     mixvol = pointer(c_int(0))
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
@@ -25,10 +25,10 @@ def mixedVolume(demics=True, vrblvl=0):
     else:
         retval = phc(78, mixvol, bbb, ccc, vrb)
     if vrblvl > 0:
-        print('-> mixedVolume, return value :', retval)
+        print('-> mixed_volume, return value :', retval)
     return mixvol[0]
 
-def stableMixedVolume(demics=True, vrblvl=0):
+def stable_mixed_volume(demics=True, vrblvl=0):
     """
     Returns the stable mixed volume of the polynomial system
     in double precision.
@@ -37,9 +37,9 @@ def stableMixedVolume(demics=True, vrblvl=0):
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
-        print('-> stableMixedVolume, demics flag :', demics)
-    modPHCpack = getPHCmod()
-    phc = modPHCpack._ada_use_c2phc
+        print('-> stable_mixed_volume, demics flag :', demics)
+    phcpack = getPHCmod()
+    phc = phcpack._ada_use_c2phc
     mixvol = pointer(c_int(0))
     stablemv = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
@@ -49,35 +49,35 @@ def stableMixedVolume(demics=True, vrblvl=0):
     else:
         retval = phc(79, mixvol, stablemv, ccc, vrb)
     if vrblvl > 0:
-        print('-> stableMixedVolume, return value :', retval)
+        print('-> stable_mixed_volume, return value :', retval)
     return (mixvol[0], stablemv[0])
 
-def showMixedVolume():
+def show_mixed_volume():
     """
     Computes the mixed volume of a simple example.
     """
     lvl = 10
     polynomials = ["x^3 + 2*x*y - 1;", "x + y - 1;"]
-    setDoubleSystem(2, polynomials, lvl)
-    mvl = mixedVolume(True, lvl)
+    set_double_system(2, polynomials, lvl)
+    mvl = mixed_volume(True, lvl)
     print('the mixed volume by DEMiCs :', mvl)
-    mvl = mixedVolume(False, lvl)
+    mvl = mixed_volume(False, lvl)
     print('the mixed volume by MixedVol :', mvl)
 
-def showStableMixedVolume():
+def show_stable_mixed_volume():
     """
     Computes the stable mixed volume of a simple example.
     """
     lvl = 10
     polynomials = ["x^3 + 2*x*y - x^2*y;", "x + y - x^3;"]
-    setDoubleSystem(2, polynomials, lvl)
-    mvl, smv = stableMixedVolume(True, lvl)
+    set_double_system(2, polynomials, lvl)
+    mvl, smv = stable_mixed_volume(True, lvl)
     print('the mixed volume by DEMiCs :', mvl)
     print('the stable mixed volume by DEMiCs :', smv)
-    mvl, smv = stableMixedVolume(False, lvl)
+    mvl, smv = stable_mixed_volume(False, lvl)
     print('the mixed volume by MixedVol :', mvl)
     print('the stable mixed volume by MixedVol :', smv)
 
 if __name__=="__main__":
-    showMixedVolume()
-    showStableMixedVolume()
+    show_mixed_volume()
+    show_stable_mixed_volume()
