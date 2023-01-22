@@ -342,11 +342,6 @@ Pointers to the literature are mentioned below.
    volume 11077 of Lecture Notes in Computer Science,
    pages 361-375, Springer-Verlag, 2018.
 
-#. J. Verschelde:
-   **Parallel Software to Offset the Cost of Higher Precision.**
-   Available at
-   <http://arxiv.org/abs/2012.06607>.
-
 #. J. Verschelde and G. Yoffe.
    **Polynomial homotopies on multicore workstations.**
    In the *Proceedings of the 4th International Workshop on Parallel 
@@ -356,6 +351,14 @@ Pointers to the literature are mentioned below.
 #. J. Verschelde and X. Yu:
    **Polynomial Homotopy Continuation on GPUs.**
    *ACM Communications in Computer Algebra*, 49(4):130-133, 2015.
+
+#. J. Verschelde:
+   **Parallel Software to Offset the Cost of Higher Precision.**
+   *ACM SIGAda Ada Letters*, 40(2):59-64, 2020.
+
+#. J. Verschelde:
+   **Exporting Ada software to Julia and Python.
+   *Ada SIGAda Letters*, 41(1):76-78, 2022.
 
 Users
 =====
