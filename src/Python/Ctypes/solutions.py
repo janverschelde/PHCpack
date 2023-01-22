@@ -2,7 +2,7 @@
 Exports operations on solutions.
 """
 from ctypes import c_int, c_double, pointer, create_string_buffer
-from version import getPHCmod, int4a2str
+from version import get_phcfun, int4a2str
 from polynomials import set_double_system
 from solver import solve_double_system, write_double_solutions
 
@@ -13,8 +13,7 @@ def number_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print("-> number_double_solutions, vrblvl =", vrblvl)
-    phcpack = getPHCmod()
-    phc = phcpack._ada_use_c2phc
+    phc = get_phcfun()
     aaa = pointer(c_int(0))
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
@@ -32,14 +31,13 @@ def get_next_double_solution(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print("-> get_next_double_solution, vrblvl =", vrblvl)
-    phcpack = getPHCmod()
-    phc = phcpack._ada_use_c2phc
+    phc = get_phcfun()
     aaa = pointer(c_int(idx)) # at the given index
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int(vrblvl)
     retval = phc(525, aaa, bbb, ccc, vrb)
-    size = bbb[0];
+    size = bbb[0]
     if vrblvl > 0:
         print('-> get_first_double_solution, size :', size)
     soldata = create_string_buffer(4*size)
@@ -55,8 +53,7 @@ def move_double_solution_cursor(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print("-> move_double_solution_cursor, vrblvl =", vrblvl)
-    phcpack = getPHCmod()
-    phc = phcpack._ada_use_c2phc
+    phc = get_phcfun()
     aaa = pointer(c_int(idx)) # at the given index
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
@@ -84,7 +81,7 @@ def show_solutions():
     print("the first solution :")
     print(sol)
     idx = 1
-    for k in range(1, nbrsols):
+    for _ in range(1, nbrsols):
         idx = move_double_solution_cursor(idx, lvl)
         print("the next index :", idx)
         sol = get_next_double_solution(idx, lvl)

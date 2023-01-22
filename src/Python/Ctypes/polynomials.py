@@ -2,7 +2,7 @@
 Exports the definition of polynomial systems.
 """
 from ctypes import c_int, c_double, pointer, create_string_buffer
-from version import getPHCmod, int4a2nbr, str2int4a, int4a2str
+from version import get_phcfun, int4a2nbr, str2int4a, int4a2str
 from dimension import set_double_dimension, get_double_dimension
 
 def set_double_polynomial(idx, nvr, pol, vrblvl=0):
@@ -15,8 +15,7 @@ def set_double_polynomial(idx, nvr, pol, vrblvl=0):
     """
     if vrblvl > 0:
         print("-> set_double_polynomial, pol = ", pol)
-    phcpack = getPHCmod()
-    phc = phcpack._ada_use_c2phc
+    phc = get_phcfun()
     vrb = (vrblvl > 0)
     apars = int4a2nbr([len(pol), nvr, idx], vrb)
     bpol = str2int4a(pol)
@@ -55,8 +54,7 @@ def get_double_polynomial(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print("-> get_double_polynomial idx = ", idx)
-    phcpack = getPHCmod()
-    phc = phcpack._ada_use_c2phc
+    phc = get_phcfun()
     adx = pointer(c_int(idx))
     bsz = pointer(c_int(0))
     ccc = pointer(c_double(0.0))

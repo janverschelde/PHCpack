@@ -17,24 +17,24 @@ from ctypes import c_int, c_double, pointer, sizeof
 # relative location of the PHCpack library
 LOCATION = "../../lib"
 
-def getPHCmod():
+def get_phcfun():
     """
-    Returns the proper module according to the platform.
+    Returns the proper function according to the platform.
     For the correct execution, the file libPHCpack,
     with the extension .so, .dylib, or .dll must be present.
     """
     if 'linux' in sys.platform:
         libphcpack = LOCATION + "/libPHCpack.so"
         phcpack = ctypes.CDLL(libphcpack)
-        return phcpack
+        return phcpack._ada_use_c2phc
     if 'darwin' in sys.platform:
         libphcpack = LOCATION + "/libPHCpack.dylib"
         phcpack = ctypes.CDLL(libphcpack)
-        return phcpack
+        return phcpack._ada_use_c2phc
     if 'win' in sys.platform:
         libphcpack = LOCATION + "/libPHCpack.dll"
         phcpack = ctypes.WinDLL(libphcpack, winmode=0)
-        return phcpack
+        return phcpack._ada_use_c2phc
     print('The platform', sys.platform, 'is not supported.')
     return None
 
@@ -109,8 +109,7 @@ def version(verbose=True):
     If verbose, then the conversions between strings and integer arrays
     are verified via the ctypes string buffer types.
     """
-    phcpack = getPHCmod()
-    phc = phcpack._ada_use_c2phc
+    phc = get_phcfun()
     aaa = pointer(c_int(0))
     name = create_string_buffer(30*4)
     ccc = pointer(c_double(0.0))

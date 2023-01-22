@@ -3,7 +3,7 @@ Exports the dimension of the system of polynomials.
 Needs the version module.
 """
 from ctypes import c_int, c_double, pointer
-from version import getPHCmod
+from version import get_phcfun
 
 def set_double_dimension(dim, vrblvl=0):
     """
@@ -12,8 +12,7 @@ def set_double_dimension(dim, vrblvl=0):
     """
     if vrblvl > 0:
         print("in set_double_dimension, dim = ", dim)
-    phcpack = getPHCmod()
-    phc = phcpack._ada_use_c2phc
+    phc = get_phcfun()
     adim = pointer(c_int(dim))
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
@@ -29,8 +28,7 @@ def get_double_dimension(vrblvl=0):
     """
     if vrblvl > 0:
         print("in getDoubleDimension ...")
-    phcpack = getPHCmod()
-    phc = phcpack._ada_use_c2phc
+    phc = get_phcfun()
     adim = pointer(c_int(0))
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))

@@ -2,7 +2,7 @@
 Exports the blackbox solver.
 """
 from ctypes import c_int, c_double, pointer, create_string_buffer
-from version import getPHCmod, int4a2nbr, int4a2str
+from version import get_phcfun, int4a2nbr, int4a2str
 from polynomials import set_double_system
 
 def write_double_solutions(vrblvl=0):
@@ -11,8 +11,7 @@ def write_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print("-> solve_double_system, vrblvl =", vrblvl)
-    phcpack = getPHCmod()
-    phc = phcpack._ada_use_c2phc
+    phc = get_phcfun()
     aaa = pointer(c_int(0))
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
@@ -32,8 +31,7 @@ def solve_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     """
     if vrblvl > 0:
         print("-> solve_double_system, nbtasks =", nbtasks)
-    phcpack = getPHCmod()
-    phc = phcpack._ada_use_c2phc
+    phc = get_phcfun()
     vrb = (vrblvl > 0)
     apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
     broco = create_string_buffer(1024)

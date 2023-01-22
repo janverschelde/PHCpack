@@ -1,3 +1,8 @@
+Sat 21 Jan 2023 : in version.py renamed the function getPHCmod into 
+  get_phcfun which returned the function instead of the module.
+  All other .py files were adjusted which led to close to perfect
+  pylint scores.
+
 Fri 20 Jan 2023 : extended solutions.py to write all solutions
   stored in double precision.
 
