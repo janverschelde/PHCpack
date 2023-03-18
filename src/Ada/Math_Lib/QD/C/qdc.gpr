@@ -1,0 +1,33 @@
+project QDC is
+
+    for Languages use ("C");
+
+    for Object_Dir use "../../../Objects";
+    for Exec_Dir use "../../../bin";
+
+    for Main use
+    (
+        "dd_test.c",       -- tests C double doubles
+        "dd_funtest.c",    -- tests C double double functions
+        "td_test.c",       -- tests C triple doubles
+        "qd_test.c",       -- tests C quad doubles
+        "pd_test.c",       -- tests C penta doubles
+        "od_test.c",       -- tests C octo doubles
+        "da_test.c",       -- tests C deca doubles
+        "hd_test.c"        -- tests C hexa doubles
+    );
+
+    package Linker is
+
+        for Switches ("dd_test.c") use ("-lm");
+        for Switches ("dd_funtest.c") use ("-lm");
+        for Switches ("td_test.c") use ("-lm");
+        for Switches ("qd_test.c") use ("-lm");
+        for Switches ("pd_test.c") use ("-lm");
+        for Switches ("od_test.c") use ("-lm");
+        for Switches ("da_test.c") use ("-lm");
+        for Switches ("hd_test.c") use ("-lm");
+
+    end Linker;
+
+end QDC;

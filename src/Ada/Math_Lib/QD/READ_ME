@@ -1,8 +1,10 @@
-Quad double arithmetic for PHCv2.4.86
+Multiple double arithmetic for PHCv2.4.87
 
 This directory was added to version 2.3.55 of PHCpack, departing from
 a standalone C version of a part of the QD software library.
 This standalone C version serves as a bridge to an Ada translation.
+In version 2.3.87, the C code was moved into a separate folder C,
+in order to avoid excluded source files when building libPHCpack.
 
 Work with Genady Yoffe led to this directory in PHCpack.
 
@@ -45,29 +47,6 @@ The "gprclean qd.gpr" removes all files created by gprbuild.
 
 ------------------------------------------------------------------------------
 file name                    : short description
-------------------------------------------------------------------------------
-double_double.h              : prototypes of the double double operations
-double_double.c              : defines the operations in double_double.h
-dd_test.c                    : test on basic operations in double_double
-dd_funtest.c                 : test on sin and cos functions
-triple_double.h              : prototypes of the triple double operations
-triple_double.c              : defines the operations in triple_double.h
-td_test.c                    : tests the operations in triple_double
-quad_double.h                : prototypes of the quad double operations
-quad_double.c                : definitions of the operations in quad_double.h
-qd_test.c                    : test on basic operations in quad_double
-penta_double.h               : prototypes of the penta double functions
-penta_double.c               : definitions of the penta_double.h functions
-pd_test.c                    : test on basic operations in penta_double
-octo_double.h                : prototypes of the octo double functions
-octo_double.c                : definitions of the octo_double.h functions
-od_test.c                    : test on basic operations in octo_double
-deca_double.h                : prototypes of the deca double functions
-deca_double.c                : definitions of the deca_double.h functions
-da_test.c                    : test on basic operations in deca_double
-hexa_double.h                : prototypes of the hexa double functions
-hexa_double.c                : definitions of the hexa_double.h functions
-hd_test.c                    : test on basic operations in hexa_double
 ------------------------------------------------------------------------------
 double_double_basics         : basic inline functions for double double numbers
 double_double_numbers        : defines double double arithmetic

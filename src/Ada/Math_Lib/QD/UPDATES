@@ -1,3 +1,6 @@
+Sat 18 Mar 2023 : moved all header and .c files into a new folder C,
+  to avoid working with excluded source files in building libPHCpack.
+
 Thu 9 Dec 2021 : added the file hexa_double_ring_io.ads.
 
 Wed 8 Dec 2021 : new hexadobl_complex_numbers_io, test_hexadobl_complex,
