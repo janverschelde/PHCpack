@@ -1,3 +1,6 @@
+Sat 18 Mar 2023 : updated phclib.gpr, removing excluded source files
+  of tests after moving C tests in the new folder C in Ada/Math_Lib/QD.
+
 Mon 30 May 2022 : updated greeting_banners for version 2.4.86.
 
 Sun 16 Jan 2022 : added phclib.gpr to build the shared object libPHCpack.

@@ -70,8 +70,6 @@ library project phclib is
                 "phc_solver.ads", "phc_solver.adb",
                 "pieri_solver_trf.adb",
               -- to avoid multiple mains ...
-                "dd_funtest.c", "dd_test.c", "td_test.c", "qd_test.c",
-                "pd_test.c", "od_test.c", "da_test.c", "hd_test.c",
                 "factor.c", "ts_divide.c", "ts_explore_Cpoles.c" ,
                 "ts_feedback.c", "ts_cosupoly.c", "ts_cosupsys.c",
                 "ts_c2str.c", "ts_c2ada.c", "ts_dcmplx.c",
@@ -153,8 +151,6 @@ library project phclib is
                 "phc_solver.ads", "phc_solver.adb",
                 "pieri_solver_trf.adb",
               -- to avoid multiple mains ...
-                "dd_funtest.c", "dd_test.c", "td_test.c", "qd_test.c",
-                "pd_test.c", "od_test.c", "da_test.c", "hd_test.c",
                 "factor.c", "ts_divide.c", "ts_explore_Cpoles.c" ,
                 "ts_feedback.c", "ts_cosupoly.c", "ts_cosupsys.c",
                 "ts_c2str.c", "ts_c2ada.c", "ts_dcmplx.c",
