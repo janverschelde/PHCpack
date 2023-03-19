@@ -76,7 +76,6 @@ ts_itrack                         : test on intrinsic path trackers
 standard_recentering_coordinates  : work with local intrinsic coordinates
 ts_ilocal                         : test local intrinsic coordinates
 affine_sampling_machine           : sampling using affine planes
-ts_sampar                         : interactive testing of affine sampler
 sampling_machine                  : interface to homotopy continuation
 sample_points                     : points sampled from a component
 sample_points_io                  : input-output for sampled points

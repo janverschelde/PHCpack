@@ -55,7 +55,6 @@ project samplers is
         "ts_inewt.adb",       -- tests intrinsic Newton's method
         "ts_itrack.adb",      -- tests intrinsic path trackers
         "ts_ilocal.adb",      -- tests local intrinsic coordinates
-       -- "ts_sampar.adb",      -- tests affine sampler
         "ts_sample.adb",      -- tests sampler
         "ts_ddqdsam.adb",     -- tests double double & quad double sampling
         "ts_unisam.adb",      -- tests Weierstrass method
