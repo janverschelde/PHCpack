@@ -1849,9 +1849,6 @@ ts_sample:
 ts_mulsam:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mulsam.adb -o $(BIN)/ts_mulsam
 
-ts_mulhom:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mulhom.adb -o $(BIN)/ts_mulhom
-
 ts_endgm: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_endgm.adb \
               -o $(BIN)/ts_endgm -largs get_clock.o get_clocks_per_sec.o

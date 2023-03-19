@@ -10,7 +10,8 @@
 
 PYTHON=/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
 # PYTHON=/usr/include/python2.7
-PYTHON38=/opt/miniconda3/include/python3.8
+# PYTHON38=/opt/miniconda3/include/python3.8
+PYTHON39=/opt/miniconda3/include/python3.9
 MPI_HOME=/usr/local
 
 ADALIB=/Users/jan/opt/GNAT/2020/lib/gcc/x86_64-apple-darwin17.7.0/8.4.1/adalib
@@ -35,11 +36,10 @@ QD_LIB=/usr/local/lib
 
 # Definitions of the PHCpack specific names start here:
 
-PHCLib=../C
+PHCLib=../Lib
 PHCAda=../Ada
 MPILib=../MPI
 PHCgpu=../GPU
-PHCmod=../Mod
 BIN=../bin
 INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/Math_Lib/Numbers -I$(PHCAda)/Math_Lib/QD \
@@ -47,8 +47,7 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/Math_Lib/Divisors -I$(PHCAda)/Math_Lib/Reduction \
  -I$(PHCAda)/Math_Lib/Polynomials -I$(PHCAda)/Math_Lib/Functions \
  -I$(PHCAda)/Math_Lib/Supports -I$(PHCAda)/Math_Lib/Circuits \
- -I$(PHCAda)/Math_Lib/Series -I$(PHCAda)/Math_Lib/Laurent \
- -I$(PHCAda)/Math_Lib/AD \
+ -I$(PHCAda)/Math_Lib/Series -I$(PHCAda)/Math_Lib/AD \
  -I$(PHCAda)/Deformations/Solutions -I$(PHCAda)/Deformations/Homotopy \
  -I$(PHCAda)/Deformations/Newton -I$(PHCAda)/Deformations/Curves \
  -I$(PHCAda)/Deformations/End_Games -I$(PHCAda)/Deformations/Sweep \
@@ -63,9 +62,8 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/Components/Samplers -I$(PHCAda)/Components/Interpolators \
  -I$(PHCAda)/Components/Factorization -I$(PHCAda)/Components/Decomposition \
  -I$(PHCAda)/Components/Solver -I$(PHCAda)/Components/Tropical \
- -I$(PHCAda)/CtoPHC/Types -I$(PHCAda)/CtoPHC/Structures \
- -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State \
- -I$(MPILib) -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
+ -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State -I$(MPILib) \
+ -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
 GNATFLAGS=-gnatv -O3 -gnatp -gnatf
 GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf
@@ -93,7 +91,7 @@ CCLINKER    = $(CCC)
 
 phc: lib.a parameter.o lib2path.o feedback.o get_clock.o get_clocks_per_sec.o \
      inputData.o outputData.o iTest.o fTest.o reltab.o \
-     simplex4phc.o mvc4phc.o demicsrun4phc.o
+     simplex4phc.o mvc4phc.o demicsrun4phc.o corecount.o
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
@@ -103,7 +101,7 @@ phc: lib.a parameter.o lib2path.o feedback.o get_clock.o get_clocks_per_sec.o \
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind phctop use_c2phc pieri_solver
 	gnatlink phctop syscon.o solcon.o phcpack.o feedback.o \
-                 parameter.o lib2path.o \
+                 parameter.o lib2path.o corecount.o \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
                  lib.a $(QD_LIB)/libqd.a \
@@ -114,7 +112,7 @@ phc: lib.a parameter.o lib2path.o feedback.o get_clock.o get_clocks_per_sec.o \
 
 phc_noqd: lib.a feedback.o get_clock.o get_clocks_per_sec.o \
      inputData.o outputData.o iTest.o fTest.o reltab.o parameter.o \
-     simplex4phc.o mvc4phc.o demicsrun4phc.o lib2path_d.o
+     simplex4phc.o mvc4phc.o demicsrun4phc.o corecount.o lib2path_d.o
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
@@ -124,7 +122,7 @@ phc_noqd: lib.a feedback.o get_clock.o get_clocks_per_sec.o \
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind phctop use_c2phc pieri_solver
 	gnatlink phctop syscon.o solcon.o phcpack.o feedback.o \
-                 parameter.o lib2path_d.o \
+                 corecount.o parameter.o lib2path_d.o \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o lib.a \
                  /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
@@ -324,16 +322,6 @@ ts_dacmplx:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_dacmplx.adb \
               -o $(BIN)/ts_dacmplx
 
-ts_hexdbl:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hexdbl.adb -o $(BIN)/ts_hexdbl
-
-ts_hdfun:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hdfun.adb -o $(BIN)/ts_hdfun
-
-ts_hdcmplx:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hdcmplx.adb \
-              -o $(BIN)/ts_hdcmplx
-
 # Test programs for Math_Lib/Vectors :
 
 ts_natvec:
@@ -380,9 +368,6 @@ ts_odvec:
 ts_davec:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_davec.adb -o $(BIN)/ts_davec
 
-ts_hdvec:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hdvec.adb -o $(BIN)/ts_hdvec
-
 # Test programs for Math_Lib/Matrices :
 
 ts_natmat:
@@ -417,9 +402,6 @@ ts_odmat:
 
 ts_damat:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_damat.adb -o $(BIN)/ts_damat
-
-ts_hdmat:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_damat.adb -o $(BIN)/ts_hdmat
 
 # Test programs for Math_Lib/Divisors :
 
@@ -478,9 +460,6 @@ ts_odqrd:
 ts_daqrd:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_daqrd.adb -o $(BIN)/ts_daqrd
 
-ts_hdqrd:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hdqrd.adb -o $(BIN)/ts_hdqrd
-
 ts_mpqrd:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mpqrd.adb -o $(BIN)/ts_mpqrd
 
@@ -507,9 +486,6 @@ ts_odsvd:
 
 ts_dasvd:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_dasvd.adb -o $(BIN)/ts_dasvd
-
-ts_hdsvd:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hdsvd.adb -o $(BIN)/ts_hdsvd
 
 ts_mpsvd:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mpsvd.adb -o $(BIN)/ts_mpsvd
@@ -559,9 +535,6 @@ ts_odlu:
 ts_dalu:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_dalu.adb -o $(BIN)/ts_dalu
 
-ts_hdlu:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hdlu.adb -o $(BIN)/ts_hdlu
-
 ts_ddnorm:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_ddnorm.adb -o $(BIN)/ts_ddnorm
 
@@ -579,13 +552,6 @@ ts_odnorm:
 
 ts_danorm:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_danorm.adb -o $(BIN)/ts_danorm
-
-ts_hdnorm:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hdnorm.adb -o $(BIN)/ts_hdnorm
-
-ts_errfree:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_errfree.adb \
-              -o $(BIN)/ts_errfree
 
 # Test programs for Math_Lib/Polynomials :
 
@@ -899,24 +865,6 @@ ts_sercffpol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sercffpol.adb \
               -o $(BIN)/ts_sercffpol
 
-# Test programs for the Math_Lib/Laurent library :
-
-ts_pslaur:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_pslaur.adb \
-              -o $(BIN)/ts_pslaur
-
-ts_laurmat:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_laurmat.adb \
-              -o $(BIN)/ts_laurmat
-
-ts_lserpol:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_lserpol.adb \
-              -o $(BIN)/ts_lserpol
-
-ts_lsernew:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_lsernew.adb \
-              -o $(BIN)/ts_lsernew
-
 # Test programs for the Math_Lib/AD library :
 
 ts_monom:
@@ -999,14 +947,10 @@ ts_trasols_io:
 ts_mixres:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mixres.adb -o $(BIN)/ts_mixres
 
-ts_getstart:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_getstart.adb \
-              -o $(BIN)/ts_getstart
-
 # Test programs for the Deformations/Homotopy library :
 
-ts_mainscal:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mainscal -o $(BIN)/ts_mainscal
+ts_drivscal:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivscal -o $(BIN)/ts_drivscal
 
 ts_scal:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_scal.adb -o $(BIN)/ts_scal
@@ -1755,9 +1699,6 @@ ts_sample:
 ts_mulsam:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mulsam.adb -o $(BIN)/ts_mulsam
 
-ts_mulhom:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mulhom.adb -o $(BIN)/ts_mulhom
-
 ts_endgm:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_endgm.adb -o $(BIN)/ts_endgm
 
@@ -2029,10 +1970,10 @@ ts_cpm:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cpm.adb -o $(BIN)/ts_cpm
 
 ts_pieri_count:
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) pieri_root_count.adb
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) pieri_count.adb
 	$(gcc) -c $(PHCAda)/CtoPHC/Funky/ts_pieri_count.c
-	gnatbind -n pieri_root_count
-	gnatlink -C pieri_root_count ts_pieri_count.o -o $(BIN)/ts_pieri_count
+	gnatbind -n pieri_count
+	gnatlink -C pieri_count ts_pieri_count.o -o $(BIN)/ts_pieri_count
 
 ts_pieri_solver:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) pieri_solver.adb
@@ -2596,22 +2537,18 @@ ts_pathpars:
 corecount.o:
 	$(gcc) -c $(PHCAda)/Tasking/corecount.c -o corecount.o
 
-# ts_corecount: corecount.o
-# 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_corecount.adb
-# 	gnatbind ts_corecount
-# 	gnatlink ts_corecount corecount.o -o $(BIN)/ts_corecount
-
-ts_corecount:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_corecount.adb \
-              -o $(BIN)/ts_corecount
+ts_corecount: corecount.o
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_corecount.adb
+	gnatbind ts_corecount
+	gnatlink ts_corecount corecount.o -o $(BIN)/ts_corecount
 
 ts_mtmatvec:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtmatvec.adb \
-              -o $(BIN)/ts_mtmatvec
+                 -o $(BIN)/ts_mtmatvec
 
 ts_mtpolval:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtpolval.adb \
-              -o $(BIN)/ts_mtpolval
+                 -o $(BIN)/ts_mtpolval
 
 ts_mtlinsol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtlinsol.adb \
@@ -2750,15 +2687,15 @@ ts_mtprdcnv:
 
 # Test programs for the Main interactive drivers :
 
-ts_mainroco: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+ts_drivroco: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
              reltab.o mvc4phc.o demicsrun4phc.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_mainroco.adb \
-                 -o ts_mainroco.o
-	gnatbind ts_mainroco use_c2phc
-	gnatlink ts_mainroco inputData.o outputData.o iTest.o fTest.o \
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_drivroco.adb \
+                 -o ts_drivroco.o
+	gnatbind ts_drivroco use_c2phc
+	gnatlink ts_drivroco inputData.o outputData.o iTest.o fTest.o \
                  simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
-                 -o $(BIN)/ts_mainroco \
+                 -o $(BIN)/ts_drivroco \
                  /usr/lib/libc++.dylib \
                  /usr/lib/libstdc++.dylib \
                  --LINK=g++
@@ -2774,26 +2711,22 @@ ts_greet:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_greet.adb \
               -o $(BIN)/ts_greet
 
-# ts_actopt: corecount.o
-# 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_actopt.adb
-# 	gnatbind ts_actopt
-# 	gnatlink ts_actopt corecount.o -o $(BIN)/ts_actopt
+ts_actopt: corecount.o
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_actopt.adb
+	gnatbind ts_actopt
+	gnatlink ts_actopt corecount.o -o $(BIN)/ts_actopt
 
-ts_actopt:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_actopt.adb -o $(BIN)/actopt
-
-ts_opthand: inputData.o outputData.o iTest.o fTest.o \
+ts_opthand: corecount.o inputData.o outputData.o iTest.o fTest.o \
             simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o mvc4phc.o \
             parameter.o lib2path.o feedback.o lib.a
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
-	gnatmake -c $(INCLULIBS) -I$(PHCAda)/PHCtoC/Main_full \
-                    $(GNATOPTFLAGS) ts_opthand.adb
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_opthand.adb
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) pieri_solver.adb
 	gnatbind ts_opthand use_c2phc mainfeed pieri_solver
-	gnatlink ts_opthand inputData.o outputData.o iTest.o \
+	gnatlink ts_opthand corecount.o inputData.o outputData.o iTest.o \
                             fTest.o simplex4phc.o reltab.o mvc4phc.o \
                             demicsrun4phc.o lib2path.o $(QD_LIB)/libqd.a \
                             syscon.o solcon.o phcpack.o parameter.o \
@@ -3483,14 +3416,17 @@ lib_adepath_qd: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
                     /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_adepath_qd -lm --LINK=g++
 
-phc_solve:
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc4c.adb
+phc_solve: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+           reltab.o mvc4phc.o demicsrun4phc.o
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/solcon.c
-	gcc -c $(PHCLib)/phcpack4c.c
+	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/phc_solve.c
-	gnatbind -n use_c2phc4c
-	gnatlink -C use_c2phc4c syscon.o solcon.o phcpack4c.o phc_solve.o \
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc syscon.o solcon.o phcpack.o phc_solve.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
                     /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/phc_solve -lm --LINK=g++
 
@@ -3507,18 +3443,6 @@ phc_solve_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
                     simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
                     /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/phc_solve -lm --LINK=g++
-
-lib_witset:
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc4c.adb
-	gcc -c $(PHCLib)/syscon.c
-	gcc -c $(PHCLib)/solcon.c
-	gcc -c $(PHCLib)/phcpack4c.c
-	gcc -c $(PHCLib)/witset.c
-	gcc -c $(PHCLib)/lib_witset.c
-	gnatbind -n use_c2phc4c
-	gnatlink -C use_c2phc4c syscon.o solcon.o phcpack4c.o witset.o \
-                    lib_witset.o \
-                 -o $(BIN)/lib_witset -lm
 
 lib_witsols:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc4c.adb
@@ -3568,7 +3492,7 @@ phcpy2c2.so: lib2path.o parameter.o inputData.o outputData.o iTest.o fTest.o \
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/padcon.c
 	$(gpp) -Dcompilewgpp=1 -c -I$(PYTHON) -I$(PYTHON)/Include \
-            -I$(PHCLib) $(PHCmod)/phcpy2c2.c
+            $(PHCLib)/phcpy2c2.c
 	gnatmake -c -static -O3 $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n use_c2phc
 	gnatlink -dynamiclib -C use_c2phc phcpy2c2.o phcpack.o syscon.o \
@@ -3616,8 +3540,8 @@ sage_phcpy2c2.so: parameter.o lib2path.o inputData.o outputData.o iTest.o \
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/padcon.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 -I$(PHCLib) \
-            -I$(PYTHON) -I$(PYTHON)/Include $(PHCmod)/phcpy2c2.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 \
+            -I$(PYTHON) -I$(PYTHON)/Include $(PHCLib)/phcpy2c2.c
 	gnatmake -c -O3 -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n -static use_c2phc
 	gnatlink -dynamiclib -C use_c2phc phcpy2c2.o phcpack.o syscon.o \
@@ -3676,8 +3600,8 @@ phcpy2c3.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/padcon.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 -I$(PHCLib) \
-               -I/opt/miniconda3/include -I$(PYTHON38) $(PHCmod)/phcpy2c3.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 \
+               -I/opt/miniconda3/include -I$(PYTHON39) $(PHCmod)/phcpy2c3.c
 	gnatmake -c -O3 -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n -static use_c2phc -o use_c2phc_binder.adb
 	gnatmake -static -c use_c2phc_binder.adb
@@ -3686,10 +3610,10 @@ phcpy2c3.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
 	g++ -dynamiclib -undefined dynamic_lookup phcpy2c3.o \
                -L/opt/miniconda3/lib \
                -arch x86_64 -L/opt/miniconda3/lib -arch x86_64 \
-               -L/opt/miniconda3/lib/python3.8/site-packages \
+               -L/opt/miniconda3/lib/python3.9/site-packages \
                phcpy2c3.a $(QD_LIB)/libqd.a $(ADALIB)/libgnat.a \
                $(ADALIB)/libgnarl.a -lm -Wl,-no_compact_unwind \
-               -L/opt/miniconda3/lib/python3.8/config-3.8-darwin \
+               -L/opt/miniconda3/lib/python3.9/config-3.9-darwin \
                -ldl -framework CoreFoundation \
                -o ../Python/PHCpy3/phcpy/phcpy2c3.so
 

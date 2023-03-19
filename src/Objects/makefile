@@ -5,9 +5,9 @@
 # swap the # symbol in the following lines to use makefile_windows
 # or to use makefile_mac on a Mac OS x computer
 
-MAKEFILE = makefile_unix
+# MAKEFILE = makefile_unix
 # MAKEFILE = makefile_mac
-# MAKEFILE = makefile_windows
+MAKEFILE = makefile_windows
 
 # the main executable is phc
 
@@ -173,7 +173,7 @@ ts_numbio:
 test_qd: ts_dbldbl ts_qddbl ts_ddcmplx ts_qdcmplx ts_mpddcv ts_mpqdcv \
          ts_ddfun ts_qdfun ts_cmpexp ts_tridbl ts_octdbl ts_tdcmplx \
          ts_odcmplx ts_pentadbl ts_decadbl ts_pdcmplx ts_dacmplx ts_tdfun \
-	 ts_pdfun ts_odfun ts_dafun ts_mpcasts ts_hexdbl ts_hdfun ts_hdcmplx
+	 ts_pdfun ts_odfun ts_dafun ts_mpcasts
 
 ts_dbldbl:
 	make -f $(MAKEFILE) ts_dbldbl
@@ -235,23 +235,23 @@ ts_pentadbl:
 ts_decadbl:
 	make -f $(MAKEFILE) ts_decadbl
 
-ts_pdcmplx:
-	make -f $(MAKEFILE) ts_pdcmplx
-
-ts_dacmplx:
-	make -f $(MAKEFILE) ts_dacmplx
-
-ts_mpcasts:
-	make -f $(MAKEFILE) ts_mpcasts
-
 ts_hexdbl:
 	make -f $(MAKEFILE) ts_hexdbl
 
 ts_hdfun:
 	make -f $(MAKEFILE) ts_hdfun
 
+ts_pdcmplx:
+	make -f $(MAKEFILE) ts_pdcmplx
+
+ts_dacmplx:
+	make -f $(MAKEFILE) ts_dacmplx
+
 ts_hdcmplx:
 	make -f $(MAKEFILE) ts_hdcmplx
+
+ts_mpcasts:
+	make -f $(MAKEFILE) ts_mpcasts
 
 # Test programs for Math_Lib/Vectors :
 
@@ -508,9 +508,6 @@ ts_odnorm:
 
 ts_danorm:
 	make -f $(MAKEFILE) ts_danorm
-
-ts_hdnorm:
-	make -f $(MAKEFILE) ts_hdnorm
 
 ts_errfree:
 	make -f $(MAKEFILE) ts_errfree
@@ -1547,9 +1544,6 @@ ts_sample:
 
 ts_mulsam:
 	make -f $(MAKEFILE) ts_mulsam
-
-ts_mulhom:
-	make -f $(MAKEFILE) ts_mulhom
 
 ts_endgm:
 	make -f $(MAKEFILE) ts_endgm

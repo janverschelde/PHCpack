@@ -1717,9 +1717,6 @@ ts_sample:
 ts_mulsam:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mulsam.adb -o $(BIN)/ts_mulsam
 
-ts_mulhom:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mulhom.adb -o $(BIN)/ts_mulhom
-
 ts_endgm:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_endgm.adb -o $(BIN)/ts_endgm
 
