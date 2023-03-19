@@ -58,7 +58,7 @@ with QuadDobl_Complex_Solutions;
 with QuadDobl_Continuation_Data;
 with QuadDobl_Continuation_Data_io;
 with Continuation_Parameters;
-with Drivers_for_Poly_Continuation;     use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;            use Main_Poly_Continuation;
 with Witness_Sets,Witness_Sets_io;      use Witness_Sets,Witness_Sets_io;
 with Intrinsic_Witness_Sets_io;         use Intrinsic_Witness_Sets_io;
 with Standard_Plane_Representations;

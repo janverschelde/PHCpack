@@ -1,5 +1,6 @@
 Sun 19 Mar 2023 : updated main.gpr and phclib.gpr for the removal of 
-  multiplicity_homotopies and ts_mulhom.
+  multiplicity_homotopies and ts_mulhom.  After fixing ts_ilocal.adb,
+  updated main.gpr and phclib.gpr.
 
 Sat 18 Mar 2023 : updated phclib.gpr, removing excluded source files
   of tests after moving C tests in the new folder C in Ada/Math_Lib/QD.
