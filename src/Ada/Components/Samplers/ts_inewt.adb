@@ -23,7 +23,7 @@ with Projective_Transformations;        use Projective_Transformations;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Standard_Continuation_Data;        use Standard_Continuation_Data;
 with Continuation_Parameters;           use Continuation_Parameters;
-with Drivers_for_Poly_Continuation;     use Drivers_for_Poly_Continuation;
+with Main_Poly_Continuation;            use Main_Poly_Continuation;
 with Standard_Plane_Representations;    use Standard_Plane_Representations;
 with Standard_Point_Coordinates;        use Standard_Point_Coordinates;
 with Standard_Moving_Planes;            use Standard_Moving_Planes;

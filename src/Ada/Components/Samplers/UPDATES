@@ -1,5 +1,6 @@
 Sun 19 Mar 2023 : removed multiplicity_homotopies, ts_mulhom.adb, and
   updated samplers.gpr.  Fixed ts_ilocal.adb for renaming of drivers package,
+  updated samplers.gpr.  Fix also ts_inewt.adb and ts_itrack.adb similarly,
   updated samplers.gpr.
 
 Thu 10 Jun 2021 : defined samplers.gpr for the test procedures.

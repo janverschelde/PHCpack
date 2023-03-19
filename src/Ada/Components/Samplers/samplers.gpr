@@ -52,8 +52,8 @@ project samplers is
         "ts_iddnewt.adb",     -- tests {dobl,quad}dobl intrinsic Newton
         "ts_ispan.adb",       -- tests determining linear span
         "ts_iwset.adb",       -- convert to intrinsic witness sets
-       -- "ts_inewt.adb",       -- tests intrinsic Newton's method
-       -- "ts_itrack.adb",      -- tests intrinsic path trackers
+        "ts_inewt.adb",       -- tests intrinsic Newton's method
+        "ts_itrack.adb",      -- tests intrinsic path trackers
         "ts_ilocal.adb",      -- tests local intrinsic coordinates
        -- "ts_sampar.adb",      -- tests affine sampler
         "ts_sample.adb",      -- tests sampler
