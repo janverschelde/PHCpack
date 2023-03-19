@@ -58,7 +58,6 @@ project samplers is
        -- "ts_sampar.adb",      -- tests affine sampler
         "ts_sample.adb",      -- tests sampler
         "ts_ddqdsam.adb",     -- tests double double & quad double sampling
-       -- "ts_mulhom.adb",      -- tests multiplicity samplers
         "ts_unisam.adb",      -- tests Weierstrass method
         "ts_hypsam.adb",      -- tests hypersurface sampler
         "ts_roots.adb",       -- tests root finder
