@@ -1,6 +1,7 @@
 Mon 20 Mar 2023 : updated feedback.gpr for fewer excluded source files.
   Updated feedback.gpr for the removal of ts_ifactor.adb.
   Updated feedback.gpr for the removal of phc_factor.adb.
+  Updated feedback.gpr for the removal of ts_endgm.adb and ts_mulsam.adb.
 
 Sun 19 Mar 2023 : updated feedback.gpr for the removal of files in Samplers.
 
