@@ -1,6 +1,6 @@
 Mon 20 Mar 2023 : fixed rewrite_polynomials and ts_rwpoly.adb, adjusted
   factorization.gpr.  Removed ts_ifactor, updated factorization.gpr again.
-  Removed ts_ifactor.adb, updated factorization.gpr.
+  Removed ts_ifactor.adb, updated factorization.gpr.  Removed phc_factor.adb.
 
 Fri 11 Jun 2021 : defined factorization.gpr to build all test procedures.
 

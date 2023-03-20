@@ -1,3 +1,5 @@
+Mon 20 Mar 2023 : removed obsolete factor.c.
+
 Sun 27 Jun 2021 : removed the obsolete pieri_count, updated ts_pieri_count.c
   to call the pieri_root_count of the Pieri folder.
 

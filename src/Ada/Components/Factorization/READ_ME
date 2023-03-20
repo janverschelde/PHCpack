@@ -66,7 +66,6 @@ monodromy_homotopies_io          : writes the results of monodromy homotopies
 drivers_to_breakup_solutions     : drivers to factor witness sets
 main_factorization               : defines phc -f
 black_box_factorization          : routine called by black-box solver (phc -b)
-phc_factor                       : Ada routine for C interface
 ------------------------------------------------------------------------------
 ts_serwit                        : series developments on curves
 ------------------------------------------------------------------------------
