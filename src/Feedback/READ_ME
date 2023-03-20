@@ -1,4 +1,4 @@
-Realization of feedback laws computed by Pieri homotopies in PHCv2.4.86
+Realization of feedback laws computed by Pieri homotopies in PHCv2.4.87
 
 Run "gprbuild feedback.gpr" to make all test programs.
 On windows, type "gprbuild feedback.gpr -Xos=windows"
