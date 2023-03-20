@@ -1,6 +1,9 @@
 with text_io,integer_io;                 use text_io,integer_io;
 with Communications_with_User;           use Communications_with_User;
 with Characters_and_Numbers;             use Characters_and_Numbers;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Complex_Numbers_Polar;     use Standard_Complex_Numbers_Polar;
@@ -28,7 +31,7 @@ procedure ts_rwpoly is
 --   This is a test program to rewrite polynomials of high degree into
 --   polynomials of modest degree, at the expense of extra variables.
 
-  procedure Test_Binary ( d : in natural;
+  procedure Test_Binary ( d : in natural32;
                           deco : in Standard_Natural_Vectors.Vector ) is
 
   -- DESCRIPTION : 
@@ -40,7 +43,7 @@ procedure ts_rwpoly is
 
   begin
     put("Length : "); put(len,1);
-    if len = deco'last
+    if len = natural32(deco'last)
      then put(" okay ");
      else put(" BUG! ");
     end if;
@@ -63,7 +66,7 @@ procedure ts_rwpoly is
   --   Interactive test on computing binary decompositions of
   --   natural numbers.
 
-    d : natural;
+    d : natural32 := 0;
     deco : Standard_Natural_Vectors.Link_to_Vector;
     ans : character;
 
@@ -71,12 +74,12 @@ procedure ts_rwpoly is
     new_line;
     loop
       put("Give a degree : "); get(d);
-      if d > 0
-       then put("The binary decomposition of "); put(d,1);
-            put_line(" :");
-            Binary(0,d,deco); new_line;
-            put("The decomposition vector : "); put(deco.all); new_line;
-            Test_Binary(d,deco.all);
+      if d > 0 then
+        put("The binary decomposition of "); put(d,1);
+        put_line(" :");
+        Binary(0,d,deco); new_line;
+        put("The decomposition vector : "); put(deco.all); new_line;
+        Test_Binary(d,deco.all);
       end if;
       declare
         bindeco : constant Standard_Natural_Vectors.Vector := Binary(d);
@@ -102,16 +105,17 @@ procedure ts_rwpoly is
     new_line;
     put("Do you wish to save the system on file ? (y/n) ");
     Ask_Yes_or_No(ans);
-    if ans = 'y'
-     then new_line;
-          put_line("Reading the name of the output file...");
-          Read_Name_and_Create_File(file);
-          put(file,sys'last,1);
-          new_line(file);
-          put(file,sys(1..sys'last-1));
-          put_line(file,sys(sys'last));
-     else new_line;
-          put_line("Bye bye.");
+    if ans = 'y' then
+      new_line;
+      put_line("Reading the name of the output file...");
+      Read_Name_and_Create_File(file);
+      put(file,natural32(sys'last),1);
+      new_line(file);
+      put(file,sys(1..sys'last-1));
+      put_line(file,sys(sys'last));
+    else
+      new_line;
+      put_line("Bye bye.");
     end if;
   end Ask_to_Save;
 
@@ -127,25 +131,26 @@ procedure ts_rwpoly is
     new_line;
     put("Do you wish to save the system on file ? (y/n) ");
     Ask_Yes_or_No(ans);
-    if ans = 'y'
-     then new_line;
-          put_line("Reading the name of the output file...");
-          Read_Name_and_Create_File(file);
-          put(file,sys'last,1);
-          new_line(file);
-          put(file,sys(1..sys'last-1));
-          put_line(file,sys(sys'last));
-          new_line(file);
-          put_line(file,"THE SOLUTIONS :");
-          put(file,Length_Of(sols),Head_Of(sols).n,sols);
-     else new_line;
-          put_line("Bye bye.");
+    if ans = 'y' then
+      new_line;
+      put_line("Reading the name of the output file...");
+      Read_Name_and_Create_File(file);
+      put(file,natural32(sys'last),1);
+      new_line(file);
+      put(file,sys(1..sys'last-1));
+      put_line(file,sys(sys'last));
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    else
+      new_line;
+      put_line("Bye bye.");
     end if;
   end Ask_to_Save;
 
   procedure Rewrite_Given_Polynomial is
 
-    n,len : natural;
+    n,len : natural32 := 0;
     p : Poly;
 
   begin
@@ -154,12 +159,12 @@ procedure ts_rwpoly is
     get(n,p);
     put("Your polynomial : "); put(p); new_line;
     put("The symbol used : "); put(Symbol_Table.get(1)); new_line;
-    len := Binary_Length(Degree(p));
+    len := Binary_Length(natural32(Degree(p)));
     Enlarge_Symbol_Table(len+1,Symbol_Table.Get(1));
     Ask_to_Save(Rewrite_Univariate_Polynomial(p));
   end Rewrite_Given_Polynomial;
 
-  function Random_Polynomial ( n,d : natural ) return Poly is
+  function Random_Polynomial ( n,d : natural32 ) return Poly is
 
   -- DESCRIPTION :
   --   Returns a random univariate polynomial of degree d with n terms.
@@ -176,7 +181,7 @@ procedure ts_rwpoly is
     Add(res,t);
     for i in 3..n loop
       t.cf := Random1;
-      t.dg(1) := Random(0,d);
+      t.dg(1) := natural32(Random(0,integer32(d)));
       Add(res,t);
     end loop;
     Clear(t);
@@ -202,7 +207,7 @@ procedure ts_rwpoly is
 
   procedure Rewrite_Random_Polynomial is
 
-    n,d : natural;
+    n,d : natural32 := 0;
     p : Poly;
 
   begin
@@ -221,7 +226,7 @@ procedure ts_rwpoly is
   -- DESCRIPTION :
   --   Rewrites the start polynomial x^d - 1 = 0 into a system.
 
-    d,n : natural;
+    d,n : natural32 := 0;
     t : Term;
     p : Poly;
 
@@ -262,24 +267,25 @@ procedure ts_rwpoly is
   end Rewrite_Start_Polynomial;
 
   procedure Check_Multivariate_Rewrite
-               ( n : in natural; p : in Poly;
+               ( n : in natural32; p : in Poly;
                  nvr : in Standard_Natural_Vectors.Vector;
-                 tnv : in natural; rp : in Poly ) is
+                 tnv : in natural32; rp : in Poly ) is
 
   -- DESCRIPTION :
   --   Performs a random test on the rewritten polynomial,
   --   evaluating the original polynomial and the rewritten
   --   polynomial at a random point.
 
-    x1 : Standard_Complex_Vectors.Vector(1..n) := Random_Vector(1,n);
-    x2 : Standard_Complex_Vectors.Vector(1..tnv);
+    x1 : Standard_Complex_Vectors.Vector(1..integer32(n))
+       := Random_Vector(1,integer32(n));
+    x2 : Standard_Complex_Vectors.Vector(1..integer32(tnv));
     y1 : Complex_Number := Eval(p,x1);
     y2 : Complex_Number;
-    ind : natural := 0;
+    ind : integer32 := 0;
 
   begin
     put_line("Checking the rewrite at a random point...");
-    for i in 1..n loop
+    for i in 1..integer32(n) loop
       ind := ind + 1;
       x2(ind) := x1(i);
       for j in 1..nvr(i)-1 loop
@@ -294,7 +300,7 @@ procedure ts_rwpoly is
 
   procedure Rewrite_Multivariate_Polynomial is
 
-    d,n,m : natural;
+    d,n,m : natural32;
     p : Poly;
 
   begin
@@ -309,20 +315,20 @@ procedure ts_rwpoly is
       deg : constant Standard_Natural_Vectors.Vector
           := Multi_Degrees(p);
       nvr : Standard_Natural_Vectors.Vector(deg'range);
-      tnv : natural;
+      tnv : natural32;
     begin
       put("The multi-degrees : "); put(deg); new_line;
       Number_of_Variables(deg,nvr,tnv);
       Define_Symbol_Table(tnv,nvr);
       declare
-        sys : Poly_Sys(1..tnv);
+        sys : Poly_Sys(1..integer32(tnv));
       begin
         Telescope(sys,tnv,nvr);
-        put_line("The telescope :"); put(sys(1..tnv-n));
-        sys(tnv-n+1) := Rewrite_Multivariate_Poly(tnv,p,nvr);
+        put_line("The telescope :"); put(sys(1..integer32(tnv-n)));
+        sys(integer32(tnv-n+1)) := Rewrite_Multivariate_Poly(tnv,p,nvr);
         put_line("The rewritten polynomial :");
-        put_line(sys(tnv-n+1));
-        Check_Multivariate_Rewrite(n,p,nvr,tnv,sys(tnv-n+1));
+        put_line(sys(integer32(tnv-n+1)));
+        Check_Multivariate_Rewrite(n,p,nvr,tnv,sys(integer32(tnv-n+1)));
       end;
     end;
     put_line(Rewrite_Multivariate_Polynomial(p));

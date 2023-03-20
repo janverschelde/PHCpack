@@ -48,7 +48,7 @@ project factorization is
     for Main use
     (
         "ts_irco.adb",       -- tests irreducible components
-       -- "ts_rwpoly.adb",     -- tests rewriting
+        "ts_rwpoly.adb",     -- tests rewriting
         "ts_combfac.adb",    -- tests combinatorial factorization
         "ts_mbthom.adb",     -- tests the homotopy membership test
         "ts_factor.adb",     -- tests factorization of one polynomial

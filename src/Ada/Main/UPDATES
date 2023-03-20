@@ -1,3 +1,6 @@
+Mon 20 Mar 2023 : updated main.gpr and phclib.gpr for the fixing of the
+  rewrite_polynomials and ts_rwpoly.adb.
+
 Sun 19 Mar 2023 : updated main.gpr and phclib.gpr for the removal of 
   multiplicity_homotopies and ts_mulhom.  After fixing ts_ilocal.adb,
   updated main.gpr and phclib.gpr.  Updated main.gpr and phclib.gpr
