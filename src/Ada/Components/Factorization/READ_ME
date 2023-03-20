@@ -60,8 +60,6 @@ ts_factor                        : interactive testing routine
 ts_hypfac                        : test on factoring hypersurfaces
 ts_newfac                        : calls monodromy component breakup routines
 ------------------------------------------------------------------------------
-ts_ifactor                       : factorization in intrinsic coordinates
-------------------------------------------------------------------------------
 monodromy_homotopies             : exports witness_factor procedures
 monodromy_homotopies_io          : writes the results of monodromy homotopies
 ------------------------------------------------------------------------------

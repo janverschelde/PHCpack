@@ -54,7 +54,6 @@ project factorization is
         "ts_factor.adb",     -- tests factorization of one polynomial
         "ts_hypfac.adb",     -- test on factoring hypersurfaces
         "ts_newfac.adb",     -- calls monodromy component breakup routines
-       -- "ts_ifactor.adb",    -- tests factorization in intrinsic coordinates
         "ts_serwit.adb"      -- tests series developments on curves
     );
 
