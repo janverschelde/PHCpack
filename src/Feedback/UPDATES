@@ -1,3 +1,6 @@
+Tue 21 Mar 2023 : updated feedback.gpr after fixing ts_diahom,
+  and the removal of ts_intcas, ts_squeeze, and ts_sqem.
+
 Mon 20 Mar 2023 : updated feedback.gpr for fewer excluded source files.
   Updated feedback.gpr for the removal of ts_ifactor.adb.
   Updated feedback.gpr for the removal of phc_factor.adb.

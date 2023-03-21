@@ -57,7 +57,7 @@ project decomposition is
     for Main use
     (
         "ts_irdeco.adb",      -- tests witness generate and classify
-       -- "ts_diahom.adb",      -- tests diagonal homotopies
+        "ts_diahom.adb",      -- tests diagonal homotopies
         "ts_intdia.adb",      -- tests intersect varieties intrinsically
         "ts_jmpdia.adb",      -- tests jumpstarting diagonal homotopies
         "ts_dimred.adb",      -- tests dimension determination
