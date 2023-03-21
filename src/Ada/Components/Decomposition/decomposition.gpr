@@ -44,11 +44,8 @@ project decomposition is
                  "../../Root_Counts/Symmetry",
                  "../Samplers", "../Interpolators", "../Factorization",
                  "../../Tasking", "../../Main", "../../CtoPHC/State");
-            for Excluded_Source_Files use
-                ("corecount.c", "zero_index_tree.c", "index_tree_lp.c",
-                 "relation_table.c", "prepare_for_mv.c", "one_level_lp.c",
-                 "mv.c", "mixed_volume.c", "form_lp.c", "cell_stack.c");
-            for Languages use ("Ada", "C");
+            for Excluded_Source_Files use ("corecount.c");
+            for Languages use ("Ada", "C"); -- C needed for timer ...
     end case;
 
     for Object_Dir use "../../../Objects";
