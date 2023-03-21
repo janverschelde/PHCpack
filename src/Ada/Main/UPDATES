@@ -1,5 +1,6 @@
 Tue 21 Mar 2023 : updated main.gpr and phclib.gpr after fixing ts_diahom,
   and the removal of ts_intcas, ts_squeeze, and ts_sqem.
+  Updated main.gpr and phclib.gpr after removing premature intrinsic packages.
 
 Mon 20 Mar 2023 : updated main.gpr and phclib.gpr for the fixing of the
   rewrite_polynomials and ts_rwpoly.adb.  Updated main.gpr and phclib.gpr

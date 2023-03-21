@@ -2,6 +2,8 @@ Tue 21 Mar 2023 : fixed ts_diahom.adb by removing calls to intrinsic solvers,
   updated decomposition.gpr.  Removed ts_squeeze, ts_sqem, ts_intcas.
   Fixed decomposition.gpr to work on Windows.
   Moved ts_filfac.adb to ../Factorization, removed ts_fillit.adb.
+  Removed premature p_intrinsic_diagonal_continuation,
+  p_intrinsic_diagonal_homotopes and p_intrinsic_diagonal_solvers.
 
 Fri 11 Jun 2021 : fixed ts_dimred.adb, defined decomposition.gpr to
   build the test procedures.
