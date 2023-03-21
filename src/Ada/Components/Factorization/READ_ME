@@ -31,6 +31,7 @@ monodromy_group_actions          : records actions of monodromy group
 monodromy_group_actions_io       : i/o for monodromy group
 monodromy_actions_breakup        : breakup with actions of monodromy group
 drivers_to_factor_components     : tuning of parameters and summary reports
+ts_filfac                        : tests filtering/factoring by interpolation
 drivers_to_component_creators    : utilities for ts_irco
 driver_to_factor_components      : intermediate driver called by ts_irco
 ts_irco                          : test on irreducible components

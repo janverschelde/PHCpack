@@ -1,3 +1,6 @@
+Tue 21 Mar 2023 : updated factorization.gpr for ts_filfac.adb,
+  moved from the ../Decomposition folder.
+
 Mon 20 Mar 2023 : fixed rewrite_polynomials and ts_rwpoly.adb, adjusted
   factorization.gpr.  Removed ts_ifactor, updated factorization.gpr again.
   Removed ts_ifactor.adb, updated factorization.gpr.  Removed phc_factor.adb.

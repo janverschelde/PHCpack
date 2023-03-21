@@ -53,6 +53,7 @@ project factorization is
         "ts_mbthom.adb",     -- tests the homotopy membership test
         "ts_factor.adb",     -- tests factorization of one polynomial
         "ts_hypfac.adb",     -- test on factoring hypersurfaces
+        "ts_filfac.adb",     -- filtering/factoring by interpolation
         "ts_newfac.adb",     -- calls monodromy component breakup routines
         "ts_serwit.adb"      -- tests series developments on curves
     );
