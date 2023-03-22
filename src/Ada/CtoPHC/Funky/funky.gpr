@@ -17,8 +17,6 @@ project funky is
             for Languages use ("Ada", "C");
             for Excluded_Source_Files use 
             (
-                "ts_ctimer.adb",
-                "pieri_count.ads", "pieri_count.adb",
                 "pieri_solver.ads", "pieri_solver.adb",
                 "verify_solution_maps.ads", "verify_solution_maps.adb"
             );
@@ -34,8 +32,6 @@ project funky is
                  "../Types");
             for Excluded_Source_Files use
             (
-                "ts_ctimer.adb",
-                "pieri_count.ads", "pieri_count.adb",
                 "pieri_solver.ads", "pieri_solver.adb",
                 "verify_solution_maps.ads", "verify_solution_maps.adb"
             );

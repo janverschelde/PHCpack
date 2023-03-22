@@ -4,6 +4,7 @@ Wed 22 Mar 2023 : after removing filter_and_split_solutions,
   testfivehom1.adb and testnine.adb, updated main.gpr and phclib.gpr.
   After fixing ts_elim and removing ts_reorder and ts_rewrite,
   updated main.gpr and phclib.gpr once more.
+  Updated phclib.gpr after removal of ts_pieri_count.c.
 
 Tue 21 Mar 2023 : updated main.gpr and phclib.gpr after fixing ts_diahom,
   and the removal of ts_intcas, ts_squeeze, and ts_sqem.
