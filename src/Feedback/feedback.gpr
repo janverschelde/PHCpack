@@ -52,8 +52,6 @@ project feedback is
                 "multihomogeneous_solutions.ads",
                 "multihomogeneous_solutions.adb",
                 "ts_elim.adb", "ts_reorder.adb", "ts_rewrite.adb",
-                "filter_and_split_solutions.ads",
-                "filter_and_split_solutions.adb",
                 "track_paths.ads", "track_paths.adb", "ts_path_tracker.adb",
                 "phc_solver.ads", "phc_solver.adb",
                 "pieri_solver_trf.adb"
@@ -106,8 +104,6 @@ project feedback is
                 "multihomogeneous_solutions.ads",
                 "multihomogeneous_solutions.adb",
                 "ts_elim.adb", "ts_reorder.adb", "ts_rewrite.adb",
-                "filter_and_split_solutions.ads",
-                "filter_and_split_solutions.adb",
                 "pieri_solver_trf.adb"
             );
     end case;
