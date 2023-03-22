@@ -37,10 +37,7 @@ project main is
             (
                 "ts_use_syscon.c",
                 "corecount.c", "corecountwindows.c",
-                "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
-                "track_paths.ads", "track_paths.adb", "ts_path_tracker.adb",
-                "phc_solver.ads", "phc_solver.adb",
-                "pieri_solver_trf.adb"
+                "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c"
             );
             for Languages use ("Ada", "C++", "C");
         when "windows" =>
@@ -75,10 +72,7 @@ project main is
             for Excluded_Source_Files use
             (
                 "corecount.c",
-                "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
-                "track_paths.ads", "track_paths.adb", "ts_path_tracker.adb",
-                "phc_solver.ads", "phc_solver.adb",
-                "pieri_solver_trf.adb"
+                "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c"
             );
             for Languages use ("Ada", "C", "C++");
     end case;

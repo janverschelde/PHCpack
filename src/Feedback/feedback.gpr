@@ -43,14 +43,7 @@ project feedback is
                 "corecount.c", "corecountwindows.c",
                 "multithreading.ads", "multithreading.adb",
                 "ts_threads.adb", "ts_natdiv.adb",
-                "ts_gcd.adb", "ts_smith.adb",
-                "track_paths.ads", "track_paths.adb",
-                "ts_path_tracker.adb",
-                "phc_solver.ads", "phc_solver.adb",
-                "pieri_solver_trf.adb",
-                "track_paths.ads", "track_paths.adb", "ts_path_tracker.adb",
-                "phc_solver.ads", "phc_solver.adb",
-                "pieri_solver_trf.adb"
+                "ts_gcd.adb", "ts_smith.adb"
             );
         when "windows" =>
             for Source_Dirs use
@@ -91,12 +84,7 @@ project feedback is
                 "corecount.c", "corecountwindows.c",
                 "multithreading.ads", "multithreading.adb",
                 "ts_threads.adb", "ts_natdiv.adb",
-                "ts_gcd.adb", "ts_smith.adb",
-                "track_paths.ads", "track_paths.adb",
-                "ts_path_tracker.adb",
-                "phc_solver.ads", "phc_solver.adb",
-                "pieri_solver_trf.adb",
-                "pieri_solver_trf.adb"
+                "ts_gcd.adb", "ts_smith.adb"
             );
     end case;
 

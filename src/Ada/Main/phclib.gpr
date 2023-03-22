@@ -38,9 +38,6 @@ library project phclib is
                 "ts_use_syscon.c",
                 "corecount.c", "corecountwindows.c",
                 "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
-                "track_paths.ads", "track_paths.adb", "ts_path_tracker.adb",
-                "phc_solver.ads", "phc_solver.adb",
-                "pieri_solver_trf.adb",
               -- to avoid multiple mains ...
                 "ts_divide.c", "ts_explore_Cpoles.c" ,
                 "ts_feedback.c", "ts_cosupoly.c", "ts_cosupsys.c",
@@ -50,12 +47,11 @@ library project phclib is
                 "ts_pieri_count.c", "root_count.c", "main.cpp", "ts_c2phc.c",
                 "ts_hermite.c", "ts_dc_inverse.c", "ts_phc_sol_rw.c",
                 "pass_poly.c", "ts_use_solpool.c", "ts_realization.c",
-                "read_input.c", "ts_use_c2fac.c", "ts_phc_solver.c",
+                "read_input.c", "ts_use_c2fac.c",
                 "ts_multiply.c", "ts_interpolation.c", "ts_getsys.c",
                 "ts_c2phc.c", "ts_use_solcon.c", "ts_poly_inverse.c",
                 "ts_phc_sys_rw.c" , "ts_use_c2pieri.c", 
-                "ts_inputData.cpp", "ts_outputData.cpp",
-	       	"path_tracker.c", "getsys2.c"
+                "ts_inputData.cpp", "ts_outputData.cpp", "getsys2.c"
             );
             for Languages use ("Ada", "C++", "C");
         when "windows" =>
@@ -91,9 +87,6 @@ library project phclib is
             (
                 "ts_use_syscon.c", "corecount.c",
                 "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
-                "track_paths.ads", "track_paths.adb", "ts_path_tracker.adb",
-                "phc_solver.ads", "phc_solver.adb",
-                "pieri_solver_trf.adb",
               -- to avoid multiple mains ...
                 "ts_divide.c", "ts_explore_Cpoles.c" ,
                 "ts_feedback.c", "ts_cosupoly.c", "ts_cosupsys.c",
@@ -103,12 +96,11 @@ library project phclib is
                 "ts_pieri_count.c", "root_count.c", "main.cpp", "ts_c2phc.c",
                 "ts_hermite.c", "ts_dc_inverse.c", "ts_phc_sol_rw.c",
                 "pass_poly.c", "ts_use_solpool.c", "ts_realization.c",
-                "read_input.c", "ts_use_c2fac.c", "ts_phc_solver.c",
+                "read_input.c", "ts_use_c2fac.c",
                 "ts_multiply.c", "ts_interpolation.c", "ts_getsys.c",
                 "ts_c2phc.c", "ts_use_solcon.c", "ts_poly_inverse.c",
                 "ts_phc_sys_rw.c" , "ts_use_c2pieri.c", 
-                "ts_inputData.cpp", "ts_outputData.cpp",
-	       	"path_tracker.c", "getsys2.c"
+                "ts_inputData.cpp", "ts_outputData.cpp", "getsys2.c"
             );
             for Languages use ("Ada", "C", "C++");
     end case;
