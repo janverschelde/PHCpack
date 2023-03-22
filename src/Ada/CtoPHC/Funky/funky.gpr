@@ -18,10 +18,8 @@ project funky is
             for Excluded_Source_Files use 
             (
                 "ts_ctimer.adb",
-                "track_paths.ads", "track_paths.adb", "ts_path_tracker.adb",
                 "pieri_count.ads", "pieri_count.adb",
                 "pieri_solver.ads", "pieri_solver.adb",
-                "phc_solver.ads", "phc_solver.adb", "pieri_solver_trf.adb",
                 "verify_solution_maps.ads", "verify_solution_maps.adb"
             );
         when "windows" =>
@@ -37,10 +35,8 @@ project funky is
             for Excluded_Source_Files use
             (
                 "ts_ctimer.adb",
-                "track_paths.ads", "track_paths.adb", "ts_path_tracker.adb",
                 "pieri_count.ads", "pieri_count.adb",
                 "pieri_solver.ads", "pieri_solver.adb",
-                "phc_solver.ads", "phc_solver.adb", "pieri_solver_trf.adb",
                 "verify_solution_maps.ads", "verify_solution_maps.adb"
             );
             for Languages use ("Ada", "C");
@@ -63,8 +59,6 @@ project funky is
         "ts_cpm.adb"             -- tests complex polynomial matrices
        -- "ts_pieri_count.c",      -- C function calls Ada Pieri_Count
        -- "ts_pieri_solver.c",     -- C function calls Ada Pieri_Solver
-       -- "ts_phc_solver.c"        -- C function calls Ada phc_solver
-       -- "ts_path_tracker.adb"    -- Ada program calls path_tracker.c
     );
 
     package Compiler is

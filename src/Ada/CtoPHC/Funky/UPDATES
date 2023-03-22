@@ -1,3 +1,8 @@
+Wed 22 Mar 2023 : removed obsolete track_paths.ads, track_paths.adb,
+  ts_path_tracker.adb, path_sols.c, path_tracker.c, pieri_solver_trf.adb,
+  phc_sols.c, phc_solver.ads, phc_solver.adb, and ts_phc_solver.c;
+  updated funky.gpr.
+
 Mon 20 Mar 2023 : removed obsolete factor.c.
 
 Sun 27 Jun 2021 : removed the obsolete pieri_count, updated ts_pieri_count.c

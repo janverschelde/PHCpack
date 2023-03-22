@@ -86,12 +86,3 @@ verify_solution_maps             : test interpolation-intersection conditions
 pieri_solver.adb                 : applies Pieri homotopies
 ts_pieri_solver.c                : C function calls Ada Pieri_Solver
 ------------------------------------------------------------------------------
-phc_sols.c                       : C function takes output of phc_solver
-phc_solver.adb                   : blackbox solver in PHCpack
-ts_phc_solver.c                  : C function calls Ada phc_solver
-------------------------------------------------------------------------------
-path_sols.c                      : C program called by track_paths.adb
-track_paths.adb                  : Ada path tracking on coefficient homotopy
-path_tracker.c                   : C program calling track_paths.adb
-ts_path_tracker.adb              : Ada program calling path_tracker.c
-------------------------------------------------------------------------------
