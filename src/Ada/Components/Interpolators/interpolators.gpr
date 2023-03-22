@@ -55,6 +55,7 @@ project interpolators is
         "ts_newint.adb",       -- tests the direct Newton interpolators
         "ts_traces.adb",       -- tests trace interpolation
         "ts_trapol.adb",       -- tests trace interpolators for one poly
+        "ts_elim.adb",         -- tests numerical elimination
         "ts_project.adb",      -- tests linear and central projectors
         "ts_filter.adb"        -- tests the filter
     );

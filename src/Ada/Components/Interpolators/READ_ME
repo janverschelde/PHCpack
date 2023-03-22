@@ -1,4 +1,4 @@
-Interpolation module for solution components with PHCv2.4.85
+Interpolation module for solution components with PHCv2.4.87
 
 The interpolation routines constitute a separate module.
 Three approaches have been studied and implemented :
@@ -66,6 +66,7 @@ quaddobl_trace_interpolators       : quad double interpolator with traces
 multprec_trace_interpolators       : multiprecision interpolator with traces
 ts_traces                          : interactive test on trace interpolation
 ts_trapol                          : test on trace interpolators for one poly
+ts_elim                            : tests numerical elimination
 ------------------------------------------------------------------------------
 standard_linear_projections        : standard projectors to hypersurface case
 standard_central_projections       : project from standard base points

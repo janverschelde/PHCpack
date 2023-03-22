@@ -48,7 +48,6 @@ project feedback is
                 "ts_path_tracker.adb",
                 "phc_solver.ads", "phc_solver.adb",
                 "pieri_solver_trf.adb",
-                "ts_elim.adb", "ts_reorder.adb", "ts_rewrite.adb",
                 "track_paths.ads", "track_paths.adb", "ts_path_tracker.adb",
                 "phc_solver.ads", "phc_solver.adb",
                 "pieri_solver_trf.adb"
@@ -97,7 +96,6 @@ project feedback is
                 "ts_path_tracker.adb",
                 "phc_solver.ads", "phc_solver.adb",
                 "pieri_solver_trf.adb",
-                "ts_elim.adb", "ts_reorder.adb", "ts_rewrite.adb",
                 "pieri_solver_trf.adb"
             );
     end case;

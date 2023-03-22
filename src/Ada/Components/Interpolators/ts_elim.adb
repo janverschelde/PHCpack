@@ -19,7 +19,7 @@ with Sample_Point_Lists;                use Sample_Point_Lists;
 with Witness_Sets,Witness_Sets_io;      use Witness_Sets,Witness_Sets_io;
 with Standard_Stacked_Sample_Grids;
 with Multprec_Stacked_Sample_Grids;
-with Drivers_to_Grid_Creators;          use Drivers_to_Grid_Creators;
+with Make_Sample_Grids;                 use Make_Sample_Grids;
 with Standard_Trace_Interpolators;
 with Multprec_Trace_Interpolators;
 
