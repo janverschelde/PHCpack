@@ -1,5 +1,6 @@
 Wed 22 Mar 2023 : after removing filter_and_split_solutions,
-  updated main.gpr and phclib.gpr.
+  updated main.gpr and phclib.gpr.  Updated main.gpr and phclib.gpr
+  after removing the package multihomogenous_solutions.
 
 Tue 21 Mar 2023 : updated main.gpr and phclib.gpr after fixing ts_diahom,
   and the removal of ts_intcas, ts_squeeze, and ts_sqem.

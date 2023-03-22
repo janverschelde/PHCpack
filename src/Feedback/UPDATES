@@ -1,5 +1,6 @@
-Wed 22 Mar 2023 : after removing filter_and_split_solutions,
-  updated feedback.gpr.
+Wed 22 Mar 2023 : after removing the filter_and_split_solutions procedure,
+  updated feedback.gpr.  Updated feedback.gpr after the removal of 
+  the package multihomogeneous_solutions.
 
 Tue 21 Mar 2023 : updated feedback.gpr after fixing ts_diahom,
   and the removal of ts_intcas, ts_squeeze, and ts_sqem.
