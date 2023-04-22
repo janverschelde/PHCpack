@@ -1,0 +1,10 @@
+Accelerated Path Tracking using Power Series in PHCv2.4.87.
+
+------------------------------------------------------------------------------
+file name                : short description
+------------------------------------------------------------------------------
+dbl_path_tracker         : path tracker in double precision
+dbl2_path_tracker        : path tracker in double double precision
+test_dbl_track           : test path tracker in double precision
+test_dbl_track           : test path tracker in doble double precision
+------------------------------------------------------------------------------
