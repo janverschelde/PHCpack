@@ -1,4 +1,4 @@
-GPU acceleration of polynomial homotopy continuation in PHCv2.4.85
+GPU acceleration of polynomial homotopy continuation in PHCv2.4.87
 
 While the code belongs to code base of PHCpack, it is under development,
 with its own specific makefiles and running modes.
@@ -39,6 +39,8 @@ Matrices : data staging algorithms for matrix factorizations at series,
            presented at SIAM PP 22, described in a PDSEC 2022 paper.  
 
 Newton : running Newton's algorithm to compute power series expansions.
+
+Track : tracking paths using Newton's method for Taylor series.
 
 This code is distributed under the GNU GENERAL PUBLIC LICENSE,
 see the file COPYING.txt for version 3 of this license.
