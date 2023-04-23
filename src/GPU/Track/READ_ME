@@ -5,6 +5,10 @@ file name                : short description
 ------------------------------------------------------------------------------
 dbl_path_tracker         : path tracker in double precision
 dbl2_path_tracker        : path tracker in double double precision
+dbl4_path_tracker        : path tracker in quad double precision
+dbl8_path_tracker        : path tracker in octo double precision
 test_dbl_track           : test path tracker in double precision
-test_dbl_track           : test path tracker in doble double precision
+test_dbl2_track          : test path tracker in double double precision
+test_dbl4_track          : test path tracker in quad double precision
+test_dbl8_track          : test path tracker in octo double precision
 ------------------------------------------------------------------------------

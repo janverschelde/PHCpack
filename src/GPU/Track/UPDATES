@@ -1,3 +1,6 @@
+Sun 23 Apr 2023 : added {dbl4, dbl8}_path_tracker, test_{dbl4, dbl8}_track,
+  and updated the makefile and makefile_unix.
+
 Sat 22 Apr 2023 : test_dbl_track calls the new dbl_path_tracker,
   wrapping the running of Newton's method, with
   double double versions in test_dbl2_track and dbl2_path_tracker.
