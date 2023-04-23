@@ -954,6 +954,26 @@ dbl2_path_tracker.obj:
                  /I$(CUDASDK)/include \
                  /Fo: dbl2_path_tracker.obj /EHsc
 
+dbl4_path_tracker.obj:
+	@-echo ">>> compiling dbl4_path_tracker ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) -I$(NEW) \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
+                      dbl4_path_tracker.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_path_tracker.obj /EHsc
+
+dbl8_path_tracker.obj:
+	@-echo ">>> compiling dbl8_path_tracker ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) -I$(NEW) \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
+                      dbl8_path_tracker.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl8_path_tracker.obj /EHsc
+
 test_dbl_track.obj:
 	@-echo ">>> compiling test_dbl_track ..."
 	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(NEW) \
@@ -967,6 +987,20 @@ test_dbl2_track.obj:
                     -I$(winkitucrt) -I$(includepath) -O2 \
                       test_dbl2_track.cpp \
                  /Fo: test_dbl2_track.obj /EHsc
+
+test_dbl4_track.obj:
+	@-echo ">>> compiling test_dbl4_track ..."
+	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(NEW) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_dbl4_track.cpp \
+                 /Fo: test_dbl4_track.obj /EHsc
+
+test_dbl8_track.obj:
+	@-echo ">>> compiling test_dbl8_track ..."
+	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(NEW) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_dbl8_track.cpp \
+                 /Fo: test_dbl8_track.obj /EHsc
 
 test_dbl_track: unimodular_matrices.obj \
                 test_dbl_track.obj dbl_path_tracker.obj \
@@ -1045,14 +1079,104 @@ test_dbl2_track: unimodular_matrices.obj \
              dbl2_baqr_kernels.obj dbl2_tabs_kernels.obj \
              dbl2_tail_kernels.obj dbl2_bals_kernels.obj
 
+test_dbl4_track: unimodular_matrices.obj \
+                 test_dbl4_track.obj dbl4_path_tracker.obj \
+                 random_numbers.obj random_series.obj random_monomials.obj \
+                 random4_vectors.obj random4_series.obj cyclic_columns.obj \
+                 dbl4_monomial_systems.obj prompt_newton_setup.obj \
+                 double_double_functions.obj quad_double_functions.obj \
+		 dbl4_newton_testers.obj \
+                 dbl4_newton_method.obj cmplx4_newton_method.obj \
+                 dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 addition_job.obj addition_jobs.obj job_coordinates.obj \
+                 gettimeofday4win.obj write_gpu_timings.obj \
+                 dbl4_systems_host.obj write_dbl4_bstimeflops.obj \
+                 write_dbl4_qrtimeflops.obj write_job_counts.obj \
+                 dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
+                 dbl4_factorizations.obj dbl_onenorms_host.obj \
+                 dbl4_bals_host.obj dbl_bals_flopcounts.obj \
+                 dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+                 dbl4_baqr_kernels.obj dbl4_tabs_kernels.obj \
+                 dbl4_tail_kernels.obj dbl4_bals_kernels.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl4_track.exe \
+		             test_dbl4_track.obj dbl4_path_tracker.obj \
+             unimodular_matrices.obj prompt_newton_setup.obj \
+             random_numbers.obj random_series.obj random_monomials.obj \
+             random4_vectors.obj random4_series.obj cyclic_columns.obj \
+             double_double_functions.obj quad_double_functions.obj\
+	     dbl4_newton_testers.obj \
+	     dbl4_newton_method.obj cmplx4_newton_method.obj \
+	     dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+             convolution_job.obj convolution_jobs.obj write_job_counts.obj \
+             addition_job.obj addition_jobs.obj job_coordinates.obj \
+             gettimeofday4win.obj write_gpu_timings.obj \
+             dbl4_systems_host.obj dbl4_monomial_systems.obj \
+             dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
+             dbl4_factorizations.obj dbl_onenorms_host.obj \
+             dbl4_bals_host.obj dbl_bals_flopcounts.obj \
+             write_dbl4_bstimeflops.obj write_dbl4_qrtimeflops.obj \
+             dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+             dbl4_baqr_kernels.obj dbl4_tabs_kernels.obj \
+             dbl4_tail_kernels.obj dbl4_bals_kernels.obj
+
+test_dbl8_track: unimodular_matrices.obj \
+                 test_dbl8_track.obj dbl8_path_tracker.obj \
+                 random_numbers.obj random_series.obj random_monomials.obj \
+                 random8_vectors.obj random8_series.obj cyclic_columns.obj \
+                 dbl8_monomial_systems.obj prompt_newton_setup.obj \
+                 double_double_functions.obj quad_double_functions.obj \
+		 octo_double_functions.obj dbl8_newton_testers.obj \
+                 dbl8_newton_method.obj cmplx8_newton_method.obj \
+                 dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 addition_job.obj addition_jobs.obj job_coordinates.obj \
+                 gettimeofday4win.obj write_gpu_timings.obj \
+                 dbl8_systems_host.obj write_dbl8_bstimeflops.obj \
+                 write_dbl8_qrtimeflops.obj write_job_counts.obj \
+                 dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
+                 dbl8_factorizations.obj dbl_onenorms_host.obj \
+                 dbl8_bals_host.obj dbl_bals_flopcounts.obj \
+                 dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+                 dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj \
+                 dbl8_tail_kernels.obj dbl8_bals_kernels.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl8_track.exe \
+		             test_dbl8_track.obj dbl8_path_tracker.obj \
+             unimodular_matrices.obj prompt_newton_setup.obj \
+             random_numbers.obj random_series.obj random_monomials.obj \
+             random8_vectors.obj random8_series.obj cyclic_columns.obj \
+             double_double_functions.obj quad_double_functions.obj\
+	     octo_double_functions.obj dbl8_newton_testers.obj \
+	     dbl8_newton_method.obj cmplx8_newton_method.obj \
+	     dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+             convolution_job.obj convolution_jobs.obj write_job_counts.obj \
+             addition_job.obj addition_jobs.obj job_coordinates.obj \
+             gettimeofday4win.obj write_gpu_timings.obj \
+             dbl8_systems_host.obj dbl8_monomial_systems.obj \
+             dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
+             dbl8_factorizations.obj dbl_onenorms_host.obj \
+             dbl8_bals_host.obj dbl_bals_flopcounts.obj \
+             write_dbl8_bstimeflops.obj write_dbl8_qrtimeflops.obj \
+             dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+             dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj \
+             dbl8_tail_kernels.obj dbl8_bals_kernels.obj
+
 clean:
 	del *~
 	del dbl_path_tracker.obj
 	del dbl2_path_tracker.obj
+	del dbl4_path_tracker.obj
+	del dbl8_path_tracker.obj
 	del test_dbl_track.obj test_dbl_track.exp
 	del test_dbl_track.lib test_dbl_track.exe
 	del test_dbl2_track.obj test_dbl2_track.exp
 	del test_dbl2_track.lib test_dbl2_track.exe
+	del test_dbl4_track.obj test_dbl4_track.exp
+	del test_dbl4_track.lib test_dbl4_track.exe
+	del test_dbl8_track.obj test_dbl8_track.exp
+	del test_dbl8_track.lib test_dbl8_track.exe
 
 cleanall:
 	del *~
