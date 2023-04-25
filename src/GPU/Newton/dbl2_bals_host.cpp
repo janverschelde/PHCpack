@@ -16,7 +16,8 @@ void CPU_dbl2_qrbs_head
  ( int dim, int degp1, double ***mathi, double ***matlo,
    double **rhshi, double **rhslo, double **solhi, double **sollo,
    double **Qhi, double **Qlo, double **Rhi, double **Rlo,
-   double *wrkvechi, double *wrkveclo, bool *noqr, int vrblvl )
+   double *wrkvechi, double *wrkveclo,
+   bool *zeroQ, bool *noqr, int vrblvl )
 {
    if(vrblvl > 1)
    {
@@ -41,16 +42,30 @@ void CPU_dbl2_qrbs_head
 
    if(nrm < 1.0e-28)
    {
-      if(vrblvl > 0)
-         cout << "skip call to CPU_dbl2_factors_houseqr ..." << endl;
+      if(*zeroQ)
+      {
+         if(vrblvl > 0)
+            cout << "no skipping of CPU_dbl2_factors_houseqr because zeroQ"
+                 << endl;
 
-      *noqr = true;
+         *noqr = false;
+      }
+      else
+      {
+         if(vrblvl > 0)
+            cout << "skip call to CPU_dbl2_factors_houseqr ..." << endl;
+
+         *noqr = true;
+      }
    }
-   else
+   if(!*noqr)
    {
       if(vrblvl > 0) cout << "calling CPU_dbl2_factors_houseqr ..." << endl;
 
       CPU_dbl2_factors_houseqr(dim,dim,mathi[0],matlo[0],Qhi,Qlo,Rhi,Rlo);
+
+      *zeroQ = false;
+
       CPU_dbl2_factors_qrbs
          (dim,dim,Qhi,Qlo,Rhi,Rlo,rhshi[0],rhslo[0],solhi[0],sollo[0],
           wrkvechi,wrkveclo);
@@ -98,7 +113,8 @@ void CPU_cmplx2_qrbs_head
    double **Qrehi, double **Qrelo, double **Qimhi, double **Qimlo,
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
    double *wrkvecrehi, double *wrkvecrelo,
-   double *wrkvecimhi, double *wrkvecimlo, bool *noqr, int vrblvl )
+   double *wrkvecimhi, double *wrkvecimlo,
+   bool *zeroQ, bool *noqr, int vrblvl )
 {
    if(vrblvl > 1)
    {
@@ -125,18 +141,31 @@ void CPU_cmplx2_qrbs_head
 
    if(nrm < 1.0e-28)
    {
-      if(vrblvl > 0)
-         cout << "skip call to CPU_cmplx2_factors_houseqr ..." << endl;
+      if(*zeroQ)
+      {
+         if(vrblvl > 0)
+            cout << "no skipping of CPU_cmplx2_factors_houseqr because zeroQ"
+                 << endl;
 
-      *noqr = true;
+         *noqr = false;
+      }
+      else
+      {
+         if(vrblvl > 0)
+            cout << "skip call to CPU_cmplx2_factors_houseqr ..." << endl;
+
+         *noqr = true;
+      }
    }
-   else
+   if(!*noqr)
    {
       if(vrblvl > 0) cout << "calling CPU_cmplx2_factors_houseqr ..." << endl;
 
       CPU_cmplx2_factors_houseqr
          (dim,dim,matrehi[0],matrelo[0],matimhi[0],matimlo[0],
           Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo);
+
+      *zeroQ = false;
 
       CPU_cmplx2_factors_qrbs
          (dim,dim,Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo,
@@ -452,9 +481,10 @@ void CPU_dbl2_qrbs_solve
    double **rhshi, double **rhslo, double **solhi, double **sollo,
    double **Qhi, double **Qlo, double **Rhi, double **Rlo,
    double *wrkvechi, double *wrkveclo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
+   int vrblvl )
 {
-   if(*noqr)
+   if((*noqr) && (!*zeroQ))
    {
       if(vrblvl > 0) cout << "skipping CPU_dbl2_qrbs_head ..." << endl;
    }
@@ -464,7 +494,7 @@ void CPU_dbl2_qrbs_solve
 
       CPU_dbl2_qrbs_head
          (dim,degp1,mathi,matlo,rhshi,rhslo,solhi,sollo,
-          Qhi,Qlo,Rhi,Rlo,wrkvechi,wrkveclo,noqr,vrblvl);
+          Qhi,Qlo,Rhi,Rlo,wrkvechi,wrkveclo,zeroQ,noqr,vrblvl);
    }
    if(degp1 > 1)
    {
@@ -485,9 +515,10 @@ void CPU_cmplx2_qrbs_solve
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
    double *wrkvecrehi, double *wrkvecrelo,
    double *wrkvecimhi, double *wrkvecimlo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
+   int vrblvl )
 {
-   if(*noqr)
+   if((*noqr) && (!*zeroQ))
    {
       if(vrblvl > 0) cout << "skipping CPU_cmplx2_qrbs_head ..." << endl;
    }
@@ -499,7 +530,7 @@ void CPU_cmplx2_qrbs_solve
          (dim,degp1,matrehi,matrelo,matimhi,matimlo,
           rhsrehi,rhsrelo,rhsimhi,rhsimlo,solrehi,solrelo,solimhi,solimlo,
           Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo,
-          wrkvecrehi,wrkvecrelo,wrkvecimhi,wrkvecimlo,noqr,vrblvl);
+          wrkvecrehi,wrkvecrelo,wrkvecimhi,wrkvecimlo,zeroQ,noqr,vrblvl);
    }
    if(degp1 > 1)
    {

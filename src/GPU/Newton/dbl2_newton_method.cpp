@@ -51,7 +51,7 @@ void dbl2_newton_qrstep
    double **Rhi_h, double **Rlo_h, double **Rhi_d, double **Rlo_d,
    double *workvechi, double *workveclo,
    double **resvechi, double **resveclo, double *resmaxhi, double *resmaxlo,
-   bool *noqr_h, bool *noqr_d,
+   bool* zeroQ_h, bool *noqr_h, bool* zeroQ_d, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    double *totcnvlapsedms, double *totqrlapsedms, double *totqtblapsedms,
    double *totbslapsedms, double *totupdlapsedms, double *totreslapsedms,
@@ -214,7 +214,7 @@ void dbl2_newton_qrstep
          (dim,degp1,oldtail,jacvalhi_h,jacvallo_h,
           urhshi_h,urhslo_h,solhi_h,sollo_h,
           Qhi_h,Qlo_h,Rhi_h,Rlo_h,workvechi,workveclo,
-          noqr_h,upidx_h,bsidx_h,&newtail,vrblvl);
+          zeroQ_h,noqr_h,upidx_h,bsidx_h,&newtail,vrblvl);
 
       *tailidx_h = newtail;
 
@@ -257,9 +257,9 @@ void dbl2_newton_qrstep
 
       GPU_dbl2_bals_solve
          (dim,degp1,szt,nbt,oldtail,jacvalhi_d,jacvallo_d,
-          Qhi_d,Qlo_d,Rhi_d,Rlo_d,urhshi_d,urhslo_d,solhi_d,sollo_d,noqr_d,
-          upidx_d,bsidx_d,&newtail,totqrlapsedms,totqtblapsedms,
-          totbslapsedms,totupdlapsedms,vrblvl);
+          Qhi_d,Qlo_d,Rhi_d,Rlo_d,urhshi_d,urhslo_d,solhi_d,sollo_d,
+          zeroQ_d,noqr_d,upidx_d,bsidx_d,&newtail,
+          totqrlapsedms,totqtblapsedms,totbslapsedms,totupdlapsedms,vrblvl);
 
       *tailidx_d = newtail;
 
@@ -712,6 +712,8 @@ int test_dbl2_real_newton
    int bsidx_h = 0;
    int upidx_d = 0;
    int bsidx_d = 0;
+   bool zeroQ_h = true;
+   bool zeroQ_d = true;
    bool noqr_h = false;
    bool noqr_d = false;
    int tailidx_h = 1;
@@ -746,8 +748,9 @@ int test_dbl2_real_newton
           rhshi_h,rhslo_h,rhshi_d,rhslo_d,urhshi_h,urhslo_h,urhshi_d,urhslo_d,
           solhi_h,sollo_h,solhi_d,sollo_d,
           Qhi_h,Qlo_h,Qhi_d,Qlo_d,Rhi_h,Rlo_h,Rhi_d,Rlo_d,
-          workvechi,workveclo, resvechi,resveclo,&resmaxhi,&resmaxlo,
-          &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,
+          workvechi,workveclo,resvechi,resveclo,&resmaxhi,&resmaxlo,
+          &zeroQ_h,&noqr_h,&zeroQ_d,&noqr_d,
+          &upidx_h,&bsidx_h,&upidx_d,&bsidx_d,
           &totcnvlapsedms,&totqrlapsedms,&totqtblapsedms,&totbslapsedms,
           &totupdlapsedms,&totreslapsedms,vrblvl,mode);
 

@@ -135,6 +135,8 @@ int dbl8_run_newton
    int bsidx_h = 0;
    int upidx_d = 0;
    int bsidx_d = 0;
+   bool zeroQ_h = true;
+   bool zeroQ_d = true;
    bool noqr_h = false;
    bool noqr_d = false;
    int tailidx_h = 1;
@@ -211,7 +213,8 @@ int dbl8_run_newton
           resvechihilo,resveclohilo,resvechilolo,resveclololo,
           resmaxhihihi,resmaxlohihi,resmaxhilohi,resmaxlolohi,
           resmaxhihilo,resmaxlohilo,resmaxhilolo,resmaxlololo,
-          &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,
+          &zeroQ_h,&noqr_h,&zeroQ_d,&noqr_d,
+          &upidx_h,&bsidx_h,&upidx_d,&bsidx_d,
           &totcnvlapsedms,&totqrlapsedms,&totqtblapsedms,&totbslapsedms,
           &totupdlapsedms,&totreslapsedms,vrblvl,mode);
 

@@ -538,6 +538,8 @@ void GPU_dbl_bals_solve
             (nrows,ncols,szt,nbt,A,Q,R,b,x,
              totqrlapsedms,totqtblapsedms,totbslapsedms,vrblvl);
 
+         *zeroQ = false;
+
          if(vrblvl > 0)
          {
             CPU_dbl_onenorm(ncols,x,&nrm);
@@ -782,6 +784,8 @@ void GPU_cmplx_bals_solve
          GPU_cmplx_bals_head
             (nrows,ncols,szt,nbt,Are,Aim,Qre,Qim,Rre,Rim,bre,bim,
              xre,xim,totqrlapsedms,totqtblapsedms,totbslapsedms,vrblvl);
+
+         *zeroQ = false;
 
          for(int j=0; j<ncols; j++)
          {

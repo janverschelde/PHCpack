@@ -556,7 +556,7 @@ void GPU_dbl2_bals_solve
    double ***mathi, double ***matlo, double **Qhi, double **Qlo,
    double **Rhi, double **Rlo, double **rhshi, double **rhslo,
    double **solhi, double **sollo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
    double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
    double *totupdlapsedms, int vrblvl )
 {
@@ -593,7 +593,7 @@ void GPU_dbl2_bals_solve
    }
    double nrm;
 
-   if(*noqr)
+   if((*noqr) && (!*zeroQ))
    {
       if(vrblvl > 0) cout << "-> skipping GPU_dbl2_bals_head ..." << endl;
    }
@@ -606,17 +606,28 @@ void GPU_dbl2_bals_solve
 
       if(nrm < 1.0e-28)
       {
-         if(vrblvl > 0)
-            cout << "-> skip call to GPU_dbl2_bals_head ..." << endl;
-
-         *noqr = true;
-
-         for(int j=0; j<ncols; j++)
+         if(*zeroQ)
          {
-            solhi[0][j] = 0.0; sollo[0][j] = 0.0;
+            if(vrblvl > 0)
+               cout << "-> no skipping GPU_dbl2_bals_head because zeroQ"
+                    << endl;
+
+            *noqr = false;
+         }
+         else
+         {
+            if(vrblvl > 0)
+               cout << "-> skip call to GPU_dbl2_bals_head ..." << endl;
+
+            *noqr = true;
+
+            for(int j=0; j<ncols; j++)
+            {
+               solhi[0][j] = 0.0; sollo[0][j] = 0.0;
+            }
          }
       }
-      else
+      if(!*noqr)
       {
          if(vrblvl > 0) cout << "-> calling GPU_dbl2_bals_head ..." << endl;
 
@@ -645,6 +656,8 @@ void GPU_dbl2_bals_solve
          GPU_dbl2_bals_head
             (nrows,ncols,szt,nbt,Ahi,Alo,Qhi,Qlo,Rhi,Rlo,bhi,blo,
              xhi,xlo,totqrlapsedms,totqtblapsedms,totbslapsedms,vrblvl);
+
+         *zeroQ = false;
 
          for(int j=0; j<ncols; j++)
          {
@@ -818,7 +831,7 @@ void GPU_cmplx2_bals_solve
    double **Rrehi, double **Rrelo, double **Rimhi, double **Rimlo,
    double **rhsrehi, double **rhsrelo, double **rhsimhi, double **rhsimlo,
    double **solrehi, double **solrelo, double **solimhi, double **solimlo, 
-   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
    double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
    double *totupdlapsedms, int vrblvl )
 {
@@ -862,7 +875,7 @@ void GPU_cmplx2_bals_solve
    }
    double nrm;
 
-   if(*noqr)
+   if((*noqr) && (!*zeroQ))
    {
       if(vrblvl > 0) cout << "-> skipping GPU_cmplx2_bals_head ..." << endl;
    }
@@ -875,18 +888,29 @@ void GPU_cmplx2_bals_solve
 
       if(nrm < 1.0e-28)
       {
-         if(vrblvl > 0)
-            cout << "-> skip call to GPU_cmplx2_bals_head ..." << endl;
-
-         *noqr = true;
-
-         for(int j=0; j<ncols; j++)
+         if(*zeroQ)
          {
-            solrehi[0][j] = 0.0; solrelo[0][j] = 0.0;
-            solimhi[0][j] = 0.0; solimlo[0][j] = 0.0;
+            if(vrblvl > 0)
+               cout << "-> no skipping GPU_cmplx2_bals_head because zeroQ"
+                    << endl;
+
+            *noqr = false;
+         }
+         else
+         {
+            if(vrblvl > 0)
+               cout << "-> skip call to GPU_cmplx2_bals_head ..." << endl;
+
+            *noqr = true;
+
+            for(int j=0; j<ncols; j++)
+            {
+               solrehi[0][j] = 0.0; solrelo[0][j] = 0.0;
+               solimhi[0][j] = 0.0; solimlo[0][j] = 0.0;
+            }
          }
       }
-      else
+      if(!*noqr)
       {
          if(vrblvl > 0) cout << "-> calling GPU_cmplx2_bals_head ..." << endl;
 
@@ -919,6 +943,8 @@ void GPU_cmplx2_bals_solve
              Qrehi,Qrelo,Qimhi,Qimlo,Rrehi,Rrelo,Rimhi,Rimlo,
              brehi,brelo,bimhi,bimlo,xrehi,xrelo,ximhi,ximlo,
              totqrlapsedms,totqtblapsedms,totbslapsedms,vrblvl);
+
+         *zeroQ = false;
 
          for(int j=0; j<ncols; j++)
          {

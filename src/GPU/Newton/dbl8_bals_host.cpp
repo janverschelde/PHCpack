@@ -33,7 +33,8 @@ void CPU_dbl8_qrbs_head
    double *wrkvechihihi, double *wrkveclohihi,
    double *wrkvechilohi, double *wrkveclolohi,
    double *wrkvechihilo, double *wrkveclohilo,
-   double *wrkvechilolo, double *wrkveclololo, bool *noqr, int vrblvl )
+   double *wrkvechilolo, double *wrkveclololo,
+   bool *zeroQ, bool *noqr, int vrblvl )
 {
    if(vrblvl > 1)
    {
@@ -68,11 +69,23 @@ void CPU_dbl8_qrbs_head
 
    if(nrm < 1.0e-120)
    {
-      if(vrblvl > 0)
-         cout << "skip call to CPU_dbl8_factors_houseqr ..." << endl;
-      *noqr = true;
+      if(*zeroQ)
+      {
+         if(vrblvl > 0)
+            cout << "no skipping CPU_dbl8_factors_houseqr because zeroQ"
+                 << endl;
+
+         *noqr = false;
+      }
+      else
+      {
+         if(vrblvl > 0)
+            cout << "skip call to CPU_dbl8_factors_houseqr ..." << endl;
+
+         *noqr = true;
+      }
    }
-   else
+   if(!*noqr)
    {
       if(vrblvl > 0) cout << "calling CPU_dbl8_factors_houseqr ..." << endl;
 
@@ -82,6 +95,8 @@ void CPU_dbl8_qrbs_head
           mathihilo[0],matlohilo[0],mathilolo[0],matlololo[0],
           Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
           Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo);
+
+      *zeroQ = false;
 
       CPU_dbl8_factors_qrbs
          (dim,dim,
@@ -206,7 +221,8 @@ void CPU_cmplx8_qrbs_head
    double *wrkvecimhihihi, double *wrkvecimlohihi,
    double *wrkvecimhilohi, double *wrkvecimlolohi,
    double *wrkvecimhihilo, double *wrkvecimlohilo,
-   double *wrkvecimhilolo, double *wrkvecimlololo, bool *noqr, int vrblvl )
+   double *wrkvecimhilolo, double *wrkvecimlololo,
+   bool *zeroQ, bool *noqr, int vrblvl )
 {
    if(vrblvl > 1)
    {
@@ -258,11 +274,23 @@ void CPU_cmplx8_qrbs_head
 
    if(nrm < 1.0e-120)
    {
-      if(vrblvl > 0)
-         cout << "skip call to CPU_cmplx8_factors_houseqr ..." << endl;
-      *noqr = true;
+      if(*zeroQ)
+      {
+         if(vrblvl > 0)
+            cout << "no skipping CPU_cmplx8_factors_houseqr because zeroQ"
+                 << endl;
+
+         *noqr = false;
+      }
+      else
+      {
+         if(vrblvl > 0)
+            cout << "skip call to CPU_cmplx8_factors_houseqr ..." << endl;
+
+         *noqr = true;
+      }
    }
-   else
+   if(!*noqr)
    {
       if(vrblvl > 0) cout << "calling CPU_cmplx8_factors_houseqr ..." << endl;
 
@@ -280,6 +308,8 @@ void CPU_cmplx8_qrbs_head
           Rrehihilo,Rrelohilo,Rrehilolo,Rrelololo,
           Rimhihihi,Rimlohihi,Rimhilohi,Rimlolohi,
           Rimhihilo,Rimlohilo,Rimhilolo,Rimlololo);
+
+      *zeroQ = false;
 
       CPU_cmplx8_factors_qrbs
          (dim,dim,
@@ -994,9 +1024,10 @@ void CPU_dbl8_qrbs_solve
    double *wrkvechilohi, double *wrkveclolohi,
    double *wrkvechihilo, double *wrkveclohilo,
    double *wrkvechilolo, double *wrkveclololo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
+   int vrblvl )
 {
-   if(*noqr)
+   if((*noqr) && (!*zeroQ))
    {
       if(vrblvl > 0) cout << "skipping CPU_dbl8_qrbs_head ..." << endl;
    }
@@ -1015,7 +1046,8 @@ void CPU_dbl8_qrbs_solve
           Qhihihi,Qlohihi,Qhilohi,Qlolohi,Qhihilo,Qlohilo,Qhilolo,Qlololo,
           Rhihihi,Rlohihi,Rhilohi,Rlolohi,Rhihilo,Rlohilo,Rhilolo,Rlololo,
           wrkvechihihi,wrkveclohihi,wrkvechilohi,wrkveclolohi,
-          wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo,noqr,vrblvl);
+          wrkvechihilo,wrkveclohilo,wrkvechilolo,wrkveclololo,zeroQ,noqr,
+          vrblvl);
    }
    if(degp1 > 1)
    {
@@ -1087,9 +1119,10 @@ void CPU_cmplx8_qrbs_solve
    double *wrkvecimhilohi, double *wrkvecimlolohi,
    double *wrkvecimhihilo, double *wrkvecimlohilo,
    double *wrkvecimhilolo, double *wrkvecimlololo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
+   int vrblvl )
 {
-   if(*noqr)
+   if((*noqr) && (!*zeroQ))
    {
       if(vrblvl > 0) cout << "skipping CPU_cmplx8_qrbs_head ..." << endl;
    }
@@ -1122,7 +1155,7 @@ void CPU_cmplx8_qrbs_solve
           wrkvecrehihilo,wrkvecrelohilo,wrkvecrehilolo,wrkvecrelololo,
           wrkvecimhihihi,wrkvecimlohihi,wrkvecimhilohi,wrkvecimlolohi,
           wrkvecimhihilo,wrkvecimlohilo,wrkvecimhilolo,wrkvecimlololo,
-          noqr,vrblvl);
+          zeroQ,noqr,vrblvl);
    }
    if(degp1 > 1)
    {

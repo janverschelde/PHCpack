@@ -101,7 +101,7 @@ void cmplx4_newton_qrstep
    double **resvecimhilo, double **resvecimlolo,
    double *resmaxhihi, double *resmaxlohi,
    double *resmaxhilo, double *resmaxlolo,
-   bool *noqr_h, bool *noqr_d,
+   bool *zeroQ_h, bool *noqr_h, bool *zeroQ_d, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    double *totcnvlapsedms, double *totqrlapsedms, double *totqtblapsedms,
    double *totbslapsedms, double *totupdlapsedms, double *totreslapsedms,
@@ -348,7 +348,9 @@ void cmplx4_newton_qrstep
  *   resvecimlohi has space for deg+1 vectors of dimension dim;
  *   resvecimhilo has space for deg+1 vectors of dimension dim;
  *   resvecimlolo has space for deg+1 vectors of dimension dim;
+ *   zeroQ_h   if true, then Q is zero and Q must be computed on host;
  *   noqr_h    flag if true, then no qr on host;
+ *   zeroQ_d   if true, then Q is zero and Q must be computed on device;
  *   noqr_d    flag if true, then no qr on device;
  *   totcnvlapsedms accumulates the milliseconds spent on the convolutions;
  *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
@@ -598,7 +600,9 @@ void cmplx4_newton_qrstep
  *   resmaxlohi is the second highest double of the max norm of the residual;
  *   resmaxhilo is the second lowest double of the max norm of the residual;
  *   resmaxlolo is the lowest double of the max norm of the residual;
+ *   zeroQ_h   false if Q was computed on host;
  *   noqr_h    updated flag if ||dx_0|| is zero for the first time on host;
+ *   zeroQ_d   false if Q was computed on device;
  *   noqr_d    updated flag if ||dx_0|| is zero for the first time on device;
  *   upidx_h   counts the number of updates skipped by host;
  *   bsidx_h   counts the number of backsubstitutions skipped by host;

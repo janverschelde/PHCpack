@@ -116,7 +116,6 @@ void dbl_newton_qrstep
  *   zeroQ_h   false if Q was computed on host;
  *   noqr_h    updated flag if ||dx_0|| is zero for the first time on host;
  *   zeroQ_d   false if Q was computed on device;
- *   noqr_h    updated flag if ||dx_0|| is zero for the first time on host;
  *   noqr_d    updated flag if ||dx_0|| is zero for the first time on device;
  *   upidx_h   counts the number of updates skipped by host;
  *   bsidx_h   counts the number of backsubstitutions skipped by host;

@@ -757,7 +757,7 @@ void GPU_dbl4_bals_solve
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo, 
    double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
    double **solhihi, double **sollohi, double **solhilo, double **sollolo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
    double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
    double *totupdlapsedms, int vrblvl )
 {
@@ -803,7 +803,7 @@ void GPU_dbl4_bals_solve
    }
    double nrm;
 
-   if(*noqr)
+   if((*noqr) && (!*zeroQ))
    {
       if(vrblvl > 0) cout << "-> skipping GPU_dbl4_bals_head ..." << endl;
    }
@@ -816,18 +816,29 @@ void GPU_dbl4_bals_solve
 
       if(nrm < 1.0e-56)
       {
-         if(vrblvl > 0)
-            cout << "-> skip call to GPU_dbl4_bals_head ..." << endl;
-
-         *noqr = true;
-
-         for(int j=0; j<ncols; j++)
+         if(*zeroQ)
          {
-            solhihi[0][j] = 0.0; sollohi[0][j] = 0.0;
-            solhilo[0][j] = 0.0; sollolo[0][j] = 0.0;
+            if(vrblvl > 0)
+               cout << "-> no skipping GPU_dbl4_bals_head because zeroQ"
+                    << endl;
+
+            *noqr = false;
+         }
+         else
+         {
+            if(vrblvl > 0)
+               cout << "-> skip call to GPU_dbl4_bals_head ..." << endl;
+
+            *noqr = true;
+
+            for(int j=0; j<ncols; j++)
+            {
+               solhihi[0][j] = 0.0; sollohi[0][j] = 0.0;
+               solhilo[0][j] = 0.0; sollolo[0][j] = 0.0;
+            }
          }
       }
-      else
+      if(!*noqr)
       {
          if(vrblvl > 0) cout << "-> calling GPU_dbl4_bals_head ..." << endl;
 
@@ -862,6 +873,8 @@ void GPU_dbl4_bals_solve
              Qhihi,Qlohi,Qhilo,Qlolo,Rhihi,Rlohi,Rhilo,Rlolo,
              bhihi,blohi,bhilo,blolo,xhihi,xlohi,xhilo,xlolo,
              totqrlapsedms,totqtblapsedms,totbslapsedms,vrblvl);
+
+         *zeroQ = false;
    
          for(int j=0; j<ncols; j++)
          {
@@ -1071,7 +1084,7 @@ void GPU_cmplx4_bals_solve
    double **solrehilo, double **solrelolo,
    double **solimhihi, double **solimlohi, 
    double **solimhilo, double **solimlolo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
    double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
    double *totupdlapsedms, int vrblvl )
 {
@@ -1138,7 +1151,7 @@ void GPU_cmplx4_bals_solve
    }
    double nrm;
 
-   if(*noqr)
+   if((*noqr) && (!*zeroQ))
    {
       if(vrblvl > 0) cout << "-> skipping GPU_cmplx4_bals_head ..." << endl;
    }
@@ -1151,20 +1164,31 @@ void GPU_cmplx4_bals_solve
 
       if(nrm < 1.0e-56)
       {
-         if(vrblvl > 0)
-            cout << "-> skip call to GPU_cmplx4_bals_head ..." << endl;
-
-         *noqr = true;
-
-         for(int j=0; j<ncols; j++)
+         if(*zeroQ)
          {
-            solrehihi[0][j] = 0.0; solrelohi[0][j] = 0.0;
-            solrehilo[0][j] = 0.0; solrelolo[0][j] = 0.0;
-            solimhihi[0][j] = 0.0; solimlohi[0][j] = 0.0;
-            solimhilo[0][j] = 0.0; solimlolo[0][j] = 0.0;
+            if(vrblvl > 0)
+               cout << "-> no skipping GPU_cmplx4_bals_head because zeroQ"
+                    << endl;
+
+            *noqr = false;
+         }
+         else
+         {
+            if(vrblvl > 0)
+               cout << "-> skip call to GPU_cmplx4_bals_head ..." << endl;
+
+            *noqr = true;
+
+            for(int j=0; j<ncols; j++)
+            {
+               solrehihi[0][j] = 0.0; solrelohi[0][j] = 0.0;
+               solrehilo[0][j] = 0.0; solrelolo[0][j] = 0.0;
+               solimhihi[0][j] = 0.0; solimlohi[0][j] = 0.0;
+               solimhilo[0][j] = 0.0; solimlolo[0][j] = 0.0;
+            }
          }
       }
-      else
+      if(!*noqr)
       {
          if(vrblvl > 0) cout << "-> calling GPU_cmplx4_bals_head ..." << endl;
 
@@ -1220,6 +1244,8 @@ void GPU_cmplx4_bals_solve
              brehihi,brelohi,brehilo,brelolo,bimhihi,bimlohi,bimhilo,bimlolo,
              xrehihi,xrelohi,xrehilo,xrelolo,ximhihi,ximlohi,ximhilo,ximlolo,
              totqrlapsedms,totqtblapsedms,totbslapsedms,vrblvl);
+
+         *zeroQ = false;
 
          for(int j=0; j<ncols; j++)
          {

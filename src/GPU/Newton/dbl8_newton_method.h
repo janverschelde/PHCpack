@@ -103,7 +103,7 @@ void dbl8_newton_qrstep
    double *resmaxhilohi, double *resmaxlolohi,
    double *resmaxhihilo, double *resmaxlohilo,
    double *resmaxhilolo, double *resmaxlololo,
-   bool *noqr_h, bool *noqr_d,
+   bool *zeroQ_h, bool *noqr_h, bool *zeroQ_d, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    double *totcnvlapsedms, double *totqrlapsedms, double *totqtblapsedms,
    double *totbslapsedms, double *totupdlapsedms, double *totreslapsedms,
@@ -334,8 +334,10 @@ void dbl8_newton_qrstep
  *   resveclohilo has space for deg+1 vectors of dimension dim;
  *   resvechilolo has space for deg+1 vectors of dimension dim;
  *   resveclololo has space for deg+1 vectors of dimension dim;
- *   noqr_h    flag if true, then qr is skipped on host;
- *   noqr_d    flag if true, then qr is skipped on device;
+ *   zeroQ_h   if true, then Q is zero and Q must be computed on host;
+ *   noqr_h    flag if true, then no qr on host;
+ *   zeroQ_d   if true, then Q is zero and Q must be computed on device;
+ *   noqr_d    flag if true, then no qr on device;
  *   totcnvlapsedms accumulates the milliseconds spent on the convolutions;
  *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
  *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
@@ -512,7 +514,9 @@ void dbl8_newton_qrstep
  *   resmaxlohilo is the third lowest double of the maximum of residual;
  *   resmaxhilolo is the second lowest double of the maximum of residual;
  *   resmaxlololo is the lowest double of the maximum of residual;
+ *   zeroQ_h   false if Q was computed on host;
  *   noqr_h    updated flag if ||dx_0|| is zero for the first time on host;
+ *   zeroQ_d   false if Q was computed on device;
  *   noqr_d    updated flag if ||dx_0|| is zero for the first time on device;
  *   upidx_h   counts the number of updates skipped by host;
  *   bsidx_h   counts the number of backsubstitutions skipped by host;

@@ -357,7 +357,7 @@ void GPU_dbl4_bals_solve
    double **Rhihi, double **Rlohi, double **Rhilo, double **Rlolo, 
    double **rhshihi, double **rhslohi, double **rhshilo, double **rhslolo,
    double **solhihi, double **sollohi, double **solhilo, double **sollolo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
    double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
    double *totupdlapsedms, int vrblvl );
 /*
@@ -393,7 +393,8 @@ void GPU_dbl4_bals_solve
  *   sollohi  space allocated for degp1 vectors of dimension dim;
  *   solhilo  space allocated for degp1 vectors of dimension dim;
  *   sollolo  space allocated for degp1 vectors of dimension dim;
- *   noqr     flag if true, then no qr;
+ *   zeroQ    if true, then Q is zero and Q must be computed;
+ *   noqr     flag if true, then no qr, only when not zeroQ;
  *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
  *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
  *   totbslapsedms accumulates the milliseconds spent on back substitutions;
@@ -417,6 +418,7 @@ void GPU_dbl4_bals_solve
  *   sollohi  second highest doubles of the solution series.
  *   solhilo  second lowest doubles of the solution series;
  *   sollolo  lowest doubles of the solution series;
+ *   zeroQ    false if Q was computed;
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped;
@@ -444,7 +446,7 @@ void GPU_cmplx4_bals_solve
    double **solrehilo, double **solrelolo,
    double **solimhihi, double **solimlohi, 
    double **solimhilo, double **solimlolo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
    double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
    double *totupdlapsedms, int vrblvl );
 /*
@@ -516,7 +518,8 @@ void GPU_cmplx4_bals_solve
  *   solimlohi has space allocated for degp1 vectors of dimension dim;
  *   solimhilo has space allocated for degp1 vectors of dimension dim;
  *   solimlolo has space allocated for degp1 vectors of dimension dim;
- *   noqr     flag if true, then no qr;
+ *   zeroQ    if true, then Q is zero and Q must be computed;
+ *   noqr     flag if true, then no qr, only when not zeroQ;
  *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
  *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
  *   totbslapsedms accumulates the milliseconds spent on back substitutions;
@@ -556,6 +559,7 @@ void GPU_cmplx4_bals_solve
  *   solimlohi are the 2nd highest doubles of the imag parts of the solution;
  *   solimhilo are the 2nd lowest doubles of the imag parts of the solution;
  *   solimlolo are the lowest doubles of the imag parts of the solution;
+ *   zeroQ    false if Q was computed;
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped;

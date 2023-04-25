@@ -1218,7 +1218,7 @@ void GPU_dbl8_bals_solve
    double **solhilohi, double **sollolohi,
    double **solhihilo, double **sollohilo,
    double **solhilolo, double **sollololo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
    double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
    double *totupdlapsedms, int vrblvl )
 {
@@ -1226,7 +1226,7 @@ void GPU_dbl8_bals_solve
    const int ncols = dim;
    int skipupcnt = 0; // counts the skipped updates
    int skipbscnt = 0; // counts the skipped substitutions
-   double prevnorm = 1.0e+99;
+   const double prevnorm = 1.0e+120;
    bool firstbs = true; // at the first back substitution
    *newtail = degp1; // in case no back substitution happens
 
@@ -1283,7 +1283,7 @@ void GPU_dbl8_bals_solve
    }
    double nrm;
 
-   if(*noqr)
+   if((*noqr) && (!*zeroQ))
    {
       if(vrblvl > 0) cout << "skipping GPU_dbl8_bals_head ..." << endl;
    }
@@ -1296,20 +1296,31 @@ void GPU_dbl8_bals_solve
 
       if(nrm < 1.0e-120)
       {
-         if(vrblvl > 0)
-            cout << "skip call to GPU_dbl8_bals_head ..." << endl;
-
-         *noqr = true;
-
-         for(int j=0; j<ncols; j++)
+         if(*zeroQ)
          {
-            solhihihi[0][j] = 0.0; sollohihi[0][j] = 0.0;
-            solhilohi[0][j] = 0.0; sollolohi[0][j] = 0.0;
-            solhihilo[0][j] = 0.0; sollohilo[0][j] = 0.0;
-            solhilolo[0][j] = 0.0; sollololo[0][j] = 0.0;
+            if(vrblvl > 0)
+               cout << "no skipping GPU_dbl8_bals_head because zeroQ"
+                    << endl;
+
+            *noqr = false;
+         }
+         else
+         {
+            if(vrblvl > 0)
+               cout << "skip call to GPU_dbl8_bals_head ..." << endl;
+
+            *noqr = true;
+
+            for(int j=0; j<ncols; j++)
+            {
+               solhihihi[0][j] = 0.0; sollohihi[0][j] = 0.0;
+               solhilohi[0][j] = 0.0; sollolohi[0][j] = 0.0;
+               solhihilo[0][j] = 0.0; sollohilo[0][j] = 0.0;
+               solhilolo[0][j] = 0.0; sollololo[0][j] = 0.0;
+            }
          }
       }
-      else
+      if(!*noqr)
       {
          if(vrblvl > 0) cout << "calling GPU_dbl8_bals_head ..." << endl;
 
@@ -1373,6 +1384,8 @@ void GPU_dbl8_bals_solve
              bhihihi,blohihi,bhilohi,blolohi,bhihilo,blohilo,bhilolo,blololo,
              xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo,
              totqrlapsedms,totqtblapsedms,totbslapsedms,vrblvl);
+
+         *zeroQ = false;
 
          for(int j=0; j<ncols; j++)
          {
@@ -1478,7 +1491,7 @@ void GPU_dbl8_bals_solve
       }
       else
       {
-         prevnorm = 1.0e+8; // nrm*1.0e+8;
+         // prevnorm = 1.0e+120; // nrm*1.0e+8;
 
          if(vrblvl > 0)
             cout << "-> run backsubstitution for x[" << stage << "] ..."
@@ -1639,7 +1652,7 @@ void GPU_cmplx8_bals_solve
    double **solimhilohi, double **solimlolohi,
    double **solimhihilo, double **solimlohilo, 
    double **solimhilolo, double **solimlololo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
    double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
    double *totupdlapsedms, int vrblvl )
 {
@@ -1647,7 +1660,7 @@ void GPU_cmplx8_bals_solve
    const int ncols = dim;
    int skipupcnt = 0; // counts the skipped updates
    int skipbscnt = 0; // counts the skipped substitutions
-   double prevnorm = 1.0e+99;
+   const double prevnorm = 1.0e+120;
    bool firstbs = true; // at the first back substitution
    *newtail = degp1; // in case no back substitution happens
 
@@ -1746,7 +1759,7 @@ void GPU_cmplx8_bals_solve
    }
    double nrm;
 
-   if(*noqr)
+   if((*noqr) && (!*zeroQ))
    {
       if(vrblvl > 0) cout << "-> calling GPU_cmplx8_bals_head ..." << endl;
    }
@@ -1759,24 +1772,35 @@ void GPU_cmplx8_bals_solve
 
       if(nrm < 1.0e-120)
       {
-         if(vrblvl > 0)
-            cout << "-> skip call to GPU_cmplx8_bals_head ..." << endl;
-
-         *noqr = true;
-
-         for(int j=0; j<ncols; j++)
+         if(*zeroQ)
          {
-            solrehihihi[0][j] = 0.0; solrelohihi[0][j] = 0.0;
-            solrehilohi[0][j] = 0.0; solrelolohi[0][j] = 0.0;
-            solrehihilo[0][j] = 0.0; solrelohilo[0][j] = 0.0;
-            solrehilolo[0][j] = 0.0; solrelololo[0][j] = 0.0;
-            solimhihihi[0][j] = 0.0; solimlohihi[0][j] = 0.0;
-            solimhilohi[0][j] = 0.0; solimlolohi[0][j] = 0.0;
-            solimhihilo[0][j] = 0.0; solimlohilo[0][j] = 0.0;
-            solimhilolo[0][j] = 0.0; solimlololo[0][j] = 0.0;
+            if(vrblvl > 0)
+               cout << "-> no skipping GPU_cmplx8_bals_head because zeroQ"
+                    << endl;
+
+            *noqr = false;
+         }
+         else
+         {
+            if(vrblvl > 0)
+               cout << "-> skip call to GPU_cmplx8_bals_head ..." << endl;
+
+            *noqr = true;
+
+            for(int j=0; j<ncols; j++)
+            {
+               solrehihihi[0][j] = 0.0; solrelohihi[0][j] = 0.0;
+               solrehilohi[0][j] = 0.0; solrelolohi[0][j] = 0.0;
+               solrehihilo[0][j] = 0.0; solrelohilo[0][j] = 0.0;
+               solrehilolo[0][j] = 0.0; solrelololo[0][j] = 0.0;
+               solimhihihi[0][j] = 0.0; solimlohihi[0][j] = 0.0;
+               solimhilohi[0][j] = 0.0; solimlolohi[0][j] = 0.0;
+               solimhihilo[0][j] = 0.0; solimlohilo[0][j] = 0.0;
+               solimhilolo[0][j] = 0.0; solimlololo[0][j] = 0.0;
+            }
          }
       }
-      else
+      if(!*noqr)
       {
          if(vrblvl > 0) cout << "-> calling GPU_cmplx8_bals_head ..." << endl;
 
@@ -1887,6 +1911,8 @@ void GPU_cmplx8_bals_solve
              ximhihihi,ximlohihi,ximhilohi,ximlolohi,
              ximhihilo,ximlohilo,ximhilolo,ximlololo,
              totqrlapsedms,totqtblapsedms,totbslapsedms,vrblvl);
+
+         *zeroQ = false;
 
          for(int j=0; j<ncols; j++)
          {
@@ -2049,7 +2075,7 @@ void GPU_cmplx8_bals_solve
       }
       else
       {
-         prevnorm = 1.0e+8; // nrm*1.0e+8;
+         // prevnorm = 1.0e+120; // nrm*1.0e+8;
 
          if(vrblvl > 0)
             cout << "-> run backsubstitutions for x[" << stage << "] ..."

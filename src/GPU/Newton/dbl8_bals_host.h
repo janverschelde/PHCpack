@@ -25,7 +25,8 @@ void CPU_dbl8_qrbs_head
    double *wrkvechihihi, double *wrkveclohihi,
    double *wrkvechilohi, double *wrkveclolohi,
    double *wrkvechihilo, double *wrkveclohilo,
-   double *wrkvechilolo, double *wrkveclololo, bool *noqr, int vrblvl );
+   double *wrkvechilolo, double *wrkveclololo,
+   bool *zeroQ, bool *noqr, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the leading terms of the power series solution
@@ -91,7 +92,8 @@ void CPU_dbl8_qrbs_head
  *   wrkveclohilo is work space allocated for a vector of dimension dim;
  *   wrkvechilolo is work space allocated for a vector of dimension dim;
  *   wrkveclololo is work space allocated for a vector of dimension dim;
- *   noqr     flag if true, then no qr;
+ *   zeroQ    if true, then Q is zero and Q must be computed;
+ *   noqr     flag if true, then no qr, only when not zeroQ;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
@@ -127,7 +129,8 @@ void CPU_dbl8_qrbs_head
  *   sollohilo  third lowest doubles of the coefficients of the solution;
  *   solhilolo  second lowest doubles of the coefficients of the solution;
  *   sollololo  lowest doubles of the coefficients of the solution;
- *   noqr       updated flag if ||dx_0|| is zero for the first time. */
+ *   zeroQ    false if Q was computed;
+ *   noqr     updated flag if ||dx_0|| is zero for the first time. */
 
 void CPU_cmplx8_qrbs_head
  ( int dim, int degp1,
@@ -178,7 +181,8 @@ void CPU_cmplx8_qrbs_head
    double *wrkvecimhihihi, double *wrkvecimlohihi,
    double *wrkvecimhilohi, double *wrkvecimlolohi,
    double *wrkvecimhihilo, double *wrkvecimlohilo,
-   double *wrkvecimhilolo, double *wrkvecimlololo, bool *noqr, int vrblvl );
+   double *wrkvecimhilolo, double *wrkvecimlololo,
+   bool *zeroQ, bool *noqr, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the leading terms of the power series solution
@@ -284,7 +288,8 @@ void CPU_cmplx8_qrbs_head
  *   wrkvecimlohilo is work space allocated for a vector of dimension dim;
  *   wrkvecimhilolo is work space allocated for a vector of dimension dim;
  *   wrkvecimlololo is work space allocated for a vector of dimension dim;
- *   noqr     flag if true, then no qr;
+ *   zeroQ    if true, then Q is zero and Q must be computed;
+ *   noqr     flag if true, then no qr, only when not zeroQ;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
@@ -352,6 +357,7 @@ void CPU_cmplx8_qrbs_head
  *   solimlohilo are the 3rd lowest doubles of the imag parts of the head;
  *   solimhilolo are the 2nd lowest doubles of the imag parts of the head;
  *   solimlololo are the lowest doubles of the imag parts of the head;
+ *   zeroQ    false if Q was computed;
  *   noqr      updated flag if ||dx_0|| is zero for the first time. */
 
 void CPU_dbl8_qrbs_tail
@@ -700,7 +706,8 @@ void CPU_dbl8_qrbs_solve
    double *wrkvechilohi, double *wrkveclolohi,
    double *wrkvechihilo, double *wrkveclohilo,
    double *wrkvechilolo, double *wrkveclololo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl );
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -758,7 +765,8 @@ void CPU_dbl8_qrbs_solve
  *   wrkveclohilo has work space allocated for a vector of dimension dim;
  *   wrkvechilolo has work space allocated for a vector of dimension dim;
  *   wrkveclololo has work space allocated for a vector of dimension dim;
- *   noqr     flag if true, then no qr;
+ *   zeroQ    if true, then Q is zero and Q must be computed;
+ *   noqr     flag if true, then no qr, only when not zeroQ;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
@@ -794,6 +802,7 @@ void CPU_dbl8_qrbs_solve
  *   sollohilo are the third lowest double coefficients of the solution;
  *   solhilolo are the second lowest double coefficients of the solution;
  *   sollololo are the lowest double coefficients of the solution;
+ *   zeroQ    false if Q was computed;
  *   noqr     flag updated when ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped;
@@ -849,7 +858,8 @@ void CPU_cmplx8_qrbs_solve
    double *wrkvecimhilohi, double *wrkvecimlolohi,
    double *wrkvecimhihilo, double *wrkvecimlohilo,
    double *wrkvecimhilolo, double *wrkvecimlololo,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl );
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -955,7 +965,8 @@ void CPU_cmplx8_qrbs_solve
  *   wrkvecimlohilo has work space allocated for a vector of dimension dim;
  *   wrkvecimhilolo has work space allocated for a vector of dimension dim;
  *   wrkvecimlololo has work space allocated for a vector of dimension dim;
- *   noqr     flag if true, then no qr;
+ *   zeroQ    if true, then Q is zero and Q must be computed;
+ *   noqr     flag if true, then no qr, only when not zeroQ;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
@@ -1023,6 +1034,7 @@ void CPU_cmplx8_qrbs_solve
  *   solimlohilo are the 3rd lowest doubles of the imag parts of sol;
  *   solimhilolo are the 2nd lowest doubles of the imag parts of sol;
  *   solimlololo are the lowest doubles of the imaginary parts of sol;
+ *   zeroQ    false if Q was computed;
  *   noqr     flag updated when ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped;

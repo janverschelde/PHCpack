@@ -128,7 +128,7 @@ void dbl8_newton_qrstep
    double *resmaxhilohi, double *resmaxlolohi,
    double *resmaxhihilo, double *resmaxlohilo,
    double *resmaxhilolo, double *resmaxlololo,
-   bool *noqr_h, bool *noqr_d,
+   bool *zeroQ_h, bool *noqr_h, bool *zeroQ_d, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    double *totcnvlapsedms, double *totqrlapsedms, double *totqtblapsedms,
    double *totbslapsedms, double *totupdlapsedms, double *totreslapsedms,
@@ -394,7 +394,7 @@ void dbl8_newton_qrstep
           Rhihilo_h,Rlohilo_h,Rhilolo_h,Rlololo_h,
           workvechihihi,workveclohihi,workvechilohi,workveclolohi,
           workvechihilo,workveclohilo,workvechilolo,workveclololo,
-          noqr_h,upidx_h,bsidx_h,&newtail,vrblvl);
+          zeroQ_h,noqr_h,upidx_h,bsidx_h,&newtail,vrblvl);
 
       *tailidx_h = newtail;
 
@@ -464,7 +464,7 @@ void dbl8_newton_qrstep
           urhshihihi_d,urhslohihi_d,urhshilohi_d,urhslolohi_d,
           urhshihilo_d,urhslohilo_d,urhshilolo_d,urhslololo_d,
           solhihihi_d,sollohihi_d,solhilohi_d,sollolohi_d,
-          solhihilo_d,sollohilo_d,solhilolo_d,sollololo_d,noqr_d,
+          solhihilo_d,sollohilo_d,solhilolo_d,sollololo_d,zeroQ_d,noqr_d,
           upidx_d,bsidx_d,&newtail,totqrlapsedms,totqtblapsedms,
           totbslapsedms,totupdlapsedms,vrblvl);
 
@@ -1433,6 +1433,8 @@ int test_dbl8_real_newton
    int bsidx_h = 0;
    int upidx_d = 0;
    int bsidx_d = 0;
+   bool zeroQ_h = true;
+   bool zeroQ_d = true;
    bool noqr_h = false;
    bool noqr_d = false;
    int tailidx_h = 1;
@@ -1507,7 +1509,8 @@ int test_dbl8_real_newton
           resvechihilo,resveclohilo,resvechilolo,resveclololo,
           &resmaxhihihi,&resmaxlohihi,&resmaxhilohi,&resmaxlolohi,
           &resmaxhihilo,&resmaxlohilo,&resmaxhilolo,&resmaxlololo,
-          &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,
+          &zeroQ_h,&noqr_h,&zeroQ_d,&noqr_d,
+          &upidx_h,&bsidx_h,&upidx_d,&bsidx_d,
           &totcnvlapsedms,&totqrlapsedms,&totqtblapsedms,&totbslapsedms,
           &totupdlapsedms,&totreslapsedms,vrblvl,mode);
 

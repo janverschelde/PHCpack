@@ -1,4 +1,5 @@
 Tue 25 Apr 2023 : updated dbl_path_tracker.cpp for the zeroQ flag.
+  Also updated {dbl2, dbl4, dbl8}_path_tracker.cpp.
 
 Mon 24 Apr 2023 : updated {dbl, dbl2, dbl4, dbl8}_path_tracker.cpp for
   a start solution and a right hand side for a Newton homotopy.
