@@ -329,11 +329,11 @@ int test_dbl_real_track
 
    if(vrblvl > 0) cout << "setting up the test system ..." << endl;
 
-   double **sol = new double*[dim];
+   double **startsol = new double*[dim];
 
-   for(int i=0; i<dim; i++) sol[i] = new double[degp1];
+   for(int i=0; i<dim; i++) startsol[i] = new double[degp1];
+   make_real_exponentials(dim,deg,startsol);
 
-   make_real_exponentials(dim,deg,sol);
    if(nbrcol != 1) // generate coefficients for the columns
    {
       // sets only the leading coefficient to a random double ...
@@ -352,9 +352,14 @@ int test_dbl_real_track
       for(int k=1; k<degp1; k++) mbrhs[i][k] = 0.0;
    }
    if(nbrcol == 1)
-      evaluate_real_monomials(dim,deg,rowsA,sol,mbrhs);
+      evaluate_real_monomials(dim,deg,rowsA,startsol,mbrhs);
    else
-      evaluate_real_columns(dim,deg,nbrcol,nvr,idx,rowsA,cff,sol,mbrhs,vrblvl);
+      evaluate_real_columns
+         (dim,deg,nbrcol,nvr,idx,rowsA,cff,startsol,mbrhs,vrblvl);
+
+   // rhs coefficients are c(t) = (1-t)*c(t) = c(t) - t*c(t)
+   for(int i=0; i<dim; i++)
+      for(int j=1; j<degp1; j++) mbrhs[i][j] = mbrhs[i][j] - mbrhs[i][j-1];
 
    if(vrblvl > 1)
    {
@@ -365,19 +370,11 @@ int test_dbl_real_track
             cout << "rhs[" << i << "][" << j << "] : "
                  << mbrhs[i][j] << endl;
    }
-   double *start0 = new double[dim];
-
-   for(int i=0; i<dim; i++)  // compute start vector
-   {
-      start0[i] = sol[i][0];
-   }
-   real_start_series_vector(dim,deg,start0,input_h);
-
    for(int i=0; i<dim; i++)
       for(int j=0; j<degp1; j++)
       {
-         // input_h[i][j] = sol[i][j]; // check if evaluation is done right
-         input_d[i][j] = input_h[i][j];
+         input_h[i][j] = startsol[i][j];
+         input_d[i][j] = startsol[i][j];
       }
 
    if(vrblvl > 1)

@@ -16,6 +16,7 @@
 #include "random_monomials.h"
 #include "dbl8_factorizations.h"
 #include "dbl8_monomial_systems.h"
+#include "octo_double_functions.h"
 #include "unimodular_matrices.h"
 #include "dbl8_systems_host.h"
 #include "dbl8_systems_kernels.h"
@@ -1059,29 +1060,30 @@ int test_dbl8_real_track
 
    if(vrblvl > 0) cout << "setting up the test system ..." << endl;
 
-   double **solhihihi = new double*[dim];
-   double **sollohihi = new double*[dim];
-   double **solhilohi = new double*[dim];
-   double **sollolohi = new double*[dim];
-   double **solhihilo = new double*[dim];
-   double **sollohilo = new double*[dim];
-   double **solhilolo = new double*[dim];
-   double **sollololo = new double*[dim];
+   double **startsolhihihi = new double*[dim];
+   double **startsollohihi = new double*[dim];
+   double **startsolhilohi = new double*[dim];
+   double **startsollolohi = new double*[dim];
+   double **startsolhihilo = new double*[dim];
+   double **startsollohilo = new double*[dim];
+   double **startsolhilolo = new double*[dim];
+   double **startsollololo = new double*[dim];
 
    for(int i=0; i<dim; i++)
    {
-      solhihihi[i] = new double[degp1];
-      sollohihi[i] = new double[degp1];
-      solhilohi[i] = new double[degp1];
-      sollolohi[i] = new double[degp1];
-      solhihilo[i] = new double[degp1];
-      sollohilo[i] = new double[degp1];
-      solhilolo[i] = new double[degp1];
-      sollololo[i] = new double[degp1];
+      startsolhihihi[i] = new double[degp1];
+      startsollohihi[i] = new double[degp1];
+      startsolhilohi[i] = new double[degp1];
+      startsollolohi[i] = new double[degp1];
+      startsolhihilo[i] = new double[degp1];
+      startsollohilo[i] = new double[degp1];
+      startsolhilolo[i] = new double[degp1];
+      startsollololo[i] = new double[degp1];
    }
    make_real8_exponentials
-      (dim,deg,solhihihi,sollohihi,solhilohi,sollolohi,
-               solhihilo,sollohilo,solhilolo,sollololo);
+      (dim,deg,startsolhihihi,startsollohihi,startsolhilohi,startsollolohi,
+               startsolhihilo,startsollohilo,startsolhilolo,startsollololo);
+
    if(nbrcol != 1) // generate coefficients for the columns
       make_real8_coefficients
          (nbrcol,dim,cffhihihi,cfflohihi,cffhilohi,cfflolohi,
@@ -1129,8 +1131,8 @@ int test_dbl8_real_track
    if(nbrcol == 1)
       evaluate_real8_monomials
          (dim,deg,rowsA,
-          solhihihi,sollohihi,solhilohi,sollolohi,
-          solhihilo,sollohilo,solhilolo,sollololo,
+          startsolhihihi,startsollohihi,startsolhilohi,startsollolohi,
+          startsolhihilo,startsollohilo,startsolhilolo,startsollololo,
           mbrhshihihi,mbrhslohihi,mbrhshilohi,mbrhslolohi,
           mbrhshihilo,mbrhslohilo,mbrhshilolo,mbrhslololo);
    else
@@ -1138,10 +1140,37 @@ int test_dbl8_real_track
          (dim,deg,nbrcol,nvr,idx,rowsA,
           cffhihihi,cfflohihi,cffhilohi,cfflolohi,
           cffhihilo,cfflohilo,cffhilolo,cfflololo,
-          solhihihi,sollohihi,solhilohi,sollolohi,
-          solhihilo,sollohilo,solhilolo,sollololo,
+          startsolhihihi,startsollohihi,startsolhilohi,startsollolohi,
+          startsolhihilo,startsollohilo,startsolhilolo,startsollololo,
           mbrhshihihi,mbrhslohihi,mbrhshilohi,mbrhslolohi,
           mbrhshihilo,mbrhslohilo,mbrhshilolo,mbrhslololo,vrblvl);
+
+   // rhs coefficients are c(t) = (1-t)*c(t) = c(t) - t*c(t)
+   for(int i=0; i<dim; i++)
+      for(int j=1; j<degp1; j++) // mbrhs[i][j] = mbrhs[i][j] - mbrhs[i][j-1];
+      {
+         double acchihihi,acclohihi,acchilohi,acclolohi;
+         double acchihilo,acclohilo,acchilolo,acclololo;
+
+         odf_sub(mbrhshihihi[i][j],  mbrhslohihi[i][j],
+                 mbrhshilohi[i][j],  mbrhslolohi[i][j],
+                 mbrhshihilo[i][j],  mbrhslohilo[i][j],
+                 mbrhshilolo[i][j],  mbrhslololo[i][j],
+                 mbrhshihihi[i][j-1],mbrhslohihi[i][j-1],
+                 mbrhshilohi[i][j-1],mbrhslolohi[i][j-1],
+                 mbrhshihilo[i][j-1],mbrhslohilo[i][j-1],
+                 mbrhshilolo[i][j-1],mbrhslololo[i][j-1],
+                 &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                 &acchihilo,&acclohilo,&acchilolo,&acclololo);
+         mbrhshihihi[i][j] = acchihihi;
+         mbrhslohihi[i][j] = acclohihi;
+         mbrhshilohi[i][j] = acchilohi;
+         mbrhslolohi[i][j] = acclolohi;
+         mbrhshihilo[i][j] = acchihilo;
+         mbrhslohilo[i][j] = acclohilo;
+         mbrhshilolo[i][j] = acchilolo;
+         mbrhslololo[i][j] = acclololo;
+      }
 
    if(vrblvl > 1)
    {
@@ -1158,43 +1187,25 @@ int test_dbl8_real_track
                  << "  "
                  << mbrhshilolo[i][j] << "  " << mbrhslololo[i][j] << endl;
    }
-   double *start0hihihi = new double[dim];
-   double *start0lohihi = new double[dim];
-   double *start0hilohi = new double[dim];
-   double *start0lolohi = new double[dim];
-   double *start0hihilo = new double[dim];
-   double *start0lohilo = new double[dim];
-   double *start0hilolo = new double[dim];
-   double *start0lololo = new double[dim];
-
-   for(int i=0; i<dim; i++)  // compute start vector
-   {
-      start0hihihi[i] = solhihihi[i][0];
-      start0lohihi[i] = sollohihi[i][0];
-      start0hilohi[i] = solhilohi[i][0];
-      start0lolohi[i] = sollolohi[i][0];
-      start0hihilo[i] = solhihilo[i][0];
-      start0lohilo[i] = sollohilo[i][0];
-      start0hilolo[i] = solhilolo[i][0];
-      start0lololo[i] = sollololo[i][0];
-   }
-   real8_start_series_vector
-      (dim,deg,start0hihihi,start0lohihi,start0hilohi,start0lolohi,
-               start0hihilo,start0lohilo,start0hilolo,start0lololo,
-       inputhihihi_h,inputlohihi_h,inputhilohi_h,inputlolohi_h,
-       inputhihilo_h,inputlohilo_h,inputhilolo_h,inputlololo_h);
-
    for(int i=0; i<dim; i++)
       for(int j=0; j<degp1; j++)
       {
-         inputhihihi_d[i][j] = inputhihihi_h[i][j];
-         inputlohihi_d[i][j] = inputlohihi_h[i][j];
-         inputhilohi_d[i][j] = inputhilohi_h[i][j];
-         inputlolohi_d[i][j] = inputlolohi_h[i][j];
-         inputhihilo_d[i][j] = inputhihilo_h[i][j];
-         inputlohilo_d[i][j] = inputlohilo_h[i][j];
-         inputhilolo_d[i][j] = inputhilolo_h[i][j];
-         inputlololo_d[i][j] = inputlololo_h[i][j];
+         inputhihihi_h[i][j] = startsolhihihi[i][j];
+         inputlohihi_h[i][j] = startsollohihi[i][j];
+         inputhilohi_h[i][j] = startsolhilohi[i][j];
+         inputlolohi_h[i][j] = startsollolohi[i][j];
+         inputhihilo_h[i][j] = startsolhihilo[i][j];
+         inputlohilo_h[i][j] = startsollohilo[i][j];
+         inputhilolo_h[i][j] = startsolhilolo[i][j];
+         inputlololo_h[i][j] = startsollololo[i][j];
+         inputhihihi_d[i][j] = startsolhihihi[i][j];
+         inputlohihi_d[i][j] = startsollohihi[i][j];
+         inputhilohi_d[i][j] = startsolhilohi[i][j];
+         inputlolohi_d[i][j] = startsollolohi[i][j];
+         inputhihilo_d[i][j] = startsolhihilo[i][j];
+         inputlohilo_d[i][j] = startsollohilo[i][j];
+         inputhilolo_d[i][j] = startsolhilolo[i][j];
+         inputlololo_d[i][j] = startsollololo[i][j];
       }
 
    if(vrblvl > 1)

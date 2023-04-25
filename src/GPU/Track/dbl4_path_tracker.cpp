@@ -14,6 +14,7 @@
 #endif
 #include "random_numbers.h"
 #include "random_monomials.h"
+#include "quad_double_functions.h"
 #include "dbl4_factorizations.h"
 #include "dbl4_monomial_systems.h"
 #include "unimodular_matrices.h"
@@ -705,19 +706,21 @@ int test_dbl4_real_track
 
    if(vrblvl > 0) cout << "setting up the test system ..." << endl;
 
-   double **solhihi = new double*[dim];
-   double **sollohi = new double*[dim];
-   double **solhilo = new double*[dim];
-   double **sollolo = new double*[dim];
+   double **startsolhihi = new double*[dim];
+   double **startsollohi = new double*[dim];
+   double **startsolhilo = new double*[dim];
+   double **startsollolo = new double*[dim];
 
    for(int i=0; i<dim; i++)
    {
-      solhihi[i] = new double[degp1];
-      sollohi[i] = new double[degp1];
-      solhilo[i] = new double[degp1];
-      sollolo[i] = new double[degp1];
+      startsolhihi[i] = new double[degp1];
+      startsollohi[i] = new double[degp1];
+      startsolhilo[i] = new double[degp1];
+      startsollolo[i] = new double[degp1];
    }
-   make_real4_exponentials(dim,deg,solhihi,sollohi,solhilo,sollolo);
+   make_real4_exponentials
+      (dim,deg,startsolhihi,startsollohi,startsolhilo,startsollolo);
+
    if(nbrcol != 1) // generate coefficients for the columns
       make_real4_coefficients(nbrcol,dim,cffhihi,cfflohi,cffhilo,cfflolo);
 
@@ -750,14 +753,31 @@ int test_dbl4_real_track
    }
    if(nbrcol == 1)
       evaluate_real4_monomials
-         (dim,deg,rowsA,solhihi,sollohi,solhilo,sollolo,
+         (dim,deg,rowsA,startsolhihi,startsollohi,startsolhilo,startsollolo,
           mbrhshihi,mbrhslohi,mbrhshilo,mbrhslolo);
    else
       evaluate_real4_columns
          (dim,deg,nbrcol,nvr,idx,rowsA,
           cffhihi,cfflohi,cffhilo,cfflolo,
-          solhihi,sollohi,solhilo,sollolo,
+          startsolhihi,startsollohi,startsolhilo,startsollolo,
           mbrhshihi,mbrhslohi,mbrhshilo,mbrhslolo,vrblvl);
+
+   // rhs coefficients are c(t) = (1-t)*c(t) = c(t) - t*c(t)
+   for(int i=0; i<dim; i++)
+      for(int j=1; j<degp1; j++) // mbrhs[i][j] = mbrhs[i][j] - mbrhs[i][j-1];
+      {
+         double acchihi,acclohi,acchilo,acclolo;
+
+         qdf_sub(mbrhshihi[i][j],  mbrhslohi[i][j],
+                 mbrhshilo[i][j],  mbrhslolo[i][j],
+                 mbrhshihi[i][j-1],mbrhslohi[i][j-1],
+                 mbrhshilo[i][j-1],mbrhslolo[i][j-1],
+                 &acchihi,&acclohi,&acchilo,&acclolo);
+         mbrhshihi[i][j] = acchihi;
+         mbrhslohi[i][j] = acclohi;
+         mbrhshilo[i][j] = acchilo;
+         mbrhslolo[i][j] = acclolo;
+      }
 
    if(vrblvl > 1)
    {
@@ -770,29 +790,17 @@ int test_dbl4_real_track
                  << "  "
                  << mbrhshilo[i][j] << "  " << mbrhslolo[i][j] << endl;
    }
-   double *start0hihi = new double[dim];
-   double *start0lohi = new double[dim];
-   double *start0hilo = new double[dim];
-   double *start0lolo = new double[dim];
-
-   for(int i=0; i<dim; i++)  // compute start vector
-   {
-      start0hihi[i] = solhihi[i][0];
-      start0lohi[i] = sollohi[i][0];
-      start0hilo[i] = solhilo[i][0];
-      start0lolo[i] = sollolo[i][0];
-   }
-   real4_start_series_vector
-      (dim,deg,start0hihi,start0lohi,start0hilo,start0lolo,
-       inputhihi_h,inputlohi_h,inputhilo_h,inputlolo_h);
-
    for(int i=0; i<dim; i++)
       for(int j=0; j<degp1; j++)
       {
-         inputhihi_d[i][j] = inputhihi_h[i][j];
-         inputlohi_d[i][j] = inputlohi_h[i][j];
-         inputhilo_d[i][j] = inputhilo_h[i][j];
-         inputlolo_d[i][j] = inputlolo_h[i][j];
+         inputhihi_h[i][j] = startsolhihi[i][j];
+         inputlohi_h[i][j] = startsollohi[i][j];
+         inputhilo_h[i][j] = startsolhilo[i][j];
+         inputlolo_h[i][j] = startsollolo[i][j];
+         inputhihi_d[i][j] = startsolhihi[i][j];
+         inputlohi_d[i][j] = startsollohi[i][j];
+         inputhilo_d[i][j] = startsolhilo[i][j];
+         inputlolo_d[i][j] = startsollolo[i][j];
       }
 
    if(vrblvl > 1)

@@ -14,6 +14,7 @@
 #endif
 #include "random_numbers.h"
 #include "random_monomials.h"
+#include "double_double_functions.h"
 #include "dbl2_factorizations.h"
 #include "dbl2_monomial_systems.h"
 #include "unimodular_matrices.h"
@@ -496,15 +497,16 @@ int test_dbl2_real_track
 
    if(vrblvl > 0) cout << "setting up the test system ..." << endl;
 
-   double **solhi = new double*[dim];
-   double **sollo = new double*[dim];
+   double **startsolhi = new double*[dim];
+   double **startsollo = new double*[dim];
 
    for(int i=0; i<dim; i++)
    {
-      solhi[i] = new double[degp1];
-      sollo[i] = new double[degp1];
+      startsolhi[i] = new double[degp1];
+      startsollo[i] = new double[degp1];
    }
-   make_real2_exponentials(dim,deg,solhi,sollo);
+   make_real2_exponentials(dim,deg,startsolhi,startsollo);
+
    if(nbrcol != 1) // generate coefficients for the columns
    {
       // sets only the leading coefficient to a random double ...
@@ -530,11 +532,24 @@ int test_dbl2_real_track
       }
    }
    if(nbrcol == 1)
-      evaluate_real2_monomials(dim,deg,rowsA,solhi,sollo,mbrhshi,mbrhslo);
+      evaluate_real2_monomials
+         (dim,deg,rowsA,startsolhi,startsollo,mbrhshi,mbrhslo);
    else
       evaluate_real2_columns
-         (dim,deg,nbrcol,nvr,idx,rowsA,cffhi,cfflo,solhi,sollo,
+         (dim,deg,nbrcol,nvr,idx,rowsA,cffhi,cfflo,startsolhi,startsollo,
           mbrhshi,mbrhslo,vrblvl);
+
+   // rhs coefficients are c(t) = (1-t)*c(t) = c(t) - t*c(t)
+   for(int i=0; i<dim; i++)
+      for(int j=1; j<degp1; j++) // mbrhs[i][j] = mbrhs[i][j] - mbrhs[i][j-1];
+      {
+         double acchi,acclo;
+
+         ddf_sub(mbrhshi[i][j],  mbrhslo[i][j],
+                 mbrhshi[i][j-1],mbrhslo[i][j-1],&acchi,&acclo);
+         mbrhshi[i][j] = acchi;
+         mbrhslo[i][j] = acchi;
+      }
 
    if(vrblvl > 1)
    {
@@ -545,21 +560,13 @@ int test_dbl2_real_track
             cout << "rhs[" << i << "][" << j << "] : "
                  << mbrhshi[i][j] << "  " << mbrhslo[i][j] << endl;
    }
-   double *start0hi = new double[dim];
-   double *start0lo = new double[dim];
-
-   for(int i=0; i<dim; i++)  // compute start vector
-   {
-      start0hi[i] = solhi[i][0];
-      start0lo[i] = sollo[i][0];
-   }
-   real2_start_series_vector(dim,deg,start0hi,start0lo,inputhi_h,inputlo_h);
-
    for(int i=0; i<dim; i++)
       for(int j=0; j<degp1; j++)
       {
-         inputhi_d[i][j] = inputhi_h[i][j];
-         inputlo_d[i][j] = inputlo_h[i][j];
+         inputhi_h[i][j] = startsolhi[i][j];
+         inputlo_h[i][j] = startsollo[i][j];
+         inputhi_d[i][j] = startsolhi[i][j];
+         inputlo_d[i][j] = startsollo[i][j];
       }
 
    if(vrblvl > 1)
