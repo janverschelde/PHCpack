@@ -7,7 +7,7 @@
 void CPU_dbl_qrbs_head
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
    double **Q, double **R, double *wrkvec,
-   bool *noqr, int vrblvl );
+   bool *zeroQ, bool *noqr, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the leading terms of the power series solution
@@ -23,7 +23,8 @@ void CPU_dbl_qrbs_head
  *   Q        space allocated for a matrix of dimension dim;
  *   R        space allocated for a matrix of dimension dim;
  *   wrkvec   work space allocated for a vector of dimension dim;
- *   noqr     flag if true, then no qr;
+ *   zeroQ    if true, then Q is zero and Q must be computed;
+ *   noqr     flag if true, then no qr, only when not zeroQ;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
@@ -31,13 +32,15 @@ void CPU_dbl_qrbs_head
  *   R        the R in a QR factorization of the Jacobian matrix;
  *   wrkvec   work space used to solve the linear system;
  *   sol      the coefficients of the solution series;
+ *   zeroQ    false if Q was computed;
  *   noqr     updated flag if ||dx_0|| is zero for the first time. */
 
 void CPU_cmplx_qrbs_head
  ( int dim, int degp1, double ***matre, double ***matim,
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **Qre, double **Qim, double **Rre, double **Rim,
-   double *wrkvecre, double *wrkvecim, bool *noqr, int vrblvl );
+   double *wrkvecre, double *wrkvecim,
+   bool *zeroQ, bool *noqr, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the leading terms of the power series solution
@@ -59,7 +62,8 @@ void CPU_cmplx_qrbs_head
  *   Rim      space allocated for a matrix of dimension dim;
  *   wrkvecre is work space allocated for a vector of dimension dim;
  *   wrkvecim is work space allocated for a vector of dimension dim;
- *   noqr     flag if true, then no qr;
+ *   zeroQ    if true, then Q is zero and Q must be computed;
+ *   noqr     flag if true, then no qr, only when not zeroQ;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
@@ -71,6 +75,7 @@ void CPU_cmplx_qrbs_head
  *   wrkvecim is work space used to solve the linear system;
  *   solre    real parts of the head term of the solution series;
  *   solim    imaginary parts of the head term of the solution series;
+ *   zeroQ    false if Q was computed;
  *   noqr     updated flag if ||dx_0|| is zero for the first time. */
 
 void CPU_dbl_qrbs_tail
@@ -147,7 +152,8 @@ void CPU_cmplx_qrbs_tail
 void CPU_dbl_qrbs_solve
  ( int dim, int degp1, int tailidx, double ***mat, double **rhs, double **sol,
    double **Q, double **R, double *wrkvec,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl );
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -163,7 +169,8 @@ void CPU_dbl_qrbs_solve
  *   Q        space allocated for a matrix of dimension dim;
  *   R        space allocated for a matrix of dimension dim;
  *   wrkvec   work space allocated for a vector of dimension dim;
- *   noqr     flag if true, then no qr;
+ *   zeroQ    if true, then Q is zero and Q must be computed;
+ *   noqr     flag if true, then no qr, only when not zeroQ;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
@@ -171,6 +178,7 @@ void CPU_dbl_qrbs_solve
  *   R        the R in a QR factorization of the Jacobian matrix;
  *   wrkvec   work space used to solve the linear system;
  *   sol      the coefficients of the solution series;
+ *   zeroQ    false if Q was computed;
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped;
@@ -181,7 +189,8 @@ void CPU_cmplx_qrbs_solve
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **Qre, double **Qim, double **Rre, double **Rim,
    double *wrkvecre, double *wrkvecim,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl );
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Solves a linear system of power series, in linearized format,
@@ -203,7 +212,8 @@ void CPU_cmplx_qrbs_solve
  *   Rim      space allocated for a matrix of dimension dim;
  *   wrkvecre has work space allocated for a vector of dimension dim;
  *   wrkvecim has work space allocated for a vector of dimension dim;
- *   noqr     flag if true, then no qr;
+ *   zeroQ    if true, then Q is zero and Q must be computed;
+ *   noqr     flag if true, then no qr, only when not zeroQ;
  *   vrblvl   the verbose level (0 for silent).
  *
  * ON RETURN :
@@ -215,6 +225,7 @@ void CPU_cmplx_qrbs_solve
  *   wrkvecim is work space used to solve the linear systems;
  *   solre    real parts of the coefficients of the solution;
  *   solim    imaginary parts of the coefficients of the solution;
+ *   zeroQ    false if Q was computed;
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped;

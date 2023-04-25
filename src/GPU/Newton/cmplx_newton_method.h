@@ -25,7 +25,7 @@ void cmplx_newton_qrstep
    double **Rre_h, double **Rim_h, double **Rre_d, double **Rim_d,
    double *workvecre, double *workvecim,
    double **resvecre, double **resvecim, double *resmax,
-   bool *noqr_h, bool *noqr_d,
+   bool *zeroQ_h, bool *noqr_h, bool *zeroQ_d, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    double *totcnvlapsedms, double *totqrlapsedms, double *totbslapsedms,
    double *totupdlapsedms, double *totreslapsedms, int vrblvl, int mode );
@@ -106,7 +106,9 @@ void cmplx_newton_qrstep
  *   wrkvecim  work space allocated for a vector of dimension dim;
  *   resvecre  space for deg+1 vectors of dimension dim;
  *   resvecim  space for deg+1 vectors of dimension dim;
+ *   zeroQ_h   if true, then Q is zero and Q must be computed on host;
  *   noqr_h    flag if true, then no qr on host;
+ *   zeroQ_h   if true, then Q is zero and Q must be computed on device;
  *   noqr_d    flag if true, then no qr on device;
  *   totcnvlapsedms accumulates the milliseconds spent on the convolutions;
  *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
@@ -162,7 +164,9 @@ void cmplx_newton_qrstep
  *   resvecre  real parts of the residual vectors;
  *   resvecim  imaginary parts of the residual vectors;
  *   resmax    the maximum element of the residual vectors;
+ *   zeroQ_h   false if Q was computed on host;
  *   noqr_h    updated flag if ||dx_0|| is zero for the first time on host;
+ *   zeroQ_d   false if Q was computed on device;
  *   noqr_d    updated flag if ||dx_0|| is zero for the first time on device;
  *   upidx_h   counts the number of updates skipped by host;
  *   bsidx_h   counts the number of backsubstitutions skipped by host;

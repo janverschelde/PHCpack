@@ -37,7 +37,7 @@ void dbl_newton_qrstep
    double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
    double **Q_h, double **Q_d, double **R_h, double **R_d,
    double *workvec, double **resvec, double *resmax,
-   bool *noqr_h, bool *noqr_d,
+   bool *zeroQ_h, bool *noqr_h, bool *zeroQ_d, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
    double *totcnvlapsedms, double *totqrlapsedms, double *totqtblapsedms,
    double *totbslapsedms, double *totupdlapsedms, double *totreslapsedms,
@@ -158,7 +158,7 @@ void dbl_newton_qrstep
 
       CPU_dbl_qrbs_solve
          (dim,degp1,oldtail,jacval_h,urhs_h,sol_h,Q_h,R_h,workvec,
-          noqr_h,upidx_h,bsidx_h,&newtail,vrblvl);
+          zeroQ_h,noqr_h,upidx_h,bsidx_h,&newtail,vrblvl);
 
       *tailidx_h = newtail;
  
@@ -189,9 +189,9 @@ void dbl_newton_qrstep
       int newtail = oldtail;
 
       GPU_dbl_bals_solve
-         (dim,degp1,szt,nbt,oldtail,jacval_d,Q_d,R_d,urhs_d,sol_d,noqr_d,
-          upidx_d,bsidx_d,&newtail,totqrlapsedms,totqtblapsedms,
-          totbslapsedms,totupdlapsedms,vrblvl);
+         (dim,degp1,szt,nbt,oldtail,jacval_d,Q_d,R_d,urhs_d,sol_d,
+          zeroQ_d,noqr_d,upidx_d,bsidx_d,&newtail,
+          totqrlapsedms,totqtblapsedms,totbslapsedms,totupdlapsedms,vrblvl);
 
       *tailidx_d = newtail;
 
@@ -467,6 +467,8 @@ int test_dbl_real_newton
    int bsidx_h = 0;
    int upidx_d = 0;
    int bsidx_d = 0;
+   bool zeroQ_h = true;
+   bool zeroQ_d = true;
    bool noqr_h = false;
    bool noqr_d = false;
    int tailidx_h = 1;
@@ -496,7 +498,8 @@ int test_dbl_real_newton
           input_h,input_d,output_h,output_d,funval_h,funval_d,
           jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
           Q_h,Q_d,R_h,R_d,workvec,resvec,&resmax,
-          &noqr_h,&noqr_d,&upidx_h,&bsidx_h,&upidx_d,&bsidx_d,
+          &zeroQ_h,&noqr_h,&zeroQ_d,&noqr_d,
+          &upidx_h,&bsidx_h,&upidx_d,&bsidx_d,
           &totcnvlapsedms,&totqrlapsedms,&totqtblapsedms,&totbslapsedms,
           &totupdlapsedms,&totreslapsedms,vrblvl,mode);
 

@@ -461,7 +461,7 @@ void GPU_cmplx_bals_qhb
 void GPU_dbl_bals_solve
  ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***mat, double **Q, double **R, double **rhs, double **sol,
-   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
    double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
    double *totupdlapsedms, int vrblvl )
 {
@@ -490,7 +490,7 @@ void GPU_dbl_bals_solve
    }
    double nrm;
 
-   if(*noqr)
+   if((*noqr) && (!*zeroQ))
    {
       if(vrblvl > 0) cout << "-> skipping GPU_dbl_bals_head ..." << endl;
    }
@@ -503,14 +503,25 @@ void GPU_dbl_bals_solve
 
       if(nrm + 1.0 == 1.0)
       {
-         if(vrblvl > 0)
-            cout << "-> skip call to GPU_dbl_bals_head ..." << endl;
+         if(*zeroQ)
+         {
+            if(vrblvl > 0)
+               cout << "-> no skipping of GPU_dbl_bals_head because zeroQ"
+                    << endl;
 
-         *noqr = true;
+            *noqr = false;
+         }
+         else
+         {
+            if(vrblvl > 0)
+               cout << "-> skip call to GPU_dbl_bals_head ..." << endl;
+   
+            *noqr = true;
 
-         for(int j=0; j<ncols; j++) sol[0][j] = 0.0;
+            for(int j=0; j<ncols; j++) sol[0][j] = 0.0;
+         }
       }
-      else
+      if(!*noqr)
       {
          if(vrblvl > 0) cout << "-> calling GPU_dbl_bals_head ..." << endl;
 
@@ -675,7 +686,7 @@ void GPU_cmplx_bals_solve
    double ***matre, double ***matim, double **Qre, double **Qim,
    double **Rre, double **Rim, double **rhsre, double **rhsim,
    double **solre, double **solim,
-   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
    double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
    double *totupdlapsedms, int vrblvl )
 {
@@ -712,7 +723,7 @@ void GPU_cmplx_bals_solve
    }
    double nrm;
 
-   if(*noqr)
+   if((*noqr) && (!*zeroQ))
    {
       if(vrblvl > 0) cout << "skipping GPU_cmplx_bals_head ..." << endl;
    }
@@ -725,17 +736,28 @@ void GPU_cmplx_bals_solve
 
       if(nrm + 1.0 == 1.0)
       {
-         if(vrblvl > 0)
-            cout << "skip call to GPU_cmplx_bals_head ..." << endl;
-
-         *noqr = true;
-
-         for(int j=0; j<ncols; j++)
+         if(*zeroQ)
          {
-            solre[0][j] = 0.0; solim[0][j] = 0.0;
+            if(vrblvl > 0)
+               cout << "no skipping of GPU_cmplx_bals_head because zeroQ"
+                    << endl;
+
+            *noqr = false;
+         }
+         else
+         {
+            if(vrblvl > 0)
+               cout << "skip call to GPU_cmplx_bals_head ..." << endl;
+
+            *noqr = true;
+  
+            for(int j=0; j<ncols; j++)
+            {
+               solre[0][j] = 0.0; solim[0][j] = 0.0;
+            }
          }
       }
-      else
+      if(!*noqr)
       {
          if(vrblvl > 0) cout << "calling GPU_cmplx_bals_head ..." << endl;
 

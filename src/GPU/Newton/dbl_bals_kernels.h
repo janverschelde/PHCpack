@@ -199,7 +199,7 @@ void GPU_cmplx_bals_qhb
 void GPU_dbl_bals_solve
  ( int dim, int degp1, int szt, int nbt, int tailidx,
    double ***mat, double **Q, double **R, double **rhs, double **sol,
-   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
    double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
    double *totupdlapsedms, int vrblvl );
 /*
@@ -220,7 +220,8 @@ void GPU_dbl_bals_solve
  *   R        space for the R of the QR factorization of the Jacobian;
  *   rhs      degp1 vectors of dimension dim;
  *   sol      space allocated for degp1 vectors of dimension dim;
- *   noqr     flag if true, then no qr;
+ *   zeroQ    if true, then Q is zero and Q must be computed;
+ *   noqr     flag if true, then no qr, only when not zeroQ;
  *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
  *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
  *   totbslapsedms accumulates the milliseconds spent on back substitutions;
@@ -232,6 +233,7 @@ void GPU_dbl_bals_solve
  *   R        the R of the QR factorization of the Jacobian matrix;
  *   rhs      updated right hand side vectors;
  *   sol      coefficients of the solution series;
+ *   zeroQ    false if Q was computed;
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped;
@@ -246,7 +248,7 @@ void GPU_cmplx_bals_solve
    double ***matre, double ***matim, double **Qre, double **Qim,
    double **Rre, double **Rim, double **rhsre, double **rhsim,
    double **solre, double **solim,
-   bool *noqr, int *upidx, int *bsidx, int *newtail,
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
    double *totqrlapsedms, double *totqtblapsedms, double *totbslapsedms,
    double *totupdlapsedms, int vrblvl );
 /*
@@ -272,7 +274,8 @@ void GPU_cmplx_bals_solve
  *   rhsim    degp1 vectors of dimension dim;
  *   solre    space allocated for degp1 vectors of dimension dim;
  *   solim    space allocated for degp1 vectors of dimension dim;
- *   noqr     flag if true, then no qr;
+ *   zeroQ    if true, then Q is zero and Q must be computed;
+ *   noqr     flag if true, then no qr, only when not zeroQ;
  *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
  *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
  *   totbslapsedms accumulates the milliseconds spent on back substitutions;
@@ -288,6 +291,7 @@ void GPU_cmplx_bals_solve
  *   rhsim    imaginary parts of the updated right hand side vectors;
  *   solre    real parts of the solution series;
  *   solim    imaginary parts of the solution series;
+ *   zeroQ    false if Q was computed;
  *   noqr     updated flag if ||dx_0|| is zero for the first time;
  *   upidx    counts the number of updates skipped;
  *   bsidx    counts the number of backsubstitutions skipped;

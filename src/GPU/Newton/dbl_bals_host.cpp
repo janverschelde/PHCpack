@@ -13,7 +13,8 @@ using namespace std;
 
 void CPU_dbl_qrbs_head
  ( int dim, int degp1, double ***mat, double **rhs, double **sol,
-   double **Q, double **R, double *wrkvec, bool *noqr, int vrblvl )
+   double **Q, double **R, double *wrkvec,
+   bool *zeroQ, bool *noqr, int vrblvl )
 {
    if(vrblvl > 1)
    {
@@ -34,16 +35,27 @@ void CPU_dbl_qrbs_head
 
    if(nrm + 1.0 == 1.0)
    {
-      if(vrblvl > 0)
-         cout << "skip call to CPU_dbl_factors_houseqr ..." << endl;
+      if(*zeroQ)
+      {
+         if(vrblvl > 0)
+            cout << "no skipping of CPU_dbl_factors_houseqr because zeroQ"
+                 << endl;
 
-      *noqr = true;
+         *noqr = false;
+      }
+      else
+      {
+         if(vrblvl > 0)
+            cout << "skip call to CPU_dbl_factors_houseqr ..." << endl;
+
+         *noqr = true;
+      }
    }
-   else
+   if(!*noqr)
    {
       if(vrblvl > 0) cout << "calling CPU_dbl_factors_houseqr ..." << endl;
 
-      CPU_dbl_factors_houseqr(dim,dim,mat[0],Q,R);
+      CPU_dbl_factors_houseqr(dim,dim,mat[0],Q,R); *zeroQ = false;
       CPU_dbl_factors_qrbs(dim,dim,Q,R,rhs[0],sol[0],wrkvec);
 
       if(vrblvl > 0)
@@ -75,7 +87,8 @@ void CPU_cmplx_qrbs_head
  ( int dim, int degp1, double ***matre, double ***matim,
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **Qre, double **Qim, double **Rre, double **Rim,
-   double *wrkvecre, double *wrkvecim, bool *noqr, int vrblvl )
+   double *wrkvecre, double *wrkvecim,
+   bool *zeroQ, bool *noqr, int vrblvl )
 {
    if(vrblvl > 1)
    {
@@ -99,16 +112,28 @@ void CPU_cmplx_qrbs_head
 
    if(nrm + 1.0 == 1.0)
    {
-      if(vrblvl > 0)
-         cout << "skip call to CPU_cmplx_factors_houseqr ..." << endl;
+      if(*zeroQ)
+      {
+         if(vrblvl > 0)
+            cout << "no skipping of CPU_cmplx_factors_houseqr because zeroQ"
+                 << endl;
 
-      *noqr = true;
+         *noqr = false;
+      }
+      else
+      {
+         if(vrblvl > 0)
+            cout << "skip call to CPU_cmplx_factors_houseqr ..." << endl;
+
+         *noqr = true;
+      }
    }
-   else
+   if(!*noqr)
    {
       if(vrblvl > 0) cout << "calling CPU_cmplx_factors_houseqr ..." << endl;
 
       CPU_cmplx_factors_houseqr(dim,dim,matre[0],matim[0],Qre,Qim,Rre,Rim);
+      *zeroQ = false;
       CPU_cmplx_factors_qrbs
          (dim,dim,Qre,Qim,Rre,Rim,rhsre[0],rhsim[0],solre[0],solim[0],
           wrkvecre,wrkvecim);
@@ -357,9 +382,10 @@ void CPU_cmplx_qrbs_tail
 void CPU_dbl_qrbs_solve
  ( int dim, int degp1, int tailidx, double ***mat, double **rhs, double **sol,
    double **Q, double **R, double *wrkvec,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
+   int vrblvl )
 {
-   if(*noqr)
+   if((*noqr) && (!*zeroQ))
    {
       if(vrblvl > 0) cout << "skipping CPU_dbl_qrbs_head ..." << endl;
    }
@@ -368,7 +394,7 @@ void CPU_dbl_qrbs_solve
       if(vrblvl > 0) cout << "calling CPU_dbl_qrbs_head ..." << endl;
 
       CPU_dbl_qrbs_head
-         (dim,degp1,mat,rhs,sol,Q,R,wrkvec,noqr,vrblvl);
+         (dim,degp1,mat,rhs,sol,Q,R,wrkvec,zeroQ,noqr,vrblvl);
    }
    if(degp1 > 1)
    {
@@ -384,9 +410,10 @@ void CPU_cmplx_qrbs_solve
    double **rhsre, double **rhsim, double **solre, double **solim,
    double **Qre, double **Qim, double **Rre, double **Rim,
    double *wrkvecre, double *wrkvecim,
-   bool *noqr, int *upidx, int *bsidx, int *newtail, int vrblvl )
+   bool *zeroQ, bool *noqr, int *upidx, int *bsidx, int *newtail,
+   int vrblvl )
 {
-   if(*noqr)
+   if((*noqr) && (!*zeroQ))
    {
       if(vrblvl > 0) cout << "skipping CPU_cmplx_qrbs_head ..." << endl;
    }
@@ -396,7 +423,7 @@ void CPU_cmplx_qrbs_solve
 
       CPU_cmplx_qrbs_head
          (dim,degp1,matre,matim,rhsre,rhsim,solre,solim,
-          Qre,Qim,Rre,Rim,wrkvecre,wrkvecim,noqr,vrblvl);
+          Qre,Qim,Rre,Rim,wrkvecre,wrkvecim,zeroQ,noqr,vrblvl);
    }
    if(degp1 > 1)
    {

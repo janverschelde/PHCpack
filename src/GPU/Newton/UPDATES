@@ -1,3 +1,6 @@
+Tue 25 Apr 2023 : to avoid skipping the QR in the very first step,
+  adjusted dbl_bals_{host, kernels} and {dbl, cmplx}_newton_method.
+
 Wed 11 Jan 2023 : updated unimodular_matrices.cpp, prompt_newton_setup.cpp,
   and test_{dbl,dbl2,dbl4,dbl8}_newton.cpp for 2-column lower/upper tests.
 
