@@ -1178,8 +1178,7 @@ clean:
 	del test_dbl8_track.obj test_dbl8_track.exp
 	del test_dbl8_track.lib test_dbl8_track.exe
 
-cleanall:
-	del *~
+cleanall: clean
 	del random_numbers.obj random_series.obj random_monomials.obj
 	del double_double_functions.obj quad_double_functions.obj
 	del octo_double_functions.obj

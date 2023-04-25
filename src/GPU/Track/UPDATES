@@ -1,5 +1,6 @@
 Mon 24 Apr 2023 : updated {dbl, dbl2, dbl4, dbl8}_path_tracker.cpp for
   a start solution and a right hand side for a Newton homotopy.
+  Adjusted the makefile_windows to clean everything.
 
 Sun 23 Apr 2023 : added {dbl4, dbl8}_path_tracker, test_{dbl4, dbl8}_track,
   and updated the makefile and makefile_unix.  Updated makefile_windows.
