@@ -523,6 +523,7 @@ test_dbl2_track: random_numbers.o random_series.o random_monomials.o \
                  random2_vectors.o random2_series.o \
                  unimodular_matrices.o prompt_newton_setup.o \
                  cyclic_columns.o test_dbl2_track.o dbl2_path_tracker.o \
+                 dbl_fabry_host.o \
                  dbl2_newton_testers.o dbl2_newton_method.o \
                  dbl2_convolutions_host.o dbl2_monomials_host.o \
                  convolution_job.o convolution_jobs.o write_job_counts.o \
@@ -542,7 +543,7 @@ test_dbl2_track: random_numbers.o random_series.o random_monomials.o \
                   random_numbers.o random_series.o random_monomials.o \
                   double_double_functions.o \
                   random2_vectors.o random2_series.o \
-                  dbl2_path_tracker.o \
+                  dbl2_path_tracker.o dbl_fabry_host.o \
                   dbl2_newton_testers.o dbl2_newton_method.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
@@ -563,6 +564,7 @@ test_dbl4_track: random_numbers.o random_series.o random_monomials.o \
                  random4_vectors.o random4_series.o \
                  unimodular_matrices.o prompt_newton_setup.o \
                  cyclic_columns.o test_dbl4_track.o dbl4_path_tracker.o \
+                 dbl_fabry_host.o \
                  dbl4_newton_testers.o dbl4_newton_method.o \
                  dbl4_convolutions_host.o dbl4_monomials_host.o \
                  convolution_job.o convolution_jobs.o write_job_counts.o \
@@ -582,7 +584,7 @@ test_dbl4_track: random_numbers.o random_series.o random_monomials.o \
                   random_numbers.o random_series.o random_monomials.o \
                   double_double_functions.o quad_double_functions.o \
                   random4_vectors.o random4_series.o \
-                  dbl4_path_tracker.o \
+                  dbl4_path_tracker.o dbl_fabry_host.o \
                   dbl4_newton_testers.o dbl4_newton_method.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
@@ -604,6 +606,7 @@ test_dbl8_track: random_numbers.o random_series.o random_monomials.o \
                  random8_vectors.o random8_series.o \
                  unimodular_matrices.o prompt_newton_setup.o \
                  cyclic_columns.o test_dbl8_track.o dbl8_path_tracker.o \
+                 dbl_fabry_host.o \
                  dbl8_newton_testers.o dbl8_newton_method.o \
                  dbl8_convolutions_host.o dbl8_monomials_host.o \
                  convolution_job.o convolution_jobs.o write_job_counts.o \
@@ -624,7 +627,7 @@ test_dbl8_track: random_numbers.o random_series.o random_monomials.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o \
                   random8_vectors.o random8_series.o \
-                  dbl8_path_tracker.o \
+                  dbl8_path_tracker.o dbl_fabry_host.o \
                   dbl8_newton_testers.o dbl8_newton_method.o \
                   dbl8_convolutions_host.o dbl8_monomials_host.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \

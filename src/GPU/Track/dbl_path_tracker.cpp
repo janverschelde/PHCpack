@@ -402,10 +402,10 @@ int test_dbl_real_track
        Q_h,Q_d,R_h,R_d,workvec,resvec,&resmax,vrblvl,mode);
 
    if((mode == 0) || (mode == 2))
-      dbl_fabry_step(dim,deg,input_d,ratios_d,&step_d,vrblvl);
+      dbl_fabry_step(dim,deg,input_d,ratios_d,&step_d,1); // vrblvl);
 
    if((mode == 1) || (mode == 2))
-      dbl_fabry_step(dim,deg,input_h,ratios_h,&step_h,vrblvl);
+      dbl_fabry_step(dim,deg,input_h,ratios_h,&step_h,1); // vrblvl);
 
    return 0;
 }

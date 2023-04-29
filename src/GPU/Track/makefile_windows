@@ -1050,7 +1050,7 @@ test_dbl_track: unimodular_matrices.obj \
 	     dbl_baqr_kernels.obj dbl_tabs_kernels.obj
 
 test_dbl2_track: unimodular_matrices.obj \
-                 test_dbl2_track.obj dbl2_path_tracker.obj \
+                 test_dbl2_track.obj dbl2_path_tracker.obj dbl_fabry_host.obj \
                  random_numbers.obj random_series.obj random_monomials.obj \
                  random2_vectors.obj random2_series.obj cyclic_columns.obj \
                  dbl2_monomial_systems.obj prompt_newton_setup.obj \
@@ -1071,6 +1071,7 @@ test_dbl2_track: unimodular_matrices.obj \
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl2_track.exe \
 		             test_dbl2_track.obj dbl2_path_tracker.obj \
+             dbl_fabry_host.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              random2_vectors.obj random2_series.obj cyclic_columns.obj \
@@ -1090,7 +1091,7 @@ test_dbl2_track: unimodular_matrices.obj \
              dbl2_tail_kernels.obj dbl2_bals_kernels.obj
 
 test_dbl4_track: unimodular_matrices.obj \
-                 test_dbl4_track.obj dbl4_path_tracker.obj \
+                 test_dbl4_track.obj dbl4_path_tracker.obj dbl_fabry_host.obj \
                  random_numbers.obj random_series.obj random_monomials.obj \
                  random4_vectors.obj random4_series.obj cyclic_columns.obj \
                  dbl4_monomial_systems.obj prompt_newton_setup.obj \
@@ -1113,6 +1114,7 @@ test_dbl4_track: unimodular_matrices.obj \
 	nvcc -ccbin=$(CL) -o test_dbl4_track.exe \
 		             test_dbl4_track.obj dbl4_path_tracker.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
+             dbl_fabry_host.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              random4_vectors.obj random4_series.obj cyclic_columns.obj \
              double_double_functions.obj quad_double_functions.obj\
@@ -1132,7 +1134,7 @@ test_dbl4_track: unimodular_matrices.obj \
              dbl4_tail_kernels.obj dbl4_bals_kernels.obj
 
 test_dbl8_track: unimodular_matrices.obj \
-                 test_dbl8_track.obj dbl8_path_tracker.obj \
+                 test_dbl8_track.obj dbl8_path_tracker.obj dbl_fabry_host.obj \
                  random_numbers.obj random_series.obj random_monomials.obj \
                  random8_vectors.obj random8_series.obj cyclic_columns.obj \
                  dbl8_monomial_systems.obj prompt_newton_setup.obj \
@@ -1154,6 +1156,7 @@ test_dbl8_track: unimodular_matrices.obj \
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl8_track.exe \
 		             test_dbl8_track.obj dbl8_path_tracker.obj \
+             dbl_fabry_host.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              random8_vectors.obj random8_series.obj cyclic_columns.obj \

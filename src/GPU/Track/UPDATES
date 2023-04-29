@@ -1,7 +1,9 @@
 Fri 28 Apr 2023 : new dbl_fabry_host to determine the step size based on
   the Fabry ratios of the series.  Updated dbl_path_tracker.cpp,
   and makefile_unix.  Updated makefile_windows and dbl_fabry_host.cpp
-  for compilation error on Windows.
+  for compilation error on Windows.  Also called the Fabry step size in
+  {dbl2, dbl4, dbl8}_path_tracker.cpp, updated dbl_path_tracker.cpp
+  and the makefiles.
 
 Tue 25 Apr 2023 : updated dbl_path_tracker.cpp for the zeroQ flag.
   Also updated {dbl2, dbl4, dbl8}_path_tracker.cpp.
