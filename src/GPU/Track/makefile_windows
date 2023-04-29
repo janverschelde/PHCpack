@@ -934,6 +934,15 @@ test_dbl8_flopbals: random_numbers.obj random8_vectors.obj \
 	     octo_double_functions.obj dbl_bals_flopcounts.obj \
 	     dbl8_tail_kernels.obj gettimeofday4win.obj
 
+dbl_fabry_host.obj:
+	@-echo ">>> compiling dbl_fabry_host ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
+                      dbl_fabry_host.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_fabry_host.obj /EHsc
+
 dbl_path_tracker.obj:
 	@-echo ">>> compiling dbl_path_tracker ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) -I$(NEW) \
@@ -1003,7 +1012,7 @@ test_dbl8_track.obj:
                  /Fo: test_dbl8_track.obj /EHsc
 
 test_dbl_track: unimodular_matrices.obj \
-                test_dbl_track.obj dbl_path_tracker.obj \
+                test_dbl_track.obj dbl_path_tracker.obj dbl_fabry_host.obj \
                 dbl_newton_testers.obj prompt_newton_setup.obj \
                 dbl_monomial_systems.obj cyclic_columns.obj \
                 dbl_newton_method.obj cmplx_newton_method.obj \
@@ -1023,6 +1032,7 @@ test_dbl_track: unimodular_matrices.obj \
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_track.exe \
                              test_dbl_track.obj dbl_path_tracker.obj \
+             dbl_fabry_host.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
 	     dbl_newton_testers.obj dbl_monomial_systems.obj \
              dbl_newton_method.obj cmplx_newton_method.obj \
@@ -1165,6 +1175,7 @@ test_dbl8_track: unimodular_matrices.obj \
 
 clean:
 	del *~
+	del dbl_fabry_host.obj
 	del dbl_path_tracker.obj
 	del dbl2_path_tracker.obj
 	del dbl4_path_tracker.obj

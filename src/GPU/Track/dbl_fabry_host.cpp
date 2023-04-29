@@ -49,6 +49,8 @@ int dbl_fabry_smallest
       if(ratios[i] < *step) *step = ratios[i];
 
    if(vrblvl > 0) cout << "step : " << *step << endl;
+
+   return 0;
 }
 
 int dbl_fabry_step
