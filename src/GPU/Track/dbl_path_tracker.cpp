@@ -24,6 +24,7 @@
 #include "dbl_bals_kernels.h"
 #include "dbl_newton_testers.h"
 #include "dbl_newton_method.h"
+#include "dbl_fabry_host.h"
 #include "dbl_path_tracker.h"
 
 using namespace std;
@@ -389,12 +390,22 @@ int test_dbl_real_track
    }
    if(vrblvl > 0) cout << scientific << setprecision(16);
 
+   double *ratios_d = new double[dim];
+   double *ratios_h = new double[dim];
+   double step_d,step_h;
+
    dbl_run_newton
       (szt,nbt,dim,deg,nbrcol,nbsteps,
        nvr,idx,exp,nbrfac,expfac,mbrhs,cff,acc,
        input_h,input_d,output_h,output_d,funval_h,funval_d,
        jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
        Q_h,Q_d,R_h,R_d,workvec,resvec,&resmax,vrblvl,mode);
+
+   if((mode == 0) || (mode == 2))
+      dbl_fabry_step(dim,deg,input_d,ratios_d,&step_d,vrblvl);
+
+   if((mode == 1) || (mode == 2))
+      dbl_fabry_step(dim,deg,input_h,ratios_h,&step_h,vrblvl);
 
    return 0;
 }

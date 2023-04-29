@@ -441,6 +441,10 @@ prompt_newton_setup.o:
 	@-echo ">>> compiling prompt_newton_setup ..."
 	$(gpp) -O3 -c $(NEW)/prompt_newton_setup.cpp
 
+dbl_fabry_host.o:
+	@-echo ">>> compiling dbl_fabry_host ..."
+	$(gpp) -O3 -c dbl_fabry_host.cpp
+
 dbl_path_tracker.o:
 	@-echo ">>> compiling dbl_path_tracker ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) -I$(NEW) \
@@ -480,6 +484,7 @@ test_dbl8_track.o:
 test_dbl_track: random_numbers.o random_series.o random_monomials.o \
                 unimodular_matrices.o prompt_newton_setup.o \
                 cyclic_columns.o test_dbl_track.o dbl_path_tracker.o \
+                dbl_fabry_host.o \
                 dbl_newton_testers.o dbl_newton_method.o \
                 dbl_convolutions_host.o dbl_monomials_host.o \
                 convolution_job.o convolution_jobs.o write_job_counts.o \
@@ -497,7 +502,7 @@ test_dbl_track: random_numbers.o random_series.o random_monomials.o \
 	$(gpp) -o test_dbl_track test_dbl_track.o cyclic_columns.o \
                   prompt_newton_setup.o unimodular_matrices.o \
                   random_numbers.o random_series.o random_monomials.o \
-                  dbl_path_tracker.o \
+                  dbl_path_tracker.o dbl_fabry_host.o \
                   dbl_newton_testers.o dbl_newton_method.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
@@ -636,7 +641,7 @@ test_dbl8_track: random_numbers.o random_series.o random_monomials.o \
                 -lcuda -lcudart -L$(CUDALIB)
 
 clean:
-	/bin/rm -f -r dbl_path_tracker.o 
+	/bin/rm -f -r dbl_fabry_host.o dbl_path_tracker.o 
 	/bin/rm -f -r dbl2_path_tracker.o 
 	/bin/rm -f -r dbl4_path_tracker.o 
 	/bin/rm -f -r dbl8_path_tracker.o 
