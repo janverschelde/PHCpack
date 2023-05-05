@@ -393,6 +393,9 @@ int test_dbl_real_track
    double *ratios_d = new double[dim];
    double *ratios_h = new double[dim];
    double step_d,step_h;
+   double *predval_d = new double[dim];
+   double *predval_h = new double[dim];
+   int fail;
 
    dbl_run_newton
       (szt,nbt,dim,deg,nbrcol,nbsteps,
@@ -402,10 +405,16 @@ int test_dbl_real_track
        Q_h,Q_d,R_h,R_d,workvec,resvec,&resmax,vrblvl,mode);
 
    if((mode == 0) || (mode == 2))
-      dbl_fabry_step(dim,deg,input_d,ratios_d,&step_d,1); // vrblvl);
-
+   {
+      fail = dbl_fabry_step(dim,deg,input_d,ratios_d,&step_d,1); // vrblvl);
+      if(step_d > 0.2) step_d = 0.2;
+      fail = dbl_fabry_predictor(dim,deg,input_d,0.5*step_d,predval_d,2);
+   }
    if((mode == 1) || (mode == 2))
-      dbl_fabry_step(dim,deg,input_h,ratios_h,&step_h,1); // vrblvl);
-
+   {
+      fail = dbl_fabry_step(dim,deg,input_h,ratios_h,&step_h,1); // vrblvl);
+      if(step_h > 0.2) step_h = 0.2;
+      fail = dbl_fabry_predictor(dim,deg,input_h,0.5*step_h,predval_h,2);
+   }
    return 0;
 }

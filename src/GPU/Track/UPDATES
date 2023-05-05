@@ -1,3 +1,6 @@
+Fri 5 May 2023 : extended dbl_fabry_host with a predictor,
+  updated dbl_path_tracker.cpp.
+
 Fri 28 Apr 2023 : new dbl_fabry_host to determine the step size based on
   the Fabry ratios of the series.  Updated dbl_path_tracker.cpp,
   and makefile_unix.  Updated makefile_windows and dbl_fabry_host.cpp
