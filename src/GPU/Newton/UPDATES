@@ -1,3 +1,6 @@
+Fri 5 May 2023 : in dbl_bals_host.cpp and dbl_bals_kernels.cu, commented
+  out the assignment to prevnorm.
+
 Thu 27 Apr 2023 : in dbl8_bals_host.cpp, commented out the assignment
   to prevnorm to allow the computation of large coefficients.
 
