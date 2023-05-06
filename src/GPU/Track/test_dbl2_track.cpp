@@ -9,6 +9,7 @@
 #include "cyclic_columns.h"
 #include "prompt_newton_setup.h"
 #include "dbl2_path_tracker.h"
+#include "cmplx2_path_tracker.h"
 
 using namespace std;
 
@@ -116,6 +117,10 @@ int main ( void )
    }
    if(cdata == 0)
       test_dbl2_real_track
+         (szt,nbt,dim,deg,nbrcol,colnvr,colidx,exp,nbrfac,expfac,rowsA,
+          nbsteps,mode,vrblvl);
+   else
+      test_dbl2_cmplx_track
          (szt,nbt,dim,deg,nbrcol,colnvr,colidx,exp,nbrfac,expfac,rowsA,
           nbsteps,mode,vrblvl);
 
