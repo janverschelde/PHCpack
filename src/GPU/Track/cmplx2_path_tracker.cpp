@@ -197,7 +197,7 @@ int cmplx2_run_newton
          }
       }
    }
-   cout << "error : " << errsum << endl;
+   if(mode == 2) cout << "error : " << errsum << endl;
 
    cout << "Wall clock time on all " << stepcnt << " Newton steps : ";
    cout << fixed << setprecision(3) 

@@ -1,7 +1,9 @@
 Sat 6 May 2023 : new cmplx_path_tracker, updated test_dbl_track.cpp
   and makefile_unix.  Updated makefile_windows, to cmplx_path_tracker.cpp
   added return 0; statements to the functions.  New cmplx2_path_tracker,
-  updated test_dbl2_track.cpp and makefile_unix.
+  updated test_dbl2_track.cpp, makefile_unix, and makefile_windows.
+  New cmplx4_path_tracker, small fix in cmplx2_path_tracker.cpp,
+  updated test_dbl4_track.cpp, makefile_unix, and makefile_windows.
 
 Fri 5 May 2023 : extended dbl_fabry_host with a predictor,
   updated dbl_path_tracker.cpp.

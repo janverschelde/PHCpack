@@ -1003,6 +1003,16 @@ cmplx2_path_tracker.obj:
                  /I$(CUDASDK)/include \
                  /Fo: cmplx2_path_tracker.obj /EHsc
 
+cmplx4_path_tracker.obj:
+	@-echo ">>> compiling cmplx4_path_tracker ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) -I$(NEW) \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
+                      cmplx4_path_tracker.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: cmplx4_path_tracker.obj /EHsc
+
 test_dbl_track.obj:
 	@-echo ">>> compiling test_dbl_track ..."
 	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(NEW) \
@@ -1114,6 +1124,7 @@ test_dbl2_track: unimodular_matrices.obj \
 
 test_dbl4_track: unimodular_matrices.obj \
                  test_dbl4_track.obj dbl4_path_tracker.obj dbl_fabry_host.obj \
+		 cmplx4_path_tracker.obj \
                  random_numbers.obj random_series.obj random_monomials.obj \
                  random4_vectors.obj random4_series.obj cyclic_columns.obj \
                  dbl4_monomial_systems.obj prompt_newton_setup.obj \
@@ -1136,7 +1147,7 @@ test_dbl4_track: unimodular_matrices.obj \
 	nvcc -ccbin=$(CL) -o test_dbl4_track.exe \
 		             test_dbl4_track.obj dbl4_path_tracker.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
-             dbl_fabry_host.obj \
+             dbl_fabry_host.obj cmplx4_path_tracker.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              random4_vectors.obj random4_series.obj cyclic_columns.obj \
              double_double_functions.obj quad_double_functions.obj\
@@ -1203,7 +1214,7 @@ clean:
 	del dbl_fabry_host.obj
 	del dbl_path_tracker.obj cmplx_path_tracker.obj
 	del dbl2_path_tracker.obj cmplx2_path_tracker.obj
-	del dbl4_path_tracker.obj
+	del dbl4_path_tracker.obj cmplx4_path_tracker.obj
 	del dbl8_path_tracker.obj
 	del test_dbl_track.obj test_dbl_track.exp
 	del test_dbl_track.lib test_dbl_track.exe
