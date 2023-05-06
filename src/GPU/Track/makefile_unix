@@ -343,6 +343,11 @@ dbl_newton_method.o:
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) -I$(NEW) \
                $(NEW)/dbl_newton_method.cpp
 
+cmplx_newton_method.o:
+	@-echo ">>> compiling cmplx_newton_method ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) -I$(NEW) \
+               $(NEW)/cmplx_newton_method.cpp
+
 dbl2_newton_method.o:
 	@-echo ">>> compiling dbl2_newton_method ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) -I$(NEW) \
@@ -450,6 +455,11 @@ dbl_path_tracker.o:
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) -I$(NEW) \
                dbl_path_tracker.cpp
 
+cmplx_path_tracker.o:
+	@-echo ">>> compiling cmplx_path_tracker ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) -I$(NEW) \
+               cmplx_path_tracker.cpp
+
 dbl2_path_tracker.o:
 	@-echo ">>> compiling dbl2_path_tracker ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) -I$(NEW) \
@@ -483,9 +493,10 @@ test_dbl8_track.o:
 
 test_dbl_track: random_numbers.o random_series.o random_monomials.o \
                 unimodular_matrices.o prompt_newton_setup.o \
-                cyclic_columns.o test_dbl_track.o dbl_path_tracker.o \
-                dbl_fabry_host.o \
+                cyclic_columns.o test_dbl_track.o \
+                dbl_path_tracker.o cmplx_path_tracker.o dbl_fabry_host.o \
                 dbl_newton_testers.o dbl_newton_method.o \
+                cmplx_newton_method.o \
                 dbl_convolutions_host.o dbl_monomials_host.o \
                 convolution_job.o convolution_jobs.o write_job_counts.o \
                 addition_job.o addition_jobs.o job_coordinates.o \
@@ -502,8 +513,9 @@ test_dbl_track: random_numbers.o random_series.o random_monomials.o \
 	$(gpp) -o test_dbl_track test_dbl_track.o cyclic_columns.o \
                   prompt_newton_setup.o unimodular_matrices.o \
                   random_numbers.o random_series.o random_monomials.o \
-                  dbl_path_tracker.o dbl_fabry_host.o \
+                  dbl_path_tracker.o cmplx_path_tracker.o dbl_fabry_host.o \
                   dbl_newton_testers.o dbl_newton_method.o \
+                  cmplx_newton_method.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
@@ -645,6 +657,7 @@ test_dbl8_track: random_numbers.o random_series.o random_monomials.o \
 
 clean:
 	/bin/rm -f -r dbl_fabry_host.o dbl_path_tracker.o 
+	/bin/rm -f -r cmplx_path_tracker.o 
 	/bin/rm -f -r dbl2_path_tracker.o 
 	/bin/rm -f -r dbl4_path_tracker.o 
 	/bin/rm -f -r dbl8_path_tracker.o 
@@ -694,7 +707,8 @@ cleanall: clean
 	/bin/rm -f -r dbl4_bals_kernels.o dbl4_tail_kernels.o
 	/bin/rm -f -r dbl8_bals_host.o
 	/bin/rm -f -r dbl8_bals_kernels.o dbl8_tail_kernels.o
-	/bin/rm -f -r dbl_newton_method.o dbl2_newton_method.o
+	/bin/rm -f -r dbl_newton_method.o cmplx_newton_method.o
+	/bin/rm -f -r dbl2_newton_method.o
 	/bin/rm -f -r dbl4_newton_method.o dbl8_newton_method.o
 	/bin/rm -f -r dbl_newton_testers.o dbl2_newton_testers.o
 	/bin/rm -f -r dbl4_newton_testers.o dbl8_newton_testers.o
