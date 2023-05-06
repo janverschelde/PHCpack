@@ -177,6 +177,8 @@ int cmplx_run_newton
 
    cout << "           Total time spent by all kernels : "
         << totkerneltime << " milliseconds." << endl;
+
+   return 0;
 }
 
 int test_dbl_cmplx_track
@@ -591,4 +593,6 @@ int test_dbl_cmplx_track
        solre_h,solim_h,solre_d,solim_d,
        Qre_h,Qim_h,Qre_d,Qim_d,Rre_h,Rim_h,Rre_d,Rim_d,
        workvecre,workvecim,resvecre,resvecim,&resmax,vrblvl,mode);
+
+   return 0;
 }
