@@ -27,8 +27,9 @@ void cmplx_newton_qrstep
    double **resvecre, double **resvecim, double *resmax,
    bool *zeroQ_h, bool *noqr_h, bool *zeroQ_d, bool *noqr_d,
    int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
-   double *totcnvlapsedms, double *totqrlapsedms, double *totbslapsedms,
-   double *totupdlapsedms, double *totreslapsedms, int vrblvl, int mode );
+   double *totcnvlapsedms, double *totqrlapsedms, double *totqtblapsedms,
+   double *totbslapsedms, double *totupdlapsedms, double *totreslapsedms,
+   int vrblvl, int mode );
 /*
  * DESCRIPTION :
  *   Does one step with Newton's method to update a power series,
