@@ -393,7 +393,7 @@ void CPU_dbl4_qrbs_tail
       }
       else
       {
-         prevnorm = 1.0e+8; // nrm*1.0e+8;
+         // prevnorm = 1.0e+8; // nrm*1.0e+8;
 
          if(vrblvl > 0)
             cout << "-> run backsubstitution for x[" << i << "] ..." << endl;
@@ -585,7 +585,7 @@ void CPU_cmplx4_qrbs_tail
       }
       else
       {
-         prevnorm = 1.0e+8; // nrm*1.0e+8;
+         // prevnorm = 1.0e+8; // nrm*1.0e+8;
 
          if(vrblvl > 0)
             cout << "-> run backsubstitution for x[" << i << "] ..." << endl;

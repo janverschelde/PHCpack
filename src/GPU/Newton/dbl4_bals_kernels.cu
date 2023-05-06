@@ -964,7 +964,7 @@ void GPU_dbl4_bals_solve
       }
       else
       {
-         prevnorm = 1.0e+8; // nrm*1.0e+8;
+         // prevnorm = 1.0e+8; // nrm*1.0e+8;
 
          if(vrblvl > 0)
             cout << "-> run backsubstitution for x[" << stage << "] ..."
@@ -1362,7 +1362,7 @@ void GPU_cmplx4_bals_solve
       }
       else
       {
-         prevnorm = 1.0e+8; // nrm*1.0e+8;
+         // prevnorm = 1.0e+8; // nrm*1.0e+8;
 
          if(vrblvl > 0)
             cout << "-> run backsubstitutions for x[" << stage << "] ..."
