@@ -1,3 +1,5 @@
+Sun 7 May 2023 : updated test_columns.cpp, adding value for #columns.
+
 Sat 6 May 2023 : fixed cmplx_newton_method.h for a wrong header of the
   qrstep function.  In dbl2_bals_host.cpp and dbl2_bals_kernels.cu,
   commented outthe assignment to prevnorm.  And did the same in
