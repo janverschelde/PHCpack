@@ -10,7 +10,8 @@ dbl2_path_tracker      : tracker in double double precision on real numbers
 cmplx2_path_tracker    : tracker in double double precision on complex numbers
 dbl4_path_tracker      : tracker in quad double precision on real numbers
 cmplx4_path_tracker    : tracker in quad double precision on complex numbers
-dbl8_path_tracker      : tracker in octo double precision
+dbl8_path_tracker      : tracker in octo double precision on real numbers
+cmplx8_path_tracker    : tracker in octo double precision on complex numbers
 test_dbl_track         : tests the tracker in double precision
 test_dbl2_track        : tests the tracker in double double precision
 test_dbl4_track        : tests the tracker in quad double precision
