@@ -32,6 +32,9 @@ test_monomial_jobs:
 test_dbl_cyclic:
 	make -f $(MAKEFILE) test_dbl_cyclic
 
+test_dbl2_cyclic:
+	make -f $(MAKEFILE) test_dbl2_cyclic
+
 test_dbl_flopbals:
 	make -f $(MAKEFILE) test_dbl_flopbals
 
