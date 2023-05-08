@@ -87,7 +87,10 @@ int main ( void )
    fail += dbl4_real_evaltest(nbt,szt,deg,dim,nvr,idx,vrblvl);
    fail += dbl4_complex_evaltest(nbt,szt,deg,dim,nvr,idx,vrblvl);
 
-   if(fail == 0) cout << "-> Test passed." << endl;
+   if(fail == 0)
+      cout << "-> Test passed." << endl;
+   else
+      cout << "-> " << fail << " tests failed." << endl;
 
    return 0;
 }
@@ -230,6 +233,26 @@ int dbl4_real_evaltest
          outputlolo_d[i][j] = new double[degp1];
       }
    }
+   int **rowsA = new int*[dim]; // exponents in the rows
+   for(int i=0; i<dim; i++) rowsA[i] = new int[dim]; // work space
+
+   double **rhshihi; // result of evaluate columns
+   double **rhslohi;
+   double **rhshilo;
+   double **rhslolo;
+
+   rhshihi = new double*[dim];
+   rhslohi = new double*[dim];
+   rhshilo = new double*[dim];
+   rhslolo = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      rhshihi[i] = new double[degp1];
+      rhslohi[i] = new double[degp1];
+      rhshilo[i] = new double[degp1];
+      rhslolo[i] = new double[degp1];
+   }
    double **funvalhihi_h;  // function values on host
    double **funvallohi_h;
    double **funvalhilo_h;
@@ -329,12 +352,30 @@ int dbl4_real_evaltest
          inputlolo_d[i][j] = inputlolo_h[i][j];
       }
 
+   evaluate_real4_columns
+      (dim,deg,dim,nvr,idx,rowsA,
+       cffhihi,cfflohi,cffhilo,cfflolo,
+       inputhihi_h,inputlohi_h,inputhilo_h,inputlolo_h,
+       rhshihi,rhslohi,rhshilo,rhslolo,0);
+
    CPU_dbl4_evaluate_columns
       (dim,deg,dim,nvr,idx,
        cffhihi,cfflohi,cffhilo,cfflolo,acchihi,acclohi,acchilo,acclolo,
        inputhihi_h,inputlohi_h,inputhilo_h,inputlolo_h,
        funvalhihi_h,funvallohi_h,funvalhilo_h,funvallolo_h,
        jacvalhihi_h,jacvallohi_h,jacvalhilo_h,jacvallolo_h,0);
+
+   cout << scientific << setprecision(16);
+   cout << "-> comparing column evaluations ... " << endl;
+   double errsum0 = 0.0;
+
+   errsum0 = dbl4_error2sum(dim,degp1,
+                rhshihi,rhslohi,rhshilo,rhslolo,
+                funvalhihi_h,funvallohi_h,funvalhilo_h,funvallolo_h,
+                "rhsfun",vrblvl);
+
+   cout << scientific << setprecision(3);
+   cout << "sum of errors : " << errsum0 << endl;
 
    double totcnvlapsedms;
 
@@ -371,10 +412,10 @@ int dbl4_real_evaltest
    cout << scientific << setprecision(3);
    cout << "sum of errors : " << errsum2 << endl;
 
-   double errsum = errsum1 + errsum2;
+   double errsum = errsum0 + errsum1 + errsum2;
    cout << "total sum of errors : " << errsum << endl;
 
-   return (errsum > 1.0e-12);
+   return (errsum > 1.0e-48);
 }
 
 int dbl4_complex_evaltest
@@ -599,6 +640,39 @@ int dbl4_complex_evaltest
          outputimlolo_d[i][j] = new double[degp1];
       }
    }
+   int **rowsA = new int*[dim]; // exponents in the rows
+   for(int i=0; i<dim; i++) rowsA[i] = new int[dim]; // work space
+
+   double **rhsrehihi; // result of evaluate columns
+   double **rhsrelohi;
+   double **rhsrehilo;
+   double **rhsrelolo;
+   double **rhsimhihi;
+   double **rhsimlohi;
+   double **rhsimhilo;
+   double **rhsimlolo;
+
+   rhsrehihi = new double*[dim];
+   rhsrelohi = new double*[dim];
+   rhsrehilo = new double*[dim];
+   rhsrelolo = new double*[dim];
+   rhsimhihi = new double*[dim];
+   rhsimlohi = new double*[dim];
+   rhsimhilo = new double*[dim];
+   rhsimlolo = new double*[dim];
+
+   for(int i=0; i<dim; i++)
+   {
+      rhsrehihi[i] = new double[degp1];
+      rhsrelohi[i] = new double[degp1];
+      rhsrehilo[i] = new double[degp1];
+      rhsrelolo[i] = new double[degp1];
+      rhsimhihi[i] = new double[degp1];
+      rhsimlohi[i] = new double[degp1];
+      rhsimhilo[i] = new double[degp1];
+      rhsimlolo[i] = new double[degp1];
+   }
+
    double **funvalrehihi_h;  // function values on host
    double **funvalrelohi_h;
    double **funvalrehilo_h;
@@ -790,6 +864,15 @@ int dbl4_complex_evaltest
          inputimlolo_d[i][j] = inputimlolo_h[i][j];
       }
 
+   evaluate_complex4_columns
+      (dim,deg,dim,nvr,idx,rowsA,
+       cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+       cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+       inputrehihi_h,inputrelohi_h,inputrehilo_h,inputrelolo_h,
+       inputimhihi_h,inputimlohi_h,inputimhilo_h,inputimlolo_h,
+       rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
+       rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,0);
+
    CPU_cmplx4_evaluate_columns
       (dim,deg,dim,nvr,idx,
        cffrehihi,cffrelohi,cffrehilo,cffrelolo,
@@ -802,6 +885,20 @@ int dbl4_complex_evaltest
        funvalimhihi_h,funvalimlohi_h,funvalimhilo_h,funvalimlolo_h,
        jacvalrehihi_h,jacvalrelohi_h,jacvalrehilo_h,jacvalrelolo_h,
        jacvalimhihi_h,jacvalimlohi_h,jacvalimhilo_h,jacvalimlolo_h,0);
+
+   cout << scientific << setprecision(16);
+   cout << "-> comparing column evaluations ... " << endl;
+   double errsum0 = 0.0;
+
+   errsum0 = cmplx4_error2sum(dim,degp1,
+                rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
+                rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
+                funvalrehihi_h,funvalrelohi_h,funvalrehilo_h,funvalrelolo_h,
+                funvalimhihi_h,funvalimlohi_h,funvalimhilo_h,funvalimlolo_h,
+                "rhsfun",vrblvl);
+
+   cout << scientific << setprecision(3);
+   cout << "sum of errors : " << errsum0 << endl;
 
    double totcnvlapsedms;
 
@@ -849,8 +946,8 @@ int dbl4_complex_evaltest
    cout << scientific << setprecision(3);
    cout << "sum of errors : " << errsum2 << endl;
 
-   double errsum = errsum1 + errsum2;
+   double errsum = errsum0 + errsum1 + errsum2;
    cout << "total sum of errors : " << errsum << endl;
 
-   return (errsum > 1.0e-12);
+   return (errsum > 1.0e-48);
 }

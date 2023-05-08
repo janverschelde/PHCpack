@@ -4,6 +4,7 @@ Mon 8 May 2023 : bug fix in test_dbl_cyclic.cpp by initializing the
   and makefile_windows.  New test_dbl4_cyclic.cpp, updated makefile
   and makefile_unix; and makefile_windows.  New test_dbl8_cyclic.cpp,
   updated makefile, makefile_unix, and makefile_windows.
+  Added test with column evaluations to test_dbl4_cyclic.cpp.
 
 Sun 7 May 2023 : updated test_columns.cpp, adding value for #columns.
   New test_dbl_cyclic.cpp to test the evaluation and differentiation
