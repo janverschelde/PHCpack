@@ -469,6 +469,10 @@ test_dbl2_cyclic.o:
 	@-echo ">>> compiling test_dbl2_cyclic ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(POL) test_dbl2_cyclic.cpp
 
+test_dbl4_cyclic.o:
+	@-echo ">>> compiling test_dbl4_cyclic ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(POL) test_dbl4_cyclic.cpp
+
 write_gpu_timings.o:
 	@-echo ">>> compiling write_gpu_timings ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/write_gpu_timings.cpp
@@ -621,6 +625,29 @@ test_dbl2_cyclic: cyclic_columns.o test_dbl2_cyclic.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   dbl2_systems_kernels.o dbl2_polynomials_kernels.o \
                   dbl2_newton_testers.o write_gpu_timings.o \
+                -lcuda -lcudart -L$(CUDALIB)
+
+test_dbl4_cyclic: cyclic_columns.o test_dbl4_cyclic.o \
+                  random_numbers.o random_series.o \
+                  random4_vectors.o random4_series.o \
+                  double_double_functions.o quad_double_functions.o \
+                  dbl4_convolutions_host.o dbl4_monomials_host.o \
+                  dbl4_systems_host.o dbl4_monomial_systems.o \
+                  convolution_job.o convolution_jobs.o write_job_counts.o \
+                  addition_job.o addition_jobs.o job_coordinates.o \
+                  dbl4_systems_kernels.o dbl4_polynomials_kernels.o \
+                  dbl4_newton_testers.o write_gpu_timings.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl4_cyclic test_dbl4_cyclic.o cyclic_columns.o \
+                  random_numbers.o random_series.o \
+                  random4_vectors.o random4_series.o \
+                  double_double_functions.o quad_double_functions.o \
+                  dbl4_convolutions_host.o dbl4_monomials_host.o \
+                  dbl4_systems_host.o dbl4_monomial_systems.o \
+                  convolution_job.o convolution_jobs.o write_job_counts.o \
+                  addition_job.o addition_jobs.o job_coordinates.o \
+                  dbl4_systems_kernels.o dbl4_polynomials_kernels.o \
+                  dbl4_newton_testers.o write_gpu_timings.o \
                 -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl_flopbals: random_numbers.o dbl_tail_kernels.o \
@@ -843,6 +870,7 @@ clean:
 	/bin/rm -f -r test_monomial_jobs.o test_monomial_jobs
 	/bin/rm -f -r test_dbl_cyclic.o test_dbl_cyclic
 	/bin/rm -f -r test_dbl2_cyclic.o test_dbl2_cyclic
+	/bin/rm -f -r test_dbl4_cyclic.o test_dbl4_cyclic
 	/bin/rm -f -r dbl_bals_flopcounts.o
 	/bin/rm -f -r test_dbl_flopbals.o test_dbl_flopbals
 	/bin/rm -f -r test_dbl2_flopbals.o test_dbl2_flopbals

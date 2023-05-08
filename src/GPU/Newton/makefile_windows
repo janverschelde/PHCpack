@@ -695,6 +695,13 @@ test_dbl2_cyclic.obj:
                       test_dbl2_cyclic.cpp \
                  /Fo: test_dbl2_cyclic.obj /EHsc
 
+test_dbl4_cyclic.obj:
+	@-echo ">>> compiling test_dbl4_cyclic ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_dbl4_cyclic.cpp \
+                 /Fo: test_dbl4_cyclic.obj /EHsc
+
 write_gpu_timings.obj:
 	@-echo ">>> compiling write_gpu_timings ..."
 	$(CL)\cl /c $(POL)/write_gpu_timings.cpp \
@@ -930,6 +937,32 @@ test_dbl2_cyclic: cyclic_columns.obj test_dbl2_cyclic.obj \
                  dbl2_newton_testers.obj write_gpu_timings.obj \
                  gettimeofday4win.obj
 
+test_dbl4_cyclic: cyclic_columns.obj test_dbl4_cyclic.obj \
+                  random_numbers.obj random_series.obj \
+                  random4_vectors.obj random4_series.obj \
+                  double_double_functions.obj quad_double_functions.obj \
+                  dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+                  dbl4_systems_host.obj dbl4_monomial_systems.obj \
+                  convolution_job.obj convolution_jobs.obj \
+                  write_job_counts.obj job_coordinates.obj \
+                  addition_job.obj addition_jobs.obj \
+                  dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
+                  dbl4_newton_testers.obj write_gpu_timings.obj \
+                  gettimeofday4win.obj
+	nvcc -ccbin=$(CL) -o test_dbl4_cyclic.exe \
+                             test_dbl4_cyclic.obj cyclic_columns.obj \
+                 random_numbers.obj random_series.obj \
+                 random4_vectors.obj random4_series.obj \
+                 double_double_functions.obj quad_double_functions.obj \
+                 dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+                 dbl4_systems_host.obj dbl4_monomial_systems.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 write_job_counts.obj job_coordinates.obj \
+                 addition_job.obj addition_jobs.obj \
+                 dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
+                 dbl4_newton_testers.obj write_gpu_timings.obj \
+                 gettimeofday4win.obj
+
 prompt_newton_setup.obj:
 	@-echo ">>> compiling prompt_newton_setup ..."
 	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
@@ -1147,6 +1180,8 @@ clean:
 	del test_dbl_cyclic.obj test_dbl_cyclic.lib
 	del test_dbl2_cyclic.exe test_dbl2_cyclic.exp
 	del test_dbl2_cyclic.obj test_dbl2_cyclic.lib
+	del test_dbl4_cyclic.exe test_dbl4_cyclic.exp
+	del test_dbl4_cyclic.obj test_dbl4_cyclic.lib
 	del dbl_monomial_systems.obj test_monomial_systems.obj
 	del dbl2_monomial_systems.obj test2_monomial_systems.obj
 	del dbl4_monomial_systems.obj test4_monomial_systems.obj

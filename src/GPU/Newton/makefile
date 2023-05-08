@@ -35,6 +35,9 @@ test_dbl_cyclic:
 test_dbl2_cyclic:
 	make -f $(MAKEFILE) test_dbl2_cyclic
 
+test_dbl4_cyclic:
+	make -f $(MAKEFILE) test_dbl4_cyclic
+
 test_dbl_flopbals:
 	make -f $(MAKEFILE) test_dbl_flopbals
 
