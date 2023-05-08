@@ -1,3 +1,6 @@
+Mon 8 May 2023 : bug fix in test_dbl_cyclic.cpp by initializing the
+  coefficients of the input, at all degrees in the series.
+
 Sun 7 May 2023 : updated test_columns.cpp, adding value for #columns.
   New test_dbl_cyclic.cpp to test the evaluation and differentiation
   of the cyclic n-root systems.  Updated the makefiles.

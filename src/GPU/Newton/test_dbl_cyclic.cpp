@@ -58,10 +58,12 @@ int main ( void )
    int dim; cin >> dim;
    cout << "-> give the degree : ";
    int deg; cin >> deg;
-   cout << "-> give the number of tiles : ";
-   int nbt; cin >> nbt;
-   cout << "-> give the size of each tile : "; 
-   int szt; cin >> szt;
+   // cout << "-> give the number of tiles : ";
+   // int nbt; cin >> nbt;
+   const int nbt = 1;
+   const int szt = deg+1;
+   // cout << "-> give the size of each tile : "; 
+   // int szt; cin >> szt;
    cout << "-> give the verbose level (0 for silent) : "; 
    int vrblvl; cin >> vrblvl;
 
@@ -109,6 +111,29 @@ int dbl_real_evaltest
 
    make_real_exponentials(dim,deg,sol);
    make_real_coefficients(dim,dim,cff);
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+         for(int k=1; k<degp1; k++) cff[i][j][k] = 0.0;
+
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
+      cout << "The coefficients of the solution series :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         for(int j=0; j<degp1; j++)
+            cout << "sol[" << i << "][" << j << "] : "
+                 << sol[i][j] << endl;
+      }
+      cout << "The coefficients of the system :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         for(int j=0; j<dim; j++)
+            for(int k=0; k<degp1; k++)
+               cout << "cff[" << i << "][" << j << "][" << k << "] : "
+                    << cff[i][j][k] << endl;
+      }
+   }
 
    cout << "-> allocating space for input and output ..." << endl;
 
@@ -240,7 +265,36 @@ int dbl_complex_evaltest
       solim[i] = new double[degp1];
    }
    make_complex_exponentials(dim,deg,angles,solre,solim);
-   make_complex_coefficients(dim,dim,cffre,cffre);
+   make_complex_coefficients(dim,dim,cffre,cffim);
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<dim; j++)
+         for(int k=1; k<degp1; k++)
+         {
+            cffre[i][j][k] = 0.0;
+            cffim[i][j][k] = 0.0;
+         }
+
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
+      cout << "The coefficients of the solution series :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         for(int j=0; j<degp1; j++)
+            cout << "sol[" << i << "][" << j << "] : "
+                 << solre[i][j] << "  "
+                 << solim[i][j] << endl;
+      }
+      cout << "The coefficients of the system :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         for(int j=0; j<dim; j++)
+            for(int k=0; k<degp1; k++)
+               cout << "cff[" << i << "][" << j << "][" << k << "] : "
+                    << cffre[i][j][k] << "  "
+                    << cffim[i][j][k] << endl;
+      }
+   }
 
    cout << "-> allocating space for input and output ..." << endl;
 
