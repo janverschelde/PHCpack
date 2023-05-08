@@ -461,6 +461,10 @@ test_monomial_jobs.o:
 	@-echo ">>> compiling test_monomial_jobs ..."
 	$(gpp) -O3 -c -I$(CNV) -I$(MAT) -I$(POL) test_monomial_jobs.cpp
 
+test_dbl_cyclic.o:
+	@-echo ">>> compiling test_dbl_cyclic ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(POL) test_dbl_cyclic.cpp
+
 write_gpu_timings.o:
 	@-echo ">>> compiling write_gpu_timings ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/write_gpu_timings.cpp
@@ -572,6 +576,25 @@ test_monomial_jobs: random_numbers.o random_series.o random_monomials.o \
                   test_monomial_jobs.o unimodular_matrices.o \
                   convolution_job.o convolution_jobs.o \
                   random_numbers.o random_series.o random_monomials.o
+
+test_dbl_cyclic: cyclic_columns.o test_dbl_cyclic.o \
+                 random_numbers.o random_series.o \
+                 dbl_convolutions_host.o dbl_monomials_host.o \
+                 dbl_systems_host.o dbl_monomial_systems.o \
+                 convolution_job.o convolution_jobs.o write_job_counts.o \
+                 addition_job.o addition_jobs.o job_coordinates.o \
+                 dbl_systems_kernels.o dbl_polynomials_kernels.o \
+                 dbl_newton_testers.o write_gpu_timings.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl_cyclic test_dbl_cyclic.o cyclic_columns.o \
+                  random_numbers.o random_series.o \
+                  dbl_convolutions_host.o dbl_monomials_host.o \
+                  dbl_systems_host.o dbl_monomial_systems.o \
+                  convolution_job.o convolution_jobs.o write_job_counts.o \
+                  addition_job.o addition_jobs.o job_coordinates.o \
+                  dbl_systems_kernels.o dbl_polynomials_kernels.o \
+                  dbl_newton_testers.o write_gpu_timings.o \
+                -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl_flopbals: random_numbers.o dbl_tail_kernels.o \
                    dbl_bals_flopcounts.o test_dbl_flopbals.o
@@ -791,6 +814,7 @@ clean:
 	/bin/rm -f -r test4_monomial_systems.o test4_monomial_systems
 	/bin/rm -f -r test8_monomial_systems.o test8_monomial_systems
 	/bin/rm -f -r test_monomial_jobs.o test_monomial_jobs
+	/bin/rm -f -r test_dbl_cyclic.o test_dbl_cyclic
 	/bin/rm -f -r dbl_bals_flopcounts.o
 	/bin/rm -f -r test_dbl_flopbals.o test_dbl_flopbals
 	/bin/rm -f -r test_dbl2_flopbals.o test_dbl2_flopbals

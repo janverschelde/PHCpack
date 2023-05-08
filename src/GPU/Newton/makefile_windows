@@ -681,6 +681,13 @@ test_monomial_jobs.obj:
                       test_monomial_jobs.cpp \
                  /Fo: test_monomial_jobs.obj /EHsc
 
+test_dbl_cyclic.obj:
+	@-echo ">>> compiling test_dbl_cyclic ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_dbl_cyclic.cpp \
+                 /Fo: test_dbl_cyclic.obj /EHsc
+
 write_gpu_timings.obj:
 	@-echo ">>> compiling write_gpu_timings ..."
 	$(CL)\cl /c $(POL)/write_gpu_timings.cpp \
@@ -867,6 +874,28 @@ test_monomial_jobs: unimodular_matrices.obj test_monomial_jobs.obj \
                              test_monomial_jobs.obj \
              unimodular_matrices.obj convolution_job.obj convolution_jobs.obj \
              random_numbers.obj random_series.obj random_monomials.obj
+
+test_dbl_cyclic: cyclic_columns.obj test_dbl_cyclic.obj \
+                 random_numbers.obj random_series.obj \
+                 dbl_convolutions_host.obj dbl_monomials_host.obj \
+                 dbl_systems_host.obj dbl_monomial_systems.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 write_job_counts.obj job_coordinates.obj \
+                 addition_job.obj addition_jobs.obj \
+                 dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
+                 dbl_newton_testers.obj write_gpu_timings.obj \
+                 gettimeofday4win.obj
+	nvcc -ccbin=$(CL) -o test_dbl_cyclic.exe \
+                             test_dbl_cyclic.obj cyclic_columns.obj \
+                 random_numbers.obj random_series.obj \
+                 dbl_convolutions_host.obj dbl_monomials_host.obj \
+                 dbl_systems_host.obj dbl_monomial_systems.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 write_job_counts.obj job_coordinates.obj \
+                 addition_job.obj addition_jobs.obj \
+                 dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
+                 dbl_newton_testers.obj write_gpu_timings.obj \
+                 gettimeofday4win.obj
 
 prompt_newton_setup.obj:
 	@-echo ">>> compiling prompt_newton_setup ..."
@@ -1081,6 +1110,8 @@ clean:
 	del test_unimodular.obj test_unimodular.lib
 	del test_columns.exe test_columns.exp
 	del test_columns.obj test_columns.lib cyclic_columns.obj
+	del test_dbl_cyclic.exe test_dbl_cyclic.exp
+	del test_dbl_cyclic.obj test_dbl_cyclic.lib
 	del dbl_monomial_systems.obj test_monomial_systems.obj
 	del dbl2_monomial_systems.obj test2_monomial_systems.obj
 	del dbl4_monomial_systems.obj test4_monomial_systems.obj

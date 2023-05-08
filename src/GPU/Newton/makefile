@@ -29,6 +29,9 @@ test8_monomial_systems:
 test_monomial_jobs:
 	make -f $(MAKEFILE) test_monomial_jobs
 
+test_dbl_cyclic:
+	make -f $(MAKEFILE) test_dbl_cyclic
+
 test_dbl_flopbals:
 	make -f $(MAKEFILE) test_dbl_flopbals
 
