@@ -29,6 +29,7 @@ dbl8_systems_kernels     : systems evaldiff with octo doubles on device
 test_dbl_cyclic          : test evaldiff cyclic system with doubles
 test_dbl2_cyclic         : test evaldiff cyclic system with double doubles
 test_dbl4_cyclic         : test evaldiff cyclic system with quad doubles
+test_dbl8_cyclic         : test evaldiff cyclic system with octo doubles
 ------------------------------------------------------------------------------
 dbl_onenorms_host        : computes 1-norm of vectors in double precision
 ------------------------------------------------------------------------------
