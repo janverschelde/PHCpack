@@ -28,13 +28,6 @@ void ConvolutionJobs::make_monomial
                                    << " : layer " << layer << endl;
       jobs[layer].push_back(job);
    }
-   if(verbose)
-   {
-      cout << jobcount << " : ";
-      cout << "monomial " << monidx << " : ";            // f[0] = cff*x[0]
-      cout << "cff * input[" << ix1 << "] to f[0] : ";
-      cout << "layer " << layer << endl;
-   }
    layer = layer + 1;
 
    for(int i=1; i<nvr; i++)
@@ -47,14 +40,6 @@ void ConvolutionJobs::make_monomial
          if(verbose) cout << jobcount << " : " << job
                                       << " : layer " << layer << endl;
          jobs[layer].push_back(job);
-      }
-      if(verbose)
-      {
-         cout << jobcount << " : ";
-         cout << "monomial " << monidx << " : ";
-         cout << "f[" << i-1 << "] * "
-              << "input[" << ix2 << "] to f[" << i << "] : ";
-         cout << "layer " << layer << endl;
       }
       layer = layer + 1;
    }
@@ -75,14 +60,6 @@ void ConvolutionJobs::make_monomial
                                       << " : layer " << layer << endl;
          jobs[layer].push_back(job);
       }
-      if(verbose)
-      {
-         cout << jobcount << " : ";
-         cout << "monomial " << monidx << " : ";
-         cout << "input[" << ix1 << "] * "
-              << "input[" << ix2 << "] to b[0] : ";
-         cout << "layer " << layer << endl;
-      }
       layer = layer + 1;
 
       for(int i=1; i<nvr-2; i++)
@@ -96,14 +73,6 @@ void ConvolutionJobs::make_monomial
                                          << " : layer " << layer << endl;
             jobs[layer].push_back(job);
          }
-         if(verbose)
-         {
-            cout << jobcount << " : ";
-            cout << "monomial " << monidx << " : ";
-            cout << "b[" << i-1 << "] * "
-                 << "input[" << ix2 << "] to b[" << i << "] : ";
-            cout << "layer " << layer << endl;
-         }
          layer = layer + 1;
       }
 
@@ -113,14 +82,6 @@ void ConvolutionJobs::make_monomial
          if(verbose) cout << jobcount << " : " << job
                                       << " : layer " << layer << endl;
          jobs[layer].push_back(job);
-      }
-      if(verbose)
-      {
-         cout << jobcount << " : ";
-         cout << "monomial " << monidx << " : ";      // b[n-2] = b[n-3]*cff
-         cout << "b[" << nvr-3 << "] * cff to "
-              << "b[" << nvr-2 << "] : ";
-         cout << "layer " << layer << endl;
       }
       layer = layer + 1;
       // host code uses cross[0] as work space,
@@ -137,13 +98,6 @@ void ConvolutionJobs::make_monomial
             if(verbose) cout << jobcount << " : " << job
                                          << " : layer " << layer << endl;
             jobs[layer].push_back(job);
-         }
-         if(verbose)
-         {
-            cout << jobcount << " : ";
-            cout << "monomial " << monidx << " : ";
-            cout << "f[0] * input[" << ix2 << "] to c[0] : ";
-            cout << "layer " << layer << endl;
          }
       }
       else
@@ -162,14 +116,6 @@ void ConvolutionJobs::make_monomial
                                             << " : layer " << layer << endl;
                jobs[layer].push_back(job);
             }
-            if(verbose)
-            {
-               cout << jobcount << " : ";
-               cout << "monomial " << monidx << " : ";
-               cout << "f[" << i << "] * b[" << ix2
-                    << "] to c[" << i << "] : ";
-               cout << "layer " << layer << endl;
-            }
          }
          ix2 = idx[nvr-1];                        // c[n-3] = f[n-3]*x[n-1]
 
@@ -181,14 +127,6 @@ void ConvolutionJobs::make_monomial
             if(verbose) cout << jobcount << " : " << job
                                          << " : layer " << layer << endl;
             jobs[layer].push_back(job);
-         }
-         if(verbose)
-         {
-            cout << jobcount << " : ";
-            cout << "monomial " << monidx << " : ";
-            cout << "f[" << nvr-3 << "] * input[" << ix2
-                 << "] to c[" << nvr-3 << "] : ";
-            cout << "layer " << layer << endl;
          }
       }
    }
@@ -218,14 +156,6 @@ void ConvolutionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
          if(verbose) cout << jobcount << " : " << job
                                       << " : layer 0" << endl;
          jobs[0].push_back(job);
-
-         if(verbose)
-         {
-            cout << jobcount << " : ";
-            cout << "monomial " << i << " : ";
-            cout << "input[" << ix1 << "] * cff to f[0] : ";
-            cout << "layer 0" << endl;
-         }
          if(laydepth < 1) laydepth = 1; // we have one layer
       }
       else if(nvr[i] == 2)
@@ -237,40 +167,16 @@ void ConvolutionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
          if(verbose) cout << jobcount << " : " << job1
                                       << " : layer 0" << endl;
          jobs[0].push_back(job1);
-
-         if(verbose)
-         {
-            cout << jobcount << " : ";
-            cout << "monomial " << i << " : ";
-            cout << "cff * input[" << ix1 << "] to f[0] : ";
-            cout << "layer 0" << endl;
-         }
          jobcount = jobcount + 1; freqlaycnt[0] = freqlaycnt[0] + 1;
          ConvolutionJob job2(i,-1,-1,0,ix2,2,0);
          if(verbose) cout << jobcount << " : " << job2
                                       << " : layer 0" << endl;
          jobs[0].push_back(job2);
-
-         if(verbose)
-         {
-            cout << jobcount << " : ";
-            cout << "monomial " << i << " : ";
-            cout << "cff * input[" << ix2 << "] to b[0] : ";
-            cout << "layer 0" << endl;
-         }
          jobcount = jobcount + 1; freqlaycnt[1] = freqlaycnt[1] + 1;
          ConvolutionJob job3(i,1,0,0,ix2,1,1);
          if(verbose) cout << jobcount << " : " << job3
                                       << " : layer 1" << endl;
          jobs[1].push_back(job3);
-
-         if(verbose)
-         {
-            cout << jobcount << " : ";
-            cout << "monomial " << i << " : ";
-            cout << "f[0] * " << "input[" << ix2 << "] to f[1] : ";
-            cout << "layer 1" << endl;
-         }
          if(laydepth < 2) laydepth = 2; // we have two layers
       }
       else if(nvr[i] > 2)

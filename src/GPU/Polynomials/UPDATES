@@ -1,3 +1,6 @@
+Tue 9 May 2023 : in convolution_jobs.cpp removed duplicate output statements
+  in verbose mode.
+
 Fri 16 Dec 2022 : extended write_job_counts with a function to write only
   the operations for the convolution jobs.  Then changed the types in
   write_job_counts to long long int to avoid overflow in the counts.
