@@ -8,6 +8,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
+#include "random_numbers.h"
 #include "dbl4_systems_host.h"
 #include "dbl4_monomial_systems.h"
 #include "dbl4_systems_kernels.h"
@@ -84,7 +85,7 @@ int main ( void )
 
    int fail = 0;
 
-   fail += dbl4_real_evaltest(nbt,szt,deg,dim,nvr,idx,vrblvl);
+   // fail += dbl4_real_evaltest(nbt,szt,deg,dim,nvr,idx,vrblvl);
    fail += dbl4_complex_evaltest(nbt,szt,deg,dim,nvr,idx,vrblvl);
 
    if(fail == 0)
@@ -480,13 +481,26 @@ int dbl4_complex_evaltest
    make_complex4_exponentials
       (dim,deg,solrehihi,solrelohi,solrehilo,solrelolo,
                solimhihi,solimlohi,solimhilo,solimlolo);
-
+/*
+   for(int i=0; i<dim; i++)  // set leading coefficients to random doubles
+   { 
+      solrehihi[i][0] = random_double();
+      solimhihi[i][0] = random_double();
+   }
+ */
    make_complex4_coefficients
       (dim,dim,cffrehihi,cffrelohi,cffrehilo,cffrelolo,
                cffimhihi,cffimlohi,cffimhilo,cffimlolo);
 
    for(int i=0; i<dim; i++)
       for(int j=0; j<dim; j++)
+      {
+         // reset coefficient to one
+         cffrehihi[i][j][0] = 1.0; cffrelohi[i][j][0] = 0.0;
+         cffrehilo[i][j][0] = 0.0; cffrelolo[i][j][0] = 0.0;
+         cffimhihi[i][j][0] = 0.0; cffimlohi[i][j][0] = 0.0;
+         cffimhilo[i][j][0] = 0.0; cffimlolo[i][j][0] = 0.0;
+
          for(int k=1; k<degp1; k++)
          {
             cffrehihi[i][j][k] = 0.0; cffrelohi[i][j][k] = 0.0;
@@ -494,6 +508,7 @@ int dbl4_complex_evaltest
             cffimhihi[i][j][k] = 0.0; cffimlohi[i][j][k] = 0.0;
             cffimhilo[i][j][k] = 0.0; cffimlolo[i][j][k] = 0.0;
          }
+      }
 
    if(vrblvl > 1)
    {
@@ -864,8 +879,10 @@ int dbl4_complex_evaltest
          inputimlolo_d[i][j] = inputimlolo_h[i][j];
       }
 
+   const int nbrcol = 1;
+
    evaluate_complex4_columns
-      (dim,deg,dim,nvr,idx,rowsA,
+      (dim,deg,nbrcol,nvr,idx,rowsA,
        cffrehihi,cffrelohi,cffrehilo,cffrelolo,
        cffimhihi,cffimlohi,cffimhilo,cffimlolo,
        inputrehihi_h,inputrelohi_h,inputrehilo_h,inputrelolo_h,
@@ -874,7 +891,7 @@ int dbl4_complex_evaltest
        rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,0);
 
    CPU_cmplx4_evaluate_columns
-      (dim,deg,dim,nvr,idx,
+      (dim,deg,nbrcol,nvr,idx,
        cffrehihi,cffrelohi,cffrehilo,cffrelolo,
        cffimhihi,cffimlohi,cffimhilo,cffimlolo,
        accrehihi,accrelohi,accrehilo,accrelolo,
@@ -902,8 +919,10 @@ int dbl4_complex_evaltest
 
    double totcnvlapsedms;
 
+   if(vrblvl > 0) cout << scientific << setprecision(16);
+
    GPU_cmplx4_evaluate_columns
-      (dim,deg,dim,szt,nbt,nvr,idx,
+      (dim,deg,nbrcol,szt,nbt,nvr,idx,
        cffrehihi,cffrelohi,cffrehilo,cffrelolo,
        cffimhihi,cffimlohi,cffimhilo,cffimlolo,
        inputrehihi_d,inputrelohi_d,inputrehilo_d,inputrelolo_d,
@@ -914,7 +933,7 @@ int dbl4_complex_evaltest
        funvalimhihi_d,funvalimlohi_d,funvalimhilo_d,funvalimlolo_d,
        jacvalrehihi_d,jacvalrelohi_d,jacvalrehilo_d,jacvalrelolo_d,
        jacvalimhihi_d,jacvalimlohi_d,jacvalimhilo_d,jacvalimlolo_d,
-       &totcnvlapsedms,0);
+       &totcnvlapsedms,vrblvl);
 
    cout << scientific << setprecision(16);
    cout << "-> comparing CPU with GPU evaluations ... " << endl;

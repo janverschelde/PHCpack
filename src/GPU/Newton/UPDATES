@@ -1,5 +1,6 @@
 Tue 9 May 2023 : in dbl4_systems_kernels.cu, improved formatting of the
-  output series at verbose level 2.
+  output series at verbose level 2.  Updated test_dbl4_cyclic.cpp with
+  the number of columns variable for more test cases.
 
 Mon 8 May 2023 : bug fix in test_dbl_cyclic.cpp by initializing the
   coefficients of the input, at all degrees in the series.

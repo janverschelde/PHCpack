@@ -1,3 +1,5 @@
+Tue 9 May 2023 : added __syncthreads()'s to dbl_convolutions_kernels.cu.
+
 Wed 19 Oct 2022 : extended random2_series with a dbl2_exponential function;
   also extended {random4, random8}_series likewise.
 

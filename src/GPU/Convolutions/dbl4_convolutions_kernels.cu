@@ -376,6 +376,8 @@ __global__ void cmplx4_padded_convolute
    yihihi = yvimhihi[idx]; yilohi = yvimlohi[idx];
    yihilo = yvimhilo[idx]; yilolo = yvimlolo[idx];
 
+   __syncthreads();
+
    qdg_mul(xrhihi,xrlohi,xrhilo,xrlolo,
            yrhihi,yrlohi,yrhilo,yrlolo,
            &zrhihi,&zrlohi,&zrhilo,&zrlolo);       // zr = xr*yr
@@ -405,6 +407,8 @@ __global__ void cmplx4_padded_convolute
    zvimhihi[k] = zihihi; zvimlohi[k] = zilohi;
    zvimhilo[k] = zihilo; zvimlolo[k] = zilolo;
 
+   __syncthreads();
+
    for(int i=1; i<dim; i++) // z[k] = z[k] + x[i]*y[k-i]
    {
       idx = dim + k - i;
@@ -416,6 +420,8 @@ __global__ void cmplx4_padded_convolute
       yrhilo = yvrehilo[idx]; yrlolo = yvrelolo[idx];
       yihihi = yvimhihi[idx]; yilohi = yvimlohi[idx];
       yihilo = yvimhilo[idx]; yilolo = yvimlolo[idx];
+
+      __syncthreads();
 
       qdg_mul(xrhihi,xrlohi,xrhilo,xrlolo,
               yrhihi,yrlohi,yrhilo,yrlolo,
@@ -451,6 +457,7 @@ __global__ void cmplx4_padded_convolute
    zrehilo[k] = zvrehilo[k]; zrelolo[k] = zvrelolo[k];
    zimhihi[k] = zvimhihi[k]; zimlohi[k] = zvimlohi[k];
    zimhilo[k] = zvimhilo[k]; zimlolo[k] = zvimlolo[k];
+   __syncthreads();
 }
 
 void GPU_dbl4_product
