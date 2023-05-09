@@ -1093,6 +1093,7 @@ void GPU_dbl4_evaluate_columns
    }
    if(vrblvl > 1)
    {
+      cout << scientific << setprecision(16);
       for(int i=0; i<dim; i++)
       {
          cout << "output series for monomial " << i << " :" << endl;
@@ -1282,6 +1283,7 @@ void GPU_cmplx4_evaluate_columns
    }
    if(vrblvl > 1)
    {
+      cout << scientific << setprecision(16);
       for(int i=0; i<dim; i++)
       {
          cout << "output series for polynomial " << i << " :" << endl;
