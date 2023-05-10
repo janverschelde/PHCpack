@@ -373,6 +373,10 @@ run_polynomials.o:
 	@-echo ">>> compiling run_polynomials ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) run_polynomials.cpp
 
+prompt_test_supports.o:
+	@-echo ">>> compiling prompt_test_supports ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) prompt_test_supports.cpp
+
 convolution_job.o:
 	@-echo ">>> compiling convolution_job ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) convolution_job.cpp
@@ -419,17 +423,20 @@ prompt_for_setup.o:
 
 test_convolution_jobs: random_numbers.o random_series.o random_monomials.o \
                        random_polynomials.o convolution_job.o \
-                       convolution_jobs.o test_convolution_jobs.o
+                       convolution_jobs.o test_convolution_jobs.o \
+                       prompt_test_supports.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_convolution_jobs test_convolution_jobs.o \
+                  prompt_test_supports.o \
                   random_numbers.o random_series.o random_monomials.o \
                   random_polynomials.o convolution_job.o convolution_jobs.o
 
 test_addition_jobs: random_numbers.o random_series.o random_monomials.o \
                     random_polynomials.o addition_job.o addition_jobs.o \
-                    test_addition_jobs.o
+                    prompt_test_supports.o test_addition_jobs.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_addition_jobs test_addition_jobs.o \
+                  prompt_test_supports.o \
                   random_numbers.o random_series.o random_monomials.o \
                   random_polynomials.o addition_job.o addition_jobs.o
 
@@ -972,6 +979,7 @@ clean:
 	/bin/rm -f -r random_polynomials.o dbl_polynomials_host.o
 	/bin/rm -f -r dbl_polynomials_kernels.o dbl_polynomials_testers.o
 	/bin/rm -f -r convolution_job.o convolution_jobs.o
+	/bin/rm -f -r prompt_test_supports.o
 	/bin/rm -f -r test_convolution_jobs test_convolution_jobs.o
 	/bin/rm -f -r addition_job.o addition_jobs.o
 	/bin/rm -f -r test_addition_jobs test_addition_jobs.o

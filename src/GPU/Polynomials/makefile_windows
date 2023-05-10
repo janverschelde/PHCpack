@@ -599,6 +599,12 @@ run_polynomials.obj:
                  /I$(CUDASDK)/include \
                  /Fo: run_polynomials.obj /EHsc
 
+prompt_test_supports.obj:
+	@-echo ">>> compiling prompt_test_supports ..."
+	$(CL)\cl /c prompt_test_supports.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: prompt_test_supports.obj /EHsc
+
 convolution_job.obj:
 	@-echo ">>> compiling convolution_job ..."
 	$(CL)\cl /c convolution_job.cpp \
@@ -668,21 +674,23 @@ prompt_for_setup.obj:
 test_convolution_jobs: random_numbers.obj random_series.obj \
 	               random_monomials.obj random_polynomials.obj \
                        convolution_job.obj convolution_jobs.obj \
-                       test_convolution_jobs.obj 
+                       test_convolution_jobs.obj prompt_test_supports.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_convolution_jobs.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
               random_polynomials.obj convolution_job.obj \
-              convolution_jobs.obj test_convolution_jobs.obj
+              convolution_jobs.obj test_convolution_jobs.obj \
+              prompt_test_supports.obj
 
 test_addition_jobs: random_numbers.obj random_series.obj \
 	            random_monomials.obj random_polynomials.obj \
-                    addition_job.obj addition_jobs.obj test_addition_jobs.obj 
+                    addition_job.obj addition_jobs.obj \
+                    test_addition_jobs.obj prompt_test_supports.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_addition_jobs.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
               random_polynomials.obj addition_job.obj addition_jobs.obj \
-              test_addition_jobs.obj
+              test_addition_jobs.obj prompt_test_supports.obj
 
 test_dbl_polynomials: random_numbers.obj random_series.obj \
 	              random_monomials.obj random_polynomials.obj \
@@ -1249,6 +1257,7 @@ clean:
 	del test_dbl_polynomials.exp test_dbl_polynomials.lib
 	del dbl_polynomials_host.obj random_polynomials.obj
 	del dbl_polynomials_kernels.obj dbl_polynomials_testers.obj
+	del prompt_test_supports.obj
 	del test_convolution_jobs.exe test_convolution_jobs.lib
 	del convolution_job.obj convolution_jobs.obj
 	del test_convolution_jobs.exp test_convolution_jobs.obj

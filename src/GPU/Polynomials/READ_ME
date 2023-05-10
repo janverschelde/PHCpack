@@ -15,6 +15,7 @@ random5_polynomials        : random polynomials with penta doubles
 random8_polynomials        : random polynomials with octo doubles
 random10_polynomials       : random polynomials with deca doubles
 -----------------------------------------------------------------------------
+prompt_test_supports       : generation of supports of test polynomials
 convolution_job            : class to represent one convolution job
 convolution_jobs           : class to setup layers of convolution jobs
 test_convolution_jobs      : collects all convolution jobs
