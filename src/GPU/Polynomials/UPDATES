@@ -1,3 +1,5 @@
+Wed 10 May 2023 : edited the documentation of convolution_job.h for clarity.
+
 Tue 9 May 2023 : in convolution_jobs.cpp removed duplicate output statements
   in verbose mode.  In dbl4_polynomials_kernels.cu, used local variables in
   the kernel cmplx4_padded_convjobs.

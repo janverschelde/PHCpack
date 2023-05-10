@@ -16,28 +16,28 @@ class ConvolutionJob
                        int outputtp, int outputix );
       /*
        * DESCRIPTION :
-       *   One convolution jobs is uniquely determined by five integers.
+       *   One convolution job is uniquely determined by five integers.
        *
        * ON ENTRY :
        *   monomialix   index of the monomial;
-       *   input1tp     type of the first input,
-       *                -1 for monomial coefficient,
-       *                0 for an input series,
-       *                1 for forward, 2 for backward, 3 for cross;
+       *   input1tp     type of the first input:
+       *                  -1 for monomial coefficient,
+       *                   0 for an input series,
+       *                   1 for forward, 2 for backward, 3 for cross;
        *   input1ix     index of the values of the first input series, 
-       *                if input1fbc equals 0,
+       *                if input1tp equals 0,
        *                or the index in forward, backward or cross,
-       *                if input1fbc is 1, 2, or 3 respectively;
-       *   input2tp     type of the first input,
-       *                -1 for monomial coefficient,
-       *                0 for an input series,
-       *                1 for forward, 2 for backward, 3 for cross;
+       *                if input1tp is 1, 2, or 3 respectively;
+       *   input2tp     type of the second input:
+       *                  -1 for monomial coefficient,
+       *                   0 for an input series,
+       *                   1 for forward, 2 for backward, 3 for cross;
        *   input2ix     index of the values of the second input series,
-       *                if input2fbc equals 0,
+       *                if input2tp equals 0,
        *                or the index in forward, backward or cross,
-       *                if input2fbc is 1, 2, or 3 respectively;
+       *                if input2tp is 1, 2, or 3 respectively;
        *   outputtp     type of output, either forward, backward,
-       *                or cross product, 1, 2, or 3;
+       *                or cross product, respectively 1, 2, or 3;
        *   outputix     index in the forward, backward, or cross product. */
 
       int get_monomial_index ( void ) const;
