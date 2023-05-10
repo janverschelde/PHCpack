@@ -60,10 +60,11 @@ class ConvolutionJobs
  
    private:
 
-      int dimension;
-      int jobcount;
-      int laydepth;
-      int *freqlaycnt;
+      int dimension; // the dimension is the total number of variables
+      int jobcount;  // total number of convolution jobs
+      int laydepth;  // number of layers is bounded by the dimension
+
+      vector<int> freqlaycnt; // frequency table of jobs at each layer
 
       vector< vector<ConvolutionJob> > jobs;
 

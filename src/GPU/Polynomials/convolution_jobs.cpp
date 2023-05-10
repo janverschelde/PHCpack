@@ -134,8 +134,7 @@ void ConvolutionJobs::make_monomial
 
 void ConvolutionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
 {
-   freqlaycnt = new int[dimension];
-   for(int i=0; i<dimension; i++) freqlaycnt[i] = 0;
+   for(int i=0; i<dimension; i++) freqlaycnt.push_back(0);
 
    for(int i=0; i<dimension; i++)
    {
@@ -216,5 +215,4 @@ ConvolutionJob ConvolutionJobs::get_job ( int k, int i ) const
 
 ConvolutionJobs::~ConvolutionJobs( void )
 {
-   // free(freqlaycnt);
 }
