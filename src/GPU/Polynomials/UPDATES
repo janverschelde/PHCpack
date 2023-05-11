@@ -1,3 +1,5 @@
+Thu 11 May 2023 : use STL vectors in addition_jobs for the data attributes.
+
 Wed 10 May 2023 : edited the documentation of convolution_job.h for clarity.
   Used an STL vector to represent the frequency table of layer counts
   in convolution_jobs.  New prompt_test_supports with code factored out of

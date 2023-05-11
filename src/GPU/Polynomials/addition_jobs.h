@@ -95,9 +95,12 @@ class AdditionJobs
       int nbrmon;
       int jobcount;
       int laydepth;
-      int *freqlaycnt;
-      int *difcnt;
-      int **difidx;
+
+      vector<int> freqlaycnt; // frequency table of jobs at each layer
+
+      vector<int> difcnt; // counts of the differential indices
+
+      vector< vector<int> > difidx;
 
       vector< vector<AdditionJob> > jobs;
 
@@ -158,7 +161,8 @@ class AdditionJobs
        *   verbose  if true, writes one line per job added. */
 
       void differential_index_count
-       ( int dim, int nbr, int *nvr, int **idx, int *cnt, bool verbose );
+       ( int dim, int nbr, int *nvr, int **idx,
+         vector<int> &cnt, bool verbose );
       /*
        * DESCRIPTION :
        *   Counts the number of monomials where the variables appear.
@@ -178,8 +182,8 @@ class AdditionJobs
        *   cnt      cnt[k] counts the number of monomials that contain k. */ 
 
       void make_differential_indices
-       ( int dim, int nbr, int *nvr, int **idx, int *cnt, int **difidx,
-         bool verbose );
+       ( int dim, int nbr, int *nvr, int **idx,
+         vector<int> &cnt, vector< vector<int> > &difidx, bool verbose );
       /*
        * DESCRIPTION :
        *   Defines the rearrangment of the monomial indices according

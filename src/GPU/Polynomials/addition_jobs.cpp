@@ -275,7 +275,8 @@ void AdditionJobs::recursive_other_make
 }
 
 void AdditionJobs::differential_index_count
- ( int dim, int nbr, int *nvr, int **idx, int *cnt, bool verbose )
+ ( int dim, int nbr, int *nvr, int **idx,
+   vector<int> &cnt, bool verbose )
 {
    for(int i=0; i<dim; i++)
    {
@@ -300,8 +301,8 @@ void AdditionJobs::differential_index_count
 }
 
 void AdditionJobs::make_differential_indices
- ( int dim, int nbr, int *nvr, int **idx, int *cnt, int **difidx,
-   bool verbose )
+ ( int dim, int nbr, int *nvr, int **idx,
+   vector<int> &cnt, vector< vector<int> > &difidx, bool verbose )
 {
    int pos;
 
@@ -339,10 +340,10 @@ void AdditionJobs::make_differential_indices
 
 void AdditionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
 {
-   freqlaycnt = new int[nbrmon];
-   for(int i=0; i<nbrmon; i++) freqlaycnt[i] = 0;
+   for(int i=0; i<nbrmon; i++) freqlaycnt.push_back(0);
 
-   difcnt = new int[nbrvar];
+   for(int i=0; i<nbrvar; i++) difcnt.push_back(0);
+
    differential_index_count(nbrvar,nbr,nvr,idx,difcnt,verbose);
 
    if(verbose)
@@ -351,8 +352,14 @@ void AdditionJobs::make ( int nbr, int *nvr, int **idx, bool verbose )
       for(int i=0; i<nbrvar; i++) cout << " " << difcnt[i];
       cout << endl;
    }
-   difidx = new int*[nbrvar];
-   for(int i=0; i<nbrvar; i++) difidx[i] = new int[difcnt[i]+1];
+   for(int i=0; i<nbrvar; i++)
+   {
+      vector<int> cnt;
+
+      for(int j=0; j<difcnt[i]+1; j++) cnt.push_back(0);
+
+      difidx.push_back(cnt);
+   }
    make_differential_indices(nbrvar,nbr,nvr,idx,difcnt,difidx,verbose);
 
    if(verbose)
