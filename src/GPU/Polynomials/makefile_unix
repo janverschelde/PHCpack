@@ -381,13 +381,25 @@ convolution_job.o:
 	@-echo ">>> compiling convolution_job ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) convolution_job.cpp
 
+complexconv_job.o:
+	@-echo ">>> compiling complexconv_job ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) complexconv_job.cpp
+
 convolution_jobs.o:
 	@-echo ">>> compiling convolution_jobs ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) convolution_jobs.cpp
 
+complexconv_jobs.o:
+	@-echo ">>> compiling complexconv_jobs ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) complexconv_jobs.cpp
+
 test_convolution_jobs.o:
 	@-echo ">>> compiling test_convolution_jobs ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test_convolution_jobs.cpp
+
+test_complexconv_jobs.o:
+	@-echo ">>> compiling test_complexconv_jobs ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test_complexconv_jobs.cpp
 
 addition_job.o:
 	@-echo ">>> compiling addition_job ..."
@@ -430,6 +442,16 @@ test_convolution_jobs: random_numbers.o random_series.o random_monomials.o \
                   prompt_test_supports.o \
                   random_numbers.o random_series.o random_monomials.o \
                   random_polynomials.o convolution_job.o convolution_jobs.o
+
+test_complexconv_jobs: random_numbers.o random_series.o random_monomials.o \
+                       random_polynomials.o complexconv_job.o \
+                       complexconv_jobs.o test_complexconv_jobs.o \
+                       prompt_test_supports.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_complexconv_jobs test_complexconv_jobs.o \
+                  prompt_test_supports.o complexconv_job.o \
+                  complexconv_jobs.o random_numbers.o random_series.o \
+                  random_monomials.o random_polynomials.o
 
 test_addition_jobs: random_numbers.o random_series.o random_monomials.o \
                     random_polynomials.o addition_job.o addition_jobs.o \
@@ -979,8 +1001,10 @@ clean:
 	/bin/rm -f -r random_polynomials.o dbl_polynomials_host.o
 	/bin/rm -f -r dbl_polynomials_kernels.o dbl_polynomials_testers.o
 	/bin/rm -f -r convolution_job.o convolution_jobs.o
+	/bin/rm -f -r complexconv_job.o complexconv_jobs.o
 	/bin/rm -f -r prompt_test_supports.o
 	/bin/rm -f -r test_convolution_jobs test_convolution_jobs.o
+	/bin/rm -f -r test_complexconv_jobs test_complexconv_jobs.o
 	/bin/rm -f -r addition_job.o addition_jobs.o
 	/bin/rm -f -r test_addition_jobs test_addition_jobs.o
 	/bin/rm -f -r job_coordinates.o write_job_counts.o prompt_for_setup.o

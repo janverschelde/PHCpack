@@ -623,6 +623,24 @@ test_convolution_jobs.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: test_convolution_jobs.obj /EHsc
 
+complexconv_job.obj:
+	@-echo ">>> compiling complexconv_job ..."
+	$(CL)\cl /c complexconv_job.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: complexconv_job.obj /EHsc
+
+complexconv_jobs.obj:
+	@-echo ">>> compiling complexconv_jobs ..."
+	$(CL)\cl /c complexconv_jobs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: complexconv_jobs.obj /EHsc
+
+test_complexconv_jobs.obj:
+	@-echo ">>> compiling test_complexconv_jobs ..."
+	$(CL)\cl /c test_complexconv_jobs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: test_complexconv_jobs.obj /EHsc
+
 addition_job.obj:
 	@-echo ">>> compiling addition_job ..."
 	$(CL)\cl /c addition_job.cpp \
@@ -680,6 +698,17 @@ test_convolution_jobs: random_numbers.obj random_series.obj \
               random_numbers.obj random_series.obj random_monomials.obj \
               random_polynomials.obj convolution_job.obj \
               convolution_jobs.obj test_convolution_jobs.obj \
+              prompt_test_supports.obj
+
+test_complexconv_jobs: random_numbers.obj random_series.obj \
+	               random_monomials.obj random_polynomials.obj \
+                       complexconv_job.obj complexconv_jobs.obj \
+                       test_complexconv_jobs.obj prompt_test_supports.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_complexconv_jobs.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random_polynomials.obj complexconv_job.obj \
+              complexconv_jobs.obj test_complexconv_jobs.obj \
               prompt_test_supports.obj
 
 test_addition_jobs: random_numbers.obj random_series.obj \
@@ -1261,6 +1290,8 @@ clean:
 	del test_convolution_jobs.exe test_convolution_jobs.lib
 	del convolution_job.obj convolution_jobs.obj
 	del test_convolution_jobs.exp test_convolution_jobs.obj
+	del complexconv_job.obj complexconv_jobs.obj
+	del test_complexconv_jobs.exp test_complexconv_jobs.obj
 	del addition_job.obj addition_jobs.obj
 	del test_addition_jobs.exe test_addition_jobs.lib
 	del test_addition_jobs.exp test_addition_jobs.obj

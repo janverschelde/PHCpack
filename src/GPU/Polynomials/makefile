@@ -9,6 +9,9 @@ MAKEFILE = makefile_unix
 test_convolution_jobs:
 	make -f $(MAKEFILE) test_convolution_jobs
 
+test_complexconv_jobs:
+	make -f $(MAKEFILE) test_complexconv_jobs
+
 test_addition_jobs:
 	make -f $(MAKEFILE) test_addition_jobs
 

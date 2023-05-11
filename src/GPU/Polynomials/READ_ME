@@ -18,7 +18,10 @@ random10_polynomials       : random polynomials with deca doubles
 prompt_test_supports       : generation of supports of test polynomials
 convolution_job            : class to represent one convolution job
 convolution_jobs           : class to setup layers of convolution jobs
-test_convolution_jobs      : collects all convolution jobs
+test_convolution_jobs      : tests all convolution jobs
+complexconv_job            : class for convolution job on complex data
+complexconv_jobs           : class for layers of complex convolution jobs
+test_complexconv_jobs      : tests all complex convolution jobs
 addition_job               : class to represent one addition job
 addition_jobs              : class to setup the reduction tree
 test_addition_jobs         : tests the definition of the reduction tree
