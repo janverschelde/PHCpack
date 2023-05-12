@@ -409,9 +409,21 @@ addition_jobs.o:
 	@-echo ">>> compiling addition_jobs ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) addition_jobs.cpp
 
+complexadd_job.o:
+	@-echo ">>> compiling complexadd_job ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) complexadd_job.cpp
+
+complexadd_jobs.o:
+	@-echo ">>> compiling complexadd_jobs ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) complexadd_jobs.cpp
+
 test_addition_jobs.o:
 	@-echo ">>> compiling test_addition_jobs ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test_addition_jobs.cpp
+
+test_complexadd_jobs.o:
+	@-echo ">>> compiling test_complexadd_jobs ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test_complexadd_jobs.cpp
 
 write_job_counts.o:
 	@-echo ">>> compiling write_job_counts ..."
@@ -461,6 +473,17 @@ test_addition_jobs: random_numbers.o random_series.o random_monomials.o \
                   prompt_test_supports.o \
                   random_numbers.o random_series.o random_monomials.o \
                   random_polynomials.o addition_job.o addition_jobs.o
+
+test_complexadd_jobs: random_numbers.o random_series.o \
+                      random_monomials.o random_polynomials.o \
+                      complexadd_job.o complexadd_jobs.o \
+                      prompt_test_supports.o test_complexadd_jobs.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_complexadd_jobs test_complexadd_jobs.o \
+                  prompt_test_supports.o \
+                  random_numbers.o random_series.o \
+                  random_monomials.o random_polynomials.o \
+                  complexadd_job.o complexadd_jobs.o
 
 test_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
                       random_polynomials.o prompt_for_setup.o \
@@ -1006,7 +1029,9 @@ clean:
 	/bin/rm -f -r test_convolution_jobs test_convolution_jobs.o
 	/bin/rm -f -r test_complexconv_jobs test_complexconv_jobs.o
 	/bin/rm -f -r addition_job.o addition_jobs.o
+	/bin/rm -f -r complexadd_job.o complexadd_jobs.o
 	/bin/rm -f -r test_addition_jobs test_addition_jobs.o
+	/bin/rm -f -r test_complexadd_jobs test_complexadd_jobs.o
 	/bin/rm -f -r job_coordinates.o write_job_counts.o prompt_for_setup.o
 	/bin/rm -f -r write_gpu_timings.o test_helpers.o
 

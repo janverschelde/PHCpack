@@ -15,6 +15,9 @@ test_complexconv_jobs:
 test_addition_jobs:
 	make -f $(MAKEFILE) test_addition_jobs
 
+test_complexadd_jobs:
+	make -f $(MAKEFILE) test_complexadd_jobs
+
 test_dbl_polynomials:
 	make -f $(MAKEFILE) test_dbl_polynomials
 

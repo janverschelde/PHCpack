@@ -5,71 +5,74 @@ of polynomials in several variables, with coefficients power series
 truncated to the same degree.
 
 -----------------------------------------------------------------------------
-file name                  : short description
+file name                 : short description
 -----------------------------------------------------------------------------
-random_polynomials         : generation of random polynomials
-random2_polynomials        : random polynomials with double doubles
-random3_polynomials        : random polynomials with triple doubles
-random4_polynomials        : random polynomials with quad doubles
-random5_polynomials        : random polynomials with penta doubles
-random8_polynomials        : random polynomials with octo doubles
-random10_polynomials       : random polynomials with deca doubles
+random_polynomials        : generation of random polynomials
+random2_polynomials       : random polynomials with double doubles
+random3_polynomials       : random polynomials with triple doubles
+random4_polynomials       : random polynomials with quad doubles
+random5_polynomials       : random polynomials with penta doubles
+random8_polynomials       : random polynomials with octo doubles
+random10_polynomials      : random polynomials with deca doubles
 -----------------------------------------------------------------------------
-prompt_test_supports       : generation of supports of test polynomials
-convolution_job            : class to represent one convolution job
-convolution_jobs           : class to setup layers of convolution jobs
-test_convolution_jobs      : tests all convolution jobs
-complexconv_job            : class for convolution job on complex data
-complexconv_jobs           : class for layers of complex convolution jobs
-test_complexconv_jobs      : tests all complex convolution jobs
-addition_job               : class to represent one addition job
-addition_jobs              : class to setup the reduction tree
-test_addition_jobs         : tests the definition of the reduction tree
-write_job_counts           : writes job and operation counts
-job_coordinates            : defines data positions for the kernels
-prompt_for_setup           : prompts for the setup of the experiments
-wingettimeofday            : defines gettimeofday() for windows
-write_gpu_timings          : writes timings obtained on the device
-test_helpers               : utility functions to help with testing
+prompt_test_supports      : generation of supports of test polynomials
+convolution_job           : class to represent one convolution job
+convolution_jobs          : class to setup layers of convolution jobs
+test_convolution_jobs     : tests all convolution jobs
+complexconv_job           : class for convolution job on complex data
+complexconv_jobs          : class for layers of complex convolution jobs
+test_complexconv_jobs     : tests all complex convolution jobs
+addition_job              : class to represent one addition job
+addition_jobs             : class to setup the reduction tree
+test_addition_jobs        : tests the definition of the reduction tree
+complexadd_job            : class for addition job on complex data
+complexadd_jobs           : class for the reduction tree of complex additions
+test_complexadd_jobs      : tests the tree of complex addition jobs
+write_job_counts          : writes job and operation counts
+job_coordinates           : defines data positions for the kernels
+prompt_for_setup          : prompts for the setup of the experiments
+wingettimeofday           : defines gettimeofday() for windows
+write_gpu_timings         : writes timings obtained on the device
+test_helpers              : utility functions to help with testing
 -----------------------------------------------------------------------------
-dbl_polynomials_host       : evaldiff of double polynomials on host
-dbl_polynomials_kernels    : kernels for double evaldiff
-dbl_polynomials_testers    : test functions in double precision
-test_dbl_polynomials       : main test in double precision
-dbl2_polynomials_host      : evaldiff of double double polynomials on host
-dbl2_polynomials_kernels   : kernels for double double evaldiff
-dbl2_polynomials_testers   : test functions in double double precision
-test_dbl2_polynomials      : main test in double double precision
-dbl3_polynomials_host      : evaldiff of triple double polynomials on host
-dbl3_polynomials_kernels   : kernels for triple double evaldiff
-dbl3_polynomials_testers   : test functions in triple double precision
-test_dbl3_polynomials      : main test in triple double precision
-dbl4_polynomials_host      : evaldiff of quad double polynomials on host
-dbl4_polynomials_kernels   : kernels for quad double evaldiff
-dbl4_polynomials_testers   : test functions in quad double precision
-test_dbl4_polynomials      : main test in quad double precision
-dbl5_polynomials_host      : evaldiff of penta double polynomials on host
-dbl5_polynomials_kernels   : kernels for penta double evaldiff
-dbl5_polynomials_testers   : test functions in penta double precision
-test_dbl5_polynomials      : main test in penta double precision
-dbl8_polynomials_host      : evaldiff of octo double polynomials on host
-dbl8_polynomials_kernels   : kernels for octo double evaldiff
-dbl8_polynomials_testers   : test functions in octo double precision
-test_dbl8_polynomials      : main test in octo double precision
-dbl10_polynomials_host     : evaldiff of deca double polynomials on host
-dbl10_polynomials_kernels  : kernels for deca double evaldiff
-dbl10_polynomials_testers  : test functions in deca double precision
-test_dbl10_polynomials     : main test in deca double precision
+dbl_polynomials_host      : evaldiff of double polynomials on host
+dbl_polynomials_kernels   : kernels for double evaldiff
+dbl_polynomials_testers   : test functions in double precision
+test_dbl_polynomials      : main test in double precision
+dbl2_polynomials_host     : evaldiff of double double polynomials on host
+dbl2_polynomials_kernels  : kernels for double double evaldiff
+dbl2_polynomials_testers  : test functions in double double precision
+test_dbl2_polynomials     : main test in double double precision
+dbl3_polynomials_host     : evaldiff of triple double polynomials on host
+dbl3_polynomials_kernels  : kernels for triple double evaldiff
+dbl3_polynomials_testers  : test functions in triple double precision
+test_dbl3_polynomials     : main test in triple double precision
+dbl4_polynomials_host     : evaldiff of quad double polynomials on host
+dbl4_polynomials_kernels  : kernels for quad double evaldiff
+dbl4_polynomials_testers  : test functions in quad double precision
+test_dbl4_polynomials     : main test in quad double precision
+dbl5_polynomials_host     : evaldiff of penta double polynomials on host
+dbl5_polynomials_kernels  : kernels for penta double evaldiff
+dbl5_polynomials_testers  : test functions in penta double precision
+test_dbl5_polynomials     : main test in penta double precision
+dbl8_polynomials_host     : evaldiff of octo double polynomials on host
+dbl8_polynomials_kernels  : kernels for octo double evaldiff
+dbl8_polynomials_testers  : test functions in octo double precision
+test_dbl8_polynomials     : main test in octo double precision
+dbl10_polynomials_host    : evaldiff of deca double polynomials on host
+dbl10_polynomials_kernels : kernels for deca double evaldiff
+dbl10_polynomials_testers : test functions in deca double precision
+test_dbl10_polynomials    : main test in deca double precision
 -----------------------------------------------------------------------------
-polynomials_kernels        : includes all cuda polynomials code
-test_polynomials           : test in all precisions
+polynomials_kernels       : includes all cuda polynomials code
+test_polynomials          : test in all precisions
 -----------------------------------------------------------------------------
-run_dbl_polynomials        : run specific tests in double precision
-run_dbl2_polynomials       : run specific tests in double double precision
-run_dbl3_polynomials       : run specific tests in triple double precision
-run_dbl4_polynomials       : run specific tests in quad double precision
-run_dbl5_polynomials       : run specific tests in penta double precision
-run_dbl8_polynomials       : run specific tests in octo double precision
-run_dbl10_polynomials      : run specific tests in deca double precision
-run_polynomials            : run specific tests in all precisions
+run_dbl_polynomials       : run specific tests in double precision
+run_dbl2_polynomials      : run specific tests in double double precision
+run_dbl3_polynomials      : run specific tests in triple double precision
+run_dbl4_polynomials      : run specific tests in quad double precision
+run_dbl5_polynomials      : run specific tests in penta double precision
+run_dbl8_polynomials      : run specific tests in octo double precision
+run_dbl10_polynomials     : run specific tests in deca double precision
+run_polynomials           : run specific tests in all precisions
 -----------------------------------------------------------------------------
