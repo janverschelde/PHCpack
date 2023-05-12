@@ -1,3 +1,6 @@
+Fri 12 May 2023 : completed definition of the addition jobs for complex
+  data in complexadd_jobs.cpp.
+
 Thu 11 May 2023 : use STL vectors in addition_jobs for the data attributes.
   New complexadd_job, complexadd_jobs, and test_complexadd_jobs for the
   addition jobs on complex data, now defined for the first operands of
