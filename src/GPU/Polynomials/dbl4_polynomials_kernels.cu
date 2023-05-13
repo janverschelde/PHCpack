@@ -1051,6 +1051,333 @@ void cmplx_added_data4_to_output
    }
 }
 
+void dbl4_data_setup
+ ( int dim, int nbr, int deg,
+   double *datahihi, double *datalohi, double *datahilo, double *datalolo,
+   double *csthihi, double *cstlohi, double *csthilo, double *cstlolo,
+   double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo,
+   double **inputhihi, double **inputlohi,
+   double **inputhilo, double **inputlolo )
+{
+   const int deg1 = deg+1;
+   int ix = 0;
+
+   for(int i=0; i<deg1; i++)
+   {
+      datahihi[ix]   = csthihi[i];
+      datalohi[ix]   = cstlohi[i];
+      datahilo[ix]   = csthilo[i];
+      datalolo[ix++] = cstlolo[i];
+   }
+   for(int i=0; i<nbr; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         datahihi[ix]   = cffhihi[i][j];
+         datalohi[ix]   = cfflohi[i][j];
+         datahilo[ix]   = cffhilo[i][j];
+         datalolo[ix++] = cfflolo[i][j];
+      }
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         datahihi[ix]   = inputhihi[i][j];
+         datalohi[ix]   = inputlohi[i][j];
+         datahilo[ix]   = inputhilo[i][j];
+         datalolo[ix++] = inputlolo[i][j];
+      }
+}
+
+void cmplx4_data_setup
+ ( int dim, int nbr, int deg,
+   double *datarehihi, double *datarelohi,
+   double *datarehilo, double *datarelolo,
+   double *dataimhihi, double *dataimlohi,
+   double *dataimhilo, double *dataimlolo,
+   double *cstrehihi, double *cstrelohi,
+   double *cstrehilo, double *cstrelolo,
+   double *cstimhihi, double *cstimlohi,
+   double *cstimhilo, double *cstimlolo,
+   double **cffrehihi, double **cffrelohi,
+   double **cffrehilo, double **cffrelolo,
+   double **cffimhihi, double **cffimlohi,
+   double **cffimhilo, double **cffimlolo,
+   double **inputrehihi, double **inputrelohi,
+   double **inputrehilo, double **inputrelolo,
+   double **inputimhihi, double **inputimlohi,
+   double **inputimhilo, double **inputimlolo )
+{
+   const int deg1 = deg+1;
+   int ix = 0;
+
+   for(int i=0; i<deg1; i++)
+   {
+      datarehihi[ix]   = cstrehihi[i];
+      datarelohi[ix]   = cstrelohi[i];
+      datarehilo[ix]   = cstrehilo[i];
+      datarelolo[ix]   = cstrelolo[i];
+      dataimhihi[ix]   = cstimhihi[i];
+      dataimlohi[ix]   = cstimlohi[i];
+      dataimhilo[ix]   = cstimhilo[i];
+      dataimlolo[ix++] = cstimlolo[i];
+   }
+   for(int i=0; i<nbr; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         datarehihi[ix]   = cffrehihi[i][j];
+         datarelohi[ix]   = cffrelohi[i][j];
+         datarehilo[ix]   = cffrehilo[i][j];
+         datarelolo[ix]   = cffrelolo[i][j];
+         dataimhihi[ix]   = cffimhihi[i][j];
+         dataimlohi[ix]   = cffimlohi[i][j];
+         dataimhilo[ix]   = cffimhilo[i][j];
+         dataimlolo[ix++] = cffimlolo[i][j];
+      }
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         datarehihi[ix]   = inputrehihi[i][j];
+         datarelohi[ix]   = inputrelohi[i][j];
+         datarehilo[ix]   = inputrehilo[i][j];
+         datarelolo[ix]   = inputrelolo[i][j];
+         dataimhihi[ix]   = inputimhihi[i][j];
+         dataimlohi[ix]   = inputimlohi[i][j];
+         dataimhilo[ix]   = inputimhilo[i][j];
+         dataimlolo[ix++] = inputimlolo[i][j];
+      }
+}
+
+void dbl4_convolution_jobs
+ ( int dim, int nbr, int deg, int *nvr, ConvolutionJobs cnvjobs,
+   int *fstart, int *bstart, int *cstart,
+   double *datahihi, double *datalohi, double *datahilo, double *datalolo,
+   double *cnvlapms, bool verbose )
+{
+   const int deg1 = deg+1;
+
+   cudaEvent_t start,stop;           // to measure time spent by kernels
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *cnvlapms = 0.0;
+   float milliseconds;
+
+   for(int k=0; k<cnvjobs.get_depth(); k++)
+   {
+      const int jobnbr = cnvjobs.get_layer_count(k);
+      int *in1ix_h = new int[jobnbr];
+      int *in2ix_h = new int[jobnbr];
+      int *outix_h = new int[jobnbr];
+
+      if(verbose) cout << "preparing convolution jobs at layer "
+                       << k << " ..." << endl;
+
+      convjobs_coordinates(cnvjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
+                           fstart,bstart,cstart,verbose);
+      // if(deg1 == BS)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads ..." << endl;
+
+         cudaEventRecord(start);
+         dbl4_padded_convjobs<<<jobnbr,deg1>>>
+            (datahihi,datalohi,datahilo,datalolo,
+             in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *cnvlapms += milliseconds;
+      }
+      free(in1ix_h); free(in2ix_h); free(outix_h);
+   }
+}
+
+void cmplx4_convolution_jobs
+ ( int dim, int nbr, int deg, int *nvr, ConvolutionJobs cnvjobs,
+   int *fstart, int *bstart, int *cstart,
+   double *datarehihi, double *datarelohi,
+   double *datarehilo, double *datarelolo,
+   double *dataimhihi, double *dataimlohi,
+   double *dataimhilo, double *dataimlolo,
+   double *cnvlapms, bool verbose )
+{
+   const int deg1 = deg+1;
+
+   cudaEvent_t start,stop;           // to measure time spent by kernels
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *cnvlapms = 0.0;
+   float milliseconds;
+
+   for(int k=0; k<cnvjobs.get_depth(); k++)
+   {
+      const int jobnbr = cnvjobs.get_layer_count(k);
+      int *in1ix_h = new int[jobnbr];
+      int *in2ix_h = new int[jobnbr];
+      int *outix_h = new int[jobnbr];
+
+      if(verbose) cout << "preparing convolution jobs at layer "
+                       << k << " ..." << endl;
+
+      convjobs_coordinates(cnvjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
+                           fstart,bstart,cstart,verbose);
+      // if(deg1 == BS)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads ..." << endl;
+
+         cudaEventRecord(start);
+         cmplx4_padded_convjobs<<<jobnbr,deg1>>>
+            (datarehihi,datarelohi,datarehilo,datarelolo,
+             dataimhihi,dataimlohi,dataimhilo,dataimlolo,
+             in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *cnvlapms += milliseconds;
+      }
+      free(in1ix_h); free(in2ix_h); free(outix_h);
+   }
+}
+
+void dbl4_addition_jobs
+ ( int dim, int nbr, int deg, int *nvr, AdditionJobs addjobs,
+   int *fstart, int *bstart, int *cstart,
+   double *datahihi, double *datalohi, double *datahilo, double *datalolo,
+   double *addlapms, bool verbose )
+{
+   const int deg1 = deg+1;
+
+   cudaEvent_t start,stop;           // to measure time spent by kernels
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *addlapms = 0.0;
+   float milliseconds;
+
+   for(int k=0; k<addjobs.get_depth(); k++)
+   {
+      const int jobnbr = addjobs.get_layer_count(k);
+      int *in1ix_h = new int[jobnbr];
+      int *in2ix_h = new int[jobnbr];
+      int *outix_h = new int[jobnbr];
+
+      if(verbose) cout << "preparing addition jobs at layer "
+                       << k << " ..." << endl;
+
+      addjobs_coordinates(addjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
+                          fstart,bstart,cstart,verbose);
+      // if(deg1 == BS)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads ..." << endl;
+
+         cudaEventRecord(start);
+         dbl4_update_addjobs<<<jobnbr,deg1>>>
+            (datahihi,datalohi,datahilo,datalolo,
+             in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *addlapms += milliseconds;
+      }
+      free(in1ix_h); free(in2ix_h); free(outix_h);
+   }
+}
+
+void cmplx4_addition_jobs
+ ( int dim, int nbr, int deg, int *nvr, AdditionJobs addjobs,
+   int *fstart, int *bstart, int *cstart,
+   double *datarehihi, double *datarelohi,
+   double *datarehilo, double *datarelolo,
+   double *dataimhihi, double *dataimlohi,
+   double *dataimhilo, double *dataimlolo,
+   double *addlapms, bool verbose )
+{
+   const int deg1 = deg+1;
+
+   cudaEvent_t start,stop;           // to measure time spent by kernels
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *addlapms = 0.0;
+   float milliseconds;
+
+   for(int k=0; k<addjobs.get_depth(); k++)
+   {
+      const int jobnbr = addjobs.get_layer_count(k);
+      int *in1ix_h = new int[jobnbr];
+      int *in2ix_h = new int[jobnbr];
+      int *outix_h = new int[jobnbr];
+
+      if(verbose) cout << "preparing addition jobs at layer "
+                       << k << " ..." << endl;
+
+      addjobs_coordinates(addjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
+                          fstart,bstart,cstart,verbose);
+      // if(deg1 == BS)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads ..." << endl;
+
+         cudaEventRecord(start);
+         cmplx4_update_addjobs<<<jobnbr,deg1>>>
+            (datarehihi,datarelohi,datarehilo,datarelolo,
+             dataimhihi,dataimlohi,dataimhilo,dataimlolo,
+             in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *addlapms += milliseconds;
+      }
+      free(in1ix_h); free(in2ix_h); free(outix_h);
+   }
+}
+
 void GPU_dbl4_poly_evaldiff
  ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,
    double *csthihi, double *cstlohi, double *csthilo, double *cstlolo,
@@ -1063,7 +1390,6 @@ void GPU_dbl4_poly_evaldiff
    double *cnvlapms, double *addlapms, double *elapsedms,
    double *walltimesec, bool verbose )
 {
-   const int deg1 = deg+1;
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
 
    int *fstart = new int[nbr];
@@ -1075,51 +1401,19 @@ void GPU_dbl4_poly_evaldiff
 
    coefficient_indices
       (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
-
    if(verbose)
-   {
-      cout << "The output coefficient count : " << totalcff << endl;
-      cout << "fsums :";
-      for(int i=0; i<nbr; i++) cout << " " << fsums[i]; cout << endl;
-      cout << "fstart :";
-      for(int i=0; i<nbr; i++) cout << " " << fstart[i]; cout << endl;
-      cout << "bsums :";
-      for(int i=0; i<nbr; i++) cout << " " << bsums[i]; cout << endl;
-      cout << "bstart :";
-      for(int i=0; i<nbr; i++) cout << " " << bstart[i]; cout << endl;
-      cout << "csums :";
-      for(int i=0; i<nbr; i++) cout << " " << csums[i]; cout << endl;
-      cout << "cstart :";
-      for(int i=0; i<nbr; i++) cout << " " << cstart[i]; cout << endl;
-   }
+      write_coefficient_indices
+         (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
+
    double *datahihi_h = new double[totalcff];        // data on host
    double *datalohi_h = new double[totalcff];
    double *datahilo_h = new double[totalcff];
    double *datalolo_h = new double[totalcff];
-   int ix = 0;
-   for(int i=0; i<deg1; i++)
-   {
-      datahihi_h[ix] = csthihi[i];
-      datalohi_h[ix] = cstlohi[i];
-      datahilo_h[ix] = csthilo[i];
-      datalolo_h[ix++] = cstlolo[i];
-   }
-   for(int i=0; i<nbr; i++)
-      for(int j=0; j<deg1; j++)
-      {
-         datahihi_h[ix] = cffhihi[i][j];
-         datalohi_h[ix] = cfflohi[i][j];
-         datahilo_h[ix] = cffhilo[i][j];
-         datalolo_h[ix++] = cfflolo[i][j];
-      }
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<deg1; j++)
-      {
-         datahihi_h[ix] = inputhihi[i][j];
-         datalohi_h[ix] = inputlohi[i][j];
-         datahilo_h[ix] = inputhilo[i][j];
-         datalolo_h[ix++] = inputlolo[i][j];
-      }
+
+   dbl4_data_setup
+      (dim,nbr,deg,datahihi_h,datalohi_h,datahilo_h,datalolo_h,
+       csthihi,cstlohi,csthilo,cstlolo,cffhihi,cfflohi,cffhilo,cfflolo,
+       inputhihi,inputlohi,inputhilo,inputlolo);
 
    double *datahihi_d;                               // device data
    double *datalohi_d;
@@ -1135,95 +1429,17 @@ void GPU_dbl4_poly_evaldiff
    cudaMemcpy(datahilo_d,datahilo_h,szdata,cudaMemcpyHostToDevice);
    cudaMemcpy(datalolo_d,datalolo_h,szdata,cudaMemcpyHostToDevice);
 
-   cudaEvent_t start,stop;           // to measure time spent by kernels
-   cudaEventCreate(&start);
-   cudaEventCreate(&stop);
-   *cnvlapms = 0.0;
-   *addlapms = 0.0;
-   float milliseconds;
    struct timeval begintime,endtime; // wall clock time of computations
-
    gettimeofday(&begintime,0);
-   for(int k=0; k<cnvjobs.get_depth(); k++)
-   {
-      const int jobnbr = cnvjobs.get_layer_count(k);
-      int *in1ix_h = new int[jobnbr];
-      int *in2ix_h = new int[jobnbr];
-      int *outix_h = new int[jobnbr];
 
-      if(verbose) cout << "preparing convolution jobs at layer "
-                       << k << " ..." << endl;
+   dbl4_convolution_jobs
+      (dim,nbr,deg,nvr,cnvjobs,fstart,bstart,cstart,
+       datahihi_d,datalohi_d,datahilo_d,datalolo_d,cnvlapms,verbose);
 
-      convjobs_coordinates(cnvjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
-                           fstart,bstart,cstart,verbose);
-      if(deg1 == BS)
-      {
-         int *in1ix_d; // first input on device
-         int *in2ix_d; // second input on device
-         int *outix_d; // output indices on device
-         const size_t szjobidx = jobnbr*sizeof(int);
-         cudaMalloc((void**)&in1ix_d,szjobidx);
-         cudaMalloc((void**)&in2ix_d,szjobidx);
-         cudaMalloc((void**)&outix_d,szjobidx);
-         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
-         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
-         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+   dbl4_addition_jobs
+      (dim,nbr,deg,nvr,addjobs,fstart,bstart,cstart,
+       datahihi_d,datalohi_d,datahilo_d,datalolo_d,addlapms,verbose);
 
-         if(verbose)
-            cout << "launching " << jobnbr << " blocks of " << BS
-                 << " threads ..." << endl;
-
-         cudaEventRecord(start);
-         dbl4_padded_convjobs<<<jobnbr,BS>>>
-            (datahihi_d,datalohi_d,datahilo_d,datalolo_d,
-             in1ix_d,in2ix_d,outix_d,deg1);
-         cudaEventRecord(stop);
-         cudaEventSynchronize(stop);
-         cudaEventElapsedTime(&milliseconds,start,stop);
-         *cnvlapms += milliseconds;
-      }
-      free(in1ix_h); free(in2ix_h); free(outix_h);
-   }
-   for(int k=0; k<addjobs.get_depth(); k++)
-   {
-      const int jobnbr = addjobs.get_layer_count(k);
-      int *in1ix_h = new int[jobnbr];
-      int *in2ix_h = new int[jobnbr];
-      int *outix_h = new int[jobnbr];
-
-      if(verbose) cout << "preparing addition jobs at layer "
-                       << k << " ..." << endl;
-
-      addjobs_coordinates(addjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
-                          fstart,bstart,cstart,verbose);
-      if(deg1 == BS)
-      {
-         int *in1ix_d; // first input on device
-         int *in2ix_d; // second input on device
-         int *outix_d; // output indices on device
-         const size_t szjobidx = jobnbr*sizeof(int);
-         cudaMalloc((void**)&in1ix_d,szjobidx);
-         cudaMalloc((void**)&in2ix_d,szjobidx);
-         cudaMalloc((void**)&outix_d,szjobidx);
-         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
-         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
-         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
-
-         if(verbose)
-            cout << "launching " << jobnbr << " blocks of " << BS
-                 << " threads ..." << endl;
-
-         cudaEventRecord(start);
-         dbl4_update_addjobs<<<jobnbr,BS>>>
-            (datahihi_d,datalohi_d,datahilo_d,datalolo_d,
-             in1ix_d,in2ix_d,outix_d,deg1);
-         cudaEventRecord(stop);
-         cudaEventSynchronize(stop);
-         cudaEventElapsedTime(&milliseconds,start,stop);
-         *addlapms += milliseconds;
-      }
-      free(in1ix_h); free(in2ix_h); free(outix_h);
-   }
    gettimeofday(&endtime,0);
    cudaMemcpy(datahihi_h,datahihi_d,szdata,cudaMemcpyDeviceToHost);
    cudaMemcpy(datalohi_h,datalohi_d,szdata,cudaMemcpyDeviceToHost);
@@ -1280,7 +1496,6 @@ void GPU_cmplx4_poly_evaldiff
    double *cnvlapms, double *addlapms, double *elapsedms,
    double *walltimesec, bool verbose )
 {
-   const int deg1 = deg+1;
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
 
    int *fstart = new int[nbr];
@@ -1292,7 +1507,6 @@ void GPU_cmplx4_poly_evaldiff
 
    coefficient_indices
       (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
-
    if(verbose)
       write_coefficient_indices
          (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
@@ -1305,38 +1519,17 @@ void GPU_cmplx4_poly_evaldiff
    double *dataimlohi_h = new double[totalcff]; 
    double *dataimhilo_h = new double[totalcff];
    double *dataimlolo_h = new double[totalcff];
-   int ix = 0;
-   for(int i=0; i<deg1; i++)
-   {
-      datarehihi_h[ix] = cstrehihi[i]; datarelohi_h[ix] = cstrelohi[i];
-      datarehilo_h[ix] = cstrehilo[i]; datarelolo_h[ix] = cstrelolo[i];
-      dataimhihi_h[ix] = cstimhihi[i]; dataimlohi_h[ix] = cstimlohi[i];
-      dataimhilo_h[ix] = cstimhilo[i]; dataimlolo_h[ix++] = cstimlolo[i];
-   }
-   for(int i=0; i<nbr; i++)
-      for(int j=0; j<deg1; j++)
-      {
-         datarehihi_h[ix] = cffrehihi[i][j];
-         datarelohi_h[ix] = cffrelohi[i][j];
-         datarehilo_h[ix] = cffrehilo[i][j];
-         datarelolo_h[ix] = cffrelolo[i][j];
-         dataimhihi_h[ix] = cffimhihi[i][j];
-         dataimlohi_h[ix] = cffimlohi[i][j];
-         dataimhilo_h[ix] = cffimhilo[i][j];
-         dataimlolo_h[ix++] = cffimlolo[i][j];
-      }
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<deg1; j++)
-      {
-         datarehihi_h[ix] = inputrehihi[i][j];
-         datarelohi_h[ix] = inputrelohi[i][j];
-         datarehilo_h[ix] = inputrehilo[i][j];
-         datarelolo_h[ix] = inputrelolo[i][j];
-         dataimhihi_h[ix] = inputimhihi[i][j];
-         dataimlohi_h[ix] = inputimlohi[i][j];
-         dataimhilo_h[ix] = inputimhilo[i][j];
-         dataimlolo_h[ix++] = inputimlolo[i][j];
-      }
+
+   cmplx4_data_setup
+      (dim,nbr,deg,
+       datarehihi_h,datarelohi_h,datarehilo_h,datarelolo_h,
+       dataimhihi_h,dataimlohi_h,dataimhilo_h,dataimlolo_h,
+       cstrehihi,cstrelohi,cstrehilo,cstrelolo,
+       cstimhihi,cstimlohi,cstimhilo,cstimlolo,
+       cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+       cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+       inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+       inputimhihi,inputimlohi,inputimhilo,inputimlolo);
 
    double *datarehihi_d;                               // device data
    double *datarelohi_d;
@@ -1364,97 +1557,22 @@ void GPU_cmplx4_poly_evaldiff
    cudaMemcpy(dataimhilo_d,dataimhilo_h,szdata,cudaMemcpyHostToDevice);
    cudaMemcpy(dataimlolo_d,dataimlolo_h,szdata,cudaMemcpyHostToDevice);
 
-   cudaEvent_t start,stop;           // to measture time spent by kernels
-   cudaEventCreate(&start);
-   cudaEventCreate(&stop);
-   *cnvlapms = 0.0;
-   *addlapms = 0.0;
-   float milliseconds;
    struct timeval begintime,endtime; // wall clock time of computations
 
    gettimeofday(&begintime,0);
-   for(int k=0; k<cnvjobs.get_depth(); k++)
-   {
-      const int jobnbr = cnvjobs.get_layer_count(k);
-      int *in1ix_h = new int[jobnbr];
-      int *in2ix_h = new int[jobnbr];
-      int *outix_h = new int[jobnbr];
 
-      if(verbose) cout << "preparing convolution jobs at layer "
-                       << k << " ..." << endl;
+   cmplx4_convolution_jobs
+      (dim,nbr,deg,nvr,cnvjobs,fstart,bstart,cstart,
+       datarehihi_d,datarelohi_d,datarehilo_d,datarelolo_d,
+       dataimhihi_d,dataimlohi_d,dataimhilo_d,dataimlolo_d,
+       cnvlapms,verbose);
 
-      convjobs_coordinates(cnvjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
-                           fstart,bstart,cstart,verbose);
-      if(deg1 == BS)
-      {
-         int *in1ix_d; // first input on device
-         int *in2ix_d; // second input on device
-         int *outix_d; // output indices on device
-         const size_t szjobidx = jobnbr*sizeof(int);
-         cudaMalloc((void**)&in1ix_d,szjobidx);
-         cudaMalloc((void**)&in2ix_d,szjobidx);
-         cudaMalloc((void**)&outix_d,szjobidx);
-         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
-         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
-         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+   cmplx4_addition_jobs
+      (dim,nbr,deg,nvr,addjobs,fstart,bstart,cstart,
+       datarehihi_d,datarelohi_d,datarehilo_d,datarelolo_d,
+       dataimhihi_d,dataimlohi_d,dataimhilo_d,dataimlolo_d,
+       addlapms,verbose);
 
-         if(verbose)
-            cout << "launching " << jobnbr << " blocks of " << BS
-                 << " threads ..." << endl;
-
-         cudaEventRecord(start);
-         cmplx4_padded_convjobs<<<jobnbr,BS>>>
-            (datarehihi_d,datarelohi_d,datarehilo_d,datarelolo_d,
-             dataimhihi_d,dataimlohi_d,dataimhilo_d,dataimlolo_d,
-             in1ix_d,in2ix_d,outix_d,deg1);
-         cudaEventRecord(stop);
-         cudaEventSynchronize(stop);
-         cudaEventElapsedTime(&milliseconds,start,stop);
-         *cnvlapms += milliseconds;
-      }
-      free(in1ix_h); free(in2ix_h); free(outix_h);
-   }
-   for(int k=0; k<addjobs.get_depth(); k++)
-   {
-      const int jobnbr = addjobs.get_layer_count(k);
-      int *in1ix_h = new int[jobnbr];
-      int *in2ix_h = new int[jobnbr];
-      int *outix_h = new int[jobnbr];
-
-      if(verbose) cout << "preparing addition jobs at layer "
-                       << k << " ..." << endl;
-
-      addjobs_coordinates(addjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
-                          fstart,bstart,cstart,verbose);
-      if(deg1 == BS)
-      {
-         int *in1ix_d; // first input on device
-         int *in2ix_d; // second input on device
-         int *outix_d; // output indices on device
-         const size_t szjobidx = jobnbr*sizeof(int);
-         cudaMalloc((void**)&in1ix_d,szjobidx);
-         cudaMalloc((void**)&in2ix_d,szjobidx);
-         cudaMalloc((void**)&outix_d,szjobidx);
-         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
-         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
-         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
-
-         if(verbose)
-            cout << "launching " << jobnbr << " blocks of " << BS
-                 << " threads ..." << endl;
-
-         cudaEventRecord(start);
-         cmplx4_update_addjobs<<<jobnbr,BS>>>
-            (datarehihi_d,datarelohi_d,datarehilo_d,datarelolo_d,
-             dataimhihi_d,dataimlohi_d,dataimhilo_d,dataimlolo_d,
-             in1ix_d,in2ix_d,outix_d,deg1);
-         cudaEventRecord(stop);
-         cudaEventSynchronize(stop);
-         cudaEventElapsedTime(&milliseconds,start,stop);
-         *addlapms += milliseconds;
-      }
-      free(in1ix_h); free(in2ix_h); free(outix_h);
-   }
    gettimeofday(&endtime,0);
    cudaMemcpy(datarehihi_h,datarehihi_d,szdata,cudaMemcpyDeviceToHost);
    cudaMemcpy(datarelohi_h,datarelohi_d,szdata,cudaMemcpyDeviceToHost);
