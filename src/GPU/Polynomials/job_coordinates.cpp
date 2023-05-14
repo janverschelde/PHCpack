@@ -435,7 +435,7 @@ void complex_addjob_indices
       else
          *inp1ix = bstart[updmon] + (updidx-1)*deg1;
    }
-   else if(adtype == 2)  // imaginary part of backward
+   else if(adtype == 5)  // imaginary part of backward
    {                     // on GPU, one backward item less
       if(updidx == 0)
          *inp1ix = bstart[updmon] + totcffoffset;
@@ -451,7 +451,7 @@ void complex_addjob_indices
       *inp1ix = cstart[updmon] + updidx*deg1 + totcffoffset;
    }
    else
-      cout << "Invalid type of the update!" << endl;
+      cout << adtype << " is an invalid addition type!" << endl;
 
    *outidx = *inp1ix;
 
@@ -475,15 +475,15 @@ void complex_addjob_indices
       {
          *inp2ix = fstart[incmon] + incidx*deg1;
       }
-      if(intype == 4)      // second real operand of forward
+      else if(intype == 4)      // second real operand of forward
       {
          *inp2ix = fstart[incmon] + incidx*deg1 + totcff;
       }
-      if(intype == 7)      // first imaginary operand of forward
+      else if(intype == 7)      // first imaginary operand of forward
       {
          *inp2ix = fstart[incmon] + incidx*deg1 + totcffoffset;
       }
-      if(intype == 10)     // second imaginary operand of forward
+      else if(intype == 10)     // second imaginary operand of forward
       {
          *inp2ix = fstart[incmon] + incidx*deg1 + totcffoffset + offset;
       }
@@ -533,7 +533,7 @@ void complex_addjob_indices
          *inp2ix = cstart[incmon] + incidx*deg1 + totcffoffset + offset;
       }
       else
-         cout << "Invalid increment type!" << endl;
+         cout << intype << " is an invalid increment type!" << endl;
    }
    if(verbose)
    {
