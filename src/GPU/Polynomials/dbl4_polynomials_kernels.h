@@ -107,6 +107,29 @@ __global__ void cmplx4_padded_convjobs
  *   dataimlolo   updated lowest fdoubles of the imaginary parts
  *                of the forward, backward, and cross products. */
 
+__global__ void cmplx4vectorized_flipsigns
+ ( double *datarihihi, double *datarilohi,
+   double *datarihilo, double *datarilolo, int totcff, int dim );
+/*
+ * DESCRIPTION :
+ *   Kernel to flip the signs of the second real operand
+ *   on the data arrays used for the complex vectorized arithmetic.
+ *
+ * ON ENTRY :
+ *   datarihihi   highest doubles of the convolutions;
+ *   datarilohi   second highest doubles of the convolutions;
+ *   datarihilo   second lowest doubles of the convolutions;
+ *   datarilolo   lowest doubles of the convolutions;
+ *   totcff       start index for the second real operand;
+ *   dim          equals the size of each block, or deg+1,
+ *                where deg is the degree of truncation.
+ *
+ * ON RETURN :
+ *   datarihihi   highest doubles of the computed data;
+ *   datarilohi   second highest doubles of the computed data;
+ *   datarihilo   second lowest doubles of the computed data;
+ *   datarilolo   lowest doubles of the computed data. */
+
 __global__ void dbl4_update_addjobs
  ( double *datahihi, double *datalohi, double *datahilo, double *datalolo,
    int *in1idx, int *in2idx, int *outidx, int dim );
@@ -1313,6 +1336,33 @@ void GPU_cmplx4_poly_evaldiff
  *                  expressed in milliseconds;
  *   walltimesec    is the elapsed wall clock time for all computations
  *                  (excluding memory copies) in seconds. */
+
+void GPU_cmplx4vectorized_flipsigns
+ ( int deg, int totcff, int offsetri,
+   double *datarihihi, double *datarilohi,
+   double *datarihilo, double *datarilolo,
+   double *elapsedms, bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Flips the signs in the second operand of the real convolutions
+ *   in the data arrays used in the vectorized complex arithmetic.
+ *
+ * ON ENTRY :
+ *   deg          degree of truncation of the series;
+ *   totcff       total number of coefficients without vectorization;
+ *   offsetri     size of the second operand;
+ *   datarihihi   highest doubles of the convolutions;
+ *   datarilohi   second highest doubles of the convolutions;
+ *   datarihilo   second lowest doubles of the convolutions;
+ *   datarilolo   lowest doubles of the convolutions;
+ *   verbose      is the verbose flag.
+ *
+ * ON RETURN :
+ *   datarihihi   highest doubles of the computed data;
+ *   datarilohi   second highest doubles of the computed data;
+ *   datarihilo   second lowest doubles of the computed data;
+ *   datarilolo   lowest doubles of the computed data;
+ *   elapsedms    elapsed time expressed in milliseconds. */
 
 void GPU_cmplx4vectorized_poly_evaldiff
  ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,

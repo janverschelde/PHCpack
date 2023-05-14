@@ -406,6 +406,21 @@ __global__ void cmplx4_padded_convjobs
    __syncthreads();
 }
 
+__global__ void cmplx4vectorized_flipsigns
+ ( double *datarihihi, double *datarilohi,
+   double *datarihilo, double *datarilolo, int totcff, int dim )
+{
+   const int bdx = blockIdx.x;    // index to the block to flip
+   const int tdx = threadIdx.x;
+   const int idx = totcff + bdx*dim + tdx; // which number to flip
+
+   double x; // register to load data from global memory
+
+   x = datarihihi[idx];
+   x = -x;
+   datarihihi[idx] = x;
+}
+
 __global__ void dbl4_update_addjobs
  ( double *datahihi, double *datalohi, double *datahilo, double *datalolo,
    int *in1idx, int *in2idx, int *outidx, int dim )
@@ -1063,6 +1078,153 @@ void cmplx_added_data4vectorized_to_output
    int totcff, int offsetri, ComplexAdditionJobs jobs,
    bool verbose )
 {
+   const int deg1 = deg + 1;
+   const int lastmon = nbr-1;
+   const int lastidx = nvr[lastmon]-1;
+   const int totcffoffset = totcff + offsetri;
+   int ix1re,ix2im;
+
+   ix1re = fstart[lastmon] + lastidx*deg1;
+   ix2im = fstart[lastmon] + lastidx*deg1 + totcffoffset;
+
+   if(verbose)
+      cout << "Updating value starting at " << ix1re << " in data." << endl;
+
+   for(int i=0; i<=deg; i++) // output[dim][i] = data[ix++];
+   {
+      outputrehihi[dim][i] = datarihihi[ix1re];
+      outputrelohi[dim][i] = datarilohi[ix1re];
+      outputrehilo[dim][i] = datarihilo[ix1re];
+      outputrelolo[dim][i] = datarilolo[ix1re++];
+      outputimhihi[dim][i] = datarihihi[ix2im];
+      outputimlohi[dim][i] = datarilohi[ix2im];
+      outputimhilo[dim][i] = datarihilo[ix2im];
+      outputimlolo[dim][i] = datarilolo[ix2im++];
+   }
+   int cnt = jobs.get_differential_count(0);
+   if(cnt == 0) // it could be there is no first variable anywhere ...
+   {
+      for(int i=0; i<=deg; i++) // output[0][i] = 0.0;
+      {
+         outputrehihi[0][i] = 0.0; outputrelohi[0][i] = 0.0;
+         outputrehilo[0][i] = 0.0; outputrelolo[0][i] = 0.0;
+         outputimhihi[0][i] = 0.0; outputimlohi[0][i] = 0.0; 
+         outputimhilo[0][i] = 0.0; outputimlolo[0][i] = 0.0;
+      }
+   }
+   else
+   {
+      int ix0 = jobs.get_differential_index(0,cnt);
+      int ix2 = nvr[ix0]-3;
+      if(ix2 < 0) ix2 = 0; // on GPU, one backward item less
+
+      ix1re = bstart[ix0] + ix2*deg1;
+      ix2im = bstart[ix0] + ix2*deg1 + totcffoffset;
+      
+      if(verbose)
+         cout << "Updating derivative 0 at " << ix1re << " in data." << endl;
+
+      for(int i=0; i<=deg; i++) // output[0][i] = data[ix++];
+      {
+         outputrehihi[0][i] = datarihihi[ix1re];
+         outputrelohi[0][i] = datarilohi[ix1re];
+         outputrehilo[0][i] = datarihilo[ix1re];
+         outputrelolo[0][i] = datarilolo[ix1re++];
+         outputimhihi[0][i] = datarihihi[ix2im];
+         outputimlohi[0][i] = datarilohi[ix2im];
+         outputimhilo[0][i] = datarihilo[ix2im];
+         outputimlolo[0][i] = datarilolo[ix2im++];
+      }
+      for(int k=1; k<dim; k++) // updating all other derivatives
+      {
+         int cnt = jobs.get_differential_count(k);
+         if(cnt == 0) // it could be there is no variable k anywhere ...
+         {
+            for(int i=0; i<=deg; i++) // output[k][i] = 0.0;
+            {
+               outputrehihi[k][i] = 0.0; outputrelohi[k][i] = 0.0;
+               outputrehilo[k][i] = 0.0; outputrelolo[k][i] = 0.0;
+               outputimhihi[k][i] = 0.0; outputimlohi[k][i] = 0.0;
+               outputimhilo[k][i] = 0.0; outputimlolo[k][i] = 0.0;
+            }
+         }
+         else
+         {
+            int ix0 = jobs.get_differential_index(k,cnt);
+   
+            if(idx[ix0][0] == k) // k is first variable of monomial
+            {
+               int ix2 = nvr[ix0]-3;
+               if(ix2 < 0) ix2 = 0;
+
+               if(verbose)
+                  cout << "Updating derivative " << k 
+                       << " at " << ix1re << " in data." << endl;
+
+               ix1re = bstart[ix0] + ix2*deg1;
+               ix2im = bstart[ix0] + ix2*deg1 + totcffoffset;
+
+               for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
+               {
+                  outputrehihi[k][i] = datarihihi[ix1re];
+                  outputrelohi[k][i] = datarilohi[ix1re];
+                  outputrehilo[k][i] = datarihilo[ix1re];
+                  outputrelolo[k][i] = datarilolo[ix1re++];
+                  outputimhihi[k][i] = datarihihi[ix2im];
+                  outputimlohi[k][i] = datarilohi[ix2im];
+                  outputimhilo[k][i] = datarihilo[ix2im];
+                  outputimlolo[k][i] = datarilolo[ix2im++];
+               }
+            }
+            else if(idx[ix0][nvr[ix0]-1] == k) // k is last variable
+            {
+               int ix2 = nvr[ix0]-2;
+   
+               if(verbose)
+                  cout << "Updating derivative " << k 
+                       << " at " << ix1re << " in data." << endl;
+
+               ix1re = fstart[ix0] + ix2*deg1;
+               ix2im = fstart[ix0] + ix2*deg1 + totcffoffset;
+
+               for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
+               {
+                  outputrehihi[k][i] = datarihihi[ix1re];
+                  outputrelohi[k][i] = datarilohi[ix1re];
+                  outputrehilo[k][i] = datarihilo[ix1re];
+                  outputrelolo[k][i] = datarilolo[ix1re++];
+                  outputimhihi[k][i] = datarihihi[ix2im];
+                  outputimlohi[k][i] = datarilohi[ix2im];
+                  outputimhilo[k][i] = datarihilo[ix2im];
+                  outputimlolo[k][i] = datarilolo[ix2im++];
+               }
+            }
+            else // derivative is in some cross product
+            {
+               int ix2 = jobs.position(nvr[ix0],idx[ix0],k) - 1;
+   
+               if(verbose)
+                  cout << "Updating derivative " << k 
+                       << " at " << ix1re << " in data." << endl;
+
+               ix1re = cstart[ix0] + ix2*deg1;
+               ix2im = cstart[ix0] + ix2*deg1 + totcffoffset;
+
+               for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
+               {
+                  outputrehihi[k][i] = datarihihi[ix1re];
+                  outputrelohi[k][i] = datarilohi[ix1re];
+                  outputrehilo[k][i] = datarihilo[ix1re];
+                  outputrelolo[k][i] = datarilolo[ix1re++];
+                  outputimhihi[k][i] = datarihihi[ix2im];
+                  outputimlohi[k][i] = datarilohi[ix2im];
+                  outputimhilo[k][i] = datarihilo[ix2im];
+                  outputimlolo[k][i] = datarilolo[ix2im++];
+               }
+            }
+         }
+      }
+   }
 }
 
 void dbl4_data_setup
@@ -1795,6 +1957,38 @@ void GPU_cmplx4_poly_evaldiff
    if(verbose) write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
 }
 
+void GPU_cmplx4vectorized_flipsigns
+ ( int deg, int totcff, int offsetri,
+   double *datarihihi, double *datarilohi,
+   double *datarihilo, double *datarilolo,
+   double *elapsedms, bool verbose )
+{
+   const int deg1 = deg+1;
+   const int nbrblocks = offsetri/deg1;
+
+   cudaEvent_t start,stop;           // to measure time spent by kernels
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+
+   cudaEventRecord(start);
+   cmplx4vectorized_flipsigns<<<nbrblocks,deg1>>>
+      (datarihihi,datarilohi,datarihilo,datarilolo,totcff,deg1);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+
+   *elapsedms = (double) milliseconds;
+
+   if(verbose)
+   {
+       cout << fixed << setprecision(2);
+       cout << "Time spent by flip sign kernels : ";
+       cout << *elapsedms << " milliseconds." << endl;
+       cout << scientific << setprecision(16);
+   }
+}
+
 void GPU_cmplx4vectorized_poly_evaldiff
  ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,
    double *cstrehihi, double *cstrelohi,
@@ -1873,6 +2067,13 @@ void GPU_cmplx4vectorized_poly_evaldiff
        datarihihi_d,datarilohi_d,datarihilo_d,datarilolo_d,
        cnvlapms,verbose);
 
+   double fliplapms; // should be insignificant ...
+
+   GPU_cmplx4vectorized_flipsigns
+      (deg,totalcff,offsetri,
+       datarihihi_d,datarilohi_d,datarihilo_d,datarilolo_d,
+       &fliplapms,verbose);
+
    cmplx4vectorized_addition_jobs
       (dim,nbr,deg,nvr,totalcff,offsetri,addjobs,fstart,bstart,cstart,
        datarihihi_d,datarilohi_d,datarihilo_d,datarilolo_d,
@@ -1883,7 +2084,7 @@ void GPU_cmplx4vectorized_poly_evaldiff
    cudaMemcpy(datarilohi_h,datarilohi_d,szdata,cudaMemcpyDeviceToHost);
    cudaMemcpy(datarihilo_h,datarihilo_d,szdata,cudaMemcpyDeviceToHost);
    cudaMemcpy(datarilolo_h,datarilolo_d,szdata,cudaMemcpyDeviceToHost);
-   *elapsedms = *cnvlapms + *addlapms;
+   *elapsedms = *cnvlapms + fliplapms + *addlapms;
    long seconds = endtime.tv_sec - begintime.tv_sec;
    long microseconds = endtime.tv_usec - begintime.tv_usec;
    *walltimesec = seconds + microseconds*1.0e-6;
