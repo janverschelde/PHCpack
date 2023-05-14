@@ -40,9 +40,9 @@ int main_dbl4_test_polynomial
    }
    if(vrblvl > 0) cout << "  Seed used : " << seedused << endl;
 
-   double realsum = test_dbl4_real_polynomial
+   double realsum = test_dbl4_polynomial
                        (dim,nbr,nva,pwr,deg,vrblvl-1,jobrep,mode);
-   double compsum = test_cmplx4_real_polynomial
+   double compsum = test_cmplx4_polynomial
                        (dim,nbr,nva,pwr,deg,vrblvl-1,jobrep,mode);
 
    int fail = int(realsum > tol) + int(compsum > tol);
@@ -487,7 +487,7 @@ double cmplx4_error_sum
    return sumerr;
 }
 
-double test_dbl4_real_polynomial
+double test_dbl4_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
 {
@@ -676,7 +676,7 @@ double test_dbl4_real_polynomial
    }
 }
 
-double test_cmplx4_real_polynomial
+double test_cmplx4_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
 {
@@ -808,6 +808,12 @@ double test_cmplx4_real_polynomial
 
       make_all_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
 
+      ComplexConvolutionJobs cmplxcnvjobs(dim);
+      ComplexAdditionJobs cmplxaddjobs(dim,nbr);
+
+      make_all_complex_jobs
+         (dim,nbr,nvr,idx,&cmplxcnvjobs,&cmplxaddjobs,vrb);
+
       double timelapsec1_h,timelapsec2_h;
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
@@ -841,6 +847,7 @@ double test_cmplx4_real_polynomial
       if((mode == 0) || (mode == 2))
       {
          if(vrb) cout << "Computing on the device ..." << endl;
+/*
          GPU_cmplx4_poly_evaldiff
             (deg+1,dim,nbr,deg,nvr,idx,
              cstrehihi,cstrelohi,cstrehilo,cstrelolo,
@@ -852,6 +859,19 @@ double test_cmplx4_real_polynomial
              outputrehihi_d,outputrelohi_d,outputrehilo_d,outputrelolo_d,
              outputimhihi_d,outputimlohi_d,outputimhilo_d,outputimlolo_d,
              cnvjobs,addjobs,&cnvlapms,&addlapms,&timelapms_d,
+             &walltimes_d,vrb);
+ */
+         GPU_cmplx4vectorized_poly_evaldiff
+            (deg+1,dim,nbr,deg,nvr,idx,
+             cstrehihi,cstrelohi,cstrehilo,cstrelolo,
+             cstimhihi,cstimlohi,cstimhilo,cstimlolo,
+             cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+             cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+             inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+             inputimhihi,inputimlohi,inputimhilo,inputimlolo,
+             outputrehihi_d,outputrelohi_d,outputrehilo_d,outputrelolo_d,
+             outputimhihi_d,outputimlohi_d,outputimhilo_d,outputimlolo_d,
+             cmplxcnvjobs,cmplxaddjobs,&cnvlapms,&addlapms,&timelapms_d,
              &walltimes_d,vrb);
       }
       double sumerr = 0.0;

@@ -47,6 +47,48 @@ void make_all_jobs
    }
 }
 
+void make_all_complex_jobs
+ ( int dim, int nbr, int *nvr, int **idx,
+   ComplexConvolutionJobs *cnvjobs, ComplexAdditionJobs *addjobs,
+   bool verbose )
+{
+   cnvjobs->make(nbr,nvr,idx,verbose);
+
+   if(verbose)
+   {
+      write_complexconv_counts(*cnvjobs);
+
+      for(int k=0; k<cnvjobs->get_depth(); k++)
+      {
+         cout << "jobs at layer " << k << " :" << endl;
+         for(int i=0; i<cnvjobs->get_layer_count(k); i++)
+            cout << cnvjobs->get_job(k,i) << endl;
+      }
+      cout << endl;
+   }
+   addjobs->make(nbr,nvr,idx,verbose);
+
+   if(verbose)
+   {
+      cout << "The differential indices :" << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "variable " << i << " :";
+         for(int j=0; j<=addjobs->get_differential_count(i); j++)
+            cout << " " << addjobs->get_differential_index(i,j);
+         cout << endl;
+      }
+      write_complexadd_counts(*addjobs);
+   
+      for(int k=0; k<addjobs->get_depth(); k++)
+      {
+         cout << "jobs at layer " << k << " :" << endl;
+         for(int i=0; i<addjobs->get_layer_count(k); i++)
+            cout << addjobs->get_job(k,i) << endl;
+      }
+   }
+}
+
 void write_jobs_report
  ( int dim, int nva, int nbr, int deg,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs )
@@ -57,6 +99,18 @@ void write_jobs_report
    write_convolution_counts(cnvjobs);
    write_addition_counts(addjobs);
    write_operation_counts(deg,cnvjobs,addjobs);
+}
+
+void write_complex_jobs_report
+ ( int dim, int nva, int nbr, int deg,
+   ComplexConvolutionJobs cnvjobs, ComplexAdditionJobs addjobs )
+{
+   cout << "dimension : " << dim << endl;
+   if(nva > 0) cout << "number of variables per monomial : " << nva << endl;
+   cout << "number of monomials : " << nbr << endl;
+   write_complexconv_counts(cnvjobs);
+   write_complexadd_counts(addjobs);
+   write_complexop_counts(deg,cnvjobs,addjobs);
 }
 
 void write_CPU_timings ( double lapsec1, double lapsec2 )
