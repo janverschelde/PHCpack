@@ -6,6 +6,8 @@
 
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
+#include "complexconv_jobs.h"
+#include "complexadd_jobs.h"
 
 int coefficient_count ( int dim, int nbr, int deg, int *nvr );
 /*
@@ -100,6 +102,36 @@ void convjob_indices
  *   inp2ix   index of the second input;
  *   outidx   index of the output. */
 
+void complex_convjob_indices
+ ( ComplexConvolutionJob job, int *inp1ix, int *inp2ix, int *outidx,
+   int dim, int nbr, int deg, int *nvr, int totcff, int offset,
+   int *fstart, int *bstart, int *cstart, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Computes the indices of the two inputs and the output of a job,
+ *   for a convolution job on complex data with second operands.
+ *
+ * ON ENTRY :
+ *   job      defines a convolution job;
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      truncation degree of the series;
+ *   nvr      nvr[k] is the number of variables for monomial k;
+ *   totcff   total number of coefficients up to the first operand;
+ *   offset   number of coefficients in the second operand;
+ *   fstart   fstart[k] has the start position of the forward products
+ *            for the k-th monomial;
+ *   bstart   fstart[k] has the start position of the backward products
+ *            for the k-th monomial;
+ *   cstart   fstart[k] has the start position of the cross products
+ *            for the k-th monomial;
+ *   verbose  if true, writes extra information about the job.
+ *
+ * ON RETURN :
+ *   inp1ix   index of the first input;
+ *   inp2ix   index of the second input;
+ *   outidx   index of the output. */
+
 void convjobs_coordinates
  ( ConvolutionJobs jobs, int layer,
    int *inp1ix, int *inp2ix, int *outidx,
@@ -119,6 +151,41 @@ void convjobs_coordinates
  *   nbr      number of monomials, excluding the constant term;
  *   deg      truncation degree of the series;
  *   nvr      nvr[k] is the number of variables for monomial k;
+ *   fstart   fstart[k] has the start position of the forward products
+ *            for the k-th monomial;
+ *   bstart   fstart[k] has the start position of the backward products
+ *            for the k-th monomial;
+ *   cstart   fstart[k] has the start position of the cross products
+ *            for the k-th monomial;
+ *   verbose  if true, writes extra information about the jobs.
+ *
+ * ON RETURN :
+ *   inp1ix   inp1ix[i] is the index of the first input of job i;
+ *   inp2ix   inp2ix[i] is the index of the second input of job i;
+ *   outidx   outidx[i] is the index of the output of job i. */
+
+void complex_convjobs_coordinates
+ ( ComplexConvolutionJobs jobs, int layer,
+   int *inp1ix, int *inp2ix, int *outidx,
+   int dim, int nbr, int deg, int *nvr, int totcff, int offset,
+   int *fstart, int *bstart, int *cstart, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Defines the coordinates of all jobs in the same layer,
+ *   for vectorized complex arithmetic.
+ *
+ * ON ENTRY :
+ *   jobs     defines convolution jobs;
+ *   layer    the index of one layer of jobs;
+ *   inp1ix   space for as many integers as the jobs on the layer;
+ *   inp2ix   space for as many integers as the jobs on the layer;
+ *   outidx   space for as many integers as the jobs on the layer;
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      truncation degree of the series;
+ *   nvr      nvr[k] is the number of variables for monomial k;
+ *   totcff   total number of coefficients up to the first operand;
+ *   offset   number of coefficients in the second operand;
  *   fstart   fstart[k] has the start position of the forward products
  *            for the k-th monomial;
  *   bstart   fstart[k] has the start position of the backward products
@@ -159,6 +226,36 @@ void addjob_indices
  *   inp2ix   index of the second input;
  *   outidx   index of the output. */
 
+void complex_addjob_indices
+ ( ComplexAdditionJob job, int *inp1ix, int *inp2ix, int *outidx,
+   int dim, int nbr, int deg, int *nvr, int totcff, int offset,
+   int *fstart, int *bstart, int *cstart, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Computes the indices of the two inputs and the output of a job,
+ *   for additions on complex data with second operands.
+ *
+ * ON ENTRY :
+ *   job      defines an addition job;
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      truncation degree of the series;
+ *   nvr      nvr[k] is the number of variables for monomial k;
+ *   totcff   total number of coefficients up to the first operand;
+ *   offset   number of coefficients in the second operand;
+ *   fstart   fstart[k] has the start position of the forward products
+ *            for the k-th monomial;
+ *   bstart   fstart[k] has the start position of the backward products
+ *            for the k-th monomial;
+ *   cstart   fstart[k] has the start position of the cross products
+ *            for the k-th monomial;
+ *   verbose  if true, writes extra information about the job.
+ *
+ * ON RETURN :
+ *   inp1ix   index of the first input;
+ *   inp2ix   index of the second input;
+ *   outidx   index of the output. */
+
 void addjobs_coordinates
  ( AdditionJobs jobs, int layer,
    int *inp1ix, int *inp2ix, int *outidx,
@@ -178,6 +275,40 @@ void addjobs_coordinates
  *   nbr      number of monomials, excluding the constant term;
  *   deg      truncation degree of the series;
  *   nvr      nvr[k] is the number of variables for monomial k;
+ *   fstart   fstart[k] has the start position of the forward products
+ *            for the k-th monomial;
+ *   bstart   fstart[k] has the start position of the backward products
+ *            for the k-th monomial;
+ *   cstart   fstart[k] has the start position of the cross products
+ *            for the k-th monomial;
+ *   verbose  if true, writes extra information about the jobs.
+ *
+ * ON RETURN :
+ *   inp1ix   inp1ix[i] is the index of the first input of job i;
+ *   inp2ix   inp2ix[i] is the index of the second input of job i;
+ *   outidx   outidx[i] is the index of the output of job i. */
+
+void complex_addjobs_coordinates
+ ( ComplexAdditionJobs jobs, int layer,
+   int *inp1ix, int *inp2ix, int *outidx,
+   int dim, int nbr, int deg, int *nvr, int totcff, int offset,
+   int *fstart, int *bstart, int *cstart, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Defines the coordinates of all jobs in the same layer.
+ *
+ * ON ENTRY :
+ *   jobs     defines addition jobs;
+ *   layer    the index of one layer of jobs;
+ *   inp1ix   space for as many integers as the jobs on the layer;
+ *   inp2ix   space for as many integers as the jobs on the layer;
+ *   outidx   space for as many integers as the jobs on the layer;
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      truncation degree of the series;
+ *   nvr      nvr[k] is the number of variables for monomial k;
+ *   totcff   total number of coefficients up to the first operand;
+ *   offset   number of coefficients in the second operand;
  *   fstart   fstart[k] has the start position of the forward products
  *            for the k-th monomial;
  *   bstart   fstart[k] has the start position of the backward products

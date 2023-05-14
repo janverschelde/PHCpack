@@ -1,3 +1,7 @@
+Sun 14 May 2023 : defined the coordinates of the complex convolution and
+  addition jobs in job_coordinates and then applied those new functions in
+  dbl4_polynomials_kernels, in the complex vectorized versions.
+
 Sat 13 May 2023 : new functions for the data initialization, for the 
   convolution jobs, and for the addition jobs in dbl4_polynomials_kernels.
   Added functions to dbl4_polynomials_kernels to enable the vectorized

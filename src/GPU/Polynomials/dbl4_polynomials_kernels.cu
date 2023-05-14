@@ -1342,13 +1342,13 @@ void cmplx4vectorized_convolution_jobs
    double *datarihilo, double *datarilolo,
    double *cnvlapms, bool verbose )
 {
-   // const int deg1 = deg+1;
+   const int deg1 = deg+1;
 
    cudaEvent_t start,stop;           // to measure time spent by kernels
    cudaEventCreate(&start);
    cudaEventCreate(&stop);
    *cnvlapms = 0.0;
-   // float milliseconds;
+   float milliseconds;
 
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
@@ -1359,6 +1359,38 @@ void cmplx4vectorized_convolution_jobs
 
       if(verbose) cout << "preparing convolution jobs at layer "
                        << k << " ..." << endl;
+
+      complex_convjobs_coordinates
+         (cnvjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,totcff,offsetri,
+          fstart,bstart,cstart,verbose);
+
+      // if(deg1 == BS)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads ..." << endl;
+
+         cudaEventRecord(start);
+         dbl4_padded_convjobs<<<jobnbr,deg1>>>
+            (datarihihi,datarilohi,datarihilo,datarilolo,
+             in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *cnvlapms += milliseconds;
+      }
+      free(in1ix_h); free(in2ix_h); free(outix_h);
    }
 }
 
@@ -1486,13 +1518,13 @@ void cmplx4vectorized_addition_jobs
    double *datarihilo, double *datarilolo,
    double *addlapms, bool verbose )
 {
-   // const int deg1 = deg+1;
+   const int deg1 = deg+1;
 
    cudaEvent_t start,stop;           // to measure time spent by kernels
    cudaEventCreate(&start);
    cudaEventCreate(&stop);
    *addlapms = 0.0;
-   // float milliseconds;
+   float milliseconds;
 
    for(int k=0; k<addjobs.get_depth(); k++)
    {
@@ -1503,6 +1535,38 @@ void cmplx4vectorized_addition_jobs
 
       if(verbose) cout << "preparing addition jobs at layer "
                        << k << " ..." << endl;
+
+      complex_addjobs_coordinates
+         (addjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
+          totcff,offsetri,fstart,bstart,cstart,verbose);
+
+      // if(deg1 == BS)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads ..." << endl;
+
+         cudaEventRecord(start);
+         dbl4_update_addjobs<<<jobnbr,deg1>>>
+            (datarihihi,datarilohi,datarihilo,datarilolo,
+             in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *addlapms += milliseconds;
+      }
+      free(in1ix_h); free(in2ix_h); free(outix_h);
    }
 }
 
