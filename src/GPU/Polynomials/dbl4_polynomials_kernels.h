@@ -7,6 +7,8 @@
 
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
+#include "complexconv_jobs.h"
+#include "complexadd_jobs.h"
 
 __global__ void dbl4_padded_convjobs
  ( double *datahihi, double *datalohi, double *datahilo, double *datalolo,
@@ -334,9 +336,9 @@ void cmplx_convoluted_data4_to_output
  *   verbose      if true, writes extra information.
  *
  * ON RETURN :
- *   outpurethihi contains the highest doubles of the real parts
+ *   outputrehihi contains the highest doubles of the real parts
  *                of the value and all derivatives;
- *   outpuretlohi contains the second highest doubles of the real parts
+ *   outputrelohi contains the second highest doubles of the real parts
  *                of the value and all derivatives;
  *   outputrehilo contains the second lowest doubles of the real parts
  *                of the value and all derivatives;
@@ -489,9 +491,9 @@ void cmplx_added_data4_to_output
  *   verbose      if true, writes extra information.
  *
  * ON RETURN :
- *   outpurethihi contains the highest doubles of the real parts
+ *   outputrehihi contains the highest doubles of the real parts
  *                of the value and all derivatives;
- *   outpuretlohi contains the second highest doubles of the real parts
+ *   outputrelohi contains the second highest doubles of the real parts
  *                of the value and all derivatives;
  *   outputrehilo contains the second lowest doubles of the real parts
  *                of the value and all derivatives;
@@ -505,6 +507,80 @@ void cmplx_added_data4_to_output
  *                of the value and all derivatives;
  *   outputimlolo contains the lowest doubles of the imaginary parts
  *                of the value and all derivatives. */
+
+void cmplx_added_data4vectorized_to_output
+ ( double *datarihihi, double *datarilohi,
+   double *datarihilo, double *datarilolo,
+   double **outputrehihi, double **outputrelohi,
+   double **outputrehilo, double **outputrelolo,
+   double **outputimhihi, double **outputimlohi,
+   double **outputimhilo, double **outputimlolo,
+   int dim, int nbr, int deg, int *nvr,
+   int **idx, int *fstart, int *bstart, int *cstart,
+   int totcff, int offsetri, ComplexAdditionJobs jobs,
+   bool verbose );
+/*
+ * DESCRIPTION :
+ *   Extracts the complex data computed on the device to the output.
+ *   All convolutions and all additions have been computed.
+ *
+ * ON ENTRY :
+ *   datarihihi   highest doubles of the computed data;
+ *   datarilohi   second highest doubles of the computed data;
+ *   datarihilo   second lowest doubles of the computed data;
+ *   datarilolo   lowest doubles of the computed data;
+ *   outputrehihi has space for all highest doubles of the real parts
+ *                of value and all derivatives;
+ *   outputrelohi has space for all second highest doubles of the real parts
+ *                of value and all derivatives;
+ *   outputrehilo has space for all second lowest doubles of the real parts
+ *                of value and all derivatives;
+ *   outputrelolo has space for all lowest doubles of the real parts
+ *                of value and all derivatives;
+ *   outputimhihi has space for all highest doubles of the imaginary parts
+ *                of value and all derivatives;
+ *   outputimlohi has space for all second highest doubles of the 
+ *                imaginary parts of value and all derivatives;
+ *   outputimhilo has space for all second lowest doubles of the
+ *                imaginary parts of value and all derivatives;
+ *   outputimlolo has space for all lowest doubles of the imaginary parts
+ *                of value and all derivatives;
+ *   dim          total number of variables;
+ *   nbr          number of monomials, excluding the constant term;
+ *   deg          truncation degree of the series;
+ *   nvr          nvr[k] is the number of variables for monomial k;
+ *   idx          idx[k] has as many indices as the value of nvr[k],
+ *                idx[k][i] defines the place of the i-th variable,
+ *                with input values in input[idx[k][i]];
+ *   fstart       fstart[k] has the start position of the forward products
+ *                for the k-th monomial;
+ *   bstart       fstart[k] has the start position of the backward products
+ *                for the k-th monomial;
+ *   cstart       fstart[k] has the start position of the cross products
+ *                for the k-th monomial;
+ *   totcff       total number of coefficients without vectorization;
+ *   offsetri     size of the second operand;
+ *   jobs         defines all addition jobs;
+ *   verbose      if true, writes extra information.
+ *
+ * ON RETURN :
+ *   outputrehihi contains the highest doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputrelohi contains the second highest doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputrehilo contains the second lowest doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputrelolo contains the lowest doubles of the real parts
+ *                of the value and all derivatives;
+ *   outpuimthihi contains the highest doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outpuimtlohi contains the second highest doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outputimhilo contains the second lowest doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outputimlolo contains the lowest doubles of the imaginary parts
+ *                of the value and all derivatives. */
+
 
 void dbl4_data_setup
  ( int dim, int nbr, int deg,
@@ -573,7 +649,7 @@ void cmplx4_data_setup
    double **inputimhilo, double **inputimlolo );
 /*
  * DESCRIPTION :
- *   Initializes the real data vectors with the constants, the coefficients
+ *   Initializes the complex data vectors with the constants, the coefficients
  *   of the monomials and the input series for each variable.
  *
  * ON ENTRY :
@@ -663,6 +739,109 @@ void cmplx4_data_setup
  *   dataimhilo   second lowest doubles of the initialized imag data;
  *   dataimlolo   lowest doubles of the initialized imag data. */
 
+void cmplx4vectorized_data_setup
+ ( int dim, int nbr, int deg, int totcff, int offsetri,
+   double *datarihihi, double *datarilohi,
+   double *datarihilo, double *datarilolo,
+   double *cstrehihi, double *cstrelohi,
+   double *cstrehilo, double *cstrelolo,
+   double *cstimhihi, double *cstimlohi,
+   double *cstimhilo, double *cstimlolo,
+   double **cffrehihi, double **cffrelohi,
+   double **cffrehilo, double **cffrelolo,
+   double **cffimhihi, double **cffimlohi,
+   double **cffimhilo, double **cffimlolo,
+   double **inputrehihi, double **inputrelohi,
+   double **inputrehilo, double **inputrelolo,
+   double **inputimhihi, double **inputimlohi,
+   double **inputimhilo, double **inputimlolo );
+/*
+ * DESCRIPTION :
+ *   Initializes the data vectors with the constants, the coefficients
+ *   of the monomials and the input series for each variable,
+ *   in data arrays where the imaginary parts follow the real parts.
+ *
+ * ON ENTRY :
+ *   dim          total number of variables;
+ *   nbr          number of monomials, excluding the constant term;
+ *   deg          truncation degree of the series;
+ *   totcff       total number of coefficients without vectorization;
+ *   offsetri     size of the second operand;
+ *   datarihihi   space for highest doubles of data;
+ *   datarilohi   space for the second highest doubles of data;
+ *   datarihilo   space for the second lowest doubles of data;
+ *   datarilolo   space for the lowest doubles of data;
+ *   cstrehihi    highest deg+1 doubles of the real parts
+ *                of the constant coefficient series;
+ *   cstrelohi    second highest deg+1 doubles of the real parts
+ *                of the constant coefficient series;
+ *   cstrehilo    second lowest deg+1 doubles for the real parts
+ *                of the constant coefficient series;
+ *   cstrelolo    lowest deg+1 doubles for the real parts
+ *                of the constant coefficient series;
+ *   cstimhihi    highest deg+1 doubles of the imaginary parts
+ *                of the constant coefficient series;
+ *   cstimlohi    second highest deg+1 doubles of the imaginary parts
+ *                of the constant coefficient series;
+ *   cstimhilo    second lowest deg+1 doubles of the imaginary parts
+ *                of the constant coefficient series;
+ *   cstimlolo    lowest deg+1 doubles for the imaginary parts
+ *                of the constant coefficient series;
+ *   cffrehihi    has the highest doubles of the real parts
+ *                of the coefficients, cffrehihi[k] has deg+1 highest
+ *                coefficients of monomial k;
+ *   cffrelohi    has the second highest doubles of the real parts
+ *                of the coefficients, cffrelohi[k] has deg+1 second highest
+ *                coefficients of monomial k;
+ *   cffrehilo    has the second lowest doubles of the real parts
+ *                of the coefficients, cffrehilo[k] has deg+1 second lowest
+ *                coefficients of monomial k;
+ *   cffrelolo    has the lowest doubles of the real parts
+ *                of the coefficients, cffrelolo[k] has deg+1 lowest
+ *                coefficients of monomial k;
+ *   cffimhihi    has the highest doubles of the imaginary parts
+ *                of the coefficients, cffimhihi[k] has deg+1 highest
+ *                coefficients of monomial k;
+ *   cffimlohi    has the second highest doubles of the imaginary parts
+ *                of the coefficients, cffimlohi[k] has deg+1 second highest
+ *                coefficients of monomial k;
+ *   cffimhilo    has the second lowest doubles of the imaginary parts
+ *                of the coefficient, cffimlolo[k] has the deg+1 second
+ *                lowest coefficients of monomial k;
+ *   cffimlolo    has the lowest doubles of the imaginary parts
+ *                of the coefficient, cffimlolo[k] has the deg+1 lowest
+ *                coefficients of monomial k;
+ *   inputrehihi  has the highest doubles of the real parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputrelohi  has the second highest doubles of the real parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputrelolo  has the second lowest doubles of the real part
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputrelolo  has the lowest doubles of the real part
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimhihi  has the highest doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimlohi  has the second highest doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimhilo  has the second lowest doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial;
+ *   inputimlolo  has the lowest doubles of the imaginary parts
+ *                of the coefficients of the power series
+ *                for all variables in the polynomial.
+ *
+ * ON RETURN :
+ *   datarihihi   highest doubles of the initialized data;
+ *   datarilohi   second highest doubles of the initialized data;
+ *   datarihilo   second lowest doubles of the initialized data;
+ *   datarilolo   lowest doubles of the initialized data. */
+
 void dbl4_convolution_jobs
  ( int dim, int nbr, int deg, int *nvr, ConvolutionJobs cnvjobs,
    int *fstart, int *bstart, int *cstart,
@@ -746,6 +925,47 @@ void cmplx4_convolution_jobs
  *   cnvlapms     is the elapsed time spent by all convolution kernels,
  *                expressed in milliseconds. */
 
+void cmplx4vectorized_convolution_jobs
+ ( int dim, int nbr, int deg, int *nvr, int totcff, int offsetri,
+   ComplexConvolutionJobs cnvjobs,
+   int *fstart, int *bstart, int *cstart,
+   double *datarihihi, double *datarilohi,
+   double *datarihilo, double *datarilolo,
+   double *cnvlapms, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Launches the kernels for all convolution jobs on complex data,
+ *   on data arrays suitable for complex vectorized arithmetic.
+ *
+ * ON ENTRY :
+ *   dim          total number of variables;
+ *   nbr          number of monomials, excluding the constant term;
+ *   deg          truncation degree of the series;
+ *   nvr          nvr[k] holds the number of variables in monomial k;
+ *   totcff       total number of coefficients without vectorization;
+ *   offsetri     size of the second operand;
+ *   cnvjobs      convolution jobs organized in layers;
+ *   fstart       fstart[k] has the start position of the forward products
+ *                for the k-th monomial;
+ *   bstart       fstart[k] has the start position of the backward products
+ *                for the k-th monomial;
+ *   cstart       fstart[k] has the start position of the cross products
+ *                for the k-th monomial;
+ *   datarihihi   highest doubles of the initialized data;
+ *   datarilohi   second highest doubles of the initialized data;
+ *   datarihilo   second lowest doubles of the initialized data;
+ *   datarilolo   lowest doubles of the initialized data;
+ *   verbose      if true, then information about each kernel launch
+ *                is displayed.
+ *
+ * ON RETURN :
+ *   datarihihi   highest doubles of the convolutions;
+ *   datarilohi   second highest doubles of the convolutions;
+ *   datarihilo   second lowest doubles of the convolutions;
+ *   datarilolo   lowest doubles of the convolutions.
+ *   cnvlapms     is the elapsed time spent by all convolution kernels,
+ *                expressed in milliseconds. */
+
 void dbl4_addition_jobs
  ( int dim, int nbr, int deg, int *nvr, AdditionJobs addjobs,
    int *fstart, int *bstart, int *cstart,
@@ -826,6 +1046,47 @@ void cmplx4_addition_jobs
  *   dataimlohi   second highest doubles of the added imag convolutions;
  *   dataimhilo   second lowest doubles of the added imag convolutions;
  *   dataimlolo   lowest doubles of the added imag convolutions.
+ *   addlapms     is the elapsed time spent by all addition kernels,
+ *                expressed in milliseconds. */
+
+void cmplx4vectorized_addition_jobs
+ ( int dim, int nbr, int deg, int *nvr, int totcff, int offsetri,
+   ComplexAdditionJobs addjobs,
+   int *fstart, int *bstart, int *cstart,
+   double *datarihihi, double *datarilohi,
+   double *datarihilo, double *datarilolo,
+   double *addlapms, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Launches the kernels for all addition jobs on complex data,
+ *   on data arrays suitable for complex vectorized arithmetic.
+ *
+ * ON ENTRY :
+ *   dim          total number of variables;
+ *   nbr          number of monomials, excluding the constant term;
+ *   deg          truncation degree of the series;
+ *   nvr          nvr[k] holds the number of variables in monomial k;
+ *   totcff       total number of coefficients without vectorization;
+ *   offsetri     size of the second operand;
+ *   addjobs      addition jobs organized in layers;
+ *   fstart       fstart[k] has the start position of the forward products
+ *                for the k-th monomial;
+ *   bstart       fstart[k] has the start position of the backward products
+ *                for the k-th monomial;
+ *   cstart       fstart[k] has the start position of the cross products
+ *                for the k-th monomial;
+ *   datarihihi   highest doubles of the convolutions;
+ *   datarilohi   second highest doubles of the convolutions;
+ *   datarihilo   second lowest doubles of the convolutions;
+ *   datarilolo   lowest doubles of the convolutions.
+ *   verbose      if true, then information about each kernel launch
+ *                is displayed.
+ *
+ * ON RETURN :
+ *   datarihihi   highest doubles of the added convolutions;
+ *   datarilohi   second highest doubles of the added convolutions;
+ *   datarihilo   second lowest doubles of the added convolutions;
+ *   datarilolo   lowest doubles of the added convolutions.
  *   addlapms     is the elapsed time spent by all addition kernels,
  *                expressed in milliseconds. */
 
@@ -937,6 +1198,150 @@ void GPU_cmplx4_poly_evaldiff
  *   Computes the convolutions in the order as defined by cnvjobs,
  *   performs the updates to the values as defined by addjobs,
  *   on complex data.
+ *
+ * ON ENTRY :
+ *   BS             number of threads in a block, must equal deg + 1;
+ *   dim            total number of variables;
+ *   nbr            number of monomials, excluding the constant term;
+ *   deg            truncation degree of the series;
+ *   nvr            nvr[k] holds the number of variables in monomial k;
+ *   idx            idx[k] has as many indices as the value of nvr[k],
+ *                  idx[k][i] defines the place of the i-th variable,
+ *                  with input values in input[idx[k][i]];
+ *   cstrehihi      highest deg+1 doubles of the real parts
+ *                  of the constant coefficient series;
+ *   cstrelohi      second highest deg+1 doubles of the real parts
+ *                  of the constant coefficient series;
+ *   cstrehilo      second lowest deg+1 doubles for the real parts
+ *                  of the constant coefficient series;
+ *   cstrelolo      lowest deg+1 doubles for the real parts
+ *                  of the constant coefficient series;
+ *   cstimhihi      highest deg+1 doubles of the imaginary parts
+ *                  of the constant coefficient series;
+ *   cstimlohi      second highest deg+1 doubles of the imaginary parts
+ *                  of the constant coefficient series;
+ *   cstimhilo      second lowest deg+1 doubles of the imaginary parts
+ *                  of the constant coefficient series;
+ *   cstimlolo      lowest deg+1 doubles for the imaginary parts
+ *                  of the constant coefficient series;
+ *   cffrehihi      has the highest doubles of the real parts
+ *                  of the coefficients, cffrehihi[k] has deg+1 highest
+ *                  coefficients of monomial k;
+ *   cffrelohi      has the second highest doubles of the real parts
+ *                  of the coefficients, cffrelohi[k] has deg+1 second highest
+ *                  coefficients of monomial k;
+ *   cffrehilo      has the second lowest doubles of the real parts
+ *                  of the coefficients, cffrehilo[k] has deg+1 second lowest
+ *                  coefficients of monomial k;
+ *   cffrelolo      has the lowest doubles of the real parts
+ *                  of the coefficients, cffrelolo[k] has deg+1 lowest
+ *                  coefficients of monomial k;
+ *   cffimhihi      has the highest doubles of the imaginary parts
+ *                  of the coefficients, cffimhihi[k] has deg+1 highest
+ *                  coefficients of monomial k;
+ *   cffimlohi      has the second highest doubles of the imaginary parts
+ *                  of the coefficients, cffimlohi[k] has deg+1 second highest
+ *                  coefficients of monomial k;
+ *   cffimhilo      has the second lowest doubles of the imaginary parts
+ *                  of the coefficient, cffimlolo[k] has the deg+1 second
+ *                  lowest coefficients of monomial k;
+ *   cffimlolo      has the lowest doubles of the imaginary parts
+ *                  of the coefficient, cffimlolo[k] has the deg+1 lowest
+ *                  coefficients of monomial k;
+ *   inputrehihi    has the highest doubles of the real parts
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   inputrelohi    has the second highest doubles of the real parts
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   inputrelolo    has the second lowest doubles of the real part
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   inputrelolo    has the lowest doubles of the real part
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   inputimhihi    has the highest doubles of the imaginary parts
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   inputimlohi    has the second highest doubles of the imaginary parts
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   inputimhilo    has the second lowest doubles of the imaginary parts
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   inputimlolo    has the lowest doubles of the imaginary parts
+ *                  of the coefficients of the power series
+ *                  for all variables in the polynomial;
+ *   outputrehihi   has space for the highest doubles of the real parts
+ *                  of the value and all derivatives;
+ *   outputrelohi   has space for the second highest doubles of the real parts
+ *                  of the value and all derivatives;
+ *   outputrehilo   has space for the second lowest doubles of the real parts
+ *                  of the value and all derivatives;
+ *   outputrelolo   has space for the lowest doubles of the real parts
+ *                  of the value and all derivatives;
+ *   outputimhihi   has space for the highest doubles of the imaginary parts
+ *                  of the value and all derivatives;
+ *   outputimlohi   has space for the second highest doubles of
+ *                  the imaginary parts of the value and all derivatives;
+ *   outputimhilo   has space for the second lowest doubles of
+ *                  the imaginary parts of the value and all derivatives;
+ *   outputimlolo   has space for the lowest doubles of the imaginary parts
+ *                  of the value and all derivatives;
+ *   cnvjobs        convolution jobs organized in layers;
+ *   addjobs        addition jobs organized in layers;
+ *   verbose        if true, then extra output about the setup is written.
+ *
+ * ON RETURN :
+ *   outputrehihi   has the highest doubles of the real parts,
+ *   outputrelohi   has the second highest doubles of the real parts,
+ *   outputrehilo   has the second lowest doubles of the real parts,
+ *   outputrelolo   has the lowest doubles of the real parts,
+ *   outputimhihi   has the highest doubles of the imaginary parts,
+ *   outputimlohi   has the second highest doubles of the imaginary parts,
+ *   outputimhilo   has the second lowest doubles of the imaginary parts,
+ *   outputimlolo   has the lowest doubles of the imaginary parts
+ *                  of derivatives and the value,
+ *                  output[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  output[dim] contains the value of the polynomial;
+ *   cnvlapms       is the elapsed time spent by all convolution kernels,
+ *                  expressed in milliseconds;
+ *   addlapms       is the elapsed time spent by all addition kernels,
+ *                  expressed in milliseconds;
+ *   elapsedms      is the elapsed time spent by all kernels,
+ *                  expressed in milliseconds;
+ *   walltimesec    is the elapsed wall clock time for all computations
+ *                  (excluding memory copies) in seconds. */
+
+void GPU_cmplx4vectorized_poly_evaldiff
+ ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,
+   double *cstrehihi, double *cstrelohi,
+   double *cstrehilo, double *cstrelolo,
+   double *cstimhihi, double *cstimlohi,
+   double *cstimhilo, double *cstimlolo,
+   double **cffrehihi, double **cffrelohi,
+   double **cffrehilo, double **cffrelolo,
+   double **cffimhihi, double **cffimlohi,
+   double **cffimhilo, double **cffimlolo,
+   double **inputrehihi, double **inputrelohi,
+   double **inputrehilo, double **inputrelolo,
+   double **inputimhihi, double **inputimlohi,
+   double **inputimhilo, double **inputimlolo,
+   double **outputrehihi, double **outputrelohi,
+   double **outputrehilo, double **outputrelolo,
+   double **outputimhihi, double **outputimlohi,
+   double **outputimhilo, double **outputimlolo,
+   ComplexConvolutionJobs cnvjobs, ComplexAdditionJobs addjobs,
+   double *cnvlapms, double *addlapms, double *elapsedms,
+   double *walltimesec, bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Evaluates and differentiations a polynomial in several variables.
+ *   Computes the convolutions in the order as defined by cnvjobs,
+ *   performs the updates to the values as defined by addjobs,
+ *   on complex data.  The complex arithmetic is vectorized,
+ *   as defined by the complex versions of the jobs.
  *
  * ON ENTRY :
  *   BS             number of threads in a block, must equal deg + 1;

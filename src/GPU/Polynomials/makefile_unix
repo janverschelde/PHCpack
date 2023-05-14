@@ -568,6 +568,8 @@ test_dbl4_polynomials: random_numbers.o random_series.o random_monomials.o \
                        random4_polynomials.o test_dbl4_polynomials.o \
                        convolution_job.o convolution_jobs.o \
                        addition_job.o addition_jobs.o test_helpers.o \
+                       complexconv_job.o complexconv_jobs.o \
+                       complexadd_job.o complexadd_jobs.o \
                        job_coordinates.o write_job_counts.o \
                        dbl4_convolutions_host.o dbl4_monomials_host.o \
                        dbl4_polynomials_host.o dbl4_polynomials_kernels.o \
@@ -582,6 +584,8 @@ test_dbl4_polynomials: random_numbers.o random_series.o random_monomials.o \
                   random4_monomials.o random4_polynomials.o \
                   convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o test_helpers.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
                   job_coordinates.o write_job_counts.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
                   dbl4_polynomials_host.o dbl4_polynomials_kernels.o \

@@ -1,5 +1,8 @@
 Sat 13 May 2023 : new functions for the data initialization, for the 
   convolution jobs, and for the addition jobs in dbl4_polynomials_kernels.
+  Added functions to dbl4_polynomials_kernels to enable the vectorized
+  complex arithmetic in the convolutions and additions.
+  Updated makefile_unix and makefile_windows.
 
 Fri 12 May 2023 : completed definition of the addition jobs for complex
   data in complexadd_jobs.cpp.
