@@ -416,9 +416,10 @@ __global__ void cmplx4vectorized_flipsigns
 
    double x; // register to load data from global memory
 
-   x = datarihihi[idx];
-   x = -x;
-   datarihihi[idx] = x;
+   x = datarihihi[idx]; x = -x; datarihihi[idx] = x;
+   x = datarilohi[idx]; x = -x; datarilohi[idx] = x;
+   x = datarihilo[idx]; x = -x; datarihilo[idx] = x;
+   x = datarilolo[idx]; x = -x; datarilolo[idx] = x;
 }
 
 __global__ void dbl4_update_addjobs
@@ -1084,6 +1085,15 @@ void cmplx_added_data4vectorized_to_output
    const int totcffoffset = totcff + offsetri;
    int ix1re,ix2im;
 
+   for(int i=0; i<=dim; i++)    // initialize the entire output
+      for(int j=0; j<deg1; j++)
+      {
+         outputrehihi[i][j] = 0.0; outputrelohi[i][j] = 0.0;
+         outputrehilo[i][j] = 0.0; outputrelolo[i][j] = 0.0;
+         outputimhihi[i][j] = 0.0; outputimlohi[i][j] = 0.0; 
+         outputimhilo[i][j] = 0.0; outputimlolo[i][j] = 0.0;
+      }
+
    ix1re = fstart[lastmon] + lastidx*deg1;
    ix2im = fstart[lastmon] + lastidx*deg1 + totcffoffset;
 
@@ -1228,7 +1238,7 @@ void cmplx_added_data4vectorized_to_output
 }
 
 void dbl4_data_setup
- ( int dim, int nbr, int deg,
+ ( int dim, int nbr, int deg, int totcff,
    double *datahihi, double *datalohi, double *datahilo, double *datalolo,
    double *csthihi, double *cstlohi, double *csthilo, double *cstlolo,
    double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo,
@@ -1261,10 +1271,16 @@ void dbl4_data_setup
          datahilo[ix]   = inputhilo[i][j];
          datalolo[ix++] = inputlolo[i][j];
       }
+
+   for(int i=ix; i<totcff; i++)
+   {
+      datahihi[i] = 0.0; datalohi[i] = 0.0;
+      datahilo[i] = 0.0; datalolo[i] = 0.0;
+   }
 }
 
 void cmplx4_data_setup
- ( int dim, int nbr, int deg,
+ ( int dim, int nbr, int deg, int totcff,
    double *datarehihi, double *datarelohi,
    double *datarehilo, double *datarelolo,
    double *dataimhihi, double *dataimlohi,
@@ -1320,6 +1336,14 @@ void cmplx4_data_setup
          dataimhilo[ix]   = inputimhilo[i][j];
          dataimlolo[ix++] = inputimlolo[i][j];
       }
+
+   for(int i=ix; i<totcff; i++)
+   {
+      datarehihi[i] = 0.0; datarelohi[i] = 0.0;
+      datarehilo[i] = 0.0; datarelolo[i] = 0.0;
+      dataimhihi[i] = 0.0; dataimlohi[i] = 0.0;
+      dataimhilo[i] = 0.0; dataimlolo[i] = 0.0;
+   }
 }
 
 void cmplx4vectorized_data_setup
@@ -1340,6 +1364,7 @@ void cmplx4vectorized_data_setup
    double **inputimhilo, double **inputimlolo )
 {
    const int deg1 = deg+1;
+
    int ix1 = 0;
    int ix2 = totcff + offsetri;
 
@@ -1378,6 +1403,16 @@ void cmplx4vectorized_data_setup
          datarihilo[ix2]   = inputimhilo[i][j];
          datarilolo[ix2++] = inputimlolo[i][j];
       }
+
+   for(int i=0; i<offsetri; i++)
+   {
+      datarihihi[ix1] = 0.0;
+      datarilohi[ix1] = 0.0;
+      datarihilo[ix1] = 0.0; datarilolo[ix1++] = 0.0;
+      datarihihi[ix2] = 0.0;
+      datarilohi[ix2] = 0.0;
+      datarihilo[ix2] = 0.0; datarilolo[ix2++] = 0.0;
+   }
 }
 
 void dbl4_convolution_jobs
@@ -1765,7 +1800,7 @@ void GPU_dbl4_poly_evaldiff
    double *datalolo_h = new double[totalcff];
 
    dbl4_data_setup
-      (dim,nbr,deg,datahihi_h,datalohi_h,datahilo_h,datalolo_h,
+      (dim,nbr,deg,totalcff,datahihi_h,datalohi_h,datahilo_h,datalolo_h,
        csthihi,cstlohi,csthilo,cstlolo,cffhihi,cfflohi,cffhilo,cfflolo,
        inputhihi,inputlohi,inputhilo,inputlolo);
 
@@ -1875,7 +1910,7 @@ void GPU_cmplx4_poly_evaldiff
    double *dataimlolo_h = new double[totalcff];
 
    cmplx4_data_setup
-      (dim,nbr,deg,
+      (dim,nbr,deg,totalcff,
        datarehihi_h,datarelohi_h,datarehilo_h,datarelolo_h,
        dataimhihi_h,dataimlohi_h,dataimhilo_h,dataimlolo_h,
        cstrehihi,cstrelohi,cstrehilo,cstrelolo,
