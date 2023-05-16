@@ -1126,6 +1126,7 @@ void cmplx_added_data4vectorized_to_output
    const int totcffoffset = totcff + offsetri;
    int ix1re,ix2im;
 
+/*
    for(int i=0; i<=dim; i++)    // initialize the entire output
       for(int j=0; j<deg1; j++)
       {
@@ -1134,7 +1135,7 @@ void cmplx_added_data4vectorized_to_output
          outputimhihi[i][j] = 0.0; outputimlohi[i][j] = 0.0; 
          outputimhilo[i][j] = 0.0; outputimlolo[i][j] = 0.0;
       }
-
+ */
    ix1re = fstart[lastmon] + lastidx*deg1;
    ix2im = fstart[lastmon] + lastidx*deg1 + totcffoffset;
 
@@ -2089,6 +2090,10 @@ void GPU_cmplx4vectorized_flipsigns
    cudaEventCreate(&stop);
    float milliseconds;
 
+   if(verbose)
+      cout << "launching " << nbrblocks << " flip signing blocks of "
+                           << deg1 << " threads ..." << endl;
+
    cudaEventRecord(start);
    cmplx4vectorized_flipsigns<<<nbrblocks,deg1>>>
       (datarihihi,datarilohi,datarihilo,datarilolo,totcff,deg1);
@@ -2190,12 +2195,12 @@ void GPU_cmplx4vectorized_poly_evaldiff
       (dim,nbr,deg,nvr,totalcff,offsetri,cnvjobs,incjobs,fstart,bstart,cstart,
        datarihihi_d,datarilohi_d,datarihilo_d,datarilolo_d,
        cnvlapms,verbose);
-
+/*
    cmplx4vectorized_addition_jobs
       (dim,nbr,deg,nvr,totalcff,offsetri,addjobs,fstart,bstart,cstart,
        datarihihi_d,datarilohi_d,datarihilo_d,datarilolo_d,
        addlapms,verbose);
-
+ */
    gettimeofday(&endtime,0);
    cudaMemcpy(datarihihi_h,datarihihi_d,szdata,cudaMemcpyDeviceToHost);
    cudaMemcpy(datarilohi_h,datarilohi_d,szdata,cudaMemcpyDeviceToHost);
