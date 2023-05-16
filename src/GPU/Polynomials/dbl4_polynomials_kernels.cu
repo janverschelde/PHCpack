@@ -2061,9 +2061,14 @@ void GPU_cmplx4vectorized_poly_evaldiff
    coefficient_indices
       (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
    if(verbose)
+   {
+      cout << "        total count : " << totalcff << endl;
+      cout << "offset for operands : " << offsetri << endl;
+      cout << "complex total count : " << cmplxtotcff << endl;
       write_coefficient_indices
          (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
-
+      
+   }
    double *datarihihi_h = new double[cmplxtotcff];      // data on host
    double *datarilohi_h = new double[cmplxtotcff];
    double *datarihilo_h = new double[cmplxtotcff];

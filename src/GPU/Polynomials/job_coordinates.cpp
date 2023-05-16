@@ -228,7 +228,7 @@ void complex_convjob_indices
    if(joboutptp == 1)          // first operand of real forward product
       *outidx = fstart[monidx] + joboutidx*deg1;
    else if(joboutptp == 4)     // second operand of real forward product
-      *outidx = fstart[monidx] + joboutidx*deg1 + totcff;
+      *outidx = fstart[monidx] + joboutidx*deg1 + offset;
    else if(joboutptp == 7)     // first operand of imag forward product
       *outidx = fstart[monidx] + joboutidx*deg1 + totcffoffset;
    else if(joboutptp == 10)    // second operand of imag forward product
@@ -253,9 +253,9 @@ void complex_convjob_indices
       else
       {
          if(nvr[monidx] == 2)
-            *outidx = bstart[monidx] + totcff;
+            *outidx = bstart[monidx] + offset;
          else
-            *outidx = bstart[monidx] + (joboutidx-1)*deg1 + totcff;
+            *outidx = bstart[monidx] + (joboutidx-1)*deg1 + offset;
 
       }
    }
@@ -289,7 +289,7 @@ void complex_convjob_indices
    else if(joboutptp == 3)    // first operand of real cross product
       *outidx = cstart[monidx] + joboutidx*deg1;
    else if(joboutptp == 6)    // second operand of real cross product
-      *outidx = cstart[monidx] + joboutidx*deg1 + totcff;
+      *outidx = cstart[monidx] + joboutidx*deg1 + offset;
    else if(joboutptp == 9)    // first operand of imag cross product
       *outidx = cstart[monidx] + joboutidx*deg1 + totcffoffset;
    else if(joboutptp == 12)   // second operand of imag cross product
@@ -477,7 +477,7 @@ void complex_addjob_indices
       }
       else if(intype == 4)      // second real operand of forward
       {
-         *inp2ix = fstart[incmon] + incidx*deg1 + totcff;
+         *inp2ix = fstart[incmon] + incidx*deg1 + offset;
       }
       else if(intype == 7)      // first imaginary operand of forward
       {
@@ -497,9 +497,9 @@ void complex_addjob_indices
       else if(intype == 5) // second real operand of backward
       {                                // on GPU, on backward item less
          if(incidx == 0)
-            *inp2ix = bstart[incmon] + totcff;
+            *inp2ix = bstart[incmon] + offset;
          else
-            *inp2ix = bstart[incmon] + (incidx-1)*deg1 + totcff;
+            *inp2ix = bstart[incmon] + (incidx-1)*deg1 + offset;
       }
       else if(intype == 8) // first imaginary operand of backward
       {                                // on GPU, on backward item less
@@ -522,7 +522,7 @@ void complex_addjob_indices
       }
       else if(intype == 6)  // second real operand of cross
       {
-         *inp2ix = cstart[incmon] + incidx*deg1 + totcff;
+         *inp2ix = cstart[incmon] + incidx*deg1 + offset;
       }
       else if(intype == 9)  // first imaginary operand of cross
       {

@@ -243,6 +243,14 @@ void cmplx4_make_input
                       cffrehihi,cffrelohi,cffrehilo,cffrelolo,
                       cffimhihi,cffimlohi,cffimhilo,cffimlolo);
    }
+   cout << "setting the constant term to zero ..." << endl;
+   for(int j=0; j<=deg; j++)
+   {
+      cstrehihi[j] = 0.0; cstrelohi[j] = 0.0;
+      cstrehilo[j] = 0.0; cstrelolo[j] = 0.0;
+      cstimhihi[j] = 0.0; cstimlohi[j] = 0.0;
+      cstimhilo[j] = 0.0; cstimlolo[j] = 0.0;
+   }
    if(verbose)
    {
       cout << "Coefficient series of the constant term :" << endl;
