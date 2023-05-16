@@ -1,10 +1,13 @@
-// Tests the definition of convolution jobs to evaluate and differentiate
-// one polynomial in several variables at complex numbers.
+// Tests the definition of convolution and increment jobs
+// to evaluate and differentiate one polynomial 
+// in several variables at complex numbers.
 
 #include <iostream>
 #include <cstdlib>
-#include "complexconv_jobs.h"
 #include "prompt_test_supports.h"
+#include "complexconv_jobs.h"
+#include "complexinc_job.h"
+#include "complexinc_jobs.h"
 
 using namespace std;
 
@@ -19,28 +22,35 @@ int main ( void )
 
    make_test_supports(dim,nva,nbr,nvr,idx);
 
-   ComplexConvolutionJobs jobs(dim);
+   ComplexConvolutionJobs cnvjobs(dim);
 
-   jobs.make(nbr,nvr,idx,true);
+   cnvjobs.make(nbr,nvr,idx,true);
 
-   for(int k=0; k<jobs.get_depth(); k++)
+   ComplexIncrementJobs incjobs(cnvjobs,true);
+
+   for(int k=0; k<cnvjobs.get_depth(); k++)
    {
       cout << "jobs at layer " << k << " :" << endl;
-      for(int i=0; i<jobs.get_layer_count(k); i++)
-         cout << jobs.get_job(k,i) << endl;
+      for(int i=0; i<cnvjobs.get_layer_count(k); i++)
+         cout << cnvjobs.get_job(k,i) << endl;
+      for(int i=0; i<incjobs.get_layer_count(k); i++)
+         cout << incjobs.get_job(k,i) << endl;
    }
    cout << "dimension : " << dim << endl;
    cout << "number of monomials : " << nbr << endl;
-   cout << "number of convolution jobs : " << jobs.get_count() << endl;
-   cout << "number of layers : " << jobs.get_depth() << endl;
+   cout << "number of convolution jobs : " << cnvjobs.get_count() << endl;
+   cout << "number of increment jobs : " << incjobs.get_count() << endl;
+   cout << "number of layers : " << cnvjobs.get_depth() << endl;
    cout << "frequency of layer counts :" << endl;
    int checksum = 0;
-   for(int i=0; i<jobs.get_depth(); i++)
+   for(int i=0; i<cnvjobs.get_depth(); i++)
    {
-      cout << i << " : " << jobs.get_layer_count(i) << endl;
-      checksum = checksum + jobs.get_layer_count(i); 
+      cout << i << " : " << cnvjobs.get_layer_count(i)
+                << " + " << incjobs.get_layer_count(i) << endl;
+      checksum = checksum + cnvjobs.get_layer_count(i)
+                          + incjobs.get_layer_count(i); 
    }
-   cout << "layer count sum : " << checksum << endl;
+   cout << "total layer count sum : " << checksum << endl;
 
    cout << "seed used : " << seedused << endl;
 

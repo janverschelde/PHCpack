@@ -1,3 +1,6 @@
+Tue 16 May 2023 : new complexinc_job and complexinc_jobs, with extra tests
+  in test_complexconv_jobs.cpp, updated makefile_unix and makefile_windows.
+
 Mon 15 May 2023 : in dbl4_polynomial_kernels.cu, initialized data arrays
   and fixed a bug in the flipping of the signs.
   Fixed indexing bugs in complexadd_jobs.cpp.  In job_coordinates.cpp,
