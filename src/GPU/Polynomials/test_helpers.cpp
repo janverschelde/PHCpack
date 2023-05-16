@@ -49,10 +49,11 @@ void make_all_jobs
 
 void make_all_complex_jobs
  ( int dim, int nbr, int *nvr, int **idx,
-   ComplexConvolutionJobs *cnvjobs, ComplexAdditionJobs *addjobs,
-   bool verbose )
+   ComplexConvolutionJobs *cnvjobs, ComplexIncrementJobs *incjobs,
+   ComplexAdditionJobs *addjobs, bool verbose )
 {
    cnvjobs->make(nbr,nvr,idx,verbose);
+   *incjobs = ComplexIncrementJobs(*cnvjobs,verbose);
 
    if(verbose)
    {
@@ -63,6 +64,8 @@ void make_all_complex_jobs
          cout << "jobs at layer " << k << " :" << endl;
          for(int i=0; i<cnvjobs->get_layer_count(k); i++)
             cout << cnvjobs->get_job(k,i) << endl;
+         for(int i=0; i<incjobs->get_layer_count(k); i++)
+            cout << incjobs->get_job(k,i) << endl;
       }
       cout << endl;
    }

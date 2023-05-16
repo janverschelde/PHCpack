@@ -7,6 +7,7 @@
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
 #include "complexconv_jobs.h"
+#include "complexinc_jobs.h"
 #include "complexadd_jobs.h"
 
 void make_all_jobs
@@ -30,8 +31,8 @@ void make_all_jobs
 
 void make_all_complex_jobs
  ( int dim, int nbr, int *nvr, int **idx,
-   ComplexConvolutionJobs *cnvjobs, ComplexAdditionJobs *addjobs,
-   bool verbose );
+   ComplexConvolutionJobs *cnvjobs, ComplexIncrementJobs *incjobs,
+   ComplexAdditionJobs *addjobs, bool verbose );
 /*
  * DESCRIPTION :
  *   Defines all convolution and addition jobs for a polynomial,
@@ -47,6 +48,7 @@ void make_all_complex_jobs
  *
  * ON RETURN :
  *   cnvjobs  are the convolution jobs;
+ *   incjobs  are the increment jobs;
  *   addjobs  are the addition jobs. */
 
 void write_jobs_report
@@ -66,7 +68,8 @@ void write_jobs_report
 
 void write_complex_jobs_report
  ( int dim, int nva, int nbr, int deg,
-   ComplexConvolutionJobs cnvjobs, ComplexAdditionJobs addjobs );
+   ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
+   ComplexAdditionJobs addjobs );
 /*
  * DESCRIPTION :
  *   Writes the dimensions of the jobs,
@@ -78,6 +81,7 @@ void write_complex_jobs_report
  *   nbr      number of monomials, excluding the constant;
  *   deg      truncation degree of the series;
  *   cnvjobs  are the convolution jobs;
+ *   incjobs  are the increment jobs;
  *   addjobs  are the addition jobs. */
 
 void write_CPU_timings ( double lapsec1, double lapsec2 );

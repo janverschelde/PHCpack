@@ -305,6 +305,72 @@ void complex_convjob_indices
    }
 }
 
+void complex_incjob_indices
+ ( ComplexIncrementJob job, int *inp1ix, int *inp2ix, int *outidx,
+   int dim, int nbr, int deg, int *nvr, int totcff, int offset,
+   int *fstart, int *bstart, int *cstart, bool verbose )
+{
+   const int monidx = job.get_monomial_index();
+   const int jobinkind = job.get_increment_kind();
+   const int jobincidx = job.get_increment_index();
+   const int jobisreal = job.get_isreal();
+   const int deg1 = deg+1;
+   const int totcffoffset = totcff + offset; // start of imag data array
+
+   if(verbose)
+   {
+      cout << "  kind : " << jobinkind << "  index : " << jobincidx 
+           << "  real or not : " << jobisreal << endl;
+   }
+   if(jobinkind == 1)   // incrementing forward product
+   {
+      if(jobisreal)
+      {
+         *inp1ix = fstart[monidx] + jobincidx*deg1;
+         *inp2ix = fstart[monidx] + jobincidx*deg1 + offset;
+      }
+      else
+      {
+         *inp1ix = fstart[monidx] + jobincidx*deg1 + totcffoffset;
+         *inp2ix = fstart[monidx] + jobincidx*deg1 + totcffoffset + offset;
+      }
+   }
+   if(jobinkind == 2)   // incrementing backward product
+   {
+      if(jobisreal)
+      {
+         *inp1ix = bstart[monidx] + jobincidx*deg1;
+         *inp2ix = bstart[monidx] + jobincidx*deg1 + offset;
+      }
+      else
+      {
+         *inp1ix = bstart[monidx] + jobincidx*deg1 + totcffoffset;
+         *inp2ix = bstart[monidx] + jobincidx*deg1 + totcffoffset + offset;
+      }
+   }
+   if(jobinkind == 3)   // incrementing cross product
+   {
+      if(jobisreal)
+      {
+         *inp1ix = cstart[monidx] + jobincidx*deg1;
+         *inp2ix = cstart[monidx] + jobincidx*deg1 + offset;
+      }
+      else
+      {
+         *inp1ix = cstart[monidx] + jobincidx*deg1 + totcffoffset;
+         *inp2ix = cstart[monidx] + jobincidx*deg1 + totcffoffset + offset;
+      }
+   }
+   *outidx = *inp1ix;
+
+   if(verbose)
+   {
+      cout << "-> inp1ix : " << *inp1ix
+           << ", inp2ix : " << *inp2ix
+           << ", outidx : " << *outidx << endl;
+   }
+}
+
 void convjobs_coordinates
  ( ConvolutionJobs jobs, int layer,
    int *inp1ix, int *inp2ix, int *outidx,
@@ -324,6 +390,18 @@ void complex_convjobs_coordinates
 { 
    for(int i=0; i<jobs.get_layer_count(layer); i++)
       complex_convjob_indices
+         (jobs.get_job(layer,i),&inp1ix[i],&inp2ix[i],&outidx[i],
+          dim,nbr,deg,nvr,totcff,offset,fstart,bstart,cstart,verbose);
+}
+
+void complex_incjobs_coordinates
+ ( ComplexIncrementJobs jobs, int layer,
+   int *inp1ix, int *inp2ix, int *outidx,
+   int dim, int nbr, int deg, int *nvr, int totcff, int offset,
+   int *fstart, int *bstart, int *cstart, bool verbose )
+{ 
+   for(int i=0; i<jobs.get_layer_count(layer); i++)
+      complex_incjob_indices
          (jobs.get_job(layer,i),&inp1ix[i],&inp2ix[i],&outidx[i],
           dim,nbr,deg,nvr,totcff,offset,fstart,bstart,cstart,verbose);
 }

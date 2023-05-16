@@ -91,6 +91,47 @@ __global__ void dbl4_padded_convjobs
    datalolo[idx3] = zvlolo[tdx];
 }
 
+__global__ void dbl4_increment_jobs
+ ( double *datahihi, double *datalohi, double *datahilo, double *datalolo,
+   int *in1idx, int *in2idx, int *outidx, int dim )
+{
+   const int bdx = blockIdx.x;           // index to the increment job
+   const int tdx = threadIdx.x;          // index to the output of the job
+   const int idx1 = in1idx[bdx] + tdx;
+   const int idx2 = in2idx[bdx] + tdx;
+   const int idx3 = outidx[bdx] + tdx;
+
+   __shared__ double yvhihi[qd_shmemsize];
+   __shared__ double yvlohi[qd_shmemsize];
+   __shared__ double yvhilo[qd_shmemsize];
+   __shared__ double yvlolo[qd_shmemsize];
+   __shared__ double zvhihi[qd_shmemsize];
+   __shared__ double zvlohi[qd_shmemsize];
+   __shared__ double zvhilo[qd_shmemsize];
+   __shared__ double zvlolo[qd_shmemsize];
+
+   zvhihi[tdx] = datahihi[idx1];  // loading first input
+   zvlohi[tdx] = datalohi[idx1]; 
+   zvhilo[tdx] = datahilo[idx1]; 
+   zvlolo[tdx] = datalolo[idx1]; 
+   yvhihi[tdx] = datahihi[idx2];  // loading second input
+   yvlohi[tdx] = datalohi[idx2];
+   yvhilo[tdx] = datahilo[idx2];
+   yvlolo[tdx] = datalolo[idx2];
+
+   __syncthreads();
+
+   qdg_inc(&zvhihi[tdx],&zvlohi[tdx],&zvhilo[tdx],&zvlolo[tdx],
+            yvhihi[tdx], yvlohi[tdx], yvhilo[tdx], yvlolo[tdx]);
+
+   __syncthreads();
+
+   datahihi[idx3] = zvhihi[tdx]; // storing the output
+   datalohi[idx3] = zvlohi[tdx];
+   datahilo[idx3] = zvhilo[tdx];
+   datalolo[idx3] = zvlolo[tdx];
+}
+
 /*
 __global__ void cmplx4_padded_convjobs
  ( double *datarehihi, double *datarelohi,
@@ -1533,7 +1574,7 @@ void cmplx4_convolution_jobs
 
 void cmplx4vectorized_convolution_jobs
  ( int dim, int nbr, int deg, int *nvr, int totcff, int offsetri,
-   ComplexConvolutionJobs cnvjobs,
+   ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
    int *fstart, int *bstart, int *cstart,
    double *datarihihi, double *datarilohi,
    double *datarihilo, double *datarilolo,
@@ -1546,10 +1587,11 @@ void cmplx4vectorized_convolution_jobs
    cudaEventCreate(&stop);
    *cnvlapms = 0.0;
    float milliseconds;
+   double fliplapms;
 
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
-      const int jobnbr = cnvjobs.get_layer_count(k);
+      int jobnbr = cnvjobs.get_layer_count(k);
       int *in1ix_h = new int[jobnbr];
       int *in2ix_h = new int[jobnbr];
       int *outix_h = new int[jobnbr];
@@ -1580,6 +1622,47 @@ void cmplx4vectorized_convolution_jobs
 
          cudaEventRecord(start);
          dbl4_padded_convjobs<<<jobnbr,deg1>>>
+            (datarihihi,datarilohi,datarihilo,datarilolo,
+             in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *cnvlapms += milliseconds;
+      }
+      GPU_cmplx4vectorized_flipsigns
+        (deg,totcff,offsetri,datarihihi,datarilohi,datarihilo,datarilolo,
+         &fliplapms,verbose);
+      *cnvlapms += fliplapms;
+
+      jobnbr = incjobs.get_layer_count(k);
+      // note: only half the number of increment jobs
+
+      if(verbose) cout << "preparing increment jobs at layer "
+                       << k << " ..." << endl;
+
+      complex_incjobs_coordinates
+         (incjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,totcff,offsetri,
+          fstart,bstart,cstart,verbose);
+
+      // if(BS == deg1)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads ..." << endl;
+
+         cudaEventRecord(start);
+         dbl4_increment_jobs<<<jobnbr,deg1>>>
             (datarihihi,datarilohi,datarihilo,datarilolo,
              in1ix_d,in2ix_d,outix_d,deg1);
          cudaEventRecord(stop);
@@ -2042,7 +2125,8 @@ void GPU_cmplx4vectorized_poly_evaldiff
    double **outputrehilo, double **outputrelolo,
    double **outputimhihi, double **outputimlohi,
    double **outputimhilo, double **outputimlolo,
-   ComplexConvolutionJobs cnvjobs, ComplexAdditionJobs addjobs,
+   ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
+   ComplexAdditionJobs addjobs,
    double *cnvlapms, double *addlapms, double *elapsedms,
    double *walltimesec, bool verbose )
 {
@@ -2103,16 +2187,9 @@ void GPU_cmplx4vectorized_poly_evaldiff
    gettimeofday(&begintime,0);
 
    cmplx4vectorized_convolution_jobs
-      (dim,nbr,deg,nvr,totalcff,offsetri,cnvjobs,fstart,bstart,cstart,
+      (dim,nbr,deg,nvr,totalcff,offsetri,cnvjobs,incjobs,fstart,bstart,cstart,
        datarihihi_d,datarilohi_d,datarihilo_d,datarilolo_d,
        cnvlapms,verbose);
-
-   double fliplapms; // should be insignificant ...
-
-   GPU_cmplx4vectorized_flipsigns
-      (deg,totalcff,offsetri,
-       datarihihi_d,datarilohi_d,datarihilo_d,datarilolo_d,
-       &fliplapms,verbose);
 
    cmplx4vectorized_addition_jobs
       (dim,nbr,deg,nvr,totalcff,offsetri,addjobs,fstart,bstart,cstart,
@@ -2124,7 +2201,7 @@ void GPU_cmplx4vectorized_poly_evaldiff
    cudaMemcpy(datarilohi_h,datarilohi_d,szdata,cudaMemcpyDeviceToHost);
    cudaMemcpy(datarihilo_h,datarihilo_d,szdata,cudaMemcpyDeviceToHost);
    cudaMemcpy(datarilolo_h,datarilolo_d,szdata,cudaMemcpyDeviceToHost);
-   *elapsedms = *cnvlapms + fliplapms + *addlapms;
+   *elapsedms = *cnvlapms + *addlapms;
    long seconds = endtime.tv_sec - begintime.tv_sec;
    long microseconds = endtime.tv_usec - begintime.tv_usec;
    *walltimesec = seconds + microseconds*1.0e-6;

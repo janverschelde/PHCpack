@@ -817,10 +817,11 @@ double test_cmplx4_polynomial
       make_all_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
 
       ComplexConvolutionJobs cmplxcnvjobs(dim);
+      ComplexIncrementJobs cmplxincjobs(cmplxcnvjobs,vrb);
       ComplexAdditionJobs cmplxaddjobs(dim,nbr);
 
       make_all_complex_jobs
-         (dim,nbr,nvr,idx,&cmplxcnvjobs,&cmplxaddjobs,vrb);
+         (dim,nbr,nvr,idx,&cmplxcnvjobs,&cmplxincjobs,&cmplxaddjobs,vrb);
 
       double timelapsec1_h,timelapsec2_h;
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
@@ -879,8 +880,8 @@ double test_cmplx4_polynomial
              inputimhihi,inputimlohi,inputimhilo,inputimlolo,
              outputrehihi_d,outputrelohi_d,outputrehilo_d,outputrelolo_d,
              outputimhihi_d,outputimlohi_d,outputimhilo_d,outputimlolo_d,
-             cmplxcnvjobs,cmplxaddjobs,&cnvlapms,&addlapms,&timelapms_d,
-             &walltimes_d,vrb);
+             cmplxcnvjobs,cmplxincjobs,cmplxaddjobs,
+             &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,vrb);
       }
       double sumerr = 0.0;
       if(mode == 2)

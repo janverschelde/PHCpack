@@ -847,6 +847,7 @@ test_dbl4_polynomials: random_numbers.obj random_series.obj \
                        convolution_job.obj convolution_jobs.obj \
                        addition_job.obj addition_jobs.obj test_helpers.obj \
                        complexconv_job.obj complexconv_jobs.obj \
+                       complexinc_job.obj complexinc_jobs.obj \
                        complexadd_job.obj complexadd_jobs.obj \
                        job_coordinates.obj write_job_counts.obj \
                        dbl4_convolutions_host.obj dbl4_monomials_host.obj \
@@ -863,6 +864,7 @@ test_dbl4_polynomials: random_numbers.obj random_series.obj \
               convolution_job.obj convolution_jobs.obj \
               addition_job.obj addition_jobs.obj test_helpers.obj \
               complexconv_job.obj complexconv_jobs.obj \
+              complexinc_job.obj complexinc_jobs.obj \
               complexadd_job.obj complexadd_jobs.obj \
               job_coordinates.obj write_job_counts.obj \
               dbl4_convolutions_host.obj dbl4_monomials_host.obj \

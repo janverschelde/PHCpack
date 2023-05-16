@@ -8,6 +8,7 @@
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
 #include "complexconv_jobs.h"
+#include "complexinc_jobs.h"
 #include "complexadd_jobs.h"
 
 __global__ void dbl4_padded_convjobs
@@ -17,6 +18,39 @@ __global__ void dbl4_padded_convjobs
  * DESCRIPTION :
  *   Executes all convolution jobs at the same layer.
  *   The block index defines the convolution job.
+ *
+ * REQUIRED : 
+ *   The number of blocks equals the size of  in1idx, in2idx, outidx,
+ *   and dim equals the number of threads in each block.
+ *
+ * ON ENTRY :
+ *   datahihi  highest parts of coefficients of monomials and input series, 
+ *             space for forward, backward, and cross products;
+ *   datalohi  second highest parts of coefficients of monomials and input, 
+ *             space for forward, backward, and cross products;
+ *   datahilo  second lowest parts of coefficients of monomials and input, 
+ *             space for forward, backward, and cross products;
+ *   datalolo  lowest parts of coefficients of monomials and input series, 
+ *             space for forward, backward, and cross products;
+ *   in1idx    indices of the first input of the convolution jobs;
+ *   in2idx    indices of the second input of the convolution jobs;
+ *   outidx    indices of the output of the convolution jobs;
+ *   dim       the number of coefficients in each series
+ *             equals the number of threads in each block.
+ *
+ * ON RETURN :
+ *   datahihi  updated highest forward, backward, and cross products;
+ *   datalohi  updated second highest forward, backward, and cross products;
+ *   datahilo  updated second lowest forward, backward, and cross products;
+ *   datalolo  updated lowest forward, backward, and cross products. */
+
+__global__ void dbl4_increment_jobs
+ ( double *datahihi, double *datalohi, double *datahilo, double *datalolo,
+   int *in1idx, int *in2idx, int *outidx, int dim );
+/*
+ * DESCRIPTION :
+ *   Executes all increment jobs at the same layer.
+ *   The block index defines the increment job.
  *
  * REQUIRED : 
  *   The number of blocks equals the size of  in1idx, in2idx, outidx,
@@ -950,7 +984,7 @@ void cmplx4_convolution_jobs
 
 void cmplx4vectorized_convolution_jobs
  ( int dim, int nbr, int deg, int *nvr, int totcff, int offsetri,
-   ComplexConvolutionJobs cnvjobs,
+   ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
    int *fstart, int *bstart, int *cstart,
    double *datarihihi, double *datarilohi,
    double *datarihilo, double *datarilolo,
@@ -968,6 +1002,7 @@ void cmplx4vectorized_convolution_jobs
  *   totcff       total number of coefficients without vectorization;
  *   offsetri     size of the second operand;
  *   cnvjobs      convolution jobs organized in layers;
+ *   incjobs      increment jobs organized in layers;
  *   fstart       fstart[k] has the start position of the forward products
  *                for the k-th monomial;
  *   bstart       fstart[k] has the start position of the backward products
@@ -1382,7 +1417,8 @@ void GPU_cmplx4vectorized_poly_evaldiff
    double **outputrehilo, double **outputrelolo,
    double **outputimhihi, double **outputimlohi,
    double **outputimhilo, double **outputimlolo,
-   ComplexConvolutionJobs cnvjobs, ComplexAdditionJobs addjobs,
+   ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
+   ComplexAdditionJobs addjobs,
    double *cnvlapms, double *addlapms, double *elapsedms,
    double *walltimesec, bool verbose=true );
 /*
@@ -1483,6 +1519,7 @@ void GPU_cmplx4vectorized_poly_evaldiff
  *   outputimlolo   has space for the lowest doubles of the imaginary parts
  *                  of the value and all derivatives;
  *   cnvjobs        convolution jobs organized in layers;
+ *   incjobs        increment jobs organized in layers;
  *   addjobs        addition jobs organized in layers;
  *   verbose        if true, then extra output about the setup is written.
  *
