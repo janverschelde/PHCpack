@@ -847,14 +847,39 @@ void dbl_added_data4_to_output
       outputlolo[dim][i] = datalolo[ix++];
    }
    int cnt = jobs.get_differential_count(0);
+
+   if(verbose)
+      cout << "Differential count for variable 0 : " << cnt << endl;
+
    if(cnt == 0) // it could be there is no first variable anywhere ...
    {
-      for(int i=0; i<=deg; i++) // output[0][i] = 0.0;
+      const int difidx = jobs.get_differential_index(0,0);
+
+      if(verbose)
+         cout << "Differential index for variable 0 : " << difidx << endl;
+
+      if(difidx < 0)
       {
-         outputhihi[0][i] = 0.0;
-         outputlohi[0][i] = 0.0;
-         outputhilo[0][i] = 0.0;
-         outputlolo[0][i] = 0.0;
+         for(int i=0; i<=deg; i++) // output[0][i] = 0.0;
+         {
+            outputhihi[0][i] = 0.0; outputlohi[0][i] = 0.0;
+            outputhilo[0][i] = 0.0; outputlolo[0][i] = 0.0;
+         }
+      }
+      else
+      {
+         int ix1re = (1 + difidx)*deg1;
+
+         if(verbose)
+            cout << "updating derivative with coefficient ..." << endl;
+
+         for(int i=0; i<=deg; i++)
+         {
+            outputhihi[0][i] = datahihi[ix1re];
+            outputlohi[0][i] = datalohi[ix1re];
+            outputhilo[0][i] = datahilo[ix1re];
+            outputlolo[0][i] = datalolo[ix1re++];
+         }
       }
    }
    else
@@ -875,77 +900,104 @@ void dbl_added_data4_to_output
          outputhilo[0][i] = datahilo[ix];
          outputlolo[0][i] = datalolo[ix++];
       }
-      for(int k=1; k<dim; k++) // updating all other derivatives
+   }
+   for(int k=1; k<dim; k++) // updating all other derivatives
+   {
+      int cnt = jobs.get_differential_count(k);
+
+      if(verbose)
+         cout << "Differential count for variable " << k
+              << " : " << cnt << endl;
+
+      if(cnt == 0) // it could be there is no variable k anywhere ...
       {
-         int cnt = jobs.get_differential_count(k);
-         if(cnt == 0) // it could be there is no variable k anywhere ...
+         const int difidx = jobs.get_differential_index(k,0);
+
+         if(verbose)
+            cout << "Differential index for variable " << k 
+                 << " : " << difidx << endl;
+
+         if(difidx < 0)
          {
             for(int i=0; i<=deg; i++) // output[k][i] = 0.0;
             {
-               outputhihi[k][i] = 0.0;
-               outputlohi[k][i] = 0.0;
-               outputhilo[k][i] = 0.0;
-               outputlolo[k][i] = 0.0;
+               outputhihi[k][i] = 0.0; outputlohi[k][i] = 0.0;
+               outputhilo[k][i] = 0.0; outputlolo[k][i] = 0.0;
             }
          }
          else
          {
-            int ix0 = jobs.get_differential_index(k,cnt);
-   
-            if(idx[ix0][0] == k) // k is first variable of monomial
+            int ix1re = (1 + difidx)*deg1;
+
+            if(verbose)
+               cout << "updating derivative with coefficient ..." << endl;
+
+            for(int i=0; i<=deg; i++)
             {
-               int ix2 = nvr[ix0]-3;
-               if(ix2 < 0) ix2 = 0;
-
-               if(verbose)
-                  cout << "Updating derivative " << k 
-                       << " at " << ix << " in data." << endl;
-
-               ix = bstart[ix0] + ix2*deg1;
-
-               for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
-               {
-                  outputhihi[k][i] = datahihi[ix];
-                  outputlohi[k][i] = datalohi[ix];
-                  outputhilo[k][i] = datahilo[ix];
-                  outputlolo[k][i] = datalolo[ix++];
-               }
+               outputhihi[k][i] = datahihi[ix1re];
+               outputlohi[k][i] = datalohi[ix1re];
+               outputhilo[k][i] = datahilo[ix1re];
+               outputlolo[k][i] = datalolo[ix1re++];
             }
-            else if(idx[ix0][nvr[ix0]-1] == k) // k is last variable
+         }
+      }
+      else
+      {
+         int ix0 = jobs.get_differential_index(k,cnt);
+
+         if(idx[ix0][0] == k) // k is first variable of monomial
+         {
+            int ix2 = nvr[ix0]-3;
+            if(ix2 < 0) ix2 = 0;
+
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << " at " << ix << " in data." << endl;
+
+            ix = bstart[ix0] + ix2*deg1;
+
+            for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
             {
-               int ix2 = nvr[ix0]-2;
-   
-               if(verbose)
-                  cout << "Updating derivative " << k 
-                       << " at " << ix << " in data." << endl;
-
-               ix = fstart[ix0] + ix2*deg1;
-
-               for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
-               {
-                  outputhihi[k][i] = datahihi[ix];
-                  outputlohi[k][i] = datalohi[ix];
-                  outputhilo[k][i] = datahilo[ix];
-                  outputlolo[k][i] = datalolo[ix++];
-               }
+               outputhihi[k][i] = datahihi[ix];
+               outputlohi[k][i] = datalohi[ix];
+               outputhilo[k][i] = datahilo[ix];
+               outputlolo[k][i] = datalolo[ix++];
             }
-            else // derivative is in some cross product
+         }
+         else if(idx[ix0][nvr[ix0]-1] == k) // k is last variable
+         {
+            int ix2 = nvr[ix0]-2;
+ 
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << " at " << ix << " in data." << endl;
+
+            ix = fstart[ix0] + ix2*deg1;
+
+            for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
             {
-               int ix2 = jobs.position(nvr[ix0],idx[ix0],k) - 1;
+               outputhihi[k][i] = datahihi[ix];
+               outputlohi[k][i] = datalohi[ix];
+               outputhilo[k][i] = datahilo[ix];
+               outputlolo[k][i] = datalolo[ix++];
+            }
+         }
+         else // derivative is in some cross product
+         {
+            int ix2 = jobs.position(nvr[ix0],idx[ix0],k) - 1;
    
-               if(verbose)
-                  cout << "Updating derivative " << k 
-                       << " at " << ix << " in data." << endl;
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << " at " << ix << " in data." << endl;
 
-               ix = cstart[ix0] + ix2*deg1;
+            ix = cstart[ix0] + ix2*deg1;
 
-               for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
-               {
-                  outputhihi[k][i] = datahihi[ix];
-                  outputlohi[k][i] = datalohi[ix];
-                  outputhilo[k][i] = datahilo[ix];
-                  outputlolo[k][i] = datalolo[ix++];
-               }
+            for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
+            {
+               outputhihi[k][i] = datahihi[ix];
+               outputlohi[k][i] = datalohi[ix];
+               outputhilo[k][i] = datahilo[ix];
+               outputlolo[k][i] = datalolo[ix++];
             }
          }
       }
@@ -987,14 +1039,45 @@ void cmplx_added_data4_to_output
       outputimlolo[dim][i] = dataimlolo[ix++];
    }
    int cnt = jobs.get_differential_count(0);
+
+   if(verbose)
+      cout << "Differential count for variable 0 : " << cnt << endl;
+
    if(cnt == 0) // it could be there is no first variable anywhere ...
    {
-      for(int i=0; i<=deg; i++) // output[0][i] = 0.0;
+      const int difidx = jobs.get_differential_index(0,0);
+
+      if(verbose)
+         cout << "Differential index for variable 0 : " << difidx << endl;
+
+      if(difidx < 0)
       {
-         outputrehihi[0][i] = 0.0; outputrelohi[0][i] = 0.0;
-         outputrehilo[0][i] = 0.0; outputrelolo[0][i] = 0.0;
-         outputimhihi[0][i] = 0.0; outputimlohi[0][i] = 0.0; 
-         outputimhilo[0][i] = 0.0; outputimlolo[0][i] = 0.0;
+         for(int i=0; i<=deg; i++) // output[0][i] = 0.0;
+         {
+            outputrehihi[0][i] = 0.0; outputrelohi[0][i] = 0.0;
+            outputrehilo[0][i] = 0.0; outputrelolo[0][i] = 0.0;
+            outputimhihi[0][i] = 0.0; outputimlohi[0][i] = 0.0; 
+            outputimhilo[0][i] = 0.0; outputimlolo[0][i] = 0.0;
+         }
+      }
+      else
+      {
+         int cffidx = (1 + difidx)*deg1;
+
+         if(verbose)
+            cout << "updating derivative with coefficient ..." << endl;
+
+         for(int i=0; i<=deg; i++)
+         {
+            outputrehihi[0][i] = datarehihi[cffidx];
+            outputrelohi[0][i] = datarelohi[cffidx];
+            outputrehilo[0][i] = datarehilo[cffidx];
+            outputrelolo[0][i] = datarelolo[cffidx];
+            outputimhihi[0][i] = dataimhihi[cffidx];
+            outputimlohi[0][i] = dataimlohi[cffidx];
+            outputimhilo[0][i] = dataimhilo[cffidx];
+            outputimlolo[0][i] = dataimlolo[cffidx++];
+         }
       }
    }
    else
@@ -1019,10 +1102,24 @@ void cmplx_added_data4_to_output
          outputimhilo[0][i] = dataimhilo[ix];
          outputimlolo[0][i] = dataimlolo[ix++];
       }
-      for(int k=1; k<dim; k++) // updating all other derivatives
+   }
+   for(int k=1; k<dim; k++) // updating all other derivatives
+   {
+      int cnt = jobs.get_differential_count(k);
+
+      if(verbose)
+         cout << "Differential count for variable " << k
+              << " : " << cnt << endl;
+
+      if(cnt == 0) // it could be there is no variable k anywhere ...
       {
-         int cnt = jobs.get_differential_count(k);
-         if(cnt == 0) // it could be there is no variable k anywhere ...
+         const int difidx = jobs.get_differential_index(k,0);
+
+         if(verbose)
+            cout << "Differential index for variable " << k 
+                 << " : " << difidx << endl;
+
+         if(difidx < 0)
          {
             for(int i=0; i<=deg; i++) // output[k][i] = 0.0;
             {
@@ -1034,74 +1131,93 @@ void cmplx_added_data4_to_output
          }
          else
          {
-            int ix0 = jobs.get_differential_index(k,cnt);
-   
-            if(idx[ix0][0] == k) // k is first variable of monomial
+            int cffidx = (1 + difidx)*deg1;
+
+            if(verbose)
+               cout << "updating derivative with coefficient ..." << endl;
+
+            for(int i=0; i<=deg; i++)
             {
-               int ix2 = nvr[ix0]-3;
-               if(ix2 < 0) ix2 = 0;
-
-               if(verbose)
-                  cout << "Updating derivative " << k 
-                       << " at " << ix << " in data." << endl;
-
-               ix = bstart[ix0] + ix2*deg1;
-
-               for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
-               {
-                  outputrehihi[k][i] = datarehihi[ix];
-                  outputrelohi[k][i] = datarelohi[ix];
-                  outputrehilo[k][i] = datarehilo[ix];
-                  outputrelolo[k][i] = datarelolo[ix];
-                  outputimhihi[k][i] = dataimhihi[ix];
-                  outputimlohi[k][i] = dataimlohi[ix];
-                  outputimhilo[k][i] = dataimhilo[ix];
-                  outputimlolo[k][i] = dataimlolo[ix++];
-               }
+               outputrehihi[k][i] = datarehihi[cffidx];
+               outputrelohi[k][i] = datarelohi[cffidx];
+               outputrehilo[k][i] = datarehilo[cffidx];
+               outputrelolo[k][i] = datarelolo[cffidx];
+               outputimhihi[k][i] = dataimhihi[cffidx];
+               outputimlohi[k][i] = dataimlohi[cffidx];
+               outputimhilo[k][i] = dataimhilo[cffidx];
+               outputimlolo[k][i] = dataimlolo[cffidx++];
             }
-            else if(idx[ix0][nvr[ix0]-1] == k) // k is last variable
+         }
+      }
+      else
+      {
+         int ix0 = jobs.get_differential_index(k,cnt);
+ 
+         if(idx[ix0][0] == k) // k is first variable of monomial
+         {
+            int ix2 = nvr[ix0]-3;
+            if(ix2 < 0) ix2 = 0;
+
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << " at " << ix << " in data." << endl;
+
+            ix = bstart[ix0] + ix2*deg1;
+
+            for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
             {
-               int ix2 = nvr[ix0]-2;
-   
-               if(verbose)
-                  cout << "Updating derivative " << k 
-                       << " at " << ix << " in data." << endl;
-
-               ix = fstart[ix0] + ix2*deg1;
-
-               for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
-               {
-                  outputrehihi[k][i] = datarehihi[ix];
-                  outputrelohi[k][i] = datarelohi[ix];
-                  outputrehilo[k][i] = datarehilo[ix];
-                  outputrelolo[k][i] = datarelolo[ix];
-                  outputimhihi[k][i] = dataimhihi[ix];
-                  outputimlohi[k][i] = dataimlohi[ix];
-                  outputimhilo[k][i] = dataimhilo[ix];
-                  outputimlolo[k][i] = dataimlolo[ix++];
-               }
+               outputrehihi[k][i] = datarehihi[ix];
+               outputrelohi[k][i] = datarelohi[ix];
+               outputrehilo[k][i] = datarehilo[ix];
+               outputrelolo[k][i] = datarelolo[ix];
+               outputimhihi[k][i] = dataimhihi[ix];
+               outputimlohi[k][i] = dataimlohi[ix];
+               outputimhilo[k][i] = dataimhilo[ix];
+               outputimlolo[k][i] = dataimlolo[ix++];
             }
-            else // derivative is in some cross product
+         }
+         else if(idx[ix0][nvr[ix0]-1] == k) // k is last variable
+         {
+            int ix2 = nvr[ix0]-2;
+
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << " at " << ix << " in data." << endl;
+
+            ix = fstart[ix0] + ix2*deg1;
+
+            for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
             {
-               int ix2 = jobs.position(nvr[ix0],idx[ix0],k) - 1;
-   
-               if(verbose)
-                  cout << "Updating derivative " << k 
-                       << " at " << ix << " in data." << endl;
+               outputrehihi[k][i] = datarehihi[ix];
+               outputrelohi[k][i] = datarelohi[ix];
+               outputrehilo[k][i] = datarehilo[ix];
+               outputrelolo[k][i] = datarelolo[ix];
+               outputimhihi[k][i] = dataimhihi[ix];
+               outputimlohi[k][i] = dataimlohi[ix];
+               outputimhilo[k][i] = dataimhilo[ix];
+               outputimlolo[k][i] = dataimlolo[ix++];
+            }
+         }
+         else // derivative is in some cross product
+         {
+            int ix2 = jobs.position(nvr[ix0],idx[ix0],k) - 1;
 
-               ix = cstart[ix0] + ix2*deg1;
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << " at " << ix << " in data." << endl;
 
-               for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
-               {
-                  outputrehihi[k][i] = datarehihi[ix];
-                  outputrelohi[k][i] = datarelohi[ix];
-                  outputrehilo[k][i] = datarehilo[ix];
-                  outputrelolo[k][i] = datarelolo[ix];
-                  outputimhihi[k][i] = dataimhihi[ix];
-                  outputimlohi[k][i] = dataimlohi[ix];
-                  outputimhilo[k][i] = dataimhilo[ix];
-                  outputimlolo[k][i] = dataimlolo[ix++];
-               }
+            ix = cstart[ix0] + ix2*deg1;
+
+            for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
+            {
+               outputrehihi[k][i] = datarehihi[ix];
+               outputrelohi[k][i] = datarelohi[ix];
+               outputrehilo[k][i] = datarehilo[ix];
+               outputrelolo[k][i] = datarelolo[ix];
+               outputimhihi[k][i] = dataimhihi[ix];
+               outputimlohi[k][i] = dataimlohi[ix];
+               outputimhilo[k][i] = dataimhilo[ix];
+               outputimlolo[k][i] = dataimlolo[ix++];
             }
          }
       }
@@ -1154,14 +1270,46 @@ void cmplx_added_data4vectorized_to_output
       outputimlolo[dim][i] = datarilolo[ix2im++];
    }
    int cnt = jobs.get_differential_count(0);
+
+   if(verbose)
+      cout << "Differential count for variable 0 : " << cnt << endl;
+
    if(cnt == 0) // it could be there is no first variable anywhere ...
    {
-      for(int i=0; i<=deg; i++) // output[0][i] = 0.0;
+      const int difidx = jobs.get_differential_index(0,0);
+
+      if(verbose)
+         cout << "Differential index for variable 0 : " << difidx << endl;
+
+      if(difidx < 0)
       {
-         outputrehihi[0][i] = 0.0; outputrelohi[0][i] = 0.0;
-         outputrehilo[0][i] = 0.0; outputrelolo[0][i] = 0.0;
-         outputimhihi[0][i] = 0.0; outputimlohi[0][i] = 0.0; 
-         outputimhilo[0][i] = 0.0; outputimlolo[0][i] = 0.0;
+         for(int i=0; i<=deg; i++) // output[0][i] = 0.0;
+         {
+            outputrehihi[0][i] = 0.0; outputrelohi[0][i] = 0.0;
+            outputrehilo[0][i] = 0.0; outputrelolo[0][i] = 0.0;
+            outputimhihi[0][i] = 0.0; outputimlohi[0][i] = 0.0; 
+            outputimhilo[0][i] = 0.0; outputimlolo[0][i] = 0.0;
+         }
+      }
+      else
+      {
+         ix1re = (1 + difidx)*deg1;
+         ix2im = (1 + difidx)*deg1 + totcffoffset;
+
+         if(verbose)
+            cout << "updating derivative with coefficient ..." << endl;
+
+         for(int i=0; i<=deg; i++)
+         {
+            outputrehihi[0][i] = datarihihi[ix1re];
+            outputrelohi[0][i] = datarilohi[ix1re];
+            outputrehilo[0][i] = datarihilo[ix1re];
+            outputrelolo[0][i] = datarilolo[ix1re++];
+            outputimhihi[0][i] = datarihihi[ix2im];
+            outputimlohi[0][i] = datarilohi[ix2im];
+            outputimhilo[0][i] = datarihilo[ix2im];
+            outputimlolo[0][i] = datarilolo[ix2im++];
+         }
       }
    }
    else
@@ -1187,10 +1335,24 @@ void cmplx_added_data4vectorized_to_output
          outputimhilo[0][i] = datarihilo[ix2im];
          outputimlolo[0][i] = datarilolo[ix2im++];
       }
-      for(int k=1; k<dim; k++) // updating all other derivatives
+   }
+   for(int k=1; k<dim; k++) // updating all other derivatives
+   {
+      int cnt = jobs.get_differential_count(k);
+
+      if(verbose)
+         cout << "Differential count for variable " << k
+              << " : " << cnt << endl;
+
+      if(cnt == 0) // it could be there is no variable k anywhere ...
       {
-         int cnt = jobs.get_differential_count(k);
-         if(cnt == 0) // it could be there is no variable k anywhere ...
+         const int difidx = jobs.get_differential_index(k,0);
+
+         if(verbose)
+            cout << "Differential index for variable " << k 
+                 << " : " << difidx << endl;
+
+         if(difidx < 0)
          {
             for(int i=0; i<=deg; i++) // output[k][i] = 0.0;
             {
@@ -1202,77 +1364,97 @@ void cmplx_added_data4vectorized_to_output
          }
          else
          {
-            int ix0 = jobs.get_differential_index(k,cnt);
-   
-            if(idx[ix0][0] == k) // k is first variable of monomial
+            ix1re = (1 + difidx)*deg1;
+            ix2im = (1 + difidx)*deg1 + totcffoffset;
+
+            if(verbose)
+               cout << "updating derivative with coefficient ..." << endl;
+
+            for(int i=0; i<=deg; i++)
             {
-               int ix2 = nvr[ix0]-3;
-               if(ix2 < 0) ix2 = 0;
-
-               if(verbose)
-                  cout << "Updating derivative " << k 
-                       << " at " << ix1re << " in data." << endl;
-
-               ix1re = bstart[ix0] + ix2*deg1;
-               ix2im = bstart[ix0] + ix2*deg1 + totcffoffset;
-
-               for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
-               {
-                  outputrehihi[k][i] = datarihihi[ix1re];
-                  outputrelohi[k][i] = datarilohi[ix1re];
-                  outputrehilo[k][i] = datarihilo[ix1re];
-                  outputrelolo[k][i] = datarilolo[ix1re++];
-                  outputimhihi[k][i] = datarihihi[ix2im];
-                  outputimlohi[k][i] = datarilohi[ix2im];
-                  outputimhilo[k][i] = datarihilo[ix2im];
-                  outputimlolo[k][i] = datarilolo[ix2im++];
-               }
+               outputrehihi[k][i] = datarihihi[ix1re];
+               outputrelohi[k][i] = datarilohi[ix1re];
+               outputrehilo[k][i] = datarihilo[ix1re];
+               outputrelolo[k][i] = datarilolo[ix1re++];
+               outputimhihi[k][i] = datarihihi[ix2im];
+               outputimlohi[k][i] = datarilohi[ix2im];
+               outputimhilo[k][i] = datarihilo[ix2im];
+               outputimlolo[k][i] = datarilolo[ix2im++];
             }
-            else if(idx[ix0][nvr[ix0]-1] == k) // k is last variable
+         }
+      }
+      else
+      {
+         int ix0 = jobs.get_differential_index(k,cnt);
+
+         if(idx[ix0][0] == k) // k is first variable of monomial
+         {
+            int ix2 = nvr[ix0]-3;
+            if(ix2 < 0) ix2 = 0;
+
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << " at " << ix1re << " in data." << endl;
+
+            ix1re = bstart[ix0] + ix2*deg1;
+            ix2im = bstart[ix0] + ix2*deg1 + totcffoffset;
+
+            for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
             {
-               int ix2 = nvr[ix0]-2;
-   
-               if(verbose)
-                  cout << "Updating derivative " << k 
-                       << " at " << ix1re << " in data." << endl;
-
-               ix1re = fstart[ix0] + ix2*deg1;
-               ix2im = fstart[ix0] + ix2*deg1 + totcffoffset;
-
-               for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
-               {
-                  outputrehihi[k][i] = datarihihi[ix1re];
-                  outputrelohi[k][i] = datarilohi[ix1re];
-                  outputrehilo[k][i] = datarihilo[ix1re];
-                  outputrelolo[k][i] = datarilolo[ix1re++];
-                  outputimhihi[k][i] = datarihihi[ix2im];
-                  outputimlohi[k][i] = datarilohi[ix2im];
-                  outputimhilo[k][i] = datarihilo[ix2im];
-                  outputimlolo[k][i] = datarilolo[ix2im++];
-               }
+               outputrehihi[k][i] = datarihihi[ix1re];
+               outputrelohi[k][i] = datarilohi[ix1re];
+               outputrehilo[k][i] = datarihilo[ix1re];
+               outputrelolo[k][i] = datarilolo[ix1re++];
+               outputimhihi[k][i] = datarihihi[ix2im];
+               outputimlohi[k][i] = datarilohi[ix2im];
+               outputimhilo[k][i] = datarihilo[ix2im];
+               outputimlolo[k][i] = datarilolo[ix2im++];
             }
-            else // derivative is in some cross product
+         }
+         else if(idx[ix0][nvr[ix0]-1] == k) // k is last variable
+         {
+            int ix2 = nvr[ix0]-2;
+ 
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << " at " << ix1re << " in data." << endl;
+
+            ix1re = fstart[ix0] + ix2*deg1;
+            ix2im = fstart[ix0] + ix2*deg1 + totcffoffset;
+
+            for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
             {
-               int ix2 = jobs.position(nvr[ix0],idx[ix0],k) - 1;
-   
-               if(verbose)
-                  cout << "Updating derivative " << k 
-                       << " at " << ix1re << " in data." << endl;
+               outputrehihi[k][i] = datarihihi[ix1re];
+               outputrelohi[k][i] = datarilohi[ix1re];
+               outputrehilo[k][i] = datarihilo[ix1re];
+               outputrelolo[k][i] = datarilolo[ix1re++];
+               outputimhihi[k][i] = datarihihi[ix2im];
+               outputimlohi[k][i] = datarilohi[ix2im];
+               outputimhilo[k][i] = datarihilo[ix2im];
+               outputimlolo[k][i] = datarilolo[ix2im++];
+            }
+         }
+         else // derivative is in some cross product
+         {
+            int ix2 = jobs.position(nvr[ix0],idx[ix0],k) - 1;
 
-               ix1re = cstart[ix0] + ix2*deg1;
-               ix2im = cstart[ix0] + ix2*deg1 + totcffoffset;
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << " at " << ix1re << " in data." << endl;
 
-               for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
-               {
-                  outputrehihi[k][i] = datarihihi[ix1re];
-                  outputrelohi[k][i] = datarilohi[ix1re];
-                  outputrehilo[k][i] = datarihilo[ix1re];
-                  outputrelolo[k][i] = datarilolo[ix1re++];
-                  outputimhihi[k][i] = datarihihi[ix2im];
-                  outputimlohi[k][i] = datarilohi[ix2im];
-                  outputimhilo[k][i] = datarihilo[ix2im];
-                  outputimlolo[k][i] = datarilolo[ix2im++];
-               }
+            ix1re = cstart[ix0] + ix2*deg1;
+            ix2im = cstart[ix0] + ix2*deg1 + totcffoffset;
+
+            for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
+            {
+               outputrehihi[k][i] = datarihihi[ix1re];
+               outputrelohi[k][i] = datarilohi[ix1re];
+               outputrehilo[k][i] = datarihilo[ix1re];
+               outputrelolo[k][i] = datarilolo[ix1re++];
+               outputimhihi[k][i] = datarihihi[ix2im];
+               outputimlohi[k][i] = datarilohi[ix2im];
+               outputimhilo[k][i] = datarihilo[ix2im];
+               outputimlolo[k][i] = datarilolo[ix2im++];
             }
          }
       }
