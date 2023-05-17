@@ -128,7 +128,8 @@ void convjob_indices
    else if(jobinp2tp == 2)     // second input is backward product
       *inp2ix = bstart[monidx] + jobinp2ix*deg1;
    else if(jobinp2tp == 3)     // second input is cross product
-      *outidx = cstart[monidx] + jobinp2ix*deg1;
+      // *outidx = cstart[monidx] + jobinp2ix*deg1;
+      *inp2ix = cstart[monidx] + jobinp2ix*deg1;
 
    if(joboutptp == 1)          // output is forward product
       *outidx = fstart[monidx] + joboutidx*deg1;
@@ -219,9 +220,11 @@ void complex_convjob_indices
    else if(jobinp2tp == 6)   // second input is imag part of backward
       *inp2ix = bstart[monidx] + jobinp2ix*deg1 + totcffoffset;
    else if(jobinp2tp == 3)   // second input is real part of cross
-      *outidx = cstart[monidx] + jobinp2ix*deg1;
+      // *outidx = cstart[monidx] + jobinp2ix*deg1;
+      *inp2ix = cstart[monidx] + jobinp2ix*deg1;
    else if(jobinp2tp == 7)   // second input is imag part of cross
-      *outidx = cstart[monidx] + jobinp2ix*deg1 + totcffoffset;
+      // *outidx = cstart[monidx] + jobinp2ix*deg1 + totcffoffset;
+      *inp2ix = cstart[monidx] + jobinp2ix*deg1 + totcffoffset;
    else
       cout << "Invalid job second input type!" << endl;
 
@@ -249,7 +252,7 @@ void complex_convjob_indices
    else if(joboutptp == 5)     // second operand of real backward
    {
       if(joboutidx < nvr[monidx]-2) // last backward product is special ...
-         *outidx = bstart[monidx] + joboutidx*deg1 + totcff;
+         *outidx = bstart[monidx] + joboutidx*deg1 + offset;
       else
       {
          if(nvr[monidx] == 2)

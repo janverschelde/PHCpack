@@ -159,7 +159,7 @@ void ComplexConvolutionJobs::make_monomial
                                         << " : layer " << layer << endl;
          jobs[layer].push_back(job3);
          // second operand of imaginary part
-         ComplexConvolutionJob job4(monidx,6,nvr-3,-1,-1,10,nvr-2);
+         ComplexConvolutionJob job4(monidx,6,nvr-3,-1,-1,11,nvr-2);
          if(verbose) cout << ++jobcount << " : " << job4
                                         << " : layer " << layer << endl;
          jobs[layer].push_back(job4);
