@@ -3,6 +3,7 @@ Wed 17 May 2023 : in dbl4_polynomials_kernels.cu, fixed the bugs for the
   In {dbl, dbl2, dbl3, dbl5, dbl8, dbl10}_polynomials_kernels.cu
   made the same fixes as in dbl4_polynomials_kernels.cu.
   Updated makefile_unix and makefile_windows.
+  Fixed indexing error in complexconv_jobs.cpp.
 
 Tue 16 May 2023 : new complexinc_job and complexinc_jobs, with extra tests
   in test_complexconv_jobs.cpp, updated makefile_unix and makefile_windows.
