@@ -549,18 +549,18 @@ void complex_addjob_indices
       *inp1ix = fstart[updmon] + updidx*deg1 + totcffoffset;
    }
    else if(adtype == 2)  // real part of backward
-   {                     // on GPU, one backward item less
+   {
       if(updidx == 0)
          *inp1ix = bstart[updmon];
       else
-         *inp1ix = bstart[updmon] + (updidx-1)*deg1;
+         *inp1ix = bstart[updmon] + updidx*deg1;
    }
    else if(adtype == 5)  // imaginary part of backward
-   {                     // on GPU, one backward item less
+   {
       if(updidx == 0)
          *inp1ix = bstart[updmon] + totcffoffset;
       else
-         *inp1ix = bstart[updmon] + (updidx-1)*deg1 + totcffoffset;
+         *inp1ix = bstart[updmon] + updidx*deg1 + totcffoffset;
    }
    else if(adtype == 3)  // real part of cross
    {
@@ -577,12 +577,14 @@ void complex_addjob_indices
 
    if(incmon == -1)   // real part of the constant or coefficient
    {
-      if(incidx < 0)
-         *inp2ix = 0; // start with constant coefficient
-      else            // incidx >= 0 is index of monomial
+      if(incidx == -1)
+         *inp2ix = 0;             // start with constant coefficient
+      else if(incidx == -2)
+         *inp2ix = totcffoffset;  // imag part of constant coefficient
+      else                        // incidx >= 0 is index of monomial
          *inp2ix = (1 + incidx)*deg1;
    }
-   if(incmon == -2)   // imaginary part of the constant or coefficient
+   else if(incmon == -2)   // imaginary part of the constant or coefficient
    {
       if(incidx < 0)
          *inp2ix = totcffoffset; // start with constant coefficient
@@ -608,32 +610,32 @@ void complex_addjob_indices
          *inp2ix = fstart[incmon] + incidx*deg1 + totcffoffset + offset;
       }
       else if(intype == 2) // first real operand of backward
-      {                                // on GPU, on backward item less
+      {
          if(incidx == 0)
             *inp2ix = bstart[incmon];
          else
-            *inp2ix = bstart[incmon] + (incidx-1)*deg1;
+            *inp2ix = bstart[incmon] + incidx*deg1;
       }
       else if(intype == 5) // second real operand of backward
-      {                                // on GPU, on backward item less
+      {
          if(incidx == 0)
             *inp2ix = bstart[incmon] + offset;
          else
-            *inp2ix = bstart[incmon] + (incidx-1)*deg1 + offset;
+            *inp2ix = bstart[incmon] + incidx*deg1 + offset;
       }
       else if(intype == 8) // first imaginary operand of backward
-      {                                // on GPU, on backward item less
+      {
          if(incidx == 0)
             *inp2ix = bstart[incmon] + totcffoffset;
          else
-            *inp2ix = bstart[incmon] + (incidx-1)*deg1 + totcffoffset;
+            *inp2ix = bstart[incmon] + incidx*deg1 + totcffoffset;
       }
       else if(intype == 11) // second imaginary operand of backward
-      {                                // on GPU, on backward item less
+      { 
          if(incidx == 0)
             *inp2ix = bstart[incmon] + totcffoffset + offset;
          else
-            *inp2ix = bstart[incmon] + (incidx-1)*deg1
+            *inp2ix = bstart[incmon] + incidx*deg1
                                      + totcffoffset + offset;
       }
       else if(intype == 3)  // first real operand of cross
