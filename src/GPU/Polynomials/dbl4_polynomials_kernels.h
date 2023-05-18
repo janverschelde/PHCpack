@@ -143,7 +143,7 @@ __global__ void cmplx4_padded_convjobs
 
 __global__ void cmplx4vectorized_flipsigns
  ( double *datarihihi, double *datarilohi,
-   double *datarihilo, double *datarilolo, int totcff, int dim );
+   double *datarihilo, double *datarilolo, int *flpidx, int dim );
 /*
  * DESCRIPTION :
  *   Kernel to flip the signs of the second real operand
@@ -154,7 +154,7 @@ __global__ void cmplx4vectorized_flipsigns
  *   datarilohi   second highest doubles of the convolutions;
  *   datarihilo   second lowest doubles of the convolutions;
  *   datarilolo   lowest doubles of the convolutions;
- *   totcff       start index for the second real operand;
+ *   flpidx       start indices of series to flip;
  *   dim          equals the size of each block, or deg+1,
  *                where deg is the degree of truncation.
  *
@@ -1373,7 +1373,7 @@ void GPU_cmplx4_poly_evaldiff
  *                  (excluding memory copies) in seconds. */
 
 void GPU_cmplx4vectorized_flipsigns
- ( int deg, int totcff, int offsetri,
+ ( int deg, int nbrflips, int *flipidx,
    double *datarihihi, double *datarilohi,
    double *datarihilo, double *datarilolo,
    double *elapsedms, bool verbose=true );
@@ -1384,8 +1384,8 @@ void GPU_cmplx4vectorized_flipsigns
  *
  * ON ENTRY :
  *   deg          degree of truncation of the series;
- *   totcff       total number of coefficients without vectorization;
- *   offsetri     size of the second operand;
+ *   nbrflips     number of series to flip signs, number of blocks;
+ *   flipidx      start index of every series to flip;
  *   datarihihi   highest doubles of the convolutions;
  *   datarilohi   second highest doubles of the convolutions;
  *   datarihilo   second lowest doubles of the convolutions;

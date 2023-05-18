@@ -1,3 +1,6 @@
+Thu 18 May 2023 : in dbl4_polynomials_kernels, corrected the flipping of
+  the signs of the second real operand using the increment job indices.
+
 Wed 17 May 2023 : in dbl4_polynomials_kernels.cu, fixed the bugs for the
   special cases of the derivative of a linear monomial.
   In {dbl, dbl2, dbl3, dbl5, dbl8, dbl10}_polynomials_kernels.cu

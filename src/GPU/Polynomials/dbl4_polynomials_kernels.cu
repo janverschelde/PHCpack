@@ -449,11 +449,11 @@ __global__ void cmplx4_padded_convjobs
 
 __global__ void cmplx4vectorized_flipsigns
  ( double *datarihihi, double *datarilohi,
-   double *datarihilo, double *datarilolo, int totcff, int dim )
+   double *datarihilo, double *datarilolo, int *flpidx, int dim )
 {
-   const int bdx = blockIdx.x;    // index to the block to flip
+   const int bdx = blockIdx.x;    // index to the series to flip
    const int tdx = threadIdx.x;
-   const int idx = totcff + bdx*dim + tdx; // which number to flip
+   const int idx = flpidx[bdx] + tdx; // which number to flip
 
    double x; // register to load data from global memory
 
@@ -1812,11 +1812,6 @@ void cmplx4vectorized_convolution_jobs
          cudaEventElapsedTime(&milliseconds,start,stop);
          *cnvlapms += milliseconds;
       }
-      GPU_cmplx4vectorized_flipsigns
-        (deg,totcff,offsetri,datarihihi,datarilohi,datarihilo,datarilolo,
-         &fliplapms,verbose);
-      *cnvlapms += fliplapms;
-
       jobnbr = incjobs.get_layer_count(k);
       // note: only half the number of increment jobs
 
@@ -1826,6 +1821,15 @@ void cmplx4vectorized_convolution_jobs
       complex_incjobs_coordinates
          (incjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,totcff,offsetri,
           fstart,bstart,cstart,verbose);
+
+      const int nbrflips = jobnbr/2;
+      int *rebidx = new int[nbrflips];
+      for(int i=0, j=0; i<jobnbr; i=i+2, j++) rebidx[j] = in2ix_h[i];
+
+      GPU_cmplx4vectorized_flipsigns
+        (deg,nbrflips,rebidx,datarihihi,datarilohi,datarihilo,datarilolo,
+         &fliplapms,verbose);
+      *cnvlapms += fliplapms;
 
       // if(BS == deg1)
       {
@@ -2259,13 +2263,17 @@ void GPU_cmplx4_poly_evaldiff
 }
 
 void GPU_cmplx4vectorized_flipsigns
- ( int deg, int totcff, int offsetri,
+ ( int deg, int nbrflips, int *flipidx,
    double *datarihihi, double *datarilohi,
    double *datarihilo, double *datarilolo,
    double *elapsedms, bool verbose )
 {
    const int deg1 = deg+1;
-   const int nbrblocks = offsetri/deg1;
+
+   int *flipidx_d;                   // flip indices on device
+   const size_t szjobidx = nbrflips*sizeof(int);
+   cudaMalloc((void**)&flipidx_d,szjobidx);
+   cudaMemcpy(flipidx_d,flipidx,szjobidx,cudaMemcpyHostToDevice);
 
    cudaEvent_t start,stop;           // to measure time spent by kernels
    cudaEventCreate(&start);
@@ -2273,12 +2281,16 @@ void GPU_cmplx4vectorized_flipsigns
    float milliseconds;
 
    if(verbose)
-      cout << "launching " << nbrblocks << " flip signing blocks of "
+   {
+      cout << "flip indices :";
+      for(int i=0; i<nbrflips; i++) cout << " " << flipidx[i];
+      cout << endl;
+      cout << "launching " << nbrflips << " flip signs blocks of "
                            << deg1 << " threads ..." << endl;
-
+   }
    cudaEventRecord(start);
-   cmplx4vectorized_flipsigns<<<nbrblocks,deg1>>>
-      (datarihihi,datarilohi,datarihilo,datarilolo,totcff,deg1);
+   cmplx4vectorized_flipsigns<<<nbrflips,deg1>>>
+      (datarihihi,datarilohi,datarihilo,datarilolo,flipidx_d,deg1);
    cudaEventRecord(stop);
    cudaEventSynchronize(stop);
    cudaEventElapsedTime(&milliseconds,start,stop);
