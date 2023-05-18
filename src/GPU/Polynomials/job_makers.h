@@ -1,8 +1,8 @@
-/* The test_helpers.h contains the prototypes of functions to help
- * the testing of the polynomial evaluation and differentiation. */
+/* The job_makers.h contains the prototypes of functions to make
+ * all jobs for the polynomial evaluation and differentiation. */
 
-#ifndef __test_helpers_h__
-#define __test_helpers_h__
+#ifndef __job_makers_h__
+#define __job_makers_h__
 
 #include "convolution_jobs.h"
 #include "addition_jobs.h"

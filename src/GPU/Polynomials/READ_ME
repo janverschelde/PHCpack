@@ -35,7 +35,7 @@ job_coordinates           : defines data positions for the kernels
 prompt_for_setup          : prompts for the setup of the experiments
 wingettimeofday           : defines gettimeofday() for windows
 write_gpu_timings         : writes timings obtained on the device
-test_helpers              : utility functions to help with testing
+job_makers                : makes all jobs for evaluation and differentiation
 -----------------------------------------------------------------------------
 dbl_polynomials_host      : evaldiff of double polynomials on host
 dbl_polynomials_kernels   : kernels for double evaldiff

@@ -15,7 +15,7 @@
 #include "write_job_counts.h"
 #include "dbl5_polynomials_host.h"
 #include "dbl5_polynomials_kernels.h"
-#include "test_helpers.h"
+#include "job_makers.h"
 #include "dbl5_polynomials_testers.h"
 
 using namespace std;

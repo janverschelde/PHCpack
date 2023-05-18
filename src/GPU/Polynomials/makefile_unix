@@ -441,9 +441,9 @@ write_gpu_timings.o:
 	@-echo ">>> compiling write_gpu_timings ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) write_gpu_timings.cpp
 
-test_helpers.o:
-	@-echo ">>> compiling test_helpers ..."
-	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test_helpers.cpp
+job_makers.o:
+	@-echo ">>> compiling job_makers ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) job_makers.cpp
 
 job_coordinates.o:
 	@-echo ">>> compiling job_coordinates ..."
@@ -499,7 +499,7 @@ test_complexadd_jobs: random_numbers.o random_series.o \
 test_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
                       random_polynomials.o prompt_for_setup.o \
                       convolution_job.o convolution_jobs.o \
-                      addition_job.o addition_jobs.o test_helpers.o \
+                      addition_job.o addition_jobs.o job_makers.o \
                       complexconv_job.o complexconv_jobs.o \
                       complexinc_job.o complexinc_jobs.o \
                       complexadd_job.o complexadd_jobs.o \
@@ -513,7 +513,7 @@ test_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
                   random_numbers.o random_series.o random_monomials.o \
                   random_polynomials.o \
                   convolution_job.o convolution_jobs.o \
-                  addition_job.o addition_jobs.o test_helpers.o \
+                  addition_job.o addition_jobs.o job_makers.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
                   complexadd_job.o complexadd_jobs.o \
@@ -529,7 +529,7 @@ test_dbl2_polynomials: random_numbers.o random_series.o random_monomials.o \
                        random2_vectors.o random2_series.o random2_monomials.o \
                        random2_polynomials.o test_dbl2_polynomials.o \
                        convolution_job.o convolution_jobs.o \
-                       addition_job.o addition_jobs.o test_helpers.o \
+                       addition_job.o addition_jobs.o job_makers.o \
                        complexconv_job.o complexconv_jobs.o \
                        complexinc_job.o complexinc_jobs.o \
                        complexadd_job.o complexadd_jobs.o \
@@ -545,7 +545,7 @@ test_dbl2_polynomials: random_numbers.o random_series.o random_monomials.o \
                   random2_vectors.o random2_series.o \
                   random2_monomials.o random2_polynomials.o \
                   convolution_job.o convolution_jobs.o \
-                  addition_job.o addition_jobs.o test_helpers.o \
+                  addition_job.o addition_jobs.o job_makers.o \
                   job_coordinates.o write_job_counts.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
@@ -562,7 +562,7 @@ test_dbl3_polynomials: random_numbers.o random_series.o random_monomials.o \
                        random3_vectors.o random3_series.o random3_monomials.o \
                        random3_polynomials.o test_dbl3_polynomials.o \
                        convolution_job.o convolution_jobs.o \
-                       addition_job.o addition_jobs.o test_helpers.o \
+                       addition_job.o addition_jobs.o job_makers.o \
                        complexconv_job.o complexconv_jobs.o \
                        complexinc_job.o complexinc_jobs.o \
                        complexadd_job.o complexadd_jobs.o \
@@ -579,7 +579,7 @@ test_dbl3_polynomials: random_numbers.o random_series.o random_monomials.o \
                   random3_vectors.o random3_series.o \
                   random3_monomials.o random3_polynomials.o \
                   convolution_job.o convolution_jobs.o \
-                  addition_job.o addition_jobs.o test_helpers.o \
+                  addition_job.o addition_jobs.o job_makers.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
                   complexadd_job.o complexadd_jobs.o \
@@ -596,7 +596,7 @@ test_dbl4_polynomials: random_numbers.o random_series.o random_monomials.o \
                        random4_vectors.o random4_series.o random4_monomials.o \
                        random4_polynomials.o test_dbl4_polynomials.o \
                        convolution_job.o convolution_jobs.o \
-                       addition_job.o addition_jobs.o test_helpers.o \
+                       addition_job.o addition_jobs.o job_makers.o \
                        complexconv_job.o complexconv_jobs.o \
                        complexinc_job.o complexinc_jobs.o \
                        complexadd_job.o complexadd_jobs.o \
@@ -613,7 +613,7 @@ test_dbl4_polynomials: random_numbers.o random_series.o random_monomials.o \
                   random4_vectors.o random4_series.o \
                   random4_monomials.o random4_polynomials.o \
                   convolution_job.o convolution_jobs.o \
-                  addition_job.o addition_jobs.o test_helpers.o \
+                  addition_job.o addition_jobs.o job_makers.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
                   complexadd_job.o complexadd_jobs.o \
@@ -630,7 +630,7 @@ test_dbl5_polynomials: random_numbers.o random_series.o random_monomials.o \
                        random5_vectors.o random5_series.o random5_monomials.o \
                        random5_polynomials.o test_dbl5_polynomials.o \
                        convolution_job.o convolution_jobs.o \
-                       addition_job.o addition_jobs.o test_helpers.o \
+                       addition_job.o addition_jobs.o job_makers.o \
                        complexconv_job.o complexconv_jobs.o \
                        complexinc_job.o complexinc_jobs.o \
                        complexadd_job.o complexadd_jobs.o \
@@ -647,7 +647,7 @@ test_dbl5_polynomials: random_numbers.o random_series.o random_monomials.o \
                   random5_vectors.o random5_series.o \
                   random5_monomials.o random5_polynomials.o \
                   convolution_job.o convolution_jobs.o \
-                  addition_job.o addition_jobs.o test_helpers.o \
+                  addition_job.o addition_jobs.o job_makers.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
                   complexadd_job.o complexadd_jobs.o \
@@ -740,7 +740,7 @@ test_polynomials: random_numbers.o random_series.o random_monomials.o \
                   random10_vectors.o random10_series.o random10_monomials.o \
                   random10_polynomials.o prompt_for_setup.o \
                   convolution_job.o convolution_jobs.o \
-                  addition_job.o addition_jobs.o test_helpers.o \
+                  addition_job.o addition_jobs.o job_makers.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
                   complexadd_job.o complexadd_jobs.o \
@@ -762,7 +762,7 @@ test_polynomials: random_numbers.o random_series.o random_monomials.o \
                   write_gpu_timings.o \
                   polynomials_kernels.o test_polynomials.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_polynomials test_polynomials.o test_helpers.o \
+	$(gpp) -o test_polynomials test_polynomials.o job_makers.o \
                   random_numbers.o random_series.o random_monomials.o \
                   random_polynomials.o double_double_functions.o \
                   random2_vectors.o random2_series.o random2_monomials.o \
@@ -803,7 +803,7 @@ test_polynomials: random_numbers.o random_series.o random_monomials.o \
 run_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
                      random_polynomials.o prompt_for_setup.o \
                      convolution_job.o convolution_jobs.o \
-                     addition_job.o addition_jobs.o test_helpers.o \
+                     addition_job.o addition_jobs.o job_makers.o \
                      complexconv_job.o complexconv_jobs.o \
                      complexinc_job.o complexinc_jobs.o \
                      complexadd_job.o complexadd_jobs.o \
@@ -817,7 +817,7 @@ run_dbl_polynomials: random_numbers.o random_series.o random_monomials.o \
                   random_numbers.o random_series.o random_monomials.o \
                   random_polynomials.o \
                   convolution_job.o convolution_jobs.o \
-                  addition_job.o addition_jobs.o test_helpers.o \
+                  addition_job.o addition_jobs.o job_makers.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
                   complexadd_job.o complexadd_jobs.o \
@@ -833,7 +833,7 @@ run_dbl2_polynomials: random_numbers.o random_series.o random_monomials.o \
                       random2_vectors.o random2_series.o random2_monomials.o \
                       random2_polynomials.o run_dbl2_polynomials.o \
                       convolution_job.o convolution_jobs.o \
-                      addition_job.o addition_jobs.o test_helpers.o \
+                      addition_job.o addition_jobs.o job_makers.o \
                       complexconv_job.o complexconv_jobs.o \
                       complexinc_job.o complexinc_jobs.o \
                       complexadd_job.o complexadd_jobs.o \
@@ -849,7 +849,7 @@ run_dbl2_polynomials: random_numbers.o random_series.o random_monomials.o \
                   random2_vectors.o random2_series.o \
                   random2_monomials.o random2_polynomials.o \
                   convolution_job.o convolution_jobs.o \
-                  addition_job.o addition_jobs.o test_helpers.o \
+                  addition_job.o addition_jobs.o job_makers.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
                   complexadd_job.o complexadd_jobs.o \
@@ -1057,7 +1057,7 @@ run_polynomials: random_numbers.o random_series.o random_monomials.o \
                  dbl8_polynomials_host.o dbl8_polynomials_testers.o \
                  dbl10_convolutions_host.o dbl10_monomials_host.o \
                  dbl10_polynomials_host.o dbl10_polynomials_testers.o \
-                 test_helpers.o write_gpu_timings.o \
+                 job_makers.o write_gpu_timings.o \
                  polynomials_kernels.o run_polynomials.o
 	@-echo ">>> linking ..."
 	$(gpp) -o run_polynomials run_polynomials.o \
@@ -1095,7 +1095,7 @@ run_polynomials: random_numbers.o random_series.o random_monomials.o \
                   dbl8_polynomials_host.o dbl8_polynomials_testers.o \
                   dbl10_convolutions_host.o dbl10_monomials_host.o \
                   dbl10_polynomials_host.o dbl10_polynomials_testers.o \
-                  test_helpers.o write_gpu_timings.o polynomials_kernels.o \
+                  job_makers.o write_gpu_timings.o polynomials_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 clean:
@@ -1141,7 +1141,7 @@ clean:
 	/bin/rm -f -r test_addition_jobs test_addition_jobs.o
 	/bin/rm -f -r test_complexadd_jobs test_complexadd_jobs.o
 	/bin/rm -f -r job_coordinates.o write_job_counts.o prompt_for_setup.o
-	/bin/rm -f -r write_gpu_timings.o test_helpers.o
+	/bin/rm -f -r write_gpu_timings.o job_makers.o
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o

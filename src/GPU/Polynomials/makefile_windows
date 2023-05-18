@@ -707,11 +707,11 @@ job_coordinates.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: job_coordinates.obj /EHsc
 
-test_helpers.obj:
-	@-echo ">>> compiling test_helpers ..."
-	$(CL)\cl /c test_helpers.cpp \
+job_makers.obj:
+	@-echo ">>> compiling job_makers ..."
+	$(CL)\cl /c job_makers.cpp \
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
-                 /Fo: test_helpers.obj /EHsc
+                 /Fo: job_makers.obj /EHsc
 
 prompt_for_setup.obj:
 	@-echo ">>> compiling prompt_for_setup ..."
@@ -766,7 +766,7 @@ test_complexadd_jobs: random_numbers.obj random_series.obj \
 test_dbl_polynomials: random_numbers.obj random_series.obj \
 	              random_monomials.obj random_polynomials.obj \
                       convolution_job.obj convolution_jobs.obj \
-                      addition_job.obj addition_jobs.obj test_helpers.obj \
+                      addition_job.obj addition_jobs.obj job_makers.obj \
                       complexconv_job.obj complexconv_jobs.obj \
                       complexinc_job.obj complexinc_jobs.obj \
                       complexadd_job.obj complexadd_jobs.obj \
@@ -784,7 +784,7 @@ test_dbl_polynomials: random_numbers.obj random_series.obj \
               complexconv_job.obj complexconv_jobs.obj \
               complexinc_job.obj complexinc_jobs.obj \
               complexadd_job.obj complexadd_jobs.obj \
-              job_coordinates.obj write_job_counts.obj test_helpers.obj \
+              job_coordinates.obj write_job_counts.obj job_makers.obj \
               dbl_convolutions_host.obj dbl_monomials_host.obj \
               dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
               write_gpu_timings.obj gettimeofday4win.obj \
@@ -796,7 +796,7 @@ test_dbl2_polynomials: random_numbers.obj random_series.obj \
                        random2_vectors.obj random2_series.obj \
                        random2_monomials.obj random2_polynomials.obj \
                        convolution_job.obj convolution_jobs.obj \
-                       addition_job.obj addition_jobs.obj test_helpers.obj \
+                       addition_job.obj addition_jobs.obj job_makers.obj \
                        complexconv_job.obj complexconv_jobs.obj \
                        complexinc_job.obj complexinc_jobs.obj \
                        complexadd_job.obj complexadd_jobs.obj \
@@ -811,7 +811,7 @@ test_dbl2_polynomials: random_numbers.obj random_series.obj \
               random_polynomials.obj double_double_functions.obj \
               random2_vectors.obj random2_series.obj \
               random2_monomials.obj random2_polynomials.obj \
-              convolution_job.obj convolution_jobs.obj test_helpers.obj \
+              convolution_job.obj convolution_jobs.obj job_makers.obj \
               addition_job.obj addition_jobs.obj prompt_for_setup.obj \
               complexconv_job.obj complexconv_jobs.obj \
               complexinc_job.obj complexinc_jobs.obj \
@@ -829,7 +829,7 @@ test_dbl3_polynomials: random_numbers.obj random_series.obj \
                        random3_vectors.obj random3_series.obj \
                        random3_monomials.obj random3_polynomials.obj \
                        convolution_job.obj convolution_jobs.obj \
-                       addition_job.obj addition_jobs.obj test_helpers.obj \
+                       addition_job.obj addition_jobs.obj job_makers.obj \
                        complexconv_job.obj complexconv_jobs.obj \
                        complexinc_job.obj complexinc_jobs.obj \
                        complexadd_job.obj complexadd_jobs.obj \
@@ -846,7 +846,7 @@ test_dbl3_polynomials: random_numbers.obj random_series.obj \
               random3_vectors.obj random3_series.obj \
               random3_monomials.obj random3_polynomials.obj \
               convolution_job.obj convolution_jobs.obj \
-              addition_job.obj addition_jobs.obj test_helpers.obj \
+              addition_job.obj addition_jobs.obj job_makers.obj \
               complexconv_job.obj complexconv_jobs.obj \
               complexinc_job.obj complexinc_jobs.obj \
               complexadd_job.obj complexadd_jobs.obj \
@@ -863,7 +863,7 @@ test_dbl4_polynomials: random_numbers.obj random_series.obj \
                        random4_vectors.obj random4_series.obj \
                        random4_monomials.obj random4_polynomials.obj \
                        convolution_job.obj convolution_jobs.obj \
-                       addition_job.obj addition_jobs.obj test_helpers.obj \
+                       addition_job.obj addition_jobs.obj job_makers.obj \
                        complexconv_job.obj complexconv_jobs.obj \
                        complexinc_job.obj complexinc_jobs.obj \
                        complexadd_job.obj complexadd_jobs.obj \
@@ -880,7 +880,7 @@ test_dbl4_polynomials: random_numbers.obj random_series.obj \
               random4_vectors.obj random4_series.obj \
               random4_monomials.obj random4_polynomials.obj \
               convolution_job.obj convolution_jobs.obj \
-              addition_job.obj addition_jobs.obj test_helpers.obj \
+              addition_job.obj addition_jobs.obj job_makers.obj \
               complexconv_job.obj complexconv_jobs.obj \
               complexinc_job.obj complexinc_jobs.obj \
               complexadd_job.obj complexadd_jobs.obj \
@@ -897,7 +897,7 @@ test_dbl5_polynomials: random_numbers.obj random_series.obj \
                        random5_vectors.obj random5_series.obj \
                        random5_monomials.obj random5_polynomials.obj \
                        convolution_job.obj convolution_jobs.obj \
-                       addition_job.obj addition_jobs.obj test_helpers.obj \
+                       addition_job.obj addition_jobs.obj job_makers.obj \
                        complexconv_job.obj complexconv_jobs.obj \
                        complexinc_job.obj complexinc_jobs.obj \
                        complexadd_job.obj complexadd_jobs.obj \
@@ -914,7 +914,7 @@ test_dbl5_polynomials: random_numbers.obj random_series.obj \
               random5_vectors.obj random5_series.obj \
               random5_monomials.obj random5_polynomials.obj \
               convolution_job.obj convolution_jobs.obj \
-              addition_job.obj addition_jobs.obj test_helpers.obj \
+              addition_job.obj addition_jobs.obj job_makers.obj \
               complexconv_job.obj complexconv_jobs.obj \
               complexinc_job.obj complexinc_jobs.obj \
               complexadd_job.obj complexadd_jobs.obj \
@@ -1030,7 +1030,7 @@ test_polynomials: random_numbers.obj random_series.obj \
                   dbl8_polynomials_host.obj dbl8_polynomials_testers.obj \
                   dbl10_convolutions_host.obj dbl10_monomials_host.obj \
                   dbl10_polynomials_host.obj dbl10_polynomials_testers.obj \
-                  test_helpers.obj write_gpu_timings.obj \
+                  job_makers.obj write_gpu_timings.obj \
 	          polynomials_kernels.obj test_polynomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_polynomials.exe \
@@ -1071,13 +1071,13 @@ test_polynomials: random_numbers.obj random_series.obj \
               dbl8_polynomials_host.obj dbl8_polynomials_testers.obj \
               dbl10_convolutions_host.obj dbl10_monomials_host.obj \
               dbl10_polynomials_host.obj dbl10_polynomials_testers.obj \
-              test_helpers.obj write_gpu_timings.obj \
+              job_makers.obj write_gpu_timings.obj \
               polynomials_kernels.obj test_polynomials.obj
 
 run_dbl_polynomials: random_numbers.obj random_series.obj \
                      random_monomials.obj random_polynomials.obj \
                      convolution_job.obj convolution_jobs.obj \
-                     addition_job.obj addition_jobs.obj test_helpers.obj \
+                     addition_job.obj addition_jobs.obj job_makers.obj \
                      complexconv_job.obj complexconv_jobs.obj \
                      complexinc_job.obj complexinc_jobs.obj \
                      complexadd_job.obj complexadd_jobs.obj \
@@ -1094,7 +1094,7 @@ run_dbl_polynomials: random_numbers.obj random_series.obj \
               complexconv_job.obj complexconv_jobs.obj \
               complexinc_job.obj complexinc_jobs.obj \
               complexadd_job.obj complexadd_jobs.obj \
-              job_coordinates.obj write_job_counts.obj test_helpers.obj \
+              job_coordinates.obj write_job_counts.obj job_makers.obj \
               dbl_convolutions_host.obj dbl_monomials_host.obj \
               dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
               write_gpu_timings.obj \
@@ -1106,7 +1106,7 @@ run_dbl2_polynomials: random_numbers.obj random_series.obj \
                       random2_vectors.obj random2_series.obj \
                       random2_monomials.obj random2_polynomials.obj \
                       convolution_job.obj convolution_jobs.obj \
-                      addition_job.obj addition_jobs.obj test_helpers.obj \
+                      addition_job.obj addition_jobs.obj job_makers.obj \
                       complexconv_job.obj complexconv_jobs.obj \
                       complexinc_job.obj complexinc_jobs.obj \
                       complexadd_job.obj complexadd_jobs.obj \
@@ -1129,7 +1129,7 @@ run_dbl2_polynomials: random_numbers.obj random_series.obj \
               job_coordinates.obj write_job_counts.obj \
               dbl2_convolutions_host.obj dbl2_monomials_host.obj \
               dbl2_polynomials_host.obj dbl2_polynomials_kernels.obj \
-              test_helpers.obj write_gpu_timings.obj \
+              job_makers.obj write_gpu_timings.obj \
               run_dbl2_polynomials.obj dbl2_polynomials_testers.obj
 
 run_dbl3_polynomials: random_numbers.obj random_series.obj \
@@ -1332,7 +1332,7 @@ run_polynomials: random_numbers.obj random_series.obj \
                  dbl8_polynomials_host.obj dbl8_polynomials_testers.obj \
                  dbl10_convolutions_host.obj dbl10_monomials_host.obj \
                  dbl10_polynomials_host.obj dbl10_polynomials_testers.obj \
-                 test_helpers.obj write_gpu_timings.obj \
+                 job_makers.obj write_gpu_timings.obj \
                  polynomials_kernels.obj run_polynomials.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o run_polynomials.exe \
@@ -1373,7 +1373,7 @@ run_polynomials: random_numbers.obj random_series.obj \
               dbl8_polynomials_host.obj dbl8_polynomials_testers.obj \
               dbl10_convolutions_host.obj dbl10_monomials_host.obj \
               dbl10_polynomials_host.obj dbl10_polynomials_testers.obj \
-              test_helpers.obj write_gpu_timings.obj \
+              job_makers.obj write_gpu_timings.obj \
               polynomials_kernels.obj run_polynomials.obj
 
 clean:

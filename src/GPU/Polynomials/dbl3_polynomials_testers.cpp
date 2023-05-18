@@ -16,7 +16,7 @@
 #include "write_gpu_timings.h"
 #include "dbl3_polynomials_host.h"
 #include "dbl3_polynomials_kernels.h"
-#include "test_helpers.h"
+#include "job_makers.h"
 #include "dbl3_polynomials_testers.h"
 
 using namespace std;

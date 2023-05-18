@@ -14,7 +14,7 @@
 #include "addition_jobs.h"
 #include "write_job_counts.h"
 #include "write_gpu_timings.h"
-#include "test_helpers.h"
+#include "job_makers.h"
 #include "dbl_polynomials_host.h"
 #include "dbl_polynomials_kernels.h"
 #include "dbl_polynomials_testers.h"

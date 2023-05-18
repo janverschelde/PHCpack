@@ -1,9 +1,9 @@
-/* The file test_helpers.cpp contains the definitions of functions
- * with prototypes in test_helpers.h. */
+/* The file job_makers.cpp contains the definitions specified in
+ * the file job_makers.h. */
 
 #include <iostream>
 #include <iomanip>
-#include "test_helpers.h"
+#include "job_makers.h"
 #include "write_job_counts.h"
 
 void make_all_jobs
