@@ -1315,8 +1315,9 @@ void cmplx_added_data4vectorized_to_output
    else
    {
       int ix0 = jobs.get_differential_index(0,cnt);
-      int ix2 = nvr[ix0]-3;
-      if(ix2 < 0) ix2 = 0; // on GPU, one backward item less
+      // int ix2 = nvr[ix0]-3;
+      // if(ix2 < 0) ix2 = 0; // on GPU, one backward item less
+      int ix2 = nvr[ix0]-2; // no longer the case for vectorized
 
       ix1re = bstart[ix0] + ix2*deg1;
       ix2im = bstart[ix0] + ix2*deg1 + totcffoffset;
@@ -1392,12 +1393,12 @@ void cmplx_added_data4vectorized_to_output
             int ix2 = nvr[ix0]-3;
             if(ix2 < 0) ix2 = 0;
 
+            ix1re = bstart[ix0] + ix2*deg1;
+            ix2im = bstart[ix0] + ix2*deg1 + totcffoffset;
+
             if(verbose)
                cout << "Updating derivative " << k 
                     << " at " << ix1re << " in data." << endl;
-
-            ix1re = bstart[ix0] + ix2*deg1;
-            ix2im = bstart[ix0] + ix2*deg1 + totcffoffset;
 
             for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
             {
@@ -1414,13 +1415,13 @@ void cmplx_added_data4vectorized_to_output
          else if(idx[ix0][nvr[ix0]-1] == k) // k is last variable
          {
             int ix2 = nvr[ix0]-2;
+
+            ix1re = fstart[ix0] + ix2*deg1;
+            ix2im = fstart[ix0] + ix2*deg1 + totcffoffset;
  
             if(verbose)
                cout << "Updating derivative " << k 
                     << " at " << ix1re << " in data." << endl;
-
-            ix1re = fstart[ix0] + ix2*deg1;
-            ix2im = fstart[ix0] + ix2*deg1 + totcffoffset;
 
             for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
             {
@@ -2329,7 +2330,7 @@ void GPU_cmplx4vectorized_poly_evaldiff
    double *cnvlapms, double *addlapms, double *elapsedms,
    double *walltimesec, bool verbose )
 {
-   const int totalcff = coefficient_count(dim,nbr,deg,nvr);
+   const int totalcff = complex_coefficient_count(dim,nbr,deg,nvr);
    const int diminput = (1 + nbr + dim)*(deg + 1); // dimension of input
    const int offsetri = totalcff - diminput; // offset for re/im operands
    const int cmplxtotcff = 2*(totalcff + offsetri);
@@ -2341,7 +2342,7 @@ void GPU_cmplx4vectorized_poly_evaldiff
    int *bsums = new int[nbr];
    int *csums = new int[nbr];
 
-   coefficient_indices
+   complex_coefficient_indices
       (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
    if(verbose)
    {

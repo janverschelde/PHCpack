@@ -23,6 +23,25 @@ int coefficient_count ( int dim, int nbr, int deg, int *nvr )
    return count;
 }
 
+int complex_coefficient_count ( int dim, int nbr, int deg, int *nvr )
+{
+   int count = 1 + nbr + dim;
+   // constant, coefficients of nbr monomials, dim input variables
+
+   for(int i=0; i<nbr; i++)
+   {
+      count = count + nvr[i]; // forward products
+      if(nvr[i] == 2)
+         count = count + 1;   // one backward product
+      else if(nvr[i] > 2)
+         count = count + (nvr[i]-1) + (nvr[i]-2);
+         // add backward and cross products
+   }
+   count = count*(deg+1);
+
+   return count;
+}
+
 void coefficient_indices
  ( int dim, int nbr, int deg, int *nvr,
    int *fsums, int *bsums, int *csums,
@@ -55,6 +74,51 @@ void coefficient_indices
       else // nvr[i] > 2
       {
          bsums[i] = bsums[i-1] + nvr[i] - 2;
+         csums[i] = csums[i-1] + nvr[i] - 2;
+      }
+   }
+   fstart[0] = (1+nbr+dim)*(deg+1);
+   for(int i=1; i<nbr; i++) fstart[i] = fstart[0] + fsums[i-1]*(deg+1);
+
+   bstart[0] = fstart[0] + fsums[nbr-1]*(deg+1);
+   for(int i=1; i<nbr; i++) bstart[i] = bstart[0] + bsums[i-1]*(deg+1);
+
+   cstart[0] = bstart[0] + bsums[nbr-1]*(deg+1);
+   for(int i=1; i<nbr; i++) cstart[i] = cstart[0] + csums[i-1]*(deg+1);
+}
+
+void complex_coefficient_indices
+ ( int dim, int nbr, int deg, int *nvr,
+   int *fsums, int *bsums, int *csums,
+   int *fstart, int *bstart, int *cstart )
+{
+   fsums[0] = nvr[0]; bsums[0] = 0; csums[0] = 0;
+
+   if(nvr[0] == 2)
+   {
+      bsums[0] = 1;                    // need one backward product
+   }
+   else if(nvr[0] > 2)
+   {
+      bsums[0] = nvr[0] - 1;
+      csums[0] = nvr[0] - 2;
+   }
+   for(int i=1; i<nbr; i++)
+   {
+      fsums[i] = fsums[i-1] + nvr[i];  // as many forward as #variables
+      if(nvr[i] < 2)
+      {
+         bsums[i] = bsums[i-1];        // no backward product
+         csums[i] = csums[i-1];        // no cross product
+      }
+      else if(nvr[i] == 2)
+      {
+         bsums[i] = bsums[i-1] + 1;   // need one backward product
+         csums[i] = csums[i-1];       // no cross product needed
+      }
+      else // nvr[i] > 2
+      {
+         bsums[i] = bsums[i-1] + nvr[i] - 1;
          csums[i] = csums[i-1] + nvr[i] - 2;
       }
    }
@@ -238,56 +302,31 @@ void complex_convjob_indices
       *outidx = fstart[monidx] + joboutidx*deg1 + totcffoffset + offset;
    else if(joboutptp == 2)     // first operand of real backward
    {
-      if(joboutidx < nvr[monidx]-2) // last backward product is special ...
-         *outidx = bstart[monidx] + joboutidx*deg1;
+      if(nvr[monidx] == 2)
+         *outidx = bstart[monidx]; // we have one backward product
       else
-      {
-         if(nvr[monidx] == 2)
-            *outidx = bstart[monidx];
-         else
-            *outidx = bstart[monidx] + (joboutidx-1)*deg1;
-
-      }
+         *outidx = bstart[monidx] + joboutidx*deg1;
    }
    else if(joboutptp == 5)     // second operand of real backward
    {
-      if(joboutidx < nvr[monidx]-2) // last backward product is special ...
-         *outidx = bstart[monidx] + joboutidx*deg1 + offset;
+      if(nvr[monidx] == 2)
+         *outidx = bstart[monidx] + offset;
       else
-      {
-         if(nvr[monidx] == 2)
-            *outidx = bstart[monidx] + offset;
-         else
-            *outidx = bstart[monidx] + (joboutidx-1)*deg1 + offset;
-
-      }
+         *outidx = bstart[monidx] + joboutidx*deg1 + offset;
    }
    else if(joboutptp == 8)     // first operand of imag backward
    {
-      if(joboutidx < nvr[monidx]-2) // last backward product is special ...
-         *outidx = bstart[monidx] + joboutidx*deg1 + totcffoffset;
+      if(nvr[monidx] == 2)
+         *outidx = bstart[monidx] + totcffoffset;
       else
-      {
-         if(nvr[monidx] == 2)
-            *outidx = bstart[monidx] + totcffoffset;
-         else
-            *outidx = bstart[monidx] + (joboutidx-1)*deg1 + totcffoffset;
-
-      }
+         *outidx = bstart[monidx] + joboutidx*deg1 + totcffoffset;
    }
    else if(joboutptp == 11)    // second operand of imag backward
    {
-      if(joboutidx < nvr[monidx]-2) // last backward product is special ...
-         *outidx = bstart[monidx] + joboutidx*deg1 + totcffoffset + offset;
+      if(nvr[monidx] == 2)
+         *outidx = bstart[monidx] + totcffoffset + offset;
       else
-      {
-         if(nvr[monidx] == 2)
-            *outidx = bstart[monidx] + totcffoffset + offset;
-         else
-            *outidx = bstart[monidx] + (joboutidx-1)*deg1
-                                     + totcffoffset + offset;
-
-      }
+         *outidx = bstart[monidx] + joboutidx*deg1 + totcffoffset + offset;
    }
    else if(joboutptp == 3)    // first operand of real cross product
       *outidx = cstart[monidx] + joboutidx*deg1;

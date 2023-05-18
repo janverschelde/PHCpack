@@ -22,6 +22,19 @@ int coefficient_count ( int dim, int nbr, int deg, int *nvr );
  *   deg      truncation degree of the series;
  *   nvr      nvr[k] holds the number of variables in monomial k. */
 
+int complex_coefficient_count ( int dim, int nbr, int deg, int *nvr );
+/*
+ * DESCRIPTION :
+ *   Returns the total number of coefficients in all convolutions,
+ *   for vectorized complex arithmetic.
+ *   The count includes also the constant coefficient.
+ *
+ * ON ENTRY :
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      truncation degree of the series;
+ *   nvr      nvr[k] holds the number of variables in monomial k. */
+
 void coefficient_indices
  ( int dim, int nbr, int deg, int *nvr,
    int *fsums, int *bsums, int *csums,
@@ -30,6 +43,36 @@ void coefficient_indices
  * DESCRIPTION :
  *   Computes the sums of coefficients for forward, backward, cross products,
  *   and the start positions for each monomial.
+ *
+ * ON ENTRY :
+ *   dim      total number of variables;
+ *   nbr      number of monomials, excluding the constant term;
+ *   deg      truncation degree of the series;
+ *   nvr      nvr[k] holds the number of variables in monomial k.
+ *
+ * ON RETURN :
+ *   fsums    fsums[k] holds the sum of coefficients for the forward
+ *            products of the k-th monomial and of all monomials before k;
+ *   bsums    fsums[k] holds the sum of coefficients for the backward
+ *            products of the k-th monomial and of all monomials before k;
+ *   csums    fsums[k] holds the sum of coefficients for the cross
+ *            products of the k-th monomial and of all monomials before k;
+ *   fstart   fstart[k] has the start position of the forward products
+ *            for the k-th monomial;
+ *   bstart   fstart[k] has the start position of the backward products
+ *            for the k-th monomial;
+ *   cstart   fstart[k] has the start position of the cross products
+ *            for the k-th monomial. */
+
+void complex_coefficient_indices
+ ( int dim, int nbr, int deg, int *nvr,
+   int *fsums, int *bsums, int *csums,
+   int *fstart, int *bstart, int *cstart );
+/*
+ * DESCRIPTION :
+ *   Computes the sums of coefficients for forward, backward, cross products,
+ *   and the start positions for each monomial,
+ *   for vectorized complex arithmetic.
  *
  * ON ENTRY :
  *   dim      total number of variables;
