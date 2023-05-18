@@ -4,6 +4,8 @@ Thu 18 May 2023 : in dbl4_polynomials_kernels, corrected the flipping of
   makefile_windows, and {dbl, dbl2, dbl3, dbl4, dbl5}_polynomials_testers.cpp.
   Extended job_coordinates with complex versions of the coefficient counts
   and the coefficient indices, with updates in dbl4_polynomials_kernels.cu.
+  In dbl4_polynomials_kernels.cu, fixed case when the first variable in
+  a monomial is not the one with index zero: one monomial is okay.
 
 Wed 17 May 2023 : in dbl4_polynomials_kernels.cu, fixed the bugs for the
   special cases of the derivative of a linear monomial.

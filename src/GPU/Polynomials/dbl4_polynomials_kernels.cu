@@ -1390,8 +1390,9 @@ void cmplx_added_data4vectorized_to_output
 
          if(idx[ix0][0] == k) // k is first variable of monomial
          {
-            int ix2 = nvr[ix0]-3;
-            if(ix2 < 0) ix2 = 0;
+            // int ix2 = nvr[ix0]-3;
+            // if(ix2 < 0) ix2 = 0;
+            int ix2 = nvr[ix0] - 2;
 
             ix1re = bstart[ix0] + ix2*deg1;
             ix2im = bstart[ix0] + ix2*deg1 + totcffoffset;
