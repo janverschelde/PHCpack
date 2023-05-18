@@ -7,7 +7,8 @@ Thu 18 May 2023 : in dbl4_polynomials_kernels, corrected the flipping of
   In dbl4_polynomials_kernels.cu, fixed case when the first variable in
   a monomial is not the one with index zero: one monomial is okay.
   One monomial plus nonzero constant is okay for complex quad doubles,
-  after another bug fix in job_coordinates.cpp.
+  after another bug fix in job_coordinates.cpp.  In complexadd_jobs.cpp,
+  commented out the generation of all jobs with the second operands.
 
 Wed 17 May 2023 : in dbl4_polynomials_kernels.cu, fixed the bugs for the
   special cases of the derivative of a linear monomial.
