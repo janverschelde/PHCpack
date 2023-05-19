@@ -1,3 +1,5 @@
+Fri 19 May 2023 : removed the dubbling of layers in complexadd_jobs.cpp.
+
 Thu 18 May 2023 : in dbl4_polynomials_kernels, corrected the flipping of
   the signs of the second real operand using the increment job indices.
   Renamed test_helpers into job_makers, updated makefile_unix and
