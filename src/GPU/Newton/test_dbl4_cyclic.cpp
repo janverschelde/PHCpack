@@ -424,7 +424,7 @@ int dbl4_complex_evaltest
 {
    const int degp1 = deg+1;
 
-   cout << "-> setting up the test system ..." << endl;
+   cout << "-> allocating coefficients and solution series ..." << endl;
 
    double ***cffrehihi = new double**[dim];
    double ***cffrelohi = new double**[dim];
@@ -478,72 +478,6 @@ int dbl4_complex_evaltest
       solimhilo[i] = new double[degp1];
       solimlolo[i] = new double[degp1];
    }
-   make_complex4_exponentials
-      (dim,deg,solrehihi,solrelohi,solrehilo,solrelolo,
-               solimhihi,solimlohi,solimhilo,solimlolo);
-/*
-   for(int i=0; i<dim; i++)  // set leading coefficients to random doubles
-   { 
-      solrehihi[i][0] = random_double();
-      solimhihi[i][0] = random_double();
-   }
- */
-   make_complex4_coefficients
-      (dim,dim,cffrehihi,cffrelohi,cffrehilo,cffrelolo,
-               cffimhihi,cffimlohi,cffimhilo,cffimlolo);
-
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<dim; j++)
-      {
-         // reset coefficient to one
-         cffrehihi[i][j][0] = 1.0; cffrelohi[i][j][0] = 0.0;
-         cffrehilo[i][j][0] = 0.0; cffrelolo[i][j][0] = 0.0;
-         cffimhihi[i][j][0] = 0.0; cffimlohi[i][j][0] = 0.0;
-         cffimhilo[i][j][0] = 0.0; cffimlolo[i][j][0] = 0.0;
-
-         for(int k=1; k<degp1; k++)
-         {
-            cffrehihi[i][j][k] = 0.0; cffrelohi[i][j][k] = 0.0;
-            cffrehilo[i][j][k] = 0.0; cffrelolo[i][j][k] = 0.0;
-            cffimhihi[i][j][k] = 0.0; cffimlohi[i][j][k] = 0.0;
-            cffimhilo[i][j][k] = 0.0; cffimlolo[i][j][k] = 0.0;
-         }
-      }
-
-   if(vrblvl > 1)
-   {
-      cout << scientific << setprecision(16);
-      cout << "The coefficients of the solution series :" << endl;
-      for(int i=0; i<dim; i++)
-      {
-         for(int j=0; j<degp1; j++)
-            cout << "sol[" << i << "][" << j << "] : "
-                 << solrehihi[i][j] << "  "
-                 << solrelohi[i][j] << endl
-                 << solrehilo[i][j] << "  "
-                 << solrelolo[i][j] << endl
-                 << solimhihi[i][j] << "  "
-                 << solimlohi[i][j] << endl
-                 << solimhilo[i][j] << "  "
-                 << solimlolo[i][j] << endl;
-      }
-      cout << "The coefficients of the system :" << endl;
-      for(int i=0; i<dim; i++)
-      {
-         for(int j=0; j<dim; j++)
-            for(int k=0; k<degp1; k++)
-               cout << "cff[" << i << "][" << j << "][" << k << "] : "
-                    << cffrehihi[i][j][k] << "  "
-                    << cffrelohi[i][j][k] << endl
-                    << cffrehilo[i][j][k] << "  "
-                    << cffrelolo[i][j][k] << endl
-                    << cffimhihi[i][j][k] << "  "
-                    << cffimlohi[i][j][k] << endl
-                    << cffimhilo[i][j][k] << "  "
-                    << cffimlolo[i][j][k] << endl;
-      }
-   }
-
    cout << "-> allocating space for input and output ..." << endl;
 
    double **inputrehihi_h = new double*[dim];
@@ -840,8 +774,6 @@ int dbl4_complex_evaltest
          }
       }
    }
-   cout << "-> calling CPU_dbl_evaluate_monomials ..." << endl;
-
    double **accrehihi = new double*[dim+1]; // to accumulate series
    double **accrelohi = new double*[dim+1];
    double **accrehilo = new double*[dim+1];
@@ -858,115 +790,191 @@ int dbl4_complex_evaltest
       accimhihi[i] = new double[degp1]; accimlohi[i] = new double[degp1];
       accimhilo[i] = new double[degp1]; accimlolo[i] = new double[degp1];
    }
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<degp1; j++)
+   double errsum = 0.0;
+
+   for(int run=0; run<2; run++)
+   {
+      cout << "-> defining input and coefficients ..." << endl;
+
+      make_complex4_exponentials
+         (dim,deg,solrehihi,solrelohi,solrehilo,solrelolo,
+                  solimhihi,solimlohi,solimhilo,solimlolo);
+
+/*
+   for(int i=0; i<dim; i++)  // set leading coefficients to random doubles
+   { 
+      solrehihi[i][0] = random_double();
+      solimhihi[i][0] = random_double();
+   }
+
+ */     make_complex4_coefficients
+         (dim,dim,cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+                  cffimhihi,cffimlohi,cffimhilo,cffimlolo);
+
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+            // reset coefficient to one
+            if(run == 0)
+            {
+               cffrehihi[i][j][0] = 1.0; cffrelohi[i][j][0] = 0.0;
+               cffrehilo[i][j][0] = 0.0; cffrelolo[i][j][0] = 0.0;
+               cffimhihi[i][j][0] = 0.0; cffimlohi[i][j][0] = 0.0;
+               cffimhilo[i][j][0] = 0.0; cffimlolo[i][j][0] = 0.0;
+            }
+            for(int k=1; k<degp1; k++)
+            {
+               cffrehihi[i][j][k] = 0.0; cffrelohi[i][j][k] = 0.0;
+               cffrehilo[i][j][k] = 0.0; cffrelolo[i][j][k] = 0.0;
+               cffimhihi[i][j][k] = 0.0; cffimlohi[i][j][k] = 0.0;
+               cffimhilo[i][j][k] = 0.0; cffimlolo[i][j][k] = 0.0;
+            }
+         }
+
+      if(vrblvl > 1)
       {
-         inputrehihi_h[i][j] = solrehihi[i][j];
-         inputrelohi_h[i][j] = solrelohi[i][j];
-         inputrehilo_h[i][j] = solrehilo[i][j];
-         inputrelolo_h[i][j] = solrelolo[i][j];
-         inputimhihi_h[i][j] = solimhihi[i][j];
-         inputimlohi_h[i][j] = solimlohi[i][j];
-         inputimhilo_h[i][j] = solimhilo[i][j];
-         inputimlolo_h[i][j] = solimlolo[i][j];
-         inputrehihi_d[i][j] = inputrehihi_h[i][j];
-         inputrelohi_d[i][j] = inputrelohi_h[i][j];
-         inputrehilo_d[i][j] = inputrehilo_h[i][j];
-         inputrelolo_d[i][j] = inputrelolo_h[i][j];
-         inputimhihi_d[i][j] = inputimhihi_h[i][j];
-         inputimlohi_d[i][j] = inputimlohi_h[i][j];
-         inputimhilo_d[i][j] = inputimhilo_h[i][j];
-         inputimlolo_d[i][j] = inputimlolo_h[i][j];
+         cout << scientific << setprecision(16);
+         cout << "The coefficients of the solution series :" << endl;
+         for(int i=0; i<dim; i++)
+         {
+            for(int j=0; j<degp1; j++)
+               cout << "sol[" << i << "][" << j << "] : "
+                    << solrehihi[i][j] << "  "
+                    << solrelohi[i][j] << endl
+                    << solrehilo[i][j] << "  "
+                    << solrelolo[i][j] << endl
+                    << solimhihi[i][j] << "  "
+                    << solimlohi[i][j] << endl
+                    << solimhilo[i][j] << "  "
+                    << solimlolo[i][j] << endl;
+         }
+         cout << "The coefficients of the system :" << endl;
+         for(int i=0; i<dim; i++)
+         {
+            for(int j=0; j<dim; j++)
+               for(int k=0; k<degp1; k++)
+                  cout << "cff[" << i << "][" << j << "][" << k << "] : "
+                       << cffrehihi[i][j][k] << "  "
+                       << cffrelohi[i][j][k] << endl
+                       << cffrehilo[i][j][k] << "  "
+                       << cffrelolo[i][j][k] << endl
+                       << cffimhihi[i][j][k] << "  "
+                       << cffimlohi[i][j][k] << endl
+                       << cffimhilo[i][j][k] << "  "
+                       << cffimlolo[i][j][k] << endl;
+         }
       }
+      cout << "-> calling CPU_dbl_evaluate_monomials ..." << endl;
 
-   const int nbrcol = 1;
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<degp1; j++)
+         {
+            inputrehihi_h[i][j] = solrehihi[i][j];
+            inputrelohi_h[i][j] = solrelohi[i][j];
+            inputrehilo_h[i][j] = solrehilo[i][j];
+            inputrelolo_h[i][j] = solrelolo[i][j];
+            inputimhihi_h[i][j] = solimhihi[i][j];
+            inputimlohi_h[i][j] = solimlohi[i][j];
+            inputimhilo_h[i][j] = solimhilo[i][j];
+            inputimlolo_h[i][j] = solimlolo[i][j];
+            inputrehihi_d[i][j] = inputrehihi_h[i][j];
+            inputrelohi_d[i][j] = inputrelohi_h[i][j];
+            inputrehilo_d[i][j] = inputrehilo_h[i][j];
+            inputrelolo_d[i][j] = inputrelolo_h[i][j];
+            inputimhihi_d[i][j] = inputimhihi_h[i][j];
+            inputimlohi_d[i][j] = inputimlohi_h[i][j];
+            inputimhilo_d[i][j] = inputimhilo_h[i][j];
+            inputimlolo_d[i][j] = inputimlolo_h[i][j];
+         }
 
-   evaluate_complex4_columns
-      (dim,deg,nbrcol,nvr,idx,rowsA,
-       cffrehihi,cffrelohi,cffrehilo,cffrelolo,
-       cffimhihi,cffimlohi,cffimhilo,cffimlolo,
-       inputrehihi_h,inputrelohi_h,inputrehilo_h,inputrelolo_h,
-       inputimhihi_h,inputimlohi_h,inputimhilo_h,inputimlolo_h,
-       rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
-       rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,0);
+      const int nbrcol = 1;
 
-   CPU_cmplx4_evaluate_columns
-      (dim,deg,nbrcol,nvr,idx,
-       cffrehihi,cffrelohi,cffrehilo,cffrelolo,
-       cffimhihi,cffimlohi,cffimhilo,cffimlolo,
-       accrehihi,accrelohi,accrehilo,accrelolo,
-       accimhihi,accimlohi,accimhilo,accimlolo,
-       inputrehihi_h,inputrelohi_h,inputrehilo_h,inputrelolo_h,
-       inputimhihi_h,inputimlohi_h,inputimhilo_h,inputimlolo_h,
-       funvalrehihi_h,funvalrelohi_h,funvalrehilo_h,funvalrelolo_h,
-       funvalimhihi_h,funvalimlohi_h,funvalimhilo_h,funvalimlolo_h,
-       jacvalrehihi_h,jacvalrelohi_h,jacvalrehilo_h,jacvalrelolo_h,
-       jacvalimhihi_h,jacvalimlohi_h,jacvalimhilo_h,jacvalimlolo_h,0);
+      evaluate_complex4_columns
+         (dim,deg,nbrcol,nvr,idx,rowsA,
+          cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+          cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+          inputrehihi_h,inputrelohi_h,inputrehilo_h,inputrelolo_h,
+          inputimhihi_h,inputimlohi_h,inputimhilo_h,inputimlolo_h,
+          rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
+          rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,0);
 
-   cout << scientific << setprecision(16);
-   cout << "-> comparing column evaluations ... " << endl;
-   double errsum0 = 0.0;
+      CPU_cmplx4_evaluate_columns
+         (dim,deg,nbrcol,nvr,idx,
+          cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+          cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+          accrehihi,accrelohi,accrehilo,accrelolo,
+          accimhihi,accimlohi,accimhilo,accimlolo,
+          inputrehihi_h,inputrelohi_h,inputrehilo_h,inputrelolo_h,
+          inputimhihi_h,inputimlohi_h,inputimhilo_h,inputimlolo_h,
+          funvalrehihi_h,funvalrelohi_h,funvalrehilo_h,funvalrelolo_h,
+          funvalimhihi_h,funvalimlohi_h,funvalimhilo_h,funvalimlolo_h,
+          jacvalrehihi_h,jacvalrelohi_h,jacvalrehilo_h,jacvalrelolo_h,
+          jacvalimhihi_h,jacvalimlohi_h,jacvalimhilo_h,jacvalimlolo_h,0);
 
-   errsum0 = cmplx4_error2sum(dim,degp1,
-                rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
-                rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
-                funvalrehihi_h,funvalrelohi_h,funvalrehilo_h,funvalrelolo_h,
-                funvalimhihi_h,funvalimlohi_h,funvalimhilo_h,funvalimlolo_h,
-                "rhsfun",vrblvl);
+      cout << "*** run " << run << " ***" << endl;
 
-   cout << scientific << setprecision(3);
-   cout << "sum of errors : " << errsum0 << endl;
+      cout << scientific << setprecision(16);
+      cout << "-> comparing column evaluations ... " << endl;
+      double errsum0 = 0.0;
 
-   double totcnvlapsedms;
+      errsum0 = cmplx4_error2sum(dim,degp1,
+                   rhsrehihi,rhsrelohi,rhsrehilo,rhsrelolo,
+                   rhsimhihi,rhsimlohi,rhsimhilo,rhsimlolo,
+                   funvalrehihi_h,funvalrelohi_h,funvalrehilo_h,funvalrelolo_h,
+                   funvalimhihi_h,funvalimlohi_h,funvalimhilo_h,funvalimlolo_h,
+                   "rhsfun",vrblvl);
 
-   if(vrblvl > 0) cout << scientific << setprecision(16);
+      cout << scientific << setprecision(3);
+      cout << "sum of errors : " << errsum0 << endl;
 
-   GPU_cmplx4_evaluate_columns
-      (dim,deg,nbrcol,szt,nbt,nvr,idx,
-       cffrehihi,cffrelohi,cffrehilo,cffrelolo,
-       cffimhihi,cffimlohi,cffimhilo,cffimlolo,
-       inputrehihi_d,inputrelohi_d,inputrehilo_d,inputrelolo_d,
-       inputimhihi_d,inputimlohi_d,inputimhilo_d,inputimlolo_d,
-       outputrehihi_d,outputrelohi_d,outputrehilo_d,outputrelolo_d,
-       outputimhihi_d,outputimlohi_d,outputimhilo_d,outputimlolo_d,
-       funvalrehihi_d,funvalrelohi_d,funvalrehilo_d,funvalrelolo_d,
-       funvalimhihi_d,funvalimlohi_d,funvalimhilo_d,funvalimlolo_d,
-       jacvalrehihi_d,jacvalrelohi_d,jacvalrehilo_d,jacvalrelolo_d,
-       jacvalimhihi_d,jacvalimlohi_d,jacvalimhilo_d,jacvalimlolo_d,
-       &totcnvlapsedms,vrblvl);
+      double totcnvlapsedms;
 
-   cout << scientific << setprecision(16);
-   cout << "-> comparing CPU with GPU evaluations ... " << endl;
-   double errsum1 = 0.0;
+      if(vrblvl > 0) cout << scientific << setprecision(16);
 
-   errsum1 = cmplx4_error2sum
-                (dim,degp1,
-                 funvalrehihi_h,funvalrelohi_h,funvalrehilo_h,funvalrelolo_h,
-                 funvalimhihi_h,funvalimlohi_h,funvalimhilo_h,funvalimlolo_h,
-                 funvalrehihi_d,funvalrelohi_d,funvalrehilo_d,funvalrelolo_d,
-                 funvalimhihi_d,funvalimlohi_d,funvalimhilo_d,funvalimlolo_d,
-                 "funval",vrblvl);
+      GPU_cmplx4vectorized_evaluate_columns
+         (dim,deg,nbrcol,szt,nbt,nvr,idx,
+          cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+          cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+          inputrehihi_d,inputrelohi_d,inputrehilo_d,inputrelolo_d,
+          inputimhihi_d,inputimlohi_d,inputimhilo_d,inputimlolo_d,
+          outputrehihi_d,outputrelohi_d,outputrehilo_d,outputrelolo_d,
+          outputimhihi_d,outputimlohi_d,outputimhilo_d,outputimlolo_d,
+          funvalrehihi_d,funvalrelohi_d,funvalrehilo_d,funvalrelolo_d,
+          funvalimhihi_d,funvalimlohi_d,funvalimhilo_d,funvalimlolo_d,
+          jacvalrehihi_d,jacvalrelohi_d,jacvalrehilo_d,jacvalrelolo_d,
+          jacvalimhihi_d,jacvalimlohi_d,jacvalimhilo_d,jacvalimlolo_d,
+          &totcnvlapsedms,vrblvl);
 
-   cout << scientific << setprecision(3);
-   cout << "sum of errors : " << errsum1 << endl;
+      cout << scientific << setprecision(16);
+      cout << "-> comparing CPU with GPU evaluations ... " << endl;
+      double errsum1 = 0.0;
 
-   cout << scientific << setprecision(16);
-   cout << "-> comparing CPU with GPU Jacobians ... " << endl;
-   double errsum2 = 0.0;
+      errsum1 = cmplx4_error2sum (dim,degp1,
+         funvalrehihi_h,funvalrelohi_h,funvalrehilo_h,funvalrelolo_h,
+         funvalimhihi_h,funvalimlohi_h,funvalimhilo_h,funvalimlolo_h,
+         funvalrehihi_d,funvalrelohi_d,funvalrehilo_d,funvalrelolo_d,
+         funvalimhihi_d,funvalimlohi_d,funvalimhilo_d,funvalimlolo_d,
+         "funval",vrblvl);
 
-   errsum2 = cmplx4_error3sum
-                (degp1,dim,dim,
-                 jacvalrehihi_h,jacvalrelohi_h,jacvalrehilo_h,jacvalrelolo_h,
-                 jacvalimhihi_h,jacvalimlohi_h,jacvalimhilo_h,jacvalimlolo_h,
-                 jacvalrehihi_d,jacvalrelohi_d,jacvalrehilo_d,jacvalrelolo_d,
-                 jacvalimhihi_d,jacvalimlohi_d,jacvalimhilo_d,jacvalimlolo_d,
-                 "jacval",vrblvl);
+      cout << scientific << setprecision(3);
+      cout << "sum of errors : " << errsum1 << endl;
 
-   cout << scientific << setprecision(3);
-   cout << "sum of errors : " << errsum2 << endl;
+      cout << scientific << setprecision(16);
+      cout << "-> comparing CPU with GPU Jacobians ... " << endl;
+      double errsum2 = 0.0;
 
-   double errsum = errsum0 + errsum1 + errsum2;
-   cout << "total sum of errors : " << errsum << endl;
+      errsum2 = cmplx4_error3sum(degp1,dim,dim,
+         jacvalrehihi_h,jacvalrelohi_h,jacvalrehilo_h,jacvalrelolo_h,
+         jacvalimhihi_h,jacvalimlohi_h,jacvalimhilo_h,jacvalimlolo_h,
+         jacvalrehihi_d,jacvalrelohi_d,jacvalrehilo_d,jacvalrelolo_d,
+         jacvalimhihi_d,jacvalimlohi_d,jacvalimhilo_d,jacvalimlolo_d,
+         "jacval",vrblvl);
 
+      cout << scientific << setprecision(3);
+      cout << "sum of errors : " << errsum2 << endl;
+
+      errsum = errsum0 + errsum1 + errsum2;
+      cout << "total sum of errors : " << errsum << endl;
+   }
    return (errsum > 1.0e-48);
 }

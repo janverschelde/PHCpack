@@ -1,3 +1,7 @@
+Fri 19 May 2023 : extended dbl4_systems_kernels to use the vectorized
+  versions in the column evaluations, updated test_dbl4_cyclic.cpp,
+  makefile_unix and makefile_windows.
+
 Tue 9 May 2023 : in dbl4_systems_kernels.cu, improved formatting of the
   output series at verbose level 2.  Updated test_dbl4_cyclic.cpp with
   the number of columns variable for more test cases.

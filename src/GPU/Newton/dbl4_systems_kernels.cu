@@ -261,6 +261,121 @@ void cmplx4_evaldiffdata_to_output
    }
 }
 
+void cmplx4vectorized_evaldiffdata_to_output
+ ( double *datarihihi, double *datarilohi,
+   double *datarihilo, double *datarilolo,
+   double ***outputrehihi, double ***outputrelohi,
+   double ***outputrehilo, double ***outputrelolo,
+   double ***outputimhihi, double ***outputimlohi,
+   double ***outputimhilo, double ***outputimlolo,
+   int dim, int nbr, int deg, int *nvr, int totcffoffset,
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl )
+{
+   const int deg1 = deg+1;
+   int ix0,ix1re,ix1im,ix2;
+
+   for(int k=0; k<nbr; k++)
+   {
+      ix1re = fstart[k] + (nvr[k]-1)*deg1;
+      ix1im = fstart[k] + (nvr[k]-1)*deg1 + totcffoffset;
+      
+      if(vrblvl > 1)
+         cout << "monomial " << k << " update starts at "
+             << ix1re << ", " << ix1im << endl;
+
+      for(int i=0; i<=deg; i++)
+      {
+         outputrehihi[k][dim][i] = datarihihi[ix1re];
+         outputrelohi[k][dim][i] = datarilohi[ix1re];
+         outputrehilo[k][dim][i] = datarihilo[ix1re];
+         outputrelolo[k][dim][i] = datarilolo[ix1re++];
+         outputimhihi[k][dim][i] = datarihihi[ix1im];
+         outputimlohi[k][dim][i] = datarilohi[ix1im];
+         outputimhilo[k][dim][i] = datarihilo[ix1im];
+         outputimlolo[k][dim][i] = datarilolo[ix1im++];
+      }
+      ix0 = idx[k][0];
+      if(nvr[k] == 1)
+      {
+         ix1re = (1 + k)*deg1;
+         ix1im = (1 + k)*deg1 + totcffoffset;
+            
+         for(int i=0; i<=deg; i++)
+         {
+            outputrehihi[k][ix0][i] = datarihihi[ix1re];
+            outputrelohi[k][ix0][i] = datarilohi[ix1re];
+            outputrehilo[k][ix0][i] = datarihilo[ix1re];
+            outputrelolo[k][ix0][i] = datarilolo[ix1re++];
+            outputimhihi[k][ix0][i] = datarihihi[ix1im];
+            outputimlohi[k][ix0][i] = datarilohi[ix1im];
+            outputimhilo[k][ix0][i] = datarihilo[ix1im];
+            outputimlolo[k][ix0][i] = datarilolo[ix1im++];
+         }
+      }
+      else if(nvr[k] > 1)
+      {                               // first and last derivative
+         ix2 = nvr[k]-2; // vectorized version is different for last backward
+         if(ix2 < 0) ix2 = 0;
+         ix1re = bstart[k] + ix2*deg1;
+         ix1im = bstart[k] + ix2*deg1 + totcffoffset;
+
+         for(int i=0; i<=deg; i++)
+         {
+            outputrehihi[k][ix0][i] = datarihihi[ix1re];
+            outputrelohi[k][ix0][i] = datarilohi[ix1re];
+            outputrehilo[k][ix0][i] = datarihilo[ix1re];
+            outputrelolo[k][ix0][i] = datarilolo[ix1re++];
+            outputimhihi[k][ix0][i] = datarihihi[ix1im];
+            outputimlohi[k][ix0][i] = datarilohi[ix1im];
+            outputimhilo[k][ix0][i] = datarihilo[ix1im];
+            outputimlolo[k][ix0][i] = datarilolo[ix1im++];
+         }
+         ix2 = nvr[k]-2;
+         ix1re = fstart[k] + ix2*deg1;
+         ix1im = fstart[k] + ix2*deg1 + totcffoffset;
+         ix0 = idx[k][ix2+1];
+
+         for(int i=0; i<=deg; i++)
+         {
+            outputrehihi[k][ix0][i] = datarihihi[ix1re];
+            outputrelohi[k][ix0][i] = datarilohi[ix1re];
+            outputrehilo[k][ix0][i] = datarihilo[ix1re];
+            outputrelolo[k][ix0][i] = datarilolo[ix1re++];
+            outputimhihi[k][ix0][i] = datarihihi[ix1im];
+            outputimlohi[k][ix0][i] = datarilohi[ix1im];
+            outputimhilo[k][ix0][i] = datarihilo[ix1im];
+            outputimlolo[k][ix0][i] = datarilolo[ix1im++];
+         }
+         if(nvr[k] > 2)                   // all other derivatives
+         {
+            for(int j=1; j<nvr[k]-1; j++)
+            {
+               ix0 = idx[k][j];            // j-th variable in monomial k
+               ix1re = cstart[k] + (j-1)*deg1;
+               ix1im = cstart[k] + (j-1)*deg1 + totcffoffset;
+
+               if(vrblvl > 1)
+                  cout << "monomial " << k << " derivative " << ix0
+                       << " update starts at "
+                       << ix1re << ", " << ix1im << endl;
+
+               for(int i=0; i<=deg; i++)
+               {
+                  outputrehihi[k][ix0][i] = datarihihi[ix1re];
+                  outputrelohi[k][ix0][i] = datarilohi[ix1re];
+                  outputrehilo[k][ix0][i] = datarihilo[ix1re];
+                  outputrelolo[k][ix0][i] = datarilolo[ix1re++];
+                  outputimhihi[k][ix0][i] = datarihihi[ix1im];
+                  outputimlohi[k][ix0][i] = datarilohi[ix1im];
+                  outputimhilo[k][ix0][i] = datarihilo[ix1im];
+                  outputimlolo[k][ix0][i] = datarilolo[ix1im++];
+               }
+            }
+         }
+      }
+   }
+}
+
 // The code for GPU_dbl4_mon_evaldiff is an adaptation of the
 // function GPU_dbl4_poly_evaldiff of dbl_polynomials_kernels.cu.
 
@@ -608,6 +723,152 @@ void GPU_cmplx4_mon_evaldiff
    free(datarehilo_h); free(datarelolo_h);
    free(dataimhihi_h); free(dataimlohi_h);
    free(dataimhilo_h); free(dataimlolo_h);
+
+   free(fstart); free(bstart); free(cstart);
+   free(fsums); free(bsums); free(csums);
+}
+
+void GPU_cmplx4vectorized_mon_evaldiff
+ ( int szt, int dim, int nbr, int deg, int *nvr, int **idx,
+   double **cffrehihi, double **cffrelohi,
+   double **cffrehilo, double **cffrelolo,
+   double **cffimhihi, double **cffimlohi,
+   double **cffimhilo, double **cffimlolo,
+   double **inputrehihi, double **inputrelohi,
+   double **inputrehilo, double **inputrelolo,
+   double **inputimhihi, double **inputimlohi,
+   double **inputimhilo, double **inputimlolo,
+   double ***outputrehihi, double ***outputrelohi,
+   double ***outputrehilo, double ***outputrelolo,
+   double ***outputimhihi, double ***outputimlohi,
+   double ***outputimhilo, double ***outputimlolo,
+   ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
+   double *cnvlapms, double *elapsedms, double *walltimesec, int vrblvl )
+{
+   const int deg1 = deg+1;
+   const int totalcff = complex_coefficient_count(dim,nbr,deg,nvr);
+   const int diminput = (1 + nbr + dim)*(deg + 1); // dimension of input
+   const int offsetri = totalcff - diminput; // offset for re/im operands
+   const int cmplxtotcff = 2*(totalcff + offsetri);
+
+   int *fstart = new int[nbr];
+   int *bstart = new int[nbr];
+   int *cstart = new int[nbr];
+   int *fsums = new int[nbr];
+   int *bsums = new int[nbr];
+   int *csums = new int[nbr];
+
+   complex_coefficient_indices
+      (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
+
+   if(vrblvl > 1)
+   {
+      cout << "        total count : " << totalcff << endl;
+      cout << "offset for operands : " << offsetri << endl;
+      cout << "complex total count : " << cmplxtotcff << endl;
+      write_coefficient_indices
+         (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
+   }
+   double *datarihihi_h = new double[cmplxtotcff];      // data on host
+   double *datarilohi_h = new double[cmplxtotcff];
+   double *datarihilo_h = new double[cmplxtotcff];
+   double *datarilolo_h = new double[cmplxtotcff];
+
+   int ixre = 0;
+   int ixim = totalcff + offsetri;
+
+   for(int i=0; i<deg1; i++)
+   {
+      datarihihi_h[ixre]   = 0.0; // cst[i]; no constant
+      datarilohi_h[ixre]   = 0.0;
+      datarihilo_h[ixre]   = 0.0;
+      datarilolo_h[ixre++] = 0.0;
+      datarihihi_h[ixim]   = 0.0;
+      datarilohi_h[ixim]   = 0.0;
+      datarihilo_h[ixim]   = 0.0;
+      datarilolo_h[ixim++] = 0.0;
+   }
+   for(int i=0; i<nbr; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         datarihihi_h[ixre]   = cffrehihi[i][j];
+         datarilohi_h[ixre]   = cffrelohi[i][j];
+         datarihilo_h[ixre]   = cffrehilo[i][j];
+         datarilolo_h[ixre++] = cffrelolo[i][j];
+         datarihihi_h[ixim]   = cffimhihi[i][j];
+         datarilohi_h[ixim]   = cffimlohi[i][j];
+         datarihilo_h[ixim]   = cffimhilo[i][j];
+         datarilolo_h[ixim++] = cffimlolo[i][j];
+      }
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         datarihihi_h[ixre]   = inputrehihi[i][j];
+         datarilohi_h[ixre]   = inputrelohi[i][j];
+         datarihilo_h[ixre]   = inputrehilo[i][j];
+         datarilolo_h[ixre++] = inputrelolo[i][j];
+         datarihihi_h[ixim]   = inputimhihi[i][j];
+         datarilohi_h[ixim]   = inputimlohi[i][j];
+         datarihilo_h[ixim]   = inputimhilo[i][j];
+         datarilolo_h[ixim++] = inputimlolo[i][j];
+      }
+
+   double *datarihihi_d;                               // device data
+   double *datarilohi_d;
+   double *datarihilo_d;
+   double *datarilolo_d;
+   const size_t szdata = cmplxtotcff*sizeof(double);
+   cudaMalloc((void**)&datarihihi_d,szdata);
+   cudaMalloc((void**)&datarilohi_d,szdata);
+   cudaMalloc((void**)&datarihilo_d,szdata);
+   cudaMalloc((void**)&datarilolo_d,szdata);
+   cudaMemcpy(datarihihi_d,datarihihi_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarilohi_d,datarilohi_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarihilo_d,datarihilo_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarilolo_d,datarilolo_h,szdata,cudaMemcpyHostToDevice);
+
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *cnvlapms = 0.0;
+   struct timeval begintime,endtime; // wall clock time of computations
+   bool verbose = (vrblvl > 1);
+
+   gettimeofday(&begintime,0);
+
+   cmplx4vectorized_convolution_jobs
+      (dim,nbr,deg,nvr,totalcff,offsetri,cnvjobs,incjobs,fstart,bstart,cstart,
+       datarihihi_d,datarilohi_d,datarihilo_d,datarilolo_d,
+       cnvlapms,verbose);
+
+   gettimeofday(&endtime,0);
+
+   cudaMemcpy(datarihihi_h,datarihihi_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarilohi_h,datarilohi_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarihilo_h,datarihilo_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarilolo_h,datarilolo_d,szdata,cudaMemcpyDeviceToHost);
+   *elapsedms = *cnvlapms;
+   long seconds = endtime.tv_sec - begintime.tv_sec;
+   long microseconds = endtime.tv_usec - begintime.tv_usec;
+   *walltimesec = seconds + microseconds*1.0e-6;
+
+   cmplx4vectorized_evaldiffdata_to_output
+      (datarihihi_h,datarilohi_h,datarihilo_h,datarilolo_h,
+       outputrehihi,outputrelohi,outputrehilo,outputrelolo,
+       outputimhihi,outputimlohi,outputimhilo,outputimlolo,
+       dim,nbr,deg,nvr,totalcff+offsetri,
+       idx,fstart,bstart,cstart,vrblvl);
+
+   if(vrblvl > 0)
+   {
+      write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
+      // write_dbl4_cnvflops(dim,deg,1,cnvjobs,*elapsedms,*walltimesec);
+   }
+   cudaFree(datarihihi_d); cudaFree(datarilohi_d);
+   cudaFree(datarihilo_d); cudaFree(datarilolo_d);
+
+   free(datarihihi_h); free(datarilohi_h);
+   free(datarihilo_h); free(datarilolo_h);
 
    free(fstart); free(bstart); free(cstart);
    free(fsums); free(bsums); free(csums);
@@ -1106,6 +1367,200 @@ void GPU_dbl4_evaluate_columns
 }
 
 void GPU_cmplx4_evaluate_columns
+ ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx, 
+   double ***cffrehihi, double ***cffrelohi,
+   double ***cffrehilo, double ***cffrelolo,
+   double ***cffimhihi, double ***cffimlohi, 
+   double ***cffimhilo, double ***cffimlolo, 
+   double **inputrehihi, double **inputrelohi,
+   double **inputrehilo, double **inputrelolo,
+   double **inputimhihi, double **inputimlohi,
+   double **inputimhilo, double **inputimlolo,
+   double ***outputrehihi, double ***outputrelohi,
+   double ***outputrehilo, double ***outputrelolo,
+   double ***outputimhihi, double ***outputimlohi, 
+   double ***outputimhilo, double ***outputimlolo, 
+   double **funvalrehihi, double **funvalrelohi,
+   double **funvalrehilo, double **funvalrelolo,
+   double **funvalimhihi, double **funvalimlohi,
+   double **funvalimhilo, double **funvalimlolo,
+   double ***jacvalrehihi, double ***jacvalrelohi,
+   double ***jacvalrehilo, double ***jacvalrelolo,
+   double ***jacvalimhihi, double ***jacvalimlohi,
+   double ***jacvalimhilo, double ***jacvalimlolo,
+   double *totcnvlapsedms, int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<degp1; j++)
+      {
+         funvalrehihi[i][j] = 0.0; funvalrelohi[i][j] = 0.0;
+         funvalrehilo[i][j] = 0.0; funvalrelolo[i][j] = 0.0;
+         funvalimhihi[i][j] = 0.0; funvalimlohi[i][j] = 0.0;
+         funvalimhilo[i][j] = 0.0; funvalimlolo[i][j] = 0.0;
+      }
+   funvalrehihi[dim-1][0] = -1.0; // constant of last eq in cyclic dim-roots
+
+   for(int k=0; k<degp1; k++)  // the Jacobian is linearized
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<dim; j++)
+         {
+            jacvalrehihi[k][i][j] = 0.0; jacvalrelohi[k][i][j] = 0.0;
+            jacvalrehilo[k][i][j] = 0.0; jacvalrelolo[k][i][j] = 0.0;
+            jacvalimhihi[k][i][j] = 0.0; jacvalimlohi[k][i][j] = 0.0;
+            jacvalimhilo[k][i][j] = 0.0; jacvalimlolo[k][i][j] = 0.0;
+         }
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<nbrcol; i++)
+      {
+         cout << "coefficients for column " << i << " :" << endl;
+         for(int j=0; j<dim; j++)
+         {
+            cout << "coefficients for monomial " << j << " :" << endl;
+            for(int k=0; k<=deg; k++)
+               cout << cffrehihi[i][j][k] << "  "
+                    << cffrelohi[i][j][k] << endl << "  "
+                    << cffrehilo[i][j][k] << "  "
+                    << cffrelolo[i][j][k] << endl << "  "
+                    << cffimhihi[i][j][k] << "  "
+                    << cffimlohi[i][j][k] << endl << "  "
+                    << cffimhilo[i][j][k] << "  "
+                    << cffimlolo[i][j][k] << endl;
+         }
+      }
+      cout << "dim : " << dim << endl;
+      for(int i=0; i<nbrcol; i++)
+      {
+         for(int j=0; j<dim; j++)
+         {
+            cout << "nvr[" << i << "][" << j << "] : " << nvr[i][j] << " :";
+            cout << "  idx[" << i << "][" << j << "] :";
+            for(int k=0; k<nvr[i][j]; k++) cout << " " << idx[i][j][k];
+            cout << endl;
+         }
+      }
+      for(int i=0; i<dim; i++)
+      {
+         cout << "input series for variable " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << inputrehihi[i][j] << "  " << inputrelohi[i][j] << endl
+                 << "  "
+                 << inputrehilo[i][j] << "  " << inputrelolo[i][j] << endl
+                 << "  "
+                 << inputimhihi[i][j] << "  " << inputimlohi[i][j] << endl
+                 << "  "
+                 << inputimhilo[i][j] << "  " << inputimlolo[i][j] << endl;
+      }
+   }
+   bool verbose = (vrblvl > 1);
+   double cnvlapms,elapsedms,walltimesec;
+
+   for(int i=0; i<nbrcol; i++)
+   {
+      ConvolutionJobs jobs(dim);
+
+      jobs.make(dim,nvr[i],idx[i],verbose);
+
+      if(verbose)
+      {
+         for(int k=0; k<jobs.get_depth(); k++)
+         {
+            cout << "jobs at layer " << k << " :" << endl;
+            for(int j=0; j<jobs.get_layer_count(k); j++)
+               cout << jobs.get_job(k,j) << endl;
+         }
+         cout << "dimension : " << dim << endl;
+         cout << "number of monomials : " << dim << endl;
+         cout << "number of convolution jobs : " << jobs.get_count() << endl;
+         cout << "number of layers : " << jobs.get_depth() << endl;
+         cout << "frequency of layer counts :" << endl;
+         int checksum = 0;
+         for(int j=0; j<jobs.get_depth(); j++)
+         {
+            cout << j << " : " << jobs.get_layer_count(j) << endl;
+            checksum = checksum + jobs.get_layer_count(j); 
+         }
+         cout << "layer count sum : " << checksum << endl;
+      }
+      GPU_cmplx4_mon_evaldiff
+         (szt,dim,dim,deg,nvr[i],idx[i],
+          cffrehihi[i],cffrelohi[i],cffrehilo[i],cffrelolo[i],
+          cffimhihi[i],cffimlohi[i],cffimhilo[i],cffimlolo[i],
+          inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+          inputimhihi,inputimlohi,inputimhilo,inputimlolo,
+          outputrehihi,outputrelohi,outputrehilo,outputrelolo,
+          outputimhihi,outputimlohi,outputimhilo,outputimlolo,jobs,
+          &cnvlapms,&elapsedms,&walltimesec,vrblvl);
+
+      *totcnvlapsedms += elapsedms;
+
+      for(int j=0; j<dim; j++)
+         if(nvr[i][j] > 0)       // update values
+         {
+            for(int L=0; L<degp1; L++)
+            {
+               // funvalre[j][L] += outputre[j][dim][L];
+               // funvalim[j][L] += outputim[j][dim][L];
+               qdf_inc(&funvalrehihi[j][L],&funvalrelohi[j][L],
+                       &funvalrehilo[j][L],&funvalrelolo[j][L],
+                       outputrehihi[j][dim][L],outputrelohi[j][dim][L],
+                       outputrehilo[j][dim][L],outputrelolo[j][dim][L]);
+               qdf_inc(&funvalimhihi[j][L],&funvalimlohi[j][L],
+                       &funvalimhilo[j][L],&funvalimlolo[j][L],
+                       outputimhihi[j][dim][L],outputimlohi[j][dim][L],
+                       outputimhilo[j][dim][L],outputimlolo[j][dim][L]);
+            }
+
+            int *indexes = idx[i][j];      // indices of the variables
+            for(int k=0; k<nvr[i][j]; k++) // derivative w.r.t. idx[i][j][k]
+            {                              // has j-th coefficient
+               int idxval = indexes[k];
+               for(int L=0; L<degp1; L++) 
+               {
+                  // jacvalre[L][j][idxval] += outputre[j][idxval][L];
+                  // jacvalim[L][j][idxval] += outputim[j][idxval][L];
+                  qdf_inc(&jacvalrehihi[L][j][idxval],
+                          &jacvalrelohi[L][j][idxval],
+                          &jacvalrehilo[L][j][idxval],
+                          &jacvalrelolo[L][j][idxval],
+                          outputrehihi[j][idxval][L],
+                          outputrelohi[j][idxval][L],
+                          outputrehilo[j][idxval][L],
+                          outputrelolo[j][idxval][L]);
+                  qdf_inc(&jacvalimhihi[L][j][idxval],
+                          &jacvalimlohi[L][j][idxval],
+                          &jacvalimhilo[L][j][idxval],
+                          &jacvalimlolo[L][j][idxval],
+                          outputimhihi[j][idxval][L],
+                          outputimlohi[j][idxval][L],
+                          outputimhilo[j][idxval][L],
+                          outputimlolo[j][idxval][L]);
+               }
+            }
+         }
+   }
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
+      for(int i=0; i<dim; i++)
+      {
+         cout << "output series for polynomial " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << funvalrehihi[i][j] << "  " << funvalrelohi[i][j] << endl
+                 << "  "
+                 << funvalrehilo[i][j] << "  " << funvalrelolo[i][j] << endl
+                 << "  "
+                 << funvalimhihi[i][j] << "  " << funvalimlohi[i][j] << endl
+                 << "  "
+                 << funvalimhilo[i][j] << "  " << funvalimlolo[i][j] << endl;
+      }
+   }
+}
+
+void GPU_cmplx4vectorized_evaluate_columns
  ( int dim, int deg, int nbrcol, int szt, int nbt, int **nvr, int ***idx, 
    double ***cffrehihi, double ***cffrelohi,
    double ***cffrehilo, double ***cffrelolo,

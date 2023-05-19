@@ -449,6 +449,30 @@ addition_jobs.o:
 	@-echo ">>> compiling addition_jobs ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/addition_jobs.cpp
 
+complexconv_job.o:
+	@-echo ">>> compiling complexconv_job ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/complexconv_job.cpp
+
+complexinc_job.o:
+	@-echo ">>> compiling complexinc_job ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/complexinc_job.cpp
+
+complexadd_job.o:
+	@-echo ">>> compiling complexadd_job ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/complexadd_job.cpp
+
+complexconv_jobs.o:
+	@-echo ">>> compiling complexconvs_job ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/complexconv_jobs.cpp
+
+complexinc_jobs.o:
+	@-echo ">>> compiling complexinc_jobs ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/complexinc_jobs.cpp
+
+complexadd_jobs.o:
+	@-echo ">>> compiling complexadd_job ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/complexadd_jobs.cpp
+
 job_coordinates.o:
 	@-echo ">>> compiling job_coordinates ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/job_coordinates.cpp
@@ -595,6 +619,9 @@ test_dbl_cyclic: cyclic_columns.o test_dbl_cyclic.o \
                  dbl_systems_host.o dbl_monomial_systems.o \
                  convolution_job.o convolution_jobs.o write_job_counts.o \
                  addition_job.o addition_jobs.o job_coordinates.o \
+                 complexconv_job.o complexconv_jobs.o \
+                 complexinc_job.o complexinc_jobs.o \
+                 complexadd_job.o complexadd_jobs.o \
                  dbl_systems_kernels.o dbl_polynomials_kernels.o \
                  dbl_newton_testers.o write_gpu_timings.o
 	@-echo ">>> linking ..."
@@ -604,6 +631,9 @@ test_dbl_cyclic: cyclic_columns.o test_dbl_cyclic.o \
                   dbl_systems_host.o dbl_monomial_systems.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
                   dbl_systems_kernels.o dbl_polynomials_kernels.o \
                   dbl_newton_testers.o write_gpu_timings.o \
                 -lcuda -lcudart -L$(CUDALIB)
@@ -616,6 +646,9 @@ test_dbl2_cyclic: cyclic_columns.o test_dbl2_cyclic.o \
                   dbl2_systems_host.o dbl2_monomial_systems.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
                   dbl2_systems_kernels.o dbl2_polynomials_kernels.o \
                   dbl2_newton_testers.o write_gpu_timings.o
 	@-echo ">>> linking ..."
@@ -627,6 +660,9 @@ test_dbl2_cyclic: cyclic_columns.o test_dbl2_cyclic.o \
                   dbl2_systems_host.o dbl2_monomial_systems.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
                   dbl2_systems_kernels.o dbl2_polynomials_kernels.o \
                   dbl2_newton_testers.o write_gpu_timings.o \
                 -lcuda -lcudart -L$(CUDALIB)
@@ -639,6 +675,9 @@ test_dbl4_cyclic: cyclic_columns.o test_dbl4_cyclic.o \
                   dbl4_systems_host.o dbl4_monomial_systems.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
                   dbl4_systems_kernels.o dbl4_polynomials_kernels.o \
                   dbl4_newton_testers.o write_gpu_timings.o
 	@-echo ">>> linking ..."
@@ -650,6 +689,9 @@ test_dbl4_cyclic: cyclic_columns.o test_dbl4_cyclic.o \
                   dbl4_systems_host.o dbl4_monomial_systems.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
                   dbl4_systems_kernels.o dbl4_polynomials_kernels.o \
                   dbl4_newton_testers.o write_gpu_timings.o \
                 -lcuda -lcudart -L$(CUDALIB)
@@ -663,6 +705,9 @@ test_dbl8_cyclic: cyclic_columns.o test_dbl8_cyclic.o \
                   dbl8_systems_host.o dbl8_monomial_systems.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
                   dbl8_systems_kernels.o dbl8_polynomials_kernels.o \
                   dbl8_newton_testers.o write_gpu_timings.o
 	@-echo ">>> linking ..."
@@ -675,6 +720,9 @@ test_dbl8_cyclic: cyclic_columns.o test_dbl8_cyclic.o \
                   dbl8_systems_host.o dbl8_monomial_systems.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
                   dbl8_systems_kernels.o dbl8_polynomials_kernels.o \
                   dbl8_newton_testers.o write_gpu_timings.o \
                 -lcuda -lcudart -L$(CUDALIB)
@@ -930,6 +978,9 @@ cleanall: clean
 	/bin/rm -f -r dbl8_baqr_kernels.o dbl8_tabs_kernels.o
 	/bin/rm -f -r convolution_job.o convolution_jobs.o write_job_counts.o
 	/bin/rm -f -r addition_job.o addition_jobs.o job_coordinates.o
+	/bin/rm -f -r complexconv_job.o complexconv_jobs.o
+	/bin/rm -f -r complexinc_job.o complexinc_jobs.o
+	/bin/rm -f -r complexadd_job.o complexadd_jobs.o
 	/bin/rm -f -r dbl_polynomials_kernels.o write_gpu_timings.o
 	/bin/rm -f -r dbl2_polynomials_kernels.o dbl4_polynomials_kernels.o
 	/bin/rm -f -r dbl8_polynomials_kernels.o

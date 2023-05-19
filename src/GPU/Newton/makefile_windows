@@ -662,6 +662,42 @@ addition_jobs.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: addition_jobs.obj /EHsc
 
+complexconv_job.obj:
+	@-echo ">>> compiling complexconv_job ..."
+	$(CL)\cl /c $(POL)/complexconv_job.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: complexconv_job.obj /EHsc
+
+complexconv_jobs.obj:
+	@-echo ">>> compiling complexconv_jobs ..."
+	$(CL)\cl /c $(POL)/complexconv_jobs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: complexconv_jobs.obj /EHsc
+
+complexinc_job.obj:
+	@-echo ">>> compiling complexinc_job ..."
+	$(CL)\cl /c $(POL)/complexinc_job.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: complexinc_job.obj /EHsc
+
+complexinc_jobs.obj:
+	@-echo ">>> compiling complexinc_jobs ..."
+	$(CL)\cl /c $(POL)/complexinc_jobs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: complexinc_jobs.obj /EHsc
+
+complexadd_job.obj:
+	@-echo ">>> compiling complexadd_job ..."
+	$(CL)\cl /c $(POL)/complexadd_job.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: complexadd_job.obj /EHsc
+
+complexadd_jobs.obj:
+	@-echo ">>> compiling complexadd_jobs ..."
+	$(CL)\cl /c $(POL)/complexadd_jobs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: complexadd_jobs.obj /EHsc
+
 job_coordinates.obj:
 	@-echo ">>> compiling job_coordinates ..."
 	$(CL)\cl /c $(POL)/job_coordinates.cpp \
@@ -903,6 +939,9 @@ test_dbl_cyclic: cyclic_columns.obj test_dbl_cyclic.obj \
                  convolution_job.obj convolution_jobs.obj \
                  write_job_counts.obj job_coordinates.obj \
                  addition_job.obj addition_jobs.obj \
+                 complexconv_job.obj complexconv_jobs.obj \
+                 complexadd_job.obj complexadd_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj \
                  dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
                  dbl_newton_testers.obj write_gpu_timings.obj \
                  gettimeofday4win.obj
@@ -914,6 +953,9 @@ test_dbl_cyclic: cyclic_columns.obj test_dbl_cyclic.obj \
                  convolution_job.obj convolution_jobs.obj \
                  write_job_counts.obj job_coordinates.obj \
                  addition_job.obj addition_jobs.obj \
+                 complexconv_job.obj complexconv_jobs.obj \
+                 complexadd_job.obj complexadd_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj \
                  dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
                  dbl_newton_testers.obj write_gpu_timings.obj \
                  gettimeofday4win.obj
@@ -927,6 +969,9 @@ test_dbl2_cyclic: cyclic_columns.obj test_dbl2_cyclic.obj \
                   convolution_job.obj convolution_jobs.obj \
                   write_job_counts.obj job_coordinates.obj \
                   addition_job.obj addition_jobs.obj \
+                  complexconv_job.obj complexconv_jobs.obj \
+                  complexadd_job.obj complexadd_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj \
                   dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
                   dbl2_newton_testers.obj write_gpu_timings.obj \
                   gettimeofday4win.obj
@@ -940,6 +985,9 @@ test_dbl2_cyclic: cyclic_columns.obj test_dbl2_cyclic.obj \
                  convolution_job.obj convolution_jobs.obj \
                  write_job_counts.obj job_coordinates.obj \
                  addition_job.obj addition_jobs.obj \
+                 complexconv_job.obj complexconv_jobs.obj \
+                 complexadd_job.obj complexadd_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj \
                  dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
                  dbl2_newton_testers.obj write_gpu_timings.obj \
                  gettimeofday4win.obj
@@ -953,6 +1001,9 @@ test_dbl4_cyclic: cyclic_columns.obj test_dbl4_cyclic.obj \
                   convolution_job.obj convolution_jobs.obj \
                   write_job_counts.obj job_coordinates.obj \
                   addition_job.obj addition_jobs.obj \
+                  complexconv_job.obj complexconv_jobs.obj \
+                  complexadd_job.obj complexadd_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj \
                   dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
                   dbl4_newton_testers.obj write_gpu_timings.obj \
                   gettimeofday4win.obj
@@ -966,6 +1017,9 @@ test_dbl4_cyclic: cyclic_columns.obj test_dbl4_cyclic.obj \
                  convolution_job.obj convolution_jobs.obj \
                  write_job_counts.obj job_coordinates.obj \
                  addition_job.obj addition_jobs.obj \
+                 complexconv_job.obj complexconv_jobs.obj \
+                 complexadd_job.obj complexadd_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj \
                  dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
                  dbl4_newton_testers.obj write_gpu_timings.obj \
                  gettimeofday4win.obj
@@ -980,6 +1034,9 @@ test_dbl8_cyclic: cyclic_columns.obj test_dbl8_cyclic.obj \
                   convolution_job.obj convolution_jobs.obj \
                   write_job_counts.obj job_coordinates.obj \
                   addition_job.obj addition_jobs.obj \
+                  complexconv_job.obj complexconv_jobs.obj \
+                  complexadd_job.obj complexadd_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj \
                   dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
                   dbl8_newton_testers.obj write_gpu_timings.obj \
                   gettimeofday4win.obj
@@ -994,6 +1051,9 @@ test_dbl8_cyclic: cyclic_columns.obj test_dbl8_cyclic.obj \
                  convolution_job.obj convolution_jobs.obj \
                  write_job_counts.obj job_coordinates.obj \
                  addition_job.obj addition_jobs.obj \
+                 complexconv_job.obj complexconv_jobs.obj \
+                 complexadd_job.obj complexadd_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj \
                  dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
                  dbl8_newton_testers.obj write_gpu_timings.obj \
                  gettimeofday4win.obj
@@ -1282,6 +1342,9 @@ cleanall:
 	del dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj
 	del convolution_job.obj convolution_jobs.obj write_job_counts.obj
 	del addition_job.obj addition_jobs.obj job_coordinates.obj
+	del complexconv_job.obj complexconv_jobs.obj 
+	del complexinc_job.obj complexinc_jobs.obj 
+	del complexadd_job.obj complexadd_jobs.obj 
 	del dbl_polynomials_kernels.obj dbl2_polynomials_kernels.obj
 	del dbl4_polynomials_kernels.obj dbl8_polynomials_kernels.obj
 	del gettimeofday4win.obj
