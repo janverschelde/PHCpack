@@ -489,22 +489,22 @@ void CPU_cmplx8_poly_speel
 
 void CPU_dbl8_poly_evaldiff
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
-   double *csthihihi, double *csthilohi,
-   double *csthihilo, double *csthilolo,
-   double *cstlohihi, double *cstlolohi,
-   double *cstlohilo, double *cstlololo,
-   double **cffhihihi, double **cffhilohi,
-   double **cffhihilo, double **cffhilolo,
-   double **cfflohihi, double **cfflolohi,
-   double **cfflohilo, double **cfflololo,
-   double **inputhihihi, double **inputhilohi,
-   double **inputhihilo, double **inputhilolo, 
-   double **inputlohihi, double **inputlolohi,
-   double **inputlohilo, double **inputlololo, 
-   double **outputhihihi, double **outputhilohi,
-   double **outputhihilo, double **outputhilolo,
-   double **outputlohihi, double **outputlolohi,
-   double **outputlohilo, double **outputlololo,
+   double *csthihihi, double *cstlohihi,
+   double *csthilohi, double *cstlolohi,
+   double *csthihilo, double *cstlohilo,
+   double *csthilolo, double *cstlololo,
+   double **cffhihihi, double **cfflohihi,
+   double **cffhilohi, double **cfflolohi,
+   double **cffhihilo, double **cfflohilo,
+   double **cffhilolo, double **cfflololo,
+   double **inputhihihi, double **inputlohihi,
+   double **inputhilohi, double **inputlolohi, 
+   double **inputhihilo, double **inputlohilo,
+   double **inputhilolo, double **inputlololo, 
+   double **outputhihihi, double **outputlohihi,
+   double **outputhilohi, double **outputlolohi,
+   double **outputhihilo, double **outputlohilo,
+   double **outputhilolo, double **outputlololo,
    double *elapsedsec, bool verbose=false );
 /*
  * DESCRIPTION :
@@ -520,52 +520,52 @@ void CPU_dbl8_poly_evaldiff
  *                  idx[k][i] defines the place of the i-th variable,
  *                  with input values in input[idx[k][i]];
  *   csthihihi      highest parts of constant coefficient series;
- *   csthilohi      second higest parts of constant coefficient series;
- *   csthihilo      third higest parts of constant coefficient series;
- *   csthilolo      fourth higest parts of constant coefficient series;
- *   cstlohihi      fourth lowest parts of constant coefficient series;
- *   cstlolohi      third lowest parts of constant coefficient series;
- *   cstlohilo      second lowest parts of constant coefficient series;
+ *   csthilohi      second highest parts of constant coefficient series;
+ *   csthilohi      third highest parts of constant coefficient series;
+ *   cstlolohi      fourth highest parts of constant coefficient series;
+ *   csthihilo      fourth lowest parts of constant coefficient series;
+ *   cstlohilo      third lowest parts of constant coefficient series;
+ *   csthilolo      second lowest parts of constant coefficient series;
  *   cstlololo      lowest parts of constant coefficient series;
  *   cffhihihi      cffhihihi[k] has deg+1 doubles for the highest parts
  *                  of the coefficient series of monomial k;
- *   cffhilohi      cffhilohi[k] has deg+1 doubles for the second highest
+ *   cfflohihi      cffhilohi[k] has deg+1 doubles for the second highest
  *                  parts of the coefficient series of monomial k;
- *   cffhihilo      cffhihilo[k] has deg+1 doubles for the third highest
+ *   cffhilohi      cffhihilo[k] has deg+1 doubles for the third highest
  *                  parts of the coefficient series of monomial k;
- *   cffhilolo      cffhilolo[k] has deg+1 doubles for the fourth highest
+ *   cfflolohi      cffhilolo[k] has deg+1 doubles for the fourth highest
  *                  parts of the coefficient series of monomial k;
- *   cfflohihi      cfflohihi[k] has deg+1 doubles for the fourth lowest
+ *   cffhihilo      cfflohihi[k] has deg+1 doubles for the fourth lowest
  *                  parts of the coefficient series of monomial k;
- *   cfflolohi      cfflolohi[k] has deg+1 doubles for the third lowest
+ *   cfflohilo      cfflolohi[k] has deg+1 doubles for the third lowest
  *                  parts of the coefficient series of monomial k;
- *   cfflohilo      cfflohilo[k] has deg+1 doubles for the second lowest
+ *   cffhilolo      cfflohilo[k] has deg+1 doubles for the second lowest
  *                  parts of the coefficient series of monomial k;
  *   cfflololo      cfflololo[k] has deg+1 doubles for the lowest parts
  *                  of the coefficient series of monomial k;
  *   inputhihihi    has the highest parts of the power series
  *                  for all variables in the polynomial;
- *   inputhilohi    has the second highest parts of the power series
+ *   inputlohihi    has the second highest parts of the power series
  *                  for all variables in the polynomial;
- *   inputhihilo    has the third highest parts of the power series
+ *   inputhilohi    has the third highest parts of the power series
  *                  for all variables in the polynomial;
- *   inputhilolo    has the fourth highest parts of the power series
+ *   inputlolohi    has the fourth highest parts of the power series
  *                  for all variables in the polynomial;
- *   inputlohihi    has the fourth lowest parts of the power series
+ *   inputhihilo    has the fourth lowest parts of the power series
  *                  for all variables in the polynomial;
- *   inputlolohi    has the third lowest parts of the power series
+ *   inputlohilo    has the third lowest parts of the power series
  *                  for all variables in the polynomial;
- *   inputlohilo    has the second lowest parts of the power series
+ *   inputhilolo    has the second lowest parts of the power series
  *                  for all variables in the polynomial;
  *   inputlololo    has the lowest parts of the power series
  *                  for all variables in the polynomial;
  *   outputhihihi   has space allocated for dim+1 series of degree deg;
- *   outputhilohi   has space allocated for dim+1 series of degree deg;
- *   outputhihilo   has space allocated for dim+1 series of degree deg;
- *   outputhilolo   has space allocated for dim+1 series of degree deg;
  *   outputlohihi   has space allocated for dim+1 series of degree deg;
+ *   outputhilohi   has space allocated for dim+1 series of degree deg;
  *   outputlolohi   has space allocated for dim+1 series of degree deg;
+ *   outputhihilo   has space allocated for dim+1 series of degree deg;
  *   outputlohilo   has space allocated for dim+1 series of degree deg;
+ *   outputhilolo   has space allocated for dim+1 series of degree deg;
  *   outputlololo   has space allocated for dim+1 series of degree deg;
  *   verbose        if true, writes one line to screen for every convolution.
  *
@@ -574,27 +574,27 @@ void CPU_dbl8_poly_evaldiff
  *                  outputhihihi[k], for k from 0 to dim-1, contains the
  *                  derivative with respect to the variable k;
  *                  outputhihihi[dim] contains the value of the polynomial;
- *   outputhilohi   has the second highest parts of derivatives and the value,
+ *   outputlohihi   has the second highest parts of derivatives and the value,
  *                  outputhilohi[k], for k from 0 to dim-1, contains the
  *                  derivative with respect to the variable k;
  *                  outputhilohi[dim] contains the value of the polynomial;
- *   outputhihilo   has the third highest parts of derivatives and the value,
+ *   outputhilohi   has the third highest parts of derivatives and the value,
  *                  outputhihilo[k], for k from 0 to dim-1, contains the
  *                  derivative with respect to the variable k;
  *                  outputhihilo[dim] contains the value of the polynomial;
- *   outputhilolo   has the fourth highest parts of derivatives and the value,
+ *   outputlolohi   has the fourth highest parts of derivatives and the value,
  *                  outputhilolo[k], for k from 0 to dim-1, contains the
  *                  derivative with respect to the variable k;
  *                  outputhilolo[dim] contains the value of the polynomial;
- *   outputlohihi   has the fourth lowest parts of derivatives and the value,
+ *   outputhihilo   has the fourth lowest parts of derivatives and the value,
  *                  outputlohihi[k], for k from 0 to dim-1, contains the
  *                  derivative with respect to the variable k;
  *                  outputlohihi[dim] contains the value of the polynomial;
- *   outputlolohi   has the third lowest parts of derivatives and the value,
+ *   outputlohilo   has the third lowest parts of derivatives and the value,
  *                  outputlolohi[k], for k from 0 to dim-1, contains the
  *                  derivative with respect to the variable k;
  *                  outputlolohi[dim] contains the value of the polynomial;
- *   outputlohilo   has the second lowest parts of derivatives and the value,
+ *   outputhilolo   has the second lowest parts of derivatives and the value,
  *                  outputlohilo[k], for k from 0 to dim-1, contains the
  *                  derivative with respect to the variable k;
  *                  outputlohilo[dim] contains the value of the polynomial;
@@ -602,6 +602,219 @@ void CPU_dbl8_poly_evaldiff
  *                  outputlololo[k], for k from 0 to dim-1, contains the
  *                  derivative with respect to the variable k;
  *                  outputlololo[dim] contains the value of the polynomial;
+ *   elapsedsec     is the elapsed time in seconds. */
+
+void CPU_cmplx8_poly_evaldiff
+ ( int dim, int nbr, int deg, int *nvr, int **idx, 
+   double *cstrehihihi, double *cstrelohihi,
+   double *cstrehilohi, double *cstrelolohi,
+   double *cstrehihilo, double *cstrelohilo,
+   double *cstrehilolo, double *cstrelololo,
+   double *cstimhihihi, double *cstimlohihi,
+   double *cstimhilohi, double *cstimlolohi,
+   double *cstimhihilo, double *cstimlohilo,
+   double *cstimhilolo, double *cstimlololo,
+   double **cffrehihihi, double **cffrelohihi,
+   double **cffrehilohi, double **cffrelolohi,
+   double **cffrehihilo, double **cffrelohilo,
+   double **cffrehilolo, double **cffrelololo,
+   double **cffimhihihi, double **cffimlohihi,
+   double **cffimhilohi, double **cffimlolohi,
+   double **cffimhihilo, double **cffimlohilo,
+   double **cffimhilolo, double **cffimlololo,
+   double **inputrehihihi, double **inputrelohihi,
+   double **inputrehilohi, double **inputrelolohi, 
+   double **inputrehihilo, double **inputrelohilo,
+   double **inputrehilolo, double **inputrelololo, 
+   double **inputimhihihi, double **inputimlohihi,
+   double **inputimhilohi, double **inputimlolohi, 
+   double **inputimhihilo, double **inputimlohilo,
+   double **inputimhilolo, double **inputimlololo, 
+   double **outputrehihihi, double **outputrelohihi,
+   double **outputrehilohi, double **outputrelolohi,
+   double **outputrehihilo, double **outputrelohilo,
+   double **outputrehilolo, double **outputrelololo,
+   double **outputimhihihi, double **outputimlohihi,
+   double **outputimhilohi, double **outputimlolohi,
+   double **outputimhihilo, double **outputimlohilo,
+   double **outputimhilolo, double **outputimlololo,
+   double *elapsedsec, bool verbose=false );
+/*
+ * DESCRIPTION :
+ *   Allocates work space memory to store the forward, backward, and
+ *   cross products in the evaluation and differentiation of a polynomial.
+ *
+ * ON ENTRY :
+ *   dim            total number of variables;
+ *   nbr            number of monomials, excluding the constant term;
+ *   deg            truncation degree of the series;
+ *   nvr            nvr[k] holds the number of variables in monomial k;
+ *   idx            idx[k] has as many indices as the value of nvr[k],
+ *                  idx[k][i] defines the place of the i-th variable,
+ *                  with input values in input[idx[k][i]];
+ *   cstrehihihi    highest parts of constant real coefficients;
+ *   cstrehilohi    second highest parts of constant real coefficients;
+ *   cstrehilohi    third highest parts of constant real coefficients;
+ *   cstrelolohi    fourth highest parts of constant real coefficients;
+ *   cstrehihilo    fourth lowest parts of constant real coefficients;
+ *   cstrelohilo    third lowest parts of constant real coefficients;
+ *   cstrehilolo    second lowest parts of constant real coefficients;
+ *   cstrelololo    lowest parts of constant real coefficients;
+ *   cstimhihihi    highest parts of constant imag coefficients;
+ *   cstimlolohi    second highest parts of constant imag coefficients;
+ *   cstimhilohi    third highest parts of constant imag coefficients;
+ *   cstimlolohi    fourth highest parts of constant imag coefficients;
+ *   cstimhihilo    fourth lowest parts of constant imag coefficients;
+ *   cstimlohilo    third lowest parts of constant imag coefficients;
+ *   cstimhilolo    second lowest parts of constant imag coefficients;
+ *   cstimlololo    lowest parts of constant imag coefficients;
+ *   cffrehihihi    cffrehihihi[k] has deg+1 doubles for the highest
+ *                  real parts of the coefficient series of monomial k;
+ *   cffrelohihi    cffrehilohi[k] has deg+1 doubles for the second highest
+ *                  real parts of the coefficient series of monomial k;
+ *   cffrehilohi    cffrehihilo[k] has deg+1 doubles for the third highest
+ *                  real parts of the coefficient series of monomial k;
+ *   cffrelolohi    cffrehilolo[k] has deg+1 doubles for the fourth highest
+ *                  real parts of the coefficient series of monomial k;
+ *   cffrehihilo    cffrelohihi[k] has deg+1 doubles for the fourth lowest
+ *                  real parts of the coefficient series of monomial k;
+ *   cffrelohilo    cffrelolohi[k] has deg+1 doubles for the third lowest
+ *                  real parts of the coefficient series of monomial k;
+ *   cffrehilolo    cffrelohilo[k] has deg+1 doubles for the second lowest
+ *                  real parts of the coefficient series of monomial k;
+ *   cffrelololo    cffrelololo[k] has deg+1 doubles for the lowest
+ *                  real parts of the coefficient series of monomial k;
+ *   cffimhihihi    cffimhihihi[k] has deg+1 doubles for the highest
+ *                  imag parts of the coefficient series of monomial k;
+ *   cffimlohihi    cffimhilohi[k] has deg+1 doubles for the second highest
+ *                  imag parts of the coefficient series of monomial k;
+ *   cffimhilohi    cffimhihilo[k] has deg+1 doubles for the third highest
+ *                  imag parts of the coefficient series of monomial k;
+ *   cffimlolohi    cffimhilolo[k] has deg+1 doubles for the fourth highest
+ *                  imag parts of the coefficient series of monomial k;
+ *   cffimhihilo    cffimlohihi[k] has deg+1 doubles for the fourth lowest
+ *                  imag parts of the coefficient series of monomial k;
+ *   cffimlohilo    cffimlolohi[k] has deg+1 doubles for the third lowest
+ *                  imag parts of the coefficient series of monomial k;
+ *   cffimhilolo    cffimlohilo[k] has deg+1 doubles for the second lowest
+ *                  imag parts of the coefficient series of monomial k;
+ *   cffimlololo    cffimlololo[k] has deg+1 doubles for the lowest
+ *                  imag parts of the coefficient series of monomial k;
+ *   inputrehihihi  has the highest real parts of the power series
+ *                  for all variables in the polynomial;
+ *   inputrelohihi  has the second highest real parts of the power series
+ *                  for all variables in the polynomial;
+ *   inputrehilohi  has the third highest real parts of the power series
+ *                  for all variables in the polynomial;
+ *   inputrelolohi  has the fourth highest real parts of the power series
+ *                  for all variables in the polynomial;
+ *   inputrehihilo  has the fourth lowest real parts of the power series
+ *                  for all variables in the polynomial;
+ *   inputrelohilo  has the third lowest real parts of the power series
+ *                  for all variables in the polynomial;
+ *   inputrehilolo  has the second lowest real parts of the power series
+ *                  for all variables in the polynomial;
+ *   inputrelololo  has the lowest real parts of the power series
+ *                  for all variables in the polynomial;
+ *   inputimhihihi  has the highest imag parts of the power series
+ *                  for all variables in the polynomial;
+ *   inputimlohihi  has the second highest imag parts of the power series
+ *                  for all variables in the polynomial;
+ *   inputimhilohi  has the third highest imag parts of the power series
+ *                  for all variables in the polynomial;
+ *   inputimlolohi  has the fourth highest imag parts of the power series
+ *                  for all variables in the polynomial;
+ *   inputimhihilo  has the fourth lowest imag parts of the power series
+ *                  for all variables in the polynomial;
+ *   inputimlohilo  has the third lowest imag parts of the power series
+ *                  for all variables in the polynomial;
+ *   inputimhilolo  has the second lowest imag parts of the power series
+ *                  for all variables in the polynomial;
+ *   inputimlololo  has the lowest imag parts of the power series
+ *                  for all variables in the polynomial;
+ *   outputrehihihi has space allocated for dim+1 series of degree deg;
+ *   outputrelohihi has space allocated for dim+1 series of degree deg;
+ *   outputrehilohi has space allocated for dim+1 series of degree deg;
+ *   outputrelolohi has space allocated for dim+1 series of degree deg;
+ *   outputrehihilo has space allocated for dim+1 series of degree deg;
+ *   outputrelohilo has space allocated for dim+1 series of degree deg;
+ *   outputrehilolo has space allocated for dim+1 series of degree deg;
+ *   outputrelololo has space allocated for dim+1 series of degree deg;
+ *   outputimhihihi has space allocated for dim+1 series of degree deg;
+ *   outputimlohihi has space allocated for dim+1 series of degree deg;
+ *   outputimhilohi has space allocated for dim+1 series of degree deg;
+ *   outputimlolohi has space allocated for dim+1 series of degree deg;
+ *   outputimhihilo has space allocated for dim+1 series of degree deg;
+ *   outputimlohilo has space allocated for dim+1 series of degree deg;
+ *   outputimhilolo has space allocated for dim+1 series of degree deg;
+ *   outputimlololo has space allocated for dim+1 series of degree deg;
+ *   verbose        if true, writes one line to screen for every convolution.
+ *
+ * ON RETURN :
+ *   outputrehihihi has the highest parts of derivatives and the value,
+ *                  outputrehihihi[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputrehihihi[dim] contains the value of the polynomial;
+ *   outputrelohihi has the second highest parts of derivatives and the value,
+ *                  outputrehilohi[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputrehilohi[dim] contains the value of the polynomial;
+ *   outputrehilohi has the third highest parts of derivatives and the value,
+ *                  outputrehihilo[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputrehihilo[dim] contains the value of the polynomial;
+ *   outputrelolohi has the fourth highest parts of derivatives and the value,
+ *                  outputrehilolo[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputrehilolo[dim] contains the value of the polynomial;
+ *   outputrehihilo has the fourth lowest parts of derivatives and the value,
+ *                  outputrelohihi[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputrelohihi[dim] contains the value of the polynomial;
+ *   outputrelohilo has the third lowest parts of derivatives and the value,
+ *                  outputrelolohi[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputrelolohi[dim] contains the value of the polynomial;
+ *   outputrehilolo has the second lowest parts of derivatives and the value,
+ *                  outputrelohilo[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputrelohilo[dim] contains the value of the polynomial;
+ *   outputrelololo has the lowest parts of derivatives and the value,
+ *                  outputrelololo[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputrelololo[dim] contains the value of the polynomial;
+ *   outputimhihihi has the highest parts of derivatives and the value,
+ *                  outputimhihihi[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputimhihihi[dim] contains the value of the polynomial;
+ *   outputimlohihi has the second highest parts of derivatives and the value,
+ *                  outputimhilohi[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputimhilohi[dim] contains the value of the polynomial;
+ *   outputimhilohi has the third highest parts of derivatives and the value,
+ *                  outputimhihilo[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputimhihilo[dim] contains the value of the polynomial;
+ *   outputimlolohi has the fourth highest parts of derivatives and the value,
+ *                  outputimhilolo[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputimhilolo[dim] contains the value of the polynomial;
+ *   outputimhihilo has the fourth lowest parts of derivatives and the value,
+ *                  outputimlohihi[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputimlohihi[dim] contains the value of the polynomial;
+ *   outputimlohilo has the third lowest parts of derivatives and the value,
+ *                  outputimlolohi[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputimlolohi[dim] contains the value of the polynomial;
+ *   outputimhilolo has the second lowest parts of derivatives and the value,
+ *                  outputimlohilo[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputimlohilo[dim] contains the value of the polynomial;
+ *   outputimlololo has the lowest parts of derivatives and the value,
+ *                  outputimlololo[k], for k from 0 to dim-1, contains the
+ *                  derivative with respect to the variable k;
+ *                  outputimlololo[dim] contains the value of the polynomial;
  *   elapsedsec     is the elapsed time in seconds. */
 
 void CPU_dbl8_conv_job
