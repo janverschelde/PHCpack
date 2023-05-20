@@ -1,5 +1,5 @@
 Sat 20 May 2023 : extended dbl8_polynomials_host with a function for
-  complex numbers.
+  complex numbers.  Completed dbl8_polynomials_host with all functions.
 
 Fri 19 May 2023 : removed the doubling of layers in complexadd_jobs.cpp.
   Extended dbl8_polynomials_host with a function on complex numbers.
